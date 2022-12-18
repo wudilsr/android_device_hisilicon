@@ -6,6 +6,7 @@ extern "C" {
 
 #include "tde_proc.h"
 #include "tde_config.h"
+#include "tde_fence.h"
 
 #ifndef CONFIG_TDE_PROC_DISABLE
 typedef struct _hiTDE_PROCINFO_S
@@ -161,6 +162,10 @@ int tde_read_proc(struct seq_file *p, HI_VOID *v)
             PROC_PRINT(p, "(%s):\t0x%08x\n", chUpdate[i], *(pu32Cur + i));
         }
     }
+
+#ifdef TDE_FENCE_SUPPORT
+    TDE_FENCE_ReadProc(p, v);
+#endif
     
     #endif
     return 0;

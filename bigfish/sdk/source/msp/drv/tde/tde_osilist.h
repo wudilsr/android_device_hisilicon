@@ -57,7 +57,10 @@ typedef struct hiTDE_SWJOB_S
     #endif
     HI_BOOL bSubmitted;             /* If have submitted */
     HI_BOOL bAqUseBuff;             /* If using temporary buffer */
-    HI_U8   u8WaitForDoneCount;     /* wait job count */        
+    HI_U8   u8WaitForDoneCount;     /* wait job count */ 
+#ifdef TDE_FENCE_SUPPORT
+    HI_S32 s32ReleaseFenceFd;
+#endif
 }TDE_SWJOB_S;
 
 
@@ -119,7 +122,7 @@ HI_S32      TdeOsiListCancelJob(TDE_HANDLE s32Handle);
 *****************************************************************************/
 HI_S32      TdeOsiListSubmitJob(TDE_HANDLE s32Handle, 
                                 HI_U32 u32TimeOut, TDE_FUNC_CB pFuncComplCB, HI_VOID *pFuncPara,
-                                TDE_NOTIFY_MODE_E enNotiType);
+                                TDE_NOTIFY_MODE_E enNotiType, HI_S32 *ps32ReleaseFence);
 
 /*****************************************************************************
  Prototype    : TdeOsiListWaitAllDone

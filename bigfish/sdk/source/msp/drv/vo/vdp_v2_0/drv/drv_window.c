@@ -230,7 +230,7 @@ HI_VOID WinLoadNewMapping(HI_DRV_DISPLAY_E enDisp)
     for (i = 0; i < WINDOW_MAX_NUMBER; i++)
     {
         if (stDispWindow.pstWinArray[enDisp][i]
-            && (stDispWindow.pstWinArray[enDisp][i]->bEnable))
+            && (stDispWindow.pstWinArray[enDisp][i]->bEnable_New))
         {
             stDispWindow.pstWinArray[enDisp][i]->u32VideoLayer
                  = stDispWindow.pstWinArray[enDisp][i]->u32VideoLayerNew;
@@ -239,13 +239,18 @@ HI_VOID WinLoadNewMapping(HI_DRV_DISPLAY_E enDisp)
                  = stDispWindow.pstWinArray[enDisp][i]->u32VideoRegionNoNew;
         }
         else if (stDispWindow.pstWinArray[enDisp][i]
-                && (!stDispWindow.pstWinArray[enDisp][i]->bEnable))
+                && (!stDispWindow.pstWinArray[enDisp][i]->bEnable_New))
         {
             stDispWindow.pstWinArray[enDisp][i]->u32VideoLayer
                  = VDP_LAYER_VID_BUTT;
             stDispWindow.pstWinArray[enDisp][i]->u32VideoRegionNo
                  = VDP_LAYER_VID_BUTT;
         }
+		
+		if (stDispWindow.pstWinArray[enDisp][i])
+		{
+			stDispWindow.pstWinArray[enDisp][i]->bEnable = stDispWindow.pstWinArray[enDisp][i]->bEnable_New;
+		}
     }
 
     return ;
@@ -256,8 +261,10 @@ HI_VOID ISR_CallbackForWinManage(HI_HANDLE hDst, const HI_DRV_DISP_CALLBACK_INFO
 {
     HI_U32 i = 0;
     WINDOW_S *pWin = HI_NULL;
+	HI_SIZE_T irqflag = 0;
 
-    if (spin_trylock(&g_threadIsr_Lock))
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
+	
     {
         /*judge whether the internal hareware-cfg is changed*/
         if (atomic_read(&stDispWindow.bWindowSytemUpdate[hDst]))
@@ -312,9 +319,10 @@ HI_VOID ISR_CallbackForWinManage(HI_HANDLE hDst, const HI_DRV_DISP_CALLBACK_INFO
             atomic_set(&stDispWindow.bWindowSytemUpdate[hDst], 0);
         }
 
-        spin_unlock(&g_threadIsr_Lock);
+        
     }
 
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
     return ;
 }
 
@@ -1106,6 +1114,7 @@ static HI_S32 WinZorderMoveTop(WINDOW_S *pstWin)
     HI_U32 u32Cnt = 0, i = 0;
     HI_S32 ret = HI_SUCCESS;
     HI_U32 u32ZorderBak[WINDOW_MAX_NUMBER] = {0};
+	HI_SIZE_T irqflag = 0;
 
     WinZorderSave(u32ZorderBak, pstWin->enDisp);
     for (u32Cnt = 0; u32Cnt < WINDOW_MAX_NUMBER; u32Cnt++)
@@ -1132,12 +1141,16 @@ static HI_S32 WinZorderMoveTop(WINDOW_S *pstWin)
         pstWin->u32Zorder = i;
     }
 
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
     ret = WindowRedistributeProcess(pstWin);
-    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
-    if (ret)
+	if (ret)
     {
         WinZorderRestore(u32ZorderBak, pstWin->enDisp);
     }
+	
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);	
+    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
+    
 
     return ret;
 }
@@ -1147,6 +1160,7 @@ static HI_S32 WinZorderMoveBottom(WINDOW_S *pstWin)
     HI_U32 u32Cnt = 0, i = 0;
     HI_S32 ret = HI_SUCCESS;
     HI_U32 u32ZorderBak[WINDOW_MAX_NUMBER] = {0};
+	HI_SIZE_T irqflag = 0;
 
     WinZorderSave(u32ZorderBak, pstWin->enDisp);
     for (u32Cnt = 0; u32Cnt < WINDOW_MAX_NUMBER; u32Cnt++)
@@ -1167,11 +1181,15 @@ static HI_S32 WinZorderMoveBottom(WINDOW_S *pstWin)
 
     pstWin->u32Zorder = 0;
 
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
     ret =  WindowRedistributeProcess(pstWin);
+	if (ret)
+        WinZorderRestore(u32ZorderBak, pstWin->enDisp);
+		
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
     (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
 
-    if (ret)
-        WinZorderRestore(u32ZorderBak, pstWin->enDisp);
+    
 
 
     return ret;
@@ -1182,6 +1200,7 @@ static HI_S32 WinZorderMoveUp(WINDOW_S *pstWin)
     HI_U32 u32Cnt = 0;
     HI_S32 ret = HI_SUCCESS;
     HI_U32 u32ZorderBak[WINDOW_MAX_NUMBER] = {0};
+	HI_SIZE_T irqflag = 0;
 
     WinZorderSave(u32ZorderBak, pstWin->enDisp);
     for (u32Cnt = 0; u32Cnt < WINDOW_MAX_NUMBER; u32Cnt++)
@@ -1195,10 +1214,12 @@ static HI_S32 WinZorderMoveUp(WINDOW_S *pstWin)
         }
     }
 
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
     ret =  WindowRedistributeProcess(pstWin);
-    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
-    if (ret)
+	if (ret)
         WinZorderRestore(u32ZorderBak, pstWin->enDisp);
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
+    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
 
     return ret;
 }
@@ -1208,6 +1229,7 @@ static HI_S32 WinZorderMoveDown(WINDOW_S *pstWin)
     HI_U32 u32Cnt = 0;
     HI_S32 ret = HI_SUCCESS;
     HI_U32 u32ZorderBak[WINDOW_MAX_NUMBER] = {0};
+	HI_SIZE_T irqflag = 0;
 
     if (pstWin->u32Zorder == 0)
         return HI_SUCCESS;
@@ -1224,10 +1246,14 @@ static HI_S32 WinZorderMoveDown(WINDOW_S *pstWin)
         }
     }
 
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
     ret = WindowRedistributeProcess(pstWin);
-    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
-    if (ret)
+	if (ret)
         WinZorderRestore(u32ZorderBak, pstWin->enDisp);
+		
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
+    (HI_VOID)WindowRedistributeProcess_Wait(pstWin);
+    
 
     return ret;
 }
@@ -1419,9 +1445,6 @@ HI_S32 WindowRedistributeProcess(WINDOW_S *tmpWindow)
     HI_S32    ret = HI_SUCCESS;
     HI_DRV_DISPLAY_E enDisp  = HI_DRV_DISPLAY_BUTT;
 
-    spin_lock(&g_threadIsr_Lock);
-
-
     /*first,get all the enabled window ptrs.*/
     Win_GetAllEnabledWindows(pstWin, &numofWindow, tmpWindow);
     Win_InsertNodeIntoEnabledWindows(pstWin, &numofWindow, tmpWindow);
@@ -1459,8 +1482,7 @@ HI_S32 WindowRedistributeProcess(WINDOW_S *tmpWindow)
                 winLocationInfor[i].y_end,
                 winLocationInfor[i].zorder);
         }
-
-        spin_unlock(&g_threadIsr_Lock);
+		
         return HI_ERR_VO_OPERATION_DENIED;
     }
 
@@ -1498,7 +1520,6 @@ HI_S32 WindowRedistributeProcess(WINDOW_S *tmpWindow)
                 winZorderInfor[i].layerZorder,
                 winZorderInfor[i].layerNumber);
         }
-        spin_unlock(&g_threadIsr_Lock);
         return HI_ERR_VO_OPERATION_DENIED;
     }
 
@@ -1555,25 +1576,27 @@ HI_S32 WindowRedistributeProcess(WINDOW_S *tmpWindow)
 _REDIS_SUCCESS:
     /*this setting is  atomic, and update the flag, so isr func can do something.*/
     atomic_set(&stDispWindow.bWindowSytemUpdate[tmpWindow->enDisp], 1);
-    spin_unlock(&g_threadIsr_Lock);
     return HI_SUCCESS;
 }
 HI_S32 WindowRedistributeProcess_Wait(WINDOW_S *tmpWindow)
 {
     unsigned int t = 0;
+	HI_S32 s32Ret = HI_SUCCESS;
+	
     while(atomic_read(&stDispWindow.bWindowSytemUpdate[tmpWindow->enDisp]))
     {
         DISP_MSLEEP(5);
         t ++;
 
-        if (t > 10)
+        if (t > 20)
         {
             WIN_WARN("wait for redistribtue end time out!\n");
+			s32Ret = HI_FAILURE;
             break;
         }
     }
 
-    return HI_SUCCESS;
+    return s32Ret;
 }
 
 
@@ -2127,7 +2150,7 @@ HI_S32 WinSendAttrToSource(WINDOW_S *pstWin, HI_DISP_DISPLAY_INFO_S *pstDispInfo
         else
         {
             stInfo.ePixFmt = HI_DRV_PIX_FMT_NV21;
-	    }
+		}
 
 
         pstWin->stWinInfoForDeveloper.bLayerOfWinHasDcmpCapbility = stVideoLayerCap.bDcmp;
@@ -3036,6 +3059,7 @@ HI_S32 WIN_SetAttr(HI_HANDLE hWin, HI_DRV_WIN_ATTR_S *pWinAttr)
     HI_BOOL bVirtual;
     WINDOW_S *pstWinTmp = HI_NULL;
     HI_RECT_S stOutRectOrigin, stOutRectRevised;
+	HI_SIZE_T irqflag = 0;
 
     WinCheckDeviceOpen();
     WinCheckNullPointer(pWinAttr);
@@ -3094,13 +3118,17 @@ HI_S32 WIN_SetAttr(HI_HANDLE hWin, HI_DRV_WIN_ATTR_S *pWinAttr)
         pstWinTmp->stUsingAttr.stOutRect = stOutRectRevised;
 
         /*to judge the layout valid or not.*/
+		spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
         nRet =    WindowRedistributeProcess(pstWinTmp);
-        if (nRet)
+		if (nRet)
         {
+			spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
             DISP_FREE(pstWinTmp);
             WIN_ERROR("reallocate video layer failed in %s!\n", __FUNCTION__);
             return nRet;
         }
+				
+		spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);     
 
         /*update the formal window's initial fmt.*/
         WinUpdateDispInfo_InitialFmt(pstWin, &stDispInfo);
@@ -3339,6 +3367,7 @@ HI_S32 WIN_SetEnable_Seperate(WINDOW_S *pstWin, HI_BOOL bEnable)
     WINDOW_S *pstWinTmp = HI_NULL;
     HI_RECT_S stOutRectOrigin, stOutRectRevised;
     HI_DISP_DISPLAY_INFO_S stDispInfo;
+	HI_SIZE_T irqflag = 0;
 
     memset((void*)&stDispInfo, 0, sizeof(HI_DISP_DISPLAY_INFO_S));
     pstWinTmp = (WINDOW_S *) DISP_MALLOC(sizeof(WINDOW_S));
@@ -3381,14 +3410,22 @@ HI_S32 WIN_SetEnable_Seperate(WINDOW_S *pstWin, HI_BOOL bEnable)
     pstWinTmp->stUsingAttr.stOutRect = stOutRectRevised;
 
     /* when enable,may cause win-layer remapping.*/
+	spin_lock_irqsave(&g_threadIsr_Lock, irqflag);
     ret =  WindowRedistributeProcess(pstWinTmp);
-    if (ret) {
+	if (ret) {
+		spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
         DISP_FREE(pstWinTmp);
         return ret;
     }
-
-    pstWin->bEnable = bEnable;
-    (HI_VOID)WindowRedistributeProcess_Wait(pstWinTmp);
+	
+	pstWin->bEnable_New = bEnable;	
+	spin_unlock_irqrestore(&g_threadIsr_Lock, irqflag);
+	
+	/*if  pstwin's enable status can't be changed in isr, we should change it in API.*/
+    if (HI_SUCCESS != WindowRedistributeProcess_Wait(pstWinTmp))
+    {
+		pstWin->bEnable = bEnable;
+    }
 
     DISP_FREE(pstWinTmp);
     return HI_SUCCESS;
@@ -3683,6 +3720,9 @@ HI_S32 WIN_QueueSyncFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameInfo, HI_U
     pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)pFrameInfo->u32Priv;
 
     pstPriv->eOriginField = HI_DRV_FIELD_ALL;
+
+    // record window get frame time for overlay lowdelay
+    (HI_VOID)HI_DRV_SYS_GetTimeStampMs(&(pFrameInfo->stLowdelayStat.u32WinGetFrameTime));
 
 #ifdef HI_VO_WIN_SYNC_SUPPORT
 	s32Ret = WIN_Sync_QueueFrame(hWin,pFrameInfo,pu32FenceFd);
@@ -4518,6 +4558,35 @@ HI_VOID ISR_WinReleaseUSLFrame(WINDOW_S *pstWin)
     return;
 }
 
+HI_DRV_VIDEO_FRAME_S *ISR_SlaveWinGetQuickFrame(WINDOW_S *pstWin)
+{
+    WINDOW_S *pstMstWin = (WINDOW_S *)(pstWin->pstMstWin);
+    HI_DRV_VIDEO_FRAME_S *pstDstF, *pstRefF, *pstNew;
+
+    // get master window crrent configed frame
+    pstDstF = WinBuf_GetConfigedFrame(&pstMstWin->stBuffer.stWinBP);
+    if (!pstDstF)
+    {
+        return HI_NULL;
+    }
+
+    // get slave window displayed frame
+    pstRefF = WinBuf_GetDisplayedFrame(&pstWin->stBuffer.stWinBP);
+
+    //pstNew = WinBuf_GetFrameByMaxID(&pstWin->stBuffer.stWinBP, pstRefF, RefID, enDstField);
+    pstNew = WinBuf_GetFrameByDstFrame(&pstWin->stBuffer.stWinBP, pstDstF, pstRefF);
+
+#if 0
+    if (pstNew)
+    {
+        pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstNew->u32Priv[0]);
+        printk("S:d=%d,f=%d,F:id =%d,f=%d\n",  RefID, enDstField, pstNew->u32FrameIndex, pstPriv->eOriginField);
+    }
+#endif
+
+    return pstNew;
+}
+
 HI_DRV_VIDEO_FRAME_S *ISR_SlaveWinGetConfigFrame(WINDOW_S *pstWin)
 {
     WINDOW_S *pstMstWin = (WINDOW_S *)(pstWin->pstMstWin);
@@ -5289,7 +5358,16 @@ HI_VOID ISR_WinConfigFrame(WINDOW_S *pstWin, HI_DRV_VIDEO_FRAME_S *pstFrame, con
 		{    
 			ISR_WinConfigFrameNormal(pstWin, pstFrame, pstInfo);
 		}    
-	}    
+	}  
+
+	// record window config frame time for overlay lowdelay
+	if (pstFrame)
+	{
+		(HI_VOID)HI_DRV_SYS_GetTimeStampMs(&(pstFrame->stLowdelayStat.u32WinConfigTime));
+
+		memcpy(&pstWin->stLowdelayStat, &pstFrame->stLowdelayStat, sizeof(HI_DRV_LOWDELAY_STAT_INFO_S));
+	}
+    
 	return ;
 }
 
@@ -5474,7 +5552,16 @@ HI_DRV_VIDEO_FRAME_S * WinGetFrameToConfig(WINDOW_S *pstWin, const HI_DRV_DISP_C
 
     if (pstWin->enType == HI_DRV_WIN_ACTIVE_SLAVE)
     {
-        pstFrame = ISR_SlaveWinGetConfigFrame(pstWin);
+        if (pstWin->bQuickMode)
+        {
+            pstFrame = ISR_SlaveWinGetQuickFrame(pstWin);
+        }
+        else
+        {
+            pstFrame = ISR_SlaveWinGetConfigFrame(pstWin);
+        }
+        
+        #if 0
         if (pstFrame == HI_NULL && pstWin->bQuickMode)
         {
             HI_DRV_VIDEO_FRAME_S *pstDispFrame;
@@ -5483,6 +5570,7 @@ HI_DRV_VIDEO_FRAME_S * WinGetFrameToConfig(WINDOW_S *pstWin, const HI_DRV_DISP_C
 
             WinBuf_FlushWaitingFrame(&pstWin->stBuffer.stWinBP, pstDispFrame);
         }
+        #endif
     }
     else
     {
@@ -5979,7 +6067,7 @@ HI_S32 WinGetProcInfo(HI_HANDLE hWin, WIN_PROC_INFO_S *pstInfo)
         //BP_GetBufState(&pstWin->stBuffer.stBP, (BUF_STT_S *)&(pstInfo->stBufState));
         WinBuf_GetStateInfo(&pstWin->stBuffer.stWinBP, (WB_STATE_S *)&(pstInfo->stBufState));
 
-
+        memcpy(&pstInfo->stLowdelayStat, &pstWin->stLowdelayStat, sizeof(HI_DRV_LOWDELAY_STAT_INFO_S));
     }
     else
     {

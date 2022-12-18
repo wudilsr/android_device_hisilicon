@@ -6678,11 +6678,12 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     VDEC_CHAN_CAP_LEVEL_E       enCapToFmw;
     HI_SYS_MEM_CONFIG_S         stMemConfig = {0};
 
+#if 0
     #if (0 == PRE_ALLOC_VDEC_SCD_MMZ) 
     HI_U32                      ScdBuf = 0;
     HI_U32                      VdhBuf = 0;
     #endif
-
+#endif
     /* check input parameters */
     if (HI_NULL == pstCapParam)
     {
@@ -6776,12 +6777,14 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     pstChan->stOption.s32SlotWidth = 0;
     pstChan->stOption.s32SlotHeight = 0;
 
+#if 0
     #if (1 == PRE_ALLOC_VDEC_SCD_MMZ) 
     pstChan->stOption.s32SCDBufSize = g_stSCDMMZ.u32Size - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
     #else
     VDEC_GetMemConfig(&ScdBuf, &VdhBuf);
     pstChan->stOption.s32SCDBufSize = ScdBuf;
     #endif
+#endif
     /*calculate max width and height*/
     switch (enCapToFmw)
     {
@@ -6789,91 +6792,112 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     case CAP_LEVEL_H264_QCIF:
         pstChan->stOption.s32MaxWidth  = 176;
         pstChan->stOption.s32MaxHeight = 144;
+        pstChan->stOption.s32SCDBufSize = 512 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_MPEG_CIF:
     case CAP_LEVEL_H264_CIF:
         pstChan->stOption.s32MaxWidth  = 352;
         pstChan->stOption.s32MaxHeight = 288;
+        pstChan->stOption.s32SCDBufSize = 768 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_MPEG_D1:
     case CAP_LEVEL_H264_D1:
         pstChan->stOption.s32MaxWidth  = 720;
         pstChan->stOption.s32MaxHeight = 576;
+        pstChan->stOption.s32SCDBufSize = 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_MPEG_720:
     case CAP_LEVEL_H264_720:
         pstChan->stOption.s32MaxWidth  = 1280;
         pstChan->stOption.s32MaxHeight = 736;
+        pstChan->stOption.s32SCDBufSize = 2 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_MPEG_FHD:
     case CAP_LEVEL_H264_FHD:
     case CAP_LEVEL_MVC_FHD:
         pstChan->stOption.s32MaxWidth  = 1920;
         pstChan->stOption.s32MaxHeight = 1088;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_H264_BYDHD:
         pstChan->stOption.s32MaxWidth  = 5632;
         pstChan->stOption.s32MaxHeight = 4224;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_SINGLE_IFRAME_FHD:
         pstChan->stOption.s32MaxWidth  = 1920;
         pstChan->stOption.s32MaxHeight = 1088;
+        pstChan->stOption.s32SCDBufSize = 2 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_1280x800:
         pstChan->stOption.s32MaxWidth  = 1280;
         pstChan->stOption.s32MaxHeight = 800;
+        pstChan->stOption.s32SCDBufSize = 2 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_800x1280:
         pstChan->stOption.s32MaxWidth  = 800;
         pstChan->stOption.s32MaxHeight = 1280;
+        pstChan->stOption.s32SCDBufSize = 2 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_1488x1280:
         pstChan->stOption.s32MaxWidth  = 1488;
         pstChan->stOption.s32MaxHeight = 1280;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_1280x1488:
         pstChan->stOption.s32MaxWidth  = 1280;
         pstChan->stOption.s32MaxHeight = 1488;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_2160x1280:
         pstChan->stOption.s32MaxWidth  = 2160;
         pstChan->stOption.s32MaxHeight = 1280;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_1280x2160:
         pstChan->stOption.s32MaxWidth  = 1280;
         pstChan->stOption.s32MaxHeight = 2176;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_2160x2160:
         pstChan->stOption.s32MaxWidth  = 2160;
         pstChan->stOption.s32MaxHeight = 2176;
+        pstChan->stOption.s32SCDBufSize = 4 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_4096x2160:
         pstChan->stOption.s32MaxWidth  = 4096;
         pstChan->stOption.s32MaxHeight = 2304;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_2160x4096:
         pstChan->stOption.s32MaxWidth  = 2304;
         pstChan->stOption.s32MaxHeight = 4096;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_4096x4096:
         pstChan->stOption.s32MaxWidth  = 4096;
         pstChan->stOption.s32MaxHeight = 4096;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_8192x4096:
         pstChan->stOption.s32MaxWidth  = 8192;
         pstChan->stOption.s32MaxHeight = 4096;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_4096x8192:
         pstChan->stOption.s32MaxWidth  = 4096;
         pstChan->stOption.s32MaxHeight = 8192;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     case CAP_LEVEL_8192x8192:
         pstChan->stOption.s32MaxWidth  = 8192;
         pstChan->stOption.s32MaxHeight = 8192;
+        pstChan->stOption.s32SCDBufSize = 16 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     default:
         pstChan->stOption.s32MaxWidth  = 1920;
         pstChan->stOption.s32MaxHeight = 1088;
+        pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     }
     
@@ -12835,7 +12859,7 @@ static HI_VOID VDEC_GetMemConfig(HI_U32 *pu32ScdBufSize, HI_U32 *pu32VdhBufSize)
     {
         case 512:
         {
-            *pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_512 *1024*1024;
+            //*pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_512 *1024*1024;
 
             TotalFrmNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_512 + HI_VIDEO_MAX_DISP_FRAME_NUM_IN_512;
 
@@ -12863,9 +12887,7 @@ static HI_VOID VDEC_GetMemConfig(HI_U32 *pu32ScdBufSize, HI_U32 *pu32VdhBufSize)
         }
 		case 768:
 		{
-
-			
-			*pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_768 * 1024 * 1024;
+			//*pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_768 * 1024 * 1024;
             TotalFrmNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_768 + HI_VIDEO_MAX_DISP_FRAME_NUM_IN_768;
             if (HI_VIDEO_PRE_CAP_1080P_IN_768 == 1)
             {
@@ -12891,8 +12913,7 @@ static HI_VOID VDEC_GetMemConfig(HI_U32 *pu32ScdBufSize, HI_U32 *pu32VdhBufSize)
 		}
         case 2048:
         {
-            *pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_2048 *1024*1024;
-
+            //*pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_2048 *1024*1024;
             TotalFrmNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_2048 + HI_VIDEO_MAX_DISP_FRAME_NUM_IN_2048;
 
             if (HI_VIDEO_PRE_CAP_1080P_IN_2048 == 1)
@@ -12921,7 +12942,7 @@ static HI_VOID VDEC_GetMemConfig(HI_U32 *pu32ScdBufSize, HI_U32 *pu32VdhBufSize)
         case 1024:
         default:
         {
-            *pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_1024 *1024*1024;
+            //*pu32ScdBufSize = HI_VIDEO_SCD_BUF_SIZE_IN_1024 *1024*1024;
 
             TotalFrmNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_1024 + HI_VIDEO_MAX_DISP_FRAME_NUM_IN_1024;
 
@@ -12953,6 +12974,7 @@ static HI_VOID VDEC_GetMemConfig(HI_U32 *pu32ScdBufSize, HI_U32 *pu32VdhBufSize)
 	{
 		*pu32VdhBufSize = (*pu32VdhBufSize)* 5/4;
 	}
+    *pu32ScdBufSize = 0;
 }
 
 HI_S32 VDEC_DRV_Init(HI_VOID)

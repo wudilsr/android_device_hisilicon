@@ -24,14 +24,16 @@ static void writeMetadata(ANativeWindowBuffer* buf, HI_SVR_PICTURE_S* pics)
 {
     private_handle_t *handle = const_cast<private_handle_t*>(
             reinterpret_cast<const private_handle_t*>(buf->handle));
-    unsigned char* metadata_ptr = (unsigned char *)mmap(NULL, handle->ion_metadata_size,
+    private_metadata_t* metadata_ptr = (private_metadata_t*)mmap(NULL, handle->ion_metadata_size,
             PROT_READ | PROT_WRITE, MAP_SHARED, handle->metadata_fd, 0);
-    if (!metadata_ptr || (void *)-1 == metadata_ptr) {
+    if (MAP_FAILED == metadata_ptr) {
         ALOGV("mmap metadata buffer failed");
         return;
     }
 
-    memcpy(metadata_ptr, pics->priv, pics->u32PrivSize);
+    metadata_ptr->is_priv_framebuf_used = pics->stPrivData.s32IsPrivFrameBufUsed;
+    metadata_ptr->display_cnt = pics->stPrivData.s32DisplayCnt;
+    metadata_ptr->priv_data_start_pos = pics->stPrivData.s32PrivDataStartPos;
 
     if (0 != munmap((void *)metadata_ptr, handle->ion_metadata_size))
     {
@@ -51,8 +53,8 @@ static void getBufferAttr(ANativeWindowBuffer* buf, HI_SVR_PICTURE_S* pics)
 
     pics->s32MetadataBufFd = p_private_handle->metadata_fd;
     pics->hMetadataBuf = p_private_handle->ion_metadata_phy_addr
-            + p_private_handle->ion_metadata_size / 2;
-    pics->u32MetadataBufSize = p_private_handle->ion_metadata_size / 2;
+            + offsetof(private_metadata_t, priv_data_start_pos);
+    pics->u32MetadataBufSize = p_private_handle->ion_metadata_size - offsetof(private_metadata_t, priv_data_start_pos);
 
     pics->s64Pts = -1;
 }
@@ -286,7 +288,7 @@ int HiVSink::queue(HI_SVR_PICTURE_S* picIn)
     (void)native_window_set_crop(w, &rect);
 
     //copy private metadata into metadata buffer
-    if (picIn->priv)
+    if (mUsage & GRALLOC_USAGE_HISI_VDP)
     {
         writeMetadata(buf, picIn);
     }
@@ -406,7 +408,7 @@ int HiVSink::dispatchGetMinBufNb(va_list args)
     }
 
     if (mUsage & GRALLOC_USAGE_HISI_VDP) {
-        minUndequeuedBuffers += 2;
+        minUndequeuedBuffers += 3;
     }
 
     *pstMinBufNb = (HI_U32)minUndequeuedBuffers;
@@ -424,9 +426,10 @@ int HiVSink::dispatchCheckFence(va_list args)
     fenceFd = mFenceMap.valueFor(pic->hBuffer);
     if (fenceFd != -1) {
         sp<Fence> fence = new Fence(fenceFd);
-        ret = fence->wait(1000);
-        if (ret < 0) {
+        ret = fence->waitForever("dispatchCheckFence");
+        if (ret != 0) {
             ALOGE("wait buffer:%#x's fence %d failed", pic->hBuffer, fenceFd);
+            mFenceMap.replaceValueFor(pic->hBuffer, -1);
             return HI_FAILURE;
         }
         t = ns2ms(fence->getSignalTime());

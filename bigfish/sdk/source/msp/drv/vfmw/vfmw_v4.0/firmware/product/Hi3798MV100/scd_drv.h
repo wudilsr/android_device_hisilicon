@@ -361,6 +361,7 @@ typedef struct
   UINT8     IsLastSeg;
   UINT8     IsStreamEnd;
   UINT8     DspCheckPicOverFlag;
+  UINT8     IsFrameLastSegFlag; //通过软件方式判断得到当前seg是一帧的最后一个seg，可以启动该帧的正常解码
   SINT32    PhyAddr;
   SINT32    LenInByte;
   SINT32    StreamID;

@@ -1612,7 +1612,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
         break;
         case HI_SVR_PLAYER_EVENT_BUFFER_STATE:
         {
-            if (NULL == pstruEvent->pu8Data)
+            if (NULL == pstruEvent->pu8Data || false == pHiPlayer->mUnderrun)
             {
                 return HI_SUCCESS;
             }
@@ -1879,6 +1879,12 @@ HiMediaPlayer* HiMediaPlayer::getHiMediaPlayerByAVPlayer(HI_HANDLE hAvPlayer)
     return NULL;
 }
 
+HI_S32 HiMediaPlayer::destroyStaticAVPlayer()
+{
+    return HI_SUCCESS;
+}
+
+
 //add for I frame error detection, valid in OrderOutput mode as follows
 HI_S32 HiMediaPlayer::streamIFrameErrorCB(HI_HANDLE hAvPlayer, HI_UNF_AVPLAY_EVENT_E enEvent, HI_U32 u32Para)
 {
@@ -1976,6 +1982,7 @@ HiMediaPlayer::HiMediaPlayer():
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
+            mUnderrun(true),
             bUnderrunOutside(false),
             mLooper(NULL),
             mLooperHandle(NULL)
@@ -2036,6 +2043,7 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
+            mUnderrun(true),
             bUnderrunOutside(false),
             mLooper(NULL),
             mLooperHandle(NULL)
@@ -3981,7 +3989,7 @@ status_t HiMediaPlayer::seekTo(int position)
 status_t HiMediaPlayer::pause()
 {
     status_t ret = NO_ERROR;
-
+    int nCurrentPosition = 0;
     LOGV("[%s] Call HiMediaPlayer::pause IN ", STR_SWITCH_PG);
 
     if(NULL == mCmdQueue.get())
@@ -3996,7 +4004,7 @@ status_t HiMediaPlayer::pause()
     //    mBufEventControl = BUF_EVENT_NOT_SEND;
     //    mSendBufEventLock.unlock();
     //}
-
+    getCurrentPosition(&nCurrentPosition);
     ret = mCmdQueue->enqueueCommand(new CommandPause(mHandle));
     if (NO_ERROR == ret)
     {
@@ -5411,6 +5419,7 @@ status_t HiMediaPlayer::setSurfaceTexture(const sp<IGraphicBufferProducer> &buff
 //    Mutex::Autolock autoLock(mLock);
     ALOGD("HiMediaPlayer::setSurfaceTexture");
     status_t err;
+    char value[PROPERTY_VALUE_MAX] = {0};
 
     if (bufferProducer != NULL) {
         err = setNativeWindow_l(new Surface(bufferProducer));
@@ -5600,7 +5609,8 @@ sp<subManager> HiMediaPlayer::getSubManager()
 HiMediaPlayer::CommandQueue::CommandQueue(HiMediaPlayer* player)
             :mCurCmd(NULL), mExcuting(true),
             mIsPlayerDestroyed(0), mCmdId(0), mPlayer(player), mState(STATE_IDLE),
-            mCurSeekPoint(0),mHuashuRequestSeekPoint(0), mSyncStatus(NO_ERROR), mSuspendState(STATE_IDLE), mu32LastGetPositionTime(0),ms32LastPosition(0)
+            mCurSeekPoint(0),mHuashuRequestSeekPoint(0), mSyncStatus(NO_ERROR), mSuspendState(STATE_IDLE), mu32LastGetPositionTime(0),ms32LastPosition(0),
+            mnPauseTime(-1), mnLastPositionWhenPause(-1), mnCurrentPlayPostion(-1)
 {
     LOGV("HiMediaPlayer::CommandQueue construct!");
     Mutex::Autolock l(mLock);
@@ -6157,13 +6167,12 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     HI_SVR_PLAYER_MEDIA_S mediaParam = (static_cast<CommandPrepare*>(cmd))->getParam();
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 start_time = getCurrentTime();
-    HI_S32 s32Underrun = 1;
     HI_S32 s32HlsStartNumber = 1;
     /* add for iptv */
     HI_CHAR value[1024] = {0};
     HI_FORMAT_BUFFER_CONFIG_S stBufConfig;
     HI_S64  s64BufMaxSize;
-
+    HI_CHAR aszPropertyValue[PROPERTY_VALUE_MAX] = {0};
     memset(value, 0, 1024);
 
     /* client.apk.name
@@ -6204,15 +6213,37 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_BUFFER_CONFIG, &stBufConfig);
 
     stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_TIME;
-    stBufConfig.s64EventStart  = 200;
+    stBufConfig.s64EventStart  = 300;
     stBufConfig.s64EventEnough = 5000;
-    stBufConfig.s64Total       = 20000;
+    stBufConfig.s64Total       = 100000;
+    if (strstr(mediaParam.aszUrl, "udp://") || strstr(mediaParam.aszUrl, "rtp://"))
+    {
+        LOGV("real time protocol,close underrun");
+        mPlayer->mUnderrun = false;
+    }
+    else
+    {
+        mPlayer->mUnderrun = true;
+    }
+
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("media.hiplayer.underrun", aszPropertyValue, "null") > 0)
+    {
+        if (!strcasecmp("false", aszPropertyValue))
+        {
+            mPlayer->mUnderrun = false;
+        }
+        else if (!strcasecmp("true", aszPropertyValue))
+        {
+            mPlayer->mUnderrun = true;
+        }
+    }
+
     stBufConfig.s64TimeOut     = 2*60*1000;
-    s64BufMaxSize = 40*1024*1024;
+    s64BufMaxSize = 80*1024*1024;
 
     s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_CONFIG, &stBufConfig);
     s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE, &s64BufMaxSize);
-    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &s32Underrun);
     if (HI_SUCCESS != s32Ret)
     {
         LOGV("ERR: HI_SVR_PLAYER_Invoke set buffer config fail, maybe is local file!");
@@ -6223,6 +6254,7 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     LOGV("s64EventEnough:%lld\n", stBufConfig.s64EventEnough);
     LOGV("s64Total:%lld\n", stBufConfig.s64Total);
     LOGV("s64TimeOut:%lld\n", stBufConfig.s64TimeOut);
+    LOGV("mUnderrun:%d\n", mPlayer->mUnderrun);
 
     s32Ret = HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam);
 
@@ -6259,6 +6291,7 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
         else
         {
             pLiveModeString = NULL;
+            ms64StartTime = HI_FORMAT_NO_PTS;
             LOGW("doPrepare, livemode=4, use normal seek!");
         }
 
@@ -6285,6 +6318,11 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
         mState = STATE_ERROR;
         mPlayer->mPrepareResult = UNKNOWN_ERROR;
         return UNKNOWN_ERROR;
+    }
+    s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &(mPlayer->mUnderrun));
+    if (HI_SUCCESS != s32Ret)
+    {
+        LOGV("ERR: HI_SVR_PLAYER_Invoke set buffer config fail, maybe is local file!");
     }
 
     /* We can set seek mode by setprop media.hisiplayer.seekmode *
@@ -6516,7 +6554,8 @@ int HiMediaPlayer::CommandQueue::doStart(Command* cmd)
         LOGW("doStart at wrong state %d", mState);
         return NO_ERROR;
     }
-
+    mnLastPositionWhenPause = -1;
+    mnPauseTime = -1;
     if (STATE_PAUSE == mState || STATE_FWD == mState || STATE_REW == mState)
     {
         if (HI_FAILURE == HI_SVR_PLAYER_Resume(mHandle))
@@ -6609,6 +6648,16 @@ int HiMediaPlayer::CommandQueue::doPause(Command* cmd)
         return NO_ERROR;
     }
 
+    mnLastPositionWhenPause = -1;
+    mnPauseTime = -1;
+    if(APP_TYPE_WASU == mAppType && true == mIsHuashuIptvLiveMod)
+    {
+        mnLastPositionWhenPause = mnCurrentPlayPostion;
+        mnLastPositionWhenPause = mnLastPositionWhenPause - (mnLastPositionWhenPause % 1000);
+        LOGV("mnLastPositionWhenPause is %d when pause in huashu live",mnLastPositionWhenPause);
+        mnPauseTime = time(0);
+    }
+
     if (STATE_FWD == mState || STATE_REW == mState)
     {
         if (HI_FAILURE == HI_SVR_PLAYER_Resume(mHandle))
@@ -6693,6 +6742,7 @@ int HiMediaPlayer::CommandQueue::doGetPosition(Command* cmd)
         {
             LOGV("huashu is seeking,return");
             *position = mHuashuRequestSeekPoint;
+            mnCurrentPlayPostion = *position;
             return NO_ERROR;
         }
 
@@ -6754,13 +6804,14 @@ int HiMediaPlayer::CommandQueue::doGetPosition(Command* cmd)
         {
             /* add for iptv */
             LOGE("ERR: doGetPosition fail!");
+            mnCurrentPlayPostion = *position;
             if (APP_TYPE_WASU == mAppType)
                 return NO_ERROR;
             else
                 return UNKNOWN_ERROR;
         }
     }
-
+    mnCurrentPlayPostion = *position;
     return NO_ERROR;
 }
 
@@ -6840,6 +6891,26 @@ int HiMediaPlayer::CommandQueue::doSeek(Command* cmd)
         mPlayerHandle = mHandle;
 
         LOGW("doSeek: mIsIPTVTimeSeeking=%d", mIsIPTVTimeSeeking);
+
+        LOGV("check if do timeseek,the check value is
+            ms64PauseTime %d mnLastPositionWhenPause %d time(0) %d mState %d mediaParam_t.aszUrl %s position %d",
+            mnPauseTime, mnLastPositionWhenPause, time(0), mState,
+            mediaParam_t.aszUrl, mCurSeekPoint);
+
+        if(mIsHuashuIptvLiveMod && STATE_PAUSE == mState && -1 != mnPauseTime && -1 != mnLastPositionWhenPause
+            && mCurSeekPoint >= mnLastPositionWhenPause)
+        {
+            if (abs((time(0) - mnPauseTime)*1000 - (mCurSeekPoint - mnLastPositionWhenPause)) < 2000)
+            {
+                mPlayer->sendEvent(android::MEDIA_SEEK_COMPLETE);
+                mnPauseTime = -1;
+                mnLastPositionWhenPause = -1;
+                LOGV("pause-->resume oper,do not need timeseek");
+                return NO_ERROR;
+            }
+        }
+        mnPauseTime = -1;
+        mnLastPositionWhenPause = -1;
 
         s32Ret = HI_SVR_PLAYER_Invoke(mPlayerHandle, HI_FORMAT_INVOKE_PRE_CLOSE_FILE , NULL);
         if (HI_SUCCESS != s32Ret)
@@ -8750,6 +8821,10 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
+            }
+            if (HI_SUCCESS == s32Ret)
+            {
+                mPlayer->mUnderrun = s32Arg;
             }
         }
         break;

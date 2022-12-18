@@ -158,6 +158,7 @@ typedef struct OMX_HISI_PARAM_CHANNELATTRIBUTES  {
     OMX_U32 nDecodeMode;
     OMX_U32 nPictureOrder;
     OMX_U32 nLowdlyEnable;
+    OMX_U32 xFramerate;    
 }  OMX_HISI_PARAM_CHANNELATTRIBUTES;
 
 #ifdef ANDROID // native buffer

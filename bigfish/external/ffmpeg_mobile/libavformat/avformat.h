@@ -143,6 +143,7 @@
 
 #include "avio.h"
 #include "libavformat/version.h"
+#include <pthread.h>
 
 struct AVFormatContext;
 
@@ -1353,6 +1354,8 @@ typedef struct hls_stream_info_s {
         int needed, cur_needed;         /* segmeng flag for DISCARD check */
         int hls_seg_start;
         int hls_seg_cur;                /* current segment number of hls_stream */
+        int hls_last_seg_duration;      /*the duration of last segment in m3u8 context*/
+        int hls_package_duration;       /*the value of #EXT-X-TARGETDURATION*/
         int64_t hls_last_load_time;     /* live playlist reload */
     } seg_list;
 
@@ -1391,6 +1394,7 @@ typedef struct hls_stream_info_s {
     int has_read;
     int video_codec;
     int audio_codec;
+    int need_refresh_url;
 } hls_stream_info_t;
 
 /** The information of the URL info */
@@ -1420,6 +1424,7 @@ typedef struct HLSContext_s {
     uint64_t                read_time;           /* time spend on file read */
     hls_segment_t           *cur_seg;            /* current read segment */
     hls_stream_info_t       *cur_hls;            /* current seg_list info */
+    hls_stream_info_t       *m3u8_refresh_info;  /* for m3u8 refresh*/
     int                     cur_stream_seq;
     int                     cur_seq_num;
     uint64_t                real_bw;             /* actual read speed of system,depends on network */
@@ -1442,7 +1447,10 @@ typedef struct HLSContext_s {
     int                     need_fresh_url;
     int                     need_fresh_currentidx;
     uint64_t                seg_download_consume;
+    pthread_t hRefreashThread;
+    pthread_mutex_t stRefreshMutex;
     HLS_URL_INFO_S stHlsUrlInfo;
+    int64_t                 m3u8_first_get_time;
 } HLSContext;
 
 typedef struct m3u9_segment_s

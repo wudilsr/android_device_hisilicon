@@ -23,6 +23,7 @@
 	<string name="str_rename">Rename</string>
 	<string name="str_new">New</string>
 	<string name="search">Search</string>
+    <string name="preview">Preview</string>
 	<string name="eject_cdrom">Eject_CDROM</string>
 	<string name="help">Help</string>
 	<string name="no_file">No such file or directory</string>
@@ -249,4 +250,8 @@
        <string name="upnp_tab_title">UPnP</string>
        <string name="baidu_pcs">Baidu PCS</string>
        <string name="no_activity_info">no app</string>
+       <string name="time_demo">2016/02/23 15:52</string>
+       <string name="file_size_1">File Size : </string>
+       <string name="file_type">File Type : </string>
+       <string name="last_modified">Last Modified Time : </string>
 </resources>

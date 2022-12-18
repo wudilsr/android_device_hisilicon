@@ -141,6 +141,19 @@ int HiSysManagerService::removeNetRoute(String8 interfacename){
     int ret = do_removeNetRoute(mname);
     return ret;
 }
+
+int HiSysManagerService::setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize){
+    const char* mtdname = tdname.string();
+    const char* mfilename = filename.string();
+    return do_setHdmiHDCPKey(mtdname,offset,mfilename,datasize);
+}
+int HiSysManagerService::getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize){
+    const char* mtdname = tdname.string();
+    const char* mfilename = filename.string();
+    return do_getHdmiHDCPKey(mtdname,offset,mfilename,datasize);
+}
+
+
 int HiSysManagerService::setHDCPKey(String8 tdname,int offset,String8 filename,int datasize){
     const char* mtdname = tdname.string();
     const char* mfilename = filename.string();
@@ -381,5 +394,17 @@ int HiSysManagerService::getDRMKey(String8 tdname,int offset,String8 filename,in
     const char* mtdname = tdname.string();
     const char* mfilename = filename.string();
     return do_getDRMKey(mtdname,offset,mfilename,datasize);
+}
+int HiSysManagerService::userDataRestoreIptv(){
+    const char* cmd0 = "system/bin/IptvRestore.sh";
+    return system(cmd0);
+}
+int HiSysManagerService::setUIAsyncCompose(int mode){
+    if(mode){
+        property_set("service.graphic.async.compose","true");
+    }else{
+        property_set("service.graphic.async.compose","false");
+    }
+    return 1;
 }
 };

@@ -1121,6 +1121,34 @@ public class InvokeTestCase
         mCommon2.setInvokeArgsDialog2(Notify);
 
     }
+	public void TestCMD_GET_IP_PORT()
+	{
+        final Method method = GetInvokeMethod();
+        Parcel request = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        request.writeInterfaceToken(IMEDIA_PLAYER);
+        request.writeInt(HiMediaPlayerInvoke.CMD_GET_IP_PORT);
+        try
+        {
+            method.invoke(mMediaPlayer, request, reply);
+        }
+        catch(Exception ee)
+        {
+            Log.e(LOG_TAG, "TestCMD_GET_IP_PORT fail ");
+            return;
+        }
+        reply.setDataPosition(0);
+        mRet = reply.readInt();
+        if (NO_ERROR != mRet)
+        {
+            Log.e(LOG_TAG, "TestCMD_GET_IP_PORT Fail");
+            mCommon.ShowResult("TestCMD_GET_IP_PORT Fail");
+            return;
+        }
+        String strIPPort = reply.readString();
+        mstrResult = "current play IP and Port info: " + strIPPort;
+        mCommon.ShowResult(mstrResult);
+	}
 
 
     public void TestCMD_GET_BUFFERTIME_CONFIG()

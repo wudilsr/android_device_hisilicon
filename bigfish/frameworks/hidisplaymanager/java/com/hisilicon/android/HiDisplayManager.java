@@ -519,7 +519,26 @@ public class HiDisplayManager  {
             return null;
         }
     }
-
+    /**
+     * Get TV Manufacture Information.
+     * <p>
+     * Get TV Manufacture Information.<br>
+     * The Information can be obtained includes TV manufacture name,TV sink name,
+     * Product code,Serial numeber of Manufacture,the week of manufacture,the year of manufacture.
+     * <br>
+     * @return a ManufactureInfo object if getting successfully, null otherwise.
+     */
+    public ManufactureInfo GetManufactureInfo()
+    {
+        try
+        {
+            return m_Display.getManufactureInfo();
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+    }
     /**
      * Set video aspect ratio.
      * <p>

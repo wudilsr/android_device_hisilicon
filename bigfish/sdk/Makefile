@@ -21,25 +21,9 @@ rebuild: distclean
 	$(AT)make build
 
 #====================================================================================
-#                   distclean
-#====================================================================================
-.PHONY: distclean
-#++++++++++++++++++++++++++++++++++++++++++++++++++++
-distclean: uninstall clean
-	$(AT)rm -rf $(IMAGE_DIR)/fastboot-burn.bin
-	$(AT)rm -rf $(IMAGE_DIR)/hi_kernel.bin
-	$(AT)rm -rf $(IMAGE_DIR)/rootfs*
-	$(AT)cd $(INCLUDE_DIR)      && rm -rf *
-	$(AT)cd $(STATIC_LIB_DIR)   && rm -rf *
-	$(AT)cd $(SHARED_LIB_DIR)   && rm -rf *
-	$(AT)cd $(EXTERN_LIB_DIR)   && rm -rf *
-	$(AT)cd $(MODULE_DIR)       && rm -rf *
-	$(AT)cd $(ROOTFS_DIR)       && rm -rf *
-
-#====================================================================================
 #                   global targets
 #====================================================================================
-.PHONY: all clean install uninstall
+.PHONY: all distclean clean install uninstall
 #++++++++++++++++++++++++++++++++++++++++++++++++++++
 INSTALL_OBJS :=
 
@@ -51,7 +35,17 @@ INSTALL_OBJS += rootbox_install
 
 all:  tools hiboot linux common msp rootfs component plugin
 
-clean: sample_clean plugin_clean component_clean rootfs_clean msp_clean common_clean linux_clean hiboot_clean tools_clean
+distclean: clean
+clean: uninstall sample_clean plugin_clean component_clean rootfs_clean msp_clean common_clean linux_clean hiboot_clean tools_clean
+	$(AT)rm -rf $(IMAGE_DIR)/fastboot-burn.bin
+	$(AT)rm -rf $(IMAGE_DIR)/hi_kernel.bin
+	$(AT)rm -rf $(IMAGE_DIR)/rootfs*
+	$(AT)cd $(INCLUDE_DIR)      && rm -rf *
+	$(AT)cd $(STATIC_LIB_DIR)   && rm -rf *
+	$(AT)cd $(SHARED_LIB_DIR)   && rm -rf *
+	$(AT)cd $(EXTERN_LIB_DIR)   && rm -rf *
+	$(AT)cd $(MODULE_DIR)       && rm -rf *
+	$(AT)cd $(ROOTFS_DIR)       && rm -rf *
 
 install: $(INSTALL_OBJS)
 ifeq ($(CFG_HI_FS_BUILDIN),y)

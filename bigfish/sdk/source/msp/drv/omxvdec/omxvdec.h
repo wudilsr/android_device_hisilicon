@@ -20,6 +20,10 @@
 #include "hi_drv_sys.h"       //HI_DRV_SYS_GetTimeStampMs依赖
 #include "hi_drv_proc.h"      //proc相关接口依赖
 #include "drv_omxvdec.h"
+#include "drv_omxvdec_pts_recv.h"
+
+#include "hi_debug.h"
+
 
 #define BPP_MODE_ENABLE                   (0)
 
@@ -38,13 +42,26 @@
 #define OMX_VER  	 		       	      (8)
 #define OMX_PTS                           (9)
 
+#define OMX_LOWDELAY_REC_NODE_NUM           10
+#define OMX_LOWDELAY_REC_ITEM               9
+#define OMX_LOWDELAY_REC_USERTAG            0
+#define OMX_LOWDELAY_REC_NODE_STATE         1
+#define OMX_LOWDELAY_REC_ETB_TIME           2
+#define OMX_LOWDELAY_REC_VFMW_RCV_STRM_TIME 3
+#define OMX_LOWDELAY_REC_VFMW_RLS_STRM_TIME 4
+#define OMX_LOWDELAY_REC_VFMW_RPO_IMG_TIME  5
+#define OMX_LOWDELAY_REC_VPSS_RCV_IMG_TIME  6
+#define OMX_LOWDELAY_REC_VPSS_RPO_IMG_TIME  7
+#define OMX_LOWDELAY_REC_TOTAL_USED_TIME    8
+#define OMX_LOWDELAY_REC_NODE_FREE          0
+#define OMX_LOWDELAY_REC_NODE_WRITED        1
 extern HI_U32 g_TraceOption;
 
 #ifndef HI_ADVCA_FUNCTION_RELEASE
 #define OmxPrint(flag, format,arg...) \
 	do { \
 		if (OMX_ALWS == flag || (0 != (g_TraceOption & (1 << flag)))) \
-		    printk("<OMXVDEC> " format, ## arg); \
+		    printk("<OMXVDEC:%d> " format, __LINE__, ## arg); \
 	} while (0)
 #else
 #define OmxPrint(flag, format,arg...)    ({do{}while(0);0;})
@@ -105,6 +122,16 @@ typedef struct {
   VOID* 	 pProcessorFunc; 	  /*processor external functions*/
 }OMXVDEC_FUNC;
 
+typedef struct
+{
+    HI_U32 usrtag_start_time;
+    HI_U32 interval;
+    HI_U32 current_tag;
+    HI_U32 time_record[OMX_LOWDELAY_REC_NODE_NUM + 1][OMX_LOWDELAY_REC_ITEM];
+    HI_U32 time_cost_sum;
+    HI_U32 average_time_cost;
+    HI_U32 rec_index;
+}OMXVDEC_LOWDELAY_PROC_RECORD;
 typedef enum {
 	ALLOC_BY_MMZ = 0,
 	ALLOC_BY_PRE,
@@ -113,5 +140,7 @@ typedef enum {
 
 HI_VOID omxvdec_release_mem(MMZ_BUFFER_S *pMMZ_Buf, eMEM_ALLOC eMemAlloc);
 
+
+UINT32 OMX_GetTimeInMs(VOID);
 #endif
 

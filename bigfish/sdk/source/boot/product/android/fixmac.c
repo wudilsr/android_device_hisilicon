@@ -22,9 +22,12 @@
 #endif
 
 #include "hi_flash.h"
+#include "hi_unf_otp.h"
 
 #define CFG_TIMERBASE23         REG_BASE_TIMER23
-#define CFG_TIMER2_CTRL         0xC2 
+#define CFG_TIMER2_CTRL         0xC2
+#define OTP_MAC         	0x294 
+#define OTP_MAC_LOCK         	0x13 
 #define READ_TIMER2         \
 	(*(volatile unsigned long *)(CFG_TIMERBASE23 + REG_TIMER_VALUE))
 
@@ -60,6 +63,12 @@ static void mac_to_string(char *eth_str, unsigned char *mac)
 {
 	sprintf(eth_str, "%02X:%02X:%02X:%02X:%02X:%02X",
 			mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+}
+
+static void otp_mac_to_string(char *eth_str, unsigned char *mac)
+{
+	sprintf(eth_str, "%X%X:%X%X:%X%X:%X%X:%X%X:%X%X",
+			mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], mac[6], mac[7], mac[8], mac[9], mac[10], mac[11]);
 }
 
 static void random_ether_addr(unsigned char *mac)
@@ -100,13 +109,46 @@ int set_default_ethaddr(void)
 	struct device_info *tmp_device_info = NULL;
 	unsigned char mac[6];
 	struct mtd_info_ex *mtd_info = NULL;
-
+	unsigned char otp_c[12];
+	char otp_mac[MAC_LENTH];
+	HI_U8 otp_lock;
+	HI_U32 i = 0;
+	
 #ifndef HI_MINIBOOT_SUPPORT
 	__raw_writel(0, CFG_TIMERBASE23 + REG_TIMER_CONTROL);
 	__raw_writel(~0, CFG_TIMERBASE23 + REG_TIMER_RELOAD);
 	__raw_writel(CFG_TIMER2_CTRL, CFG_TIMERBASE23 + REG_TIMER_CONTROL);
 #endif
-
+	/*
+	 * sample for telecom test:otp check
+	 */
+	/*otp_lock = HI_OTP_ReadByte(OTP_MAC_LOCK);
+	if((otp_lock & 0x4) != 0)
+	{  
+	    for(i=0;i < 12;i++)
+	    {
+	        otp_c[i] = HI_OTP_ReadByte(OTP_MAC + i);
+	    }
+	    otp_mac_to_string(otp_mac,otp_c);
+	    Ret = check_mac_format(otp_mac);
+	    if (Ret == 0) 
+	    {
+	        printf("read otp mac success!\n");
+	        printf("otp mac:%s\n", otp_mac);
+	        setenv("ethaddr", otp_mac);
+	        return FIXMAC_SUCCESS;
+	    }
+	    else
+	    {
+	        printf("check otp mac format failed\n");
+	        return FIXMAC_ERROR;
+	    }
+	}	
+	else
+	{
+	    printf("otp mac not lock\n");
+	}*/
+	
 	HI_Flash_InterInfo_S pFlashInfo;
 	flashhandle = HI_Flash_OpenByName(FASTBOOT_DEVICE_INFO_NAME);
 	if ((0 == flashhandle) || (HI_INVALID_HANDLE == flashhandle))

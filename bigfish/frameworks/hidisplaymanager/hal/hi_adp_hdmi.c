@@ -9,8 +9,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+
 #include "hi_unf_hdmi.h"
 #include "hi_unf_edid.h"
+#include "hi_mpi_edid.h"
 #include "hi_unf_disp.h"
 #include "hi_unf_pdm.h"
 #include "hi_adp.h"
@@ -18,9 +20,11 @@
 #include <hidisplay.h>
 #include <cutils/properties.h>
 #include "hi_drv_vinput.h"
+#include "hi_flash.h"
 
 #define DEBUG_HDMI_INIT 1
 #define BUFLEN  PROP_VALUE_MAX
+#undef LOG_TAG
 #define LOG_TAG "HI_ADP_HDMI"
 
 #define KPC_EV_KEY_PRESS          (0x1)
@@ -31,12 +35,51 @@
 #define NOT_DETECTED_CEC           1
 #define DETECTED_BUT_NO_CEC        2
 #define DETECTED_AND_WITH_CEC      3
+
 HI_U32 nCecMode = NOT_DETECTED_CEC;
 HI_U32 timerType = 0; // 0 is detect cec, 1 is cec suspend
 HI_U8 hdmiEDIDBuf[512];
 HI_U32 hdmiEDIDBuflen = 512;
 HI_U32 hdmiEDIDFlag = 0;
 HI_U32 hdmiHotPlugCase = 0;
+
+HI_U32  g_HotPlugDetected = 0;
+
+
+
+static int HDMI_TV_MAX_SUPPORT_FMT[] = {
+
+    HI_UNF_ENC_FMT_3840X2160_60,     /**<4K 60 Hz*/
+    HI_UNF_ENC_FMT_3840X2160_50,     /**<4K 50 Hz*/
+    HI_UNF_ENC_FMT_3840X2160_30,     /**<4K 30 Hz*/
+    HI_UNF_ENC_FMT_3840X2160_25,     /**<4K 25 Hz*/
+    HI_UNF_ENC_FMT_3840X2160_24,     /**<4K 24 Hz*/
+    HI_UNF_ENC_FMT_1080P_60,         /**<1080p 60 Hz*/
+    HI_UNF_ENC_FMT_1080P_50,         /**<1080p 50 Hz*/
+    HI_UNF_ENC_FMT_1080P_30,         /**<1080p 30 Hz*/
+    HI_UNF_ENC_FMT_1080P_25,         /**<1080p 25 Hz*/
+    HI_UNF_ENC_FMT_1080P_24,         /**<1080p 24 Hz*/
+
+    HI_UNF_ENC_FMT_1080i_60,         /**<1080i 60 Hz*/
+    HI_UNF_ENC_FMT_1080i_50,         /**<1080i 50 Hz*/
+
+    HI_UNF_ENC_FMT_720P_60,          /**<720p 60 Hz*/
+    HI_UNF_ENC_FMT_720P_50,          /**<720p 50 Hz */
+
+    HI_UNF_ENC_FMT_576P_50,          /**<576p 50 Hz*/
+    HI_UNF_ENC_FMT_480P_60,          /**<480p 60 Hz*/
+
+    HI_UNF_ENC_FMT_PAL,              /* B D G H I PAL */
+    HI_UNF_ENC_FMT_PAL_N,            /* (N)PAL        */
+    HI_UNF_ENC_FMT_PAL_Nc,           /* (Nc)PAL       */
+
+    HI_UNF_ENC_FMT_NTSC,             /* (M)NTSC       */
+    HI_UNF_ENC_FMT_NTSC_J,           /* NTSC-J        */
+    HI_UNF_ENC_FMT_NTSC_PAL_M,       /* (M)PAL        */
+
+    HI_UNF_ENC_FMT_SECAM_SIN,        /**< SECAM_SIN*/
+    HI_UNF_ENC_FMT_SECAM_COS,        /**< SECAM_COS*/
+};
 
 typedef struct hiHDMI_ARGS_S
 {
@@ -60,6 +103,8 @@ extern int displayType;
 extern int cvbs_dac_port;
 extern int hdmi_enable;
 extern int cvbs_enable;
+//extern HI_U32 TVHMax ;
+//extern HI_U32 TVWMax ;
 
 User_HDMI_CallBack pfnHdmiUserCallback = NULL;
 HI_UNF_HDMI_STATUS_S           stHdmiStatus;
@@ -67,6 +112,10 @@ HI_UNF_HDMI_ATTR_S             stHdmiAttr;
 HI_UNF_EDID_BASE_INFO_S        stSinkCap;
 #ifdef HI_HDCP_SUPPORT
 const HI_CHAR * pstencryptedHdcpKey = "/system/etc/EncryptedKey_332bytes.bin";
+#define HDCP_KEY_LOCATION           "deviceinfo"
+#define DRM_KEY_OFFSET              (128 * 1024)  // DRM KEY from bottom
+#define HDCP_KEY_OFFSET_DEFAULT     (4 * 1024)    // HDMI KEY offset base on DRM KEY
+#define HDCP_KEY_LEN                (332)
 #endif
 
 static HI_CHAR *g_pDispFmtString[HI_UNF_ENC_FMT_BUTT+1] = {
@@ -150,7 +199,138 @@ extern int baseparam_save(void);
 int getOptimalFormat();
 int isCapabilityChanged(int getCapResult,HI_UNF_EDID_BASE_INFO_S *pstSinkAttr);
 void capToString(char* buffer,HI_UNF_EDID_BASE_INFO_S cap);
+void setTVproperty()
+{
+    char tmpdpi[64]="";
+	char tmpsize[64]="";
+	display_format_e fmt;
+	char tvdpi1[][64] ={"1920*1080",
+                       "1920*1080",
+                       "1920*1080",
+                       "1920*1080",
+                       "1920*1080",
 
+                       "1920*1080",
+                       "1920*1080",
+
+                       "1280*720",
+                       "1280*720",
+
+                       "720*576",
+                       "720*480",
+
+                       "720*576",
+                       "720*576",
+                       "720*576",
+
+                       "720*480",
+                       "720*480",
+                       "720*480",
+
+	                   "",
+			           "",
+			           "1920*1080",
+			           "1280*720",
+			           "1280*720",
+
+	                   "640*480",
+	                   "800*600",
+	                   "1024*768",
+	                   "1280*720",
+	                   "1280*800",
+	                   "1280*1024",
+	                   "1360*768",
+	                   "1366*768",
+	                   "1400*1050",
+	                   "1440*900",
+	                   "1440*900",
+	                   "1600*900",
+	                   "1600*1200",
+	                   "1680*1050",
+	                   "1680*1050",
+	                   "1920*1080",
+	                   "1920*1200",
+	                   "1920*1440",
+	                   "2048*1152",
+	                   "2560*1440",
+	                   "2560*1600",
+
+                       };
+	char tvdpi2[][64]={"3840*2160",
+			          "3840*2160",
+			          "3840*2160",
+			          "3840*2160",
+			          "3840*2160",
+
+			          "4096*2160",
+			          "4096*2160",
+			          "4096*2160",
+			          "4096*2160",
+			          "4096*2160",
+
+			          "3840*2160",
+			          "3840*2160",
+			          "1280*720",
+			          "1920*1080",
+			          "1920*1080",
+			          "1920*1080",
+			          "1920*1080",
+			          "",
+			           };
+	int ret = get_format(&fmt);
+	if(ret == HI_SUCCESS)
+	{
+            if(fmt >= DISPLAY_FMT_3840X2160_24 && fmt < DISPLAY_FMT_BUTT)
+                strcpy(tmpdpi,tvdpi2[fmt-DISPLAY_FMT_3840X2160_24]);
+            else if(fmt >=DISPLAY_FMT_1080P_60 && fmt <= DISPLAY_FMT_VESA_2560X1600_60_RB)
+                strcpy(tmpdpi,tvdpi1[fmt]);
+            else
+                ALOGE("the format not surport!\n");
+	}
+	else
+	{
+            fmt = DISPLAY_FMT_BUTT;
+            ALOGE("get formate failed!\n");
+	}
+
+//    sprintf(tmpsize,"%d",(int)(sqrt(TVHMax*TVHMax +TVWMax*TVWMax)/2.54 +0.5));
+	property_set("persist.sys.tv.name",stSinkCap.stMfrsInfo.u8MfrsName);
+	property_set("persist.sys.tv.type",stSinkCap.stMfrsInfo.u8pSinkName);
+//	property_set("persist.sys.tv.size",tmpsize);
+	property_set("persist.sys.tv.dpi",tmpdpi);
+	return ;
+}
+
+#if 0
+int getTVSize(HI_U32 *TVHight, HI_U32 *TVWidth)
+{
+    ALOGE("***********getTVSize!************\n");
+    HI_U8 u8EdidData[514];
+    HI_U32 edidlen = 0;
+    EDID_INFO_S stEdidInfo;
+    int ret = -1;
+    memset(u8EdidData,0x0,sizeof(u8EdidData));
+    memset(&stEdidInfo,0x0,sizeof(EDID_INFO_S));
+
+    ret = HI_UNF_HDMI_ReadEDID(u8EdidData, &edidlen);
+    if(ret != HI_SUCCESS)
+    {
+        ALOGE("read edid data error!");
+        return -1;
+    }
+    ret = HI_MPI_EDID_EdidParse(u8EdidData, edidlen, &stEdidInfo);
+    if(ret != HI_SUCCESS)
+    {
+        ALOGE("parse edid data error!");
+        return -1;
+    }
+    *TVHight = stEdidInfo.stDevDispInfo.u32ImgeHMax;
+    *TVWidth = stEdidInfo.stDevDispInfo.u32ImgeWMax;
+    HI_MPI_EDID_EdidRelease(&stEdidInfo);
+    ALOGE("the width of TV is %d, the hight of TV is %d\n",*TVWidth,*TVHight);
+    return 0;
+}
+#endif
 HI_UNF_ENC_FMT_E stringToUnfFmt(HI_CHAR *pszFmt)
 {
     HI_S32 i;
@@ -211,6 +391,32 @@ static HI_VOID HDMI_PrintAttr(HI_UNF_HDMI_ATTR_S *pstHDMIAttr)
     return;
 }
 
+int getCurrentMaxSupportFmt(HI_UNF_EDID_BASE_INFO_S *pstSinkCapAttr)
+{
+    int i;
+    int MaxFmtListLen = sizeof(HDMI_TV_MAX_SUPPORT_FMT) / sizeof(HDMI_TV_MAX_SUPPORT_FMT[0]);
+    ALOGE("MaxFmtListLen = %d", MaxFmtListLen);
+
+    if (pstSinkCapAttr == NULL)
+    {
+        ALOGE("<ERROR>: getCurrentMaxSupportFmt Bad Input !");
+        return HI_FAILURE;
+    }
+
+    for (i = 0; i < MaxFmtListLen; i++)
+    {
+        int format = HDMI_TV_MAX_SUPPORT_FMT[i];
+        if (HI_TRUE == pstSinkCapAttr->bSupportFormat[format])
+        {
+            ALOGE("Find Max Support Format Success, Value -> [%d]", format);
+            return format;
+        }
+    }
+
+    ALOGE("Can't Find Max Support Format, Use Default Format- > HI_UNF_ENC_FMT_720P_50");
+    return HI_UNF_ENC_FMT_720P_50;
+}
+
 HI_BOOL isMutexStrategyEnabledForHdmiAndCvbs()
 {
     char buf_cvbs_enable[BUFLEN];
@@ -247,6 +453,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     HDMI_ARGS_S     *pArgs  = (HDMI_ARGS_S*)pPrivateData;
     HI_UNF_HDMI_ID_E       hHdmi   =  pArgs->enHdmi;
     display_format_e            format = DISPLAY_FMT_1080i_60;
+    display_format_e        enMaxFormat = HI_UNF_ENC_FMT_720P_50;
 
 #ifdef HI_HDCP_SUPPORT
     static HI_U8 u8FirstTimeSetting = HI_TRUE;
@@ -295,6 +502,8 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         return;
     }
 
+    //getTVSize(&TVHMax,&TVWMax);
+
     /*hdmi adapt begin*/
     HI_UNF_HDMI_GetAttr(hHdmi, &stHdmiAttr);
     getCapRet = HI_UNF_HDMI_GetSinkCapability(hHdmi, &stSinkCap);
@@ -304,8 +513,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     {
         ALOGE("4k[%d] = %d \n", j, stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_24+j]);
     }
-    ALOGE("\n optimum format is %d \n",(int)stSinkCap.enNativeFormat);
-
+    ALOGE("\n optimum format is %d \n",(int)stSinkCap.enNativeFormat);	
     /* stHdmiAttr.bEnableHdmi */
     if(getCapRet == HI_SUCCESS)
     {
@@ -371,7 +579,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
             }
             if((fmtRet == HI_SUCCESS) && (format < DISPLAY_FMT_BUTT)) {
                 ALOGE("current format ok" );
-                set_format(format);
+                //set_format(format);
             } else {
                 ALOGE("current format err, reset to 720P60Hz" );
                 set_format((display_format_e)stSinkCap.enNativeFormat);
@@ -384,7 +592,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
             displayType = 2;
             if((fmtRet == HI_SUCCESS) && (format < DISPLAY_FMT_BUTT)) {
                 ALOGE("current format ok" );
-                set_format(format);
+               // set_format(format);
             } else {
                 ALOGE("current format err, reset to 1024x768@P60Hz" );
                 set_format(HI_UNF_ENC_FMT_VESA_1024X768_60);
@@ -473,6 +681,16 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                     stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
                 }
             }
+            else if (strcmp("max_fmt", perfer) == 0)
+            {
+                enMaxFormat = getCurrentMaxSupportFmt(&stSinkCap);
+                if (enMaxFormat == HI_FAILURE)
+                {
+                    ALOGE("Get Current Max Support Format Failed, Use Default Format HI_UNF_ENC_FMT_720P_50");
+                    enMaxFormat = HI_UNF_ENC_FMT_720P_50;
+                }
+                stSinkCap.enNativeFormat = enMaxFormat;
+            }
 
             // native format err case
             if(stSinkCap.enNativeFormat > HI_UNF_ENC_FMT_720P_50)
@@ -515,7 +733,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                     if((fmtRet == HI_SUCCESS)
                         && (format == (display_format_e)stSinkCap.enNativeFormat)) {
                         ALOGE("\n tv: current is optimum format" );
-                        set_format(format);
+                        // set_format(format);
                     } else {
                         ALOGE("\n tv: set optimum format \n");
                         set_format((display_format_e)stSinkCap.enNativeFormat);
@@ -527,7 +745,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                     if( (fmtRet == HI_SUCCESS)
                         && ((HI_UNF_ENC_FMT_E)format == HI_UNF_ENC_FMT_VESA_1024X768_60) ) {
                         ALOGE("\n pc: current is optimum format" );
-                        set_format(format);
+                      //  set_format(format);
                     } else {
                         ALOGE("\n pc: set optimum format \n");
                         set_format(HI_UNF_ENC_FMT_VESA_1024X768_60);
@@ -556,7 +774,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                 else
                 {
                     ALOGE("current format ok" );
-                    set_format(format);
+                   // set_format(format);
                 }
             }
         }
@@ -584,7 +802,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                 {
                     if((fmtRet == HI_SUCCESS) && (format < DISPLAY_FMT_BUTT)) {
                         ALOGE("\n tv: current format ok" );
-                        set_format(format);
+                        //set_format(format);
                     } else {
                         ALOGE("\n tv: set optimum format \n");
                         set_format((display_format_e)stSinkCap.enNativeFormat);
@@ -595,7 +813,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                 {
                     if((fmtRet == HI_SUCCESS) && (format < DISPLAY_FMT_BUTT)) {
                         ALOGE("\n pc: current format ok" );
-                        set_format(format);
+                       // set_format(format);
                     } else {
                         ALOGE("\n pc: set optimum format \n");
                         set_format(HI_UNF_ENC_FMT_VESA_1024X768_60);
@@ -606,7 +824,14 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         } // end of else //2.2 capability is changed
     } // end of if(getCapRet == HI_SUCCESS)
     /* hdmi adapt end*/
+	char tmp1[92] = "";
+	char tmp2[92] = "";
+	property_get("ro.product.target",tmp1,"");
+	property_get("ro.product.target",tmp2,"");
 
+	if(strcmp(tmp1,"unicom")==0||
+		strcmp(tmp2,"telecom")==0)
+        setTVproperty();
     /* hdmi attr*/
     if(HI_TRUE == stHdmiAttr.bEnableHdmi)
     {
@@ -642,6 +867,8 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         //HDCP Enable use default setting!!
     }
 #endif
+
+    g_HotPlugDetected = 1;
 
     ret = HI_UNF_HDMI_SetAttr(hHdmi, &stHdmiAttr);
 
@@ -959,6 +1186,7 @@ void HDMI_Suspend_Timeout(int sig)
 
 HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateData)
 {
+    HI_UNF_HDMI_STATUS_S stHdmiStatus;
     //1.1 if hdmi suspend is disable, do nothing
     if(0 == get_HDMI_Suspend_Enable())
     {
@@ -974,16 +1202,29 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
         case HI_UNF_HDMI_EVENT_HOTPLUG:
             ALOGE("HDMI_Suspend_Callback: hdmi hotplug");
             if(nCecMode != DETECTED_AND_WITH_CEC) {
+                /*
                 alarm(0);
                 alarm(15);
                 timerType = 0;
+                */
+            }
+            usleep(200*1000); //sleep 200ms, and then detect hdmi status again
+            HI_UNF_HDMI_GetStatus(g_stHdmiArgs.enHdmi, &stHdmiStatus);
+            if ((HI_TRUE == stHdmiStatus.bConnected) && (HI_TRUE == stHdmiStatus.bSinkPowerOn)) {
+                ALOGE("HDMI_Suspend_Callback: HDMI <HOTPLUG>, so cancel suspend timer");
+                alarm(0);
             }
             break;
         case HI_UNF_HDMI_EVENT_NO_PLUG:
             ALOGE("HDMI_Suspend_Callback: hdmi unplug");
-            alarm(0);
-            alarm(get_HDMI_Suspend_Time()*60);
-            timerType = 1;
+            if (g_HotPlugDetected) {
+                ALOGE("HDMI_Suspend_Callback: try to suspend");
+                alarm(0);
+                alarm(get_HDMI_Suspend_Time()*60);
+                timerType = 1;
+            }
+            else
+                ALOGE("HDMI_Suspend_Callback: no HOTPLUG yet, so do not suspend");
             break;
         case HI_UNF_HDMI_EVENT_RSEN_CONNECT:
             ALOGE("HDMI_Suspend_Callback: hdmi connected");
@@ -995,6 +1236,12 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
                 nCecMode = DETECTED_BUT_NO_CEC;
             }
             ALOGD("HDMI_Suspend_Callback: hdmi connected, nCecMode = %d", nCecMode);
+            usleep(200*1000); //sleep 200ms, and then detect hdmi status again
+            HI_UNF_HDMI_GetStatus(g_stHdmiArgs.enHdmi, &stHdmiStatus);
+            if ((HI_TRUE == stHdmiStatus.bConnected) && (HI_TRUE == stHdmiStatus.bSinkPowerOn)) {
+                ALOGE("HDMI_Suspend_Callback: HDMI <RSEN_CONNECT>, so cancel suspend timer");
+                alarm(0);
+            }
             break;
         case HI_UNF_HDMI_EVENT_RSEN_DISCONNECT:
             ALOGE("HDMI_Suspend_Callback: hdmi disconnected");
@@ -1115,6 +1362,155 @@ HI_S32 HIADP_HDMI_SetHDCPKey(HI_UNF_HDMI_ID_E enHDMIId)
 
     return u32Ret;
 }
+
+/**
+ * Function: getFlashDataByName
+ * Brif    : get 'deviceinfo' data from ----> <Flash Bottom>
+ * Param   : mtdname ---- flash name e.g "deviceinfo"
+ *           offset  ---- offset in flash from bottom
+ *           pBuffer ---- Data out Buffer
+ *           offlen  ---- read size
+ */
+HI_S32 getFlashDataByName(const char *mtdname, unsigned long offset, unsigned long offlen, char *pBuffer)
+{
+    HI_U32 u32Ret;
+    char *pbuf = NULL;
+    unsigned int uBlkSize = 0;
+    unsigned int totalsize = 0;
+    unsigned int PartitionSize = 0;
+    HI_Flash_InterInfo_S info;
+
+    HI_HANDLE handle = HI_Flash_OpenByName((HI_CHAR *)mtdname);
+    if (HI_INVALID_HANDLE == handle)
+    {
+        ALOGE("HI_Flash_OpenByName failed, mtdname[%s]\n", mtdname);
+        return HI_FAILURE;
+    }
+
+    HI_Flash_GetInfo(handle, &info);
+    PartitionSize = (unsigned int)info.PartSize;
+    uBlkSize = info.BlockSize;
+    if (uBlkSize == 0)
+    {
+        uBlkSize = 512;
+    }
+    //totalsize = ((offlen - 1) / uBlkSize + 1) * uBlkSize; // Block alignment
+    totalsize = ((offset - 1) / uBlkSize + 1) * uBlkSize; // Block alignment
+    if (totalsize > PartitionSize)
+    {
+        ALOGE("flash size read overbrim ,error");
+        HI_Flash_Close(handle);
+        return HI_FAILURE;
+    }
+
+    ALOGE("totalsize=%u,pagesize=%u,offset=%lu,offlen=%lu", totalsize, uBlkSize, offset, offlen);
+    pbuf = (char *)malloc(totalsize);
+    if(NULL == pbuf)
+    {
+        ALOGE("malloc error, totalsize=[%d]", totalsize);
+        HI_Flash_Close(handle);
+        return HI_FAILURE;
+    }
+    memset(pbuf, 0, totalsize);
+
+    // Read data from bottom of deviceinfo, bottom 128K data is DRM Key
+    // We get HDMI1.4 HDCP Key 4K data over 128K from bottom of deviceinfo
+    u32Ret = HI_Flash_Read(handle, PartitionSize - totalsize, (HI_U8 *)pbuf, totalsize, HI_FLASH_RW_FLAG_RAW);
+    if (HI_FAILURE == u32Ret)
+    {
+        ALOGE("HI_Flash_Read Failed:%d\n", u32Ret);
+        HI_Flash_Close(handle);
+        free(pbuf);
+        pbuf = NULL;
+        return HI_FAILURE;
+    }
+    HI_Flash_Close(handle);
+
+    memcpy(pBuffer, pbuf + offset % uBlkSize, offlen);
+    memset(pbuf, 0, totalsize);
+    free(pbuf);
+    pbuf = NULL;
+
+    return HI_SUCCESS;
+}
+
+/*
+ * HDMI1.4 HDCP Key
+ * Localtion: deviceInfo
+ * OffSet:68K,size:2K
+ * Key Real size :  332B
+*/
+
+HI_S32 HIADP_HDMI_SetHDCPKey_DeviceInfo(HI_UNF_HDMI_ID_E enHDMIId)
+{
+    HI_U32 u32Ret;
+
+    HI_UNF_HDMI_LOAD_KEY_S stLoadKey;
+    const char *device_name = HDCP_KEY_LOCATION;
+    unsigned long offset;
+    unsigned long data_len = HDCP_KEY_LEN;
+    char *pBuf = NULL;
+    char offset_buf[PROP_VALUE_MAX];
+
+    /* Attention: This offset property is from 'deviceinfo' bottom offset
+       if User config this, it must make sure this value more than 128K + 4K
+       Because the bottom 128K is DRM KEY, the 4K use to store HDMI HDCP KEY */
+    property_get("persist.sys.hdmi.hdcp.offset", offset_buf, "0");
+    offset = atoi(offset_buf);
+    if (offset == 0)
+    {
+        ALOGE("HIADP_HDMI_SetHDCPKey_DeviceInfo, use default offset!");
+        offset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET; // default 4k+128k from bottom
+    }
+    else if (offset < (HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET))
+    {
+        ALOGE("HIADP_HDMI_SetHDCPKey_DeviceInfo, use customer property hdmi hdcp offset, But Length is too short!!");
+        return HI_FAILURE;
+    }
+
+    pBuf = (char *)malloc(data_len);
+    if (!pBuf)
+    {
+        ALOGE("HIADP_HDMI_SetHDCPKey_DeviceInfo, malloc failed");
+        return HI_FAILURE;
+    }
+    memset(pBuf, 0, data_len);
+
+    ALOGE("device_name = %s", device_name);
+    ALOGE("offset = %ld", offset);
+    ALOGE("data_len = %ld", data_len);
+
+    u32Ret = getFlashDataByName(device_name, offset, data_len, pBuf);
+
+    if (HI_SUCCESS == u32Ret)
+    {
+        ALOGE("getFlashDataByName, Success!");
+        stLoadKey.u32KeyLength = data_len;
+        stLoadKey.pu8InputEncryptedKey  = (char *)malloc(data_len);
+        if(HI_NULL == stLoadKey.pu8InputEncryptedKey)
+        {
+            ALOGE("malloc stLoadKey.pu8InputEncryptedKey erro!\n");
+            return HI_FAILURE;
+        }
+        stLoadKey.pu8InputEncryptedKey = pBuf;
+        u32Ret = HI_UNF_HDMI_LoadHDCPKey(enHDMIId,&stLoadKey);
+        if (HI_SUCCESS == u32Ret)
+        {
+            ALOGE("HI_UNF_HDMI_LoadHDCPKey  Success!\n");
+        }
+        else
+        {
+            ALOGE("HI_UNF_HDMI_LoadHDCPKey  Failed !\n");
+        }
+    }
+    else
+    {
+        ALOGE("getFlashDataByName  Failed !\n");
+    }
+    free(pBuf);
+    pBuf = NULL;
+    return u32Ret;
+}
 #endif
 
 HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
@@ -1136,7 +1532,8 @@ HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
         return HI_FAILURE;
     }
 #ifdef HI_HDCP_SUPPORT
-    Ret = HIADP_HDMI_SetHDCPKey(enHDMIId);
+    //Ret = HIADP_HDMI_SetHDCPKey(enHDMIId);
+    Ret = HIADP_HDMI_SetHDCPKey_DeviceInfo(enHDMIId);
     if (HI_SUCCESS != Ret)
     {
         ALOGE("Set hdcp erro:%#x\n",Ret);

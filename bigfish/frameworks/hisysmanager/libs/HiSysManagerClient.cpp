@@ -179,6 +179,28 @@ int HiSysManagerClient::removeNetRoute(String8 interfacename)
     }
     return ret;
 }
+
+int HiSysManagerClient::setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
+{
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->setHdmiHDCPKey(tdname,offset,filename,datasize);
+    }
+    return ret;
+}
+int HiSysManagerClient::getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
+{
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->getHdmiHDCPKey(tdname,offset,filename,datasize);
+    }
+    return ret;
+}
+
 int HiSysManagerClient::setHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
 {
     int ret = -1;
@@ -439,6 +461,24 @@ int HiSysManagerClient::getDRMKey(String8 tdname,int offset,String8 filename,int
     if(ps != 0)
     {
         ret = ps->getDRMKey(tdname,offset,filename,datasize);
+    }
+    return ret;
+}
+int  HiSysManagerClient::userDataRestoreIptv(){
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->userDataRestoreIptv();
+    }
+    return ret;
+}
+int  HiSysManagerClient::setUIAsyncCompose(int mode){
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->setUIAsyncCompose(mode);
     }
     return ret;
 }

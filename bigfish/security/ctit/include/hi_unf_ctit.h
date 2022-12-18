@@ -66,6 +66,24 @@ HI_VOID HI_CTIT_random(HI_U32 *rand,  HI_U32 len);
 HI_U32 HI_CTIT_readSN(HI_U8* u8data,HI_U32 len);
 
 /**
+\brief Store the MAC.      CNcomment: 保存MAC地址。
+\param[in] pu8Mac        buffer to store the MAC         CNcomment:保存MAC的内存空间
+\param[in] u32Length     the length of MAC               CNcomment:MAC的长度
+\retval ::HI_SUCCESS Success CNcomment:HI_SUCCESS 成功
+\retval ::HI_FAILURE This API fails to be called CNcomment:HI_FAILURE  API系统调用失败
+ */
+HI_S32 HI_CTIT_writeMAC(HI_U8 *pu8Mac, HI_U32 u32Length);
+
+/**
+\brief Get the MAC       CNcomment: 获取MAC
+\param[out] pu8Mac        buffer to store the MAC         CNcomment:保存MAC的内存空间
+\param[out] u32Length     the length of MAC            CNcomment:MAC的长度
+\retval ::HI_SUCCESS Success CNcomment:HI_SUCCESS 成功
+\retval ::HI_FAILURE This API fails to be called CNcomment:HI_FAILURE  API系统调用失败
+ */
+HI_S32 HI_CTIT_readMAC(HI_U8 *pu8Mac, HI_U32 u32Length);
+
+/**
 \brief Set the private business data which offered by third party to flash，it's a string。
      CNcomment：烧写业务相关的数据，数据由第三方给出，并按文本形式传入参数。
 \param[in] s8Data[]             buffer to store the business data which offered by third party.

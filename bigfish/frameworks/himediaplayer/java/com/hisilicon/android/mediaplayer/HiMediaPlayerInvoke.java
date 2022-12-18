@@ -3941,6 +3941,42 @@ public class HiMediaPlayerInvoke
     */
     public final static int CMD_SET_TPLAY_MODE = CMD_INVOKE_BASE + 334; // 0 : smooth tplay mode  1: I frame tplay mode.
     /**
+        <br>
+        Get mediaplayer ip address and port.<br>
+        <h3>Description:</h3>
+        None
+        <h3>Request:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>int</p></td>
+                <td>Value of CMD_GET_IP_PORT</p></td>
+            </tr>
+            </table>
+        <h3>Reply:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>String</p></td>
+                <td>ip adrress and port, example: ip=10.29.22.9&port=8080</p></td>
+            </tr>
+            </table>
+        <br>
+        <h3>Attention:</h3>
+        This is valid for android mediaplayer interface.
+    */
+    public final static int CMD_GET_IP_PORT = CMD_INVOKE_BASE + 335;
+    /**
        <br>
        get mediaplayer url<br>
        <h3>Description:</h3>

@@ -1,7 +1,7 @@
 package com.hisilicon.android;
 import android.graphics.Rect;
 import com.hisilicon.android.DispFmt;
-
+import com.hisilicon.android.ManufactureInfo;
 /** @hide */
 interface IHiDisplayManager
 {
@@ -26,6 +26,7 @@ interface IHiDisplayManager
     int setRightEyeFirst(int Outpriority);
     int getRightEyeFirst();
     DispFmt getDisplayCapability();
+    ManufactureInfo getManufactureInfo();
     int setAspectRatio(int ratio);
     int getAspectRatio();
     int setAspectCvrs(int cvrs);

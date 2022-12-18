@@ -303,7 +303,7 @@ void TX_PHY_INIT(void)
     TX_PHY_WriteRegister(PHY_PLL2_ADDR,0x09);
 
     // driver setting , slew rate ctrl
-    TX_PHY_WriteRegister(PHY_DRV_ADDR,0x01);
+    TX_PHY_WriteRegister(PHY_DRV_ADDR,0x04);
 
     // clk invert
     TX_PHY_WriteRegister(PHY_CLK_ADDR,0x00);
@@ -567,7 +567,7 @@ HI_S32 TX_PHY_SwingCtrl(SWING_CTL_E enSwing)
     }
     else
     {
-        u32phyreg |= 0x01;
+        u32phyreg |= 0x02;
     }
 
     HDMIPrint("writing phy PHY_PLL1_ADDR(swing):0x%x \n",u32phyreg);

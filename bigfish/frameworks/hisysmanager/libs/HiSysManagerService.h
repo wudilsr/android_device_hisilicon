@@ -38,6 +38,8 @@ public:
     virtual int setDefaultRoute(String8 interfacename,int gw);
     virtual int removeDefaultRoute(String8 interfacename);
     virtual int removeNetRoute(String8 interfacename);
+    virtual int setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
+    virtual int getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     virtual int setHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     virtual int getHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     virtual int reboot();
@@ -64,6 +66,8 @@ public:
     virtual int recoveryIPTV(String8 path,String8 file);
     virtual int setDRMKey(String8 tdname,int offset,String8 filename,int datasize);
     virtual int getDRMKey(String8 tdname,int offset,String8 filename,int datasize);
+    virtual int userDataRestoreIptv();
+    virtual int setUIAsyncCompose(int mode);
 };
 };
 #endif /*SysManagerService_H*/

@@ -16,6 +16,7 @@
   <string name="str_rename">重命名</string>
   <string name="str_new">新建</string>
   <string name="search">搜索</string>
+  <string name="preview">预览</string>
   <string name="eject_cdrom">弹出光驱</string>
   <string name="help">帮助</string>
   <string name="no_file">没有该文件或目录</string>
@@ -242,4 +243,8 @@
        <string name="upnp_tab_title">UPnP</string>
        <string name="baidu_pcs">百度网盘</string>
        <string name="no_activity_info">没有找到应用</string>
+
+       <string name="file_size_1">文件大小 : </string>
+       <string name="file_type">文件类型 : </string>
+       <string name="last_modified">最后修改时间 : </string>
 </resources>

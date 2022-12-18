@@ -376,6 +376,10 @@ HI_S32 TdeOsiEnableRegionDeflicker(HI_BOOL bRegionDeflicker);
 HI_S32 TdeCalScaleRect(const TDE2_RECT_S* pstSrcRect, const TDE2_RECT_S* pstDstRect,
                                 TDE2_RECT_S* pstRectInSrc, TDE2_RECT_S* pstRectInDst);
 
+HI_S32 TdeOsiEndJobEx(TDE_HANDLE s32Handle, HI_BOOL bBlock, HI_U32 u32TimeOut,
+                        HI_BOOL bSync, TDE_FUNC_CB pFuncComplCB, HI_VOID *pFuncPara,
+                        HI_S32 *ps32ReleaseFence);
+
 #ifdef __cplusplus
  #if __cplusplus
 }

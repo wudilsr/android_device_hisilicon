@@ -32,6 +32,9 @@
 #include "rdt.h"
 #include "url.h"
 #include <unistd.h>
+#if defined (ANDROID_VERSION)
+#include <cutils/properties.h>
+#endif
 
 static void get_downspeed(AVFormatContext *s, int len, int64_t time)
 {
@@ -167,10 +170,15 @@ static int rtsp_read_play(AVFormatContext *s)
         if (rt->state == RTSP_STATE_PAUSED) {
             cmd[0] = 0;
         } else {
-            snprintf(cmd, sizeof(cmd),
-                     "Range: npt=%"PRId64".%03"PRId64"-\r\n",
-                     rt->seek_timestamp / AV_TIME_BASE,
-                     rt->seek_timestamp / (AV_TIME_BASE / 1000) % 1000);
+            if (rt->headers && (av_stristart(rt->headers, "Range:", NULL) ||
+                                av_stristr(rt->headers, "Range:"))) {
+                snprintf(cmd, sizeof(cmd), "%s", rt->headers);
+            } else {
+                snprintf(cmd, sizeof(cmd),
+                         "Range: npt=%"PRId64".%03"PRId64"-\r\n",
+                         rt->seek_timestamp / AV_TIME_BASE,
+                         rt->seek_timestamp / (AV_TIME_BASE / 1000) % 1000);
+            }
         }
         ff_rtsp_send_cmd(s, "PLAY", rt->control_uri, cmd, reply, NULL);
         if (reply->status_code != RTSP_STATUS_OK) {
@@ -268,6 +276,18 @@ static int rtsp_read_header(AVFormatContext *s,
 {
     RTSPState *rt = s->priv_data;
     int ret;
+#if defined (ANDROID_VERSION)
+    char prefer_tcp_str[PROP_VALUE_MAX];
+
+    if (property_get("persist.sys.hiplayer.rtspusetcp", prefer_tcp_str, "false")) {
+        if (!strcmp(prefer_tcp_str, "true")) {
+            rt->rtsp_flags |= RTSP_FLAG_PREFER_TCP;
+            av_log(s, AV_LOG_INFO, "[%s,%d] perfer_tcp=true\n", __FUNCTION__, __LINE__);
+        } else {
+            av_log(s, AV_LOG_INFO, "[%s,%d] perfer_tcp=false\n", __FUNCTION__, __LINE__);
+        }
+    }
+#endif
 
     ret = ff_rtsp_connect(s);
     if (ret) {
@@ -603,6 +623,9 @@ static int rtsp_read_close(AVFormatContext *s)
     ff_network_close();
     rt->real_setup = NULL;
     av_freep(&rt->real_setup_cache);
+    if (rt->headers) {
+        av_freep(&rt->headers);
+    }
     return 0;
 }
 

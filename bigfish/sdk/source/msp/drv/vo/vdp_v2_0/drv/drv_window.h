@@ -327,6 +327,8 @@ typedef struct tagWIN_PROC_INFO_S
     /*  buffer state */
     WINBUF_STATE_S stBufState;
 
+    HI_DRV_LOWDELAY_STAT_INFO_S stLowdelayStat;
+    
     /*only for developer or mainteiner.*/
     HI_WIN_RROC_FOR_DEVELOPER_S stWinInfoForDeveloper;
 }WIN_PROC_INFO_S;

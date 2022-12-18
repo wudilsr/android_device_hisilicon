@@ -3,8 +3,8 @@
 
 /* add register macro */
 #define C51_BASE             0xf8400000
-#define C51_SIZE             0x10000
-#define C51_DATA             0xe000
+#define C51_SIZE             0x8000
+#define C51_DATA             0x7000
 #define C51_START	     0xf000
 
 //#define MCU_CODE_MAXSIZE     0x5000

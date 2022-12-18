@@ -26,6 +26,11 @@ RECOVERY_KERNEL_CONFIG := hi3798mv100_android_recovery_defconfig
 # emmc fastboot configure
 EMMC_BOOT_CFG_NAME := hi3798mdmo1a_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_emmc.cfg
 EMMC_BOOT_REG_NAME := hi3798mdmo1a_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_emmc.reg
+ifeq ($(strip $(SUPPORT_UNIFIED_UPDATE)),true)
+# emmc fastboot configuration for QFP
+EMMC_BOOT_CFG_NAME_2 := hi3798mdmo1f_hi3798mv100_ddr3_1gbyte_16bitx2_2layers_emmc.cfg
+EMMC_BOOT_REG_NAME_2 := hi3798mdmo1f_hi3798mv100_ddr3_1gbyte_16bitx2_2layers_emmc.reg
+endif
 EMMC_BOOT_ENV_STARTADDR :=0x100000
 EMMC_BOOT_ENV_SIZE=0x10000
 EMMC_BOOT_ENV_RANGE=0x10000
@@ -128,6 +133,9 @@ BOARD_WLAN_DEVICE_QCA1021X := y
 # Can set only one module to 'y' every build.
 # Example:
 # enable RTL8723BU WiFi+BT : BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
+# if RTL8723BU is set to y, must modify device\hisilicon\Hi3798MV100\Hi3798MV100.mk as follows:
+# BOARD_BLUETOOTH_DEVICE_REALTEK := y
+# if RTL8723BU is set to n,must modify BOARD_BLUETOOTH_DEVICE_REALTEK := n
 # if MT7632U is set to y, must modify device\hisilicon\Hi3798MV100\etc\init.Hi3798MV100.rc as follows:
 # write /proc/sys/vm/min_free_kbytes 32768 (from 10240 to 32768 to get more memory)
 

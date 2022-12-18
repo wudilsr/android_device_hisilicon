@@ -192,6 +192,7 @@ private:
 
     int         beginPictureThread();
     int         pictureThread();
+    int         jpegEncoder(void* srcBuffer, void * dstBuffer, int width, int height, int quality, int *jpegSize);
 
     void        OnFrameArrivedYUYV(char *buffer, int length);
     void        OnFrameArrivedMJPEG(char *buffer, int length);
@@ -217,7 +218,9 @@ private:
     int                     mSnapshotHeight;
     int                     mJpegQuality;
     int                     mPictureFrameSize;
+    int                     mThumbnailSize;
     char*                   mPictureBuffer;
+    char*                   mThumbnailBuffer;
 
     preview_stream_ops*     mPreviewWindow;
     bool                    mPreviewConfigured;

@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_zme.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_zme.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_zme.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_zme.o -O2 -Wall -Wundef
@@ -372,39 +372,39 @@ PQ_MNG_VdpZmeComnSet:
 	str	r3, [r1, #32]	@ g_bVdpZmeMedEn.426, <variable>.bZmeMedHL
 	str	r3, [r1, #36]	@ g_bVdpZmeMedEn.426, <variable>.bZmeMedHC
 	str	r3, [r1, #40]	@ g_bVdpZmeMedEn.426, <variable>.bZmeMedVL
-	ldr	r0, [r0, #0]	@ D.36880, <variable>.u32ZmeFrmWIn
-	cmp	r0, #4096	@ D.36880,
-	str	r0, [r1, #72]	@ D.36880, <variable>.u32ZmeWIn
-	ldr	r1, [r5, #8]	@ D.36881, <variable>.u32ZmeFrmWOut
-	str	r1, [r4, #80]	@ D.36881, <variable>.u32ZmeWOut
-	ldr	r7, [r5, #4]	@ D.36882, <variable>.u32ZmeFrmHIn
-	str	r7, [r4, #76]	@ D.36882, <variable>.u32ZmeHIn
-	ldr	r6, [r5, #12]	@ D.36883, <variable>.u32ZmeFrmHOut
-	str	r6, [r4, #84]	@ D.36883, <variable>.u32ZmeHOut
+	ldr	r0, [r0, #0]	@ D.36887, <variable>.u32ZmeFrmWIn
+	cmp	r0, #4096	@ D.36887,
+	str	r0, [r1, #72]	@ D.36887, <variable>.u32ZmeWIn
+	ldr	r1, [r5, #8]	@ D.36888, <variable>.u32ZmeFrmWOut
+	str	r1, [r4, #80]	@ D.36888, <variable>.u32ZmeWOut
+	ldr	r7, [r5, #4]	@ D.36889, <variable>.u32ZmeFrmHIn
+	str	r7, [r4, #76]	@ D.36889, <variable>.u32ZmeHIn
+	ldr	r6, [r5, #12]	@ D.36890, <variable>.u32ZmeFrmHOut
+	str	r6, [r4, #84]	@ D.36890, <variable>.u32ZmeHOut
 	bcc	.L30	@,
-	mov	r8, r0, lsr r2	@ tmp166, D.36880,
+	mov	r8, r0, lsr r2	@ tmp166, D.36887,
 	mov	r0, r8, asl #20	@, tmp166,
 	bl	__aeabi_uidiv	@
 	mov	r0, r0, asl #1	@ tmp172,,
 	str	r0, [r4, #88]	@ tmp172, <variable>.u32ZmeRatioHL
 .L31:
-	mov	r1, r6	@, D.36883
-	mov	r0, r7, asl #12	@, D.36882,
+	mov	r1, r6	@, D.36890
+	mov	r0, r7, asl #12	@, D.36889,
 	bl	__aeabi_uidiv	@
 	ldr	r1, [r4, #80]	@ u32ZmeCWOut, <variable>.u32ZmeWOut
 	ldr	r7, [r4, #76]	@ <variable>.u32ZmeHIn, <variable>.u32ZmeHIn
 	ldr	r6, [r4, #84]	@ <variable>.u32ZmeHOut, <variable>.u32ZmeHOut
 	str	r0, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	ldr	r0, [r4, #72]	@ u32ZmeCWIn, <variable>.u32ZmeWIn
-	ldrb	r2, [r5, #16]	@ zero_extendqisi2	@ D.36900, <variable>.u8ZmeYCFmtIn
-	ldrb	ip, [r5, #17]	@ zero_extendqisi2	@ D.36905, <variable>.u8ZmeYCFmtOut
-	cmp	r2, #2	@ D.36900,
+	ldrb	r2, [r5, #16]	@ zero_extendqisi2	@ D.36907, <variable>.u8ZmeYCFmtIn
+	ldrb	ip, [r5, #17]	@ zero_extendqisi2	@ D.36912, <variable>.u8ZmeYCFmtOut
+	cmp	r2, #2	@ D.36907,
 	movne	r0, r0, lsr #1	@ u32ZmeCWIn, <variable>.u32ZmeWIn,
-	cmp	ip, #2	@ D.36905,
+	cmp	ip, #2	@ D.36912,
 	movne	r1, r1, lsr #1	@ u32ZmeCWOut, <variable>.u32ZmeWOut,
-	cmp	r2, #1	@ D.36900,
+	cmp	r2, #1	@ D.36907,
 	moveq	r7, r7, lsr #1	@ u32ZmeCHIn, <variable>.u32ZmeHIn,
-	cmp	ip, #1	@ D.36905,
+	cmp	ip, #1	@ D.36912,
 	moveq	r6, r6, lsr #1	@ u32ZmeCHOut, <variable>.u32ZmeHOut,
 	cmp	r0, #4096	@ u32ZmeCWIn,
 	bcc	.L40	@,
@@ -452,7 +452,7 @@ PQ_MNG_VdpZmeComnSet:
 	mov	r0, r6	@, u32ZmeRatioVCReal
 	bl	GetVerticalScalerOffset	@
 	ldr	r2, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
-	ldr	r1, [r4, #96]	@ D.36953, <variable>.u32ZmeRatioHC
+	ldr	r1, [r4, #96]	@ D.36960, <variable>.u32ZmeRatioHC
 	subs	r3, r2, #1048576	@ tmp214, <variable>.u32ZmeRatioHL,
 	movne	r3, #1	@ tmp214
 	str	r3, [r4, #16]	@ tmp214, <variable>.bZmeMdHL
@@ -466,7 +466,7 @@ PQ_MNG_VdpZmeComnSet:
 	subs	r3, ip, #0	@ prephitmp.711, g_bVdpZmeFirEn,
 	movne	r3, #1	@ prephitmp.711
 .L48:
-	cmp	r1, #1048576	@ D.36953,
+	cmp	r1, #1048576	@ D.36960,
 	str	r3, [r4, #16]	@ prephitmp.711, <variable>.bZmeMdHL
 	moveq	r1, #0	@ prephitmp.694,
 	beq	.L50	@,
@@ -557,7 +557,7 @@ PQ_MNG_VdpZmeComnSet:
 	mov	r8, r0, asl #1	@ u32ZmeRatioVLReal, <variable>.u32ZmeRatioVL,
 	b	.L43	@
 .L30:
-	mov	r0, r0, asl #20	@, D.36880,
+	mov	r0, r0, asl #20	@, D.36887,
 	bl	__aeabi_uidiv	@
 	str	r0, [r4, #88]	@, <variable>.u32ZmeRatioHL
 	b	.L31	@
@@ -629,10 +629,10 @@ PQ_MNG_VpssZmeComnSet:
 	str	r0, [r1, #32]	@ g_bVpssZmeMedEn.436, <variable>.bZmeMedHL
 	str	r0, [r1, #36]	@ g_bVpssZmeMedEn.436, <variable>.bZmeMedHC
 	str	r0, [r1, #40]	@ g_bVpssZmeMedEn.436, <variable>.bZmeMedVL
-	ldr	r0, [r5, #0]	@ D.37011, <variable>.u32ZmeFrmWIn
-	str	r0, [r1, #72]	@ D.37011, <variable>.u32ZmeWIn
-	ldr	r1, [r5, #8]	@ D.37012, <variable>.u32ZmeFrmWOut
-	str	r1, [r4, #80]	@ D.37012, <variable>.u32ZmeWOut
+	ldr	r0, [r5, #0]	@ D.37018, <variable>.u32ZmeFrmWIn
+	str	r0, [r1, #72]	@ D.37018, <variable>.u32ZmeWIn
+	ldr	r1, [r5, #8]	@ D.37019, <variable>.u32ZmeFrmWOut
+	str	r1, [r4, #80]	@ D.37019, <variable>.u32ZmeWOut
 	ldr	r6, [r5, #20]	@ <variable>.bZmeFrmFmtIn, <variable>.bZmeFrmFmtIn
 	ldr	r7, [r5, #4]	@ iftmp.437, <variable>.u32ZmeFrmHIn
 	cmp	r6, r2	@ <variable>.bZmeFrmFmtIn,
@@ -642,10 +642,10 @@ PQ_MNG_VpssZmeComnSet:
 	ldr	r6, [r5, #12]	@ iftmp.438, <variable>.u32ZmeFrmHOut
 	cmp	r3, #1	@ <variable>.bZmeFrmFmtOut,
 	movne	r6, r6, lsr #1	@ iftmp.438, <variable>.u32ZmeFrmHOut,
-	cmp	r0, #4096	@ D.37011,
+	cmp	r0, #4096	@ D.37018,
 	str	r6, [r4, #84]	@ iftmp.438, <variable>.u32ZmeHOut
 	bcc	.L73	@,
-	mov	r8, r0, lsr #1	@ tmp165, D.37011,
+	mov	r8, r0, lsr #1	@ tmp165, D.37018,
 	mov	r0, r8, asl #20	@, tmp165,
 	bl	__aeabi_uidiv	@
 	mov	r1, r0, asl #1	@ tmp171,,
@@ -658,18 +658,18 @@ PQ_MNG_VpssZmeComnSet:
 	ldr	r6, [r4, #76]	@ <variable>.u32ZmeHIn, <variable>.u32ZmeHIn
 	ldr	r7, [r4, #84]	@ <variable>.u32ZmeHOut, <variable>.u32ZmeHOut
 	str	r0, [r4, #92]	@, <variable>.u32ZmeRatioVL
-	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.37041, <variable>.u8ZmeYCFmtIn
-	ldrb	sl, [r5, #17]	@ zero_extendqisi2	@ D.37046, <variable>.u8ZmeYCFmtOut
-	cmp	r3, #2	@ D.37041,
+	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.37048, <variable>.u8ZmeYCFmtIn
+	ldrb	sl, [r5, #17]	@ zero_extendqisi2	@ D.37053, <variable>.u8ZmeYCFmtOut
+	cmp	r3, #2	@ D.37048,
 	ldrne	ip, [r4, #72]	@ u32ZmeCWIn.750, <variable>.u32ZmeWIn
 	ldreq	r0, [r4, #72]	@ u32ZmeCWIn, <variable>.u32ZmeWIn
 	movne	r0, ip, lsr #1	@ u32ZmeCWIn, u32ZmeCWIn.750,
 	moveq	ip, r0	@ u32ZmeCWIn.750, u32ZmeCWIn
-	cmp	sl, #2	@ D.37046,
+	cmp	sl, #2	@ D.37053,
 	movne	r1, r1, lsr #1	@ u32ZmeCWOut, <variable>.u32ZmeWOut,
-	cmp	r3, #1	@ D.37041,
+	cmp	r3, #1	@ D.37048,
 	moveq	r6, r6, lsr #1	@ u32ZmeCHIn, <variable>.u32ZmeHIn,
-	cmp	sl, #1	@ D.37046,
+	cmp	sl, #1	@ D.37053,
 	moveq	r7, r7, lsr #1	@ u32ZmeCHOut, <variable>.u32ZmeHOut,
 	cmp	ip, #4096	@ u32ZmeCWIn.750,
 	bcc	.L83	@,
@@ -686,18 +686,18 @@ PQ_MNG_VpssZmeComnSet:
 	mov	r8, #0	@ tmp199,
 	mov	r1, r5	@, pstZmeDrvPara
 	str	r8, [r4, #48]	@ tmp199, <variable>.s32ZmeOffsetHL
-	mov	r6, r0	@ D.37068,
-	str	r0, [r4, #100]	@ D.37068, <variable>.u32ZmeRatioVC
+	mov	r6, r0	@ D.37075,
+	str	r0, [r4, #100]	@ D.37075, <variable>.u32ZmeRatioVC
 	mov	r0, r7	@, <variable>.u32ZmeRatioVL
 	bl	GetVerticalScalerOffset	@
 	mov	r1, r5	@, pstZmeDrvPara
 	str	r8, [r4, #52]	@ tmp199, <variable>.s32ZmeOffsetHC
-	mov	sl, r0	@ D.37070,
-	mov	r0, r6	@, D.37068
-	str	sl, [r4, #56]	@ D.37070, <variable>.s32ZmeOffsetVL
+	mov	sl, r0	@ D.37077,
+	mov	r0, r6	@, D.37075
+	str	sl, [r4, #56]	@ D.37077, <variable>.s32ZmeOffsetVL
 	bl	GetVerticalScalerOffset	@
 	ldr	r2, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
-	ldr	r1, [r4, #96]	@ D.37076, <variable>.u32ZmeRatioHC
+	ldr	r1, [r4, #96]	@ D.37083, <variable>.u32ZmeRatioHC
 	subs	r3, r2, #1048576	@ tmp203, <variable>.u32ZmeRatioHL,
 	movne	r3, #1	@ tmp203
 	str	r3, [r4, #16]	@ tmp203, <variable>.bZmeMdHL
@@ -710,7 +710,7 @@ PQ_MNG_VpssZmeComnSet:
 	subs	r3, r0, r8	@ prephitmp.739, g_bVpssZmeFirEn,
 	movne	r3, #1	@ prephitmp.739
 .L86:
-	cmp	r1, #1048576	@ D.37076,
+	cmp	r1, #1048576	@ D.37083,
 	str	r3, [r4, #16]	@ prephitmp.739, <variable>.bZmeMdHL
 	moveq	r3, #0	@ prephitmp.751,
 	beq	.L88	@,
@@ -729,7 +729,7 @@ PQ_MNG_VpssZmeComnSet:
 	ldr	r0, [r3, #4]	@ g_bVpssZmeFirEn, g_bVpssZmeFirEn
 	subs	lr, r0, #0	@ tmp216, g_bVpssZmeFirEn,
 	movne	lr, #1	@ tmp216
-	cmp	r6, #4096	@ D.37068,
+	cmp	r6, #4096	@ D.37075,
 	str	lr, [r4, #24]	@ tmp216, <variable>.bZmeMdVL
 	beq	.L97	@,
 .L91:
@@ -757,15 +757,15 @@ PQ_MNG_VpssZmeComnSet:
 	str	r0, [r4, #96]	@, <variable>.u32ZmeRatioHC
 	b	.L84	@
 .L73:
-	mov	r0, r0, asl #20	@, D.37011,
+	mov	r0, r0, asl #20	@, D.37018,
 	bl	__aeabi_uidiv	@
 	str	r0, [r4, #88]	@, <variable>.u32ZmeRatioHL
 	b	.L74	@
 .L96:
-	cmp	sl, #0	@ D.37070,
-	streq	sl, [r4, #24]	@ D.37070, <variable>.bZmeMdVL
+	cmp	sl, #0	@ D.37077,
+	streq	sl, [r4, #24]	@ D.37077, <variable>.bZmeMdVL
 	bne	.L89	@,
-	cmp	r6, #4096	@ D.37068,
+	cmp	r6, #4096	@ D.37075,
 	bne	.L91	@,
 .L97:
 	ldr	r3, [r4, #60]	@ <variable>.s32ZmeOffsetVC, <variable>.s32ZmeOffsetVC
@@ -955,16 +955,16 @@ PQ_MNG_VdpZmeSQSetSptAddr:
 	mov	r6, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r5, r6, #12	@ D.37379, pstMem,
+	add	r5, r6, #12	@ D.37386, pstMem,
 	bl	PQ_MNG_VdpZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r5	@, D.37379
+	mov	r0, r5	@, D.37386
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
 	str	r0, [r4, #116]	@, <variable>.u32ZmeCoefAddrHL
-	mov	r0, r5	@, D.37379
+	mov	r0, r5	@, D.37386
 	bl	GetHCfirCoef	@
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	str	r0, [r4, #120]	@, <variable>.u32ZmeCoefAddrHC
@@ -990,7 +990,7 @@ PQ_MNG_VdpZmeSQSetSptAddr:
 	ldrcc	r3, [r6, #232]	@ u32CoefAddr, <variable>.stZmeCoefAddr.u32ZmeCoefAddrVL4_0
 .L136:
 	str	r3, [r4, #124]	@ u32CoefAddr, <variable>.u32ZmeCoefAddrVL
-	mov	r0, r5	@, D.37379
+	mov	r0, r5	@, D.37386
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
 	bl	GetVCfirCoef	@
 	str	r0, [r4, #128]	@, <variable>.u32ZmeCoefAddrVC
@@ -1018,24 +1018,24 @@ PQ_MNG_VpssZmeHQSetSptAddr:
 	mov	r5, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r5, r5, #12	@ D.37395, pstMem,
+	add	r5, r5, #12	@ D.37402, pstMem,
 	bl	PQ_MNG_VpssZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r5	@, D.37395
+	mov	r0, r5	@, D.37402
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
 	str	r0, [r4, #116]	@, <variable>.u32ZmeCoefAddrHL
-	mov	r0, r5	@, D.37395
+	mov	r0, r5	@, D.37402
 	bl	GetHCfirCoef	@
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	str	r0, [r4, #120]	@, <variable>.u32ZmeCoefAddrHC
-	mov	r0, r5	@, D.37395
+	mov	r0, r5	@, D.37402
 	bl	GetVLFilterCoef	@
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
 	str	r0, [r4, #124]	@, <variable>.u32ZmeCoefAddrVL
-	mov	r0, r5	@, D.37395
+	mov	r0, r5	@, D.37402
 	bl	GetVCfirCoef	@
 	str	r0, [r4, #128]	@, <variable>.u32ZmeCoefAddrVC
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
@@ -1062,11 +1062,11 @@ PQ_MNG_VdpZmeHQSetSptAddr:
 	mov	r5, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r6, r5, #12	@ D.37411, pstMem,
+	add	r6, r5, #12	@ D.37418, pstMem,
 	bl	PQ_MNG_VdpZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r6	@, D.37411
+	mov	r0, r6	@, D.37418
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
@@ -1090,7 +1090,7 @@ PQ_MNG_VdpZmeHQSetSptAddr:
 	bls	.L161	@,
 .L147:
 	str	r3, [r4, #120]	@ u32CoefAddr, <variable>.u32ZmeCoefAddrHC
-	mov	r0, r6	@, D.37411
+	mov	r0, r6	@, D.37418
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	bl	GetVLFilterCoef	@
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
@@ -1146,11 +1146,11 @@ PQ_MNG_VpssZmeSetSptAddr:
 	mov	r5, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r6, r5, #12	@ D.37427, pstMem,
+	add	r6, r5, #12	@ D.37434, pstMem,
 	bl	PQ_MNG_VpssZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r6	@, D.37427
+	mov	r0, r6	@, D.37434
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
@@ -1174,7 +1174,7 @@ PQ_MNG_VpssZmeSetSptAddr:
 	bls	.L178	@,
 .L164:
 	str	r3, [r4, #120]	@ u32CoefAddr, <variable>.u32ZmeCoefAddrHC
-	mov	r0, r6	@, D.37427
+	mov	r0, r6	@, D.37434
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	bl	GetVLFilterCoef	@
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
@@ -1230,24 +1230,24 @@ PQ_MNG_VdpZmeHQSetAddr:
 	mov	r5, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r5, r5, #12	@ D.37443, pstMem,
+	add	r5, r5, #12	@ D.37450, pstMem,
 	bl	PQ_MNG_VdpZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r5	@, D.37443
+	mov	r0, r5	@, D.37450
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
 	str	r0, [r4, #116]	@, <variable>.u32ZmeCoefAddrHL
-	mov	r0, r5	@, D.37443
+	mov	r0, r5	@, D.37450
 	bl	GetHCfirCoef	@
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	str	r0, [r4, #120]	@, <variable>.u32ZmeCoefAddrHC
-	mov	r0, r5	@, D.37443
+	mov	r0, r5	@, D.37450
 	bl	GetVLFilterCoef	@
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
 	str	r0, [r4, #124]	@, <variable>.u32ZmeCoefAddrVL
-	mov	r0, r5	@, D.37443
+	mov	r0, r5	@, D.37450
 	bl	GetVCfirCoef	@
 	str	r0, [r4, #128]	@, <variable>.u32ZmeCoefAddrVC
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
@@ -1274,16 +1274,16 @@ PQ_MNG_VpssZmeSQSetSptAddr:
 	mov	r6, r0	@ pstMem, pstMem
 	mov	r0, r1	@, pstZmeDrvPara
 	mov	r1, r2	@, pstZmeRtlPara
-	add	r5, r6, #12	@ D.37459, pstMem,
+	add	r5, r6, #12	@ D.37466, pstMem,
 	bl	PQ_MNG_VpssZmeComnSet	@
 	ldr	r0, [r4, #88]	@ <variable>.u32ZmeRatioHL, <variable>.u32ZmeRatioHL
 	mov	r1, r0, lsr #8	@, <variable>.u32ZmeRatioHL,
-	mov	r0, r5	@, D.37459
+	mov	r0, r5	@, D.37466
 	bl	GetHLfirCoef	@
 	ldr	r1, [r4, #96]	@ <variable>.u32ZmeRatioHC, <variable>.u32ZmeRatioHC
 	mov	r1, r1, lsr #8	@, <variable>.u32ZmeRatioHC,
 	str	r0, [r4, #116]	@, <variable>.u32ZmeCoefAddrHL
-	mov	r0, r5	@, D.37459
+	mov	r0, r5	@, D.37466
 	bl	GetHCfirCoef	@
 	ldr	r1, [r4, #92]	@, <variable>.u32ZmeRatioVL
 	str	r0, [r4, #120]	@, <variable>.u32ZmeCoefAddrHC
@@ -1309,7 +1309,7 @@ PQ_MNG_VpssZmeSQSetSptAddr:
 	ldrcc	r3, [r6, #232]	@ u32CoefAddr, <variable>.stZmeCoefAddr.u32ZmeCoefAddrVL4_0
 .L183:
 	str	r3, [r4, #124]	@ u32CoefAddr, <variable>.u32ZmeCoefAddrVL
-	mov	r0, r5	@, D.37459
+	mov	r0, r5	@, D.37466
 	ldr	r1, [r4, #100]	@, <variable>.u32ZmeRatioVC
 	bl	GetVCfirCoef	@
 	str	r0, [r4, #128]	@, <variable>.u32ZmeCoefAddrVC
@@ -1372,7 +1372,7 @@ PQ_MNG_ZME_2L_Check:
 	cmp	r3, #0	@ tmp147,
 	bne	.L203	@,
 .L193:
-	mvn	r0, #0	@ D.37624,
+	mvn	r0, #0	@ D.37631,
 .L198:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -1417,7 +1417,7 @@ PQ_MNG_ZME_2L_Check:
 	mov	r0, #4194304	@,
 	stmia	sp, {r6, ip}	@ phole stm
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, r4	@ D.37624, tmp168
+	mov	r0, r4	@ D.37631, tmp168
 	b	.L198	@
 .L194:
 	cmp	r6, #3	@ u32Port1WitdhNum,
@@ -1442,7 +1442,7 @@ PQ_MNG_ZME_2L_Check:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, r4	@ D.37624, tmp165
+	mov	r0, r4	@ D.37631, tmp165
 	b	.L198	@
 .L195:
 	cmp	r3, #3	@ u32Port0HeighNum,
@@ -1461,7 +1461,7 @@ PQ_MNG_ZME_2L_Check:
 	ldr	r3, [fp, #40]	@, pu32OutHeigh
 	str	r7, [r3, #0]	@ stZmeLayerWin$stPort0Win$u32Height,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, #0	@ D.37624,
+	mov	r0, #0	@ D.37631,
 	b	.L198	@
 .L204:
 	ldr	lr, [fp, #36]	@, pu32OutWitdh
@@ -1474,7 +1474,7 @@ PQ_MNG_ZME_2L_Check:
 	str	r4, [r0, #0]	@ tmp162,
 	mov	r0, #4194304	@,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, #0	@ D.37624,
+	mov	r0, #0	@ D.37631,
 	b	.L198	@
 	.fnend
 	.size	PQ_MNG_ZME_2L_Check, .-PQ_MNG_ZME_2L_Check
@@ -1709,7 +1709,7 @@ PQ_MNG_InitVdpZme:
 	movt	r4, #:upper16:.LANCHOR1	@ tmp137,
 	ldr	r1, [r4, #592]	@ g_bVdpZmeInitFlag, g_bVdpZmeInitFlag
 	cmp	r1, #0	@ g_bVdpZmeInitFlag,
-	movne	r0, #0	@ D.37506,
+	movne	r0, #0	@ D.37513,
 	beq	.L245	@,
 .L242:
 	sub	sp, fp, #20
@@ -1725,8 +1725,8 @@ PQ_MNG_InitVdpZme:
 	subs	r5, r0, #0	@ s32Ret,
 	bne	.L243	@,
 	ldr	r2, [fp, #-32]	@ stMMZ.u32StartPhyAddr, stMMZ.u32StartPhyAddr
-	add	lr, r4, #300	@ D.37507, tmp137,
-	mov	r0, lr	@, D.37507
+	add	lr, r4, #300	@ D.37514, tmp137,
+	mov	r0, lr	@, D.37514
 	str	r2, [lr, #4]	@ stMMZ.u32StartPhyAddr, <variable>.u32StartPhyAddr
 	ldr	r1, [fp, #-28]	@ stMMZ.u32Size, stMMZ.u32Size
 	ldr	ip, [fp, #-36]	@ stMMZ.u32StartVirAddr, stMMZ.u32StartVirAddr
@@ -1737,7 +1737,7 @@ PQ_MNG_InitVdpZme:
 	movt	r3, #:upper16:.LANCHOR0	@ tmp147,
 	mov	r2, #1	@ tmp148,
 	str	r5, [r4, #0]	@ s32Ret, g_bVdpZmeMedEn
-	mov	r0, r5	@ D.37506, s32Ret
+	mov	r0, r5	@ D.37513, s32Ret
 	str	r2, [r4, #592]	@ tmp148, g_bVdpZmeInitFlag
 	str	r2, [r3, #0]	@ tmp148, g_bVdpZmeFirEn
 	b	.L242	@
@@ -1751,7 +1751,7 @@ PQ_MNG_InitVdpZme:
 	movt	lr, #:upper16:.LC5	@ tmp154,
 	str	lr, [sp, #0]	@ tmp154,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.37506,
+	mvn	r0, #0	@ D.37513,
 	b	.L242	@
 	.fnend
 	.size	PQ_MNG_InitVdpZme, .-PQ_MNG_InitVdpZme
@@ -1942,14 +1942,14 @@ PQ_MNG_DeInitZme:
 	.section	.rodata
 	.align	2
 .LANCHOR2 = . + 0
-	.type	__func__.37502, %object
-	.size	__func__.37502, 18
-__func__.37502:
+	.type	__func__.37509, %object
+	.size	__func__.37509, 18
+__func__.37509:
 	.ascii	"PQ_MNG_InitVdpZme\000"
 	.space	2
-	.type	__func__.37519, %object
-	.size	__func__.37519, 19
-__func__.37519:
+	.type	__func__.37526, %object
+	.size	__func__.37526, 19
+__func__.37526:
 	.ascii	"PQ_MNG_InitVpssZme\000"
 	.data
 	.align	2

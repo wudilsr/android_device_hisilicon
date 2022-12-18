@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/screen_background"
+    android:background="@drawable/bg_screen_end"
     android:baselineAligned="false"
     android:orientation="horizontal" >
 
@@ -343,7 +343,7 @@
             </TextView>
         </LinearLayout>
 
-        <ListView
+        <com.hisilicon.dlna.textview.DlnaListView
             android:id="@+id/playListView"
             android:layout_width="fill_parent"
             android:layout_height="412dp"
@@ -359,8 +359,7 @@
             android:focusableInTouchMode="true"
             android:nextFocusUp="@+id/playListView"
             android:nextFocusDown="@+id/playListView"
-            android:listSelector="@drawable/music_listview_bg" >
-        </ListView>
+            android:listSelector="@drawable/music_listview_bg" />
     </LinearLayout>
 
 </LinearLayout>

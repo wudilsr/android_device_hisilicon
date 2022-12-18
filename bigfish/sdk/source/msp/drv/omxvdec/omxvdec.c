@@ -52,6 +52,7 @@ extern HI_BOOL  g_FastOutputMode;
 #define DBG_CMD_SEGSIZE         "set_SegSize"
 #define DBG_CMD_DFS             "set_Dfs"
 #define DBG_CMD_LOWDELAY_TIME   "set_LD"
+#define DBG_CMD_LD_CNT_FRM      "set_LDCountFrm"
 #define DBG_CMD_HELP            "help"
 
 
@@ -63,6 +64,8 @@ HI_CHAR  g_SavePath[PATH_LEN]    = {'/','m','n','t','\0'};
 HI_CHAR  g_SaveName[NAME_LEN]    = {'o','m','x','\0'};
 HI_U32   g_SaveNum               = 0;
 
+HI_U32   g_lowdelay_count_frame  = 100;
+extern HI_BOOL  g_FastOutputMode;
 OMXVDEC_ENTRY  *g_OmxVdec               = HI_NULL;
 OMXVDEC_FUNC    g_stOmxFunc             = {HI_NULL};
 
@@ -232,6 +235,8 @@ static HI_S32 omxvdec_open(struct inode *inode, struct file *fd)
                }
            }
 
+           OMX_PTSREC_Init();
+
            spin_lock_irqsave(&omxvdec->lock, flags);
         }
 
@@ -299,6 +304,7 @@ static HI_S32 omxvdec_release(struct inode *inode, struct file *fd)
     {
         channel_exit();
         task_destroy_thread(omxvdec);
+        OMX_PTSREC_DeInit();
     }
 
 	fd->private_data = HI_NULL;
@@ -603,6 +609,15 @@ static HI_S32 omxvdec_remove(struct platform_device *pltdev)
 	return 0;
 }
 
+UINT32 OMX_GetTimeInMs(VOID)
+{
+    UINT64   SysTime;
+
+    SysTime = sched_clock();
+    do_div(SysTime, 1000000);
+    return (UINT32)SysTime;
+}
+
 /* ==========================================================================
  * omxvdec proc entrance
  * =========================================================================*/
@@ -674,6 +689,7 @@ HI_VOID omxvdec_help_proc(HI_VOID)
     "cmd = set_DispNum,      para = value        :set DispNum    = value\n"
     "cmd = set_SegSize,      para = value        :set SegSize    = value\n"
     "cmd = set_InBufThred,   para = value        :set InBufThred = value\n"
+    "cmd = set_LDCountFrm,   para = value        :set LDCountFrm = value\n"
     "\n");
     HI_DRV_PROC_EchoHelper(
     "cmd = set_LD,  para = value        :set LowDelayStatistics  = value\n"
@@ -982,6 +998,16 @@ HI_S32 omxvdec_write_proc(struct file *file, const char __user *buffer, size_t c
             {
                 goto error;
             }
+        }
+        else if (!strncmp(str1, DBG_CMD_LD_CNT_FRM, DBG_CMD_LEN))
+        {
+            if(omxvdec_string_to_value(str2, &dat2) != 0)
+            {
+                goto error;
+            }
+
+            OmxPrint(OMX_ALWS, "LowDelay Count Frame Number: %u\n", dat2);
+            g_lowdelay_count_frame= dat2;
         }
         else if (!strncmp(str1, DBG_CMD_LOWDELAY_TIME, DBG_CMD_LEN))
         {

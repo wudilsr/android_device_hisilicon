@@ -11,8 +11,8 @@
  * Date:    26, 11, 2014
  *
  */
- 
- 
+
+#include <asm/div64.h>
 #include "hi_drv_module.h"
 #include "drv_vpss_ext.h"
 #include "drv_vdec_ext.h"
@@ -30,6 +30,7 @@ extern OMXVDEC_FUNC g_stOmxFunc;
 extern OMXVDEC_ENTRY *g_OmxVdec;
 extern VFMW_EXPORT_FUNC_S* pVfmwFunc;
 extern HI_BOOL  g_FastOutputMode;
+extern HI_U32 g_lowdelay_count_frame;
 
 
 /*=================== MACRO ====================*/
@@ -134,12 +135,14 @@ static HI_S32 processor_get_frame(OMXVDEC_CHAN_CTX *pchan, EXTERNAL_FRAME_STORE_
         frame->VirAddr = pbuf->kern_vaddr + pbuf->offset;
         frame->Length  = pbuf->buf_len;
 
+        frame->PrivatePhyAddr = pbuf->private_phy_addr;
+        frame->PrivateLength  = pbuf->private_len;
         pchan->yuv_use_cnt++;
 
         ret = HI_SUCCESS;
 
-        OmxPrint(OMX_OUTBUF, "VPSS got frame: phy addr = 0x%08x\n", frame->PhyAddr);
-
+        OmxPrint(OMX_OUTBUF, "VPSS got frame: phy addr = 0x%08x PrivatePhyAddr = 0x%08x\n",\
+			     frame->PhyAddr, frame->PrivatePhyAddr);
         break;
 	}
 
@@ -430,6 +433,10 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
     {
         pVpssFrm->u32StartPhyAddr = (HI_U32)OutFrame.PhyAddr;
         pVpssFrm->u32StartVirAddr = (HI_U32)OutFrame.VirAddr;
+
+        //PrivatePhyAddr = -1 表示未分配metadata，此时也传递给VPSS，给VPSS作判断用
+        pVpssFrm->u32PrivDataPhyAddr = (HI_U32)OutFrame.PrivatePhyAddr;
+        pVpssFrm->u32PrivDataSize    = (HI_U32)OutFrame.PrivateLength;
     }
 
     OmxPrint(OMX_VPSS, "VPSS get frame buffer success!\n");
@@ -486,6 +493,8 @@ static HI_S32 processor_report_new_frame(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
     VPSS_HANDLE hVpss;
     HI_DRV_VIDEO_FRAME_S *pstFrame;
     HI_DRV_VID_FRAME_ADDR_S stBakBufAddr;
+    HI_DRV_VIDEO_PRIVATE_S *pstPrivInfo = HI_NULL;
+    HI_VDEC_PRIV_FRAMEINFO_S *pstvdecPrivInfo = HI_NULL;
 
     hPort = ((HI_DRV_VPSS_FRMINFO_S*)pstArgs)->hPort;
     hVpss = (HI_HANDLE)PORTHANDLE_TO_VPSSID(hPort);
@@ -516,6 +525,14 @@ static HI_S32 processor_report_new_frame(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
             return HI_FAILURE;
         }
     }
+	
+    if((pchan->bLowdelay || g_FastOutputMode) && (NULL != pchan->omx_vdec_lowdelay_proc_rec))
+    {
+        pstPrivInfo     = (HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv);
+        pstvdecPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S*)(pstPrivInfo->u32Reserve);
+        channel_add_lowdelay_tag_time(pchan, pstvdecPrivInfo->u32Usertag, OMX_LOWDELAY_REC_VPSS_RPO_IMG_TIME, OMX_GetTimeInMs());
+    }
+    pchan->omx_chan_statinfo.ProcessorOut++;
 
     OmxPrint(OMX_VPSS, "VPSS report new frame success!\n");
 
@@ -691,15 +708,6 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
         return HI_FAILURE;
 	}
 
-    pstPrivInfo                                 = (HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv);
-    pstPrivInfo->u32BufferID                    = stImage.image_id;
-
-    pstvdecPrivInfo                             = (HI_VDEC_PRIV_FRAMEINFO_S*)(pstPrivInfo->u32Reserve);
-    pstvdecPrivInfo->image_id                   = stImage.image_id;
-    pstvdecPrivInfo->image_id_1                 = stImage.image_id_1;
-    pstvdecPrivInfo->stBTLInfo.u32BTLImageID    = stImage.BTLInfo.btl_imageid;
-    pstvdecPrivInfo->stBTLInfo.u32Is1D          = stImage.BTLInfo.u32Is1D;
-
     /*Change IMAGE to HI_DRV_VIDEO_FRAME_S*/
     if ((stImage.format & 0x3000) != 0)
     {
@@ -857,19 +865,57 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
         }
     }
 
-    u32fpsInteger                               = stImage.frame_rate/1000;
-    u32fpsDecimal                               = stImage.frame_rate%1000;
-    pstFrame->u32FrameRate                      = u32fpsInteger*1000 + (u32fpsDecimal + 500) / 1000;
+    HI_U32 remainder = do_div(stImage.SrcPts, 1000);
+    stImage.SrcPts = (remainder >= 500)? (stImage.SrcPts + 1):stImage.SrcPts;
 
-    if (pstFrame->u32FrameRate > 30)
+    /* Calculate PTS */
+    OMX_PTSREC_CalcStamp(pchan->channel_id, &stImage);
+
+    stImage.SrcPts= stImage.SrcPts * 1000 + remainder;
+    u32fpsInteger                               = stImage.frame_rate/1024;
+    u32fpsDecimal                               = stImage.frame_rate%1024;
+    pstFrame->u32FrameRate                      = u32fpsInteger*1000 + u32fpsDecimal ;
+
+    if (pstFrame->u32FrameRate < 10000 || pstFrame->u32FrameRate > 75000)
     {
-        ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_SET_FRAME_RATE, &pstFrame->u32FrameRate);
-        if(HI_TRUE != ret)
+        pstFrame->u32FrameRate = pchan->last_frame.u32FrameRate;
+    }
+
+    if (pstFrame->u32FrameRate > 30000 && pstFrame->u32FrameRate != pchan->last_frame.u32FrameRate)
+    {
+        HI_U32 u32FrameRate = pstFrame->u32FrameRate/1000;
+
+        ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_SET_FRAME_RATE, &u32FrameRate);
+        if(VDEC_OK != ret)
         {
             OmxPrint(OMX_ERR, "VDEC_CID_SET_FRAME_RATE falled!\n");
         }
     }
 
+    pchan->last_frame.u32FrameRate = pstFrame->u32FrameRate;
+
+
+    pstPrivInfo                                 = (HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv);
+    pstPrivInfo->u32BufferID                    = stImage.image_id;
+    pstPrivInfo->stVideoOriginalInfo.enSource   = HI_DRV_SOURCE_DTV;
+    pstPrivInfo->stVideoOriginalInfo.u32Width   = stImage.disp_width;
+    pstPrivInfo->stVideoOriginalInfo.u32Height  = stImage.disp_height;
+    pstPrivInfo->stVideoOriginalInfo.u32FrmRate = pstFrame->u32FrameRate;
+    pstPrivInfo->stVideoOriginalInfo.en3dType   = pstFrame->eFrmType;
+    pstPrivInfo->stVideoOriginalInfo.enSrcColorSpace = HI_DRV_CS_BT601_YUV_LIMITED;
+    pstPrivInfo->stVideoOriginalInfo.enColorSys      = HI_DRV_COLOR_SYS_AUTO;
+    pstPrivInfo->stVideoOriginalInfo.bGraphicMode    = HI_FALSE;
+    pstPrivInfo->stVideoOriginalInfo.bInterlace      = pstFrame->bProgressive;
+
+    pstvdecPrivInfo                             = (HI_VDEC_PRIV_FRAMEINFO_S*)(pstPrivInfo->u32Reserve);
+    pstvdecPrivInfo->image_id                   = stImage.image_id;
+    pstvdecPrivInfo->image_id_1                 = stImage.image_id_1;
+    pstvdecPrivInfo->stBTLInfo.u32BTLImageID    = stImage.BTLInfo.btl_imageid;
+    pstvdecPrivInfo->stBTLInfo.u32Is1D          = stImage.BTLInfo.u32Is1D;
+
+    pstvdecPrivInfo->u32Usertag                    = stImage.Usertag;
+    /*interleaved source, VPSS module swtich field to frame, need to adjust pts*/
+    pstvdecPrivInfo->s32InterPtsDelta = OMX_PTSREC_GetInterPtsDelta(pchan->channel_id);
 
     if (HI_TRUE == pchan->bLowdelay || HI_TRUE == g_FastOutputMode)
     {
@@ -900,6 +946,11 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
         pstFrame->bSecure = HI_FALSE;
     }
 #endif
+    if((pchan->bLowdelay || g_FastOutputMode) && (NULL != pchan->omx_vdec_lowdelay_proc_rec))
+    {
+        channel_add_lowdelay_tag_time(pchan, stImage.Usertag, OMX_LOWDELAY_REC_VPSS_RCV_IMG_TIME, OMX_GetTimeInMs());
+    }
+    pchan->omx_chan_statinfo.ProcessorIn++;
 
     return 0;
 }
@@ -1081,6 +1132,14 @@ HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, OMX_PIX_FORMAT_E color_for
         stVpssPortCfg.b3Dsupport = HI_TRUE;
     }
 
+    /* 在云游戏的场景，视频为H264，只有IP帧，如果使能快速输出模式，
+       设置IP_MODE,SIMPLE_DPB,SCD lowdly
+    */
+    if ( HI_TRUE == pchan->bLowdelay || HI_TRUE == g_FastOutputMode)
+    {
+        stVpssPortCfg.bTunnelEnable = HI_TRUE;
+    }
+
     ret = (pVpssFunc->pfnVpssCreatePort)(pchan->processor_id, &stVpssPortCfg, &pchan->port_id);
     if (ret != HI_SUCCESS)
     {
@@ -1155,6 +1214,18 @@ HI_S32 processor_start_inst(OMXVDEC_CHAN_CTX *pchan)
         OmxPrint(OMX_FATAL, "%s pchan = NULL!\n", __func__);
         return HI_FAILURE;
     }
+
+	if (pchan->bStorePrivateData == HI_FALSE)
+	{
+		HI_BOOL bStore = HI_FALSE;
+        ret = (pVpssFunc->pfnVpssSendCommand)(pchan->processor_id, HI_DRV_VPSS_USER_COMMAND_STOREPRIV, &bStore);
+	}
+	else
+	{
+		HI_BOOL bStore = HI_TRUE;
+        ret = (pVpssFunc->pfnVpssSendCommand)(pchan->processor_id, HI_DRV_VPSS_USER_COMMAND_STOREPRIV, &bStore);
+	}
+
 
     ret = (pVpssFunc->pfnVpssEnablePort)(pchan->port_id, HI_TRUE);
     if (ret != HI_SUCCESS)

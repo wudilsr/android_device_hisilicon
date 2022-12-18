@@ -460,7 +460,6 @@ int CameraHalImpl::getPicture(previewBuffer *buffer)
     CAMERA_HAL_LOGV("exit %s()", __FUNCTION__);
 
     buffer->viraddr = (char *)mBufferSnapshot[index].start;
-    buffer->length = v4l2_buf.bytesused;
 
     return 0;
 }

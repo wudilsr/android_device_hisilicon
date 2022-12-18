@@ -31,10 +31,10 @@ extern "C" {
  /* the type of Adjust Audio */
 typedef enum hiHI_MPI_SND_SPEEDADJUST_TYPE_E
 {
- HI_MPI_AO_SND_SPEEDADJUST_SRC,     /**<samplerate convert */
- HI_MPI_AO_SND_SPEEDADJUST_PITCH,   /**<Sola speedadjust, reversed */
- HI_MPI_AO_SND_SPEEDADJUST_MUTE,    /**<mute */
- HI_MPI_AO_SND_SPEEDADJUST_BUTT 
+    HI_MPI_AO_SND_SPEEDADJUST_SRC,     /**<samplerate convert */
+    HI_MPI_AO_SND_SPEEDADJUST_PITCH,   /**<Sola speedadjust, reversed */
+    HI_MPI_AO_SND_SPEEDADJUST_MUTE,    /**<mute */
+    HI_MPI_AO_SND_SPEEDADJUST_BUTT 
 } HI_MPI_SND_SPEEDADJUST_TYPE_E;
 
 /******************************* MPI for UNF Sound Init *****************************/
@@ -97,6 +97,11 @@ HI_S32   HI_MPI_AO_SND_SetLowLatency(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT
 HI_S32   HI_MPI_AO_SND_GetLowLatency(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E eOutPort, HI_U32* pu32LatecnyMs);
 //HI_S32   HI_MPI_AO_SND_AttachTrack(HI_UNF_SND_E enSound, HI_HANDLE hTrack);   //HI_MPI_AO_TRACK_AttachSnd
 //HI_S32   HI_MPI_AO_SND_DetachTrack(HI_UNF_SND_E enSound, HI_HANDLE hTrack);
+
+HI_S32   HI_MPI_AO_SND_DMACreate(HI_VOID);
+HI_S32   HI_MPI_AO_SND_DMADestory(HI_VOID);
+HI_S32   HI_MPI_AO_SND_DMASendData(const HI_UNF_AO_FRAMEINFO_S* pstAOFrame, const HI_U32 u32LatencyMs);
+HI_S32   HI_MPI_AO_SND_DMAGetDelayMs(HI_U32 *pu32DelayMs);
 
 /******************************* MPI Track for UNF_SND/UNF_Mixer *****************************/
 HI_S32   HI_MPI_AO_Track_GetDefaultOpenAttr(HI_UNF_SND_TRACK_TYPE_E enTrackType, HI_UNF_AUDIOTRACK_ATTR_S *pstAttr);

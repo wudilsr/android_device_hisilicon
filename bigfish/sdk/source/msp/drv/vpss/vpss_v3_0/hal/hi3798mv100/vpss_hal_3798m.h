@@ -125,6 +125,7 @@ typedef struct hiVPSS_HAL_CTX_S
     HI_U32   au32ZmeCoefPhy[VPSS_ZME_COEF_NUM][4];
     HI_U32   au32ZmeCoefVir[VPSS_ZME_COEF_NUM][4];
     MMZ_BUFFER_S stZmeCoefBuf;
+    MMZ_BUFFER_S stLowDelayBuf;
 } VPSS_HAL_CTX_S;
 
 
@@ -238,6 +239,7 @@ typedef struct hiVPSS_HAL_INFO_S
     VPSS_DIE_INFO_S stDieInfo; 
 
     HI_U32 u32ScdValue;
+    HI_BOOL bOutLowDelay;
     VPSS_HAL_PORT_INFO_S astPortInfo[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];
 
 } VPSS_HAL_INFO_S;

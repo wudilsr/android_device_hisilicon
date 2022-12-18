@@ -38,6 +38,7 @@ namespace android
             virtual int setRightEyeFirst(int Outpriority);
             virtual int getRightEyeFirst();
             virtual int getDisplayCapability(Parcel *pl);
+            virtual int getManufactureInfo(Parcel *pl);
             virtual int setAspectRatio(int ratio);
             virtual int getAspectRatio();
             virtual int setAspectCvrs(int cvrs);

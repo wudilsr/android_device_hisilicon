@@ -34,6 +34,7 @@ namespace android {
         SETSTEREOPRIORITY,
         GETSTEREOPRIORITY,
         GETCAP,
+        GETMANUINFO,
         SETASPECTRATIO,
         GETASPECTRATIO,
         SETASPECTCVRS,
@@ -444,6 +445,18 @@ namespace android {
                 Parcel data;
                 data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
                 remote()->transact(GETCAP, data, pl);
+                return ret;
+            }
+            virtual int getManufactureInfo(Parcel *pl)
+            {
+                int ret = -1;
+                if(pl == NULL)
+                {
+                    return ret;
+                }
+                Parcel data;
+                data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
+                remote()->transact(GETMANUINFO, data, pl);
                 return ret;
             }
             virtual int setAspectRatio(int ratio)
@@ -971,6 +984,10 @@ namespace android {
             case GETCAP:
                 CHECK_INTERFACE(IDisplayService, data, reply);
                 ret = getDisplayCapability(reply);
+                return NO_ERROR;
+            case GETMANUINFO:
+                CHECK_INTERFACE(IDisplayService, data, reply);
+                ret = getManufactureInfo(reply);
                 return NO_ERROR;
             case SETASPECTRATIO:
                 CHECK_INTERFACE(IDisplayService, data, reply);

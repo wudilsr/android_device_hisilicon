@@ -2,6 +2,7 @@ package com.explorer.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,7 @@ public class MainExplorerActivity extends CommonActivity {
   private boolean menuItem6 = true;
   private boolean menuItem7 = true;
 
+  private boolean menuItem8 = true;
   /* 设置operater项的各子项状态 */
   private boolean menuItem1_0_copy = true;
   private boolean menuItem1_1_cut = true;
@@ -220,6 +222,7 @@ public class MainExplorerActivity extends CommonActivity {
    * 初始化menu
    */
   private void intMenu() {
+      Log.i(TAG,"intMenu 1");
     titleAdapter = new TabMenu.MenuTitleAdapter(this, new String[] { " " }, 16, 0xFF222222, Color.LTGRAY, Color.WHITE);
     // 定义每项分页栏的内容
     String[] menuOptions = null;
@@ -229,15 +232,26 @@ public class MainExplorerActivity extends CommonActivity {
       menuDrawableIDs = new int[] { R.drawable.menu_delete };
     } else if (menuItem2 && menuItem3 && (!menuItem4) && (!OPERATER_ENABLE)) {
       /* "新建" "搜索" "切换过滤条件" "切换显示方式" */
+        Log.i(TAG,"intMenu 2");
       menuOptions = new String[] { getString(R.string.str_new), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but) };
       menuDrawableIDs = new int[] { // R.drawable.menu_test,
       R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut };
 
-    } else if (menuItem2 && menuItem3 && (!menuItem4) && OPERATER_ENABLE) {
+    } else if (menuItem2 && menuItem3 && (!menuItem4) && OPERATER_ENABLE && (!menuItem8)) {
       /* "操作", "新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
+        /* "预览" */
+        Log.i(TAG,"intMenu 3");
       menuOptions = new String[] { getString(R.string.operation), getString(R.string.str_new), getString(R.string.search), getString(R.string.filter_but),
           getString(R.string.show_but), getString(R.string.sort_but) };
       menuDrawableIDs = new int[] { R.drawable.menu_bookmark, R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut,
+          R.drawable.menu_fullscreen };
+    } else if (menuItem2 && menuItem3 && (!menuItem4)&& menuItem8 && OPERATER_ENABLE ) {
+      /* "操作", "新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
+        /* "预览" */
+        Log.i(TAG,"intMenu 4");
+      menuOptions = new String[] { getString(R.string.operation), getString(R.string.preview), getString(R.string.str_new), getString(R.string.search), getString(R.string.filter_but),
+          getString(R.string.show_but), getString(R.string.sort_but) };
+      menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut,
           R.drawable.menu_fullscreen };
     } else if (listNull_pasteEnable && (menuItem2) && (!menuItem3) && (!menuItem4) && OPERATER_ENABLE) {
       /* "操作","新建", "切换过滤条件" */
@@ -386,6 +400,11 @@ public class MainExplorerActivity extends CommonActivity {
         menuItem1 = true;
         menuItem2 = true;
         menuItem3 = true;
+        if(listFile.get(myPosition).isDirectory()){
+            menuItem8 = false;
+        }else{
+            menuItem8 = true;
+        }
         menuItem4 = false;
       }
     } else {
@@ -450,7 +469,7 @@ public class MainExplorerActivity extends CommonActivity {
           if (tabMenu.isShowing())
             tabMenu.dismiss();
         }
-      } else if (menuItem2 && menuItem3 && (!menuItem4) && OPERATER_ENABLE) {
+      } else if (menuItem2 && menuItem3 && (!menuItem4) && OPERATER_ENABLE &&(!menuItem8)) {
         if (arg2 == 0) {
           /* 操作 */
           operation();
@@ -485,7 +504,47 @@ public class MainExplorerActivity extends CommonActivity {
           if (tabMenu.isShowing())
             tabMenu.dismiss();
         }
-      } else if (listNull_pasteEnable && (menuItem2) && (!menuItem3) && (!menuItem4) && OPERATER_ENABLE) {
+      }else if (menuItem2 && menuItem3 && (!menuItem4) &&menuItem8 && OPERATER_ENABLE) {
+          if (arg2 == 0) {
+              /* 操作 */
+              operation();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+              if (arg2 == 1) {
+              preview(listFile.get(myPosition));
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 2) {
+              FileUtil util = new FileUtil(MainExplorerActivity.this);
+              util.createNewDir(currentFileString);
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 3) {
+              searchFileDialog();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+
+            if (arg2 == 4) {
+              FilterDialog();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 5) {
+              ShowDialog();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 6) {
+              /* 排序 */
+              sortFiles();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+          }  else if (listNull_pasteEnable && (menuItem2) && (!menuItem3) && (!menuItem4) && OPERATER_ENABLE) {
         if (arg2 == 0) {
           operation();
           if (tabMenu.isShowing())
@@ -678,7 +737,9 @@ public class MainExplorerActivity extends CommonActivity {
       }
     });
   }
-
+  protected void preview(File file){
+      super.preview(file);
+  }
   /**
    * 切换显示方式如列表或缩略图
    */
@@ -1294,7 +1355,6 @@ public class MainExplorerActivity extends CommonActivity {
             sortBut.setOnClickListener(null);
             sortBut.setImageResource(sortArray[0]);
           }
-          sortCount = 0;
           filterBut.setOnClickListener(null);
           filterBut.setImageResource(filterArray[0]);
           filterCount = 0;

@@ -352,7 +352,7 @@ namespace android
             //add for first progress report,fix camera recording block
             mLockThreadId = getThreadId();
             mPlayer->setLooping(mLoop);
-            mPlayer->setVolume(mLeftVolume, mRightVolume);
+            //mPlayer->setVolume(mLeftVolume, mRightVolume);
             mCurrentState = MEDIA_PLAYER_STARTED;
             ret = mPlayer->start();
             if (ret != NO_ERROR)

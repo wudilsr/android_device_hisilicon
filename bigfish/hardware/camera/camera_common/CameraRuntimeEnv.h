@@ -56,6 +56,7 @@ public:
     int                 mPreviewHeight;
     int                 mPreviewFormat;
     int                 mPreviewFps;
+    const char*         mPreviewFrameFmt;
 
     int                 mSnapshotWidth;
     int                 mSnapshotHeight;
@@ -66,6 +67,26 @@ public:
     int                 mThumbnailWidth;
     int                 mThumbnailHeight;
     int                 mThumbnailQuality;
+
+    int                 mRotation;
+    float               mFocalLength;
+    int                 mZoomRatio;
+    int                 mZoom;
+    int                 mMaxZoom;
+    int                 mApertureFactor;
+    int                 mEquivalentFocus;
+    int                 mExposureCompensation;
+    int                 mEVStep;
+    int                 mBrightness;
+
+    /* gps parameter */
+    bool                mHaveGPS;
+    double              mGPSLatitude;
+    double              mGPSLongitude;
+    double              mGPSAltitude;
+    unsigned long       mGPSTimestamp;
+    bool                mGPSHaveTimestamp;
+    char                mGPSProcMethod[64+1];
 
     bool                mShouldRestartPreview;
     CameraParameters    mParameters;

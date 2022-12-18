@@ -335,6 +335,10 @@ HI_S32 VPSS_IMG_AddNewImg(VPSS_IMAGELIST_INFO_S *pstImgInfo,
 
         pstEmpty2ndImage->stSrcImage.u32Pts = pstEmpty1stImage->stSrcImage.u32Pts
                                              + pstVdecPriv->s32InterPtsDelta;
+
+        pstEmpty2ndImage->stSrcImage.s64OmxPts = pstEmpty1stImage->stSrcImage.s64OmxPts
+                                               + pstVdecPriv->s32InterPtsDelta * 1000;
+											 
         pstEmpty1stImage->stSrcImage.u32FrameRate = 
                     pstEmpty1stImage->stSrcImage.u32FrameRate*2;
         pstEmpty2ndImage->stSrcImage.u32FrameRate = 

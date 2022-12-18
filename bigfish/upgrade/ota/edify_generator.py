@@ -203,8 +203,13 @@ class EdifyGenerator(object):
             'write_raw_image(package_extract_file("%(fn)s"), "%(device)s");'
             % args)
       elif partition_type == "EMMC":
-        self.script.append(
-            'package_extract_file("%(fn)s", "%(device)s");' % args)
+        if fn == "fastboot.img":
+          self.script.append(
+              'ifelse(getprop("persist.sys.packagetype.qfp") == "true", package_extract_file("fastboot-qfp.img", "%s"),\n        package_extract_file("%s", "%s"));'
+              % (p.device, fn, p.device))
+        else:
+          self.script.append(
+              'package_extract_file("%(fn)s", "%(device)s");' % args)
       else:
         raise ValueError("don't know how to write \"%s\" partitions" % (p.fs_type,))
 

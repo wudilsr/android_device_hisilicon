@@ -25,6 +25,7 @@
 #define HI_UNF_DISP_HD0 (HI_UNF_DISPLAY1)
 
 #define DISPLAY_DEBUG 1
+
 #define LOG_TAG "DisplaySetting"
 
 #define ENV_VALUE_BUFFER_LEN 8
@@ -73,6 +74,8 @@ int displayType = 0; // 0 is hdmi not connected, 1 is tv, 2 is pc
 extern HI_UNF_HDMI_STATUS_S stHdmiStatus;
 extern HI_UNF_EDID_BASE_INFO_S stSinkCap;
 
+HI_U32 TVHMax = 0;
+HI_U32 TVWMax = 0;
 typedef enum  baseparam_option_e{
     FORMAT =        1<<0,
     BRIGHTNESS =    1<<1,
@@ -103,6 +106,7 @@ extern HI_U32 set_HDMI_Suspend_Time(int iTime);
 extern HI_U32 get_HDMI_Suspend_Time();
 extern HI_U32 set_HDMI_Suspend_Enable(int iEnable);
 extern HI_U32 get_HDMI_Suspend_Enable();
+extern void setTVproperty();
 
 static int baseparam_disp_set(void *data, baseparam_option_e flag, int enDisp)
 {
@@ -901,7 +905,10 @@ int set_format(display_format_e format)
 #endif
 
     store_format((display_format_e)format, (display_format_e)format_sd);
-
+    char tmp[92] = "";
+    property_get("ro.product.target",tmp,"");
+    if(strcmp(tmp,"unicom")==0||strcmp(tmp,"telecom")==0)
+        setTVproperty();
     return HI_SUCCESS;
 }
 
@@ -965,6 +972,34 @@ int get_hdmi_capability(int *hdmi_sink_cap)
     }
 
     return ret;
+}
+int get_manufacture_info(char * frsname, char * sinkname,int *productcode, int *serianumber,
+     int *week, int *year, int *TVHight, int *TVWidth)
+{
+        ALOGE("<<<<<<Manufacture Infomation>>>>>>\n");
+        HI_S32 ret = HI_SUCCESS;
+        HI_UNF_EDID_BASE_INFO_S gtSinkCap;
+        memset(&gtSinkCap, 0, sizeof(HI_UNF_EDID_BASE_INFO_S));
+
+        int Ret = HI_UNF_HDMI_GetSinkCapability(HI_UNF_HDMI_ID_0, &gtSinkCap);
+        if(ret != HI_SUCCESS)
+        {
+                ALOGE("Get Manufacture failure!\n");
+                return HI_FAILURE;
+        }
+
+        strcpy(frsname, (char *)gtSinkCap.stMfrsInfo.u8MfrsName);
+        strcpy(sinkname, (char *)gtSinkCap.stMfrsInfo.u8pSinkName);
+        *serianumber = gtSinkCap.stMfrsInfo.u32SerialNumber;
+        *productcode = gtSinkCap.stMfrsInfo.u32ProductCode;
+        *week = gtSinkCap.stMfrsInfo.u32Week;
+        *year = gtSinkCap.stMfrsInfo.u32Year;
+        *TVHight = (int) TVHMax;
+        *TVWidth = (int) TVWMax;
+
+        ALOGE("Manufacture Name:%s, Sink Name:%s, Product Code:%d, Serial Number:%d,Manufacture Week:%d, \
+                                          Manufacture Year:%d,TV Size:W%d,H%d \n",frsname,sinkname,*productcode,*serianumber,*week,*year,*TVWidth,*TVHight);
+        return HI_SUCCESS;
 }
 
 /*
@@ -1823,7 +1858,6 @@ int called_by_displaysetting()
 
     int pid = getpid();
     snprintf(cmdline, sizeof(cmdline), "/proc/%d/cmdline", pid);
-    ALOGD("cmdline for pid %d: %s", pid, cmdline);
 
     file = fopen(cmdline, "r");
     if (file == NULL)
@@ -1888,6 +1922,8 @@ int disp_init()
     int base_sd_ret = HI_FAILURE;
     char base[PROPERTY_LEN];
     char customize[PROPERTY_LEN];
+    char property[PROPERTY_LEN];
+    char mem[PROPERTY_LEN];
     HI_UNF_PDM_DISP_PARAM_S baseParam;
     HI_UNF_PDM_DISP_PARAM_S baseParam_sd;
 
@@ -1943,9 +1979,10 @@ int disp_init()
     }
     ALOGE("sd, GetBaseParam VirtScreenWidth:%d", baseParam.u32VirtScreenWidth);
 
-    char property[PROPERTY_LEN];
     property_get("ro.config.low_ram", property, "");
-    if ( (strcmp(property, "true") == 0) && (1280 != baseParam.u32VirtScreenWidth) && (720 != baseParam.u32VirtScreenHeight) ) {
+    property_get("ro.product.mem.size", mem, "unknown");
+    if ( (strcmp(property, "true") == 0) && ((strcmp(mem, "512m") == 0) || (strcmp(mem, "768m") == 0))
+        && (1280 != baseParam.u32VirtScreenWidth) && (720 != baseParam.u32VirtScreenHeight) ) {
         baseParam.u32VirtScreenWidth = 1280;
         baseParam.u32VirtScreenHeight = 720;
         HI_UNF_PDM_UpdateBaseParam(HI_UNF_PDM_BASEPARAM_DISP1, &baseParam);
@@ -2064,6 +2101,7 @@ static int open_display(const struct hw_module_t* module, const char* name,
     ctx->device.get_graphic_out_range = get_graphic_out_range;
 
     ctx->device.get_hdmi_capability = get_hdmi_capability;
+    ctx->device.get_manufacture_info = get_manufacture_info;
 
     ctx->device.open_display_channel = open_display_channel;
     ctx->device.close_display_channel = close_display_channel;

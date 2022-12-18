@@ -1084,16 +1084,74 @@ static HI_S32 AO_SND_GetAefBypass(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E 
     return SND_GetOpAefBypass(pCard, enOutPort, pbBypass);
 }
 
-
 static HI_S32 AO_Snd_GetXRunCount(HI_UNF_SND_E enSound, HI_U32 *pu32Count)
 {
     SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
 
     CHECK_AO_NULL_PTR(pCard);
-    SND_GetXRunCount(pCard,pu32Count);
+    SND_GetXRunCount(pCard, pu32Count);
 
     return HI_SUCCESS;
+}
 
+static HI_S32 AO_Snd_GetPortInfo(HI_UNF_SND_E enSound, SND_PORT_KERNEL_ATTR_S* pstPortKAttr)
+{
+    SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
+    CHECK_AO_NULL_PTR(pCard);
+
+    if (HI_TRUE == pCard->bDMAMode)
+    {
+        return HI_ERR_AO_USED;
+    }
+
+    return SND_GetPortInfo(pCard, HI_UNF_SND_OUTPUTPORT_ALL, pstPortKAttr);
+}
+
+static HI_S32 AO_Snd_ResetDMAMode(HI_UNF_SND_E enSound)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
+
+    if (HI_TRUE == pCard->bDMAMode)
+    {
+        s32Ret = SND_SetPortSampleRate(pCard, HI_UNF_SND_OUTPUTPORT_ALL, (HI_U32)(pCard->enUserSampleRate));
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_AO("SND_SetPortSampleRate(%d) HI_UNF_SND_OUTPUTPORT_ALL failed!\n", (HI_U32)(pCard->enUserSampleRate));
+            return s32Ret;
+        }
+        pCard->bDMAMode = HI_FALSE;
+    }
+    return s32Ret;
+}
+
+static HI_S32 AO_Snd_SetDMAMode(HI_UNF_SND_E enSound, HI_BOOL bEnable, HI_UNF_SAMPLE_RATE_E enSampleRate)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
+    CHECK_AO_NULL_PTR(pCard);
+
+    if (HI_TRUE == bEnable)
+    {
+        pCard->bDMAMode = bEnable;
+
+        s32Ret = SND_SetPortSampleRate(pCard, HI_UNF_SND_OUTPUTPORT_ALL, (HI_U32)enSampleRate);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_AO("SND_SetPortSampleRate(%d) HI_UNF_SND_OUTPUTPORT_ALL failed!\n", (HI_U32)enSampleRate);
+            return s32Ret;
+        }
+    }
+    else
+    {
+        s32Ret = AO_Snd_ResetDMAMode(enSound);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_AO("AO_Snd_ResetDMAMode failed!\n");
+            return s32Ret;
+        }
+    }
+    return s32Ret;
 }
 
 /* snd open kernel intf */
@@ -1476,7 +1534,30 @@ HI_S32 AO_TrackSetAipFiFoBypass(HI_U32 u32TrackID, HI_BOOL bEnable)
     }
 }
 
-HI_S32 AO_Track_SendData(HI_U32 u32TrackID, HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
+HI_S32 AO_Track_SendData(HI_U32 u32TrackID, HI_UNF_AO_FRAMEINFO_S* pstAOFrame)
+{
+    SND_CARD_STATE_S* pCard;
+    u32TrackID &= AO_TRACK_CHNID_MASK;
+    pCard = TRACK_CARD_GetCard(u32TrackID);
+
+    if (pCard)
+    {
+        if (HI_TRUE == pCard->bDMAMode)
+        {
+            return HI_SUCCESS;
+        }
+        else
+        {
+            return TRACK_SendData(pCard, u32TrackID, pstAOFrame);
+        }
+    }
+    else
+    {
+        return HI_ERR_AO_SOUND_NOT_OPEN;
+    }
+}
+
+HI_S32 AO_Track_SendAlsaData(HI_U32 u32TrackID, HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
 {
     SND_CARD_STATE_S *pCard;
     u32TrackID &= AO_TRACK_CHNID_MASK;
@@ -1484,13 +1565,22 @@ HI_S32 AO_Track_SendData(HI_U32 u32TrackID, HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
 
     if (pCard)
     {
-        return TRACK_SendData(pCard, u32TrackID, pstAOFrame);
+        if (HI_TRUE == pCard->bDMAMode)
+        {
+            return HI_SUCCESS;
+        }
+        else
+        {
+            return TRACK_SendAlsaData(pCard, u32TrackID, pstAOFrame);
+        }
     }
     else
     {
         return HI_ERR_AO_SOUND_NOT_OPEN;
     }
 }
+
+
 
 static HI_S32 AO_Track_MmapTrackAttr(HI_U32 u32TrackID, HI_U32* pu32AipRegAddr, HI_TRACK_MmapAttr_S *pstTrackMmapAttr)
 {
@@ -3169,7 +3259,7 @@ static HI_S32 AO_CloseDev(HI_VOID)
     {
         if (s_stAoDrv.astSndEntity[i].pCard)
         {
-            for(j =0; j<SND_MAX_OPEN_NUM;j++)
+            for(j = 0; j < SND_MAX_OPEN_NUM; j++)
             {
                 if(s_stAoDrv.astSndEntity[i].u32File[j] != 0)
                 {
@@ -3972,6 +4062,22 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         break;
     }
 
+    case CMD_AO_SND_GETPORTINFO:
+    {
+        AO_SND_GetPortInfo_Param_S_PTR pstPortInfoParam = (AO_SND_GetPortInfo_Param_S_PTR)arg;
+        CHECK_AO_SNDCARD_OPEN(pstPortInfoParam->enSound);
+        Ret = AO_Snd_GetPortInfo(pstPortInfoParam->enSound, pstPortInfoParam->stPortKAttr);
+        break;
+    }
+
+    case CMD_AO_SND_SETDMAMODE:
+    {
+        AO_SND_SetDMAMode_Param_S_PTR pstParam = (AO_SND_SetDMAMode_Param_S_PTR)arg;
+        CHECK_AO_SNDCARD_OPEN(pstParam->enSound);
+        Ret = AO_Snd_SetDMAMode(pstParam->enSound, pstParam->bEnable, pstParam->enSampleRate);
+        break;
+    }
+
     default:
         Ret = HI_FAILURE;
         {
@@ -4116,6 +4222,7 @@ HI_S32 AO_DRV_Release(struct inode *inode, struct file  *filp)
                                     return HI_FAILURE;
                                 }
                             }
+                            AO_Snd_ResetDMAMode(i);
 
                             AO_Snd_FreeHandle(i, (struct file *)(s_stAoDrv.astSndEntity[i].u32File[j]));
                         }
@@ -4519,13 +4626,18 @@ HI_S32 HI_DRV_AO_SND_GetDefaultOpenAttr(HI_UNF_SND_E enSound, HI_UNF_SND_ATTR_S 
     HI_S32 Ret;
 	AO_SND_OpenDefault_Param_S stSndDefaultAttr;
     CHECK_AO_SNDCARD( enSound );
+    Ret = down_interruptible(&g_AoMutex);
 
 	stSndDefaultAttr.enSound = enSound;
 	Ret = AOGetSndDefOpenAttr(&stSndDefaultAttr);
 	if(HI_SUCCESS != Ret)
-		return Ret;
-
+    {
+        HI_ERR_AO("GetDefaultAttr Failed %d\n");
+        up(&g_AoMutex);
+        return Ret;
+    }
 	memcpy(pstAttr, &stSndDefaultAttr.stAttr, sizeof(HI_UNF_SND_ATTR_S));
+    up(&g_AoMutex);
 	return Ret;
 }
 
@@ -4534,6 +4646,7 @@ HI_S32 HI_DRV_AO_SND_Open(HI_UNF_SND_E enSound, HI_UNF_SND_ATTR_S *pstAttr, stru
     HI_S32 Ret;
     DRV_AO_STATE_S *pAOState;
     struct file  *pstfile;
+    Ret = down_interruptible(&g_AoMutex);
 
     if(HI_NULL == pfile)
     {
@@ -4558,7 +4671,9 @@ HI_S32 HI_DRV_AO_SND_Open(HI_UNF_SND_E enSound, HI_UNF_SND_ATTR_S *pstAttr, stru
                 Ret = AO_SND_Open(enSound, pstAttr, NULL, HI_FALSE);
                 if (HI_SUCCESS != Ret)
                 {
+                    HI_ERR_AO("Ao SND Open Failed\n");
                     AO_Snd_FreeHandle(enSound, pstfile);
+                    up(&g_AoMutex);
                     return Ret;
                 }
         }
@@ -4566,6 +4681,7 @@ HI_S32 HI_DRV_AO_SND_Open(HI_UNF_SND_E enSound, HI_UNF_SND_ATTR_S *pstAttr, stru
 
     atomic_inc(&s_stAoDrv.astSndEntity[enSound].atmUseTotalCnt);
     atomic_inc(&pAOState->atmUserOpenCnt[enSound]);
+    up(&g_AoMutex);
 
     return Ret;
 }
@@ -4575,6 +4691,7 @@ HI_S32 HI_DRV_AO_SND_Close(HI_UNF_SND_E enSound, struct file  *pfile)
     HI_S32 Ret;
     DRV_AO_STATE_S *pAOState;
     struct file  *pstfilp;
+    Ret = down_interruptible(&g_AoMutex);
 
     if(HI_NULL == pfile)
     {
@@ -4600,8 +4717,10 @@ HI_S32 HI_DRV_AO_SND_Close(HI_UNF_SND_E enSound, struct file  *pfile)
                 {
                     atomic_inc(&s_stAoDrv.astSndEntity[enSound].atmUseTotalCnt);
                     atomic_inc(&pAOState->atmUserOpenCnt[enSound]);
+                    HI_ERR_AO("AO SND Close failed %d\n", Ret);
+                    up(&g_AoMutex);
                     return Ret;
-                }
+            }
 
                 AO_Snd_FreeHandle(enSound, pstfilp);
             }
@@ -4610,6 +4729,7 @@ HI_S32 HI_DRV_AO_SND_Close(HI_UNF_SND_E enSound, struct file  *pfile)
     {
         atomic_dec(&s_stAoDrv.astSndEntity[enSound].atmUseTotalCnt);
     }
+    up(&g_AoMutex);
 
     return HI_SUCCESS;
 }
@@ -4622,22 +4742,43 @@ HI_S32 HI_DRV_AO_SND_Close(HI_UNF_SND_E enSound, struct file  *pfile)
 }
 HI_S32 HI_DRV_AO_SND_SetVolume(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_GAIN_ATTR_S stGain)
 {
+    HI_S32 Ret = HI_SUCCESS;
     CHECK_AO_SNDCARD_OPEN( enSound );
-    return AO_SND_SetVolume(enSound, enOutPort, stGain);
+
+    Ret = down_interruptible(&g_AoMutex);
+    Ret = AO_SND_SetVolume(enSound, enOutPort, stGain);
+    up(&g_AoMutex);
+    return Ret;
 
 }
 
 HI_S32 HI_DRV_AO_SND_GetVolume(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_GAIN_ATTR_S *pstGain)
 {
+    HI_S32 Ret = HI_SUCCESS;
     CHECK_AO_SNDCARD_OPEN( enSound );
-    return AO_SND_GetVolume(enSound, enOutPort, pstGain);
+    Ret = down_interruptible(&g_AoMutex);
+    Ret = AO_SND_GetVolume(enSound, enOutPort, pstGain);
+    up(&g_AoMutex);
+    return Ret;
 }
 
 HI_S32 HI_DRV_AO_Track_GetDefaultOpenAttr(HI_UNF_SND_TRACK_TYPE_E enTrackType, HI_UNF_AUDIOTRACK_ATTR_S *pstAttr)
 {
-    pstAttr->enTrackType = enTrackType;
+    HI_S32 Ret = HI_SUCCESS;
 
-    return AO_Track_GetDefAttr(pstAttr);
+    Ret = down_interruptible(&g_AoMutex);
+
+    pstAttr->enTrackType = enTrackType;
+    Ret = AO_Track_GetDefAttr(pstAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_AO("GetDefaultOpenAttr %d\n", Ret);
+        up(&g_AoMutex);
+        return Ret;
+    }
+    up(&g_AoMutex);
+
+    return Ret;
 }
 
 HI_S32 HI_DRV_AO_Track_Create(HI_UNF_SND_E enSound, HI_UNF_AUDIOTRACK_ATTR_S *pstAttr, HI_BOOL bAlsaTrack, struct file  *pfile, HI_HANDLE *phTrack)
@@ -4645,6 +4786,7 @@ HI_S32 HI_DRV_AO_Track_Create(HI_UNF_SND_E enSound, HI_UNF_AUDIOTRACK_ATTR_S *ps
     HI_S32 Ret = HI_SUCCESS;
     HI_HANDLE hHandle = HI_INVALID_HANDLE;
     struct file  *pstfilp;
+    Ret = down_interruptible(&g_AoMutex);
 
     if(HI_NULL == pfile)
 	{
@@ -4659,6 +4801,8 @@ HI_S32 HI_DRV_AO_Track_Create(HI_UNF_SND_E enSound, HI_UNF_AUDIOTRACK_ATTR_S *ps
     Ret = AO_Track_AllocHandle(&hHandle, pstAttr->enTrackType, pstfilp);
     if(HI_SUCCESS != Ret)
     {
+        HI_ERR_AO("AO_Track_AllocHandle Failed \n", Ret);
+        up(&g_AoMutex);
         return Ret;
     }
 
@@ -4666,10 +4810,13 @@ HI_S32 HI_DRV_AO_Track_Create(HI_UNF_SND_E enSound, HI_UNF_AUDIOTRACK_ATTR_S *ps
     if (HI_SUCCESS != Ret)
     {
         AO_Track_FreeHandle(hHandle);
+        HI_ERR_AO("Pre Create Track Failed \n", Ret);
+        up(&g_AoMutex);
         return Ret;
     }
 
     *phTrack = hHandle;
+    up(&g_AoMutex);
 
     return Ret;
 }
@@ -4678,14 +4825,18 @@ HI_S32 HI_DRV_AO_Track_Destroy(HI_HANDLE hSndTrack)
 {
     HI_S32 Ret = HI_SUCCESS;
     CHECK_AO_TRACK_OPEN(hSndTrack);
+    Ret = down_interruptible(&g_AoMutex);
 
     Ret = AO_Track_Destory(hSndTrack);
     if (HI_SUCCESS != Ret)
     {
+        HI_ERR_AO("Create Destroy Failed \n", Ret);
+        up(&g_AoMutex);
         return Ret;
     }
 
     AO_Track_FreeHandle(hSndTrack);
+    up(&g_AoMutex);
 
     return Ret;
 }
@@ -4719,6 +4870,13 @@ HI_S32 HI_DRV_AO_Track_SendData(HI_HANDLE hSndTrack, HI_UNF_AO_FRAMEINFO_S *pstA
     CHECK_AO_TRACK_OPEN(hSndTrack);
     return AO_Track_SendData(hSndTrack, pstAOFrame);
 }
+
+HI_S32 HI_DRV_AO_Track_SendAlsaData(HI_HANDLE hSndTrack, HI_UNF_AO_FRAMEINFO_S *pstAOFrame)
+{
+    CHECK_AO_TRACK_OPEN(hSndTrack);
+    return AO_Track_SendAlsaData(hSndTrack, pstAOFrame);
+}
+
 
 HI_S32 HI_DRV_AO_Track_AttachAi(HI_HANDLE hSndTrack, HI_HANDLE hAi)
 {

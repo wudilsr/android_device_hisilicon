@@ -317,11 +317,6 @@ static int hieth_net_open(struct net_device *dev)
 
 	try_module_get(THIS_MODULE);
 
-	if (!is_valid_ether_addr(dev->dev_addr))
-		random_ether_addr(dev->dev_addr);
-
-	hieth_hw_set_macaddress(ld, 1, dev->dev_addr);
-
 	/* init tasklet */
 	ld->bf_recv.next = NULL;
 	ld->bf_recv.state = 0;
@@ -538,7 +533,6 @@ void hieth_net_set_rx_mode(struct net_device *dev)
 	spin_unlock(&hieth_glb_reg_lock);
 }
 
-#if 0
 static void print_mac_address(const char *pre_msg, const unsigned char *mac,
 			      const char *post_msg)
 {
@@ -553,7 +547,6 @@ static void print_mac_address(const char *pre_msg, const unsigned char *mac,
 	if (post_msg)
 		printk(post_msg);
 }
-#endif
 
 static int hieth_net_ioctl(struct net_device *net_dev,
 			   struct ifreq *ifreq, int cmd)
@@ -745,6 +738,16 @@ static int hieth_platdev_probe_port(struct platform_device *pdev, int port)
 		hieth_error("hieth_init_skb_buffers failed!");
 		goto _error_init_skb_buffers;
 	}
+
+	if (!is_valid_ether_addr(netdev->dev_addr)) {
+		print_mac_address(KERN_WARNING "Invalid HW-MAC Address: ",
+				netdev->dev_addr, "\n");
+		random_ether_addr(netdev->dev_addr);
+		print_mac_address(KERN_WARNING "Set Random MAC address: ",
+				netdev->dev_addr, "\n");
+	}
+
+	hieth_hw_set_macaddress(ld, 1, netdev->dev_addr);
 
 	ret = register_netdev(netdev);
 	if (ret) {

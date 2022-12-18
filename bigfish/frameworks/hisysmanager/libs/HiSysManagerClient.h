@@ -32,6 +32,8 @@ public:
     int setDefaultRoute(String8 interfacename,int gw);
     int removeDefaultRoute(String8 interfacename);
     int removeNetRoute(String8 interfacename);
+    int setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
+    int getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     int setHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     int getHDCPKey(String8 tdname,int offset,String8 filename,int datasize);
     int reboot();
@@ -58,6 +60,8 @@ public:
     int recoveryIPTV(String8 path,String8 file);
     int setDRMKey(String8 tdname,int offset,String8 filename,int datasize);
     int getDRMKey(String8 tdname,int offset,String8 filename,int datasize);
+    int userDataRestoreIptv();
+    int setUIAsyncCompose(int mode);
     static sp<IHiSysManagerService> & getSysManagerService();
 private:
     static sp<IHiSysManagerService> mSysManagerService;

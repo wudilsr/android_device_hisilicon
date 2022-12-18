@@ -16,6 +16,7 @@ endef
 
 MAKEFILE_MODULES := hardware \
                     external \
+                    external/libformat_open/libfectest \
                     system \
                     development \
                     packages \

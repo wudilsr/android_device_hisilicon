@@ -20,7 +20,7 @@
 #include <linux/err.h>
 #include <linux/scatterlist.h>
 #include <asm/setup.h>
-
+#include <linux/syscalls.h>
 #include "rsa.h"
 #include "hi_drv_cipher.h"
 #include "hi_drv_mmz.h"
@@ -28,6 +28,7 @@
 extern HI_S32 DRV_CA_OTP_V200_GetSCSActive(HI_U32 *pActiveFlag);
 
 #define SYSTEM_LIST_FILE "/system/etc/system_list"
+#define SYSTEM_LIST_NUM "/dev/system_num"
 #define CONFIG_RSAKEY_TAG_VAL   0x52534101  /* RSA */
 #define BUF_SIZE 1024
 #define OFFSET_ACTUAL_DATA_SIZE 0x34
@@ -60,6 +61,7 @@ static char errmsg[ERRMSG_LEN];
 static int chk_fail_flag = E_STATUS_STOP;
 static char *file_data_buf;
 static char *line_buf;
+static int check_system_num = 0;
 static unsigned char RSAKey[512] = {0};
 static unsigned char g_all_partition_hash[128] = {0};
 static unsigned char g_system_hash[32] = {0};
@@ -505,6 +507,7 @@ static int verify_files(struct file *filp, int file_len)
 			return -1;
 		}
 
+		check_system_num++;
 		/* interval time 100ms */
 		msleep(100);
 	}
@@ -518,9 +521,14 @@ static int system_verify(void *unused)
 	int ret;
 	int i;
 	struct file *filp = NULL;
+	struct file *filp_num = NULL;
 	struct inode *inode;
 	int file_size = 0;
+	int file_num = 0;
 	int actual_len;
+	loff_t pos = 0;
+	char buf[10];
+	mm_segment_t fs;
 
 	chk_fail_flag = E_STATUS_RUNNING;
 	/* alloc data buf */
@@ -576,6 +584,8 @@ static int system_verify(void *unused)
 
 	pr_info("actual_len: %x.\n", actual_len);
 
+	check_system_num = 0;
+	
 	/* SHA1 to every file */
 	ret = verify_files(filp, actual_len);
 	if (ret) {
@@ -584,6 +594,66 @@ static int system_verify(void *unused)
 		goto ERR2;
 	}
 
+	printk("Check system file num\n");
+	
+    char *argv[] = {"/etc/security_l2_num", NULL};
+    char *envp[] = {"PATH=/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin",NULL};
+	
+    call_usermodehelper(argv[0], argv, envp, UMH_WAIT_EXEC);
+
+	ssleep(1);
+	
+	i = 0;
+	
+	set_freezable();
+		
+	while (1) {
+
+		try_to_freeze();
+
+		if (kthread_should_stop()) {
+			kfree(file_data_buf);
+			return 0;
+		}
+
+		
+		filp_num = filp_open(SYSTEM_LIST_NUM, O_RDONLY, 0);
+				
+		if(!IS_ERR(filp_num))
+		{
+			fs=get_fs();
+			set_fs(KERNEL_DS);
+			vfs_read(filp_num,buf, sizeof(buf), &pos);
+			file_num = (int)simple_strtoul(buf,NULL,10);
+			file_num --;
+			printk("Check system file num is:%d %d\n",file_num,check_system_num);
+			if(file_num != check_system_num)
+			{
+				printk("Check system file num is not same\n");
+				goto ERR2;
+			}
+			else
+			{
+				printk("Check system file num is the same\n");
+			}
+			filp_close(filp_num, NULL);
+			set_fs(fs);
+			sys_unlink(SYSTEM_LIST_NUM);
+			break;
+		}
+		else 
+		{
+			pr_err("open file fail (%ld) times: %d.\n", PTR_ERR(filp_num), i);
+		}
+		
+		if (i++ > MAX_RETRY_TIMES) {
+			pr_err("open file fail.\n");
+			snprintf(errmsg, ERRMSG_LEN, "open system_num file fail");
+			goto ERR2;
+		}
+		ssleep(1);
+	}
+	
 	if (!kthread_should_stop()) {
 		/* verify success */
 		chk_fail_flag = E_STATUS_SUCCESS;

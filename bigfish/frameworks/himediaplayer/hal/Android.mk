@@ -28,7 +28,6 @@ LOCAL_SHARED_LIBRARIES :=       \
     libutils                    \
 
 LOCAL_SHARED_LIBRARIES += \
-    libandroid_runtime \
     libnativehelper \
     libcharsetMgr \
     libhi_subtitle \

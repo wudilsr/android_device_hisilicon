@@ -6,6 +6,8 @@ extern "C" {
 #include "vformat.h"
 #include "aformat.h"
 #include "hi_type.h"
+#include "hi_adp_search.h"
+#include "hi_unf_subt.h"
 }
 
 #include <utils/threads.h>
@@ -132,6 +134,25 @@ typedef enum
     IPTV_PLAYER_EVT_PLAYBACK_ERROR,// playback error event
 }IPTV_PLAYER_EVT_e;
 
+
+/*
+* Note  : Struct CTC_SUBT_PARM_S used for CTC_MediaProcessor Subtitle Info
+* which get from application.
+* param :
+* u32SubtNum --- number of subtitle in stream
+* u32SubtChannelSelect --- if Multiple Subtitle ,select a Channel. Start with 0. If only one subtitle set 0.
+* eSubtType  --- Type of Subtitle default 'DVB' = 0x01
+* stSubtItem --- Info of Subtitle include PID , page id , ancillary id
+*/
+typedef struct tagCTC_SUBT_PARM_S
+{
+    HI_U32 u32SubtNum;
+    HI_U8  u8SubtChannelSelect;
+    HI_UNF_SUBT_DATA_TYPE_E eSubtType;
+    HI_UNF_SUBT_ITEM_S stSubtItem[SUBT_ITEM_MAX_NUM];
+}CTC_SUBT_PARM_S;
+
+
 typedef void (*IPTV_PLAYER_EVT_CB)(IPTV_PLAYER_EVT_e evt, void *handler);
 
 class CTsPlayer;
@@ -197,6 +218,7 @@ class CTC_MediaProcessor{
         virtual void leaveChannel() = 0;
 
         virtual void playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander) = 0;
+        virtual int EnableSubtitle(CTC_SUBT_PARM_S *pstSubParam) = 0;
 };
 
 
@@ -265,6 +287,7 @@ class CTsPlayer : public CTC_MediaProcessor{
 
         //hisi private interface, support set eos event
         virtual bool SetEos();
+        virtual int EnableSubtitle(CTC_SUBT_PARM_S *pstSubParam);
 
     protected:
         int        m_bLeaveChannel;
@@ -272,6 +295,7 @@ class CTsPlayer : public CTC_MediaProcessor{
     private:
 
         HI_HANDLE                    hSo;
+        HI_HANDLE                    hSubt;
         HI_HANDLE                    hDmxId;
         HI_HANDLE                    hSubTitle;
         HI_HANDLE                   hTsBuf;
@@ -293,6 +317,10 @@ class CTsPlayer : public CTC_MediaProcessor{
 
         TS_SO_CALLBACK_INFO_S       stSoCallbackInfo;
 
+        PMT_COMPACT_TBL             *pProgTbl;
+
+        HI_BOOL                     bUseSubtitle;
+
         int  MediaDeviceInit();
         bool MediaDeviceDeinit();
         bool MediaDeviceCreate();
@@ -310,6 +338,15 @@ class CTsPlayer : public CTC_MediaProcessor{
         HI_S32 HIADP_IPTV_Disp_DeInit(HI_VOID);
         HI_S32 HIADP_IPTV_Snd_Init(HI_VOID);
         HI_S32 HIADP_IPTV_Snd_DeInit(HI_VOID);
+
+        /* Subtitle Function */
+        HI_S32 CreateSubtitleDecoder(CTC_SUBT_PARM_S *pstSubtitleParam);
+        HI_S32 FilterDataCallback(HI_U32 u32UserData, HI_U8 *pu8Data, HI_U32 u32DataLength);
+        HI_S32 SubtitlOutputInit();
+        HI_S32 SubtitlOutputCreate();
+        HI_S32 DeInitSubtitle();
+        HI_S32 DestroySubutile();
+
 #ifdef SUBTITLE
         HI_S32 SetTsSubStream(HI_U32 u32SubtPID, HI_U16 u16PageID, HI_U16 u16AncillaryID);
 #endif

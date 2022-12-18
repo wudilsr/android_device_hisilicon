@@ -26,7 +26,8 @@
 #include "hi_drv_video.h"  //主要是输出颜色空间枚举
 
 //合入低延迟修改 20150827
-#define OMXVDEC_VERSION	 		        (2015081800)
+//合入overlay
+#define OMXVDEC_VERSION	 		        (2015081899)
 
 #define OMXVDEC_NAME                    "hi_omxvdec"
 #define DRIVER_PATH                     "/dev/hi_omxvdec"
@@ -187,6 +188,8 @@ typedef struct {
 	HI_U32           buffer_len;
 	HI_U32           data_offset;
 	HI_U32           data_len;
+	HI_U32           private_phyaddr;//VPSS 假4K输出需要额外信息
+	HI_U32           private_len;	    
 	HI_U32           flags;
 	HI_S64           timestamp;
 	eBUFFER_TYPE     buffer_type;

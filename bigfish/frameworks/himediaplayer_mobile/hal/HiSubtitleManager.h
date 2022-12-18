@@ -42,6 +42,7 @@ namespace android {
         HI_BOOL mIsUTF8;
         int mLanguageType;
         int mIsDisableSubtitle;
+        bool mIsBufferPosted;
         Mutex mLock;
         bool mInitialized;
         sp <Surface>  mSubSurface;

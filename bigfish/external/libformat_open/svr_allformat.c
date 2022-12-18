@@ -78,6 +78,9 @@ static void init()
 #if defined (ANDROID_VERSION)
     extern URLProtocol ff_hirtp_protocol;
     av_register_protocol2(&ff_hirtp_protocol, sizeof(ff_hirtp_protocol));
+    
+    extern URLProtocol ff_rtpfec_protocol;
+    av_register_protocol2(&ff_rtpfec_protocol, sizeof(ff_rtpfec_protocol));
 #endif
 
 #if(CONFIG_RTP_PROTOCOL)

@@ -455,6 +455,16 @@ typedef struct hiDRV_VIDEO_ORIGINAL_INFO_S
     HI_BOOL                     bInterlace;     //source is Interlace or Progress
     
 }HI_DRV_VIDEO_ORIGINAL_INFO_S;
+
+typedef struct hiDRV_LOWDELAY_STAT_INFO_S
+{
+    HI_U32  u32OmxReportDoneTime;
+    HI_U32  u32OverlayQueueTime;
+    HI_U32  u32WinGetFrameTime;
+    HI_U32  u32WinConfigTime;
+}HI_DRV_LOWDELAY_STAT_INFO_S;
+
+
 typedef struct hiDRV_VIDEO_FRAME_S
 {    
     HI_U32 u32FrameIndex; //????????????,????????
@@ -507,24 +517,7 @@ typedef struct hiDRV_VIDEO_FRAME_S
 	HI_RECT_S                stLbxInfo;
     HI_U32 u32StreamVirtAddr;
 
-		
-		/***********below should be deleted************/
-    //maybe use
-
-	//HI_DRV_ASPECT_RATIO_S stDispAR;
-	//HI_BOOL bInterlaced;
-
-    //HI_DRV_COLOR_SPACE_E eColorSpace; /* 'HI_DRV_CS_UNKNOWN' means unknown */
-
-    /* these member may be changed per frame */
-    //HI_U32 u32FrmCnt;
-
-    //HI_U32  u32PlayTime;  /* 0 means ignore, do not process */
-    //HI_BOOL bToRelease; /* frame should be released when displayed */
-
-
-    //HI_DRV_FIELD_MODE_E  eOriginField;
-    //HI_RECT_S stOriginImageRect;  /* orgin image rectagle without letterbox */
+    HI_DRV_LOWDELAY_STAT_INFO_S stLowdelayStat;
 
 }HI_DRV_VIDEO_FRAME_S;
 

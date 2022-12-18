@@ -135,48 +135,6 @@ void deinitClip()
     }
 }
 
-void convert_RGB_to_YUV420sp(char* yuv, char* rgb, int w, int h) {
-    struct rgb_quad{
-        unsigned char  rgbBlue;
-        unsigned char  rgbGreen;
-        unsigned char  rgbRed;
-        unsigned char  rgbAlpha;
-    };
-
-    int frameSize = w * h;
-
-    int yIndex = 0;
-    int uvIndex = frameSize;
-
-    int  R, G, B, Y, U, V;
-    int index = 0;
-
-    int i,j;
-    struct rgb_quad* rbgBuf = (struct rgb_quad*)rgb;
-
-    for (j = 0; j < h; j++) {
-        for (i = 0; i < w; i++) {
-            //alpha is not used
-            R = rbgBuf[index].rgbRed;
-            G = rbgBuf[index].rgbGreen;
-            B = rbgBuf[index].rgbBlue;
-
-            // well known RGB to YUV algorithm
-            Y =  0.299 * R + 0.587 * G + 0.114 * B;
-            U = -0.169 * R - 0.331 * G + 0.5 * B + 128;
-            V = 0.5 * R - 0.419 * G - 0.081 * B + 128;
-
-            yuv[yIndex++] = (char) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
-            if (j % 2 == 0 && index % 2 == 0) {
-                yuv[uvIndex++] = (char)((U<0) ? 0 : ((U > 255) ? 255 : U));
-                yuv[uvIndex++] = (char)((V<0) ? 0 : ((V > 255) ? 255 : V));
-            }
-
-            index ++;
-        }
-    }
-}
-
 /*
  **************************************************************************
  * FunctionName: convertYUV420Planar2rgb565;
@@ -280,7 +238,6 @@ void convert_yuv422packed_to_yuv420sp(char *src, char *dst, int w, int h, int St
         {
             dst = dst + Stride - w;
         }
-
     }
 
     for ( i = 0; i < h; i = i +2 )
@@ -350,7 +307,6 @@ void getVideoData(char* src, char* dst, int w, int h, int Stride)
         {
             src = src + Stride - w;
         }
-
     }
 
     for ( int i = 0; i < h/2; i++ )
@@ -850,6 +806,46 @@ void convert_YUYV_to_YUV420sp(char *src, char *dst, int w, int h)
     }
 }
 
+void convert_YUV420sp_to_YUV420p(char *src, char *dst, int w, int h, int Stride)
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    int i, j;
+
+    for(i=0; i<w*h; i++)
+    {
+        *(dst++) = *(src++); //copy Y data
+        if((i+1) % w == 0)
+        {
+            src = src + Stride - w;
+        }
+    }
+
+    char *temp = src;
+    int hh = h>>1;
+    int hw = w>>1;
+
+    for(i=0; i<hh; i++)
+    {
+        for(j=0;j<hw;j++)
+        {
+            *(dst++) = *(src+2*j);    //copy U data
+        }
+
+        src = src + Stride;
+    }
+
+    for(i=0; i<hh; i++)
+    {
+        for(j=0;j<hw;j++)
+        {
+            *(dst++) = *(temp+2*j+1);    //copy V data
+        }
+
+        temp = temp + Stride;
+    }
+}
+
 static const signed short redAdjust[] = {
     -161,-160,-159,-158,-157,-156,-155,-153,
     -152,-151,-150,-149,-148,-147,-145,-144,
@@ -1087,7 +1083,7 @@ void convert_yuyv_to_uyvy(unsigned char * dest, unsigned char * source, int widt
  * Other       : NA;
  **************************************************************************
  */
-static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, unsigned int width, unsigned int height)
+static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, unsigned int srcwidth, unsigned int srcheight, unsigned int destwidth, unsigned int destheight)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
@@ -1098,8 +1094,8 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
 
     void* psrcvaddr = NULL;
     void* pdesvaddr = NULL;
-    unsigned int src_phyaddr = 0;
-    unsigned int des_phyaddr = 0;
+    uint64_t src_phyaddr = 0;
+    uint64_t des_phyaddr = 0;
 
     s32Ret = HI_TDE2_Open();
     if (HI_SUCCESS != s32Ret)
@@ -1108,7 +1104,7 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
         return -1;
     }
 
-    src_phyaddr = (unsigned int)HI_MMZ_New(width*height*2, 32, NULL, (HI_CHAR *)"camera_src");
+    src_phyaddr = (uint64_t)HI_MMZ_New(srcwidth*srcheight*2, 32, NULL, (HI_CHAR *)"camera_src");
     if (0==src_phyaddr)
     {
         CAMERA_HAL_LOGE("HI_MMZ_New src  failed!");
@@ -1117,12 +1113,12 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
     psrcvaddr = HI_MMZ_Map(src_phyaddr, 1);
 
     //convert data to physical memory
-    convert_yuyv_to_uyvy((unsigned char*)psrcvaddr, src, width, height);
+    convert_yuyv_to_uyvy((unsigned char*)psrcvaddr, src, srcwidth, srcheight);
 
     HI_MMZ_Flush(src_phyaddr);
     HI_MMZ_Unmap(src_phyaddr);
 
-    des_phyaddr = (unsigned int)HI_MMZ_New(width*height*2, 32, NULL, (HI_CHAR *)"camera_des");
+    des_phyaddr = (uint64_t)HI_MMZ_New(destwidth*destheight*2, 32, NULL, (HI_CHAR *)"camera_des");
     if(0==des_phyaddr)
     {
         CAMERA_HAL_LOGE("HI_MMZ_New dest failed!");
@@ -1132,9 +1128,9 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
     //source picture
     pict_s.u32PhyAddr       = src_phyaddr;
     pict_s.enColorFmt       = TDE2_COLOR_FMT_YCbCr422;
-    pict_s.u32Height        = height;
-    pict_s.u32Width         = width;
-    pict_s.u32Stride        = width*2;
+    pict_s.u32Height        = srcheight;
+    pict_s.u32Width         = srcwidth;
+    pict_s.u32Stride        = srcwidth*2;
     pict_s.pu8ClutPhyAddr   = NULL;
     pict_s.bYCbCrClut       = HI_FALSE ;
     pict_s.bAlphaMax255     = HI_TRUE;
@@ -1144,15 +1140,15 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
     pict_s.u32CbCrStride    = 0;
     rect_s.s32Xpos          = 0;
     rect_s.s32Ypos          = 0;
-    rect_s.u32Width         = width;
-    rect_s.u32Height        = height;
+    rect_s.u32Width         = srcwidth;
+    rect_s.u32Height        = srcheight;
 
     //target picture
     pict_d.u32PhyAddr       = des_phyaddr;
     pict_d.enColorFmt       = TDE2_COLOR_FMT_RGB565  ;
-    pict_d.u32Height        = height;
-    pict_d.u32Width         = width;
-    pict_d.u32Stride        = width*2;
+    pict_d.u32Height        = destheight;
+    pict_d.u32Width         = destwidth;
+    pict_d.u32Stride        = destwidth*2;
     pict_d.pu8ClutPhyAddr   = NULL;
     pict_d.bYCbCrClut       = HI_FALSE ;
     pict_d.bAlphaMax255     = HI_TRUE;
@@ -1162,8 +1158,8 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
     pict_d.u32CbCrStride    = 0;
     rect_d.s32Xpos          = 0;
     rect_d.s32Ypos          = 0;
-    rect_d.u32Width         = width;
-    rect_d.u32Height        = height;
+    rect_d.u32Width         = destwidth;
+    rect_d.u32Height        = destheight;
 
     //TDE convert
     s32Handle = HI_TDE2_BeginJob();
@@ -1191,7 +1187,7 @@ static int TDE_ConvertYUYVtoRGB565(unsigned char *src, unsigned char **dest, uns
 
     if(pdesvaddr != NULL)
     {
-        memcpy(*dest, pdesvaddr, width*height*2);
+        memcpy(*dest, pdesvaddr, destwidth*destheight*2);
     }
 
     HI_MMZ_Unmap(des_phyaddr);
@@ -1220,14 +1216,135 @@ OVER:
  * Other       : NA;
  **************************************************************************
  */
-void ConvertYUYVtoRGB565(const void *yuyv_data, void *rgb565_data, const unsigned int w, const unsigned int h)
+void ConvertYUYVtoRGB565(const void *yuyv_data, void *rgb565_data, const unsigned int srcw, const unsigned int srch, const unsigned int destw, const unsigned int desth)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
-    if (0 != TDE_ConvertYUYVtoRGB565((unsigned char*)yuyv_data, (unsigned char**)(&rgb565_data), w, h))
+    if (0 != TDE_ConvertYUYVtoRGB565((unsigned char*)yuyv_data, (unsigned char**)(&rgb565_data), srcw, srch, destw, desth))
     {
-        Software_ConvertYUYVtoRGB565(yuyv_data, rgb565_data, w, h);
+        Software_ConvertYUYVtoRGB565(yuyv_data, rgb565_data, srcw, srch);
     }
+}
+
+/*
+ **************************************************************************
+ * FunctionName: ConvertYUV420SPtoRGB565;
+ * Description : NA;
+ * Input       : NA;
+ * Output      : NA;
+ * ReturnValue : NA;
+ * Other       : NA;
+ **************************************************************************
+ */
+int ConvertYUV420SPtoRGB565(uint64_t src_phyaddr, unsigned char **dest, unsigned int srcwidth, unsigned int srcheight, unsigned int destwidth, unsigned int destheight, int Stride)
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    HI_S32 s32Ret = 0;
+    TDE2_MB_S pict_s;
+    TDE2_SURFACE_S pict_d;
+    TDE2_RECT_S rect_s,rect_d;
+    TDE_HANDLE s32Handle = NULL;
+
+    void* pdesvaddr = NULL;
+    uint64_t des_phyaddr = 0;
+
+    s32Ret = HI_TDE2_Open();
+    if (HI_SUCCESS != s32Ret)
+    {
+        CAMERA_HAL_LOGE("open tde failed");
+        return -1;
+    }
+
+    des_phyaddr = (uint64_t)HI_MMZ_New(destwidth*destheight*2, 32, NULL, (HI_CHAR *)"camera_des");
+    if(0==des_phyaddr)
+    {
+        CAMERA_HAL_LOGE("HI_MMZ_New dest failed!");
+        goto OVER;
+    }
+
+    //source picture
+    pict_s.u32YPhyAddr      = src_phyaddr;
+    pict_s.enMbFmt          = TDE2_MB_COLOR_FMT_JPG_YCbCr420MBP;
+    pict_s.u32YHeight       = srcheight;
+    pict_s.u32YWidth        = srcwidth;
+    pict_s.u32YStride       = Stride;
+    pict_s.u32CbCrPhyAddr   = src_phyaddr+Stride*srcheight;
+    pict_s.u32CbCrStride    = Stride;
+    rect_s.s32Xpos          = 0;
+    rect_s.s32Ypos          = 0;
+    rect_s.u32Width         = srcwidth;
+    rect_s.u32Height        = srcheight;
+
+    //target picture
+    pict_d.u32PhyAddr       = des_phyaddr;
+    pict_d.enColorFmt       = TDE2_COLOR_FMT_RGB565;
+    pict_d.u32Height        = destheight;
+    pict_d.u32Width         = destwidth;
+    pict_d.u32Stride        = destwidth*2;
+    pict_d.pu8ClutPhyAddr   = NULL;
+    pict_d.bYCbCrClut       = HI_FALSE ;
+    pict_d.bAlphaMax255     = HI_TRUE;
+    pict_d.bAlphaExt1555    = HI_FALSE;
+    pict_d.u8Alpha1         = 0;
+    pict_d.u32CbCrPhyAddr   = 0;
+    pict_d.u32CbCrStride    = 0;
+    rect_d.s32Xpos          = 0;
+    rect_d.s32Ypos          = 0;
+    rect_d.u32Width         = destwidth;
+    rect_d.u32Height        = destheight;
+
+    //TDE convert
+    s32Handle = HI_TDE2_BeginJob();
+    if (s32Handle == HI_ERR_TDE_INVALID_HANDLE)
+    {
+        CAMERA_HAL_LOGE("begin job failed");
+        goto OVER;
+    }
+
+    TDE2_MBOPT_S pstMbOpt;
+    memset(&pstMbOpt, 0, sizeof(TDE2_MBOPT_S));
+
+    pstMbOpt.enClipMode = TDE2_CLIPMODE_INSIDE;
+    pstMbOpt.stClipRect.s32Xpos=0;
+    pstMbOpt.stClipRect.s32Ypos=0;
+    pstMbOpt.stClipRect.u32Width=srcwidth;
+    pstMbOpt.stClipRect.u32Height=srcheight;
+    pstMbOpt.enResize = TDE2_MBRESIZE_QUALITY_HIGH;
+
+    s32Ret =HI_TDE2_MbBlit(s32Handle, &pict_s, &rect_s, &pict_d, &rect_d, &pstMbOpt);
+    if (HI_SUCCESS != s32Ret)
+    {
+        CAMERA_HAL_LOGE("Mbblit failed  s32Ret=%x", s32Ret);
+        HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 10);
+        goto OVER;
+    }
+    s32Ret = HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 10);
+    if ((HI_SUCCESS != s32Ret) && (HI_ERR_TDE_JOB_TIMEOUT != s32Ret))
+    {
+        CAMERA_HAL_LOGE("end job failed  s32Ret=%d", s32Ret);
+        goto OVER;
+    }
+
+    pdesvaddr = HI_MMZ_Map(des_phyaddr, 1);
+
+    if(pdesvaddr != NULL)
+    {
+        memcpy(*dest, pdesvaddr, destwidth*destheight*2);
+    }
+
+    HI_MMZ_Unmap(des_phyaddr);
+
+    HI_TDE2_Close();
+    HI_MMZ_Delete(des_phyaddr);
+
+    return 0;
+
+OVER:
+    HI_TDE2_Close();
+    HI_MMZ_Delete(des_phyaddr);
+
+    return -1;
 }
 }; // namespace android
 

@@ -171,8 +171,6 @@ typedef struct MOVStreamContext {
     int64_t track_end;    ///< used for dts generation in fragmented movie files
 } MOVStreamContext;
 
-#define SEPARATE_READ_MAXCNT     10  ///< max read count one time in separate file
-
 typedef struct MOVContext {
     AVClass *avclass;
     AVFormatContext *fc;
@@ -198,9 +196,6 @@ typedef struct MOVContext {
     MOVSenc *senc;
     MOVTenc *tenc;
     unsigned int tenc_count;
-    int separate_flag;    ///< overlap file flag, example: video data is in the front of file, audio data is behind.
-    int separate_read_cnt;  ///< read count once time of one stream in separate file
-    int separate_read_stream;  ///< which stream read data now in separate file
 } MOVContext;
 
 int ff_mp4_read_descr_len(AVIOContext *pb);

@@ -37,6 +37,7 @@ namespace android
             int SetRightEyeFirst(int Outpriority);
             int GetRightEyeFirst();
             int GetDisplayCapability(Parcel *pl);
+            int GetManufactureInfo(Parcel *pl);
             int SaveParam();
             int SetAspectRatio(int ratio);
             int GetAspectRatio();

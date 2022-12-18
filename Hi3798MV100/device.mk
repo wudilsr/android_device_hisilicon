@@ -34,23 +34,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.graphic=true
 endif
 
-#HiPlayer fast switch channel mode, false for fast switch
-ifeq ($(strip $(PRODUCT_TARGET)),telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.nostatic=true
-else ifeq ($(strip $(PRODUCT_TARGET)),unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.nostatic=true
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.nostatic=false
-endif
-
 #HiPlayer: video frame counts to be played before underrun while seeked
 ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.vfcnt=200
 endif
+
+#HiPlayer: for vo switch channel freeze
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.hiplayer.vo.freeze=false
+#if open HiPlayer: for vo switch channel freeze
 
 ifeq ($(PRODUCT_TARGET),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -264,7 +257,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # add release version
 PRODUCT_PROPERTY_OVERRIDES += \
-    gsm.version.baseband=HiSTBAndroidV600R001C00SPC063
+    gsm.version.baseband=HiSTBAndroidV600R001C00SPC064
 
 PRODUCT_PROPERTY_OVERRIDES += \
     hibrowser.default.fullscreen=true
@@ -288,6 +281,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # enable PowerControl
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.pmqos.enable=true
+
+# set hisi omx output to overlay
+PRODUCT_PROPERTY_OVERRIDES += \
+    service.media.codec.overlay=false
+
+# patch name
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.product.patch=SPC060+patch13
 
 PRODUCT_PACKAGES += \
      libandroid_qb
@@ -345,7 +346,12 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/hisilicon/bigfish/etc/restore:system/etc/restore \
-    device/hisilicon/bigfish/etc/exitfastplay:system/etc/exitfastplay
+    device/hisilicon/bigfish/etc/exitfastplay:system/etc/exitfastplay \
+    device/hisilicon/bigfish/etc/security_l2_num:system/etc/security_l2_num
+PRODUCT_COPY_FILES += \
+    frameworks/base/cmds/preload/preloadclass.jar:system/framework/preloadclass.jar
+
+PRODUCT_COPY_FILES += device/hisilicon/bigfish/frameworks/fastbootoptimize/prebuilt/ZygoteOptimize.jar:system/framework/ZygoteOptimize.jar
 
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 

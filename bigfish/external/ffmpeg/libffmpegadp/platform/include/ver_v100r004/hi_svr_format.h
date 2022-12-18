@@ -253,7 +253,10 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_SET_LOCALTIME,        /**< the command of setting IStreamSource demux of AVPLAY LocalTime,the parameter is ::HI_S64* *//**< CNcomment:IStreamSource 设置当前AVPLAY中的Localtime给demux,单位ms,参数类型 :: HI_S64* */
     HI_FORMAT_INVOKE_SET_LOG_LEVEL,        /**< the command of setting log level,the parameter is::HI_FORMAT_LOG_LEVEL_E *//**< CNcomment:设置日志等级，参数::HI_FORMAT_LOG_LEVEL_E */
     HI_FORMAT_INVOKE_SET_TPLAY_MODE,       /**< the command of setting Tplay mode,the parameter is::HI_SVR_PLAYER_TPLAY_MODE_E *//**< CNcomment:设置快进快退模式，参数::HI_SVR_PLAYER_TPLAY_MODE_E */
-    HI_FORMAT_INVOKE_PROTOCOL_USER = 100,  /**< the command of setting user protocol *//**< CNcomment:支持用户设置给协议信息 */
+
+    /* if hisilicon invoke command, please defined before USER */
+    HI_FORMAT_INVOKE_PROTOCOL_USER=100,    /**< the command of setting data to user protocol *//**< CNcomment:设置用户协议数据 */
+
     HI_FORMAT_INVOKE_BUTT
 } HI_FORMAT_INVOKE_ID_E;
 

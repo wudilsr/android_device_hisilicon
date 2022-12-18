@@ -253,7 +253,8 @@
 /*
  * Card status field definitions
  */
-#define MMC_CS_ERROR_MASK	0xFDFFA080
+#define MMC_CS_ERROR_MASK	0xFDDFA080
+#define MMC_CS_ERROR_ECC	(1<<21)
 
 #define EXT_CSD_SEC_ER_EN	1<<0
 #define EXT_CSD_SEC_BD_BLK_EN	1<<2

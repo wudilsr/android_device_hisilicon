@@ -128,7 +128,7 @@ static void tcp_getAddrInfo(void *arg)
         hints.ai_family = AF_INET;
     }
     #endif
-
+reparse:
     ret = getaddrinfo(hostname, portstr,&hints,&ai);
 
     if (ret)
@@ -160,8 +160,11 @@ static void tcp_getAddrInfo(void *arg)
             ret = (ret <0)? 0 : cmsg;
             break;
         }
+        errcode = ff_neterrno();
 
         usleep(20*1000);
+        if (ret == 0 && errcode == 0)
+            goto reparse;
     }
 
     if (ret > 0)

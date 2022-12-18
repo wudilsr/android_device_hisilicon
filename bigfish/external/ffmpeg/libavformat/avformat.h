@@ -1340,6 +1340,7 @@ typedef struct AVFormatContext {
     AVProcinfo stProc;
     int hls_find_stream_max_nb;
     int time_shift_duration;
+    int is_time_shift;
 } AVFormatContext;
 
 typedef struct AVPacketList {
@@ -1389,6 +1390,186 @@ typedef struct Hls_CryptoContext_s {
     int             cur_segment;
 } Hls_CryptoContext;
 
+#if defined (CONFIG_HLS_VERSION_4)
+typedef struct hls_segment_s {
+    int64_t start_time;                 /* segment start time (ms) */
+    int     total_time;                 /* segment duration (ms) */
+    int     byterange_len;              /* segment byte range length */
+    int     byterange_off;              /* segment byte range offset */
+    int     discontinuity;              /* flag of codec,timestamp,encode param change, 1:discontinuity, 0:normal */
+
+    char    url[INITIAL_URL_SIZE];      /* segment URL*/
+    char    key[INITIAL_URL_SIZE];      /* Segment key */
+    int     key_type;
+    uint8_t iv[16];
+} hls_segment_t;
+
+/* Segments list */
+struct segment_list_s
+{
+    int hls_index;                  /* position of current hls_stream */
+    int hls_stream_offset;          /* stream offset of current hls_stream */
+    int hls_finished;               /* set to 1 if have EXT-X-ENDLIST in m3u8 context */
+    int hls_target_duration;        /* duration of hls_stream */
+    int hls_segment_nb;             /* segment number of setment list */
+    hls_segment_t **segments;           /* segment list */
+    int needed, cur_needed;         /* segmeng flag for DISCARD check */
+    int hls_seg_start;
+    int hls_seg_cur;                /* current segment number of hls_stream */
+
+    enum {
+        PLAYLIST_TYPE_NONE = 0,
+        PLAYLIST_TYPE_EVENT,
+        PLAYLIST_TYPE_VOD,
+    };
+    /**
+     * If the tag is present and has a value of EVENT, the server MUST NOT change
+     * or delete any part of the Playlist file (although it MAY append lines to it).
+     * If the tag is present and has a value of VOD, the Playlist file MUST NOT change.
+     */
+    int play_list_type;
+    int64_t hls_last_load_time;     /* live playlist reload */
+};
+
+typedef struct hls_stream_info_s {
+    int     bandwidth;                  /* bandwidth usage of segments (bits per second) */
+    char    url[INITIAL_URL_SIZE];      /* M3U8 URL */
+
+    /* Segments list */
+    struct segment_list_s seg_list;
+
+    /* Stream */
+    struct segment_stream_s
+    {
+        char                *headers;       /* Cookies etc .*/
+        URLContext          *input;         /* URLContext for open segments url*/
+        int64_t             offset;         /* URLContext offset*/
+        int32_t             size;           /* URLContext size, used in byte range request*/
+    } seg_stream;
+
+    /*Segments key */
+    struct segment_key_s
+    {
+        char                key_url[INITIAL_URL_SIZE];
+        uint8_t             key[16];
+        Hls_CryptoContext   *IO_decrypt;
+    } seg_key;
+    int has_read;
+    int video_codec;
+    int audio_codec;
+
+    int iframe_only;           /* the segments only have one i frame, 0:normal stream, 1:only i frame */
+    char groups[3][HLS_TAG_LEN]; /*group id of VIDEO, AUDIO and SUBTITLE*/
+} hls_stream_info_t;
+
+typedef struct hls_ext_stream_info_s
+{
+    /* ext_media Segments list */
+    hls_stream_info_t stream_info;
+    char    uri[INITIAL_URL_SIZE];      /* ext-x-media data url */
+    int     media_type;                 /* ext-x-media data type, value is::HLS_MEDIA_TYPE_E */
+    char    group_id[HLS_TAG_LEN];
+    char    language[4];
+    char    name[HLS_TAG_LEN];
+    int     is_default;      /* 1:YES, 0:NO */
+    int     autoselect;      /* 1:YES, 0:NO */
+    int     forced;          /* 1:YES, 0:NO */
+} hls_ext_stream_info_t;
+
+typedef struct hls_group_s {
+    char group_id[HLS_TAG_LEN];
+    int ext_stream_cur; /* Current selected stream of this group */
+    int has_codec;      /* The codec context for this group is opened */
+    int stream_index;   /* First stream in this group */
+    int ext_stream_nb;
+    hls_ext_stream_info_t** ext_streams;
+} hls_group_t;
+
+typedef struct hls_group_array_s {
+    int                     hls_grp_nb;
+    hls_group_t**           hls_groups;
+} hls_group_array_t;
+
+typedef struct HLSContext_s {
+    const AVClass           *av_class;
+    int                     hls_version;         /* version of this playlist */
+    int                     hls_stream_nb;       /* total number of hls_stream */
+    int                     hls_file_eof;        /* file reached EOF */
+    int                     hls_stream_cur;      /* current hls_stream */
+    hls_stream_info_t       **hls_stream;        /* bandwidth adaptation */
+
+    int                     first_packet;        /* first packet (default 1) */
+    int                     segment_stream_eof;  /* segment reached EOF */
+
+    char                    *headers;            /* segment's headers */
+    char                    *file_name;          /* hls original url */
+    unsigned int            userdata;            /* hi_svr_format handle */
+    uint64_t                read_size;           /* read size in byte */
+    hls_segment_t           *cur_seg;            /* current read segment */
+    hls_stream_info_t       *cur_hls;            /* current seg_list info */
+    int                     cur_stream_no;      /* current stream index */
+    int                     cur_seg_no;         /* current segment index*/
+    uint64_t                real_bw;             /* actual read speed of system,depends on network */
+                                         /* speed and process speed of system */
+    int                     current_bw;      /* current segment bit rate*/
+    int                     appoint_id;
+    int                     reset_appoint_id;
+    AVFormatContext         *parent;
+    AVIOInterruptCB         interrupt_callback;
+    int                     has_video_stream;
+    DownSpeed               downspeed;
+    uint64_t                netdata_read_speed;  /* network read speed */
+    char                    *user_agent;
+    char                    *referer;
+    char                    *cookies;
+
+    hls_group_array_t*      group_array;        /*pointer to hls_group_array_t object*/
+    int                     hls_iframe_nb;
+    hls_stream_info_t       **hls_iframe_stream;
+
+    int                     discontinuity_status;
+
+    ByteIOContext       IO_pb;          /* ByteIOContext for reading segments stream*/
+    uint8_t*            IO_buf;         /* IO_pb io buffer*/
+    /* Demuxer*/
+    struct segment_demux_s
+    {
+        AVPacket        pkt;            /* AVPacket for reading frame */
+        AVFormatContext *ctx;           /* pointer to segments AVFormatContext */
+
+        int             set_offset;     /* set pts offset flags*/
+        int64_t         *last_time_array;      /* last sending packet pts */
+        int64_t         pts_offset;     /* pts offset */
+        int64_t         seek_offset;
+        int64_t         latest_read_pts; /*minimal pts of recent read packet*/
+    } seg_demux;
+
+    /* The name of alternate streams belongs to this context
+     * All alternate stream MUST have the same NAME attributes and
+     * MAY have different group id
+     */
+    char   ext_stream_name[HLS_TAG_LEN];
+    char   ext_group_id[HLS_TAG_LEN];
+
+    int    stream_offset;
+    void*  playlist_io;
+    int    disable_cache; /* disable internal cache */
+    int64_t last_get_speed_time;
+    int                     hls_force_min_bw_count;
+    int                     hls_force_min_bw_max;
+    int                     hls_bw_up_num;        /* if network bandwidth is enough to switch up, hls_bw_up_num++,
+                                                   * if network bandwidth switch down, hls_bw_up_num = 0 */
+    int                     hls_bw_up_num_max;    /* if hls_bw_up_num >= hls_bw_up_num_max, do bandwidth switch up */
+} HLSContext;
+#else
+
+typedef struct hls_iframe_s {
+    int duration;
+    int offset_time;
+    int offset_pos;
+    int size;
+} hls_iframe_t;
+
 typedef struct hls_segment_s {
     int64_t start_time;                 /* segment start time (ms) */
     int     total_time;                 /* segment duration (ms) */
@@ -1397,11 +1578,15 @@ typedef struct hls_segment_s {
     int     key_type;
     uint8_t iv[16];
     time_t  program_time;
+    hls_iframe_t **iframes;
+    int iframe_nb;
+    int iframe_cur_index;
 } hls_segment_t;
 
 typedef struct hls_stream_info_s {
     int     bandwidth;                  /* bandwidth usage of segments (bits per second) */
     char    url[INITIAL_URL_SIZE];      /* M3U8 URL */
+    int iframe_only;
 
     /* Segments list */
     struct segment_list_s
@@ -1472,6 +1657,8 @@ typedef struct HLSContext_s {
     int                     hls_stream_nb;       /* total number of hls_stream */
     int                     hls_stream_cur;      /* current hls_stream */
     hls_stream_info_t       **hls_stream;        /* bandwidth adaptation */
+    int                     hls_iframe_nb;
+    hls_stream_info_t       **hls_iframe_stream;
 
     int                     first_packet;        /* first packet (default 1) */
     int                     segment_stream_eof;  /* segment reached EOF */
@@ -1518,6 +1705,7 @@ typedef struct HLSContext_s {
     char                    ts_traceid[INITIAL_URL_SIZE];
     HLS_URL_INFO_S          stHlsUrlInfo;
 } HLSContext;
+#endif
 
 typedef struct m3u9_segment_s
 {

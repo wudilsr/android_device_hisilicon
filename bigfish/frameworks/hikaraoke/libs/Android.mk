@@ -5,7 +5,6 @@ include $(CLEAR_VARS)
 
 LOCAL_PRELINK_MODULE := false
 LOCAL_MODULE:= libhikaraokeservice
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_SRC_FILES:= \
     HiCircleBuf.cpp \
     HiKaraokeProxy.cpp \

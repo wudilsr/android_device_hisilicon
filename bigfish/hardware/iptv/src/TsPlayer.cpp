@@ -70,6 +70,8 @@ Modification  : Created file
 #include "TsPlayer.h"
 #include <sys/stat.h>
 
+#include "hi_video_codec.h"
+
 #define TSPLAY_VERSION    2
 
 #ifndef FBIOPUT_OSD_SRCCOLORKEY
@@ -85,6 +87,7 @@ Modification  : Created file
 #define FBIOPUT_OSD_SET_GBL_ALPHA  0x4500
 #endif
 
+#define HI_SUBT_MAX_PTS_OFFSET 0x100000 /* the max value of pts offset */
 
 #define DMX_ID                     0
 #define PORT_ID                    HI_UNF_DMX_PORT_RAM_0
@@ -92,6 +95,29 @@ Modification  : Created file
 #define VID_BUF_SIZE               (9*1024*1024)
 #define INVALID_TS_PID             0x1fff
 #define VO_DIVID_DISPLAY_PERCENT   80
+
+#define SUBTITLE_TEST
+
+typedef HI_S32 (*SUBT_DATA_CALLBACK_FN)(HI_U32 u32UserData, HI_U8 *pu8Data, HI_U32 u32DataLength);
+
+typedef struct tagSUBT_DATA_INSTALL_PARAM_S
+{
+    HI_U32 u32DmxID;
+    HI_U16 u16SubtPID;
+    HI_U32 u32UserData;
+    HI_UNF_SUBT_DATA_TYPE_E enDataType;
+    SUBT_DATA_CALLBACK_FN pfnCallback;
+}SUBT_DATA_INSTALL_PARAM_S;
+
+
+typedef struct tagSUBT_DATA_S
+{
+    HI_BOOL bEnable;
+    SUBT_DATA_INSTALL_PARAM_S stInstallParam;
+    HI_HANDLE hChannelID;
+    HI_HANDLE hFilterID;
+}SUBT_DATA_S;
+
 
 /** invalid pts*/
 #define HI_FORMAT_NO_PTS                       (-1)
@@ -211,6 +237,7 @@ CTC_MediaProcessor              *g_pHandle = NULL;
 static IPTV_PLAYER_EVT_CB       g_CallBackFunc = NULL;
 static HI_VOID                  *g_CallBackHandle = NULL;
 static HI_U32                   g_FirstFrm = 0;
+static HI_U32                   g_Ratio = 1;
 static HI_U32                   g_Cvrs = 1;
 static HI_HANDLE                g_hWin = HI_INVALID_HANDLE;
 static HI_HANDLE                g_hAvplay = HI_INVALID_HANDLE;
@@ -226,6 +253,23 @@ static HI_VOID                  __GetVoAspectCvrs(HI_VOID);
 static pthread_mutex_t          g_TsplayerMutex = PTHREAD_MUTEX_INITIALIZER;
 static HI_U32                   g_LockFlag = 0;
 
+/* Subtitle Data */
+#define SUBT_STREAM_KEYWORD (0xBD)
+#define SCTE_STREAM_KEYWORD (0xC6)
+#define MAX_CHANNEL_BUF_SIZE (64 * 1024)
+#define DATA_RECV_MAX_NUM (32)
+
+static SUBT_DATA_S     s_astSubtDataRecv[DATA_RECV_MAX_NUM];
+static pthread_t       s_stSubtDataThreadID;
+static pthread_mutex_t s_stSubtDataMutex;
+static HI_BOOL         s_bSubtDataThreadReady = HI_FALSE;
+static HI_BOOL         s_bInit = HI_FALSE;
+
+static HI_HANDLE       g_hSubt = HI_INVALID_HANDLE;
+static HI_HANDLE       g_hSO = HI_INVALID_HANDLE;
+static HI_BOOL         bSubDgbFlag = HI_TRUE;
+
+static HI_U32          g_WinHide =0;
 /*player mutex */
 #define TSPLAYER_LOCK() \
     HI_U32 g_LockFlag = 0; \
@@ -308,6 +352,125 @@ static HI_VOID* __GetBufStatus(HI_VOID *pArg)
     return NULL;
 }
 
+static bool __SetRatio(int nRatio)
+{
+    HI_S32 s32Ret = 0;
+    HI_UNF_WINDOW_ATTR_S    stTmpWinAttr;
+    HI_UNF_AVPLAY_STREAM_INFO_S stStreamInfo;
+    float s32WinAspectRatio, s32StreamAspectRatio;
+    HI_U32 u32VirWinWidth, u32VirWinHeight;
+
+    PLAYER_LOGI("### CTsPlayer::__SetRatio(%d) \n", nRatio);
+
+    if ((g_eTsplayerState >= HI_TSPLAYER_STATE_PLAY) && (g_eTsplayerState < HI_TSPLAYER_STATE_STOP))
+    {
+        s32Ret = HI_UNF_AVPLAY_GetStreamInfo(g_hAvplay, &stStreamInfo);
+        PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_AVPLAY_GetStreamInfo failed" , s32Ret);
+        s32Ret = HI_UNF_DISP_GetVirtualScreen(HI_UNF_DISPLAY1, &u32VirWinWidth, &u32VirWinHeight);
+        PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_DISP_GetVirtualScreen failed" , s32Ret);
+        PLAYER_LOGI("u32VirWinWidth:%d", u32VirWinWidth);
+        PLAYER_LOGI("u32VirWinHeight:%d", u32VirWinHeight);
+        PLAYER_LOGI("StreamWide:%d", stStreamInfo.stVidStreamInfo.u32Width);
+        PLAYER_LOGI("StreamHeight:%d", stStreamInfo.stVidStreamInfo.u32Height);
+        s32WinAspectRatio = (float)u32VirWinWidth/u32VirWinHeight;
+        s32StreamAspectRatio = (float)stStreamInfo.stVidStreamInfo.u32Width/stStreamInfo.stVidStreamInfo.u32Height;
+        PLAYER_LOGI("s32WinAspectRatio = %f, s32StreamAspectRatio = %f", s32WinAspectRatio, s32StreamAspectRatio);
+        s32Ret = HI_UNF_VO_GetWindowAttr(g_hWin, &stTmpWinAttr);
+        PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_GetWindowAttr failed" , s32Ret);
+
+        switch (nRatio)
+        {
+            case 0:
+                s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &g_WinAttr);
+                PLAYER_LOGI("g_WinAttr.stWinAspectAttr.enAspectCvrs = %d", g_WinAttr.stWinAspectAttr.enAspectCvrs);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                break;
+            case 1:
+                s32Ret = HI_UNF_VO_GetWindowAttr(g_hWin, &stTmpWinAttr);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_GetWindowAttr failed" , s32Ret);
+                stTmpWinAttr.stWinAspectAttr.enAspectCvrs = (HI_UNF_VO_ASPECT_CVRS_E)g_Cvrs;//HI_UNF_VO_ASPECT_CVRS_IGNORE;
+                stTmpWinAttr.stOutputRect.s32X = 0;
+                stTmpWinAttr.stOutputRect.s32Y = 0;
+                stTmpWinAttr.stOutputRect.s32Width  = 0;
+                stTmpWinAttr.stOutputRect.s32Height = 0;
+                s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &stTmpWinAttr);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                break;
+            case 2:
+                    /*TODO:  There is no interface to set the TV ratio, so we choose 16:9 as the TV default value, temporarily don't consider 4:3*/
+                s32Ret = HI_UNF_VO_GetWindowAttr(g_hWin, &stTmpWinAttr);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_GetWindowAttr failed" , s32Ret);
+                if (s32StreamAspectRatio >= s32WinAspectRatio)
+                {
+                    PLAYER_LOGI("case 2 add black side");
+                    stTmpWinAttr.stWinAspectAttr.enAspectCvrs = HI_UNF_VO_ASPECT_CVRS_LETTERBOX;
+                    stTmpWinAttr.stOutputRect.s32X = 0;
+                    stTmpWinAttr.stOutputRect.s32Y = 0;
+                    stTmpWinAttr.stOutputRect.s32Width  = 0;
+                    stTmpWinAttr.stOutputRect.s32Height = 0;
+                    s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &stTmpWinAttr);
+                    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                } else {
+                    PLAYER_LOGI("case 2 cut video");
+                    stTmpWinAttr.stWinAspectAttr.enAspectCvrs = HI_UNF_VO_ASPECT_CVRS_PAN_SCAN;
+                    stTmpWinAttr.stOutputRect.s32X = 0;
+                    stTmpWinAttr.stOutputRect.s32Y = 0;
+                    stTmpWinAttr.stOutputRect.s32Width  = 0;
+                    stTmpWinAttr.stOutputRect.s32Height = 0;
+                    s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &stTmpWinAttr);
+                    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                }
+                break;
+            case 3:
+                    /*TODO: There is no interface to set the TV ratio, so we choose 16:9 as the TV default value, temporarily don't consider the 4:3*/
+                s32Ret = HI_UNF_VO_GetWindowAttr(g_hWin, &stTmpWinAttr);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_GetWindowAttr failed" , s32Ret);
+                if (s32StreamAspectRatio >= s32WinAspectRatio)
+                {
+                    PLAYER_LOGI("case 3 cut video");
+                    stTmpWinAttr.stWinAspectAttr.enAspectCvrs = HI_UNF_VO_ASPECT_CVRS_PAN_SCAN;
+                    stTmpWinAttr.stOutputRect.s32X = 0;
+                    stTmpWinAttr.stOutputRect.s32Y = 0;
+                    stTmpWinAttr.stOutputRect.s32Width  = 0;
+                    stTmpWinAttr.stOutputRect.s32Height = 0;
+                    s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &stTmpWinAttr);
+                    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                }
+                else
+                {
+                    PLAYER_LOGI("case 3 add black side");
+                    stTmpWinAttr.stWinAspectAttr.enAspectCvrs = HI_UNF_VO_ASPECT_CVRS_LETTERBOX;
+                    stTmpWinAttr.stOutputRect.s32X = 0;
+                    stTmpWinAttr.stOutputRect.s32Y = 0;
+                    stTmpWinAttr.stOutputRect.s32Width  = 0;
+                    stTmpWinAttr.stOutputRect.s32Height = 0;
+                    s32Ret = HI_UNF_VO_SetWindowAttr(g_hWin, &stTmpWinAttr);
+                    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_SetWindowAttr:enAspectRatio failed" , s32Ret);
+                }
+                break;
+            case 255:
+                PLAYER_LOGI("### Call HI_UNF_VO_FreezeWindow HI_TRUE\n");
+                s32Ret = HI_UNF_VO_FreezeWindow(g_hWin, HI_TRUE, HI_UNF_WINDOW_FREEZE_MODE_BLACK);
+                PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_VO_FreezeWindow failed" , s32Ret);
+                break;
+            default:
+                PLAYER_LOGI("### CTsPlayer::SetRatio(%d) unkown cmd\n", nRatio);
+                break;
+        }
+    }
+    else
+    {
+        PLAYER_LOGI("### CTsPlayer::__SetRatio(%d) g_eTsplayerState(%d) error\n", nRatio, g_eTsplayerState);
+    }
+
+    g_Ratio = nRatio;
+
+    PLAYER_LOGI("### CTsPlayer::SetRatio(%d) quit\n", nRatio);
+
+    return true;
+ }
+
+
 static HI_VOID __GetVoAspectCvrs(HI_VOID)
 {
     char buffer[PROP_VALUE_MAX];
@@ -330,6 +493,7 @@ static HI_S32 TsPlayer_EvnetHandler(HI_HANDLE handle, HI_UNF_AVPLAY_EVENT_E enEv
             if (g_FirstFrm == 0)
             {
                 g_FirstFrm = 1;
+                //__SetRatio(g_Ratio);
                 g_CallBackFunc(IPTV_PLAYER_EVT_FIRST_PTS, g_CallBackHandle);
                 PLAYER_LOGI("### Get First video frm\n");
             }
@@ -983,6 +1147,12 @@ int CTsPlayer::MediaDeviceInit(HI_VOID)
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "Call So Init failed" , s32Ret);
 #endif
 
+    s32Ret = HI_UNF_SO_Init();
+    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "Call So Init failed" , s32Ret);
+
+    s32Ret = HI_UNF_SUBT_Init();
+    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "Call SUBT Init failed" , s32Ret);
+
     s32Ret = HIADP_IPTV_Snd_Init();
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "Call Snd Init failed" , s32Ret);
 
@@ -1027,6 +1197,12 @@ bool CTsPlayer::MediaDeviceDeinit(HI_VOID)
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "ERR: HI_UNF_SO_DeInit fail!");
 #endif
 
+    s32Ret = HI_UNF_SO_DeInit();
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "ERR: HI_UNF_SO_DeInit fail!");
+
+    s32Ret = HI_UNF_SUBT_DeInit();
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "ERR: HI_UNF_SUBT_DeInit fail!");
+
     s32Ret = HIADP_IPTV_Snd_DeInit();
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "ERR: HIADP_IPTV_Snd_DeInit fail!");
 
@@ -1045,6 +1221,718 @@ bool CTsPlayer::MediaDeviceDeinit(HI_VOID)
 
     return true;
 }
+
+#define USING_LOCALTIME 0
+HI_S32 GetCurPts(HI_U32 u32UserData, HI_S64 *ps64CurrentPts)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_UNF_AVPLAY_STATUS_INFO_S stStatusInfo;
+    HI_HANDLE hAvplayer = (HI_HANDLE)u32UserData;
+    static HI_U32 u32PrePtsTime = 0;
+
+    s32Ret = HI_UNF_AVPLAY_GetStatusInfo(hAvplayer, &stStatusInfo);
+    if (s32Ret != HI_SUCCESS)
+    {
+        printf("failed to HI_UNF_AVPLAY_GetStatusInfo\n");
+    }
+
+#if USING_LOCALTIME
+    *ps64CurrentPts = stStatusInfo.stSyncStatus.u32LocalTime;
+#else
+    *ps64CurrentPts = stStatusInfo.stSyncStatus.u32LastVidPts;
+#endif
+
+
+    if (*ps64CurrentPts < u32PrePtsTime)
+    {
+        printf("Get PTS:%llu, pre time is %u\n", *ps64CurrentPts, u32PrePtsTime);
+
+        /* reset the output */
+#if !SYN_USING_LOCALTIME
+        if ((g_hSO != HI_INVALID_HANDLE) && (NULL != g_hSO))
+        {
+            (HI_VOID)HI_UNF_SO_ResetSubBuf(g_hSO);
+        }
+#endif
+    }
+
+    u32PrePtsTime = *ps64CurrentPts;
+
+    return HI_SUCCESS;
+}
+
+
+HI_S32 SO_OnDraw(HI_U32 u32UserData, const HI_UNF_SO_SUBTITLE_INFO_S *pstInfo, HI_VOID *pArg)
+{
+    printf(" ---------- Here SO_OnDraw Called ------------\n");
+    return 1;
+}
+
+HI_S32 SO_OnClear(HI_U32 u32UserData, HI_VOID *pArg)
+{
+    printf(" ########### Here SO_OnClear Called ########## \n");
+    return 1;
+}
+
+/* Subtitle Start */
+
+static void SUBT_Data_Thread(HI_VOID *args)
+{
+    HI_UNF_DMX_DATA_S stSection[5] = { {0} };
+    HI_U32 u32SectionNum = 0;
+    HI_U8 i = 0;
+    SUBT_DATA_S *pstSubtData = NULL;
+
+    while (HI_TRUE == s_bSubtDataThreadReady)
+    {
+        /* Get section data */
+        for (i = 0; i < DATA_RECV_MAX_NUM; i++)
+        {
+            pthread_mutex_lock(&s_stSubtDataMutex);
+
+            pstSubtData = &s_astSubtDataRecv[i];
+            if (HI_FALSE == pstSubtData->bEnable)
+            {
+                pthread_mutex_unlock(&s_stSubtDataMutex);
+                continue;
+            }
+
+            if (HI_SUCCESS != HI_UNF_DMX_AcquireBuf(pstSubtData->hChannelID, 1, &u32SectionNum, stSection, 0))
+            {
+                pthread_mutex_unlock(&s_stSubtDataMutex);
+                continue;
+            }
+
+            if(u32SectionNum == 0)
+            {
+                pthread_mutex_unlock(&s_stSubtDataMutex);
+                continue;
+            }
+
+            if (pstSubtData->stInstallParam.pfnCallback)
+            {
+                (HI_VOID)pstSubtData->stInstallParam.pfnCallback(pstSubtData->stInstallParam.u32UserData, stSection[0].pu8Data, stSection[0].u32Size);
+            }
+
+            (HI_VOID)HI_UNF_DMX_ReleaseBuf(pstSubtData->hChannelID, u32SectionNum, stSection);
+            pthread_mutex_unlock(&s_stSubtDataMutex);
+        }
+
+        usleep(50*1000);
+    }
+
+    printf("Data receive thread exit!!!\n");
+    PLAYER_LOGE("Data receive thread exit!!!\n");
+}
+
+HI_S32 SUBT_Data_Install(SUBT_DATA_INSTALL_PARAM_S *pstInstallParam, HI_HANDLE *hData)
+{
+    //HI_UNF_DMX_CHAN_ATTR_S tChAttr = {0};
+    //HI_UNF_DMX_FILTER_ATTR_S tFilterAttr = {0};
+    HI_UNF_DMX_CHAN_ATTR_S tChAttr;
+    HI_UNF_DMX_FILTER_ATTR_S tFilterAttr;
+    memset(&tChAttr, 0, sizeof(HI_UNF_DMX_CHAN_ATTR_S));
+
+    HI_S32 s32Ret = 0;
+    HI_U8  i = 0;
+    SUBT_DATA_S *pstSubtData = NULL;
+
+    if (HI_FALSE == s_bInit)
+    {
+        printf("not init...\n");
+        PLAYER_LOGE("not init...\n");
+
+        return HI_FAILURE;
+    }
+
+    if (NULL == pstInstallParam || NULL == hData)
+    {
+        printf("parameter is invalid...\n");
+        PLAYER_LOGE("parameter is invalid...\n");
+
+        return HI_FAILURE;
+    }
+
+    for (i = 0; i < DATA_RECV_MAX_NUM; i++)
+    {
+        pstSubtData = &s_astSubtDataRecv[i];
+
+        if (HI_FALSE == pstSubtData->bEnable)
+        {
+            break;
+        }
+    }
+    if (i >= DATA_RECV_MAX_NUM)
+    {
+        printf("install too much, max is %d !\n", DATA_RECV_MAX_NUM);
+        PLAYER_LOGE("install too much, max is %d !\n", DATA_RECV_MAX_NUM);
+
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_UNF_DMX_GetChannelDefaultAttr(&tChAttr);
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("failed to HI_FILTER_Destroy !\n");
+        PLAYER_LOGE("failed to HI_FILTER_Destroy !\n");
+        return HI_FAILURE;
+    }
+     switch(pstInstallParam->enDataType)
+    {
+        case HI_UNF_SUBT_SCTE:
+            tChAttr.u32BufSize = MAX_CHANNEL_BUF_SIZE;
+            tChAttr.enChannelType = HI_UNF_DMX_CHAN_TYPE_SEC;
+            tChAttr.enCRCMode = HI_UNF_DMX_CHAN_CRC_MODE_BY_SYNTAX_AND_DISCARD;
+            tChAttr.enOutputMode = HI_UNF_DMX_CHAN_OUTPUT_MODE_PLAY;
+            break;
+        case HI_UNF_SUBT_DVB:
+        default:
+            tChAttr.u32BufSize = MAX_CHANNEL_BUF_SIZE;
+            tChAttr.enChannelType = HI_UNF_DMX_CHAN_TYPE_PES;
+            tChAttr.enCRCMode = HI_UNF_DMX_CHAN_CRC_MODE_BY_SYNTAX_AND_DISCARD;
+            tChAttr.enOutputMode = HI_UNF_DMX_CHAN_OUTPUT_MODE_PLAY;
+            break;
+    }
+
+    s32Ret = HI_UNF_DMX_CreateChannel(pstInstallParam->u32DmxID, &tChAttr, &pstSubtData->hChannelID);
+    if (s32Ret != HI_SUCCESS)
+    {
+        printf("failed to HI_UNF_DMX_CreateChannel !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_CreateChannel !\n");
+        return HI_FAILURE;
+    }
+
+    /* set channel PID for recving data */
+    s32Ret = HI_UNF_DMX_SetChannelPID(pstSubtData->hChannelID, pstInstallParam->u16SubtPID);
+    if (s32Ret != HI_SUCCESS)
+    {
+        (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+        printf("failed to HI_UNF_DMX_SetChannelPID !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_SetChannelPID !\n");
+        return HI_FAILURE;
+    }
+
+    memset(tFilterAttr.au8Match, 0, DMX_FILTER_MAX_DEPTH);
+    memset(tFilterAttr.au8Mask, 0, DMX_FILTER_MAX_DEPTH);
+    memset(tFilterAttr.au8Negate, 0, DMX_FILTER_MAX_DEPTH);
+    tFilterAttr.u32FilterDepth = 1;
+    tFilterAttr.au8Match[0] = SUBT_STREAM_KEYWORD; /* Subtitle stream id is 0xbd */
+    tFilterAttr.au8Mask[0] = 0xff;
+
+    s32Ret = HI_UNF_DMX_CreateFilter(pstInstallParam->u32DmxID, &tFilterAttr, &pstSubtData->hFilterID);
+    if (s32Ret != HI_SUCCESS)
+    {
+        (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+        printf("failed to HI_UNF_DMX_CreateFilter !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_CreateFilter !\n");
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_UNF_DMX_SetFilterAttr(pstSubtData->hFilterID, &tFilterAttr);
+    if (s32Ret != HI_SUCCESS)
+    {
+        (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+        (HI_VOID)HI_UNF_DMX_DestroyFilter(pstSubtData->hFilterID);
+
+        printf("failed to HI_UNF_DMX_SetFilterAttr !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_SetFilterAttr !\n");
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_UNF_DMX_AttachFilter(pstSubtData->hFilterID, pstSubtData->hChannelID);
+    if (s32Ret != HI_SUCCESS)
+    {
+        (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+        (HI_VOID)HI_UNF_DMX_DestroyFilter(pstSubtData->hFilterID);
+
+        printf("failed to HI_UNF_DMX_AttachFilter !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_AttachFilter !\n");
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_UNF_DMX_OpenChannel(pstSubtData->hChannelID);
+    if (s32Ret != HI_SUCCESS)
+    {
+        (HI_VOID)HI_UNF_DMX_DetachFilter(pstSubtData->hFilterID, pstSubtData->hChannelID);
+
+        (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+        (HI_VOID)HI_UNF_DMX_DestroyFilter(pstSubtData->hFilterID);
+
+        printf("failed to HI_UNF_DMX_OpenChannel !\n");
+        PLAYER_LOGE("failed to HI_UNF_DMX_OpenChannel !\n");
+        return HI_FAILURE;
+    }
+
+    pthread_mutex_lock(&s_stSubtDataMutex);
+    pstSubtData->stInstallParam = *pstInstallParam;
+    pstSubtData->bEnable = HI_TRUE;
+    pthread_mutex_unlock(&s_stSubtDataMutex);
+
+    *hData = (HI_HANDLE)pstSubtData;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 SUBT_Data_Uninstall(HI_HANDLE hData)
+{
+    SUBT_DATA_S *pstSubtData = (SUBT_DATA_S *)hData;
+
+    if (HI_FALSE == s_bInit)
+    {
+        printf("not init...\n");
+        PLAYER_LOGE("not init...\n");
+
+        return HI_FAILURE;
+    }
+
+    if ( HI_NULL == pstSubtData )
+    {
+        return HI_FAILURE;
+    }
+
+    (HI_VOID)HI_UNF_DMX_CloseChannel(pstSubtData->hChannelID);
+    (HI_VOID)HI_UNF_DMX_DetachFilter(pstSubtData->hFilterID, pstSubtData->hChannelID);
+    (HI_VOID)HI_UNF_DMX_DestroyFilter(pstSubtData->hFilterID);
+    (HI_VOID)HI_UNF_DMX_DestroyChannel(pstSubtData->hChannelID);
+
+    pthread_mutex_lock(&s_stSubtDataMutex);
+    pstSubtData->hChannelID = 0;
+    pstSubtData->hFilterID  = 0;
+    pstSubtData->bEnable    = HI_FALSE;
+    pthread_mutex_unlock(&s_stSubtDataMutex);
+
+    return HI_SUCCESS;
+}
+
+
+HI_S32 SUBT_Data_Init(HI_VOID)
+{
+    if (HI_FALSE == s_bInit)
+    {
+        memset(s_astSubtDataRecv, 0, sizeof(s_astSubtDataRecv));
+
+        (HI_VOID)pthread_mutex_init(&s_stSubtDataMutex, NULL);
+        s_bSubtDataThreadReady = HI_TRUE;
+        pthread_create(&s_stSubtDataThreadID, NULL, (void * (*)(void *))SUBT_Data_Thread, (void*)HI_NULL);
+        s_bInit = HI_TRUE;
+    }
+    return HI_SUCCESS;
+}
+
+HI_S32 SUBT_Data_DeInit(HI_VOID)
+{
+    HI_U8 i = 0;
+    SUBT_DATA_S *pstSubtData = NULL;
+
+    if (HI_TRUE == s_bInit)
+    {
+        for (i = 0; i < DATA_RECV_MAX_NUM; i++)
+        {
+            pstSubtData = &s_astSubtDataRecv[i];
+
+            if (HI_TRUE == pstSubtData->bEnable)
+            {
+                (HI_VOID)SUBT_Data_Uninstall((HI_HANDLE)pstSubtData);
+            }
+        }
+        memset(s_astSubtDataRecv, 0, sizeof(s_astSubtDataRecv));
+
+
+        s_bSubtDataThreadReady = HI_FALSE;
+        pthread_join(s_stSubtDataThreadID, NULL);
+        pthread_mutex_destroy(&s_stSubtDataMutex);
+        s_bInit = HI_FALSE;
+    }
+    return HI_SUCCESS;
+}
+
+HI_S32 FilterDataCallback(HI_U32 u32UserData, HI_U8 *pu8Data, HI_U32 u32DataLength)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_U32 u32SubtPID = u32UserData;
+
+
+    if (g_hSubt)
+    {
+        if(bSubDgbFlag)printf("u32SubtPID=0x%x, u32DataLength=%d\n", u32SubtPID, u32DataLength);
+        if(bSubDgbFlag)PLAYER_LOGE("u32SubtPID=0x%x, u32DataLength=%d\n", u32SubtPID, u32DataLength);
+        if(u32SubtPID)
+        {
+            s32Ret = HI_UNF_SUBT_InjectData(g_hSubt, u32SubtPID, pu8Data, u32DataLength);
+            if (s32Ret != HI_SUCCESS)
+            {
+                printf("failed to HI_UNF_SUBT_InjectData, u32SubtPID=0x%x\n",u32SubtPID);
+                PLAYER_LOGE("failed to HI_UNF_SUBT_InjectData, u32SubtPID=0x%x\n",u32SubtPID);
+            }
+        }
+    }
+
+    return s32Ret;
+}
+
+
+HI_S32 StartSubtitleDataFilter(CTC_SUBT_PARM_S *pstSubParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    HI_U8  u8Index = pstSubParam->u8SubtChannelSelect;
+    HI_HANDLE hSubtData = 0;
+    SUBT_DATA_INSTALL_PARAM_S stInstallParam;
+    s32Ret = SUBT_Data_DeInit();
+    s32Ret |= SUBT_Data_Init();
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("failed to SUBT_Data_Init\n");
+        PLAYER_LOGE("failed to SUBT_Data_Init\n");
+
+        return HI_FAILURE;
+    }
+
+    stInstallParam.u32DmxID = 0;
+    stInstallParam.pfnCallback = FilterDataCallback;
+
+    if (pstSubParam->eSubtType == HI_UNF_SUBT_DVB)
+    {
+        stInstallParam.u16SubtPID = pstSubParam->stSubtItem[u8Index].u32SubtPID;
+        stInstallParam.u32UserData = pstSubParam->stSubtItem[u8Index].u32SubtPID;
+        stInstallParam.enDataType = HI_UNF_SUBT_DVB;
+        s32Ret |= SUBT_Data_Install(&stInstallParam, &hSubtData);
+    }
+
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("failed to SUBT_Data_Install\n");
+        PLAYER_LOGE("failed to SUBT_Data_Install\n");
+
+        (HI_VOID)SUBT_Data_DeInit();
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+}
+
+HI_S32 UNFSubtCallbackSendData(HI_U32 u32UserData, HI_UNF_SUBT_DATA_S *pstData)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_HANDLE hSO = (HI_HANDLE)u32UserData;
+    HI_UNF_SO_SUBTITLE_INFO_S stSubtitleOut;
+    HI_UNF_AVPLAY_STATUS_INFO_S stStatusInfo;
+
+    if (NULL != pstData)
+    {
+        /* PTS validity check */
+        memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+        s32Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+        if ((s32Ret == HI_SUCCESS) && ((pstData->u32PTS + pstData->u32Duration) < stStatusInfo.stSyncStatus.u32LastVidPts))
+        {
+            printf("stStatusInfo.stSyncStatus.u32LastVidPts = %d\n", stStatusInfo.stSyncStatus.u32LastVidPts);
+            PLAYER_LOGI("stStatusInfo.stSyncStatus.u32LastVidPts = %d\n", stStatusInfo.stSyncStatus.u32LastVidPts);
+            if ((pstData->u32PTS + HI_SUBT_MAX_PTS_OFFSET) < stStatusInfo.stSyncStatus.u32LastVidPts)
+            {
+                printf("subtitle pts is wrong, try to update subtitle pts=%d -> %d, Duration=%d\n", pstData->u32PTS,
+                       stStatusInfo.stSyncStatus.u32LastVidPts, pstData->u32Duration);
+                PLAYER_LOGE("subtitle pts is wrong, try to update subtitle pts=%d -> %d, Duration=%d\n", pstData->u32PTS,
+                       stStatusInfo.stSyncStatus.u32LastVidPts, pstData->u32Duration);
+                pstData->u32PTS = stStatusInfo.stSyncStatus.u32LastVidPts;
+            }
+            else
+            {
+                printf("discard a subtitle, pts=%d, Duration=%d, current pts = %d\n", pstData->u32PTS,
+                       pstData->u32Duration, stStatusInfo.stSyncStatus.u32LastVidPts);
+                PLAYER_LOGE("discard a subtitle, pts=%d, Duration=%d, current pts = %d\n", pstData->u32PTS,
+                       pstData->u32Duration, stStatusInfo.stSyncStatus.u32LastVidPts);
+                return HI_SUCCESS;
+            }
+        }
+
+        /* send subtitle data to so */
+        memset(&stSubtitleOut, 0, sizeof(stSubtitleOut));
+
+        stSubtitleOut.eType = (HI_UNF_SO_SUBTITLE_TYPE_E)pstData->enDataType;
+        if (pstData->enPageState == HI_UNF_SUBT_PAGE_NORMAL_CASE)
+        {
+            stSubtitleOut.unSubtitleParam.stGfx.enMsgType = HI_UNF_SO_DISP_MSG_NORM;
+        }
+        else
+        {
+            stSubtitleOut.unSubtitleParam.stGfx.enMsgType = HI_UNF_SO_DISP_MSG_ERASE;
+        }
+
+        stSubtitleOut.unSubtitleParam.stGfx.x = pstData->u32x;
+        stSubtitleOut.unSubtitleParam.stGfx.y = pstData->u32y;
+        stSubtitleOut.unSubtitleParam.stGfx.w = pstData->u32w;
+        stSubtitleOut.unSubtitleParam.stGfx.h = pstData->u32h;
+
+        stSubtitleOut.unSubtitleParam.stGfx.s32BitWidth = pstData->u32BitWidth;
+        if(pstData->pvPalette && pstData->u32PaletteItem)
+        {
+            memcpy(stSubtitleOut.unSubtitleParam.stGfx.stPalette, pstData->pvPalette, pstData->u32PaletteItem);
+        }
+
+        stSubtitleOut.unSubtitleParam.stGfx.s64Pts = pstData->u32PTS;
+        stSubtitleOut.unSubtitleParam.stGfx.u32Duration = pstData->u32Duration;
+
+        stSubtitleOut.unSubtitleParam.stGfx.u32Len = pstData->u32DataLen;
+        stSubtitleOut.unSubtitleParam.stGfx.pu8PixData = pstData->pu8SubtData;
+        stSubtitleOut.unSubtitleParam.stGfx.u32CanvasWidth = pstData->u32DisplayWidth;
+        stSubtitleOut.unSubtitleParam.stGfx.u32CanvasHeight = pstData->u32DisplayHeight;
+
+        if (hSO)
+        {
+            s32Ret = HI_UNF_SO_SendData(hSO, &stSubtitleOut, 1000);
+            if (s32Ret != HI_SUCCESS)
+            {
+                printf("failed to HI_UNF_SO_SendData\n");
+                PLAYER_LOGE("failed to HI_UNF_SO_SendData\n");
+            }
+        }
+    }
+
+    return HI_SUCCESS;
+}
+
+/*
+ * Function     : CreateSubtitleDecoder
+ * Description  : Init and Create Subtitle Module
+ * Create Date  : 2016/03/22
+ * Modify       : none
+*/
+HI_S32 CTsPlayer::CreateSubtitleDecoder(CTC_SUBT_PARM_S *pstSubParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_U8 u8Index;
+    HI_UNF_SUBT_PARAM_S stSubtitleParam;
+
+    if (pstSubParam->eSubtType == HI_UNF_SUBT_DVB)
+    {
+        if(bSubDgbFlag)printf("DVB subtitle\n");
+        if(bSubDgbFlag)PLAYER_LOGI("DVB subtitle\n");
+        memset(&stSubtitleParam, 0, sizeof(stSubtitleParam));
+        stSubtitleParam.enDataType = HI_UNF_SUBT_DVB;
+
+        stSubtitleParam.pfnCallback = UNFSubtCallbackSendData;
+        stSubtitleParam.u32UserData = (HI_U32)g_hSO;
+        stSubtitleParam.u8SubtItemNum = pstSubParam->u32SubtNum;
+        if(bSubDgbFlag)printf("Subtitle Count = %d\n", pstSubParam->u32SubtNum);
+        if(bSubDgbFlag)PLAYER_LOGI("Subtitle Count = %d\n", pstSubParam->u32SubtNum);
+
+        for (u8Index = 0; u8Index < stSubtitleParam.u8SubtItemNum; u8Index++)
+        {
+            stSubtitleParam.astItems[u8Index].u32SubtPID = pstSubParam->stSubtItem[u8Index].u32SubtPID;
+            if(bSubDgbFlag)printf("u32SubtPID[%d] = %d\n", u8Index , pstSubParam->stSubtItem[u8Index].u32SubtPID);
+            if(bSubDgbFlag)PLAYER_LOGI("u32SubtPID[%d] = %d\n", u8Index , pstSubParam->stSubtItem[u8Index].u32SubtPID);
+            stSubtitleParam.astItems[u8Index].u16PageID = pstSubParam->stSubtItem[u8Index].u16PageID;
+            if(bSubDgbFlag)printf("u16PageID[%d] = %d\n", u8Index , pstSubParam->stSubtItem[u8Index].u16PageID);
+            if(bSubDgbFlag)PLAYER_LOGI("u16PageID[%d] = %d\n", u8Index , pstSubParam->stSubtItem[u8Index].u16PageID);
+            stSubtitleParam.astItems[u8Index].u16AncillaryID = pstSubParam->stSubtItem[u8Index].u16AncillaryID;
+            if(bSubDgbFlag)printf("u16AncillaryID[%d] = %d\n", u8Index ,pstSubParam->stSubtItem[u8Index].u16AncillaryID);
+            if(bSubDgbFlag)PLAYER_LOGI("u16AncillaryID[%d] = %d\n", u8Index ,pstSubParam->stSubtItem[u8Index].u16AncillaryID);
+        }
+        s32Ret = HI_UNF_SUBT_Create(&stSubtitleParam, &g_hSubt);
+        if (HI_SUCCESS != s32Ret)
+        {
+            printf("failed to HI_UNF_SUBT_Create\n");
+            PLAYER_LOGE("failed to HI_UNF_SUBT_Create\n");
+        }
+    }
+    else
+    {
+        printf("Not DVB subtitle\n");
+        PLAYER_LOGE("Not DVB subtitle\n");
+    }
+
+    return s32Ret;
+}
+
+int CTsPlayer::EnableSubtitle(CTC_SUBT_PARM_S *pstSubParam)
+{
+    int Ret = HI_SUCCESS;
+    bUseSubtitle = HI_TRUE;
+    bSubDgbFlag = HI_TRUE;
+    CTC_SUBT_PARM_S *pstSubtitleParam = pstSubParam;
+
+    Ret = SubtitlOutputCreate();
+    if (HI_SUCCESS != Ret)
+    {
+        printf("SubtitlOutputInit & SubtitlOutputCreate Failed !\n");
+        PLAYER_LOGE("SubtitlOutputInit & SubtitlOutputCreate Failed !\n");
+        return HI_FAILURE;
+    }
+
+    /* Create subtitle module instance */
+    if (HI_INVALID_HANDLE == g_hSubt)
+    {
+        Ret = CreateSubtitleDecoder(pstSubtitleParam);
+        if (HI_SUCCESS != Ret)
+        {
+            printf("CreateSubtitleDecoder Failed\n");
+            PLAYER_LOGE("CreateSubtitleDecoder Failed\n");
+            return HI_FAILURE;
+        }
+    }
+
+    if (g_hSubt)
+    {
+        HI_U8  u8SubtNo = pstSubtitleParam->u8SubtChannelSelect;
+        printf("subtitle select = %d\n", u8SubtNo);
+        PLAYER_LOGE("subtitle select = %d\n", u8SubtNo);
+        HI_UNF_SUBT_ITEM_S stSubtItem;
+
+        if (g_hSO)
+        {
+            HI_UNF_SO_CLEAR_PARAM_S stClearParam;
+
+            memset(&stClearParam, 0, sizeof(HI_UNF_SO_CLEAR_PARAM_S));
+            (HI_VOID)SO_OnClear(0, (HI_VOID *)&stClearParam);
+            (HI_VOID)HI_UNF_SO_ResetSubBuf(g_hSO);
+        }
+
+        /* Default subtitle 0 */
+        if(HI_UNF_SUBT_DVB == pstSubtitleParam->eSubtType)
+        {
+            memset(&stSubtItem, 0, sizeof(stSubtItem));
+            stSubtItem.u32SubtPID = pstSubtitleParam->stSubtItem[u8SubtNo].u32SubtPID;
+            stSubtItem.u16PageID = pstSubtitleParam->stSubtItem[u8SubtNo].u16PageID;
+            stSubtItem.u16AncillaryID = pstSubtitleParam->stSubtItem[u8SubtNo].u16AncillaryID;
+            printf("select subtitle[%d,%d,%d]\n",stSubtItem.u32SubtPID,stSubtItem.u16PageID,stSubtItem.u16AncillaryID);
+            PLAYER_LOGE("select subtitle[%d,%d,%d]\n",stSubtItem.u32SubtPID,stSubtItem.u16PageID,stSubtItem.u16AncillaryID);
+            Ret = HI_UNF_SUBT_SwitchContent(g_hSubt, &stSubtItem);
+            if (HI_SUCCESS != Ret)
+            {
+                printf("failed to HI_UNF_SUBT_SwitchContent\n");
+                PLAYER_LOGE("failed to HI_UNF_SUBT_SwitchContent\n");
+            }
+        }
+
+    }
+
+    Ret = StartSubtitleDataFilter(pstSubtitleParam);
+    if (HI_SUCCESS != Ret)
+    {
+        printf("StartSubtitleDataFilter Failed\n");
+        PLAYER_LOGE("StartSubtitleDataFilter Failed\n");
+    }
+
+    return Ret;
+}
+
+/*
+ * Function     : SubtitlOutputInit
+ * Description  : Init SO
+ * Create Date  : 2016/03/22
+ * Modify       : none
+*/
+HI_S32 CTsPlayer::SubtitlOutputInit()
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    /* SO Init */
+    s32Ret = HI_UNF_SO_Init();
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("<ERR>: CTCMediaProcessor --- SO_Init Failed\n");
+        PLAYER_LOGE("<ERR>: CTCMediaProcessor --- SO_Init Failed\n");
+        return HI_FAILURE;
+    }
+    return s32Ret;
+}
+
+/*
+ * Function     : SubtitlOutputCreate
+ * Description  : SO Create & Regist 'GetPts','Draw' and 'Clear' Callback Function
+ * Create Date  : 2016/03/22
+ * Modify       : none
+*/
+HI_S32 CTsPlayer::SubtitlOutputCreate()
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    /* SO Create */
+    PLAYER_MEMSET(&stSoCallbackInfo, 0, sizeof(stSoCallbackInfo));
+    s32Ret = HI_UNF_SO_Create(&g_hSO);
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("<ERR>: CTCMediaProcessor --- SO_Create Failed\n");
+        PLAYER_LOGE("<ERR>: CTCMediaProcessor --- SO_Create Failed\n");
+        return HI_FAILURE;
+    }
+    stSoCallbackInfo.bExtSubTitle = bExtSubTitle;
+    stSoCallbackInfo.hAvplay = g_hAvplay;
+    stSoCallbackInfo.pstFileInfo = &stFileInfo;
+    stSoCallbackInfo.pStreamID = &stStreamID;
+
+    s32Ret = HI_UNF_SO_RegGetPtsCb(g_hSO,GetCurPts,(HI_U32)g_hAvplay);
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("<ERR>: CTCMediaProcessor --- SO_RegGetPtsCb Failed\n");
+        PLAYER_LOGE("<ERR>: CTCMediaProcessor --- SO_RegGetPtsCb Failed\n");
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_UNF_SO_RegOnDrawCb(g_hSO, SO_OnDraw, SO_OnClear, NULL);
+    if (HI_SUCCESS != s32Ret)
+    {
+        printf("<ERR>: CTCMediaProcessor --- SO_RegOnDrawCb Failed\n");
+        PLAYER_LOGE("<ERR>: CTCMediaProcessor --- SO_RegOnDrawCb Failed\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+}
+
+/*
+ * Function     : DeInitSubtitle
+ * Description  : DeInit SO & Subtitle Module
+ * Date         : 2016/03/22
+ * Modify       : none
+*/
+HI_S32 CTsPlayer::DeInitSubtitle()
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    s32Ret = HI_UNF_SO_DeInit();
+    s32Ret |= HI_UNF_SUBT_DeInit();
+
+    if(HI_SUCCESS != s32Ret)
+    {
+        printf("Subtitle Deinit Failed !\n");
+    }
+
+    return s32Ret;
+}
+
+/*
+ * Function     : DestroySubutile
+ * Description  : Destroy SO & Subtitle Module
+ * Date         : 2016/03/22
+ * Modify       : none
+*/
+
+HI_S32 CTsPlayer::DestroySubutile()
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    SUBT_Data_DeInit();
+
+    if ((HI_INVALID_HANDLE != g_hSO) && (NULL != g_hSO))
+    {
+        s32Ret = HI_UNF_SO_Destroy(g_hSO);
+        PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_SO_Destroy failed");
+        g_hSO = (HI_HANDLE)HI_INVALID_HANDLE;
+    }
+
+    if ((HI_INVALID_HANDLE != g_hSubt) && (NULL != g_hSubt))
+    {
+        s32Ret = HI_UNF_SUBT_Destroy(g_hSubt);
+        PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_SUBT_Destroy failed");
+        g_hSubt = (HI_HANDLE)HI_INVALID_HANDLE;
+    }
+
+    return s32Ret;
+}
+
 
 //prepare resources
 bool CTsPlayer::MediaDeviceCreate()
@@ -1167,6 +2055,12 @@ bool CTsPlayer::MediaDeviceDestroy()
         hSubTitle = (HI_HANDLE)NULL;
     }
 #endif
+
+    if (bUseSubtitle){
+        s32Ret = DestroySubutile();
+        PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_SO_Destroy or HI_UNF_SUBT_Destroy failed");
+    }
+    bUseSubtitle = HI_FALSE;
 
     s32Ret = HI_UNF_AVPLAY_ChnClose(g_hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Close AVPLAY video channel failed");
@@ -1512,6 +2406,9 @@ CTsPlayer::CTsPlayer()
     PLAYER_MEMSET(&stStreamID, 0, sizeof(stStreamID));
     initWinAttr(&g_WinAttr, HI_UNF_DISPLAY1);
 
+    g_hSubt = HI_INVALID_HANDLE;
+    g_hSO = HI_INVALID_HANDLE;
+
 #ifdef SUBTITLE
     PLAYER_MEMSET(&stSoCallbackInfo, 0, sizeof(stSoCallbackInfo));
 #endif
@@ -1756,6 +2653,7 @@ bool CTsPlayer::StartPlay()
     HI_S32  s32TmpHiFormart = 0;
     HI_U32     u32ADecType = 0;
     HI_UNF_VCODEC_TYPE_E    eVdecType = HI_UNF_VCODEC_TYPE_BUTT;
+    bUseSubtitle = HI_FALSE;
 
     PLAYER_LOGI("### CTsPlayer::StartPlay \n");
     TSPLAYER_LOCK();
@@ -1999,7 +2897,7 @@ bool CTsPlayer::Seek()
 bool CTsPlayer::Fast()
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_UNF_VCODEC_MODE_E eMode = HI_UNF_VCODEC_MODE_NORMAL;
+    HI_UNF_VCODEC_MODE_E eMode = HI_UNF_VCODEC_MODE_I;
     HI_UNF_AVPLAY_STATUS_INFO_S stStatusInfo;
     HI_UNF_VCODEC_ATTR_S stVdecAdvAttr;
 
@@ -2018,21 +2916,40 @@ bool CTsPlayer::Fast()
         return true;
     }
 
+	HI_CODEC_VIDEO_CMD_S	stVdecCmd ={0};
+	HI_BOOL bProgressive;
+
+	bProgressive = HI_TRUE;
+
+	stVdecCmd.u32CmdID = HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD;
+	stVdecCmd.pPara = (HI_VOID *)&bProgressive;
+
+	/*针对vod点播快进场景，服务器下发的全隔行I帧流时，强制逐行，减小底层通路上的视频帧缓存*/
+	s32Ret = HI_UNF_AVPLAY_Invoke(g_hAvplay, HI_UNF_AVPLAY_INVOKE_VCODEC, &stVdecCmd);
+	if (s32Ret != HI_SUCCESS)
+	{
+	   PLAYER_LOGI("%s->%d, fail!\n",__func__,__LINE__);
+	}
+
+	PLAYER_LOGI("### CTsPlayer::Fast invoke HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD .\n");
+
+
+    s32Ret = HI_UNF_DMX_ResetTSBuffer(hTsBuf);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_DMX_ResetTSBuffer failed");
+
     s32Ret = HI_UNF_AVPLAY_Reset(g_hAvplay, NULL);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_Reset failed");
 
     s32Ret = HI_UNF_AVPLAY_Tplay(g_hAvplay, NULL);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_Tplay failed");
 
-    s32Ret = HI_UNF_DMX_ResetTSBuffer(hTsBuf);
-    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_DMX_ResetTSBuffer failed");
 
     s32Ret = HI_UNF_AVPLAY_GetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, (HI_VOID*)&stVdecAdvAttr);
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_AVPLAY_GetAttr VID failed" , s32Ret);
 
-    stVdecAdvAttr.bOrderOutput = HI_TRUE;
+    //stVdecAdvAttr.bOrderOutput = HI_FALSE;
     stVdecAdvAttr.enMode = eMode;
-    stVdecAdvAttr.u32ErrCover = 20;
+    //stVdecAdvAttr.u32ErrCover = 20;
     s32Ret = HI_UNF_AVPLAY_SetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, (HI_VOID*)&stVdecAdvAttr);
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_AVPLAY_SetAttr VID failed" , s32Ret);
 
@@ -2143,7 +3060,24 @@ int CTsPlayer::GetVolume()
 bool CTsPlayer::SetRatio(int nRatio)
 {
     PLAYER_LOGI("### CTsPlayer::SetRatio(%d) \n", nRatio);
-    return true;
+    g_Ratio = nRatio;
+
+    PLAYER_CHK_RETURN((false == bIsPrepared), false, "HW resource is not prepared !!!" , false);
+
+    if (nRatio == 255)
+    {
+        g_WinHide =1;
+        return (HI_SUCCESS == VideoHide());
+    }
+    else
+    {
+	if(g_WinHide ==1)
+        {
+            g_WinHide=0;
+            VideoShow();
+        }
+        return __SetRatio(nRatio);
+    }
 }
 
 //SetVolume [0-100]
@@ -2238,13 +3172,10 @@ void CTsPlayer::GetVideoPixels(int& width, int& height)
 
     PLAYER_LOGI("### HI_UNF_DISP_GetVirtualScreen, Ret:0x%x, w: %d ,h: %d \n", s32Ret, u32DispWidth, u32DispHeight);
 
-
-
     width = u32DispWidth;
     height = u32DispHeight;
 
     PLAYER_LOGI("### GetVideoPixels, w: %d ,h: %d \n", width, height);
-    return;
 }
 
 //TODO: this function definination blur, temporarily not implemented.
@@ -2325,8 +3256,8 @@ long CTsPlayer::GetCurrentPlayTime()
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "call HI_UNF_AVPLAY_GetStatusInfo failed" , s32Ret);
 
     TSPLAYER_UNLOCK();
-    PLAYER_LOGI("### CTsPlayer::u32PlayTime:%u\n", stStatusInfo.stSyncStatus.u32PlayTime);
-    return (long)stStatusInfo.stSyncStatus.u32PlayTime;
+    PLAYER_LOGI("### CTsPlayer::u32LastVidPts:%u\n", stStatusInfo.stSyncStatus.u32LastVidPts);
+    return (long)stStatusInfo.stSyncStatus.u32LastVidPts;
 }
 
 void CTsPlayer::leaveChannel()

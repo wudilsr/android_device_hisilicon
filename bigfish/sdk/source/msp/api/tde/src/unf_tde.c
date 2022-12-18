@@ -492,6 +492,33 @@ HI_S32   HI_TDE2_EndJob(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock, HI_
     #endif
 }
 
+#ifndef TDE_BOOT
+
+HI_S32 HI_TDE2_EndJobEx(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock, HI_U32 u32TimeOut)
+{
+    HI_S32 s32Ret;
+
+    TDE_CHECK_FD();
+
+    TDE_ENDJOB_CMD_EX_S stEndJob;
+    /* Disable sync function */
+    bSync = HI_FALSE;
+
+    stEndJob.s32Handle = s32Handle;
+    stEndJob.bSync  = bSync;
+    stEndJob.bBlock = bBlock;
+    stEndJob.u32TimeOut = u32TimeOut;
+
+    s32Ret = ioctl(g_s32TdeFd, TDE_END_JOB_EX, &stEndJob);
+    if (s32Ret != HI_SUCCESS)
+    {
+        return s32Ret;
+    }
+
+    return stEndJob.s32ReleaseFenceFd;    
+}
+
+
 /*****************************************************************************
 * Function:      HI_TDE2_WaitForDone
 * Description:   wait for completion of sumit TDE2 operate
@@ -500,7 +527,7 @@ HI_S32   HI_TDE2_EndJob(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock, HI_
 * Return:        true: assigned task completed  / false: assigned task not completed 
 * Others:        none
 *****************************************************************************/
-#ifndef TDE_BOOT
+
 HI_S32 HI_TDE2_WaitForDone(TDE_HANDLE s32Handle)
 {
     TDE_CHECK_FD();

@@ -60,23 +60,31 @@ typedef struct {
     eBUFFER_TYPE       buf_type;
 	eBUFFER_STATE      status;
 	HI_U32             phy_addr;
+	HI_U32             private_phy_addr;//VPSS 假4K输出需要metabuf传递额外信息    
 	HI_U32             buf_len;
 	HI_U32             act_len;
+	HI_U32             private_len;    
 	HI_U32             offset;
 	HI_U32             flags;
 	HI_U32             buf_id;
 	HI_S64             time_stamp;
-
+    HI_U32             usr_tag;
 	struct list_head   list;
 
 	HI_VOID           *user_vaddr;
 	HI_VOID           *kern_vaddr;
 	HI_VOID           *client_data;
-
+    HI_U32             u32FrameRate;
 }OMXVDEC_BUF_S;
   
 typedef struct {
+    HI_U32 DecoderIn;
+    HI_U32 DecoderOut;
+    HI_U32 ProcessorIn;
+    HI_U32 ProcessorOut;
+} OMXVDEC_CHAN_STATINFO;
     
+typedef struct {
 	HI_S32             channel_id;
 	HI_S32             decoder_id;
 	HI_S32             processor_id;
@@ -87,6 +95,7 @@ typedef struct {
 	HI_U32             out_stride;
 	HI_U32             protocol;
     HI_U32             bReversed;
+    HI_U32             bStorePrivateData;
     HI_U32             ref_frame_num;
     HI_U32             ref_frame_size;
     HI_U32             dfs_delay_time;
@@ -148,6 +157,8 @@ typedef struct {
     MMZ_BUFFER_S       channel_extra_buf;
     MMZ_BUFFER_S       decoder_scd_buf;
     MMZ_BUFFER_S       decoder_vdh_buf;
+    OMXVDEC_CHAN_STATINFO  omx_chan_statinfo;
+    OMXVDEC_LOWDELAY_PROC_RECORD* omx_vdec_lowdelay_proc_rec;
 }OMXVDEC_CHAN_CTX;
 
 typedef struct tagVDEC_PREMMZ_NODE_S
@@ -201,6 +212,7 @@ OMXVDEC_CHAN_CTX* channel_find_inst_by_processor_id(OMXVDEC_ENTRY *vdec, HI_S32 
 
 OMXVDEC_CHAN_CTX* channel_find_inst_need_wake_up(OMXVDEC_ENTRY *vdec);
 
+VOID channel_add_lowdelay_tag_time(OMXVDEC_CHAN_CTX *pchan, UINT32 tag, UINT32 type, UINT32 time);
 HI_VOID channel_proc_entry(struct seq_file *p, OMXVDEC_CHAN_CTX *pchan);
 
 #if (1 == BPP_MODE_ENABLE)

@@ -460,6 +460,7 @@ private:
         bool              mReset;
 
         bool              mIsTimedTextTrackEnable;
+        bool              mIsSubtitleDataTrackEnable;
         int               mPrepareResult;
         virtual status_t  AddTimedTextSource(const Parcel& request);
         virtual status_t  selectTrack(int trackIndex, bool select);
@@ -476,6 +477,7 @@ private:
             return mHandle;
         };
 
+        static HI_S32   destroyStaticAVPlayer();
 private:
         bool mSetdatasourcePrepare;
         bool mHasPrepared;
@@ -498,14 +500,16 @@ private:
         bool mPrepareAsync;              // to detect which type prepare API Called
         Condition mCondition;
         bool mFirstPlay;
-        bool mNdkMode;
+        bool mStaticAvplay;
         int mTureHD;
         int mVolumeLock;             // volume adjustable
+        HI_UNF_SND_GAIN_ATTR_S stGain;
         int  mIsNotSupportByteRange;  //http protocol must not has byte range info in the http request in some condition
         char *mstrUserAgent;
         char *mstrReferer;
         bool mIsPrepared;
         HI_UNF_WINDOW_FREEZE_MODE_E mWndFreezeMode;
+        bool mIsBufferStart;
         int mPreOutputFormat;
         bool mUseStaticResource;
         int mTimeShiftDuration;
@@ -564,6 +568,7 @@ private:
         status_t        SendPrepareMessage();
         status_t        CreateAsinkAudioTrack();
         void            SetDatasourcePrepare(char *uri);
+        int             storeSubtitleData(HI_HANDLE handle, const char * data, int size, int durationMs, int64_t n64Start, Parcel * parcel);
         enum {
                 // These keys must be in sync with the keys in TimedText.java
                 KEY_DISPLAY_FLAGS                 = 1, // int

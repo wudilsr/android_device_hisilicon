@@ -1307,7 +1307,7 @@ static HI_VOID SndOpDisableMuteCtrl(HI_U32 u32Card)
     { 
         (pCard->pstGpioFunc->pfnGpioWriteBit)(HI_SND_MUTECTL_GPIO, ((0 == HI_SND_MUTECTL_LEVEL) ? 1 : 0));
     }
-	ADAC_FastPowerEnable(HI_FALSE);    //diable fast power up
+    ADAC_FastPowerEnable(HI_FALSE);    //diable fast power up
     return;
 }
 
@@ -1322,7 +1322,7 @@ static HI_VOID SndOpEnableMuteCtrl(HI_U32 u32Card)
     { 
         (pCard->pstGpioFunc->pfnGpioWriteBit)(HI_SND_MUTECTL_GPIO, ((0 == HI_SND_MUTECTL_LEVEL) ? 0 : 1));
     }
-	ADAC_FastPowerEnable(HI_TRUE);     //enable fast power up
+    ADAC_FastPowerEnable(HI_TRUE);     //enable fast power up
     return;
 }
 
@@ -2106,6 +2106,103 @@ HI_VOID SND_GetXRunCount(SND_CARD_STATE_S *pCard, HI_U32 *pu32Count)
 
 }
 
+HI_S32 SND_SetPortSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_U32 u32SampleRate)
+{
+    HI_S32 s32Ret;
+    AIAO_PORT_ATTR_S stAiaoAttr;
+    SND_OP_STATE_S* state = HI_NULL;
+    HI_U32 u32PortNum;
+    AIAO_PORT_ID_E enPortID;
+
+    // enOutPort is HI_UNF_SND_OUTPUTPORT_ALL
+    for (u32PortNum = 0; u32PortNum < HI_UNF_SND_OUTPUTPORT_MAX; u32PortNum++)
+    {
+        state = (SND_OP_STATE_S*)(pCard->hSndOp[u32PortNum]);
+        if (HI_NULL != state)
+        {
+            enPortID = state->enPortID[state->ActiveId];
+
+            s32Ret = HAL_AIAO_P_Stop(enPortID, AIAO_STOP_IMMEDIATE);
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_ERR_AO("HAL_AIAO_P_Stop(%d) failed\n", enPortID);
+                return HI_FAILURE;
+            }
+
+            s32Ret = HAL_AIAO_P_GetAttr(enPortID, &stAiaoAttr);
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_ERR_AO("HAL_AIAO_P_GetAttr(%d) failed\n", enPortID);
+                return HI_FAILURE;
+            }
+            stAiaoAttr.stIfAttr.enRate = (AIAO_SAMPLE_RATE_E)u32SampleRate;
+
+            s32Ret = HAL_AIAO_P_SetAttr(enPortID, &stAiaoAttr);
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_FATAL_AO("HAL_AIAO_P_SetAttr(%d) failed!\n", enPortID);
+                return HI_FAILURE;
+            }
+
+            s32Ret = HAL_AIAO_P_Start(enPortID);
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_ERR_AO("HAL_AIAO_P_Start(%d) failed!\n", enPortID);
+                return HI_FAILURE;
+            }
+
+            if (HI_UNF_SND_OUTPUTPORT_HDMI0 == state->enOutPort)
+            {
+                HDMI_AUDIO_ATTR_S stHDMIAttr;
+                if(pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetAoAttr)
+                {
+                    (pCard->pstHdmiFunc->pfnHdmiGetAoAttr)(HI_UNF_HDMI_ID_0, &stHDMIAttr);
+                }
+                stHDMIAttr.enSampleRate = (HI_UNF_SAMPLE_RATE_E)u32SampleRate;
+                if(pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiAudioChange)
+                {
+                    (pCard->pstHdmiFunc->pfnHdmiAudioChange)(HI_UNF_HDMI_ID_0, &stHDMIAttr);
+                }
+            }
+        }
+    }
+
+    return s32Ret;
+}
+
+HI_S32 SND_GetPortInfo(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, SND_PORT_KERNEL_ATTR_S* pstPortKAttr)
+{
+    SND_OP_STATE_S* state;
+    AIAO_RBUF_ATTR_S stRbfAttr;
+    AIAO_PORT_ID_E enPortID;
+    SND_PORT_KERNEL_ATTR_S stPortKAttr[HI_UNF_SND_OUTPUTPORT_MAX];
+    HI_U32 u32PortNum;
+
+    memset(stPortKAttr, 0, sizeof(SND_PORT_KERNEL_ATTR_S) * HI_UNF_SND_OUTPUTPORT_MAX);
+
+    // enOutPort is HI_UNF_SND_OUTPUTPORT_ALL
+    for (u32PortNum = 0; u32PortNum < HI_UNF_SND_OUTPUTPORT_MAX; u32PortNum++)
+    {
+        state = (SND_OP_STATE_S*)(pCard->hSndOp[u32PortNum]);
+        if (HI_NULL == state)
+        {
+            stPortKAttr[u32PortNum].enOutPort = HI_UNF_SND_OUTPUTPORT_BUTT;
+        }
+        else
+        {
+            stPortKAttr[u32PortNum].enOutPort = state->enOutPort;
+
+            enPortID = state->enPortID[state->ActiveId];
+            HAL_AIAO_P_GetRbfAttr(enPortID, &stRbfAttr);
+            stPortKAttr[u32PortNum].u32PhyDma = stRbfAttr.u32BufPhyAddr;
+            stPortKAttr[u32PortNum].u32PhyWptr = stRbfAttr.u32BufPhyWptr;
+            stPortKAttr[u32PortNum].u32PhyRptr = stRbfAttr.u32BufPhyRptr;
+            stPortKAttr[u32PortNum].u32Size = stRbfAttr.u32BufSize;
+        }
+    }
+    memcpy(pstPortKAttr, stPortKAttr, sizeof(SND_PORT_KERNEL_ATTR_S) * HI_UNF_SND_OUTPUTPORT_MAX);
+    return HI_SUCCESS;
+}
 
 static HI_U32 Cast_GetSysTime(HI_VOID)
 {

@@ -358,6 +358,16 @@ int pktq_get_buf_size(void *handle)
     return q->cur_buf_size;
 }
 
+void pktq_free_data_packet(DataPacket *node)
+{
+    if (node)
+    {
+        av_free(node->data);
+        av_free(node->priv);
+        memset(node, 0, sizeof(DataPacket));
+    }
+}
+
 int pktq_clear(void *handle)
 {
     PKTQueue *q = (PKTQueue *)handle;

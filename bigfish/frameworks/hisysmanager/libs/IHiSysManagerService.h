@@ -30,6 +30,8 @@ public:
     virtual int setDefaultRoute(String8 interfacename,int gw) = 0;
     virtual int removeDefaultRoute(String8 interfacename) = 0;
     virtual int removeNetRoute(String8 interfacename) = 0;
+    virtual int setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
+    virtual int getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
     virtual int setHDCPKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
     virtual int getHDCPKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
     virtual int reboot() = 0;
@@ -56,6 +58,8 @@ public:
     virtual int recoveryIPTV(String8 path,String8 file) = 0;
     virtual int setDRMKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
     virtual int getDRMKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
+    virtual int userDataRestoreIptv() = 0;
+    virtual int setUIAsyncCompose(int mode) = 0;
 };
 class BnHiSysManagerService : public BnInterface<IHiSysManagerService>
 {

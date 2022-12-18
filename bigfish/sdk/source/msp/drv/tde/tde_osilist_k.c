@@ -24,7 +24,7 @@ extern "C" {
 #include "tde_osilist.h"
 #include "tde_hal.h"
 #include "wmalloc.h"
-
+#include "tde_fence.h"
 
 /* JOB LIST head node definition */
 typedef struct hiTDE_SWJOBLIST_S
@@ -374,6 +374,11 @@ HI_S32 TdeOsiListBeginJob(TDE_HANDLE *pHandle)
     #endif
     pstJob->s32Handle = *pHandle;
     pstJob->pid = current->tgid;
+    
+#ifdef TDE_FENCE_SUPPORT
+    pstJob->s32ReleaseFenceFd = -1;
+#endif
+
     return HI_SUCCESS;
 }
 
@@ -490,7 +495,7 @@ HI_VOID  static TdeOsiListWaitTdeIdle(HI_VOID)
 *****************************************************************************/
 HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle, 
                            HI_U32 u32TimeOut, TDE_FUNC_CB pFuncComplCB, HI_VOID *pFuncPara,
-                           TDE_NOTIFY_MODE_E enNotiType)
+                           TDE_NOTIFY_MODE_E enNotiType, HI_S32 *ps32ReleaseFence)
 {
     TDE_SWJOB_S * pstJob;
     HI_HANDLE_MGR *pHandleMgr;
@@ -502,6 +507,7 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle,
     HI_SIZE_T lockflags;
     #endif
     HI_BOOL asynflag = 0;
+    
     bValid = query_handle(s32Handle, &pHandleMgr);
     if (!bValid)
     {
@@ -530,6 +536,32 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle,
     pstJob->enNotiType   = enNotiType;
     pstJob->pFuncComplCB = pFuncComplCB;
     pstJob->pFuncPara = pFuncPara;
+
+    if(TDE_JOB_WAKE_NOTIFY != enNotiType)
+    {
+        if((!in_interrupt())&&(wgetfreenum() < 5))
+        {
+            pstJob->enNotiType = TDE_JOB_WAKE_NOTIFY;
+            enNotiType = TDE_JOB_WAKE_NOTIFY;
+            u32TimeOut = 1000;
+            asynflag = 1;/*由非阻塞方式转为阻塞方式标志位*/
+            
+        }
+    }
+
+#ifdef TDE_FENCE_SUPPORT
+    if ((enNotiType != TDE_JOB_WAKE_NOTIFY) && (ps32ReleaseFence != NULL))
+    {
+        *ps32ReleaseFence = TDE_FENCE_Create("tde");
+        if (*ps32ReleaseFence < 0)
+        {
+            TDE_TRACE(TDE_KERN_ERR, "TDE_FENCE_Create err!\n");
+            return HI_ERR_TDE_NO_MEM;
+        }
+        pstJob->s32ReleaseFenceFd = *ps32ReleaseFence;
+    }
+#endif
+    
     TDE_LOCK(&s_pstTDEOsiJobList->lock,lockflags);
     /*If the job to commit is not null,join the current job to the tail node of the last job.*/
     if (HI_NULL != s_pstTDEOsiJobList->pstJobToCommit)
@@ -561,17 +593,7 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle,
     TdeOsiListFlushJob(pstJob);
     #endif
     TdeOsiListAddJob(pstJob);
-    if(TDE_JOB_WAKE_NOTIFY != enNotiType)
-    {
-        if((!in_interrupt())&&(wgetfreenum() < 5))
-        {
-            pstJob->enNotiType = TDE_JOB_WAKE_NOTIFY;
-            enNotiType = TDE_JOB_WAKE_NOTIFY;
-            u32TimeOut = 1000;
-            asynflag = 1;/*由非阻塞方式转为阻塞方式标志位*/
-            
-        }
-    }
+    
     s32Ret = TdeHalNodeExecute(s_pstTDEOsiJobList->pstJobToCommit->pstFirstCmd->stNodeBuf.u32PhyAddr,
     s_pstTDEOsiJobList->pstJobToCommit->pstFirstCmd->stNodeBuf.u64Update, \
     s_pstTDEOsiJobList->pstJobToCommit->bAqUseBuff);
@@ -630,6 +652,7 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle,
     TDE_TRACE(TDE_KERN_DEBUG, "handle:%d complete!\n", pstJob->s32Handle);
     #endif
     TDE_UNLOCK(&s_pstTDEOsiJobList->lock,lockflags);
+    
     return HI_SUCCESS;
 }
 
@@ -970,6 +993,14 @@ HI_VOID TdeOsiListNodeComp()
                 pstDelJob->pFuncComplCB(pstDelJob->pFuncPara, &(pstDelJob->s32Handle));
                 TDE_LOCK(&s_pstTDEOsiJobList->lock,lockflags);
             }
+
+#ifdef TDE_FENCE_SUPPORT
+            if (pstDelJob->s32ReleaseFenceFd > 0)
+            {
+                TDE_FENCE_WakeUp();
+            }
+#endif
+            
             TdeOsiListSafeDestroyJob(pstDelJob);
         }
         else

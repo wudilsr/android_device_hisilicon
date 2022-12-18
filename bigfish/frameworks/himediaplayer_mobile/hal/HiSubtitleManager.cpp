@@ -18,6 +18,7 @@ subManager::subManager():
     Mutex::Autolock l(&subManager::mSubInstMutex);
     mSubInstances.add(this);
     mIsXBMC = false;
+    mIsBufferPosted = false;
 }
 
 subManager::~subManager()
@@ -559,6 +560,10 @@ int subManager::postBuffer(int type)
             }
 
             mSubSurface->unlockAndPost();
+            if (!this->mIsBufferPosted)
+            {
+                this->mIsBufferPosted = true;
+            }
         }
     }
 
@@ -584,6 +589,10 @@ int subManager::postBuffer(int type)
             }
 
             unlockNativeWindow();
+            if (!this->mIsBufferPosted)
+            {
+                this->mIsBufferPosted = true;
+            }
         }
     }
     else if(true == mIsXBMC && NULL != pCacheBuffer)
@@ -598,6 +607,10 @@ int subManager::postBuffer(int type)
             memset(pCacheBuffer, 0x00,1280*720*4);
             unlink("/mnt/picsub.bmp");
         }
+        if (!this->mIsBufferPosted)
+        {
+            this->mIsBufferPosted = true;
+        }
     }
 
     return ret;
@@ -611,7 +624,7 @@ void subManager::clearLastBuffer()
 
 void  subManager::cleanSubMem()
 {
-    LOGV("Call %s IN", __FUNCTION__);
+    LOGV("Call %s IN, mIsBufferPosted=%d", __FUNCTION__, this->mIsBufferPosted);
 
     if (false == mInitialized)
         return;
@@ -649,23 +662,26 @@ void  subManager::cleanSubMem()
     }
     if (mNativeWindow != NULL)
     {
-        ANativeWindow_Buffer outBuffer;
-        if (NO_ERROR == lockNativeWindow(&outBuffer))
+        if (mIsBufferPosted)
         {
-            if (PIXEL_FORMAT_RGBA_8888 == outBuffer.format)
+            ANativeWindow_Buffer outBuffer;
+            if (NO_ERROR == lockNativeWindow(&outBuffer))
             {
-                resetSubtitleConfig(outBuffer.stride, outBuffer.height, outBuffer.bits, outBuffer.format);
-            }
-            else
-            {
-                LOGW("[resetSubtitleConfig] unsupport format(%d) !\n", outBuffer.format);
-            }
+                if (PIXEL_FORMAT_RGBA_8888 == outBuffer.format)
+                {
+                    resetSubtitleConfig(outBuffer.stride, outBuffer.height, outBuffer.bits, outBuffer.format);
+                }
+                else
+                {
+                    LOGW("[resetSubtitleConfig] unsupport format(%d) !\n", outBuffer.format);
+                }
 
-            unlockNativeWindow();
+                unlockNativeWindow();
+            }
         }
 
-    mNativeWindow.clear();
-    mNativeWindow = NULL;
+        mNativeWindow.clear();
+        mNativeWindow = NULL;
     }
 
     if (true == mIsXBMC)

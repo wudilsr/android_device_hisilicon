@@ -106,7 +106,7 @@ typedef struct
     HI_UNF_TRACK_MODE_E    enUserTrackMode;
     HI_U32                 u32UserMute;   //bit[1]:global mute; bit[0]:local mute. if u32UserMute=0, real mute;else real unmute
     HI_U32                 u32LatencyMs;       //AOP Buffer threshold setting
-	HI_BOOL                bBypass;
+    HI_BOOL                bBypass;
     HI_UNF_SAMPLE_RATE_E   enSampleRate;
 
     /* internal state */
@@ -129,22 +129,19 @@ typedef struct
     HI_UNF_SND_SPDIF_CATEGORYCODE_E  enUserSPDIFCategoryCode;
 } SND_OP_STATE_S;
 
-
-    /* internal state */
-
-
-HI_VOID 				SND_GetDelayMs(SND_CARD_STATE_S *pCard, HI_U32 *pdelayms);
-HI_VOID					SND_DestroyOp(SND_CARD_STATE_S *pCard, HI_BOOL bSuspend);
+/* internal state */
+HI_VOID                 SND_GetDelayMs(SND_CARD_STATE_S *pCard, HI_U32 *pdelayms);
+HI_VOID                 SND_DestroyOp(SND_CARD_STATE_S *pCard, HI_BOOL bSuspend);
 HI_S32                  SND_CreateOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_ATTR_S *pstAttr,AO_ALSA_I2S_Param_S* pstAoI2sParam, HI_BOOL bResume);
-HI_S32					SND_SetOpMute(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute);
-HI_S32					SND_GetOpMute(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL *pbMute);
+HI_S32                  SND_SetOpMute(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute);
+HI_S32                  SND_GetOpMute(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL *pbMute);
 HI_S32                  SND_SetOpHdmiMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_HDMI_MODE_E enMode);
 HI_S32                  SND_GetOpHdmiMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_HDMI_MODE_E *penMode);
 HI_S32                  SND_SetOpSpdifMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_SPDIF_MODE_E enMode);
 HI_S32                  SND_GetOpSpdifMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_SPDIF_MODE_E *penMode);
-HI_S32					SND_SetOpVolume(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_SetOpVolume(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                         HI_UNF_SND_GAIN_ATTR_S stGain);
-HI_S32					SND_GetOpVolume(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_GetOpVolume(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                         HI_UNF_SND_GAIN_ATTR_S *pstGain);
 HI_S32                  SND_SetOpSpdifCategoryCode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, 
                                                    HI_UNF_SND_SPDIF_CATEGORYCODE_E enCategoryCode);
@@ -154,32 +151,32 @@ HI_S32                  SND_SetOpSpdifSCMSMode(SND_CARD_STATE_S *pCard, HI_UNF_S
                                                HI_UNF_SND_SPDIF_SCMSMODE_E enSCMSMode);
 HI_S32                  SND_GetOpSpdifSCMSMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, 
                                                HI_UNF_SND_SPDIF_SCMSMODE_E *penSCMSMode);
-HI_S32					SND_SetOpSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_SetOpSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                             HI_UNF_SAMPLE_RATE_E enSampleRate);
-HI_S32					SND_GetOpSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_GetOpSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                             HI_UNF_SAMPLE_RATE_E *penSampleRate);
-HI_S32					SND_SetOpTrackMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_SetOpTrackMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                            HI_UNF_TRACK_MODE_E enMode);
-HI_S32					SND_GetOpTrackMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_GetOpTrackMode(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                            HI_UNF_TRACK_MODE_E *penMode);
-HI_S32					SND_SetOpAttr(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_SetOpAttr(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                       SND_OP_ATTR_S *pstSndPortAttr);
-HI_S32					SND_GetOpAttr(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
+HI_S32                  SND_GetOpAttr(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort,
                                       SND_OP_ATTR_S *pstSndPortAttr);
 HI_S32                  SND_GetOpStatus(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, AIAO_PORT_STAUTS_S *pstPortStatus);
 
-HI_S32					SND_StopOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort);
-HI_S32					SND_StartOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort);
+HI_S32                  SND_StopOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort);
+HI_S32                  SND_StartOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort);
 
 HI_U32                  SND_SetLowLatency(SND_CARD_STATE_S *pCard,HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_U32 u32LatencyMs);
 HI_U32                  SND_GetLowLatency(SND_CARD_STATE_S *pCard,HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_U32 *pu32LatencyMs);
 HI_S32                  SND_SetOpAefBypass(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bBypass);
 HI_S32                  SND_GetOpAefBypass(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL *pbBypass);
 
-HI_HANDLE				SND_GetOpHandlebyOutType(SND_CARD_STATE_S *pCard, SND_OUTPUT_TYPE_E enOutType);
-SND_ENGINE_TYPE_E		SND_OpGetEngineType(HI_HANDLE hSndOp);
-AOE_AOP_ID_E			SND_OpGetAopId(HI_HANDLE hSndOp);
-SND_ENGINE_TYPE_E		SND_GetOpGetOutType(HI_HANDLE hSndOp);
+HI_HANDLE               SND_GetOpHandlebyOutType(SND_CARD_STATE_S *pCard, SND_OUTPUT_TYPE_E enOutType);
+SND_ENGINE_TYPE_E       SND_OpGetEngineType(HI_HANDLE hSndOp);
+AOE_AOP_ID_E            SND_OpGetAopId(HI_HANDLE hSndOp);
+SND_ENGINE_TYPE_E       SND_GetOpGetOutType(HI_HANDLE hSndOp);
 HI_UNF_SND_OUTPUTPORT_E SND_GetOpOutputport(HI_HANDLE hSndOp);
 
 #if defined (HI_SND_DRV_SUSPEND_SUPPORT)
@@ -197,6 +194,9 @@ HI_U32 SND_ReleaseCastData(SND_CARD_STATE_S *pCard, HI_S32 u32CastId, AO_Cast_Da
 HI_S32 SND_ReadOpProc(struct seq_file* p, SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enPort);
 
 HI_VOID SND_GetXRunCount(SND_CARD_STATE_S *pCard, HI_U32 *pu32Count);
+HI_S32 SND_SetPortSampleRate(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_U32 u32SampleRate);
+HI_S32 SND_GetPortInfo(SND_CARD_STATE_S *pCard, HI_UNF_SND_OUTPUTPORT_E enOutPort, SND_PORT_KERNEL_ATTR_S* pstPortKAttr);
+
 #ifdef __cplusplus
  #if __cplusplus
 }

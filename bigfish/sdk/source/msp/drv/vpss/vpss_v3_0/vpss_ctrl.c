@@ -688,6 +688,8 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
          
     }
 
+    pstHalInfo->bOutLowDelay = pstTask->bOutLowDelay;
+    
     return HI_SUCCESS;
 
 }
@@ -1347,6 +1349,78 @@ HI_S32 VPSS_CTRL_GetOutBufferRect(HI_RECT_S stOriRect,HI_RECT_S *pstRevisedRect)
 
 	return HI_SUCCESS;
 }
+
+HI_BOOL VPSS_CTRL_CheckLowDelay(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
+{
+    HI_BOOL bLowDelayTask = HI_FALSE;
+    VPSS_INSTANCE_S *pstInstance;
+    VPSS_IN_INTF_S stInIntf = {0};
+    HI_DRV_VIDEO_FRAME_S *pstImage;  
+    HI_U32 u32Count;
+    VPSS_PORT_S* pstPort;
+    HI_U32 u32EnablePort = 0;
+    HI_BOOL bRotation = HI_FALSE;
+    
+    if (pstTask->pstInstance)
+    {
+        pstInstance = pstTask->pstInstance;
+        
+        (HI_VOID)VPSS_IN_GetIntf(&(pstTask->pstInstance->stInEntity), &stInIntf);
+
+        VPSS_CHECK_NULL(stInIntf.pfnGetProcessImage);
+    
+        (HI_VOID)stInIntf.pfnGetProcessImage(&(pstTask->pstInstance->stInEntity),
+                            &pstImage);
+
+        
+        for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
+        {
+            pstPort = &((pstTask->pstInstance)->stPort[u32Count]);
+            if (pstPort->bEnble)
+            {
+                u32EnablePort++;
+
+                if (pstPort->enRotation != HI_DRV_VPSS_ROTATION_DISABLE)
+                {
+                    bRotation = HI_TRUE;
+                }
+
+                if (pstPort->bTunnelEnable)
+                {
+                    bLowDelayTask = HI_TRUE;
+                }
+            }
+        }
+
+        if (pstImage->u32Width > 1920)
+        {
+            bLowDelayTask = HI_FALSE;
+        }
+        
+        if (pstImage->bSecure)
+        {
+            bLowDelayTask = HI_FALSE;
+        }
+        
+        if (pstImage->eFrmType != HI_DRV_FT_NOT_STEREO)
+        {
+            bLowDelayTask = HI_FALSE;
+        }
+        
+        if (u32EnablePort > 1 || bRotation == HI_TRUE)
+        {
+            bLowDelayTask = HI_FALSE;
+        }
+        
+    }
+    else
+    {
+        bLowDelayTask = HI_FALSE;
+    }
+
+    return bLowDelayTask;
+}
+
 HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 {
     HI_S32 s32Ret = HI_FAILURE;  
@@ -1900,6 +1974,11 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 				
 				if (pstInstance->bStorePrivData)
 				{
+                    memset(&(pstLeftFbNode->stOutFrame.stLowdelayStat), 0x0, sizeof(HI_DRV_LOWDELAY_STAT_INFO_S));
+                    
+                    // record report done time for overlay lowdelay
+                    (HI_VOID)HI_DRV_SYS_GetTimeStampMs(&(pstLeftFbNode->stOutFrame.stLowdelayStat.u32OmxReportDoneTime));
+				
 					(HI_VOID)VPSS_CTRL_StorePrivData(&(pstLeftFbNode->stBuffer),
 							&(pstLeftFbNode->stOutFrame));
 				}
@@ -2112,6 +2191,7 @@ HI_S32 VPSS_CTRL_ThreadProc(HI_VOID* pArg)
 
 	VPSS_OSAL_InitEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
 	VPSS_OSAL_InitEvent(&(pstVpssCtrl->stNewTask), EVENT_UNDO, EVENT_UNDO);
+	VPSS_OSAL_InitEvent(&(pstVpssCtrl->stTaskLowDelay), EVENT_UNDO, EVENT_UNDO);
 
 	pstVpssCtrl->stTask.u32LastTotal = 0;
 	pstVpssCtrl->stTask.u32SuccessTotal = 0;
@@ -2142,7 +2222,17 @@ HI_S32 VPSS_CTRL_ThreadProc(HI_VOID* pArg)
 
 			VPSS_HAL_SetClockEn(enIp, HI_TRUE);
 
+            if (VPSS_CTRL_CheckLowDelay(enIp, &(pstVpssCtrl->stTask)))
+            {
+                pstVpssCtrl->stTask.bOutLowDelay = HI_TRUE;
+            }
+            else
+            {
+                pstVpssCtrl->stTask.bOutLowDelay = HI_FALSE;
+            }
+            
 			VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
+			VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stTaskLowDelay), EVENT_UNDO, EVENT_UNDO);
 			s32StartRet = VPSS_CTRL_StartTask(enIp, &(pstVpssCtrl->stTask));
 			if (s32StartRet == HI_SUCCESS)
 			{
@@ -2152,7 +2242,15 @@ HI_S32 VPSS_CTRL_ThreadProc(HI_VOID* pArg)
 				   */
 				pstVpssCtrl->stTask.stState = TASK_STATE_WAIT;
 
-				s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskNext), HZ);
+                if (pstVpssCtrl->stTask.bOutLowDelay)
+                {
+				    s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskLowDelay), HZ);
+                }
+                else
+                {
+				    s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskNext), HZ);
+                }
+                
 				if (s32WaitRet == HI_SUCCESS)
 				{
 					pstVpssCtrl->s32ThreadPos = 3;
@@ -2168,6 +2266,15 @@ HI_S32 VPSS_CTRL_ThreadProc(HI_VOID* pArg)
 					}
 
 					pstVpssCtrl->stTask.u32SuccessTotal ++;
+
+					if (pstVpssCtrl->stTask.bOutLowDelay)
+                    {
+    				    s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskNext), HZ);
+    				    if (s32WaitRet != HI_SUCCESS)
+    				    {
+					        VPSS_FATAL("...............Wait LowDelay Faild\n");
+    				    }
+                    }
 				}
 				else
 				{
@@ -2874,12 +2981,6 @@ irqreturn_t VPSS0_CTRL_IntService(HI_S32 irq, HI_VOID *dev_id)
         VPSS_HAL_ClearIntState(VPSS_IP_0,0x2);
     }
 
-    if(u32State & 0x70)//   0xf ---> 0xff open tunl mask and dcmp err mask
-    {
-        VPSS_FATAL(" Tunnel = %x \n", u32State);
-        VPSS_HAL_ClearIntState(VPSS_IP_0,0x70);
-    }
-
     if(u32State & 0x1)
     {
         //VPSS_FATAL("NODE  state = %x \n", u32State);
@@ -2889,7 +2990,13 @@ irqreturn_t VPSS0_CTRL_IntService(HI_S32 irq, HI_VOID *dev_id)
 		VPSS_HAL_GetCycleCnt(VPSS_IP_0,&(g_u32LogicCycle[0][g_u32Pos]));
 #endif
     }
-
+    if(u32State & 0x40 || u32State & 0x10)
+    {
+        VPSS_HAL_ClearIntState(VPSS_IP_0,0x40);
+        VPSS_HAL_ClearIntState(VPSS_IP_0,0x10);
+        
+        VPSS_OSAL_GiveEvent(&(g_stVpssCtrl[VPSS_IP_0].stTaskLowDelay),EVENT_DONE,EVENT_UNDO);
+    }
     if(u32State & 0x8)
     {
         VPSS_HAL_ClearIntState(VPSS_IP_0,0x8);

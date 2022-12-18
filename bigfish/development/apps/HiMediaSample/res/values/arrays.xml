@@ -95,5 +95,6 @@
                <item>TestCMD_GET_BUFFERSIZE_CONFIG</item>
                <item>TestCMD_SET_BUFFERTIME_CONFIG</item>
                <item>TestCMD_GET_BUFFERTIME_CONFIG</item>
+               <item>TestCMD_GET_IP_PORT</item>
       </string-array>
 </resources>

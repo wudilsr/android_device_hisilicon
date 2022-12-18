@@ -337,7 +337,8 @@ public class SambaActivity extends CommonActivity implements Runnable {
   private boolean menuItem5;
   private boolean menuItem6;
   private boolean menuItem7;
-
+  //预览
+  private boolean menuItem8 = true;
   /* 设置operater项的各子项状态 */
   private boolean menuItem1_0_copy = true;
   private boolean menuItem1_1_cut = true;
@@ -413,28 +414,48 @@ public class SambaActivity extends CommonActivity implements Runnable {
 
       menuOptions = new String[] { getString(R.string.new_dir), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but) };
       menuDrawableIDs = new int[] { R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_cut, R.drawable.menu_cut };
-    }else if ((!listFileFlag)&&menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE){
+    }else if ((!listFileFlag)&&menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE&& (!menuItem8)){
       /* "操作","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
 
       menuOptions = new String[] { getString(R.string.operation),getString(R.string.new_dir), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but) };
       menuDrawableIDs = new int[] { R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_cut, R.drawable.menu_edit, R.drawable.menu_cut,R.drawable.menu_cut };
-    }else if (listFileFlag&&menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE){
+    }else if ((!listFileFlag)&&menuItem2 && menuItem3 && (!menuItem5)&& menuItem8&&OPERATER_ENABLE){
+        /* "操作","预览","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
+
+        menuOptions = new String[] { getString(R.string.operation),getString(R.string.preview),getString(R.string.new_dir), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but) };
+        menuDrawableIDs = new int[] { R.drawable.menu_bookmark, R.drawable.menu_bookmark,R.drawable.menu_edit, R.drawable.menu_cut, R.drawable.menu_edit, R.drawable.menu_cut,R.drawable.menu_cut };
+      }else if (listFileFlag&&menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE&&(!menuItem8)){
       /* "操作","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序"*/
 
       menuOptions = new String[] { getString(R.string.operation),getString(R.string.new_dir), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
       menuDrawableIDs = new int[] { R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_cut, R.drawable.menu_edit, R.drawable.menu_cut,R.drawable.menu_cut };
-    }
-    else if ((!listFileFlag)&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE){
+    }else if (listFileFlag&&menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE && menuItem8){
+        /* "操作","预览","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序"*/
+
+        menuOptions = new String[] { getString(R.string.operation), getString(R.string.preview),getString(R.string.new_dir), getString(R.string.search), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
+        menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_cut, R.drawable.menu_edit, R.drawable.menu_cut,R.drawable.menu_cut };
+      }
+    else if ((!listFileFlag)&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE&& (!menuItem8)){
+      /* "操作"," `建", "搜索", "加入快捷菜单", "切换过滤条件","切换显示方式","文件排序" */
+
+      menuOptions = new String[] { getString(R.string.operation),getString(R.string.new_dir), getString(R.string.search), getString(R.string.add_shortcut), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
+      menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut, R.drawable.menu_cut,R.drawable.menu_fullscreen };
+    }else if ((!listFileFlag)&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE&& menuItem8){
+        /* "操作","预览"," `建", "搜索", "加入快捷菜单", "切换过滤条件","切换显示方式","文件排序" */
+
+        menuOptions = new String[] { getString(R.string.operation), getString(R.string.preview),getString(R.string.new_dir), getString(R.string.search), getString(R.string.add_shortcut), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
+        menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut, R.drawable.menu_cut,R.drawable.menu_fullscreen };
+      }else if (listFileFlag&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE&& (!menuItem8)){
       /* "操作","新建", "搜索", "加入快捷菜单", "切换过滤条件","切换显示方式","文件排序" */
 
       menuOptions = new String[] { getString(R.string.operation),getString(R.string.new_dir), getString(R.string.search), getString(R.string.add_shortcut), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
       menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut, R.drawable.menu_cut,R.drawable.menu_fullscreen };
-    }else if (listFileFlag&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE){
-      /* "操作","新建", "搜索", "加入快捷菜单", "切换过滤条件","切换显示方式","文件排序" */
+    }else if (listFileFlag&&menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE&& (menuItem8)){
+        /* "操作","预览","新建", "搜索", "加入快捷菜单", "切换过滤条件","切换显示方式","文件排序" */
 
-      menuOptions = new String[] { getString(R.string.operation),getString(R.string.new_dir), getString(R.string.search), getString(R.string.add_shortcut), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
-      menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut, R.drawable.menu_cut,R.drawable.menu_fullscreen };
-    }else if (((!noServerFlag)&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&(!OPERATER_ENABLE))||(!listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE)) {
+        menuOptions = new String[] { getString(R.string.operation),getString(R.string.preview),getString(R.string.new_dir), getString(R.string.search), getString(R.string.add_shortcut), getString(R.string.filter_but), getString(R.string.show_but),getString(R.string.sort_but)  };
+        menuDrawableIDs = new int[] { R.drawable.menu_bookmark,R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_edit, R.drawable.menu_fullscreen, R.drawable.menu_cut, R.drawable.menu_cut,R.drawable.menu_fullscreen };
+      }else if (((!noServerFlag)&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&(!OPERATER_ENABLE))||(!listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE)) {
       /* "新建","切换过滤条件" */
 
       menuOptions=new String[] {getString(R.string.new_dir),getString(R.string.filter_but)};
@@ -445,17 +466,27 @@ public class SambaActivity extends CommonActivity implements Runnable {
       menuOptions=new String[] {getString(R.string.new_dir),getString(R.string.filter_but)};
       menuDrawableIDs=new int[] {R.drawable.menu_bookmark, R.drawable.menu_cut};
     }
-    else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE){
+    else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE&& (!menuItem8)){
       /* "操作","新建","切换过滤条件" */
 
       menuOptions=new String[] {getString(R.string.operation),getString(R.string.new_dir),getString(R.string.filter_but)};
       menuDrawableIDs=new int[] {R.drawable.menu_bookmark, R.drawable.menu_cut,R.drawable.menu_bookmark};
-    }else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE){
+    }else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE&& (menuItem8)){
+        /* "操作","预览","新建","切换过滤条件" */
+
+        menuOptions=new String[] {getString(R.string.operation),getString(R.string.preview), getString(R.string.new_dir),getString(R.string.filter_but)};
+        menuDrawableIDs=new int[] {R.drawable.menu_bookmark, R.drawable.menu_bookmark,R.drawable.menu_cut,R.drawable.menu_bookmark};
+      }else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE&& (!menuItem8)){
       /* "操作","新建","切换过滤条件" "加入快捷菜单" */
 
       menuOptions=new String[] {getString(R.string.operation),getString(R.string.new_dir),getString(R.string.filter_but),getString(R.string.add_shortcut)};
       menuDrawableIDs=new int[] {R.drawable.menu_bookmark, R.drawable.menu_cut,R.drawable.menu_bookmark,R.drawable.menu_fullscreen};
-    }
+    }else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE&& (menuItem8)){
+        /* "操作","预览","新建","切换过滤条件" "加入快捷菜单" */
+
+        menuOptions=new String[] {getString(R.string.operation),getString(R.string.preview), getString(R.string.new_dir),getString(R.string.filter_but),getString(R.string.add_shortcut)};
+        menuDrawableIDs=new int[] {R.drawable.menu_bookmark,R.drawable.menu_bookmark, R.drawable.menu_cut,R.drawable.menu_bookmark,R.drawable.menu_fullscreen};
+      }
     else {
       menuOptions = new String[] {};
       menuDrawableIDs = new int[] {};
@@ -644,7 +675,11 @@ public class SambaActivity extends CommonActivity implements Runnable {
         menuItem3 = false;
       } else {
         if (OPERATER_ENABLE) {
-
+            if(listFile.get(myPosition).isDirectory()){
+                menuItem8 = false;
+            }else{
+                menuItem8 = true;
+            }
           menuItem1=false;
            listFileNullFlag=false;
            if (num == 0) {
@@ -789,7 +824,7 @@ public class SambaActivity extends CommonActivity implements Runnable {
         }
       }
 
-      else if (menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE){
+      else if (menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE && !menuItem8){
         /* 粘贴可用            "操作","新建", "搜索", "加入快捷菜单","切换过滤条件", "切换显示方式","文件排序"  */
         if (arg2 == 0) {
           /* "操作"  */
@@ -832,7 +867,55 @@ public class SambaActivity extends CommonActivity implements Runnable {
         }
       }
 
-      else if (menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE){
+      else if (menuItem2 && menuItem3 && menuItem5&&OPERATER_ENABLE && menuItem8){
+          /* 粘贴可用            "操作","预览","新建", "搜索", "加入快捷菜单","切换过滤条件", "切换显示方式","文件排序"  */
+          if (arg2 == 0) {
+            /* "操作"  */
+
+            operation();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 1) {
+              /* "预览"  */
+              preview(listFile.get(myPosition));
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+          if (arg2 == 2) {
+            FileUtil util = new FileUtil(SambaActivity.this);
+            util.createNewDir(currentFileString);
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 3) {
+            searchFileDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 4) {
+            addShortCut();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 5) {
+            FilterDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 6) {
+            ShowDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 7) {
+            /* "文件排序"  */
+            sortFiles();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+        }
+      else if (menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE&&!menuItem8){
         /*   粘贴可用        "操作","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
         if (arg2 == 0) {
           /* "操作"  */
@@ -868,7 +951,49 @@ public class SambaActivity extends CommonActivity implements Runnable {
             tabMenu.dismiss();
         }
       }
-      else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE){
+      else if (menuItem2 && menuItem3 && (!menuItem5)&&OPERATER_ENABLE&&menuItem8){
+          /*   粘贴可用        "操作","新建", "搜索", "切换过滤条件", "切换显示方式", "文件排序" */
+          if (arg2 == 0) {
+            /* "操作"  */
+            operation();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 1) {
+              /* "预览"  */
+              preview(listFile.get(myPosition));
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+          if (arg2 == 2) {
+            FileUtil util = new FileUtil(SambaActivity.this);
+            util.createNewDir(currentFileString);
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 3) {
+            searchFileDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 4) {
+            FilterDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 5) {
+            ShowDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 6) {
+            /* "文件排序"  */
+            sortFiles();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+        }
+      else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE&&!menuItem8){
         /* "操作","新建","切换过滤条件","文件排序" */
         if (arg2 == 0) {
           /* "操作"  */
@@ -888,7 +1013,35 @@ public class SambaActivity extends CommonActivity implements Runnable {
           if (tabMenu.isShowing())
             tabMenu.dismiss();
         }
-      }else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE){
+      }
+      else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE&&menuItem8){
+          /* "操作","预览","新建","切换过滤条件","文件排序" */
+          if (arg2 == 0) {
+            /* "操作"  */
+
+            operation();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 1) {
+              /* "预览"  */
+              preview(listFile.get(myPosition));
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+          if (arg2 == 2) {
+            FileUtil util = new FileUtil(SambaActivity.this);
+            util.createNewDir(currentFileString);
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+          if (arg2 == 3) {
+            FilterDialog();
+            if (tabMenu.isShowing())
+              tabMenu.dismiss();
+          }
+        }
+      else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE&&!menuItem8){
       /* "操作","新建","切换过滤条件" "加入快捷菜单" */
 
           if (arg2 == 0) {
@@ -915,6 +1068,39 @@ public class SambaActivity extends CommonActivity implements Runnable {
             tabMenu.dismiss();
         }
     }
+      else if (listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(menuItem5)&&OPERATER_ENABLE&&menuItem8){
+          /* "操作","预览","新建","切换过滤条件" "加入快捷菜单" */
+
+              if (arg2 == 0) {
+              /* "操作"  */
+
+              operation();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+              if (arg2 == 1) {
+                  /* "预览"  */
+                  preview(listFile.get(myPosition));
+                  if (tabMenu.isShowing())
+                    tabMenu.dismiss();
+                }
+            if (arg2 == 2) {
+              FileUtil util = new FileUtil(SambaActivity.this);
+              util.createNewDir(currentFileString);
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 3) {
+              FilterDialog();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+            if (arg2 == 4) {
+              addShortCut();
+              if (tabMenu.isShowing())
+                tabMenu.dismiss();
+            }
+        }
       else if (((!noServerFlag)&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5))||(!listFileNullFlag&&(!menuItem1)&&menuItem2&&(!menuItem3)&&(!menuItem4)&&(!menuItem5)&&OPERATER_ENABLE)){
         if (arg2 == 0) {
           FileUtil util = new FileUtil(SambaActivity.this);
@@ -2377,7 +2563,6 @@ public class SambaActivity extends CommonActivity implements Runnable {
             // sortBut.setOnClickListener(null);
             // sortBut.setImageResource(sortArray[0]);
             // }
-            sortCount = 0;
             filterBut.setOnClickListener(null);
             filterBut.setImageResource(filterArray[0]);
             filterCount = 0;
@@ -3277,5 +3462,8 @@ public class SambaActivity extends CommonActivity implements Runnable {
       Log.e(TAG, "Can't get mount service");
     }
     return null;
+  }
+  protected void preview(File file){
+      super.preview(file);
   }
 }

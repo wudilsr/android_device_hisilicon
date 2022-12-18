@@ -135,6 +135,7 @@ typedef struct display_device_t
     int(*set_graphic_out_range)(int x, int y, int w, int h);
     int(*get_graphic_out_range)(int *x, int *y, int *w, int *h);
     int(*get_hdmi_capability)(int *hdmi_sink_cap);
+    int(*get_manufacture_info)(char * frsname, char * sinkname, int *productcode, int *serianumber, int *week, int *year,int *TVHight, int *TVWidth);
     int(*get_macro_vision)(display_macrovision_mode_e *macrovision_mode);
     int(*set_macro_vision)(display_macrovision_mode_e macrovision_mode);
     int(*set_hdcp)(int );

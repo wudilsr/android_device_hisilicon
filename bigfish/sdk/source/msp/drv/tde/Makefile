@@ -37,6 +37,13 @@ EXTRA_CFLAGS += -DHI_TDE_MEMCOUNT_SUPPORT=0
 EXTRA_CFLAGS += -DHI_TDE_BUFFER=0x20000
 EXTRA_CFLAGS += -DCONFIG_GFX_STB_SDK
 
+ifeq ($(CFG_ANDROID_PRODUCT),y)
+ifneq ($(CFG_HI_LOADER_SUPPORT), y)
+EXTRA_CFLAGS += -I$(LINUX_DIR)/drivers/staging/android
+EXTRA_CFLAGS += -DTDE_FENCE_SUPPORT
+endif
+endif
+
 MOD_NAME := hi_$(TARGET)
 
 obj-$(CFG_MSP_BUILDTYPE) += $(MOD_NAME).o
@@ -49,7 +56,8 @@ $(MOD_NAME)-y   :=  tde_osr.o       \
                     tde_osictl_k.o  \
                     tde_proc_k.o    \
                     wmalloc_k.o     \
-                    tde_adp.o
+                    tde_adp.o	    \
+		    tde_fence.o
 
 REMOVED_FILES := "*.o" "*.ko" "*.order" "*.symvers" "*.mod" "*.mod.*" "*.cmd" ".tmp_versions" "modules.builtin"
 

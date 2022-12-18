@@ -63,5 +63,6 @@ ifndef CFG_HI_STATIC_LIB_ONLY
 endif
 
 $(OBJ_DIR)/%.o : %.c
+	$(AT)test -d $(OBJ_DIR) || mkdir -p $(OBJ_DIR)
 	$(AT)$(CC) $(CFLAGS) -c $^ -o "$(OBJ_DIR)/$(*F).o"
 

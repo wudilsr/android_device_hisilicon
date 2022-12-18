@@ -25,6 +25,7 @@
 #include "wmalloc.h"
 #include "tde_adp.h"
 #include "hi_gfx_comm_k.h"
+#include "tde_fence.h"
 
 typedef unsigned long       HI_UL;
 #define TDE_NAME    "HI_TDE"
@@ -136,20 +137,44 @@ HI_VOID tde_cleanup_module_k(HI_VOID)
 
 int tde_open(struct inode *finode, struct file  *ffile)
 {
+#ifdef TDE_FENCE_SUPPORT
+    HI_BOOL bOpenFence = HI_FALSE;
+#endif
+
     TDE_LOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     if (1 == atomic_inc_return(&g_TDECount))
     {
         TdeHalResumeInit(); 
+
+#ifdef TDE_FENCE_SUPPORT
+        bOpenFence = HI_TRUE;
+#endif
     }
     TDE_UNLOCK(&s_TdeRefLock, s_TdeRefLockFlags);
+
+#ifdef TDE_FENCE_SUPPORT
+    if (bOpenFence)
+    {
+        TDE_FENCE_Open();
+    }
+#endif  
+
     return 0;
 }
 
 int tde_release(struct inode *finode, struct file  *ffile)
 {
+#ifdef TDE_FENCE_SUPPORT
+    HI_BOOL bCloseFence = HI_FALSE;
+#endif
+
     TDE_LOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     if (atomic_dec_and_test(&g_TDECount))
     {
+#ifdef TDE_FENCE_SUPPORT
+        bCloseFence = HI_TRUE;
+#endif
+
     	TdeHalClose(); 
         //todo:
         //tasklet_kill(&tde_tasklet);
@@ -160,6 +185,14 @@ int tde_release(struct inode *finode, struct file  *ffile)
     }
     TDE_UNLOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     TdeFreePendingJob();
+
+#ifdef TDE_FENCE_SUPPORT
+    if (bCloseFence)
+    {
+        TDE_FENCE_Close();
+    }
+#endif
+
     return 0;
 }
 
@@ -289,7 +322,32 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             {
                 return -EFAULT;
             }
+
             return TdeOsiEndJob(stEndJob.s32Handle, stEndJob.bBlock, stEndJob.u32TimeOut, stEndJob.bSync, NULL, NULL);
+        }
+
+        case TDE_END_JOB_EX:
+        {
+            TDE_ENDJOB_CMD_EX_S stEndJob;
+            HI_S32 ret;
+
+            if (copy_from_user(&stEndJob, argp, sizeof(TDE_ENDJOB_CMD_S)))
+            {
+                return -EFAULT;
+            }
+
+            ret = TdeOsiEndJobEx(stEndJob.s32Handle, stEndJob.bBlock, stEndJob.u32TimeOut, stEndJob.bSync, NULL, NULL, &stEndJob.s32ReleaseFenceFd);
+            if (ret < 0)
+            {
+                return -EFAULT;
+            }
+
+            if (copy_to_user(argp, &stEndJob, sizeof(TDE_ENDJOB_CMD_EX_S)))
+            {
+                return -EFAULT;
+            }
+            
+            return HI_SUCCESS;
         }
 
         case TDE_MB_BITBLT:

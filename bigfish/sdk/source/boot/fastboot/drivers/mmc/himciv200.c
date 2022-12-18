@@ -56,6 +56,41 @@ static unsigned int retry_count = MAX_RETRY_COUNT;
 static struct himci_dma_des hi_dma_des[MAX_DMA_DES]
 	__attribute__ ((aligned(512)));
 
+static const char * card_err_string[32] = {
+	"reserved",
+	"reserved",
+	"reserved",
+	"reserved",
+	"reserved",
+	"status bit",
+	"status bit",
+	"Device not switch to the expected mode",
+	"status bit",
+	"status bit",
+	"status bit",
+	"status bit",
+	"status bit",
+	"An erase sequence was clearled before excuting",
+	"status bit",
+	"Only partial address space was erased due to write protected blocks ",
+	"Cid/csd overwrite",
+	"reserved",
+	"reserved",
+	"Device error related to the execution of the last command",
+	"Device error occurred, not related to the host command",
+	"Device internal ECC was applied but failed to correct the data ",
+	"command not legal fo the Device state",
+	"the CRC check of the command failed",
+	"a sequence or password error happen in lock/unlock device cmd",
+	"status bit",
+	"Attempt to program a write protected block",
+	"An invailid selection of erase groups",
+	"An error in the sequence of erase cmd",
+	"Block length argument error",
+	"Address argument misaligned to device physical blocks",
+	"Address out of the allowed range for the device",
+};
+
 /* reset MMC host controler */
 static void hi_mci_sys_reset(struct himci_host *host)
 {
@@ -133,7 +168,7 @@ static void hi_mci_control_cclk(struct himci_host *host, unsigned int flag)
 	himci_writel(cmd_reg.cmd_arg, host->base + MCI_CMD);
 
 	if (hi_mci_wait_cmd(host) != 0)
-		HIMCI_DEBUG_ERR("Disable or enable CLK is timeout");
+		HIMCI_ERROR("Disable or enable CLK is timeout");
 
 }
 
@@ -166,7 +201,7 @@ static void hi_mci_set_cclk(struct himci_host *host, unsigned int cclk)
 	himci_writel(cmd_reg.cmd_arg, host->base + MCI_CMD);
 
 	if (hi_mci_wait_cmd(host) != 0)
-		HIMCI_DEBUG_ERR("Set card CLK divider is failed");
+		HIMCI_ERROR("Set card CLK divider is failed");
 }
 
 static void hi_mci_init_card(struct himci_host *host)
@@ -385,7 +420,7 @@ static int hi_mci_exec_cmd(struct himci_host *host, struct mmc_cmd *cmd,
 	himci_writel(cmd_reg.cmd_arg, host->base + MCI_CMD);
 
 	if (hi_mci_wait_cmd(host) != 0) {
-		HIMCI_DEBUG_ERR("Send card cmd is failed");
+		HIMCI_ERROR("send card cmd to CIU is failed!");
 		return -1;
 	}
 	return 0;
@@ -394,6 +429,7 @@ static int hi_mci_exec_cmd(struct himci_host *host, struct mmc_cmd *cmd,
 static int hi_mci_cmd_done(struct himci_host *host, unsigned int stat)
 {
 	struct mmc_cmd *cmd = host->cmd;
+	u8 i;
 
 	HIMCI_DEBUG_FUN("Function Call: stat 0x%08x", stat);
 	HIMCI_ASSERT(host);
@@ -419,10 +455,19 @@ static int hi_mci_cmd_done(struct himci_host *host, unsigned int stat)
 		if (host->mmc.version && !IS_SD((&host->mmc)) && !host->tunning) {
 			if ((cmd->resp_type == MMC_RSP_R1)
 				|| (cmd->resp_type == MMC_RSP_R1b)) {
+
+				if (cmd->response[0] & MMC_CS_ERROR_ECC) {
+					HIMCI_ERROR("Is Card error: %s ",
+							card_err_string[21]);
+				}
 				if (cmd->response[0] & MMC_CS_ERROR_MASK) {
-					HIMCI_DEBUG_ERR("Card status stat = 0x%x"
-						" is card error!",
-						cmd->response[0]);
+					for (i = 0; i < 32; i++) {
+						if ((cmd->response[0]>>i )&&0x01) {
+							HIMCI_ERROR("Is Card error: %s ",
+								card_err_string[i]);
+						}
+					}
+
 					return -1;
 				}
 			}
@@ -434,8 +479,10 @@ static int hi_mci_cmd_done(struct himci_host *host, unsigned int stat)
 				stat);
 		return TIMEOUT;
 	} else if (stat & (RCRC_INT_STATUS | RE_INT_STATUS)) {
-		HIMCI_DEBUG_ERR("CMD status stat = 0x%x is response error!",
-				stat);
+			if (stat & RCRC_INT_STATUS)
+				HIMCI_ERROR(" error: response CRC error (%x)\n", stat);
+			if (stat & RE_INT_STATUS)
+				HIMCI_ERROR(" error: response error (%x)\n", stat);
 		return -1;
 	}
 	return 0;
@@ -447,11 +494,20 @@ static void hi_mci_data_done(struct himci_host *host, unsigned int stat)
 	HIMCI_ASSERT(host);
 
 	if (stat & (HTO_INT_STATUS | DRTO_INT_STATUS)) {
-		HIMCI_DEBUG_ERR("Data status stat = 0x%x is timeout error!",
-				stat);
+		if (stat & HTO_INT_STATUS)
+			HIMCI_ERROR(" error: data starvation-by-host timeout (%x)\n", stat);
+		if (stat & DRTO_INT_STATUS)
+			HIMCI_ERROR(" error: data read timeout (%x)\n", stat);
 	} else if (stat & (EBE_INT_STATUS | SBE_INT_STATUS | FRUN_INT_STATUS
 			   | DCRC_INT_STATUS)) {
-		HIMCI_DEBUG_ERR("Data status stat = 0x%x is data error!", stat);
+		if (stat & EBE_INT_STATUS)
+			HIMCI_ERROR(" error: end-bit error (%x)\n", stat);
+		if (stat & SBE_INT_STATUS)
+			HIMCI_ERROR(" error: start bit error (%x)\n", stat);
+		if (stat & FRUN_INT_STATUS)
+			HIMCI_ERROR(" error: FIFO underrun/overrun error (%x)\n", stat);
+		if (stat & DCRC_INT_STATUS)
+			HIMCI_ERROR(" error: data CRC error (%x)\n", stat);
 	}
 }
 
@@ -478,7 +534,7 @@ static int hi_mci_wait_cmd_complete(struct himci_host *host)
 		wait_retry_count++;
 	} while (wait_retry_count < retry_num);
 
-	HIMCI_DEBUG_ERR("Wait cmd complete error! irq status is 0x%x",
+	HIMCI_ERROR("Wait cmd complete timeout! irq status is 0x%x",
 			reg_data);
 
 	return -1;
@@ -507,7 +563,7 @@ static int hi_mci_wait_data_complete(struct himci_host *host)
 		wait_retry_count++;
 	} while (wait_retry_count < retry_num);
 
-	HIMCI_DEBUG_ERR("Wait cmd complete error! irq status is 0x%x",
+	HIMCI_ERROR("wait data request complete timeout! irq status is 0x%x",
 			reg_data);
 
 	return -1;
@@ -529,7 +585,7 @@ static int hi_mci_wait_card_complete(struct himci_host *host)
 		wait_retry_count++;
 	} while (wait_retry_count < retry_count);
 
-	HIMCI_DEBUG_ERR("Wait card complete error! status is 0x%x", reg_data);
+	HIMCI_ERROR("Wait card complete timeout! status is 0x%x", reg_data);
 
 	return -1;
 }
@@ -586,7 +642,6 @@ static int hi_mci_request(struct mmc *mmc, struct mmc_cmd *cmd,
 	/* send command */
 	ret = hi_mci_exec_cmd(host, cmd, data);
 	if (ret) {
-		HIMCI_ERROR("CMD execute is error!");
 		goto request_end;
 	}
 

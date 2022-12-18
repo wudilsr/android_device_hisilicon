@@ -55,6 +55,7 @@ unsigned short us;
         } \
     }while(0)
 
+#define SUB_LOG_DEBUG
 
 HB_Error hb_getSFntTable(void *font, HB_Tag tableTag, HB_Byte *buffer, HB_UInt *length)
 {
@@ -79,7 +80,7 @@ HB_Error hb_getSFntTable(void *font, HB_Tag tableTag, HB_Byte *buffer, HB_UInt *
 
 int hb_shaping(HB_ShaperItem *pShapeItem, FT_Face face, int numberOfWords, unsigned int *srtcode, android::GlyphPos *glyphs, int *gidx)
 {
-    int i, j, k, isArab, isL2R, nArab, nNotArab, nPunc;
+    int i, j, k, isArab, isL2R, nArab, nNotArab, nPunc, nReduce;
     HB_UChar16 u16_srtcode[SUB_CHAR_MAX_LEN];
 
     LOGV("__ARABIC__ hb_shaping: shaper %x", pShapeItem);
@@ -89,54 +90,62 @@ int hb_shaping(HB_ShaperItem *pShapeItem, FT_Face face, int numberOfWords, unsig
     output string should be      : aaaaaNNNNaaa     <-- arabic is written from Left to Right.
 */
 
-    isArab = nArab = nNotArab = nPunc = 0;
+    isArab = nArab = nNotArab = nPunc = nReduce = 0;
     isL2R = 1;
     for (i=0; i<numberOfWords; i++)
     {
         isArab = (code_point_to_script(srtcode[i]) == HB_Script_Arabic);
-//        LOGV("str %d:  %x, arab: %d", i, srtcode[i], isArab);
+        SUB_LOG_DEBUG("str %d:  %x, arab: %d", i, srtcode[i], isArab);
         if (isArab)
         {
             if (nNotArab)
             {
                 if (isL2R)
                 {
-//                    LOGE("draw %d punctuation string", nNotArab);
+                    SUB_LOG_DEBUG("draw %d punctuation string", nNotArab);
                     for (j=0, k=0; j<nPunc; j++, k++)
                     {
                         gidx[k] = FT_Get_Char_Index(face, srtcode[j]);
-//                        LOGE("punc source: %d, dest: %d, idx: %d", j, k, gidx[k]);
+                        SUB_LOG_DEBUG("punc source: %d, dest: %d, idx: %d", j, k, gidx[k]);
                     }
                 }
                 else
                 {
-//                LOGE("draw %d nonArab string", nNotArab);
-                    for (j=i-nNotArab,k=numberOfWords-i+nPunc; j<i; j++,k++)
+                    SUB_LOG_DEBUG("draw %d nonArab string", nNotArab);
+                    for (j=i-nNotArab,k=numberOfWords-i+nPunc+nReduce; j<i; j++,k++)
                     {
                         gidx[k] = FT_Get_Char_Index(face, srtcode[j]);
-//                      LOGE("source: %d, dest: %d, idx: %d", j, k, gidx[k]);
+                        SUB_LOG_DEBUG("source: %d, dest: %d, idx: %d", j, k, gidx[k]);
                     }
                 }
                 nNotArab = 0;
             }
             isL2R = 0;
-//            LOGE("isArab: %d %d %x", i, nArab, srtcode[i]);
+            SUB_LOG_DEBUG("isArab: %d %d %x", i, nArab, srtcode[i]);
             u16_srtcode[nArab++] = (HB_UChar16)srtcode[i];
         }
         else
         {
             if (nArab)
             {
-//                LOGE("draw %d Arab string", nArab);
+                SUB_LOG_DEBUG("draw %d Arab string", nArab);
                 // draw A string and clean it
                 pShapeItem->string = u16_srtcode;
                 pShapeItem->item.length = nArab;
                 pShapeItem->num_glyphs = nArab;
                 pShapeItem->stringLength = nArab;
 
-//                LOGV("Harfbuzz Arabic reshape: i %d, nArab %d, start: %d", i, nArab, (numberOfWords-i+nPunc));
                 HB_ShapeItem(pShapeItem);
-                for (j=numberOfWords-i+nPunc, k=nArab-1; k>=0; j++, k--)
+
+                if(nArab > pShapeItem->num_glyphs)
+                {
+                    nReduce += nArab - pShapeItem->num_glyphs;
+                    SUB_LOG_DEBUG("nArab:%d > num_glyphs:%d, nReduce:%d", nArab, pShapeItem->num_glyphs, nReduce);
+                    nArab = pShapeItem->num_glyphs;
+                }
+                SUB_LOG_DEBUG("Harfbuzz Arabic reshape: i %d, nArab %d, start: %d", i, nArab, (numberOfWords-i+nPunc+nReduce));
+
+                for (j=numberOfWords-i+nPunc+nReduce, k=nArab-1; k>=0; j++, k--)
                 {
                     gidx[j] = pShapeItem->glyphs[k];
                 }
@@ -153,39 +162,61 @@ int hb_shaping(HB_ShaperItem *pShapeItem, FT_Face face, int numberOfWords, unsig
     {
         if (isL2R)
         {
-//            LOGE("endofstr, nPunc: %d, %d", nPunc, nNotArab);
-            for (j=0, k=0; j<nPunc; j++, k++)
+            SUB_LOG_DEBUG("endofstr, nPunc: %d, %d", nPunc, nNotArab);
+            for (j=0, k=nReduce; j<nPunc; j++, k++)
             {
                 gidx[k] = FT_Get_Char_Index(face, srtcode[j]);
-//                LOGE("punc source: %d, dest: %d, idx: %d", j, k, gidx[k]);
+                SUB_LOG_DEBUG("punc source: %d, dest: %d, idx: %d", j, k, gidx[k]);
             }
         }
         else
         {
-    //        LOGE("endofstr, nonArab: %d", nNotArab);
-            for (j=i-nNotArab,k=numberOfWords-i+nPunc; j<i; j++,k++)
+            SUB_LOG_DEBUG("endofstr, nonArab: %d", nNotArab);
+            for (j=i-nNotArab,k=numberOfWords-i+nPunc+nReduce; j<i; j++,k++)
             {
                 gidx[k] = FT_Get_Char_Index(face, srtcode[j]);
-    //                    LOGE("source: %d, dest: %d, idx: %d", j, k, gidx[k]);
+                SUB_LOG_DEBUG("source: %d, dest: %d, idx: %d", j, k, gidx[k]);
             }
         }
     }
     if (nArab)
     {
-//        LOGE("endofstr, Arab: %d", nArab);
+        SUB_LOG_DEBUG("endofstr, Arab: %d", nArab);
         pShapeItem->string = u16_srtcode;
         pShapeItem->item.length = nArab;
         pShapeItem->num_glyphs = nArab;
         pShapeItem->stringLength = nArab;
 
-//        LOGV("Harfbuzz Arabic reshape: i %d, nArab %d, idx: %d", i, nArab, (numberOfWords-i+nPunc));
         HB_ShapeItem(pShapeItem);
-        for (j=numberOfWords-i+nPunc, k=nArab-1; k>=0; j++, k--)
+        if(nArab > pShapeItem->num_glyphs)
+        {
+            nReduce +=nArab - pShapeItem->num_glyphs;
+            SUB_LOG_DEBUG("nArab:%d > num_glyphs:%d, nReduce:%d", nArab, pShapeItem->num_glyphs, nReduce);
+            nArab = pShapeItem->num_glyphs;
+        }
+        SUB_LOG_DEBUG("Harfbuzz Arabic reshape: i %d, nArab %d, idx: %d", i, nArab, (numberOfWords-i+nPunc+nReduce));
+
+        for (j=numberOfWords-i+nPunc+nReduce, k=nArab-1; k>=0; j++, k--)
         {
             gidx[j] = pShapeItem->glyphs[k];
         }
     }
 
+    if(nReduce > 0)
+    {
+        SUB_LOG_DEBUG("gitx have %d words invalid, from header", nReduce);
+        memmove(gidx,gidx+nReduce,sizeof(int)*(numberOfWords-nReduce));
+        for(j=numberOfWords-nReduce; j<numberOfWords; j++)
+        {
+            gidx[j] = FT_Get_Char_Index(face, 0x20);
+        }
+    }
+ /*
+    for(j=0; j<numberOfWords; j++)
+    {
+        SUB_LOG_DEBUG("gidx[%d]:0x%x(%d)", j,  gidx[j], gidx[j]);
+    }
+*/
     return 0;
 }
 

@@ -5,6 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES += $(call find-other-java-files, java)
 LOCAL_SRC_FILES += java/com/hisilicon/android/IHiDisplayManager.aidl
 LOCAL_SRC_FILES += com/hisilicon/android/DispFmt.java
+LOCAL_SRC_FILES += com/hisilicon/android/ManufactureInfo.java
 
 
 LOCAL_NO_STANDARD_LIBRARIES := true

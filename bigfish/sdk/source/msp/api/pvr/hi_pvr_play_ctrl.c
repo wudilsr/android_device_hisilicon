@@ -2272,28 +2272,25 @@ HI_S32 PVRPlaySetPlayerSpeed(PVR_PLAY_CHN_S  *pChnAttr, HI_UNF_PVR_PLAY_SPEED_E 
 HI_S32 PVRPlayAudSyncCtrl(PVR_PLAY_CHN_S  *pChnAttr, HI_BOOL bCtrlFlag)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_U32 u32AudPid = 0x1fff;
     HI_UNF_SYNC_ATTR_S         stSyncAttr = {0};
-    HI_UNF_AVPLAY_MEDIA_CHAN_E enMediaChn = HI_UNF_AVPLAY_MEDIA_CHAN_BUTT;
 
-    s32Ret = HI_UNF_AVPLAY_GetAttr(pChnAttr->hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &u32AudPid);
-    if (HI_SUCCESS == s32Ret)
+    if (HI_FALSE == bCtrlFlag)
     {
-        if (0x1fff != u32AudPid)
+        s32Ret = HI_UNF_AVPLAY_Stop(pChnAttr->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_AUD, (HI_UNF_AVPLAY_STOP_OPT_S *)HI_NULL);
+        if (HI_SUCCESS != s32Ret)
         {
-            enMediaChn = HI_UNF_AVPLAY_MEDIA_CHAN_AUD;
-        }
-        else
-        {
-            return HI_SUCCESS;
+            HI_ERR_PVR("Stop avplay audio fail! ret=%#x\n", s32Ret);
         }
     }
-    else
+    if (HI_TRUE == bCtrlFlag)
     {
-        HI_ERR_PVR("Get audio pid fail! ret=%#x\n", s32Ret);
-        return HI_FAILURE;
+        s32Ret = HI_UNF_AVPLAY_Start(pChnAttr->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_AUD, HI_NULL);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_PVR("start avplay audio fail! ret=%#x\n", s32Ret);
+        }
     }
-
+    
     s32Ret = HI_UNF_AVPLAY_GetAttr(pChnAttr->hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr);
     if (HI_SUCCESS != s32Ret)
     {
@@ -2309,29 +2306,10 @@ HI_S32 PVRPlayAudSyncCtrl(PVR_PLAY_CHN_S  *pChnAttr, HI_BOOL bCtrlFlag)
         if (HI_SUCCESS != s32Ret)
         {
             HI_ERR_PVR("Set avplay sync attr fail! ret=%#x\n", s32Ret);
-        }
-
-        if (enMediaChn == HI_UNF_AVPLAY_MEDIA_CHAN_AUD)
-        {
-            s32Ret = HI_UNF_AVPLAY_Stop(pChnAttr->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_AUD, (HI_UNF_AVPLAY_STOP_OPT_S *)HI_NULL);
-            if (HI_SUCCESS != s32Ret)
-            {
-                HI_ERR_PVR("Stop avplay fail! ret=%#x\n", s32Ret);
-            }
-        }        
+        }            
     }
     else
     {
-        if (enMediaChn == HI_UNF_AVPLAY_MEDIA_CHAN_AUD)
-        {
-            s32Ret = HI_UNF_AVPLAY_Start(pChnAttr->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_AUD, HI_NULL);
-            if (HI_SUCCESS != s32Ret)
-            {
-                HI_ERR_PVR("Stop avplay fail! ret=%#x\n", s32Ret);
-                return s32Ret;
-            }
-        }
-
         if(HI_UNF_AVPLAY_SYNC_REF_BUTT != pChnAttr->enLastSyncState)
         {
             stSyncAttr.enSyncRef = pChnAttr->enLastSyncState;
@@ -2346,6 +2324,7 @@ HI_S32 PVRPlayAudSyncCtrl(PVR_PLAY_CHN_S  *pChnAttr, HI_BOOL bCtrlFlag)
 
     return s32Ret;
 }
+
 
 HI_S32 PVRPlaySetPauseMode(PVR_PLAY_CHN_S  *pChnAttr)
 {

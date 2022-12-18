@@ -295,6 +295,19 @@ typedef struct hiAO_Track_FifoBypass_Param_S
     HI_BOOL   bEnable;
 } AO_Track_FifoBypass_Param_S, *AO_Track_FifoBypass_Param_S_PTR;
 
+typedef struct
+{
+    HI_UNF_SND_E           enSound;
+    SND_PORT_KERNEL_ATTR_S stPortKAttr[HI_UNF_SND_OUTPUTPORT_MAX];
+} AO_SND_GetPortInfo_Param_S, *AO_SND_GetPortInfo_Param_S_PTR;
+
+typedef struct
+{
+    HI_UNF_SND_E           enSound;
+    HI_BOOL                bEnable;
+    HI_UNF_SAMPLE_RATE_E   enSampleRate;
+} AO_SND_SetDMAMode_Param_S, *AO_SND_SetDMAMode_Param_S_PTR;
+
 /********************************************************
   AO command code definition
  *********************************************************/
@@ -332,10 +345,12 @@ typedef struct hiAO_Track_FifoBypass_Param_S
  #define CMD_AO_SND_GETAEFBYPASS _IOWR (HI_ID_AO, 0x25, AO_SND_AefBypass_Param_S)
  
  #define CMD_AO_SND_SETALLTRACKMUTE _IOW  (HI_ID_AO, 0x26, AO_SND_AllTrackMute_Param_S)
- #define CMD_AO_SND_GETALLTRACKMUTE _IOWR	(HI_ID_AO, 0x27, AO_SND_AllTrackMute_Param_S)
- #define CMD_AO_SND_GETXRUNCOUNT _IOWR	(HI_ID_AO, 0x28, AO_SND_Get_Xrun_Param_S)
+ #define CMD_AO_SND_GETALLTRACKMUTE _IOWR (HI_ID_AO, 0x27, AO_SND_AllTrackMute_Param_S)
+ #define CMD_AO_SND_GETXRUNCOUNT _IOWR  (HI_ID_AO, 0x28, AO_SND_Get_Xrun_Param_S)
  #define CMD_AO_SND_SETLOWLATENCY _IOW  (HI_ID_AO, 0x29, AO_SND_Set_LowLatency_Param_S)
  #define CMD_AO_SND_GETLOWLATENCY _IOWR  (HI_ID_AO, 0x2a, AO_SND_Set_LowLatency_Param_S)
+ #define CMD_AO_SND_GETPORTINFO   _IOWR  (HI_ID_AO, 0x2b, AO_SND_GetPortInfo_Param_S)
+ #define CMD_AO_SND_SETDMAMODE    _IOWR  (HI_ID_AO, 0x2c, AO_SND_SetDMAMode_Param_S)
 
 /*AO Track command code*/
  #define CMD_AO_TRACK_GETDEFATTR _IOWR  (HI_ID_AO, 0x40, HI_UNF_AUDIOTRACK_ATTR_S)

@@ -36,7 +36,7 @@ typedef enum hiFORMAT_SUBTITLE_TYPE_E
     HI_FORMAT_SUBTITLE_DVB_SUB,       /**< DVB subtitle *//**< CNcomment:DVBsub×ÖÄ» */
     HI_FORMAT_SUBTITLE_DVD_SUB,       /**< DVD subtitle *//**< CNcomment:DVDsub×ÖÄ» */
     HI_FORMAT_SUBTITLE_TTML,          /**< TTML subtitle *//**< CNcomment:TTML×ÖÄ» */
-
+    HI_FORMAT_SUBTITLE_WEBVTT,
     HI_FORMAT_SUBTITLE_BUTT
 } HI_FORMAT_SUBTITLE_TYPE_E;
 

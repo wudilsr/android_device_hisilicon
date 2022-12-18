@@ -88,6 +88,7 @@ typedef struct hiVDEC_PRIV_FRAMEINFO_S
     HI_S32                      s32TopFieldFrameFormat;
     HI_S32                      s32BottomFieldFrameFormat;
     HI_S32                      s32FieldFlag;
+    HI_U32                      u32Usertag;
 }HI_VDEC_PRIV_FRAMEINFO_S;
 
 typedef HI_S32  (*FN_VDEC_Suspend)(PM_BASEDEV_S *, pm_message_t state);

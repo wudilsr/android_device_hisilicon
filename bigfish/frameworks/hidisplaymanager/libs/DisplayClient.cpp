@@ -302,6 +302,28 @@ namespace android
         }
         return 0;
     }
+    int DisplayClient::GetManufactureInfo(Parcel *pl)
+    {
+        int ret = -1;
+        const sp<IDisplayService>& ps = getDisplayService();
+
+        if(ps != 0)
+        {
+             ps->getManufactureInfo(pl);
+        }
+        ret = pl->readInt32();
+        /* What if ret is 0, as no exception; */
+        if(ret == 0)
+        {
+            ret = pl->readInt32();
+            /* What if ret is not 1, as read data err */
+            if(ret != 1)
+            {
+                return -1;
+            }
+        }
+        return 0;
+    }
     int DisplayClient::SetAspectRatio(int ratio)
     {
         int ret = -1;

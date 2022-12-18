@@ -265,7 +265,8 @@ public class RemoteIME extends InputMethodService {
             + realAction);
 
         if (ImeState.STATE_BYPASS == mImeState) return false;
-
+        //if can't see input view, don't handle key event
+        if (!isInputViewShown()) return false;
         int keyCode = event.getKeyCode();
         // SHIFT-SPACE is used to switch between Chinese and English
         // when HKB is on.

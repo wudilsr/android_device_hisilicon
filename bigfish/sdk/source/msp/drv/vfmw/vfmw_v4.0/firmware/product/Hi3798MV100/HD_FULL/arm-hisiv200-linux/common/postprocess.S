@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.postprocess.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/postprocess.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/postprocess.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/postprocess.o -O2 -Wall
@@ -123,16 +123,16 @@ PostPro_GetRepairStratage:
 	cmp	r0, #0	@ VidStd
 	bne	.L2	@,
 	ldrb	r0, [r1, #3]	@ zero_extendqisi2	@ <variable>.frame_mbs_only_flag, <variable>.frame_mbs_only_flag
-	rsbs	r0, r0, #1	@ D.32249, <variable>.frame_mbs_only_flag
-	movcc	r0, #0	@ D.32249
+	rsbs	r0, r0, #1	@ D.32252, <variable>.frame_mbs_only_flag
+	movcc	r0, #0	@ D.32252
 	ldmfd	sp, {fp, sp, pc}	@
 .L2:
 	cmp	r0, #15	@ VidStd,
-	movne	r0, #0	@ D.32249,
+	movne	r0, #0	@ D.32252,
 	ldmnefd	sp, {fp, sp, pc}	@
 	ldrb	r2, [r1, #3]	@ zero_extendqisi2	@ <variable>.frame_mbs_only_flag, <variable>.frame_mbs_only_flag
-	rsbs	r0, r2, #1	@ D.32249, <variable>.frame_mbs_only_flag
-	movcc	r0, #0	@ D.32249
+	rsbs	r0, r2, #1	@ D.32252, <variable>.frame_mbs_only_flag
+	movcc	r0, #0	@ D.32252
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	PostPro_GetRepairStratage, .-PostPro_GetRepairStratage
@@ -167,38 +167,38 @@ PostPro_CopyYuv:
 	mov	r1, #1	@ tmp153,
 	str	r6, [r4, #12]	@ <variable>.VahbStride, <variable>.VahbStride
 	ldr	r6, [r0, r5]	@ <variable>.DispFramePhyAddr, <variable>.DispFramePhyAddr
-	ldr	ip, [ip, #104]	@ D.32286, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
+	ldr	ip, [ip, #104]	@ D.32289, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
 	str	r6, [r4, #4]	@ <variable>.DispFramePhyAddr, <variable>.ImageAddr
-	cmp	ip, r2	@ D.32286,
+	cmp	ip, r2	@ D.32289,
 	ldr	r5, [r0, r5]	@ <variable>.DispFramePhyAddr, <variable>.DispFramePhyAddr
 	str	r5, [r4, #8]	@ <variable>.DispFramePhyAddr, <variable>.Image2DAddr
 	ldr	r6, [r0, #220]	@ <variable>.FwdRefPicPhyAddr, <variable>.FwdRefPicPhyAddr
 	str	r6, [r4, #16]	@ <variable>.FwdRefPicPhyAddr, <variable>.RefImageAddr
 	ldr	r5, [r0, #228]	@ <variable>.CurPmvPhyAddr, <variable>.CurPmvPhyAddr
 	str	r5, [r4, #20]	@ <variable>.CurPmvPhyAddr, <variable>.CurrPmvAddr
-	ldrh	r6, [r0, #164]	@ D.32272, <variable>.PicWidthInMb
-	str	r6, [r4, #24]	@ D.32272, <variable>.ImageWidth
-	ldrh	r5, [r0, #166]	@ D.32274, <variable>.PicHeightInMb
+	ldrh	r6, [r0, #164]	@ D.32275, <variable>.PicWidthInMb
+	str	r6, [r4, #24]	@ D.32275, <variable>.ImageWidth
+	ldrh	r5, [r0, #166]	@ D.32277, <variable>.PicHeightInMb
 	str	r1, [r4, #32]	@ tmp153, <variable>.IsFrame
 	str	r2, [r4, #36]	@ tmp154, <variable>.ImageCSP
-	mul	r6, r6, r5	@ tmp158, D.32272, D.32274
-	str	r5, [r4, #28]	@ D.32274, <variable>.ImageHeight
+	mul	r6, r6, r5	@ tmp158, D.32275, D.32277
+	str	r5, [r4, #28]	@ D.32277, <variable>.ImageHeight
 	movw	r5, #14660	@ tmp161,
 	str	r1, [r4, #840]	@ tmp153, <variable>.ValidGroupNum
 	strh	r2, [r4, #40]	@ movhi	@ tmp154, <variable>.StartMbn
 	sub	r6, r6, #1	@ tmp160, tmp158,
 	strh	r6, [r4, #42]	@ movhi	@ tmp160, <variable>.EndMbn
 	ldr	r5, [r0, r5]	@ <variable>.Compress_en, <variable>.Compress_en
-	moveq	r0, r1	@ D.32289, tmp153
+	moveq	r0, r1	@ D.32292, tmp153
 	str	r1, [r4, #856]	@ tmp153, <variable>.FullRepair
 	str	r2, [r4, #852]	@ tmp154, <variable>.Pic_type
 	str	r5, [r4, #848]	@ <variable>.Compress_en, <variable>.Compress_en
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r1, r0	@, pMp4DecParam
 	mov	r0, #2	@,
-	blx	ip	@ D.32286
-	subs	r0, r0, #0	@ D.32289,,
-	movne	r0, #1	@ D.32289
+	blx	ip	@ D.32289
+	subs	r0, r0, #0	@ D.32292,,
+	movne	r0, #1	@ D.32292
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	PostPro_CopyYuv, .-PostPro_CopyYuv
@@ -233,17 +233,17 @@ PostPro_BubbleSort:
 	beq	.L16	@,
 	cmp	r0, #0	@ pretmp.536,
 	ldmlsfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
-	ldrh	r3, [r5, #12]	@ D.33528, <variable>.SliceMbRange
+	ldrh	r3, [r5, #12]	@ D.33531, <variable>.SliceMbRange
 	mov	r1, #1	@ j,
-	ldrh	r2, [r5, #16]	@ D.33530, <variable>.SliceMbRange
-	cmp	r3, r2	@ D.33528, D.33530
+	ldrh	r2, [r5, #16]	@ D.33533, <variable>.SliceMbRange
+	cmp	r3, r2	@ D.33531, D.33533
 	bls	.L19	@,
-	ldrh	ip, [r5, #14]	@ D.33533, <variable>.SliceMbRange
+	ldrh	ip, [r5, #14]	@ D.33536, <variable>.SliceMbRange
 	mov	r4, r1	@ flag, j
-	strh	r2, [r5, #12]	@ movhi	@ D.33530, <variable>.SliceMbRange
+	strh	r2, [r5, #12]	@ movhi	@ D.33533, <variable>.SliceMbRange
 	ldrh	r2, [r5, #18]	@, <variable>.SliceMbRange
-	strh	r3, [r5, #16]	@ movhi	@ D.33528, <variable>.SliceMbRange
-	strh	ip, [r5, #18]	@ movhi	@ D.33533, <variable>.SliceMbRange
+	strh	r3, [r5, #16]	@ movhi	@ D.33531, <variable>.SliceMbRange
+	strh	ip, [r5, #18]	@ movhi	@ D.33536, <variable>.SliceMbRange
 	strh	r2, [r5, #14]	@ movhi	@, <variable>.SliceMbRange
 .L19:
 	add	r3, r5, #4	@ ivtmp.551, pDecReport,
@@ -253,30 +253,30 @@ PostPro_BubbleSort:
 	add	r1, r1, #1	@ tmp195, j,
 	bls	.L25	@,
 .L15:
-	ldrh	ip, [r3, #12]	@ D.33528, <variable>.SliceMbRange
+	ldrh	ip, [r3, #12]	@ D.33531, <variable>.SliceMbRange
 	add	r1, r1, #1	@ j, tmp195,
-	ldrh	r8, [r3, #16]	@ D.33530, <variable>.SliceMbRange
-	cmp	ip, r8	@ D.33528, D.33530
+	ldrh	r8, [r3, #16]	@ D.33533, <variable>.SliceMbRange
+	cmp	ip, r8	@ D.33531, D.33533
 	bls	.L14	@,
-	ldrh	sl, [r3, #14]	@ D.33533, <variable>.SliceMbRange
+	ldrh	sl, [r3, #14]	@ D.33536, <variable>.SliceMbRange
 	mov	r4, #1	@ flag,
-	strh	r8, [r3, #12]	@ movhi	@ D.33530, <variable>.SliceMbRange
+	strh	r8, [r3, #12]	@ movhi	@ D.33533, <variable>.SliceMbRange
 	ldrh	r8, [r3, #18]	@, <variable>.SliceMbRange
-	strh	ip, [r3, #16]	@ movhi	@ D.33528, <variable>.SliceMbRange
-	strh	sl, [r3, #18]	@ movhi	@ D.33533, <variable>.SliceMbRange
+	strh	ip, [r3, #16]	@ movhi	@ D.33531, <variable>.SliceMbRange
+	strh	sl, [r3, #18]	@ movhi	@ D.33536, <variable>.SliceMbRange
 	strh	r8, [r3, #14]	@ movhi	@, <variable>.SliceMbRange
 .L14:
-	ldrh	r3, [r2, #12]	@ D.33528, <variable>.SliceMbRange
-	ldrh	ip, [r2, #16]	@ D.33530, <variable>.SliceMbRange
-	cmp	r3, ip	@ D.33528, D.33530
+	ldrh	r3, [r2, #12]	@ D.33531, <variable>.SliceMbRange
+	ldrh	ip, [r2, #16]	@ D.33533, <variable>.SliceMbRange
+	cmp	r3, ip	@ D.33531, D.33533
 	bls	.L22	@,
 	ldrh	r8, [r2, #18]	@, <variable>.SliceMbRange
 	mov	r4, #1	@ flag,
-	strh	ip, [r2, #12]	@ movhi	@ D.33530, <variable>.SliceMbRange
-	ldrh	ip, [r2, #14]	@ D.33533, <variable>.SliceMbRange
-	strh	r3, [r2, #16]	@ movhi	@ D.33528, <variable>.SliceMbRange
+	strh	ip, [r2, #12]	@ movhi	@ D.33533, <variable>.SliceMbRange
+	ldrh	ip, [r2, #14]	@ D.33536, <variable>.SliceMbRange
+	strh	r3, [r2, #16]	@ movhi	@ D.33531, <variable>.SliceMbRange
 	strh	r8, [r2, #14]	@ movhi	@, <variable>.SliceMbRange
-	strh	ip, [r2, #18]	@ movhi	@ D.33533, <variable>.SliceMbRange
+	strh	ip, [r2, #18]	@ movhi	@ D.33536, <variable>.SliceMbRange
 .L22:
 	cmp	r0, r1	@ pretmp.536, j
 	add	r3, r2, #4	@ ivtmp.551, tmp194,
@@ -398,8 +398,8 @@ PostPro_GetDivx3MbGroup:
 	sub	sp, sp, #28	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r2, [r1, #8]	@ D.33456, <variable>.DecSliceNum
-	sub	r3, r2, #1	@ tmp156, D.33456,
+	ldr	r2, [r1, #8]	@ D.33459, <variable>.DecSliceNum
+	sub	r3, r2, #1	@ tmp156, D.33459,
 	cmp	r3, #3	@ tmp156,
 	bhi	.L62	@,
 	ldr	r7, [r0, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
@@ -433,24 +433,24 @@ PostPro_GetDivx3MbGroup:
 	ldr	r3, [fp, #-68]	@ ivtmp.630, %sfp
 	str	r0, [fp, #-68]	@ pRepairParam, %sfp
 .L54:
-	ldrh	r2, [r3, #12]	@ D.33467, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33470, <variable>.SliceMbRange
 	ldrh	r0, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
-	cmp	r2, r5	@ D.33467, total_mbn
+	cmp	r2, r5	@ D.33470, total_mbn
 	cmple	r0, r5	@, curr_slice_end_mbn, total_mbn
 	bgt	.L50	@,
-	cmp	r2, r0	@ D.33467, curr_slice_end_mbn
+	cmp	r2, r0	@ D.33470, curr_slice_end_mbn
 	bgt	.L50	@,
-	cmp	r2, r8	@ D.33467, old_slice_end_mbn
+	cmp	r2, r8	@ D.33470, old_slice_end_mbn
 	movlt	r8, r4	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r8, r8, #1	@ tmp177, old_slice_end_mbn,
-	cmp	r2, r8	@ D.33467, tmp177
+	cmp	r2, r8	@ D.33470, tmp177
 	ble	.L52	@,
 	ldr	sl, [r7, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	r6, r4, r4, lsr #31	@, tmp186, old_slice_start_mbn, old_slice_start_mbn,
-	uxth	r4, r9	@ D.33484, dectopfldmbs
-	sub	r8, r2, #1	@ tmp195, D.33467,
-	rsb	r6, r4, r6	@ tmp188, D.33484, tmp186
-	rsb	r4, r4, r8	@ tmp197, D.33484, tmp195
+	uxth	r4, r9	@ D.33487, dectopfldmbs
+	sub	r8, r2, #1	@ tmp195, D.33470,
+	rsb	r6, r4, r6	@ tmp188, D.33487, tmp186
+	rsb	r4, r4, r8	@ tmp197, D.33487, tmp195
 	add	sl, r7, sl, asl #2	@, tmp180, pLocalRepairParam, <variable>.ValidGroupNum,
 	strh	r6, [sl, #40]	@ movhi	@ tmp188, <variable>.StartMbn
 	ldr	r6, [r7, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -463,7 +463,7 @@ PostPro_GetDivx3MbGroup:
 	str	r4, [r7, #840]	@ tmp199, <variable>.ValidGroupNum
 	bne	.L61	@,
 	ldr	r4, [fp, #-60]	@, %sfp
-	cmp	r2, r4	@ D.33467,
+	cmp	r2, r4	@ D.33470,
 	bge	.L60	@,
 .L61:
 	ldr	r6, [r1, #8]	@ prephitmp.615, <variable>.DecSliceNum
@@ -473,30 +473,30 @@ PostPro_GetDivx3MbGroup:
 	beq	.L63	@,
 .L53:
 	mov	r8, r0	@ old_slice_end_mbn, curr_slice_end_mbn
-	mov	r4, r2	@ old_slice_start_mbn, D.33467
+	mov	r4, r2	@ old_slice_start_mbn, D.33470
 .L50:
 	add	ip, ip, #1	@ i, i,
 	add	r3, r3, #4	@ ivtmp.630, ivtmp.630,
 	cmp	ip, r6	@ i, prephitmp.615
 	bls	.L54	@,
-	mov	r3, #0	@ D.33461,
+	mov	r3, #0	@ D.33464,
 .L47:
-	mov	r0, r3	@, D.33461
+	mov	r0, r3	@, D.33464
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L63:
 	add	r4, r1, ip, asl #2	@, tmp203, pDecReport, i,
 	ldr	sl, [fp, #-56]	@, %sfp
-	ldrh	r8, [r4, #14]	@ D.33501, <variable>.SliceMbRange
-	cmp	r8, sl	@ D.33501,
+	ldrh	r8, [r4, #14]	@ D.33504, <variable>.SliceMbRange
+	cmp	r8, sl	@ D.33504,
 	bge	.L53	@,
 	ldr	r0, [fp, #-68]	@ pRepairParam, %sfp
 	ldr	r3, [fp, #-48]	@, %sfp
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	sub	r1, r3, #1	@ tmp216,,
-	mov	r3, #0	@ D.33461,
+	mov	r3, #0	@ D.33464,
 	add	r2, r0, ip, asl #2	@, tmp208, pRepairParam, <variable>.ValidGroupNum,
-	strh	r8, [r2, #40]	@ movhi	@ D.33501, <variable>.StartMbn
+	strh	r8, [r2, #40]	@ movhi	@ D.33504, <variable>.StartMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	r2, r0, ip, asl #2	@, tmp214, pRepairParam, <variable>.ValidGroupNum,
 	strh	r1, [r2, #42]	@ movhi	@ tmp216, <variable>.EndMbn
@@ -514,7 +514,7 @@ PostPro_GetDivx3MbGroup:
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33461,
+	mov	r3, #1	@ D.33464,
 	b	.L47	@
 	.fnend
 	.size	PostPro_GetDivx3MbGroup, .-PostPro_GetDivx3MbGroup
@@ -537,8 +537,8 @@ PostPro_GetAvsMbGroup:
 	sub	sp, sp, #28	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r2, [r1, #8]	@ D.33384, <variable>.DecSliceNum
-	sub	r3, r2, #1	@ tmp156, D.33384,
+	ldr	r2, [r1, #8]	@ D.33387, <variable>.DecSliceNum
+	sub	r3, r2, #1	@ tmp156, D.33387,
 	cmp	r3, #199	@ tmp156,
 	bhi	.L81	@,
 	ldr	r7, [r0, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
@@ -572,24 +572,24 @@ PostPro_GetAvsMbGroup:
 	ldr	r3, [fp, #-68]	@ ivtmp.675, %sfp
 	str	r0, [fp, #-68]	@ pRepairParam, %sfp
 .L73:
-	ldrh	r2, [r3, #12]	@ D.33395, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33398, <variable>.SliceMbRange
 	ldrh	r0, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
-	cmp	r2, r5	@ D.33395, total_mbn
+	cmp	r2, r5	@ D.33398, total_mbn
 	cmple	r0, r5	@, curr_slice_end_mbn, total_mbn
 	bgt	.L69	@,
-	cmp	r2, r0	@ D.33395, curr_slice_end_mbn
+	cmp	r2, r0	@ D.33398, curr_slice_end_mbn
 	bgt	.L69	@,
-	cmp	r2, r8	@ D.33395, old_slice_end_mbn
+	cmp	r2, r8	@ D.33398, old_slice_end_mbn
 	movlt	r8, r4	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r8, r8, #1	@ tmp177, old_slice_end_mbn,
-	cmp	r2, r8	@ D.33395, tmp177
+	cmp	r2, r8	@ D.33398, tmp177
 	ble	.L71	@,
 	ldr	sl, [r7, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	r6, r4, r4, lsr #31	@, tmp186, old_slice_start_mbn, old_slice_start_mbn,
-	uxth	r4, r9	@ D.33412, dectopfldmbs
-	sub	r8, r2, #1	@ tmp195, D.33395,
-	rsb	r6, r4, r6	@ tmp188, D.33412, tmp186
-	rsb	r4, r4, r8	@ tmp197, D.33412, tmp195
+	uxth	r4, r9	@ D.33415, dectopfldmbs
+	sub	r8, r2, #1	@ tmp195, D.33398,
+	rsb	r6, r4, r6	@ tmp188, D.33415, tmp186
+	rsb	r4, r4, r8	@ tmp197, D.33415, tmp195
 	add	sl, r7, sl, asl #2	@, tmp180, pLocalRepairParam, <variable>.ValidGroupNum,
 	strh	r6, [sl, #40]	@ movhi	@ tmp188, <variable>.StartMbn
 	ldr	r6, [r7, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -602,7 +602,7 @@ PostPro_GetAvsMbGroup:
 	str	r4, [r7, #840]	@ tmp199, <variable>.ValidGroupNum
 	bne	.L80	@,
 	ldr	r4, [fp, #-60]	@, %sfp
-	cmp	r2, r4	@ D.33395,
+	cmp	r2, r4	@ D.33398,
 	bge	.L79	@,
 .L80:
 	ldr	r6, [r1, #8]	@ prephitmp.660, <variable>.DecSliceNum
@@ -612,30 +612,30 @@ PostPro_GetAvsMbGroup:
 	beq	.L82	@,
 .L72:
 	mov	r8, r0	@ old_slice_end_mbn, curr_slice_end_mbn
-	mov	r4, r2	@ old_slice_start_mbn, D.33395
+	mov	r4, r2	@ old_slice_start_mbn, D.33398
 .L69:
 	add	ip, ip, #1	@ i, i,
 	add	r3, r3, #4	@ ivtmp.675, ivtmp.675,
 	cmp	ip, r6	@ i, prephitmp.660
 	bls	.L73	@,
-	mov	r3, #0	@ D.33389,
+	mov	r3, #0	@ D.33392,
 .L66:
-	mov	r0, r3	@, D.33389
+	mov	r0, r3	@, D.33392
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L82:
 	add	r4, r1, ip, asl #2	@, tmp203, pDecReport, i,
 	ldr	sl, [fp, #-56]	@, %sfp
-	ldrh	r8, [r4, #14]	@ D.33429, <variable>.SliceMbRange
-	cmp	r8, sl	@ D.33429,
+	ldrh	r8, [r4, #14]	@ D.33432, <variable>.SliceMbRange
+	cmp	r8, sl	@ D.33432,
 	bge	.L72	@,
 	ldr	r0, [fp, #-68]	@ pRepairParam, %sfp
 	ldr	r3, [fp, #-48]	@, %sfp
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	sub	r1, r3, #1	@ tmp216,,
-	mov	r3, #0	@ D.33389,
+	mov	r3, #0	@ D.33392,
 	add	r2, r0, ip, asl #2	@, tmp208, pRepairParam, <variable>.ValidGroupNum,
-	strh	r8, [r2, #40]	@ movhi	@ D.33429, <variable>.StartMbn
+	strh	r8, [r2, #40]	@ movhi	@ D.33432, <variable>.StartMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	r2, r0, ip, asl #2	@, tmp214, pRepairParam, <variable>.ValidGroupNum,
 	strh	r1, [r2, #42]	@ movhi	@ tmp216, <variable>.EndMbn
@@ -653,7 +653,7 @@ PostPro_GetAvsMbGroup:
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33389,
+	mov	r3, #1	@ D.33392,
 	b	.L66	@
 	.fnend
 	.size	PostPro_GetAvsMbGroup, .-PostPro_GetAvsMbGroup
@@ -682,18 +682,18 @@ PostPro_GetVp8MbGroup:
 	cmp	r3, #199	@ tmp152,
 	bhi	.L97	@,
 	ldr	r5, [r0, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
-	mov	r7, #0	@ tmp155,
+	mov	r6, #0	@ tmp155,
 	ldr	r4, [r0, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
-	mvn	r6, #0	@ old_slice_start_mbn,
-	str	r7, [r0, #840]	@ tmp155, <variable>.ValidGroupNum
-	mov	r1, r7	@ i, tmp155
-	str	r7, [r0, #856]	@ tmp155, <variable>.FullRepair
+	mvn	r7, #0	@ old_slice_end_mbn,
+	str	r6, [r0, #840]	@ tmp155, <variable>.ValidGroupNum
+	mov	r1, r6	@ i, tmp155
+	str	r6, [r0, #856]	@ tmp155, <variable>.FullRepair
 	mov	r3, r9	@ ivtmp.720, pDecReport
 	mul	r4, r4, r5	@ total_mbn, <variable>.ImageWidth, <variable>.ImageHeight
 	ldr	r5, [r9, #8]	@ prephitmp.705, <variable>.DecSliceNum
-	mov	r7, r6	@ old_slice_end_mbn, old_slice_start_mbn
+	mov	r6, r7	@ old_slice_start_mbn, old_slice_end_mbn
 	add	ip, r9, r5, asl #2	@, tmp161, pDecReport, prephitmp.705,
-	add	r8, r4, r6	@, total_mbn,
+	add	r8, r4, r7	@, total_mbn, tmp6
 	str	r8, [fp, #-52]	@, %sfp
 	uxth	r8, r4	@, total_mbn
 	str	r8, [fp, #-48]	@, %sfp
@@ -705,28 +705,28 @@ PostPro_GetVp8MbGroup:
 	cmp	r1, r5	@ i, prephitmp.705
 	bhi	.L98	@,
 .L94:
-	ldrh	r2, [r3, #12]	@ D.33325, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33328, <variable>.SliceMbRange
 	ldrh	ip, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
 	add	r3, r3, #4	@ ivtmp.720, ivtmp.720,
-	cmp	r2, r4	@ D.33325, total_mbn
+	cmp	r2, r4	@ D.33328, total_mbn
 	cmple	ip, r4	@, curr_slice_end_mbn, total_mbn
 	bgt	.L88	@,
-	cmp	r2, ip	@ D.33325, curr_slice_end_mbn
+	cmp	r2, ip	@ D.33328, curr_slice_end_mbn
 	bgt	.L88	@,
-	cmp	r2, r7	@ D.33325, old_slice_end_mbn
+	cmp	r2, r7	@ D.33328, old_slice_end_mbn
 	add	sl, r6, r6, lsr #31	@, tmp218, old_slice_start_mbn, old_slice_start_mbn,
-	sub	r8, r2, #1	@ tmp217, D.33325,
+	sub	r8, r2, #1	@ tmp217, D.33328,
 	movlt	r7, r6	@ old_slice_end_mbn, old_slice_start_mbn
-	add	r6, r7, #1	@ tmp175, old_slice_end_mbn,
-	cmp	r6, r2	@ tmp175, D.33325
+	add	r7, r7, #1	@ tmp175, old_slice_end_mbn,
+	cmp	r7, r2	@ tmp175, D.33328
+	mov	r6, r2	@ old_slice_start_mbn, D.33328
 	mov	r7, ip	@ old_slice_end_mbn, curr_slice_end_mbn
-	mov	r6, r2	@ old_slice_start_mbn, D.33325
 	beq	.L90	@,
 	cmp	sl, r8	@ tmp218, tmp217
 	bge	.L90	@,
-	ldr	r2, [r0, #840]	@ D.33343, <variable>.ValidGroupNum
-	cmp	r2, #199	@ D.33343,
-	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33343,
+	ldr	r2, [r0, #840]	@ D.33346, <variable>.ValidGroupNum
+	cmp	r2, #199	@ D.33346,
+	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33346,
 	bgt	.L99	@,
 	strh	sl, [r2, #40]	@ movhi	@ tmp218, <variable>.StartMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -742,18 +742,18 @@ PostPro_GetVp8MbGroup:
 	bne	.L88	@,
 	add	r2, r9, r1, asl #2	@, tmp199, pDecReport, i,
 	ldr	ip, [fp, #-52]	@, %sfp
-	ldrh	r2, [r2, #14]	@ D.33357, <variable>.SliceMbRange
-	cmp	r2, ip	@ D.33357,
+	ldrh	r2, [r2, #14]	@ D.33360, <variable>.SliceMbRange
+	cmp	r2, ip	@ D.33360,
 	bge	.L88	@,
 	ldr	r3, [r0, #840]	@ temp.726, <variable>.ValidGroupNum
 	cmp	r3, #199	@ temp.726,
 	bgt	.L100	@,
 	add	ip, r0, r3, asl #2	@, tmp205, pRepairParam, temp.726,
 	ldr	r3, [fp, #-48]	@, %sfp
-	strh	r2, [ip, #40]	@ movhi	@ D.33357, <variable>.StartMbn
+	strh	r2, [ip, #40]	@ movhi	@ D.33360, <variable>.StartMbn
 	sub	r1, r3, #1	@ tmp213,,
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
-	mov	r3, #0	@ D.33319,
+	mov	r3, #0	@ D.33322,
 	add	r2, r0, ip, asl #2	@, tmp211, pRepairParam, <variable>.ValidGroupNum,
 	strh	r1, [r2, #42]	@ movhi	@ tmp213, <variable>.EndMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -761,9 +761,9 @@ PostPro_GetVp8MbGroup:
 	str	r1, [r0, #840]	@ tmp215, <variable>.ValidGroupNum
 	b	.L85	@
 .L98:
-	mov	r3, #0	@ D.33319,
+	mov	r3, #0	@ D.33322,
 .L85:
-	mov	r0, r3	@, D.33319
+	mov	r0, r3	@, D.33322
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L97:
@@ -771,7 +771,7 @@ PostPro_GetVp8MbGroup:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33319,
+	mov	r3, #1	@ D.33322,
 	b	.L85	@
 .L99:
 	mov	r0, #22	@,
@@ -779,7 +779,7 @@ PostPro_GetVp8MbGroup:
 	mov	r2, #1472	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33319,
+	mov	r3, #1	@ D.33322,
 	b	.L85	@
 .L100:
 	mov	r0, #22	@,
@@ -787,7 +787,7 @@ PostPro_GetVp8MbGroup:
 	movw	r2, #1490	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33319,
+	mov	r3, #1	@ D.33322,
 	b	.L85	@
 	.fnend
 	.size	PostPro_GetVp8MbGroup, .-PostPro_GetVp8MbGroup
@@ -839,28 +839,28 @@ PostPro_GetVp6MbGroup:
 	cmp	r1, r5	@ i, prephitmp.752
 	bhi	.L116	@,
 .L112:
-	ldrh	r2, [r3, #12]	@ D.33257, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33260, <variable>.SliceMbRange
 	ldrh	ip, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
 	add	r3, r3, #4	@ ivtmp.767, ivtmp.767,
-	cmp	r2, r4	@ D.33257, total_mbn
+	cmp	r2, r4	@ D.33260, total_mbn
 	cmple	ip, r4	@, curr_slice_end_mbn, total_mbn
 	bgt	.L106	@,
-	cmp	r2, ip	@ D.33257, curr_slice_end_mbn
+	cmp	r2, ip	@ D.33260, curr_slice_end_mbn
 	bgt	.L106	@,
-	cmp	r2, r7	@ D.33257, old_slice_end_mbn
+	cmp	r2, r7	@ D.33260, old_slice_end_mbn
 	add	sl, r6, r6, lsr #31	@, tmp218, old_slice_start_mbn, old_slice_start_mbn,
-	sub	r8, r2, #1	@ tmp217, D.33257,
+	sub	r8, r2, #1	@ tmp217, D.33260,
 	movlt	r7, r6	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r7, r7, #1	@ tmp175, old_slice_end_mbn,
-	cmp	r7, r2	@ tmp175, D.33257
-	mov	r6, r2	@ old_slice_start_mbn, D.33257
+	cmp	r7, r2	@ tmp175, D.33260
+	mov	r6, r2	@ old_slice_start_mbn, D.33260
 	mov	r7, ip	@ old_slice_end_mbn, curr_slice_end_mbn
 	beq	.L108	@,
 	cmp	sl, r8	@ tmp218, tmp217
 	bge	.L108	@,
-	ldr	r2, [r0, #840]	@ D.33275, <variable>.ValidGroupNum
-	cmp	r2, #199	@ D.33275,
-	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33275,
+	ldr	r2, [r0, #840]	@ D.33278, <variable>.ValidGroupNum
+	cmp	r2, #199	@ D.33278,
+	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33278,
 	bgt	.L117	@,
 	strh	sl, [r2, #40]	@ movhi	@ tmp218, <variable>.StartMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -876,18 +876,18 @@ PostPro_GetVp6MbGroup:
 	bne	.L106	@,
 	add	r2, r9, r1, asl #2	@, tmp199, pDecReport, i,
 	ldr	ip, [fp, #-52]	@, %sfp
-	ldrh	r2, [r2, #14]	@ D.33289, <variable>.SliceMbRange
-	cmp	r2, ip	@ D.33289,
+	ldrh	r2, [r2, #14]	@ D.33292, <variable>.SliceMbRange
+	cmp	r2, ip	@ D.33292,
 	bge	.L106	@,
 	ldr	r3, [r0, #840]	@ temp.773, <variable>.ValidGroupNum
 	cmp	r3, #199	@ temp.773,
 	bgt	.L118	@,
 	add	ip, r0, r3, asl #2	@, tmp205, pRepairParam, temp.773,
 	ldr	r3, [fp, #-48]	@, %sfp
-	strh	r2, [ip, #40]	@ movhi	@ D.33289, <variable>.StartMbn
+	strh	r2, [ip, #40]	@ movhi	@ D.33292, <variable>.StartMbn
 	sub	r1, r3, #1	@ tmp213,,
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
-	mov	r3, #0	@ D.33251,
+	mov	r3, #0	@ D.33254,
 	add	r2, r0, ip, asl #2	@, tmp211, pRepairParam, <variable>.ValidGroupNum,
 	strh	r1, [r2, #42]	@ movhi	@ tmp213, <variable>.EndMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -895,9 +895,9 @@ PostPro_GetVp6MbGroup:
 	str	r1, [r0, #840]	@ tmp215, <variable>.ValidGroupNum
 	b	.L103	@
 .L116:
-	mov	r3, #0	@ D.33251,
+	mov	r3, #0	@ D.33254,
 .L103:
-	mov	r0, r3	@, D.33251
+	mov	r0, r3	@, D.33254
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L115:
@@ -905,7 +905,7 @@ PostPro_GetVp6MbGroup:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33251,
+	mov	r3, #1	@ D.33254,
 	b	.L103	@
 .L117:
 	mov	r0, #22	@,
@@ -913,7 +913,7 @@ PostPro_GetVp6MbGroup:
 	movw	r2, #1393	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33251,
+	mov	r3, #1	@ D.33254,
 	b	.L103	@
 .L118:
 	mov	r0, #22	@,
@@ -921,7 +921,7 @@ PostPro_GetVp6MbGroup:
 	movw	r2, #1411	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33251,
+	mov	r3, #1	@ D.33254,
 	b	.L103	@
 	.fnend
 	.size	PostPro_GetVp6MbGroup, .-PostPro_GetVp6MbGroup
@@ -973,28 +973,28 @@ PostPro_GetVc1MbGroup:
 	cmp	r1, r5	@ i, prephitmp.799
 	bhi	.L134	@,
 .L130:
-	ldrh	r2, [r3, #12]	@ D.33189, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33192, <variable>.SliceMbRange
 	ldrh	ip, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
 	add	r3, r3, #4	@ ivtmp.814, ivtmp.814,
-	cmp	r2, r4	@ D.33189, total_mbn
+	cmp	r2, r4	@ D.33192, total_mbn
 	cmple	ip, r4	@, curr_slice_end_mbn, total_mbn
 	bgt	.L124	@,
-	cmp	r2, ip	@ D.33189, curr_slice_end_mbn
+	cmp	r2, ip	@ D.33192, curr_slice_end_mbn
 	bgt	.L124	@,
-	cmp	r2, r7	@ D.33189, old_slice_end_mbn
+	cmp	r2, r7	@ D.33192, old_slice_end_mbn
 	add	sl, r6, r6, lsr #31	@, tmp218, old_slice_start_mbn, old_slice_start_mbn,
-	sub	r8, r2, #1	@ tmp217, D.33189,
+	sub	r8, r2, #1	@ tmp217, D.33192,
 	movlt	r7, r6	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r7, r7, #1	@ tmp175, old_slice_end_mbn,
-	cmp	r7, r2	@ tmp175, D.33189
-	mov	r6, r2	@ old_slice_start_mbn, D.33189
+	cmp	r7, r2	@ tmp175, D.33192
+	mov	r6, r2	@ old_slice_start_mbn, D.33192
 	mov	r7, ip	@ old_slice_end_mbn, curr_slice_end_mbn
 	beq	.L126	@,
 	cmp	sl, r8	@ tmp218, tmp217
 	bge	.L126	@,
-	ldr	r2, [r0, #840]	@ D.33207, <variable>.ValidGroupNum
-	cmp	r2, #199	@ D.33207,
-	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33207,
+	ldr	r2, [r0, #840]	@ D.33210, <variable>.ValidGroupNum
+	cmp	r2, #199	@ D.33210,
+	add	r2, r0, r2, asl #2	@, tmp181, pRepairParam, D.33210,
 	bgt	.L135	@,
 	strh	sl, [r2, #40]	@ movhi	@ tmp218, <variable>.StartMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -1010,18 +1010,18 @@ PostPro_GetVc1MbGroup:
 	bne	.L124	@,
 	add	r2, r9, r1, asl #2	@, tmp199, pDecReport, i,
 	ldr	ip, [fp, #-52]	@, %sfp
-	ldrh	r2, [r2, #14]	@ D.33221, <variable>.SliceMbRange
-	cmp	r2, ip	@ D.33221,
+	ldrh	r2, [r2, #14]	@ D.33224, <variable>.SliceMbRange
+	cmp	r2, ip	@ D.33224,
 	bge	.L124	@,
 	ldr	r3, [r0, #840]	@ temp.820, <variable>.ValidGroupNum
 	cmp	r3, #199	@ temp.820,
 	bgt	.L136	@,
 	add	ip, r0, r3, asl #2	@, tmp205, pRepairParam, temp.820,
 	ldr	r3, [fp, #-48]	@, %sfp
-	strh	r2, [ip, #40]	@ movhi	@ D.33221, <variable>.StartMbn
+	strh	r2, [ip, #40]	@ movhi	@ D.33224, <variable>.StartMbn
 	sub	r1, r3, #1	@ tmp213,,
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
-	mov	r3, #0	@ D.33183,
+	mov	r3, #0	@ D.33186,
 	add	r2, r0, ip, asl #2	@, tmp211, pRepairParam, <variable>.ValidGroupNum,
 	strh	r1, [r2, #42]	@ movhi	@ tmp213, <variable>.EndMbn
 	ldr	ip, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -1029,9 +1029,9 @@ PostPro_GetVc1MbGroup:
 	str	r1, [r0, #840]	@ tmp215, <variable>.ValidGroupNum
 	b	.L121	@
 .L134:
-	mov	r3, #0	@ D.33183,
+	mov	r3, #0	@ D.33186,
 .L121:
-	mov	r0, r3	@, D.33183
+	mov	r0, r3	@, D.33186
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L133:
@@ -1039,7 +1039,7 @@ PostPro_GetVc1MbGroup:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33183,
+	mov	r3, #1	@ D.33186,
 	b	.L121	@
 .L135:
 	mov	r0, #22	@,
@@ -1047,7 +1047,7 @@ PostPro_GetVc1MbGroup:
 	mov	r2, #1312	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33183,
+	mov	r3, #1	@ D.33186,
 	b	.L121	@
 .L136:
 	mov	r0, #22	@,
@@ -1055,7 +1055,7 @@ PostPro_GetVc1MbGroup:
 	movw	r2, #1331	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33183,
+	mov	r3, #1	@ D.33186,
 	b	.L121	@
 	.fnend
 	.size	PostPro_GetVc1MbGroup, .-PostPro_GetVc1MbGroup
@@ -1078,8 +1078,8 @@ PostPro_GetMp24MbGroup:
 	sub	sp, sp, #12	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r2, [r1, #8]	@ D.33093, <variable>.DecSliceNum
-	sub	r3, r2, #1	@ tmp155, D.33093,
+	ldr	r2, [r1, #8]	@ D.33096, <variable>.DecSliceNum
+	sub	r3, r2, #1	@ tmp155, D.33096,
 	cmp	r3, #199	@ tmp155,
 	bhi	.L153	@,
 	ldr	r6, [r0, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
@@ -1091,9 +1091,9 @@ PostPro_GetMp24MbGroup:
 	ldr	r6, [r1, #8]	@ prephitmp.854, <variable>.DecSliceNum
 	cmp	r6, r4	@ prephitmp.854,
 	add	r2, r1, r6, asl #2	@, tmp163, pDecReport, prephitmp.854,
-	uxth	r9, r5	@ D.33101, total_mbn
-	strh	r9, [r2, #14]	@ movhi	@ D.33101, <variable>.SliceMbRange
-	strh	r9, [r2, #12]	@ movhi	@ D.33101, <variable>.SliceMbRange
+	uxth	r9, r5	@ D.33104, total_mbn
+	strh	r9, [r2, #14]	@ movhi	@ D.33104, <variable>.SliceMbRange
+	strh	r9, [r2, #12]	@ movhi	@ D.33104, <variable>.SliceMbRange
 	bne	.L154	@,
 .L140:
 	mvn	sl, #0	@ old_slice_end_mbn,
@@ -1105,38 +1105,38 @@ PostPro_GetMp24MbGroup:
 	b	.L150	@
 .L148:
 	mov	sl, r4	@ old_slice_end_mbn, curr_slice_end_mbn
-	mov	r7, r2	@ old_slice_start_mbn, D.33112
+	mov	r7, r2	@ old_slice_start_mbn, D.33115
 .L143:
 	add	ip, ip, #1	@ i, i,
 	add	r3, r3, #4	@ ivtmp.871, ivtmp.871,
 	cmp	ip, r6	@ i, prephitmp.854
 	bhi	.L155	@,
 .L150:
-	ldrh	r2, [r3, #12]	@ D.33112, <variable>.SliceMbRange
+	ldrh	r2, [r3, #12]	@ D.33115, <variable>.SliceMbRange
 	ldrh	r4, [r3, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
-	cmp	r2, r5	@ D.33112, total_mbn
+	cmp	r2, r5	@ D.33115, total_mbn
 	cmple	r4, r5	@, curr_slice_end_mbn, total_mbn
 	bgt	.L143	@,
-	cmp	r2, r4	@ D.33112, curr_slice_end_mbn
+	cmp	r2, r4	@ D.33115, curr_slice_end_mbn
 	movle	r8, #0	@, tmp191
 	movgt	r8, #1	@, tmp191
-	cmp	r2, r7	@ D.33112, old_slice_start_mbn
+	cmp	r2, r7	@ D.33115, old_slice_start_mbn
 	orrlt	r8, r8, #1	@,, tmp194, tmp191
 	cmp	r8, #0	@ tmp194,
 	bne	.L143	@,
-	cmp	r2, sl	@ D.33112, old_slice_end_mbn
+	cmp	r2, sl	@ D.33115, old_slice_end_mbn
 	movlt	sl, r7	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r8, sl, #1	@ tmp195, old_slice_end_mbn,
-	cmp	r8, r2	@ tmp195, D.33112
+	cmp	r8, r2	@ tmp195, D.33115
 	beq	.L145	@,
 	add	r7, r7, r7, lsr #31	@, tmp247, old_slice_start_mbn, old_slice_start_mbn,
-	sub	r8, r2, #1	@ tmp246, D.33112,
+	sub	r8, r2, #1	@ tmp246, D.33115,
 	cmp	r7, r8	@ tmp247, tmp246
 	bge	.L145	@,
-	ldr	r6, [r0, #840]	@ D.33133, <variable>.ValidGroupNum
-	cmp	r6, #199	@ D.33133,
+	ldr	r6, [r0, #840]	@ D.33136, <variable>.ValidGroupNum
+	cmp	r6, #199	@ D.33136,
 	bgt	.L156	@,
-	add	r6, r0, r6, asl #2	@, tmp201, pRepairParam, D.33133,
+	add	r6, r0, r6, asl #2	@, tmp201, pRepairParam, D.33136,
 	sub	sl, sl, #100	@ tmp248, old_slice_end_mbn,
 	strh	r7, [r6, #40]	@ movhi	@ tmp247, <variable>.StartMbn
 	ldr	r7, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -1165,8 +1165,8 @@ PostPro_GetMp24MbGroup:
 	cmp	r3, #199	@ temp.879,
 	bgt	.L157	@,
 	add	r2, r0, r3, asl #2	@, tmp234, pRepairParam, temp.879,
-	sub	r9, r9, #1	@ tmp242, D.33101,
-	mov	r3, #0	@ D.33098,
+	sub	r9, r9, #1	@ tmp242, D.33104,
+	mov	r3, #0	@ D.33101,
 	strh	r7, [r2, #40]	@ movhi	@ temp.877, <variable>.StartMbn
 	ldr	r1, [r0, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	ip, r0, r1, asl #2	@, tmp240, pRepairParam, <variable>.ValidGroupNum,
@@ -1176,9 +1176,9 @@ PostPro_GetMp24MbGroup:
 	str	r1, [r0, #840]	@ tmp244, <variable>.ValidGroupNum
 	b	.L139	@
 .L155:
-	mov	r3, #0	@ D.33098,
+	mov	r3, #0	@ D.33101,
 .L139:
-	mov	r0, r3	@, D.33098
+	mov	r0, r3	@, D.33101
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L154:
@@ -1186,7 +1186,7 @@ PostPro_GetMp24MbGroup:
 	sub	r7, r5, #10	@ tmp175, total_mbn,
 	ldrh	ip, [sl, #4]	@ tmp174, <variable>.SliceMbRange
 	cmp	ip, r7	@ tmp174, tmp175
-	subge	r7, r9, #1	@ tmp180, D.33101,
+	subge	r7, r9, #1	@ tmp180, D.33104,
 	strgeh	r7, [sl, #4]	@ movhi	@ tmp180, <variable>.SliceMbRange
 	b	.L140	@
 .L153:
@@ -1194,7 +1194,7 @@ PostPro_GetMp24MbGroup:
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33098,
+	mov	r3, #1	@ D.33101,
 	b	.L139	@
 .L156:
 	mov	r0, #22	@,
@@ -1202,7 +1202,7 @@ PostPro_GetMp24MbGroup:
 	movw	r2, #1222	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33098,
+	mov	r3, #1	@ D.33101,
 	b	.L139	@
 .L157:
 	mov	r0, #22	@,
@@ -1210,7 +1210,7 @@ PostPro_GetMp24MbGroup:
 	movw	r2, #1251	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r3, #1	@ D.33098,
+	mov	r3, #1	@ D.33101,
 	b	.L139	@
 	.fnend
 	.size	PostPro_GetMp24MbGroup, .-PostPro_GetMp24MbGroup
@@ -1242,10 +1242,10 @@ PostPro_GetH264MbGroup:
 	cmp	r3, #199	@ tmp194,
 	str	r0, [fp, #-856]	@, %sfp
 	bhi	.L203	@,
-	ldr	sl, [r4, #24]	@ D.32960, <variable>.ImageWidth
+	ldr	sl, [r4, #24]	@ D.32963, <variable>.ImageWidth
 	cmp	r2, #0	@ IsMbaff,
 	ldr	r6, [r4, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
-	mul	r6, r6, sl	@ total_mbn, <variable>.ImageHeight, D.32960
+	mul	r6, r6, sl	@ total_mbn, <variable>.ImageHeight, D.32963
 	uxtheq	r9, r6	@ prephitmp.914, total_mbn
 	bne	.L204	@,
 .L162:
@@ -1283,10 +1283,10 @@ PostPro_GetH264MbGroup:
 	add	sl, r8, #1	@ tmp410, old_slice_end_mbn,
 	cmp	r2, sl	@ temp.1010, tmp410
 	ble	.L177	@,
-	ldr	sl, [r4, #840]	@ D.33046, <variable>.ValidGroupNum
-	cmp	sl, #199	@ D.33046,
+	ldr	sl, [r4, #840]	@ D.33049, <variable>.ValidGroupNum
+	cmp	sl, #199	@ D.33049,
 	bgt	.L206	@,
-	add	sl, r4, sl, asl #2	@, tmp413, pRepairParam, D.33046,
+	add	sl, r4, sl, asl #2	@, tmp413, pRepairParam, D.33049,
 	add	r7, r7, r7, lsr #31	@, tmp419, old_slice_start_mbn, old_slice_start_mbn,
 	sub	ip, r2, #1	@ tmp426, temp.1010,
 	sub	r8, r8, #100	@ tmp471, old_slice_end_mbn,
@@ -1310,16 +1310,16 @@ PostPro_GetH264MbGroup:
 	bne	.L180	@,
 	add	r7, r5, r1, asl #2	@, tmp440, pDecReport, i.959,
 	ldr	r8, [fp, #-848]	@, %sfp
-	ldrh	r7, [r7, #14]	@ D.33068, <variable>.SliceMbRange
-	cmp	r7, r8	@ D.33068,
+	ldrh	r7, [r7, #14]	@ D.33071, <variable>.SliceMbRange
+	cmp	r7, r8	@ D.33071,
 	bge	.L180	@,
 	ldr	r3, [r4, #840]	@ temp.1014, <variable>.ValidGroupNum
 	cmp	r3, #199	@ temp.1014,
 	bgt	.L207	@,
 	add	r1, r4, r3, asl #2	@, tmp446, pRepairParam, temp.1014,
 	sub	r9, r9, #1	@ tmp454, prephitmp.914,
-	mov	r0, #0	@ D.32959,
-	strh	r7, [r1, #40]	@ movhi	@ D.33068, <variable>.StartMbn
+	mov	r0, #0	@ D.32962,
+	strh	r7, [r1, #40]	@ movhi	@ D.33071, <variable>.StartMbn
 	ldr	ip, [r4, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	r2, r4, ip, asl #2	@, tmp452, pRepairParam, <variable>.ValidGroupNum,
 	strh	r9, [r2, #42]	@ movhi	@ tmp454, <variable>.EndMbn
@@ -1328,7 +1328,7 @@ PostPro_GetH264MbGroup:
 	str	r1, [r4, #840]	@ tmp456, <variable>.ValidGroupNum
 	b	.L160	@
 .L205:
-	mov	r0, #0	@ D.32959,
+	mov	r0, #0	@ D.32962,
 .L160:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -1337,12 +1337,12 @@ PostPro_GetH264MbGroup:
 	sub	r2, fp, #844	@ ivtmp.953,,
 	ldr	lr, [fp, #-856]	@, %sfp
 	add	r3, r2, #4	@ ivtmp.953, ivtmp.953,
-	mov	sl, sl, asl #1	@ DoubleImageWidth, D.32960,
+	mov	sl, sl, asl #1	@ DoubleImageWidth, D.32963,
 	strh	r8, [r2, #0]	@ movhi	@, SliceMbRange_Tmp
-	add	r0, r2, lr, asl #2	@, D.34129, ivtmp.953,,
+	add	r0, r2, lr, asl #2	@, D.34132, ivtmp.953,,
 	ldrh	ip, [r5, #14]	@, <variable>.SliceMbRange
-	rsb	r9, r2, r0	@ tmp475, ivtmp.953, D.34129
-	cmp	r3, r0	@ ivtmp.953, D.34129
+	rsb	r9, r2, r0	@ tmp475, ivtmp.953, D.34132
+	cmp	r3, r0	@ ivtmp.953, D.34132
 	sub	r1, r9, #4	@ tmp476, tmp475,
 	strh	ip, [r2, #2]	@ movhi	@, SliceMbRange_Tmp
 	ubfx	r1, r1, #2, #1	@ tmp477, tmp476,,
@@ -1356,7 +1356,7 @@ PostPro_GetH264MbGroup:
 	add	r2, r2, #4	@ ivtmp.952, ivtmp.952,
 	strh	ip, [r3, #2]	@ movhi	@, SliceMbRange_Tmp
 	add	r3, r3, #4	@ ivtmp.953, ivtmp.953,
-	cmp	r3, r0	@ ivtmp.953, D.34129
+	cmp	r3, r0	@ ivtmp.953, D.34132
 	beq	.L193	@,
 .L163:
 	ldrh	lr, [r2, #12]	@, <variable>.SliceMbRange
@@ -1369,7 +1369,7 @@ PostPro_GetH264MbGroup:
 	strh	r8, [r3, #4]	@ movhi	@, SliceMbRange_Tmp
 	add	r3, r2, #4	@ ivtmp.953, tmp478,
 	ldrh	ip, [r1, #14]	@, <variable>.SliceMbRange
-	cmp	r3, r0	@ ivtmp.953, D.34129
+	cmp	r3, r0	@ ivtmp.953, D.34132
 	strh	ip, [r2, #2]	@ movhi	@, SliceMbRange_Tmp
 	add	r2, r1, #4	@ ivtmp.952, tmp479,
 	bne	.L163	@,
@@ -1388,8 +1388,8 @@ PostPro_GetH264MbGroup:
 	moveq	r7, sl	@ j, DoubleImageWidth
 	and	r0, lr, r0	@ prephitmp.916, SliceMbRange_Tmp, prephitmp.916
 	strh	r0, [r9, r8]	@ movhi	@ prephitmp.916, SliceMbRange_Tmp
-	orr	r9, ip, #1	@ D.32971, SliceMbRange_Tmp,
-	strh	r9, [r2, r3]	@ movhi	@ D.32971, SliceMbRange_Tmp
+	orr	r9, ip, #1	@ D.32974, SliceMbRange_Tmp,
+	strh	r9, [r2, r3]	@ movhi	@ D.32974, SliceMbRange_Tmp
 	beq	.L165	@,
 	mov	r3, #0	@,
 	uxth	r7, sl	@, DoubleImageWidth
@@ -1409,7 +1409,7 @@ PostPro_GetH264MbGroup:
 	bl	__aeabi_uidiv	@
 	mov	r1, sl	@, DoubleImageWidth
 	mov	r6, r0	@ tmp229,
-	mov	r0, r9	@, D.32971
+	mov	r0, r9	@, D.32974
 	bl	__aeabi_uidiv	@
 	ldr	r2, [fp, #-852]	@, %sfp
 	ldr	r9, [fp, #-872]	@,
@@ -1423,13 +1423,13 @@ PostPro_GetH264MbGroup:
 	mul	r6, r6, r2	@ tmp234, tmp229,
 	add	r2, r7, #1	@ j.961, j,
 	cmp	r2, #199	@ j.961,
-	uxth	r6, r6	@ D.32987, tmp234
-	add	r1, r6, r1	@ tmp236, D.32987, mbsurplus0
-	uxth	r1, r1	@ D.32989, tmp236
-	strh	r1, [r9, #12]	@ movhi	@ D.32989, <variable>.SliceMbRange
+	uxth	r6, r6	@ D.32990, tmp234
+	add	r1, r6, r1	@ tmp236, D.32990, mbsurplus0
+	uxth	r1, r1	@ D.32992, tmp236
+	strh	r1, [r9, #12]	@ movhi	@ D.32992, <variable>.SliceMbRange
 	ldr	ip, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
 	sub	r9, ip, #1	@ tmp248, <variable>.ImageWidth,
-	add	ip, r6, r9	@ tmp250, D.32987, tmp248
+	add	ip, r6, r9	@ tmp250, D.32990, tmp248
 	strh	ip, [lr, #14]	@ movhi	@ tmp250, <variable>.SliceMbRange
 	bhi	.L199	@,
 	ldr	lr, [fp, #-864]	@, %sfp
@@ -1437,23 +1437,23 @@ PostPro_GetH264MbGroup:
 	ldr	r6, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
 	add	r9, r5, r2, asl #2	@, tmp263, pDecReport, j.961,
 	cmp	ip, #200	@ j.964,
-	uxth	r3, r3	@ D.32998, mbsurplus1
+	uxth	r3, r3	@ D.33001, mbsurplus1
 	mul	r0, r0, lr	@ tmp260, tmp232,
 	add	lr, r5, r7, asl #2	@, tmp254, pDecReport, j,
-	add	r1, r1, r6	@ tmp258, D.32989, <variable>.ImageWidth
+	add	r1, r1, r6	@ tmp258, D.32992, <variable>.ImageWidth
 	strh	r1, [lr, #16]	@ movhi	@ tmp258, <variable>.SliceMbRange
-	uxth	r0, r0	@ D.32997, tmp260
-	add	r7, r3, r0	@ tmp265, D.32998, D.32997
+	uxth	r0, r0	@ D.33000, tmp260
+	add	r7, r3, r0	@ tmp265, D.33001, D.33000
 	strh	r7, [r9, #14]	@ movhi	@ tmp265, <variable>.SliceMbRange
 	beq	.L199	@,
 	ldr	r6, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
 	add	r7, ip, #1	@ j, j.964,
 	cmp	r7, #200	@ j,
 	add	ip, r5, ip, asl #2	@, tmp276, pDecReport, j.964,
-	add	r1, r0, r6	@ tmp268, D.32997, <variable>.ImageWidth
-	uxth	r9, r1	@ D.33002, tmp268
-	strh	r9, [lr, #20]	@ movhi	@ D.33002, <variable>.SliceMbRange
-	add	r3, r9, r3	@ tmp278, D.33002, D.32998
+	add	r1, r0, r6	@ tmp268, D.33000, <variable>.ImageWidth
+	uxth	r9, r1	@ D.33005, tmp268
+	strh	r9, [lr, #20]	@ movhi	@ D.33005, <variable>.SliceMbRange
+	add	r3, r9, r3	@ tmp278, D.33005, D.33001
 	strh	r3, [ip, #14]	@ movhi	@ tmp278, <variable>.SliceMbRange
 	beq	.L199	@,
 .L170:
@@ -1469,8 +1469,8 @@ PostPro_GetH264MbGroup:
 	ldrh	r9, [r8, #-2]	@ tmp466, SliceMbRange_Tmp
 	bic	r6, r6, #1	@ tmp464, tmp463,
 	strh	r6, [r8, #-4]	@ movhi	@ tmp464, SliceMbRange_Tmp
-	orr	r9, r9, #1	@ D.32971, tmp466,
-	strh	r9, [r8, #-2]	@ movhi	@ D.32971, SliceMbRange_Tmp
+	orr	r9, r9, #1	@ D.32974, tmp466,
+	strh	r9, [r8, #-2]	@ movhi	@ D.32974, SliceMbRange_Tmp
 .L184:
 	mov	r0, r6	@, prephitmp.916
 	mov	r1, sl	@, DoubleImageWidth
@@ -1478,7 +1478,7 @@ PostPro_GetH264MbGroup:
 	cmp	r1, #1	@,
 	str	r1, [fp, #-852]	@, %sfp
 	bls	.L166	@,
-	mov	r0, r9	@, D.32971
+	mov	r0, r9	@, D.32974
 	mov	r1, sl	@, DoubleImageWidth
 	bl	__aeabi_uidivmod	@
 	ldr	ip, [fp, #-860]	@, %sfp
@@ -1509,7 +1509,7 @@ PostPro_GetH264MbGroup:
 	cmp	r7, #200	@ j,
 	add	lr, ip, r6	@ tmp341, temp.985, <variable>.ImageWidth
 	strh	lr, [r2, #16]	@ movhi	@ tmp341, <variable>.SliceMbRange
-	strh	r9, [r3, #14]	@ movhi	@ D.32971, <variable>.SliceMbRange
+	strh	r9, [r3, #14]	@ movhi	@ D.32974, <variable>.SliceMbRange
 	bne	.L170	@,
 .L199:
 	ldr	r6, [fp, #-868]	@ total_mbn, %sfp
@@ -1525,7 +1525,7 @@ PostPro_GetH264MbGroup:
 	bl	PostPro_BubbleSort	@
 	b	.L162	@
 .L166:
-	mov	r0, r9	@, D.32971
+	mov	r0, r9	@, D.32974
 	mov	r1, sl	@, DoubleImageWidth
 	bl	__aeabi_uidivmod	@
 	mov	r2, r1	@ tmp350,
@@ -1533,7 +1533,7 @@ PostPro_GetH264MbGroup:
 	cmp	r1, r2	@, tmp350
 	bls	.L171	@,
 	add	r3, r5, r7, asl #2	@, tmp355, pDecReport, j,
-	mov	r0, r9	@, D.32971
+	mov	r0, r9	@, D.32974
 	mov	r1, sl	@, DoubleImageWidth
 	strh	r6, [r3, #12]	@ movhi	@ prephitmp.916, <variable>.SliceMbRange
 	str	r2, [fp, #-872]	@,
@@ -1576,7 +1576,7 @@ PostPro_GetH264MbGroup:
 	add	r7, r7, #1	@ j, j,
 	cmp	r7, #199	@ j,
 	strh	r6, [r2, #12]	@ movhi	@ prephitmp.916, <variable>.SliceMbRange
-	strh	r9, [r2, #14]	@ movhi	@ D.32971, <variable>.SliceMbRange
+	strh	r9, [r2, #14]	@ movhi	@ D.32974, <variable>.SliceMbRange
 	bls	.L170	@,
 	b	.L199	@
 .L168:
@@ -1587,9 +1587,9 @@ PostPro_GetH264MbGroup:
 	uxth	r0, r9	@ temp.969, tmp281
 	add	r3, r0, r3	@ tmp290, temp.969, mbsurplus1
 	add	r7, r0, r1	@ tmp283, temp.969, mbsurplus0
-	uxth	r3, r3	@ D.33008, tmp290
+	uxth	r3, r3	@ D.33011, tmp290
 	uxth	r1, r7	@ temp.971, tmp283
-	strh	r3, [ip, #14]	@ movhi	@ D.33008, <variable>.SliceMbRange
+	strh	r3, [ip, #14]	@ movhi	@ D.33011, <variable>.SliceMbRange
 	strh	r1, [ip, #12]	@ movhi	@ temp.971, <variable>.SliceMbRange
 	bhi	.L199	@,
 	mov	r0, ip	@ tmp298, tmp293
@@ -1600,7 +1600,7 @@ PostPro_GetH264MbGroup:
 	cmp	r7, #200	@ j,
 	strh	r9, [r0, #16]	@ movhi	@ tmp302, <variable>.SliceMbRange
 	ldr	r1, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
-	add	r6, r3, r1	@ tmp309, D.33008, <variable>.ImageWidth
+	add	r6, r3, r1	@ tmp309, D.33011, <variable>.ImageWidth
 	strh	r6, [lr, #14]	@ movhi	@ tmp309, <variable>.SliceMbRange
 	bne	.L170	@,
 	b	.L199	@
@@ -1610,7 +1610,7 @@ PostPro_GetH264MbGroup:
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32959,
+	mov	r0, #1	@ D.32962,
 	b	.L160	@
 .L206:
 	mov	r0, #22	@,
@@ -1618,7 +1618,7 @@ PostPro_GetH264MbGroup:
 	movw	r2, #1121	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32959,
+	mov	r0, #1	@ D.32962,
 	b	.L160	@
 .L207:
 	mov	r0, #22	@,
@@ -1626,7 +1626,7 @@ PostPro_GetH264MbGroup:
 	movw	r2, #1148	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32959,
+	mov	r0, #1	@ D.32962,
 	b	.L160	@
 	.fnend
 	.size	PostPro_GetH264MbGroup, .-PostPro_GetH264MbGroup
@@ -1650,9 +1650,9 @@ PostPro_GetHevcMbGroup:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r9, r0	@ pRepairParam, pRepairParam
-	ldr	r0, [r1, #8]	@ D.32833, <variable>.DecSliceNum
+	ldr	r0, [r1, #8]	@ D.32836, <variable>.DecSliceNum
 	mov	r3, r2	@ pHevcDecParam, pHevcDecParam
-	sub	r2, r0, #1	@ tmp234, D.32833,
+	sub	r2, r0, #1	@ tmp234, D.32836,
 	cmp	r2, #199	@ tmp234,
 	bhi	.L271	@,
 	ldr	r0, [r9, #868]	@ <variable>.tiles_enabled_flag, <variable>.tiles_enabled_flag
@@ -1714,8 +1714,8 @@ PostPro_GetHevcMbGroup:
 	str	r4, [fp, #-48]	@ total_mbn, %sfp
 .L226:
 	ldr	r6, [r8, #0]	@ j.1119, <variable>.SliceGroup
-	ldr	r0, [r8, #4]	@ D.32861, <variable>.SliceGroup
-	cmp	r6, r0	@ j.1119, D.32861
+	ldr	r0, [r8, #4]	@ D.32864, <variable>.SliceGroup
+	cmp	r6, r0	@ j.1119, D.32864
 	bhi	.L220	@,
 	add	r7, r6, #1664	@ tmp365, j.1119,
 	ldr	r2, [r3, r7, asl #2]	@ prephitmp.1051, <variable>.TsToRsMap
@@ -1725,37 +1725,37 @@ PostPro_GetHevcMbGroup:
 	ldrb	r4, [ip, #0]	@ zero_extendqisi2	@ tmp258, <variable>.IsDeced
 	cmp	r4, #0	@ tmp258,
 	beq	.L221	@,
-	rsb	r4, r6, r0	@ tmp393, j.1119, D.32861
+	rsb	r4, r6, r0	@ tmp393, j.1119, D.32864
 	add	ip, r3, r7, asl #2	@, ivtmp.1087, pHevcDecParam, tmp365,
 	tst	r4, #1	@ tmp393,
 	mov	r4, r6	@ j.1120, j.1119
 	beq	.L223	@,
 	add	r4, r6, #1	@ j.1120, j.1119,
-	cmp	r4, r0	@ j.1120, D.32861
+	cmp	r4, r0	@ j.1120, D.32864
 	bls	.L261	@,
 	b	.L220	@
 .L223:
 	add	r4, r4, #1	@ tmp396, j.1120,
-	cmp	r4, r0	@ tmp396, D.32861
+	cmp	r4, r0	@ tmp396, D.32864
 	add	r4, r4, #1	@ j.1120, tmp396,
 	bhi	.L220	@,
 	ldr	r5, [ip, #4]!	@ tmp259, <variable>.TsToRsMap
 	add	r5, r3, r5	@ tmp261, pHevcDecParam, tmp259
 	add	r5, r5, #153600	@ tmp262, tmp261,
 	add	r5, r5, #512	@ tmp262, tmp262,
-	ldrb	r5, [r5, #0]	@ zero_extendqisi2	@ D.32856, <variable>.IsDeced
-	cmp	r5, #0	@ D.32856,
+	ldrb	r5, [r5, #0]	@ zero_extendqisi2	@ D.32859, <variable>.IsDeced
+	cmp	r5, #0	@ D.32859,
 	beq	.L221	@,
 .L261:
 	ldr	r5, [ip, #4]!	@ tmp421, <variable>.TsToRsMap
 	add	r5, r3, r5	@ tmp423, pHevcDecParam, tmp421
 	add	r5, r5, #153600	@ tmp424, tmp423,
 	add	r5, r5, #512	@ tmp424, tmp424,
-	ldrb	r5, [r5, #0]	@ zero_extendqisi2	@ D.32856, <variable>.IsDeced
-	cmp	r5, #0	@ D.32856,
+	ldrb	r5, [r5, #0]	@ zero_extendqisi2	@ D.32859, <variable>.IsDeced
+	cmp	r5, #0	@ D.32859,
 	bne	.L223	@,
 .L221:
-	rsb	r4, r6, r0	@ tmp389, k, D.32861
+	rsb	r4, r6, r0	@ tmp389, k, D.32864
 	add	ip, r7, #1	@ tmp263, tmp365,
 	tst	r4, #1	@ tmp389,
 	add	ip, r3, ip, asl #2	@, ivtmp.1076, pHevcDecParam, tmp263,
@@ -1763,7 +1763,7 @@ PostPro_GetHevcMbGroup:
 	add	r2, r2, #153600	@ tmp413, tmp368,
 	add	r6, r6, #1	@ k, k,
 	add	r4, r2, #512	@ tmp413, tmp413,
-	cmp	r0, r6	@ D.32861, k
+	cmp	r0, r6	@ D.32864, k
 	add	ip, ip, #4	@ ivtmp.1076, ivtmp.1076,
 	strb	r1, [r4, #0]	@ tmp377, <variable>.IsDeced
 	bcc	.L220	@,
@@ -1782,7 +1782,7 @@ PostPro_GetHevcMbGroup:
 	add	r6, r6, #1	@ tmp391, k,
 	add	r4, r2, #153600	@ tmp268, tmp368,
 	add	r2, r4, #512	@ tmp268, tmp268,
-	cmp	r0, r6	@ D.32861, tmp391
+	cmp	r0, r6	@ D.32864, tmp391
 	add	ip, ip, #4	@ tmp392, ivtmp.1076,
 	add	r6, r6, #1	@ k, tmp391,
 	strb	r1, [r2, #0]	@ tmp377, <variable>.IsDeced
@@ -1819,8 +1819,8 @@ PostPro_GetHevcMbGroup:
 	add	r1, r2, #1	@ i.1122, i.1116,
 	cmp	r1, r4	@ i.1122, total_mbn
 	bcs	.L229	@,
-	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32871, <variable>.IsDeced
-	cmp	r5, #0	@ D.32871,
+	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32874, <variable>.IsDeced
+	cmp	r5, #0	@ D.32874,
 	bne	.L229	@,
 .L267:
 	mov	ip, r1	@ i, i.1122
@@ -1828,13 +1828,13 @@ PostPro_GetHevcMbGroup:
 	add	r1, ip, #1	@ i.1122, i,
 	cmp	r1, r4	@ i.1122, total_mbn
 	bcs	.L229	@,
-	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32871, <variable>.IsDeced
-	cmp	r5, #0	@ D.32871,
+	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32874, <variable>.IsDeced
+	cmp	r5, #0	@ D.32874,
 	bne	.L229	@,
-	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32871, <variable>.IsDeced
+	ldrb	r5, [r0, #1]!	@ zero_extendqisi2	@ D.32874, <variable>.IsDeced
 	mov	ip, r1	@ i, i.1122
 	add	r1, r1, #1	@ i.1122, i,
-	cmp	r5, #0	@ D.32871,
+	cmp	r5, #0	@ D.32874,
 	beq	.L267	@,
 .L229:
 	ldr	r0, [r9, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -1855,7 +1855,7 @@ PostPro_GetHevcMbGroup:
 	movt	r1, #:upper16:.LC4	@,
 	sub	r4, r4, #1	@ tmp296, total_mbn,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.32838,
+	mov	r0, #0	@ D.32841,
 	mov	r2, #0	@ movhi	@,
 	mov	r3, #1	@ tmp297,
 	strh	r4, [r9, #42]	@ movhi	@ tmp296, <variable>.EndMbn
@@ -1865,47 +1865,47 @@ PostPro_GetHevcMbGroup:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L233:
-	mov	r0, #0	@ D.32838,
+	mov	r0, #0	@ D.32841,
 	b	.L212	@
 .L213:
 	ldr	r3, [r1, #8]	@ prephitmp.1045, <variable>.DecSliceNum
 	mvn	sl, #0	@ old_slice_end_mbn,
-	uxth	r7, r4	@ D.32883, total_mbn
+	uxth	r7, r4	@ D.32886, total_mbn
 	add	r8, r4, sl	@, total_mbn,
 	mov	r2, r1	@ ivtmp.1114, pDecReport
 	str	r8, [fp, #-48]	@, %sfp
 	add	r5, r1, r3, asl #2	@, tmp300, pDecReport, prephitmp.1045,
 	mov	r6, sl	@ old_slice_start_mbn, old_slice_end_mbn
-	strh	r7, [r5, #14]	@ movhi	@ D.32883, <variable>.SliceMbRange
-	strh	r7, [r5, #12]	@ movhi	@ D.32883, <variable>.SliceMbRange
+	strh	r7, [r5, #14]	@ movhi	@ D.32886, <variable>.SliceMbRange
+	strh	r7, [r5, #12]	@ movhi	@ D.32886, <variable>.SliceMbRange
 	b	.L243	@
 .L241:
 	mov	sl, r5	@ old_slice_end_mbn, curr_slice_end_mbn
-	mov	r6, ip	@ old_slice_start_mbn, D.32845
+	mov	r6, ip	@ old_slice_start_mbn, D.32848
 .L236:
 	add	r0, r0, #1	@ i.1138, i.1138,
 	add	r2, r2, #4	@ ivtmp.1114, ivtmp.1114,
 	cmp	r0, r3	@ i.1138, prephitmp.1045
 	bhi	.L233	@,
 .L243:
-	ldrh	ip, [r2, #12]	@ D.32845, <variable>.SliceMbRange
+	ldrh	ip, [r2, #12]	@ D.32848, <variable>.SliceMbRange
 	ldrh	r5, [r2, #14]	@ curr_slice_end_mbn, <variable>.SliceMbRange
-	cmp	ip, r4	@ D.32845, total_mbn
+	cmp	ip, r4	@ D.32848, total_mbn
 	cmple	r5, r4	@, curr_slice_end_mbn, total_mbn
 	bgt	.L236	@,
-	cmp	ip, r5	@ D.32845, curr_slice_end_mbn
+	cmp	ip, r5	@ D.32848, curr_slice_end_mbn
 	bgt	.L236	@,
-	cmp	ip, sl	@ D.32845, old_slice_end_mbn
+	cmp	ip, sl	@ D.32848, old_slice_end_mbn
 	movlt	sl, r6	@ old_slice_end_mbn, old_slice_start_mbn
 	add	r8, sl, #1	@ tmp314, old_slice_end_mbn,
-	cmp	ip, r8	@ D.32845, tmp314
+	cmp	ip, r8	@ D.32848, tmp314
 	ble	.L238	@,
-	ldr	r3, [r9, #840]	@ D.32872, <variable>.ValidGroupNum
-	cmp	r3, #199	@ D.32872,
+	ldr	r3, [r9, #840]	@ D.32875, <variable>.ValidGroupNum
+	cmp	r3, #199	@ D.32875,
 	bgt	.L273	@,
-	add	r3, r9, r3, asl #2	@, tmp319, pRepairParam, D.32872,
+	add	r3, r9, r3, asl #2	@, tmp319, pRepairParam, D.32875,
 	add	r6, r6, r6, lsr #31	@, tmp325, old_slice_start_mbn, old_slice_start_mbn,
-	sub	r8, ip, #1	@ tmp332, D.32845,
+	sub	r8, ip, #1	@ tmp332, D.32848,
 	sub	sl, sl, #100	@ tmp369, old_slice_end_mbn,
 	strh	r6, [r3, #40]	@ movhi	@ tmp325, <variable>.StartMbn
 	ldr	r6, [r9, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
@@ -1926,17 +1926,17 @@ PostPro_GetHevcMbGroup:
 	cmp	r6, r0	@ temp.1130, i.1138
 	bne	.L241	@,
 	add	r8, r1, r0, asl #2	@, tmp346, pDecReport, i.1138,
-	ldrh	r6, [r8, #14]	@ D.32850, <variable>.SliceMbRange
+	ldrh	r6, [r8, #14]	@ D.32853, <variable>.SliceMbRange
 	ldr	r8, [fp, #-48]	@, %sfp
-	cmp	r6, r8	@ D.32850,
+	cmp	r6, r8	@ D.32853,
 	bge	.L241	@,
 	ldr	r3, [r9, #840]	@ temp.1131, <variable>.ValidGroupNum
 	cmp	r3, #199	@ temp.1131,
 	bgt	.L274	@,
 	add	r1, r9, r3, asl #2	@, tmp353, pRepairParam, temp.1131,
-	sub	r7, r7, #1	@ tmp361, D.32883,
-	mov	r0, #0	@ D.32838,
-	strh	r6, [r1, #40]	@ movhi	@ D.32850, <variable>.StartMbn
+	sub	r7, r7, #1	@ tmp361, D.32886,
+	mov	r0, #0	@ D.32841,
+	strh	r6, [r1, #40]	@ movhi	@ D.32853, <variable>.StartMbn
 	ldr	r3, [r9, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	add	ip, r9, r3, asl #2	@, tmp359, pRepairParam, <variable>.ValidGroupNum,
 	strh	r7, [ip, #42]	@ movhi	@ tmp361, <variable>.EndMbn
@@ -1945,12 +1945,12 @@ PostPro_GetHevcMbGroup:
 	str	r1, [r9, #840]	@ tmp363, <variable>.ValidGroupNum
 	b	.L212	@
 .L271:
-	mov	r2, r0	@, D.32833
+	mov	r2, r0	@, D.32836
 	movw	r1, #:lower16:.LC1	@,
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32838,
+	mov	r0, #1	@ D.32841,
 	b	.L212	@
 .L273:
 	mov	r0, #1	@,
@@ -1958,7 +1958,7 @@ PostPro_GetHevcMbGroup:
 	ldr	r2, .L275	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32838,
+	mov	r0, #1	@ D.32841,
 	b	.L212	@
 .L274:
 	mov	r0, #1	@,
@@ -1966,7 +1966,7 @@ PostPro_GetHevcMbGroup:
 	ldr	r2, .L275	@,
 	movt	r1, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.32838,
+	mov	r0, #1	@ D.32841,
 	b	.L212	@
 .L276:
 	.align	2
@@ -1992,7 +1992,7 @@ PostPro_GetRepairParam:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r8, r1, #872	@ D.32445, pRepairParam,
+	add	r8, r1, #872	@ D.32448, pRepairParam,
 	mov	r9, r3	@ pDecReport, pDecReport
 	mov	r7, r1	@ pRepairParam, pRepairParam
 	mov	r3, #0	@ tmp201,
@@ -2042,17 +2042,17 @@ PostPro_GetRepairParam:
 	add	ip, r4, lr, asl #2	@, tmp261, pDecParam, <variable>.CurrPicPmvIdc,
 	ldr	r3, [ip, #1580]	@ tmp263, <variable>.PmvPhyAddr
 	str	r3, [r7, #20]	@ tmp263, <variable>.CurrPmvAddr
-	ldr	r3, [r4, #68]	@ D.32517, <variable>.CtbLog2SizeY
-	mov	ip, sl, asl r3	@ D.32522, tmp264,
-	str	r3, [r7, #864]	@ D.32517, <variable>.CtbSize
+	ldr	r3, [r4, #68]	@ D.32520, <variable>.CtbLog2SizeY
+	mov	ip, sl, asl r3	@ D.32525, tmp264,
+	str	r3, [r7, #864]	@ D.32520, <variable>.CtbSize
 	ldr	r0, [r4, #188]	@ <variable>.pic_width_in_luma_samples, <variable>.pic_width_in_luma_samples
 	sub	r1, r0, #1	@ tmp265, <variable>.pic_width_in_luma_samples,
-	add	r2, r1, ip	@ tmp267, tmp265, D.32522
+	add	r2, r1, ip	@ tmp267, tmp265, D.32525
 	mov	lr, r2, lsr r3	@ tmp268, tmp267,
 	str	lr, [r7, #24]	@ tmp268, <variable>.ImageWidth
 	ldr	r0, [r4, #184]	@ <variable>.pic_height_in_luma_samples, <variable>.pic_height_in_luma_samples
 	sub	r1, r0, #1	@ tmp269, <variable>.pic_height_in_luma_samples,
-	add	r2, r1, ip	@ tmp271, tmp269, D.32522
+	add	r2, r1, ip	@ tmp271, tmp269, D.32525
 	mov	lr, r2, lsr r3	@ tmp272, tmp271,
 	str	lr, [r7, #28]	@ tmp272, <variable>.ImageHeight
 	ldrb	r0, [r4, #217]	@ zero_extendqisi2	@ <variable>.tiles_enabled_flag, <variable>.tiles_enabled_flag
@@ -2103,26 +2103,26 @@ PostPro_GetRepairParam:
 	add	r5, r5, ip	@ err_mbs, err_mbs, tmp479
 	bgt	.L346	@,
 .L345:
-	ldr	lr, [r8, #840]	@ D.32778, <variable>.ValidGroupNum
-	cmp	lr, #0	@ D.32778,
+	ldr	lr, [r8, #840]	@ D.32781, <variable>.ValidGroupNum
+	cmp	lr, #0	@ D.32781,
 	ble	.L347	@,
 	ldrsh	ip, [r8, #42]	@ <variable>.EndMbn, <variable>.EndMbn
 	mov	r2, #1	@ i.1245,
 	ldrsh	r1, [r8, #40]	@ <variable>.StartMbn, <variable>.StartMbn
-	cmp	r2, lr	@ i.1245, D.32778
+	cmp	r2, lr	@ i.1245, D.32781
 	add	r0, ip, r2	@ tmp482, <variable>.EndMbn,
-	sub	r3, lr, #1	@ tmp497, D.32778,
+	sub	r3, lr, #1	@ tmp497, D.32781,
 	rsb	ip, r1, r0	@ tmp484, <variable>.StartMbn, tmp482
 	and	r3, r3, r2	@ tmp499, tmp497,
 	add	r5, r5, ip	@ err_mbs, err_mbs, tmp484
-	add	r8, r8, #4	@ ivtmp.1192, D.32445,
+	add	r8, r8, #4	@ ivtmp.1192, D.32448,
 	beq	.L347	@,
 	cmp	r3, #0	@ tmp499,
 	beq	.L348	@,
 	ldrsh	r0, [r8, #42]	@ <variable>.EndMbn, <variable>.EndMbn
 	mov	r2, #2	@ i.1245,
 	ldrsh	ip, [r8, #40]	@ <variable>.StartMbn, <variable>.StartMbn
-	cmp	r2, lr	@ i.1245, D.32778
+	cmp	r2, lr	@ i.1245, D.32781
 	add	r1, r0, #1	@ tmp549, <variable>.EndMbn,
 	add	r8, r8, #4	@ ivtmp.1192, ivtmp.1192,
 	rsb	r3, ip, r1	@ tmp551, <variable>.StartMbn, tmp549
@@ -2137,7 +2137,7 @@ PostPro_GetRepairParam:
 	add	r1, r0, #1	@ tmp538, <variable>.EndMbn,
 	ldrsh	r0, [r3, #40]	@ <variable>.StartMbn, <variable>.StartMbn
 	rsb	ip, r4, r1	@ tmp540, <variable>.StartMbn, tmp538
-	cmp	r2, lr	@ i.1245, D.32778
+	cmp	r2, lr	@ i.1245, D.32781
 	add	r1, r8, #1	@ tmp545, <variable>.EndMbn,
 	rsb	r1, r0, r1	@ tmp547, <variable>.StartMbn, tmp545
 	add	r8, r5, ip	@ err_mbs, err_mbs, tmp540
@@ -2202,21 +2202,21 @@ PostPro_GetRepairParam:
 	rsbs	r0, r2, #1	@ tmp226, <variable>.chroma_format_idc
 	movcc	r0, #0	@ tmp226
 	str	r0, [r7, #36]	@ tmp226, <variable>.ImageCSP
-	ldr	ip, [r4, #1116]	@ D.32473, <variable>.ApcSize
-	cmp	ip, #0	@ D.32473,
+	ldr	ip, [r4, #1116]	@ D.32476, <variable>.ApcSize
+	cmp	ip, #0	@ D.32476,
 	beq	.L292	@,
 	ldr	r3, [r4, #1320]	@ <variable>.RefPicFsId, <variable>.RefPicFsId
 	cmp	r3, r1	@ <variable>.RefPicFsId, ref_img_idc
 	moveq	r3, #0	@ i,
 	beq	.L294	@,
-	tst	ip, #1	@ D.32473,
+	tst	ip, #1	@ D.32476,
 	mov	r2, r4	@ ivtmp.1209, pDecParam
 	mov	r3, #0	@ i,
 	bne	.L295	@,
-	ldr	sl, [r4, #1324]	@ D.32467, <variable>.RefPicFsId
+	ldr	sl, [r4, #1324]	@ D.32470, <variable>.RefPicFsId
 	mov	r3, #1	@ i,
 	add	r2, r4, #4	@ ivtmp.1209, pDecParam,
-	cmp	sl, r1	@ D.32467, ref_img_idc
+	cmp	sl, r1	@ D.32470, ref_img_idc
 	bne	.L295	@,
 .L294:
 	add	r1, r3, #312	@ tmp228, i,
@@ -2233,56 +2233,56 @@ PostPro_GetRepairParam:
 	streq	sl, [r9, #8]	@ <variable>.NewPicFlag, <variable>.DecSliceNum
 	bne	.L415	@,
 .L300:
-	ldr	r2, [r7, #4]	@ D.32484, <variable>.ImageAddr
+	ldr	r2, [r7, #4]	@ D.32487, <variable>.ImageAddr
 	ldr	lr, [r7, #16]	@ <variable>.RefImageAddr, <variable>.RefImageAddr
-	cmp	r2, lr	@ D.32484, <variable>.RefImageAddr
+	cmp	r2, lr	@ D.32487, <variable>.RefImageAddr
 	bne	.L327	@,
-	ldr	ip, [r4, #820]	@ D.32493, <variable>.ImgSlotNum
-	cmp	ip, #0	@ D.32493,
+	ldr	ip, [r4, #820]	@ D.32496, <variable>.ImgSlotNum
+	cmp	ip, #0	@ D.32496,
 	beq	.L327	@,
-	ldr	r3, [r4, #308]	@ D.32489, <variable>.ImgPhyAddr
-	cmp	r2, r3	@ D.32484, D.32489
+	ldr	r3, [r4, #308]	@ D.32492, <variable>.ImgPhyAddr
+	cmp	r2, r3	@ D.32487, D.32492
 	bne	.L328	@,
-	tst	ip, #1	@ D.32493,
+	tst	ip, #1	@ D.32496,
 	mov	r1, r4	@ ivtmp.1204, pDecParam
 	mov	r0, #0	@ i.1226,
 	bne	.L304	@,
-	ldr	r3, [r4, #312]	@ D.32489, <variable>.ImgPhyAddr
+	ldr	r3, [r4, #312]	@ D.32492, <variable>.ImgPhyAddr
 	mov	r0, #1	@ i.1226,
 	add	r1, r4, #4	@ ivtmp.1204, pDecParam,
-	cmp	r3, r2	@ D.32489, D.32484
+	cmp	r3, r2	@ D.32492, D.32487
 	beq	.L304	@,
 	b	.L328	@
 .L389:
-	ldr	r3, [lr, #312]	@ D.32489, <variable>.ImgPhyAddr
-	cmp	r3, r2	@ D.32489, D.32484
+	ldr	r3, [lr, #312]	@ D.32492, <variable>.ImgPhyAddr
+	cmp	r3, r2	@ D.32492, D.32487
 	bne	.L328	@,
 .L304:
 	add	r3, r0, #1	@ tmp505, i.1226,
 	add	lr, r1, #4	@ tmp506, ivtmp.1204,
-	cmp	ip, r3	@ D.32493, tmp505
+	cmp	ip, r3	@ D.32496, tmp505
 	add	r0, r3, #1	@ i.1226, tmp505,
 	bls	.L327	@,
-	ldr	r3, [r1, #312]	@ D.32489, <variable>.ImgPhyAddr
+	ldr	r3, [r1, #312]	@ D.32492, <variable>.ImgPhyAddr
 	add	r1, lr, #4	@ ivtmp.1204, tmp506,
-	cmp	r3, r2	@ D.32489, D.32484
+	cmp	r3, r2	@ D.32492, D.32487
 	beq	.L389	@,
 .L328:
-	str	r3, [r7, #16]	@ D.32585, <variable>.RefImageAddr
+	str	r3, [r7, #16]	@ D.32588, <variable>.RefImageAddr
 	b	.L327	@
 .L296:
-	ldr	lr, [r2, #1324]	@ D.32467, <variable>.RefPicFsId
+	ldr	lr, [r2, #1324]	@ D.32470, <variable>.RefPicFsId
 	add	r2, r0, #4	@ ivtmp.1209, tmp510,
-	cmp	lr, r1	@ D.32467, ref_img_idc
+	cmp	lr, r1	@ D.32470, ref_img_idc
 	beq	.L294	@,
-	ldr	lr, [r0, #1324]	@ D.32467, <variable>.RefPicFsId
+	ldr	lr, [r0, #1324]	@ D.32470, <variable>.RefPicFsId
 	add	r3, r3, #1	@ i, i,
-	cmp	lr, r1	@ D.32467, ref_img_idc
+	cmp	lr, r1	@ D.32470, ref_img_idc
 	beq	.L294	@,
 .L295:
 	add	r3, r3, #1	@ i, i,
 	add	r0, r2, #4	@ tmp510, ivtmp.1209,
-	cmp	ip, r3	@ D.32473, i
+	cmp	ip, r3	@ D.32476, i
 	bhi	.L296	@,
 	b	.L292	@
 .L280:
@@ -2308,10 +2308,10 @@ PostPro_GetRepairParam:
 	ldrh	ip, [r4, #80]	@ <variable>.mbheight, <variable>.mbheight
 	add	r2, ip, #1	@ tmp428, <variable>.mbheight,
 	str	r2, [r7, #28]	@ tmp428, <variable>.ImageHeight
-	ldrb	lr, [r4, #5]	@ zero_extendqisi2	@ D.32720, <variable>.fcm
+	ldrb	lr, [r4, #5]	@ zero_extendqisi2	@ D.32723, <variable>.fcm
 	str	r5, [r7, #36]	@ tmp434, <variable>.ImageCSP
-	cmp	lr, r5	@ D.32720,
-	cmpne	lr, #2	@, D.32720,
+	cmp	lr, r5	@ D.32723,
+	cmpne	lr, #2	@, D.32723,
 	movne	sl, #0	@, tmp433
 	moveq	sl, #1	@, tmp433
 	str	sl, [r7, #32]	@ tmp433, <variable>.IsFrame
@@ -2427,9 +2427,9 @@ PostPro_GetRepairParam:
 .L284:
 	movw	ip, #14440	@ tmp350,
 	add	r3, ip, #12	@ tmp351, tmp351,
-	ldr	lr, [r2, ip]	@ D.32638, <variable>.CurPicAddr
+	ldr	lr, [r2, ip]	@ D.32641, <variable>.CurPicAddr
 	mov	r2, #0	@ tmp361,
-	str	lr, [r1, #4]	@ D.32638, <variable>.ImageAddr
+	str	lr, [r1, #4]	@ D.32641, <variable>.ImageAddr
 	ldr	r5, [r4, r3]	@ <variable>.rcn_address, <variable>.rcn_address
 	str	r5, [r1, #8]	@ <variable>.rcn_address, <variable>.Image2DAddr
 	movw	r1, #14432	@ tmp353,
@@ -2451,7 +2451,7 @@ PostPro_GetRepairParam:
 	str	r0, [r7, #32]	@ tmp360, <variable>.IsFrame
 	ldr	sl, [r9, #4]	@ <variable>.ImgStride, <variable>.ImgStride
 	str	r5, [r8, #16]	@ <variable>.FwdRefPic0Addr, <variable>.RefImageAddr
-	add	lr, sl, lr	@ tmp363, <variable>.ImgStride, D.32638
+	add	lr, sl, lr	@ tmp363, <variable>.ImgStride, D.32641
 	str	lr, [r8, #4]	@ tmp363, <variable>.ImageAddr
 	ldr	lr, [r9, #4]	@ <variable>.ImgStride, <variable>.ImgStride
 	str	r3, [r8, #28]	@ <variable>.PicHeightInMb, <variable>.ImageHeight
@@ -2599,21 +2599,21 @@ PostPro_GetRepairParam:
 	rsbs	r0, r3, #1	@ tmp304, <variable>.chroma_format_idc
 	movcc	r0, #0	@ tmp304
 	str	r0, [r7, #36]	@ tmp304, <variable>.ImageCSP
-	ldr	ip, [r4, #1116]	@ D.32572, <variable>.ApcSize
-	cmp	ip, #0	@ D.32572,
+	ldr	ip, [r4, #1116]	@ D.32575, <variable>.ApcSize
+	cmp	ip, #0	@ D.32575,
 	beq	.L318	@,
 	ldr	r3, [r4, #1320]	@ <variable>.RefPicFsId, <variable>.RefPicFsId
 	cmp	r3, r1	@ <variable>.RefPicFsId, mvc_ref_img_idc
 	moveq	r3, #0	@ i.1233,
 	beq	.L320	@,
-	tst	ip, #1	@ D.32572,
+	tst	ip, #1	@ D.32575,
 	mov	r2, r4	@ ivtmp.1219, pDecParam
 	mov	r3, #0	@ i.1233,
 	bne	.L321	@,
-	ldr	r0, [r4, #1324]	@ D.32567, <variable>.RefPicFsId
+	ldr	r0, [r4, #1324]	@ D.32570, <variable>.RefPicFsId
 	mov	r3, #1	@ i.1233,
 	add	r2, r4, #4	@ ivtmp.1219, pDecParam,
-	cmp	r0, r1	@ D.32567, mvc_ref_img_idc
+	cmp	r0, r1	@ D.32570, mvc_ref_img_idc
 	bne	.L321	@,
 .L320:
 	add	r1, r3, #312	@ tmp306, i.1233,
@@ -2654,18 +2654,18 @@ PostPro_GetRepairParam:
 	str	lr, [r7, #848]	@ <variable>.Compress_en, <variable>.Compress_en
 	b	.L310	@
 .L322:
-	ldr	lr, [r2, #1324]	@ D.32567, <variable>.RefPicFsId
+	ldr	lr, [r2, #1324]	@ D.32570, <variable>.RefPicFsId
 	add	r2, r0, #4	@ ivtmp.1219, tmp521,
-	cmp	lr, r1	@ D.32567, mvc_ref_img_idc
+	cmp	lr, r1	@ D.32570, mvc_ref_img_idc
 	beq	.L320	@,
-	ldr	sl, [r0, #1324]	@ D.32567, <variable>.RefPicFsId
+	ldr	sl, [r0, #1324]	@ D.32570, <variable>.RefPicFsId
 	add	r3, r3, #1	@ i.1233, i.1233,
-	cmp	sl, r1	@ D.32567, mvc_ref_img_idc
+	cmp	sl, r1	@ D.32570, mvc_ref_img_idc
 	beq	.L320	@,
 .L321:
 	add	r3, r3, #1	@ i.1233, i.1233,
 	add	r0, r2, #4	@ tmp521, ivtmp.1219,
-	cmp	ip, r3	@ D.32572, i.1233
+	cmp	ip, r3	@ D.32575, i.1233
 	bhi	.L322	@,
 	b	.L318	@
 .L414:
@@ -2682,47 +2682,47 @@ PostPro_GetRepairParam:
 	str	r3, [r7, #852]	@ temp.1239, <variable>.Pic_type
 	b	.L337	@
 .L416:
-	ldrb	r3, [r4, #8]	@ zero_extendqisi2	@ D.32734, <variable>.curparity
-	cmp	r3, #0	@ D.32734,
+	ldrb	r3, [r4, #8]	@ zero_extendqisi2	@ D.32737, <variable>.curparity
+	cmp	r3, #0	@ D.32737,
 	beq	.L405	@,
-	cmp	r3, #1	@ D.32734,
+	cmp	r3, #1	@ D.32737,
 	bne	.L342	@,
 .L405:
 	add	r1, r3, #1	@ tmp441, tmp441,
 	str	r1, [r7, #852]	@ tmp441, <variable>.Pic_type
 	b	.L342	@
 .L419:
-	ldr	ip, [r4, #820]	@ D.32589, <variable>.ImgSlotNum
-	cmp	ip, #0	@ D.32589,
+	ldr	ip, [r4, #820]	@ D.32592, <variable>.ImgSlotNum
+	cmp	ip, #0	@ D.32592,
 	beq	.L327	@,
-	ldr	r3, [r4, #308]	@ D.32585, <variable>.ImgPhyAddr
-	cmp	r2, r3	@ temp.1235, D.32585
+	ldr	r3, [r4, #308]	@ D.32588, <variable>.ImgPhyAddr
+	cmp	r2, r3	@ temp.1235, D.32588
 	bne	.L328	@,
-	tst	ip, #1	@ D.32589,
+	tst	ip, #1	@ D.32592,
 	mov	r1, r4	@ ivtmp.1214, pDecParam
 	mov	r0, #0	@ i.1228,
 	bne	.L330	@,
-	ldr	r3, [r4, #312]	@ D.32585, <variable>.ImgPhyAddr
+	ldr	r3, [r4, #312]	@ D.32588, <variable>.ImgPhyAddr
 	mov	r0, #1	@ i.1228,
 	add	r1, r4, #4	@ ivtmp.1214, pDecParam,
-	cmp	r2, r3	@ temp.1235, D.32585
+	cmp	r2, r3	@ temp.1235, D.32588
 	beq	.L330	@,
 	b	.L328	@
 .L392:
-	ldr	r3, [lr, #312]	@ D.32585, <variable>.ImgPhyAddr
-	cmp	r2, r3	@ temp.1235, D.32585
+	ldr	r3, [lr, #312]	@ D.32588, <variable>.ImgPhyAddr
+	cmp	r2, r3	@ temp.1235, D.32588
 	bne	.L328	@,
 .L330:
 	add	sl, r0, #1	@ tmp516, i.1228,
 	add	lr, r1, #4	@ tmp515, ivtmp.1214,
-	cmp	ip, sl	@ D.32589, tmp516
+	cmp	ip, sl	@ D.32592, tmp516
 	add	r0, sl, #1	@ i.1228, tmp516,
 	bls	.L327	@,
-	ldr	r3, [r1, #312]	@ D.32585, <variable>.ImgPhyAddr
+	ldr	r3, [r1, #312]	@ D.32588, <variable>.ImgPhyAddr
 	add	r1, lr, #4	@ ivtmp.1214, tmp515,
-	cmp	r2, r3	@ temp.1235, D.32585
+	cmp	r2, r3	@ temp.1235, D.32588
 	beq	.L392	@,
-	str	r3, [r7, #16]	@ D.32585, <variable>.RefImageAddr
+	str	r3, [r7, #16]	@ D.32588, <variable>.RefImageAddr
 	b	.L327	@
 .L418:
 	mov	r0, r7	@, pRepairParam
@@ -2735,37 +2735,37 @@ PostPro_GetRepairParam:
 	bl	PostPro_GetH264MbGroup	@
 	b	.L300	@
 .L413:
-	ldr	r0, [r4, #1576]	@ D.32546, <variable>.ImgSlotNum
-	cmp	r0, #0	@ D.32546,
+	ldr	r0, [r4, #1576]	@ D.32549, <variable>.ImgSlotNum
+	cmp	r0, #0	@ D.32549,
 	beq	.L313	@,
-	ldr	r3, [r4, #1320]	@ D.32542, <variable>.ImgPhyAddr
-	cmp	r2, r3	@ temp.1230, D.32542
+	ldr	r3, [r4, #1320]	@ D.32545, <variable>.ImgPhyAddr
+	cmp	r2, r3	@ temp.1230, D.32545
 	bne	.L314	@,
-	tst	r0, #1	@ D.32546,
+	tst	r0, #1	@ D.32549,
 	mov	r1, #0	@ i.1232,
 	bne	.L316	@,
-	ldr	r3, [r4, #1324]	@ D.32542, <variable>.ImgPhyAddr
+	ldr	r3, [r4, #1324]	@ D.32545, <variable>.ImgPhyAddr
 	mov	r1, #1	@ i.1232,
 	add	r4, r4, #4	@ ivtmp.1224, ivtmp.1224,
-	cmp	r3, r2	@ D.32542, temp.1230
+	cmp	r3, r2	@ D.32545, temp.1230
 	beq	.L316	@,
 	b	.L314	@
 .L390:
-	ldr	r3, [ip, #1324]	@ D.32542, <variable>.ImgPhyAddr
-	cmp	r3, r2	@ D.32542, temp.1230
+	ldr	r3, [ip, #1324]	@ D.32545, <variable>.ImgPhyAddr
+	cmp	r3, r2	@ D.32545, temp.1230
 	bne	.L314	@,
 .L316:
 	add	r1, r1, #1	@ tmp526, i.1232,
 	add	ip, r4, #4	@ tmp525, ivtmp.1224,
-	cmp	r0, r1	@ D.32546, tmp526
+	cmp	r0, r1	@ D.32549, tmp526
 	add	r1, r1, #1	@ i.1232, tmp526,
 	bls	.L313	@,
-	ldr	r3, [r4, #1324]	@ D.32542, <variable>.ImgPhyAddr
+	ldr	r3, [r4, #1324]	@ D.32545, <variable>.ImgPhyAddr
 	add	r4, ip, #4	@ ivtmp.1224, tmp525,
-	cmp	r3, r2	@ D.32542, temp.1230
+	cmp	r3, r2	@ D.32545, temp.1230
 	beq	.L390	@,
 .L314:
-	str	r3, [r7, #16]	@ D.32542, <variable>.RefImageAddr
+	str	r3, [r7, #16]	@ D.32545, <variable>.RefImageAddr
 	b	.L313	@
 .L412:
 	mov	r0, r7	@, pRepairParam
@@ -2852,13 +2852,13 @@ PostPro_CopyYuv_Vp6:
 	str	r3, [r4, #16]	@ <variable>.image_last_ref_addr, <variable>.RefImageAddr
 	ldr	r2, [r5, #184]	@ <variable>.CurPmvAddr, <variable>.CurPmvAddr
 	str	r2, [r4, #20]	@ <variable>.CurPmvAddr, <variable>.CurrPmvAddr
-	ldrh	r2, [r5, #52]	@ D.32361, <variable>.PicWidthInMb
-	str	r2, [r4, #24]	@ D.32361, <variable>.ImageWidth
-	ldrh	lr, [r5, #54]	@ D.32363, <variable>.PicHeightInMb
+	ldrh	r2, [r5, #52]	@ D.32364, <variable>.PicWidthInMb
+	str	r2, [r4, #24]	@ D.32364, <variable>.ImageWidth
+	ldrh	lr, [r5, #54]	@ D.32366, <variable>.PicHeightInMb
 	str	r7, [r4, #32]	@ tmp149, <variable>.IsFrame
 	str	r6, [r4, #36]	@ tmp150, <variable>.ImageCSP
-	mov	r3, lr	@, D.32363
-	str	lr, [r4, #28]	@ D.32363, <variable>.ImageHeight
+	mov	r3, lr	@, D.32366
+	str	lr, [r4, #28]	@ D.32366, <variable>.ImageHeight
 	bl	dprint_vfmw	@
 	ldr	ip, [r4, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
 	ldr	r1, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
@@ -2867,13 +2867,13 @@ PostPro_CopyYuv_Vp6:
 	str	r6, [r4, #844]	@ tmp150, <variable>.rpr_ref_pic_type
 	str	r7, [r4, #840]	@ tmp149, <variable>.ValidGroupNum
 	mul	r2, r1, ip	@ tmp159, <variable>.ImageWidth, <variable>.ImageHeight
-	ldr	ip, [r3, #104]	@ D.32375, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
+	ldr	ip, [r3, #104]	@ D.32378, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
 	strh	r6, [r4, #40]	@ movhi	@ tmp150, <variable>.StartMbn
-	cmp	ip, r6	@ D.32375,
+	cmp	ip, r6	@ D.32378,
 	sub	r1, r2, #1	@ tmp161, tmp159,
 	strh	r1, [r4, #42]	@ movhi	@ tmp161, <variable>.EndMbn
 	ldr	r3, [r5, #192]	@ <variable>.Compress_en, <variable>.Compress_en
-	moveq	r0, r7	@ D.32378, tmp149
+	moveq	r0, r7	@ D.32381, tmp149
 	str	r7, [r4, #856]	@ tmp149, <variable>.FullRepair
 	str	r6, [r4, #852]	@ tmp150, <variable>.Pic_type
 	str	r3, [r4, #848]	@ <variable>.Compress_en, <variable>.Compress_en
@@ -2883,9 +2883,9 @@ PostPro_CopyYuv_Vp6:
 	mov	r2, r6	@, tmp150
 	mov	r3, r8	@, VdhId
 	mov	r0, #10	@,
-	blx	ip	@ D.32375
-	subs	r0, r0, #0	@ D.32378,,
-	movne	r0, #1	@ D.32378
+	blx	ip	@ D.32378
+	subs	r0, r0, #0	@ D.32381,,
+	movne	r0, #1	@ D.32381
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 	.fnend
 	.size	PostPro_CopyYuv_Vp6, .-PostPro_CopyYuv_Vp6
@@ -2907,18 +2907,18 @@ PostPro_CopyYuv_Vc1:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, r0	@ pVc1DecParam, pVc1DecParam
-	ldrh	r0, [r0, #74]	@ D.32299, <variable>.DispPicWidth
+	ldrh	r0, [r0, #74]	@ D.32302, <variable>.DispPicWidth
 	mov	r8, r1	@ VdhId, VdhId
 	movw	r6, #:lower16:g_RepairParam	@ tmp146,
 	movw	r2, #2047	@ tmp149,
-	sub	r1, r0, #1	@ tmp147, D.32299,
+	sub	r1, r0, #1	@ tmp147, D.32302,
 	movt	r6, #:upper16:g_RepairParam	@ tmp146,
 	mov	r4, #1744	@ tmp145,
 	uxth	r3, r1	@ tmp148, tmp147
 	cmp	r3, r2	@ tmp148, tmp149
 	mla	r4, r4, r8, r6	@ pRepairParam, tmp145, VdhId, tmp146
 	bls	.L429	@,
-	sub	lr, r0, #2048	@ tmp150, D.32299,
+	sub	lr, r0, #2048	@ tmp150, D.32302,
 	sub	ip, lr, #1	@ tmp150, tmp150,
 	uxth	r7, ip	@ tmp152, tmp150
 	cmp	r7, r2	@ tmp152, tmp149
@@ -2933,8 +2933,8 @@ PostPro_CopyYuv_Vc1:
 	movw	r2, #:lower16:78072	@ tmp170,
 	movt	r2, #:upper16:78072	@ tmp170,
 	mov	r7, #1	@ tmp176,
-	movw	lr, #:lower16:16382	@ D.32330,
-	movt	lr, #:upper16:16382	@ D.32330,
+	movw	lr, #:lower16:16382	@ D.32333,
+	movt	lr, #:upper16:16382	@ D.32333,
 	str	r0, [r4, #4]	@ <variable>.ystaddr_1d, <variable>.ImageAddr
 	movw	r1, #:lower16:.LC9	@,
 	ldr	ip, [r5, r6]	@ <variable>.CurFrmImgLuma2dPhyAddr, <variable>.CurFrmImgLuma2dPhyAddr
@@ -2947,16 +2947,16 @@ PostPro_CopyYuv_Vc1:
 	str	ip, [r4, #16]	@ <variable>.FwdRefAddr, <variable>.RefImageAddr
 	ldr	ip, [r5, r3]	@ <variable>.CurrColmbAddr, <variable>.CurrColmbAddr
 	str	ip, [r4, #20]	@ <variable>.CurrColmbAddr, <variable>.CurrPmvAddr
-	ldr	r2, [r5, r2]	@ D.32323, <variable>.ChanMaxWidthInMb
-	str	r2, [r4, #24]	@ D.32323, <variable>.ImageWidth
+	ldr	r2, [r5, r2]	@ D.32326, <variable>.ChanMaxWidthInMb
+	str	r2, [r4, #24]	@ D.32326, <variable>.ImageWidth
 	ldrh	r3, [r5, #76]	@ <variable>.DispPicHeight, <variable>.DispPicHeight
 	str	r7, [r4, #32]	@ tmp176, <variable>.IsFrame
 	add	ip, r3, #15	@ tmp172, <variable>.DispPicHeight,
 	str	r6, [r4, #36]	@ tmp177, <variable>.ImageCSP
 	mov	r3, ip, asr #4	@ tmp173, tmp172,
 	add	ip, r3, r7	@ tmp174, tmp173,
-	and	r3, ip, lr	@ D.32330, tmp174, D.32330
-	str	r3, [r4, #28]	@ D.32330, <variable>.ImageHeight
+	and	r3, ip, lr	@ D.32333, tmp174, D.32333
+	str	r3, [r4, #28]	@ D.32333, <variable>.ImageHeight
 	bl	dprint_vfmw	@
 	ldr	ip, [r4, #28]	@ <variable>.ImageHeight, <variable>.ImageHeight
 	ldr	r0, [r4, #24]	@ <variable>.ImageWidth, <variable>.ImageWidth
@@ -2966,14 +2966,14 @@ PostPro_CopyYuv_Vc1:
 	movt	r3, #:upper16:78068	@ tmp190,
 	str	r6, [r4, #844]	@ tmp177, <variable>.rpr_ref_pic_type
 	mul	r1, r0, ip	@ tmp186, <variable>.ImageWidth, <variable>.ImageHeight
-	ldr	ip, [r2, #104]	@ D.32342, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
+	ldr	ip, [r2, #104]	@ D.32345, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
 	str	r7, [r4, #840]	@ tmp176, <variable>.ValidGroupNum
 	strh	r6, [r4, #40]	@ movhi	@ tmp177, <variable>.StartMbn
-	cmp	ip, r6	@ D.32342,
+	cmp	ip, r6	@ D.32345,
 	sub	r2, r1, #1	@ tmp188, tmp186,
 	strh	r2, [r4, #42]	@ movhi	@ tmp188, <variable>.EndMbn
 	ldr	r2, [r5, r3]	@ <variable>.Compress_en, <variable>.Compress_en
-	moveq	r0, r7	@ D.32345, tmp176
+	moveq	r0, r7	@ D.32348, tmp176
 	str	sl, [r4, #860]	@ level, <variable>.level
 	str	r6, [r4, #852]	@ tmp177, <variable>.Pic_type
 	str	r2, [r4, #848]	@ <variable>.Compress_en, <variable>.Compress_en
@@ -2983,18 +2983,18 @@ PostPro_CopyYuv_Vc1:
 	mov	r1, r5	@, pVc1DecParam
 	mov	r2, r6	@, tmp177
 	mov	r3, r8	@, VdhId
-	blx	ip	@ D.32342
-	subs	r0, r0, #0	@ D.32345,,
-	movne	r0, #1	@ D.32345
+	blx	ip	@ D.32345
+	subs	r0, r0, #0	@ D.32348,,
+	movne	r0, #1	@ D.32348
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L436:
-	sub	r6, r0, #4096	@ tmp154, D.32299,
+	sub	r6, r0, #4096	@ tmp154, D.32302,
 	sub	r1, r6, #1	@ tmp154, tmp154,
 	uxth	r3, r1	@ tmp156, tmp154
 	cmp	r3, r2	@ tmp156, tmp149
 	movls	sl, #48	@ level,
 	bls	.L431	@,
-	sub	ip, r0, #6144	@ tmp158, D.32299,
+	sub	ip, r0, #6144	@ tmp158, D.32302,
 	sub	r7, ip, #1	@ tmp158, tmp158,
 	uxth	r0, r7	@ tmp160, tmp158
 	cmp	r0, r2	@ tmp160, tmp149
@@ -3039,14 +3039,14 @@ PostPro_GetErrRatio:
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp147,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp147,
 	mla	r5, r5, r4, r2	@ pDecReport, tmp145, VdhId, tmp146
-	ldr	r3, [r3, #108]	@ D.32231, g_vdm_hal_fun_ptr.pfun_VDMHAL_MakeDecReport
+	ldr	r3, [r3, #108]	@ D.32234, g_vdm_hal_fun_ptr.pfun_VDMHAL_MakeDecReport
 	str	r6, [fp, #-48]	@ VidStd, MakeDecReport.VidStd
-	cmp	r3, #0	@ D.32231,
+	cmp	r3, #0	@ D.32234,
 	str	r4, [fp, #-40]	@ VdhId, MakeDecReport.VdhId
 	str	r5, [fp, #-44]	@ pDecReport, MakeDecReport.pDecReport
 	beq	.L440	@,
 	mov	r0, r8	@, tmp143
-	blx	r3	@ D.32231
+	blx	r3	@ D.32234
 .L441:
 	movw	r0, #:lower16:g_RepairParam	@ tmp153,
 	movt	r0, #:upper16:g_RepairParam	@ tmp153,
@@ -3067,7 +3067,7 @@ PostPro_GetErrRatio:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L440:
-	mov	r0, r3	@, D.32231
+	mov	r0, r3	@, D.32234
 	movw	r1, #:lower16:.LC11	@,
 	mov	r2, #106	@,
 	movt	r1, #:upper16:.LC11	@,
@@ -3084,19 +3084,19 @@ PostPro_GetErrRatio:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.33593, %object
-	.size	__func__.33593, 21
-__func__.33593:
+	.type	__func__.33596, %object
+	.size	__func__.33596, 21
+__func__.33596:
 	.ascii	"PostPro_SetDecReport\000"
 	.space	3
-	.type	__func__.32829, %object
-	.size	__func__.32829, 23
-__func__.32829:
+	.type	__func__.32832, %object
+	.size	__func__.32832, 23
+__func__.32832:
 	.ascii	"PostPro_GetHevcMbGroup\000"
 	.space	1
-	.type	__func__.32438, %object
-	.size	__func__.32438, 23
-__func__.32438:
+	.type	__func__.32441, %object
+	.size	__func__.32441, 23
+__func__.32441:
 	.ascii	"PostPro_GetRepairParam\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

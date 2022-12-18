@@ -36,8 +36,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.*;
 import android.media.MediaPlayer.*;
 import android.net.Uri;
@@ -58,6 +60,7 @@ import com.hisilicon.dlna.file.*;
 import com.hisilicon.android.mediaplayer.HiMediaPlayer;
 import com.hisilicon.android.mediaplayer.HiMediaPlayerInvoke;
 import com.hisilicon.dlna.util.*;
+import com.hisilicon.dlna.textview.DlnaListView;
 
 public class MusicPlayerSubWnd extends PlayerSubWnd
 {
@@ -72,6 +75,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
     private static final int UPDATE_FILESIZE = 0x105;
     private static final int UPDATE_ALBUMIMAGE = 0x106;
     private static final int UNSUPPORT_FILE = 0x107;
+    private static final int CHANGE_BG_SCREEN = 0x108;
 
     private static final long SEEK_TIMEOUT_SECONDS = 3l;
     private static final int randomMaxCount = 6;
@@ -107,7 +111,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
     private ImageButton playNext = null;
     private ImageButton playModeIB = null;
     private ImageButton shuffleMode = null;
-    private ListView playList = null;
+    private DlnaListView playList = null;
     private TextView seektimeTextView = null;
     private AlertDialog mAlertDialog = null;
 
@@ -128,6 +132,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
     private Bitmap albumImage = null;
     private Timer networkTimer;
     private Timer mUpdateCurrentPositionTimer;
+    private Timer mChangeBgTimer;
     // private boolean stopNotifyFlag = false;
     // 用于记录播放器的状态
     private int dmrPreState = Constant.DMR_STATE_NO_MEDIA_PRESENT;
@@ -179,6 +184,14 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
     private String albumByHiPlayer =  null;
     private String genreByHiPlayer = null;
     private Bitmap albumartByHiPlayer = null;
+    private int mCurrentBgScreenIndex = 0;
+    private int mBgScreens[] = {
+        R.drawable.bg_screen1,
+        R.drawable.bg_screen2,
+        R.drawable.bg_screen3,
+        R.drawable.bg_screen4,
+        R.drawable.bg_screen_end
+    };
 
     /**
      * update UI components(TextView, ListView...)
@@ -193,6 +206,12 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         {
             switch (msg.what)
             {
+                case CHANGE_BG_SCREEN:
+                    Resources resources = getResources();
+                    Drawable btnDrawable = resources.getDrawable(mBgScreens[mCurrentBgScreenIndex++]);
+                    mCurrentBgScreenIndex %= mBgScreens.length;
+                    mParentView.setBackgroundDrawable(btnDrawable);
+                    break;
                 case TIME_PROGRESS_UPDATE:
                     // mCurrentTimeTextView
                     if (mediaPlayer != null)
@@ -300,6 +319,14 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         return mParentView;
     }
 
+    class ChangeBgTask extends TimerTask
+    {
+        @Override
+        public void run() {
+            mHandler.sendEmptyMessage(CHANGE_BG_SCREEN);
+        }
+    }
+
     public void onResume()
     {
         Log.d(TAG, "onResume " + this.toString() + ",zhl time=" + SystemClock.elapsedRealtime());
@@ -319,6 +346,9 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         mediaPlayerStatus = MediaPlayerUtil.Status.Idle;
         Message msg = mediaPlayerHandler.obtainMessage(0, Action.InitPlayer);
         mediaPlayerHandler.sendMessage(msg);
+
+        mChangeBgTimer = new Timer("change_bg_timer");
+        mChangeBgTimer.schedule(new ChangeBgTask(), 0, 5000);
     }
 
     public void onPause()
@@ -326,6 +356,12 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         Log.d(TAG, "onPause " + this.toString() + ",zhl time=" + SystemClock.elapsedRealtime());
         isStarted = false;
         mIsInited = false;
+
+        if (mChangeBgTimer != null)
+        {
+            mChangeBgTimer.cancel();
+            mChangeBgTimer = null;
+        }
 
         if (mUpdateCurrentPositionTimer != null)
         {
@@ -398,6 +434,13 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         {
             // shield the play button
             return KeyDoResult.DO_OVER;
+        }
+        else if (keyCode == KeyEvent.KEYCODE_DPAD_UP)
+        {
+            if (mSeekBar.hasFocus())
+            {
+                return KeyDoResult.DO_OVER;
+            }
         }
         return KeyDoResult.DO_NOTHING;
     }
@@ -874,7 +917,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
             mPlayPauseButton = (ImageButton) mParentView.findViewById(R.id.playBtn);
             backToList = (ImageButton) mParentView.findViewById(R.id.backBtn);
             listCount = (TextView) mParentView.findViewById(R.id.listCountTextView);
-            playList = (ListView) mParentView.findViewById(R.id.playListView);
+            playList = (DlnaListView) mParentView.findViewById(R.id.playListView);
             playPrevious = (ImageButton) mParentView.findViewById(R.id.previousBtn);
             playNext = (ImageButton) mParentView.findViewById(R.id.nextBtn);
             playModeIB = (ImageButton) mParentView.findViewById(R.id.playModeBtn);
@@ -1496,6 +1539,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         if (playList.getCount() > index)
         {
             playList.setSelection(index);
+            playList.setPlayItem(index);
         }
     }
 
@@ -2259,6 +2303,7 @@ public class MusicPlayerSubWnd extends PlayerSubWnd
         mUrl = url;
         Log.d(TAG, "play mUrl= " + mUrl);
         playList.setSelection(PlayList.getinstance().getPosition());
+        playList.setPlayItem(PlayList.getinstance().getPosition());
         mediaPlayerHandler.removeCallbacksAndMessages(null);
         Message msg = mediaPlayerHandler.obtainMessage(0, Action.InitPlayer);
         mediaPlayerHandler.sendMessageDelayed(msg, 300);

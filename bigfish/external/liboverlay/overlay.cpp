@@ -4,7 +4,7 @@
 #include <utils/StopWatch.h>
 #include <utils/KeyedVector.h>
 #include <sys/mman.h>
-#include <sync/sw_sync.h>
+//#include <sync/sw_sync.h>
 #include <ui/Fence.h>
 #include <pthread.h>
 
@@ -69,6 +69,7 @@ typedef struct window
     int                     fence_fd;
 #endif
     HI_S32                  s32Reset;
+    HI_S32                  s32Visible;
     HI_U32                  u32RepeatCnt;
     pthread_mutex_t         mutex;
     HI_HANDLE               hWindow;
@@ -79,7 +80,7 @@ typedef struct window
     HI_S32                  s32EnableCvrs;
     KeyedVector<addr_t, sp<Fence> > mFenceMap;
     Vector<window_freeze_ctx>      mFreezeCtxs;
-
+    frame_t                 stLastFrame;
 //    HI_DRV_DISP_ZORDER_E    enZFlag; /*z-order of this window*/
 //    HI_DRV_ROT_ANGLE_E      enRotation; /*transform*/
 } window_t;
@@ -115,7 +116,7 @@ static inline bool canRelease(int releaseFrameIdx, int curFrameIdx)
 static inline void delIndex(struct hi_overlay_dev * ov, private_handle_t* handle)
 {
     addr_t addr = handle->ion_phy_addr;
-    int i;
+    int i = 0;
     (void)pthread_mutex_lock(&ov->mutex);
     i = ov->bufferIndexMap.indexOfKey(addr);
 
@@ -129,7 +130,7 @@ static inline void delIndex(struct hi_overlay_dev * ov, private_handle_t* handle
 
 static inline index_t getIndex(struct hi_overlay_dev * ov, private_handle_t* handle)
 {
-    int i;
+    int i = 0;
     const static index_t invalid = {-1, -1};
     index_t ret;
     (void)pthread_mutex_lock(&ov->mutex);
@@ -148,8 +149,7 @@ static inline void setIndex(struct hi_overlay_dev * ov, private_handle_t* handle
 {
     addr_t addr = handle->ion_phy_addr;
     index_t index;
-    int i;
-
+    int i = 0;
     index.windowIndex = winIdx;
     index.frameIndex = frameIdx;
     (void)pthread_mutex_lock(&ov->mutex);
@@ -169,10 +169,12 @@ static inline void ov_clear_win(window_t* w)
     memset(&w->curFrame, 0, sizeof(w->curFrame));
     memset(&w->last_position, 0, sizeof(w->last_position));
     memset(&w->stRatio, 0, sizeof(w->stRatio));
+    memset(&w->stLastFrame, 0, sizeof(w->stRatio));
     w->frameIndex = 0;
     w->hWindow = 0;
     w->mFenceMap.clear();
     w->mFreezeCtxs.clear();
+    w->s32Visible = 0;
     pthread_mutex_destroy(&w->mutex);
 }
 
@@ -289,6 +291,8 @@ static int ov_create_win(window_t* w)
         goto failed;
     }
 
+	//(void)HI_MPI_WIN_SetQuickOutput(w->hWindow,HI_TRUE);
+
     if (HI_MPI_WIN_SetEnable(w->hWindow, HI_TRUE) != HI_SUCCESS) {
         ALOGE("enable window failed");
         goto failed;
@@ -374,9 +378,9 @@ failed:
 
 static int ov_display_frame(window_t* w, frame_t* frame, int* releaseFence)
 {
-    HI_UNF_VIDEO_FRAME_INFO_S* pstFrame = NULL;
     HI_DRV_VIDEO_FRAME_S* pstDrvFrame = NULL;
     HI_DRV_VIDEO_PRIVATE_S* priv = NULL;
+    private_metadata_t* priv_metadata  = NULL;;
     HI_U32 u32Stride = (HI_U32)frame->stride;
     int fence_fd = -1;
     int inc = 0;
@@ -387,10 +391,14 @@ static int ov_display_frame(window_t* w, frame_t* frame, int* releaseFence)
     char bufferVal[PROPERTY_VALUE_MAX];
 //    HI_DRV_WIN_PLAY_INFO_S stWinInfo;
 
-    if ((HI_U32)frame->frame_buf_addr == w->curFrame.stBufAddr[0].u32PhyAddr_Y)
+    if (frame->frame_buf_fd == w->stLastFrame.frame_buf_fd
+        && frame->frame_buf_addr == w->stLastFrame.frame_buf_addr
+        && frame->metadata_buf_fd == w->stLastFrame.metadata_buf_fd
+        && frame->metadata_buf_addr == w->stLastFrame.metadata_buf_addr)
     {
         return 0;
     }
+    w->stLastFrame = *frame;
     w->frameIndex++;
 
 #ifdef SW_FENCE
@@ -409,31 +417,18 @@ static int ov_display_frame(window_t* w, frame_t* frame, int* releaseFence)
 
     priv = (HI_DRV_VIDEO_PRIVATE_S*)w->curFrame.u32Priv;
     w->u32RepeatCnt = 1;
-    w->curFrame.ePixFormat = HI_DRV_PIX_FMT_NV21;//yuv420sp
-    w->curFrame.stBufAddr[0].u32PhyAddr_Y = addr;
-    w->curFrame.stBufAddr[0].u32Stride_Y = u32Stride;
-    w->curFrame.stBufAddr[0].u32PhyAddr_C = addr + height * u32Stride;
-    w->curFrame.stBufAddr[0].u32Stride_C = u32Stride;
-    w->curFrame.u32FrameRate = 60 * 100;//surface flinger refresh rate
-    w->curFrame.u32FrameIndex = w->frameIndex;
-    w->curFrame.enFieldMode = HI_DRV_FIELD_ALL;
     priv->eColorSpace = HI_DRV_CS_BT601_YUV_LIMITED;
     priv->eOriginField = HI_DRV_FIELD_ALL;
-    priv->u32PrivBufPhyAddr = frame->metadata_buf_addr + frame->metadata_buf_size / 2;
+    priv->u32PrivBufPhyAddr = frame->metadata_buf_addr + offsetof(private_metadata_t, priv_data_start_pos);
 
-    if (frame->frame_buf_fd != -1) {
-        pstFrame = (HI_UNF_VIDEO_FRAME_INFO_S*)mmap(NULL, frame->metadata_buf_size,
+    if (frame->metadata_buf_fd != -1) {
+        priv_metadata = (private_metadata_t*)mmap(NULL, frame->metadata_buf_size,
                 PROT_READ | PROT_WRITE, MAP_SHARED, frame->metadata_buf_fd, 0);
     }
 
-    if (pstFrame)
+    if (priv_metadata != MAP_FAILED)
     {
-        static HI_DRV_FIELD_MODE_E s_fieldMode[] = {
-                [HI_UNF_VIDEO_FIELD_ALL] = HI_DRV_FIELD_ALL,
-                [HI_UNF_VIDEO_FIELD_TOP] = HI_DRV_FIELD_TOP,
-                [HI_UNF_VIDEO_FIELD_BOTTOM] = HI_DRV_FIELD_BOTTOM
-        };
-        pstDrvFrame = (HI_DRV_VIDEO_FRAME_S*)((char*)pstFrame + frame->metadata_buf_size / 2);
+        pstDrvFrame = (HI_DRV_VIDEO_FRAME_S*)(&priv_metadata->priv_data_start_pos);
         //w/h changed, reset aspect ratio
         if (w->curFrame.u32Height && (
                 w->curFrame.u32Height != pstDrvFrame->u32Height ||
@@ -445,45 +440,36 @@ static int ov_display_frame(window_t* w, frame_t* frame, int* releaseFence)
             w->stRatio.stInWnd.s32Y = 0;
             w->stRatio.stInWnd.s32Height = pstDrvFrame->u32Height;
             w->stRatio.stInWnd.s32Width = pstDrvFrame->u32Width;
-            w->stRatio.AspectHeight = pstFrame->u32AspectHeight;
-            w->stRatio.AspectWidth = pstFrame->u32AspectWidth;
+            w->stRatio.AspectHeight = pstDrvFrame->u32AspectHeight;
+            w->stRatio.AspectWidth = pstDrvFrame->u32AspectWidth;
             if (ov_set_position(w, w->last_position)) {
                 ALOGE("reset overlay position failed");
             }
         }
 
-        w->curFrame.u32Height = pstDrvFrame->u32Height;
-        w->curFrame.u32Width = pstDrvFrame->u32Width;
-        w->curFrame.u32AspectHeight = pstFrame->u32AspectHeight;
-        w->curFrame.u32AspectWidth = pstFrame->u32AspectWidth;
-        w->curFrame.u32FrameRate = pstFrame->stFrameRate.u32fpsInteger * 100
-                                + pstFrame->stFrameRate.u32fpsDecimal / 10;
-        w->curFrame.enFieldMode = s_fieldMode[pstFrame->enFieldMode];
-        w->u32RepeatCnt = pstFrame->u32Private[0];//FRC repeat count
-        priv->eOriginField = s_fieldMode[pstFrame->enFieldMode];
+        memcpy(&w->curFrame, pstDrvFrame, sizeof(HI_DRV_VIDEO_FRAME_S));
+        w->curFrame.u32FrameIndex = w->frameIndex;
+		w->curFrame.bSecure = (HI_BOOL)frame->is_sec;
+        w->u32RepeatCnt = priv_metadata->display_cnt;
 
-        if (0 != munmap((void *)pstFrame, frame->metadata_buf_size))
+        if (0 != munmap((void *)priv_metadata, frame->metadata_buf_size))
         {
             ALOGE("Failed to munmap metadata buffer");
         }
     }
     else {
-        w->curFrame.u32Height = height;
-        w->curFrame.u32Width = width;
+        ALOGE("Failed to mmap metadata buffer");
+        return -1;
     }
 
-#if 0
-    snprintf(bufferKey, sizeof(bufferKey) - 1, "media.0x%lx", addr);
-    if (property_get(bufferKey, bufferVal, "")) {
-        int ps = 0, cs = 0, of = 0;
-        if (sscanf(bufferVal, "PS:%d,CS:%d,OF:%d", &ps, &cs, &of) == 3) {
-            ALOGD("prop key:%s, val:%s", bufferKey, bufferVal);
-            w->curFrame.bProgressive = (HI_BOOL)ps;
-            priv->eColorSpace = (HI_DRV_COLOR_SPACE_E)cs;
-            priv->eOriginField = (HI_DRV_FIELD_MODE_E)of;
-        }
+    char buffer[PROP_VALUE_MAX];
+    property_get("overlay.frc", buffer, "1");
+    if (!strncasecmp(buffer, "0", 1))
+    {
+        w->u32RepeatCnt = 1;
+        ALOGE("for close frc, u32RepeatCnt:%d",w->u32RepeatCnt);
     }
-#endif
+
     while (w->u32RepeatCnt > 1) {
         if (HI_MPI_WIN_QueueSyncFrame(w->hWindow, &w->curFrame, (HI_U32*)&fence_fd) != HI_SUCCESS) {
             ALOGE("queue frame failed");
@@ -551,8 +537,8 @@ static int ov_set_position(window_t* w, overlay_rect_t displayFrame)
     ALOGD("get attr,x:%d, y:%d, w:%d,h:%d",
             attr.stOutRect.s32X,
             attr.stOutRect.s32Y,
-            attr.stOutRect.s32Height,
-            attr.stOutRect.s32Width);
+            attr.stOutRect.s32Width,
+            attr.stOutRect.s32Height);
     attr.stOutRect.s32X     = displayFrame.left;
     attr.stOutRect.s32Y     = displayFrame.top;
     attr.stOutRect.s32Height     = displayFrame.bottom - displayFrame.top;
@@ -655,8 +641,8 @@ static void ov_destroy_win(window_t* w)
         ALOGE("disable window failed");
     }
 
+    ov_reset_win(w);
     if (w->mFreezeCtxs.size() > 0) {
-        ov_reset_win(w);
         ov_release_freezeframe(w);
     }
 
@@ -672,18 +658,24 @@ static void ov_destroy_win(window_t* w)
 }
 
 //------------------------------------------------------------------------------
-int checkBuffer(struct overlay_device_t const* module,
-        buffer_handle_t handle)
+int checkBuffer(struct overlay_device_t const* module, buffer_handle_t handle)
 {
+    char name[256] = {0};
+    index_t index;
+    int winIdx = 0;
+    int frameIdx = 0;
     struct hi_overlay_dev * ov = (struct hi_overlay_dev *)module;
-    char name[256];
     private_handle_t *hnd = (private_handle_t *)handle;
+
+    if (NULL == ov || NULL == hnd)
+    {
+        ALOGE("invalid parame ov:%p, hnd:%p", ov, hnd);
+        return -1;
+    }
+
     snprintf(name, sizeof(name), "Check buffer 0x%lx", hnd->ion_phy_addr);
     StopWatch stopWath(name);
-    index_t index = getIndex(ov, hnd);
-    int winIdx;
-    int frameIdx;
-
+    index = getIndex(ov, hnd);
     if (index.windowIndex < 0) {
         ALOGE("CheckBuffer, invalid buffer addr:0x%lx", hnd->ion_phy_addr);
         return -1;
@@ -737,11 +729,11 @@ int prepareOverlayLayers(struct overlay_device_t const* module,
         int num, overlay_layer_t* layers)
 {
     struct hi_overlay_dev * ov = (struct hi_overlay_dev *)module;
-    int i;
+    int i = 0;
     private_handle_t *hnd = NULL;
 
-    if (!layers) {
-        ALOGE("invalid overlay layers");
+    if (NULL == ov || NULL == layers) {
+        ALOGE("invalid parame ov:%p, hnd:%p", ov, hnd);
         return -1;
     }
 
@@ -752,6 +744,11 @@ int prepareOverlayLayers(struct overlay_device_t const* module,
 
     for (i = 0; i < num; i++) {
         hnd = (private_handle_t*)layers[i].handle;
+        if (NULL == hnd)
+        {
+            ALOGW("layer's buffer handle is null!");
+            continue;
+        }
         setIndex(ov, hnd, i, 0);
         if (!ov->window[i].hWindow) {
             ov_create_win(ov->window+i);
@@ -761,6 +758,7 @@ int prepareOverlayLayers(struct overlay_device_t const* module,
             ov_reset_win(ov->window + i);
             ov_unlock_win(ov->window + i);
         }
+        ov->window[i].s32Visible = layers[i].visible;
     }
 
     for (i = num; i < VDH_BUTT; i++) {
@@ -774,12 +772,23 @@ int queueBuffer(struct overlay_device_t const* module,
 {
     struct hi_overlay_dev * ov = (struct hi_overlay_dev *)module;
     private_handle_t *hnd = (private_handle_t *)handle;
-    index_t idx = getIndex(ov, hnd);
-    int index = idx.windowIndex;
+    index_t idx;
+    int index = -1;
     frame_t frame;
 
+    if (NULL == ov || NULL == hnd || NULL == releaseFence) {
+        ALOGE("invalid parame ov:%p, hnd:%p, releaseFence:%p", ov, hnd, releaseFence);
+        return -1;
+    }
+    idx = getIndex(ov, hnd);
+    index = idx.windowIndex;
     if (index < 0) {
         ALOGE("Queue, invalid buffer addr:0x%lx", hnd->ion_phy_addr);
+        return -1;
+    }
+    if (!ov->window[index].s32Visible)
+    {
+        ALOGE("surface is not visible");
         return -1;
     }
     frame.frame_buf_fd = hnd->share_fd;
@@ -790,6 +799,18 @@ int queueBuffer(struct overlay_device_t const* module,
     frame.height = hnd->height;
     frame.width = hnd->width;
     frame.stride = hnd->stride;
+    frame.is_sec = hnd->usage & GRALLOC_USAGE_PROTECTED ? 1 : 0;
+
+	if ((hnd->usage & GRALLOC_USAGE_HISI_FASTOUTPUT) != 0)
+	{
+		HI_S32	ret;
+
+		ret = HI_MPI_WIN_SetQuickOutput((ov->window + index)->hWindow, HI_TRUE);
+		if (HI_SUCCESS != ret)
+		{
+			ALOGE("set win quickoutput true, ret=%#x", ret);
+		}
+	}
 
     ov_lock_win(ov->window + index);
     if (ov_display_frame(ov->window + index, &frame, releaseFence) < 0) {
@@ -820,50 +841,53 @@ void setPosition(struct overlay_device_t const* module,
         buffer_handle_t handle,
         overlay_rect_t displayFrame)
 {
-   private_handle_t *hnd = (private_handle_t *)handle;
-   struct hi_overlay_dev * ov = (struct hi_overlay_dev *)module;
-   index_t idx = getIndex(ov, hnd);
-   int index = idx.windowIndex;
-   HI_UNF_VIDEO_FRAME_INFO_S* pstFrame = NULL;
-   HI_DRV_VIDEO_FRAME_S* pstDrvFrame = NULL;
+    private_handle_t *hnd = (private_handle_t *)handle;
+    struct hi_overlay_dev * ov = (struct hi_overlay_dev *)module;
+    index_t idx;
+    int index = -1;
+    private_metadata_t* priv_metadata = NULL;
+    HI_DRV_VIDEO_FRAME_S* pstDrvFrame = NULL;
 
-   if (index < 0) {
-       ALOGE("SetPos, invalid buffer addr:0x%lx", hnd->ion_phy_addr);
-       return;
-   }
+    if (NULL == ov || NULL == hnd)
+    {
+        ALOGE("invalid parame ov:%p, hnd:%p", ov, hnd);
+        return;
+    }
+    idx = getIndex(ov, hnd);
+    index = idx.windowIndex;
+    if (index < 0) {
+        ALOGE("SetPos, invalid buffer addr:0x%lx", hnd->ion_phy_addr);
+        return;
+    }
 
-   if (hnd->metadata_fd != -1) {
-       pstFrame = (HI_UNF_VIDEO_FRAME_INFO_S*)mmap(NULL, hnd->ion_metadata_size,
+    ov->window[index].stRatio.SrcImgH = hnd->height;
+    ov->window[index].stRatio.SrcImgW = hnd->width;
+    ov->window[index].stRatio.stInWnd.s32X = 0;
+    ov->window[index].stRatio.stInWnd.s32Y = 0;
+
+    if (hnd->metadata_fd != -1) {
+        priv_metadata = (private_metadata_t*)mmap(NULL, hnd->ion_metadata_size,
                PROT_READ | PROT_WRITE, MAP_SHARED, hnd->metadata_fd, 0);
-       pstDrvFrame = (HI_DRV_VIDEO_FRAME_S*)((char*)pstFrame + hnd->ion_metadata_size / 2);
+        if (priv_metadata != MAP_FAILED) {
+           pstDrvFrame = (HI_DRV_VIDEO_FRAME_S*)(&priv_metadata->priv_data_start_pos);
+           ov->window[index].stRatio.stInWnd.s32Height = pstDrvFrame->u32Height;
+           ov->window[index].stRatio.stInWnd.s32Width = pstDrvFrame->u32Width;
+           ov->window[index].stRatio.AspectHeight = pstDrvFrame->u32AspectHeight;
+           ov->window[index].stRatio.AspectWidth = pstDrvFrame->u32AspectWidth;
+           if (0 != munmap((void *)priv_metadata, hnd->ion_metadata_size))
+           {
+               ALOGE("Failed to munmap metadata buffer");
+           }
+        }
+    }
 
-   }
-   ov_lock_win(ov->window + index);
+    ov_lock_win(ov->window + index);
+    if (ov_set_position(ov->window + index, displayFrame)) {
+        ALOGE("Set overlay position failed, buffer:0x%lx", hnd->ion_phy_addr);
+    }
+    ov_unlock_win(ov->window + index);
 
-   ov->window[index].stRatio.SrcImgH = hnd->height;
-   ov->window[index].stRatio.SrcImgW = hnd->width;
-   ov->window[index].stRatio.stInWnd.s32X = 0;
-   ov->window[index].stRatio.stInWnd.s32Y = 0;
-
-   if (pstFrame) {
-       ov->window[index].stRatio.stInWnd.s32Height = pstDrvFrame->u32Height;
-       ov->window[index].stRatio.stInWnd.s32Width = pstDrvFrame->u32Width;
-       ov->window[index].stRatio.AspectHeight = pstFrame->u32AspectHeight;
-       ov->window[index].stRatio.AspectWidth = pstFrame->u32AspectWidth;
-   }
-
-   if (ov_set_position(ov->window + index, displayFrame)) {
-       ALOGE("Set overlay position failed, buffer:0x%lx", hnd->ion_phy_addr);
-   }
-   ov_unlock_win(ov->window + index);
-
-   if (pstFrame) {
-       if (0 != munmap((void *)pstFrame, hnd->ion_metadata_size))
-       {
-           ALOGE("Failed to munmap metadata buffer");
-       }
-   }
-   return;
+    return;
 }
 
 void setTransform(struct overlay_device_t const* module,
@@ -892,6 +916,11 @@ int ovdev_close(struct hw_device_t* device)
 {
     struct hi_overlay_dev *ovdev = (struct hi_overlay_dev *)device;
     int i;
+    if (NULL == ovdev)
+    {
+        ALOGE("invalid input param!");
+        return -1;
+    }
     for (i = 0; i < VDH_BUTT; i++) {
         ov_destroy_win(ovdev->window + i);
     }
@@ -948,6 +977,8 @@ overlay_module_t HAL_MODULE_INFO_SYM = {
         name: "Default Overlay HW HAL",
         author: "HiSilicon Technologies Co., Ltd.",
         methods: &hal_module_methods,
+        dso: NULL,
+        reserved: {0},
     }
 };
 

@@ -606,7 +606,28 @@ HI_S32   HI_MPI_AO_SND_GetLowLatency(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT
         *pu32LatecnyMs = stLowLatencyParam.u32LatencyMs;
     }
     return s32Ret;
+}
 
+// create SND Directional Memory Access(DMA)
+HI_S32   HI_MPI_AO_SND_DMACreate(HI_VOID)
+{
+    return SND_DMA_Create();
+}
+
+// destory SND Directional Memory Access(DMA)
+HI_S32   HI_MPI_AO_SND_DMADestory(HI_VOID)
+{
+    return SND_DMA_Destory();
+}
+
+HI_S32   HI_MPI_AO_SND_DMASendData(const HI_UNF_AO_FRAMEINFO_S* pstAOFrame, const HI_U32 u32LatencyMs)
+{
+    return SND_DMA_SendData(pstAOFrame, u32LatencyMs);
+}
+
+HI_S32   HI_MPI_AO_SND_DMAGetDelayMs(HI_U32 *pu32DelayMs)
+{
+    return SND_DMA_GetDelayMs(pu32DelayMs);
 }
 
 /******************************* MPI Track for UNF_SND*****************************/
@@ -704,7 +725,7 @@ HI_S32   HI_MPI_AO_Track_Create(HI_UNF_SND_E enSound, const HI_UNF_AUDIOTRACK_AT
             *phTrack = hTrack;
         }
     }
-	
+
     if(pstAttr->enTrackType == HI_UNF_SND_TRACK_TYPE_LOWLATENCY)
     {        
         s32Ret = LOWLATENCY_EnableLowLatencyAttr(hTrack, HI_TRUE);

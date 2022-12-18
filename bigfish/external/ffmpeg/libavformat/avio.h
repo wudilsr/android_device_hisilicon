@@ -169,6 +169,7 @@ typedef struct {
     int protocal_flag;
     int force_seek;
     int opaque_not_urlcontex;
+    int is_multiple;
 } AVIOContext;
 
 /* unbuffered I/O */
@@ -200,10 +201,16 @@ typedef struct URLContext {
     int port;
     char ipaddr[16];
     char http_res[4096];
+    int is_multiple;
 } URLContext;
 
 #define URL_PROTOCOL_FLAG_NESTED_SCHEME 1 /*< The protocol name can be the first part of a nested protocol scheme */
 #define URL_PROTOCOL_FLAG_NETWORK       2 /*< The protocol uses network */
+
+#define URL_PROTOCOL_NETWORK_NORMAL (0)
+#define URL_PROTOCOL_NETWORK_SINGLE (1)
+#define URL_PROTOCOL_NETWORK_MULTIPLE (2)
+
 
 /**
  * @deprecated This struct is to be made private. Use the higher-level
@@ -268,6 +275,7 @@ attribute_deprecated int url_poll(URLPollEntry *poll_table, int n, int timeout);
 #define NETWORK_TIMEOUT     11
 #define NETWORK_DISCONNECT  12      // FIXME if there is a suitable value
 #define NETWORK_TS_SEGMENT_COMPLETE 20
+#define NETWORK_ADJUST_BITRATE      21
 #define NETWORK_PRIVATE     100
 
 typedef int URLInterruptCB(void);

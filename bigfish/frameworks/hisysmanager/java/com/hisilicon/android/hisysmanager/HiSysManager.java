@@ -18,9 +18,15 @@ package com.hisilicon.android.hisysmanager;
      * HiSysManager is hisi system management module, offers a variety of interfaces that require higher privileges
        Such as flash reader, key programmer to read, debug information, hardware testing, upgrade, restore factory settings.
      */
+
 public class HiSysManager{
 
     private static String TAG = "HiSysManagerClient";
+    private static final int DRM_KEY_OFFSET          = (128 * 1024);    // DRM KEY from bottom 128K
+    private static final int HDCP_KEY_OFFSET_DEFAULT = (4 * 1024);      // HDMI KEY offset base on DRM KEY 4K
+    private static final int DEVICEINFO_LEN          = (2 *1024 * 1024);// deviceinfo length 2M
+    private static final int BEFORE_ENCRYPT_KEY_LEN  = 384;             // Orginal Key 384Byte lenght
+    private static final int AFTER_ENCRYPT_KEY_LEN   = 332;             // after encrypt , 332Byte lenght
     static {
         System.loadLibrary("sysmangerservice_jni");
     }
@@ -77,6 +83,7 @@ public class HiSysManager{
      */
     public native int recoveryIPTV(String path, String file);
 
+	public native int userDataRestoreIptv();
     /**
      * Open network side interface.
      * <p>
@@ -192,6 +199,74 @@ public class HiSysManager{
     /** @hide below api */
     /** ************************************************************ */
 
+
+    /**
+     * Write HDMI hdcp key to deviceinfo partition.
+     * <p>
+     * Get HDMI Key from user and decrypt, Then encrypt this key by root key in otp area<br>
+     * <br>
+     * @param OrgKeyPath: User key path.
+     * @return result 0: sucess,-1: failed.
+     */
+     /** {@hide} this api is for internal use only */
+    public int setHdmiHDCPKey(String OrgKeyPath)
+    {
+        // default offset ( 128 + 4 ) K
+        // 128K is DRM KEY
+        // 4K HDMI HDCP KEY
+        int default_offset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+        return native_setHdmiHDCPKey("deviceinfo", default_offset, OrgKeyPath, BEFORE_ENCRYPT_KEY_LEN);
+    }
+
+    /**
+     * Set hdcp key to deviceinfo partition.
+     * <p>
+     * Read hdcp key to deviceinfo partition.<br>
+     * <br>
+     * @param tdname :Partition name.e.g:'deviceinfo'
+     * @param offset :position.
+     * @param filename :key file path.
+     * @param datasize :key length.
+     * @return result 0: sucess,-1: failed.
+     */
+     /** {@hide} this api is for internal use only */
+
+    public native int native_setHdmiHDCPKey(String tdname, int offset, String filename,
+            int datasize);
+
+    /**
+     * Get HDMI hdcp key from deviceinfo partition.
+     * <p>
+     * get HDMI HDCP KEY from deviceinfo, and input it into file -> KeyOutputPath<br>
+     * <br>
+     * @param KeyOutputPath: HDMI HDCP KEY output path.
+     * @return result 0: sucess,-1: failed.
+     */
+     /** {@hide} this api is for internal use only */
+
+    public int getHdmiHDCPKey(String KeyOutputPath)
+    {
+        // default offset ( 128 + 4 ) K
+        // 128K is DRM KEY
+        // 4K HDMI HDCP KEY
+        int default_offset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+        return native_getHdmiHDCPKey("deviceinfo", default_offset, KeyOutputPath, AFTER_ENCRYPT_KEY_LEN);
+    }
+
+    /**
+     * Read hdcp key from deviceinfo partition.
+     * <p>
+     * Read hdcp key from deviceinfo partition.<br>
+     * <br>
+     * @param tdname :Partition name.
+     * @param offset :position.
+     * @param filename :get key and write in this file path.
+     * @param datasize :key length.
+     * @return result 0: sucess,-1: failed.
+     */
+     /** {@hide} this api is for internal use only */
+    public native int native_getHdmiHDCPKey(String tdname, int offset, String filename,
+            int datasize);
 
     /**
      * Write hdcp key to deviceinfo partition.
@@ -490,5 +565,4 @@ public class HiSysManager{
     /** {@hide} this api is for internal use only */
     public native int enableCapable(int type);
     private native final int native_updateLogo(String path);
-
 }

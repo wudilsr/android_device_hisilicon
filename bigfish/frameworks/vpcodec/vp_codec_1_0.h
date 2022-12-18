@@ -45,7 +45,7 @@ const char * vl_get_version();
  *@param : codec_id 编码类型
  *@param : width 视频宽度
  *@param : height 视频高度
- *@param : frame_rate 帧率
+ *@param : frame_rate 帧率 
  *@param : bit_rate 码率
  *@param : gop GOP值:I帧最大间隔
  *@param : img_format 图像格式
@@ -57,8 +57,8 @@ vl_codec_handle_t vl_video_encoder_init(vl_codec_id_t codec_id, int width, int h
  * 视频编码
  *
  *@param : handle 编码器handle
- *@param : type 帧类型
- *@param : in 待编码的数据
+ *@param : type 帧类型 
+ *@param : in 待编码的数据 
  *@param : in_size 待编码的数据长度
  *@param : out 编码后的数据,H.264需要包含(0x00，0x00，0x00，0x01)起始码，内部分配空间（即该方法在实现时分配空间）， 且必须为 I420格式
  *@return ：成功返回编码后的数据长度，失败返回 <= 0
@@ -77,25 +77,25 @@ int vl_video_encoder_destory(vl_codec_handle_t handle);
  * 初始化解码器
  *
  *@param : codec_id 解码器类型
- *@return : 成功返回解码器handle，失败返回 <= 0
+ *@return : 成功返回解码器handle，失败返回 <= 0 
  */
 vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id);
 
 /**
  * 视频解码
  *
- *@param : handle 视频解码器handle
- *@param : in 待解码的数据
+ *@param : handle 视频解码器handle 
+ *@param : in 待解码的数据 
  *@param : in_size 待解码的数据长度
- *@param : out 解码后的数据，内部分配空间
- *@return ：成功返回解码后的数据长度，失败返回 <= 0
+ *@param : out 解码后的数据，内部分配空间 
+ *@return ：成功返回解码后的数据长度，失败返回 <= 0 
  */
 int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, char ** out);
 
 /**
  * 销毁解码器
  *@param : handle 视频解码器handle
- *@return ：成功返回1，失败返回0
+ *@return ：成功返回1，失败返回0 
  */
 int vl_video_decoder_destory(vl_codec_handle_t handle);
 
@@ -104,3 +104,4 @@ int vl_video_decoder_destory(vl_codec_handle_t handle);
 #endif
 
 #endif /* _INCLUDED_COM_VIDEOPHONE_CODEC */
+

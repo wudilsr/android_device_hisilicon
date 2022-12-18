@@ -12,11 +12,13 @@ LOCAL_C_INCLUDES +=                                            \
     device/hisilicon/bigfish/sdk/source/msp/drv/include        \
     device/hisilicon/bigfish/sdk/source/msp/api/include        \
     device/hisilicon/bigfish/hardware/gpu/android/gralloc \
+    device/hisilicon/bigfish/hardware/camera/libexif           \
     frameworks/base/include                                    \
     external/skia/src/images                                   \
     external/skia/include/core                                 \
     external/skia/include/images                               \
-    external/jpeg
+    external/jpeg                                              \
+    system/media/camera/include
 
 LOCAL_SHARED_LIBRARIES :=         \
     liblog                        \
@@ -29,6 +31,7 @@ LOCAL_SHARED_LIBRARIES :=         \
     libskia                       \
     libhi_msp                     \
     libcutils                     \
+    libgnuexif                    \
     libhi_common                  \
 
 LOCAL_WHOLE_STATIC_LIBRARIES:=    \

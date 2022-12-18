@@ -132,6 +132,26 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_removeNetRoute(JNIEn
     (env)->ReleaseStringUTFChars(interfacename, c_facename);
     return HiSysManagerClient().removeNetRoute(m_name);
 }
+
+static jint com_hisilicon_android_hisysmanager_HiSysManager_setHdmiHDCPKey(JNIEnv *env, jobject clazz,jstring tdname,jint offset,jstring filename,jint datasize){
+    const char* c_tdname = (env)->GetStringUTFChars(tdname, 0 );
+    const char* c_filename = (env)->GetStringUTFChars(filename, 0 );
+    String8 m_tdname = String8(c_tdname);
+    String8 m_filename = String8(c_filename);
+    (env)->ReleaseStringUTFChars(tdname, c_tdname);
+    (env)->ReleaseStringUTFChars(filename, c_filename);
+    return HiSysManagerClient().setHdmiHDCPKey(m_tdname,offset,m_filename,datasize);
+}
+static jint com_hisilicon_android_hisysmanager_HiSysManager_getHdmiHDCPKey(JNIEnv *env, jobject clazz,jstring tdname,jint offset,jstring filename,jint datasize){
+    const char* c_tdname = (env)->GetStringUTFChars(tdname, 0 );
+    const char* c_filename = (env)->GetStringUTFChars(filename, 0 );
+    String8 m_tdname = String8(c_tdname);
+    String8 m_filename = String8(c_filename);
+    (env)->ReleaseStringUTFChars(tdname, c_tdname);
+    (env)->ReleaseStringUTFChars(filename, c_filename);
+    return HiSysManagerClient().getHdmiHDCPKey(m_tdname,offset,m_filename,datasize);
+}
+
 static jint com_hisilicon_android_hisysmanager_HiSysManager_setHDCPKey(JNIEnv *env, jobject clazz,jstring tdname,jint offset,jstring filename,jint datasize){
     const char* c_tdname = (env)->GetStringUTFChars(tdname, 0 );
     const char* c_filename = (env)->GetStringUTFChars(filename, 0 );
@@ -267,6 +287,9 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_recoveryIPTV(JNIEnv 
     (env)->ReleaseStringUTFChars(file, c_file);
     return HiSysManagerClient().recoveryIPTV(m_path,m_file);
 }
+static jint com_hisilicon_android_hisysmanager_HiSysManager_userDataRestoreIptv(JNIEnv *env, jobject clazz){
+    return HiSysManagerClient().userDataRestoreIptv();
+}
 static jint com_hisilicon_android_hisysmanager_HiSysManager_setDRMKey(JNIEnv *env, jobject clazz,jstring tdname,jint offset,jstring filename,jint datasize){
     const char* c_tdname = (env)->GetStringUTFChars(tdname, 0 );
     const char* c_filename = (env)->GetStringUTFChars(filename, 0 );
@@ -302,6 +325,8 @@ static JNINativeMethod gMethods[] = {
         {"removeNetRoute", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_removeNetRoute},
         {"setHDCPKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setHDCPKey},
         {"getHDCPKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_getHDCPKey},
+        {"native_setHdmiHDCPKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setHdmiHDCPKey},
+        {"native_getHdmiHDCPKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_getHdmiHDCPKey},
         {"reboot", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_reboot},
         {"doQbSnap", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_doQbSnap},
         {"cleanQbFlag", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_cleanQbFlag},
@@ -324,6 +349,7 @@ static JNINativeMethod gMethods[] = {
         {"setHimm", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setHimm},
         {"enableCapable", "(I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_enableCapable},
         {"recoveryIPTV", "(Ljava/lang/String;Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_recoveryIPTV},
+        {"userDataRestoreIptv", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_userDataRestoreIptv},
         {"setDRMKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setDRMKey},
         {"getDRMKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_getDRMKey},
 };

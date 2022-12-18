@@ -602,8 +602,10 @@ static void hi_mci_cmd_done(struct himci_host *host, unsigned int stat)
 			    stat);
 	} else if (stat & (RCRC_INT_STATUS | RE_INT_STATUS)) {
 		cmd->error = -EILSEQ;
-		himci_error( "irq cmd status stat = 0x%x is response error!",
-			    stat);
+		if (stat & RCRC_INT_STATUS)
+			printk(" error: response CRC error (%x)\n", stat);
+		if (stat & RE_INT_STATUS)
+			printk(" error: response error (%x)\n", stat);
 	}
 }
 
@@ -619,13 +621,21 @@ static void hi_mci_data_done(struct himci_host *host, unsigned int stat)
 
 	if (stat & (HTO_INT_STATUS | DRTO_INT_STATUS)) {
 		data->error = -ETIMEDOUT;
-		himci_error("irq data status stat = 0x%x is timeout error!",
-			    stat);
+		if (stat & HTO_INT_STATUS)
+			printk(" error: data starvation-by-host timeout (%x)\n", stat);
+		if (stat & DRTO_INT_STATUS)
+			printk(" error: data read timeout (%x)\n", stat);
 	} else if (stat & (EBE_INT_STATUS | SBE_INT_STATUS |
 			   FRUN_INT_STATUS | DCRC_INT_STATUS)) {
 		data->error = -EILSEQ;
-		himci_error("irq data status stat = 0x%x is data error!",
-			    stat);
+		if (stat & EBE_INT_STATUS)
+			printk(" error: end-bit error (%x)\n", stat);
+		if (stat & SBE_INT_STATUS)
+			printk(" error: start bit error (%x)\n", stat);
+		if (stat & FRUN_INT_STATUS)
+			printk(" error: FIFO underrun/overrun error (%x)\n", stat);
+		if (stat & DCRC_INT_STATUS)
+			printk(" error: data CRC error (%x)\n", stat);
 	}
 	if (!data->error)
 		data->bytes_xfered = data->blocks * data->blksz;

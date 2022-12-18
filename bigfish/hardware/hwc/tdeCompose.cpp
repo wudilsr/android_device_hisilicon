@@ -17,14 +17,58 @@
 #include <sys/stat.h>
 #include <linux/sw_sync.h>
 
+struct sync_merge_data {
+ __s32 fd2;
+ char name[32];
+ __s32 fence;
+};
 #define SYNC_IOC_MAGIC '>'
 #define SYNC_IOC_WAIT _IOW(SYNC_IOC_MAGIC, 0, __s32)
+#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 1, struct sync_merge_data)
 int sync_wait(int fd, int timeout)
 {
     __s32 to = timeout;
 
     return ioctl(fd, SYNC_IOC_WAIT, &to);
 }
+
+int sync_merge(const char *name, int fd1, int fd2)
+{
+    struct sync_merge_data data;
+    int err;
+
+    data.fd2 = fd2;
+    strlcpy(data.name, name, sizeof(data.name));
+
+    err = ioctl(fd1, SYNC_IOC_MERGE, &data);
+    if (err < 0)
+        return err;
+
+    return data.fence;
+}
+
+int sync_merge_fence(const char *name, int fd1, int fd2) {
+
+    int mergeId = -1;
+    // Merge the two fences.  In the case where one of the fences is not a
+    // valid fence (e.g. NO_FENCE) we merge the one valid fence with itself so
+    // that a new fence with the given name is created.
+    if (fd1 > 0 && fd2 > 0) {
+        mergeId = sync_merge(name, fd1, fd2);
+    } else if (fd1 > 0) {
+        mergeId = fd1;
+    } else if (fd2 > 0) {
+        mergeId = fd2;
+    } else {
+        return -1;
+    }
+    if (mergeId == -1) {
+        ALOGE("HISI_HWC merge: sync_merge(\"%s\", %d, %d)", name, fd1, fd2);
+        return mergeId;
+    }
+    return mergeId;
+}
+
 
 HIFB_COLOR_FMT_E tde2FbFmt(int format)
 {
@@ -156,16 +200,14 @@ int getLayerType(hwc_layer_1_t*  layer)
     return -1;
 }
 
-bool tde_fill_rect(HI_U32 color ,hwc_layer_1_t*  layer ,hwc_rect_t * pRect)
+bool tde_fill_rect(TDE_HANDLE s32Handle, HI_U32 color, hwc_layer_1_t* layer, hwc_rect_t* pRect)
 {
     HI_S32 s32Ret;
     TDE2_RECT_S dstRect;
     TDE2_COLOR_FMT_E dst_fmt;
     TDE2_SURFACE_S dstSurface;
-    TDE_HANDLE s32Handle;
     struct private_handle_t* pDstHandle = (struct private_handle_t *) (layer->handle);
 
-    HI_TDE2_Open();
     memset(&dstRect, 0, sizeof(TDE2_RECT_S));
     memset(&dst_fmt, 0, sizeof(TDE2_COLOR_FMT_E));
     memset(&dstSurface, 0, sizeof(TDE2_SURFACE_S));
@@ -185,7 +227,7 @@ bool tde_fill_rect(HI_U32 color ,hwc_layer_1_t*  layer ,hwc_rect_t * pRect)
     }
 
     if(!pDstHandle)
-        goto hardwareError;
+        return false;
     dstSurface.u32Width = pDstHandle->width;
     dstSurface.u32Height = pDstHandle->height;
     dstSurface.u32Stride = pDstHandle->stride * getBpp(pDstHandle->format);
@@ -196,40 +238,22 @@ bool tde_fill_rect(HI_U32 color ,hwc_layer_1_t*  layer ,hwc_rect_t * pRect)
     //ALOGE("dstRect x[%d] y[%d] w[%d] h[%d]",dstRect.s32Xpos,dstRect.s32Ypos,dstRect.u32Width,dstRect.u32Height);
     //ALOGE("dstSurface w[%d] h[%d]",dstSurface.u32Width,dstSurface.u32Height);
 
-    s32Handle = HI_TDE_BeginJob();
-    if (HI_ERR_TDE_INVALID_HANDLE == s32Handle)
-    {
-        ALOGE(" Fail to create Job.ERROR::%d\n",s32Handle);
-        goto hardwareError;
-    }
-
     //fill  now
     s32Ret = HI_TDE2_QuickFill(s32Handle, &dstSurface, &dstRect, color);
     if (HI_SUCCESS != s32Ret)
     {
-        ALOGE("QuickFill Failed s32Ret: 0x%x!\n", s32Ret);
+        ALOGE("HISI_HWC QuickFill Failed s32Ret: 0x%x!\n", s32Ret);
         HI_TDE2_CancelJob(s32Handle);
-        goto hardwareError;
+        return false;
     }
 
-    s32Ret = HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 200);
-    if (HI_SUCCESS != s32Ret)
-    {
-        ALOGE("Fail to HI_TDE2_EndJob. tde error code 0x%x\n",s32Ret);
-        goto hardwareError;
-    }
-    s32Ret = HI_TDE2_WaitAllDone();
-    HI_TDE2_Close();
     return true;
-hardwareError:
-  HI_TDE2_Close();
-  return false;
+
 }
 
-bool tde_blit(hwc_layer_1_t*  srcLayer, hwc_layer_1_t*  dstLayer)
+bool tde_blit(TDE_HANDLE s32Handle, hwc_layer_1_t*  srcLayer, hwc_layer_1_t*  dstLayer)
 {
     //init TDE ARGS
-    TDE_HANDLE s32Handle;
     HI_S32 s32Ret;
     TDE2_RECT_S srcRect;
     TDE2_RECT_S dstRect;
@@ -311,14 +335,6 @@ bool tde_blit(hwc_layer_1_t*  srcLayer, hwc_layer_1_t*  dstLayer)
         stOpt.stBlendOpt.eBlendCmd = TDE2_BLENDCMD_NONE;
     }
 
-    HI_TDE2_Open();
-    s32Handle = HI_TDE_BeginJob();
-    if (HI_ERR_TDE_INVALID_HANDLE == s32Handle)
-    {
-        ALOGE(" Fail to create Job.ERROR::%d\n",s32Handle);
-        goto hardwareError;
-    }
-
     s32Ret = HI_TDE2_Bitblit(s32Handle,
             &dstSurface, &dstRect,
             &srcSurface, &srcRect,
@@ -329,20 +345,10 @@ bool tde_blit(hwc_layer_1_t*  srcLayer, hwc_layer_1_t*  dstLayer)
     {
         ALOGE("Failed to HI_TDE2_Bitblit tde error code:0x%x!\n", s32Ret);
         HI_TDE2_CancelJob(s32Handle);
-        goto hardwareError;
+        return false;
     }
 
-    s32Ret = HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 200);
-    if (HI_SUCCESS != s32Ret)
-    {
-        ALOGE("Fail to HI_TDE2_EndJob. tde error code 0x%x\n",s32Ret);
-        goto hardwareError;
-    }
-    s32Ret = HI_TDE2_WaitAllDone();
-    HI_TDE2_Close();
     return 0;
-hardwareError:
-    return false;
 }
 
 bool isFullScreen(hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
@@ -380,25 +386,24 @@ bool isCopyBlendMode(hwc_layer_1_t* srcLayer, int index)
     return false;
 }
 
-bool tde_quick_copy(hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
+bool tde_quick_copy(TDE_HANDLE s32Handle, hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
 {
    if(haveScale(backLayer) || !is32Bit(backLayer))
     {
         //clearFb
-        HI_U32 color = 0x000000FF;
-        tde_fill_rect(color,fbLayer);
+        HI_U32 color = 0x00000000;
+        tde_fill_rect(s32Handle, color, fbLayer);
         backLayer->blending = HWC_BLENDING_NONE;
-        return tde_blit(backLayer,fbLayer);
+        return tde_blit(s32Handle, backLayer, fbLayer);
     }
 
      if(!isFullScreen(backLayer,fbLayer))
      {
          //clearFb
          HI_U32 color = 0x00000000;
-         tde_fill_rect(color,fbLayer);
+         tde_fill_rect(s32Handle, color, fbLayer);
      }
 
-    TDE_HANDLE s32Handle;
     HI_S32 s32Ret;
 
     //init TDE ARGS
@@ -438,14 +443,6 @@ bool tde_quick_copy(hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
     dstSurface.bAlphaMax255 = HI_TRUE;
     setFbFormat(tde2FbFmt(backFmt));
 
-    HI_TDE2_Open();
-    s32Handle = HI_TDE_BeginJob();
-    if (HI_ERR_TDE_INVALID_HANDLE == s32Handle)
-    {
-        ALOGE(" Fail to create Job.ERROR::%d\n",s32Handle);
-        goto hardwareError;
-    }
-
     s32Ret = HI_TDE2_QuickCopy(s32Handle,
             &backSurface, &backRect,
             &dstSurface, &dstRect);
@@ -455,13 +452,6 @@ bool tde_quick_copy(hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
         HI_TDE2_CancelJob(s32Handle);
     }
 
-    s32Ret = HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 200);
-    if (HI_SUCCESS != s32Ret)
-    {
-        ALOGE("Fail to HI_TDE2_EndJob. tde error code 0x%x\n",s32Ret);
-        goto hardwareError;
-    }
-    s32Ret = HI_TDE2_WaitAllDone();
 #if 0
     property_get("persist.test.tde", property, "0");
     debug = atoi(property);
@@ -495,11 +485,8 @@ bool tde_quick_copy(hwc_layer_1_t*  backLayer, hwc_layer_1_t*  fbLayer)
     }
 #endif
 
-    HI_TDE2_Close();
     return true;
 
-hardwareError:
-    return false;
 }
 
 static int bVisible(hwc_region_t* region)
@@ -518,13 +505,22 @@ int tde_compose(hwc_composer_device_1_t *dev,
 {
     struct hwc_context_t* ctx = (struct hwc_context_t*)dev;
     hwc_display_contents_1_t* list = displays[0];
-    hwc_layer_1_t *layer = &list->hwLayers[list->numHwLayers-1];
-    sync_wait(layer->acquireFenceFd, 1000);
+    hwc_layer_1_t* pFBTarget = &list->hwLayers[list->numHwLayers-1];
+    TDE_HANDLE s32Handle = 0;
+    sync_wait(pFBTarget->acquireFenceFd, 1000);
+
+    s32Handle = HI_TDE_BeginJob();
+    if (HI_ERR_TDE_INVALID_HANDLE == s32Handle)
+    {
+        ALOGE("HISI_HWC Fail to create Job.ERROR::%d\n",s32Handle);
+        return -1;
+    }
+
 
     if(0 == list->numHwLayers-1)
     {
         HI_U32 color = 0x00000000;
-        tde_fill_rect(color, &list->hwLayers[list->numHwLayers-1],&list->hwLayers[list->numHwLayers-1].displayFrame);
+        tde_fill_rect(s32Handle, color, pFBTarget, &pFBTarget->displayFrame);
     }
 
     for (int i=0; i< list->numHwLayers-1; i++){
@@ -537,7 +533,7 @@ int tde_compose(hwc_composer_device_1_t *dev,
                     //video is visib
                     HI_U32 color = 0x00000000;
                     if(bVisible(&layer->visibleRegionScreen))
-                        tde_fill_rect(color, &list->hwLayers[list->numHwLayers-1],&layer->displayFrame);
+                        tde_fill_rect(s32Handle, color, pFBTarget, &layer->displayFrame);
                     break;
                 }
             case DIM_LAYER:
@@ -549,15 +545,46 @@ int tde_compose(hwc_composer_device_1_t *dev,
                 }
             case UI_LAYER:
                 if (isCopyBlendMode(layer, i)) {
-                    tde_quick_copy(layer, &list->hwLayers[list->numHwLayers-1]);
+                    tde_quick_copy(s32Handle, layer, pFBTarget);
                 } else {
-                    tde_blit(layer, &list->hwLayers[list->numHwLayers-1]);
+                    tde_blit(s32Handle, layer, pFBTarget);
                 }
                 break;
             default:
                 break;
         }
     }
+
+    char async_compose[PROPERTY_VALUE_MAX] = {0};
+    property_get("service.graphic.async.compose", async_compose, "false");
+
+    if (0 == strcmp(async_compose, "true")) {
+        int tdeAcquireFenceID = HI_TDE2_EndJobEx(s32Handle, HI_FALSE, HI_FALSE, 200);
+        if (tdeAcquireFenceID < 0)
+        {
+            ALOGE("HISI_HWC Fail to generate fenceID 0x%x\n",tdeAcquireFenceID);
+        }
+        else
+        {
+            for (int i=0; i< list->numHwLayers-1; i++){
+                private_handle_t *hnd = (private_handle_t*)list->hwLayers[i].handle;
+                hwc_layer_1_t* layer = &list->hwLayers[i];
+
+                layer->releaseFenceFd = dup(tdeAcquireFenceID);
+            }
+        }
+
+        return tdeAcquireFenceID;
+    } else {
+        int s32Ret = HI_TDE2_EndJob(s32Handle, HI_FALSE, HI_TRUE, 200);
+        if (HI_SUCCESS != s32Ret)
+        {
+            ALOGE("Fail to HI_TDE2_EndJob. tde error code 0x%x\n",s32Ret);
+        }
+        HI_TDE2_WaitAllDone();
+        return -1;
+    }
+
     return 0;
 }
 /********************************** END **********************************************/

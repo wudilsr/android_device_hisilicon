@@ -20,11 +20,12 @@ include $(CLEAR_VARS)
 include $(SDK_DIR)/Android.def
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
-LOCAL_SHARED_LIBRARIES := liblog libEGL libhardware liboverlay libhi_msp libcutils
+LOCAL_SHARED_LIBRARIES := liblog libEGL libhardware liboverlay libhi_msp libcutils libutils
 #LOCAL_SRC_FILES := HwcDebug.cpp
 LOCAL_C_INCLUDES := $(HISI_PLATFORM_PATH)/hardware/gpu/android/gralloc
 LOCAL_C_INCLUDES += $(COMMON_UNF_INCLUDE)
 LOCAL_C_INCLUDES += device/hisilicon/bigfish/sdk/pub/include/
+LOCAL_C_INCLUDES += device/hisilicon/bigfish/sdk/source/msp/api/tde/include/
 #LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
 #LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)
 #LOCAL_C_INCLUDES += $(MSP_UNF_INCLUDE)

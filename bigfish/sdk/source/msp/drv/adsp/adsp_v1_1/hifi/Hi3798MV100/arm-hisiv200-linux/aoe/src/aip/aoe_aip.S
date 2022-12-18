@@ -13,38 +13,38 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/adsp/adsp_v1_1
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/adsp/adsp_v1_1
 @ -Idrivers/msp/adsp/adsp_v1_1
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/include/comp
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aoe/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aflt/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aoe/src/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/codec/iapcm_dec
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/codec/iamp3_dec
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/effect/base_effect
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/include/comp
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aoe/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aflt/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/aoe/src/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/codec/iapcm_dec
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/codec/iamp3_dec
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1/./hifi/component/effect/base_effect
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/adsp/adsp_v1_1
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -55,9 +55,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_adsp) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/adsp/adsp_v1_1/./hifi/aoe/src/aip/.aoe_aip.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/adsp/adsp_v1_1/./hifi/aoe/src/aip/aoe_aip.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/adsp/adsp_v1_1/./hifi/aoe/src/aip/aoe_aip.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/adsp/adsp_v1_1/./hifi/aoe/src/aip/aoe_aip.o -O2 -Wall -Wundef
@@ -2002,40 +2002,41 @@ AIPPauseChnCmdProc:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:.LANCHOR0	@ tmp146,
-	add	r3, r0, #8	@ tmp138, Id,
-	movt	r4, #:upper16:.LANCHOR0	@ tmp146,
+	movw	r4, #:lower16:.LANCHOR0	@ tmp153,
+	add	r3, r0, #8	@ tmp140, Id,
+	movt	r4, #:upper16:.LANCHOR0	@ tmp153,
 	mov	r6, r0	@ Id, Id
 	ldr	r5, [r4, r3, asl #2]	@ state, g_stAipRm.hAip
 	cmp	r5, #0	@ state,
-	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
+	beq	.L193	@,
 	ldr	r7, [r5, #208]	@ <variable>.CurStatus, <variable>.CurStatus
 	cmp	r7, #1	@ <variable>.CurStatus,
-	beq	.L194	@,
+	beq	.L197	@,
+.L193:
 	ldr	r3, [r4, r6, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	r2, [r3, #8]	@ D.16097,
-	ands	r2, r2, #8	@ tmp142, D.16097,
+	ldr	r2, [r3, #8]	@ D.16104,
+	ands	r2, r2, #8	@ tmp149, D.16104,
 	ldmnefd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L195:
-	ldr	r0, [r3, #8]	@ tmp143,
-	bfi	r0, r2, #4, #4	@ tmp143, tmp142,,
-	str	r0, [r3, #8]	@ tmp143,
-	ldr	ip, [r3, #8]	@ tmp144,
-	orr	r1, ip, #8	@ tmp147, tmp144,
-	str	r1, [r3, #8]	@ tmp147,
+.L198:
+	ldr	r0, [r3, #8]	@ tmp150,
+	bfi	r0, r2, #4, #4	@ tmp150, tmp149,,
+	str	r0, [r3, #8]	@ tmp150,
+	ldr	ip, [r3, #8]	@ tmp151,
+	orr	r1, ip, #8	@ tmp155, tmp151,
+	str	r1, [r3, #8]	@ tmp155,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L194:
+.L197:
 	mov	r0, r5	@, state
 	bl	AIPFadeoutChnData	@
 	mov	r0, r5	@, state
 	mov	r1, r7	@, <variable>.CurStatus
 	bl	AIPFlushChn	@
-	mov	r0, #2	@ tmp140,
-	str	r0, [r5, #208]	@ tmp140, <variable>.CurStatus
+	mov	r0, #2	@ tmp147,
+	str	r0, [r5, #208]	@ tmp147, <variable>.CurStatus
 	ldr	r3, [r4, r6, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	r2, [r3, #8]	@ D.16097,
-	ands	r2, r2, #8	@ tmp142, D.16097,
-	beq	.L195	@,
+	ldr	r2, [r3, #8]	@ D.16104,
+	ands	r2, r2, #8	@ tmp149, D.16104,
+	beq	.L198	@,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	AIPPauseChnCmdProc, .-AIPPauseChnCmdProc
@@ -2056,29 +2057,30 @@ AIFlushChnCmdProc:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:.LANCHOR0	@ tmp146,
-	add	r3, r0, #8	@ tmp138, Id,
-	movt	r4, #:upper16:.LANCHOR0	@ tmp146,
+	movw	r4, #:lower16:.LANCHOR0	@ tmp153,
+	add	r3, r0, #8	@ tmp140, Id,
+	movt	r4, #:upper16:.LANCHOR0	@ tmp153,
 	mov	r5, r0	@ Id, Id
 	ldr	r6, [r4, r3, asl #2]	@ state, g_stAipRm.hAip
 	cmp	r6, #0	@ state,
-	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
+	beq	.L202	@,
 	ldr	r7, [r6, #208]	@ <variable>.CurStatus, <variable>.CurStatus
 	cmp	r7, #1	@ <variable>.CurStatus,
-	beq	.L200	@,
+	beq	.L206	@,
+.L202:
 	ldr	r3, [r4, r5, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	r2, [r3, #8]	@ D.16104,
-	ands	r2, r2, #8	@ tmp142, D.16104,
+	ldr	r2, [r3, #8]	@ D.16118,
+	ands	r2, r2, #8	@ tmp149, D.16118,
 	ldmnefd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L201:
-	ldr	ip, [r3, #8]	@ tmp143,
-	bfi	ip, r2, #4, #4	@ tmp143, tmp142,,
-	str	ip, [r3, #8]	@ tmp143,
-	ldr	r1, [r3, #8]	@ tmp144,
-	orr	r0, r1, #8	@ tmp147, tmp144,
-	str	r0, [r3, #8]	@ tmp147,
+.L207:
+	ldr	ip, [r3, #8]	@ tmp150,
+	bfi	ip, r2, #4, #4	@ tmp150, tmp149,,
+	str	ip, [r3, #8]	@ tmp150,
+	ldr	r1, [r3, #8]	@ tmp151,
+	orr	r0, r1, #8	@ tmp155, tmp151,
+	str	r0, [r3, #8]	@ tmp155,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L200:
+.L206:
 	mov	r0, r6	@, state
 	bl	AIPFadeoutChnData	@
 	mov	r1, #3	@,
@@ -2091,9 +2093,9 @@ AIFlushChnCmdProc:
 	mov	r1, r7	@, <variable>.CurStatus
 	bl	FADE_Active	@
 	ldr	r3, [r4, r5, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	r2, [r3, #8]	@ D.16104,
-	ands	r2, r2, #8	@ tmp142, D.16104,
-	beq	.L201	@,
+	ldr	r2, [r3, #8]	@ D.16118,
+	ands	r2, r2, #8	@ tmp149, D.16118,
+	beq	.L207	@,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	AIFlushChnCmdProc, .-AIFlushChnCmdProc
@@ -2114,30 +2116,31 @@ AIPStopChnCmdProc:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:.LANCHOR0	@ tmp147,
-	add	r3, r0, #8	@ tmp138, Id,
-	movt	r4, #:upper16:.LANCHOR0	@ tmp147,
+	movw	r4, #:lower16:.LANCHOR0	@ tmp154,
+	add	r3, r0, #8	@ tmp140, Id,
+	movt	r4, #:upper16:.LANCHOR0	@ tmp154,
 	mov	r6, r0	@ Id, Id
 	ldr	r5, [r4, r3, asl #2]	@ state, g_stAipRm.hAip
 	cmp	r5, #0	@ state,
-	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
+	beq	.L211	@,
 	ldr	r1, [r5, #208]	@ <variable>.CurStatus, <variable>.CurStatus
-	sub	r0, r1, #1	@ tmp139, <variable>.CurStatus,
-	cmp	r0, #1	@ tmp139,
-	bls	.L206	@,
+	sub	r0, r1, #1	@ tmp146, <variable>.CurStatus,
+	cmp	r0, #1	@ tmp146,
+	bls	.L215	@,
+.L211:
 	ldr	r3, [r4, r6, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	ip, [r3, #8]	@ D.16111,
-	ands	r2, ip, #8	@ tmp143, D.16111,
+	ldr	ip, [r3, #8]	@ D.16132,
+	ands	r2, ip, #8	@ tmp150, D.16132,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L207:
-	ldr	ip, [r3, #8]	@ tmp144,
-	bfi	ip, r2, #4, #4	@ tmp144, tmp143,,
-	str	ip, [r3, #8]	@ tmp144,
-	ldr	r1, [r3, #8]	@ tmp145,
-	orr	r0, r1, #8	@ tmp148, tmp145,
-	str	r0, [r3, #8]	@ tmp148,
+.L216:
+	ldr	ip, [r3, #8]	@ tmp151,
+	bfi	ip, r2, #4, #4	@ tmp151, tmp150,,
+	str	ip, [r3, #8]	@ tmp151,
+	ldr	r1, [r3, #8]	@ tmp152,
+	orr	r0, r1, #8	@ tmp156, tmp152,
+	str	r0, [r3, #8]	@ tmp156,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L206:
+.L215:
 	mov	r0, r5	@, state
 	bl	AIPFadeoutChnData	@
 	mov	r0, r5	@, state
@@ -2145,12 +2148,12 @@ AIPStopChnCmdProc:
 	bl	AIPFlushChn	@
 	mov	r0, r5	@, state
 	bl	AIPWriteMuteFrame	@
-	mov	r2, #0	@ tmp141,
-	str	r2, [r5, #208]	@ tmp141, <variable>.CurStatus
+	mov	r2, #0	@ tmp148,
+	str	r2, [r5, #208]	@ tmp148, <variable>.CurStatus
 	ldr	r3, [r4, r6, asl #2]	@ pAipReg, g_stAipRm.hwAipReg
-	ldr	ip, [r3, #8]	@ D.16111,
-	ands	r2, ip, #8	@ tmp143, D.16111,
-	beq	.L207	@,
+	ldr	ip, [r3, #8]	@ D.16132,
+	ands	r2, ip, #8	@ tmp150, D.16132,
+	beq	.L216	@,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	AIPStopChnCmdProc, .-AIPStopChnCmdProc
@@ -2177,34 +2180,34 @@ AIPProcChnCmd:
 	mov	r4, r0	@ Id, Id
 	bl	AIPGetChnCmd	@
 	cmp	r0, #4	@,
-	beq	.L215	@,
+	beq	.L224	@,
 	ldr	r3, [fp, #-24]	@ newcmd, newcmd
 	cmp	r3, #3	@ newcmd,
 	ldrls	pc, [pc, r3, asl #2]	@ newcmd
-	b	.L215	@
-.L214:
-	.word	.L210
-	.word	.L211
-	.word	.L212
-	.word	.L213
-.L211:
+	b	.L224	@
+.L223:
+	.word	.L219
+	.word	.L220
+	.word	.L221
+	.word	.L222
+.L220:
 	mov	r0, r4	@, Id
 	bl	AIPStopChnCmdProc	@
-.L215:
+.L224:
 	sub	sp, fp, #16
 	ldmfd	sp, {r4, fp, sp, pc}
-.L213:
+.L222:
 	mov	r0, r4	@, Id
 	bl	AIFlushChnCmdProc	@
-	b	.L215	@
-.L210:
+	b	.L224	@
+.L219:
 	mov	r0, r4	@, Id
 	bl	AIPStartChnCmdProc	@
-	b	.L215	@
-.L212:
+	b	.L224	@
+.L221:
 	mov	r0, r4	@, Id
 	bl	AIPPauseChnCmdProc	@
-	b	.L215	@
+	b	.L224	@
 	.fnend
 	.size	AIPProcChnCmd, .-AIPProcChnCmd
 	.align	2
@@ -2234,8 +2237,8 @@ AIPCalcRbfInNeedBytes:
 	ldr	r8, [r0, #76]	@ SampleRate, <variable>.stAttr.u32OutSampleRate
 	ldr	r7, [r0, #68]	@ BitWidth, <variable>.stAttr.u32OutBitPerSample
 	movne	r6, r1	@ NeedInBytes, blocksize
-	beq	.L225	@,
-.L218:
+	beq	.L234	@,
+.L227:
 	ldr	r0, [r4, #188]	@, <variable>.hRingIn
 	sub	r1, fp, #72	@,,
 	bl	RBUF_QueryInfo	@
@@ -2246,7 +2249,7 @@ AIPCalcRbfInNeedBytes:
 	mov	r0, r6	@, NeedInBytes
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
-.L225:
+.L234:
 	mov	r0, r1	@, blocksize
 	ldr	r1, [r4, #1024]	@, <variable>.OutFrameSize
 	bl	__aeabi_uidiv	@
@@ -2268,18 +2271,18 @@ AIPCalcRbfInNeedBytes:
 	mov	r1, r0	@ D.15045,
 	ldr	r0, [r4, #200]	@ D.15056, <variable>.hSRC
 	cmp	r0, #0	@ D.15056,
-	bne	.L226	@,
-.L220:
+	bne	.L235	@,
+.L229:
 	tst	r1, #3	@ NeedSampels,
 	ldr	r0, [r4, #1028]	@ <variable>.InFrameSize, <variable>.InFrameSize
 	addne	r1, r1, #3	@ tmp159, NeedSampels,
 	bicne	r1, r1, #3	@ NeedSampels, tmp159,
 	mul	r6, r0, r1	@ NeedInBytes, <variable>.InFrameSize, NeedSampels
-	b	.L218	@
-.L226:
+	b	.L227	@
+.L235:
 	bl	ResamplerGetMinInputNum	@
 	mov	r1, r0	@ NeedSampels,
-	b	.L220	@
+	b	.L229	@
 	.fnend
 	.size	AIPCalcRbfInNeedBytes, .-AIPCalcRbfInNeedBytes
 	.align	2
@@ -2310,21 +2313,21 @@ AIPDmaFrame:
 	mov	r1, r5	@, blocksize
 	bl	AIPCalcRbfInNeedBytes	@
 	cmp	r0, #0	@,
-	bne	.L231	@,
-.L228:
+	bne	.L240	@,
+.L237:
 	mov	r0, #0	@ D.15103,
-.L229:
+.L238:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
-.L231:
+.L240:
 	mov	r1, r5	@, blocksize
 	mov	r0, r4	@, state
 	bl	AIPCheckRbfOutFree	@
 	cmp	r0, #0	@,
-	beq	.L228	@,
+	beq	.L237	@,
 	bl	AOE_GetWKBuf	@
 	cmp	r0, #0	@ uWkAddr
-	beq	.L228	@,
+	beq	.L237	@,
 	str	r0, [r6, #0]	@ uWkAddr, <variable>.pDataBuf
 	bl	AOE_GetWKBufSize	@
 	ldr	r5, [fp, #-32]	@ needsize, needsize
@@ -2346,7 +2349,7 @@ AIPDmaFrame:
 	ldr	r0, [r4, #188]	@, <variable>.hRingIn
 	bl	RBUF_ReadDataDma	@
 	ldr	r0, [fp, #-32]	@ D.15103, needsize
-	b	.L229	@
+	b	.L238	@
 	.fnend
 	.size	AIPDmaFrame, .-AIPDmaFrame
 	.align	2
@@ -2429,26 +2432,26 @@ AIPUnifyPcmData:
 	mov	r4, r1	@ pstFrame, pstFrame
 	ldr	r5, [r0, #68]	@ dstBitDepth, <variable>.stAttr.u32OutBitPerSample
 	cmp	r3, r6	@ D.14927, dstCh
-	beq	.L240	@,
+	beq	.L249	@,
 	cmp	r6, r3	@ dstCh, D.14927
-	bls	.L241	@,
+	bls	.L250	@,
 	bl	AOE_GetWKBuf	@
 	mov	r2, r4	@, pstFrame
 	mov	r1, r0	@ D.14932,
 	mov	r0, r6	@, dstCh
 	bl	UTIL_UpmixPcmData	@
-.L240:
+.L249:
 	ldr	r3, [r4, #16]	@ <variable>.u32BitPerSample, <variable>.u32BitPerSample
 	cmp	r3, r5	@ <variable>.u32BitPerSample, dstBitDepth
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L244:
+.L253:
 	bl	AOE_GetWKBuf	@
 	mov	r2, r4	@, pstFrame
 	mov	r1, r0	@ D.14938,
 	mov	r0, r5	@, dstBitDepth
 	bl	UTIL_UnifyBitDepthPcmData	@
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L241:
+.L250:
 	bl	AOE_GetWKBuf	@
 	mov	r2, r4	@, pstFrame
 	mov	r1, r0	@ D.14934,
@@ -2456,7 +2459,7 @@ AIPUnifyPcmData:
 	bl	UTIL_DownmixPcmData	@
 	ldr	r3, [r4, #16]	@ <variable>.u32BitPerSample, <variable>.u32BitPerSample
 	cmp	r3, r5	@ <variable>.u32BitPerSample, dstBitDepth
-	bne	.L244	@,
+	bne	.L253	@,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	AIPUnifyPcmData, .-AIPUnifyPcmData
@@ -2481,17 +2484,17 @@ AIPProcFrame:
 	mov	r4, r0	@ state, state
 	mov	r5, r1	@ pstInFrame, pstInFrame
 	cmp	r3, #1	@ <variable>.bMute,
-	beq	.L250	@,
-.L246:
+	beq	.L259	@,
+.L255:
 	ldr	r0, [r4, #20]	@ <variable>.stAttr.u32InDataFormat, <variable>.stAttr.u32InDataFormat
 	cmp	r0, #0	@ <variable>.stAttr.u32InDataFormat,
-	beq	.L251	@,
-.L247:
+	beq	.L260	@,
+.L256:
 	mov	r0, r4	@, state
 	mov	r1, r5	@, pstInFrame
 	bl	AIPDmaFrame2FiFo	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
-.L251:
+.L260:
 	mov	r0, r4	@, state
 	mov	r1, r5	@, pstInFrame
 	bl	AIPUnifyPcmData	@
@@ -2506,11 +2509,11 @@ AIPProcFrame:
 	bl	AIPFadePcmData	@
 	ldr	r1, [r4, #200]	@ <variable>.hSRC, <variable>.hSRC
 	cmp	r1, #0	@ <variable>.hSRC,
-	bne	.L252	@,
-.L248:
+	bne	.L261	@,
+.L257:
 	ldr	r2, [r4, #196]	@ <variable>.hADJ, <variable>.hADJ
 	cmp	r2, #0	@ <variable>.hADJ,
-	beq	.L247	@,
+	beq	.L256	@,
 	mov	r0, r4	@, state
 	mov	r1, r5	@, pstInFrame
 	bl	AIPSpeedAdjProc	@
@@ -2518,18 +2521,18 @@ AIPProcFrame:
 	mov	r1, r5	@, pstInFrame
 	bl	AIPDmaFrame2FiFo	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
-.L250:
+.L259:
 	ldr	r1, [r1, #8]	@ __n, <variable>.u32DataBytes
 	ldr	r0, [r5, #0]	@ __p, <variable>.pDataBuf
 	cmp	r1, #0	@ __n,
-	beq	.L246	@,
+	beq	.L255	@,
 	bl	__memzero	@
-	b	.L246	@
-.L252:
+	b	.L255	@
+.L261:
 	mov	r0, r4	@, state
 	mov	r1, r5	@, pstInFrame
 	bl	AIPResamplePcmData	@
-	b	.L248	@
+	b	.L257	@
 	.fnend
 	.size	AIPProcFrame, .-AIPProcFrame
 	.align	2
@@ -2558,27 +2561,27 @@ AIPProcChnData:
 	ldr	r3, [r4, #1020]	@ <variable>.OutBlockSize, <variable>.OutBlockSize
 	mul	r2, r1, r0	@ tmp135, <variable>.OutputLeftSamples, <variable>.OutFrameSize
 	cmp	r2, r3	@ tmp135, <variable>.OutBlockSize
-	bcs	.L258	@,
+	bcs	.L267	@,
 	sub	r5, fp, #52	@ tmp139,,
 	mov	r0, r4	@, state
 	mov	r1, r5	@, tmp139
 	bl	AIPDmaFrame	@
 	cmp	r0, #0	@,
-	bne	.L259	@,
-.L256:
+	bne	.L268	@,
+.L265:
 	bl	AOE_FlushWKBuf	@
-.L257:
+.L266:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
-.L258:
+.L267:
 	mov	r0, r4	@, state
 	bl	AIPDmaLeftFrame	@
-	b	.L257	@
-.L259:
+	b	.L266	@
+.L268:
 	mov	r0, r4	@, state
 	mov	r1, r5	@, tmp139
 	bl	AIPProcFrame	@
-	b	.L256	@
+	b	.L265	@
 	.fnend
 	.size	AIPProcChnData, .-AIPProcChnData
 	.align	2
@@ -2610,18 +2613,18 @@ AIPProcChn:
 	bl	AIPUpdateChnState	@
 	ldr	r4, [r4, r6, asl #2]	@ state, g_stAipRm.hAip
 	cmp	r4, #0	@ state,
-	beq	.L261	@,
+	beq	.L270	@,
 	ldr	r3, [r4, #208]	@ <variable>.CurStatus, <variable>.CurStatus
 	cmp	r3, #1	@ <variable>.CurStatus,
-	beq	.L263	@,
-.L261:
+	beq	.L272	@,
+.L270:
 	mov	r0, #0	@,
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
-.L263:
+.L272:
 	ldr	r0, [r5, #4]	@ D.15855,
 	tst	r0, #4194304	@ D.15855,
-	bne	.L261	@,
+	bne	.L270	@,
 	mov	r0, r4	@, state
 	bl	AIPProcChnData	@
 	ldr	r0, [r4, #192]	@, <variable>.hRingOut
@@ -2634,7 +2637,7 @@ AIPProcChn:
 	ldr	r1, [r5, #4]	@ tmp152,
 	bfi	r1, r0, #16, #6	@ tmp152,,,
 	str	r1, [r5, #4]	@ tmp152,
-	b	.L261	@
+	b	.L270	@
 	.fnend
 	.size	AIPProcChn, .-AIPProcChn
 	.align	2

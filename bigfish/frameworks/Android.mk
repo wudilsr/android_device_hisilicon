@@ -13,7 +13,9 @@ driver_modules := \
     flashInfo    \
     hikaraoke \
     hisysmanager \
-    qb
+    fastbootoptimize \
+    qb \
+    audio_nodelay
 
 ifneq (,$(findstring Hi379,$(CHIPNAME)))
 driver_modules += hipq

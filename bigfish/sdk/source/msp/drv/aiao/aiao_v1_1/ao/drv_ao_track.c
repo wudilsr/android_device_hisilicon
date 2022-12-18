@@ -1981,6 +1981,9 @@ HI_S32 TrackCreateMaster(SND_CARD_STATE_S *pCard, SND_TRACK_STATE_S *state, HI_U
     state->enAIP[SND_ENGINE_TYPE_PCM] = enAIP;
     state->stAipRbfMmz[SND_ENGINE_TYPE_PCM] = stRbfMmz;
     state->bAipRbfExtDmaMem[SND_ENGINE_TYPE_PCM] = HI_FALSE;
+    state->stStreamAttr.u32PcmSampleRate = stAipAttr.stBufInAttr.u32BufSampleRate;
+    state->stStreamAttr.u32PcmChannels = stAipAttr.stBufInAttr.u32BufChannels;
+    state->stStreamAttr.u32PcmBitDepth = stAipAttr.stBufInAttr.u32BufBitPerSample;
 
     if(SND_SPDIF_MODE_NONE != pCard->enSpdifPassthrough)
     {
@@ -2062,6 +2065,10 @@ HI_S32 TrackCreateSlave(SND_TRACK_STATE_S *state, HI_UNF_AUDIOTRACK_ATTR_S *pstA
         state->stAipRbfMmz[SND_ENGINE_TYPE_PCM] = stRbfMmz;
         state->bAipRbfExtDmaMem[SND_ENGINE_TYPE_PCM] = HI_FALSE;
         state->enCurnStatus = SND_TRACK_STATUS_STOP;
+        
+        state->stStreamAttr.u32PcmSampleRate = stAipAttr.stBufInAttr.u32BufSampleRate;
+        state->stStreamAttr.u32PcmChannels = stAipAttr.stBufInAttr.u32BufChannels;
+        state->stStreamAttr.u32PcmBitDepth = stAipAttr.stBufInAttr.u32BufBitPerSample;
     }
     else
     {
@@ -2544,6 +2551,65 @@ HI_S32 TRACK_Destroy(SND_CARD_STATE_S *pCard, HI_U32 u32TrackID)
 #endif
     pCard->hSndTrack[state->TrackId] = HI_NULL;
     AUTIL_AO_FREE(HI_ID_AO, (HI_VOID*)state);
+    return HI_SUCCESS;
+}
+
+
+HI_S32 TRACK_SendAlsaData(SND_CARD_STATE_S *pCard,HI_U32 u32TrackID, HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
+{
+    SND_TRACK_STATE_S *pTrack;
+    SND_TRACK_STREAM_ATTR_S stStreamAttr;
+    STREAMMODE_CHANGE_ATTR_S stChange;
+
+    if (HI_NULL == pstAOFrame)
+    {
+        return HI_FAILURE;
+    }
+
+    //todo , check attr
+    pTrack = (SND_TRACK_STATE_S *)pCard->hSndTrack[u32TrackID];
+
+    //Ao track state check
+    if(SND_TRACK_STATUS_BUTT <= pTrack->enCurnStatus)
+    {
+        HI_ERR_AO("Invalid ao track status\n");
+        return HI_FAILURE;
+    }
+    if (SND_TRACK_STATUS_PAUSE == pTrack->enCurnStatus)
+    {
+        return HI_ERR_AO_PAUSE_STATE;
+    }
+    if (SND_TRACK_STATUS_STOP == pTrack->enCurnStatus)
+    {
+        HI_ERR_AO("Ao track stop status, can't send data\n");
+        return HI_FAILURE;
+    }
+
+    //if it is invaild samplerate, discard audio frame and return HI_SUCCESS(avoid printing).
+    CHECK_AO_FRAME_NOSTANDART_SAMPLERATE(pstAOFrame->u32SampleRate);
+    CHECK_AO_FRAME_BITDEPTH(pstAOFrame->s32BitPerSample);
+    TRACKDbgCountTrySendData(pTrack);
+
+    TRACKBuildStreamAttr(pCard, (HI_UNF_AO_FRAMEINFO_S *)pstAOFrame, &stStreamAttr);   
+    DetectStreamModeChange(pCard, pTrack, &stStreamAttr, &stChange);
+
+    if (HI_FALSE == TrackisBufFree(pCard, pTrack, &stStreamAttr))
+    {
+      //  (HI_VOID)TRACKStartAip(pCard, pTrack);
+        return HI_ERR_AO_OUT_BUF_FULL;
+    }
+
+    TRACKWriteFrame(pCard, pTrack, &stStreamAttr);
+
+    if(AO_SND_SPEEDADJUST_SRC == pTrack->enUserSpeedType && 0 > pTrack->s32UserSpeedRate)
+    {
+        TRACKWriteMuteFrame(pCard, pTrack, &stStreamAttr);
+    }
+
+   // (HI_VOID)TRACKStartAip(pCard, pTrack);
+
+    TRACKDbgCountSendData(pTrack);
+
     return HI_SUCCESS;
 }
 

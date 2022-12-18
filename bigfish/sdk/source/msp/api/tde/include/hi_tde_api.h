@@ -663,6 +663,9 @@ HI_S32 HI_TDE2_EnableRegionDeflicker(HI_BOOL bRegionDeflicker);
 **/
 HI_S32 HI_TDE2_MultiBlending(TDE_HANDLE s32Handle, TDE_SURFACE_LIST_S *pstSurfaceList);
 
+
+HI_S32 HI_TDE2_EndJobEx(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock, HI_U32 u32TimeOut);
+
 /** @} */  /** <!-- ==== API declaration end ==== */
 #ifdef __cplusplus
  #if __cplusplus

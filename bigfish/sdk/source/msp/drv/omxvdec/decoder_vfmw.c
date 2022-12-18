@@ -50,7 +50,7 @@ VFMW_EXPORT_FUNC_S* pVfmwFunc = HI_NULL;
 HI_U32   g_DispNum               = 4;
 HI_U32   g_SegSize               = 2;         // (M)
 HI_BOOL  g_DynamicFsEnable       = HI_TRUE;
-HI_BOOL  g_LowDelayStatistics    = HI_TRUE;
+HI_BOOL  g_LowDelayStatistics    = HI_FALSE;  //HI_TRUE;
 HI_BOOL  g_RawMoveEnable         = HI_TRUE;   // 码流搬移使能标志，解决scd切割失败不释放码流的情况
 HI_BOOL  g_FastOutputMode        = HI_FALSE;
 
@@ -69,6 +69,7 @@ static HI_S32 decoder_event_handler(HI_S32 chan_id, HI_S32 event_type, HI_VOID *
 {
 	HI_S32  ret = HI_SUCCESS;
 	OMXVDEC_CHAN_CTX  *pchan = HI_NULL;
+    IMAGE* pstImg = NULL;
 
 	pchan = channel_find_inst_by_decoder_id(g_OmxVdec, chan_id);
 	if (HI_NULL == pchan)
@@ -83,6 +84,16 @@ static HI_S32 decoder_event_handler(HI_S32 chan_id, HI_S32 event_type, HI_VOID *
 
             OmxPrint(OMX_INFO, "Get New Image!\n");
 
+            pstImg = (IMAGE*)((HI_U32*)pargs);
+            if (pstImg == NULL)
+            {
+                break;
+            }
+            if ((pchan->bLowdelay || g_FastOutputMode) && (NULL != pchan->omx_vdec_lowdelay_proc_rec))
+            {
+                channel_add_lowdelay_tag_time(pchan, pstImg->Usertag, OMX_LOWDELAY_REC_VFMW_RPO_IMG_TIME, OMX_GetTimeInMs());
+            }
+            pchan->omx_chan_statinfo.DecoderOut++;
             ret = processor_inform_img_ready(pchan);
 
             break;
@@ -378,6 +389,7 @@ static HI_S32 decoder_get_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 		stream_data->RawExt.BufLen        = pbuf->buf_len;
 		stream_data->RawExt.CfgWidth      = pchan->out_width;
 		stream_data->RawExt.CfgHeight     = pchan->out_height;
+        stream_data->UserTag              = pbuf->usr_tag;
 
         if (pchan->seek_pending)
         {
@@ -406,6 +418,11 @@ static HI_S32 decoder_get_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 
 		ret = HI_SUCCESS;
 
+        if ((pchan->bLowdelay || g_FastOutputMode) && (NULL != pchan->omx_vdec_lowdelay_proc_rec))
+        {
+            channel_add_lowdelay_tag_time(pchan, stream_data->UserTag, OMX_LOWDELAY_REC_VFMW_RCV_STRM_TIME, OMX_GetTimeInMs());
+        }
+		pchan->omx_chan_statinfo.DecoderIn++;
         if ((pchan->bLowdelay || g_FastOutputMode)
             && !(stream_data->is_not_last_packet_flag)
             && pchan->protocol == STD_H264)
@@ -528,6 +545,11 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 		pchan->input_flush_pending = 0;
 	}
 
+    if ((pchan->bLowdelay || g_FastOutputMode) && (NULL != pchan->omx_vdec_lowdelay_proc_rec))
+    {
+        channel_add_lowdelay_tag_time(pchan, stream_data->UserTag, OMX_LOWDELAY_REC_VFMW_RLS_STRM_TIME, OMX_GetTimeInMs());
+    }
+	
 	spin_unlock_irqrestore(&pchan->raw_lock, flags);
 
     OmxPrint(OMX_INBUF, "VFMW release stream: PhyAddr = 0x%08x, VirAddr = %p, Len = %d\n",

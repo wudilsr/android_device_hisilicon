@@ -23,13 +23,9 @@ config HI_VIDEO_MAX_DISP_FRAME_NUM_IN_1024
 	range 2 16
 	default 4
 
-config HI_VIDEO_SCD_BUF_SIZE_IN_1024
-	int "SCD buffer size(2M-50M)"
-	range 2 50
-	default 20
-
 config HI_VIDEO_MAX_VDH_BUF_IN_1024
-        int "Max VDH buffer for one decoder(20M-300M)"
-        range 20 300
-        default 180
+    int "Max VDH buffer for one decoder(20M-300M)"
+    range 20 300
+    default 180
+
 endmenu

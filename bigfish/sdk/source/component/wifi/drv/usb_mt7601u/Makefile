@@ -13,32 +13,22 @@ BUILD_DIR  := $(shell pwd)/tmp
 ifneq ($(ANDROID_BUILD),y)
 INSTALL_DIR := $(MODULE_DIR)
 STA_CFG_INSTALL_DIR := $(ROOTFS_DIR)/etc/Wireless/RT2870STA
-AP_CFG_INSTALL_DIR := $(ROOTFS_DIR)/etc/Wireless/RT2870AP
+PREALLOC_INSTALL_DIR := $(MODULE_DIR)/mtprealloc7601Usta.ko
 else
 INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules
 STA_CFG_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/Wireless/RT2870STA
-AP_CFG_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/Wireless/RT2870AP
+PREALLOC_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules/mtprealloc7601Usta.ko
 endif
 
-ifeq ($(CFG_HI_WIFI_MODE_STA),y)
-STA_SRC := DPA_MT7601U_ANDROID_JB_3.0.0.6_20130830_SOFTAP
-STA_MODULE := mt7601Usta.ko mtprealloc7601Usta.ko
-STA_MODULE_PATH := $(BUILD_DIR)/$(STA_SRC)/os/linux/mt7601Usta.ko \
-                   $(BUILD_DIR)/$(STA_SRC)/PREALLOC/os/linux/mtprealloc7601Usta.ko
-STA_CFG := RT2870STA_7601.dat
-STA_CFG_PATH := $(BUILD_DIR)/$(STA_SRC)/RT2870STA_7601.dat
-endif
+STA_SRC := JEDI.MP1.mt7601u.v1.4.3
+STA_MODULE := mt7601Usta.ko mtprealloc.ko
+STA_MODULE_PATH := $(BUILD_DIR)/$(STA_SRC)/os/linux/mt7601Usta.ko 
+PREALLOC_MODULE_PATH :=  $(BUILD_DIR)/$(STA_SRC)/os/linux/mtprealloc.ko
+STA_CFG := MT7601USTA.dat
+STA_CFG_PATH := $(BUILD_DIR)/$(STA_SRC)/MT7601USTA.dat
 
-ifeq ($(CFG_HI_WIFI_MODE_AP),y)
-AP_SRC := DPO_GPL_MT7601UAP_JB_SDK42_20130329
-AP_MODULE := mt7601Uap.ko
-AP_MODULE_PATH := $(BUILD_DIR)/$(AP_SRC)/os/linux/mt7601Uap.ko
-AP_CFG := RT2870AP_7601.dat
-AP_CFG_PATH := $(BUILD_DIR)/$(AP_SRC)/RT2870AP_7601.dat
-endif
-
-MODULE_SRC = $(STA_SRC) $(AP_SRC)
-MODULE = $(STA_MODULE) $(AP_MODULE)
+MODULE_SRC = $(STA_SRC)
+MODULE = $(STA_MODULE)
 
 BUILD_MODULES = $(patsubst %,%_build,${MODULE_SRC})
 UNINSTALL_MODULES = $(patsubst %,%_uninstall,${MODULE})
@@ -58,24 +48,13 @@ clean:
 
 install: all
 	@test -d $(INSTALL_DIR) || mkdir -p $(INSTALL_DIR)
-ifeq ($(CFG_HI_WIFI_MODE_STA),y)
 	@cp -v $(STA_MODULE_PATH) $(INSTALL_DIR)/
+	@cp -v $(PREALLOC_MODULE_PATH) $(PREALLOC_INSTALL_DIR)
 	@test -d $(STA_CFG_INSTALL_DIR) || mkdir -p $(STA_CFG_INSTALL_DIR)
 	@cp -v $(STA_CFG_PATH) $(STA_CFG_INSTALL_DIR)/
-endif
-ifeq ($(CFG_HI_WIFI_MODE_AP),y)
-	@cp -v $(AP_MODULE_PATH) $(INSTALL_DIR)/
-	@test -d $(AP_CFG_INSTALL_DIR) || mkdir -p $(AP_CFG_INSTALL_DIR)
-	@cp -v $(AP_CFG_PATH) $(AP_CFG_INSTALL_DIR)/
-endif
 
 uninstall: $(UNINSTALL_MODULES)
-ifeq ($(CFG_HI_WIFI_MODE_STA),y)
 	@rm -f $(STA_CFG_INSTALL_DIR)/$(STA_CFG)
-endif
-ifeq ($(CFG_HI_WIFI_MODE_AP),y)
-	@rm -f $(AP_CFG_INSTALL_DIR)/$(AP_CFG)
-endif
 
 #==================================================================
 #                          modules

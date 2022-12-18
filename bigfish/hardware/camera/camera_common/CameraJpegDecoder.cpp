@@ -33,45 +33,6 @@ CameraJpegDecoder::CameraJpegDecoder()
       mPort(HI_INVALID_HANDLE),
       mDelayCount(0),
       mCanceled(false) {
-    HI_S32 s32Ret = HI_MPI_VDEC_Init();
-
-    s32Ret |= HI_MPI_VDEC_AllocChan(&mVdec, HI_NULL);
-
-    HI_UNF_VCODEC_ATTR_S stDefAttr;
-    s32Ret |= HI_MPI_VDEC_GetChanAttr(mVdec, &stDefAttr);
-    stDefAttr.enType = HI_UNF_VCODEC_TYPE_MJPEG;
-    s32Ret |= HI_MPI_VDEC_SetChanAttr(mVdec, &stDefAttr);
-
-    s32Ret |= HI_MPI_VDEC_ChanBufferInit(mVdec, VDEC_BUFF_SIZE, HI_INVALID_HANDLE);
-
-    // Vdec's output buffers use external buffers, allocated from native window.
-    s32Ret |= HI_MPI_VDEC_SetChanBufferMode(mVdec, VDEC_BUF_USER_ALLOC_MANAGE);
-
-    s32Ret |= HI_MPI_VDEC_CreatePort(mVdec, &mPort, VDEC_PORT_HD);
-
-    s32Ret |= HI_MPI_VDEC_SetPortType(mVdec, mPort, VDEC_PORT_TYPE_MASTER);
-
-    HI_DRV_VPSS_PORT_CFG_S stPortCfg;
-    memset(&stPortCfg, 0, sizeof(HI_DRV_VPSS_PORT_CFG_S));
-    s32Ret |= HI_MPI_VDEC_GetPortAttr(mVdec, mPort, &stPortCfg);
-    stPortCfg.s32OutputWidth = 0;
-    stPortCfg.s32OutputHeight = 0;
-    s32Ret |= HI_MPI_VDEC_SetPortAttr(mVdec, mPort, &stPortCfg);
-
-    s32Ret |= HI_MPI_VDEC_EnablePort(mVdec, mPort);
-
-    HI_BOOL bProgressive = HI_TRUE;
-    HI_CODEC_VIDEO_CMD_S stVdecCmd;
-    stVdecCmd.u32CmdID = HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD;
-    stVdecCmd.pPara = (HI_VOID *)&bProgressive;
-    s32Ret |= HI_MPI_VDEC_Invoke(mVdec, &stVdecCmd);
-
-    s32Ret |= HI_MPI_VDEC_ChanStart(mVdec);
-    if (s32Ret != HI_SUCCESS) {
-        ALOGE("MPI_VDEC, init vdec or port error = %d", s32Ret);
-    }
-
-    mStartSystemTime = systemTime(SYSTEM_TIME_MONOTONIC);
 }
 
 CameraJpegDecoder::~CameraJpegDecoder() {
@@ -99,6 +60,111 @@ CameraJpegDecoder::~CameraJpegDecoder() {
 
     ALOGV("mVideoFrameMap.size: %d", mVideoFrameMap.size());
     mVideoFrameMap.clear();
+}
+
+status_t CameraJpegDecoder::initJpegDecoder()
+{
+#ifdef HI_TEE_SUPPORT
+    VDEC_BUFFER_ATTR_S stVdecBufAttr = {0};
+#endif
+    HI_S32 s32Ret = HI_MPI_VDEC_Init();
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_Init error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    s32Ret = HI_MPI_VDEC_AllocChan(&mVdec, HI_NULL);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_AllocChan error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    HI_UNF_VCODEC_ATTR_S stDefAttr;
+    s32Ret = HI_MPI_VDEC_GetChanAttr(mVdec, &stDefAttr);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_GetChanAttr error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    stDefAttr.enType = HI_UNF_VCODEC_TYPE_MJPEG;
+    s32Ret = HI_MPI_VDEC_SetChanAttr(mVdec, &stDefAttr);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_SetChanAttr error = %d", s32Ret);
+        return s32Ret;
+    }
+
+#ifdef HI_TEE_SUPPORT
+    stVdecBufAttr.u32BufSize = VDEC_BUFF_SIZE;
+    stVdecBufAttr.bTvp = false;
+    s32Ret = HI_MPI_VDEC_ChanBufferInit(mVdec, HI_INVALID_HANDLE, &stVdecBufAttr);
+#else
+    s32Ret = HI_MPI_VDEC_ChanBufferInit(mVdec, VDEC_BUFF_SIZE, HI_INVALID_HANDLE);
+#endif
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_ChanBufferInit error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    // Vdec's output buffers use external buffers, allocated from native window.
+    s32Ret = HI_MPI_VDEC_SetChanBufferMode(mVdec, VDEC_BUF_USER_ALLOC_MANAGE);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_SetChanBufferMode error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    s32Ret = HI_MPI_VDEC_CreatePort(mVdec, &mPort, VDEC_PORT_HD);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_CreatePort error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    s32Ret = HI_MPI_VDEC_SetPortType(mVdec, mPort, VDEC_PORT_TYPE_MASTER);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_SetPortType error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    HI_DRV_VPSS_PORT_CFG_S stPortCfg;
+    memset(&stPortCfg, 0, sizeof(HI_DRV_VPSS_PORT_CFG_S));
+    s32Ret = HI_MPI_VDEC_GetPortAttr(mVdec, mPort, &stPortCfg);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_GetPortAttr error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    stPortCfg.s32OutputWidth = 0;
+    stPortCfg.s32OutputHeight = 0;
+    s32Ret = HI_MPI_VDEC_SetPortAttr(mVdec, mPort, &stPortCfg);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_SetPortAttr error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    s32Ret = HI_MPI_VDEC_EnablePort(mVdec, mPort);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_EnablePort error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    HI_BOOL bProgressive = HI_TRUE;
+    HI_CODEC_VIDEO_CMD_S stVdecCmd;
+    stVdecCmd.u32CmdID = HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD;
+    stVdecCmd.pPara = (HI_VOID *)&bProgressive;
+    s32Ret = HI_MPI_VDEC_Invoke(mVdec, &stVdecCmd);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_Invoke error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    s32Ret = HI_MPI_VDEC_ChanStart(mVdec);
+    if (s32Ret != HI_SUCCESS) {
+        ALOGE("MPI_VDEC, HI_MPI_VDEC_ChanStart error = %d", s32Ret);
+        return s32Ret;
+    }
+
+    mStartSystemTime = systemTime(SYSTEM_TIME_MONOTONIC);
+
+    return HI_SUCCESS;
 }
 
 HI_HANDLE CameraJpegDecoder::getBufferHandle(buffer_handle_t* native_buffer)
@@ -150,6 +216,7 @@ status_t CameraJpegDecoder::setExternalBuffer(struct preview_stream_ops* window,
 
     mPreviewWindow = window;
     mBufferCount = count;
+    mStride = stride;
 
     return OK;
 }
@@ -213,7 +280,7 @@ status_t CameraJpegDecoder::putStream(const uint8_t *data, uint32_t size) {
         ALOGE("Call HI_MPI_VDEC_ChanGetBuffer return error: %#x", s32Ret);
         return NO_MEMORY;
     }
-    memcpy(stBuf.pu8Addr, data, size);
+    memcpy((void *)((uint64_t)stBuf.pu8Addr), (void *)data, size);
     nsecs_t timestamp = systemTime(SYSTEM_TIME_MONOTONIC);
     stBuf.u64Pts = (timestamp - mStartSystemTime) / 1E6; // ms
     s32Ret = HI_MPI_VDEC_ChanPutBuffer(mVdec, &stBuf);
@@ -246,13 +313,15 @@ status_t CameraJpegDecoder::getFrameIndex(const HI_DRV_VIDEO_FRAME_PACKAGE_S *fr
     return UNKNOWN_ERROR;
 }
 
-status_t CameraJpegDecoder::receiveFrame(buffer_handle_t** native_buffer, uint64_t*timestamp) {
+status_t CameraJpegDecoder::receiveFrame(buffer_handle_t** native_buffer, uint64_t*timestamp, int *Stride) {
     HI_DRV_VIDEO_FRAME_PACKAGE_S framePackage;
     HI_S32 s32Ret = HI_MPI_VDEC_ReceiveFrame(mVdec, &framePackage);
 
+    HI_S32 mTryCount = 0;
     while(mDelayCount > 3) {
         if(s32Ret == HI_SUCCESS) {
             mDelayCount = mDelayCount - 1;
+            mTryCount--;
 
             int i = 0;
             status_t status = getFrameIndex(&framePackage, &i);
@@ -266,10 +335,18 @@ status_t CameraJpegDecoder::receiveFrame(buffer_handle_t** native_buffer, uint64
             }
         }
         s32Ret = HI_MPI_VDEC_ReceiveFrame(mVdec, &framePackage);
+        if(s32Ret != HI_SUCCESS) {
+            mTryCount++;
+            usleep(1000*10);
+        }
+        if(mTryCount > 50) {
+            ALOGE("HI_MPI_VDEC_ReceiveFrame fail, try 50 times");
+            return -101;
+        }
     }
 
     if (s32Ret != HI_SUCCESS) {
-        ALOGW("Call HI_MPI_VDEC_ReceiveFrame return error = %d", s32Ret);
+        ALOGW("Call HI_MPI_VDEC_ReceiveFrame mDelayCount: %d, return error = %d", mDelayCount, s32Ret);
         return s32Ret;
     }
 
@@ -303,6 +380,8 @@ status_t CameraJpegDecoder::receiveFrame(buffer_handle_t** native_buffer, uint64
     if (buffer != NULL) {
         *native_buffer = buffer;
     }
+
+    *Stride = mStride;
 
     /* Save YUV */
 #if 0

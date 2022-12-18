@@ -459,6 +459,9 @@ private:
             HI_S64 ms64StartTime;
             HI_S32 ms32LastPosition;
             HI_U32 mu32LastGetPositionTime;
+            int mnPauseTime;
+            int mnLastPositionWhenPause;
+            int mnCurrentPlayPostion;
             /* end */
             HI_FORMAT_FILE_INFO_S *mpWrapperFileInfo; // fileinfo to user,e.g. delete the substream info for truehd
             int SetOutPutSettings();
@@ -579,6 +582,7 @@ private:
         sp <CommandQueue>    mCmdQueue;
         HI_HANDLE mAVPlayer;
         bool mUseExtAVPlay;
+        int               mUnderrun;
 
         HI_HANDLE mSoHandle;
         bool mReset;
@@ -597,6 +601,7 @@ HI_HANDLE getHandle()
             return mHandle;
         };
 
+        static HI_S32   destroyStaticAVPlayer();
 private:
         bool mSetdatasourcePrepare;
         bool mHasPrepared;

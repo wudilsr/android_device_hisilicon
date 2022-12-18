@@ -291,6 +291,9 @@ public class MenuClickSwitch
             case 22:
                 mInvokeTest.TestCMD_GET_BUFFERTIME_CONFIG();
                 break;
+            case 23:
+                mInvokeTest.TestCMD_GET_IP_PORT();
+                break;
             default:
                 break;
         }

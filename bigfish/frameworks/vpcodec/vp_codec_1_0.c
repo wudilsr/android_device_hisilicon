@@ -74,21 +74,21 @@ const char * vl_get_version()
 
 void fh_load_gop_bitrate(int *fh_gop, int *fh_bitrate)
 {
-
+	
 	FILE *fp = fopen("/mnt/sdcard/fh_vpcodec_attr", "rb");
 	char read_line[256];
 	memset(read_line, 0, 256);
-	if (NULL != fp)
+	if (NULL != fp) 
 	{
 		fgets(read_line,256,fp);
 		printf("fh_load_gop_bitrate: %s\n", read_line);
 
 		*fh_gop = strtol(read_line, NULL, 0);
 		printf("fh_load_gop_bitrate: fh_gop: %d\n", *fh_gop);
-
+		
 		memset(read_line, 0, 256);
 		fgets(read_line,256,fp);
-		printf("fh_load_gop_bitrate: %s\n", read_line);
+		printf("fh_load_gop_bitrate: %s\n", read_line);	
 		*fh_bitrate = strtol(read_line, NULL, 0);
 		printf("fh_load_gop_bitrate: fh_bitrate: %d\n", *fh_bitrate);
 
@@ -240,7 +240,7 @@ vl_codec_handle_t vl_video_encoder_init(vl_codec_id_t codec_id, int width, int h
     }
 
     ALOGE("vl_video_encoder_init , hend = 0x%08x\n",hVenc );
-
+    
     g_hVenc = hVenc;
     return hVenc;
 
@@ -267,10 +267,10 @@ static HI_S32 Yuv_SEMIPLANAR_to_PLANAR( HI_U8 *in, HI_U8 ** out, HI_UNF_VIDEO_FR
     HI_U32 u32Height = pstFrame->u32Height / 2;
 
 
-    pu8Ydata = *out;
-
+	pu8Ydata = *out;
+    
     pu8Vdata =(pu8Ydata + pstFrame->u32Width * pstFrame->u32Height);
-
+ 
     pu8Udata =(pu8Ydata + pstFrame->u32Width * pstFrame->u32Height * 5 / 4);
 
      /* write Y */
@@ -279,16 +279,16 @@ static HI_S32 Yuv_SEMIPLANAR_to_PLANAR( HI_U8 *in, HI_U8 ** out, HI_UNF_VIDEO_FR
     ptr += pstFrame->u32Height*pstFrame->u32Width;
 
     /* U V transfer and save */
-
+    
     u32Height = pstFrame->u32Width*u32Height/8;
-
+    
     for (j = 0; j < u32Height; j++)
     {
         pu8Udata[j] = ptr[0] | (ptr[2]<<8) | (ptr[4]<<16) | (ptr[6]<<24);
         pu8Vdata[j] = ptr[1] | (ptr[3]<<8) | (ptr[5]<<16) | (ptr[7]<<24);
         ptr += 8;
     }
-
+    
 
     * out = pu8Ydata;
 
@@ -311,12 +311,12 @@ static HI_S32 Transfer_buffer(HI_U8 *in, int length, HI_U32 *pu32PutAddrPhy)
     s32Ret = HI_MMZ_GetPhyaddr(in, &u32InputAddrPhy, &u32Size);
     if (HI_SUCCESS == s32Ret)
     {
-        *pu32PutAddrPhy = u32InputAddrPhy;
-
-	return HI_SUCCESS;
-
-    }
-
+		*pu32PutAddrPhy = u32InputAddrPhy;
+		
+		return HI_SUCCESS;
+		
+	}
+	
     if(g_stMmzFrm.bufsize < length)
     {
         if(0 != g_stMmzFrm.bufsize)
@@ -327,8 +327,10 @@ static HI_S32 Transfer_buffer(HI_U8 *in, int length, HI_U32 *pu32PutAddrPhy)
                 ALOGE("HI_MMZ_Malloc failed\n");
                 return s32Ret;
             }
-        }
-	snprintf(g_stMmzFrm.bufname, sizeof(g_stMmzFrm.bufname), "vp_codec");
+		
+    	}
+
+		snprintf(g_stMmzFrm.bufname, sizeof(g_stMmzFrm.bufname), "vp_codec");
         g_stMmzFrm.bufsize = length;
         s32Ret = HI_MMZ_Malloc(&g_stMmzFrm);
         if (s32Ret != HI_SUCCESS)
@@ -352,18 +354,18 @@ static HI_S32 Transfer_buffer(HI_U8 *in, int length, HI_U32 *pu32PutAddrPhy)
             ALOGE("Yuv_SEMIPLANAR_to_PLANAR failed, ret = 0x%08x\n", s32Ret);
         }
 #else /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-
+	
 	memcpy(g_stMmzFrm.user_viraddr, in, length);
 #endif /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-
+	
 	if (HI_SUCCESS != HI_MMZ_Flush(0))
 	{
 		ALOGE("Error: MMZ Flush cached failed!\n");
 		return HI_FAILURE;
 	}
-
+	
 	*pu32PutAddrPhy = g_stMmzFrm.phyaddr;
-
+	
 	return HI_SUCCESS;
 
 }
@@ -412,7 +414,7 @@ int vl_video_encoder_encode(vl_codec_handle_t handle, vl_frame_type_t type, char
     stFrame.u32Height =  pstAttr->u32Height;
     stFrame.stVideoFrameAddr[0].u32CAddr   = stFrame.stVideoFrameAddr[0].u32YAddr + (stFrame.u32Width * stFrame.u32Height);
     stFrame.stVideoFrameAddr[0].u32YStride =  pstAttr->u32Width ;
-
+    
 #if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
 	stFrame.stVideoFrameAddr[0].u32CrAddr = stFrame.stVideoFrameAddr[0].u32YAddr + ((stFrame.u32Width * stFrame.u32Height)*5/4);
 	stFrame.stVideoFrameAddr[0].u32CStride  = stFrame.u32Width/2;
@@ -479,7 +481,7 @@ int vl_video_encoder_encode(vl_codec_handle_t handle, vl_frame_type_t type, char
             goto ERR0;
         }
     }
-
+    
     s32Len = 0;
     i=0;
     while (1)
@@ -531,7 +533,7 @@ int vl_video_encoder_encode(vl_codec_handle_t handle, vl_frame_type_t type, char
     }
     //printf("@@@@[%s]line:%d,i=%d,end:%d\n",__FUNCTION__,__LINE__,i,stStream.bFrameEnd);      /*libo@201312*/
     //* out = (char *)stStream.pu8Addr;
-   // ALOGE("@@@@[%s]line:%d,u32Len:%d\n",__FUNCTION__,__LINE__,u32Len);      /*libo@201312*/
+   // ALOGE("@@@@[%s]line:%d,u32Len:%d\n",__FUNCTION__,__LINE__,u32Len);      /*libo@201312*/    
 EXIT0:
     s32Ret = HI_UNF_VENC_DequeueFrame(handle, &stFrame);
     if (HI_SUCCESS != s32Ret)
@@ -590,8 +592,8 @@ int vl_video_encoder_destory(vl_codec_handle_t handle)
             ALOGE("HI_MMZ_Malloc failed\n");
             return s32Ret;
         }
-
-	memset(&g_stMmzFrm, 0, sizeof(HI_MMZ_BUF_S));
+    
+	    memset(&g_stMmzFrm, 0, sizeof(HI_MMZ_BUF_S));
     }
 
     return s32Ret;
@@ -613,7 +615,7 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
     HI_HANDLE hAvplay;
     HI_UNF_WINDOW_ATTR_S stVirWinAttr;
     HI_UNF_AVPLAY_LOW_DELAY_ATTR_S stLowDelay;
-
+    
     ALOGE("vl_video_decoder_init  codec_id = %d\n", codec_id );
 
     if ((HI_INVALID_HANDLE != g_hAvplay)||(HI_INVALID_HANDLE != g_hVirWin))
@@ -622,14 +624,14 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
         return g_hAvplay;
     }
 
-
+    
     HI_SYS_Init();
-
+    
     s32Ret = HI_UNF_VO_Init(HI_UNF_VO_DEV_MODE_NORMAL);
     if (s32Ret != HI_SUCCESS)
     {
         ALOGE("call HI_UNF_VO_Init failed.ret = 0x%08x\n", s32Ret);
-
+        
         return HI_FAILURE;
     }
 
@@ -637,7 +639,7 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
     if (s32Ret != HI_SUCCESS)
     {
         ALOGE("call HI_UNF_AVPLAY_Init failedret = 0x%08x.\n", s32Ret);
-
+        
         return HI_FAILURE;
     }
 
@@ -667,7 +669,7 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
 
     stAvOpt.enDecType  = HI_UNF_VCODEC_DEC_TYPE_NORMAL;
     stAvOpt.enCapLevel = HI_UNF_VCODEC_CAP_LEVEL_FULLHD;
-
+    
     if(HI_UNF_VCODEC_TYPE_H264 == stAvVdecAttr.enType)
     {
         stAvOpt.enProtocolLevel = HI_UNF_VCODEC_PRTCL_LEVEL_H264;
@@ -692,10 +694,10 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
 
     //stAvVdecAttr.enType = pstAttr->enDecType;
     stAvVdecAttr.enMode = HI_UNF_VCODEC_MODE_NORMAL;
-    stAvVdecAttr.u32ErrCover  = 90;
+    stAvVdecAttr.u32ErrCover  = 10;
     stAvVdecAttr.u32Priority  = 3;
     stAvVdecAttr.bOrderOutput = HI_TRUE;
-
+    
     s32Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &stAvVdecAttr);
     if (s32Ret != HI_SUCCESS)
     {
@@ -730,7 +732,7 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
         goto ERR4;
     }
 
-
+    
     s32Ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_LOW_DELAY, &stLowDelay);
     stLowDelay.bEnable = HI_TRUE;
     s32Ret |= HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_LOW_DELAY, &stLowDelay);
@@ -740,7 +742,7 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
         ALOGE("HI_UNF_AVPLAY_SetAttr failed, ret = 0x%08x\n", s32Ret);
         goto ERR4;
     }
-
+   
     s32Ret = HI_UNF_VO_SetWindowEnable(g_hVirWin, HI_TRUE);
     if (HI_SUCCESS != s32Ret)
     {
@@ -754,31 +756,31 @@ vl_codec_handle_t vl_video_decoder_init(vl_codec_id_t codec_id)
         ALOGE("HI_UNF_AVPLAY_Start failed, ret = 0x%08x\n", s32Ret);
         goto ERR5;
     }
-
+    
     ALOGE("vl_video_decoder_init, hand = 0x%08x\n", hAvplay);
     g_hAvplay = hAvplay;
     return hAvplay;
-
+    
 ERR5:
     HI_UNF_VO_SetWindowEnable(g_hVirWin, HI_FALSE);
-
+    
 ERR4:
     HI_UNF_VO_DetachWindow(g_hVirWin, hAvplay);
-
+    
 ERR3:
     HI_UNF_VO_DestroyWindow(g_hVirWin);
     g_hVirWin = HI_INVALID_HANDLE;
 
 ERR2:
     HI_UNF_AVPLAY_ChnClose(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
-
+    
 ERR1:
     HI_UNF_AVPLAY_Destroy(hAvplay);
     hAvplay = HI_INVALID_HANDLE;
 ERR0:
     HI_UNF_AVPLAY_DeInit();
     HI_UNF_VO_DeInit();
-
+    
     return HI_FAILURE;
 }
 
@@ -807,13 +809,13 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
                                        0x43, 0x45, 0x4e, 0x44,
                                        0x00, 0x00, 0x01, 0x00};
     in_size +=  sizeof(g_zero_delay);
-
+    
     if ((HI_INVALID_HANDLE == g_hVirWin)||(HI_INVALID_HANDLE == handle)||(HI_NULL == out)||(HI_NULL == *out))
     {
         ALOGE("Parameters Error!  g_hVirWin:%x, handle:%x \n", g_hVirWin, handle);
         return s32Ret;
     }
-
+    
     if(HI_NULL != pBufVirAddr)
     {
         s32Ret = HI_MUNMAP(pBufVirAddr);
@@ -821,7 +823,7 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
         {
             ALOGE("HI_MUNMAP failed, ret = 0x%08x\n", s32Ret);
         }
-        pBufVirAddr = HI_NULL;
+        pBufVirAddr = HI_NULL; 
         s32Ret = HI_UNF_VO_ReleaseFrame(g_hVirWin, &stFrameinfo);
         if (HI_SUCCESS != s32Ret)
         {
@@ -829,7 +831,7 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
         }
     }
 
-
+    
     s32Ret = HI_UNF_AVPLAY_GetBuf(handle, HI_UNF_AVPLAY_BUF_ID_ES_VID, in_size, &stAvplayBuf, 0/*TIME_OUT_MS*/);
     if (HI_SUCCESS == s32Ret)
     {
@@ -851,7 +853,6 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
     {
         ALOGE("HI_UNF_AVPLAY_GetBuf failed, ret = 0x%08x\n", s32Ret);
     }
-#if 1 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
     i=0;
     while (HI_SUCCESS != (s32Ret = HI_UNF_VO_AcquireFrame(g_hVirWin, &stFrameinfo, 0/*TIME_OUT_MS*/)))
     {
@@ -862,9 +863,9 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
             goto ERR0;
         }
     }
-    //ALOGE("@addr:%x-%x=%d==%d\n",stFrameinfo.stVideoFrameAddr[0].u32YAddr,stFrameinfo.stVideoFrameAddr[0].u32CAddr,stFrameinfo.stVideoFrameAddr[0].u32YAddr-stFrameinfo.stVideoFrameAddr[0].u32CAddr,stFrameinfo.u32Width * stFrameinfo.u32Height);        /*libo@201312*/
-
-    //ALOGE("@@@@[%s]line:%d,%dx%d,%d\n",__FUNCTION__,__LINE__,stFrameinfo.u32Width , stFrameinfo.u32Height, stFrameinfo.enVideoFormat);      /*libo@201312*/
+    //ALOGE("@addr:%x-%x=%d==%d\n",stFrameinfo.stVideoFrameAddr[0].u32YAddr,stFrameinfo.stVideoFrameAddr[0].u32CAddr,stFrameinfo.stVideoFrameAddr[0].u32YAddr-stFrameinfo.stVideoFrameAddr[0].u32CAddr,stFrameinfo.u32Width * stFrameinfo.u32Height);        /*libo@201312*/    
+    
+    //ALOGE("@@@@[%s]line:%d,%dx%d,%d\n",__FUNCTION__,__LINE__,stFrameinfo.u32Width , stFrameinfo.u32Height, stFrameinfo.enVideoFormat);      /*libo@201312*/    
 
     u32Size = stFrameinfo.u32Width * stFrameinfo.u32Height * 3 / 2;
 
@@ -874,18 +875,24 @@ int vl_video_decoder_decode(vl_codec_handle_t handle, char * in, int in_size, ch
         ALOGE("HI_MMAP failed, PHY_addr: 0x%08x\n", stFrameinfo.stVideoFrameAddr[0].u32YAddr);
         goto ERR1;
     }
-
-    s32Ret=  Yuv_SEMIPLANAR_to_PLANAR(pBufVirAddr, out, &stFrameinfo);
+    
+#if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
+   s32Ret=  Yuv_SEMIPLANAR_to_PLANAR(pBufVirAddr, out, &stFrameinfo);
     if (HI_SUCCESS != s32Ret)
     {
         ALOGE("Yuv_SEMIPLANAR_to_PLANAR failed, ret = 0x%08x\n", s32Ret);
         goto ERR1;
     }
+#else
+    memcpy((HI_VOID*)*out, (HI_VOID*)pBufVirAddr, u32Size);
+
+   // *out = pBufVirAddr;
+
 #endif /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-
+    
     return u32Size;
-
-ERR1:
+    
+ERR1:  
     s32Ret = HI_UNF_VO_ReleaseFrame(g_hVirWin, &stFrameinfo);
     if (HI_SUCCESS != s32Ret)
     {
@@ -910,14 +917,14 @@ int vl_video_decoder_destory(vl_codec_handle_t handle)
     HI_S32 s32Ret = HI_FAILURE;
     HI_UNF_AVPLAY_STOP_OPT_S Stop;
 
-
+    
     ALOGE("Parameters  g_hVirWin:%x, handle:%x \n", g_hVirWin, handle);
     if ((HI_INVALID_HANDLE == g_hVirWin)||(HI_INVALID_HANDLE == handle))
     {
         ALOGE("Parameters Error!  g_hVirWin:%x, handle:%x \n", g_hVirWin, handle);
         return s32Ret;
     }
-
+    
     Stop.enMode = HI_UNF_AVPLAY_STOP_MODE_BLACK;
     Stop.u32TimeoutMs = 0;
 
@@ -932,31 +939,31 @@ int vl_video_decoder_destory(vl_codec_handle_t handle)
     {
         ALOGE("HI_UNF_VO_SetWindowEnable failed, ret = 0x%08x\n", s32Ret);
     }
-
+    
     s32Ret = HI_UNF_VO_DetachWindow(g_hVirWin, handle);
     if (HI_SUCCESS != s32Ret)
     {
         ALOGE("HI_UNF_VO_DetachWindow failed, ret = 0x%08x\n", s32Ret);
     }
-
+    
     HI_UNF_VO_DestroyWindow(g_hVirWin);
     g_hVirWin = HI_INVALID_HANDLE;
-
+    
     s32Ret = HI_UNF_AVPLAY_ChnClose(handle, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
     if (HI_SUCCESS != s32Ret)
     {
         ALOGE("HI_UNF_AVPLAY_ChnClose failed, ret = 0x%08x\n", s32Ret);
     }
-
+    
     s32Ret = HI_UNF_AVPLAY_Destroy(handle);
     if (HI_SUCCESS != s32Ret)
     {
         ALOGE("HI_UNF_AVPLAY_Destroy failed, ret = 0x%08x\n", s32Ret);
     }
-
+    
     g_hAvplay = HI_INVALID_HANDLE;
-
-    HI_UNF_AVPLAY_DeInit();
+     
+    HI_UNF_AVPLAY_DeInit();    
     HI_UNF_VO_DeInit();
 
     return s32Ret;

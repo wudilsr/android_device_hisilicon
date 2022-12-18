@@ -36,16 +36,18 @@
 #include <cutils/properties.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <utils/Timers.h>
 
 
 /*****************************************************************************/
 #define OVERLAY 1
 #define OV_TAG "Overlay"
 static bool mTdeCompose = false;
+
 struct hwc_context_t {
     hwc_composer_device_1_t device;
     /* our private state goes below here */
-	framebuffer_device_t*  fb_device;
+    framebuffer_device_t*  fb_device;
 };
 
 static int hwc_device_open(const struct hw_module_t* module, const char* name,
@@ -186,12 +188,32 @@ static int hwc_prepare(hwc_composer_device_1_t *dev,
 static int hwc_set(hwc_composer_device_1_t *dev,
         size_t numDisplays, hwc_display_contents_1_t** displays)
 {
+    /* 增加TDE打印控制 */
+    bool mTdeDebug   = false;
+    char tdeDebug[PROPERTY_VALUE_MAX];
+    //add by hisi
+    property_get("persist.sys.tde.debug", tdeDebug, "false");
+    if (0 == strcmp(tdeDebug, "true")) {
+        mTdeDebug = true;
+    } else {
+        mTdeDebug = false;
+    }
+
     struct hwc_context_t* ctx = (struct hwc_context_t*)dev;
     private_module_t *m = (private_module_t*)ctx->fb_device->common.module;
     HIFB_HWC_LAYERINFO_S LayerInfos;
+    int tdeAcquireFenceID = -1;
+    hwc_display_contents_1_t* list = displays[0];
+
+    char async_compose[PROPERTY_VALUE_MAX] = {0};
+    int merged_fd = -1;
+    property_get("service.graphic.async.compose", async_compose, "false");
+    int64_t enterTime = 0;
+    if (mTdeDebug) {
+        enterTime = systemTime(SYSTEM_TIME_MONOTONIC) / 1000ll;
+    }
 
 #ifdef OVERLAY
-    hwc_display_contents_1_t* list = displays[0];
     for (int i=0; i< list->numHwLayers; i++){
         private_handle_t *hnd = (private_handle_t*)list->hwLayers[i].handle;
         if(list->hwLayers[i].compositionType == HWC_OVERLAY && hnd)
@@ -238,7 +260,8 @@ static int hwc_set(hwc_composer_device_1_t *dev,
             }else {
                 if(mTdeCompose && supportByHardware(list)) {
                     //ALOGE("TDE finishi the compose!");
-                    tde_compose(dev,numDisplays,displays);
+                    tdeAcquireFenceID = tde_compose(dev,numDisplays,displays);
+                    //tde_compose(dev,numDisplays,displays);
                 } else {
                     setFbFormat(HIFB_FMT_ARGB8888);
                     //ALOGE("GPUfinishi the compose!");
@@ -251,23 +274,54 @@ static int hwc_set(hwc_composer_device_1_t *dev,
             LayerInfos.stInRect.y = TargetFramebuffer->displayFrame.top;
             LayerInfos.stInRect.w = pHandle->width;
             LayerInfos.stInRect.h = pHandle->height;
-            LayerInfos.s32AcquireFenceFd = TargetFramebuffer->acquireFenceFd;
+
+            if (0 == strcmp(async_compose, "true")) {
+                /* merge fb acquirefence and tdefence */
+                merged_fd = sync_merge_fence("HISI_HWC", TargetFramebuffer->acquireFenceFd, tdeAcquireFenceID);
+            } else {
+                merged_fd = TargetFramebuffer->acquireFenceFd;
+                TargetFramebuffer->acquireFenceFd = -1;
+            }
+
+            LayerInfos.s32AcquireFenceFd = merged_fd;
+
             if (ioctl(m->framebuffer->fd, FBIO_HWC_REFRESH, &LayerInfos) != 0)
             {
                 ALOGE("fail to play UI");
             }
 
-            if (TargetFramebuffer->acquireFenceFd != -1)
+            if (merged_fd != -1)
+            {
+                close(merged_fd);
+                merged_fd = -1;
+            }
+
+            if (-1 != TargetFramebuffer->acquireFenceFd)
             {
                 close(TargetFramebuffer->acquireFenceFd);
                 TargetFramebuffer->acquireFenceFd = -1;
             }
+
+            if (-1 != tdeAcquireFenceID)
+            {
+                close(tdeAcquireFenceID);
+                tdeAcquireFenceID = -1;
+            }
+
+            TargetFramebuffer->acquireFenceFd = -1;
+
             if (LayerInfos.s32ReleaseFenceFd != -1){
                 TargetFramebuffer->releaseFenceFd = dup(LayerInfos.s32ReleaseFenceFd);
                 close(LayerInfos.s32ReleaseFenceFd);
             }
         }
     }
+    if (mTdeDebug) {
+        int64_t exitTime = systemTime(SYSTEM_TIME_MONOTONIC) / 1000ll;
+        ALOGE("HISI_HWC num = %d ion_phy_addr=0x%x async=%s",list->numHwLayers, LayerInfos.u32LayerAddr, async_compose);
+        ALOGI("HISI_HWC time escape:%lld", exitTime - enterTime);
+    }
+
     return 0;
 }
 
@@ -354,6 +408,7 @@ static int hwc_device_close(struct hw_device_t *dev)
 		}
         free(ctx);
     }
+    HI_TDE2_Close();
     return 0;
 }
 static int loadFbHalModule(hwc_context_t* dev)
@@ -413,6 +468,7 @@ static int hwc_device_open(const struct hw_module_t* module, const char* name,
         *device = &dev->device.common;
         status = 0;
         loadOverLayModule();
+        HI_TDE2_Open();
     }
 
     char value[PROPERTY_VALUE_MAX];
@@ -424,11 +480,5 @@ static int hwc_device_open(const struct hw_module_t* module, const char* name,
         mTdeCompose = false;
     }
 
-    property_get("ro.config.low_ram", value, "false");
-    if (0 == strcmp(value, "false")) {
-        ;//mTdeCompose = true;
-    } else {
-        mTdeCompose = false;
-    }
     return status;
 }

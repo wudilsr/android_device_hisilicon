@@ -587,6 +587,7 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
   device_specific.IncrementalOTA_Assertions()
 
   updating_fastboot,target_fastboot = common.GetRawImageDifferent("/tmp/fastboot.img","fastboot.img",OPTIONS.source_tmp,OPTIONS.target_tmp)
+  updating_fastboot_2,target_fastboot_2 = common.GetRawImageDifferent("/tmp/fastboot-qfp.img","fastboot-qfp.img",OPTIONS.source_tmp,OPTIONS.target_tmp)
   updating_bootargs,target_bootargs = common.GetRawImageDifferent("/tmp/bootargs.img","bootargs.img",OPTIONS.source_tmp,OPTIONS.target_tmp)
   updating_baseparam,target_baseparam = common.GetRawImageDifferent("/tmp/baseparam.img","baseparam.img",OPTIONS.source_tmp,OPTIONS.target_tmp)
   updating_logo,target_logo = common.GetRawImageDifferent("/tmp/logo.img","logo.img",OPTIONS.source_tmp,OPTIONS.target_tmp)
@@ -605,6 +606,14 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
     script.Print("update fastboot...")
     common.ZipWriteStr(output_zip, "fastboot.img", target_fastboot.data)
     script.WriteRawImage("/fastboot", "fastboot.img")
+
+  if updating_fastboot_2:
+    print "update_fastboot-qfp==%s" % (updating_fastboot_2)
+    if updating_fastboot is None:
+      script.Print("update fastboot...")
+    common.ZipWriteStr(output_zip, "fastboot-qfp.img", target_fastboot_2.data)
+    if updating_fastboot is None:
+      script.WriteRawImage("/fastboot", "fastboot.img")
 
   if updating_bootargs:
     print "update_bootargs==%s" % (updating_bootargs)

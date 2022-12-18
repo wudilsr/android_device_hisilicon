@@ -61,6 +61,8 @@ typedef struct hiVPSS_TASK_S
     VPSS_INSTANCE_S* pstInstance;
 	
 	VPSS_HAL_INFO_S stVpssHalInfo;
+
+	HI_BOOL bOutLowDelay;
     VPSS_FB_NODE_S *pstFrmNode[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER*2];   
 #ifdef ZME_2L_TEST
 	VPSS_FB_NODE_S *pstFrmNodeRoBuf[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];  
@@ -88,6 +90,7 @@ typedef struct hiVPSS_CTRL_S
     
     HI_U32          s32IsVPSSOpen;
 
+    OSAL_EVENT    stTaskLowDelay;
     OSAL_EVENT    stTaskNext;
     OSAL_EVENT      stNewTask;
     VPSS_TASK_S     stTask;

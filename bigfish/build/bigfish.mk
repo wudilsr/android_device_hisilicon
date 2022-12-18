@@ -87,7 +87,11 @@ endif
 
 # hiboot
 .PHONY: hiboot
+ifneq ($(EMMC_BOOT_REG_NAME_2),)
+hiboot: $(NAND_HIBOOT_IMG) $(EMMC_HIBOOT_IMG) $(EMMC_HIBOOT_IMG_2)
+else
 hiboot: $(NAND_HIBOOT_IMG) $(EMMC_HIBOOT_IMG)
+endif
 # updatezip
 .PHONY: updatezip
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)

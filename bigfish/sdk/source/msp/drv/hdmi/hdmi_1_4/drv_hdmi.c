@@ -745,6 +745,8 @@ HI_U32 DRV_HDMI_Init(HI_U32 FromUserSpace)
         {
             bOpenAlready = HI_TRUE;
         }
+        
+        SI_Adjust_SwingCtrl(DRV_HDMI_Disp2UnfFmt(enEncFmt), HI_UNF_HDMI_DEEP_COLOR_24BIT);
     }
 
     if(bOpenAlready == HI_TRUE)

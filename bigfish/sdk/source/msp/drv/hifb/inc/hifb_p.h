@@ -255,6 +255,10 @@ typedef struct
 #ifdef CFG_HIFB_PROC_SUPPORT 	
 	HIFB_PROC_S         stProcInfo;
 #endif	
+
+#ifdef CFG_HIFB_FENCE_SUPPORT
+    struct workqueue_struct *pstHwcRefreshWorkqueue;
+#endif
 }HIFB_PAR_S;
 
 

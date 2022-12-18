@@ -10,7 +10,7 @@
  *       Revision:  initial draft;
  **************************************************************************************
  */
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 #define LOG_TAG "CapabilityManager"
 #include <utils/Log.h>
 
@@ -507,8 +507,8 @@ int CameraParameterAntibanding::queryCapability ( CameraParameters& p )
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
-    p.set(CameraParameters::KEY_SUPPORTED_ANTIBANDING, CameraParameters::ANTIBANDING_OFF);
-    p.set(CameraParameters::KEY_ANTIBANDING, CameraParameters::ANTIBANDING_OFF);
+    p.set(CameraParameters::KEY_SUPPORTED_ANTIBANDING, CameraParameters::ANTIBANDING_AUTO);
+    p.set(CameraParameters::KEY_ANTIBANDING, CameraParameters::ANTIBANDING_AUTO);
 
     return 0;
 }
@@ -711,30 +711,12 @@ int CameraParameterPreview::queryCapability(CameraParameters& p)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
-    struct v4l2_fmtdesc fmt;
-
-    memset(&fmt, 0, sizeof(fmt));
-    fmt.index = 0;
-    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    while (0 == ioctl(mCameraFd, VIDIOC_ENUM_FMT, &fmt))
-    {
-        fmt.index++;
-        CAMERA_PARAM_LOGI("Camera support capture format: { pixelformat = '%c%c%c%c', description = '%s' }",
-                fmt.pixelformat & 0xFF, (fmt.pixelformat >> 8) & 0xFF,
-                (fmt.pixelformat >> 16) & 0xFF, (fmt.pixelformat >> 24) & 0xFF,
-                fmt.description);
-        if(strcmp((char *)fmt.description, "MJPEG")== 0)
-        {
-            mPreviewFormat = V4L2_PIX_FMT_MJPEG;
-        }
-    }
-
     struct v4l2_frmsizeenum fsize;
     String8 strPreview("");
     char strTmp[64];
     memset(&fsize, 0x00, sizeof(fsize));
     fsize.index         = 0;
-    fsize.pixel_format  = mPreviewFormat;
+    fsize.pixel_format  = DEFAULT_CAMERA_PREVIEW_V4L2_FORMAT;
     fsize.type          = V4L2_FRMSIZE_TYPE_DISCRETE;
 
     int order[PREVIEW_SIZE_COUNT];
@@ -782,6 +764,24 @@ int CameraParameterPreview::queryCapability(CameraParameters& p)
         String8 realMaxPreviewSize(strTmp);
         CAMERA_PARAM_LOGI("set preferred-preview-size-for-video = %s", realMaxPreviewSize.string());
         p.set(CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO, realMaxPreviewSize);
+    }
+
+    struct v4l2_fmtdesc fmt;
+
+    memset(&fmt, 0, sizeof(fmt));
+    fmt.index = 0;
+    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    while (0 == ioctl(mCameraFd, VIDIOC_ENUM_FMT, &fmt))
+    {
+        fmt.index++;
+        CAMERA_PARAM_LOGI("Camera support capture format: { pixelformat = '%c%c%c%c', description = '%s' }",
+                fmt.pixelformat & 0xFF, (fmt.pixelformat >> 8) & 0xFF,
+                (fmt.pixelformat >> 16) & 0xFF, (fmt.pixelformat >> 24) & 0xFF,
+                fmt.description);
+        if(strcmp((char *)fmt.description, "MJPEG")== 0)
+        {
+            mPreviewFormat = V4L2_PIX_FMT_MJPEG;
+        }
     }
 
     //here we must init the preview size
@@ -849,7 +849,11 @@ int CameraParameterPreview::setParameter(CameraParameters& p)
 
         ((CameraExtendedEnv*)mEnv)->mPreviewWidth   = mPreviewWidth;
         ((CameraExtendedEnv*)mEnv)->mPreviewHeight  = mPreviewHeight;
-        ((CameraExtendedEnv*)mEnv)->mPreviewFormat  = mPreviewFormat;
+        if(mPreviewWidth <= VGA_WIDTH){
+            ((CameraExtendedEnv*)mEnv)->mPreviewFormat  = V4L2_PIX_FMT_YUYV;
+        }else{
+            ((CameraExtendedEnv*)mEnv)->mPreviewFormat  = mPreviewFormat;
+        }
 
         CAMERA_PARAM_LOGI("preview resolution [width=%d, height=%d]", width, height);
 
@@ -870,6 +874,7 @@ int CameraParameterPreview::setParameter(CameraParameters& p)
         CAMERA_PARAM_LOGE("invalid preview format[%s]", fmt);
         return -1;
     }
+    ((CameraExtendedEnv*)mEnv)->mPreviewFrameFmt = fmt;
 
     CAMERA_HAL_LOGV("set preview format to [%s]", fmt);
 
@@ -902,7 +907,6 @@ public:
     {
         mSnapshotWidth = 0;
         mSnapshotHeight = 0;
-        mSnapshotFormat  = DEFAULT_CAMERA_SNAPSHOT_V4L2_FORMAT;
     }
 
     int queryCapability(CameraParameters& p);
@@ -913,38 +917,18 @@ public:
 private:
     int mSnapshotWidth;
     int mSnapshotHeight;
-    int mSnapshotFormat;
 };
 
 int CameraParameterSnapshot::queryCapability(CameraParameters& p)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
-    struct v4l2_fmtdesc fmt;
-
-    memset(&fmt, 0, sizeof(fmt));
-    fmt.index = 0;
-    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    while (0 == ioctl(mCameraFd, VIDIOC_ENUM_FMT, &fmt))
-    {
-        fmt.index++;
-        CAMERA_PARAM_LOGI("Camera support capture format: { pixelformat = '%c%c%c%c', description = '%s' }",
-                fmt.pixelformat & 0xFF, (fmt.pixelformat >> 8) & 0xFF,
-                (fmt.pixelformat >> 16) & 0xFF, (fmt.pixelformat >> 24) & 0xFF,
-                fmt.description);
-        if(strcmp((char *)fmt.description, "MJPEG")== 0)
-        {
-            mSnapshotFormat = V4L2_PIX_FMT_MJPEG;
-        }
-    }
-
-
     struct v4l2_frmsizeenum fsize;
     String8 strSnapshot("");
     char strTmp[64];
     memset(&fsize, 0x00, sizeof(fsize));
     fsize.index         = 0;
-    fsize.pixel_format  = mSnapshotFormat;
+    fsize.pixel_format  = DEFAULT_CAMERA_SNAPSHOT_V4L2_FORMAT;
     fsize.type          = V4L2_FRMSIZE_TYPE_DISCRETE;
 
     int order[PICTURE_SIZE_COUNT];
@@ -1066,7 +1050,7 @@ int CameraParameterSnapshot::setParameter(CameraParameters& p)
         return -1;
     }
 
-    ((CameraExtendedEnv*)mEnv)->mSnapshotFormat  = mSnapshotFormat;
+    ((CameraExtendedEnv*)mEnv)->mSnapshotFormat  = DEFAULT_CAMERA_SNAPSHOT_V4L2_FORMAT;
 
     int quality = p.getInt(CameraParameters::KEY_JPEG_QUALITY);
     if(quality < 0 || quality >100)
@@ -1102,7 +1086,7 @@ int CameraParameterSnapshot::getMaxSnapshotFps(CameraParameters& p)
     p.getPictureSize(&width, &height);
 
     frmival.index           = 0;
-    frmival.pixel_format    = ((CameraExtendedEnv*)mEnv)->mSnapshotFormat;
+    frmival.pixel_format    = ((CameraExtendedEnv*)mEnv)->mPreviewFormat;
     frmival.width           = width;
     frmival.height          = height;
     frmival.type            = V4L2_FRMIVAL_TYPE_DISCRETE;
@@ -1633,8 +1617,8 @@ int CameraParameterExposureCompensation::queryCapability(CameraParameters& p)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
-    p.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, 0);
-    p.set(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION, 0);
+    p.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, 1);
+    p.set(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION, 2);
     p.set(CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION, 0);
 
     return 0;
@@ -1644,10 +1628,95 @@ int CameraParameterExposureCompensation::setParameter(CameraParameters& p)
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
+    int max = p.getInt(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION);
+    int min = p.getInt(CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION);
+    if((0 == max) && (0 == min))
+    {
+       return 0;
+    }
+
+    //if the camera app do not set this ,set it to 0.
+    if(!p.get(CameraParameters::KEY_EXPOSURE_COMPENSATION))
+    {
+        p.set(CameraParameters::KEY_EXPOSURE_COMPENSATION, 0);
+    }
+
+    int mExposure = p.getInt(CameraParameters::KEY_EXPOSURE_COMPENSATION);
+    int step = p.getInt(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP);
+
+    if((mExposure > min) && (mExposure < max))
+    {
+       p.set(CameraParameters::KEY_EXPOSURE_COMPENSATION, mExposure);
+    }
+
     return 0;
 }
 
 int CameraParameterExposureCompensation::commitParameter()
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    return 0;
+}
+
+/*
+ ******************************************************************************
+ *
+ *                  EXPOSURE COMPENSATION RELATED INTERFACE
+ *
+ ******************************************************************************
+ */
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
+#define LOG_TAG "CameraParameterAutoExposureLock"
+
+class CameraParameterAutoExposureLock: public CapabilityInterface
+{
+public:
+    CameraParameterAutoExposureLock(void *env) : CapabilityInterface(env)
+    {
+    }
+
+    int queryCapability(CameraParameters& p);
+    int setParameter(CameraParameters& p);
+    int commitParameter();
+};
+
+int CameraParameterAutoExposureLock::queryCapability(CameraParameters& p)
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    p.set(CameraParameters::KEY_AUTO_EXPOSURE_LOCK_SUPPORTED, "true");
+    p.set(CameraParameters::KEY_AUTO_EXPOSURE_LOCK, "false");
+
+    return 0;
+}
+
+int CameraParameterAutoExposureLock::setParameter(CameraParameters& p)
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    const char* str     = NULL;
+    const char* support = p.get(CameraParameters::KEY_AUTO_EXPOSURE_LOCK_SUPPORTED);
+
+    if(support && strcmp(support, "true") == 0)
+    {
+        str = p.get(CameraParameters::KEY_AUTO_EXPOSURE_LOCK);
+        if(str && strcmp(str, "true") == 0)
+        {
+            p.set(CameraParameters::KEY_AUTO_EXPOSURE_LOCK, str);
+        }
+        else if(str && strcmp(str, "false") == 0)
+        {
+            p.set(CameraParameters::KEY_AUTO_EXPOSURE_LOCK, str);
+        }
+    }
+
+    return 0;
+}
+
+int CameraParameterAutoExposureLock::commitParameter()
 {
     CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
 
@@ -1965,6 +2034,86 @@ int CameraParameterMisc::setParameter(CameraParameters& p)
 {
     CAMERA_HAL_LOGV("enter %s", __FUNCTION__);
 
+    CameraExtendedEnv* env = (CameraExtendedEnv*)mEnv;
+
+    const char *strValue = p.get(CameraParameters::KEY_ROTATION);
+    if(strValue)
+    {
+        env->mRotation = atoi(strValue);
+    }
+    else
+    {
+        env->mRotation = 0;
+    }
+
+    /* gps parameters */
+    strValue = p.get(CameraParameters::KEY_GPS_LATITUDE);
+    if(strValue)
+    {
+        env->mGPSLatitude = strtod(strValue, NULL);
+        env->mHaveGPS     = true;
+    }
+    else
+    {
+        env->mHaveGPS     = false;
+    }
+
+    strValue = p.get(CameraParameters::KEY_GPS_LONGITUDE);
+    if(strValue)
+    {
+        env->mGPSLongitude = strtod(strValue, NULL);
+        env->mHaveGPS      = true;
+    }
+    else
+    {
+        env->mHaveGPS      = false;
+    }
+
+    strValue = p.get(CameraParameters::KEY_GPS_ALTITUDE);
+    if(strValue)
+    {
+        env->mGPSAltitude = strtod(strValue, NULL);
+        env->mHaveGPS     = true;
+    }
+    else
+    {
+        env->mHaveGPS     = false;
+    }
+
+    strValue = p.get(CameraParameters::KEY_GPS_TIMESTAMP);
+    if(strValue)
+    {
+        env->mGPSTimestamp = strtol(strValue, NULL, 10);
+        env->mGPSHaveTimestamp = true;
+    }
+    else
+    {
+        env->mGPSHaveTimestamp = false;
+    }
+
+    strValue = p.get(CameraParameters::KEY_GPS_PROCESSING_METHOD);
+    if(strValue)
+    {
+        int arraysize = sizeof(env->mGPSProcMethod);
+        int strlength = strlen(strValue);
+        memset(env->mGPSProcMethod, 0x00, arraysize);
+        strncpy((char*)(env->mGPSProcMethod), strValue, ((strlength>arraysize-1) ? (arraysize-1) : strlength));
+    }
+    else
+    {
+        env->mGPSProcMethod[0] = '\0';
+    }
+
+    strValue = p.get(CameraParameters::KEY_FOCAL_LENGTH);
+    if(strValue)
+    {
+        env->mFocalLength = p.getFloat(CameraParameters::KEY_FOCAL_LENGTH);
+    }
+    else
+    {
+        env->mFocalLength = 4.31;
+    }
+
     return 0;
 }
 
@@ -2182,6 +2331,15 @@ int CapabilityManager::registerAllCapInterface ( void )
     if(NULL == capInterface)
     {
         CAMERA_HAL_LOGE("No memory for CameraParameterExposureCompensation!");
+        return -ENOMEM;
+    }
+    mParametersObjs.add(capInterface);
+
+    /* auto exposure lock related interface */
+    capInterface = new CameraParameterAutoExposureLock(mEnv);
+    if(NULL == capInterface)
+    {
+        CAMERA_HAL_LOGE("No memory for CameraParameterAutoExposureLock!");
         return -ENOMEM;
     }
     mParametersObjs.add(capInterface);

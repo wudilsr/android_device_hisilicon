@@ -39,5 +39,6 @@ int pktq_get_pkt(void *handle, DataPacket *pkt, int timeout_ms);
 int pktq_get_data_size(void *handle);
 int pktq_get_buf_size(void *handle);
 int pktq_clear(void *handle);
+void pktq_free_data_packet(DataPacket *node);
 #endif
 

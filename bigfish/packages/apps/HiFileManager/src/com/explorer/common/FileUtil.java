@@ -1034,4 +1034,13 @@ public class FileUtil {
             return "*/*";
         return extension;
     }
+    public static String getExtension(final File file) {
+        String suffix = "";
+        String name = file.getName();
+        final int idx = name.lastIndexOf(".");
+        if (idx > 0) {
+            suffix = name.substring(idx + 1);
+        }
+        return suffix;
+    }
 }

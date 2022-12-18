@@ -27,6 +27,7 @@
 #if defined (ANDROID_VERSION)
 #include "cutils/properties.h"
 #endif
+#include <pthread.h>
 #include "libavutil/avstring.h"
 #include "libavutil/intreadwrite.h"
 #include "avformat.h"
@@ -47,7 +48,19 @@
 #define DEFAULT_PTS_ADDON       (1)         // 1 sec
 
 #define INITIAL_BUFFER_SIZE     (32768 * 16) //512K
-#define HLS_MAX_WAITE_TIME      (5 * AV_TIME_BASE)  // 3s
+#define HLS_MAX_WAITE_TIME      (5 * AV_TIME_BASE)  // 5s
+#define HLS_MAX_REFRESH_TIME      (9 * AV_TIME_BASE)  // 9s
+
+#define HLS_REFRESH_TIME1 (1 * AV_TIME_BASE)
+#define HLS_REFRESH_TIME2 (2 * AV_TIME_BASE)
+#define HLS_REFRESH_TIME3 (5 * AV_TIME_BASE)
+#define HLS_REFRESH_TIME4 (10 * AV_TIME_BASE)
+#define M3U8_UNREFRESH_TIMES1 (3)
+#define M3U8_UNREFRESH_TIMES2 (4)
+#define M3U8_UNREFRESH_TIMES3 (5)
+#define M3U8_UNREFRESH_TIMES4 (10)
+#define M3U8_REFRESH_SLICE_SLEEP_TIME (50*1000) //50ms
+
 #define __FILE_NAME__           av_filename(__FILE__)
 
 #define DEC AV_OPT_FLAG_DECODING_PARAM
@@ -118,6 +131,45 @@ static int hlsGetLine(ByteIOContext *s, char *buf, int maxlen, AVIOInterruptCB *
 
     buf[i] = 0;
     return i;
+}
+static int copy_m3u8_info(hls_stream_info_t *dest_hls, hls_stream_info_t *src_hls)
+{
+    int i;
+    int add_ret;
+    hls_segment_t *seg = NULL;
+    if (src_hls == NULL || dest_hls == NULL)
+        return -1;
+    //refresh variants
+    dest_hls->bandwidth = src_hls->bandwidth;
+    memcpy(dest_hls->url,src_hls->url,INITIAL_URL_SIZE);
+    memcpy(dest_hls->second_level_url,src_hls->second_level_url,INITIAL_URL_SIZE);
+
+    dest_hls->video_codec= src_hls->video_codec;
+    dest_hls->audio_codec= src_hls->audio_codec;
+    //copy seg_list
+    dest_hls->seg_list.hls_finished = src_hls->seg_list.hls_finished;
+    dest_hls->seg_list.hls_target_duration = src_hls->seg_list.hls_target_duration;
+    dest_hls->seg_list.hls_seg_start = src_hls->seg_list.hls_seg_start;
+    dest_hls->seg_list.hls_last_load_time = src_hls->seg_list.hls_last_load_time;
+
+    if (dest_hls->seg_list.segments == NULL && src_hls->seg_list.hls_segment_nb != 0)
+        dest_hls->seg_list.segments = (hls_segment_t **)av_malloc(src_hls->seg_list.hls_segment_nb * sizeof(hls_segment_t));
+
+    //copy segments
+    for (i = 0; i < src_hls->seg_list.hls_segment_nb;i++){
+        seg = av_mallocz(sizeof(hls_segment_t));
+        if (!seg){
+            return AVERROR(ENOMEM);
+        }
+        memcpy(seg,src_hls->seg_list.segments[i],sizeof(hls_segment_t));
+        dynarray_add_noverify(&dest_hls->seg_list.segments, &dest_hls->seg_list.hls_segment_nb, seg, &add_ret);
+        if (add_ret < 0) {
+            av_free(seg);
+            seg = NULL;
+            return  AVERROR(ENOMEM);
+        }
+    }
+    return 0;
 }
 
 static int hlsReadLine(ByteIOContext *s, char *buf, int maxlen, AVIOInterruptCB *interrupt_callback)
@@ -256,8 +308,12 @@ static void hlsResetPacket(AVPacket *pkt)
 static void hlsFreeSegmentList(hls_stream_info_t *hls)
 {
     int i;
-    for (i = 0; i < hls->seg_list.hls_segment_nb; i++)
-        av_free(hls->seg_list.segments[i]);
+    for (i = 0; i < hls->seg_list.hls_segment_nb; i++){
+        if (hls->seg_list.segments == NULL)
+            return;
+        if (hls->seg_list.segments[i])
+            av_free(hls->seg_list.segments[i]);
+    }
 
     hls->seg_list.hls_segment_nb = 0;
     av_freep(&hls->seg_list.segments);
@@ -441,6 +497,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         goto fail;
     }
 
+    pthread_mutex_lock(&c->stRefreshMutex);
     if (hls) {
         hlsFreeSegmentList(hls);
         hls->seg_list.hls_finished = 0;
@@ -496,6 +553,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
             }
 
             hls->seg_list.hls_target_duration = atoi(ptr);
+            hls->seg_list.hls_package_duration = atoi(ptr);
         } else if (av_strstart(line, "#EXT-X-MEDIA-SEQUENCE:", &ptr)) {
             if (!hls) {
                 hls = hlsNewHlsStream(c, 0, url, NULL, c->headers);
@@ -509,6 +567,11 @@ static int hlsParseM3U8(HLSContext *c, char *url,
             av_log(NULL, AV_LOG_ERROR, "[%s:%d], hls_seg_start = %d \n",
                 __FUNCTION__, __LINE__, hls->seg_list.hls_seg_start);
         } else if (av_strstart(line, "#EXT-X-ENDLIST", &ptr)) {
+            if(strstr(url, "livemode=2")){
+                hls->need_refresh_url = 1;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][m3u8]set need_refresh_url\n", __FUNCTION__, __LINE__);
+                break;
+            }
             if (hls)
                 hls->seg_list.hls_finished = 1;
             hls_finished = 1;
@@ -518,6 +581,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
             is_segment = 1;
             duration   = atof(ptr) * 1000;
             duration_in_second = duration / 1000;
+            hls->seg_list.hls_last_seg_duration = duration_in_second;
             if (duration_in_second > 0 && duration_in_second < hls->seg_list.hls_target_duration)
                 hls->seg_list.hls_target_duration = duration_in_second;
             else if (duration_in_second == 0)
@@ -620,7 +684,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         hls->seg_list.hls_last_load_time = av_gettime();
 
 fail:
-
+    pthread_mutex_unlock(&c->stRefreshMutex);
     if ((hls_finished || url_feof(in)) && url && (!strncmp(url, "http://", strlen("http://")) || !strncmp(url, "https://", strlen("https://")))) {
         consume_ms = (int)((av_gettime() - download_start_time)/1000);
         if (consume_ms < 0) {
@@ -910,7 +974,12 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
 
     pos = cur - start;
     //hls_segment_t *seg = hls->seg_list.segments[pos];
-    hls_segment_t *seg=c->cur_seg;
+    hls_segment_t *seg = c->cur_seg;
+    if (!seg)
+    {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] hlsOpenSegment fail, seg is null\n",__FILE_NAME__, __LINE__);
+        return -1;
+    }
 
     if (c->user_agent && strlen(c->user_agent) > 0)
         av_dict_set(&opts, "user-agent", c->user_agent, 0);
@@ -1210,6 +1279,9 @@ static int hlsFreshUrl(hls_stream_info_t *v)
 
 static int hlsLiveToTimeSeek(hls_stream_info_t *v)
 {
+    // count on the offset,make sure that we can continue the play after timeseek.
+    // the m3u8 must be continuous from the one that is before timeseek.
+    const int OFFSET_TIMESEEK = 6*60;
     char    *pTmp = NULL;
     char    *pEnd  = NULL;
     unsigned int duration = 0;
@@ -1233,7 +1305,7 @@ static int hlsLiveToTimeSeek(hls_stream_info_t *v)
 
         memset(livemode_string, 0, INITIAL_URL_SIZE);
         memset(start_time, 0, 128);
-        time_t lt = time(0) - duration/1000;
+        time_t lt = time(0) - duration/1000 - OFFSET_TIMESEEK;
         struct tm *ptr = localtime(&lt);
         strftime(start_time, 100, "%Y%m%dT%H%M%S.00Z", ptr);
         temp_string =  av_asnprintf("livemode=2&starttime=%s", start_time);
@@ -1277,7 +1349,6 @@ static int hlsReadDataCb(void *opaque, uint8_t *buf, int buf_size)
     int need_reload = 0;
     int64_t time_diff;
     int64_t time_wait;
-    int has_reload = 0;
     int open_fail = 0;
     int64_t seg_consume_begin = 0, seg_consume_end = 0;
 
@@ -1289,29 +1360,17 @@ reload:
 
         if (time_wait > HLS_MAX_WAITE_TIME)
             time_wait = HLS_MAX_WAITE_TIME;
-
-        /* If this is a live stream and target_duration has elapsed since
-         * the last playlist reload, reload the variant playlists now. */
-        if (!v->seg_list.hls_finished && ((llabs(time_diff) >= time_wait) || need_reload)) {
-reparse:
-            ret = hlsParseM3U8(c, v->url, v, NULL);
-            if (ret < 0) {
-                if (ff_check_interrupt(&c->interrupt_callback))
-                    return ret;
-
-                usleep(1000*1000);
-                av_log(NULL, AV_LOG_ERROR, "[%s:%d] redo hlsParseM3U8\n",
-                        __FILE_NAME__, __LINE__);
-                goto reparse;
+        if (!v->seg_list.hls_finished)
+        {
+            pthread_mutex_lock(&c->stRefreshMutex);
+            if (c->m3u8_refresh_info){
+                hlsFreeSegmentList(v);
+                ret = copy_m3u8_info(v,c->m3u8_refresh_info);
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]copy_m3u8_info,S:%d,C:%d,N:%d\n",__FILE_NAME__, __LINE__,v->seg_list.hls_seg_start,v->seg_list.hls_seg_cur,v->seg_list.hls_segment_nb);
+                if (ret != 0)
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]copy_hls_segments faile\n",__FILE_NAME__, __LINE__);
             }
-            if (c->need_fresh_currentidx)
-            {
-                av_log(NULL, AV_LOG_ERROR, "live to time seek fresh hls_seg_cur %d", v->seg_list.hls_seg_start);
-                v->seg_list.hls_seg_cur = v->seg_list.hls_seg_start;
-                c->need_fresh_currentidx = 0;
-            }
-            need_reload = 0;
-            has_reload = 1;
+            pthread_mutex_unlock(&c->stRefreshMutex);
         }
 
         if (v->seg_list.hls_seg_cur < v->seg_list.hls_seg_start) {
@@ -1326,9 +1385,28 @@ reparse:
             av_log(NULL,AV_LOG_ERROR,"fresh live url to timeseek url");
             if (0 == hlsLiveToTimeSeek(v))
             {
-                need_reload = 1;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d]fresh live url to timeseek url:%s\n",
+                    __FILE_NAME__, __LINE__, v->url);
+                pthread_mutex_lock(&c->stRefreshMutex);
+                memcpy(c->cur_hls->url,v->url,INITIAL_URL_SIZE);
+                pthread_mutex_unlock(&c->stRefreshMutex);
+                //need_reload = 1;
                 c->need_fresh_url =0;
                 c->need_fresh_currentidx = 1;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d]fresh live url to timeseek url,c->cur_hls->url:%s\n",
+                    __FILE_NAME__, __LINE__, c->cur_hls->url);
+
+                while(c->need_fresh_currentidx)
+                {
+                    if (ff_check_interrupt(&c->interrupt_callback))
+                    {
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d]exit, return eof\n", __FILE_NAME__, __LINE__);
+                        return AVERROR_EOF;
+                    }
+                    usleep(100*1000);
+                }
+
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d]fresh live url to timeseek url end\n", __FILE_NAME__, __LINE__);
                 goto reload;
             }
             c->need_fresh_url = 0;
@@ -1360,9 +1438,15 @@ reparse:
         if (v->seg_list.hls_seg_cur >= v->seg_list.hls_seg_start + v->seg_list.hls_segment_nb) {
             if (v->seg_list.hls_finished
                || (!v->seg_list.hls_finished && ((AVFormatContext*)c->parent)->duration > MAX_LIVE_CACHE_DURATION * AV_TIME_BASE
-                   && !strstr(v->url, "livemode=2")))
-                return AVERROR_EOF;
-
+                   && !strstr(v->url, "livemode=2"))){
+            return AVERROR_EOF;
+        }else if(ff_check_interrupt(&c->interrupt_callback)) {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] return EOF, force exit\n",__FILE_NAME__, __LINE__);
+            return AVERROR_EOF;
+        }else {
+            goto reload;
+        }
+#if 0
             #if defined (ANDROID_VERSION)
             /* add for china mobile iptv */
             char value[1024] = {0};
@@ -1387,7 +1471,7 @@ reparse:
                 int ret_t = hlsFreshUrl(v);
 
                 if (0 == ret_t) {
-                    need_reload = 1;
+                    //need_reload = 1;
                     goto reload;
                 }
             }
@@ -1417,11 +1501,14 @@ reparse:
             if (ff_check_interrupt(&c->interrupt_callback))
                 return AVERROR_EOF;
             goto reload;
+#endif
         }
-
         if (!v->seg_list.hls_finished) {
-            if (has_reload && (c->cur_stream_seq != v->seg_list.hls_index)) {
+#if 0
+            int64_t time_parseM3U8 = av_gettime();
+            if (c->cur_stream_seq != v->seg_list.hls_index) {
 reparse2:
+                time_parseM3U8 = av_gettime();
                 ret = hlsParseM3U8(c, c->cur_hls->url, c->cur_hls, NULL);
                 if (ret < 0) {
                     if (ff_check_interrupt(&c->interrupt_callback))
@@ -1432,8 +1519,6 @@ reparse2:
                     goto reparse2;
                 }
             }
-
-            has_reload = 0;
 #if 0
             if (c->cur_hls->seg_list.hls_seg_start+ c->cur_hls->seg_list.hls_segment_nb - 1 < v->seg_list.hls_seg_cur) {
                 goto reparse2;
@@ -1457,6 +1542,17 @@ reparse2:
                 }
             } else {
                 if (c->cur_hls->seg_list.hls_seg_start + c->cur_hls->seg_list.hls_segment_nb - 1 < v->seg_list.hls_seg_cur) {
+                    if (c->cur_hls->need_refresh_url) {
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d]c->cur_hls->url:%s\n", __FILE_NAME__, __LINE__, c->cur_hls->url);
+                        pthread_mutex_lock(&c->stRefreshMutex);
+                        hlsFreshUrl(c->cur_hls);
+                        pthread_mutex_unlock(&c->stRefreshMutex);
+                        c->need_fresh_currentidx = 1;
+                    }
+
+                    if (llabs(av_gettime() - time_parseM3U8) < 1000*1000) {
+                        usleep(1000*1000);
+                    }
                     goto reparse2;
                 }
             }
@@ -1471,6 +1567,7 @@ reparse2:
                 }
             }
             #endif
+#endif
 #endif
             //c->cur_seg = c->cur_hls->seg_list.segments[v->seg_list.hls_seg_cur - v->seg_list.hls_seg_start];
             //c->cur_seq_num = v->seg_list.hls_seg_cur - v->seg_list.hls_seg_start;
@@ -1500,6 +1597,12 @@ reparse2:
         //c->read_time = 500*1000;
         int64_t open_start = av_gettime();
 reopen:
+        if (!c->cur_seg)
+        {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] return EOF, c->cur_seg is null\n",__FILE_NAME__, __LINE__);
+            return AVERROR_EOF;
+        }
+
         seg_consume_begin = av_gettime();
         ret = hlsOpenSegment(v);
         c->seg_download_consume += (av_gettime() - seg_consume_begin);
@@ -1547,7 +1650,6 @@ reopen:
                 goto reload;
             } else { // Reload playlist for live stream
                 v->seg_list.hls_seg_cur++;
-                need_reload = 1;
                 goto reload;
             }
         } else {
@@ -1771,6 +1873,218 @@ static int HLS_probe(AVProbeData *p)
     return 0;
 }
 
+static void* hlsRefreshM3u8(void *pArg)
+{
+    if (pArg  == NULL)
+        return NULL;
+    AVFormatContext *s = (AVFormatContext *)pArg;
+    HLSContext *c = s->priv_data;
+    URLContext *uc = (URLContext *) s->pb->opaque;
+    hls_stream_info_t *v = c->hls_stream[0];
+    int ret;
+    int target_duration = 0;
+    int64_t interval_time = HLS_MAX_REFRESH_TIME;
+    int last_position = 0;
+    int unrefresh_times = 0;
+    int64_t start = 0;
+    int64_t down_load_time = 0;
+    int64_t wait_time = 0;
+    int64_t start_wait = 0;
+    int64_t m3u8_first_refresh_duration = 0;
+    int is_china_mobile_iptv = 0;
+    int freshing_url = 0;
+    interval_time = interval_time <= (v->seg_list.hls_package_duration * AV_TIME_BASE) ?\
+        interval_time : (v->seg_list.hls_package_duration * AV_TIME_BASE);
+    interval_time = interval_time <= (v->seg_list.hls_last_seg_duration * AV_TIME_BASE) ?\
+        interval_time : (v->seg_list.hls_last_seg_duration * AV_TIME_BASE);
+
+    m3u8_first_refresh_duration =  av_gettime() - c->m3u8_first_get_time;
+    if (m3u8_first_refresh_duration >= 0 && m3u8_first_refresh_duration <= interval_time){
+        interval_time = interval_time - m3u8_first_refresh_duration;
+    }else if(m3u8_first_refresh_duration > interval_time) {
+        interval_time = 0;
+    }
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]interval_time:%lld,package_duration:%d,last_seg_duration:%d,m3u8_first_refresh_duration:%lld\n",__FILE_NAME__, __LINE__,\
+        interval_time,v->seg_list.hls_package_duration,v->seg_list.hls_last_seg_duration,m3u8_first_refresh_duration);
+#if defined (ANDROID_VERSION)
+    /* add for china mobile iptv */
+    char value[1024] = {0};
+    memset(value, 0, 1024);
+    /* client.apk.name
+           1. iptv.china.mobile
+           2. iptv.china.telecom
+           set apk.name by using "setprop iptv.project.name iptv.china.mobile" command.
+           */
+    if (property_get("iptv.project.name", value, NULL) > 0) {
+        if (!strncmp(value, "iptv.china.mobile", 17)) {
+            is_china_mobile_iptv = 1;
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] find china mobile iptv flag \n", __FILE_NAME__, __LINE__);
+        }
+    }
+    /* iptv end */
+#endif
+
+    c->m3u8_refresh_info = av_mallocz(sizeof(hls_stream_info_t));
+    if (c->m3u8_refresh_info == NULL)
+        goto end;
+    hls_stream_info_t *hls_stream = c->m3u8_refresh_info;
+
+    hls_stream_info_t *cur_hls = av_mallocz(sizeof(hls_stream_info_t));
+    if (cur_hls == NULL)
+        goto end;
+    ret = copy_m3u8_info(hls_stream,v);
+    if (ret != 0)
+        goto end;
+    while(1)
+    {
+        if (ff_check_interrupt(&c->interrupt_callback)) {
+            break;
+        }
+        if (interval_time != 0 && (interval_time > down_load_time) && !c->need_fresh_currentidx){
+            av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]interval_time:%lld,down_load_time:%lld,wait_time:%lld\n",interval_time,down_load_time,(interval_time - down_load_time));
+            if (down_load_time > 0){
+                wait_time = interval_time - down_load_time;
+            }else{
+                wait_time = interval_time;
+            }
+            start_wait = av_gettime();
+            av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]wait start time:%lld\n",start_wait);
+            while ((av_gettime() - start_wait) < wait_time)
+            {
+                if (ff_check_interrupt(&c->interrupt_callback)) {
+                    goto end;
+                }
+                usleep(M3U8_REFRESH_SLICE_SLEEP_TIME);
+            }
+            av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]wait end time:%lld\n",av_gettime());
+        }else {
+            //No sleep
+            av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]interval_time:%lld,< down_load_time:%lld,No sleep\n",interval_time,down_load_time);
+        }
+        if (!hls_stream->seg_list.hls_finished) {
+reparse:
+            start = av_gettime();
+            if (c->need_fresh_currentidx) {
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]fresh live url to timeseek url,c->cur_hls->url:%s\n",
+                    __FILE_NAME__, __LINE__, c->cur_hls->url);
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]fresh live url to timeseek url, hls_stream->url:%s\n",
+                    __FILE_NAME__, __LINE__, hls_stream->url);
+
+                pthread_mutex_lock(&c->stRefreshMutex);
+                memcpy(hls_stream->url, c->cur_hls->url, INITIAL_URL_SIZE);
+                pthread_mutex_unlock(&c->stRefreshMutex);
+                freshing_url = 1;
+            }
+
+            ret = hlsParseM3U8(c, hls_stream->url, hls_stream, NULL);
+            if (ret < 0) {
+                if (ff_check_interrupt(&c->interrupt_callback)) {
+                    goto end;
+                }
+
+                usleep(1000*1000);
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8] redo hlsParseM3U8\n",
+                        __FILE_NAME__, __LINE__);
+                goto reparse;
+            }
+
+            if(freshing_url) {
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8] fresh live url to timeseek url end\n",
+                        __FILE_NAME__, __LINE__);
+                freshing_url = 0;
+                c->need_fresh_currentidx = 0;
+            }
+
+            if (c->cur_hls->seg_list.hls_seg_cur >= hls_stream->seg_list.hls_seg_start + hls_stream->seg_list.hls_segment_nb) {
+#if 0
+                if (((AVFormatContext*)c->parent)->duration > MAX_LIVE_CACHE_DURATION * AV_TIME_BASE && !strstr(hls_stream->url, "livemode=2")){
+                    ;
+                }else
+#endif
+                {
+                    if (1 == is_china_mobile_iptv || hls_stream->need_refresh_url == 1) {
+                        hlsFreshUrl(hls_stream);
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8] hls_stream->url:%s, cur_hls->url:%s\n", __FILE_NAME__, __LINE__, hls_stream->url, cur_hls->url);
+                        pthread_mutex_lock(&c->stRefreshMutex);
+                        memcpy(c->cur_hls->url,hls_stream->url,INITIAL_URL_SIZE);
+                        pthread_mutex_unlock(&c->stRefreshMutex);
+                    }
+                }
+            }
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]hlsRefreshM3u8 Info:start:%d,segment_nb:%d cur,v:%d,c:%d\n",__FILE_NAME__, __LINE__, \
+                hls_stream->seg_list.hls_seg_start,hls_stream->seg_list.hls_segment_nb,v->seg_list.hls_seg_cur,c->cur_hls->seg_list.hls_seg_cur);
+            if (c->cur_stream_seq != hls_stream->seg_list.hls_index) {
+                av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]hls stream changed\n");
+                hlsFreeSegmentList(cur_hls);
+                ret = copy_m3u8_info(cur_hls,c->cur_hls);
+reparse2:
+                ret = hlsParseM3U8(c, cur_hls->url, cur_hls, NULL);
+                if (ret < 0) {
+                    if (ff_check_interrupt(&c->interrupt_callback)) {
+                        goto end;
+                    }
+
+                    usleep(1000*1000);
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8] redo hlsParseM3U8\n", __FILE_NAME__, __LINE__);
+                    goto reparse2;
+                }
+
+                hlsFreeSegmentList(c->cur_hls);
+                ret = copy_m3u8_info(c->cur_hls,cur_hls);
+                if (ret != 0)
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]copy_hls_segments faile\n",__FILE_NAME__, __LINE__);
+            }
+            down_load_time = av_gettime()-start;
+
+            if (last_position == hls_stream->seg_list.hls_seg_start + hls_stream->seg_list.hls_segment_nb) {
+                unrefresh_times++;
+                if (unrefresh_times <= M3U8_UNREFRESH_TIMES1){
+                    interval_time = HLS_REFRESH_TIME1;
+                }else if (unrefresh_times == M3U8_UNREFRESH_TIMES2){
+                    interval_time = HLS_REFRESH_TIME2;
+                }else if (unrefresh_times == M3U8_UNREFRESH_TIMES3){
+                    interval_time = HLS_REFRESH_TIME3;
+                }else{
+                    interval_time = HLS_REFRESH_TIME4;
+                    if (unrefresh_times > M3U8_UNREFRESH_TIMES4)
+                        unrefresh_times = M3U8_UNREFRESH_TIMES4;
+                }
+            }else{
+                unrefresh_times = 0;
+                last_position = hls_stream->seg_list.hls_seg_start + hls_stream->seg_list.hls_segment_nb;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d][ref_m3u8]package_duration:%d,last_seg_duration:%d\n",__FILE_NAME__, __LINE__,hls_stream->seg_list.hls_package_duration,hls_stream->seg_list.hls_last_seg_duration);
+                target_duration = hls_stream->seg_list.hls_package_duration <= hls_stream->seg_list.hls_last_seg_duration ? hls_stream->seg_list.hls_package_duration : hls_stream->seg_list.hls_last_seg_duration;
+                target_duration = target_duration * AV_TIME_BASE;
+                interval_time = (int64_t)(target_duration <= HLS_MAX_REFRESH_TIME ? target_duration : HLS_MAX_REFRESH_TIME);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+end:
+    av_log(NULL,AV_LOG_ERROR,"[ref_m3u8]Exit refresh m3u8 thread\n");
+    if (hls_stream != NULL)
+    {
+        pthread_mutex_lock(&c->stRefreshMutex);
+        hlsFreeSegmentList(hls_stream);
+        av_free(hls_stream);
+        hls_stream = NULL;
+        pthread_mutex_unlock(&c->stRefreshMutex);
+    }
+    if (cur_hls != NULL)
+    {
+        pthread_mutex_lock(&c->stRefreshMutex);
+        hlsFreeSegmentList(cur_hls);
+        av_free(cur_hls);
+        cur_hls = NULL;
+        pthread_mutex_unlock(&c->stRefreshMutex);
+    }
+    return NULL;
+}
+
+
 static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
 {
     HLSContext *c = s->priv_data;
@@ -1845,7 +2159,8 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     c->use_offset_seq = 0;
     c->cur_download_url[0] = 0;
     c->stHlsUrlInfo.enable = 0;
-
+    c->need_fresh_currentidx = 0;
+    c->m3u8_first_get_time = av_gettime();
     /* Get host name string */
     if (uc && uc->moved_url)
     {
@@ -2237,6 +2552,12 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         c->hls_stream[i]->has_read = 0;
         c->hls_stream[i]->seg_list.hls_index = i;
     }
+    pthread_mutex_init(&c->stRefreshMutex, NULL);
+    ret = pthread_create(&c->hRefreashThread, NULL,
+                            hlsRefreshM3u8, (void*)s);
+    if (0 != ret){
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d],Create hlsRefreshM3u8 fail\n", __FILE_NAME__, __LINE__);
+    }
 
     c->first_packet = 1;
     c->read_size = 0;
@@ -2532,6 +2853,8 @@ static int HLS_close(AVFormatContext *s)
         downspeed->head = NULL;
         downspeed->tail = NULL;
     }
+    (void)pthread_join(c->hRefreashThread, NULL);
+    (void)pthread_mutex_destroy(&c->stRefreshMutex);
 
     return 0;
 }
@@ -2604,7 +2927,7 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
             if (timestamp >= pos && j == hls->seg_list.hls_segment_nb)
             {
                 j = hls->seg_list.hls_segment_nb;
-                av_log(NULL, AV_LOG_INFO, "seek exceed last seg number %d ", j);
+                av_log(NULL, AV_LOG_ERROR, "seek exceed last seg number %d ", j);
                 hls->seg_list.hls_seg_cur = hls->seg_list.hls_seg_start + j;
                 hls->seg_demux.set_offset = 0;
                 hls->seg_demux.pts_offset = 0;

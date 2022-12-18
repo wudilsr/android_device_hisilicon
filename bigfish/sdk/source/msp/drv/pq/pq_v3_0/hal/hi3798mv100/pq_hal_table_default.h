@@ -227,7 +227,7 @@ static PQ_PHY_REG_S sg_stPhyReg[] =
     {0xf8cb1170,    16,      23,        0,        0,      0x2,       32},         //lasi_mov_thd
     /*PDLASIMODE0COEF*/
     {0xf8cb1174,     8,      15,        0,        0,      0x2,        0},         //lasi_txt_coring
-    {0xf8cb1174,     0,       7,        0,        0,      0x2,        0},         //lasi_txt_alpha
+    {0xf8cb1174,     0,       7,        0,        0,      0x2,       32},         //lasi_txt_alpha
     {0xf8cb1178,    24,      31,        0,        0,      0x2,        0},         //lasi_txt_thd3
     {0xf8cb1178,    16,      23,        0,        0,      0x2,        0},         //lasi_txt_thd2
     {0xf8cb1178,     8,      15,        0,        0,      0x2,        0},         //lasi_txt_thd1

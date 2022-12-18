@@ -733,7 +733,18 @@ HI_UNF_AVPLAY_BUF_STATE_E AVPLAY_CaclBufState(const AVPLAY_S *pAvplay, HI_UNF_AV
             }
             else
             {
-                CurBufState = HI_UNF_AVPLAY_BUF_STATE_NORMAL;
+                if (u32StrmTime <= 40)
+                {
+                    CurBufState = HI_UNF_AVPLAY_BUF_STATE_EMPTY;
+                }
+                else if (u32StrmTime <= 80)
+                {
+                    CurBufState = HI_UNF_AVPLAY_BUF_STATE_LOW;
+                }
+                else
+                {
+                    CurBufState = HI_UNF_AVPLAY_BUF_STATE_NORMAL;
+                }
             }
 
 #if 0
@@ -1377,6 +1388,8 @@ HI_VOID AVPLAY_ProcVidQuickOutput(AVPLAY_S *pAvplay)
 #else
         pAvplay->AvplayProcContinue = HI_TRUE;
 #endif
+	/* fix frame lost of vpss when seeking in buffer */
+	memcpy(&pAvplay->LstFrmPack, &pAvplay->CurFrmPack, sizeof(HI_DRV_VIDEO_FRAME_PACKAGE_S));
         pAvplay->DebugInfo.MasterVidStat.PlayNum++;
         pAvplay->FrcCurPlayCnt++;
     }
@@ -9546,6 +9559,7 @@ HI_S32 HI_MPI_AVPLAY_GetStreamInfo(HI_HANDLE hAvplay, HI_UNF_AVPLAY_STREAM_INFO_
     HI_U32              Id = GET_AVPLAY_ID(hAvplay);
     AVPLAY_S           *pAvplay;
     ADEC_STREAMINFO_S   AdecStreaminfo = {0};
+    VDEC_STATUSINFO_S       VdecBufStatus = {0};
 
     if (!pstStreamInfo)
     {
@@ -9577,6 +9591,16 @@ HI_S32 HI_MPI_AVPLAY_GetStreamInfo(HI_HANDLE hAvplay, HI_UNF_AVPLAY_STREAM_INFO_
         {
             HI_ERR_AVPLAY("call HI_MPI_VDEC_GetChanStreamInfo failed.\n");
         }
+
+	Ret = HI_MPI_VDEC_GetChanStatusInfo(pAvplay->hVdec, &VdecBufStatus);
+	if (Ret != HI_SUCCESS)
+	{
+		HI_ERR_AVPLAY("call HI_MPI_VDEC_GetChanStatusInfo failed.\n");
+	}
+	else
+	{
+		pstStreamInfo->stVidStreamInfo.u32bps = VdecBufStatus.u32StrmInBps;
+	}
     }
 
     AVPLAY_INST_UNLOCK(Id);

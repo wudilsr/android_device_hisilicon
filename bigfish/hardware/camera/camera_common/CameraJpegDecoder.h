@@ -33,8 +33,9 @@ public:
     CameraJpegDecoder();
     ~CameraJpegDecoder();
 
+    status_t initJpegDecoder();
     status_t putStream(const uint8_t *data, uint32_t size);
-    status_t receiveFrame(buffer_handle_t** native_buffer, uint64_t*timestamp);
+    status_t receiveFrame(buffer_handle_t** native_buffer, uint64_t*timestamp, int *Stride);
     status_t releaseFrame(buffer_handle_t* native_buffer);
 
     status_t setExternalBuffer(struct preview_stream_ops* window, int w, int h, int count);
@@ -51,6 +52,7 @@ private:
 
     int mDelayCount;
     int mBufferCount;
+    int mStride;
     bool mCanceled;
     KeyedVector<HI_HANDLE, buffer_handle_t*> mBufMap;
     KeyedVector<buffer_handle_t*, HI_DRV_VIDEO_FRAME_S> mVideoFrameMap;

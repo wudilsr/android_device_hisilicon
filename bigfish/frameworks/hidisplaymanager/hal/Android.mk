@@ -24,7 +24,9 @@ LOCAL_C_INCLUDES := \
                     $(LOCAL_PATH)/../../../sdk/source/msp/drv/include/\
                     $(LOCAL_PATH)/../../../sdk/source/msp/drv/hifb/include/\
                     $(LOCAL_PATH)/../../../sdk/source/msp/api/higo/include/\
-                    $(TOP)/system/core/include/
+                    $(TOP)/system/core/include/ \
+                    $(TOP)/device/hisilicon/bigfish/sdk/source/common/api/flash/include \
+		    $(LOCAL_PATH)/../../../sdk/source/msp/api/hdmi/hdmi_1_4/
 
 EXTRA_CFLAGS += -I$(LINUXROOT)/include/
 include $(BUILD_SHARED_LIBRARY)

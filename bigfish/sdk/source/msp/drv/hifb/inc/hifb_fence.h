@@ -54,6 +54,7 @@ typedef struct
     wait_queue_head_t    FrameEndEvent;
     struct sw_sync_timeline *pstTimeline;
     HI_BOOL bFrameHit;
+    HIFB_HWC_LAYERINFO_S stLayerInfo;
 }HIFB_SYNC_INFO_S;
 
 /********************** Global Variable declaration **************************/
@@ -83,7 +84,7 @@ int hifb_create_fence(struct sw_sync_timeline *timeline,const char *fence_name,u
 * param[in] 	: GPU创建的fence
 * param[in] 	: 等待超时时间
 ***********************************************************************/
-int hifb_fence_wait(int fence_fd, long timeout);
+int hifb_fence_wait(struct sync_fence *fence, long timeout);
 
 #ifdef __cplusplus
 

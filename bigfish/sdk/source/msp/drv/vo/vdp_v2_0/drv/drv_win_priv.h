@@ -241,6 +241,7 @@ typedef struct tagWINDOW_S
 
     /* state */
     HI_BOOL bEnable;
+	HI_BOOL bEnable_New;	
     HI_BOOL bMasked;
 
     HI_DRV_DISPLAY_E  enDisp;
@@ -339,6 +340,8 @@ typedef struct tagWINDOW_S
 #ifdef HI_VO_WIN_SYNC_SUPPORT
 	WIN_SYNC_INFO_S stSyncInfo;
 #endif
+
+    HI_DRV_LOWDELAY_STAT_INFO_S stLowdelayStat;
 }WINDOW_S;
 
 

@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,10 +61,10 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/.vdm_hal_h264.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_h264.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_h264.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_h264.o
@@ -218,11 +218,11 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r0, r3	@, CurrMsgSlotPhy
 	mov	r5, r2	@ pSlcPara, pSlcPara
 	bl	MEM_Phy2Vir	@
-	subs	r9, r0, #0	@ D.39054,
+	subs	r9, r0, #0	@ D.39061,
 	beq	.L174	@,
 	ldr	r3, [r5, #8]	@ <variable>.valid_bitlen, <variable>.valid_bitlen
 	cmp	r3, #0	@ <variable>.valid_bitlen,
-	streq	r3, [r9, #0]	@ <variable>.valid_bitlen,* D.39054
+	streq	r3, [r9, #0]	@ <variable>.valid_bitlen,* D.39061
 	streq	r3, [r9, #4]	@ <variable>.valid_bitlen,
 	streq	r3, [r9, #8]	@ <variable>.valid_bitlen,
 	beq	.L20	@,
@@ -237,7 +237,7 @@ H264HAL_V300R001_SetSliceMsg:
 	bic	ip, lr, #15	@ stream_base_addr.1099, <variable>.stream_base_addr,
 	rsb	r0, ip, r1	@ temp.1079, stream_base_addr.1099, tmp362
 	str	r2, [r9, #8]	@ tmp.1080,
-	str	r0, [r9, #0]	@ temp.1079,* D.39054
+	str	r0, [r9, #0]	@ temp.1079,* D.39061
 .L20:
 	ldr	r1, [r5, #12]	@ <variable>.valid_bitlen, <variable>.valid_bitlen
 	cmp	r1, #0	@ <variable>.valid_bitlen,
@@ -245,18 +245,18 @@ H264HAL_V300R001_SetSliceMsg:
 	streq	r1, [r9, #16]	@ <variable>.valid_bitlen,
 	streq	r1, [r9, #20]	@ <variable>.valid_bitlen,
 	beq	.L22	@,
-	ldr	ip, [r5, #28]	@ D.39066, <variable>.bytespos
+	ldr	ip, [r5, #28]	@ D.39073, <variable>.bytespos
 	ldr	r3, [r5, #20]	@ <variable>.bitsoffset, <variable>.bitsoffset
 	ldr	r0, [r4, #916]	@ <variable>.stream_base_addr, <variable>.stream_base_addr
-	bic	r1, ip, #15	@ tmp369, D.39066,
-	add	lr, r3, ip, asl #3	@, tmp367, <variable>.bitsoffset, D.39066,
+	bic	r1, ip, #15	@ tmp369, D.39073,
+	add	lr, r3, ip, asl #3	@, tmp367, <variable>.bitsoffset, D.39073,
 	and	r2, lr, #127	@ tmp.454, tmp367,
 	str	r2, [r9, #16]	@ tmp.454,
 	ldr	ip, [r5, #12]	@ tmp.857, <variable>.valid_bitlen
 	bic	r3, r0, #15	@ stream_base_addr, <variable>.stream_base_addr,
-	rsb	lr, r3, r1	@ D.39082, stream_base_addr, tmp369
+	rsb	lr, r3, r1	@ D.39089, stream_base_addr, tmp369
 	str	ip, [r9, #20]	@ tmp.857,
-	str	lr, [r9, #12]	@ D.39082,
+	str	lr, [r9, #12]	@ D.39089,
 .L22:
 	ldr	r1, [r5, #48]	@ <variable>.first_mb_in_slice, <variable>.first_mb_in_slice
 	movw	lr, #:lower16:g_not_direct_8x8_inference_flag	@ tmp382,
@@ -318,8 +318,8 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r1, ip, asl #5	@ tmp448, tmp446,
 	and	r2, lr, #31	@ tmp450, <variable>.second_chroma_qp_index_offset,
 	orr	r3, r1, r8, asl #16	@, tmp449, tmp448, <variable>.weight_flag,
-	orr	ip, r3, r2	@ D.39168, tmp449, tmp450
-	str	ip, [r9, #40]	@ D.39168,
+	orr	ip, r3, r2	@ D.39175, tmp449, tmp450
+	str	ip, [r9, #40]	@ D.39175,
 	ldr	lr, [r5, #68]	@ <variable>.slice_alpha_c0_offset_div2, <variable>.slice_alpha_c0_offset_div2
 	ldr	r8, [r5, #72]	@ <variable>.slice_beta_offset_div2, <variable>.slice_beta_offset_div2
 	and	r3, lr, #15	@ tmp455, <variable>.slice_alpha_c0_offset_div2,
@@ -357,11 +357,11 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r3, ip	@ i.902, tmp1
 	str	r1, [fp, #-48]	@, %sfp
 	str	r7, [fp, #-60]	@, %sfp
-	str	r9, [fp, #-64]	@ D.39054, %sfp
+	str	r9, [fp, #-64]	@ D.39061, %sfp
 	str	r5, [fp, #-56]	@ pSlcPara, %sfp
 	b	.L43	@
 .L41:
-	cmp	r1, #3	@ D.39222,
+	cmp	r1, #3	@ D.39229,
 	beq	.L179	@,
 .L42:
 	ldr	r8, [fp, #-56]	@, %sfp
@@ -370,15 +370,15 @@ H264HAL_V300R001_SetSliceMsg:
 	bls	.L180	@,
 .L43:
 	ldrb	sl, [r2, #1626]	@ zero_extendqisi2	@ <variable>.frame_structure, <variable>.frame_structure
-	and	r0, r3, #7	@ D.39215, i.902,
+	and	r0, r3, #7	@ D.39222, i.902,
 	ldr	r5, [r4, #32]	@ <variable>.mb_adaptive_frame_field_flag, <variable>.mb_adaptive_frame_field_flag
-	and	r1, r3, #3	@ D.39222, i.902,
+	and	r1, r3, #3	@ D.39229, i.902,
 	ldr	r8, [fp, #-52]	@, %sfp
-	mov	r7, r0, asl #2	@, D.39215,
+	mov	r7, r0, asl #2	@, D.39222,
 	add	lr, r5, sl, asl #1	@, tmp483, <variable>.mb_adaptive_frame_field_flag, <variable>.frame_structure,
 	ldrb	r5, [r2, #1627]	@ zero_extendqisi2	@ <variable>.frame_is_long_term, <variable>.frame_is_long_term
 	str	r7, [fp, #-72]	@, %sfp
-	add	r7, r1, r1, asl #2	@, tmp499, D.39222, D.39222,
+	add	r7, r1, r1, asl #2	@, tmp499, D.39229, D.39229,
 	add	sl, r8, lr, asl #2	@, tmp487,, tmp483,
 	ldr	r9, [r2, #1644]	@, <variable>.apc_idc
 	cmp	r5, #1	@ <variable>.frame_is_long_term,
@@ -390,14 +390,14 @@ H264HAL_V300R001_SetSliceMsg:
 	and	r9, lr, #3	@ tmp489, tmp490,
 	movne	r5, #0	@ iftmp.460,
 	and	r8, r8, #31	@ tmp496, tmp494,
-	cmp	r0, #7	@ D.39215,
+	cmp	r0, #7	@ D.39222,
 	ldr	sl, [fp, #-72]	@, %sfp
 	orr	r0, r5, r9	@ tmp491, iftmp.460, tmp489
 	orr	ip, ip, r8, asl r7	@, tmp1, tmp1, tmp496,
 	orr	r6, r6, r0, asl sl	@, tmp.847, tmp.847, tmp491,
 	bne	.L41	@,
 	ldr	r0, [fp, #-60]	@, %sfp
-	cmp	r1, #3	@ D.39222,
+	cmp	r1, #3	@ D.39229,
 	ldr	r9, [fp, #-64]	@, %sfp
 	str	r6, [r9, r0, asl #2]	@ tmp.847,
 	add	r0, r0, #1	@,,
@@ -417,15 +417,15 @@ H264HAL_V300R001_SetSliceMsg:
 	bhi	.L43	@,
 .L180:
 	tst	r1, #7	@ temp.900,
-	ldr	r9, [fp, #-64]	@ D.39054, %sfp
+	ldr	r9, [fp, #-64]	@ D.39061, %sfp
 	ldr	r5, [fp, #-56]	@ pSlcPara, %sfp
 	ldrne	r0, [fp, #-60]	@, %sfp
 	ldreq	sl, [fp, #-52]	@, %sfp
 	ldreqb	r3, [r5, #0]	@ zero_extendqisi2	@ <variable>.slice_type, <variable>.slice_type
-	strne	r6, [r9, r0, asl #2]	@ tmp.847,* D.39054
+	strne	r6, [r9, r0, asl #2]	@ tmp.847,* D.39061
 	ldrne	r1, [fp, #-48]	@, %sfp
 	addeq	r3, sl, r3, asl #2	@, tmp508,, <variable>.slice_type,
-	strne	ip, [r9, r1, asl #2]	@ tmp1,* D.39054
+	strne	ip, [r9, r1, asl #2]	@ tmp1,* D.39061
 	ldrneb	r3, [r5, #0]	@ zero_extendqisi2	@ <variable>.slice_type, <variable>.slice_type
 	ldrne	r2, [fp, #-52]	@, %sfp
 	addne	r3, r2, r3, asl #2	@, tmp516,, <variable>.slice_type,
@@ -445,7 +445,7 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r2, ip	@ i.928, tmp1.852
 	str	sl, [fp, #-48]	@, %sfp
 	str	r7, [fp, #-60]	@, %sfp
-	str	r9, [fp, #-64]	@ D.39054, %sfp
+	str	r9, [fp, #-64]	@ D.39061, %sfp
 	str	r5, [fp, #-56]	@ pSlcPara, %sfp
 	b	.L50	@
 .L48:
@@ -523,7 +523,7 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r2, #2	@ tmp757,
 	bne	.L34	@,
 .L108:
-	add	r2, r9, #256	@ ivtmp.786, D.39054,
+	add	r2, r9, #256	@ ivtmp.786, D.39061,
 	mov	r4, r5	@ ivtmp.784, pSlcPara
 	mov	r3, r5	@ ivtmp.1071, pSlcPara
 	mov	r0, #0	@ i.1052,
@@ -554,8 +554,8 @@ H264HAL_V300R001_SetSliceMsg:
 	add	r3, r3, #4	@ ivtmp.1071, ivtmp.1071,
 	mov	r1, lr, asl #23	@ tmp781, tmp782,
 	mov	sl, r1, lsr #23	@ tmp781, tmp781,
-	orr	r8, sl, ip, asl #9	@, D.39478, tmp781, tmp778,
-	str	r8, [r2, #512]	@ D.39478,
+	orr	r8, sl, ip, asl #9	@, D.39485, tmp781, tmp778,
+	str	r8, [r2, #512]	@ D.39485,
 	ldr	r1, [r5, #44]	@ temp.923, <variable>.num_ref_idx_l0_active_minus1
 	add	r2, r2, #4	@ ivtmp.786, ivtmp.786,
 	cmp	r1, r0	@ temp.923, i.1052
@@ -608,7 +608,7 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r1, #2	@ tmp799,
 	beq	.L184	@,
 .L34:
-	mov	r0, #0	@ D.39058,
+	mov	r0, #0	@ D.39065,
 .L18:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -622,10 +622,10 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r2, ip	@ i.976, tmp1.853
 	mov	r7, #20	@ Dn_0.845,
 	mov	r8, #12	@ Dn_num.841,
-	str	r9, [fp, #-56]	@ D.39054, %sfp
+	str	r9, [fp, #-56]	@ D.39061, %sfp
 	b	.L77	@
 .L52:
-	cmp	r1, #2	@ D.39262,
+	cmp	r1, #2	@ D.39269,
 	andne	r1, r2, #3	@ prephitmp.967, i.976,
 	andne	r0, r2, #7	@ prephitmp.741, i.976,
 	beq	.L185	@,
@@ -646,16 +646,16 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r1, r2	@ temp.932, i.976
 	bls	.L186	@,
 .L77:
-	ldrb	r1, [r3, #1624]	@ zero_extendqisi2	@ D.39262, <variable>.list_structure
-	cmp	r1, #1	@ D.39262,
+	ldrb	r1, [r3, #1624]	@ zero_extendqisi2	@ D.39269, <variable>.list_structure
+	cmp	r1, #1	@ D.39269,
 	bne	.L52	@,
 	ldrb	r1, [r3, #1625]	@ zero_extendqisi2	@ <variable>.is_used, <variable>.is_used
 	cmp	r1, #3	@ <variable>.is_used,
 	beq	.L53	@,
-	ldrb	r1, [r3, #1628]	@ zero_extendqisi2	@ D.39274, <variable>.top_structure
+	ldrb	r1, [r3, #1628]	@ zero_extendqisi2	@ D.39281, <variable>.top_structure
 	and	r0, r2, #7	@ prephitmp.741, i.976,
 	ldrb	sl, [r3, #1629]	@ zero_extendqisi2	@ <variable>.top_is_long_term, <variable>.top_is_long_term
-	cmp	r1, #1	@ D.39274,
+	cmp	r1, #1	@ D.39281,
 	mov	lr, r0, asl #2	@, prephitmp.741,
 	moveq	r9, #4	@,
 	movne	r9, #0	@,
@@ -664,7 +664,7 @@ H264HAL_V300R001_SetSliceMsg:
 	ldr	r9, [r4, #32]	@, <variable>.mb_adaptive_frame_field_flag
 	str	lr, [fp, #-48]	@, %sfp
 	moveq	sl, #8	@ iftmp.462,
-	add	r1, r9, r1, asl #1	@, tmp554,, D.39274,
+	add	r1, r9, r1, asl #1	@, tmp554,, D.39281,
 	ldr	r9, [fp, #-52]	@, %sfp
 	movne	sl, #0	@ iftmp.462,
 	add	lr, r9, r1, asl #2	@, tmp558,, tmp554,
@@ -687,10 +687,10 @@ H264HAL_V300R001_SetSliceMsg:
 	ldrb	r0, [r3, #1625]	@ zero_extendqisi2	@ <variable>.is_used, <variable>.is_used
 	cmp	r0, #3	@ <variable>.is_used,
 	beq	.L65	@,
-	ldrb	r1, [r3, #1630]	@ zero_extendqisi2	@ D.39311, <variable>.btm_structure
+	ldrb	r1, [r3, #1630]	@ zero_extendqisi2	@ D.39318, <variable>.btm_structure
 	and	r0, r2, #7	@ prephitmp.741, i.976,
 	ldrb	sl, [r3, #1631]	@ zero_extendqisi2	@ <variable>.btm_is_long_term, <variable>.btm_is_long_term
-	cmp	r1, #1	@ D.39311,
+	cmp	r1, #1	@ D.39318,
 	moveq	r9, #4	@,
 	movne	r9, #0	@,
 	str	r9, [fp, #-60]	@, %sfp
@@ -698,7 +698,7 @@ H264HAL_V300R001_SetSliceMsg:
 	ldr	r9, [r4, #32]	@, <variable>.mb_adaptive_frame_field_flag
 	moveq	sl, #8	@ iftmp.466,
 	movne	sl, #0	@ iftmp.466,
-	add	lr, r9, r1, asl #1	@, tmp594,, D.39311,
+	add	lr, r9, r1, asl #1	@, tmp594,, D.39318,
 	mov	r9, r0, asl #2	@, prephitmp.741,
 	str	r9, [fp, #-48]	@, %sfp
 	ldr	r9, [fp, #-52]	@, %sfp
@@ -780,11 +780,11 @@ H264HAL_V300R001_SetSliceMsg:
 	orr	r6, r6, lr, asl sl	@, tmp.849, tmp.849, tmp619,
 	b	.L70	@
 .L186:
-	ldr	r9, [fp, #-56]	@ D.39054, %sfp
+	ldr	r9, [fp, #-56]	@ D.39061, %sfp
 	tst	r1, #7	@ temp.932,
 	ldreqb	r3, [r5, #0]	@ zero_extendqisi2	@ <variable>.slice_type, <variable>.slice_type
-	strne	r6, [r9, r8, asl #2]	@ tmp.849,* D.39054
-	strne	ip, [r9, r7, asl #2]	@ tmp1.853,* D.39054
+	strne	r6, [r9, r8, asl #2]	@ tmp.849,* D.39061
+	strne	ip, [r9, r7, asl #2]	@ tmp1.853,* D.39061
 	ldrneb	r3, [r5, #0]	@ zero_extendqisi2	@ <variable>.slice_type, <variable>.slice_type
 	ldreq	r2, [fp, #-52]	@, %sfp
 	ldrne	r7, [fp, #-52]	@, %sfp
@@ -820,7 +820,7 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r1, #3	@ temp.1033,
 	and	r7, lr, #31	@ tmp857, tmp856,
 	orr	r7, ip, r7, asl r6	@, tmp.851, tmp.851, tmp857,
-	streq	r7, [r9, r8, asl #2]	@ tmp.851,* D.39054
+	streq	r7, [r9, r8, asl #2]	@ tmp.851,* D.39061
 	ldr	r6, [r3, #4]	@ tmp864, <variable>.Apc2RefIdx
 	moveq	r7, #0	@ tmp.851,
 	addeq	r8, r8, #1	@ Dn_num.1039, Dn_num.1039,
@@ -830,7 +830,7 @@ H264HAL_V300R001_SetSliceMsg:
 	addne	r3, r4, #4	@ ivtmp.799, tmp850,
 	bne	.L51	@
 .L189:
-	str	ip, [r9, r8, asl #2]	@ tmp.851,* D.39054
+	str	ip, [r9, r8, asl #2]	@ tmp.851,* D.39061
 	add	r3, r4, #4	@ ivtmp.799, tmp850,
 	add	r8, r8, #1	@ Dn_num.1039, Dn_num.1039,
 	mov	ip, #0	@ tmp.851,
@@ -880,10 +880,10 @@ H264HAL_V300R001_SetSliceMsg:
 	mov	r2, ip	@ i.1025, tmp1.854
 	mov	r7, #28	@ Dn_0.846,
 	mov	r8, #16	@ Dn_num.842,
-	str	r9, [fp, #-56]	@ D.39054, %sfp
+	str	r9, [fp, #-56]	@ D.39061, %sfp
 	b	.L104	@
 .L79:
-	cmp	r1, #2	@ D.39347,
+	cmp	r1, #2	@ D.39354,
 	andne	r1, r2, #3	@ prephitmp.1016, i.1025,
 	andne	r0, r2, #7	@ prephitmp.1011, i.1025,
 	beq	.L191	@,
@@ -904,16 +904,16 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r1, r2	@ temp.924, i.1025
 	bls	.L192	@,
 .L104:
-	ldrb	r1, [r3, #-20]	@ zero_extendqisi2	@ D.39347, <variable>.list_structure
-	cmp	r1, #1	@ D.39347,
+	ldrb	r1, [r3, #-20]	@ zero_extendqisi2	@ D.39354, <variable>.list_structure
+	cmp	r1, #1	@ D.39354,
 	bne	.L79	@,
 	ldrb	r0, [r3, #-19]	@ zero_extendqisi2	@ <variable>.is_used, <variable>.is_used
 	cmp	r0, #3	@ <variable>.is_used,
 	beq	.L80	@,
-	ldrb	r1, [r3, #-16]	@ zero_extendqisi2	@ D.39359, <variable>.top_structure
+	ldrb	r1, [r3, #-16]	@ zero_extendqisi2	@ D.39366, <variable>.top_structure
 	and	r0, r2, #7	@ prephitmp.1011, i.1025,
 	ldrb	sl, [r3, #-15]	@ zero_extendqisi2	@ <variable>.top_is_long_term, <variable>.top_is_long_term
-	cmp	r1, #1	@ D.39359,
+	cmp	r1, #1	@ D.39366,
 	moveq	r9, #4	@,
 	movne	r9, #0	@,
 	str	r9, [fp, #-60]	@, %sfp
@@ -921,7 +921,7 @@ H264HAL_V300R001_SetSliceMsg:
 	ldr	r9, [r4, #32]	@, <variable>.mb_adaptive_frame_field_flag
 	moveq	sl, #8	@ iftmp.470,
 	movne	sl, #0	@ iftmp.470,
-	add	lr, r9, r1, asl #1	@, tmp654,, D.39359,
+	add	lr, r9, r1, asl #1	@, tmp654,, D.39366,
 	mov	r9, r0, asl #2	@, prephitmp.1011,
 	str	r9, [fp, #-48]	@, %sfp
 	ldr	r9, [fp, #-52]	@, %sfp
@@ -945,10 +945,10 @@ H264HAL_V300R001_SetSliceMsg:
 	ldrb	r0, [r3, #-19]	@ zero_extendqisi2	@ <variable>.is_used, <variable>.is_used
 	cmp	r0, #3	@ <variable>.is_used,
 	beq	.L92	@,
-	ldrb	r1, [r3, #-14]	@ zero_extendqisi2	@ D.39396, <variable>.btm_structure
+	ldrb	r1, [r3, #-14]	@ zero_extendqisi2	@ D.39403, <variable>.btm_structure
 	and	r0, r2, #7	@ prephitmp.1011, i.1025,
 	ldrb	sl, [r3, #-13]	@ zero_extendqisi2	@ <variable>.btm_is_long_term, <variable>.btm_is_long_term
-	cmp	r1, #1	@ D.39396,
+	cmp	r1, #1	@ D.39403,
 	mov	lr, r0, asl #2	@, prephitmp.1011,
 	moveq	r9, #4	@,
 	movne	r9, #0	@,
@@ -957,7 +957,7 @@ H264HAL_V300R001_SetSliceMsg:
 	ldr	r9, [r4, #32]	@, <variable>.mb_adaptive_frame_field_flag
 	str	lr, [fp, #-48]	@, %sfp
 	moveq	sl, #8	@ iftmp.474,
-	add	r1, r9, r1, asl #1	@, tmp694,, D.39396,
+	add	r1, r9, r1, asl #1	@, tmp694,, D.39403,
 	ldr	r9, [fp, #-52]	@, %sfp
 	movne	sl, #0	@ iftmp.474,
 	add	lr, r9, r1, asl #2	@, tmp698,, tmp694,
@@ -1038,19 +1038,19 @@ H264HAL_V300R001_SetSliceMsg:
 	orr	r6, r6, lr, asl sl	@, tmp.850, tmp.850, tmp719,
 	b	.L97	@
 .L192:
-	ldr	r9, [fp, #-56]	@ D.39054, %sfp
+	ldr	r9, [fp, #-56]	@ D.39061, %sfp
 	tst	r1, #7	@ temp.924,
-	strne	r6, [r9, r8, asl #2]	@ tmp.850,* D.39054
-	strne	ip, [r9, r7, asl #2]	@ tmp1.854,* D.39054
+	strne	r6, [r9, r8, asl #2]	@ tmp.850,* D.39061
+	strne	ip, [r9, r7, asl #2]	@ tmp1.854,* D.39061
 	b	.L45	@
 .L182:
 	tst	r1, #7	@ temp.911,
-	ldr	r9, [fp, #-64]	@ D.39054, %sfp
+	ldr	r9, [fp, #-64]	@ D.39061, %sfp
 	ldr	r5, [fp, #-56]	@ pSlcPara, %sfp
 	ldrne	sl, [fp, #-60]	@, %sfp
-	strne	r6, [r9, sl, asl #2]	@ tmp.848,* D.39054
+	strne	r6, [r9, sl, asl #2]	@ tmp.848,* D.39061
 	ldrne	r0, [fp, #-48]	@, %sfp
-	strne	ip, [r9, r0, asl #2]	@ tmp1.852,* D.39054
+	strne	ip, [r9, r0, asl #2]	@ tmp1.852,* D.39061
 	b	.L45	@
 .L173:
 	ldr	ip, [r5, #2788]	@ <variable>.pmv_address_idc, <variable>.pmv_address_idc
@@ -1089,7 +1089,7 @@ H264HAL_V300R001_SetSliceMsg:
 	cmp	r3, r2	@ i.1061, temp.1074
 	bls	.L115	@,
 .L162:
-	add	r9, r9, #384	@ ivtmp.762, D.39054,
+	add	r9, r9, #384	@ ivtmp.762, D.39061,
 	mov	r2, #0	@ i,
 .L116:
 	ldr	ip, [r4, #472]	@ tmp801, <variable>.wp_weight_l1_y
@@ -1118,8 +1118,8 @@ H264HAL_V300R001_SetSliceMsg:
 	add	r4, r4, #4	@ ivtmp.784, ivtmp.784,
 	mov	lr, ip, asl #23	@ tmp823, tmp824,
 	mov	r0, lr, lsr #23	@ tmp823, tmp823,
-	orr	r3, r0, r1, asl #9	@, D.39518, tmp823, tmp820,
-	str	r3, [r9, #512]	@ D.39518,
+	orr	r3, r0, r1, asl #9	@, D.39525, tmp823, tmp820,
+	str	r3, [r9, #512]	@ D.39525,
 	ldr	ip, [r5, #40]	@ <variable>.num_ref_idx_l1_active_minus1, <variable>.num_ref_idx_l1_active_minus1
 	add	r9, r9, #4	@ ivtmp.762, ivtmp.762,
 	cmp	ip, r2	@ <variable>.num_ref_idx_l1_active_minus1, i
@@ -1131,7 +1131,7 @@ H264HAL_V300R001_SetSliceMsg:
 	ldr	r1, [r4, #28]	@ <variable>.pic_width_in_mb, <variable>.pic_width_in_mb
 	mul	lr, r1, r2	@ tmp384, <variable>.pic_width_in_mb, <variable>.frame_height_in_mb
 	cmp	lr, ip	@ tmp384, tmp387
-	mvnhi	r0, #0	@ D.39058,
+	mvnhi	r0, #0	@ D.39065,
 	bls	.L24	@,
 	b	.L18	@
 .L183:
@@ -1151,13 +1151,13 @@ H264HAL_V300R001_SetSliceMsg:
 	bls	.L112	@,
 	b	.L111	@
 .L177:
-	ldr	r0, [r4, #920]	@ D.39189, <variable>.mbtodec
-	ldrb	r1, [r5, #1]	@ zero_extendqisi2	@ D.39185, <variable>.MbaffFrameFlag
-	cmp	r0, #262144	@ D.39189,
-	addgt	r1, r1, #1	@, D.39185,
-	suble	r0, r0, #1	@, D.39189,
+	ldr	r0, [r4, #920]	@ D.39196, <variable>.mbtodec
+	ldrb	r1, [r5, #1]	@ zero_extendqisi2	@ D.39192, <variable>.MbaffFrameFlag
+	cmp	r0, #262144	@ D.39196,
+	addgt	r1, r1, #1	@, D.39192,
+	suble	r0, r0, #1	@, D.39196,
 	movwgt	r0, #:lower16:262143	@,
-	addle	r1, r1, #1	@, D.39185,
+	addle	r1, r1, #1	@, D.39192,
 	movtgt	r0, #:upper16:262143	@,
 	bl	__aeabi_idiv	@
 	b	.L32	@
@@ -1169,7 +1169,7 @@ H264HAL_V300R001_SetSliceMsg:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39058,
+	mvn	r0, #0	@ D.39065,
 	b	.L18	@
 	.fnend
 	.size	H264HAL_V300R001_SetSliceMsg, .-H264HAL_V300R001_SetSliceMsg
@@ -1195,23 +1195,23 @@ H264HAL_V300R001_SetPicMsg:
 	mov	r5, r1	@ pHwMem, pHwMem
 	mov	r6, r3	@ FstSlcMsgSlotPhy, FstSlcMsgSlotPhy
 	bl	MEM_Phy2Vir	@
-	subs	r2, r0, #0	@ D.38886,
+	subs	r2, r0, #0	@ D.38893,
 	beq	.L232	@,
 	ldrb	ip, [r4, #0]	@ zero_extendqisi2	@ <variable>.pic_structure, <variable>.pic_structure
 	movw	r3, #:lower16:.LANCHOR0	@ tmp221,
 	ldr	lr, [r4, #32]	@ <variable>.mb_adaptive_frame_field_flag, <variable>.mb_adaptive_frame_field_flag
 	movt	r3, #:upper16:.LANCHOR0	@ tmp221,
-	ldr	r0, [r4, #36]	@ D.38896, <variable>.transform_8x8_mode_flag
+	ldr	r0, [r4, #36]	@ D.38903, <variable>.transform_8x8_mode_flag
 	bic	r6, r6, #15	@ tmp.1252, FstSlcMsgSlotPhy,
-	ldr	r7, [r4, #40]	@ D.38899, <variable>.entropy_coding_mode_flag
+	ldr	r7, [r4, #40]	@ D.38906, <variable>.entropy_coding_mode_flag
 	add	r1, lr, ip, asl #1	@, tmp224, <variable>.mb_adaptive_frame_field_flag, <variable>.pic_structure,
-	ldr	ip, [r4, #44]	@ D.38902, <variable>.constrained_intra_pred_flag
+	ldr	ip, [r4, #44]	@ D.38909, <variable>.constrained_intra_pred_flag
 	add	lr, r3, r1, asl #2	@, tmp228, tmp221, tmp224,
-	mov	r0, r0, asl #28	@ tmp210, D.38896,
+	mov	r0, r0, asl #28	@ tmp210, D.38903,
 	ldr	r1, [r4, #28]	@ <variable>.pic_width_in_mb, <variable>.pic_width_in_mb
-	orr	r0, r0, r7, asl #27	@, tmp211, tmp210, D.38899,
+	orr	r0, r0, r7, asl #27	@, tmp211, tmp210, D.38906,
 	ldr	r7, [r4, #20]	@ <variable>.pic_height_in_mb, <variable>.pic_height_in_mb
-	orr	r0, r0, ip, asl #26	@, tmp213, tmp211, D.38902,
+	orr	r0, r0, ip, asl #26	@, tmp213, tmp211, D.38909,
 	ldr	ip, [lr, #136]	@ tmp231, g_StructTrans
 	sub	r1, r1, #1	@ tmp214, <variable>.pic_width_in_mb,
 	ldr	lr, [r4, #16]	@ <variable>.nal_ref_idc, <variable>.nal_ref_idc
@@ -1227,18 +1227,18 @@ H264HAL_V300R001_SetPicMsg:
 	moveq	r1, #33554432	@ iftmp.445,
 	movne	r1, #0	@ iftmp.445,
 	orr	lr, r3, r1	@ tmp.447, tmp233, iftmp.445
-	str	lr, [r2, #0]	@ tmp.447,* D.38886
+	str	lr, [r2, #0]	@ tmp.447,* D.38893
 	ldr	r0, [r4, #296]	@ <variable>.CurrPicImg2DAddr, <variable>.CurrPicImg2DAddr
 	bic	r3, r0, #15	@ tmp.1237, <variable>.CurrPicImg2DAddr,
 	str	r3, [r2, #4]	@ tmp.1237,
-	ldr	lr, [r4, #48]	@ D.38928, <variable>.ThisPoc
-	str	lr, [r2, #8]	@ D.38928,
+	ldr	lr, [r4, #48]	@ D.38935, <variable>.ThisPoc
+	str	lr, [r2, #8]	@ D.38935,
 	ldr	r0, [r4, #32]	@ <variable>.mb_adaptive_frame_field_flag, <variable>.mb_adaptive_frame_field_flag
 	cmp	r0, #0	@ <variable>.mb_adaptive_frame_field_flag,
 	streq	r0, [r2, #12]	@ <variable>.mb_adaptive_frame_field_flag,
-	ldrne	r0, [r4, #52]	@ D.38932, <variable>.TopPoc
-	strne	r0, [r2, #12]	@ D.38932,
-	ldrne	r0, [r4, #56]	@ D.38934, <variable>.BottomPoc
+	ldrne	r0, [r4, #52]	@ D.38939, <variable>.TopPoc
+	strne	r0, [r2, #12]	@ D.38939,
+	ldrne	r0, [r4, #56]	@ D.38941, <variable>.BottomPoc
 	str	r0, [r2, #16]	@ <variable>.mb_adaptive_frame_field_flag,
 	ldr	r3, [r5, #1136]	@ <variable>.SedTopAddr, <variable>.SedTopAddr
 	bic	lr, r3, #15	@ tmp.1242, <variable>.SedTopAddr,
@@ -1264,7 +1264,7 @@ H264HAL_V300R001_SetPicMsg:
 	str	r6, [r2, #36]	@ tmp.1252,
 	ldr	r0, [r4, #1116]	@ i, <variable>.ApcSize
 	cmp	r0, #0	@ i,
-	addne	ip, r2, #40	@ ivtmp.1233, D.38886,
+	addne	ip, r2, #40	@ ivtmp.1233, D.38893,
 	movne	r1, r4	@ ivtmp.1232, pParam
 	movne	r3, #0	@ i.1255,
 	beq	.L207	@,
@@ -1286,7 +1286,7 @@ H264HAL_V300R001_SetPicMsg:
 	add	r3, r0, #10	@ tmp250, i,
 	add	ip, r0, #1	@ i, i,
 	rsb	r0, r0, #15	@ tmp284, i,
-	add	r3, r2, r3, asl #2	@, ivtmp.1226, D.38886, tmp250,
+	add	r3, r2, r3, asl #2	@, ivtmp.1226, D.38893, tmp250,
 	cmp	ip, #15	@ i,
 	add	lr, r4, r1, asl #2	@, tmp263, pParam, <variable>.Apc2Idc,
 	and	r0, r0, #1	@ tmp285, tmp284,
@@ -1326,7 +1326,7 @@ H264HAL_V300R001_SetPicMsg:
 	str	r3, [r2, #104]	@ tmp.1260,
 	ldr	ip, [r4, #1116]	@ i.1266, <variable>.ApcSize
 	cmp	ip, #0	@ i.1266,
-	addne	r1, r2, #108	@ ivtmp.1218, D.38886,
+	addne	r1, r2, #108	@ ivtmp.1218, D.38893,
 	movne	r3, r4	@ ivtmp.1217, pParam
 	movne	r0, #0	@ i.1265,
 	beq	.L212	@,
@@ -1345,10 +1345,10 @@ H264HAL_V300R001_SetPicMsg:
 	bhi	.L213	@,
 .L212:
 	add	r1, ip, #14	@ tmp269, i.1266,
-	add	r3, r2, ip, asl #3	@, tmp268, D.38886, i.1266,
+	add	r3, r2, ip, asl #3	@, tmp268, D.38893, i.1266,
 	add	r7, ip, #1	@ i.1266, i.1266,
 	add	r0, r3, #108	@ ivtmp.1209, tmp268,
-	add	r1, r2, r1, asl #3	@, ivtmp.1212, D.38886, tmp269,
+	add	r1, r2, r1, asl #3	@, ivtmp.1212, D.38893, tmp269,
 	cmp	r7, #15	@ i.1266,
 	rsb	lr, ip, #15	@ tmp279, i.1266,
 	mov	r3, #0	@ tmp276,
@@ -1377,8 +1377,8 @@ H264HAL_V300R001_SetPicMsg:
 	bls	.L210	@,
 .L213:
 	ldr	r1, [r5, #1152]	@ <variable>.DblkTopAddr, <variable>.DblkTopAddr
-	add	ip, r2, #224	@ D.40695, ivtmp.1205,
-	mov	r3, r2	@ ivtmp.1205, D.38886
+	add	ip, r2, #224	@ D.40702, ivtmp.1205,
+	mov	r3, r2	@ ivtmp.1205, D.38893
 	bic	r0, r1, #15	@ tmp.1269, <variable>.DblkTopAddr,
 	str	r0, [r2, #236]	@ tmp.1269,
 .L214:
@@ -1389,10 +1389,10 @@ H264HAL_V300R001_SetPicMsg:
 	str	r0, [r3, #256]	@ tmp274,
 	add	r3, r2, #4	@ ivtmp.1205, tmp278,
 	ldr	lr, [r1, #60]	@ tmp316, <variable>.Qmatrix
-	cmp	r3, ip	@ ivtmp.1205, D.40695
+	cmp	r3, ip	@ ivtmp.1205, D.40702
 	str	lr, [r2, #256]	@ tmp316,
 	bne	.L214	@,
-	mov	r0, #0	@ D.38890,
+	mov	r0, #0	@ D.38897,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L232:
 	movw	r1, #:lower16:.LC0	@,
@@ -1401,7 +1401,7 @@ H264HAL_V300R001_SetPicMsg:
 	movw	r3, #:lower16:.LC3	@,
 	movt	r3, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38890,
+	mvn	r0, #0	@ D.38897,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L234:
 	.align	2
@@ -1427,7 +1427,7 @@ H264HAL_V300R001_CutSliceChain:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	bl	MEM_Phy2Vir	@
-	subs	r3, r0, #0	@ D.38840,
+	subs	r3, r0, #0	@ D.38847,
 	beq	.L239	@,
 	mov	r0, #0	@ tmp142,
 	str	r0, [r3, #252]	@ tmp142,
@@ -1439,7 +1439,7 @@ H264HAL_V300R001_CutSliceChain:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38844,
+	mvn	r0, #0	@ D.38851,
 	ldmfd	sp, {fp, sp, pc}	@
 .L241:
 	.align	2
@@ -1466,7 +1466,7 @@ Write_V300R001_CabacTab:
 	bl	__gnu_mcount_nc
 	bl	MEM_Phy2Vir	@
 	cmp	r0, #0	@ p
-	addne	r4, r0, #5120	@ D.40855, p,
+	addne	r4, r0, #5120	@ D.40862, p,
 	movwne	r3, #:lower16:.LANCHOR1	@ ivtmp.1330,
 	movtne	r3, #:upper16:.LANCHOR1	@ ivtmp.1330,
 	beq	.L249	@,
@@ -1494,7 +1494,7 @@ Write_V300R001_CabacTab:
 	str	ip, [r0, #32]	@ tmp160,
 	add	r0, r2, #32	@ p, tmp157,
 	ldr	r1, [lr, #4]	@ tmp161, g_CabacMN
-	cmp	r0, r4	@ p, D.40855
+	cmp	r0, r4	@ p, D.40862
 	str	r1, [r2, #4]	@ tmp161,
 	ldr	ip, [lr, #8]	@ tmp162, g_CabacMN
 	str	ip, [r2, #8]	@ tmp162,
@@ -1509,7 +1509,7 @@ Write_V300R001_CabacTab:
 	ldr	r1, [lr, #28]	@ tmp167, g_CabacMN
 	str	r1, [r2, #28]	@ tmp167,
 	bne	.L244	@,
-	mov	r0, #0	@ D.38809,
+	mov	r0, #0	@ D.38816,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L249:
 	mov	r0, #22	@,
@@ -1517,7 +1517,7 @@ Write_V300R001_CabacTab:
 	mov	r2, #272	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38809,
+	mvn	r0, #0	@ D.38816,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	Write_V300R001_CabacTab, .-Write_V300R001_CabacTab
@@ -1539,13 +1539,13 @@ H264HAL_V300R001_InitHal:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	bl	Write_V300R001_CabacTab	@
-	cmp	r0, #0	@ D.38816
+	cmp	r0, #0	@ D.38823
 	ldmeqfd	sp, {fp, sp, pc}	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC5	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38820,
+	mvn	r0, #0	@ D.38827,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	H264HAL_V300R001_InitHal, .-H264HAL_V300R001_InitHal
@@ -1576,8 +1576,8 @@ H264HAL_V300R001_StartDec:
 	movt	r3, #:upper16:s_pstVfmwChan	@ tmp252,
 	mov	r5, r0	@ pParam, pParam
 	ldr	r2, [r4, ip, asl #3]	@ <variable>.ChanId, <variable>.ChanId
-	ldr	r4, [r3, r2, asl #2]	@ D.39569, s_pstVfmwChan
-	cmp	r4, #0	@ D.39569,
+	ldr	r4, [r3, r2, asl #2]	@ D.39576, s_pstVfmwChan
+	cmp	r4, #0	@ D.39576,
 	ldrne	r4, [r4, #1264]	@ ModuleLowlyEnable, <variable>.stSynExtraData.s32ModuleLowlyEnable
 	cmp	r1, #1	@ VdhId,
 	bls	.L305	@,
@@ -1585,7 +1585,7 @@ H264HAL_V300R001_StartDec:
 	movw	r1, #:lower16:.LC6	@,
 	movt	r1, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 .L259:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -1617,12 +1617,12 @@ H264HAL_V300R001_StartDec:
 	add	r2, r7, #1	@ StartCnt.492, StartCnt,
 	str	r2, [lr, #0]	@ StartCnt.492, StartCnt
 	bl	dprint_vfmw	@
-	ldr	r3, [r5, #920]	@ D.39606, <variable>.mbtodec
+	ldr	r3, [r5, #920]	@ D.39613, <variable>.mbtodec
 	sub	r7, fp, #44	@ D32.493,,
 	mov	r1, #0	@ tmp293,
-	cmp	r3, #262144	@ D.39606,
+	cmp	r3, #262144	@ D.39613,
 	mov	r0, #3	@,
-	suble	r3, r3, #1	@ iftmp.494, D.39606,
+	suble	r3, r3, #1	@ iftmp.494, D.39613,
 	str	r1, [r7, #-4]!	@ tmp293, D32
 	bicle	r3, r3, #-16777216	@ iftmp.494, iftmp.494,
 	ldr	ip, [r7, #0]	@ tmp295,* D32.493
@@ -1776,8 +1776,8 @@ H264HAL_V300R001_StartDec:
 	bl	dprint_vfmw	@
 	ldr	sl, [r5, #28]	@ <variable>.pic_width_in_mb, <variable>.pic_width_in_mb
 	movw	r3, #2047	@ tmp420,
-	mov	r2, sl, asl #4	@ D.39740, <variable>.pic_width_in_mb,
-	sub	r1, r2, #1	@ tmp419, D.39740,
+	mov	r2, sl, asl #4	@ D.39747, <variable>.pic_width_in_mb,
+	sub	r1, r2, #1	@ tmp419, D.39747,
 	cmp	r1, r3	@ tmp419, tmp420
 	bhi	.L322	@,
 .L273:
@@ -1810,11 +1810,11 @@ H264HAL_V300R001_StartDec:
 	mov	sl, ip, asl #4	@ tmp448, <variable>.frame_height_in_mb,
 	add	r1, sl, #31	@ tmp450, tmp448,
 	bic	r3, r1, #31	@ tmp452, tmp450,
-	mul	r8, r8, r3	@ D.39774, level, tmp452
-	str	r8, [r5, #1200]	@ D.39774, <variable>.prcnum_1d_cnt
+	mul	r8, r8, r3	@ D.39781, level, tmp452
+	str	r8, [r5, #1200]	@ D.39781, <variable>.prcnum_1d_cnt
 	ldr	r4, [r6, #0]	@ <variable>.pVdmRegVirAddr, <variable>.pVdmRegVirAddr
-	str	r8, [fp, #-48]	@ D.39774, D32
-	str	r8, [r4, #108]	@ D.39774,
+	str	r8, [fp, #-48]	@ D.39781, D32
+	str	r8, [r4, #108]	@ D.39781,
 	beq	.L323	@,
 .L277:
 	ldr	r7, [r6, #1156]	@ <variable>.PpfdBufAddr, <variable>.PpfdBufAddr
@@ -1890,9 +1890,9 @@ H264HAL_V300R001_StartDec:
 	orr	r3, r4, r1, asl #28	@, temp.1663, temp.1657, tmp525,
 	movw	r1, #:lower16:.LC25	@,
 	movt	r1, #:upper16:.LC25	@,
-	orr	sl, r3, ip, asl #30	@, D.39815, temp.1663, <variable>.RefPicType,
-	str	sl, [fp, #-48]	@ D.39815, D32
-	str	sl, [lr, #148]	@ D.39815,
+	orr	sl, r3, ip, asl #30	@, D.39822, temp.1663, <variable>.RefPicType,
+	str	sl, [fp, #-48]	@ D.39822, D32
+	str	sl, [lr, #148]	@ D.39822,
 	ldr	r2, [fp, #-48]	@, D32
 	bl	dprint_vfmw	@
 	ldrb	r4, [r5, #0]	@ zero_extendqisi2	@ <variable>.pic_structure, <variable>.pic_structure
@@ -1927,9 +1927,9 @@ H264HAL_V300R001_StartDec:
 	ldr	r4, [r5, #1124]	@ pSlicePara, <variable>.pFirstSlice
 	cmp	r4, #0	@ pSlicePara,
 	beq	.L324	@,
-	ldr	r8, [r4, #48]	@ D.39845, <variable>.first_mb_in_slice
-	cmp	r8, #0	@ D.39845,
-	moveq	r9, r8	@ AddSlice0Flag, D.39845
+	ldr	r8, [r4, #48]	@ D.39852, <variable>.first_mb_in_slice
+	cmp	r8, #0	@ D.39852,
+	moveq	r9, r8	@ AddSlice0Flag, D.39852
 	bne	.L325	@,
 .L282:
 	ldr	r1, [r5, #1120]	@ temp.1577, <variable>.SliceParaNum
@@ -1947,11 +1947,11 @@ H264HAL_V300R001_StartDec:
 	movcs	r3, #1	@, tmp589
 	cmp	r7, #0	@ i,
 	add	lr, r9, r7	@ tmp579, pretmp.1417, i
-	add	r0, r7, sl	@ D.39881, i, pretmp.1418
+	add	r0, r7, sl	@ D.39888, i, pretmp.1418
 	movle	r3, #0	@, tmp589,
 	add	lr, lr, #8	@ tmp580, tmp579,
 	cmp	r3, #0	@ tmp589,
-	add	r3, r0, #8	@ tmp582, D.39881,
+	add	r3, r0, #8	@ tmp582, D.39888,
 	ldr	lr, [r6, lr, asl #2]	@ prev_slcmsg_phy.1570, <variable>.MsgSlotAddr
 	ldr	r3, [r6, r3, asl #2]	@ cur_slcmsg_phy.1571, <variable>.MsgSlotAddr
 	movne	r4, r2	@ tmp_pSlicePara, tmp_pSlicePara.1579
@@ -1996,12 +1996,12 @@ H264HAL_V300R001_StartDec:
 	movw	r2, #1507	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L287:
 	cmp	r7, r1	@ j, temp.1577
 	beq	.L291	@,
-	cmp	r0, #140	@ D.39881,
+	cmp	r0, #140	@ D.39888,
 	beq	.L291	@,
 	add	r0, sl, r7	@ tmp599, pretmp.1418, j
 	ldr	r8, [r4, #48]	@ <variable>.first_mb_in_slice, <variable>.first_mb_in_slice
@@ -2050,17 +2050,17 @@ H264HAL_V300R001_StartDec:
 	sub	r8, r8, #1	@ last_mb_in_slice, tmp593,
 	b	.L293	@
 .L322:
-	sub	lr, r2, #2048	@ tmp421, D.39740,
+	sub	lr, r2, #2048	@ tmp421, D.39747,
 	sub	r1, lr, #1	@ tmp421, tmp421,
 	cmp	r1, r3	@ tmp421, tmp420
 	movls	r8, #32	@ level,
 	bls	.L275	@,
-	sub	ip, r2, #4096	@ tmp424, D.39740,
+	sub	ip, r2, #4096	@ tmp424, D.39747,
 	sub	sl, ip, #1	@ tmp424, tmp424,
 	cmp	sl, r3	@ tmp424, tmp420
 	movls	r8, #48	@ level,
 	bls	.L275	@,
-	sub	r0, r2, #6144	@ tmp427, D.39740,
+	sub	r0, r2, #6144	@ tmp427, D.39747,
 	sub	r2, r0, #1	@ tmp427, tmp427,
 	cmp	r2, r3	@ tmp427, tmp420
 	movls	r8, #64	@ level,
@@ -2081,7 +2081,7 @@ H264HAL_V300R001_StartDec:
 	ldr	r9, [r4, #8]	@, <variable>.valid_bitlen
 	mov	ip, #0	@ tmp560,
 	str	ip, [r4, #48]	@ tmp560, <variable>.first_mb_in_slice
-	sub	lr, r8, #1	@, D.39845,
+	sub	lr, r8, #1	@, D.39852,
 	mov	r1, r7	@, tmp547
 	mov	r2, r4	@, pSlicePara
 	str	r9, [fp, #-76]	@, %sfp
@@ -2114,7 +2114,7 @@ H264HAL_V300R001_StartDec:
 	cmp	r0, #0	@,
 	bne	.L328	@,
 	ldr	r0, [fp, #-56]	@, %sfp
-	str	r8, [r4, #48]	@ D.39845, <variable>.first_mb_in_slice
+	str	r8, [r4, #48]	@ D.39852, <variable>.first_mb_in_slice
 	str	r0, [r4, #28]	@, <variable>.bytespos
 	ldr	r3, [fp, #-76]	@, %sfp
 	str	r3, [r4, #8]	@, <variable>.valid_bitlen
@@ -2158,13 +2158,13 @@ H264HAL_V300R001_StartDec:
 	movw	r0, #:lower16:-121438208	@,
 	movt	r0, #:upper16:-121438208	@,
 	bl	MEM_Phy2Vir	@
-	subs	r3, r0, #0	@ D.39593,
-	strne	r3, [r6, #0]	@ D.39593, <variable>.pVdmRegVirAddr
+	subs	r3, r0, #0	@ D.39600,
+	strne	r3, [r6, #0]	@ D.39600, <variable>.pVdmRegVirAddr
 	bne	.L265	@,
 	movw	r1, #:lower16:.LC11	@,
 	movt	r1, #:upper16:.LC11	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L309:
 	ldr	r3, [r5, #1120]	@ temp.1577, <variable>.SliceParaNum
@@ -2175,7 +2175,7 @@ H264HAL_V300R001_StartDec:
 	add	lr, r3, #8	@ tmp608, tmp607,
 	ldr	r0, [r6, lr, asl #2]	@, <variable>.MsgSlotAddr
 	bl	H264HAL_V300R001_CutSliceChain	@
-	mov	r0, #0	@ D.39574,
+	mov	r0, #0	@ D.39581,
 	b	.L259	@
 .L316:
 	mov	lr, #0	@ tmp264,
@@ -2186,7 +2186,7 @@ H264HAL_V300R001_StartDec:
 	movt	r1, #:upper16:.LC7	@,
 	str	lr, [sp, #0]	@ tmp264,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L327:
 	mov	r0, #1	@,
@@ -2194,7 +2194,7 @@ H264HAL_V300R001_StartDec:
 	movw	r2, #1635	@,
 	movt	r1, #:upper16:.LC28	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L314:
 	mov	r0, #0	@,
@@ -2204,7 +2204,7 @@ H264HAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC9	@,
 	movt	r3, #:upper16:.LC9	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L328:
 	mov	r0, r9	@, tmp561
@@ -2212,7 +2212,7 @@ H264HAL_V300R001_StartDec:
 	movw	r2, #1463	@,
 	movt	r1, #:upper16:.LC28	@,
 	bl	dprint_vfmw	@
-	mov	r0, sl	@ D.39574, tmp553
+	mov	r0, sl	@ D.39581, tmp553
 	b	.L259	@
 .L317:
 	movw	r1, #:lower16:.LC0	@,
@@ -2221,21 +2221,21 @@ H264HAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC8	@,
 	movt	r3, #:upper16:.LC8	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L284:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC30	@,
 	movt	r1, #:upper16:.LC30	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L324:
 	mov	r0, r4	@, pSlicePara
 	movw	r1, #:lower16:.LC27	@,
 	movt	r1, #:upper16:.LC27	@,
 	bl	dprint_vfmw	@
-	mov	r0, sl	@ D.39574, tmp553
+	mov	r0, sl	@ D.39581, tmp553
 	b	.L259	@
 .L318:
 	movw	r1, #:lower16:.LC0	@,
@@ -2244,7 +2244,7 @@ H264HAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39574,
+	mvn	r0, #0	@ D.39581,
 	b	.L259	@
 .L330:
 	.align	2
@@ -2256,9 +2256,9 @@ H264HAL_V300R001_StartDec:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.39011, %object
-	.size	__func__.39011, 29
-__func__.39011:
+	.type	__func__.39018, %object
+	.size	__func__.39018, 29
+__func__.39018:
 	.ascii	"H264HAL_V300R001_SetSliceMsg\000"
 	.space	3
 	.type	g_SliceTypeForPMV, %object
@@ -2289,9 +2289,9 @@ g_ListStructField:
 	.word	2
 	.word	2
 	.word	2
-	.type	__func__.38873, %object
-	.size	__func__.38873, 27
-__func__.38873:
+	.type	__func__.38880, %object
+	.size	__func__.38880, 27
+__func__.38880:
 	.ascii	"H264HAL_V300R001_SetPicMsg\000"
 	.space	1
 	.type	g_StructTrans, %object
@@ -2305,14 +2305,14 @@ g_StructTrans:
 	.word	2
 	.word	3
 	.word	3
-	.type	__func__.38839, %object
-	.size	__func__.38839, 31
-__func__.38839:
+	.type	__func__.38846, %object
+	.size	__func__.38846, 31
+__func__.38846:
 	.ascii	"H264HAL_V300R001_CutSliceChain\000"
 	.space	1
-	.type	__func__.39554, %object
-	.size	__func__.39554, 26
-__func__.39554:
+	.type	__func__.39561, %object
+	.size	__func__.39561, 26
+__func__.39561:
 	.ascii	"H264HAL_V300R001_StartDec\000"
 	.data
 	.align	2
@@ -3685,9 +3685,9 @@ g_CabacMN:
 	.bss
 	.align	2
 .LANCHOR2 = . + 0
-	.type	StartCnt.39544, %object
-	.size	StartCnt.39544, 4
-StartCnt.39544:
+	.type	StartCnt.39551, %object
+	.size	StartCnt.39551, 4
+StartCnt.39551:
 	.space	4
 	.ident	"GCC: (Hisilicon_v200(gcc4.4-290+glibc-2.11+eabi+nptl)) 4.4.1"
 	.section	.note.GNU-stack,"",%progbits

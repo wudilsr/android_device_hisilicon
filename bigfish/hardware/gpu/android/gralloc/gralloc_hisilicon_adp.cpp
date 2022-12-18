@@ -170,18 +170,19 @@ int pri_hisi_init_framebuffer(struct private_module_t *module, struct fb_var_scr
 	GRALLOC_IGNORE(module);
 
 	char property[PROPERTY_VALUE_MAX];
-
+    char mem[PROPERTY_VALUE_MAX];
 	/*low mem configuration 720P 2 FB buffers*/
 	property_get("ro.config.low_ram", property, "");
-    if (strcmp(property, "true") == 0)
-	{   
-		if (info->xres != RESOLUTION_FB_720P_WIDTH && info->yres != RESOLUTION_FB_720P_HEIGHT)
-		{   
+    property_get("ro.product.mem.size", mem, "unknown");
+    if ((strcmp(property, "true") == 0) && ((strcmp(mem, "512m") == 0) || (strcmp(mem, "768m") == 0)))
+    {
+        if (info->xres != RESOLUTION_FB_720P_WIDTH && info->yres != RESOLUTION_FB_720P_HEIGHT)
+        {
 			info->xres = RESOLUTION_FB_720P_WIDTH;
 			info->yres = RESOLUTION_FB_720P_HEIGHT;
-		}   
-		info->yres_virtual = info->yres * (NUM_BUFFERS - 1); 
-	}
+        }
+        info->yres_virtual = info->yres * (NUM_BUFFERS - 1);
+    }
 
 	return 0;
 }

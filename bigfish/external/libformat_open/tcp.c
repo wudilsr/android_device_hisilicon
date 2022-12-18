@@ -40,6 +40,8 @@
 #include <sys/select.h>
 #include "libavutil/avstring.h"
 
+#include "termplug.h"
+
 #ifndef SOL_TCP   //wkf34645 for linux compile
 #define SOL_TCP 6
 #endif
@@ -103,6 +105,17 @@ static int ipv6_works()
     }
 
     return (ipv6_works>0)?1:0;
+}
+
+/* fd must be init with -1 outside */
+static void tcp_safe_close(int fd)
+{
+    if (0 <= fd)
+    {
+        closesocket(fd);
+    }
+
+    return;
 }
 
 //wkf34645 get DNS use thread
@@ -211,10 +224,10 @@ static void tcp_getAddrInfo(void *arg)
         av_log(NULL, AV_LOG_ERROR, "[%s:%d] write msg failed:%s\n",__FILE_NAME__,__LINE__,strerror(errno));
     }
 
-    close(fd1[0]);
-    close(fd1[1]);
-    close(fd2[0]);
-    close(fd2[1]);
+    tcp_safe_close(fd1[0]);
+    tcp_safe_close(fd1[1]);
+    tcp_safe_close(fd2[0]);
+    tcp_safe_close(fd2[1]);
     av_log(NULL, AV_LOG_WARNING, "[%s:%d] thread exit!\n",__FILE_NAME__,__LINE__);
     pthread_detach(pthread_self()); //thread quit
 }
@@ -264,6 +277,7 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
     int timeout = 10;
     char hostname[1024],proto[1024],path[1024];
     char portstr[10];
+    char hostip[64];
     int64_t time_start = av_gettime();
     TCPThread_S stThread;
     int ret_getinfo;
@@ -302,6 +316,9 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
 
     if (is_thread)
     {
+        memset(fd1, -1, sizeof(fd1));
+        memset(fd2, -1, sizeof(fd2));
+
         ret = pipe(fd1);
         ret |= pipe(fd2);
         if (ret < 0)
@@ -309,10 +326,10 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] ret_cond=%d, errno = %d\n",__FILE_NAME__,__LINE__,ret, errno);
             is_thread = 0;
             pthread_attr_destroy(&attr);
-            close(fd1[0]);
-            close(fd1[1]);
-            close(fd2[0]);
-            close(fd2[1]);
+            tcp_safe_close(fd1[0]);
+            tcp_safe_close(fd1[1]);
+            tcp_safe_close(fd2[0]);
+            tcp_safe_close(fd2[1]);
             return AVERROR(EIO); //h00212929 add, only use asyn thread way.
                                  //sync will cause ANR[haimeidi]
         }
@@ -331,10 +348,10 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] pthread_create failed\n",__FILE_NAME__,__LINE__);
             is_thread = 0;
             pthread_attr_destroy(&attr);
-            close(fd1[0]);
-            close(fd1[1]);
-            close(fd2[0]);
-            close(fd2[1]);
+            tcp_safe_close(fd1[0]);
+            tcp_safe_close(fd1[1]);
+            tcp_safe_close(fd2[0]);
+            tcp_safe_close(fd2[1]);
         }
     }
 
@@ -413,6 +430,52 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
 
     cur_ai = stThread.ai;
     ai = stThread.ai;
+
+    /* verify the client access before, only for jiangsu telecom */
+
+    struct sockaddr_in *sa = NULL;
+
+    switch (ai->ai_family) {
+    case PF_INET:
+        sa = (struct sockaddr_in *)ai->ai_addr;
+        memset(hostip, 0, 64);
+        snprintf(hostip, 64, "%s", inet_ntoa(sa->sin_addr));
+
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] port=%d ipv4:%s, len=%d\n",
+                    __FILE_NAME__, __LINE__,
+                    ntohs(sa->sin_port), hostip, strlen(hostip));
+        break;
+    case PF_INET6:
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] ipv6 \n", __FILE_NAME__, __LINE__);
+        break;
+    default:
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] not ipv4 and ipv6 \n", __FILE_NAME__, __LINE__);
+        break;
+    }
+
+    if (s->stream_uri) {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] set stream uri: %s \n", __FILE_NAME__, __LINE__, s->stream_uri);
+
+        ret = verify(s->stream_uri, strlen(s->stream_uri), hostip, strlen(hostip));
+
+        if (-93001 == ret) {
+            if (NULL != url_errorcode_cb) {
+                url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_PRIVATE, "-93001");
+            }
+
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] verify faild, ret = %d \n", __FILE_NAME__, __LINE__, ret);
+
+            goto fail1;
+        } else if (0 != ret) {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] verify return invalid value \n", __FILE_NAME__, __LINE__);
+        } else {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] verify successfully \n", __FILE_NAME__, __LINE__);
+        }
+    } else {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] not set stream uri, use keep-alive mode \n", __FILE_NAME__, __LINE__);
+    }
+
+    /* verify the client access end, only for jiangsu telecom */
 
     p = strchr(uri, '?');
     if (p) {

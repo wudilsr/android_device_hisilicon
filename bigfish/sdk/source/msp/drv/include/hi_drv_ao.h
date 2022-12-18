@@ -442,6 +442,15 @@ typedef struct hiHI_TRACK_MMAPATTR_S
     HI_TRACK_MmapBufAttr_S stMmapBuff; /**<Buffer Attribute*/ /**<CNcomment:Buffer ¨º?D?*/
 } HI_TRACK_MmapAttr_S;
 
+typedef struct 
+{
+    HI_UNF_SND_OUTPUTPORT_E enOutPort;
+    HI_U32 u32PhyDma;
+    HI_U32 u32PhyWptr;
+    HI_U32 u32PhyRptr;
+    HI_U32 u32Size;
+} SND_PORT_KERNEL_ATTR_S;
+
 /******************* Audio Effect component ID ************************/
 
 #define HI_AEF_GET_AFLTID_CMD 0x100

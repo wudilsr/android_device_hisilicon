@@ -35,6 +35,7 @@ extern HI_S32 HI_DRV_AO_Track_Start(HI_HANDLE hSndTrack);
 extern HI_S32 HI_DRV_AO_Track_Stop(HI_HANDLE hSndTrack);
 extern HI_S32 HI_DRV_AO_Track_GetDelayMs(HI_HANDLE hSndTrack, HI_U32* pDelayMs);
 extern HI_S32 HI_DRV_AO_Track_SendData(HI_HANDLE hSndTrack, HI_UNF_AO_FRAMEINFO_S* pstAOFrame);
+extern HI_S32 HI_DRV_AO_Track_SendAlsaData(HI_HANDLE hSndTrack, HI_UNF_AO_FRAMEINFO_S* pstAOFrame);
 
 void I2SDma_Enable(HI_BOOL bEnable);
 void I2SDma_Set(HI_U32 u32PeroidNs);

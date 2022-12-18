@@ -6,7 +6,7 @@ ifeq (y,$(CFG_HI_HACODEC_MP3DECODE_SUPPORT))
 HA_MODULE += src/mp3dec
 endif
 ifeq (y,$(CFG_HI_HACODEC_AACDECODE_SUPPORT))
-HA_MODULE += src/aacdec
+HA_MODULE += src/aacdec_android
 endif	
 ifeq (y,$(CFG_HI_HACODEC_AACENCODE_SUPPORT))
 HA_MODULE += src/aacenc

@@ -33,10 +33,10 @@ namespace android
     int32_t HiKaraokeService::initMic()
     {
         ALOGD("HiKaraokeService::initMic");
-        mInitState = 1;
         int ret = mHiKaraokeProxy->initMic();
         if(ret >= 0)
         {
+			mInitState = 1;
             system("echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
         }
         return ret;

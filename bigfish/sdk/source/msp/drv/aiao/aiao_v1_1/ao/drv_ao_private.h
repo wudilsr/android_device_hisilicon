@@ -201,21 +201,22 @@ typedef struct
     HI_U32                  uSndTrackInitFlag;
     HI_HANDLE               hSndOp[HI_UNF_SND_OUTPUTPORT_MAX];
     HI_HANDLE               hSndTrack[AO_MAX_TOTAL_TRACK_NUM];
-    HI_BOOL					bAllTrackMute;	//exclude alsa track 
+    HI_BOOL                 bAllTrackMute;  //exclude alsa track 
     HI_HANDLE               hSndEngine[SND_ENGINE_TYPE_BUTT];
     MMZ_BUFFER_S            stTrackRbfMmz[SND_ENGINE_TYPE_BUTT];
     HI_U32                  u32AttAef;     //attached aef (bit)
     HI_HANDLE               hAefProc[AFLT_MAX_CHAN_NUM];  
 
     HI_BOOL                 bHdmiDebug;
-    HI_BOOL                 bSndDestoryFlag;	/*for suspent popfree, Destory snd flag,when suspent or normal */
+    HI_BOOL                 bSndDestoryFlag;    /*for suspent popfree, Destory snd flag,when suspent or normal */
     HI_U32    uSndCastInitFlag;
     HI_HANDLE hCast[AO_MAX_CAST_NUM];
     HI_HANDLE hCastOp[AO_MAX_CAST_NUM]; /*op cast used */
-	/*save pcm*/
-	SND_DEBUG_CMD_CTRL_E	enSaveState;
-	HI_U32 					u32SaveCnt;
-	struct file *			fileHandle; 		   
+    /*save pcm*/
+    SND_DEBUG_CMD_CTRL_E    enSaveState;
+    HI_U32                  u32SaveCnt;
+    struct file *           fileHandle;
+    HI_BOOL                 bDMAMode;
 } SND_CARD_STATE_S;
 
 typedef struct tagAO_REGISTER_PARAM_S

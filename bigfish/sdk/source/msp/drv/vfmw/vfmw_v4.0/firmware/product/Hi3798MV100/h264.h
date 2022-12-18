@@ -242,6 +242,7 @@ typedef struct
     UINT8   svc_extension_flag;
     UINT8   nal_integ;
     UINT8   dsp_check_pic_over_flag;
+    UINT8   IsFrameLastSegFlag;
     H264_BITSTREAM_S  stream[2];
     UINT32  nal_bitoffset;
     UINT32  nal_segment;          // how many stream segment received in this nal
@@ -669,6 +670,7 @@ typedef struct
 typedef struct
 {
     UINT8   last_pack_in_nal;
+    UINT8   IsFrameLastSegFlag;
     UINT8   pack_is_pic_over_flag;
     UINT8   *p_stream;
     UINT32  strm_phy_addr;

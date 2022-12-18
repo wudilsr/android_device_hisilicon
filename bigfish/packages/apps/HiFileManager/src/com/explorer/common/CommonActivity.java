@@ -33,10 +33,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.webkit.MimeTypeMap;
+import android.os.SystemProperties;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Stack;
 import java.util.Timer;
@@ -405,6 +408,9 @@ public abstract class CommonActivity extends Activity {
 
     mIsSupportBD = true;
 	FilterType.filterType(CommonActivity.this);
+	if(SystemProperties.get("ro.product.target").equals("telecom")){
+        sortCount = 2 ;
+    }
   }
 
   protected BDInfo getBDInfo() {
@@ -1055,5 +1061,9 @@ public abstract class CommonActivity extends Activity {
         e.printStackTrace();
       }
     }
+  }
+  protected void preview(File file){
+      PreviewDialog dialog = new PreviewDialog(this, file.getAbsolutePath(),this);
+      dialog.show();
   }
 }

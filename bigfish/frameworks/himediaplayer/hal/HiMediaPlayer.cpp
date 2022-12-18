@@ -352,7 +352,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                         pHiPlayer->mCmdQueue->setState(HiMediaPlayer::CommandQueue::STATE_STOP);
 
                         HI_SVR_PLAYER_GetParam(hPlayer, HI_SVR_PLAYER_ATTR_WINDOW_HDL, &hWindow);
-                        if (HI_UNF_WINDOW_FREEZE_MODE_BUTT != pHiPlayer->mWndFreezeMode)
+                        if (pHiPlayer->mWndFreezeMode < HI_UNF_WINDOW_FREEZE_MODE_BUTT)
                         {
                             if (HI_INVALID_HANDLE != hWindow)
                                 HI_UNF_VO_ResetWindow(hWindow, pHiPlayer->mWndFreezeMode);
@@ -401,7 +401,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
 
             HI_SVR_PLAYER_GetParam(hPlayer, HI_SVR_PLAYER_ATTR_WINDOW_HDL, &hWindow);
 
-            if (HI_UNF_WINDOW_FREEZE_MODE_BUTT != pHiPlayer->mWndFreezeMode)
+            if (pHiPlayer->mWndFreezeMode < HI_UNF_WINDOW_FREEZE_MODE_BUTT)
             {
                 if (HI_INVALID_HANDLE != hWindow)
                     HI_UNF_VO_ResetWindow(hWindow, pHiPlayer->mWndFreezeMode);
@@ -554,6 +554,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 #if NET_CACHE_UNDERRUN
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_START, 0);
                 #endif
+                pHiPlayer->mIsBufferStart = true;
             }
             else if (HI_SVR_PLAYER_BUFFER_START == pstBufStat->eType)
             {
@@ -562,6 +563,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 #if NET_CACHE_UNDERRUN
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_START, 0);
                 #endif
+                pHiPlayer->mIsBufferStart = true;
             }
             else if (HI_SVR_PLAYER_BUFFER_ENOUGH == pstBufStat->eType)
             {
@@ -570,6 +572,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 #if NET_CACHE_UNDERRUN
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                 #endif
+                pHiPlayer->mIsBufferStart = false;
             }
             else if (HI_SVR_PLAYER_BUFFER_FULL == pstBufStat->eType)
             {
@@ -578,6 +581,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 #if NET_CACHE_UNDERRUN
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                 #endif
+                pHiPlayer->mIsBufferStart = false;
             }
             else
             {
@@ -623,6 +627,9 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
             case HI_FORMAT_MSG_NETWORK_NORMAL:
                 LOGV("Network resume ");
                 break;
+            case HI_FORMAT_MSG_NETWORK_ADJUST_BITRATE:
+                LOGV("Network adjust bitrate ");
+                break;
             case HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE:
             {
                 if (1 == pHiPlayer->mYunosSource){
@@ -639,7 +646,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 break;
             }
 
-            LOGV("Send MEDIA_INFO_NETWORK event s32ErrorCode:%d", pstNet->s32ErrorCode);
+            LOGV("Send MEDIA_INFO_NETWORK event s32ErrorCode:%d, eType:%d", pstNet->s32ErrorCode, pstNet->eType);
             pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_NETWORK, pstNet->eType);
             if (HI_TRUE == bNotifyOS && 1 == pHiPlayer->mYunosSource) {
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_UNKNOWN, CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO);
@@ -694,6 +701,35 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
             }
         }
         break;
+        case HI_SVR_PLAYER_EVENT_USER_PRIVATE:
+        {
+            HI_S32 s32Error = 0;
+            HI_U8 *pu8Str = pstruEvent->pu8Data;
+
+            if (NULL != pu8Str)
+            {
+                s32Error = atoi((const HI_CHAR*)pu8Str);
+                LOGV("user private error happend, err code value is = %d ", s32Error);
+
+                /* jiangsu telecom defined event type value is 10000 */
+
+                if (s32Error == -93001)
+                {
+                    /* client verify error, should be reported anytime */
+                    pHiPlayer->sendEvent(android::MEDIA_INFO, 10000, s32Error);
+                }
+                else
+                {
+                    /* cdn error, only report after buffer start event */
+                    if (pHiPlayer->mIsBufferStart == true)
+                        pHiPlayer->sendEvent(android::MEDIA_INFO, 10000, s32Error);
+                }
+
+                /* pu8data malloced in hiplayer */
+                free(pu8Str);
+            }
+        }
+        break;
         default:
         {
             LOGE("Receive Event: HI_SVR_PLAYER_EVENT_BUTT or UNKOWN EVENT[%d]", pstruEvent->eEvent);
@@ -729,6 +765,73 @@ HiMediaPlayer* HiMediaPlayer::getHiMediaPlayerByAVPlayer(HI_HANDLE hAvPlayer)
 
     return NULL;
 }
+
+HI_S32 HiMediaPlayer::destroyStaticAVPlayer()
+{
+    int i = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
+    LOGV("destroyStaticAVPlayer start, AvPlayCount:%d!", mAVPlayInstances.AvPlayCount);
+    Mutex::Autolock lock(&HiMediaPlayer::mCreateAvplayMutex);
+    for (i = 0; i < mAVPlayInstances.AvPlayCount; i++)
+    {
+        if (true == HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mUse
+            && HI_INVALID_HANDLE != HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mAVPlayer)
+        {
+            HiMediaPlayer* pHiPlayer = NULL;
+            pHiPlayer = getHiMediaPlayerByAVPlayer(HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mAVPlayer);
+            if (pHiPlayer == NULL)
+            {
+                LOGW("[destroyStaticAVPlayer]There is no HiMediaPlayer instance");
+                return HI_FAILURE;
+            }
+            pHiPlayer->mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
+            LOGV("[destroyStaticAVPlayer]set mWndFreezeMode HI_UNF_WINDOW_FREEZE_MODE_BLACK!");
+        }
+        else if (false == HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mUse
+            && HI_INVALID_HANDLE != HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mAVPlayer)
+        {
+            HI_HANDLE hAVPlayer = HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mAVPlayer;
+            HI_HANDLE hWindow = HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mWindow;
+            HI_HANDLE hAudioTrack = HiMediaPlayer::mAVPlayInstances.mAVPlays[i]->mAudioTrack;
+            HiMediaPlayer::mAVPlayInstances.mAVPlays.removeAt(i);
+            HiMediaPlayer::mAVPlayInstances.AvPlayCount--;
+            if ((HI_HANDLE)HI_INVALID_HANDLE != hAudioTrack)
+            {
+                s32Ret |= HI_UNF_SND_Detach(hAudioTrack, hAVPlayer);
+                s32Ret |= HI_UNF_SND_DestroyTrack(hAudioTrack);
+                hAudioTrack = (HI_HANDLE)HI_INVALID_HANDLE;
+                LOGV("[destroyStaticAVPlayer]Detach sound device, ret = 0x%x !", s32Ret);
+            }
+            if (HI_INVALID_HANDLE != hWindow)
+            {
+                s32Ret = HI_UNF_VO_SetWindowEnable(hWindow, HI_FALSE);
+                s32Ret |= HI_UNF_VO_DetachWindow(hWindow, hAVPlayer);
+                LOGV("[destroyStaticAVPlayer]Detach window, ret = 0x%x !", s32Ret);
+            }
+            s32Ret = HI_UNF_AVPLAY_ChnClose(hAVPlayer, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
+            LOGV("[destroyStaticAVPlayer]Close vid channel, ret = 0x%x !", s32Ret);
+
+            s32Ret = HI_UNF_AVPLAY_ChnClose(hAVPlayer, HI_UNF_AVPLAY_MEDIA_CHAN_AUD);
+            LOGV("[destroyStaticAVPlayer]Close aud channel, ret = 0x%x !", s32Ret);
+
+            s32Ret = HI_UNF_AVPLAY_Destroy(hAVPlayer);
+            hAVPlayer = (HI_HANDLE)HI_INVALID_HANDLE;
+            LOGV("[destroyStaticAVPlayer]Destroy avplay handle, ret = 0x%x !", s32Ret);
+
+            if (HI_INVALID_HANDLE != hWindow)
+            {
+                s32Ret = HI_UNF_VO_DestroyWindow(hWindow);
+                hWindow = (HI_HANDLE)HI_INVALID_HANDLE;
+                LOGV("[destroyStaticAVPlayer]Destroy window, ret = 0x%x !", s32Ret);
+            }
+            LOGV("[destroyStaticAVPlayer]static avplay number is %d, max:%d", mAVPlayInstances.mAVPlays.size(), HIMEDIA_STATIC_AVPLAY_MAX_CNT);
+            break;
+        }
+    }
+
+    return HI_SUCCESS;
+}
+
 
 //add for I frame error detection, valid in OrderOutput mode as follows
 HI_S32 HiMediaPlayer::streamIFrameErrorCB(HI_HANDLE hAvPlayer, HI_UNF_AVPLAY_EVENT_E enEvent, HI_U32 u32Para)
@@ -816,12 +919,13 @@ HiMediaPlayer::HiMediaPlayer():
             mIsNotSupportByteRange(0),
             mVSink(0),
             mASink(0),
-            mNdkMode(false),
+            mStaticAvplay(false),
             mNonVSink(false),
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
             mTimeShiftDuration(-1),
+            mIsBufferStart(false),
             mUnderrun(true),
             mYunosSource(0)
 {
@@ -840,8 +944,9 @@ HiMediaPlayer::HiMediaPlayer():
     }
     memset(&mMediaParam, 0, sizeof(mMediaParam));
     mpFileInfo = NULL;
-    mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
     mSubTitleNativeWindow = NULL;
+    stGain.bLinearMode = HI_TRUE;
+    stGain.s32Gain = HIMEDIA_DEFAULT_MIXWEIGHT;
     char value[PROPERTY_VALUE_MAX] = {0};
     char valueNoStatic[PROPERTY_VALUE_MAX] = {0};
     char valueLowRam[PROPERTY_VALUE_MAX] = {0};
@@ -850,13 +955,27 @@ HiMediaPlayer::HiMediaPlayer():
     {
         mVSink = new HiVSink(0);
     }
-
+    mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_LAST;
     if ((property_get("service.media.hiplayer.nostatic", valueNoStatic, NULL) && !strcasecmp("true", valueNoStatic))
         || (property_get("ro.config.low_ram", valueLowRam, NULL) && !strcasecmp("true", valueLowRam)))
     {
-        mNdkMode = true;
+        mStaticAvplay = false;
         LOGV("set nostatic avplay resource mode");
     }
+
+    memset(value, 0, PROP_VALUE_MAX);
+    property_get("persist.sys.hiplayer.vo.freeze", value, "false");
+    if (!strcasecmp("true", value))
+    {
+        mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_LAST;
+        mStaticAvplay = true;
+    }
+    else if (!strcasecmp("false", value))
+    {
+        mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
+        mStaticAvplay = false;
+    }
+    LOGI("defalt:mWndFreezeMode:%d",mWndFreezeMode);
 }
 
 HiMediaPlayer::HiMediaPlayer(void* userData):
@@ -885,12 +1004,13 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
             mIsNotSupportByteRange(0),
             mVSink(0),
             mASink(0),
-            mNdkMode(true),
+            mStaticAvplay(false),
             mNonVSink(true),
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
             mTimeShiftDuration(-1),
+            mIsBufferStart(false),
             mUnderrun(true),
             mYunosSource(0)
 {
@@ -902,15 +1022,30 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
     mState = STATE_INIT;
     mDisplayStrategy = DP_STRATEGY_ADAPT_MASK;
     char valueAdaption[PROPERTY_VALUE_MAX] = {0};
+    char value[PROPERTY_VALUE_MAX] = {0};
     if (property_get("persist.sys.video.adaptformat", valueAdaption, NULL)
             && !strcasecmp("true", valueAdaption))
     {
         mDisplayStrategy |= DP_STRATEGY_24FPS_MASK;
     }
+    mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_LAST;
+    property_get("persist.sys.hiplayer.vo.freeze", value, "false");
+    if (!strcasecmp("true", value))
+    {
+        mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_LAST;
+        mStaticAvplay = true;
+    }
+    else if (!strcasecmp("false", value))
+    {
+        mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
+        mStaticAvplay = false;
+    }
+    LOGI("defalt:mWndFreezeMode:%d",mWndFreezeMode);
     memset(&mMediaParam, 0, sizeof(mMediaParam));
     mpFileInfo = NULL;
     mSubTitleNativeWindow = NULL;
-    mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
+    stGain.bLinearMode = HI_TRUE;
+    stGain.s32Gain = HIMEDIA_DEFAULT_MIXWEIGHT;
 }
 
 status_t HiMediaPlayer::initCheck()
@@ -946,7 +1081,6 @@ int HiMediaPlayer::createAVPlay()
     HI_UNF_AVPLAY_ATTR_S stAVPlayAttr;
     HI_UNF_WINDOW_ATTR_S stWinAttr;
     HI_UNF_AUDIOTRACK_ATTR_S stTrackAttr;
-    HI_UNF_SND_GAIN_ATTR_S stGain;
     HI_UNF_AVPLAY_OPEN_OPT_S stOpenOpt;
 
     LOGV("HI_UNF_AVPLAY_GetDefaultConfig begin");
@@ -1002,8 +1136,6 @@ int HiMediaPlayer::createAVPlay()
 
         if (HI_SUCCESS == s32Ret && (HI_HANDLE)HI_INVALID_HANDLE != mAudioTrack)
         {
-            stGain.bLinearMode = HI_TRUE;
-            stGain.s32Gain = HIMEDIA_DEFAULT_MIXWEIGHT;
             LOGV("HI_UNF_SND_SetTrackWeight begin");
             s32Ret = HI_UNF_SND_SetTrackWeight(mAudioTrack, &stGain);
             LOGV("HI_UNF_SND_SetTrackWeight end");
@@ -1198,11 +1330,13 @@ int HiMediaPlayer::createHiplayer()
     char buffer[PROP_VALUE_MAX];
     memset(buffer, 0, PROP_VALUE_MAX);
 
+/*
     if (strstr(mMediaParam.aszUrl, "udp://") || strstr(mMediaParam.aszUrl, "rtp://"))
     {
         struParam.u32VDecErrCover = 100;
     }
     else
+        */
     {
         struParam.u32VDecErrCover = 0;
     }
@@ -1365,10 +1499,16 @@ void HiMediaPlayer::destroyHiPlayer()
 HiMediaPlayer::~HiMediaPlayer()
 {
     setProcInfo(getCurrentTime(), HI_SVR_PLAYER_PROC_DO_DESTRUCTOR);
-    if (true == mUseStaticResource)
+    if (true == mUseStaticResource && HI_UNF_WINDOW_FREEZE_MODE_LAST == mWndFreezeMode)
     {
         LOGV("HiMediaPlayer destructor Finish (do nothing)");
         return;
+    }
+
+    if (mMediaParam.u32UserData)
+    {
+        free((void *)mMediaParam.u32UserData);
+        mMediaParam.u32UserData = NULL;
     }
 
 #ifndef HIMEDIA_NOT_DEINIT_RESOURCE
@@ -1382,6 +1522,19 @@ HiMediaPlayer::~HiMediaPlayer()
 
     if (mUseExtAVPlay)
     {
+        Mutex::Autolock lock(&HiMediaPlayer::mCreateAvplayMutex);
+        for (int i = 0; i < mAVPlayInstances.AvPlayCount; i++)
+        {
+            if (mAVPlayer == mAVPlayInstances.mAVPlays[i]->mAVPlayer)
+            {
+                LOGV("remove static avplay handle %x (idx %d)", mAVPlayInstances.mAVPlays[i]->mAVPlayer, i);
+                mAVPlayInstances.mAVPlays.removeAt(i);
+                mAVPlayInstances.AvPlayCount--;
+                break;
+            }
+        }
+
+        LOGV("static avplay number is %d, max:%d", mAVPlayInstances.mAVPlays.size(), HIMEDIA_STATIC_AVPLAY_MAX_CNT);
         destroyAVPlay();
     }
 
@@ -1496,7 +1649,11 @@ status_t HiMediaPlayer::setDataSource(const char *uri, const KeyedVector<String8
         line.append("\r\n");
         mHeaders.append(line);
     }
-
+    if (mMediaParam.u32UserData)
+    {
+        free((void *)mMediaParam.u32UserData);
+        mMediaParam.u32UserData = NULL;
+    }
     mMediaParam.u32UserData = (HI_U32)strdup(mHeaders.string());
     SetDatasourcePrepare(mMediaParam.aszUrl);
     return NO_ERROR;
@@ -1697,11 +1854,8 @@ status_t HiMediaPlayer::CreateAsinkAudioTrack()
             }
         }
 
-        HI_UNF_SND_GAIN_ATTR_S stGain;
         if (HI_SUCCESS == s32Ret && (HI_HANDLE)HI_INVALID_HANDLE != mAudioTrack)
         {
-            stGain.bLinearMode = HI_TRUE;
-            stGain.s32Gain = HIMEDIA_DEFAULT_MIXWEIGHT;
             LOGV("HI_UNF_SND_SetTrackWeight begin");
             s32Ret = HI_UNF_SND_SetTrackWeight(mAudioTrack, &stGain);
             LOGV("HI_UNF_SND_SetTrackWeight end");
@@ -2275,7 +2429,7 @@ int HiMediaPlayer::mallocAvPlayResource()
     int i = 0;
     int ret = HI_SUCCESS;
 
-    if (true == mNdkMode)
+    if (false == mStaticAvplay)
     {
         if (HI_INVALID_HANDLE == mAVPlayer)
         {
@@ -2475,12 +2629,66 @@ status_t HiMediaPlayer::storeTimedTextData(const char * data, int size, int time
     }
 }
 
+int HiMediaPlayer::storeSubtitleData(HI_HANDLE handle, const char * data, int size, int durationMs, int64_t n64Start,Parcel * parcel)
+{
+    if (parcel != NULL && data != NULL)
+    {
+        HI_SVR_PLAYER_STREAMID_S stStreamId;
+        memset(&stStreamId, 0, sizeof(stStreamId));
+        HI_FORMAT_FILE_INFO_S *pstFileInfo  = NULL;
+        int trackId = 0;
+        int64_t starttimeUs = n64Start * 1000;
+        long long durationUs = durationMs * 1000;
+        // android webvttrender.java require this format,must add WEBVTT header
+        int webvttHeaderSize = sizeof("WEBVTT\r\n\r\n") - 1;
+        int nWebvttDataSize = webvttHeaderSize + size;
+        char *webvttData = new char[nWebvttDataSize + 1];
+
+        if (NULL == webvttData || NULL == mpFileInfo)
+        {
+            LOGE("storeSubtitleData some error occur,webvttData is null or mpFileInfo is null");
+            return HI_FAILURE;
+        }
+
+        memset(webvttData, 0 , nWebvttDataSize + 1);
+        memcpy(webvttData, "WEBVTT\r\n\r\n", webvttHeaderSize);
+
+        HI_SVR_PLAYER_GetParam(handle, HI_SVR_PLAYER_ATTR_STREAMID, (HI_VOID*)&stStreamId);
+        trackId = stStreamId.u16SubStreamId + mpFileInfo->pastProgramInfo[stStreamId.u16ProgramId].u32VidStreamNum + mpFileInfo->pastProgramInfo[stStreamId.u16ProgramId].u32AudStreamNum;
+
+        parcel->writeInt32(trackId);
+        parcel->writeInt64(starttimeUs);
+        parcel->writeInt64(durationUs);
+
+        memcpy(webvttData + webvttHeaderSize, data, size);
+
+        // write the size of the text sample
+        parcel->writeInt32(nWebvttDataSize);
+        // write the text sample as a byte array
+        parcel->writeInt32(nWebvttDataSize);
+        parcel->write(webvttData, nWebvttDataSize);
+
+        LOGV("storeSubtitleData: trackId = %d, starttime= %lld, duration = %d", trackId, starttimeUs, durationMs);
+        LOGV("storeSubtitleData: %s, %d", webvttData, nWebvttDataSize);
+
+        delete(webvttData);
+        webvttData = NULL;
+        return HI_SUCCESS;
+    }
+    else
+    {
+        LOGE("storeSubtitleData some error occur,parcel is null or data is null");
+        return HI_FAILURE;
+    }
+}
+
 int HiMediaPlayer::TimedTextOndraw(int u32UserData, const HI_UNF_SO_SUBTITLE_INFO_S *pstInfo, void *pArg)
 {
 
     HiMediaPlayer *pHiMediaPlayer = NULL;
     pHiMediaPlayer = (HiMediaPlayer *)u32UserData;
-    Parcel tmpParcel;
+    Parcel TimedTextParcel;
+    Parcel SubdataParcel;
     char _string[SUB_CHAR_MAX_LEN + 2] = "";
     int size = 0;
     int timeMs = 0, starttime = 0;
@@ -2491,10 +2699,10 @@ int HiMediaPlayer::TimedTextOndraw(int u32UserData, const HI_UNF_SO_SUBTITLE_INF
         return HI_FAILURE;
     }
 
-    //mIsTimedTextTrackEnable =false means the subtitle track is disable.
+    //mIsTimedTextTrackEnable =false and mIsSubtitleDataTrackEnable =false means the subtitle track is disable.
     if (pHiMediaPlayer != NULL)
     {
-        if( pHiMediaPlayer->mIsTimedTextTrackEnable == false)
+        if(( pHiMediaPlayer->mIsTimedTextTrackEnable == false) && ( pHiMediaPlayer->mIsSubtitleDataTrackEnable == false))
             return HI_SUCCESS;
     }
 
@@ -2525,8 +2733,16 @@ int HiMediaPlayer::TimedTextOndraw(int u32UserData, const HI_UNF_SO_SUBTITLE_INF
         return HI_SUCCESS;
     }
 
-    pHiMediaPlayer->storeTimedTextData(_string, size, timeMs, &tmpParcel);
-    pHiMediaPlayer->sendEvent(android::MEDIA_TIMED_TEXT, 0, 0, &tmpParcel);
+    if (pHiMediaPlayer->mIsSubtitleDataTrackEnable)
+    {
+        pHiMediaPlayer->storeSubtitleData(pHiMediaPlayer->mHandle, _string, size, pstInfo->unSubtitleParam.stText.u32Duration, pstInfo->unSubtitleParam.stText.s64Pts,&SubdataParcel);
+        pHiMediaPlayer->sendEvent(android::MEDIA_SUBTITLE_DATA, 0, 0, &SubdataParcel);
+    }
+    else
+    {
+        pHiMediaPlayer->storeTimedTextData(_string, size, timeMs, &TimedTextParcel);
+        pHiMediaPlayer->sendEvent(android::MEDIA_TIMED_TEXT, 0, 0, &TimedTextParcel);
+    }
 
     return HI_SUCCESS;
 }
@@ -2539,7 +2755,10 @@ int HiMediaPlayer::TimedTextOnclear(int u32UserData, void *pArg)
 
     if (pHiMediaPlayer != NULL)
     {
-        pHiMediaPlayer->sendEvent(android::MEDIA_TIMED_TEXT);
+        if (pHiMediaPlayer->mIsTimedTextTrackEnable)
+        {
+            pHiMediaPlayer->sendEvent(android::MEDIA_TIMED_TEXT);
+        }
         return HI_SUCCESS;
     }
     else
@@ -2751,14 +2970,18 @@ status_t HiMediaPlayer::reset()
     }
 
     mReset = true;
+    if (mpFileInfo->eSourceType != HI_FORMAT_SOURCE_NET_LIVE)
+    {
+        //mWndFreezeMode = HI_UNF_WINDOW_FREEZE_MODE_BLACK;
+    }
     mCmdQueue->ReleaseFileInfoWrapper();
     destroyHiPlayer();
 
-    if (HI_UNF_WINDOW_FREEZE_MODE_BLACK == mWndFreezeMode
+    if (mWndFreezeMode < HI_UNF_WINDOW_FREEZE_MODE_BUTT
         && HI_INVALID_HANDLE != mWindow)
     {
         s32Ret = HI_UNF_VO_ResetWindow(mWindow, mWndFreezeMode);
-        LOGV("Call HI_UNF_VO_ResetWindow ret = 0x%x ", s32Ret);
+        LOGV("Call HI_UNF_VO_ResetWindow ret = 0x%x, mWndFreezeMode=%d", s32Ret, mWndFreezeMode);
     }
 
     if (-1 != mPreOutputFormat)
@@ -2788,9 +3011,9 @@ status_t HiMediaPlayer::reset()
             if (mAVPlayer == mAVPlayInstances.mAVPlays[i]->mAVPlayer)
             {
                 mAVPlayInstances.mAVPlays[i]->setUse(false);
-                mWindow = HI_INVALID_HANDLE;
-                mAVPlayer = HI_INVALID_HANDLE;
-                mAudioTrack = HI_INVALID_HANDLE;
+                //mWindow = HI_INVALID_HANDLE;
+                //mAVPlayer = HI_INVALID_HANDLE;
+                //mAudioTrack = HI_INVALID_HANDLE;
                 LOGV("set static avplay handle %x (idx %d) no use", mAVPlayInstances.mAVPlays[i]->mAVPlayer, i);
                 break;
             }
@@ -2819,7 +3042,6 @@ inline status_t HiMediaPlayer::setLooping(int loop)
     }
 
     HI_HANDLE hdl = HI_SVR_PLAYER_INVALID_HDL;
-    HI_UNF_SND_GAIN_ATTR_S stGain;
     HI_S32 s32Ret = HI_FAILURE;
 
     LOGV("SetVolume L-R [%4.2f  %4.2f]", leftVolume, rightVolume);
@@ -2848,8 +3070,8 @@ inline status_t HiMediaPlayer::setLooping(int loop)
 
     if (HI_SUCCESS != s32Ret)
     {
-        LOGE("ERR: get audio track hdl fail! \n");
-        return HI_FAILURE;
+        LOGW("Warning: get audio track hdl fail, maybe player is not prepared\n");
+        return NO_ERROR;
     }
 
     s32Ret = HI_UNF_SND_SetTrackWeight(hdl, &stGain);
@@ -3056,10 +3278,10 @@ status_t  HiMediaPlayer::selectTrack(int trackIndex, bool select)
                 return INVALID_OPERATION;
             }
             mIsTimedTextTrackEnable = false;
+            mIsSubtitleDataTrackEnable = false;
         }
         else
         {
-            mIsTimedTextTrackEnable = true;
             return HiMediaPlayer::selectSubtitleTrack((trackIndex-mVideoTrackCount-mAudioTrackCount));
         }
     }
@@ -3121,33 +3343,49 @@ status_t HiMediaPlayer::selectSubtitleTrack(int SubIndex)
         return HI_FAILURE;
     }
 
-    if (stStreamId.u16ProgramId < pstFileInfo->u32ProgramNum)
+    HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_STREAMID, (HI_VOID*)&stStreamId);
+
+    //current play track is the same with SubIndex
+    if ( SubIndex != stStreamId.u16SubStreamId )
     {
-        s32SubtitleNum = pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].u32SubStreamNum;
-        if (SubIndex < s32SubtitleNum)//check the value is valid
+        if (stStreamId.u16ProgramId < pstFileInfo->u32ProgramNum)
         {
-            stStreamId.u16SubStreamId = SubIndex;
-            if(HI_SUCCESS != HI_SVR_PLAYER_SetParam(mHandle, HI_SVR_PLAYER_ATTR_STREAMID, (HI_VOID*)&stStreamId))
+            s32SubtitleNum = pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].u32SubStreamNum;
+            if (SubIndex < s32SubtitleNum)//check the value is valid
             {
-                LOGE("ERROR!!!!!!HI_SVR_PLAYER_SetParam error, switch subtitle fail");
-                return HI_FAILURE;
+                stStreamId.u16SubStreamId = SubIndex;
+                if(HI_SUCCESS != HI_SVR_PLAYER_SetParam(mHandle, HI_SVR_PLAYER_ATTR_STREAMID, (HI_VOID*)&stStreamId))
+                {
+                    LOGE("ERROR!!!!!!HI_SVR_PLAYER_SetParam error, switch subtitle fail");
+                    return HI_FAILURE;
+                }
+                else
+                {
+                    mCmdQueue->wait();
+                }
             }
             else
             {
-                mCmdQueue->wait();
-                return NO_ERROR;
+                LOGE("ERROR!!!!!! invalid sub idx, switch subtitle fail");
+                return HI_FAILURE;
             }
         }
         else
         {
-            LOGE("ERROR!!!!!! invalid sub idx, switch subtitle fail");
+            LOGE("ERROR!!!!!! invalid program id, switch subtitle fail");
             return HI_FAILURE;
         }
     }
+
+    if (HI_FORMAT_SUBTITLE_WEBVTT == pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].pastSubStream[SubIndex].u32Format)
+    {
+        LOGV("SubtitleDataTrack selected");
+        mIsSubtitleDataTrackEnable = true;
+    }
     else
     {
-        LOGE("ERROR!!!!!! invalid program id, switch subtitle fail");
-        return HI_FAILURE;
+        LOGV("TimedTextTrack selected");
+        mIsTimedTextTrackEnable = true;
     }
 
     LOGV("selectSubtitleTrack done");
@@ -3348,16 +3586,42 @@ status_t HiMediaPlayer::getTrackInfo(Parcel* reply)
         lang=pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].pastAudStream[i].aszLanguage;
         reply->writeString16(String16(lang));
     }
+
     for(i=0;i<s32SubtitleNum;i++)
     {
         reply->writeInt32(2);
-        reply->writeInt32(MEDIA_TRACK_TYPE_TIMEDTEXT);
+
         lang=(char*)(pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].pastSubStream[i].paszLanguage);
         if (0 == strlen(lang))
         {
             lang = "und";
         }
-        reply->writeString16(String16(lang));
+
+        if (HI_FORMAT_SUBTITLE_WEBVTT == pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].pastSubStream[i].u32Format)
+        {
+            int autoSelect = 0;
+            int defaultSelect = 0;
+            int forcedSub = 0;
+
+            reply->writeInt32(MEDIA_TRACK_TYPE_SUBTITLE);
+            reply->writeString16(String16(lang));
+            reply->writeInt32(autoSelect);
+            if (0 == i)
+            {
+                defaultSelect = 1;
+            }
+            else
+            {
+                defaultSelect = 0;
+            }
+            reply->writeInt32(defaultSelect);
+            reply->writeInt32(forcedSub);
+        }
+        else
+        {
+            reply->writeInt32(MEDIA_TRACK_TYPE_TIMEDTEXT);
+            reply->writeString16(String16(lang));
+        }
     }
     return NO_ERROR;
 }
@@ -4720,6 +4984,7 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     HI_CHAR aszPropertyValue[PROPERTY_VALUE_MAX] = {0};
     HI_S32 s32HlsStartNumber = 1;
     HI_BOOL bIsConfigSize = HI_FALSE;
+    HI_FORMAT_FILE_INFO_S* pstruInfo = NULL;
 
     if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_HEADERS, (void*)mediaParam.u32UserData))
     {
@@ -4836,9 +5101,20 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
         s64BufMaxSize *= 1024 * 1024;
     }
 
+#if 0
+    if (strstr(mediaParam.aszUrl, "rtp://") && strstr(mediaParam.aszUrl, "ChannelFECPort"))
+    {
+        mPlayer->mUnderrun = 2;
+        stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_TIME;
+        stBufConfig.s64EventEnough = 3000;
+        stBufConfig.s64EventStart  = 200;
+        stBufConfig.s64Total       = 20000;
+        s64BufMaxSize = 20*1024*1024;
+    }
+#endif
+
     s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE, &s64BufMaxSize);
     s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_CONFIG, &stBufConfig);
-    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &(mPlayer->mUnderrun));
     if (HI_SUCCESS != s32Ret)
     {
         LOGV("ERR: HI_SVR_PLAYER_Invoke set buffer config fail, maybe is local file!");
@@ -4849,7 +5125,6 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     LOGV("s64EventEnough:%lld\n", stBufConfig.s64EventEnough);
     LOGV("s64Total:%lld\n", stBufConfig.s64Total);
     LOGV("s64TimeOut:%lld\n", stBufConfig.s64TimeOut);
-    LOGV("mUnderrun(%d)\n", mPlayer->mUnderrun);
     LOGV("s64BufMaxSize:%lld\n", s64BufMaxSize);
     #endif
 
@@ -4896,6 +5171,16 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
         mState = STATE_ERROR;
         mPlayer->mPrepareResult = UNKNOWN_ERROR;
         return UNKNOWN_ERROR;
+    }
+    s32Ret = HI_SVR_PLAYER_GetFileInfo(mHandle, &pstruInfo);
+    if (HI_SUCCESS == s32Ret &&  NULL != pstruInfo && (HI_FORMAT_NETWORK_MULTIPLE == pstruInfo->eNetworkType))
+    {
+        mPlayer->mUnderrun = 0;
+    }
+    s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &(mPlayer->mUnderrun));
+    if (HI_SUCCESS != s32Ret)
+    {
+        LOGV("ERR: HI_SVR_PLAYER_Invoke set buffer config fail, maybe is local file!");
     }
 
     /* We can set seek mode by setprop media.hisiplayer.seekmode *
@@ -5310,6 +5595,14 @@ int HiMediaPlayer::CommandQueue::doGetDuration(Command* cmd)
     {
         LOGE("ERR: doGetDuration fail!");
         return UNKNOWN_ERROR;
+    }
+
+    /* reference: http://developer.android.com/reference/android/media/MediaPlayer.html#getDuration() */
+    /* the duration in milliseconds, if no duration is available (for example, if streaming live content), -1 is returned.  */
+    if (HI_FORMAT_SOURCE_NET_LIVE == pstruInfo->eSourceType)
+    {
+        LOGV("live stream, getDuration = -1");
+        *duration = -1;
     }
 
     return NO_ERROR;
@@ -5917,7 +6210,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                 reply->writeString16((String16)pszArtist);
                 reply->writeString16((String16)pszGenre);
                 reply->writeString16((String16)pszYear);
-
+                reply->writeInt32(pstFileInfo->u32Bitrate);
                  if (NULL != pArg.pu8Buff) {
                      free(pArg.pu8Buff);
                  }
@@ -7492,6 +7785,30 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             }
         }
         break;
+        case CMD_GET_IP_PORT:
+        {
+            //"ip=10.29.22.9&port=8080" ;
+            HI_CHAR azIP[HI_FORMAT_TITLE_MAX_LEN] = {0};
+            HI_CHAR aszRetStr[HI_FORMAT_MAX_URL_LEN] = {0};
+            HI_FORMAT_URL_INFO_S urlInfo;
+
+            s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_URL_INFO, (void*)&urlInfo);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("CMD_GET_IP_PORT HI_FORMAT_INVOKE_GET_URL_INFO fail!");
+                return UNKNOWN_ERROR;
+            }
+
+            strncpy(azIP, urlInfo.ipaddr, strlen(urlInfo.ipaddr));
+
+            if (NULL != reply)
+            {
+                reply->writeInt32(s32Ret);
+                snprintf(aszRetStr, sizeof(aszRetStr), "ip=%s&port=%d", azIP, urlInfo.port);
+                LOGV("CMD_GET_IP_PORT aszRetStr:%s, len=%d!", aszRetStr,strlen(aszRetStr));
+                reply->writeString16((String16)aszRetStr);
+            }
+        }break;
         /*YUNOS Begin to get mediaplayer extra information*/
         case CMD_YUNOS_SOURCE:{
             LOGV("CMD_YUNOS_SOURCE  !");

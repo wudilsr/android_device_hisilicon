@@ -44,6 +44,8 @@
 #include <sys/time.h>
 #include "hls_key_decrypt.h"
 
+#define HLS_IFRAME_ENABLE
+
 #define DISCONTINUE_MAX_TIME    (90000*3)
 #define DEFAULT_PTS_ADDON       (1)         // 1 sec
 
@@ -54,6 +56,8 @@
 #define DEC AV_OPT_FLAG_DECODING_PARAM
 #define ENC AV_OPT_FLAG_ENCODING_PARAM
 #define OFFSET(x) offsetof(HLSContext, x)
+
+#define HLS_TIME_SHIFT_SEGMENT_NUM_MIN (30)
 
 #ifndef HI_ADVCA_FUNCTION_RELEASE
 const AVOption ff_hls_options[] = {
@@ -85,6 +89,11 @@ typedef struct hls_info_s {
     char codecs[30];
     char resolution[20];
 } hls_info_t;
+
+typedef struct hls_iframe_info_s {
+    hls_info_t info;
+    char uri[INITIAL_URL_SIZE];
+} hls_iframe_info_t;
 
 typedef struct hls_key_info_s {
     char    uri[INITIAL_URL_SIZE];
@@ -288,15 +297,45 @@ static void hlsResetPacket(AVPacket *pkt)
     pkt->data = NULL;
 }
 
+static void hlsFreeIframeList(hls_segment_t *segments)
+{
+    int i = 0;
+    for (i = 0; i < segments->iframe_nb; i++) {
+        av_free(segments->iframes[i]);
+    }
+    segments->iframe_nb = 0;
+    if (segments->iframes) {
+        av_freep(&segments->iframes);
+    }
+}
+
 /* Free all segments context of hls_stream */
 static void hlsFreeSegmentList(hls_stream_info_t *hls)
 {
     int i;
     for (i = 0; i < hls->seg_list.hls_segment_nb; i++)
+    {
+        hlsFreeIframeList(hls->seg_list.segments[i]);
         av_free(hls->seg_list.segments[i]);
+    }
 
     hls->seg_list.hls_segment_nb = 0;
     av_freep(&hls->seg_list.segments);
+}
+
+/* Free all hls_iframe_stream context of hls_context */
+static void hlsFreeHlsIframeList(HLSContext *c)
+{
+#ifndef HLS_IFRAME_ENABLE
+    return;
+#endif
+    int i;
+    for (i = 0; i < c->hls_iframe_nb; i++) {
+        hls_stream_info_t *hls = c->hls_iframe_stream[i];
+        av_free(hls);
+    }
+    av_freep(&c->hls_iframe_stream);
+    c->hls_iframe_nb = 0;
 }
 
 /* Free all hls_stream context of hls_context */
@@ -344,26 +383,52 @@ static void hlsFreeHlsList(HLSContext *c)
     c->hls_stream_nb = 0;
 }
 
-static hls_stream_info_t *hlsNewHlsStream(HLSContext *c, int bandwidth,
+static inline void hls_init_stream(hls_stream_info_t *hls,  int bandwidth,
+        const char *url, const char *base, const char *headers)
+{
+    hls->bandwidth = bandwidth;
+
+    if (headers)
+        hls->seg_stream.headers = av_strdup(headers);
+
+    hlsMakeAbsoluteUrl(hls->url, sizeof(hls->url), base, url);
+}
+
+static hls_stream_info_t *hls_new_stream(HLSContext *c, int bandwidth,
         const char *url, const char *base, const char *headers)
 {
     hls_stream_info_t *hls = av_mallocz(sizeof(hls_stream_info_t));
-    int add_ret;
+
     if (!hls) return NULL;
 
-    av_log(NULL, AV_LOG_ERROR, "[%s:%d] HLS stream info ==> bandwidth=%d url=%s base=%s headers=%s\n",
-            __FILE_NAME__, __LINE__, bandwidth, url, base, headers);
-
-    hls->bandwidth = bandwidth;
-    if (headers)
-        hls->seg_stream.headers = av_strdup(headers);
+    av_log(c->parent, AV_LOG_INFO, "[%s:%d]: NEW HLS stream info ==> bandwidth=%d url=%s base=%s headers=%s\n",
+            __FUNCTION__, __LINE__,
+            bandwidth, url, base, headers);
+    hls_init_stream(hls, bandwidth, url, base, headers);
     hlsResetPacket(&hls->seg_demux.pkt);
+    return hls;
+}
 
-    hlsMakeAbsoluteUrl(hls->url, sizeof(hls->url), base, url);
+static void hls_del_stream(hls_stream_info_t *hls)
+{
+    int i;
+    if (hls) {
+        av_freep(&hls->seg_stream.headers);
+        av_free(hls);
+    }
+}
+
+static hls_stream_info_t *hlsNewHlsStream(HLSContext *c, int bandwidth,
+        const char *url, const char *base, const char *headers)
+{
+    int add_ret;
+    hls_stream_info_t *hls = hls_new_stream(c, bandwidth, url, base, headers);
+    if (!hls)
+        return NULL;
 
     dynarray_add_noverify(&c->hls_stream, &c->hls_stream_nb, hls, &add_ret);
-    if (add_ret < 0) {
-        av_free(hls);
+    if (add_ret < 0){
+        hls_del_stream(hls);
         hls = NULL;
     }
     return hls;
@@ -386,6 +451,17 @@ static void hlsHandleArgs(hls_info_t *info, const char *key, int key_len, char *
     }
 }
 
+static void handle_iframe_info(hls_iframe_info_t *info, const char *key,
+        int key_len, char **dest, int *dest_len)
+{
+    hlsHandleArgs(&info->info, key, key_len, dest, dest_len);
+
+    if (!strncmp(key, "URI=", key_len)) {
+        *dest     =        info->uri;
+        *dest_len = sizeof(info->uri);
+    }
+}
+
 static void hlsHandleKeyArgs(hls_key_info_t *info, const char *key,
         int key_len, char **dest, int *dest_len)
 {
@@ -402,9 +478,9 @@ static void hlsHandleKeyArgs(hls_key_info_t *info, const char *key,
 }
 
 static int hlsParseM3U8(HLSContext *c, char *url,
-        hls_stream_info_t *hls, ByteIOContext *in)
+        hls_stream_info_t *hls, ByteIOContext *in, hls_stream_info_t *hls_iframe)
 {
-    int ret = 0, duration = 0, is_segment = 0, is_hls = 0, bandwidth = 0, video_codec = 0, audio_codec = 0, start_time = 0;
+    int ret = 0, duration = 0, is_segment = 0, is_iframe = 0, is_hls = 0, bandwidth = 0, video_codec = 0, audio_codec = 0, start_time = 0;
     char line[1024];
     const char *ptr;
     int close_in = 0;
@@ -417,6 +493,8 @@ static int hlsParseM3U8(HLSContext *c, char *url,
     int  hls_finished = 0;
     time_t  timeSec = 0;
     int save_hls=0;
+    int size = 0, offset = 0;
+    int seg_index = 0;
     /**make resolution change available from 3716c-0.6.3 r41002 changed by duanqingpeng**/
     /*HLSContext *hls_c = NULL;
 
@@ -487,9 +565,13 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         goto fail;
     }
 
-    if (hls) {
+    if (hls && !hls_iframe) {
         hlsFreeSegmentList(hls);
         hls->seg_list.hls_finished = 0;
+    }
+
+    if (hls_iframe && !hls) {
+        goto fail;
     }
 
     while (!url_feof(in)) {
@@ -513,20 +595,111 @@ static int hlsParseM3U8(HLSContext *c, char *url,
             is_hls = 1;
             hlsParseKeyValue(ptr, (hlsParseKeyValCb) hlsHandleArgs, &info);
             bandwidth = atoi(info.bandwidth);
-            if(strstr(info.codecs, "mp4a.40.2") || strstr(info.codecs, "mp4a.40.5") || strstr(info.codecs, "mp4a.40.34")) {
+
+            /*audiocodecs description:
+                        // generic for MPEG-2 Part 7 & MPEG-4 Part 2 AAC
+                        "mp4a",
+                        // MPEG-2 Part 7 & MPEG-4 Part 2 AAC, Low-Complexity Profile
+                        "mp4a.40.2",
+                        "mp4a.40.5",
+                        "mp4a.40.34"
+                    */
+            if(strstr(info.codecs, "mp4a."))
+            {
                 audio_codec = 1;
             }
-            if(strstr(info.codecs, "avc1.42001e") || strstr(info.codecs, "avc1.66.30")
-                    || strstr(info.codecs, "avc1.4d001e") || strstr(info.codecs, "avc1.77.30")
-                    || strstr(info.codecs, "avc1.4d401f") || strstr(info.codecs, "avc1.4d401e")
-                    || strstr(info.codecs, "avc1.42e015") || strstr(info.codecs, "avc1.4d4016")
-                    || strstr(info.codecs, "avc1.42e016") || strstr(info.codecs, "avc1.4d4015")
-                    || strstr(info.codecs, "avc1.42c00b"))
+            /* videocodecs description:
+                        // generic for MPEG-4 Part 10 H.264/AVC
+                        "avc1",
+                        // MPEG-4 Part 10 H.264/AVC, Baseline Profile
+                        "avc1.42e00a", // level 1.0
+                        "avc1.42e00b", // level 1.1
+                        "avc1.42e00c", // level 1.2
+                        "avc1.42e00d", // level 1.3
+                        "avc1.42e014", // level 2.0
+                        "avc1.42e015", // level 2.1
+                        "avc1.42e016", // level 2.2
+                        "avc1.42e01e", // level 3.0
+                        "avc1.42e01f", // level 3.1
+                        "avc1.42e020", // level 3.2
+                        "avc1.42e028", // level 4.0
+                        // MPEG-4 Part 10 H.264/AVC, Main Profile
+                        "avc1.4d400a", // level 1.0
+                        "avc1.4d400b", // level 1.1
+                        "avc1.4d400c", // level 1.2
+                        "avc1.4d400d", // level 1.3
+                        "avc1.4d4014", // level 2.0
+                        "avc1.4d4015", // level 2.1
+                        "avc1.4d4016", // level 2.2
+                        "avc1.4d401e", // level 3.0
+                        "avc1.4d401f", // level 3.1
+                        "avc1.4d4020", // level 3.2
+                        "avc1.4d4028", // level 4.0
+                        // MPEG-4 Part 10 H.264/AVC, High Profile
+                        "avc1.64000a", // level 1.0
+                        "avc1.64000b", // level 1.1
+                        "avc1.64000c", // level 1.2
+                        "avc1.64000d", // level 1.3
+                        "avc1.640014", // level 2.0
+                        "avc1.640015", // level 2.1
+                        "avc1.640016", // level 2.2
+                        "avc1.64001e", // level 3.0
+                        "avc1.64001f", // level 3.1
+                        "avc1.640020", // level 3.2
+                        "avc1.640028", // level 4.0
+                        // MPEG-4 Part 2 Visual Simple Profile
+                        "mp4v.20.9", // level 0
+                        // MPEG-4 Part 2 Visual Advanced Simple Profile
+                        "mp4v.20.240"  // level 0
+                  */
+            if(strstr(info.codecs, "avc1.") || strstr(info.codecs, "mp4v."))
             {
                 video_codec = 1;
             }
+        }
+#ifdef HLS_IFRAME_ENABLE
+        else if (av_strstart(line, "#EXT-X-BYTERANGE:", &ptr)) {
+            if (!is_segment) {
+                continue;
+            }
+            is_segment = 0;
+            is_iframe = 1;
+            size = atoi(ptr);
+            ptr = strchr(ptr, '@');
+            if (ptr) {
+                offset = atoi(ptr+1);
+            } else {
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d] #EXT-X-BYTERANGE parse offset fail\n", __FUNCTION__, __LINE__);
+                goto fail;
+            }
+        }
+        else if (av_strstart(line, "#EXT-X-I-FRAMES-ONLY", &ptr)) {
+            hls->iframe_only = 1;
+            av_log(NULL, AV_LOG_INFO, "[%s:%d] #EXT-X-I-FRAMES-ONLY\n", __FUNCTION__, __LINE__);
+        }
+        /* new i-frame streams */
+        else if (av_strstart(line, "#EXT-X-I-FRAME-STREAM-INF:", &ptr)) {
+            hls_iframe_info_t iframe_info;
+            memset(&iframe_info, 0, sizeof(iframe_info));
+            ff_parse_key_value(ptr, (ff_parse_key_val_cb)handle_iframe_info, &iframe_info);
+            bandwidth = atoi(iframe_info.info.bandwidth);
 
-        } else if (av_strstart(line, "#EXT-X-KEY:", &ptr)) {
+            hls_stream_info_t *i_hls_stream = hls_new_stream(c, bandwidth, iframe_info.uri, url, NULL);
+
+            if (!i_hls_stream) {
+                ret = AVERROR(ENOMEM);
+                goto fail;
+            }
+            dynarray_add_noverify(&c->hls_iframe_stream, &c->hls_iframe_nb, i_hls_stream, &ret);
+            if (ret < 0) {
+                ret = AVERROR(ENOMEM);
+                goto fail;
+            }
+            av_log(c->parent, AV_LOG_ERROR, "i-frame stream, uri:%s, bandwidth:%s\n",
+                    iframe_info.uri, iframe_info.info.bandwidth);
+        }
+#endif
+        else if (av_strstart(line, "#EXT-X-KEY:", &ptr)) {
             hls_key_info_t info = {{0}};
             hlsParseKeyValue(ptr, (hlsParseKeyValCb) hlsHandleKeyArgs, &info);
 
@@ -571,11 +744,12 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         } else if (av_strstart(line, "#EXTINF:", &ptr)) {
             is_segment = 1;
             duration   = atof(ptr) * 1000;
-            if (duration > 0 && duration < hls->seg_list.hls_target_duration)
-                hls->seg_list.hls_target_duration = duration;
-            else if (duration == 0)
-                hls->seg_list.hls_target_duration = hls->seg_list.hls_target_duration;
-
+            if (!hls_iframe) {
+                if (duration > 0 && duration < hls->seg_list.hls_target_duration)
+                    hls->seg_list.hls_target_duration = duration;
+                else if (duration == 0)
+                    hls->seg_list.hls_target_duration = hls->seg_list.hls_target_duration;
+            }
             //av_log(NULL, AV_LOG_ERROR, "#EXTINF:%d ,fresh target duraion = %d \n",
             //    duration, hls->seg_list.hls_target_duration);
         } else if (av_strstart(line, "#EXT-X-PROGRAM-DATE-TIME:", &ptr)) {
@@ -654,7 +828,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
                     }
                 }
 
-                seg = av_malloc(sizeof(hls_segment_t));
+                seg = av_mallocz(sizeof(hls_segment_t));
                 if (!seg) {
                     ret = AVERROR(ENOMEM);
                     goto fail;
@@ -665,6 +839,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
                 seg->program_time = timeSec;
                 start_time += duration;
                 seg->key_type   = key_type;
+                seg->iframe_cur_index = INT_MAX;
 
                 if (has_iv) {
                     memcpy(seg->iv, iv, sizeof(iv));
@@ -684,6 +859,56 @@ static int hlsParseM3U8(HLSContext *c, char *url,
                     ret = AVERROR(ENOMEM);
                     goto fail;
                 }
+            }
+
+            if (is_iframe) {
+                char iframe_url[INITIAL_URL_SIZE] = {0};
+                char *p = NULL;
+                int len = 0;
+                hls_segment_t *seg = NULL;
+                hls_iframe_t *iframe = NULL;
+                int add_ret;
+
+                is_iframe = 0;
+                while (seg_index < hls->seg_list.hls_segment_nb) {
+                    seg = hls->seg_list.segments[seg_index];
+                    hlsMakeAbsoluteUrl(iframe_url, sizeof(iframe_url), seg->url, line);
+                    p = strchr(seg->url, '?');
+                    if (p) {
+                        len = strlen(seg->url) - strlen(p);
+                    } else {
+                        len = strlen(seg->url);
+                    }
+                    if (!av_strlcmp(seg->url, iframe_url, len)) {
+                        break;
+                    } else {
+                        seg = NULL;
+                    }
+                    seg_index++;
+                    start_time = 0;
+                }
+                if (!seg) {
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] seg_index %d outrange hls_segment_nb:%d\n", __FUNCTION__, __LINE__,seg_index,hls->seg_list.hls_segment_nb);
+                    goto fail;
+                }
+                iframe = av_malloc(sizeof(hls_iframe_t));
+                if (!iframe) {
+                    ret = AVERROR(ENOMEM);
+                    goto fail;
+                }
+                iframe->size = size;
+                iframe->offset_pos = offset;
+                iframe->offset_time = start_time;
+                iframe->duration = duration;
+                start_time += duration;
+                dynarray_add_noverify(&seg->iframes, &seg->iframe_nb, iframe, &add_ret);
+                if (add_ret < 0) {
+                    av_free(iframe);
+                    iframe = NULL;
+                    ret = AVERROR(ENOMEM);
+                    goto fail;
+                }
+                av_log(NULL, AV_LOG_DEBUG, "[%s:%d] add iframe in\nseg(%s)\n size:%d offset_pos:%d offset_time:%d duration:%d", __FUNCTION__, __LINE__,seg->url,size,offset,start_time,duration);
             }
         }
     }
@@ -1046,6 +1271,16 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
 
         av_log(NULL, AV_LOG_ERROR, "nocache open:%s", seg->url);//TODO:remove on release
 
+if (hls->iframe_only && seg->iframe_cur_index < seg->iframe_nb) {
+    char off[20], end[20];
+    hls_iframe_t *iframe = seg->iframes[seg->iframe_cur_index];
+    snprintf(off, sizeof(off) - 1, "%d", iframe->offset_pos);
+    snprintf(end, sizeof(end) - 1, "%d", iframe->offset_pos + iframe->size - 1);
+    av_dict_set(&opts, "offset", off, 0);
+//    av_dict_set(&opts, "end_offset", end, 0);
+    av_log(NULL, AV_LOG_DEBUG, "[%s:%d] iframe_cur_index:%d set off:%s end:%s\n", __FUNCTION__, __LINE__,seg->iframe_cur_index,off,end);
+}
+
         ret = hls_open_h(&hls->seg_stream.input, seg->url, URL_RDONLY, &(c->interrupt_callback), &opts);
         if (0 == ret)
         {
@@ -1312,6 +1547,7 @@ static int hlsReadDataCb(void *opaque, uint8_t *buf, int buf_size)
     int64_t time_wait;
     int has_reload = 0;
     int open_fail = 0;
+    AVFormatContext *s = v->seg_demux.parent;
 
 restart:
     if (!v->seg_stream.input) {
@@ -1333,10 +1569,16 @@ reload:
         if (!v->seg_list.hls_finished && ((llabs(time_diff) >= time_wait) || need_reload)) {
 reparse:
             //ret = hlsFreshUrl(v); //only for yueme version
-            ret = hlsParseM3U8(c, v->url, v, NULL);
+            ret = hlsParseM3U8(c, v->url, v, NULL, NULL);
             if (ret < 0) {
                 if (ff_check_interrupt(&c->interrupt_callback))
                     return ret;
+
+                /* fix seek operation blocked */
+                if (s->is_time_shift)
+                {
+                    return AVERROR(EAGAIN);
+                }
 
                 usleep(1000*1000);
                 av_log(NULL, AV_LOG_ERROR, "[%s:%d] redo hlsParseM3U8\n",
@@ -1407,10 +1649,16 @@ reparse:
             if (has_reload && (c->cur_stream_seq != v->seg_list.hls_index)) {
 reparse2:
                 //ret = hlsFreshUrl(c->cur_hls); //only for yueme version
-                ret = hlsParseM3U8(c, c->cur_hls->url, c->cur_hls, NULL);
+                ret = hlsParseM3U8(c, c->cur_hls->url, c->cur_hls, NULL, NULL);
                 if (ret < 0) {
                     if (ff_check_interrupt(&c->interrupt_callback))
                         return ret;
+
+                    /* fix seek operation blocked */
+                    if (s->is_time_shift)
+                    {
+                        return AVERROR(EAGAIN);
+                    }
 
                     usleep(1000*1000);
                     av_log(NULL, AV_LOG_ERROR, "[%s:%d] redo hlsParseM3U8\n", __FILE_NAME__, __LINE__);
@@ -1560,7 +1808,16 @@ reopen:
             v->seg_stream.input = v->seg_key.IO_decrypt->hd;
         ret = hls_decrypt_read(v->seg_key.IO_decrypt, buf, buf_size);
     } else {  // Normal stream
-        ret = hls_read(v->seg_stream.input, v->seg_stream.offset, buf, buf_size);
+        if (c->cur_seg->iframe_cur_index < c->cur_seg->iframe_nb) {
+            av_log(NULL, AV_LOG_DEBUG, "[%s:%d] offset:%lld size:%d\n", __FUNCTION__, __LINE__,v->seg_stream.offset,c->cur_seg->iframes[c->cur_seg->iframe_cur_index]->size);
+        }
+        if (c->cur_seg->iframe_cur_index < c->cur_seg->iframe_nb &&
+            c->cur_seg->iframes[c->cur_seg->iframe_cur_index]->size <= v->seg_stream.offset) {
+            c->cur_seg->iframe_cur_index = INT_MAX;
+            //ret = AVERROR_EOF;
+        } /*else*/ {
+            ret = hls_read(v->seg_stream.input, v->seg_stream.offset, buf, buf_size);
+        }
         if(ret > 0) {
             v->seg_stream.offset += ret;
             URLContext *uc = (URLContext *) v->seg_stream.input;
@@ -1629,10 +1886,16 @@ load_next:
     int stream_num = 0;
     hls_stream_info_t *hls = c->hls_stream[0];
     stream_num = hlsGetIndex(c);
+    if (c->cur_stream_seq != stream_num)
+    {
+        av_log(NULL, AV_LOG_INFO, "[%s:%d]Adjust bit rate from %d to %d\n",__FUNCTION__,__LINE__, c->cur_stream_seq, stream_num);
+        url_errorcode_cb(c->interrupt_callback.opaque, NETWORK_ADJUST_BITRATE, "http");
+    }
+
     hls_stream_info_t *hls_next = c->hls_stream[stream_num];
     if (0 == hls_next->seg_list.hls_segment_nb && 0 == hls_next->is_parsed)
     {
-        ret = hlsParseM3U8(c, hls_next->url, hls_next, NULL);
+        ret = hlsParseM3U8(c, hls_next->url, hls_next, NULL, NULL);
         if (0 > ret)
         {
             hls_next = v;
@@ -1640,6 +1903,14 @@ load_next:
         else
         {
             hls_next->is_parsed = 1;
+#ifdef HLS_IFRAME_ENABLE
+            if (stream_num < c->hls_iframe_nb) {
+                hls_stream_info_t *hls_iframe = c->hls_iframe_stream[stream_num];
+                if ((ret = hlsParseM3U8(c, hls_iframe->url, hls, NULL, hls_iframe)) < 0) {
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] parse iframe m3u8 fail\n", __FUNCTION__, __LINE__);
+                }
+            }
+#endif
         }
     }
 
@@ -1812,6 +2083,53 @@ static int HLS_probe(AVProbeData *p)
     return 0;
 }
 
+static void hlsCalDuration(AVFormatContext *s)
+{
+    HLSContext *c = NULL;
+    int64_t duration = 0;
+    int i = 0;
+
+    if (NULL == s || s->priv_data == NULL)
+    {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d], AVFormatContext ptr is null\n", __FILE_NAME__, __LINE__);
+        return;
+    }
+
+    c = s->priv_data;
+
+    for (i = 0; i < c->hls_stream[0]->seg_list.hls_segment_nb; i++) {
+        c->hls_stream[0]->seg_list.segments[i]->start_time = duration;
+        duration += c->hls_stream[0]->seg_list.segments[i]->total_time;
+    }
+
+    if (c->hls_stream[0]->seg_list.hls_finished)
+    {
+        s->duration = duration * (AV_TIME_BASE / 1000);
+        s->is_live_stream = 0;
+        s->is_time_shift = 0;
+    }
+    else
+    {
+        s->is_live_stream = 1;
+
+        if (HLS_TIME_SHIFT_SEGMENT_NUM_MIN < c->hls_stream[0]->seg_list.hls_segment_nb)
+        {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] is_time_shift segment num:%d", __FUNCTION__, __LINE__, c->hls_stream[0]->seg_list.hls_segment_nb);
+            s->duration = duration * (AV_TIME_BASE / 1000);
+            s->is_time_shift = 1;
+        }
+        else
+        {
+            s->duration = 10 * AV_TIME_BASE; // If no duration, HiPlayer will continuously seek to 0
+            s->is_time_shift = 0;
+        }
+    }
+
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d] duration:%lld", __FUNCTION__, __LINE__,s->duration);
+
+    return;
+}
+
 static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
 {
     HLSContext *c = s->priv_data;
@@ -1903,14 +2221,14 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     if (uc && uc->moved_url)
     {
         av_log(NULL, AV_LOG_ERROR, "[%s:%d], moved_url:%s\n", __FILE_NAME__, __LINE__, uc->moved_url);
-        ret = hlsParseM3U8(c, uc->moved_url, NULL, s->pb);
+        ret = hlsParseM3U8(c, uc->moved_url, NULL, s->pb, NULL);
     }
     else
     {
         if (!strncmp(c->file_name, cache_name, 7))
-            ret = hlsParseM3U8(c, strstr(s->filename, "http"), NULL, s->pb);
+            ret = hlsParseM3U8(c, strstr(s->filename, "http"), NULL, s->pb, NULL);
         else
-            ret = hlsParseM3U8(c, s->filename, NULL, s->pb);
+            ret = hlsParseM3U8(c, s->filename, NULL, s->pb, NULL);
     }
 
     if (ret < 0)
@@ -1937,11 +2255,20 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         {
             start_stream_num = hlsGetDefaultIndex(c, HLS_MODE_FAST);
             hls_stream_info_t *hls = c->hls_stream[start_stream_num];
-            ret = hlsParseM3U8(c, hls->url, hls, NULL);
+            ret = hlsParseM3U8(c, hls->url, hls, NULL, NULL);
             if (0 <= ret)
             {
                 valid_stream_nb = 1;
                 hls->is_parsed = 1;
+
+#ifdef HLS_IFRAME_ENABLE
+                if (start_stream_num < c->hls_iframe_nb) {
+                    hls_stream_info_t *hls_iframe = c->hls_iframe_stream[start_stream_num];
+                    if ((ret = hlsParseM3U8(c, hls_iframe->url, hls, NULL, hls_iframe)) < 0) {
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d] parse iframe m3u8 fail\n", __FUNCTION__, __LINE__);
+                    }
+                }
+#endif
             }
         }
         else
@@ -1987,7 +2314,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
                 }
                 /* end: add for fresh url */
 
-                if ((ret = hlsParseM3U8(c, hls->url, hls, NULL)) < 0) {
+                if ((ret = hlsParseM3U8(c, hls->url, hls, NULL, NULL)) < 0) {
                     continue;
                 } else {
                     hls->first_seg_number = hls->seg_list.hls_seg_start;
@@ -2008,6 +2335,14 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
                     last_seg_start = hls->seg_list.hls_seg_start;
                     hls->is_parsed = 1;
                     //break;    //zzg continue parse rest list
+#ifdef HLS_IFRAME_ENABLE
+                    if (i < c->hls_iframe_nb) {
+                        hls_stream_info_t *hls_iframe = c->hls_iframe_stream[i];
+                        if ((ret = hlsParseM3U8(c, hls_iframe->url, hls, NULL, hls_iframe)) < 0) {
+                            av_log(NULL, AV_LOG_ERROR, "[%s:%d] parse iframe m3u8 fail\n", __FUNCTION__, __LINE__);
+                        }
+                    }
+#endif
                 }
             }
         }
@@ -2117,32 +2452,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         }
     }
 
-    /* If this isn't a live stream, calculate the total duration of the
-     * stream. */
-    if (c->hls_stream[start_stream_num]->seg_list.hls_finished) {
-        int64_t duration = 0;
-        for (i = 0; i < c->hls_stream[start_stream_num]->seg_list.hls_segment_nb; i++) {
-            c->hls_stream[start_stream_num]->seg_list.segments[i]->start_time = duration;
-            duration += c->hls_stream[start_stream_num]->seg_list.segments[i]->total_time;
-        }
-        s->duration = duration * (AV_TIME_BASE / 1000);
-        s->is_live_stream = 0;
-    } else {
-        int64_t duration = 0;
-        for (i = 0; i < c->hls_stream[start_stream_num]->seg_list.hls_segment_nb; i++) {
-            c->hls_stream[start_stream_num]->seg_list.segments[i]->start_time = duration;
-            duration += c->hls_stream[start_stream_num]->seg_list.segments[i]->total_time;
-        }
-
-        c->timeshift_start_program_time = c->hls_stream[start_stream_num]->seg_list.segments[0]->program_time;
-        s->duration = duration * (AV_TIME_BASE / 1000);
-
-        av_log(NULL, AV_LOG_ERROR, "[%s:%d] start programe time = %d \n",
-            __FUNCTION__, __LINE__,
-            c->timeshift_start_program_time);
-
-        s->is_live_stream = 1;
-    }
+    hlsCalDuration(s);
 
     c->parent = s;
     if (c->hls_stream_nb && !strncmp("http", c->hls_stream[start_stream_num]->seg_list.segments[0]->url, 4)) {
@@ -2362,6 +2672,7 @@ fail:
     av_log(NULL, AV_LOG_ERROR, "[%s:%d], HLS_read_header fail\n", __FILE_NAME__, __LINE__);
 
     hlsFreeHlsList(c);
+    hlsFreeHlsIframeList(c);
 
     if (c->headers) {
         av_free(c->headers);
@@ -2478,16 +2789,26 @@ start:
         if (hls->seg_list.needed && !hls->seg_demux.pkt.data) {
             ret = av_read_frame(hls->seg_demux.ctx, &hls->seg_demux.pkt);
             if (ret < 0) {
-                av_log(NULL, AV_LOG_ERROR, "[%s:%d] av_read_frame fail, ret = %d, AVEOF = 0x%x \m",
-                    __FILE_NAME__, __LINE__, ret, AVERROR_EOF);
-                if (!url_feof(&hls->seg_stream.IO_pb)) {
-                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] read packet return fail, ret =%d, eof = 0x%x \n",
+                if (AVERROR(EAGAIN) != ret || !s->is_time_shift)
+                {
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] av_read_frame fail, ret = %d, AVEOF = 0x%x \m",
                         __FILE_NAME__, __LINE__, ret, AVERROR_EOF);
-
+                }
+                if (!url_feof(&hls->seg_stream.IO_pb)) {
+                    if (AVERROR(EAGAIN) != ret || !s->is_time_shift)
+                    {
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d] read packet return fail, ret =%d, eof = 0x%x \n",
+                            __FILE_NAME__, __LINE__, ret, AVERROR_EOF);
+                    }
                     if (NULL != hls && !hls->seg_list.hls_finished) {
                         return AVERROR(EAGAIN);
                     }
 
+                    return ret;
+                }
+
+                if (s->is_time_shift && AVERROR(EAGAIN) == ret)
+                {
                     return ret;
                 }
 
@@ -2733,6 +3054,7 @@ static int HLS_close(AVFormatContext *s)
     }
 
     hlsFreeHlsList(c);
+    hlsFreeHlsIframeList(c);
 
     if (c->headers) {
         av_free(c->headers);
@@ -2787,12 +3109,12 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
                                int64_t timestamp, int flags)
 {
     HLSContext *c = s->priv_data;
-    int i, j, ret;
+    int i, j, k, ret;
 
     if ((flags & AVSEEK_FLAG_BYTE)/* || !c->hls_stream[0]->seg_list.hls_finished*/)
         return AVERROR(ENOSYS);
 
-    timestamp = av_rescale_rnd(timestamp, 1, stream_index >= 0 ?
+    timestamp = av_rescale_rnd(timestamp, 1000, stream_index >= 0 ?
                                s->streams[stream_index]->time_base.den :
                                AV_TIME_BASE, flags & AVSEEK_FLAG_BACKWARD ?
                                AV_ROUND_DOWN : AV_ROUND_UP);
@@ -2826,12 +3148,52 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
         hls->seg_stream.IO_pb.eof_reached = 0;
         hls->seg_stream.IO_pb.pos = 0;
         hls->seg_stream.IO_pb.buf_ptr = hls->seg_stream.IO_pb.buf_end = hls->seg_stream.IO_pb.buffer;
-        timestamp *= 1000;
+       // timestamp *= 1000;
+        hls->seg_demux.seek_offset = 0;
         /* Locate the segment that contains the target timestamp */
         if (NULL == servicetype) {
             for (j = 0; j < hls->seg_list.hls_segment_nb; j++) {
                 if (timestamp >= pos &&
                     timestamp < pos + hls->seg_list.segments[j]->total_time) {
+#ifdef HLS_IFRAME_ENABLE
+{
+                    hls_segment_t *seg = hls->seg_list.segments[j];
+                    int ts_rel = timestamp - pos;
+                    if (flags & AVSEEK_FLAG_BACKWARD) {
+                        for (k = seg->iframe_nb -1; 0 < k; k--) {
+                            if (ts_rel >= seg->iframes[k]->offset_time) {
+                                seg->iframe_cur_index = k;
+                                av_log(NULL, AV_LOG_DEBUG, "[%s:%d] find iframe k:%d offsettime:%d offsetpos:%d\n", __FUNCTION__, __LINE__,k,seg->iframes[k]->offset_time,seg->iframes[k]->offset_pos);
+                                hls->seg_demux.seek_offset = 90 * (seg->iframes[k]->offset_time);
+                                break;
+                            }
+                        }
+                    } else {
+                        for (k = 0; k < seg->iframe_nb; k++) {
+                            if (ts_rel <= seg->iframes[k]->offset_time) {
+                                av_log(NULL, AV_LOG_DEBUG, "[%s:%d] find iframe k:%d offsettime:%d offsetpos:%d\n", __FUNCTION__, __LINE__,k,seg->iframes[k]->offset_time,seg->iframes[k]->offset_pos);
+                                hls->seg_demux.seek_offset = 90 * (seg->iframes[k]->offset_time);
+                                seg->iframe_cur_index = k;
+                                break;
+                            }
+                        }
+                        if (k >= seg->iframe_nb) {
+                            av_log(NULL, AV_LOG_DEBUG, "[%s:%d] find next seg\n", __FUNCTION__, __LINE__);
+                            j++;
+                            if (j >= hls->seg_list.hls_segment_nb) {
+                                av_log(NULL, AV_LOG_DEBUG, "[%s:%d] already last seg\n", __FUNCTION__, __LINE__);
+                                j = hls->seg_list.hls_segment_nb - 1;
+                                seg = hls->seg_list.segments[j];
+                                if (0 < seg->iframe_nb) {
+                                    k = seg->iframe_nb - 1;
+                                    seg->iframe_cur_index = k;
+                                    hls->seg_demux.seek_offset = 90 * (seg->iframes[k]->offset_time);
+                                }
+                            }
+                        }
+                    }
+}
+#endif
                     hls->seg_list.hls_seg_cur = hls->seg_list.hls_seg_start + j;
 
                     /* Set flag to update pts offset time*/
@@ -2839,7 +3201,7 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
                     hls->seg_demux.pts_offset = 0;
                     //hls->seg_demux.last_time = 0;
                     memset(hls->seg_demux.last_time, 0, s->nb_streams * sizeof(int64_t));
-                    hls->seg_demux.seek_offset = 90 * (hls->seg_list.segments[j]->start_time);
+                    hls->seg_demux.seek_offset += 90 * (hls->seg_list.segments[j]->start_time);
 
                     av_log(NULL, AV_LOG_ERROR, "[%s:%d] next pts will start at (%lld) for seeking \n",
                             __FILE_NAME__,__LINE__,
@@ -2854,7 +3216,7 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
         }
         else
         {
-            ret = hlsParseM3U8(c, hls->url, hls, NULL);
+            ret = hlsParseM3U8(c, hls->url, hls, NULL, NULL);
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] end start time = %lld \n", __FUNCTION__, __LINE__,
                 hls->seg_list.segments[hls->seg_list.hls_segment_nb - 1]->start_time);
 

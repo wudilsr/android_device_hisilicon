@@ -36,17 +36,28 @@ HISILICON_SECURITY_L3 := false
 #Quick Boot Support
 BOARD_QBSUPPORT := false
 
+#Unified update.zip for BGA and QFP fastboots
+SUPPORT_UNIFIED_UPDATE := false
+
 # Whether fastplay should be played completely or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.fastplay.fullyplay=false
 
-#enable wallpaper or not in 512M
+# Enable low RAM config or not: true or false
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.low_ram=false
+
+# Enable wallpaper or not for low_ram: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.low_ram.wp.enable=false
 
 # Whether bootanimation should be played or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.bootanim.enable=true
+
+# Enable TDE compose or not: true or false
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.config.tde_compose=true
 
 #set video output rate for telecom and unicom, defalt 4:3
 ifeq ($(strip $(PRODUCT_TARGET)),telecom)
@@ -73,6 +84,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # false -> disable; true -> enable
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.video.adaptformat=false
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.zygote.optimize=true \
+    persist.sys.boot.optimize=true
 
 # Whether CVBS is enabled or not when HDMI is plugged in
 ifeq ($(strip $(PRODUCT_TARGET)), telecom)
@@ -102,7 +117,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.optimalfmt.enable=1
 endif
 
-# Preferential display format: native, i50hz, p50hz, i60hz or p60hz
+# Preferential display format: native, i50hz, p50hz, i60hz, p60hz or max_fmt
 # persist.sys.optimalfmt.perfer is valid only if persist.sys.optimalfmt.enable=1
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.optimalfmt.perfer=native
@@ -114,4 +129,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.player.cache.high=12000 \
     persist.sys.player.cache.total=20000 \
     persist.sys.player.bufmaxsize=80
+
+# Preferential hiplayer buffer seek
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.player.buffer.seek=0 \
+    persist.sys.player.leftbuf.min=10 \
+    persist.sys.player.avsync.min=500
+
+# Preferential hiplayer rtsp timeshift support for sichuan mobile
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.hiplayer.rtspusetcp=false
 

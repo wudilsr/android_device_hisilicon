@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.vp6.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp6.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp6.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp6.o -O2 -Wall -Wundef
@@ -203,12 +203,12 @@ VP6_BuildScanOrder:
 	cmp	r2, r5	@ j.591, i.592
 	bls	.L6	@,
 .L28:
-	uxtb	ip, ip	@ D.38772, MaxOffset
-	strb	ip, [r7, #1024]	@ D.38772, <variable>.EobOffsetTable
+	uxtb	ip, ip	@ D.38779, MaxOffset
+	strb	ip, [r7, #1024]	@ D.38779, <variable>.EobOffsetTable
 	ldr	r3, [r6, #12]	@ <variable>.Vp3VersionNo, <variable>.Vp3VersionNo
 	add	r5, r5, #1	@ i.592, i.592,
 	cmp	r3, #6	@ <variable>.Vp3VersionNo,
-	addhi	ip, ip, #1	@ tmp209, D.38772,
+	addhi	ip, ip, #1	@ tmp209, D.38779,
 	strhib	ip, [r7, #1024]	@ tmp209, <variable>.EobOffsetTable
 	cmp	r5, #64	@ i.592,
 	add	r7, r7, #1	@ ivtmp.593, ivtmp.593,
@@ -265,9 +265,9 @@ VP6_BuildModeTree:
 .L58:
 	ldrb	r9, [r6, #406]	@ zero_extendqisi2	@ <variable>.probXmitted, <variable>.probXmitted
 	cmp	r5, #3	@ i,
-	mul	r2, r7, r9	@ D.38803, tmp771, <variable>.probXmitted
-	add	r1, r2, r3	@ total.1018, D.38803, total.782
-	str	r2, [fp, #-76]	@ D.38803, Counts
+	mul	r2, r7, r9	@ D.38810, tmp771, <variable>.probXmitted
+	add	r1, r2, r3	@ total.1018, D.38810, total.782
+	str	r2, [fp, #-76]	@ D.38810, Counts
 	beq	.L102	@,
 	ldrb	lr, [r6, #407]	@ zero_extendqisi2	@ <variable>.probXmitted, <variable>.probXmitted
 	cmp	r5, #4	@ i,
@@ -652,12 +652,12 @@ VP6_BuildModeTree:
 	mul	r9, r7, r9	@ prephitmp.662, tmp771, <variable>.probXmitted
 	str	r9, [fp, #-48]	@ prephitmp.662, Counts
 .L34:
-	ldrb	lr, [sl, #454]	@ zero_extendqisi2	@ D.38807, <variable>.probXmitted
+	ldrb	lr, [sl, #454]	@ zero_extendqisi2	@ D.38814, <variable>.probXmitted
 	add	r5, r5, #1	@ i, i,
 	ldrb	r0, [sl, #444]	@ zero_extendqisi2	@ tmp282, <variable>.probXmitted
 	add	r8, r8, #4	@ ivtmp.697, ivtmp.697,
-	add	r3, lr, r0	@ tmp283, D.38807, tmp282
-	rsb	r0, lr, lr, asl #8	@,, D.38807, D.38807,
+	add	r3, lr, r0	@ tmp283, D.38814, tmp282
+	rsb	r0, lr, lr, asl #8	@,, D.38814, D.38814,
 	add	r1, r3, #1	@, tmp283,
 	bl	__aeabi_idiv	@
 	ldr	ip, [fp, #-88]	@, %sfp
@@ -672,18 +672,18 @@ VP6_BuildModeTree:
 	ldr	r0, [fp, #-76]	@ Counts, Counts
 	add	ip, lr, r3	@,, Counts
 	str	r9, [fp, #-100]	@, %sfp
-	add	r2, r9, r0	@ D.38818,, Counts
+	add	r2, r9, r0	@ D.38825,, Counts
 	str	lr, [fp, #-96]	@, %sfp
-	add	r9, ip, r2	@ D.38822,, D.38818
+	add	r9, ip, r2	@ D.38829,, D.38825
 	str	ip, [fp, #-112]	@, %sfp
 	str	r2, [fp, #-120]	@,
-	rsb	r0, r9, r9, asl #8	@,, D.38822, D.38822,
+	rsb	r0, r9, r9, asl #8	@,, D.38829, D.38829,
 	bl	__aeabi_uidiv	@
-	add	r1, r9, #1	@, D.38822,
+	add	r1, r9, #1	@, D.38829,
 	add	r0, r0, #1	@ tmp304,,
 	strb	r0, [r4, #224]	@ tmp304, <variable>.probMode
 	ldr	r3, [fp, #-120]	@,
-	rsb	r0, r3, r3, asl #8	@,, D.38818, D.38818,
+	rsb	r0, r3, r3, asl #8	@,, D.38825, D.38825,
 	bl	__aeabi_uidiv	@
 	add	ip, r0, #1	@ tmp315,,
 	strb	ip, [r4, #225]	@ tmp315, <variable>.probMode
@@ -691,29 +691,29 @@ VP6_BuildModeTree:
 	ldr	r0, [fp, #-64]	@, Counts
 	ldr	r3, [fp, #-60]	@ Counts, Counts
 	str	r2, [fp, #-88]	@, %sfp
-	ldr	ip, [fp, #-80]	@ D.38833, Counts
-	add	r2, r0, r3	@ D.38838,, Counts
+	ldr	ip, [fp, #-80]	@ D.38840, Counts
+	add	r2, r0, r3	@ D.38845,, Counts
 	ldr	lr, [fp, #-88]	@, %sfp
 	ldr	r9, [fp, #-56]	@ Counts, Counts
 	ldr	r1, [fp, #-48]	@ Counts, Counts
 	str	r0, [fp, #-92]	@, %sfp
-	add	r0, r2, #1	@, D.38838,
+	add	r0, r2, #1	@, D.38845,
 	str	r0, [fp, #-108]	@, %sfp
-	add	r9, ip, r9	@ D.38835, D.38833, Counts
+	add	r9, ip, r9	@ D.38842, D.38840, Counts
 	add	r1, lr, r1	@,, Counts
 	ldr	lr, [fp, #-108]	@, %sfp
 	str	r1, [fp, #-104]	@, %sfp
-	add	r1, r1, r9	@ tmp323,, D.38835
+	add	r1, r1, r9	@ tmp323,, D.38842
 	add	r1, r1, lr	@, tmp323,
 	ldr	lr, [fp, #-104]	@, %sfp
-	rsb	r0, r9, r9, asl #8	@,, D.38835, D.38835,
+	rsb	r0, r9, r9, asl #8	@,, D.38842, D.38842,
 	str	ip, [fp, #-124]	@,
 	add	lr, lr, #1	@,,
 	str	r2, [fp, #-116]	@,
 	str	lr, [fp, #-104]	@, %sfp
 	bl	__aeabi_uidiv	@
 	ldr	r3, [fp, #-120]	@,
-	add	r1, r3, #1	@, D.38818,
+	add	r1, r3, #1	@, D.38825,
 	add	r0, r0, #1	@ tmp330,,
 	strb	r0, [r4, #226]	@ tmp330, <variable>.probMode
 	ldr	r2, [fp, #-100]	@, %sfp
@@ -726,17 +726,17 @@ VP6_BuildModeTree:
 	ldr	r3, [fp, #-96]	@, %sfp
 	rsb	r0, r3, r3, asl #8	@,,,,
 	bl	__aeabi_uidiv	@
-	add	r1, r9, #1	@, D.38835,
+	add	r1, r9, #1	@, D.38842,
 	add	r0, r0, #1	@ tmp352,,
 	strb	r0, [r4, #228]	@ tmp352, <variable>.probMode
 	ldr	r2, [fp, #-124]	@,
-	rsb	r0, r2, r2, asl #8	@,, D.38833, D.38833,
+	rsb	r0, r2, r2, asl #8	@,, D.38840, D.38840,
 	bl	__aeabi_uidiv	@
 	ldr	r3, [fp, #-116]	@,
 	ldr	ip, [fp, #-104]	@, %sfp
-	add	r1, ip, r3	@,, D.38838
+	add	r1, ip, r3	@,, D.38845
 	add	lr, r0, #1	@ tmp363,,
-	rsb	r0, r3, r3, asl #8	@,, D.38838, D.38838,
+	rsb	r0, r3, r3, asl #8	@,, D.38845, D.38845,
 	strb	lr, [r4, #229]	@ tmp363, <variable>.probMode
 	bl	__aeabi_uidiv	@
 	ldr	r1, [fp, #-108]	@, %sfp
@@ -1571,8 +1571,8 @@ VP6_BoolTreeToHuffCodes:
 	ldrb	ip, [r0, #3]	@ zero_extendqisi2	@ tmp174,
 	rsb	r2, r4, #255	@ tmp173, tmp172,
 	ldrb	r4, [r0, #4]	@ zero_extendqisi2	@ tmp176,
-	mul	r2, r3, r2	@ D.39207, Prob, tmp173
-	mov	r2, r2, lsr #8	@ Prob.1493, D.39207,
+	mul	r2, r3, r2	@ D.39214, Prob, tmp173
+	mov	r2, r2, lsr #8	@ Prob.1493, D.39214,
 	mul	ip, ip, r2	@ tmp175, tmp174, Prob.1493
 	mov	ip, ip, lsr #8	@ Prob1, tmp175,
 	mul	r3, r4, ip	@ tmp177, tmp176, Prob1
@@ -1581,8 +1581,8 @@ VP6_BoolTreeToHuffCodes:
 	ldrb	r3, [r0, #4]	@ zero_extendqisi2	@ tmp179,
 	ldrb	r4, [r0, #5]	@ zero_extendqisi2	@ tmp181,
 	rsb	r3, r3, #255	@ tmp180, tmp179,
-	mul	r3, r3, ip	@ D.39220, tmp180, Prob1
-	mov	r3, r3, lsr #8	@ Prob1.1495, D.39220,
+	mul	r3, r3, ip	@ D.39227, tmp180, Prob1
+	mov	r3, r3, lsr #8	@ Prob1.1495, D.39227,
 	mul	ip, r4, r3	@ tmp182, tmp181, Prob1.1495
 	mov	ip, ip, lsr #8	@ tmp183, tmp182,
 	str	ip, [r1, #12]	@ tmp183,
@@ -1595,8 +1595,8 @@ VP6_BoolTreeToHuffCodes:
 	ldrb	r3, [r0, #6]	@ zero_extendqisi2	@ tmp190,
 	rsb	ip, r4, #255	@ tmp189, tmp188,
 	ldrb	r4, [r0, #7]	@ zero_extendqisi2	@ tmp192,
-	mul	r2, ip, r2	@ D.39234, tmp189, Prob.1493
-	mov	ip, r2, lsr #8	@ Prob.1498, D.39234,
+	mul	r2, ip, r2	@ D.39241, tmp189, Prob.1493
+	mov	ip, r2, lsr #8	@ Prob.1498, D.39241,
 	mul	r3, r3, ip	@ tmp191, tmp190, Prob.1498
 	mov	r3, r3, lsr #8	@ Prob1.1499, tmp191,
 	mul	r2, r4, r3	@ tmp193, tmp192, Prob1.1499
@@ -1611,8 +1611,8 @@ VP6_BoolTreeToHuffCodes:
 	ldrb	r3, [r0, #8]	@ zero_extendqisi2	@ tmp201,
 	rsb	r2, r4, #255	@ tmp200, tmp199,
 	ldrb	r4, [r0, #9]	@ zero_extendqisi2	@ tmp203,
-	mul	r2, r2, ip	@ D.39252, tmp200, Prob.1498
-	mov	r2, r2, lsr #8	@ Prob.1502, D.39252,
+	mul	r2, r2, ip	@ D.39259, tmp200, Prob.1498
+	mov	r2, r2, lsr #8	@ Prob.1502, D.39259,
 	mul	r3, r3, r2	@ tmp202, tmp201, Prob.1502
 	mov	r3, r3, lsr #8	@ Prob1.1503, tmp202,
 	mul	ip, r4, r3	@ tmp204, tmp203, Prob1.1503
@@ -1626,8 +1626,8 @@ VP6_BoolTreeToHuffCodes:
 	ldrb	r3, [r0, #8]	@ zero_extendqisi2	@ tmp210,
 	ldrb	ip, [r0, #10]	@ zero_extendqisi2	@ tmp212,
 	rsb	r3, r3, #255	@ tmp211, tmp210,
-	mul	r3, r3, r2	@ D.39270, tmp211, Prob.1502
-	mov	r3, r3, lsr #8	@ Prob.1506, D.39270,
+	mul	r3, r3, r2	@ D.39277, tmp211, Prob.1502
+	mov	r3, r3, lsr #8	@ Prob.1506, D.39277,
 	mul	r2, ip, r3	@ tmp213, tmp212, Prob.1506
 	mov	r2, r2, lsr #8	@ tmp214, tmp213,
 	str	r2, [r1, #36]	@ tmp214,
@@ -1690,8 +1690,8 @@ VP6_ZerosBoolTreeToHuffCodes:
 	ldrb	r2, [r0, #6]	@ zero_extendqisi2	@ tmp175,
 	mul	r3, r4, r3	@ tmp172, tmp171, tmp170
 	mov	r4, r3, lsr #8	@ tmp173, tmp172,
-	mul	r3, ip, r4	@ D.39330, tmp174, tmp173
-	mov	r3, r3, lsr #8	@ Prob.1539, D.39330,
+	mul	r3, ip, r4	@ D.39337, tmp174, tmp173
+	mov	r3, r3, lsr #8	@ Prob.1539, D.39337,
 	mul	r2, r2, r3	@ tmp176, tmp175, Prob.1539
 	mov	ip, r2, lsr #8	@ tmp177, tmp176,
 	str	ip, [r1, #16]	@ tmp177,
@@ -1708,8 +1708,8 @@ VP6_ZerosBoolTreeToHuffCodes:
 	mul	r3, r4, r3	@ tmp185, tmp184, tmp183
 	rsb	ip, ip, #255	@ tmp188, tmp187,
 	mov	r3, r3, lsr #8	@ tmp186, tmp185,
-	mul	r3, ip, r3	@ D.39346, tmp188, tmp186
-	mov	ip, r3, lsr #8	@ Prob.1550, D.39346,
+	mul	r3, ip, r3	@ D.39353, tmp188, tmp186
+	mov	ip, r3, lsr #8	@ Prob.1550, D.39353,
 	mul	r2, r2, ip	@ tmp190, tmp189, Prob.1550
 	mov	r2, r2, lsr #8	@ tmp191, tmp190,
 	str	r2, [r1, #24]	@ tmp191,
@@ -1751,32 +1751,32 @@ VP6_InsertSorted:
 	add	r8, r1, r1, asl #1	@, tmp146, node, node,
 	add	r4, r3, r3, asl #1	@, tmp150, which, which,
 	add	r8, r0, r8, asl #2	@, prephitmp.1576, pSn, tmp146,
-	add	r4, r0, r4, asl #2	@, D.39375, pSn, tmp150,
-	ldr	r7, [r8, #8]	@ D.39379, <variable>.freq
+	add	r4, r0, r4, asl #2	@, D.39382, pSn, tmp150,
+	ldr	r7, [r8, #8]	@ D.39386, <variable>.freq
 	ldr	ip, [r4, #8]	@ <variable>.freq, <variable>.freq
-	cmp	r7, ip	@ D.39379, <variable>.freq
+	cmp	r7, ip	@ D.39386, <variable>.freq
 	bls	.L138	@,
 	mov	r6, r3	@ which.1591, which
 	b	.L141	@
 .L144:
-	add	r4, r0, r4, asl #2	@, D.39375, pSn, tmp155,
+	add	r4, r0, r4, asl #2	@, D.39382, pSn, tmp155,
 	ldr	r5, [r4, #8]	@ <variable>.freq, <variable>.freq
-	cmp	r7, r5	@ D.39379, <variable>.freq
+	cmp	r7, r5	@ D.39386, <variable>.freq
 	bls	.L140	@,
-	mov	r6, ip	@ which.1591, which.1588
+	mov	r6, ip	@ which.1591, which.1587
 .L141:
-	ldr	ip, [r4, #4]	@ which.1588, <variable>.next
-	cmn	ip, #1	@ which.1588,
-	add	r4, ip, ip, asl #1	@, tmp155, which.1588, which.1588,
+	ldr	ip, [r4, #4]	@ which.1587, <variable>.next
+	cmn	ip, #1	@ which.1587,
+	add	r4, ip, ip, asl #1	@, tmp155, which.1587, which.1587,
 	bne	.L144	@,
 .L139:
 	add	r6, r6, r6, asl #1	@, tmp160, which.1591, which.1591,
 	add	r0, r0, r6, asl #2	@, tmp162, pSn, tmp160,
 	str	r1, [r0, #4]	@ node, <variable>.next
-	str	ip, [r8, #4]	@ which.1588, <variable>.next
+	str	ip, [r8, #4]	@ which.1587, <variable>.next
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L140:
-	cmp	ip, r3	@ which.1588, which
+	cmp	ip, r3	@ which.1587, which
 	bne	.L139	@,
 .L138:
 	str	r1, [r2, #0]	@ node,* pStartnode
@@ -1943,8 +1943,8 @@ VP6_BuildHuffTree:
 	sub	r4, fp, #44	@,,
 	add	r3, r1, r2	@ tmp346, tmp440, prephitmp.1612
 	add	ip, r4, r3, asl #2	@, tmp348,, tmp346,
-	ldr	r3, [ip, #-360]	@ D.39428, <variable>.next
-	cmn	r3, #1	@ D.39428,
+	ldr	r3, [ip, #-360]	@ D.39435, <variable>.next
+	cmn	r3, #1	@ D.39435,
 	beq	.L154	@,
 	ldr	r9, [fp, #-416]	@, %sfp
 	sub	r7, fp, #408	@ tmp355,,
@@ -1959,7 +1959,7 @@ VP6_BuildHuffTree:
 	add	r5, r5, #8	@ ivtmp.1638, tmp361,
 .L153:
 	add	sl, r1, r2	@ tmp372, tmp440, prephitmp.1612
-	add	r3, r3, r3, asl #1	@, tmp365, D.39428, D.39428,
+	add	r3, r3, r3, asl #1	@, tmp365, D.39435, D.39435,
 	sub	r8, fp, #44	@,,
 	add	ip, r4, r4, asl #1	@, tmp399, sncount, sncount,
 	add	r3, r8, r3, asl #2	@, tmp367,, tmp365,
@@ -1997,8 +1997,8 @@ VP6_BuildHuffTree:
 	mov	r1, r2, asl #1	@ tmp440, prephitmp.1612,
 	add	r3, r1, r2	@ tmp429, tmp440, prephitmp.1612
 	add	ip, r0, r3, asl #2	@, tmp431,, tmp429,
-	ldr	r3, [ip, #-360]	@ D.39428, <variable>.next
-	cmn	r3, #1	@ D.39428,
+	ldr	r3, [ip, #-360]	@ D.39435, <variable>.next
+	cmn	r3, #1	@ D.39435,
 	bne	.L153	@,
 .L154:
 	sub	sp, fp, #40
@@ -2033,7 +2033,7 @@ VP6_BuildHuffLookupTable:
 	mov	r2, r3	@ tmp193, j
 .L183:
 	add	r3, r3, #1	@ j, j,
-	add	ip, r0, r2	@ D.39452, pHuffTreeRoot, tmp193
+	add	ip, r0, r2	@ D.39459, pHuffTreeRoot, tmp193
 	rsb	r1, r3, #6	@ tmp145, j,
 	mov	r1, r5, asr r1	@ tmp146, i,
 	tst	r1, #1	@ tmp146,
@@ -2913,14 +2913,14 @@ IsFrameSizeChanged:
 	ldr	r2, [r0, ip]	@ <variable>.OldHeaderInfo.pic_height_in_mb, <variable>.OldHeaderInfo.pic_height_in_mb
 	ldr	r3, [r0, r1]	@ <variable>.NewHeaderInfo.pic_height_in_mb, <variable>.NewHeaderInfo.pic_height_in_mb
 	cmp	r2, r3	@ <variable>.OldHeaderInfo.pic_height_in_mb, <variable>.NewHeaderInfo.pic_height_in_mb
-	movne	r0, #1	@ D.40282,
+	movne	r0, #1	@ D.40289,
 	ldmnefd	sp, {fp, sp, pc}	@
 	movw	r1, #12280	@ tmp141,
 	movw	r2, #12136	@ tmp140,
 	ldr	r3, [r0, r1]	@ <variable>.NewHeaderInfo.pic_width_in_mb, <variable>.NewHeaderInfo.pic_width_in_mb
 	ldr	r0, [r0, r2]	@ <variable>.OldHeaderInfo.pic_width_in_mb, <variable>.OldHeaderInfo.pic_width_in_mb
-	subs	r0, r0, r3	@ D.40282, <variable>.OldHeaderInfo.pic_width_in_mb, <variable>.NewHeaderInfo.pic_width_in_mb
-	movne	r0, #1	@ D.40282
+	subs	r0, r0, r3	@ D.40289, <variable>.OldHeaderInfo.pic_width_in_mb, <variable>.NewHeaderInfo.pic_width_in_mb
+	movne	r0, #1	@ D.40289
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	IsFrameSizeChanged, .-IsFrameSizeChanged
@@ -2966,7 +2966,7 @@ VP6DEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r4, r0, #0	@ pCtx, pCtx
 	mov	r6, r1	@ ImgID, ImgID
-	moveq	r0, r4	@ D.40544, pCtx
+	moveq	r0, r4	@ D.40551, pCtx
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	movw	r5, #13000	@ tmp139,
 	mov	r2, #0	@,
@@ -2976,7 +2976,7 @@ VP6DEC_RecycleImage:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pImg,
-	moveq	r0, #1	@ D.40544,
+	moveq	r0, #1	@ D.40551,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r7, #0	@ tmp146,
@@ -2986,7 +2986,7 @@ VP6DEC_RecycleImage:
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FreeUsdByDec	@
-	mov	r0, #1	@ D.40544,
+	mov	r0, #1	@ D.40551,
 	str	r7, [r6, #216]	@ tmp146, <variable>.p_usrdat
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
@@ -3011,70 +3011,70 @@ VP6_ConvertBoolToHuff:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	add	r7, r0, #6592	@ tmp200, pVp6CodecInfo,
-	add	r9, r7, #4	@ D.39548, tmp200,
+	add	r9, r7, #4	@ D.39555, tmp200,
 	mov	r4, r0	@ pVp6CodecInfo, pVp6CodecInfo
 	add	r8, r0, #512	@ tmp199, pVp6CodecInfo,
 	add	r6, r0, #9408	@ tmp201, pVp6CodecInfo,
 	movw	r1, #:lower16:.LC0	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC0	@,
-	add	r5, r6, #44	@ D.39552, tmp201,
+	add	r5, r6, #44	@ D.39559, tmp201,
 	bl	dprint_vfmw	@
 	add	sl, r4, #9472	@ tmp202, pVp6CodecInfo,
 	add	r0, r8, #2	@, tmp199,
-	mov	r1, r9	@, D.39548
+	mov	r1, r9	@, D.39555
 	bl	VP6_BoolTreeToHuffCodes	@
-	mov	r1, r9	@, D.39548
-	add	r9, sl, #28	@ D.39556, tmp202,
-	add	r7, r7, #52	@ D.39550, tmp200,
-	mov	r0, r5	@, D.39552
+	mov	r1, r9	@, D.39555
+	add	r9, sl, #28	@ D.39563, tmp202,
+	add	r7, r7, #52	@ D.39557, tmp200,
+	mov	r0, r5	@, D.39559
 	mov	r2, #12	@,
 	bl	VP6_BuildHuffTree	@
-	add	r6, r6, #68	@ D.39554, tmp201,
-	mov	r0, r5	@, D.39552
-	mov	r1, r9	@, D.39556
+	add	r6, r6, #68	@ D.39561, tmp201,
+	mov	r0, r5	@, D.39559
+	mov	r1, r9	@, D.39563
 	bl	VP6_BuildHuffLookupTable	@
 	add	r5, r4, #6656	@ tmp205, pVp6CodecInfo,
 	add	r0, r8, #13	@, tmp199,
-	mov	r1, r7	@, D.39550
+	mov	r1, r7	@, D.39557
 	add	r2, r4, #536	@, pVp6CodecInfo,
 	str	r2, [fp, #-48]	@, %sfp
 	bl	VP6_BoolTreeToHuffCodes	@
 	mov	r2, #12	@,
-	mov	r1, r7	@, D.39550
-	mov	r0, r6	@, D.39554
-	add	r7, r5, #36	@ D.39564, tmp205,
+	mov	r1, r7	@, D.39557
+	mov	r0, r6	@, D.39561
+	add	r7, r5, #36	@ D.39571, tmp205,
 	bl	VP6_BuildHuffTree	@
 	add	r9, r4, #8512	@ tmp206, pVp6CodecInfo,
-	mov	r0, r6	@, D.39554
+	mov	r0, r6	@, D.39561
 	add	r1, sl, #92	@, tmp202,
-	add	r6, r9, #20	@ D.39568, tmp206,
+	add	r6, r9, #20	@ D.39575, tmp206,
 	bl	VP6_BuildHuffLookupTable	@
 	add	r8, r4, #11904	@ tmp207, pVp6CodecInfo,
-	mov	r1, r7	@, D.39564
+	mov	r1, r7	@, D.39571
 	ldr	r0, [fp, #-48]	@, %sfp
 	bl	VP6_ZerosBoolTreeToHuffCodes	@
-	mov	r1, r7	@, D.39564
-	add	r7, r8, #28	@ D.39572, tmp207,
+	mov	r1, r7	@, D.39571
+	add	r7, r8, #28	@ D.39579, tmp207,
 	mov	r2, #9	@,
-	mov	r0, r6	@, D.39568
-	add	sl, r5, #92	@ D.39566, tmp205,
+	mov	r0, r6	@, D.39575
+	add	sl, r5, #92	@ D.39573, tmp205,
 	bl	VP6_BuildHuffTree	@
-	mov	r0, r6	@, D.39568
-	mov	r1, r7	@, D.39572
-	add	r9, r9, #48	@ D.39570, tmp206,
+	mov	r0, r6	@, D.39575
+	mov	r1, r7	@, D.39579
+	add	r9, r9, #48	@ D.39577, tmp206,
 	bl	VP6_BuildHuffLookupTable	@
 	ldr	r3, [fp, #-48]	@, %sfp
-	mov	r1, sl	@, D.39566
+	mov	r1, sl	@, D.39573
 	add	r6, r4, #6784	@ ivtmp.2298, pVp6CodecInfo,
 	add	r0, r3, #14	@,,
 	add	r5, r4, #8576	@ ivtmp.2300, pVp6CodecInfo,
 	bl	VP6_ZerosBoolTreeToHuffCodes	@
-	mov	r1, sl	@, D.39566
+	mov	r1, sl	@, D.39573
 	mov	r2, #9	@,
-	mov	r0, r9	@, D.39570
+	mov	r0, r9	@, D.39577
 	bl	VP6_BuildHuffTree	@
-	mov	r0, r9	@, D.39570
+	mov	r0, r9	@, D.39577
 	add	r1, r8, #92	@, tmp207,
 	add	sl, r4, #9600	@ ivtmp.2302, pVp6CodecInfo,
 	bl	VP6_BuildHuffLookupTable	@
@@ -3392,8 +3392,8 @@ VP6_DecodeDecide:
 	.word	.L217
 .L218:
 	movw	lr, #12300	@ tmp179,
-	ldrb	r2, [r5, lr]	@ zero_extendqisi2	@ D.39863, <variable>.Vp6CodecInfo.FrameType
-	cmp	r2, #0	@ D.39863,
+	ldrb	r2, [r5, lr]	@ zero_extendqisi2	@ D.39870, <variable>.Vp6CodecInfo.FrameType
+	cmp	r2, #0	@ D.39870,
 	bne	.L229	@,
 .L221:
 	movw	r4, #13000	@ tmp196,
@@ -3408,16 +3408,16 @@ VP6_DecodeDecide:
 	cmp	r1, #0	@ <variable>.Vp6CodecInfo.FrameType,
 	beq	.L222	@,
 	ldr	r0, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r4, #200]	@ D.39890, <variable>.error_level
-	ldr	r3, [r0, #0]	@ D.39891, <variable>.s32RefErrThr
-	cmp	r2, r3	@ D.39890, D.39891
+	ldr	r2, [r4, #200]	@ D.39897, <variable>.error_level
+	ldr	r3, [r0, #0]	@ D.39898, <variable>.s32RefErrThr
+	cmp	r2, r3	@ D.39897, D.39898
 	bls	.L222	@,
 	movw	r1, #:lower16:.LC9	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC9	@,
 	bl	dprint_vfmw	@
 .L227:
-	mov	r0, #0	@ D.39844,
+	mov	r0, #0	@ D.39851,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L214:
 	ldr	r3, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
@@ -3448,8 +3448,8 @@ VP6_DecodeDecide:
 	ldr	r1, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	movw	r2, #12292	@ tmp175,
 	str	r6, [r5, r2]	@ tmp168, <variable>.Vp6CodecInfo.RefNum
-	str	r0, [r5, r7]	@ D.39861, <variable>.Vp6CodecInfo.GoldenFsID
-	str	r0, [r5, r4]	@ D.39861, <variable>.Vp6CodecInfo.FwdFsID
+	str	r0, [r5, r7]	@ D.39868, <variable>.Vp6CodecInfo.GoldenFsID
+	str	r0, [r5, r4]	@ D.39868, <variable>.Vp6CodecInfo.FwdFsID
 	ldr	r2, [r1, #8]	@ prephitmp.2476, <variable>.s32DecMode
 	b	.L215	@
 .L228:
@@ -3457,14 +3457,14 @@ VP6_DecodeDecide:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39844, <variable>.Vp6CodecInfo.Imgbuf_allocated
+	mov	r0, r4	@ D.39851, <variable>.Vp6CodecInfo.Imgbuf_allocated
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L216:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC7	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39844,
+	mov	r0, #0	@ D.39851,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L217:
 	movw	ip, #12300	@ tmp181,
@@ -3482,17 +3482,17 @@ VP6_DecodeDecide:
 	movt	r2, #:upper16:.LC6	@,
 	mov	r3, r4	@, <variable>.Vp6CodecInfo.RefNum
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39844, <variable>.Vp6CodecInfo.RefNum
+	mov	r0, r4	@ D.39851, <variable>.Vp6CodecInfo.RefNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L222:
-	mov	r0, #1	@ D.39844,
+	mov	r0, #1	@ D.39851,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L229:
 	mov	r0, #18	@,
 	movw	r1, #:lower16:.LC4	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39844,
+	mov	r0, #0	@ D.39851,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L230:
 	mov	r0, #22	@,
@@ -3501,7 +3501,7 @@ VP6_DecodeDecide:
 	movt	r1, #:upper16:.LC8	@,
 	movw	r3, #2117	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39844, pFwdImg
+	mov	r0, r4	@ D.39851, pFwdImg
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L232:
 	.align	2
@@ -3540,13 +3540,13 @@ VP6_SetImgFormat:
 	mov	r1, lr	@, tmp153
 	strb	lr, [r4, #372]	@ tmp153, <variable>.ImageDnr.pic_structure
 	mov	lr, #8	@ tmp157,
-	and	r3, r2, #3	@ D.40433, <variable>.Vp6CodecInfo.FrameType,
+	and	r3, r2, #3	@ D.40440, <variable>.Vp6CodecInfo.FrameType,
 	str	lr, [r4, #392]	@ tmp157, <variable>.ImageDnr.QP_U
-	orr	ip, r3, #7168	@ tmp150, D.40433,
+	orr	ip, r3, #7168	@ tmp150, D.40440,
 	mov	r2, #1	@ tmp155,
-	str	r3, [r4, #156]	@ D.40433, <variable>.bottom_fld_type
+	str	r3, [r4, #156]	@ D.40440, <variable>.bottom_fld_type
 	orr	ip, ip, #32	@ tmp150, tmp150,
-	str	r3, [r4, #152]	@ D.40433, <variable>.top_fld_type
+	str	r3, [r4, #152]	@ D.40440, <variable>.top_fld_type
 	str	ip, [r4, #160]	@ tmp150, <variable>.format
 	mov	ip, #10	@ tmp152,
 	strb	r2, [r4, #377]	@ tmp155, <variable>.ImageDnr.chroma_format_idc
@@ -3558,19 +3558,19 @@ VP6_SetImgFormat:
 	movw	r0, #12500	@ tmp162,
 	ldr	r3, [r5, r0]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
 	movw	r1, #12496	@ tmp164,
-	mov	r3, r3, asl #4	@ prephitmp.2511, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb,
-	str	r3, [r4, #164]	@ prephitmp.2511, <variable>.image_width
+	mov	r3, r3, asl #4	@ prephitmp.2510, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb,
+	str	r3, [r4, #164]	@ prephitmp.2510, <variable>.image_width
 	ldr	r2, [r5, r1]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
-	mov	r2, r2, asl #4	@ D.40440, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb,
-	str	r2, [r4, #168]	@ D.40440, <variable>.image_height
+	mov	r2, r2, asl #4	@ D.40447, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb,
+	str	r2, [r4, #168]	@ D.40447, <variable>.image_height
 	ldr	ip, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	ldr	r0, [ip, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	r0, #25	@ <variable>.eCapLevel,
-	movne	r2, r3	@ <variable>.image_width, prephitmp.2511
+	movne	r2, r3	@ <variable>.image_width, prephitmp.2510
 	beq	.L239	@,
 .L235:
 	ldr	r0, [r4, #168]	@ <variable>.image_height, <variable>.image_height
-	mov	r3, r3, lsr #1	@ tmp180, prephitmp.2511,
+	mov	r3, r3, lsr #1	@ tmp180, prephitmp.2510,
 	str	r2, [r4, #172]	@ <variable>.image_width, <variable>.disp_width
 	str	r3, [r4, #180]	@ tmp180, <variable>.disp_center_x
 	mov	r1, r0, lsr #1	@ tmp182, <variable>.image_height,
@@ -3578,21 +3578,21 @@ VP6_SetImgFormat:
 	str	r1, [r4, #184]	@ tmp182, <variable>.disp_center_y
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L239:
-	ldr	r1, [r4, #192]	@ D.40445, <variable>.image_stride
-	mov	r2, r2, lsr #4	@ tmp170, D.40440,
+	ldr	r1, [r4, #192]	@ D.40452, <variable>.image_stride
+	mov	r2, r2, lsr #4	@ tmp170, D.40447,
 	ldr	r3, [r4, #104]	@ <variable>.luma_phy_addr, <variable>.luma_phy_addr
 	ldr	r0, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
-	mov	lr, r1, asl #4	@ tmp168, D.40445,
-	add	ip, r3, r1	@ tmp175, <variable>.luma_phy_addr, D.40445
+	mov	lr, r1, asl #4	@ tmp168, D.40452,
+	add	ip, r3, r1	@ tmp175, <variable>.luma_phy_addr, D.40452
 	str	r3, [r4, #120]	@ <variable>.luma_phy_addr, <variable>.luma_2d_phy_addr
-	mul	r2, r2, lr	@ D.40451, tmp170, tmp168
+	mul	r2, r2, lr	@ D.40458, tmp170, tmp168
 	str	r3, [r4, #88]	@ <variable>.luma_phy_addr, <variable>.top_luma_phy_addr
 	str	ip, [r4, #96]	@ tmp175, <variable>.btm_luma_phy_addr
 	str	r0, [r4, #48]	@ <variable>.luma_vir_addr, <variable>.luma_2d_vir_addr
-	add	r3, r2, r3	@ tmp172, D.40451, <variable>.luma_phy_addr
-	add	r2, r0, r2	@ tmp174, <variable>.luma_vir_addr, D.40451
+	add	r3, r2, r3	@ tmp172, D.40458, <variable>.luma_phy_addr
+	add	r2, r0, r2	@ tmp174, <variable>.luma_vir_addr, D.40458
 	str	r3, [r4, #108]	@ tmp172, <variable>.chrom_phy_addr
-	add	r0, r3, r1	@ tmp176, tmp172, D.40445
+	add	r0, r3, r1	@ tmp176, tmp172, D.40452
 	str	r2, [r4, #36]	@ tmp174, <variable>.chrom_vir_addr
 	str	r0, [r4, #100]	@ tmp176, <variable>.btm_chrom_phy_addr
 	mov	r0, r3	@, tmp172
@@ -3600,7 +3600,7 @@ VP6_SetImgFormat:
 	bl	MEM_Phy2Vir	@
 	ldr	r2, [r4, #164]	@ <variable>.image_width, <variable>.image_width
 	ldr	ip, [r4, #92]	@ <variable>.top_chrom_phy_addr, <variable>.top_chrom_phy_addr
-	mov	r3, r2	@ prephitmp.2511, <variable>.image_width
+	mov	r3, r2	@ prephitmp.2510, <variable>.image_width
 	str	ip, [r4, #124]	@ <variable>.top_chrom_phy_addr, <variable>.chrom_2d_phy_addr
 	str	r0, [r4, #52]	@, <variable>.chrom_2d_vir_addr
 	b	.L235	@
@@ -3648,8 +3648,8 @@ VP6DEC_VDMPostProc:
 	movge	r6, #100	@ iftmp.514,
 	str	r6, [r3, #200]	@ iftmp.514, <variable>.error_level
 	ldr	r0, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r3, [r0, #0]	@ D.40493, <variable>.s32RefErrThr
-	cmp	r6, r3	@ iftmp.514, D.40493
+	ldr	r3, [r0, #0]	@ D.40500, <variable>.s32RefErrThr
+	cmp	r6, r3	@ iftmp.514, D.40500
 	bhi	.L258	@,
 .L244:
 	mov	r0, r4	@, pCtx
@@ -3664,10 +3664,10 @@ VP6DEC_VDMPostProc:
 .L245:
 	movw	r2, #12308	@ tmp185,
 	movw	r0, #12320	@ tmp186,
-	ldr	r1, [r4, r2]	@ prephitmp.2542, <variable>.Vp6CodecInfo.CurFsID
-	str	r1, [r4, r0]	@ prephitmp.2542, <variable>.Vp6CodecInfo.ToQueFsID
+	ldr	r1, [r4, r2]	@ prephitmp.2541, <variable>.Vp6CodecInfo.CurFsID
+	str	r1, [r4, r0]	@ prephitmp.2541, <variable>.Vp6CodecInfo.ToQueFsID
 .L246:
-	cmn	r1, #1	@ prephitmp.2542,
+	cmn	r1, #1	@ prephitmp.2541,
 	beq	.L247	@,
 	movw	r5, #13000	@ tmp187,
 	mov	r2, #1	@,
@@ -3693,22 +3693,22 @@ VP6DEC_VDMPostProc:
 	movw	r6, #12316	@ tmp211,
 	movw	r3, #12312	@ tmp212,
 	ldr	lr, [r4, r3]	@ <variable>.Vp6CodecInfo.GoldenFsID, <variable>.Vp6CodecInfo.GoldenFsID
-	ldr	r1, [r4, r6]	@ prephitmp.2555, <variable>.Vp6CodecInfo.FwdFsID
-	cmp	r1, lr	@ prephitmp.2555, <variable>.Vp6CodecInfo.GoldenFsID
+	ldr	r1, [r4, r6]	@ prephitmp.2554, <variable>.Vp6CodecInfo.FwdFsID
+	cmp	r1, lr	@ prephitmp.2554, <variable>.Vp6CodecInfo.GoldenFsID
 	beq	.L249	@,
 	movw	r5, #12308	@ tmp214,
 	ldr	r8, [r4, r5]	@ <variable>.Vp6CodecInfo.CurFsID, <variable>.Vp6CodecInfo.CurFsID
-	cmp	r1, r8	@ prephitmp.2555, <variable>.Vp6CodecInfo.CurFsID
+	cmp	r1, r8	@ prephitmp.2554, <variable>.Vp6CodecInfo.CurFsID
 	beq	.L250	@,
 	movw	r2, #13000	@ tmp216,
 	ldr	r0, [r4, r2]	@, <variable>.ChanID
 	mov	r2, #0	@,
 	bl	FSP_SetRef	@
-	ldr	r1, [r4, r5]	@ prephitmp.2555, <variable>.Vp6CodecInfo.CurFsID
+	ldr	r1, [r4, r5]	@ prephitmp.2554, <variable>.Vp6CodecInfo.CurFsID
 .L250:
 	movw	lr, #13000	@ tmp229,
 	movw	r8, #12316	@ tmp228,
-	str	r1, [r4, r8]	@ prephitmp.2555, <variable>.Vp6CodecInfo.FwdFsID
+	str	r1, [r4, r8]	@ prephitmp.2554, <variable>.Vp6CodecInfo.FwdFsID
 	mov	r2, #1	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
@@ -3718,20 +3718,20 @@ VP6DEC_VDMPostProc:
 	bne	.L262	@,
 	movw	r5, #12308	@ tmp236,
 	movw	r3, #12312	@ tmp235,
-	ldr	r1, [r4, r3]	@ prephitmp.2571, <variable>.Vp6CodecInfo.GoldenFsID
+	ldr	r1, [r4, r3]	@ prephitmp.2570, <variable>.Vp6CodecInfo.GoldenFsID
 	ldr	ip, [r4, r5]	@ <variable>.Vp6CodecInfo.CurFsID, <variable>.Vp6CodecInfo.CurFsID
-	cmp	r1, ip	@ prephitmp.2571, <variable>.Vp6CodecInfo.CurFsID
+	cmp	r1, ip	@ prephitmp.2570, <variable>.Vp6CodecInfo.CurFsID
 	beq	.L253	@,
 .L263:
 	movw	lr, #13000	@ tmp238,
 	mov	r2, #0	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
-	ldr	r1, [r4, r5]	@ prephitmp.2571, <variable>.Vp6CodecInfo.CurFsID
+	ldr	r1, [r4, r5]	@ prephitmp.2570, <variable>.Vp6CodecInfo.CurFsID
 .L253:
 	movw	r2, #12312	@ tmp241,
 	movw	r8, #13000	@ tmp242,
-	str	r1, [r4, r2]	@ prephitmp.2571, <variable>.Vp6CodecInfo.GoldenFsID
+	str	r1, [r4, r2]	@ prephitmp.2570, <variable>.Vp6CodecInfo.GoldenFsID
 	mov	r2, #1	@,
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
@@ -3748,9 +3748,9 @@ VP6DEC_VDMPostProc:
 	beq	.L255	@,
 	movw	r5, #12308	@ tmp236,
 	movw	r3, #12312	@ tmp235,
-	ldr	r1, [r4, r3]	@ prephitmp.2571, <variable>.Vp6CodecInfo.GoldenFsID
+	ldr	r1, [r4, r3]	@ prephitmp.2570, <variable>.Vp6CodecInfo.GoldenFsID
 	ldr	ip, [r4, r5]	@ <variable>.Vp6CodecInfo.CurFsID, <variable>.Vp6CodecInfo.CurFsID
-	cmp	r1, ip	@ prephitmp.2571, <variable>.Vp6CodecInfo.CurFsID
+	cmp	r1, ip	@ prephitmp.2570, <variable>.Vp6CodecInfo.CurFsID
 	bne	.L263	@,
 	b	.L253	@
 .L243:
@@ -3771,7 +3771,7 @@ VP6DEC_VDMPostProc:
 	str	r6, [r4, r5]	@ tmp179, <variable>.Vp6CodecInfo.ToQueFsID
 	mov	r2, #0	@,
 	bl	FSP_SetDisplay	@
-	ldr	r1, [r4, r5]	@ prephitmp.2542, <variable>.Vp6CodecInfo.ToQueFsID
+	ldr	r1, [r4, r5]	@ prephitmp.2541, <variable>.Vp6CodecInfo.ToQueFsID
 	b	.L246	@
 .L261:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
@@ -3796,19 +3796,19 @@ VP6DEC_VDMPostProc:
 	movw	r7, #13000	@ tmp219,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_GetRef	@
-	subs	r2, r0, #0	@ D.40526,
+	subs	r2, r0, #0	@ D.40533,
 	movwne	r0, #12308	@ tmp221,
-	ldrne	r1, [r4, r0]	@ prephitmp.2555, <variable>.Vp6CodecInfo.CurFsID
+	ldrne	r1, [r4, r0]	@ prephitmp.2554, <variable>.Vp6CodecInfo.CurFsID
 	bne	.L250	@
 .L251:
 	movw	r5, #12308	@ tmp223,
-	ldr	r1, [r4, r6]	@ prephitmp.2555, <variable>.Vp6CodecInfo.FwdFsID
+	ldr	r1, [r4, r6]	@ prephitmp.2554, <variable>.Vp6CodecInfo.FwdFsID
 	ldr	ip, [r4, r5]	@ <variable>.Vp6CodecInfo.CurFsID, <variable>.Vp6CodecInfo.CurFsID
-	cmp	r1, ip	@ prephitmp.2555, <variable>.Vp6CodecInfo.CurFsID
+	cmp	r1, ip	@ prephitmp.2554, <variable>.Vp6CodecInfo.CurFsID
 	beq	.L250	@,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
-	ldr	r1, [r4, r5]	@ prephitmp.2555, <variable>.Vp6CodecInfo.CurFsID
+	ldr	r1, [r4, r5]	@ prephitmp.2554, <variable>.Vp6CodecInfo.CurFsID
 	b	.L250	@
 .L258:
 	mov	r2, r6	@, iftmp.514
@@ -3834,8 +3834,8 @@ VP6DEC_VDMPostProc:
 	bl	FSP_GetNullLogicFs	@
 	movw	r1, #12292	@ tmp170,
 	str	r7, [r4, r1]	@ tmp163, <variable>.Vp6CodecInfo.RefNum
-	str	r0, [r4, sl]	@ D.40500, <variable>.Vp6CodecInfo.GoldenFsID
-	str	r0, [r4, r6]	@ D.40500, <variable>.Vp6CodecInfo.FwdFsID
+	str	r0, [r4, sl]	@ D.40507, <variable>.Vp6CodecInfo.GoldenFsID
+	str	r0, [r4, r6]	@ D.40507, <variable>.Vp6CodecInfo.FwdFsID
 	b	.L242	@
 .L260:
 	mov	r2, r6	@, pToQueImg
@@ -3932,7 +3932,7 @@ VP6_CfgTable:
 	add	r1, r4, #116	@, pVp6CodecInfo,
 	mov	r2, #9	@,
 	add	r0, r6, #130	@, tmp178,
-	add	r9, r4, #224	@ ivtmp.2725, pVp6CodecInfo,
+	add	r9, r4, #224	@ ivtmp.2724, pVp6CodecInfo,
 	bl	memcpy	@
 	add	r1, r4, #125	@, pVp6CodecInfo,
 	mov	r2, #9	@,
@@ -3978,7 +3978,7 @@ VP6_CfgTable:
 	mov	r2, #9	@,
 	add	r0, r5, #144	@, tmp801,
 	bl	memcpy	@
-	mov	r1, r9	@, ivtmp.2725
+	mov	r1, r9	@, ivtmp.2724
 	mov	r2, #9	@,
 	add	r0, r5, #160	@, tmp801,
 	bl	memcpy	@
@@ -3998,30 +3998,30 @@ VP6_CfgTable:
 	mov	r2, #9	@,
 	add	r0, r5, #224	@, tmp801,
 	bl	memcpy	@
-	add	r1, r9, #45	@, ivtmp.2725,
+	add	r1, r9, #45	@, ivtmp.2724,
 	mov	r2, #9	@,
 	add	r0, r5, #240	@, tmp801,
 	bl	memcpy	@
-	add	r1, r9, #54	@, ivtmp.2725,
+	add	r1, r9, #54	@, ivtmp.2724,
 	mov	r2, #9	@,
 	add	r0, r5, #256	@, tmp801,
 	bl	memcpy	@
-	add	r1, r9, #63	@, ivtmp.2725,
+	add	r1, r9, #63	@, ivtmp.2724,
 	mov	r2, #9	@,
 	add	r0, r5, #272	@, tmp801,
 	bl	memcpy	@
-	add	r6, r8, #180	@ ivtmp.2725, tmp802,
+	add	r6, r8, #180	@ ivtmp.2724, tmp802,
 	add	r1, r4, #296	@, pVp6CodecInfo,
 	mov	r2, #9	@,
 	add	r0, r5, #288	@, tmp801,
 	add	ip, r4, #2944	@, pVp6CodecInfo,
 	str	ip, [fp, #-64]	@, %sfp
 	bl	memcpy	@
-	add	r1, r9, #81	@, ivtmp.2725,
+	add	r1, r9, #81	@, ivtmp.2724,
 	mov	r2, #9	@,
 	add	r0, r5, #304	@, tmp801,
 	bl	memcpy	@
-	mov	r1, r6	@, ivtmp.2725
+	mov	r1, r6	@, ivtmp.2724
 	mov	r2, #9	@,
 	add	r0, r5, #320	@, tmp801,
 	bl	memcpy	@
@@ -4057,7 +4057,7 @@ VP6_CfgTable:
 	mov	r2, #9	@,
 	add	r0, r5, #448	@, tmp801,
 	bl	memcpy	@
-	add	r1, r6, #81	@, ivtmp.2725,
+	add	r1, r6, #81	@, ivtmp.2724,
 	mov	r2, #9	@,
 	add	r0, r5, #464	@, tmp801,
 	bl	memcpy	@
@@ -4187,50 +4187,50 @@ VP6_CfgTable:
 	ldr	r3, [ip, #68]	@ <variable>.UseHuffman, <variable>.UseHuffman
 	cmp	r3, sl	@ <variable>.UseHuffman,
 	bne	.L266	@,
-	add	r7, r4, #1152	@ D.40214, pVp6CodecInfo,
+	add	r7, r4, #1152	@ D.40221, pVp6CodecInfo,
 	add	sl, r4, #4096	@ tmp346, pVp6CodecInfo,
 	add	r0, sl, #2	@, tmp346,
 	mov	r2, #11	@,
-	mov	r1, r7	@, D.40214
-	add	r8, r4, #536	@ D.40222, pVp6CodecInfo,
+	mov	r1, r7	@, D.40221
+	add	r8, r4, #536	@ D.40229, pVp6CodecInfo,
 	bl	memcpy	@
-	add	r1, r7, #11	@, D.40214,
+	add	r1, r7, #11	@, D.40221,
 	add	r0, sl, #18	@, tmp346,
 	mov	r2, #11	@,
 	bl	memcpy	@
-	add	r1, r7, #22	@, D.40214,
+	add	r1, r7, #22	@, D.40221,
 	add	r0, sl, #34	@, tmp346,
 	mov	r2, #11	@,
 	bl	memcpy	@
-	add	r1, r7, #33	@, D.40214,
+	add	r1, r7, #33	@, D.40221,
 	add	r0, sl, #50	@, tmp346,
 	mov	r2, #11	@,
 	bl	memcpy	@
-	add	r1, r7, #44	@, D.40214,
+	add	r1, r7, #44	@, D.40221,
 	add	r0, sl, #66	@, tmp346,
 	mov	r2, #11	@,
 	bl	memcpy	@
-	add	r1, r7, #55	@, D.40214,
+	add	r1, r7, #55	@, D.40221,
 	add	r0, sl, #82	@, tmp346,
 	add	r7, r4, #4160	@ tmp392, pVp6CodecInfo,
 	add	sl, r4, #4736	@ tmp381, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r5, r7, #34	@ D.40225, tmp392,
-	add	r6, r4, #564	@ D.40235, pVp6CodecInfo,
+	add	r5, r7, #34	@ D.40232, tmp392,
+	add	r6, r4, #564	@ D.40242, pVp6CodecInfo,
 	bl	memcpy	@
-	mov	r1, r8	@, D.40222
+	mov	r1, r8	@, D.40229
 	mov	r2, #14	@,
 	add	r0, sl, #34	@, tmp381,
 	bl	memcpy	@
-	add	r1, r8, #14	@, D.40222,
+	add	r1, r8, #14	@, D.40229,
 	mov	r2, #14	@,
 	add	r0, sl, #50	@, tmp381,
 	bl	memcpy	@
-	mov	r1, r6	@, D.40235
+	mov	r1, r6	@, D.40242
 	mov	r2, #11	@,
-	mov	r0, r5	@, D.40225
+	mov	r0, r5	@, D.40232
 	bl	memcpy	@
-	add	r1, r6, #66	@, D.40235,
+	add	r1, r6, #66	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #50	@, tmp392,
 	bl	memcpy	@
@@ -4238,19 +4238,19 @@ VP6_CfgTable:
 	mov	r2, #11	@,
 	add	r0, r7, #66	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #11	@, D.40235,
+	add	r1, r6, #11	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #82	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #77	@, D.40235,
+	add	r1, r6, #77	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #98	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #143	@, D.40235,
+	add	r1, r6, #143	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #114	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #22	@, D.40235,
+	add	r1, r6, #22	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #130	@, tmp392,
 	bl	memcpy	@
@@ -4258,19 +4258,19 @@ VP6_CfgTable:
 	mov	r2, #11	@,
 	add	r0, r7, #146	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #154	@, D.40235,
+	add	r1, r6, #154	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #162	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #33	@, D.40235,
+	add	r1, r6, #33	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #178	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #99	@, D.40235,
+	add	r1, r6, #99	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #194	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #165	@, D.40235,
+	add	r1, r6, #165	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #210	@, tmp392,
 	bl	memcpy	@
@@ -4278,104 +4278,104 @@ VP6_CfgTable:
 	mov	r2, #11	@,
 	add	r0, r7, #226	@, tmp392,
 	bl	memcpy	@
-	add	r1, r6, #110	@, D.40235,
+	add	r1, r6, #110	@, D.40242,
 	mov	r2, #11	@,
 	add	r0, r7, #242	@, tmp392,
 	bl	memcpy	@
 	add	r1, r4, #740	@, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r0, r5, #224	@, D.40225,
+	add	r0, r5, #224	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #55	@, D.40235,
+	add	r1, r6, #55	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #240	@, D.40225,
+	add	r0, r5, #240	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #121	@, D.40235,
+	add	r1, r6, #121	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #256	@, D.40225,
+	add	r0, r5, #256	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #187	@, D.40235,
+	add	r1, r6, #187	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #272	@, D.40225,
+	add	r0, r5, #272	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #198	@, D.40235,
+	add	r1, r6, #198	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #288	@, D.40225,
+	add	r0, r5, #288	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #828	@, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r0, r5, #304	@, D.40225,
+	add	r0, r5, #304	@, D.40232,
 	bl	memcpy	@
 	add	r3, r4, #892	@, pVp6CodecInfo,
 	add	r1, r3, #2	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #320	@, D.40225,
+	add	r0, r5, #320	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #209	@, D.40235,
+	add	r1, r6, #209	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #336	@, D.40225,
+	add	r0, r5, #336	@, D.40232,
 	bl	memcpy	@
 	add	r2, r4, #836	@, pVp6CodecInfo,
 	add	r1, r2, #3	@,,
-	add	r0, r5, #352	@, D.40225,
+	add	r0, r5, #352	@, D.40232,
 	mov	r2, #11	@,
 	bl	memcpy	@
 	add	r0, r4, #904	@, pVp6CodecInfo,
 	add	r1, r0, #1	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #368	@, D.40225,
+	add	r0, r5, #368	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #784	@, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r0, r5, #384	@, D.40225,
+	add	r0, r5, #384	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #848	@, pVp6CodecInfo,
 	add	r1, r1, #2	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #400	@, D.40225,
+	add	r0, r5, #400	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #916	@, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r0, r5, #416	@, D.40225,
+	add	r0, r5, #416	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #231	@, D.40235,
+	add	r1, r6, #231	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #432	@, D.40225,
+	add	r0, r5, #432	@, D.40232,
 	bl	memcpy	@
 	add	ip, r4, #860	@, pVp6CodecInfo,
 	add	r1, ip, #1	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #448	@, D.40225,
+	add	r0, r5, #448	@, D.40232,
 	bl	memcpy	@
 	add	r3, r4, #924	@, pVp6CodecInfo,
 	add	r1, r3, #3	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #464	@, D.40225,
+	add	r0, r5, #464	@, D.40232,
 	bl	memcpy	@
-	add	r1, r6, #242	@, D.40235,
+	add	r1, r6, #242	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #480	@, D.40225,
+	add	r0, r5, #480	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #872	@, pVp6CodecInfo,
 	mov	r2, #11	@,
-	add	r0, r5, #496	@, D.40225,
+	add	r0, r5, #496	@, D.40232,
 	bl	memcpy	@
 	add	r2, r4, #936	@, pVp6CodecInfo,
 	add	r1, r2, #2	@,,
-	add	r0, r5, #512	@, D.40225,
+	add	r0, r5, #512	@, D.40232,
 	mov	r2, #11	@,
 	bl	memcpy	@
-	add	r1, r6, #253	@, D.40235,
+	add	r1, r6, #253	@, D.40242,
 	mov	r2, #11	@,
-	add	r0, r5, #528	@, D.40225,
+	add	r0, r5, #528	@, D.40232,
 	bl	memcpy	@
 	add	r0, r4, #880	@, pVp6CodecInfo,
 	add	r1, r0, #3	@,,
 	mov	r2, #11	@,
-	add	r0, r5, #544	@, D.40225,
+	add	r0, r5, #544	@, D.40232,
 	bl	memcpy	@
 	add	r1, r4, #948	@, pVp6CodecInfo,
-	add	r0, r5, #560	@, D.40225,
+	add	r0, r5, #560	@, D.40232,
 	add	r1, r1, #1	@,,
 	mov	r2, #11	@,
 	bl	memcpy	@
@@ -4401,8 +4401,8 @@ VP6_CfgTable:
 	add	r1, r6, #28	@,,
 	add	r0, r5, #2	@,,
 	mov	r2, #128	@,
-	add	r5, r8, #2	@ D.40191, tmp632,
-	add	r6, r7, #28	@ D.40200, tmp633,
+	add	r5, r8, #2	@ D.40198, tmp632,
+	add	r6, r7, #28	@ D.40207, tmp633,
 	bl	memcpy	@
 	add	r2, r4, #11904	@, pVp6CodecInfo,
 	add	r0, r4, #6464	@, pVp6CodecInfo,
@@ -4410,9 +4410,9 @@ VP6_CfgTable:
 	add	r0, r0, #2	@,,
 	mov	r2, #128	@,
 	bl	memcpy	@
-	mov	r1, r6	@, D.40200
+	mov	r1, r6	@, D.40207
 	mov	r2, #64	@,
-	mov	r0, r5	@, D.40191
+	mov	r0, r5	@, D.40198
 	bl	memcpy	@
 	add	r1, r7, #92	@, tmp633,
 	mov	r2, #64	@,
@@ -4428,82 +4428,82 @@ VP6_CfgTable:
 	bl	memcpy	@
 	add	r1, r7, #412	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #256	@, D.40191,
+	add	r0, r5, #256	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #476	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #320	@, D.40191,
+	add	r0, r5, #320	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #540	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #384	@, D.40191,
+	add	r0, r5, #384	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #604	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #448	@, D.40191,
+	add	r0, r5, #448	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #796	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #512	@, D.40191,
+	add	r0, r5, #512	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #860	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #576	@, D.40191,
+	add	r0, r5, #576	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #924	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #640	@, D.40191,
+	add	r0, r5, #640	@, D.40198,
 	bl	memcpy	@
 	add	r1, r7, #988	@, tmp633,
 	mov	r2, #64	@,
-	add	r0, r5, #704	@, D.40191,
+	add	r0, r5, #704	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1152	@, D.40200,
+	add	r1, r6, #1152	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #768	@, D.40191,
+	add	r0, r5, #768	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1216	@, D.40200,
+	add	r1, r6, #1216	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #832	@, D.40191,
+	add	r0, r5, #832	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1280	@, D.40200,
+	add	r1, r6, #1280	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #896	@, D.40191,
+	add	r0, r5, #896	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1344	@, D.40200,
+	add	r1, r6, #1344	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #960	@, D.40191,
+	add	r0, r5, #960	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1536	@, D.40200,
+	add	r1, r6, #1536	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1024	@, D.40191,
+	add	r0, r5, #1024	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1600	@, D.40200,
+	add	r1, r6, #1600	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1088	@, D.40191,
+	add	r0, r5, #1088	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1664	@, D.40200,
+	add	r1, r6, #1664	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1152	@, D.40191,
+	add	r0, r5, #1152	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1728	@, D.40200,
+	add	r1, r6, #1728	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1216	@, D.40191,
+	add	r0, r5, #1216	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1920	@, D.40200,
+	add	r1, r6, #1920	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1280	@, D.40191,
+	add	r0, r5, #1280	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #1984	@, D.40200,
+	add	r1, r6, #1984	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1344	@, D.40191,
+	add	r0, r5, #1344	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #2048	@, D.40200,
+	add	r1, r6, #2048	@, D.40207,
 	mov	r2, #64	@,
-	add	r0, r5, #1408	@, D.40191,
+	add	r0, r5, #1408	@, D.40198,
 	bl	memcpy	@
-	add	r1, r6, #2112	@, D.40200,
-	add	r0, r5, #1472	@, D.40191,
+	add	r1, r6, #2112	@, D.40207,
+	add	r0, r5, #1472	@, D.40198,
 	mov	r2, #64	@,
 	bl	memcpy	@
 	add	r1, r4, #3136	@, pVp6CodecInfo,
@@ -4601,21 +4601,21 @@ VP6_Set_DecParam:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
 	ldr	r1, [r4, sl]	@, <variable>.Vp6CodecInfo.FwdFsID
-	mov	r8, r0	@ pCur.2918,
+	mov	r8, r0	@ pCur.2917,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
 	movw	ip, #12312	@ tmp243,
 	ldr	r1, [r4, ip]	@, <variable>.Vp6CodecInfo.GoldenFsID
-	mov	sl, r0	@ pFwd.2921,
+	mov	sl, r0	@ pFwd.2920,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
-	cmp	r8, r9	@ pCur.2918,
-	cmpne	sl, r9	@, pFwd.2921,
+	cmp	r8, r9	@ pCur.2917,
+	cmpne	sl, r9	@, pFwd.2920,
 	beq	.L283	@,
-	cmp	r0, r9	@ pGolden.2924,
+	cmp	r0, r9	@ pGolden.2923,
 	beq	.L283	@,
-	ldr	r6, [r8, #520]	@ temp.2928, <variable>.pstDecodeFs
-	cmp	r6, #0	@ temp.2928,
+	ldr	r6, [r8, #520]	@ temp.2927, <variable>.pstDecodeFs
+	cmp	r6, #0	@ temp.2927,
 	beq	.L299	@,
 	ldr	lr, [r6, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	movw	ip, #12324	@ tmp259,
@@ -4624,17 +4624,17 @@ VP6_Set_DecParam:
 	str	lr, [r4, #180]	@ <variable>.PhyAddr, <variable>.Vp6DecParam.image_curr_recon_addr
 	ldr	r1, [r8, #532]	@ <variable>.PmvAddr, <variable>.PmvAddr
 	str	r1, [r4, #192]	@ <variable>.PmvAddr, <variable>.Vp6DecParam.CurPmvAddr
-	ldr	r2, [r0, #520]	@ temp.2934, <variable>.pstDecodeFs
+	ldr	r2, [r0, #520]	@ temp.2933, <variable>.pstDecodeFs
 	movw	r0, #12556	@ tmp265,
 	ldr	r1, [r4, ip]	@ <variable>.Vp6CodecInfo.DDR_Stride, <variable>.Vp6CodecInfo.DDR_Stride
-	cmp	r2, #0	@ temp.2934,
+	cmp	r2, #0	@ temp.2933,
 	ldreq	r2, [r8, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r9, [r2, #12]	@ iftmp.498, <variable>.PhyAddr
 	str	r9, [r4, #184]	@ iftmp.498, <variable>.Vp6DecParam.image_golden_ref_addr
-	ldr	r3, [sl, #520]	@ temp.2938, <variable>.pstDecodeFs
+	ldr	r3, [sl, #520]	@ temp.2937, <variable>.pstDecodeFs
 	movw	sl, #12552	@ tmp261,
 	ldr	r2, [r4, sl]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.br.value, <variable>.Vp6CodecInfo.NewHeaderInfo.br.value
-	cmp	r3, #0	@ temp.2938,
+	cmp	r3, #0	@ temp.2937,
 	ldreq	r3, [r8, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	movw	r8, #12548	@ tmp263,
 	ldr	r9, [r4, r8]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.br.range, <variable>.Vp6CodecInfo.NewHeaderInfo.br.range
@@ -4647,12 +4647,12 @@ VP6_Set_DecParam:
 	str	r3, [r4, #176]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.br.count, <variable>.Vp6DecParam.count
 	str	r9, [r4, #172]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.br.range, <variable>.Vp6DecParam.range
 	movw	r9, #12474	@ tmp273,
-	ldr	sl, [r7, #0]	@ D.40000, <variable>.VirAddr
+	ldr	sl, [r7, #0]	@ D.40007, <variable>.VirAddr
 	bl	BsPos	@
-	cmp	r0, #0	@ D.40001,
-	add	ip, r0, #7	@ tmp269, D.40001,
-	movlt	r0, ip	@ D.40001, tmp269
-	add	r8, sl, r0, asr #3	@, BaseAddrUnAligned, D.40000, D.40001,
+	cmp	r0, #0	@ D.40008,
+	add	ip, r0, #7	@ tmp269, D.40008,
+	movlt	r0, ip	@ D.40008, tmp269
+	add	r8, sl, r0, asr #3	@, BaseAddrUnAligned, D.40007, D.40008,
 	mov	r0, r8	@, BaseAddrUnAligned
 	bl	MEM_Vir2Phy	@
 	bic	r1, r0, #15	@ tmp271,,
@@ -4677,22 +4677,22 @@ VP6_Set_DecParam:
 	mov	r6, #16	@ tmp277,
 	str	r6, [r4, #128]	@ tmp277, <variable>.Vp6DecParam.bit0_stream_addr_0
 	mov	r6, #0	@ tmp282,
-	mov	r9, lr, asl #3	@ D.40016, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset,
+	mov	r9, lr, asl #3	@ D.40023, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset,
 	bl	BsPos	@
 	ldr	r2, [r4, r8]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset
 	str	r6, [r4, #140]	@ tmp282, <variable>.Vp6DecParam.bit0_stream_addr_1
 	str	r6, [r4, #136]	@ tmp282, <variable>.Vp6DecParam.bit0_offset_1
 	str	r6, [r4, #132]	@ tmp282, <variable>.Vp6DecParam.bit0_len_1
-	rsb	r1, r0, r9	@ tmp281,, D.40016
+	rsb	r1, r0, r9	@ tmp281,, D.40023
 	str	r1, [r4, #120]	@ tmp281, <variable>.Vp6DecParam.bit0_len_0
 	ldr	r0, [r7, #0]	@ <variable>.VirAddr, <variable>.VirAddr
-	add	sl, r0, r2	@ BaseAddrUnAligned.2948, <variable>.VirAddr, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset
-	mov	r0, sl	@, BaseAddrUnAligned.2948
+	add	sl, r0, r2	@ BaseAddrUnAligned.2947, <variable>.VirAddr, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset
+	mov	r0, sl	@, BaseAddrUnAligned.2947
 	bl	MEM_Vir2Phy	@
-	mov	r9, r0	@ D.40020,
-	mov	r0, sl	@, BaseAddrUnAligned.2948
+	mov	r9, r0	@ D.40027,
+	mov	r0, sl	@, BaseAddrUnAligned.2947
 	bl	MEM_Vir2Phy	@
-	and	ip, r9, #15	@ tmp291, D.40020,
+	and	ip, r9, #15	@ tmp291, D.40027,
 	ldr	r2, [r4, #64]	@ <variable>.Vp6DecParam.StreamBaseAddr, <variable>.Vp6DecParam.StreamBaseAddr
 	ldr	r3, [r4, r8]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset, <variable>.Vp6CodecInfo.NewHeaderInfo.Buff2Offset
 	mov	sl, ip, asl #3	@ tmp292, tmp291,
@@ -4743,7 +4743,7 @@ VP6_Set_DecParam:
 	ldr	r8, [fp, #-48]	@, %sfp
 	add	ip, lr, #62	@ tmp337, tmp337,
 	ldr	lr, [r4, #0]	@, <variable>.pstExtraData
-	mov	r0, #1	@ D.39927,
+	mov	r0, #1	@ D.39934,
 	add	r8, r8, #14	@,,
 	str	r8, [r4, #20]	@, <variable>.Vp6DecParam.TblProbMv
 	ldr	r9, [fp, #-52]	@, %sfp
@@ -4787,24 +4787,24 @@ VP6_Set_DecParam:
 	movw	r1, #:lower16:.LC15	@,
 	movt	r1, #:upper16:.LC15	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39927,
+	mov	r0, #0	@ D.39934,
 	b	.L277	@
 .L276:
-	ldr	r6, [r7, #520]	@ D.39928, <variable>.pstDecodeFs
-	cmp	r6, #0	@ D.39928,
+	ldr	r6, [r7, #520]	@ D.39935, <variable>.pstDecodeFs
+	cmp	r6, #0	@ D.39935,
 	beq	.L300	@,
 	ldr	r1, [r6, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r1, [r4, #180]	@ <variable>.PhyAddr, <variable>.Vp6DecParam.image_curr_recon_addr
 	ldr	r2, [r7, #532]	@ <variable>.PmvAddr, <variable>.PmvAddr
 	str	r2, [r4, #192]	@ <variable>.PmvAddr, <variable>.Vp6DecParam.CurPmvAddr
-	ldr	r3, [r0, #520]	@ D.39937, <variable>.pstDecodeFs
-	mov	r0, #1	@ D.39927,
-	cmp	r3, #0	@ D.39937,
+	ldr	r3, [r0, #520]	@ D.39944, <variable>.pstDecodeFs
+	mov	r0, #1	@ D.39934,
+	cmp	r3, #0	@ D.39944,
 	ldreq	r3, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	lr, [r3, #12]	@ iftmp.493, <variable>.PhyAddr
 	str	lr, [r4, #184]	@ iftmp.493, <variable>.Vp6DecParam.image_golden_ref_addr
-	ldr	ip, [r8, #520]	@ D.39943, <variable>.pstDecodeFs
-	cmp	ip, #0	@ D.39943,
+	ldr	ip, [r8, #520]	@ D.39950, <variable>.pstDecodeFs
+	cmp	ip, #0	@ D.39950,
 	ldreq	ip, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r1, [ip, #12]	@ iftmp.494, <variable>.PhyAddr
 	str	r5, [r4, #4]	@ pVp6DecParam, <variable>.pVp6DecParam
@@ -4817,7 +4817,7 @@ VP6_Set_DecParam:
 	str	r0, [r4, #128]	@ tmp302, <variable>.Vp6DecParam.bit0_stream_addr_0
 	mov	r0, r6	@, pBs
 	ldr	ip, [r7, #8]	@ <variable>.Length, <variable>.Length
-	mov	sl, ip, asl #3	@ D.40028, <variable>.Length,
+	mov	sl, ip, asl #3	@ D.40035, <variable>.Length,
 	bl	BsPos	@
 	str	r8, [r4, #156]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.MultiStream, <variable>.Vp6DecParam.bit1_len_1
 	str	r8, [r4, #140]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.MultiStream, <variable>.Vp6DecParam.bit0_stream_addr_1
@@ -4828,7 +4828,7 @@ VP6_Set_DecParam:
 	str	r8, [r4, #144]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.MultiStream, <variable>.Vp6DecParam.bit1_len_0
 	str	r8, [r4, #164]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.MultiStream, <variable>.Vp6DecParam.bit1_stream_addr_1
 	str	r8, [r4, #160]	@ <variable>.Vp6CodecInfo.NewHeaderInfo.MultiStream, <variable>.Vp6DecParam.bit1_offset_1
-	rsb	r7, r0, sl	@ tmp305,, D.40028
+	rsb	r7, r0, sl	@ tmp305,, D.40035
 	str	r7, [r4, #120]	@ tmp305, <variable>.Vp6DecParam.bit0_len_0
 	b	.L292	@
 .L299:
@@ -4836,14 +4836,14 @@ VP6_Set_DecParam:
 	movw	r1, #:lower16:.LC16	@,
 	movt	r1, #:upper16:.LC16	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.39927, temp.2928
+	mov	r0, r6	@ D.39934, temp.2927
 	b	.L277	@
 .L300:
 	mov	r0, sl	@, tmp171
 	movw	r1, #:lower16:.LC16	@,
 	movt	r1, #:upper16:.LC16	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.39927, D.39928
+	mov	r0, r6	@ D.39934, D.39935
 	b	.L277	@
 	.fnend
 	.size	VP6_Set_DecParam, .-VP6_Set_DecParam
@@ -4865,21 +4865,21 @@ VP6DEC_Init:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, #12992	@ tmp139,
-	ldr	r7, [r0, r5]	@ D.39797, <variable>.ImageQue.ResetMagicWord
+	ldr	r7, [r0, r5]	@ D.39804, <variable>.ImageQue.ResetMagicWord
 	mov	r6, r1	@ pstExtraData, pstExtraData
 	movw	r1, #13008	@,
 	mov	r4, r0	@ pCtx, pCtx
 	bl	__memzero	@
 	add	r0, r4, #12608	@, pCtx,
 	add	r0, r0, #40	@,,
-	str	r7, [r4, r5]	@ D.39797, <variable>.ImageQue.ResetMagicWord
+	str	r7, [r4, r5]	@ D.39804, <variable>.ImageQue.ResetMagicWord
 	bl	ResetVoQueue	@
 	str	r6, [r4, #0]	@ pstExtraData, <variable>.pstExtraData
 	mov	r0, r4	@, pCtx
 	bl	VCTRL_GetChanIDByCtx	@
 	movw	r3, #13000	@ tmp143,
-	cmn	r0, #1	@ D.39805,
-	str	r0, [r4, r3]	@ D.39805, <variable>.ChanID
+	cmn	r0, #1	@ D.39812,
+	str	r0, [r4, r3]	@ D.39812, <variable>.ChanID
 	beq	.L305	@,
 	add	r0, r4, #220	@, pCtx,
 	movw	r1, #12396	@,
@@ -4898,14 +4898,14 @@ VP6DEC_Init:
 	movt	r1, #:upper16:.LC18	@,
 	str	r2, [r4, ip]	@ <variable>.s32DecMode, <variable>.Vp6CodecInfo.UsedDecMode
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.39810,
+	mov	r0, #1	@ D.39817,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L305:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC17	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.39810,
+	mvn	r0, #19	@ D.39817,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	VP6DEC_Init, .-VP6DEC_Init
@@ -4957,22 +4957,22 @@ Vp6_Vfmw_DecodeBool128:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r4, r1	@ pBr, pBr
-	ldr	r1, [r1, #4]	@ range.3028, <variable>.range
-	ldr	r5, [r4, #8]	@ value.3029, <variable>.value
-	add	r7, r1, #1	@ tmp148, range.3028,
-	ldr	r3, [r4, #12]	@ count.3027, <variable>.count
+	ldr	r1, [r1, #4]	@ range.3027, <variable>.range
+	ldr	r5, [r4, #8]	@ value.3028, <variable>.value
+	add	r7, r1, #1	@ tmp148, range.3027,
+	ldr	r3, [r4, #12]	@ count.3026, <variable>.count
 	mov	r7, r7, lsr #1	@ split, tmp148,
 	mov	r2, r7, asl #16	@ bigsplit, split,
-	cmp	r5, r2	@ value.3029, bigsplit
-	rsbcs	r7, r7, r1	@ D.38576, split, range.3028
-	rsbcs	r5, r2, r5	@ D.38577, bigsplit, value.3029
+	cmp	r5, r2	@ value.3028, bigsplit
+	rsbcs	r7, r7, r1	@ D.38583, split, range.3027
+	rsbcs	r5, r2, r5	@ D.38584, bigsplit, value.3028
 	movcs	r6, #1	@ bit,
 	movcc	r7, r7, asl #1	@ range, split,
-	movcs	r7, r7, asl r6	@ range, D.38576,
-	movcs	r5, r5, asl r6	@ value, D.38577,
-	movcc	r5, r5, asl #1	@ value, value.3029,
+	movcs	r7, r7, asl r6	@ range, D.38583,
+	movcs	r5, r5, asl r6	@ value, D.38584,
+	movcc	r5, r5, asl #1	@ value, value.3028,
 	movcc	r6, #0	@ bit,
-	subs	r3, r3, #1	@ count, count.3027,
+	subs	r3, r3, #1	@ count, count.3026,
 	bne	.L311	@,
 	mov	r1, #8	@,
 	bl	BsGet	@
@@ -5056,10 +5056,10 @@ VP6_InterFrmHeader:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #12120	@ tmp149,
-	ldr	r2, [r0, r3]	@ D.39700, <variable>.OldHeaderInfo.Vp3VersionNo
+	ldr	r2, [r0, r3]	@ D.39707, <variable>.OldHeaderInfo.Vp3VersionNo
 	mov	r4, r0	@ pVp6CodecInfo, pVp6CodecInfo
 	mov	r6, r1	@ pBs, pBs
-	cmp	r2, #0	@ D.39700,
+	cmp	r2, #0	@ D.39707,
 	beq	.L338	@,
 	movw	r3, #12254	@ tmp157,
 	movw	lr, #12124	@ tmp155,
@@ -5067,17 +5067,17 @@ VP6_InterFrmHeader:
 	movw	r5, #12264	@ tmp153,
 	ldr	r1, [r0, lr]	@ <variable>.OldHeaderInfo.VpProfile, <variable>.OldHeaderInfo.VpProfile
 	cmp	ip, #0	@ <variable>.NewHeaderInfo.MultiStream,
-	str	r2, [r0, r5]	@ D.39700, <variable>.NewHeaderInfo.Vp3VersionNo
+	str	r2, [r0, r5]	@ D.39707, <variable>.NewHeaderInfo.Vp3VersionNo
 	movw	r2, #12268	@ tmp154,
 	str	r1, [r0, r2]	@ <variable>.OldHeaderInfo.VpProfile, <variable>.NewHeaderInfo.VpProfile
 	bne	.L339	@,
-	add	r5, r0, #12288	@ temp.3083, pVp6CodecInfo,
+	add	r5, r0, #12288	@ temp.3082, pVp6CodecInfo,
 	mov	r0, r6	@, pBs
-	add	r5, r5, #36	@ temp.3083, temp.3083,
-	mov	r1, r5	@, temp.3083
+	add	r5, r5, #36	@ temp.3082, temp.3082,
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_StartDecode	@
 .L328:
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	mov	r0, r6	@, pBs
 	bl	Vp6_Vfmw_DecodeBool128	@
 	movw	r1, #12124	@ tmp167,
@@ -5085,38 +5085,38 @@ VP6_InterFrmHeader:
 	movw	r3, #12084	@ tmp166,
 	movw	ip, #12312	@ tmp165,
 	cmp	r2, #0	@ <variable>.OldHeaderInfo.VpProfile,
-	str	r0, [r4, r3]	@ D.39714, <variable>.RefreshGoldenFrame
-	str	r0, [r4, ip]	@ D.39714, <variable>.NewHeaderInfo.RefreshGoldenFrame
+	str	r0, [r4, r3]	@ D.39721, <variable>.RefreshGoldenFrame
+	str	r0, [r4, ip]	@ D.39721, <variable>.NewHeaderInfo.RefreshGoldenFrame
 	bne	.L340	@,
 	movw	r0, #12308	@ tmp193,
-	mov	r3, #1	@ D.39705,
+	mov	r3, #1	@ D.39712,
 	str	r2, [r4, r0]	@ <variable>.OldHeaderInfo.VpProfile, <variable>.NewHeaderInfo.PredictionFilterMode
 	movw	r2, #12258	@ tmp190,
 	mov	ip, #14	@ tmp191,
 	strb	ip, [r4, r2]	@ tmp191, <variable>.NewHeaderInfo.PredictionFilterAlpha
 .L326:
-	mov	r0, r3	@, D.39705
+	mov	r0, r3	@, D.39712
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L339:
 	mov	r0, r6	@, pBs
 	mov	r1, #16	@,
 	bl	BsGet	@
-	add	r1, r4, #12288	@ temp.3083, pVp6CodecInfo,
-	add	r5, r1, #36	@ temp.3083, temp.3083,
+	add	r1, r4, #12288	@ temp.3082, pVp6CodecInfo,
+	add	r5, r1, #36	@ temp.3082, temp.3082,
 	movw	r2, #12304	@ tmp159,
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	str	r0, [r4, r2]	@, <variable>.NewHeaderInfo.Buff2Offset
 	mov	r0, r6	@, pBs
 	bl	Vp6_Vfmw_StartDecode	@
 	b	.L328	@
 .L340:
 	mov	r0, r6	@, pBs
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_DecodeBool128	@
 	movw	r8, #12316	@ tmp169,
-	cmp	r0, #0	@ D.39718,
-	mov	r7, r0	@ D.39718,
-	str	r0, [r4, r8]	@ D.39718, <variable>.NewHeaderInfo.UseLoopFilter
+	cmp	r0, #0	@ D.39725,
+	mov	r7, r0	@ D.39725,
+	str	r0, [r4, r8]	@ D.39725, <variable>.NewHeaderInfo.UseLoopFilter
 	bne	.L341	@,
 .L330:
 	movw	r2, #12120	@ tmp173,
@@ -5127,29 +5127,29 @@ VP6_InterFrmHeader:
 	strlsb	r2, [r4, lr]	@ tmp188, <variable>.NewHeaderInfo.PredictionFilterAlpha
 	bhi	.L342	@,
 .L337:
-	mov	r3, #1	@ D.39705,
-	mov	r0, r3	@, D.39705
+	mov	r3, #1	@ D.39712,
+	mov	r0, r3	@, D.39712
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L342:
 	mov	r0, r6	@, pBs
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_DecodeBool128	@
 	cmp	r0, #0	@,
 	beq	.L337	@,
 	mov	r0, r6	@, pBs
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_DecodeBool128	@
 	cmp	r0, #0	@,
 	beq	.L333	@,
 	movw	lr, #12308	@ tmp175,
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	mov	r2, #5	@,
 	mov	r0, #2	@ tmp176,
 	str	r0, [r4, lr]	@ tmp176, <variable>.NewHeaderInfo.PredictionFilterMode
 	mov	r0, r6	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	movw	r3, #12256	@ tmp177,
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	mov	r2, #3	@,
 	strb	r0, [r4, r3]	@, <variable>.NewHeaderInfo.PredictionFilterVarThresh
 	mov	r0, r6	@, pBs
@@ -5157,30 +5157,30 @@ VP6_InterFrmHeader:
 	movw	ip, #12257	@ tmp179,
 	strb	r0, [r4, ip]	@, <variable>.NewHeaderInfo.PredictionFilterMvSizeThresh
 .L334:
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	mov	r0, r6	@, pBs
 	mov	r2, #4	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	movw	r1, #12258	@ tmp185,
-	mov	r3, #1	@ D.39705,
+	mov	r3, #1	@ D.39712,
 	strb	r0, [r4, r1]	@, <variable>.NewHeaderInfo.PredictionFilterAlpha
 	b	.L326	@
 .L341:
 	mov	r0, r6	@, pBs
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_DecodeBool128	@
-	orr	r0, r0, r7, asl #1	@, tmp172,, D.39718,
+	orr	r0, r0, r7, asl #1	@, tmp172,, D.39725,
 	str	r0, [r4, r8]	@ tmp172, <variable>.NewHeaderInfo.UseLoopFilter
 	b	.L330	@
 .L333:
 	mov	r0, r6	@, pBs
-	mov	r1, r5	@, temp.3083
+	mov	r1, r5	@, temp.3082
 	bl	Vp6_Vfmw_DecodeBool128	@
-	cmp	r0, #0	@ D.39738
+	cmp	r0, #0	@ D.39745
 	movwne	r3, #12308	@ tmp181,
 	movweq	r3, #12308	@ tmp183,
 	movne	r2, #1	@ tmp182,
-	streq	r0, [r4, r3]	@ D.39738, <variable>.NewHeaderInfo.PredictionFilterMode
+	streq	r0, [r4, r3]	@ D.39745, <variable>.NewHeaderInfo.PredictionFilterMode
 	strne	r2, [r4, r3]	@ tmp182, <variable>.NewHeaderInfo.PredictionFilterMode
 	b	.L334	@
 .L338:
@@ -5190,7 +5190,7 @@ VP6_InterFrmHeader:
 	movt	r1, #:upper16:.LC19	@,
 	mov	r0, #1	@,
 	bl	dprint_vfmw	@
-	mvn	r3, #87	@ D.39705,
+	mvn	r3, #87	@ D.39712,
 	b	.L326	@
 	.fnend
 	.size	VP6_InterFrmHeader, .-VP6_InterFrmHeader
@@ -5224,15 +5224,15 @@ VP6_IntraFrmHeader:
 	movw	r6, #12264	@ tmp160,
 	bl	BsGet	@
 	mov	r1, #2	@,
-	uxtb	r2, r0	@ D.39615,
+	uxtb	r2, r0	@ D.39622,
 	mov	r0, r5	@, pBs
-	str	r2, [r4, r6]	@ D.39615, <variable>.NewHeaderInfo.Vp3VersionNo
+	str	r2, [r4, r6]	@ D.39622, <variable>.NewHeaderInfo.Vp3VersionNo
 	bl	BsGet	@
-	ldr	r2, [r4, r6]	@ D.39621, <variable>.NewHeaderInfo.Vp3VersionNo
+	ldr	r2, [r4, r6]	@ D.39628, <variable>.NewHeaderInfo.Vp3VersionNo
 	movw	r3, #12268	@ tmp162,
-	cmp	r2, #8	@ D.39621,
-	uxtb	r0, r0	@ D.39618,
-	str	r0, [r4, r3]	@ D.39618, <variable>.NewHeaderInfo.VpProfile
+	cmp	r2, #8	@ D.39628,
+	uxtb	r0, r0	@ D.39625,
+	str	r0, [r4, r3]	@ D.39625, <variable>.NewHeaderInfo.VpProfile
 	bhi	.L361	@,
 	mov	r0, r5	@, pBs
 	mov	r1, #1	@,
@@ -5246,68 +5246,68 @@ VP6_IntraFrmHeader:
 	mov	r1, #16	@,
 	mov	r0, r5	@, pBs
 	bl	BsGet	@
-	add	r8, r4, #12288	@ temp.3113, pVp6CodecInfo,
-	add	r6, r8, #36	@ temp.3113, temp.3113,
+	add	r8, r4, #12288	@ temp.3112, pVp6CodecInfo,
+	add	r6, r8, #36	@ temp.3112, temp.3112,
 	movw	r7, #12304	@ tmp171,
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	str	r0, [r4, r7]	@, <variable>.NewHeaderInfo.Buff2Offset
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_StartDecode	@
 .L348:
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	mov	r2, #8	@,
 	mov	r0, r5	@, pBs
 	movw	r8, #12276	@ tmp177,
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	mov	r2, #8	@,
-	uxtb	r3, r0	@ D.39638,
+	uxtb	r3, r0	@ D.39645,
 	mov	r0, r5	@, pBs
-	str	r3, [r4, r8]	@ D.39638, <variable>.NewHeaderInfo.pic_height_in_mb
+	str	r3, [r4, r8]	@ D.39645, <variable>.NewHeaderInfo.pic_height_in_mb
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r7, [r4, r8]	@ <variable>.NewHeaderInfo.pic_height_in_mb, <variable>.NewHeaderInfo.pic_height_in_mb
 	mov	ip, #12288	@ tmp184,
 	movw	r2, #12284	@ tmp180,
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	mov	r7, r7, asl #1	@ tmp183, <variable>.NewHeaderInfo.pic_height_in_mb,
 	str	r7, [r4, r2]	@ tmp183, <variable>.NewHeaderInfo.VMacroblockCount
 	mov	r2, #8	@,
-	uxtb	r8, r0	@ D.39643,
+	uxtb	r8, r0	@ D.39650,
 	movw	r0, #12280	@ tmp179,
-	str	r8, [r4, r0]	@ D.39643, <variable>.NewHeaderInfo.pic_width_in_mb
+	str	r8, [r4, r0]	@ D.39650, <variable>.NewHeaderInfo.pic_width_in_mb
 	mov	r0, r5	@, pBs
-	mov	r8, r8, asl #1	@ D.39647, D.39643,
-	str	r8, [r4, ip]	@ D.39647, <variable>.NewHeaderInfo.HMacroblockCount
+	mov	r8, r8, asl #1	@ D.39654, D.39650,
+	str	r8, [r4, ip]	@ D.39654, <variable>.NewHeaderInfo.HMacroblockCount
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	mov	r2, #8	@,
-	uxtb	r3, r0	@ D.39648,
+	uxtb	r3, r0	@ D.39655,
 	mov	r0, r5	@, pBs
-	mov	ip, r3, asl #1	@ tmp189, D.39648,
+	mov	ip, r3, asl #1	@ tmp189, D.39655,
 	movw	r3, #12292	@ tmp187,
 	str	ip, [r4, r3]	@ tmp189, <variable>.NewHeaderInfo.OutputVMacroblockCount
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, #2	@,
-	mov	r1, r6	@, temp.3113
-	uxtb	r3, r0	@ D.39653,
+	mov	r1, r6	@, temp.3112
+	uxtb	r3, r0	@ D.39660,
 	mov	r0, r5	@, pBs
-	mov	ip, r3, asl #1	@ tmp192, D.39653,
+	mov	ip, r3, asl #1	@ tmp192, D.39660,
 	movw	r3, #12296	@ tmp190,
 	str	ip, [r4, r3]	@ tmp192, <variable>.NewHeaderInfo.OutputHMacroblockCount
 	bl	Vp6_Vfmw_BoolRead	@
 	movw	r3, #12064	@ tmp195,
-	ldr	r3, [r4, r3]	@ D.39662, <variable>.VOldScaled
+	ldr	r3, [r4, r3]	@ D.39669, <variable>.VOldScaled
 	movw	r2, #12255	@ tmp193,
-	cmp	r3, r7	@ D.39662, tmp183
+	cmp	r3, r7	@ D.39669, tmp183
 	strb	r0, [r4, r2]	@, <variable>.NewHeaderInfo.ScalingMode
 	beq	.L349	@,
 	movw	lr, #12060	@ tmp196,
-	ldr	r2, [r4, lr]	@ prephitmp.3101, <variable>.HOldScaled
+	ldr	r2, [r4, lr]	@ prephitmp.3100, <variable>.HOldScaled
 .L350:
 	movw	r1, #:lower16:.LC23	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC23	@,
-	str	r8, [sp, #0]	@ D.39647,
+	str	r8, [sp, #0]	@ D.39654,
 	str	r7, [sp, #4]	@ tmp183,
 	bl	dprint_vfmw	@
 .L351:
@@ -5315,7 +5315,7 @@ VP6_IntraFrmHeader:
 	movw	r0, #12060	@ tmp199,
 	ldr	r3, [r4, r2]	@ <variable>.NewHeaderInfo.VpProfile, <variable>.NewHeaderInfo.VpProfile
 	movw	ip, #12064	@ tmp200,
-	str	r8, [r4, r0]	@ D.39647, <variable>.HOldScaled
+	str	r8, [r4, r0]	@ D.39654, <variable>.HOldScaled
 	cmp	r3, #0	@ <variable>.NewHeaderInfo.VpProfile,
 	str	r7, [r4, ip]	@ tmp183, <variable>.VOldScaled
 	bne	.L363	@,
@@ -5329,7 +5329,7 @@ VP6_IntraFrmHeader:
 	movw	r1, #:lower16:.LC24	@,
 	movt	r1, #:upper16:.LC24	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.39625,
+	mov	r0, #1	@ D.39632,
 .L345:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
@@ -5338,19 +5338,19 @@ VP6_IntraFrmHeader:
 	movw	r1, #:lower16:.LC21	@,
 	movt	r1, #:upper16:.LC21	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39625,
+	mov	r0, #0	@ D.39632,
 	b	.L345	@
 .L347:
-	add	ip, r4, #12288	@ temp.3113, pVp6CodecInfo,
+	add	ip, r4, #12288	@ temp.3112, pVp6CodecInfo,
 	mov	r0, r5	@, pBs
-	add	r6, ip, #36	@ temp.3113, temp.3113,
-	mov	r1, r6	@, temp.3113
+	add	r6, ip, #36	@ temp.3112, temp.3112,
+	mov	r1, r6	@, temp.3112
 	bl	Vp6_Vfmw_StartDecode	@
 	b	.L348	@
 .L349:
 	movw	r1, #12060	@ tmp197,
-	ldr	r2, [r4, r1]	@ prephitmp.3101, <variable>.HOldScaled
-	cmp	r8, r2	@ D.39647, prephitmp.3101
+	ldr	r2, [r4, r1]	@ prephitmp.3100, <variable>.HOldScaled
+	cmp	r8, r2	@ D.39654, prephitmp.3100
 	bne	.L350	@,
 	b	.L351	@
 .L362:
@@ -5358,17 +5358,17 @@ VP6_IntraFrmHeader:
 	movw	r1, #:lower16:.LC22	@,
 	movt	r1, #:upper16:.LC22	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39625,
+	mov	r0, #0	@ D.39632,
 	b	.L345	@
 .L363:
 	mov	r0, r5	@, pBs
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	bl	Vp6_Vfmw_DecodeBool128	@
 	cmp	r0, #0	@,
 	beq	.L353	@,
 	movw	r0, #12308	@ tmp203,
 	mov	lr, #2	@ tmp204,
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	str	lr, [r4, r0]	@ tmp204, <variable>.NewHeaderInfo.PredictionFilterMode
 	mov	r2, #5	@,
 	mov	r0, r5	@, pBs
@@ -5376,7 +5376,7 @@ VP6_IntraFrmHeader:
 	movw	r1, #12264	@ tmp205,
 	ldr	r3, [r4, r1]	@ <variable>.NewHeaderInfo.Vp3VersionNo, <variable>.NewHeaderInfo.Vp3VersionNo
 	movw	ip, #12256	@ tmp207,
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	mov	r2, #3	@,
 	cmp	r3, #7	@ <variable>.NewHeaderInfo.Vp3VersionNo,
 	movls	r3, #5	@ iftmp.484,
@@ -5397,20 +5397,20 @@ VP6_IntraFrmHeader:
 	bls	.L359	@,
 	mov	r2, #4	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	bl	Vp6_Vfmw_BoolRead	@
 	movw	r2, #12258	@ tmp219,
 	strb	r0, [r4, r2]	@, <variable>.NewHeaderInfo.PredictionFilterAlpha
 	b	.L359	@
 .L353:
 	mov	r0, r5	@, pBs
-	mov	r1, r6	@, temp.3113
+	mov	r1, r6	@, temp.3112
 	bl	Vp6_Vfmw_DecodeBool128	@
-	cmp	r0, #0	@ D.39684
+	cmp	r0, #0	@ D.39691
 	movwne	r3, #12308	@ tmp213,
 	movweq	r3, #12308	@ tmp215,
 	movne	r2, #1	@ tmp214,
-	streq	r0, [r4, r3]	@ D.39684, <variable>.NewHeaderInfo.PredictionFilterMode
+	streq	r0, [r4, r3]	@ D.39691, <variable>.NewHeaderInfo.PredictionFilterMode
 	strne	r2, [r4, r3]	@ tmp214, <variable>.NewHeaderInfo.PredictionFilterMode
 	b	.L356	@
 	.fnend
@@ -5447,20 +5447,20 @@ VP6_GetPictureHeader:
 	bl	BsGet	@
 	movw	r3, #12080	@ tmp154,
 	mov	r1, #6	@,
-	uxtb	ip, r0	@ D.39761,
+	uxtb	ip, r0	@ D.39768,
 	mov	r0, r5	@, pBs
-	strb	ip, [r4, r3]	@ D.39761, <variable>.FrameType
-	str	ip, [r4, r6]	@ D.39761, <variable>.NewHeaderInfo.FrameType
+	strb	ip, [r4, r3]	@ D.39768, <variable>.FrameType
+	str	ip, [r4, r6]	@ D.39768, <variable>.NewHeaderInfo.FrameType
 	bl	BsGet	@
 	movw	r3, #:lower16:.LANCHOR0	@ tmp159,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp159,
 	movw	lr, #12260	@ tmp165,
 	mov	r1, #1	@,
-	uxtb	r2, r0	@ D.39766,
+	uxtb	r2, r0	@ D.39773,
 	movw	r0, #12252	@ tmp156,
-	add	ip, r2, r3	@ tmp161, D.39766, tmp159
-	strb	r2, [r4, r0]	@ D.39766, <variable>.NewHeaderInfo.DctQMask
-	add	r3, r3, r2, asl #1	@, tmp169, tmp159, D.39766,
+	add	ip, r2, r3	@ tmp161, D.39773, tmp159
+	strb	r2, [r4, r0]	@ D.39773, <variable>.NewHeaderInfo.DctQMask
+	add	r3, r3, r2, asl #1	@, tmp169, tmp159, D.39773,
 	mov	r0, r5	@, pBs
 	ldrb	r2, [ip, #140]	@ zero_extendqisi2	@ tmp163, VP6_LoopFilterLimitValues
 	add	ip, r3, #332	@ tmp178, tmp169,
@@ -5538,17 +5538,17 @@ Vp6_Vfmw_DecodeBool:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, r1	@ pBr, pBr
-	ldr	r1, [r1, #4]	@ range.3163, <variable>.range
+	ldr	r1, [r1, #4]	@ range.3162, <variable>.range
 	mov	r6, r0	@ pBs, pBs
 	ldr	r4, [r5, #8]	@ value, <variable>.value
-	sub	r0, r1, #1	@ tmp145, range.3163,
+	sub	r0, r1, #1	@ tmp145, range.3162,
 	ldr	r3, [r5, #12]	@ count, <variable>.count
 	mul	ip, r0, r2	@ tmp146, tmp145, probability
 	mov	r7, ip, lsr #8	@ tmp147, tmp146,
 	add	r7, r7, #1	@ split, tmp147,
 	mov	r2, r7, asl #16	@ bigsplit, split,
 	cmp	r4, r2	@ value, bigsplit
-	rsbcs	r7, r7, r1	@ range, split, range.3163
+	rsbcs	r7, r7, r1	@ range, split, range.3162
 	rsbcs	r4, r2, r4	@ value, bigsplit, value
 	movcc	r8, #0	@ bit,
 	movcs	r8, #1	@ bit,
@@ -5599,11 +5599,11 @@ VP6_ConfigureMvEntropyDecoder:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r6, #:lower16:.LANCHOR0	@ tmp477,
-	add	r4, r2, #72	@ D.39136, pbi,
+	add	r4, r2, #72	@ D.39143, pbi,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp477,
 	mov	r5, r1	@ pBs, pBs
 	mov	r7, r0	@ pVp6CodecInfo, pVp6CodecInfo
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	ldrb	r2, [r6, #460]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
@@ -5611,258 +5611,258 @@ VP6_ConfigureMvEntropyDecoder:
 	bne	.L423	@,
 .L384:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #461]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L424	@,
 .L385:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #477]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L425	@,
 .L386:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #478]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L426	@,
 .L387:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #462]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L427	@,
 .L388:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #463]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L428	@,
 .L389:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #464]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L429	@,
 .L390:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #465]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L430	@,
 .L391:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #466]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L431	@,
 .L392:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #467]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L432	@,
 .L393:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #468]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L433	@,
 .L394:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #479]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L434	@,
 .L396:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #480]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L435	@,
 .L408:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #481]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L436	@,
 .L409:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #482]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L437	@,
 .L410:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #483]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L438	@,
 .L411:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #484]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L439	@,
 .L412:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #485]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L440	@,
 .L397:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #469]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L441	@,
 .L398:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #470]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L442	@,
 .L399:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #471]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L443	@,
 .L400:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #472]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L444	@,
 .L401:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #473]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L445	@,
 .L402:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #474]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L446	@,
 .L403:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #475]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L447	@,
 .L404:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #476]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L448	@,
 .L405:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #486]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L449	@,
 .L407:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #487]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L450	@,
 .L415:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #488]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L451	@,
 .L416:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #489]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L452	@,
 .L417:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #490]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L453	@,
 .L418:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #491]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L454	@,
 .L419:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	ldrb	r2, [r6, #492]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L455	@,
 	ldrb	r2, [r6, #493]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L456:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp424,,
-	uxtb	ip, r3	@ D.39178, tmp424
-	strb	ip, [r7, #513]	@ D.39178, <variable>.MvSizeProbs
-	cmp	ip, #0	@ D.39178,
+	uxtb	ip, r3	@ D.39185, tmp424
+	strb	ip, [r7, #513]	@ D.39185, <variable>.MvSizeProbs
+	cmp	ip, #0	@ D.39185,
 	moveq	ip, #1	@ tmp426,
 	streqb	ip, [r7, #513]	@ tmp426, <variable>.MvSizeProbs
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L455:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldrb	r2, [r6, #493]	@ zero_extendqisi2	@, VP6_MvUpdateProbs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r3, r0, asl #1	@ tmp471,,
 	mov	r0, r5	@, pBs
-	uxtb	ip, r3	@ temp.3293, tmp471
-	strb	ip, [r7, #512]	@ temp.3293, <variable>.MvSizeProbs
-	cmp	ip, #0	@ temp.3293,
+	uxtb	ip, r3	@ temp.3292, tmp471
+	strb	ip, [r7, #512]	@ temp.3292, <variable>.MvSizeProbs
+	cmp	ip, #0	@ temp.3292,
 	moveq	ip, #1	@ tmp473,
 	streqb	ip, [r7, #512]	@ tmp473, <variable>.MvSizeProbs
 	bl	Vp6_Vfmw_DecodeBool	@
@@ -5870,386 +5870,386 @@ VP6_ConfigureMvEntropyDecoder:
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	b	.L456	@
 .L454:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp464,,
-	uxtb	r1, r2	@ temp.3286, tmp464
-	strb	r1, [r7, #511]	@ temp.3286, <variable>.MvSizeProbs
-	cmp	r1, #0	@ temp.3286,
+	uxtb	r1, r2	@ temp.3285, tmp464
+	strb	r1, [r7, #511]	@ temp.3285, <variable>.MvSizeProbs
+	cmp	r1, #0	@ temp.3285,
 	moveq	r1, #1	@ tmp466,
 	streqb	r1, [r7, #511]	@ tmp466, <variable>.MvSizeProbs
 	b	.L419	@
 .L453:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp457,,
-	uxtb	r0, r3	@ temp.3278, tmp457
-	strb	r0, [r7, #510]	@ temp.3278, <variable>.MvSizeProbs
-	cmp	r0, #0	@ temp.3278,
+	uxtb	r0, r3	@ temp.3277, tmp457
+	strb	r0, [r7, #510]	@ temp.3277, <variable>.MvSizeProbs
+	cmp	r0, #0	@ temp.3277,
 	moveq	r0, #1	@ tmp459,
 	streqb	r0, [r7, #510]	@ tmp459, <variable>.MvSizeProbs
 	b	.L418	@
 .L452:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp450,,
-	uxtb	r2, ip	@ temp.3273, tmp450
-	strb	r2, [r7, #509]	@ temp.3273, <variable>.MvSizeProbs
-	cmp	r2, #0	@ temp.3273,
+	uxtb	r2, ip	@ temp.3272, tmp450
+	strb	r2, [r7, #509]	@ temp.3272, <variable>.MvSizeProbs
+	cmp	r2, #0	@ temp.3272,
 	moveq	r2, #1	@ tmp452,
 	streqb	r2, [r7, #509]	@ tmp452, <variable>.MvSizeProbs
 	b	.L417	@
 .L451:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp443,,
-	uxtb	r3, r1	@ temp.3266, tmp443
-	strb	r3, [r7, #508]	@ temp.3266, <variable>.MvSizeProbs
-	cmp	r3, #0	@ temp.3266,
+	uxtb	r3, r1	@ temp.3265, tmp443
+	strb	r3, [r7, #508]	@ temp.3265, <variable>.MvSizeProbs
+	cmp	r3, #0	@ temp.3265,
 	moveq	r3, #1	@ tmp445,
 	streqb	r3, [r7, #508]	@ tmp445, <variable>.MvSizeProbs
 	b	.L416	@
 .L450:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp436,,
-	uxtb	r0, ip	@ temp.3258, tmp436
-	strb	r0, [r7, #507]	@ temp.3258, <variable>.MvSizeProbs
-	cmp	r0, #0	@ temp.3258,
+	uxtb	r0, ip	@ temp.3257, tmp436
+	strb	r0, [r7, #507]	@ temp.3257, <variable>.MvSizeProbs
+	cmp	r0, #0	@ temp.3257,
 	moveq	r0, #1	@ tmp438,
 	streqb	r0, [r7, #507]	@ tmp438, <variable>.MvSizeProbs
 	b	.L415	@
 .L449:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp429,,
-	uxtb	r1, r2	@ temp.3253, tmp429
-	strb	r1, [r7, #506]	@ temp.3253, <variable>.MvSizeProbs
-	cmp	r1, #0	@ temp.3253,
+	uxtb	r1, r2	@ temp.3252, tmp429
+	strb	r1, [r7, #506]	@ temp.3252, <variable>.MvSizeProbs
+	cmp	r1, #0	@ temp.3252,
 	moveq	r1, #1	@ tmp431,
 	streqb	r1, [r7, #506]	@ tmp431, <variable>.MvSizeProbs
 	b	.L407	@
 .L448:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp375,,
-	uxtb	r0, r3	@ temp.3343, tmp375
-	strb	r0, [r7, #505]	@ temp.3343, <variable>.MvSizeProbs
-	cmp	r0, #0	@ temp.3343,
+	uxtb	r0, r3	@ temp.3342, tmp375
+	strb	r0, [r7, #505]	@ temp.3342, <variable>.MvSizeProbs
+	cmp	r0, #0	@ temp.3342,
 	moveq	r0, #1	@ tmp377,
 	streqb	r0, [r7, #505]	@ tmp377, <variable>.MvSizeProbs
 	b	.L405	@
 .L447:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp368,,
-	uxtb	r2, ip	@ temp.3338, tmp368
-	strb	r2, [r7, #504]	@ temp.3338, <variable>.MvSizeProbs
-	cmp	r2, #0	@ temp.3338,
+	uxtb	r2, ip	@ temp.3337, tmp368
+	strb	r2, [r7, #504]	@ temp.3337, <variable>.MvSizeProbs
+	cmp	r2, #0	@ temp.3337,
 	moveq	r2, #1	@ tmp370,
 	streqb	r2, [r7, #504]	@ tmp370, <variable>.MvSizeProbs
 	b	.L404	@
 .L446:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp361,,
-	uxtb	r3, r1	@ temp.3333, tmp361
-	strb	r3, [r7, #503]	@ temp.3333, <variable>.MvSizeProbs
-	cmp	r3, #0	@ temp.3333,
+	uxtb	r3, r1	@ temp.3332, tmp361
+	strb	r3, [r7, #503]	@ temp.3332, <variable>.MvSizeProbs
+	cmp	r3, #0	@ temp.3332,
 	moveq	r3, #1	@ tmp363,
 	streqb	r3, [r7, #503]	@ tmp363, <variable>.MvSizeProbs
 	b	.L403	@
 .L445:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp354,,
-	uxtb	r0, ip	@ temp.3328, tmp354
-	strb	r0, [r7, #502]	@ temp.3328, <variable>.MvSizeProbs
-	cmp	r0, #0	@ temp.3328,
+	uxtb	r0, ip	@ temp.3327, tmp354
+	strb	r0, [r7, #502]	@ temp.3327, <variable>.MvSizeProbs
+	cmp	r0, #0	@ temp.3327,
 	moveq	r0, #1	@ tmp356,
 	streqb	r0, [r7, #502]	@ tmp356, <variable>.MvSizeProbs
 	b	.L402	@
 .L444:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp347,,
-	uxtb	r1, r2	@ temp.3323, tmp347
-	strb	r1, [r7, #501]	@ temp.3323, <variable>.MvSizeProbs
-	cmp	r1, #0	@ temp.3323,
+	uxtb	r1, r2	@ temp.3322, tmp347
+	strb	r1, [r7, #501]	@ temp.3322, <variable>.MvSizeProbs
+	cmp	r1, #0	@ temp.3322,
 	moveq	r1, #1	@ tmp349,
 	streqb	r1, [r7, #501]	@ tmp349, <variable>.MvSizeProbs
 	b	.L401	@
 .L443:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp340,,
-	uxtb	ip, r3	@ temp.3318, tmp340
-	strb	ip, [r7, #500]	@ temp.3318, <variable>.MvSizeProbs
-	cmp	ip, #0	@ temp.3318,
+	uxtb	ip, r3	@ temp.3317, tmp340
+	strb	ip, [r7, #500]	@ temp.3317, <variable>.MvSizeProbs
+	cmp	ip, #0	@ temp.3317,
 	moveq	ip, #1	@ tmp342,
 	streqb	ip, [r7, #500]	@ tmp342, <variable>.MvSizeProbs
 	b	.L400	@
 .L442:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp333,,
-	uxtb	r0, r2	@ temp.3313, tmp333
-	strb	r0, [r7, #499]	@ temp.3313, <variable>.MvSizeProbs
-	cmp	r0, #0	@ temp.3313,
+	uxtb	r0, r2	@ temp.3312, tmp333
+	strb	r0, [r7, #499]	@ temp.3312, <variable>.MvSizeProbs
+	cmp	r0, #0	@ temp.3312,
 	moveq	r0, #1	@ tmp335,
 	streqb	r0, [r7, #499]	@ tmp335, <variable>.MvSizeProbs
 	b	.L399	@
 .L441:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp326,,
-	uxtb	r3, r1	@ temp.3308, tmp326
-	strb	r3, [r7, #498]	@ temp.3308, <variable>.MvSizeProbs
-	cmp	r3, #0	@ temp.3308,
+	uxtb	r3, r1	@ temp.3307, tmp326
+	strb	r3, [r7, #498]	@ temp.3307, <variable>.MvSizeProbs
+	cmp	r3, #0	@ temp.3307,
 	moveq	r3, #1	@ tmp328,
 	streqb	r3, [r7, #498]	@ tmp328, <variable>.MvSizeProbs
 	b	.L398	@
 .L440:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp319,,
-	uxtb	r2, ip	@ D.39166, tmp319
-	strb	r2, [r7, #497]	@ D.39166, <variable>.MvShortProbs
-	cmp	r2, #0	@ D.39166,
+	uxtb	r2, ip	@ D.39173, tmp319
+	strb	r2, [r7, #497]	@ D.39173, <variable>.MvShortProbs
+	cmp	r2, #0	@ D.39173,
 	moveq	r2, #1	@ tmp321,
 	streqb	r2, [r7, #497]	@ tmp321, <variable>.MvShortProbs
 	b	.L397	@
 .L439:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp417,,
-	uxtb	r0, r2	@ temp.3248, tmp417
-	strb	r0, [r7, #496]	@ temp.3248, <variable>.MvShortProbs
-	cmp	r0, #0	@ temp.3248,
+	uxtb	r0, r2	@ temp.3247, tmp417
+	strb	r0, [r7, #496]	@ temp.3247, <variable>.MvShortProbs
+	cmp	r0, #0	@ temp.3247,
 	moveq	r0, #1	@ tmp419,
 	streqb	r0, [r7, #496]	@ tmp419, <variable>.MvShortProbs
 	b	.L412	@
 .L438:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp410,,
-	uxtb	r3, r1	@ temp.3241, tmp410
-	strb	r3, [r7, #495]	@ temp.3241, <variable>.MvShortProbs
-	cmp	r3, #0	@ temp.3241,
+	uxtb	r3, r1	@ temp.3240, tmp410
+	strb	r3, [r7, #495]	@ temp.3240, <variable>.MvShortProbs
+	cmp	r3, #0	@ temp.3240,
 	moveq	r3, #1	@ tmp412,
 	streqb	r3, [r7, #495]	@ tmp412, <variable>.MvShortProbs
 	b	.L411	@
 .L437:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp403,,
-	uxtb	r2, ip	@ temp.3233, tmp403
-	strb	r2, [r7, #494]	@ temp.3233, <variable>.MvShortProbs
-	cmp	r2, #0	@ temp.3233,
+	uxtb	r2, ip	@ temp.3232, tmp403
+	strb	r2, [r7, #494]	@ temp.3232, <variable>.MvShortProbs
+	cmp	r2, #0	@ temp.3232,
 	moveq	r2, #1	@ tmp405,
 	streqb	r2, [r7, #494]	@ tmp405, <variable>.MvShortProbs
 	b	.L410	@
 .L436:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp396,,
-	uxtb	r0, r1	@ temp.3228, tmp396
-	strb	r0, [r7, #493]	@ temp.3228, <variable>.MvShortProbs
-	cmp	r0, #0	@ temp.3228,
+	uxtb	r0, r1	@ temp.3227, tmp396
+	strb	r0, [r7, #493]	@ temp.3227, <variable>.MvShortProbs
+	cmp	r0, #0	@ temp.3227,
 	moveq	r0, #1	@ tmp398,
 	streqb	r0, [r7, #493]	@ tmp398, <variable>.MvShortProbs
 	b	.L409	@
 .L435:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp389,,
-	uxtb	ip, r3	@ temp.3221, tmp389
-	strb	ip, [r7, #492]	@ temp.3221, <variable>.MvShortProbs
-	cmp	ip, #0	@ temp.3221,
+	uxtb	ip, r3	@ temp.3220, tmp389
+	strb	ip, [r7, #492]	@ temp.3220, <variable>.MvShortProbs
+	cmp	ip, #0	@ temp.3220,
 	moveq	ip, #1	@ tmp391,
 	streqb	ip, [r7, #492]	@ tmp391, <variable>.MvShortProbs
 	b	.L408	@
 .L434:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp382,,
-	uxtb	r1, r2	@ temp.3213, tmp382
-	strb	r1, [r7, #491]	@ temp.3213, <variable>.MvShortProbs
-	cmp	r1, #0	@ temp.3213,
+	uxtb	r1, r2	@ temp.3212, tmp382
+	strb	r1, [r7, #491]	@ temp.3212, <variable>.MvShortProbs
+	cmp	r1, #0	@ temp.3212,
 	moveq	r1, #1	@ tmp384,
 	streqb	r1, [r7, #491]	@ tmp384, <variable>.MvShortProbs
 	b	.L396	@
 .L433:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp312,,
-	uxtb	r0, r1	@ temp.3303, tmp312
-	strb	r0, [r7, #490]	@ temp.3303, <variable>.MvShortProbs
-	cmp	r0, #0	@ temp.3303,
+	uxtb	r0, r1	@ temp.3302, tmp312
+	strb	r0, [r7, #490]	@ temp.3302, <variable>.MvShortProbs
+	cmp	r0, #0	@ temp.3302,
 	moveq	r0, #1	@ tmp314,
 	streqb	r0, [r7, #490]	@ tmp314, <variable>.MvShortProbs
 	b	.L394	@
 .L432:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp305,,
-	uxtb	ip, r3	@ temp.3298, tmp305
-	strb	ip, [r7, #489]	@ temp.3298, <variable>.MvShortProbs
-	cmp	ip, #0	@ temp.3298,
+	uxtb	ip, r3	@ temp.3297, tmp305
+	strb	ip, [r7, #489]	@ temp.3297, <variable>.MvShortProbs
+	cmp	ip, #0	@ temp.3297,
 	moveq	ip, #1	@ tmp307,
 	streqb	ip, [r7, #489]	@ tmp307, <variable>.MvShortProbs
 	b	.L393	@
 .L431:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp298,,
-	uxtb	r1, r2	@ temp.3202, tmp298
-	strb	r1, [r7, #488]	@ temp.3202, <variable>.MvShortProbs
-	cmp	r1, #0	@ temp.3202,
+	uxtb	r1, r2	@ temp.3201, tmp298
+	strb	r1, [r7, #488]	@ temp.3201, <variable>.MvShortProbs
+	cmp	r1, #0	@ temp.3201,
 	moveq	r1, #1	@ tmp300,
 	streqb	r1, [r7, #488]	@ tmp300, <variable>.MvShortProbs
 	b	.L392	@
 .L430:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp291,,
-	uxtb	r0, r3	@ temp.3214, tmp291
-	strb	r0, [r7, #487]	@ temp.3214, <variable>.MvShortProbs
-	cmp	r0, #0	@ temp.3214,
+	uxtb	r0, r3	@ temp.3213, tmp291
+	strb	r0, [r7, #487]	@ temp.3213, <variable>.MvShortProbs
+	cmp	r0, #0	@ temp.3213,
 	moveq	r0, #1	@ tmp293,
 	streqb	r0, [r7, #487]	@ tmp293, <variable>.MvShortProbs
 	b	.L391	@
 .L429:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp284,,
-	uxtb	r2, ip	@ temp.3234, tmp284
-	strb	r2, [r7, #486]	@ temp.3234, <variable>.MvShortProbs
-	cmp	r2, #0	@ temp.3234,
+	uxtb	r2, ip	@ temp.3233, tmp284
+	strb	r2, [r7, #486]	@ temp.3233, <variable>.MvShortProbs
+	cmp	r2, #0	@ temp.3233,
 	moveq	r2, #1	@ tmp286,
 	streqb	r2, [r7, #486]	@ tmp286, <variable>.MvShortProbs
 	b	.L390	@
 .L428:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp277,,
-	uxtb	r3, r1	@ temp.3259, tmp277
-	strb	r3, [r7, #485]	@ temp.3259, <variable>.MvShortProbs
-	cmp	r3, #0	@ temp.3259,
+	uxtb	r3, r1	@ temp.3258, tmp277
+	strb	r3, [r7, #485]	@ temp.3258, <variable>.MvShortProbs
+	cmp	r3, #0	@ temp.3258,
 	moveq	r3, #1	@ tmp279,
 	streqb	r3, [r7, #485]	@ tmp279, <variable>.MvShortProbs
 	b	.L389	@
 .L427:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	ip, r0, asl #1	@ tmp270,,
-	uxtb	r0, ip	@ temp.3279, tmp270
-	strb	r0, [r7, #484]	@ temp.3279, <variable>.MvShortProbs
-	cmp	r0, #0	@ temp.3279,
+	uxtb	r0, ip	@ temp.3278, tmp270
+	strb	r0, [r7, #484]	@ temp.3278, <variable>.MvShortProbs
+	cmp	r0, #0	@ temp.3278,
 	moveq	r0, #1	@ tmp272,
 	streqb	r0, [r7, #484]	@ tmp272, <variable>.MvShortProbs
 	b	.L388	@
 .L426:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp263,,
-	uxtb	r1, r2	@ D.39154, tmp263
-	strb	r1, [r7, #1]	@ D.39154, <variable>.MvSignProbs
-	cmp	r1, #0	@ D.39154,
+	uxtb	r1, r2	@ D.39161, tmp263
+	strb	r1, [r7, #1]	@ D.39161, <variable>.MvSignProbs
+	cmp	r1, #0	@ D.39161,
 	moveq	r1, #1	@ tmp265,
 	streqb	r1, [r7, #1]	@ tmp265, <variable>.MvSignProbs
 	b	.L387	@
 .L425:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r3, r0, asl #1	@ tmp256,,
-	uxtb	ip, r3	@ D.39144, tmp256
-	strb	ip, [r7, #3]	@ D.39144, <variable>.IsMvShortProb
-	cmp	ip, #0	@ D.39144,
+	uxtb	ip, r3	@ D.39151, tmp256
+	strb	ip, [r7, #3]	@ D.39151, <variable>.IsMvShortProb
+	cmp	ip, #0	@ D.39151,
 	moveq	ip, #1	@ tmp258,
 	streqb	ip, [r7, #3]	@ tmp258, <variable>.IsMvShortProb
 	b	.L386	@
 .L424:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp249,,
-	uxtb	r0, r2	@ temp.3201, tmp249
-	strb	r0, [r7, #0]	@ temp.3201, <variable>.MvSignProbs
-	cmp	r0, #0	@ temp.3201,
+	uxtb	r0, r2	@ temp.3200, tmp249
+	strb	r0, [r7, #0]	@ temp.3200, <variable>.MvSignProbs
+	cmp	r0, #0	@ temp.3200,
 	moveq	r0, #1	@ tmp251,
 	streqb	r0, [r7, #0]	@ tmp251, <variable>.MvSignProbs
 	b	.L385	@
 .L423:
-	mov	r1, r4	@, D.39136
+	mov	r1, r4	@, D.39143
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp242,,
-	uxtb	r3, r1	@ temp.3204, tmp242
-	strb	r3, [r7, #2]	@ temp.3204, <variable>.IsMvShortProb
-	cmp	r3, #0	@ temp.3204,
+	uxtb	r3, r1	@ temp.3203, tmp242
+	strb	r3, [r7, #2]	@ temp.3203, <variable>.IsMvShortProb
+	cmp	r3, #0	@ temp.3203,
 	moveq	r3, #1	@ tmp244,
 	streqb	r3, [r7, #2]	@ tmp244, <variable>.IsMvShortProb
 	b	.L384	@
@@ -6272,17 +6272,17 @@ VP6_decodeModeDiff:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r4, r1, #72	@ D.39035, pbi,
+	add	r4, r1, #72	@ D.39042, pbi,
 	mov	r2, #205	@,
 	mov	r5, r0	@ pBs, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	bl	Vp6_Vfmw_DecodeBool	@
-	cmp	r0, #0	@ D.39036
+	cmp	r0, #0	@ D.39043
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_DecodeBool128	@
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #171	@,
 	rsb	r3, r0, r0, asl #31	@, tmp150,,,
 	mov	r0, r5	@, pBs
@@ -6292,51 +6292,51 @@ VP6_decodeModeDiff:
 	cmp	r0, #0	@,
 	beq	.L466	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #199	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L461	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #140	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	addne	r6, r6, r6, asl #1	@, tmp155, sign, sign,
-	movne	r0, r6, asl #2	@ D.39039, tmp155,
+	movne	r0, r6, asl #2	@ D.39046, tmp155,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #125	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
-	movne	r0, r6, asl #4	@ D.39039, sign,
+	movne	r0, r6, asl #4	@ D.39046, sign,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #104	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	addne	r6, r6, r6, asl #2	@, tmp159, sign, sign,
 	addeq	r6, r6, r6, asl #1	@, tmp163, sign, sign,
-	movne	r0, r6, asl #2	@ D.39039, tmp159,
-	moveq	r0, r6, asl #3	@ D.39039, tmp163,
+	movne	r0, r6, asl #2	@ D.39046, tmp159,
+	moveq	r0, r6, asl #3	@ D.39046, tmp163,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L461:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #7	@,
 	mov	r6, r6, asl #2	@ tmp165, sign,
 	bl	Vp6_Vfmw_BoolRead	@
-	mul	r0, r0, r6	@ D.39039,, tmp165
+	mul	r0, r0, r6	@ D.39046,, tmp165
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L466:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.39035
+	mov	r1, r4	@, D.39042
 	mov	r2, #83	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	rsb	r0, r0, #3	@ tmp152,,
-	mov	r0, r6, asl r0	@ D.39039, sign,
+	mov	r0, r6, asl r0	@ D.39046, sign,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VP6_decodeModeDiff, .-VP6_decodeModeDiff
@@ -6360,24 +6360,24 @@ VP6_DecodeModeProbs:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r6, r2	@ pbi, pbi
-	add	r8, r6, #72	@ D.39081, pbi,
+	add	r8, r6, #72	@ D.39088, pbi,
 	mov	sl, r0	@ pVp6CodecInfo, pVp6CodecInfo
 	mov	r5, r1	@ pBs, pBs
-	mov	r4, r0	@ ivtmp.3404, pVp6CodecInfo
+	mov	r4, r0	@ ivtmp.3403, pVp6CodecInfo
 	mov	r7, #0	@ j,
 	movw	r2, #:lower16:.LANCHOR0	@,
 	movt	r2, #:upper16:.LANCHOR0	@,
 	str	r2, [fp, #-48]	@, %sfp
 .L510:
 	mov	r0, r5	@, pBs
-	mov	r1, r8	@, D.39081
+	mov	r1, r8	@, D.39088
 	mov	r2, #174	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L513	@,
 .L468:
 	mov	r0, r5	@, pBs
-	mov	r1, r8	@, D.39081
+	mov	r1, r8	@, D.39088
 	mov	r2, #254	@,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6389,232 +6389,232 @@ VP6_DecodeModeProbs:
 	add	r1, r3, r7	@ tmp511, tmp596, j
 	add	r9, sl, r1, asl #2	@, tmp513, pVp6CodecInfo, tmp511,
 	ldrb	r2, [r9, #414]	@ zero_extendqisi2	@ tmp515, <variable>.probXmitted
-	adds	r2, r2, r0	@ diff.3449, tmp515,
-	movmi	r2, #0	@ iftmp.3451,
+	adds	r2, r2, r0	@ diff.3448, tmp515,
+	movmi	r2, #0	@ iftmp.3450,
 	bmi	.L471	@,
-	cmp	r2, #255	@ diff.3449,
+	cmp	r2, #255	@ diff.3448,
 	movge	r2, #255	@ tmp516,
-	uxtb	r2, r2	@ iftmp.3451, tmp516
+	uxtb	r2, r2	@ iftmp.3450, tmp516
 .L471:
 	add	lr, r3, r7	@ tmp520, tmp596, j
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	add	r9, sl, lr, asl #2	@, tmp522, pVp6CodecInfo, tmp520,
-	strb	r2, [r9, #414]	@ iftmp.3451, <variable>.probXmitted
+	strb	r2, [r9, #414]	@ iftmp.3450, <variable>.probXmitted
 	str	r3, [fp, #-96]	@,
 	bl	VP6_decodeModeDiff	@
 	ldrb	r3, [r9, #404]	@ zero_extendqisi2	@ tmp532, <variable>.probXmitted
-	adds	r2, r0, r3	@ diff.3455,, tmp532
+	adds	r2, r0, r3	@ diff.3454,, tmp532
 	ldr	r3, [fp, #-96]	@,
-	movmi	r2, #0	@ iftmp.3457,
+	movmi	r2, #0	@ iftmp.3456,
 	bmi	.L473	@,
-	cmp	r2, #255	@ diff.3455,
+	cmp	r2, #255	@ diff.3454,
 	movge	r2, #255	@ tmp533,
-	uxtb	r2, r2	@ iftmp.3457, tmp533
+	uxtb	r2, r2	@ iftmp.3456, tmp533
 .L473:
 	add	lr, r3, r7	@ tmp537, tmp596, j
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	add	r3, sl, lr, asl #2	@, tmp539, pVp6CodecInfo, tmp537,
-	strb	r2, [r3, #404]	@ iftmp.3457, <variable>.probXmitted
+	strb	r2, [r3, #404]	@ iftmp.3456, <variable>.probXmitted
 	bl	VP6_decodeModeDiff	@
 	ldrb	ip, [r4, #415]	@ zero_extendqisi2	@ tmp542, <variable>.probXmitted
-	adds	r3, r0, ip	@ diff.3461,, tmp542
-	movmi	r3, #0	@ iftmp.3463,
+	adds	r3, r0, ip	@ diff.3460,, tmp542
+	movmi	r3, #0	@ iftmp.3462,
 	bmi	.L475	@,
-	cmp	r3, #255	@ diff.3461,
+	cmp	r3, #255	@ diff.3460,
 	movge	r3, #255	@ tmp543,
-	uxtb	r3, r3	@ iftmp.3463, tmp543
+	uxtb	r3, r3	@ iftmp.3462, tmp543
 .L475:
-	strb	r3, [r4, #415]	@ iftmp.3463, <variable>.probXmitted
+	strb	r3, [r4, #415]	@ iftmp.3462, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r2, [r4, #405]	@ zero_extendqisi2	@ tmp545, <variable>.probXmitted
-	adds	r3, r0, r2	@ diff.3467,, tmp545
-	movmi	r3, #0	@ iftmp.3469,
+	adds	r3, r0, r2	@ diff.3466,, tmp545
+	movmi	r3, #0	@ iftmp.3468,
 	bmi	.L477	@,
-	cmp	r3, #255	@ diff.3467,
+	cmp	r3, #255	@ diff.3466,
 	movge	r3, #255	@ tmp546,
-	uxtb	r3, r3	@ iftmp.3469, tmp546
+	uxtb	r3, r3	@ iftmp.3468, tmp546
 .L477:
-	strb	r3, [r4, #405]	@ iftmp.3469, <variable>.probXmitted
+	strb	r3, [r4, #405]	@ iftmp.3468, <variable>.probXmitted
 	mov	r1, r6	@, pbi
 	mov	r0, r5	@, pBs
 	bl	VP6_decodeModeDiff	@
 	ldrb	r1, [r4, #416]	@ zero_extendqisi2	@ tmp548, <variable>.probXmitted
-	adds	r3, r0, r1	@ diff.3473,, tmp548
-	movmi	r3, #0	@ iftmp.3475,
+	adds	r3, r0, r1	@ diff.3472,, tmp548
+	movmi	r3, #0	@ iftmp.3474,
 	bmi	.L479	@,
-	cmp	r3, #255	@ diff.3473,
+	cmp	r3, #255	@ diff.3472,
 	movge	r3, #255	@ tmp549,
-	uxtb	r3, r3	@ iftmp.3475, tmp549
+	uxtb	r3, r3	@ iftmp.3474, tmp549
 .L479:
-	strb	r3, [r4, #416]	@ iftmp.3475, <variable>.probXmitted
+	strb	r3, [r4, #416]	@ iftmp.3474, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	ip, [r4, #406]	@ zero_extendqisi2	@ tmp551, <variable>.probXmitted
-	adds	r3, r0, ip	@ diff.3479,, tmp551
-	movmi	r3, #0	@ iftmp.3481,
+	adds	r3, r0, ip	@ diff.3478,, tmp551
+	movmi	r3, #0	@ iftmp.3480,
 	bmi	.L481	@,
-	cmp	r3, #255	@ diff.3479,
+	cmp	r3, #255	@ diff.3478,
 	movge	r3, #255	@ tmp552,
-	uxtb	r3, r3	@ iftmp.3481, tmp552
+	uxtb	r3, r3	@ iftmp.3480, tmp552
 .L481:
-	strb	r3, [r4, #406]	@ iftmp.3481, <variable>.probXmitted
+	strb	r3, [r4, #406]	@ iftmp.3480, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r3, [r4, #417]	@ zero_extendqisi2	@ tmp554, <variable>.probXmitted
-	adds	r3, r0, r3	@ diff.3485,, tmp554
-	movmi	r3, #0	@ iftmp.3487,
+	adds	r3, r0, r3	@ diff.3484,, tmp554
+	movmi	r3, #0	@ iftmp.3486,
 	bmi	.L483	@,
-	cmp	r3, #255	@ diff.3485,
+	cmp	r3, #255	@ diff.3484,
 	movge	r3, #255	@ tmp555,
-	uxtb	r3, r3	@ iftmp.3487, tmp555
+	uxtb	r3, r3	@ iftmp.3486, tmp555
 .L483:
-	strb	r3, [r4, #417]	@ iftmp.3487, <variable>.probXmitted
+	strb	r3, [r4, #417]	@ iftmp.3486, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r2, [r4, #407]	@ zero_extendqisi2	@ tmp557, <variable>.probXmitted
-	adds	r3, r0, r2	@ diff.3491,, tmp557
-	movmi	r3, #0	@ iftmp.3493,
+	adds	r3, r0, r2	@ diff.3490,, tmp557
+	movmi	r3, #0	@ iftmp.3492,
 	bmi	.L485	@,
-	cmp	r3, #255	@ diff.3491,
+	cmp	r3, #255	@ diff.3490,
 	movge	r3, #255	@ tmp558,
-	uxtb	r3, r3	@ iftmp.3493, tmp558
+	uxtb	r3, r3	@ iftmp.3492, tmp558
 .L485:
-	strb	r3, [r4, #407]	@ iftmp.3493, <variable>.probXmitted
+	strb	r3, [r4, #407]	@ iftmp.3492, <variable>.probXmitted
 	mov	r1, r6	@, pbi
 	mov	r0, r5	@, pBs
 	bl	VP6_decodeModeDiff	@
 	ldrb	r1, [r4, #418]	@ zero_extendqisi2	@ tmp560, <variable>.probXmitted
-	adds	r3, r0, r1	@ diff.3497,, tmp560
-	movmi	r3, #0	@ iftmp.3499,
+	adds	r3, r0, r1	@ diff.3496,, tmp560
+	movmi	r3, #0	@ iftmp.3498,
 	bmi	.L487	@,
-	cmp	r3, #255	@ diff.3497,
+	cmp	r3, #255	@ diff.3496,
 	movge	r3, #255	@ tmp561,
-	uxtb	r3, r3	@ iftmp.3499, tmp561
+	uxtb	r3, r3	@ iftmp.3498, tmp561
 .L487:
-	strb	r3, [r4, #418]	@ iftmp.3499, <variable>.probXmitted
+	strb	r3, [r4, #418]	@ iftmp.3498, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	ip, [r4, #408]	@ zero_extendqisi2	@ tmp563, <variable>.probXmitted
-	adds	r3, r0, ip	@ diff.3503,, tmp563
-	movmi	r3, #0	@ iftmp.3505,
+	adds	r3, r0, ip	@ diff.3502,, tmp563
+	movmi	r3, #0	@ iftmp.3504,
 	bmi	.L489	@,
-	cmp	r3, #255	@ diff.3503,
+	cmp	r3, #255	@ diff.3502,
 	movge	r3, #255	@ tmp564,
-	uxtb	r3, r3	@ iftmp.3505, tmp564
+	uxtb	r3, r3	@ iftmp.3504, tmp564
 .L489:
-	strb	r3, [r4, #408]	@ iftmp.3505, <variable>.probXmitted
+	strb	r3, [r4, #408]	@ iftmp.3504, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r3, [r4, #419]	@ zero_extendqisi2	@ tmp566, <variable>.probXmitted
-	adds	r3, r0, r3	@ diff.3509,, tmp566
-	movmi	r3, #0	@ iftmp.3511,
+	adds	r3, r0, r3	@ diff.3508,, tmp566
+	movmi	r3, #0	@ iftmp.3510,
 	bmi	.L491	@,
-	cmp	r3, #255	@ diff.3509,
+	cmp	r3, #255	@ diff.3508,
 	movge	r3, #255	@ tmp567,
-	uxtb	r3, r3	@ iftmp.3511, tmp567
+	uxtb	r3, r3	@ iftmp.3510, tmp567
 .L491:
-	strb	r3, [r4, #419]	@ iftmp.3511, <variable>.probXmitted
+	strb	r3, [r4, #419]	@ iftmp.3510, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r2, [r4, #409]	@ zero_extendqisi2	@ tmp569, <variable>.probXmitted
-	adds	r3, r0, r2	@ diff.3515,, tmp569
-	movmi	r3, #0	@ iftmp.3517,
+	adds	r3, r0, r2	@ diff.3514,, tmp569
+	movmi	r3, #0	@ iftmp.3516,
 	bmi	.L493	@,
-	cmp	r3, #255	@ diff.3515,
+	cmp	r3, #255	@ diff.3514,
 	movge	r3, #255	@ tmp570,
-	uxtb	r3, r3	@ iftmp.3517, tmp570
+	uxtb	r3, r3	@ iftmp.3516, tmp570
 .L493:
-	strb	r3, [r4, #409]	@ iftmp.3517, <variable>.probXmitted
+	strb	r3, [r4, #409]	@ iftmp.3516, <variable>.probXmitted
 	mov	r1, r6	@, pbi
 	mov	r0, r5	@, pBs
 	bl	VP6_decodeModeDiff	@
 	ldrb	r1, [r4, #420]	@ zero_extendqisi2	@ tmp572, <variable>.probXmitted
-	adds	r3, r0, r1	@ diff.3521,, tmp572
-	movmi	r3, #0	@ iftmp.3523,
+	adds	r3, r0, r1	@ diff.3520,, tmp572
+	movmi	r3, #0	@ iftmp.3522,
 	bmi	.L495	@,
-	cmp	r3, #255	@ diff.3521,
+	cmp	r3, #255	@ diff.3520,
 	movge	r3, #255	@ tmp573,
-	uxtb	r3, r3	@ iftmp.3523, tmp573
+	uxtb	r3, r3	@ iftmp.3522, tmp573
 .L495:
-	strb	r3, [r4, #420]	@ iftmp.3523, <variable>.probXmitted
+	strb	r3, [r4, #420]	@ iftmp.3522, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	ip, [r4, #410]	@ zero_extendqisi2	@ tmp575, <variable>.probXmitted
-	adds	r3, r0, ip	@ diff.3527,, tmp575
-	movmi	r3, #0	@ iftmp.3529,
+	adds	r3, r0, ip	@ diff.3526,, tmp575
+	movmi	r3, #0	@ iftmp.3528,
 	bmi	.L497	@,
-	cmp	r3, #255	@ diff.3527,
+	cmp	r3, #255	@ diff.3526,
 	movge	r3, #255	@ tmp576,
-	uxtb	r3, r3	@ iftmp.3529, tmp576
+	uxtb	r3, r3	@ iftmp.3528, tmp576
 .L497:
-	strb	r3, [r4, #410]	@ iftmp.3529, <variable>.probXmitted
+	strb	r3, [r4, #410]	@ iftmp.3528, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r3, [r4, #421]	@ zero_extendqisi2	@ tmp578, <variable>.probXmitted
-	adds	r3, r0, r3	@ diff.3533,, tmp578
-	movmi	r3, #0	@ iftmp.3535,
+	adds	r3, r0, r3	@ diff.3532,, tmp578
+	movmi	r3, #0	@ iftmp.3534,
 	bmi	.L499	@,
-	cmp	r3, #255	@ diff.3533,
+	cmp	r3, #255	@ diff.3532,
 	movge	r3, #255	@ tmp579,
-	uxtb	r3, r3	@ iftmp.3535, tmp579
+	uxtb	r3, r3	@ iftmp.3534, tmp579
 .L499:
-	strb	r3, [r4, #421]	@ iftmp.3535, <variable>.probXmitted
+	strb	r3, [r4, #421]	@ iftmp.3534, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r2, [r4, #411]	@ zero_extendqisi2	@ tmp581, <variable>.probXmitted
-	adds	r3, r0, r2	@ diff.3539,, tmp581
-	movmi	r3, #0	@ iftmp.3541,
+	adds	r3, r0, r2	@ diff.3538,, tmp581
+	movmi	r3, #0	@ iftmp.3540,
 	bmi	.L501	@,
-	cmp	r3, #255	@ diff.3539,
+	cmp	r3, #255	@ diff.3538,
 	movge	r3, #255	@ tmp582,
-	uxtb	r3, r3	@ iftmp.3541, tmp582
+	uxtb	r3, r3	@ iftmp.3540, tmp582
 .L501:
-	strb	r3, [r4, #411]	@ iftmp.3541, <variable>.probXmitted
+	strb	r3, [r4, #411]	@ iftmp.3540, <variable>.probXmitted
 	mov	r1, r6	@, pbi
 	mov	r0, r5	@, pBs
 	bl	VP6_decodeModeDiff	@
 	ldrb	r1, [r4, #422]	@ zero_extendqisi2	@ tmp584, <variable>.probXmitted
-	adds	r3, r0, r1	@ diff.3545,, tmp584
-	movmi	r3, #0	@ iftmp.3547,
+	adds	r3, r0, r1	@ diff.3544,, tmp584
+	movmi	r3, #0	@ iftmp.3546,
 	bmi	.L503	@,
-	cmp	r3, #255	@ diff.3545,
+	cmp	r3, #255	@ diff.3544,
 	movge	r3, #255	@ tmp585,
-	uxtb	r3, r3	@ iftmp.3547, tmp585
+	uxtb	r3, r3	@ iftmp.3546, tmp585
 .L503:
-	strb	r3, [r4, #422]	@ iftmp.3547, <variable>.probXmitted
+	strb	r3, [r4, #422]	@ iftmp.3546, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	ip, [r4, #412]	@ zero_extendqisi2	@ tmp587, <variable>.probXmitted
-	adds	r3, r0, ip	@ diff.3551,, tmp587
-	movmi	r3, #0	@ iftmp.3553,
+	adds	r3, r0, ip	@ diff.3550,, tmp587
+	movmi	r3, #0	@ iftmp.3552,
 	bmi	.L505	@,
-	cmp	r3, #255	@ diff.3551,
+	cmp	r3, #255	@ diff.3550,
 	movge	r3, #255	@ tmp588,
-	uxtb	r3, r3	@ iftmp.3553, tmp588
+	uxtb	r3, r3	@ iftmp.3552, tmp588
 .L505:
-	strb	r3, [r4, #412]	@ iftmp.3553, <variable>.probXmitted
+	strb	r3, [r4, #412]	@ iftmp.3552, <variable>.probXmitted
 	mov	r0, r5	@, pBs
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r3, [r4, #423]	@ zero_extendqisi2	@ tmp590, <variable>.probXmitted
-	adds	r3, r0, r3	@ diff.3425,, tmp590
+	adds	r3, r0, r3	@ diff.3424,, tmp590
 	movmi	r3, #0	@ iftmp.465,
 	bmi	.L507	@,
-	cmp	r3, #255	@ diff.3425,
+	cmp	r3, #255	@ diff.3424,
 	movge	r3, #255	@ tmp591,
 	uxtb	r3, r3	@ iftmp.465, tmp591
 .L507:
@@ -6623,17 +6623,17 @@ VP6_DecodeModeProbs:
 	mov	r1, r6	@, pbi
 	bl	VP6_decodeModeDiff	@
 	ldrb	r2, [r4, #413]	@ zero_extendqisi2	@ tmp593, <variable>.probXmitted
-	adds	r3, r0, r2	@ diff.3427,, tmp593
+	adds	r3, r0, r2	@ diff.3426,, tmp593
 	movmi	r3, #0	@ iftmp.467,
 	bmi	.L509	@,
-	cmp	r3, #255	@ diff.3427,
+	cmp	r3, #255	@ diff.3426,
 	movge	r3, #255	@ tmp594,
 	uxtb	r3, r3	@ iftmp.467, tmp594
 .L509:
 	strb	r3, [r4, #413]	@ iftmp.467, <variable>.probXmitted
 .L469:
 	add	r7, r7, #1	@ j, j,
-	add	r4, r4, #20	@ ivtmp.3404, ivtmp.3404,
+	add	r4, r4, #20	@ ivtmp.3403, ivtmp.3403,
 	cmp	r7, #3	@ j,
 	bne	.L510	@,
 	mov	r0, sl	@, pVp6CodecInfo
@@ -6642,7 +6642,7 @@ VP6_DecodeModeProbs:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L513:
-	mov	r1, r8	@, D.39081
+	mov	r1, r8	@, D.39088
 	mov	r2, #4	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
@@ -6737,7 +6737,7 @@ VP6_ConfigureEntropyDecoder:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r7, #:lower16:.LANCHOR0	@ tmp987,
-	add	r4, r2, #72	@ D.38969, pbi,
+	add	r4, r2, #72	@ D.38976, pbi,
 	movt	r7, #:upper16:.LANCHOR0	@ tmp987,
 	str	r2, [fp, #-88]	@ pbi, %sfp
 	mov	r5, r1	@ pBs, pBs
@@ -6748,7 +6748,7 @@ VP6_ConfigureEntropyDecoder:
 	mov	r6, r3	@ FrameType, FrameType
 	bl	memset	@
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1456]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6759,7 +6759,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #514]	@ LastProb, <variable>.DcProbs
 .L516:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1457]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6770,7 +6770,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #515]	@ LastProb, <variable>.DcProbs
 .L518:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1458]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6781,7 +6781,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #516]	@ LastProb, <variable>.DcProbs
 .L520:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1459]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6792,7 +6792,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #517]	@ LastProb, <variable>.DcProbs
 .L522:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1460]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6803,7 +6803,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #518]	@ LastProb, <variable>.DcProbs
 .L524:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1461]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6814,7 +6814,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #519]	@ LastProb, <variable>.DcProbs
 .L526:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1462]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6825,7 +6825,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #520]	@ LastProb, <variable>.DcProbs
 .L528:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1463]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6836,7 +6836,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #521]	@ LastProb, <variable>.DcProbs
 .L530:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1464]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6847,7 +6847,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #522]	@ LastProb, <variable>.DcProbs
 .L532:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1465]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6858,7 +6858,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #523]	@ LastProb, <variable>.DcProbs
 .L534:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1466]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6869,7 +6869,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #524]	@ LastProb, <variable>.DcProbs
 .L536:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1467]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6880,7 +6880,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #525]	@ LastProb, <variable>.DcProbs
 .L541:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1468]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6891,7 +6891,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #526]	@ LastProb, <variable>.DcProbs
 .L543:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1469]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6902,7 +6902,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #527]	@ LastProb, <variable>.DcProbs
 .L545:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1470]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6913,7 +6913,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #528]	@ LastProb, <variable>.DcProbs
 .L547:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1471]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6924,7 +6924,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #529]	@ LastProb, <variable>.DcProbs
 .L549:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1472]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6935,7 +6935,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #530]	@ LastProb, <variable>.DcProbs
 .L551:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1473]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6946,7 +6946,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #531]	@ LastProb, <variable>.DcProbs
 .L553:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1474]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6957,7 +6957,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [ip, #532]	@ LastProb, <variable>.DcProbs
 .L555:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1475]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6968,7 +6968,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r2, #533]	@ LastProb, <variable>.DcProbs
 .L557:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1476]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6979,7 +6979,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r1, #534]	@ LastProb, <variable>.DcProbs
 .L559:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1477]	@ zero_extendqisi2	@, VP6_DcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -6991,18 +6991,18 @@ VP6_ConfigureEntropyDecoder:
 	beq	.L539	@,
 .L540:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_DecodeBool128	@
 	cmp	r0, #0	@,
 	beq	.L562	@,
-	ldr	r8, [fp, #-64]	@ ivtmp.3650, %sfp
+	ldr	r8, [fp, #-64]	@ ivtmp.3649, %sfp
 	mov	sl, #1	@ i,
 	str	r6, [fp, #-68]	@ FrameType, %sfp
 	mov	r9, r7	@ tmp987, tmp987
 	b	.L564	@
 .L563:
 	ldr	r0, .L681	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r0, r6]	@ zero_extendqisi2	@, ScanBandUpdateProbs
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_DecodeBool	@
@@ -7012,10 +7012,10 @@ VP6_ConfigureEntropyDecoder:
 	add	r3, r6, #1	@ i, tmp998,
 	add	sl, r6, #2	@ i, tmp998,
 	ldr	r6, .L681	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
-	add	r8, r7, #2	@ ivtmp.3650, tmp999,
-	add	r7, r7, #1	@ ivtmp.3650, tmp999,
+	add	r8, r7, #2	@ ivtmp.3649, tmp999,
+	add	r7, r7, #1	@ ivtmp.3649, tmp999,
 	ldrb	r2, [r6, r3]	@ zero_extendqisi2	@, ScanBandUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7024,19 +7024,19 @@ VP6_ConfigureEntropyDecoder:
 	beq	.L641	@,
 .L564:
 	ldr	r7, .L681	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	add	r6, sl, #1	@ tmp998, i,
 	ldrb	r2, [r7, sl]	@ zero_extendqisi2	@, ScanBandUpdateProbs
-	add	r7, r8, #1	@ tmp999, ivtmp.3650,
+	add	r7, r8, #1	@ tmp999, ivtmp.3649,
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L563	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #4	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	strb	r0, [r8, #1089]	@, <variable>.ScanBands
 	ldr	r0, .L681	@,
 	ldrb	r2, [r0, r6]	@ zero_extendqisi2	@, ScanBandUpdateProbs
@@ -7046,7 +7046,7 @@ VP6_ConfigureEntropyDecoder:
 	beq	.L626	@,
 .L639:
 	mov	r2, #4	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	strb	r0, [r7, #1089]	@, <variable>.ScanBands
@@ -7054,7 +7054,7 @@ VP6_ConfigureEntropyDecoder:
 .L640:
 	mov	r2, #4	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	cmp	sl, #64	@ i,
 	strb	r0, [r7, #1089]	@, <variable>.ScanBands
@@ -7067,189 +7067,189 @@ VP6_ConfigureEntropyDecoder:
 	bl	VP6_BuildScanOrder	@
 .L562:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1572]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L642	@,
 .L565:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1573]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L643	@,
 .L566:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1574]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L644	@,
 .L567:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1575]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L645	@,
 .L568:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1576]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L646	@,
 .L569:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1577]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L647	@,
 .L570:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1578]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L648	@,
 .L571:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1579]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L649	@,
 .L572:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1580]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L650	@,
 .L573:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1581]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L651	@,
 .L574:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1582]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L652	@,
 .L575:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1583]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L653	@,
 .L576:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1584]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L654	@,
 .L577:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1585]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L655	@,
 .L578:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1586]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L656	@,
 .L580:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1587]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L657	@,
 .L582:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1588]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L658	@,
 .L583:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1589]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L659	@,
 .L584:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1590]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L660	@,
 .L585:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1591]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L661	@,
 .L586:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1592]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L662	@,
 .L587:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1593]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L663	@,
 .L588:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1594]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L664	@,
 .L589:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1595]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L665	@,
 .L590:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1596]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L666	@,
 .L591:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1597]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L667	@,
 .L592:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1598]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7257,7 +7257,7 @@ VP6_ConfigureEntropyDecoder:
 .L593:
 	ldrb	r2, [r7, #1599]	@ zero_extendqisi2	@, ZrlUpdateProbs
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	bne	.L669	@,
@@ -7283,11 +7283,11 @@ VP6_ConfigureEntropyDecoder:
 	add	sl, lr, r9	@ tmp982,, tmp980
 	add	ip, r2, r2, asl #5	@, tmp973,,,
 	ldr	r8, .L681+4	@,
-	add	sl, sl, #564	@ ivtmp.3596, tmp982,
+	add	sl, sl, #564	@ ivtmp.3595, tmp982,
 	add	r7, r1, ip, asl #1	@, tmp979,, tmp973,
 	mov	r9, #0	@ Band,
-	add	r7, r8, r7	@ ivtmp.3594,, tmp979
-	mov	r8, sl	@ ivtmp.3667, ivtmp.3596
+	add	r7, r8, r7	@ ivtmp.3593,, tmp979
+	mov	r8, sl	@ ivtmp.3666, ivtmp.3595
 	b	.L621	@
 .L671:
 	cmp	r6, #0	@ FrameType,
@@ -7295,7 +7295,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	lr, [r8, #0]	@ LastProb, <variable>.AcProbs
 .L599:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #1]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7306,7 +7306,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r1, [r8, #1]	@ LastProb, <variable>.AcProbs
 .L601:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #2]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7317,7 +7317,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	lr, [r8, #2]	@ LastProb, <variable>.AcProbs
 .L603:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #3]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7328,7 +7328,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r0, [r8, #3]	@ LastProb, <variable>.AcProbs
 .L605:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #4]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7339,7 +7339,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	lr, [r8, #4]	@ LastProb, <variable>.AcProbs
 .L607:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #5]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7350,7 +7350,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r3, [r8, #5]	@ LastProb, <variable>.AcProbs
 .L609:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #6]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7361,7 +7361,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	lr, [r8, #6]	@ LastProb, <variable>.AcProbs
 .L611:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #7]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7372,7 +7372,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	ip, [r8, #7]	@ LastProb, <variable>.AcProbs
 .L613:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #8]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7383,7 +7383,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	lr, [r8, #8]	@ LastProb, <variable>.AcProbs
 .L615:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #9]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7394,7 +7394,7 @@ VP6_ConfigureEntropyDecoder:
 	streqb	r0, [r8, #9]	@ LastProb, <variable>.AcProbs
 .L617:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #10]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
@@ -7402,216 +7402,216 @@ VP6_ConfigureEntropyDecoder:
 .L633:
 	cmp	r6, #0	@ FrameType,
 	add	r9, r9, #1	@ Band, Band,
-	add	r7, r7, #11	@ ivtmp.3594, ivtmp.3594,
-	add	sl, sl, #11	@ ivtmp.3596, ivtmp.3596,
+	add	r7, r7, #11	@ ivtmp.3593, ivtmp.3593,
+	add	sl, sl, #11	@ ivtmp.3595, ivtmp.3595,
 	ldreqb	r3, [fp, #-46]	@ zero_extendqisi2	@ LastProb, LastProb
 	streqb	r3, [r8, #10]	@ LastProb, <variable>.AcProbs
 	cmp	r9, #6	@ Band,
-	add	r8, r8, #11	@ ivtmp.3667, ivtmp.3667,
+	add	r8, r8, #11	@ ivtmp.3666, ivtmp.3666,
 	beq	.L597	@,
 .L621:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	ldrb	r2, [r7, #0]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L671	@,
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r3, r0, asl #1	@ tmp872,,
-	uxtb	r2, r3	@ temp.3880, tmp872
-	cmp	r2, #0	@ temp.3880,
-	addeq	r2, r2, #1	@,, tmp875, temp.3880
-	uxtb	r0, r2	@ temp.3882, tmp875
+	uxtb	r2, r3	@ temp.3879, tmp872
+	cmp	r2, #0	@ temp.3879,
+	addeq	r2, r2, #1	@,, tmp875, temp.3879
+	uxtb	r0, r2	@ temp.3881, tmp875
 	ldrb	r2, [r7, #1]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
-	strb	r0, [fp, #-56]	@ temp.3882, LastProb
-	strb	r0, [sl, #0]	@ temp.3882, <variable>.AcProbs
+	strb	r0, [fp, #-56]	@ temp.3881, LastProb
+	strb	r0, [sl, #0]	@ temp.3881, <variable>.AcProbs
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L672	@,
 .L600:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, r0, asl #1	@ tmp882,,
-	uxtb	r0, r2	@ temp.3889, tmp882
+	uxtb	r0, r2	@ temp.3888, tmp882
 	ldrb	r2, [r7, #2]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
-	cmp	r0, #0	@ temp.3889,
-	addeq	r0, r0, #1	@,, tmp885, temp.3889
-	uxtb	ip, r0	@ temp.3891, tmp885
+	cmp	r0, #0	@ temp.3888,
+	addeq	r0, r0, #1	@,, tmp885, temp.3888
+	uxtb	ip, r0	@ temp.3890, tmp885
 	mov	r0, r5	@, pBs
-	strb	ip, [fp, #-55]	@ temp.3891, LastProb
-	strb	ip, [sl, #1]	@ temp.3891, <variable>.AcProbs
+	strb	ip, [fp, #-55]	@ temp.3890, LastProb
+	strb	ip, [sl, #1]	@ temp.3890, <variable>.AcProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L673	@,
 .L602:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldrb	r2, [r7, #3]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	mov	ip, r0, asl #1	@ tmp892,,
 	mov	r0, r5	@, pBs
-	uxtb	r1, ip	@ temp.3897, tmp892
-	cmp	r1, #0	@ temp.3897,
-	addeq	r1, r1, #1	@,, tmp895, temp.3897
-	uxtb	r3, r1	@ temp.3899, tmp895
-	mov	r1, r4	@, D.38969
-	strb	r3, [fp, #-54]	@ temp.3899, LastProb
-	strb	r3, [sl, #2]	@ temp.3899, <variable>.AcProbs
+	uxtb	r1, ip	@ temp.3896, tmp892
+	cmp	r1, #0	@ temp.3896,
+	addeq	r1, r1, #1	@,, tmp895, temp.3896
+	uxtb	r3, r1	@ temp.3898, tmp895
+	mov	r1, r4	@, D.38976
+	strb	r3, [fp, #-54]	@ temp.3898, LastProb
+	strb	r3, [sl, #2]	@ temp.3898, <variable>.AcProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L674	@,
 .L604:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp902,,
 	mov	r0, r5	@, pBs
-	uxtb	r3, r1	@ temp.3910, tmp902
-	mov	r1, r4	@, D.38969
-	cmp	r3, #0	@ temp.3910,
-	addeq	r3, r3, #1	@,, tmp905, temp.3910
-	uxtb	r2, r3	@ temp.3912, tmp905
-	strb	r2, [fp, #-53]	@ temp.3912, LastProb
-	strb	r2, [sl, #3]	@ temp.3912, <variable>.AcProbs
+	uxtb	r3, r1	@ temp.3909, tmp902
+	mov	r1, r4	@, D.38976
+	cmp	r3, #0	@ temp.3909,
+	addeq	r3, r3, #1	@,, tmp905, temp.3909
+	uxtb	r2, r3	@ temp.3911, tmp905
+	strb	r2, [fp, #-53]	@ temp.3911, LastProb
+	strb	r2, [sl, #3]	@ temp.3911, <variable>.AcProbs
 	ldrb	r2, [r7, #4]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L675	@,
 .L606:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, r0, asl #1	@ tmp912,,
-	uxtb	r0, r2	@ temp.3919, tmp912
+	uxtb	r0, r2	@ temp.3918, tmp912
 	ldrb	r2, [r7, #5]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
-	cmp	r0, #0	@ temp.3919,
-	addeq	r0, r0, #1	@,, tmp915, temp.3919
-	uxtb	ip, r0	@ temp.3921, tmp915
+	cmp	r0, #0	@ temp.3918,
+	addeq	r0, r0, #1	@,, tmp915, temp.3918
+	uxtb	ip, r0	@ temp.3920, tmp915
 	mov	r0, r5	@, pBs
-	strb	ip, [fp, #-52]	@ temp.3921, LastProb
-	strb	ip, [sl, #4]	@ temp.3921, <variable>.AcProbs
+	strb	ip, [fp, #-52]	@ temp.3920, LastProb
+	strb	ip, [sl, #4]	@ temp.3920, <variable>.AcProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L676	@,
 .L608:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp922,,
 	mov	r0, r5	@, pBs
-	uxtb	ip, r2	@ temp.3929, tmp922
+	uxtb	ip, r2	@ temp.3928, tmp922
 	ldrb	r2, [r7, #6]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
-	cmp	ip, #0	@ temp.3929,
-	addeq	ip, ip, #1	@,, tmp925, temp.3929
-	uxtb	r1, ip	@ temp.3931, tmp925
-	strb	r1, [fp, #-51]	@ temp.3931, LastProb
-	strb	r1, [sl, #5]	@ temp.3931, <variable>.AcProbs
-	mov	r1, r4	@, D.38969
+	cmp	ip, #0	@ temp.3928,
+	addeq	ip, ip, #1	@,, tmp925, temp.3928
+	uxtb	r1, ip	@ temp.3930, tmp925
+	strb	r1, [fp, #-51]	@ temp.3930, LastProb
+	strb	r1, [sl, #5]	@ temp.3930, <variable>.AcProbs
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L677	@,
 .L610:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldrb	r2, [r7, #7]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	mov	r1, r0, asl #1	@ tmp932,,
-	uxtb	r3, r1	@ temp.3937, tmp932
-	mov	r1, r4	@, D.38969
-	cmp	r3, #0	@ temp.3937,
-	addeq	r3, r3, #1	@,, tmp935, temp.3937
-	uxtb	r0, r3	@ temp.3939, tmp935
-	strb	r0, [fp, #-50]	@ temp.3939, LastProb
-	strb	r0, [sl, #6]	@ temp.3939, <variable>.AcProbs
+	uxtb	r3, r1	@ temp.3936, tmp932
+	mov	r1, r4	@, D.38976
+	cmp	r3, #0	@ temp.3936,
+	addeq	r3, r3, #1	@,, tmp935, temp.3936
+	uxtb	r0, r3	@ temp.3938, tmp935
+	strb	r0, [fp, #-50]	@ temp.3938, LastProb
+	strb	r0, [sl, #6]	@ temp.3938, <variable>.AcProbs
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L678	@,
 .L612:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r3, r0, asl #1	@ tmp942,,
-	uxtb	r0, r3	@ temp.3949, tmp942
-	cmp	r0, #0	@ temp.3949,
-	addeq	r0, r0, #1	@,, tmp945, temp.3949
-	uxtb	r2, r0	@ temp.3951, tmp945
+	uxtb	r0, r3	@ temp.3948, tmp942
+	cmp	r0, #0	@ temp.3948,
+	addeq	r0, r0, #1	@,, tmp945, temp.3948
+	uxtb	r2, r0	@ temp.3950, tmp945
 	mov	r0, r5	@, pBs
-	strb	r2, [fp, #-49]	@ temp.3951, LastProb
-	strb	r2, [sl, #7]	@ temp.3951, <variable>.AcProbs
+	strb	r2, [fp, #-49]	@ temp.3950, LastProb
+	strb	r2, [sl, #7]	@ temp.3950, <variable>.AcProbs
 	ldrb	r2, [r7, #8]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L679	@,
 .L614:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp952,,
 	mov	r0, r5	@, pBs
-	uxtb	ip, r2	@ temp.3959, tmp952
+	uxtb	ip, r2	@ temp.3958, tmp952
 	ldrb	r2, [r7, #9]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
-	cmp	ip, #0	@ temp.3959,
-	addeq	ip, ip, #1	@,, tmp955, temp.3959
-	uxtb	r1, ip	@ temp.3961, tmp955
-	strb	r1, [fp, #-48]	@ temp.3961, LastProb
-	strb	r1, [sl, #8]	@ temp.3961, <variable>.AcProbs
-	mov	r1, r4	@, D.38969
+	cmp	ip, #0	@ temp.3958,
+	addeq	ip, ip, #1	@,, tmp955, temp.3958
+	uxtb	r1, ip	@ temp.3960, tmp955
+	strb	r1, [fp, #-48]	@ temp.3960, LastProb
+	strb	r1, [sl, #8]	@ temp.3960, <variable>.AcProbs
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L680	@,
 .L616:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldrb	r2, [r7, #10]	@ zero_extendqisi2	@, VP6_AcUpdateProbs
 	mov	ip, r0, asl #1	@ tmp962,,
 	mov	r0, r5	@, pBs
-	uxtb	r1, ip	@ temp.3969, tmp962
-	cmp	r1, #0	@ temp.3969,
-	addeq	r1, r1, #1	@,, tmp965, temp.3969
-	uxtb	r3, r1	@ temp.3971, tmp965
-	mov	r1, r4	@, D.38969
-	strb	r3, [fp, #-47]	@ temp.3971, LastProb
-	strb	r3, [sl, #9]	@ temp.3971, <variable>.AcProbs
+	uxtb	r1, ip	@ temp.3968, tmp962
+	cmp	r1, #0	@ temp.3968,
+	addeq	r1, r1, #1	@,, tmp965, temp.3968
+	uxtb	r3, r1	@ temp.3970, tmp965
+	mov	r1, r4	@, D.38976
+	strb	r3, [fp, #-47]	@ temp.3970, LastProb
+	strb	r3, [sl, #9]	@ temp.3970, <variable>.AcProbs
 	bl	Vp6_Vfmw_DecodeBool	@
 	cmp	r0, #0	@,
 	beq	.L633	@,
 .L670:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	add	r9, r9, #1	@ Band, Band,
 	bl	Vp6_Vfmw_BoolRead	@
-	add	r7, r7, #11	@ ivtmp.3594, ivtmp.3594,
-	add	r8, r8, #11	@ ivtmp.3667, ivtmp.3667,
+	add	r7, r7, #11	@ ivtmp.3593, ivtmp.3593,
+	add	r8, r8, #11	@ ivtmp.3666, ivtmp.3666,
 	mov	ip, r0, asl #1	@ tmp860,,
-	uxtb	r1, ip	@ D.39018, tmp860
-	cmp	r1, #0	@ D.39018,
-	addeq	r1, r1, #1	@,, tmp863, D.39018
+	uxtb	r1, ip	@ D.39025, tmp860
+	cmp	r1, #0	@ D.39025,
+	addeq	r1, r1, #1	@,, tmp863, D.39025
 	cmp	r9, #6	@ Band,
-	uxtb	r3, r1	@ temp.3654, tmp863
-	strb	r3, [fp, #-46]	@ temp.3654, LastProb
-	strb	r3, [sl, #10]	@ temp.3654, <variable>.AcProbs
-	add	sl, sl, #11	@ ivtmp.3596, ivtmp.3596,
+	uxtb	r3, r1	@ temp.3653, tmp863
+	strb	r3, [fp, #-46]	@ temp.3653, LastProb
+	strb	r3, [sl, #10]	@ temp.3653, <variable>.AcProbs
+	add	sl, sl, #11	@ ivtmp.3595, ivtmp.3595,
 	bne	.L621	@,
 .L597:
 	ldr	r3, [fp, #-68]	@, %sfp
@@ -7637,18 +7637,18 @@ VP6_ConfigureEntropyDecoder:
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L638:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp506,,
-	uxtb	sl, ip	@ D.38978, tmp506
-	cmp	sl, #0	@ D.38978,
-	addeq	sl, sl, #1	@,, tmp509, D.38978
+	uxtb	sl, ip	@ D.38985, tmp506
+	cmp	sl, #0	@ D.38985,
+	addeq	sl, sl, #1	@,, tmp509, D.38985
 	cmp	r6, #0	@ FrameType,
-	uxtb	r8, sl	@ D.38981, tmp509
-	strb	r8, [r9, #535]	@ D.38981, <variable>.DcProbs
-	strb	r8, [fp, #-46]	@ D.38981, LastProb
+	uxtb	r8, sl	@ D.38988, tmp509
+	strb	r8, [r9, #535]	@ D.38988, <variable>.DcProbs
+	strb	r8, [fp, #-46]	@ D.38988, LastProb
 	bne	.L540	@,
 .L539:
 	ldr	lr, .L681+8	@ tmp626,
@@ -7661,380 +7661,380 @@ VP6_ConfigureEntropyDecoder:
 	b	.L540	@
 .L558:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp616,,
-	uxtb	sl, ip	@ temp.3754, tmp616
-	cmp	sl, #0	@ temp.3754,
-	addeq	sl, sl, #1	@,, tmp619, temp.3754
-	uxtb	r8, sl	@ temp.3756, tmp619
-	strb	r8, [r9, #534]	@ temp.3756, <variable>.DcProbs
-	strb	r8, [fp, #-47]	@ temp.3756, LastProb
+	uxtb	sl, ip	@ temp.3753, tmp616
+	cmp	sl, #0	@ temp.3753,
+	addeq	sl, sl, #1	@,, tmp619, temp.3753
+	uxtb	r8, sl	@ temp.3755, tmp619
+	strb	r8, [r9, #534]	@ temp.3755, <variable>.DcProbs
+	strb	r8, [fp, #-47]	@ temp.3755, LastProb
 	b	.L559	@
 .L556:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp605,,
-	uxtb	r0, r1	@ temp.3743, tmp605
-	cmp	r0, #0	@ temp.3743,
-	addeq	r0, r0, #1	@,, tmp608, temp.3743
-	uxtb	r3, r0	@ temp.3745, tmp608
-	strb	r3, [r2, #533]	@ temp.3745, <variable>.DcProbs
-	strb	r3, [fp, #-48]	@ temp.3745, LastProb
+	uxtb	r0, r1	@ temp.3742, tmp605
+	cmp	r0, #0	@ temp.3742,
+	addeq	r0, r0, #1	@,, tmp608, temp.3742
+	uxtb	r3, r0	@ temp.3744, tmp608
+	strb	r3, [r2, #533]	@ temp.3744, <variable>.DcProbs
+	strb	r3, [fp, #-48]	@ temp.3744, LastProb
 	b	.L557	@
 .L554:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp594,,
-	uxtb	sl, ip	@ temp.3733, tmp594
-	cmp	sl, #0	@ temp.3733,
-	addeq	sl, sl, #1	@,, tmp597, temp.3733
-	uxtb	r8, sl	@ temp.3735, tmp597
-	strb	r8, [r9, #532]	@ temp.3735, <variable>.DcProbs
-	strb	r8, [fp, #-49]	@ temp.3735, LastProb
+	uxtb	sl, ip	@ temp.3732, tmp594
+	cmp	sl, #0	@ temp.3732,
+	addeq	sl, sl, #1	@,, tmp597, temp.3732
+	uxtb	r8, sl	@ temp.3734, tmp597
+	strb	r8, [r9, #532]	@ temp.3734, <variable>.DcProbs
+	strb	r8, [fp, #-49]	@ temp.3734, LastProb
 	b	.L555	@
 .L552:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp583,,
-	uxtb	r0, r1	@ temp.3725, tmp583
-	cmp	r0, #0	@ temp.3725,
-	addeq	r0, r0, #1	@,, tmp586, temp.3725
-	uxtb	r3, r0	@ temp.3727, tmp586
-	strb	r3, [r2, #531]	@ temp.3727, <variable>.DcProbs
-	strb	r3, [fp, #-50]	@ temp.3727, LastProb
+	uxtb	r0, r1	@ temp.3724, tmp583
+	cmp	r0, #0	@ temp.3724,
+	addeq	r0, r0, #1	@,, tmp586, temp.3724
+	uxtb	r3, r0	@ temp.3726, tmp586
+	strb	r3, [r2, #531]	@ temp.3726, <variable>.DcProbs
+	strb	r3, [fp, #-50]	@ temp.3726, LastProb
 	b	.L553	@
 .L550:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp572,,
-	uxtb	sl, ip	@ temp.3714, tmp572
-	cmp	sl, #0	@ temp.3714,
-	addeq	sl, sl, #1	@,, tmp575, temp.3714
-	uxtb	r8, sl	@ temp.3716, tmp575
-	strb	r8, [r9, #530]	@ temp.3716, <variable>.DcProbs
-	strb	r8, [fp, #-51]	@ temp.3716, LastProb
+	uxtb	sl, ip	@ temp.3713, tmp572
+	cmp	sl, #0	@ temp.3713,
+	addeq	sl, sl, #1	@,, tmp575, temp.3713
+	uxtb	r8, sl	@ temp.3715, tmp575
+	strb	r8, [r9, #530]	@ temp.3715, <variable>.DcProbs
+	strb	r8, [fp, #-51]	@ temp.3715, LastProb
 	b	.L551	@
 .L548:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp561,,
-	uxtb	r0, r1	@ temp.3705, tmp561
-	cmp	r0, #0	@ temp.3705,
-	addeq	r0, r0, #1	@,, tmp564, temp.3705
-	uxtb	r3, r0	@ temp.3707, tmp564
-	strb	r3, [r2, #529]	@ temp.3707, <variable>.DcProbs
-	strb	r3, [fp, #-52]	@ temp.3707, LastProb
+	uxtb	r0, r1	@ temp.3704, tmp561
+	cmp	r0, #0	@ temp.3704,
+	addeq	r0, r0, #1	@,, tmp564, temp.3704
+	uxtb	r3, r0	@ temp.3706, tmp564
+	strb	r3, [r2, #529]	@ temp.3706, <variable>.DcProbs
+	strb	r3, [fp, #-52]	@ temp.3706, LastProb
 	b	.L549	@
 .L546:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp550,,
-	uxtb	sl, ip	@ temp.3693, tmp550
-	cmp	sl, #0	@ temp.3693,
-	addeq	sl, sl, #1	@,, tmp553, temp.3693
-	uxtb	r8, sl	@ temp.3695, tmp553
-	strb	r8, [r9, #528]	@ temp.3695, <variable>.DcProbs
-	strb	r8, [fp, #-53]	@ temp.3695, LastProb
+	uxtb	sl, ip	@ temp.3692, tmp550
+	cmp	sl, #0	@ temp.3692,
+	addeq	sl, sl, #1	@,, tmp553, temp.3692
+	uxtb	r8, sl	@ temp.3694, tmp553
+	strb	r8, [r9, #528]	@ temp.3694, <variable>.DcProbs
+	strb	r8, [fp, #-53]	@ temp.3694, LastProb
 	b	.L547	@
 .L544:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp539,,
-	uxtb	r0, r1	@ temp.3685, tmp539
-	cmp	r0, #0	@ temp.3685,
-	addeq	r0, r0, #1	@,, tmp542, temp.3685
-	uxtb	r3, r0	@ temp.3683, tmp542
-	strb	r3, [r2, #527]	@ temp.3683, <variable>.DcProbs
-	strb	r3, [fp, #-54]	@ temp.3683, LastProb
+	uxtb	r0, r1	@ temp.3684, tmp539
+	cmp	r0, #0	@ temp.3684,
+	addeq	r0, r0, #1	@,, tmp542, temp.3684
+	uxtb	r3, r0	@ temp.3682, tmp542
+	strb	r3, [r2, #527]	@ temp.3682, <variable>.DcProbs
+	strb	r3, [fp, #-54]	@ temp.3682, LastProb
 	b	.L545	@
 .L542:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp528,,
-	uxtb	sl, ip	@ temp.3677, tmp528
-	cmp	sl, #0	@ temp.3677,
-	addeq	sl, sl, #1	@,, tmp531, temp.3677
-	uxtb	r8, sl	@ temp.3675, tmp531
-	strb	r8, [r9, #526]	@ temp.3675, <variable>.DcProbs
-	strb	r8, [fp, #-55]	@ temp.3675, LastProb
+	uxtb	sl, ip	@ temp.3676, tmp528
+	cmp	sl, #0	@ temp.3676,
+	addeq	sl, sl, #1	@,, tmp531, temp.3676
+	uxtb	r8, sl	@ temp.3674, tmp531
+	strb	r8, [r9, #526]	@ temp.3674, <variable>.DcProbs
+	strb	r8, [fp, #-55]	@ temp.3674, LastProb
 	b	.L543	@
 .L637:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp517,,
-	uxtb	r0, r1	@ temp.3669, tmp517
-	cmp	r0, #0	@ temp.3669,
-	addeq	r0, r0, #1	@,, tmp520, temp.3669
-	uxtb	r3, r0	@ temp.3665, tmp520
-	strb	r3, [r2, #525]	@ temp.3665, <variable>.DcProbs
-	strb	r3, [fp, #-56]	@ temp.3665, LastProb
+	uxtb	r0, r1	@ temp.3668, tmp517
+	cmp	r0, #0	@ temp.3668,
+	addeq	r0, r0, #1	@,, tmp520, temp.3668
+	uxtb	r3, r0	@ temp.3664, tmp520
+	strb	r3, [r2, #525]	@ temp.3664, <variable>.DcProbs
+	strb	r3, [fp, #-56]	@ temp.3664, LastProb
 	b	.L541	@
 .L636:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp495,,
-	uxtb	r0, r1	@ temp.3990, tmp495
-	cmp	r0, #0	@ temp.3990,
-	addeq	r0, r0, #1	@,, tmp498, temp.3990
-	uxtb	r3, r0	@ temp.3992, tmp498
-	strb	r3, [r2, #524]	@ temp.3992, <variable>.DcProbs
-	strb	r3, [fp, #-46]	@ temp.3992, LastProb
+	uxtb	r0, r1	@ temp.3989, tmp495
+	cmp	r0, #0	@ temp.3989,
+	addeq	r0, r0, #1	@,, tmp498, temp.3989
+	uxtb	r3, r0	@ temp.3991, tmp498
+	strb	r3, [r2, #524]	@ temp.3991, <variable>.DcProbs
+	strb	r3, [fp, #-46]	@ temp.3991, LastProb
 	b	.L536	@
 .L533:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp486,,
-	uxtb	sl, ip	@ temp.3983, tmp486
-	cmp	sl, #0	@ temp.3983,
-	addeq	sl, sl, #1	@,, tmp489, temp.3983
-	uxtb	r8, sl	@ temp.3985, tmp489
-	strb	r8, [r9, #523]	@ temp.3985, <variable>.DcProbs
-	strb	r8, [fp, #-47]	@ temp.3985, LastProb
+	uxtb	sl, ip	@ temp.3982, tmp486
+	cmp	sl, #0	@ temp.3982,
+	addeq	sl, sl, #1	@,, tmp489, temp.3982
+	uxtb	r8, sl	@ temp.3984, tmp489
+	strb	r8, [r9, #523]	@ temp.3984, <variable>.DcProbs
+	strb	r8, [fp, #-47]	@ temp.3984, LastProb
 	b	.L534	@
 .L531:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp475,,
-	uxtb	r0, r1	@ temp.3975, tmp475
-	cmp	r0, #0	@ temp.3975,
-	addeq	r0, r0, #1	@,, tmp478, temp.3975
-	uxtb	r3, r0	@ temp.3977, tmp478
-	strb	r3, [r2, #522]	@ temp.3977, <variable>.DcProbs
-	strb	r3, [fp, #-48]	@ temp.3977, LastProb
+	uxtb	r0, r1	@ temp.3974, tmp475
+	cmp	r0, #0	@ temp.3974,
+	addeq	r0, r0, #1	@,, tmp478, temp.3974
+	uxtb	r3, r0	@ temp.3976, tmp478
+	strb	r3, [r2, #522]	@ temp.3976, <variable>.DcProbs
+	strb	r3, [fp, #-48]	@ temp.3976, LastProb
 	b	.L532	@
 .L529:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp464,,
-	uxtb	sl, ip	@ temp.3873, tmp464
-	cmp	sl, #0	@ temp.3873,
-	addeq	sl, sl, #1	@,, tmp467, temp.3873
-	uxtb	r8, sl	@ temp.3871, tmp467
-	strb	r8, [r9, #521]	@ temp.3871, <variable>.DcProbs
-	strb	r8, [fp, #-49]	@ temp.3871, LastProb
+	uxtb	sl, ip	@ temp.3872, tmp464
+	cmp	sl, #0	@ temp.3872,
+	addeq	sl, sl, #1	@,, tmp467, temp.3872
+	uxtb	r8, sl	@ temp.3870, tmp467
+	strb	r8, [r9, #521]	@ temp.3870, <variable>.DcProbs
+	strb	r8, [fp, #-49]	@ temp.3870, LastProb
 	b	.L530	@
 .L527:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp453,,
-	uxtb	r0, r1	@ temp.3698, tmp453
-	cmp	r0, #0	@ temp.3698,
-	addeq	r0, r0, #1	@,, tmp456, temp.3698
-	uxtb	r3, r0	@ temp.3696, tmp456
-	strb	r3, [r2, #520]	@ temp.3696, <variable>.DcProbs
-	strb	r3, [fp, #-50]	@ temp.3696, LastProb
+	uxtb	r0, r1	@ temp.3697, tmp453
+	cmp	r0, #0	@ temp.3697,
+	addeq	r0, r0, #1	@,, tmp456, temp.3697
+	uxtb	r3, r0	@ temp.3695, tmp456
+	strb	r3, [r2, #520]	@ temp.3695, <variable>.DcProbs
+	strb	r3, [fp, #-50]	@ temp.3695, LastProb
 	b	.L528	@
 .L525:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp442,,
-	uxtb	sl, ip	@ temp.3746, tmp442
-	cmp	sl, #0	@ temp.3746,
-	addeq	sl, sl, #1	@,, tmp445, temp.3746
-	uxtb	r8, sl	@ temp.3736, tmp445
-	strb	r8, [r9, #519]	@ temp.3736, <variable>.DcProbs
-	strb	r8, [fp, #-51]	@ temp.3736, LastProb
+	uxtb	sl, ip	@ temp.3745, tmp442
+	cmp	sl, #0	@ temp.3745,
+	addeq	sl, sl, #1	@,, tmp445, temp.3745
+	uxtb	r8, sl	@ temp.3735, tmp445
+	strb	r8, [r9, #519]	@ temp.3735, <variable>.DcProbs
+	strb	r8, [fp, #-51]	@ temp.3735, LastProb
 	b	.L526	@
 .L523:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp431,,
-	uxtb	r0, r1	@ temp.3782, tmp431
-	cmp	r0, #0	@ temp.3782,
-	addeq	r0, r0, #1	@,, tmp434, temp.3782
-	uxtb	r3, r0	@ temp.3780, tmp434
-	strb	r3, [r2, #518]	@ temp.3780, <variable>.DcProbs
-	strb	r3, [fp, #-52]	@ temp.3780, LastProb
+	uxtb	r0, r1	@ temp.3781, tmp431
+	cmp	r0, #0	@ temp.3781,
+	addeq	r0, r0, #1	@,, tmp434, temp.3781
+	uxtb	r3, r0	@ temp.3779, tmp434
+	strb	r3, [r2, #518]	@ temp.3779, <variable>.DcProbs
+	strb	r3, [fp, #-52]	@ temp.3779, LastProb
 	b	.L524	@
 .L521:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp420,,
-	uxtb	sl, ip	@ temp.3818, tmp420
-	cmp	sl, #0	@ temp.3818,
-	addeq	sl, sl, #1	@,, tmp423, temp.3818
-	uxtb	r8, sl	@ temp.3816, tmp423
-	strb	r8, [r9, #517]	@ temp.3816, <variable>.DcProbs
-	strb	r8, [fp, #-53]	@ temp.3816, LastProb
+	uxtb	sl, ip	@ temp.3817, tmp420
+	cmp	sl, #0	@ temp.3817,
+	addeq	sl, sl, #1	@,, tmp423, temp.3817
+	uxtb	r8, sl	@ temp.3815, tmp423
+	strb	r8, [r9, #517]	@ temp.3815, <variable>.DcProbs
+	strb	r8, [fp, #-53]	@ temp.3815, LastProb
 	b	.L522	@
 .L519:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp409,,
-	uxtb	r0, r1	@ temp.3854, tmp409
-	cmp	r0, #0	@ temp.3854,
-	addeq	r0, r0, #1	@,, tmp412, temp.3854
-	uxtb	r3, r0	@ temp.3852, tmp412
-	strb	r3, [r2, #516]	@ temp.3852, <variable>.DcProbs
-	strb	r3, [fp, #-54]	@ temp.3852, LastProb
+	uxtb	r0, r1	@ temp.3853, tmp409
+	cmp	r0, #0	@ temp.3853,
+	addeq	r0, r0, #1	@,, tmp412, temp.3853
+	uxtb	r3, r0	@ temp.3851, tmp412
+	strb	r3, [r2, #516]	@ temp.3851, <variable>.DcProbs
+	strb	r3, [fp, #-54]	@ temp.3851, LastProb
 	b	.L520	@
 .L517:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp398,,
-	uxtb	sl, ip	@ temp.3902, tmp398
-	cmp	sl, #0	@ temp.3902,
-	addeq	sl, sl, #1	@,, tmp401, temp.3902
-	uxtb	r8, sl	@ temp.3900, tmp401
-	strb	r8, [r9, #515]	@ temp.3900, <variable>.DcProbs
-	strb	r8, [fp, #-55]	@ temp.3900, LastProb
+	uxtb	sl, ip	@ temp.3901, tmp398
+	cmp	sl, #0	@ temp.3901,
+	addeq	sl, sl, #1	@,, tmp401, temp.3901
+	uxtb	r8, sl	@ temp.3899, tmp401
+	strb	r8, [r9, #515]	@ temp.3899, <variable>.DcProbs
+	strb	r8, [fp, #-55]	@ temp.3899, LastProb
 	b	.L518	@
 .L515:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp387,,
-	uxtb	r0, r1	@ temp.3942, tmp387
-	cmp	r0, #0	@ temp.3942,
-	addeq	r0, r0, #1	@,, tmp390, temp.3942
-	uxtb	r3, r0	@ temp.3940, tmp390
-	strb	r3, [r2, #514]	@ temp.3940, <variable>.DcProbs
-	strb	r3, [fp, #-56]	@ temp.3940, LastProb
+	uxtb	r0, r1	@ temp.3941, tmp387
+	cmp	r0, #0	@ temp.3941,
+	addeq	r0, r0, #1	@,, tmp390, temp.3941
+	uxtb	r3, r0	@ temp.3939, tmp390
+	strb	r3, [r2, #514]	@ temp.3939, <variable>.DcProbs
+	strb	r3, [fp, #-56]	@ temp.3939, LastProb
 	b	.L516	@
 .L669:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r7, [fp, #-64]	@, %sfp
 	mov	r8, r0, asl #1	@ tmp750,,
-	uxtb	r0, r8	@ D.39006, tmp750
-	cmp	r0, #0	@ D.39006,
-	addeq	r0, r0, #1	@,, tmp753, D.39006
+	uxtb	r0, r8	@ D.39013, tmp750
+	cmp	r0, #0	@ D.39013,
+	addeq	r0, r0, #1	@,, tmp753, D.39013
 	strb	r0, [r7, #563]	@ tmp753, <variable>.ZeroRunProbs
 	b	.L595	@
 .L668:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r2, r0, asl #1	@ tmp852,,
-	uxtb	r8, r2	@ temp.3868, tmp852
-	cmp	r8, #0	@ temp.3868,
-	addeq	r8, r8, #1	@,, tmp855, temp.3868
+	uxtb	r8, r2	@ temp.3867, tmp852
+	cmp	r8, #0	@ temp.3867,
+	addeq	r8, r8, #1	@,, tmp855, temp.3867
 	strb	r8, [ip, #562]	@ tmp855, <variable>.ZeroRunProbs
 	b	.L593	@
 .L667:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	sl, r0, asl #1	@ tmp844,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r9, sl	@ temp.3859, tmp844
-	cmp	r9, #0	@ temp.3859,
-	addeq	r9, r9, #1	@,, tmp847, temp.3859
+	uxtb	r9, sl	@ temp.3858, tmp844
+	cmp	r9, #0	@ temp.3858,
+	addeq	r9, r9, #1	@,, tmp847, temp.3858
 	strb	r9, [r0, #561]	@ tmp847, <variable>.ZeroRunProbs
 	b	.L592	@
 .L666:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp836,,
-	uxtb	r3, r1	@ temp.3849, tmp836
-	cmp	r3, #0	@ temp.3849,
-	addeq	r3, r3, #1	@,, tmp839, temp.3849
+	uxtb	r3, r1	@ temp.3848, tmp836
+	cmp	r3, #0	@ temp.3848,
+	addeq	r3, r3, #1	@,, tmp839, temp.3848
 	strb	r3, [r2, #560]	@ tmp839, <variable>.ZeroRunProbs
 	b	.L591	@
 .L665:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r8, r0, asl #1	@ tmp828,,
-	uxtb	sl, r8	@ temp.3842, tmp828
-	cmp	sl, #0	@ temp.3842,
-	addeq	sl, sl, #1	@,, tmp831, temp.3842
+	uxtb	sl, r8	@ temp.3841, tmp828
+	cmp	sl, #0	@ temp.3841,
+	addeq	sl, sl, #1	@,, tmp831, temp.3841
 	strb	sl, [ip, #559]	@ tmp831, <variable>.ZeroRunProbs
 	b	.L590	@
 .L664:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r9, r0, asl #1	@ tmp820,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r1, r9	@ temp.3832, tmp820
-	cmp	r1, #0	@ temp.3832,
-	addeq	r1, r1, #1	@,, tmp823, temp.3832
+	uxtb	r1, r9	@ temp.3831, tmp820
+	cmp	r1, #0	@ temp.3831,
+	addeq	r1, r1, #1	@,, tmp823, temp.3831
 	strb	r1, [r0, #558]	@ tmp823, <variable>.ZeroRunProbs
 	b	.L589	@
 .L663:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r8, [fp, #-64]	@, %sfp
 	mov	r2, r0, asl #1	@ tmp812,,
-	uxtb	r3, r2	@ temp.3824, tmp812
-	cmp	r3, #0	@ temp.3824,
-	addeq	r3, r3, #1	@,, tmp815, temp.3824
+	uxtb	r3, r2	@ temp.3823, tmp812
+	cmp	r3, #0	@ temp.3823,
+	addeq	r3, r3, #1	@,, tmp815, temp.3823
 	strb	r3, [r8, #557]	@ tmp815, <variable>.ZeroRunProbs
 	b	.L588	@
 .L682:
@@ -8045,254 +8045,254 @@ VP6_ConfigureEntropyDecoder:
 	.word	.LANCHOR0+1480
 .L662:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	sl, r0, asl #1	@ tmp804,,
-	uxtb	r9, sl	@ temp.3813, tmp804
-	cmp	r9, #0	@ temp.3813,
-	addeq	r9, r9, #1	@,, tmp807, temp.3813
+	uxtb	r9, sl	@ temp.3812, tmp804
+	cmp	r9, #0	@ temp.3812,
+	addeq	r9, r9, #1	@,, tmp807, temp.3812
 	strb	r9, [ip, #556]	@ tmp807, <variable>.ZeroRunProbs
 	b	.L587	@
 .L661:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r1, r0, asl #1	@ tmp796,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r2, r1	@ temp.3806, tmp796
-	cmp	r2, #0	@ temp.3806,
-	addeq	r2, r2, #1	@,, tmp799, temp.3806
+	uxtb	r2, r1	@ temp.3805, tmp796
+	cmp	r2, #0	@ temp.3805,
+	addeq	r2, r2, #1	@,, tmp799, temp.3805
 	strb	r2, [r0, #555]	@ tmp799, <variable>.ZeroRunProbs
 	b	.L586	@
 .L660:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	sl, [fp, #-64]	@, %sfp
 	mov	r8, r0, asl #1	@ tmp788,,
-	uxtb	r3, r8	@ temp.3797, tmp788
-	cmp	r3, #0	@ temp.3797,
-	addeq	r3, r3, #1	@,, tmp791, temp.3797
+	uxtb	r3, r8	@ temp.3796, tmp788
+	cmp	r3, #0	@ temp.3796,
+	addeq	r3, r3, #1	@,, tmp791, temp.3796
 	strb	r3, [sl, #554]	@ tmp791, <variable>.ZeroRunProbs
 	b	.L585	@
 .L659:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r9, r0, asl #1	@ tmp780,,
-	uxtb	r1, r9	@ temp.3789, tmp780
-	cmp	r1, #0	@ temp.3789,
-	addeq	r1, r1, #1	@,, tmp783, temp.3789
+	uxtb	r1, r9	@ temp.3788, tmp780
+	cmp	r1, #0	@ temp.3788,
+	addeq	r1, r1, #1	@,, tmp783, temp.3788
 	strb	r1, [ip, #553]	@ tmp783, <variable>.ZeroRunProbs
 	b	.L584	@
 .L658:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r2, r0, asl #1	@ tmp772,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r8, r2	@ temp.3777, tmp772
-	cmp	r8, #0	@ temp.3777,
-	addeq	r8, r8, #1	@,, tmp775, temp.3777
+	uxtb	r8, r2	@ temp.3776, tmp772
+	cmp	r8, #0	@ temp.3776,
+	addeq	r8, r8, #1	@,, tmp775, temp.3776
 	strb	r8, [r0, #552]	@ tmp775, <variable>.ZeroRunProbs
 	b	.L583	@
 .L657:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	sl, r0, asl #1	@ tmp764,,
-	uxtb	r3, sl	@ temp.3770, tmp764
-	cmp	r3, #0	@ temp.3770,
-	addeq	r3, r3, #1	@,, tmp767, temp.3770
+	uxtb	r3, sl	@ temp.3769, tmp764
+	cmp	r3, #0	@ temp.3769,
+	addeq	r3, r3, #1	@,, tmp767, temp.3769
 	strb	r3, [r9, #551]	@ tmp767, <variable>.ZeroRunProbs
 	b	.L582	@
 .L656:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp756,,
-	uxtb	r2, r1	@ temp.3761, tmp756
-	cmp	r2, #0	@ temp.3761,
-	addeq	r2, r2, #1	@,, tmp759, temp.3761
+	uxtb	r2, r1	@ temp.3760, tmp756
+	cmp	r2, #0	@ temp.3760,
+	addeq	r2, r2, #1	@,, tmp759, temp.3760
 	strb	r2, [ip, #550]	@ tmp759, <variable>.ZeroRunProbs
 	b	.L580	@
 .L655:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	sl, r0, asl #1	@ tmp742,,
-	uxtb	r3, sl	@ temp.4089, tmp742
-	cmp	r3, #0	@ temp.4089,
-	addeq	r3, r3, #1	@,, tmp745, temp.4089
+	uxtb	r3, sl	@ temp.4088, tmp742
+	cmp	r3, #0	@ temp.4088,
+	addeq	r3, r3, #1	@,, tmp745, temp.4088
 	strb	r3, [r9, #549]	@ tmp745, <variable>.ZeroRunProbs
 	b	.L578	@
 .L654:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp734,,
-	uxtb	r2, r1	@ temp.4082, tmp734
-	cmp	r2, #0	@ temp.4082,
-	addeq	r2, r2, #1	@,, tmp737, temp.4082
+	uxtb	r2, r1	@ temp.4081, tmp734
+	cmp	r2, #0	@ temp.4081,
+	addeq	r2, r2, #1	@,, tmp737, temp.4081
 	strb	r2, [ip, #548]	@ tmp737, <variable>.ZeroRunProbs
 	b	.L577	@
 .L653:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r8, r0, asl #1	@ tmp726,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	sl, r8	@ temp.4075, tmp726
-	cmp	sl, #0	@ temp.4075,
-	addeq	sl, sl, #1	@,, tmp729, temp.4075
+	uxtb	sl, r8	@ temp.4074, tmp726
+	cmp	sl, #0	@ temp.4074,
+	addeq	sl, sl, #1	@,, tmp729, temp.4074
 	strb	sl, [r0, #547]	@ tmp729, <variable>.ZeroRunProbs
 	b	.L576	@
 .L652:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r1, [fp, #-64]	@, %sfp
 	mov	r9, r0, asl #1	@ tmp718,,
-	uxtb	r3, r9	@ temp.4068, tmp718
-	cmp	r3, #0	@ temp.4068,
-	addeq	r3, r3, #1	@,, tmp721, temp.4068
+	uxtb	r3, r9	@ temp.4067, tmp718
+	cmp	r3, #0	@ temp.4067,
+	addeq	r3, r3, #1	@,, tmp721, temp.4067
 	strb	r3, [r1, #546]	@ tmp721, <variable>.ZeroRunProbs
 	b	.L575	@
 .L651:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r2, r0, asl #1	@ tmp710,,
-	uxtb	r8, r2	@ temp.4061, tmp710
-	cmp	r8, #0	@ temp.4061,
-	addeq	r8, r8, #1	@,, tmp713, temp.4061
+	uxtb	r8, r2	@ temp.4060, tmp710
+	cmp	r8, #0	@ temp.4060,
+	addeq	r8, r8, #1	@,, tmp713, temp.4060
 	strb	r8, [ip, #545]	@ tmp713, <variable>.ZeroRunProbs
 	b	.L574	@
 .L650:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	sl, r0, asl #1	@ tmp702,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r9, sl	@ temp.4054, tmp702
-	cmp	r9, #0	@ temp.4054,
-	addeq	r9, r9, #1	@,, tmp705, temp.4054
+	uxtb	r9, sl	@ temp.4053, tmp702
+	cmp	r9, #0	@ temp.4053,
+	addeq	r9, r9, #1	@,, tmp705, temp.4053
 	strb	r9, [r0, #544]	@ tmp705, <variable>.ZeroRunProbs
 	b	.L573	@
 .L649:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp694,,
-	uxtb	r3, r1	@ temp.4047, tmp694
-	cmp	r3, #0	@ temp.4047,
-	addeq	r3, r3, #1	@,, tmp697, temp.4047
+	uxtb	r3, r1	@ temp.4046, tmp694
+	cmp	r3, #0	@ temp.4046,
+	addeq	r3, r3, #1	@,, tmp697, temp.4046
 	strb	r3, [r2, #543]	@ tmp697, <variable>.ZeroRunProbs
 	b	.L572	@
 .L648:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r8, r0, asl #1	@ tmp686,,
-	uxtb	sl, r8	@ temp.4040, tmp686
-	cmp	sl, #0	@ temp.4040,
-	addeq	sl, sl, #1	@,, tmp689, temp.4040
+	uxtb	sl, r8	@ temp.4039, tmp686
+	cmp	sl, #0	@ temp.4039,
+	addeq	sl, sl, #1	@,, tmp689, temp.4039
 	strb	sl, [ip, #542]	@ tmp689, <variable>.ZeroRunProbs
 	b	.L571	@
 .L647:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	mov	r9, r0, asl #1	@ tmp678,,
 	ldr	r0, [fp, #-64]	@, %sfp
-	uxtb	r1, r9	@ temp.4033, tmp678
-	cmp	r1, #0	@ temp.4033,
-	addeq	r1, r1, #1	@,, tmp681, temp.4033
+	uxtb	r1, r9	@ temp.4032, tmp678
+	cmp	r1, #0	@ temp.4032,
+	addeq	r1, r1, #1	@,, tmp681, temp.4032
 	strb	r1, [r0, #541]	@ tmp681, <variable>.ZeroRunProbs
 	b	.L570	@
 .L646:
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r8, [fp, #-64]	@, %sfp
 	mov	r2, r0, asl #1	@ tmp670,,
-	uxtb	r3, r2	@ temp.4026, tmp670
-	cmp	r3, #0	@ temp.4026,
-	addeq	r3, r3, #1	@,, tmp673, temp.4026
+	uxtb	r3, r2	@ temp.4025, tmp670
+	cmp	r3, #0	@ temp.4025,
+	addeq	r3, r3, #1	@,, tmp673, temp.4025
 	strb	r3, [r8, #540]	@ tmp673, <variable>.ZeroRunProbs
 	b	.L569	@
 .L645:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	sl, [fp, #-64]	@, %sfp
 	mov	ip, r0, asl #1	@ tmp662,,
-	uxtb	r9, ip	@ temp.4019, tmp662
-	cmp	r9, #0	@ temp.4019,
-	addeq	r9, r9, #1	@,, tmp665, temp.4019
+	uxtb	r9, ip	@ temp.4018, tmp662
+	cmp	r9, #0	@ temp.4018,
+	addeq	r9, r9, #1	@,, tmp665, temp.4018
 	strb	r9, [sl, #539]	@ tmp665, <variable>.ZeroRunProbs
 	b	.L568	@
 .L644:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	mov	r0, r5	@, pBs
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r1, r0, asl #1	@ tmp654,,
-	uxtb	r0, r1	@ temp.4012, tmp654
-	cmp	r0, #0	@ temp.4012,
-	addeq	r0, r0, #1	@,, tmp657, temp.4012
+	uxtb	r0, r1	@ temp.4011, tmp654
+	cmp	r0, #0	@ temp.4011,
+	addeq	r0, r0, #1	@,, tmp657, temp.4011
 	strb	r0, [r2, #538]	@ tmp657, <variable>.ZeroRunProbs
 	b	.L567	@
 .L643:
 	mov	r0, r5	@, pBs
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r8, r0, asl #1	@ tmp646,,
-	uxtb	r3, r8	@ temp.4005, tmp646
-	cmp	r3, #0	@ temp.4005,
-	addeq	r3, r3, #1	@,, tmp649, temp.4005
+	uxtb	r3, r8	@ temp.4004, tmp646
+	cmp	r3, #0	@ temp.4004,
+	addeq	r3, r3, #1	@,, tmp649, temp.4004
 	strb	r3, [ip, #537]	@ tmp649, <variable>.ZeroRunProbs
 	b	.L566	@
 .L642:
-	mov	r1, r4	@, D.38969
+	mov	r1, r4	@, D.38976
 	mov	r0, r5	@, pBs
 	mov	r2, #7	@,
 	bl	Vp6_Vfmw_BoolRead	@
 	ldr	r9, [fp, #-64]	@, %sfp
 	mov	sl, r0, asl #1	@ tmp638,,
-	uxtb	r1, sl	@ temp.3998, tmp638
-	cmp	r1, #0	@ temp.3998,
-	addeq	r1, r1, #1	@,, tmp641, temp.3998
+	uxtb	r1, sl	@ temp.3997, tmp638
+	cmp	r1, #0	@ temp.3997,
+	addeq	r1, r1, #1	@,, tmp641, temp.3997
 	strb	r1, [r9, #536]	@ tmp641, <variable>.ZeroRunProbs
 	b	.L565	@
 	.fnend
@@ -8372,7 +8372,7 @@ VP6_BuildTables:
 	mov	r0, r5	@, pVp6CodecInfo
 	mov	r1, r4	@, pPictureHeader
 	bl	VP6_CfgTable	@
-	mov	r0, #1	@ D.40258,
+	mov	r0, #1	@ D.40265,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L690:
 	mov	r1, r2	@, pBs
@@ -8396,10 +8396,10 @@ VP6_BuildTables:
 	mov	r0, r5	@, pVp6CodecInfo
 	mov	r1, r4	@, pPictureHeader
 	bl	VP6_CfgTable	@
-	mov	r0, #1	@ D.40258,
+	mov	r0, #1	@ D.40265,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L684:
-	mov	r0, #0	@ D.40258,
+	mov	r0, #0	@ D.40265,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L693:
 	.align	2
@@ -8429,18 +8429,18 @@ VP6DEC_GetImageBuffer:
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
-	cmp	r0, #1	@ D.38732,
+	cmp	r0, #1	@ D.38739,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
 	cmn	r0, #1	@,
-	movne	r0, #0	@ D.38735,
+	movne	r0, #0	@ D.38742,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
 	add	r1, r4, #12608	@, pCtx,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	add	r1, r1, #40	@,,
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, #0	@ D.38735,
+	mov	r0, #0	@ D.38742,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	VP6DEC_GetImageBuffer, .-VP6DEC_GetImageBuffer
@@ -8469,9 +8469,9 @@ VP6_GetImageBuffer:
 	ldr	r0, [r0, r6]	@, <variable>.ChanID
 	movw	r7, #12308	@ tmp142,
 	bl	FSP_NewLogicFs	@
-	cmp	r0, #0	@ D.38699,
-	mov	r1, r0	@ D.38699,
-	str	r0, [r4, r7]	@ D.38699, <variable>.Vp6CodecInfo.CurFsID
+	cmp	r0, #0	@ D.38706,
+	mov	r1, r0	@ D.38706,
+	str	r0, [r4, r7]	@ D.38706, <variable>.Vp6CodecInfo.CurFsID
 	blt	.L705	@,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
@@ -8485,8 +8485,8 @@ VP6_GetImageBuffer:
 	ldr	r0, [r5, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	cmp	r0, #0	@ <variable>.pstDecodeFs,
 	beq	.L703	@,
-	ldr	r3, [r5, #524]	@ D.38718, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.38718,
+	ldr	r3, [r5, #524]	@ D.38725, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.38725,
 	beq	.L703	@,
 	ldr	r2, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	cmp	r2, #0	@ <variable>.pstTfOutFs,
@@ -8504,12 +8504,12 @@ VP6_GetImageBuffer:
 	ldr	r3, [r3, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	ip, [sp, #0]	@ <variable>.PhyAddr,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.38708,
+	mov	r0, #1	@ D.38715,
 .L701:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L703:
-	mov	r0, #0	@ D.38708,
+	mov	r0, #0	@ D.38715,
 	b	.L701	@
 .L705:
 	movw	r8, #12312	@ tmp146,
@@ -8535,11 +8535,11 @@ VP6_GetImageBuffer:
 	add	r1, r4, #12608	@, pCtx,
 	str	r5, [r4, r3]	@ tmp153, <variable>.Vp6CodecInfo.RefNum
 	add	r1, r1, #40	@,,
-	str	r0, [r4, r8]	@ D.38706, <variable>.Vp6CodecInfo.GoldenFsID
-	str	r0, [r4, r7]	@ D.38706, <variable>.Vp6CodecInfo.FwdFsID
+	str	r0, [r4, r8]	@ D.38713, <variable>.Vp6CodecInfo.GoldenFsID
+	str	r0, [r4, r7]	@ D.38713, <variable>.Vp6CodecInfo.FwdFsID
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, r5	@ D.38708, tmp153
+	mov	r0, r5	@ D.38715, tmp153
 	b	.L701	@
 .L706:
 	mov	r0, #22	@,
@@ -8547,7 +8547,7 @@ VP6_GetImageBuffer:
 	movw	r2, #657	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.38708, pLf
+	mov	r0, r5	@ D.38715, pLf
 	b	.L701	@
 	.fnend
 	.size	VP6_GetImageBuffer, .-VP6_GetImageBuffer
@@ -8571,19 +8571,19 @@ VP6_ArrangeVHBMem:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #12496	@ tmp159,
-	ldr	r3, [r0, r3]	@ D.38623, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
+	ldr	r3, [r0, r3]	@ D.38630, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
 	mov	r4, r0	@ pCtx, pCtx
-	cmp	r3, #2	@ D.38623,
+	cmp	r3, #2	@ D.38630,
 	bls	.L734	@,
 	movw	r0, #12500	@ tmp161,
-	ldr	r2, [r4, r0]	@ prephitmp.4186, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
-	cmp	r2, #2	@ prephitmp.4186,
+	ldr	r2, [r4, r0]	@ prephitmp.4185, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
+	cmp	r2, #2	@ prephitmp.4185,
 	bls	.L709	@,
-	cmp	r3, #512	@ D.38623,
+	cmp	r3, #512	@ D.38630,
 	bhi	.L709	@,
-	cmp	r2, #512	@ prephitmp.4186,
+	cmp	r2, #512	@ prephitmp.4185,
 	bhi	.L709	@,
-	ldr	r1, [r4, #0]	@ D.38632, <variable>.pstExtraData
+	ldr	r1, [r4, #0]	@ D.38639, <variable>.pstExtraData
 	ldr	ip, [r1, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	ip, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L712	@,
@@ -8592,9 +8592,9 @@ VP6_ArrangeVHBMem:
 	beq	.L735	@,
 .L713:
 	mov	r8, #3	@ PmvNum,
-	mov	r5, r2, asl #4	@ PicWidth, prephitmp.4186,
-	mov	r6, r3, asl #4	@ PicHeight, D.38623,
-	mov	sl, #5	@ prephitmp.4188,
+	mov	r5, r2, asl #4	@ PicWidth, prephitmp.4185,
+	mov	r6, r3, asl #4	@ PicHeight, D.38630,
+	mov	sl, #5	@ prephitmp.4187,
 	mov	r9, r8	@ DecFsNum, PmvNum
 .L720:
 	sub	r7, fp, #84	@ tmp203,,
@@ -8612,7 +8612,7 @@ VP6_ArrangeVHBMem:
 	movw	r6, #13000	@ tmp189,
 	strb	r3, [fp, #-84]	@ <variable>.s32DnrDispOutEnable, FspInstCfg.s32DispLoopEnable
 	ldr	ip, [r0, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
-	strb	sl, [fp, #-77]	@ prephitmp.4188, FspInstCfg.s32ExpectedDispFsNum
+	strb	sl, [fp, #-77]	@ prephitmp.4187, FspInstCfg.s32ExpectedDispFsNum
 	cmp	ip, #24	@ <variable>.eCapLevel,
 	uxtbne	r2, r9	@ iftmp.442, DecFsNum
 	strb	r2, [fp, #-79]	@ iftmp.442, FspInstCfg.s32ExpectedDecFsNum
@@ -8626,9 +8626,9 @@ VP6_ArrangeVHBMem:
 	strb	r7, [fp, #-80]	@ tmp187, FspInstCfg.s32UserDec
 	strb	r8, [fp, #-76]	@ iftmp.443, FspInstCfg.s32ExpectedPmvNum
 	bl	FSP_ConfigInstance	@
-	subs	r5, r0, #0	@ D.38681,
+	subs	r5, r0, #0	@ D.38688,
 	bne	.L731	@,
-	ldr	lr, [r4, #0]	@ temp.4224, <variable>.pstExtraData
+	ldr	lr, [r4, #0]	@ temp.4223, <variable>.pstExtraData
 	sub	r3, fp, #48	@,,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r2, [lr, #28]	@, <variable>.s32SyntaxMemSize
@@ -8638,18 +8638,18 @@ VP6_ArrangeVHBMem:
 	bne	.L736	@,
 	mov	r2, #1	@ tmp200,
 	movw	r1, #12296	@ tmp199,
-	mov	r0, r2	@ D.38629, tmp200
+	mov	r0, r2	@ D.38636, tmp200
 	str	r2, [r4, r1]	@ tmp200, <variable>.Vp6CodecInfo.Imgbuf_allocated
 	b	.L711	@
 .L734:
 	movw	r2, #12500	@ tmp160,
-	ldr	r2, [r0, r2]	@ prephitmp.4186, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
+	ldr	r2, [r0, r2]	@ prephitmp.4185, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
 .L709:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC32	@,
 	movt	r1, #:upper16:.LC32	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38629,
+	mov	r0, #0	@ D.38636,
 .L711:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -8657,88 +8657,88 @@ VP6_ArrangeVHBMem:
 	ldr	lr, [r1, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	lr, #25	@ <variable>.eCapLevel,
 	bne	.L713	@,
-	ldr	ip, [r1, #744]	@ D.38640, <variable>.stChanOption.s32MaxWidth
-	mov	r2, r2, asl #4	@ temp.4210, prephitmp.4186,
-	cmp	r2, ip	@ temp.4210, D.38640
+	ldr	ip, [r1, #744]	@ D.38647, <variable>.stChanOption.s32MaxWidth
+	mov	r2, r2, asl #4	@ temp.4209, prephitmp.4185,
+	cmp	r2, ip	@ temp.4209, D.38647
 	bhi	.L737	@,
-	ldr	lr, [r1, #748]	@ prephitmp.4190, <variable>.stChanOption.s32MaxHeight
-	mov	r3, r3, asl #4	@ prephitmp.4192, D.38623,
-	cmp	r3, lr	@ prephitmp.4192, prephitmp.4190
+	ldr	lr, [r1, #748]	@ prephitmp.4189, <variable>.stChanOption.s32MaxHeight
+	mov	r3, r3, asl #4	@ prephitmp.4191, D.38630,
+	cmp	r3, lr	@ prephitmp.4191, prephitmp.4189
 	bhi	.L723	@,
 	ldr	r6, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ temp.4213, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	r9, [r1, #768]	@ temp.4212, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r6, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	r8, #1	@ PmvNum,
 	beq	.L726	@,
-	add	r8, r9, #1	@ PmvNum.4215, temp.4213,
-	cmp	r8, #17	@ PmvNum.4215,
+	add	r8, r9, #1	@ PmvNum.4214, temp.4212,
+	cmp	r8, #17	@ PmvNum.4214,
 	movge	r8, #17	@ PmvNum,
 .L726:
-	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.4188, <variable>.stChanOption.s32DisplayFrameNum
-	add	r9, r9, #2	@ DecFsNum, temp.4213,
-	mov	r5, r2	@ PicWidth, temp.4210
-	mov	r6, r3	@ PicHeight, prephitmp.4192
+	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.4187, <variable>.stChanOption.s32DisplayFrameNum
+	add	r9, r9, #2	@ DecFsNum, temp.4212,
+	mov	r5, r2	@ PicWidth, temp.4209
+	mov	r6, r3	@ PicHeight, prephitmp.4191
 	b	.L720	@
 .L731:
 	mov	r0, r7	@, tmp187
 	movw	r1, #:lower16:.LC35	@,
 	movt	r1, #:upper16:.LC35	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.38629, tmp187
+	mov	r0, r7	@ D.38636, tmp187
 	b	.L711	@
 .L735:
 	ldr	r5, [r1, #744]	@ PicWidth, <variable>.stChanOption.s32MaxWidth
-	mov	r2, r2, asl #4	@ D.38639, prephitmp.4186,
-	cmp	r2, r5	@ D.38639, PicWidth
+	mov	r2, r2, asl #4	@ D.38646, prephitmp.4185,
+	cmp	r2, r5	@ D.38646, PicWidth
 	bhi	.L738	@,
 	ldr	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
-	mov	r3, r3, asl #4	@ prephitmp.4196, D.38623,
-	cmp	r3, r6	@ prephitmp.4196, PicHeight
+	mov	r3, r3, asl #4	@ prephitmp.4195, D.38630,
+	cmp	r3, r6	@ prephitmp.4195, PicHeight
 	bhi	.L715	@,
 	movw	r3, #12296	@ tmp166,
 	ldr	r0, [r4, r3]	@ <variable>.Vp6CodecInfo.Imgbuf_allocated, <variable>.Vp6CodecInfo.Imgbuf_allocated
 	cmp	r0, #1	@ <variable>.Vp6CodecInfo.Imgbuf_allocated,
 	beq	.L711	@,
 	ldr	r7, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ D.38650, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	r9, [r1, #768]	@ D.38657, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r7, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	r8, #1	@ PmvNum,
 	beq	.L719	@,
-	add	r8, r9, #1	@ PmvNum.4207, D.38650,
-	cmp	r8, #17	@ PmvNum.4207,
+	add	r8, r9, #1	@ PmvNum.4206, D.38657,
+	cmp	r8, #17	@ PmvNum.4206,
 	movge	r8, #17	@ PmvNum,
 .L719:
-	add	r9, r9, #2	@ DecFsNum, D.38650,
-	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.4188, <variable>.stChanOption.s32DisplayFrameNum
+	add	r9, r9, #2	@ DecFsNum, D.38657,
+	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.4187, <variable>.stChanOption.s32DisplayFrameNum
 	b	.L720	@
 .L737:
-	ldr	lr, [r1, #748]	@ prephitmp.4190, <variable>.stChanOption.s32MaxHeight
-	mov	r3, r3, asl #4	@ prephitmp.4192, D.38623,
+	ldr	lr, [r1, #748]	@ prephitmp.4189, <variable>.stChanOption.s32MaxHeight
+	mov	r3, r3, asl #4	@ prephitmp.4191, D.38630,
 .L723:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC33	@,
 	movt	r1, #:upper16:.LC33	@,
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38629,
+	mov	r0, #0	@ D.38636,
 	b	.L711	@
 .L736:
-	mov	r0, r5	@, D.38681
+	mov	r0, r5	@, D.38688
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.38629, D.38681
+	mov	r0, r5	@ D.38636, D.38688
 	b	.L711	@
 .L738:
 	ldr	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
-	mov	r3, r3, asl #4	@ prephitmp.4196, D.38623,
+	mov	r3, r3, asl #4	@ prephitmp.4195, D.38630,
 .L715:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC33	@,
 	movt	r1, #:upper16:.LC33	@,
 	stmia	sp, {r5, r6}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38629,
+	mov	r0, #0	@ D.38636,
 	b	.L711	@
 	.fnend
 	.size	VP6_ArrangeVHBMem, .-VP6_ArrangeVHBMem
@@ -8761,24 +8761,24 @@ VP6DEC_Decode:
 	sub	sp, sp, #20	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r3, [r1, #0]	@ D.40306, <variable>.VirAddr
+	ldr	r3, [r1, #0]	@ D.40313, <variable>.VirAddr
 	mov	r4, r0	@ pCtx, pCtx
-	str	r3, [r0, #208]	@ D.40306, <variable>.Vp6StreamParam.VirAddr
-	ldr	r2, [r1, #8]	@ <variable>.PhyAddr, <variable>.PhyAddr
+	str	r3, [r0, #208]	@ D.40313, <variable>.Vp6StreamParam.VirAddr
+	ldr	r2, [r1, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r2, [r0, #212]	@ <variable>.PhyAddr, <variable>.Vp6StreamParam.PhyAddr
-	ldr	r2, [r1, #12]	@ D.40309, <variable>.LenInByte
-	cmp	r2, #0	@ D.40309,
-	str	r2, [r0, #216]	@ D.40309, <variable>.Vp6StreamParam.Length
+	ldr	r2, [r1, #16]	@ D.40316, <variable>.LenInByte
+	cmp	r2, #0	@ D.40316,
+	str	r2, [r0, #216]	@ D.40316, <variable>.Vp6StreamParam.Length
 	movweq	r3, #12300	@ tmp158,
 	moveq	r2, #3	@ tmp159,
 	streqb	r2, [r0, r3]	@ tmp159, <variable>.Vp6CodecInfo.FrameType
 	beq	.L741	@,
-	cmp	r2, #2	@ D.40309,
+	cmp	r2, #2	@ D.40316,
 	ble	.L761	@,
 	add	r5, r0, #12608	@ tmp278, pCtx,
 	add	r7, r0, #220	@ pVp6CodecInfo, pCtx,
 	add	r6, r5, #8	@ pBs, tmp278,
-	mov	r1, r3	@, D.40306
+	mov	r1, r3	@, D.40313
 	mov	r0, r6	@, pBs
 	bl	BsInit	@
 	add	r3, r4, #208	@ tmp163, pCtx,
@@ -8786,14 +8786,14 @@ VP6DEC_Decode:
 	str	r3, [r4, #204]	@ tmp163, <variable>.pVp6StreamParam
 	mov	r1, r6	@, pBs
 	bl	VP6_GetPictureHeader	@
-	cmp	r0, #1	@ D.40318,
-	mov	r8, r0	@ D.40318,
+	cmp	r0, #1	@ D.40325,
+	mov	r8, r0	@ D.40325,
 	beq	.L744	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC37	@,
 	movt	r1, #:upper16:.LC37	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L744:
 	add	r1, r4, #12416	@, pCtx,
@@ -8822,41 +8822,41 @@ VP6DEC_Decode:
 .L741:
 	mov	r0, r4	@, pCtx
 	bl	VP6_DecodeDecide	@
-	cmp	r0, #1	@ ret.4257,
-	mov	r6, r0	@ ret.4257,
+	cmp	r0, #1	@ ret.4256,
+	mov	r6, r0	@ ret.4256,
 	beq	.L753	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC41	@,
 	movt	r1, #:upper16:.LC41	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 .L743:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L753:
 	mov	r0, r4	@, pCtx
 	bl	VP6_GetImageBuffer	@
-	cmp	r0, #1	@ D.40372,
-	mov	r5, r0	@ D.40372,
+	cmp	r0, #1	@ D.40379,
+	mov	r5, r0	@ D.40379,
 	beq	.L754	@,
-	mov	r0, r6	@, ret.4257
+	mov	r0, r6	@, ret.4256
 	movw	r1, #:lower16:.LC42	@,
 	movt	r1, #:upper16:.LC42	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L761:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC36	@,
 	movt	r1, #:upper16:.LC36	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L754:
 	movw	r7, #13000	@ tmp224,
 	movw	r6, #12308	@ tmp226,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
-	mov	r2, r5	@, D.40372
+	mov	r2, r5	@, D.40379
 	ldr	r1, [r4, r6]	@, <variable>.Vp6CodecInfo.CurFsID
 	bl	FSP_SetRef	@
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
@@ -8917,7 +8917,7 @@ VP6DEC_Decode:
 	movw	r1, #:lower16:.LC45	@,
 	movt	r1, #:upper16:.LC45	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.40316,
+	mov	r0, #1	@ D.40323,
 	b	.L743	@
 .L746:
 	movw	r7, #:lower16:g_event_report	@ tmp178,
@@ -8957,26 +8957,26 @@ VP6DEC_Decode:
 	bl	FSP_ClearLogicFs	@
 	mov	sl, #0	@ tmp199,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	add	r5, r5, #40	@ D.40347, tmp278,
+	add	r5, r5, #40	@ D.40354, tmp278,
 	str	sl, [r4, r8]	@ tmp199, <variable>.Vp6CodecInfo.GoldenFsID
 	str	sl, [r4, r7]	@ tmp199, <variable>.Vp6CodecInfo.FwdFsID
 	bl	FSP_GetNullLogicFs	@
 	movw	r2, #12292	@ tmp206,
 	str	sl, [r4, r2]	@ tmp199, <variable>.Vp6CodecInfo.RefNum
-	mov	r1, r5	@, D.40347
-	str	r0, [r4, r8]	@ D.40346, <variable>.Vp6CodecInfo.GoldenFsID
-	str	r0, [r4, r7]	@ D.40346, <variable>.Vp6CodecInfo.FwdFsID
+	mov	r1, r5	@, D.40354
+	str	r0, [r4, r8]	@ D.40353, <variable>.Vp6CodecInfo.GoldenFsID
+	str	r0, [r4, r7]	@ D.40353, <variable>.Vp6CodecInfo.FwdFsID
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
 	movw	ip, #12500	@ tmp211,
-	ldr	r2, [r4, ip]	@ temp.4254, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
-	cmp	r2, #512	@ temp.4254,
+	ldr	r2, [r4, ip]	@ temp.4253, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_width_in_mb
+	cmp	r2, #512	@ temp.4253,
 	bhi	.L765	@,
 	movw	r3, #12496	@ tmp213,
-	ldr	r3, [r4, r3]	@ prephitmp.4239, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
-	cmp	r3, #512	@ prephitmp.4239,
+	ldr	r3, [r4, r3]	@ prephitmp.4238, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
+	cmp	r3, #512	@ prephitmp.4238,
 	bhi	.L749	@,
-	ldr	r3, [r4, #0]	@ D.40354, <variable>.pstExtraData
+	ldr	r3, [r4, #0]	@ D.40361, <variable>.pstExtraData
 	ldr	r1, [r3, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r1, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L751	@,
@@ -8998,31 +8998,31 @@ VP6DEC_Decode:
 	movw	r1, #:lower16:.LC40	@,
 	movt	r1, #:upper16:.LC40	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L764:
-	mov	r0, r5	@, D.40372
+	mov	r0, r5	@, D.40379
 	movw	r1, #:lower16:.LC44	@,
 	movt	r1, #:upper16:.LC44	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.40316, tmp247
+	mov	r0, r6	@ D.40323, tmp247
 	b	.L743	@
 .L765:
 	movw	lr, #12496	@ tmp212,
-	ldr	r3, [r4, lr]	@ prephitmp.4239, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
+	ldr	r3, [r4, lr]	@ prephitmp.4238, <variable>.Vp6CodecInfo.NewHeaderInfo.pic_height_in_mb
 .L749:
 	mov	r0, #18	@,
 	movw	r1, #:lower16:.LC39	@,
 	movt	r1, #:upper16:.LC39	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L762:
-	mov	r0, r8	@, D.40318
+	mov	r0, r8	@, D.40325
 	movw	r1, #:lower16:.LC38	@,
 	movt	r1, #:upper16:.LC38	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.40316,
+	mov	r0, #0	@ D.40323,
 	b	.L743	@
 .L757:
 	movw	r5, #12340	@ tmp264,
@@ -9044,7 +9044,7 @@ VP6DEC_Decode:
 	movw	r2, #2638	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.40316, pImage
+	mov	r0, r7	@ D.40323, pImage
 	b	.L743	@
 .L766:
 	movw	r2, #12296	@ tmp217,
@@ -9052,7 +9052,7 @@ VP6DEC_Decode:
 	cmp	ip, #0	@ <variable>.Vp6CodecInfo.Imgbuf_allocated,
 	bne	.L752	@,
 .L760:
-	mov	r0, r5	@, D.40347
+	mov	r0, r5	@, D.40354
 	bl	ResetVoQueue	@
 	b	.L752	@
 	.fnend
@@ -9137,9 +9137,9 @@ VP6_DcNodeEqs:
 	.word	203
 @ C:
 	.word	17
-	.type	__func__.39838, %object
-	.size	__func__.39838, 17
-__func__.39838:
+	.type	__func__.39845, %object
+	.size	__func__.39845, 17
+__func__.39845:
 	.ascii	"VP6_DecodeDecide\000"
 	.space	3
 	.type	VP6_LoopFilterLimitValues, %object

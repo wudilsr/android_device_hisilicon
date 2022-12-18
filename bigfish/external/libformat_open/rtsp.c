@@ -101,6 +101,7 @@ const AVOption ff_rtsp_options[] = {
     { "min_port", "Minimum local UDP port", OFFSET(rtp_port_min), AV_OPT_TYPE_INT, {RTSP_RTP_PORT_MIN}, 0, 65535, DEC|ENC },
     { "max_port", "Maximum local UDP port", OFFSET(rtp_port_max), AV_OPT_TYPE_INT, {RTSP_RTP_PORT_MAX}, 0, 65535, DEC|ENC },
     { "download_speed_collect_freq_ms",  "download speed collect freq", OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, DEC|ENC},
+    {"headers", "custom rtsp headers", OFFSET(headers), AV_OPT_TYPE_STRING, { 0 }, 0, 0, DEC|ENC},
     { NULL },
 };
 
@@ -1692,6 +1693,10 @@ redirect:
     do {
         int lower_transport = ff_log2_tab[lower_transport_mask &
                                   ~(lower_transport_mask - 1)];
+
+        if ((lower_transport_mask & (1 << RTSP_LOWER_TRANSPORT_TCP))
+                && (rt->rtsp_flags & RTSP_FLAG_PREFER_TCP))
+            lower_transport = RTSP_LOWER_TRANSPORT_TCP;
 
         err = ff_rtsp_make_setup_request(s, host, port, lower_transport,
                                  rt->server_type == RTSP_SERVER_REAL ?

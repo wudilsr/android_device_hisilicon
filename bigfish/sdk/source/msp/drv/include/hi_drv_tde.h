@@ -111,6 +111,16 @@ typedef struct hiTDE_ENDJOB_CMD_S
     HI_U32     u32TimeOut; /**< time out(ms) */
 } TDE_ENDJOB_CMD_S;
 
+typedef struct hiTDE_ENDJOB_CMD_EX_S
+{
+    TDE_HANDLE s32Handle;  /**< TDE handle */
+    HI_BOOL    bSync;      /**< weather sync */
+    HI_BOOL    bBlock;     /**< weather block */
+    HI_U32     u32TimeOut; /**< time out(ms) */
+    HI_S32     s32ReleaseFenceFd;
+} TDE_ENDJOB_CMD_EX_S;
+
+
 /** mask blit rop blend info */
 typedef struct hiTDE_BITMAP_MASKROP_CMD_S
 {
@@ -183,7 +193,7 @@ typedef struct hiTDE_PATTERN_FILL_CMD_S
 #define TDE_GET_ALPHATHRESHOLD_STATE _IOW(TDE_IOC_MAGIC, 22, HI_BOOL)
 #define TDE_PATTERN_FILL _IOW(TDE_IOC_MAGIC, 23, TDE_PATTERN_FILL_CMD_S)
 #define TDE_ENABLE_REGIONDEFLICKER _IOW(TDE_IOC_MAGIC, 24, HI_BOOL)
-
+#define TDE_END_JOB_EX _IOW(TDE_IOC_MAGIC, 25, TDE_ENDJOB_CMD_EX_S)
 
 //#pragma pack()
 #ifdef __cplusplus

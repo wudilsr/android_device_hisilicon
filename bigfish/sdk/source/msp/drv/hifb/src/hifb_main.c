@@ -3338,38 +3338,34 @@ static HI_S32 hifb_alloccanbuf(struct fb_info *info, HIFB_LAYER_INFO_S * pLayerI
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
-#ifdef CFG_HIFB_FENCE_SUPPORT  
-static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
+#ifdef CFG_HIFB_FENCE_SUPPORT
+
+typedef struct 
 {
-    HI_S32 s32Ret = HI_SUCCESS;
-    struct fb_info *info;
+    HIFB_PAR_S *par;
+    struct sync_fence *fence;
+    struct work_struct work;
     HIFB_HWC_LAYERINFO_S stLayerInfo;
+}HIFB_REFRESHWQ_S;
+
+static HI_VOID hifb_hwcrefresh_work(struct work_struct *work)
+{
+	HIFB_PAR_S *par;
+    struct fb_info *info;
     HI_BOOL bDispEnable;
-	
-    if (copy_from_user(&stLayerInfo, argp, sizeof(HIFB_HWC_LAYERINFO_S)))
+    HIFB_HWC_LAYERINFO_S stLayerInfo;
+    HIFB_REFRESHWQ_S *pstWork;
+
+    pstWork = (HIFB_REFRESHWQ_S *)container_of(work, HIFB_REFRESHWQ_S, work);
+	par = pstWork->par; 
+
+    memcpy(&stLayerInfo, &pstWork->stLayerInfo, sizeof(HIFB_HWC_LAYERINFO_S));
+
+    if (pstWork->fence != NULL)
     {
-        return -EFAULT;
-    }
-	/**
-	 **创建hifb fence，返回文件节点给stLayerInfo.s32ReleaseFenceFd
-	 **/
-	s32Ret = hifb_create_fence(s_SyncInfo.pstTimeline, "hifb_fence", ++s_SyncInfo.u32FenceValue);
-	if (s32Ret < 0) 
-	{
-		HIFB_ERROR("hifb_create_fence failed! s32Ret = 0x%x\n", s32Ret);
-	}
-	/**
-	 **fence设备节点，每一个layer都有一个acquire 和release fence
-	 **禁止显示一个buffer的内容直到该fence被触发，而它是在HW 被set up 前被发送的
-	 **这个意味着属于这个layer的buffer已经不在被读取了，在一个buffer不在被读取的时候将会触发这个fence
-	 **/
-    stLayerInfo.s32ReleaseFenceFd = s32Ret;
-    if (stLayerInfo.s32AcquireFenceFd >= 0)
-    {/**
-      **禁止显示一个buffer的内容直到该fence被触发,也就是s32AcquireFenceFd被释放
-      **才能进行更新显示
-      **/
-        hifb_fence_wait(stLayerInfo.s32AcquireFenceFd, 3000);
+        hifb_fence_wait(pstWork->fence, -1);
+        sync_fence_put(pstWork->fence);
+        pstWork->fence = NULL;
     }
 
 	/**
@@ -3422,15 +3418,6 @@ static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
 	/** GPU已经绘制完，可以刷新了 **/
     atomic_inc(&s_SyncInfo.s32RefreshCnt);
 
-
-    if (copy_to_user(argp,&stLayerInfo,sizeof(HIFB_HWC_LAYERINFO_S)))
-    {/**
-      **释放没有用的fence
-      **/
-		put_unused_fd(stLayerInfo.s32ReleaseFenceFd);
-        return -EFAULT;
-	}  
-
 #ifdef CFG_HIFB_LOGO_SUPPORT		
 	hifb_clear_logo(par->stBaseInfo.u32LayerID, HI_FALSE);
 #endif	
@@ -3450,9 +3437,74 @@ static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
 	        }
 		}
 	}
- 
-    return HI_SUCCESS;
 
+    kfree(pstWork);
+ 
+    return;
+}
+
+static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    //struct fb_info *info;
+    HIFB_HWC_LAYERINFO_S stLayerInfo;
+    //HI_BOOL bDispEnable;
+    HIFB_REFRESHWQ_S *pstWork;    
+
+    if (copy_from_user(&stLayerInfo, argp, sizeof(HIFB_HWC_LAYERINFO_S)))
+    {
+        return -EFAULT;
+    }
+
+    pstWork = (HIFB_REFRESHWQ_S *)kmalloc(sizeof(HIFB_REFRESHWQ_S), GFP_KERNEL);
+    if (pstWork == NULL)
+    {
+        return -EFAULT;
+    }
+    
+	/**
+	 **创建hifb fence，返回文件节点给stLayerInfo.s32ReleaseFenceFd
+	 **/
+	s32Ret = hifb_create_fence(s_SyncInfo.pstTimeline, "hifb_fence", ++s_SyncInfo.u32FenceValue);
+	if (s32Ret < 0) 
+	{
+	    kfree(pstWork);
+		HIFB_ERROR("hifb_create_fence failed! s32Ret = 0x%x\n", s32Ret);
+	}
+	/**
+	 **fence设备节点，每一个layer都有一个acquire 和release fence
+	 **禁止显示一个buffer的内容直到该fence被触发，而它是在HW 被set up 前被发送的
+	 **这个意味着属于这个layer的buffer已经不在被读取了，在一个buffer不在被读取的时候将会触发这个fence
+	 **/
+    stLayerInfo.s32ReleaseFenceFd = s32Ret;
+
+    memcpy(&pstWork->stLayerInfo, &stLayerInfo, sizeof(HIFB_HWC_LAYERINFO_S));
+    
+    if (stLayerInfo.s32AcquireFenceFd >= 0)
+    {/**
+      **禁止显示一个buffer的内容直到该fence被触发,也就是s32AcquireFenceFd被释放
+      **才能进行更新显示
+      **/
+        pstWork->fence = sync_fence_fdget(stLayerInfo.s32AcquireFenceFd);
+    }
+    else
+    {
+        pstWork->fence = NULL;
+    }
+
+    pstWork->par = par;
+    INIT_WORK(&(pstWork->work), hifb_hwcrefresh_work);
+    queue_work(par->pstHwcRefreshWorkqueue, &(pstWork->work)); 
+        
+    if (copy_to_user(argp,&stLayerInfo,sizeof(HIFB_HWC_LAYERINFO_S)))
+    {/**
+      **释放没有用的fence
+      **/
+		put_unused_fd(stLayerInfo.s32ReleaseFenceFd);
+        return -EFAULT;
+	}
+
+    return HI_SUCCESS;
 }
 #endif
 
@@ -5112,6 +5164,15 @@ static HI_S32 hifb_open (struct fb_info *info, HI_S32 user)
 		 ** fence同步
 		 **/
         hifb_sync_init(par->stBaseInfo.u32LayerID);
+
+#ifdef CFG_HIFB_FENCE_SUPPORT
+        par->pstHwcRefreshWorkqueue = create_singlethread_workqueue("hifb_hwcrefresh");
+        if (par->pstHwcRefreshWorkqueue == NULL)
+        {
+            HIFB_ERROR("failed!\n");                
+            return HI_FAILURE;
+        }
+#endif
 
 		/**
 		 ** layer parameters initial

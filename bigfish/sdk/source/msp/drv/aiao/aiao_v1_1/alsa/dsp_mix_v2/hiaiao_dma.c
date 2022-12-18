@@ -203,7 +203,7 @@ static enum hrtimer_restart SndPeroidCallback(struct hrtimer *hrt)
     {
         HI_S32 s32Ret = HI_SUCCESS;
         had->stAOFrame.ps32PcmBuffer = had->pVirBaseAddr + had->u32HwPointer * had->stAoHwParam.period_bytes;
-        s32Ret = HI_DRV_AO_Track_SendData(had->u32TrackId, &had->stAOFrame);
+        s32Ret = HI_DRV_AO_Track_SendAlsaData(had->u32TrackId, &had->stAOFrame);
         if(HI_SUCCESS == s32Ret)
         {
             had->u32HadSent++;
@@ -396,6 +396,7 @@ static void CmdIoTask(struct work_struct *work)
             had->u32HadSent++;
             had->u32HwPointer = had->u32HadSent%had->stAoHwParam.periods;
             atomic_set(&had->atmTrackState, 1);
+            had->bTriggerStartOK = HI_FALSE;
 #ifdef HIGH_RES_TIMERS
             HRTimerStart(had);
 #else

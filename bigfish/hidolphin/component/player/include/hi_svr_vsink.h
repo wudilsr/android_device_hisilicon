@@ -58,6 +58,13 @@ typedef enum hiSVR_VSINK_CMD_E
     HI_SVR_VSINK_CHECK_FENCE,
 } HI_SVR_VSINK_CMD_E;
 
+typedef struct hiSVR_PRIV_DATA_S
+{
+    HI_S32    s32IsPrivFrameBufUsed;   /* Whether to use private frame buffer */
+    HI_S32    s32DisplayCnt;              /*  displayer count one frame */
+    HI_S32    s32PrivDataStartPos;     /* private drv metadata start positon */
+} HI_SVR_PRIV_DATA_S;
+
 typedef struct hiSVR_PICTURE_S
 {
     //property for frame buffer
@@ -73,6 +80,7 @@ typedef struct hiSVR_PICTURE_S
     HI_U32              u32RepeatCnt;
 
     HI_S64              s64Pts;
+    HI_SVR_PRIV_DATA_S  stPrivData;
     HI_VOID*            priv;
     HI_U32              u32PrivSize;
 } HI_SVR_PICTURE_S;

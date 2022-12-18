@@ -1000,6 +1000,7 @@ typedef struct AVPacket {
 
     /*for use of playready decrypt, when set to 1, force no decrypt*/
     int flg_no_decrypt;
+    int bytes_left;    //bytes left when decoder one frame
 } AVPacket;
 #define AV_PKT_FLAG_KEY     0x0001 ///< The packet contains a keyframe
 #define AV_PKT_FLAG_CORRUPT 0x0002 ///< The packet content is corrupted

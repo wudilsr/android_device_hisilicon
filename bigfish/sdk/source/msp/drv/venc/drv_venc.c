@@ -1763,10 +1763,11 @@ HI_S32 VENC_DRV_SetAttr(VeduEfl_EncPara_S* EncHandle, HI_UNF_VENC_CHN_ATTR_S* ps
                 return HI_ERR_VENC_NOT_SUPPORT;
             }
 #endif
+            //don't let the vpss skip frame!
             if (HI_SUCCESS != (pstEncChnPara->stSrcInfo.pfChangeInfo)(pstEncChnPara->stSrcInfo.handle, 
                                                 pstAttr->u32Width, 
                                                 pstAttr->u32Height,
-                                                pstAttr->u32TargetFrmRate))
+                                                60))
             {
                 HI_ERR_VENC("Src Handle(%x) change Info failed!.\n", pstEncChnPara->stSrcInfo.handle);
                 return HI_FAILURE;

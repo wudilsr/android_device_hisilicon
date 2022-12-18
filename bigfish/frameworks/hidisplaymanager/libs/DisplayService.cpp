@@ -306,6 +306,40 @@ namespace android
         }
         return ret;
     }
+    int DisplayService::getManufactureInfo(Parcel * pl)
+    {
+        int ret = -1;
+        char frsname[128] = "0";
+        char sinkname [128] = "0";
+        int productcode = 0;
+        int serinumber = 0;
+        int week = 0;
+        int year = 0;
+	int TVHight =0;
+	int TVWidth =0;
+        ret = mDevice->get_manufacture_info(frsname, sinkname, &productcode, &serinumber,&week, &year, &TVHight, &TVWidth);
+
+        pl->writeInt32(0);
+        if(ret == -1)
+        {
+            pl->writeInt32(0);
+            ALOGE("getManufactureInfo failure! \n");
+        } else {
+            pl->writeInt32(1);
+        }
+
+        String16 fn(frsname);
+        String16 sk(sinkname);
+        pl->writeString16(fn);
+        pl->writeString16(sk);
+        pl->writeInt32(productcode);
+        pl->writeInt32(serinumber);
+        pl->writeInt32(week);
+        pl->writeInt32(year);
+	pl->writeInt32(TVWidth);
+	pl->writeInt32(TVHight);
+        return ret;
+    }
     int DisplayService::setAspectRatio(int ratio)
     {
         int ret = -1;

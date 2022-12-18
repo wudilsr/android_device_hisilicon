@@ -29,10 +29,13 @@
 #define HIRTP_MAX_PKT_SIZE    (1472)//(600*188)
 #define HIRTP_DEFAULT_PKT_SIZE 1472
 #define HIRTP_SEQ_MOD (1<<16)
-#define HIRTP_READ_TIME_OUT (5000000) // 5 second
+#define HIRTP_READ_TIME_OUT   (5000000) // 5 second
+#define HIRTP_RECONNECT_CYCLE (1000000) // 1000ms
+#define HIRTP_CHECK_RECONNECT_MAX_CNT (10)
 
 typedef struct HiRTPContext {
     URLContext *parent;
+    char       *url;
     URLContext *rtp_hd, *rtcp_hd;
     int rtp_fd, rtcp_fd;
     void  *ts_queue;
@@ -43,6 +46,8 @@ typedef struct HiRTPContext {
     pthread_t dgram_thread_tid;
     int is_exit;
     int max_pkt_size;
+    int flags;
+    AVIOInterruptCB interrupt_callback;
 } HiRTPContext;
 
 
@@ -105,6 +110,110 @@ static void _build_udp_url(char *buf, int buf_size,
     _url_add_option(buf, buf_size, "fifo_size=0");
 }
 
+static int _close_connection(HiRTPContext *s)
+{
+    if (s->rtp_hd) {
+        ffurl_close(s->rtp_hd);
+        s->rtp_hd = NULL;
+        s->rtp_fd = -1;
+    }
+    if (s->rtcp_hd) {
+        ffurl_close(s->rtcp_hd);
+        s->rtcp_hd = NULL;
+        s->rtcp_fd = -1;
+    }
+
+    return 0;
+}
+
+static int _open_connection(HiRTPContext *s, const char *uri, int flags)
+{
+    int rtp_port, rtcp_port,
+        ttl, connect,
+        local_rtp_port, local_rtcp_port, max_packet_size;
+    char hostname[256];
+    char buf[1024];
+    char path[1024];
+    const char *p;
+
+    av_url_split(NULL, 0, NULL, 0, hostname, sizeof(hostname), &rtp_port,
+                 path, sizeof(path), uri);
+    /* extract parameters */
+    ttl = -1;
+    rtcp_port = rtp_port+1;
+    local_rtp_port = -1;
+    local_rtcp_port = -1;
+    max_packet_size = -1;
+    connect = 0;
+
+    p = strchr(uri, '?');
+    if (p) {
+        if (av_find_info_tag(buf, sizeof(buf), "ttl", p)) {
+            ttl = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "rtcpport", p)) {
+            rtcp_port = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "localport", p)) {
+            local_rtp_port = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "localrtpport", p)) {
+            local_rtp_port = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "localrtcpport", p)) {
+            local_rtcp_port = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "pkt_size", p)) {
+            max_packet_size = strtol(buf, NULL, 10);
+        }
+        if (av_find_info_tag(buf, sizeof(buf), "connect", p)) {
+            connect = strtol(buf, NULL, 10);
+        }
+    }
+
+    _build_udp_url(buf, sizeof(buf),
+                  hostname, rtp_port, local_rtp_port, ttl, max_packet_size,
+                  connect);
+
+    av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] build rtp url(%s, %d)\n", __FUNCTION__, __LINE__, buf, (flags | AVIO_FLAG_NONBLOCK));
+    if (ffurl_open(&s->rtp_hd, buf, (flags | AVIO_FLAG_NONBLOCK), &s->interrupt_callback, NULL) < 0){
+        av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ffurl_open return error!\n", __FUNCTION__, __LINE__);
+        goto fail;
+    }
+
+   // if (local_rtp_port>=0 && local_rtcp_port<0)
+   //     local_rtcp_port = ff_udp_get_local_port(s->rtp_hd) + 1;
+
+    _build_udp_url(buf, sizeof(buf),
+                  hostname, rtcp_port, local_rtcp_port, ttl, max_packet_size,
+                  connect);
+
+    av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] build rtcp url(%s, %d)\n", __FUNCTION__, __LINE__, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_WRITE));
+
+    if (ffurl_open(&s->rtcp_hd, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_READ_WRITE), &s->interrupt_callback, NULL) < 0) {
+        av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ffurl_open return error!\n", __FUNCTION__, __LINE__);
+    }
+
+    /* just to ease handle access. XXX: need to suppress direct handle
+       access */
+    s->rtp_fd = ffurl_get_file_handle(s->rtp_hd);
+    if (s->rtcp_hd)
+    {
+        s->rtcp_fd = ffurl_get_file_handle(s->rtcp_hd);
+    }
+    else
+    {
+        s->rtcp_fd = -1;
+    }
+
+    return 0;
+
+fail:
+    _close_connection(s);
+
+    return -1;
+}
+
 static int  _rtp_test_max_pkt_size(HiRTPContext *s)
 {
     int ret, len, fd_max, nb_pkt = 0;
@@ -157,43 +266,84 @@ static int  _rtp_test_max_pkt_size(HiRTPContext *s)
     return ret;
 }
 
+static int _make_fd_array(HiRTPContext *s, int fds[2], int *fd_num, int *fd_max)
+{
+    int num, max;
+
+    if (s->rtp_fd < 0) {
+        av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] rtp_fd=%d invalid\n", __FUNCTION__, __LINE__, s->rtp_fd);
+        return -1;
+    }
+
+    fds[0] = s->rtp_fd;
+    fds[1] = s->rtcp_fd;
+    *fd_max = FFMAX(s->rtp_fd, s->rtcp_fd);
+    if (s->rtcp_fd >= 0) {
+        *fd_num = 2;
+    } else {
+        *fd_num = 1;
+    }
+
+    return 0;
+}
+
 static void *_rtp_stream_thread_process(void *arg)
 {
     HiRTPContext *s = (HiRTPContext *)arg;
     URLContext *h = s->parent;
     uint8_t *rcv_buf = NULL;
     DataPacket rtppkt = {0}, emptypkt = {0};
-    int len, ret, fd_max, bufsize = 0, rcv_max_pkt_size = 0;
-    int fd[2], i, fd_num;
+    int len, ret, fd_max = -1, bufsize = 0, rcv_max_pkt_size = 0;
+    int fd[2], i, fd_num = 0, check_reconnect_cnt = 0;
     fd_set rfds;
     struct timeval tv;
+    int64_t timeout_start_time;//set <=0 to disable check timeout
+    int64_t last_pkt_recv_time  = -1;
+    int64_t last_reconnect_time = -1, now_time;
 
     av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] _rtp_stream_thread_process thread enter...22\n", __FUNCTION__, __LINE__);
 
     //_rtp_test_max_pkt_size(s);
     s->max_pkt_size = HIRTP_MAX_PKT_SIZE;
-    fd[0] = s->rtp_fd;
-    fd_max = fd[0];
-    fd[1] = s->rtcp_fd;
-
-    if (s->rtcp_fd >= 0)
-    {
-        fd_num = 2;
-
-        if (fd[1] > fd_max)
-            fd_max = fd[1];
-    }
-    else
-    {
-        fd_num = 1;
-    }
-
+    _make_fd_array(s, fd, &fd_num, &fd_max);
+    timeout_start_time = av_gettime();
     while(s->is_exit == 0)
     {
         if (ff_check_interrupt(&h->interrupt_callback)) {
             av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] rtp thread interrupted\n", __FUNCTION__, __LINE__);
             s->is_exit = 1;
             break;
+        }
+
+       if (timeout_start_time > 0 && llabs(av_gettime() - timeout_start_time) > HIRTP_READ_TIME_OUT) {
+           av_log(NULL, AV_LOG_ERROR, "[%s,%d] HiRtp no data received for %d us, return error !\n",
+            __FUNCTION__, __LINE__, HIRTP_READ_TIME_OUT);
+           s->is_exit = 1;
+           break;
+       }
+
+        if (check_reconnect_cnt >= HIRTP_CHECK_RECONNECT_MAX_CNT) {
+            now_time = av_gettime();
+            if (timeout_start_time < 0 &&
+                last_pkt_recv_time > 0 &&
+                (now_time - last_pkt_recv_time) >= HIRTP_READ_TIME_OUT &&
+                (now_time - last_reconnect_time >= HIRTP_RECONNECT_CYCLE)) {
+                 av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] haven't received pkts for %lld ms, do reconnecting...\n",
+                    __FUNCTION__, __LINE__, (now_time - last_pkt_recv_time)/1000);
+                _close_connection(s);
+                fd_num = 0;
+                last_reconnect_time = now_time;
+                if (0 == _open_connection(s, s->url, s->flags)) {
+                    _make_fd_array(s, fd, &fd_num, &fd_max);
+                    check_reconnect_cnt = 0;
+                    last_pkt_recv_time = now_time;
+                }
+            }
+        }
+
+        if (fd_num <= 0) {
+            usleep(10000);
+            continue;
         }
 
         FD_ZERO(&rfds);
@@ -226,6 +376,13 @@ static void *_rtp_stream_thread_process(void *arg)
                     }
                     len = recv(fd[i], rcv_buf, bufsize, 0);
                     if (len > 0) {
+                        check_reconnect_cnt = 0;
+                        last_pkt_recv_time = av_gettime();
+                        if (timeout_start_time > 0) {
+                            timeout_start_time = -1;
+                            av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] first pkt received, disable timeout checking!seq=%u\n",
+                                __FUNCTION__, __LINE__, (unsigned)((unsigned)rcv_buf[2]<<8|rcv_buf[3]));
+                        }
                         if (len > rcv_max_pkt_size)
                             rcv_max_pkt_size = len;
                         rtppkt.data = rcv_buf;
@@ -242,9 +399,12 @@ static void *_rtp_stream_thread_process(void *arg)
                     }
                 }
             }
-        } else if (ret < 0) {
-              av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] select return error=%d(errno=%d,%s)\n",
-                __FUNCTION__, __LINE__, ret, errno, strerror(errno));
+        } else if (ret <= 0) {
+            if (ret < 0) {
+                av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] select return error=%d(errno=%d,%s)\n",
+                    __FUNCTION__, __LINE__, ret, errno, strerror(errno));
+            }
+            check_reconnect_cnt ++;
         }
     }
 
@@ -265,126 +425,23 @@ static void *_rtp_stream_thread_process(void *arg)
 static int hirtp_open(URLContext *h, const char *uri, int flags)
 {
     HiRTPContext *s = h->priv_data;
-    int rtp_port, rtcp_port,
-        ttl, connect,
-        local_rtp_port, local_rtcp_port, max_packet_size;
-    char hostname[256];
-    char buf[1024];
-    char path[1024];
-    const char *p;
     int ret;
-    int payload_type;
-    uint8_t recvbuf[HIRTP_MAX_PKT_SIZE] = {0};
-    int64_t start_time;
 
     av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] hirtp_open(%s, %d)\n", __FUNCTION__, __LINE__, uri, flags);
 
-    s->parent = h;
-    av_url_split(NULL, 0, NULL, 0, hostname, sizeof(hostname), &rtp_port,
-                 path, sizeof(path), uri);
-    /* extract parameters */
-    ttl = -1;
-    rtcp_port = rtp_port+1;
-    local_rtp_port = -1;
-    local_rtcp_port = -1;
-    max_packet_size = -1;
-    connect = 0;
-
-    p = strchr(uri, '?');
-    if (p) {
-        if (av_find_info_tag(buf, sizeof(buf), "ttl", p)) {
-            ttl = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "rtcpport", p)) {
-            rtcp_port = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "localport", p)) {
-            local_rtp_port = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "localrtpport", p)) {
-            local_rtp_port = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "localrtcpport", p)) {
-            local_rtcp_port = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "pkt_size", p)) {
-            max_packet_size = strtol(buf, NULL, 10);
-        }
-        if (av_find_info_tag(buf, sizeof(buf), "connect", p)) {
-            connect = strtol(buf, NULL, 10);
-        }
+    s->url   = av_strdup(uri);
+    if (!s->url) {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d][HIRTP] malloc for uri='%s' error\n", __FUNCTION__, __LINE__, uri);
+        return AVERROR(ENOMEM);
     }
+    s->parent = h;
+    s->flags  = flags;
+    s->interrupt_callback = h->interrupt_callback;
 
-    _build_udp_url(buf, sizeof(buf),
-                  hostname, rtp_port, local_rtp_port, ttl, max_packet_size,
-                  connect);
-
-    av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] build rtp url(%s, %d)\n", __FUNCTION__, __LINE__, buf, (flags | AVIO_FLAG_NONBLOCK));
-    if (ffurl_open(&s->rtp_hd, buf, (flags | AVIO_FLAG_NONBLOCK), &h->interrupt_callback, NULL) < 0){
-        av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ffurl_open return error!\n", __FUNCTION__, __LINE__);
+    if (_open_connection(s, uri, flags) < 0) {
         goto fail;
     }
 
-   start_time = av_gettime();
-
-   while (1) {
-       if (llabs(av_gettime() - start_time) > HIRTP_READ_TIME_OUT) {
-           av_log(NULL, AV_LOG_ERROR, "Func:%s, Line:%d, HiRtp read header data timeout !\n", __FUNCTION__, __LINE__);
-           goto fail;
-       }
-       if (ff_check_interrupt(&(h->interrupt_callback)) > 0)
-       {
-           av_log(NULL, AV_LOG_ERROR, "[%s:%d] interrupt exit \n", __FILE__, __LINE__);
-           goto fail;
-       }
-
-       ret = ffurl_read(s->rtp_hd, recvbuf, sizeof(recvbuf));
-       if (ret == AVERROR(EAGAIN))
-           continue;
-       if (ret < 0)
-           goto fail;
-
-       start_time = av_gettime();
-
-       if (ret < 12) {
-           av_log(s, AV_LOG_WARNING, "Received too short packet\n");
-           continue;
-       }
-
-       if ((recvbuf[0] & 0xc0) != 0x80) {
-           av_log(s, AV_LOG_WARNING, "Unsupported HiRTP version packet received\n");
-           continue;
-       }
-
-       payload_type = recvbuf[1] & 0x7f;
-       break;
-   }
-
-
-   // if (local_rtp_port>=0 && local_rtcp_port<0)
-   //     local_rtcp_port = ff_udp_get_local_port(s->rtp_hd) + 1;
-
-    _build_udp_url(buf, sizeof(buf),
-                  hostname, rtcp_port, local_rtcp_port, ttl, max_packet_size,
-                  connect);
-
-    av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] build rtcp url(%s, %d)\n", __FUNCTION__, __LINE__, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_WRITE));
-
-    if (ffurl_open(&s->rtcp_hd, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_READ_WRITE), &h->interrupt_callback, NULL) < 0) {
-        av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ffurl_open return error!\n", __FUNCTION__, __LINE__);
-    }
-
-    /* just to ease handle access. XXX: need to suppress direct handle
-       access */
-    s->rtp_fd = ffurl_get_file_handle(s->rtp_hd);
-    if (s->rtcp_hd)
-    {
-        s->rtcp_fd = ffurl_get_file_handle(s->rtcp_hd);
-    }
-    else
-    {
-        s->rtcp_fd = -1;
-    }
     s->ts_queue = NULL;
     if (pktq_create(&s->ts_queue, HIRTP_TSQUE_BUF_MAX_SIZE, HIRTP_TSQUE_BUF_FORBIDDEN_SIZE) < 0) {
         av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] create ts queue return error!\n", __FUNCTION__, __LINE__);
@@ -403,7 +460,8 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
         goto fail;
     }
 
-    h->max_packet_size = s->rtp_hd->max_packet_size;
+    //set @max_packet_size to 0 for using avio buffer seek(seek backward, or forward).
+    h->max_packet_size = 0;//s->rtp_hd->max_packet_size;
     h->is_streamed = 1;
 
     s->rtpdmx = ff_rtp_parse_open(NULL, NULL, s->rtcp_hd, 33, 10, 0);
@@ -433,14 +491,7 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
         ff_rtp_parse_close(s->rtpdmx);
         s->rtpdmx = NULL;
     }
-    if (s->rtp_hd) {
-        ffurl_close(s->rtp_hd);
-        s->rtp_hd = NULL;
-    }
-    if (s->rtcp_hd) {
-        ffurl_close(s->rtcp_hd);
-        s->rtcp_hd = NULL;
-    }
+    _close_connection(s);
     if (s->ts_queue) {
         pktq_destroy(s->ts_queue);
         s->ts_queue = NULL;
@@ -452,6 +503,9 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
     if (s->empty_buf_queue) {
         pktq_destroy(s->empty_buf_queue);
         s->empty_buf_queue = NULL;
+    }
+    if (s->url) {
+        av_freep(&s->url);
     }
 
     return AVERROR(EIO);
@@ -569,17 +623,16 @@ static int hirtp_close(URLContext *h)
     if (s->rtpdmx)
         ff_rtp_parse_close(s->rtpdmx);
     //close udp connection at the last.
-    if (s->rtp_hd)
-        ffurl_close(s->rtp_hd);
-    if (s->rtcp_hd)
-        ffurl_close(s->rtcp_hd);
+    _close_connection(s);
     if (s->ts_queue)
         pktq_destroy(s->ts_queue);
     if (s->rtp_queue)
         pktq_destroy(s->rtp_queue);
     if (s->empty_buf_queue)
         pktq_destroy(s->empty_buf_queue);
-
+    if (s->url) {
+        av_freep(&s->url);
+    }
     return 0;
 }
 

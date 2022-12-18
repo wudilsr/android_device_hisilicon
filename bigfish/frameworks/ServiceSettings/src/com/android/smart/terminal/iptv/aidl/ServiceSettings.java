@@ -74,11 +74,16 @@ public class ServiceSettings extends Service {
     private static final String ServerNTPUrl = "Service/ServiceInfo/ServerNTPUrl";
     private static final String SPDIF_MODE = "Service/ServiceInfo/Spdif_Mode";
     private static final String PLATFORM_TYPE = "Service/ServiceInfo/PlatType";
+    
+    private static final String OPTFORMAT = "Service/ServiceInfo/AutoOptFormat";
 
     private final static float FONT_SIZE_SMALL = 0.75f;
     private final static float FONT_SIZE_NORMAL = 1f;
     private final static float FONT_SIZE_LARGE = 1.15f;
-
+    
+    
+    private final static String OPT_FORMAT_ENABLE = "1";
+    private final static String OPT_FORMAT_DISABLE = "0";
     private final static String ETHERNET_ENABLE = "1";
     private final static String ETHERNET_DISABLE = "0";
     private final static String IPV6_STATE_ENABLE = "1";
@@ -89,6 +94,7 @@ public class ServiceSettings extends Service {
     private final static String DHCP_AUTHENTIC_DISABLE = "0";
     private static final String PLATFORM_TYPE_GD = "GD";
     private static final String PLATFORM_TYPE_SC = "SC";
+    private static final String PLATFORM_TYPE_SH3 = "SH3";
     private final String AUDIO_OUTPUT_MODE_OFF = "2";
     private final String AUDIO_OUTPUT_MODE_RAW = "1";
     private final String AUDIO_OUTPUT_MODE_LPCM = "0";
@@ -292,6 +298,17 @@ public class ServiceSettings extends Service {
                 mPlatformType = value;
                 Log.d(TAG, "setValue mPlatformType:"+mPlatformType);
                 ret = true;
+            }else if(key.equals(OPTFORMAT)) {
+                int status = Integer.parseInt(value);
+                if(status == 0)
+                {
+                    mDisplayManager.setOptimalFormatEnable(0);     
+                }
+                if(status == 1)
+                {
+                    mDisplayManager.setOptimalFormatEnable(1);
+                }
+                ret = true;
             }
             Log.d(TAG, "setValue key:"+key + " ret:" + ret);
             return ret;
@@ -456,6 +473,25 @@ public class ServiceSettings extends Service {
                         return false;
                     }
                 }
+            } else if(PLATFORM_TYPE_SH3.equals(mPlatformType)){
+                switch (flag){
+                    case 0:{
+                        mAOService.setAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_HDMI, HiAoService.AUDIO_OUTPUT_MODE_AUTO);
+                    }break;
+                    case 1:{
+                        mAOService.setAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_HDMI, HiAoService.AUDIO_OUTPUT_MODE_LPCM);
+                    }break;
+                    case 2:{
+                        mAOService.setAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_HDMI, HiAoService.AUDIO_OUTPUT_MODE_RAW);
+                    }break;
+                    case 3:{
+                        mAOService.setAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_HDMI, HiAoService.AUDIO_OUTPUT_MODE_OFF);
+                    }break;
+                    default:{
+                        Log.d(TAG, "setAudioMode error, unkown flag:"+flag);
+                        return false;
+                    }
+                }
             } else {
                 Log.d(TAG, "error unkown platform type");
             }
@@ -608,6 +644,16 @@ public class ServiceSettings extends Service {
                         Log.d(TAG, "error unkown iSpdifMode "+iSpdifMode);
                     break;
                }
+            }else if (key.equals(OPTFORMAT)){
+                int status = mDisplayManager.getOptimalFormatEnable();
+                if(1 == status)
+                {
+                    ret = OPT_FORMAT_ENABLE;
+                } 
+                if(0 == status)
+                {
+                    ret = OPT_FORMAT_DISABLE;
+                }
             }
 
             Log.d(TAG, "getValue key:"+key + " ret value:" +ret);
@@ -761,6 +807,24 @@ public class ServiceSettings extends Service {
                 switch (iSpdifMode) {
                     case HiAoService.AUDIO_OUTPUT_MODE_RAW:{
                        audiomode = 1;
+                    }break;
+                    default:break;
+                }
+            } else if (PLATFORM_TYPE_SH3.equals(mPlatformType)) {
+                Log.d(TAG, "getAudioMode iHDMIMode:"+iHDMIMode + " mPlatformType:"+mPlatformType);
+
+                switch (iHDMIMode) {
+                    case HiAoService.AUDIO_OUTPUT_MODE_AUTO:{
+                       audiomode = 0;
+                    }break;
+                    case HiAoService.AUDIO_OUTPUT_MODE_LPCM:{
+                       audiomode = 1;
+                    }break;
+                    case HiAoService.AUDIO_OUTPUT_MODE_RAW:{
+                       audiomode = 2;
+                    }break;
+                    case HiAoService.AUDIO_OUTPUT_MODE_OFF:{
+                       audiomode = 3;
                     }break;
                     default:break;
                 }

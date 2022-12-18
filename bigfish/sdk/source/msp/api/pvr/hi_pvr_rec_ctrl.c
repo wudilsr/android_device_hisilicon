@@ -1086,7 +1086,6 @@ STATIC HI_S32 PVRRecSaveIndexToCache(PVR_REC_CHN_S *pRecChn)
 STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
 {
     HI_S32 ret = HI_SUCCESS;
-    HI_CHAR szScFileName[PVR_MAX_FILENAME_LEN] = {0};
 #ifdef PVR_ACQUIREDATAINDX
     HI_U32 i = 0;
     HI_UNF_DMX_REC_DATA_INDEX_S stDataIdx = {0};
@@ -1100,9 +1099,6 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
 
     HI_INFO_PVR("Chn %d start to save to cache.\n", pRecChn->u32ChnID);
 
-    snprintf(szScFileName, PVR_MAX_FILENAME_LEN, "%s.sc", pRecChn->stUserCfg.szFileName);
-
-    //fpDmxSc = fopen(szScFileName, "wb");
 #ifdef DUMP_DMX_DATA
     HI_CHAR saveName[256];
     HI_CHAR saveIdxName[256];
@@ -1121,13 +1117,10 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
     while (HI_UNF_PVR_REC_STATE_STOP != pRecChn->enState)
     {
     #ifndef PVR_ACQUIREDATAINDX
-        if (HI_NULL != pRecChn->IndexHandle)
+        ret = PVRRecSaveIndexToCache(pRecChn);
+        if (!((HI_SUCCESS == ret) || (HI_ERR_DMX_NOAVAILABLE_DATA == ret) || (HI_ERR_DMX_TIMEOUT == ret)))
         {
-            ret = PVRRecSaveIndexToCache(pRecChn);
-            if (!((HI_SUCCESS == ret) || (HI_ERR_DMX_NOAVAILABLE_DATA == ret) || (HI_ERR_DMX_TIMEOUT == ret)))
-            {
-                break;
-            }
+            break;
         }
         
         do
@@ -1169,7 +1162,7 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
                     }
 
                     /* if registed external write callback function, get and save the cipher data */
-                    if((NULL != pRecChn->writeCallBack) && (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pRecChn->stUserCfg.enStreamType))
+                    if(HI_NULL != pRecChn->writeCallBack)
                     {
                         HI_U64 u64GlobalOffset;
 
@@ -1207,19 +1200,13 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
                     }
                     else
                     {
-                        if (HI_NULL != pRecChn->IndexHandle)
-                        {
-                            pRecChn->IndexHandle->u64FileSizeGlobal += stRecData.u32Len;
-                        }
+                        pRecChn->IndexHandle->u64FileSizeGlobal += stRecData.u32Len;
                     }
                 }while (HI_SUCCESS != ret);
 
                 (HI_VOID)HI_UNF_DMX_ReleaseRecData(pRecChn->DemuxRecHandle, &stRecData);
 
-                if (pRecChn->IndexHandle != HI_NULL)
-                {
-                    PVR_Index_PushStartWhenTsLead(pRecChn->IndexHandle, pRecChn->u64CurFileSize);
-                }
+                PVR_Index_PushStartWhenTsLead(pRecChn->IndexHandle, pRecChn->u64CurFileSize);
 
                 u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
             }
@@ -1247,32 +1234,26 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
         {
             if (HI_UNF_PVR_REC_STATE_PAUSE == pRecChn->enState)
             {
-                if (HI_NULL != pRecChn->IndexHandle)
+                for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
                 {
-                    for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
-                    {
-                        pRecChn->IndexHandle->u64DeltaGlobalOffset += stDataIdx.stRecData[i].u32Len;
-                    }
+                    pRecChn->IndexHandle->u64DeltaGlobalOffset += stDataIdx.stRecData[i].u32Len;
                 }
                 
                 (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
                 continue;
             }
 
-            if (HI_NULL != pRecChn->IndexHandle)
+            for(i = 0; i < stDataIdx.u32IdxNum; i++)
             {
-                for(i = 0; i < stDataIdx.u32IdxNum; i++)
+                pstIdx = &(stDataIdx.stIndex[i]);
+                do
                 {
-                    pstIdx = &(stDataIdx.stIndex[i]);
-                    do
+                    ret = PVR_Index_SaveToCache(pRecChn->IndexHandle, pstIdx);
+                    if (ret != HI_SUCCESS)
                     {
-                        ret = PVR_Index_SaveToCache(pRecChn->IndexHandle, pstIdx);
-                        if (ret != HI_SUCCESS)
-                        {
-                            usleep(10*1000);
-                        }
-                    }while(ret != HI_SUCCESS);
-                }
+                        usleep(10*1000);
+                    }
+                }while(ret != HI_SUCCESS);
             }
             
             for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
@@ -1300,7 +1281,7 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
                     continue;
                 }
 
-                if((NULL != pRecChn->writeCallBack) && (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pRecChn->stUserCfg.enStreamType))
+                if(HI_NULL != pRecChn->writeCallBack)
                 {
                     HI_U64 u64GlobalOffset;
                     u64GlobalOffset = pRecChn->u64CurFileSize + (pRecChn->stRecTsQueue.u32Size - PVRRecTsQueueGetValidSize(pRecChn));
@@ -1335,10 +1316,7 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
                     ret = PVRRecTsQueuePush(pRecChn, pstData->pDataAddr, pstData->u32Len);
                     if (HI_SUCCESS == ret)
                     {
-                        if (HI_NULL != pRecChn->IndexHandle)
-                        {
-                            pRecChn->IndexHandle->u64FileSizeGlobal += pstData->u32Len;
-                        }
+                        pRecChn->IndexHandle->u64FileSizeGlobal += pstData->u32Len;
                     }
                 }while(HI_SUCCESS != ret);
             }
@@ -1350,9 +1328,8 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
 
             (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
             
-//            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
-            
-            if ((HI_NULL != pRecChn->IndexHandle) && (pRecChn->IndexHandle->bRecReachFix))
+           
+            if (pRecChn->IndexHandle->bRecReachFix)
                 break;
         }
         else if ((ret == HI_ERR_DMX_NOAVAILABLE_DATA) || (ret == HI_ERR_DMX_TIMEOUT))
@@ -1394,11 +1371,6 @@ STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
         HI_INFO_PVR("-----PVRRecSaveToCache exiting with error:%#x...\n", ret);
         PVRRecCheckError(pRecChn, ret);
     }
-    /*
-    if (fpDmxSc)
-    {
-        fclose(fpDmxSc);
-    }*/
 
     HI_INFO_PVR("<==chn %d PVRRecSaveIdxRoutine ret=%#x.\n", pRecChn->u32ChnID, ret);
     return NULL;
@@ -1437,7 +1409,7 @@ STATIC HI_VOID* PVRRecSaveToFile(HI_VOID *args)
         if (HI_SUCCESS != ret)
         {
             /*index到达指定指定大小/时间后不会再保存index*/
-            if ((ret == HI_ERR_PVR_FILE_TILL_END) && (pRecChn->IndexHandle != HI_NULL))
+            if (ret == HI_ERR_PVR_FILE_TILL_END)
             {
                 (HI_VOID)PVR_Index_SaveToFile(pRecChn->IndexHandle, HI_TRUE);
             }
@@ -1450,9 +1422,6 @@ STATIC HI_VOID* PVRRecSaveToFile(HI_VOID *args)
         PVRRecCheckRecPosition(pRecChn);
     
 PVR_SAVE_INDEX:
-        if (pRecChn->IndexHandle == HI_NULL)
-            continue;
-
         ret = PVR_Index_SaveToFile(pRecChn->IndexHandle, HI_FALSE);
         if (ret != HI_SUCCESS)
         {
@@ -1488,7 +1457,8 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
     HI_UNF_DMX_REC_INDEX_S stRecIndex = {0};
     
     PVR_REC_CHN_S *pRecChn = (PVR_REC_CHN_S *)args;
-    
+    memset(&pRecChn->stDmxIdxInfo, 0, sizeof(HI_UNF_DMX_REC_INDEX_S));
+    pRecChn->bUseLastDmxIdx = HI_FALSE;
 #ifdef DUMP_DMX_DATA
         HI_CHAR saveName[256];
         HI_CHAR saveIdxName[256];
@@ -1685,25 +1655,19 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
         {
             if (HI_UNF_PVR_REC_STATE_PAUSE == pRecChn->enState)
             {
-                if (HI_NULL != pRecChn->IndexHandle)
+                for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
                 {
-                    for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
-                    {
-                        pRecChn->IndexHandle->u64DeltaGlobalOffset += stDataIdx.stRecData[i].u32Len;
-                    }
+                    pRecChn->IndexHandle->u64DeltaGlobalOffset += stDataIdx.stRecData[i].u32Len;
                 }
                 
                 (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
                 continue;
             }
 
-            if (HI_NULL != pRecChn->IndexHandle)
+            for(i = 0; i < stDataIdx.u32IdxNum; i++)
             {
-                for(i = 0; i < stDataIdx.u32IdxNum; i++)
-                {
-                    pstIdx = &(stDataIdx.stIndex[i]);
-                    (HI_VOID)PVR_Index_SaveFramePosition(pRecChn->IndexHandle, pstIdx, HI_FALSE);
-                }
+                pstIdx = &(stDataIdx.stIndex[i]);
+                (HI_VOID)PVR_Index_SaveFramePosition(pRecChn->IndexHandle, pstIdx, HI_FALSE);
             }
 
             for (i = 0; i < stDataIdx.u32RecDataCnt; i++)
@@ -1733,9 +1697,7 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
                     continue;
                 }
 
-                if ((NULL != pRecChn->writeCallBack) && 
-                    (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pRecChn->stUserCfg.enStreamType) &&
-                    (pRecChn->IndexHandle != HI_NULL))
+                if (HI_NULL != pRecChn->writeCallBack)
                 {
                     if (PVR_INDEX_REWIND_BY_TIME == pRecChn->IndexHandle->stCycMgr.enRewindType)
                     {
@@ -1774,13 +1736,9 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
             if (ret != HI_SUCCESS)
                 break;
 
-            if (pRecChn->IndexHandle != HI_NULL)
-            {
-                PVR_Index_PushStartWhenTsLead(pRecChn->IndexHandle, pRecChn->u64CurFileSize);
-            }
+            PVR_Index_PushStartWhenTsLead(pRecChn->IndexHandle, pRecChn->u64CurFileSize);
 
             PVRRecCheckRecPosition(pRecChn);
-//            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
 
             (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
         }
@@ -1831,6 +1789,72 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
 
 #endif
 #endif
+STATIC HI_VOID *PVRRecSaveStream(HI_VOID *args)
+{
+    HI_S32 ret;
+    HI_UNF_DMX_REC_DATA_S stData;
+    PVR_REC_CHN_S *pstRecChn = (PVR_REC_CHN_S *)args;
+
+    while (HI_UNF_PVR_REC_STATE_STOP != pstRecChn->enState)
+    {
+        ret = HI_UNF_DMX_AcquireRecData(pstRecChn->DemuxRecHandle, &stData, 0);
+        if (ret == HI_SUCCESS)
+        {
+            if (HI_UNF_PVR_REC_STATE_PAUSE == pstRecChn->enState)
+            {
+                (HI_VOID)HI_UNF_DMX_ReleaseRecData(pstRecChn->DemuxRecHandle, &stData);
+                continue;
+            }
+
+            if ((0 == stData.u32Len) || (0 != stData.u32Len%188) || (0 != stData.u32Len%16))
+            {
+                HI_FATAL_PVR("Len=%x Mod_188=%d Mod_16=%d\n", 
+                              stData.u32Len, stData.u32Len%188, stData.u32Len%16);
+                ret = HI_FAILURE;
+                (HI_VOID)HI_UNF_DMX_ReleaseRecData(pstRecChn->DemuxRecHandle, &stData);
+                break;
+            }
+
+            if (HI_SUCCESS != PVRRecProcCipherEncrypt(pstRecChn, stData.u32DataPhyAddr, stData.u32DataPhyAddr, stData.u32Len))
+            {
+                HI_ERR_PVR("PVRRecProcCipherEncrypt failed\n");
+                (HI_VOID)HI_UNF_DMX_ReleaseRecData(pstRecChn->DemuxRecHandle, &stData);
+                continue;
+            }
+
+            ret = PVRRecCycWriteStream(stData, pstRecChn);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_PVR("Write file failed ret:%#x! size:%u, addr:%p\n", ret, stData.u32Len, stData.pDataAddr);
+                (HI_VOID)HI_UNF_DMX_ReleaseRecData(pstRecChn->DemuxRecHandle, &stData);
+                break;
+            }
+
+            (HI_VOID)HI_UNF_DMX_ReleaseRecData(pstRecChn->DemuxRecHandle, &stData);
+        }
+        else if ((HI_ERR_DMX_NOAVAILABLE_DATA == ret) || (HI_ERR_DMX_TIMEOUT == ret))
+        {
+            usleep(10000);
+            continue;
+        }
+        else
+        {
+            HI_ERR_PVR("receive rec stream error:%x\n", ret);
+            break;
+        }
+    }
+
+    if (HI_UNF_PVR_REC_STATE_STOP != pstRecChn->enState)
+    {
+        HI_ERR_PVR("-----PVRRecSaveToFile exiting with error:%#x...\n", ret);
+        PVRRecCheckError(pstRecChn, ret);
+    }
+
+    pstRecChn->bSavingData = HI_FALSE;
+    HI_INFO_PVR("<==PVRRecSaveIndexAndStreamRoutine,FileLen:0x%llx.\n", pstRecChn->u64CurFileSize);
+
+    return HI_NULL;
+}
 
 STATIC INLINE HI_S32 PVRRecPrepareCipher(PVR_REC_CHN_S *pChnAttr)
 {
@@ -2569,7 +2593,11 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
         
     (void)HI_SYS_GetTimeStampMs(&pRecChn->u32RecStartTimeMs);
 
-    if (HI_NULL != pRecChn->IndexHandle)
+    if (HI_NULL == pRecChn->IndexHandle)
+    {
+        ret = pthread_create(&pRecChn->RecordFileThread, HI_NULL, PVRRecSaveStream, pRecChn);
+    }
+    else
     {
         PVR_Index_ResetRecAttr(pRecChn->IndexHandle);
 
@@ -2578,56 +2606,52 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
         {
             HI_ERR_PVR("PVR_Index_PrepareHeaderInfo fail\n");
         }
-    }
+    
 
-#ifdef HI_PVR_L2_CACHE_SUPPORT
-    #ifndef PVR_ACQUIREDATAINDX
-    memset(&pRecChn->stDmxIdxInfo, 0, sizeof(HI_UNF_DMX_REC_INDEX_S));
-    pRecChn->bUseLastDmxIdx = HI_FALSE;
-    #endif
+#ifdef HI_PVR_L2_CACHE_SUPPORT   
+        if (HI_SUCCESS != PVRRecTsQueueInit(pRecChn))
+        {
+            pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
+            (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            PVR_UNLOCK(&(pRecChn->stMutex));
+            return HI_FAILURE;
+        }
     
-    if (HI_SUCCESS != PVRRecTsQueueInit(pRecChn))
-    {
-        pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
-        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
-        PVR_UNLOCK(&(pRecChn->stMutex));
-        return HI_FAILURE;
-    }
-    
-    ret = pthread_create(&pRecChn->RecordCacheThread, NULL, PVRRecSaveToCache, pRecChn);
-    if (ret != HI_SUCCESS)
-    {
-        pRecChn->enState = HI_UNF_PVR_REC_STATE_STOP;
-        HI_ERR_PVR("Create save cache thread failure!\n");
-        PVRRecTsQueueDeInit(pRecChn);
-        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
-        PVR_UNLOCK(&(pRecChn->stMutex));
-        return HI_FAILURE;
-    }
+        ret = pthread_create(&pRecChn->RecordCacheThread, HI_NULL, PVRRecSaveToCache, pRecChn);
+        if (ret != HI_SUCCESS)
+        {
+            pRecChn->enState = HI_UNF_PVR_REC_STATE_STOP;
+            HI_ERR_PVR("Create save cache thread failure!\n");
+            PVRRecTsQueueDeInit(pRecChn);
+            (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            PVR_UNLOCK(&(pRecChn->stMutex));
+            return HI_FAILURE;
+        }
         
-    ret = pthread_create(&pRecChn->RecordFileThread, NULL, PVRRecSaveToFile, pRecChn);
-    if (ret != HI_SUCCESS)
-    {
-        PVR_UNLOCK(&(pRecChn->stMutex));
-        HI_ERR_PVR("create record STREAM thread failure!\n");
-        (HI_VOID)pthread_join(pRecChn->RecordCacheThread, NULL);
-        PVRRecTsQueueDeInit(pRecChn);
-        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
-        pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
-        return HI_FAILURE;
-    }
+        ret = pthread_create(&pRecChn->RecordFileThread, HI_NULL, PVRRecSaveToFile, pRecChn);
+        if (ret != HI_SUCCESS)
+        {
+            PVR_UNLOCK(&(pRecChn->stMutex));
+            HI_ERR_PVR("create record STREAM thread failure!\n");
+            (HI_VOID)pthread_join(pRecChn->RecordCacheThread, HI_NULL);
+            PVRRecTsQueueDeInit(pRecChn);
+            (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
+            return HI_FAILURE;
+        }
 #else
-    ret = pthread_create(&pRecChn->RecordFileThread, NULL, PVRRecSaveIndexAndStreamRoutine, pRecChn);
+        ret = pthread_create(&pRecChn->RecordFileThread, HI_NULL, PVRRecSaveIndexAndStreamRoutine, pRecChn);
 
-    if (ret != HI_SUCCESS)
-    {
-        HI_ERR_PVR("create record STREAM thread failure!\n");
-        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
-        pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
-        PVR_UNLOCK(&(pRecChn->stMutex));
-        return HI_FAILURE;
-    }
+        if (ret != HI_SUCCESS)
+        {
+            HI_ERR_PVR("create record STREAM thread failure!\n");
+            (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
+            PVR_UNLOCK(&(pRecChn->stMutex));
+            return HI_FAILURE;
+        }
 #endif
+    }
 
     HI_INFO_PVR("channel %d start ok.\n", u32ChnID);
 
@@ -2707,13 +2731,20 @@ HI_S32 HI_PVR_RecStopChn(HI_U32 u32ChnID)
 
     pRecChn->enState = HI_UNF_PVR_REC_STATE_STOP;
 #ifdef HI_PVR_L2_CACHE_SUPPORT
-    (HI_VOID)pthread_join(pRecChn->RecordCacheThread, NULL);
-    pRecChn->RecordCacheThread = 0;
+    if (HI_NULL != pRecChn->IndexHandle)
+    {
+        (HI_VOID)pthread_join(pRecChn->RecordCacheThread, NULL);
+        pRecChn->RecordCacheThread = 0;
+    }
+    
 #endif
 
     (HI_VOID)pthread_join(pRecChn->RecordFileThread, NULL);
 #ifdef HI_PVR_L2_CACHE_SUPPORT
-    PVRRecTsQueueDeInit(pRecChn);
+    if (HI_NULL != pRecChn->IndexHandle)
+    {
+        PVRRecTsQueueDeInit(pRecChn);
+    }
 #endif
 
     ret = HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);

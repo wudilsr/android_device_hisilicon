@@ -308,7 +308,9 @@ public class PhotoDataAdapter implements PhotoPage.Model {
         ImageEntry entry = mImageCache.get(getVersion(index));
         Bitmap screennail = entry == null ? null : entry.screenNail;
         if (screennail != null) {
-            if ( index != mCurrentIndex && ActivityManager.isLowRamDeviceStatic() ) {
+            if ( index != mCurrentIndex
+                && (ActivityManager.isLowRamDeviceStatic()
+                    && ("512m".equals(ActivityManager.getMemorySizeStatic()) || "768m".equals(ActivityManager.getMemorySizeStatic()))) ) {
                 mImageCache.remove(getVersion(index));
                 if (entry.fullImageTask != null) entry.fullImageTask.cancel();
                 if (entry.screenNailTask != null) entry.screenNailTask.cancel();
@@ -490,7 +492,9 @@ public class PhotoDataAdapter implements PhotoPage.Model {
             // current item mismatch - don't request image
             return;
         }
-        if ( -1 != mLastIndex && currentIndex != mLastIndex && ActivityManager.isLowRamDeviceStatic() ) {
+        if ( -1 != mLastIndex && currentIndex != mLastIndex
+            && (ActivityManager.isLowRamDeviceStatic()
+                && ("512m".equals(ActivityManager.getMemorySizeStatic()) || "768m".equals(ActivityManager.getMemorySizeStatic()))) ) {
             ImageEntry entry = mImageCache.remove(getVersion(mLastIndex));
             if (entry.fullImageTask != null) entry.fullImageTask.cancel();
             if (entry.screenNailTask != null) entry.screenNailTask.cancel();
@@ -501,7 +505,8 @@ public class PhotoDataAdapter implements PhotoPage.Model {
             int offset = sImageFetchSeq[i].indexOffset;
             int bit = sImageFetchSeq[i].imageBit;
             task = startTaskIfNeeded(currentIndex + offset, bit);
-            if ( ActivityManager.isLowRamDeviceStatic() ) {  
+            if (ActivityManager.isLowRamDeviceStatic()
+                && ("512m".equals(ActivityManager.getMemorySizeStatic()) || "768m".equals(ActivityManager.getMemorySizeStatic()))) {
                 mLastIndex = currentIndex;
                 break;
             }

@@ -319,6 +319,7 @@ static int http_open_cnx(URLContext *h)
             av_log(NULL, AV_LOG_WARNING,"[%s:%d]: url_open_h ret='%d',errno:%d\n",__FILE_NAME__, __LINE__, err, ff_neterrno());
             if (!av_stristr(s->location, DIAGNOSE_TAG) && err == AVERROR(ENETUNREACH) && !ff_check_interrupt(&(h->interrupt_callback)))
             {
+                usleep(50*1000);
                 goto redo;
             }
             s->http_code = err;
@@ -523,6 +524,15 @@ static int http_open(URLContext *h, const char *uri, int flags)
     ret = http_open_cnx(h);
     while (!s->has_reconnect && CHECK_NET_INTERRUPT(ret)  && abs(av_gettime() - start_time) <= HTTP_CONNECT_TIMEOUT)
     {
+        /* DIAGNOSE need return immediately */
+        if ((FFABS(av_gettime() - start_time) > DIAGNOSE_RECONNECT_TIMEOUT)
+            && av_stristr(s->location, DIAGNOSE_TAG))
+        {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] DIAGNOSE, network timeout\n", __FILE_NAME__, __LINE__);
+            url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_TIMEOUT, "http");
+            break;
+        }
+
         if (ff_check_interrupt(&(h->interrupt_callback)) > 0)
         {
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] \n", __FILE_NAME__, __LINE__);
@@ -944,7 +954,7 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
     int not_support_byte_range = 0;
     const char *method;
 
-    s->seekable = 0;
+    //s->seekable = 0;
 
     /* send http header */
     post = h->flags & AVIO_FLAG_WRITE;

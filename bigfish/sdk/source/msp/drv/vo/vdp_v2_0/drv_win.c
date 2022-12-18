@@ -653,6 +653,14 @@ BufferQueue[state, FrameID]
         }
     }
 
+    PROC_PRINT(p,"Overlay Lowdelay stat: OmxDone %u, OverlayQueue %u, WinGet %u, WinConfig %u, Total %u\n",
+                pstProcInfo->stLowdelayStat.u32OmxReportDoneTime,
+                pstProcInfo->stLowdelayStat.u32OverlayQueueTime,
+                pstProcInfo->stLowdelayStat.u32WinGetFrameTime,
+                pstProcInfo->stLowdelayStat.u32WinConfigTime,
+                pstProcInfo->stLowdelayStat.u32WinConfigTime - pstProcInfo->stLowdelayStat.u32OmxReportDoneTime);
+    
+
     PROC_PRINT(p, "\n");
 
 _ERR_EXIT_:

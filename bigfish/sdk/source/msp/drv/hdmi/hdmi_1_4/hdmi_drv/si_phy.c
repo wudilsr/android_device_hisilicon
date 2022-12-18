@@ -257,7 +257,7 @@ void SI_TX_PHY_INIT(void)
     SI_TX_PHY_WriteRegister(PHY_PLL2_ADDR,0x09);
 
     // driver setting , slew rate ctrl
-    SI_TX_PHY_WriteRegister(PHY_DRV_ADDR,0x01);
+    SI_TX_PHY_WriteRegister(PHY_DRV_ADDR,0x04);
 
     // clk invert
     SI_TX_PHY_WriteRegister(PHY_CLK_ADDR,0x00);
@@ -514,7 +514,7 @@ static HI_S32 SI_TX_PHY_SwingCtrl(HI_U32 u32TMDSClk)
     // taiyan phy, use encoder in ctrl
 
     HI_U32 u32phyreg = 0;
-
+    SI_TX_PHY_WriteRegister(PHY_DRV_ADDR,0x04);
     SI_TX_PHY_ReadRegister(PHY_PLL1_ADDR,&u32phyreg);
     u32phyreg &= ~0x03;
 
@@ -524,7 +524,7 @@ static HI_S32 SI_TX_PHY_SwingCtrl(HI_U32 u32TMDSClk)
     }
     else if(u32TMDSClk <= 165)  //27M < TMDS_clock <= 165M
     {
-        u32phyreg |= 0x01;
+        u32phyreg |= 0x02;
     }
     else
     {

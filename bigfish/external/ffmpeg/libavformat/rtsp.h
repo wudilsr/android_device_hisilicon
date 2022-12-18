@@ -382,12 +382,16 @@ typedef struct RTSPState {
     int max_udp_pkt_size;
  //   int thread_pos;
 #endif
+    char *headers;
     int64_t last_get_speed_time;
 } RTSPState;
 
 #define RTSP_FLAG_FILTER_SRC  0x1    /**< Filter incoming UDP packets -
                                           receive packets only from the right
                                           source address and port. */
+
+#define RTSP_FLAG_PREFER_TCP  0x10   /**< Try RTP via TCP first if possible. */
+
 
 /**
  * Describe a single stream, as identified by a single m= line block in the

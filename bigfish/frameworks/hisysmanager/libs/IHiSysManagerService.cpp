@@ -23,6 +23,8 @@ enum {
 	SETDEFAULTROUTE,
 	REMOVEDEFAULTROUTE,
 	REMOVENETROUTE,
+	SETHDMIHDCPKEY,
+	GETHDMIHDCPKEY,
 	SETHDCPKEY,
 	GETHDCPKEY,
 	DOREBOOT,
@@ -49,6 +51,8 @@ enum {
 	RECOVERYIPTV,
 	SETDRMKEY,
 	GETDRMKEY,
+	USERDATARESOURCEIPTV,
+	SETUIASYNCCOMPOSE,
 };
 class BpHiSysManagerService : public BpInterface<IHiSysManagerService>
 {
@@ -307,6 +311,48 @@ public:
 		}
 		return ret;
 	}
+
+	virtual int setHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
+	{
+		Parcel data, reply;
+		data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+		data.writeString8(tdname);
+		data.writeInt32(offset);
+		data.writeString8(filename);
+		data.writeInt32(datasize);
+		remote()->transact(SETHDMIHDCPKEY, data, &reply);
+		int32_t ret = reply.readInt32();
+		if(ret == 0)
+		{
+			ret = reply.readInt32();
+		}
+		else
+		{
+			ret = -1;
+		}
+		return ret;
+	}
+	virtual int getHdmiHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
+	{
+		Parcel data, reply;
+		data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+		data.writeString8(tdname);
+		data.writeInt32(offset);
+		data.writeString8(filename);
+		data.writeInt32(datasize);
+		remote()->transact(GETHDMIHDCPKEY, data, &reply);
+		int32_t ret = reply.readInt32();
+		if(ret == 0)
+		{
+			ret = reply.readInt32();
+		}
+		else
+		{
+			ret = -1;
+		}
+		return ret;
+	}
+
 	virtual int setHDCPKey(String8 tdname,int offset,String8 filename,int datasize)
 	{
 		Parcel data, reply;
@@ -759,7 +805,40 @@ public:
 		}
 		return ret;
 	}
-};
+    virtual int userDataRestoreIptv()
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+        remote()->transact(USERDATARESOURCEIPTV, data, &reply);
+        int32_t ret = reply.readInt32();
+        if(ret == 0)
+        {
+            ret = reply.readInt32();
+        }
+        else
+        {
+            ret = -1;
+        }
+        return ret;
+        }
+    virtual int setUIAsyncCompose(int mode)
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+        data.writeInt32(mode);
+        remote()->transact(SETUIASYNCCOMPOSE, data, &reply);
+        int32_t ret = reply.readInt32();
+        if(ret == 0)
+        {
+            ret = reply.readInt32();
+        }
+        else
+        {
+            ret = -1;
+        }
+        return ret;
+        }
+    };
 
 IMPLEMENT_META_INTERFACE(HiSysManagerService, "android.os.HiSysManagerService");
 
@@ -868,6 +947,24 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
 		CHECK_INTERFACE(IHiSysManagerService, data, reply);
 		name = data.readString8();
 		ret = removeNetRoute(name);
+		reply->writeInt32(ret);
+		return NO_ERROR;
+	case SETHDMIHDCPKEY:
+		CHECK_INTERFACE(IHiSysManagerService, data, reply);
+		name = data.readString8();
+		offset = data.readInt32();
+		path = data.readString8();
+		offlen = data.readInt32();
+		ret = setHdmiHDCPKey(name,offset,path,offlen);
+		reply->writeInt32(ret);
+		return NO_ERROR;
+	case GETHDMIHDCPKEY:
+		CHECK_INTERFACE(IHiSysManagerService, data, reply);
+		name = data.readString8();
+		offset = data.readInt32();
+		path = data.readString8();
+		offlen = data.readInt32();
+		ret = getHdmiHDCPKey(name,offset,path,offlen);
 		reply->writeInt32(ret);
 		return NO_ERROR;
 	case SETHDCPKEY:
@@ -1034,6 +1131,17 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
 		ret = getDRMKey(name,offset,path,offlen);
 		reply->writeInt32(ret);
 		return NO_ERROR;
+    case USERDATARESOURCEIPTV:
+        CHECK_INTERFACE(IHiSysManagerService, data, reply);
+        ret = userDataRestoreIptv();
+        reply->writeInt32(ret);
+        return NO_ERROR;
+    case SETUIASYNCCOMPOSE:
+        CHECK_INTERFACE(IHiSysManagerService, data, reply);
+        offlen = data.readInt32();
+        ret = setUIAsyncCompose(offlen);
+        reply->writeInt32(ret);
+        return NO_ERROR;
 	default:
 		return BBinder::onTransact(code, data, reply, flags);
 	}

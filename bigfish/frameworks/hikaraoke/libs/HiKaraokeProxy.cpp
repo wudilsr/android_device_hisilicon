@@ -215,7 +215,7 @@ namespace android
 
     int32_t HiKaraokeProxy::setReverbMode(uint32_t mode)
     {
-        ALOGV("%s Call %s IN", LOG_TAG, __FUNCTION__);
+        ALOGV("%s Call %s IN mode = %d", LOG_TAG, __FUNCTION__, mode);
 
        /* if (mode < HI_KARAOKE_REVERB_TYPE_NULL || mode > HI_KARAOKE_REVERB_TYPE_BUTT)
         {
@@ -234,6 +234,12 @@ namespace android
                 break;
             case REVERB_MODE_CONCERT:
                 type = HI_KARAOKE_REVERB_TYPE_CONCERT;
+                break;
+            case REVERB_MODE_MAN:
+                type = HI_KARAOKE_REVERB_TYPE_THEATRE;
+                break;
+            case REVERB_MODE_WOMAN:
+                type = HI_KARAOKE_REVERB_TYPE_HALL;
                 break;
             default:
                 type = HI_KARAOKE_REVERB_TYPE_NULL;
@@ -267,10 +273,17 @@ namespace android
             case HI_KARAOKE_REVERB_TYPE_CONCERT:
                 mode = REVERB_MODE_CONCERT;
                 break;
+            case HI_KARAOKE_REVERB_TYPE_THEATRE:
+                mode = REVERB_MODE_MAN;
+                break;
+            case HI_KARAOKE_REVERB_TYPE_HALL:
+                mode = REVERB_MODE_WOMAN;
+                break;
             default:
                 mode = REVERB_MODE_STUDIO;
                 break;
         }
+        ALOGV("%s Call %s IN mode = %d", LOG_TAG, __FUNCTION__, mode);
         return mode;
     }
 

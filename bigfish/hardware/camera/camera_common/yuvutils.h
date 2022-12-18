@@ -50,8 +50,9 @@ bool        convertYUV420SemiPlanar(const BitmapParams &src, const BitmapParams 
 
 void        convert_YUYV_to_YUV420planar(char *src, char *dst, int w, int h, int Stride);
 void        convert_YUYV_to_YUV420sp(char *src, char *dst, int w, int h);
-void        ConvertYUYVtoRGB565(const void *yuyv_data, void *rgb565_data, const unsigned int w, const unsigned int h);
-void        convert_RGB_to_YUV420sp(char* yuv420sp, char* argb, int width, int height);
+void        convert_YUV420sp_to_YUV420p(char *src, char *dst, int w, int h, int Stride);
+void        ConvertYUYVtoRGB565(const void *yuyv_data, void *rgb565_data, const unsigned int srcw, const unsigned int srch, const unsigned int destw, const unsigned int desth);
+int         ConvertYUV420SPtoRGB565(uint64_t src_phyaddr, unsigned char **dest, unsigned int srcwidth, unsigned int srcheight, unsigned int destwidth, unsigned int destheight, int Stride);
 
 };
 

@@ -46,6 +46,10 @@ endif
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_MULTI_PREBUILT)
 
+include $(CLEAR_VARS)
+$(shell mkdir -p $(TARGET_OUT)/etc/dlna)
+$(shell cp -r $(LOCAL_PATH)/../cfg/dlna_keycode.map $(TARGET_OUT)/etc/dlna/)
+
 ifeq ($(CFG_HI_DTCP_SUPPORT),y)
 $(shell mkdir -p $(TARGET_OUT)/etc)
 $(shell cp -r $(LOCAL_PATH)/../cfg/dtcp.crt $(TARGET_OUT)/etc/)

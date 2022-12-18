@@ -707,8 +707,13 @@ HI_S32 PF_SetChnBaseTiming(HI_DRV_DISPLAY_E eChn, DISP_FMT_CFG_S *pstCfg)
     }
     else
     {
+    #if 0
         thd = pstCfg->stTiming.u32Vfb + pstCfg->stTiming.u32Vbb + DISP_VTTHD_VIDEO_OFFSET;
-
+    #else
+        thd = (pstCfg->stTiming.u32Vfb
+                + pstCfg->stTiming.u32Vbb
+                + pstCfg->stTiming.u32Vact)*8/10;
+    #endif
         if (u32DispId == 1)
         {
             thd = thd + DISP_VTTHD_DISP0_TO_DISP1;

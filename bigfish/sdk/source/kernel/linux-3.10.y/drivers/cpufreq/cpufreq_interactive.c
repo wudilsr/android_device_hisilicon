@@ -1354,6 +1354,7 @@ static int __init cpufreq_interactive_init(void)
 	if (IS_ERR(speedchange_task))
 		return PTR_ERR(speedchange_task);
 
+	kthread_bind(speedchange_task, 3);
 	sched_setscheduler_nocheck(speedchange_task, SCHED_FIFO, &param);
 	get_task_struct(speedchange_task);
 

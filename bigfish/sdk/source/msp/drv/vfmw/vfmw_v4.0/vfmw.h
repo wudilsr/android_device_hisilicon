@@ -835,6 +835,8 @@ typedef struct
     SINT32      PhyAddr;
     UINT8*      VirAddr;
     SINT32      Length;
+    SINT32      PrivatePhyAddr;    /* store private frame info ,such as for fake 4K output*/
+    SINT32      PrivateLength;
 } EXTERNAL_FRAME_STORE_S;
 
 /* stream accessing interface */

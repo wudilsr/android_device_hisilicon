@@ -67,6 +67,10 @@
 #define READ_ERROR    -1   /*read error*/
 #define LOGO_MAX_SIZE   (20*1024*1024)
 
+#define DRM_KEY_OFFSET              (128 * 1024)  // DRM KEY from bottom
+#define HDCP_KEY_OFFSET_DEFAULT     (4 * 1024)    // HDMI KEY offset base on DRM KEY
+#define DEVICEINFO_MAX              (2 * 1024 * 1024) // deviceinfo 2M lenght
+
 #define LOG_TAG "sysmanager"
 
 struct cmdinfo {
@@ -404,6 +408,146 @@ int do_removeNetRoute(const char* interfacename)
     }
     return -1;
 }
+
+//Set HDMI HDCP Key
+int do_setHdmiHDCPKey(const char* tdname,int default_offset,const char* filename,int datasize)
+{
+    FILE *fp = NULL;
+    char mtdname[256] = {0};
+    char hdcpfile_name[256] = {0};
+    HI_U8 *pBuf = NULL;
+    long moffset = -1;
+    int mdatasize = -1;
+    int ret = -1;
+    char offset_buf[PROP_VALUE_MAX];
+    int offset_prop = 0;
+
+    property_get("persist.sys.hdmi.hdcp.offset", offset_buf, "0");
+    offset_prop = atoi(offset_buf);
+    if (offset_prop == 0)
+    {
+        moffset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+    }
+    else if (offset_prop < (HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET) || offset_prop > (DEVICEINFO_MAX - HDCP_KEY_OFFSET_DEFAULT))
+    {
+        moffset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+    }
+    else
+    {
+        moffset = offset_prop;
+    }
+
+    if (tdname != NULL)
+    {
+        strcat(mtdname, tdname);
+    }
+    if (filename != NULL)
+    {
+        strcat(hdcpfile_name, filename);
+    }
+    mdatasize = datasize;
+    pBuf = (HI_U8 *)malloc(mdatasize);
+    if (pBuf == NULL)
+    {
+        ALOGE("do_setHdmiHDCPKey Failed to malloc %d memory!!", mdatasize);
+        return -1;
+    }
+    memset(pBuf, 0, mdatasize);
+    ALOGE("do_setHdmiHDCPKey = %s %d %s %d", mtdname, moffset, hdcpfile_name, mdatasize);
+    // Get HDCP Key.
+    fp = fopen(hdcpfile_name, "rb");
+    if (NULL == fp)
+    {
+        ALOGE("Failed to get HDCP Key! Interupt the burn process!\n");
+        free(pBuf);
+        return -1;
+    }
+    fread(pBuf, 1, mdatasize, fp);
+    fclose(fp);
+    //remove(hdcpfile_name);
+    if (strlen(mtdname) > 0 && moffset >= 0 && mdatasize > 0)
+    {
+        ret = set_HDMI_HDCP_Key(mtdname, moffset, pBuf, mdatasize);
+    }
+    else
+    {
+        ALOGE("Bad Input Param\n");
+    }
+    memset(pBuf, 0, mdatasize);
+    free(pBuf);
+    pBuf = NULL;
+    return ret;
+}
+//Get HDMI HDCP Key
+int do_getHdmiHDCPKey(const char* tdname,int default_offset,const char* filename,int datasize)
+{
+    int ret = -1;
+    char mtdname[256] = {0};
+    char hdcpfile_name[256] = {0};
+    unsigned long moffset = -1;
+    unsigned int mofflen = -1;
+    char *pBuf = NULL;
+    FILE *fp = NULL;
+    char offset_buf[PROP_VALUE_MAX];
+    int offset_prop = 0;
+
+    property_get("persist.sys.hdmi.hdcp.offset", offset_buf, "0");
+    offset_prop = atoi(offset_buf);
+    if (offset_prop == 0)
+    {
+        moffset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+    }
+    else if (offset_prop < (HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET) || offset_prop > (DEVICEINFO_MAX - HDCP_KEY_OFFSET_DEFAULT))
+    {
+        moffset = HDCP_KEY_OFFSET_DEFAULT + DRM_KEY_OFFSET;
+    }
+    else
+    {
+        moffset = offset_prop;
+    }
+
+    if (tdname!= NULL)
+    {
+        strcat(mtdname, tdname);
+    }
+
+    if (filename != NULL)
+    {
+        strcat(hdcpfile_name, filename);
+    }
+    mofflen = datasize;
+    ALOGE("do_getHDCPKey = %s %d %s %d", mtdname, moffset, hdcpfile_name, mofflen);
+
+    pBuf = (char *)malloc(mofflen);
+    if (pBuf == NULL)
+    {
+        ALOGE("Failed to malloc %d memory!!", mofflen);
+        return -1;
+    }
+    memset(pBuf, 0, mofflen);
+    if (strlen(mtdname) >0 && mofflen > 0)
+    {
+        ret = get_HDMI_HDCP_Key(mtdname, moffset, pBuf, mofflen);
+    }
+    if (ret == 0)
+    {
+        fp = fopen(hdcpfile_name, "wb");
+        if (NULL == fp)
+        {
+            ALOGE("Failed to get HDCP Key!\n");
+            free(pBuf);
+            pBuf = NULL;
+            return -1;
+        }
+        fwrite(pBuf, 1, mofflen, fp);
+        fflush(fp);
+        fclose(fp);
+    }
+    free(pBuf);
+    pBuf = NULL;
+    return ret;
+}
+
 int do_setHDCPKey(const char* tdname,int offset,const char* filename,int datasize)
 {
     FILE *fp = NULL;

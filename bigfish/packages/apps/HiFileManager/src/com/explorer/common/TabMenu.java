@@ -46,7 +46,7 @@ public class TabMenu extends PopupWindow{
         gvBody = new GridView(context);
         gvBody.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 //        gvBody.setSelector(new ColorDrawable(Color.TRANSPARENT));//选中的时候为透明色
-        gvBody.setNumColumns(6);
+        gvBody.setNumColumns(7);
         gvBody.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         gvBody.setVerticalSpacing(10);
         gvBody.setHorizontalSpacing(10);

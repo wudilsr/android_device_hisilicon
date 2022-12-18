@@ -117,9 +117,11 @@ int hifb_create_fence(struct sw_sync_timeline *timeline, const char *fence_name,
 * param[in] 	: GPU创建的fence
 * param[in] 	: 等待超时时间
 ***********************************************************************/
-int hifb_fence_wait(int fence_fd, long timeout)
+int hifb_fence_wait(struct sync_fence *fence, long timeout)
 {
 	int err;
+
+#if 0
 	struct sync_fence *fence = NULL;
 
 	fence = sync_fence_fdget(fence_fd);
@@ -128,6 +130,7 @@ int hifb_fence_wait(int fence_fd, long timeout)
 		HIFB_ERROR("sync_fence_fdget failed!\n");
 		return -EINVAL;
 	}
+#endif
 
 	/**
 	 **这里等待s_SyncInfo.u32Timeline与s_SyncInfo.u32FenceValue相等
@@ -144,12 +147,14 @@ int hifb_fence_wait(int fence_fd, long timeout)
 		HIFB_WARNING("error waiting on fence: 0x%x\n", err);
 	}
 
+#if 0
 	/**
 	 **谁使用谁释放，hifb使用acquire fence，则由hifb来释放，
 	 ** hifb创建的release fence给GPU使用，则由GPU释放realease fence。
 	 **/
 	sync_fence_put(fence);
-	
+#endif
+    
 	return 0;
 	
 }

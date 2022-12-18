@@ -1,5 +1,7 @@
+include $(call libfectest)
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
+include device/hisilicon/bigfish/hidolphin/cfg.mak
 
 ifneq ($(PRODUCT_TARGET),shcmcc)
 LOCAL_PRELINK_MODULE := false
@@ -14,13 +16,15 @@ LOCAL_C_INCLUDES += \
     $(LOCAL_PATH)/../ffmpeg/libavformat \
     $(LOCAL_PATH)/../ffmpeg/libavutil \
     $(LOCAL_PATH)/../libudf \
-    $(LOCAL_PATH)/../libclientadp
+    $(LOCAL_PATH)/../libclientadp \
+    $(LOCAL_PATH)/../libtermplug \
+    $(LOCAL_PATH)/libfectest/
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS := $(CFG_CFLAGS)
 LOCAL_CFLAGS += -DANDROID_VERSION
 LOCAL_LDFLAGS += -ldl
-LOCAL_SHARED_LIBRARIES := libutils liblog libcutils libavformat libavutil libavcodec libclientadp
+LOCAL_SHARED_LIBRARIES := libutils liblog libcutils libavformat libavutil libavcodec libclientadp libtermplug libfec
 
 LOCAL_RTSP_SRC_FILES := \
     rtsp.c \
@@ -56,7 +60,6 @@ LOCAL_SRC_FILES := \
     svr_iso_dec.c \
     svr_udf_protocol.c \
     svr_allformat.c \
-    hls.c \
     hls_read.c \
     hls_key_decrypt.c \
     http.c \
@@ -64,7 +67,19 @@ LOCAL_SRC_FILES := \
     tcp.c \
     hirtpproto.c \
     udp.c \
-    svr_utils.c
+    svr_utils.c \
+    rtpfecproto.c
+
+ifeq (4.0,$(CFG_HLS_VERSION))
+ifneq ($(PRODUCT_TARGET),shcmcc)
+    LOCAL_SRC_FILES += hls_v40.c
+    LOCAL_CFLAGS += -DCONFIG_HLS_VERSION_4=1
+else
+    LOCAL_SRC_FILES += hls.c 
+endif
+else
+    LOCAL_SRC_FILES += hls.c
+endif
 
 LOCAL_SRC_FILES += $(LOCAL_RTSP_SRC_FILES)
 

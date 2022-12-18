@@ -178,7 +178,8 @@ typedef enum
     CMD_SET_LOW_DELAY,              // set low delay mode, should use before starting to play, 1: enable; 0:disable.
     CMD_SET_TIMESHIFT_DURATION,     // set duration of timeshift playing.
     CMD_SET_TPLAY_MODE,
-	CMD_SET_TRACK_VOLUME = CMD_INVOKE_BASE + 400,
+    CMD_GET_IP_PORT,
+    CMD_SET_TRACK_VOLUME = CMD_INVOKE_BASE + 400,
     CMD_GET_MEDIA_URL = CMD_INVOKE_BASE + 500,
     CMD_CONNECT_ID = CMD_INVOKE_BASE + 501,
 

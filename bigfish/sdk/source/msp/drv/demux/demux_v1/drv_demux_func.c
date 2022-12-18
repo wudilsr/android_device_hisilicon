@@ -2259,7 +2259,9 @@ static HI_S32 DMXOsiIsr(int irq, void* devId)
         if (DmxHalIPPortGetOutIntStatus(PortId))
         {
             DMX_RamPort_Info_S *PortInfo = &g_pDmxDevOsi->RamPortInfo[PortId];
+            HI_SIZE_T           LockFlag;
 
+            spin_lock_irqsave(&PortInfo->LockRamPort, LockFlag);
             if (0 != PortInfo->Write)
             {
                 HI_U32  DescRead;
@@ -2284,6 +2286,7 @@ static HI_S32 DMXOsiIsr(int irq, void* devId)
                     PortInfo->Write = 0;
                 }
             }
+            spin_unlock_irqrestore(&PortInfo->LockRamPort, LockFlag);
 
             DmxHalIPPortClearOutIntStatus(PortId);
             /*
@@ -3949,6 +3952,7 @@ HI_S32 DMX_OsiTsBufferCreate(const HI_U32 PortId, const HI_U32 Size, DMX_MMZ_BUF
         return HI_ERR_DMX_INVALID_PARA;
     }
 
+#if 0
     DescDepth = (BufSize / 0x100000) * 0x3ff;
     if (DescDepth < DMX_MIN_IP_DESC_DEPTH)
     {
@@ -3958,6 +3962,9 @@ HI_S32 DMX_OsiTsBufferCreate(const HI_U32 PortId, const HI_U32 Size, DMX_MMZ_BUF
     {
         DescDepth = DMX_MAX_IP_DESC_DEPTH;
     }
+#else
+    DescDepth = DMX_MAX_IP_DESC_DEPTH;
+#endif
 
     DescBufSize = (DescDepth + 1) * DMX_PER_DESC_LEN;
 

@@ -10,6 +10,8 @@ namespace android
         REVERB_MODE_STUDIO = 1,
         REVERB_MODE_KTV,
         REVERB_MODE_CONCERT,
+        REVERB_MODE_MAN,
+        REVERB_MODE_WOMAN
     };
 
     enum KaraokeMediaRecordState

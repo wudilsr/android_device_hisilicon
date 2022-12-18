@@ -76,8 +76,13 @@ static const AVOption options[] = {
 {"cookies", "set cookies to be sent in applicable future requests, use newline delimited Set-Cookie HTTP field value syntax", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "not support byte range", OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"download_speed_collect_freq_ms", "download speed collect freq", OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+/* add for jiangsu telecom */
+{"cdn_error", "",  OFFSET(cdn_error), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
+/* end */
 {"download_size_once", "download size each connection, in MB", OFFSET(download_size_once), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
 {"traceId", "",  OFFSET(traceId), AV_OPT_TYPE_STRING, { 0 }, 0, 0, D|E},
+{ "offset", "initial byte offset", OFFSET(off), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, INT64_MAX, D },
+{ "end_offset", "try to limit the request to bytes preceding this offset", OFFSET(end), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, INT64_MAX, D },
 {NULL}
 };
 #else
@@ -94,8 +99,13 @@ static const AVOption options[] = {
 {"cookies", "", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "",  OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"download_speed_collect_freq_ms", "",  OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+/* add for jiangsu telecom */
+{"cdn_error", "",  OFFSET(cdn_error), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
+/* end */
 {"download_size_once", "download size each connection, in MB", OFFSET(download_size_once), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
 {"traceId", "",  OFFSET(traceId), AV_OPT_TYPE_STRING, { 0 }, 0, 0, D|E},
+{ "offset", "initial byte offset", OFFSET(off), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, INT64_MAX, D },
+{ "end_offset", "try to limit the request to bytes preceding this offset", OFFSET(end), AV_OPT_TYPE_INT64, { .i64 = 0 }, 0, INT64_MAX, D },
 {NULL}
 };
 #endif
@@ -342,6 +352,11 @@ static int http_open_cnx(URLContext *h)
         av_log(NULL, AV_LOG_ERROR, "[%s:%d] connect failed,ret=%d,http code:%d\n",
             __FILE_NAME__,__LINE__,err, s->http_code);
 
+        if (NULL != s->cdn_error && NULL != url_errorcode_cb)
+        {
+            url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_PRIVATE, s->cdn_error);
+        }
+
         if (s->has_reconnect && !ff_check_interrupt(&(h->interrupt_callback)))
         {
             return AVERROR(ECONNRESET);
@@ -502,7 +517,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
 
     s->filesize = -1;
     s->seek_flag = 1;   /* changed by taijie */
-    s->off = 0;//set offset to 0 while connecting
+    //s->off = 0;//set offset to 0 while connecting
     s->one_connect_limited_size = 0;
 
 #if defined (ANDROID_VERSION)
@@ -535,7 +550,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
         av_log(NULL, AV_LOG_ERROR, "one connect limited size: %dMB", s->one_connect_limited_size/(1024*1024));
 #endif
 
-    s->end = s->one_connect_limited_size;
+    //s->end = s->one_connect_limited_size;
 
     //h00186041 can not resume play when reconnect the network in suho sometimes
     s->reconnect = 0; /* init, connect status. */
@@ -824,6 +839,19 @@ static int process_line(URLContext *h, char *line, int line_count, int new_conne
             //    return AVERROR(ENOMEM);
             //av_freep(&s->icy_metadata_headers);
             //s->icy_metadata_headers = buf;
+        } else if (!av_strcasecmp (tag, "CDN_error")) {
+            if (s->cdn_error)
+                av_freep(&s->cdn_error);
+
+            if (!(s->cdn_error = av_strdup(p)))
+                return AVERROR(ENOMEM);
+        }else if (!av_strcasecmp(tag,"UPlay-type")) {
+            if(strstr(p,"multiple")) {
+                h->is_multiple = URL_PROTOCOL_NETWORK_MULTIPLE;
+            }
+            else {
+                h->is_multiple = URL_PROTOCOL_NETWORK_SINGLE;
+            }
         }
     }
 
@@ -1220,6 +1248,7 @@ static int http_reconnect(URLContext *h,HTTPContext *old, int flag)
     s->headers = av_strdup(old->headers);
     s->referer = av_strdup(old->referer);
     s->not_support_byte_range = av_strdup(old->not_support_byte_range);
+    s->cdn_error  = av_strdup(old->cdn_error);
     s->filesize = -1;
     s->chunksize = -1;
     s->off = old->off;
@@ -1248,6 +1277,7 @@ static int http_reconnect(URLContext *h,HTTPContext *old, int flag)
         s->headers = NULL;
         av_freep(&s->referer);
         av_freep(&s->not_support_byte_range);
+        av_freep(&s->cdn_error);
         av_free (s);
         s = NULL;
         return ret;
@@ -1496,6 +1526,7 @@ HTTP_READ_AGAIN:
             s->user_agent = NULL;
             av_freep(&s->referer);
             av_freep(&s->not_support_byte_range);
+            av_freep(&s->cdn_error);
             av_free(s);
             s = tmp;
         }
@@ -1531,6 +1562,7 @@ HTTP_READ_AGAIN:
             s->user_agent = NULL;
             av_freep(&s->referer);
             av_freep(&s->not_support_byte_range);
+            av_freep(&s->cdn_error);
             av_free(s);
             s = tmp;
             goto HTTP_READ_AGAIN;
@@ -1605,6 +1637,7 @@ static int http_close(URLContext *h)
     s->user_agent = NULL;
     av_freep(&s->referer);
     av_freep(&s->not_support_byte_range);
+    av_freep(&s->cdn_error);
     return ret;
 }
 

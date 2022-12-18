@@ -25,6 +25,8 @@ extern "C" {
 
 static HI_S32 s_DispISRMngrInitFlag = -1;
 static DISP_ISR_M_S s_DispISRMngr;
+DEFINE_SPINLOCK(g_IsrListOptLock);
+
 
 #define DispCheckNullPointer(ptr) \
     {                                \
@@ -267,17 +269,22 @@ HI_S32 DISP_ISR_RegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE_E
 {
     DISP_ISR_CHN_S *pstChn;
     HI_U32 u32NodeFlagNew;
-    HI_S32 index;
-
+    HI_S32 index;	
+	HI_SIZE_T irqflag = 0;
+	
     if (s_DispISRMngrInitFlag < 0)
-    {
+    {	
         return HI_FAILURE;
     }
-    DispCheckID(enDisp);
+
+	DispCheckID(enDisp);    
+	
+	spin_lock_irqsave(&g_IsrListOptLock, irqflag);
     pstChn = &s_DispISRMngr.stDispChn[enDisp];
     if (pstChn->bEnable != HI_TRUE)
     {
         DISP_ERROR("DISP %d is not add to ISR manager!\n", enDisp);
+		spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
         return HI_FAILURE;
     }
 
@@ -287,8 +294,11 @@ HI_S32 DISP_ISR_RegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE_E
     if (index < 0)
     {
         DISP_ERROR("DISP %d  callback reach max number!\n", enDisp);
+		spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
         return HI_FAILURE;
     }
+
+   
 
     // record callback info   
     pstChn->stList[eType].stNode[index].hDst = pstCB->hDst;
@@ -305,6 +315,7 @@ HI_S32 DISP_ISR_RegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE_E
         DISP_ISR_SwitchIntterrup(enDisp, eType, HI_TRUE);     
     }
 
+	spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
     return HI_SUCCESS;
 }
 
@@ -314,6 +325,7 @@ HI_S32 DISP_ISR_UnRegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE
     DISP_ISR_CHN_S *pstChn;
     HI_U32 u32NodeFlagNew;
     HI_S32 index;
+	HI_SIZE_T irqflag = 0;
 
     if (s_DispISRMngrInitFlag < 0)
     {
@@ -321,18 +333,15 @@ HI_S32 DISP_ISR_UnRegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE
     }
     
     DispCheckID(enDisp);
+	
+	spin_lock_irqsave(&g_IsrListOptLock, irqflag);
     pstChn = &s_DispISRMngr.stDispChn[enDisp];
-#if  0
-    if (pstChn->bEnable != HI_TRUE)
-    {
-        DISP_ERROR("DISP %d is not add to ISR manager!\n", enDisp);
-        return HI_FAILURE;
-    }
-#endif
+
     index = DISP_ISR_SearchNode(pstChn, eType, pstCB);
     if (index < 0)
     {
         DISP_ERROR("Callback is not exist!\n");
+		spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
         return HI_FAILURE;
     }
 
@@ -348,9 +357,9 @@ HI_S32 DISP_ISR_UnRegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYPE
     if (!pstChn->stList[eType].u32NodeFlag)
     {
         DISP_ISR_SwitchIntterrup(enDisp, eType, HI_FALSE);
-        //printk("close int\n");
     }
 
+	spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
     return HI_SUCCESS;
 }
 
@@ -410,6 +419,7 @@ HI_S32 DISP_ISR_Main(HI_S32 irq, HI_VOID *dev_id)
     HI_U32 u32IntState = 0;
     HI_U32 n, v;
     HI_S32 i;
+	HI_SIZE_T irqflag = 0;
     DISP_INTF_OPERATION_S *pfOpt = DISP_HAL_GetOperationPtr();
 
     // if get int ops failed, return
@@ -445,6 +455,8 @@ HI_S32 DISP_ISR_Main(HI_S32 irq, HI_VOID *dev_id)
     {
         return DEF_DISP_ISR_Main_RETURN_VALUE;
     }
+	
+	spin_lock_irqsave(&g_IsrListOptLock, irqflag);
 
     for(i = 1; i >= 0; i--)
     {
@@ -517,7 +529,8 @@ HI_S32 DISP_ISR_Main(HI_S32 irq, HI_VOID *dev_id)
     {
         DISP_FATAL("Unespexted interrup 0x%x happened!\n", u32IntState);
     }
-
+	
+	spin_unlock_irqrestore(&g_IsrListOptLock, irqflag);
     return DEF_DISP_ISR_Main_RETURN_VALUE;
 }
 

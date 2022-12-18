@@ -549,15 +549,25 @@ int camera_get_number_of_cameras(void)
  */
 int camera_get_camera_info(int camera_id, struct camera_info *info)
 {
-    if (camera_id == CAMERA_FACING_FRONT)
+    int CameraNum = camera_get_number_of_cameras();
+
+    if(CameraNum == 1)
     {
         info->facing        = CAMERA_FACING_FRONT;
         info->orientation   = 0;
     }
     else
     {
-        info->facing        = CAMERA_FACING_BACK;
-        info->orientation   = 0;
+        if (camera_id == CAMERA_FACING_FRONT)
+        {
+            info->facing        = CAMERA_FACING_FRONT;
+            info->orientation   = 0;
+        }
+        else
+        {
+            info->facing        = CAMERA_FACING_BACK;
+            info->orientation   = 0;
+        }
     }
 
     return 0;
@@ -684,7 +694,7 @@ struct camera_module HAL_MODULE_INFO_SYM =
         version_major       : 1,
         version_minor       : 0,
         id                  : CAMERA_HARDWARE_MODULE_ID,
-        name                : "Hi3716c Camera module",
+        name                : "Camera module",
         author              : "hisilicon",
         methods             : &camera_module_methods,
         dso                 : NULL,

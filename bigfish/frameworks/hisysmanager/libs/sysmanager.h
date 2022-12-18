@@ -18,6 +18,8 @@ int do_removeRoute(const char* interfacename,const char* dst,int length,const ch
 int do_setDefaultRoute(const char* interfacename, int gw);
 int do_removeDefaultRoute(const char* interfacename);
 int do_removeNetRoute(const char* interfacename);
+int do_setHdmiHDCPKey(const char* tdname,int offset,const char* filename,int datasize);
+int do_getHdmiHDCPKey(const char* tdname,int offset,const char* filename,int datasize);
 int do_setHDCPKey(const char* tdname,int offset,const char* filename,int datasize);
 int do_getHDCPKey(const char* tdname,int offset,const char* filename,int datasize);
 int do_setDRMKey(const char* tdname,int offset,const char* filename,int datasize);

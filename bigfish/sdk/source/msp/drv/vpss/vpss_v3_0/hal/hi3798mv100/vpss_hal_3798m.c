@@ -426,10 +426,15 @@ HI_S32 VPSS_HAL_SetPortCfg(VPSS_IP_E enIP,HI_U32 u32AppVir,
 {
     HI_U32 u32Count;
 	HI_U32 u32PortAvailable = DEF_VPSS_HAL_PORT_NUM;
-
+    VPSS_HAL_CTX_S *pstHalCtx = HI_NULL;
+    
     HI_BOOL abPortUsed[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER]
         = {HI_FALSE, HI_FALSE, HI_FALSE};
     
+
+    VPSS_HAL_CHECK_IP_VAILD(enIP);
+
+    pstHalCtx = &stHalCtx[enIP];
     /* 先默认关闭三个硬件输出通道 */
     VPSS_REG_EnPort(u32AppVir, VPSS_REG_HD, HI_FALSE);
     VPSS_REG_EnPort(u32AppVir, VPSS_REG_STR, HI_FALSE);
@@ -651,7 +656,19 @@ HI_S32 VPSS_HAL_SetPortCfg(VPSS_IP_E enIP,HI_U32 u32AppVir,
 
 			VPSS_REG_SetLBAEn(u32AppVir, enPort, HI_TRUE);
 
-
+            if (pstHalInfo->bOutLowDelay)
+            {
+                VPSS_REG_SetTunlEn(u32AppVir,enPort,HI_TRUE);
+                VPSS_REG_SetTunlFinishLine(u32AppVir,enPort,
+                    pstOutFrm->u32Height/10);
+                VPSS_REG_SetTunlAddr(u32AppVir,enPort,
+                    pstHalCtx->stLowDelayBuf.u32StartPhyAddr);
+            }
+            else
+            {
+                VPSS_REG_SetTunlEn(u32AppVir,enPort,HI_FALSE);
+            }
+            
 			/* 输出格式 */
 			VPSS_REG_SetFrmSize(u32AppVir,enPort,pstOutFrm->u32Height, pstOutFrm->u32Width);
 			VPSS_REG_SetFrmAddr(u32AppVir,enPort,pstOutAddr->u32PhyAddr_Y, pstOutAddr->u32PhyAddr_C);
@@ -1507,6 +1524,17 @@ HI_S32 VPSS_HAL_Init(VPSS_IP_E enIP)
     pstHalCtx->bInit = HI_TRUE;
 
     VPSS_HAL_SetClockEn(enIP, HI_FALSE);
+
+    s32Ret = HI_DRV_MMZ_AllocAndMap("VPSS_LowDelayBuf", HI_NULL,
+        4096, 0, &pstHalCtx->stLowDelayBuf);
+    if (s32Ret != HI_SUCCESS)
+    {
+        VPSS_FATAL("Alloc VPSS_LowDelayBuf Failed\n");
+        HI_DRV_MMZ_UnmapAndRelease(&pstHalCtx->stRegBuf);
+        HI_DRV_MMZ_UnmapAndRelease(&pstHalCtx->stZmeCoefBuf);
+        
+        return HI_FAILURE;
+    }
     
     return HI_SUCCESS;
 }
@@ -1539,6 +1567,8 @@ HI_S32 VPSS_HAL_DelInit(VPSS_IP_E enIP)
     HI_DRV_MMZ_UnmapAndRelease(&pstHalCtx->stZmeCoefBuf);
     memset(&pstHalCtx->stZmeCoefBuf, 0, sizeof(MMZ_BUFFER_S));
 
+    HI_DRV_MMZ_UnmapAndRelease(&pstHalCtx->stLowDelayBuf);
+    memset(&pstHalCtx->stLowDelayBuf, 0, sizeof(MMZ_BUFFER_S));
     pstHalCtx->bInit = HI_FALSE;
 
     return HI_SUCCESS;

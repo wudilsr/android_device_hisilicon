@@ -38,8 +38,8 @@
 ***********************************************************************/
 #define DEF_MAX_IN_BUF_CNT                 (3)
 #define DEF_MIN_IN_BUF_CNT                 (1)
-#define DEF_MAX_OUT_BUF_CNT                (6)
-#define DEF_MIN_OUT_BUF_CNT                (4)
+#define DEF_MAX_OUT_BUF_CNT                (7)
+#define DEF_MIN_OUT_BUF_CNT                (3)
 
 #define MAX_IN_BUF_SLOT_NUM                (3)
 

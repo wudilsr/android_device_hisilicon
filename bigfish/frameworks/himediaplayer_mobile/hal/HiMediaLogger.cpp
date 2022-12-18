@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <errno.h>
 
 #define LOG_TAG "HIMEDIALOG"
 //#define LOG_NDEBUG 0
@@ -226,7 +227,8 @@ void HiMediaLogger::onFirstRef() {
     size = mClearFilePeriod/mSwitchFilePeriod;
 
     if (stat(mLogPath.string(), &st) == -1) {
-        if (mkdir(mLogPath.string(), 0777)) {
+        if (mkdir(mLogPath.string(), 0777))
+        {
             ALOGE("mkdir %s failed", mLogPath.string());
         }
     } else {
@@ -240,9 +242,13 @@ void HiMediaLogger::onFirstRef() {
            newestN[i] = NULL;
        }
 
-        theFolder = opendir(mLogPath.string());
-       while(next_file = readdir(theFolder))
-        {
+       theFolder = opendir(mLogPath.string());
+       if (!theFolder)
+       {
+           ALOGE("open dir errno=%d, path is %s", errno, mLogPath.string());
+       }
+       while(theFolder && (next_file = readdir(theFolder)))
+       {
             if (!strncmp(next_file->d_name, ".", 1) ||
                     !strncmp(next_file->d_name, "..", 2))
             {
@@ -272,6 +278,11 @@ void HiMediaLogger::onFirstRef() {
             }
         }
 
+        if (theFolder)
+        {
+            closedir(theFolder);
+            theFolder = NULL;
+        }
         ALOGD("%d newest files scanned.", (size - empty));
 
         //now the N newest file left, remove the files which are created

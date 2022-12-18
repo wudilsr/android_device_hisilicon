@@ -45,6 +45,7 @@ make prepare:
 make build:
 	Make prepare, all and install.
 	
+make clean:
 make distclean:
 	Clean all.
 
@@ -53,9 +54,6 @@ make rebuild:
 	
 make all:
 	Will make hiboot, linux, rootfs, common, msp and component.
-
-make clean:
-	Will clean hiboot, linux, rootfs, common, msp and component.
 	
 make install:
 	Will install hiboot, linux, rootfs, common, msp, component, rootbox,

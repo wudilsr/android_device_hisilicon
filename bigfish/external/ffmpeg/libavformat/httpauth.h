@@ -103,6 +103,7 @@ typedef struct {
     int download_speed_collect_freq_ms;
     int download_size_once; //Bytes
     int64_t last_get_speed_time;
+    char *cdn_error;
     char *traceId;
 } HTTPContext;
 

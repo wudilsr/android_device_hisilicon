@@ -49,7 +49,7 @@ MOD_NAME := hi_omxvdec
 
 obj-$(CFG_MSP_BUILDTYPE) += $(MOD_NAME).o
 
-$(MOD_NAME)-y   := omxvdec.o channel.o task.o message.o decoder_vfmw.o processor_vpss.o
+$(MOD_NAME)-y   := omxvdec.o channel.o task.o message.o decoder_vfmw.o processor_vpss.o drv_omxvdec_pts_recv.o drv_omxvdec_alg_frd.o
 
 REMOVED_FILES := "*.o" "*.ko" "*.order" "*.symvers" "*.mod" "*.mod.*" "*.cmd" ".tmp_versions" "modules.builtin"
 

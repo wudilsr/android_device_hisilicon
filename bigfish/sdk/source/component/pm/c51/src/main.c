@@ -1074,10 +1074,14 @@ void WaitforEnterFlag(void)
         read_regVal();
         if (0x12345678 == regData.val32)
         {
+			regData.val32 = 0x0;
+            write_regVal();
             break;
         }
         else if (0x11111111 == regData.val32)
         {
+			regData.val32 = 0x0;
+            write_regVal();
             g_u8KeyEnterPmoc = 0x1;
             break;
         }
@@ -1108,10 +1112,14 @@ void WaitforEnterStandbyFlag(void)
         read_regVal();
         if (0x12345678 == regData.val32)
         {
+            regData.val32 = 0x0;
+            write_regVal();
             break;
         }
         else if (0x11111111 == regData.val32)
         {
+		    regData.val32 = 0x0;
+            write_regVal();
             g_u8KeyEnterPmoc = 0x1;
             break;
         }

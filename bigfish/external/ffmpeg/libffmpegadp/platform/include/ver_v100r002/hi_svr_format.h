@@ -213,6 +213,14 @@ typedef enum hiFORMAT_STREAM_TYPE_E
     HI_FORMAT_STREAM_BUTT
 } HI_FORMAT_STREAM_TYPE_E;
 
+typedef enum hiFORMAT_NETWORK_TYPE_E
+{
+    HI_FORMAT_NETWORK_NORMAL = 0x0,    /**< Normal network *//**< CNcomment:正常网络 */
+    HI_FORMAT_NETWORK_SINGLE,          /**< Single network *//**< CNcomment:单播网络 */
+    HI_FORMAT_NETWORK_MULTIPLE,        /**< Multiple network *//**< CNcomment:组播网络 */
+    HI_FORMAT_NETWORK_BUTT
+} HI_FORMAT_NETWORK_TYPE_E;
+
 /** User operation command, the commands should be sent to the DEMUX */
 /** CNcomment:用户操作命令，对于有些场景，解析器需要知道上层用户操作命令 */
 typedef enum hiFORMAT_USER_CMD_E
@@ -400,6 +408,7 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_SET_LOW_DELAY,        /**< the command of setting low delay, the parameter is ::HI_S32 */ /**< CNcomment:设置low delay模式，参数类型为::HI_S32 */
     HI_FORMAT_INVOKE_SET_FREE_RUN,         /**< the command of setting play free run behavior, the parameter is ::HI_S32*, HI_TRUE:: play video only, as fast as possible; HI_FALSE: resume to normal play*//**< CNcomment:设置free run开关模式，参数类型为::HI_S32,  HI_TRUE:快速输出视频帧; HI_FALSE: 恢复正常播放*/
     HI_FORMAT_INVOKE_SET_HTTP_DOWNLOAD_SIZE_ONCE,        /**< the command of setting download size each http connection in MB, the parameter is ::HI_S32 */ /**< CNcomment:设置每次http连接下载的数据大小，单位MB，参数类型为::HI_S32 */
+    HI_FORMAT_INVOKE_SET_BUFFER_SEEK,      /**< the command of setting seek in buffer, the parameter is ::HI_BOOL*, HI_TRUE:: seek in buffer; HI_FALSE: not seek in buffer*//**< CNcomment:设置buffer内seek标识，此命令只能由播放器内部使用，参数类型为::HI_BOOL,  HI_TRUE:需要进行buffer内seek; HI_FALSE:无需buffer内seek*/
 
     /* if hisilicon invoke command, please defined before USER */
     HI_FORMAT_INVOKE_PROTOCOL_USER=100,    /**< the command of setting data to user protocol *//**< CNcomment:设置用户协议数据 */
@@ -476,13 +485,14 @@ typedef struct hiFORMAT_BUFFER_STATUS_S
 /** CNcomment:网络错误类别定义 */
 typedef enum hiFORMAT_MSG_NETWORK_E
 {
-    HI_FORMAT_MSG_NETWORK_ERROR_UNKNOW = 0,         /**< unknown error *//**< CNcomment:未知错误 */
+    HI_FORMAT_MSG_NETWORK_ERROR_UNKNOW = 0,     /**< unknown error *//**< CNcomment:未知错误 */
     HI_FORMAT_MSG_NETWORK_ERROR_CONNECT_FAILED, /**< connection error *//**< CNcomment:连接失败 */
     HI_FORMAT_MSG_NETWORK_ERROR_TIMEOUT,        /**< operation timeout *//**< CNcomment:读取超时 */
-    HI_FORMAT_MSG_NETWORK_ERROR_DISCONNECT,        /**< net work disconnect *//**< CNcomment:断网 */
+    HI_FORMAT_MSG_NETWORK_ERROR_DISCONNECT,     /**< net work disconnect *//**< CNcomment:断网 */
     HI_FORMAT_MSG_NETWORK_ERROR_NOT_FOUND,      /**< file not found *//**< CNcomment:资源不可用 */
     HI_FORMAT_MSG_NETWORK_NORMAL,               /**< status of network is normal *//**< CNcomment:网络状态正常 */
-    HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE,
+    HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE,     /**< segment download complete *//**< CNcomment:分片下载完毕 */
+    HI_FORMAT_MSG_NETWORK_ADJUST_BITRATE,       /**< adjust bitrate event *//**< CNcomment:发生切换码率事件 */
     HI_FORMAT_MSG_NETWORK_ERROR_BUTT,
 } HI_FORMAT_MSG_NETWORK_E;
 
@@ -652,6 +662,8 @@ typedef struct hiFORMAT_PROGRAM_INFO_S
     HI_FORMAT_SUB_INFO_S *pastSubStream;   /**< Subtitle information *//**< CNcomment:字幕信息 */
     HI_CHAR aszServiceName[HI_FORMAT_SERVICE_DESCRIPT_LEN];       /**< Program service name info *//**< CNcomment:节目名称 */
     HI_CHAR aszServiceProvider[HI_FORMAT_SERVICE_DESCRIPT_LEN];   /**<  Program service provider info *//**< CNcomment:节目提供商 */
+    HI_S64  s64StartTime;                   /**< Start time of program, in the unit is ms. *//**< CNcomment:节目播放起始时间，单位ms */
+    HI_S64  s64Duration;                    /**< Total duration of program, in the unit of ms. *//**< CNcomment:节目总时长，单位ms */
 } HI_FORMAT_PROGRAM_INFO_S;
 
 /** Media file information */
@@ -660,6 +672,7 @@ typedef struct hiFORMAT_FILE_INFO_S
 {
     HI_FORMAT_SOURCE_TYPE_E eSourceType;    /**< File source type *//**< CNcomment:文件源类型 */
     HI_FORMAT_STREAM_TYPE_E eStreamType;    /**< File stream type *//**< CNcomment:文件流类型 */
+    HI_FORMAT_NETWORK_TYPE_E eNetworkType;  /**< Network type *//**< CNcomment:网络类型*/
     HI_S64  s64FileSize;                    /**< File size, in the unit of byte. *//**< CNcomment:文件大小，单位字节 */
     HI_S64  s64StartTime;                   /**< Start time of playing a file, in the unit is ms. *//**< CNcomment:文件播放起始时间，单位ms */
     HI_S64  s64Duration;                    /**< Total duration of a file, in the unit of ms. *//**< CNcomment:文件总时长，单位ms */

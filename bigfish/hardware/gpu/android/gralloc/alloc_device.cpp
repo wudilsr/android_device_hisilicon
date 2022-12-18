@@ -478,9 +478,9 @@ static int alloc_device_alloc(alloc_device_t *dev, int w, int h, int format, int
 		stride = bpr / bpp;
 	}
 
-	char property[PROPERTY_VALUE_MAX];	
-	property_get("ro.config.low_ram", property, "");
-    if (strcmp(property, "true") != 0)
+    char tde[PROPERTY_VALUE_MAX];
+    property_get("ro.config.tde_compose", tde, "true");
+    if (strcmp(tde, "true") == 0)
 	{
 		usage = usage | GRALLOC_USAGE_PHYSICAL_MEM;
 	}

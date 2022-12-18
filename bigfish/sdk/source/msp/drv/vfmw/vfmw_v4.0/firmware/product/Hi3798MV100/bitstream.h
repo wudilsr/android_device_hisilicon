@@ -36,7 +36,11 @@ extern "C" {
 		( ( (x) & 0x00ff0000 ) >> 8 ) |		\
 		( ( (x) >> 24 ) & 0x000000ff ) 
 
-typedef struct _tag_BITSTREAM{
+#define H264_NALU_TYPE_SLICE 1
+#define H264_NALU_TYPE_IDR   5
+
+typedef struct _tag_BITSTREAM
+{
 	UINT8  *pHead;
 	UINT8  *pTail;
 	UINT32  Bufa;
@@ -63,6 +67,7 @@ SINT32  BsLongSkip(BS *pBS, SINT32 nBits);
 SINT32  BsSkipWithoutCount( BS *pBS, SINT32 nBits );
 UINT8*  BsGetNextBytePtr( BS *pBS );
 UINT32 ZerosMS_32(UINT32 data);
+UINT32 BsUeV( BS *pBS );
 
 
 #ifdef __cplusplus

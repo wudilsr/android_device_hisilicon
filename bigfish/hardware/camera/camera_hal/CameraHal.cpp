@@ -27,6 +27,8 @@
 #include "CameraHal.h"
 #include "CameraUtils.h"
 #include "SkJpegEncoder.h"
+#include "JpegEncoderExif.h"
+#define SWAP(a) a=((a>>8) & 0x00ff) | ((a<<8) & 0xff00)
 
 namespace android {
 
@@ -56,6 +58,7 @@ CameraHal::CameraHal(int id)
     mJpegQuality = 0;
     mMsgEnabled = 0;
     mPictureFrameSize = 0;
+    mThumbnailSize = 0;
     mPreviewAlreadyStopped = false;
     mPreviewConfigured = false;
     mPreviewRunning =false;
@@ -514,10 +517,17 @@ int CameraHal::setPreviewWindow(struct preview_stream_ops * window)
 
     Mutex::Autolock lock(mLock);
 
+    if (mPreviewWindow == window && mutexBoolRead(&mPreviewRunning)) {
+        return NO_ERROR;
+    }
+
     mPreviewWindow = window;
 
-    if (NULL == window)
-    {
+    if (NULL == window) {
+        if (mMJPEGDecoder != NULL) {
+            CAMERA_DELETE(mMJPEGDecoder);
+        }
+
         return NO_ERROR;
     }
 
@@ -531,11 +541,20 @@ int CameraHal::setPreviewWindow(struct preview_stream_ops * window)
     mPreviewWindow->get_min_undequeued_buffer_count(mPreviewWindow, &minUndequeuedBuffers);
     CAMERA_EVENT_LOGI("get_min_undequeued_buffer_count=%d", minUndequeuedBuffers);
     if (mExtendedEnv.mPreviewFormat != V4L2_PIX_FMT_YUYV) {
-         mMJPEGDecoder = new CameraJpegDecoder();
-         status_t status = mMJPEGDecoder->setExternalBuffer(mPreviewWindow, mExtendedEnv.mPreviewWidth, mExtendedEnv.mPreviewHeight, mPreviewBuffercount);
-         if (status != OK) {
+        mMJPEGDecoder = new CameraJpegDecoder();
+        status_t ret = mMJPEGDecoder->initJpegDecoder();
+        if (ret != HI_SUCCESS) {
+            CAMERA_DELETE(mMJPEGDecoder);
+            mExtendedEnv.mNotifyCb(CAMERA_MSG_ERROR, CAMERA_ERROR_SERVER_DIED, 0, mExtendedEnv.mUser);
+            mutexBoolWrite(&mPreviewAlreadyStopped, true);
+            stopPreview();
             return UNKNOWN_ERROR;
-         }
+        }
+
+        status_t status = mMJPEGDecoder->setExternalBuffer(mPreviewWindow, mExtendedEnv.mPreviewWidth, mExtendedEnv.mPreviewHeight, mPreviewBuffercount);
+        if (status != OK) {
+            return UNKNOWN_ERROR;
+        }
     }
 
     return OK;
@@ -772,6 +791,7 @@ void CameraHal::previewThread()
 {
     CAMERA_HAL_LOGV("enter %s", __FUNCTION__);
 
+    mErrorCount = 0;
     while(mutexBoolRead(&mPreviewRunning))
     {
         struct previewBuffer buffer;
@@ -1159,6 +1179,38 @@ int CameraHal::beginPictureThread()
     return 0;
 }
 
+int CameraHal::jpegEncoder(void* srcBuffer, void * dstBuffer, int width, int height, int quality, int *jpegSize)
+{
+    CAMERA_HAL_LOGV("enter %s()", __FUNCTION__);
+
+    SkBitmap bm;
+#ifdef SKIA5
+    SkColorType ct = kRGB_565_SkColorType;
+    bm.setInfo(SkImageInfo::Make(width, height, ct, kPremul_SkAlphaType), 0);
+#else
+    bm.setConfig(SkBitmap::kRGB_565_Config, width, height, 0);
+#endif
+    bm.setPixels(srcBuffer,NULL);
+    SkDynamicMemoryWStream stream;
+    SkJpegImageSWEncoder swencoder;
+
+    //use soft encoder to make rgb565 to jpg
+    if(swencoder.Encode(&stream, bm, quality) == true)
+    {
+        stream.copyTo(dstBuffer);
+        *jpegSize = stream.getOffset();
+        CAMERA_EVENT_LOGI("jpeg encode OK [data length=%d]", *jpegSize);
+    }
+    else
+    {
+        *jpegSize = 0;
+        CAMERA_EVENT_LOGI("jpeg encode FAILED");
+    }
+
+    return 0;
+}
+
+
 /*
  **************************************************************************
  * FunctionName: CameraHal::pictureThread;
@@ -1195,46 +1247,71 @@ int CameraHal::pictureThread()
         return UNKNOWN_ERROR;
     }
 
-    SkBitmap bm;
-    bm.setConfig(SkBitmap::kRGB_565_Config, mSnapshotWidth, mSnapshotHeight, 0);
+    int jpegSize = 0;
+    int thumbnailSize = 0;
+    ConvertYUYVtoRGB565((void*)buffer.viraddr, mPictureBuffer, mSnapshotWidth, mSnapshotHeight, mSnapshotWidth, mSnapshotHeight);
+    jpegEncoder(mPictureBuffer, mPictureBuffer, mSnapshotWidth, mSnapshotHeight, mJpegQuality, &jpegSize);
 
-    if(mExtendedEnv.mSnapshotFormat == V4L2_PIX_FMT_MJPEG){
-        SkImageDecoder::DecodeMemory(buffer.viraddr, buffer.length, &bm);
-    } else {
-        ConvertYUYVtoRGB565((void*)buffer.viraddr, mPictureBuffer, mSnapshotWidth, mSnapshotHeight);
-        bm.setPixels((void*)mPictureBuffer,NULL);
+    if(mExtendedEnv.mThumbnailWidth != 0 && mExtendedEnv.mThumbnailHeight != 0){
+        ConvertYUYVtoRGB565((void*)buffer.viraddr, mThumbnailBuffer, mSnapshotWidth, mSnapshotHeight, mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight);
+        jpegEncoder(mThumbnailBuffer, mThumbnailBuffer, mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight, mExtendedEnv.mThumbnailQuality, &thumbnailSize);
     }
 
-    SkDynamicMemoryWStream stream;
-    SkJpegImageSWEncoder swencoder;
-    int jpegSize = 0;
+    JpegEncoderExif* exif      = NULL;
+    ExifBuffer* exifBuffer     = NULL;
 
-    //use soft encoder to make rgb565 to jpg
-    if(swencoder.Encode(&stream, bm, mJpegQuality) == true)
+    exif = new JpegEncoderExif(&mExtendedEnv);
+    if(exif == NULL)
     {
-        jpegSize = stream.getOffset();
-        CAMERA_EVENT_LOGI("jpeg encode OK [data length=%d]", jpegSize);
+        ALOGE("failed to create JpegEncoderExif");
+    }
+    exif->jpegEncoderExifInit();
+
+    exifBuffer = exif->makeExif(exif, (unsigned char*)mThumbnailBuffer, thumbnailSize);
+
+    int totalSize = 0;
+    if(exifBuffer && ( exifBuffer->mSize > 0))
+    {
+        totalSize = EXIF_ATTR_LEN + exifBuffer->mSize + jpegSize;
     }
     else
     {
-        CAMERA_EVENT_LOGI("jpeg encode FAILED");
+        totalSize = jpegSize;
     }
 
-    CAMERA_FREE(mPictureBuffer);
+    camera_memory_t* pictureData = mExtendedEnv.mRequestMemory(-1, totalSize, 1, NULL);
+    if(!pictureData || !(pictureData->data))
+    {
+        ALOGE("fail to allocate memory for jpeg");
+        mExtendedEnv.mNotifyCb(CAMERA_MSG_ERROR, 1, 0, mExtendedEnv.mUser);
+        return 0;
+    }
+    char* picAddr = (char*)(pictureData->data);
+    char* outAddr = (char*)(mPictureBuffer);
+    if(exifBuffer && ( exifBuffer->mSize > 0))
+    {
+        memcpy(picAddr, outAddr, JPEG_HEADER_LEN);
+
+        unsigned short exifIdentifier = EXIF_ID;
+        unsigned short exifLength = exifBuffer->mSize +2;
+        unsigned short *exifStart = (unsigned short *)(picAddr + JPEG_HEADER_LEN);
+        *exifStart = SWAP(exifIdentifier);
+        *(exifStart+1) = SWAP(exifLength);
+        memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN, exifBuffer->mData, exifBuffer->mSize);
+        memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN + exifBuffer->mSize, outAddr + JPEG_HEADER_LEN, jpegSize - JPEG_HEADER_LEN);
+    }
+    else
+    {
+        memcpy(picAddr, mPictureBuffer, jpegSize);
+    }
 
     if((mExtendedEnv.mMsgEnabled & CAMERA_MSG_RAW_IMAGE) != 0)
     {
         camera_memory_t* picture    = NULL;
-        int size = mSnapshotWidth * mSnapshotHeight * 3 / 2;
-        picture = mExtendedEnv.mRequestMemory(-1, size, 1, NULL);
+        picture = mExtendedEnv.mRequestMemory(-1, mPictureFrameSize, 1, NULL);
         if(picture && picture->data)
         {
-            if(mExtendedEnv.mSnapshotFormat == V4L2_PIX_FMT_MJPEG){
-                void *img = bm.getPixels();
-                convert_RGB_to_YUV420sp((char*)picture->data, (char*)img, mSnapshotWidth, mSnapshotHeight);
-            } else {
-                convert_yuv422packed_to_yuv420sp((char*)buffer.viraddr, (char *)picture->data, mSnapshotWidth, mSnapshotHeight, mSnapshotWidth);
-            }
+            memcpy((char *)picture->data, (char *)buffer.viraddr, mPictureFrameSize);
             CAMERA_HAL_LOGV("send CAMERA_MSG_RAW_IMAGE to app");
             mExtendedEnv.mDataCb(CAMERA_MSG_RAW_IMAGE, picture, 0, NULL, mExtendedEnv.mUser);
             picture->release(picture);
@@ -1249,15 +1326,13 @@ int CameraHal::pictureThread()
 
     if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE)
     {
-        if(jpegSize > 0)
+        if(totalSize > 0)
         {
-            camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, jpegSize, 1, NULL);
-            if (frame && frame->data)
+            if (pictureData && pictureData->data)
             {
                 CAMERA_HAL_LOGV("send CAMERA_MSG_COMPRESSED_IMAGE to app");
-                stream.copyTo(frame->data);
-                mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, frame, 0, NULL, mExtendedEnv.mUser);
-                frame->release(frame);
+                mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, pictureData, 0, NULL, mExtendedEnv.mUser);
+                pictureData->release(pictureData);
             }
             else
             {
@@ -1269,6 +1344,9 @@ int CameraHal::pictureThread()
             mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, 0, 0, NULL, mExtendedEnv.mUser);
         }
     }
+
+    CAMERA_FREE(mThumbnailBuffer);
+    CAMERA_FREE(mPictureBuffer);
 
     CAMERA_EVENT_LOGI("take picture OK");
     return NO_ERROR;
@@ -1297,6 +1375,21 @@ status_t CameraHal::takePicture()
     mSnapshotHeight     = mExtendedEnv.mSnapshotHeight;
     mJpegQuality        = mExtendedEnv.mJpegQuality;
     mPictureFrameSize   = mSnapshotWidth * mSnapshotHeight * 2;
+    mThumbnailSize      = mExtendedEnv.mThumbnailWidth*mExtendedEnv.mThumbnailHeight*2;
+
+    mPictureBuffer = (char *)malloc(mPictureFrameSize);
+    if( NULL== mPictureBuffer)
+    {
+        CAMERA_HAL_LOGE("fail to malloc memory for mPictureBuffer");
+        return UNKNOWN_ERROR;
+    }
+
+    mThumbnailBuffer = (char *)malloc(mThumbnailSize);
+    if( NULL== mThumbnailBuffer)
+    {
+        CAMERA_HAL_LOGE("fail to malloc memory for mThumbnailBuffer");
+        return UNKNOWN_ERROR;
+    }
 
     if(mSnapshotWidth == mPreviewWidth && mSnapshotHeight == mPreviewHeight)
     {
@@ -1308,13 +1401,6 @@ status_t CameraHal::takePicture()
 
     stopPreview();
     Mutex::Autolock lock(mLock);
-
-    mPictureBuffer = (char *)malloc(mPictureFrameSize);
-    if( NULL== mPictureBuffer)
-    {
-        CAMERA_HAL_LOGE("fail to malloc memory for mPictureBuffer");
-        return UNKNOWN_ERROR;
-    }
 
     int msg = CMD_TAKE_PICTURE;
     mMsgToStateThread.put(&msg);
@@ -1514,18 +1600,27 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
     }
 
     mMJPEGDecoder->putStream((unsigned char *)buffer, length);
-    int ret = mMJPEGDecoder->receiveFrame(&native_buffer1, (uint64_t *)&(Timestamp));
+    int ret = mMJPEGDecoder->receiveFrame(&native_buffer1, (uint64_t *)&(Timestamp), &Stride);
     if (ret != OK)
     {
+        if(ret == -101 && mutexBoolRead(&mPreviewRunning)) {
+            mMJPEGDecoder->cancelExternalBuffer();
+            CAMERA_DELETE(mMJPEGDecoder);
+            mExtendedEnv.mNotifyCb(CAMERA_MSG_ERROR, CAMERA_ERROR_SERVER_DIED, 0, mExtendedEnv.mUser);
+            mutexBoolWrite(&mPreviewAlreadyStopped, true);
+            stopPreview();
+        }
         return;
     }
 
     private_handle_t *p_private_handle = const_cast<private_handle_t*>(reinterpret_cast<const private_handle_t*>(*native_buffer1));
-    uint32_t frameSize = mPreviewWidth * mPreviewHeight * 3 / 2;
+    uint32_t frameSize = Stride * mPreviewHeight * 3 / 2;
     uint8_t *userAddr = (uint8_t *)HI_MEM_Map(p_private_handle->ion_phy_addr, frameSize);
 
     ret = mPreviewWindow->enqueue_buffer(mPreviewWindow, native_buffer1);
-    mEnqueuedBuffers++;
+    if(ret >= 0) {
+        mEnqueuedBuffers++;
+    }
 
     if ((mExtendedEnv.mMsgEnabled & CAMERA_MSG_VIDEO_FRAME)  && mPreviewFakeRunning)
     {
@@ -1546,7 +1641,7 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
             videoMetadataBuffer->offset = 0;
 
             CAMERA_HAL_LOGV("mDataCbTimestamp : frame->mBuffer=0x%x, videoMetadataBuffer=0x%x, videoMedatadaBufferMemory=0x%x",
-                                native_buffer, videoMetadataBuffer, videoMedatadaBufferMemory);
+                                native_buffer1, videoMetadataBuffer, videoMedatadaBufferMemory);
             mVideoMetadataBufferMemoryMap.add((uint32_t)videoMetadataBuffer, (uint32_t)(videoMedatadaBufferMemory));
             //nsecs_t timestamp = systemTime(SYSTEM_TIME_MONOTONIC);
             mExtendedEnv.mDataCbTimeStamp(Timestamp, CAMERA_MSG_VIDEO_FRAME, videoMedatadaBufferMemory, 0, mExtendedEnv.mUser);
@@ -1555,10 +1650,16 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
 
     if ((mExtendedEnv.mMsgEnabled & CAMERA_MSG_PREVIEW_FRAME) && mPreviewFakeRunning)
     {
-        camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, frameSize, 1, NULL);
+        camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, mPreviewWidth * mPreviewHeight * 3/2, 1, NULL);
         if (NULL != frame && NULL != frame->data && NULL != userAddr)
         {
-            memcpy(frame->data, userAddr, frameSize);
+            if(0 == strcmp(mExtendedEnv.mPreviewFrameFmt, CameraParameters::PIXEL_FORMAT_YUV420P)){
+                convert_YUV420sp_to_YUV420p((char*)userAddr, (char *)frame->data, mPreviewWidth, mPreviewHeight, Stride);
+            } else if (Stride != mPreviewWidth) {
+                getVideoData((char *)userAddr, (char *)frame->data, mPreviewWidth, mPreviewHeight, Stride);
+            } else {
+                memcpy(frame->data, userAddr, frameSize);
+            }
             CAMERA_HAL_LOGV("send CAMERA_MSG_PREVIEW_FRAME to app");
             mExtendedEnv.mDataCb(CAMERA_MSG_PREVIEW_FRAME, frame, 0, NULL, mExtendedEnv.mUser);
             frame->release(frame);
@@ -1578,10 +1679,16 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
 
         if((mExtendedEnv.mMsgEnabled & CAMERA_MSG_RAW_IMAGE) != 0)
         {
-            camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, frameSize, 1, NULL);
+            camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, mPreviewWidth * mPreviewHeight * 3/2, 1, NULL);
             if (NULL != frame && NULL != frame->data && NULL != userAddr)
             {
-                memcpy(frame->data, userAddr, frameSize);
+                if(0 == strcmp(mExtendedEnv.mPreviewFrameFmt, CameraParameters::PIXEL_FORMAT_YUV420P)){
+                    convert_YUV420sp_to_YUV420p((char*)userAddr, (char *)frame->data, mPreviewWidth, mPreviewHeight, Stride);
+                } else if (Stride != mPreviewWidth) {
+                    getVideoData((char *)userAddr, (char *)frame->data, mPreviewWidth, mPreviewHeight, Stride);
+                } else {
+                    memcpy(frame->data, userAddr, frameSize);
+                }
                 CAMERA_HAL_LOGV("send CAMERA_MSG_RAW_IMAGE to app");
                 mExtendedEnv.mDataCb(CAMERA_MSG_RAW_IMAGE, frame, 0, NULL, mExtendedEnv.mUser);
                 frame->release(frame);
@@ -1596,38 +1703,77 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
             mExtendedEnv.mNotifyCb(CAMERA_MSG_RAW_IMAGE_NOTIFY, 0, 0, mExtendedEnv.mUser);
         }
 
-        SkBitmap bm;
-        bm.setConfig(SkBitmap::kRGB_565_Config, mSnapshotWidth, mSnapshotHeight, 0);
-        SkImageDecoder::DecodeMemory(buffer, length, &bm);
-        SkDynamicMemoryWStream stream;
-        SkJpegImageSWEncoder swencoder;
         int jpegSize = 0;
+        int thumbnailSize = 0;
+        ConvertYUV420SPtoRGB565((uint64_t)p_private_handle->ion_phy_addr, (unsigned char **)(&mPictureBuffer), mSnapshotWidth, mSnapshotHeight,
+                                    mSnapshotWidth, mSnapshotHeight, Stride);
+        jpegEncoder(mPictureBuffer, mPictureBuffer, mSnapshotWidth, mSnapshotHeight, mJpegQuality, &jpegSize);
 
-        //use soft encoder to make rgb565 to jpg
-        if(swencoder.Encode(&stream, bm, mJpegQuality) == true)
+        if(mExtendedEnv.mThumbnailWidth != 0 && mExtendedEnv.mThumbnailHeight != 0){
+            ConvertYUV420SPtoRGB565((uint64_t)p_private_handle->ion_phy_addr, (unsigned char **)(&mThumbnailBuffer), mSnapshotWidth, mSnapshotHeight,
+                                        mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight, Stride);
+            jpegEncoder(mThumbnailBuffer, mThumbnailBuffer, mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight, mExtendedEnv.mThumbnailQuality, &thumbnailSize);
+        }
+
+        JpegEncoderExif* exif      = NULL;
+        ExifBuffer* exifBuffer     = NULL;
+
+        exif = new JpegEncoderExif(&mExtendedEnv);
+        if(exif == NULL)
         {
-            jpegSize = stream.getOffset();
-            CAMERA_EVENT_LOGI("jpeg encode success, jpeg length=%d", jpegSize);
+            ALOGE("failed to create JpegEncoderExif");
+        }
+        exif->jpegEncoderExifInit();
+
+        exifBuffer = exif->makeExif(exif, (unsigned char*)mThumbnailBuffer, thumbnailSize);
+
+        int totalSize = 0;
+        if(exifBuffer && ( exifBuffer->mSize > 0))
+        {
+            totalSize = EXIF_ATTR_LEN + exifBuffer->mSize + jpegSize;
         }
         else
         {
-            CAMERA_EVENT_LOGI("jpeg encode fail");
+            totalSize = jpegSize;
+        }
+
+        camera_memory_t* pictureData = mExtendedEnv.mRequestMemory(-1, totalSize, 1, NULL);
+        if(!pictureData || !(pictureData->data))
+        {
+            ALOGE("fail to allocate memory for jpeg");
+            mExtendedEnv.mNotifyCb(CAMERA_MSG_ERROR, 1, 0, mExtendedEnv.mUser);
+            CAMERA_FREE(mThumbnailBuffer);
+            CAMERA_FREE(mPictureBuffer);
+            return;
+        }
+        char* picAddr = (char*)(pictureData->data);
+        char* outAddr = (char*)(mPictureBuffer);
+        if(exifBuffer && ( exifBuffer->mSize > 0))
+        {
+            memcpy(picAddr, outAddr, JPEG_HEADER_LEN);
+
+            unsigned short exifIdentifier = EXIF_ID;
+            unsigned short exifLength = exifBuffer->mSize +2;
+            unsigned short *exifStart = (unsigned short *)(picAddr + JPEG_HEADER_LEN);
+            *exifStart = SWAP(exifIdentifier);
+            *(exifStart+1) = SWAP(exifLength);
+            memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN, exifBuffer->mData, exifBuffer->mSize);
+            memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN + exifBuffer->mSize, outAddr + JPEG_HEADER_LEN, jpegSize - JPEG_HEADER_LEN);
+        }
+        else
+        {
+            memcpy(picAddr, mPictureBuffer, jpegSize);
         }
 
         if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE)
         {
-            if(jpegSize > 0)
+            if(totalSize > 0)
             {
-                camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, jpegSize, 1, NULL);
-                if (NULL != frame && NULL != frame->data)
+                if (pictureData && pictureData->data)
                 {
                     CAMERA_HAL_LOGV("send CAMERA_MSG_COMPRESSED_IMAGE to app");
-                    stream.copyTo(frame->data);
-
-                    if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE) {
-                        mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, frame, 0, NULL, mExtendedEnv.mUser);
-                    }
-                    frame->release(frame);
+                    mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, pictureData, 0, NULL, mExtendedEnv.mUser);
+                    pictureData->release(pictureData);
                 }
                 else
                 {
@@ -1640,6 +1786,9 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
             }
         }
 
+        CAMERA_FREE(mThumbnailBuffer);
+        CAMERA_FREE(mPictureBuffer);
+
         CAMERA_EVENT_LOGI("take picture OK");
         mTakePictureWithPreviewDate = false;
     }
@@ -1650,6 +1799,7 @@ void CameraHal::OnFrameArrivedMJPEG(char *buffer, int length)
         if(ret < 0)
         {
             ALOGE("====fail to dequeue buffer from preview window====, ret=%d", ret);
+            return;
         }
         mMJPEGDecoder->releaseFrame(native_buffer2);
         mEnqueuedBuffers--;
@@ -1746,7 +1896,11 @@ void CameraHal::OnFrameArrivedYUYV(char *buffer, int length)
             camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, size, 1, NULL);
             if (NULL != frame && NULL != frame->data && NULL != img)
             {
-                convert_yuv422packed_to_yuv420sp((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+                if(0 == strcmp(mExtendedEnv.mPreviewFrameFmt, CameraParameters::PIXEL_FORMAT_YUV420P)){
+                    convert_YUYV_to_YUV420planar((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+                }else{
+                    convert_yuv422packed_to_yuv420sp((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+                }
                 nsecs_t timestamp = systemTime(SYSTEM_TIME_MONOTONIC);
                 if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_VIDEO_FRAME){
                     mExtendedEnv.mDataCbTimeStamp(timestamp, CAMERA_MSG_VIDEO_FRAME, frame, 0, mExtendedEnv.mUser);
@@ -1766,7 +1920,11 @@ void CameraHal::OnFrameArrivedYUYV(char *buffer, int length)
         camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, size, 1, NULL);
         if (NULL != frame && NULL != frame->data && NULL != img)
         {
-            convert_yuv422packed_to_yuv420sp((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+            if(0 == strcmp(mExtendedEnv.mPreviewFrameFmt, CameraParameters::PIXEL_FORMAT_YUV420P)){
+                convert_YUYV_to_YUV420planar((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+            }else{
+                convert_yuv422packed_to_yuv420sp((char*)buffer, (char *)frame->data, mPreviewWidth, mPreviewHeight, mPreviewWidth);
+            }
             CAMERA_HAL_LOGV("send CAMERA_MSG_PREVIEW_FRAME to app");
             mExtendedEnv.mDataCb(CAMERA_MSG_PREVIEW_FRAME, frame, 0, NULL, mExtendedEnv.mUser);
             frame->release(frame);
@@ -1805,41 +1963,92 @@ void CameraHal::OnFrameArrivedYUYV(char *buffer, int length)
             mExtendedEnv.mNotifyCb(CAMERA_MSG_RAW_IMAGE_NOTIFY, 0, 0, mExtendedEnv.mUser);
         }
 
-        void *img2 = NULL;
-        img2 = malloc(mSnapshotWidth * mSnapshotHeight * 2);
-        ConvertYUYVtoRGB565((void*)buffer, img2, mSnapshotWidth, mSnapshotHeight);
-
-        SkBitmap bm;
-        bm.setConfig(SkBitmap::kRGB_565_Config, mSnapshotWidth, mSnapshotHeight, 0);
-        bm.setPixels(img2,NULL);
-        SkDynamicMemoryWStream stream;
-        SkJpegImageSWEncoder swencoder;
         int jpegSize = 0;
+        int thumbnailSize = 0;
+        ConvertYUYVtoRGB565((void*)buffer, mPictureBuffer, mSnapshotWidth, mSnapshotHeight, mSnapshotWidth, mSnapshotHeight);
+        jpegEncoder(mPictureBuffer, mPictureBuffer, mSnapshotWidth, mSnapshotHeight, mJpegQuality, &jpegSize);
 
-        //use soft encoder to make rgb565 to jpg
-        if(swencoder.Encode(&stream, bm, mJpegQuality) == true)
+        if(mExtendedEnv.mThumbnailWidth != 0 && mExtendedEnv.mThumbnailHeight != 0){
+            ConvertYUYVtoRGB565((void*)buffer, mThumbnailBuffer, mSnapshotWidth, mSnapshotHeight, mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight);
+            jpegEncoder(mThumbnailBuffer, mThumbnailBuffer, mExtendedEnv.mThumbnailWidth, mExtendedEnv.mThumbnailHeight, mExtendedEnv.mThumbnailQuality, &thumbnailSize);
+        }
+
+        JpegEncoderExif* exif      = NULL;
+        ExifBuffer* exifBuffer     = NULL;
+
+        exif = new JpegEncoderExif(&mExtendedEnv);
+        if(exif == NULL)
         {
-            jpegSize = stream.getOffset();
-            CAMERA_EVENT_LOGI("jpeg encode success, jpeg length=%d", jpegSize);
+            ALOGE("failed to create JpegEncoderExif");
+        }
+        exif->jpegEncoderExifInit();
+
+        exifBuffer = exif->makeExif(exif, (unsigned char*)mThumbnailBuffer, thumbnailSize);
+
+        int totalSize = 0;
+        if(exifBuffer && ( exifBuffer->mSize > 0))
+        {
+            totalSize = EXIF_ATTR_LEN + exifBuffer->mSize + jpegSize;
         }
         else
         {
-            CAMERA_EVENT_LOGI("jpeg encode fail");
+            totalSize = jpegSize;
+        }
+
+        camera_memory_t* pictureData = mExtendedEnv.mRequestMemory(-1, totalSize, 1, NULL);
+        if(!pictureData || !(pictureData->data))
+        {
+            ALOGE("fail to allocate memory for jpeg");
+            mExtendedEnv.mNotifyCb(CAMERA_MSG_ERROR, 1, 0, mExtendedEnv.mUser);
+            CAMERA_FREE(mPictureBuffer);
+            CAMERA_FREE(mThumbnailBuffer);
+            return;
+        }
+        char* picAddr = (char*)(pictureData->data);
+        char* outAddr = (char*)(mPictureBuffer);
+        if(exifBuffer && ( exifBuffer->mSize > 0))
+        {
+            memcpy(picAddr, outAddr, JPEG_HEADER_LEN);
+
+            unsigned short exifIdentifier = EXIF_ID;
+            unsigned short exifLength = exifBuffer->mSize +2;
+            unsigned short *exifStart = (unsigned short *)(picAddr + JPEG_HEADER_LEN);
+            *exifStart = SWAP(exifIdentifier);
+            *(exifStart+1) = SWAP(exifLength);
+            memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN, exifBuffer->mData, exifBuffer->mSize);
+            memcpy(picAddr + JPEG_HEADER_LEN + EXIF_ATTR_LEN + exifBuffer->mSize, outAddr + JPEG_HEADER_LEN, jpegSize - JPEG_HEADER_LEN);
+        }
+        else
+        {
+            memcpy(picAddr, mPictureBuffer, jpegSize);
+        }
+
+        if((mExtendedEnv.mMsgEnabled & CAMERA_MSG_RAW_IMAGE) != 0)
+        {
+            camera_memory_t* picture    = NULL;
+            picture = mExtendedEnv.mRequestMemory(-1, mPictureFrameSize, 1, NULL);
+            if(picture && picture->data)
+            {
+                memcpy((char *)picture->data, (char *)buffer, mPictureFrameSize);
+                CAMERA_HAL_LOGV("send CAMERA_MSG_RAW_IMAGE to app");
+                mExtendedEnv.mDataCb(CAMERA_MSG_RAW_IMAGE, picture, 0, NULL, mExtendedEnv.mUser);
+                picture->release(picture);
+            }
+        }
+        else if((mExtendedEnv.mMsgEnabled & CAMERA_MSG_RAW_IMAGE_NOTIFY) != 0)
+        {
+            mExtendedEnv.mNotifyCb(CAMERA_MSG_RAW_IMAGE_NOTIFY, 0, 0, mExtendedEnv.mUser);
         }
 
         if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE)
         {
-            if(jpegSize > 0)
+            if(totalSize > 0)
             {
-                camera_memory_t* frame = mExtendedEnv.mRequestMemory(-1, jpegSize, 1, NULL);
-                if (NULL != frame && NULL != frame->data)
+                if (pictureData && pictureData->data)
                 {
                     CAMERA_HAL_LOGV("send CAMERA_MSG_COMPRESSED_IMAGE to app");
-                    stream.copyTo(frame->data);
-                    if (mExtendedEnv.mMsgEnabled & CAMERA_MSG_COMPRESSED_IMAGE){
-                        mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, frame, 0, NULL, mExtendedEnv.mUser);
-                    }
-                    frame->release(frame);
+                    mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, pictureData, 0, NULL, mExtendedEnv.mUser);
+                    pictureData->release(pictureData);
                 }
                 else
                 {
@@ -1851,7 +2060,10 @@ void CameraHal::OnFrameArrivedYUYV(char *buffer, int length)
                 mExtendedEnv.mDataCb(CAMERA_MSG_COMPRESSED_IMAGE, 0, 0, NULL, mExtendedEnv.mUser);
             }
         }
-        free(img2);
+
+        CAMERA_FREE(mPictureBuffer);
+        CAMERA_FREE(mThumbnailBuffer);
+
         CAMERA_EVENT_LOGI("take picture OK");
         mTakePictureWithPreviewDate = false;
     }

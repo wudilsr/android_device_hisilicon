@@ -5431,13 +5431,36 @@ HI_S32     TdeOsiEndJob(TDE_HANDLE s32Handle, HI_BOOL bBlock, HI_U32 u32TimeOut,
         enNotiType = TDE_JOB_COMPL_NOTIFY;
     }
 
-    return TdeOsiListSubmitJob(s32Handle,u32TimeOut, pFuncComplCB, pFuncPara, enNotiType);
+    return TdeOsiListSubmitJob(s32Handle,u32TimeOut, pFuncComplCB, pFuncPara, enNotiType, NULL);
 #else
-    return TdeOsiListSubmitJob(s32Handle,u32TimeOut, pFuncComplCB, pFuncPara, TDE_JOB_WAKE_NOTIFY);
+    return TdeOsiListSubmitJob(s32Handle,u32TimeOut, pFuncComplCB, pFuncPara, TDE_JOB_WAKE_NOTIFY, NULL);
 #endif
 }
 #ifndef TDE_BOOT
 EXPORT_SYMBOL(TdeOsiEndJob);
+
+HI_S32 TdeOsiEndJobEx(TDE_HANDLE s32Handle, HI_BOOL bBlock, HI_U32 u32TimeOut,
+                        HI_BOOL bSync, TDE_FUNC_CB pFuncComplCB, HI_VOID *pFuncPara,
+                        HI_S32 *ps32ReleaseFence)
+{
+    TDE_NOTIFY_MODE_E enNotiType;
+
+    if (bBlock)
+    {
+        if(in_interrupt())
+        {
+            TDE_TRACE(TDE_KERN_INFO, "can not be block in interrupt!\n");
+            return HI_ERR_TDE_UNSUPPORTED_OPERATION;
+        }
+        enNotiType = TDE_JOB_WAKE_NOTIFY;
+    }
+    else
+    {
+        enNotiType = TDE_JOB_COMPL_NOTIFY;
+    }
+
+    return TdeOsiListSubmitJob(s32Handle,u32TimeOut, pFuncComplCB, pFuncPara, enNotiType, ps32ReleaseFence);
+}
 
 /*****************************************************************************
 * Function:      TdeOsiDelJob
