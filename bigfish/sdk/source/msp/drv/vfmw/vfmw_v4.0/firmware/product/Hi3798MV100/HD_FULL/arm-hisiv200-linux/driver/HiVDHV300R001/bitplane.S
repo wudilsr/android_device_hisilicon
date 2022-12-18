@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,10 +61,10 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/.bitplane.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/bitplane.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/bitplane.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/bitplane.o -O2
@@ -125,8 +125,8 @@ BPD_Start:
 	movt	ip, #:upper16:g_HwMem	@ tmp136,
 	mov	r2, #0	@ tmp137,
 	mov	r0, #1	@ tmp139,
-	ldr	r3, [ip, #8]	@ D.44106, <variable>.pBpdRegVirAddr
-	str	r2, [r3, #0]	@ tmp137,* D.44106
+	ldr	r3, [ip, #8]	@ D.44110, <variable>.pBpdRegVirAddr
+	str	r2, [r3, #0]	@ tmp137,* D.44110
 	ldr	r1, [ip, #8]	@ temp.487, <variable>.pBpdRegVirAddr
 	str	r0, [r1, #0]	@ tmp139,* temp.487
 	ldr	r3, [ip, #8]	@ temp.489, <variable>.pBpdRegVirAddr
@@ -153,8 +153,8 @@ IsBpd_Ready:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:g_HwMem	@ tmp138,
 	movt	r3, #:upper16:g_HwMem	@ tmp138,
-	ldr	r0, [r3, #8]	@ D.44112, <variable>.pBpdRegVirAddr
-	cmp	r0, #0	@ D.44112,
+	ldr	r0, [r3, #8]	@ D.44116, <variable>.pBpdRegVirAddr
+	cmp	r0, #0	@ D.44116,
 	beq	.L8	@,
 	ldr	r0, [r0, #64]	@ Data32.513,
 	and	r0, r0, #1	@ Data32, Data32.513,
@@ -190,58 +190,58 @@ BPD_GetParam:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:g_HwMem	@ tmp147,
 	movt	r3, #:upper16:g_HwMem	@ tmp147,
-	ldr	r4, [r2, #16]	@ D.44159, <variable>.BsLen
-	ldr	lr, [r3, #8]	@ D.44149, <variable>.pBpdRegVirAddr
-	ldr	r3, [r2, #24]	@ D.44161, <variable>.TotalPos
-	ldr	ip, [lr, #80]	@ D.44152,
-	rsb	r5, r3, r4, asl #3	@, tmp149, D.44161, D.44159,
-	ldr	lr, [lr, #84]	@ D.44156,
-	cmp	ip, r5	@ D.44152, tmp149
+	ldr	r4, [r2, #16]	@ D.44163, <variable>.BsLen
+	ldr	lr, [r3, #8]	@ D.44153, <variable>.pBpdRegVirAddr
+	ldr	r3, [r2, #24]	@ D.44165, <variable>.TotalPos
+	ldr	ip, [lr, #80]	@ D.44156,
+	rsb	r5, r3, r4, asl #3	@, tmp149, D.44165, D.44163,
+	ldr	lr, [lr, #84]	@ D.44160,
+	cmp	ip, r5	@ D.44156, tmp149
 	bcs	.L15	@,
 	ldrb	r3, [r0, #3096]	@ zero_extendqisi2	@, <variable>.PreParseInfo.IsAdvProfile
 	cmp	r3, #0	@ <variable>.PreParseInfo.IsAdvProfile,
 	bne	.L16	@,
-	ubfx	r3, lr, #4, #4	@ tmp176, D.44156,,
-	and	r0, lr, #15	@ tmp172, D.44156,
+	ubfx	r3, lr, #4, #4	@ tmp176, D.44160,,
+	and	r0, lr, #15	@ tmp172, D.44160,
 	str	r3, [r1, #336]	@ tmp176, <variable>.SMPPicSyntax.SKIPMBMode
-	ubfx	lr, lr, #8, #4	@ tmp174, D.44156,,
+	ubfx	lr, lr, #8, #4	@ tmp174, D.44160,,
 	str	r0, [r1, #328]	@ tmp172, <variable>.SMPPicSyntax.MVTYPEMBMode
 	mov	r0, r2	@, pBS
 	str	lr, [r1, #332]	@ tmp174, <variable>.SMPPicSyntax.DIRECTMBMode
-	mov	r1, ip	@, D.44152
+	mov	r1, ip	@, D.44156
 	bl	BsLongSkip	@
-	mov	r0, #0	@ D.44168,
+	mov	r0, #0	@ D.44172,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L16:
-	ubfx	r3, lr, #28, #2	@ tmp169, D.44156,,
-	ubfx	r0, lr, #0, #4	@ tmp155, D.44156,,
+	ubfx	r3, lr, #28, #2	@ tmp169, D.44160,,
+	ubfx	r0, lr, #0, #4	@ tmp155, D.44160,,
 	strb	r3, [r1, #378]	@ tmp169, <variable>.AdvPicSyntax.CONDOVER
-	ubfx	r3, lr, #12, #4	@ tmp157, D.44156,,
+	ubfx	r3, lr, #12, #4	@ tmp157, D.44160,,
 	strb	r0, [r1, #382]	@ tmp155, <variable>.AdvPicSyntax.MVTYPEMBMode
-	ubfx	r0, lr, #16, #4	@ tmp159, D.44156,,
+	ubfx	r0, lr, #16, #4	@ tmp159, D.44160,,
 	strb	r3, [r1, #385]	@ tmp157, <variable>.AdvPicSyntax.ACPREDMode
-	ubfx	r3, lr, #20, #4	@ tmp161, D.44156,,
+	ubfx	r3, lr, #20, #4	@ tmp161, D.44160,,
 	strb	r0, [r1, #386]	@ tmp159, <variable>.AdvPicSyntax.OVERFLAGSMode
-	ubfx	r0, lr, #8, #4	@ tmp163, D.44156,,
+	ubfx	r0, lr, #8, #4	@ tmp163, D.44160,,
 	strb	r3, [r1, #387]	@ tmp161, <variable>.AdvPicSyntax.FIELDTXMode
-	ubfx	r3, lr, #24, #4	@ tmp165, D.44156,,
+	ubfx	r3, lr, #24, #4	@ tmp165, D.44160,,
 	strb	r0, [r1, #383]	@ tmp163, <variable>.AdvPicSyntax.DIRECTMBMode
-	ubfx	r0, lr, #4, #4	@ tmp167, D.44156,,
+	ubfx	r0, lr, #4, #4	@ tmp167, D.44160,,
 	strb	r3, [r1, #388]	@ tmp165, <variable>.AdvPicSyntax.FORWARDMBMode
 	strb	r0, [r1, #384]	@ tmp167, <variable>.AdvPicSyntax.SKIPMBMode
 	mov	r0, r2	@, pBS
-	mov	r1, ip	@, D.44152
+	mov	r1, ip	@, D.44156
 	bl	BsLongSkip	@
-	mov	r0, #0	@ D.44168,
+	mov	r0, #0	@ D.44172,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L15:
-	rsb	r3, r3, r4	@, D.44161, D.44159
-	mov	r2, ip	@, D.44152
+	rsb	r3, r3, r4	@, D.44165, D.44163
+	mov	r2, ip	@, D.44156
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.44168,
+	mov	r0, #1	@ D.44172,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	BPD_GetParam, .-BPD_GetParam
@@ -267,7 +267,7 @@ BPDDRV_WaitBpdReadyIfNoIsr:
 	mov	r4, r0	@ StartTimeInMs,
 .L20:
 	bl	IsBpd_Ready	@
-	subs	r5, r0, #0	@ D.44130,
+	subs	r5, r0, #0	@ D.44134,
 	bne	.L18	@,
 	bl	OSAL_GetTimeInMs	@
 	cmp	r0, r4	@ CurTimeInMs, StartTimeInMs
@@ -275,14 +275,14 @@ BPDDRV_WaitBpdReadyIfNoIsr:
 	rsb	r0, r4, r0	@ tmp138, StartTimeInMs, CurTimeInMs
 	cmp	r0, r6	@ tmp138, tmp142
 	bls	.L20	@,
-	mov	r0, r5	@, D.44130
+	mov	r0, r5	@, D.44134
 	movw	r1, #:lower16:.LC3	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.44137,
+	mov	r0, #1	@ D.44141,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L18:
-	mov	r0, #0	@ D.44137,
+	mov	r0, #0	@ D.44141,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	BPDDRV_WaitBpdReadyIfNoIsr, .-BPDDRV_WaitBpdReadyIfNoIsr
@@ -306,7 +306,7 @@ BPD_Reset:
 	movw	r0, #:lower16:-121241600	@,
 	movt	r0, #:upper16:-121241600	@,
 	bl	MEM_Phy2Vir	@
-	subs	r2, r0, #0	@ D.44082,
+	subs	r2, r0, #0	@ D.44086,
 	beq	.L37	@,
 	movw	r4, #:lower16:g_pstRegCrg	@ tmp160,
 	movt	r4, #:upper16:g_pstRegCrg	@ tmp160,
@@ -399,7 +399,7 @@ BPD_CfgReg:
 	cmp	ip, r6	@ <variable>.PreParseInfo.IsAdvProfile,
 	ldr	r0, [r1, #24]	@ <variable>.TotalPos, <variable>.TotalPos
 	str	r5, [fp, #-56]	@, %sfp
-	ldr	r5, [r1, #20]	@ D.43928, <variable>.BufPos
+	ldr	r5, [r1, #20]	@ D.43932, <variable>.BufPos
 	beq	.L44	@,
 	ldrb	r1, [r2, #362]	@ zero_extendqisi2	@ <variable>.AdvPicSyntax.MVMODE, <variable>.AdvPicSyntax.MVMODE
 	cmp	r1, #0	@ <variable>.AdvPicSyntax.MVMODE,
@@ -415,11 +415,11 @@ BPD_CfgReg:
 .L65:
 	ldr	r6, [r1, #0]	@ tmp412,* prephitmp.630
 .L47:
-	ldrb	r8, [r2, #349]	@ zero_extendqisi2	@ D.43958, <variable>.AdvPicSyntax.PTYPE
+	ldrb	r8, [r2, #349]	@ zero_extendqisi2	@ D.43962, <variable>.AdvPicSyntax.PTYPE
 	ldr	r9, [r2, #392]	@ <variable>.AdvPicSyntax.FCM, <variable>.AdvPicSyntax.FCM
-	cmp	r8, #4	@ D.43958,
+	cmp	r8, #4	@ D.43962,
 	ldrb	r7, [r2, #16]	@ zero_extendqisi2	@ <variable>.AdvSeqSyntax.PROFILE, <variable>.AdvSeqSyntax.PROFILE
-	andne	r8, r8, #3	@ iftmp.442, D.43958,
+	andne	r8, r8, #3	@ iftmp.442, D.43962,
 	moveq	r8, #3	@ iftmp.442,
 	bfi	r6, r8, #14, #2	@ tmp204, iftmp.442,,
 	mov	r8, r6	@ tmp206, tmp204
@@ -445,7 +445,7 @@ BPD_CfgReg:
 	str	r8, [r1, #0]	@ tmp423,* prephitmp.630
 .L57:
 	adds	r6, r0, #31	@ tmp265, <variable>.TotalPos,
-	rsb	r7, r0, r5	@ tmp264, <variable>.TotalPos, D.43928
+	rsb	r7, r0, r5	@ tmp264, <variable>.TotalPos, D.43932
 	addmi	r6, r0, #62	@, tmp267, <variable>.TotalPos,
 	movw	ip, #23232	@ tmp253,
 	bic	sl, r6, #31	@ tmp270, tmp267,
@@ -459,9 +459,9 @@ BPD_CfgReg:
 	smull	r7, r9, r9, ip	@, tmp256, tmp257, <variable>.MbWidth
 	mov	r6, r6, lsr #27	@ tmp274, tmp273,
 	add	r7, r5, r6	@ tmp275, tmp271, tmp274
-	movge	sl, r0	@ D.43929, <variable>.TotalPos
+	movge	sl, r0	@ D.43933, <variable>.TotalPos
 	and	r5, r7, #31	@ tmp276, tmp275,
-	mov	sl, sl, asr #3	@, D.43929,
+	mov	sl, sl, asr #3	@, D.43933,
 	rsb	r5, r6, r5	@ tmp277, tmp274, tmp276
 	str	sl, [fp, #-60]	@, %sfp
 	cmp	r5, #0	@ tmp277,
@@ -567,19 +567,19 @@ BPD_CfgReg:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L44:
-	ldrb	r1, [r2, #259]	@ zero_extendqisi2	@ D.43971, <variable>.SMPPicSyntax.MVMODE
-	cmp	r1, #0	@ D.43971,
+	ldrb	r1, [r2, #259]	@ zero_extendqisi2	@ D.43975, <variable>.SMPPicSyntax.MVMODE
+	cmp	r1, #0	@ D.43975,
 	beq	.L51	@,
-	cmp	r1, #4	@ D.43971,
+	cmp	r1, #4	@ D.43975,
 	beq	.L52	@,
 .L66:
 	sub	r1, fp, #48	@ prephitmp.630,,
 .L53:
-	ldrb	r8, [r2, #251]	@ zero_extendqisi2	@ D.43976, <variable>.SMPPicSyntax.PTYPE
+	ldrb	r8, [r2, #251]	@ zero_extendqisi2	@ D.43980, <variable>.SMPPicSyntax.PTYPE
 	ldr	r9, [r1, #0]	@ tmp216,* prephitmp.630
-	cmp	r8, #4	@ D.43976,
+	cmp	r8, #4	@ D.43980,
 	ldrb	r7, [r2, #0]	@ zero_extendqisi2	@ <variable>.SMPSeqSyntax.PROFILE, <variable>.SMPSeqSyntax.PROFILE
-	andne	r8, r8, #3	@ iftmp.443, D.43976,
+	andne	r8, r8, #3	@ iftmp.443, D.43980,
 	moveq	r8, #3	@ iftmp.443,
 	bfi	r9, r8, #14, #2	@ tmp216, iftmp.443,,
 	bic	r8, r9, #196608	@ tmp218, tmp216,
@@ -647,13 +647,13 @@ BPD_CfgReg:
 	ldr	r3, [fp, #-72]	@,
 	ldr	r1, [fp, #-64]	@,
 	ldr	r2, [fp, #-68]	@,
-	subs	ip, r0, #0	@ D.43917,
-	strne	ip, [r3, #8]	@ D.43917, <variable>.pBpdRegVirAddr
+	subs	ip, r0, #0	@ D.43921,
+	strne	ip, [r3, #8]	@ D.43921, <variable>.pBpdRegVirAddr
 	bne	.L41	@,
 	movw	r1, #:lower16:.LC7	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.43922,
+	mvn	r0, #0	@ D.43926,
 	b	.L43	@
 	.fnend
 	.size	BPD_CfgReg, .-BPD_CfgReg
@@ -675,11 +675,11 @@ BPD_Drv:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #23236	@ tmp146,
-	ldr	r3, [r1, r3]	@ D.44202, <variable>.MbHeight
+	ldr	r3, [r1, r3]	@ D.44206, <variable>.MbHeight
 	mov	r4, r1	@ pCodecInfo, pCodecInfo
 	mov	r5, r0	@ pBs, pBs
 	mov	r6, r2	@ pSyntax, pSyntax
-	cmp	r3, #2	@ D.44202,
+	cmp	r3, #2	@ D.44206,
 	ble	.L78	@,
 	movw	r0, #23232	@ tmp148,
 	ldr	r2, [r1, r0]	@ prephitmp.714, <variable>.MbWidth
@@ -687,11 +687,11 @@ BPD_Drv:
 	ble	.L72	@,
 	cmp	r2, #128	@ prephitmp.714,
 	bgt	.L72	@,
-	cmp	r3, #128	@ D.44202,
+	cmp	r3, #128	@ D.44206,
 	ble	.L73	@,
 .L72:
 	mov	r2, r2, asl #4	@, prephitmp.714,
-	mov	r3, r3, asl #4	@, D.44202,
+	mov	r3, r3, asl #4	@, D.44206,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC8	@,
 	movt	r1, #:upper16:.LC8	@,
@@ -717,10 +717,10 @@ BPD_Drv:
 	bl	BPD_CfgReg	@
 	cmn	r0, #1	@,
 	beq	.L79	@,
-	ldr	r3, [r7, #8]	@ D.44228, <variable>.pBpdRegVirAddr
+	ldr	r3, [r7, #8]	@ D.44232, <variable>.pBpdRegVirAddr
 	mov	ip, #0	@ tmp156,
 	mov	r8, #1	@ tmp158,
-	str	ip, [r3, #0]	@ tmp156,* D.44228
+	str	ip, [r3, #0]	@ tmp156,* D.44232
 	ldr	lr, [r7, #8]	@ temp.726, <variable>.pBpdRegVirAddr
 	str	r8, [lr, #0]	@ tmp158,* temp.726
 	ldr	r1, [r7, #8]	@ temp.728, <variable>.pBpdRegVirAddr
@@ -746,9 +746,9 @@ BPD_Drv:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.44111, %object
-	.size	__func__.44111, 12
-__func__.44111:
+	.type	__func__.44115, %object
+	.size	__func__.44115, 12
+__func__.44115:
 	.ascii	"IsBpd_Ready\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

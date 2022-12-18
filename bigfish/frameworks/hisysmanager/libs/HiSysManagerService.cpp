@@ -22,6 +22,13 @@
 #include <binder/Parcel.h>
 #include "HiSysManagerService.h"
 #include "sysmanager.h"
+
+#include "SkBitmap.h"
+#include "SkImageDecoder.h"
+#include "SkImageEncoder.h"
+
+#define LOG_TAG "HiSysManagerService"
+
 //extern "C"
 // {
 //
@@ -53,6 +60,29 @@ int HiSysManagerService::reset(){
     int ret = do_reset();
     return 0;
 }
+
+int HiSysManagerService::updateLogo(String8 path) {
+    const char* mpath = path.string();
+    SkBitmap bitmap;
+    int ret = -1;
+    const char* out_path = "/data/local/tmp/logo.jpg";
+    const int quality = 100;
+    ret = SkImageDecoder::DecodeFile(mpath, &bitmap);
+    ALOGE("SkImageDecoder::DecodeFile(%s) returns %d\n", mpath, ret);
+    if (false == ret)
+    {
+        return -1;
+    }
+    ret = SkImageEncoder::EncodeFile(out_path, bitmap, SkImageEncoder::kJPEG_Type, quality);
+    ALOGE("SkImageEncoder::EncodeFile(%s) returns %d\n", out_path, ret);
+    if (false == ret)
+    {
+        return -1;
+    }
+    ret = do_updateLogo(out_path);
+    return ret;
+}
+
 int HiSysManagerService::enterSmartStandby(){
     int ret = do_EnterSmartStandby();
     return ret;

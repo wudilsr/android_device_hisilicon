@@ -17,6 +17,9 @@
 #include "decoder.h"
 #include "processor.h"
 
+#include "vfmw_ext.h"
+#include "hi_module.h"    //HI_ID_VDEC
+#include "hi_drv_stat.h"
 #ifdef HI_TVP_SUPPORT
 #include "sec_mmz.h"
 #endif
@@ -26,7 +29,10 @@
 extern HI_BOOL  g_SaveRawEnable;
 extern HI_CHAR  g_SavePath[];
 extern HI_CHAR  g_SaveName[];
-
+extern HI_U32   g_SaveNum;
+extern HI_BOOL  g_FastOutputMode;
+extern HI_BOOL  g_LowDelayStatistics;
+extern VFMW_EXPORT_FUNC_S* pVfmwFunc;
 
 /*============== INTERNAL FUNCTION =============*/
 static inline const HI_PCHAR channel_show_chan_state(eCHAN_STATE state)
@@ -708,7 +714,7 @@ static HI_S32 channel_save_stream(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_S *pstrea
     
     if (HI_TRUE == g_SaveRawEnable && pchan->raw_file == HI_NULL)
     {
-        snprintf(FilePath, sizeof(FilePath), "%s/%s_%d.raw", g_SavePath, g_SaveName, pchan->channel_id);
+        snprintf(FilePath, sizeof(FilePath), "%s/%s_%d_%d.raw", g_SavePath, g_SaveName, g_SaveNum, pchan->channel_id);
         pchan->raw_file = filp_open(FilePath, O_RDWR|O_CREAT|O_TRUNC, S_IRWXO);
         if (IS_ERR(pchan->raw_file))
         {
@@ -953,6 +959,7 @@ cleanup0:
 HI_S32 channel_release_inst(OMXVDEC_CHAN_CTX *pchan)
 {
     HI_U32 i;
+    HI_S32 ret = HI_FAILURE;
 	unsigned long flags;
 	eCHAN_STATE state;
 	OMXVDEC_BUF_S *pbuf    = HI_NULL;
@@ -974,6 +981,18 @@ HI_S32 channel_release_inst(OMXVDEC_CHAN_CTX *pchan)
         OmxPrint(OMX_FATAL, "%s omxvdec = NULL\n", __func__);
 		return HI_FAILURE;
 	}
+    if (HI_TRUE == g_LowDelayStatistics)
+    {
+            HI_HANDLE hHandle = 0;
+            hHandle = (HI_ID_VDEC << 16) | pchan->channel_id;
+             ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_STOP_LOWDLAY_CALC, &hHandle);
+             if (HI_SUCCESS != ret)
+             {
+                 OmxPrint(OMX_FATAL, "%s call VDEC_CID_STOP_LOWDLAY_CALC failed, ret = %d!\n", __func__, ret);
+                 return HI_FAILURE;
+             }
+             HI_DRV_LD_Stop_Statistics();
+    }
 
 	spin_lock_irqsave(&pchan->chan_lock, flags);
 	state = pchan->state;
@@ -1385,6 +1404,7 @@ HI_S32 channel_empty_this_stream(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puse
         OmxPrint(OMX_ERR, "%s receive an empty buffer, return immediately.\n", __func__);
 	    message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_S_SUCCESS, (HI_VOID *)puser_buf);
     }
+    ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_EXTRA_WAKEUP_THREAD, NULL);
 
 	OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 

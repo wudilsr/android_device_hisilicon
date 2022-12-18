@@ -135,8 +135,7 @@ status_t surfaceSetting::updateSurfacePosition(int x, int y, int w, int h)
 {
     if ( w < 0 || h < 0 )
         return UNKNOWN_ERROR;
-    if ( x < 0 || y < 0)
-        return UNKNOWN_ERROR;
+
     if (x == mSurfaceX && y == mSurfaceY && w == mSurfaceWidth && h == mSurfaceHeight)
         return NO_ERROR;
 

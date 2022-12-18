@@ -13,6 +13,8 @@
  */
 
 #include "hi_drv_module.h"  // HI_DRV_MODULE_GetFunction 依赖
+#include "hi_module.h"    //HI_ID_OMXVDEC
+#include "hi_drv_stat.h"
 #include "decoder.h"
 #include "vfmw_ext.h"
 
@@ -29,8 +31,10 @@ extern VDEC_PREMMZ_NODE_S st_VdecChanPreUsedMMZInfo[];
 extern HI_U32 g_VdecPreMMZNodeNum;
 #endif
 
+HI_S32 processor_inform_img_ready(OMXVDEC_CHAN_CTX *pchan);
+
 /*================ STATIC VALUE ================*/
-static VFMW_EXPORT_FUNC_S* pVfmwFunc = HI_NULL;
+VFMW_EXPORT_FUNC_S* pVfmwFunc = HI_NULL;
 
 
 /*=================== MACRO ====================*/
@@ -46,6 +50,7 @@ static VFMW_EXPORT_FUNC_S* pVfmwFunc = HI_NULL;
 HI_U32   g_DispNum               = 4;
 HI_U32   g_SegSize               = 2;         // (M)
 HI_BOOL  g_DynamicFsEnable       = HI_TRUE;
+HI_BOOL  g_LowDelayStatistics    = HI_TRUE;
 HI_BOOL  g_RawMoveEnable         = HI_TRUE;   // 码流搬移使能标志，解决scd切割失败不释放码流的情况
 HI_BOOL  g_FastOutputMode        = HI_FALSE;
 
@@ -74,6 +79,14 @@ static HI_S32 decoder_event_handler(HI_S32 chan_id, HI_S32 event_type, HI_VOID *
 
 	switch (event_type)
     {
+        case EVNT_NEW_IMAGE:
+
+            OmxPrint(OMX_INFO, "Get New Image!\n");
+
+            ret = processor_inform_img_ready(pchan);
+
+            break;
+
         case EVNT_NEED_ARRANGE:
 		{
             pchan->dfs_alloc_flag  = DFS_WAIT_ALLOC;
@@ -231,6 +244,11 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
     	        *pFmwCap = CAP_LEVEL_HEVC_UHD;
                 break;
         }
+        
+        pstOption->s32SupportH264    = 1;
+        pstOption->s32MaxSliceNum    = 136;
+        pstOption->s32MaxSpsNum      = 32;
+        pstOption->s32MaxPpsNum      = 256;
     }
     else if (STD_H264 == pchan_cfg->eVidStd || STD_MVC == pchan_cfg->eVidStd)
     {
@@ -387,6 +405,31 @@ static HI_S32 decoder_get_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
         OmxPrint(OMX_PTS, "Get Time Stamp: %lld\n", stream_data->Pts);
 
 		ret = HI_SUCCESS;
+
+        if ((pchan->bLowdelay || g_FastOutputMode)
+            && !(stream_data->is_not_last_packet_flag)
+            && pchan->protocol == STD_H264)
+        {
+            UINT8 au8EndFlag[20] =
+                        /* H264 & MVC*/
+                        {0x00, 0x00, 0x01, 0x1e, 0x48, 0x53, 0x50, 0x49, 0x43, 0x45,
+                         0x4e, 0x44, 0x00, 0x00, 0x01, 0x1e
+                    };
+
+            if (stream_data->Length + 16 > stream_data->RawExt.BufLen)
+            {
+                OmxPrint(OMX_ERR, "%s:Length(%d)+15 > RawExt.BufLen(%d)\n", __func__, stream_data->Length, stream_data->RawExt.BufLen);
+
+                break;
+            }
+
+            memcpy((UINT8 *)(stream_data->VirAddr + stream_data->Length), au8EndFlag, 16);
+
+            UINT8* pEndAddr = stream_data->VirAddr + stream_data->Length;
+            stream_data->Length += 16;
+
+            OmxPrint(OMX_INFO, "%s add end of stream at each frame\n", __func__);
+        }
 
         OmxPrint(OMX_INBUF, "VFMW got stream: PhyAddr = 0x%08x, VirAddr = %p, Len = %d\n",
                             stream_data->PhyAddr, stream_data->VirAddr, stream_data->Length);
@@ -972,12 +1015,12 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
     if ( HI_TRUE == pchan->bLowdelay || HI_TRUE == g_FastOutputMode)
     {
     	pchan_cfg->s32DecMode         = IP_MODE;
-    
-        /* set to 2 means both bOrderoutput and SIMPLE_DPB */
-    	pchan_cfg->s32DecOrderOutput  = 2;
+
+        /* set to 1 means Orderoutput */
+    	pchan_cfg->s32DecOrderOutput  = 1;
         pchan_cfg->s32LowdlyEnable    = HI_FALSE;
         pchan_cfg->s32ModuleLowlyEnable = HI_TRUE;
-
+        pchan_cfg->s32ChanLowlyEnable = HI_TRUE;
     }
 
     //set the decode max w&h
@@ -1007,6 +1050,22 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
     {
         OmxPrint(OMX_FATAL, "%s GET_IMAGE_INTF failed\n", __func__);
         goto error3;
+    }
+
+    if (HI_TRUE == g_LowDelayStatistics)
+    {
+            HI_HANDLE hHandle = 0;
+
+
+            hHandle = (HI_ID_VDEC << 16) | pchan->channel_id;
+
+             ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_START_LOWDLAY_CALC, &hHandle);
+             if (HI_SUCCESS != ret)
+             {
+                 OmxPrint(OMX_FATAL, "%s call VDEC_CID_START_LOWDLAY_CALC failed, ret = %d!\n", __func__, ret);
+                 return HI_FAILURE;
+             }
+             HI_DRV_LD_Start_Statistics(SCENES_VID_PLAY, (HI_VOID*)hHandle);
     }
 
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);

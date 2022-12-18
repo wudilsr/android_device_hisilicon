@@ -303,8 +303,8 @@ bool tde_blit(hwc_layer_1_t*  srcLayer, hwc_layer_1_t*  dstLayer)
     stOpt.u8GlobalAlpha = srcLayer->planeAlpha;
     if(srcLayer->blending == HWC_BLENDING_PREMULT)
     {
-        stOpt.stBlendOpt.bSrc1AlphaPremulti = HI_TRUE;
-        stOpt.stBlendOpt.bSrc2AlphaPremulti = HI_TRUE;
+        stOpt.stBlendOpt.bSrc1AlphaPremulti = HI_FALSE;
+        stOpt.stBlendOpt.bSrc2AlphaPremulti = HI_FALSE;
         stOpt.stBlendOpt.eBlendCmd = TDE2_BLENDCMD_SRCOVER;
     } else {
         //HWC_BLENDING_COVERAGE
@@ -502,6 +502,17 @@ hardwareError:
     return false;
 }
 
+static int bVisible(hwc_region_t* region)
+{
+    int i;
+    int visible = 0;
+    for (i = 0; i < region->numRects; i++) {
+        visible |= region->rects[i].bottom || region->rects[i].left || region->rects[i].right || region->rects[i].top;
+    }
+    return visible;
+}
+
+
 int tde_compose(hwc_composer_device_1_t *dev,
         size_t numDisplays, hwc_display_contents_1_t** displays)
 {
@@ -523,8 +534,10 @@ int tde_compose(hwc_composer_device_1_t *dev,
         switch (layerType){
             case VIDEO_LAYER:
                 {
+                    //video is visib
                     HI_U32 color = 0x00000000;
-                    tde_fill_rect(color, &list->hwLayers[list->numHwLayers-1],&layer->displayFrame);
+                    if(bVisible(&layer->visibleRegionScreen))
+                        tde_fill_rect(color, &list->hwLayers[list->numHwLayers-1],&layer->displayFrame);
                     break;
                 }
             case DIM_LAYER:

@@ -18,7 +18,7 @@ public class SetMacInfo {
     public int SetMac(String mac) {
         int ret = -1;
         if (compareMac(mac, mMacList.get(2))) {
-            return 0;
+            return 2;
         }
         HiSysManager hiSysManager = new HiSysManager();
         ret = hiSysManager.setFlashInfo("deviceinfo", 0, 17, mac);
@@ -93,7 +93,7 @@ public class SetMacInfo {
             if ('9' == mac[num]) {
                 mac[num] = 'A';
                 break;
-            } else if ('F' == mac[num]) {
+            } else if ('F' == mac[num]||'f' == mac[num]) {
                 mac[num] = '0';
                 num--;
             } else if (':' == mac[num]) {

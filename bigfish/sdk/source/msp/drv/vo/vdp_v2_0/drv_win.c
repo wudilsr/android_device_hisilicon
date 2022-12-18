@@ -1563,7 +1563,7 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
             Ret = WIN_CheckHanlde(pVoWinFrame->hWindow, pstWinState);
             if (HI_SUCCESS == Ret)
             {
-                Ret = WIN_QueueSyncFrame(pVoWinFrame->hWindow, &pVoWinFrame->stFrame,pVoWinFrame->pu32FenceFd); 
+                Ret = WIN_QueueSyncFrame(pVoWinFrame->hWindow, &pVoWinFrame->stFrame,&pVoWinFrame->u32FenceFd); 
             }
             break;
         }

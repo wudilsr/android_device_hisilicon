@@ -8,6 +8,7 @@
  */
 
 #include <pthread.h>
+#include "hi_debug.h"
 #include "so_queue.h"
 #include "hi_unf_so.h"
 
@@ -24,7 +25,7 @@
     do{\
         int ret = pthread_mutex_lock(&pstMember->stMutex);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_lock(stMutex) failure,ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_lock(stMutex) failure,ret = 0x%x\n",ret);\
         }\
     }while(0)
 
@@ -32,7 +33,7 @@
     do{\
         int ret = pthread_mutex_unlock(&pstMember->stMutex);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_unlock(stMutex) failure, ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_unlock(stMutex) failure, ret = 0x%x\n",ret);\
         }\
     }while(0)
 
@@ -40,7 +41,7 @@
     do{\
         int ret = pthread_mutex_lock(&pstMember->stQueueResetMutex);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_lock(stQueueResetMutex) failure,ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_lock(stQueueResetMutex) failure,ret = 0x%x\n",ret);\
         }\
     }while(0)
 
@@ -48,7 +49,7 @@
     do{\
         int ret = pthread_mutex_unlock(&pstMember->stQueueResetMutex);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_unlock(stQueueResetMutex) failure, ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_unlock(stQueueResetMutex) failure, ret = 0x%x\n",ret);\
         }\
     }while(0)
 
@@ -169,9 +170,21 @@ static HI_S32 SO_InsertToClearList(SO_MEMBER_S *pstMember, const SO_INFO_S *pstS
     {
         if (pstMember->u32ReadIndx < pstMember->u32WriteIndx)
         {
+            HI_U32 u32MoveSize = 0;
+
+            pstMember->u32WriteIndx = SO_QUEUE_MAX_CLEAR_NODE_NUM;
+
+            if (0 == pstMember->u32ReadIndx)
+            {
+                pstMember->u32ReadIndx = 1;
+            }
+
             u32NodeNum = pstMember->u32WriteIndx - pstMember->u32ReadIndx;
 
-            SO_MEMMOVE(&pstMember->astClearNodeList[0], &pstMember->astClearNodeList[pstMember->u32ReadIndx], u32NodeNum);
+            u32MoveSize = u32NodeNum * sizeof(SO_CLEAR_NODE_S);
+
+            SO_MEMMOVE(&pstMember->astClearNodeList[0], &pstMember->astClearNodeList[pstMember->u32ReadIndx], u32MoveSize);
+
             pstMember->u32ReadIndx  = 0;
             pstMember->u32WriteIndx = pstMember->u32ReadIndx + u32NodeNum;
         }

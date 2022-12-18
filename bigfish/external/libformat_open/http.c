@@ -71,6 +71,7 @@ static const AVOption options[] = {
 {"post_data", "set custom HTTP post data", OFFSET(post_data), AV_OPT_TYPE_BINARY, .flags = D|E},
 {"multiple_requests", "use persistent connections", OFFSET(multiple_requests), AV_OPT_TYPE_INT, {.i64 = 0}, 0, 1, D|E},
 {"has_reconnect", "upper protocol has reconnect function or not", OFFSET(has_reconnect), AV_OPT_TYPE_INT, {.i64 = 0}, 0,1, D|E},
+{"hls_connection", "",  OFFSET(hls_connection), AV_OPT_TYPE_INT, {.i64 = 0}, 0,1, D|E},
 {"referer", "override referer header", OFFSET(referer), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"cookies", "set cookies to be sent in applicable future requests, use newline delimited Set-Cookie HTTP field value syntax", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "not support byte range", OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
@@ -88,6 +89,7 @@ static const AVOption options[] = {
 {"post_data", "",  OFFSET(post_data), AV_OPT_TYPE_BINARY, .flags = D|E},
 {"multiple_requests", "",  OFFSET(multiple_requests), AV_OPT_TYPE_INT, {.i64 = 0}, 0, 1, D|E},
 {"has_reconnect", "",  OFFSET(has_reconnect), AV_OPT_TYPE_INT, {.i64 = 0}, 0,1, D|E},
+{"hls_connection", "",  OFFSET(hls_connection), AV_OPT_TYPE_INT, {.i64 = 0}, 0,1, D|E},
 {"referer", "",  OFFSET(referer), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"cookies", "", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "",  OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
@@ -306,6 +308,11 @@ static int http_open_cnx(URLContext *h)
         if (err < 0)
         {
             av_log(NULL, AV_LOG_WARNING,"[%s:%d]: url_open_h ret='%d',errno:%d\n",__FILE_NAME__, __LINE__, err, ff_neterrno());
+            if ((err == AVERROR(ENETUNREACH) || err == AVERROR(EAGAIN))
+                && !ff_check_interrupt(&(h->interrupt_callback)))
+            {
+                goto redo;
+            }
             s->http_code = err;
             if (s->has_reconnect && !ff_check_interrupt(&(h->interrupt_callback)))
             {
@@ -433,7 +440,10 @@ static int http_open_cnx(URLContext *h)
 
         snprintf(tmp, sizeof(tmp), "%s", s->location);
         h->moved_url = av_strdup(tmp);
+        s->off = old_off;
 
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] http_code:%d, http reconnect to :%s, s->off:%d \n", __FILE_NAME__, __LINE__,
+            s->http_code, h->moved_url, s->off);
         goto redo;
     }//end if
 
@@ -457,7 +467,11 @@ retry:
     h->port = port;
     av_strlcpy(&h->ipaddr, &s->hd->ipaddr, sizeof(h->ipaddr));
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] port=%d, s->hd->ipaddr=%s \n", __FILE_NAME__, __LINE__, port, s->hd->ipaddr);
-    return 0;
+
+    if (err >= 0)
+    {
+        return 0;
+    }
  fail:
     if (hd)
         ffurl_close(hd);
@@ -497,7 +511,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
         char buffer[PROPERTY_VALUE_MAX];
         memset(buffer, 0, PROPERTY_VALUE_MAX);
         if(property_get("media.http.limitedsize", buffer, NULL)
-            && atoi(buffer) > 0)
+            && atoi(buffer) > 0 && (!s->hls_connection))
         {
             s->one_connect_limited_size = atoi(buffer)*1024*1024;
             if (0 > s->one_connect_limited_size)
@@ -505,7 +519,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
                 s->one_connect_limited_size = 0;
             }
         }
-        else if (0 < s->download_size_once)
+        else if (0 < s->download_size_once && (!s->hls_connection))
         {
             s->one_connect_limited_size = s->download_size_once * 1024 * 1024;
             if (0 > s->one_connect_limited_size)
@@ -1181,7 +1195,7 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] off = %lld, s->off = %lld \n",
         __FILE_NAME__, __LINE__, off, s->off);
 
-    return (off == s->off) ? 0 : -1;
+    return (off == s->off || *new_location) ? 0 : -1;
 }
 
 //wkf34645 reconnect while read
@@ -1347,10 +1361,17 @@ HTTP_READ_AGAIN:
         }
     }
     else if (s->end < (s->filesize - 1) && s->filesize > 0 && s->one_connect_limited_size > 0
-        && (AVERROR_EOF == ret || s->off >= s->end || ret == 0))
+        && s->one_connect_limited_size < s->filesize && (AVERROR_EOF == ret || s->off >= s->end || ret == 0))
     {
         if(AVERROR_EOF == ret || ret == 0)
         {
+            if (s->download_size_once != 0)
+            {
+                s->one_connect_limited_size = s->download_size_once * 1024 * 1024;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d] one_connect_limited_size: %d \n",
+                __FILE_NAME__, __LINE__, s->one_connect_limited_size);
+            }
+
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] set reconnect = 1, reconnect at once, filesize = %lld, ret:%d, s->off:%lld, s->end:%lld, size:%d\n",
                 __FILE_NAME__, __LINE__, s->filesize, ret, s->off, s->end, size);
             reconnect = 1;

@@ -55,6 +55,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.audiofx.AudioEffect;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -1505,11 +1506,12 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 if (null == (Bitmap) msg.obj) {
                     mBitmap = BitmapFactory.decodeResource(
                             MediaPlaybackActivity.this.getResources(),
-                            R.drawable.a0);
-                } else {
-                    mBitmap = BitmapFactory.decodeResource(
-                            MediaPlaybackActivity.this.getResources(),
                             R.drawable.default_cover);
+                } else {
+                    mBitmap = (Bitmap)msg.obj;
+//                    mBitmap = BitmapFactory.decodeResource(
+//                            MediaPlaybackActivity.this.getResources(),
+//                            R.drawable.default_cover);
                 }
 
                 DisplayMetrics dm = new DisplayMetrics();
@@ -1608,7 +1610,6 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 }
                 return;
             }
-
             long songid = mService.getAudioId();
             if (songid < 0 && path.toLowerCase().startsWith("http://")) {
                 // Once we can get album art and meta data from MediaPlayer, we
@@ -1786,22 +1787,58 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 // Don't allow default artwork here, because we want to fall
                 // back to song-specific
                 // album art if we can't find anything for the album.
-                Bitmap bm = MusicUtils.getArtwork(MediaPlaybackActivity.this,
-                        songid, albumid, false);
-                if (bm == null) {
-                    bm = MusicUtils.getArtwork(MediaPlaybackActivity.this,
-                            songid, -1);
-                    albumid = -1;
-                }
-                if (bm != null) {
+                if(mService!=null){
+//                Bitmap bm = MusicUtils.getArtwork(MediaPlaybackActivity.this,
+//                        songid, albumid, false);
+//                if (bm == null) {
+//                	Log.i(TAG, "handleMessage GET_ALBUM_ART is null");
+//                    bm = MusicUtils.getArtwork(MediaPlaybackActivity.this,
+//                            songid, -1);
+//                    albumid = -1;
+//                }
+            try{
+                  Bitmap bm = createAlbumThumbnail(mService.getPath());
+                  if (bm != null) {
                     numsg = mHandler.obtainMessage(ALBUM_ART_DECODED, bm);
                     mHandler.removeMessages(ALBUM_ART_DECODED);
                     mHandler.sendMessage(numsg);
+                  }
+                }catch (RemoteException e) {
+                }
                 }
                 mAlbumId = albumid;
             }
         }
     }
+    public static Bitmap createAlbumThumbnail(String filePath) {
+        if (filePath.indexOf("http") == 0) {
+            return null;
+        }
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+        retriever.setDataSource(filePath);
+        byte[] art = retriever.getEmbeddedPicture();
+        if (art.length > 0) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(art, 0, art.length, opts);
+        opts.inSampleSize = 1;//ImageUtils.calculateInSampleSize(opts, 380,380);
+        opts.inJustDecodeBounds = false;
+        bitmap = BitmapFactory.decodeByteArray(art, 0, art.length, opts);
+        }
+        } catch (IllegalArgumentException ex) {
+        bitmap = null;
+        } catch (RuntimeException ex) {
+        bitmap = null;
+        } finally {
+        try {
+        retriever.release();
+        } catch (RuntimeException ex) {
+        }
+        }
+        return bitmap;
+        }
 
     private static class Worker implements Runnable {
         private final Object mLock = new Object();

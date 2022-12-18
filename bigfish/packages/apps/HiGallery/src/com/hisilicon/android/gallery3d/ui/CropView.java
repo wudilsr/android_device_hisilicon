@@ -748,7 +748,7 @@ public class CropView extends GLView {
 
         mImageRotation = rotation;
 
-        mImageView.setModel(dataModel);
+        mImageView.setModel(dataModel,false);
         mAnimation.initialize();
     }
 

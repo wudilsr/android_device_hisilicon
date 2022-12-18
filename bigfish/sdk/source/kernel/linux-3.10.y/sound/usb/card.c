@@ -74,8 +74,11 @@ MODULE_DESCRIPTION("USB Audio");
 MODULE_LICENSE("GPL");
 MODULE_SUPPORTED_DEVICE("{{Generic,USB Audio}}");
 
-
+#ifdef CONFIG_ANDROID
+static int index[SNDRV_CARDS] = {2,3,4,5,6,7,8,9,10};
+#else
 static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;	/* Index 0-MAX */
+#endif
 static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;	/* ID for this card */
 static bool enable[SNDRV_CARDS] = SNDRV_DEFAULT_ENABLE_PNP;/* Enable this card */
 /* Vendor/product IDs for this card */
@@ -371,11 +374,8 @@ static int snd_usb_audio_create(struct usb_device *dev, int idx,
 		snd_printk(KERN_ERR "unknown device speed %d\n", snd_usb_get_speed(dev));
 		return -ENXIO;
 	}
-#ifdef CONFIG_ANDROID
-		err = snd_card_create(2, id[2], THIS_MODULE, 0, &card);
-#else
-		err = snd_card_create(index[idx], id[idx], THIS_MODULE, 0, &card);
-#endif
+
+	err = snd_card_create(index[idx], id[idx], THIS_MODULE, 0, &card);
 	if (err < 0) {
 		snd_printk(KERN_ERR "cannot create card instance %d\n", idx);
 		return err;
@@ -582,7 +582,9 @@ snd_usb_audio_probe(struct usb_device *dev,
 	 * not sure how to distinguish analog/digital/unknown,
 	 * assume digital for now
 	 */
-	switch_set_state(&sdev, STATE_CONNECTED);
+	if (0 == chip->index) {
+		switch_set_state(&sdev, STATE_CONNECTED);
+	}
 #endif
 
 	usb_chip[chip->index] = chip;
@@ -622,9 +624,13 @@ static void snd_usb_audio_disconnect(struct usb_device *dev,
 
 	mutex_lock(&register_mutex);
 	chip->num_interfaces--;
+
 #ifdef CONFIG_ANDROID
-	switch_set_state(&sdev, STATE_DISCONNECTED);
+	if (0 == chip->index) {
+		switch_set_state(&sdev, STATE_DISCONNECTED);
+	}
 #endif
+
 	if (chip->num_interfaces <= 0) {
 		snd_card_disconnect(card);
 		/* release the pcm resources */
@@ -786,8 +792,6 @@ static struct usb_driver usb_audio_driver = {
 
 static int __init snd_usb_audio_init(void)
 {
-	int err = 0;
-
 	if (nrpacks < 1 || nrpacks > MAX_PACKS) {
 		printk(KERN_WARNING "invalid nrpacks value.\n");
 		return -EINVAL;
@@ -795,14 +799,13 @@ static int __init snd_usb_audio_init(void)
 
 #ifdef CONFIG_ANDROID
 	sdev.name = "h2w";
-	if (switch_dev_register(&sdev)){
+	if (switch_dev_register(&sdev)) {
 		printk(KERN_ERR "error registering switch device");
 		return -EINVAL;
 	}
 #endif
 
-	err = usb_register(&usb_audio_driver);
-	return err;
+	return usb_register(&usb_audio_driver);
 }
 
 static void __exit snd_usb_audio_cleanup(void)

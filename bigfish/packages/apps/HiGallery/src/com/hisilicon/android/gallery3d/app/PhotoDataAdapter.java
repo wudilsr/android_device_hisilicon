@@ -48,6 +48,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import android.app.ActivityManager;
+import android.content.Context;
 
 public class PhotoDataAdapter implements PhotoPage.Model {
     @SuppressWarnings("unused")
@@ -311,12 +312,12 @@ public class PhotoDataAdapter implements PhotoPage.Model {
                 mImageCache.remove(getVersion(index));
                 if (entry.fullImageTask != null) entry.fullImageTask.cancel();
                 if (entry.screenNailTask != null) entry.screenNailTask.cancel();
-                return new ImageData(null, 0);
+                return new ImageData(null, 0,false);
             } else {
-                return new ImageData(screennail, entry.rotation);
+                return new ImageData(screennail, entry.rotation,entry.isgif);
             }
         } else {
-            return new ImageData(null, 0);
+            return new ImageData(null, 0,false);
         }
     }
 
@@ -601,6 +602,11 @@ public class PhotoDataAdapter implements PhotoPage.Model {
                 }
             } else {
                 entry = new ImageEntry();
+                String itmepath=item.getPath().toString();
+                String type = itmepath.substring(itmepath.lastIndexOf(".") + 1);
+                if ("gif".equalsIgnoreCase(type)) {
+                    entry.isgif = true;;
+                }
                 entry.rotation = item.getFullImageRotation();
                 mImageCache.put(version, entry);
             }
@@ -666,6 +672,7 @@ public class PhotoDataAdapter implements PhotoPage.Model {
         public Future<Bitmap> screenNailTask;
         public Future<BitmapRegionDecoder> fullImageTask;
         public boolean failToLoad = false;
+        public boolean isgif = false;
     }
 
     private class SourceListener implements ContentListener {

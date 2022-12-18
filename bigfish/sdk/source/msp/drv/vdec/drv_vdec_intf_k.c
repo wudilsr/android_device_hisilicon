@@ -7081,7 +7081,7 @@ static HI_S32 VDEC_Chan_AllocHandle(HI_HANDLE *phHandle, struct file *pstFile)
 
     s_stVdecDrv.u32ChanNum++;
     *phHandle = (HI_ID_VDEC << 16) | i;  
-    up(&s_stVdecDrv.stSem);
+
     #if 1
     if( HI_NULL == s_stVdecDrv.astChanEntity[i].pstChan)
     {
@@ -7101,6 +7101,7 @@ static HI_S32 VDEC_Chan_AllocHandle(HI_HANDLE *phHandle, struct file *pstFile)
     }
     s_stVdecDrv.astChanEntity[i].pstChan = pstChan;
     #endif
+    up(&s_stVdecDrv.stSem);	
     return HI_SUCCESS;
 
 err0:
@@ -7234,51 +7235,19 @@ HI_S32 VDEC_Chan_FindPreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
                     g_VdecPreMMZNodeNum ++;
                     }
                 }
-           }
-           #if 0
-           if(0 < st_VdecChanPreUsedMMZInfo[i+1].u32Size && 0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-           {
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartPhyAddr = st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartVirAddr = st_VdecChanPreUsedMMZInfo[i].u32StartVirAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32Size = st_VdecChanPreUsedMMZInfo[i+1].u32Size + st_VdecChanPreUsedMMZInfo[i].u32Size - pstMMZBuffer->u32Size;
-           }
-           else if(0 < st_VdecChanPreUsedMMZInfo[i+1].u32Size && 1 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-           {
-               g_VdecPreMMZNodeNum++;
-               for(j=g_VdecPreMMZNodeNum;j>i+1;j--)
-               {
-                   memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j-1],sizeof(VDEC_PREMMZ_NODE_S));
-               }
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartPhyAddr = st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartVirAddr = st_VdecChanPreUsedMMZInfo[i].u32StartVirAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32Size         = st_VdecChanPreUsedMMZInfo[i+1].u32Size - pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32NodeState    = 0;
-           }
-           else if(i==(g_VdecPreMMZNodeNum-1))
-           {
-               g_VdecPreMMZNodeNum++;
-               for(j=0;j<i;j++)
-               {
-                   u32Size += st_VdecChanPreUsedMMZInfo[j].u32Size;
-               }
-               u32Size += pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i].u32Size           = pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartPhyAddr = st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32StartVirAddr = st_VdecChanPreUsedMMZInfo[i].u32StartVirAddr + pstMMZBuffer->u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32Size         = g_stVDHMMZ.u32Size - u32Size;
-               st_VdecChanPreUsedMMZInfo[i+1].u32NodeState    = 0;
-           }
-           #endif
+            }
+
+        st_VdecChanPreUsedMMZInfo[i].u32NodeState = 1;
+        pstMMZBuffer->u32StartPhyAddr = st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr;
+        pstMMZBuffer->u32StartVirAddr = st_VdecChanPreUsedMMZInfo[i].u32StartVirAddr;
+        return HI_SUCCESS;
        }
-       st_VdecChanPreUsedMMZInfo[i].u32NodeState = 1;
-       pstMMZBuffer->u32StartPhyAddr = st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr;
-       pstMMZBuffer->u32StartVirAddr = st_VdecChanPreUsedMMZInfo[i].u32StartVirAddr;
-       return HI_SUCCESS;
     }
     else
     {
        return HI_FAILURE;
     }
+    return HI_FAILURE;    
 }
 
 HI_S32 VDEC_Chan_ReleasePreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
@@ -8658,6 +8627,15 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
             HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_STOP err!\n");
         }
     }
+	
+
+    /* Lock */
+    if (down_interruptible(&s_stVdecDrv.stSem))
+    {
+        HI_ERR_VDEC("Global lock err!\n");
+        return HI_FAILURE;
+    }
+	
     #if 1
     /* Destroy VFMW decode channel */
     if (HI_INVALID_HANDLE != s_stVdecDrv.astChanEntity[hHandle].pstChan->hChan)
@@ -8721,6 +8699,8 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
 #endif
     }
 #endif
+    up(&s_stVdecDrv.stSem);
+	
     /* Stop user data channel */
 #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
     USRDATA_Stop(hHandle);
@@ -12323,12 +12303,22 @@ static SINT32 VdecTaskFunc(VOID* param)   //l00273086
 
     while(1)
     {
-        for(i = 0; i < HI_VDEC_MAX_INSTANCE_NEW; i++)
+        /* Lock */
+        if (down_interruptible(&s_stVdecDrv.stSem))
+        {
+            HI_ERR_VDEC("Global lock err!\n");
+            continue;
+        }
+
+        for (i = 0; i < HI_VDEC_MAX_INSTANCE_NEW; i++)
         {
             pstChan = s_stVdecDrv.astChanEntity[i].pstChan;
+
             if((HI_NULL != pstChan) && (VDEC_CHAN_STATE_RUN == pstChan->enCurState))
             {
+                //To do
                VDEC_CHAN_TRY_USE_DOWN(&s_stVdecDrv.astChanEntity[i]);
+
                if (HI_SUCCESS != s32Ret)
                {
                    // HI_ERR_VDEC("%s Lock %d err!\n", __FUNCTION__, i);
@@ -12341,12 +12331,17 @@ static SINT32 VdecTaskFunc(VOID* param)   //l00273086
             {
                 //To do
             }
+
+            //VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[i]);
         }
-        
+
+        up(&s_stVdecDrv.stSem);
+
         if(i >= HI_VDEC_MAX_INSTANCE_NEW)
         {
             msleep(s_VdecTaskSleepTimems);
         }
+
         /*
         else
         {

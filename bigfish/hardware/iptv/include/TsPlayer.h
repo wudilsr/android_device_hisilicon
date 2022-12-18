@@ -262,6 +262,10 @@ class CTsPlayer : public CTC_MediaProcessor{
         //leave channel
         virtual void leaveChannel();
         virtual void playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander);
+
+        //hisi private interface, support set eos event
+        virtual bool SetEos();
+
     protected:
         int        m_bLeaveChannel;
 
@@ -297,10 +301,10 @@ class CTsPlayer : public CTC_MediaProcessor{
 
         HI_S32  SetAudStream();
 
-		HI_S32 HIADP_VO_Init(HI_UNF_VO_DEV_MODE_E enDevMode);
-		HI_S32 HIADP_VO_DeInit();
+        HI_S32 HIADP_VO_Init(HI_UNF_VO_DEV_MODE_E enDevMode);
+        HI_S32 HIADP_VO_DeInit();
 
-		HI_S32 HIADP_AVPlay_SetVdecAttr(HI_HANDLE hAvplay,HI_UNF_VCODEC_TYPE_E enType,HI_UNF_VCODEC_MODE_E enMode);
+        HI_S32 HIADP_AVPlay_SetVdecAttr(HI_HANDLE hAvplay,HI_UNF_VCODEC_TYPE_E enType,HI_UNF_VCODEC_MODE_E enMode);
 
         HI_S32 HIADP_IPTV_Disp_Init();
         HI_S32 HIADP_IPTV_Disp_DeInit(HI_VOID);

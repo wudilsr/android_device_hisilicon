@@ -219,7 +219,7 @@ public class PhotoPage extends ActivityState implements
             pda = new PhotoDataAdapter(mActivity, mPhotoView, mMediaSet,
                     itemPath, mCurrentIndex);
             mModel = pda;
-            mPhotoView.setModel(mModel);
+            mPhotoView.setModel(mModel,filePathString);
 
             mResultIntent.putExtra(KEY_INDEX_HINT, mCurrentIndex);
             setStateResult(Activity.RESULT_OK, mResultIntent);
@@ -284,7 +284,7 @@ public class PhotoPage extends ActivityState implements
                     .getMediaObject(itemPath);
             mModel = new SinglePhotoDataAdapter(mActivity, mPhotoView,
                     mediaItem);
-            mPhotoView.setModel(mModel);
+            mPhotoView.setModel(mModel,mModel.getCurrentMediaItem().getPath().toString());
             updateCurrentPhoto(mediaItem);
         }
 

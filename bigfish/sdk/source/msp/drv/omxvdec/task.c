@@ -83,6 +83,7 @@ static HI_S32 task_alloc_channel_mem(OMXVDEC_CHAN_CTX *pchan)
     VDEC_CHAN_FRAME_STORE_PARAM_S stFsParam;
     HI_U32 u32NeededMemSize  = 0;
     HI_U32 u32NeededFrameNum = 0;
+    HI_U32 i = 0;
 
     if (pchan->decoder_vdh_buf.u32Size != 0 && pchan->decoder_vdh_buf.u32StartPhyAddr != 0)
     {
@@ -110,30 +111,20 @@ static HI_S32 task_alloc_channel_mem(OMXVDEC_CHAN_CTX *pchan)
 #endif
     {
     #if (1 == PRE_ALLOC_VDEC_VDH_MMZ)
-        pchan->decoder_vdh_buf.u32Size = u32NeededMemSize;
+        for (i = u32NeededFrameNum; i > 0; i--)
+        {
+            pchan->decoder_vdh_buf.u32Size = i * pchan->ref_frame_size;
         ret = VDEC_Chan_FindPreMMZ(&pchan->decoder_vdh_buf);
     
         //if pre alloc mmz not available,alloc it by mmz
-        if (ret != HI_SUCCESS)
+    	    if(ret == HI_SUCCESS)
         {
-	        ret = HI_DRV_MMZ_AllocAndMap("OMXVDEC_DFS", "OMXVDEC", u32NeededMemSize, 0, &pchan->decoder_vdh_buf);
-            pchan->eVDHMemAlloc = ALLOC_BY_MMZ;
+                pchan->eVDHMemAlloc = ALLOC_BY_PRE;
+                break;
         }
-        else
-        {
-            pchan->eVDHMemAlloc = ALLOC_BY_PRE;
         }  
-    #else
-	    ret = HI_DRV_MMZ_AllocAndMap("OMXVDEC_DFS", "OMXVDEC", u32NeededMemSize, 0, &pchan->decoder_vdh_buf);
-        pchan->eVDHMemAlloc = ALLOC_BY_MMZ;        
     #endif
 
-	    if(ret != HI_SUCCESS)
-	    {
-	        OmxPrint(OMX_FATAL, "Alloc DFS Mem(size = %d) failed!\n", u32NeededMemSize);
-	        ret = HI_FAILURE;
-	        goto exit;
-	    }
 	}
 
 	stFsParam.PhyAddr  = pchan->decoder_vdh_buf.u32StartPhyAddr;

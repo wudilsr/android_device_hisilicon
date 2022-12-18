@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.vp8.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp8.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp8.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/vp8.o -O2 -Wall -Wundef
@@ -211,18 +211,18 @@ VP8DEC_GetImageBuffer:
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
-	cmp	r0, #1	@ D.39965,
+	cmp	r0, #1	@ D.39969,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
 	cmn	r0, #1	@,
-	movne	r0, #0	@ D.39968,
+	movne	r0, #0	@ D.39972,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
 	add	r1, r4, #8128	@, pCtx,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	add	r1, r1, #40	@,,
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, #0	@ D.39968,
+	mov	r0, #0	@ D.39972,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	VP8DEC_GetImageBuffer, .-VP8DEC_GetImageBuffer
@@ -268,7 +268,7 @@ VP8DEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r4, r0, #0	@ pCtx, pCtx
 	mov	r6, r1	@ ImgID, ImgID
-	moveq	r0, r4	@ D.39946, pCtx
+	moveq	r0, r4	@ D.39950, pCtx
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	movw	r5, #8520	@ tmp139,
 	mov	r2, #0	@,
@@ -278,7 +278,7 @@ VP8DEC_RecycleImage:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pImg,
-	moveq	r0, #1	@ D.39946,
+	moveq	r0, #1	@ D.39950,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r7, #0	@ tmp146,
@@ -288,7 +288,7 @@ VP8DEC_RecycleImage:
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FreeUsdByDec	@
-	mov	r0, #1	@ D.39946,
+	mov	r0, #1	@ D.39950,
 	str	r7, [r6, #216]	@ tmp146, <variable>.p_usrdat
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
@@ -336,8 +336,8 @@ VP8_DecodeDecide:
 	.word	.L33
 .L34:
 	movw	lr, #8160	@ tmp186,
-	ldr	r2, [r5, lr]	@ D.39356, <variable>.Vp8CodecInfo.FrameType
-	cmp	r2, #0	@ D.39356,
+	ldr	r2, [r5, lr]	@ D.39360, <variable>.Vp8CodecInfo.FrameType
+	cmp	r2, #0	@ D.39360,
 	bne	.L45	@,
 .L37:
 	movw	ip, #8520	@ tmp202,
@@ -352,16 +352,16 @@ VP8_DecodeDecide:
 	cmp	r2, #0	@ <variable>.Vp8CodecInfo.FrameType,
 	beq	.L38	@,
 	ldr	lr, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r4, #200]	@ D.39382, <variable>.error_level
-	ldr	r3, [lr, #0]	@ D.39383, <variable>.s32RefErrThr
-	cmp	r2, r3	@ D.39382, D.39383
+	ldr	r2, [r4, #200]	@ D.39386, <variable>.error_level
+	ldr	r3, [lr, #0]	@ D.39387, <variable>.s32RefErrThr
+	cmp	r2, r3	@ D.39386, D.39387
 	bls	.L38	@,
 	movw	r1, #:lower16:.LC7	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	dprint_vfmw	@
 .L43:
-	mov	r0, #0	@ D.39335,
+	mov	r0, #0	@ D.39339,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L30:
 	ldr	r3, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
@@ -398,9 +398,9 @@ VP8_DecodeDecide:
 	ldr	r1, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	movw	r2, #8120	@ tmp182,
 	str	r4, [r5, r2]	@ tmp172, <variable>.Vp8CodecInfo.RefNum
-	str	r0, [r5, r8]	@ D.39354, <variable>.Vp8CodecInfo.GoldenFsID
-	str	r0, [r5, r7]	@ D.39354, <variable>.Vp8CodecInfo.LastFsID
-	str	r0, [r5, r6]	@ D.39354, <variable>.Vp8CodecInfo.AltFsID
+	str	r0, [r5, r8]	@ D.39358, <variable>.Vp8CodecInfo.GoldenFsID
+	str	r0, [r5, r7]	@ D.39358, <variable>.Vp8CodecInfo.LastFsID
+	str	r0, [r5, r6]	@ D.39358, <variable>.Vp8CodecInfo.AltFsID
 	ldr	r2, [r1, #8]	@ prephitmp.637, <variable>.s32DecMode
 	b	.L31	@
 .L44:
@@ -408,14 +408,14 @@ VP8_DecodeDecide:
 	movw	r1, #:lower16:.LC0	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39335, <variable>.Vp8CodecInfo.Imgbuf_allocated
+	mov	r0, r4	@ D.39339, <variable>.Vp8CodecInfo.Imgbuf_allocated
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L32:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC5	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39335,
+	mov	r0, #0	@ D.39339,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L33:
 	movw	r3, #8160	@ tmp188,
@@ -433,17 +433,17 @@ VP8_DecodeDecide:
 	movt	r2, #:upper16:.LC4	@,
 	mov	r3, r4	@, <variable>.Vp8CodecInfo.RefNum
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39335, <variable>.Vp8CodecInfo.RefNum
+	mov	r0, r4	@ D.39339, <variable>.Vp8CodecInfo.RefNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L38:
-	mov	r0, #1	@ D.39335,
+	mov	r0, #1	@ D.39339,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L45:
 	mov	r0, #18	@,
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39335,
+	mov	r0, #0	@ D.39339,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L46:
 	mov	r0, #22	@,
@@ -453,7 +453,7 @@ VP8_DecodeDecide:
 	movt	r2, #:upper16:.LANCHOR0	@,
 	movw	r3, #1462	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39335, pFwdImg
+	mov	r0, r4	@ D.39339, pFwdImg
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 	.fnend
 	.size	VP8_DecodeDecide, .-VP8_DecodeDecide
@@ -765,8 +765,8 @@ VP8_Set_DecParam:
 	cmp	r8, #0	@ pAlt,
 	cmpne	r0, #0	@, pLast,
 	beq	.L56	@,
-	ldr	r5, [r6, #520]	@ D.39581, <variable>.pstDecodeFs
-	cmp	r5, #0	@ D.39581,
+	ldr	r5, [r6, #520]	@ D.39585, <variable>.pstDecodeFs
+	cmp	r5, #0	@ D.39585,
 	beq	.L108	@,
 	ldr	r2, [r5, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	movw	ip, #5682	@ tmp423,
@@ -776,25 +776,25 @@ VP8_Set_DecParam:
 	ldrsb	r2, [r4, r2]	@ <variable>.Vp8CodecInfo.NewHeaderInfo.ref_lf_deltas, <variable>.Vp8CodecInfo.NewHeaderInfo.ref_lf_deltas
 	str	r9, [r4, #3140]	@ <variable>.PmvAddr, <variable>.Vp8DecParam.CurrPmvAddr
 	mov	r9, #5696	@ tmp429,
-	ldr	r1, [r7, #520]	@ D.39590, <variable>.pstDecodeFs
-	cmp	r1, #0	@ D.39590,
+	ldr	r1, [r7, #520]	@ D.39594, <variable>.pstDecodeFs
+	cmp	r1, #0	@ D.39594,
 	ldreq	r1, [r6, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r5, [r1, #12]	@ iftmp.477, <variable>.PhyAddr
 	ldrsb	r1, [r4, r9]	@, <variable>.Vp8CodecInfo.NewHeaderInfo.mode_lf_deltas
 	movw	r9, #5693	@ tmp437,
 	str	r5, [r4, #3132]	@ iftmp.477, <variable>.Vp8DecParam.image_gld_ref_addr
 	movw	r5, #5706	@ tmp431,
-	ldr	r7, [r8, #520]	@ D.39596, <variable>.pstDecodeFs
-	cmp	r7, #0	@ D.39596,
+	ldr	r7, [r8, #520]	@ D.39600, <variable>.pstDecodeFs
+	cmp	r7, #0	@ D.39600,
 	ldreq	r7, [r6, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r8, [r7, #12]	@ iftmp.478, <variable>.PhyAddr
 	ldrb	r7, [r4, r5]	@ zero_extendqisi2	@, <variable>.Vp8CodecInfo.NewHeaderInfo.ref_frame_sign_bias
 	movw	r5, #5697	@ tmp439,
 	str	r8, [r4, #3128]	@ iftmp.478, <variable>.Vp8DecParam.image_alt_ref_addr
 	movw	r8, #5683	@ tmp433,
-	ldr	sl, [r0, #520]	@ D.39602, <variable>.pstDecodeFs
+	ldr	sl, [r0, #520]	@ D.39606, <variable>.pstDecodeFs
 	movw	r0, #5686	@ tmp425,
-	cmp	sl, #0	@ D.39602,
+	cmp	sl, #0	@ D.39606,
 	ldreq	sl, [r6, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r3, [sl, #12]	@ iftmp.479, <variable>.PhyAddr
 	ldrsb	sl, [r4, r8]	@, <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data
@@ -802,7 +802,7 @@ VP8_Set_DecParam:
 	str	r3, [r4, #3136]	@ iftmp.479, <variable>.Vp8DecParam.image_last_ref_addr
 	ldr	lr, [r6, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	movw	r6, #5687	@ tmp435,
-	ldr	r3, [lr, #20]	@ D.39609, <variable>.Stride
+	ldr	r3, [lr, #20]	@ D.39613, <variable>.Stride
 	ldrsb	lr, [r4, ip]	@ <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data, <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data
 	ldrsb	ip, [r4, r0]	@ <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data, <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data
 	ldrsb	r0, [r4, r6]	@, <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data
@@ -841,9 +841,9 @@ VP8_Set_DecParam:
 	movw	r5, #8112	@ tmp422,
 	str	r6, [fp, #-112]	@, %sfp
 	add	r6, r4, #6976	@ ivtmp.820, pCtx,
-	str	r3, [r4, r5]	@ D.39609, <variable>.Vp8CodecInfo.ddr_stride
+	str	r3, [r4, r5]	@ D.39613, <variable>.Vp8CodecInfo.ddr_stride
 	add	r6, r6, #2	@ ivtmp.820, ivtmp.820,
-	str	r3, [r4, #2800]	@ D.39609, <variable>.Vp8DecParam.ddr_stride
+	str	r3, [r4, #2800]	@ D.39613, <variable>.Vp8DecParam.ddr_stride
 	movw	r3, #5699	@ tmp459,
 	str	lr, [r4, #3044]	@ <variable>.Vp8CodecInfo.NewHeaderInfo.segment_feature_data, <variable>.Vp8DecParam.segment_feature_dat0
 	movw	lr, #5695	@ tmp457,
@@ -1297,21 +1297,21 @@ VP8_Set_DecParam:
 	str	r2, [fp, #-112]	@, %sfp
 	mov	r0, r5	@, pBs
 	str	r3, [r4, #2820]	@ tmp783, <variable>.Vp8DecParam.stream_base_addr
-	mov	r6, lr, asl #3	@ D.39750, tmp785,
+	mov	r6, lr, asl #3	@ D.39754, tmp785,
 	bl	BsPos	@
-	rsb	r9, r0, r6	@ tmp787,, D.39750
+	rsb	r9, r0, r6	@ tmp787,, D.39754
 	str	r9, [r4, #2824]	@ tmp787, <variable>.Vp8DecParam.bit_len_0
 	ldr	r9, [fp, #-136]	@, %sfp
 	mov	r0, r5	@, pBs
 	ldr	r1, [r9, #4]	@ <variable>.PhyAddr, <variable>.PhyAddr
-	and	r6, r1, #15	@ D.39754, <variable>.PhyAddr,
+	and	r6, r1, #15	@ D.39758, <variable>.PhyAddr,
 	bl	BsPos	@
-	add	r6, r6, #16	@ tmp789, D.39754,
-	cmp	r0, #0	@ D.39755,
-	add	ip, r0, #7	@ tmp792, D.39755,
-	movge	ip, r0	@ D.39755, D.39755
+	add	r6, r6, #16	@ tmp789, D.39758,
+	cmp	r0, #0	@ D.39759,
+	add	ip, r0, #7	@ tmp792, D.39759,
+	movge	ip, r0	@ D.39759, D.39759
 	mov	r0, r5	@, pBs
-	add	r5, r6, ip, asr #3	@, ByteA, tmp789, D.39755,
+	add	r5, r6, ip, asr #3	@, ByteA, tmp789, D.39759,
 	bl	BsPos	@
 	movw	r2, #5673	@ tmp812,
 	mov	r6, #1	@ tmp815,
@@ -1323,9 +1323,9 @@ VP8_Set_DecParam:
 	ldr	r1, [r4, r7]	@ temp.940, <variable>.Vp8CodecInfo.NewHeaderInfo.first_partition_length_in_bytes
 	uxtb	r6, r6	@ num_part, tmp814
 	cmp	r6, #1	@ num_part,
-	mov	r3, r0, asr #31	@ tmp797, D.39761,
+	mov	r3, r0, asr #31	@ tmp797, D.39765,
 	mov	r3, r3, lsr #29	@ tmp798, tmp797,
-	add	ip, r0, r3	@ tmp799, D.39761, tmp798
+	add	ip, r0, r3	@ tmp799, D.39765, tmp798
 	and	r0, ip, #7	@ tmp800, tmp799,
 	rsb	ip, r3, r0	@ tmp801, tmp798, tmp800
 	mov	r3, #0	@ tmp804,
@@ -1353,12 +1353,12 @@ VP8_Set_DecParam:
 	mov	r1, #0	@ i.942,
 	add	r8, r7, r7, asl #1	@, tmp823, tmp820, tmp820,
 	sub	ip, fp, #108	@ tmp860,,
-	add	r7, r0, r8	@ D.39799, ByteLen_1, tmp823
+	add	r7, r0, r8	@ D.39803, ByteLen_1, tmp823
 	bne	.L75	@,
 	cmp	r1, r9	@ i.942, pretmp.757
 	rsbge	r3, r5, r2	@ tmp917, source_start, VirAddr_1
 	ldrltb	r3, [r2, #2]	@ zero_extendqisi2	@ tmp921,
-	addge	r3, r3, r7	@ length, tmp917, D.39799
+	addge	r3, r3, r7	@ length, tmp917, D.39803
 	ldrltb	r1, [r2, #1]	@ zero_extendqisi2	@ tmp919,
 	ldrltb	r0, [r2, #0]	@ zero_extendqisi2	@ tmp924,* VirAddr_1
 	movlt	r3, r3, asl #16	@ tmp922, tmp921,
@@ -1371,7 +1371,7 @@ VP8_Set_DecParam:
 	b	.L75	@
 .L110:
 	cmp	r2, r9	@ tmp874, pretmp.757
-	add	r1, r8, r7	@ length, tmp926, D.39799
+	add	r1, r8, r7	@ length, tmp926, D.39803
 	bge	.L102	@,
 	ldrb	sl, [r0, #2]	@ zero_extendqisi2	@ tmp930,
 	ldrb	lr, [r0, #1]	@ zero_extendqisi2	@ tmp928,
@@ -1387,7 +1387,7 @@ VP8_Set_DecParam:
 .L75:
 	cmp	r1, r9	@ i.942, pretmp.757
 	rsb	lr, r5, r3	@ tmp830, source_start, source
-	add	r0, lr, r7	@ length, tmp830, D.39799
+	add	r0, lr, r7	@ length, tmp830, D.39803
 	bge	.L73	@,
 	ldrb	r0, [r3, #2]	@ zero_extendqisi2	@ tmp826,
 	ldrb	r8, [r3, #1]	@ zero_extendqisi2	@ tmp824,
@@ -1414,7 +1414,7 @@ VP8_Set_DecParam:
 	ldr	lr, [ip], #4	@ tmp890, BsLen
 	add	r0, r5, r2	@ tmp838, tmp836,
 	add	r2, r4, #2848	@ ivtmp.781, pCtx,
-	add	r9, r0, r9	@ D.39806, tmp838, tmp841
+	add	r9, r0, r9	@ D.39810, tmp838, tmp841
 	mov	r0, #1	@ i,
 	and	r5, r9, #15	@ tmp892, prephitmp.761,
 	cmp	r0, r6	@ i, num_part
@@ -1426,7 +1426,7 @@ VP8_Set_DecParam:
 	str	r5, [r2, #32]	@ tmp893, <variable>.Vp8DecParam.bitn_offset_0
 	str	r3, [r2, #64]	@ tmp895, <variable>.Vp8DecParam.bitn_byte_offset_0
 	and	r7, r1, r0	@ tmp866, i.942,
-	str	r9, [fp, #-76]	@ D.39806, Byte
+	str	r9, [fp, #-76]	@ D.39810, Byte
 	mov	r1, #0	@ tmp861,
 	add	r3, r2, #4	@ ivtmp.781, ivtmp.781,
 	str	r1, [r2, #96]	@ tmp861, <variable>.Vp8DecParam.bitn_len_1
@@ -1460,7 +1460,7 @@ VP8_Set_DecParam:
 	mov	sl, r4	@ pCtx, pCtx
 	b	.L78	@
 .L112:
-	str	r9, [fp, #-76]	@ D.39806, Byte
+	str	r9, [fp, #-76]	@ D.39810, Byte
 	ldr	r4, [r7, #4]	@ prephitmp.761, Byte
 .L99:
 	ldr	r5, [ip], #4	@ tmp910, BsLen
@@ -1482,7 +1482,7 @@ VP8_Set_DecParam:
 	beq	.L111	@,
 .L78:
 	cmp	r0, #0	@ i,
-	streq	r9, [fp, #-76]	@ D.39806, Byte
+	streq	r9, [fp, #-76]	@ D.39810, Byte
 	ldrne	r2, [r5, #0]	@ tmp845, Byte
 	ldrne	r4, [ip, #-4]	@ tmp844, BsLen
 	ldreq	r2, [r5, #4]	@ prephitmp.761, Byte
@@ -1514,7 +1514,7 @@ VP8_Set_DecParam:
 	movw	r1, #:lower16:.LC8	@,
 	movt	r1, #:upper16:.LC8	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39580,
+	mov	r0, #0	@ D.39584,
 .L58:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -1522,7 +1522,7 @@ VP8_Set_DecParam:
 	mov	r4, sl	@ pCtx, pCtx
 .L70:
 	ldr	r5, [fp, #-120]	@, %sfp
-	mov	r0, #1	@ D.39580,
+	mov	r0, #1	@ D.39584,
 	ldr	r1, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	str	r5, [r4, #4]	@, <variable>.pVp8DecParam
 	ldr	ip, [r1, #684]	@ <variable>.s32Compress_en, <variable>.s32Compress_en
@@ -1539,7 +1539,7 @@ VP8_Set_DecParam:
 	movw	r1, #:lower16:.LC9	@,
 	movt	r1, #:upper16:.LC9	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.39580, D.39581
+	mov	r0, r5	@ D.39584, D.39585
 	b	.L58	@
 	.fnend
 	.size	VP8_Set_DecParam, .-VP8_Set_DecParam
@@ -1568,9 +1568,9 @@ VP8_GetImageBuffer:
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
 	movw	r6, #8152	@ tmp144,
 	bl	FSP_NewLogicFs	@
-	cmp	r0, #0	@ D.39392,
-	mov	r1, r0	@ D.39392,
-	str	r0, [r4, r6]	@ D.39392, <variable>.Vp8CodecInfo.CurFsID
+	cmp	r0, #0	@ D.39396,
+	mov	r1, r0	@ D.39396,
+	str	r0, [r4, r6]	@ D.39396, <variable>.Vp8CodecInfo.CurFsID
 	blt	.L119	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
@@ -1581,14 +1581,14 @@ VP8_GetImageBuffer:
 	movw	r1, #:lower16:.LC12	@,
 	movt	r1, #:upper16:.LC12	@,
 	bl	dprint_vfmw	@
-	ldr	r2, [r5, #520]	@ D.39410, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.39410,
+	ldr	r2, [r5, #520]	@ D.39414, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.39414,
 	beq	.L117	@,
-	ldr	r3, [r5, #524]	@ D.39412, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.39412,
+	ldr	r3, [r5, #524]	@ D.39416, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.39416,
 	beq	.L117	@,
-	ldr	ip, [r5, #528]	@ D.39414, <variable>.pstTfOutFs
-	cmp	ip, #0	@ D.39414,
+	ldr	ip, [r5, #528]	@ D.39418, <variable>.pstTfOutFs
+	cmp	ip, #0	@ D.39418,
 	beq	.L117	@,
 	ldr	ip, [ip, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	mov	r0, #18	@,
@@ -1598,12 +1598,12 @@ VP8_GetImageBuffer:
 	movt	r1, #:upper16:.LC13	@,
 	str	ip, [sp, #0]	@ <variable>.PhyAddr,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.39402,
+	mov	r0, #1	@ D.39406,
 .L115:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L117:
-	mov	r0, #0	@ D.39402,
+	mov	r0, #0	@ D.39406,
 	b	.L115	@
 .L119:
 	movw	r8, #8140	@ tmp148,
@@ -1635,12 +1635,12 @@ VP8_GetImageBuffer:
 	add	r1, r4, #8128	@, pCtx,
 	str	sl, [r4, r3]	@ tmp159, <variable>.Vp8CodecInfo.RefNum
 	add	r1, r1, #40	@,,
-	str	r0, [r4, r8]	@ D.39400, <variable>.Vp8CodecInfo.GoldenFsID
-	str	r0, [r4, r7]	@ D.39400, <variable>.Vp8CodecInfo.LastFsID
-	str	r0, [r4, r6]	@ D.39400, <variable>.Vp8CodecInfo.AltFsID
+	str	r0, [r4, r8]	@ D.39404, <variable>.Vp8CodecInfo.GoldenFsID
+	str	r0, [r4, r7]	@ D.39404, <variable>.Vp8CodecInfo.LastFsID
+	str	r0, [r4, r6]	@ D.39404, <variable>.Vp8CodecInfo.AltFsID
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, sl	@ D.39402, tmp159
+	mov	r0, sl	@ D.39406, tmp159
 	b	.L115	@
 .L120:
 	mov	r0, #22	@,
@@ -1648,7 +1648,7 @@ VP8_GetImageBuffer:
 	movw	r2, #1515	@,
 	movt	r1, #:upper16:.LC11	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.39402, pLf
+	mov	r0, r5	@ D.39406, pLf
 	b	.L115	@
 	.fnend
 	.size	VP8_GetImageBuffer, .-VP8_GetImageBuffer
@@ -1672,15 +1672,15 @@ VP8_ArrangeVHBMem:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #5768	@ tmp155,
-	ldr	r3, [r0, r3]	@ D.39252, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_height_in_pix
+	ldr	r3, [r0, r3]	@ D.39256, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_height_in_pix
 	mov	r4, r0	@ pCtx, pCtx
-	cmp	r3, #31	@ D.39252,
+	cmp	r3, #31	@ D.39256,
 	bls	.L148	@,
 	movw	r0, #5764	@ tmp157,
 	ldr	r2, [r4, r0]	@ prephitmp.1085, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_width_in_pix
 	cmp	r2, #31	@ prephitmp.1085,
 	bls	.L123	@,
-	ldr	r1, [r4, #0]	@ D.39259, <variable>.pstExtraData
+	ldr	r1, [r4, #0]	@ D.39263, <variable>.pstExtraData
 	ldr	ip, [r1, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	ip, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L126	@,
@@ -1690,7 +1690,7 @@ VP8_ArrangeVHBMem:
 .L127:
 	mov	r8, #4	@ PmvNum,
 	mov	r5, r2	@ PicWidth, prephitmp.1085
-	mov	r6, r3	@ PicHeight, D.39252
+	mov	r6, r3	@ PicHeight, D.39256
 	mov	sl, #5	@ prephitmp.1087,
 	mov	r9, r8	@ DecFsNum, PmvNum
 .L134:
@@ -1723,7 +1723,7 @@ VP8_ArrangeVHBMem:
 	strb	r7, [fp, #-80]	@ tmp183, FspInstCfg.s32UserDec
 	strb	r8, [fp, #-76]	@ iftmp.468, FspInstCfg.s32ExpectedPmvNum
 	bl	FSP_ConfigInstance	@
-	subs	r5, r0, #0	@ D.39306,
+	subs	r5, r0, #0	@ D.39310,
 	bne	.L145	@,
 	ldr	lr, [r4, #0]	@ temp.1115, <variable>.pstExtraData
 	sub	r3, fp, #48	@,,
@@ -1735,7 +1735,7 @@ VP8_ArrangeVHBMem:
 	bne	.L150	@,
 	mov	ip, #1	@ tmp196,
 	movw	r1, #8124	@ tmp195,
-	mov	r0, ip	@ D.39256, tmp196
+	mov	r0, ip	@ D.39260, tmp196
 	str	ip, [r4, r1]	@ tmp196, <variable>.Vp8CodecInfo.Imgbuf_allocated
 	b	.L125	@
 .L148:
@@ -1746,7 +1746,7 @@ VP8_ArrangeVHBMem:
 	movw	r1, #:lower16:.LC14	@,
 	movt	r1, #:upper16:.LC14	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39256,
+	mov	r0, #0	@ D.39260,
 .L125:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -1754,12 +1754,12 @@ VP8_ArrangeVHBMem:
 	ldr	r0, [r1, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	r0, #25	@ <variable>.eCapLevel,
 	bne	.L127	@,
-	ldr	ip, [r1, #744]	@ D.39266, <variable>.stChanOption.s32MaxWidth
-	cmp	r2, ip	@ prephitmp.1085, D.39266
+	ldr	ip, [r1, #744]	@ D.39270, <variable>.stChanOption.s32MaxWidth
+	cmp	r2, ip	@ prephitmp.1085, D.39270
 	ldrhi	lr, [r1, #748]	@ prephitmp.1089, <variable>.stChanOption.s32MaxHeight
 	bhi	.L137	@,
 	ldr	lr, [r1, #748]	@ prephitmp.1089, <variable>.stChanOption.s32MaxHeight
-	cmp	r3, lr	@ D.39252, prephitmp.1089
+	cmp	r3, lr	@ D.39256, prephitmp.1089
 	bhi	.L137	@,
 	ldr	r6, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
 	ldr	r9, [r1, #768]	@ temp.1104, <variable>.stChanOption.s32MaxRefFrameNum
@@ -1773,7 +1773,7 @@ VP8_ArrangeVHBMem:
 	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.1087, <variable>.stChanOption.s32DisplayFrameNum
 	add	r9, r9, #2	@ DecFsNum, temp.1104,
 	mov	r5, r2	@ PicWidth, prephitmp.1085
-	mov	r6, r3	@ PicHeight, D.39252
+	mov	r6, r3	@ PicHeight, D.39256
 	b	.L134	@
 .L149:
 	ldr	r5, [r1, #744]	@ PicWidth, <variable>.stChanOption.s32MaxWidth
@@ -1781,22 +1781,22 @@ VP8_ArrangeVHBMem:
 	ldrhi	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
 	bhi	.L129	@,
 	ldr	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
-	cmp	r3, r6	@ D.39252, PicHeight
+	cmp	r3, r6	@ D.39256, PicHeight
 	bhi	.L129	@,
 	movw	r3, #8124	@ tmp162,
 	ldr	r0, [r4, r3]	@ <variable>.Vp8CodecInfo.Imgbuf_allocated, <variable>.Vp8CodecInfo.Imgbuf_allocated
 	cmp	r0, #1	@ <variable>.Vp8CodecInfo.Imgbuf_allocated,
 	beq	.L125	@,
 	ldr	r7, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ D.39275, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	r9, [r1, #768]	@ D.39279, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r7, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	r8, #1	@ PmvNum,
 	beq	.L133	@,
-	add	r8, r9, #1	@ PmvNum.1100, D.39275,
+	add	r8, r9, #1	@ PmvNum.1100, D.39279,
 	cmp	r8, #17	@ PmvNum.1100,
 	movge	r8, #17	@ PmvNum,
 .L133:
-	add	r9, r9, #2	@ DecFsNum, D.39275,
+	add	r9, r9, #2	@ DecFsNum, D.39279,
 	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.1087, <variable>.stChanOption.s32DisplayFrameNum
 	b	.L134	@
 .L145:
@@ -1804,7 +1804,7 @@ VP8_ArrangeVHBMem:
 	movw	r1, #:lower16:.LC17	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.39256, tmp183
+	mov	r0, r7	@ D.39260, tmp183
 	b	.L125	@
 .L137:
 	mov	r0, #0	@,
@@ -1812,14 +1812,14 @@ VP8_ArrangeVHBMem:
 	movt	r1, #:upper16:.LC15	@,
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39256,
+	mov	r0, #0	@ D.39260,
 	b	.L125	@
 .L150:
-	mov	r0, r5	@, D.39306
+	mov	r0, r5	@, D.39310
 	movw	r1, #:lower16:.LC16	@,
 	movt	r1, #:upper16:.LC16	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.39256, D.39306
+	mov	r0, r5	@ D.39260, D.39310
 	b	.L125	@
 .L129:
 	mov	r0, #0	@,
@@ -1827,7 +1827,7 @@ VP8_ArrangeVHBMem:
 	movt	r1, #:upper16:.LC15	@,
 	stmia	sp, {r5, r6}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39256,
+	mov	r0, #0	@ D.39260,
 	b	.L125	@
 	.fnend
 	.size	VP8_ArrangeVHBMem, .-VP8_ArrangeVHBMem
@@ -1854,7 +1854,7 @@ Vp8_Vfmw_DecodeBool:
 	mov	r5, r1	@ pBs, pBs
 	ldr	r6, [r0, #4]	@ value, <variable>.value
 	sub	r1, ip, #1	@ tmp153, range.1152,
-	ldr	r9, [r0, #8]	@ D.38543, <variable>.count
+	ldr	r9, [r0, #8]	@ D.38547, <variable>.count
 	mov	r4, r0	@ pBc, pBc
 	mul	r0, r1, r2	@ tmp154, tmp153, probability
 	mov	r3, r0, lsr #8	@ tmp155, tmp154,
@@ -1874,7 +1874,7 @@ Vp8_Vfmw_DecodeBool:
 	strcc	r1, [fp, #-56]	@, %sfp
 	strcs	ip, [fp, #-56]	@, %sfp
 	ldrb	sl, [r3, #1116]	@ zero_extendqisi2	@ shift, VP8_VFMWBITREADER_NORM
-	subs	r9, r9, sl	@ count, D.38543, shift
+	subs	r9, r9, sl	@ count, D.38547, shift
 	mov	r6, r6, asl sl	@ value.1150, value,
 	bmi	.L164	@,
 .L154:
@@ -1920,9 +1920,9 @@ Vp8_Vfmw_DecodeBool:
 	bpl	.L155	@,
 .L163:
 	ldr	r0, [fp, #-52]	@, %sfp
-	add	lr, r9, #8	@ D.40769, count,
+	add	lr, r9, #8	@ D.40773, count,
 	bic	r3, r0, #7	@ tmp162,,
-	add	r9, lr, r3	@ count, D.40769, tmp162
+	add	r9, lr, r3	@ count, D.40773, tmp162
 	b	.L154	@
 	.fnend
 	.size	Vp8_Vfmw_DecodeBool, .-Vp8_Vfmw_DecodeBool
@@ -2005,7 +2005,7 @@ get_delta_q:
 	mov	r8, r0	@ pBc, pBc
 	mov	r7, r1	@ pBs, pBs
 	bl	Vp8_Vfmw_DecodeBool	@
-	subs	r5, r0, #0	@ D.38883,
+	subs	r5, r0, #0	@ D.38887,
 	bne	.L181	@,
 	cmp	r5, r4	@ ret_val, prev
 	mov	r0, r5	@, ret_val
@@ -2332,25 +2332,25 @@ VP8_GetPictureHeader:
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
 	mov	r1, #8	@,
-	mov	r8, r0	@ D.38985,
+	mov	r8, r0	@ D.38989,
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
 	movw	ip, #4960	@ tmp312,
-	and	r3, r5, #1	@ D.38989, data0,
-	str	r3, [r6, ip]	@ D.38989, <variable>.FrameType
-	uxtb	r8, r8	@ D.38985, D.38985
+	and	r3, r5, #1	@ D.38993, data0,
+	str	r3, [r6, ip]	@ D.38993, <variable>.FrameType
+	uxtb	r8, r8	@ D.38989, D.38989
 	ubfx	r2, r5, #1, #3	@ tmp315, data0,,
 	str	r2, [r6, #2524]	@ tmp315, <variable>.NewHeaderInfo.version
 	ubfx	r1, r5, #4, #1	@ tmp318, data0,,
 	str	r1, [r6, #2520]	@ tmp318, <variable>.NewHeaderInfo.show_frame
-	str	r3, [r6, #2516]	@ D.38989, <variable>.NewHeaderInfo.frame_type
-	uxtb	ip, r0	@ D.38986,
-	mov	r2, ip, asl #16	@ tmp322, D.38986,
-	orr	r1, r2, r8, asl #8	@, tmp323, tmp322, D.38985,
+	str	r3, [r6, #2516]	@ D.38993, <variable>.NewHeaderInfo.frame_type
+	uxtb	ip, r0	@ D.38990,
+	mov	r2, ip, asl #16	@ tmp322, D.38990,
+	orr	r1, r2, r8, asl #8	@, tmp323, tmp322, D.38989,
 	orr	r0, r1, r5	@ tmp324, tmp323, data0
-	mov	r3, r0, asr #5	@ D.39004, tmp324,
-	str	r3, [r6, #2528]	@ D.39004, <variable>.NewHeaderInfo.first_partition_length_in_bytes
-	cmp	r3, r7	@ D.39004, strlen
+	mov	r3, r0, asr #5	@ D.39008, tmp324,
+	str	r3, [r6, #2528]	@ D.39008, <variable>.NewHeaderInfo.first_partition_length_in_bytes
+	cmp	r3, r7	@ D.39008, strlen
 	bhi	.L306	@,
 	add	r0, r6, #2448	@, pVp8CodecInfo,
 	add	lr, r0, #12	@,,
@@ -2385,7 +2385,7 @@ VP8_GetPictureHeader:
 	movt	r1, #:upper16:.LC19	@,
 	str	ip, [sp, #0]	@ data2.1469,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39009,
+	mov	r0, #0	@ D.39013,
 .L229:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -2394,7 +2394,7 @@ VP8_GetPictureHeader:
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
 	mov	r1, #8	@,
-	mov	r8, r0	@ D.39022,
+	mov	r8, r0	@ D.39026,
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
 	mov	r1, #8	@,
@@ -2402,45 +2402,45 @@ VP8_GetPictureHeader:
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
 	mov	r1, #8	@,
-	mov	r7, r0	@ D.39024,
+	mov	r7, r0	@ D.39028,
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
-	uxtb	r3, r8	@ D.39022, D.39022
-	orr	ip, r3, r5, asl #8	@, tmp338, D.39022, data1.1471,
-	uxtb	r7, r7	@ D.39024, D.39024
+	uxtb	r3, r8	@ D.39026, D.39026
+	orr	ip, r3, r5, asl #8	@, tmp338, D.39026, data1.1471,
+	uxtb	r7, r7	@ D.39028, D.39028
 	mov	r5, r5, lsr #6	@ tmp342, data1.1471,
 	str	r5, [r6, #2572]	@ tmp342, <variable>.NewHeaderInfo.horiz_scale
-	mov	r2, ip, asl #18	@ D.39027, tmp338,
-	mov	r2, r2, lsr #18	@ D.39027, D.39027,
-	str	r2, [r6, #2564]	@ D.39027, <variable>.NewHeaderInfo.pic_width_in_pix
-	add	r1, r2, #15	@ tmp340, D.39027,
-	cmp	r2, #32	@ D.39027,
-	mov	r1, r1, lsr #4	@ D.39030, tmp340,
-	str	r1, [r6, #2556]	@ D.39030, <variable>.NewHeaderInfo.pic_width_in_mb
+	mov	r2, ip, asl #18	@ D.39031, tmp338,
+	mov	r2, r2, lsr #18	@ D.39031, D.39031,
+	str	r2, [r6, #2564]	@ D.39031, <variable>.NewHeaderInfo.pic_width_in_pix
+	add	r1, r2, #15	@ tmp340, D.39031,
+	cmp	r2, #32	@ D.39031,
+	mov	r1, r1, lsr #4	@ D.39034, tmp340,
+	str	r1, [r6, #2556]	@ D.39034, <variable>.NewHeaderInfo.pic_width_in_mb
 	uxtb	r3, r0	@ data3,
-	orr	ip, r7, r3, asl #8	@, tmp345, D.39024, data3,
+	orr	ip, r7, r3, asl #8	@, tmp345, D.39028, data3,
 	mov	r0, r3, lsr #6	@ tmp349, data3,
 	str	r0, [r6, #2576]	@ tmp349, <variable>.NewHeaderInfo.vert_scale
-	mov	r3, ip, asl #18	@ D.39037, tmp345,
-	mov	r3, r3, lsr #18	@ D.39037, D.39037,
-	str	r3, [r6, #2568]	@ D.39037, <variable>.NewHeaderInfo.pic_height_in_pix
-	add	r0, r3, #15	@ tmp347, D.39037,
-	mov	r0, r0, lsr #4	@ D.39040, tmp347,
-	str	r0, [r6, #2560]	@ D.39040, <variable>.NewHeaderInfo.pic_height_in_mb
-	mul	ip, r1, r0	@ tmp350, D.39030, D.39040
+	mov	r3, ip, asl #18	@ D.39041, tmp345,
+	mov	r3, r3, lsr #18	@ D.39041, D.39041,
+	str	r3, [r6, #2568]	@ D.39041, <variable>.NewHeaderInfo.pic_height_in_pix
+	add	r0, r3, #15	@ tmp347, D.39041,
+	mov	r0, r0, lsr #4	@ D.39044, tmp347,
+	str	r0, [r6, #2560]	@ D.39044, <variable>.NewHeaderInfo.pic_height_in_mb
+	mul	ip, r1, r0	@ tmp350, D.39034, D.39044
 	str	ip, [r6, #2580]	@ tmp350, <variable>.NewHeaderInfo.total_mbs
 	bls	.L233	@,
-	cmp	r3, #32	@ D.39037,
+	cmp	r3, #32	@ D.39041,
 	bls	.L233	@,
-	cmp	r1, #512	@ D.39030,
+	cmp	r1, #512	@ D.39034,
 	bhi	.L233	@,
-	cmp	r0, #512	@ D.39040,
+	cmp	r0, #512	@ D.39044,
 	bhi	.L233	@,
 	ldr	r5, [r6, #116]	@ old_height, <variable>.OldHeaderInfo.pic_height_in_pix
 	ldr	r7, [r6, #112]	@ old_width, <variable>.OldHeaderInfo.pic_width_in_pix
-	cmp	r3, r5	@ D.39037, old_height
+	cmp	r3, r5	@ D.39041, old_height
 	bne	.L235	@,
-	cmp	r2, r7	@ D.39027, old_width
+	cmp	r2, r7	@ D.39031, old_width
 	beq	.L230	@,
 .L235:
 	mov	r0, #22	@,
@@ -2482,9 +2482,9 @@ VP8_GetPictureHeader:
 	mov	r0, r5	@, bc
 	mov	r2, #128	@,
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r1, r0	@ D.39062,
-	strb	r1, [r6, #2474]	@ D.39062, <variable>.NewHeaderInfo.segmentation_enabled
-	cmp	r1, #0	@ D.39062,
+	uxtb	r1, r0	@ D.39066,
+	strb	r1, [r6, #2474]	@ D.39066, <variable>.NewHeaderInfo.segmentation_enabled
+	cmp	r1, #0	@ D.39066,
 	bne	.L307	@,
 .L237:
 	mov	r1, r4	@, pBs
@@ -2508,9 +2508,9 @@ VP8_GetPictureHeader:
 	strb	r0, [r6, #2471]	@, <variable>.NewHeaderInfo.sharpness_level
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r0, r0	@ D.39114,
-	strb	r0, [r6, #2462]	@ D.39114, <variable>.NewHeaderInfo.mode_ref_lf_delta_enabled
-	cmp	r0, #0	@ D.39114,
+	uxtb	r0, r0	@ D.39118,
+	strb	r0, [r6, #2462]	@ D.39118, <variable>.NewHeaderInfo.mode_ref_lf_delta_enabled
+	cmp	r0, #0	@ D.39118,
 	bne	.L308	@,
 .L245:
 	mov	r1, r4	@, pBs
@@ -2569,9 +2569,9 @@ VP8_GetPictureHeader:
 	mov	r1, r4	@, pBs
 	mov	r2, #128	@,
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r0, r0	@ D.39194,
-	strb	r0, [r6, #2505]	@ D.39194, <variable>.NewHeaderInfo.refresh_entropy_probs
-	cmp	r0, #0	@ D.39194,
+	uxtb	r0, r0	@ D.39198,
+	strb	r0, [r6, #2505]	@ D.39198, <variable>.NewHeaderInfo.refresh_entropy_probs
+	cmp	r0, #0	@ D.39198,
 	bne	.L253	@,
 	add	r1, r6, #2608	@, pVp8CodecInfo,
 	add	lr, r6, #3760	@, pVp8CodecInfo,
@@ -3243,9 +3243,9 @@ VP8_GetPictureHeader:
 	mov	r2, #128	@,
 	ldr	r6, [fp, #-68]	@ pVp8CodecInfo, %sfp
 	bl	Vp8_Vfmw_DecodeBool	@
-	cmp	r0, #0	@ D.39221,
-	str	r0, [r6, #2532]	@ D.39221, <variable>.NewHeaderInfo.mb_no_coeff_skip
-	streqb	r0, [r6, #2513]	@ D.39221, <variable>.NewHeaderInfo.prob_skip_false
+	cmp	r0, #0	@ D.39225,
+	str	r0, [r6, #2532]	@ D.39225, <variable>.NewHeaderInfo.mb_no_coeff_skip
+	streqb	r0, [r6, #2513]	@ D.39225, <variable>.NewHeaderInfo.prob_skip_false
 	beq	.L296	@,
 	mov	r2, sl	@, j
 	mov	r0, r5	@, bc
@@ -3264,11 +3264,11 @@ VP8_GetPictureHeader:
 	bic	r1, r2, #-16777216	@ tmp536, tmp538,
 	bic	lr, r1, #255	@ tmp536, tmp536,
 	cmp	lr, #0	@ tmp536,
-	moveq	r0, #1	@ D.39009,
+	moveq	r0, #1	@ D.39013,
 	beq	.L229	@,
 .L297:
 	ldrb	ip, [r6, #2463]	@ zero_extendqisi2	@ <variable>.NewHeaderInfo.base_qindex, <variable>.NewHeaderInfo.base_qindex
-	mov	r0, #1	@ D.39009,
+	mov	r0, #1	@ D.39013,
 	strb	ip, [r6, #2464]	@ <variable>.NewHeaderInfo.base_qindex, <variable>.NewHeaderInfo.last_kf_gf_q
 	b	.L229	@
 .L306:
@@ -3276,7 +3276,7 @@ VP8_GetPictureHeader:
 	movw	r1, #:lower16:.LC18	@,
 	movt	r1, #:upper16:.LC18	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39009,
+	mov	r0, #0	@ D.39013,
 	b	.L229	@
 .L309:
 	mov	r1, r4	@, pBs
@@ -3326,9 +3326,9 @@ VP8_GetPictureHeader:
 	mov	r0, r5	@, bc
 	mov	r1, r4	@, pBs
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r2, r0	@ D.39119,
-	strb	r2, [r6, #2461]	@ D.39119, <variable>.NewHeaderInfo.mode_ref_lf_delta_update
-	cmp	r2, #0	@ D.39119,
+	uxtb	r2, r0	@ D.39123,
+	strb	r2, [r6, #2461]	@ D.39123, <variable>.NewHeaderInfo.mode_ref_lf_delta_update
+	cmp	r2, #0	@ D.39123,
 	beq	.L245	@,
 	add	lr, r6, #2480	@ ivtmp.1441, pVp8CodecInfo,
 	add	r8, r6, #2496	@ ivtmp.1434, pVp8CodecInfo,
@@ -3338,28 +3338,28 @@ VP8_GetPictureHeader:
 	mov	r2, #128	@,
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	ip, r0	@ D.39124,
-	strb	ip, [r6, #2490]	@ D.39124, <variable>.NewHeaderInfo.ref_frame_delta_update_flag
-	cmp	ip, #1	@ D.39124,
+	uxtb	ip, r0	@ D.39128,
+	strb	ip, [r6, #2490]	@ D.39128, <variable>.NewHeaderInfo.ref_frame_delta_update_flag
+	cmp	ip, #1	@ D.39128,
 	beq	.L343	@,
 .L246:
 	add	r7, r7, #1	@ ivtmp.1441, ivtmp.1441,
 	cmp	r7, r8	@ ivtmp.1441, ivtmp.1434
 	bne	.L247	@,
-	add	r9, r6, #2496	@ D.41072, pVp8CodecInfo,
-	add	r8, r9, #4	@ D.41072, D.41072,
+	add	r9, r6, #2496	@ D.41076, pVp8CodecInfo,
+	add	r8, r9, #4	@ D.41076, D.41076,
 .L249:
 	mov	r1, r4	@, pBs
 	mov	r2, #128	@,
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r1, r0	@ D.39138,
-	strb	r1, [r6, #2491]	@ D.39138, <variable>.NewHeaderInfo.mb_mode_delta_update_flag
-	cmp	r1, #1	@ D.39138,
+	uxtb	r1, r0	@ D.39142,
+	strb	r1, [r6, #2491]	@ D.39142, <variable>.NewHeaderInfo.mb_mode_delta_update_flag
+	cmp	r1, #1	@ D.39142,
 	beq	.L344	@,
 .L248:
 	add	r7, r7, #1	@ ivtmp.1434, ivtmp.1434,
-	cmp	r7, r8	@ ivtmp.1434, D.41072
+	cmp	r7, r8	@ ivtmp.1434, D.41076
 	bne	.L249	@,
 	b	.L245	@
 .L349:
@@ -3377,20 +3377,20 @@ VP8_GetPictureHeader:
 	strb	r0, [r6, #2475]	@, <variable>.NewHeaderInfo.update_mb_segmentation_map
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r2, r0	@ D.39069,
-	strb	r2, [r6, #2476]	@ D.39069, <variable>.NewHeaderInfo.update_mb_segmentation_data
-	cmp	r2, #0	@ D.39069,
+	uxtb	r2, r0	@ D.39073,
+	strb	r2, [r6, #2476]	@ D.39073, <variable>.NewHeaderInfo.update_mb_segmentation_data
+	cmp	r2, #0	@ D.39073,
 	bne	.L345	@,
 .L238:
 	ldrb	r9, [r6, #2475]	@ zero_extendqisi2	@ <variable>.NewHeaderInfo.update_mb_segmentation_map, <variable>.NewHeaderInfo.update_mb_segmentation_map
 	cmp	r9, #0	@ <variable>.NewHeaderInfo.update_mb_segmentation_map,
 	beq	.L237	@,
 	add	r7, r6, #2464	@ tmp376, pVp8CodecInfo,
-	add	r8, r6, #2480	@ D.41092, pVp8CodecInfo,
+	add	r8, r6, #2480	@ D.41096, pVp8CodecInfo,
 	add	r7, r7, #14	@ tmp376, tmp376,
 	mov	r1, #255	@,
 	mov	r2, #3	@,
-	add	r8, r8, #1	@ D.41092, D.41092,
+	add	r8, r8, #1	@ D.41096, D.41096,
 	mov	r0, r7	@, tmp376
 	bl	memset	@
 .L244:
@@ -3398,13 +3398,13 @@ VP8_GetPictureHeader:
 	mov	r2, #128	@,
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r1, r0	@ D.39102,
-	strb	r1, [r6, #2481]	@ D.39102, <variable>.NewHeaderInfo.segment_prob_update
-	cmp	r1, #1	@ D.39102,
+	uxtb	r1, r0	@ D.39106,
+	strb	r1, [r6, #2481]	@ D.39106, <variable>.NewHeaderInfo.segment_prob_update
+	cmp	r1, #1	@ D.39106,
 	beq	.L346	@,
 .L243:
 	add	r7, r7, #1	@ ivtmp.1448, ivtmp.1448,
-	cmp	r7, r8	@ ivtmp.1448, D.41092
+	cmp	r7, r8	@ ivtmp.1448, D.41096
 	bne	.L244	@,
 	b	.L237	@
 .L343:
@@ -3417,9 +3417,9 @@ VP8_GetPictureHeader:
 	strb	r0, [r7, #0]	@, <variable>.NewHeaderInfo.ref_lf_deltas
 	mov	r0, r5	@, bc
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r3, r0	@ D.39131,
-	strb	r3, [r6, #2472]	@ D.39131, <variable>.NewHeaderInfo.delta_sign
-	cmp	r3, #1	@ D.39131,
+	uxtb	r3, r0	@ D.39135,
+	strb	r3, [r6, #2472]	@ D.39135, <variable>.NewHeaderInfo.delta_sign
+	cmp	r3, #1	@ D.39135,
 	ldreqb	r3, [r7, #0]	@ zero_extendqisi2	@ tmp394, <variable>.NewHeaderInfo.ref_lf_deltas
 	rsbeq	r3, r3, #0	@ tmp395, tmp394
 	streqb	r3, [r7, #0]	@ tmp395, <variable>.NewHeaderInfo.ref_lf_deltas
@@ -3459,9 +3459,9 @@ VP8_GetPictureHeader:
 	mov	r0, r5	@, bc
 	mov	r6, #0	@ tmp,
 	bl	Vp8_Vfmw_DecodeBool	@
-	uxtb	r3, r0	@ D.39081,
-	strb	r3, [r8, #2460]	@ D.39081, <variable>.NewHeaderInfo.quantizer_update
-	cmp	r3, #1	@ D.39081,
+	uxtb	r3, r0	@ D.39085,
+	strb	r3, [r8, #2460]	@ D.39085, <variable>.NewHeaderInfo.quantizer_update
+	cmp	r3, #1	@ D.39085,
 	bne	.L241	@,
 	ldr	r6, [fp, #-68]	@, %sfp
 	mov	r1, r4	@, pBs
@@ -3505,7 +3505,7 @@ VP8_GetPictureHeader:
 	movw	r1, #:lower16:.LC20	@,
 	movt	r1, #:upper16:.LC20	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39009,
+	mov	r0, #0	@ D.39013,
 	b	.L229	@
 .L346:
 	mov	r0, r5	@, bc
@@ -3535,18 +3535,18 @@ VP8DEC_Decode:
 	sub	sp, sp, #36	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r3, [r1, #0]	@ D.39849, <variable>.VirAddr
+	ldr	r3, [r1, #0]	@ D.39853, <variable>.VirAddr
 	mov	r4, r0	@ pCtx, pCtx
-	str	r3, [r0, #3152]	@ D.39849, <variable>.StreamParam.VirAddr
+	str	r3, [r0, #3152]	@ D.39853, <variable>.StreamParam.VirAddr
 	ldr	r2, [r1, #8]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r2, [r0, #3156]	@ <variable>.PhyAddr, <variable>.StreamParam.PhyAddr
-	ldr	r2, [r1, #12]	@ D.39852, <variable>.LenInByte
-	cmp	r2, #2	@ D.39852,
-	str	r2, [r0, #3160]	@ D.39852, <variable>.StreamParam.Length
+	ldr	r2, [r1, #12]	@ D.39856, <variable>.LenInByte
+	cmp	r2, #2	@ D.39856,
+	str	r2, [r0, #3160]	@ D.39856, <variable>.StreamParam.Length
 	ble	.L371	@,
 	add	r5, r0, #3168	@ pBs, pCtx,
 	add	r9, r0, #3200	@ pVp8CodecInfo, pCtx,
-	mov	r1, r3	@, D.39849
+	mov	r1, r3	@, D.39853
 	mov	r0, r5	@, pBs
 	bl	BsInit	@
 	add	r3, r4, #3152	@ tmp157, pCtx,
@@ -3595,7 +3595,7 @@ VP8DEC_Decode:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r2, #1	@,
 	ldr	r1, [r4, sl]	@, <variable>.Vp8CodecInfo.AltFsID
-	add	r6, r4, #8128	@ D.39886, pCtx,
+	add	r6, r4, #8128	@ D.39890, pCtx,
 	bl	FSP_ClearLogicFs	@
 	ldr	r1, [r4, r7]	@, <variable>.Vp8CodecInfo.LastFsID
 	mov	r2, #1	@,
@@ -3603,19 +3603,19 @@ VP8DEC_Decode:
 	bl	FSP_ClearLogicFs	@
 	mov	r2, #0	@ tmp191,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
-	add	r6, r6, #40	@ D.39886, D.39886,
+	add	r6, r6, #40	@ D.39890, D.39890,
 	str	r2, [r4, r8]	@ tmp191, <variable>.Vp8CodecInfo.GoldenFsID
 	str	r2, [r4, sl]	@ tmp191, <variable>.Vp8CodecInfo.AltFsID
 	str	r2, [r4, r7]	@ tmp191, <variable>.Vp8CodecInfo.LastFsID
 	str	r2, [fp, #-64]	@,
 	bl	FSP_GetNullLogicFs	@
 	movw	r1, #8120	@ tmp201,
-	str	r0, [r4, r8]	@ D.39885, <variable>.Vp8CodecInfo.GoldenFsID
+	str	r0, [r4, r8]	@ D.39889, <variable>.Vp8CodecInfo.GoldenFsID
 	ldr	r3, [fp, #-64]	@,
-	str	r0, [r4, r7]	@ D.39885, <variable>.Vp8CodecInfo.LastFsID
-	str	r0, [r4, sl]	@ D.39885, <variable>.Vp8CodecInfo.AltFsID
+	str	r0, [r4, r7]	@ D.39889, <variable>.Vp8CodecInfo.LastFsID
+	str	r0, [r4, sl]	@ D.39889, <variable>.Vp8CodecInfo.AltFsID
 	str	r3, [r4, r1]	@ tmp191, <variable>.Vp8CodecInfo.RefNum
-	mov	r1, r6	@, D.39886
+	mov	r1, r6	@, D.39890
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
 	movw	ip, #5756	@ tmp206,
@@ -3626,7 +3626,7 @@ VP8DEC_Decode:
 	ldr	r3, [r4, lr]	@ prephitmp.1631, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_height_in_mb
 	cmp	r3, #512	@ prephitmp.1631,
 	bhi	.L358	@,
-	ldr	r3, [r4, #0]	@ D.39893, <variable>.pstExtraData
+	ldr	r3, [r4, #0]	@ D.39897, <variable>.pstExtraData
 	ldr	ip, [r3, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	ip, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L360	@,
@@ -3703,7 +3703,7 @@ VP8DEC_Decode:
 	cmp	r3, #0	@ <variable>.Vp8CodecInfo.Imgbuf_allocated,
 	bne	.L361	@,
 .L370:
-	mov	r0, r6	@, D.39886
+	mov	r0, r6	@, D.39890
 	bl	ResetVoQueue	@
 	b	.L361	@
 .L362:
@@ -3828,21 +3828,21 @@ VP8DEC_Init:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, #8512	@ tmp139,
-	ldr	r7, [r0, r5]	@ D.38778, <variable>.ImageQue.ResetMagicWord
+	ldr	r7, [r0, r5]	@ D.38782, <variable>.ImageQue.ResetMagicWord
 	mov	r6, r1	@ pstExtraData, pstExtraData
 	movw	r1, #8528	@,
 	mov	r4, r0	@ pCtx, pCtx
 	bl	__memzero	@
 	add	r0, r4, #8128	@, pCtx,
 	add	r0, r0, #40	@,,
-	str	r7, [r4, r5]	@ D.38778, <variable>.ImageQue.ResetMagicWord
+	str	r7, [r4, r5]	@ D.38782, <variable>.ImageQue.ResetMagicWord
 	bl	ResetVoQueue	@
 	str	r6, [r4, #0]	@ pstExtraData, <variable>.pstExtraData
 	mov	r0, r4	@, pCtx
 	bl	VCTRL_GetChanIDByCtx	@
 	movw	r3, #8520	@ tmp143,
-	cmn	r0, #1	@ D.38786,
-	str	r0, [r4, r3]	@ D.38786, <variable>.ChanID
+	cmn	r0, #1	@ D.38790,
+	str	r0, [r4, r3]	@ D.38790, <variable>.ChanID
 	beq	.L382	@,
 	ldr	ip, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	movw	r2, #8124	@ tmp145,
@@ -3863,7 +3863,7 @@ VP8DEC_Init:
 	str	r3, [r4, lr]	@ tmp153, <variable>.Vp8CodecInfo.LastFrameType
 	movw	r1, #8136	@ tmp158,
 	ldr	r2, [ip, #44]	@ <variable>.s32Vp8SegIdMemAddr, <variable>.s32Vp8SegIdMemAddr
-	mov	r0, #1	@ D.38791,
+	mov	r0, #1	@ D.38795,
 	str	r2, [r4, r1]	@ <variable>.s32Vp8SegIdMemAddr, <variable>.Vp8CodecInfo.SegIdAddr
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L382:
@@ -3871,7 +3871,7 @@ VP8DEC_Init:
 	movw	r1, #:lower16:.LC30	@,
 	movt	r1, #:upper16:.LC30	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.38791,
+	mvn	r0, #19	@ D.38795,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	VP8DEC_Init, .-VP8DEC_Init
@@ -3906,13 +3906,13 @@ VP8_SetImgFormat:
 	mov	r1, lr	@, tmp153
 	strb	lr, [r4, #372]	@ tmp153, <variable>.ImageDnr.pic_structure
 	mov	lr, #8	@ tmp157,
-	and	r3, r2, #3	@ D.38611, <variable>.Vp8CodecInfo.FrameType,
+	and	r3, r2, #3	@ D.38615, <variable>.Vp8CodecInfo.FrameType,
 	str	lr, [r4, #392]	@ tmp157, <variable>.ImageDnr.QP_U
-	orr	ip, r3, #7168	@ tmp150, D.38611,
+	orr	ip, r3, #7168	@ tmp150, D.38615,
 	mov	r2, #1	@ tmp155,
-	str	r3, [r4, #156]	@ D.38611, <variable>.bottom_fld_type
+	str	r3, [r4, #156]	@ D.38615, <variable>.bottom_fld_type
 	orr	ip, ip, #32	@ tmp150, tmp150,
-	str	r3, [r4, #152]	@ D.38611, <variable>.top_fld_type
+	str	r3, [r4, #152]	@ D.38615, <variable>.top_fld_type
 	str	ip, [r4, #160]	@ tmp150, <variable>.format
 	mov	ip, #13	@ tmp152,
 	strb	r2, [r4, #377]	@ tmp155, <variable>.ImageDnr.chroma_format_idc
@@ -3925,8 +3925,8 @@ VP8_SetImgFormat:
 	ldr	r3, [r5, r3]	@ prephitmp.1708, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_width_in_pix
 	movw	r2, #5768	@ tmp163,
 	str	r3, [r4, #164]	@ prephitmp.1708, <variable>.image_width
-	ldr	r2, [r5, r2]	@ D.38616, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_height_in_pix
-	str	r2, [r4, #168]	@ D.38616, <variable>.image_height
+	ldr	r2, [r5, r2]	@ D.38620, <variable>.Vp8CodecInfo.NewHeaderInfo.pic_height_in_pix
+	str	r2, [r4, #168]	@ D.38620, <variable>.image_height
 	ldr	ip, [r5, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	ldr	r0, [ip, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	r0, #25	@ <variable>.eCapLevel,
@@ -3942,22 +3942,22 @@ VP8_SetImgFormat:
 	str	r1, [r4, #184]	@ tmp180, <variable>.disp_center_y
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L389:
-	ldr	r1, [r4, #192]	@ D.38621, <variable>.image_stride
-	add	r0, r2, #15	@ tmp167, D.38616,
+	ldr	r1, [r4, #192]	@ D.38625, <variable>.image_stride
+	add	r0, r2, #15	@ tmp167, D.38620,
 	ldr	r3, [r4, #104]	@ <variable>.luma_phy_addr, <variable>.luma_phy_addr
 	mov	r2, r0, lsr #4	@ tmp168, tmp167,
 	ldr	r0, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
-	mov	lr, r1, asl #4	@ tmp166, D.38621,
-	add	ip, r3, r1	@ tmp173, <variable>.luma_phy_addr, D.38621
+	mov	lr, r1, asl #4	@ tmp166, D.38625,
+	add	ip, r3, r1	@ tmp173, <variable>.luma_phy_addr, D.38625
 	str	r3, [r4, #120]	@ <variable>.luma_phy_addr, <variable>.luma_2d_phy_addr
-	mul	r2, r2, lr	@ D.38627, tmp168, tmp166
+	mul	r2, r2, lr	@ D.38631, tmp168, tmp166
 	str	r3, [r4, #88]	@ <variable>.luma_phy_addr, <variable>.top_luma_phy_addr
 	str	ip, [r4, #96]	@ tmp173, <variable>.btm_luma_phy_addr
 	str	r0, [r4, #48]	@ <variable>.luma_vir_addr, <variable>.luma_2d_vir_addr
-	add	r3, r2, r3	@ tmp170, D.38627, <variable>.luma_phy_addr
-	add	r2, r0, r2	@ tmp172, <variable>.luma_vir_addr, D.38627
+	add	r3, r2, r3	@ tmp170, D.38631, <variable>.luma_phy_addr
+	add	r2, r0, r2	@ tmp172, <variable>.luma_vir_addr, D.38631
 	str	r3, [r4, #108]	@ tmp170, <variable>.chrom_phy_addr
-	add	r0, r3, r1	@ tmp174, tmp170, D.38621
+	add	r0, r3, r1	@ tmp174, tmp170, D.38625
 	str	r2, [r4, #36]	@ tmp172, <variable>.chrom_vir_addr
 	str	r0, [r4, #100]	@ tmp174, <variable>.btm_chrom_phy_addr
 	mov	r0, r3	@, tmp170
@@ -4008,8 +4008,8 @@ VP8DEC_VDMPostProc:
 	movge	r6, #100	@ iftmp.449,
 	str	r6, [r3, #200]	@ iftmp.449, <variable>.error_level
 	ldr	r0, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r3, [r0, #0]	@ D.38671, <variable>.s32RefErrThr
-	cmp	r6, r3	@ iftmp.449, D.38671
+	ldr	r3, [r0, #0]	@ D.38675, <variable>.s32RefErrThr
+	cmp	r6, r3	@ iftmp.449, D.38675
 	bhi	.L432	@,
 	mov	r0, r4	@, pCtx
 	movw	r5, #8116	@ tmp186,
@@ -4087,16 +4087,16 @@ VP8DEC_VDMPostProc:
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
 .L402:
-	ldrb	r3, [r4, #3252]	@ zero_extendqisi2	@ D.38714, <variable>.Vp8CodecInfo.OldHeaderInfo.copy_buffer_to_arf
-	cmp	r3, #1	@ D.38714,
+	ldrb	r3, [r4, #3252]	@ zero_extendqisi2	@ D.38718, <variable>.Vp8CodecInfo.OldHeaderInfo.copy_buffer_to_arf
+	cmp	r3, #1	@ D.38718,
 	beq	.L437	@,
-	cmp	r3, #2	@ D.38714,
+	cmp	r3, #2	@ D.38718,
 	beq	.L438	@,
 .L408:
-	ldrb	r3, [r4, #3251]	@ zero_extendqisi2	@ D.38730, <variable>.Vp8CodecInfo.OldHeaderInfo.copy_buffer_to_gf
-	cmp	r3, #1	@ D.38730,
+	ldrb	r3, [r4, #3251]	@ zero_extendqisi2	@ D.38734, <variable>.Vp8CodecInfo.OldHeaderInfo.copy_buffer_to_gf
+	cmp	r3, #1	@ D.38734,
 	beq	.L439	@,
-	cmp	r3, #2	@ D.38730,
+	cmp	r3, #2	@ D.38734,
 	beq	.L440	@,
 .L413:
 	movw	r2, #8160	@ tmp287,
@@ -4395,9 +4395,9 @@ VP8DEC_VDMPostProc:
 	bl	FSP_GetNullLogicFs	@
 	movw	r1, #8120	@ tmp184,
 	str	r5, [r4, r1]	@ tmp174, <variable>.Vp8CodecInfo.RefNum
-	str	r0, [r4, sl]	@ D.38679, <variable>.Vp8CodecInfo.GoldenFsID
-	str	r0, [r4, r7]	@ D.38679, <variable>.Vp8CodecInfo.LastFsID
-	str	r0, [r4, r6]	@ D.38679, <variable>.Vp8CodecInfo.AltFsID
+	str	r0, [r4, sl]	@ D.38683, <variable>.Vp8CodecInfo.GoldenFsID
+	str	r0, [r4, r7]	@ D.38683, <variable>.Vp8CodecInfo.LastFsID
+	str	r0, [r4, r6]	@ D.38683, <variable>.Vp8CodecInfo.AltFsID
 	b	.L392	@
 .L434:
 	movw	r1, #:lower16:.LC33	@,
@@ -4424,9 +4424,9 @@ VP8DEC_VDMPostProc:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.39330, %object
-	.size	__func__.39330, 17
-__func__.39330:
+	.type	__func__.39334, %object
+	.size	__func__.39334, 17
+__func__.39334:
 	.ascii	"VP8_DecodeDecide\000"
 	.space	3
 	.type	vp8_default_mv_context, %object
@@ -5835,9 +5835,9 @@ vp8_mv_update_probs:
 	.byte	-2
 	.byte	-2
 	.space	2
-	.type	C.460.38983, %object
-	.size	C.460.38983, 8
-C.460.38983:
+	.type	C.460.38987, %object
+	.size	C.460.38987, 8
+C.460.38987:
 	.word	7
 	.word	6
 	.type	vp8_coef_update_probs, %object

@@ -849,9 +849,13 @@ HI_S32 HI_MPI_WIN_QueueSyncFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame
 
     VoWinFrame.hWindow = hWindow;
 	VoWinFrame.stFrame = *pFrame;
-	VoWinFrame.pu32FenceFd = pu32FenceFd;
+	VoWinFrame.u32FenceFd = 0xffffffff;
 
 	Ret = ioctl(g_VoDevFd, CMD_WIN_QUSYNC_FRAME, &VoWinFrame);
+	if (!Ret)
+	{
+		*pu32FenceFd = VoWinFrame.u32FenceFd;
+	}
 
     return Ret;
 }

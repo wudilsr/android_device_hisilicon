@@ -445,6 +445,12 @@ void load_recovery(void)
 	char *recovery_boot_args = NULL;
 	char *boot_args = NULL;
 
+#ifdef HI_ADVCA_SUPPORT
+	if (-1 == HI_Android_Auth_Recovery())
+	{
+		run_command("reset", 0);
+	}
+#endif
 	boot_args = (char *)malloc(strlen(getenv("bootargs")) + 1);
 	if (!boot_args) {
 		printf("malloc fail ! recovery !\n");

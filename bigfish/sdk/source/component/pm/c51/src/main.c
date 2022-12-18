@@ -822,7 +822,10 @@ void SystemSuspend(void)
     if(g_u8CaVendorId != CA_VENDOR_ID_NAGRA)
 #endif
     {
-        DDREnterSelf();
+        if ((0x0 == wdgon) && (0x0 == g_u8KeyEnterPmoc))
+		{
+			DDREnterSelf();
+		}
     }
 
     /* change MCU bus clock to 24M / 8 */
@@ -963,6 +966,12 @@ void SystemSuspend(void)
             read_regVal();
             regData.val8[0] |= 0x10;
             write_regVal();
+			
+            /* after reset system, wait 1.5s, then power down, for EMMC */
+            if (0x1 == g_u8KeyEnterPmoc)
+			{
+				wait_minute_3(45, 210, 210);
+			}
 
             //printf_char('i');
 
@@ -1247,34 +1256,25 @@ void main()
 #ifdef POWER_UP_STANDBY_MODE1
         KEYLED_Disable();
 #endif
-        IR_Init();
         TIMER_Init();
 
         if (g_u8GpioPort != 0xff)
         {
             gpio_SetIntType(g_u8GpioPort);
         }
+  
 
-        // dbg
-        //dbg_reset();
-
-        // ir
-        //ir_enable();
-        //IR_Init();
 #ifdef HI_ADVCA_SUPPORT
         if (g_u8CaVendorId != CA_VENDOR_ID_NAGRA)
 #endif
         {
-            DDRPHYRegSave();
+			if ((0x0 == wdgon) && (0x0 == g_u8KeyEnterPmoc))
+			{
+            	DDRPHYRegSave();
+			}
         }
-
-        // suspend
         SystemSuspend();
-
-        // enable  timer/ir/key isr
-        //pmocType = 0xff;
-        //pmocflag = 0;
-
+ 
         KEYLED_Early_Display();
         TIMER_Enable();
 
@@ -1282,9 +1282,8 @@ void main()
         {
             gpio_IntEnable(g_u8GpioPort, HI_TRUE);
         }
-
-        //keyled_enable(0x2);
-        //keyled_enable(0x1);
+ 
+		IR_Init();
         IR_Start();
 
 #ifndef HI_ADVCA_RELEASE

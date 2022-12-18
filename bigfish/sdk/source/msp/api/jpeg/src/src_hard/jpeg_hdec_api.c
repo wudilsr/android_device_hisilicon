@@ -513,6 +513,7 @@ HI_S32 JPEG_HDEC_Init(j_common_ptr cinfo)
 		**            就不需要再走硬件了CNend\n
 		**/
 		pJpegHandle->bFirstDec          =  HI_TRUE;
+		pJpegHandle->bFillInput         =  HI_TRUE;
 
 		/** default the jpeg hard decode is 4bytes align, but tde is need 16bytes align**/
 		pJpegHandle->u32StrideAlign     = JPGD_HDEC_MMZ_CSCOUT_STRIDE_ALIGN;
@@ -678,6 +679,7 @@ HI_S32 JPEG_HDEC_Abort(const struct jpeg_common_struct *cinfo)
 		
 
 		pJpegHandle->bFirstDec			=  HI_TRUE;
+		pJpegHandle->bFillInput         =  HI_TRUE;
 		pJpegHandle->u32StrideAlign 	= JPGD_HDEC_MMZ_CSCOUT_STRIDE_ALIGN;
 
 #ifdef CONFIG_JPEG_GETDECTIME

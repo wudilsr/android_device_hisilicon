@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2015 ARM Limited
+ * (C) COPYRIGHT 2006-2014 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -290,21 +290,6 @@ MALI_IMPORT MALI_CHECK_RESULT mali_err_code _mali_frame_builder_write_lock(mali_
  * @param frame_builder The frame-builder to unlock the surfaces of
  */
 MALI_IMPORT void _mali_frame_builder_write_unlock(mali_frame_builder *frame_builder);
-
-/**
- * Reset the damage region in framebuilder
- * @param frame_builder The frame builder defining the frame
- */
-MALI_EXPORT void _mali_frame_builder_damage_region_reset(mali_frame_builder *frame_builder);
-
-/**
- * Set the damage region of buffer to frame builder in order to do partial update
- * @param frame_builder The frame builder defining the frame
- * @param rects A pointer to a list of values describing the rectangles
- * @param n_rects Specifies the number of rectangles comprising the damage region
- * @return MALI_TRUE if success, MALI_FALSE if not
- */
-MALI_EXPORT mali_bool _mali_frame_builder_damage_region_set(mali_frame_builder *frame_builder, int *rects, int n_rects);
 
 #ifdef __cplusplus
 }

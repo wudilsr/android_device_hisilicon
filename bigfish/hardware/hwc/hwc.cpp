@@ -219,14 +219,6 @@ static int hwc_set(hwc_composer_device_1_t *dev,
     }
 #endif
 
-    if(mTdeCompose && supportByHardware(list)) {
-        //ALOGE("TDE finishi the compose!");
-        tde_compose(dev,numDisplays,displays);
-    } else {
-        setFbFormat(HIFB_FMT_ARGB8888);
-        //ALOGE("GPUfinishi the compose!");
-    }
-
     if (displays && m){
 
         hwc_layer_1_t* TargetFramebuffer = /*(displays[0]->numHwLayers == 2) ? \
@@ -240,6 +232,19 @@ static int hwc_set(hwc_composer_device_1_t *dev,
             LayerInfos.u32Stride = pHandle->stride * bpp;
             LayerInfos.u32LayerAddr = pHandle->ion_phy_addr + TargetFramebuffer->sourceCrop.left * bpp \
                                       + TargetFramebuffer->sourceCrop.top * LayerInfos.u32Stride;
+            static int lastFbAddr = 0;
+            if(lastFbAddr == LayerInfos.u32LayerAddr)   {
+                //ALOGE("not use tdeCompose update!");
+            }else {
+                if(mTdeCompose && supportByHardware(list)) {
+                    //ALOGE("TDE finishi the compose!");
+                    tde_compose(dev,numDisplays,displays);
+                } else {
+                    setFbFormat(HIFB_FMT_ARGB8888);
+                    //ALOGE("GPUfinishi the compose!");
+                }
+            }
+            lastFbAddr = LayerInfos.u32LayerAddr;
             //ALOGD("LAYER ADDR:%p,stride:%d,bpp:%d,",LayerInfos.u32LayerAddr,pHandle->stride,bpp);
             LayerInfos.eFmt = getFbFormat();
             LayerInfos.stInRect.x = TargetFramebuffer->displayFrame.left;

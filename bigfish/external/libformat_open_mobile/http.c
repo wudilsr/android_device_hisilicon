@@ -317,6 +317,10 @@ static int http_open_cnx(URLContext *h)
         if (err < 0)
         {
             av_log(NULL, AV_LOG_WARNING,"[%s:%d]: url_open_h ret='%d',errno:%d\n",__FILE_NAME__, __LINE__, err, ff_neterrno());
+            if (!av_stristr(s->location, DIAGNOSE_TAG) && err == AVERROR(ENETUNREACH) && !ff_check_interrupt(&(h->interrupt_callback)))
+            {
+                goto redo;
+            }
             s->http_code = err;
             if (s->has_reconnect && !ff_check_interrupt(&(h->interrupt_callback)))
             {
@@ -453,7 +457,10 @@ retry:
     h->port = port;
     av_strlcpy(&h->ipaddr, &s->hd->ipaddr, sizeof(h->ipaddr));
 
-    return 0;
+    if (err >= 0)
+    {
+        return 0;
+    }
  fail:
     if (hd)
         ffurl_close(hd);

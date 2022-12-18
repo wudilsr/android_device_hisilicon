@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2010-2015 ARM Limited
+ * (C) COPYRIGHT 2010-2014 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -183,13 +183,12 @@ MALI_STATIC_INLINE void _mali_base_profiling_annotate_unlock(void)
 
 #ifdef MALI_MEMORY_PROFILING
 /* Environment variable name,to enable memory profiling. */
-#define MALI_MEM_PROFILING_TO_FILE      "MALI_MEM_PROFILING_TO_FILE"
+#define MALI_MEM_PROFILING_TO_FILE		"MALI_MEM_PROFILING_TO_FILE"
 
 /**
  * @brief Check mali profiling if enable
  */
-MALI_STATIC_INLINE mali_bool _mali_mem_profiling_to_file_enabled()
-{
+MALI_STATIC_INLINE mali_bool _mali_mem_profiling_to_file_enabled() {
 	return _mali_sys_config_string_get_bool(MALI_MEM_PROFILING_TO_FILE, MALI_FALSE);
 }
 
@@ -197,16 +196,12 @@ MALI_STATIC_INLINE mali_bool _mali_mem_profiling_to_file_enabled()
  * @brief Starts a function trace
  * @param str The function name you want to trace.
  */
-MALI_STATIC_INLINE void _mali_mem_profiling_to_file_begin(const char *str)
-{
-	if (_mali_mem_profiling_to_file_enabled())
-	{
+MALI_STATIC_INLINE void _mali_mem_profiling_to_file_begin(const char *str) {
+	if (_mali_mem_profiling_to_file_enabled()) {
 		char buf[256];
 		_mali_sys_snprintf(buf, 256, "%d    %s  begin:\n", (u32)_mali_sys_get_time_usec(), str);
 		_mali_arch_mem_profiling_fwrite(buf);
-	}
-	else
-	{
+	} else {
 		_mali_arch_mem_profiling_fclose();
 	}
 }
@@ -215,16 +210,12 @@ MALI_STATIC_INLINE void _mali_mem_profiling_to_file_begin(const char *str)
  * @brief Ends a function trace
  * @param str The function name you want to trace.
  */
-MALI_STATIC_INLINE void _mali_mem_profiling_to_file_end(const char *str)
-{
-	if (_mali_mem_profiling_to_file_enabled())
-	{
+MALI_STATIC_INLINE void _mali_mem_profiling_to_file_end(const char *str) {
+	if (_mali_mem_profiling_to_file_enabled()) {
 		char buf[256];
 		_mali_sys_snprintf(buf, 256, "%d    %s  end.\n", (u32)_mali_sys_get_time_usec(), str);
 		_mali_arch_mem_profiling_fwrite(buf);
-	}
-	else
-	{
+	} else {
 		_mali_arch_mem_profiling_fclose();
 	}
 }
@@ -233,28 +224,24 @@ MALI_STATIC_INLINE void _mali_mem_profiling_to_file_end(const char *str)
  * @brief Traces the memory usage information for func call
  * @param str The memory usage information you are tracing.
  */
-MALI_STATIC_INLINE void _mali_mem_profiling_to_file_info(const char *str)
-{
-	if (_mali_mem_profiling_to_file_enabled())
-	{
+MALI_STATIC_INLINE void _mali_mem_profiling_to_file_info(const char *str) {
+	if (_mali_mem_profiling_to_file_enabled()) {
 		char buf[256];
 		_mali_sys_snprintf(buf, 256, "%d    %s\n", (u32)_mali_sys_get_time_usec(), str);
 		_mali_arch_mem_profiling_fwrite(buf);
-	}
-	else
-	{
+	} else {
 		_mali_arch_mem_profiling_fclose();
 	}
 }
 
 #define MALI_MEM_PROFILING_TO_FILE_BEGIN(name) _mali_mem_profiling_to_file_begin(name)
-#define MALI_MEM_PROFILING_TO_FILE_END(name)    _mali_mem_profiling_to_file_end(name)
-#define MALI_MEM_PROFILING_TO_FILE_ENABLED()    _mali_mem_profiling_to_file_enabled()
+#define MALI_MEM_PROFILING_TO_FILE_END(name)	_mali_mem_profiling_to_file_end(name)
+#define MALI_MEM_PROFILING_TO_FILE_ENABLED()	_mali_mem_profiling_to_file_enabled()
 #define MALI_MEM_PROFILING_TO_FILE_INFO(str) _mali_mem_profiling_to_file_info(str)
 #else
 #define MALI_MEM_PROFILING_TO_FILE_BEGIN(name)
 #define MALI_MEM_PROFILING_TO_FILE_END(name)
-#define MALI_MEM_PROFILING_TO_FILE_ENABLED()    NULL
+#define MALI_MEM_PROFILING_TO_FILE_ENABLED()	NULL
 #define MALI_MEM_PROFILING_TO_FILE_INFO(str)
 #endif /* MALI_MEMORY_PROFILING */
 

@@ -438,6 +438,7 @@ typedef struct
     UINT32        LastRawDisContinueCount;  /* 用来判断是否发生raw包DisContinueCount变化 ，初始化为-1 */
     SINT32        DisContinueRawPacketFlag; /* 0: 未发生；1: 发生；2: 发生后重新开始，需被再次回到0状态 */
     SINT32        ScdLowdlyEnable;          /* 0: 低延迟未使能; 1: 低延迟使能 */
+    SINT32        s32ChanLowlyEnable;
     SINT32        IsOmxPath;             /* 0: 低缓存未使能; 1: 低缓存使能 */
     STREAM_DATA_S DisContinueRawPacket;     /* 记录发生raw包discontinue时的最新一包，用以后续从此包开始解码 */
 
@@ -576,6 +577,7 @@ typedef struct
     UINT32         UpMsgStepNum;
     UINT32         u32RawSizeCount;
     UINT32         u32RawNumCount;
+    SINT32         s32ChanLowlyEnable;    /* chan lowdly enable */
 
     UINT32         HeaderLen;
     UINT8          HeaderBuf[HEADER_BUFFER_SIZE];

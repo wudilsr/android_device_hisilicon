@@ -648,19 +648,26 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
                 &pstHalInfo->astPortInfo[i].stOutInfo, enLR);
 						
             VPSS_INST_GetInCrop(pstInst, i, &pstHalInfo->astPortInfo[i].stInCropRect);
+			
             if (   pstHalInfo->stInInfo.u32Width == 704 
                 && (pstHalInfo->stInInfo.u32Height == 576 || pstHalInfo->stInInfo.u32Height == 480)
                 && (pstHalInfo->stInInfo.u32Height == pstHalInfo->astPortInfo[i].stOutInfo.u32Height)
                 && pstHalInfo->astPortInfo[i].stOutInfo.u32Width == 720
 				&& pstInst->stPort[i].eAspMode == HI_DRV_ASP_RAT_MODE_FULL)
-            {
-                pstHalInfo->astPortInfo[i].stVideoRect.s32Width = 
-                                    pstHalInfo->stInInfo.u32Width;
-                pstHalInfo->astPortInfo[i].stVideoRect.s32Height = 
-                                    pstHalInfo->stInInfo.u32Height;
-                pstHalInfo->astPortInfo[i].stVideoRect.s32X = 8;
-                pstHalInfo->astPortInfo[i].stVideoRect.s32Y = 0;
-            }   
+			{
+				pstHalInfo->astPortInfo[i].stVideoRect.s32Width = 
+					pstHalInfo->stInInfo.u32Width;
+				pstHalInfo->astPortInfo[i].stVideoRect.s32Height = 
+					pstHalInfo->stInInfo.u32Height;
+				pstHalInfo->astPortInfo[i].stVideoRect.s32X = 8;
+				pstHalInfo->astPortInfo[i].stVideoRect.s32Y = 0;
+				pstHalInfo->astPortInfo[i].stOutCropRect.s32X = 0;
+				pstHalInfo->astPortInfo[i].stOutCropRect.s32Y = 0;
+				pstHalInfo->astPortInfo[i].stOutCropRect.s32Width = 
+					pstHalInfo->stInInfo.u32Width;
+				pstHalInfo->astPortInfo[i].stOutCropRect.s32Height = 
+					pstHalInfo->stInInfo.u32Height;
+			}   
             else
             {
                 VPSS_INST_GetVideoRect(pstInst, i, &pstHalInfo->astPortInfo[i].stInCropRect,
@@ -1415,20 +1422,7 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 					u32StoreH = (HI_U32)stBufferRect.s32Height;
 				}
 			}
-			
-			pstPriv = (HI_DRV_VIDEO_PRIVATE_S*) & (pstImage->u32Priv[0]);
-			if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_FRAME_FLAG)
-			{
-				pstPort->bCurDropped = HI_FALSE;
-			}
-			else
-			{
-				pstPort->bCurDropped = VPSS_INST_CheckIsDropped(pstTask->pstInstance,
-						pstPort->u32MaxFrameRate,
-						pstPort->u32OutCount);
-			}
-			if (pstPort->bCurDropped == HI_FALSE)
-			{
+
             /*2D image -> 1 outFrame 1 buffer*/
             if (pstImage->eFrmType == HI_DRV_FT_NOT_STEREO
                 || pstPort->b3Dsupport == HI_FALSE)
@@ -1554,12 +1548,6 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             pstTask->pstFrmNode[u32Count * 2 + 1] = HI_NULL;
         }
     }
-        else
-        {
-            pstTask->pstFrmNode[u32Count * 2] = HI_NULL;
-            pstTask->pstFrmNode[u32Count * 2 + 1] = HI_NULL;
-        }
-    }
 
     for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER * 2; u32Count++)
     {
@@ -1569,7 +1557,8 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             break;
         }
     }
-    
+
+#if 0
 	for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
     {
         pstPort = &((pstTask->pstInstance)->stPort[u32Count]);
@@ -1582,19 +1571,7 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             break;
 		}
 	}
-	
-	if (s32Ret == HI_SUCCESS)
-	{
-		for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
-		{
-			pstPort = &((pstTask->pstInstance)->stPort[u32Count]);
-
-			if (pstPort->bEnble == HI_TRUE) 
-			{
-				pstPort->u32OutCount++;
-			}
-		}
-	}
+#endif
     return s32Ret;
 
 }
@@ -1884,6 +1861,11 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
         bDropped = HI_FALSE;
         if (pstLeftFbNode != HI_NULL || pstRightFbNode != HI_NULL)
         {            
+            //HI_RECT_S stLbxTmp = {0};
+            pstPort->u32OutCount ++;
+            bDropped = VPSS_INST_CheckIsDropped(pstInstance,
+                                                pstPort->u32MaxFrameRate,
+                                                pstPort->u32OutCount);
 			//Drop 2first frame for interlace stream
             if(HI_FALSE == pstInstance->stInEntity.stStreamInfo.u32StreamProg && HI_NULL != pstInstance->stInEntity.pstWbcInfo[0])
             {
@@ -1891,6 +1873,15 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                     || (3 == pstInstance->stInEntity.pstWbcInfo[0]->u32CompleteCount))
                 {
                     bDropped = HI_TRUE;
+                }
+            }
+            if (pstLeftFbNode != HI_NULL)
+            {
+                memcpy(&stTmpFrame, &(pstLeftFbNode->stOutFrame), sizeof(HI_DRV_VIDEO_FRAME_S));
+                pstPriv = (HI_DRV_VIDEO_PRIVATE_S*) & (stTmpFrame.u32Priv[0]);
+                if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_FRAME_FLAG)
+                {
+                    bDropped = HI_FALSE;
                 }
             }
         }
@@ -1915,6 +1906,18 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 
                 if (HI_FALSE == bDropped)
                 {
+                    if (u32Count == 0)
+                    {
+                        HI_LD_Event_S evt;
+                        HI_U32 TmpTime = 0;
+                        HI_DRV_SYS_GetTimeStampMs(&TmpTime);
+                        evt.evt_id = EVENT_VPSS_FRM_OUT;
+                        evt.frame = pstLeftFbNode->stOutFrame.u32FrameIndex;
+                        evt.handle = pstLeftFbNode->stOutFrame.hTunnelSrc;
+                        evt.time = TmpTime;
+                        HI_DRV_LD_Notify_Event(&evt);
+                    }
+
                     VPSS_INST_ReportNewFrm(pstTask->pstInstance,
                                            pstPort->s32PortId,
                                            &(pstLeftFbNode->stOutFrame));

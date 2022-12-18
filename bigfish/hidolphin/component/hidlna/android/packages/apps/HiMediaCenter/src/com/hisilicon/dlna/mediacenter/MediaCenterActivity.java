@@ -178,6 +178,7 @@ public class MediaCenterActivity extends Activity implements UpdateCompleteListe
     private Timer mNetWorkSpeedTimer;
     private Context mContext;
     private DecodeMethod mDecodeMethod = null;
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
 
     /**
      * use this enum to choose which image to show when the activity is brought to foreground from
@@ -1107,6 +1108,7 @@ public class MediaCenterActivity extends Activity implements UpdateCompleteListe
             try
             {
                 Log.d(TAG, "before create");
+                CommonDef.setDefaultAdapterName(DEFAULT_USE_ADAPTER_WIFI_ETHERNET);
                 dmpManager.create(mContext);
                 Log.d(TAG, "end create");
             }

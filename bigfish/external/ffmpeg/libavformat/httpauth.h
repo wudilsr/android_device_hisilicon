@@ -95,6 +95,7 @@ typedef struct {
     int willtry; //h00186041, used for AD/DNS hijacked
     int is_chunks_finished;
     int has_reconnect;  // 0 for use http reconnect function, 1 for use upper protocol reconnect function
+    int hls_connection; // 0 not hls connection,1 is hls connection
     int multiple_requests;  /**< A flag which indicates if we use persistent connections. */
     uint8_t *post_data;
     int post_datalen;// make sure post_datalen is next to post_data in HTTPContext, so that av_opt_set_bin can set its value

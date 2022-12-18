@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2010, 2012-2013, 2015 ARM Limited
+ * (C) COPYRIGHT 2006-2010, 2012-2014 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -41,9 +41,12 @@ typedef enum mali_reg_id
 	M200_FRAME_REG_ORIGIN_OFFSET_Y                  = 0x011,
 	M200_FRAME_REG_SUBPIXEL_SPECIFIER               = 0x012,
 	M200_FRAME_REG_TIEBREAK_MODE                    = 0x013,
+#if defined(USING_MALI400) || defined(USING_MALI450)
 	M400_FRAME_REG_PLIST_CONFIG                     = 0x014,
 	M400_FRAME_REG_SCALING_CONFIG                   = 0x015,
 	M400_FRAME_REG_TILEBUFFER_BITS                  = 0x016,
+#endif
+
 	M200_WB0_REG_SOURCE_SELECT                      = 0x040,
 	M200_WB0_REG_TARGET_ADDR                        = 0x041,
 	M200_WB0_REG_TARGET_PIXEL_FORMAT                = 0x042,
@@ -95,6 +98,7 @@ enum m200_feature
 	M200_FEATURE_ORIGIN_LOWER_LEFT = (1 << 5)
 };
 
+#if defined(USING_MALI400) || defined(USING_MALI450)
 enum m400_scaling_config
 {
 	M400_SCALING_CONFIG_POINT_AND_LINE_SCALE_ENABLE = (1 << 0),
@@ -106,6 +110,7 @@ enum m400_scaling_config
 	M400_SCALING_CONFIG_FLIP_FRAGCOORD              = (1 << 10),
 	M400_SCALING_CONFIG_FLIP_DERIVATIVE_Y           = (1 << 11)
 };
+#endif
 
 /**
  * This enum is used when writing to a m200_reg typed array of writeback registers.

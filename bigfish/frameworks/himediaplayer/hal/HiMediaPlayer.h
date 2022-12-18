@@ -454,6 +454,7 @@ private:
         sp <CommandQueue> mCmdQueue;
         HI_HANDLE         mAVPlayer;
         bool              mUseExtAVPlay;
+        int               mUnderrun;
 
         HI_HANDLE         mSoHandle;
         bool              mReset;

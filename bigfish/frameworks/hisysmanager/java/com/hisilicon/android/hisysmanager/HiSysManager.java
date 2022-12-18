@@ -52,6 +52,20 @@ public class HiSysManager{
      * @return result 0: sucess,-1: failed
      */
     public native int reboot();
+
+    /**
+     * Update logo.
+     * <p>
+     * Update logo with a picture. The picture will be converted into JPEG format, and then used to update logo.<br>
+     * <br>
+     * @param path The full path of the picture.
+     * @return result 0: sucess, -1: failed.
+     */
+    public int updateLogo(String path)
+    {
+        return native_updateLogo(path);
+    }
+
     /**
      * Iptv to private recovery.
      * <p>
@@ -475,4 +489,6 @@ public class HiSysManager{
      */
     /** {@hide} this api is for internal use only */
     public native int enableCapable(int type);
+    private native final int native_updateLogo(String path);
+
 }

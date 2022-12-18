@@ -109,8 +109,7 @@ public class MediaService extends Service
     private final static String SYSTEM_SETTING_REMOVE_SHAREDDIR_ACTION= "com.hisilicon.dlna.remove.shareddir";
     private final static String SYSTEM_SETTING_ADD_SHAREDDIR_ACTION= "com.hisilicon.dlna.add.shareddir";
     private final static String SERVICE_DMS_RESTART_ACTION = "com.hisilicon.service.dms.restarted";
-    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "eth";//"eth0";
-
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
     private final int DIR_ADD= 0x10;
     private final int DIR_REMOVE= DIR_ADD + 1;
     private final Lock dmsBinderLock = new ReentrantLock();

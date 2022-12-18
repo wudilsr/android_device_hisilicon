@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2007-2011, 2015 ARM Limited
+ * (C) COPYRIGHT 2007-2011, 2014 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -27,14 +27,21 @@
 #define MALI_L2_COUNTER_OFFSET      (30000 | MALI_COUNTER_HARDWARE_BIT)
 #define MALI_L2_COUNTER_OFFSET_END  (39999 | MALI_COUNTER_HARDWARE_BIT)
 
+#if defined(USING_MALI200) && (MALI200_HWVER == 0x0001)
+#define MALI_CORE_FREQ_KHZ 300000
+#define MALI_CORE_FREQ_MHZ_STR "300.0"
+#else
 #define MALI_CORE_FREQ_KHZ 10000
 #define MALI_CORE_FREQ_MHZ_STR "10.0"
+#endif /* Mali200 r0p1 */
 
 #define MALI_COUNTER_INFINITE 0x7fffffffffffffffLL
 
 #include "mali200_counters.h"
 #include "maligp2_counters.h"
+#if !defined(USING_MALI200)
 #include "malil2_counters.h"
+#endif
 
 typedef enum mali_frequency_scale
 {

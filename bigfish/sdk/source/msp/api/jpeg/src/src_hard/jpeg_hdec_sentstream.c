@@ -1822,8 +1822,8 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 			}
 			if(HI_FALSE == bRetVal && 0XFF != pStreamStartVirAddr[u32NeedDecCnt - 2] && 0XD9 != pStreamStartVirAddr[u32NeedDecCnt - 1])
 			{/** 不是最后的码流，调用填充数据又没有实现填充的功能 **/
-				pJpegHandle->bFillInput  = HI_FALSE;
-				goto FAIL;
+			    //pJpegHandle->bFillInput  = HI_FALSE;
+				//goto FAIL;
 			}
 			
 			/** 刷码流数据 **/

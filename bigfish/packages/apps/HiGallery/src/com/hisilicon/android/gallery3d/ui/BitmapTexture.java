@@ -27,7 +27,7 @@ import android.graphics.Bitmap;
 // does not free the Bitmap.
 public class BitmapTexture extends UploadedTexture {
     protected Bitmap mContentBitmap;
-
+    private boolean misgif = false;
     public BitmapTexture(Bitmap bitmap) {
         this(bitmap, false);
     }
@@ -50,5 +50,11 @@ public class BitmapTexture extends UploadedTexture {
 
     public Bitmap getBitmap() {
         return mContentBitmap;
+    }
+    public void setIsGif(boolean isgif) {
+		misgif = isgif;
+	}
+    public boolean getIsGif(){
+         return misgif;
     }
 }

@@ -44,6 +44,7 @@ void SI_ReleaseHDMITX_SWReset( HI_U8 );
 HI_BOOL SI_IsHDMIResetting(void);
 void SI_SetDeepColor ( HI_U8 bDeepColor );
 void HDMI_ProcessCableIn(void);
+void SI_CheckClockStable(void);
 
 void SI_ReadBlockHDMITXP0(HI_U8 Addr, HI_U8 NBytes, HI_U8 * Data );
 void SI_ReadBlockHDMITXP1(HI_U8 Addr, HI_U8 NBytes, HI_U8 * Data );

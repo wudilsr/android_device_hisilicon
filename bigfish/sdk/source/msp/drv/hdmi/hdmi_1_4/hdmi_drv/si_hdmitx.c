@@ -285,29 +285,65 @@ HI_BOOL SI_IsHDMIResetting(void)
 //-------------------------------------------------------------------
 void SI_SW_ResetHDMITX(void)
 {
-    HI_U8 TimeOut = 50;
-
+    HI_U8 TimeOut = 20;
+    HI_U8 RegVal;
     COM_INFO("--> SI_SW_ResetHDMITX\n");
+
+    SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    DelayMS(10);
+    SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    DelayMS(5);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+    
     while ( !siiIsTClockStable() && --TimeOut )
     {
-        DelayMS(1);         // wait for input pixel clock to stabilze
+        DelayMS(5);         // wait for input pixel clock to stabilze
     }
 
-    if (TimeOut)
+    if (TimeOut == 0)
     {
-        SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-        DelayMS(1);
-        SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-        DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        SI_AssertHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(10);
+        SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(5);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        COM_INFO("TClock Stable:%d before sw reset\n", siiIsTClockStable());
     }
-    else
+    COM_INFO("SI_SW_ResetHDMITX. <--\n");
+
+}
+
+//-------------------------------------------------------------------
+void SI_CheckClockStable(void)
+{
+    HI_U8 TimeOut = 20;
+    HI_U8 RegVal;
+
+    COM_INFO("--> SI_CheckClockStable.\n");
+    if(siiIsTClockStable())
     {
-        COM_INFO("SoftReset TMDS is not stable!!\n");
-        SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-        DelayMS(1);
-        SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-        DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        COM_INFO("TClock Stable:%d <--\n", siiIsTClockStable());
+        return;
     }
+
+    SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    DelayMS(10);
+    SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    DelayMS(5);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+    
+    while ( !siiIsTClockStable() && --TimeOut )
+    {
+        DelayMS(5);         // wait for input pixel clock to stabilze
+    }
+
+    if (TimeOut == 0)
+    {
+        SI_AssertHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(10);
+        SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(5);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        COM_INFO("TClock Stable:%d before sw reset\n", siiIsTClockStable());
+    }
+    COM_INFO("SI_CheckClockStable. <--\n");
+
 }
 //-------------------------------------------------------------------
 void SI_WakeUpHDMITX(void)

@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100/.vfmw.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100/vfmw.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100/vfmw.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100/vfmw.o -O2 -Wall
@@ -123,7 +123,7 @@ VDM_ResetClock:
 	movw	ip, #:lower16:g_pstRegCrg	@ tmp139,
 	movt	ip, #:upper16:g_pstRegCrg	@ tmp139,
 	ldr	r1, [ip, #0]	@ g_pstRegCrg.443, g_pstRegCrg
-	ldr	r0, [r1, #120]	@ D.50130, <variable>.PERI_CRG30.u32
+	ldr	r0, [r1, #120]	@ D.50134, <variable>.PERI_CRG30.u32
 	bfc	r0, #12, #5	@ u32TmpValue,,
 	bfc	r0, #17, #1	@ u32TmpValue,,
 	str	r0, [r1, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
@@ -157,8 +157,8 @@ VDM_OpenHardware:
 	ldr	r1, [r0, #0]	@ g_pstRegCrg.444, g_pstRegCrg
 	movw	r0, #:lower16:32212230	@ tmp141,
 	movt	r0, #:upper16:32212230	@,
-	ldr	lr, [r1, #120]	@ D.50137, <variable>.PERI_CRG30.u32
-	orr	ip, lr, #1	@ u32TmpValue, D.50137,
+	ldr	lr, [r1, #120]	@ D.50141, <variable>.PERI_CRG30.u32
+	orr	ip, lr, #1	@ u32TmpValue, D.50141,
 	bfc	ip, #4, #1	@ u32TmpValue,,
 	bfc	ip, #6, #1	@ u32TmpValue,,
 	bfc	ip, #8, #2	@ u32TmpValue,,
@@ -194,8 +194,8 @@ DSP_OpenHardware:
 	ldr	r2, [r0, #0]	@ g_pstRegCrg.445, g_pstRegCrg
 	movw	r0, #:lower16:32212230	@ tmp141,
 	movt	r0, #:upper16:32212230	@,
-	ldr	lr, [r2, #120]	@ D.50145, <variable>.PERI_CRG30.u32
-	orr	r1, lr, #2	@ u32TmpValue, D.50145,
+	ldr	lr, [r2, #120]	@ D.50149, <variable>.PERI_CRG30.u32
+	orr	r1, lr, #2	@ u32TmpValue, D.50149,
 	str	r1, [r2, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldr	r3, [ip, #4]	@ arm_delay_ops.const_udelay, arm_delay_ops.const_udelay
 	blx	r3	@ arm_delay_ops.const_udelay
@@ -226,7 +226,7 @@ DSP_CloseHardware:
 	ldr	r2, [r0, #0]	@ g_pstRegCrg.447, g_pstRegCrg
 	movw	r0, #:lower16:32212230	@ tmp140,
 	movt	r0, #:upper16:32212230	@,
-	ldr	r1, [r2, #120]	@ D.50166, <variable>.PERI_CRG30.u32
+	ldr	r1, [r2, #120]	@ D.50170, <variable>.PERI_CRG30.u32
 	bfc	r1, #1, #1	@ u32TmpValue,,
 	str	r1, [r2, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldr	r3, [ip, #4]	@ arm_delay_ops.const_udelay, arm_delay_ops.const_udelay
@@ -254,7 +254,7 @@ SCD_OpenHardware:
 	movw	r0, #:lower16:g_pstRegCrg	@ tmp138,
 	movt	r0, #:upper16:g_pstRegCrg	@ tmp138,
 	ldr	r3, [r0, #0]	@ g_pstRegCrg.448, g_pstRegCrg
-	ldr	r2, [r3, #120]	@ D.50174, <variable>.PERI_CRG30.u32
+	ldr	r2, [r3, #120]	@ D.50178, <variable>.PERI_CRG30.u32
 	bfc	r2, #5, #1	@ u32TmpValue,,
 	str	r2, [r3, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldmfd	sp, {fp, sp, pc}	@
@@ -280,8 +280,8 @@ SCD_CloseHardware:
 	movw	r1, #:lower16:g_pstRegCrg	@ tmp138,
 	movt	r1, #:upper16:g_pstRegCrg	@ tmp138,
 	ldr	r3, [r1, #0]	@ g_pstRegCrg.449, g_pstRegCrg
-	ldr	r0, [r3, #120]	@ D.50181, <variable>.PERI_CRG30.u32
-	orr	r2, r0, #32	@ u32TmpValue, D.50181,
+	ldr	r0, [r3, #120]	@ D.50185, <variable>.PERI_CRG30.u32
+	orr	r2, r0, #32	@ u32TmpValue, D.50185,
 	str	r2, [r3, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -307,8 +307,8 @@ BPD_OpenHardware:
 	movt	ip, #:upper16:g_pstRegCrg	@ tmp138,
 	mov	r0, #0	@,
 	ldr	r3, [ip, #0]	@ g_pstRegCrg.450, g_pstRegCrg
-	ldr	r1, [r3, #136]	@ D.50188, <variable>.PERI_CRG34.u32
-	orr	r2, r1, #1	@ u32TmpValue, D.50188,
+	ldr	r1, [r3, #136]	@ D.50192, <variable>.PERI_CRG34.u32
+	orr	r2, r1, #1	@ u32TmpValue, D.50192,
 	bfc	r2, #4, #1	@ u32TmpValue,,
 	str	r2, [r3, #136]	@ u32TmpValue, <variable>.PERI_CRG34.u32
 	ldmfd	sp, {fp, sp, pc}	@
@@ -335,8 +335,8 @@ BPD_CloseHardware:
 	movt	r2, #:upper16:g_pstRegCrg	@ tmp138,
 	mov	r0, #0	@,
 	ldr	r3, [r2, #0]	@ g_pstRegCrg.451, g_pstRegCrg
-	ldr	ip, [r3, #136]	@ D.50196, <variable>.PERI_CRG34.u32
-	bic	r1, ip, #17	@ u32TmpValue, D.50196,
+	ldr	ip, [r3, #136]	@ D.50200, <variable>.PERI_CRG34.u32
+	bic	r1, ip, #17	@ u32TmpValue, D.50200,
 	orr	r2, r1, #16	@ u32TmpValue, u32TmpValue,
 	str	r2, [r3, #136]	@ u32TmpValue, <variable>.PERI_CRG34.u32
 	ldmfd	sp, {fp, sp, pc}	@
@@ -389,12 +389,12 @@ VDM_CloseHardware:
 	movt	r1, #:upper16:.LANCHOR0	@ tmp141,
 	movw	r4, #:lower16:g_pstRegCrg	@ tmp147,
 	movt	r4, #:upper16:g_pstRegCrg	@ tmp147,
-	ldr	r0, [r1, #60]	@ D.50154, g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbReset
+	ldr	r0, [r1, #60]	@ D.50158, g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbReset
 	ldr	r3, [r4, #0]	@ g_pstRegCrg.446, g_pstRegCrg
-	cmp	r0, #0	@ D.50154,
-	ldr	r5, [r3, #120]	@ D.50153, <variable>.PERI_CRG30.u32
+	cmp	r0, #0	@ D.50158,
+	ldr	r5, [r3, #120]	@ D.50157, <variable>.PERI_CRG30.u32
 	beq	.L20	@,
-	blx	r0	@ D.50154
+	blx	r0	@ D.50158
 .L21:
 	ldr	lr, [r4, #0]	@ g_pstRegCrg.760, g_pstRegCrg
 	movw	ip, #:lower16:arm_delay_ops	@ tmp144,
@@ -586,7 +586,7 @@ VDEC_Control:
 	.word	.L79
 	.word	.L48
 	.word	.L49
-	.word	.L79
+	.word	.L32
 	.word	.L79
 	.word	.L79
 	.word	.L79
@@ -611,24 +611,36 @@ VDEC_Control:
 	.word	.L55
 	.word	.L32
 	.word	.L56
-.L37:
-	cmp	r2, #0	@ pArgs,
-	beq	.L151	@,
-.L65:
+.L130:
+	mov	r2, r6	@, ChanID
+	mov	r0, #31	@,
+	movw	r1, #:lower16:.LC10	@,
+	movt	r1, #:upper16:.LC10	@,
+	bl	dprint_vfmw	@
+	mov	r0, r6	@, ChanID
+	mov	r1, r4	@, pArgs
+	bl	VCTRL_SetFsParamToChan	@
+	mov	r0, r6	@, ChanID
+	bl	VCTRL_RequestChanMem	@
+	cmp	r0, #0	@,
+	bne	.L131	@,
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
-	mov	r1, r4	@, pArgs
-	bl	VCTRL_ConfigChan	@
-	cmp	r0, #0	@,
-	bne	.L106	@,
-	bl	VCTRL_EnableAllInt	@
+	mov	r1, #2	@,
+	bl	VCTRL_SetChanFsPartitionState	@
+	mov	r0, #31	@,
+	movw	r1, #:lower16:.LC11	@,
+	movt	r1, #:upper16:.LC11	@,
+	bl	dprint_vfmw	@
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinUnLockIRQ	@
+.L132:
 	mov	r0, r6	@, ChanID
-	bl	VCTRL_LoadDspCode	@
+	mov	r1, #0	@,
+	bl	VCTRT_SetChanCtrlState	@
 	subs	r5, r0, #0	@ ret,
 	beq	.L30	@,
 .L79:
@@ -636,7 +648,7 @@ VDEC_Control:
 	b	.L30	@
 .L46:
 	cmp	r2, #0	@ pArgs,
-	beq	.L152	@,
+	beq	.L153	@,
 .L74:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -647,11 +659,11 @@ VDEC_Control:
 	ldr	r5, [fp, #-72]	@ stMem.Length, stMem.Length
 	ldr	r2, [fp, #-80]	@ stMem.PhyAddr, stMem.PhyAddr
 	stmia	r4, {r2, r5}	@ phole stm
-.L146:
+.L149:
 	cmp	r0, #0	@ ret
 	moveq	r5, r0	@, ret, ret
 	mvnne	r5, #0	@, ret,
-.L147:
+.L150:
 	bl	VCTRL_EnableAllInt	@
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -659,7 +671,7 @@ VDEC_Control:
 	b	.L30	@
 .L33:
 	cmp	r2, #0	@ pArgs,
-	beq	.L153	@,
+	beq	.L154	@,
 .L58:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -674,10 +686,10 @@ VDEC_Control:
 	b	.L30	@
 .L34:
 	cmp	r2, #0	@ pArgs,
-	beq	.L154	@,
+	beq	.L155	@,
 	ldr	r0, [r2, #0]	@ prephitmp.830,* pArgs
 	cmp	r0, #33	@ prephitmp.830,
-	bgt	.L155	@,
+	bgt	.L156	@,
 .L61:
 	add	r1, r4, #4	@, pArgs,
 	bl	VCTRL_CreateChan	@
@@ -693,64 +705,69 @@ VDEC_Control:
 .L84:
 	mov	r5, #0	@ ret,
 	b	.L30	@
-.L56:
-	cmp	r2, #0	@ pArgs,
-	beq	.L156	@,
-	mov	r0, r6	@, ChanID
-	mov	r1, #1	@,
-	bl	VCTRT_SetChanCtrlState	@
-	cmp	r0, #0	@,
-	bne	.L79	@,
-	mov	r0, r6	@, ChanID
-	bl	VCTRL_RlsAllFrameNode	@
-	subs	r5, r0, #0	@ ret,
-	beq	.L128	@,
-	mov	r2, r6	@, ChanID
-	movw	r1, #:lower16:.LC9	@,
-	mov	r0, #31	@,
-	movt	r1, #:upper16:.LC9	@,
-	bl	dprint_vfmw	@
-	b	.L30	@
-.L55:
+.L50:
 	cmp	r2, #0	@ pArgs,
 	beq	.L157	@,
-.L82:
-	add	r5, r6, r3	@ tmp294, ChanID, tmp316
-	add	r1, r3, r6, asl #2	@, tmp301, tmp316, ChanID,
-	mov	r2, #0	@ tmp296,
-	strb	r2, [r5, #128]	@ tmp296, g_LowDelayCalcStat
-	mov	r5, r2	@ ret, tmp296
-	str	r2, [r1, #144]	@ tmp296, g_LowDelayCalcHandle
-	b	.L30	@
-.L54:
-	cmp	r2, #0	@ pArgs,
-	beq	.L158	@,
-.L81:
-	add	r0, r6, r3	@ tmp282, ChanID, tmp316
-	mov	ip, #1	@ tmp284,
-	add	r3, r3, r6, asl #2	@, tmp289, tmp316, ChanID,
-	mov	r5, #0	@ ret,
-	strb	ip, [r0, #128]	@ tmp284, g_LowDelayCalcStat
-	ldr	r2, [r4, #0]	@ tmp291,* pArgs
-	str	r2, [r3, #144]	@ tmp291, g_LowDelayCalcHandle
-	b	.L30	@
-.L51:
-	cmp	r2, #0	@ pArgs,
-	beq	.L159	@,
-.L77:
+.L76:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
+	sub	r1, fp, #80	@,,
+	mov	ip, #1	@ tmp270,
+	mov	r3, #0	@ tmp271,
+	str	ip, [fp, #-80]	@ tmp270, option.s32KeepBS
+	str	r3, [fp, #-76]	@ tmp271, option.s32KeepSPSPPS
+	bl	VCTRL_ResetChanWithOption	@
+	cmp	r0, #0	@,
+	bne	.L125	@,
+	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
-	bl	VCTRL_ConfigFFFBSpeed	@
-	b	.L146	@
-.L35:
+	bl	VCTRL_SeekPts	@
+	subs	r5, r0, #0	@ ret,
+	beq	.L150	@,
+.L125:
+	mvn	r5, #0	@ ret,
+	b	.L150	@
+.L54:
+	cmp	r2, #0	@ pArgs,
+	beq	.L158	@,
+.L81:
+	add	r0, r6, r3	@ tmp284, ChanID, tmp316
+	mov	ip, #1	@ tmp286,
+	add	r3, r3, r6, asl #2	@, tmp291, tmp316, ChanID,
+	mov	r5, #0	@ ret,
+	strb	ip, [r0, #128]	@ tmp286, g_LowDelayCalcStat
+	ldr	r2, [r4, #0]	@ tmp293,* pArgs
+	str	r2, [r3, #144]	@ tmp293, g_LowDelayCalcHandle
+	b	.L30	@
+.L53:
+	cmp	r2, #0	@ pArgs,
+	beq	.L159	@,
+.L80:
+	ldr	r0, [r4, #0]	@ tmp281,* pArgs
+	movw	r1, #:lower16:.LANCHOR1	@ tmp280,
+	movt	r1, #:upper16:.LANCHOR1	@ tmp280,
+	mov	r5, #0	@ ret,
+	str	r0, [r1, r6, asl #2]	@ tmp281, g_FrameRate
+	b	.L30	@
+.L55:
 	cmp	r2, #0	@ pArgs,
 	beq	.L160	@,
+.L82:
+	add	r5, r6, r3	@ tmp296, ChanID, tmp316
+	add	r1, r3, r6, asl #2	@, tmp303, tmp316, ChanID,
+	mov	r2, #0	@ tmp298,
+	strb	r2, [r5, #128]	@ tmp298, g_LowDelayCalcStat
+	mov	r5, r2	@ ret, tmp298
+	str	r2, [r1, #144]	@ tmp298, g_LowDelayCalcHandle
+	b	.L30	@
+.L35:
+	cmp	r2, #0	@ pArgs,
+	beq	.L161	@,
 	ldr	r0, [r2, #0]	@ prephitmp.826,* pArgs
 	cmp	r0, #33	@ prephitmp.826,
-	bgt	.L161	@,
+	bgt	.L162	@,
 .L63:
 	ldr	r1, [r4, #4]	@,
 	mov	r2, #2	@,
@@ -763,7 +780,7 @@ VDEC_Control:
 	b	.L30	@
 .L36:
 	cmp	r2, #0	@ pArgs,
-	beq	.L162	@,
+	beq	.L163	@,
 .L64:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -771,10 +788,27 @@ VDEC_Control:
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_GetChanCfg	@
-	b	.L146	@
+	b	.L149	@
+.L37:
+	cmp	r2, #0	@ pArgs,
+	beq	.L164	@,
+.L65:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	mov	r0, r6	@, ChanID
+	mov	r1, r4	@, pArgs
+	bl	VCTRL_ConfigChan	@
+	cmp	r0, #0	@,
+	bne	.L125	@,
+	mov	r0, r6	@, ChanID
+	bl	VCTRL_LoadDspCode	@
+	subs	r5, r0, #0	@ ret,
+	mvnne	r5, #0	@ ret,
+	b	.L150	@
 .L40:
 	cmp	r2, #0	@ pArgs,
-	beq	.L163	@,
+	beq	.L165	@,
 .L68:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -783,57 +817,7 @@ VDEC_Control:
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_GetStreamSize	@
 	mov	r5, r0	@ ret,
-	b	.L147	@
-.L41:
-	cmp	r2, #0	@ pArgs,
-	beq	.L164	@,
-.L69:
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinLockIRQ	@
-	ldr	r0, [r4, #0]	@,* pArgs
-	sub	r1, fp, #40	@,,
-	sub	r2, fp, #52	@,,
-	bl	VCTRL_GetChanMemSize	@
-	subs	r5, r0, #0	@ D.50589,
-	bne	.L123	@,
-	ldr	r2, [fp, #-40]	@ VdmMem, VdmMem
-	ldr	lr, [fp, #-52]	@ ScdMem, ScdMem
-	ldr	r1, [fp, #-44]	@ ScdMem, ScdMem
-	ldr	r3, [fp, #-36]	@ VdmMem, VdmMem
-	add	r0, lr, r2	@ tmp234, ScdMem, VdmMem
-	ldr	ip, [fp, #-48]	@ ScdMem, ScdMem
-	ldr	r2, [fp, #-32]	@ VdmMem, VdmMem
-	add	lr, ip, r3	@ tmp237, ScdMem, VdmMem
-	str	r0, [r4, #0]	@ tmp234, <variable>.MinMemSize
-	add	r2, r1, r2	@ tmp240, ScdMem, VdmMem
-	str	lr, [r4, #4]	@ tmp237, <variable>.NormalMemSize
-	str	r2, [r4, #8]	@ tmp240, <variable>.FluentMemSize
-	b	.L147	@
-.L50:
-	cmp	r2, #0	@ pArgs,
-	beq	.L165	@,
-.L76:
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinLockIRQ	@
-	mov	r0, r6	@, ChanID
-	sub	r1, fp, #80	@,,
-	mov	ip, #1	@ tmp268,
-	mov	r3, #0	@ tmp269,
-	str	ip, [fp, #-80]	@ tmp268, option.s32KeepBS
-	str	r3, [fp, #-76]	@ tmp269, option.s32KeepSPSPPS
-	bl	VCTRL_ResetChanWithOption	@
-	cmp	r0, #0	@,
-	bne	.L123	@,
-	mov	r0, r6	@, ChanID
-	mov	r1, r4	@, pArgs
-	bl	VCTRL_SeekPts	@
-	subs	r5, r0, #0	@ ret,
-	beq	.L147	@,
-.L123:
-	mvn	r5, #0	@ ret,
-	b	.L147	@
+	b	.L150	@
 .L48:
 	cmp	r2, #0	@ pArgs,
 	beq	.L166	@,
@@ -845,7 +829,17 @@ VDEC_Control:
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_SetDiscardPicParam	@
 	mov	r5, r0	@ ret,
-	b	.L147	@
+	b	.L150	@
+.L49:
+	cmp	r2, #0	@ pArgs,
+	bne	.L79	@,
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	mov	r2, #780	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
 .L44:
 	cmp	r2, #0	@ pArgs,
 	beq	.L167	@,
@@ -855,28 +849,54 @@ VDEC_Control:
 	bl	OSAL_SpinLockIRQ	@
 	ldr	r0, [r4, #0]	@,* pArgs
 	bl	VCTRL_GetChanIDByMemAddr	@
-	cmn	r0, #1	@ D.50622,
-	str	r0, [r4, #0]	@ D.50622,* pArgs
-	moveq	r5, r0	@, ret, D.50622
+	cmn	r0, #1	@ D.50628,
+	str	r0, [r4, #0]	@ D.50628,* pArgs
+	moveq	r5, r0	@, ret, D.50628
 	movne	r5, #0	@, ret,
-	bl	VCTRL_EnableAllInt	@
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinUnLockIRQ	@
-	b	.L30	@
-.L53:
+	b	.L150	@
+.L56:
 	cmp	r2, #0	@ pArgs,
 	beq	.L168	@,
-.L80:
-	ldr	r0, [r4, #0]	@ tmp279,* pArgs
-	movw	r1, #:lower16:.LANCHOR1	@ tmp278,
-	movt	r1, #:upper16:.LANCHOR1	@ tmp278,
-	mov	r5, #0	@ ret,
-	str	r0, [r1, r6, asl #2]	@ tmp279, g_FrameRate
+	mov	r0, r6	@, ChanID
+	mov	r1, #1	@,
+	bl	VCTRT_SetChanCtrlState	@
+	cmp	r0, #0	@,
+	bne	.L79	@,
+	mov	r0, r6	@, ChanID
+	bl	VCTRL_RlsAllFrameNode	@
+	subs	r5, r0, #0	@ ret,
+	beq	.L130	@,
+	mov	r2, r6	@, ChanID
+	movw	r1, #:lower16:.LC9	@,
+	mov	r0, #31	@,
+	movt	r1, #:upper16:.LC9	@,
+	bl	dprint_vfmw	@
 	b	.L30	@
-.L42:
+.L52:
 	cmp	r2, #0	@ pArgs,
 	beq	.L169	@,
+.L78:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	mov	r0, r6	@, ChanID
+	mov	r1, r4	@, pArgs
+	bl	VCTRL_ConfigPVRInfo	@
+	b	.L149	@
+.L51:
+	cmp	r2, #0	@ pArgs,
+	beq	.L170	@,
+.L77:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	mov	r0, r6	@, ChanID
+	mov	r1, r4	@, pArgs
+	bl	VCTRL_ConfigFFFBSpeed	@
+	b	.L149	@
+.L42:
+	cmp	r2, #0	@ pArgs,
+	beq	.L171	@,
 .L70:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -885,18 +905,18 @@ VDEC_Control:
 	sub	r2, fp, #64	@,,
 	mov	r3, #1	@,
 	bl	VCTRL_GetChanMemSizeWithOption	@
-	subs	r5, r0, #0	@ D.50602,
-	bne	.L123	@,
+	subs	r5, r0, #0	@ D.50608,
+	bne	.L125	@,
 	ldr	r3, [fp, #-60]	@ DetailMemSize.ScdDetailMem, DetailMemSize.ScdDetailMem
 	ldr	r0, [fp, #-56]	@ DetailMemSize.ChanCtxDetailMem, DetailMemSize.ChanCtxDetailMem
 	ldr	r1, [fp, #-64]	@ DetailMemSize.VdhDetailMem, DetailMemSize.VdhDetailMem
 	str	r3, [r4, #4]	@ DetailMemSize.ScdDetailMem,
 	str	r0, [r4, #8]	@ DetailMemSize.ChanCtxDetailMem,
 	str	r1, [r4, #0]	@ DetailMemSize.VdhDetailMem,* pArgs
-	b	.L147	@
+	b	.L150	@
 .L38:
 	cmp	r2, #0	@ pArgs,
-	beq	.L170	@,
+	beq	.L172	@,
 .L66:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -904,10 +924,10 @@ VDEC_Control:
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_SetStreamInterface	@
-	b	.L146	@
+	b	.L149	@
 .L47:
 	cmp	r2, #0	@ pArgs,
-	beq	.L171	@,
+	beq	.L173	@,
 .L75:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -915,40 +935,7 @@ VDEC_Control:
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_PutUsrdecFrame	@
-	b	.L146	@
-.L52:
-	cmp	r2, #0	@ pArgs,
-	beq	.L172	@,
-.L78:
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinLockIRQ	@
-	mov	r0, r6	@, ChanID
-	mov	r1, r4	@, pArgs
-	bl	VCTRL_ConfigPVRInfo	@
-	b	.L146	@
-.L43:
-	cmp	r2, #0	@ pArgs,
-	beq	.L173	@,
-.L71:
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinLockIRQ	@
-	mov	r0, r6	@, ChanID
-	sub	r1, fp, #80	@,,
-	bl	VCTRL_GetChanMemInfo	@
-	subs	r5, r0, #0	@ ret,
-	bne	.L106	@,
-	ldr	lr, [fp, #-76]	@ D.50614, MemRec.VirAddr
-	ldr	r2, [fp, #-72]	@ D.50613, MemRec.PhyAddr
-	ldr	ip, [fp, #-68]	@ MemRec.Length, MemRec.Length
-	cmp	lr, #0	@ D.50614,
-	stmia	r4, {r2, lr}	@ phole stm
-	str	ip, [r4, #8]	@ MemRec.Length, <variable>.Length
-	beq	.L123	@,
-	cmp	r2, #0	@ D.50613,
-	mvneq	r5, #0	@ ret,
-	b	.L147	@
+	b	.L149	@
 .L39:
 	cmp	r2, #0	@ pArgs,
 	beq	.L174	@,
@@ -957,31 +944,47 @@ VDEC_Control:
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	str	r6, [r4, #0]	@ ChanID, <variable>.image_provider_inst_id
-	movw	r1, #:lower16:VCTRL_GetChanImage	@ tmp223,
-	movw	r3, #:lower16:VCTRL_ReleaseChanImage	@ tmp224,
-	movt	r1, #:upper16:VCTRL_GetChanImage	@ tmp223,
-	movt	r3, #:upper16:VCTRL_ReleaseChanImage	@ tmp224,
-	str	r1, [r4, #4]	@ tmp223, <variable>.read_image
+	movw	r1, #:lower16:VCTRL_GetChanImage	@ tmp225,
+	movw	r3, #:lower16:VCTRL_ReleaseChanImage	@ tmp226,
+	movt	r1, #:upper16:VCTRL_GetChanImage	@ tmp225,
+	movt	r3, #:upper16:VCTRL_ReleaseChanImage	@ tmp226,
+	str	r1, [r4, #4]	@ tmp225, <variable>.read_image
 	mov	r5, #0	@ ret,
-	str	r3, [r4, #8]	@ tmp224, <variable>.release_image
+	str	r3, [r4, #8]	@ tmp226, <variable>.release_image
 	bl	VCTRL_EnableAllInt	@
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinUnLockIRQ	@
 	b	.L30	@
-.L49:
-	cmp	r2, #0	@ pArgs,
-	bne	.L79	@,
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #778	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L45:
+.L41:
 	cmp	r2, #0	@ pArgs,
 	beq	.L175	@,
+.L69:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	ldr	r0, [r4, #0]	@,* pArgs
+	sub	r1, fp, #40	@,,
+	sub	r2, fp, #52	@,,
+	bl	VCTRL_GetChanMemSize	@
+	subs	r5, r0, #0	@ D.50595,
+	bne	.L125	@,
+	ldr	r2, [fp, #-40]	@ VdmMem, VdmMem
+	ldr	lr, [fp, #-52]	@ ScdMem, ScdMem
+	ldr	r1, [fp, #-44]	@ ScdMem, ScdMem
+	ldr	r3, [fp, #-36]	@ VdmMem, VdmMem
+	add	r0, lr, r2	@ tmp236, ScdMem, VdmMem
+	ldr	ip, [fp, #-48]	@ ScdMem, ScdMem
+	ldr	r2, [fp, #-32]	@ VdmMem, VdmMem
+	add	lr, ip, r3	@ tmp239, ScdMem, VdmMem
+	str	r0, [r4, #0]	@ tmp236, <variable>.MinMemSize
+	add	r2, r1, r2	@ tmp242, ScdMem, VdmMem
+	str	lr, [r4, #4]	@ tmp239, <variable>.NormalMemSize
+	str	r2, [r4, #8]	@ tmp242, <variable>.FluentMemSize
+	b	.L150	@
+.L45:
+	cmp	r2, #0	@ pArgs,
+	beq	.L176	@,
 .L59:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -994,11 +997,33 @@ VDEC_Control:
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinUnLockIRQ	@
 	b	.L30	@
+.L43:
+	cmp	r2, #0	@ pArgs,
+	beq	.L177	@,
+.L71:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	mov	r0, r6	@, ChanID
+	sub	r1, fp, #80	@,,
+	bl	VCTRL_GetChanMemInfo	@
+	subs	r5, r0, #0	@ ret,
+	bne	.L178	@,
+	ldr	lr, [fp, #-76]	@ D.50620, MemRec.VirAddr
+	ldr	r2, [fp, #-72]	@ D.50619, MemRec.PhyAddr
+	ldr	ip, [fp, #-68]	@ MemRec.Length, MemRec.Length
+	cmp	lr, #0	@ D.50620,
+	stmia	r4, {r2, lr}	@ phole stm
+	str	ip, [r4, #8]	@ MemRec.Length, <variable>.Length
+	beq	.L125	@,
+	cmp	r2, #0	@ D.50619,
+	mvneq	r5, #0	@ ret,
+	b	.L150	@
 .L32:
 	cmp	r1, #58	@ eCmdID,
 	ldrls	pc, [pc, r1, asl #2]	@ eCmdID
 	b	.L79	@
-.L96:
+.L97:
 	.word	.L84
 	.word	.L58
 	.word	.L84
@@ -1034,7 +1059,7 @@ VDEC_Control:
 	.word	.L79
 	.word	.L73
 	.word	.L79
-	.word	.L79
+	.word	.L95
 	.word	.L79
 	.word	.L79
 	.word	.L79
@@ -1057,7 +1082,18 @@ VDEC_Control:
 	.word	.L80
 	.word	.L81
 	.word	.L82
-	.word	.L95
+	.word	.L96
+.L95:
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinLockIRQ	@
+	mov	r5, #0	@ ret,
+	bl	VCTRL_ExtraWakeUpThread	@
+	bl	VCTRL_EnableAllInt	@
+	movw	r0, #:lower16:g_TaskLock	@,
+	movt	r0, #:upper16:g_TaskLock	@,
+	bl	OSAL_SpinUnLockIRQ	@
+	b	.L30	@
 .L94:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -1065,21 +1101,21 @@ VDEC_Control:
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_ResetChanWithOption	@
-	b	.L146	@
+	b	.L149	@
 .L93:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_ReleaseStream	@
-	b	.L146	@
+	b	.L149	@
 .L92:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_ResetChan	@
-	b	.L146	@
+	b	.L149	@
 .L91:
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_StopChanWithCheck	@
@@ -1092,7 +1128,7 @@ VDEC_Control:
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_StartChan	@
-	b	.L146	@
+	b	.L149	@
 .L89:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -1106,90 +1142,41 @@ VDEC_Control:
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinUnLockIRQ	@
 	b	.L30	@
-.L95:
+.L96:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinLockIRQ	@
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, pArgs
 	bl	VCTRL_StartChanWithOption	@
-	b	.L146	@
-.L106:
+	b	.L149	@
+.L156:
+	mov	r0, #0	@,
+	movw	r1, #:lower16:.LC6	@,
+	movw	r2, #606	@,
+	movt	r1, #:upper16:.LC6	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L162:
+	mov	r0, #0	@,
+	movw	r1, #:lower16:.LC6	@,
+	movw	r2, #622	@,
+	movt	r1, #:upper16:.LC6	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L178:
 	bl	VCTRL_EnableAllInt	@
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	mvn	r5, #0	@ ret,
 	bl	OSAL_SpinUnLockIRQ	@
 	b	.L30	@
-.L155:
-	mov	r0, #0	@,
-	movw	r1, #:lower16:.LC6	@,
-	mov	r2, #604	@,
-	movt	r1, #:upper16:.LC6	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L161:
-	mov	r0, #0	@,
-	movw	r1, #:lower16:.LC6	@,
-	mov	r2, #620	@,
-	movt	r1, #:upper16:.LC6	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L128:
-	mov	r2, r6	@, ChanID
-	mov	r0, #31	@,
-	movw	r1, #:lower16:.LC10	@,
-	movt	r1, #:upper16:.LC10	@,
-	bl	dprint_vfmw	@
-	mov	r0, r6	@, ChanID
-	mov	r1, r4	@, pArgs
-	bl	VCTRL_SetFsParamToChan	@
-	mov	r0, r6	@, ChanID
-	bl	VCTRL_RequestChanMem	@
-	cmp	r0, #0	@,
-	bne	.L129	@,
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinLockIRQ	@
-	mov	r0, r6	@, ChanID
-	mov	r1, #2	@,
-	bl	VCTRL_SetChanFsPartitionState	@
-	mov	r0, #31	@,
-	movw	r1, #:lower16:.LC11	@,
-	movt	r1, #:upper16:.LC11	@,
-	bl	dprint_vfmw	@
-	movw	r0, #:lower16:g_TaskLock	@,
-	movt	r0, #:upper16:g_TaskLock	@,
-	bl	OSAL_SpinUnLockIRQ	@
-.L130:
-	mov	r0, r6	@, ChanID
-	mov	r1, #0	@,
-	bl	VCTRT_SetChanCtrlState	@
-	subs	r5, r0, #0	@ ret,
-	mvnne	r5, #0	@ ret,
-	b	.L30	@
-.L156:
+.L168:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #807	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L153:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #573	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L159:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #762	@,
+	movw	r2, #809	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1197,39 +1184,7 @@ VDEC_Control:
 .L157:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #799	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L162:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #635	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L152:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #740	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L175:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #587	@,
-	movt	r1, #:upper16:.LC5	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L163:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #685	@,
+	movw	r2, #757	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1237,7 +1192,7 @@ VDEC_Control:
 .L154:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #596	@,
+	movw	r2, #575	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1245,79 +1200,15 @@ VDEC_Control:
 .L160:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #612	@,
+	movw	r2, #801	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
 	b	.L30	@
-.L167:
+.L155:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #716	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L171:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #748	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L158:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #792	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L164:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #693	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L169:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #700	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L173:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	mov	r2, #708	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L151:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #643	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L168:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #785	@,
-	movt	r1, #:upper16:.LC4	@,
-	bl	dprint_vfmw	@
-	mvn	r5, #0	@ ret,
-	b	.L30	@
-.L172:
-	mov	r0, r2	@, pArgs
-	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #769	@,
+	movw	r2, #598	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1325,15 +1216,79 @@ VDEC_Control:
 .L165:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #755	@,
+	movw	r2, #687	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
 	b	.L30	@
-.L170:
+.L159:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #670	@,
+	movw	r2, #787	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L161:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #614	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L177:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #710	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L158:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #794	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L163:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #637	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L169:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #771	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L153:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #742	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L171:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #702	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L173:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #750	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1341,7 +1296,39 @@ VDEC_Control:
 .L166:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #725	@,
+	movw	r2, #727	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L167:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #718	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L172:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	mov	r2, #672	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L175:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #695	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L164:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	movw	r2, #645	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
@@ -1349,16 +1336,32 @@ VDEC_Control:
 .L174:
 	mov	r0, r2	@, pArgs
 	movw	r1, #:lower16:.LC4	@,
-	movw	r2, #678	@,
+	mov	r2, #680	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@ ret,
 	b	.L30	@
-.L129:
+.L170:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC4	@,
+	mov	r2, #764	@,
+	movt	r1, #:upper16:.LC4	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L176:
+	mov	r0, r2	@, pArgs
+	movw	r1, #:lower16:.LC5	@,
+	movw	r2, #589	@,
+	movt	r1, #:upper16:.LC5	@,
+	bl	dprint_vfmw	@
+	mvn	r5, #0	@ ret,
+	b	.L30	@
+.L131:
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_GetCurChanFsSize	@
 	cmp	r0, #0	@,
-	beq	.L130	@,
+	beq	.L132	@,
 	mov	r2, r6	@, ChanID
 	mov	r0, #31	@,
 	movw	r1, #:lower16:.LC12	@,
@@ -1377,14 +1380,14 @@ VDEC_Control:
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	b	.L130	@
+	b	.L132	@
 .L85:
 	ldr	r0, [r2, #0]	@ prephitmp.830,* pArgs
 	b	.L61	@
 .L88:
 	mov	r4, #500	@ s32Loop.867,
-	b	.L97	@
-.L176:
+	b	.L98	@
+.L179:
 	cmp	r4, #0	@ s32Loop.867,
 	sub	r4, r4, #1	@ s32Loop.867, s32Loop.867,
 	beq	.L79	@,
@@ -1394,17 +1397,17 @@ VDEC_Control:
 	bl	VCTRT_SetChanCtrlState	@
 	cmn	r0, #1	@,
 	mov	r0, #1	@,
-	bne	.L103	@,
+	bne	.L104	@,
 	bl	msleep	@
 	sub	r4, r4, #1	@ s32Loop.867, s32Loop.867,
-.L97:
+.L98:
 	mov	r1, #2	@,
 	mov	r0, r6	@, ChanID
 	bl	VCTRT_SetChanCtrlState	@
 	cmn	r0, #1	@,
 	mov	r0, #1	@,
-	beq	.L176	@,
-.L103:
+	beq	.L179	@,
+.L104:
 	cmp	r4, #0	@ s32Loop.867,
 	ble	.L79	@,
 	mov	r0, r6	@, ChanID
@@ -1414,36 +1417,36 @@ VDEC_Control:
 	b	.L79	@
 .L87:
 	mov	r4, #500	@ s32Loop,
-	b	.L98	@
-.L177:
+	b	.L99	@
+.L180:
 	cmp	r4, #0	@ s32Loop,
 	sub	r4, r4, #1	@ s32Loop, s32Loop,
-	beq	.L101	@,
+	beq	.L102	@,
 	bl	msleep	@
 	mov	r1, #2	@,
 	mov	r0, r6	@, ChanID
 	bl	VCTRT_SetChanCtrlState	@
 	cmn	r0, #1	@,
 	mov	r0, #1	@,
-	bne	.L99	@,
+	bne	.L100	@,
 	bl	msleep	@
 	sub	r4, r4, #1	@ s32Loop, s32Loop,
-.L98:
-	mov	r1, #2	@,
-	mov	r0, r6	@, ChanID
-	bl	VCTRT_SetChanCtrlState	@
-	cmn	r0, #1	@,
-	mov	r0, #1	@,
-	beq	.L177	@,
 .L99:
+	mov	r1, #2	@,
+	mov	r0, r6	@, ChanID
+	bl	VCTRT_SetChanCtrlState	@
+	cmn	r0, #1	@,
+	mov	r0, #1	@,
+	beq	.L180	@,
+.L100:
 	cmp	r4, #0	@ s32Loop,
-	ble	.L101	@,
+	ble	.L102	@,
 	mov	r0, r6	@, ChanID
 	bl	VCTRL_DestroyChan	@
 	subs	r5, r0, #0	@ ret,
 	beq	.L30	@,
 	b	.L79	@
-.L101:
+.L102:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC8	@,
 	mvn	r2, #0	@,
@@ -1475,19 +1478,19 @@ VDEC_Exit:
 	bl	__gnu_mcount_nc
 	bl	OSAL_DOWN_INTERRUPTIBLE	@
 	cmp	r0, #0	@,
-	bne	.L184	@,
-.L179:
+	bne	.L187	@,
+.L182:
 	movw	r4, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp139,
 	ldr	r0, [r4, #208]	@ g_VfmwInitCount, g_VfmwInitCount
 	sub	r3, r0, #1	@ g_VfmwInitCount.463, g_VfmwInitCount,
 	str	r3, [r4, #208]	@ g_VfmwInitCount.463, g_VfmwInitCount
 	cmp	r3, #0	@ g_VfmwInitCount.463,
-	ble	.L180	@,
+	ble	.L183	@,
 	bl	OSAL_UP	@
-	mov	r0, #0	@ D.50324,
+	mov	r0, #0	@ D.50328,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
-.L180:
+.L183:
 	bl	VCTRL_CloseVfmw	@
 	mov	r5, r0	@ ret.944,
 	bl	MEM_ManagerClearOperation	@
@@ -1495,15 +1498,15 @@ VDEC_Exit:
 	str	r1, [r4, #124]	@ tmp143, g_VfmwEnableFlag
 	bl	OSAL_UP	@
 	cmp	r5, #0	@ ret.944,
-	moveq	r0, r5	@, D.50324, ret.944
-	mvnne	r0, #0	@, D.50324,
+	moveq	r0, r5	@, D.50328, ret.944
+	mvnne	r0, #0	@, D.50328,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
-.L184:
+.L187:
 	movw	r1, #:lower16:.LC14	@,
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC14	@,
 	bl	dprint_vfmw	@
-	b	.L179	@
+	b	.L182	@
 	.fnend
 	.size	VDEC_Exit, .-VDEC_Exit
 	.align	2
@@ -1564,12 +1567,12 @@ VDEC_InitWithOperation:
 	mov	r5, r0	@ pArgs, pArgs
 	bl	OSAL_DOWN_INTERRUPTIBLE	@
 	cmp	r5, #0	@ pArgs,
-	beq	.L198	@,
+	beq	.L201	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp231,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp231,
 	ldr	r3, [r4, #124]	@ g_VfmwEnableFlag, g_VfmwEnableFlag
 	cmp	r3, #1	@ g_VfmwEnableFlag,
-	beq	.L199	@,
+	beq	.L202	@,
 	mov	r1, #12	@,
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
@@ -1690,11 +1693,11 @@ VDEC_InitWithOperation:
 	movt	r2, #:upper16:VDMHAL_V300R001_WriteBigTitle1DYuv	@ tmp215,
 	str	r2, [r4, #116]	@ tmp215, g_vdm_hal_fun_ptr.pfun_VDMHAL_Write1DYuv
 	bl	VDEC_SpinLockInit	@
-	ldr	r3, [r4, #32]	@ D.50292, g_vdm_hal_fun_ptr.pfun_VDMHAL_GetCharacter
-	cmp	r3, #0	@ D.50292,
-	beq	.L191	@,
-	blx	r3	@ D.50292
-.L191:
+	ldr	r3, [r4, #32]	@ D.50296, g_vdm_hal_fun_ptr.pfun_VDMHAL_GetCharacter
+	cmp	r3, #0	@ D.50296,
+	beq	.L194	@,
+	blx	r3	@ D.50296
+.L194:
 	mov	r0, r5	@, pArgs
 	bl	MEM_ManagerWithOperation	@
 	bl	VCTRL_OpenVfmw	@
@@ -1705,44 +1708,44 @@ VDEC_InitWithOperation:
 	mov	r2, r6	@, ret
 	bl	dprint_vfmw	@
 	cmp	r6, #0	@ ret,
-	ldr	r0, [r4, #60]	@ D.50301, g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbReset
+	ldr	r0, [r4, #60]	@ D.50305, g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbReset
 	moveq	r3, #1	@ tmp219,
 	movne	r3, #0	@ tmp223,
-	cmp	r0, #0	@ D.50301,
+	cmp	r0, #0	@ D.50305,
 	str	r3, [r4, #208]	@ tmp223, g_VfmwInitCount
 	str	r3, [r4, #124]	@ tmp223, g_VfmwEnableFlag
-	beq	.L194	@,
-	blx	r0	@ D.50301
-.L195:
+	beq	.L197	@,
+	blx	r0	@ D.50305
+.L198:
 	ldmia	r5, {r0, r1}	@ phole ldm
 	bl	VCTRL_SetCallBack	@
 	bl	OSAL_UP	@
 	cmp	r6, #0	@ ret,
-	moveq	r0, r6	@, D.50253, ret
-	mvnne	r0, #0	@, D.50253,
+	moveq	r0, r6	@, D.50257, ret
+	mvnne	r0, #0	@, D.50257,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L199:
+.L202:
 	ldr	r1, [r4, #208]	@ g_VfmwInitCount, g_VfmwInitCount
 	add	r0, r1, #1	@ tmp145, g_VfmwInitCount,
 	str	r0, [r4, #208]	@ tmp145, g_VfmwInitCount
 	ldmia	r5, {r0, r1}	@ phole ldm
 	bl	VCTRL_SetCallBack	@
 	bl	OSAL_UP	@
-	mov	r0, #0	@ D.50253,
+	mov	r0, #0	@ D.50257,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L194:
+.L197:
 	movw	r1, #:lower16:.LC1	@,
 	movw	r2, #505	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	b	.L195	@
-.L198:
+	b	.L198	@
+.L201:
 	bl	OSAL_UP	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC15	@,
 	movt	r1, #:upper16:.LC15	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50253,
+	mvn	r0, #0	@ D.50257,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VDEC_InitWithOperation, .-VDEC_InitWithOperation
@@ -1858,20 +1861,20 @@ VDEC_Lowdelay_Event_Time:
 	add	r4, r3, r4, asl #2	@, tmp143, tmp140, ChanId,
 	ldr	r3, [fp, #-32]	@ TmpTime.442, TmpTime
 	ldrb	r2, [r0, #128]	@ zero_extendqisi2	@ tmp149, g_LowDelayCalcStat
-	ldr	r1, [r4, #144]	@ D.50113, g_LowDelayCalcHandle
+	ldr	r1, [r4, #144]	@ D.50117, g_LowDelayCalcHandle
 	cmp	r2, #1	@ tmp149,
-	beq	.L211	@,
-.L210:
+	beq	.L214	@,
+.L213:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
-.L211:
+.L214:
 	sub	r0, fp, #48	@,,
 	str	r5, [fp, #-48]	@ eventId, evt.evt_id
 	str	r6, [fp, #-40]	@ u32FrameId, evt.frame
-	str	r1, [fp, #-44]	@ D.50113, evt.handle
+	str	r1, [fp, #-44]	@ D.50117, evt.handle
 	str	r3, [fp, #-36]	@ TmpTime.442, evt.time
 	bl	HI_DRV_LD_Notify_Event	@
-	b	.L210	@
+	b	.L213	@
 	.fnend
 	.size	VDEC_Lowdelay_Event_Time, .-VDEC_Lowdelay_Event_Time
 	.global	g_VfmwEnableFlag

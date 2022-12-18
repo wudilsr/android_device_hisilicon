@@ -41,6 +41,10 @@
 #define SEPARATE_SYMBOL_LENGTH "::length="
 #define SEPARATE_SYMBOL_FD      "::fd="
 
+//static avplay
+#define HIMEDIA_NOT_DEINIT_RESOURCE    1
+#define HIMEDIA_STATIC_AVPLAY_MAX_CNT  1
+
 //window z order define
 typedef enum hiMEDIAPLAYER_ZORDER_E
 {

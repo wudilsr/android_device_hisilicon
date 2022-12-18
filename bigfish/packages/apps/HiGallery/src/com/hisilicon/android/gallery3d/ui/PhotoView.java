@@ -178,11 +178,16 @@ public class PhotoView extends GLView {
                 R.drawable.ic_control_play);
     }
 
-    public void setModel(Model model) {
-        if (mModel == model)
+    public void setModel(Model model,String path) {
+        if (mModel == model||path==null)
             return;
         mModel = model;
-        mTileView.setModel(model);
+        String type = path.substring(path.lastIndexOf(".") + 1);
+        if ("gif".equalsIgnoreCase(type)) {
+             mTileView.setModel(model,true);
+        }else{
+             mTileView.setModel(model,false);
+        }
         if (model != null)
             notifyOnNewImage();
     }
@@ -224,9 +229,9 @@ public class PhotoView extends GLView {
         }
         ScreenNailEntry entry = mScreenNails[which];
         if (data == null) {
-            entry.set(false, null, 0);
+            entry.set(false, null, 0,false);
         } else {
-            entry.set(true, data.bitmap, data.rotation);
+            entry.set(true, data.bitmap, data.rotation,data.misgif);
         }
     }
 
@@ -718,10 +723,11 @@ public class PhotoView extends GLView {
     public static class ImageData {
         public int rotation;
         public Bitmap bitmap;
-
-        public ImageData(Bitmap bitmap, int rotation) {
+        public boolean misgif;
+        public ImageData(Bitmap bitmap, int rotation,boolean isgif) {
             this.bitmap = bitmap;
             this.rotation = rotation;
+            this.misgif = isgif;
         }
     }
 
@@ -740,7 +746,7 @@ public class PhotoView extends GLView {
 
         private BitmapTexture mTexture;
 
-        public void set(boolean enabled, Bitmap bitmap, int rotation) {
+        public void set(boolean enabled, Bitmap bitmap, int rotation,boolean isgif) {
             mEnabled = enabled;
             mRotation = rotation;
             if (bitmap == null) {
@@ -752,9 +758,11 @@ public class PhotoView extends GLView {
                     if (mTexture.getBitmap() != bitmap) {
                         mTexture.recycle();
                         mTexture = new BitmapTexture(bitmap);
+                        mTexture.setIsGif(isgif);
                     }
                 } else {
                     mTexture = new BitmapTexture(bitmap);
+                    mTexture.setIsGif(isgif);
                 }
                 updateDrawingSize();
             }
@@ -788,9 +796,13 @@ public class PhotoView extends GLView {
             float s = ((mRotation / 90) & 0x01) == 0 ? mPositionController
                     .getMinimalScale(width, height) : mPositionController
                     .getMinimalScale(height, width);
-
-            mDrawWidth = Math.round(width * s);
-            mDrawHeight = Math.round(height * s);
+            if(mTexture.getIsGif()){
+                    mDrawWidth = width;
+                    mDrawHeight =height;
+            }else{
+                mDrawWidth = Math.round(width * s);
+                mDrawHeight =Math.round(height * s);
+            }
         }
 
         public boolean isEnabled() {
@@ -822,7 +834,7 @@ public class PhotoView extends GLView {
         mTransitionMode = TRANS_NONE;
         mTileView.freeTextures();
         for (ScreenNailEntry entry : mScreenNails) {
-            entry.set(false, null, 0);
+            entry.set(false, null, 0,false);
         }
     }
 

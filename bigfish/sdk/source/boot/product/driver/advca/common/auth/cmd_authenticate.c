@@ -858,6 +858,56 @@ HI_S32 CA_GetExternRsaKey(cmd_tbl_t *cmdtp, HI_S32 flag, HI_S32 argc, char *argv
 U_BOOT_CMD(ca_get_extern_rsa_key,2,1,CA_GetExternRsaKey, "get external rsa key","for example: get_extern_rsa_key fastboot");
 
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+HI_S32 HI_Android_Auth_Recovery(HI_VOID)
+{
+    HI_S32 ret = 0;
+    HI_BOOL CAFlag = HI_FALSE;
+    HI_UNF_ADVCA_FLASH_TYPE_E enCAFlashType = HI_UNF_ADVCA_FLASH_TYPE_BUTT;
+    HI_U32 recoveryAuthMode = COMMON_MODE;
+
+    CA_ASSERT(HI_UNF_ADVCA_Init(), ret);
+    CA_ASSERT(HI_UNF_ADVCA_GetSecBootStat(&CAFlag, &enCAFlashType), ret);
+    if (CAFlag == HI_TRUE)
+    {
+        ret = run_command("ca_get_extern_rsa_key fastboot", 0);
+        if (ret == -1)
+        {
+            HI_ERR_CA("Get extern rsa key failed!\n");
+            return -1;
+        }
+
+        ret = run_command("ca_common_verify_bootargs_partition bootargs", 0);
+        if (ret == -1)
+        {
+            HI_ERR_CA("Verify bootargs failed!\n");
+            return -1;
+        }
+
+        recoveryAuthMode = HI_CA_GetAuthMode("recovery");
+
+        if (recoveryAuthMode == SPECIAL_MODE)
+        {
+            ret = run_command("ca_special_verify recovery", 0);
+            if (ret == -1)
+            {
+                HI_ERR_CA("Special verify recovery failed!\n");
+                return -1;
+            }
+        }
+        else
+        {
+            HI_ERR_CA("AuthMode Not support!\n");
+            return -1;
+        }
+    }
+    else
+    {
+        HI_SIMPLEINFO_CA("enter write OTP mode!\n");
+    }
+
+    return 0;
+}
+
 HI_S32 HI_Android_Authenticate(HI_VOID)
 {
     HI_S32 ret = 0;
@@ -884,30 +934,14 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
             return -1;
         }
 
-        recoveryAuthMode = HI_CA_GetAuthMode("recovery");
         kernelAuthMode = HI_CA_GetAuthMode("kernel");
 
-        if (recoveryAuthMode == SPECIAL_MODE && kernelAuthMode == SPECIAL_MODE)
+        if (kernelAuthMode == SPECIAL_MODE)
         {
-            ret = run_command("ca_special_verify recovery", 0);
-            if (ret == -1)
-            {
-                HI_ERR_CA("Special verify recovery failed!\n");
-                return -1;
-            }
             ret = run_command("ca_special_verify kernel", 0);
             if (ret == -1)
             {
                 HI_ERR_CA("Special verify kernel failed!\n");
-                return -1;
-            }
-        }
-        else if (recoveryAuthMode == COMMON_MODE && kernelAuthMode == COMMON_MODE)
-        {
-            ret = run_command("ca_common_verify_signature_check", 0);
-            if (ret == -1)
-            {
-                HI_ERR_CA("Common verify recovery or kernel failed!\n");
                 return -1;
             }
         }

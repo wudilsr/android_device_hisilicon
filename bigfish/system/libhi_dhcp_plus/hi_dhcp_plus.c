@@ -28,7 +28,7 @@ int EnCry(char r[R_SIZE], char ts[TS_SIZE],
 
     if(login == NULL) return EMPTY_STRING;
 
-    unsigned int ilen = strlen((char *)login) + 1;
+    unsigned int ilen = strlen((char *)login);
     if (ilen > MAX_LOGIN_LEN)
         return LOGIN_LEN_ERR;
 
@@ -116,13 +116,13 @@ int Message(const char *login, const char *pwd, unsigned char msg[MESSAGE_LEN], 
         return EMPTY_STRING;
     }
 
-    sz_login = strlen(login) + 1;
+    sz_login = strlen(login);
     if (sz_login > MAX_LOGIN_LEN) {
         ALOGE("Login name lenth ERROR! Too long!");
         return LOGIN_LEN_ERR;
     }
 
-    sz_pwd = strlen(pwd) + 1;
+    sz_pwd = strlen(pwd);
     if (sz_pwd > MAX_PASSWORD_LEN) {
         ALOGE("Password lenth ERROR! Too long!");
         return LOGIN_LEN_ERR;

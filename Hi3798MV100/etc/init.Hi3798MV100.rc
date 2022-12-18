@@ -30,6 +30,16 @@ on boot
     chown bluetooth net_bt_stack /system/etc/bluetooth
     chown bluetooth net_bt_stack /data/misc/bluetooth
     setprop ro.bt.bdaddr_path "/data/misc/bluetooth/bdaddr"
+
+on property:sys.boot_completed=1
+    start exitfastplay
+
+service exitfastplay /system/bin/sh /system/etc/exitfastplay
+    user root
+    group root
+    disabled
+    oneshot
+
 # for BT PAN
 service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
     class main
@@ -53,7 +63,7 @@ service frontPanel /system/bin/frontPanel
     user root
     group root
 
-service dhcpcd_eth0 /system/bin/dhcpcd -aABDKL
+service dhcpcd_eth0 /system/bin/dhcpcd -aABDKL -f /system/etc/dhcpcd/dhcpcd.conf
     class main
     disabled
     oneshot
@@ -73,7 +83,7 @@ service iprenew_eth0 /system/bin/dhcpcd -n
     disabled
     oneshot
 
-service dhcpcd_eth1 /system/bin/dhcpcd -aABDKL
+service dhcpcd_eth1 /system/bin/dhcpcd -aABDKL -f /system/etc/dhcpcd/dhcpcd.conf
     class main
     disabled
     oneshot

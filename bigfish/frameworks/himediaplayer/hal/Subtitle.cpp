@@ -587,17 +587,20 @@ xmlNodePtr SubtitleFontManager::readxml()
         mDoc = xmlReadFile(SYSTEM_CONFIG_PATH,NULL,0);
         if( NULL == mDoc ){
             LOGE("Subtitle system style.xml file is not parsed successfully. \n");
+            SUB_FREE_CHARPTR(pPath);
             return NULL;
         }
     }
     curNode = xmlDocGetRootElement(mDoc);
     if (NULL == curNode){
         LOGV("style.xml is empty file \n");
+        SUB_FREE_CHARPTR(pPath);
         xmlFreeDoc(mDoc);
         return NULL;
     }
     if (xmlStrcmp(curNode->name, BAD_CAST "style")){
         LOGV("document of the wrong type, root node != root\n");
+        SUB_FREE_CHARPTR(pPath);
         xmlFreeDoc(mDoc);
         return NULL;
     }

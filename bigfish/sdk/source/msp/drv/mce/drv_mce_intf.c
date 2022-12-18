@@ -19,6 +19,9 @@
 #define MCE_NAME                "HI_MCE"
 #define MMZ_INFOZONE_SIZE       (8*1024)
 
+#ifdef HI_MCE_PLAYCTRL_SUPPORT
+#define MCE_DEF_ANDROID_PLAYCOUNT 1
+#endif
 
 DECLARE_MUTEX(g_MceMutex);
 
@@ -49,7 +52,12 @@ MCE_S   g_Mce =
     .bMceExit = HI_TRUE,
     .BeginTime = 0,
     .EndTime = 0,
+#ifdef HI_MCE_PLAYCTRL_SUPPORT
+    .stStopParam.enCtrlMode = HI_UNF_MCE_PLAYCTRL_BY_COUNT,
+    .stStopParam.u32PlayCount = MCE_DEF_ANDROID_PLAYCOUNT,
+#else
     .stStopParam.enCtrlMode = HI_UNF_MCE_PLAYCTRL_BUTT,
+#endif
     .playEnd = HI_FALSE
 };
 
@@ -322,9 +330,15 @@ static HI_S32 MCE_ProcWrite(struct file * file,
 			{
 				HI_UNF_MCE_STOPPARM_S stStopParam;
 				HI_UNF_MCE_EXITPARAM_S stExitParam;
+#ifdef HI_MCE_PLAYCTRL_SUPPORT                
+                stStopParam.enCtrlMode = HI_UNF_MCE_PLAYCTRL_BY_COUNT;
+                stStopParam.enStopMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
+                stStopParam.u32PlayCount = MCE_DEF_ANDROID_PLAYCOUNT;
+#else
 				stStopParam.enCtrlMode = HI_UNF_MCE_PLAYCTRL_BY_TIME;
 				stStopParam.enStopMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
 				stStopParam.u32PlayTimeMs = 0;
+#endif
 				s32Ret = HI_DRV_MCE_Stop(&stStopParam);
 				stExitParam.hNewWin = HI_INVALID_HANDLE;
 				s32Ret |= HI_DRV_MCE_Exit(&stExitParam);

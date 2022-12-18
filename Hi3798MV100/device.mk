@@ -46,6 +46,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.nostatic=false
 endif
 
+#HiPlayer: video frame counts to be played before underrun while seeked
+ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
+PRODUCT_PROPERTY_OVERRIDES += \
+    service.media.hiplayer.vfcnt=200
+endif
+
 ifeq ($(PRODUCT_TARGET),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.media.timeshift=1
@@ -258,7 +264,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # add release version
 PRODUCT_PROPERTY_OVERRIDES += \
-    gsm.version.baseband=HiSTBAndroidV600R001C00SPC062
+    gsm.version.baseband=HiSTBAndroidV600R001C00SPC063
 
 PRODUCT_PROPERTY_OVERRIDES += \
     hibrowser.default.fullscreen=true
@@ -338,7 +344,8 @@ PRODUCT_COPY_FILES += \
 
 
 PRODUCT_COPY_FILES += \
-    device/hisilicon/bigfish/etc/restore:system/etc/restore
+    device/hisilicon/bigfish/etc/restore:system/etc/restore \
+    device/hisilicon/bigfish/etc/exitfastplay:system/etc/exitfastplay
 
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 

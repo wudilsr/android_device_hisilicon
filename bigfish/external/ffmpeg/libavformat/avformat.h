@@ -1455,6 +1455,7 @@ typedef struct hls_stream_info_s {
     int has_read;
     int video_codec;
     int audio_codec;
+    int is_parsed;
 } hls_stream_info_t;
     /** The information of the URL info */
     /** CNcomment:URLµÄÏêÏ¸ĞÅÏ¢ */

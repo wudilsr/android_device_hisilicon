@@ -2536,7 +2536,7 @@ HiMediaPlayer::~HiMediaPlayer()
         return;
     }
 
-#ifndef NOT_DEINIT_RESOURCE
+#ifndef HIMEDIA_NOT_DEINIT_RESOURCE
     if (mState > STATE_ERROR_INITPLAYER)
     {
         HiMediaSystem::deInitPlayer();
@@ -2555,7 +2555,7 @@ HiMediaPlayer::~HiMediaPlayer()
     LOGV("HiMediaPlayer destructor Step 3, clear valid snd port id %d ", mSndPortId);
     mSndPortId = SOUND_INVALID_PORTID;
 
-#ifndef NOT_DEINIT_RESOURCE
+#ifndef HIMEDIA_NOT_DEINIT_RESOURCE
     if (mState > STATE_ERROR_INITDEVICE)
     {
         HiMediaSystem::deInitDevice();
@@ -2631,6 +2631,19 @@ status_t HiMediaPlayer::setDataSource(const char *uri, const KeyedVector<String8
     String8 line;
     memset(&mMediaParam, 0, sizeof(mMediaParam));
     strncpy(mMediaParam.aszUrl, uri, (size_t)HI_FORMAT_MAX_URL_LEN - 1);
+    /* replace character /r and /n to NULL in url*/
+    char *pChar0D0A = mMediaParam.aszUrl;
+    while(pChar0D0A && *pChar0D0A != '\0')
+    {
+        if(*pChar0D0A == 0x0D || *pChar0D0A == 0x0A)
+        {
+            *pChar0D0A = 0;
+            LOGV("uri[%s] have char [0D0A], cut to [%s]",uri, mMediaParam.aszUrl);
+            break;
+        }
+        pChar0D0A++;
+    }
+
     mFirstPlay = true;
 
     sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_PREPARE_PROGRESS, 10);
@@ -2696,23 +2709,16 @@ status_t HiMediaPlayer::setDataSource(int fd, int64_t offset, int64_t length)
     memset(filePath, 0, 64);
     memset(dataSrcPath, 0, HI_FORMAT_MAX_URL_LEN);
 
+    sp<FdDelegate> fdDelegate = new FdDelegate(fd);
+    mFdDelegates.push(fdDelegate);
     snprintf(filePath, 63, "/proc/%d/fd/%d", getpid(), fd);
     readlink(filePath, dataSrcPath, HI_FORMAT_MAX_URL_LEN);
 
     //set the file name and offset to stMedia
     memset(&mMediaParam, 0, sizeof(mMediaParam));
-    if (property_get("ro.cts.enable", value, "false") && !strncasecmp("false", value, 5))
-    {
-        snprintf(mMediaParam.aszUrl, HI_FORMAT_MAX_URL_LEN - 1,
-            "%s%s%lld%s%lld",
-            dataSrcPath, SEPARATE_SYMBOL_OFFSET, offset, SEPARATE_SYMBOL_LENGTH, length);
-    }
-    else
-    {
         snprintf(mMediaParam.aszUrl, HI_FORMAT_MAX_URL_LEN - 1,
             "%s%s%lld%s%lld%s%d",
-            dataSrcPath, SEPARATE_SYMBOL_OFFSET, offset, SEPARATE_SYMBOL_LENGTH, length, SEPARATE_SYMBOL_FD, fd);
-    }
+        dataSrcPath, SEPARATE_SYMBOL_OFFSET, offset, SEPARATE_SYMBOL_LENGTH, length, SEPARATE_SYMBOL_FD,  fdDelegate->getFd());
 
     LOGV("mMediaParam.aszUrl is: %s", mMediaParam.aszUrl);
     diagnoseDisable[0] = 0;
@@ -3525,7 +3531,7 @@ int HiMediaPlayer::mallocAvPlayResource()
         return ret;
     }
 
-    LOGV("static avplay number is %d, max:%d", mAVPlayInstances.AvPlayCount, AVPLAY_MAX_COUNT);
+    LOGV("static avplay number is %d, max:%d", mAVPlayInstances.AvPlayCount, HIMEDIA_STATIC_AVPLAY_MAX_CNT);
 
     for (i = 0; i < mAVPlayInstances.AvPlayCount; i++)
     {
@@ -3557,7 +3563,7 @@ int HiMediaPlayer::mallocAvPlayResource()
 
     if (i == mAVPlayInstances.AvPlayCount)
     {
-        if (mAVPlayInstances.AvPlayCount < AVPLAY_MAX_COUNT)
+        if (mAVPlayInstances.AvPlayCount < HIMEDIA_STATIC_AVPLAY_MAX_CNT)
         {
             ret = initResource();
             ret |= createAVPlay();
@@ -3577,7 +3583,7 @@ int HiMediaPlayer::mallocAvPlayResource()
         }
         else
         {
-            LOGV("static avplay resource exceed max is %d, use self create resource", AVPLAY_MAX_COUNT);
+            LOGV("static avplay resource exceed max is %d, use self create resource", HIMEDIA_STATIC_AVPLAY_MAX_CNT);
             ret = initResource();
             ret |= createAVPlay();
             mUseStaticResource = false;
@@ -4161,7 +4167,7 @@ status_t HiMediaPlayer::reset()
             }
         }
 
-        LOGV("static avplay number is %d, max:%d", mAVPlayInstances.AvPlayCount, AVPLAY_MAX_COUNT);
+        LOGV("static avplay number is %d, max:%d", mAVPlayInstances.AvPlayCount, HIMEDIA_STATIC_AVPLAY_MAX_CNT);
     }
 
     return HI_SUCCESS;
@@ -6152,7 +6158,7 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 start_time = getCurrentTime();
     HI_S32 s32Underrun = 1;
-    HI_S32 s32HlsStartNumber = 0;
+    HI_S32 s32HlsStartNumber = 1;
     /* add for iptv */
     HI_CHAR value[1024] = {0};
     HI_FORMAT_BUFFER_CONFIG_S stBufConfig;
@@ -6183,11 +6189,15 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
         LOGW("Warn: doPrepare HI_FORMAT_INVOKE_SET_HEADERS fail!");
     }
 
+    //china moblie request play the hls live stream from first segment.
     if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle,
         HI_FORMAT_INVOKE_SET_HLS_LIVE_START_NUM, (void*)s32HlsStartNumber))
     {
         LOGW("Warn: doPrepare HI_FORMAT_INVOKE_SET_HLS_LIVE_START_NUM fail!");
     }
+
+    LOGV("set play the hls stream from first segment");
+
     /* Set buffer config */
     memset(&stBufConfig, 0, sizeof(HI_FORMAT_BUFFER_CONFIG_S));
     stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_SIZE;
@@ -8889,6 +8899,109 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             if (NULL != reply)
             {
                 reply->writeInt32(NO_ERROR);
+            }
+        }
+        break;
+        case CMD_SET_AUDIO_CHANNEL:
+        {
+            HI_UNF_TRACK_MODE_E eMode = HI_UNF_TRACK_MODE_BUTT;
+            HI_S32 s32Ret = 0;
+            HI_HANDLE hdl = HI_INVALID_HANDLE;
+            HI_S32 s32Fixed = 0;
+            arg = request->readInt32();
+            LOGV("set audio channel arg:%d", arg);
+            if (0 == arg)
+            {
+                eMode = HI_UNF_TRACK_MODE_DOUBLE_LEFT;
+            }
+            else if (1 == arg)
+            {
+                eMode = HI_UNF_TRACK_MODE_DOUBLE_RIGHT;
+            }
+            else if (2 == arg)
+            {
+                eMode = HI_UNF_TRACK_MODE_STEREO;
+            }
+            else
+            {
+                LOGE("unsupport channel:%d", arg);
+                break;
+            }
+            s32Ret = HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AUDTRACK_HDL, &hdl);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("GET HI_SVR_PLAYER_ATTR_AUDTRACK_HDL failed.");
+                break;
+            }
+            s32Ret = HI_UNF_SND_SetTrackChannelMode(hdl, eMode);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("HI_UNF_SND_SetTrackChannelMode failed %x", s32Ret);
+                break;
+            }
+            s32Ret = HI_UNF_SND_GetTrackChannelMode(hdl, &eMode);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("HI_UNF_SND_GetTrackChannelMode failed %x", s32Ret);
+                break;
+            }
+            if (HI_UNF_TRACK_MODE_DOUBLE_LEFT == eMode)
+            {
+                s32Fixed = 0;
+            }
+            else if (HI_UNF_TRACK_MODE_DOUBLE_RIGHT == eMode)
+            {
+                s32Fixed = 1;
+            }
+            else if (HI_UNF_TRACK_MODE_STEREO == eMode)
+            {
+                s32Fixed = 2;
+            }
+            else
+            {
+                LOGE("unknow mode:%d", eMode);
+                break;
+            }
+            if (NULL != reply)
+            {
+                LOGV("Fixed audio channel :%d", s32Fixed);
+                reply->writeInt32(s32Fixed);
+            }
+        }
+        break;
+        case CMD_SET_TRACK_VOLUME:
+        {
+            HI_UNF_SND_ABSGAIN_ATTR_S stAbsWeightGain;
+            HI_S32 s32Ret = 0;
+            HI_HANDLE hTrack = HI_INVALID_HANDLE;
+
+            HI_S32 lVolume = request->readInt32();
+            HI_S32 rVolume = request->readInt32();
+            LOGV("set track volume:%d %d", lVolume, rVolume);
+
+            s32Ret = HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AUDTRACK_HDL, &hTrack);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("GET HI_SVR_PLAYER_ATTR_AUDTRACK_HDL failed.");
+                break;
+            }
+
+            memset(&stAbsWeightGain, 0, sizeof(stAbsWeightGain));
+            stAbsWeightGain.bLinearMode = HI_TRUE;
+            stAbsWeightGain.s32GainL = lVolume;
+            stAbsWeightGain.s32GainR = rVolume;
+            s32Ret = HI_UNF_SND_SetTrackAbsWeight(hTrack, &stAbsWeightGain);
+
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("GET HI_SVR_PLAYER_ATTR_AUDTRACK_HDL failed.");
+                break;
+            }
+
+            if (NULL != reply)
+            {
+                LOGV("fixed track Volume :%d", s32Ret);
+                reply->writeInt32(s32Ret);
             }
         }
         break;

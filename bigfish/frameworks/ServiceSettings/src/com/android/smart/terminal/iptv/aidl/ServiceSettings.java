@@ -187,7 +187,7 @@ public class ServiceSettings extends Service {
                     enable = false;
                 }
                 mEthEnable = value;
-                mEthManager.setEthernetEnabled(enable);
+                mEthManager.enableEthernet(enable);
                 ret = true;
             } else if (key.equals(WIDTH2HEIGHT)) {
                 int ratio = Integer.parseInt(value);

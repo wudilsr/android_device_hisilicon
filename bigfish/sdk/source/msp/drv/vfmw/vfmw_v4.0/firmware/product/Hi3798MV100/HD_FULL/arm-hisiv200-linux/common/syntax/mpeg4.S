@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.mpeg4.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg4.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg4.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg4.o -O2 -Wall
@@ -152,7 +152,7 @@ MP4_GetGMCparam:
 	sub	sp, sp, #68	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldrb	r4, [r0, #65]	@ zero_extendqisi2	@ D.38638, <variable>.syn_vol.sprite_warping_accuracy
+	ldrb	r4, [r0, #65]	@ zero_extendqisi2	@ D.38642, <variable>.syn_vol.sprite_warping_accuracy
 	mov	r9, #2	@ tmp205,
 	mov	r6, r1	@ p_gmc, p_gmc
 	mov	r2, r9, asl r4	@, tmp205,
@@ -160,15 +160,15 @@ MP4_GetGMCparam:
 	mov	r0, #16	@,
 	str	r2, [fp, #-60]	@, %sfp
 	mov	r1, r2	@,
-	rsb	r4, r4, #3	@, D.38638,
+	rsb	r4, r4, #3	@, D.38642,
 	str	r3, [fp, #-104]	@,
 	str	r4, [fp, #-88]	@, %sfp
 	bl	__aeabi_idiv	@
 	ldr	r3, [fp, #-104]	@,
-	ldr	sl, [r3, #708]	@ D.38640, <variable>.image_width
-	ldr	r9, [r3, #704]	@ D.38642, <variable>.image_height
-	cmp	sl, #1	@ D.38640,
-	mov	r8, sl, asl #4	@ tmp209, D.38640,
+	ldr	sl, [r3, #708]	@ D.38644, <variable>.image_width
+	ldr	r9, [r3, #704]	@ D.38646, <variable>.image_height
+	cmp	sl, #1	@ D.38644,
+	mov	r8, sl, asl #4	@ tmp209, D.38644,
 	str	r8, [r6, #8]	@ tmp209, <variable>.sW
 	ldr	r7, [r3, #704]	@ <variable>.image_height, <variable>.image_height
 	movle	r4, #0	@ alpha,
@@ -184,29 +184,29 @@ MP4_GetGMCparam:
 	ldr	ip, [r3, #680]	@ sprite_ref$0$0.735, <variable>.x
 	str	r1, [fp, #-52]	@, %sfp
 	ldr	r5, [r3, #692]	@, <variable>.y
-	ldr	r0, [r3, #688]	@ D.38652, <variable>.x
+	ldr	r0, [r3, #688]	@ D.38656, <variable>.x
 	str	r5, [fp, #-48]	@, %sfp
 	ldr	r7, [r3, #696]	@, <variable>.x
 	str	r7, [fp, #-56]	@, %sfp
 	movle	r7, #1	@ w2,
-	ldr	lr, [r3, #700]	@ D.38655, <variable>.y
+	ldr	lr, [r3, #700]	@ D.38659, <variable>.y
 	ble	.L10	@,
 	mov	r4, #0	@ alpha,
 	mov	r1, #1	@ tmp366,
 .L11:
 	add	r4, r4, #1	@ alpha, alpha,
 	mov	r7, r1, asl r4	@ w2, tmp366,
-	cmp	sl, r7	@ D.38640, w2
+	cmp	sl, r7	@ D.38644, w2
 	bgt	.L11	@,
 .L10:
-	cmp	r9, #1	@ D.38642,
+	cmp	r9, #1	@ D.38646,
 	movgt	r5, #0	@ beta,
 	movgt	r1, #1	@ tmp365,
 	ble	.L44	@,
 .L14:
 	add	r5, r5, #1	@ beta, beta,
 	mov	r8, r1, asl r5	@ h2, tmp365,
-	cmp	r9, r8	@ D.38642, h2
+	cmp	r9, r8	@ D.38646, h2
 	bgt	.L14	@,
 	mov	r1, r8, asl #4	@, h2,
 	str	r1, [fp, #-92]	@, %sfp
@@ -215,34 +215,34 @@ MP4_GetGMCparam:
 	cmp	r3, #1	@ <variable>.FF_BUG_DIVX500B413,
 	beq	.L45	@,
 	ldr	r3, [fp, #-52]	@, %sfp
-	add	r0, r0, ip	@ tmp220, D.38652, sprite_ref$0$0.735
+	add	r0, r0, ip	@ tmp220, D.38656, sprite_ref$0$0.735
 	ldr	r1, [fp, #-48]	@, %sfp
-	add	r0, r0, sl, asl #1	@, tmp222, tmp220, D.38640,
-	add	lr, lr, r3	@ tmp225, D.38655,
+	add	r0, r0, sl, asl #1	@, tmp222, tmp220, D.38644,
+	add	lr, lr, r3	@ tmp225, D.38659,
 	add	r1, r1, r3	@,,
 	str	r1, [fp, #-48]	@, %sfp
 	ldr	r1, [fp, #-56]	@, %sfp
-	add	lr, lr, r9, asl #1	@, tmp227, tmp225, D.38642,
+	add	lr, lr, r9, asl #1	@, tmp227, tmp225, D.38646,
 	add	r3, r1, ip	@,, sprite_ref$0$0.735
 	ldr	r1, [fp, #-60]	@, %sfp
 	str	r3, [fp, #-56]	@, %sfp
-	mov	r3, r1, asr #1	@ D.38691,,
+	mov	r3, r1, asr #1	@ D.38695,,
 	ldr	r1, [fp, #-52]	@, %sfp
-	mul	lr, r3, lr	@, D.38691, tmp227
-	mul	r1, r1, r3	@,, D.38691
-	mul	r0, r3, r0	@ sprite_ref$1$0, D.38691, tmp222
-	mul	ip, ip, r3	@ sprite_ref$0$0.735, sprite_ref$0$0.735, D.38691
+	mul	lr, r3, lr	@, D.38695, tmp227
+	mul	r1, r1, r3	@,, D.38695
+	mul	r0, r3, r0	@ sprite_ref$1$0, D.38695, tmp222
+	mul	ip, ip, r3	@ sprite_ref$0$0.735, sprite_ref$0$0.735, D.38695
 	str	lr, [fp, #-84]	@, %sfp
 	str	r1, [fp, #-52]	@, %sfp
 	ldr	r1, [fp, #-48]	@, %sfp
-	mul	r1, r1, r3	@,, D.38691
+	mul	r1, r1, r3	@,, D.38695
 	str	r1, [fp, #-72]	@, %sfp
 	ldr	r1, [fp, #-56]	@, %sfp
-	mul	r1, r1, r3	@,, D.38691
+	mul	r1, r1, r3	@,, D.38695
 	str	r1, [fp, #-80]	@, %sfp
 .L16:
-	rsb	r3, sl, sl, asl #28	@, tmp231, D.38640, D.38640,
-	rsb	lr, r7, sl	@, w2, D.38640
+	rsb	r3, sl, sl, asl #28	@, tmp231, D.38644, D.38644,
+	rsb	lr, r7, sl	@, w2, D.38644
 	mul	r1, r2, ip	@, r, sprite_ref$0$0.735
 	mov	r3, r3, asl #4	@ tmp232, tmp231,
 	str	lr, [fp, #-64]	@, %sfp
@@ -251,13 +251,13 @@ MP4_GetGMCparam:
 	str	ip, [fp, #-100]	@,
 	mul	r3, lr, r1	@ tmp235,,
 	str	r1, [fp, #-48]	@, %sfp
-	mov	r1, sl	@, D.38640
-	mla	r0, r7, r0, r3	@ D.38728, w2, tmp233, tmp235
-	cmp	r0, #0	@ D.38728,
-	movgt	r3, sl, asr #1	@, D.38640,
-	movle	lr, sl, asr #1	@, D.38640,
-	addgt	r0, r0, r3	@ iftmp.442, D.38728,
-	rsble	r0, lr, r0	@ iftmp.442,, D.38728
+	mov	r1, sl	@, D.38644
+	mla	r0, r7, r0, r3	@ D.38732, w2, tmp233, tmp235
+	cmp	r0, #0	@ D.38732,
+	movgt	r3, sl, asr #1	@, D.38644,
+	movle	lr, sl, asr #1	@, D.38644,
+	addgt	r0, r0, r3	@ iftmp.442, D.38732,
+	rsble	r0, lr, r0	@ iftmp.442,, D.38732
 	strgt	r3, [fp, #-76]	@, %sfp
 	strle	lr, [fp, #-76]	@, %sfp
 	bl	__aeabi_idiv	@
@@ -270,47 +270,47 @@ MP4_GetGMCparam:
 	mul	ip, lr, r3	@ tmp243,, tmp242
 	ldr	lr, [fp, #-64]	@, %sfp
 	str	r1, [fp, #-56]	@, %sfp
-	mla	r3, lr, r1, ip	@ D.38747,,, tmp243
+	mla	r3, lr, r1, ip	@ D.38751,,, tmp243
 	ldr	ip, [fp, #-100]	@,
-	cmp	r3, #0	@ D.38747,
+	cmp	r3, #0	@ D.38751,
 	str	ip, [fp, #-100]	@,
 	ldrgt	r1, [fp, #-76]	@, %sfp
 	ldrle	lr, [fp, #-76]	@, %sfp
 	add	r0, r0, r7, asl #4	@,,, w2,
 	str	r0, [fp, #-72]	@, %sfp
-	addgt	r0, r1, r3	@ iftmp.443,, D.38747
-	rsble	r0, lr, r3	@ iftmp.443,, D.38747
-	mov	r1, sl	@, D.38640
+	addgt	r0, r1, r3	@ iftmp.443,, D.38751
+	rsble	r0, lr, r3	@ iftmp.443,, D.38751
+	mov	r1, sl	@, D.38644
 	bl	__aeabi_idiv	@
 	ldr	r2, [fp, #-96]	@,
 	ldr	r1, [fp, #-80]	@, %sfp
-	rsb	r3, r8, r9	@ D.38755, h2, D.38642
+	rsb	r3, r8, r9	@ D.38759, h2, D.38646
 	mul	sl, r2, r8	@ tmp248, r, h2
 	mul	ip, r1, sl	@ tmp249,, tmp248
 	ldr	sl, [fp, #-56]	@, %sfp
 	str	r0, [fp, #-64]	@, %sfp
 	ldr	r0, [fp, #-48]	@, %sfp
-	mla	r1, r3, r0, ip	@ D.38762, D.38755,, tmp249
-	mov	r0, r9, asr #1	@ prephitmp.725, D.38642,
-	mul	r3, r3, sl	@ tmp257, D.38755,
+	mla	r1, r3, r0, ip	@ D.38766, D.38759,, tmp249
+	mov	r0, r9, asr #1	@ prephitmp.725, D.38646,
+	mul	r3, r3, sl	@ tmp257, D.38759,
 	ldr	sl, [fp, #-84]	@, %sfp
-	cmp	r1, #0	@ D.38762,
+	cmp	r1, #0	@ D.38766,
 	ldr	ip, [fp, #-100]	@,
-	addgt	r1, r1, r0	@, D.38762, prephitmp.725
-	rsble	r1, r0, r1	@, prephitmp.725, D.38762
+	addgt	r1, r1, r0	@, D.38766, prephitmp.725
+	rsble	r1, r0, r1	@, prephitmp.725, D.38766
 	str	r1, [fp, #-48]	@, %sfp
-	rsb	r1, r9, r9, asl #28	@, tmp253, D.38642, D.38642,
+	rsb	r1, r9, r9, asl #28	@, tmp253, D.38646, D.38646,
 	mov	r1, r1, asl #4	@ tmp254, tmp253,
 	mla	r1, r2, sl, r1	@ tmp255, r,, tmp254
 	ldr	sl, [fp, #-68]	@, %sfp
-	mla	r3, r8, r1, r3	@ D.38778, h2, tmp255, tmp257
-	cmp	r3, #0	@ D.38778,
-	addgt	r3, r0, r3	@ iftmp.445, prephitmp.725, D.38778
-	rsble	r3, r0, r3	@ iftmp.445, prephitmp.725, D.38778
-	mov	r0, sl	@ D.38649,
-	mov	r1, r0, asr #31	@ D.38649
-	cmp	r1, #0	@ D.38649,
-	cmpeq	r0, #3	@ D.38649,
+	mla	r3, r8, r1, r3	@ D.38782, h2, tmp255, tmp257
+	cmp	r3, #0	@ D.38782,
+	addgt	r3, r0, r3	@ iftmp.445, prephitmp.725, D.38782
+	rsble	r3, r0, r3	@ iftmp.445, prephitmp.725, D.38782
+	mov	r0, sl	@ D.38653,
+	mov	r1, r0, asr #31	@ D.38653
+	cmp	r1, #0	@ D.38653,
+	cmpeq	r0, #3	@ D.38653,
 	bls	.L46	@,
 .L25:
 	ldr	r5, [r6, #16]	@ prephitmp.704, <variable>.dU
@@ -352,8 +352,8 @@ MP4_GetGMCparam:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L46:
-	cmp	r0, #3	@ D.38649,
-	ldrls	pc, [pc, r0, asl #2]	@ D.38649
+	cmp	r0, #3	@ D.38653,
+	ldrls	pc, [pc, r0, asl #2]	@ D.38653
 	b	.L25	@
 .L30:
 	.word	.L26
@@ -375,16 +375,16 @@ MP4_GetGMCparam:
 	rsb	r4, r5, r1	@ shift$0, min_ab, tmp298
 	sub	r0, r4, #1	@ tmp299, shift$0,
 	ldr	r1, [fp, #-56]	@, %sfp
-	mov	r8, lr, asl r0	@ D.38860,,
+	mov	r8, lr, asl r0	@ D.38864,,
 	ldr	r0, [fp, #-72]	@, %sfp
 	mov	r5, r7, asr r5	@, w2,
 	add	lr, r0, r1	@ tmp303,,
 	ldr	r0, [fp, #-52]	@, %sfp
-	add	r1, r8, r0, asl r4	@, tmp302, D.38860,,
+	add	r1, r8, r0, asl r4	@, tmp302, D.38864,,
 	str	r1, [r6, #36]	@ tmp302, <variable>.Vo
 	ldr	r0, [fp, #-48]	@, %sfp
-	add	r8, r8, ip, asl r4	@, sprite_ref$0$0.724, D.38860, sprite_ref$0$0.735,
-	mov	r1, r9	@, D.38642
+	add	r8, r8, ip, asl r4	@, sprite_ref$0$0.724, D.38864, sprite_ref$0$0.735,
+	mov	r1, r9	@, D.38646
 	str	r8, [r6, #32]	@ sprite_ref$0$0.724, <variable>.Uo
 	str	r5, [fp, #-48]	@, %sfp
 	str	r2, [fp, #-96]	@,
@@ -406,7 +406,7 @@ MP4_GetGMCparam:
 	mul	r2, r1, ip	@ temp.731,,
 	ldr	ip, [fp, #-64]	@, %sfp
 	mul	r7, sl, lr	@, h3,
-	mov	r1, r9	@, D.38642
+	mov	r1, r9	@, D.38646
 	mul	r9, sl, r3	@ tmp318, h3, tmp317
 	add	r3, ip, r2	@,, temp.731
 	str	r3, [fp, #-64]	@, %sfp
@@ -415,38 +415,38 @@ MP4_GetGMCparam:
 	str	r7, [fp, #-68]	@, %sfp
 	ldr	r7, [fp, #-76]	@, %sfp
 	ldr	ip, [fp, #-92]	@, %sfp
-	add	r9, r9, lr, asl r7	@, D.38877, tmp318,,
+	add	r9, r9, lr, asl r7	@, D.38881, tmp318,,
 	ldr	r7, [fp, #-100]	@,
 	ldr	lr, [fp, #-68]	@, %sfp
 	add	r2, r2, ip	@ tmp324, temp.731,
-	mul	sl, sl, r3	@ D.38887, h3,
+	mul	sl, sl, r3	@ D.38891, h3,
 	ldr	r3, [fp, #-56]	@, %sfp
-	mla	ip, lr, r7, r9	@ tmp320,, sprite_ref$0$0.735, D.38877
+	mla	ip, lr, r7, r9	@ tmp320,, sprite_ref$0$0.735, D.38881
 	ldr	lr, [fp, #-104]	@,
 	add	r7, r0, r3	@ tmp308,,
 	ldr	r3, [fp, #-48]	@, %sfp
 	add	ip, ip, r5	@ tmp321, tmp320, prephitmp.704
 	mov	r0, lr	@, iftmp.445
-	mul	r7, r3, r7	@ D.38875,, tmp308
-	add	lr, ip, r7	@ tmp322, tmp321, D.38875
+	mul	r7, r3, r7	@ D.38879,, tmp308
+	add	lr, ip, r7	@ tmp322, tmp321, D.38879
 	str	lr, [r6, #40]	@ tmp322, <variable>.Uco
 	str	r2, [fp, #-96]	@,
 	bl	__aeabi_idiv	@
 	ldr	ip, [fp, #-52]	@, %sfp
 	ldr	r3, [fp, #-68]	@, %sfp
-	str	sl, [r6, #24]	@ D.38887, <variable>.dV
-	str	r7, [r6, #20]	@ D.38875, <variable>.dU
+	str	sl, [r6, #24]	@ D.38891, <variable>.dV
+	str	r7, [r6, #20]	@ D.38879, <variable>.dU
 	str	r5, [r6, #16]	@ prephitmp.704, <variable>.dU
 	ldr	r7, [fp, #-96]	@,
-	mla	r9, r3, ip, r9	@ tmp331,,, D.38877
+	mla	r9, r3, ip, r9	@ tmp331,,, D.38881
 	add	r3, r4, #2	@ shift$1, shift$0,
-	add	sl, r9, sl	@ tmp332, tmp331, D.38887
+	add	sl, r9, sl	@ tmp332, tmp331, D.38891
 	add	r2, r7, r0	@ tmp329, tmp324,
 	ldr	r7, [fp, #-48]	@, %sfp
-	mul	ip, r7, r2	@ D.38890,, tmp329
-	add	r1, sl, ip	@ tmp333, tmp332, D.38890
+	mul	ip, r7, r2	@ D.38894,, tmp329
+	add	r1, sl, ip	@ tmp333, tmp332, D.38894
 	str	r1, [r6, #44]	@ tmp333, <variable>.Vco
-	str	ip, [r6, #28]	@ D.38890, <variable>.dV
+	str	ip, [r6, #28]	@ D.38894, <variable>.dV
 	b	.L31	@
 .L28:
 	ldr	r8, [fp, #-88]	@, %sfp
@@ -458,31 +458,31 @@ MP4_GetGMCparam:
 	mov	r8, #1	@ tmp276,
 	sub	r0, r4, #1	@ tmp275, shift$0,
 	add	r1, r4, r8	@ tmp281, shift$0,
-	rsb	r2, r2, #0	@ D.38818, r
-	mul	r7, r7, sl	@ D.38830, w2, tmp280
-	add	r1, r3, r8, asl r1	@, D.38827, tmp287, tmp276,
+	rsb	r2, r2, #0	@ D.38822, r
+	mul	r7, r7, sl	@ D.38834, w2, tmp280
+	add	r1, r3, r8, asl r1	@, D.38831, tmp287, tmp276,
 	ldr	sl, [fp, #-52]	@, %sfp
-	mov	r8, r8, asl r0	@ D.38809, tmp276,
+	mov	r8, r8, asl r0	@ D.38813, tmp276,
 	ldr	r0, [fp, #-72]	@, %sfp
-	mla	r3, r2, sl, r5	@ D.38838, D.38818,,
+	mla	r3, r2, sl, r5	@ D.38842, D.38822,,
 	ldr	sl, [fp, #-64]	@, %sfp
-	mla	r5, r2, ip, r0	@ prephitmp.704, D.38818, sprite_ref$0$0.735,
+	mla	r5, r2, ip, r0	@ prephitmp.704, D.38822, sprite_ref$0$0.735,
 	ldr	r0, [fp, #-56]	@, %sfp
-	rsb	r2, sl, r0	@ D.38813,,
+	rsb	r2, sl, r0	@ D.38817,,
 	ldr	sl, [fp, #-52]	@, %sfp
-	str	r3, [r6, #24]	@ D.38838, <variable>.dV
-	str	r2, [r6, #20]	@ D.38813, <variable>.dU
-	mla	r0, r7, sl, r1	@ tmp294, D.38830,, D.38827
+	str	r3, [r6, #24]	@ D.38842, <variable>.dV
+	str	r2, [r6, #20]	@ D.38817, <variable>.dU
+	mla	r0, r7, sl, r1	@ tmp294, D.38834,, D.38831
 	str	r5, [r6, #16]	@ prephitmp.704, <variable>.dU
-	mla	r1, r7, ip, r1	@ tmp289, D.38830, sprite_ref$0$0.735, D.38827
+	mla	r1, r7, ip, r1	@ tmp289, D.38834, sprite_ref$0$0.735, D.38831
 	str	r5, [r6, #28]	@ prephitmp.704, <variable>.dV
 	add	r0, r0, r5	@ tmp295, tmp294, prephitmp.704
-	add	r7, r8, sl, asl r4	@, tmp278, D.38809,,
-	add	r3, r0, r3	@ tmp296, tmp295, D.38838
-	add	r8, r8, ip, asl r4	@, sprite_ref$0$0.724, D.38809, sprite_ref$0$0.735,
+	add	r7, r8, sl, asl r4	@, tmp278, D.38813,,
+	add	r3, r0, r3	@ tmp296, tmp295, D.38842
+	add	r8, r8, ip, asl r4	@, sprite_ref$0$0.724, D.38813, sprite_ref$0$0.735,
 	add	r1, r1, r5	@ tmp290, tmp289, prephitmp.704
 	str	r3, [r6, #44]	@ tmp296, <variable>.Vco
-	add	sl, r1, r2	@ tmp291, tmp290, D.38813
+	add	sl, r1, r2	@ tmp291, tmp290, D.38817
 	str	r7, [r6, #36]	@ tmp278, <variable>.Vo
 	str	sl, [r6, #40]	@ tmp291, <variable>.Uco
 	add	r3, r4, #2	@ shift$1, shift$0,
@@ -554,17 +554,17 @@ MP4_GetGMCparam:
 	b	.L32	@
 .L45:
 	ldr	r3, [fp, #-52]	@, %sfp
-	add	r0, r0, ip	@ tmp216, D.38652, sprite_ref$0$0.735
+	add	r0, r0, ip	@ tmp216, D.38656, sprite_ref$0$0.735
 	ldr	r1, [fp, #-48]	@, %sfp
-	add	lr, lr, r3	@ tmp218, D.38655,
+	add	lr, lr, r3	@ tmp218, D.38659,
 	add	r1, r1, r3	@,,
 	str	r1, [fp, #-72]	@, %sfp
 	ldr	r1, [fp, #-56]	@, %sfp
 	add	r3, r1, ip	@,, sprite_ref$0$0.735
 	ldr	r1, [fp, #-60]	@, %sfp
 	str	r3, [fp, #-80]	@, %sfp
-	mla	lr, r9, r1, lr	@, D.38642,, tmp218
-	mla	r0, sl, r1, r0	@ sprite_ref$1$0, D.38640,, tmp216
+	mla	lr, r9, r1, lr	@, D.38646,, tmp218
+	mla	r0, sl, r1, r0	@ sprite_ref$1$0, D.38644,, tmp216
 	str	lr, [fp, #-84]	@, %sfp
 	b	.L16	@
 .L47:
@@ -909,10 +909,10 @@ Mp4_Combine_SliceData:
 	ldr	r2, [r3, r2]	@ SlcNum, <variable>.Mp4DecParam.SlcNum
 	beq	.L97	@,
 	movw	r0, #15709	@ tmp147,
-	ldrb	r0, [r3, r0]	@ zero_extendqisi2	@ D.41535, <variable>.IsLastSeg
-	cmp	r0, #1	@ D.41535,
+	ldrb	r0, [r3, r0]	@ zero_extendqisi2	@ D.41539, <variable>.IsLastSeg
+	cmp	r0, #1	@ D.41539,
 	beq	.L108	@,
-	cmp	r0, #0	@ D.41535,
+	cmp	r0, #0	@ D.41539,
 	bne	.L105	@,
 	movw	ip, #15789	@ tmp221,
 	ldrb	r0, [r3, ip]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
@@ -924,7 +924,7 @@ Mp4_Combine_SliceData:
 	movw	r2, #4551	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41542,
+	mvn	r0, #0	@ D.41546,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L108:
 	sub	ip, r2, #1	@ tmp148, SlcNum,
@@ -934,24 +934,24 @@ Mp4_Combine_SliceData:
 	mov	r2, ip, asl #3	@ tmp278, tmp148,
 	rsb	r4, ip, r2	@ tmp154, tmp148, tmp278
 	add	r4, r3, r4, asl #2	@, tmp156, pCtx, tmp154,
-	ldr	r5, [r4, #1292]	@ D.41549, <variable>.bit_len
-	cmp	r5, #0	@ D.41549,
+	ldr	r5, [r4, #1292]	@ D.41553, <variable>.bit_len
+	cmp	r5, #0	@ D.41553,
 	beq	.L101	@,
-	ldr	r6, [r4, #1300]	@ D.41551, <variable>.phy_address
-	cmp	r6, #0	@ D.41551,
+	ldr	r6, [r4, #1300]	@ D.41555, <variable>.phy_address
+	cmp	r6, #0	@ D.41555,
 	beq	.L101	@,
 	movw	r2, #15712	@ tmp209,
 	ldr	r3, [r3, r2]	@ <variable>.PhyAddr, <variable>.PhyAddr
-	cmp	r6, r3	@ D.41551, <variable>.PhyAddr
-	addls	r1, r5, r1, asl #3	@, tmp220, D.41549, CodeLen,
+	cmp	r6, r3	@ D.41555, <variable>.PhyAddr
+	addls	r1, r5, r1, asl #3	@, tmp220, D.41553, CodeLen,
 	strls	r1, [r4, #1292]	@ tmp220, <variable>.bit_len
-	movls	r0, #0	@ D.41542,
+	movls	r0, #0	@ D.41546,
 	ldmlsfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	movw	r1, #:lower16:.LC1	@,
 	movw	r2, #4528	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41542,
+	mvn	r0, #0	@ D.41546,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L101:
 	rsb	ip, ip, r2	@ tmp169, tmp148, tmp278
@@ -963,9 +963,9 @@ Mp4_Combine_SliceData:
 	movls	r1, r1, asl #3	@ tmp199, CodeLen,
 	strls	r1, [ip, #1292]	@ tmp199, <variable>.bit_len
 	ldrls	r3, [r3, r0]	@ <variable>.PhyAddr, <variable>.PhyAddr
-	movhi	r0, #0	@ D.41542,
+	movhi	r0, #0	@ D.41546,
 	ldrhi	r3, [ip, #1288]	@ <variable>.bit_len, <variable>.bit_len
-	movls	r0, #0	@ D.41542,
+	movls	r0, #0	@ D.41546,
 	addhi	r1, r3, r1, asl #3	@, tmp191, <variable>.bit_len, CodeLen,
 	strls	r3, [ip, #1300]	@ <variable>.PhyAddr, <variable>.phy_address
 	strhi	r1, [ip, #1288]	@ tmp191, <variable>.bit_len
@@ -978,7 +978,7 @@ Mp4_Combine_SliceData:
 	cmp	r0, #0	@ <variable>.bit_len,
 	beq	.L111	@,
 .L106:
-	mvn	r0, #0	@ D.41542,
+	mvn	r0, #0	@ D.41546,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L97:
 	mov	r0, #1	@,
@@ -986,7 +986,7 @@ Mp4_Combine_SliceData:
 	movw	r2, #4557	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41542,
+	mvn	r0, #0	@ D.41546,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L111:
 	ldr	r0, [r2, #1300]	@ <variable>.phy_address, <variable>.phy_address
@@ -1007,7 +1007,7 @@ Mp4_Combine_SliceData:
 	movw	r1, #:lower16:.LC0	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41542,
+	mvn	r0, #0	@ D.41546,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	Mp4_Combine_SliceData, .-Mp4_Combine_SliceData
@@ -1031,7 +1031,7 @@ Mp4_Check_Slice_NotSH:
 	movw	r1, #20019	@ tmp140,
 	ldrb	r3, [r0, r1]	@ zero_extendqisi2	@ <variable>.MP4Vol.resync_marker_disable, <variable>.MP4Vol.resync_marker_disable
 	movw	r2, #21208	@ tmp139,
-	ldrb	r2, [r0, r2]	@ zero_extendqisi2	@ D.41507, <variable>.MP4Vop.vop_coding_type
+	ldrb	r2, [r0, r2]	@ zero_extendqisi2	@ D.41511, <variable>.MP4Vop.vop_coding_type
 	cmp	r3, #0	@ <variable>.MP4Vol.resync_marker_disable,
 	bne	.L113	@,
 	movw	r3, #15864	@ tmp142,
@@ -1039,9 +1039,9 @@ Mp4_Check_Slice_NotSH:
 	tst	ip, #120	@ tmp144,
 	bne	.L113	@,
 	ldrh	r3, [r0, r3]	@ tmp150,
-	ubfx	r3, r3, #7, #4	@ D.41515, tmp150,,
-	cmp	r2, #3	@ D.41507,
-	ldrls	pc, [pc, r2, asl #2]	@ D.41507
+	ubfx	r3, r3, #7, #4	@ D.41519, tmp150,,
+	cmp	r2, #3	@ D.41511,
+	ldrls	pc, [pc, r2, asl #2]	@ D.41511
 	b	.L114	@
 .L118:
 	.word	.L115
@@ -1059,7 +1059,7 @@ Mp4_Check_Slice_NotSH:
 	cmp	r2, #18	@ StartCodeLen,
 	movlt	r2, #18	@ StartCodeLen,
 .L119:
-	add	r3, r3, #17	@ tmp162, D.41515,
+	add	r3, r3, #17	@ tmp162, D.41519,
 	cmp	r2, r3	@ StartCodeLen, tmp162
 	moveq	r0, #0	@ ret,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -1134,10 +1134,10 @@ MP4_Combine_HdPacket:
 	cmp	r2, #0	@ <variable>.VirAddr,
 	beq	.L134	@,
 	movw	r2, #15709	@ tmp145,
-	ldrb	r5, [r0, r2]	@ zero_extendqisi2	@ D.41973, <variable>.IsLastSeg
-	cmp	r5, #1	@ D.41973,
+	ldrb	r5, [r0, r2]	@ zero_extendqisi2	@ D.41977, <variable>.IsLastSeg
+	cmp	r5, #1	@ D.41977,
 	beq	.L135	@,
-	cmp	r5, #0	@ D.41973,
+	cmp	r5, #0	@ D.41977,
 	bne	.L132	@,
 	movw	ip, #15789	@ tmp181,
 	ldrb	lr, [r0, ip]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
@@ -1155,14 +1155,14 @@ MP4_Combine_HdPacket:
 	str	r2, [r4, r3]	@ tmp188, <variable>.LenInByte
 	mov	r2, #80	@,
 	bl	memcpy	@
-	mov	r0, r5	@ D.41972, D.41973
+	mov	r0, r5	@ D.41976, D.41977
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L135:
 	movw	r6, #22101	@ tmp146,
-	ldrb	r5, [r0, r6]	@ zero_extendqisi2	@ D.41976, <variable>.IsLastSeg
-	cmp	r5, #1	@ D.41976,
+	ldrb	r5, [r0, r6]	@ zero_extendqisi2	@ D.41980, <variable>.IsLastSeg
+	cmp	r5, #1	@ D.41980,
 	beq	.L136	@,
-	cmp	r5, #0	@ D.41976,
+	cmp	r5, #0	@ D.41980,
 	bne	.L131	@,
 	movw	r3, #22181	@ tmp172,
 	ldrb	r2, [r0, r3]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
@@ -1171,7 +1171,7 @@ MP4_Combine_HdPacket:
 	movw	r3, #22188	@ tmp174,
 	movw	r0, #15716	@ tmp175,
 	ldr	r1, [r4, r0]	@ <variable>.LenInByte, <variable>.LenInByte
-	mov	r0, r5	@ D.41972, D.41976
+	mov	r0, r5	@ D.41976, D.41980
 	ldr	r2, [r4, r3]	@ <variable>.LenInByte, <variable>.LenInByte
 	add	ip, r1, r2	@ tmp179, <variable>.LenInByte, <variable>.LenInByte
 	str	ip, [r4, r3]	@ tmp179, <variable>.LenInByte
@@ -1182,7 +1182,7 @@ MP4_Combine_HdPacket:
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41972,
+	mvn	r0, #0	@ D.41976,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L136:
 	movw	r1, #15712	@ tmp147,
@@ -1194,7 +1194,7 @@ MP4_Combine_HdPacket:
 	movw	r3, #22108	@ tmp166,
 	movw	r0, #15716	@ tmp167,
 	ldr	r1, [r4, r0]	@ <variable>.LenInByte, <variable>.LenInByte
-	mov	r0, #0	@ D.41972,
+	mov	r0, #0	@ D.41976,
 	ldr	ip, [r4, r3]	@ <variable>.LenInByte, <variable>.LenInByte
 	add	r2, r1, ip	@ tmp171, <variable>.LenInByte, <variable>.LenInByte
 	str	r2, [r4, r3]	@ tmp171, <variable>.LenInByte
@@ -1205,7 +1205,7 @@ MP4_Combine_HdPacket:
 	movw	r2, #5063	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41972,
+	mvn	r0, #0	@ D.41976,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L137:
 	add	ip, r4, #22016	@, pCtx,
@@ -1217,7 +1217,7 @@ MP4_Combine_HdPacket:
 	movw	r2, #22181	@ tmp163,
 	mov	r0, #0	@ tmp161,
 	strb	r0, [r4, r6]	@ tmp161, <variable>.IsLastSeg
-	strb	r5, [r4, r2]	@ D.41976, <variable>.IsLastSeg
+	strb	r5, [r4, r2]	@ D.41980, <variable>.IsLastSeg
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L134:
 	movw	r0, #:lower16:g_event_report	@ tmp141,
@@ -1235,7 +1235,7 @@ MP4_Combine_HdPacket:
 	movw	r1, #:lower16:.LC4	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41972,
+	mvn	r0, #0	@ D.41976,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	MP4_Combine_HdPacket, .-MP4_Combine_HdPacket
@@ -1257,7 +1257,7 @@ MP4_GetScdUpMsg:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #22060	@ tmp141,
-	ldr	r3, [r0, r3]	@ D.41486, <variable>.pstExtraData
+	ldr	r3, [r0, r3]	@ D.41490, <variable>.pstExtraData
 	add	r2, r0, #15808	@ tmp139, pCtx,
 	add	r0, r0, #56576	@ tmp140, pCtx,
 	ldr	ip, [r3, #864]	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stChanOption.u32DynamicFrameStoreAllocEn
@@ -1466,16 +1466,16 @@ MP4_Record_PacketID:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r5, #22516	@ tmp136,
-	ldr	r3, [r0, r5]	@ D.41941, <variable>.stHdPktInfo.StreamIDNum
+	ldr	r3, [r0, r5]	@ D.41945, <variable>.stHdPktInfo.StreamIDNum
 	mov	r4, r0	@ pCtx, pCtx
-	cmp	r3, #62	@ D.41941,
+	cmp	r3, #62	@ D.41945,
 	bgt	.L173	@,
-	add	ip, r3, #5504	@ tmp144, D.41941,
+	add	ip, r3, #5504	@ tmp144, D.41945,
 	movw	r1, #15720	@ tmp150,
 	add	r0, ip, #60	@ tmp144, tmp144,
 	ldr	ip, [r4, r1]	@ <variable>.StreamID, <variable>.StreamID
-	add	r3, r3, #1	@ D.41951, D.41941,
-	str	r3, [r4, r5]	@ D.41951, <variable>.stHdPktInfo.StreamIDNum
+	add	r3, r3, #1	@ D.41955, D.41945,
+	str	r3, [r4, r5]	@ D.41955, <variable>.stHdPktInfo.StreamIDNum
 	add	r2, r4, r0, asl #2	@, tmp148, pCtx, tmp144,
 	movw	r0, #15709	@ tmp155,
 	str	ip, [r2, #4]	@ <variable>.StreamID, <variable>.stHdPktInfo.StreamId
@@ -1486,11 +1486,11 @@ MP4_Record_PacketID:
 	ldrb	r2, [r4, r0]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r2, #1	@ <variable>.IsLastSeg,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
-	add	r2, r3, #5504	@ tmp159, D.41951,
+	add	r2, r3, #5504	@ tmp159, D.41955,
 	movw	r0, #15800	@ tmp165,
 	add	ip, r2, #60	@ tmp159, tmp159,
 	ldr	r1, [r4, r0]	@ <variable>.StreamID, <variable>.StreamID
-	add	r3, r3, #1	@ tmp168, D.41951,
+	add	r3, r3, #1	@ tmp168, D.41955,
 	str	r3, [r4, r5]	@ tmp168, <variable>.stHdPktInfo.StreamIDNum
 	add	r4, r4, ip, asl #2	@, tmp163, pCtx, tmp159,
 	str	r1, [r4, #4]	@ <variable>.StreamID, <variable>.stHdPktInfo.StreamId
@@ -1601,7 +1601,7 @@ MP4_Renew_CurPacket:
 	add	r4, r4, #15744	@ tmp151, pCtx,
 	bl	memcpy	@
 	ldr	r2, [r5, #240]	@ <variable>.stHdPktInfo.stScdUpMsg, <variable>.stHdPktInfo.stScdUpMsg
-	mov	r0, #0	@ D.42016,
+	mov	r0, #0	@ D.42020,
 	str	r2, [r4, #32]	@ <variable>.stHdPktInfo.stScdUpMsg, <variable>.stMp4UpMsg
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L185:
@@ -1615,7 +1615,7 @@ MP4_Renew_CurPacket:
 	movw	r2, #5090	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.42016, ret
+	mov	r0, r5	@ D.42020, ret
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	MP4_Renew_CurPacket, .-MP4_Renew_CurPacket
@@ -1639,21 +1639,21 @@ MP4_Check_CurPacket:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r5, #15704	@ tmp145,
-	ldr	r1, [r0, r5]	@ D.42113, <variable>.VirAddr
+	ldr	r1, [r0, r5]	@ D.42117, <variable>.VirAddr
 	movw	r3, #15716	@ tmp147,
 	movw	r2, #15712	@ tmp143,
-	ldr	lr, [r0, r3]	@ D.42112, <variable>.LenInByte
+	ldr	lr, [r0, r3]	@ D.42116, <variable>.LenInByte
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r0, [r0, r2]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	sub	r5, fp, #52	@ tmp151,,
 	movw	ip, #22044	@ tmp146,
 	movw	r3, #22056	@ tmp149,
-	str	r1, [r4, ip]	@ D.42113, <variable>.BitsObj.vir_addr
+	str	r1, [r4, ip]	@ D.42117, <variable>.BitsObj.vir_addr
 	movw	r2, #22048	@ tmp142,
 	movw	ip, #22052	@ tmp148,
 	str	r0, [r4, r2]	@ <variable>.PhyAddr, <variable>.BitsObj.phy_addr
-	mov	r2, lr	@, D.42112
-	str	lr, [r4, ip]	@ D.42112, <variable>.BitsObj.len
+	mov	r2, lr	@, D.42116
+	str	lr, [r4, ip]	@ D.42116, <variable>.BitsObj.len
 	mov	r0, #0	@ tmp150,
 	str	r0, [r4, r3]	@ tmp150, <variable>.BitsObj.offset
 	mov	r0, r5	@, tmp151
@@ -1680,8 +1680,8 @@ MP4_Check_CurPacket:
 .L208:
 	movw	r2, #22520	@ tmp178,
 	movw	ip, #438	@ tmp179,
-	ldr	r3, [r4, r2]	@ D.41900, <variable>.stHdPktInfo.HeadCode
-	cmp	r3, ip	@ D.41900, tmp179
+	ldr	r3, [r4, r2]	@ D.41904, <variable>.stHdPktInfo.HeadCode
+	cmp	r3, ip	@ D.41904, tmp179
 	beq	.L190	@,
 	cmp	r0, #196	@ StartCode,
 	beq	.L190	@,
@@ -1751,7 +1751,7 @@ MP4_Check_CurPacket:
 	b	.L195	@
 .L210:
 	movw	r2, #438	@ tmp184,
-	cmp	r3, r2	@ D.41900, tmp184
+	cmp	r3, r2	@ D.41904, tmp184
 	bne	.L194	@,
 	movw	r1, #22108	@ tmp185,
 	ldr	r3, [r4, r1]	@ <variable>.LenInByte, <variable>.LenInByte
@@ -1789,17 +1789,17 @@ MP4_Record_SlcSegID:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r6, #19964	@ tmp136,
-	ldr	r3, [r0, r6]	@ D.41827, <variable>.StreamIDNum
+	ldr	r3, [r0, r6]	@ D.41831, <variable>.StreamIDNum
 	movw	r4, #1022	@ tmp137,
 	mov	r5, r0	@ pCtx, pCtx
-	cmp	r3, r4	@ D.41827, tmp137
+	cmp	r3, r4	@ D.41831, tmp137
 	bhi	.L215	@,
-	add	ip, r3, #3952	@ tmp145, D.41827,
+	add	ip, r3, #3952	@ tmp145, D.41831,
 	movw	r1, #15720	@ tmp151,
 	add	r0, ip, #14	@ tmp145, tmp145,
 	ldr	ip, [r5, r1]	@ <variable>.StreamID, <variable>.StreamID
-	add	r3, r3, #1	@ D.41836, D.41827,
-	str	r3, [r5, r6]	@ D.41836, <variable>.StreamIDNum
+	add	r3, r3, #1	@ D.41840, D.41831,
+	str	r3, [r5, r6]	@ D.41840, <variable>.StreamIDNum
 	add	r2, r5, r0, asl #2	@, tmp149, pCtx, tmp145,
 	movw	r0, #15709	@ tmp156,
 	str	ip, [r2, #4]	@ <variable>.StreamID, <variable>.StreamID
@@ -1810,11 +1810,11 @@ MP4_Record_SlcSegID:
 	ldrb	r2, [r5, r0]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r2, #1	@ <variable>.IsLastSeg,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	add	r2, r3, #3952	@ tmp160, D.41836,
+	add	r2, r3, #3952	@ tmp160, D.41840,
 	movw	r0, #15800	@ tmp166,
 	add	ip, r2, #14	@ tmp160, tmp160,
 	ldr	r1, [r5, r0]	@ <variable>.StreamID, <variable>.StreamID
-	add	r3, r3, #1	@ tmp169, D.41836,
+	add	r3, r3, #1	@ tmp169, D.41840,
 	str	r3, [r5, r6]	@ tmp169, <variable>.StreamIDNum
 	add	r5, r5, ip, asl #2	@, tmp164, pCtx, tmp160,
 	str	r1, [r5, #4]	@ <variable>.StreamID, <variable>.StreamID
@@ -2123,7 +2123,7 @@ Bs_Get_Matrix:
 	mov	r4, r6	@ i, value
 	b	.L247	@
 .L257:
-	mov	r6, r0	@ value, D.39046
+	mov	r6, r0	@ value, D.39050
 .L247:
 	mov	r0, sl	@, bs
 	mov	r1, #8	@,
@@ -2136,23 +2136,23 @@ Bs_Get_Matrix:
 	cmp	r4, #63	@ i,
 	movgt	r3, #0	@, tmp162
 	movle	r3, #1	@, tmp162
-	cmp	r0, #0	@ D.39046,
-	str	r0, [r7, r2, asl #2]	@ D.39046,* matrix
+	cmp	r0, #0	@ D.39050,
+	str	r0, [r7, r2, asl #2]	@ D.39050,* matrix
 	moveq	r3, #0	@, tmp162,
 	cmp	r3, #0	@ tmp162,
 	bne	.L257	@,
-	cmp	r0, #0	@ D.39046,
+	cmp	r0, #0	@ D.39050,
 	ldmnefd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	sub	r0, r4, #1	@ tmp163, i,
 	cmp	r0, #63	@ tmp163,
 	ldmgtfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	ldr	ip, .L258	@ tmp165,
 	add	r4, ip, r4, asl #2	@, ivtmp.1507, tmp165, i,
-	add	ip, ip, #260	@ D.43068, tmp165,
+	add	ip, ip, #260	@ D.43072, tmp165,
 	add	r3, r4, #4	@ ivtmp.1507, ivtmp.1507,
-	rsb	r2, r4, ip	@ tmp174, ivtmp.1507, D.43068
+	rsb	r2, r4, ip	@ tmp174, ivtmp.1507, D.43072
 	ldr	lr, [r4, #-4]	@ tmp169, scan_tables
-	cmp	r3, ip	@ ivtmp.1507, D.43068
+	cmp	r3, ip	@ ivtmp.1507, D.43072
 	sub	r1, r2, #4	@ tmp175, tmp174,
 	ubfx	r1, r1, #2, #1	@ tmp176, tmp175,,
 	str	r6, [r7, lr, asl #2]	@ value,* matrix
@@ -2161,7 +2161,7 @@ Bs_Get_Matrix:
 	beq	.L249	@,
 	ldr	r2, [r3, #-4]	@ tmp182, scan_tables
 	add	r3, r3, #4	@ ivtmp.1507, ivtmp.1507,
-	cmp	r3, ip	@ ivtmp.1507, D.43068
+	cmp	r3, ip	@ ivtmp.1507, D.43072
 	str	r6, [r7, r2, asl #2]	@ value,* matrix
 	ldmeqfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L249:
@@ -2170,7 +2170,7 @@ Bs_Get_Matrix:
 	ldr	lr, [r1], #4	@ tmp181, scan_tables
 	add	r3, r1, #4	@ ivtmp.1507, tmp177,
 	str	r6, [r7, r0, asl #2]	@ value,* matrix
-	cmp	r3, ip	@ ivtmp.1507, D.43068
+	cmp	r3, ip	@ ivtmp.1507, D.43072
 	str	r6, [r7, lr, asl #2]	@ value,* matrix
 	bne	.L249	@,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
@@ -2200,26 +2200,26 @@ Mp4_Syntax_Slice_SH:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	sl, #15616	@ tmp146,
-	ldr	r6, [r0, sl]	@ D.41689, <variable>.Mp4DecParam.SlcNum
+	ldr	r6, [r0, sl]	@ D.41693, <variable>.Mp4DecParam.SlcNum
 	movw	r3, #510	@ tmp148,
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r9, r2	@ len, len
-	sub	r7, r6, #1	@ D.41700, D.41689,
-	cmp	r7, r3	@ D.41700, tmp148
+	sub	r7, r6, #1	@ D.41704, D.41693,
+	cmp	r7, r3	@ D.41704, tmp148
 	bhi	.L269	@,
 	movw	r3, #15864	@ tmp165,
 	sub	r5, fp, #76	@ tmp170,,
 	ldrb	ip, [r0, r3]	@ zero_extendqisi2	@ tmp167,
-	add	r0, r6, #1	@ tmp164, D.41689,
+	add	r0, r6, #1	@ tmp164, D.41693,
 	str	r0, [r4, sl]	@ tmp164, <variable>.Mp4DecParam.SlcNum
 	mov	r0, r5	@, tmp170
 	ubfx	lr, ip, #3, #4	@ tmp169, tmp167,,
-	mov	sl, r6, asl #3	@ tmp394, D.41689,
-	add	r8, lr, #17	@ D.41706, tmp169,
+	mov	sl, r6, asl #3	@ tmp394, D.41693,
+	add	r8, lr, #17	@ D.41710, tmp169,
 	bl	BsInit	@
 	mov	r0, r5	@, tmp170
-	mov	r1, r8	@, D.41706
-	rsb	r8, r6, sl	@ tmp178, D.41689, tmp394
+	mov	r1, r8	@, D.41710
+	rsb	r8, r6, sl	@ tmp178, D.41693, tmp394
 	bl	BsSkip	@
 	mov	r1, #5	@,
 	mov	r0, r5	@, tmp170
@@ -2229,13 +2229,13 @@ Mp4_Syntax_Slice_SH:
 	ldrb	ip, [r4, r2]	@ zero_extendqisi2	@ <variable>.MP4Vop.num_mb_ingob, <variable>.MP4Vop.num_mb_ingob
 	movw	r3, #1204	@ tmp182,
 	movw	r1, #1206	@ tmp184,
-	mul	r0, ip, r0	@ D.41712, <variable>.MP4Vop.num_mb_ingob,
-	str	r0, [r8, #1304]	@ D.41712, <variable>.mb_start_num
+	mul	r0, ip, r0	@ D.41716, <variable>.MP4Vop.num_mb_ingob,
+	str	r0, [r8, #1304]	@ D.41716, <variable>.mb_start_num
 	ldrh	ip, [r4, r3]	@ <variable>.Mp4DecParam.PicWidthInMb, <variable>.Mp4DecParam.PicWidthInMb
 	ldrh	r2, [r4, r1]	@ <variable>.Mp4DecParam.PicHeightInMb, <variable>.Mp4DecParam.PicHeightInMb
 	mul	r3, r2, ip	@ tmp186, <variable>.Mp4DecParam.PicHeightInMb, <variable>.Mp4DecParam.PicWidthInMb
 	sub	r3, r3, #1	@ totalMbMin1, tmp186,
-	cmp	r0, r3	@ D.41712, totalMbMin1
+	cmp	r0, r3	@ D.41716, totalMbMin1
 	bhi	.L270	@,
 	mov	r1, #2	@,
 	mov	r0, r5	@, tmp170
@@ -2286,7 +2286,7 @@ Mp4_Syntax_Slice_SH:
 	str	r1, [r4, ip]	@ tmp284, <variable>.PicIntegrality
 	beq	.L271	@,
 .L264:
-	rsb	r6, r6, sl	@ tmp320, D.41689, tmp394
+	rsb	r6, r6, sl	@ tmp320, D.41693, tmp394
 	mov	r0, #0	@ tmp324,
 	add	r6, r4, r6, asl #2	@, tmp322, pCtx, tmp320,
 	add	r3, r6, #1280	@ tmp331, tmp322,
@@ -2295,14 +2295,14 @@ Mp4_Syntax_Slice_SH:
 	str	r0, [r6, #1292]	@ tmp324, <variable>.bit_len
 	strb	r0, [r2, #6]	@ tmp324, <variable>.bit_offset
 .L265:
-	mov	r3, r7, asl #3	@ tmp393, D.41700,
-	rsb	ip, r7, r3	@ tmp345, D.41700, tmp393
+	mov	r3, r7, asl #3	@ tmp393, D.41704,
+	rsb	ip, r7, r3	@ tmp345, D.41704, tmp393
 	add	r2, r4, ip, asl #2	@, tmp347, pCtx, tmp345,
 	ldr	r1, [r2, #1300]	@ <variable>.phy_address, <variable>.phy_address
 	cmp	r1, #0	@ <variable>.phy_address,
 	bne	.L272	@,
 .L266:
-	rsb	r3, r7, r3	@ tmp373, D.41700, tmp393
+	rsb	r3, r7, r3	@ tmp373, D.41704, tmp393
 	movw	r2, #15864	@ tmp377,
 	ldrb	ip, [r4, r2]	@ zero_extendqisi2	@ tmp379,
 	add	lr, r4, r3, asl #2	@, tmp375, pCtx, tmp373,
@@ -2318,13 +2318,13 @@ Mp4_Syntax_Slice_SH:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L272:
-	ldr	r1, [r2, #1292]	@ D.41758, <variable>.bit_len
-	cmp	r1, #0	@ D.41758,
+	ldr	r1, [r2, #1292]	@ D.41762, <variable>.bit_len
+	cmp	r1, #0	@ D.41762,
 	beq	.L266	@,
 	movw	ip, #15864	@ tmp364,
 	ldrb	r3, [r4, ip]	@ zero_extendqisi2	@ tmp366,
 	ubfx	r0, r3, #3, #4	@ tmp368, tmp366,,
-	add	lr, r0, r1	@ tmp369, tmp368, D.41758
+	add	lr, r0, r1	@ tmp369, tmp368, D.41762
 	str	lr, [r2, #1292]	@ tmp369, <variable>.bit_len
 	b	.L267	@
 .L271:
@@ -2363,7 +2363,7 @@ Mp4_Syntax_Slice_SH:
 	bl	dprint_vfmw	@
 	b	.L262	@
 .L270:
-	mov	r2, r0	@, D.41712
+	mov	r2, r0	@, D.41716
 	movw	r1, #:lower16:.LC9	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC9	@,
@@ -2396,25 +2396,25 @@ Mp4_Syntax_Slice_NotSH:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r8, #15616	@ tmp154,
-	ldr	r6, [r0, r8]	@ D.41598, <variable>.Mp4DecParam.SlcNum
+	ldr	r6, [r0, r8]	@ D.41602, <variable>.Mp4DecParam.SlcNum
 	mov	r4, r0	@ pCtx, pCtx
 	movw	r3, #510	@ tmp156,
 	mov	r7, r2	@ len, len
-	sub	r0, r6, #1	@ tmp155, D.41598,
+	sub	r0, r6, #1	@ tmp155, D.41602,
 	cmp	r0, r3	@ tmp155, tmp156
 	bhi	.L291	@,
 	movw	ip, #15864	@ tmp174,
 	sub	r5, fp, #68	@ tmp407,,
 	ldrh	r3, [r4, ip]	@ tmp176,
-	add	r0, r6, #1	@ tmp173, D.41598,
+	add	r0, r6, #1	@ tmp173, D.41602,
 	str	r0, [r4, r8]	@ tmp173, <variable>.Mp4DecParam.SlcNum
 	mov	r0, r5	@, tmp407
 	ubfx	lr, r3, #7, #4	@ tmp178, tmp176,,
 	movw	r8, #21972	@ tmp181,
-	add	sl, lr, #17	@ D.41613, tmp178,
+	add	sl, lr, #17	@ D.41617, tmp178,
 	bl	BsInit	@
 	mov	r0, r5	@, tmp407
-	mov	r1, sl	@, D.41613
+	mov	r1, sl	@, D.41617
 	bl	BsSkip	@
 	movw	r2, #21976	@ tmp185,
 	ldr	r1, [r4, r8]	@ <variable>.MP4Syntax.image_height, <variable>.MP4Syntax.image_height
@@ -2436,8 +2436,8 @@ Mp4_Syntax_Slice_NotSH:
 	sxth	r1, r1	@, n
 	mov	r0, r5	@, tmp407
 	bl	BsGet	@
-	mov	sl, r6, asl #3	@ tmp406, D.41598,
-	rsb	r3, r6, sl	@ tmp196, D.41598, tmp406
+	mov	sl, r6, asl #3	@ tmp406, D.41602,
+	rsb	r3, r6, sl	@ tmp196, D.41602, tmp406
 	sub	ip, r8, #1	@ tmp200, MbCnt,
 	add	r2, r4, r3, asl #2	@, tmp198, pCtx, tmp196,
 	cmp	r0, ip	@ temp.1575, tmp200
@@ -2447,7 +2447,7 @@ Mp4_Syntax_Slice_NotSH:
 	mov	r1, #5	@,
 	mov	r0, r5	@, tmp407
 	bl	BsGet	@
-	rsb	r8, r6, sl	@ tmp206, D.41598, tmp406
+	rsb	r8, r6, sl	@ tmp206, D.41602, tmp406
 	mov	r1, #1	@,
 	add	r8, r4, r8, asl #2	@, tmp208, pCtx, tmp206,
 	strb	r0, [r8, #1285]	@, <variable>.vop_quant
@@ -2465,8 +2465,8 @@ Mp4_Syntax_Slice_NotSH:
 	mov	r0, r5	@, tmp407
 	bl	BsSkip	@
 	movw	r0, #20068	@ tmp214,
-	ldr	r1, [r4, r0]	@ D.41634, <variable>.MP4Vol.vop_time_incr_bits
-	cmp	r1, #0	@ D.41634,
+	ldr	r1, [r4, r0]	@ D.41638, <variable>.MP4Vol.vop_time_incr_bits
+	cmp	r1, #0	@ D.41638,
 	bne	.L293	@,
 .L283:
 	mov	r1, #1	@,
@@ -2475,7 +2475,7 @@ Mp4_Syntax_Slice_NotSH:
 	mov	r1, #2	@,
 	mov	r0, r5	@, tmp407
 	bl	BsGet	@
-	rsb	r2, r6, sl	@ tmp221, D.41598, tmp406
+	rsb	r2, r6, sl	@ tmp221, D.41602, tmp406
 	mov	r1, #3	@,
 	add	r8, r4, r2, asl #2	@, tmp223, pCtx, tmp221,
 	strb	r0, [r8, #1284]	@, <variable>.vop_coding_type
@@ -2487,7 +2487,7 @@ Mp4_Syntax_Slice_NotSH:
 	bne	.L294	@,
 .L284:
 	movw	r0, #21216	@ tmp280,
-	rsb	r8, r6, sl	@ tmp276, D.41598, tmp406
+	rsb	r8, r6, sl	@ tmp276, D.41602, tmp406
 	ldrb	r2, [r4, r0]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_fcode_forward, <variable>.MP4Vop.vop_fcode_forward
 	movw	ip, #21217	@ tmp290,
 	add	r8, r4, r8, asl #2	@, tmp278, pCtx, tmp276,
@@ -2528,7 +2528,7 @@ Mp4_Syntax_Slice_NotSH:
 	cmp	lr, #1	@ <variable>.IsLastSeg,
 	beq	.L295	@,
 .L285:
-	rsb	r6, r6, sl	@ tmp375, D.41598, tmp406
+	rsb	r6, r6, sl	@ tmp375, D.41602, tmp406
 	mov	r1, #0	@ tmp379,
 	add	r6, r4, r6, asl #2	@, tmp377, pCtx, tmp375,
 	add	ip, r6, #1280	@ tmp386, tmp377,
@@ -2601,8 +2601,8 @@ Mp4_Syntax_Slice_NotSH:
 	mov	r1, r8	@, MbCnt
 	mov	r0, r5	@, tmp407
 	bl	BsGet	@
-	mov	sl, r6, asl #3	@ tmp406, D.41598,
-	rsb	r2, r6, sl	@ tmp402, D.41598, tmp406
+	mov	sl, r6, asl #3	@ tmp406, D.41602,
+	rsb	r2, r6, sl	@ tmp402, D.41602, tmp406
 	add	r8, r4, r2, asl #2	@, tmp404, pCtx, tmp402,
 	str	r0, [r8, #1304]	@, <variable>.mb_start_num
 	b	.L280	@
@@ -2641,19 +2641,19 @@ MP4_Dec_Slice:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	ip, #15864	@ tmp144,
-	ldrb	r3, [r0, ip]	@ zero_extendqisi2	@ D.41790,
+	ldrb	r3, [r0, ip]	@ zero_extendqisi2	@ D.41794,
 	mov	r4, r0	@ pCtx, pCtx
-	tst	r3, #1	@ D.41790,
+	tst	r3, #1	@ D.41794,
 	beq	.L306	@,
-	tst	r3, #4	@ D.41790,
+	tst	r3, #4	@ D.41794,
 	bne	.L303	@,
 	ldrh	r0, [r0, ip]	@ tmp169,
-	ubfx	r0, r0, #7, #4	@ D.41812, tmp169,,
-	cmp	r0, #0	@ D.41812,
+	ubfx	r0, r0, #7, #4	@ D.41816, tmp169,,
+	cmp	r0, #0	@ D.41816,
 	beq	.L303	@,
-	cmp	r0, #7	@ D.41812,
-	bfile	r3, r0, #3, #4	@ D.41790, D.41812,,
-	strleb	r3, [r4, ip]	@ D.41790,
+	cmp	r0, #7	@ D.41816,
+	bfile	r3, r0, #3, #4	@ D.41794, D.41816,,
+	strleb	r3, [r4, ip]	@ D.41794,
 .L303:
 	mov	r0, r4	@, pCtx
 	bl	Mp4_Syntax_Slice_SH	@
@@ -2747,26 +2747,26 @@ Mp4_Syntax_Vos:
 	mov	r0, r4	@, tmp174
 	mov	r1, #8	@,
 	bl	BsGet	@
-	sub	r2, r0, #1	@ tmp147, D.40040,
-	str	r0, [r5, r7]	@ D.40040, <variable>.MP4Vos.profile_and_level_indication
-	cmp	r0, #8	@ D.40040,
+	sub	r2, r0, #1	@ tmp147, D.40044,
+	str	r0, [r5, r7]	@ D.40044, <variable>.MP4Vos.profile_and_level_indication
+	cmp	r0, #8	@ D.40044,
 	cmpne	r2, #2	@, tmp147,
 	movhi	r2, #0	@, tmp154
 	movls	r2, #1	@, tmp154
 	bls	.L312	@,
-	cmp	r0, #240	@ D.40040,
+	cmp	r0, #240	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #241	@ D.40040,
+	cmp	r0, #241	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #242	@ D.40040,
+	cmp	r0, #242	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #243	@ D.40040,
+	cmp	r0, #243	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #244	@ D.40040,
+	cmp	r0, #244	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #245	@ D.40040,
+	cmp	r0, #245	@ D.40044,
 	beq	.L312	@,
-	cmp	r0, #0	@ D.40040,
+	cmp	r0, #0	@ D.40044,
 	beq	.L317	@,
 	movw	lr, #:lower16:g_event_report	@ tmp169,
 	movt	lr, #:upper16:g_event_report	@ tmp169,
@@ -2784,7 +2784,7 @@ Mp4_Syntax_Vos:
 .L312:
 	movw	ip, #21292	@ tmp158,
 	movw	r1, #22036	@ tmp155,
-	str	r0, [r5, ip]	@ D.40040, <variable>.MP4Syntax.syn_vos.profile_and_level_indication
+	str	r0, [r5, ip]	@ D.40044, <variable>.MP4Syntax.syn_vos.profile_and_level_indication
 	mov	r0, #1	@ tmp156,
 	strb	r0, [r5, r1]	@ tmp156, <variable>.MP4SyntaxState.vos_decode_right
 .L314:
@@ -2793,7 +2793,7 @@ Mp4_Syntax_Vos:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
 .L317:
-	mov	r2, r0	@, D.40040
+	mov	r2, r0	@, D.40044
 	movw	r1, #:lower16:.LC12	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC12	@,
@@ -2832,12 +2832,12 @@ Mp4_Syntax_Vol:
 	add	r6, r0, #19968	@ tmp628, pCtx,
 	mov	r4, r0	@ pCtx, pCtx
 	add	r6, r6, #32	@ tmp628, tmp628,
-	ldr	r5, [lr, r9, asl #2]	@ D.39715, s_pstVfmwChan
+	ldr	r5, [lr, r9, asl #2]	@ D.39719, s_pstVfmwChan
 	movw	r9, #20004	@ tmp259,
-	cmp	r5, #0	@ D.39715,
-	ldrne	r7, [r5, #1300]	@ MaxVerSize, <variable>.stSynExtraData.stChanOption.s32MaxHeight
+	cmp	r5, #0	@ D.39719,
+	ldrne	r7, [r5, #1308]	@ MaxVerSize, <variable>.stSynExtraData.stChanOption.s32MaxHeight
 	moveq	r7, #8192	@ MaxVerSize,
-	ldrne	r8, [r5, #1296]	@ MaxHorSize, <variable>.stSynExtraData.stChanOption.s32MaxWidth
+	ldrne	r8, [r5, #1304]	@ MaxHorSize, <variable>.stSynExtraData.stChanOption.s32MaxWidth
 	sub	r5, fp, #76	@ tmp630,,
 	moveq	r8, r7	@ MaxHorSize, MaxVerSize
 	mov	r0, r5	@, tmp630
@@ -2864,9 +2864,9 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r3, #20000	@ tmp264,
-	uxtb	r0, r0	@ D.39729,
-	strb	r0, [r4, r3]	@ D.39729, <variable>.MP4Vol.is_object_layer_identifier
-	cmp	r0, #0	@ D.39729,
+	uxtb	r0, r0	@ D.39733,
+	strb	r0, [r4, r3]	@ D.39733, <variable>.MP4Vol.is_object_layer_identifier
+	cmp	r0, #0	@ D.39733,
 	bne	.L415	@,
 	movw	lr, #21285	@ tmp273,
 	movw	r0, #20001	@ tmp272,
@@ -2876,18 +2876,18 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r3, #20003	@ tmp277,
-	uxtb	r9, r0	@ D.39740,
-	strb	r9, [r4, r3]	@ D.39740, <variable>.MP4Vol.aspect_ratio_info
-	cmp	r9, #15	@ D.39740,
+	uxtb	r9, r0	@ D.39744,
+	strb	r9, [r4, r3]	@ D.39744, <variable>.MP4Vol.aspect_ratio_info
+	cmp	r9, #15	@ D.39744,
 	beq	.L416	@,
 .L323:
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	ip, #20005	@ tmp284,
-	uxtb	r0, r0	@ D.39749,
-	strb	r0, [r4, ip]	@ D.39749, <variable>.MP4Vol.vol_control_parameters
-	cmp	r0, #0	@ D.39749,
+	uxtb	r0, r0	@ D.39753,
+	strb	r0, [r4, ip]	@ D.39753, <variable>.MP4Vol.vol_control_parameters
+	cmp	r0, #0	@ D.39753,
 	movweq	ip, #20006	@ tmp354,
 	moveq	r2, #1	@ tmp355,
 	streqb	r2, [r4, ip]	@ tmp355, <variable>.MP4Vol.chroma_format
@@ -2896,10 +2896,10 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	mov	r1, #2	@,
 	bl	BsGet	@
-	uxtb	r9, r0	@ D.39813,
+	uxtb	r9, r0	@ D.39817,
 	movw	r0, #20008	@ tmp358,
-	cmp	r9, #0	@ D.39813,
-	strb	r9, [r4, r0]	@ D.39813, <variable>.MP4Vol.video_object_layer_shape
+	cmp	r9, #0	@ D.39817,
+	strb	r9, [r4, r0]	@ D.39817, <variable>.MP4Vol.video_object_layer_shape
 	beq	.L332	@,
 	mov	r0, r5	@, tmp630
 	movw	r5, #22039	@ tmp360,
@@ -2928,19 +2928,19 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39820,
+	subs	sl, r0, #0	@ D.39824,
 	beq	.L394	@,
 	mov	r1, #16	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r1, #20072	@ tmp377,
-	cmp	r0, #0	@ D.39826,
-	str	r0, [r4, r1]	@ D.39826, <variable>.MP4Vol.vop_time_increment_resolution
+	cmp	r0, #0	@ D.39830,
+	str	r0, [r4, r1]	@ D.39830, <variable>.MP4Vol.vop_time_increment_resolution
 	movweq	r1, #20068	@ tmp383,
 	moveq	r2, #1	@ tmp384,
 	streq	r2, [r4, r1]	@ tmp384, <variable>.MP4Vol.vop_time_incr_bits
 	beq	.L339	@,
-	subs	r0, r0, #1	@ value.1711, D.39826,
+	subs	r0, r0, #1	@ value.1711, D.39830,
 	beq	.L335	@,
 	mov	r3, r0	@ value, value.1711
 .L336:
@@ -2963,21 +2963,21 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39839,
+	subs	sl, r0, #0	@ D.39843,
 	beq	.L394	@,
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	r3, #20009	@ tmp395,
-	uxtb	sl, r0	@ D.39846,
-	strb	sl, [r4, r3]	@ D.39846, <variable>.MP4Vol.fixed_vop_rate
-	cmp	sl, #0	@ D.39846,
+	uxtb	sl, r0	@ D.39850,
+	strb	sl, [r4, r3]	@ D.39850, <variable>.MP4Vol.fixed_vop_rate
+	cmp	sl, #0	@ D.39850,
 	bne	.L418	@,
 .L341:
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39854,
+	subs	sl, r0, #0	@ D.39858,
 	beq	.L394	@,
 	mov	r1, #13	@,
 	mov	r0, r5	@, tmp630
@@ -2987,7 +2987,7 @@ Mp4_Syntax_Vol:
 	str	r0, [r4, r9]	@, <variable>.MP4Vol.video_object_layer_width
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39862,
+	subs	sl, r0, #0	@ D.39866,
 	beq	.L394	@,
 	mov	r1, #13	@,
 	mov	r0, r5	@, tmp630
@@ -2997,15 +2997,15 @@ Mp4_Syntax_Vol:
 	str	r0, [r4, sl]	@, <variable>.MP4Vol.video_object_layer_height
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	r2, r0, #0	@ D.39870,
+	subs	r2, r0, #0	@ D.39874,
 	beq	.L419	@,
-	ldr	r3, [r4, r9]	@ D.39878, <variable>.MP4Vol.video_object_layer_width
-	cmp	r3, #31	@ D.39878,
+	ldr	r3, [r4, r9]	@ D.39882, <variable>.MP4Vol.video_object_layer_width
+	cmp	r3, #31	@ D.39882,
 	bls	.L345	@,
-	ldr	r2, [r4, sl]	@ D.39880, <variable>.MP4Vol.video_object_layer_height
-	cmp	r2, #31	@ D.39880,
+	ldr	r2, [r4, sl]	@ D.39884, <variable>.MP4Vol.video_object_layer_height
+	cmp	r2, #31	@ D.39884,
 	bls	.L345	@,
-	mul	lr, r3, r2	@ tmp434, D.39878, D.39880
+	mul	lr, r3, r2	@ tmp434, D.39882, D.39884
 	mul	r7, r8, r7	@ tmp435, MaxHorSize, MaxVerSize
 	cmp	lr, r7	@ tmp434, tmp435
 	bls	.L346	@,
@@ -3031,14 +3031,14 @@ Mp4_Syntax_Vol:
 	bl	dprint_vfmw	@
 	movw	r1, #22039	@ tmp414,
 	mov	r0, r5	@, tmp630
-	strb	sl, [r4, r1]	@ D.39862, <variable>.MP4SyntaxState.vol_decode_right
+	strb	sl, [r4, r1]	@ D.39866, <variable>.MP4SyntaxState.vol_decode_right
 	bl	BsPos	@
 	mov	r5, r0	@ BitUsed,
 	movw	r0, #:lower16:g_event_report	@ tmp418,
 	movt	r0, #:upper16:g_event_report	@ tmp418,
 	ldr	ip, [r0, #0]	@ g_event_report.1720, g_event_report
 	cmp	ip, #0	@ g_event_report.1720,
-	movne	r2, sl	@, D.39862
+	movne	r2, sl	@, D.39866
 	beq	.L326	@,
 .L391:
 	movw	r1, #22960	@ tmp441,
@@ -3052,9 +3052,9 @@ Mp4_Syntax_Vol:
 	mov	r1, #2	@,
 	bl	BsGet	@
 	movw	r3, #20006	@ tmp287,
-	uxtb	r9, r0	@ D.39754,
-	strb	r9, [r4, r3]	@ D.39754, <variable>.MP4Vol.chroma_format
-	cmp	r9, #1	@ D.39754,
+	uxtb	r9, r0	@ D.39758,
+	strb	r9, [r4, r3]	@ D.39758, <variable>.MP4Vol.chroma_format
+	cmp	r9, #1	@ D.39758,
 	beq	.L325	@,
 	movw	lr, #22039	@ tmp289,
 	mov	r0, r5	@, tmp630
@@ -3078,9 +3078,9 @@ Mp4_Syntax_Vol:
 	mov	r1, #4	@,
 	bl	BsGet	@
 	movw	r3, #20003	@ tmp277,
-	uxtb	r9, r0	@ D.39740,
-	strb	r9, [r4, r3]	@ D.39740, <variable>.MP4Vol.aspect_ratio_info
-	cmp	r9, #15	@ D.39740,
+	uxtb	r9, r0	@ D.39744,
+	strb	r9, [r4, r3]	@ D.39744, <variable>.MP4Vol.aspect_ratio_info
+	cmp	r9, #15	@ D.39744,
 	bne	.L323	@,
 .L416:
 	mov	r1, #8	@,
@@ -3095,47 +3095,47 @@ Mp4_Syntax_Vol:
 	str	r0, [r4, r1]	@, <variable>.MP4Vol.par_height
 	b	.L323	@
 .L325:
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r2, #20007	@ tmp294,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	strb	r0, [r4, r2]	@, <variable>.MP4Vol.low_delay
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r1, #20040	@ tmp297,
-	cmp	r0, #0	@ D.39762,
-	str	r0, [r4, r1]	@ D.39762, <variable>.MP4Vol.vbv_parameters
+	cmp	r0, #0	@ D.39766,
+	str	r0, [r4, r1]	@ D.39766, <variable>.MP4Vol.vbv_parameters
 	beq	.L327	@,
 	mov	r1, #15	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	sl, #20044	@ tmp299,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	str	r0, [r4, sl]	@, <variable>.MP4Vol.first_half_bit_rate
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39769,
+	subs	sl, r0, #0	@ D.39773,
 	beq	.L408	@,
 	mov	r1, #15	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20048	@ tmp310,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	str	r0, [r4, ip]	@, <variable>.MP4Vol.latter_half_bit_rate
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39779,
+	subs	sl, r0, #0	@ D.39783,
 	beq	.L408	@,
 	mov	r1, #15	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r3, #20052	@ tmp321,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	str	r0, [r4, r3]	@, <variable>.MP4Vol.first_half_vbv_buffer_size
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39787,
+	subs	sl, r0, #0	@ D.39791,
 	beq	.L408	@,
 	mov	r1, #3	@,
 	mov	r0, r5	@, tmp630
@@ -3146,24 +3146,24 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r2, #20060	@ tmp334,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	str	r0, [r4, r2]	@, <variable>.MP4Vol.first_half_vbv_occupancy
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39797,
+	subs	sl, r0, #0	@ D.39801,
 	beq	.L408	@,
 	mov	r1, #15	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20064	@ tmp345,
-	mov	r1, r9	@, D.39754
+	mov	r1, r9	@, D.39758
 	str	r0, [r4, ip]	@, <variable>.MP4Vol.latter_half_vbv_occupancy
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	subs	sl, r0, #0	@ D.39805,
+	subs	sl, r0, #0	@ D.39809,
 	bne	.L327	@,
 .L408:
-	mov	r0, r9	@, D.39754
+	mov	r0, r9	@, D.39758
 	b	.L396	@
 .L335:
 	mov	r3, #1	@ iftmp.521,
@@ -3185,7 +3185,7 @@ Mp4_Syntax_Vol:
 	ldr	ip, [fp, #-80]	@,
 	movw	r3, #22039	@ tmp425,
 	mov	r0, r5	@, tmp630
-	strb	ip, [r4, r3]	@ D.39870, <variable>.MP4SyntaxState.vol_decode_right
+	strb	ip, [r4, r3]	@ D.39874, <variable>.MP4SyntaxState.vol_decode_right
 	str	ip, [fp, #-80]	@,
 	bl	BsPos	@
 	movw	r2, #:lower16:g_event_report	@ tmp429,
@@ -3206,14 +3206,14 @@ Mp4_Syntax_Vol:
 	strb	r0, [r4, r8]	@, <variable>.MP4Vol.interlaced
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
-	uxtb	r2, r0	@ D.39891,
-	strb	r2, [r4, r7]	@ D.39891, <variable>.MP4Vol.obmc_disable
-	cmp	r2, #0	@ D.39891,
+	uxtb	r2, r0	@ D.39895,
+	strb	r2, [r4, r7]	@ D.39895, <variable>.MP4Vol.obmc_disable
+	cmp	r2, #0	@ D.39895,
 	bne	.L347	@,
 	movw	r3, #:lower16:g_event_report	@ tmp452,
 	movt	r3, #:upper16:g_event_report	@ tmp452,
 	movw	ip, #22039	@ tmp449,
-	strb	r2, [r4, ip]	@ D.39891, <variable>.MP4SyntaxState.vol_decode_right
+	strb	r2, [r4, ip]	@ D.39895, <variable>.MP4SyntaxState.vol_decode_right
 	ldr	ip, [r3, #0]	@ g_event_report.1725, g_event_report
 	cmp	ip, #0	@ g_event_report.1725,
 	beq	.L347	@,
@@ -3230,18 +3230,18 @@ Mp4_Syntax_Vol:
 	cmp	r1, #1	@ <variable>.MP4Vol.video_object_layer_verid,
 	movne	r1, #2	@,,
 	bl	BsGet	@
-	uxtb	r7, r0	@ D.39903,
-	strb	r7, [r4, r8]	@ D.39903, <variable>.MP4Vol.sprite_enable
-	cmp	r7, #0	@ D.39903,
+	uxtb	r7, r0	@ D.39907,
+	strb	r7, [r4, r8]	@ D.39907, <variable>.MP4Vol.sprite_enable
+	cmp	r7, #0	@ D.39907,
 	bne	.L420	@,
 .L350:
 	mov	r0, r5	@, tmp630
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	r2, #20013	@ tmp504,
-	uxtb	ip, r0	@ D.39943,
-	strb	ip, [r4, r2]	@ D.39943, <variable>.MP4Vol.not_8_bit
-	cmp	ip, #0	@ D.39943,
+	uxtb	ip, r0	@ D.39947,
+	strb	ip, [r4, r2]	@ D.39947, <variable>.MP4Vol.not_8_bit
+	cmp	ip, #0	@ D.39947,
 	beq	.L358	@,
 	mov	r0, r5	@, tmp630
 	movw	r5, #22039	@ tmp506,
@@ -3272,7 +3272,7 @@ Mp4_Syntax_Vol:
 	ldr	sl, [r0, #0]	@ g_VdmCharacter, g_VdmCharacter
 	ands	sl, sl, #8	@ tmp460, g_VdmCharacter,
 	beq	.L421	@,
-	sub	lr, r7, #1	@ tmp469, D.39903,
+	sub	lr, r7, #1	@ tmp469, D.39907,
 	uxtb	ip, lr	@ tmp470, tmp469
 	cmp	ip, #1	@ tmp470,
 	bls	.L422	@,
@@ -3300,7 +3300,7 @@ Mp4_Syntax_Vol:
 	bl	dprint_vfmw	@
 	b	.L326	@
 .L422:
-	cmp	r7, #2	@ D.39903,
+	cmp	r7, #2	@ D.39907,
 	beq	.L354	@,
 .L410:
 	mov	r0, r5	@, tmp630
@@ -3354,9 +3354,9 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r1, #20014	@ tmp514,
-	uxtb	r7, r0	@ D.39952,
-	strb	r7, [r4, r1]	@ D.39952, <variable>.MP4Vol.quant_type
-	cmp	r7, #0	@ D.39952,
+	uxtb	r7, r0	@ D.39956,
+	strb	r7, [r4, r1]	@ D.39956, <variable>.MP4Vol.quant_type
+	cmp	r7, #0	@ D.39956,
 	bne	.L423	@,
 .L360:
 	movw	r3, #20001	@ tmp539,
@@ -3373,9 +3373,9 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20018	@ tmp548,
-	uxtb	r7, r0	@ D.39981,
-	strb	r7, [r4, ip]	@ D.39981, <variable>.MP4Vol.complexity_estimation_disable
-	cmp	r7, #0	@ D.39981,
+	uxtb	r7, r0	@ D.39985,
+	strb	r7, [r4, ip]	@ D.39985, <variable>.MP4Vol.complexity_estimation_disable
+	cmp	r7, #0	@ D.39985,
 	movweq	r1, #:lower16:.LC18	@,
 	moveq	r0, #1	@,
 	movteq	r1, #:upper16:.LC18	@,
@@ -3389,9 +3389,9 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r2, #20020	@ tmp561,
-	uxtb	r7, r0	@ D.39992,
-	strb	r7, [r4, r2]	@ D.39992, <variable>.MP4Vol.data_partitioned
-	cmp	r7, #0	@ D.39992,
+	uxtb	r7, r0	@ D.39996,
+	strb	r7, [r4, r2]	@ D.39996, <variable>.MP4Vol.data_partitioned
+	cmp	r7, #0	@ D.39996,
 	movwne	r1, #:lower16:.LC19	@,
 	movne	r0, #1	@,
 	movtne	r1, #:upper16:.LC19	@,
@@ -3404,9 +3404,9 @@ Mp4_Syntax_Vol:
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	ip, #20021	@ tmp573,
-	uxtb	r8, r0	@ D.40003,
-	strb	r8, [r4, ip]	@ D.40003, <variable>.MP4Vol.newpred_enable
-	cmp	r8, #0	@ D.40003,
+	uxtb	r8, r0	@ D.40007,
+	strb	r8, [r4, ip]	@ D.40007, <variable>.MP4Vol.newpred_enable
+	cmp	r8, #0	@ D.40007,
 	beq	.L371	@,
 	movw	r1, #:lower16:.LC20	@,
 	movt	r1, #:upper16:.LC20	@,
@@ -3415,13 +3415,13 @@ Mp4_Syntax_Vol:
 	bl	dprint_vfmw	@
 	movw	r3, #22039	@ tmp576,
 	mov	r0, r5	@, tmp630
-	strb	r7, [r4, r3]	@ D.39992, <variable>.MP4SyntaxState.vol_decode_right
+	strb	r7, [r4, r3]	@ D.39996, <variable>.MP4SyntaxState.vol_decode_right
 	bl	BsPos	@
 	movw	r2, #:lower16:g_event_report	@ tmp580,
 	movt	r2, #:upper16:g_event_report	@ tmp580,
 	ldr	ip, [r2, #0]	@ g_event_report.1744, g_event_report
 	cmp	ip, #0	@ g_event_report.1744,
-	movne	r2, r7	@, D.39992
+	movne	r2, r7	@, D.39996
 	mov	r5, r0	@ BitUsed,
 	bne	.L392	@,
 	b	.L326	@
@@ -3435,9 +3435,9 @@ Mp4_Syntax_Vol:
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	r2, #20015	@ tmp517,
-	uxtb	r3, r0	@ D.39957,
-	strb	r3, [r4, r2]	@ D.39957, <variable>.MP4Vol.load_intra_quant_mat
-	cmp	r3, #0	@ D.39957,
+	uxtb	r3, r0	@ D.39961,
+	strb	r3, [r4, r2]	@ D.39961, <variable>.MP4Vol.load_intra_quant_mat
+	cmp	r3, #0	@ D.39961,
 	movweq	r2, #:lower16:.LANCHOR0	@ tmp629,
 	movteq	r2, #:upper16:.LANCHOR0	@ tmp629,
 	bne	.L424	@,
@@ -3459,9 +3459,9 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	r2, #20016	@ tmp528,
-	uxtb	r3, r0	@ D.39967,
-	strb	r3, [r4, r2]	@ D.39967, <variable>.MP4Vol.load_nonintra_quant_mat
-	cmp	r3, #0	@ D.39967,
+	uxtb	r3, r0	@ D.39971,
+	strb	r3, [r4, r2]	@ D.39971, <variable>.MP4Vol.load_nonintra_quant_mat
+	cmp	r3, #0	@ D.39971,
 	ldreq	r1, .L427	@ tmp627,
 	bne	.L425	@,
 .L365:
@@ -3483,7 +3483,7 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20024	@ tmp479,
-	mov	r1, r7	@, D.39903
+	mov	r1, r7	@, D.39907
 	strb	r0, [r4, ip]	@, <variable>.MP4Vol.sprite_warping_points
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
@@ -3503,18 +3503,18 @@ Mp4_Syntax_Vol:
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20022	@ tmp583,
-	uxtb	r1, r0	@ D.40012,
-	strb	r1, [r4, ip]	@ D.40012, <variable>.MP4Vol.reduced_resolution_vop_enable
-	cmp	r1, #0	@ D.40012,
+	uxtb	r1, r0	@ D.40016,
+	strb	r1, [r4, ip]	@ D.40016, <variable>.MP4Vol.reduced_resolution_vop_enable
+	cmp	r1, #0	@ D.40016,
 	bne	.L426	@,
 .L372:
 	mov	r1, #1	@,
 	mov	r0, r5	@, tmp630
 	bl	BsGet	@
 	movw	ip, #20023	@ tmp599,
-	uxtb	r1, r0	@ D.40022,
-	strb	r1, [r4, ip]	@ D.40022, <variable>.MP4Vol.scalability
-	cmp	r1, #0	@ D.40022,
+	uxtb	r1, r0	@ D.40026,
+	strb	r1, [r4, ip]	@ D.40026, <variable>.MP4Vol.scalability
+	cmp	r1, #0	@ D.40026,
 	beq	.L373	@,
 	movw	r1, #:lower16:.LC22	@,
 	movt	r1, #:upper16:.LC22	@,
@@ -3549,7 +3549,7 @@ Mp4_Syntax_Vol:
 	movt	r1, #:upper16:.LC21	@,
 	bl	dprint_vfmw	@
 	movw	r2, #22039	@ tmp586,
-	strb	r8, [r4, r2]	@ D.40003, <variable>.MP4SyntaxState.vol_decode_right
+	strb	r8, [r4, r2]	@ D.40007, <variable>.MP4SyntaxState.vol_decode_right
 	mov	r0, r5	@, tmp630
 	bl	BsPos	@
 	mov	r5, r0	@ BitUsed,
@@ -3557,14 +3557,14 @@ Mp4_Syntax_Vol:
 	movt	r0, #:upper16:g_event_report	@ tmp590,
 	ldr	ip, [r0, #0]	@ g_event_report.1746, g_event_report
 	cmp	ip, #0	@ g_event_report.1746,
-	movne	r2, r8	@, D.40003
+	movne	r2, r8	@, D.40007
 	bne	.L392	@,
 	b	.L326	@
 .L370:
 	movw	r3, #20022	@ tmp595,
 	sub	lr, r3, #1	@ tmp592, tmp592,
-	strb	r7, [r4, r3]	@ D.39992, <variable>.MP4Vol.reduced_resolution_vop_enable
-	strb	r7, [r4, lr]	@ D.39992, <variable>.MP4Vol.newpred_enable
+	strb	r7, [r4, r3]	@ D.39996, <variable>.MP4Vol.reduced_resolution_vop_enable
+	strb	r7, [r4, lr]	@ D.39996, <variable>.MP4Vol.newpred_enable
 	b	.L372	@
 .L424:
 	add	r3, r4, #19968	@, pCtx,
@@ -3604,11 +3604,11 @@ Mp4_Syntax_Vop:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, #15616	@ tmp184,
-	ldr	r3, [r0, r5]	@ D.39498, <variable>.Mp4DecParam.SlcNum
+	ldr	r3, [r0, r5]	@ D.39502, <variable>.Mp4DecParam.SlcNum
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r8, r1	@ ptr, ptr
 	mov	r6, r2	@ len, len
-	cmp	r3, #0	@ D.39498,
+	cmp	r3, #0	@ D.39502,
 	bne	.L480	@,
 	movw	r1, #21269	@ tmp188,
 	ldrb	r0, [r4, r1]	@ zero_extendqisi2	@ <variable>.MP4Syntax.vol_decode_over, <variable>.MP4Syntax.vol_decode_over
@@ -3622,7 +3622,7 @@ Mp4_Syntax_Vop:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L480:
-	mov	r2, r3	@, D.39498
+	mov	r2, r3	@, D.39502
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC23	@,
 	movt	r1, #:upper16:.LC23	@,
@@ -3659,19 +3659,19 @@ Mp4_Syntax_Vop:
 	bl	BsGet	@
 	movw	r1, #:lower16:.LC24	@,
 	movt	r1, #:upper16:.LC24	@,
-	uxtb	r2, r0	@ D.39514,
+	uxtb	r2, r0	@ D.39518,
 	mov	r0, #18	@,
-	strb	r2, [r4, r8]	@ D.39514, <variable>.MP4Vop.vop_coding_type
+	strb	r2, [r4, r8]	@ D.39518, <variable>.MP4Vop.vop_coding_type
 	bl	dprint_vfmw	@
-	ldrb	r2, [r4, r8]	@ zero_extendqisi2	@ D.39516, <variable>.MP4Vop.vop_coding_type
-	cmp	r2, #3	@ D.39516,
+	ldrb	r2, [r4, r8]	@ zero_extendqisi2	@ D.39520, <variable>.MP4Vop.vop_coding_type
+	cmp	r2, #3	@ D.39520,
 	beq	.L482	@,
 .L433:
 	movw	r0, #21275	@ tmp216,
-	ldrb	r3, [r4, r0]	@ zero_extendqisi2	@ D.39530, <variable>.MP4Syntax.coding_mode
-	cmp	r3, #1	@ D.39530,
+	ldrb	r3, [r4, r0]	@ zero_extendqisi2	@ D.39534, <variable>.MP4Syntax.coding_mode
+	cmp	r3, #1	@ D.39534,
 	beq	.L483	@,
-	cmp	r3, #2	@ D.39530,
+	cmp	r3, #2	@ D.39534,
 	beq	.L437	@,
 .L436:
 	movw	ip, #22600	@ tmp218,
@@ -3679,14 +3679,14 @@ Mp4_Syntax_Vop:
 	cmp	r1, #1	@ <variable>.IPVopErr,
 	beq	.L484	@,
 .L438:
-	mov	r6, r6, asl #3	@ D.39545, len,
+	mov	r6, r6, asl #3	@ D.39549, len,
 	mov	sl, #0	@ i,
 	b	.L441	@
 .L486:
 	bl	BsPos	@
 	mov	r1, #1	@,
 	add	sl, sl, r1	@ i, i,
-	cmp	r0, r6	@, D.39545
+	cmp	r0, r6	@, D.39549
 	mov	r0, r5	@, tmp437
 	bgt	.L475	@,
 	bl	BsGet	@
@@ -3695,7 +3695,7 @@ Mp4_Syntax_Vop:
 	beq	.L439	@,
 	bl	BsPos	@
 	add	sl, sl, #1	@ i, i,
-	cmp	r0, r6	@, D.39545
+	cmp	r0, r6	@, D.39549
 	bgt	.L475	@,
 	cmp	sl, #6400	@ i,
 	beq	.L485	@,
@@ -3710,11 +3710,11 @@ Mp4_Syntax_Vop:
 	mov	r0, r5	@, tmp437
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	r8, r0, #0	@ D.39554,
+	subs	r8, r0, #0	@ D.39558,
 	beq	.L479	@,
 	movw	r2, #21376	@ tmp234,
-	ldr	r1, [r4, r2]	@ D.39561, <variable>.MP4Syntax.syn_vol.vop_time_incr_bits
-	cmp	r1, #0	@ D.39561,
+	ldr	r1, [r4, r2]	@ D.39565, <variable>.MP4Syntax.syn_vol.vop_time_incr_bits
+	cmp	r1, #0	@ D.39565,
 	bne	.L487	@,
 .L445:
 	movw	r3, #21980	@ tmp236,
@@ -3724,15 +3724,15 @@ Mp4_Syntax_Vop:
 	str	sl, [r4, r3]	@ i, <variable>.MP4Syntax.time_incr
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	r8, r0, #0	@ D.39566,
+	subs	r8, r0, #0	@ D.39570,
 	beq	.L479	@,
 	mov	r0, r5	@, tmp437
 	mov	r1, #1	@,
 	bl	BsGet	@
 	movw	r2, #21209	@ tmp248,
-	uxtb	ip, r0	@ D.39573,
-	strb	ip, [r4, r2]	@ D.39573, <variable>.MP4Vop.vop_coded
-	cmp	ip, #0	@ D.39573,
+	uxtb	ip, r0	@ D.39577,
+	strb	ip, [r4, r2]	@ D.39577, <variable>.MP4Vop.vop_coded
+	cmp	ip, #0	@ D.39577,
 	beq	.L488	@,
 	movw	r8, #21208	@ tmp264,
 	ldrb	r3, [r4, r8]	@ zero_extendqisi2	@ temp.1802, <variable>.MP4Vop.vop_coding_type
@@ -3778,9 +3778,9 @@ Mp4_Syntax_Vop:
 	mov	r1, #5	@,
 	bl	BsGet	@
 	movw	r8, #21215	@ tmp329,
-	uxtb	r2, r0	@ D.39637,
-	strb	r2, [r4, r8]	@ D.39637, <variable>.MP4Vop.vop_quant
-	cmp	r2, #0	@ D.39637,
+	uxtb	r2, r0	@ D.39641,
+	strb	r2, [r4, r8]	@ D.39641, <variable>.MP4Vop.vop_quant
+	cmp	r2, #0	@ D.39641,
 	moveq	r2, #1	@ tmp332,
 	streqb	r2, [r4, r8]	@ tmp332, <variable>.MP4Vop.vop_quant
 	movw	r8, #21208	@ tmp334,
@@ -3820,7 +3820,7 @@ Mp4_Syntax_Vop:
 	mov	r5, r0	@ BitUsed,
 	mov	r0, r0, asr #31	@ tmp380, BitUsed,
 	cmp	r5, #0	@ BitUsed,
-	rsb	r6, r5, r6	@ tmp378, BitUsed, D.39545
+	rsb	r6, r5, r6	@ tmp378, BitUsed, D.39549
 	mov	r3, r0, lsr #29	@ tmp381, tmp380,
 	add	r0, r5, #7	@ tmp393, BitUsed,
 	add	ip, r5, r3	@ tmp382, BitUsed, tmp381
@@ -3852,10 +3852,10 @@ Mp4_Syntax_Vop:
 	movw	r0, #21217	@ tmp416,
 	movw	r1, #21216	@ tmp419,
 	movw	r3, #21215	@ tmp422,
-	ldr	r2, [r4, lr]	@ D.39691, <variable>.StreamIDNum
+	ldr	r2, [r4, lr]	@ D.39695, <variable>.StreamIDNum
 	ldrb	lr, [r4, ip]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_coding_type, <variable>.MP4Vop.vop_coding_type
 	ldrb	ip, [r4, r0]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_fcode_backward, <variable>.MP4Vop.vop_fcode_backward
-	cmp	r2, #0	@ D.39691,
+	cmp	r2, #0	@ D.39695,
 	ldrb	r0, [r4, r1]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_fcode_forward, <variable>.MP4Vop.vop_fcode_forward
 	ldrb	r1, [r4, r3]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_quant, <variable>.MP4Vop.vop_quant
 	movw	r3, #21212	@ tmp425,
@@ -3898,7 +3898,7 @@ Mp4_Syntax_Vop:
 	bl	dprint_vfmw	@
 	b	.L432	@
 .L483:
-	cmp	r2, #0	@ D.39516,
+	cmp	r2, #0	@ D.39520,
 	beq	.L436	@,
 .L437:
 	mov	r0, r5	@, tmp437
@@ -3928,7 +3928,7 @@ Mp4_Syntax_Vop:
 	bl	dprint_vfmw	@
 	b	.L432	@
 .L484:
-	cmp	r2, #0	@ D.39516,
+	cmp	r2, #0	@ D.39520,
 	beq	.L438	@,
 	b	.L437	@
 .L479:
@@ -3938,7 +3938,7 @@ Mp4_Syntax_Vop:
 	bl	dprint_vfmw	@
 	movw	r1, #22041	@ tmp240,
 	mov	r0, r5	@, tmp437
-	strb	r8, [r4, r1]	@ D.39566, <variable>.MP4SyntaxState.vop_decode_right
+	strb	r8, [r4, r1]	@ D.39570, <variable>.MP4SyntaxState.vop_decode_right
 	bl	BsPos	@
 	mov	r5, r0	@ BitUsed,
 	movw	r0, #:lower16:g_event_report	@ tmp244,
@@ -3947,7 +3947,7 @@ Mp4_Syntax_Vop:
 	cmp	ip, #0	@ g_event_report.1800,
 	beq	.L432	@,
 	movw	lr, #22960	@ tmp245,
-	mov	r2, r8	@, D.39566
+	mov	r2, r8	@, D.39570
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r1, #103	@,
 	mov	r3, r8	@, tmp2
@@ -4000,9 +4000,9 @@ Mp4_Syntax_Vop:
 	mov	r1, #3	@,
 	bl	BsGet	@
 	movw	r3, #21216	@ tmp337,
-	uxtb	sl, r0	@ D.39644,
-	strb	sl, [r4, r3]	@ D.39644, <variable>.MP4Vop.vop_fcode_forward
-	cmp	sl, #0	@ D.39644,
+	uxtb	sl, r0	@ D.39648,
+	strb	sl, [r4, r3]	@ D.39648, <variable>.MP4Vop.vop_fcode_forward
+	cmp	sl, #0	@ D.39648,
 	beq	.L495	@,
 	ldrb	ip, [r4, r8]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_coding_type, <variable>.MP4Vop.vop_coding_type
 	cmp	ip, #2	@ <variable>.MP4Vop.vop_coding_type,
@@ -4011,13 +4011,13 @@ Mp4_Syntax_Vop:
 	mov	r1, #3	@,
 	bl	BsGet	@
 	movw	r3, #21217	@ tmp351,
-	uxtb	r8, r0	@ D.39655,
-	strb	r8, [r4, r3]	@ D.39655, <variable>.MP4Vop.vop_fcode_backward
-	cmp	r8, #0	@ D.39655,
+	uxtb	r8, r0	@ D.39659,
+	strb	r8, [r4, r3]	@ D.39659, <variable>.MP4Vop.vop_fcode_backward
+	cmp	r8, #0	@ D.39659,
 	bne	.L451	@,
 	add	r3, r3, #824	@ tmp353, tmp353,
 	mov	r0, r5	@, tmp437
-	strb	r8, [r4, r3]	@ D.39655, <variable>.MP4SyntaxState.vop_decode_right
+	strb	r8, [r4, r3]	@ D.39659, <variable>.MP4SyntaxState.vop_decode_right
 	bl	BsPos	@
 	movw	r2, #:lower16:g_event_report	@ tmp357,
 	movt	r2, #:upper16:g_event_report	@ tmp357,
@@ -4026,7 +4026,7 @@ Mp4_Syntax_Vop:
 	mov	r5, r0	@ BitUsed,
 	beq	.L465	@,
 	movw	r1, #22960	@ tmp358,
-	mov	r2, r8	@, D.39655
+	mov	r2, r8	@, D.39659
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	mov	r3, r8	@, tmp2
 	mov	r1, #103	@,
@@ -4062,7 +4062,7 @@ Mp4_Syntax_Vop:
 	mov	r9, #0	@,
 	add	r8, r2, #252	@ ivtmp.1782, ivtmp.1782,
 	str	r9, [fp, #-80]	@, %sfp
-	str	r6, [fp, #-84]	@ D.39545, %sfp
+	str	r6, [fp, #-84]	@ D.39549, %sfp
 .L461:
 	mov	r0, r5	@, tmp437
 	bl	bs_get_spritetrajectory	@
@@ -4103,7 +4103,7 @@ Mp4_Syntax_Vop:
 	ldrb	r0, [r4, sl]	@ zero_extendqisi2	@ <variable>.MP4Syntax.syn_vol.sprite_warping_points, <variable>.MP4Syntax.syn_vol.sprite_warping_points
 	cmp	r0, r6	@ <variable>.MP4Syntax.syn_vol.sprite_warping_points,
 	bhi	.L461	@,
-	ldr	r6, [fp, #-84]	@ D.39545, %sfp
+	ldr	r6, [fp, #-84]	@ D.39549, %sfp
 	b	.L454	@
 .L493:
 	movw	r1, #15796	@ tmp402,
@@ -4118,7 +4118,7 @@ Mp4_Syntax_Vop:
 .L495:
 	mov	r0, r5	@, tmp437
 	movw	r5, #22041	@ tmp339,
-	strb	sl, [r4, r5]	@ D.39644, <variable>.MP4SyntaxState.vop_decode_right
+	strb	sl, [r4, r5]	@ D.39648, <variable>.MP4SyntaxState.vop_decode_right
 	bl	BsPos	@
 	movw	r1, #:lower16:g_event_report	@ tmp343,
 	movt	r1, #:upper16:g_event_report	@ tmp343,
@@ -4127,7 +4127,7 @@ Mp4_Syntax_Vop:
 	mov	r5, r0	@ BitUsed,
 	beq	.L464	@,
 	movw	lr, #22960	@ tmp344,
-	mov	r2, sl	@, D.39644
+	mov	r2, sl	@, D.39648
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r1, #103	@,
 	mov	r3, sl	@, tmp2
@@ -4150,8 +4150,8 @@ Mp4_Syntax_Vop:
 	moveq	lr, #1	@,
 	moveq	r3, lr, asl r9	@ tmp322,,
 	subeq	r3, r3, #1	@ tmp324, tmp322,
-	eoreq	r6, r0, r3	@ D.39632, y, tmp324
-	rsbeq	r6, r6, #0	@ y, D.39632
+	eoreq	r6, r0, r3	@ D.39636, y, tmp324
+	rsbeq	r6, r6, #0	@ y, D.39636
 	b	.L460	@
 .L496:
 	mov	r1, r6	@, length
@@ -4163,8 +4163,8 @@ Mp4_Syntax_Vop:
 	moveq	lr, #1	@,
 	moveq	r3, lr, asl r6	@ tmp309,,
 	subeq	r3, r3, #1	@ tmp311, tmp309,
-	eoreq	sl, r0, r3	@ D.39619, x, tmp311
-	rsbeq	sl, sl, #0	@ x, D.39619
+	eoreq	sl, r0, r3	@ D.39623, x, tmp311
+	rsbeq	sl, sl, #0	@ x, D.39623
 	b	.L456	@
 	.fnend
 	.size	Mp4_Syntax_Vop, .-Mp4_Syntax_Vop
@@ -4223,9 +4223,9 @@ Mp4_Syntax_Vo:
 	mov	r1, r6	@, tmp160
 	bl	BsGet	@
 	movw	r3, #19976	@ tmp188,
-	uxtb	r0, r0	@ D.39422,
-	strb	r0, [r4, r3]	@ D.39422, <variable>.MP4Vos.is_visual_object_identifier
-	cmp	r0, #0	@ D.39422,
+	uxtb	r0, r0	@ D.39426,
+	strb	r0, [r4, r3]	@ D.39426, <variable>.MP4Vos.is_visual_object_identifier
+	cmp	r0, #0	@ D.39426,
 	movweq	r3, #19977	@ tmp196,
 	streqb	r6, [r4, r3]	@ tmp160, <variable>.MP4Vos.visual_object_verid
 	bne	.L506	@,
@@ -4233,9 +4233,9 @@ Mp4_Syntax_Vo:
 	mov	r1, #4	@,
 	bl	BsGet	@
 	movw	r3, #19979	@ tmp200,
-	uxtb	r6, r0	@ D.39432,
-	strb	r6, [r4, r3]	@ D.39432, <variable>.MP4Vos.visual_object_type
-	cmp	r6, #1	@ D.39432,
+	uxtb	r6, r0	@ D.39436,
+	strb	r6, [r4, r3]	@ D.39436, <variable>.MP4Vos.visual_object_type
+	cmp	r6, #1	@ D.39436,
 	beq	.L507	@,
 .L501:
 	mov	r0, r5	@, tmp275
@@ -4274,18 +4274,18 @@ Mp4_Syntax_Vo:
 	mov	r0, r5	@, tmp275
 	bl	BsGet	@
 	movw	r3, #19979	@ tmp200,
-	uxtb	r6, r0	@ D.39432,
-	strb	r6, [r4, r3]	@ D.39432, <variable>.MP4Vos.visual_object_type
-	cmp	r6, #1	@ D.39432,
+	uxtb	r6, r0	@ D.39436,
+	strb	r6, [r4, r3]	@ D.39436, <variable>.MP4Vos.visual_object_type
+	cmp	r6, #1	@ D.39436,
 	bne	.L501	@,
 .L507:
-	mov	r1, r6	@, D.39432
+	mov	r1, r6	@, D.39436
 	mov	r0, r5	@, tmp275
 	bl	BsGet	@
 	movw	ip, #19980	@ tmp203,
-	uxtb	r1, r0	@ D.39437,
-	strb	r1, [r4, ip]	@ D.39437, <variable>.MP4Vos.video_signal_type
-	cmp	r1, #0	@ D.39437,
+	uxtb	r1, r0	@ D.39441,
+	strb	r1, [r4, ip]	@ D.39441, <variable>.MP4Vos.video_signal_type
+	cmp	r1, #0	@ D.39441,
 	bne	.L508	@,
 .L502:
 	movw	r1, #22037	@ tmp227,
@@ -4351,19 +4351,19 @@ Mp4_Syntax_Vo:
 	mov	r0, r5	@, tmp275
 	bl	BsGet	@
 	movw	ip, #19981	@ tmp206,
-	mov	r1, r6	@, D.39432
+	mov	r1, r6	@, D.39436
 	strb	r0, [r4, ip]	@, <variable>.MP4Vos.video_format
 	mov	r0, r5	@, tmp275
 	bl	BsGet	@
 	movw	r3, #19982	@ tmp209,
-	mov	r1, r6	@, D.39432
+	mov	r1, r6	@, D.39436
 	strb	r0, [r4, r3]	@, <variable>.MP4Vos.video_range
 	mov	r0, r5	@, tmp275
 	bl	BsGet	@
 	movw	r2, #19983	@ tmp212,
-	uxtb	r0, r0	@ D.39446,
-	strb	r0, [r4, r2]	@ D.39446, <variable>.MP4Vos.colour_description
-	cmp	r0, #0	@ D.39446,
+	uxtb	r0, r0	@ D.39450,
+	strb	r0, [r4, r2]	@ D.39450, <variable>.MP4Vos.colour_description
+	cmp	r0, #0	@ D.39450,
 	beq	.L502	@,
 	mov	r1, #8	@,
 	mov	r0, r5	@, tmp275
@@ -4403,11 +4403,11 @@ Mp4_Syntax_ShortHeader:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r4, #15616	@ tmp152,
-	ldr	r3, [r0, r4]	@ D.39188, <variable>.Mp4DecParam.SlcNum
+	ldr	r3, [r0, r4]	@ D.39192, <variable>.Mp4DecParam.SlcNum
 	mov	r5, r0	@ pCtx, pCtx
 	mov	r7, r1	@ ptr, ptr
 	mov	r6, r2	@ len, len
-	cmp	r3, #0	@ D.39188,
+	cmp	r3, #0	@ D.39192,
 	bne	.L532	@,
 .L510:
 	sub	r4, fp, #60	@ tmp312,,
@@ -4429,9 +4429,9 @@ Mp4_Syntax_ShortHeader:
 	mov	r0, r4	@, tmp312
 	bl	BsGet	@
 	movw	r2, #21218	@ tmp162,
-	uxtb	r1, r0	@ D.39200,
-	strb	r1, [r5, r2]	@ D.39200, <variable>.MP4Vop.source_format
-	sub	r0, r1, #1	@ tmp164, D.39200,
+	uxtb	r1, r0	@ D.39204,
+	strb	r1, [r5, r2]	@ D.39204, <variable>.MP4Vop.source_format
+	sub	r0, r1, #1	@ tmp164, D.39204,
 	cmp	r0, #3	@ tmp164,
 	ldrls	pc, [pc, r0, asl #2]	@ tmp164
 	b	.L511	@
@@ -4461,14 +4461,14 @@ Mp4_Syntax_ShortHeader:
 	ldrb	ip, [r5, r3]	@ zero_extendqisi2	@ <variable>.MP4Syntax.coding_mode, <variable>.MP4Syntax.coding_mode
 	movw	r2, #21208	@ tmp213,
 	cmp	ip, #2	@ <variable>.MP4Syntax.coding_mode,
-	uxtb	r0, r0	@ D.39210,
-	strb	r0, [r5, r2]	@ D.39210, <variable>.MP4Vop.vop_coding_type
+	uxtb	r0, r0	@ D.39214,
+	strb	r0, [r5, r2]	@ D.39214, <variable>.MP4Vop.vop_coding_type
 	beq	.L519	@,
 	movw	r1, #22600	@ tmp217,
 	ldr	lr, [r5, r1]	@ <variable>.IPVopErr, <variable>.IPVopErr
 	cmp	lr, #1	@ <variable>.IPVopErr,
 	bne	.L520	@,
-	cmp	r0, #0	@ D.39210,
+	cmp	r0, #0	@ D.39214,
 	bne	.L519	@,
 .L520:
 	mov	r1, #4	@,
@@ -4479,10 +4479,10 @@ Mp4_Syntax_ShortHeader:
 	movw	r7, #21215	@ tmp222,
 	bl	BsGet	@
 	mov	r1, #1	@,
-	mov	r6, r6, asl #3	@ D.39228, len,
-	uxtb	r0, r0	@ D.39220,
-	strb	r0, [r5, r7]	@ D.39220, <variable>.MP4Vop.vop_quant
-	cmp	r0, #0	@ D.39220,
+	mov	r6, r6, asl #3	@ D.39232, len,
+	uxtb	r0, r0	@ D.39224,
+	strb	r0, [r5, r7]	@ D.39224, <variable>.MP4Vop.vop_quant
+	cmp	r0, #0	@ D.39224,
 	mov	r0, r4	@, tmp312
 	moveq	r2, #1	@ tmp225,
 	streqb	r2, [r5, r7]	@ tmp225, <variable>.MP4Vop.vop_quant
@@ -4585,7 +4585,7 @@ Mp4_Syntax_ShortHeader:
 	add	r7, r7, #1	@ i, i,
 	bl	BsPos	@
 	mov	r1, #8	@,
-	cmp	r0, r6	@, D.39228
+	cmp	r0, r6	@, D.39232
 	mov	r0, r4	@, tmp312
 	bgt	.L534	@,
 	bl	BsSkip	@
@@ -4593,7 +4593,7 @@ Mp4_Syntax_ShortHeader:
 	bls	.L524	@,
 	b	.L529	@
 .L532:
-	mov	r2, r3	@, D.39188
+	mov	r2, r3	@, D.39192
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC23	@,
 	movt	r1, #:upper16:.LC23	@,
@@ -4623,7 +4623,7 @@ Mp4_Syntax_ShortHeader:
 	mov	r4, r0	@ BitUsed,
 	mov	r0, r0, asr #31	@ tmp261, BitUsed,
 	cmp	r4, #0	@ BitUsed,
-	rsb	r6, r4, r6	@ tmp259, BitUsed, D.39228
+	rsb	r6, r4, r6	@ tmp259, BitUsed, D.39232
 	mov	r3, r0, lsr #29	@ tmp262, tmp261,
 	add	r0, r4, #7	@ tmp274, BitUsed,
 	add	ip, r4, r3	@ tmp263, BitUsed, tmp262
@@ -4651,10 +4651,10 @@ Mp4_Syntax_ShortHeader:
 	movw	r0, #21217	@ tmp297,
 	movw	r1, #21216	@ tmp300,
 	movw	r3, #21215	@ tmp303,
-	ldr	r2, [r5, lr]	@ D.39269, <variable>.StreamIDNum
+	ldr	r2, [r5, lr]	@ D.39273, <variable>.StreamIDNum
 	ldrb	lr, [r5, ip]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_coding_type, <variable>.MP4Vop.vop_coding_type
 	ldrb	ip, [r5, r0]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_fcode_backward, <variable>.MP4Vop.vop_fcode_backward
-	cmp	r2, #0	@ D.39269,
+	cmp	r2, #0	@ D.39273,
 	ldrb	r0, [r5, r1]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_fcode_forward, <variable>.MP4Vop.vop_fcode_forward
 	ldrb	r1, [r5, r3]	@ zero_extendqisi2	@ <variable>.MP4Vop.vop_quant, <variable>.MP4Vop.vop_quant
 	movw	r3, #21212	@ tmp306,
@@ -4737,14 +4737,14 @@ Mp4_Syntax_Gop:
 	mov	r0, r4	@, tmp142
 	mov	r1, #1	@,
 	bl	BsGet	@
-	subs	r6, r0, #0	@ D.39152,
+	subs	r6, r0, #0	@ D.39156,
 	bne	.L538	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC31	@,
 	movt	r1, #:upper16:.LC31	@,
 	bl	dprint_vfmw	@
 	movw	r0, #22038	@ tmp148,
-	strb	r6, [r5, r0]	@ D.39152, <variable>.MP4SyntaxState.gop_decode_right
+	strb	r6, [r5, r0]	@ D.39156, <variable>.MP4SyntaxState.gop_decode_right
 	mov	r0, r4	@, tmp142
 	bl	BsPos	@
 	movw	r3, #:lower16:g_event_report	@ tmp152,
@@ -4754,7 +4754,7 @@ Mp4_Syntax_Gop:
 	mov	r4, r0	@ BitUsed,
 	beq	.L539	@,
 	movw	r1, #22960	@ tmp153,
-	mov	r2, r6	@, D.39152
+	mov	r2, r6	@, D.39156
 	ldr	r0, [r5, r1]	@, <variable>.ChanID
 	mov	r3, r6	@, tmp2
 	mov	r1, #103	@,
@@ -4829,11 +4829,11 @@ NextStartCode:
 	ble	.L554	@,
 	bl	BsShow	@
 	mov	r1, #8	@,
-	mov	r3, r0	@ D.39071,
-	cmp	r3, r8	@ D.39071, tmp176
-	bic	r2, r0, #1020	@ tmp152, D.39071,
-	bic	ip, r0, #15	@ tmp147, D.39071,
-	bic	lr, r0, #255	@ tmp166, D.39071,
+	mov	r3, r0	@ D.39075,
+	cmp	r3, r8	@ D.39075, tmp176
+	bic	r2, r0, #1020	@ tmp152, D.39075,
+	bic	ip, r0, #15	@ tmp147, D.39075,
+	bic	lr, r0, #255	@ tmp166, D.39075,
 	bic	r2, r2, #3	@ tmp152, tmp152,
 	mov	r0, r4	@, tmp174
 	beq	.L543	@,
@@ -4847,9 +4847,9 @@ NextStartCode:
 	cmp	r3, #2	@ <variable>.is_short_header,
 	bne	.L555	@,
 	ldr	r3, [r5, #744]	@ <variable>.SH_num, <variable>.SH_num
-	add	ip, r3, #1	@ D.39086, <variable>.SH_num,
-	str	ip, [r5, #744]	@ D.39086, <variable>.SH_num
-	cmp	ip, #18	@ D.39086,
+	add	ip, r3, #1	@ D.39090, <variable>.SH_num,
+	str	ip, [r5, #744]	@ D.39090, <variable>.SH_num
+	cmp	ip, #18	@ D.39090,
 	bls	.L549	@,
 	mov	lr, #196	@ tmp160,
 	mov	r1, #1	@ tmp161,
@@ -4864,7 +4864,7 @@ NextStartCode:
 	strb	ip, [r5, #9]	@ tmp148, <variable>.is_short_header
 	mov	r0, r4	@, tmp174
 	str	r1, [r5, #744]	@ tmp150, <variable>.SH_num
-	str	r3, [r7, #0]	@ D.39071,* pStartCode
+	str	r3, [r7, #0]	@ D.39075,* pStartCode
 	bl	BsPos	@
 .L545:
 	sub	sp, fp, #32
@@ -4875,7 +4875,7 @@ NextStartCode:
 	bl	BsPos	@
 	b	.L545	@
 .L553:
-	str	r3, [r7, #0]	@ D.39071,* pStartCode
+	str	r3, [r7, #0]	@ D.39075,* pStartCode
 	mov	r0, r4	@, tmp174
 	bl	BsPos	@
 	b	.L545	@
@@ -4909,18 +4909,18 @@ MPEG4DEC_GetImageBuffer:
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
-	cmp	r0, #1	@ D.41429,
+	cmp	r0, #1	@ D.41433,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
 	cmn	r0, #1	@,
-	movne	r0, #0	@ D.41432,
+	movne	r0, #0	@ D.41436,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
 	add	r1, r4, #22528	@, pCtx,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	add	r1, r1, #80	@,,
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, #0	@ D.41432,
+	mov	r0, #0	@ D.41436,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	MPEG4DEC_GetImageBuffer, .-MPEG4DEC_GetImageBuffer
@@ -4950,8 +4950,8 @@ MP4_SetImgFormat:
 	cmp	r0, #0	@ pImg
 	ldmeqfd	sp, {r3, r4, fp, sp, pc}	@
 	movw	r2, #21976	@ tmp140,
-	ldr	r3, [r4, r2]	@ D.41241, <variable>.MP4Syntax.image_width
-	cmp	r3, #0	@ D.41241,
+	ldr	r3, [r4, r2]	@ D.41245, <variable>.MP4Syntax.image_width
+	cmp	r3, #0	@ D.41245,
 	beq	.L563	@,
 	movw	r2, #21972	@ tmp141,
 	ldr	ip, [r4, r2]	@ <variable>.MP4Syntax.image_height, <variable>.MP4Syntax.image_height
@@ -4959,9 +4959,9 @@ MP4_SetImgFormat:
 	beq	.L563	@,
 	ldr	r1, [r0, #164]	@ <variable>.image_width, <variable>.image_width
 	ldr	lr, [r0, #168]	@ <variable>.image_height, <variable>.image_height
-	cmp	r1, r3	@ <variable>.image_width, D.41241
+	cmp	r1, r3	@ <variable>.image_width, D.41245
 	strls	r1, [r0, #172]	@, <variable>.image_width, <variable>.disp_width
-	strhi	r3, [r0, #172]	@, D.41241, <variable>.disp_width
+	strhi	r3, [r0, #172]	@, D.41245, <variable>.disp_width
 	ldr	r3, [r4, r2]	@ <variable>.MP4Syntax.image_height, <variable>.MP4Syntax.image_height
 	cmp	lr, r3	@ <variable>.image_height, <variable>.MP4Syntax.image_height
 	strls	lr, [r0, #176]	@, <variable>.image_height, <variable>.disp_height
@@ -5044,7 +5044,7 @@ MPEG4DEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r4, r0, #0	@ pCtx, pCtx
 	mov	r6, r1	@ ImgID, ImgID
-	mvneq	r0, #1	@ D.41221,
+	mvneq	r0, #1	@ D.41225,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	movw	r5, #22960	@ tmp139,
 	mov	r2, #0	@,
@@ -5054,7 +5054,7 @@ MPEG4DEC_RecycleImage:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pImg,
-	moveq	r0, #1	@ D.41221,
+	moveq	r0, #1	@ D.41225,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r7, #0	@ tmp146,
@@ -5064,7 +5064,7 @@ MPEG4DEC_RecycleImage:
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FreeUsdByDec	@
-	mov	r0, #1	@ D.41221,
+	mov	r0, #1	@ D.41225,
 	str	r7, [r6, #216]	@ tmp146, <variable>.p_usrdat
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
@@ -5113,26 +5113,26 @@ Vdm_Mem_Move:
 	str	r3, [r4, #1268]	@ <variable>.PmvAddr, <variable>.Mp4DecParam.CurPmvPhyAddr
 	movw	r0, #15644	@ tmp153,
 	strh	r1, [r4, ip]	@ movhi	@ tmp152, <variable>.Mp4DecParam.PicHeightInMb
-	add	r1, r4, #1040	@ D.40497, pCtx,
+	add	r1, r4, #1040	@ D.40501, pCtx,
 	ldr	r2, [r5, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	ldr	r3, [r4, r6]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	ldr	ip, [r2, #20]	@ <variable>.Stride, <variable>.Stride
 	movw	r2, #15700	@ tmp156,
 	str	ip, [r4, r0]	@ <variable>.Stride, <variable>.Mp4DecParam.VahbStride
 	ldr	r0, [r3, #684]	@ <variable>.s32Compress_en, <variable>.s32Compress_en
-	str	r1, [r4, #1036]	@ D.40497, <variable>.pMp4DecParam
+	str	r1, [r4, #1036]	@ D.40501, <variable>.pMp4DecParam
 	str	r0, [r4, r2]	@ <variable>.s32Compress_en, <variable>.Mp4DecParam.Compress_en
-	ldr	r2, [r3, #896]	@ D.40498, <variable>.stDisParams.s32Mode
-	cmp	r2, #1	@ D.40498,
+	ldr	r2, [r3, #896]	@ D.40502, <variable>.stDisParams.s32Mode
+	cmp	r2, #1	@ D.40502,
 	beq	.L578	@,
-	cmp	r2, #2	@ D.40498,
+	cmp	r2, #2	@ D.40502,
 	beq	.L579	@,
 .L575:
 	mov	r0, #1	@ tmp175,
 	strb	r0, [r4, #1198]	@ tmp175, <variable>.Mp4DecParam.IsNvopCopy
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L578:
-	cmp	r1, #0	@ D.40497,
+	cmp	r1, #0	@ D.40501,
 	beq	.L575	@,
 	movw	ip, #22960	@ tmp162,
 	movw	lr, #56800	@ tmp164,
@@ -5148,7 +5148,7 @@ Vdm_Mem_Move:
 	ldr	r2, [r3, #900]	@ <variable>.stDisParams.s32DisNums, <variable>.stDisParams.s32DisNums
 	cmp	r2, #0	@ <variable>.stDisParams.s32DisNums,
 	ble	.L575	@,
-	cmp	r1, #0	@ D.40497,
+	cmp	r1, #0	@ D.40501,
 	beq	.L575	@,
 	movw	lr, #56800	@ tmp170,
 	movw	r1, #22960	@ tmp168,
@@ -5380,8 +5380,8 @@ Mp4_Set_DecPar:
 	beq	.L585	@,
 	cmp	r0, #0	@ pBwd,
 	beq	.L585	@,
-	ldr	ip, [r7, #520]	@ D.40828, <variable>.pstDecodeFs
-	cmp	ip, #0	@ D.40828,
+	ldr	ip, [r7, #520]	@ D.40832, <variable>.pstDecodeFs
+	cmp	ip, #0	@ D.40832,
 	ldreq	r5, [r7, #524]	@ prephitmp.2153, <variable>.pstDispOutFs
 	ldreq	r4, [r7, #528]	@ prephitmp.2090, <variable>.pstTfOutFs
 	beq	.L589	@,
@@ -5396,14 +5396,14 @@ Mp4_Set_DecPar:
 	str	ip, [r6, #1268]	@ <variable>.PmvAddr, <variable>.Mp4DecParam.CurPmvPhyAddr
 	ldr	r4, [r0, #532]	@ <variable>.PmvAddr, <variable>.PmvAddr
 	str	r4, [r6, #1272]	@ <variable>.PmvAddr, <variable>.Mp4DecParam.BwdPmvPhyAddr
-	ldr	r5, [r0, #520]	@ D.40839, <variable>.pstDecodeFs
-	cmp	r5, #0	@ D.40839,
+	ldr	r5, [r0, #520]	@ D.40843, <variable>.pstDecodeFs
+	cmp	r5, #0	@ D.40843,
 	ldreq	r5, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r1, [r5, #12]	@ iftmp.572, <variable>.PhyAddr
 	movw	r5, #15620	@ tmp408,
 	str	r1, [r6, #1264]	@ iftmp.572, <variable>.Mp4DecParam.BwdRefPicPhyAddr
-	ldr	lr, [r8, #520]	@ D.40846, <variable>.pstDecodeFs
-	cmp	lr, #0	@ D.40846,
+	ldr	lr, [r8, #520]	@ D.40850, <variable>.pstDecodeFs
+	cmp	lr, #0	@ D.40850,
 	ldreq	lr, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	r3, [lr, #12]	@ iftmp.573, <variable>.PhyAddr
 	str	r3, [r6, #1260]	@ iftmp.573, <variable>.Mp4DecParam.FwdRefPicPhyAddr
@@ -5412,15 +5412,15 @@ Mp4_Set_DecPar:
 	ldr	ip, [r2, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	add	r2, r6, #21248	@ ivtmp.2108, pCtx,
 	str	ip, [r6, #1252]	@ <variable>.PhyAddr, <variable>.Mp4DecParam.CurPicPhyAddr
-	ldr	r4, [r0, #528]	@ D.40853, <variable>.pstTfOutFs
-	cmp	r4, #0	@ D.40853,
+	ldr	r4, [r0, #528]	@ D.40857, <variable>.pstTfOutFs
+	cmp	r4, #0	@ D.40857,
 	ldreq	r4, [r7, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r1, [r4, #12]	@ iftmp.574, <variable>.PhyAddr
 	str	r1, [r6, r5]	@ iftmp.574, <variable>.Mp4DecParam.TfBwdPhyAddr
 	movw	r5, #15628	@ tmp411,
-	ldr	lr, [r8, #528]	@ D.40860, <variable>.pstTfOutFs
+	ldr	lr, [r8, #528]	@ D.40864, <variable>.pstTfOutFs
 	movw	r8, #15632	@ tmp414,
-	cmp	lr, #0	@ D.40860,
+	cmp	lr, #0	@ D.40864,
 	ldreq	lr, [r7, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r0, [lr, #12]	@ iftmp.575, <variable>.PhyAddr
 	str	r0, [r6, r3]	@ iftmp.575, <variable>.Mp4DecParam.TfFwdPhyAddr
@@ -5550,7 +5550,7 @@ Mp4_Set_DecPar:
 	ldr	r3, [r6, r1]	@ <variable>.CurFsID, <variable>.CurFsID
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
-	str	ip, [sp, #4]	@ D.40828,
+	str	ip, [sp, #4]	@ D.40832,
 	str	lr, [sp, #0]	@ <variable>.BwdFsID,
 	str	r4, [sp, #8]	@ prephitmp.2090,
 	str	r5, [sp, #12]	@ prephitmp.2153,
@@ -5704,7 +5704,7 @@ MPEG4DEC_VDMPostProc:
 	bl	dprint_vfmw	@
 .L625:
 	movw	ip, #22552	@ tmp349,
-	mov	r0, #0	@ D.41325,
+	mov	r0, #0	@ D.41329,
 	ldr	r1, [r4, ip]	@ <variable>.FrameNum, <variable>.FrameNum
 	add	r2, r1, #1	@ tmp352, <variable>.FrameNum,
 	str	r2, [r4, ip]	@ tmp352, <variable>.FrameNum
@@ -5812,7 +5812,7 @@ MPEG4DEC_VDMPostProc:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r4, r7]	@, <variable>.ToQueFsID
 	bl	FSP_SetDisplay	@
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 .L624:
 	mov	r7, #2	@ ToQueCodingType,
@@ -5872,13 +5872,13 @@ MPEG4DEC_VDMPostProc:
 	str	r7, [r4, r9]	@ tmp210, <variable>.FwdFsID
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r9]	@ D.41353, <variable>.FwdFsID
-	str	r0, [r4, r8]	@ D.41353, <variable>.BwdFsID
+	str	r0, [r4, r9]	@ D.41357, <variable>.FwdFsID
+	str	r0, [r4, r8]	@ D.41357, <variable>.BwdFsID
 .L617:
 	movw	r1, #22968	@ tmp230,
 	mov	r0, #0	@ tmp231,
 	str	r0, [r4, r1]	@ tmp231, <variable>.RefNum
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 .L638:
 	ldr	r0, [r4, r6]	@ temp.2236, <variable>.ChanID
@@ -5903,7 +5903,7 @@ MPEG4DEC_VDMPostProc:
 	ldr	r1, [r4, r0]	@, <variable>.ToQueFsID
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_SetDisplay	@
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 .L635:
 	mov	r0, r7	@, pCurImg
@@ -5912,14 +5912,14 @@ MPEG4DEC_VDMPostProc:
 	mov	r2, r7	@,
 	movt	r1, #:upper16:.LC35	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 .L637:
 	movw	r1, #:lower16:.LC38	@,
 	movw	r2, #4275	@,
 	movt	r1, #:upper16:.LC38	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 .L639:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
@@ -5934,7 +5934,7 @@ MPEG4DEC_VDMPostProc:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r4, r8]	@, <variable>.ToQueFsID
 	bl	FSP_SetDisplay	@
-	mvn	r0, #0	@ D.41325,
+	mvn	r0, #0	@ D.41329,
 	b	.L614	@
 	.fnend
 	.size	MPEG4DEC_VDMPostProc, .-MPEG4DEC_VDMPostProc
@@ -6065,13 +6065,13 @@ MPEG4DEC_Init:
 .L655:
 	movw	r6, #22952	@ tmp170,
 	movw	r1, #56824	@,
-	ldr	r7, [r4, r6]	@ D.40943, <variable>.ImageQue.ResetMagicWord
+	ldr	r7, [r4, r6]	@ D.40947, <variable>.ImageQue.ResetMagicWord
 	mov	r0, r4	@, pCtx
 	bl	__memzero	@
 	add	r1, r4, #22528	@, pCtx,
 	add	r0, r1, #80	@,,
 	mov	r8, #0	@ tmp175,
-	str	r7, [r4, r6]	@ D.40943, <variable>.ImageQue.ResetMagicWord
+	str	r7, [r4, r6]	@ D.40947, <variable>.ImageQue.ResetMagicWord
 	bl	ResetVoQueue	@
 	movw	r0, #22060	@ tmp174,
 	str	r5, [r4, r0]	@ pstExtraData, <variable>.pstExtraData
@@ -6079,15 +6079,15 @@ MPEG4DEC_Init:
 	str	r8, [r5, #904]	@ tmp175, <variable>.s32WaitFsFlag
 	bl	VCTRL_GetChanIDByCtx	@
 	movw	r2, #22960	@ tmp176,
-	cmn	r0, #1	@ D.40952,
-	str	r0, [r4, r2]	@ D.40952, <variable>.ChanID
+	cmn	r0, #1	@ D.40956,
+	str	r0, [r4, r2]	@ D.40956, <variable>.ChanID
 	beq	.L662	@,
 	mov	r0, r4	@, pCtx
 	bl	Global_Data_Init	@
-	subs	r6, r0, #0	@ D.40957,
+	subs	r6, r0, #0	@ D.40961,
 	beq	.L663	@,
 .L654:
-	mvn	r0, #0	@ D.40939,
+	mvn	r0, #0	@ D.40943,
 .L657:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
@@ -6095,7 +6095,7 @@ MPEG4DEC_Init:
 	movw	r3, #22576	@ tmp180,
 	movw	ip, #22548	@ tmp178,
 	mov	lr, #1	@ tmp179,
-	str	r6, [r4, r3]	@ D.40957, <variable>.PPicFound
+	str	r6, [r4, r3]	@ D.40961, <variable>.PPicFound
 	str	lr, [r4, ip]	@ tmp179, <variable>.InitComplete
 	mov	r0, #2	@,
 	movw	r1, #:lower16:.LC43	@,
@@ -6104,7 +6104,7 @@ MPEG4DEC_Init:
 	ldr	r5, [r5, #696]	@ <variable>.s32KeepSPSPPS, <variable>.s32KeepSPSPPS
 	cmp	r5, #1	@ <variable>.s32KeepSPSPPS,
 	beq	.L658	@,
-	mov	r0, r6	@ D.40939, D.40957
+	mov	r0, r6	@ D.40943, D.40961
 	b	.L657	@
 .L661:
 	add	r6, r4, #21248	@, pCtx,
@@ -6138,7 +6138,7 @@ MPEG4DEC_Init:
 	movw	r1, #:lower16:.LC42	@,
 	movt	r1, #:upper16:.LC42	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.40939,
+	mvn	r0, #19	@ D.40943,
 	b	.L657	@
 .L658:
 	add	r2, r4, #21248	@, pCtx,
@@ -6165,7 +6165,7 @@ MPEG4DEC_Init:
 	bl	memcpy	@
 	movw	r2, #56809	@ tmp205,
 	strb	r5, [r4, r2]	@ <variable>.s32KeepSPSPPS, <variable>.SeekReset
-	mov	r0, r6	@ D.40939, D.40957
+	mov	r0, r6	@ D.40943, D.40961
 	b	.L657	@
 	.fnend
 	.size	MPEG4DEC_Init, .-MPEG4DEC_Init
@@ -6190,20 +6190,20 @@ Mp4_RecordFrameAtr:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #21311	@ tmp150,
-	ldrb	r3, [r0, r3]	@ zero_extendqisi2	@ D.40543, <variable>.MP4Syntax.syn_vol.aspect_ratio_info
+	ldrb	r3, [r0, r3]	@ zero_extendqisi2	@ D.40547, <variable>.MP4Syntax.syn_vol.aspect_ratio_info
 	mov	r6, r0	@ pCtx, pCtx
 	mov	r4, r1	@ id, id
-	cmp	r3, #15	@ D.40543,
+	cmp	r3, #15	@ D.40547,
 	beq	.L675	@,
-	sub	r1, r3, #2	@ tmp173, D.40543,
+	sub	r1, r3, #2	@ tmp173, D.40547,
 	uxtb	ip, r1	@ tmp174, tmp173
 	cmp	ip, #1	@ tmp174,
 	bls	.L669	@,
-	sub	lr, r3, #4	@ tmp175, D.40543,
+	sub	lr, r3, #4	@ tmp175, D.40547,
 	uxtb	r2, lr	@ tmp176, tmp175
 	cmp	r2, #1	@ tmp176,
 	bls	.L670	@,
-	cmp	r3, #1	@ D.40543,
+	cmp	r3, #1	@ D.40547,
 	moveq	r7, #5	@ aspect_ratio,
 	beq	.L671	@,
 .L666:
@@ -6335,14 +6335,14 @@ Mp4_RecordFrameAtr:
 	movw	r0, #21340	@ tmp151,
 	movw	r2, #21344	@ tmp152,
 	ldr	r3, [r6, r0]	@ sar_width, <variable>.MP4Syntax.syn_vol.par_width
-	ldr	r2, [r6, r2]	@ D.40549, <variable>.MP4Syntax.syn_vol.par_height
+	ldr	r2, [r6, r2]	@ D.40553, <variable>.MP4Syntax.syn_vol.par_height
 	cmp	r3, #0	@ sar_width,
-	cmpne	r2, #0	@, D.40549,
+	cmpne	r2, #0	@, D.40553,
 	beq	.L666	@,
 	movw	r7, #21392	@ tmp160,
 	ldr	r1, [r6, r7]	@ <variable>.MP4Syntax.syn_vol.video_object_layer_height, <variable>.MP4Syntax.syn_vol.video_object_layer_height
-	mul	r1, r1, r2	@ D.40558, <variable>.MP4Syntax.syn_vol.video_object_layer_height, D.40549
-	cmp	r1, #0	@ D.40558,
+	mul	r1, r1, r2	@ D.40562, <variable>.MP4Syntax.syn_vol.video_object_layer_height, D.40553
+	cmp	r1, #0	@ D.40562,
 	beq	.L666	@,
 	movw	r0, #21388	@ tmp163,
 	mov	r7, r3, asl #10	@ tmp162, sar_width,
@@ -6369,21 +6369,21 @@ Mp4_RecordFrameAtr:
 	b	.L671	@
 .L676:
 	ldr	r0, [r4, #168]	@ <variable>.image_height, <variable>.image_height
-	ldr	r5, [r4, #192]	@ D.40604, <variable>.image_stride
+	ldr	r5, [r4, #192]	@ D.40608, <variable>.image_stride
 	add	lr, r0, #15	@ tmp187, <variable>.image_height,
 	ldr	r3, [r4, #104]	@ <variable>.luma_phy_addr, <variable>.luma_phy_addr
 	ldr	sl, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
 	mov	r2, lr, lsr #4	@ tmp189, tmp187,
-	mov	r1, r5, asl #4	@ tmp186, D.40604,
-	add	ip, r3, r5	@ tmp194, <variable>.luma_phy_addr, D.40604
+	mov	r1, r5, asl #4	@ tmp186, D.40608,
+	add	ip, r3, r5	@ tmp194, <variable>.luma_phy_addr, D.40608
 	str	r3, [r4, #120]	@ <variable>.luma_phy_addr, <variable>.luma_2d_phy_addr
-	mul	r9, r2, r1	@ D.40610, tmp189, tmp186
+	mul	r9, r2, r1	@ D.40614, tmp189, tmp186
 	str	ip, [r4, #96]	@ tmp194, <variable>.btm_luma_phy_addr
 	str	sl, [r4, #48]	@ <variable>.luma_vir_addr, <variable>.luma_2d_vir_addr
 	str	r3, [r4, #88]	@ <variable>.luma_phy_addr, <variable>.top_luma_phy_addr
-	add	lr, r9, r3	@ tmp191, D.40610, <variable>.luma_phy_addr
-	add	r8, sl, r9	@ tmp193, <variable>.luma_vir_addr, D.40610
-	add	r0, lr, r5	@ tmp195, tmp191, D.40604
+	add	lr, r9, r3	@ tmp191, D.40614, <variable>.luma_phy_addr
+	add	r8, sl, r9	@ tmp193, <variable>.luma_vir_addr, D.40614
+	add	r0, lr, r5	@ tmp195, tmp191, D.40608
 	str	r8, [r4, #36]	@ tmp193, <variable>.chrom_vir_addr
 	str	r0, [r4, #100]	@ tmp195, <variable>.btm_chrom_phy_addr
 	mov	r0, lr	@, tmp191
@@ -6415,9 +6415,9 @@ Mp4_Frame_Atr:
 	bl	__gnu_mcount_nc
 	mov	r4, r0	@ pCtx, pCtx
 	movw	r0, #21912	@ tmp141,
-	ldrb	r3, [r4, r0]	@ zero_extendqisi2	@ D.40671, <variable>.MP4Syntax.syn_vop.vop_coding_type
-	cmp	r3, #4	@ D.40671,
-	strb	r3, [r4, #2]	@ D.40671, <variable>.CurCodingType
+	ldrb	r3, [r4, r0]	@ zero_extendqisi2	@ D.40675, <variable>.MP4Syntax.syn_vop.vop_coding_type
+	cmp	r3, #4	@ D.40675,
+	strb	r3, [r4, #2]	@ D.40675, <variable>.CurCodingType
 	beq	.L684	@,
 .L678:
 	movw	lr, #22960	@ tmp158,
@@ -6425,28 +6425,28 @@ Mp4_Frame_Atr:
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	bl	FSP_NewLogicFs	@
 	movw	ip, #56800	@ tmp160,
-	cmp	r0, #0	@ D.40678,
-	str	r0, [r4, ip]	@ D.40678, <variable>.CurFsID
+	cmp	r0, #0	@ D.40682,
+	str	r0, [r4, ip]	@ D.40682, <variable>.CurFsID
 	blt	.L679	@,
 	movw	r3, #22964	@ tmp161,
 	ldr	r1, [r4, r3]	@ <variable>.FspPartitionOK, <variable>.FspPartitionOK
 	cmp	r1, #0	@ <variable>.FspPartitionOK,
 	beq	.L679	@,
-	mov	r1, r0	@, D.40678
+	mov	r1, r0	@, D.40682
 	mov	r0, r4	@, pCtx
 	bl	Mp4_RecordFrameAtr	@
 	mov	r3, #0	@ tmp207,
 	movw	r1, #22544	@ tmp206,
-	mov	r0, r3	@ D.40696, tmp207
+	mov	r0, r3	@ D.40700, tmp207
 	str	r3, [r4, r1]	@ tmp207, <variable>.ErrorLevel
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L684:
 	movw	r2, #22960	@ tmp143,
 	movw	lr, #:lower16:g_VfmwChanStat	@ tmp144,
-	ldr	r0, [r4, r2]	@ D.40675, <variable>.ChanID
+	ldr	r0, [r4, r2]	@ D.40679, <variable>.ChanID
 	movt	lr, #:upper16:g_VfmwChanStat	@ tmp144,
 	mov	r3, #300	@ tmp147,
-	mla	ip, r3, r0, lr	@ tmp148, tmp147, D.40675, tmp144
+	mla	ip, r3, r0, lr	@ tmp148, tmp147, D.40679, tmp144
 	ldr	r1, [ip, #12]	@ <variable>.u32SkipFind, <variable>.u32SkipFind
 	add	r2, r1, #1	@ tmp157, <variable>.u32SkipFind,
 	str	r2, [ip, #12]	@ tmp157, <variable>.u32SkipFind
@@ -6493,8 +6493,8 @@ Mp4_Frame_Atr:
 	str	r7, [r4, sl]	@ tmp180, <variable>.FwdFsID
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, sl]	@ D.40694, <variable>.FwdFsID
-	str	r0, [r4, r8]	@ D.40694, <variable>.BwdFsID
+	str	r0, [r4, sl]	@ D.40698, <variable>.FwdFsID
+	str	r0, [r4, r8]	@ D.40698, <variable>.BwdFsID
 .L681:
 	add	r0, r4, #22528	@, pCtx,
 	movw	lr, #22960	@ tmp202,
@@ -6504,7 +6504,7 @@ Mp4_Frame_Atr:
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	str	r2, [r4, ip]	@ tmp201, <variable>.RefNum
 	bl	FSP_ClearNotInVoQueue	@
-	mvn	r0, #0	@ D.40696,
+	mvn	r0, #0	@ D.40700,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	.fnend
 	.size	Mp4_Frame_Atr, .-Mp4_Frame_Atr
@@ -6528,7 +6528,7 @@ Frame_Init:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	movw	r3, #22060	@ tmp164,
-	ldr	r5, [r0, r3]	@ D.40371, <variable>.pstExtraData
+	ldr	r5, [r0, r3]	@ D.40375, <variable>.pstExtraData
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r3, r2	@ PicHeight, PicHeight
 	ldr	r0, [r5, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
@@ -6549,8 +6549,8 @@ Frame_Init:
 	beq	.L702	@,
 	movw	r2, #:lower16:g_vdm_hal_fun_ptr	@ tmp175,
 	movt	r2, #:upper16:g_vdm_hal_fun_ptr	@ tmp175,
-	ldr	ip, [r2, #48]	@ D.40407, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
-	cmp	ip, #0	@ D.40407,
+	ldr	ip, [r2, #48]	@ D.40411, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	ip, #0	@ D.40411,
 	beq	.L703	@,
 	movw	r0, #22960	@ tmp181,
 	ldr	r1, [r5, #28]	@ <variable>.s32SyntaxMemSize, <variable>.s32SyntaxMemSize
@@ -6568,11 +6568,11 @@ Frame_Init:
 	movw	r5, #:lower16:.LANCHOR2	@ tmp183,
 	movt	r5, #:upper16:.LANCHOR2	@ tmp183,
 	str	r5, [sp, #16]	@ tmp183,
-	blx	ip	@ D.40407
+	blx	ip	@ D.40411
 	cmp	r0, #0	@,
 	bne	.L703	@,
-	ldr	r2, [r5, #936]	@ D.40418, MemArrange.ValidPMVNum
-	cmp	r2, #1	@ D.40418,
+	ldr	r2, [r5, #936]	@ D.40422, MemArrange.ValidPMVNum
+	cmp	r2, #1	@ D.40422,
 	ldrle	r3, [r5, #548]	@ prephitmp.2449, MemArrange.ValidFrameNum
 	ble	.L706	@,
 	ldr	r3, [r5, #548]	@ prephitmp.2449, MemArrange.ValidFrameNum
@@ -6618,7 +6618,7 @@ Frame_Init:
 	moveq	r9, #1	@ iftmp.555,
 	strb	r9, [fp, #-76]	@ iftmp.555, FspInstCfg.s32ExpectedPmvNum
 	bl	FSP_ConfigInstance	@
-	subs	r5, r0, #0	@ D.40442,
+	subs	r5, r0, #0	@ D.40446,
 	bne	.L712	@,
 	movw	r1, #22060	@ tmp216,
 	sub	r3, fp, #48	@,,
@@ -6661,9 +6661,9 @@ Frame_Init:
 	ldr	r8, [r5, #796]	@ DispFsNum, <variable>.stChanOption.s32DisplayFrameNum
 	b	.L695	@
 .L715:
-	ldr	ip, [r5, #744]	@ D.40378, <variable>.stChanOption.s32MaxWidth
-	cmp	ip, r1	@ D.40378, PicWidth
-	mov	r7, ip	@ PicWidth.2440, D.40378
+	ldr	ip, [r5, #744]	@ D.40382, <variable>.stChanOption.s32MaxWidth
+	cmp	ip, r1	@ D.40382, PicWidth
+	mov	r7, ip	@ PicWidth.2440, D.40382
 	ldrcc	r8, [r5, #748]	@ prephitmp.2452, <variable>.stChanOption.s32MaxHeight
 	bcc	.L689	@,
 	ldr	r6, [r5, #748]	@ PicHeight.2441, <variable>.stChanOption.s32MaxHeight
@@ -6675,15 +6675,15 @@ Frame_Init:
 	cmp	r1, #1	@ <variable>.FspPartitionOK,
 	beq	.L691	@,
 	ldr	r0, [r5, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	sl, [r5, #768]	@ D.40388, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	sl, [r5, #768]	@ D.40392, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r0, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	r9, #1	@ PmvNum,
 	beq	.L694	@,
-	add	r9, sl, #1	@ PmvNum.2442, D.40388,
+	add	r9, sl, #1	@ PmvNum.2442, D.40392,
 	cmp	r9, #17	@ PmvNum.2442,
 	movge	r9, #17	@ PmvNum,
 .L694:
-	add	sl, sl, #2	@ DecFsNum, D.40388,
+	add	sl, sl, #2	@ DecFsNum, D.40392,
 	ldr	r8, [r5, #796]	@ DispFsNum, <variable>.stChanOption.s32DisplayFrameNum
 	b	.L695	@
 .L706:
@@ -6691,21 +6691,21 @@ Frame_Init:
 	movw	r1, #:lower16:.LC48	@,
 	movt	r1, #:upper16:.LC48	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40384,
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 .L703:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC47	@,
 	movt	r1, #:upper16:.LC47	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40384,
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 .L712:
 	mov	r0, r7	@, tmp211
 	movw	r1, #:lower16:.LC50	@,
 	movt	r1, #:upper16:.LC50	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40384,
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 .L697:
 	mov	r2, r1	@, PicWidth
@@ -6715,26 +6715,26 @@ Frame_Init:
 	str	lr, [sp, #0]	@ temp.2444,
 	str	ip, [sp, #4]	@ prephitmp.2451,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40384,
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 .L716:
-	mov	r0, r5	@, D.40442
+	mov	r0, r5	@, D.40446
 	movw	r1, #:lower16:.LC49	@,
 	movt	r1, #:upper16:.LC49	@,
 	bl	dprint_vfmw	@
 	movw	r0, #22964	@ tmp223,
-	str	r5, [r4, r0]	@ D.40442, <variable>.FspPartitionOK
-	mvn	r0, #0	@ D.40384,
+	str	r5, [r4, r0]	@ D.40446, <variable>.FspPartitionOK
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 .L689:
 	mov	r2, r1	@, PicWidth
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC46	@,
 	movt	r1, #:upper16:.LC46	@,
-	str	ip, [sp, #0]	@ D.40378,
+	str	ip, [sp, #0]	@ D.40382,
 	str	r8, [sp, #4]	@ prephitmp.2452,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40384,
+	mvn	r0, #0	@ D.40388,
 	b	.L691	@
 	.fnend
 	.size	Frame_Init, .-Frame_Init
@@ -6812,25 +6812,25 @@ Mp4_Syntax_UserData:
 	bgt	.L727	@,
 	b	.L769	@
 .L759:
-	ldrb	r0, [r1, r6]	@ zero_extendqisi2	@ D.39299,* i
-	orr	r3, r3, r0	@ D.39301, monitor, D.39299
-	mov	r3, r3, asl #8	@ monitor, D.39301,
+	ldrb	r0, [r1, r6]	@ zero_extendqisi2	@ D.39303,* i
+	orr	r3, r3, r0	@ D.39305, monitor, D.39303
+	mov	r3, r3, asl #8	@ monitor, D.39305,
 	cmp	r3, #256	@ monitor,
 	beq	.L760	@,
 	add	r6, r6, #1	@ i, i,
-	strb	r0, [r7, #3]	@ D.39299, <variable>.TmpUserData
+	strb	r0, [r7, #3]	@ D.39303, <variable>.TmpUserData
 	cmp	r2, r6	@ len, i
 	add	r4, r4, #1	@ userdata_len, userdata_len,
 	ble	.L725	@,
 .L727:
-	ldrb	r0, [r1, r6]	@ zero_extendqisi2	@ D.39299,* i
+	ldrb	r0, [r1, r6]	@ zero_extendqisi2	@ D.39303,* i
 	add	r7, r5, r4	@ tmp173, pCtx, userdata_len
-	orr	r3, r3, r0	@ D.39301, monitor, D.39299
-	mov	r3, r3, asl #8	@ monitor, D.39301,
+	orr	r3, r3, r0	@ D.39305, monitor, D.39303
+	mov	r3, r3, asl #8	@ monitor, D.39305,
 	cmp	r3, #256	@ monitor,
 	beq	.L760	@,
 	add	r4, r4, #1	@ userdata_len, userdata_len,
-	strb	r0, [r7, #3]	@ D.39299, <variable>.TmpUserData
+	strb	r0, [r7, #3]	@ D.39303, <variable>.TmpUserData
 	cmp	r4, ip	@ userdata_len, tmp322
 	add	r7, r5, r4	@ tmp329, pCtx, userdata_len
 	beq	.L762	@,
@@ -6875,8 +6875,8 @@ Mp4_Syntax_UserData:
 	ldr	r2, [r5, r8]	@, <variable>.UserID
 	bl	Mp4_GetUserDataBuf	@
 	movw	r3, #22596	@ tmp189,
-	cmp	r0, #0	@ D.39315,
-	str	r0, [r5, r3]	@ D.39315, <variable>.CurUsrData
+	cmp	r0, #0	@ D.39319,
+	str	r0, [r5, r3]	@ D.39319, <variable>.CurUsrData
 	addeq	sl, r4, #-2147483646	@ prephitmp.2517, userdata_len,
 	addeq	r7, r5, #3	@ buf, pCtx,
 	beq	.L730	@,
@@ -6884,7 +6884,7 @@ Mp4_Syntax_UserData:
 	sub	r8, r4, #2	@ userdata_len.2545, userdata_len,
 	str	r8, [r0, #1048]	@ userdata_len.2545, <variable>.data_size
 	movpl	r2, #0	@ iftmp.469,
-	ldr	r0, [r5, r3]	@ D.39316, <variable>.CurUsrData
+	ldr	r0, [r5, r3]	@ D.39320, <variable>.CurUsrData
 	bmi	.L765	@,
 .L732:
 	add	r7, r5, #3	@ buf, pCtx,
@@ -7158,10 +7158,10 @@ Mp4_Syntax_Parse:
 	bl	BsShow	@
 	movw	r3, #19972	@ tmp181,
 	str	r9, [r4, r3]	@ tmp182, <variable>.IsWaitToDecFlag
-	mov	r6, r0	@ D.40094,
+	mov	r6, r0	@ D.40098,
 	movw	r0, #510	@ tmp183,
-	cmp	r6, r0	@ D.40094, tmp183
-	mov	r5, r6	@ StartCode, D.40094
+	cmp	r6, r0	@ D.40098, tmp183
+	mov	r5, r6	@ StartCode, D.40098
 	beq	.L823	@,
 .L771:
 	movw	r3, #15864	@ tmp217,
@@ -7234,7 +7234,7 @@ Mp4_Syntax_Parse:
 	movne	r6, #0	@ BitUsed,
 	b	.L781	@
 .L824:
-	mov	ip, r6, lsr #8	@ tmp226, D.40094,
+	mov	ip, r6, lsr #8	@ tmp226, D.40098,
 	movw	r0, #21277	@ tmp223,
 	sub	r1, ip, #128	@ tmp227, tmp226,
 	mov	r8, #2	@ tmp224,
@@ -7278,17 +7278,17 @@ Mp4_Syntax_Parse:
 	beq	.L836	@,
 	movw	r3, #21976	@ tmp390,
 	movw	r2, #21972	@ tmp392,
-	ldr	r3, [r4, r3]	@ D.40244, <variable>.MP4Syntax.image_width
+	ldr	r3, [r4, r3]	@ D.40248, <variable>.MP4Syntax.image_width
 	movw	r1, #22564	@ tmp391,
-	ldr	r2, [r4, r2]	@ D.40245, <variable>.MP4Syntax.image_height
+	ldr	r2, [r4, r2]	@ D.40249, <variable>.MP4Syntax.image_height
 	movw	r0, #22568	@ tmp393,
-	cmp	r3, #0	@ D.40244,
-	str	r3, [r4, r1]	@ D.40244, <variable>.NewPicWidth
-	str	r2, [r4, r0]	@ D.40245, <variable>.NewPicHeight
+	cmp	r3, #0	@ D.40248,
+	str	r3, [r4, r1]	@ D.40248, <variable>.NewPicWidth
+	str	r2, [r4, r0]	@ D.40249, <variable>.NewPicHeight
 	beq	.L803	@,
 	movw	lr, #22556	@ tmp394,
 	ldr	ip, [r4, lr]	@ <variable>.OldPicWidth, <variable>.OldPicWidth
-	cmp	r3, ip	@ D.40244, <variable>.OldPicWidth
+	cmp	r3, ip	@ D.40248, <variable>.OldPicWidth
 	movne	r5, #1	@ bNeedPartition,
 	beq	.L803	@,
 .L804:
@@ -7371,7 +7371,7 @@ Mp4_Syntax_Parse:
 	str	r1, [r4, ip]	@ tmp250,
 	b	.L774	@
 .L803:
-	cmp	r2, #0	@ D.40245,
+	cmp	r2, #0	@ D.40249,
 	bne	.L839	@,
 .L805:
 	movw	ip, #22964	@ tmp398,
@@ -7379,14 +7379,14 @@ Mp4_Syntax_Parse:
 	subs	r5, r5, #1	@ bNeedPartition, <variable>.FspPartitionOK,
 	movne	r5, #1	@ bNeedPartition
 .L806:
-	cmp	r3, #0	@ D.40244,
+	cmp	r3, #0	@ D.40248,
 	bne	.L840	@,
 .L807:
-	cmp	r2, #0	@ D.40245,
+	cmp	r2, #0	@ D.40249,
 	beq	.L808	@,
 	movw	r1, #22560	@ tmp403,
 	ldr	r3, [r4, r1]	@ <variable>.OldPicHeight, <variable>.OldPicHeight
-	cmp	r2, r3	@ D.40245, <variable>.OldPicHeight
+	cmp	r2, r3	@ D.40249, <variable>.OldPicHeight
 	bne	.L804	@,
 	b	.L808	@
 .L798:
@@ -7404,12 +7404,12 @@ Mp4_Syntax_Parse:
 	b	.L774	@
 .L835:
 	movw	ip, #20080	@ tmp331,
-	ldr	r1, [r4, ip]	@ D.40199, <variable>.MP4Vol.video_object_layer_width
-	cmp	r1, #0	@ D.40199,
+	ldr	r1, [r4, ip]	@ D.40203, <variable>.MP4Vol.video_object_layer_width
+	cmp	r1, #0	@ D.40203,
 	beq	.L797	@,
 	movw	r3, #20084	@ tmp332,
-	ldr	r2, [r4, r3]	@ D.40202, <variable>.MP4Vol.video_object_layer_height
-	cmp	r2, #0	@ D.40202,
+	ldr	r2, [r4, r3]	@ D.40206, <variable>.MP4Vol.video_object_layer_height
+	cmp	r2, #0	@ D.40206,
 	bne	.L841	@,
 .L797:
 	movw	r1, #56809	@ tmp334,
@@ -7431,7 +7431,7 @@ Mp4_Syntax_Parse:
 	mov	r0, r8	@, tmp184
 	bl	BsGet	@
 	mov	r1, #32	@,
-	mov	r3, r0	@ D.40099,
+	mov	r3, r0	@ D.40103,
 	mov	r0, r8	@, tmp184
 	str	r3, [fp, #-120]	@,
 	bl	BsGet	@
@@ -7441,7 +7441,7 @@ Mp4_Syntax_Parse:
 	movt	r1, #:upper16:1128615492	@ tmp190,
 	movt	r2, #:upper16:1213419593	@ tmp193,
 	cmp	r0, r1	@, tmp190
-	cmpeq	ip, r2	@, D.40099, tmp193
+	cmpeq	ip, r2	@, D.40103, tmp193
 	bne	.L771	@,
 	movw	r6, #:lower16:g_event_report	@ tmp201,
 	movt	r6, #:upper16:g_event_report	@ tmp201,
@@ -7563,8 +7563,8 @@ Mp4_Syntax_Parse:
 	str	r8, [r4, r9]	@ tmp551, <variable>.FwdFsID
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r9]	@ D.40332, <variable>.FwdFsID
-	str	r0, [r4, sl]	@ D.40332, <variable>.BwdFsID
+	str	r0, [r4, r9]	@ D.40336, <variable>.FwdFsID
+	str	r0, [r4, sl]	@ D.40336, <variable>.BwdFsID
 .L817:
 	add	r5, r4, #22528	@ temp.2685, pCtx,
 	movw	ip, #22968	@ tmp571,
@@ -7663,7 +7663,7 @@ Mp4_Syntax_Parse:
 .L839:
 	movw	r1, #22560	@ tmp396,
 	ldr	r0, [r4, r1]	@ <variable>.OldPicHeight, <variable>.OldPicHeight
-	cmp	r2, r0	@ D.40245, <variable>.OldPicHeight
+	cmp	r2, r0	@ D.40249, <variable>.OldPicHeight
 	movne	r5, #1	@ bNeedPartition,
 	bne	.L806	@,
 	b	.L805	@
@@ -7789,18 +7789,18 @@ Mp4_Syntax_Parse:
 	ldr	r5, [r4, r2]	@ <variable>.MP4Vol.vop_time_increment_resolution, <variable>.MP4Vol.vop_time_increment_resolution
 	movw	r2, #22000	@ tmp368,
 	ldr	r3, [r4, r0]	@ <variable>.MP4Syntax.time_increment, <variable>.MP4Syntax.time_increment
-	add	r0, lr, ip	@ D.40228, <variable>.MP4Syntax.time_incr, <variable>.MP4Syntax.time_base
+	add	r0, lr, ip	@ D.40232, <variable>.MP4Syntax.time_incr, <variable>.MP4Syntax.time_base
 	ldr	lr, [r4, r2]	@ <variable>.MP4Syntax.last_non_b_time, <variable>.MP4Syntax.last_non_b_time
-	str	r0, [r4, r1]	@ D.40228, <variable>.MP4Syntax.time_base
-	mla	r3, r5, r0, r3	@ D.40232, <variable>.MP4Vol.vop_time_increment_resolution, D.40228, <variable>.MP4Syntax.time_increment
+	str	r0, [r4, r1]	@ D.40232, <variable>.MP4Syntax.time_base
+	mla	r3, r5, r0, r3	@ D.40236, <variable>.MP4Vol.vop_time_increment_resolution, D.40232, <variable>.MP4Syntax.time_increment
 	movw	r5, #21992	@ tmp353,
 	str	ip, [r4, r5]	@ <variable>.MP4Syntax.time_base, <variable>.MP4Syntax.last_time_base
 	movw	r0, #21996	@ tmp366,
-	rsb	ip, lr, r3	@ tmp370, <variable>.MP4Syntax.last_non_b_time, D.40232
+	rsb	ip, lr, r3	@ tmp370, <variable>.MP4Syntax.last_non_b_time, D.40236
 	movw	lr, #22004	@ tmp367,
 	str	ip, [r4, lr]	@ tmp370, <variable>.MP4Syntax.time_pp
-	str	r3, [r4, r2]	@ D.40232, <variable>.MP4Syntax.last_non_b_time
-	str	r3, [r4, r0]	@ D.40232, <variable>.MP4Syntax.time
+	str	r3, [r4, r2]	@ D.40236, <variable>.MP4Syntax.last_non_b_time
+	str	r3, [r4, r0]	@ D.40236, <variable>.MP4Syntax.time
 	b	.L802	@
 .L841:
 	mov	r0, r4	@, pCtx
@@ -7861,7 +7861,7 @@ Mp4_Syntax_Parse:
 .L840:
 	movw	r0, #22556	@ tmp401,
 	ldr	lr, [r4, r0]	@ <variable>.OldPicWidth, <variable>.OldPicWidth
-	cmp	r3, lr	@ D.40244, <variable>.OldPicWidth
+	cmp	r3, lr	@ D.40248, <variable>.OldPicWidth
 	beq	.L807	@,
 	b	.L804	@
 .L837:
@@ -7911,20 +7911,20 @@ Mp4_Syntax_Parse:
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
 	movw	ip, #56784	@,
-	str	r0, [r4, ip]	@ D.40280, <variable>.FwdFsID
-	str	r0, [r4, r5]	@ D.40280, <variable>.BwdFsID
+	str	r0, [r4, ip]	@ D.40284, <variable>.FwdFsID
+	str	r0, [r4, r5]	@ D.40284, <variable>.BwdFsID
 .L810:
-	add	r5, r4, #22528	@ D.40281, pCtx,
+	add	r5, r4, #22528	@ D.40285, pCtx,
 	movw	r3, #22968	@ tmp454,
-	add	r5, r5, #80	@ D.40281, D.40281,
+	add	r5, r5, #80	@ D.40285, D.40285,
 	movw	ip, #22960	@ tmp457,
 	mov	r2, #0	@ tmp455,
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	str	r2, [r4, r3]	@ tmp455, <variable>.RefNum
-	mov	r1, r5	@, D.40281
+	mov	r1, r5	@, D.40285
 	bl	FSP_ClearNotInVoQueue	@
 	movw	r0, #22060	@ tmp459,
-	ldr	r3, [r4, r0]	@ D.40284, <variable>.pstExtraData
+	ldr	r3, [r4, r0]	@ D.40288, <variable>.pstExtraData
 	ldr	r1, [r3, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r1, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L811	@,
@@ -7971,12 +7971,12 @@ Mp4_Syntax_Parse:
 	ldr	r1, [r4, r0]	@ <variable>.MP4Syntax.time_pp, <variable>.MP4Syntax.time_pp
 	ldr	r2, [r4, lr]	@ <variable>.MP4Syntax.last_non_b_time, <variable>.MP4Syntax.last_non_b_time
 	movw	lr, #22008	@ tmp383,
-	mla	r3, ip, r3, r5	@ D.40240, <variable>.MP4Vol.vop_time_increment_resolution, tmp374, <variable>.MP4Syntax.time_increment
+	mla	r3, ip, r3, r5	@ D.40244, <variable>.MP4Vol.vop_time_increment_resolution, tmp374, <variable>.MP4Syntax.time_increment
 	rsb	r0, r2, r1	@ tmp386, <variable>.MP4Syntax.last_non_b_time, <variable>.MP4Syntax.time_pp
 	movw	r1, #21996	@ tmp382,
-	add	r5, r0, r3	@ tmp389, tmp386, D.40240
+	add	r5, r0, r3	@ tmp389, tmp386, D.40244
 	str	r5, [r4, lr]	@ tmp389, <variable>.MP4Syntax.time_bp
-	str	r3, [r4, r1]	@ D.40240, <variable>.MP4Syntax.time
+	str	r3, [r4, r1]	@ D.40244, <variable>.MP4Syntax.time
 	b	.L802	@
 .L844:
 	mov	r0, r4	@, pCtx
@@ -8014,7 +8014,7 @@ Mp4_Syntax_Parse:
 	cmp	r1, #0	@ <variable>.FspPartitionOK,
 	bne	.L812	@,
 .L821:
-	mov	r0, r5	@, D.40281
+	mov	r0, r5	@, D.40285
 	bl	ResetVoQueue	@
 	b	.L812	@
 	.fnend
@@ -8056,13 +8056,13 @@ MPEG4DEC_Decode:
 	mov	r0, #2	@,
 	movw	r1, #:lower16:.LC73	@,
 	movt	r1, #:upper16:.LC73	@,
-	add	r6, r4, #15680	@ D.41028, pCtx,
+	add	r6, r4, #15680	@ D.41032, pCtx,
 	bl	dprint_vfmw	@
 	ldr	r2, [r5, #8]	@, <variable>.PhyAddr
 	mov	r0, #7	@,
 	movw	r1, #:lower16:.LC74	@,
 	movt	r1, #:upper16:.LC74	@,
-	add	r6, r6, #24	@ D.41028, D.41028,
+	add	r6, r6, #24	@ D.41032, D.41032,
 	bl	dprint_vfmw	@
 	ldr	r2, [r5, #12]	@, <variable>.LenInByte
 	mov	r0, #7	@,
@@ -8120,17 +8120,17 @@ MPEG4DEC_Decode:
 	bl	dprint_vfmw	@
 	mov	r2, #160	@,
 	mov	r1, r5	@, ptr_strm_para
-	mov	r0, r6	@, D.41028
+	mov	r0, r6	@, D.41032
 	bl	memcpy	@
 	mov	r0, r4	@, pCtx
-	mov	r1, r6	@, D.41028
+	mov	r1, r6	@, D.41032
 	bl	MP4_GetScdUpMsg	@
 	mov	r0, r4	@, pCtx
 	bl	MP4_Check_CurPacket	@
-	cmn	r0, #1	@ D.41029,
-	mov	r7, r0	@ D.41029,
+	cmn	r0, #1	@ D.41033,
+	mov	r7, r0	@ D.41033,
 	beq	.L888	@,
-	mov	r1, r6	@, D.41028
+	mov	r1, r6	@, D.41032
 	mov	r0, r4	@, pCtx
 	movw	sl, #15712	@ tmp206,
 	movw	r9, #15704	@ tmp209,
@@ -8151,7 +8151,7 @@ MPEG4DEC_Decode:
 	str	r7, [r4, r6]	@ <variable>.PhyAddr, <variable>.BitsObj.phy_addr
 	str	sl, [r4, r1]	@ tmp215, <variable>.BitsObj.offset
 	bl	Mp4_Get_DecMode	@
-	ldr	r3, [r4, r9]	@ D.41036, <variable>.pstExtraData
+	ldr	r3, [r4, r9]	@ D.41040, <variable>.pstExtraData
 	ldr	r8, [r3, #864]	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r8, #1	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn,
 	beq	.L889	@,
@@ -8193,14 +8193,14 @@ MPEG4DEC_Decode:
 	beq	.L856	@,
 	movw	r2, #22092	@ tmp254,
 	bic	ip, r3, #432	@ tmp253, tmp248,
-	ldr	r2, [r4, r2]	@ D.41058, <variable>.DecMode
+	ldr	r2, [r4, r2]	@ D.41062, <variable>.DecMode
 	bic	r3, ip, #2	@ tmp253, tmp253,
 	str	r3, [r4, r1]	@ tmp253, <variable>.PicIntegrality
-	cmp	r2, #2	@ D.41058,
+	cmp	r2, #2	@ D.41062,
 	beq	.L891	@,
-	cmp	r2, #1	@ D.41058,
+	cmp	r2, #1	@ D.41062,
 	beq	.L892	@,
-	cmp	r2, #4	@ D.41058,
+	cmp	r2, #4	@ D.41062,
 	bne	.L859	@,
 	movw	ip, #21912	@ tmp259,
 	ldrb	r3, [r4, ip]	@ zero_extendqisi2	@ prephitmp.2724, <variable>.MP4Syntax.syn_vop.vop_coding_type
@@ -8235,9 +8235,9 @@ MPEG4DEC_Decode:
 	mov	r7, r0	@ pBwdImg,
 	beq	.L895	@,
 	movw	r1, #21275	@ tmp294,
-	ldrb	r3, [r4, r1]	@ zero_extendqisi2	@ D.41091, <variable>.MP4Syntax.coding_mode
-	cmp	r3, #1	@ D.41091,
-	cmpne	r3, #3	@, D.41091,
+	ldrb	r3, [r4, r1]	@ zero_extendqisi2	@ D.41095, <variable>.MP4Syntax.coding_mode
+	cmp	r3, #1	@ D.41095,
+	cmpne	r3, #3	@, D.41095,
 	bne	.L865	@,
 	movw	r7, #22060	@ tmp303,
 	ldr	r0, [r6, #200]	@ <variable>.error_level, <variable>.error_level
@@ -8261,12 +8261,12 @@ MPEG4DEC_Decode:
 	movt	r1, #:upper16:.LC88	@,
 	ldr	r3, [ip, #0]	@, <variable>.s32RefErrThr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 .L850:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L865:
-	cmp	r3, #2	@ D.41091,
+	cmp	r3, #2	@ D.41095,
 	beq	.L896	@,
 .L866:
 	movw	r0, #21912	@ tmp337,
@@ -8336,7 +8336,7 @@ MPEG4DEC_Decode:
 	cmp	sl, #0	@ <variable>.MP4Syntax.packed_mode,
 	beq	.L897	@,
 .L855:
-	mov	r0, #0	@ D.40998,
+	mov	r0, #0	@ D.41002,
 	b	.L850	@
 .L868:
 	mov	r2, r5	@, ptr_strm_para
@@ -8344,9 +8344,9 @@ MPEG4DEC_Decode:
 	mov	r1, #0	@,
 	bl	Mp4_Set_DecPar	@
 	movw	r3, #21912	@ tmp381,
-	ldrb	r3, [r4, r3]	@ zero_extendqisi2	@ D.41146, <variable>.MP4Syntax.syn_vop.vop_coding_type
-	cmp	r3, #2	@ D.41146,
-	cmpne	r3, #4	@, D.41146,
+	ldrb	r3, [r4, r3]	@ zero_extendqisi2	@ D.41150, <variable>.MP4Syntax.syn_vop.vop_coding_type
+	cmp	r3, #2	@ D.41150,
+	cmpne	r3, #4	@, D.41150,
 	bne	.L874	@,
 	movw	ip, #22576	@ tmp389,
 	ldr	r2, [r4, ip]	@ <variable>.PPicFound, <variable>.PPicFound
@@ -8354,16 +8354,16 @@ MPEG4DEC_Decode:
 	beq	.L898	@,
 .L874:
 	movw	r5, #22060	@ tmp397,
-	cmp	r3, #1	@ D.41146,
+	cmp	r3, #1	@ D.41150,
 	ldr	r1, [r4, r5]	@ temp.2785, <variable>.pstExtraData
 	movweq	r2, #22576	@ tmp395,
-	streq	r3, [r4, r2]	@ D.41146, <variable>.PPicFound
-	add	r3, r4, #1040	@ D.41154, pCtx,
-	str	r3, [r4, #1036]	@ D.41154, <variable>.pMp4DecParam
-	ldr	r2, [r1, #896]	@ D.41155, <variable>.stDisParams.s32Mode
-	cmp	r2, #1	@ D.41155,
+	streq	r3, [r4, r2]	@ D.41150, <variable>.PPicFound
+	add	r3, r4, #1040	@ D.41158, pCtx,
+	str	r3, [r4, #1036]	@ D.41158, <variable>.pMp4DecParam
+	ldr	r2, [r1, #896]	@ D.41159, <variable>.stDisParams.s32Mode
+	cmp	r2, #1	@ D.41159,
 	beq	.L899	@,
-	cmp	r2, #2	@ D.41155,
+	cmp	r2, #2	@ D.41159,
 	beq	.L900	@,
 .L877:
 	movw	r1, #21912	@ tmp414,
@@ -8384,7 +8384,7 @@ MPEG4DEC_Decode:
 	str	r5, [r2, #-4]!	@ <variable>.MP4Syntax.syn_vop.vop_coding_type, para
 	mov	r3, #4	@,
 	blx	ip	@ g_event_report
-	mov	r0, r5	@ D.40998, <variable>.MP4Syntax.syn_vop.vop_coding_type
+	mov	r0, r5	@ D.41002, <variable>.MP4Syntax.syn_vop.vop_coding_type
 	b	.L850	@
 .L889:
 	ldr	lr, [r3, #904]	@ <variable>.s32WaitFsFlag, <variable>.s32WaitFsFlag
@@ -8405,7 +8405,7 @@ MPEG4DEC_Decode:
 	bl	MP4_ClearCurPic	@
 	mov	r0, r4	@, pCtx
 	bl	MP4_Clean_HeadPacket	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L896:
 	movw	r8, #22060	@ tmp316,
@@ -8433,7 +8433,7 @@ MPEG4DEC_Decode:
 	movt	r1, #:upper16:.LC90	@,
 	ldr	r3, [r3, #0]	@, <variable>.s32RefErrThr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L897:
 	mov	r0, #11	@,
@@ -8451,20 +8451,20 @@ MPEG4DEC_Decode:
 	cmpne	r0, #0	@, pFwd,
 	mov	r7, r0	@ pFwd,
 	beq	.L902	@,
-	ldr	r3, [r5, #520]	@ D.41194, <variable>.pstDecodeFs
-	cmp	r3, #0	@ D.41194,
+	ldr	r3, [r5, #520]	@ D.41198, <variable>.pstDecodeFs
+	cmp	r3, #0	@ D.41198,
 	beq	.L879	@,
 	ldr	r0, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	cmp	r0, #0	@ <variable>.pstTfOutFs,
 	beq	.L879	@,
-	ldr	r1, [r5, #524]	@ D.41198, <variable>.pstDispOutFs
-	cmp	r1, #0	@ D.41198,
+	ldr	r1, [r5, #524]	@ D.41202, <variable>.pstDispOutFs
+	cmp	r1, #0	@ D.41202,
 	beq	.L879	@,
-	ldr	ip, [r7, #520]	@ D.41205, <variable>.pstDecodeFs
+	ldr	ip, [r7, #520]	@ D.41209, <variable>.pstDecodeFs
 	movw	r0, #21976	@ tmp462,
 	ldr	r2, [r3, #12]	@ iftmp.2803, <variable>.PhyAddr
-	cmp	ip, #0	@ D.41205,
-	ldr	r3, [r1, #12]	@ D.41202, <variable>.PhyAddr
+	cmp	ip, #0	@ D.41209,
+	ldr	r3, [r1, #12]	@ D.41206, <variable>.PhyAddr
 	movw	r1, #21972	@ tmp464,
 	ldr	lr, [r4, r0]	@ <variable>.MP4Syntax.image_width, <variable>.MP4Syntax.image_width
 	ldrne	r6, [ip, #12]	@ iftmp.587, <variable>.PhyAddr
@@ -8475,10 +8475,10 @@ MPEG4DEC_Decode:
 	stmia	sp, {r6, lr}	@ phole stm
 	str	ip, [sp, #8]	@ <variable>.MP4Syntax.image_height,
 	bl	Vdm_Mem_Move	@
-	mov	r0, #0	@ D.40998,
+	mov	r0, #0	@ D.41002,
 	b	.L850	@
 .L899:
-	cmp	r3, #0	@ D.41154,
+	cmp	r3, #0	@ D.41158,
 	beq	.L877	@,
 	movw	r3, #21912	@ tmp398,
 	ldrb	r1, [r4, r3]	@ zero_extendqisi2	@ <variable>.MP4Syntax.syn_vop.vop_coding_type, <variable>.MP4Syntax.syn_vop.vop_coding_type
@@ -8496,7 +8496,7 @@ MPEG4DEC_Decode:
 	bl	MP4_ClearCurPic	@
 	mov	r0, r4	@, pCtx
 	bl	MP4_Clean_HeadPacket	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L892:
 	movw	r3, #21912	@ tmp257,
@@ -8508,14 +8508,14 @@ MPEG4DEC_Decode:
 	ldr	lr, [r1, #904]	@ <variable>.s32WaitFsFlag, <variable>.s32WaitFsFlag
 	cmp	lr, #0	@ <variable>.s32WaitFsFlag,
 	beq	.L854	@,
-	mov	r0, #0	@ D.40998,
+	mov	r0, #0	@ D.41002,
 	b	.L850	@
 .L848:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC72	@,
 	movt	r1, #:upper16:.LC72	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L901:
 	movw	lr, #56800	@ tmp320,
@@ -8534,7 +8534,7 @@ MPEG4DEC_Decode:
 	movt	r1, #:upper16:.LC89	@,
 	ldr	r3, [r3, #0]	@, <variable>.s32RefErrThr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L898:
 	movw	r0, #56800	@ tmp393,
@@ -8543,13 +8543,13 @@ MPEG4DEC_Decode:
 	mov	r2, #1	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	bl	FSP_ClearLogicFs	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L900:
 	ldr	r2, [r1, #900]	@ <variable>.stDisParams.s32DisNums, <variable>.stDisParams.s32DisNums
 	cmp	r2, #0	@ <variable>.stDisParams.s32DisNums,
 	ble	.L877	@,
-	cmp	r3, #0	@ D.41154,
+	cmp	r3, #0	@ D.41158,
 	beq	.L877	@,
 	movw	r3, #21912	@ tmp404,
 	ldrb	r1, [r4, r3]	@ zero_extendqisi2	@ <variable>.MP4Syntax.syn_vop.vop_coding_type, <variable>.MP4Syntax.syn_vop.vop_coding_type
@@ -8571,28 +8571,28 @@ MPEG4DEC_Decode:
 	bl	MP4_ClearCurPic	@
 	mov	r0, r4	@, pCtx
 	bl	MP4_Clean_HeadPacket	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L888:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC85	@,
 	movt	r1, #:upper16:.LC85	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.40998, D.41029
+	mov	r0, r7	@ D.41002, D.41033
 	b	.L850	@
 .L893:
 	movw	r2, #22576	@ tmp270,
 	ldr	r2, [r4, r2]	@ <variable>.PPicFound, <variable>.PPicFound
 	cmp	r2, #0	@ <variable>.PPicFound,
 	bne	.L862	@,
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L856:
 	mov	r0, #2	@,
 	movw	r1, #:lower16:.LC94	@,
 	movt	r1, #:upper16:.LC94	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L895:
 	mov	r0, #1	@,
@@ -8601,7 +8601,7 @@ MPEG4DEC_Decode:
 	movt	r1, #:upper16:.LC87	@,
 	movw	r3, #3715	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40998,
+	mvn	r0, #0	@ D.41002,
 	b	.L850	@
 .L894:
 	mov	r0, #1	@,
@@ -8612,7 +8612,7 @@ MPEG4DEC_Decode:
 	bl	MP4_ClearCurPic	@
 	mov	r0, r4	@, pCtx
 	bl	MP4_Clean_HeadPacket	@
-	mov	r0, r7	@ D.40998, ret
+	mov	r0, r7	@ D.41002, ret
 	b	.L850	@
 .L879:
 	movw	r6, #56800	@ tmp450,
@@ -8993,28 +8993,28 @@ scan_tables:
 	.word	47
 	.word	55
 	.word	63
-	.type	__func__.41688, %object
-	.size	__func__.41688, 20
-__func__.41688:
+	.type	__func__.41692, %object
+	.size	__func__.41692, 20
+__func__.41692:
 	.ascii	"Mp4_Syntax_Slice_SH\000"
-	.type	__func__.41595, %object
-	.size	__func__.41595, 23
-__func__.41595:
+	.type	__func__.41599, %object
+	.size	__func__.41599, 23
+__func__.41599:
 	.ascii	"Mp4_Syntax_Slice_NotSH\000"
 	.space	1
-	.type	__func__.41789, %object
-	.size	__func__.41789, 14
-__func__.41789:
+	.type	__func__.41793, %object
+	.size	__func__.41793, 14
+__func__.41793:
 	.ascii	"MP4_Dec_Slice\000"
 	.space	2
-	.type	__func__.40716, %object
-	.size	__func__.40716, 15
-__func__.40716:
+	.type	__func__.40720, %object
+	.size	__func__.40720, 15
+__func__.40720:
 	.ascii	"Mp4_Set_DecPar\000"
 	.space	1
-	.type	__func__.40984, %object
-	.size	__func__.40984, 16
-__func__.40984:
+	.type	__func__.40988, %object
+	.size	__func__.40988, 16
+__func__.40988:
 	.ascii	"MPEG4DEC_Decode\000"
 	.data
 	.align	2
@@ -9371,9 +9371,9 @@ sprite_trajectory_len:
 	.bss
 	.align	2
 .LANCHOR2 = . + 0
-	.type	MemArrange.40359, %object
-	.size	MemArrange.40359, 940
-MemArrange.40359:
+	.type	MemArrange.40363, %object
+	.size	MemArrange.40363, 940
+MemArrange.40363:
 	.space	940
 	.ident	"GCC: (Hisilicon_v200(gcc4.4-290+glibc-2.11+eabi+nptl)) 4.4.1"
 	.section	.note.GNU-stack,"",%progbits

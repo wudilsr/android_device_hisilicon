@@ -20,6 +20,7 @@ int hls_open_h(URLContext **puc, const char *filename, int flags, const AVIOInte
          */
         AVDictionary *tmp_opts = NULL;
         av_dict_copy(&tmp_opts, *options, 0);
+        av_dict_set(&tmp_opts, "hls_connection", "1", 0);
         ret = ffurl_open_h(puc, filename, flags, int_cb, &tmp_opts);
         av_dict_free(&tmp_opts);
         if(ret < 0)
@@ -98,6 +99,9 @@ int hls_read(URLContext *h, int64_t offset, unsigned char *buf, int size)
     int ret = -1;
     int read_size = size;
     int retry = 1;
+
+    if (h == NULL)
+        return -1;
 
     while(retry > 0)
     {

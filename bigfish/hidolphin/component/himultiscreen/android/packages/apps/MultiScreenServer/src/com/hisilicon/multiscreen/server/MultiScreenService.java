@@ -122,7 +122,9 @@ public class MultiScreenService extends Service implements IPushMessageHandler
      */
     private static final String NIC_DEFAULT_NAME = "unknow";
 
-    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "eth";
+
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
+
 
     /**
      * Message id of start all server.<br>
@@ -1560,6 +1562,10 @@ public class MultiScreenService extends Service implements IPushMessageHandler
         {
             LogTool.i("AP is open");
             mActiveNetType = WIFI_NIC_NAME;
+
+            if(DEFAULT_USE_ADAPTER_WIFI_ETHERNET.contains("wlan"))
+                return true;
+
         }
 
         if (networkManager.getActiveDefaultNetwork() == ConnectivityManager.TYPE_WIFI)

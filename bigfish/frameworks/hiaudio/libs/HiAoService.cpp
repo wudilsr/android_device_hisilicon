@@ -701,4 +701,14 @@ namespace android
     g_EnterSmartSuspend = (HI_BOOL)status;
 	return 0;
   }
+    int HiAoService::setSndVolume(int volume)
+    {
+        int ret;
+        ALOGE("HiAoService setSndVolume = %d", volume);
+        HI_UNF_SND_GAIN_ATTR_S sGain;
+        sGain.bLinearMode = HI_TRUE;
+        sGain.s32Gain = volume;
+        ret = HI_UNF_SND_SetVolume(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_ALL, &sGain);
+        return ret;
+    }
 };

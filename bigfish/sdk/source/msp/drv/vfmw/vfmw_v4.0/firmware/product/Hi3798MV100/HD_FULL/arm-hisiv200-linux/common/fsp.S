@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.fsp.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/fsp.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/fsp.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/fsp.o -O2 -Wall -Wundef
@@ -122,52 +122,52 @@ FSP_GetUsedBufferNum:
 	bl	__gnu_mcount_nc
 	movw	r2, #:lower16:s_pstVfmwChan	@ tmp172,
 	movt	r2, #:upper16:s_pstVfmwChan	@ tmp172,
-	movw	r3, #:lower16:206402	@ tmp173,
-	movt	r3, #:upper16:206402	@ tmp173,
-	ldr	ip, [r2, r0, asl #2]	@ D.38802, s_pstVfmwChan
-	ldrsb	r6, [ip, r3]	@ D.38807, <variable>.FspInst.s32DecFsNum
-	cmp	r6, #0	@ D.38807,
+	movw	r3, #:lower16:206418	@ tmp173,
+	movt	r3, #:upper16:206418	@ tmp173,
+	ldr	ip, [r2, r0, asl #2]	@ D.38806, s_pstVfmwChan
+	ldrsb	r6, [ip, r3]	@ D.38811, <variable>.FspInst.s32DecFsNum
+	cmp	r6, #0	@ D.38811,
 	movle	r0, #0	@ s32UsedFrameNum,
 	ldmlefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	movw	r0, #:lower16:241366	@ tmp181,
-	movt	r0, #:upper16:241366	@ tmp181,
-	add	r3, ip, r0	@ tmp181, D.38802, tmp181
-	rsb	r6, r6, r6, asl #4	@, tmp178, D.38807, D.38807,
+	movw	r0, #:lower16:241382	@ tmp181,
+	movt	r0, #:upper16:241382	@ tmp181,
+	add	r3, ip, r0	@ tmp181, D.38806, tmp181
+	rsb	r6, r6, r6, asl #4	@, tmp178, D.38811, D.38811,
 	mov	r0, #0	@ s32UsedFrameNum,
 	ldrsb	r2, [r3, #0]	@ <variable>.DispState, <variable>.DispState
-	mov	r6, r6, asl #2	@ D.40411, tmp178,
-	sub	r1, r6, #60	@ tmp189, D.40411,
+	mov	r6, r6, asl #2	@ D.40415, tmp178,
+	sub	r1, r6, #60	@ tmp189, D.40415,
 	cmp	r2, #3	@ <variable>.DispState,
 	ubfx	r2, r1, #2, #1	@ tmp193, tmp189,,
 	beq	.L19	@,
 	mov	r3, #60	@ ivtmp.609,
-	cmp	r3, r6	@ ivtmp.609, D.40411
+	cmp	r3, r6	@ ivtmp.609, D.40415
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L21:
 	cmp	r2, #0	@ tmp193,
 	beq	.L5	@,
-	movw	r1, #:lower16:241426	@ tmp208,
-	movt	r1, #:upper16:241426	@ tmp208,
-	add	r2, ip, r1	@ tmp208, D.38802, tmp208
+	movw	r1, #:lower16:241442	@ tmp208,
+	movt	r1, #:upper16:241442	@ tmp208,
+	add	r2, ip, r1	@ tmp208, D.38806, tmp208
 	add	r3, r3, #60	@ ivtmp.609, ivtmp.609,
 	ldrsb	r1, [r2, #0]	@ <variable>.DispState, <variable>.DispState
 	cmp	r1, #3	@ <variable>.DispState,
 	addeq	r0, r0, #1	@ s32UsedFrameNum, s32UsedFrameNum,
-	cmp	r3, r6	@ ivtmp.609, D.40411
+	cmp	r3, r6	@ ivtmp.609, D.40415
 	bne	.L5	@,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L13:
 	add	r3, r1, #60	@ ivtmp.609, tmp194,
-	cmp	r3, r6	@ ivtmp.609, D.40411
+	cmp	r3, r6	@ ivtmp.609, D.40415
 	beq	.L20	@,
 .L5:
-	movw	r2, #:lower16:241366	@ tmp199,
-	movt	r2, #:upper16:241366	@ tmp199,
-	add	r5, ip, r3	@ tmp197, D.38802, ivtmp.609
+	movw	r2, #:lower16:241382	@ tmp199,
+	movt	r2, #:upper16:241382	@ tmp199,
+	add	r5, ip, r3	@ tmp197, D.38806, ivtmp.609
 	add	r1, r3, #60	@ tmp194, ivtmp.609,
 	mov	r3, r2	@ tmp204, tmp199
 	add	r2, r5, r2	@ tmp199, tmp197, tmp199
-	add	r4, ip, r1	@ tmp202, D.38802, tmp194
+	add	r4, ip, r1	@ tmp202, D.38806, tmp194
 	ldrsb	r2, [r2, #0]	@ <variable>.DispState, <variable>.DispState
 	add	r3, r4, r3	@ tmp204, tmp202, tmp204
 	cmp	r2, #3	@ <variable>.DispState,
@@ -177,13 +177,13 @@ FSP_GetUsedBufferNum:
 	bne	.L13	@,
 	add	r3, r1, #60	@ ivtmp.609, tmp194,
 	add	r0, r0, #1	@ s32UsedFrameNum, s32UsedFrameNum,
-	cmp	r3, r6	@ ivtmp.609, D.40411
+	cmp	r3, r6	@ ivtmp.609, D.40415
 	bne	.L5	@,
 .L20:
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L19:
 	mov	r3, #60	@ ivtmp.609,
-	cmp	r3, r6	@ ivtmp.609, D.40411
+	cmp	r3, r6	@ ivtmp.609, D.40415
 	mov	r0, #1	@ s32UsedFrameNum,
 	bne	.L21	@,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
@@ -276,10 +276,10 @@ FSP_GetLogicFs:
 .L44:
 	movw	r2, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r3, [r2, r0, asl #2]	@ D.39806, s_pFspInst
-	cmp	r3, #0	@ D.39806,
+	ldr	r3, [r2, r0, asl #2]	@ D.39810, s_pFspInst
+	cmp	r3, #0	@ D.39810,
 	addne	r1, r1, r1, asl #4	@, tmp149, LogicFrameID, LogicFrameID,
-	addne	r0, r3, r1, asl #5	@, tmp151, D.39806, tmp149,
+	addne	r0, r3, r1, asl #5	@, tmp151, D.39810, tmp149,
 	addne	r0, r0, #96	@ pstLogicFs, tmp151,
 	ldmnefd	sp, {fp, sp, pc}	@
 	b	.L41	@
@@ -306,16 +306,16 @@ FSP_GetFsImagePtr:
 	cmpls	r0, #15	@, InstID,
 	bls	.L49	@,
 .L46:
-	mov	r0, #0	@ D.39830,
+	mov	r0, #0	@ D.39834,
 	ldmfd	sp, {fp, sp, pc}	@
 .L49:
 	movw	r2, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r3, [r2, r0, asl #2]	@ D.39825, s_pFspInst
-	cmp	r3, #0	@ D.39825,
+	ldr	r3, [r2, r0, asl #2]	@ D.39829, s_pFspInst
+	cmp	r3, #0	@ D.39829,
 	addne	r1, r1, r1, asl #4	@, tmp149, LogicFrameID, LogicFrameID,
-	addne	r0, r3, r1, asl #5	@, tmp151, D.39825, tmp149,
-	addne	r0, r0, #104	@ D.39830, tmp151,
+	addne	r0, r3, r1, asl #5	@, tmp151, D.39829, tmp149,
+	addne	r0, r0, #104	@ D.39834, tmp151,
 	ldmnefd	sp, {fp, sp, pc}	@
 	b	.L46	@
 	.fnend
@@ -341,17 +341,17 @@ FSP_GetDecPhyFs:
 	cmpls	r0, #15	@, InstID,
 	bls	.L54	@,
 .L51:
-	mov	r0, #0	@ D.39849,
+	mov	r0, #0	@ D.39853,
 	ldmfd	sp, {fp, sp, pc}	@
 .L54:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r3, [r3, r0, asl #2]	@ D.39844, s_pFspInst
-	cmp	r3, #0	@ D.39844,
+	ldr	r3, [r3, r0, asl #2]	@ D.39848, s_pFspInst
+	cmp	r3, #0	@ D.39848,
 	beq	.L51	@,
 	add	r1, r1, r1, asl #4	@, tmp150, LogicFrameID, LogicFrameID,
-	add	r2, r3, r1, asl #5	@, tmp152, D.39844, tmp150,
-	ldr	r0, [r2, #616]	@ D.39849, <variable>.pstDecodeFs
+	add	r2, r3, r1, asl #5	@, tmp152, D.39848, tmp150,
+	ldr	r0, [r2, #616]	@ D.39853, <variable>.pstDecodeFs
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetDecPhyFs, .-FSP_GetDecPhyFs
@@ -376,17 +376,17 @@ FSP_GetDispPhyFs:
 	cmpls	r0, #15	@, InstID,
 	bls	.L59	@,
 .L56:
-	mov	r0, #0	@ D.39868,
+	mov	r0, #0	@ D.39872,
 	ldmfd	sp, {fp, sp, pc}	@
 .L59:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r3, [r3, r0, asl #2]	@ D.39863, s_pFspInst
-	cmp	r3, #0	@ D.39863,
+	ldr	r3, [r3, r0, asl #2]	@ D.39867, s_pFspInst
+	cmp	r3, #0	@ D.39867,
 	beq	.L56	@,
 	add	r1, r1, r1, asl #4	@, tmp150, LogicFrameID, LogicFrameID,
-	add	r2, r3, r1, asl #5	@, tmp152, D.39863, tmp150,
-	ldr	r0, [r2, #620]	@ D.39868, <variable>.pstDispOutFs
+	add	r2, r3, r1, asl #5	@, tmp152, D.39867, tmp150,
+	ldr	r0, [r2, #620]	@ D.39872, <variable>.pstDispOutFs
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetDispPhyFs, .-FSP_GetDispPhyFs
@@ -412,15 +412,15 @@ FSP_GetPmvAddr:
 	bhi	.L61	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r3, [r3, r0, asl #2]	@ D.39882, s_pFspInst
-	cmp	r3, #0	@ D.39882,
+	ldr	r3, [r3, r0, asl #2]	@ D.39886, s_pFspInst
+	cmp	r3, #0	@ D.39886,
 	beq	.L61	@,
 	add	r1, r1, r1, asl #4	@, tmp150, LogicFrameID, LogicFrameID,
-	add	r2, r3, r1, asl #5	@, tmp152, D.39882, tmp150,
-	ldr	r0, [r2, #628]	@ D.39887, <variable>.PmvAddr
+	add	r2, r3, r1, asl #5	@, tmp152, D.39886, tmp150,
+	ldr	r0, [r2, #628]	@ D.39891, <variable>.PmvAddr
 	ldmfd	sp, {fp, sp, pc}	@
 .L61:
-	mov	r0, #0	@ D.39887,
+	mov	r0, #0	@ D.39891,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetPmvAddr, .-FSP_GetPmvAddr
@@ -449,11 +449,11 @@ FSP_IsFsInVO:
 	add	r0, r0, r0, asl #5	@, tmp148, InstID, InstID,
 	add	r2, r3, r0, asl #3	@, tmp150, tmp187, tmp148,
 	add	r2, r2, #64	@ tmp151, tmp150,
-	ldrsh	ip, [r2, #2]	@ D.40123, <variable>.history
-	cmn	ip, #1	@ D.40123,
+	ldrsh	ip, [r2, #2]	@ D.40127, <variable>.history
+	cmn	ip, #1	@ D.40127,
 	beq	.L66	@,
 	ldrh	r2, [r2, #4]	@ i.788, <variable>.head
-	cmp	r2, ip	@ i.788, D.40123
+	cmp	r2, ip	@ i.788, D.40127
 	beq	.L66	@,
 	ldr	r4, [r4, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r4, #1	@ <variable>.eFspInstState,
@@ -463,7 +463,7 @@ FSP_IsFsInVO:
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L75:
 	and	r2, r2, #63	@ i, i.788,
-	cmp	ip, r2	@ D.40123, i
+	cmp	ip, r2	@ D.40127, i
 	beq	.L66	@,
 	mov	r4, r0, asl #1	@ tmp166, tmp148,
 	add	r0, r4, r2	@ tmp167, tmp166, i
@@ -480,7 +480,7 @@ FSP_IsFsInVO:
 	add	r2, r2, #1	@ i.790, i,
 	and	r2, r2, #63	@ i, i.790,
 	add	r0, r4, r2	@ tmp179, tmp190, i
-	cmp	ip, r2	@ D.40123, i
+	cmp	ip, r2	@ D.40127, i
 	add	r0, r3, r0, asl #2	@, tmp183, tmp187, tmp179,
 	bne	.L74	@,
 	b	.L66	@
@@ -561,10 +561,10 @@ FSP_GetTotalValidFsNum:
 	bhi	.L92	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r0, [r3, r0, asl #2]	@ D.40240, s_pFspInst
-	cmp	r0, #0	@ D.40240,
+	ldr	r0, [r3, r0, asl #2]	@ D.40244, s_pFspInst
+	cmp	r0, #0	@ D.40244,
 	beq	.L93	@,
-	ldrsb	r0, [r0, #9]	@ D.40238, <variable>.s8TotalValidFsNum
+	ldrsb	r0, [r0, #9]	@ D.40242, <variable>.s8TotalValidFsNum
 	ldmfd	sp, {fp, sp, pc}	@
 .L92:
 	mov	r0, #0	@,
@@ -574,7 +574,7 @@ FSP_GetTotalValidFsNum:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40238,
+	mvn	r0, #0	@ D.40242,
 	ldmfd	sp, {fp, sp, pc}	@
 .L93:
 	movw	r1, #:lower16:.LC0	@,
@@ -583,7 +583,7 @@ FSP_GetTotalValidFsNum:
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40238,
+	mvn	r0, #0	@ D.40242,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetTotalValidFsNum, .-FSP_GetTotalValidFsNum
@@ -608,13 +608,13 @@ FSP_GetFspType:
 	bhi	.L100	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r0, [r3, r0, asl #2]	@ D.40225, s_pFspInst
-	cmp	r0, #0	@ D.40225,
+	ldr	r0, [r3, r0, asl #2]	@ D.40229, s_pFspInst
+	cmp	r0, #0	@ D.40229,
 	beq	.L101	@,
 	ldr	r1, [r0, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r1, #1	@ <variable>.eFspInstState,
-	moveq	r0, #0	@, D.40223,
-	mvnne	r0, #0	@, D.40223,
+	moveq	r0, #0	@, D.40227,
+	mvnne	r0, #0	@, D.40227,
 	ldmfd	sp, {fp, sp, pc}	@
 .L100:
 	mov	r0, #0	@,
@@ -624,7 +624,7 @@ FSP_GetFspType:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40223,
+	mvn	r0, #0	@ D.40227,
 	ldmfd	sp, {fp, sp, pc}	@
 .L101:
 	movw	r1, #:lower16:.LC0	@,
@@ -633,7 +633,7 @@ FSP_GetFspType:
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40223,
+	mvn	r0, #0	@ D.40227,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetFspType, .-FSP_GetFspType
@@ -704,11 +704,11 @@ FSP_ProcFspQue:
 	add	r2, r4, r3	@ tmp213, tmp317, i.934
 	ldr	r5, [r1, #88]	@ <variable>.top_luma_phy_addr, <variable>.top_luma_phy_addr
 	add	r2, ip, r2, asl #2	@, tmp217, tmp309, tmp213,
-	ldr	r2, [r2, #72]	@ D.40167, <variable>.Addr
-	cmp	r5, r2	@ <variable>.top_luma_phy_addr, D.40167
+	ldr	r2, [r2, #72]	@ D.40171, <variable>.Addr
+	cmp	r5, r2	@ <variable>.top_luma_phy_addr, D.40171
 	moveq	sl, #1	@ SameImageFlag,
 	beq	.L122	@,
-	cmp	r2, #0	@ D.40167,
+	cmp	r2, #0	@ D.40171,
 	addne	r3, r3, #1	@ i.933, i.934,
 	bne	.L113	@,
 	mov	sl, #2	@ SameImageFlag,
@@ -719,11 +719,11 @@ FSP_ProcFspQue:
 	cmp	r3, #0	@ i.934,
 	sub	r2, r3, #1	@ j, i.934,
 	add	r5, r4, r3	@ tmp225, tmp317, i.934
-	ldrh	r7, [r8, #4]	@ D.40163, <variable>.head
+	ldrh	r7, [r8, #4]	@ D.40167, <variable>.head
 	moveq	r2, #63	@ j,
 	add	r6, r4, r2	@ tmp236, tmp317, j
 	add	r5, ip, r5, asl #2	@, tmp229, tmp309, tmp225,
-	cmp	r7, r3	@ D.40163, i.934
+	cmp	r7, r3	@ D.40167, i.934
 	add	r6, ip, r6, asl #2	@, tmp240, tmp309, tmp236,
 	ldr	r6, [r6, #72]	@ tmp242, <variable>.Addr
 	str	r6, [r5, #72]	@ tmp242, <variable>.Addr
@@ -845,7 +845,7 @@ FSP_GetQueSwitchFlag:
 	movw	r1, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp138,
 	add	r3, r1, r0, asl #3	@, tmp144, tmp138, tmp142,
-	ldrb	r0, [r3, #64]	@ zero_extendqisi2	@ D.40098, <variable>.SwitchFlag
+	ldrb	r0, [r3, #64]	@ zero_extendqisi2	@ D.40102, <variable>.SwitchFlag
 	ldmfd	sp, {fp, sp, pc}	@
 .L137:
 	mov	r0, #0	@,
@@ -855,7 +855,7 @@ FSP_GetQueSwitchFlag:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r0, #255	@ D.40098,
+	mov	r0, #255	@ D.40102,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetQueSwitchFlag, .-FSP_GetQueSwitchFlag
@@ -880,13 +880,13 @@ FSP_PrintContext:
 	bhi	.L161	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp151,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp151,
-	ldr	r5, [r3, r0, asl #2]	@ D.40023, s_pFspInst
-	cmp	r5, #0	@ D.40023,
+	ldr	r5, [r3, r0, asl #2]	@ D.40027, s_pFspInst
+	cmp	r5, #0	@ D.40027,
 	beq	.L162	@,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
 	movt	r1, #:upper16:.LC5	@,
-	mov	r8, r5	@ ivtmp.1028, D.40023
+	mov	r8, r5	@ ivtmp.1028, D.40027
 	bl	dprint_vfmw	@
 	ldr	r3, [r5, #4]	@, <variable>.eFspInstState
 	mov	r0, #0	@,
@@ -894,7 +894,7 @@ FSP_PrintContext:
 	movw	r2, #:lower16:.LC7	@,
 	movt	r1, #:upper16:.LC6	@,
 	movt	r2, #:upper16:.LC7	@,
-	mov	r6, r5	@ ivtmp.1062, D.40023
+	mov	r6, r5	@ ivtmp.1062, D.40027
 	bl	dprint_vfmw	@
 	ldr	r3, [r5, #68]	@, <variable>.stInstCfg.s32DecFsWidth
 	mov	r0, #0	@,
@@ -1026,7 +1026,7 @@ FSP_PrintContext:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC19	@,
 	movt	r1, #:upper16:.LC19	@,
-	add	lr, r5, r3, asl #2	@, tmp193, D.40023, tmp191,
+	add	lr, r5, r3, asl #2	@, tmp193, D.40027, tmp191,
 	add	r4, r4, #1	@ i, i,
 	add	ip, lr, #34816	@ tmp194, tmp193,
 	add	r2, ip, #152	@ tmp194, tmp194,
@@ -1058,7 +1058,7 @@ FSP_PrintContext:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC19	@,
 	movt	r1, #:upper16:.LC19	@,
-	add	lr, r5, r3, asl #2	@, tmp215, D.40023, tmp213,
+	add	lr, r5, r3, asl #2	@, tmp215, D.40027, tmp213,
 	add	r4, r4, #1	@ i.1049, i.1049,
 	add	ip, lr, #38656	@ tmp216, tmp215,
 	add	r2, ip, #152	@ tmp216, tmp216,
@@ -1120,7 +1120,7 @@ FSP_PrintContext:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L162:
-	mov	r0, r5	@, D.40023
+	mov	r0, r5	@, D.40027
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #2669	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -1151,22 +1151,22 @@ FSP_GetLogicIdByPhyAddr:
 	bhi	.L179	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp142,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp142,
-	ldr	r3, [r3, r0, asl #2]	@ D.39988, s_pFspInst
-	cmp	r3, #0	@ D.39988,
+	ldr	r3, [r3, r0, asl #2]	@ D.39992, s_pFspInst
+	cmp	r3, #0	@ D.39992,
 	movne	r0, #0	@ i,
 	beq	.L180	@,
 .L172:
-	ldr	r2, [r3, #616]	@ D.39992, <variable>.pstDecodeFs
+	ldr	r2, [r3, #616]	@ D.39996, <variable>.pstDecodeFs
 	add	ip, r3, #544	@ tmp148, ivtmp.1096,
-	cmp	r2, #0	@ D.39992,
+	cmp	r2, #0	@ D.39996,
 	beq	.L171	@,
 	ldr	r2, [r2, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	cmp	r2, r1	@ <variable>.PhyAddr, PhyAddr
 	ldmeqfd	sp, {fp, sp, pc}	@
 .L171:
-	ldr	r3, [r3, #1160]	@ D.39992, <variable>.pstDecodeFs
+	ldr	r3, [r3, #1160]	@ D.39996, <variable>.pstDecodeFs
 	add	r0, r0, #1	@ i, i,
-	cmp	r3, #0	@ D.39992,
+	cmp	r3, #0	@ D.39996,
 	mov	r2, r0	@ tmp147, i
 	beq	.L175	@,
 	ldr	r3, [r3, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -1180,7 +1180,7 @@ FSP_GetLogicIdByPhyAddr:
 	mvn	r0, #0	@ i,
 	ldmfd	sp, {fp, sp, pc}	@
 .L180:
-	mov	r0, r3	@, D.39988
+	mov	r0, r3	@, D.39992
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #2614	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -1318,9 +1318,9 @@ FSP_GetDecFsAddrTab:
 	mov	ip, #0	@ tmp158,
 	str	ip, [r1, #0]	@ tmp158,* DecFsNum
 	ldr	r5, [r4, r0, asl #2]	@ tmp160, s_pFspInst
-	ldrsb	r5, [r5, #10]	@ D.39912, <variable>.s32DecFsNum
-	cmp	r5, ip	@ D.39912,
-	str	r5, [r1, #0]	@ D.39912,* DecFsNum
+	ldrsb	r5, [r5, #10]	@ D.39916, <variable>.s32DecFsNum
+	cmp	r5, ip	@ D.39916,
+	str	r5, [r1, #0]	@ D.39916,* DecFsNum
 	ldr	r0, [r4, r0, asl #2]	@ temp.1172, s_pFspInst
 	ldmlefd	sp, {r4, r5, fp, sp, pc}	@
 	add	r0, r0, #34816	@ ivtmp.1161, temp.1172,
@@ -1397,8 +1397,8 @@ FSP_GetStoreType:
 	bhi	.L214	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp141,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp141,
-	ldr	r0, [r3, r0, asl #2]	@ D.39753, s_pFspInst
-	cmp	r0, #0	@ D.39753,
+	ldr	r0, [r3, r0, asl #2]	@ D.39757, s_pFspInst
+	cmp	r0, #0	@ D.39757,
 	beq	.L215	@,
 	cmp	r1, #0	@ ePhyFsType,
 	bne	.L211	@,
@@ -1406,7 +1406,7 @@ FSP_GetStoreType:
 	cmp	r1, r2	@ <variable>.s32DecFsNum, PhyFsID
 	ble	.L212	@,
 	rsb	r3, r2, r2, asl #4	@, tmp148, PhyFsID, PhyFsID,
-	add	ip, r0, r3, asl #2	@, tmp150, D.39753, tmp148,
+	add	ip, r0, r3, asl #2	@, tmp150, D.39757, tmp148,
 	add	r2, ip, #34816	@ tmp151, tmp150,
 	add	r0, r2, #160	@ tmp151, tmp151,
 	ldr	r0, [r0, #4]	@ eStoreType, <variable>.eStoreType
@@ -1441,7 +1441,7 @@ FSP_GetStoreType:
 	cmp	r2, r1	@ PhyFsID, <variable>.s32DispFsNum
 	bge	.L212	@,
 	rsb	r3, r2, r2, asl #4	@, tmp156, PhyFsID, PhyFsID,
-	add	ip, r0, r3, asl #2	@, tmp158, D.39753, tmp156,
+	add	ip, r0, r3, asl #2	@, tmp158, D.39757, tmp156,
 	add	r2, ip, #38656	@ tmp159, tmp158,
 	add	r0, r2, #160	@ tmp159, tmp159,
 	ldr	r0, [r0, #4]	@ eStoreType, <variable>.eStoreType
@@ -1469,8 +1469,8 @@ FSP_SetStoreType:
 	bhi	.L224	@,
 	movw	ip, #:lower16:.LANCHOR0	@ tmp142,
 	movt	ip, #:upper16:.LANCHOR0	@ tmp142,
-	ldr	ip, [ip, r0, asl #2]	@ D.39723, s_pFspInst
-	cmp	ip, #0	@ D.39723,
+	ldr	ip, [ip, r0, asl #2]	@ D.39727, s_pFspInst
+	cmp	ip, #0	@ D.39727,
 	beq	.L225	@,
 	cmp	r1, #0	@ ePhyFsType,
 	bne	.L221	@,
@@ -1479,7 +1479,7 @@ FSP_SetStoreType:
 	ble	.L222	@,
 	rsb	r2, r2, r2, asl #4	@, tmp149, PhyFsID, PhyFsID,
 	mov	r0, r1	@ Ret, ePhyFsType
-	add	ip, ip, r2, asl #2	@, tmp151, D.39723, tmp149,
+	add	ip, ip, r2, asl #2	@, tmp151, D.39727, tmp149,
 	add	r2, ip, #34816	@ tmp152, tmp151,
 	add	r1, r2, #160	@ tmp152, tmp152,
 	str	r3, [r1, #4]	@ eStoreType, <variable>.eStoreType
@@ -1496,7 +1496,7 @@ FSP_SetStoreType:
 	bge	.L222	@,
 	rsb	r2, r2, r2, asl #4	@, tmp157, PhyFsID, PhyFsID,
 	mov	r0, #0	@ Ret,
-	add	r1, ip, r2, asl #2	@, tmp159, D.39723, tmp157,
+	add	r1, ip, r2, asl #2	@, tmp159, D.39727, tmp157,
 	add	ip, r1, #38656	@ tmp160, tmp159,
 	add	r1, ip, #160	@ tmp160, tmp160,
 	str	r3, [r1, #4]	@ eStoreType, <variable>.eStoreType
@@ -1512,7 +1512,7 @@ FSP_SetStoreType:
 	mvn	r0, #0	@ Ret,
 	ldmfd	sp, {fp, sp, pc}	@
 .L225:
-	mov	r0, ip	@, D.39723
+	mov	r0, ip	@, D.39727
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #2154	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -1542,12 +1542,12 @@ FSP_GetDisplay:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp138,
-	ldr	r0, [r3, r0, asl #2]	@ D.39700, s_pFspInst
-	cmp	r0, #0	@ D.39700,
+	ldr	r0, [r3, r0, asl #2]	@ D.39704, s_pFspInst
+	cmp	r0, #0	@ D.39704,
 	beq	.L231	@,
 	add	r1, r1, r1, asl #4	@, tmp144, LogicFrameID, LogicFrameID,
-	add	r0, r0, r1, asl #5	@, tmp146, D.39700, tmp144,
-	ldrsb	r0, [r0, #97]	@ D.39704, <variable>.s32DispState
+	add	r0, r0, r1, asl #5	@, tmp146, D.39704, tmp144,
+	ldrsb	r0, [r0, #97]	@ D.39708, <variable>.s32DispState
 	ldmfd	sp, {fp, sp, pc}	@
 .L231:
 	movw	r1, #:lower16:.LC0	@,
@@ -1556,7 +1556,7 @@ FSP_GetDisplay:
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39704,
+	mvn	r0, #0	@ D.39708,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetDisplay, .-FSP_GetDisplay
@@ -1583,12 +1583,12 @@ FSP_GetRef:
 	bhi	.L239	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp143,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp143,
-	ldr	r0, [r3, r0, asl #2]	@ D.39633, s_pFspInst
-	cmp	r0, #0	@ D.39633,
+	ldr	r0, [r3, r0, asl #2]	@ D.39637, s_pFspInst
+	cmp	r0, #0	@ D.39637,
 	beq	.L240	@,
 	add	r1, r1, r1, asl #4	@, tmp149, LogicFrameID, LogicFrameID,
-	add	r0, r0, r1, asl #5	@, tmp151, D.39633, tmp149,
-	ldrsb	r0, [r0, #96]	@ D.39628, <variable>.s32IsRef
+	add	r0, r0, r1, asl #5	@, tmp151, D.39637, tmp149,
+	ldrsb	r0, [r0, #96]	@ D.39632, <variable>.s32IsRef
 	ldmfd	sp, {fp, sp, pc}	@
 .L238:
 	mov	r0, #0	@,
@@ -1598,7 +1598,7 @@ FSP_GetRef:
 	movw	r3, #:lower16:.LC30	@,
 	movt	r3, #:upper16:.LC30	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39628,
+	mvn	r0, #0	@ D.39632,
 	ldmfd	sp, {fp, sp, pc}	@
 .L239:
 	mov	r0, #0	@,
@@ -1608,7 +1608,7 @@ FSP_GetRef:
 	movw	r3, #:lower16:.LC31	@,
 	movt	r3, #:upper16:.LC31	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39628,
+	mvn	r0, #0	@ D.39632,
 	ldmfd	sp, {fp, sp, pc}	@
 .L240:
 	movw	r1, #:lower16:.LC0	@,
@@ -1617,7 +1617,7 @@ FSP_GetRef:
 	movw	r3, #:lower16:.LC32	@,
 	movt	r3, #:upper16:.LC32	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39628,
+	mvn	r0, #0	@ D.39632,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_GetRef, .-FSP_GetRef
@@ -1646,15 +1646,15 @@ FSP_SetRef:
 	bhi	.L257	@,
 	movw	r1, #:lower16:.LANCHOR0	@ tmp149,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp149,
-	ldr	r5, [r1, r0, asl #2]	@ D.39550, s_pFspInst
-	cmp	r5, #0	@ D.39550,
+	ldr	r5, [r1, r0, asl #2]	@ D.39554, s_pFspInst
+	cmp	r5, #0	@ D.39554,
 	beq	.L258	@,
 	mov	r8, r4, asl #4	@ tmp312, LogicFrameID,
-	uxtb	sl, r2	@ D.39558, IsRef
+	uxtb	sl, r2	@ D.39562, IsRef
 	add	r7, r8, r4	@ tmp155, tmp312, LogicFrameID
-	add	r7, r5, r7, asl #5	@, tmp157, D.39550, tmp155,
+	add	r7, r5, r7, asl #5	@, tmp157, D.39554, tmp155,
 	ldrsb	r3, [r7, #98]	@ <variable>.IsDummyFs, <variable>.IsDummyFs
-	strb	sl, [r7, #96]	@ D.39558, <variable>.s32IsRef
+	strb	sl, [r7, #96]	@ D.39562, <variable>.s32IsRef
 	cmp	r3, #0	@ <variable>.IsDummyFs,
 	ldmnefd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	ldr	r3, [r7, #616]	@ prephitmp.1285, <variable>.pstDecodeFs
@@ -1666,9 +1666,9 @@ FSP_SetRef:
 	beq	.L259	@,
 .L246:
 	add	r0, r8, r4	@ tmp207, tmp312, LogicFrameID
-	add	r3, r5, r0, asl #5	@, tmp209, D.39550, tmp207,
-	ldrb	r2, [r3, #100]	@ zero_extendqisi2	@ D.39578, <variable>.PmvIdc
-	cmp	r2, #19	@ D.39578,
+	add	r3, r5, r0, asl #5	@, tmp209, D.39554, tmp207,
+	ldrb	r2, [r3, #100]	@ zero_extendqisi2	@ D.39582, <variable>.PmvIdc
+	cmp	r2, #19	@ D.39582,
 	bhi	.L249	@,
 	cmp	r6, #1	@ IsRef,
 	beq	.L260	@,
@@ -1680,9 +1680,9 @@ FSP_SetRef:
 	beq	.L261	@,
 .L252:
 	add	r2, r8, r4	@ tmp269, tmp312, LogicFrameID
-	add	r3, r5, r2, asl #5	@, tmp271, D.39550, tmp269,
-	ldr	r3, [r3, #620]	@ D.39601, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.39601,
+	add	r3, r5, r2, asl #5	@, tmp271, D.39554, tmp269,
+	ldr	r3, [r3, #620]	@ D.39605, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.39605,
 	beq	.L253	@,
 	ldrsb	r1, [r3, #2]	@ <variable>.DispState, <variable>.DispState
 	cmp	r1, #1	@ <variable>.DispState,
@@ -1690,14 +1690,14 @@ FSP_SetRef:
 .L254:
 	add	r2, r8, r4	@ tmp286, tmp312, LogicFrameID
 	ldr	r0, [r3, #56]	@ <variable>.u32Tick, <variable>.u32Tick
-	add	r2, r5, r2, asl #5	@, tmp288, D.39550, tmp286,
+	add	r2, r5, r2, asl #5	@, tmp288, D.39554, tmp286,
 	ldr	r1, [r2, #608]	@ <variable>.u32Tick, <variable>.u32Tick
 	cmp	r0, r1	@ <variable>.u32Tick, <variable>.u32Tick
 	beq	.L263	@,
 .L253:
 	cmp	r6, #0	@ IsRef,
 	addeq	r4, r8, r4	@ tmp307, tmp312, LogicFrameID
-	addeq	r5, r5, r4, asl #5	@, tmp309, D.39550, tmp307,
+	addeq	r5, r5, r4, asl #5	@, tmp309, D.39554, tmp307,
 	streq	r6, [r5, #616]	@ IsRef, <variable>.pstDecodeFs
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L256:
@@ -1716,9 +1716,9 @@ FSP_SetRef:
 	beq	.L264	@,
 .L251:
 	add	r3, r8, r4	@ tmp279, tmp312, LogicFrameID
-	add	ip, r5, r3, asl #5	@, tmp281, D.39550, tmp279,
-	ldr	r3, [ip, #620]	@ D.39601, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.39601,
+	add	ip, r5, r3, asl #5	@, tmp281, D.39554, tmp279,
+	ldr	r3, [ip, #620]	@ D.39605, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.39605,
 	bne	.L254	@,
 	b	.L253	@
 .L257:
@@ -1731,7 +1731,7 @@ FSP_SetRef:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L249:
-	sxtb	r2, r2	@, D.39578
+	sxtb	r2, r2	@, D.39582
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC35	@,
 	movt	r1, #:upper16:.LC35	@,
@@ -1748,14 +1748,14 @@ FSP_SetRef:
 	ldr	r1, [ip, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	r1, #0	@ g_IsFrameIntfValid,
 	beq	.L247	@,
-	ldr	ip, [ip, #-3880]	@ D.40306, g_FspFrameIntf.SetFrameRef
-	ldr	r1, [r3, #12]	@ D.39576, <variable>.PhyAddr
-	cmp	ip, #0	@ D.40306,
+	ldr	ip, [ip, #-3880]	@ D.40310, g_FspFrameIntf.SetFrameRef
+	ldr	r1, [r3, #12]	@ D.39580, <variable>.PhyAddr
+	cmp	ip, #0	@ D.40310,
 	beq	.L265	@,
-	blx	ip	@ D.40306
+	blx	ip	@ D.40310
 	ldr	r3, [r7, #616]	@ prephitmp.1285, <variable>.pstDecodeFs
 .L247:
-	strb	sl, [r3, #0]	@ D.39558, <variable>.IsDecRef
+	strb	sl, [r3, #0]	@ D.39562, <variable>.IsDecRef
 	b	.L246	@
 .L263:
 	cmp	r6, #1	@ IsRef,
@@ -1771,13 +1771,13 @@ FSP_SetRef:
 	strb	r0, [r3, #2]	@ tmp274, <variable>.DispState
 	b	.L251	@
 .L261:
-	sxtab	ip, r5, r2	@ tmp244, D.39550, D.39578
+	sxtab	ip, r5, r2	@ tmp244, D.39554, D.39582
 	strb	r6, [ip, #14]	@ IsRef, <variable>.IsPmvInUse
 	str	r6, [r3, #628]	@ IsRef, <variable>.PmvAddr
 	str	r6, [r1, #4]	@ IsRef, <variable>.eLfsPmvState
 	b	.L252	@
 .L258:
-	mov	r0, r5	@, D.39550
+	mov	r0, r5	@, D.39554
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #1876	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -1786,18 +1786,18 @@ FSP_SetRef:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L264:
-	sxtab	r1, r5, r2	@ tmp222, D.39550, D.39578
+	sxtab	r1, r5, r2	@ tmp222, D.39554, D.39582
 	mov	r2, #2	@ tmp233,
 	strb	r6, [r1, #14]	@ IsRef, <variable>.IsPmvInUse
 	str	r2, [r3, #4]	@ tmp233, <variable>.eLfsPmvState
 	b	.L251	@
 .L265:
-	mov	r0, ip	@, D.40306
+	mov	r0, ip	@, D.40310
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
 	ldr	r3, [r7, #616]	@ prephitmp.1285, <variable>.pstDecodeFs
-	strb	sl, [r3, #0]	@ D.39558, <variable>.IsDecRef
+	strb	sl, [r3, #0]	@ D.39562, <variable>.IsDecRef
 	b	.L246	@
 	.fnend
 	.size	FSP_SetRef, .-FSP_SetRef
@@ -1824,24 +1824,24 @@ FSP_RemovePmv:
 	bhi	.L274	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp142,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp142,
-	ldr	r0, [r3, r0, asl #2]	@ D.39521, s_pFspInst
-	cmp	r0, #0	@ D.39521,
+	ldr	r0, [r3, r0, asl #2]	@ D.39525, s_pFspInst
+	cmp	r0, #0	@ D.39525,
 	beq	.L275	@,
 	mov	r3, r1, asl #4	@ tmp175, LogicFrameID,
 	add	r2, r3, r1	@ tmp148, tmp175, LogicFrameID
-	add	r2, r0, r2, asl #5	@, tmp150, D.39521, tmp148,
+	add	r2, r0, r2, asl #5	@, tmp150, D.39525, tmp148,
 	ldr	ip, [r2, #612]	@ <variable>.eLfsPmvState, <variable>.eLfsPmvState
 	cmp	ip, #2	@ <variable>.eLfsPmvState,
 	ldmnefd	sp, {fp, sp, pc}	@
-	ldrb	r2, [r2, #100]	@ zero_extendqisi2	@ D.39529, <variable>.PmvIdc
-	cmp	r2, #19	@ D.39529,
-	sxtabls	r2, r0, r2	@ tmp163, D.39521, D.39529
+	ldrb	r2, [r2, #100]	@ zero_extendqisi2	@ D.39533, <variable>.PmvIdc
+	cmp	r2, #19	@ D.39533,
+	sxtabls	r2, r0, r2	@ tmp163, D.39525, D.39533
 	addls	r2, r2, #8	@ tmp164, tmp163,
 	movls	ip, #0	@ tmp165,
 	strlsb	ip, [r2, #6]	@ tmp165, <variable>.IsPmvInUse
 	add	r2, r3, r1	@ tmp170, tmp175, LogicFrameID
 	mov	r1, #0	@ tmp174,
-	add	ip, r0, r2, asl #5	@, tmp172, D.39521, tmp170,
+	add	ip, r0, r2, asl #5	@, tmp172, D.39525, tmp170,
 	add	r0, ip, #608	@ tmp173, tmp172,
 	str	r1, [r0, #4]	@ tmp174, <variable>.eLfsPmvState
 	ldmfd	sp, {fp, sp, pc}	@
@@ -1892,17 +1892,17 @@ FSP_FirstFsCheck:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp185,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp185,
-	ldr	ip, [r3, r0, asl #2]	@ D.39247, s_pFspInst
-	cmp	ip, #0	@ D.39247,
+	ldr	ip, [r3, r0, asl #2]	@ D.39251, s_pFspInst
+	cmp	ip, #0	@ D.39251,
 	beq	.L285	@,
 	add	r0, r0, r0, asl #5	@, tmp153, InstID, InstID,
 	add	r2, r3, r0, asl #3	@, tmp155, tmp185, tmp153,
 	add	r2, r2, #64	@ tmp156, tmp155,
-	ldrsh	r4, [r2, #2]	@ D.39254, <variable>.history
-	cmn	r4, #1	@ D.39254,
+	ldrsh	r4, [r2, #2]	@ D.39258, <variable>.history
+	cmn	r4, #1	@ D.39258,
 	beq	.L279	@,
 	ldrh	r2, [r2, #4]	@ i, <variable>.head
-	cmp	r2, r4	@ i, D.39254
+	cmp	r2, r4	@ i, D.39258
 	beq	.L279	@,
 	ldr	r5, [ip, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	movw	r6, #35044	@ tmp166,
@@ -1921,7 +1921,7 @@ FSP_FirstFsCheck:
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L286:
 	and	r2, r2, #63	@ i.1353, i,
-	cmp	r4, r2	@ D.39254, i.1353
+	cmp	r4, r2	@ D.39258, i.1353
 	beq	.L280	@,
 	mov	r6, r0, asl #1	@ tmp188, tmp153,
 	add	r7, r1, r7	@ tmp189, DecPhyAddr, SlotLen
@@ -1930,14 +1930,14 @@ FSP_FirstFsCheck:
 	add	r2, r2, #1	@ i.1354, i.1353,
 	and	r2, r2, #63	@ i.1353, i.1354,
 	add	ip, r3, r0, asl #2	@, tmp180, tmp185, tmp176,
-	ldr	ip, [ip, #72]	@ D.39266, <variable>.Addr
-	add	r0, ip, r5	@ tmp182, D.39266, PreSlotLen
+	ldr	ip, [ip, #72]	@ D.39270, <variable>.Addr
+	add	r0, ip, r5	@ tmp182, D.39270, PreSlotLen
 	cmp	r0, r1	@ tmp182, DecPhyAddr
 	blt	.L281	@,
-	cmp	ip, r7	@ D.39266, tmp189
+	cmp	ip, r7	@ D.39270, tmp189
 	ble	.L287	@,
 .L281:
-	cmp	r4, r2	@ D.39254, i.1353
+	cmp	r4, r2	@ D.39258, i.1353
 	bne	.L284	@,
 	mov	r0, #0	@ ret,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
@@ -1945,7 +1945,7 @@ FSP_FirstFsCheck:
 	mov	r0, #1	@ ret,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L285:
-	mov	r0, ip	@, D.39247
+	mov	r0, ip	@, D.39251
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #1449	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -1981,8 +1981,8 @@ FSP_GetDecodePmvTable:
 	beq	.L299	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp145,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp145,
-	ldr	r0, [r3, r0, asl #2]	@ D.39136, s_pFspInst
-	cmp	r0, #0	@ D.39136,
+	ldr	r0, [r3, r0, asl #2]	@ D.39140, s_pFspInst
+	cmp	r0, #0	@ D.39140,
 	beq	.L300	@,
 	ldrsb	ip, [r0, #13]	@ <variable>.s32PmvNum, <variable>.s32PmvNum
 	str	ip, [r2, #0]	@ <variable>.s32PmvNum,* pPmvNum
@@ -1992,7 +1992,7 @@ FSP_GetDecodePmvTable:
 	mov	r3, #0	@ ivtmp.1383,
 	mov	r2, r3	@ i, ivtmp.1383
 .L294:
-	add	ip, r0, r3	@ tmp150, D.39136, ivtmp.1383
+	add	ip, r0, r3	@ tmp150, D.39140, ivtmp.1383
 	add	r2, r2, #1	@ i, i,
 	add	ip, ip, #42752	@ tmp152, tmp150,
 	ldr	ip, [ip, #24]	@ tmp153, <variable>.PmvAddr
@@ -2064,15 +2064,15 @@ FSP_GetDecodeFrameTable:
 	beq	.L312	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp147,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp147,
-	ldr	r0, [r3, r0, asl #2]	@ D.39106, s_pFspInst
-	cmp	r0, #0	@ D.39106,
+	ldr	r0, [r3, r0, asl #2]	@ D.39110, s_pFspInst
+	cmp	r0, #0	@ D.39110,
 	beq	.L313	@,
 	ldrsb	ip, [r0, #10]	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
 	str	ip, [r2, #0]	@ <variable>.s32DecFsNum,* pFsNum
 	ldrsb	r2, [r0, #10]	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
 	cmp	r2, #0	@ <variable>.s32DecFsNum,
 	ldmlefd	sp, {fp, sp, pc}	@
-	add	r2, r0, #34816	@ ivtmp.1418, D.39106,
+	add	r2, r0, #34816	@ ivtmp.1418, D.39110,
 	mov	r3, #0	@ i,
 	add	r2, r2, #168	@ ivtmp.1418, ivtmp.1418,
 .L307:
@@ -2141,8 +2141,8 @@ FSP_DisableInstance:
 	bhi	.L319	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r0, [r3, r0, asl #2]	@ D.38705, s_pFspInst
-	cmp	r0, #0	@ D.38705,
+	ldr	r0, [r3, r0, asl #2]	@ D.38709, s_pFspInst
+	cmp	r0, #0	@ D.38709,
 	beq	.L320	@,
 	ldr	r1, [r0, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r1, #1	@ <variable>.eFspInstState,
@@ -2292,8 +2292,8 @@ FSP_Exit:
 	cmp	ip, #0	@ <variable>.eFspInstState,
 	bne	.L353	@,
 .L336:
-	ldr	r3, [r4, #60]	@ D.38629, s_pFspInst
-	cmp	r3, #0	@ D.38629,
+	ldr	r3, [r4, #60]	@ D.38633, s_pFspInst
+	cmp	r3, #0	@ D.38633,
 	ldmeqfd	sp, {r3, r4, fp, sp, pc}	@
 .L354:
 	ldr	r3, [r3, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
@@ -2305,8 +2305,8 @@ FSP_Exit:
 .L353:
 	mov	r0, #14	@,
 	bl	FSP_DisableInstance	@
-	ldr	r3, [r4, #60]	@ D.38629, s_pFspInst
-	cmp	r3, #0	@ D.38629,
+	ldr	r3, [r4, #60]	@ D.38633, s_pFspInst
+	cmp	r3, #0	@ D.38633,
 	bne	.L354	@,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L352:
@@ -2388,12 +2388,12 @@ FSP_ConfigAttribute:
 	bhi	.L360	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r3, [r3, r0, asl #2]	@ D.38646, s_pFspInst
+	ldr	r3, [r3, r0, asl #2]	@ D.38650, s_pFspInst
 	ldr	r2, [r3, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r2, #1	@ <variable>.eFspInstState,
 	bne	.L361	@,
 	ldrb	ip, [r1, #0]	@ zero_extendqisi2	@ <variable>.s8LowBufEnable, <variable>.s8LowBufEnable
-	mov	r0, #0	@ D.38644,
+	mov	r0, #0	@ D.38648,
 	strb	ip, [r3, #1]	@ <variable>.s8LowBufEnable, <variable>.s8LowBufEnable
 	ldmfd	sp, {fp, sp, pc}	@
 .L361:
@@ -2404,7 +2404,7 @@ FSP_ConfigAttribute:
 	movw	r3, #:lower16:.LC38	@,
 	movt	r3, #:upper16:.LC38	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38644,
+	mvn	r0, #0	@ D.38648,
 	ldmfd	sp, {fp, sp, pc}	@
 .L360:
 	mov	r0, #0	@,
@@ -2414,7 +2414,7 @@ FSP_ConfigAttribute:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38644,
+	mvn	r0, #0	@ D.38648,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	FSP_ConfigAttribute, .-FSP_ConfigAttribute
@@ -2445,9 +2445,9 @@ FSP_UdateInfo:
 	movt	r2, #:upper16:g_vdm_hal_fun_ptr	@ tmp153,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp152,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp152,
-	ldr	ip, [r2, #48]	@ D.38522, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	ldr	ip, [r2, #48]	@ D.38526, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
 	ldr	r6, [r3, r0, asl #2]	@ pstInst, s_pFspInst
-	cmp	ip, #0	@ D.38522,
+	cmp	ip, #0	@ D.38526,
 	beq	.L365	@,
 	mov	r1, #10	@ tmp154,
 	str	r0, [sp, #12]	@ InstID,
@@ -2461,14 +2461,14 @@ FSP_UdateInfo:
 	mov	r0, #1024	@,
 	mov	r2, r5	@, Width
 	mov	r3, r4	@, Height
-	blx	ip	@ D.38522
+	blx	ip	@ D.38526
 	cmp	r0, #0	@,
 	bne	.L365	@,
 	add	ip, r6, #38656	@ ivtmp.1569, pstInst,
 	add	r7, r6, #34816	@ ivtmp.1561, pstInst,
 	add	r2, ip, #176	@ ivtmp.1569, ivtmp.1569,
 	add	r3, r7, #176	@ ivtmp.1561, ivtmp.1561,
-	mov	ip, r2	@ D.41389, ivtmp.1569
+	mov	ip, r2	@ D.41393, ivtmp.1569
 .L367:
 	ldr	r7, [fp, #-968]	@ MemArrange.VahbStride, MemArrange.VahbStride
 	add	r0, r3, #60	@ tmp194, ivtmp.1561,
@@ -2498,7 +2498,7 @@ FSP_UdateInfo:
 	str	r7, [r3, #60]	@ MemArrange.VahbStride, <variable>.Stride
 	add	r3, r3, #120	@ ivtmp.1561, ivtmp.1561,
 	ldr	lr, [fp, #-432]	@ MemArrange.ChromOffset, MemArrange.ChromOffset
-	cmp	r3, ip	@ ivtmp.1561, D.41389
+	cmp	r3, ip	@ ivtmp.1561, D.41393
 	str	lr, [r0, #24]	@ MemArrange.ChromOffset, <variable>.ChromOffset
 	ldr	r7, [fp, #-428]	@ MemArrange.LumaPixelOffset, MemArrange.LumaPixelOffset
 	str	r7, [r0, #28]	@ MemArrange.LumaPixelOffset, <variable>.LumaPixelOffset
@@ -2530,7 +2530,7 @@ FSP_UdateInfo:
 	str	r0, [r6, ip]	@ MemArrange.ChromOffset, <variable>.ChromOffset
 	movw	ip, #42772	@ tmp181,
 	ldr	lr, [fp, #-428]	@ MemArrange.LumaPixelOffset, MemArrange.LumaPixelOffset
-	mov	r0, #0	@ D.38519,
+	mov	r0, #0	@ D.38523,
 	str	lr, [r6, r2]	@ MemArrange.LumaPixelOffset, <variable>.LumaPixelOffset
 	movw	lr, #34948	@ tmp185,
 	ldr	r1, [fp, #-424]	@ MemArrange.ChromaPixelOffset, MemArrange.ChromaPixelOffset
@@ -2563,14 +2563,14 @@ FSP_UdateInfo:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38519,
+	mvn	r0, #0	@ D.38523,
 	b	.L364	@
 .L365:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC39	@,
 	movt	r1, #:upper16:.LC39	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38519,
+	mvn	r0, #0	@ D.38523,
 	b	.L364	@
 	.fnend
 	.size	FSP_UdateInfo, .-FSP_UdateInfo
@@ -2594,13 +2594,13 @@ FSP_GetInstInfo:
 	movw	r2, #:lower16:.LANCHOR0	@ tmp136,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp136,
 	mov	r3, r1	@ pFspInstInfo, pFspInstInfo
-	ldr	ip, [r2, r0, asl #2]	@ D.39958, s_pFspInst
-	cmp	ip, #0	@ D.39958,
+	ldr	ip, [r2, r0, asl #2]	@ D.39962, s_pFspInst
+	cmp	ip, #0	@ D.39962,
 	beq	.L376	@,
 	ldrb	r4, [ip, #10]	@ zero_extendqisi2	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
 	movw	lr, #35044	@ tmp141,
 	mov	r0, r1	@ tmp154, pFspInstInfo
-	add	r1, ip, #34816	@, D.39958,
+	add	r1, ip, #34816	@, D.39962,
 	mov	r2, #3840	@,
 	add	r1, r1, #156	@,,
 	strb	r4, [r3, #1]	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
@@ -2620,7 +2620,7 @@ FSP_GetInstInfo:
 	bl	memcpy	@
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L376:
-	mov	r0, ip	@, D.39958
+	mov	r0, ip	@, D.39962
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #2565	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -2664,8 +2664,8 @@ FSP_SetDisplay:
 	bl	OSAL_SpinLockIRQ	@
 	ldr	r6, [r6, r5, asl #2]	@ pstInst, s_pFspInst
 	add	r2, r7, r4	@ tmp164, tmp281, LogicFrameID
-	rsbs	r8, sl, #1	@ D.39661, IsWaitDisp
-	movcc	r8, #0	@ D.39661
+	rsbs	r8, sl, #1	@ D.39665, IsWaitDisp
+	movcc	r8, #0	@ D.39665
 	movw	r3, #:lower16:.LANCHOR1	@ tmp155,
 	movt	r3, #:upper16:.LANCHOR1	@ tmp155,
 	add	r2, r6, r2, asl #5	@, tmp166, pstInst, tmp164,
@@ -2674,7 +2674,7 @@ FSP_SetDisplay:
 	cmp	r0, #0	@ <variable>.IsDummyFs,
 	cmpeq	sl, #0	@, IsWaitDisp,
 	beq	.L395	@,
-	cmp	r8, #0	@ D.39661,
+	cmp	r8, #0	@ D.39665,
 	moveq	r3, #3	@ iftmp.521,
 	bne	.L383	@,
 .L385:
@@ -2689,11 +2689,11 @@ FSP_SetDisplay:
 	ldr	ip, [lr, #4]	@ temp.1638, <variable>.pstDispOutFs
 	cmp	ip, #0	@ temp.1638,
 	beq	.L390	@,
-	ldr	r2, [r6, #608]	@ D.39684, <variable>.u32Tick
-	ldr	r3, [ip, #56]	@ D.39683, <variable>.u32Tick
-	cmp	r3, r2	@ D.39683, D.39684
+	ldr	r2, [r6, #608]	@ D.39688, <variable>.u32Tick
+	ldr	r3, [ip, #56]	@ D.39687, <variable>.u32Tick
+	cmp	r3, r2	@ D.39687, D.39688
 	bne	.L396	@,
-	cmp	r8, #0	@ D.39661,
+	cmp	r8, #0	@ D.39665,
 	strneb	r0, [r1, #1]	@ <variable>.IsDummyFs, <variable>.s32DispState
 	strneb	r0, [ip, #2]	@ <variable>.IsDummyFs, <variable>.DispState
 	moveq	r3, #3	@ tmp264,
@@ -2705,8 +2705,8 @@ FSP_SetDisplay:
 	bl	OSAL_SpinUnLockIRQ	@
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L395:
-	ldr	r2, [r2, #620]	@ D.39665, <variable>.pstDispOutFs
-	cmp	r2, #0	@ D.39665,
+	ldr	r2, [r2, #620]	@ D.39669, <variable>.pstDispOutFs
+	cmp	r2, #0	@ D.39669,
 	beq	.L383	@,
 	ldrsb	r1, [r1, #1]	@ <variable>.s32DispState, <variable>.s32DispState
 	cmp	r1, #0	@ <variable>.s32DispState,
@@ -2714,12 +2714,12 @@ FSP_SetDisplay:
 	ldr	ip, [r3, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	ip, #0	@ g_IsFrameIntfValid,
 	beq	.L383	@,
-	ldr	r3, [r3, #-3884]	@ D.40315, g_FspFrameIntf.ReleaseFrame
-	ldr	r1, [r2, #12]	@ D.39674, <variable>.PhyAddr
-	cmp	r3, #0	@ D.40315,
+	ldr	r3, [r3, #-3884]	@ D.40319, g_FspFrameIntf.ReleaseFrame
+	ldr	r1, [r2, #12]	@ D.39678, <variable>.PhyAddr
+	cmp	r3, #0	@ D.40319,
 	beq	.L397	@,
 	mov	r0, r5	@, InstID
-	blx	r3	@ D.40315
+	blx	r3	@ D.40319
 .L383:
 	mov	r3, #0	@ iftmp.521,
 	b	.L385	@
@@ -2757,7 +2757,7 @@ FSP_SetDisplay:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L397:
-	mov	r0, r3	@, D.40315
+	mov	r0, r3	@, D.40319
 	movw	r1, #:lower16:.LC40	@,
 	movt	r1, #:upper16:.LC40	@,
 	bl	dprint_vfmw	@
@@ -2905,7 +2905,7 @@ FSP_IsFsLeak:
 	cmp	r4, r1	@ TotalFsNum, tmp156
 	bgt	.L425	@,
 .L410:
-	mov	r0, #0	@ D.39201,
+	mov	r0, #0	@ D.39205,
 .L405:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
@@ -2926,14 +2926,14 @@ FSP_IsFsLeak:
 	bl	dprint_vfmw	@
 	mov	r0, r5	@, InstID
 	bl	FSP_PrintContext	@
-	mov	r0, #1	@ D.39201,
+	mov	r0, #1	@ D.39205,
 	b	.L405	@
 .L423:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC42	@,
 	movt	r1, #:upper16:.LC42	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39201,
+	mvn	r0, #0	@ D.39205,
 	b	.L405	@
 	.fnend
 	.size	FSP_IsFsLeak, .-FSP_IsFsLeak
@@ -2959,29 +2959,29 @@ FSP_IsNewFsAvalible:
 	bhi	.L450	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	r5, [r3, r0, asl #2]	@ D.39162, s_pFspInst
-	cmp	r5, #0	@ D.39162,
+	ldr	r5, [r3, r0, asl #2]	@ D.39166, s_pFspInst
+	cmp	r5, #0	@ D.39166,
 	beq	.L451	@,
 	movw	r3, #:lower16:.LANCHOR1	@ tmp150,
 	movt	r3, #:upper16:.LANCHOR1	@ tmp150,
 	ldr	r2, [r3, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	r2, #0	@ g_IsFrameIntfValid,
 	beq	.L430	@,
-	ldr	r4, [r3, #-3892]	@ D.40323, g_FspFrameIntf.IsFrameAvalible
-	cmp	r4, #0	@ D.40323,
+	ldr	r4, [r3, #-3892]	@ D.40327, g_FspFrameIntf.IsFrameAvalible
+	cmp	r4, #0	@ D.40327,
 	beq	.L452	@,
-	blx	r4	@ D.40323
+	blx	r4	@ D.40327
 	cmp	r0, #0	@,
 	bne	.L432	@,
 .L430:
-	ldrb	r0, [r5, #10]	@ zero_extendqisi2	@ D.39171, <variable>.s32DecFsNum
-	cmp	r0, #0	@ D.39171,
+	ldrb	r0, [r5, #10]	@ zero_extendqisi2	@ D.39175, <variable>.s32DecFsNum
+	cmp	r0, #0	@ D.39175,
 	beq	.L433	@,
-	sxtb	r0, r0	@ D.39180, D.39171
-	cmp	r0, #0	@ D.39180,
+	sxtb	r0, r0	@ D.39184, D.39175
+	cmp	r0, #0	@ D.39184,
 	ble	.L434	@,
-	add	r5, r5, #34816	@ ivtmp.1718, D.39162,
-	sub	r3, r0, #1	@ tmp158, D.39180,
+	add	r5, r5, #34816	@ ivtmp.1718, D.39166,
+	sub	r3, r0, #1	@ tmp158, D.39184,
 	and	r1, r3, #1	@ tmp160, tmp158,
 	mov	r3, #0	@ i,
 	ldrsb	ip, [r5, #156]!	@ <variable>.IsDecRef, <variable>.IsDecRef
@@ -2992,7 +2992,7 @@ FSP_IsNewFsAvalible:
 	beq	.L436	@,
 .L440:
 	mov	r3, #1	@ i,
-	cmp	r3, r0	@ i, D.39180
+	cmp	r3, r0	@ i, D.39184
 	add	r5, r5, #60	@ ivtmp.1718, ivtmp.1718,
 	bge	.L434	@,
 	cmp	r1, #0	@ tmp160,
@@ -3006,7 +3006,7 @@ FSP_IsNewFsAvalible:
 .L442:
 	add	r3, r3, #1	@ i, i,
 	add	r5, r5, #60	@ ivtmp.1718, ivtmp.1718,
-	cmp	r3, r0	@ i, D.39180
+	cmp	r3, r0	@ i, D.39184
 	bge	.L434	@,
 .L437:
 	ldrsb	r1, [r5, #0]	@ <variable>.IsDecRef, <variable>.IsDecRef
@@ -3028,29 +3028,29 @@ FSP_IsNewFsAvalible:
 .L445:
 	add	r3, r1, #1	@ i, tmp161,
 	add	r5, r2, #60	@ ivtmp.1718, tmp162,
-	cmp	r3, r0	@ i, D.39180
+	cmp	r3, r0	@ i, D.39184
 	blt	.L437	@,
 .L434:
 	mov	r0, r6	@, InstID
 	bl	FSP_IsFsLeak	@
 	cmp	r0, #0	@,
-	mvnne	r0, #0	@ D.39160,
+	mvnne	r0, #0	@ D.39164,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L432:
-	mov	r0, #0	@ D.39160,
+	mov	r0, #0	@ D.39164,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L436:
-	cmp	r3, r0	@ i, D.39180
+	cmp	r3, r0	@ i, D.39184
 	bge	.L434	@,
 .L433:
-	mov	r0, #1	@ D.39160,
+	mov	r0, #1	@ D.39164,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L452:
-	mov	r0, r4	@, D.40323
+	mov	r0, r4	@, D.40327
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39160, D.40323
+	mov	r0, r4	@ D.39164, D.40327
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L450:
 	mov	r0, #0	@,
@@ -3060,17 +3060,17 @@ FSP_IsNewFsAvalible:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39160,
+	mvn	r0, #0	@ D.39164,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L451:
-	mov	r0, r5	@, D.39162
+	mov	r0, r5	@, D.39166
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #1117	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39160,
+	mvn	r0, #0	@ D.39164,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	FSP_IsNewFsAvalible, .-FSP_IsNewFsAvalible
@@ -3096,10 +3096,10 @@ FSP_EmptyInstance:
 	bhi	.L481	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp156,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp156,
-	ldr	r8, [r3, r0, asl #2]	@ D.38765, s_pFspInst
-	cmp	r8, #0	@ D.38765,
+	ldr	r8, [r3, r0, asl #2]	@ D.38769, s_pFspInst
+	cmp	r8, #0	@ D.38769,
 	beq	.L482	@,
-	add	r0, r8, #96	@, D.38765,
+	add	r0, r8, #96	@, D.38769,
 	mov	r1, #34816	@,
 	bl	__memzero	@
 	ldrsb	r0, [r8, #10]	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
@@ -3107,7 +3107,7 @@ FSP_EmptyInstance:
 	ble	.L457	@,
 	movw	r7, #:lower16:.LANCHOR1	@ tmp192,
 	movt	r7, #:upper16:.LANCHOR1	@ tmp192,
-	add	r4, r8, #34816	@ ivtmp.1765, D.38765,
+	add	r4, r8, #34816	@ ivtmp.1765, D.38769,
 	mov	r5, #0	@ i,
 	add	r4, r4, #212	@ ivtmp.1765, ivtmp.1765,
 	mov	r9, r7	@ tmp193, tmp192
@@ -3116,17 +3116,17 @@ FSP_EmptyInstance:
 .L460:
 	mov	r0, sl	@, InstID
 	mov	r2, #0	@,
-	blx	r3	@ D.40334
+	blx	r3	@ D.40338
 .L459:
 	ldrsb	r1, [r4, #-54]	@ <variable>.DispState, <variable>.DispState
 	cmp	r1, #0	@ <variable>.DispState,
 	beq	.L458	@,
-	ldr	r3, [r7, #-3884]	@ D.40340, g_FspFrameIntf.ReleaseFrame
+	ldr	r3, [r7, #-3884]	@ D.40344, g_FspFrameIntf.ReleaseFrame
 	ldr	r1, [r4, #-44]	@ temp.1767, <variable>.PhyAddr
-	cmp	r3, #0	@ D.40340,
+	cmp	r3, #0	@ D.40344,
 	beq	.L483	@,
 	mov	r0, sl	@, InstID
-	blx	r3	@ D.40340
+	blx	r3	@ D.40344
 .L458:
 	strb	r6, [r4, #-56]	@ tmp195, <variable>.IsDecRef
 	add	r5, r5, #1	@ i, i,
@@ -3136,8 +3136,8 @@ FSP_EmptyInstance:
 	cmp	lr, r5	@ <variable>.s32DecFsNum, i
 	ble	.L457	@,
 .L462:
-	ldr	r1, [r4, #-44]	@ D.38774, <variable>.PhyAddr
-	cmp	r1, #0	@ D.38774,
+	ldr	r1, [r4, #-44]	@ D.38778, <variable>.PhyAddr
+	cmp	r1, #0	@ D.38778,
 	beq	.L458	@,
 	ldr	r2, [r7, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	r2, #0	@ g_IsFrameIntfValid,
@@ -3145,16 +3145,16 @@ FSP_EmptyInstance:
 	ldrsb	ip, [r4, #-56]	@ <variable>.IsDecRef, <variable>.IsDecRef
 	cmp	ip, #0	@ <variable>.IsDecRef,
 	beq	.L459	@,
-	ldr	r3, [r9, #-3880]	@ D.40334, g_FspFrameIntf.SetFrameRef
-	cmp	r3, #0	@ D.40334,
+	ldr	r3, [r9, #-3880]	@ D.40338, g_FspFrameIntf.SetFrameRef
+	cmp	r3, #0	@ D.40338,
 	bne	.L460	@,
-	mov	r0, r3	@, D.40334
+	mov	r0, r3	@, D.40338
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
 	b	.L459	@
 .L483:
-	mov	r0, r3	@, D.40340
+	mov	r0, r3	@, D.40344
 	movw	r1, #:lower16:.LC40	@,
 	movt	r1, #:upper16:.LC40	@,
 	add	r5, r5, #1	@ i, i,
@@ -3166,13 +3166,13 @@ FSP_EmptyInstance:
 	cmp	lr, r5	@ <variable>.s32DecFsNum, i
 	bgt	.L462	@,
 .L457:
-	ldrsb	ip, [r8, #11]	@ D.38789, <variable>.s32DispFsNum
-	cmp	ip, #0	@ D.38789,
+	ldrsb	ip, [r8, #11]	@ D.38793, <variable>.s32DispFsNum
+	cmp	ip, #0	@ D.38793,
 	ble	.L463	@,
-	add	r4, r8, #38656	@ tmp178, D.38765,
-	cmp	ip, #1	@ D.38789,
+	add	r4, r8, #38656	@ tmp178, D.38769,
+	cmp	ip, #1	@ D.38793,
 	add	r1, r4, #212	@ ivtmp.1757, tmp178,
-	sub	r3, ip, #1	@ tmp202, D.38789,
+	sub	r3, ip, #1	@ tmp202, D.38793,
 	and	r5, r3, #1	@ tmp204, tmp202,
 	mov	r0, #1	@ i.1769,
 	mov	r3, #0	@ tmp191,
@@ -3184,7 +3184,7 @@ FSP_EmptyInstance:
 	cmp	r5, #0	@ tmp204,
 	beq	.L464	@,
 	mov	r0, #2	@ i.1769,
-	cmp	ip, r0	@ D.38789, i.1769
+	cmp	ip, r0	@ D.38793, i.1769
 	str	r3, [r2, #0]	@ tmp191, <variable>.u32Tick
 	strb	r3, [r2, #-56]	@ tmp191, <variable>.IsDecRef
 	strb	r3, [r2, #-54]	@ tmp191, <variable>.DispState
@@ -3193,7 +3193,7 @@ FSP_EmptyInstance:
 .L464:
 	add	r0, r0, #2	@ i.1769, i.1769,
 	mov	lr, r2	@ tmp206, ivtmp.1757
-	cmp	ip, r0	@ D.38789, i.1769
+	cmp	ip, r0	@ D.38793, i.1769
 	str	r3, [lr], #60	@ tmp191, <variable>.u32Tick
 	strb	r3, [r2, #-56]	@ tmp191, <variable>.IsDecRef
 	strb	r3, [r2, #-54]	@ tmp191, <variable>.DispState
@@ -3203,28 +3203,28 @@ FSP_EmptyInstance:
 	strb	r3, [lr, #-56]	@ tmp191, <variable>.IsDecRef
 	bgt	.L464	@,
 .L463:
-	ldrsb	ip, [r8, #13]	@ D.38791, <variable>.s32PmvNum
-	cmp	ip, #0	@ D.38791,
+	ldrsb	ip, [r8, #13]	@ D.38795, <variable>.s32PmvNum
+	cmp	ip, #0	@ D.38795,
 	ble	.L465	@,
-	cmp	ip, #1	@ D.38791,
-	sub	r0, ip, #1	@ tmp197, D.38791,
+	cmp	ip, #1	@ D.38795,
+	sub	r0, ip, #1	@ tmp197, D.38795,
 	and	r1, r0, #1	@ tmp199, tmp197,
 	mov	r2, #1	@ i.1770,
 	mov	r0, #0	@ tmp190,
-	add	r3, r8, r2	@ ivtmp.1750, D.38765,
+	add	r3, r8, r2	@ ivtmp.1750, D.38769,
 	strb	r0, [r8, #14]	@ tmp190, <variable>.IsPmvInUse
 	ble	.L465	@,
 	cmp	r1, #0	@ tmp199,
 	beq	.L466	@,
 	mov	r2, #2	@ i.1770,
-	cmp	ip, r2	@ D.38791, i.1770
+	cmp	ip, r2	@ D.38795, i.1770
 	strb	r0, [r3, #14]	@ tmp190, <variable>.IsPmvInUse
 	add	r3, r3, #1	@ ivtmp.1750, ivtmp.1750,
 	ble	.L465	@,
 .L466:
 	add	r2, r2, #2	@ i.1770, i.1770,
 	add	r1, r3, #1	@ tmp201, ivtmp.1750,
-	cmp	ip, r2	@ D.38791, i.1770
+	cmp	ip, r2	@ D.38795, i.1770
 	strb	r0, [r3, #14]	@ tmp190, <variable>.IsPmvInUse
 	strb	r0, [r1, #14]	@ tmp190, <variable>.IsPmvInUse
 	add	r3, r1, #1	@ ivtmp.1750, tmp201,
@@ -3241,17 +3241,17 @@ FSP_EmptyInstance:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38763,
+	mvn	r0, #0	@ D.38767,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L482:
-	mov	r0, r8	@, D.38765
+	mov	r0, r8	@, D.38769
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #439	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38763,
+	mvn	r0, #0	@ D.38767,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	.fnend
 	.size	FSP_EmptyInstance, .-FSP_EmptyInstance
@@ -3276,31 +3276,31 @@ FSP_EnableInstance:
 	bhi	.L490	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r4, [r3, r0, asl #2]	@ D.38685, s_pFspInst
-	cmp	r4, #0	@ D.38685,
+	ldr	r4, [r3, r0, asl #2]	@ D.38689, s_pFspInst
+	cmp	r4, #0	@ D.38689,
 	beq	.L491	@,
 	ldr	r5, [r4, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r5, #0	@ <variable>.eFspInstState,
-	mvnne	r0, #0	@ D.38683,
+	mvnne	r0, #0	@ D.38687,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
-	mov	r0, r4	@, D.38685
+	mov	r0, r4	@, D.38689
 	movw	r1, #42864	@,
 	bl	__memzero	@
 	movw	r2, #42856	@ tmp144,
 	mov	r1, #1	@ tmp143,
-	mov	r0, r5	@ D.38683, <variable>.eFspInstState
+	mov	r0, r5	@ D.38687, <variable>.eFspInstState
 	str	r5, [r4, r2]	@ <variable>.eFspInstState, <variable>.eFspPartitionState
 	str	r1, [r4, #4]	@ tmp143, <variable>.eFspInstState
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L491:
-	mov	r0, r4	@, D.38685
+	mov	r0, r4	@, D.38689
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #313	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38683,
+	mvn	r0, #0	@ D.38687,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L490:
 	mov	r0, #0	@,
@@ -3310,7 +3310,7 @@ FSP_EnableInstance:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38683,
+	mvn	r0, #0	@ D.38687,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	FSP_EnableInstance, .-FSP_EnableInstance
@@ -3347,12 +3347,12 @@ FSP_ClearContext:
 	bl	__memzero	@
 	str	r7, [r4, #4]	@ eTmpFspInstState, <variable>.eFspInstState
 	strb	r8, [r4, #0]	@ s8TmpInstID, <variable>.s32InstID
-	mov	ip, #0	@ D.38664,
+	mov	ip, #0	@ D.38668,
 	strb	sl, [r4, #1]	@ s8TmpLowBufEnable, <variable>.s8LowBufEnable
 	ldmia	r6, {r0, r1, r2, r3}	@ tmp141,,,,
 	stmia	r5, {r0, r1, r2, r3}	@ tmp142,,,,
 .L494:
-	mov	r0, ip	@, D.38664
+	mov	r0, ip	@, D.38668
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L496:
@@ -3362,7 +3362,7 @@ FSP_ClearContext:
 	movw	r3, #:lower16:.LC44	@,
 	movt	r3, #:upper16:.LC44	@,
 	bl	dprint_vfmw	@
-	mvn	ip, #0	@ D.38664,
+	mvn	ip, #0	@ D.38668,
 	b	.L494	@
 	.fnend
 	.size	FSP_ClearContext, .-FSP_ClearContext
@@ -3390,8 +3390,8 @@ FSP_ConfigInstance:
 	beq	.L505	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp143,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp143,
-	ldr	r2, [r3, r0, asl #2]	@ D.38852, s_pFspInst
-	cmp	r2, #0	@ D.38852,
+	ldr	r2, [r3, r0, asl #2]	@ D.38856, s_pFspInst
+	cmp	r2, #0	@ D.38856,
 	beq	.L501	@,
 	ldr	r2, [r2, #4]	@ <variable>.eFspInstState, <variable>.eFspInstState
 	cmp	r2, #1	@ <variable>.eFspInstState,
@@ -3410,18 +3410,18 @@ FSP_ConfigInstance:
 	ldr	r0, [r6, #0]	@ tmp153,* pstFspInstCfg
 	str	r0, [ip, #0]	@ tmp153, <variable>.stInstCfg
 .L499:
-	mov	r0, r5	@, D.38846
+	mov	r0, r5	@, D.38850
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L501:
 	movw	r2, #613	@,
-	mvn	r5, #0	@ D.38846,
+	mvn	r5, #0	@ D.38850,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC0	@,
 	movw	r3, #:lower16:.LC46	@,
 	movt	r1, #:upper16:.LC0	@,
 	movt	r3, #:upper16:.LC46	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@, D.38846
+	mov	r0, r5	@, D.38850
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L504:
 	mov	r0, #0	@,
@@ -3431,7 +3431,7 @@ FSP_ConfigInstance:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.38846,
+	mvn	r5, #0	@ D.38850,
 	b	.L499	@
 .L505:
 	mov	r0, r1	@, pstFspInstCfg
@@ -3441,7 +3441,7 @@ FSP_ConfigInstance:
 	movt	r1, #:upper16:.LC0	@,
 	movt	r3, #:upper16:.LC45	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.38846,
+	mvn	r5, #0	@ D.38850,
 	b	.L499	@
 	.fnend
 	.size	FSP_ConfigInstance, .-FSP_ConfigInstance
@@ -3467,12 +3467,12 @@ FSP_ResetInstance:
 	bhi	.L527	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp147,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp147,
-	ldr	sl, [r3, r0, asl #2]	@ D.38725, s_pFspInst
-	cmp	sl, #0	@ D.38725,
+	ldr	sl, [r3, r0, asl #2]	@ D.38729, s_pFspInst
+	cmp	sl, #0	@ D.38729,
 	beq	.L528	@,
 	movw	r6, #:lower16:.LANCHOR1	@ tmp162,
 	movt	r6, #:upper16:.LANCHOR1	@ tmp162,
-	add	r4, sl, #34816	@ ivtmp.1874, D.38725,
+	add	r4, sl, #34816	@ ivtmp.1874, D.38729,
 	mov	r5, #0	@ i,
 	add	r4, r4, #168	@ ivtmp.1874, ivtmp.1874,
 	mov	r8, r6	@ tmp163, tmp162
@@ -3480,22 +3480,22 @@ FSP_ResetInstance:
 .L512:
 	mov	r0, r7	@, InstID
 	mov	r2, #0	@,
-	blx	r3	@ D.40351
+	blx	r3	@ D.40355
 .L511:
 	ldrsb	r1, [r4, #-10]	@ <variable>.DispState, <variable>.DispState
 	cmp	r1, #0	@ <variable>.DispState,
 	beq	.L510	@,
-	ldr	r3, [r6, #-3884]	@ D.40357, g_FspFrameIntf.ReleaseFrame
+	ldr	r3, [r6, #-3884]	@ D.40361, g_FspFrameIntf.ReleaseFrame
 	ldr	r1, [r4, #0]	@ temp.1880, <variable>.PhyAddr
-	cmp	r3, #0	@ D.40357,
+	cmp	r3, #0	@ D.40361,
 	beq	.L529	@,
 	mov	r0, r7	@, InstID
-	blx	r3	@ D.40357
+	blx	r3	@ D.40361
 .L510:
-	ldr	r1, [r4, #60]	@ D.38729, <variable>.PhyAddr
+	ldr	r1, [r4, #60]	@ D.38733, <variable>.PhyAddr
 	add	r5, r5, #1	@ tmp167, i,
 	add	r4, r4, #60	@ tmp168, ivtmp.1874,
-	cmp	r1, #0	@ D.38729,
+	cmp	r1, #0	@ D.38733,
 	beq	.L517	@,
 	ldr	ip, [r6, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	ip, #0	@ g_IsFrameIntfValid,
@@ -3503,30 +3503,30 @@ FSP_ResetInstance:
 	ldrsb	lr, [r4, #-12]	@ <variable>.IsDecRef, <variable>.IsDecRef
 	cmp	lr, #0	@ <variable>.IsDecRef,
 	beq	.L518	@,
-	ldr	r3, [r8, #-3880]	@ D.40351, g_FspFrameIntf.SetFrameRef
-	cmp	r3, #0	@ D.40351,
+	ldr	r3, [r8, #-3880]	@ D.40355, g_FspFrameIntf.SetFrameRef
+	cmp	r3, #0	@ D.40355,
 	beq	.L525	@,
 	mov	r0, r7	@, InstID
 	mov	r2, #0	@,
-	blx	r3	@ D.40351
+	blx	r3	@ D.40355
 .L518:
 	ldrsb	r3, [r4, #-10]	@ <variable>.DispState, <variable>.DispState
 	cmp	r3, #0	@ <variable>.DispState,
 	beq	.L517	@,
-	ldr	r3, [r6, #-3884]	@ D.40357, g_FspFrameIntf.ReleaseFrame
+	ldr	r3, [r6, #-3884]	@ D.40361, g_FspFrameIntf.ReleaseFrame
 	ldr	r1, [r4, #0]	@ temp.1880, <variable>.PhyAddr
-	cmp	r3, #0	@ D.40357,
+	cmp	r3, #0	@ D.40361,
 	beq	.L524	@,
 	mov	r0, r7	@, InstID
-	blx	r3	@ D.40357
+	blx	r3	@ D.40361
 .L517:
 	add	r5, r5, #1	@ i, tmp167,
 	add	r4, r4, #60	@ ivtmp.1874, tmp168,
 	cmp	r5, #64	@ i,
 	beq	.L530	@,
 .L514:
-	ldr	r1, [r4, #0]	@ D.38729, <variable>.PhyAddr
-	cmp	r1, #0	@ D.38729,
+	ldr	r1, [r4, #0]	@ D.38733, <variable>.PhyAddr
+	cmp	r1, #0	@ D.38733,
 	beq	.L510	@,
 	ldr	r0, [r6, #-3896]	@ g_IsFrameIntfValid, g_IsFrameIntfValid
 	cmp	r0, #0	@ g_IsFrameIntfValid,
@@ -3534,33 +3534,33 @@ FSP_ResetInstance:
 	ldrsb	r2, [r4, #-12]	@ <variable>.IsDecRef, <variable>.IsDecRef
 	cmp	r2, #0	@ <variable>.IsDecRef,
 	beq	.L511	@,
-	ldr	r3, [r8, #-3880]	@ D.40351, g_FspFrameIntf.SetFrameRef
-	cmp	r3, #0	@ D.40351,
+	ldr	r3, [r8, #-3880]	@ D.40355, g_FspFrameIntf.SetFrameRef
+	cmp	r3, #0	@ D.40355,
 	bne	.L512	@,
-	mov	r0, r3	@, D.40351
+	mov	r0, r3	@, D.40355
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
 	b	.L511	@
 .L530:
-	mov	r0, sl	@, D.38725
+	mov	r0, sl	@, D.38729
 	bl	FSP_ClearContext	@
-	mov	r0, #0	@ D.38723,
+	mov	r0, #0	@ D.38727,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L529:
-	mov	r0, r3	@, D.40357
+	mov	r0, r3	@, D.40361
 	movw	r1, #:lower16:.LC40	@,
 	movt	r1, #:upper16:.LC40	@,
 	bl	dprint_vfmw	@
 	b	.L510	@
 .L525:
-	mov	r0, r3	@, D.40351
+	mov	r0, r3	@, D.40355
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
 	b	.L518	@
 .L524:
-	mov	r0, r3	@, D.40357
+	mov	r0, r3	@, D.40361
 	movw	r1, #:lower16:.LC40	@,
 	movt	r1, #:upper16:.LC40	@,
 	bl	dprint_vfmw	@
@@ -3573,17 +3573,17 @@ FSP_ResetInstance:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38723,
+	mvn	r0, #0	@ D.38727,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L528:
-	mov	r0, sl	@, D.38725
+	mov	r0, sl	@, D.38729
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #361	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38723,
+	mvn	r0, #0	@ D.38727,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	.fnend
 	.size	FSP_ResetInstance, .-FSP_ResetInstance
@@ -3802,7 +3802,7 @@ FSP_NewLogicFs:
 	cmp	ip, #0	@ temp.2003,
 	ble	.L557	@,
 	ldrsb	r3, [r5, #14]	@ <variable>.IsPmvInUse, <variable>.IsPmvInUse
-	mov	lr, ip	@ D.39381, temp.2003
+	mov	lr, ip	@ D.39385, temp.2003
 	cmp	r3, #0	@ <variable>.IsPmvInUse,
 	moveq	r0, r3	@ prephitmp.1929, <variable>.IsPmvInUse
 	beq	.L559	@,
@@ -3810,10 +3810,10 @@ FSP_NewLogicFs:
 	mov	r2, r5	@ ivtmp.2046, pstInst
 	mov	r3, #0	@ i.2005,
 	bne	.L560	@,
-	ldrb	r6, [r5, #15]	@ zero_extendqisi2	@ D.39376, <variable>.IsPmvInUse
+	ldrb	r6, [r5, #15]	@ zero_extendqisi2	@ D.39380, <variable>.IsPmvInUse
 	mov	r3, #1	@ i.2005,
 	add	r2, r5, r3	@ ivtmp.2046, pstInst,
-	cmp	r6, #0	@ D.39376,
+	cmp	r6, #0	@ D.39380,
 	bne	.L560	@,
 .L625:
 	uxtb	r0, r3	@ prephitmp.1929, i.2005
@@ -3828,16 +3828,16 @@ FSP_NewLogicFs:
 	str	r6, [r2, #628]	@ tmp408, <variable>.PmvAddr
 	ldr	ip, [r5, lr]	@ <variable>.s32HalfPmvOffset, <variable>.s32HalfPmvOffset
 	str	ip, [r2, #632]	@ <variable>.s32HalfPmvOffset, <variable>.HalfPmvOffset
-	ldrsb	lr, [r5, #13]	@ D.39381, <variable>.s32PmvNum
-	cmp	lr, r3	@ D.39381, i.2005
+	ldrsb	lr, [r5, #13]	@ D.39385, <variable>.s32PmvNum
+	cmp	lr, r3	@ D.39385, i.2005
 	ble	.L561	@,
 .L557:
 	ldrsb	r1, [r5, #56]	@ <variable>.stInstCfg.s32DispLoopEnable, <variable>.stInstCfg.s32DispLoopEnable
 	cmp	r1, #0	@ <variable>.stInstCfg.s32DispLoopEnable,
 	beq	.L565	@,
 .L644:
-	ldrsb	r6, [r5, #11]	@ D.39400, <variable>.s32DispFsNum
-	cmp	r6, #0	@ D.39400,
+	ldrsb	r6, [r5, #11]	@ D.39404, <variable>.s32DispFsNum
+	cmp	r6, #0	@ D.39404,
 	ble	.L643	@,
 	add	r0, r5, #38656	@ tmp454, pstInst,
 	cmn	r0, #156	@ tmp454,
@@ -3847,7 +3847,7 @@ FSP_NewLogicFs:
 	bic	lr, ip, #-16777216	@ tmp456, tmp457,
 	cmp	lr, #0	@ tmp456,
 	beq	.L568	@,
-	tst	r6, #1	@ D.39400,
+	tst	r6, #1	@ D.39404,
 	add	r1, r0, #216	@ ivtmp.1951, tmp454,
 	mov	r2, #0	@ i,
 	bne	.L572	@,
@@ -3872,13 +3872,13 @@ FSP_NewLogicFs:
 	str	r6, [lr, #620]	@ prephitmp.2004, <variable>.pstDispOutFs
 	b	.L567	@
 .L541:
-	add	r6, r5, #34816	@ D.39338, pstInst,
+	add	r6, r5, #34816	@ D.39342, pstInst,
 	movw	r2, #42776	@ tmp304,
-	add	lr, r6, #96	@ D.39338, D.39338,
-	str	lr, [r3, #624]	@ D.39338, <variable>.pstTfOutFs
-	str	lr, [ip, #4]	@ D.39338, <variable>.pstDispOutFs
+	add	lr, r6, #96	@ D.39342, D.39342,
+	str	lr, [r3, #624]	@ D.39342, <variable>.pstTfOutFs
+	str	lr, [ip, #4]	@ D.39342, <variable>.pstDispOutFs
 	mov	r8, #1	@ tmp324,
-	str	lr, [r3, #616]	@ D.39338, <variable>.pstDecodeFs
+	str	lr, [r3, #616]	@ D.39342, <variable>.pstDecodeFs
 	ldr	r9, [r5, r2]	@ <variable>.PmvAddr, <variable>.PmvAddr
 	str	r9, [r0, #4]	@ <variable>.PmvAddr, <variable>.PmvAddr
 	ldrb	r7, [r5, #13]	@ zero_extendqisi2	@ <variable>.s32PmvNum, <variable>.s32PmvNum
@@ -3908,9 +3908,9 @@ FSP_NewLogicFs:
 	add	r8, r6, #216	@ tmp803, tmp567,
 	str	ip, [r6, #612]	@ tmp569, <variable>.eLfsPmvState
 	ldr	r4, [r6, #616]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
-	ldr	ip, [r5, #36]	@ D.39432, <variable>.u32InstTick
-	str	ip, [r6, #608]	@ D.39432, <variable>.u32Tick
-	str	ip, [r4, #56]	@ D.39432, <variable>.u32Tick
+	ldr	ip, [r5, #36]	@ D.39436, <variable>.u32InstTick
+	str	ip, [r6, #608]	@ D.39436, <variable>.u32Tick
+	str	ip, [r4, #56]	@ D.39436, <variable>.u32Tick
 	ldr	lr, [r3, #4]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	ldr	r4, [r6, #608]	@ <variable>.u32Tick, <variable>.u32Tick
 	str	r4, [lr, #56]	@ <variable>.u32Tick, <variable>.u32Tick
@@ -3931,11 +3931,11 @@ FSP_NewLogicFs:
 	str	r3, [r6, #272]	@ <variable>.FsHeight, <variable>.stDispImg.image_height
 	ldr	r0, [r5, #20]	@ <variable>.Stride, <variable>.Stride
 	str	r0, [r6, #296]	@ <variable>.Stride, <variable>.stDispImg.image_stride
-	ldr	r1, [r4, #12]	@ D.39448, <variable>.PhyAddr
-	str	r1, [r6, #208]	@ D.39448, <variable>.stDispImg.luma_phy_addr
-	mov	r0, r1	@, D.39448
+	ldr	r1, [r4, #12]	@ D.39452, <variable>.PhyAddr
+	str	r1, [r6, #208]	@ D.39452, <variable>.stDispImg.luma_phy_addr
+	mov	r0, r1	@, D.39452
 	ldr	ip, [r4, #44]	@ <variable>.ChromOffset, <variable>.ChromOffset
-	add	r2, ip, r1	@ tmp703, <variable>.ChromOffset, D.39448
+	add	r2, ip, r1	@ tmp703, <variable>.ChromOffset, D.39452
 	str	r2, [r9, #4]	@ tmp703, <variable>.stDispImg.chrom_phy_addr
 	bl	MEM_Phy2Vir	@
 	str	r0, [r6, #136]	@, <variable>.stDispImg.luma_vir_addr
@@ -3943,16 +3943,16 @@ FSP_NewLogicFs:
 	bl	MEM_Phy2Vir	@
 	ldr	r3, [fp, #-100]	@,
 	str	r0, [r3, #4]	@, <variable>.stDispImg.chrom_vir_addr
-	ldr	ip, [r5, #12]	@ D.39461, <variable>.PhyAddr
-	str	ip, [r6, #192]	@ D.39461, <variable>.stDispImg.top_luma_phy_addr
+	ldr	ip, [r5, #12]	@ D.39465, <variable>.PhyAddr
+	str	ip, [r6, #192]	@ D.39465, <variable>.stDispImg.top_luma_phy_addr
 	ldr	r1, [r5, #44]	@ <variable>.ChromOffset, <variable>.ChromOffset
-	add	r3, ip, r1	@ D.39464, D.39461, <variable>.ChromOffset
-	str	r3, [r6, #196]	@ D.39464, <variable>.stDispImg.top_chrom_phy_addr
+	add	r3, ip, r1	@ D.39468, D.39465, <variable>.ChromOffset
+	str	r3, [r6, #196]	@ D.39468, <variable>.stDispImg.top_chrom_phy_addr
 	ldr	r0, [r5, #20]	@ <variable>.Stride, <variable>.Stride
-	add	r2, r0, ip	@ tmp749, <variable>.Stride, D.39461
+	add	r2, r0, ip	@ tmp749, <variable>.Stride, D.39465
 	str	r2, [r6, #200]	@ tmp749, <variable>.stDispImg.btm_luma_phy_addr
 	ldr	ip, [r5, #20]	@ <variable>.Stride, <variable>.Stride
-	add	r0, r3, ip	@ tmp758, D.39464, <variable>.Stride
+	add	r0, r3, ip	@ tmp758, D.39468, <variable>.Stride
 	str	r0, [r6, #204]	@ tmp758, <variable>.stDispImg.btm_chrom_phy_addr
 	ldr	r2, [r5, #12]	@ temp.2028, <variable>.PhyAddr
 	str	r2, [r6, #224]	@ temp.2028, <variable>.stDispImg.luma_2d_phy_addr
@@ -3967,11 +3967,11 @@ FSP_NewLogicFs:
 	ldr	r3, [fp, #-88]	@, %sfp
 	str	r0, [r3, #4]	@, <variable>.stDispImg.chrom_2d_vir_addr
 	ldr	r0, [fp, #-96]	@,
-	ldr	r1, [r0, #12]	@ D.39479, <variable>.PhyAddr
-	str	r1, [r6, #216]	@ D.39479, <variable>.stDispImg.luma_tf_phy_addr
-	mov	r0, r1	@, D.39479
+	ldr	r1, [r0, #12]	@ D.39483, <variable>.PhyAddr
+	str	r1, [r6, #216]	@ D.39483, <variable>.stDispImg.luma_tf_phy_addr
+	mov	r0, r1	@, D.39483
 	ldr	r2, [r4, #44]	@ <variable>.ChromOffset, <variable>.ChromOffset
-	add	ip, r2, r1	@ tmp812, <variable>.ChromOffset, D.39479
+	add	ip, r2, r1	@ tmp812, <variable>.ChromOffset, D.39483
 	str	ip, [r8, #4]	@ tmp812, <variable>.stDispImg.chrom_tf_phy_addr
 	bl	MEM_Phy2Vir	@
 	str	r0, [r6, #144]	@, <variable>.stDispImg.luma_tf_vir_addr
@@ -4006,18 +4006,18 @@ FSP_NewLogicFs:
 	str	r0, [r6, #160]	@, <variable>.stDispImg.line_num_vir_addr
 	ldr	r0, .L648	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	ldrsb	r0, [r7, #3]	@ D.39317, <variable>.s32LogicFsID
+	ldrsb	r0, [r7, #3]	@ D.39321, <variable>.s32LogicFsID
 .L535:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L562:
-	ldrb	r0, [r2, #15]	@ zero_extendqisi2	@ D.39376, <variable>.IsPmvInUse
+	ldrb	r0, [r2, #15]	@ zero_extendqisi2	@ D.39380, <variable>.IsPmvInUse
 	add	r2, r1, #1	@ ivtmp.2046, tmp964,
-	cmp	r0, #0	@ D.39376,
+	cmp	r0, #0	@ D.39380,
 	beq	.L625	@,
-	ldrb	r1, [r1, #15]	@ zero_extendqisi2	@ D.39376, <variable>.IsPmvInUse
+	ldrb	r1, [r1, #15]	@ zero_extendqisi2	@ D.39380, <variable>.IsPmvInUse
 	add	r3, r3, #1	@ i.2005, i.2005,
-	cmp	r1, #0	@ D.39376,
+	cmp	r1, #0	@ D.39380,
 	beq	.L625	@,
 .L560:
 	add	r3, r3, #1	@ i.2005, i.2005,
@@ -4025,7 +4025,7 @@ FSP_NewLogicFs:
 	cmp	r3, ip	@ i.2005, temp.2003
 	blt	.L562	@,
 .L561:
-	cmp	lr, #0	@ D.39381,
+	cmp	lr, #0	@ D.39385,
 	ble	.L563	@,
 	ldrsb	ip, [r5, #13]	@ temp.2008, <variable>.s32PmvNum
 	mov	r2, #1	@ i.2009,
@@ -4087,28 +4087,28 @@ FSP_NewLogicFs:
 	cmp	r1, #0	@ g_IsFrameIntfValid,
 	mov	r3, r0	@ uImage_height,
 	beq	.L544	@,
-	ldr	ip, [r2, #-3888]	@ D.40377, g_FspFrameIntf.AllocFrame
-	cmp	ip, #0	@ D.40377,
+	ldr	ip, [r2, #-3888]	@ D.40381, g_FspFrameIntf.AllocFrame
+	cmp	ip, #0	@ D.40381,
 	beq	.L645	@,
 	mov	r0, r8	@, InstID
 	mov	r2, r6	@, uImage_width
 	sub	r1, fp, #84	@,,
-	blx	ip	@ D.40377
+	blx	ip	@ D.40381
 	cmp	r0, #0	@,
 	bne	.L576	@,
-	ldr	r6, [fp, #-84]	@ D.39424, stInfo.stFrameInfo.PhyAddr
-	cmp	r6, #0	@ D.39424,
+	ldr	r6, [fp, #-84]	@ D.39428, stInfo.stFrameInfo.PhyAddr
+	cmp	r6, #0	@ D.39428,
 	beq	.L646	@,
 	add	r2, sl, r4	@ tmp540, tmp945, i.2020
 	add	r7, r5, r2, asl #5	@, tmp542, pstInst, tmp540,
 	ldr	r0, [r7, #616]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
-	str	r6, [r0, #12]	@ D.39424, <variable>.PhyAddr
+	str	r6, [r0, #12]	@ D.39428, <variable>.PhyAddr
 	ldrsb	r6, [r7, #100]	@ <variable>.PmvIdc, <variable>.PmvIdc
-	ldr	r8, [fp, #-68]	@ D.39428, stInfo.stPmvInfo.PhyAddr
+	ldr	r8, [fp, #-68]	@ D.39432, stInfo.stPmvInfo.PhyAddr
 	add	lr, r6, #10688	@ tmp560, <variable>.PmvIdc,
 	add	r9, lr, #6	@ tmp560, tmp560,
-	str	r8, [r7, #628]	@ D.39428, <variable>.PmvAddr
-	str	r8, [r5, r9, asl #2]	@ D.39428, <variable>.PmvAddr
+	str	r8, [r7, #628]	@ D.39432, <variable>.PmvAddr
+	str	r8, [r5, r9, asl #2]	@ D.39432, <variable>.PmvAddr
 	b	.L544	@
 .L573:
 	rsb	ip, r2, r2, asl #4	@, tmp1004, i, i,
@@ -4135,7 +4135,7 @@ FSP_NewLogicFs:
 .L572:
 	add	r3, r2, #1	@ tmp953, i,
 	add	lr, r1, #60	@ tmp954, ivtmp.1951,
-	cmp	r6, r3	@ D.39400, tmp953
+	cmp	r6, r3	@ D.39404, tmp953
 	add	r2, r3, #1	@ i, i.1998,
 	rsb	r0, r3, r3, asl #4	@, tmp476, i.1998, i.1998,
 	bgt	.L573	@,
@@ -4185,7 +4185,7 @@ FSP_NewLogicFs:
 .L574:
 	ldr	r0, .L648	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L628:
 	rsb	r1, r7, r7, asl #4	@, tmp331, i.2025, i.2025,
@@ -4198,7 +4198,7 @@ FSP_NewLogicFs:
 	b	.L543	@
 .L645:
 	movw	r1, #:lower16:.LC34	@,
-	mov	r0, ip	@, D.40377
+	mov	r0, ip	@, D.40381
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
 .L576:
@@ -4208,7 +4208,7 @@ FSP_NewLogicFs:
 	movw	r1, #:lower16:.LC54	@,
 	movt	r1, #:upper16:.LC54	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L642:
 	mov	r0, r7	@, prephitmp.1926
@@ -4242,13 +4242,13 @@ FSP_NewLogicFs:
 	ldrsb	r2, [r5, #9]	@ <variable>.s8TotalValidFsNum, <variable>.s8TotalValidFsNum
 	cmp	r2, #0	@ <variable>.s8TotalValidFsNum,
 	ble	.L550	@,
-	ldrsb	lr, [r5, #10]	@ D.39369, <variable>.s32DecFsNum
+	ldrsb	lr, [r5, #10]	@ D.39373, <variable>.s32DecFsNum
 	add	r1, r5, #34816	@ pstPhyFs, pstInst,
 	add	r3, r1, #156	@ pstPhyFs, pstPhyFs,
-	cmp	lr, #0	@ D.39369,
+	cmp	lr, #0	@ D.39373,
 	movle	ip, #0	@ prephitmp.1931,
 	ble	.L552	@,
-	tst	lr, #1	@ D.39369,
+	tst	lr, #1	@ D.39373,
 	mov	ip, #0	@ i.1996,
 	mov	r0, ip	@ i.2044, i.1996
 	mvn	r1, #0	@ LeastTick.2050,
@@ -4275,7 +4275,7 @@ FSP_NewLogicFs:
 	cmp	r2, r1	@ LeastTick, LeastTick.2050
 	movcc	ip, r0	@ i.1996, i.2044
 	movcs	r2, r1	@ LeastTick, LeastTick.2050
-	cmp	lr, r3	@ D.39369, tmp968
+	cmp	lr, r3	@ D.39373, tmp968
 	bgt	.L647	@,
 .L552:
 	rsb	ip, ip, ip, asl #4	@, tmp369, prephitmp.1931, prephitmp.1931,
@@ -4294,7 +4294,7 @@ FSP_NewLogicFs:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L568:
 	mov	r3, #0	@ i.1998,
@@ -4311,16 +4311,16 @@ FSP_NewLogicFs:
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L646:
 	ldr	r0, .L648	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, r6	@, D.39424
+	mov	r0, r6	@, D.39428
 	movw	r1, #:lower16:.LC55	@,
 	movt	r1, #:upper16:.LC55	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L538:
 	mov	r0, #0	@,
@@ -4329,7 +4329,7 @@ FSP_NewLogicFs:
 	bl	dprint_vfmw	@
 	ldr	r0, .L648	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L550:
 	mov	r0, #0	@,
@@ -4340,7 +4340,7 @@ FSP_NewLogicFs:
 	bl	dprint_vfmw	@
 	ldr	r0, .L648	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.39317,
+	mvn	r0, #0	@ D.39321,
 	b	.L535	@
 .L649:
 	.align	2
@@ -4378,13 +4378,13 @@ FSP_PartitionFsMemory:
 	bhi	.L718	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp204,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp204,
-	ldr	r4, [r3, r5, asl #2]	@ D.38897, s_pFspInst
-	cmp	r4, #0	@ D.38897,
+	ldr	r4, [r3, r5, asl #2]	@ D.38901, s_pFspInst
+	cmp	r4, #0	@ D.38901,
 	beq	.L719	@,
 	movw	r6, #:lower16:s_pstVfmwChan	@ tmp637,
 	movt	r6, #:upper16:s_pstVfmwChan	@ tmp637,
-	movw	r2, #:lower16:251540	@ tmp209,
-	movt	r2, #:upper16:251540	@ tmp209,
+	movw	r2, #:lower16:251556	@ tmp209,
+	movt	r2, #:upper16:251556	@ tmp209,
 	ldr	r1, [r6, r5, asl #2]	@ prephitmp.2079, s_pstVfmwChan
 	ldr	r0, [r1, r2]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
 	cmp	r0, #0	@ <variable>.u32DynamicFrameStoreAllocEn,
@@ -4393,43 +4393,43 @@ FSP_PartitionFsMemory:
 	ldr	ip, [r4, #72]	@ prephitmp.2223, <variable>.stInstCfg.s32DecFsHeight
 	mul	r8, r7, ip	@ prephitmp.2224, prephitmp.2077, prephitmp.2223
 .L656:
-	ldr	r2, [r1, #140]	@ D.38926, <variable>.stChanCfg.s32MaxWidth
-	ldr	r3, [r1, #144]	@ D.38927, <variable>.stChanCfg.s32MaxHeight
-	mul	r0, r2, r3	@ tmp250, D.38926, D.38927
+	ldr	r2, [r1, #144]	@ D.38930, <variable>.stChanCfg.s32MaxWidth
+	ldr	r3, [r1, #148]	@ D.38931, <variable>.stChanCfg.s32MaxHeight
+	mul	r0, r2, r3	@ tmp250, D.38930, D.38931
 	cmp	r0, r8	@ tmp250, prephitmp.2224
 	blt	.L721	@,
-	ldr	r3, [r4, #88]	@ D.38937, <variable>.stInstCfg.s32DispFsHeight
-	cmp	r3, #0	@ D.38937,
+	ldr	r3, [r4, #88]	@ D.38941, <variable>.stInstCfg.s32DispFsHeight
+	cmp	r3, #0	@ D.38941,
 	bne	.L662	@,
 	ldrb	r0, [r4, #56]	@ zero_extendqisi2	@, <variable>.stInstCfg.s32DispLoopEnable
 	str	r0, [fp, #-1000]	@, %sfp
 .L663:
-	ldr	r8, [r1, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
-	ldrb	sl, [r4, #61]	@ zero_extendqisi2	@ D.38944, <variable>.stInstCfg.s32ExpectedDecFsNum
+	ldr	r8, [r1, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldrb	sl, [r4, #61]	@ zero_extendqisi2	@ D.38948, <variable>.stInstCfg.s32ExpectedDecFsNum
 	cmp	r8, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	beq	.L722	@,
 .L665:
-	movw	r8, #:lower16:249260	@ tmp265,
-	movt	r8, #:upper16:249260	@ tmp265,
-	sxtb	sl, sl	@ D.38945, D.38944
-	movw	r7, #:lower16:249280	@ tmp267,
+	movw	r8, #:lower16:249276	@ tmp265,
+	movt	r8, #:upper16:249276	@ tmp265,
+	sxtb	sl, sl	@ D.38949, D.38948
+	movw	r7, #:lower16:249296	@ tmp267,
 	ldr	lr, [r1, r8]	@ <variable>.s32RefNum, <variable>.s32RefNum
-	movt	r7, #:upper16:249280	@ tmp267,
+	movt	r7, #:upper16:249296	@ tmp267,
 	movw	ip, #:lower16:g_vdm_hal_fun_ptr	@ tmp275,
 	movt	ip, #:upper16:g_vdm_hal_fun_ptr	@ tmp275,
-	cmp	sl, lr	@ D.38945, <variable>.s32RefNum
+	cmp	sl, lr	@ D.38949, <variable>.s32RefNum
 	movne	r2, #1	@ tmp268,
 	moveq	r2, #0	@ tmp270,
 	str	r2, [r1, r7]	@ tmp270, <variable>.s32RefNumChanged
-	movw	r2, #:lower16:249260	@ tmp273,
+	movw	r2, #:lower16:249276	@ tmp273,
 	ldr	r0, [r6, r5, asl #2]	@ tmp272, s_pstVfmwChan
-	movt	r2, #:upper16:249260	@ tmp273,
+	movt	r2, #:upper16:249276	@ tmp273,
 	ldrsb	r3, [r4, #61]	@ <variable>.stInstCfg.s32ExpectedDecFsNum, <variable>.stInstCfg.s32ExpectedDecFsNum
 	movw	r7, #:lower16:s_pstVfmwChan	@ tmp271,
 	movt	r7, #:upper16:s_pstVfmwChan	@ tmp271,
 	str	r3, [r0, r2]	@ <variable>.stInstCfg.s32ExpectedDecFsNum, <variable>.s32RefNum
-	ldr	r8, [ip, #48]	@ D.38962, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
-	cmp	r8, #0	@ D.38962,
+	ldr	r8, [ip, #48]	@ D.38966, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	r8, #0	@ D.38966,
 	beq	.L669	@,
 	ldrsb	ip, [r4, #64]	@ <variable>.stInstCfg.s32ExpectedPmvNum, <variable>.stInstCfg.s32ExpectedPmvNum
 	mov	lr, #40	@ tmp279,
@@ -4444,7 +4444,7 @@ FSP_PartitionFsMemory:
 	str	ip, [sp, #16]	@ tmp282,
 	str	r5, [sp, #12]	@ InstID,
 	str	lr, [sp, #8]	@ <variable>.stInstCfg.s32UserDec,
-	blx	r8	@ D.38962
+	blx	r8	@ D.38966
 	cmp	r0, #2	@ Ret,
 	mov	r8, r0	@ Ret,
 	bne	.L723	@,
@@ -4452,31 +4452,31 @@ FSP_PartitionFsMemory:
 	mov	r1, #1	@ tmp293,
 	strb	ip, [r4, #9]	@ MemArrange.ValidFrameNum, <variable>.s8TotalValidFsNum
 	ldr	r3, [r7, r5, asl #2]	@ tmp292, s_pstVfmwChan
-	str	r1, [r3, #1456]	@ tmp293, <variable>.stSynExtraData.s32WaitFsFlag
+	str	r1, [r3, #1464]	@ tmp293, <variable>.stSynExtraData.s32WaitFsFlag
 .L652:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L662:
-	ldr	r2, [r4, #84]	@ D.38939, <variable>.stInstCfg.s32DispFsWidth
-	cmp	r2, #0	@ D.38939,
+	ldr	r2, [r4, #84]	@ D.38943, <variable>.stInstCfg.s32DispFsWidth
+	cmp	r2, #0	@ D.38943,
 	bne	.L664	@,
 	ldrb	r2, [r4, #56]	@ zero_extendqisi2	@, <variable>.stInstCfg.s32DispLoopEnable
 	str	r2, [fp, #-1000]	@, %sfp
-	ldr	r8, [r1, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
-	ldrb	sl, [r4, #61]	@ zero_extendqisi2	@ D.38944, <variable>.stInstCfg.s32ExpectedDecFsNum
+	ldr	r8, [r1, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldrb	sl, [r4, #61]	@ zero_extendqisi2	@ D.38948, <variable>.stInstCfg.s32ExpectedDecFsNum
 	cmp	r8, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	bne	.L665	@,
 .L722:
-	movw	r3, #:lower16:249248	@ tmp257,
-	movt	r3, #:upper16:249248	@ tmp257,
-	ldr	r2, [r1, r3]	@ D.38953, <variable>.FspInst.eFspPartitionState
-	cmp	r2, #0	@ D.38953,
-	cmpne	r2, #2	@, D.38953,
+	movw	r3, #:lower16:249264	@ tmp257,
+	movt	r3, #:upper16:249264	@ tmp257,
+	ldr	r2, [r1, r3]	@ D.38957, <variable>.FspInst.eFspPartitionState
+	cmp	r2, #0	@ D.38957,
+	cmpne	r2, #2	@, D.38957,
 	movne	r8, #0	@, tmp264
 	moveq	r8, #1	@, tmp264
 	beq	.L665	@,
-	cmp	r2, #1	@ D.38953,
-	moveq	r0, r8	@ D.38895, tmp264
+	cmp	r2, #1	@ D.38957,
+	moveq	r0, r8	@ D.38899, tmp264
 	beq	.L652	@,
 	strb	r8, [r4, #9]	@ tmp264, <variable>.s8TotalValidFsNum
 	mov	r0, #31	@,
@@ -4485,7 +4485,7 @@ FSP_PartitionFsMemory:
 	movt	r1, #:upper16:.LC59	@,
 	ldr	r2, [r2, r3]	@, <variable>.FspInst.eFspPartitionState
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L720:
 	mov	r0, r5	@, InstID
@@ -4511,19 +4511,19 @@ FSP_PartitionFsMemory:
 	mov	r2, r8	@, Ret
 	movw	r1, #:lower16:.LC61	@,
 	movt	r1, #:upper16:.LC61	@,
-	str	lr, [ip, #1456]	@ tmp324, <variable>.stSynExtraData.s32WaitFsFlag
+	str	lr, [ip, #1464]	@ tmp324, <variable>.stSynExtraData.s32WaitFsFlag
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L664:
 	ldrb	r0, [r4, #56]	@ zero_extendqisi2	@, <variable>.stInstCfg.s32DispLoopEnable
 	cmp	r0, #0	@,
 	str	r0, [fp, #-1000]	@, %sfp
 	beq	.L663	@,
-	cmp	r3, ip	@ D.38937, prephitmp.2223
+	cmp	r3, ip	@ D.38941, prephitmp.2223
 	beq	.L725	@,
 .L661:
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L723:
 	cmp	r0, #0	@ Ret,
@@ -4531,9 +4531,9 @@ FSP_PartitionFsMemory:
 	ldr	r1, [fp, #-444]	@ MemArrange.ValidFrameNum, MemArrange.ValidFrameNum
 	strb	r1, [r4, #9]	@ MemArrange.ValidFrameNum, <variable>.s8TotalValidFsNum
 	ldr	r2, [r7, r5, asl #2]	@ tmp297, s_pstVfmwChan
-	str	r0, [r2, #1456]	@ Ret, <variable>.stSynExtraData.s32WaitFsFlag
+	str	r0, [r2, #1464]	@ Ret, <variable>.stSynExtraData.s32WaitFsFlag
 	ldr	lr, [r7, r5, asl #2]	@ tmp300, s_pstVfmwChan
-	ldr	r0, [lr, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r0, [lr, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r0, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	beq	.L726	@,
 .L674:
@@ -4542,7 +4542,7 @@ FSP_PartitionFsMemory:
 	movt	r1, #:upper16:.LC60	@,
 	sxtb	r3, r0	@ prephitmp.2081,
 	mov	r0, #31	@,
-	add	sl, sl, r3, asl #2	@, MinFsNum, D.38945, prephitmp.2081,
+	add	sl, sl, r3, asl #2	@, MinFsNum, D.38949, prephitmp.2081,
 	bl	dprint_vfmw	@
 	ldr	ip, [fp, #-444]	@ temp.2246, MemArrange.ValidFrameNum
 	cmp	sl, ip	@ MinFsNum, temp.2246
@@ -4557,7 +4557,7 @@ FSP_PartitionFsMemory:
 	cmp	r7, #0	@ <variable>.s8LowBufEnable,
 	beq	.L682	@,
 	ldr	r8, [r6, r5, asl #2]	@ tmp337, s_pstVfmwChan
-	ldr	r5, [r8, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r5, [r8, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r5, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	beq	.L682	@,
 	ldrsb	r1, [r4, #61]	@ <variable>.stInstCfg.s32ExpectedDecFsNum, <variable>.stInstCfg.s32ExpectedDecFsNum
@@ -4572,7 +4572,7 @@ FSP_PartitionFsMemory:
 	ldrb	sl, [r4, #61]	@ zero_extendqisi2	@ prephitmp.2227, <variable>.stInstCfg.s32ExpectedDecFsNum
 	strb	sl, [r4, #10]	@ prephitmp.2227, <variable>.s32DecFsNum
 .L683:
-	add	lr, r4, #34816	@, D.38897,
+	add	lr, r4, #34816	@, D.38901,
 	mov	r0, #0	@ ivtmp.2182,
 	add	r9, lr, #180	@,,
 	str	lr, [fp, #-1000]	@, %sfp
@@ -4623,9 +4623,9 @@ FSP_PartitionFsMemory:
 	beq	.L728	@,
 	ldrb	sl, [r4, #10]	@ zero_extendqisi2	@ prephitmp.2227, <variable>.s32DecFsNum
 .L684:
-	add	r2, r4, r0	@ D.42097, D.38897, ivtmp.2182
+	add	r2, r4, r0	@ D.42101, D.38901, ivtmp.2182
 	sxtb	sl, sl	@ prephitmp.2227, prephitmp.2227
-	add	r3, r2, #34816	@ tmp355, D.42097,
+	add	r3, r2, #34816	@ tmp355, D.42101,
 	cmp	r1, sl	@ i.2244, prephitmp.2227
 	mov	r2, r3	@ tmp397, tmp355
 	blt	.L729	@,
@@ -4706,7 +4706,7 @@ FSP_PartitionFsMemory:
 	strb	r3, [r4, #11]	@ <variable>.stInstCfg.s32DispLoopEnable, <variable>.s32DispFsNum
 .L690:
 	ldr	r7, [fp, #-1000]	@, %sfp
-	add	r9, r4, #38656	@ tmp471, D.38897,
+	add	r9, r4, #38656	@ tmp471, D.38901,
 	mov	ip, #0	@ ivtmp.2140,
 	add	sl, r9, #176	@ ivtmp.2146, tmp471,
 	add	r8, r7, #184	@ ivtmp.2150,,
@@ -4763,9 +4763,9 @@ FSP_PartitionFsMemory:
 	str	r1, [fp, #-1016]	@, %sfp
 .L689:
 	ldr	r9, [fp, #-1016]	@, %sfp
-	add	r2, r4, ip	@ D.42005, D.38897, ivtmp.2140
-	add	r1, r2, #38656	@ tmp506, D.42005,
-	add	lr, r2, #34816	@, D.42005,
+	add	r2, r4, ip	@ D.42009, D.38901, ivtmp.2140
+	add	r1, r2, #38656	@ tmp506, D.42009,
+	add	lr, r2, #34816	@, D.42009,
 	cmp	r3, r9	@ i,
 	str	lr, [fp, #-1000]	@, %sfp
 	str	lr, [fp, #-1004]	@, %sfp
@@ -4804,7 +4804,7 @@ FSP_PartitionFsMemory:
 	b	.L692	@
 .L730:
 	ldr	r3, [fp, #-56]	@ MemArrange.ValidPMVNum, MemArrange.ValidPMVNum
-	add	r0, r4, #42752	@ ivtmp.2120, D.38897,
+	add	r0, r4, #42752	@ ivtmp.2120, D.38901,
 	add	r1, r0, #24	@ ivtmp.2120, ivtmp.2120,
 	mov	ip, #0	@ tmp645,
 	cmp	r3, #20	@ MemArrange.ValidPMVNum,
@@ -4818,7 +4818,7 @@ FSP_PartitionFsMemory:
 	strb	ip, [r4, #14]	@ tmp645, <variable>.IsPmvInUse
 	str	r2, [r1, #0]	@ tmp670, <variable>.PmvAddr
 	add	r1, r1, #4	@ ivtmp.2120, ivtmp.2120,
-	add	r2, r4, r3	@ ivtmp.2126, D.38897,
+	add	r2, r4, r3	@ ivtmp.2126, D.38901,
 	ldrb	r5, [r4, #13]	@ zero_extendqisi2	@ prephitmp.2308, <variable>.s32PmvNum
 	b	.L697	@
 .L732:
@@ -4912,7 +4912,7 @@ FSP_PartitionFsMemory:
 	str	r2, [r4, #52]	@ tmp631, <variable>.stPreInfo.s32PreDecSlotLen
 .L699:
 	ldr	r3, [fp, #-988]	@ MemArrange.TotalMemUsed, MemArrange.TotalMemUsed
-	mov	r0, #0	@ D.38895,
+	mov	r0, #0	@ D.38899,
 	ldr	r1, [fp, #-1008]	@, %sfp
 	str	r3, [r1, #0]	@ MemArrange.TotalMemUsed,
 	b	.L652	@
@@ -4935,7 +4935,7 @@ FSP_PartitionFsMemory:
 	movt	r1, #:upper16:.LC62	@,
 	str	ip, [sp, #0]	@ <variable>.stInstCfg.s32ExpectedDispFsNum,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L724:
 	rsb	r2, r0, r0, asl #3	@, tmp216, eChanCapLevel, eChanCapLevel,
@@ -4972,36 +4972,36 @@ FSP_PartitionFsMemory:
 .L726:
 	bl	OSAL_GetTimeInMs	@
 	ldr	ip, [r7, r5, asl #2]	@ temp.2239, s_pstVfmwChan
-	movw	r3, #:lower16:251516	@ tmp304,
-	movt	r3, #:upper16:251516	@ tmp304,
-	movw	r1, #:lower16:251536	@ tmp303,
-	movt	r1, #:upper16:251536	@ tmp303,
+	movw	r3, #:lower16:251532	@ tmp304,
+	movt	r3, #:upper16:251532	@ tmp304,
+	movw	r1, #:lower16:251552	@ tmp303,
+	movt	r1, #:upper16:251552	@ tmp303,
 	ldr	lr, [ip, r3]	@ <variable>.stDynamicFSTimestamp.u32StartTime, <variable>.stDynamicFSTimestamp.u32StartTime
-	movw	r2, #:lower16:251520	@ tmp308,
-	movt	r2, #:upper16:251520	@ tmp308,
+	movw	r2, #:lower16:251536	@ tmp308,
+	movt	r2, #:upper16:251536	@ tmp308,
 	rsb	r0, lr, r0	@ tmp306, <variable>.stDynamicFSTimestamp.u32StartTime,
 	str	r0, [ip, r1]	@ tmp306, <variable>.stDynamicFSTimestamp.u32AllTime
 	ldr	r1, [r7, r5, asl #2]	@ temp.2240, s_pstVfmwChan
-	movw	lr, #:lower16:251528	@ tmp310,
-	movt	lr, #:upper16:251528	@ tmp310,
-	ldr	ip, [r1, r2]	@ D.38986, <variable>.stDynamicFSTimestamp.u32PreEndTime
-	movw	r2, #:lower16:251524	@ tmp312,
+	movw	lr, #:lower16:251544	@ tmp310,
+	movt	lr, #:upper16:251544	@ tmp310,
+	ldr	ip, [r1, r2]	@ D.38990, <variable>.stDynamicFSTimestamp.u32PreEndTime
+	movw	r2, #:lower16:251540	@ tmp312,
 	ldr	r3, [r1, r3]	@ temp.2241, <variable>.stDynamicFSTimestamp.u32StartTime
-	movt	r2, #:upper16:251524	@ tmp312,
-	cmp	ip, r3	@ D.38986, temp.2241
-	rsbcs	r8, r3, ip	@ iftmp.476, temp.2241, D.38986
+	movt	r2, #:upper16:251540	@ tmp312,
+	cmp	ip, r3	@ D.38990, temp.2241
+	rsbcs	r8, r3, ip	@ iftmp.476, temp.2241, D.38990
 	str	r8, [r1, lr]	@ iftmp.476, <variable>.stDynamicFSTimestamp.u32PreAllocTime
 	ldr	r1, [r6, r5, asl #2]	@ temp.2242, s_pstVfmwChan
-	movw	ip, #:lower16:251516	@ tmp313,
-	movt	ip, #:upper16:251516	@ tmp313,
-	ldr	lr, [r1, r2]	@ D.38991, <variable>.stDynamicFSTimestamp.u32MMZEndTime
-	movw	r2, #:lower16:251536	@ tmp317,
+	movw	ip, #:lower16:251532	@ tmp313,
+	movt	ip, #:upper16:251532	@ tmp313,
+	ldr	lr, [r1, r2]	@ D.38995, <variable>.stDynamicFSTimestamp.u32MMZEndTime
+	movw	r2, #:lower16:251552	@ tmp317,
 	ldr	r3, [r1, ip]	@ temp.2243, <variable>.stDynamicFSTimestamp.u32StartTime
-	movw	ip, #:lower16:251532	@ tmp314,
-	movt	ip, #:upper16:251532	@ tmp314,
-	movt	r2, #:upper16:251536	@ tmp317,
-	cmp	lr, r3	@ D.38991, temp.2243
-	rsbcs	r0, r3, lr	@ iftmp.477, temp.2243, D.38991
+	movw	ip, #:lower16:251548	@ tmp314,
+	movt	ip, #:upper16:251548	@ tmp314,
+	movt	r2, #:upper16:251552	@ tmp317,
+	cmp	lr, r3	@ D.38995, temp.2243
+	rsbcs	r0, r3, lr	@ iftmp.477, temp.2243, D.38995
 	movw	r3, #:lower16:g_u32DFSMaxAllocTime	@ tmp318,
 	movcc	r0, #0	@ iftmp.477,
 	str	r0, [r1, ip]	@ iftmp.477, <variable>.stDynamicFSTimestamp.u32MMZAllocTime
@@ -5022,7 +5022,7 @@ FSP_PartitionFsMemory:
 	bl	dprint_vfmw	@
 .L659:
 	mov	r3, #0	@ tmp248,
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	strb	r3, [r4, #9]	@ tmp248, <variable>.s8TotalValidFsNum
 	b	.L652	@
 .L718:
@@ -5033,7 +5033,7 @@ FSP_PartitionFsMemory:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L721:
 	mov	r0, #0	@,
@@ -5055,7 +5055,7 @@ FSP_PartitionFsMemory:
 	sub	r2, fp, #52	@,,
 	add	r3, lr, #8	@,,
 	blx	ip	@ g_event_report.474
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L658:
 	mov	r2, #7	@ tmp243,
@@ -5086,22 +5086,22 @@ FSP_PartitionFsMemory:
 	movt	r1, #:upper16:.LC63	@,
 	str	ip, [sp, #0]	@ temp.2246,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L719:
-	mov	r0, r4	@, D.38897
+	mov	r0, r4	@, D.38901
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #666	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 .L725:
-	cmp	r7, r2	@ prephitmp.2077, D.38939
+	cmp	r7, r2	@ prephitmp.2077, D.38943
 	beq	.L663	@,
-	mvn	r0, #0	@ D.38895,
+	mvn	r0, #0	@ D.38899,
 	b	.L652	@
 	.fnend
 	.size	FSP_PartitionFsMemory, .-FSP_PartitionFsMemory
@@ -5130,9 +5130,9 @@ FSP_ClearNotInVoQueue:
 	beq	.L747	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp146,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp146,
-	ldr	sl, [r3, r0, asl #2]	@ D.38828, s_pFspInst
-	cmp	sl, #0	@ D.38828,
-	movne	r6, sl	@ ivtmp.2361, D.38828
+	ldr	sl, [r3, r0, asl #2]	@ D.38832, s_pFspInst
+	cmp	sl, #0	@ D.38832,
+	movne	r6, sl	@ ivtmp.2361, D.38832
 	movne	r4, #0	@ i,
 	bne	.L739	@,
 	b	.L751	@
@@ -5142,7 +5142,7 @@ FSP_ClearNotInVoQueue:
 	ldr	r1, [r7, #300]	@, <variable>.stDispImg.image_id
 	mov	r2, #0	@,
 	bl	FSP_SetRef	@
-	add	r2, sl, r6, asl #5	@, tmp168, D.38828, tmp166,
+	add	r2, sl, r6, asl #5	@, tmp168, D.38832, tmp166,
 	mov	r0, r9	@, pstVoQue
 	add	r1, r2, #104	@, tmp168,
 	bl	IsImageInVoQueue	@
@@ -5160,7 +5160,7 @@ FSP_ClearNotInVoQueue:
 	mov	r0, r8	@, InstID
 	add	r7, r6, #544	@ tmp161, ivtmp.2361,
 	bl	FSP_SetRef	@
-	add	r1, sl, r4, asl #5	@, tmp155, D.38828, tmp153,
+	add	r1, sl, r4, asl #5	@, tmp155, D.38832, tmp153,
 	mov	r0, r9	@, pstVoQue
 	add	r1, r1, #104	@, tmp155,
 	bl	IsImageInVoQueue	@
@@ -5181,7 +5181,7 @@ FSP_ClearNotInVoQueue:
 	add	r6, r7, #544	@ ivtmp.2361, tmp161,
 	bne	.L739	@,
 .L750:
-	mov	r0, #0	@ D.38824,
+	mov	r0, #0	@ D.38828,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L746:
 	mov	r0, #0	@,
@@ -5191,17 +5191,17 @@ FSP_ClearNotInVoQueue:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38824,
+	mvn	r0, #0	@ D.38828,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L751:
-	mov	r0, sl	@, D.38828
+	mov	r0, sl	@, D.38832
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #562	@,
 	movt	r1, #:upper16:.LC0	@,
 	movw	r3, #:lower16:.LC2	@,
 	movt	r3, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38824,
+	mvn	r0, #0	@ D.38828,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L747:
 	mov	r0, r1	@, pstVoQue
@@ -5211,7 +5211,7 @@ FSP_ClearNotInVoQueue:
 	movt	r1, #:upper16:.LC0	@,
 	movt	r3, #:upper16:.LC64	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38824,
+	mvn	r0, #0	@ D.38828,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	.fnend
 	.size	FSP_ClearNotInVoQueue, .-FSP_ClearNotInVoQueue
@@ -5221,9 +5221,9 @@ FSP_ClearNotInVoQueue:
 	.section	.rodata
 	.align	2
 .LANCHOR2 = . + 0
-	.type	__func__.39297, %object
-	.size	__func__.39297, 15
-__func__.39297:
+	.type	__func__.39301, %object
+	.size	__func__.39301, 15
+__func__.39301:
 	.ascii	"FSP_NewLogicFs\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

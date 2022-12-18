@@ -256,6 +256,11 @@ do {                                                                            
         _pu8Tmp = (HI_U8 *)malloc(_pstMeta->u32BuffLen + _s32ValLen + _s32KeyLen + 2 + HI_META_MAX_BUF_LEN);    \
         if (NULL == _pu8Tmp)                                                    \
         {                                                                       \
+            if (NULL != _pstMeta->pstKvp)                                       \
+            {                                                                   \
+                free(_pstMeta->pstKvp);                                         \
+                _pstMeta->pstKvp = NULL;                                        \
+            }                                                                   \
             _ret = HI_FAILURE;                                                  \
             break;                                                              \
         }                                                                       \
@@ -267,7 +272,11 @@ do {                                                                            
             if (_pstMeta->pstKvp[i].eValueType >= HI_SVR_PLAYER_VALUE_U8P)      \
                 _pstMeta->pstKvp[i].unValue.pu8Value = _pu8Tmp + (_pstMeta->pstKvp[i].unValue.pu8Value - _pstMeta->pu8Buff);\
         }                                                                       \
-        free(_pstMeta->pu8Buff);                                                \
+        if (NULL != _pstMeta->pu8Buff)                                          \
+        {                                                                       \
+            free(_pstMeta->pu8Buff);                                            \
+            _pstMeta->pu8Buff = NULL;                                           \
+        }                                                                       \
         _pstMeta->pu8Buff = _pu8Tmp;                                            \
         _pstMeta->u32BuffLen = _pstMeta->u32BuffLen + _s32ValLen + _s32KeyLen + 2 + HI_META_MAX_BUF_LEN; \
     }                                                                           \

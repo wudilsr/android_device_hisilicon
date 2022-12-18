@@ -21,7 +21,7 @@
 #ott stands for OTT or the China Mobile provincial procurement mode.
 #dvb stands for dvb version.
 #Please modify here before compilation
-PRODUCT_TARGET := ott
+PRODUCT_TARGET := telecom
 
 #Setup SecurityL1
 HISILICON_SECURITY_L1 := false
@@ -36,9 +36,17 @@ HISILICON_SECURITY_L3 := false
 #Quick Boot Support
 BOARD_QBSUPPORT := false
 
+# Whether fastplay should be played completely or not: true or false
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.fastplay.fullyplay=false
+
 #enable wallpaper or not in 512M
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.low_ram.wp.enable=false
+
+# Whether bootanimation should be played or not: true or false
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.bootanim.enable=true
 
 #set video output rate for telecom and unicom, defalt 4:3
 ifeq ($(strip $(PRODUCT_TARGET)),telecom)
@@ -98,3 +106,12 @@ endif
 # persist.sys.optimalfmt.perfer is valid only if persist.sys.optimalfmt.enable=1
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.optimalfmt.perfer=native
+
+# Preferential hiplayer cache setting
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.player.cache.type=time \
+    persist.sys.player.cache.low=500 \
+    persist.sys.player.cache.high=12000 \
+    persist.sys.player.cache.total=20000 \
+    persist.sys.player.bufmaxsize=80
+

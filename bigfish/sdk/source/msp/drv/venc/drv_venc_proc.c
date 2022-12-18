@@ -441,7 +441,7 @@ static HI_S32 VENC_DRV_ProcRead(struct seq_file *p, HI_VOID *v)
                     "priority                      :%u\n"
                     "QuickEncode                   :%s\n"
                     "DriftRateThr                  :%s\n"
-                    "Split                         :Enable(%s)	Size(%u byte)\n"
+                    "Split                         :Enable(%s)	Size(%u)\n"
                     "StreamBufSize                 :%u(KB)\n"
                     "MaxQP/MinQP                   :%s/%s\n"
                     "QLevel                        :%u\n"
@@ -460,7 +460,7 @@ static HI_S32 VENC_DRV_ProcRead(struct seq_file *p, HI_VOID *v)
                     g_stVencChn[u32ChnID].stChnUserCfg.u8Priority,
                     szBoolTab[g_stVencChn[u32ChnID].stChnUserCfg.bQuickEncode],
                     szRCSkipThr,
-	                szBoolTab[g_stVencChn[u32ChnID].stChnUserCfg.bSlcSplitEn],g_stVencChn[u32ChnID].u32SliceSize ,
+					szBoolTab[g_stVencChn[u32ChnID].stChnUserCfg.bSlcSplitEn],g_stVencChn[u32ChnID].u32SliceSize*16,
 	                g_stVencChn[u32ChnID].stChnUserCfg.u32StrmBufSize / 1000U,
 	                szMaxMinQP[0],szMaxMinQP[1],
                     g_stVencChn[u32ChnID].stChnUserCfg.u32Qlevel,

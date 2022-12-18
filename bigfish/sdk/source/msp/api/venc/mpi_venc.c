@@ -302,6 +302,7 @@ static HI_S32 MpiVencChechConfig(const HI_UNF_VENC_CHN_ATTR_S* pstAttr)
         }
     }
 
+#if 0
 #if 1
     if (pstAttr->bSlcSplitEn)
     {
@@ -320,6 +321,7 @@ static HI_S32 MpiVencChechConfig(const HI_UNF_VENC_CHN_ATTR_S* pstAttr)
             return HI_ERR_VENC_INVALID_PARA;
         }
     }	
+#endif
 #endif
     return HI_SUCCESS;
 }

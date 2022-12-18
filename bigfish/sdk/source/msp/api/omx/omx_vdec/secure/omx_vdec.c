@@ -22,6 +22,9 @@
 #include "omx_vdec.h"
 #include "omx_codec_type.h"
 #include "omx_dbg.h"
+#include "hi_common.h"
+#include "hi_drv_stat.h"
+#include "hi_mpi_stat.h"
 
 #ifdef HI_TVP_SUPPORT
 #include "sec_mmz.h"
@@ -1123,6 +1126,7 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message
 
 	OMX_PORT_PRIVATE *port_priv = NULL;
 	OMX_BUFFERHEADERTYPE *pomx_buf = NULL;
+    HI_LD_Event_S LdEvent;
     
 	if (!pcom_priv || !message)
 	{
@@ -1264,6 +1268,11 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message
             
             //DEBUG_PRINT_STREAM("[FBD] post ||| phyaddr = %x, useraddr = %p, data_len = %ld\n", puser_buf->phyaddr, pomx_buf->pBuffer, pomx_buf->nFilledLen);
             
+            LdEvent.evt_id = EVENT_AVPLAY_FRM_IN;
+            LdEvent.frame = puser_buf->u32FrameIndex;
+            LdEvent.handle = puser_buf->hTunnelSrc;
+            (HI_VOID)HI_SYS_GetTimeStampMs(&(LdEvent.time));
+            (HI_VOID)HI_MPI_STAT_NotifyLowDelayEvent(&LdEvent);
 			post_event(pcom_priv, (OMX_U32)pomx_buf, VDEC_S_SUCCESS, OMX_GENERATE_FBD);
 
             if (pomx_buf->nFlags & OMX_BUFFERFLAG_EOS)

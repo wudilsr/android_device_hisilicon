@@ -2402,6 +2402,7 @@ static void hdmi_ProcEvent(HI_UNF_HDMI_EVENT_TYPE_E event,HI_U32 procID)
     */
     Check1stOE(HI_UNF_HDMI_ID_0);
 
+    SI_CheckClockStable();
     if(procID >= MAX_PROCESS_NUM)
     {
         COM_ERR("Invalid procID:%d in hdmi_ProcEvent\n",procID);

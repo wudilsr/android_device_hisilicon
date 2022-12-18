@@ -285,9 +285,9 @@ HI_U32 TrackGetMultiPcmSampleRate(HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
 
     switch (pstAOFrame->u32SampleRate)
     {
-        case HI_UNF_SAMPLE_RATE_32K:
-        case HI_UNF_SAMPLE_RATE_44K:
-        case HI_UNF_SAMPLE_RATE_48K:
+       // case HI_UNF_SAMPLE_RATE_32K:
+       // case HI_UNF_SAMPLE_RATE_44K:
+       // case HI_UNF_SAMPLE_RATE_48K:
         case HI_UNF_SAMPLE_RATE_88K:
         case HI_UNF_SAMPLE_RATE_96K:
         case HI_UNF_SAMPLE_RATE_176K:

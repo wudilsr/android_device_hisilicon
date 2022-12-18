@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2015 ARM Limited. All rights reserved.
+ * Copyright (C) 2012-2014 ARM Limited. All rights reserved.
  * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
@@ -131,7 +131,6 @@ static void mali_executor_wq_schedule(void *arg);
 static void mali_executor_send_gp_oom_to_user(struct mali_gp_job *job);
 static void mali_executor_complete_group(struct mali_group *group,
 		mali_bool success,
-		mali_bool release_jobs,
 		struct mali_gp_job **gp_job_done,
 		struct mali_pp_job **pp_job_done);
 static void mali_executor_change_state_pp_physical(struct mali_group *group,
@@ -446,8 +445,7 @@ void mali_executor_zap_all_active(struct mali_session_data *session)
 	if (MALI_FALSE == ret) {
 		struct mali_gp_job *gp_job = NULL;
 
-		mali_executor_complete_group(gp_group, MALI_FALSE,
-					     MALI_TRUE, &gp_job, NULL);
+		mali_executor_complete_group(gp_group, MALI_FALSE, &gp_job, NULL);
 
 		MALI_DEBUG_ASSERT_POINTER(gp_job);
 
@@ -461,8 +459,7 @@ void mali_executor_zap_all_active(struct mali_session_data *session)
 		if (MALI_FALSE == ret) {
 			struct mali_pp_job *pp_job = NULL;
 
-			mali_executor_complete_group(virtual_group, MALI_FALSE,
-						     MALI_TRUE, NULL, &pp_job);
+			mali_executor_complete_group(virtual_group, MALI_FALSE, NULL, &pp_job);
 
 			if (NULL != pp_job) {
 				/* PP job completed, make sure it is freed */
@@ -480,8 +477,7 @@ void mali_executor_zap_all_active(struct mali_session_data *session)
 			if (MALI_FALSE == ret) {
 				struct mali_pp_job *pp_job = NULL;
 
-				mali_executor_complete_group(group, MALI_FALSE,
-							     MALI_TRUE, NULL, &pp_job);
+				mali_executor_complete_group(group, MALI_FALSE, NULL, &pp_job);
 
 				if (NULL != pp_job) {
 					/* PP job completed, free it */
@@ -619,8 +615,7 @@ _mali_osk_errcode_t mali_executor_interrupt_gp(struct mali_group *group,
 		success = (int_result != MALI_INTERRUPT_RESULT_ERROR) ?
 			  MALI_TRUE : MALI_FALSE;
 
-		mali_executor_complete_group(group, success,
-					     MALI_TRUE, &job, NULL);
+		mali_executor_complete_group(group, success, &job, NULL);
 
 		mali_executor_unlock();
 
@@ -720,8 +715,7 @@ _mali_osk_errcode_t mali_executor_interrupt_pp(struct mali_group *group,
 		success = (int_result == MALI_INTERRUPT_RESULT_SUCCESS) ?
 			  MALI_TRUE : MALI_FALSE;
 
-		mali_executor_complete_group(group, success,
-					     MALI_TRUE, NULL, &job);
+		mali_executor_complete_group(group, success, NULL, &job);
 
 		mali_executor_unlock();
 
@@ -805,8 +799,7 @@ _mali_osk_errcode_t mali_executor_interrupt_mmu(struct mali_group *group,
 				     mali_mmu_get_rawstat(group->mmu), status));
 #endif
 
-		mali_executor_complete_group(group, MALI_FALSE,
-					     MALI_TRUE, &gp_job, &pp_job);
+		mali_executor_complete_group(group, MALI_FALSE, &gp_job, &pp_job);
 
 		mali_executor_unlock();
 
@@ -938,20 +931,11 @@ void mali_executor_group_power_down(struct mali_group *groups[],
 	MALI_DEBUG_PRINT(3, ("Executor: powering down %u groups\n", num_groups));
 
 	for (i = 0; i < num_groups; i++) {
-		/* Groups must be either disabled or inactive. while for virtual group,
-		 * it maybe in empty state, because when we meet pm_runtime_suspend,
-		 * virtual group could be powered off, and before we acquire mali_executor_lock,
-		 * we must release mali_pm_state_lock, if there is a new physical job was queued,
-		 * all of physical groups in virtual group could be pulled out, so we only can
-		 * powered down an empty virtual group. Those physical groups will be powered
-		 * up in following pm_runtime_resume callback function.
-		 */
+		/* Groups must be either disabled or inactive */
 		MALI_DEBUG_ASSERT(mali_executor_group_is_in_state(groups[i],
 				  EXEC_STATE_DISABLED) ||
 				  mali_executor_group_is_in_state(groups[i],
-						  EXEC_STATE_INACTIVE) ||
-				  mali_executor_group_is_in_state(groups[i],
-						  EXEC_STATE_EMPTY));
+						  EXEC_STATE_INACTIVE));
 
 		MALI_DEBUG_PRINT(3, ("Executor: powering down group %s\n",
 				     mali_group_core_description(groups[i])));
@@ -982,8 +966,7 @@ void mali_executor_abort_session(struct mali_session_data *session)
 		if (EXEC_STATE_WORKING == gp_group_state) {
 			struct mali_gp_job *gp_job = NULL;
 
-			mali_executor_complete_group(gp_group, MALI_FALSE,
-						     MALI_TRUE, &gp_job, NULL);
+			mali_executor_complete_group(gp_group, MALI_FALSE, &gp_job, NULL);
 
 			MALI_DEBUG_ASSERT_POINTER(gp_job);
 
@@ -1001,8 +984,7 @@ void mali_executor_abort_session(struct mali_session_data *session)
 		    && mali_group_get_session(virtual_group) == session) {
 			struct mali_pp_job *pp_job = NULL;
 
-			mali_executor_complete_group(virtual_group, MALI_FALSE,
-						     MALI_TRUE, NULL, &pp_job);
+			mali_executor_complete_group(virtual_group, MALI_FALSE, NULL, &pp_job);
 
 			if (NULL != pp_job) {
 				/* PP job completed, make sure it is freed */
@@ -1017,8 +999,7 @@ void mali_executor_abort_session(struct mali_session_data *session)
 		if (mali_group_get_session(group) == session) {
 			struct mali_pp_job *pp_job = NULL;
 
-			mali_executor_complete_group(group, MALI_FALSE,
-						     MALI_TRUE, NULL, &pp_job);
+			mali_executor_complete_group(group, MALI_FALSE, NULL, &pp_job);
 
 			if (NULL != pp_job) {
 				/* PP job completed, make sure it is freed */
@@ -1327,8 +1308,7 @@ _mali_osk_errcode_t _mali_ukk_gp_suspend_response(_mali_uk_gp_suspend_response_s
 		/* Correct job is still running */
 		struct mali_gp_job *job_done = NULL;
 
-		mali_executor_complete_group(gp_group, MALI_FALSE,
-					     MALI_TRUE, &job_done, NULL);
+		mali_executor_complete_group(gp_group, MALI_FALSE, &job_done, NULL);
 
 		/* The same job should have completed */
 		MALI_DEBUG_ASSERT(job_done == job);
@@ -1408,6 +1388,7 @@ static mali_bool mali_executor_physical_rejoin_virtual(struct mali_group *group)
 	MALI_DEBUG_ASSERT(MALI_FALSE == mali_group_is_virtual(group));
 
 	/* Make sure group and virtual group have same status */
+
 	if (MALI_GROUP_STATE_INACTIVE == mali_group_get_state(virtual_group)) {
 		if (mali_group_deactivate(group)) {
 			trigger_pm_update = MALI_TRUE;
@@ -1665,7 +1646,7 @@ static void mali_executor_schedule(void)
 
 				MALI_DEBUG_ASSERT_POINTER(job);
 				MALI_DEBUG_ASSERT(sub_job <= MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS);
-
+				
 				/* Put job + group on list of jobs to start later on */
 
 				groups_to_start[num_jobs_to_start] = group;
@@ -1692,9 +1673,9 @@ static void mali_executor_schedule(void)
 
 	/* 3. Deactivate idle pp group , must put deactive here before active vitual group
 	 *    for cover case first only has physical job in normal queue but group inactive,
-	 *    so delay the job start go to active group, when group activated,
+	 *    so delay the job start go to active group, when group activated, 
 	 *    call scheduler again, but now if we get high queue virtual job,
-	 *    we will do nothing in schedule cause executor schedule stop
+	 *    we will do nothing in schedule cause executor schedule stop 
 	 */
 
 	if (MALI_TRUE == mali_executor_deactivate_list_idle(deactivate_idle_group
@@ -1715,7 +1696,7 @@ static void mali_executor_schedule(void)
 			trigger_pm_update = MALI_TRUE;
 		}
 	}
-
+	
 	/* 5. To power up group asap, we trigger pm update here. */
 
 	if (MALI_TRUE == trigger_pm_update) {
@@ -1816,8 +1797,7 @@ static void mali_executor_send_gp_oom_to_user(struct mali_gp_job *job)
 				       notification);
 }
 static struct mali_gp_job *mali_executor_complete_gp(struct mali_group *group,
-		mali_bool success,
-		mali_bool release_jobs)
+		mali_bool success)
 {
 	struct mali_gp_job *job;
 
@@ -1831,20 +1811,17 @@ static struct mali_gp_job *mali_executor_complete_gp(struct mali_group *group,
 	/* Core is now ready to go into idle list */
 	gp_group_state = EXEC_STATE_IDLE;
 
-	if (release_jobs) {
-		/* This will potentially queue more GP and PP jobs */
-		mali_timeline_tracker_release(&job->tracker);
+	/* This will potentially queue more GP and PP jobs */
+	mali_timeline_tracker_release(&job->tracker);
 
-		/* Signal PP job */
-		mali_gp_job_signal_pp_tracker(job, success);
-	}
+	/* Signal PP job */
+	mali_gp_job_signal_pp_tracker(job, success);
 
 	return job;
 }
 
 static struct mali_pp_job *mali_executor_complete_pp(struct mali_group *group,
-		mali_bool success,
-		mali_bool release_jobs)
+		mali_bool success)
 {
 	struct mali_pp_job *job;
 	u32 sub_job;
@@ -1873,7 +1850,7 @@ static struct mali_pp_job *mali_executor_complete_pp(struct mali_group *group,
 	mali_pp_job_mark_sub_job_completed(job, success);
 	job_is_done = mali_pp_job_is_complete(job);
 
-	if (job_is_done && release_jobs) { 
+	if (job_is_done) {
 		/* This will potentially queue more GP and PP jobs */
 		mali_timeline_tracker_release(&job->tracker);
 	}
@@ -1883,7 +1860,6 @@ static struct mali_pp_job *mali_executor_complete_pp(struct mali_group *group,
 
 static void mali_executor_complete_group(struct mali_group *group,
 		mali_bool success,
-		mali_bool release_jobs,
 		struct mali_gp_job **gp_job_done,
 		struct mali_pp_job **pp_job_done)
 {
@@ -1894,13 +1870,11 @@ static void mali_executor_complete_group(struct mali_group *group,
 	mali_bool pp_job_is_done = MALI_TRUE;
 
 	if (NULL != gp_core) {
-		gp_job = mali_executor_complete_gp(group,
-						   success, release_jobs);
+		gp_job = mali_executor_complete_gp(group, success);
 	} else {
 		MALI_DEBUG_ASSERT_POINTER(pp_core);
 		MALI_IGNORE(pp_core);
-		pp_job = mali_executor_complete_pp(group,
-						   success, release_jobs);
+		pp_job = mali_executor_complete_pp(group, success);
 
 		pp_job_is_done = mali_pp_job_is_complete(pp_job);
 	}
@@ -2294,6 +2268,7 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 {
 	int current_core_scaling_mask[MALI_MAX_NUMBER_OF_DOMAINS] = { 0 };
 	int target_core_scaling_mask[MALI_MAX_NUMBER_OF_DOMAINS] = { 0 };
+	mali_bool update_global_core_scaling_mask = MALI_FALSE;
 	int i;
 
 	MALI_DEBUG_ASSERT(0 < target_core_nr);
@@ -2356,6 +2331,7 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 			struct mali_pm_domain *domain;
 
 			if (num_physical_pp_cores_enabled >= target_core_nr) {
+				update_global_core_scaling_mask = MALI_TRUE;
 				break;
 			}
 
@@ -2385,9 +2361,11 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 	 * Here, we may still have some pp cores not been enabled because of some
 	 * pp cores need to be disabled are still in working state.
 	 */
-	for (i = 0; i < MALI_MAX_NUMBER_OF_DOMAINS; i++) {
-		if (0 < target_core_scaling_mask[i]) {
-			core_scaling_delay_up_mask[i] = target_core_scaling_mask[i];
+	if (update_global_core_scaling_mask) {
+		for (i = 0; i < MALI_MAX_NUMBER_OF_DOMAINS; i++) {
+			if (0 < target_core_scaling_mask[i]) {
+				core_scaling_delay_up_mask[i] = target_core_scaling_mask[i];
+			}
 		}
 	}
 

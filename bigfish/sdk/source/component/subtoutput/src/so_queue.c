@@ -20,6 +20,7 @@
 #include <pthread.h>
 
 #include "linux_list.h"
+#include "hi_debug.h"
 #include "so_queue.h"
 
 typedef struct hiSO_QUEUE_S
@@ -47,7 +48,7 @@ typedef struct hiSO_NODE_S
     do{\
         int ret = pthread_mutex_lock(&pSoQueue->lock);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_lock(QUEUE) failure,ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_lock(QUEUE) failure,ret = 0x%x\n",ret);\
         }\
     }while(0)
 
@@ -55,7 +56,7 @@ typedef struct hiSO_NODE_S
     do{\
         int ret = pthread_mutex_unlock(&pSoQueue->lock);\
         if(ret != 0){\
-            printf("SO call pthread_mutex_unlock(QUEUE) failure,ret = 0x%x\n",ret);\
+            HI_PRINT("SO call pthread_mutex_unlock(QUEUE) failure,ret = 0x%x\n",ret);\
         }\
     }while(0)
 

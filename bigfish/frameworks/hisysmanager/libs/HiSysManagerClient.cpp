@@ -57,6 +57,18 @@ int HiSysManagerClient::reset()
     }
     return ret;
 }
+
+int HiSysManagerClient::updateLogo(String8 path)
+{
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->updateLogo(path);
+    }
+    return ret;
+}
+
 int HiSysManagerClient::enterSmartStandby()
 {
     int ret = -1;

@@ -10,6 +10,7 @@ import com.hisilicon.dlna.dmp.DMPNative;
 import com.hisilicon.dlna.file.DMSDevice;
 import com.hisilicon.dlna.file.DMSFile;
 import com.hisilicon.dlna.file.FileType;
+import com.hisilicon.dlna.util.CommonDef;
 
 /**
  * Get sibling play list from one child file.<br>
@@ -28,6 +29,7 @@ public class FetchPlayListThread extends Thread
     private List<DMSFile> mFileList;
     private EventCallback mEventCallback;
     private boolean mIsInterrupted;
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
 
     /**
      * Event callback of the thread.<br>
@@ -108,6 +110,7 @@ public class FetchPlayListThread extends Thread
         DMPManager dmpManager = new DMPManager(DMPNative.getInstance());
         try
         {
+            CommonDef.setDefaultAdapterName(DEFAULT_USE_ADAPTER_WIFI_ETHERNET);
             dmpManager.create(context);
         }
         catch (Exception e)

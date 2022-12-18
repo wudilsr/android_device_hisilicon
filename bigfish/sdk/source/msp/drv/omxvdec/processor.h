@@ -33,5 +33,7 @@ HI_S32 processor_stop_inst(OMXVDEC_CHAN_CTX *pchan);
 
 HI_S32 processor_reset_inst(OMXVDEC_CHAN_CTX *pchan);
 
+HI_S32 processor_inform_img_ready(OMXVDEC_CHAN_CTX *pchan);
+
 #endif
 

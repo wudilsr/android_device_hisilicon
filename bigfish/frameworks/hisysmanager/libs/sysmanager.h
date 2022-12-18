@@ -6,6 +6,7 @@ __BEGIN_DECLS
 /* sysmanager context struct */
 int do_upgrade(const char* path);
 int do_reset();
+int do_updateLogo(const char* path);
 int do_EnterSmartStandby();
 int do_QuitSmartStandby();
 int do_setFlashInfo(const char* flag,int offset,int offlen,const char* info);

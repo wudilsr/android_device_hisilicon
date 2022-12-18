@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2009-2015 ARM Limited
+ * (C) COPYRIGHT 2009-2014 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -367,6 +367,7 @@ MALI_STATIC_INLINE void _mali_surface_set_event_callback(mali_surface *surf, enu
  */
 void _mali_surface_fprintf(struct mali_surface *surface, const char *filename);
 
+
 /**
  * Dumps the content of a mali_surface to two files. A .hex file containing the actual image data,
  * and a .hex.metadata file containing the constraints and pointer values of the image.
@@ -377,24 +378,6 @@ void _mali_surface_fprintf(struct mali_surface *surface, const char *filename);
  *  Setting this to "foo" will yield one "foo.hex" file and one "foo.metadata" file
  **/
 void _mali_surface_dump(struct mali_surface *surface, const char *filename_prefix);
-
-/**
- * Dumps the content of a mali_surface to four files.
- * _RGB.ppm: RGB image
- * _RGB.metadata: the metadata of RGB image
- * _grey.ppm: grey image
-   _grey.metadata: the metadata of grey image
- *
- * This function is used for debugging purposes only.
- *
- * @param surface The surface to dump
- * @param filename_prefix The name of the file, minus file ending.
- * @param orientation The rotated degree of surface.
- * @return dump mali_surface is sucessfull or fail
- **/
-
-mali_bool _mali_surface_dump_to_visible_image(struct mali_surface *surface, const char *filename_prefix, const u32 orientation);
-
 #endif
 
 #ifdef __cplusplus

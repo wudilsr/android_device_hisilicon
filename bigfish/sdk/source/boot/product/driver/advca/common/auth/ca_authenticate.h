@@ -176,6 +176,10 @@ HI_U32 HI_CA_ImgAuthenticate(HI_U32 StartAddr,HI_U32 length,HI_U8 u8Signature[RS
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
 HI_U32 HI_CA_GetAuthMode(HI_U8* pPartionName);
 
+/*
+    Authenticate non-boot images when enter recovery
+*/
+HI_S32 HI_Android_Auth_Recovery(HI_VOID);
 #endif
 
 /*

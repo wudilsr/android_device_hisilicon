@@ -37,6 +37,11 @@ EXTRA_CFLAGS += -I$(TEE_INCLUDE)                           \
                 -I$(TVP_DIR)/libteec/sec_mmz/inc
 endif
 
+ifeq (y,$(CFG_HI_VDEC_PRE_ALLOC_VDHMMZ_SUPPORT))
+EXTRA_CFLAGS += -DPRE_ALLOC_VDEC_VDH_MMZ=1
+else
+EXTRA_CFLAGS += -DPRE_ALLOC_VDEC_VDH_MMZ=0
+endif
 KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers
 KBUILD_EXTRA_SYMBOLS += $(MSP_DIR)/drv/vfmw/vfmw_v4.0/Module.symvers
 

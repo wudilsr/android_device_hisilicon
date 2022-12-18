@@ -455,7 +455,7 @@ public class factorytestActivity extends Activity {
         if (mNew_Mac != null) {
             int ret = macinfo.SetMac(mNew_Mac);
             rst_set_mac.setVisibility(View.VISIBLE);
-            if (ret == 1) {
+            if (ret == 0) {
                 yetSet = true;
                 macinfo.saveMacAddr(mMacFile_Path);
                 mNew_Mac = macinfo.getMacAddr(mMacFile_Path);
@@ -463,7 +463,7 @@ public class factorytestActivity extends Activity {
 
                 rst_set_mac.setBackgroundColor(Color.parseColor("#008800"));
                 rst_set_mac.setText(R.string.str_pass);
-            } else if (ret == 0) {
+            } else if (ret == 2) {
                 rst_set_mac.setBackgroundColor(Color.parseColor("#66009D"));
                 rst_set_mac.setText(R.string.mac_end);
             } else {

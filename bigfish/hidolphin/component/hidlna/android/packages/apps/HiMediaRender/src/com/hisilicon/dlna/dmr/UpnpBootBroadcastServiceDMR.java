@@ -103,7 +103,7 @@ public class UpnpBootBroadcastServiceDMR extends Service
     private final static String SYSTEM_SETTING_TURNOFF_DMR_ACTION = "com.hisilicon.dlna.turnoff.dmr";
     private final static String SYSTEM_SETTING_TURNON_DMR_ACTION = "com.hisilicon.dlna.turnon.dmr";
     private final static String SERVICE_DMR_RESTART_ACTION = "com.hisilicon.service.dmr.restarted";
-    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "eth"; //wlan
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
 
     HandlerThread startServerInActivityInBCThread = null;
     Handler handler2 = null;

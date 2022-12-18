@@ -501,9 +501,11 @@ namespace android {
         {
             int t2 = getSystemTime();
             LOGE("===inst[%d] createMediaRetriever fail use %dms url [%s]===", mId, t2-t1, mUrl);
+#ifndef HIMEDIA_NOT_DEINIT_RESOURCE
             HiMediaSystem::deInitCharset();
             HiMediaSystem::deInitPlayer();
             HiMediaSystem::deInitDevice();
+#endif
             return UNKNOWN_ERROR;
         }
 
@@ -520,9 +522,11 @@ namespace android {
         if(mHandle)
         {
             HI_SVR_PLAYER_DestroyMetaRetriever(mHandle);
+#ifndef HIMEDIA_NOT_DEINIT_RESOURCE
             HiMediaSystem::deInitCharset();
             HiMediaSystem::deInitPlayer();
             HiMediaSystem::deInitDevice();
+#endif
             mHandle = NULL;
         }
         int t2 = getSystemTime();

@@ -463,6 +463,7 @@ typedef struct hiCHAN_CFG_S
     SINT32           s32VcmpWmEndLine;   /* water marker end line number */
     SINT32           s32SupportAllP;     /* support stream of all p frames */
     SINT32           s32ModuleLowlyEnable;
+    SINT32           s32ChanLowlyEnable;
     SINT32           s32IsOmxPath;       /* specify for omx path */
     SINT32           s32MaxRawPacketNum;
     SINT32           s32MaxRawPacketSize;

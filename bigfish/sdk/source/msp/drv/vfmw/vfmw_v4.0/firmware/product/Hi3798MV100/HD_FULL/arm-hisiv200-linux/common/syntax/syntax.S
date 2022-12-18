@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC062_v2015072619 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC063_v2015120719 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.syntax.o.d
-@ /hihome/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/master_4.4/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC062/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/syntax.c
+@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC063/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/syntax.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/syntax.o -O2 -Wall
@@ -125,17 +125,17 @@ ProduceTimeStamp:
 	beq	.L2	@,
 	mov	r3, #328	@ tmp140,
 	mov	r8, r4	@ tmp141, ThisFramePts
-	ldrd	r6, [r0, r3]	@ D.38691, pstVoQue, tmp140
+	ldrd	r6, [r0, r3]	@ D.38695, pstVoQue, tmp140
 	mov	r9, r5	@, ThisFramePts
-	subs	r8, r8, r6	@ tmp141, tmp141, D.38691
-	sbc	r9, r9, r7	@ tmp141, tmp141, D.38691
+	subs	r8, r8, r6	@ tmp141, tmp141, D.38695
+	sbc	r9, r9, r7	@ tmp141, tmp141, D.38695
 	cmp	r9, #0	@ tmp141,
 	cmpeq	r8, #5	@ tmp141,
 	bhi	.L3	@,
 	mvn	r8, #0	@ tmp142,
 	mvn	r9, #0	@,
-	cmp	r7, r9	@ D.38691, tmp142
-	cmpeq	r6, r8	@ D.38691, tmp142
+	cmp	r7, r9	@ D.38695, tmp142
+	cmpeq	r6, r8	@ D.38695, tmp142
 	beq	.L3	@,
 	sub	r3, r2, #8	@ tmp146, eVidStd,
 	cmp	r3, #1	@ tmp146,
@@ -182,17 +182,17 @@ GetQueueImgNum:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldrh	r3, [r0, #6]	@ D.38869, <variable>.head
-	ldrh	ip, [r0, #4]	@ D.38870, <variable>.history
-	ldrh	r0, [r0, #8]	@ D.38878, <variable>.tail
-	cmp	r3, ip	@ D.38869, D.38870
-	addcc	r4, r3, #64	@ tmp142, D.38869,
-	rsbcs	ip, ip, r3	@ ReadNum, D.38870, D.38869
-	rsbcc	ip, ip, r4	@ ReadNum, D.38870, tmp142
-	cmp	r3, r0	@ D.38869, D.38878
-	addhi	r0, r0, #64	@ tmp143, D.38878,
+	ldrh	r3, [r0, #6]	@ D.38873, <variable>.head
+	ldrh	ip, [r0, #4]	@ D.38874, <variable>.history
+	ldrh	r0, [r0, #8]	@ D.38882, <variable>.tail
+	cmp	r3, ip	@ D.38873, D.38874
+	addcc	r4, r3, #64	@ tmp142, D.38873,
+	rsbcs	ip, ip, r3	@ ReadNum, D.38874, D.38873
+	rsbcc	ip, ip, r4	@ ReadNum, D.38874, tmp142
+	cmp	r3, r0	@ D.38873, D.38882
+	addhi	r0, r0, #64	@ tmp143, D.38882,
 	str	ip, [r1, #0]	@ ReadNum,* pReadImgNum
-	rsb	r3, r3, r0	@ NewNum, D.38869, tmp143
+	rsb	r3, r3, r0	@ NewNum, D.38873, tmp143
 	str	r3, [r2, #0]	@ NewNum,* pNewImgNum
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
@@ -216,12 +216,12 @@ OpenUsdPool_WithMem:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp172,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp172,
-	ldr	ip, [r3, r0, asl #2]	@ D.40137, pstVdecUsdPool
-	cmp	ip, #0	@ D.40137,
+	ldr	ip, [r3, r0, asl #2]	@ D.40141, pstVdecUsdPool
+	cmp	ip, #0	@ D.40141,
 	beq	.L24	@,
 .L18:
 	mov	r1, #0	@ tmp174,
-	mov	r3, ip	@ ivtmp.643, D.40137
+	mov	r3, ip	@ ivtmp.643, D.40141
 	mov	r2, r1	@ i, tmp174
 	mov	r0, r1	@ tmp178, i
 	str	r1, [ip, #0]	@ tmp174, <variable>.s32AccessIdx
@@ -237,9 +237,9 @@ OpenUsdPool_WithMem:
 	bne	.L20	@,
 	ldmfd	sp, {fp, sp, pc}	@
 .L24:
-	cmp	r1, #0	@ D.40137,
-	str	r1, [r3, r0, asl #2]	@ D.40137, pstVdecUsdPool
-	mov	ip, r1	@ D.40137, Viraddr
+	cmp	r1, #0	@ D.40141,
+	str	r1, [r3, r0, asl #2]	@ D.40141, pstVdecUsdPool
+	mov	ip, r1	@ D.40141, Viraddr
 	mvneq	r0, #0	@ ret,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	b	.L18	@
@@ -290,12 +290,12 @@ InitUsdPool:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r1, [r3, r0, asl #2]	@ D.39967, pstVdecUsdPool
-	cmp	r1, #0	@ D.39967,
-	mvneq	r0, #0	@ D.39971,
+	ldr	r1, [r3, r0, asl #2]	@ D.39971, pstVdecUsdPool
+	cmp	r1, #0	@ D.39971,
+	mvneq	r0, #0	@ D.39975,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	mov	r0, #0	@ tmp140,
-	mov	r3, r1	@ ivtmp.700, D.39967
+	mov	r3, r1	@ ivtmp.700, D.39971
 	mov	r2, r0	@ i, tmp140
 	str	r0, [r1, #0]	@ tmp140, <variable>.s32AccessIdx
 .L31:
@@ -330,14 +330,14 @@ GetUsd:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp141,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp141,
-	ldr	r0, [r3, r0, asl #2]	@ D.39982, pstVdecUsdPool
-	cmp	r0, #0	@ D.39982,
+	ldr	r0, [r3, r0, asl #2]	@ D.39986, pstVdecUsdPool
+	cmp	r0, #0	@ D.39986,
 	bne	.L46	@,
 .L36:
 	mov	r0, #0	@ pstUsrDat,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L46:
-	mov	r2, r0	@ ivtmp.733, D.39982
+	mov	r2, r0	@ ivtmp.733, D.39986
 	mov	r3, #0	@ i,
 	b	.L39	@
 .L37:
@@ -367,13 +367,13 @@ GetUsd:
 	mov	r5, #134	@ tmp145,
 	mla	ip, r3, r1, r1	@ tmp179, i, tmp150, tmp150
 	mul	r4, r5, r3	@ tmp144, tmp145, i
-	mla	r3, r1, r3, r0	@ tmp151, tmp150, i, D.39982
-	add	r5, ip, r0	@ tmp181, tmp179, D.39982
+	mla	r3, r1, r3, r0	@ tmp151, tmp150, i, D.39986
+	add	r5, ip, r0	@ tmp181, tmp179, D.39986
 	add	r4, r4, #1	@ tmp146, tmp144,
 	movw	r1, #1064	@ tmp154,
 	strb	r2, [ip, r0]	@ <variable>.dnr_used_flag, <variable>.IsRegistered
 	strh	r2, [r5, #4]	@ movhi	@ <variable>.dnr_used_flag, <variable>.itu_t_t35_provider_code
-	add	r0, r0, r4, asl #3	@, pstUsrDat, D.39982, tmp146,
+	add	r0, r0, r4, asl #3	@, pstUsrDat, D.39986, tmp146,
 	strb	r2, [r5, #1]	@ <variable>.dnr_used_flag, <variable>.itu_t_t35_country_code
 	mov	r4, #0	@ tmp159,
 	strb	r2, [r5, #2]	@ <variable>.dnr_used_flag, <variable>.itu_t_t35_country_code_extension_byte
@@ -472,8 +472,8 @@ GetVoLastImageID:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r0, [r0, #296]	@ D.40073, <variable>.SideInfo.LastImageIdPlus2
-	cmp	r0, #1	@ D.40073,
+	ldr	r0, [r0, #296]	@ D.40077, <variable>.SideInfo.LastImageIdPlus2
+	cmp	r0, #1	@ D.40077,
 	mvnls	r0, #0	@,,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -497,15 +497,15 @@ IsMain10Profile:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:4321216	@ tmp140,
 	movt	r3, #:upper16:4321216	@ tmp140,
-	ldr	r2, [r0, r3]	@ D.40083, <variable>.general_profile_idc
-	cmp	r2, #1	@ D.40083,
+	ldr	r2, [r0, r3]	@ D.40087, <variable>.general_profile_idc
+	cmp	r2, #1	@ D.40087,
 	beq	.L60	@,
 	movw	ip, #:lower16:4321220	@ tmp141,
 	movt	ip, #:upper16:4321220	@ tmp141,
 	ldr	r1, [r0, ip]	@ <variable>.general_profile_compatibility_flag_1, <variable>.general_profile_compatibility_flag_1
 	cmp	r1, #1	@ <variable>.general_profile_compatibility_flag_1,
 	beq	.L60	@,
-	cmp	r2, #2	@ D.40083,
+	cmp	r2, #2	@ D.40087,
 	beq	.L67	@,
 	movw	r3, #:lower16:4321224	@ tmp143,
 	movt	r3, #:upper16:4321224	@ tmp143,
@@ -626,15 +626,15 @@ IsVoQueueEmpty:
 	bl	__gnu_mcount_nc
 	subs	r4, r0, #0	@ pstVoQue, pstVoQue
 	beq	.L84	@,
-	ldrh	r2, [r4, #6]	@ D.40046, <variable>.head
+	ldrh	r2, [r4, #6]	@ D.40050, <variable>.head
 	ldrh	r3, [r4, #8]	@ <variable>.tail, <variable>.tail
-	cmp	r3, r2	@ <variable>.tail, D.40046
-	movne	r0, #0	@ D.40045,
+	cmp	r3, r2	@ <variable>.tail, D.40050
+	movne	r0, #0	@ D.40049,
 	ldmnefd	sp, {r3, r4, fp, sp, pc}	@
 	ldrh	r0, [r4, #4]	@ <variable>.history, <variable>.history
 	cmp	r0, r3	@ <variable>.history, <variable>.tail
-	movne	r0, #0	@, D.40045
-	moveq	r0, #1	@, D.40045
+	movne	r0, #0	@, D.40049
+	moveq	r0, #1	@, D.40049
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L84:
 	movw	r1, #:lower16:.LC1	@,
@@ -642,7 +642,7 @@ IsVoQueueEmpty:
 	movt	r1, #:upper16:.LC1	@,
 	movt	r2, #:upper16:.LANCHOR1	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.40045, pstVoQue
+	mov	r0, r4	@ D.40049, pstVoQue
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	IsVoQueueEmpty, .-IsVoQueueEmpty
@@ -666,36 +666,36 @@ IsImageInVoQueue:
 	cmp	r1, #0	@ p_image
 	beq	.L94	@,
 	ldrh	r3, [r0, #4]	@ i, <variable>.history
-	ldrh	r4, [r0, #8]	@ D.40028, <variable>.tail
+	ldrh	r4, [r0, #8]	@ D.40032, <variable>.tail
 	and	r3, r3, #63	@ i.925, i,
-	cmp	r4, r3	@ D.40028, i.925
+	cmp	r4, r3	@ D.40032, i.925
 	bne	.L92	@,
 	b	.L88	@
 .L89:
-	cmp	r3, r4	@ i.925, D.40028
+	cmp	r3, r4	@ i.925, D.40032
 	beq	.L88	@,
 .L92:
 	add	r2, r0, r3, asl #2	@, tmp146, pstVoQue, i.925,
 	add	ip, r3, #1	@ i.926, i.925,
 	and	r3, ip, #63	@ i.925, i.926,
-	ldr	r2, [r2, #12]	@ D.40031, <variable>.image_ptr
-	cmp	r2, #0	@ D.40031,
+	ldr	r2, [r2, #12]	@ D.40035, <variable>.image_ptr
+	cmp	r2, #0	@ D.40035,
 	beq	.L89	@,
 	ldr	ip, [r2, #196]	@ <variable>.image_id, <variable>.image_id
 	ldr	r2, [r1, #196]	@ <variable>.image_id, <variable>.image_id
 	cmp	ip, r2	@ <variable>.image_id, <variable>.image_id
 	bne	.L89	@,
-	mov	r0, #0	@ D.40025,
+	mov	r0, #0	@ D.40029,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L88:
-	mvn	r0, #0	@ D.40025,
+	mvn	r0, #0	@ D.40029,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L94:
 	mov	r0, r1	@, p_image
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.40025,
+	mvn	r0, #0	@ D.40029,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	IsImageInVoQueue, .-IsImageInVoQueue
@@ -825,8 +825,8 @@ CloseUsdPool:
 	movw	r4, #:lower16:.LANCHOR0	@ tmp135,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp135,
 	mov	r5, r0	@ ChanID, ChanID
-	ldr	r0, [r4, r0, asl #2]	@ D.39936, pstVdecUsdPool
-	cmp	r0, #0	@ D.39936,
+	ldr	r0, [r4, r0, asl #2]	@ D.39940, pstVdecUsdPool
+	cmp	r0, #0	@ D.39940,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	bl	OSAL_FreeVirMem	@
 	mov	r3, #0	@ tmp137,
@@ -854,12 +854,12 @@ OpenUsdPool:
 	movw	r4, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp140,
 	mov	r5, r0	@ ChanID, ChanID
-	ldr	r0, [r4, r0, asl #2]	@ D.40143, pstVdecUsdPool
-	cmp	r0, #0	@ D.40143,
+	ldr	r0, [r4, r0, asl #2]	@ D.40147, pstVdecUsdPool
+	cmp	r0, #0	@ D.40147,
 	beq	.L115	@,
 .L109:
 	mov	r1, #0	@ tmp143,
-	mov	r3, r0	@ ivtmp.1038, D.40143
+	mov	r3, r0	@ ivtmp.1038, D.40147
 	str	r1, [r0, #0]	@ tmp143, <variable>.s32AccessIdx
 	mov	r2, r1	@ i, tmp143
 	mov	r0, r1	@ tmp147, i
@@ -878,8 +878,8 @@ OpenUsdPool:
 	movw	r0, #:lower16:205832	@,
 	movt	r0, #:upper16:205832	@,
 	bl	OSAL_AllocVirMem	@
-	cmp	r0, #0	@ D.40143,
-	str	r0, [r4, r5, asl #2]	@ D.40143, pstVdecUsdPool
+	cmp	r0, #0	@ D.40147,
+	str	r0, [r4, r5, asl #2]	@ D.40147, pstVdecUsdPool
 	mvneq	r0, #0	@ ret,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	b	.L109	@
@@ -908,8 +908,8 @@ IsNewpicSeg:
 	ldr	r4, [r2, #0]	@ pu8, <variable>.VirAddr
 	beq	.L151	@,
 .L117:
-	ldrb	r2, [r4, #0]	@ zero_extendqisi2	@ D.39840,* pu8
-	cmp	r2, #0	@ D.39840,
+	ldrb	r2, [r4, #0]	@ zero_extendqisi2	@ D.39844,* pu8
+	cmp	r2, #0	@ D.39844,
 	bne	.L152	@,
 	ldrb	r3, [r4, #1]	@ zero_extendqisi2	@ prephitmp.1056,
 	cmp	r3, #0	@ prephitmp.1056,
@@ -1124,7 +1124,7 @@ ReleasePacket:
 	.word	.L159
 	.word	.L160
 .L160:
-	ldr	r5, [r1, #0]	@ D.39692, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39696, <variable>.pstExtraData
 	movw	lr, #8520	@ tmp175,
 	ldr	r0, [r1, lr]	@, <variable>.ChanID
 	ldr	r1, [r5, #240]	@, <variable>.StreamID
@@ -1137,7 +1137,7 @@ ReleasePacket:
 	movt	r1, #:upper16:.LC8	@,
 	bl	dprint_vfmw	@
 .L169:
-	add	r0, r5, #224	@, D.39703,
+	add	r0, r5, #224	@, D.39707,
 	mov	r1, #160	@,
 	bl	__memzero	@
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
@@ -1150,7 +1150,7 @@ ReleasePacket:
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L155:
 	movw	r1, #22060	@ tmp148,
-	ldr	r5, [r4, r1]	@ D.39648, <variable>.pstExtraData
+	ldr	r5, [r4, r1]	@ D.39652, <variable>.pstExtraData
 	ldrb	r0, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	beq	.L171	@,
@@ -1161,12 +1161,12 @@ ReleasePacket:
 	ldr	r1, [r5, #320]	@, <variable>.StreamID
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	SM_ReleaseStreamSeg	@
-	add	r0, r5, #224	@, D.39703,
+	add	r0, r5, #224	@, D.39707,
 	mov	r1, #160	@,
 	bl	__memzero	@
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L156:
-	ldr	r5, [r1, #0]	@ D.39682, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39686, <variable>.pstExtraData
 	ldrb	r0, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	bne	.L169	@,
@@ -1177,7 +1177,7 @@ ReleasePacket:
 	bl	SM_ReleaseStreamSeg	@
 	b	.L169	@
 .L157:
-	ldr	r5, [r1, #0]	@ D.39662, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39666, <variable>.pstExtraData
 	ldrb	ip, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	ip, #1	@ <variable>.IsLastSeg,
 	bne	.L169	@,
@@ -1188,7 +1188,7 @@ ReleasePacket:
 	bl	SM_ReleaseStreamSeg	@
 	b	.L169	@
 .L158:
-	ldr	r5, [r1, #0]	@ D.39672, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39676, <variable>.pstExtraData
 	ldrb	r3, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r3, #1	@ <variable>.IsLastSeg,
 	bne	.L169	@,
@@ -1199,7 +1199,7 @@ ReleasePacket:
 	bl	SM_ReleaseStreamSeg	@
 	b	.L169	@
 .L159:
-	ldr	r5, [r1, #0]	@ D.39703, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39707, <variable>.pstExtraData
 	movw	r2, #13000	@ tmp181,
 	ldr	r0, [r1, r2]	@, <variable>.ChanID
 	ldr	r1, [r5, #240]	@, <variable>.StreamID
@@ -1293,12 +1293,12 @@ ReleaseCurPic:
 	bl	MP2_ClearCurPic	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L178:
-	ldr	r5, [r1, #0]	@ D.39779, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39783, <variable>.pstExtraData
 	ldrb	r1, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r1, #1	@ <variable>.IsLastSeg,
 	beq	.L194	@,
 .L192:
-	add	r0, r5, #224	@, D.39803,
+	add	r0, r5, #224	@, D.39807,
 	mov	r1, #160	@,
 	bl	__memzero	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
@@ -1307,7 +1307,7 @@ ReleaseCurPic:
 	bl	AVS_ClearCurPic	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L180:
-	ldr	r5, [r1, #0]	@ D.39757, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39761, <variable>.pstExtraData
 	ldrb	r3, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r3, #1	@ <variable>.IsLastSeg,
 	bne	.L192	@,
@@ -1318,7 +1318,7 @@ ReleaseCurPic:
 	bl	SM_ReleaseStreamSeg	@
 	b	.L192	@
 .L181:
-	ldr	r5, [r1, #0]	@ D.39769, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39773, <variable>.pstExtraData
 	ldrb	r0, [r5, #229]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	bne	.L192	@,
@@ -1329,7 +1329,7 @@ ReleaseCurPic:
 	bl	SM_ReleaseStreamSeg	@
 	b	.L192	@
 .L182:
-	ldr	r5, [r1, #0]	@ D.39803, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39807, <variable>.pstExtraData
 	movw	lr, #13000	@ tmp172,
 	ldr	r0, [r1, lr]	@, <variable>.ChanID
 	ldr	r1, [r5, #240]	@, <variable>.StreamID
@@ -1343,7 +1343,7 @@ ReleaseCurPic:
 	bl	dprint_vfmw	@
 	b	.L192	@
 .L183:
-	ldr	r5, [r1, #0]	@ D.39792, <variable>.pstExtraData
+	ldr	r5, [r1, #0]	@ D.39796, <variable>.pstExtraData
 	movw	ip, #8520	@ tmp166,
 	ldr	r0, [r1, ip]	@, <variable>.ChanID
 	ldr	r1, [r5, #240]	@, <variable>.StreamID
@@ -1394,17 +1394,17 @@ SegMan:
 	beq	.L196	@,
 	movw	r3, #:lower16:s_pstVfmwChan	@ tmp230,
 	movt	r3, #:upper16:s_pstVfmwChan	@ tmp230,
-	ldr	r2, [r3, r0, asl #2]	@ D.39537, s_pstVfmwChan
-	ldr	r1, [r2, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r2, [r3, r0, asl #2]	@ D.39541, s_pstVfmwChan
+	ldr	r1, [r2, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r1, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	beq	.L209	@,
 .L199:
-	ldrb	r5, [r4, #13]	@ zero_extendqisi2	@ D.39546, <variable>.CurrSeg.IsLastSeg
+	ldrb	r5, [r4, #13]	@ zero_extendqisi2	@ D.39550, <variable>.CurrSeg.IsLastSeg
 	mov	r2, #0	@ tmp159,
 	strb	r2, [r4, #408]	@ tmp159, <variable>.u32SCDWrapAround
-	cmp	r5, #1	@ D.39546,
+	cmp	r5, #1	@ D.39550,
 	beq	.L210	@,
-	cmp	r5, #0	@ D.39546,
+	cmp	r5, #0	@ D.39550,
 	beq	.L211	@,
 .L202:
 	mvn	r0, #0	@ ret,
@@ -1421,9 +1421,9 @@ SegMan:
 	bl	__memzero	@
 	ldrb	r1, [r4, #2]	@ zero_extendqisi2	@ <variable>.ConvolutionPacketNum, <variable>.ConvolutionPacketNum
 	add	r3, r1, #1	@ tmp176, <variable>.ConvolutionPacketNum,
-	uxtb	ip, r3	@ D.39564, tmp176
-	strb	ip, [r4, #2]	@ D.39564, <variable>.ConvolutionPacketNum
-	cmp	ip, #1	@ D.39564,
+	uxtb	ip, r3	@ D.39568, tmp176
+	strb	ip, [r4, #2]	@ D.39568, <variable>.ConvolutionPacketNum
+	cmp	ip, #1	@ D.39568,
 	bls	.L202	@,
 	ldr	r1, [r4, #104]	@, <variable>.StreamID
 	mov	r0, r6	@, ChanID
@@ -1446,7 +1446,7 @@ SegMan:
 	ldr	ip, [r2, #0]	@ g_event_report.525, g_event_report
 	cmp	ip, #0	@ g_event_report.525,
 	beq	.L203	@,
-	mov	r2, r5	@, D.39546
+	mov	r2, r5	@, D.39550
 	mov	r0, r6	@, ChanID
 	mov	r1, #113	@,
 	mov	r3, r5	@, tmp2
@@ -1457,7 +1457,7 @@ SegMan:
 	strb	lr, [r4, #2]	@ tmp182, <variable>.ConvolutionPacketNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L209:
-	ldr	r2, [r2, #1456]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
+	ldr	r2, [r2, #1464]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
 	cmp	r2, #1	@ <variable>.stSynExtraData.s32WaitFsFlag,
 	bne	.L199	@,
 	ldrb	r0, [r4, #408]	@ zero_extendqisi2	@ <variable>.u32SCDWrapAround, <variable>.u32SCDWrapAround
@@ -1471,16 +1471,16 @@ SegMan:
 	strb	r0, [r4, #408]	@ tmp157, <variable>.u32SCDWrapAround
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L210:
-	ldrb	r5, [r4, #2]	@ zero_extendqisi2	@ D.39548, <variable>.ConvolutionPacketNum
-	cmp	r5, r2	@ D.39548,
+	ldrb	r5, [r4, #2]	@ zero_extendqisi2	@ D.39552, <variable>.ConvolutionPacketNum
+	cmp	r5, r2	@ D.39552,
 	beq	.L212	@,
-	cmp	r5, #1	@ D.39548,
+	cmp	r5, #1	@ D.39552,
 	bne	.L202	@,
 	ldr	r1, [r3, r6, asl #2]	@ tmp185, s_pstVfmwChan
 	movw	ip, #:lower16:1047552	@ tmp232,
 	ldr	r0, [r4, #100]	@ <variable>.LenInByte, <variable>.LenInByte
 	movt	ip, #:upper16:1047552	@ tmp232,
-	ldr	r3, [r1, #544]	@ <variable>.eVidStd, <variable>.eVidStd
+	ldr	r3, [r1, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r3, #6	@ <variable>.eVidStd,
 	movne	ip, #1024	@ s32MinBottomSegLen,
 	cmp	ip, r0	@ s32MinBottomSegLen, <variable>.LenInByte
@@ -1489,11 +1489,11 @@ SegMan:
 	movw	r1, #:lower16:.LC13	@,
 	movt	r1, #:upper16:.LC13	@,
 	bl	dprint_vfmw	@
-	ldr	r3, [r4, #100]	@ D.39596, <variable>.LenInByte
+	ldr	r3, [r4, #100]	@ D.39600, <variable>.LenInByte
 	ldr	r0, [r4, #8]	@ <variable>.CurrSeg.VirAddr, <variable>.CurrSeg.VirAddr
 	ldr	r1, [r4, #88]	@, <variable>.VirAddr
-	mov	r2, r3	@, D.39596
-	rsb	r0, r3, r0	@, D.39596, <variable>.CurrSeg.VirAddr
+	mov	r2, r3	@, D.39600
+	rsb	r0, r3, r0	@, D.39600, <variable>.CurrSeg.VirAddr
 	bl	memcpy	@
 	ldr	r3, [r4, #100]	@ <variable>.LenInByte, <variable>.LenInByte
 	ldr	r1, [r4, #8]	@ <variable>.CurrSeg.VirAddr, <variable>.CurrSeg.VirAddr
@@ -1502,7 +1502,7 @@ SegMan:
 	ldr	ip, [r4, #20]	@ <variable>.CurrSeg.LenInByte, <variable>.CurrSeg.LenInByte
 	rsb	r1, r3, r1	@ tmp200, <variable>.LenInByte, <variable>.CurrSeg.VirAddr
 	rsb	r2, r3, r2	@ tmp203, <variable>.LenInByte, <variable>.CurrSeg.PhyAddr
-	strb	r5, [r4, #93]	@ D.39548, <variable>.IsLastSeg
+	strb	r5, [r4, #93]	@ D.39552, <variable>.IsLastSeg
 	add	r3, r3, ip	@ tmp206, <variable>.LenInByte, <variable>.CurrSeg.LenInByte
 	str	r1, [r4, #88]	@ tmp200, <variable>.VirAddr
 	str	r2, [r4, #96]	@ tmp203, <variable>.PhyAddr
@@ -1533,8 +1533,8 @@ SegMan:
 	add	r0, r4, #168	@, pSegMan,
 	mov	r1, #80	@,
 	bl	__memzero	@
-	strb	r5, [r4, #2]	@ D.39548, <variable>.ConvolutionPacketNum
-	mov	r0, r5	@ ret, D.39548
+	strb	r5, [r4, #2]	@ D.39552, <variable>.ConvolutionPacketNum
+	mov	r0, r5	@ ret, D.39552
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L206:
 	mov	r0, #22	@,
@@ -1613,21 +1613,21 @@ DecodeStream:
 	movw	r1, #:lower16:.LC17	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	ldr	r3, [r5, #0]	@ D.39258, <variable>.pstExtraData
-	ldr	r2, [r3, #556]	@ D.39259, <variable>.StdExt.Vc1Ext.IsAdvProfile
-	cmp	r2, #1	@ D.39259,
+	ldr	r3, [r5, #0]	@ D.39262, <variable>.pstExtraData
+	ldr	r2, [r3, #556]	@ D.39263, <variable>.StdExt.Vc1Ext.IsAdvProfile
+	cmp	r2, #1	@ D.39263,
 	bhi	.L274	@,
 	ldr	r0, [r3, #560]	@ <variable>.StdExt.Vc1Ext.CodecVersion, <variable>.StdExt.Vc1Ext.CodecVersion
 	cmp	r0, #8	@ <variable>.StdExt.Vc1Ext.CodecVersion,
 	bgt	.L275	@,
 	movw	lr, #:lower16:81344	@ tmp267,
 	movt	lr, #:upper16:81344	@ tmp267,
-	uxtb	r2, r2	@ D.39268, D.39259
+	uxtb	r2, r2	@ D.39272, D.39263
 	movw	ip, #:lower16:81346	@ tmp269,
-	strb	r2, [r5, lr]	@ D.39268, <variable>.CodecInfo.PreParseInfo.IsAdvProfile
+	strb	r2, [r5, lr]	@ D.39272, <variable>.CodecInfo.PreParseInfo.IsAdvProfile
 	movt	ip, #:upper16:81346	@ tmp269,
 	ldr	r3, [r3, #560]	@ <variable>.StdExt.Vc1Ext.CodecVersion, <variable>.StdExt.Vc1Ext.CodecVersion
-	cmp	r2, #1	@ D.39268,
+	cmp	r2, #1	@ D.39272,
 	strb	r3, [r5, ip]	@ <variable>.StdExt.Vc1Ext.CodecVersion, <variable>.CodecInfo.PreParseInfo.CodecVersion
 	beq	.L276	@,
 	ldrb	r0, [r4, #14]	@ zero_extendqisi2	@ <variable>.CurrSeg.IsStreamEnd, <variable>.CurrSeg.IsStreamEnd
@@ -1635,10 +1635,10 @@ DecodeStream:
 	movweq	r6, #:lower16:114368	@ tmp290,
 	movteq	r6, #:upper16:114368	@ tmp290,
 	beq	.L262	@,
-	add	r6, r4, #88	@ D.39305, pSegMan,
+	add	r6, r4, #88	@ D.39309, pSegMan,
 	add	r1, r4, #8	@, pSegMan,
 	mov	r2, #80	@,
-	mov	r0, r6	@, D.39305
+	mov	r0, r6	@, D.39309
 	bl	memcpy	@
 	add	r0, r4, #168	@, pSegMan,
 	mov	r1, #80	@,
@@ -1805,12 +1805,12 @@ DecodeStream:
 	bl	memcpy	@
 	movw	r3, #:lower16:g_SdecFunc	@ tmp485,
 	movt	r3, #:upper16:g_SdecFunc	@ tmp485,
-	ldr	r3, [r3, #12]	@ D.39498, g_SdecFunc.pfun_iMediaSoftDEC_Decode
-	cmp	r3, #0	@ D.39498,
+	ldr	r3, [r3, #12]	@ D.39502, g_SdecFunc.pfun_iMediaSoftDEC_Decode
+	cmp	r3, #0	@ D.39502,
 	beq	.L260	@,
 	mov	r1, r6	@, tmp479
 	mov	r0, r5	@, pstCtx
-	blx	r3	@ D.39498
+	blx	r3	@ D.39502
 	cmn	r0, #2	@,
 	beq	.L261	@,
 .L260:
@@ -1870,10 +1870,10 @@ DecodeStream:
 	movw	r3, #:lower16:s_pstVfmwChan	@ tmp366,
 	movt	r3, #:upper16:s_pstVfmwChan	@ tmp366,
 	ldr	r3, [r3, r6, asl #2]	@ temp.1269, s_pstVfmwChan
-	ldr	r2, [r3, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r2, [r3, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r2, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	bne	.L252	@,
-	ldr	lr, [r3, #1456]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
+	ldr	lr, [r3, #1464]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
 	cmp	lr, #0	@ <variable>.stSynExtraData.s32WaitFsFlag,
 	bne	.L251	@,
 .L252:
@@ -2077,10 +2077,10 @@ DecodeStream:
 	movw	r0, #:lower16:s_pstVfmwChan	@ tmp326,
 	movt	r0, #:upper16:s_pstVfmwChan	@ tmp326,
 	ldr	r3, [r0, r6, asl #2]	@ temp.1255, s_pstVfmwChan
-	ldr	r6, [r3, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r6, [r3, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r6, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	bne	.L245	@,
-	ldr	r2, [r3, #1456]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
+	ldr	r2, [r3, #1464]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
 	cmp	r2, #0	@ <variable>.stSynExtraData.s32WaitFsFlag,
 	bne	.L244	@,
 .L245:
@@ -2093,10 +2093,10 @@ DecodeStream:
 	movw	r1, #:lower16:s_pstVfmwChan	@ tmp349,
 	movt	r1, #:upper16:s_pstVfmwChan	@ tmp349,
 	ldr	r3, [r1, r6, asl #2]	@ temp.1262, s_pstVfmwChan
-	ldr	ip, [r3, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	ip, [r3, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	ip, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	bne	.L249	@,
-	ldr	r3, [r3, #1456]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
+	ldr	r3, [r3, #1464]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
 	cmp	r3, #0	@ <variable>.stSynExtraData.s32WaitFsFlag,
 	bne	.L248	@,
 .L249:
@@ -2158,7 +2158,7 @@ DecodeStream:
 	b	.L261	@
 .L283:
 	ldr	ip, [r4, #100]	@ <variable>.LenInByte, <variable>.LenInByte
-	mov	r1, r6	@, D.39305
+	mov	r1, r6	@, D.39309
 	ldr	r2, [r4, #88]	@ <variable>.VirAddr, <variable>.VirAddr
 	mov	r0, r5	@, pstCtx
 	ldr	r3, [r4, #96]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -2169,27 +2169,27 @@ DecodeStream:
 	add	lr, r3, #16	@ tmp317, <variable>.PhyAddr,
 	str	lr, [r4, #96]	@ tmp317, <variable>.PhyAddr
 	bl	VC1DEC_Decode	@
-	mov	r0, r6	@, D.39305
+	mov	r0, r6	@, D.39309
 	mov	r1, #160	@,
 	bl	__memzero	@
 	b	.L261	@
 .L285:
-	add	r4, r4, #88	@ D.39289, pSegMan,
+	add	r4, r4, #88	@ D.39293, pSegMan,
 	mov	r0, r5	@, pstCtx
-	mov	r1, r4	@, D.39289
+	mov	r1, r4	@, D.39293
 	bl	VC1DEC_Decode	@
-	mov	r0, r4	@, D.39289
+	mov	r0, r4	@, D.39293
 	mov	r1, #160	@,
 	bl	__memzero	@
 	b	.L240	@
 .L284:
 	movw	ip, #:lower16:s_pstVfmwChan	@ tmp275,
 	movt	ip, #:upper16:s_pstVfmwChan	@ tmp275,
-	ldr	r3, [ip, r6, asl #2]	@ D.39279, s_pstVfmwChan
-	ldr	r0, [r3, #1416]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	ldr	r3, [ip, r6, asl #2]	@ D.39283, s_pstVfmwChan
+	ldr	r0, [r3, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r0, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
 	bne	.L239	@,
-	ldr	r3, [r3, #1456]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
+	ldr	r3, [r3, #1464]	@ <variable>.stSynExtraData.s32WaitFsFlag, <variable>.stSynExtraData.s32WaitFsFlag
 	cmp	r3, #0	@ <variable>.stSynExtraData.s32WaitFsFlag,
 	bne	.L238	@,
 .L239:
@@ -2252,7 +2252,7 @@ SYNTAX_ReturnImage:
 	and	r3, r1, #63	@ tmp155, tmp153,
 	strh	r3, [r4, #6]	@ movhi	@ tmp155, <variable>.head
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, #1	@ D.39137,
+	mov	r0, #1	@ D.39141,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L289:
 	add	lr, r0, #113664	@ pstVoQue, pSynCtx,
@@ -2303,7 +2303,7 @@ SYNTAX_ReturnImage:
 	add	r4, r0, r4	@ pstVoQue, pSynCtx, pstVoQue
 	b	.L304	@
 .L287:
-	mvn	r0, #1	@ D.39137,
+	mvn	r0, #1	@ D.39141,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L307:
 	.align	2
@@ -2370,12 +2370,12 @@ SYNTAX_ReceiveImage:
 .L325:
 	ldr	r0, .L331	@,
 	bl	OSAL_SpinLockIRQ	@
-	ldrh	r3, [r6, #6]	@ D.38916, <variable>.head
+	ldrh	r3, [r6, #6]	@ D.38920, <variable>.head
 	ldrh	r0, [r6, #8]	@ <variable>.tail, <variable>.tail
-	cmp	r0, r3	@ <variable>.tail, D.38916
+	cmp	r0, r3	@ <variable>.tail, D.38920
 	mvneq	r5, #2	@ ret,
 	beq	.L327	@,
-	add	lr, r6, r3, asl #2	@, tmp164, pstVoQue, D.38916,
+	add	lr, r6, r3, asl #2	@, tmp164, pstVoQue, D.38920,
 	mov	r2, #504	@,
 	mov	r0, r4	@, p_image
 	mov	r5, #1	@ ret,
@@ -2479,9 +2479,9 @@ ResetVoQueue:
 	mov	r4, r0	@ pstVoQue, pstVoQue
 	ldr	r0, .L339	@,
 	bl	OSAL_SpinLockIRQ	@
-	ldrh	r2, [r4, #6]	@ D.38622, <variable>.head
-	ldrh	r3, [r4, #4]	@ D.38623, <variable>.history
-	cmp	r2, r3	@ D.38622, D.38623
+	ldrh	r2, [r4, #6]	@ D.38626, <variable>.head
+	ldrh	r3, [r4, #4]	@ D.38627, <variable>.history
+	cmp	r2, r3	@ D.38626, D.38627
 	ldrneh	ip, [r4, #8]	@ prephitmp.1400, <variable>.tail
 	beq	.L338	@,
 .L335:
@@ -2524,7 +2524,7 @@ ResetVoQueue:
 	ldmfd	sp, {r4, r6, r7, fp, sp, pc}
 .L338:
 	ldrh	ip, [r4, #8]	@ prephitmp.1400, <variable>.tail
-	cmp	r2, ip	@ D.38622, prephitmp.1400
+	cmp	r2, ip	@ D.38626, prephitmp.1400
 	bne	.L335	@,
 	b	.L336	@
 .L340:
@@ -2602,8 +2602,8 @@ SYNTAX_ReleaseImage:
 .L391:
 	add	r8, r6, #2	@ tmp219, i,
 	add	lr, r7, r8, asl #2	@, tmp177, pstVoQue, tmp219,
-	ldr	r2, [lr, #4]	@ D.38998, <variable>.image_ptr
-	cmp	r2, #0	@ D.38998,
+	ldr	r2, [lr, #4]	@ D.39002, <variable>.image_ptr
+	cmp	r2, #0	@ D.39002,
 	beq	.L363	@,
 	ldr	r1, [r2, #196]	@ <variable>.image_id, <variable>.image_id
 	ldr	r0, [r4, #196]	@ <variable>.image_id, <variable>.image_id
@@ -2629,8 +2629,8 @@ SYNTAX_ReleaseImage:
 	bne	.L369	@,
 	cmp	sl, #1	@ SameImageFlag,
 	add	lr, lr, #1	@ tmp193, temp.1441,
-	and	r2, lr, #63	@ D.38991, tmp193,
-	strh	r2, [r7, #4]	@ movhi	@ D.38991, <variable>.history
+	and	r2, lr, #63	@ D.38995, tmp193,
+	strh	r2, [r7, #4]	@ movhi	@ D.38995, <variable>.history
 	bne	.L365	@,
 	ldrh	lr, [r7, #8]	@ <variable>.tail, <variable>.tail
 	mov	r0, #12	@,
@@ -2823,12 +2823,12 @@ SYNTAX_ReleaseImage:
 .L375:
 	movw	r2, #:lower16:g_SdecFunc	@ tmp211,
 	movt	r2, #:upper16:g_SdecFunc	@ tmp211,
-	ldr	r3, [r2, #16]	@ D.39097, g_SdecFunc.pfun_iMediaSoftDEC_RecycleImage
-	cmp	r3, #0	@ D.39097,
+	ldr	r3, [r2, #16]	@ D.39101, g_SdecFunc.pfun_iMediaSoftDEC_RecycleImage
+	cmp	r3, #0	@ D.39101,
 	beq	.L387	@,
 	add	r0, r5, #8	@, pSynCtx,
 	ldr	r1, [r4, #196]	@, <variable>.image_id
-	blx	r3	@ D.39097
+	blx	r3	@ D.39101
 	cmp	r0, #0	@,
 	bne	.L387	@,
 	mov	r4, #1	@ ret,
@@ -2943,12 +2943,12 @@ ReturnImageToSyntax:
 .L415:
 	movw	r3, #:lower16:g_SdecFunc	@ tmp150,
 	movt	r3, #:upper16:g_SdecFunc	@ tmp150,
-	ldr	r3, [r3, #16]	@ D.38670, g_SdecFunc.pfun_iMediaSoftDEC_RecycleImage
-	cmp	r3, #0	@ D.38670,
+	ldr	r3, [r3, #16]	@ D.38674, g_SdecFunc.pfun_iMediaSoftDEC_RecycleImage
+	cmp	r3, #0	@ D.38674,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	mov	r0, r1	@, pCtx
 	ldr	r1, [r2, #196]	@, <variable>.image_id
-	blx	r3	@ D.38670
+	blx	r3	@ D.38674
 	ldmfd	sp, {fp, sp, pc}	@
 .L416:
 	mov	r0, r1	@, pCtx
@@ -3043,8 +3043,8 @@ InsertImgToVoQueue:
 	add	r0, r5, r7, asl #2	@, tmp175, pstVoQue, i.1540,
 	ldr	r3, [r4, #196]	@ <variable>.image_id, <variable>.image_id
 	ldr	r2, [r0, #12]	@ tmp172, <variable>.image_ptr
-	ldr	r2, [r2, #196]	@ D.38737, <variable>.image_id
-	cmp	r2, r3	@ D.38737, <variable>.image_id
+	ldr	r2, [r2, #196]	@ D.38741, <variable>.image_id
+	cmp	r2, r3	@ D.38741, <variable>.image_id
 	bne	.L431	@,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC29	@,
@@ -3057,8 +3057,8 @@ InsertImgToVoQueue:
 	cmp	r1, r7	@ <variable>.tail, i.1540
 	bne	.L457	@,
 .L430:
-	ldr	r2, [r4, #200]	@ D.38744, <variable>.error_level
-	cmp	r2, #100	@ D.38744,
+	ldr	r2, [r4, #200]	@ D.38748, <variable>.error_level
+	cmp	r2, #100	@ D.38748,
 	bhi	.L463	@,
 	ldr	r3, [r4, #164]	@ prephitmp.1528, <variable>.image_width
 	cmp	r3, #31	@ prephitmp.1528,
@@ -3080,7 +3080,7 @@ InsertImgToVoQueue:
 .L437:
 	ldr	r0, .L468	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, #1	@ D.38729,
+	mov	r0, #1	@ D.38733,
 .L429:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -3097,11 +3097,11 @@ InsertImgToVoQueue:
 	ldrd	r2, [r4, #16]	@, p_image,
 	strd	r2, [fp, #-68]	@,,
 	ldrd	r2, [r4]	@, <variable>.SrcPts
-	mov	r8, r0	@ D.38753,
-	mov	r9, r1	@ D.38753,
-	strd	r8, [r4, #8]	@ D.38753, p_image,
+	mov	r8, r0	@ D.38757,
+	mov	r9, r1	@ D.38757,
+	strd	r8, [r4, #8]	@ D.38757, p_image,
 	mov	r0, #29	@,
-	strd	r8, [sp]	@ D.38753,
+	strd	r8, [sp]	@ D.38757,
 	movw	r1, #:lower16:.LC31	@,
 	ldrd	r8, [fp, #-68]	@,,
 	movt	r1, #:upper16:.LC31	@,
@@ -3135,22 +3135,22 @@ InsertImgToVoQueue:
 	ldr	ip, [r4, #180]	@ <variable>.disp_center_x, <variable>.disp_center_x
 	ldrh	r2, [r4, #184]	@ tmp223, <variable>.disp_center_y
 	ldr	r7, [r4, #160]	@ temp.1548, <variable>.format
-	ldr	lr, [r4, #204]	@ D.38784, <variable>.seq_cnt
+	ldr	lr, [r4, #204]	@ D.38788, <variable>.seq_cnt
 	orr	r1, r2, ip, asl #16	@,, tmp223, <variable>.disp_center_x,
 	ldr	sl, [r4, #176]	@ <variable>.disp_height, <variable>.disp_height
 	ldrh	r0, [r4, #172]	@ tmp218, <variable>.disp_width
-	cmp	lr, r8	@ D.38784, <variable>.SideInfo.OldSeqCnt
+	cmp	lr, r8	@ D.38788, <variable>.SideInfo.OldSeqCnt
 	str	r1, [fp, #-68]	@, %sfp
 	ubfx	r8, r7, #8, #2	@ ScanType, temp.1548,,
-	ldr	r3, [r5, #316]	@ D.38788, <variable>.SideInfo.SeqImgCnt
+	ldr	r3, [r5, #316]	@ D.38792, <variable>.SideInfo.SeqImgCnt
 	ubfx	r7, r7, #14, #3	@ AspectRatio, temp.1548,,
-	strne	lr, [r5, #320]	@ D.38784, <variable>.SideInfo.SeqCnt
+	strne	lr, [r5, #320]	@ D.38788, <variable>.SideInfo.SeqCnt
 	orr	sl, r0, sl, asl #16	@, dsize, tmp218, <variable>.disp_height,
-	add	ip, r3, #1	@ tmp229, D.38788,
-	str	r3, [r4, #208]	@ D.38788, <variable>.seq_img_cnt
-	ldr	r3, [r5, #272]	@ D.38790, <variable>.SideInfo.OldAspectRatio
+	add	ip, r3, #1	@ tmp229, D.38792,
+	str	r3, [r4, #208]	@ D.38792, <variable>.seq_img_cnt
+	ldr	r3, [r5, #272]	@ D.38794, <variable>.SideInfo.OldAspectRatio
 	str	ip, [r5, #316]	@ tmp229, <variable>.SideInfo.SeqImgCnt
-	cmp	r3, r7	@ D.38790, AspectRatio
+	cmp	r3, r7	@ D.38794, AspectRatio
 	movweq	r9, #:lower16:g_event_report	@ tmp318,
 	movteq	r9, #:upper16:g_event_report	@ tmp318,
 	beq	.L443	@,
@@ -3159,7 +3159,7 @@ InsertImgToVoQueue:
 	ldr	ip, [r9, #0]	@ g_event_report.459, g_event_report
 	cmp	ip, #0	@ g_event_report.459,
 	beq	.L444	@,
-	strb	r3, [fp, #-52]	@ D.38790, para
+	strb	r3, [fp, #-52]	@ D.38794, para
 	mov	r1, #7	@,
 	ldr	r0, [fp, #-56]	@, %sfp
 	sub	r2, fp, #52	@,,
@@ -3282,7 +3282,7 @@ InsertImgToVoQueue:
 	rsb	r1, r3, r0	@ Period, <variable>.u32FrBeginTime, CurTime.1571
 	mov	r4, r0	@ CurTime.1571,
 	cmp	r1, #1000	@ Period,
-	movcc	r0, #1	@ D.38729,
+	movcc	r0, #1	@ D.38733,
 	bcc	.L429	@,
 	ldr	r3, [r8, #4]	@ temp.1572, <variable>.u32FrImgNum
 	cmp	r3, #0	@ temp.1572,
@@ -3294,7 +3294,7 @@ InsertImgToVoQueue:
 .L452:
 	ldr	lr, [fp, #-68]	@, %sfp
 	mov	r2, #0	@ tmp313,
-	mov	r0, #1	@ D.38729,
+	mov	r0, #1	@ D.38733,
 	str	r2, [r8, #4]	@ tmp313, <variable>.u32FrImgNum
 	str	r4, [sl, lr]	@ CurTime.1571, <variable>.u32FrBeginTime
 	b	.L429	@
@@ -3342,7 +3342,7 @@ InsertImgToVoQueue:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.38729,
+	mvn	r0, #1	@ D.38733,
 	b	.L429	@
 .L469:
 	.align	2
@@ -3358,14 +3358,14 @@ InsertImgToVoQueue:
 	.section	.rodata
 	.align	2
 .LANCHOR1 = . + 0
-	.type	__func__.40041, %object
-	.size	__func__.40041, 15
-__func__.40041:
+	.type	__func__.40045, %object
+	.size	__func__.40045, 15
+__func__.40045:
 	.ascii	"IsVoQueueEmpty\000"
 	.space	1
-	.type	__func__.38723, %object
-	.size	__func__.38723, 19
-__func__.38723:
+	.type	__func__.38727, %object
+	.size	__func__.38727, 19
+__func__.38727:
 	.ascii	"InsertImgToVoQueue\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
@@ -3477,9 +3477,9 @@ pstVdecUsdPool:
 	.size	g_SpinLock, 12
 g_SpinLock:
 	.space	12
-	.type	last_rec_pos_time.38715, %object
-	.size	last_rec_pos_time.38715, 64
-last_rec_pos_time.38715:
+	.type	last_rec_pos_time.38719, %object
+	.size	last_rec_pos_time.38719, 64
+last_rec_pos_time.38719:
 	.space	64
 	.type	g_DnrEnable, %object
 	.size	g_DnrEnable, 4

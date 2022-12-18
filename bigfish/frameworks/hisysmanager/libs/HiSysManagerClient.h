@@ -20,6 +20,7 @@ class HiSysManagerClient: public RefBase
 public:
     int upgrade(String8 path);
     int reset();
+    int updateLogo(String8 path);
     int enterSmartStandby();
     int quitSmartStandby();
     int setFlashInfo(String8 warpflag,int offset,int offlen,String8 info);

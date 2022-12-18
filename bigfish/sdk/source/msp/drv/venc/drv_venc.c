@@ -39,8 +39,7 @@
 #endif
 
 #include <linux/delay.h>
-#include <linux/kernel.h>       /* printk */
-
+#include <linux/kernel.h>       
 
 //#include "drv_vi_ext.h"
 //#include "drv_ndpt_ext.h"
@@ -643,7 +642,7 @@ HI_S32 VENC_DRV_CreateChn(VeduEfl_EncPara_S** phVencChn, venc_chan_cfg *pstAttr,
 	    EncCfg.bRCSkipFrmEn = HI_FALSE;
 	}
 
-#if 0	
+#if 1	
     if (EncCfg.SlcSplitEn)
     {
         if (pVencUnfAttrs->u32Width >= 1280)
@@ -1070,8 +1069,8 @@ HI_S32 VENC_DRV_SetSrcInfo(VeduEfl_EncPara_S* hVencChn, HI_DRV_VENC_SRC_INFO_S* 
         case HI_ID_VI:
             D_VENC_CHECK_PTR(pstSrcInfo->pfChangeInfo);
             s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, 
-                                    pEncPara->PicWidth, 
-                                    pEncPara->PicHeight,
+                                    pstVenc->stChnUserCfg.u32Width, 
+                                    pstVenc->stChnUserCfg.u32Height,
                                     pEncPara->VoFrmRate);
             if (HI_SUCCESS != s32Ret)
             {
@@ -1090,8 +1089,8 @@ HI_S32 VENC_DRV_SetSrcInfo(VeduEfl_EncPara_S* hVencChn, HI_DRV_VENC_SRC_INFO_S* 
         case HI_ID_VO:
             D_VENC_CHECK_PTR(pstSrcInfo->pfChangeInfo);
             s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, 
-                                    pEncPara->PicWidth, 
-                                    pEncPara->PicHeight,
+                                    pstVenc->stChnUserCfg.u32Width, 
+                                    pstVenc->stChnUserCfg.u32Height,
                                     pEncPara->VoFrmRate);
                                     
             if (HI_SUCCESS != s32Ret)
@@ -2654,7 +2653,7 @@ HI_S32 HI_DRV_VENC_Close_By_OPENTV(struct file*  ffile)
 
     Ret = down_interruptible(&g_VencDrvMutex);
 
-    del_timer(&vencTimer);
+    del_timer_sync(&vencTimer);
 
     for (i = 0; i < VENC_MAX_CHN_NUM; i++)
     {

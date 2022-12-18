@@ -27,6 +27,7 @@
 extern HI_BOOL  g_FrameRateLimit;
 extern HI_BOOL  g_DeInterlaceEnable;
 extern HI_BOOL  g_DynamicFsEnable;
+extern HI_BOOL  g_LowDelayStatistics;
 extern HI_U32   g_DispNum;
 extern HI_U32   g_SegSize;         // (M)
 extern HI_BOOL  g_RawMoveEnable;   // 码流搬移使能标志，解决scd切割失败不释放码流的情况
@@ -50,6 +51,7 @@ extern HI_BOOL  g_FastOutputMode;
 #define DBG_CMD_DISPNUM         "set_DispNum"
 #define DBG_CMD_SEGSIZE         "set_SegSize"
 #define DBG_CMD_DFS             "set_Dfs"
+#define DBG_CMD_LOWDELAY_TIME   "set_LD"
 #define DBG_CMD_HELP            "help"
 
 
@@ -59,6 +61,7 @@ HI_BOOL  g_SaveRawEnable         = HI_FALSE;
 HI_BOOL  g_SaveYuvEnable         = HI_FALSE;
 HI_CHAR  g_SavePath[PATH_LEN]    = {'/','m','n','t','\0'};
 HI_CHAR  g_SaveName[NAME_LEN]    = {'o','m','x','\0'};
+HI_U32   g_SaveNum               = 0;
 
 OMXVDEC_ENTRY  *g_OmxVdec               = HI_NULL;
 OMXVDEC_FUNC    g_stOmxFunc             = {HI_NULL};
@@ -658,7 +661,8 @@ HI_VOID omxvdec_help_proc(HI_VOID)
     "USAGE:echo [cmd] [para] > /proc/msp/omxvdec\n"
     "cmd = save_raw,         para = start/stop   :start/stop to save raw data\n"
     "cmd = save_yuv,         para = start/stop   :start/stop to save yuv data\n"
-    "cmd = save_path,        para = path         :config path to save data\n");
+    "cmd = save_path,        para = path         :config path to save data\n"
+    "cmd = set_FastOutput,   para = on/off       :enable/disable fast output\n");
     HI_DRV_PROC_EchoHelper(
     "cmd = limit_framerate,  para = on/off       :enable/disable frame rate limit\n"
     "cmd = set_RawMove,      para = on/off       :enable/disable raw move\n"
@@ -670,6 +674,9 @@ HI_VOID omxvdec_help_proc(HI_VOID)
     "cmd = set_DispNum,      para = value        :set DispNum    = value\n"
     "cmd = set_SegSize,      para = value        :set SegSize    = value\n"
     "cmd = set_InBufThred,   para = value        :set InBufThred = value\n"
+    "\n");
+    HI_DRV_PROC_EchoHelper(
+    "cmd = set_LD,  para = value        :set LowDelayStatistics  = value\n"
     "\n");
     HI_DRV_PROC_EchoHelper(
     "TraceOption(32bits):\n"
@@ -707,7 +714,8 @@ static HI_S32 omxvdec_read_proc(struct seq_file *p, HI_VOID *v)
     PROC_PRINT(p, "%-25s :%d\n", "DynamicFsEnable",   g_DynamicFsEnable);
     PROC_PRINT(p, "%-25s :%d\n", "FrameRateLimit",    g_FrameRateLimit);
     PROC_PRINT(p, "%-25s :%d\n", "DeInterlaceEnable", g_DeInterlaceEnable);
-  //  PROC_PRINT(p, "%-25s :%d\n", "FastOutputMode",    g_FastOutputMode);
+    PROC_PRINT(p, "%-25s :%d\n", "FastOutputMode",    g_FastOutputMode);
+    PROC_PRINT(p, "%-25s :%d\n", "LowDelayStatistics", g_LowDelayStatistics);
     if (HI_TRUE == g_DynamicFsEnable && HI_NULL != g_OmxVdec->task.task_thread)
     {
         task_proc_entry(p, &g_OmxVdec->task);
@@ -810,6 +818,7 @@ HI_S32 omxvdec_write_proc(struct file *file, const char __user *buffer, size_t c
             {
                 OmxPrint(OMX_ALWS, "Enable raw save.\n");
                 g_SaveRawEnable = HI_TRUE;
+                g_SaveNum++;                
             }
             else if (!strncmp(str2, DBG_CMD_STOP, DBG_CMD_LEN))
             {
@@ -827,6 +836,7 @@ HI_S32 omxvdec_write_proc(struct file *file, const char __user *buffer, size_t c
             {
                 OmxPrint(OMX_ALWS, "Enable yuv save.\n");
                 g_SaveYuvEnable = HI_TRUE;
+                g_SaveNum++;
             }
             else if (!strncmp(str2, DBG_CMD_STOP, DBG_CMD_LEN))
             {
@@ -967,6 +977,23 @@ HI_S32 omxvdec_write_proc(struct file *file, const char __user *buffer, size_t c
             {
                 OmxPrint(OMX_ALWS, "Disable DynamicFs.\n");
                 g_DynamicFsEnable = HI_FALSE;
+            }
+            else
+            {
+                goto error;
+            }
+        }
+        else if (!strncmp(str1, DBG_CMD_LOWDELAY_TIME, DBG_CMD_LEN))
+        {
+            if (!strncmp(str2, DBG_CMD_ON, DBG_CMD_LEN))
+            {
+                OmxPrint(OMX_ALWS, "Enable low_delay_statistics.\n");
+                g_LowDelayStatistics = HI_TRUE;
+            }
+            else if (!strncmp(str2, DBG_CMD_OFF, DBG_CMD_LEN))
+            {
+                OmxPrint(OMX_ALWS, "Disable low_delay_statistics.\n");
+                g_LowDelayStatistics = HI_FALSE;
             }
             else
             {

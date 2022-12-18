@@ -25,8 +25,8 @@
 #include "vfmw.h"
 #include "hi_drv_video.h"  //主要是输出颜色空间枚举
 
-
-#define OMXVDEC_VERSION	 		        (2015071501)
+//合入低延迟修改 20150827
+#define OMXVDEC_VERSION	 		        (2015081800)
 
 #define OMXVDEC_NAME                    "hi_omxvdec"
 #define DRIVER_PATH                     "/dev/hi_omxvdec"
@@ -194,6 +194,9 @@ typedef struct {
     OMXVDEC_FRAME_S  out_frame;
 	HI_VOID         *bufferaddr;
 	HI_VOID         *client_data;
+    HI_U32           u32FrameIndex;
+    HI_HANDLE        hTunnelSrc;
+    HI_U32           u32FrameRate;    
 }OMXVDEC_BUF_DESC;
 
 typedef struct {

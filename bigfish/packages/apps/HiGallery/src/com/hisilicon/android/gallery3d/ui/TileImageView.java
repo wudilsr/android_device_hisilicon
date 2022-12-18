@@ -72,6 +72,7 @@ public class TileImageView extends GLView {
 
     private Model mModel;
     protected BitmapTexture mBackupImage;
+    private boolean misgif = false;
     protected int mLevelCount;  // cache the value of mScaledBitmaps.length
 
     // The mLevel variable indicates which level of bitmap we should use.
@@ -135,8 +136,9 @@ public class TileImageView extends GLView {
         mTileDecoder = mThreadPool.submit(new TileDecoder());
     }
 
-    public void setModel(Model model) {
+    public void setModel(Model model,boolean isgif) {
         mModel = model;
+        misgif = isgif;
         if (model != null) notifyModelInvalidated();
     }
 
@@ -146,12 +148,14 @@ public class TileImageView extends GLView {
             mBackupImage = null;
         } else {
             if (mBackupImage != null) {
+                misgif = mBackupImage.getIsGif();
                 if (mBackupImage.getBitmap() != backup) {
                     mBackupImage.recycle();
                     mBackupImage = new BitmapTexture(backup);
                 }
             } else {
                 mBackupImage = new BitmapTexture(backup);
+                mBackupImage.setIsGif(misgif);
             }
         }
     }
@@ -387,9 +391,13 @@ public class TileImageView extends GLView {
                     }
                 }
             } else if (mBackupImage != null) {
-                mBackupImage.draw(canvas, mOffsetX, mOffsetY,
-                        Math.round(mImageWidth * mScale),
-                        Math.round(mImageHeight * mScale));
+               if(mBackupImage.getIsGif()){
+                    int x = (getWidth()-mImageWidth)/2;
+                    int y = (getHeight()-mImageHeight)/2;
+                    mBackupImage.draw(canvas, x, y,Math.round(mImageWidth * 1),Math.round(mImageHeight * 1));
+               }else{
+                    mBackupImage.draw(canvas, mOffsetX, mOffsetY,Math.round(mImageWidth * mScale),Math.round(mImageHeight * mScale));
+               }
             }
         } finally {
             if (rotation != 0) canvas.restore();

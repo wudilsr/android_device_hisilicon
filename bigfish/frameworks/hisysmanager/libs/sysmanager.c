@@ -46,7 +46,9 @@
 #include <linux/capability.h>
 #include <linux/prctl.h>
 #include <private/android_filesystem_config.h>
+#include "hi_unf_mce.h"
 #include "hi_unf_pmoc.h"
+#include "hi_unf_pdm.h"
 
 #include <cutils/log.h>
 #include <dirent.h>
@@ -63,6 +65,9 @@
 #define TOKEN_MAX     24     /* max number of arguments in buffer */
 #define REPLY_MAX     256   /* largest reply allowed */
 #define READ_ERROR    -1   /*read error*/
+#define LOGO_MAX_SIZE   (20*1024*1024)
+
+#define LOG_TAG "sysmanager"
 
 struct cmdinfo {
     const char *name;
@@ -78,6 +83,126 @@ int do_reset()
     rebootForReset();
     return 0;
 }
+
+static HI_U32 getFileSize(const char *pFilePath)
+{
+    struct stat statbuf;
+
+    if(pFilePath){
+        stat(pFilePath, &statbuf);
+        return statbuf.st_size;
+    }else{
+        SLOGE(" [%s] :%d , invalid param ! ",__func__, __LINE__);
+        return HI_FAILURE;
+    }
+}
+
+int do_updateLogo(const char* pFilePath)
+{
+    HI_S32 ret = HI_FAILURE;
+    HI_UNF_MCE_LOGO_PARAM_S stLogoParam;
+    FILE *fpSrc = NULL;
+    HI_U32 fileSize;
+    HI_U8 *pDataBuf = NULL;
+    HI_U32 readSize;
+
+    if (NULL == pFilePath)
+    {
+        SLOGE("do_updateLogo, input param path is NULL!");
+        return HI_FAILURE;
+    }
+    if ((access(pFilePath, R_OK) != 0))
+    {
+        SLOGE("do_updateLogo, can not access %s!", pFilePath);
+        return HI_FAILURE;
+    }
+
+    fpSrc = fopen(pFilePath, "r");
+    if (NULL == fpSrc)
+    {
+        SLOGE("do_updateLogo, fopen %s ERROR!", pFilePath);
+        return HI_FAILURE;
+    }
+
+    fileSize = getFileSize(pFilePath);
+    SLOGE("do_updateLogo, %s is %d bytes!", pFilePath, fileSize);
+    if(HI_FAILURE == fileSize){
+        SLOGE(" [%s] :%d , getFileSize failed! ", __func__, __LINE__);
+        goto CLOSE_FP;
+    }
+
+    if (fileSize >= LOGO_MAX_SIZE)
+    {
+        SLOGE("do_updateLogo, %s exceeds %d bytes!", pFilePath, LOGO_MAX_SIZE);
+        goto CLOSE_FP;
+    }
+
+    pDataBuf = (HI_U8 *)malloc(fileSize);
+    if (NULL == pDataBuf)
+    {
+        SLOGE("do_updateLogo, malloc buffer ERROR!");
+        goto CLOSE_FP;
+    }
+
+    memset(pDataBuf, 0x00, fileSize);
+
+    readSize = fread(pDataBuf, sizeof(HI_CHAR), fileSize, fpSrc);
+    if(readSize != fileSize){
+        SLOGE("[%s] :%d , read [%s] failed !", __func__, __LINE__, pFilePath);
+        goto ERR_LOGO;
+    }
+
+    ret = HI_UNF_PDM_GetLogoParam(&stLogoParam);
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_updateLogo, HI_UNF_PDM_GetLogoParam ERROR: ret = %#x", ret);
+        goto ERR_LOGO;
+    }
+
+    SLOGD("do_updateLogo, original LOGO PARAMS:\n--> bLogoEnable = %d, u32LogoLen = %d bytes",
+        stLogoParam.bLogoEnable, stLogoParam.u32LogoLen);
+
+    stLogoParam.bLogoEnable = HI_TRUE;
+    stLogoParam.u32LogoLen = readSize;
+
+    SLOGD("do_updateLogo, update LOGO PARAMS:\n--> bLogoEnable = %d, u32LogoLen = %d bytes",
+        stLogoParam.bLogoEnable, stLogoParam.u32LogoLen);
+
+    ret = HI_UNF_PDM_UpdateLogoParam(&stLogoParam);
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_updateLogo, HI_UNF_PDM_UpdateLogoParam ERROR: ret = %#x", ret);
+        goto ERR_LOGO;
+    }
+
+    ret = HI_UNF_PDM_UpdateLogoContent(pDataBuf, readSize);
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_updateLogo, HI_UNF_PDM_UpdateLogoContent ERROR: ret = %#x", ret);
+        goto ERR_LOGO;
+    }
+    else
+    {
+        SLOGD("do_updateLogo, HI_UNF_PDM_UpdateLogoContent success");
+    }
+
+ERR_LOGO:
+    free(pDataBuf);
+    pDataBuf = NULL;
+CLOSE_FP:
+    fclose(fpSrc);
+    fpSrc = NULL;
+
+    if (HI_SUCCESS != ret)
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 int do_EnterSmartStandby()
 {
     SLOGE("do_EnterSmartStandby!(%s->%d)",__FUNCTION__,__LINE__);

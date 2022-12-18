@@ -592,10 +592,10 @@ public class HDMITestService extends Service {
         int timPosition = Common.video_timing_position;
         int deepPosition = Common.deepcolor_position;
         if (timPosition >= Common.video_timing_array.length - 4)
-            mhisys.adjustDevState("/proc/msp/pm_core","volt=1140");
+            mhisys.adjustDevState("/proc/msp/pm_core","volt=1200");
         else if (deepPosition == DEEP_36BIT
                 && (timPosition == TIM_1080P50 || timPosition == TIM_1080P60)) {
-            mhisys.adjustDevState("/proc/msp/pm_core","volt=1140");
+            mhisys.adjustDevState("/proc/msp/pm_core","volt=1200");
         } else
             mhisys.adjustDevState("/proc/msp/pm_core","volt=0");
     }

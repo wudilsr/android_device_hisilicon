@@ -538,7 +538,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
         break;
         case HI_SVR_PLAYER_EVENT_BUFFER_STATE:
         {
-            if (NULL == pstruEvent->pu8Data)
+            if (NULL == pstruEvent->pu8Data || false == pHiPlayer->mUnderrun)
             {
                 return HI_SUCCESS;
             }
@@ -822,6 +822,7 @@ HiMediaPlayer::HiMediaPlayer():
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
             mTimeShiftDuration(-1),
+            mUnderrun(true),
             mYunosSource(0)
 {
     LOGV("[%s] HiMediaPlayer construct", STR_SWITCH_PG);
@@ -890,6 +891,7 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
             mTimeShiftDuration(-1),
+            mUnderrun(true),
             mYunosSource(0)
 {
     LOGV("[%s] HiMediaPlayer construct userData", STR_SWITCH_PG);
@@ -1463,6 +1465,19 @@ status_t HiMediaPlayer::setDataSource(const char *uri, const KeyedVector<String8
 
     memset(&mMediaParam, 0, sizeof(mMediaParam));
     strncpy(mMediaParam.aszUrl, uri, (size_t)HI_FORMAT_MAX_URL_LEN - 1);
+    /* replace character /r and /n to NULL in url*/
+    char *pChar0D0A = mMediaParam.aszUrl;
+    while(pChar0D0A && *pChar0D0A != '\0')
+    {
+        if(*pChar0D0A == 0x0D || *pChar0D0A == 0x0A)
+        {
+            *pChar0D0A = 0;
+            LOGV("uri[%s] have char [0D0A], cut to [%s]",uri, mMediaParam.aszUrl);
+            break;
+        }
+        pChar0D0A++;
+    }
+
     mFirstPlay = true;
 
     sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_PREPARE_PROGRESS, 10);
@@ -3875,6 +3890,12 @@ status_t HiMediaPlayer::getMetadata(const media::HiMetadata::Filter& ids, Parcel
              LOGV("key %s: len %d \n", pstKvp[i].pszKey, u32Len);
         }*/
     }
+    if(NULL != pArg.pu8Buff){
+        free(pArg.pu8Buff);
+    }
+    if(NULL != pArg.pstKvp){
+        free(pArg.pstKvp);
+    }
 
     return NO_ERROR;
 }
@@ -4694,11 +4715,11 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     HI_SVR_PLAYER_MEDIA_S mediaParam = (static_cast<CommandPrepare*>(cmd))->getParam();
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 start_time = getCurrentTime();
-    HI_S32 s32Underrun = 1;
     HI_FORMAT_BUFFER_CONFIG_S stBufConfig;
     HI_S64  s64BufMaxSize;
-    HI_CHAR aszUnderrunSwitch[PROPERTY_VALUE_MAX] = {0};
+    HI_CHAR aszPropertyValue[PROPERTY_VALUE_MAX] = {0};
     HI_S32 s32HlsStartNumber = 1;
+    HI_BOOL bIsConfigSize = HI_FALSE;
 
     if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_HEADERS, (void*)mediaParam.u32UserData))
     {
@@ -4733,33 +4754,91 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     stBufConfig.s64EventStart  = 500;//2000
     stBufConfig.s64EventEnough = 12000;
     stBufConfig.s64Total       = 20000;
-    s64BufMaxSize = 20*1024*1024;
+    s64BufMaxSize = 80*1024*1024;
 
     if (strstr(mediaParam.aszUrl, "udp://") || strstr(mediaParam.aszUrl, "rtp://"))
     {
         LOGV("real time protocol,close underrun");
-        s32Underrun = 0;
+        mPlayer->mUnderrun = false;
     }
     else
     {
-        s32Underrun = 1;
+        mPlayer->mUnderrun = true;
     }
 
-    if (property_get("media.hiplayer.underrun", aszUnderrunSwitch, "null") > 0)
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("media.hiplayer.underrun", aszPropertyValue, "null") > 0)
     {
-        if (!strcasecmp("false", aszUnderrunSwitch))
+        if (!strcasecmp("false", aszPropertyValue))
         {
-            s32Underrun = 0;
+            mPlayer->mUnderrun = false;
         }
-        else if (!strcasecmp("true", aszUnderrunSwitch))
+        else if (!strcasecmp("true", aszPropertyValue))
         {
-            s32Underrun = 1;
+            mPlayer->mUnderrun = true;
         }
     }
 
-    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_CONFIG, &stBufConfig);
+    /* config cache buffer through property */
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("persist.sys.player.cache.type", aszPropertyValue, "null") > 0)
+    {
+        if (!strcasecmp("size", aszPropertyValue))
+        {
+            stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_SIZE;
+            bIsConfigSize = HI_TRUE;
+            stBufConfig.s64EventStart  = 2*1024*1024;
+            stBufConfig.s64EventEnough = 48*1024*1024;
+            stBufConfig.s64Total       = 80*1024*1024;
+            s64BufMaxSize = 80*1024*1024;
+        }
+        else if (!strcasecmp("time", aszPropertyValue))
+        {
+            stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_TIME;
+            bIsConfigSize = HI_FALSE;
+        }
+    }
+
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("persist.sys.player.cache.low", aszPropertyValue, "null") && strcasecmp("null", aszPropertyValue))
+    {
+        stBufConfig.s64EventStart = atoi(aszPropertyValue);
+        if (HI_TRUE == bIsConfigSize)
+        {
+            stBufConfig.s64EventStart *= 1024 * 1024;
+        }
+    }
+
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("persist.sys.player.cache.high", aszPropertyValue, "null") && strcasecmp("null", aszPropertyValue))
+    {
+        stBufConfig.s64EventEnough = atoi(aszPropertyValue);
+        if (HI_TRUE == bIsConfigSize)
+        {
+            stBufConfig.s64EventEnough *= 1024 * 1024;
+        }
+    }
+
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("persist.sys.player.cache.total", aszPropertyValue, "null") && strcasecmp("null", aszPropertyValue))
+    {
+        stBufConfig.s64Total = atoi(aszPropertyValue);
+        if (HI_TRUE == bIsConfigSize)
+        {
+            stBufConfig.s64Total *= 1024 * 1024;
+        }
+    }
+
+    memset(aszPropertyValue, 0, PROP_VALUE_MAX);
+    if (property_get("persist.sys.player.bufmaxsize", aszPropertyValue, "null") && strcasecmp("null", aszPropertyValue))
+    {
+        s64BufMaxSize = atoi(aszPropertyValue);
+        s64BufMaxSize *= 1024 * 1024;
+    }
+
     s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE, &s64BufMaxSize);
-    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &s32Underrun);
+    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_CONFIG, &stBufConfig);
+    s32Ret |= HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_UNDERRUN, &(mPlayer->mUnderrun));
     if (HI_SUCCESS != s32Ret)
     {
         LOGV("ERR: HI_SVR_PLAYER_Invoke set buffer config fail, maybe is local file!");
@@ -4770,8 +4849,35 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     LOGV("s64EventEnough:%lld\n", stBufConfig.s64EventEnough);
     LOGV("s64Total:%lld\n", stBufConfig.s64Total);
     LOGV("s64TimeOut:%lld\n", stBufConfig.s64TimeOut);
-    LOGV("s32Underrun(%d)\n",s32Underrun);
+    LOGV("mUnderrun(%d)\n", mPlayer->mUnderrun);
+    LOGV("s64BufMaxSize:%lld\n", s64BufMaxSize);
     #endif
+
+    /* We can set hls start mode by setprop media.hiplayer.hls.startmode *
+     * setprop media.hiplayer.hls.startmode fast      --- means hls start by fast *
+     * setprop media.hiplayer.hls.startmode normal --- means hls start by normal */
+    HI_CHAR startMode[PROPERTY_VALUE_MAX] = {0};
+    if (property_get("media.hiplayer.hls.startmode", startMode, "normal") > 0)
+    {
+        HI_FORMAT_HLS_START_MODE_E eStartMode = HI_FORMAT_HLS_MODE_NORMAL;
+        if (!strncasecmp(startMode, "fast", 4))
+        {
+            eStartMode = HI_FORMAT_HLS_MODE_FAST;
+        }
+
+        LOGV("going to set hls start mode to %s", startMode);
+
+        s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_HLS_START_MODE, (HI_VOID*)eStartMode);
+        if (HI_SUCCESS != s32Ret)
+        {
+            LOGE("ERR: HI_SVR_PLAYER_Invoke HI_FORMAT_INVOKE_SET_HLS_START_MODE fail!");
+        }
+        else
+        {
+            LOGV("set hls start mode success");
+        }
+    }
+
     s32Ret = HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam);
 
     LOGE("HI_SVR_PLAYER_SetMedia use time = %d ms", getCurrentTime() - start_time);
@@ -5806,22 +5912,18 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                     LOGV("meta: %s\n", pstKvp[i].pszKey);
                 }
 
-                String16 *str16Album = new String16(pszAlbum, strlen(pszAlbum));
-                reply->writeString16(*str16Album);
-                String16 *str16Title = new String16(pszTitle, strlen(pszTitle));
-                reply->writeString16(*str16Title);
-                String16 *str16Artist = new String16(pszArtist, strlen(pszArtist));
-                reply->writeString16(*str16Artist);
-                String16 *str16Genre = new String16(pszGenre, strlen(pszGenre));
-                reply->writeString16(*str16Genre);
-                String16 *str16Year = new String16(pszYear, strlen(pszYear));
-                reply->writeString16(*str16Year);
+                reply->writeString16((String16)pszAlbum);
+                reply->writeString16((String16)pszTitle);
+                reply->writeString16((String16)pszArtist);
+                reply->writeString16((String16)pszGenre);
+                reply->writeString16((String16)pszYear);
 
-                delete(str16Album);
-                delete(str16Title);
-                delete(str16Artist);
-                delete(str16Genre);
-                delete(str16Year);
+                 if (NULL != pArg.pu8Buff) {
+                     free(pArg.pu8Buff);
+                 }
+                 if (NULL != pArg.pstKvp) {
+                     free(pArg.pstKvp);
+                 }
             }
         }
         break;
@@ -6029,8 +6131,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
 
                 if (NULL != reply)
                 {
-                    pstr16 = new String16(pstAudInfo->aszLanguage, strlen(pstAudInfo->aszLanguage));
-                    reply->writeString16(*pstr16);
+                    reply->writeString16((String16)pstAudInfo->aszLanguage);
                     reply->writeInt32(pstAudInfo->u32Format);
                     reply->writeInt32(pstAudInfo->u32SampleRate);
                     reply->writeInt32(pstAudInfo->u16Channels);
@@ -6357,8 +6458,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
 
             if (NULL != reply)
             {
-                sfontpath = new String16(hichars, strlen(hichars));
-                reply->writeString16(*sfontpath);
+                reply->writeString16((String16)hichars);
             }
         }
         break;
@@ -6829,8 +6929,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                 reply->writeInt32(stream_info.stream_nb);
                 reply->writeInt32(stream_info.bandwidth);
                 reply->writeInt32(stream_info.hls_segment_nb);
-                String16 *temp_url = new String16(stream_info.url, strlen(stream_info.url));
-                reply->writeString16(*temp_url);
+                reply->writeString16((String16)stream_info.url);
             }
         }
         break;
@@ -6851,8 +6950,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                 reply->writeInt32(segment_info.total_time);
                 reply->writeInt32(segment_info.bandwidth);
                 reply->writeInt32(segment_info.seq_num);
-                String16 *temp_url = new String16(segment_info.url, strlen(segment_info.url));
-                reply->writeString16(*temp_url);
+                reply->writeString16((String16)segment_info.url);
             }
         }
         break;
@@ -7067,6 +7165,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             }
 
             s64Size = s32Size * 1024;
+            LOGV("HiMediaPlayer::invoke set buffer max size[%d]KB ", s32Size);
             s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE, (HI_VOID *)&s64Size);
 
             if (NULL != reply)
@@ -7135,6 +7234,10 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
+            }
+            if (HI_SUCCESS == s32Ret)
+            {
+                mPlayer->mUnderrun = (bool)s32Arg;
             }
         }
         break;
@@ -7549,7 +7652,44 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                 LOGV("CMD_YUNOS_MEDIA_INFO mMediaInfoStr len=%d, %s !", strlen(mMediaInfoStr), mMediaInfoStr);
                 reply->writeString16((String16)mMediaInfoStr);
             }
-        }break;
+        }
+		break;
+		case CMD_SET_TRACK_VOLUME:
+		{
+			HI_UNF_SND_ABSGAIN_ATTR_S stAbsWeightGain;
+			HI_S32 s32Ret = 0;
+			HI_HANDLE hTrack = HI_INVALID_HANDLE;
+
+			HI_S32 lVolume = request->readInt32();
+			HI_S32 rVolume = request->readInt32();
+			LOGV("set track volume:%d %d", lVolume, rVolume);
+
+			s32Ret = HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AUDTRACK_HDL, &hTrack);
+			if (HI_SUCCESS != s32Ret)
+			{
+				LOGE("GET HI_SVR_PLAYER_ATTR_AUDTRACK_HDL failed.");
+				break;
+			}
+
+			memset(&stAbsWeightGain, 0, sizeof(stAbsWeightGain));
+			stAbsWeightGain.bLinearMode = HI_TRUE;
+			stAbsWeightGain.s32GainL = lVolume;
+			stAbsWeightGain.s32GainR = rVolume;
+			s32Ret = HI_UNF_SND_SetTrackAbsWeight(hTrack, &stAbsWeightGain);
+
+			if (HI_SUCCESS != s32Ret)
+			{
+				LOGE("GET HI_SVR_PLAYER_ATTR_AUDTRACK_HDL failed.");
+				break;
+			}
+
+			if (NULL != reply)
+			{
+				LOGV("fixed track Volume :%d", s32Ret);
+				reply->writeInt32(s32Ret);
+			}
+		}
+		break;
         default:
             LOGE("HiMediaPlayer::invoke fail: unkonw cmd type %d", (int)cmd);
             //if cmd is unknown, write HI_FAILURE to reply

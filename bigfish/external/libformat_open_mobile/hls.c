@@ -1346,6 +1346,9 @@ reparse:
 
                 time_diff = av_gettime() - v->seg_list.hls_last_load_time;
                 time_wait = v->seg_list.hls_target_duration * AV_TIME_BASE;
+
+                if (time_wait > HLS_MAX_WAITE_TIME)
+                    time_wait = HLS_MAX_WAITE_TIME;
             }
 
             /* Enough time has elapsed since the last reload */
@@ -1405,6 +1408,9 @@ reparse:
 
                 time_diff = av_gettime() - v->seg_list.hls_last_load_time;
                 time_wait = v->seg_list.hls_target_duration * AV_TIME_BASE;
+
+                if (time_wait > HLS_MAX_WAITE_TIME)
+                    time_wait = HLS_MAX_WAITE_TIME;
             }
 
             /* Enough time has elapsed since the last reload */

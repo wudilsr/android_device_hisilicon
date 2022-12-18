@@ -14,8 +14,9 @@ namespace android
       virtual int getUnfAudioPort(int port) = 0;
       virtual int setBluerayHbr(int status) = 0;
       virtual int setEnterSmartSuspend(int status) = 0;
-	  virtual void startCardPlay() = 0;
-	  virtual void stopCardPlay() = 0;
+      virtual void startCardPlay() = 0;
+      virtual void stopCardPlay() = 0;
+      virtual int setSndVolume(int volume) = 0;
   };
 
   class BnHiAoService : public BnInterface<IHiAoService>

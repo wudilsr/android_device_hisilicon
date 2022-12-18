@@ -11,6 +11,7 @@ namespace android {
 enum {
 	UPGRADE = IBinder::FIRST_CALL_TRANSACTION + 0,
 	RESET,
+    UPDATELOGO,
 	ENTERSMARTSTANDBY,
 	QUITSMARTSTANDBY,
 	SETFLASHINFO,
@@ -90,6 +91,25 @@ public:
 		}
 		return ret;
 	}
+
+    virtual int updateLogo(String8 path)
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+        data.writeString8(path);
+        remote()->transact(UPDATELOGO, data, &reply);
+        int32_t ret = reply.readInt32();
+        if(ret == 0)
+        {
+            ret = reply.readInt32();
+        }
+        else
+        {
+            ret = -1;
+        }
+        return ret;
+    }
+
 	virtual int enterSmartStandby()
 	{
 		Parcel data, reply;
@@ -768,6 +788,12 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
 		ret = reset();
 		reply->writeInt32(ret);
 		return NO_ERROR;
+        case UPDATELOGO:
+            CHECK_INTERFACE(IHiSysManagerService, data, reply);
+            path = data.readString8();
+            ret = updateLogo(path);
+            reply->writeInt32(ret);
+            return NO_ERROR;
 	case ENTERSMARTSTANDBY:
 		CHECK_INTERFACE(IHiSysManagerService, data, reply);
 		ret = enterSmartStandby();

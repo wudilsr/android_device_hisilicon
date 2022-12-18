@@ -13,9 +13,10 @@ namespace android
     SETAUDIOPORT = IBinder::FIRST_CALL_TRANSACTION,
     GETAUDIOPORT,
     SETBLUERAYHBR,
-	STARTCARDPLAY,
-	STOPCARDPLAY,
-	SETENTERSMAERTSUSPEND,
+    STARTCARDPLAY,
+    STOPCARDPLAY,
+    SETENTERSMAERTSUSPEND,
+    SETSOUNDVOLUME,
   };
 
   class BpHiAoService : public BpInterface<IHiAoService>
@@ -28,19 +29,19 @@ namespace android
       }
 
       virtual void startCardPlay()
-	  {
-	  	  ALOGI("startCardPlay");
-	      Parcel data,reply;
-		  data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
-		  remote()->transact(STARTCARDPLAY,data, &reply,IBinder::FLAG_ONEWAY);
-	  }
+      {
+          ALOGI("startCardPlay");
+          Parcel data,reply;
+          data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
+          remote()->transact(STARTCARDPLAY,data, &reply,IBinder::FLAG_ONEWAY);
+      }
 
-	  virtual void stopCardPlay()
-	  {
-	      Parcel data,reply;
-		  data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
-		  remote()->transact(STOPCARDPLAY,data, &reply,IBinder::FLAG_ONEWAY);
-	  }
+      virtual void stopCardPlay()
+      {
+          Parcel data,reply;
+          data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
+          remote()->transact(STOPCARDPLAY,data, &reply,IBinder::FLAG_ONEWAY);
+      }
 
       virtual int setUnfAudioPort(int port,int mode)
       {
@@ -82,15 +83,25 @@ namespace android
 
       virtual int setEnterSmartSuspend(int status)
       {
-    	Parcel data,reply;
-    	data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
-    	data.writeInt32(status);
-    	remote()->transact(SETENTERSMAERTSUSPEND,data, &reply);
-    	int32_t ret = reply.readInt32();
-    	return ret;
+        Parcel data,reply;
+        data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
+        data.writeInt32(status);
+        remote()->transact(SETENTERSMAERTSUSPEND,data, &reply);
+        int32_t ret = reply.readInt32();
+        return ret;
       }
 
-	  
+      virtual int setSndVolume(int volume)
+      {
+        Parcel data,reply;
+        data.writeInterfaceToken(IHiAoService::getInterfaceDescriptor());
+        data.writeInt32(volume);
+        remote()->transact(SETSOUNDVOLUME,data, &reply);
+        int32_t ret = reply.readInt32();
+        return ret;
+      }
+
+
   };
 
    IMPLEMENT_META_INTERFACE(HiAoService, "android.os.IHiAoService");
@@ -122,20 +133,26 @@ namespace android
          ret = setBluerayHbr(status);
          reply->writeInt32(ret);
          return NO_ERROR;
-	  case SETENTERSMAERTSUSPEND:
+      case SETENTERSMAERTSUSPEND:
          CHECK_INTERFACE(IHiAoService, data, reply);
          status = data.readInt32();
          ret = setEnterSmartSuspend(status);
          reply->writeInt32(ret);
          return NO_ERROR;
       case STARTCARDPLAY:
-	     CHECK_INTERFACE(IHiAoService, data, reply);
-		 startCardPlay();
-		 return NO_ERROR;
-	  case STOPCARDPLAY:
-	     CHECK_INTERFACE(IHiAoService, data, reply);
-		 stopCardPlay();
-		 return NO_ERROR;
+         CHECK_INTERFACE(IHiAoService, data, reply);
+         startCardPlay();
+         return NO_ERROR;
+      case STOPCARDPLAY:
+         CHECK_INTERFACE(IHiAoService, data, reply);
+         stopCardPlay();
+         return NO_ERROR;
+      case SETSOUNDVOLUME:
+         CHECK_INTERFACE(IHiAoService, data, reply);
+         value = data.readInt32();
+         ret = setSndVolume(value);
+         reply->writeInt32(ret);
+         return ret;
       default:
          return BBinder::onTransact(code, data, reply, flags);
     }

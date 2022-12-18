@@ -301,20 +301,19 @@ HI_S32 HI_MPI_DISP_SetIsogenyAttr(const HI_DRV_DISP_ISOGENY_ATTR_S *pstIsogeny,
 		return HI_SUCCESS;
 	}
 	
-    Ret = HI_MPI_DISP_SetEnable(HI_DRV_DISPLAY_0, HI_FALSE);
-    if (Ret)
-	{
-		HI_ERR_DISP("Disable sd channel failed£¡\n");		
-        goto __RETURN_POINT;
-	}
-
     Ret = HI_MPI_DISP_SetEnable(HI_DRV_DISPLAY_1, HI_FALSE);
     if (Ret)
 	{
 		HI_ERR_DISP("Disable hd channel failed£¡\n");		
         goto __RETURN_POINT;
 	}
-
+	
+    Ret = HI_MPI_DISP_SetEnable(HI_DRV_DISPLAY_0, HI_FALSE);
+    if (Ret)
+	{
+		HI_ERR_DISP("Disable sd channel failed£¡\n");		
+        goto __RETURN_POINT;
+	}
 
     for (i = 0; i < u32Num; i++)
     {

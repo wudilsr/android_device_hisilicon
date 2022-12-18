@@ -2300,7 +2300,13 @@ HI_VOID  OPTM_VDP_WBC_SetRegUp (OPTM_VDP_LAYER_WBC_E enLayer)
 	 **CAPTURE的寄存器更新。当软件配置完该层寄存器后写1更新，更新完成后，硬件自动清零。
 	 **/
     volatile U_WBC_GP0_UPD WBC_GP0_UPD;
-	volatile U_WBC_G0_UPD WBC_G0_UPD;		
+	volatile U_WBC_G0_UPD WBC_G0_UPD;	
+
+	if (0 == pOptmVdpReg->WBC_GP0_YADDR.u32)
+	{
+		return;
+	}
+	
 	if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
     {
         WBC_GP0_UPD.bits.regup = 0x1;

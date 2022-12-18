@@ -19,8 +19,6 @@
 
 #define ANDROID_LOOP_TAG "ANDROID_LOOP"
 
-#define NOT_DEINIT_RESOURCE    1
-#define AVPLAY_MAX_COUNT       1
 #if NET_CACHE_UNDERRUN
 #define NET_CACHE_DIAGNOSE 0
 #else
@@ -495,6 +493,19 @@ private:
                 return ptr;
             }
         };
+        class FdDelegate : public RefBase {
+        public:
+            FdDelegate(int fd) : mFd(dup(fd)) {}
+            int getFd() {
+                return mFd;
+            }
+            ~FdDelegate() {
+                close(mFd);
+            }
+        private:
+            FdDelegate() {};
+            int mFd;
+        };
         HiMediaPlayer();
         HiMediaPlayer(void* userData);
         ~HiMediaPlayer();
@@ -549,6 +560,7 @@ private:
         virtual status_t    setParameter(int key, const Parcel &request);
         int         getTrueHDSetting();
         status_t    setSubFramePack(int type);
+		 Vector< sp<FdDelegate> > mFdDelegates;
 #if NET_CACHE_UNDERRUN
         // add for buffer event START
         enum

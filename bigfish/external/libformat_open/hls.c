@@ -721,7 +721,7 @@ static int hlsGetDefaultIndex(HLSContext *c, HLS_START_MODE_E mode)
             }
             if (HLS_MODE_FAST == mode)
             {
-                if ((c->hls_stream[i]->seg_list.hls_segment_nb) &&
+                if ((c->hls_stream[i]->seg_list.hls_segment_nb || !c->hls_stream[i]->is_parsed) &&
                     (c->hls_stream[i]->bandwidth < c->hls_stream[default_video_bw_stream_nb]->bandwidth))
                 {
                     default_video_bw_stream_nb = i;
@@ -729,7 +729,7 @@ static int hlsGetDefaultIndex(HLSContext *c, HLS_START_MODE_E mode)
             }
             else
             {
-                if ((c->hls_stream[i]->seg_list.hls_segment_nb) &&
+                if ((c->hls_stream[i]->seg_list.hls_segment_nb || !c->hls_stream[i]->is_parsed) &&
                     (c->hls_stream[i]->bandwidth > c->hls_stream[default_video_bw_stream_nb]->bandwidth))
                 {
                     default_video_bw_stream_nb = i;
@@ -836,14 +836,15 @@ static int hlsGetIndex(HLSContext *c)
 {
     uint64_t net_bw = c->netdata_read_speed;
     int    cur_bw=c->cur_hls->bandwidth;
-    int    target_index=-1;
+    int    target_index = -1;
     int    target_bw = 0;
-    int    cur_index=0;
-    int    i=0;
+    int    cur_index = 0;
+    int    i = 0;
     unsigned int bw_diff = 0xFFFFFFFF;
+    int    adjust_smooth = 1;
 
     if ((c->appoint_id >= 0) && (c->appoint_id < c->hls_stream_nb) &&
-            (c->hls_stream[c->appoint_id]->seg_list.hls_segment_nb > 0)) {
+            (c->hls_stream[c->appoint_id]->seg_list.hls_segment_nb > 0 || !c->hls_stream[c->appoint_id]->is_parsed)) {
         return c->appoint_id;
     }
 
@@ -856,7 +857,7 @@ static int hlsGetIndex(HLSContext *c)
     for (i = 0; i < c->hls_stream_nb; i++) {
         if ((c->hls_stream[i]->bandwidth < net_bw)
                 && (net_bw - c->hls_stream[i]->bandwidth < bw_diff)
-                && (c->hls_stream[i]->seg_list.hls_segment_nb > 0)) {
+                && (c->hls_stream[i]->seg_list.hls_segment_nb > 0 || !c->hls_stream[i]->is_parsed)) {
             bw_diff = net_bw - c->hls_stream[i]->bandwidth;
             target_index = i;
         }
@@ -866,7 +867,7 @@ static int hlsGetIndex(HLSContext *c)
         bw_diff = 0xFFFFFFFF;
         for (i = 0; i < c->hls_stream_nb; i++) {
             if (c->hls_stream[i]->bandwidth < bw_diff
-                    && (c->hls_stream[i]->seg_list.hls_segment_nb > 0)) {
+                    && (c->hls_stream[i]->seg_list.hls_segment_nb > 0 || !c->hls_stream[i]->is_parsed)) {
                 bw_diff = c->hls_stream[i]->bandwidth;
                 target_index = i;
             }
@@ -876,7 +877,20 @@ static int hlsGetIndex(HLSContext *c)
     target_bw = c->hls_stream[target_index]->bandwidth;
     bw_diff = 0xFFFFFFFF;
 
-    if (cur_index != target_index) {
+#if defined (ANDROID_VERSION)
+    /* We can set hls bandwidth adjust mode by setprop media.hiplayer.hls.adjustbw *
+     * setprop media.hiplayer.hls.adjustbw quick      --- means adjust by quick *
+     * setprop media.hiplayer.hls.adjustbw smooth --- means adjust by smooth*/
+
+    char value[PROPERTY_VALUE_MAX] = {0};
+    if (property_get("media.hiplayer.hls.adjustbw", value, "smooth") > 0) {
+        if (!strncmp(value, "quick", 5)) {
+            adjust_smooth = 0;
+        }
+    }
+#endif
+
+    if (adjust_smooth && cur_index != target_index) {
         if (target_bw < cur_bw) {
             for (i = 0; i < c->hls_stream_nb; i++) {
                 if ((c->hls_stream[i]->bandwidth < cur_bw)
@@ -890,15 +904,16 @@ static int hlsGetIndex(HLSContext *c)
             for (i = 0; i < c->hls_stream_nb; i++) {
                 if ((c->hls_stream[i]->bandwidth > cur_bw)
                         && (c->hls_stream[i]->bandwidth - cur_bw < bw_diff)
-                        && (c->hls_stream[i]->seg_list.hls_segment_nb > 0)) {
+                        && (c->hls_stream[i]->seg_list.hls_segment_nb > 0 || !c->hls_stream[i]->is_parsed)) {
                     bw_diff = c->hls_stream[i]->bandwidth - cur_bw;
                     target_index = i;
                 }
             }
         }
     }
-    av_log(NULL, AV_LOG_ERROR, "[%s:%d] net_bw =%llu  current: %d %d  target: %d %d \n",
-        __FILE_NAME__, __LINE__, net_bw, cur_index, cur_bw, target_index,c->hls_stream[target_index]->bandwidth);
+
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d] net_bw =%llu  current: %d %d  target: %d %d, adjust smooth: %d \n",
+        __FILE_NAME__, __LINE__, net_bw, cur_index, cur_bw, target_index,c->hls_stream[target_index]->bandwidth, adjust_smooth);
     return target_index;
 }
 
@@ -1301,6 +1316,12 @@ static int hlsReadDataCb(void *opaque, uint8_t *buf, int buf_size)
 restart:
     if (!v->seg_stream.input) {
 reload:
+        if (ff_check_interrupt(&c->interrupt_callback))
+        {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] force quit \n", __FILE__, __LINE__);
+            return AVERROR_EOF;
+        }
+
         time_diff = av_gettime() - v->seg_list.hls_last_load_time;
         time_wait = v->seg_list.hls_target_duration * AV_TIME_BASE;
 
@@ -1339,34 +1360,22 @@ reparse:
                 return AVERROR_EOF;
 
             #if defined (ANDROID_VERSION)
-            /* add for china mobile iptv */
-            char value[1024] = {0};
-            int is_china_mobile_iptv = 0;
-
-            memset(value, 0, 1024);
-
-            /* client.apk.name
+            /* add for fresh url */
+            /* setprop media.hiplayer.hls.freshurl true or false
+                   the project may need set true:
                    1. iptv.china.mobile
-                   2. iptv.china.telecom
-                   set apk.name by using "setprop iptv.project.name iptv.china.mobile" command.
+                   2. iptv.china.telecom (yue me)
                    */
+            char value[PROPERTY_VALUE_MAX] = {0};
+            if (property_get("media.hiplayer.hls.freshurl", value, NULL) && !strncmp(value, "true", 4)) {
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d] need fresh url\n", __FILE_NAME__, __LINE__);
 
-            if (property_get("iptv.project.name", value, NULL) > 0) {
-                if (!strncmp(value, "iptv.china.mobile", 17)) {
-                    is_china_mobile_iptv = 1;
-                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] find china mobile iptv flag \n", __FILE_NAME__, __LINE__);
-                }
-            }
-
-            if (1 == is_china_mobile_iptv) {
-                int ret_t = hlsFreshUrl(v);
-
-                if (0 == ret_t) {
+                if (0 == hlsFreshUrl(v)) {
                     need_reload = 1;
                     goto reload;
                 }
             }
-            /* iptv end */
+            /* end: add for fresh url*/
             #endif
 
             time_diff = av_gettime() - v->seg_list.hls_last_load_time;
@@ -1383,6 +1392,9 @@ reparse:
 
                 time_diff = av_gettime() - v->seg_list.hls_last_load_time;
                 time_wait = v->seg_list.hls_target_duration * AV_TIME_BASE;
+
+                if (time_wait > HLS_MAX_WAITE_TIME)
+                    time_wait = HLS_MAX_WAITE_TIME;
             }
 
             /* Enough time has elapsed since the last reload */
@@ -1531,7 +1543,7 @@ reopen:
                     open_fail = 0;
                 }
             }
-            if (v->seg_key.IO_decrypt) {
+            if (v->seg_key.IO_decrypt && v->seg_key.IO_decrypt->hd) {
                 v->seg_key.IO_decrypt->hd->parent = s->pb;
                 if (open_fail && !strncmp(v->seg_key.IO_decrypt->hd->filename, "http://", strlen("http://"))) {
                     av_log(NULL, AV_LOG_ERROR, "[%s:%d] network normal\n",__FILE_NAME__,__LINE__);
@@ -1582,6 +1594,12 @@ reopen:
     if (ret < 0 && ret != AVERROR_EOF)
         return ret;
 
+    if (ff_check_interrupt(&c->interrupt_callback))
+    {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] force quit \n", __FILE__, __LINE__);
+        return AVERROR_EOF;
+    }
+
     if (v->seg_key.IO_decrypt) {
         hls_decrypt_close(v->seg_key.IO_decrypt);
         av_freep(&v->seg_key.IO_decrypt);
@@ -1612,6 +1630,19 @@ load_next:
     hls_stream_info_t *hls = c->hls_stream[0];
     stream_num = hlsGetIndex(c);
     hls_stream_info_t *hls_next = c->hls_stream[stream_num];
+    if (0 == hls_next->seg_list.hls_segment_nb && 0 == hls_next->is_parsed)
+    {
+        ret = hlsParseM3U8(c, hls_next->url, hls_next, NULL);
+        if (0 > ret)
+        {
+            hls_next = v;
+        }
+        else
+        {
+            hls_next->is_parsed = 1;
+        }
+    }
+
     pos = hls_next->seg_list.hls_seg_start + (hls->seg_list.hls_seg_cur - hls->seg_list.hls_seg_start);
 
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] hls_next.seg_start = %d, hls.seg_cur = %d hls.seg_start = %d, pos = %d\n",
@@ -1629,6 +1660,13 @@ load_next:
                 c->cur_seg = hls_next->seg_list.segments[pos-hls_next->seg_list.hls_seg_start];
                 c->cur_hls = hls_next;
                 c->cur_stream_seq = stream_num;
+                c->cur_seq_num = pos-hls_next->seg_list.hls_seg_start;
+            }
+            else if (c->cur_stream_seq != stream_num)
+            {
+                hls_next = c->hls_stream[c->cur_stream_seq];
+                c->cur_seg = hls_next->seg_list.segments[pos-hls_next->seg_list.hls_seg_start];
+                c->cur_hls = hls_next;
                 c->cur_seq_num = pos-hls_next->seg_list.hls_seg_start;
             }
         } else {
@@ -1701,6 +1739,7 @@ load_next:
                     return ret;
                 }
                 avcodec_copy_context(st->codec, hls->seg_demux.ctx->streams[j]->codec);
+                av_log(NULL, AV_LOG_INFO, "%s:%d, av_new_stream, id: %d\n", __FILE__, __LINE__, st->id);
             }
         }
 
@@ -1721,7 +1760,7 @@ static int hlsRecheckDiscardFlags(AVFormatContext *s, int first)
 {
     HLSContext *c = s->priv_data;
     int i, changed = 0;
-
+#if 0
     /* Check if any new streams are needed */
     for (i = 0; i < c->hls_stream_nb; i++)
         c->hls_stream[i]->seg_list.cur_needed = 0;
@@ -1751,7 +1790,7 @@ static int hlsRecheckDiscardFlags(AVFormatContext *s, int first)
             av_log(s, AV_LOG_INFO, "No longer receiving variant %d\n", i);
         }
     }
-
+#endif
     return changed;
 }
 
@@ -1779,6 +1818,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     int ret = 0, i, j, stream_offset = 0;
     URLContext *uc = (URLContext *) s->pb->opaque;
     const char *cache_name = "hicache";
+    int start_stream_num = 0;
 
     if(NULL != c)
         c->reset_appoint_id = 0;
@@ -1892,59 +1932,83 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         int last_seg_start = 0;
         int min_segment_nb = 0;
         c->timeshift_time = s->time_shift_duration;
-        for (i = 0; i < c->hls_stream_nb; i++) {
-            hls_stream_info_t *hls = c->hls_stream[i];
 
-            /* before: add for china telecom iptv */
-            av_log(NULL, AV_LOG_ERROR, "[%s:%d] cache time = %d, parse url = %s \n",
-                __FILE__, __LINE__, c->timeshift_time, hls->url);
-
-            char *servicetype = NULL, *endchar = NULL;
-            servicetype = strstr(s->filename, "servicetype=2");
-            endchar = strstr(s->filename, "?");
-
-            if (NULL != servicetype && NULL != endchar) {
-                //calc starttime
-                time_t lt = time(0) - labs(c->timeshift_time) / 1000 - 28800;
-                struct tm *ptr = localtime(&lt);
-                char shift_time[128];
-
-                memset(shift_time, 0, 128);
-                strftime(shift_time, 128, "%Y%m%d%H%M%S", ptr);
-
-                //memset(p, 0, hls->url + INITIAL_URL_SIZE - p);
-                snprintf(hls->url + strlen(hls->url), INITIAL_URL_SIZE - strlen(hls->url), "%s%s%s%s",
-                    endchar, "&playseek=", shift_time, "-&zoneoffset=480&timezone=UTC");
-            }
-            else
+        if (HLS_MODE_FAST == s->hls_start_mode && 1 < c->hls_stream_nb)
+        {
+            start_stream_num = hlsGetDefaultIndex(c, HLS_MODE_FAST);
+            hls_stream_info_t *hls = c->hls_stream[start_stream_num];
+            ret = hlsParseM3U8(c, hls->url, hls, NULL);
+            if (0 <= ret)
             {
-                av_log(NULL, AV_LOG_ERROR, "[%s:%d] not shift program \n", __FILE__, __LINE__);
-            }
-
-            av_log(NULL, AV_LOG_ERROR, "[%s:%d] cache time = %d, parse url = %s \n",
-                __FILE__, __LINE__, c->timeshift_time, hls->url);
-            /* end: add for china telecom iptv */
-
-            if ((ret = hlsParseM3U8(c, hls->url, hls, NULL)) < 0) {
-                continue;
-            } else {
-                hls->first_seg_number = hls->seg_list.hls_seg_start;
-                /* if the segment start number is not equal, we use offset caculate next segment sequence */
                 valid_stream_nb = 1;
+                hls->is_parsed = 1;
+            }
+        }
+        else
+        {
+            for (i = 0; i < c->hls_stream_nb; i++) {
+                hls_stream_info_t *hls = c->hls_stream[i];
 
-                if (0 == i || hls->seg_list.hls_segment_nb < min_segment_nb) {
-                    min_segment_nb = hls->seg_list.hls_segment_nb;
+                /* before: add for fresh url */
+                /* setprop media.hiplayer.hls.freshurl true or false
+                              the project may need set true:
+                              1. iptv.china.mobile
+                              2. iptv.china.telecom (yue me)
+                         */
+                char value[PROPERTY_VALUE_MAX] = {0};
+                if (property_get("media.hiplayer.hls.freshurl", value, NULL) && !strncmp(value, "true", 4)) {
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] cache time = %d, parse url = %s \n",
+                        __FILE__, __LINE__, c->timeshift_time, hls->url);
+
+                    char *servicetype = NULL, *endchar = NULL;
+                    servicetype = strstr(s->filename, "servicetype=2");
+                    endchar = strstr(s->filename, "?");
+
+                    if (NULL != servicetype && NULL != endchar) {
+                        //calc starttime
+                        time_t lt = time(0) - labs(c->timeshift_time) / 1000 - 28800;
+                        struct tm *ptr = localtime(&lt);
+                        char shift_time[128];
+
+                        memset(shift_time, 0, 128);
+                        strftime(shift_time, 128, "%Y%m%d%H%M%S", ptr);
+
+                        //memset(p, 0, hls->url + INITIAL_URL_SIZE - p);
+                        snprintf(hls->url + strlen(hls->url), INITIAL_URL_SIZE - strlen(hls->url), "%s%s%s%s",
+                            endchar, "&playseek=", shift_time, "-&zoneoffset=480&timezone=UTC");
+                    }
+                    else
+                    {
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d] not shift program \n", __FILE__, __LINE__);
+                    }
+
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] cache time = %d, parse url = %s \n",
+                        __FILE__, __LINE__, c->timeshift_time, hls->url);
                 }
+                /* end: add for fresh url */
 
-                if (i > 0 && min_segment_nb > 1
-                    && abs(last_seg_start - hls->seg_list.hls_seg_start) >= (min_segment_nb - 1)
-                    && 0 == hls->seg_list.hls_finished) {
-                    c->use_offset_seq = 1;
-                    av_log(NULL, AV_LOG_ERROR, "hls live Stream, use offset sequence number refresh list\n");
+                if ((ret = hlsParseM3U8(c, hls->url, hls, NULL)) < 0) {
+                    continue;
+                } else {
+                    hls->first_seg_number = hls->seg_list.hls_seg_start;
+                    /* if the segment start number is not equal, we use offset caculate next segment sequence */
+                    valid_stream_nb = 1;
+
+                    if (0 == i || hls->seg_list.hls_segment_nb < min_segment_nb) {
+                        min_segment_nb = hls->seg_list.hls_segment_nb;
+                    }
+
+                    if (i > 0 && min_segment_nb > 1
+                        && abs(last_seg_start - hls->seg_list.hls_seg_start) >= (min_segment_nb - 1)
+                        && 0 == hls->seg_list.hls_finished) {
+                        c->use_offset_seq = 1;
+                        av_log(NULL, AV_LOG_ERROR, "hls live Stream, use offset sequence number refresh list\n");
+                    }
+
+                    last_seg_start = hls->seg_list.hls_seg_start;
+                    hls->is_parsed = 1;
+                    //break;    //zzg continue parse rest list
                 }
-
-                last_seg_start = hls->seg_list.hls_seg_start;
-                //break;    //zzg continue parse rest list
             }
         }
 
@@ -1968,7 +2032,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     if (c->has_video_stream) {
         for (i = 0; i < c->hls_stream_nb; i++) {
             hls_stream_info_t *hls = c->hls_stream[i];
-            if (!hls->video_codec || (0 == hls->seg_list.hls_finished && 1 == bVodStream)) {
+            if (!hls->video_codec || (0 == hls->seg_list.hls_finished && 1 == bVodStream && hls->is_parsed)) {
                 hlsFreeSegmentList(hls);
 
                 av_free_packet(&hls->seg_demux.pkt);
@@ -2015,7 +2079,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         }
     }
 
-    if (c->hls_stream[0]->seg_list.hls_segment_nb == 0) {
+    if (c->hls_stream[start_stream_num]->seg_list.hls_segment_nb == 0) {
         av_log(NULL, AV_LOG_WARNING, "Empty playlist\n");
         ret = AVERROR_EOF;
         goto fail;
@@ -2025,7 +2089,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     c->real_bw = 0;
     c->netdata_read_speed = 0;
 
-    if (c->hls_stream_nb > 1 && c->hls_stream[0]->seg_list.hls_finished) {
+    if (c->hls_stream_nb > 1 && c->hls_stream[start_stream_num]->seg_list.hls_finished && HLS_MODE_FAST != s->hls_start_mode) {
         int maxnb = c->hls_stream[0]->seg_list.hls_segment_nb, minnb = c->hls_stream[0]->seg_list.hls_segment_nb;
         int maxband = 0, maxbandidx = 0;
 
@@ -2055,22 +2119,22 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
 
     /* If this isn't a live stream, calculate the total duration of the
      * stream. */
-    if (c->hls_stream[0]->seg_list.hls_finished) {
+    if (c->hls_stream[start_stream_num]->seg_list.hls_finished) {
         int64_t duration = 0;
-        for (i = 0; i < c->hls_stream[0]->seg_list.hls_segment_nb; i++) {
-            c->hls_stream[0]->seg_list.segments[i]->start_time = duration;
-            duration += c->hls_stream[0]->seg_list.segments[i]->total_time;
+        for (i = 0; i < c->hls_stream[start_stream_num]->seg_list.hls_segment_nb; i++) {
+            c->hls_stream[start_stream_num]->seg_list.segments[i]->start_time = duration;
+            duration += c->hls_stream[start_stream_num]->seg_list.segments[i]->total_time;
         }
         s->duration = duration * (AV_TIME_BASE / 1000);
         s->is_live_stream = 0;
     } else {
         int64_t duration = 0;
-        for (i = 0; i < c->hls_stream[0]->seg_list.hls_segment_nb; i++) {
-            c->hls_stream[0]->seg_list.segments[i]->start_time = duration;
-            duration += c->hls_stream[0]->seg_list.segments[i]->total_time;
+        for (i = 0; i < c->hls_stream[start_stream_num]->seg_list.hls_segment_nb; i++) {
+            c->hls_stream[start_stream_num]->seg_list.segments[i]->start_time = duration;
+            duration += c->hls_stream[start_stream_num]->seg_list.segments[i]->total_time;
         }
 
-        c->timeshift_start_program_time = c->hls_stream[0]->seg_list.segments[0]->program_time;
+        c->timeshift_start_program_time = c->hls_stream[start_stream_num]->seg_list.segments[0]->program_time;
         s->duration = duration * (AV_TIME_BASE / 1000);
 
         av_log(NULL, AV_LOG_ERROR, "[%s:%d] start programe time = %d \n",
@@ -2081,7 +2145,7 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
     }
 
     c->parent = s;
-    if (c->hls_stream_nb && !strncmp("http", c->hls_stream[0]->seg_list.segments[0]->url, 4)) {
+    if (c->hls_stream_nb && !strncmp("http", c->hls_stream[start_stream_num]->seg_list.segments[0]->url, 4)) {
         s->pb->downspeedable = 1;
         DownSpeed *downspeed = &(s->pb->downspeed);
         downspeed->down_size = 0;
@@ -2109,7 +2173,17 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
             c->cur_stream_seq = c->appoint_id;
             c->cur_seq_num = 0;
         } else {
-            int default_video_bw_stream_nb = hlsGetDefaultIndex(c, (HLS_START_MODE_E)s->hls_start_mode);
+            int default_video_bw_stream_nb = 0;
+
+            if (HLS_MODE_FAST != s->hls_start_mode)
+            {
+                default_video_bw_stream_nb = hlsGetDefaultIndex(c, (HLS_START_MODE_E)s->hls_start_mode);
+            }
+            else
+            {
+                default_video_bw_stream_nb = start_stream_num;
+            }
+
             #if 1
             hls_stream_info_t *hls_tmp = c->hls_stream[default_video_bw_stream_nb];
             c->hls_stream[default_video_bw_stream_nb] = c->hls_stream[0];
@@ -2355,7 +2429,13 @@ static int HLS_read_packet(AVFormatContext *s, AVPacket *pkt)
             c->cur_stream_seq = c->appoint_id;
             c->cur_seq_num = 0;
         } else {
-            int default_video_bw_stream_nb = hlsGetDefaultIndex(c, (HLS_START_MODE_E)s->hls_start_mode);
+            int default_video_bw_stream_nb = 0;
+
+            if (HLS_MODE_FAST != s->hls_start_mode)
+            {
+                default_video_bw_stream_nb = hlsGetDefaultIndex(c, (HLS_START_MODE_E)s->hls_start_mode);
+            }
+
             c->cur_seg = c->hls_stream[default_video_bw_stream_nb]->seg_list.segments[0];
             c->cur_hls = c->hls_stream[default_video_bw_stream_nb];
             c->cur_stream_seq = default_video_bw_stream_nb;
@@ -2414,13 +2494,68 @@ start:
                 hlsResetPacket(&hls->seg_demux.pkt);
             }
 
+            if (s->nb_streams < hls->seg_demux.ctx->nb_streams)
+            {
+                int j = 0;
+
+                int64_t* lasttime = (int64_t*)av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+                if (NULL == lasttime) {
+                    ret = AVERROR(ENOMEM);
+                    return ret;
+                }
+
+                int64_t* last_org_pts = (int64_t*)av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+                if (NULL == last_org_pts)
+                {
+                    av_free(lasttime);
+                    ret = AVERROR(ENOMEM);
+                    return ret;
+                }
+
+                int64_t* discontinue_pts = (int64_t*)av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+                if (NULL == discontinue_pts)
+                {
+                    av_free(lasttime);
+                    av_free(last_org_pts);
+                    ret = AVERROR(ENOMEM);
+                    return ret;
+                }
+
+                memcpy(lasttime, hls->seg_demux.last_time, sizeof(int64_t) * s->nb_streams);
+                memcpy(last_org_pts, hls->seg_demux.last_org_pts,sizeof(int64_t) * s->nb_streams);
+
+                for (j = 0; j < s->nb_streams; j++)
+                    discontinue_pts[j] = AV_NOPTS_VALUE;
+
+                av_free(hls->seg_demux.last_org_pts);
+                av_free(hls->seg_demux.discontinue_pts);
+                av_free(hls->seg_demux.last_time);
+                hls->seg_demux.last_time  = lasttime;
+                hls->seg_demux.last_org_pts = last_org_pts;
+                hls->seg_demux.discontinue_pts = discontinue_pts;
+
+                for (j = s->nb_streams; j < hls->seg_demux.ctx->nb_streams; j++) {
+                    AVStream *st = av_new_stream(s, i);
+                    if (!st) {
+                        ret = AVERROR(ENOMEM);
+                        av_log(NULL, AV_LOG_ERROR, "[%s:%d] ENOMEM", __FILE_NAME__, __LINE__);
+                        return ret;
+                    }
+
+                    avcodec_copy_context(st->codec, hls->seg_demux.ctx->streams[j]->codec);
+                    av_log(NULL, AV_LOG_INFO, "[%s:%d] add stream:%d codec_type:%d", __FILE_NAME__, __LINE__, j, st->codec->codec_type);
+                }
+            }
             //notice: st_main->id is invalid, always is 0.
             AVStream *st_seg = NULL, *st_main = NULL;
             //int k = 0;
             st_seg = hls->seg_demux.ctx->streams[hls->seg_demux.pkt.stream_index];
             st_main = s->streams[hls->seg_demux.pkt.stream_index];
 
-            if (st_seg->codec && st_main->codec)
+            if (st_main && st_seg && st_seg->codec && st_main->codec)
             {
                 if (st_seg->codec->codec_type == AVMEDIA_TYPE_VIDEO
                    && st_seg->codec->width > 0 && st_seg->codec->height > 0)
@@ -2450,24 +2585,6 @@ start:
                 {
                     av_log(NULL, AV_LOG_ERROR, "[%s,%d] update hls codec id:%d\n", __FILE_NAME__, __LINE__, st_main->codec->width);
                     st_main->codec->codec_id = st_seg->codec->codec_id;
-                }
-            }
-
-            /* Create new AVStreams for new stream */
-            if (s->nb_streams < hls->seg_demux.ctx->nb_streams)
-            {
-                int j = 0;
-
-                for (j = s->nb_streams; j < hls->seg_demux.ctx->nb_streams; j++) {
-                    AVStream *st = av_new_stream(s, j);
-                    if (!st) {
-                        ret = AVERROR(ENOMEM);
-                        av_log(NULL, AV_LOG_ERROR, "[%s:%d] ENOMEM", __FILE_NAME__, __LINE__);
-                        return ret;
-                    }
-
-                    avcodec_copy_context(st->codec, hls->seg_demux.ctx->streams[j]->codec);
-                    av_log(NULL, AV_LOG_INFO, "[%s:%d] add stream:%d codec_type:%d", __FILE_NAME__, __LINE__, j, st->codec->codec_type);
                 }
             }
         }

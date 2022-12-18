@@ -45,6 +45,12 @@ static HI_U32 g_idr_pic_id = 0;
 extern HI_VOID VENC_DRV_BoardInit(HI_VOID);
 extern HI_VOID VENC_DRV_BoardDeinit(HI_VOID);
 
+#ifndef HI_ADVCA_FUNCTION_RELEASE
+#define Smooth_printk printk
+#else
+#define Smooth_printk(format, arg...)
+#endif
+
 enum
 {
     VENC_YUV_420	= 0,
@@ -3197,7 +3203,7 @@ HI_S32 VENC_DRV_EflCreateVenc( VeduEfl_EncPara_S** pEncHandle, VeduEfl_EncCfg_S*
 
 	/* other */
 	pEncPara->bNeverEnc   = HI_TRUE;
-	pEncPara->SlcSplitMod = 0;   // 1;                                          //just choose the mb line Mode 
+	pEncPara->SlcSplitMod = 1;                                          //just choose the mb line Mode 
     pEncPara->NumRefIndex = 0;
 
 	if (pEncCfg->bOMXChn)
@@ -4008,7 +4014,7 @@ static HI_VOID VENC_DRV_EflGetFrmRate( VeduEfl_EncPara_S *pEncPara,HI_UNF_VENC_C
 
     HI_U32 max1,max2;
 
-    if (!pEncPara->AutoSkipFrameEn)
+    if (0/*!pEncPara->AutoSkipFrameEn*/)
     {
         newViFrmRate = pEncPara->LastFrmRate[0] ;
     }
@@ -5871,7 +5877,7 @@ static HI_VOID Venc_ISR( HI_VOID )
                 }
                 else
                 {
-                    //printk("I frame is not support in 30 frames!!\n");
+                    //Smooth_printk("I frame is not support in 30 frames!!\n");
                 }
             }
 #endif			

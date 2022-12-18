@@ -887,8 +887,8 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 			  **/
 			 if(s_pstruJpgOsrDev->bEngageFlag != HI_FALSE)
 			 {
-				 jpg_do_reset();
-				 jpg_do_clock_off();
+				 //jpg_do_reset();
+				 //jpg_do_clock_off();
 				 up(&s_pstruJpgOsrDev->SemGetDev);
 				 up(&s_JpegMutex);
 				 s_pstruJpgOsrDev->bLock = HI_FALSE;/** ห๘สอทลมห **/

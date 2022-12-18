@@ -269,7 +269,7 @@ void SW_ResetHDMITX(void)
 
     AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
     //DelayMS(1);
-    DelayMS(5);
+    DelayMS(10);
     ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
     DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
     
@@ -284,8 +284,8 @@ void SW_ResetHDMITX(void)
         AssertHDMITX_SWReset(BIT_TX_SW_RST);
         DelayMS(10);
         ReleaseHDMITX_SWReset(BIT_TX_SW_RST);
-        DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
-        HDMIPrint("TClock UnStable before sw reset <--\n");
+        DelayMS(10);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        HDMIPrint("TClock UnStable:%d before sw reset <--\n", siiIsTClockStable());
     }
     //DelayMS(5);     // allow TCLK (sent to Rx across the HDMS link) to stabilize
 

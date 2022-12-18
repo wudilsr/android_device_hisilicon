@@ -215,31 +215,14 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 						pstPort->stDispPixAR.u32ARh);
 			}
 
-			if (pstInstance->u32UhdLevelW == VPSS_UHD_HIGH_W
-					&& pstInstance->u32UhdLevelH == VPSS_UHD_HIGH_H)
-			{
-				if (atomic_read(&pstInstance->atmUhdFmt) == 0)
-				{
-					stLevelRect.s32Width = VPSS_UHD_MIDDLE_W;
-					stLevelRect.s32Height = VPSS_UHD_MIDDLE_H;
-				}
-				else
-				{
-					stLevelRect.s32Width = VPSS_UHD_HIGH_W;
-					stLevelRect.s32Height = VPSS_UHD_HIGH_H;
-				}
-			}
-			else
-			{
-				stLevelRect.s32Width = VPSS_UHD_LOW_W;
-				stLevelRect.s32Height = VPSS_UHD_LOW_H;
-			}
-
 			{
 				HI_S32 s32ReviseWidth = 0;
 				HI_S32 s32ReviseHeight = 0;
 				HI_S32 s32ReviseARw = 0;
 				HI_S32 s32ReviseARh = 0;
+
+				stLevelRect.s32Width = u32LevelW;
+				stLevelRect.s32Height = u32LevelH;
 
 				VPSS_INST_LevelRectGetReviseRect(pstPort->stLevelOutRect,
 						stLevelRect,
@@ -1733,19 +1716,19 @@ HI_S32 VPSS_INST_CheckInstAvailable(VPSS_INSTANCE_S *pstInstance)
 			{
 				//VPSS_INST_CheckFrmBuffer(pstInstance,pstInstance->stPort[u32Count].s32PortId,&bPortBufEnough);
 				bPortBufEnough = HI_TRUE;
-				
+
 			}
-            if(bPortBufEnough)
-            {
-                s32BufIsEnough = s32BufIsEnough + 1;
-            }
-            else
-            {
-                
-            }
-        }
-        
-    }
+			if(bPortBufEnough)
+			{
+				s32BufIsEnough = s32BufIsEnough + 1;
+			}
+			else
+			{
+
+			}
+		}
+
+	}
 
     if(bHasEnPort == 0)
     {
@@ -2631,6 +2614,11 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst,
         pstVideoRect->s32Y = 0;
         pstVideoRect->s32Width  = u32DstW;
         pstVideoRect->s32Height = u32DstH;
+
+		pstOutCropRect->s32X = 0;
+		pstOutCropRect->s32Y = 0;
+		pstOutCropRect->s32Width = pstVideoRect->s32Width;
+		pstOutCropRect->s32Height = pstVideoRect->s32Height;
 
         return;
     }

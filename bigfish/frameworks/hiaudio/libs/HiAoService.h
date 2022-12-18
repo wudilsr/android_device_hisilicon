@@ -22,8 +22,9 @@ namespace android
       virtual int getUnfAudioPort(int port);
       virtual int setBluerayHbr(int status);
       virtual int setEnterSmartSuspend(int status);
-	  virtual void startCardPlay();
-	  virtual void stopCardPlay();
+      virtual void startCardPlay();
+      virtual void stopCardPlay();
+      virtual int setSndVolume(int volume);
     private:
       int isHdmiClose;
       int isSpdifClose;

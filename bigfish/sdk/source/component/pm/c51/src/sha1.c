@@ -113,7 +113,7 @@ void SHA1PreProcess()
 
         tmp = SHA1CircularShift(tmp,1);
 
-        regAddr.val32 = g_u32DateBaseAddr + RAM_STORE_ADDR + t * 4;  
+        regAddr.val32 = RAM_STORE_ADDR + t * 4;  
         regData.val32 = tmp ;	   
 
         *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4)) =  regData.val8[3];

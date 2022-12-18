@@ -1,0 +1,13 @@
+#!/system/bin/sh
+
+BOOTANIM_ENABLE=`getprop persist.sys.bootanim.enable`
+case $BOOTANIM_ENABLE in
+ false)
+  setprop persist.sys.swap.enable 1;
+  sleep 0.1;
+  echo exit > /proc/msp/mce
+  ;;
+ *)
+  ;;
+ esac
+

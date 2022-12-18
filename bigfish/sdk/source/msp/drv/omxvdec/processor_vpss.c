@@ -19,13 +19,17 @@
 #include "processor.h"
 
 #include "hi_math.h"
+#include "vfmw_ext.h"
 
 /*================ EXTERN VALUE ================*/
 extern HI_BOOL  g_SaveYuvEnable;
 extern HI_CHAR  g_SavePath[];
 extern HI_CHAR  g_SaveName[];
+extern HI_U32   g_SaveNum;
 extern OMXVDEC_FUNC g_stOmxFunc;
 extern OMXVDEC_ENTRY *g_OmxVdec;
+extern VFMW_EXPORT_FUNC_S* pVfmwFunc;
+extern HI_BOOL  g_FastOutputMode;
 
 
 /*=================== MACRO ====================*/
@@ -66,6 +70,22 @@ static HI_DRV_PIX_FORMAT_E processor_color_omx_to_hal(OMX_PIX_FORMAT_E format)
     }
 
     return ret_color;
+}
+
+HI_S32 processor_inform_img_ready(OMXVDEC_CHAN_CTX *pchan)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    if (HI_NULL == pchan)
+    {
+        OmxPrint(OMX_FATAL, "%s pchan is NULL!\n", __func__);
+        return HI_FAILURE;
+    }
+    s32Ret = (pVpssFunc->pfnVpssSendCommand)(pchan->processor_id, HI_DRV_VPSS_USER_COMMAND_IMAGEREADY, NULL);
+    if (s32Ret != HI_SUCCESS)
+    {
+        OmxPrint(OMX_FATAL, "%s CALL HI_DRV_VPSS_USER_COMMAND_IMAGEREADY error,ret = %d\n", __func__, s32Ret);
+    }
+    return s32Ret;
 }
 
 static HI_S32 processor_get_frame(OMXVDEC_CHAN_CTX *pchan, EXTERNAL_FRAME_STORE_S *frame, HI_U32 expect_length)
@@ -283,11 +303,15 @@ static HI_S32 processor_report_frame(OMXVDEC_CHAN_CTX *pchan, HI_DRV_VIDEO_FRAME
     user_buf.out_frame.stride               = pstFrame->stBufAddr[0].u32Stride_Y;
     user_buf.out_frame.width                = pstFrame->u32Width;
     user_buf.out_frame.height               = pstFrame->u32Height;
+    user_buf.u32FrameIndex                  = pstFrame->u32FrameIndex;
+    user_buf.hTunnelSrc                     = pstFrame->hTunnelSrc;
+    user_buf.u32FrameRate                   = pstFrame->u32FrameRate;
+    
     user_buf.out_frame.save_yuv             = g_SaveYuvEnable;
     if (HI_TRUE == user_buf.out_frame.save_yuv)
     {
        snprintf(user_buf.out_frame.save_path, sizeof(user_buf.out_frame.save_path),
-                "%s/%s_%dx%d.yuv", g_SavePath, g_SaveName, pstFrame->u32Width, pstFrame->u32Height);
+                "%s/%s_%d_%dx%d.yuv", g_SavePath, g_SaveName, g_SaveNum, pstFrame->u32Width, pstFrame->u32Height);
                 user_buf.out_frame.save_path[PATH_LEN-1] = '\0';
     }
 
@@ -532,7 +556,7 @@ static HI_S32 processor_report_last_frame(OMXVDEC_CHAN_CTX *pchan)
 		    msleep(5);
 		}
 
-		if (FailedNum > 100)
+		if (FailedNum > 500)
 		{
 			return HI_FAILURE;
 		}
@@ -808,6 +832,8 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     pstFrame->u32ErrorLevel                    = stImage.error_level;
     pstFrame->s64OmxPts                        = stImage.SrcPts;
     pstFrame->u32FrameIndex                    = stImage.seq_img_cnt;
+    pstFrame->hTunnelSrc                       = (HI_ID_VDEC << 16) | pchan->channel_id;
+
     
     if (STD_MVC == pchan->protocol)
     {
@@ -835,8 +861,17 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     u32fpsDecimal                               = stImage.frame_rate%1000;
     pstFrame->u32FrameRate                      = u32fpsInteger*1000 + (u32fpsDecimal + 500) / 1000;
 
+    if (pstFrame->u32FrameRate > 30)
+    {
+        ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_SET_FRAME_RATE, &pstFrame->u32FrameRate);
+        if(HI_TRUE != ret)
+        {
+            OmxPrint(OMX_ERR, "VDEC_CID_SET_FRAME_RATE falled!\n");
+        }
+    }
 
-    if (HI_TRUE == pchan->bLowdelay)
+
+    if (HI_TRUE == pchan->bLowdelay || HI_TRUE == g_FastOutputMode)
     {
         pstFrame->u32TunnelPhyAddr = stImage.line_num_phy_addr;
     }
@@ -1026,7 +1061,7 @@ HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, OMX_PIX_FORMAT_E color_for
          OmxPrint(OMX_FATAL, "%s call HI_DRV_VPSS_GetDefaultPortCfg failed, ret = %d\n", __func__, ret);
          goto error;
     }
-	OmxPrint(OMX_FATAL, "%s color_format = %d\n", __func__, color_format);
+
     pchan->color_format                 = color_format;
     stVpssPortCfg.s32OutputWidth        = 0;    // 宽高设为0表示根据输入自适应配置
     stVpssPortCfg.s32OutputHeight       = 0;

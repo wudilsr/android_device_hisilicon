@@ -56,14 +56,16 @@ Modification  : Created file
 #include "HA.AUDIO.MP3.decode.h"
 #include "HA.AUDIO.WMA9STD.decode.h"
 #include "HA.AUDIO.COOK.decode.h"
-#include "HA.AUDIO.DRA.decode.h"
+//#include "HA.AUDIO.DRA.decode.h"
 #include "HA.AUDIO.AMRNB.codec.h"
 #include "HA.AUDIO.AMRWB.codec.h"
-#include "HA.AUDIO.FFMPEG_DECODE.decode.h"
+//#include "HA.AUDIO.FFMPEG_DECODE.decode.h"
 #include "HA.AUDIO.DOLBYPLUS.decode.h"
+#include "HA.AUDIO.DOLBYTRUEHD.decode.h"
 #include "HA.AUDIO.TRUEHDPASSTHROUGH.decode.h"
 #include "HA.AUDIO.BLURAYLPCM.decode.h"
-
+#include "HA.AUDIO.AC3PASSTHROUGH.decode.h"
+#include "HA.AUDIO.DTSPASSTHROUGH.decode.h"
 
 #include "TsPlayer.h"
 #include <sys/stat.h>
@@ -167,6 +169,7 @@ Modification  : Created file
 DTSHD_DECODE_OPENCONFIG_S           DtsDecConfig;
 DOLBYPLUS_DECODE_OPENCONFIG_S       DolbyDecConfig;
 HA_BLURAYLPCM_DECODE_OPENCONFIG_S   BlyRayDecConfig;
+TRUEHD_DECODE_OPENCONFIG_S          TrueHdDecConfig;
 
 HI_VOID IPTV_ADAPTER_PLAYER_LOG(HI_CHAR *pFuncName, HI_U32 u32LineNum, const HI_CHAR *format, ...);
 
@@ -204,24 +207,24 @@ HI_VOID IPTV_ADAPTER_PLAYER_LOG(HI_CHAR *pFuncName, HI_U32 u32LineNum, const HI_
 static HI_S32 GetPlayingPts(HI_U32 u32UserData, HI_S64 *ps64CurrentPts);
 #endif
 
-CTC_MediaProcessor* g_pHandle = NULL;
-static IPTV_PLAYER_EVT_CB g_CallBackFunc = NULL;
-static HI_VOID*    g_CallBackHandle = NULL;
-static HI_U32 g_FirstFrm = 0;
-static HI_U32 g_Cvrs = 1;
-static HI_HANDLE g_hWin = HI_INVALID_HANDLE;
-static HI_HANDLE g_hAvplay = HI_INVALID_HANDLE;
-static HI_HANDLE g_hTrack = HI_INVALID_HANDLE;
-static HI_UNF_WINDOW_ATTR_S g_WinAttr;
-static HI_TSPLAYER_STATE_E  g_eTsplayerState;
-static pthread_t g_hGetStatus;
-static volatile HI_BOOL g_bThreadQuit = HI_FALSE;
-static HI_U32 g_u32Cnt = 0;
-static HI_VOID* __GetBufStatus(HI_VOID *pArg);
-static HI_VOID __GetVoAspectCvrs(HI_VOID);
-
-static pthread_mutex_t g_TsplayerMutex = PTHREAD_MUTEX_INITIALIZER;
-static HI_U32 g_LockFlag = 0;
+CTC_MediaProcessor              *g_pHandle = NULL;
+static IPTV_PLAYER_EVT_CB       g_CallBackFunc = NULL;
+static HI_VOID                  *g_CallBackHandle = NULL;
+static HI_U32                   g_FirstFrm = 0;
+static HI_U32                   g_Cvrs = 1;
+static HI_HANDLE                g_hWin = HI_INVALID_HANDLE;
+static HI_HANDLE                g_hAvplay = HI_INVALID_HANDLE;
+static HI_HANDLE                g_hTrack = HI_INVALID_HANDLE;
+static HI_UNF_SND_TRACK_TYPE_E  g_SndTrackType = HI_UNF_SND_TRACK_TYPE_BUTT;
+static HI_UNF_WINDOW_ATTR_S     g_WinAttr;
+static HI_TSPLAYER_STATE_E      g_eTsplayerState;
+static pthread_t                g_hGetStatus;
+static volatile HI_BOOL         g_bThreadQuit = HI_FALSE;
+static HI_U32                   g_u32Cnt = 0;
+static HI_VOID*                 __GetBufStatus(HI_VOID *pArg);
+static HI_VOID                  __GetVoAspectCvrs(HI_VOID);
+static pthread_mutex_t          g_TsplayerMutex = PTHREAD_MUTEX_INITIALIZER;
+static HI_U32                   g_LockFlag = 0;
 
 /*player mutex */
 #define TSPLAYER_LOCK() \
@@ -344,6 +347,11 @@ static HI_S32 TsPlayer_EvnetHandler(HI_HANDLE handle, HI_UNF_AVPLAY_EVENT_E enEv
                 g_CallBackFunc(IPTV_PLAYER_EVT_ABEND, g_CallBackHandle);
                 PLAYER_LOGI("### Get buf empty\n");
             }
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_EOS)
+        {
+            g_CallBackFunc(IPTV_PLAYER_EVT_VOD_EOS, g_CallBackHandle);
+            PLAYER_LOGI("### Get eos flag\n");
         }
         else
         {
@@ -488,201 +496,245 @@ static bool vFormat2HiType(vformat_t vformat, int *hiVformart)
 static bool aFormat2HiType(aformat_t afmt, HA_CODEC_ID_E *hiADecType, HI_BOOL *bIsBigEndian)
 {
     HI_S32    s32Ret = HI_SUCCESS;
-    HI_S32    Ret;
-    
+
     PLAYER_LOGI("### Input audio codec ID: %d \n", afmt);
+
     if (0 == IS_AFMT_VALID(afmt))
     {
         PLAYER_LOGE("### unsupport input audio codec ID: %d !\n", afmt);
         return HI_FAILURE;
     }
 
-    switch(afmt)
+    switch (afmt)
     {
         case FORMAT_HI_MPEG:
             *hiADecType = HA_AUDIO_ID_MP3;
             break;
+
         case FORMAT_HI_PCM_S16LE:
         case FORMAT_HI_PCM_U8:
             *hiADecType = HA_AUDIO_ID_PCM;
             break;
+
         case FORMAT_HI_AAC:
             *hiADecType = HA_AUDIO_ID_AAC;
             break;
+
         case FORMAT_HI_AC3:
-        case FORMAT_HI_DDPlus:
-            *hiADecType = HA_AUDIO_ID_DOLBY_PLUS;
+            HI_UNF_AVPLAY_FoundSupportDeoder(FORMAT_AC3, (HI_U32*)hiADecType);
             break;
+
+        case FORMAT_HI_DDPlus:
+            HI_UNF_AVPLAY_FoundSupportDeoder(FORMAT_EAC3, (HI_U32*)hiADecType);
+            break;
+
         case FORMAT_HI_ALAW:
         case FORMAT_HI_MULAW:
+            HI_UNF_AVPLAY_FoundSupportDeoder(FORMAT_G711, (HI_U32*)hiADecType);
+            break;
+
         case FORMAT_HI_FLAC:
+            HI_UNF_AVPLAY_FoundSupportDeoder(FORMAT_FLAC, (HI_U32*)hiADecType);
+            break;
+
         case FORMAT_HI_ADPCM:
         case FORMAT_HI_VORBIS:      //Not support this Format unless using FFMpeg
             *hiADecType = HA_AUDIO_ID_FFMPEG_DECODE;
             break;
+
         case FORMAT_HI_DTS:
-            *hiADecType = HA_AUDIO_ID_DTSHD;
+            HI_UNF_AVPLAY_FoundSupportDeoder(FORMAT_DTS, (HI_U32*)hiADecType);
             break;
+
         case FORMAT_HI_PCM_S16BE:
             *hiADecType = HA_AUDIO_ID_PCM;
             *bIsBigEndian = HI_TRUE;
             break;
+
         case FORMAT_HI_COOK:
             *hiADecType = HA_AUDIO_ID_COOK;
             break;
+
         case FORMAT_HI_AMR:
             *hiADecType = HA_AUDIO_ID_AMRNB;
             break;
+
         case FORMAT_HI_RAAC:
             *hiADecType = HA_AUDIO_ID_AAC;
             break;
+
         case FORMAT_HI_WMA:
             *hiADecType = HA_AUDIO_ID_WMA9STD;
             break;
-/*
+
+        /*
         case FORMAT_HI_WMAPRO:
             *hiADecType = HA_AUDIO_ID_WMA; //Not support WMAPro format
             break;
-*/
+        */
+
         case FORMAT_HI_PCM_BLURAY:
             *hiADecType = HA_AUDIO_ID_BLYRAYLPCM;
             break;
-         default:
+
+        default:
             PLAYER_LOGE("### unsupport input audio codec ID: %d !\n", afmt);
             s32Ret = HI_FAILURE;
             break;
 
     }
 
-    if(HI_SUCCESS == s32Ret)
+    if (HI_SUCCESS == s32Ret)
     {
         PLAYER_LOGI("### Switch to Hisi audio codec ID: 0x%x \n", *hiADecType);
     }
 
     return s32Ret;
 
-
 }
 
-HI_VOID getAudAttrByType(HI_UNF_ACODEC_ATTR_S *pstAdecAttr, HI_U8  *pu8Extradata, HI_BOOL bIsBigEndian)
+HI_S32 getAudAttrByType(HI_UNF_ACODEC_ATTR_S *pstAdecAttr, HI_U8  *pu8Extradata, HI_BOOL bIsBigEndian)
 {
     WAV_FORMAT_S stWavFormat;
+    HI_S32 s32Ret = HI_SUCCESS;
 
     switch (pstAdecAttr->enType)
     {
         case HA_AUDIO_ID_PCM:
         {
-        /* set pcm wav format here base on pcm file */
-        stWavFormat.nChannels = 2;
-        stWavFormat.nSamplesPerSec = 48000;
-        stWavFormat.wBitsPerSample = 16;
+            /* set pcm wav format here base on pcm file */
+            stWavFormat.nChannels = 2;
+            stWavFormat.nSamplesPerSec = 48000;
+            stWavFormat.wBitsPerSample = 16;
 
-        if(HI_TRUE == bIsBigEndian)
-        {
-        stWavFormat.cbSize =4;
-        stWavFormat.cbExtWord[0] = 1;
-        }
+            if (HI_TRUE == bIsBigEndian)
+            {
+                stWavFormat.cbSize = 4;
+                stWavFormat.cbExtWord[0] = 1;
+            }
 
-        HA_PCM_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam),&stWavFormat);
+            HA_PCM_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), &stWavFormat);
 
-        PLAYER_LOGI("### (nChannels = 2, wBitsPerSample = 16, nSamplesPerSec = 48000, isBigEndian = %d)", bIsBigEndian);
+            PLAYER_LOGI("### (nChannels = 2, wBitsPerSample = 16, nSamplesPerSec = 48000, isBigEndian = %d)", bIsBigEndian);
         }
 
         break;
+
         case HA_AUDIO_ID_DOLBY_PLUS:
         {
-        DOLBYPLUS_DECODE_OPENCONFIG_S *pstConfig = &DolbyDecConfig;
-        HA_DOLBYPLUS_DecGetDefalutOpenConfig(pstConfig);
-        HA_DOLBYPLUS_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
-        break;
+            DOLBYPLUS_DECODE_OPENCONFIG_S* pstConfig = &DolbyDecConfig;
+            HA_DOLBYPLUS_DecGetDefalutOpenConfig(pstConfig);
+            HA_DOLBYPLUS_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
+            break;
         }
 
         case HA_AUDIO_ID_MP2:
-        HA_MP2_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
-        break;
+            HA_MP2_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            break;
 
         case HA_AUDIO_ID_AAC:
-        HA_AAC_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
-        break;
+            HA_AAC_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            break;
 
         case HA_AUDIO_ID_MP3:
-        HA_MP3_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
-        break;
+            HA_MP3_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            break;
 
         case HA_AUDIO_ID_AMRNB:
-        if (NULL != (HI_U32*)pu8Extradata)
-        {
-        HA_AMRNB_GetDecDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
-        *((HI_U32*)pu8Extradata));
-        }
-        break;
+            if (NULL != (HI_U32*)pu8Extradata)
+            {
+                HA_AMRNB_GetDecDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
+                                                *((HI_U32*)pu8Extradata));
+            }
+
+            break;
 
         case HA_AUDIO_ID_AMRWB:
-        if (NULL != (HI_U32*)pu8Extradata)
-        {
-        HA_AMRWB_GetDecDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
-        *((HI_U32*)pu8Extradata));
-        }
-        break;
+            if (NULL != (HI_U32*)pu8Extradata)
+            {
+                HA_AMRWB_GetDecDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
+                                                *((HI_U32*)pu8Extradata));
+            }
+
+            break;
 
         case HA_AUDIO_ID_WMA9STD:
-        if (NULL != (HI_U32*)pu8Extradata)
-        {
-        HA_WMA_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
-        *((HI_U32*)pu8Extradata));
-        }
-        break;
+            if (NULL != (HI_U32*)pu8Extradata)
+            {
+                HA_WMA_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
+                                              *((HI_U32*)pu8Extradata));
+            }
+
+            break;
 
         case HA_AUDIO_ID_COOK:
-        if (NULL != (HI_U32*)pu8Extradata)
-        {
-        HA_COOK_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
-        *((HI_U32*)pu8Extradata));
-        }
-        break;
+            if (NULL != (HI_U32*)pu8Extradata)
+            {
+                HA_COOK_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam),
+                                               *((HI_U32*)pu8Extradata));
+            }
+
+            break;
 
         case HA_AUDIO_ID_DTSHD:
         {
-        DTSHD_DECODE_OPENCONFIG_S *pstConfig = &DtsDecConfig;
-        HA_DTSHD_DecGetDefalutOpenConfig(pstConfig);
-        HA_DTSHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
-        break;
+            DTSHD_DECODE_OPENCONFIG_S* pstConfig = &DtsDecConfig;
+            HA_DTSHD_DecGetDefalutOpenConfig(pstConfig);
+            HA_DTSHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
+            break;
         }
 
         case HA_AUDIO_ID_BLYRAYLPCM:
         {
-        HA_BLURAYLPCM_DECODE_OPENCONFIG_S *pstConfig = &BlyRayDecConfig;
-        HA_BLYRAYLPCM_DecGetDefalutOpenConfig(pstConfig);
-        HA_BLYRAYLPCM_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
-        break;
+            HA_BLURAYLPCM_DECODE_OPENCONFIG_S* pstConfig = &BlyRayDecConfig;
+            HA_BLYRAYLPCM_DecGetDefalutOpenConfig(pstConfig);
+            HA_BLYRAYLPCM_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
+            break;
         }
 
-/*
+        /*
         case HA_AUDIO_ID_FFMPEG_DECODE:
-        stAdecAttr.enFmt = HI_UNF_ADEC_STRAM_FMT_PACKET;
-        pstMember->eAudStreamMode = HI_UNF_ADEC_STRAM_FMT_PACKET;
+            stAdecAttr.enFmt = HI_UNF_ADEC_STRAM_FMT_PACKET;
+            pstMember->eAudStreamMode = HI_UNF_ADEC_STRAM_FMT_PACKET;
 
-        if (NULL != pu8Extradata && NULL != (HI_U32*)pu8Extradata + 1)
+            if (NULL != pu8Extradata && NULL != (HI_U32*)pu8Extradata + 1)
+            {
+                HA_FFMPEGC_DecGetDefalutOpenParam(&(stAdecAttr.stDecodeParam),
+                (HI_U32*)(*((HI_U32*)pu8Extradata + 1)));
+            }
+            break;
+        */
+        case HA_AUDIO_ID_AC3PASSTHROUGH:
+            HA_AC3PASSTHROUGH_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            pstAdecAttr->stDecodeParam.enDecMode = HD_DEC_MODE_THRU;
+            break;
+
+        case HA_AUDIO_ID_DTSPASSTHROUGH:
+            HA_DTSPASSTHROUGH_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            pstAdecAttr->stDecodeParam.enDecMode = HD_DEC_MODE_THRU;
+            break;
+
+        case HA_AUDIO_ID_DOLBY_TRUEHD:
         {
-        HA_FFMPEGC_DecGetDefalutOpenParam(&(stAdecAttr.stDecodeParam),
-        (HI_U32*)(*((HI_U32*)pu8Extradata + 1)));
+            TRUEHD_DECODE_OPENCONFIG_S* pstConfig = &TrueHdDecConfig;
+            HA_DOLBY_TRUEHD_DecGetDefalutOpenConfig(pstConfig);
+            HA_DOLBY_TRUEHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
         }
-        break;
-*/
+            break;
+
         case HA_AUDIO_ID_TRUEHD:
-        HA_TRUEHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
-        pstAdecAttr->stDecodeParam.enDecMode = HD_DEC_MODE_THRU;          /* truehd just support pass-through */
-        ALOGD(" TrueHD decoder(HBR Pass-through only).\n");
-        break;
+            HA_TRUEHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
+            pstAdecAttr->stDecodeParam.enDecMode = HD_DEC_MODE_THRU;
+            ALOGD(" TrueHD decoder(HBR Pass-through only).\n");
+            break;
 
         default:
-        HA_DRA_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam));
-        break;
+            s32Ret = HI_FAILURE;
+            break;
     }
 
-    return;
+    return s32Ret;
 }
-
 
 #ifdef SUBTITLE
 static HI_S32 GetPlayingPts(HI_U32 u32UserData, HI_S64 *ps64CurrentPts)
@@ -1029,6 +1081,9 @@ bool CTsPlayer::MediaDeviceCreate()
     s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_RNG_BUF_STATE, TsPlayer_EvnetHandler);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent buf state failed");
 
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_EOS, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent eos failed");
+
     s32Ret = HI_UNF_AVPLAY_ChnOpen(g_hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID, HI_NULL);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_ChnOpen VID failed");
 
@@ -1146,6 +1201,10 @@ bool CTsPlayer::MediaDeviceDestroy()
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_UnRegisterEvent buf state failed");
     PLAYER_LOGI("### CTsPlayer::MediaDeviceDestroy go here %d\n", __LINE__);
 
+    s32Ret = HI_UNF_AVPLAY_UnRegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_EOS);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_UnRegisterEvent eos failed");
+    PLAYER_LOGI("### CTsPlayer::MediaDeviceDestroy go here %d\n", __LINE__);
+
     s32Ret = HI_UNF_AVPLAY_Destroy(g_hAvplay);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_Destroy failed");
     PLAYER_LOGI("### CTsPlayer::MediaDeviceDestroy go here %d\n", __LINE__);
@@ -1213,32 +1272,91 @@ bool CTsPlayer::ReSetWindowAttr()
 
 HI_S32 CTsPlayer::SetAudStream()
 {
-    HI_S32 s32Ret = HI_SUCCESS;
-    HA_CODEC_ID_E hiADecType;
+    HI_S32                                s32Ret = HI_SUCCESS;
+    HA_CODEC_ID_E                         hiADecType;
 
-    HI_UNF_SND_TRACK_TYPE_E eMixType = HI_UNF_SND_TRACK_TYPE_MASTER;
-    HI_UNF_AUDIOTRACK_ATTR_S  stTrackAttr;
-
-    HI_U8  *pu8Extradata;
-    AUDIO_PARA_T* pSetAudioPara = NULL;
-    HI_UNF_AVPLAY_MULTIAUD_ATTR_S   stMultiAudAttr;
-    HI_UNF_ACODEC_ATTR_S stAdecAttr;
-    HI_U32                      AudPid[32] = {0};
-    HI_UNF_ACODEC_ATTR_S        AdecAttr[32];
-    HI_U32 i,j;
-    HI_BOOL bIsBigEndian = HI_FALSE;
+    HI_UNF_SND_TRACK_TYPE_E               eMixType = HI_UNF_SND_TRACK_TYPE_MASTER;
+    HI_UNF_AUDIOTRACK_ATTR_S              stTrackAttr;
+    HI_HANDLE                             hTrack = HI_INVALID_HANDLE;
+    HI_U8                                 *pu8Extradata;
+    AUDIO_PARA_T                          *pSetAudioPara = NULL;
+    HI_UNF_AVPLAY_MULTIAUD_ATTR_S         stMultiAudAttr;
+    HI_UNF_ACODEC_ATTR_S                  stAdecAttr;
+    HI_U32                                AudPid[32] = {0};
+    HI_UNF_ACODEC_ATTR_S                  AdecAttr[32];
+    HI_U32                                i,j;
+    HI_BOOL                               bIsBigEndian = HI_FALSE;
 
     PLAYER_LOGI("### CTsPlayer \n");
-    s32Ret = HI_UNF_SND_GetDefaultTrackAttr(eMixType, &stTrackAttr);
-    PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "call HI_UNF_SND_GetDefaultTrackAttr failed" , s32Ret);
 
     if (HI_INVALID_HANDLE == g_hTrack)
     {
-        s32Ret = HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &g_hTrack);
-        PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "call HI_UNF_SND_CreateTrack failed" , s32Ret);
+        s32Ret = HI_UNF_SND_GetDefaultTrackAttr(HI_UNF_SND_TRACK_TYPE_MASTER, &stTrackAttr);
+        s32Ret|= HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &g_hTrack);
+        if (HI_SUCCESS == s32Ret)
+        {
+            g_SndTrackType = HI_UNF_SND_TRACK_TYPE_MASTER;
+            PLAYER_LOGI("### Audio Master Track is idle!\n");
+            PLAYER_LOGI("### Create Audio Master Track Success\n");
+        }
+        else
+        {
+            PLAYER_LOGI("### Audio Master Track is Busy!\n");
+            s32Ret = HI_UNF_SND_GetDefaultTrackAttr(HI_UNF_SND_TRACK_TYPE_SLAVE, &stTrackAttr);
+            s32Ret|= HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &g_hTrack);
+            if (HI_SUCCESS == s32Ret)
 
-        s32Ret = HI_UNF_SND_Attach(g_hTrack, g_hAvplay);
+            {
+                g_SndTrackType = HI_UNF_SND_TRACK_TYPE_SLAVE;
+                PLAYER_LOGI("### Create Audio Slave Track Success\n");
+            }
+        }
+
+        if (HI_SUCCESS == s32Ret)
+        {
+            s32Ret = HI_UNF_SND_Attach(g_hTrack, g_hAvplay);
+            if (HI_SUCCESS == s32Ret)
+            {
+                PLAYER_LOGI("### Audio Track Attach Success\n");
+            }
+            else
+            {
+                HI_UNF_SND_DestroyTrack(g_hTrack);
+                g_hTrack = HI_INVALID_HANDLE;
+                PLAYER_LOGI("### Audio Track Attach Fail, destroy Track\n");
+            }
+        }
+
         PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "call HI_UNF_SND_Attach failed" , s32Ret);
+    }
+    else if ((HI_INVALID_HANDLE != g_hTrack)
+           &&(HI_UNF_SND_TRACK_TYPE_SLAVE == g_SndTrackType))
+    {
+        s32Ret = HI_UNF_SND_GetDefaultTrackAttr(HI_UNF_SND_TRACK_TYPE_MASTER, &stTrackAttr);
+        s32Ret|= HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &hTrack);
+        if (HI_SUCCESS == s32Ret)
+        {
+            s32Ret = HI_UNF_AVPLAY_Stop(g_hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_AUD, NULL);
+            s32Ret|= HI_UNF_SND_Detach(g_hTrack, g_hAvplay);
+            if (HI_SUCCESS == s32Ret)
+            {
+                s32Ret = HI_UNF_SND_Attach(hTrack, g_hAvplay);
+                if (HI_SUCCESS == s32Ret)
+                {
+                    g_hTrack = hTrack;
+                    g_SndTrackType = HI_UNF_SND_TRACK_TYPE_MASTER;
+                    PLAYER_LOGI("### Audio Slave Track is Dettched!\n");
+                    PLAYER_LOGI("### Create Audio Master Track Success\n");
+                    PLAYER_LOGI("### Audio Track Attach Success\n");
+                }
+            }
+
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_UNF_SND_DestroyTrack(hTrack);
+                PLAYER_LOGI("### Audio Track Attach Fail, destroy Track\n");
+            }
+        }
     }
 
     PLAYER_LOGI("### u32AudStreamNum:%#x\n", stFileInfo.astProgramInfo[stStreamID.u32ProgramId].u32AudStreamNum);
@@ -1254,7 +1372,8 @@ HI_S32 CTsPlayer::SetAudStream()
         stAdecAttr.stDecodeParam.enDecMode = HD_DEC_MODE_RAWPCM;
         stAdecAttr.enType = hiADecType;
 
-        getAudAttrByType(&stAdecAttr, pu8Extradata, bIsBigEndian);
+        s32Ret = getAudAttrByType(&stAdecAttr, pu8Extradata, bIsBigEndian);
+        PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), HI_FAILURE, "call getAudAttrByType failed, unsupported audio format" , s32Ret);
 
         s32Ret = HI_UNF_AVPLAY_SetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_ADEC, &stAdecAttr);
         PLAYER_CHK_PRINTF((s32Ret != HI_SUCCESS), s32Ret, "set adec attr fail");
@@ -1880,7 +1999,7 @@ bool CTsPlayer::Seek()
 bool CTsPlayer::Fast()
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_UNF_VCODEC_MODE_E eMode = HI_UNF_VCODEC_MODE_I;
+    HI_UNF_VCODEC_MODE_E eMode = HI_UNF_VCODEC_MODE_NORMAL;
     HI_UNF_AVPLAY_STATUS_INFO_S stStatusInfo;
     HI_UNF_VCODEC_ATTR_S stVdecAdvAttr;
 
@@ -1913,7 +2032,7 @@ bool CTsPlayer::Fast()
 
     stVdecAdvAttr.bOrderOutput = HI_TRUE;
     stVdecAdvAttr.enMode = eMode;
-    stVdecAdvAttr.u32ErrCover = 0;
+    stVdecAdvAttr.u32ErrCover = 20;
     s32Ret = HI_UNF_AVPLAY_SetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, (HI_VOID*)&stVdecAdvAttr);
     PLAYER_CHK_RETURN((HI_SUCCESS != s32Ret), false, "Call HI_UNF_AVPLAY_SetAttr VID failed" , s32Ret);
 
@@ -2117,7 +2236,7 @@ void CTsPlayer::GetVideoPixels(int& width, int& height)
 
     s32Ret = HI_UNF_DISP_GetVirtualScreen(enDisp, &u32DispWidth, &u32DispHeight);
 
-	PLAYER_LOGI("### HI_UNF_DISP_GetVirtualScreen, Ret:0x%x, w: %d ,h: %d \n", s32Ret, u32DispWidth, u32DispHeight);
+    PLAYER_LOGI("### HI_UNF_DISP_GetVirtualScreen, Ret:0x%x, w: %d ,h: %d \n", s32Ret, u32DispWidth, u32DispHeight);
 
 
 
@@ -2309,6 +2428,26 @@ void CTsPlayer::leaveChannel()
     PLAYER_LOGI("###g_hWin:%#x, g_hAvplay:%#x \n", g_hWin, g_hAvplay);
 
     return;
+}
+
+bool CTsPlayer::SetEos()
+{
+    HI_S32    Ret = HI_SUCCESS;
+
+    PLAYER_LOGI("### CTsPlayer::SetEos\n");
+
+    TSPLAYER_LOCK();
+
+    PLAYER_CHK_RETURN((false == bIsPrepared), false, "HW resource is not prepared !!!", false);
+
+    Ret = HI_UNF_AVPLAY_FlushStream(g_hAvplay, HI_NULL);
+    PLAYER_CHK_RETURN((HI_SUCCESS != Ret), false, "Call HI_UNF_AVPLAY_FlushStream failed", Ret);
+
+    TSPLAYER_UNLOCK();
+
+    PLAYER_LOGI("### CTsPlayer::SetEos quit\n");
+
+    return true;
 }
 
 void CTsPlayer::playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander)

@@ -3,6 +3,11 @@
 #include "hi_type.h"
 
 
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif
 
 #define HI_ERR_CA(format, arg...)       printf("%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
 #define HI_INFO_CA(format, arg...)
@@ -78,5 +83,10 @@ HI_U32 HI_CTIT_readSN(HI_U8* u8data,HI_U32 len);
 HI_S32 HI_CTIT_SetCTITData(HI_CHAR s8Data[], HI_CHAR Rsa_E[], HI_CHAR Rsa_N[], HI_U32 u32DataLength);
 
 
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif
+#endif
 
 #endif   /* __HI_UNF_CTIT_H__ */

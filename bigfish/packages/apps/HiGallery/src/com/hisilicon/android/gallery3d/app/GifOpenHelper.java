@@ -212,23 +212,27 @@ public class GifOpenHelper {
     }
 
     private Bitmap resizedBitmap(Bitmap bitmap) {
-        Bitmap resizedBitmap = null;
+         if(bitmap==null)
+            return null;
+        Bitmap resizedBitmap = bitmap;
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-
         // create the new Bitmap object
+        if(width>1280||height>1280){
+        float scale_w = (float)1280/width;
+        float scale_h = (float)1280/height;
         Matrix matrix = new Matrix();
-        float scale = 1.0f;
-
+        float scale = Math.min(scale_w, scale_h);
         matrix.postScale(scale, scale);
         resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
                 matrix, true);
 
-        while (resizedBitmap.getWidth() > 320) {
-            scale *= 0.8f;
-            matrix.postScale(scale, scale);
-            resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
-                    matrix, true);
+//        while (resizedBitmap.getWidth() > 320) {
+//            scale *= 0.8f;
+//            matrix.postScale(scale, scale);
+//            resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,
+//                    matrix, true);
+//        }
         }
         return resizedBitmap;
 

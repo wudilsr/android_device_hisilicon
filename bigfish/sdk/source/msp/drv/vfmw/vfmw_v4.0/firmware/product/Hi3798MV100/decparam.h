@@ -292,6 +292,8 @@ typedef struct
 	UINT32  RefPicType[16];
     UINT32  RefPicFsId[16];
 	SINT32  Compress_en;
+
+	UINT32  MbaffFrameFlag; 
 } H264_DEC_PIC_PARAM_S;
 #endif
 

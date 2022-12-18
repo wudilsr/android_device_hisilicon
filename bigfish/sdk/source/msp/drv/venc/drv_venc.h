@@ -16,7 +16,7 @@ extern "C" {
  #endif
 #endif
 
-#define VENC_FIRMWARE_VERSION "001.002.2015051900"
+#define VENC_FIRMWARE_VERSION "001.002.2015051998"
 
 #define GET_VENC_CHHANDLE(u32ChanId) (u32ChanId | (HI_ID_VENC << 16))
 

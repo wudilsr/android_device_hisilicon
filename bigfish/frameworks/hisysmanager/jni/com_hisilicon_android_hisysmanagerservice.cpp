@@ -47,6 +47,15 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_upgrade(JNIEnv *env,
 static jint com_hisilicon_android_hisysmanager_HiSysManager_reset(JNIEnv *env, jobject clazz){
     return HiSysManagerClient().reset();
 }
+
+static jint com_hisilicon_android_hisysmanager_HiSysManager_updateLogo(JNIEnv *env, jobject clazz, jstring path)
+{
+    const char* szStr = (env)->GetStringUTFChars(path, 0 );
+    String8 mpath = String8(szStr);
+    (env)->ReleaseStringUTFChars(path, szStr );
+    return HiSysManagerClient().updateLogo(mpath);
+}
+
 static jint com_hisilicon_android_hisysmanager_HiSysManager_enterSmartStandby(JNIEnv *env, jobject clazz){
     return HiSysManagerClient().enterSmartStandby();
 }
@@ -279,6 +288,7 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_getDRMKey(JNIEnv *en
 static JNINativeMethod gMethods[] = {
         {"upgrade", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_upgrade},
         {"reset", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_reset},
+        {"native_updateLogo", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_updateLogo},
         {"enterSmartStandby", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_enterSmartStandby},
         {"quitSmartStandby", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_quitSmartStandby},
         {"setFlashInfo", "(Ljava/lang/String;IILjava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setFlashInfo},

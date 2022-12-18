@@ -164,7 +164,14 @@ static int cpu_init_hpm(unsigned long rate, unsigned int offset)
     {
         if (rate == cpu_freq_hpm_table[i].freq)
         {
-            cur_cpu_hpm  = cpu_freq_hpm_table[i].hpmrecord + g_u8CpuHpmOffset + offset;
+	        if (g_u8CpuHpmOffset != 0xff)
+            {
+                cur_cpu_hpm  = cpu_freq_hpm_table[i].hpmrecord + g_u8CpuHpmOffset + offset;
+            }
+	        else
+	        {
+ 	    	    cur_cpu_hpm  = cpu_freq_hpm_table[i].hpmrecord + offset + 0x10;
+	        }
             cur_cpu_vmin = cpu_freq_hpm_table[i].vmin;
             break;
         }
@@ -398,23 +405,33 @@ static int mpu_clk_set_rate(struct clk *clk, unsigned rate)
 
     if (1200000 == rate)
     {
-        if ((CHIP_TYPE_FF == corner_type) || (CHIP_TYPE_SS == corner_type)
-            || (HI_CHIP_PACKAGE_TYPE_QFP_216 == enPackageType))
+        if (g_u8CpuHpmOffset != 0xff)
         {
-            rate = 1000000;
-	        rate_change_flag = 1;
+	        if ((CHIP_TYPE_FF == corner_type) || (CHIP_TYPE_SS == corner_type)
+            || (HI_CHIP_PACKAGE_TYPE_QFP_216 == enPackageType))
+            {	
+            	rate = 1000000;
+	    	    rate_change_flag = 1;
+            }
+        }
+        else
+        {
+            if (CHIP_TYPE_SS == corner_type)
+            {
+		        offset += 0x10;
+	        }
         }
     }
 
     if (HI_CHIP_PACKAGE_TYPE_QFP_216 == enPackageType)
     {
-        if (600000 == rate)
+        if ((600000 == rate) || (1200000 == rate))
         {
-            offset = 0x10;
+            offset += 0x10;
         }
         else
         {
-            offset = 0x25;
+            offset += 0x25;
         }
     }
 
