@@ -499,6 +499,77 @@ static HI_U32 PVRIndex_GetPreEntryAverageTimeMs(PVR_INDEX_HANDLE pvrIndexHandle)
 }
 */
 
+/*This api is only for IP record*/
+static HI_U32 PVRIndexGetRecTimeStamp(PVR_INDEX_HANDLE handle, const HI_UNF_DMX_REC_INDEX_S *pstRecIdx)
+{
+    HI_U32 u32DeltaTime = 0;
+    HI_U32 u32DeltaFrameNum = 0;
+    HI_U32 u32DeltaTimeStamp = 0;
+    PVR_REC_TIMESTAMP_S *pstTimeStamp = &handle->stTimeStamp;
+
+    pstTimeStamp->u32FrameNum++;
+
+    /*in first Gop (if less than 20 frames),we using average average delta timestamp of the first 20 frames to adjust the frameTimeMs*/
+    /*get the first frame PTS ,as the calc base value to get the first average delta timestamp*/
+    if (pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs == PVR_INDEX_INVALID_PTSMS)
+    {
+        pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs = pstRecIdx->u32PtsMs;
+        pstTimeStamp->stLastIFrmPtsInfo.u32FrameNum = pstTimeStamp->u32FrameNum;
+    }
+
+    if ((pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs == PVR_INDEX_INVALID_PTSMS) && 
+        (pstRecIdx->u32PtsMs > pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs) && 
+        (pstTimeStamp->u32FrameNum >= PVR_INDEX_MAX_TIMESTAMP_BASE))
+    {
+        pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs = pstRecIdx->u32PtsMs;
+        pstTimeStamp->stCurIFrmPtsInfo.u32FrameNum = pstTimeStamp->u32FrameNum;
+        pstTimeStamp->bShouldUpdateTimeStamp = HI_TRUE;
+    } 
+
+    /*After we get I frame ,then ,we only using I fram to calc the average delta timestamp*/
+    if ((pstRecIdx->enFrameType == HI_UNF_FRAME_TYPE_I) && (pstTimeStamp->u32FrameNum >= PVR_INDEX_MAX_TIMESTAMP_BASE))
+    {
+        pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs = pstRecIdx->u32PtsMs ;
+        pstTimeStamp->stCurIFrmPtsInfo.u32FrameNum = pstTimeStamp->u32FrameNum;
+        /*if PTS rewind or wrapped (32bit overflow),need not update the average timestamp*/
+        if (pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs > pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs)
+        {
+            pstTimeStamp->bShouldUpdateTimeStamp = HI_TRUE;
+        }
+    }
+
+    if (pstTimeStamp->bShouldUpdateTimeStamp)
+    {
+        pstTimeStamp->bShouldUpdateTimeStamp = HI_FALSE;
+        u32DeltaTime = pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs - pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs;
+        u32DeltaFrameNum = pstTimeStamp->stCurIFrmPtsInfo.u32FrameNum - pstTimeStamp->stLastIFrmPtsInfo.u32FrameNum;
+        if ((u32DeltaTime !=0) && (u32DeltaFrameNum >= 1))
+        {
+            u32DeltaTimeStamp = u32DeltaTime/u32DeltaFrameNum;;
+            /*liuxingqiang said ,he has meet the frame time gop rang of 15~60 Ms,some net stream is 15fps*/
+            if ((u32DeltaTimeStamp < PVR_INDEX_MAX_TIMESTAMP_GOP) && 
+                (u32DeltaTimeStamp > PVR_INDEX_MIN_TIMESTAMP_GOP))
+            {
+                pstTimeStamp->u32DeltaTimeStamp = u32DeltaTimeStamp;
+            }               
+        }          
+        pstTimeStamp->stLastIFrmPtsInfo.u32PtsMs = pstTimeStamp->stCurIFrmPtsInfo.u32PtsMs;
+        pstTimeStamp->stLastIFrmPtsInfo.u32FrameNum = pstTimeStamp->stCurIFrmPtsInfo.u32FrameNum;
+    }
+
+    if (pstTimeStamp->u32FrameNum <= 1)
+    {
+        pstTimeStamp->u32CurFrameTimeMs = 0;
+    }
+    else
+    {
+        pstTimeStamp->u32CurFrameTimeMs += pstTimeStamp->u32DeltaTimeStamp;
+    }
+
+    return pstTimeStamp->u32CurFrameTimeMs;
+}
+
+
 HI_U32 PVRIndexGetCurTimeMs(HI_VOID)
 {
     HI_U32    Ticks;
@@ -636,7 +707,7 @@ static HI_BOOL PVRIndexIsFilePlaying(const HI_CHAR *pIdxFileName, PVR_INDEX_HAND
 }
 
 
-static HI_S32 PVRIndexIsFrameValid(HI_U32 u32FrmPos, PVR_CYC_MGR_S *pstCycMgr)
+static HI_BOOL PVRIndexIsFrameValid(HI_U32 u32FrmPos, PVR_CYC_MGR_S *pstCycMgr)
 {
     HI_U32 u32StartFrame = 0;
     HI_U32 u32EndFrame = 0;
@@ -1031,19 +1102,7 @@ STATIC INLINE HI_VOID PVRIndexCycMoveReadFrame(PVR_INDEX_HANDLE handle, HI_S32 s
     handle->u32ReadFrame = PVRIndexCalcNewPos(handle, handle->u32ReadFrame, s32Offset);
 }
 
-/**
- * @brief Record cycle infomation
- *
- *
- *  @param[in] handle : The recording index handle
- *
- *  @retval :: HI_FAILURE on failure.
- *  @retval :: HI_SUCCESS on success.
- *
- *  @note
- *
- *  @see ::
- */
+
 static HI_S32 PVRIndexWriteIndexCycMgr(PVR_INDEX_HANDLE hIndex, PVR_CYC_MGR_S *pstCycMgr)
 {
     PVR_CYC_HEADER_INFO_S stHeaderCycInfo = {0};
@@ -1070,52 +1129,53 @@ static HI_S32 PVRIndexWriteIndexCycMgr(PVR_INDEX_HANDLE hIndex, PVR_CYC_MGR_S *p
 }
 
 /* get the header struct info from index file */
-STATIC INLINE HI_S32 PVRIndexGetHeaderInfo(HI_S32 s32Fd, PVR_IDX_HEADER_INFO_S* pHeadInfo)
+STATIC INLINE HI_S32 PVRIndexGetHeaderInfo(HI_S32 s32Fd, PVR_IDX_HEADER_INFO_S* pstHeadInfo)
 {
+    HI_U32 u32IndexEntryNum;
+    HI_S32 s32TmpOffset;
     HI_S32 s32ReadRet = sizeof(PVR_IDX_HEADER_INFO_S);
-    HI_S64 indexFileSize;
-    HI_S32 tmpOffset;
-    HI_U32 indexEntryNum;
+    HI_S64 s64IndexFileSize;
 
-
-    s32ReadRet = PVR_READ(pHeadInfo, sizeof(PVR_IDX_HEADER_INFO_S), s32Fd, 0);
+    s32ReadRet = PVR_READ(pstHeadInfo, sizeof(PVR_IDX_HEADER_INFO_S), s32Fd, 0);
     if (s32ReadRet != (HI_S32)sizeof(PVR_IDX_HEADER_INFO_S))
     {
         HI_ERR_PVR("read Header info err, ret:%d, fd:%d, size:%d\n", s32ReadRet, s32Fd, s32ReadRet);
-        memset(pHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
+        memset(pstHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
         return HI_FAILURE;
     }
 
-    if (PVR_INDEX_HEADER_CODE != pHeadInfo->u32StartCode)
+    if (PVR_INDEX_HEADER_CODE != pstHeadInfo->u32StartCode)
     {
-        HI_ERR_PVR("Header info StartCode:0x%x, No head at this file, still play.\n", pHeadInfo->u32StartCode);
-        memset(pHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
+        HI_ERR_PVR("Header info StartCode:0x%x, No head at this file, still play.\n", pstHeadInfo->u32StartCode);
+        memset(pstHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
         return HI_FAILURE;
     }
 
-    /* for temp use, TODO: we must make sure the index file biger than cycInfo */
-    tmpOffset = (HI_S32)pvr_lseek(s32Fd, 0, SEEK_CUR);
-    if (tmpOffset < 0)
+    s32TmpOffset = (HI_S32)pvr_lseek(s32Fd, 0, SEEK_CUR);
+    if (s32TmpOffset < 0)
     {
         HI_ERR_PVR("can't seek to 0.\n");
-        memset(pHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
+        memset(pstHeadInfo, 0, sizeof(PVR_IDX_HEADER_INFO_S));
         return HI_FAILURE;
     }
-    indexFileSize = (HI_S64)pvr_lseek(s32Fd, 0, SEEK_END);
-    pvr_lseek(s32Fd, tmpOffset, SEEK_SET);
 
-    indexEntryNum = (HI_U32)(((HI_U64)indexFileSize - (HI_U64)pHeadInfo->u32HeaderLen)/(HI_U64)sizeof(PVR_INDEX_ENTRY_S));
+    s64IndexFileSize = (HI_S64)pvr_lseek(s32Fd, 0, SEEK_END);
+    pvr_lseek(s32Fd, s32TmpOffset, SEEK_SET);
 
-    if (pHeadInfo->stCycInfo.u32EndFrame > indexEntryNum)
+    u32IndexEntryNum = (HI_U32)(((HI_U64)s64IndexFileSize - (HI_U64)pstHeadInfo->u32HeaderLen)/(HI_U64)sizeof(PVR_INDEX_ENTRY_S));
+
+    if (pstHeadInfo->stCycInfo.u32EndFrame > u32IndexEntryNum)
     {
-        HI_WARN_PVR("HeadInfo's CycInfo.EndFrame(%u) > indexEntryNum(%u).\n", pHeadInfo->stCycInfo.u32EndFrame, indexEntryNum);
-        pHeadInfo->stCycInfo.u32EndFrame = indexEntryNum;
+        HI_WARN_PVR("HeadInfo's CycInfo.EndFrame(%u) > indexEntryNum(%u).\n", 
+                     pstHeadInfo->stCycInfo.u32EndFrame, u32IndexEntryNum);
+        pstHeadInfo->stCycInfo.u32EndFrame = u32IndexEntryNum;
     }
 
-    if (pHeadInfo->stCycInfo.u32LastFrame > indexEntryNum)
+    if (pstHeadInfo->stCycInfo.u32LastFrame > u32IndexEntryNum)
     {
-        HI_WARN_PVR("HeadInfo's CycInfo.LastFrame(%u) > indexEntryNum(%u).\n", pHeadInfo->stCycInfo.u32LastFrame, indexEntryNum);
-        pHeadInfo->stCycInfo.u32LastFrame = indexEntryNum;
+        HI_WARN_PVR("HeadInfo's CycInfo.LastFrame(%u) > indexEntryNum(%u).\n", 
+                     pstHeadInfo->stCycInfo.u32LastFrame, u32IndexEntryNum);
+        pstHeadInfo->stCycInfo.u32LastFrame = u32IndexEntryNum;
     }
 
     return HI_SUCCESS;
@@ -1185,6 +1245,7 @@ STATIC INLINE HI_VOID PVRIndexSetDftAttr(PVR_INDEX_HANDLE handle)
     HI_INFO_PVR("index set default attr.\n");
 
     handle->u64GlobalOffset = 0;
+    handle->u64OverflowOffset = 0;
     handle->u64FileSizeGlobal = 0;
     handle->u32PauseFrame  = 0;
     handle->u64PauseOffset = PVR_INDEX_PAUSE_INVALID_OFFSET;
@@ -1194,7 +1255,6 @@ STATIC INLINE HI_VOID PVRIndexSetDftAttr(PVR_INDEX_HANDLE handle)
     handle->u32RecLastValidPtsMs = PVR_INDEX_INVALID_PTSMS;
     handle->u32RecPicParser = 0xffffffff;
     handle->u32RecFirstFrmTimeMs = 0;
-    handle->bRecReachPlay = HI_FALSE;
 
     handle->s32WriteFd = PVR_FILE_INVALID_FILE;
     handle->s32ReadFd = PVR_FILE_INVALID_FILE;
@@ -1208,25 +1268,25 @@ STATIC INLINE HI_VOID PVRIndexSetDftAttr(PVR_INDEX_HANDLE handle)
     memset(handle->szIdxFileName, 0, PVR_MAX_FILENAME_LEN);
 }
 
-static HI_S32 PVRCacheWriteIdx(PVR_INDEX_HANDLE handle,HI_U8* pu8Data,HI_U32 u32Len,HI_U32 u32Offset,
-                                   HI_BOOL bDirectFlag,HI_BOOL* bWriteFlag)
+static HI_S32 PVRCacheWriteIdx(PVR_INDEX_HANDLE handle, HI_U8* pu8Data, HI_U32 u32Len, HI_U32 u32Offset,
+                               HI_BOOL bDirectFlag, HI_BOOL* bWriteFlag)
 {
     HI_U32 u32SaveSz;
 
     PVR_IDX_CACHE_LOCK(&(handle->stIdxWriteCache.stCacheMutex));
-    
+
     if (handle->stIdxWriteCache.u32BufferLen == 0)/*no cache buffer*/
     {
         PVR_WRITE_INDEX(u32SaveSz, u32Len, pu8Data, handle->s32WriteFd,u32Offset, handle);
         *bWriteFlag = HI_TRUE;
     }
-    else if ( bDirectFlag )/*Direct write file,not use cache*/
+    else if (bDirectFlag)/*Direct write file,not use cache*/
     {
         if (handle->stIdxWriteCache.u32UsedSize)/*have data cache*/
         {
             PVR_WRITE_INDEX(u32SaveSz, handle->stIdxWriteCache.u32UsedSize,handle->stIdxWriteCache.pu8Addr,
-                            handle->s32WriteFd,handle->stIdxWriteCache.u32StartOffset, handle);
-            PVR_WRITE_INDEX(u32SaveSz, u32Len, pu8Data, handle->s32WriteFd,u32Offset, handle);
+                            handle->s32WriteFd, handle->stIdxWriteCache.u32StartOffset, handle);
+            PVR_WRITE_INDEX(u32SaveSz, u32Len, pu8Data, handle->s32WriteFd, u32Offset, handle);
             *bWriteFlag = HI_TRUE;
             handle->stIdxWriteCache.u32UsedSize = 0;
             handle->stIdxWriteCache.u32StartOffset = 0;
@@ -1234,12 +1294,12 @@ static HI_S32 PVRCacheWriteIdx(PVR_INDEX_HANDLE handle,HI_U8* pu8Data,HI_U32 u32
         }
         else/*no cached data*/
         {
-            PVR_WRITE_INDEX(u32SaveSz, u32Len, pu8Data, handle->s32WriteFd,u32Offset, handle);
+            PVR_WRITE_INDEX(u32SaveSz, u32Len, pu8Data, handle->s32WriteFd, u32Offset, handle);
             *bWriteFlag = HI_TRUE;
         }
     }
     else
-    {        
+    {
         /*  
         1. Data offset jump,may be means idx rewind.
         2. Cache buffer not enough
@@ -1262,19 +1322,19 @@ static HI_S32 PVRCacheWriteIdx(PVR_INDEX_HANDLE handle,HI_U8* pu8Data,HI_U32 u32
         memcpy(handle->stIdxWriteCache.pu8Addr + handle->stIdxWriteCache.u32UsedSize,pu8Data,u32Len);
         if(handle->stIdxWriteCache.u32UsedSize == 0)//cache is empty
         {
-           handle->stIdxWriteCache.u32StartOffset  = u32Offset;
+           handle->stIdxWriteCache.u32StartOffset = u32Offset;
         }
-        handle->stIdxWriteCache.u32UsedSize +=  u32Len;            
+        handle->stIdxWriteCache.u32UsedSize +=  u32Len;
     }
     PVR_IDX_CACHE_UNLOCK(&(handle->stIdxWriteCache.stCacheMutex));
-    
+
     PVR_IDX_CACHE_LOCK(&(handle->stIdxReadCache.stCacheMutex));
     if (PVR_Index_IfOffsetReadCache(handle,u32Offset,u32Len))//write data been cached or appears in cache
     {
         handle->stIdxReadCache.u32UsedSize = 0;//invalid the read cache buffer
     }
     PVR_IDX_CACHE_UNLOCK(&(handle->stIdxReadCache.stCacheMutex));
-    
+
     return HI_SUCCESS;
 }
 
@@ -1323,12 +1383,12 @@ HI_S32 PVR_Index_IfOffsetInWriteCache(PVR_INDEX_HANDLE  handle,HI_U32 u32Offset,
 }
 
 /*check if the offset in read cache:1 all in cache,0 not in cache,2 offset in cache*/
-static HI_S32 PVR_Index_IfOffsetReadCache(PVR_INDEX_HANDLE  handle,HI_U32 u32Offset,HI_U32 u32Size)
+static HI_S32 PVR_Index_IfOffsetReadCache(PVR_INDEX_HANDLE handle, HI_U32 u32Offset, HI_U32 u32Size)
 {
     if (handle->stIdxReadCache.u32BufferLen && handle->stIdxReadCache.u32UsedSize)/*have data cached*/
     {
-        if (u32Offset >= handle->stIdxReadCache.u32StartOffset && 
-            ((u32Offset-handle->stIdxReadCache.u32StartOffset) <= handle->stIdxReadCache.u32UsedSize))
+        if ((u32Offset >= handle->stIdxReadCache.u32StartOffset) && 
+            ((u32Offset - handle->stIdxReadCache.u32StartOffset) <= handle->stIdxReadCache.u32UsedSize))
         {
             if ((u32Offset - handle->stIdxReadCache.u32StartOffset + u32Size) <= handle->stIdxReadCache.u32UsedSize)
             {
@@ -1341,8 +1401,8 @@ static HI_S32 PVR_Index_IfOffsetReadCache(PVR_INDEX_HANDLE  handle,HI_U32 u32Off
 }
 
 
-static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE  handle,PVR_FILE fd, HI_VOID* pData,size_t size, 
-                              HI_U32 offset,HI_U32 u32DirectFlag)
+static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE handle, PVR_FILE fd, HI_VOID* pData, size_t size, 
+                               HI_U32 u32Offset, HI_U32 u32DirectFlag)
 {
     ssize_t readNum = 0;
     HI_S32 s32CachedFlag;
@@ -1354,15 +1414,15 @@ static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE  handle,PVR_FILE fd, HI_VOID* pD
     if (handle->stIdxReadCache.u32BufferLen == 0 || u32DirectFlag || 
         size > handle->stIdxReadCache.u32BufferLen)/*read directly*/
     {
-        PVR_READ_INDEX_DIRECTLY(readNum, pData, size, fd, (off_t)offset, handle);
+        PVR_READ_INDEX_DIRECTLY(readNum, pData, size, fd, (off_t)u32Offset, handle);
         NotCacheNum++;
     }
     else
     {
-        s32CachedFlag = PVR_Index_IfOffsetReadCache(handle,offset,size);
+        s32CachedFlag = PVR_Index_IfOffsetReadCache(handle, u32Offset,size);
         if (s32CachedFlag == 1)/*cached*/
         {
-            pDataAddr = handle->stIdxReadCache.pu8Addr + offset - handle->stIdxReadCache.u32StartOffset;
+            pDataAddr = handle->stIdxReadCache.pu8Addr + u32Offset - handle->stIdxReadCache.u32StartOffset;
             memcpy(pData,pDataAddr,size);
             readNum = size;
             u32CacheNum ++;
@@ -1380,7 +1440,7 @@ static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE  handle,PVR_FILE fd, HI_VOID* pD
             ||                      ||                      ||
             cache start        offset          cache end
             */
-            s32CacheStartReadOffset = (HI_S32)(offset - (handle->stIdxReadCache.u32BufferLen / 2));
+            s32CacheStartReadOffset = (HI_S32)(u32Offset - (handle->stIdxReadCache.u32BufferLen / 2));
             if (s32CacheStartReadOffset < 0)
             {
                 s32CacheStartReadOffset = 0;
@@ -1390,10 +1450,10 @@ static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE  handle,PVR_FILE fd, HI_VOID* pD
                                     fd, (off_t)s32CacheStartReadOffset, handle);
             handle->stIdxReadCache.u32UsedSize = readNum;
             handle->stIdxReadCache.u32StartOffset = s32CacheStartReadOffset;  
-            s32CachedFlag = PVR_Index_IfOffsetReadCache(handle,offset,size);/*check again*/
+            s32CachedFlag = PVR_Index_IfOffsetReadCache(handle, u32Offset, size);/*check again*/
             if (s32CachedFlag == 1)
             {
-                pDataAddr = handle->stIdxReadCache.pu8Addr + offset - handle->stIdxReadCache.u32StartOffset;
+                pDataAddr = handle->stIdxReadCache.pu8Addr + u32Offset - handle->stIdxReadCache.u32StartOffset;
                 memcpy(pData,pDataAddr,size);
                 readNum = size;
                 NotCacheNum++;
@@ -1401,7 +1461,7 @@ static ssize_t PVRCacheReadIdx(PVR_INDEX_HANDLE  handle,PVR_FILE fd, HI_VOID* pD
             else/*try read directly */
             {
                 HI_WARN_PVR("idx read cache not works!\n");
-                PVR_READ_INDEX_DIRECTLY(readNum, pData, size, fd, (off_t)offset, handle); 
+                PVR_READ_INDEX_DIRECTLY(readNum, pData, size, fd, (off_t)u32Offset, handle); 
                 NotCacheNum++;
             }
         }         
@@ -1457,7 +1517,7 @@ static HI_S32 PVRIndexGetFBwardIPBFrameNum(PVR_INDEX_HANDLE hIndex,
 
         if (HI_TRUE != PVRIndexIsFrameValid(s32NextFrameNum, &hIndex->stCycMgr))
         {
-            HI_ERR_PVR("next frame number %d is invalid. start=%d end=%d last=%d\n",
+            HI_WARN_PVR("next frame number %d is invalid. start=%d end=%d last=%d\n",
                         s32NextFrameNum,
                         pstCycMgr->u32StartFrame,
                         pstCycMgr->u32EndFrame,
@@ -1565,6 +1625,26 @@ static HI_U32 PVRIndecCalcInvalidIdxLen(PVR_INDEX_HANDLE hIndex, HI_U64 *pu64Len
 }
 #endif
 
+static HI_VOID PVRIndexCheckReadFrmValidWhenTimeshift(PVR_INDEX_HANDLE hIndex)
+{
+    if (hIndex->bIsPlay == HI_FALSE)
+        return ;
+
+    if (hIndex->bRecReachPlay == HI_TRUE)
+    {
+        return ;
+    }
+
+    if (PVRIndexIsFrameValid(hIndex->u32ReadFrame, &hIndex->stCycMgr) == 0)
+    {
+        HI_WARN_PVR("Rec cover play!!!! S/E/L/R:%d/%d/%d/%d\n",
+                     hIndex->stCycMgr.u32StartFrame, hIndex->stCycMgr.u32EndFrame,
+                     hIndex->stCycMgr.u32LastFrame,hIndex->u32ReadFrame);
+        hIndex->bRecReachPlay = HI_TRUE;
+    }
+}
+
+
 static HI_BOOL PVRIndexCheckRewind(PVR_INDEX_HANDLE hIndex,
                                    PVR_CYC_MGR_S *pstCycMgr,
                                    PVR_INDEX_ENTRY_S *pstIdxEntry)
@@ -1600,10 +1680,10 @@ static INLINE HI_VOID PVRIndexAssignIndexEntry(PVR_INDEX_HANDLE hIndex,
                                                PVR_INDEX_ENTRY_S *pstIdxEntry)
 {
     HI_U32 u32CurFrmTimeMs = 0, u32TimeNow = 0;
-    
+
     hIndex->u64GlobalOffset = pstDmxIndexInfo->u64GlobalOffset - hIndex->u64DeltaGlobalOffset;
     hIndex->u32DmxClkTimeMs = pstDmxIndexInfo->u32DataTimeMs;
-    
+
     if (PVR_INDEX_INVALID_I_FRAME_OFFSET != hIndex->u16RecLastIframe)
     {
         hIndex->u16RecLastIframe++;
@@ -1650,22 +1730,30 @@ static INLINE HI_VOID PVRIndexAssignIndexEntry(PVR_INDEX_HANDLE hIndex,
     }
 
     pstIdxEntry->u16FrameTypeAndGop = ((pstDmxIndexInfo->enFrameType) & 0x3) << 14 | (hIndex->u16RecLastIframe & 0x3fff);
-    pstIdxEntry->u64GlobalOffset    = pstDmxIndexInfo->u64GlobalOffset - hIndex->u64DeltaGlobalOffset;
-    pstIdxEntry->u64Offset          = pstDmxIndexInfo->u64GlobalOffset - hIndex->u64DeltaGlobalOffset;
+    pstIdxEntry->u64GlobalOffset    = pstDmxIndexInfo->u64GlobalOffset - hIndex->u64DeltaGlobalOffset + hIndex->u64OverflowOffset;
+    pstIdxEntry->u64Offset          = pstDmxIndexInfo->u64GlobalOffset - hIndex->u64DeltaGlobalOffset + hIndex->u64OverflowOffset;
     pstIdxEntry->u32FrameSize       = pstDmxIndexInfo->u32FrameSize;
     pstIdxEntry->u32PtsMs           = hIndex->u32RecLastValidPtsMs;
     pstIdxEntry->u16IndexType       = (HI_U16)hIndex->enIndexType;
     pstIdxEntry->u161stFrameOfTT    = 0;
     pstIdxEntry->s32CycTimes        = hIndex->stCycMgr.u32CycTimes;
-    
+
     /* In case the recording data lose, compensate the current time */
     if ((u32CurFrmTimeMs - hIndex->u32LastDispTime) >= 1000)
     {
         hIndex->u32DeltaDispTimeMs += (u32CurFrmTimeMs - hIndex->u32LastDispTime);
     }
-    pstIdxEntry->u32DisplayTimeMs   = u32CurFrmTimeMs - hIndex->u32DeltaDispTimeMs;
 
-    hIndex->u32LastDispTime       = u32CurFrmTimeMs;
+    if (!hIndex->stTimeStamp.bNeedAdjustByPts)
+    {
+        pstIdxEntry->u32DisplayTimeMs = u32CurFrmTimeMs - hIndex->u32DeltaDispTimeMs;
+    }
+    else
+    {
+        pstIdxEntry->u32DisplayTimeMs = PVRIndexGetRecTimeStamp(hIndex, pstDmxIndexInfo);
+    }
+    
+    hIndex->u32LastDispTime = u32CurFrmTimeMs;
 }
 
 
@@ -1676,7 +1764,7 @@ static HI_VOID PVRIndexSubGopInfo(PVR_INDEX_HANDLE hIndex,
 {
     HI_U32 u32GopSizeSeg;
     PVR_INDEX_ENTRY_S stPreEntryTmp = {0};
-    
+
     pstRecIdxInfo->stIdxInfo.u32GopTotalNum--;
     if (HI_SUCCESS == PVRIndexGetEntryByNum(hIndex, &stPreEntryTmp, u32PreCurFrm))
     {
@@ -1684,7 +1772,7 @@ static HI_VOID PVRIndexSubGopInfo(PVR_INDEX_HANDLE hIndex,
         u32GopSizeSeg = (u32GopSizeSeg > 12) ? 12 : u32GopSizeSeg;
         pstRecIdxInfo->stIdxInfo.u32GopSizeInfo[u32GopSizeSeg]--;
     }
-    
+
     return;
 }
 
@@ -1693,7 +1781,7 @@ static HI_VOID PVRIndexAddGopInfo(PVR_INDEX_HANDLE hIndex,
                                      PVR_INDEX_ENTRY_S *pstIdxEntry)
 {
     HI_U32 u32GopSizeSeg;
-    
+
     pstRecIdxInfo->stIdxInfo.u32GopTotalNum++;
 
     if (pstRecIdxInfo->u32LastGopSize > pstRecIdxInfo->stIdxInfo.u32MaxGopSize)
@@ -1790,9 +1878,11 @@ static HI_VOID PVRIndexUpdateCycMgrAndRecInfoWhenRewind(PVR_INDEX_HANDLE hIndex,
             PVRIndexPushStartFrame(hIndex, pstCycMgr, pstIdxInfo, u64NextEndOffset);
         }
 
-        if ((PVRIndexCheckEndOffsetCoverStartOffset(pstEndEntry->u64Offset, u64NextEndOffset, 
-                                    pstCycMgr->u64StartFrameOffset, pstCycMgr->u64MaxCycSize)) ||
-              (pstCycMgr->u32StartFrame == PVR_IDX_NEXT_POS_IN_CYC(pstCycMgr->u32EndFrame,(pstCycMgr->u32LastFrame + 1))))
+        //we reserve 2 frames for this case:
+        //read is equal to start, and we are pushing start at the monent. It will cause  the function of checking read invalide fail
+        if ((pstCycMgr->u32StartFrame < 2) ||
+            (pstCycMgr->u32StartFrame == PVR_IDX_NEXT_N_POS_IN_CYC(pstCycMgr->u32EndFrame, 2, (pstCycMgr->u32LastFrame + 1))) ||
+            (PVRIndexCheckEndOffsetCoverStartOffset(pstEndEntry->u64Offset, u64NextEndOffset, pstCycMgr->u64StartFrameOffset, pstCycMgr->u64MaxCycSize)))
         {
             do
             {
@@ -1801,14 +1891,15 @@ static HI_VOID PVRIndexUpdateCycMgrAndRecInfoWhenRewind(PVR_INDEX_HANDLE hIndex,
                                                           pstCycMgr->u64StartFrameOffset, pstCycMgr->u64MaxCycSize));
         }
     }
-    
+
     pstCycMgr->u32EndFrame = 0;
+    PVRIndexCheckReadFrmValidWhenTimeshift(hIndex);
 
     if (PVR_INDEX_is_Iframe(pstEndEntry))
     {
         PVRIndexAddGopInfo(hIndex, pstIdxInfo, pstEndEntry);
     }
-    
+
     pstIdxInfo->u32LastGopSize = (pstEndEntry->u16FrameTypeAndGop & 0x3fff) + 1;
 
     PVRIndexUpdateTotalFrmNum(pstIdxInfo, pstCycMgr);
@@ -1850,7 +1941,7 @@ static HI_VOID PVRIndexUpdateCycMgrAndRecInfoWhenNotRewind(PVR_INDEX_HANDLE hInd
         //两种情况会移动start   
         //1. end  指向的offset  会覆盖prestart  指向的offset
         //2. end  赶上prestart
-        if ((pstCycMgr->u32StartFrame == PVR_IDX_NEXT_POS_IN_CYC(pstCycMgr->u32EndFrame,(pstCycMgr->u32LastFrame + 1))) ||
+        if ((pstCycMgr->u32StartFrame == PVR_IDX_NEXT_N_POS_IN_CYC(pstCycMgr->u32EndFrame,2,(pstCycMgr->u32LastFrame + 1))) ||
             (PVRIndexCheckEndOffsetCoverStartOffset(pstEndEntry->u64Offset, u64NextEndOffset, 
                                                     pstCycMgr->u64StartFrameOffset, pstCycMgr->u64MaxCycSize)))
         {
@@ -1860,13 +1951,15 @@ static HI_VOID PVRIndexUpdateCycMgrAndRecInfoWhenNotRewind(PVR_INDEX_HANDLE hInd
             }while(PVRIndexCheckEndOffsetCoverStartOffset(pstEndEntry->u64Offset,u64NextEndOffset, 
                                                           pstCycMgr->u64StartFrameOffset, pstCycMgr->u64MaxCycSize));
         }
-        
+
         pstCycMgr->u32EndFrame++;
         if (pstCycMgr->u32LastFrame < pstCycMgr->u32EndFrame)
         {
             pstCycMgr->u32LastFrame++;
         }
     }
+
+    PVRIndexCheckReadFrmValidWhenTimeshift(hIndex);
 
     if (PVR_INDEX_is_Iframe(pstEndEntry))
     {
@@ -2004,7 +2097,7 @@ static HI_VOID PVRIndexProcRewind(PVR_INDEX_HANDLE hIndex,
         PVRIndexUpdateCycMgrAndRecInfoWhenRewind(hIndex, pstCycMgr, &hIndex->stRecIdxInfo, pstIdxEntry);
         hIndex->bRewindFlagForIndex = HI_TRUE;
         pstIdxEntry->s32CycTimes = pstCycMgr->u32CycTimes;
-        
+
         hIndex->stIdxWriteCache.u32RewindCacheWrite = hIndex->stIdxWriteCache.u32Write;
     }
 }
@@ -2052,8 +2145,15 @@ static HI_S32 PVRIndexProcDisableRewind(PVR_INDEX_HANDLE hIndex,
     {
         return HI_FAILURE;
     }
-    
-    if(PVR_INDEX_REWIND_BY_TIME == pstCycMgr->enRewindType)
+
+    if ((pstCycMgr->u32MaxCycTimeInMs == 0) && (pstCycMgr->u64MaxCycSize == 0))
+    {
+        PVRIndexUpdateCycMgrAndRecInfoWhenDisableRewind(hIndex, pstCycMgr, pstRecInfo, pstIdxEntry);
+
+        return HI_SUCCESS;
+    }
+
+    if (PVR_INDEX_REWIND_BY_TIME == pstCycMgr->enRewindType)
     {            
         if((pstIdxEntry->u32DisplayTimeMs/1000) >= (pstCycMgr->u32MaxCycTimeInMs - 1)/1000)
         {
@@ -2070,7 +2170,7 @@ static HI_S32 PVRIndexProcDisableRewind(PVR_INDEX_HANDLE hIndex,
             return HI_FAILURE;
         }
     }
-    
+
     PVRIndexUpdateCycMgrAndRecInfoWhenDisableRewind(hIndex, pstCycMgr, pstRecInfo, pstIdxEntry);
 
     return HI_SUCCESS;
@@ -2160,10 +2260,11 @@ HI_S32 PVR_Index_SaveToFile(PVR_INDEX_HANDLE hIndex, HI_BOOL bDirectWrite)
 
     pstIdxBuf = &hIndex->stIdxWriteCache;
 
-//判读writecache  是否空或者满，统一用usednum  进行处理
+/** we use u32UsedNum to judge whether the writecache is full or empty */
+/**  CNcomment:统一用 usednum 判断 writecache 是否空或者满*/
     if (pstIdxBuf->u32UsedNum == 0)
     {
-        HI_INFO_PVR("There is no data in write cache! read %d write %d\n", u32Read, u32Write);
+        HI_INFO_PVR("There is no data in write cache!\n");
         return HI_SUCCESS;
     }
 
@@ -2196,9 +2297,9 @@ HI_S32 PVR_Index_SaveToFile(PVR_INDEX_HANDLE hIndex, HI_BOOL bDirectWrite)
             HI_ERR_PVR("Write idx failed!! ret %x\n", s32Ret);
             return s32Ret;
         }
-        
+
         (HI_VOID)PVRIndexWriteIndexCycMgr(hIndex, &stCycMgr);
-        (HI_VOID)PVRIndexWriteIndexInfo(hIndex, &stIdxInfo);                
+        (HI_VOID)PVRIndexWriteIndexInfo(hIndex, &stIdxInfo);
 
         hIndex->u32WriteFrame = u32IdxCount2;
         //fileidxinfo主要给readcache使用，表明写入文件的帧号
@@ -2206,9 +2307,9 @@ HI_S32 PVR_Index_SaveToFile(PVR_INDEX_HANDLE hIndex, HI_BOOL bDirectWrite)
         pstIdxBuf->u32RewindCacheWrite = 0;
         pstIdxBuf->u32Read = PVR_IDX_NEXT_N_POS_IN_CYC(u32Read, u32IdxCount, PVR_INDEX_WRITE_CACHE_NUM);
         pstIdxBuf->u32UsedNum -= u32IdxCount;
-        
+
         HI_ASSERT(pstIdxBuf->u32UsedNum <= PVR_INDEX_WRITE_CACHE_NUM);
-        
+
         PVR_IDX_CACHE_UNLOCK(&(pstIdxBuf->stCacheMutex));
 
         PVR_INDEX_LOCK(&(hIndex->stMutex));
@@ -2305,7 +2406,7 @@ HI_S32 PVR_Index_SaveToCache(PVR_INDEX_HANDLE hIndex, const HI_UNF_DMX_REC_INDEX
         {
             PVR_INDEX_UNLOCK(&(hIndex->stMutex));
             return HI_SUCCESS;
-        }    
+        }
     }
 
     PVR_IDX_CACHE_LOCK(&(pstIdxBuf->stCacheMutex));
@@ -2319,100 +2420,25 @@ HI_S32 PVR_Index_SaveToCache(PVR_INDEX_HANDLE hIndex, const HI_UNF_DMX_REC_INDEX
     HI_INFO_PVR("Chn %d saveidx !bufwrite %d goffset %llx disime %d frmsize %d frmtype %d\n",
                 hIndex->u32RecPicParser,pstIdxBuf->u32Write, stIndexEntry.u64GlobalOffset, 
                 stIndexEntry.u32DisplayTimeMs, stIndexEntry.u32FrameSize,((pstDmxIndexInfo->enFrameType)&0x3));
-    
+
     return HI_SUCCESS;
 }
 
-//正常停止时将Indexcache的数据刷进文件里面
+/*
+Flush the index in the write cache to the disk
+*/
 HI_S32 PVR_Index_FlushToFile(PVR_INDEX_HANDLE hIndex)
 {
-    HI_U32 u32Read, u32UseNum;
     HI_U32 u32IdxTotalNum = 0;
-    HI_S32 s32Ret = HI_SUCCESS;
-    HI_BOOL bRewind = HI_FALSE;
-    PVR_INDEX_ENTRY_S  stIndexEntry = {0};
-    PVR_INDEX_ENTRY_S  *pstIdxEntry = HI_NULL;
-    PVR_CYC_MGR_S      *pstCycMgr = HI_NULL;
-    HIPVR_IDX_BUF_S    *pstIdxBuf = HI_NULL;
+    HI_S32 s32Ret;
+    PVR_CYC_MGR_S   *pstCycMgr = HI_NULL;
+    HIPVR_IDX_BUF_S *pstIdxBuf = HI_NULL;
 
     pstCycMgr = &(hIndex->stCycMgr);
     pstIdxBuf = &(hIndex->stIdxWriteCache);
+    u32IdxTotalNum = pstIdxBuf->u32UsedNum;
 
-    if (pstIdxBuf->u32UsedNum == 0)
-    {
-        HI_INFO_PVR("There is no index in index write cache\n");
-        return HI_SUCCESS;
-    }
-
-    HI_INFO_PVR("hIndex cycinfo s/e/l:%d/%d/%d StartOffset %llx\n", 
-                pstCycMgr->u32StartFrame, 
-                pstCycMgr->u32EndFrame, 
-                pstCycMgr->u32LastFrame, 
-                pstCycMgr->u64StartFrameOffset);
-
-    u32Read   = pstIdxBuf->u32Read;
-    u32UseNum = pstIdxBuf->u32UsedNum;
-
-    //考虑index不能超前ts，必须在index超前处停止刷cache
-    //因此，将filecycinfo赋值给handlecycinfo，重新做一遍处理
-
-    pstCycMgr->u32StartFrame = hIndex->stFileCycInfo.u32StartFrame;
-    pstCycMgr->u32LastFrame  = hIndex->stFileCycInfo.u32LastFrame;
-    pstCycMgr->u32EndFrame   = hIndex->stFileCycInfo.u32EndFrame;
-    s32Ret = PVRIndexGetEntryByNum(hIndex , &stIndexEntry, pstCycMgr->u32StartFrame);
-    if (HI_SUCCESS == s32Ret)
-    {
-        pstCycMgr->u64StartFrameOffset = stIndexEntry.u64Offset;
-    }
-    else
-    {
-        HI_ERR_PVR("Get startfrm failed %x, s/e/l:%d/%d/%d\n",
-                   s32Ret, pstCycMgr->u32StartFrame, pstCycMgr->u32EndFrame, pstCycMgr->u32LastFrame);
-        pstCycMgr->u64StartFrameOffset = 0;
-    }
-
-    PVR_Index_GetRecIdxInfo(hIndex);
-    
-    HI_INFO_PVR("File cycinfo s/e/l:%d/%d/%d StartOffset %llx\n", 
-                pstCycMgr->u32StartFrame, 
-                pstCycMgr->u32EndFrame, 
-                pstCycMgr->u32LastFrame,
-                pstCycMgr->u64StartFrameOffset);
-
-    pstIdxEntry = (PVR_INDEX_ENTRY_S *)(pstIdxBuf->pu8Addr + u32Read * sizeof(PVR_INDEX_ENTRY_S));
-    while((u32UseNum != 0) && (pstIdxEntry->u64GlobalOffset + pstIdxEntry->u32FrameSize < hIndex->u64FileSizeGlobal))
-    {
-        if ((hIndex->bRewindFlagForIndex == HI_TRUE) && 
-            (u32Read == pstIdxBuf->u32RewindCacheWrite))
-        {
-            bRewind = HI_TRUE;
-            PVRIndexUpdateCycMgrAndRecInfoWhenRewind(hIndex, pstCycMgr, &hIndex->stRecIdxInfo, pstIdxEntry);
-        }
-        else
-        {
-            PVRIndexUpdateCycMgrAndRecInfoWhenNotRewind(hIndex, pstCycMgr, 
-                                                        &hIndex->stRecIdxInfo, pstIdxEntry);
-        }
-
-        pstIdxEntry = (PVR_INDEX_ENTRY_S *)(pstIdxBuf->pu8Addr + u32Read * sizeof(PVR_INDEX_ENTRY_S));
-        u32Read = PVR_IDX_NEXT_POS_IN_CYC(u32Read, PVR_INDEX_WRITE_CACHE_NUM);
-        u32UseNum--;
-        u32IdxTotalNum++;
-    }
-
-    if (pstIdxBuf->u32UsedNum < u32IdxTotalNum)
-    {
-        HI_ERR_PVR("Readnum %d is big than usednum %d\n", u32IdxTotalNum, pstIdxBuf->u32UsedNum);
-        return HI_FAILURE;
-    }
-
-    HI_INFO_PVR("Flush finish!! file cycinfo s/e/l:%d/%d/%d StartOffset %llx\n", 
-                pstCycMgr->u32StartFrame, 
-                pstCycMgr->u32EndFrame, 
-                pstCycMgr->u32LastFrame,
-                pstCycMgr->u64StartFrameOffset);
-
-    if (bRewind)
+    if (hIndex->bRewindFlagForIndex)
     {
         HI_U32 u32BeforRewindIdxNum;
         u32BeforRewindIdxNum = PVR_IDX_DISTANCE_IN_CYC(pstIdxBuf->u32RewindCacheWrite, 
@@ -2431,7 +2457,7 @@ HI_S32 PVR_Index_FlushToFile(PVR_INDEX_HANDLE hIndex)
             HI_ERR_PVR("Write idx failed!! ret %x\n", s32Ret);
             return s32Ret;
         }
-        
+
         PVRIndexWriteIndexCycMgr(hIndex, pstCycMgr);
         PVRIndexWriteIndexInfo(hIndex, &hIndex->stRecIdxInfo);                
 
@@ -2453,12 +2479,22 @@ HI_S32 PVR_Index_FlushToFile(PVR_INDEX_HANDLE hIndex)
         hIndex->u32WriteFrame += u32IdxTotalNum;
     }
 
+    if (hIndex->s32WriteFd && (hIndex->s32WriteFd != PVR_FILE_INVALID_FILE))
+    {
+        PVR_FSYNC(hIndex->s32WriteFd);
+    }
+
+    if (hIndex->s32HeaderFd && (hIndex->s32HeaderFd != PVR_FILE_INVALID_FILE))
+    {
+        PVR_FSYNC(hIndex->s32HeaderFd);
+    }
+
     hIndex->stFileCycInfo.u32EndFrame   = pstCycMgr->u32EndFrame;
     hIndex->stFileCycInfo.u32LastFrame  = pstCycMgr->u32LastFrame;
     hIndex->stFileCycInfo.u32StartFrame = pstCycMgr->u32StartFrame;
     hIndex->stFileCycInfo.u32IsRewind   = pstCycMgr->bIsRewind;
-    pstIdxBuf->u32Read = PVR_IDX_NEXT_N_POS_IN_CYC(u32Read, u32IdxTotalNum, PVR_INDEX_WRITE_CACHE_NUM);
-    pstIdxBuf->u32UsedNum -= u32IdxTotalNum;
+    pstIdxBuf->u32Read = PVR_IDX_NEXT_N_POS_IN_CYC(pstIdxBuf->u32Read, u32IdxTotalNum, PVR_INDEX_WRITE_CACHE_NUM);
+    pstIdxBuf->u32UsedNum = 0;
 
     return HI_SUCCESS;
 }
@@ -2472,7 +2508,7 @@ HI_S32 PVR_Index_SaveFramePosition(PVR_INDEX_HANDLE hIndex, HI_UNF_DMX_REC_INDEX
     PVR_INDEX_ENTRY_S   stIdxEntry = {0};
     PVR_CYC_MGR_S       *pstCycMgr = HI_NULL;
     PVR_REC_INDEX_INFO_S *pstRecInfo = HI_NULL;
-    
+
     pstCycMgr = &(hIndex->stCycMgr);
     pstRecInfo = &(hIndex->stRecIdxInfo);
 
@@ -2513,7 +2549,7 @@ HI_S32 PVR_Index_SaveFramePosition(PVR_INDEX_HANDLE hIndex, HI_UNF_DMX_REC_INDEX
             return HI_SUCCESS;
         } 
     }
-    
+
     if (hIndex->bRewindFlagForIndex)
     {
         hIndex->u32WriteFrame = 0;
@@ -2521,7 +2557,7 @@ HI_S32 PVR_Index_SaveFramePosition(PVR_INDEX_HANDLE hIndex, HI_UNF_DMX_REC_INDEX
     }
 
     memcpy(&hIndex->stCurRecFrame, &stIdxEntry, sizeof(PVR_INDEX_ENTRY_S));
-    
+
     /* if saved stream less than 50M use direct write */
     bDirectWriteFile = (stIdxEntry.u64GlobalOffset < 0x3200000)?HI_TRUE:bDirectWriteFile;
 
@@ -2542,7 +2578,7 @@ HI_S32 PVR_Index_SaveFramePosition(PVR_INDEX_HANDLE hIndex, HI_UNF_DMX_REC_INDEX
         (HI_VOID)PVRIndexWriteIndexCycMgr(hIndex, pstCycMgr);
         (HI_VOID)PVRIndexWriteIndexInfo(hIndex, pstRecInfo);
     }
-    
+
     HI_INFO_PVR("chn %d S:%u, E:%u, L:%u, W:%u\n",
                 hIndex->u32RecPicParser,
                 pstCycMgr->u32StartFrame,
@@ -2594,8 +2630,8 @@ HI_S32 PVR_Index_Init(HI_VOID)
     Modification : modify for HD
 *****************************************************************************/
 PVR_INDEX_HANDLE PVR_Index_CreatPlay(HI_U32 chnID,
-                                const HI_UNF_PVR_PLAY_ATTR_S *pstPlayAttr,
-                                HI_BOOL *pIsNoIdx)
+                                     const HI_UNF_PVR_PLAY_ATTR_S *pstPlayAttr,
+                                     HI_BOOL *pIsNoIdx)
 {
     HI_S32 ret = HI_SUCCESS;
     PVR_INDEX_HANDLE handle;
@@ -2603,7 +2639,7 @@ PVR_INDEX_HANDLE PVR_Index_CreatPlay(HI_U32 chnID,
     //HI_BOOL bPlayOnly = HI_FALSE;
     //HI_U32 PicParser;
 
-    if(!pstPlayAttr)
+    if (!pstPlayAttr)
     {
         return HI_NULL_PTR;
     }
@@ -2614,6 +2650,9 @@ PVR_INDEX_HANDLE PVR_Index_CreatPlay(HI_U32 chnID,
     if (PVRIndexIsFileRecording(szIndexName, &handle))
     {
         handle->bIsPlay = HI_TRUE;
+        PVR_LOCK(&(handle->stMutex));
+        handle->bRecReachPlay = HI_FALSE;
+        PVR_UNLOCK(&(handle->stMutex));
         return handle;
     }
 
@@ -2663,18 +2702,17 @@ PVR_INDEX_HANDLE PVR_Index_CreatPlay(HI_U32 chnID,
         return HI_NULL_PTR;
     }
 #endif
-    
+
     PVRIndexSetDftAttr(handle);
 
     memset(handle->szIdxFileName, 0, sizeof(handle->szIdxFileName));
     strncpy(handle->szIdxFileName, szIndexName, strlen(szIndexName));
 
-    if(-1 == pthread_mutex_init(&(handle->stMutex), NULL))
+    if (-1 == pthread_mutex_init(&(handle->stMutex), NULL))
     {
         HI_ERR_PVR("init mutex lock for PVR index failed \n");
         goto ErrorExit;
     }
-
 
     handle->bIsPlay = HI_TRUE;
     handle->bIsRec = HI_FALSE;
@@ -2772,14 +2810,15 @@ ErrorExit:
     Author       : Jiang Lei
     Modification : modify for HD
 *****************************************************************************/
-PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
-                                HI_UNF_PVR_REC_ATTR_S *pstRecAttr)
+PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID, HI_UNF_PVR_REC_ATTR_S *pstRecAttr)
 {
+    HI_S32 ret;
+    HI_UNF_DMX_PORT_E enPort;
     PVR_INDEX_HANDLE handle = HI_NULL;
     HI_CHAR szIndexName[PVR_MAX_FILENAME_LEN] = {0};
     HI_U32 i = 0;
 
-    if(!pstRecAttr)
+    if (!pstRecAttr)
     {
         return HI_NULL_PTR;
     }
@@ -2794,7 +2833,7 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
         return HI_NULL_PTR;
     }
 
-    for(i = 0; i < sizeof(g_u32RecChnStat)/sizeof(HI_U32); i++)
+    for (i = 0; i < sizeof(g_u32RecChnStat)/sizeof(HI_U32); i++)
     {
         if (PVR_INDEX_REC_CHN_UNUSED == g_u32RecChnStat[i])
         {
@@ -2817,7 +2856,7 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
     memset(handle->szIdxFileName, 0, sizeof(handle->szIdxFileName));
     strncpy(handle->szIdxFileName, szIndexName, strlen(szIndexName));
 
-    if(-1 == pthread_mutex_init(&(handle->stMutex), NULL))
+    if (-1 == pthread_mutex_init(&(handle->stMutex), NULL))
     {
         HI_ERR_PVR("init mutex lock for PVR index failed \n");
         g_u32RecChnStat[i] = PVR_INDEX_REC_CHN_UNUSED;
@@ -2836,7 +2875,7 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
     handle->stCycMgr.u32MaxCycTimeInMs = pstRecAttr->u64MaxTimeInMs ;
     handle->stCycMgr.u32EndFrame = -1;
     handle->stCycMgr.u32LastFrame = -1;
-    
+
     handle->stCycMgr.enRewindType = PVR_INDEX_REWIND_BY_BOTH;
     
     if ((handle->stCycMgr.u64MaxCycSize == 0) && (handle->stCycMgr.u32MaxCycTimeInMs > 0))
@@ -2898,15 +2937,23 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
         HI_ERR_PVR("HI_MALLOC write cache buffer failed!\n");
     }
 
-    if(-1 == pthread_mutex_init(&(handle->stIdxWriteCache.stCacheMutex), NULL))
+    if (-1 == pthread_mutex_init(&(handle->stIdxWriteCache.stCacheMutex), NULL))
     {
         HI_ERR_PVR("init mutex lock for PVR index failed,check it\n");
         if (handle->stIdxWriteCache.pu8Addr != HI_NULL)
+        {
             HI_FREE(HI_ID_PVR,handle->stIdxWriteCache.pu8Addr);
-        return HI_NULL_PTR;
+        }
+
+        PVR_CLOSE(handle->s32WriteFd);
+        PVR_CLOSE(handle->s32SeekFd);
+        PVR_CLOSE(handle->s32HeaderFd);
+        PVR_CLOSE(handle->s32ReadFd);
+        (HI_VOID)remove(szIndexName);
+        goto ErrorExit;
     }
 
-    memset(&handle->stIdxReadCache,0,sizeof(HIPVR_IDX_BUF_S));
+    memset(&handle->stIdxReadCache, 0, sizeof(HIPVR_IDX_BUF_S));
     handle->stIdxReadCache.pu8Addr = HI_MALLOC(HI_ID_PVR, PVR_INDEX_READ_CACHE_NUM * sizeof(PVR_INDEX_ENTRY_S));
     if (handle->stIdxReadCache.pu8Addr)
     {
@@ -2921,14 +2968,24 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
         handle->stIdxReadCache.u32BufferLen = 0;
     }
     
-    if(-1 == pthread_mutex_init(&(handle->stIdxReadCache.stCacheMutex), NULL))
+    if (-1 == pthread_mutex_init(&(handle->stIdxReadCache.stCacheMutex), NULL))
     {
         HI_ERR_PVR("init mutex lock for PVR index failed,check it\n");
         if (handle->stIdxWriteCache.pu8Addr != HI_NULL)
+        {
             HI_FREE(HI_ID_PVR, handle->stIdxWriteCache.pu8Addr);
+        }
         if (handle->stIdxReadCache.pu8Addr != HI_NULL)
+        {
             HI_FREE(HI_ID_PVR, handle->stIdxReadCache.pu8Addr);
-        return HI_NULL_PTR;
+        }
+
+        PVR_CLOSE(handle->s32WriteFd);
+        PVR_CLOSE(handle->s32SeekFd);
+        PVR_CLOSE(handle->s32HeaderFd);
+        PVR_CLOSE(handle->s32ReadFd);
+        (HI_VOID)remove(szIndexName);
+        goto ErrorExit;
     }
 #else
     handle->stIdxWriteCache.pu8Addr = HI_MALLOC(HI_ID_PVR, PVR_DFT_IDX_WRITECACHE_SIZE);
@@ -2937,9 +2994,19 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
         handle->stIdxWriteCache.u32BufferLen = PVR_DFT_IDX_WRITECACHE_SIZE;
         handle->stIdxWriteCache.u32UsedSize = 0;
         handle->stIdxWriteCache.u32StartOffset = 0;
-        if(-1 == pthread_mutex_init(&(handle->stIdxWriteCache.stCacheMutex), NULL))
+        if (-1 == pthread_mutex_init(&(handle->stIdxWriteCache.stCacheMutex), NULL))
         {
             HI_ERR_PVR("init mutex lock for PVR index failed,check it\n");
+            if (handle->stIdxWriteCache.pu8Addr != HI_NULL)
+            {
+                HI_FREE(HI_ID_PVR, handle->stIdxWriteCache.pu8Addr);
+            }
+            PVR_CLOSE(handle->s32WriteFd);
+            PVR_CLOSE(handle->s32SeekFd);
+            PVR_CLOSE(handle->s32HeaderFd);
+            PVR_CLOSE(handle->s32ReadFd);
+            (HI_VOID)remove(szIndexName);
+            goto ErrorExit;
         }
     }
     else
@@ -2948,16 +3015,30 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
         HI_ERR_PVR("HI_MALLOC write cache buffer failed!\n");
     }
 
-    memset(&handle->stIdxReadCache,0,sizeof(HIPVR_IDX_BUF_S));
+    memset(&handle->stIdxReadCache, 0, sizeof(HIPVR_IDX_BUF_S));
     handle->stIdxReadCache.pu8Addr = HI_MALLOC(HI_ID_PVR, PVR_DFT_IDX_READCACHE_SIZE);
     if (handle->stIdxReadCache.pu8Addr)
     {
         handle->stIdxReadCache.u32BufferLen = PVR_DFT_IDX_READCACHE_SIZE;
         handle->stIdxReadCache.u32UsedSize = 0;
         handle->stIdxReadCache.u32StartOffset = 0;
-        if(-1 == pthread_mutex_init(&(handle->stIdxReadCache.stCacheMutex), NULL))
+        if (-1 == pthread_mutex_init(&(handle->stIdxReadCache.stCacheMutex), NULL))
         {
             HI_ERR_PVR("init mutex lock for PVR index failed,check it\n");
+            if (handle->stIdxWriteCache.pu8Addr != HI_NULL)
+            {
+                HI_FREE(HI_ID_PVR, handle->stIdxWriteCache.pu8Addr);
+            }
+            if (handle->stIdxReadCache.pu8Addr != HI_NULL)
+            {
+                HI_FREE(HI_ID_PVR, handle->stIdxReadCache.pu8Addr);
+            }
+            PVR_CLOSE(handle->s32WriteFd);
+            PVR_CLOSE(handle->s32SeekFd);
+            PVR_CLOSE(handle->s32HeaderFd);
+            PVR_CLOSE(handle->s32ReadFd);
+            (HI_VOID)remove(szIndexName);
+            goto ErrorExit;
         }
     }
     else
@@ -2979,6 +3060,24 @@ PVR_INDEX_HANDLE PVR_Index_CreatRec(HI_U32 chnID,
     handle->u64TimeRewindMaxSize = 0;
     handle->u64DeltaGlobalOffset = 0;
     memset(&(handle->stRecIdxInfo), 0, sizeof(PVR_REC_INDEX_INFO_S));
+
+    memset(&(handle->stTimeStamp), 0, sizeof(PVR_REC_TIMESTAMP_S));
+    ret = HI_UNF_DMX_GetTSPortId(pstRecAttr->u32DemuxID, &enPort);
+    if (ret == HI_SUCCESS)
+    {
+        if (enPort >= HI_UNF_DMX_PORT_RAM_0)
+        {
+            handle->stTimeStamp.bNeedAdjustByPts = HI_TRUE;
+        }
+    }
+    else
+    {
+        handle->stTimeStamp.bNeedAdjustByPts = HI_FALSE;
+    }
+
+    handle->stTimeStamp.u32DeltaTimeStamp        = PVR_INDEX_DEFAULT_FRAME_TIMESTAMP;
+    handle->stTimeStamp.stLastIFrmPtsInfo.u32PtsMs = PVR_INDEX_INVALID_PTSMS;
+    handle->stTimeStamp.stCurIFrmPtsInfo.u32PtsMs  = PVR_INDEX_INVALID_PTSMS;
 
     UNUSED(chnID);
 
@@ -3028,22 +3127,26 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
     }
 
 #ifndef HI_PVR_L2_CACHE_SUPPORT
-    HI_CHAR  szFileName[PVR_MAX_FILENAME_LEN] = {0};
     if (PVR_Index_FlushIdxWriteCache(handle) != HI_SUCCESS)
     {
         HI_ERR_PVR("rec flush cache error!\n");
     }
 
-    memcpy(szFileName, handle->szIdxFileName, 
-           ((HI_U32)strstr(handle->szIdxFileName,".idx") - (HI_U32)handle->szIdxFileName));    
-    
-
     (HI_VOID)PVRIndexWriteIndexCycMgr(handle, &handle->stCycMgr);
 
+    if (handle->s32HeaderFd && (handle->s32HeaderFd != PVR_FILE_INVALID_FILE))
+    {
+        PVR_FSYNC(handle->s32HeaderFd);
+    }
+
+    if (handle->s32WriteFd && (handle->s32WriteFd != PVR_FILE_INVALID_FILE))
+    {
+        PVR_FSYNC(handle->s32WriteFd);
+    }
 #endif
     (HI_VOID)pthread_mutex_destroy(&(handle->stMutex));
 
-    /* close index file                                                        */
+    /* close index file */
     if (handle->s32ReadFd && (handle->s32ReadFd != PVR_FILE_INVALID_FILE))
     {
         PVR_CLOSE(handle->s32ReadFd);
@@ -3068,7 +3171,7 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
         handle->s32HeaderFd = PVR_FILE_INVALID_FILE;
     }
 
-    /* release index handle                                                 */
+    /* release index handle */
     if (handle->u32RecPicParser != 0xffffffff)
     {
         g_u32RecChnStat[handle->u32RecPicParser] = PVR_INDEX_REC_CHN_UNUSED;
@@ -3083,8 +3186,8 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
         handle->stIdxWriteCache.u32StartOffset = 0;
         handle->stIdxWriteCache.u32UsedSize = 0;
     }
-        (HI_VOID)pthread_mutex_destroy(&(handle->stIdxWriteCache.stCacheMutex));        
-        
+    (HI_VOID)pthread_mutex_destroy(&(handle->stIdxWriteCache.stCacheMutex));
+
     if (handle->stIdxReadCache.pu8Addr)
     {
         HI_FREE(HI_ID_PVR, handle->stIdxReadCache.pu8Addr);
@@ -3100,8 +3203,8 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
         handle->stIdxWriteCache.u32StartNum = 0;
         handle->stIdxWriteCache.u32UsedNum = 0;
     }
-        (HI_VOID)pthread_mutex_destroy(&(handle->stIdxWriteCache.stCacheMutex));        
-        
+    (HI_VOID)pthread_mutex_destroy(&(handle->stIdxWriteCache.stCacheMutex));
+
     if (handle->stIdxReadCache.pu8Addr)
     {
         HI_FREE(HI_ID_PVR, handle->stIdxReadCache.pu8Addr);
@@ -3110,7 +3213,7 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
         handle->stIdxReadCache.u32UsedNum = 0;
     }
 #endif
-    (HI_VOID)pthread_mutex_destroy(&(handle->stIdxReadCache.stCacheMutex));    
+    (HI_VOID)pthread_mutex_destroy(&(handle->stIdxReadCache.stCacheMutex));
 
     return HI_SUCCESS;
 }
@@ -3142,8 +3245,6 @@ HI_S32 PVR_Index_PrepareHeaderInfo(PVR_INDEX_HANDLE handle, HI_U32 u32UsrDataLen
     stIdxHeaderInfo.u32StartCode = PVR_INDEX_HEADER_CODE;
     stIdxHeaderInfo.u32UsrDataInfoLen = u32UsrDataLen;
 
-
-
     stIdxHeaderInfo.u64ValidSize = handle->stCycMgr.u64MaxCycSize;
     stIdxHeaderInfo.stCycInfo.u32StartFrame = handle->stCycMgr.u32StartFrame;
     stIdxHeaderInfo.stCycInfo.u32EndFrame   = handle->stCycMgr.u32EndFrame;
@@ -3173,7 +3274,7 @@ HI_S32 PVR_Index_PrepareHeaderInfo(PVR_INDEX_HANDLE handle, HI_U32 u32UsrDataLen
         HI_FREE(HI_ID_PVR, pTmpBuff);
         return HI_FAILURE;
     }
-    
+
     HI_INFO_PVR("write header info ok(%uByte writen), UDLen:%u, MaxSize:%llu\n", 
                  s32WriteRet, stIdxHeaderInfo.u32UsrDataInfoLen, stIdxHeaderInfo.u64ValidSize);
     PVR_FSYNC(handle->s32HeaderFd);
@@ -3188,14 +3289,18 @@ HI_S32 PVR_Index_PrepareHeaderInfo(PVR_INDEX_HANDLE handle, HI_U32 u32UsrDataLen
 /* reset the player attribute, called when start play*/
 HI_VOID PVR_Index_ResetPlayAttr(PVR_INDEX_HANDLE handle)
 {
+    PVR_INDEX_LOCK(&handle->stMutex);
     handle->u32ReadFrame = handle->stCycMgr.u32StartFrame;
+    handle->bRecReachPlay = HI_FALSE;
     memset(&handle->stCurPlayFrame, 0, sizeof(PVR_INDEX_ENTRY_S));
+    PVR_INDEX_UNLOCK(&handle->stMutex);
 }
 
 /* reset the player attribute, called when start record */
 HI_VOID PVR_Index_ResetRecAttr(PVR_INDEX_HANDLE handle)
 {
     handle->u64GlobalOffset = 0;
+    handle->u64OverflowOffset = 0;
     handle->u32PauseFrame  = 0;
     handle->u64PauseOffset = PVR_INDEX_PAUSE_INVALID_OFFSET;
     handle->u32WriteFrame = 0;
@@ -3208,7 +3313,7 @@ HI_VOID PVR_Index_ResetRecAttr(PVR_INDEX_HANDLE handle)
     handle->stCycMgr.u32CycTimes = 0;
     handle->stCycMgr.u32StartFrame = 0;
 
-    memset(&handle->stCurRecFrame, 0, sizeof(PVR_INDEX_ENTRY_S) );
+    memset(&handle->stCurRecFrame, 0, sizeof(PVR_INDEX_ENTRY_S));
 }
 
 /* set current frame size is zero, prevent from repeatly sending the last frame when switch play mode */
@@ -3325,7 +3430,7 @@ HI_VOID PVR_Index_GetIdxInfo(PVR_INDEX_HANDLE handle)
     HI_U32 u32FindStart = 0;
     PVR_INDEX_ENTRY_S stEntryTmp = {0};
     HI_U32 u32CurGopSize = 0, u32GopSizeSeg = 0;
-    
+
     u32StartFrm = handle->stCycMgr.u32StartFrame;
     u32EndFrm = (handle->stCycMgr.u32EndFrame == -1)?0:handle->stCycMgr.u32EndFrame;
     u32LastFrm = (handle->stCycMgr.u32LastFrame == -1)?0:handle->stCycMgr.u32LastFrame;
@@ -3339,14 +3444,14 @@ HI_VOID PVR_Index_GetIdxInfo(PVR_INDEX_HANDLE handle)
         handle->stRecIdxInfo.stIdxInfo.u32FrameTotalNum = u32LastFrm + 1;
     }
 
-    for(i = (HI_S32)u32EndFrm; i >= (HI_S32)u32FindStart; i--)
+    for (i = (HI_S32)u32EndFrm; i >= (HI_S32)u32FindStart; i--)
     {
         if (HI_SUCCESS == PVR_Index_GetFrameByNum(handle, &stEntryTmp, i))
         {
             if (0 != (stEntryTmp.u16FrameTypeAndGop & 0x3fff))
             {
                 u32CurGopSize = (stEntryTmp.u16FrameTypeAndGop & 0x3fff) + 1;
-                
+
                 handle->stRecIdxInfo.stIdxInfo.u32GopTotalNum++;
                 
                 if(0 != handle->stRecIdxInfo.stIdxInfo.u32GopTotalNum)
@@ -3372,7 +3477,7 @@ HI_VOID PVR_Index_GetIdxInfo(PVR_INDEX_HANDLE handle)
             u32EndFrm = u32LastFrm;
             continue;
         }
-    } 
+    }
 
     if (HI_SUCCESS == PVR_Index_GetFrameByNum(handle, &stEntryTmp, u32FindStart))
     {
@@ -3396,12 +3501,12 @@ HI_VOID PVR_Index_GetRecIdxInfo(PVR_INDEX_HANDLE handle)
         HI_ERR_PVR("Can't get index header info.\n");
         return;
     }
-    
+
     s32ReadRet = PVR_READ(&(handle->stRecIdxInfo), 
                             sizeof(PVR_REC_INDEX_INFO_S), 
                             handle->s32HeaderFd, 
                             PVR_GET_IDX_INFO_OFFSET(stIdxHeaderInfo));
-    
+
     if (s32ReadRet != sizeof(PVR_REC_INDEX_INFO_S))
     {
         HI_ERR_PVR("Write index info fail ret=0x%x\n", s32ReadRet);
@@ -3410,31 +3515,40 @@ HI_VOID PVR_Index_GetRecIdxInfo(PVR_INDEX_HANDLE handle)
 }
 
 
-HI_BOOL PVR_Index_CheckSetRecReachPlay(PVR_INDEX_HANDLE handle)
+HI_BOOL PVR_Index_CheckSetRecReachPlay(PVR_INDEX_HANDLE handle, HI_U32 u32MinDistance)
 {
     HI_U32 u32ReadFrame = 0;
     HI_U32 u32StartFrame = 0;
     HI_U32 u32EndFrame = 0;
     HI_U32 u32LastFrame = 0;
 
-    u32StartFrame = handle->stCycMgr.u32StartFrame;
-    u32EndFrame = (handle->stCycMgr.u32EndFrame == -1)?0:handle->stCycMgr.u32EndFrame;
-    u32ReadFrame = handle->u32ReadFrame;
-    u32LastFrame = (handle->stCycMgr.u32LastFrame == -1)?0:handle->stCycMgr.u32LastFrame;
+    PVR_INDEX_LOCK(&handle->stMutex);
 
+    if (handle->bRecReachPlay == HI_TRUE)
+    {
+        PVR_INDEX_UNLOCK(&handle->stMutex);
+        return HI_TRUE;
+    }
+
+    u32StartFrame = handle->stCycMgr.u32StartFrame;
+    u32EndFrame   = (handle->stCycMgr.u32EndFrame == -1)?0:handle->stCycMgr.u32EndFrame;
+    u32ReadFrame  = handle->u32ReadFrame;
+    u32LastFrame  = (handle->stCycMgr.u32LastFrame == -1)?0:handle->stCycMgr.u32LastFrame;
 
     if (u32StartFrame < u32EndFrame) /* NOT cycled, 0--S--R--E--L  */
     {
 
-        if ((HI_S32)u32StartFrame + PVR_TPLAY_MIN_DISTANCE > (HI_S32)u32ReadFrame)
+        if (u32StartFrame + u32MinDistance >= u32ReadFrame)
         {
             HI_WARN_PVR("Rec almost over Play: S/R/E/L: %u,%u,%u,%u.\n",
-                   u32StartFrame, u32ReadFrame,u32EndFrame, u32LastFrame);
+                         u32StartFrame, u32ReadFrame,u32EndFrame, u32LastFrame);
             handle->bRecReachPlay = HI_TRUE;
+            PVR_INDEX_UNLOCK(&handle->stMutex);
             return HI_TRUE;
         }
         else
         {
+            PVR_INDEX_UNLOCK(&handle->stMutex);
             return HI_FALSE;
         }
     }
@@ -3442,50 +3556,44 @@ HI_BOOL PVR_Index_CheckSetRecReachPlay(PVR_INDEX_HANDLE handle)
     {
         if (u32ReadFrame > u32StartFrame) /* 0----E----S----R--L */
         {
-            if (u32ReadFrame - u32StartFrame > PVR_TPLAY_MIN_DISTANCE)
+            if (u32ReadFrame - u32StartFrame > u32MinDistance)
             {
+                PVR_INDEX_UNLOCK(&handle->stMutex);
                 return HI_FALSE;
             }
             else
             {
                 HI_WARN_PVR("Rec almost over Play: E/S/R/L: %u,%u,%u,%u.\n",
-                   u32EndFrame, u32StartFrame, u32ReadFrame, u32LastFrame);
+                             u32EndFrame, u32StartFrame, u32ReadFrame, u32LastFrame);
                 handle->bRecReachPlay = HI_TRUE;
+                PVR_INDEX_UNLOCK(&handle->stMutex);
                 return HI_TRUE;
             }
         }
         else /* 0--R--E----S--L */
         {
-            HI_U32 startToLast;
+            HI_U32 u32StartToLast;
 
-            startToLast = u32LastFrame - u32StartFrame;
+            u32StartToLast = u32LastFrame - u32StartFrame;
 
-            if (startToLast + u32ReadFrame > PVR_TPLAY_MIN_DISTANCE)
+            if (u32StartToLast + u32ReadFrame > u32MinDistance)
             {
+                PVR_INDEX_UNLOCK(&handle->stMutex);
                 return HI_FALSE;
             }
             else
             {
-                HI_ERR_PVR("Rec almost over Play: R/E/S/L: %u,%u,%u,%u.\n",
-                   u32ReadFrame, u32EndFrame, u32StartFrame, u32LastFrame);
+                HI_ERR_PVR("Rec almost over Play: R/E/S/L: %u/%u/%u/%u.\n",
+                            u32ReadFrame, u32EndFrame, u32StartFrame, u32LastFrame);
 
                 handle->bRecReachPlay = HI_TRUE;
+                PVR_INDEX_UNLOCK(&handle->stMutex);
                 return HI_TRUE;
             }
         }
     }
 }
 
-HI_BOOL PVR_Index_QureyClearRecReachPlay(PVR_INDEX_HANDLE handle)
-{
-    if (HI_TRUE == handle->bRecReachPlay)
-    {
-        handle->bRecReachPlay = HI_FALSE;
-        return HI_TRUE;
-    }
-
-    return HI_FALSE;
-}
 
 /*****************************************************************************
  Prototype       : PVR_IndexGetNextEntry
@@ -3915,9 +4023,9 @@ STATIC INLINE HI_U32 PVRIndexFindFrameByTime(PVR_INDEX_HANDLE handle, HI_U32 u32
     HI_S32 s32Read;
     HI_U32 u32LastFrame;
 
-    u32EndFrame = (handle->stCycMgr.u32EndFrame == -1)?0:handle->stCycMgr.u32EndFrame;
+    u32EndFrame   = (handle->stCycMgr.u32EndFrame == -1)?0:handle->stCycMgr.u32EndFrame;
     u32StartFrame = handle->stCycMgr.u32StartFrame;
-    u32LastFrame = (handle->stCycMgr.u32LastFrame == -1)?0:handle->stCycMgr.u32LastFrame;
+    u32LastFrame  = (handle->stCycMgr.u32LastFrame == -1)?0:handle->stCycMgr.u32LastFrame;
 
     memset(&lastEntry, 0, sizeof(PVR_INDEX_ENTRY_S));   
     /* Not rewind, find it directly*/
@@ -3989,13 +4097,13 @@ HI_S32 PVR_Index_SeekByFrame2I(PVR_INDEX_HANDLE handle, HI_S32 offset, HI_S32 wh
     HI_INFO_PVR("whence:%s, offset:%d\n", WHENCE_STRING(whence), offset);
 
     PVR_INDEX_LOCK(&(handle->stMutex));
-    switch ( whence )
+    switch (whence)
     {
-    case SEEK_SET :
+    case SEEK_SET:
         handle->u32ReadFrame = handle->stCycMgr.u32StartFrame;
         PVRIndexCycMoveReadFrame(handle, offset);
         break;
-    case SEEK_CUR :
+    case SEEK_CUR:
         PVRIndexCycMoveReadFrame(handle, offset);
         break;
     case SEEK_END:
@@ -4054,6 +4162,8 @@ HI_S32 PVR_Index_SeekByFrame2I(PVR_INDEX_HANDLE handle, HI_S32 offset, HI_S32 wh
         return ret;
     }
 
+    handle->bRecReachPlay = HI_FALSE;
+
     PVR_INDEX_UNLOCK(&(handle->stMutex));
     return HI_SUCCESS;
 }
@@ -4082,7 +4192,7 @@ HI_S32 PVR_Index_SeekToTime(PVR_INDEX_HANDLE handle, HI_U32 u32TimeMs)
 
     if (PVR_IDX_ENABLE_REWIND(handle)) /* rewind */
     {
-        if ( HI_FALSE == PVRIndexIsFrameValid(frameToSeek, &handle->stCycMgr))
+        if (HI_FALSE == PVRIndexIsFrameValid(frameToSeek, &handle->stCycMgr))
         {
             /* frame position is invalid, so check which close to the frame, and then set it */
             offsetEndFrame = frameToSeek - handle->stCycMgr.u32EndFrame;
@@ -4131,10 +4241,10 @@ HI_S32 PVR_Index_SeekToTime(PVR_INDEX_HANDLE handle, HI_U32 u32TimeMs)
     Author       : j40671
     Modification : Created function
 *****************************************************************************/
-HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whence, HI_U32 curplaytime)
+HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 s64Offset, HI_S32 whence, HI_U32 u32CurPlayTime)
 {
     HI_S32 ret;
-    PVR_INDEX_ENTRY_S    stFrameTmp;
+    PVR_INDEX_ENTRY_S stFrameTmp = {0};
     HI_U32 u32CurFrmTime;
     HI_U32 u32StartFrmTime;
     HI_U32 u32EndFrmTime;
@@ -4142,7 +4252,7 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
     HI_U32 u32StartFrmPos;
     HI_U32 u32EndFrmPos;
 
-    HI_INFO_PVR("seek pos(%lld) whence:%s.\n", offset,  WHENCE_STRING(whence));
+    HI_INFO_PVR("seek pos(%lld) whence:%s.\n", s64Offset,  WHENCE_STRING(whence));
 
     memset(&stFrameTmp, 0, sizeof(PVR_INDEX_ENTRY_S));    
 
@@ -4155,7 +4265,7 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
     {
         u32EndFrmPos = handle->stCycMgr.u32LastFrame;
     }
-        
+
     ret = PVRIndexGetEntryByNum(handle, &stFrameTmp, u32StartFrmPos);
     if (ret != HI_SUCCESS)
     {
@@ -4163,7 +4273,6 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
         return ret;
     }
     u32StartFrmTime = stFrameTmp.u32DisplayTimeMs;
-
 
     ret = PVRIndexGetEntryByNum(handle, &stFrameTmp, u32EndFrmPos);
     if (ret != HI_SUCCESS)
@@ -4173,10 +4282,10 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
     }
     u32EndFrmTime = stFrameTmp.u32DisplayTimeMs;
 
-    u32CurFrmTime = curplaytime;
+    u32CurFrmTime = u32CurPlayTime;
 
-    HI_INFO_PVR("frame info start:%d, end:%d, cur:%d\n",
-                 u32StartFrmTime, u32EndFrmTime, u32CurFrmTime);
+    HI_WARN_PVR("frame info start %d:%d, end %d:%d, cur :%d\n",
+                 u32StartFrmPos,u32StartFrmTime, u32EndFrmPos,u32EndFrmTime, u32CurFrmTime);
 
     if (u32CurFrmTime < u32StartFrmTime)
     {
@@ -4187,16 +4296,16 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
         u32CurFrmTime = u32EndFrmTime;
     }
 
-    switch ( whence )
+    switch (whence)
     {
     case SEEK_SET:
-        u32SeekToTime = (HI_S32)offset;
+        u32SeekToTime = (HI_S32)s64Offset;
         break;
     case SEEK_CUR:
-        u32SeekToTime = u32CurFrmTime + (HI_S32)offset;
+        u32SeekToTime = u32CurFrmTime + (HI_S32)s64Offset;
         break;
     case SEEK_END:
-        u32SeekToTime = u32EndFrmTime + (HI_S32)offset;
+        u32SeekToTime = u32EndFrmTime + (HI_S32)s64Offset;
         break;
     default:
         return HI_ERR_PVR_INVALID_PARA;
@@ -4212,7 +4321,7 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
     }
 
     HI_WARN_PVR("seek to time: %u.  whence:%s, offset:%lld, start:%d, end:%d, cur:%d\n",
-                 u32SeekToTime, WHENCE_STRING(whence), offset, u32StartFrmTime, u32EndFrmTime, u32CurFrmTime);
+                 u32SeekToTime, WHENCE_STRING(whence), s64Offset, u32StartFrmTime, u32EndFrmTime, u32CurFrmTime);
 
     return PVR_Index_SeekToTime(handle, u32SeekToTime);
 }
@@ -4233,20 +4342,23 @@ HI_S32 PVR_Index_SeekByTime(PVR_INDEX_HANDLE handle, HI_S64 offset, HI_S32 whenc
 *****************************************************************************/
 HI_S32 PVR_Index_SeekToStart(PVR_INDEX_HANDLE handle)
 {
-    HI_U32 before_seek;
+    HI_U32 u32BeforeSeek;
 
     HI_ASSERT_RET(handle != NULL);
 
     PVR_INDEX_LOCK(&(handle->stMutex));
     handle->u32ReadFrame = handle->stCycMgr.u32StartFrame;
-    before_seek = handle->u32ReadFrame;
+    handle->bRecReachPlay = HI_FALSE;
+    u32BeforeSeek = handle->u32ReadFrame;
 
     if ((handle->bIsRec) && (handle->stCycMgr.u32StartFrame >= handle->stCycMgr.u32EndFrame))
     {
         PVRIndexCycMoveReadFrame(handle, PVR_TPLAY_MIN_DISTANCE);
     }
 
-    HI_WARN_PVR("seek to start, %u --> %u\n", before_seek, handle->u32ReadFrame);
+    HI_WARN_PVR("Seek to start, %u --> %u s/e/l %d/%d/%d\n", 
+                 u32BeforeSeek, handle->u32ReadFrame, handle->stCycMgr.u32StartFrame, 
+                 handle->stCycMgr.u32EndFrame, handle->stCycMgr.u32LastFrame);
 
     PVR_INDEX_UNLOCK(&(handle->stMutex));
 
@@ -4275,6 +4387,7 @@ HI_S32 PVR_Index_SeekToEnd(PVR_INDEX_HANDLE handle)
     HI_WARN_PVR("seek to end\n");
 
     handle->u32ReadFrame = handle->stCycMgr.u32EndFrame;
+    handle->bRecReachPlay = HI_FALSE;
     PVR_INDEX_UNLOCK(&(handle->stMutex));
 
     return HI_SUCCESS;
@@ -4365,16 +4478,16 @@ HI_S32 PVR_Index_SeekToPauseOrStart(PVR_INDEX_HANDLE handle)
     Modification : Created function
 
 *****************************************************************************/
-HI_S32 PVR_Index_GetNextFrame(PVR_INDEX_HANDLE handle, PVR_INDEX_ENTRY_S *pFrame)
+HI_S32 PVR_Index_GetNextFrame(PVR_INDEX_HANDLE handle, PVR_INDEX_ENTRY_S *pstFrame)
 {
     HI_S32 ret;
 
     HI_ASSERT_RET(handle != NULL);
-    HI_ASSERT_RET(pFrame != NULL);
+    HI_ASSERT_RET(pstFrame != NULL);
 
     PVR_INDEX_LOCK(&(handle->stMutex));
 
-    ret = PVRIndexGetNextEntry(handle, pFrame);
+    ret = PVRIndexGetNextEntry(handle, pstFrame);
     if (HI_SUCCESS != ret)
     {
         HI_INFO_PVR("get next entry error, file end.\n");
@@ -4382,9 +4495,9 @@ HI_S32 PVR_Index_GetNextFrame(PVR_INDEX_HANDLE handle, PVR_INDEX_ENTRY_S *pFrame
         return ret;
     }
 
-    if (1 == pFrame->u16UpFlowFlag)
+    if (1 == pstFrame->u16UpFlowFlag)
     {
-        ret = PVRIndexGetNextIEntry(handle, pFrame);
+        ret = PVRIndexGetNextIEntry(handle, pstFrame);
         if (HI_SUCCESS != ret)
         {
             HI_INFO_PVR("get next I entry error, file end.\n");
@@ -4448,7 +4561,7 @@ HI_S32 PVR_Index_GetCurrentFrame(const PVR_INDEX_HANDLE handle,  PVR_INDEX_ENTRY
 
     PVR_INDEX_LOCK(&(handle->stMutex));
 
-    ret =  PVRIndexGetCurrentEntry(handle, pEntry);
+    ret = PVRIndexGetCurrentEntry(handle, pEntry);
 
     PVR_INDEX_UNLOCK(&(handle->stMutex));
     return ret;
@@ -4531,7 +4644,7 @@ HI_S32 PVR_Index_QueryFrameByTime(const PVR_INDEX_HANDLE handle, HI_U32 u32Searc
 HI_S32 PVR_Index_MarkPausePos(PVR_INDEX_HANDLE handle)
 {
     /* save the frame number of current recording frame*/
-    
+
 #ifdef HI_PVR_L2_CACHE_SUPPORT
     handle->u32PauseFrame = handle->stCycMgr.u32EndFrame;
 #else
@@ -4769,7 +4882,7 @@ HI_S32 PVR_Index_GetFrmNumByEntry(PVR_INDEX_HANDLE pstIndexHandle, PTR_PVR_INDEX
         HI_ERR_PVR("get start index %d entry fail\n", u32StartFrmNum);
         return HI_FAILURE;
     }
-    
+
     if(HI_SUCCESS != PVR_Index_GetFrameByNum(pstIndexHandle, &stZeroIndexEntry, 0))
     {
         HI_ERR_PVR("get index 0 entry fail\n", 0);
@@ -4797,7 +4910,7 @@ HI_S32 PVR_Index_GetFrmNumByEntry(PVR_INDEX_HANDLE pstIndexHandle, PTR_PVR_INDEX
         {
             u32MidFrmNum = (u32LastFrmNum - u32StartFrmNum)/2;
             u32EndFrmNum = u32LastFrmNum;
-            
+
             if(HI_SUCCESS != PVR_Index_GetFrameByNum(pstIndexHandle, &stEndIndexEntry, u32EndFrmNum))
             {
                 HI_ERR_PVR("get the %d entry fail.\n", u32EndFrmNum);
@@ -4809,7 +4922,7 @@ HI_S32 PVR_Index_GetFrmNumByEntry(PVR_INDEX_HANDLE pstIndexHandle, PTR_PVR_INDEX
         {
             u32MidFrmNum = u32EndFrmNum/2;
             u32StartFrmNum = 0;
-            
+
             if(HI_SUCCESS != PVR_Index_GetFrameByNum(pstIndexHandle, &stStartIndexEntry, u32StartFrmNum))
             {
                 HI_ERR_PVR("get the %d entry fail.\n", u32StartFrmNum);
@@ -4836,7 +4949,7 @@ HI_S32 PVR_Index_GetFrmNumByEntry(PVR_INDEX_HANDLE pstIndexHandle, PTR_PVR_INDEX
         HI_ERR_PVR("get the %d entry fail.\n", u32MidFrmNum);
         return HI_FAILURE;
     }
-    
+
     while((HI_S32)u32StartFrmNum <= (HI_S32)u32EndFrmNum)
     {
         u32MidFrmNum = u32StartFrmNum + (u32EndFrmNum - u32StartFrmNum)/2;
@@ -4900,11 +5013,11 @@ HI_S32 PVR_Index_GetMaxBitrate(PVR_INDEX_HANDLE piIndexHandle)
 
 /*get stream bit rate  */
 HI_S32 PVR_Index_GetStreamBitRate(PVR_INDEX_HANDLE piIndexHandle,
-                                      HI_U32 *pBitRate,
-                                      HI_U32 u32StartFrameNum, 
-                                      HI_U32 u32EndFrameNum)
+                                  HI_U32 *pBitRate,
+                                  HI_U32 u32StartFrameNum, 
+                                  HI_U32 u32EndFrameNum)
 {
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
+    PVR_INDEX_ENTRY_S  stTmpEntry ={0}; 
     HI_U32 i = 0, u32StartTime = 0, u32EndTime = 0;
     HI_U64 u64TotalBytes = 0;
 
@@ -4920,19 +5033,19 @@ HI_S32 PVR_Index_GetStreamBitRate(PVR_INDEX_HANDLE piIndexHandle,
         return HI_FAILURE;
     }
 
-    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32StartFrameNum))
+    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &stTmpEntry, u32StartFrameNum))
     {
          HI_INFO_PVR("get the %d entry fail.\n", i);
          return HI_FAILURE;
     }
-    u32StartTime = frame_tmp.u32DisplayTimeMs;
+    u32StartTime = stTmpEntry.u32DisplayTimeMs;
 
-    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32EndFrameNum))
+    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &stTmpEntry, u32EndFrameNum))
     {
          HI_INFO_PVR("get the %d entry fail.\n", i);
          return HI_FAILURE;
     }
-    u32EndTime = frame_tmp.u32DisplayTimeMs;
+    u32EndTime = stTmpEntry.u32DisplayTimeMs;
 
     if((u32StartTime == u32EndTime) || (u32StartTime >= u32EndTime))
     {
@@ -4945,42 +5058,42 @@ HI_S32 PVR_Index_GetStreamBitRate(PVR_INDEX_HANDLE piIndexHandle,
     {
         for (i = u32StartFrameNum; i < piIndexHandle->stCycMgr.u32LastFrame; i++)
         {
-            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, i))
+            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &stTmpEntry, i))
             {
                  HI_INFO_PVR("get the %d entry fail.\n", i);
                  return HI_FAILURE;
             }
             
-            u64TotalBytes += frame_tmp.u32FrameSize;
+            u64TotalBytes += stTmpEntry.u32FrameSize;
         }
 
         for (i = 0; i < u32EndFrameNum; i++)
         {
-            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, i))
+            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &stTmpEntry, i))
             {
                  HI_INFO_PVR("get the %d entry fail.\n", i);
                  return HI_FAILURE;
             }
             
-            u64TotalBytes += frame_tmp.u32FrameSize;
+            u64TotalBytes += stTmpEntry.u32FrameSize;
         }
     }
     else
     {
         for (i = u32StartFrameNum; i < u32EndFrameNum; i++)
         {
-            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, i))
+            if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &stTmpEntry, i))
             {
                  HI_INFO_PVR("get the %d entry fail.\n", i);
                  return HI_FAILURE;
             }
             
-            u64TotalBytes += frame_tmp.u32FrameSize;
+            u64TotalBytes += stTmpEntry.u32FrameSize;
         }
     }
 
-   *pBitRate =  (u64TotalBytes*8)/((u32EndTime - u32StartTime)/1000);
-    
+    *pBitRate = (u64TotalBytes*8)/((u32EndTime - u32StartTime)/1000);
+
     return HI_SUCCESS;
 }
 
@@ -5015,7 +5128,6 @@ HI_S32 PVR_Index_GetFrameRate(PVR_INDEX_HANDLE piIndexHandle, HI_U32 *pFrameRate
          PVR_INDEX_UNLOCK(&piIndexHandle->stMutex);
          return HI_FAILURE;
     }
-    
     u32StartTime = frame_tmp.u32DisplayTimeMs;
 
     s32Ret = PVRIndexGetEntryByNum(piIndexHandle, &frame_tmp, u32EndFrmNum);
@@ -5082,83 +5194,6 @@ HI_S32 PVR_Index_GetFrameRate(PVR_INDEX_HANDLE piIndexHandle, HI_U32 *pFrameRate
    1 == u32Direction FORWARD*/
 HI_S32 PVR_Index_GetFBwardIPBFrameNum(PVR_INDEX_HANDLE handle, HI_U32 u32Direction, HI_U32 u32FrameType, HI_U32 u32CurFrameNum, HI_U32 *pu32NextFrameNum)
 {
-#if 0
-    HI_S32 s32NextFrameNum = (HI_S32)u32CurFrameNum;
-    PVR_INDEX_ENTRY_S pFrame; 
-    HI_S32 ret=0;
-    
-    HI_ASSERT_RET(handle != NULL);
-    HI_ASSERT_RET(pu32NextFrameNum != NULL);
-
-    memset(&pFrame, 0, sizeof(PVR_INDEX_ENTRY_S));
-
-    if (HI_TRUE != PVRIndexIsFrameValid(u32CurFrameNum, &handle->stCycMgr))
-    {
-        HI_ERR_PVR("input frame number %d is invalid start=%d end=%d last=%d.\n", 
-                    u32CurFrameNum,
-                    handle->stCycMgr.u32StartFrame,
-                    handle->stCycMgr.u32EndFrame,
-                    handle->stCycMgr.u32LastFrame);
-        return HI_FAILURE;
-    }
-
-    while (1)
-    {
-        if (0 == u32Direction)
-            s32NextFrameNum--;
-        else
-            s32NextFrameNum++;
-
-        if (handle->stCycMgr.u32EndFrame <= handle->stCycMgr.u32StartFrame)
-        {
-            if (0 == u32Direction)
-                s32NextFrameNum = (0 > s32NextFrameNum) ? (HI_S32)handle->stCycMgr.u32LastFrame : s32NextFrameNum;
-            else
-                s32NextFrameNum = (handle->stCycMgr.u32LastFrame < (HI_U32)s32NextFrameNum) ? 0 : s32NextFrameNum;
-        }
-        
-        if (HI_TRUE != PVRIndexIsFrameValid(s32NextFrameNum, &handle->stCycMgr))
-        {
-            HI_ERR_PVR("next frame number %d is invalid. start=%d end=%d\n",
-                       s32NextFrameNum, handle->stCycMgr.u32StartFrame, handle->stCycMgr.u32EndFrame);
-            return PVR_INDEX_ERR_INVALID;
-        }
-
-        ret = PVRIndexGetEntryByNum(handle, &pFrame, s32NextFrameNum);
-        if (HI_SUCCESS != ret)
-        {
-            HI_ERR_PVR("PVRIndexGetEntryByNum fail frame=%d start=%d end=%d last=%d ret=%#x.\n",
-                       s32NextFrameNum,
-                       handle->stCycMgr.u32StartFrame,
-                       handle->stCycMgr.u32EndFrame,
-                       handle->stCycMgr.u32LastFrame,
-                       ret);
-            return HI_FAILURE;
-        }
-
-        /* IPB frame, and not found the frame upflow flag*/
-        if (u32FrameType == PVR_INDEX_FRAME_I)
-        {
-            if (PVR_INDEX_is_Iframe(&pFrame))
-                break;
-        }
-        else if (u32FrameType == PVR_INDEX_FRAME_P)
-        {
-            if (PVR_INDEX_is_Pframe(&pFrame))
-                break;
-        }
-        else if (u32FrameType == PVR_INDEX_FRAME_B)
-        {
-            if (PVR_INDEX_is_Bframe(&pFrame))
-                break;
-        }
-        else
-            return HI_FAILURE;
-    }
-    
-    *pu32NextFrameNum = (HI_U32)s32NextFrameNum;
-    return HI_SUCCESS;
-#endif
     return PVRIndexGetFBwardIPBFrameNum(handle,&handle->stCycMgr,u32Direction, u32FrameType, u32CurFrameNum, pu32NextFrameNum);
 }
 
@@ -5178,7 +5213,7 @@ HI_S32 PVR_Index_PushStartWhenTsLead(PVR_INDEX_HANDLE handle, HI_U64 u64CurFileS
         HI_ERR_PVR("Invalide param\n");
         return HI_FAILURE;
     }
-    
+
     pstCycMgr = &handle->stCycMgr;
     u32CurFrm = pstCycMgr->u32StartFrame;
     u32NextFrm = pstCycMgr->u32StartFrame;
@@ -5224,7 +5259,7 @@ HI_S32 PVR_Index_PushStartWhenTsLead(PVR_INDEX_HANDLE handle, HI_U64 u64CurFileS
         PVR_INDEX_UNLOCK(&handle->stMutex);
         return HI_SUCCESS;
     }
-    
+
     s32Ret = PVRIndexGetEntryByNum(handle, &stStartEntry, u32CurFrm);
     if (HI_SUCCESS != s32Ret)
     {
@@ -5232,7 +5267,7 @@ HI_S32 PVR_Index_PushStartWhenTsLead(PVR_INDEX_HANDLE handle, HI_U64 u64CurFileS
         PVR_INDEX_UNLOCK(&handle->stMutex);
         return s32Ret;
     }
-    
+
     do
     {
         u32CurFrm = u32NextFrm;
@@ -5272,9 +5307,16 @@ HI_S32 PVR_Index_PushStartWhenTsLead(PVR_INDEX_HANDLE handle, HI_U64 u64CurFileS
                 stNextEntry.u64GlobalOffset - stStartEntry.u64GlobalOffset, u64TsLeadLen);
     pstCycMgr->u32StartFrame = u32NextFrm;
     pstCycMgr->u64StartFrameOffset = stNextEntry.u64Offset;
+
+    (HI_VOID)PVRIndexCheckReadFrmValidWhenTimeshift(handle);
     PVR_INDEX_UNLOCK(&handle->stMutex);
-    
+
     return HI_SUCCESS;
+}
+
+HI_VOID PVR_Index_ProcOverFlow(PVR_INDEX_HANDLE handle)
+{
+    handle->u64OverflowOffset = handle->stCurRecFrame.u64GlobalOffset + handle->stCurRecFrame.u32FrameSize;
 }
 
 
@@ -5303,7 +5345,7 @@ HI_S32 PVR_Index_CycMoveFrmNum(PVR_INDEX_HANDLE handle, HI_BOOL bForward,HI_S32 
                     s32CurFrmNum, handle->stCycMgr.u32StartFrame, handle->stCycMgr.u32EndFrame);
         return PVR_INDEX_ERR_INVALID;
     }
-    
+
     /*通常只会在一个GOP范围移动帧号，调用此函数的时候如果 移动范围太大，可能是异常，因此本函数只支持 512 范围内移动*/
     if (Distance > 512)
     {
@@ -5398,99 +5440,104 @@ HI_S32 PVR_Index_CycMoveFrmNum(PVR_INDEX_HANDLE handle, HI_BOOL bForward,HI_S32 
                     pstCycMgr->u32StartFrame, pstCycMgr->u32LastFrame, pstCycMgr->u32EndFrame);
         return PVR_INDEX_ERR_INVALID;
     }
-    
+
     *ps32NextFrameNum = s32NextFrameNum;
 
     HI_INFO_PVR("Move , F:%d,c:%d,D:%d,N:%d,S:%d,L:%d,E:%d\n",
                 bForward, s32CurFrmNum, Distance, s32NextFrameNum,
                 pstCycMgr->u32StartFrame, pstCycMgr->u32LastFrame, pstCycMgr->u32EndFrame);
-    
+
     return HI_SUCCESS;
 }
 
-HI_S32 PVR_Index_GetPreIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, HI_U32 *PreIFrameNum,PVR_INDEX_ENTRY_S *PreIFrame)
+HI_S32 PVR_Index_GetPreIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, HI_U32 *PreIFrameNum, PVR_INDEX_ENTRY_S *PreIFrame)
 {
     PVR_INDEX_ENTRY_S stIndexEntry = {0};
-    HI_U32 PreFrmNum = 0;
-    HI_U32 PreIOffset = 0;
+    HI_U32 u32PreFrmNum = 0;
+    HI_U32 u32PreIOffset = 0;
     HI_S32 ret = 0;
-    
+
     HI_ASSERT_RET(handle != NULL);
     HI_ASSERT_RET(PreIFrameNum != NULL);
 
     if (HI_TRUE != PVRIndexIsFrameValid(u32CurFrameNum, &handle->stCycMgr))
     {
-        HI_WARN_PVR("current frame number %d is invalid. start=%d end=%d\n",u32CurFrameNum,handle->stCycMgr.u32StartFrame,handle->stCycMgr.u32EndFrame);
+        HI_WARN_PVR("current frame number %d is invalid. start=%d end=%d\n",
+                    u32CurFrameNum, handle->stCycMgr.u32StartFrame, handle->stCycMgr.u32EndFrame);
         return PVR_INDEX_ERR_INVALID;
     }
-    
-    ret = PVR_Index_CycMoveFrmNum( handle, HI_FALSE,(HI_S32)u32CurFrameNum,1, (HI_S32 *)&PreFrmNum);
+
+    ret = PVR_Index_CycMoveFrmNum(handle, HI_FALSE, (HI_S32)u32CurFrameNum, 1, (HI_S32 *)&u32PreFrmNum);
     if (HI_SUCCESS != ret)
     {
         return ret;
     }
 
-    ret = PVR_Index_GetFrameByNum(handle, &stIndexEntry, PreFrmNum);
+    ret = PVR_Index_GetFrameByNum(handle, &stIndexEntry, u32PreFrmNum);
     if (HI_SUCCESS != ret)
     {
         return HI_FAILURE;
     }
-    PreIOffset = PVR_INDEX_get_preIoffset(&stIndexEntry);
-    ret =   PVR_Index_CycMoveFrmNum(handle, HI_FALSE,(HI_S32)PreFrmNum,PreIOffset, (HI_S32*)PreIFrameNum);
+
+    u32PreIOffset = PVR_INDEX_get_preIoffset(&stIndexEntry);
+    ret = PVR_Index_CycMoveFrmNum(handle, HI_FALSE, (HI_S32)u32PreFrmNum, u32PreIOffset, (HI_S32*)PreIFrameNum);
     if ((ret == PVR_INDEX_ERR_INVALID) || (HI_ERR_PVR_FILE_TILL_START == ret))
     {
         HI_WARN_PVR("search pre I frame till start ,can not get\n");
         return ret;
     }
-        
+
     /*check it is I*/
     (HI_VOID)PVR_Index_GetFrameByNum(handle, &stIndexEntry, *PreIFrameNum);
     if (!PVR_INDEX_is_Iframe(&stIndexEntry))
     {
-        HI_WARN_PVR(" c:%d, PI:%d, but not I\n",u32CurFrameNum,*PreIFrameNum);
+        HI_WARN_PVR(" c:%d, PI:%d, but not I\n", u32CurFrameNum, *PreIFrameNum);
         return HI_FAILURE;
     }
-    memcpy(PreIFrame,&stIndexEntry,sizeof(PVR_INDEX_ENTRY_S));
+
+    memcpy(PreIFrame, &stIndexEntry, sizeof(PVR_INDEX_ENTRY_S));
+
     HI_INFO_PVR("GetPI: C:%d,PI:%d\n",u32CurFrameNum,*PreIFrameNum);
-    return ret;    
+
+    return ret;
 }
 
-HI_S32 PVR_Index_GetNextIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, HI_U32 *pNextIFrameNum,PVR_INDEX_ENTRY_S* pNextIFrame)
+HI_S32 PVR_Index_GetNextIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, HI_U32 *pu32NextIFrameNum,PVR_INDEX_ENTRY_S* pstNextIFrame)
 {
-    PVR_INDEX_ENTRY_S stIndexEntry = {0};
-
-    HI_U32 PreIOffset = 0;
-    HI_U32 PreIFrameNum = 0;
-    PVR_INDEX_ENTRY_S PreIFrame = {0};
-    HI_S32 NextIFrameNum = 0;
-    HI_S32 TmpStartFrm = 0;/*每一次搜寻帧的开始帧号*/
-    HI_S32 TmpEndFrameNum = 0;/*每一次搜寻帧的结果帧号*/
-    HI_U32 Step = 0;
-    HI_U32 Cnt = 0;
-    PVR_INDEX_INFO_S *pIdxInfo = &handle->stRecIdxInfo.stIdxInfo;
-    
+    HI_U32 u32Step = 0;
+    HI_U32 u32Count = 0;
+    HI_U32 u32PreIOffset = 0;
+    HI_U32 u32PreIFrameNum = 0;
+    HI_S32 s32NextIFrameNum = 0;
     HI_S32 ret=0;
-    
+    HI_S32 s32TmpStartFrm = 0;/*每一次搜寻帧的开始帧号*/
+    HI_S32 s32TmpEndFrameNum = 0;/*每一次搜寻帧的结果帧号*/
+    PVR_INDEX_ENTRY_S stIndexEntry = {0};
+    PVR_INDEX_ENTRY_S stPreIFrame = {0};
+    PVR_INDEX_INFO_S  *pstIdxInfo = &handle->stRecIdxInfo.stIdxInfo;
+
     HI_ASSERT_RET(handle != NULL);
-    HI_ASSERT_RET(pNextIFrameNum != NULL);
+    HI_ASSERT_RET(pu32NextIFrameNum != NULL);
 
     if (HI_TRUE != PVRIndexIsFrameValid(u32CurFrameNum, &handle->stCycMgr))
     {
-        HI_WARN_PVR("current frame number %d is invalid. start=%d end=%d\n",u32CurFrameNum,handle->stCycMgr.u32StartFrame,handle->stCycMgr.u32EndFrame);
+        HI_WARN_PVR("current frame number %d is invalid. start=%d end=%d\n",
+                     u32CurFrameNum, handle->stCycMgr.u32StartFrame, handle->stCycMgr.u32EndFrame);
         return PVR_INDEX_ERR_INVALID;
     }
 
     (HI_VOID)PVR_Index_GetFrameByNum(handle, &stIndexEntry, u32CurFrameNum);
     if (PVR_INDEX_is_Iframe(&stIndexEntry))
     {
-        ret = PVR_Index_GetFBwardIPBFrameNum( handle, 1, PVR_INDEX_FRAME_I,  u32CurFrameNum, pNextIFrameNum);
-        if ( HI_SUCCESS == ret )
+        ret = PVR_Index_GetFBwardIPBFrameNum(handle, 1, PVR_INDEX_FRAME_I, u32CurFrameNum, pu32NextIFrameNum);
+        if (HI_SUCCESS == ret)
         {
-            ret  = PVR_Index_GetFrameByNum(handle, &stIndexEntry, *pNextIFrameNum);
+            ret  = PVR_Index_GetFrameByNum(handle, &stIndexEntry, *pu32NextIFrameNum);
             if (HI_SUCCESS == ret)
             {
-                memcpy(pNextIFrame,&stIndexEntry,sizeof(PVR_INDEX_ENTRY_S));
-                HI_INFO_PVR("[%d]GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n",__LINE__,u32CurFrameNum,*pNextIFrameNum,ret);
+                memcpy(pstNextIFrame, &stIndexEntry, sizeof(PVR_INDEX_ENTRY_S));
+                HI_INFO_PVR("GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n",
+                             u32CurFrameNum, *pu32NextIFrameNum, ret);
                 return HI_SUCCESS;
             }
             HI_ERR_PVR("Get frame by num failed! ret %x\n", ret);
@@ -5498,17 +5545,17 @@ HI_S32 PVR_Index_GetNextIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, H
         return ret;
     }
 
-    ret = PVR_Index_GetPreIFrame( handle, u32CurFrameNum, &PreIFrameNum,&PreIFrame);
-    if ( HI_SUCCESS != ret )
+    ret = PVR_Index_GetPreIFrame(handle, u32CurFrameNum, &u32PreIFrameNum, &stPreIFrame);
+    if (HI_SUCCESS != ret)
     {
-        ret = PVR_Index_GetFBwardIPBFrameNum( handle, 1, PVR_INDEX_FRAME_I,  u32CurFrameNum, pNextIFrameNum);
-        if ( HI_SUCCESS == ret )
+        ret = PVR_Index_GetFBwardIPBFrameNum(handle, 1, PVR_INDEX_FRAME_I,  u32CurFrameNum, pu32NextIFrameNum);
+        if (HI_SUCCESS == ret)
         {
-            ret = PVR_Index_GetFrameByNum(handle, &stIndexEntry, *pNextIFrameNum);
+            ret = PVR_Index_GetFrameByNum(handle, &stIndexEntry, *pu32NextIFrameNum);
             if (HI_SUCCESS == ret)
             {
-                memcpy(pNextIFrame,&stIndexEntry,sizeof(PVR_INDEX_ENTRY_S));
-                HI_INFO_PVR("[%d]GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n",__LINE__,u32CurFrameNum,*pNextIFrameNum,ret);
+                memcpy(pstNextIFrame,&stIndexEntry,sizeof(PVR_INDEX_ENTRY_S));
+                HI_INFO_PVR("GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n", u32CurFrameNum, *pu32NextIFrameNum, ret);
                 return HI_SUCCESS;
             }
             HI_ERR_PVR("Get frame by num failed! ret %x\n", ret);
@@ -5517,120 +5564,125 @@ HI_S32 PVR_Index_GetNextIFrame(PVR_INDEX_HANDLE handle, HI_U32 u32CurFrameNum, H
     }
 
     /*1. 计算步进值*/
-    if(( (HI_S32)pIdxInfo->u32GopTotalNum > 0) && ((HI_S32)pIdxInfo->u32FrameTotalNum > 0))
+    if (((HI_S32)pstIdxInfo->u32GopTotalNum > 0) && ((HI_S32)pstIdxInfo->u32FrameTotalNum > 0))
     {
-        Step = pIdxInfo->u32FrameTotalNum / pIdxInfo->u32GopTotalNum;
+        u32Step = pstIdxInfo->u32FrameTotalNum / pstIdxInfo->u32GopTotalNum;
     }
     else
     {
-        HI_ERR_PVR("Recorded Gop Num:%d, Frm Num:%d may be error\n",pIdxInfo->u32GopTotalNum,pIdxInfo->u32FrameTotalNum);
-        Step = 50;
+        HI_WARN_PVR("Recorded Gop Num:%d, Frm Num:%d may be error\n",
+                     pstIdxInfo->u32GopTotalNum, pstIdxInfo->u32FrameTotalNum);
+        u32Step = 50;
     }
 
     /*2. 找到某一个 TmpFrameNum ， 是 u32CurFrameNum 后面某一个GOP中的一帧，
     这个 do-while 通常循环一两次既可找到这样一个帧，因此虽然代码显得复杂，但是 读文件较少，IO操作较少*/ 
-    TmpStartFrm = u32CurFrameNum;
+    s32TmpStartFrm = u32CurFrameNum;
     do
     {
-        Cnt++;
-        ret = PVR_Index_CycMoveFrmNum(handle, HI_TRUE,(HI_S32)TmpStartFrm,Step, &TmpEndFrameNum); 
-        ret |= PVR_Index_GetFrameByNum(handle, &stIndexEntry, TmpEndFrameNum);
-        PreIOffset = PVR_INDEX_get_preIoffset(&stIndexEntry);
-        ret |= PVR_Index_CycMoveFrmNum(handle, HI_FALSE,(HI_S32)TmpEndFrameNum,PreIOffset, &NextIFrameNum); 
-        
-        HI_INFO_PVR("[%d]Serach a Next GopFrm: S:%d,E:%d,Step:%d,NextI:%d,ret:0x%x\n",\
-                __LINE__,TmpStartFrm,TmpEndFrameNum,Step,NextIFrameNum,ret);
+        u32Count++;
+        ret = PVR_Index_CycMoveFrmNum(handle, HI_TRUE, s32TmpStartFrm, u32Step, &s32TmpEndFrameNum); 
+        ret |= PVR_Index_GetFrameByNum(handle, &stIndexEntry, s32TmpEndFrameNum);
+        u32PreIOffset = PVR_INDEX_get_preIoffset(&stIndexEntry);
+        ret |= PVR_Index_CycMoveFrmNum(handle, HI_FALSE, s32TmpEndFrameNum, u32PreIOffset, &s32NextIFrameNum); 
 
-        TmpStartFrm = TmpEndFrameNum;
-        if ( (PVR_INDEX_ERR_INVALID == ret) || (HI_ERR_PVR_FILE_TILL_END == ret))
+        HI_INFO_PVR("Serach a Next GopFrm: S:%d,E:%d,Step:%d,NextI:%d,ret:0x%x\n",
+                     s32TmpStartFrm, s32TmpEndFrameNum, u32Step, s32NextIFrameNum, ret);
+
+        s32TmpStartFrm = s32TmpEndFrameNum;
+        if ((PVR_INDEX_ERR_INVALID == ret) || (HI_ERR_PVR_FILE_TILL_END == ret))
         {
             HI_WARN_PVR("serach next I frame till end ,can not get,error\n");
             return HI_FAILURE;
         }
-        if ( Cnt > 256 )
+        if (u32Count > 256)
         {
-            HI_ERR_PVR("search frame of next gop more than 256 times, something must wrong!Cur:%d",u32CurFrameNum);
-            Cnt = 0;
+            HI_ERR_PVR("search frame of next gop more than 256 times, something must wrong!Cur:%d", u32CurFrameNum);
+            u32Count = 0;
             break;
         }
-        if ( PreIOffset == 0)
+        if (u32PreIOffset == 0)
         {
-            Cnt = 0;
+            u32Count = 0;
             break;
         }
-        
-    } while ( PreIFrameNum == (HI_U32)NextIFrameNum);
+    } while (u32PreIFrameNum == (HI_U32)s32NextIFrameNum);
 
     /*3. 如果经过以上 do-while 找到的 TmpFrameNum 是这种情况 :
     ........u32CurFrameNum......I.......I.........I....       ........TmpFrameNum....I，
     需要继续反向寻找一个 与 u32CurFrameNum 相邻的 GOP 的I帧*/
-    TmpStartFrm = TmpEndFrameNum;
-    Cnt = 0;
-    
-    while ( PreIFrameNum != (HI_U32)NextIFrameNum  )
+    s32TmpStartFrm = s32TmpEndFrameNum;
+    u32Count = 0;
+
+    while (u32PreIFrameNum != (HI_U32)s32NextIFrameNum)
     {
-        Cnt++;
-        TmpEndFrameNum = NextIFrameNum;
-        ret = PVR_Index_GetPreIFrame(handle, TmpStartFrm, (HI_U32*)&NextIFrameNum,&stIndexEntry); 
-        ret |= PVR_Index_CycMoveFrmNum(handle, HI_FALSE,(HI_S32)NextIFrameNum,1, &TmpStartFrm); 
-        if ( HI_SUCCESS != ret)
+        u32Count++;
+        s32TmpEndFrameNum = s32NextIFrameNum;
+        ret = PVR_Index_GetPreIFrame(handle, s32TmpStartFrm, (HI_U32*)&s32NextIFrameNum, &stIndexEntry); 
+        ret |= PVR_Index_CycMoveFrmNum(handle, HI_FALSE, s32NextIFrameNum, 1, &s32TmpStartFrm); 
+        if (HI_SUCCESS != ret)
         {
-            Cnt = 0;
+            u32Count = 0;
             break;
         }
-        if ( Cnt > 256 )
+        if (u32Count > 256)
         {
             HI_ERR_PVR("search next I frame more than 256 times, something must wrong!Cur:%d",u32CurFrameNum);
-            Cnt = 0;
+            u32Count = 0;
             break;
         }
         
     }
-    
-    NextIFrameNum = TmpEndFrameNum;
+
+    s32NextIFrameNum = s32TmpEndFrameNum;
 
     /*4. check it is I*/
-    (HI_VOID)PVR_Index_GetFrameByNum(handle, &stIndexEntry, NextIFrameNum);
+    (HI_VOID)PVR_Index_GetFrameByNum(handle, &stIndexEntry, (HI_U32)s32NextIFrameNum);
     if (PVR_INDEX_is_Iframe(&stIndexEntry))
     {
-        *pNextIFrameNum = NextIFrameNum;
-         memcpy(pNextIFrame,&stIndexEntry,sizeof(PVR_INDEX_ENTRY_S));
+        *pu32NextIFrameNum = s32NextIFrameNum;
+         memcpy(pstNextIFrame, &stIndexEntry, sizeof(PVR_INDEX_ENTRY_S));
     }
     else
     {
-        HI_WARN_PVR("Get Next I Frame failed, Cur:%d\n",u32CurFrameNum);
+        HI_WARN_PVR("Get Next I Frame failed, Cur:%d\n", u32CurFrameNum);
         return HI_FAILURE;
     }
 
-    HI_INFO_PVR("[%d]GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n",__LINE__,u32CurFrameNum,*pNextIFrameNum,ret);
+    HI_INFO_PVR("GetNextI finish: Cur:%d,NextI:%d,ret:0x%x\n", u32CurFrameNum, *pu32NextIFrameNum, ret);
     return HI_SUCCESS;
 }
 
 /* get frame number, frame attribute, GOP attribute from one frame plus N forward*/
 HI_S32 PVR_Index_GetForwardGOPAttr(PVR_INDEX_HANDLE piIndexHandle, 
-                                   HI_PVR_FETCH_RESULT_S *pPvrFetchRes, 
+                                   HI_PVR_FETCH_RESULT_S *pstFetchRes, 
                                    HI_U32 u32StartFrameNum, 
                                    HI_U32 u32FrameNum)
 {
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
-    HI_U32 i = 0, u32ReadFrameEnd = 0, u32GopTotalFrameNum = 0, u32GopFlag = 0;
+    HI_U32 i = 0, u32ReadFrameEnd = 0, u32GopFlag = 0, u32FrmNum = 0;
     HI_S32 ret = 0;
-    
+    PVR_INDEX_ENTRY_S *pstFrame = HI_NULL; 
+
     HI_ASSERT_RET(NULL != piIndexHandle);
-    HI_ASSERT_RET(NULL != pPvrFetchRes);
+    HI_ASSERT_RET(NULL != pstFetchRes);
 
     if (HI_TRUE != PVRIndexIsFrameValid(u32StartFrameNum, &piIndexHandle->stCycMgr))
     {
-        HI_ERR_PVR("input frame number is invalid.\n");
+        HI_ERR_PVR("Input frame number %d is invalid. S/E/L %d/%d/%d\n", 
+                    u32StartFrameNum, 
+                    piIndexHandle->stCycMgr.u32StartFrame,
+                    piIndexHandle->stCycMgr.u32EndFrame,
+                    piIndexHandle->stCycMgr.u32LastFrame);
         return HI_FAILURE;
     }
-    
-    memset(pPvrFetchRes, 0, sizeof(HI_PVR_FETCH_RESULT_S));
+
+    memset(pstFetchRes, 0, sizeof(HI_PVR_FETCH_RESULT_S));
     u32ReadFrameEnd = u32StartFrameNum + u32FrameNum;
 
-    for(i = u32StartFrameNum; i < u32ReadFrameEnd; i++)
-    {        
-        if(i > piIndexHandle->stCycMgr.u32LastFrame)
+    for (i = u32StartFrameNum; i < u32ReadFrameEnd; i++)
+    { 
+        pstFrame = &pstFetchRes->stFrame[u32FrmNum].stIndexEntry;
+        if (i > piIndexHandle->stCycMgr.u32LastFrame)
         {
             if (piIndexHandle->stCycMgr.u32EndFrame <= piIndexHandle->stCycMgr.u32StartFrame)
             {
@@ -5647,7 +5699,7 @@ HI_S32 PVR_Index_GetForwardGOPAttr(PVR_INDEX_HANDLE piIndexHandle,
             return HI_SUCCESS;
         }
 
-        ret = PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, i);
+        ret = PVR_Index_GetFrameByNum(piIndexHandle, pstFrame, i);
         if(HI_SUCCESS != ret)
         {
              if(ret == HI_ERR_PVR_FILE_TILL_END)
@@ -5661,192 +5713,156 @@ HI_S32 PVR_Index_GetForwardGOPAttr(PVR_INDEX_HANDLE piIndexHandle,
              }
         }
 
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameNum = i;
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-        memcpy(&(pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-        pPvrFetchRes->u32TotalFrameNum++;
+        pstFetchRes->stFrame[u32FrmNum].u32FrameNum = i;
+        pstFetchRes->stFrame[u32FrmNum].u32FrameType = PVR_INDEX_get_frameType(pstFrame);
 
-        if (PVR_INDEX_is_Iframe(&frame_tmp))
+        u32FrmNum++;
+        pstFetchRes->u32TotalFrameNum = u32FrmNum;
+
+        if (PVR_INDEX_is_Iframe(pstFrame))
         {
             u32GopFlag = 1;
-            pPvrFetchRes->u32IFrameNum++;
-            if((0 != pPvrFetchRes->u32GopNum) && (0 != i))
-                pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum - 1].u32LastFrameNum = i-1;
-            pPvrFetchRes->u32GopNum++;
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum - 1].u32FirstFrameNum = i;
-        }     
-        
-        if (PVR_INDEX_is_Bframe(&frame_tmp))
-        {
-            pPvrFetchRes->u32BFrameNum++;
-            if (1 == u32GopFlag)  
-                pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum - 1].u32BFrameNum++;
+            pstFetchRes->u32IFrameNum++;
+            pstFetchRes->u32GopNum++;
         }
-
-        if (PVR_INDEX_is_Pframe(&frame_tmp))
+        else if (PVR_INDEX_is_Bframe(pstFrame))
         {
-            pPvrFetchRes->u32PFrameNum++;
-            if (1 == u32GopFlag)  
-                pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].u32PFrameNum++;
+            pstFetchRes->u32BFrameNum++;
         }
-        
-        if (1 == u32GopFlag)  
+        else if (PVR_INDEX_is_Pframe(pstFrame))
         {
-            u32GopTotalFrameNum = pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].u32TotalFrameNum;
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].sFrame[u32GopTotalFrameNum].u32FrameNum = i;
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].sFrame[u32GopTotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].sFrame[u32GopTotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].sFrame[u32GopTotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-            memcpy(&(pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].sFrame[u32GopTotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-            pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].u32TotalFrameNum++;
+            pstFetchRes->u32PFrameNum++;
         }
     }
-
-    pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum-1].u32LastFrameNum = i - 1;
 
     return HI_SUCCESS;
 }
 
 /* get frame number, frame attribute, GOP attribute from one frame plus N backward*/
 HI_S32 PVR_Index_GetBackwardGOPAttr(PVR_INDEX_HANDLE piIndexHandle, 
-                                HI_PVR_FETCH_RESULT_S *pPvrFetchRes, 
-                                HI_U32 u32StartFrameNum, 
-                                HI_U32 u32FrameNum)
+                                    HI_PVR_FETCH_RESULT_S *pstFetchRes, 
+                                    HI_U32 u32StartFrameNum, 
+                                    HI_U32 u32FrameCount)
 {
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
-    HI_PVR_FETCH_GOP_S *gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-    HI_S32 i = 0 , s32ReadFrameEnd = 0;
-    HI_U32 u32GopTotalFrameNum = 0 , u32GopFlag = 1;    
-    HI_S32 ret = 0;
-    
+    HI_U32 i, u32GopFlag = 0, u32FrmCount = 0, u32FrmNum = u32StartFrameNum;
+    HI_S32 ret = HI_SUCCESS;
+    PVR_INDEX_ENTRY_S       *pstEntry = HI_NULL;
+    PVR_CYC_MGR_S           *pstCycMgr = HI_NULL;
+    HI_PVR_FETCH_GOP_ATTR_S *pstFetchGopAttr = HI_NULL;
+    HI_PVR_FETCH_FRAME_S    *pGopReverseFrm, *pTmpFetchFrame = HI_NULL;
+
     HI_ASSERT_RET(NULL != piIndexHandle);
-    HI_ASSERT_RET(NULL != pPvrFetchRes);
+    HI_ASSERT_RET(NULL != pstFetchRes);
+    pstCycMgr = &(piIndexHandle->stCycMgr);
 
-    if (HI_TRUE != PVRIndexIsFrameValid(u32StartFrameNum, &piIndexHandle->stCycMgr))
+    if (HI_TRUE != PVRIndexIsFrameValid(u32StartFrameNum, pstCycMgr))
     {
-        HI_ERR_PVR("input frame number is invalid.\n");
-        return HI_FAILURE;
-    }    
-
-    gop_tmp = (HI_PVR_FETCH_GOP_S *)HI_MALLOC(HI_ID_PVR, sizeof(HI_PVR_FETCH_GOP_S));
-    
-    if((HI_PVR_FETCH_GOP_S *)NULL == gop_tmp)
-    {
-        HI_WARN_PVR("HI_MALLOC HI_PVR_FETCH_GOP_S fail.\n");
+        HI_ERR_PVR("Input frame number %d is invalid. S/E/L %d/%d/%d\n", 
+                    u32StartFrameNum, 
+                    piIndexHandle->stCycMgr.u32StartFrame,
+                    piIndexHandle->stCycMgr.u32EndFrame,
+                    piIndexHandle->stCycMgr.u32LastFrame);
         return HI_FAILURE;
     }
-    
-    memset(gop_tmp, 0, sizeof(HI_PVR_FETCH_GOP_S));
-    memset(pPvrFetchRes, 0, sizeof(HI_PVR_FETCH_RESULT_S));
-    
-    s32ReadFrameEnd = (HI_S32)u32StartFrameNum - (HI_S32)u32FrameNum;
-    for(i = u32StartFrameNum; i > s32ReadFrameEnd; i--)
-    {        
-        if(i < 0)
+
+    pGopReverseFrm = (HI_PVR_FETCH_FRAME_S *)HI_MALLOC(HI_ID_PVR, sizeof(HI_PVR_FETCH_FRAME_S) * MAX_FRAME_NUM_ONCE_FETCH);
+    HI_ASSERT_RET(NULL != pGopReverseFrm);
+
+    memset(pGopReverseFrm, 0, sizeof(HI_PVR_FETCH_FRAME_S) * MAX_FRAME_NUM_ONCE_FETCH);
+    memset(pstFetchRes, 0, sizeof(HI_PVR_FETCH_RESULT_S));
+    pTmpFetchFrame = pGopReverseFrm;
+    pstFetchGopAttr = &(pstFetchRes->stGop[0]);
+
+    for (i = u32FrameCount; i > 0; i--)
+    {
+        pstEntry = &(pTmpFetchFrame->stIndexEntry);
+
+        if (HI_TRUE != PVRIndexIsFrameValid(u32FrmNum, pstCycMgr))
         {
-            if (piIndexHandle->stCycMgr.u32EndFrame <= piIndexHandle->stCycMgr.u32StartFrame)
-            {
-                i = piIndexHandle->stCycMgr.u32LastFrame;
-                s32ReadFrameEnd = (HI_S32)(piIndexHandle->stCycMgr.u32LastFrame) - ((HI_S32)u32FrameNum - (HI_S32)(u32StartFrameNum+1)) ;
-                s32ReadFrameEnd = (s32ReadFrameEnd <= (HI_S32)(piIndexHandle->stCycMgr.u32StartFrame)) ? (HI_S32)(piIndexHandle->stCycMgr.u32StartFrame) : s32ReadFrameEnd;
-            }
-            else
-                break;
-        }
-        if (HI_TRUE != PVRIndexIsFrameValid(i, &piIndexHandle->stCycMgr))
-        {
-            HI_FREE(HI_ID_PVR, gop_tmp);
-            gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-            return HI_SUCCESS;
+            ret = HI_FAILURE;
+            HI_ERR_PVR("Readframe %d is invalide\n", u32FrmNum);
+            break;
         }
 
-        ret = PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, i);
-        if(HI_SUCCESS != ret)
+        ret = PVRIndexGetEntryByNum(piIndexHandle, pstEntry, u32FrmNum);
+        if (HI_SUCCESS != ret)
         {
-            if(ret != HI_ERR_PVR_FILE_TILL_END)
-            {
-                HI_WARN_PVR("get the %d entry fail.\n", i);
-                HI_FREE(HI_ID_PVR, gop_tmp);
-                gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-                return HI_FAILURE;
-            }
+            HI_ERR_PVR("Get the %d entry fail! ret %x\n", u32FrmNum, ret);
+            break;
+        }
+
+        pTmpFetchFrame->u32FrameNum = u32FrmNum;
+        pTmpFetchFrame->u32FrameType = PVR_INDEX_get_frameType(pstEntry);
+
+        u32FrmCount++;
+        pstFetchGopAttr->u32TotalFrameNum = u32FrmCount;   //add frm num of this GOP
+        pstFetchRes->u32TotalFrameNum++;                   //add frm num of fetch result
+
+        if (PVR_INDEX_is_Iframe(pstEntry))
+        {
+            u32GopFlag = 1;
+            pstFetchRes->u32IFrameNum++;
+        }
+        else if (PVR_INDEX_is_Bframe(pstEntry))
+        {
+            pstFetchRes->u32BFrameNum++;
+            pstFetchGopAttr->u32BFrameNum++;
+        }
+        else if (PVR_INDEX_is_Pframe(pstEntry))
+        {
+            pstFetchRes->u32PFrameNum++;
+            pstFetchGopAttr->u32PFrameNum++;
         }
 
         if (1 == u32GopFlag)
         {
-            gop_tmp->u32LastFrameNum = i;
-            u32GopFlag = 0;
-        }
-
-        u32GopTotalFrameNum = gop_tmp->u32TotalFrameNum;
-        gop_tmp->sFrame[u32GopTotalFrameNum].u32FrameNum = i;
-        gop_tmp->sFrame[u32GopTotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-        gop_tmp->sFrame[u32GopTotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-        gop_tmp->sFrame[u32GopTotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-        memcpy(&(gop_tmp->sFrame[u32GopTotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-        gop_tmp->u32TotalFrameNum++;
-        
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameNum = i;
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-        pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-        memcpy(&(pPvrFetchRes->sFrame[pPvrFetchRes->u32TotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-        pPvrFetchRes->u32TotalFrameNum++;
-
-        if (PVR_INDEX_is_Iframe(&frame_tmp))
-        {
-            u32GopFlag = 1;
-            pPvrFetchRes->u32IFrameNum++;
-            gop_tmp->u32FirstFrameNum = i;
-        }     
-        
-        if (PVR_INDEX_is_Bframe(&frame_tmp))
-        {
-            pPvrFetchRes->u32BFrameNum++;
-            gop_tmp->u32BFrameNum++;
-        }
-
-        if (PVR_INDEX_is_Pframe(&frame_tmp))
-        {
-            pPvrFetchRes->u32PFrameNum++;
-            gop_tmp->u32PFrameNum++;
-        }
-        
-        if (1 == u32GopFlag)  
-        {
-            HI_S32 j = 0, k = 0;
-            memcpy((void *)&(pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum]), (void *)gop_tmp, sizeof(HI_PVR_FETCH_GOP_S));
-            for(j = gop_tmp->u32TotalFrameNum - 1; j >= 0; j--)
+            HI_S32 j = (HI_S32)pstFetchGopAttr->u32TotalFrameNum - 1;
+            for (; j >= 0 ; j--)
             {
-                memcpy((void *)&(pPvrFetchRes->sGop[pPvrFetchRes->u32GopNum].sFrame[k]),
-                       (void *)&(gop_tmp->sFrame[j]),
-                       sizeof(HI_PVR_FETCH_FRAME_S));
-                k++;
+                memcpy(&pstFetchRes->stFrame[pstFetchRes->u32TotalFrameNum - j - 1], pGopReverseFrm + j, sizeof(HI_PVR_FETCH_FRAME_S));
             }
-            memset(gop_tmp, 0, sizeof(HI_PVR_FETCH_GOP_S));
-            pPvrFetchRes->u32GopNum++;
+           
+            pstFetchRes->u32GopNum++;
+            if (pstFetchRes->u32GopNum >= MAX_GOP_NUM_ONCE_FETCH)
+            {
+                HI_WARN_PVR("Gop num %d is too large\n", pstFetchRes->u32GopNum);
+                break;
+            }
+            pstFetchGopAttr++;
+            u32FrmCount = 0;
+            u32GopFlag = 0;
+            memset(pGopReverseFrm, 0, sizeof(HI_PVR_FETCH_FRAME_S) * MAX_FRAME_NUM_ONCE_FETCH);
+            pTmpFetchFrame = pGopReverseFrm;
         }
+        else
+        {
+            pTmpFetchFrame++;
+        }
+        u32FrmNum = PVR_IDX_PREV_POS_IN_CYC(u32FrmNum, (pstCycMgr->u32LastFrame + 1));
     }
 
-    HI_FREE(HI_ID_PVR, gop_tmp);
-    gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-    return HI_SUCCESS;
+    HI_FREE(HI_ID_PVR, pGopReverseFrm);
+    pGopReverseFrm = HI_NULL;
+    pTmpFetchFrame = HI_NULL;
+    return ret;
 }
 
 
 /* get current GOP's attribute, include total frame number, numbers of B/P frame, from one I frame */
 HI_S32 PVR_Index_GetCurGOPAttr(PVR_INDEX_HANDLE piIndexHandle, 
-                                    HI_PVR_FETCH_GOP_S *pPvrGopAttr, 
-                                    HI_U32 u32StartIFrameNum)
+                               HI_PVR_FETCH_RESULT_S *pstFetchResult, 
+                               HI_U32 u32StartIFrameNum)
 {
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
     HI_U32 u32FrameNumTmp = u32StartIFrameNum, u32GopFlag = 0;
-    HI_S32 u32Ret = 0;
+    HI_S32 s32Ret = 0;
+    HI_U32 i = 0;
+    PVR_INDEX_ENTRY_S* pstEntry = HI_NULL;
     
     HI_ASSERT_RET(NULL != piIndexHandle);
-    HI_ASSERT_RET(NULL != pPvrGopAttr);
+    HI_ASSERT_RET(NULL != pstFetchResult);
+
+    pstEntry = &pstFetchResult->stFrame[0].stIndexEntry;
+    memset(pstFetchResult, 0, sizeof(HI_PVR_FETCH_RESULT_S));
 
     if (HI_TRUE != PVRIndexIsFrameValid(u32StartIFrameNum, &piIndexHandle->stCycMgr))
     {
@@ -5854,320 +5870,88 @@ HI_S32 PVR_Index_GetCurGOPAttr(PVR_INDEX_HANDLE piIndexHandle,
         return HI_FAILURE;
     }
 
-    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32StartIFrameNum))
+    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, pstEntry, u32StartIFrameNum))
     {
          HI_WARN_PVR("get the %d entry fail.\n", u32StartIFrameNum);
          return HI_FAILURE;
     }
 
-    if (!PVR_INDEX_is_Iframe(&frame_tmp))
+    if (!PVR_INDEX_is_Iframe(pstEntry))
     {
-        HI_WARN_PVR("start frame is not a I frame.\n");
+        HI_WARN_PVR("Start frame is not a I frame.\n");
         return HI_FAILURE;
     }
 
-    memset(pPvrGopAttr, 0, sizeof(HI_PVR_FETCH_GOP_S));
-
     while(1)
-    {        
+    {
+        pstEntry = &pstFetchResult->stFrame[i].stIndexEntry;
+
         if (piIndexHandle->stCycMgr.u32EndFrame <= piIndexHandle->stCycMgr.u32StartFrame)
         {
             if (u32FrameNumTmp > piIndexHandle->stCycMgr.u32LastFrame)
                 u32FrameNumTmp = 0;
-            if ((1 == u32GopFlag) &&
-                (u32FrameNumTmp > piIndexHandle->stCycMgr.u32EndFrame) && 
+
+            if ((u32FrameNumTmp > piIndexHandle->stCycMgr.u32EndFrame) && 
                 (u32FrameNumTmp < piIndexHandle->stCycMgr.u32StartFrame))
             {
-                HI_WARN_PVR("Can not find next I frame.\n");
+                HI_ERR_PVR("Curnum %d invalide, can't find next I frame.\n", u32FrameNumTmp);
                 return HI_FAILURE;
             }
         }
         else
         {
-             if ((1 == u32GopFlag) && (u32FrameNumTmp > piIndexHandle->stCycMgr.u32LastFrame))
+            if (u32FrameNumTmp > piIndexHandle->stCycMgr.u32LastFrame)
             {
-                HI_WARN_PVR("Can not find next I frame.\n");
+                HI_ERR_PVR("Curnum %d invalide, can't find next I frame.\n", u32FrameNumTmp);
                 return HI_FAILURE;
             }
         }
 
-        u32Ret = PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32FrameNumTmp);
-        if(HI_SUCCESS != u32Ret)
+        s32Ret = PVR_Index_GetFrameByNum(piIndexHandle, pstEntry, u32FrameNumTmp);
+        if (HI_SUCCESS != s32Ret)
         {   
-             if (HI_ERR_PVR_FILE_TILL_END == u32Ret)
+             if (HI_ERR_PVR_FILE_TILL_END == s32Ret)
              {
-                HI_WARN_PVR("Reach the end of index, return success.\n");
+                HI_INFO_PVR("Reach the end of index, return success.\n");
                 return HI_SUCCESS;
              }
              else
              {
-                HI_WARN_PVR("get the %d entry fail.\n", u32FrameNumTmp);
+                HI_ERR_PVR("Get the %d entry fail.\n", u32FrameNumTmp);
                 return HI_FAILURE;
              }
         }
-        
-        if (PVR_INDEX_is_Iframe(&frame_tmp))
+
+        if (PVR_INDEX_is_Iframe(pstEntry))
         {
             u32GopFlag++;
-            if (1 == u32GopFlag)
-                pPvrGopAttr->u32FirstFrameNum = u32FrameNumTmp;
+            if (u32GopFlag > 1)
+                break;
         }
-        
-        if (1 < u32GopFlag)
-        {
-            pPvrGopAttr->u32LastFrameNum = u32FrameNumTmp - 1;
-            break;
-        }
-        
+
         if (piIndexHandle->stCycMgr.u32EndFrame == u32FrameNumTmp)
         {
-            pPvrGopAttr->u32LastFrameNum = u32FrameNumTmp;
             break;
         }
-        
-        if (1 == u32GopFlag)
-        {
-            if (PVR_INDEX_is_Pframe(&frame_tmp))
-                pPvrGopAttr->u32PFrameNum++;
-            
-            if (PVR_INDEX_is_Bframe(&frame_tmp))
-                pPvrGopAttr->u32BFrameNum++;
 
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameNum = u32FrameNumTmp;
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-            memcpy(&(pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-                
-            pPvrGopAttr->u32TotalFrameNum++;
+        if (PVR_INDEX_is_Pframe(pstEntry))
+        {
+            pstFetchResult->u32PFrameNum++;
         }
 
+        if (PVR_INDEX_is_Bframe(pstEntry))
+        {
+            pstFetchResult->u32BFrameNum++;
+        }
+
+        pstFetchResult->stFrame[i].u32FrameNum = u32FrameNumTmp;
+        pstFetchResult->stFrame[i].u32FrameType = PVR_INDEX_get_frameType(pstEntry);
+
+        i++;
         u32FrameNumTmp++;
+        pstFetchResult->u32TotalFrameNum = i;
     }
 
-    return HI_SUCCESS;
-}
-
-
-/* get the next GOP's attribute, include total frame number, numbers of B/P frame, from one I frame */
-HI_S32 PVR_Index_GetNextGOPAttr(PVR_INDEX_HANDLE piIndexHandle, 
-                                    HI_PVR_FETCH_GOP_S *pPvrGopAttr, 
-                                    HI_U32 u32StartIFrameNum)
-{
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
-    HI_U32 u32FrameNumTmp = u32StartIFrameNum, u32GopFlag = 0;
-    
-    HI_ASSERT_RET(NULL != piIndexHandle);
-    HI_ASSERT_RET(NULL != pPvrGopAttr);
-
-    if (HI_TRUE != PVRIndexIsFrameValid(u32StartIFrameNum, &piIndexHandle->stCycMgr))
-    {
-        HI_ERR_PVR("input frame number is invalid.\n");
-        return HI_FAILURE;
-    }
-
-    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32StartIFrameNum))
-    {
-         HI_WARN_PVR("get the %d entry fail.\n", u32StartIFrameNum);
-         return HI_FAILURE;
-    }
-
-    if (!PVR_INDEX_is_Iframe(&frame_tmp))
-    {
-        HI_WARN_PVR("start frame is not a I frame.\n");
-        return HI_FAILURE;
-    }
-
-    memset(pPvrGopAttr, 0, sizeof(HI_PVR_FETCH_GOP_S));
-
-    while(1)
-    {
-        u32FrameNumTmp++;
-        
-        if (piIndexHandle->stCycMgr.u32EndFrame <= piIndexHandle->stCycMgr.u32StartFrame)
-        {
-            if (u32FrameNumTmp > piIndexHandle->stCycMgr.u32LastFrame)
-                u32FrameNumTmp = 0;
-            if ((0 == u32GopFlag) &&
-                (u32FrameNumTmp > piIndexHandle->stCycMgr.u32EndFrame) && 
-                (u32FrameNumTmp < piIndexHandle->stCycMgr.u32StartFrame))
-            {
-                HI_WARN_PVR("Can not find next I frame.\n");
-                return HI_FAILURE;
-            }
-        }
-        else
-        {
-             if ((0 == u32GopFlag) && (u32FrameNumTmp > piIndexHandle->stCycMgr.u32LastFrame))
-            {
-                HI_WARN_PVR("Can not find next I frame.\n");
-                return HI_FAILURE;
-            }
-        }
-                    
-        if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32FrameNumTmp))
-        {
-             HI_WARN_PVR("get the %d entry fail.\n", u32FrameNumTmp);
-             return HI_FAILURE;
-        }
-        
-        if (PVR_INDEX_is_Iframe(&frame_tmp))
-        {
-            u32GopFlag++;
-            if (1 == u32GopFlag)
-                pPvrGopAttr->u32FirstFrameNum = u32FrameNumTmp;
-        }
-        
-        if (1 < u32GopFlag)
-        {
-            pPvrGopAttr->u32LastFrameNum = u32FrameNumTmp - 1;
-            break;
-        }
-        
-        if (1 == u32GopFlag)
-        {
-            if (u32FrameNumTmp > piIndexHandle->stCycMgr.u32EndFrame)
-            {
-                pPvrGopAttr->u32LastFrameNum = u32FrameNumTmp - 1;
-                break;
-            }
-            
-            if (PVR_INDEX_is_Pframe(&frame_tmp))
-                pPvrGopAttr->u32PFrameNum++;
-            
-            if (PVR_INDEX_is_Bframe(&frame_tmp))
-                pPvrGopAttr->u32BFrameNum++;
-
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameNum = u32FrameNumTmp;
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-            pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-            memcpy(&(pPvrGopAttr->sFrame[pPvrGopAttr->u32TotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-                
-            pPvrGopAttr->u32TotalFrameNum++;
-        }
-    }
-
-    return HI_SUCCESS;
-}
-
-/* get the pre GOP's attribute, include total frame number, numbers of B/P frame, from one I frame */
-HI_S32 PVR_Index_GetPreGOPAttr(PVR_INDEX_HANDLE piIndexHandle, 
-                               HI_PVR_FETCH_GOP_S *pPvrGopAttr, 
-                               HI_U32 u32StartIFrameNum)
-{
-    PVR_INDEX_ENTRY_S  frame_tmp ={0}; 
-    HI_PVR_FETCH_GOP_S *gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-    HI_S32 s32FrameNumTmp = (HI_S32)u32StartIFrameNum;
-    HI_U32 u32GopFlag = 1;
-    HI_S32 j = 0, k = 0;
-    
-    HI_ASSERT_RET(NULL != piIndexHandle);
-    HI_ASSERT_RET(NULL != pPvrGopAttr);
-
-    if (HI_TRUE != PVRIndexIsFrameValid(u32StartIFrameNum, &piIndexHandle->stCycMgr))
-    {
-        HI_ERR_PVR("input frame number is invalid.\n");
-        return HI_FAILURE;
-    }
-
-    if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, u32StartIFrameNum))
-    {
-         HI_WARN_PVR("get the %d entry fail.\n", u32StartIFrameNum);
-         return HI_FAILURE;
-    }
-
-    if (!PVR_INDEX_is_Iframe(&frame_tmp))
-    {
-        HI_WARN_PVR("start frame is not a I frame.\n");
-        return HI_FAILURE;
-    }
-
-    gop_tmp = (HI_PVR_FETCH_GOP_S *)HI_MALLOC(HI_ID_PVR, sizeof(HI_PVR_FETCH_GOP_S));
-    
-    if((HI_PVR_FETCH_GOP_S *)NULL == gop_tmp)
-    {
-        HI_WARN_PVR("HI_MALLOC HI_PVR_FETCH_GOP_S fail.\n");
-        return HI_FAILURE;
-    }
-
-    memset(pPvrGopAttr, 0, sizeof(HI_PVR_FETCH_GOP_S));
-    memset(gop_tmp, 0, sizeof(HI_PVR_FETCH_GOP_S));
-
-    while(1)
-    {
-        s32FrameNumTmp--;
-        
-        if (piIndexHandle->stCycMgr.u32EndFrame <= piIndexHandle->stCycMgr.u32StartFrame)
-        {
-            if (s32FrameNumTmp < 0)
-                s32FrameNumTmp = (HI_S32)(piIndexHandle->stCycMgr.u32LastFrame);
-
-            if ((s32FrameNumTmp < (HI_S32)(piIndexHandle->stCycMgr.u32StartFrame)) &&
-                (s32FrameNumTmp > (HI_S32)(piIndexHandle->stCycMgr.u32EndFrame)))
-            {
-                HI_WARN_PVR("Can not find pre I frame.\n");
-                HI_FREE(HI_ID_PVR, gop_tmp);
-                gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-                return HI_FAILURE;
-            }
-        }
-        else
-        {
-            if (s32FrameNumTmp < (HI_S32)(piIndexHandle->stCycMgr.u32StartFrame))
-            {
-                HI_WARN_PVR("Can not find pre I frame.\n");
-                HI_FREE(HI_ID_PVR, gop_tmp);
-                gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-                return HI_FAILURE;
-            }
-        }
-        
-        if(HI_SUCCESS != PVR_Index_GetFrameByNum(piIndexHandle, &frame_tmp, s32FrameNumTmp))
-        {
-             HI_WARN_PVR("get the %d entry fail.\n", s32FrameNumTmp);
-             HI_FREE(HI_ID_PVR, gop_tmp);
-             gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
-             return HI_FAILURE;
-        }
-
-        if (1 == u32GopFlag)
-        {
-            gop_tmp->u32LastFrameNum = s32FrameNumTmp;
-            u32GopFlag = 0;
-        }
-
-        if (PVR_INDEX_is_Pframe(&frame_tmp))
-            gop_tmp->u32PFrameNum++;
-        
-        if (PVR_INDEX_is_Bframe(&frame_tmp))
-            gop_tmp->u32BFrameNum++;
-
-        gop_tmp->sFrame[gop_tmp->u32TotalFrameNum].u32FrameNum = s32FrameNumTmp;
-        gop_tmp->sFrame[gop_tmp->u32TotalFrameNum].u32FrameSize = frame_tmp.u32FrameSize;
-        gop_tmp->sFrame[gop_tmp->u32TotalFrameNum].u32FrameType = PVR_INDEX_get_frameType(&frame_tmp);
-        gop_tmp->sFrame[gop_tmp->u32TotalFrameNum].u32PTS = frame_tmp.u32PtsMs;
-        memcpy(&(gop_tmp->sFrame[gop_tmp->u32TotalFrameNum].stIndexEntry), &frame_tmp, sizeof(PVR_INDEX_ENTRY_S));
-        gop_tmp->u32TotalFrameNum++;
-
-        if (PVR_INDEX_is_Iframe(&frame_tmp))
-        {
-            gop_tmp->u32FirstFrameNum = s32FrameNumTmp;
-            break;
-        }
-    }
-    
-    memcpy((void *)pPvrGopAttr, (void *)gop_tmp, sizeof(HI_PVR_FETCH_GOP_S));
-    for(j = gop_tmp->u32TotalFrameNum - 1; j >= 0; j--)
-    {
-        memcpy((void *)&(pPvrGopAttr->sFrame[k]),
-               (void *)&(gop_tmp->sFrame[j]),
-               sizeof(HI_PVR_FETCH_FRAME_S));
-        k++;
-    }
-
-    HI_FREE(HI_ID_PVR, gop_tmp);
-    gop_tmp = (HI_PVR_FETCH_GOP_S *)NULL;
     return HI_SUCCESS;
 }
 
@@ -6175,7 +5959,7 @@ HI_S32 PVR_Index_GetPreGOPAttr(PVR_INDEX_HANDLE piIndexHandle,
 /* the following function for get pointer of some filed of structure PVR_INDEX_HANDLE,
 for hi_pvr_smooth_ctrl.c will use these pointer.
 Attention: if the contents of these structure changed, need re-compile hi_pvr_smooth_ctrl.c*/
-PVR_CYC_MGR_S*  PVR_Index_GetCycMgr(PVR_INDEX_HANDLE IndexHandle)
+PVR_CYC_MGR_S* PVR_Index_GetCycMgr(PVR_INDEX_HANDLE IndexHandle)
 {
     if ((PVR_INDEX_HANDLE)NULL == IndexHandle)
     {
@@ -6185,7 +5969,7 @@ PVR_CYC_MGR_S*  PVR_Index_GetCycMgr(PVR_INDEX_HANDLE IndexHandle)
     return (PVR_CYC_MGR_S*)&IndexHandle->stCycMgr;    
 }
 
-PVR_INDEX_INFO_S*  PVR_Index_GetPVRIdxInfo(PVR_INDEX_HANDLE IndexHandle)
+PVR_INDEX_INFO_S* PVR_Index_GetPVRIdxInfo(PVR_INDEX_HANDLE IndexHandle)
 {
     if ((PVR_INDEX_HANDLE)NULL == IndexHandle)
     {
@@ -6205,26 +5989,65 @@ HI_U32 PVR_Index_GetCurReadFrameNum(PVR_INDEX_HANDLE IndexHandle)
     return IndexHandle->u32ReadFrame;   
 }
 
-HI_S32 PVR_Index_SetCurReadFrameNum(PVR_INDEX_HANDLE IndexHandle,HI_U32 u32ReadFrame)
+HI_S32 PVR_Index_SetCurReadFrameNum(PVR_INDEX_HANDLE handle, HI_U32 u32ReadFrame)
 {
-    if ((PVR_INDEX_HANDLE)NULL == IndexHandle)
+    if ((PVR_INDEX_HANDLE)NULL == handle)
     {
         HI_ERR_PVR("NULL pointer error\n");
         return HI_FAILURE;
     }
 
-    IndexHandle->u32ReadFrame = u32ReadFrame;
+    PVR_INDEX_LOCK(&handle->stMutex);
+    handle->u32ReadFrame = u32ReadFrame;
+    if (handle->bIsRec)
+    {
+        if (handle->bRecReachPlay && PVRIndexIsFrameValid(u32ReadFrame, &handle->stCycMgr))
+        {
+            handle->bRecReachPlay = HI_FALSE;
+        }
+    }
+    PVR_INDEX_UNLOCK(&handle->stMutex);
     return HI_SUCCESS;   
 }
 
-HI_S32 PVR_Index_CheckIndexFrmValid(HI_U32 u32IndexFrm, PVR_CYC_MGR_S *pstIndexCycMgr)
+HI_BOOL PVR_Index_CheckIndexFrmValid(HI_U32 u32IndexFrm, PVR_CYC_MGR_S *pstIndexCycMgr)
 {
     return PVRIndexIsFrameValid(u32IndexFrm, pstIndexCycMgr);
 }
 
 HI_VOID PVR_Index_CycMoveReadFrm(PVR_INDEX_HANDLE handle, HI_S32 s32Offset)
 {
+    PVR_INDEX_LOCK(&handle->stMutex);
     PVRIndexCycMoveReadFrame(handle, s32Offset);
+    PVR_INDEX_UNLOCK(&handle->stMutex);
+}
+
+//1--forward direction   0--backward direction
+HI_U32 PVR_Index_CalcFrameDistance(HI_U32 u32Dst, HI_U32 u32Src, HI_U32 u32Direction, PVR_CYC_MGR_S *pstCycMgr)
+{
+    if (pstCycMgr->u32LastFrame == 0)
+    {
+        return 0;
+    }
+
+    if (u32Direction == 1)
+    {
+        return (u32Dst + pstCycMgr->u32LastFrame + 1 - u32Src)%(pstCycMgr->u32LastFrame + 1);
+    }
+    else
+    {
+        return (u32Src + pstCycMgr->u32LastFrame + 1 - u32Dst)%(pstCycMgr->u32LastFrame + 1);
+    }
+}
+
+HI_U32 PVR_Index_GetNextFrameNum(HI_U32 u32FrmNum, PVR_CYC_MGR_S *pstCycMgr)
+{
+    return PVR_IDX_NEXT_POS_IN_CYC(u32FrmNum, (pstCycMgr->u32LastFrame + 1));
+}
+
+HI_U32 PVR_Index_GetPrevFrameNum(HI_U32 u32FrmNum, PVR_CYC_MGR_S *pstCycMgr)
+{
+    return PVR_IDX_PREV_POS_IN_CYC(u32FrmNum, (pstCycMgr->u32LastFrame + 1));
 }
 
 #ifdef __cplusplus

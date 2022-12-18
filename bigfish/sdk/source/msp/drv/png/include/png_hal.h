@@ -572,6 +572,8 @@ HI_VOID PngHalSetErrmode(HI_U32 u32Value);
 
 HI_VOID PngHalSetClock(HI_BOOL bEnable);
 
+HI_S32 PngHalOpen(HI_VOID); 
+
 HI_U32 PngHalGetIrqNum(HI_VOID);
 
 #ifdef __cplusplus

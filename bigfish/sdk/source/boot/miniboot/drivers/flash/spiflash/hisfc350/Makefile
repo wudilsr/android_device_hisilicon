@@ -21,3 +21,4 @@ CFLAGS += -I$(SRCDIR)../
 SRCS-y                     += hisfc350.c
 SRCS-$(CONFIG_ARCH_S40)    += hisfc350_s40.c hisfc350_s40_spi_ids.c
 SRCS-$(CONFIG_ARCH_GODBOX) += hisfc350_godbox.c hisfc350_godbox_ids.c
+SRCS-$(CONFIG_ARCH_HI3716MV310) += hisfc350_hi3716mv310.c hisfc350_hi3716mv310_spi_ids.c

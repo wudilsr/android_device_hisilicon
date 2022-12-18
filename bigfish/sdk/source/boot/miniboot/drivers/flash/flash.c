@@ -46,6 +46,7 @@ struct flash_dev_t {
 static struct flash_dev_t flash_dev[] = {
 	{ "SPIFlash", FT_SPIFLASH, "mtdparts", NULL },
 	{ "NAND",     FT_NAND,     "mtdparts", NULL },
+	{ "SPI_NAND", FT_SNAND,    "mtdparts", NULL },
 	{ "eMMC",     FT_EMMC,     "blkdevparts", NULL },
 	{0},
 };
@@ -114,7 +115,7 @@ void *flash_open_range(uint32 flash, uint64 from, uint64 length)
 {
 	struct flash_ops_t *flash_ops;
 	struct flash_intf_t *flashif;
-	struct flash_dev_t *flash_dev = get_flash_dev(flash);
+	struct flash_dev_t *flash_dev = get_flash_dev((enum flash_type_t)flash);
 
 	if (!flash_dev || !flash_dev->ops) {
 		pr_error("Not support this flash: %s\n");
@@ -149,7 +150,7 @@ void *flash_open_part(uint32 flash, const char *partname)
 	struct flash_intf_t *flashif;
 	struct flash_ops_t *flash_ops;
 	struct flash_info_t *flash_info;
-	struct flash_dev_t *flash_dev = get_flash_dev(flash);
+	struct flash_dev_t *flash_dev = get_flash_dev((enum flash_type_t)flash);
 
 	if (!flash_dev || !flash_dev->ops) {
 		return NULL;
@@ -239,6 +240,7 @@ void flash_show_info(struct flash_info_t *info)
 
 		break;
 	case FT_NAND:
+	case FT_SNAND:
 		pr_tool("Block:%sB ", u32tohstr(info->blocksize, NULL));
 		pr_tool("Chip:%sB*%d ",
 			u64tohstr(info->chipsize, NULL),

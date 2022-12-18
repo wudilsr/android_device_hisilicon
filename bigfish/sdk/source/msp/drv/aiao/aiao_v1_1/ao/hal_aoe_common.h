@@ -144,6 +144,10 @@ typedef struct
     HI_U32  u32BufDataFormat;          /**<I/O, 0, linear pcm, 1, iec61937 */
     HI_U32  u32BufLatencyThdMs;        /* 10 ~ 40 ms */
     HI_BOOL bRbfHwPriority; /* TRUE: high priority */
+
+    HI_BOOL bAddMute; /* Just for cast aop */
+
+	
 } AOE_AOP_OUTBUF_ATTR_S;
 
 

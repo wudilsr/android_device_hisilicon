@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mau9QbsdCwRDp+53WhKWwvOIzJxw6g5obTyMKg8qSc1HUBxjCUUZbcpE8FJXWa3qMN5w
-rpwJQWwrc+a/bK7LztGbNxVOWmtsKl988R49+BghFclb4e2c+86AFr/cg5tr/g==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxUMxdQz3tCTuIIgtfgxTuNEIq8u2Qf+iuotkzXBQo5kDIZ327vjSa+wy/zAQV+9wDOcP
+igli1P3ZSoQX94X8/8dw94Voxxmi5RhWru1eznSJ6oKvqvnqF5KMoKrk9LSy9A==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -301,7 +315,7 @@ HI_S32 VPSS_REG_SetCurTunlAddr(HI_U32 u32AppAddr,REG_FRAMEPOS_E  ePort,HI_U32 u3
 }
 
 
-HI_S32 VPSS_REG_SetCurTunlEn(HI_U32 u32AppAddr,HI_BOOL u32CurTunlEn)
+HI_S32 VPSS_REG_SetCurTunlEn(HI_U32 u32AppAddr, REG_CHANELPOS_E ePort, HI_BOOL u32TunlEn)
 {
     U_VPSS_TUNL_CTRL0  VPSS_TUNL_CTRL0;
     
@@ -309,16 +323,42 @@ HI_S32 VPSS_REG_SetCurTunlEn(HI_U32 u32AppAddr,HI_BOOL u32CurTunlEn)
     
     pstReg = (VPSS_REG_S*)u32AppAddr;
 
-    VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
-    VPSS_TUNL_CTRL0.bits.cur_tunl_en = u32CurTunlEn;    
-    VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
+    switch(ePort)
+    {  
+        case CUR_CHANEL:
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.read_tunl_sel = 0;  
+			VPSS_TUNL_CTRL0.bits.read_tunl_en = u32TunlEn;
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
+            break;
+		case NEXT1_CHANEL:
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.read_tunl_sel = 1;  
+			VPSS_TUNL_CTRL0.bits.read_tunl_en = u32TunlEn;
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
+            break;
+		case NEXT2_CHANEL:
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.read_tunl_sel = 2;  
+			VPSS_TUNL_CTRL0.bits.read_tunl_en = u32TunlEn;
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
+            break;
+		case REF_CHANEL:
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.read_tunl_sel = 3;  
+			VPSS_TUNL_CTRL0.bits.read_tunl_en = u32TunlEn;
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
+            break;
+       default:
+            VPSS_FATAL("\nReg Error\n");
+    }
 
     return HI_SUCCESS;
 }
 
 HI_S32 VPSS_REG_SetCurTunlInterval(HI_U32 u32AppAddr,REG_FRAMEPOS_E ePort,HI_S32  s32CurTunlInterval)
 {
-    U_VPSS_TUNL_CTRL1  VPSS_TUNL_CTRL1;
+    U_VPSS_TUNL_CTRL0  VPSS_TUNL_CTRL0;
 
     VPSS_REG_S *pstReg;
     
@@ -330,9 +370,9 @@ HI_S32 VPSS_REG_SetCurTunlInterval(HI_U32 u32AppAddr,REG_FRAMEPOS_E ePort,HI_S32
     switch(ePort)
     {  
         case CUR_FRAME:
-            VPSS_TUNL_CTRL1.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL1.u32));
-            VPSS_TUNL_CTRL1.bits.cur_tunl_rd_interval = s32CurTunlInterval;    
-            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL1.u32), VPSS_TUNL_CTRL1.u32); 
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.read_tunl_rd_interval = s32CurTunlInterval;    
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
             break;
        default:
             VPSS_FATAL("\nReg Error\n");
@@ -459,6 +499,7 @@ HI_S32 VPSS_REG_SetTunlFinishLine(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_S32
 
 HI_S32 VPSS_REG_SetTunlMode(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, REG_TUNLPOS_E  s32TunlMode)
 {
+    U_VPSS_TUNL_CTRL0  VPSS_TUNL_CTRL0;
     U_VPSS_TUNL_CTRL1  VPSS_TUNL_CTRL1;
 
     VPSS_REG_S *pstReg;
@@ -468,9 +509,9 @@ HI_S32 VPSS_REG_SetTunlMode(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, REG_TUNLPOS
     switch(ePort)
     {  
         case VPSS_REG_HD:
-            VPSS_TUNL_CTRL1.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL1.u32));
-            VPSS_TUNL_CTRL1.bits.vhd0_tunl_mode = s32TunlMode;    
-            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL1.u32), VPSS_TUNL_CTRL1.u32); 
+            VPSS_TUNL_CTRL0.u32 = VPSS_REG_RegRead((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32));
+            VPSS_TUNL_CTRL0.bits.vhd0_tunl_mode = s32TunlMode;    
+            VPSS_REG_RegWrite((volatile HI_U32*)&(pstReg->VPSS_TUNL_CTRL0.u32), VPSS_TUNL_CTRL0.u32); 
             break;
             /*
         case VPSS_REG_STR:
@@ -651,7 +692,7 @@ HI_S32 VPSS_REG_SetPortFlipEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL b
 
 
 
-HI_S32 VPSS_REG_SetPortPixBitW(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, REG_PIX_BITW_E ePixBitW)
+HI_S32 VPSS_REG_SetPortPixBitW(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_DRV_PIXEL_BITWIDTH_E ePixBitW)
 {
 
 	U_VPSS_VHD0CTRL VPSS_VHD0CTRL;
@@ -2236,7 +2277,7 @@ HI_S32 VPSS_REG_SetUVConvertEn(HI_U32 u32AppAddr,HI_U32 u32EnUV)
     return HI_SUCCESS;
 }
 
-HI_S32 VPSS_REG_SetPixBitW(HI_U32 u32AppAddr,REG_PIX_BITW_E ePixBitW)
+HI_S32 VPSS_REG_SetPixBitW(HI_U32 u32AppAddr,HI_DRV_PIXEL_BITWIDTH_E ePixBitW)
 {
     U_VPSS_CTRL2 VPSS_CTRL2;
 

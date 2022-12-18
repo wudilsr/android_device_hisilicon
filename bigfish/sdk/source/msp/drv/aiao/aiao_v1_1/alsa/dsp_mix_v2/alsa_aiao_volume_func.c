@@ -41,6 +41,7 @@
 #define HI_VOLUME_I2S  4
 
 #define HI_VOLUME_CAPTURE  5
+#define HI_VOLUME_SWITCH  6
 
 
 struct hiaudio_sw_volume *hswvol;	//global volune 
@@ -52,13 +53,13 @@ struct hisoc_mixer_control {
     int max, min;
 };
 
-int snd_soc_info_hisivolsw(struct snd_kcontrol *kcontrol,
-	struct snd_ctl_elem_info *uinfo)
+int snd_soc_info_hisivolsw(struct snd_kcontrol* kcontrol,
+                           struct snd_ctl_elem_info* uinfo)
 {
-    struct hisoc_mixer_control *mc = (struct hisoc_mixer_control *)kcontrol->private_value;
+    struct hisoc_mixer_control* mc = (struct hisoc_mixer_control*)kcontrol->private_value;
 
     ATRP();
-	
+
     uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
     uinfo->count = 2;       //default stereo
     uinfo->value.integer.min = mc->min;
@@ -66,10 +67,10 @@ int snd_soc_info_hisivolsw(struct snd_kcontrol *kcontrol,
     return 0;
 }
 
-int snd_soc_get_hisivolsw(struct snd_kcontrol *kcontrol,
-	struct snd_ctl_elem_value *ucontrol)
+int snd_soc_get_hisivolsw(struct snd_kcontrol* kcontrol,
+                          struct snd_ctl_elem_value* ucontrol)
 {
-    struct hisoc_mixer_control *mc = (struct hisoc_mixer_control *)kcontrol->private_value;
+    struct hisoc_mixer_control* mc = (struct hisoc_mixer_control*)kcontrol->private_value;
 
     ATRP();
 
@@ -107,10 +108,10 @@ int snd_soc_get_hisivolsw(struct snd_kcontrol *kcontrol,
     return 0;
 }
 
-int snd_soc_put_hisivolsw(struct snd_kcontrol *kcontrol,
-	struct snd_ctl_elem_value *ucontrol)
+int snd_soc_put_hisivolsw(struct snd_kcontrol* kcontrol,
+                          struct snd_ctl_elem_value* ucontrol)
 {
-    struct hisoc_mixer_control *mc =	(struct hisoc_mixer_control *)kcontrol->private_value;
+    struct hisoc_mixer_control* mc =    (struct hisoc_mixer_control*)kcontrol->private_value;
     int err;
     unsigned int val;
     HI_UNF_SND_GAIN_ATTR_S stGain;
@@ -122,43 +123,45 @@ int snd_soc_put_hisivolsw(struct snd_kcontrol *kcontrol,
     stGain.bLinearMode = HI_TRUE;
     stGain.s32Gain = val;
 
-    switch(mc->index)
+    switch (mc->index)
     {
         case HI_VOLUME_ALL:
             //ATRC("\nput  HI_VOLUME_ALL %d", stGain.s32Gain);
             err = aoe_set_volume(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_ALL, stGain);
-            if(!err)
+            if (!err)
+            {
                 hswvol->v_all = stGain.s32Gain;
                 hswvol->v_hdmi = stGain.s32Gain;
                 hswvol->v_spdif = stGain.s32Gain;
                 hswvol->v_adac = stGain.s32Gain;
+            }
             break;
         case HI_VOLUME_HDMI:
             //ATRC("\nput  HI_VOLUME_HDMI %d", stGain.s32Gain);
             err = aoe_set_volume(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_HDMI0, stGain);
-            if(!err)
+            if (!err)
                 hswvol->v_hdmi = stGain.s32Gain;
             break;
 
         case HI_VOLUME_SPDIF:
             //ATRC("\nput  HI_VOLUME_SPDIF %d", stGain.s32Gain);
             err = aoe_set_volume(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_SPDIF0, stGain);
-            if(!err)
+            if (!err)
                 hswvol->v_spdif = stGain.s32Gain;
             break;
-            
+
         case HI_VOLUME_ADAC:
             //ATRC("\nput  HI_VOLUME_ADAC %d", stGain.s32Gain);
             err = aoe_set_volume(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_DAC0, stGain);
-            if(!err)
-                hswvol->v_adac= stGain.s32Gain;
+            if (!err)
+                hswvol->v_adac = stGain.s32Gain;
             break;
         case HI_VOLUME_CAPTURE:
             //ATRC("\nput  HI_VOLUME_CAPTURE %d", stGain.s32Gain);
-            hswvol->v_capture= stGain.s32Gain;
+            hswvol->v_capture = stGain.s32Gain;
             err = 0;
             break;
-        default : 
+        default :
             err = -1;
             break;
     }
@@ -166,38 +169,86 @@ int snd_soc_put_hisivolsw(struct snd_kcontrol *kcontrol,
 }
 
 
+int snd_soc_info_hisi_switch(struct snd_kcontrol* kcontrol,
+                             struct snd_ctl_elem_info* uinfo)
+{
+    ATRP();
+    uinfo->type = SNDRV_CTL_ELEM_TYPE_BOOLEAN;
+    uinfo->count = 1;
+    uinfo->value.integer.min = 0;
+    uinfo->value.integer.max = 1;
+    return 0;
+}
+
+int snd_soc_get_hisi_switch(struct snd_kcontrol* kcontrol,
+                            struct snd_ctl_elem_value* ucontrol)
+{
+    ucontrol->value.integer.value[0] = hswvol->v_mute;
+    return 0;
+}
+
+int snd_soc_put_hisi_switch(struct snd_kcontrol* kcontrol,
+                            struct snd_ctl_elem_value* ucontrol)
+{
+    unsigned int val;
+    int ret;
+
+    val = ucontrol->value.integer.value[0];
+    ret = aoe_set_mute(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_ALL, (HI_BOOL)val);
+    if (HI_SUCCESS == ret)
+    {
+        hswvol->v_mute = val;
+    }
+    //ATRC("snd_soc_put_hisi_switch val = %d\n", val);
+    return ret;
+}
+
 #define HISOC_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin) \
-	((unsigned long)&(struct hisoc_mixer_control) \
-	{.index = xindex, .volume_all = xall, .volume_hdmi = xhdmi, \
-	.volume_spdif = xspdif, .volume_adac = xadac, .max = xmax, \
-	.min = xmin})
+    ((unsigned long)&(struct hisoc_mixer_control) \
+    {.index = xindex, .volume_all = xall, .volume_hdmi = xhdmi, \
+    .volume_spdif = xspdif, .volume_adac = xadac, .max = xmax, \
+    .min = xmin})
 
 #define HISOC_SINGLE_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin) \
-	HISOC_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin)
+    HISOC_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin)
 
 #define HISOC_SINGLE(xname, xindex, xall, xhdmi, xspdif, xadac,xmax, xmin) \
-{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
-	.info = snd_soc_info_hisivolsw, .get = snd_soc_get_hisivolsw,\
-	.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,\
-	.put = snd_soc_put_hisivolsw, \
-	.private_value =  HISOC_SINGLE_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin) }
+{   .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+    .info = snd_soc_info_hisivolsw, .get = snd_soc_get_hisivolsw,\
+    .access = SNDRV_CTL_ELEM_ACCESS_READWRITE,\
+    .put = snd_soc_put_hisivolsw, \
+    .private_value =  HISOC_SINGLE_VALUE(xindex, xall, xhdmi, xspdif, xadac,xmax, xmin)\
+}
 
-static const struct snd_kcontrol_new hisi_snd_controls[] = {
+#define HISOC_SINGLE_SWITCH(xname, xindex) \
+{ \
+    .iface = SNDRV_CTL_ELEM_IFACE_MIXER, \
+    .name = xname, \
+    .info = snd_soc_info_hisi_switch, \
+    .get = snd_soc_get_hisi_switch, \
+    .access = SNDRV_CTL_ELEM_ACCESS_READWRITE, \
+    .put = snd_soc_put_hisi_switch, \
+}
+
+static const struct snd_kcontrol_new hisi_snd_controls[] =
+{
     HISOC_SINGLE("PGA Capture Volume", HI_VOLUME_CAPTURE, 99, 99, 99, 99, 99, 0),  //"PGA" is matched for Android code
     HISOC_SINGLE("Master Playback Volume", HI_VOLUME_ALL , 99, 99, 99, 99, 99, 0),
     HISOC_SINGLE("Hdmi Playback Volume", HI_VOLUME_HDMI , 99, 99, 99, 99, 99, 0),
     HISOC_SINGLE("Spdif Playback Volume", HI_VOLUME_SPDIF , 99, 99, 99, 99, 99, 0),
     HISOC_SINGLE("Adac Playback Volume", HI_VOLUME_ADAC , 99, 99, 99, 99, 99, 0),
+    HISOC_SINGLE_SWITCH("ALL Playback Switch", HI_VOLUME_SWITCH)
 };
 
 int hiaudio_volume_register(struct snd_soc_codec *codec)
 {
     hswvol = kzalloc(sizeof(struct hiaudio_sw_volume), GFP_KERNEL);
-    hswvol->v_all = 30;	//default value 
+    hswvol->v_all = 30;    //default value 
     hswvol->v_hdmi = 30;
     hswvol->v_spdif = 30;
     hswvol->v_adac = 30;
     hswvol->v_capture = 30;
+    hswvol->v_mute = 0;
     //hswvol->v_i2s = 99;
     return snd_soc_add_codec_controls(codec, hisi_snd_controls, ARRAY_SIZE(hisi_snd_controls));
 }

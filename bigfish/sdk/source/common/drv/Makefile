@@ -34,8 +34,7 @@ EXTRA_CFLAGS += -I$(COMMON_DIR)/include \
                 -I$(MSP_DIR)/drv/include \
                 -I$(MSP_DIR)/api/include \
                 -I$(MSP_DIR)/api/tde/include \
-                -I$(MSP_DIR)/include \
-                -I$(LINUX_DIR)/include/uapi/linux
+                -I$(MSP_DIR)/include
 
 ifdef CFG_HI_LOG_LEVEL
 EXTRA_CFLAGS += -DCFG_HI_LOG_LEVEL=$(CFG_HI_LOG_LEVEL)

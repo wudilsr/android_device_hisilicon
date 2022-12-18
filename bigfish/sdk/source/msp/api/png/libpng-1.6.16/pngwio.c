@@ -38,7 +38,11 @@ png_write_data(png_structrp png_ptr, png_const_bytep data, png_size_t length)
          length);
 
    else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Call to NULL write function");
+#endif
 }
 
 #ifdef PNG_STDIO_SUPPORTED
@@ -58,7 +62,11 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
    check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
 
    if (check != length)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Write Error");
+#endif
 }
 #endif
 
@@ -158,10 +166,13 @@ png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
    if (png_ptr->read_data_fn != NULL)
    {
       png_ptr->read_data_fn = NULL;
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr,
           "Can't set both read_data_fn and write_data_fn in the"
           " same structure");
+#endif
    }
 #endif
 }

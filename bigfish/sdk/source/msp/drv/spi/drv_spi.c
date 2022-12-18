@@ -97,7 +97,7 @@
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi37968cv100)
 #define SPI0_CSGPIO_NO (1*8+6)
 #define SPI1_CSGPIO_NO (2*8+2)
-#elif defined(CHIP_TYPE_hi3798cv200_a)
+#elif defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410)|| defined(CHIP_TYPE_hi3716mv420)
 #define SPI0_CSGPIO_NO (1*8+4)
 #define SPI1_CSGPIO_NO (13*8+5)
 #else
@@ -158,6 +158,8 @@ HI_VOID HI_DRV_SPI_SetCs_Gpio(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para2 error!\n");
         return;
@@ -198,6 +200,8 @@ HI_VOID HI_DRV_SPI_SetCs_Level(HI_U8 devId,HI_U32 Level)
 #if     defined(CHIP_TYPE_hi3718mv100)  \
      || defined(CHIP_TYPE_hi3719mv100)  \
      || defined(CHIP_TYPE_hi3798mv100)  \
+     || defined(CHIP_TYPE_hi3716mv410)   \
+     || defined(CHIP_TYPE_hi3716mv420)	\
      || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para2 error!\n");
         return;
@@ -250,6 +254,8 @@ HI_VOID HI_DRV_SPI_Reset(HI_U8 set,HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+     || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para2 error!\n");
         return;
@@ -300,6 +306,8 @@ HI_VOID HI_DRV_SPI_CLKEnable(HI_S32 enable,HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
 
         HI_ERR_SPI("para2 error!\n");
@@ -339,6 +347,8 @@ HI_VOID HI_DRV_SPI_Enable(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
 
         HI_ERR_SPI("para error!\n");
@@ -376,6 +386,8 @@ HI_VOID HI_DRV_SPI_DisEnable(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
 
         HI_ERR_SPI("para error!\n");
@@ -419,6 +431,8 @@ HI_VOID HI_DRV_SPI_SetLoop(HI_U8 devId,HI_U8 set)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para error!\n");
         return;
@@ -455,6 +469,8 @@ HI_VOID HI_DRV_SPI_SetFIFO(HI_U8 devId,HI_U8 intsize)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para error!\n");
         return;
@@ -530,6 +546,8 @@ HI_S32 HI_DRV_SPI_SetFrom(HI_U8 devId,HI_U8 framemode,HI_U8 spo,HI_U8 sph,HI_U8 
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_FAILURE;
@@ -592,6 +610,8 @@ HI_S32 HI_DRV_SPI_GetFrom(HI_U8 devId,HI_U8 *framemode,HI_U8 *spo,HI_U8 *sph,HI_
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_FAILURE;
@@ -643,6 +663,8 @@ HI_S32 HI_DRV_SPI_SetClk(HI_U8 devId,HI_U8 scr,HI_U8 cpsdvsr)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_FAILURE;
@@ -687,6 +709,8 @@ HI_VOID HI_DRV_SPI_SetBlend(HI_U8 devId,HI_U8 bBigEnd)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return ;
@@ -724,6 +748,8 @@ HI_U8 HI_DRV_SPI_GetBlend(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return 0;
@@ -758,6 +784,8 @@ HI_VOID HI_DRV_SPI_SetItr(HI_U8 devId,HI_U8 regvalue)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return;
@@ -789,6 +817,8 @@ HI_VOID HI_DRV_SPI_ClearItr(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para error!\n");
         return;
@@ -824,6 +854,8 @@ HI_U32 HI_DRV_SPI_BusyState(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para error!\n");
         return 2;
@@ -855,6 +887,8 @@ HI_U32 HI_DRV_SPI_FifoEmpty(HI_U8 devId,HI_S32 bSend)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return 2;
@@ -928,6 +962,8 @@ HI_S32 HI_DRV_SPI_WriteQuery(HI_U8 devId,HI_U8 *Send, HI_U32 SendCnt)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1008,6 +1044,8 @@ HI_S32 HI_DRV_SPI_WriteIsr(HI_U8 devId,HI_U8 *Send, HI_U32 SendCnt)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1098,6 +1136,8 @@ HI_S32 HI_DRV_SPI_ReadQuery(HI_U8 devId, HI_U8 *Read, HI_U32 ReadCnt)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1188,6 +1228,8 @@ HI_S32 HI_DRV_SPI_ReadIsr(HI_U8 devId, HI_U8 *Read, HI_U32 ReadCnt)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1309,6 +1351,8 @@ HI_S32 HI_DRV_SPI_ReadEx(HI_U8 devId, HI_U8 *Send, HI_U32 SendCnt, HI_U8 *Read, 
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1453,6 +1497,8 @@ HI_S32 HI_DRV_SPI_ReadEx_Isr(HI_U8 devId, HI_U8 *Send, HI_U32 SendCnt, HI_U8 *Re
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para1 error!\n");
         return HI_ERR_SPI_INVALID_PARA;
@@ -1567,6 +1613,8 @@ HI_S32 HI_DRV_SPI_Open(HI_U8 devId)
 #if    defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3796mv100)
         HI_ERR_SPI("para error!\n");
         return HI_FAILURE;
@@ -1588,6 +1636,7 @@ HI_S32 HI_DRV_SPI_Open(HI_U8 devId)
 
 HI_S32 HI_DRV_SPI_Close(HI_U8 devId)
 {
+	HI_DRV_SPI_CLKEnable(0,devId);
 #ifdef USE_SPI_INTERRUPT
     if(devId==0)
     free_irq(SPI0_IRQ, HI_NULL);

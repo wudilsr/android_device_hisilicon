@@ -114,6 +114,8 @@ HI_S32   JPGBUF_Read(const JPG_CYCLEBUF_S* pstCB, HI_VOID* pVirtDst, HI_U32 u32R
                         stData.pAddr[1], u32RdLen - stData.u32Len[0]);
         }   
     }
+#if 0
+	/** deal with codecc **/
     else  /*(u32RdLen == 2) */
     {
         HI_U8*  pu8Src = (HI_U8*)stData.pAddr[0];
@@ -131,7 +133,7 @@ HI_S32   JPGBUF_Read(const JPG_CYCLEBUF_S* pstCB, HI_VOID* pVirtDst, HI_U32 u32R
         
         *pu8Dst = *pu8Src;
     }
-
+#endif
     return HI_SUCCESS;
 }
 

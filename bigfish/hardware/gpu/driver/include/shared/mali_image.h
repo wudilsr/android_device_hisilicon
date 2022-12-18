@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2009-2014 ARM Limited
+ * (C) COPYRIGHT 2009-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -66,7 +66,7 @@
 
 #endif
 
-/* fix enum names and wrap the defines in an ifdef */
+
 /* EGL_COLORSPACE additional values */
 #define EGL_COLORSPACE_BT_601  0x30EC
 #define EGL_COLORSPACE_BT_709  0x30ED
@@ -144,7 +144,7 @@ typedef struct yuv_format_info
 	u32 format;
 	u32 planes_count;
 	/* For some formats like UYVY, U channels can't be fetched to channel #2 anyway.
-         * So workaround is we swap both UV planes and UV uniforms used by PP. */
+	     * So workaround is we swap both UV planes and UV uniforms used by PP. */
 	mali_bool uv_plane_swap;
 	yuv_format_plane_info plane[MALI_IMAGE_MAX_PLANES];
 } yuv_format_info;

@@ -79,7 +79,8 @@ typedef unsigned   USIGN;
 #define  VFMW_CHIP_TYPE_Hi3716CV200ES  8
 #define  VFMW_CHIP_TYPE_Hi3716CV200    9
 #define  VFMW_CHIP_TYPE_Hi3798MV100    10
-#define  VFMW_CHIP_TYPE_Hi3798CV200 11
+#define  VFMW_CHIP_TYPE_Hi3798CV200    11
+#define  VFMW_CHIP_TYPE_Hi3716MV410    12
 
 /* BVT */
 #define  VFMW_CHIP_TYPE_Hi3531         50
@@ -366,6 +367,7 @@ typedef enum
     EVNT_NEED_ARRANGE,//l00273086
     EVNT_UNSUPPORT_SPEC,//y00226912
     EVNT_FAKE_FRAME,
+	EVNT_VIDSTD_ERROR,//l00225186
 } VDEC_EVNT_TYPE_E;
 
 typedef enum
@@ -384,6 +386,7 @@ typedef enum
 typedef enum
 {
     SPEC_BIT_DEPTH,    // unsupport bit depth
+    SPEC_OVER_CAP,     //Over Capability of Reserve Memory
     SPEC_BUTT
 } UNSUPPORT_SPEC_E;
 
@@ -464,6 +467,8 @@ typedef struct hiCHAN_CFG_S
     SINT32           s32MaxRawPacketNum;
     SINT32           s32MaxRawPacketSize;
     SINT32           s32ExtraFrameStoreNum;
+	SINT32           s32MaxWidth;
+	SINT32           s32MaxHeight;/*if the stream to be decoded w*h > s32MaxWidth*s32MaxHeight vfmw will stop syntax stream*/
 } VDEC_CHAN_CFG_S;
 
 //add by z00222166, 2012.11.20
@@ -525,6 +530,7 @@ typedef struct
 /* BEGIN: Added by y62639, 2010/8/19 */
 typedef struct
 {
+	UINT8  bAvsPlus;
     SINT32 IsProgressiveSeq;
     SINT32 IsProgressiveFrm;
     SINT32 RealFrmRate;
@@ -682,6 +688,7 @@ typedef struct
     SINT32      compress_luma_offset;
     SINT32      compress_chroma_offset;
 #endif
+	UINT32      is_SecureFrame;                	/*add for tvp support*/
 
     UINT32      is_1Dcompress;
     FRAME_PACKING_TYPE_E  eFramePackingType;
@@ -859,6 +866,7 @@ typedef struct hiMEM_DESC_S
     SINT32  PhyAddr;
     VOID*   VirAddr;
     SINT32  Length;
+    UINT32  IsSecMem;
 } MEM_DESC_S;
 
 /* detailed channel memory desc. */
@@ -913,6 +921,7 @@ typedef struct
     UINT32 u32CfgFrameNum;//l00273086
     UINT32 u32NeedMMZ;//l00273086
     UINT32 u32MaxMemUse;//l00273086
+    SINT32 s32IsSecMode;                       /*add sec mode*/    
 } VDEC_CHAN_OPTION_S;
 
 /* user defined channel reset option*/
@@ -987,6 +996,11 @@ typedef struct FSP_FRAME_INTF_S
  ***********************************************************************/
 VOID   VDEC_OpenModule(VOID);
 VOID   VDEC_ExitModule(VOID);
+
+VOID VDM_CloseHardware(SINT32 VdhId);
+VOID DSP_CloseHardware(SINT32 VdhId);
+
+SINT32 BPD_CloseHardware(VOID);
 SINT32 VDEC_Init(SINT32 (*VdecCallback)(SINT32 ChanID, SINT32 eEventID, VOID *pArgs));
 SINT32 VDEC_InitWithOperation(VDEC_OPERATION_S *pArgs);
 SINT32 VDEC_Control(SINT32 ChanID, VDEC_CID_E eCmdID, VOID *pArgs);

@@ -262,7 +262,8 @@ static int ov_create_win(window_t* w)
 {
     HI_S32 ret;
     DisplayClient dispClient;
-    int resolution = 1080;
+    int fbWidth = 0;
+    int fbHeight = 0;
     int aspectRate = 0;
     char buffer[PROP_VALUE_MAX];
 
@@ -299,17 +300,12 @@ static int ov_create_win(window_t* w)
         ALOGE("create sync time line failed");
     }
 #endif
+
+    dispClient.GetVirtScreenSize(&fbWidth, &fbHeight);
+
     //init attr for aspect rate convertion
-    memset(buffer, 0, PROP_VALUE_MAX);
-    property_get("persist.sys.resolution", buffer, "1080");
-    resolution = atoi(buffer);
-    if(resolution == 1080) {
-        w->stRatio.stScreen.s32Width = 1920;
-        w->stRatio.stScreen.s32Height = 1080;
-    } else {
-        w->stRatio.stScreen.s32Width = 1280;
-        w->stRatio.stScreen.s32Height = 720;
-    }
+    w->stRatio.stScreen.s32Width = fbWidth;
+    w->stRatio.stScreen.s32Height = fbHeight;
     w->stRatio.stScreen.s32X = 0;
     w->stRatio.stScreen.s32Y = 0;
 
@@ -493,7 +489,7 @@ static int ov_display_frame(window_t* w, frame_t* frame, int* releaseFence)
             ALOGE("queue frame failed");
             return -1;
         }
-        w->curFrame.u32FrameIndex = w->frameIndex++;
+        //w->curFrame.u32FrameIndex = w->frameIndex++;
         close(fence_fd);
         fence_fd = -1;
         w->u32RepeatCnt--;
@@ -798,6 +794,7 @@ int queueBuffer(struct overlay_device_t const* module,
     ov_lock_win(ov->window + index);
     if (ov_display_frame(ov->window + index, &frame, releaseFence) < 0) {
         ALOGE("Queue, buffer 0x%lx failed", hnd->ion_phy_addr);
+        ov_unlock_win(ov->window + index);
         return -1;
     }
     idx.frameIndex = (int)ov->window[index].curFrame.u32FrameIndex;

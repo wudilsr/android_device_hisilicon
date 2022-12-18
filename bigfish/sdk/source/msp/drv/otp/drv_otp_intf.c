@@ -599,7 +599,7 @@ HI_S32 OTP_DRV_ModInit(HI_VOID)
     stProcFunc.fnWrite  = OTP_ProcWrite;
     HI_DRV_PROC_AddModule(HI_MOD_OTP, &stProcFunc, NULL);
 
-#ifndef CHIP_TYPE_hi3798cv200_a
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
     (HI_VOID)DRV_OTP_DieID_Check();
 #endif
 

@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2007-2010, 2013-2014 ARM Limited
+ * (C) COPYRIGHT 2007-2010, 2013, 2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -27,11 +27,7 @@ enum mali200_counter_ids                /* NB HW codes below, not the enum value
 	CID_M200_TILE_WRITEBACK_WRITES                                ,
 	CID_M200_STORE_UNIT_WRITES                                    , /* HW: 10 */
 	CID_M200_RESERVED_11                                          ,
-#if defined(USING_MALI200)
-	CID_M200_PALETTE_CACHE_READS                                  ,
-#else
 	CID_M200_PALETTE_CACHE_READS_REMOVED                          ,
-#endif
 	CID_M200_TEXTURE_CACHE_UNCOMPRESSED_READS                     ,
 	CID_M200_POLYGON_LIST_READS                                   ,
 	CID_M200_RSW_READS                                            ,
@@ -41,11 +37,7 @@ enum mali200_counter_ids                /* NB HW codes below, not the enum value
 	CID_M200_VARYING_READS                                        ,
 	CID_M200_TEXTURE_DESCRIPTORS_READS                            , /*  HW: 20 */
 	CID_M200_TEXTURE_DESCRIPTORS_REMAPPING_READS                  ,
-#if defined(USING_MALI200)
-	CID_M200_TEXTURE_CACHE_COMPRESSED_READS                       ,
-#else
 	CID_M200_TEXTURE_CACHE_COMPRESSED_READS_REMOVED               ,
-#endif
 	CID_M200_LOAD_UNIT_READS                                      ,
 	CID_M200_POLYGON_COUNT                                        ,
 	CID_M200_PIXEL_RECTANGLE_COUNT                                ,
@@ -79,13 +71,8 @@ enum mali200_counter_ids                /* NB HW codes below, not the enum value
 	CID_M200_TEXTURE_CACHE_HIT_COUNT                              ,
 	CID_M200_TEXTURE_CACHE_MISS_COUNT                             ,
 	CID_M200_TEXTURE_CACHE_CONFLICT_MISS_COUNT                    ,
-#if defined(USING_MALI200)
-	CID_M200_PALETTE_CACHE_HIT_COUNT                              ,
-	CID_M200_PALETTE_CACHE_MISS_COUNT                             ,
-#else
 	CID_M400_COMPRESSED_TEXTURE_CACHE_HIT_COUNT                   ,
 	CID_M400_COMPRESSED_TEXTURE_CACHE_MISS_COUNT                  ,
-#endif
 	CID_M200_LOAD_STORE_CACHE_HIT_COUNT                           ,
 	CID_M200_LOAD_STORE_CACHE_MISS_COUNT                          ,
 	CID_M200_PROGRAM_CACHE_HIT_COUNT                              , /* HW: 60 */

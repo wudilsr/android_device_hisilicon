@@ -136,7 +136,7 @@ HI_VOID	jpeg_set_dqt(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
             		 99, 99, 99, 99, 99, 99, 99, 99
         		};
 
-        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
         
 		if(HI_FALSE == pstImgInfo->QuantTbl[0].bHasQuantTbl)
 		{
@@ -228,7 +228,7 @@ static HI_S32 jpeg_table_dc(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 		HI_U32 hdc_tab[12]                 = {0};
         
 		HI_U8 *pTmp  = (HI_U8*)gs_u8DefaultDCTable;
-        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
 
 		if ((HI_FALSE == pstImgInfo->DcHuffTbl[0].bHasHuffTbl) || (HI_TRUE == pstImgInfo->DcHuffTbl[2].bHasHuffTbl))
 		{
@@ -356,7 +356,7 @@ static HI_VOID jpeg_table_ac(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 		
                
 		HI_U8 *pTmp  = (HI_U8*)gs_u8DefaultACTable;
-        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+        IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
         
 		if((HI_FALSE == pstImgInfo->AcHuffTbl[0].bHasHuffTbl) || (HI_TRUE == pstImgInfo->AcHuffTbl[2].bHasHuffTbl))
 		{
@@ -473,6 +473,11 @@ static HI_VOID jpeg_table_ac(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 HI_S32 jpeg_set_dht(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 {
     HI_S32 s32Ret = HI_SUCCESS;
+
+	memset(&gs_huffcode[0][0],0,sizeof(gs_huffcode));
+    memset(gs_huff_ptr,0,sizeof(gs_huff_ptr));
+    memset(gs_hac_symbol_tab,0,sizeof(gs_hac_symbol_tab));
+    
     s32Ret = jpeg_table_dc(pstOutMsg);
 	if(HI_SUCCESS != s32Ret)
     {

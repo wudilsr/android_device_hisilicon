@@ -12,6 +12,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.hisilicon.intent.action.RESET_BASEPARAM" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE_IMMEDIATE"/>
             </intent-filter>
         </receiver>
 

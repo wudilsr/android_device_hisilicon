@@ -156,6 +156,8 @@ typedef enum {
  * Option constants for bizarre disfunctionality and real
  * features.
  */
+/* Chip can not auto increment pages */
+#define NAND_NO_AUTOINCR	0x00000001
 /* Buswidth is 16 bit */
 #define NAND_BUSWIDTH_16	0x00000002
 /* Chip has cache program function */
@@ -563,6 +565,8 @@ struct nand_chip {
 #define NAND_MFR_MACRONIX	0xc2
 #define NAND_MFR_EON		0x92
 #define NAND_MFR_GIGA		0xc8
+#define NAND_MFR_GD		0xc8
+#define NAND_MFR_ESMT		0xC8
 #define NAND_MFR_WINBOND	0xef
 
 /* The maximum expected count of bytes in the NAND ID sequence */

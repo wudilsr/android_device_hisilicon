@@ -18,43 +18,6 @@ extern "C"{
 #endif  /* __cplusplus */
 #endif  /* __cplusplus */
 
-/*******************************************************************************
- * Function:        HI_JPG_Open
- * Description:     打开JPEG硬件解码器
- * Input:           无
- * Output:          无
- * Return:          HI_SUCCESS:    成功
- *                  HI_FAILURE     系统调用错误
- * Others: 
-*******************************************************************************/
-HI_S32 HI_JPG_Open(HI_VOID);
-
-/*******************************************************************************
- * Function:        HI_JPG_Close
- * Description:     关闭JPEG硬件解码器
- * Input:           无
- * Output:          HI_SUCCESS    成功
- *                  HI_FAILURE    系统错误
- *                    
- * Return:          无
- * Others:    
-*******************************************************************************/
-HI_S32 HI_JPG_Close(HI_VOID);
-
-/*******************************************************************************
- * Function:        JPGDRV_GetDevice
- * Description:     获取JPG硬件解码设备
- * Data Accessed:   
- * Data Updated:  
- * Input:           无
- * Output:          无
- * Return:          HI_SUCCESS             成功
- *                  HI_ERR_JPG_DEV_NOOPEN  设备未开启
- *                  HI_ERR_JPG_DEC_BUSY    设备忙
- *                  HI_FAILURE             系统错误
- * Others:       
-*******************************************************************************/
-HI_S32 JPGDRV_GetDevice(HI_VOID);
 
 /*******************************************************************************
  * Function:        JPGDRV_ReleaseDevice
@@ -82,7 +45,7 @@ HI_S32 JPGDRV_ReleaseDevice(HI_VOID);
  *                  HI_FAILURE             系统错误
  * Others:       
 *******************************************************************************/
-HI_S32 JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID **pVhbRegPtr);
+HI_VOID JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID **pVhbRegPtr);
 
 /*******************************************************************************
  * Function:        JPGDRV_GetIntStatus
@@ -97,7 +60,7 @@ HI_S32 JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID *
  *                  HI_FAILURE             系统错误
  * Others:       
 *******************************************************************************/
-HI_S32 JPGDRV_GetIntStatus(JPG_INTTYPE_E *pIntType, HI_U32 TimeOut);
+HI_VOID JPGDRV_GetIntStatus(JPG_INTTYPE_E *pIntType, HI_U32 TimeOut);
 
 #ifdef __cplusplus
 #if __cplusplus

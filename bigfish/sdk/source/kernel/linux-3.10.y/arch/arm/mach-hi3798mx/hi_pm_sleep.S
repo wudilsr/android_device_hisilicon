@@ -321,7 +321,7 @@ enable_mcu:
 	ldr	r2, [r1]
 	orr	r2, #0x1
 	str	r2, [r1]
-	ldr	r1, =IO_ADDRESS(0xf840e520)
+	ldr	r1, =IO_ADDRESS(0xf8407520)
 	ldr	r2, =0x12345678
 	str	r2, [r1]
 

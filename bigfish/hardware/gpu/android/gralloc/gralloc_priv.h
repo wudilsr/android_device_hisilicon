@@ -31,12 +31,6 @@
 #include <alloc_device.h>
 #include <utils/Log.h>
 
-/* Hisilicon private usage flags */
-#define GRALLOC_USAGE_HISI_VDP (GRALLOC_USAGE_PRIVATE_0)//VDP
-#define GRALLOC_USAGE_HISI_MASK (GRALLOC_USAGE_PRIVATE_MASK)//VDH MASK
-#define GRALLOC_USAGE_HISI_PHYADDR (GRALLOC_USAGE_PRIVATE_2)
-#define GRALLOC_HISI_METADATA_BUF (1)//private frame info for overlay
-
 #ifdef MALI_600
 #define GRALLOC_ARM_UMP_MODULE 0
 #define GRALLOC_ARM_DMA_BUF_MODULE 1
@@ -52,6 +46,12 @@
 /*#define IOCTL_GET_FB_UMP_SECURE_ID    _IOR('F', 311, unsigned int)*/
 #define GRALLOC_ARM_UMP_MODULE 0
 #define GRALLOC_ARM_DMA_BUF_MODULE 1
+
+#define GRALLOC_HISILICON_PLUGIN
+
+#ifdef GRALLOC_HISILICON_PLUGIN
+#include "gralloc_hisilicon_pri.h"
+#endif
 
 /* NOTE:
  * If your framebuffer device driver is integrated with dma_buf, you will have to
@@ -166,8 +166,8 @@ struct private_handle_t
 	/*shared file descriptor for dma_buf sharing*/
 	int     share_fd;
 #endif
-#if GRALLOC_HISI_METADATA_BUF
-	int     metadata_fd;
+#ifdef GRALLOC_HISILICON_PLUGIN
+    HISI_NEW_FD_MEMBER
 #endif
 	int     magic;
 	int     flags;
@@ -177,7 +177,7 @@ struct private_handle_t
 	int     height;
 	int     format;
 	int     stride;
-	void    *base;
+	void   *base;
 	int     lockState;
 	int     writeOwner;
 	int     pid;
@@ -200,22 +200,13 @@ struct private_handle_t
 #if GRALLOC_ARM_DMA_BUF_MODULE
 	ion_user_handle_t ion_hnd;
 	unsigned long ion_phy_addr;
-	//uint32_t ion_phy_addr;
 #define GRALLOC_ARM_DMA_BUF_NUM_INTS 2
 #else
 #define GRALLOC_ARM_DMA_BUF_NUM_INTS 0
 #endif
 
-#if GRALLOC_HISI_METADATA_BUF
-    struct ion_handle *ion_metadata_hnd;
-    unsigned long ion_metadata_phy_addr;
-    int ion_metadata_size;
-#define GRALLOC_HISI_METADATA_BUF_SIZE (32*1024)
-#define GRALLOC_HISI_METADATA_BUF_NUM_INTS (3)
-#define GRALLOC_HISI_METADATA_BUF_NUM_FDS (1)
-#else
-#define GRALLOC_HISI_METADATA_BUF_NUM_INTS (0)
-#define GRALLOC_HISI_METADATA_BUF_NUM_FDS (0)
+#ifdef GRALLOC_HISILICON_PLUGIN
+    HISI_NEW_INT_MEMBER
 #endif
 
 #if GRALLOC_ARM_DMA_BUF_MODULE
@@ -225,14 +216,7 @@ struct private_handle_t
 #endif
 
 #ifdef __cplusplus
-	/*
-	 * We track the number of integers in the structure. There are 11 unconditional
-	 * integers (magic - pid, yuv_info, fd and offset). The GRALLOC_ARM_XXX_NUM_INTS
-	 * variables are used to track the number of integers that are conditionally
-	 * included.
-	 */
-	static const int sNumInts = 15 + GRALLOC_ARM_UMP_NUM_INTS + GRALLOC_ARM_DMA_BUF_NUM_INTS + GRALLOC_HISI_METADATA_BUF_NUM_INTS;
-	static const int sNumFds = GRALLOC_ARM_NUM_FDS + GRALLOC_HISI_METADATA_BUF_NUM_FDS;
+	static const int sNumFds = GRALLOC_ARM_NUM_FDS + GRALLOC_HISI_NEW_FDS_NUM;
 	static const int sMagic = 0x3141592;
 
 #if GRALLOC_ARM_UMP_MODULE
@@ -240,8 +224,8 @@ struct private_handle_t
 #if GRALLOC_ARM_DMA_BUF_MODULE
 		share_fd(-1),
 #endif
-#if GRALLOC_HISI_METADATA_BUF
-        metadata_fd(-1),
+#ifdef GRALLOC_HISILICON_PLUGIN
+        HISI_NEW_FD_MEMBER_INIT,
 #endif
 		magic(sMagic),
 		flags(flags),
@@ -262,26 +246,26 @@ struct private_handle_t
 		offset(0)
 #if GRALLOC_ARM_DMA_BUF_MODULE
 		,
-		ion_hnd(ION_INVALID_HANDLE)
+		ion_hnd(ION_INVALID_HANDLE),
+		ion_phy_addr(-1)
 #endif
-#if GRALLOC_HISI_METADATA_BUF
+
+#ifdef GRALLOC_HISILICON_PLUGIN
         ,
-        ion_metadata_hnd(ION_INVALID_HANDLE),
-        ion_metadata_phy_addr(-1),
-        ion_metadata_size(0)
+        HISI_NEW_INT_MEMBER_INIT
 #endif
 	{
 		version = sizeof(native_handle);
 		numFds = sNumFds;
-		numInts = sNumInts;
+		numInts = (sizeof(private_handle_t) - sizeof(native_handle)) / sizeof(int) - sNumFds;
 	}
 #endif
 
 #if GRALLOC_ARM_DMA_BUF_MODULE
 	private_handle_t(int flags, int usage, int size, void *base, int lock_state):
 		share_fd(-1),
-#if GRALLOC_HISI_METADATA_BUF
-        metadata_fd(-1),
+#ifdef GRALLOC_HISILICON_PLUGIN
+        HISI_NEW_FD_MEMBER_INIT,
 #endif
 		magic(sMagic),
 		flags(flags),
@@ -304,16 +288,14 @@ struct private_handle_t
 		offset(0),
 		ion_hnd(ION_INVALID_HANDLE),
 		ion_phy_addr(-1)
-#if GRALLOC_HISI_METADATA_BUF
+#ifdef GRALLOC_HISILICON_PLUGIN
         ,
-        ion_metadata_hnd(ION_INVALID_HANDLE),
-        ion_metadata_phy_addr(-1),
-        ion_metadata_size(0)
+        HISI_NEW_INT_MEMBER_INIT
 #endif
 	{
 		version = sizeof(native_handle);
 		numFds = sNumFds;
-		numInts = sNumInts;
+		numInts = (sizeof(private_handle_t) - sizeof(native_handle)) / sizeof(int) - sNumFds;
 	}
 
 #endif
@@ -322,8 +304,8 @@ struct private_handle_t
 #if GRALLOC_ARM_DMA_BUF_MODULE
 		share_fd(-1),
 #endif
-#if GRALLOC_HISI_METADATA_BUF
-        metadata_fd(-1),
+#ifdef GRALLOC_HISILICON_PLUGIN
+        HISI_NEW_FD_MEMBER_INIT,
 #endif
 		magic(sMagic),
 		flags(flags),
@@ -346,18 +328,17 @@ struct private_handle_t
 		offset(fb_offset)
 #if GRALLOC_ARM_DMA_BUF_MODULE
 		,
-		ion_hnd(ION_INVALID_HANDLE)
+		ion_hnd(ION_INVALID_HANDLE),
+		ion_phy_addr(-1)
 #endif
-#if GRALLOC_HISI_METADATA_BUF
+#ifdef GRALLOC_HISILICON_PLUGIN
         ,
-        ion_metadata_hnd(NULL),
-        ion_metadata_phy_addr(-1),
-        ion_metadata_size(0)
+        HISI_NEW_INT_MEMBER_INIT
 #endif
 	{
 		version = sizeof(native_handle);
 		numFds = sNumFds;
-		numInts = sNumInts;
+		numInts = (sizeof(private_handle_t) - sizeof(native_handle)) / sizeof(int) - sNumFds;
 	}
 
 	~private_handle_t()
@@ -374,7 +355,9 @@ struct private_handle_t
 	{
 		const private_handle_t *hnd = (const private_handle_t *)h;
 
-		if (!h || h->version != sizeof(native_handle) || h->numInts != sNumInts || h->numFds != sNumFds || hnd->magic != sMagic)
+		if (!h || h->version != sizeof(native_handle) || h->numFds != sNumFds ||
+		        h->numInts != (sizeof(private_handle_t) - sizeof(native_handle)) / sizeof(int) - sNumFds ||
+		        hnd->magic != sMagic)
 		{
 			return -EINVAL;
 		}

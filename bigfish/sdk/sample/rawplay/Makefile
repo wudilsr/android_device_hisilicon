@@ -17,10 +17,10 @@ CFLAGS += -I$(SDK_INC_DIR) -I$(SAMPLE_DIR)/common
 ifeq ($(CFG_HI_TVP_SUPPORT), y)
 CFLAGS += -DHI_TVP_SUPPORT
 CFLAGS += -I$(TVP_DIR)/libteec/inc/
-HI_LIBS += libteec
+HI_LIBS += -lteec
 endif
 
-LIBPATH = -L$(SDK_STATIC_LIB_DIR) -L$(SDK_SHARE_LIB_DIR)
+LIBPATH = -L$(SDK_STATIC_LIB_DIR) -L$(SDK_SHARE_LIB_DIR) 
 LIB = -Wl,--start-group $(SYS_LIBS) $(HI_LIBS) -Wl,--end-group
 
 APP = sample_rawplay

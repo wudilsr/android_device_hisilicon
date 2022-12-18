@@ -20,6 +20,15 @@ typedef struct
 
 typedef struct
 {
+    HI_UNF_DMX_PORT_TYPE_E  PortType;
+    HI_U32 SyncLockTh;
+    HI_U32 SyncLostTh;
+    HI_U32 TunerInClk;
+    HI_U32 BitSelector;
+}DMX_TunerPortInfo_S;
+
+typedef struct
+{
     HI_U32      FqAddr;
     HI_U32      FqBufSize;
     HI_U32      FqBlockSize;
@@ -60,6 +69,7 @@ typedef struct
 typedef struct
 {
     DMX_Info_S          DmxInfo[HI_DEMUX_COUNT];
+    DMX_TunerPortInfo_S DmxTunerPortInfo[HI_TUNER_PORT_COUNT];
     DMX_FqInfo_S        DmxFqInfo;
     DMX_OqInfo_S        DmxOqInfo[HI_OQ_COUNT];
     DMX_ChanInfo_S      DmxChanInfo[HI_CHANNEL_COUNT];

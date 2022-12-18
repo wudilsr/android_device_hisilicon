@@ -437,6 +437,12 @@ HI_U32 AUTIL_VolumeLinear2RegdB(HI_U32 u32Linear)
 {
     HI_U32 RegdB;
 
+    if (u32Linear > AO_MAX_LINEARVOLUME)
+    {
+         HI_ERR_AO("invalid LinearVolume(%d)\n", u32Linear);
+         return HI_ERR_AO_INVALID_PARA;  
+    }
+
     /* if mute(volume=0), avoid tolerance in calculate FHLL_log10 */
     if ((u32Linear == 0))
     {
@@ -678,7 +684,7 @@ const HI_CHAR *AUTIL_Track2Name(HI_UNF_SND_TRACK_TYPE_E     enTrackType)
         "master",
         "slave",
         "virtual",
-        "lowLatecny",
+        "lowLatency",
     };
 
     if (enTrackType < HI_UNF_SND_TRACK_TYPE_BUTT)
@@ -733,6 +739,9 @@ const HI_CHAR *AUTIL_Format2Name(HI_U32 u32Format)
 
         case IEC61937_DATATYPE_71_LPCM:
             return "7.1PCM";  
+
+        case IEC61937_DATATYPE_20_LPCM:
+            return "2.0PCM";
 
         default:
             return "Unknown";       
@@ -799,17 +808,55 @@ HI_U32 AUTIL_MclkFclkDiv(HI_UNF_I2S_MCLK_SEL_E enMclkSel)
 HI_VOID AUTIL_OS_GetTime(HI_U32 *t_ms)
 {
 #ifdef __KERNEL__
-	struct timeval tv;
+    struct timeval tv;
 
-	do_gettimeofday(&tv);
+    do_gettimeofday(&tv);
 
-	*t_ms = (tv.tv_usec/1000) + tv.tv_sec * 1000;
+    *t_ms = (tv.tv_usec / 1000) + tv.tv_sec * 1000;
 #endif
-	return;
-
+    return;
 }
 
+AIAO_I2S_CHNUM_E AUTIL_CHNUM_UNF2AIAO(HI_UNF_I2S_CHNUM_E enChannel)
+{
+    switch (enChannel)
+    {
+        case HI_UNF_I2S_CHNUM_1:
+            return AIAO_I2S_CHNUM_1;
+        case HI_UNF_I2S_CHNUM_2:
+            return AIAO_I2S_CHNUM_2;
+        case HI_UNF_I2S_CHNUM_8:
+            return AIAO_I2S_CHNUM_8;
+        default:
+            return AIAO_I2S_CHNUM_2;  //TODO
+    }
+}
 
+AIAO_BITDEPTH_E AUTIL_BITDEPTH_UNF2AIAO(HI_UNF_I2S_BITDEPTH_E enBitDepth)
+{
+    switch (enBitDepth)
+    {
+        case HI_UNF_I2S_BIT_DEPTH_16:
+            return AIAO_BIT_DEPTH_16;
+        case HI_UNF_I2S_BIT_DEPTH_24:
+            return AIAO_BIT_DEPTH_24;
+        default:
+            return AIAO_BIT_DEPTH_16;  //TODO
+    }
+}
+
+AIAO_I2S_MODE_E AUTIL_I2S_MODE_UNF2AIAO(HI_UNF_I2S_MODE_E enI2sMode)
+{
+    switch (enI2sMode)
+    {
+        case HI_UNF_I2S_STD_MODE:
+            return AIAO_MODE_I2S;
+        case HI_UNF_I2S_PCM_MODE:
+            return AIAO_MODE_PCM;
+        default:
+            return AIAO_MODE_BUTT;
+    }
+}
 
 AUTIL_CHIP_PLATFORM_E  AUTIL_GetChipPlatform(HI_VOID)
 {

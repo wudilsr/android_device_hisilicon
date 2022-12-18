@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2meM+cF/niIj0W2VqztNQxF4nQj/oE+ftuBt2xQNg6Qw35C6K33x5XlmE1Tq5n6ZPew5+
-UIyl23WJ6QGzs1OR2yr9vqiKHbuGiz24xDcMJDe8tMukCm9FKs/dnwumSYwG8g==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxSbMhxmnwiHeKEb/uiF9UnX+FVWEkMIl+ePo1yOhwdDBBUGg3Rm6LN0IzrfJjcFqnx2A
+HF7BOnN1AHxwlmfahyEsHmt4G/JfIRm4mWqFA+LR/7c82UQqVVRWhkda5vESgA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -55,7 +69,7 @@ HI_S32 VPSS_REG_SetClockEn(HI_U32 u32Type, HI_BOOL bClkEn)
 { 
     U_PERI_CRG60 PERI_CRG60;
 
-   	//bClkEn= HI_FALSE;
+	//bClkEn= HI_FALSE;
    
     switch(u32Type)
     {
@@ -984,7 +998,7 @@ HI_S32 VPSS_REG_SetRfrAddr(HI_U32 u32AppAddr,HI_U32 u32RfrYaddr,HI_U32 u32RfrCad
 	VPSS_REG_RegWrite(&(pstReg->VPSS_RFRCADDR.u32), VPSS_RFRCADDR.u32); 
 
     return HI_SUCCESS;
-} //lzxa 	
+} //lzxa	
 
 HI_S32 VPSS_REG_SetRfrStride(HI_U32 u32AppAddr,HI_U32 u32RfrYStride,HI_U32 u32RfrCStride)
 {
@@ -2507,8 +2521,8 @@ HI_S32 VPSS_REG_SetFrmFormat(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_DRV_PIX_
     {
         case HI_DRV_PIX_FMT_NV21:
         case HI_DRV_PIX_FMT_NV12:
-        //case HI_DRV_PIX_FMT_NV12_CMP:
-        //case HI_DRV_PIX_FMT_NV21_CMP:
+        case HI_DRV_PIX_FMT_NV12_CMP:
+        case HI_DRV_PIX_FMT_NV21_CMP:
             u32Format = 0x0;
             break;
         case HI_DRV_PIX_FMT_NV61_2X1:
@@ -3599,11 +3613,10 @@ HI_VOID VPSS_REG_SetDetBlk(HI_U32 u32AppAddr,HI_U32 blk_id, HI_U32 *pu32Addr)
 }
 HI_VOID VPSS_REG_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData)
 {
-  /*
     HI_U32  pixdata;
-    VPSS_REG_S *pstReg;
+    PQ_VPSS_WBC_REG_S *pstReg;
     
-    pstReg = (VPSS_REG_S*)u32AppAddr;
+    pstReg = (PQ_VPSS_WBC_REG_S*)u32AppAddr;
     
     if (BlkNum > 5)
     {
@@ -3625,7 +3638,6 @@ HI_VOID VPSS_REG_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData)
     pstData[7] = (pixdata & 0xff000000) >> 24;
 
     return ;
-  */ //lzx
 
 }
 /********************************/
@@ -6771,7 +6783,7 @@ HI_S32 VPSS_REG_SetOutCropVidPos(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,
          /*
 		case VPSS_REG_STR:
 
-	     VPSS_STRCROP_POS.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_STRCROP_POS.u32));
+		 VPSS_STRCROP_POS.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_STRCROP_POS.u32));
             VPSS_STRCROP_SIZE.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_STRCROP_SIZE.u32));
             
             VPSS_STRCROP_POS.bits.str_crop_x = u32XFPos;
@@ -7737,7 +7749,7 @@ HI_S32 VPSS_REG_SetPortCropSize(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_U32 u
 
     switch(ePort)
     {
-    	/*
+		/*
         case VPSS_REG_SD:
             VPSS_VSDCROP_SIZE.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_VSDCROP_SIZE.u32));
             VPSS_VSDCROP_SIZE.bits.vsd_crop_height = u32CropHeight - 1;
@@ -7780,7 +7792,7 @@ HI_S32 VPSS_REG_SetPortCropEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_BOOL bP
 
     switch(ePort)
     {
-    	/*
+		/*
         case VPSS_REG_SD:
             VPSS_VSDCROP_SIZE.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_VSDCROP_SIZE.u32));
             VPSS_VSDCROP_SIZE.bits.vsd_crop_en = bPortCropEn;
@@ -7827,7 +7839,7 @@ HI_S32 VPSS_REG_SetPortMirrorEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL
 
     switch(ePort)
     {
-    	/*
+		/*
         case VPSS_REG_SD:
             VPSS_CTRL2.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_CTRL2.u32));
             VPSS_CTRL2.bits.vsd_mirror = bMirrorEn;
@@ -7868,7 +7880,7 @@ HI_S32 VPSS_REG_SetPortFlipEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL b
 
     switch(ePort)
     {
-    	
+		
         case VPSS_REG_SD:
             VPSS_CTRL2.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_CTRL2.u32));
             VPSS_CTRL2.bits.vsd_flip = bFlipEn;

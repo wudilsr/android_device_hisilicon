@@ -1,0 +1,55 @@
+menuconfig HIPCIE
+	bool "Hisilicon PCI Express support"
+	depends on PCI && (ARCH_S40V3 || ARCH_MV410 || ARCH_HIFONE)
+	default y if PCI
+	default n if ! PCI
+	help
+	Hisilicon PCI Express support
+	Choose this selection to support PCI Express uses.
+
+if HIPCIE
+
+menu "PCI Express configs"
+
+config PCIE0_SEL
+        int "PCI Express controller0 sel"
+        range 0 1
+        default "0" if ! PCI
+        default "1" if PCI
+        depends on PCI
+        help
+        PCI Express controller0 sel.
+        Set 0 to disable controller 0,
+        set 1 to enable controller 0 to work at x1 mode.
+
+config PCIE0_DEVICES_MEM_SIZE
+        hex "Total memory size of PCI Express 0 system devices"
+        range 0x0 0x7800000 if (ARCH_S40V3 || ARCH_MV410)
+        range 0x0 0x2000000 if ARCH_HIFONE
+        default "0x7800000" if (ARCH_S40V3 || ARCH_MV410)
+        default "0x2000000" if ARCH_HIFONE
+        depends on PCI
+        help
+        All memory size required by all devices in pci subsystem.
+        Hisilicon PCI Express controller provide up to 128M memory
+        and io size for device.
+        Here we set memory size up to 120M, means that io size has at least 8M
+        You can change this depend on you device connected
+        to Hisilicon PCI Express controller.
+
+config PCIE0_DEVICES_CONFIG_SIZE
+        hex "Total configuration header size of PCI Express 0 system devices"
+        range 0x0 0x10000000   if (ARCH_S40V3 || ARCH_MV410 || ARCH_HIFONE)
+        default 0x800000       if (ARCH_S40V3 || ARCH_MV410 || ARCH_HIFONE)
+        depends on PCI
+        help
+        All configuration size required by devices connnect to
+        Hisilicon PCI Express controller.
+        NOTE: This will alloc memory from kernel,
+        enlarge this will require the same memory.
+        The default value is enough for most applications.
+        
+endmenu
+
+endif
+

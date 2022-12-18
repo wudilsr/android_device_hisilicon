@@ -24,36 +24,25 @@ extern "C" {
  #endif
 #endif /* End of #ifdef __cplusplus */
 
-HI_S32 MCE_FrcCreate(MCE_AVPLAY_S *pAvplay)
+HI_VOID MCE_FrcCreate(AVPLAY_ALG_FRC_S *FrcCalAlg, AVPLAY_FRC_CFG_S *FrcParamCfg, AVPLAY_FRC_CTRL_S *FrcCtrlInfo)
 {
-    /*init frc*/
-    memset(&pAvplay->FrcCalAlg, 0, sizeof(AVPLAY_ALG_FRC_S));
+    memset(FrcCalAlg, 0, sizeof(AVPLAY_ALG_FRC_S));
 
-    pAvplay->FrcCtrlInfo.s32FrmState = 0;
+    FrcCtrlInfo->s32FrmState = 0;
 
-    pAvplay->FrcParamCfg.u32InRate = 25;
-    pAvplay->FrcParamCfg.u32OutRate = 25;
-    pAvplay->FrcParamCfg.u32PlayRate = AVPLAY_ALG_FRC_BASE_PLAY_RATIO;
-
-    return HI_SUCCESS;
+    FrcParamCfg->u32InRate   = 25;
+    FrcParamCfg->u32OutRate  = 25;
+    FrcParamCfg->u32PlayRate = AVPLAY_ALG_FRC_BASE_PLAY_RATIO;
 }
 
-HI_S32 MCE_FrcDestroy(MCE_AVPLAY_S *pAvplay)
+HI_VOID MCE_FrcDestroy(AVPLAY_ALG_FRC_S *FrcCalAlg)
 {
-    memset(&pAvplay->FrcCalAlg, 0, sizeof(AVPLAY_ALG_FRC_S));
-
-    return HI_SUCCESS;
+    memset(FrcCalAlg, 0, sizeof(AVPLAY_ALG_FRC_S));
 }
 
-HI_S32 MCE_FrcReset(AVPLAY_ALG_FRC_S *hFrc)
+HI_VOID MCE_FrcReset(AVPLAY_ALG_FRC_S *hFrc)
 {
-    if (hFrc == HI_NULL)
-    {
-       return HI_FAILURE;
-    }
     memset(hFrc, 0, sizeof(AVPLAY_ALG_FRC_S));
-
-    return HI_SUCCESS;
 }
 
 HI_VOID MCE_FrcCalculate(AVPLAY_ALG_FRC_S *hFrc, AVPLAY_FRC_CFG_S *pstFrcCfg, AVPLAY_FRC_CTRL_S *pstFrcCtrl)

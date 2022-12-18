@@ -403,7 +403,14 @@ HI_S32 DmxInit(HI_VOID)
 
         for (i = 0; i < HI_TUNER_PORT_COUNT; i++)
         {
-            DmxHalDvbPortSetAttr(i);
+            DmxDevMgr->DmxTunerPortInfo[i].PortType             = HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188;
+            DmxDevMgr->DmxTunerPortInfo[i].SyncLockTh         = 5;
+            DmxDevMgr->DmxTunerPortInfo[i].SyncLostTh         = 1;
+            DmxDevMgr->DmxTunerPortInfo[i].TunerInClk         = 0;
+            DmxDevMgr->DmxTunerPortInfo[i].BitSelector  = 0;
+    
+            DmxHalDvbPortSetAttr(i, DmxDevMgr->DmxTunerPortInfo[i].PortType, DmxDevMgr->DmxTunerPortInfo[i].SyncLockTh, 
+                    DmxDevMgr->DmxTunerPortInfo[i].SyncLostTh, DmxDevMgr->DmxTunerPortInfo[i].TunerInClk , DmxDevMgr->DmxTunerPortInfo[i].BitSelector );
 
             DmxHalDvbPortSetTsCountCtrl(i, TS_COUNT_CRTL_START);
             DmxHalDvbPortSetErrTsCountCtrl(i, TS_COUNT_CRTL_START);
@@ -483,6 +490,90 @@ HI_S32 DmxDetachPort(const HI_U32 DmxId)
     DmxInfo->PortId = DMX_INVALID_PORT_ID;
 
     DmxHalDemuxSetPortId(DmxId, DMX_PORT_MODE_BUTT, 0);
+
+    return HI_SUCCESS;
+}
+
+HI_S32 DmxGetTSPortAttr(HI_U32 PortId, HI_UNF_DMX_PORT_ATTR_S *pstAttr)
+{
+    DMX_TunerPortInfo_S *TunerPortInfo;
+    
+    CHECK_DMX_INIT();
+    CHECK_TUNER_PORTID(PortId);
+    CHECK_POINTER(pstAttr);
+
+    TunerPortInfo = &DmxDevMgr->DmxTunerPortInfo[PortId];
+    
+    pstAttr->enPortMod             = HI_UNF_DMX_PORT_MODE_EXTERNAL;
+    pstAttr->enPortType            = TunerPortInfo->PortType;
+    pstAttr->u32SyncLostTh         = TunerPortInfo->SyncLostTh;
+    pstAttr->u32SyncLockTh         = TunerPortInfo->SyncLockTh;
+    pstAttr->u32TunerInClk         = TunerPortInfo->TunerInClk;
+    pstAttr->u32SerialBitSelector  = TunerPortInfo->BitSelector;
+    pstAttr->u32TunerErrMod        = 0;
+    pstAttr->u32UserDefLen1        = 0;
+    pstAttr->u32UserDefLen2        = 0;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 DmxSetTSPortAttr(HI_U32 PortId, HI_UNF_DMX_PORT_ATTR_S *pstAttr)
+{
+    DMX_TunerPortInfo_S *TunerPortInfo;
+    
+    CHECK_DMX_INIT();
+    CHECK_TUNER_PORTID(PortId);
+    CHECK_POINTER(pstAttr);
+
+    switch (pstAttr->enPortType)
+    {
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_BURST :
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_VALID :
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188 :
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_204 :
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188_204 :
+        case HI_UNF_DMX_PORT_TYPE_SERIAL :
+            break;
+
+        case HI_UNF_DMX_PORT_TYPE_SERIAL2BIT :
+        case HI_UNF_DMX_PORT_TYPE_SERIAL_NOSYNC :
+        case HI_UNF_DMX_PORT_TYPE_SERIAL2BIT_NOSYNC :
+            break;
+
+        case HI_UNF_DMX_PORT_TYPE_USER_DEFINED :
+        case HI_UNF_DMX_PORT_TYPE_AUTO :
+            return HI_ERR_DMX_NOT_SUPPORT;
+
+        default :
+            HI_ERR_DEMUX("Port %u set invalid port type %d\n", PortId, pstAttr->enPortType);
+
+            return HI_ERR_DMX_INVALID_PARA;
+    }
+
+    if (pstAttr->u32TunerInClk > 1)
+    {
+        HI_ERR_DEMUX("Port %u set invalid tunner in clock %d\n", PortId, pstAttr->u32TunerInClk);
+
+        return HI_ERR_DMX_INVALID_PARA;
+    }
+
+    if (pstAttr->u32SerialBitSelector > 1)
+    {
+        HI_ERR_DEMUX("Port %u set invalid Serial Bit Selector %d\n", PortId, pstAttr->u32SerialBitSelector);
+
+        return HI_ERR_DMX_INVALID_PARA;
+    }
+
+    TunerPortInfo = &DmxDevMgr->DmxTunerPortInfo[PortId];
+
+    TunerPortInfo->PortType = pstAttr->enPortType;
+    TunerPortInfo->SyncLockTh = pstAttr->u32SyncLockTh;
+    TunerPortInfo->SyncLostTh = pstAttr->u32SyncLostTh;
+    TunerPortInfo->TunerInClk = pstAttr->u32TunerInClk;
+    TunerPortInfo->BitSelector = pstAttr->u32SerialBitSelector;
+    
+    DmxHalDvbPortSetAttr(PortId, TunerPortInfo->PortType, TunerPortInfo->SyncLockTh,
+            TunerPortInfo->SyncLostTh, TunerPortInfo->TunerInClk, TunerPortInfo->BitSelector);
 
     return HI_SUCCESS;
 }

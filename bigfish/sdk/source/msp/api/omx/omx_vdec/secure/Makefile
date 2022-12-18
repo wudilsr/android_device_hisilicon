@@ -2,7 +2,7 @@
 # export variable
 #===============================================================================
 ifeq ($(CFG_HI_EXPORT_FLAG),)
-SDK_DIR ?= $(CURDIR)/../../../../..
+SDK_DIR ?= $(CURDIR)/../../../../../..
 
 include $(SDK_DIR)/base.mak
 endif
@@ -20,9 +20,9 @@ CFLAGS  +=  -I$(COMMON_UNF_INCLUDE)                 \
             -I$(MSP_UNF_INCLUDE)                    \
             -I$(MSP_API_INCLUDE)                    \
             -I$(MSP_DRV_INCLUDE)                    \
-	    -I$(TVP_DIR)/libteec/inc
-
-CFLAGS      += -DHI_TVP_SUPPORT
+	        -I$(TVP_DIR)/libteec/inc                \
+	        -I$(TVP_DIR)/libteec/sec_mmz/inc
+CFLAGS  +=  -DHI_TVP_SUPPORT
 
 LIBS        := libOMX.hisi.video.decoder.secure
 
@@ -51,4 +51,7 @@ uninstall:
 ifndef CFG_HI_STATIC_LIB_ONLY
 	$(AT)rm -rf $(EXTERN_LIB_DIR)/$(LIBS).so
 endif
+
+%.o : %.c
+	$(AT)$(CC) $(CFLAGS) -c -o $@ $^
 

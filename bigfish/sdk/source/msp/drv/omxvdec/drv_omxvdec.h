@@ -21,11 +21,12 @@
 
 #include <linux/ioctl.h>
 
+#include "hi_type.h"
 #include "vfmw.h"
 #include "hi_drv_video.h"  //主要是输出颜色空间枚举
 
 
-#define OMXVDEC_VERSION	 		        (2015032400)
+#define OMXVDEC_VERSION	 		        (2015071501)
 
 #define OMXVDEC_NAME                    "hi_omxvdec"
 #define DRIVER_PATH                     "/dev/hi_omxvdec"
@@ -36,14 +37,12 @@
 #define MAX(a, b)                       (((a) > (b)) ?  (a) : (b))
 #define MIN(a, b)                       (((a) > (b)) ?  (b) : (a))
 
-#define UHD_FRAME_WIDTH	                (4096) 
+#define UHD_FRAME_WIDTH	                (4096)
 #define UHD_FRAME_HEIGHT                (2304)
-#define HD_FRAME_WIDTH                  (1920) 
+#define HD_FRAME_WIDTH                  (1920)
 #define HD_FRAME_HEIGHT                 (1088)
-#define SD_FRAME_WIDTH                  (1280) 
-#define SD_FRAME_HEIGHT                 (736)
-
-#define SD_HEVC_FRAME_HEIGHT            (768)
+#define SD_FRAME_WIDTH                  (1280)
+#define SD_FRAME_HEIGHT                 (768)
 
 #define MAX_SUPPORT_WIDTH               (UHD_FRAME_WIDTH)
 #define MAX_SUPPORT_HEIGHT              (UHD_FRAME_HEIGHT)
@@ -51,14 +50,25 @@
 #define DEFAULT_FRAME_WIDTH             (HD_FRAME_WIDTH)
 #define DEFAULT_FRAME_HEIGHT            (HD_FRAME_HEIGHT)
 
-#define FRAME_SIZE(w, h)                (((w)*(h)*3)/2)
+#define DEFAULT_FRAME_SIZE(w, h)        (((w)*(h)*3)/2)
+#define HI_OMX_GET_STRIDE(w)            ((w + (16-1))&(~(16-1)))
+
+
+typedef enum  // omx color space enum
+{
+    OMX_PIX_FMT_NV12    ,          /* YUV 4:2:0 semiplanar */
+    OMX_PIX_FMT_NV21    ,          /* YVU 4:2:0 semiplanar */
+    OMX_PIX_FMT_YUV420Planar ,     /* YUV 4:2:0 planar     */
+    OMX_PIX_FMT_YUV420Tile ,       /* YUV 4:2:0 tile       */
+    OMX_PIX_BUTT
+}OMX_PIX_FORMAT_E;
 
 enum {
 	VDEC_S_SUCCESS = 0,
 	VDEC_S_FAILED  = 1,
 };
 
-/* omxvdec msg response types */ 
+/* omxvdec msg response types */
 #define VDEC_MSG_RESP_BASE              (0x10000)
 #define VDEC_MSG_RESP_OPEN              (VDEC_MSG_RESP_BASE + 0x1)
 #define VDEC_MSG_RESP_START_DONE        (VDEC_MSG_RESP_BASE + 0x2)
@@ -95,90 +105,12 @@ enum {
 #define VDEC_EVT_REPORT_SCAN_TYPE_CHG	(VDEC_EVT_REPORT_BASE + 0x3)
 #define VDEC_EVT_REPORT_HW_ERROR        (VDEC_EVT_REPORT_BASE + 0x4)
 #define VDEC_EVT_REPORT_CROP_RECT_CHG	(VDEC_EVT_REPORT_BASE + 0x5)
+#define VDEC_EVT_REPORT_DEC_SIZE_CHG    (VDEC_EVT_REPORT_BASE + 0x6)
 
-/* ========================================================
- * IOCTL for interaction with omx components
- * ========================================================*/
-typedef struct {
-	HI_S32 chan_num;
-	void  *in;
-	void  *out;
-}OMXVDEC_IOCTL_MSG;
-
-#define VDEC_IOCTL_MAGIC 'v'
-
-#define VDEC_IOCTL_CHAN_CREATE   \
-	_IOWR(VDEC_IOCTL_MAGIC, 1, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_RELEASE  \
-	_IOW(VDEC_IOCTL_MAGIC, 2, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_SET_EXTRADATA \
-	_IOW(VDEC_IOCTL_MAGIC, 3, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_GET_EXTRADATA \
-	_IOR(VDEC_IOCTL_MAGIC, 4, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_GET_PORT_PRO \
-	_IOR(VDEC_IOCTL_MAGIC, 5, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_SET_PORT_PRO \
-	_IOW(VDEC_IOCTL_MAGIC, 6, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_FLUSH_PORT \
-	_IOW(VDEC_IOCTL_MAGIC, 7, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_BIND_BUFFER \
-	_IOWR(VDEC_IOCTL_MAGIC, 8, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_UNBIND_BUFFER \
-	_IOWR(VDEC_IOCTL_MAGIC, 9, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_FILL_OUTPUT_FRAME \
-	_IOWR(VDEC_IOCTL_MAGIC, 10, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_EMPTY_INPUT_STREAM \
-	_IOWR(VDEC_IOCTL_MAGIC, 11, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_START \
-	_IOW(VDEC_IOCTL_MAGIC, 12, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_STOP  \
-	_IOW(VDEC_IOCTL_MAGIC, 13, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_PAUSE \
-	_IOW(VDEC_IOCTL_MAGIC, 14, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_RESUME \
-	_IOW(VDEC_IOCTL_MAGIC, 15, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_GET_MSG \
-	_IOR(VDEC_IOCTL_MAGIC, 16, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_STOP_MSG \
-	_IOW(VDEC_IOCTL_MAGIC, 17, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_GET_NUMBER_INSTANCES \
-	_IOR(VDEC_IOCTL_MAGIC, 18, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_SET_PICTURE_ORDER \
-	_IOW(VDEC_IOCTL_MAGIC, 19, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_SET_FRAME_RATE \
-	_IOW(VDEC_IOCTL_MAGIC, 20, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_SET_DECODE_MODE \
-	_IOW(VDEC_IOCTL_MAGIC, 21, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_SET_PIC_SIZE	\
-	_IOW(VDEC_IOCTL_MAGIC, 22, OMXVDEC_IOCTL_MSG)
-
-#define VDEC_IOCTL_CHAN_GET_PIC_SIZE	\
-	_IOW(VDEC_IOCTL_MAGIC, 23, OMXVDEC_IOCTL_MSG)
 
 /* ========================================================
  * internal struct enum definition
- * ========================================================*/ 
+ * ========================================================*/
 typedef enum {
     PORT_DIR_INPUT,
     PORT_DIR_OUTPUT,
@@ -186,10 +118,11 @@ typedef enum {
 }ePORT_DIR;
 
 typedef enum {
-    OMX_ALLOCATE_TYPE,
-    OMX_USE_TYPE,
-    OMX_USE_NATIVE_TYPE,
-    OMX_ALLOCATE_SECURE_TYPE,
+    OMX_ALLOCATE_USR,
+    OMX_USE_OTHER,
+    OMX_USE_NATIVE,
+    OMX_ALLOCATE_SECURE,
+    OMX_ALLOCATE_DRIVER,
     OMX_BUTT_TYPE,
 }eBUFFER_TYPE;
 
@@ -203,12 +136,14 @@ typedef enum {
 }OMXVDEC_CODEC_EXT;
 
 typedef struct {
+    HI_BOOL          is_tvp;
     HI_U32           cfg_width;
     HI_U32           cfg_height;
     HI_U32           cfg_stride;
     HI_U32           cfg_inbuf_num;
     HI_U32           cfg_outbuf_num;
-    HI_U32           cfg_color_format;
+    OMX_PIX_FORMAT_E cfg_color_format;
+    HI_BOOL          m_use_native_buf;
     VDEC_CHAN_CFG_S  chan_cfg;
 }OMXVDEC_DRV_CFG;
 
@@ -233,6 +168,21 @@ typedef struct {
 }OMXVDEC_FRAME_S;
 
 typedef struct {
+	HI_U32 frame_width;
+	HI_U32 frame_height;
+	HI_U32 frame_stride;
+}OMXVDEC_IMG_SIZE;
+
+typedef struct {
+	HI_U32 frame_width;
+	HI_U32 frame_height;
+	HI_U32 frame_stride;
+	HI_U32 frame_size;
+    HI_U32 max_frame_num;
+    HI_U32 min_frame_num;
+}OMXVDEC_DEC_SIZE;
+
+typedef struct {
 	HI_U32           phyaddr;
 	HI_U32           buffer_len;
 	HI_U32           data_offset;
@@ -241,28 +191,85 @@ typedef struct {
 	HI_S64           timestamp;
 	eBUFFER_TYPE     buffer_type;
 	ePORT_DIR        dir;
+    OMXVDEC_FRAME_S  out_frame;
 	HI_VOID         *bufferaddr;
 	HI_VOID         *client_data;
-    OMXVDEC_FRAME_S  out_frame;
 }OMXVDEC_BUF_DESC;
 
 typedef struct {
-	HI_U32 frame_width;
-	HI_U32 frame_height;
-	HI_U32 frame_stride;
-}OMXVDEC_IMG_SIZE;
-
-typedef union {
-	OMXVDEC_BUF_DESC buf;
-	OMXVDEC_IMG_SIZE img_size;
-}OMXVDEC_MSG_DATA;
-
-typedef struct {
 	HI_U32           status_code;
-	HI_U32           msgcode;
-	OMXVDEC_MSG_DATA msgdata;
-	HI_U32           msgdatasize;
+	HI_U32            msgcode;
+	HI_U32            msgdatasize;
+
+    union {
+	OMXVDEC_IMG_SIZE img_size;
+	OMXVDEC_DEC_SIZE dec_size;
+	OMXVDEC_BUF_DESC buf;
+    } msgdata;
+
 }OMXVDEC_MSG_INFO;
+
+/* ========================================================
+ * IOCTL for interaction with omx components
+ * ========================================================*/
+typedef struct {
+	HI_S32    chan_num;
+	HI_VOID  *in;
+	HI_VOID  *out;
+}OMXVDEC_IOCTL_MSG;
+
+#define VDEC_IOCTL_MAGIC 'v'
+
+#define VDEC_IOCTL_CHAN_CREATE   \
+	_IO(VDEC_IOCTL_MAGIC, 1)
+
+#define VDEC_IOCTL_CHAN_RELEASE  \
+	_IO(VDEC_IOCTL_MAGIC, 2)
+
+#define VDEC_IOCTL_SET_EXTRADATA \
+	_IO(VDEC_IOCTL_MAGIC, 3)
+
+#define VDEC_IOCTL_GET_EXTRADATA \
+	_IO(VDEC_IOCTL_MAGIC, 4)
+
+#define VDEC_IOCTL_FLUSH_PORT \
+	_IO(VDEC_IOCTL_MAGIC, 5)
+
+#define VDEC_IOCTL_CHAN_BIND_BUFFER \
+	_IO(VDEC_IOCTL_MAGIC, 6)
+
+#define VDEC_IOCTL_CHAN_UNBIND_BUFFER \
+	_IO(VDEC_IOCTL_MAGIC, 7)
+
+#define VDEC_IOCTL_FILL_OUTPUT_FRAME \
+	_IO(VDEC_IOCTL_MAGIC, 8)
+
+#define VDEC_IOCTL_EMPTY_INPUT_STREAM \
+	_IO(VDEC_IOCTL_MAGIC, 9)
+
+#define VDEC_IOCTL_CHAN_START \
+	_IO(VDEC_IOCTL_MAGIC, 10)
+
+#define VDEC_IOCTL_CHAN_STOP  \
+	_IO(VDEC_IOCTL_MAGIC, 11)
+
+#define VDEC_IOCTL_CHAN_PAUSE \
+	_IO(VDEC_IOCTL_MAGIC, 12)
+
+#define VDEC_IOCTL_CHAN_RESUME \
+	_IO(VDEC_IOCTL_MAGIC, 13)
+
+#define VDEC_IOCTL_CHAN_GET_MSG \
+	_IO(VDEC_IOCTL_MAGIC, 14)
+
+#define VDEC_IOCTL_CHAN_STOP_MSG \
+	_IO(VDEC_IOCTL_MAGIC, 15)
+
+#define VDEC_IOCTL_CHAN_ALLOC_BUFFER	\
+	_IO(VDEC_IOCTL_MAGIC, 16)
+
+#define VDEC_IOCTL_CHAN_FREE_BUFFER	\
+	_IO(VDEC_IOCTL_MAGIC, 17)
 
 #endif
 

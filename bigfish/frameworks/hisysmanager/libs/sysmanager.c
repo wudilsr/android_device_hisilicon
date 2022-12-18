@@ -78,22 +78,6 @@ int do_reset()
     rebootForReset();
     return 0;
 }
-int do_updateCAFile(const char* path1,const char* path2)
-{
-#ifdef CFG_HI_ADVCA_SUPPORT
-    //    SLOGE("#######%s,arg[0]=%s,arg[1]=%s",__FUNCTION__,arg[0],arg[1]);
-    int ret = HI_SYS_Init();
-    if (-1 == ret)
-    {
-        SLOGE("HI_SYS_Init Failed!(%s->%d)",__FUNCTION__,__LINE__);
-        return -1;
-    }
-    if((NULL!=path1)&&(NULL!=path2)){
-        return CA_Android_authUpdateFile(path1,path2);
-    }else return -1;
-#endif
-    return 0;
-}
 int do_EnterSmartStandby()
 {
     SLOGE("do_EnterSmartStandby!(%s->%d)",__FUNCTION__,__LINE__);
@@ -122,7 +106,7 @@ int do_setFlashInfo(const char* flag,int offset,int offlen,const char* info)
     {
         strcat(mtdname,flag);
     }
-    if(info=NULL)
+    if(info!=NULL)
     {
         strcat(minfo,info);
     }

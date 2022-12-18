@@ -900,4 +900,25 @@ HI_S32 HI_UNF_PMOC_QuitSmartStandby(HI_VOID)
     return HI_SUCCESS;
 }
 
+HI_S32 HI_MPI_PMOC_BoostCpuFreq(HI_VOID)
+{
+    HI_S32  ret;
+
+    if (g_u32C51Fd < 0)
+    {
+       HI_ERR_PM("file descriptor is illegal \n");
+       return HI_ERR_PMOC_NOT_INIT;
+    }
+
+    ret = ioctl(g_u32C51Fd, HI_PMOC_BOOST_CPU);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_PM(" pm HI_MPI_PMOC_BoostCpuFreq error ret = 0x%x \n", ret);
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+
+
 

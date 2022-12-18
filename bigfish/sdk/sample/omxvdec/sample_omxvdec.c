@@ -119,7 +119,7 @@ static int GetTimeInMs(void)
 
 static void wait_for_event(OmxTestInfo_S * pOmxTestInfo, int cmd)
 {
-	pthread_mutex_lock(&pOmxTestInfo->lock);
+	pthread_mutex_lock(&pOmxTestInfo->event_lock);
 	while(1)
 	{
 		if((pOmxTestInfo->event_is_done == 1) && (pOmxTestInfo->last_cmd == cmd || pOmxTestInfo->last_cmd == -1))
@@ -127,25 +127,25 @@ static void wait_for_event(OmxTestInfo_S * pOmxTestInfo, int cmd)
 			pOmxTestInfo->event_is_done = 0;
 			break;
 		}
-		pthread_cond_wait(&pOmxTestInfo->cond, &pOmxTestInfo->lock);
+		pthread_cond_wait(&pOmxTestInfo->event_cond, &pOmxTestInfo->event_lock);
 
 	}
-	pthread_mutex_unlock(&pOmxTestInfo->lock);
+	pthread_mutex_unlock(&pOmxTestInfo->event_lock);
 }
 
 static void event_complete(OmxTestInfo_S *pOmxTestInfo, int cmd)
 {
-	pthread_mutex_lock(&pOmxTestInfo->lock);
+	pthread_mutex_lock(&pOmxTestInfo->event_lock);
 	if(pOmxTestInfo->event_is_done == 0)
 		pOmxTestInfo->event_is_done = 1;
 
-	pthread_cond_broadcast(&pOmxTestInfo->cond);
+	pthread_cond_broadcast(&pOmxTestInfo->event_cond);
 	pOmxTestInfo->last_cmd = cmd;
-	pthread_mutex_unlock(&pOmxTestInfo->lock);
+	pthread_mutex_unlock(&pOmxTestInfo->event_lock);
 }
 
 
-/*************************************************************************
+/************************************************************************
 				file operation functions
 ************************************************************************/
 
@@ -427,7 +427,7 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
     if (1 == pOmxTestInfo->tvp_option && bytes_read > 0)
     {
         pBuffer = (OMX_U8*)pOmxTestInfo->pCAStreamBuf.user_viraddr;
-        HI_SEC_MMZ_CA2TA(pOmxTestInfo->pCAStreamBuf.phyaddr,pBufHdr->pBuffer, bytes_read);
+        HI_SEC_MMZ_CA2TA((unsigned long)(pOmxTestInfo->pCAStreamBuf.phyaddr),(unsigned long)(pBufHdr->pBuffer), bytes_read);
     }
 #endif
 
@@ -539,9 +539,7 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 			{
 				DEBUG_PRINT("Event error in the middle of Decode\n");
 
-				pthread_mutex_lock(&pOmxTestInfo->eos_lock);
 				pOmxTestInfo->bOutputEosReached = true;
-				pthread_mutex_unlock(&pOmxTestInfo->eos_lock);
 			}
 		}
 
@@ -556,7 +554,7 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
         pOmxTestInfo->preStatus = pOmxTestInfo->currentStatus;
 	    pOmxTestInfo->currentStatus = PORT_SETTING_CHANGE_STATE;
 
-	    sem_post(&pOmxTestInfo->fbd_sem);
+	    sem_post(&pOmxTestInfo->ftb_sem);
 	    break;
 
 	case OMX_EventBufferFlag:
@@ -565,9 +563,7 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 
 		if (nData1 == 1 && (nData2 & OMX_BUFFERFLAG_EOS))
 		{
-	        pthread_mutex_lock(&pOmxTestInfo->eos_lock);
 	        pOmxTestInfo->bOutputEosReached = true;
-	        pthread_mutex_unlock(&pOmxTestInfo->eos_lock);
 
 		#ifdef CalcFrameRate
 			if (!g_PrintAlready)
@@ -633,15 +629,26 @@ OMX_ERRORTYPE EmptyBufferDone(OMX_IN OMX_HANDLETYPE hComponent,
 		return OMX_ErrorBadParameter;
 	}
     
-	DEBUG_PRINT("Function %s cnt[%d]\n", __FUNCTION__, pOmxTestInfo->ebd_cnt);
-	pOmxTestInfo->ebd_cnt++;
-
+    pOmxTestInfo->free_ip_buf_cnt++;
+    
 	if(pOmxTestInfo->bInputEosReached)
 	{
-		DEBUG_PRINT("*****EBD:Input EoS Reached************\n");
+		DEBUG_PRINT("EBD: Input EoS Reached.\n");
 		return OMX_ErrorNone;
 	}
 
+	if(pOmxTestInfo->seeking_progress)
+	{
+		DEBUG_PRINT("EBD: Seeking Pending.\n");
+		return OMX_ErrorNone;
+	}
+    
+    if(pOmxTestInfo->flush_input_progress)
+    {
+        DEBUG_PRINT("EBD: Input Flushing.\n");
+		return OMX_ErrorNone;
+    }
+    
 	pthread_mutex_lock(&pOmxTestInfo->etb_lock);
 	if(push(pOmxTestInfo->etb_queue, (void *) pBuffer) < 0)
 	{
@@ -689,6 +696,8 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
 	
     DEBUG_PRINT("Fill buffer done\n");
     
+	pOmxTestInfo->free_op_buf_cnt++;
+    
     if (pBuffer->nFilledLen != 0)
     {
         gettimeofday(&pOmxTestInfo->t_cur_get, NULL);
@@ -716,20 +725,24 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
 
         pOmxTestInfo->receive_frame_cnt++;
     }
-       
-	pthread_mutex_lock(&pOmxTestInfo->fbd_lock);
-
-	pOmxTestInfo->free_op_buf_cnt++;
+    
+    if (pOmxTestInfo->flush_output_progress)
+    {
+        DEBUG_PRINT("FBD: Output Flushing.\n");
+		return OMX_ErrorNone;
+    }
+  
+	pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
 
 	if (!pOmxTestInfo->sent_disabled)
 	{
-		if(push(pOmxTestInfo->fbd_queue, (void *)pBuffer) < 0)
+		if(push(pOmxTestInfo->ftb_queue, (void *)pBuffer) < 0)
 		{
-			pthread_mutex_unlock(&pOmxTestInfo->fbd_lock);
+			pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
 			DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
 			return OMX_ErrorUndefined;
 		}
-		sem_post(&pOmxTestInfo->fbd_sem);
+		sem_post(&pOmxTestInfo->ftb_sem);
 	}
     else
     {
@@ -744,7 +757,7 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
        }
     }
 
-	pthread_mutex_unlock(&pOmxTestInfo->fbd_lock);
+	pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
 
     if (pBuffer->nFilledLen != 0)
     {
@@ -1261,6 +1274,8 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
     }
     DEBUG_PRINT("OMX_AllocateBuffer Input buffer success\n");
 
+	pOmxTestInfo->free_ip_buf_cnt = pOmxTestInfo->portFmt.nBufferCountActual;
+
 	//Allocate buffer on decoder's o/p port
 	pOmxTestInfo->portFmt.nPortIndex = pOmxTestInfo->portParam.nStartPortNumber + 1;
 	OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamPortDefinition, &pOmxTestInfo->portFmt);
@@ -1437,7 +1452,7 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
                 gettimeofday(&pOmxTestInfo->t_first_send, NULL);
 			}
 			DEBUG_PRINT("OMX_EmptyThisBuffer success!\n");
-			pOmxTestInfo->etb_count++;
+            pOmxTestInfo->free_ip_buf_cnt--;
 		}
         
 		if (pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags & OMX_BUFFERFLAG_EOS)
@@ -1519,12 +1534,11 @@ static int process_current_command(OmxTestInfo_S * pOmxTestInfo, const char *seq
 	unsigned int data = 0, bufCnt = 0, i = 0;
 	int frameSize;
 
-       if (pOmxTestInfo->currentStatus == PORT_SETTING_CHANGE_STATE)
-       {
-		DEBUG_PRINT_ERROR("\nCurrent Status = PORT_SETTING_CHANGE_STATE, Command %s Rejected !\n", seq_command);
-              return 0;
-       }
-
+    if (pOmxTestInfo->currentStatus == PORT_SETTING_CHANGE_STATE)
+    {
+        DEBUG_PRINT_ERROR("\nCurrent Status = PORT_SETTING_CHANGE_STATE, Command %s Rejected !\n", seq_command);
+        return 0;
+    }
 
 	if(strcmp(seq_command, "p") == 0)
 	{
@@ -1551,7 +1565,6 @@ static int process_current_command(OmxTestInfo_S * pOmxTestInfo, const char *seq
 		pOmxTestInfo->flush_output_progress = 1;
 		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandFlush, OMX_ALL, 0);
 		wait_for_event(pOmxTestInfo, OMX_CommandFlush);
-		printf("SEEK flush all done~\n");
 
         seek_progress(pOmxTestInfo);
 		pOmxTestInfo->seeking_progress = 0;
@@ -1633,6 +1646,8 @@ static void* ebd_thread(void* pArg)
 		int readBytes =0;
 		OMX_BUFFERHEADERTYPE* pBuffer = NULL;
 
+        pOmxTestInfo->EtbStatus = THREAD_WAITING;
+
 		if(pOmxTestInfo->flush_input_progress)
 		{
 			sem_wait(&pOmxTestInfo->in_flush_sem);
@@ -1650,7 +1665,7 @@ static void* ebd_thread(void* pArg)
 
         if (pOmxTestInfo->bInputEosReached)
             continue;
-
+        
 		pthread_mutex_lock(&pOmxTestInfo->etb_lock);
 		pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->etb_queue);
 		pthread_mutex_unlock(&pOmxTestInfo->etb_lock);
@@ -1661,32 +1676,50 @@ static void* ebd_thread(void* pArg)
 			continue;
 		}
 
+        pOmxTestInfo->EtbStatus = THREAD_RUNNING;
+
 		pBuffer->nOffset = 0;
         pBuffer->nFlags  = 0;
         
-		if((readBytes = Read_Buffer_from_EsRawStream(pOmxTestInfo, pBuffer)) > 0)
+        readBytes = Read_Buffer_from_EsRawStream(pOmxTestInfo, pBuffer);
+        
+		if(pOmxTestInfo->seeking_progress)
+		{
+		    DEBUG_PRINT("Read es done meet seeking.\n");
+			continue;
+		}
+        
+		if(pOmxTestInfo->flush_input_progress)
+		{
+		    DEBUG_PRINT("Read es done meet input flushing.\n");
+			continue;
+		}
+        
+        if (pOmxTestInfo->ebd_thread_exit)
+        {
+            break;
+        }
+            
+		if(readBytes > 0)
 		{
 			DEBUG_PRINT("%s: Timestamp sent(%lld)\n", __func__, pBuffer->nTimeStamp);
-			pBuffer->nFilledLen = readBytes;
-			OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle,pBuffer);
-			pOmxTestInfo->etb_count++;
-			
 			if (pBuffer->nFlags & OMX_BUFFERFLAG_EOS)
 			{
 			    pOmxTestInfo->bInputEosReached = true;
-				continue;
 			}
 		}
 		else
 		{
 			DEBUG_PRINT("EBD::Either EOS or Some Error while reading file\n");
 			pOmxTestInfo->bInputEosReached = true;
-			pBuffer->nFilledLen = readBytes;
-			OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle,pBuffer);
-			pOmxTestInfo->etb_count++;
-			continue;
 		}
+        
+		pBuffer->nFilledLen = readBytes;
+		OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle,pBuffer);
+        pOmxTestInfo->free_ip_buf_cnt--;
 	}
+    
+    pOmxTestInfo->EtbStatus = THREAD_INVALID;
 
 	return NULL;
 }
@@ -1701,12 +1734,14 @@ static void* fbd_thread(void* pArg)
 
 	while(pOmxTestInfo->currentStatus != ERROR_STATE)
 	{
+        pOmxTestInfo->FtbStatus = THREAD_WAITING;
+        
 		if(pOmxTestInfo->flush_output_progress)
 		{
 			sem_wait(&pOmxTestInfo->out_flush_sem);
 		}
 
-		sem_wait(&pOmxTestInfo->fbd_sem);
+		sem_wait(&pOmxTestInfo->ftb_sem);
 
 		if (pOmxTestInfo->fbd_thread_exit)
 		{
@@ -1733,39 +1768,53 @@ static void* fbd_thread(void* pArg)
 			break;
 		}
 
-		pthread_mutex_lock(&pOmxTestInfo->fbd_lock);
-		pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->fbd_queue);
-		pthread_mutex_unlock(&pOmxTestInfo->fbd_lock);
+		pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
+		pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->ftb_queue);
+		pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
 
 		if (!pBuffer)
 		{
 			DEBUG_PRINT("Info - No pBuffer to dequeue\n");
 			continue;
 		}
+        
+        pOmxTestInfo->FtbStatus = THREAD_RUNNING;
 
 		/********************************************************************/
 		/* De-Initializing the open max and relasing the buffers and */
 		/* closing the files.*/
 		/********************************************************************/
-
-		pthread_mutex_lock(&pOmxTestInfo->enable_lock);
 		if (pOmxTestInfo->flush_output_progress)
 		{
-			pBuffer->nFilledLen = 0;
-			pBuffer->nFlags &= ~OMX_BUFFERFLAG_EXTRADATA;
-
-			pthread_mutex_lock(&pOmxTestInfo->fbd_lock);
-
-			if(push(pOmxTestInfo->fbd_queue, (void *)pBuffer) < 0)
-			{
-				DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
-			}
-			else
-            {         
-				sem_post(&pOmxTestInfo->fbd_sem);
-            }
-			pthread_mutex_unlock(&pOmxTestInfo->fbd_lock);
+        #if 0  // continue to send buffer after output flush
+            
+    			pBuffer->nFilledLen = 0;
+    			pBuffer->nFlags &= ~OMX_BUFFERFLAG_EXTRADATA;
+    
+    			pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
+    
+    			if(push(pOmxTestInfo->fbd_queue, (void *)pBuffer) < 0)
+    			{
+    				DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
+    			}
+    			else
+                {         
+    				sem_post(&pOmxTestInfo->ftb_sem);
+                }
+    			pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
+            
+        #else  // not send buffer after output flush
+            
+	        DEBUG_PRINT("Fill this buffer meet output flushing.\n");
+		    continue;
+                
+        #endif
 		}
+        else if (pOmxTestInfo->seeking_progress)
+        {
+	        DEBUG_PRINT("Fill this buffer meet seek pending.\n");
+		    continue;
+        }
 		else
 		{
             pBuffer->nFilledLen = 0;
@@ -1774,9 +1823,9 @@ static void* fbd_thread(void* pArg)
 				pOmxTestInfo->free_op_buf_cnt--;
 			}
 		}
-        
-		pthread_mutex_unlock(&pOmxTestInfo->enable_lock);
-	}
+    }
+    
+    pOmxTestInfo->FtbStatus = THREAD_INVALID;
 
 	return NULL;
 }
@@ -1810,9 +1859,7 @@ static void Init_OmxInst()
 	memset(OmxTestInfo, 0, g_TestInstNum * sizeof(OmxTestInfo_S));
 
 	for (i = 0; i < g_TestInstNum; i++)
-	{
-    	OmxTestInfo[i].cmd_data = ~(unsigned)0;
-   
+	{   
     	OmxTestInfo[i].timestampInterval = 33333;
     	OmxTestInfo[i].currentStatus = GOOD_STATE;
 
@@ -2160,19 +2207,17 @@ int main(int argc, char **argv)
     
     	DEBUG_PRINT("*********get cmd line ok! *******\n");
 
-     	pthread_cond_init(&(OmxTestInfo[i].cond), 0);
-     	pthread_mutex_init(&OmxTestInfo[i].eos_lock, 0);
-     	pthread_mutex_init(&OmxTestInfo[i].lock, 0);
+     	pthread_cond_init(&(OmxTestInfo[i].event_cond), 0);
+     	pthread_mutex_init(&OmxTestInfo[i].event_lock, 0);
      	pthread_mutex_init(&OmxTestInfo[i].etb_lock, 0);
-     	pthread_mutex_init(&OmxTestInfo[i].fbd_lock, 0);
-     	pthread_mutex_init(&OmxTestInfo[i].enable_lock, 0);
+     	pthread_mutex_init(&OmxTestInfo[i].ftb_lock, 0);
      
      	if (-1 == sem_init(&OmxTestInfo[i].etb_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
      
-     	if (-1 == sem_init(&OmxTestInfo[i].fbd_sem, 0, 0))
+     	if (-1 == sem_init(&OmxTestInfo[i].ftb_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
@@ -2202,10 +2247,10 @@ int main(int argc, char **argv)
      		return -1;
      	}
      
-     	OmxTestInfo[i].fbd_queue = alloc_queue();
-     	if (OmxTestInfo[i].fbd_queue == NULL)
+     	OmxTestInfo[i].ftb_queue = alloc_queue();
+     	if (OmxTestInfo[i].ftb_queue == NULL)
      	{
-     		DEBUG_PRINT_ERROR("Error in Creating fbd_queue\n");
+     		DEBUG_PRINT_ERROR("Error in Creating ftb_queue\n");
      		free_queue(OmxTestInfo[i].etb_queue);
      		return -1;
      	}
@@ -2217,7 +2262,7 @@ int main(int argc, char **argv)
     	{
     		DEBUG_PRINT_ERROR("Error in Creating fbd_thread\n");
     		free_queue(OmxTestInfo[i].etb_queue);
-    		free_queue(OmxTestInfo[i].fbd_queue);
+    		free_queue(OmxTestInfo[i].ftb_queue);
     		return -1;
     	}
     
@@ -2283,12 +2328,11 @@ static void loop_function(void)
     char curr_seq_command[512];	
 	int command_inst_no = 0; //命令对应的实例; 等于0表示对所有实例有效
 
-	printf("\nCmd test for control, cmds as follows:\n");
-	printf("** First input the command type, Then input the instance No **\n");
-	printf("**Command Type: q, pause, resume, flush, flush-in, flush-out **\n");
-	printf("** note: use \"q\" to exit instance No = 0 exit**\n");
+	printf("\nTest for control, cmds as follows:\n");
+	printf("First input the command type, Then input the instance num.\n");
 
-	printf("\nPlease input the COMMAND: q (exit), p (pause), r (resume), f (flush all), f0 (flush in), f1 (flush out), s (seek)\n");
+	printf("\nPlease input the COMMAND:\n");
+	printf("q (exit), p (pause), r (resume), f (flush all), f0 (flush in), f1 (flush out), s (seek)\n\n");
 		
 	while (cmd_error == 0)
 	{
@@ -2504,244 +2548,6 @@ static OMX_ERRORTYPE Use_Buffers ( OMX_COMPONENTTYPE *dec_handle,
 }
 
 
-static void free_output_buffers(OmxTestInfo_S * pOmxTestInfo)
-{
-	OMX_U32 index = 0;
-	OMX_BUFFERHEADERTYPE *pBuffer = NULL;
-
-	pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->fbd_queue);
-
-	while (index < pOmxTestInfo->portFmt.nBufferCountActual)
-	{
-		if (pBuffer)
-		{
-			DEBUG_PRINT("Free output buffer[%d] addr %p\n", index, pBuffer);
-            if (0 == pOmxTestInfo->alloc_use_option)
-            {
-                OMX_FreeBuffer(pOmxTestInfo->dec_handle, 1, pBuffer);
-            }
-            else
-            {
-                OMX_FreeBuffer(pOmxTestInfo->dec_handle, 1, pBuffer);
-                HI_MMZ_Free(&pOmxTestInfo->buffer[pBuffer->nTickCount]);
-            }
-			index++;
-		}
-		pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->fbd_queue);
-	}
-}
-
-
-static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueToError)
-{
-	int bufCnt = 0;
-	OMX_STATETYPE state = OMX_StateLoaded;
-	OMX_ERRORTYPE result = OMX_ErrorNone;
-
-    DEBUG_PRINT("Inst %d ready to quit.\n", pOmxTestInfo->inst_no);
-
-	pOmxTestInfo->ebd_thread_exit = 1;
-	pOmxTestInfo->fbd_thread_exit = 1;
-	sem_post(&pOmxTestInfo->etb_sem);  
-	sem_post(&pOmxTestInfo->fbd_sem);
-
-	OMX_GetState(pOmxTestInfo->dec_handle, &state);
-
-	pOmxTestInfo->flush_input_progress = 1;
-	pOmxTestInfo->flush_output_progress = 1;
-	OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandFlush, OMX_ALL, 0);
-	wait_for_event(pOmxTestInfo, OMX_CommandFlush);
-    
-    DEBUG_PRINT("Flush All done.\n");
-
-	if (pOmxTestInfo->currentStatus == PORT_SETTING_RECONFIG_STATE)
-	{
-	    DEBUG_PRINT_ERROR("currentStatus = PORT_SETTING_RECONFIG_STATE, sleep for a while.\n");
-	    do {
-	        sleep(1);
-	    }while(pOmxTestInfo->currentStatus == PORT_SETTING_RECONFIG_STATE);
-		DEBUG_PRINT_ERROR("currentStatus != PORT_SETTING_RECONFIG_STATE, wake up.\n");
-	}
-
-	if (state == OMX_StateExecuting || state == OMX_StatePause)
-	{
-		DEBUG_PRINT("Requesting transition to Idle\n");
-		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandStateSet, OMX_StateIdle, 0);
-		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
-        
-        DEBUG_PRINT("In Idle state.\n");
-
-		OMX_GetState(pOmxTestInfo->dec_handle, &state);
-		if (state != OMX_StateIdle)
-		{
-			DEBUG_PRINT_ERROR("current component state :%d error!\n", state);
-		}
-
-		DEBUG_PRINT("current component state :%d\n", state);
-	}
-
-	if (state == OMX_StateIdle)
-	{
-		DEBUG_PRINT("Requesting transition to Loaded\n");
-		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandStateSet, OMX_StateLoaded, 0);
-
-		for(bufCnt=0; bufCnt < pOmxTestInfo->used_ip_buf_cnt; ++bufCnt)
-		{
-			OMX_FreeBuffer(pOmxTestInfo->dec_handle, 0, pOmxTestInfo->pInputBufHdrs[bufCnt]);
-		}
-
-		if (pOmxTestInfo->pInputBufHdrs)
-		{
-			free(pOmxTestInfo->pInputBufHdrs);
-			pOmxTestInfo->pInputBufHdrs = NULL;
-		}
-
-		DEBUG_PRINT("free ip buffer ok!\n");
-        
-		for(bufCnt = 0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
-		{
-		     OMX_FreeBuffer(pOmxTestInfo->dec_handle, 1, pOmxTestInfo->pOutYUVBufHdrs[bufCnt]);
-		}
-
-		if (pOmxTestInfo->pOutYUVBufHdrs)
-		{
-			free(pOmxTestInfo->pOutYUVBufHdrs);
-			pOmxTestInfo->pOutYUVBufHdrs = NULL;
-		}
-
-		pOmxTestInfo->free_op_buf_cnt = 0;
-
-		DEBUG_PRINT("free op buffer ok!\n");
-
-		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
-        
-        DEBUG_PRINT("In Loaded state.\n");
-
-		OMX_GetState(pOmxTestInfo->dec_handle, &state);
-		if (state != OMX_StateLoaded)
-		{
-			DEBUG_PRINT_ERROR("current component state :%d error!\n", state);
-		}
-
-              if (pOmxTestInfo->alloc_use_option)
-              {
-                 for(bufCnt=0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
-                 {
-                     HI_MMZ_Free(&pOmxTestInfo->buffer[bufCnt]);
-                 }
-              }
-              
-		DEBUG_PRINT("current component state :%d\n", state);
-        
-	}
-
-	DEBUG_PRINT("[OMX Vdec Test] - Free omx handle start \n");
-
-	result = OMX_FreeHandle(pOmxTestInfo->dec_handle);
-	if (result != OMX_ErrorNone)
-	{
-		DEBUG_PRINT_ERROR("OMX_FreeHandle error. Error code: %x\n", result);
-	}
-
-	DEBUG_PRINT("[OMX Vdec Test] - Free omx handle end !!\n");
-
-	pOmxTestInfo->dec_handle = NULL;
-
-	/* Deinit OpenMAX */
-	DEBUG_PRINT("De-initializing OMX \n");
-	OMX_Deinit();
-
-	DEBUG_PRINT(" closing all files \n");
-	if(pOmxTestInfo->inputBufferFileFd != NULL)
-	{
-		fclose(pOmxTestInfo->inputBufferFileFd);
-		pOmxTestInfo->inputBufferFileFd = NULL;
-	}
-	DEBUG_PRINT(" after free inputfile \n");
-
-	if(pOmxTestInfo->etb_queue)
-	{
-		free_queue(pOmxTestInfo->etb_queue);
-		pOmxTestInfo->etb_queue = NULL;
-	}
-
-	DEBUG_PRINT("after free etb_queue\n");
-	if(pOmxTestInfo->fbd_queue)
-	{
-		free_queue(pOmxTestInfo->fbd_queue);
-		pOmxTestInfo->fbd_queue = NULL;
-	}
-	DEBUG_PRINT("after free iftb_queue\n");
-    
-#ifdef HI_TVP_SUPPORT
-    if (1 == pOmxTestInfo->tvp_option)
-    {
-        HI_MMZ_Free(&pOmxTestInfo->pCAStreamBuf);
-        HI_SEC_MMZ_DeInit();
-    }
-#endif
-
-	pthread_join(pOmxTestInfo->ebd_thread_id, NULL);
-    
-	DEBUG_PRINT("after join ebd thread\n");
-    
-	pthread_join(pOmxTestInfo->fbd_thread_id, NULL);
-
-	DEBUG_PRINT("after join fbd thread\n");
-
-	pthread_cond_destroy(&pOmxTestInfo->cond);
-
-	pthread_mutex_destroy(&pOmxTestInfo->lock);
-	pthread_mutex_destroy(&pOmxTestInfo->etb_lock);
-	pthread_mutex_destroy(&pOmxTestInfo->fbd_lock);
-	pthread_mutex_destroy(&pOmxTestInfo->enable_lock);
-
-	pthread_mutex_destroy(&pOmxTestInfo->eos_lock);
-
-	DEBUG_PRINT("after destroy mutex\n");
-
-	if (-1 == sem_destroy(&pOmxTestInfo->etb_sem))
-	{
-		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
-	}
-
-	if (-1 == sem_destroy(&pOmxTestInfo->fbd_sem))
-	{
-		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
-	}
-
-	if (-1 == sem_destroy(&pOmxTestInfo->in_flush_sem))
-	{
-		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
-	}
-
-	if (-1 == sem_destroy(&pOmxTestInfo->out_flush_sem))
-	{
-		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
-	}
-
-	if (-1 == sem_destroy(&pOmxTestInfo->seek_sem))
-	{
-		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
-	}
-
-    close((long)pOmxTestInfo->in_filename);
-    
-    pOmxTestInfo->is_open = 0;
-    
-	printf("*****************************************\n");
-
-	if (isDueToError)
-		printf("************...TEST FAILED...************\n");
-	else
-		printf("**********...TEST SUCCESSFULL...*********\n");
-
-	printf("*****************************************\n\n\n");
-
-    return;
-}
-
-
 static int disable_output_port(OmxTestInfo_S * pOmxTestInfo)
 {
        int q_flag = 0;
@@ -2750,17 +2556,15 @@ static int disable_output_port(OmxTestInfo_S * pOmxTestInfo)
 	DEBUG_PRINT("prepre to disable output port\n");
 
 	// Send DISABLE command.
-	pthread_mutex_lock(&pOmxTestInfo->enable_lock);
 	pOmxTestInfo->sent_disabled = 1;
-	pthread_mutex_unlock(&pOmxTestInfo->enable_lock);
 
 	OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandPortDisable, 1, 0);
 
     do
     {
-       pthread_mutex_lock(&pOmxTestInfo->fbd_lock);
-       pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->fbd_queue);
-       pthread_mutex_unlock(&pOmxTestInfo->fbd_lock);
+       pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
+       pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->ftb_queue);
+       pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
        
        if (NULL != pBuffer)
        {
@@ -2890,7 +2694,7 @@ static int output_port_reconfig(OmxTestInfo_S * pOmxTestInfo)
 		DEBUG_PRINT_ERROR("disable output port failed\n");
 		return -1;
 	}
-	/* Port for which the Client needs to obtain info */
+	/* Port for which the client needs to obtain info */
 
 	pOmxTestInfo->portFmt.nPortIndex = 1;
 
@@ -2928,52 +2732,310 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
 {
 	int bufCnt = 0;
 	int frameSize = 0;
+    OMX_BUFFERHEADERTYPE *pBuffer = NULL;
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
     
-	DEBUG_PRINT_ALWS("Enter seek_progress!\n");
+	DEBUG_PRINT("Enter seek_progress!\n");
 
+    if (pOmxTestInfo->EtbStatus == THREAD_RUNNING || pOmxTestInfo->FtbStatus == THREAD_RUNNING)
+    {
+        DEBUG_PRINT_ERROR("EtbStatus/FtbStatus = THREAD_RUNNING, sleep for a while.\n");
+        do {
+            sleep(1);
+        }while(pOmxTestInfo->EtbStatus == THREAD_RUNNING || pOmxTestInfo->FtbStatus == THREAD_RUNNING);
+        DEBUG_PRINT_ERROR("EtbStatus&FtbStatus != THREAD_RUNNING, wake up.\n");
+    }
+
+    do {
+        pthread_mutex_lock(&pOmxTestInfo->etb_lock);
+        pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->etb_queue);
+        pthread_mutex_unlock(&pOmxTestInfo->etb_lock);
+    }while(pBuffer != NULL);
+    
+    do {
+        pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
+        pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->ftb_queue);
+        pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
+    }while(pBuffer != NULL);
+    
     rewind(pOmxTestInfo->inputBufferFileFd);
     pOmxTestInfo->frame_flag = 0;
     pOmxTestInfo->send_cnt   = 0;
+    pOmxTestInfo->receive_frame_cnt = 0;
+    pOmxTestInfo->bInputEosReached = false;
     
-	DEBUG_PRINT_ALWS("Enter seek_progress %d %d!\n", pOmxTestInfo->bInputEosReached, pOmxTestInfo->used_ip_buf_cnt);
-	if(pOmxTestInfo->bInputEosReached)
-	{
-        pOmxTestInfo->bInputEosReached = false;
-        for (bufCnt = 0; bufCnt < pOmxTestInfo->used_ip_buf_cnt; bufCnt++)
+	if (pOmxTestInfo->used_op_buf_cnt != pOmxTestInfo->free_op_buf_cnt)
+    {
+        DEBUG_PRINT_ERROR("ERROR: seek_progress used_op_buf_cnt = %d, free_op_buf_cnt = %d!\n", pOmxTestInfo->used_op_buf_cnt, pOmxTestInfo->free_op_buf_cnt);
+        sleep(3);
+    }
+    
+    for(bufCnt = 0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
+    {
+        DEBUG_PRINT("OMX_FillThisBuffer on output buf no.%d\n",bufCnt);
+
+        pOmxTestInfo->pOutYUVBufHdrs[bufCnt]->nOutputPortIndex = 1;
+        pOmxTestInfo->pOutYUVBufHdrs[bufCnt]->nFlags &= ~OMX_BUFFERFLAG_EOS;
+
+        ret = OMX_FillThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pOutYUVBufHdrs[bufCnt]);
+
+        if (OMX_ErrorNone != ret)
         {
-        	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
-        	pOmxTestInfo->pInputBufHdrs[bufCnt]->nOffset = 0;
-        	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags = 0;
-
-        	frameSize = Read_Buffer_from_EsRawStream(pOmxTestInfo, pOmxTestInfo->pInputBufHdrs[bufCnt]);
-            
-        	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFilledLen = frameSize;
-        	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
-            
-            DEBUG_PRINT_ALWS("%s: Timestamp sent(%lld)\n", __func__, pOmxTestInfo->pInputBufHdrs[bufCnt]->nTimeStamp);
-
-        	ret = OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pInputBufHdrs[bufCnt]);
-        	if (OMX_ErrorNone != ret)
-        	{
-        		DEBUG_PRINT_ERROR("ERROR: OMX_EmptyThisBuffer failed\n");
-        		do_freeHandle_and_clean_up(pOmxTestInfo, true);
-        		return -1;
-        	}
-        	else
-        	{
-        		pOmxTestInfo->etb_count++;
-        	}
-            
-        	if (pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags & OMX_BUFFERFLAG_EOS)
-        	{
-        		pOmxTestInfo->bInputEosReached = true;
-                break;
-        	}
+            DEBUG_PRINT_ERROR("Error - OMX_FillThisBuffer failed!!\n");
+            do_freeHandle_and_clean_up(pOmxTestInfo, true);
+            return -1;
         }
+        else
+        {
+            pOmxTestInfo->free_op_buf_cnt--;
+        }
+    }
+    
+	if (pOmxTestInfo->used_ip_buf_cnt != pOmxTestInfo->free_ip_buf_cnt)
+    {
+        DEBUG_PRINT_ERROR("ERROR: seek_progress used_ip_buf_cnt = %d, free_ip_buf_cnt = %d!\n", pOmxTestInfo->used_ip_buf_cnt, pOmxTestInfo->free_ip_buf_cnt);
+        sleep(3);
+    }
+    
+    for (bufCnt = 0; bufCnt < pOmxTestInfo->used_ip_buf_cnt; bufCnt++)
+    {
+    	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
+    	pOmxTestInfo->pInputBufHdrs[bufCnt]->nOffset = 0;
+    	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags = 0;
+
+    	frameSize = Read_Buffer_from_EsRawStream(pOmxTestInfo, pOmxTestInfo->pInputBufHdrs[bufCnt]);
+        
+    	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFilledLen = frameSize;
+    	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
+        
+        DEBUG_PRINT("%s: Timestamp sent(%lld)\n", __func__, pOmxTestInfo->pInputBufHdrs[bufCnt]->nTimeStamp);
+
+    	ret = OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pInputBufHdrs[bufCnt]);
+    	if (OMX_ErrorNone != ret)
+    	{
+    		DEBUG_PRINT_ERROR("ERROR: OMX_EmptyThisBuffer failed\n");
+    		do_freeHandle_and_clean_up(pOmxTestInfo, true);
+    		return -1;
+    	}
+    	else
+    	{
+            pOmxTestInfo->free_ip_buf_cnt--;
+    	}
+        
+    	if (pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags & OMX_BUFFERFLAG_EOS)
+    	{
+    		pOmxTestInfo->bInputEosReached = true;
+            break;
+    	}
+    }
+    
+	DEBUG_PRINT("SEEK PROGRESS DONE!\n");
+	return 0;
+}
+
+static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueToError)
+{
+	int bufCnt = 0;
+	OMX_STATETYPE state = OMX_StateLoaded;
+	OMX_ERRORTYPE result = OMX_ErrorNone;
+
+    DEBUG_PRINT("Inst %d ready to quit.\n", pOmxTestInfo->inst_no);
+
+	pOmxTestInfo->ebd_thread_exit = 1;
+	pOmxTestInfo->fbd_thread_exit = 1;
+	sem_post(&pOmxTestInfo->etb_sem);  
+	sem_post(&pOmxTestInfo->ftb_sem);
+
+	OMX_GetState(pOmxTestInfo->dec_handle, &state);
+
+	pOmxTestInfo->flush_input_progress = 1;
+	pOmxTestInfo->flush_output_progress = 1;
+	OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandFlush, OMX_ALL, 0);
+	wait_for_event(pOmxTestInfo, OMX_CommandFlush);
+    
+    DEBUG_PRINT("Flush All done.\n");
+
+	if (pOmxTestInfo->currentStatus == PORT_SETTING_RECONFIG_STATE)
+	{
+	    DEBUG_PRINT_ERROR("currentStatus = PORT_SETTING_RECONFIG_STATE, sleep for a while.\n");
+	    do {
+	        sleep(1);
+	    }while(pOmxTestInfo->currentStatus == PORT_SETTING_RECONFIG_STATE);
+		DEBUG_PRINT_ERROR("currentStatus != PORT_SETTING_RECONFIG_STATE, wake up.\n");
 	}
 
-	DEBUG_PRINT_ALWS("SEEK PROGRESS DONE!\n");
-	return 0;
+	if (state == OMX_StateExecuting || state == OMX_StatePause)
+	{
+		DEBUG_PRINT("Requesting transition to Idle\n");
+		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandStateSet, OMX_StateIdle, 0);
+		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
+        
+        DEBUG_PRINT("In Idle state.\n");
+
+		OMX_GetState(pOmxTestInfo->dec_handle, &state);
+		if (state != OMX_StateIdle)
+		{
+			DEBUG_PRINT_ERROR("current component state :%d error!\n", state);
+		}
+
+		DEBUG_PRINT("current component state :%d\n", state);
+	}
+
+	if (state == OMX_StateIdle)
+	{
+		DEBUG_PRINT("Requesting transition to Loaded\n");
+		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandStateSet, OMX_StateLoaded, 0);
+
+		for(bufCnt=0; bufCnt < pOmxTestInfo->used_ip_buf_cnt; ++bufCnt)
+		{
+			OMX_FreeBuffer(pOmxTestInfo->dec_handle, 0, pOmxTestInfo->pInputBufHdrs[bufCnt]);
+		}
+
+		if (pOmxTestInfo->pInputBufHdrs)
+		{
+			free(pOmxTestInfo->pInputBufHdrs);
+			pOmxTestInfo->pInputBufHdrs = NULL;
+		}
+
+		DEBUG_PRINT("free ip buffer ok!\n");
+        
+		for(bufCnt = 0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
+		{
+		     OMX_FreeBuffer(pOmxTestInfo->dec_handle, 1, pOmxTestInfo->pOutYUVBufHdrs[bufCnt]);
+		}
+
+		if (pOmxTestInfo->pOutYUVBufHdrs)
+		{
+			free(pOmxTestInfo->pOutYUVBufHdrs);
+			pOmxTestInfo->pOutYUVBufHdrs = NULL;
+		}
+
+		pOmxTestInfo->free_op_buf_cnt = 0;
+
+		DEBUG_PRINT("free op buffer ok!\n");
+
+		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
+        
+        DEBUG_PRINT("In Loaded state.\n");
+
+		OMX_GetState(pOmxTestInfo->dec_handle, &state);
+		if (state != OMX_StateLoaded)
+		{
+			DEBUG_PRINT_ERROR("current component state :%d error!\n", state);
+		}
+
+              if (pOmxTestInfo->alloc_use_option)
+              {
+                 for(bufCnt=0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
+                 {
+                     HI_MMZ_Free(&pOmxTestInfo->buffer[bufCnt]);
+                 }
+              }
+              
+		DEBUG_PRINT("current component state :%d\n", state);
+        
+	}
+
+	DEBUG_PRINT("[OMX Vdec Test] - Free omx handle start \n");
+
+	result = OMX_FreeHandle(pOmxTestInfo->dec_handle);
+	if (result != OMX_ErrorNone)
+	{
+		DEBUG_PRINT_ERROR("OMX_FreeHandle error. Error code: %x\n", result);
+	}
+
+	DEBUG_PRINT("[OMX Vdec Test] - Free omx handle end !!\n");
+
+	pOmxTestInfo->dec_handle = NULL;
+
+	/* Deinit OpenMAX */
+	DEBUG_PRINT("De-initializing OMX \n");
+	OMX_Deinit();
+
+	DEBUG_PRINT(" closing all files \n");
+	if(pOmxTestInfo->inputBufferFileFd != NULL)
+	{
+		fclose(pOmxTestInfo->inputBufferFileFd);
+		pOmxTestInfo->inputBufferFileFd = NULL;
+	}
+	DEBUG_PRINT(" after free inputfile \n");
+
+	if(pOmxTestInfo->etb_queue)
+	{
+		free_queue(pOmxTestInfo->etb_queue);
+		pOmxTestInfo->etb_queue = NULL;
+	}
+
+	DEBUG_PRINT("after free etb_queue\n");
+	if(pOmxTestInfo->ftb_queue)
+	{
+		free_queue(pOmxTestInfo->ftb_queue);
+		pOmxTestInfo->ftb_queue = NULL;
+	}
+	DEBUG_PRINT("after free ftb_queue\n");
+    
+#ifdef HI_TVP_SUPPORT
+    if (1 == pOmxTestInfo->tvp_option)
+    {
+        HI_MMZ_Free(&pOmxTestInfo->pCAStreamBuf);
+        HI_SEC_MMZ_DeInit();
+    }
+#endif
+
+	pthread_join(pOmxTestInfo->ebd_thread_id, NULL);
+    
+	DEBUG_PRINT("after join ebd thread\n");
+    
+	pthread_join(pOmxTestInfo->fbd_thread_id, NULL);
+
+	DEBUG_PRINT("after join fbd thread\n");
+
+	pthread_cond_destroy(&pOmxTestInfo->event_cond);
+
+	pthread_mutex_destroy(&pOmxTestInfo->event_lock);
+	pthread_mutex_destroy(&pOmxTestInfo->etb_lock);
+	pthread_mutex_destroy(&pOmxTestInfo->ftb_lock);
+
+	DEBUG_PRINT("after destroy mutex\n");
+
+	if (-1 == sem_destroy(&pOmxTestInfo->etb_sem))
+	{
+		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
+	}
+
+	if (-1 == sem_destroy(&pOmxTestInfo->ftb_sem))
+	{
+		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
+	}
+
+	if (-1 == sem_destroy(&pOmxTestInfo->in_flush_sem))
+	{
+		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
+	}
+
+	if (-1 == sem_destroy(&pOmxTestInfo->out_flush_sem))
+	{
+		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
+	}
+
+	if (-1 == sem_destroy(&pOmxTestInfo->seek_sem))
+	{
+		DEBUG_PRINT_ERROR("L%d Error - sem_destroy failed %d\n", __LINE__, errno);
+	}
+
+    close((long)pOmxTestInfo->in_filename);
+    
+    pOmxTestInfo->is_open = 0;
+    
+	printf("*********************************************\n");
+
+	if (isDueToError)
+		printf("**************...TEST FAILED...**************\n");
+	else
+		printf("************...TEST SUCCESSFULL...***********\n");
+
+	printf("*********************************************\n\n\n");
+    
+    return;
 }
 

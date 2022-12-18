@@ -9,14 +9,16 @@
 
 /*
  *  nand flash support
- *  #define CONFIG_NAND_SUPPORT
+ * 
  */
+#define CONFIG_NAND_SUPPORT	y
 
 
 /*
  *  spi flash support
- *  #define CONFIG_SPIFLASH_SUPPORT
+ * 
  */
+#define CONFIG_SPIFLASH_SUPPORT	y
 
 
 /*
@@ -40,9 +42,8 @@
 
 /*
  *  emmc flash support
- * 
+ *  #define CONFIG_EMMC_SUPPORT
  */
-#define CONFIG_EMMC_SUPPORT	y
 
 
 /*
@@ -124,10 +125,15 @@
 
 
 /*
- *  AVS config
- * 
+ *  Gpio Light config
+ *  #define CONFIG_GPIO_LIGHT_SET
  */
-#define CONFIG_AVS_SUPPORT	y
+
+
+/*
+ *  AVS config
+ *  #define CONFIG_AVS_SUPPORT
+ */
 
 
 /*
@@ -139,4 +145,10 @@
 /*
  *  USB Driver config
  *  #define CONFIG_USB_SUPPORT
+ */
+
+
+/*
+ *  Secure boot config
+ *  #define CONFIG_SECURE_BOOT_SUPPORT
  */

@@ -169,6 +169,10 @@ typedef   struct item_para
 #define KEYLED_TYPE (2)
 #elif defined(HI_KEYLED_PT6964)
 #define KEYLED_TYPE (3)
+#elif defined(HI_KEYLED_FD650)
+#define KEYLED_TYPE (4)
+#elif defined(HI_KEYLED_GPIOKEY)
+#define KEYLED_TYPE (5)
 #else
 #error "invalid keyled type."
 #endif

@@ -21,13 +21,7 @@ LOCAL_SHARED_LIBRARIES := \
     libui\
     libnetutils \
     libhi_common \
-    libhi_msp \
-    libandroid_runtime
-ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
-LOCAL_CFLAGS += -DCFG_HI_ADVCA_SUPPORT
-LOCAL_STATIC_LIBRARIES += \
-    libca_update
-endif
+    libhi_msp
 LOCAL_C_INCLUDES := \
     $(TOP)/framework/native/services/surfaceflinger \
     $(TOP)/hardware/libhardware/include \

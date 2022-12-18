@@ -28,6 +28,9 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.SystemProperties;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
@@ -69,14 +72,17 @@ public class AudioPreview extends Activity implements OnPreparedListener,
     private AudioManager mAudioManager;
     private boolean mPausedByTransientLossOfFocus;
     private boolean playStateScreenOff;
+    private WakeLock wakeLock = null;
     private BroadcastReceiver powerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 if (mPlayer.isPlaying()) {
+                    acquireWakeLock();
                     mPlayer.pause();
                     playStateScreenOff = true;
+                    wakeLock.release();
                 } else {
                     playStateScreenOff = false;
                 }
@@ -90,6 +96,16 @@ public class AudioPreview extends Activity implements OnPreparedListener,
             }
         }
     };
+
+    private void acquireWakeLock() {
+        synchronized (wakeLock) {
+            try {
+                wakeLock.acquire();
+	        } catch (Exception e) {
+                Log.e(TAG, "exception in acquireWakeLock()", e);
+            }
+	    }
+    }
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -123,6 +139,8 @@ public class AudioPreview extends Activity implements OnPreparedListener,
         mSeekBar = (SeekBar) findViewById(R.id.progress);
         mProgressRefresher = new Handler();
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getCanonicalName());
 
         PreviewPlayer player = (PreviewPlayer) getLastNonConfigurationInstance();
         if (player == null) {
@@ -226,7 +244,9 @@ public class AudioPreview extends Activity implements OnPreparedListener,
                 setNames();
             }
         }
-        registerpowerReceiver();
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            registerpowerReceiver();
+        }
     }
 
     private void registerpowerReceiver() {
@@ -245,7 +265,9 @@ public class AudioPreview extends Activity implements OnPreparedListener,
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(powerReceiver);
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            unregisterReceiver(powerReceiver);
+        }
         stopPlayback();
         super.onDestroy();
     }

@@ -26,7 +26,9 @@
 #include "ahci.h"
 
 static void ahci_host_stop(struct ata_host *host);
+#ifdef CONFIG_ARCH_S40
 extern int ncq_fixed;
+#endif
 unsigned int ncq_en = 1;
 module_param(ncq_en, uint, 0600);
 MODULE_PARM_DESC(ncq_en, "ahci ncq flag (default:0)");
@@ -163,7 +165,11 @@ static int ahci_probe(struct platform_device *pdev)
 	/* prepare host */
 	if (hpriv->cap & HOST_CAP_NCQ)
 		pi.flags |= ATA_FLAG_NCQ;
+#ifdef CONFIG_ARCH_S40
 	if (!ncq_en || !ncq_fixed)
+#else
+	if (!ncq_en)
+#endif
 		pi.flags &= ~ATA_FLAG_NCQ;
 
 	if (hpriv->cap & HOST_CAP_PMP)

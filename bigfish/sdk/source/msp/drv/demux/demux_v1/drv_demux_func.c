@@ -147,7 +147,7 @@ static HI_VOID DMXConfigIPPortRate(HI_U32 PortId)
     HI_U32 DmxClk;
     HI_UNF_DMX_TSO_PORT_ATTR_S PortAttr;
 
-    DmxClk = DmxHalGetClk();
+    DmxClk = DmxHalGetDmxClk();
 	
     /*Attention: now we do not support MV300 TSO */
     for ( i = 0 ; i < DMX_TSOPORT_CNT; i++ )
@@ -2928,8 +2928,6 @@ static HI_S32 DmxReset(HI_VOID)
 
     DmxHalConfigHardware();
 
-    udelay(10);
-
     ret = DmxHalGetInitStatus();
     if (HI_SUCCESS != ret)
     {
@@ -2962,18 +2960,53 @@ static HI_S32 DmxReset(HI_VOID)
     return HI_SUCCESS;
 }
 
-/***********************************************************************************
-* Function      : DMX_OsiInit
-* Description   : Initialize demux module
-* Input         :
-* Output        :
-* Return        : HI_SUCCESS:     success
-*                 HI_FAILURE:     system error or allocated dma buffer size beyonds limit
-* Others:
-***********************************************************************************/
-HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
+/*
+ * simple dynamic tune dmx clock rule(range: [0 ~ 31]):
+ * 1. no demux attached to any port, reduce = 31;
+ * 2. 1 demux attached to any port, reduce = 10;
+ * 3. more than 2 demux attached to any port, reduce = 0;
+ * 4. ram port need external bandwidth, so we increase using count.
+ * see actual dmx clk from offset 0x2320.
+ */
+static HI_VOID DMX_DynamicTuneDmxClk(HI_VOID)
 {
-    DMX_DEV_OSI_S          *pDmxDevOsi;
+    HI_U32 ActiveCnt = 0;
+    HI_U32 index;
+
+    for (index = 0; index < DMX_CNT; index++)
+    {
+        DMX_Sub_DevInfo_S  *DmxInfo = &g_pDmxDevOsi->SubDevInfo[index];
+        
+        if (DMX_INVALID_PORT_ID != DmxInfo->PortId)
+        {  
+            ActiveCnt ++;
+
+            if (DMX_PORT_MODE_RAM == DmxInfo->PortMode)
+            {
+                ActiveCnt ++ ;
+            }
+        }
+    }
+
+    switch(ActiveCnt)
+    {
+        case 0:
+            DmxHalDynamicTuneDmxClk(31);
+            break;
+        case 1:
+            DmxHalDynamicTuneDmxClk(10);
+            break;
+        default:
+            DmxHalDynamicTuneDmxClk(0);
+            break;
+    }
+}
+
+extern uint DmxPoolBufSize;
+extern uint DmxBlockSize;
+
+static HI_S32 __DMX_StartAllDmx(HI_VOID)
+{
     HI_UNF_DMX_PORT_ATTR_S  PortAttr;
     HI_UNF_DMX_TSO_PORT_ATTR_S  TSOPortAttr;
     DMX_FQ_Info_S          *FqInfo;
@@ -2982,62 +3015,38 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
     HI_U32                  FqBufSize;
     MMZ_BUFFER_S            MmzBuf;
     HI_U32                  i;
-    HI_U32                  ProcessID;
-
-    if (HI_NULL != g_pDmxDevOsi)
-    {
-        g_pDmxDevOsi->Reference++;
-        UpdateProcRef(g_pDmxDevOsi->Reference);
-        ProcessID = __task_pid_nr_ns(current, PIDTYPE_PID, NULL);
-        HI_INFO_DEMUX("Process (ID : 0x%x )call DMX_OsiInit , g_pDmxDevOsi->Reference= %d\n",ProcessID,g_pDmxDevOsi->Reference);
-        return HI_SUCCESS;
-    }
 
     if (HI_SUCCESS != DmxReset())
     {
         return HI_ERR_DMX_BUSY;
     }
 
-    BufSize     = (PoolBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
-    FqDepth     = BufSize / (BlockSize + DMX_BUF_INTERVAL) + 1;
+    if (0 != request_irq(DMX_INT_NUM, (irq_handler_t) DMXOsiIsr, IRQF_DISABLED, "hi_dmx_irq", HI_NULL))
+    {
+        HI_ERR_DEMUX("request_irq(%d) error.\n", DMX_INT_NUM);
+        return HI_FAILURE;
+    }
+
+    BufSize     = (DmxPoolBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
+    FqDepth     = BufSize / (DmxBlockSize + DMX_BUF_INTERVAL) + 1;
     FqBufSize   = FqDepth * DMX_FQ_DESC_SIZE;
 
     if (HI_SUCCESS != HI_DRV_MMZ_AllocAndMap("DMX_PoolBuf", MMZ_OTHERS, BufSize + FqBufSize, 0, &MmzBuf))
     {
         HI_FATAL_DEMUX("memory allocate failed\n");
 
-        return HI_ERR_DMX_ALLOC_MEM_FAILED;
-    }
-
-    pDmxDevOsi = HI_VMALLOC(HI_ID_DEMUX, sizeof(DMX_DEV_OSI_S));
-    if (HI_NULL == pDmxDevOsi)
-    {
-        HI_FATAL_DEMUX("memory allocate failed\n");
-
-        HI_DRV_MMZ_UnmapAndRelease(&MmzBuf);
+        free_irq(DMX_INT_NUM, HI_NULL);
 
         return HI_ERR_DMX_ALLOC_MEM_FAILED;
     }
 
-    g_pDmxDevOsi = pDmxDevOsi;
-
-    memset((HI_VOID*)pDmxDevOsi, 0, sizeof(DMX_DEV_OSI_S));
-
-    HI_INIT_MUTEX(&pDmxDevOsi->lock_Channel);
-    HI_INIT_MUTEX(&pDmxDevOsi->lock_Filter);
-    HI_INIT_MUTEX(&pDmxDevOsi->lock_Key);
-    HI_INIT_MUTEX(&pDmxDevOsi->lock_OqBuf);
-    HI_INIT_MUTEX(&pDmxDevOsi->lock_AVChan);
-    
-    spin_lock_init(&pDmxDevOsi->splock_OqBuf);
-
-    FqInfo = &pDmxDevOsi->DmxFqInfo[DMX_FQ_COMMOM];
+    FqInfo = &g_pDmxDevOsi->DmxFqInfo[DMX_FQ_COMMOM];
 
     FqInfo->u32IsUsed       = 1;
     FqInfo->u32BufPhyAddr   = MmzBuf.u32StartPhyAddr;
     FqInfo->u32BufVirAddr   = MmzBuf.u32StartVirAddr;
     FqInfo->u32BufSize      = BufSize;
-    FqInfo->u32BlockSize    = BlockSize;
+    FqInfo->u32BlockSize    = DmxBlockSize;
     FqInfo->u32FQDepth      = FqDepth;
     FqInfo->u32FQPhyAddr    = FqInfo->u32BufPhyAddr + BufSize;
     FqInfo->u32FQVirAddr    = FqInfo->u32BufVirAddr + BufSize;
@@ -3064,7 +3073,7 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
     for (i = 0; i < DMX_RAMPORT_CNT; i++)
     {
-        DMX_RamPort_Info_S *PortInfo = &pDmxDevOsi->RamPortInfo[i];
+        DMX_RamPort_Info_S *PortInfo = &g_pDmxDevOsi->RamPortInfo[i];
 
         init_waitqueue_head(&PortInfo->WaitQueue);
 
@@ -3108,7 +3117,7 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
 #ifdef DMX_TAG_DEAL_SUPPORT
     {
-        DMX_TagDeal_Info_S *TagDealInfo = &pDmxDevOsi->TagDealInfo;
+        DMX_TagDeal_Info_S *TagDealInfo = &g_pDmxDevOsi->TagDealInfo;
 
         TagDealInfo->bEnabled = HI_FALSE;
         TagDealInfo->enSyncMod = HI_UNF_DMX_TAG_HEAD_SYNC;
@@ -3136,15 +3145,15 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
     for (i = 0; i < DMX_CNT; i++)
     {
-        DMX_Sub_DevInfo_S  *DmxInfo = &pDmxDevOsi->SubDevInfo[i];
-        DMX_RecInfo_S      *RecInfo = &pDmxDevOsi->DmxRecInfo[i];
+        DMX_Sub_DevInfo_S  *DmxInfo = &g_pDmxDevOsi->SubDevInfo[i];
+        DMX_RecInfo_S      *RecInfo = &g_pDmxDevOsi->DmxRecInfo[i];
 
         DmxInfo->PortMode   = DMX_PORT_MODE_BUTT;
         DmxInfo->PortId     = DMX_INVALID_PORT_ID;
 
         RecInfo->DmxId      = DMX_INVALID_DEMUX_ID;
-#ifdef DMX_DATAINDEX_V2_SUPPORT
-		INIT_LIST_HEAD(&RecInfo->head);   
+#ifndef DMX_DATAINDEX_V1_SUPPORT
+        INIT_LIST_HEAD(&RecInfo->head);   
         RecInfo->RemIdxCnt = 0;
 #endif
 
@@ -3155,7 +3164,7 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
     for (i = 0; i < DMX_CHANNEL_CNT; i++)
     {
-        DMX_ChanInfo_S *ChanInfo = &pDmxDevOsi->DmxChanInfo[i];
+        DMX_ChanInfo_S *ChanInfo = &g_pDmxDevOsi->DmxChanInfo[i];
 
         ChanInfo->DmxId             = DMX_INVALID_DEMUX_ID;
         ChanInfo->ChanPid           = DMX_INVALID_PID;
@@ -3173,7 +3182,7 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
     for (i = 0; i < DMX_FILTER_CNT; i++)
     {
-        DMX_FilterInfo_S *FilterInfo = &pDmxDevOsi->DmxFilterInfo[i];
+        DMX_FilterInfo_S *FilterInfo = &g_pDmxDevOsi->DmxFilterInfo[i];
 
         FilterInfo->ChanId      = DMX_INVALID_CHAN_ID;
         FilterInfo->FilterId    = DMX_INVALID_FILTER_ID;
@@ -3183,18 +3192,18 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 #ifdef DMX_DESCRAMBLER_SUPPORT
     for (i = 0; i < DMX_KEY_CNT; i++)
     {
-        DescramblerReset(i, &pDmxDevOsi->DmxKeyInfo[i]);
+        DescramblerReset(i, &g_pDmxDevOsi->DmxKeyInfo[i]);
     }
 #endif
 
     for (i = 0; i < DMX_PCR_CHANNEL_CNT; i++)
     {
-        pDmxDevOsi->DmxPcrInfo[i].DmxId = DMX_INVALID_DEMUX_ID;
+        g_pDmxDevOsi->DmxPcrInfo[i].DmxId = DMX_INVALID_DEMUX_ID;
     }
 
     for (i = 0; i < DMX_OQ_CNT; i++)
     {
-        DMX_OQ_Info_S  *OqInfo = &pDmxDevOsi->DmxOqInfo[i];
+        DMX_OQ_Info_S  *OqInfo = &g_pDmxDevOsi->DmxOqInfo[i];
 
         OqInfo->u32OQId     = i;
         OqInfo->OqWakeUp    = HI_FALSE;
@@ -3204,7 +3213,7 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
     for (i = 0; i < DMX_FQ_CNT; i++)
     {
-        DMX_FQ_Info_S  *FqInfo = &pDmxDevOsi->DmxFqInfo[i];
+        DMX_FQ_Info_S  *FqInfo = &g_pDmxDevOsi->DmxFqInfo[i];
 
         spin_lock_init(&FqInfo->LockFq);
     }
@@ -3215,13 +3224,14 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
     DmxHalEnableAllChEnqueInt();
 
     DmxHalFQEnableAllOverflowInt();
+    
 #ifdef HI_DEMUX_PROC_SUPPORT
     memset(&GlobalProcInfo,0x0,sizeof(DMX_Proc_Global_Info_S));
 #endif
 
     DmxHalSetFlushMaxWaitTime(0x2400);
     DmxHalSetDataFakeMod(DMX_ENABLE);
-    init_waitqueue_head(&pDmxDevOsi->DmxWaitQueue);
+    init_waitqueue_head(&g_pDmxDevOsi->DmxWaitQueue);
 
 #ifdef DMX_DESCRAMBLER_SUPPORT
 #ifdef CHIP_TYPE_hi3716m
@@ -3242,16 +3252,160 @@ HI_S32 DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
     init_waitqueue_head(&AllChnWaitQueue);
     memset(&psErrMsg, 0, sizeof(DMX_ERRMSG_S) * DMX_MAX_ERRLIST_NUM);
 
+    DmxHalEnableAllPVRInt();
+
+    DMX_DynamicTuneDmxClk();
+
     del_timer(&CheckChnTimeoutTimer);
     CheckChnTimeoutTimer.expires = jiffies + DMX_CHECKCHN_TIMEOUT * HZ / 1000;
     add_timer(&CheckChnTimeoutTimer);
 
+    return HI_SUCCESS;
+}
+
+HI_S32 DMX_StartAllDmx(HI_VOID)
+{
+    HI_S32 ret = HI_FAILURE;
+
+    BUG_ON(!g_pDmxDevOsi);
+
+    if (DMX_DEV_ACTIVED == g_pDmxDevOsi->State)
+    {
+        ret = HI_SUCCESS;
+        goto out;
+    }
+
+    g_pDmxDevOsi->State = DMX_DEV_ACTIVED;
+
+    ret = __DMX_StartAllDmx();
+
+out:
+    return ret;
+}
+
+/***********************************************************************************
+* Function      : DMX_OsiInit
+* Description   : Initialize demux module
+* Input         :
+* Output        :
+* Return        : HI_SUCCESS:     success
+*                 HI_FAILURE:     system error or allocated dma buffer size beyonds limit
+* Others:
+***********************************************************************************/
+HI_S32 DMX_OsiInit(HI_VOID)
+{
+    DMX_DEV_OSI_S          *pDmxDevOsi;
+    HI_U32                  ProcessID;
+
+    if (HI_NULL != g_pDmxDevOsi)
+    {
+        g_pDmxDevOsi->Reference++;
+        UpdateProcRef(g_pDmxDevOsi->Reference);
+        ProcessID = __task_pid_nr_ns(current, PIDTYPE_PID, NULL);
+        HI_INFO_DEMUX("Process (ID : 0x%x )call DMX_OsiInit , g_pDmxDevOsi->Reference= %d\n",ProcessID,g_pDmxDevOsi->Reference);
+        return HI_SUCCESS;
+    }
+
+    pDmxDevOsi = HI_KMALLOC(HI_ID_DEMUX, sizeof(DMX_DEV_OSI_S), GFP_KERNEL);
+    if (HI_NULL == pDmxDevOsi)
+    {
+        HI_FATAL_DEMUX("memory allocate failed\n");
+
+        return HI_ERR_DMX_ALLOC_MEM_FAILED;
+    }
+
+    memset((HI_VOID*)pDmxDevOsi, 0, sizeof(DMX_DEV_OSI_S));
+
+    pDmxDevOsi->State = DMX_DEV_INACTIVED;
+    
+    HI_INIT_MUTEX(&pDmxDevOsi->lock_Channel);
+    HI_INIT_MUTEX(&pDmxDevOsi->lock_Filter);
+    HI_INIT_MUTEX(&pDmxDevOsi->lock_Key);
+    HI_INIT_MUTEX(&pDmxDevOsi->lock_AVChan);
+    
+    spin_lock_init(&pDmxDevOsi->splock_OqBuf);
+
+    g_pDmxDevOsi = pDmxDevOsi;
+
+    g_pDmxDevOsi->ResumeCnt = 0;
+
     g_pDmxDevOsi->Reference++;
     UpdateProcRef(g_pDmxDevOsi->Reference);
     ProcessID = __task_pid_nr_ns(current, PIDTYPE_PID, NULL);
-    HI_INFO_DEMUX("Process (ID : 0x%x )call DMX_OsiInit , g_pDmxDevOsi->Reference= %d\n",ProcessID,g_pDmxDevOsi->Reference);
+    HI_INFO_DEMUX("Process (ID : 0x%x )call DMX_OsiInit , g_pDmxDevOsi->Reference= %d\n", ProcessID, g_pDmxDevOsi->Reference);
 
     return HI_SUCCESS;
+}
+
+static HI_S32 __DMX_StopAllDmx(HI_VOID)
+{
+    DMX_FQ_Info_S  *FqInfo = HI_NULL;
+    MMZ_BUFFER_S    MmzBuf;
+    HI_U32          i;
+
+    FqInfo = &g_pDmxDevOsi->DmxFqInfo[DMX_FQ_COMMOM];
+
+    DmxHalDisableAllPVRInt();
+    
+    free_irq(DMX_INT_NUM, HI_NULL);
+
+    del_timer(&CheckChnTimeoutTimer);
+
+    for (i = 0; i < DMX_RAMPORT_CNT; i++)
+    {
+        if (0 != g_pDmxDevOsi->RamPortInfo[i].DescPhyAddr)
+        {
+            MMZ_BUFFER_S MmzBuf;
+
+            MmzBuf.u32StartPhyAddr = g_pDmxDevOsi->RamPortInfo[i].DescPhyAddr;
+            MmzBuf.u32StartVirAddr = g_pDmxDevOsi->RamPortInfo[i].DescKerAddr;
+
+            HI_DRV_MMZ_UnmapAndRelease(&MmzBuf);
+        }
+
+        DmxHalIPPortDisableInt(i);
+        DmxHalIPPortSetTsCountCtrl(i, HI_FALSE);
+    }
+
+    for (i = 0; i < DMX_TUNERPORT_CNT; i++)
+    {
+        DmxHalDvbPortSetTsCountCtrl(i, TS_COUNT_CRTL_STOP);
+        DmxHalDvbPortSetTsCountCtrl(i, TS_COUNT_CRTL_RESET);
+
+        DmxHalDvbPortSetErrTsCountCtrl(i, TS_COUNT_CRTL_STOP);
+        DmxHalDvbPortSetErrTsCountCtrl(i, TS_COUNT_CRTL_RESET);
+    }
+
+    DmxFqStop(DMX_FQ_COMMOM);
+
+    MmzBuf.u32StartPhyAddr  = FqInfo->u32BufPhyAddr;
+    MmzBuf.u32StartVirAddr  = FqInfo->u32BufVirAddr;
+
+    HI_DRV_MMZ_UnmapAndRelease(&MmzBuf);
+
+    return HI_SUCCESS;
+}
+
+HI_S32 DMX_StopAllDmx(HI_VOID)
+{
+    HI_S32 ret = HI_FAILURE;
+    
+    BUG_ON(!g_pDmxDevOsi);
+        
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        ret = HI_SUCCESS;
+        goto out;
+    }
+
+    g_pDmxDevOsi->State = DMX_DEV_INACTIVED; 
+
+    __DMX_StopAllDmx();
+
+    ret = HI_SUCCESS;
+
+out:
+    return ret;
 }
 
 /***********************************************************************************
@@ -3276,45 +3430,9 @@ HI_S32 DMX_OsiDeInit(HI_VOID)
 
         if ( 0 == g_pDmxDevOsi->Reference )
         {
-            DMX_FQ_Info_S  *FqInfo = &g_pDmxDevOsi->DmxFqInfo[DMX_FQ_COMMOM];
-            MMZ_BUFFER_S    MmzBuf;
-            HI_U32          i;
+            DMX_StopAllDmx();
 
-            del_timer(&CheckChnTimeoutTimer);
-
-            for (i = 0; i < DMX_RAMPORT_CNT; i++)
-            {
-                if (0 != g_pDmxDevOsi->RamPortInfo[i].DescPhyAddr)
-                {
-                    MMZ_BUFFER_S MmzBuf;
-
-                    MmzBuf.u32StartPhyAddr = g_pDmxDevOsi->RamPortInfo[i].DescPhyAddr;
-                    MmzBuf.u32StartVirAddr = g_pDmxDevOsi->RamPortInfo[i].DescKerAddr;
-
-                    HI_DRV_MMZ_UnmapAndRelease(&MmzBuf);
-                }
-
-                DmxHalIPPortDisableInt(i);
-                DmxHalIPPortSetTsCountCtrl(i, HI_FALSE);
-            }
-
-            for (i = 0; i < DMX_TUNERPORT_CNT; i++)
-            {
-                DmxHalDvbPortSetTsCountCtrl(i, TS_COUNT_CRTL_STOP);
-                DmxHalDvbPortSetTsCountCtrl(i, TS_COUNT_CRTL_RESET);
-
-                DmxHalDvbPortSetErrTsCountCtrl(i, TS_COUNT_CRTL_STOP);
-                DmxHalDvbPortSetErrTsCountCtrl(i, TS_COUNT_CRTL_RESET);
-            }
-
-            DmxFqStop(DMX_FQ_COMMOM);
-
-            MmzBuf.u32StartPhyAddr  = FqInfo->u32BufPhyAddr;
-            MmzBuf.u32StartVirAddr  = FqInfo->u32BufVirAddr;
-
-            HI_DRV_MMZ_UnmapAndRelease(&MmzBuf);
-
-            HI_VFREE(HI_ID_DEMUX, g_pDmxDevOsi);
+            HI_KFREE(HI_ID_DEMUX, g_pDmxDevOsi);
             g_pDmxDevOsi = HI_NULL;
         }
     }
@@ -3370,12 +3488,25 @@ HI_BOOL DMX_OsiIsTSIAttachTSO(HI_U32 PortId, HI_UNF_DMX_TSO_PORT_E* TSO)
     return Tsi->bAttachWithTSO;
 }
 
+HI_S32  DMX_OsiGetResumeCount(HI_U32 *pCount)
+{
+    *pCount = g_pDmxDevOsi->ResumeCnt;
+
+    return HI_SUCCESS;
+}
+
 HI_S32 DMX_OsiAttachPort(const HI_U32 DmxId, const DMX_PORT_MODE_E PortMode, const HI_U32 PortId)
 {
     DMX_Sub_DevInfo_S  *DmxInfo = &g_pDmxDevOsi->SubDevInfo[DmxId];
 
     DmxInfo->PortMode   = PortMode;
     DmxInfo->PortId     = PortId;
+    
+    /*
+    * data will be into demux immediately after DmxHalSetDemuxPortId succeed.
+    * tune clk in advance.
+    */
+    DMX_DynamicTuneDmxClk();
 
     DmxHalSetDemuxPortId(DmxId, PortMode, PortId);
 
@@ -3441,6 +3572,8 @@ HI_S32 DMX_OsiDetachPort(const HI_U32 DmxId)
     DmxInfo->PortId     = DMX_INVALID_PORT_ID;
 
     DmxHalSetDemuxPortId(DmxId, DMX_PORT_MODE_BUTT, DMX_INVALID_PORT_ID);
+
+    DMX_DynamicTuneDmxClk();
 
     return HI_SUCCESS;
 }
@@ -6963,10 +7096,6 @@ HI_S32 DMX_DRV_REC_CreateChannel(HI_UNF_DMX_REC_ATTR_S *RecAttr, DMX_REC_TIMESTA
 
     CHECKDMXID(RecAttr->u32DmxId);
 
-#ifndef DMX_REC_TIME_STAMP_SUPPORT
-    enRecTimeStamp = DMX_REC_TIMESTAMP_NONE;
-#endif
-
     switch (RecAttr->enRecType)
     {
         case HI_UNF_DMX_REC_TYPE_SELECT_PID :
@@ -7107,6 +7236,9 @@ HI_S32 DMX_DRV_REC_CreateChannel(HI_UNF_DMX_REC_ATTR_S *RecAttr, DMX_REC_TIMESTA
     }
 
     RecBufSize      = (RecAttr->u32RecBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
+    /* align with block */
+    RecBufSize = RecBufSize - RecBufSize % RecFqBlockSize;
+    
     RecFqDepth      = RecBufSize / RecFqBlockSize + 1;
     RecFqBufSize    = RecFqDepth * DMX_FQ_DESC_SIZE;
     RecFqBufSize    = (RecFqBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
@@ -7130,6 +7262,9 @@ HI_S32 DMX_DRV_REC_CreateChannel(HI_UNF_DMX_REC_ATTR_S *RecAttr, DMX_REC_TIMESTA
     if (0 != ScdBufSize)
     {
         ScdBufSize      = (ScdBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
+        /* align with block */
+        ScdBufSize = ScdBufSize - ScdBufSize % ScdBlockSize;
+        
         ScdFqDepth      = ScdBufSize / ScdBlockSize + 1;
         ScdFqBufSize    = ScdFqDepth * DMX_FQ_DESC_SIZE;
         ScdFqBufSize    = (ScdFqBufSize + MIN_MMZ_BUF_SIZE - 1) / MIN_MMZ_BUF_SIZE * MIN_MMZ_BUF_SIZE;
@@ -7224,7 +7359,7 @@ HI_S32 DMX_DRV_REC_CreateChannel(HI_UNF_DMX_REC_ATTR_S *RecAttr, DMX_REC_TIMESTA
 
     *RecId      = RecAttr->u32DmxId;
     *BufPhyAddr = RecFqInfo->u32BufPhyAddr;
-    *BufSize    = RecBufSize;
+    *BufSize    = RecFqInfo->u32BufSize;;
 
     /*set recorded ts packet len,added by l00188263 ,Hi3719 support 192 Byte ts packet length recording*/
 #ifdef DMX_REC_TIME_STAMP_SUPPORT
@@ -7567,7 +7702,7 @@ HI_S32 DMX_DRV_REC_StartRecChn(HI_U32 RecId)
         return HI_SUCCESS;
     }
 	
-#ifdef DMX_DATAINDEX_V2_SUPPORT
+#ifndef DMX_DATAINDEX_V1_SUPPORT
     BUG_ON(!list_empty(&RecInfo->head));
 #endif
 
@@ -7721,7 +7856,7 @@ HI_S32 DMX_DRV_REC_StartRecChn(HI_U32 RecId)
     RecInfo->ScrambleDetectCnt = 0;
     RecInfo->ClearDetectCnt = 0;
     RecInfo->bSCDBufIsEmpty = HI_TRUE;
-#ifdef DMX_DATAINDEX_V2_SUPPORT
+#ifndef DMX_DATAINDEX_V1_SUPPORT
     RecInfo->PrevFrameEndAddr = 0;
     RecInfo->BlockStartAddr = FqInfo->u32BufPhyAddr;
     RecInfo->RemIdxCnt = 0;
@@ -7741,7 +7876,7 @@ HI_S32 DMX_DRV_REC_StopRecChn(HI_U32 RecId)
     DMX_DEV_OSI_S  *DmxMgr      = g_pDmxDevOsi;
     DMX_RecInfo_S  *RecInfo     = &DmxMgr->DmxRecInfo[RecId];
     DMX_OQ_Info_S  *RecOqInfo   = &DmxMgr->DmxOqInfo[RecInfo->RecOqId];
-#ifdef DMX_DATAINDEX_V2_SUPPORT	
+#ifndef DMX_DATAINDEX_V1_SUPPORT	
     Dmx_Rec_Data_Index_Helper *Entry, *Tmp;
 #endif
 
@@ -7793,7 +7928,7 @@ HI_S32 DMX_DRV_REC_StopRecChn(HI_U32 RecId)
     }
     #endif
 
-#ifdef DMX_DATAINDEX_V2_SUPPORT
+#ifndef DMX_DATAINDEX_V1_SUPPORT
     /* remove remain rec data&idx */
     RecInfo->RemIdxCnt = 0; 
     list_for_each_entry_safe(Entry, Tmp, &RecInfo->head, list)
@@ -7895,7 +8030,7 @@ HI_S32 DMX_DRV_REC_ReleaseRecData(HI_U32 RecId, HI_U32 PhyAddr, HI_U32 Len)
     return DmxOQRelease(RecInfo->RecFqId, RecInfo->RecOqId, PhyAddr, Len);
 }
 
-#ifdef DMX_DATAINDEX_V2_SUPPORT
+#ifndef DMX_DATAINDEX_V1_SUPPORT
 static HI_S32 DMX_GetRecDataIndex(HI_U32 RecId)
 {
     HI_S32 ret = HI_FAILURE;
@@ -7929,7 +8064,7 @@ static HI_S32 DMX_GetRecDataIndex(HI_U32 RecId)
         NewFrameStartAddr = FqInfo->u32BufPhyAddr + do_div(u64FrameGlobalOffset, (HI_U64)FqInfo->u32BufSize);
         NewFrameEndAddr = NewFrameStartAddr + NewRecIndex->u32FrameSize; 
 			
-        /* drop exception frame */
+        /* drop exception frame by simple rule. */
         if (unlikely(NewRecIndex->u32FrameSize >= FqInfo->u32BufSize || 0 == NewRecIndex->u32FrameSize))
         {
             HI_ERR_DEMUX("Drop exception frame(0x%x, 0x%x), fq(0x%x, 0x%x).\n", NewFrameStartAddr, NewRecIndex->u32FrameSize, 
@@ -8034,6 +8169,8 @@ static HI_VOID DMX_NewNoRewindFrame(DMX_RecInfo_S  *RecInfo, Dmx_Rec_Data_Index_
             RemRecData->pDataAddr = (HI_U8  *)(FqInfo->u32BufVirAddr + RemRecData->u32DataPhyAddr - FqInfo->u32BufPhyAddr);
             RemRecData->u32Len = Entry->data[0].u32DataPhyAddr + Entry->data[0].u32Len - RecInfo->BlockStartAddr; 
 
+            BUG_ON(RemRecData->u32Len > FqInfo->u32BlockSize);
+
             RemRecIdx = &RecInfo->RemRecIdx[RecInfo->RemIdxCnt ++];
             memcpy(RemRecIdx, &Entry->index, sizeof(HI_UNF_DMX_REC_INDEX_S));
 
@@ -8089,6 +8226,8 @@ static HI_VOID DMX_NewRewindFrame(DMX_RecInfo_S  *RecInfo, Dmx_Rec_Data_Index_He
             RemRecData->pDataAddr = (HI_U8  *)(FqInfo->u32BufVirAddr + RemRecData->u32DataPhyAddr - FqInfo->u32BufPhyAddr);
             RemRecData->u32Len = Entry->data[1].u32DataPhyAddr + Entry->data[1].u32Len - RecInfo->BlockStartAddr;
 
+            BUG_ON(RemRecData->u32Len > FqInfo->u32BlockSize);
+
             RemRecIdx = &RecInfo->RemRecIdx[RecInfo->RemIdxCnt ++];
             memcpy(RemRecIdx, &Entry->index, sizeof(HI_UNF_DMX_REC_INDEX_S));
 
@@ -8120,7 +8259,9 @@ static HI_VOID DMX_AppendNoRewindFrame(DMX_RecInfo_S  *RecInfo, Dmx_Rec_Data_Ind
         }
         else
         {
-            RemRecData->u32Len += Entry->data[0].u32Len; 
+            RemRecData->u32Len = Entry->data[0].u32DataPhyAddr + Entry->data[0].u32Len - RecInfo->BlockStartAddr; 
+
+            BUG_ON(RemRecData->u32Len > FqInfo->u32BlockSize);
 
             RemRecIdx = &RecInfo->RemRecIdx[RecInfo->RemIdxCnt ++];
             memcpy(RemRecIdx, &Entry->index, sizeof(HI_UNF_DMX_REC_INDEX_S));
@@ -8172,7 +8313,6 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
     DMX_FQ_Info_S  *FqInfo  = &DmxMgr->DmxFqInfo[RecInfo->RecFqId];
     DMX_OQ_Info_S  *OqInfo  = &DmxMgr->DmxOqInfo[RecInfo->RecOqId];
     HI_UNF_DMX_REC_DATA_S  *RemRecData = &RecInfo->RemRecData; 
-    HI_UNF_DMX_REC_INDEX_S *RemRecIdx = &RecInfo->RemRecIdx[0]; 
 
     BUG_ON((RecInfo->BlockStartAddr - FqInfo->u32BufPhyAddr) % FqInfo->u32BlockSize);
  
@@ -8182,9 +8322,7 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
     }
 
     while(RemRecData->u32Len < FqInfo->u32BlockSize)
-    {
-        BUG_ON(RecInfo->RemIdxCnt > DMX_MAX_IDX_ACQUIRED_EACH_TIME);
-        
+    {        
         if (!list_empty(&RecInfo->head))
         {
             Dmx_Rec_Data_Index_Helper *Entry = list_first_entry(&RecInfo->head, Dmx_Rec_Data_Index_Helper, list);
@@ -8201,7 +8339,7 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
                     DMX_NewRewindFrame(RecInfo, Entry);
                 }
             }
-            else /* append */
+            else if (RecInfo->RemIdxCnt < DMX_MAX_IDX_ACQUIRED_EACH_TIME) /* append */
             {
                 if (HI_FALSE == Entry->Rewind)
                 {
@@ -8211,6 +8349,10 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
                 {
                     DMX_AppendRewindFrame(RecInfo, Entry);
                 }
+            }
+            else
+            {
+                BUG();
             }
         }
         else /* there is no available index now in list */
@@ -8240,7 +8382,15 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
         pstRecDataIdx->u32IdxNum = RecInfo->RemIdxCnt;
         
         memcpy(&pstRecDataIdx->stRecData[0], RemRecData, sizeof(HI_UNF_DMX_REC_DATA_S));
-        memcpy(&pstRecDataIdx->stIndex[0], RemRecIdx, sizeof(HI_UNF_DMX_REC_INDEX_S) * RecInfo->RemIdxCnt);
+
+        if (sizeof(HI_UNF_DMX_REC_INDEX_S) * RecInfo->RemIdxCnt <= sizeof(RecInfo->RemRecIdx))
+        {
+            memcpy(&pstRecDataIdx->stIndex[0], &RecInfo->RemRecIdx[0], sizeof(HI_UNF_DMX_REC_INDEX_S) * RecInfo->RemIdxCnt);
+        }
+        else
+        {
+            BUG();
+        }
         
         RecInfo->BlockStartAddr = RemRecData->u32DataPhyAddr + RemRecData->u32Len;
 
@@ -8250,7 +8400,7 @@ static HI_S32 DMX_AcquireRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S 
         RecInfo->BlockStartAddr = (RecInfo->BlockStartAddr == FqInfo->u32BufPhyAddr + FqInfo->u32BufSize) ? 
                                                 FqInfo->u32BufPhyAddr : RecInfo->BlockStartAddr ;
         RecInfo->RemIdxCnt = 0;
-        
+
         ret = HI_SUCCESS;
     }
     
@@ -8301,9 +8451,7 @@ HI_S32 DMX_DRV_REC_ReleaseRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S
     DMX_FQ_Info_S  *FqInfo  = HI_NULL;
     DMX_OQ_Info_S  *OqInfo  = HI_NULL;
     OQ_DescInfo_S  *OqDesc;
-    HI_U32 u32ProcsBlk = 0;
     HI_U32 OqRead = 0;
-    HI_U32 ReleaseBlockCnt = 0;
     HI_U32 index;
 
     CHECKDMXID(RecInfo->DmxId);
@@ -8338,18 +8486,13 @@ HI_S32 DMX_DRV_REC_ReleaseRecDataIndex(HI_U32 RecId, HI_UNF_DMX_REC_DATA_INDEX_S
 
             if ((RelBlkAddr != OqDesc->start_addr) || ((OqDesc->pvrctrl_datalen & 0xffff) != FqInfo->u32BlockSize))
             {
-                HI_ERR_DEMUX("buf %d release wrong data block\n", OqInfo->u32OQId);
+                HI_ERR_DEMUX("Release block(0x%x) failed, current oq desc(0x%x, 0x%x)!\n", RelBlkAddr, OqDesc->start_addr, (OqDesc->pvrctrl_datalen & 0xffff));
 
                 return HI_ERR_DMX_INVALID_PARA;
             }    
-            
-            u32ProcsBlk = (RelBlkAddr + FqInfo->u32BlockSize - FqInfo->u32BufPhyAddr)/FqInfo->u32BlockSize;
 
-            ReleaseBlockCnt = (u32ProcsBlk >= OqRead)?(u32ProcsBlk - OqRead):(OqInfo->u32OQDepth - OqRead + u32ProcsBlk - 1);
-
-            BUG_ON(1 != ReleaseBlockCnt);
-
-            DmxOQReleaseByBlockCnt(RecInfo->RecFqId, OqInfo->u32OQId, ReleaseBlockCnt);
+            /* only release one blk one time. */
+            DmxOQReleaseByBlockCnt(RecInfo->RecFqId, OqInfo->u32OQId, 1);
 
             RelBlkAddr += FqInfo->u32BlockSize;
         }
@@ -8934,11 +9077,12 @@ HI_S32 DMX_DRV_REC_AcquireRecIndex(HI_U32 RecId, HI_UNF_DMX_REC_INDEX_S *RecInde
                         HI_U64 GlobalOffset = CurrFrame->u64GlobalOffset;
 
                         FIDX_FeedStartCode(RecInfo->PicParser, &EsScd);
-                        
+
                         if (GlobalOffset < CurrFrame->u64GlobalOffset)
                         {
                             CurrFrame->u32DataTimeMs = ScrClk / 90;
                             memcpy(RecIndex, CurrFrame, sizeof(HI_UNF_DMX_REC_INDEX_S));
+                            
                             bGetValidIndex = HI_TRUE;     
                             break;
                         }
@@ -9051,24 +9195,15 @@ HI_S32 DMX_DRV_REC_GetRecBufferStatus(HI_U32 RecId, HI_UNF_DMX_RECBUF_STATUS_S *
     return HI_SUCCESS;
 }
 
-HI_S32 DMX_OsiDeviceInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
+HI_S32 DMX_OsiDeviceInit(HI_VOID)
 {
     HI_S32 ret;
 
-    ret = DMX_OsiInit(PoolBufSize, BlockSize);
+    ret = DMX_OsiInit();
     if (HI_SUCCESS != ret)
     {
         return ret;
     }
-
-    if (0 != request_irq(DMX_INT_NUM, (irq_handler_t) DMXOsiIsr, IRQF_DISABLED, "hi_dmx_irq", HI_NULL))
-    {
-        DMX_OsiDeInit();
-        HI_FATAL_DEMUX("request_irq error\n");
-        return HI_FAILURE;
-    }
-
-    DmxHalEnableAllPVRInt();
 
     FIDX_Init(DmxRecUpdateFrameInfo);
 
@@ -9077,8 +9212,6 @@ HI_S32 DMX_OsiDeviceInit(HI_U32 PoolBufSize, HI_U32 BlockSize)
 
 HI_VOID DMX_OsiDeviceDeInit(HI_VOID)
 {
-    DmxHalDisableAllPVRInt();
-    free_irq(DMX_INT_NUM, HI_NULL);
     DMX_OsiDeInit();
 }
 
@@ -9093,6 +9226,11 @@ HI_S32 DMX_OsiSuspend(PM_BASEDEV_S *himd, pm_message_t state)
 {
     DMX_DEV_OSI_S  *DmxDevOsi   = g_pDmxDevOsi;
     HI_U32          i;
+
+    if (DMX_DEV_INACTIVED == DmxDevOsi->State)
+    {
+        goto out;
+    }
 
     del_timer(&CheckChnTimeoutTimer);
 
@@ -9112,7 +9250,8 @@ HI_S32 DMX_OsiSuspend(PM_BASEDEV_S *himd, pm_message_t state)
             }
         }
     }
-
+    
+out:
     HI_PRINT("DEMUX suspend OK\n");
 
     return HI_SUCCESS;
@@ -9134,6 +9273,11 @@ HI_S32 DMX_OsiResume(PM_BASEDEV_S *himd)
     HI_U32                  i;
     HI_U32                  j;
     HI_S32                  ret;
+
+    if (DMX_DEV_INACTIVED == DmxDevOsi->State)
+    {
+        goto out;
+    }
 
     if (HI_SUCCESS != DmxReset())
     {
@@ -9157,8 +9301,6 @@ HI_S32 DMX_OsiResume(PM_BASEDEV_S *himd)
     HI_INIT_MUTEX(&DmxDevOsi->lock_AVChan);
     HI_INIT_MUTEX(&DmxDevOsi->lock_Filter);
     HI_INIT_MUTEX(&DmxDevOsi->lock_Key);
-    HI_INIT_MUTEX(&DmxDevOsi->lock_OqBuf);
-
     spin_lock_init(&DmxDevOsi->splock_OqBuf);
 
     DmxFqStart(DMX_FQ_COMMOM);
@@ -9334,6 +9476,9 @@ HI_S32 DMX_OsiResume(PM_BASEDEV_S *himd)
     CheckChnTimeoutTimer.expires = jiffies + msecs_to_jiffies(DMX_CHECKCHN_TIMEOUT);
     add_timer(&CheckChnTimeoutTimer);
 
+    DmxDevOsi->ResumeCnt ++;
+
+out:
     HI_PRINT("DEMUX resume OK\n");
 
     return HI_SUCCESS;
@@ -9645,11 +9790,10 @@ static void insert_pmt_pid(HI_U32 u32PmtPid)
 
 static HI_S32 parse_pat_table(HI_U8* pu8Data,HI_U32 u32Len)
 {
-    HI_U32 u32SecLen,u32CurSecNum,u32LastSecNum;
+    HI_U32 u32SecLen;
     HI_U32 u32ProgramNum,u32PmtPid;
     u32SecLen = (pu8Data[1] & 0xf) << 8 | pu8Data[2];
-    u32CurSecNum = pu8Data[6];
-    u32LastSecNum = pu8Data[7];
+
     if (u32SecLen < 12|| u32SecLen > u32Len)
     {
         return -1;

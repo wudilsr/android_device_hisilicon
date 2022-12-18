@@ -53,12 +53,6 @@ int HiSysManagerService::reset(){
     int ret = do_reset();
     return 0;
 }
-int HiSysManagerService::updateCAFile(String8 path1,String8 path2){
-    const char* mpath1 = path1.string();
-    const char* mpath2 = path2.string();
-    int ret = do_updateCAFile(mpath1,mpath2);
-    return ret;
-}
 int HiSysManagerService::enterSmartStandby(){
     int ret = do_EnterSmartStandby();
     return ret;

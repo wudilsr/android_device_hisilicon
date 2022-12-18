@@ -119,20 +119,29 @@ static HI_S32 SYS_Ioctl(struct inode *pInode, struct file *pFile, HI_U32 cmd, HI
         case SYS_GET_DOLBYSUPPORT:
             ret = HI_DRV_SYS_GetDolbySupport((HI_U32*)arg);
             break;
+
         case SYS_GET_DTSSUPPORT:
             ret = HI_DRV_SYS_GetDtsSupport((HI_U32*)arg);
             break;
+
         case SYS_GET_ADVCASUPPORT:
             ret = HI_DRV_SYS_GetAdvcaSupport((HI_U32*)arg);
             break;
+
         case SYS_GET_MACROVISIONSUPPORT:
             ret = HI_DRV_SYS_GetRoviSupport((HI_U32*)arg);
             break;
+
         case SYS_GET_DDRCONFIG:
             ret = HI_DRV_SYS_GetMemConfig((HI_SYS_MEM_CONFIG_S*)arg);
             break;
-	 case SYS_GET_DIEID:
+
+        case SYS_GET_DIEID:
             ret = HI_DRV_SYS_GetDieID((HI_U64 *)arg);
+            break;
+
+        case SYS_GET_CHIPPACKAGETYPE :
+            ret = HI_DRV_SYS_GetChipPackageType((HI_CHIP_PACKAGE_TYPE_E*)arg);
             break;
 
         default :
@@ -144,13 +153,14 @@ static HI_S32 SYS_Ioctl(struct inode *pInode, struct file *pFile, HI_U32 cmd, HI
 
 static HI_S32 SysProcShow(struct seq_file *s, HI_VOID *pArg)
 {
-    HI_CHIP_TYPE_E      ChipType    = HI_CHIP_TYPE_BUTT;
-    HI_CHIP_VERSION_E   ChipVersion = 0;
-    HI_CHAR            *ChipName;
-    HI_U32 u32DolbySupport ;
-    HI_U32 u32DtsSupport ;
-    HI_U32 u32RoviSupport ;
-    HI_U32 u32AdvcaSupport;
+    HI_CHIP_TYPE_E          ChipType    = HI_CHIP_TYPE_BUTT;
+    HI_CHIP_VERSION_E       ChipVersion = 0;
+    HI_CHIP_PACKAGE_TYPE_E  PackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+    HI_CHAR                *ChipName;
+    HI_U32                  DolbySupport;
+    HI_U32                  DtsSupport;
+    HI_U32                  RoviSupport;
+    HI_U32                  AdvcaSupport;
 
     HI_DRV_SYS_GetChipVersion(&ChipType, &ChipVersion);
 
@@ -209,24 +219,61 @@ static HI_S32 SysProcShow(struct seq_file *s, HI_VOID *pArg)
 
     PROC_PRINT(s, "CHIP_VERSION: %s(0x%x)_v%x\n", ChipName, ChipType, ChipVersion);
 
-    if (HI_SUCCESS == HI_DRV_SYS_GetDolbySupport(&u32DolbySupport))
+    if (HI_SUCCESS == HI_DRV_SYS_GetChipPackageType(&PackageType))
     {
-        PROC_PRINT(s, "DOLBY: %s\n", (u32DolbySupport) ? "YES" : "NO");
+        HI_CHAR *str;
+
+        switch (PackageType)
+        {
+            case HI_CHIP_PACKAGE_TYPE_BGA_15_15 :
+                str = "BGA 15*15";
+                break;
+
+            case HI_CHIP_PACKAGE_TYPE_BGA_16_16 :
+                str = "BGA 16*16";
+                break;
+
+            case HI_CHIP_PACKAGE_TYPE_BGA_19_19 :
+                str = "BGA 19*19";
+                break;
+
+            case HI_CHIP_PACKAGE_TYPE_BGA_23_23 :
+                str = "BGA 23*23";
+                break;
+
+            case HI_CHIP_PACKAGE_TYPE_BGA_31_31 :
+                str = "BGA 31*31";
+                break;
+
+            case HI_CHIP_PACKAGE_TYPE_QFP_216 :
+                str = "QFP 216";
+                break;
+
+            default:
+                str = "UNKNOWN";
+        }
+
+        PROC_PRINT(s, "PACKAGE_TYPE: %s\n", str);
     }
 
-    if (HI_SUCCESS == HI_DRV_SYS_GetDtsSupport(&u32DtsSupport))
+    if (HI_SUCCESS == HI_DRV_SYS_GetDolbySupport(&DolbySupport))
     {
-        PROC_PRINT(s, "DTS: %s\n", (u32DtsSupport) ? "YES" : "NO");
+        PROC_PRINT(s, "DOLBY: %s\n", (DolbySupport) ? "YES" : "NO");
     }
 
-    if (HI_SUCCESS == HI_DRV_SYS_GetAdvcaSupport(&u32AdvcaSupport))
+    if (HI_SUCCESS == HI_DRV_SYS_GetDtsSupport(&DtsSupport))
     {
-        PROC_PRINT(s, "ADVCA: %s\n", (u32AdvcaSupport) ? "YES" : "NO");
+        PROC_PRINT(s, "DTS: %s\n", (DtsSupport) ? "YES" : "NO");
     }
 
-    if (HI_SUCCESS == HI_DRV_SYS_GetRoviSupport(&u32RoviSupport))
+    if (HI_SUCCESS == HI_DRV_SYS_GetAdvcaSupport(&AdvcaSupport))
     {
-        PROC_PRINT(s, "ROVI(Macrovision): %s\n", (u32RoviSupport) ? "YES" : "NO");
+        PROC_PRINT(s, "ADVCA: %s\n", (AdvcaSupport) ? "YES" : "NO");
+    }
+
+    if (HI_SUCCESS == HI_DRV_SYS_GetRoviSupport(&RoviSupport))
+    {
+        PROC_PRINT(s, "ROVI(Macrovision): %s\n", (RoviSupport) ? "YES" : "NO");
     }
 
     return 0;

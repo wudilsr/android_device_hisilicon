@@ -1460,6 +1460,15 @@ static struct ctl_table vm_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_doulongvec_minmax,
 	},
+#ifdef CONFIG_CMA	
+	{
+		.procname	= "cma_watermark",
+		.data		= &cma_watermark,
+		.maxlen		= sizeof(cma_watermark),
+		.mode		= 0644,
+		.proc_handler	= cma_watermark_sysctl_handler,
+	},
+#endif	
 	{ }
 };
 

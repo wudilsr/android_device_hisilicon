@@ -23,6 +23,7 @@
 #include "hi_unf_ir.h"
 
 static int g_IrDevFd = -1;
+extern unsigned int read_timeout ;
 #define  UMAP_DEVNAME_IR "/dev/hi_ir"
 
 #define  SUCCESS 0
@@ -65,6 +66,11 @@ signed int IR_Init(void)
 	{
 		IR_LOG("open IR err.%s\n",UMAP_DEVNAME_IR);
 
+		return FAILURE;
+	}
+	HI_S32 Ret = ioctl(g_IrDevFd, CMD_IR_SET_BLOCKTIME, read_timeout);
+	if(Ret != SUCCESS)
+	{
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -182,11 +188,6 @@ unsigned int  IR_GetValueWithProtocol (KEY_STATUS_E *penPressStatus, unsigned lo
 	CHECK_IR_OPEN();
 
 
-	Ret = ioctl(g_IrDevFd, CMD_IR_SET_BLOCKTIME, u32TimeoutMs);
-	if(Ret != SUCCESS)
-        {
-		return Ret;
-	}
 
 	Ret = read(g_IrDevFd, &Irkey, sizeof(struct key_attr));
 	if (Ret == (signed int)sizeof(struct key_attr))

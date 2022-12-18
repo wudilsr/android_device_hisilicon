@@ -72,6 +72,10 @@ void chan_display_usr(DATA_U32_S channum);
 
 void KEYLED_Init_Usr(void)
 {
+#ifndef HI_ADVCA_RELEASE
+        printf_str("Logic CT1642 Board Init \r\n");
+#endif
+
     KeyPressFlag_CT1642 = 0;
 
     //printf_char('c');

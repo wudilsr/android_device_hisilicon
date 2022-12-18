@@ -27,6 +27,7 @@
 #include "sys.h"
 #include "phy_fix.h"
 #include "sockioctl.h"
+#include "autoeee/autoeee.h"
 
 extern struct hieth_mdio_local hieth_mdio_local_device;
 
@@ -36,6 +37,11 @@ void hieth_mdiobus_driver_exit(void);
 static struct net_device *hieth_devs_save[2] = { NULL, NULL };
 
 static struct sockaddr macaddr;
+
+spinlock_t hieth_glb_reg_lock;
+
+/* default, disable autoeee func */
+bool enable_autoeee = false;
 
 /*
  * Phy address preference the uboot config
@@ -103,6 +109,9 @@ static void hieth_adjust_link(struct net_device *dev)
 		hieth_set_linkstat(ld, stat);
 		phy_print_status(ld->phy);
 		ld->link_stat = stat;
+
+		if (enable_autoeee)
+			init_autoeee(ld, stat);
 	}
 }
 
@@ -308,6 +317,11 @@ static int hieth_net_open(struct net_device *dev)
 
 	try_module_get(THIS_MODULE);
 
+	if (!is_valid_ether_addr(dev->dev_addr))
+		random_ether_addr(dev->dev_addr);
+
+	hieth_hw_set_macaddress(ld, 1, dev->dev_addr);
+
 	/* init tasklet */
 	ld->bf_recv.next = NULL;
 	ld->bf_recv.state = 0;
@@ -415,12 +429,8 @@ static int hieth_net_set_mac_address(struct net_device *dev, void *p)
 
 	local_lock(ld);
 
-	if (hieth_devs_save[UP_PORT])
-		memcpy(hieth_devs_save[UP_PORT]->dev_addr, skaddr->sa_data,
-		       dev->addr_len);
-	if (hieth_devs_save[DOWN_PORT])
-		memcpy(hieth_devs_save[DOWN_PORT]->dev_addr, skaddr->sa_data,
-		       dev->addr_len);
+	memcpy(dev->dev_addr, skaddr->sa_data, dev->addr_len);
+	dev->addr_assign_type &= ~NET_ADDR_RANDOM;
 
 	local_unlock(ld);
 
@@ -429,6 +439,106 @@ static int hieth_net_set_mac_address(struct net_device *dev, void *p)
 	return 0;
 }
 
+void hieth_enable_mac_addr(struct hieth_netdev_local *ld,
+		unsigned int high, int enable)
+{
+	if (enable)
+		hieth_writel_bits(ld, 1, high,
+				UD_BIT(ld->port, BITS_MACFLT_ENA));
+	else
+		hieth_writel_bits(ld, 0, high,
+				UD_BIT(ld->port, BITS_MACFLT_ENA));
+}
+
+static inline void hieth_enable_mac_addr_filter(struct hieth_netdev_local *ld,
+		unsigned int reg_n, int enable)
+{
+	hieth_enable_mac_addr(ld, GLB_MAC_H16(ld->port, reg_n), enable);
+}
+
+void hieth_set_mac_addr(struct hieth_netdev_local *ld, u8 addr[6],
+		unsigned int high, unsigned int low)
+{
+	unsigned long data;
+
+	hieth_writel_bits(ld, 1, high, UD_BIT(ld->port, BITS_MACFLT_ENA));
+
+	data = (addr[0] << 8) | addr[1];
+	hieth_writel_bits(ld, data, high, BITS_MACFLT_HI16);
+
+	data = (addr[2] << 24) | (addr[3] << 16) | (addr[4] << 8) | addr[5];
+	hieth_writel(ld, data, low);
+
+	hieth_writel_bits(ld, 1, high, UD_BIT(ld->port, BITS_MACFLT_FW2CPU));
+}
+
+static inline void hieth_set_mac_addr_filter(struct hieth_netdev_local *ld,
+		unsigned char *addr, unsigned int reg_n)
+{
+	hieth_set_mac_addr(ld, addr, GLB_MAC_H16(ld->port, reg_n),
+			GLB_MAC_L32(ld->port, reg_n));
+}
+
+void hieth_net_set_rx_mode(struct net_device *dev)
+{
+	struct hieth_netdev_local *ld = netdev_priv(dev);
+
+	spin_lock(&hieth_glb_reg_lock);
+
+	if (dev->flags & IFF_PROMISC) {
+		hieth_writel_bits(ld, 1, GLB_FWCTRL,
+				UD_BIT(ld->port, BITS_FWALL2CPU));
+	} else {
+		hieth_writel_bits(ld, 0, GLB_FWCTRL,
+				UD_BIT(ld->port, BITS_FWALL2CPU));
+
+		if ((netdev_mc_count(dev) > HIETH_MAX_MULTICAST_ADDRESSES)
+				|| (dev->flags & IFF_ALLMULTI)) {
+			hieth_writel_bits(ld, 1, GLB_MACTCTRL,
+					UD_BIT(ld->port, BITS_MULTI2CPU));
+		} else {
+			int reg = HIETH_MAX_UNICAST_ADDRESSES;
+			int i;
+			struct netdev_hw_addr *ha;
+
+			for (i = reg; i < HIETH_MAX_MAC_FILTER_NUM; i++)
+				hieth_enable_mac_addr_filter(ld, i, 0);
+
+			netdev_for_each_mc_addr(ha, dev) {
+				hieth_set_mac_addr_filter(ld, ha->addr, reg);
+				reg++;
+			}
+
+			hieth_writel_bits(ld, 0, GLB_MACTCTRL,
+					UD_BIT(ld->port, BITS_MULTI2CPU));
+		}
+
+		/* Handle multiple unicast addresses (perfect filtering)*/
+		if (netdev_uc_count(dev) > HIETH_MAX_UNICAST_ADDRESSES) {
+			hieth_writel_bits(ld, 1, GLB_MACTCTRL,
+					UD_BIT(ld->port, BITS_UNI2CPU));
+		} else {
+			int reg = 0;
+			int i;
+			struct netdev_hw_addr *ha;
+
+			for (i = reg; i < HIETH_MAX_UNICAST_ADDRESSES; i++)
+				hieth_enable_mac_addr_filter(ld, i, 0);
+
+			netdev_for_each_uc_addr(ha, dev) {
+				hieth_set_mac_addr_filter(ld, ha->addr, reg);
+				reg++;
+			}
+
+			hieth_writel_bits(ld, 0, GLB_MACTCTRL,
+					UD_BIT(ld->port, BITS_UNI2CPU));
+		}
+	}
+
+	spin_unlock(&hieth_glb_reg_lock);
+}
+
+#if 0
 static void print_mac_address(const char *pre_msg, const unsigned char *mac,
 			      const char *post_msg)
 {
@@ -443,6 +553,7 @@ static void print_mac_address(const char *pre_msg, const unsigned char *mac,
 	if (post_msg)
 		printk(post_msg);
 }
+#endif
 
 static int hieth_net_ioctl(struct net_device *net_dev,
 			   struct ifreq *ifreq, int cmd)
@@ -522,6 +633,8 @@ static const struct net_device_ops hieth_netdev_ops = {
 	.ndo_tx_timeout = hieth_net_timeout,
 	.ndo_do_ioctl = hieth_net_ioctl,
 	.ndo_set_mac_address = hieth_net_set_mac_address,
+	.ndo_set_rx_mode	= hieth_net_set_rx_mode,
+	.ndo_change_mtu		= eth_change_mtu,
 	.ndo_get_stats = hieth_net_get_stats,
 };
 
@@ -549,6 +662,10 @@ static int hieth_platdev_probe_port(struct platform_device *pdev, int port)
 	netdev->watchdog_timeo = 3 * HZ;
 	netdev->netdev_ops = &hieth_netdev_ops;
 	netdev->ethtool_ops = &hieth_ethtools_ops;
+
+	netdev->priv_flags |= IFF_UNICAST_FLT;
+
+	memcpy(netdev->dev_addr, macaddr.sa_data, netdev->addr_len);
 
 	/* init hieth_global somethings... */
 	hieth_devs_save[port] = netdev;
@@ -614,6 +731,9 @@ static int hieth_platdev_probe_port(struct platform_device *pdev, int port)
 
 	printk(KERN_INFO "%s port phy at 0x%02x is connect\n",
 	       (ld->port == UP_PORT ? "Up" : "Down"), phy_addr);
+
+	if (enable_autoeee)
+		init_autoeee(ld, 0);
 
 	skb_queue_head_init(&ld->rx_head);
 	skb_queue_head_init(&ld->rx_hw);
@@ -847,6 +967,8 @@ static int hieth_plat_driver_probe(struct platform_device *pdev)
 	hieth_platdev_probe_port(pdev, UP_PORT);
 	hieth_platdev_probe_port(pdev, DOWN_PORT);
 
+	spin_lock_init(&hieth_glb_reg_lock);
+
 	phy_quirk(&hieth_mdio_local_device, hisf_phy_addr_up);
 	phy_quirk(&hieth_mdio_local_device, hisf_phy_addr_down);
 
@@ -860,15 +982,6 @@ static int hieth_plat_driver_probe(struct platform_device *pdev)
 		ret = -ENODEV;
 		goto _error_nodev_exit;
 	}
-
-	if (!is_valid_ether_addr(macaddr.sa_data)) {
-		print_mac_address(KERN_WARNING "Invalid HW-MAC Address: ",
-				  macaddr.sa_data, "\n");
-		random_ether_addr(macaddr.sa_data);
-		print_mac_address(KERN_WARNING "Set Random MAC address: ",
-				  macaddr.sa_data, "\n");
-	}
-	hieth_net_set_mac_address(ndev, (void *)&macaddr);
 
 	ret = request_irq(CONFIG_HIETH_IRQNUM, hieth_net_isr, IRQF_SHARED,
 			  "hieth", hieth_devs_save);

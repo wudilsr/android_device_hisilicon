@@ -42,6 +42,10 @@
 
 #define HI_STD_I2C_NUM  3
 
+#elif  defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define HI_STD_I2C_NUM  7
+
 #elif defined(CHIP_TYPE_hi3718cv100)
 
 #define HI_STD_I2C_NUM  5

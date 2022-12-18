@@ -116,6 +116,9 @@ status_t CameraJpegDecoder::setExternalBuffer(struct preview_stream_ops* window,
 
     int stride = 0;
     VDEC_BUFFER_ATTR_S stVdecAttr;
+
+    memset(&stVdecAttr, 0, sizeof(VDEC_BUFFER_ATTR_S));
+
     stVdecAttr.u32BufNum = count;
 
     mBufMap.clear();

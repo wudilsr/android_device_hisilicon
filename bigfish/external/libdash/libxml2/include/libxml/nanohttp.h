@@ -66,6 +66,10 @@ XMLPUBFUN int XMLCALL
 	xmlNanoHTTPRead		(void *ctx,
 				 void *dest,
 				 int len);
+//@invokeID:type is XMLInvokeID
+XMLPUBFUN int XMLCALL
+	xmlNanoHTTPInvoke (void *ctx, int invokeID, void *arg);
+
 #ifdef LIBXML_OUTPUT_ENABLED
 XMLPUBFUN int XMLCALL
 	xmlNanoHTTPSave		(void *ctxt,

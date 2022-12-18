@@ -496,7 +496,7 @@ static int slac_open(struct inode * inode, struct file * file)
         s32SlacTickWaitFlag = 0;
         init_waitqueue_head(&WaitQueueSlacTick);
         pSlacTickThread = kthread_create(slac_tick_proc, NULL, "SlacTick");
-        if (NULL == pSlacTickThread)
+        if (IS_ERR(pSlacTickThread))
         {
             TRC("create kthread failed\n");
             atomic_dec(&open_cnt);

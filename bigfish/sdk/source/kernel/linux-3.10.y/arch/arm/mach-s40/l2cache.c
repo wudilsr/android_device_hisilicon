@@ -124,6 +124,8 @@ static int __init l2_cache_init(void)
 			|| (get_chipid() == _HI3796CV100)) {
 		/* L2cache is 1M( 64KB * 16 Way = 1M ) bytes */
 		l2x0_init(l2x0_virt_base, 0x00470000, 0xFFB0FFFF);
+	} else if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		l2x0_init(l2x0_virt_base, 0x00440000, 0xFFB0FFFF);
 	} else 
 		l2x0_init(l2x0_virt_base, 0x00450000, 0xFFB0FFFF);
 

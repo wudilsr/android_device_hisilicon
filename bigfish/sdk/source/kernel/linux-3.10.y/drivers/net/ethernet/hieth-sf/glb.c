@@ -39,18 +39,11 @@ int hieth_port_init(struct hieth_netdev_local *ld, int port)
 	hieth_writel_bits(ld, 0, GLB_FWCTRL, BITS_VLAN_ENABLE);
 
 	/*enable UpEther<->CPU */
-	if (ld->port == UP_PORT) {
-		hieth_writel_bits(ld, 1, GLB_FWCTRL, BITS_FW2CPU_ENA_UP);
-		hieth_writel_bits(ld, 1, GLB_FWCTRL, BITS_FWALL2CPU_UP);
-		hieth_writel_bits(ld, 1, GLB_MACTCTRL, BITS_BROAD2CPU_UP);
-	} else if (ld->port == DOWN_PORT) {
-		/*enable DownEther<->CPU */
-		hieth_writel_bits(ld, 1, GLB_FWCTRL, BITS_FW2CPU_ENA_DOWN);
-		hieth_writel_bits(ld, 1, GLB_FWCTRL, BITS_FWALL2CPU_DOWN);
-		hieth_writel_bits(ld, 1, GLB_MACTCTRL, BITS_BROAD2CPU_DOWN);
-	} else {
-		BUG();
-	}
+	hieth_writel_bits(ld, 1, GLB_FWCTRL, UD_BIT(ld->port, BITS_FW2CPU_ENA));
+	hieth_writel_bits(ld, 0, GLB_FWCTRL, UD_BIT(ld->port, BITS_FWALL2CPU));
+	hieth_writel_bits(ld, 1, GLB_MACTCTRL,
+			UD_BIT(ld->port, BITS_BROAD2CPU));
+	hieth_writel_bits(ld, 1, GLB_MACTCTRL, UD_BIT(ld->port, BITS_MACT_ENA));
 
 	hieth_set_mac_leadcode_cnt_limit(ld, 0);
 	hieth_set_rcv_len_max(ld, HIETH_MAX_RCV_LEN);

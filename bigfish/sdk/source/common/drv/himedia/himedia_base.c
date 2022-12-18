@@ -217,7 +217,7 @@ static int himedia_pm_resume_noirq(struct device *dev)
 #endif /* !CONFIG_SUSPEND */
 
 //#ifdef  CONFIG_HIBERNATION
-#ifdef CONFIG_PM_HIBERNATE
+#if defined(CONFIG_PM_HIBERNATE) || defined(CONFIG_HISI_SNAPSHOT_BOOT)
 static int himedia_pm_freeze(struct device *dev)
 {
 	int ret = 0;

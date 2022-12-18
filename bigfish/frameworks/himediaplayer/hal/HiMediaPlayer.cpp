@@ -2,6 +2,8 @@
 #define LOG_TAG "HisiMediaPlayer"
 
 #include <cutils/properties.h>
+#include <media/stagefright/foundation/AString.h>
+#include <media/stagefright/foundation/base64.h>
 
 #include "hi_unf_avplay.h"
 #include "hi_unf_sound.h"
@@ -347,13 +349,15 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                     break;
                 case HI_SVR_PLAYER_STATE_STOP:
                     {
+                        pHiPlayer->mCmdQueue->setState(HiMediaPlayer::CommandQueue::STATE_STOP);
+
                         HI_SVR_PLAYER_GetParam(hPlayer, HI_SVR_PLAYER_ATTR_WINDOW_HDL, &hWindow);
                         if (HI_UNF_WINDOW_FREEZE_MODE_BUTT != pHiPlayer->mWndFreezeMode)
                         {
                             if (HI_INVALID_HANDLE != hWindow)
                                 HI_UNF_VO_ResetWindow(hWindow, pHiPlayer->mWndFreezeMode);
                         }
-                        pHiPlayer->mCmdQueue->setState(HiMediaPlayer::CommandQueue::STATE_STOP);
+
                         pHiPlayer->mCmdQueue->signal();
                     }
                     break;
@@ -424,6 +428,15 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
             if (NULL != pstProgress)
             {
                 LOGV("Receive Event: Current play progress is %d ", pstProgress->u32Progress);
+            }
+
+            char soft_detector[PROPERTY_VALUE_MAX] = {0};
+            if (property_get("persist.sys.softdetector.enable", soft_detector, "false") && strcmp("true", soft_detector)== 0)
+            {
+                HI_FORMAT_BUFFER_STATUS_S stStatus;
+                HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, HI_FORMAT_INVOKE_GET_BUFFER_STATUS, (HI_VOID *)&stStatus);
+                LOGV("Receive Event: Current play progress s64Duration = %d ", stStatus.s64Duration);
+                pHiPlayer->sendEvent(android::MEDIA_INFO, MEDIA_INFO_EXTEND_BUFFER_LENGTH, stStatus.s64Duration);
             }
         }
         break;
@@ -499,6 +512,22 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                     }
                 }
             }
+            char soft_detector[PROPERTY_VALUE_MAX] = {0};
+            if (property_get("persist.sys.softdetector.enable", soft_detector, "false") && strcmp("true", soft_detector)== 0)
+            {
+                HI_S64 streamNum = 0;
+                HI_S64 bandwidth = 0;
+                if (HI_SUCCESS ==  HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, HI_FORMAT_INVOKE_GET_HLS_STREAM_NUM, (HI_VOID *)&streamNum)){
+                    if (1 == streamNum) {
+                        s32Ret = HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, CMD_GET_HLS_BANDWIDTH, (HI_VOID *)&bandwidth);
+                    } else {
+                        bandwidth = -1;
+                    }
+                } else {
+                    bandwidth = pHiPlayer->mpFileInfo->u32Bitrate;
+                }
+                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_EXTEND_FIRST_FRAME_TIME, bandwidth);
+            }
         }
         break;
         case HI_SVR_PLAYER_EVENT_DOWNLOAD_FINISH:
@@ -567,7 +596,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
             LOGV("Receive Event: HI_SVR_PLAYER_EVENT_NETWORK_INFO ");
 
             HI_FORMAT_NET_STATUS_S *pstNet = (HI_FORMAT_NET_STATUS_S*)pstruEvent->pu8Data;
-
+            HI_BOOL bNotifyOS = HI_FALSE;
             switch (pstNet->eType)
             {
             case HI_FORMAT_MSG_NETWORK_ERROR_UNKNOW:
@@ -575,12 +604,18 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 break;
             case HI_FORMAT_MSG_NETWORK_ERROR_CONNECT_FAILED:
                 LOGV("Connect server fail ");
+                pHiPlayer->mS32ErrorCode = 3001;
+                bNotifyOS = HI_TRUE;
                 break;
             case HI_FORMAT_MSG_NETWORK_ERROR_TIMEOUT:
                 LOGV("Request timeout ");
+                pHiPlayer->mS32ErrorCode = 3003;
+                bNotifyOS = HI_TRUE;
                 break;
             case HI_FORMAT_MSG_NETWORK_ERROR_DISCONNECT:
                 LOGV("Server disconnect ");
+                pHiPlayer->mS32ErrorCode = 3002;
+                bNotifyOS = HI_TRUE;
                 break;
             case HI_FORMAT_MSG_NETWORK_ERROR_NOT_FOUND:
                 LOGV("Media stream not found ");
@@ -588,12 +623,28 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
             case HI_FORMAT_MSG_NETWORK_NORMAL:
                 LOGV("Network resume ");
                 break;
+            case HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE:
+            {
+                if (1 == pHiPlayer->mYunosSource){
+                    pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_UNKNOWN, CMD_YUNOS_TS_INFO);
+                    LOGV("HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE CMD_YUNOS_TS_INFO ");
+                    return HI_SUCCESS;
+                }
+            }
             default:
+                if(pstNet->s32ErrorCode >=  400 && pstNet->s32ErrorCode < 600){
+                    pHiPlayer->mS32ErrorCode = 3000 + pstNet->s32ErrorCode;
+                    bNotifyOS = HI_TRUE;
+                }
                 break;
             }
 
-            LOGV("Send MEDIA_INFO_NETWORK event ");
+            LOGV("Send MEDIA_INFO_NETWORK event s32ErrorCode:%d", pstNet->s32ErrorCode);
             pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_NETWORK, pstNet->eType);
+            if (HI_TRUE == bNotifyOS && 1 == pHiPlayer->mYunosSource) {
+                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_UNKNOWN, CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO);
+                LOGV("CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO pHiPlayer->mU32ErrorCode=%d ",pHiPlayer->mS32ErrorCode);
+            }
         }
         break;
         case HI_SVR_PLAYER_EVENT_ERROR:
@@ -770,7 +821,8 @@ HiMediaPlayer::HiMediaPlayer():
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
-            mTimeShiftDuration(-1)
+            mTimeShiftDuration(-1),
+            mYunosSource(0)
 {
     LOGV("[%s] HiMediaPlayer construct", STR_SWITCH_PG);
     memset(&mProcInfo, 0, sizeof(mProcInfo));
@@ -837,7 +889,8 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
             mPrepareResult(NO_ERROR),
-            mTimeShiftDuration(-1)
+            mTimeShiftDuration(-1),
+            mYunosSource(0)
 {
     LOGV("[%s] HiMediaPlayer construct userData", STR_SWITCH_PG);
     setProcInfo(getCurrentTime(), HI_SVR_PLAYER_PROC_HIMEDIAPLAYER_CONSTRUCT);
@@ -995,20 +1048,13 @@ int HiMediaPlayer::createAVPlay()
         stWinAttr.stWinAspectAttr.enAspectCvrs  = HI_UNF_VO_ASPECT_CVRS_IGNORE;
     }
 
-    //set win {w,h} by resolution
-    char buffer[PROP_VALUE_MAX];
-    int resolution = 720;
-    memset(buffer, 0, PROP_VALUE_MAX);
-    property_get("persist.sys.resolution", buffer, "720");
-    resolution = atoi(buffer);
-    LOGV("HiMediaPlayer::createAVPlay, resolution = %d",resolution);
-    if (resolution == 1080) {
-        stWinAttr.stOutputRect.s32Width  = 1920;
-        stWinAttr.stOutputRect.s32Height = 1080;
-    } else {
-        stWinAttr.stOutputRect.s32Width  = 1280;
-        stWinAttr.stOutputRect.s32Height = 720;
-    }
+    int w = 0;
+    int h = 0;
+    DisplayClient DspClient;
+    DspClient.GetVirtScreenSize(&w, &h);
+
+    stWinAttr.stOutputRect.s32Width  = w;
+    stWinAttr.stOutputRect.s32Height = h;
 
     LOGV("HI_UNF_VO_CreateWindow begin");
     s32Ret = HI_UNF_VO_CreateWindow(&stWinAttr, &mWindow);
@@ -1139,21 +1185,15 @@ int HiMediaPlayer::createHiplayer()
             dynamic_cast<HI_SVR_ASINK_S*>(mASink.get()));
     struParam.x            = HIMEDIA_DEFAULT_OUTPUT_X;
     struParam.y            = HIMEDIA_DEFAULT_OUTPUT_Y;
-    //set win {w,h} by resolution
-    char buffer[PROP_VALUE_MAX];
-    int resolution = 720;
-    memset(buffer, 0, PROP_VALUE_MAX);
-    property_get("persist.sys.resolution", buffer, "720");
-    resolution = atoi(buffer);
-    LOGV("HiMediaPlayer::createHiplayer, resolution = %d",resolution);
-    if (resolution == 1080) {
-        struParam.w  = 1920;
-        struParam.h = 1080;
-    } else {
-        struParam.w  = 1280;
-        struParam.h = 720;
-    }
 
+    int w = 0;
+    int h = 0;
+    DisplayClient DspClient;
+    DspClient.GetVirtScreenSize(&w, &h);
+    struParam.w  = w;
+    struParam.h = h;
+
+    char buffer[PROP_VALUE_MAX];
     memset(buffer, 0, PROP_VALUE_MAX);
 
     if (strstr(mMediaParam.aszUrl, "udp://") || strstr(mMediaParam.aszUrl, "rtp://"))
@@ -1511,6 +1551,8 @@ int HiMediaPlayer::dumpFileInfo(HI_FORMAT_FILE_INFO_S *pstFileInfo)
     for (i = 0; i < (int)pstFileInfo->u32ProgramNum; i++)
     {
         LOGV("Program %d: ", i);
+        LOGV("service name: %s", pstFileInfo->pastProgramInfo[i].aszServiceName);
+        LOGV("service provider: %s", pstFileInfo->pastProgramInfo[i].aszServiceProvider);
 
         for (j = 0; j < pstFileInfo->pastProgramInfo[i].u32VidStreamNum; j++)
         {
@@ -3348,41 +3390,177 @@ status_t HiMediaPlayer::getAudioCodecFormat(HI_S32 s32AudioFormat, HI_CHAR * psz
     }
     return NO_ERROR;
 }
+///TODO:is it correct?
+status_t HiMediaPlayer::getAudioChannelString(HI_S32 s32AudioChannel, HI_CHAR * pszAudioChannel)
+{
+    switch(s32AudioChannel) //refer to MediaDef.cpp and hi_audio_code.h
+    {
+        case HA_AUD_CH_MONO:
+            sprintf(pszAudioChannel, "mono");
+            break;
+        case HA_AUD_CH_STEREO:
+            sprintf(pszAudioChannel, "stereo");
+            break;
+        case HA_AUD_CH_3_0:
+            sprintf(pszAudioChannel, "3.0");
+            break;
+        case HA_AUD_CH_4_0:
+            sprintf(pszAudioChannel, "4.0");
+            break;
+        case HA_AUD_CH_5_0:
+            sprintf(pszAudioChannel, "5.0");
+            break;
+        case HA_AUD_CH_5_1:
+            sprintf(pszAudioChannel, "5.1");
+            break;
+        case HA_AUD_CH_7_1:
+            sprintf(pszAudioChannel, "7.1");
+            break;
+        default:
+            sprintf(pszAudioChannel, "%d.0", s32AudioChannel);
+            break;
+    }
+    return NO_ERROR;
+}
 
 status_t HiMediaPlayer::getVideoCodecFormat(HI_S32 s32VideoFormat, HI_CHAR * pszVideoCodec)
 {
+    if (NULL == pszVideoCodec) {
+        return HI_FAILURE;
+    }
+    HI_CHAR *type = NULL;
+    HI_BOOL bFormat = HI_TRUE;
     switch(s32VideoFormat) //refer to MediaDef.cpp and hi_svr_codec.h
     {
         case HI_FORMAT_VIDEO_VP8:
-            sprintf(pszVideoCodec, "video/x-vnd.on2.vp8");
+            type = "x-vnd.on2.vp8";
             break;
         case HI_FORMAT_VIDEO_H264:
-            sprintf(pszVideoCodec, "video/avc");
+            type = "avc";
             break;
         case HI_FORMAT_VIDEO_MPEG4:
         case HI_FORMAT_VIDEO_MSMPEG4V1:
         case HI_FORMAT_VIDEO_MSMPEG4V2:
-            sprintf(pszVideoCodec, "video/mp4");
+            type = "mp4";
             break;
         case HI_FORMAT_VIDEO_H263:
-            sprintf(pszVideoCodec, "video/h263");
+            type = "h263";
             break;
         case HI_FORMAT_VIDEO_MPEG2:
-            sprintf(pszVideoCodec, "video/mpeg2");
+            type = "mpeg2";
             break;
         case HI_FORMAT_VIDEO_VC1:
-            sprintf(pszVideoCodec, "video/x-ms-wm");
+            type = "x-ms-wm";
             break;
         case HI_FORMAT_VIDEO_REAL8:
         case HI_FORMAT_VIDEO_REAL9:
-            sprintf(pszVideoCodec, "video/rn-realmedia");
+            type = "rn-realmedia";
             break;
         case HI_FORMAT_VIDEO_RAW:
-            sprintf(pszVideoCodec, "video/raw");
+            type = "raw";
+            break;
+        case HI_FORMAT_VIDEO_AVS:         /**< AVS*/
+            type = "AVS";
+            break;
+        case HI_FORMAT_VIDEO_VP6:         /**< VP6*/
+            type = "VP6";
+            break;
+        case HI_FORMAT_VIDEO_VP6F:        /**< VP6F*/
+            type = "VP6F";
+            break;
+        case HI_FORMAT_VIDEO_VP6A:        /**< VP6A*/
+            type = "VP6A";
+            break;
+        case HI_FORMAT_VIDEO_MJPEG:       /**< MJPEG*/
+            type = "MJPEG";
+            break;
+        case HI_FORMAT_VIDEO_SORENSON:    /**< SORENSON SPARK*/
+            type = "SORENSON SPARK";
+            break;
+        case HI_FORMAT_VIDEO_DIVX3:       /**< DIVX3, not supported*/
+            type = "DIVX3";
+            break;
+        case HI_FORMAT_VIDEO_JPEG:        /**< JPEG added for VENC*/
+            type = "JPEG";
+            break;
+        case HI_FORMAT_VIDEO_MSVIDEO1:    /**< MS video */
+            type = "MSVIDEO1";
+            break;
+        case HI_FORMAT_VIDEO_WMV1:
+            type = "WMV1";
+            break;
+        case HI_FORMAT_VIDEO_WMV2:
+            type = "WMV2";
+            break;
+        case HI_FORMAT_VIDEO_RV10:
+            type = "RV10";
+            break;
+        case HI_FORMAT_VIDEO_RV20:
+            type = "RV20";
+            break;
+        case HI_FORMAT_VIDEO_SVQ1:        /**< Apple video */
+            type = "SVQ1";
+            break;
+        case HI_FORMAT_VIDEO_SVQ3:        /**< Apple video */
+            type = "SVQ3";
+            break;
+        case HI_FORMAT_VIDEO_H261:
+            type = "H261";
+            break;
+        case HI_FORMAT_VIDEO_VP3:
+            type = "VP3";
+            break;
+        case HI_FORMAT_VIDEO_VP5:
+            type = "VP5";
+            break;
+        case HI_FORMAT_VIDEO_CINEPAK:
+            type = "CINEPAK";
+            break;
+        case HI_FORMAT_VIDEO_INDEO2:
+            type = "INDEO2";
+            break;
+        case HI_FORMAT_VIDEO_INDEO3:
+            type = "INDEO3";
+            break;
+        case HI_FORMAT_VIDEO_INDEO4:
+            type = "INDEO4";
+            break;
+        case HI_FORMAT_VIDEO_INDEO5:
+            type = "INDEO5";
+            break;
+        case HI_FORMAT_VIDEO_MJPEGB:
+            type = "MJPEGB";
+            break;
+        case HI_FORMAT_VIDEO_MVC:
+            type = "MVC";
+            break;
+        case HI_FORMAT_VIDEO_HEVC:        /**< HEVC(H265)*/
+            type = "HEVC";
+            break;
+        case HI_FORMAT_VIDEO_DV:
+            type = "DV";
+            break;
+        case HI_FORMAT_VIDEO_HUFFYUV:
+            type = "HUFFYUV";
+            break;
+        case HI_FORMAT_VIDEO_DIVX:           /**< DIVX,not supported*/
+            type = "DIVX";
+            break;
+        case HI_FORMAT_VIDEO_REALMAGICMPEG4: /**< REALMAGIC MPEG4,not supported*/
+            type = "REALMAGICMPEG4";
             break;
         default:
-            sprintf(pszVideoCodec, "%d", s32VideoFormat);
+            bFormat = HI_FALSE;
             break;
+    }
+    if (bFormat) {
+        if (1 == mYunosSource){
+            snprintf(pszVideoCodec,HI_FORMAT_SUB_TITLE_LEN,"%s", type);
+        } else {
+            snprintf(pszVideoCodec,HI_FORMAT_SUB_TITLE_LEN, "video/%s", type);
+        }
+    } else {
+        snprintf(pszVideoCodec, HI_FORMAT_SUB_TITLE_LEN, "%d", s32VideoFormat);
     }
     return NO_ERROR;
 }
@@ -3457,6 +3635,7 @@ status_t HiMediaPlayer::getMetadata(const media::HiMetadata::Filter& ids, Parcel
 
     if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_METADATA, &pArg))
     {
+        LOGE("HI_SVR_PLAYER_Invoke HI_FORMAT_INVOKE_GET_METADATA fail!");
         return HI_FAILURE;
     }
 
@@ -3470,92 +3649,105 @@ status_t HiMediaPlayer::getMetadata(const media::HiMetadata::Filter& ids, Parcel
         }
         else
         {
-             HI_CHAR pszAudioCodec[HI_FORMAT_TITLE_MAX_LEN];
-             HI_CHAR pszVideoCodec[HI_FORMAT_TITLE_MAX_LEN];
-             HI_S32 s32AudioFormat = -1;
-             HI_S32 s32VideoFormat = -1;
-             HI_S64 s64Duration = 0;
-             HI_S32 s32CdTrackMax = 0;
-             HI_S32 s32CdTrackNum = 0;
-             HI_S32 s32NumTracks = 0;
-             HI_BOOL bSeekAble;
+            HI_CHAR pszAudioCodec[HI_FORMAT_TITLE_MAX_LEN];
+            HI_CHAR pszVideoCodec[HI_FORMAT_TITLE_MAX_LEN];
+            HI_S32 s32AudioFormat = -1;
+            HI_S32 s32VideoFormat = -1;
+            HI_S64 s64Duration = 0;
+            HI_S32 s32CdTrackMax = 0;
+            HI_S32 s32CdTrackNum = 0;
+            HI_S32 s32NumTracks = 0;
+            HI_BOOL bSeekAble;
+            HI_S32 s32Ret;
+            HI_SVR_PLAYER_STREAMID_S stStreamId;
+            HI_FORMAT_PROGRAM_INFO_S* pstProgram;
 
-             //NumTracks, int
-             s32NumTracks = pstFileInfo->pastProgramInfo[0].u32AudStreamNum +
-                            pstFileInfo->pastProgramInfo[0].u32VidStreamNum +
-                            pstFileInfo->pastProgramInfo[0].u32SubStreamNum;
-             metadata.appendInt32(HiMetadata::kNumTracks, s32NumTracks);
-
-             //BitRate, int
-             metadata.appendInt32(HiMetadata::kBitRate, pstFileInfo->u32Bitrate);
-
-             //audio codec
-             if (pstFileInfo->pastProgramInfo[0].u32AudStreamNum > 0)
-             {
-                 s32AudioFormat = pstFileInfo->pastProgramInfo[0].pastAudStream[0].u32Format;
-
-                 getAudioCodecFormat(s32AudioFormat, pszAudioCodec);
-
-                 String16 *str16AudioCodec = new String16(pszAudioCodec, strlen(pszAudioCodec));
-                 metadata.AppendStringMeta(HiMetadata::kAudioCodec, *str16AudioCodec);
-             }
-             LOGV("audio format = %d\n", s32AudioFormat);
-
-             if (pstFileInfo->pastProgramInfo[0].u32VidStreamNum > 0)
-             {
-                 //video codec
-                 s32VideoFormat = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u32Format;
-                 getVideoCodecFormat(s32VideoFormat, pszVideoCodec);
-                 String16 *str16VideoCodec = new String16(pszVideoCodec, strlen(pszVideoCodec));
-                 metadata.AppendStringMeta(HiMetadata::kVideoCodec, *str16VideoCodec);
-
-                 if (NULL != str16VideoCodec)
-                 {
-                     delete(str16VideoCodec);
-                     str16VideoCodec = NULL;
-                 }
-
-                 HI_U16 u16VideoHeight = 0;
-                 HI_U16 u16VideoWidth = 0;
-                 HI_U16 u16VideoFramerate1 = 0;
-                 HI_U16 u16VideoFramerate2 = 0;
-                 HI_U32 u32VideoBitrate = 0;
-
-                 u16VideoHeight = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u16Height;
-                 u16VideoWidth = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u16Width;
-                 u16VideoFramerate1 = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u16FpsInteger;
-                 u16VideoFramerate2 = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u16FpsDecimal;
-                 u32VideoBitrate = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u32Bitrate;
-
-                 if(u16VideoHeight > 0)
-                     metadata.appendInt32(HiMetadata::kVideoHeight, u16VideoHeight);
-                 if(u16VideoWidth)
-                     metadata.appendInt32(HiMetadata::kVideoWidth, u16VideoWidth);
-                 if(u16VideoFramerate1 > 0)
-                     metadata.appendInt32(HiMetadata::kVideoframeRate, u16VideoFramerate1);
-                 if(u32VideoBitrate > 0)
-                     metadata.appendInt32(HiMetadata::kVideoBitRate, u32VideoBitrate);
-
-                 //LOGV("video format = %d\n", s32VideoFormat);
-                 //LOGV("video height = %d\n", u16VideoHeight);
-                 //LOGV("video width = %d\n", u16VideoWidth);
-                 //LOGV("video framerate = %d.%d\n", u16VideoFramerate1, u16VideoFramerate2);
-                 //LOGV("video bitrate = %d\n", u32VideoBitrate);
+            s32Ret = HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_STREAMID, (HI_VOID*)&stStreamId);
+            if (HI_SUCCESS != s32Ret)
+            {
+                LOGE("HI_SVR_PLAYER_GetParam  HI_SVR_PLAYER_ATTR_STREAMID failed:%x", s32Ret);
+                //return -1;
+                memset(&stStreamId,0,sizeof(HI_SVR_PLAYER_STREAMID_S));
             }
-             //duration
-             s64Duration = pstFileInfo->s64Duration;
-             if(s64Duration > 0)
-                 metadata.appendInt32(HiMetadata::kDuration, (HI_S32)s64Duration);
+            if (pstFileInfo->u32ProgramNum < stStreamId.u16ProgramId)
+            {
+                LOGE("invalid program num,u32ProgramNum:%d,stStreamId.u16ProgramId:%d", pstFileInfo->u32ProgramNum,stStreamId.u16ProgramId);
+                return -1;
+            }
+            pstProgram = &pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId];
+            //NumTracks, int
+            s32NumTracks = pstProgram->u32AudStreamNum + pstProgram->u32VidStreamNum + pstProgram->u32SubStreamNum;
+            metadata.appendInt32(HiMetadata::kNumTracks, s32NumTracks);
 
-             //LOGV("duration = %lld\n", s64Duration);
+            //BitRate, int
+            metadata.appendInt32(HiMetadata::kBitRate, pstFileInfo->u32Bitrate);
 
-             //MimeType, string
-             String16 *str16MimeType = new String16(pstFileInfo->aszFileFormat, strlen(pstFileInfo->aszFileFormat));
-             metadata.AppendStringMeta(HiMetadata::kMimeType, *str16MimeType);
-             if (HI_SUCCESS == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_SEEKABLE, &bSeekAble))
-             {
+            //audio codec
+            if (pstProgram->u32AudStreamNum > stStreamId.u16SubStreamId)
+            {
+                s32AudioFormat = pstProgram->pastAudStream[stStreamId.u16SubStreamId].u32Format;
+
+                getAudioCodecFormat(s32AudioFormat, pszAudioCodec);
+
+                String16 *str16AudioCodec = new String16(pszAudioCodec, strlen(pszAudioCodec));
+                metadata.AppendStringMeta(HiMetadata::kAudioCodec, *str16AudioCodec);
+            }
+            LOGV("audio format = %d\n", s32AudioFormat);
+            if (pstProgram->u32VidStreamNum > stStreamId.u16VidStreamId)
+            {
+                //video codec
+                s32VideoFormat = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u32Format;
+                getVideoCodecFormat(s32VideoFormat, pszVideoCodec);
+                String16 *str16VideoCodec = new String16(pszVideoCodec, strlen(pszVideoCodec));
+                metadata.AppendStringMeta(HiMetadata::kVideoCodec, *str16VideoCodec);
+
+                if (NULL != str16VideoCodec)
+                {
+                 delete(str16VideoCodec);
+                 str16VideoCodec = NULL;
+                }
+
+                HI_U16 u16VideoHeight = 0;
+                HI_U16 u16VideoWidth = 0;
+                HI_U16 u16VideoFramerate1 = 0;
+                HI_U16 u16VideoFramerate2 = 0;
+                HI_U32 u32VideoBitrate = 0;
+
+                u16VideoHeight = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u16Height;
+                u16VideoWidth = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u16Width;
+                u16VideoFramerate1 = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u16FpsInteger;
+                u16VideoFramerate2 = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u16FpsDecimal;
+                u32VideoBitrate = pstProgram->pastVidStream[stStreamId.u16VidStreamId].u32Bitrate;
+
+                if(u16VideoHeight > 0)
+                 metadata.appendInt32(HiMetadata::kVideoHeight, u16VideoHeight);
+                if(u16VideoWidth)
+                 metadata.appendInt32(HiMetadata::kVideoWidth, u16VideoWidth);
+                if(u16VideoFramerate1 > 0)
+                 metadata.appendInt32(HiMetadata::kVideoframeRate, u16VideoFramerate1);
+                if(u32VideoBitrate > 0)
+                 metadata.appendInt32(HiMetadata::kVideoBitRate, u32VideoBitrate);
+
+                //LOGV("video format = %d\n", s32VideoFormat);
+                //LOGV("video height = %d\n", u16VideoHeight);
+                //LOGV("video width = %d\n", u16VideoWidth);
+                //LOGV("video framerate = %d.%d\n", u16VideoFramerate1, u16VideoFramerate2);
+                //LOGV("video bitrate = %d\n", u32VideoBitrate);
+            }
+            //duration
+            s64Duration = pstFileInfo->s64Duration;
+            if(s64Duration > 0)
+             metadata.appendInt32(HiMetadata::kDuration, (HI_S32)s64Duration);
+
+            //LOGV("duration = %lld\n", s64Duration);
+
+            //MimeType, string
+            String16 *str16MimeType = new String16(pstFileInfo->aszFileFormat, strlen(pstFileInfo->aszFileFormat));
+            metadata.AppendStringMeta(HiMetadata::kMimeType, *str16MimeType);
+            if (HI_SUCCESS == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_SEEKABLE, &bSeekAble))
+            {
                 metadata.appendBool(HiMetadata::kSeekAvailable,bSeekAble);
-             }
+            }
         }
     }
 
@@ -3630,6 +3822,7 @@ status_t HiMediaPlayer::getMetadata(const media::HiMetadata::Filter& ids, Parcel
         }
         else if (!strcmp(pstKvp[i].pszKey, "track-info\/audio\/bit-rate") ||
                  !strcmp(pstKvp[i].pszKey, "codec-info\/audio\/sample-rate") ||
+                 !strcmp(pstKvp[i].pszKey, "codec-info\/audio\/channels") ||
                  !strcmp(pstKvp[i].pszKey, "track"))
         {
             if (!strcmp(pstKvp[i].pszKey, "track-info\/audio\/bit-rate"))
@@ -3639,6 +3832,23 @@ status_t HiMediaPlayer::getMetadata(const media::HiMetadata::Filter& ids, Parcel
             else if (!strcmp(pstKvp[i].pszKey, "codec-info\/audio\/sample-rate"))
             {
                 metadata.appendInt32(HiMetadata::kAudioSampleRate, pstKvp[i].unValue.s32Value);
+            }
+            else if(!strcmp(pstKvp[i].pszKey, "codec-info\/audio\/channels"))
+            {
+                ps8Out = new HI_CHAR[30];
+                getAudioChannelString(pstKvp[i].unValue.s32Value,ps8Out);
+                String16 *str16Tmp = new String16(ps8Out, strlen(ps8Out));
+                if (NULL != str16Tmp)
+                {
+                    metadata.AppendStringMeta(HiMetadata::kCodecChannels, *str16Tmp);
+                    delete(str16Tmp);
+                    str16Tmp = NULL;
+                }
+                if (ps8Out != NULL)
+                {
+                    delete [] ps8Out;
+                    ps8Out = NULL;
+                }
             }
             else if (!strcmp(pstKvp[i].pszKey, "track"))
             {
@@ -3791,6 +4001,18 @@ status_t HiMediaPlayer::DealPreInvokeSetting(const Parcel& request, Parcel *repl
         else
         {
             reply->writeInt32(UNKNOWN_ERROR);
+        }
+    }
+
+    char soft_detector[PROPERTY_VALUE_MAX] = {0};
+    if (property_get("persist.sys.softdetector.enable", soft_detector, "false") && strcmp("true", soft_detector)== 0)
+    {
+        if (CMD_GET_MEDIA_URL == cmd_type)
+        {
+            if (NULL != reply)
+            {
+                reply->writeString16(String16(mMediaParam.aszUrl));
+            }
         }
     }
 
@@ -4477,22 +4699,20 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     HI_S64  s64BufMaxSize;
     HI_CHAR aszUnderrunSwitch[PROPERTY_VALUE_MAX] = {0};
     HI_S32 s32HlsStartNumber = 1;
-    HI_CHAR *servicetype = NULL;
 
     if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_HEADERS, (void*)mediaParam.u32UserData))
     {
         LOGW("Warn: doPrepare HI_FORMAT_INVOKE_SET_HEADERS fail!");
     }
 
-
     /* if it is timeshift stream, we play the hls stream from first segment */
-    servicetype = strstr(mediaParam.aszUrl, "servicetype=2");
-    if (NULL != servicetype)
+    if (strstr(mediaParam.aszUrl, "servicetype=2")
+        || strstr(mediaParam.aszUrl, "starttime="))
     {
         if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle,
             HI_FORMAT_INVOKE_SET_HLS_LIVE_START_NUM, (void*)s32HlsStartNumber))
         {
-            LOGW("Warn: doSeek HI_FORMAT_INVOKE_SET_HLS_LIVE_START_NUM fail!");
+            LOGW("Warn: doPrepare HI_FORMAT_INVOKE_SET_HLS_LIVE_START_NUM fail!");
         }
 
         LOGV("set time shift duration = %d ", mPlayer->mTimeShiftDuration);
@@ -4861,7 +5081,8 @@ int HiMediaPlayer::CommandQueue::doPause(Command* cmd)
     HI_HANDLE mHandle = cmd->getHandle();
 
     if (STATE_INIT == mState || STATE_ERROR == mState
-        || STATE_IDLE == mState || STATE_PAUSE == mState)
+        || STATE_IDLE == mState || STATE_PAUSE == mState
+        || STATE_STOP == mState)
     {
         LOGW("doPause at wrong state %d", mState);
         return NO_ERROR;
@@ -4880,6 +5101,14 @@ int HiMediaPlayer::CommandQueue::doPause(Command* cmd)
 
     if (HI_FAILURE == HI_SVR_PLAYER_Pause(mHandle))
     {
+        if (STATE_INIT == mState || STATE_ERROR == mState
+        || STATE_IDLE == mState || STATE_PAUSE == mState
+        || STATE_STOP == mState)
+        {
+            LOGW("doPause at wrong state %d", mState);
+            return NO_ERROR;
+        }
+
         LOGE("ERR: HI_SVR_PLAYER_Pause fail");
         return UNKNOWN_ERROR;
     }
@@ -5667,6 +5896,11 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             else
             {
                 s32Ret = HI_FAILURE;
+                if (NULL != reply)
+                {
+                    reply->writeInt32( s32Ret);
+                }
+                break;
             }
 
             s32Width = pstFileInfo->pastProgramInfo[stStreamId.u16ProgramId].pastSubStream[
@@ -6132,6 +6366,12 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         {
             HI_S32 s32CodeType;
             s32CodeType = request->readInt32();
+            if (s32CodeType >= HI_CHARSET_CODETYPE_BULT)
+            {
+                reply->writeInt32(BAD_VALUE);
+                break;
+            }
+            LOGV("[CMD_SET_SUB_FONT_ENCODE]codetype:%d", s32CodeType);
             CHECK_FUNC_RET(HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_SOURCE_CODETYPE,
                 &s32CodeType));/* set invoke for codetype */
 
@@ -7050,32 +7290,8 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         case CMD_SET_VIDEO_FREE_RUN:
         {
             arg = request->readInt32();
-            LOGV("set video free run arg:%d", arg);
 
-            if (1 == arg)
-            {
-                s32Ret = HI_UNF_AVPLAY_Reset(hAVPlayer, NULL);
-                s32Ret |= HI_UNF_AVPLAY_Tplay(hAVPlayer, NULL);
-                if (HI_SUCCESS != s32Ret)
-                {
-                    LOGE("HI_UNF_AVPLAY_Tplay failed, ret:0x%x", s32Ret);
-                }
-            }
-            else if (0 == arg)
-            {
-                s32Ret = HI_UNF_AVPLAY_Reset(hAVPlayer, NULL);
-                s32Ret |= HI_UNF_AVPLAY_Resume(hAVPlayer, NULL);
-                if (HI_SUCCESS != s32Ret)
-                {
-                    LOGE("HI_UNF_AVPLAY_Resume failed, ret:0x%x", s32Ret);
-                }
-            }
-            else
-            {
-                LOGW("unsupport parameter");
-                s32Ret = HI_FAILURE;
-            }
-
+            s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_FREE_RUN, (void*)arg);
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
@@ -7162,6 +7378,178 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             }
         }
         break;
+        case CMD_SET_TPLAY_MODE:
+        {
+            arg = request->readInt32();
+
+            s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_TPLAY_MODE, (HI_VOID *)&arg);
+            if (NULL != reply)
+            {
+                reply->writeInt32(s32Ret);
+            }
+        }
+        break;
+        /*YUNOS Begin to get mediaplayer extra information*/
+        case CMD_YUNOS_SOURCE:{
+            LOGV("CMD_YUNOS_SOURCE  !");
+            String16 pUUID = request->readString16();
+            HI_S32  hisize;
+            if ( pUUID.size() == 0 )
+            {
+                LOGV("[CMD_YUNOS_SOURCE] Can't set UUID, UUID is NULL!");
+                s32Ret = HI_FAILURE;
+                if (NULL != reply)
+                {
+                    reply->writeInt32( s32Ret);
+                }
+                LOGV("HiMediaPlayer::invoke leave, cmd [%d]", cmd_type);
+                return s32Ret;
+            }
+            utf16_to_utf8(pUUID.string(), pUUID.size(), getPlayer()->mUUID);
+            getPlayer()->mYunosSource = 1;
+            LOGV("CMD_YUNOS_SOURCE mYunosSource=%d  hichars=%s !",getPlayer()->mYunosSource,getPlayer()->mUUID);
+            if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_SET_UUID, (void*)getPlayer()->mUUID))
+            {
+                LOGE("CMD_YUNOS_SOURCE HI_FORMAT_INVOKE_SET_UUID fail!");
+            }
+        }break;
+        case CMD_YUNOS_TS_INFO: {
+            //mTsInfoStr = "event=3005&ts_duration=9592911&ts_length=1673200&bitrate=644245&ts_traceid=4f
+            //9786e707c6d50517fd0bcaecff8e6614192991633261003&ts_send_time=1419299163326
+            //&ts_first_btime=1419299163357&ts_last_btime=1419299163545&ts_num=2&cdn_ip=10.29.22.9";
+            char tsInfoStr[HI_FORMAT_MAX_URL_LEN];
+            HI_S64 ts_duration = 0;
+            HI_S64 ts_length = 0;
+            int bitrate = 0;
+            HI_S64 ts_send_time = 0;
+            HI_S64 ts_first_btime = 0;
+            HI_S64 ts_last_btime = 0;
+            int seq_num = 0;
+            HI_CHAR cdn_ip[HI_FORMAT_TITLE_MAX_LEN];
+            HI_FORMAT_URL_INFO_S urlInfo;
+            HI_FORMAT_HLS_SEGMENT_INFO_S segment_info;
+
+            memset(tsInfoStr, 0, sizeof(tsInfoStr));
+            memset(cdn_ip, 0, sizeof(cdn_ip));
+            if (0 == getPlayer()->mYunosSource){
+                LOGE("CMD_YUNOS_MEDIA_INFO, mYunosSource=%d UUID is NULL fail!", getPlayer()->mYunosSource);
+                return BAD_TYPE;
+            }
+            if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_URL_INFO, (void*)&urlInfo))
+            {
+                LOGE("CMD_YUNOS_MEDIA_INFO HI_FORMAT_INVOKE_GET_URL_INFO fail!");
+            }
+            strncpy(cdn_ip, urlInfo.ipaddr, strlen(urlInfo.ipaddr));
+
+            if (HI_SUCCESS == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_HLS_SEGMENT_INFO, (HI_VOID*)&segment_info))
+            {
+                ts_duration = segment_info.total_time * 1000;
+                seq_num = segment_info.seq_num;
+                ts_length = segment_info.ts_length;
+                ts_send_time = segment_info.ts_send_time;
+                ts_first_btime = segment_info.ts_first_btime;
+                ts_last_btime = segment_info.ts_last_btime;
+                bitrate = segment_info.bandwidth;
+            }
+
+            if (NULL != reply)
+            {
+                snprintf(tsInfoStr, sizeof(tsInfoStr),
+                "event=3005&ts_duration=%lld&ts_length=%lld&bitrate=%d&ts_traceid=%s&ts_send_time=%lld&ts_first_btime=%lld&ts_last_btime=%lld&ts_num=%d&cdn_ip=%s",
+                    ts_duration, ts_length, bitrate, segment_info.ts_traceid, ts_send_time,ts_first_btime, ts_last_btime, seq_num, cdn_ip);
+
+                LOGV("CMD_YUNOS_TS_INFO tsInfoStr len=%d, %s !", strlen(tsInfoStr), tsInfoStr);
+                reply->writeString16((String16)tsInfoStr);
+            }
+        }break;
+        case CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO: {
+            //mHttpErrorInfoStr = "event=4001&error_code=3003&ts_num=2&bitrate=644245&http_res=8UDDUKNKLKJKDDFDFD";
+            char httpErrorInfoStr[HI_FORMAT_MAX_URL_LEN];
+            int ts_num, bitrate;
+            HI_FORMAT_HLS_SEGMENT_INFO_S segment_info;
+
+            memset(httpErrorInfoStr, 0, sizeof(httpErrorInfoStr));
+            if (0 == getPlayer()->mYunosSource){
+                LOGE("CMD_YUNOS_MEDIA_INFO, mYunosSource=%d UUID is NULL fail!", getPlayer()->mYunosSource);
+                return BAD_TYPE;
+            }
+            if (HI_SUCCESS == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_HLS_SEGMENT_INFO, (HI_VOID*)&segment_info))
+            {
+                ts_num = segment_info.seq_num;
+                bitrate = segment_info.bandwidth;
+            }
+
+            if (NULL != reply)
+            {
+                if (3004 == getPlayer()->mS32ErrorCode) {
+                    AString out;
+                    encodeBase64(segment_info.http_res, strlen(segment_info.http_res), &out);
+                   snprintf(httpErrorInfoStr, sizeof(httpErrorInfoStr), "event=4001&error_code=%d&ts_num=%d&bitrate=%d&http_res=%s",
+                        getPlayer()->mS32ErrorCode, ts_num, bitrate, out.c_str());
+                } else {
+                     snprintf(httpErrorInfoStr, sizeof(httpErrorInfoStr), "event=4001&error_code=%d&ts_num=%d&bitrate=%d&http_res=",
+                        getPlayer()->mS32ErrorCode, ts_num, bitrate);
+                }
+                LOGV("CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO len=%d, %s !", strlen(httpErrorInfoStr), httpErrorInfoStr);
+                reply->writeString16((String16)httpErrorInfoStr);
+            }
+        }break;
+        case CMD_YUNOS_MEDIA_INFO: {
+            //"encode_type=H264& cdn_ip =10.29.22.9&bitrate=644245" ;
+            char mMediaInfoStr[HI_FORMAT_MAX_URL_LEN];
+            HI_CHAR encode_type[HI_FORMAT_SUB_TITLE_LEN];
+            HI_CHAR cdn_ip[HI_FORMAT_SUB_TITLE_LEN];
+            HI_S32 s32VideoFormat;
+            int bitrate = 0;
+            HI_FORMAT_HLS_SEGMENT_INFO_S segment_info;
+            memset(mMediaInfoStr, 0, sizeof(mMediaInfoStr));
+            memset(encode_type, 0, sizeof(encode_type));
+            memset(cdn_ip, 0, sizeof(cdn_ip));
+
+            if (0 == getPlayer()->mYunosSource){
+                LOGE("CMD_YUNOS_MEDIA_INFO, mYunosSource=%d UUID is NULL fail!",getPlayer()->mYunosSource);
+                return BAD_TYPE;
+            }
+            HI_FORMAT_FILE_INFO_S *pstFileInfo = NULL;
+            HI_FORMAT_URL_INFO_S urlInfo;
+
+            if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_URL_INFO, (void*)&urlInfo))
+            {
+                LOGE("CMD_YUNOS_MEDIA_INFO HI_FORMAT_INVOKE_GET_URL_INFO fail!");
+            }
+            strncpy(cdn_ip, urlInfo.ipaddr, strlen(urlInfo.ipaddr));
+            if (HI_SUCCESS == HI_SVR_PLAYER_GetFileInfo(mHandle, &pstFileInfo))
+            {
+                if (NULL == pstFileInfo)
+                {
+                    LOGE("HI_SVR_PLAYER_GetFileInfo fail!");
+                }
+                else
+                {
+                     if (pstFileInfo->pastProgramInfo[0].u32VidStreamNum > 0)
+                     {
+                         int i;
+                         HI_BOOL subflag = HI_FALSE;
+                         //video codec
+                         s32VideoFormat = pstFileInfo->pastProgramInfo[0].pastVidStream[0].u32Format;
+                         mPlayer->getVideoCodecFormat(s32VideoFormat, encode_type);
+                         LOGV("CMD_YUNOS_MEDIA_INFO getVideoCodecFormat s32VideoFormat=%d,encode_type=%s ", s32VideoFormat, encode_type);
+                     }
+                }
+            } else {
+                LOGE("HI_SVR_PLAYER_GetFileInfo fail!");
+            }
+            if (HI_SUCCESS == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_HLS_SEGMENT_INFO, (HI_VOID*)&segment_info))
+            {
+                bitrate = segment_info.bandwidth;
+            }
+            if (NULL != reply)
+            {
+                snprintf(mMediaInfoStr, sizeof(mMediaInfoStr), "encode_type=%s&cdn_ip=%s&bitrate=%d", encode_type, cdn_ip,bitrate);
+                LOGV("CMD_YUNOS_MEDIA_INFO mMediaInfoStr len=%d, %s !", strlen(mMediaInfoStr), mMediaInfoStr);
+                reply->writeString16((String16)mMediaInfoStr);
+            }
+        }break;
         default:
             LOGE("HiMediaPlayer::invoke fail: unkonw cmd type %d", (int)cmd);
             //if cmd is unknown, write HI_FAILURE to reply

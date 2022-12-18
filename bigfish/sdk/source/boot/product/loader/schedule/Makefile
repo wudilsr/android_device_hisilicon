@@ -3,8 +3,13 @@ SDK_DIR := $(shell pwd)/../../../../..
 include $(SDK_DIR)/base.mak
 endif
 
-CFLAGS += -I$(BOOT_DIR)/product/driver/include
+ifneq ($(CFG_HI_MINIBOOT_SUPPORT),y)
 CFLAGS += -I$(BOOT_DIR)/fastboot/include
+else
+CFLAGS += -I$(BOOT_DIR)/miniboot/include
+endif
+
+CFLAGS += -I$(BOOT_DIR)/product/driver/include
 CFLAGS += -I$(BOOT_DIR)/product/loader/app/include
 CFLAGS += -I$(COMPONENT_DIR)/loader/api/include
 

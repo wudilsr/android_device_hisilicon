@@ -49,7 +49,10 @@ History       :
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
-	|| defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
 //#define AIAO_PLL_307MHZ 1             /* cv200 fpga */
 #define AIAO_PLL_492MHZ 1               /* cv200 asic, default*/  /*491.52M*/
 //#define AIAO_PLL_600MHZ 1               /* cv200 asic*/
@@ -640,7 +643,7 @@ static inline HI_U32  PORT2ID(AIAO_PORT_ID_E enPortID)
     {
         ChnId += (HI_U32)AIAO_SPDIFTX_INT0;
     }
-    else
+    if (ChnId >= AIAO_INT_BUTT)
     {
         ChnId = 0;   /* avoid TQE */
     }

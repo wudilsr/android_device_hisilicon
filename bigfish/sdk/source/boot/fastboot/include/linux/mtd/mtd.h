@@ -81,6 +81,26 @@ typedef enum {
 	MTD_OOB_RAW,
 } mtd_oob_mode_t;
 
+/*
+ * oob operation modes
+ *
+ * MTD_READ_STD:	stand read page mode.
+ * MTD_READ_BULK:	bulk read mode, only read data, without oob.
+ * MTD_READ_CACHE:	cache read mode,  read data+oob.
+ */
+typedef enum {
+	MTD_READ_PAGE,
+	MTD_READ_OOB,
+	MTD_READ_BULK,
+	MTD_READ_CACHE,
+} read_mode_t;
+
+struct mtd_read_mode_t {
+	read_mode_t mode;
+	uint32_t    pageoff;
+	uint32_t    pagenum;
+};
+
 /**
  * struct mtd_oob_ops - oob operation operands
  * @mode:	operation mode
@@ -102,6 +122,7 @@ typedef enum {
  */
 struct mtd_oob_ops {
 	mtd_oob_mode_t	mode;
+	struct mtd_read_mode_t rmode;
 	size_t		len;
 	size_t		retlen;
 	size_t		ooblen;

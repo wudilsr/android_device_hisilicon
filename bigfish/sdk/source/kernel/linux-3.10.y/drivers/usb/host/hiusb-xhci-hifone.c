@@ -65,6 +65,9 @@ MODULE_LICENSE("Dual MIT/GPL");
 #define BIT_UTMI_8_16                 (0x1<<3)
 #define PCS_SSP_SOFT_RESET            (0x1<<31)
 
+ #define USB3_DEEMPHASIS              (0x1 << 2)
+ #define USB3_DEEMPHASIS_MASK         (0x3 << 1)
+
 extern void hiusb_start_hcd_hifone(resource_size_t host_addr);
 extern void hiusb_stop_hcd_hifone(resource_size_t host_addr);
 
@@ -202,6 +205,8 @@ void hiusb3_start_hcd(void __iomem *base)
 	reg = readl(base + REG_GUSB3PIPECTL0);
 	reg &= ~PCS_SSP_SOFT_RESET;
 	reg &= ~(0x1<<17);       //disable suspend
+	reg &= ~USB3_DEEMPHASIS_MASK;     //0db  de-emphasis
+	reg |= USB3_DEEMPHASIS; 
 	writel(reg, base + REG_GUSB3PIPECTL0);
 	msleep(100);
 

@@ -43,8 +43,8 @@ typedef struct tagUsbImgMap
 {
     HI_U32 u32FileLength;    /**< File length*/
     HI_U32 u32Offset;          /**< Address offset*/
-    HI_U32 u32FlashAddr;     /**< Address in the flash*/
-    HI_U32 uPartition_endaddr;/**< The end address of flash partition*/
+    HI_U64 u64FlashAddr;     /**< Address in the flash*/
+    HI_U64 u64Partition_endaddr;/**< The end address of flash partition*/
     HI_U32 uFlashType;           /**<Flash type*/
     HI_U32 lFlashIndex;      /**<Flash chip select*/
     HI_U32 u32DataCRC;
@@ -68,7 +68,7 @@ typedef struct tagUsbHeader
     HI_U32      u32MagicNum;   /**< Magic number */
     HI_U32      u32HeaderCrc;    /**< cyclic redundancy check(CRC) random number*/
     HI_U32      u32HeaderLen;  /**< Length of a file head. */
-    HI_U32      u32FileLen;    /**< Length of File.*/
+    HI_U64      u64FileLen;    /**< Length of File.*/
     HI_U16      u16ManuNum;    /**< Count of data structure UsbManuInfo.*/
     UsbManuInfo astManuInfo[USB_MANU_MAX_NUM];  /**< Array of data structure UsbManuInfo*/
 } UsbHeader;

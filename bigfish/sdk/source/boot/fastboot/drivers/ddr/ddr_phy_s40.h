@@ -12,6 +12,7 @@
 /* control the initialization of the PHY */
 #define DDR_PHY_PHYINITCTRL	0x4
 #define DDR_PHY_PHYINITSTATUS	0x8	/* Read Data Eye Calibration Error*/
+#define DDR_PHY_DRAMCFG		0x2c    /* DRAM config register */
 #define DDR_PHY_MODEREG01	0x64	/* Extend Mode Register 01 */
 #define DDR_PHY_MODEREG23	0x68	/* Extend Mode Register 23 */
 /* update delay setting in registers to PHY */
@@ -24,6 +25,7 @@
 #define DDR_PHY_IOCTL2		0xB4
 /* AC command bit delay line setting */
 #define DDR_PHY_ACCMDBDL2		0x128
+#define DDR_PHY_ACPHYCTL4	0x180  /* AC block PHY control register*/
 /* AC block PHY control register */
 #define DDR_PHY_ACPHYCTL7		0x18C
 /* WR DQ0-DQ3 [4:0] [12:8] [20:16] [28:24] delay value of the bit delay line
@@ -65,6 +67,7 @@ phase shift of the Read DQS to create 90 degree delays*/
 /* hardware gate training result */
 #define PHY_INITSTATUS_GT_MASK		0x20
 #define PHY_SWTRLT_WL_MASK		0xf
+#define PHY_SWTRLT_GATE_MASK	0xf
 #define PHY_WDQ_PHASE_MASK		0x1f
 #define PHY_PHYINITCTRL_MASK		0xffff	/* [15:0] all stat */
 /* Read Data Eye Calibration Error */
@@ -90,6 +93,7 @@ phase shift of the Read DQS to create 90 degree delays*/
 #define PHY_ACPHY_DRAMCLK0_BIT		25	/* [25] halft_dramclk0 */
 #define PHY_ACPHY_DRAMCLK1_BIT		24	/* [24] halft_dramclk1 */
 #define PHY_ACPHY_DRAMCLK_EXT_BIT	3 /* [3] halft_dramclk0 */
+#define PHY_SWTMODE_SW_GTMODE_BIT	1 /* [1] SW gate training */
 
 /* value */
 /* Read Data Eye Training Enable. */
@@ -97,13 +101,21 @@ phase shift of the Read DQS to create 90 degree delays*/
 #define PHY_PHYINITCTRL_DLYMEAS_EN	0x4	/* Delay Measurement Enable */
 /* PHY Initialization Enable. */
 #define PHY_PHYINITCTRL_INIT_EN		0x1
+/* RDQS range[0, 0x1f],  middle value is 0x10 */
+#define PHY_RDQS_MIDDLE_VAL		0x10
 /* DQ range[0, 0x1f],  middle value is 0x10 */
 #define PHY_DQ_MIDDLE_VAL		0x10101010
+#define PHY_MISC_SCRAMB_DIS		0xfffeffff	/* scrambler disable */
+/* NOTE: rdqsg_bdl is [5:0] in register manual, actual use [4:0] */
+#define PHY_GATE_BDL_MAX        0x40 /* [4:0]rdqsg_bdl + [20:16]rdqsgtxbdl */
+/* [5] two cycle on address or command.(2T timing) */
+#define PHY_DRAMCFG_MA2T		0x20
 
 /* other */
 #define PHY_RDQSG_PHASE_STEP	4 /* gate training phase step. */
 #define PHY_GATE_PHASE_MARGIN	8 /* gate phase margin */
 #define PHY_DQ_BDL_LEVEL	32 /* [CUSTOM] DQ BDL range */
+#define PHY_DQ_BDL_MIDDLE	15 /* middle DQ BDL value */
 #define PHY_RDQSG_PHASE_MAX	0x3c /* RDQSG phase max value */
 #define PHY_ACPHY_CLK_MAX	0xf /* halft_dramclk0 + cp1p_dclk0 */
 /**
@@ -129,3 +141,29 @@ phase shift of the Read DQS to create 90 degree delays*/
 /* [CUSTOM] relation between BDL and Phase. 1 phase = 4 bdl, 4 = 1 << 2 */
 #define DDR_BDL_PHASE_REL		2
 #endif
+
+#define DDR_PHY_VREF_HOST_SET(base_phy, val, bytenum) \
+	REG_WRITE(((val & 0x7) << 12) | ((val >> 3) & 0x3), \
+		base_phy + DDR_PHY_IOCTL2)
+
+#define DDR_PHY_VREF_HOST_GET(base_phy, val) \
+	do { \
+		unsigned int ref_range; \
+		unsigned int ref_sel; \
+		val = REG_READ(base_phy + DDR_PHY_IOCTL2); \
+		ref_range = val & 0x3; \
+		ref_sel   = (val >> 12) & 0x7; \
+		val = (ref_range << 3) | ref_sel; \
+	} while (0)
+
+#define DDR_PHY_VREF_HOST_DISPLAY(base_phy, ddr_reg, index, byte_num) \
+	do { \
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX, \
+			"Host Vref"); \
+		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_IOCTL2; \
+	} while (0)
+
+/* phy s40 not support DRAM vref */
+#define DDR_PHY_VREF_DRAM_SET(base_phy, val, byte_index)
+#define DDR_PHY_VREF_DRAM_GET(base_phy, val, byte_index)
+#define DDR_PHY_VREF_DRAM_DISPLAY(base_phy, ddr_reg, index, byte_num)

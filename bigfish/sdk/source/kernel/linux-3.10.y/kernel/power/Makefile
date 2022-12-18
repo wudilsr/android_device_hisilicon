@@ -18,3 +18,5 @@ obj-$(CONFIG_PM_WAKELOCKS)	+= wakelock.o
 obj-$(CONFIG_SUSPEND_TIME)	+= suspend_time.o
 
 obj-$(CONFIG_MAGIC_SYSRQ)	+= poweroff.o
+ccflags-$(CONFIG_HISI_SNAPSHOT_BOOT) += -DUSE_FIXED_SMALL_CHUNK
+obj-$(CONFIG_HISI_SNAPSHOT_BOOT) += qbcompress.o qbcompress_wrapper.o qb_crc_check.o

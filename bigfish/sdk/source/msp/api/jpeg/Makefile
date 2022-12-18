@@ -12,16 +12,15 @@ endif
 # standard jpeg dir
 #===============================================================================
 TARGET := jpeg
-LIB_VER = 6b
-
 #===============================================================================
 # local variable
 #===============================================================================
 LIBS := libjpeg
 
-
-ifeq (${CFG_HI_LIB_JPEG_VERSION},libjpeg-9a)
-LIB_VER = 9a
+ifeq ($(CFG_LIB_JPEG_VERSION_6B),y)
+LIB_VER := 6b
+else ifeq ($(CFG_LIB_JPEG_VERSION_9A),y)
+LIB_VER := 9a
 endif
 
 HEADER_FILES := $(MSP_DIR)/api/$(TARGET)/inc/inc_${LIB_VER}/jpeglib.h
@@ -39,26 +38,20 @@ HEADER_FILES += $(MSP_DIR)/api/$(TARGET)/inc/inc_hard/hi_jpeg_api.h
 all: $(LIBS)
 
 clean:
-	$(AT)cp src/Makefile-${LIB_VER} src/Makefile
-	make -C src clean
-	$(AT)rm -rf src/$(LIBS)*.so
-	$(AT)rm -rf src/$(LIBS)*.a
+	$(AT)cd src && make -f Makefile-$(LIB_VER) clean
+	$(AT)rm -rf src/$(LIBS)*.so src/$(LIBS)*.a
+
 install: all
-	$(AT)cp src/Makefile-${LIB_VER} src/Makefile
-	$(AT)cp -f  src/$(LIBS)*.a            $(STATIC_LIB_DIR)/  -a
+	$(AT)cp -af  src/$(LIBS)*.a           $(STATIC_LIB_DIR)/
 ifndef CFG_HI_STATIC_LIB_ONLY
-	$(AT)cp -f  src/$(LIBS)*.so           $(SHARED_LIB_DIR)/  -a
-endif	
+	$(AT)cp -af  src/$(LIBS)*.so          $(SHARED_LIB_DIR)/
+endif
 	$(AT)cp -f  $(HEADER_FILES)           $(INCLUDE_DIR)/
 
 uninstall:
-	$(AT)cp src/Makefile-${LIB_VER} src/Makefile
-	$(AT)rm -rf $(STATIC_LIB_DIR)/$(LIBS)*.a
-	$(AT)rm -rf $(SHARED_LIB_DIR)/$(LIBS)*.so
+	$(AT)rm -rf $(STATIC_LIB_DIR)/$(LIBS)*.a $(SHARED_LIB_DIR)/$(LIBS)*.so
 	$(AT)rm -rf $(foreach file, $(HEADER_FILES), $(INCLUDE_DIR)/$(notdir $(file)))
 
-$(LIBS) :
-	$(AT)cp src/Makefile-${LIB_VER} src/Makefile
-	$(AT)rm -rf src/$(LIBS)*.a
-	$(AT)rm -rf src/$(LIBS)*.so 
-	make -C src
+$(LIBS):
+	$(AT)rm -rf src/$(LIBS)*.a src/$(LIBS)*.so
+	$(AT)cd src && make -f Makefile-$(LIB_VER)

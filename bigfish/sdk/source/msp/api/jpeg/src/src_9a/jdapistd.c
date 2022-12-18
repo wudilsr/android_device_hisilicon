@@ -223,7 +223,7 @@ jpeg_start_decompress (j_decompress_ptr cinfo)
 					/**nothing to do**/
 				}
 			#else
-				if((HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)&&(HI_TRUE == pJpegHandle->bInHardDec))
+				if((HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)&&(HI_TRUE == pJpegHandle->bInHardDec) && (HI_TRUE == pJpegHandle->bFillInput))
 				{/**
 		   		  ** when use external stream,if hard decode failure,user should resume the stream,and call this function again
 		          ** CNcomment: 如果是使用外部处理码流，则直接返回失败，然后用户回退码流之后重新调用该接口进行软解 CNend\n

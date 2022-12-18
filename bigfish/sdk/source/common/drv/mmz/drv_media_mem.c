@@ -1039,7 +1039,7 @@ int get_mmz_info_phys_start(void)
     return mmz_info_phys_start;
 }
 
-#define MAX_MMZ_INFO_LEN 20*1024
+#define MAX_MMZ_INFO_LEN    (64 * 1024)
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0)
 #define CHECK_BUFF_OVERFLOW() \

@@ -13,18 +13,17 @@
 #include <asm/arch/platform.h>
 #include <version.h>
 
-#define _16M        0x1000000
+static unsigned int ddr_size = 0;
+/*****************************************************************************/
+void preset_ddr_size(unsigned int size)
+{
+	ddr_size = size;
+}
 /*****************************************************************************/
 /* Use this feature, Dcache should be disable */
 unsigned int get_ddr_size(void)
 {
 #define TO_UINT32(_p)   (*(volatile unsigned int *)(_p))
-//TODO: XXX
-#ifdef CONFIG_HIFONE_FPGA
-	static unsigned int ddr_size = 0x40000000;
-#else
-	static unsigned int ddr_size = 0;
-#endif
 	volatile unsigned char *memskip;
 	volatile unsigned char *membase = (unsigned char *)MEM_BASE_DDR;
 	unsigned int orgin = TO_UINT32(membase);
@@ -34,9 +33,9 @@ unsigned int get_ddr_size(void)
 	if (ddr_size)
 		return ddr_size;
 
-	for (memskip = membase + _16M;
+	for (memskip = membase + SZ_16M;
 	     memskip <= membase + get_max_ddr_size();
-	     memskip += _16M) {
+	     memskip += SZ_16M) {
 
 		TO_UINT32(membase) = 0xA9A9A9A9;
 		tmp = TO_UINT32(membase);

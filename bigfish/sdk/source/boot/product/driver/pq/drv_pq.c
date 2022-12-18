@@ -3,12 +3,8 @@
 #include "hi_common.h"
 #include "hi_drv_pq.h"
 #include "hi_flash.h"
-#ifndef HI_PQ_VERSION_V1
-#include "pq_mng_csc.h"
-#endif
 
 
-static PQ_PARAM_S sg_stPqParam;
 static HI_BOOL sg_bInitState = HI_FALSE;
 static HI_BOOL sg_bGetBinState = HI_FALSE;
 
@@ -17,38 +13,14 @@ static HI_U32 u32PQ_Brightness[HI_UNF_DISPLAY_BUTT] = {50, 50, 50};
 static HI_U32 u32PQ_Contrast[HI_UNF_DISPLAY_BUTT] =  {50, 50, 50};
 static HI_U32 u32PQ_Saturation[HI_UNF_DISPLAY_BUTT] = {50, 50, 50};
 static HI_U32 u32PQ_HuePlus[HI_UNF_DISPLAY_BUTT] = {50, 50, 50};
-
-HI_S32 Num2Level(HI_U32 u32Number)
-{
-    if (u32Number)
-    {
-        return (u32Number * 100 + 127) / 255;
-    }
-    else
-    {
-        return u32Number;
-    }
-}
-
-HI_S32 Level2Num(HI_U32 Level)
-{
-    if (Level)
-    {
-        return (Level * 255 + 50) / 100;
-    }
-    else
-    {
-        return Level;
-    }
-}
+#else
+static PQ_PARAM_S sg_stPqParam;
 #endif
 
 
 HI_S32 PQ_ReadPQ(HI_U32* pAddr)
 {
     HI_S32              Ret = HI_SUCCESS;
-
-
     HI_HANDLE           hFlash = HI_INVALID_HANDLE;
     HI_S32              s32ReadLen = 0;
     HI_U32              u32StartPhyAddr = 0;
@@ -62,10 +34,8 @@ HI_S32 PQ_ReadPQ(HI_U32* pAddr)
         Ret = HI_FAILURE;
         goto RET;
     }
-    else
-    {
-        (HI_VOID)HI_Flash_GetInfo(hFlash, &stFlashInfo);
-    }
+
+    (HI_VOID)HI_Flash_GetInfo(hFlash, &stFlashInfo);
 
     Ret = HI_DRV_PDM_AllocReserveMem(PQ_DEF_NAME, MCE_DEF_PQPARAM_SIZE, &u32StartPhyAddr);
 
@@ -93,10 +63,26 @@ FLASH_CLOSE:
 RET:
 
     return Ret;
-
 }
 
 #ifdef HI_PQ_VERSION_V1
+HI_S32 HI_PQ_GetPQData(PQ_PARAM_S** pAddr)
+{
+    if (HI_FALSE == sg_bInitState)
+    {
+        HI_PQ_Init();
+    }
+
+    if (HI_FALSE == sg_bGetBinState)
+    {
+        HI_ERR_PQ( "\r\nError,get pq bin failed\r\n" );
+        return HI_FAILURE;
+    }
+
+    *pAddr = &sg_stPqParam;
+    return HI_SUCCESS;
+}
+
 HI_S32 PQ_GetPQData()
 {
     PQ_PARAM_S*       pstPdmPqParam;
@@ -170,9 +156,9 @@ HI_VOID HI_PQ_Init(HI_VOID)
 {
     HI_S32  s32Ret;
 #ifndef HI_PQ_VERSION_V1
-    HI_U32 u32PqParaAddr;
+    HI_U32  u32PqParaAddr = 0;
     HI_DISP_PARAM_S stDispParam0 = {0};
-    HI_DISP_PARAM_S stDispParam1 = {0};
+    HI_DISP_PARAM_S stDispParam1 = {0};    
 #endif
 
     if (HI_TRUE == sg_bInitState)
@@ -183,6 +169,13 @@ HI_VOID HI_PQ_Init(HI_VOID)
     sg_bInitState = HI_TRUE;
 
 #ifndef HI_PQ_VERSION_V1
+    s32Ret = PQ_ReadPQ(&u32PqParaAddr);
+    if (s32Ret)
+    {
+        HI_ERR_PQ("\r\nPQ_ReadPQ failed\r\n");
+        return;
+    }
+
     s32Ret = HI_DRV_PDM_GetDispParam(HI_UNF_DISPLAY0, &stDispParam0);
     s32Ret |= HI_DRV_PDM_GetDispParam(HI_UNF_DISPLAY1, &stDispParam1);
     if (s32Ret)
@@ -214,15 +207,6 @@ HI_VOID HI_PQ_Init(HI_VOID)
         u32PQ_HuePlus[HI_UNF_DISPLAY0] =  stDispParam0.u32HuePlus;
         u32PQ_HuePlus[HI_UNF_DISPLAY1] =  stDispParam1.u32HuePlus;
     }
-
-    s32Ret = PQ_ReadPQ(&u32PqParaAddr);
-
-    if (s32Ret)
-    {
-        HI_ERR_PQ("\r\nPQ_ReadPQ failed\r\n");
-        return;
-    }
-
 #else
     s32Ret = PQ_GetPQData();
     if (s32Ret)
@@ -233,30 +217,129 @@ HI_VOID HI_PQ_Init(HI_VOID)
 #endif
 
     return;
-
-
-}
-
-HI_S32 HI_PQ_GetPQData(PQ_PARAM_S** pAddr)
-{
-    if (HI_FALSE == sg_bInitState)
-    {
-        HI_PQ_Init();
-    }
-
-    if (HI_FALSE == sg_bGetBinState)
-    {
-        HI_ERR_PQ( "\r\nError,get pq bin failed\r\n" );
-        return HI_FAILURE;
-    }
-
-    *pAddr = &sg_stPqParam;
-    return HI_SUCCESS;
 }
 
 #ifndef HI_PQ_VERSION_V1
+HI_S32 HI_PQ_GetBrightness(HI_U32 enChan, HI_U32* pu32Brightness)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    {
+        return HI_FAILURE;
+    }
 
+    *pu32Brightness = u32PQ_Brightness[enChan];
+    return HI_SUCCESS;
+}
 
+HI_S32 HI_PQ_GetContrast(HI_U32 enChan, HI_U32* pu32Contrast)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Contrast = u32PQ_Contrast[enChan];
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_GetHue(HI_U32 enChan, HI_U32* pu32Hue)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Hue = u32PQ_HuePlus[enChan];
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_GetSaturation(HI_U32 enChan, HI_U32* pu32Saturation)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Saturation = u32PQ_Saturation[enChan];
+    return HI_SUCCESS;
+}
+
+#if 0
+HI_S32 HI_PQ_SetBrightness(HI_U32 enChan, HI_U32 u32Brightness)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    { return HI_FAILURE; }
+
+    if (u32Brightness > 100)
+    { return HI_FAILURE; }
+
+    u32PQ_Brightness[enChan] = u32Brightness;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_SetContrast(HI_U32 enChan, HI_U32 u32Contrast)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    { return HI_FAILURE; }
+
+    if (u32Contrast > 100)
+    { return HI_FAILURE; }
+
+    u32PQ_Contrast[enChan] = u32Contrast;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_SetHue(HI_U32 enChan, HI_U32 u32Hue)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    { return HI_FAILURE; }
+
+    if (u32Hue > 100)
+    { return HI_FAILURE; }
+
+    u32PQ_HuePlus[enChan] = u32Hue;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_SetSaturation(HI_U32 enChan, HI_U32 u32Saturation)
+{
+    if (enChan > HI_UNF_DISPLAY1)
+    { return HI_FAILURE; }
+
+    if (u32Saturation > 100)
+    { return HI_FAILURE; }
+
+    u32PQ_Saturation[enChan] = u32Saturation;
+
+    return HI_SUCCESS;
+}
+
+HI_S32 Num2Level(HI_U32 u32Number)
+{
+    if (u32Number)
+    {
+        return (u32Number * 100 + 127) / 255;
+    }
+    else
+    {
+        return u32Number;
+    }
+}
+
+HI_S32 Level2Num(HI_U32 Level)
+{
+    if (Level)
+    {
+        return (Level * 255 + 50) / 100;
+    }
+    else
+    {
+        return Level;
+    }
+}
 
 /**
  \brief »ñÈ¡ÁÁ¶È
@@ -669,13 +752,6 @@ HI_S32 DRV_PQ_SetSDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, HI_BOOL 
     stPictureSetting.u16Hue = pstPictureSetting->u16Hue;
     stPictureSetting.u16Saturation = pstPictureSetting->u16Saturation;
 
-    PQ_MNG_GetSDPictureSetting(&stPictureSetting, &stColorTemp);
-    HI_ERR_PQ("Set Brightness:%d, Contrast:%d, Hue:%d, Saturation:%d\n", \
-              pstPictureSetting->u16Brightness, \
-              pstPictureSetting->u16Contrast, \
-              pstPictureSetting->u16Hue, \
-              pstPictureSetting->u16Saturation);
-
     return HI_SUCCESS;
 }
 HI_S32 DRV_PQ_SetHDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, HI_BOOL bFormalSetting)
@@ -695,93 +771,9 @@ HI_S32 DRV_PQ_SetHDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, HI_BOOL 
     stPictureSetting.u16Hue = pstPictureSetting->u16Hue;
     stPictureSetting.u16Saturation = pstPictureSetting->u16Saturation;
 
-    PQ_MNG_GetHDPictureSetting(&stPictureSetting, &stColorTemp);
-    HI_ERR_PQ("Set Brightness:%d, Contrast:%d, Hue:%d, Saturation:%d\n", \
-              pstPictureSetting->u16Brightness, \
-              pstPictureSetting->u16Contrast, \
-              pstPictureSetting->u16Hue, \
-              pstPictureSetting->u16Saturation);
-
     return HI_SUCCESS;
 }
-
-HI_S32 HI_PQ_GetBrightness(HI_U32 enChan, HI_U32* pu32Brightness)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    *pu32Brightness = u32PQ_Brightness[enChan];
-    return HI_SUCCESS;
-}
-HI_S32 HI_PQ_SetBrightness(HI_U32 enChan, HI_U32 u32Brightness)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    if (u32Brightness > 100)
-    { return HI_FAILURE; }
-
-    return DRV_PQ_SetBrightness(enChan, Level2Num(u32Brightness));
-}
-HI_S32 HI_PQ_GetContrast(HI_U32 enChan, HI_U32* pu32Contrast)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    *pu32Contrast = u32PQ_Contrast[enChan];
-    return HI_SUCCESS;
-}
-
-
-HI_S32 HI_PQ_SetContrast(HI_U32 enChan, HI_U32 u32Contrast)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    if (u32Contrast > 100)
-    { return HI_FAILURE; }
-
-    return DRV_PQ_SetContrast(enChan, Level2Num(u32Contrast));
-}
-
-HI_S32 HI_PQ_GetHue(HI_U32 enChan, HI_U32* pu32Hue)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    *pu32Hue = u32PQ_HuePlus[enChan];
-    return HI_SUCCESS;
-}
-
-HI_S32 HI_PQ_SetHue(HI_UNF_DISP_E enChan, HI_U32 u32Hue)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    if (u32Hue > 100)
-    { return HI_FAILURE; }
-
-    return DRV_PQ_SetHue(enChan, Level2Num(u32Hue));
-}
-HI_S32 HI_PQ_GetSaturation(HI_U32 enChan, HI_U32* pu32Saturation)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    *pu32Saturation = u32PQ_Saturation[enChan];
-    return HI_SUCCESS;
-}
-
-HI_S32 HI_PQ_SetSaturation(HI_U32 enChan, HI_U32 u32Saturation)
-{
-    if (enChan > HI_UNF_DISPLAY1)
-    { return HI_FAILURE; }
-
-    if (u32Saturation > 100)
-    { return HI_FAILURE; }
-
-    return DRV_PQ_SetSaturation(enChan, Level2Num(u32Saturation));
-}
+#endif
 
 #else
 HI_S32 HI_PQ_GetBrightness(HI_U32 enChan, HI_U32* pu32Brightness)
@@ -807,6 +799,26 @@ HI_S32 HI_PQ_GetSaturation(HI_U32 enChan, HI_U32* pu32Saturation)
 
     return HI_SUCCESS;
 }
+#if 0
+HI_S32 HI_PQ_SetBrightness(HI_U32 enChan, HI_U32 u32Brightness)
+{
+    return HI_SUCCESS;
+}
 
+HI_S32 HI_PQ_SetContrast(HI_U32 enChan, HI_U32 u32Contrast)
+{
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_SetHue(HI_U32 enChan, HI_U32 u32Hue)
+{
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PQ_SetSaturation(HI_U32 enChan, HI_U32 u32Saturation)
+{
+    return HI_SUCCESS;
+}
+#endif
 #endif
 

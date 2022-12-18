@@ -16,39 +16,33 @@ TARGET := higo
 # local variable
 #===============================================================================
 HIGO_CHIP_VER = ghfp
+
+ifeq ($(CFG_LIB_JPEG_VERSION_6B),y)
 HIGO_STORE_LIB_VER = libjpeg6b_libpng1.4.0
-
-
-
-ifeq (${CFG_HI_LIB_JPEG_VERSION},libjpeg-9a)
+else ifeq ($(CFG_LIB_JPEG_VERSION_9A),y)
 HIGO_STORE_LIB_VER = libjpeg9a_libpng1.6.16
 endif
 
-ifeq (${CFG_HI_LIB_PNG_VERSION},libpng-1.6.16)
+ifeq ($(CFG_LIB_PNG_VERSION_1_6_16),y)
 HIGO_STORE_LIB_VER = libjpeg9a_libpng1.6.16
 endif
 
-ifeq (${CFG_HI_TOOLCHAINS_NAME},arm-hisiv200-linux)
+ifeq ($(CFG_HI_TOOLCHAINS_NAME),arm-hisiv200-linux)
 HIGO_CHIP_VER = ghfp
 endif
 
-ifeq (${CFG_HI_TOOLCHAINS_NAME},arm-histbv300-linux)
-ifeq (${CFG_HI_CHIP_TYPE},hi3798mv100)
-HIGO_CHIP_VER = hisiv300_a7
-else
-ifeq (${CFG_HI_CHIP_TYPE},hi3796mv100)
+ifeq ($(CFG_HI_TOOLCHAINS_NAME),arm-histbv300-linux)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
 HIGO_CHIP_VER = hisiv300_a7
 else
 HIGO_CHIP_VER = hisiv300_a9
 endif
 endif
-endif
-
 
 #===============================================================================
 #real higo dir
 #===============================================================================
-NEED_HIGO_GHFP_DIR :=$(HIGOLIB)/store/higo_release_v1r2_${HIGO_CHIP_VER}_${HIGO_STORE_LIB_VER}
+NEED_HIGO_GHFP_DIR := $(HIGOLIB)/store/higo_release_v1r2_$(HIGO_CHIP_VER)_$(HIGO_STORE_LIB_VER)
 
 #===============================================================================
 # local variable

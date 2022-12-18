@@ -39,7 +39,12 @@ static int resume_delay;
 static char resume_file[256] = CONFIG_PM_STD_PARTITION;
 dev_t swsusp_resume_device;
 sector_t swsusp_resume_block;
-int in_suspend __nosavedata;
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+int noshrink;
+char hb_bdev_file[64] = CONFIG_PM_STD_PARTITION;
+char compress_method[16] = "lzo";
+#endif
+__visible int in_suspend __nosavedata;
 
 enum {
 	HIBERNATION_INVALID,
@@ -355,8 +360,9 @@ int hibernation_snapshot(int platform_mode)
 		dpm_complete(PMSG_RECOVER);
 		goto Thaw;
 	}
-
+#ifndef CONFIG_HISI_SNAPSHOT_BOOT
 	suspend_console();
+#endif
 	ftrace_stop();
 	pm_restrict_gfp_mask();
 
@@ -384,7 +390,9 @@ int hibernation_snapshot(int platform_mode)
 		pm_restore_gfp_mask();
 
 	ftrace_start();
+#ifndef CONFIG_HISI_SNAPSHOT_BOOT
 	resume_console();
+#endif
 	dpm_complete(msg);
 
  Close:
@@ -622,7 +630,12 @@ static void power_down(void)
 	 * corruption after resume.
 	 */
 	printk(KERN_CRIT "PM: Please power down manually\n");
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+	while (1)
+	    cpu_relax();
+#else
 	while(1);
+#endif
 }
 
 /**
@@ -674,8 +687,12 @@ int hibernate(void)
 		pr_debug("PM: writing image.\n");
 		error = swsusp_write(flags);
 		swsusp_free();
-		if (!error)
+		if (!error) {
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+			hibernation_mode = HIBERNATION_REBOOT;
+#endif
 			power_down();
+		}
 		in_suspend = 0;
 		pm_restore_gfp_mask();
 	} else {
@@ -683,7 +700,11 @@ int hibernate(void)
 	}
 
  Thaw:
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+	suspend_thaw_processes();
+#else
 	thaw_processes();
+#endif
 
 	/* Don't bother checking whether freezer_test_done is true */
 	freezer_test_done = false;
@@ -1016,6 +1037,32 @@ static ssize_t image_size_store(struct kobject *kobj, struct kobj_attribute *att
 
 power_attr(image_size);
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+static ssize_t compress_method_show(struct kobject *kobj,
+							struct kobj_attribute *attr, char *buf)
+{
+		return sprintf(buf, "%s\n", compress_method);
+}
+static ssize_t compress_method_store(struct kobject *kobj,
+			struct kobj_attribute *attr,
+			const char *buf, size_t n)
+{
+	return -EINVAL;
+}
+power_attr(compress_method);
+static ssize_t hb_bdev_file_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+			return sprintf(buf, "%s\n", hb_bdev_file);
+}
+static ssize_t hb_bdev_file_store(struct kobject *kobj,
+			struct kobj_attribute *attr,
+			const char *buf, size_t n)
+{
+			return -EINVAL;
+}
+power_attr(hb_bdev_file);
+#endif
 static ssize_t reserved_size_show(struct kobject *kobj,
 				  struct kobj_attribute *attr, char *buf)
 {
@@ -1043,6 +1090,10 @@ static struct attribute * g[] = {
 	&resume_attr.attr,
 	&image_size_attr.attr,
 	&reserved_size_attr.attr,
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+	&compress_method_attr.attr,
+	&hb_bdev_file_attr.attr,
+#endif
 	NULL,
 };
 
@@ -1108,6 +1159,18 @@ static int __init resumedelay_setup(char *str)
 	resume_delay = simple_strtoul(str, NULL, 0);
 	return 1;
 }
+
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+static int __init hb_bdev_setup(char *str)
+{
+
+	strncpy(hb_bdev_file, str, sizeof(hb_bdev_file) - 1);
+	printk(KERN_INFO "\ni am in hb_bdev_setup() hb_bdev_file=%s\n", hb_bdev_file);
+	return 1;
+}
+
+__setup("hbcomp=", hb_bdev_setup);
+#endif
 
 __setup("noresume", noresume_setup);
 __setup("resume_offset=", resume_offset_setup);

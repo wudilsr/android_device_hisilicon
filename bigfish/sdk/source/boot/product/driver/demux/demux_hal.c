@@ -166,6 +166,52 @@ HI_VOID DmxHalConfigHardware(HI_VOID)
 
     g_pstRegCrg->PERI_CRG64.u32 = PeriCrg64.u32;
 }
+
+#elif  defined(CHIP_TYPE_hi3716mv410)  || defined(CHIP_TYPE_hi3716mv420)
+HI_VOID DmxHalConfigHardware(HI_VOID)
+{
+    U_PERI_CRG63 PeriCrg63;
+    U_PERI_CRG64 PeriCrg64;
+
+    PeriCrg63.u32 = g_pstRegCrg->PERI_CRG63.u32;
+    
+    // reset demux
+    PeriCrg63.bits.pvr_srst_req = 1;
+    g_pstRegCrg->PERI_CRG63.u32 = PeriCrg63.u32;
+
+    udelay(1);
+
+    PeriCrg63.bits.pvr_bus_cken     = 1;
+    PeriCrg63.bits.pvr_dmx_cken     = 1;
+    PeriCrg63.bits.pvr_27m_cken     = 0;
+    PeriCrg63.bits.pvr_tsi1_cken    = 1;
+    PeriCrg63.bits.pvr_tsi2_cken    = 1;
+    PeriCrg63.bits.pvr_tsi3_cken    = 1;
+    PeriCrg63.bits.pvr_tsi4_cken    = 1;
+    PeriCrg63.bits.pvr_tsi5_cken    = 1;
+#if defined(CHIP_TYPE_hi3716mv420)    
+    PeriCrg63.bits.pvr_tsi6_cken    = 1;
+    PeriCrg63.bits.pvr_tsi7_cken    = 1;
+#endif    
+    PeriCrg63.bits.pvr_ts0_cken     = 1;
+    PeriCrg63.bits.pvr_tsout0_cken  = 1;
+#if defined(CHIP_TYPE_hi3716mv420) 
+    PeriCrg63.bits.pvr_ts1_cken     = 1;
+    PeriCrg63.bits.pvr_tsout1_cken  = 1;
+#endif
+    PeriCrg63.bits.pvr_srst_req     = 0;
+
+    g_pstRegCrg->PERI_CRG63.u32 = PeriCrg63.u32;
+
+    PeriCrg64.u32 = g_pstRegCrg->PERI_CRG64.u32;
+
+    PeriCrg64.bits.pvr_ts0_clk_sel  = 1;
+#if defined(CHIP_TYPE_hi3716mv420)  
+    PeriCrg64.bits.pvr_ts1_clk_sel  = 1;
+#endif
+
+    g_pstRegCrg->PERI_CRG64.u32 = PeriCrg64.u32;
+}
 #endif
 
 HI_S32 DmxHalGetInitStatus(HI_VOID)
@@ -190,7 +236,11 @@ HI_S32 DmxHalGetInitStatus(HI_VOID)
 * Return        :
 * Others:
 ***********************************************************************************/
-HI_VOID DmxHalDvbPortSetAttr(HI_U32 PortId)
+HI_VOID DmxHalDvbPortSetAttr(HI_U32 PortId,  HI_UNF_DMX_PORT_TYPE_E  PortType,
+        HI_U32                  SyncOn,
+        HI_U32                  SyncOff,
+        HI_U32                  TunerInClk,
+        HI_U32                  BitSelector)
 {
     U_TS_INTERFACE  ts_interface;
 
@@ -199,12 +249,97 @@ HI_VOID DmxHalDvbPortSetAttr(HI_U32 PortId)
     ts_interface.bits.port_sel = 0;
     DMX_WRITE_REG(TS_INTERFACE(PortId), ts_interface.value);
 
-    ts_interface.bits.bit_sel           = 0;
-    ts_interface.bits.serial_sel        = 0;
-    ts_interface.bits.sync_mode         = 2;
-    ts_interface.bits.nosync_fixed_204  = 0;
-    ts_interface.bits.syncon_th         = 5;
-    ts_interface.bits.syncoff_th        = 1;
+    switch (PortType)
+    {
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_BURST :
+        {
+            ts_interface.bits.serial_sel    = 0;
+            ts_interface.bits.sync_mode     = 0;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188 :
+        {
+            ts_interface.bits.serial_sel        = 0;
+            ts_interface.bits.sync_mode         = 2;
+            ts_interface.bits.nosync_fixed_204  = 0;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_204 :
+        {
+            ts_interface.bits.serial_sel        = 0;
+            ts_interface.bits.sync_mode         = 2;
+            ts_interface.bits.nosync_fixed_204  = 1;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188_204 :
+        {
+            ts_interface.bits.serial_sel    = 0;
+            ts_interface.bits.sync_mode     = 3;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_SERIAL :
+        {
+            ts_interface.bits.serial_sel    = 1;
+            ts_interface.bits.sync_mode     = 0;
+            ts_interface.bits.ser_2bit_mode = 0;
+            ts_interface.bits.ser_2bit_rev  = 0;
+            ts_interface.bits.ser_nosync    = 0;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_SERIAL2BIT :
+        {
+            ts_interface.bits.serial_sel    = 1;
+            ts_interface.bits.sync_mode     = 0;
+            ts_interface.bits.ser_2bit_mode = 1;
+            ts_interface.bits.ser_2bit_rev  = 0;
+            ts_interface.bits.ser_nosync    = 0;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_SERIAL_NOSYNC :
+        {
+            ts_interface.bits.serial_sel    = 1;
+            ts_interface.bits.sync_mode     = 0;
+            ts_interface.bits.ser_2bit_mode = 0;
+            ts_interface.bits.ser_2bit_rev  = 0;
+            ts_interface.bits.ser_nosync    = 1;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_SERIAL2BIT_NOSYNC :
+        {
+            ts_interface.bits.serial_sel    = 1;
+            ts_interface.bits.sync_mode     = 0;
+            ts_interface.bits.ser_2bit_mode = 1;
+            ts_interface.bits.ser_2bit_rev  = 0;
+            ts_interface.bits.ser_nosync    = 1;
+
+            break;
+        }
+
+        case HI_UNF_DMX_PORT_TYPE_PARALLEL_VALID :
+        default :
+        {
+            ts_interface.bits.serial_sel    = 0;
+            ts_interface.bits.sync_mode     = 1;
+        }
+    }
+
+    ts_interface.bits.bit_sel           = BitSelector;
+    ts_interface.bits.syncon_th         = SyncOn;
+    ts_interface.bits.syncoff_th        = SyncOff;
 
     DMX_WRITE_REG(TS_INTERFACE(PortId), ts_interface.value);
 

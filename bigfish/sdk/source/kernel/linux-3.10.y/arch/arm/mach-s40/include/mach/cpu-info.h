@@ -22,7 +22,10 @@
 #define _HI3718CV100                             (0x1037160200LL)
 
 #define _HI3716MV400                             (0x1C37160200LL)
+#define _HI3716MV410                             (0x0137160410LL)
+#define _HI3716MV420                             (0x0037160410LL)
 #define _HI3716MV400_MASK                        (0xFEFFFFFFFFLL)
+#define _HI3716MV410_MASK                        (0xFFFFFFFFFFLL)
 
 #define _HI3719MV100A                            (0x1E37160200LL)
 #define _HI3719MV100A_MASK                       (0xFEFFFFFFFFLL)

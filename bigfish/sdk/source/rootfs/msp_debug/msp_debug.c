@@ -193,6 +193,21 @@ HI_S32 SetDebugLevel(HI_U32 u32Pos, HI_U32 u32Level)
 
 }
 
+/**************************************************************************
+* Function Name:SetDebugLevelForce
+* Description:set debug pos with a force level
+***************************************************************************/
+HI_S32 SetDebugLevelForce(HI_U32 u32Pos, HI_U32 u32Cmd, HI_U32 u32ForceLevel)
+{
+	HI_U32 u32ModID    = u32Cmd & 0x0000ffff;
+
+	HI_MPI_LogPrintPosSet((HI_MOD_ID_E)u32ModID, (LOG_OUTPUT_POS_E)u32Pos);
+	HI_SYS_SetLogLevel((HI_MOD_ID_E)u32ModID, (HI_LOG_LEVEL_E)u32ForceLevel);
+
+	return HI_SUCCESS;
+
+}
+
 #define MAX_LINE_SIZE (128)
 static char line_buf[MAX_LINE_SIZE];
 
@@ -433,7 +448,7 @@ void DebugProcessCmd(void)
 				{
 					g_iDebugOutLevel = ptCmd->cmdPara;
 					 /*set debuglevel error when debug off*/
-					SetDebugLevel(LOG_OUTPUT_SERIAL, HI_LOG_LEVEL_ERROR); 
+                    SetDebugLevelForce(LOG_OUTPUT_SERIAL, g_iDebugOutLevel, HI_LOG_LEVEL_ERROR);
 				}
 				else
 				{

@@ -134,7 +134,7 @@ static int hinfc610_toshiba_19nm_set_rr_param(struct hinfc_host *host, int param
 
 static int hinfc610_toshiba_19nm_reset_rr_param(struct hinfc_host *host)
 {
-	return hinfc610_toshiba_19nm_set_rr_reg(host, 0);
+	return hinfc610_toshiba_19nm_set_rr_param(host, 0);
 }
 /*****************************************************************************/
 struct read_retry_t hinfc610_toshiba_19nm_read_retry = {

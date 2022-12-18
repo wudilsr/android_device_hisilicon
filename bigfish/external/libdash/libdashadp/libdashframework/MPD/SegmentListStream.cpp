@@ -27,7 +27,18 @@ SegmentListStream::~SegmentListStream           ()
 ISegment*                   SegmentListStream::GetInitializationSegment     ()
 {
     if (this->segmentList->GetInitialization())
+    {
+        if (this->segmentList->GetInitialization()->GetSourceURL() == "" &&
+            representation != NULL &&
+            !representation->GetBaseURLs().empty() &&
+            representation->GetBaseURLs().at(0)->GetUrl() !=  "")
+        {
+            dash_log(DASH_LOG_WARNING, "[%s,%d] InitializationSegment sourceURL is null, use base url='%s'  instead!\n",
+                __FUNCTION__, __LINE__, representation->GetBaseURLs().at(0)->GetUrl().c_str());
+            return this->segmentList->GetInitialization()->ToSegment(this->baseUrls, representation->GetBaseURLs().at(0)->GetUrl());
+        }
         return this->segmentList->GetInitialization()->ToSegment(this->baseUrls);
+    }
 
     return this->segmentList->ToInitializationSegment(baseUrls, representation->GetId(), representation->GetBandwidth());
 }
@@ -87,18 +98,26 @@ ISegmentList*               SegmentListStream::FindSegmentList              ()
 }
 uint32_t                    SegmentListStream::GetAverageSegmentDuration    ()
 {
+    uint32_t segDuration = this->segmentList->GetDuration();
+    uint32_t timeScale = this->segmentList->GetTimescale();
+
     /* TODO calculate average segment durations for SegmentTimeline */
-    return this->segmentList->GetDuration();
+    if (timeScale > 0)
+    {
+        segDuration = this->segmentList->GetDuration() * 1000ULL/timeScale;
+    }
+
+    return segDuration;
 }
 
 uint64_t   SegmentListStream::GetSegmentEndTime  (uint32_t position)
 {
-    return (GetAverageSegmentDuration() * ( 1 + position));
+    return ((uint64_t)GetAverageSegmentDuration() * ( 1 + position));
 }
 
 uint64_t   SegmentListStream::GetSegmentStartTime  (uint32_t position)
 {
-    return (GetAverageSegmentDuration() * (position));
+    return ((uint64_t)GetAverageSegmentDuration() * (position));
 }
 
 uint32_t   SegmentListStream::GetPositionFromTime(int64_t ms, int direct)

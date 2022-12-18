@@ -103,7 +103,7 @@ png_set_cHRM(png_const_structrp png_ptr, png_inforp info_ptr,
     double white_x, double white_y, double red_x, double red_y,
     double green_x, double green_y, double blue_x, double blue_y)
 {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    png_set_cHRM_fixed(png_ptr, info_ptr,
       png_fixed(png_ptr, white_x, "cHRM White X"),
       png_fixed(png_ptr, white_y, "cHRM White Y"),
@@ -131,7 +131,7 @@ png_set_cHRM_XYZ(png_const_structrp png_ptr, png_inforp info_ptr, double red_X,
     double red_Y, double red_Z, double green_X, double green_Y, double green_Z,
     double blue_X, double blue_Y, double blue_Z)
 {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    png_set_cHRM_XYZ_fixed(png_ptr, info_ptr,
       png_fixed(png_ptr, red_X, "cHRM Red X"),
       png_fixed(png_ptr, red_Y, "cHRM Red Y"),
@@ -177,13 +177,11 @@ png_set_gAMA_fixed(png_const_structrp png_ptr, png_inforp info_ptr,
 void PNGAPI
 png_set_gAMA(png_const_structrp png_ptr, png_inforp info_ptr, double file_gamma)
 {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    png_set_gAMA_fixed(png_ptr, info_ptr, png_fixed(png_ptr, file_gamma,
        "png_set_gAMA"));
 #else
-   png_set_gAMA_fixed(png_ptr, info_ptr, png_fixed(png_ptr, file_gamma,
-       ""));
-
+   png_set_gAMA_fixed(png_ptr, info_ptr, png_fixed(png_ptr, file_gamma, ""));
 #endif
 }
 #  endif
@@ -204,9 +202,12 @@ png_set_hIST(png_const_structrp png_ptr, png_inforp info_ptr,
    if (info_ptr->num_palette == 0 || info_ptr->num_palette
        > PNG_MAX_PALETTE_LENGTH)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr,
           "Invalid palette size, hIST allocation skipped");
-
+#endif
       return;
    }
 
@@ -220,7 +221,11 @@ png_set_hIST(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (info_ptr->hist == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Insufficient memory for hIST chunk data");
+#endif
       return;
    }
 
@@ -313,17 +318,29 @@ png_set_pCAL(png_const_structrp png_ptr, png_inforp info_ptr,
 
    /* Check that the type matches the specification. */
    if (type < 0 || type > 3)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid pCAL equation type");
+#endif
 
    if (nparams < 0 || nparams > 255)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid pCAL parameter count");
+#endif
 
    /* Validate params[nparams] */
    for (i=0; i<nparams; ++i)
    {
       if (params[i] == NULL ||
           !png_check_fp_string(params[i], strlen(params[i])))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Invalid format for pCAL parameter");
+#endif
    }
 
    info_ptr->pcal_purpose = png_voidcast(png_charp,
@@ -331,7 +348,11 @@ png_set_pCAL(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (info_ptr->pcal_purpose == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Insufficient memory for pCAL purpose");
+#endif
       return;
    }
 
@@ -352,7 +373,11 @@ png_set_pCAL(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (info_ptr->pcal_units == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Insufficient memory for pCAL units");
+#endif
       return;
    }
 
@@ -363,7 +388,11 @@ png_set_pCAL(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (info_ptr->pcal_params == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Insufficient memory for pCAL params");
+#endif
       return;
    }
 
@@ -379,7 +408,11 @@ png_set_pCAL(png_const_structrp png_ptr, png_inforp info_ptr,
 
       if (info_ptr->pcal_params[i] == NULL)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Insufficient memory for pCAL parameter");
+#endif
          return;
       }
 
@@ -407,15 +440,27 @@ png_set_sCAL_s(png_const_structrp png_ptr, png_inforp info_ptr,
     * unit unless this is an API call.)
     */
    if (unit != 1 && unit != 2)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid sCAL unit");
+#endif
 
    if (swidth == NULL || (lengthw = strlen(swidth)) == 0 ||
        swidth[0] == 45 /* '-' */ || !png_check_fp_string(swidth, lengthw))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid sCAL width");
+#endif
 
    if (sheight == NULL || (lengthh = strlen(sheight)) == 0 ||
        sheight[0] == 45 /* '-' */ || !png_check_fp_string(sheight, lengthh))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid sCAL height");
+#endif
 
    info_ptr->scal_unit = (png_byte)unit;
 
@@ -428,7 +473,11 @@ png_set_sCAL_s(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (info_ptr->scal_s_width == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Memory allocation failed while processing sCAL");
+#endif
       return;
    }
 
@@ -445,8 +494,11 @@ png_set_sCAL_s(png_const_structrp png_ptr, png_inforp info_ptr,
    {
       png_free (png_ptr, info_ptr->scal_s_width);
       info_ptr->scal_s_width = NULL;
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Memory allocation failed while processing sCAL");
+#endif
       return;
    }
 
@@ -465,10 +517,18 @@ png_set_sCAL(png_const_structrp png_ptr, png_inforp info_ptr, int unit,
 
    /* Check the arguments. */
    if (width <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid sCAL width ignored");
+#endif
 
    else if (height <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid sCAL height ignored");
+#endif
 
    else
    {
@@ -495,10 +555,18 @@ png_set_sCAL_fixed(png_const_structrp png_ptr, png_inforp info_ptr, int unit,
 
    /* Check the arguments. */
    if (width <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid sCAL width ignored");
+#endif
 
    else if (height <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid sCAL height ignored");
+#endif
 
    else
    {
@@ -545,11 +613,19 @@ png_set_PLTE(png_structrp png_ptr, png_inforp info_ptr,
    if (num_palette < 0 || num_palette > PNG_MAX_PALETTE_LENGTH)
    {
       if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Invalid palette length");
+#endif
 
       else
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid palette length");
+#endif
          return;
       }
    }
@@ -561,7 +637,11 @@ png_set_PLTE(png_structrp png_ptr, png_inforp info_ptr,
 #        endif
       ))
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid palette");
+#endif
       return;
    }
 
@@ -657,7 +737,11 @@ png_set_iCCP(png_const_structrp png_ptr, png_inforp info_ptr,
       return;
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "Invalid iCCP compression method");
+#endif
 
    /* Set the colorspace first because this validates the profile; do not
     * override previously set app cHRM or gAMA here (because likely as not the
@@ -685,7 +769,11 @@ png_set_iCCP(png_const_structrp png_ptr, png_inforp info_ptr,
 
    if (new_iccp_name == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_benign_error(png_ptr, "");
+#else
       png_benign_error(png_ptr, "Insufficient memory to process iCCP chunk");
+#endif
       return;
    }
 
@@ -697,8 +785,12 @@ png_set_iCCP(png_const_structrp png_ptr, png_inforp info_ptr,
    {
       png_free(png_ptr, new_iccp_name);
       new_iccp_name = NULL;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_benign_error(png_ptr, "");
+#else
       png_benign_error(png_ptr,
           "Insufficient memory to process iCCP profile");
+#endif
       return;
    }
 
@@ -723,7 +815,11 @@ png_set_text(png_const_structrp png_ptr, png_inforp info_ptr,
    ret = png_set_text_2(png_ptr, info_ptr, text_ptr, num_text);
 
    if (ret != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Insufficient memory to store text");
+#endif
 }
 
 int /* PRIVATE */
@@ -772,8 +868,12 @@ png_set_text_2(png_const_structrp png_ptr, png_inforp info_ptr,
 
       if (new_text == NULL)
       {
-         png_chunk_report_ex(png_ptr, "too many text chunks",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+         png_chunk_report(png_ptr, "too many text chunks",
             PNG_CHUNK_WRITE_ERROR);
+#endif
          return 1;
       }
 
@@ -799,8 +899,12 @@ png_set_text_2(png_const_structrp png_ptr, png_inforp info_ptr,
       if (text_ptr[i].compression < PNG_TEXT_COMPRESSION_NONE ||
           text_ptr[i].compression >= PNG_TEXT_COMPRESSION_LAST)
       {
-         png_chunk_report_ex(png_ptr, "text compression mode is out of range",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+         png_chunk_report(png_ptr, "text compression mode is out of range",
             PNG_CHUNK_WRITE_ERROR);
+#endif
          continue;
       }
 
@@ -831,8 +935,12 @@ png_set_text_2(png_const_structrp png_ptr, png_inforp info_ptr,
       }
 #  else /* PNG_iTXt_SUPPORTED */
       {
-         png_chunk_report_ex(png_ptr, "iTXt chunk not supported",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+         png_chunk_report(png_ptr, "iTXt chunk not supported",
             PNG_CHUNK_WRITE_ERROR);
+#endif
          continue;
       }
 #  endif
@@ -860,8 +968,12 @@ png_set_text_2(png_const_structrp png_ptr, png_inforp info_ptr,
 
       if (textp->key == NULL)
       {
-         png_chunk_report_ex(png_ptr, "text chunk: out of memory",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+         png_chunk_report(png_ptr, "text chunk: out of memory",
                PNG_CHUNK_WRITE_ERROR);
+#endif
          return 1;
       }
 
@@ -934,7 +1046,11 @@ png_set_tIME(png_const_structrp png_ptr, png_inforp info_ptr,
        mod_time->hour  > 23   || mod_time->minute > 59 ||
        mod_time->second > 60)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Ignoring invalid time value");
+#endif
       return;
    }
 
@@ -984,8 +1100,12 @@ png_set_tRNS(png_structrp png_ptr, png_inforp info_ptr,
           (trans_color->red > sample_max ||
           trans_color->green > sample_max ||
           trans_color->blue > sample_max)))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr,
             "tRNS chunk has out-of-range samples for bit_depth");
+#endif
 
       info_ptr->trans_color = *trans_color;
 
@@ -1031,7 +1151,11 @@ png_set_sPLT(png_const_structrp png_ptr,
    if (np == NULL)
    {
       /* Out of memory or too many chunks */
-      png_chunk_report_ex(png_ptr, "too many sPLT chunks", PNG_CHUNK_WRITE_ERROR);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+      png_chunk_report(png_ptr, "too many sPLT chunks", PNG_CHUNK_WRITE_ERROR);
+#endif
       return;
    }
 
@@ -1049,7 +1173,12 @@ png_set_sPLT(png_const_structrp png_ptr,
       if (entries->name == NULL || entries->entries == NULL)
       {
          /* png_handle_sPLT doesn't do this, so this is an app error */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "png_set_sPLT: invalid sPLT");
+#endif
+
          /* Just skip the invalid entry */
          continue;
       }
@@ -1098,7 +1227,11 @@ png_set_sPLT(png_const_structrp png_ptr,
    while (++entries, --nentries);
 
    if (nentries > 0)
-      png_chunk_report_ex(png_ptr, "sPLT out of memory", PNG_CHUNK_WRITE_ERROR);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+      png_chunk_report(png_ptr, "sPLT out of memory", PNG_CHUNK_WRITE_ERROR);
+#endif
 }
 #endif /* sPLT */
 
@@ -1115,8 +1248,12 @@ check_location(png_const_structrp png_ptr, int location)
    if (location == 0 && (png_ptr->mode & PNG_IS_READ_STRUCT) == 0)
    {
       /* Write struct, so unknown chunks come from the app */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_warning(png_ptr, "");
+#else
       png_app_warning(png_ptr,
          "png_set_unknown_chunks now expects a valid location");
+#endif
       /* Use the old behavior */
       location = (png_byte)(png_ptr->mode &
          (PNG_HAVE_IHDR|PNG_HAVE_PLTE|PNG_AFTER_IDAT));
@@ -1126,7 +1263,11 @@ check_location(png_const_structrp png_ptr, int location)
     * png_set_unknown_chunks on a read pointer it must get the location right.
     */
    if (location == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "invalid location in png_set_unknown_chunks");
+#endif
 
    /* Now reduce the location to the top-most set bit by removing each least
     * significant bit in turn.
@@ -1160,7 +1301,12 @@ png_set_unknown_chunks(png_const_structrp png_ptr,
       defined(PNG_READ_SUPPORTED)
       if ((png_ptr->mode & PNG_IS_READ_STRUCT) != 0)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "no unknown chunk support on read");
+#endif
+
          return;
       }
 #  endif
@@ -1168,7 +1314,12 @@ png_set_unknown_chunks(png_const_structrp png_ptr,
       defined(PNG_WRITE_SUPPORTED)
       if ((png_ptr->mode & PNG_IS_READ_STRUCT) == 0)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "no unknown chunk support on write");
+#endif
+
          return;
       }
 #  endif
@@ -1184,8 +1335,12 @@ png_set_unknown_chunks(png_const_structrp png_ptr,
 
    if (np == NULL)
    {
-      png_chunk_report_ex(png_ptr, "too many unknown chunks",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+      png_chunk_report(png_ptr, "too many unknown chunks",
          PNG_CHUNK_WRITE_ERROR);
+#endif
       return;
    }
 
@@ -1217,8 +1372,12 @@ png_set_unknown_chunks(png_const_structrp png_ptr,
 
          if (np->data == NULL)
          {
-            png_chunk_report_ex(png_ptr, "unknown chunk: out of memory",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_chunk_report(png_ptr, "", PNG_CHUNK_WRITE_ERROR);
+#else
+            png_chunk_report(png_ptr, "unknown chunk: out of memory",
                PNG_CHUNK_WRITE_ERROR);
+#endif
             /* But just skip storing the unknown chunk */
             continue;
          }
@@ -1250,7 +1409,11 @@ png_set_unknown_chunk_location(png_const_structrp png_ptr, png_inforp info_ptr,
    {
       if ((location & (PNG_HAVE_IHDR|PNG_HAVE_PLTE|PNG_AFTER_IDAT)) == 0)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "invalid unknown chunk location");
+#endif
          /* Fake out the pre 1.6.0 behavior: */
          if ((location & PNG_HAVE_IDAT) != 0) /* undocumented! */
             location = PNG_AFTER_IDAT;
@@ -1321,7 +1484,12 @@ png_set_keep_unknown_chunks(png_structrp png_ptr, int keep,
 
    if (keep < 0 || keep >= PNG_HANDLE_CHUNK_LAST)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "png_set_keep_unknown_chunks: invalid keep");
+#endif
+
       return;
    }
 
@@ -1370,7 +1538,12 @@ png_set_keep_unknown_chunks(png_structrp png_ptr, int keep,
          /* Prior to 1.6.0 this was silently ignored, now it is an app_error
           * which can be switched off.
           */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "png_set_keep_unknown_chunks: no chunk list");
+#endif
+
          return;
       }
 
@@ -1385,7 +1558,12 @@ png_set_keep_unknown_chunks(png_structrp png_ptr, int keep,
     */
    if (num_chunks + old_num_chunks > UINT_MAX/5)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "png_set_keep_unknown_chunks: too many chunks");
+#endif
+
       return;
    }
 
@@ -1506,7 +1684,11 @@ png_set_compression_buffer_size(png_structrp png_ptr, png_size_t size)
        return;
 
     if (size == 0 || size > PNG_UINT_31_MAX)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+       png_error(png_ptr, "");
+#else
        png_error(png_ptr, "invalid compression buffer size");
+#endif
 
 #  ifdef PNG_SEQUENTIAL_READ_SUPPORTED
       if ((png_ptr->mode & PNG_IS_READ_STRUCT) != 0)
@@ -1521,15 +1703,23 @@ png_set_compression_buffer_size(png_structrp png_ptr, png_size_t size)
       {
          if (png_ptr->zowner != 0)
          {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr,
               "Compression buffer size cannot be changed because it is in use");
+#endif
             return;
          }
 
          if (size > ZLIB_IO_MAX)
          {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr,
                "Compression buffer size limited to system maximum");
+#endif
             size = ZLIB_IO_MAX; /* must fit */
          }
 
@@ -1538,8 +1728,12 @@ png_set_compression_buffer_size(png_structrp png_ptr, png_size_t size)
             /* Deflate will potentially go into an infinite loop on a SYNC_FLUSH
              * if this is permitted.
              */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr,
                "Compression buffer size cannot be reduced below 6");
+#endif
             return;
          }
 

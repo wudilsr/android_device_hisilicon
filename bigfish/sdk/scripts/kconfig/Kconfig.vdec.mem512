@@ -19,7 +19,7 @@ config HI_VIDEO_MAX_REF_FRAME_NUM_IN_512
 	default 7
 
 config HI_VIDEO_MAX_DISP_FRAME_NUM_IN_512
-	int "Max display frame number(2-16)"
+	int "Extra frame number for schedule(2-16)"
 	range 2 16
 	default 2
 

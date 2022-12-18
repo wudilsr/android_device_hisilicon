@@ -113,7 +113,6 @@ err1:
 //destroy animation. 
 HI_S32 HI_ANIMATION_Destroy(HI_HANDLE hRender)
 {
-    HI_S32 ret;
     ANIMATION_INFO *pRender;
 
     pRender = (ANIMATION_INFO *)hRender;
@@ -122,9 +121,9 @@ HI_S32 HI_ANIMATION_Destroy(HI_HANDLE hRender)
         DEBUGINFO(HI_FAILURE);
         return HI_FAILURE;
     }
-    ret = HI_GO_DestroyDecoder(pRender->DecHandle);
+    HI_GO_DestroyDecoder(pRender->DecHandle);
 
-    ret = HI_GO_FreeSurface(pRender->BkSurface);
+    HI_GO_FreeSurface(pRender->BkSurface);
     
     free(pRender);
     return HI_SUCCESS;

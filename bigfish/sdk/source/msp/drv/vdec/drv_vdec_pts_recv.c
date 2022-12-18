@@ -293,7 +293,7 @@ HI_S32 PTSREC_GetFrmRate(HI_HANDLE hHandle, HI_UNF_AVPLAY_FRMRATE_PARAM_S *pstFr
 
 HI_U32 PTSREC_GetInterPtsDelta(HI_HANDLE hHandle)
 {
-    return s_stPtsRecChan[hHandle].s32InterPtsDelta;
+    return (HI_U32)s_stPtsRecChan[hHandle].s32InterPtsDelta;
 }
 /*
  * For HI_UNF_AVPLAY_FRMRATE_TYPE_PTS:      Recover PTS and detect frame rate;
@@ -345,7 +345,7 @@ HI_U32 PTSREC_CalcStamp(HI_HANDLE hHandle, HI_UNF_VCODEC_TYPE_E enVdecType, IMAG
     }
 
     u32SrcPts = (HI_U32)pstImage->SrcPts;
-    u32Pts = (HI_U32)pstImage->PTS;
+    //u32Pts = (HI_U32)pstImage->PTS;
 
     /* u32SrcPts is valid */
     if (HI_INVALID_PTS != u32SrcPts)

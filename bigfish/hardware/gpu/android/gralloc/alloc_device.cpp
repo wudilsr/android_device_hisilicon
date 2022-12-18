@@ -31,7 +31,6 @@
 #include "gralloc_priv.h"
 #include "gralloc_helper.h"
 #include "framebuffer_device.h"
-#include "overlay.h"
 
 #if GRALLOC_ARM_UMP_MODULE
 #include <ump/ump.h>
@@ -43,21 +42,11 @@
 #include <ion/ion.h>
 #endif
 
-#include "hi_math.h"
+#ifdef GRALLOC_HISILICON_PLUGIN
+#include "gralloc_hisilicon_adp.h"
+#endif
 
 #define GRALLOC_ALIGN( value, base ) (((value) + ((base) - 1)) & ~((base) - 1))
-//#define GRALLOC_ALIGN( value, base ) ((((value)%256)==0)?(value):(((((value)/256)%2)==0)?((((value)/256)+1)*256):((((value)/256)+2)*256)))
-
-#define GRALLOC_ALIGN_YUV( value ) HI_SYS_GET_STRIDE( value )
-
-#if defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
-#define GRALLOC_ALIGN_RGB( value ) HI_SYS_GET_STRIDE( value )
-#else
-#define GRALLOC_ALIGN_RGB( value ) GRALLOC_ALIGN( value, 64 )
-#endif
-#define GRALLOC_USE_CMA
-
-static struct overlay_device_t *mOdev = NULL;
 
 #if GRALLOC_SIMULATE_FAILURES
 #include <cutils/properties.h>
@@ -109,8 +98,7 @@ static int __ump_alloc_should_fail()
 }
 #endif
 
-
-static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, int is_yuv, buffer_handle_t *pHandle)
+static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, buffer_handle_t *pHandle)
 {
 #if GRALLOC_ARM_DMA_BUF_MODULE
 	{
@@ -119,20 +107,14 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, int
 		unsigned char *cpu_ptr;
 		int shared_fd;
 		int ret;
-		unsigned long ion_phy_addr = (unsigned long)(-1);
-		size_t len;
 
-		if( usage & GRALLOC_USAGE_HISI_PHYADDR )
-		{
-			is_yuv = 1;
-		}
-
-#ifndef GRALLOC_USE_CMA
-		int heap_id = is_yuv ? ION_HEAP(ION_HIS_ID_DDR): ION_HEAP_SYSTEM_MASK;
-		ret = ion_alloc(m->ion_client, size, 0, heap_id, 0, &(ion_hnd));
+#ifdef GRALLOC_HISILICON_PLUGIN
+		int heapid = pri_hisi_ion_get_heapid(dev, size, usage, pHandle);
+		ret = ion_alloc(m->ion_client, size, 0, heapid, 0, &(ion_hnd));
 #else
-		ret = ion_alloc(m->ion_client, size, 0, ION_HEAP(ION_HIS_ID_DDR), 0, &(ion_hnd));
+		ret = ion_alloc(m->ion_client, size, 0, ION_HEAP_SYSTEM_MASK, 0, &(ion_hnd));
 #endif
+
 		if (ret != 0)
 		{
 			AERR("Failed to ion_alloc from ion_client:%d", m->ion_client);
@@ -167,64 +149,34 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, int
 			close(shared_fd);
 			return -1;
 		}
-#ifdef GRALLOC_USE_CMA
-		ion_phys(m->ion_client, ion_hnd, &ion_phy_addr, &len);
-#else
-		if(is_yuv)
-		{
-			ion_phys(m->ion_client, ion_hnd, &ion_phy_addr, &len);
-		}
-#endif
-#if GRALLOC_HISI_METADATA_BUF
-	    struct ion_handle *ion_metadata_hnd = NULL;
-	    unsigned long ion_metadata_phy_addr = -1;
-	    size_t ion_metadata_size = 0;
-	    int ion_metadata_fd = -1;
-#ifdef GRALLOC_USE_CMA
-        if (usage & GRALLOC_USAGE_HISI_VDP)
-        {
-            ret = ion_alloc(m->ion_client, GRALLOC_HISI_METADATA_BUF_SIZE, 0, ION_HEAP(ION_HIS_ID_DDR),
-                            0,
-                            &ion_metadata_hnd );
-            if (ret != 0)
-            {
-                AERR("Failed to alloc metadata buffer from ion_client:%d", m->ion_client);
-                ret = munmap(cpu_ptr, size);
-                close(shared_fd);
-                ion_free(m->ion_client, ion_hnd);
-                return -1;
-            }
 
-            ret = ion_share(m->ion_client, ion_metadata_hnd, &ion_metadata_fd);
-
-            if (ret != 0)
-            {
-                AERR("Failed to share metadata buffer from ion_client:%d", m->ion_client);
-                ret = munmap(cpu_ptr, size);
-                close(shared_fd);
-                ion_free(m->ion_client, ion_hnd);
-                ion_free(m->ion_client, ion_metadata_hnd);
-                return -1;
-            }
-            ion_phys(m->ion_client, ion_metadata_hnd, &ion_metadata_phy_addr, &ion_metadata_size);
-        } else {
-            ion_metadata_fd = dup(0);//caution:makesure to be a valid file descriptor
-        }
-
-#endif
-#endif
 		private_handle_t *hnd = new private_handle_t(private_handle_t::PRIV_FLAGS_USES_ION, usage, size, cpu_ptr, private_handle_t::LOCK_STATE_MAPPED);
-
 		if (NULL != hnd)
 		{
 			hnd->share_fd = shared_fd;
 			hnd->ion_hnd = ion_hnd;
-			hnd->ion_phy_addr = ion_phy_addr;
-#if GRALLOC_HISI_METADATA_BUF
-			hnd->metadata_fd = ion_metadata_fd;
-			hnd->ion_metadata_hnd = ion_metadata_hnd;
-			hnd->ion_metadata_phy_addr = ion_metadata_phy_addr;
-			hnd->ion_metadata_size = ion_metadata_size;
+#ifdef GRALLOC_HISILICON_PLUGIN
+			if(0!=pri_hisi_device_layerbuffer_alloc(dev, size, usage, pHandle, m, ion_hnd, hnd))
+			{
+				close(shared_fd);
+				ret = munmap(cpu_ptr, size);
+
+				if (0 != ret)
+				{
+					AERR("munmap failed for base:%p size: %lu", cpu_ptr, (unsigned long)size);
+				}
+
+				ret = ion_free(m->ion_client, ion_hnd);
+
+				if (0 != ret)
+				{
+					AERR("ion_free( %d ) failed", m->ion_client);
+				}
+
+				delete hnd;
+
+				return -1;
+			}
 #endif
 			*pHandle = hnd;
 			return 0;
@@ -248,14 +200,7 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, int
 		{
 			AERR("ion_free( %d ) failed", m->ion_client);
 		}
-#if GRALLOC_HISI_METADATA_BUF
-        ret = ion_free(m->ion_client, ion_metadata_hnd);
 
-        if (0 != ret)
-        {
-            AERR("ion_free( %d ) metadata failed", m->ion_client);
-        }
-#endif
 		return -1;
 	}
 #endif
@@ -301,7 +246,7 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, int
 					if (UMP_INVALID_SECURE_ID != ump_id)
 					{
 						private_handle_t *hnd = new private_handle_t(private_handle_t::PRIV_FLAGS_USES_UMP, usage, size, cpu_ptr,
-						private_handle_t::LOCK_STATE_MAPPED, ump_id, ump_mem_handle);
+						        private_handle_t::LOCK_STATE_MAPPED, ump_id, ump_mem_handle);
 
 						if (NULL != hnd)
 						{
@@ -365,7 +310,7 @@ static int gralloc_alloc_framebuffer_locked(alloc_device_t *dev, size_t size, in
 		// screen when post is called.
 		int newUsage = (usage & ~GRALLOC_USAGE_HW_FB) | GRALLOC_USAGE_HW_2D;
 		AERR("fallback to single buffering. Virtual Y-res too small %d", m->info.yres);
-		return gralloc_alloc_buffer(dev, bufferSize, newUsage, 0, pHandle);
+		return gralloc_alloc_buffer(dev, bufferSize, newUsage, pHandle);
 	}
 
 	if (bufferMask >= ((1LU << numBuffers) - 1))
@@ -421,8 +366,10 @@ static int gralloc_alloc_framebuffer_locked(alloc_device_t *dev, size_t size, in
 #endif
 	}
 #endif
-    // get the physical address of the buffer
-    hnd->ion_phy_addr = (uintptr_t)vaddr - (uintptr_t)m->framebuffer->base + (uintptr_t)m->finfo.smem_start;
+
+#ifdef GRALLOC_HISILICON_PLUGIN
+	pri_hisi_device_framebuffer_alloc(dev, size, usage, pHandle, hnd, vaddr, m);
+#endif
 
 	*pHandle = hnd;
 
@@ -447,7 +394,6 @@ static int alloc_device_alloc(alloc_device_t *dev, int w, int h, int format, int
 
 	size_t size;
 	size_t stride;
-	int is_yuv = 0;
 
 	if (format == HAL_PIXEL_FORMAT_YCrCb_420_SP || format == HAL_PIXEL_FORMAT_YV12
 	        /* HAL_PIXEL_FORMAT_YCbCr_420_SP, HAL_PIXEL_FORMAT_YCbCr_420_P, HAL_PIXEL_FORMAT_YCbCr_422_I are not defined in Android.
@@ -467,16 +413,27 @@ static int alloc_device_alloc(alloc_device_t *dev, int w, int h, int format, int
 			case HAL_PIXEL_FORMAT_YCbCr_420_SP:
 			case HAL_PIXEL_FORMAT_YCbCr_420_P:
 #endif
+
+#ifdef GRALLOC_HISILICON_PLUGIN
 				stride = GRALLOC_ALIGN_YUV(w);
 				size = h * (stride + GRALLOC_ALIGN_YUV(stride / 2));
-				is_yuv = 1;
+				usage = usage | GRALLOC_USAGE_PHYSICAL_MEM;
+#else
+				stride = GRALLOC_ALIGN(w, 16);
+				size = h * (stride + GRALLOC_ALIGN(stride / 2, 16));
+#endif
 				break;
 #ifdef SUPPORT_LEGACY_FORMAT
 
 			case HAL_PIXEL_FORMAT_YCbCr_422_I:
+#ifdef GRALLOC_HISILICON_PLUGIN
 				stride = GRALLOC_ALIGN_YUV(w);
 				size = h * stride * 2;
-				is_yuv = 1;
+				usage = usage | GRALLOC_USAGE_PHYSICAL_MEM;
+#else
+				stride = GRALLOC_ALIGN(w, 16);
+				size = h * stride * 2;
+#endif
 				break;
 #endif
 
@@ -512,9 +469,20 @@ static int alloc_device_alloc(alloc_device_t *dev, int w, int h, int format, int
 				return -EINVAL;
 		}
 
+#ifdef GRALLOC_HISILICON_PLUGIN
 		size_t bpr = GRALLOC_ALIGN_RGB(w * bpp);
+#else
+		size_t bpr = GRALLOC_ALIGN(w * bpp, 64);
+#endif
 		size = bpr * h;
 		stride = bpr / bpp;
+	}
+
+	char property[PROPERTY_VALUE_MAX];	
+	property_get("ro.config.low_ram", property, "");
+    if (strcmp(property, "true") != 0)
+	{
+		usage = usage | GRALLOC_USAGE_PHYSICAL_MEM;
 	}
 
 	int err;
@@ -529,7 +497,7 @@ static int alloc_device_alloc(alloc_device_t *dev, int w, int h, int format, int
 #endif
 
 	{
-		err = gralloc_alloc_buffer(dev, size, usage, is_yuv, pHandle);
+		err = gralloc_alloc_buffer(dev, size, usage, pHandle);
 	}
 
 	if (err < 0)
@@ -587,14 +555,12 @@ static int alloc_device_free(alloc_device_t *dev, buffer_handle_t handle)
 
 	private_handle_t const *hnd = reinterpret_cast<private_handle_t const *>(handle);
 
-	if (hnd->usage & GRALLOC_USAGE_HISI_VDP)
+#ifdef GRALLOC_HISILICON_PLUGIN
+	if(pri_hisi_device_free(dev, handle, hnd) < 0)
 	{
-	    ALOGD("gralloc free video buffer:%#x", hnd->ion_phy_addr);
-	    if (mOdev->checkBuffer(mOdev, handle) > 0) {
-	        ALOGD("overlay take care of buffer %#x, do not free at here", hnd->ion_phy_addr);
-	        return 0;
-	    }
+		return 0;
 	}
+#endif
 
 	if (hnd->flags & private_handle_t::PRIV_FLAGS_FRAMEBUFFER)
 	{
@@ -647,18 +613,9 @@ static int alloc_device_free(alloc_device_t *dev, buffer_handle_t handle)
 
 		if (0 != ion_free(m->ion_client, hnd->ion_hnd))
 		{
-			AERR("Failed to ion_free( ion_client: %d ion_hnd: %p )", m->ion_client,(void*)(uintptr_t)hnd->ion_hnd);
+			AERR("Failed to ion_free( ion_client: %d ion_hnd: %p )", m->ion_client, (void *)(uintptr_t)hnd->ion_hnd);
 		}
-#if GRALLOC_HISI_METADATA_BUF
-	    if (hnd->ion_metadata_hnd)
-	    {
-	        if (0 != ion_free(m->ion_client, hnd->ion_metadata_hnd))
-	        {
-	            AERR("Failed to free metadata buffer( ion_client: %d ion_hnd: %p )", m->ion_client, hnd->ion_metadata_hnd);
-	        }
-	    }
-	    close(hnd->metadata_fd);
-#endif
+
 		memset((void *)hnd, 0, sizeof(*hnd));
 #else
 		AERR("Can't free dma_buf memory for handle:0x%x. Not supported.", (unsigned int)hnd);
@@ -692,6 +649,10 @@ static int alloc_device_close(struct hw_device_t *device)
 		ump_close(); // Our UMP memory refs will be released automatically here...
 #endif
 	}
+
+#ifdef GRALLOC_HISILICON_PLUGIN
+	pri_hisi_device_close(device);
+#endif
 
 	return 0;
 }
@@ -743,8 +704,11 @@ int alloc_device_open(hw_module_t const *module, const char *name, hw_device_t *
 	}
 
 #endif
-	mOdev = overlay_singleton();
-	overlay_set_alloc_dev(dev);
+
+#ifdef GRALLOC_HISILICON_PLUGIN
+	pri_hisi_device_open(module, name, device, dev);
+#endif
+
 	*device = &dev->common;
 
 	return 0;

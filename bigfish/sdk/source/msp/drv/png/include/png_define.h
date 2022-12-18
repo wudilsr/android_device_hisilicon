@@ -88,6 +88,9 @@ extern "C"{
     }\
 }while(0)
 
+#define PNG_LOCK(lock,lockflags) spin_lock_irqsave(lock, lockflags)
+#define PNG_UNLOCK(lock,lockflags) spin_unlock_irqrestore(lock, lockflags)
+
 #define PNG_DECLARE_WAITQUEUE(queue_head) DECLARE_WAIT_QUEUE_HEAD(queue_head)
 #define PNG_WAIT_EVENT_INTERRUPTIBLE(queue_head, condition) wait_event_interruptible(queue_head, (condition))        
 #define PNG_WAKE_UP_INTERRUPTIBLE(queue_head_p) wake_up_interruptible(queue_head_p)

@@ -33,6 +33,10 @@ extern void hinfc610_controller_enable(struct hinfc_host *host, int enable);
 #  include "hinfc610_s40.c"
 #endif
 
+#if defined(CONFIG_ARCH_HI3716MV310)
+#  include "hinfc610_hi3716mv310.c"
+#endif
+
 /*****************************************************************************/
 
 static unsigned int get_8bits(unsigned char byte)

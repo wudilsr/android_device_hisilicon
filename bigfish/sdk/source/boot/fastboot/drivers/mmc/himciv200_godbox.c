@@ -21,3 +21,18 @@ static void hi_mci_sys_init(void)
 	tmp_reg &= ~SDIO_SRST_REQ;
 	himci_writel(tmp_reg, REG_BASE_CRG + REG_PERI_CRG46);
 }
+
+static unsigned int himci_get_clock(void)
+{
+	unsigned int clk = MMC_CLK;
+
+	return clk;
+}
+
+static void himci_set_timing(unsigned int timing)
+{}
+
+static void himci_get_tuning_param(int datastrobe, unsigned int * min,
+		unsigned int * max, unsigned int * mask, 
+		unsigned int * offset, unsigned int * reg_addr)
+{}

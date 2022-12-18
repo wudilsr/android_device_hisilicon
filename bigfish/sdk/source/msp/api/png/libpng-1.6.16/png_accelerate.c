@@ -27,10 +27,6 @@ extern "C" {
 #include <fcntl.h>
 
 #include "hipng_accelerate.h"
-
-#ifdef PNG_RESTRICT
-   // #undef PNG_RESTRICT
-#endif
 #include "pngpriv.h"
 
 #define PNG_CHUNK_HEAD_LEN 8
@@ -41,7 +37,25 @@ extern "C" {
 #define HIPNG_MAX_WIDTH 4096
 #define HIPNG_MAX_HEIGHT 4096
 #define HIPNG_MIN_HEIGHT 1
-#define HIPNG_MAX_MEM (10*1024*1024)
+#define HIPNG_MAX_MEM (100*1024*1024)
+
+#define HIPNG_STATE_PUSHSTREAM_FAILED 0x1
+#define HIPNG_STATE_DECODE_FAILED 0x2
+#define HIPNG_STATE_SWITCH_COMPLETE 0x3
+
+/*异常打桩测试*/
+#define HIPNG_PUSHSTREAM_FAIL_START	0x1		/*开始推送码流时失败*/
+#define HIPNG_PUSHSTREAM_FAIL_PROCESS 0x2	/*码流推送一部分失败*/
+#define HIPNG_DECODE_FAIL_TRANSFORM 0x3		/*设置转换失败*/
+#define HIPNG_DECODE_FAIL_DECODE 0x4		/*解码失败*/
+#define HIPNG_PUSHSTREAM_FAIL_IDATHEAD 0x5		/*非首个IDAT HEAD码流推送失败*/
+#define HIPNG_PUSHSTREAM_FAIL_CRCNODATA 0x6		/*读取CRC时数据不够*/
+#define HIPNG_PUSHSTREAM_FAIL_CRCNOBUF 0x7		/*读取CRC时buf不够*/		
+
+HI_VOID hipng_push_switch_start(png_structp png_ptr);
+HI_S32 hipng_set_transform(png_structp png_ptr, HI_PNG_TRANSFORM_S *pstTransform);
+
+HI_U8 hipng_select_decmode(png_structp png_ptr, png_bytepp image, png_uint_32 num_rows);
 
     /*****************************************************************
     * func:create the struct of hardWare dec
@@ -114,7 +128,8 @@ extern "C" {
         pstPngStruct->u32InflexionSize = PNG_INFLEXION_SIZE;
         pstPngStruct->bSyncDec = HI_TRUE;
 		pstPngStruct->s32MmzFd = s32MemFd;
-
+		pstPngStruct->u8ReadHeadCount = PNG_CHUNK_HEAD_LEN;
+		HIPNG_TRACE("create %d=============\n", pstPngStruct->s32Handle);
         return pstPngStruct;
     }
 
@@ -132,6 +147,7 @@ extern "C" {
             return;
         }
 
+        HIPNG_TRACE("destroy %d=============\n", pstHwctlStruct->s32Handle);
         HI_PNG_DestroyDecoder(pstHwctlStruct->s32Handle);
 
         if (pstHwctlStruct->pallateaddr != 0)
@@ -274,6 +290,482 @@ extern "C" {
         return HI_SUCCESS;
     }
 
+	/*推送码流*/
+	HI_S32 hipng_push_stream(png_structp png_ptr)
+	{
+		HI_U8 u8DecMode = 0;
+		HI_BOOL bEnd = HI_FALSE;
+        hipng_struct_hwctl_s *pstHwStruct = (hipng_struct_hwctl_s *)(png_ptr->private_ptr);
+        HI_UCHAR ucChunkHead[PNG_CHUNK_HEAD_LEN] = {0, 0, 0, 0, 'I', 'D', 'A', 'T'};
+        HI_U32 u32Len = 0;
+        HI_S32 s32Ret = HI_SUCCESS;
+
+		if (NULL == pstHwStruct)
+		{
+			/*直接返回给软件解码*/
+			HIPNG_TRACE("Null decode handle!\n");
+			return HI_FAILURE;
+		}
+
+		if (pstHwStruct->u8PushState)
+		{
+			HIPNG_TRACE("state:%d!\n", pstHwStruct->u8PushState);
+			return HI_FAILURE;
+		}
+		
+		/*选择解码模式*/
+		u8DecMode = hipng_select_decmode(png_ptr,NULL,0);
+		
+		if (!(u8DecMode & HIPNG_HW_DEC) && !(u8DecMode & HIPNG_HWCOPY_DEC))
+		{
+			/*直接返回给软件解码*/
+			HIPNG_TRACE("u8DecMode:%d\n", u8DecMode);
+			return HI_FAILURE;
+		}
+
+		pstHwStruct->mode = png_ptr->mode;
+		while(!bEnd)
+		{
+			if (pstHwStruct->u8ReadHeadCount == PNG_CHUNK_HEAD_LEN)
+			{
+				ucChunkHead[0] = (png_ptr->idat_size >> 24) & 0xff;
+				ucChunkHead[1] = (png_ptr->idat_size >> 16) & 0xff;
+				ucChunkHead[2] = (png_ptr->idat_size >> 8) & 0xff;
+				ucChunkHead[3] = png_ptr->idat_size & 0xff;
+				pstHwStruct->idat_size = png_ptr->idat_size + PNG_CHUNK_HEAD_LEN + PNG_CHUNK_TAIL_LEN;
+				HIPNG_TRACE("New idat:0x%x\n", pstHwStruct->idat_size);
+			}
+			
+			if (0 == pstHwStruct->stBuf.u32Size)
+	        {
+				/*分配码流buf*/
+				pstHwStruct->stBuf.u32Size = pstHwStruct->idat_size;
+				if (pstHwStruct->u8ExceptionMode == HIPNG_PUSHSTREAM_FAIL_START)
+					s32Ret = HI_FAILURE;
+				else if ((pstHwStruct->u8ExceptionMode == HIPNG_PUSHSTREAM_FAIL_IDATHEAD) && (pstHwStruct->u8IdatCount > 0))
+					s32Ret = HI_FAILURE;
+				else
+					s32Ret = HI_PNG_AllocBuf(pstHwStruct->s32Handle, &pstHwStruct->stBuf);
+				if (s32Ret < 0)
+				{
+					/*todo:回送码流，切换到软解码*/					
+					HIPNG_TRACE("Alloc buf %d failed!\n", pstHwStruct->stBuf.u32Size);
+					if (pstHwStruct->bHasStream && pstHwStruct->u8ReadHeadCount)
+					{
+						memcpy(pstHwStruct->chunkHead, ucChunkHead, 8);
+						pstHwStruct->bChunkheadValid = HI_TRUE;
+					}
+					memset(&pstHwStruct->stBuf, 0, sizeof(HI_PNG_BUF_S));
+					pstHwStruct->u8PushState = HIPNG_STATE_PUSHSTREAM_FAILED;
+					hipng_push_switch_start(png_ptr);
+					return HI_FAILURE;
+				}            
+	        }
+			
+			/*读取头部数据,头部数据保存在一个buf里，以方便
+			出错时处理*/
+			if (pstHwStruct->u8ReadHeadCount > 0)
+	        {
+				if ((HI_U32)(pstHwStruct->u8ReadHeadCount) > pstHwStruct->stBuf.u32Size)
+				{
+					pstHwStruct->stBuf.u32Size = 0;
+				}
+				else
+				{
+	            	u32Len = (HI_U32)(pstHwStruct->u8ReadHeadCount);
+					HIPNG_TRACE("len %d!\n", u32Len);			
+					memcpy(pstHwStruct->stBuf.pVir + pstHwStruct->u32StreamLen, &ucChunkHead[PNG_CHUNK_HEAD_LEN - pstHwStruct->u8ReadHeadCount], u32Len);
+		            pstHwStruct->u32StreamLen += u32Len;
+		            pstHwStruct->idat_size -= u32Len;
+		            pstHwStruct->stBuf.u32Size -= u32Len;
+		            pstHwStruct->u8ReadHeadCount -= u32Len;
+				}				
+	        }
+
+			/*读取idat数据*/
+			while (png_ptr->idat_size > 0 && png_ptr->save_buffer_size > 0)
+			{
+				u32Len = (png_ptr->idat_size < png_ptr->save_buffer_size) ? png_ptr->idat_size:png_ptr->save_buffer_size;
+				u32Len = (u32Len < pstHwStruct->stBuf.u32Size) ? u32Len : pstHwStruct->stBuf.u32Size;
+				if (u32Len == 0)
+				{
+					break;
+				}
+				HIPNG_TRACE("len %d\n", u32Len);
+				memcpy(pstHwStruct->stBuf.pVir + pstHwStruct->u32StreamLen, png_ptr->save_buffer_ptr, u32Len);
+
+#if 1
+				/*如果读取的是CRC,打印CRC,调试用*/
+				if (pstHwStruct->bCrc)
+				{
+					HI_U32 i;
+					for (i = 0; i < u32Len; i++)
+					{
+						HIPNG_TRACE("Crc:%d\n", *(png_ptr->save_buffer_ptr + i));
+					}
+				}
+#endif
+
+	            pstHwStruct->u32StreamLen += u32Len;
+	            pstHwStruct->idat_size -= u32Len;
+	            pstHwStruct->stBuf.u32Size -= u32Len;
+				png_ptr->idat_size -= u32Len;
+		      	png_ptr->buffer_size -= u32Len;
+		      	png_ptr->save_buffer_size -= u32Len;
+		      	png_ptr->save_buffer_ptr += u32Len;
+			}
+
+			/*读取idat数据*/
+			while (png_ptr->idat_size > 0 && png_ptr->current_buffer_size > 0)
+			{
+				u32Len = (png_ptr->idat_size < png_ptr->current_buffer_size) ? png_ptr->idat_size:png_ptr->current_buffer_size;
+				u32Len = (u32Len < pstHwStruct->stBuf.u32Size) ? u32Len : pstHwStruct->stBuf.u32Size;
+				if (u32Len == 0)
+				{
+					break;
+				}
+				HIPNG_TRACE("len %d\n", u32Len);
+				memcpy(pstHwStruct->stBuf.pVir + pstHwStruct->u32StreamLen, png_ptr->current_buffer_ptr, u32Len);
+#if 1
+				/*如果读取的是CRC,打印CRC,调试用*/
+        		if (pstHwStruct->bCrc)
+				{
+					HI_U32 i;
+					for (i = 0; i < u32Len; i++)
+					{
+						HIPNG_TRACE("Crc:%d\n", *(png_ptr->current_buffer_ptr + i));
+					}
+				}
+#endif
+	            pstHwStruct->u32StreamLen += u32Len;
+	            pstHwStruct->idat_size -= u32Len;
+	            pstHwStruct->stBuf.u32Size -= u32Len;
+				png_ptr->idat_size -= u32Len;
+				png_ptr->buffer_size -= u32Len;
+				png_ptr->current_buffer_size -= u32Len;
+				png_ptr->current_buffer_ptr += u32Len;
+			}
+
+			/*idat数据读取完，读取CRC数据*/
+			if (PNG_CHUNK_TAIL_LEN == pstHwStruct->idat_size)
+			{
+				if (png_ptr->idat_size != 0)
+				{
+					HIPNG_TRACE("Unknown error!\n");
+				}
+
+				if(HIPNG_PUSHSTREAM_FAIL_CRCNODATA == pstHwStruct->u8ExceptionMode)
+				{
+					png_push_save_buffer(png_ptr);
+					pstHwStruct->u8ExceptionMode = 0;
+					HIPNG_TRACE("No enough crc data!\n");
+					return HI_SUCCESS;
+				}
+					
+				if (png_ptr->buffer_size < PNG_CHUNK_TAIL_LEN) 
+				{
+					png_push_save_buffer(png_ptr);
+					return HI_SUCCESS;
+				}
+
+				if(HIPNG_PUSHSTREAM_FAIL_CRCNOBUF == pstHwStruct->u8ExceptionMode)
+				{
+					HIPNG_TRACE("No enough crc buf!\n");
+					pstHwStruct->u8ExceptionMode = 0;
+					pstHwStruct->stBuf.u32Size = 0;
+				}
+
+				if (pstHwStruct->stBuf.u32Size < PNG_CHUNK_TAIL_LEN)
+				{
+					pstHwStruct->stBuf.u32Size = 0;
+				}
+				
+				png_ptr->idat_size = PNG_CHUNK_TAIL_LEN;
+				pstHwStruct->bCrc = HI_TRUE;
+				HIPNG_TRACE("Read crc!\n");
+			}
+			else if (pstHwStruct->idat_size == 0)
+			{
+				/*crc数据读取完*/
+				
+				if (png_ptr->idat_size != 0)
+				{
+					HIPNG_TRACE("Unknown error!\n");
+				}
+
+				png_ptr->mode &= ~PNG_HAVE_CHUNK_HEADER;
+	      		png_ptr->mode |= PNG_AFTER_IDAT;
+
+				/*将u8ReadHeadCount,bCrc设置为初始 值以读取下一个idat*/
+				pstHwStruct->u8ReadHeadCount = PNG_CHUNK_HEAD_LEN;
+				pstHwStruct->bCrc = HI_FALSE;
+				pstHwStruct->u8IdatCount++;
+				bEnd = HI_TRUE;
+				HIPNG_TRACE("Read end!\n");
+			}
+
+			/*码流buf填满或者码流完整了，送给底层处理*/		
+			if ((0 == pstHwStruct->stBuf.u32Size) || bEnd)
+			{
+				s32Ret = HI_PNG_SetStreamLen(pstHwStruct->s32Handle, pstHwStruct->stBuf.u32PhyAddr, pstHwStruct->u32StreamLen);
+				if (pstHwStruct->u8ExceptionMode == HIPNG_PUSHSTREAM_FAIL_PROCESS)
+					s32Ret = HI_FAILURE;
+				if (s32Ret < 0)
+				{
+					/*todo:回送码流，切换到软解码*/					
+					pstHwStruct->u8PushState = HIPNG_STATE_PUSHSTREAM_FAILED;
+					hipng_push_switch_start(png_ptr);
+					HIPNG_TRACE("0x%x, 0x%x\n", pstHwStruct->stBuf.u32PhyAddr, pstHwStruct->u32StreamLen);					
+					return HI_FAILURE;
+				}
+				if (!pstHwStruct->bHasStream)
+					pstHwStruct->bHasStream = HI_TRUE;
+ 				memset(&pstHwStruct->stBuf, 0, sizeof(HI_PNG_BUF_S));
+				pstHwStruct->u32StreamLen = 0;
+			}
+
+			/*已无码流*/
+			if ((0 == png_ptr->save_buffer_size) && (0 == png_ptr->current_buffer_size))
+			{
+				bEnd = HI_TRUE;
+			}
+		}				
+				        
+        return HI_SUCCESS;
+    }
+
+	HI_S32 hipng_push_decode(png_structp png_ptr)
+	{
+		HI_S32 s32Ret;
+		HI_PNG_DECINFO_S stInfo = {0};
+		HI_U32 i;
+        hipng_struct_hwctl_s *pstHwStruct = (hipng_struct_hwctl_s *)(png_ptr->private_ptr);
+		HI_CHAR *row;
+		HI_U8 u8DecMode;
+		png_bytep row_buf;
+		
+		if (NULL == pstHwStruct)
+		{
+			/*直接返回给软件解码*/
+			HIPNG_TRACE("Null decode handle!\n", __FUNCTION__, __LINE__);
+			return HI_SUCCESS;
+		}
+
+		if (pstHwStruct->u8PushState)
+		{
+			HIPNG_TRACE("state:%d!\n", pstHwStruct->u8PushState);
+			return HI_SUCCESS;
+		}
+		
+		/*选择解码模式*/
+		u8DecMode = hipng_select_decmode(png_ptr,NULL,0);
+		
+		if (!(u8DecMode & HIPNG_HW_DEC) && !(u8DecMode & HIPNG_HWCOPY_DEC))
+		{
+			/*直接返回给软件解码*/
+			HIPNG_TRACE("u8DecMode:%d\n", u8DecMode);
+			return HI_SUCCESS;
+		}
+		
+        s32Ret = hipng_set_transform(png_ptr, &stInfo.stTransform);
+		if(pstHwStruct->u8ExceptionMode == HIPNG_DECODE_FAIL_TRANSFORM)
+			s32Ret = HI_FAILURE;
+		if (s32Ret < 0)
+        {
+        	/*todo:回送码流，切换到软解码*/
+			pstHwStruct->u8PushState = HIPNG_STATE_DECODE_FAILED;
+			hipng_push_switch_start(png_ptr);
+        	HIPNG_TRACE("Set transform failed!\n");
+            return HI_FAILURE;
+        }
+
+        stInfo.bSync = pstHwStruct->bSyncDec;
+        stInfo.stPngInfo.eColorFmt = png_ptr->color_type;
+        stInfo.stPngInfo.u32Width = png_ptr->width;
+        stInfo.stPngInfo.u32Height = png_ptr->height;
+        stInfo.stPngInfo.u8BitDepth = png_ptr->bit_depth;
+        stInfo.u32Phyaddr = pstHwStruct->u32TmpPhyaddr;
+        stInfo.u32Stride = (pstHwStruct->u32TmpStride + 0xf) & 0xfffffff0;
+
+		if(pstHwStruct->u8ExceptionMode == HIPNG_DECODE_FAIL_DECODE)
+			s32Ret = HI_FAILURE;
+		else
+        	s32Ret = HI_PNG_Decode(pstHwStruct->s32Handle, &stInfo);
+		if (s32Ret < 0)
+        {
+        	/*todo:回送码流，切换到软解码*/
+			pstHwStruct->u8PushState = HIPNG_STATE_DECODE_FAILED;
+			hipng_push_switch_start(png_ptr);
+        	HIPNG_TRACE("Decode failed!\n");
+            return HI_FAILURE;
+        }
+
+		png_ptr->transformed_pixel_depth = pstHwStruct->pixel_depth;
+
+		row_buf = png_ptr->row_buf;
+
+		HIPNG_TRACE("height:%d!\n", png_ptr->height);
+		/*调用行回调处理函数*/
+		if (png_ptr->row_fn != NULL)
+		{
+			row = (HI_CHAR *)pstHwStruct->pu8TmpImage;
+			for (i = 0; i < png_ptr->height; i++)
+			{
+				/*attention:*/
+				png_ptr->row_buf = (png_bytep)row - 1;
+				(*(png_ptr->row_fn))(png_ptr, (png_bytep)row, i, (int)png_ptr->pass);
+				row += ((pstHwStruct->u32TmpStride + 0xf)&0xfffffff0);
+			}
+		}
+		png_ptr->row_buf = row_buf;
+
+		/*解码结束标识*/
+		png_ptr->flags |= PNG_FLAG_ZSTREAM_ENDED;
+
+		return HI_SUCCESS;
+	}
+
+	#define PNG_READ_CHUNK_MODE 1
+	#define PNG_READ_IDAT_MODE  2
+	HI_VOID hipng_push_switch_start(png_structp png_ptr)
+	{
+        hipng_struct_hwctl_s *pstHwStruct = (hipng_struct_hwctl_s *)(png_ptr->private_ptr);
+		HI_VOID *pStream = NULL;
+		HI_U32 u32Len = 0;		
+		png_byte chunk_length[4];
+		png_byte chunk_tag[4];
+		png_uint_32 mode = pstHwStruct->mode;
+			
+		/*保存必要的信息，待码流回送给软件后
+		恢复*/
+		pstHwStruct->save_buffer = png_ptr->save_buffer;
+		pstHwStruct->save_buffer_ptr = png_ptr->save_buffer_ptr;
+		pstHwStruct->save_buffer_size = png_ptr->save_buffer_size;
+		pstHwStruct->save_buffer_max = png_ptr->save_buffer_max;
+		pstHwStruct->current_buffer = png_ptr->current_buffer;
+		pstHwStruct->current_buffer_ptr = png_ptr->current_buffer_ptr;
+		pstHwStruct->current_buffer_size = png_ptr->current_buffer_size;
+		pstHwStruct->buffer_size = png_ptr->buffer_size;
+		pstHwStruct->push_length = png_ptr->push_length;
+		pstHwStruct->crc = png_ptr->crc;
+		pstHwStruct->chunk_name = png_ptr->chunk_name;
+		pstHwStruct->mode = png_ptr->mode;
+		HIPNG_TRACE("11111\n");
+		/*获取码流地址及长度*/		
+		HI_PNG_GetStream(pstHwStruct->s32Handle,&pStream,&u32Len);
+		if ((0 == u32Len) || (NULL == pStream))
+		{
+			pstHwStruct->u8PushState = HIPNG_STATE_SWITCH_COMPLETE;
+			return;
+		}
+		HIPNG_TRACE("222222222\n");
+		/*首个码流长度不会小于PNG_CHUNK_HEAD_LEN*/
+		if (u32Len < PNG_CHUNK_HEAD_LEN)
+		{
+			HIPNG_TRACE("Unknown error!\n");
+		}
+		
+		png_ptr->save_buffer = NULL;
+		png_ptr->save_buffer_ptr = NULL;
+		png_ptr->save_buffer_size = 0;
+		png_ptr->save_buffer_max = 0;
+		png_ptr->current_buffer = pStream;
+		png_ptr->current_buffer_ptr = pStream;
+		png_ptr->current_buffer_size = u32Len;
+		png_ptr->buffer_size = png_ptr->current_buffer_size;
+
+		memcpy(chunk_length, png_ptr->current_buffer_ptr, 4);
+		png_ptr->current_buffer_ptr += 4;
+		png_ptr->current_buffer_size -= 4;
+		png_ptr->buffer_size -= 4;
+		png_ptr->push_length = png_get_uint_31(png_ptr, chunk_length);
+		png_ptr->idat_size = png_ptr->push_length;
+		memcpy(chunk_tag, png_ptr->current_buffer_ptr, 4);
+		png_ptr->current_buffer_ptr += 4;
+		png_ptr->current_buffer_size -= 4;
+		png_ptr->buffer_size -= 4;
+		
+		png_reset_crc(png_ptr);
+		png_calculate_crc(png_ptr, chunk_tag, 4);
+		png_ptr->chunk_name = PNG_CHUNK_FROM_STRING(chunk_tag);
+		png_ptr->mode = (mode | PNG_HAVE_CHUNK_HEADER);
+		png_ptr->process_mode = PNG_READ_IDAT_MODE;
+				
+		return;
+	}
+
+	HI_VOID hipng_push_switch_process(png_structp png_ptr)
+	{
+		hipng_struct_hwctl_s *pstHwStruct = (hipng_struct_hwctl_s *)(png_ptr->private_ptr);
+		HI_VOID *pStream = NULL;
+		HI_U32 u32Len = 0;		
+
+		if ((NULL == pstHwStruct) || (HIPNG_STATE_SWITCH_COMPLETE == pstHwStruct->u8PushState))
+			return;
+						
+		if ((0 == png_ptr->buffer_size) && pstHwStruct->u8PushState)
+		{
+			HI_PNG_GetStream(pstHwStruct->s32Handle,&pStream,&u32Len);
+
+			if (u32Len > 0)
+			{
+				png_ptr->current_buffer = pStream;
+				png_ptr->current_buffer_size = u32Len;
+				png_ptr->buffer_size = u32Len + png_ptr->save_buffer_size;
+				png_ptr->current_buffer_ptr = png_ptr->current_buffer;
+			}
+			else if (pstHwStruct->bChunkheadValid)
+			{
+				png_ptr->current_buffer = pstHwStruct->chunkHead;
+				png_ptr->current_buffer_size = 8;
+				png_ptr->buffer_size = 8 + png_ptr->save_buffer_size;
+				png_ptr->current_buffer_ptr = png_ptr->current_buffer;
+				pstHwStruct->bChunkheadValid = HI_FALSE;
+			}
+			else
+			{
+				/*码流已恢复完，恢复之前的状态*/
+				if (HIPNG_STATE_DECODE_FAILED == pstHwStruct->u8PushState)
+				{
+					if (png_ptr->save_buffer)
+					{
+						HIPNG_TRACE("Free old buf!\n");
+						png_free(png_ptr, png_ptr->save_buffer);
+					}
+					png_ptr->save_buffer = pstHwStruct->save_buffer;
+					png_ptr->save_buffer_ptr = pstHwStruct->save_buffer_ptr;
+					png_ptr->save_buffer_size = pstHwStruct->save_buffer_size;
+					png_ptr->save_buffer_max = pstHwStruct->save_buffer_max;
+					png_ptr->current_buffer = pstHwStruct->current_buffer;
+					png_ptr->current_buffer_ptr = pstHwStruct->current_buffer_ptr;
+					png_ptr->current_buffer_size = pstHwStruct->current_buffer_size;
+					png_ptr->buffer_size = pstHwStruct->buffer_size;
+					png_ptr->push_length = pstHwStruct->push_length;
+					png_ptr->crc = pstHwStruct->crc;
+					png_ptr->chunk_name = pstHwStruct->chunk_name;
+					png_ptr->mode |= pstHwStruct->mode;
+					png_ptr->process_mode = PNG_READ_CHUNK_MODE;
+				}
+				else
+				{
+					HIPNG_TRACE("%d, %d, %d\n", png_ptr->save_buffer_size, 
+						png_ptr->current_buffer_size, png_ptr->buffer_size);
+					png_ptr->save_buffer = pstHwStruct->save_buffer;
+					png_ptr->save_buffer_ptr = pstHwStruct->save_buffer_ptr;
+					png_ptr->save_buffer_size = pstHwStruct->save_buffer_size;
+					png_ptr->save_buffer_max = pstHwStruct->save_buffer_max;
+					png_ptr->current_buffer = pstHwStruct->current_buffer;
+					png_ptr->current_buffer_ptr = pstHwStruct->current_buffer_ptr;
+					png_ptr->current_buffer_size = pstHwStruct->current_buffer_size;
+					png_ptr->buffer_size = pstHwStruct->buffer_size;
+				}
+				pstHwStruct->u8PushState = HIPNG_STATE_SWITCH_COMPLETE;
+			}
+		}
+
+		return;
+	}
+	
     HI_S32 hipng_set_transform(png_structp png_ptr, HI_PNG_TRANSFORM_S *pstTransform)
     {
         HI_U32 *pu32Clut = HI_NULL;
@@ -296,20 +788,20 @@ extern "C" {
                 /* alloc palette*/
 #ifdef HIPNG_MMZ
 #ifdef HIGFX_COMMON
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                 pstTransform->u32ClutPhyaddr = (HI_U32)HI_GFX_AllocMem(256 * 4, 16, HI_NULL, "PNG_PALETTE");
 #else
                 pstTransform->u32ClutPhyaddr = (HI_U32)HI_GFX_AllocMem(256 * 4, 16, HI_NULL, HI_NULL);
 #endif
 #else
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
 		pstTransform->u32ClutPhyaddr = (HI_U32)HI_MMZ_New(256 * 4, 16, HI_NULL, (HI_CHAR*)"PNG_PALETTE");
 #else
 		pstTransform->u32ClutPhyaddr = (HI_U32)HI_MMZ_New(256 * 4, 16, HI_NULL, HI_NULL);
 #endif
 #endif
 #else
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                 pstTransform->u32ClutPhyaddr = (HI_U32)HI_GFX_AllocMem(pstHwStruct->s32MmzFd, 256 * 4, 16, HI_NULL, "PNG_PALETTE", &(pstHwStruct->pPallateMemData));
 #else
                 pstTransform->u32ClutPhyaddr = (HI_U32)HI_GFX_AllocMem(pstHwStruct->s32MmzFd, 256 * 4, 16, HI_NULL, HI_NULL, &(pstHwStruct->pPallateMemData));
@@ -533,6 +1025,7 @@ extern "C" {
 	    {
 	        pstHwStruct->u8SupportDecMode &= ~HIPNG_HW_DEC;
 			pstHwStruct->u8SupportDecMode &= ~HIPNG_HWCOPY_DEC;
+			HIPNG_TRACE("unsupport:0x%x!\n", png_ptr->transformations);
 	        goto CHECKSOFT;
 	    }
 
@@ -608,7 +1101,7 @@ CHECKSOFT:
 			{
 #ifdef HIPNG_MMZ
 #ifdef HIGFX_COMMON
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
 		        pstHwStruct->u32TmpPhyaddr = (HI_U32)HI_GFX_AllocMem(u32MemSize, 
 		            16, HI_NULL, "HIPNG_IMAGE_BUF");
 #else
@@ -616,7 +1109,7 @@ CHECKSOFT:
 		            16, HI_NULL, HI_NULL);
 #endif
 #else
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
 			pstHwStruct->u32TmpPhyaddr = (HI_U32)HI_MMZ_New(u32MemSize,
                             16, HI_NULL, "HIPNG_IMAGE_BUF");
 #else
@@ -625,7 +1118,7 @@ CHECKSOFT:
 #endif
 #endif
 #else
-#ifndef PNG_NO_STRING
+#ifndef HI_ADVCA_FUNCTION_RELEASE
 		        pstHwStruct->u32TmpPhyaddr = (HI_U32)HI_GFX_AllocMem(pstHwStruct->s32MmzFd, u32MemSize, 
 		            16, HI_NULL, "HIPNG_IMAGE_BUF", &(pstHwStruct->pTmpMemData));
 #else
@@ -637,6 +1130,7 @@ CHECKSOFT:
 				if (0 == pstHwStruct->u32TmpPhyaddr)
 		        {
 		            u8DecMode &= ~HIPNG_HWCOPY_DEC;
+                HIPNG_TRACE("no mem:0x%x!\n", u32MemSize);
 		        }
 				else
 				{
@@ -661,6 +1155,7 @@ CHECKSOFT:
 						HI_GFX_FreeMem(pstHwStruct->s32MmzFd, pstHwStruct->u32TmpPhyaddr, pstHwStruct->pTmpMemData);
 #endif
 						pstHwStruct->u32TmpPhyaddr = 0;
+						HIPNG_TRACE("no mem:0x%x!\n", u32MemSize);
 						u8DecMode &= ~HIPNG_HWCOPY_DEC;
 					}
 					else
@@ -686,7 +1181,11 @@ CHECKSOFT:
 	    if (!(u8DecMode & HIPNG_SW_DEC) && !(u8DecMode & HIPNG_HW_DEC)
 			&& !(u8DecMode & HIPNG_HWCOPY_DEC))
 	    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	        png_error(png_ptr, "");
+#else
 	        png_error(png_ptr, "Unsupport!\n");
+#endif
 	    }
 
 		pstHwStruct->u8DecMode = u8DecMode;
@@ -731,7 +1230,11 @@ CHECKSOFT:
 	    s32Ret = hipng_get_readfn(png_ptr);
 	    if (s32Ret < 0)
 	    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	        png_error(png_ptr, "");
+#else
 	        png_error(png_ptr, "Internal Err!\n");
+#endif
 	    }
 
 	    if (pstHwStruct->read_data_fn_hw != NULL)
@@ -831,7 +1334,11 @@ CHECKSOFT:
 	        	|| (png_ptr->transformations & HIPNG_RGB555)
 	        	|| (png_ptr->transformations & HIPNG_RGB444))
 	    	{
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	    		png_error(png_ptr, "");
+#else
 	    		png_error(png_ptr, "Unsupport!\n");
+#endif
 	    	}
 			return HI_FAILURE;
 	    }
@@ -910,7 +1417,11 @@ ERR:
 		
 		if (!(u8DecMode & HIPNG_SW_DEC))
 		{
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+			png_error(png_ptr, "");
+#else
 			png_error(png_ptr, "Internel err!\n");
+#endif
 		}
 
 		hipng_prepare_switch(png_ptr);
@@ -1008,7 +1519,11 @@ ERR:
 	            s32Ret = hipng_get_result(png_ptr, bBlock);
 	            if (s32Ret < 0)
 	            {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	                png_error(png_ptr, "");
+#else
 	                png_error(png_ptr, "Internal Err!\n");
+#endif
 	            }
 	        }
 			
@@ -1112,6 +1627,7 @@ ERR:
 	    }
 
 	    pstHwStruct->u32TmpStride = info_ptr->rowbytes;
+		pstHwStruct->pixel_depth = info_ptr->pixel_depth;
 
 	    return;
 	}

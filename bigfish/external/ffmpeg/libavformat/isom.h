@@ -114,6 +114,13 @@ typedef struct {
     unsigned flags;
 } MOVTrackExt;
 
+typedef struct
+{
+    uint8_t *sidx_data;
+    int       sidx_data_size;
+    int64_t anchor_point_offset;
+}MOVSidx;
+
 typedef struct MOVStreamContext {
     AVIOContext *pb;
     int ffindex;          ///< AVStream index
@@ -156,11 +163,12 @@ typedef struct MOVStreamContext {
     int has_palette;
     int64_t data_size;
     int64_t trak_pos;
-    uint8_t *sidx_data;
-    int      sidx_data_size;
+    MOVSidx sidx_info;
     MOVAvcC *avcC_data;
     int      avcC_count;
+    int      hvcC_count;
     int      nb_stsd_entries;
+    int64_t track_end;    ///< used for dts generation in fragmented movie files
 } MOVStreamContext;
 
 #define SEPARATE_READ_MAXCNT     10  ///< max read count one time in separate file
@@ -210,7 +218,7 @@ void ff_mp4_parse_es_descr(AVIOContext *pb, int *es_id);
 int ff_mov_read_esds(AVFormatContext *fc, AVIOContext *pb, MOVAtom atom);
 enum CodecID ff_mov_get_lpcm_codec_id(int bps, int flags);
 
-uint8_t* ff_mov_get_sidx_data(AVFormatContext *s);
+int  ff_mov_get_sidx_data(AVFormatContext *s,int stream_index, MOVSidx *sidx);
 int ff_mov_read_stsd_entries(MOVContext *c, AVIOContext *pb, int entries);
 void ff_mov_read_chan(AVFormatContext *s, int64_t size, AVCodecContext *codec);
 void ff_mov_write_chan(AVIOContext *pb, int64_t channel_layout);

@@ -86,7 +86,7 @@ typedef enum CA_SSD_KEY_TYPE
 }CA_SSD_KEY_TYPE;
 
 
-#ifdef HI_ADVCA_SUPPORT
+#if defined(HI_ADVCA_SUPPORT) && !defined(HI_LOADER_BOOTLOADER)
 
 /* 
  Descryption： 读取Flash镜像时，如果镜像有被加密存储，则读取后先使用此接口解密。

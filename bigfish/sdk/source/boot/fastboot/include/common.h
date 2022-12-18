@@ -232,6 +232,9 @@ void	print_size(unsigned long long, const char *);
 int	print_buffer (ulong addr, void* data, uint width, uint count, uint linelen);
 
 /* common/main.c */
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+int checkout_qbboot(void);
+#endif
 void	main_loop	(void);
 int	run_command	(const char *cmd, int flag);
 int	readline	(const char *const prompt);
@@ -769,6 +772,7 @@ int cpu_release(int nr, int argc, char *argv[]);
 #define BOOT_MEDIA_SPI_NAND                                 (4)
 #define BOOT_MEDIA_EMMC                                     (5)
 #define BOOT_MEDIA_SD                                       (6)
+void preset_ddr_size(unsigned int size);
 unsigned int get_ddr_size(void);
 extern unsigned long timer_clock;
 #define CONFIG_SYS_HZ           (timer_clock)

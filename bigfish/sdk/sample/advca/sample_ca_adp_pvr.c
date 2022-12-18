@@ -679,20 +679,14 @@ HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID
 
     attr.u32DemuxID    = u32DemuxID;
 
-
-    (HI_VOID)PVR_RecAddPid(attr.u32DemuxID, 0, HI_UNF_DMX_CHAN_TYPE_SEC);
-    (HI_VOID)PVR_RecAddPid(attr.u32DemuxID, pstProgInfo->PmtPid, HI_UNF_DMX_CHAN_TYPE_SEC);
-
 	if (pstProgInfo->AElementNum > 0)
 	{
 		AudPid  = pstProgInfo->AElementPid;
-		(HI_VOID)PVR_RecAddPid(attr.u32DemuxID, AudPid, HI_UNF_DMX_CHAN_TYPE_AUD);
 	}
 
     if (pstProgInfo->VElementNum > 0 )
     {
     	VidPid = pstProgInfo->VElementPid;
-        (HI_VOID)PVR_RecAddPid(attr.u32DemuxID, VidPid, HI_UNF_DMX_CHAN_TYPE_VID);
         attr.u32IndexPid   = VidPid;
         attr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_VIDEO;
         attr.enIndexVidType = (HI_UNF_VCODEC_TYPE_E)pstProgInfo->VideoType;
@@ -709,21 +703,16 @@ HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID
                         cycle);
 
     (HI_VOID)snprintf(attr.szFileName, sizeof(attr.szFileName), "%s/", path);
-   
-
-
-       
 
     strncat(attr.szFileName, szFileName, strlen(szFileName));
-
-    
-
     attr.u32FileNameLen = strlen(attr.szFileName);
     attr.u32ScdBufSize = PVR_STUB_SC_BUF_SZIE;
     attr.u32DavBufSize = PVR_STUB_TSDATA_SIZE;
     attr.enStreamType  = HI_UNF_PVR_STREAM_TYPE_TS;
     attr.bRewind = bRewind;
     attr.u64MaxFileSize= maxSize;//source;
+    attr.u64MaxTimeInMs= 0;
+
     attr.bIsClearStream = HI_TRUE;
     attr.u32UsrDataInfoSize = sizeof(PVR_PROG_INFO_S) + 100;/*the one in index file is a multipleit of 40 bytes*//*CNcomment:索引文件里是40个字节对齐的*/
 
@@ -735,7 +724,18 @@ HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID
     {
         return ret;
     }
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(recChn, 0), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(recChn, pstProgInfo->PmtPid), ret);
 
+    if (pstProgInfo->AElementNum > 0)
+    {
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(recChn, AudPid), ret);
+    }
+
+    if (pstProgInfo->VElementNum > 0)
+    {
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(recChn, VidPid), ret);
+    }
 
     SAMPLE_RUN(HI_UNF_PVR_RecStartChn(recChn), ret);
     if (HI_SUCCESS != ret)
@@ -743,11 +743,12 @@ HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID
         (HI_VOID)HI_UNF_PVR_RecDestroyChn(recChn);
         return ret;
     }
+
     //===================for ADVCA========================
     g_u32RecChnID = recChn;
     SAMPLE_RUN(HI_UNF_ADVCA_PVR_RecOpen(recChn),ret); 
     PVR_Index_GetIdxFileName(szIndexFileName,attr.szFileName);
-    (HI_VOID)HI_UNF_ADVCA_PVR_GetCAPrivateFileName(szIndexFileName,CAPrivateFileName);
+    SAMPLE_RUN(HI_UNF_ADVCA_PVR_GetCAPrivateFileName(szIndexFileName,CAPrivateFileName), ret);
     
     memset(&CurTime, 0, sizeof(&CurTime));
     //time_t time(time_t *t);

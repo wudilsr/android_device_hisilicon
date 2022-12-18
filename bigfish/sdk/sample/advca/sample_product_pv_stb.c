@@ -22,31 +22,29 @@
 /***************************** Macro Definition ******************************/
 #define MAX_OTP_SIZE    0x800
 
-/*************************** Structure Definition ****************************/
-
-typedef struct{
-    HI_CHAR name[32];
-    HI_U32  datavalue;
-}HI_OTP_PV_STRUCT_S;
-
-/********************** Global Variable declaration **************************/
-
 typedef enum hiADVCA_PV_TYPE_E
 {
     MSID = 0, 
     Version_ID,
-    
+    ITCSA3_IMLB,    //only for irdeto
+
     boot_mode_sel,
     bootsel_ctrl,
-    
+
     link_prt_disable,
     ts_csa2_hardonly_en,
     ts_sp_hardonly_en,
     ts_csa3_hardonly_en,
-	tskl_csa3_disable,
+    tskl_csa2_disable,
+    tskl_csa3_disable,
+    tskl_sp_disable,
+    tskl_sm4_disable,
+    tskl_tdes_disable,
     dcas_kl_disable,
     misc_kl_disable,
     gg_kl_disable,
+    vmx_bl_fuse,    //only for verimatrix advanced
+    itcsa3_enable,  //only for irdeto
 
     runtime_check_en,
     ddr_wakeup_disable,
@@ -56,54 +54,76 @@ typedef enum hiADVCA_PV_TYPE_E
 
     jtag_prt_mode,
     jtag_r_disable,
+    boot_info_disable,
 
     /*Followed items should be set carefully and in the final*/
     bload_dec_en,
     self_boot_disable,
     SCS_activation,
-    
-    otp_globle_lock_en,    /*Should be set at last, otherwise the OTP can not be writed*/
+
+    otp_globle_lock_en,    /*Should be set at last, otherwise the OTP can not be writed, the Verimatrix Chipset should not set this bit */
 
     HI_UNF_ADVCA_PV_TYPE_BUTT
 }HI_ADVCA_PV_TYPE_E;
 
+/*************************** Structure Definition ****************************/
+
+typedef struct{
+    HI_CHAR name[32];
+    HI_ADVCA_PV_TYPE_E  type;
+    HI_U32  datavalue;
+}HI_OTP_PV_STRUCT_S;
+
+/********************** Global Variable declaration **************************/
+
+
 HI_OTP_PV_STRUCT_S stDefaultPV[HI_UNF_ADVCA_PV_TYPE_BUTT]={
 
     /*DATA Configuration*/
-    {"MSID",            0x0},
-    {"Version_ID",    0x0},
+    {"MSID",                MSID,       0x0},
+    {"Version_ID",          Version_ID, 0x0},
+    {"ITCSA3_IMLB",         ITCSA3_IMLB, 0x0},
 
     /* Lockable fuses Configuration*/
-    {"boot_mode_sel",      0x0},
-    {"bootsel_ctrl",           0x0},   /*setted with boot_mode_sel together */
-    
-    {"link_prt_disable",         0x0},
-    {"ts_csa2_hardonly_en", 0x0},
-    {"ts_sp_hardonly_en",     0x0},
-    {"ts_csa3_hardonly_en", 0x0},
-	{"tskl_csa3_disable", 0x0},
-    {"dcas_kl_disable",     0x0},
-    {"misc_kl_disable",     0x0},
-    {"gg_kl_disable",     0x0},
+    {"boot_mode_sel",       boot_mode_sel,  0x0},
+    {"bootsel_ctrl",        bootsel_ctrl,   0x0},   /*setted with boot_mode_sel together */
+
+    {"link_prt_disable",    link_prt_disable,   0x0},
+    {"ts_csa2_hardonly_en", ts_csa2_hardonly_en,    0x0},
+    {"ts_sp_hardonly_en",   ts_sp_hardonly_en,  0x0},
+    {"ts_csa3_hardonly_en", ts_csa3_hardonly_en,    0x0},
+    {"tskl_csa2_disable",   tskl_csa2_disable,    0x0},
+    {"tskl_csa3_disable",   tskl_csa3_disable,    0x0},
+    {"tskl_sp_disable",     tskl_sp_disable,    0x0},
+    {"tskl_sm4_disable",    tskl_sm4_disable,   0x0},
+    {"tskl_tdes_disable",   tskl_tdes_disable,  0x0},
+    {"dcas_kl_disable",     dcas_kl_disable,    0x0},
+    {"misc_kl_disable",     misc_kl_disable,    0x0},
+    {"gg_kl_disable",       gg_kl_disable,      0x0},
+    {"vmx_bl_fuse",         vmx_bl_fuse,        0x0},
+    {"itcsa3_enable",       itcsa3_enable,      0x0},
         
-    {"runtime_check_en",  0x0},
-    {"ddr_wakeup_disable",  0x0},
-    {"wakeup_ddr_check_en",  0x0},
-    {"version_id_check_en",     0x0},
-    {"bl_msid_check_en",        0x0},
+    {"runtime_check_en",    runtime_check_en,   0x0},
+    {"ddr_wakeup_disable",  ddr_wakeup_disable, 0x0},
+    {"wakeup_ddr_check_en", wakeup_ddr_check_en,    0x0},
+    {"version_id_check_en", version_id_check_en,    0x0},
+    {"bl_msid_check_en",    bl_msid_check_en,   0x0},
 
     /* OneWay Configuration*/
-    {"jtag_prt_mode",    0x0},
-    {"jtag_r_disable",        0x0},
+    {"jtag_prt_mode",    jtag_prt_mode,     0x0},
+    {"jtag_r_disable",   jtag_r_disable,    0x0},
+    {"boot_info_disable",   boot_info_disable,    0x0},
+
+    /*Followed items should be set carefully and in the final*/
 
     /* Lockable fuses Configuration*/
-    {"bload_dec_en",           0x0},
-    {"self_boot_disable",      0x0},
+    {"bload_dec_en",        bload_dec_en,   0x0},
+    {"self_boot_disable",   self_boot_disable,  0x0},
     /* OneWay Configuration*/
-    {"SCS_activation",      0x0},  
-    
+    {"SCS_activation",      SCS_activation,     0x0},  
+
     /* Lockable fuses Configuration*/
-    {"otp_globle_lock_en", 0x0}        /*Should be set at last, otherwise the OTP can not be writed*/
+    {"otp_globle_lock_en",  otp_globle_lock_en,  0x0}        /*Should be set at last, otherwise the OTP can not be writed*/
 };
 
 extern HI_S32 HI_UNF_ADVCA_DisableLinkProtection(HI_VOID);
@@ -118,8 +138,10 @@ extern HI_S32 HI_UNF_ADVCA_LockGlobalOTP(HI_VOID);
 extern HI_S32 HI_UNF_ADVCA_GetCSA3HardCWStat(HI_BOOL *pbLock);
 extern HI_S32 HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_TYPE_E enType, HI_U8 *pu8ParamIn, HI_U32 u32ParamLen);
 extern HI_S32 HI_UNF_ADVCA_OtpRead(HI_U32 Addr, HI_U32 *pValue);
+extern HI_S32 HI_MPI_OTP_TEST(HI_U8 u8TestValue[16]);
+
 /******************************* API declaration *****************************/
-HI_S32 SetPVItemValue(HI_OTP_PV_STRUCT_S *pstPVcfg)
+static HI_S32 SetPVItemValue(HI_OTP_PV_STRUCT_S *pstPVcfg)
 {
     HI_U32 num = sizeof(stDefaultPV)/sizeof(HI_OTP_PV_STRUCT_S);
     HI_U32 i;
@@ -136,7 +158,7 @@ HI_S32 SetPVItemValue(HI_OTP_PV_STRUCT_S *pstPVcfg)
     return HI_FAILURE;
 }
 
-HI_S32 GetOTPItemValue(FILE * fp_pv_out)
+static HI_S32 GetOTPItemValue(FILE * fp_pv_out)
 {
     HI_U32 num = sizeof(stDefaultPV)/sizeof(HI_OTP_PV_STRUCT_S);
     HI_OTP_PV_STRUCT_S   *pstPVItem;
@@ -146,91 +168,294 @@ HI_S32 GetOTPItemValue(FILE * fp_pv_out)
     for(i=0; i<num; i++)
     {
         pstPVItem = &stDefaultPV[i];
-        if(0==strncmp(pstPVItem->name, "MSID", 4))
+        pstPVItem->datavalue = 0;
+        if(pstPVItem->type == MSID)
         {
             HI_U8 u8MarketId[4];
             ret = HI_UNF_ADVCA_GetMarketId(u8MarketId);
-            pstPVItem->datavalue = (u8MarketId[0]<<24)|(u8MarketId[1]<<16)|(u8MarketId[2]<<8)|u8MarketId[3];
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = (u8MarketId[0]<<24)|(u8MarketId[1]<<16)|(u8MarketId[2]<<8)|u8MarketId[3];
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "Version_ID", 10))
+        else if(pstPVItem->type == Version_ID)
         {
             HI_U8 u8VersionId[4];
             ret = HI_UNF_ADVCA_GetVersionId(u8VersionId);
-            pstPVItem->datavalue = (u8VersionId[0]<<24)|(u8VersionId[1]<<16)|(u8VersionId[2]<<8)|u8VersionId[3];
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = (u8VersionId[0]<<24)|(u8VersionId[1]<<16)|(u8VersionId[2]<<8)|u8VersionId[3];
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "boot_mode_sel", 13))
+        else if(pstPVItem->type == ITCSA3_IMLB)
         {
-            HI_BOOL bSecEnable;
-            ret = HI_UNF_ADVCA_GetSecBootStat(&bSecEnable, (HI_UNF_ADVCA_FLASH_TYPE_E *) &pstPVItem->datavalue);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_ITCSA3_IMLB, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = (stOtpFuseAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[0]<<8)
+                                        |stOtpFuseAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[1];
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "bootsel_ctrl", 11))
+        else if(pstPVItem->type == boot_mode_sel)
         {
+            //HI_BOOL bSecEnable;
+            //ret = HI_UNF_ADVCA_GetSecBootStat(&bSecEnable, (HI_UNF_ADVCA_FLASH_TYPE_E *) &pstPVItem->datavalue);
+            
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stEnableSecureBoot.enFlashType;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "link_prt_disable", 16))
+        else if(pstPVItem->type == bootsel_ctrl)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION, &stOtpFuseAttr);
+            if((HI_SUCCESS == ret)&&(stOtpFuseAttr.unOtpFuseAttr.stEnableSecureBoot.enFlashType < HI_UNF_ADVCA_FLASH_TYPE_BUTT))
+            {
+                pstPVItem->datavalue = 1;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "ts_csa2_hardonly_en", 19))
+        else if(pstPVItem->type == link_prt_disable)
         {
-            ret = HI_UNF_ADVCA_GetHardCwSelStat((HI_BOOL *) &pstPVItem->datavalue);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_LP_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "ts_sp_hardonly_en", 17))
+        else if(pstPVItem->type == ts_csa2_hardonly_en)
         {
+            //ret = HI_UNF_ADVCA_GetHardCwSelStat((HI_BOOL *) &pstPVItem->datavalue);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_CSA2_CW_HARDONLY_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "ts_csa3_hardonly_en", 19))
+        else if(pstPVItem->type == ts_sp_hardonly_en)
         {
-            ret = HI_UNF_ADVCA_GetCSA3HardCWStat((HI_BOOL *) &pstPVItem->datavalue);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SP_CW_HARDONLY_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "tskl_csa3_disable", 16))
+        else if(pstPVItem->type == ts_csa3_hardonly_en)
         {
+            //ret = HI_UNF_ADVCA_GetCSA3HardCWStat((HI_BOOL *) &pstPVItem->datavalue);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_CSA3_CW_HARDONLY_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "misc_kl_disable", 18))
+        else if(pstPVItem->type == tskl_csa2_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_CSA2_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "gg_kl_disable", 19))
+        else if(pstPVItem->type == tskl_csa3_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_CSA3_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "dcas_kl_disable", 15))
+        else if(pstPVItem->type == tskl_sp_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SP_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "runtime_check_en", 16))
+#if 0     
+        else if(pstPVItem->type == tskl_sm4_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "ddr_wakeup_disable", 18))
+        else if(pstPVItem->type == tskl_tdes_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "wakeup_ddr_check_en", 19))
+#endif        
+        else if(pstPVItem->type == dcas_kl_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "version_id_check_en", 19))
+        else if(pstPVItem->type == misc_kl_disable)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_MISC_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == gg_kl_disable)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == vmx_bl_fuse)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_VMX_BL_FUSE, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == itcsa3_enable)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_IRDETO_ITCSA3_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == runtime_check_en)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_RUNTIME_CHECK_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == ddr_wakeup_disable)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_DDR_WAKEUP_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == wakeup_ddr_check_en)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_DDR_WAKEUP_CHECK_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == version_id_check_en)
         {
             ret = HI_UNF_ADVCA_GetVersionCheckStat(&pstPVItem->datavalue);
         }
-        else if(0==strncmp(pstPVItem->name, "bl_msid_check_en", 16))
+        else if(pstPVItem->type == bl_msid_check_en)
         {
             ret = HI_UNF_ADVCA_GetBootMSIDCheckStat(&pstPVItem->datavalue);
         }
-        else if(0==strncmp(pstPVItem->name, "jtag_prt_mode", 13))
+        else if(pstPVItem->type == jtag_prt_mode)
         {
             ret = HI_UNF_ADVCA_GetJtagMode((HI_UNF_ADVCA_JTAG_MODE_E *) &pstPVItem->datavalue);
         }
-        else if(0==strncmp(pstPVItem->name, "jtag_r_disable", 14))
+        else if(pstPVItem->type == jtag_r_disable)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_JTAG_READ_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "bload_dec_en", 12))
+        else if(pstPVItem->type == boot_info_disable)
+        {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_BOOTINFO_DEACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
+        }
+        else if(pstPVItem->type == bload_dec_en)
         {
             ret = HI_UNF_ADVCA_GetBootDecEnStat(&pstPVItem->datavalue);
         }
-        else if(0==strncmp(pstPVItem->name, "self_boot_disable", 17))
+        else if(pstPVItem->type == self_boot_disable)
         {
             ret = HI_UNF_ADVCA_GetSelfBootStat((HI_BOOL *) &pstPVItem->datavalue);
         }
-        else if(0==strncmp(pstPVItem->name, "SCS_activation", 14))
+        else if(pstPVItem->type == SCS_activation)
         {
-            HI_UNF_ADVCA_FLASH_TYPE_E enFlashType;
-            ret = HI_UNF_ADVCA_GetSecBootStat((HI_BOOL *) &pstPVItem->datavalue, &enFlashType);
+//            HI_UNF_ADVCA_FLASH_TYPE_E enFlashType;
+//            ret = HI_UNF_ADVCA_GetSecBootStat((HI_BOOL *) &pstPVItem->datavalue, &enFlashType);
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stEnableSecureBoot.bEnable;
+            }
         }
-        else if(0==strncmp(pstPVItem->name, "otp_globle_lock_en", 18))
+        else if(pstPVItem->type == otp_globle_lock_en)
         {
+            HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+            memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+            ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_GLOBAL_LOCK_ACTIVATION, &stOtpFuseAttr);
+            if(HI_SUCCESS == ret)
+            {
+                pstPVItem->datavalue = stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+            }
         }
         else
         {
@@ -264,7 +489,7 @@ HI_S32 GetOTPItemValue(FILE * fp_pv_out)
 }
 
 
-HI_S32 GetOTPValue(FILE * fp_pv_out)
+static HI_S32 GetOTPValue(FILE * fp_pv_out)
 {
     HI_S32 ret = HI_SUCCESS;
     HI_U32 *buf = HI_NULL;
@@ -281,7 +506,7 @@ HI_S32 GetOTPValue(FILE * fp_pv_out)
     
     for(i = 0; i < MAX_OTP_SIZE / 4; i++)
     {
-        ret = HI_UNF_ADVCA_OtpRead(i * 4, buf + i);
+        ret = HI_UNF_ADVCA_OtpRead(i*4, buf + i);
 		if(ret != HI_SUCCESS)
 		{
 			HI_DEBUG_ADVCA("Read OTP error!\n");
@@ -296,7 +521,7 @@ HI_S32 GetOTPValue(FILE * fp_pv_out)
         {
             if(0 == (i % 4))
             {
-                fprintf(fp_pv_out, "\n%03x:  ", i);
+                fprintf(fp_pv_out, "\n%03x:  ", i*4);
             }
             if(0 == (i%4))
             {
@@ -311,7 +536,7 @@ HI_S32 GetOTPValue(FILE * fp_pv_out)
         {
             if(0 == (i % 4))
             {
-                printf("\n%03x:  ", i);
+                printf("\n%03x:  ", i*4);
             }
             if(0 == (i % 4))
             {
@@ -331,7 +556,7 @@ EXIT_CLOSE:
 }
 
 
-HI_S32 SetOTPValue(HI_VOID)
+static HI_S32 SetOTPValue(HI_VOID)
 {
     HI_U32 num = sizeof(stDefaultPV)/sizeof(HI_OTP_PV_STRUCT_S);
     HI_OTP_PV_STRUCT_S   *pstPVItem;
@@ -341,29 +566,22 @@ HI_S32 SetOTPValue(HI_VOID)
     for(i=0; i<num; i++)
     {
         pstPVItem = &stDefaultPV[i];
-        switch(i)
+        switch(pstPVItem->type)
         {
             case MSID:
-                if(0==strncmp(pstPVItem->name, "MSID", 4))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        HI_U8 u8MarketId[4];
-                        u8MarketId[0] = (pstPVItem->datavalue >> 24) & 0xFF;
-                        u8MarketId[1] = (pstPVItem->datavalue >> 16) & 0xFF;
-                        u8MarketId[2] = (pstPVItem->datavalue >> 8) & 0xFF;
-                        u8MarketId[3] = pstPVItem->datavalue & 0xFF;
-                        ret = HI_UNF_ADVCA_SetMarketId(u8MarketId);
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_U8 u8MarketId[4];
+                    u8MarketId[0] = (pstPVItem->datavalue >> 24) & 0xFF;
+                    u8MarketId[1] = (pstPVItem->datavalue >> 16) & 0xFF;
+                    u8MarketId[2] = (pstPVItem->datavalue >> 8) & 0xFF;
+                    u8MarketId[3] = pstPVItem->datavalue & 0xFF;
+                    ret = HI_UNF_ADVCA_SetMarketId(u8MarketId);
                 }
             break;
 
             case Version_ID:
-                if(0==strncmp(pstPVItem->name, "Version_ID", 10))
+                if(pstPVItem->datavalue != 0)
                 {
                     HI_U8 u8VersionId[4];
                     u8VersionId[0] = (pstPVItem->datavalue >> 24) & 0xFF;
@@ -372,290 +590,272 @@ HI_S32 SetOTPValue(HI_VOID)
                     u8VersionId[3] = pstPVItem->datavalue & 0xFF;
                     ret = HI_UNF_ADVCA_SetVersionId(u8VersionId);
                 }
-                else
+            break;
+            
+            case ITCSA3_IMLB:
+                if(pstPVItem->datavalue != 0)
                 {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_VENDORID_E enCaVendorID = 0;
+                    ret = HI_UNF_ADVCA_GetVendorID((HI_U32 *)&enCaVendorID);
+                    if((HI_SUCCESS == ret)&&(HI_UNF_ADVCA_IRDETO == enCaVendorID))
+                    {
+                        HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                        memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                        stOtpFuseAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[0] = (pstPVItem->datavalue >> 8) & 0xFF;
+                        stOtpFuseAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[1] = pstPVItem->datavalue & 0xFF;
+                        ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_ITCSA3_IMLB,&stOtpFuseAttr);
+                    }
                 }
             break;
 
             case boot_mode_sel:
             case bootsel_ctrl:
-                if((0==strncmp(pstPVItem->name, "boot_mode_sel", 13))||(0==strncmp(pstPVItem->name, "bootsel_ctrl", 12)))
+                if((stDefaultPV[boot_mode_sel].datavalue != 0)||(stDefaultPV[bootsel_ctrl].datavalue != 0))
                 {
-                    if((stDefaultPV[boot_mode_sel].datavalue != 0)||(stDefaultPV[bootsel_ctrl].datavalue != 0))
-                    {
-                        ret = HI_UNF_ADVCA_SetFlashTypeEx((HI_UNF_ADVCA_FLASH_TYPE_E)stDefaultPV[boot_mode_sel].datavalue);
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_SetFlashTypeEx((HI_UNF_ADVCA_FLASH_TYPE_E)stDefaultPV[boot_mode_sel].datavalue);
                 }
             break;
 
             case link_prt_disable:
-                if(0==strncmp(pstPVItem->name, "link_prt_disable", 16))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_DisableLinkProtection();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_LP_DEACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_DisableLinkProtection();
                 }
             break;
             
             case ts_csa2_hardonly_en:
-                if(0==strncmp(pstPVItem->name, "ts_csa2_hardonly_en", 19))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_LockHardCwSel();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_CSA2_CW_HARDONLY_ACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_LockHardCwSel();
                 }
             break;
 
             case ts_sp_hardonly_en:
-                if(0==strncmp(pstPVItem->name, "ts_sp_hardonly_en", 17))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_LockSPHardCW();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_SP_CW_HARDONLY_ACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_LockSPHardCW();
                 }
             break;
 
             case ts_csa3_hardonly_en:
-                if(0==strncmp(pstPVItem->name, "ts_csa3_hardonly_en", 19))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_LockCSA3HardCW();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_CSA3_CW_HARDONLY_ACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_LockCSA3HardCW();
                 }
             break;
 
-            case tskl_csa3_disable:
-                if(0==strncmp(pstPVItem->name, "tskl_csa3_disable", 17))
+            case tskl_csa2_disable:
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_TSKL_CSA3_DISABLE, NULL, 0);
-                    }
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_CSA2_KL_DEACTIVATION,&stOtpFuseAttr);
                 }
-                else
+                break;
+
+            case tskl_csa3_disable:
+                if(pstPVItem->datavalue != 0)
                 {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_CSA3_KL_DEACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_TSKL_CSA3_DISABLE, NULL, 0);
+                }
+            break;
+            case tskl_sp_disable:
+                if(pstPVItem->datavalue != 0)
+                {
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_SP_KL_DEACTIVATION,&stOtpFuseAttr);
+                }
+                break;
+#if 0
+            case tskl_sm4_disable:
+                if(pstPVItem->datavalue != 0)
+                {
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION,&stOtpFuseAttr);
+                }
+                break;
+
+            case tskl_tdes_disable:
+                if(pstPVItem->datavalue != 0)
+                {
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION,&stOtpFuseAttr);
+                }
+                break;
+#endif                
+            case dcas_kl_disable:
+                if(pstPVItem->datavalue != 0)
+                {
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_DisableDCasKl();
                 }
             break;
 
             case misc_kl_disable:
-                if(0==strncmp(pstPVItem->name, "misc_kl_disable", 15))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_MISC_KL_DISABLE, NULL, 0);
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_MISC_KL_DEACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_MISC_KL_DISABLE, NULL, 0);
                 }
             break;
 
             case gg_kl_disable:
-                if(0==strncmp(pstPVItem->name, "gg_kl_disable", 13))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_GG_KL_DISABLE, NULL, 0);
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION,&stOtpFuseAttr);
+                    //ret = HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_GG_KL_DISABLE, NULL, 0);
                 }
             break;
 
-            case dcas_kl_disable:
-                if(0==strncmp(pstPVItem->name, "dcas_kl_disable", 15))
+            case vmx_bl_fuse:
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
+                    HI_UNF_ADVCA_VENDORID_E enCaVendorID = 0;
+                    ret = HI_UNF_ADVCA_GetVendorID((HI_U32 *)&enCaVendorID);
+                    if((HI_SUCCESS == ret)&&(HI_UNF_ADVCA_VERIMATRIX == enCaVendorID))
                     {
-                        ret = HI_UNF_ADVCA_DisableDCasKl();
+                        HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                        memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                        stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                        ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_VMX_BL_FUSE,&stOtpFuseAttr);
                     }
                 }
-                else
+                break;
+
+            case itcsa3_enable:
+                if(pstPVItem->datavalue != 0)
                 {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    HI_UNF_ADVCA_VENDORID_E enCaVendorID = 0;
+                    ret = HI_UNF_ADVCA_GetVendorID((HI_U32 *)&enCaVendorID);
+                    if((HI_SUCCESS == ret)&&(HI_UNF_ADVCA_IRDETO == enCaVendorID))
+                    {
+                        HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                        memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                        stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                        ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_IRDETO_ITCSA3_ACTIVATION,&stOtpFuseAttr);
+                    }
                 }
-            break;
+                break;
 
             case runtime_check_en:
-                if(0==strncmp(pstPVItem->name, "runtime_check_en", 16))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_EnableRuntimeCheck();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_EnableRuntimeCheck();
                 }
             break;
 
             case ddr_wakeup_disable:
-                if(0==strncmp(pstPVItem->name, "ddr_wakeup_disable", 18))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_DisableDDRWakeup();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_DisableDDRWakeup();
                 }
             break;
 
             case wakeup_ddr_check_en:
-                if(0==strncmp(pstPVItem->name, "wakeup_ddr_check_en", 19))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_EnableDDRWakeupCheck();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_EnableDDRWakeupCheck();
                 }
             break;
 
             case version_id_check_en:
-                if(0==strncmp(pstPVItem->name, "version_id_check_en", 19))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_EnableVersionCheck();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_EnableVersionCheck();
                 }
             break;
 
             case bl_msid_check_en:
-                if(0==strncmp(pstPVItem->name, "bl_msid_check_en", 16))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_EnableBootMSIDCheck();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_EnableBootMSIDCheck();
                 }
             break;
 
             case jtag_prt_mode:
-                if(0==strncmp(pstPVItem->name, "jtag_prt_mode", 13))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_SetJtagMode((HI_UNF_ADVCA_JTAG_MODE_E)pstPVItem->datavalue);
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_SetJtagMode((HI_UNF_ADVCA_JTAG_MODE_E)pstPVItem->datavalue);
                 }
             break;
 
             case jtag_r_disable:
-                if(0==strncmp(pstPVItem->name, "jtag_r_disable", 14))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_DisableJtagRead();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_DisableJtagRead();
                 }
             break;
 
-            case bload_dec_en:
-                if(0==strncmp(pstPVItem->name, "bload_dec_en", 12))
+            case boot_info_disable:
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_LockBootDecEn();
-                    }
+                    HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
+                    memset(&stOtpFuseAttr, 0, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
+                    stOtpFuseAttr.unOtpFuseAttr.stDefaultAttr.bEnable = HI_TRUE;
+                    ret = HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_BOOTINFO_DEACTIVATION,&stOtpFuseAttr);
                 }
-                else
+                break;
+
+            case bload_dec_en:
+                if(pstPVItem->datavalue != 0)
                 {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_LockBootDecEn();
                 }
             break;
 
             case self_boot_disable:
-                if(0==strncmp(pstPVItem->name, "self_boot_disable", 17))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_DisableSelfBoot();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_DisableSelfBoot();
                 }
             break;
-
             case SCS_activation:
-                if(0==strncmp(pstPVItem->name, "SCS_activation", 14))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_EnableSecBootEx();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_EnableSecBootEx();
                 }
             break;
 
             case otp_globle_lock_en:
-                if(0==strncmp(pstPVItem->name, "otp_globle_lock_en", 18))
+                if(pstPVItem->datavalue != 0)
                 {
-                    if(pstPVItem->datavalue != 0)
-                    {
-                        ret = HI_UNF_ADVCA_LockGlobalOTP();
-                    }
-                }
-                else
-                {
-                    HI_DEBUG_ADVCA("Invalid item, index [%d],  name [%s]\n", i, pstPVItem->name);
+                    ret = HI_UNF_ADVCA_LockGlobalOTP();
                 }
             break;
 
@@ -673,6 +873,14 @@ HI_S32 SetOTPValue(HI_VOID)
     return ret;
 }
 
+static HI_VOID PrintHelpInfo(HI_VOID)
+{
+    printf("Usage: ./sample_product_pv_stb 0 pv_out_file  ----> get pv value\n");
+    printf("Usage: ./sample_product_pv_stb 1 otp_debug pv_cfg_file [pv_out_file] ---->  set pv value\n");
+    printf("        otp_debug : enable--enable OTP debug mode, disable--disable OTP debug mode\n");
+    return;
+}
+
 HI_S32 main(HI_S32 argc,HI_CHAR **argv)
 {
     HI_S32 Ret = HI_SUCCESS;
@@ -684,11 +892,11 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
     HI_OTP_PV_STRUCT_S stPVCustomerCfg;
     HI_U32 operationmode = 0;
     HI_S32 count;
+    HI_BOOL bOtpDebug = HI_TRUE;    //if it's true, enable the virtual OTP operation mode
 
     if(argc < 3)
     {
-        printf("Usage: ./product_pv_stb 0 pv_out   ----> get pv value\n");
-        printf("Usage: ./product_pv_stb 1 pv_cfg [pv_out]   ---->  set pv value\n");
+        PrintHelpInfo();
         return HI_FAILURE;
     }
 
@@ -697,13 +905,27 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
     if(0 == operationmode)
     {
         pFileNamePVOut  = argv[2];
+        bOtpDebug = HI_FALSE;
+    }
+    else if(argc < 4)
+    {
+        PrintHelpInfo();
+        return HI_FAILURE;
     }
     else
     {
-        pFileNamePVCfg  = argv[2];
-        if(argc > 3)
+        if(0==strncmp(argv[2],"disable",strlen("disable")))
         {
-            pFileNamePVOut  = argv[3];
+            bOtpDebug = HI_FALSE;
+        }
+        else
+        {
+           bOtpDebug = HI_TRUE;
+        }
+        pFileNamePVCfg  = argv[3];
+        if(argc > 4)
+        {
+            pFileNamePVOut  = argv[4];
         }
     }
 
@@ -744,6 +966,20 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
         }    
     }
 
+    if(bOtpDebug)
+    {
+        HI_U8 u8TestValue [ 16 ];
+        u8TestValue[0] = 2;         //DRV_OTP_SET_FAKE_BUFFER_FLAG,  enable OTP debug mode
+        Ret = HI_UNF_OTP_Init();
+        Ret |= HI_MPI_OTP_TEST(u8TestValue);
+        if(HI_SUCCESS != Ret)
+        {
+            HI_DEBUG_ADVCA("Enable OTP debug mode failed, ret=0x%x\n", Ret);
+            goto EXIT_CLOSE_FILE;
+        }
+        HI_DEBUG_ADVCA("Enable OTP debug mode success.\n");
+    }
+
     Ret = HI_UNF_ADVCA_Init();
     if(HI_SUCCESS != Ret)
     {
@@ -763,8 +999,17 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
     }
 
     HI_UNF_ADVCA_DeInit();
+    
+    if(bOtpDebug)
+    {
+        HI_U8 u8TestValue [ 16 ];
+        u8TestValue[0] = 0;         //DRV_OTP_NO_FAKE_FLAG,  disable OTP debug mode
+        (HI_VOID)HI_MPI_OTP_TEST(u8TestValue);
+        (HI_VOID)HI_UNF_OTP_DeInit();
+        HI_DEBUG_ADVCA("Close OTP debug mode.\n");
+    }
 
-    EXIT_CLOSE_FILE:
+EXIT_CLOSE_FILE:
     if(HI_NULL != fp_pv_in)
     {
         fclose(fp_pv_in);

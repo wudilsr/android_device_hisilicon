@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -235,9 +235,11 @@ typedef struct binary_shader_chunk_vertex_operand
 typedef struct gles_gb_cpu_pretrans_pass
 {
 	u16 attrib_array_pos;
-	u16 mvp_pos1;
-	u16 mvp_pos2;
-	u32   value1;
+	u16 mvp1_index;
+	u16 mvp2_index;
+	u16 mvp2_set;
+	u32 value1;
+
 } gles_gb_cpu_pretrans_pass;
 
 #endif

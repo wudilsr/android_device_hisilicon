@@ -178,7 +178,8 @@ HI_VOID hifb_captureimage_fromdevice(HI_U32 u32LayerID, HI_BOOL bAlphaEnable)
 	    stBlitOpt.stAlpha.bAlphaEnable = HI_TRUE;
 	    stBlitOpt.stAlpha.u8GlobalAlpha=0xff;
 	}
-	
+
+	stBlitOpt.bBlock = HI_TRUE;
 	s32Ret = s_stDrvTdeOps.HIFB_DRV_Blit(&stSrcBuffer, &stDstBuffer, &stBlitOpt, HI_TRUE);
 	if (s32Ret < 0)
 	{

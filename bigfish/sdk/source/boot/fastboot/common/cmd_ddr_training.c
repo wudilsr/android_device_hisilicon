@@ -53,6 +53,12 @@ extern char s5_ddr_training_data_start[];
 extern char s5_ddr_training_data_end[];
 #endif /* CONFIG_DDR_TRAINING_S5 */
 
+#ifdef CONFIG_DDR_TRAINING_HI3716MV410
+extern int  hi3716mv410_ddr_training_result(unsigned int result_addr);
+extern char hi3716mv410_ddr_training_data_start[];
+extern char hi3716mv410_ddr_training_data_end[];
+#endif /* CONFIG_DDR_TRAINING_HI3716MV410 */
+
 #define DDR_TRAINING_ENV                       "ddrtr"
 
 static struct ddrtr_result_t ddrtr_result;
@@ -91,6 +97,10 @@ static int ddr_training_result(unsigned int result_addr)
 
 #ifdef CONFIG_DDR_TRAINING_S5
 	return s5_ddr_training_result(result_addr);
+#endif
+
+#ifdef CONFIG_DDR_TRAINING_HI3716MV410
+	return hi3716mv410_ddr_training_result(result_addr);
 #endif
 	printf("DDR training is unsupport.\n");
 
@@ -150,6 +160,12 @@ static void * get_ddrtr_entry(void)
 	src_ptr = s5_ddr_training_data_start;
 	dst_ptr = (char *)(0xFFFF0C00);
 	length  = s5_ddr_training_data_end - src_ptr;
+#endif
+
+#ifdef CONFIG_DDR_TRAINING_HI3716MV410
+	src_ptr = hi3716mv410_ddr_training_data_start;
+	dst_ptr = (char *)(0xFFFF0C00);
+	length  = hi3716mv410_ddr_training_data_end - src_ptr;
 #endif
 	if (!src_ptr || !length) {
 		printf("DDR training is unsupport.\n");

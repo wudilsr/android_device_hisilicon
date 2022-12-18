@@ -10,7 +10,7 @@ jFNWMaKwwrNZrJ3A/CGEgpgMlrKprpEjJXhoVtAE+0PpRkmAzpr5VhwmZS92MA==*/
 #include"vpss_common.h"
 #include"hi_drv_video.h"
 
-#define ALG_RATIO_PIX_RATIO1 1024
+#define ALG_RATIO_PIX_RATIO1 864
 typedef struct tagALG_RATIO_USR_ASPECTRATIO_S
 {
 	HI_BOOL bUserDefAspectRatio;

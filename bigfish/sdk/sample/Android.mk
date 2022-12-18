@@ -1,4 +1,12 @@
 LOCAL_PATH := $(call my-dir)
+SAMPLE_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+include $(SDK_DIR)/Android.def
+
+define first_makefile_under
+    $(wildcard $(addsuffix /Android.mk, $(addprefix $(SAMPLE_PATH)/,$(1))))
+endef
 
 # don't compile: dolby seperateoutput higo wifi vp gpu 3dtv
 SAMPLE_MODULE := common esplay ao tsplay es_ts_switch ipplay mosaic pip log memdev userproc cgms \
@@ -111,4 +119,4 @@ SAMPLE_MODULE += nagra
 endif
 endif
 
-include $(call all-named-subdir-makefiles,$(SAMPLE_MODULE))
+include $(call first_makefile_under, $(SAMPLE_MODULE))

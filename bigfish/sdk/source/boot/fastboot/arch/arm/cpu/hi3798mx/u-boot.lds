@@ -12,12 +12,13 @@ SECTIONS
 		__text_start = .;
 		arch/arm/cpu/hi3798mx/start.o	(.text)
 		arch/arm/cpu/hi3798mx/lowlevel_init.o	(.text)
-		arch/arm/cpu/hi3798mx/ddrphy_training.o	(.text)
-		arch/arm/cpu/hi3798mx/ddrphy_training_func.o	(.text)
 		arch/arm/cpu/hi3798mx/emmc_boot.o	(.text)
 		arch/arm/cpu/hi3798mx/chip.o	(.text)
 		arch/arm/cpu/hi3798mx/uart.o	(.text)
-		arch/arm/cpu/hi3798mx/ddr_dataeye_training.o (.text)
+		drivers/ddr/ddr_training_impl.o (.text)
+		drivers/ddr/ddr_training_ctl.o (.text)
+		drivers/ddr/ddr_training_boot.o (.text)
+		drivers/ddr/ddr_training_custom.o (.text)
 		__init_end = .;
 		ASSERT(((__init_end - __text_start) < 0x4f00), "init sections too big!");
 		*(.text)

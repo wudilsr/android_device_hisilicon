@@ -13,7 +13,6 @@ UPDATE_TOOLS :=$(HOST_OUT_EXECUTABLES)/bsdiff \
                $(HOST_OUT_EXECUTABLES)/fs_config
 
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-
 RELEASE_PEM_KEY := $(shell test -f device/hisilicon/${CHIPNAME}/security/releasekey.x509.pem && echo yes)
 ifeq ($(RELEASE_PEM_KEY),yes)
 $(warning device/hisilicon/${CHIPNAME}/security/releasekey.x509.pem have exist!)
@@ -21,6 +20,7 @@ else
 $(error device/hisilicon/${CHIPNAME}/security/releasekey.x509.pem does not exist!)
 endif
 
+ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 RELEASE_PK8_KEY := $(shell test -f device/hisilicon/${CHIPNAME}/security/releasekey.pk8 && echo yes)
 ifeq ($(RELEASE_PK8_KEY),yes)
 $(warning device/hisilicon/${CHIPNAME}/security/releasekey.pk8 have exist!)
@@ -54,6 +54,7 @@ SECURITY_MAINTAIN_OUT := $(PRODUCT_OUT)/Security_L2/MAINTAIN
 L2_EMMC_PRODUCTION_OUT :=  $(PRODUCT_OUT)/Security_L2/PRODUCTION
 L2_EMMC_MAINTAIN_OUT := $(PRODUCT_OUT)/Security_L2/MAINTAIN
 endif
+endif
 
 # kernel
 -include device/hisilicon/bigfish/build/kernel.mk
@@ -78,8 +79,10 @@ endif
 # apploader
 -include device/hisilicon/bigfish/build/apploader.mk
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
+ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 # security
 -include device/hisilicon/bigfish/build/security.mk
+endif
 endif
 
 # hiboot
@@ -88,7 +91,11 @@ hiboot: $(NAND_HIBOOT_IMG) $(EMMC_HIBOOT_IMG)
 # updatezip
 .PHONY: updatezip
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
+ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 updatezip: $(EMMC_SECURITY_UPDATE_PACKAGE)
+else
+updatezip: $(EMMC_UPDATE_PACKAGE)
+endif
 else
 updatezip: $(NAND_UPDATE_PACKAGE) $(EMMC_UPDATE_PACKAGE)
 endif
@@ -110,7 +117,9 @@ ifeq ($(strip $(BOARD_QBSUPPORT)),true)
 	$(hide) rm  -rf $(NAND_PRODUCT_OUT)
 endif
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
+ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 	$(hide) rm  -rf $(EMMC_PRODUCT_OUT)
+endif
 	$(hide) rm  -rf $(NAND_PRODUCT_OUT)
 endif
 endif

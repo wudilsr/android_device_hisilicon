@@ -31,11 +31,38 @@ SegmentTemplateStream::~SegmentTemplateStream           ()
 }
 ISegment*                   SegmentTemplateStream::GetInitializationSegment     ()
 {
+    ISegment *seg;
+    ISegmentTemplate *segTemplate;
+    std::vector<dash::mpd::IBaseUrl *> tempBaseUrls;
+
     if (this->segmentTemplate->GetInitialization())
         return this->segmentTemplate->GetInitialization()->ToSegment(baseUrls);
 
-    return this->segmentTemplate->ToInitializationSegment(baseUrls, representation->GetId(), representation->GetBandwidth());
+    seg = this->segmentTemplate->ToInitializationSegment(baseUrls, representation->GetId(), representation->GetBandwidth());
+    if (seg != NULL)
+        return  seg;
+
+    segTemplate = this->adaptationSet->GetSegmentTemplate();
+    if (segTemplate != NULL)
+    {
+        tempBaseUrls = BaseUrlResolver::ResolveBaseUrl(mpd, period, adaptationSet, 0, 0, 0);
+        seg = segTemplate->ToInitializationSegment(tempBaseUrls, representation->GetId(), representation->GetBandwidth());
+        if (seg != NULL)
+            return seg;
+    }
+
+    segTemplate = this->period->GetSegmentTemplate();
+    if (segTemplate != NULL)
+    {
+        tempBaseUrls = BaseUrlResolver::ResolveBaseUrl(mpd, period, NULL, 0, 0, 0);
+        seg = segTemplate->ToInitializationSegment(tempBaseUrls, representation->GetId(), representation->GetBandwidth());
+        if (seg != NULL)
+            return seg;
+    }
+
+    return NULL;
 }
+
 ISegment*                   SegmentTemplateStream::GetIndexSegment              (size_t segmentNumber)
 {
     /* time-based template */
@@ -94,8 +121,18 @@ uint32_t                    SegmentTemplateStream::GetSize                      
 }
 uint32_t                    SegmentTemplateStream::GetAverageSegmentDuration    ()
 {
+    uint32_t segDuration = this->segmentTemplate->GetDuration();
+    uint32_t timeScale = this->segmentTemplate->GetTimescale();
+
     /* TODO calculate average segment durations for SegmentTimeline */
-    return this->segmentTemplate->GetDuration();
+    if (timeScale > 0)
+    {
+        segDuration = this->segmentTemplate->GetDuration() * 1000ULL/timeScale;
+    }
+  //  dash_log(DASH_LOG_INFO, "[%s,%d] segDuration=%u, timeScale=%u\n",
+ //       __FUNCTION__, __LINE__, segDuration, timeScale);
+
+    return segDuration;
 }
 
 uint64_t   SegmentTemplateStream::GetSegmentEndTime  (uint32_t position)

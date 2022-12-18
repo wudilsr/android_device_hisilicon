@@ -1287,7 +1287,6 @@ typedef struct
 
 
 /*************************** Function Declare *************************/
-UINT8 HEVC_IsMain10Profile(VOID);
 SINT32 HEVCDEC_Init(HEVC_CTX_S *pHevcCtx,SYNTAX_EXTRA_DATA_S *pstExtraData);
 VOID   HEVC_InitDecPara(HEVC_CTX_S *pHevcCtx);
 SINT32 HEVC_ClearAll(HEVC_CTX_S *pHevcCtx,SINT32 flag);

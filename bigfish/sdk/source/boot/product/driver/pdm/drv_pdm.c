@@ -20,7 +20,7 @@
 static HI_PDM_SRCTYPE_E g_enSrcType = HI_PDM_SRCTYPE_FLASH;
 static HI_PDM_MEMINFO_S g_stMemInfo = {0};
 
-#if 0
+#if 1
 static HI_UNF_DISP_TIMING_S g_stDispTiming =
 {
     .VFB           =                               27,
@@ -64,6 +64,71 @@ HI_VOID PDM_GetDefDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispParam)
     }
 
     return;
+}
+
+static HI_VOID LoaderGetDefDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispParam)
+{
+    HI_S32 i;
+
+
+    pstDispParam->enFormat   = HI_UNF_ENC_FMT_720P_50;
+    pstDispParam->u32HuePlus = 50;
+    pstDispParam->u32Saturation = 50;
+    pstDispParam->u32Contrast   = 50;
+    pstDispParam->u32Brightness = 50;
+
+
+    pstDispParam->stDispTiming = g_stDispTiming;
+
+
+    pstDispParam->enPixelFormat    = HIGO_PF_8888;
+    pstDispParam->u32VirtScreenWidth  = 1280;
+    pstDispParam->u32VirtScreenHeight = 720;
+    
+    pstDispParam->stBgColor.u8Red   = 0x00;
+    pstDispParam->stBgColor.u8Green = 0x00;
+    pstDispParam->stBgColor.u8Blue  = 0xFF;
+
+
+    pstDispParam->enSrcDisp = HI_TRUE;
+    pstDispParam->bGammaEnable = HI_FALSE;
+
+
+    pstDispParam->stAspectRatio.enDispAspectRatio = 2;
+    pstDispParam->stAspectRatio.u32UserAspectHeight = 0;
+    pstDispParam->stAspectRatio.u32UserAspectWidth = 0;
+
+
+    /*
+    * in cfg.mak
+    * CFG_HI_DAC_YPBPR_Y=0, CFG_HI_DAC_YPBPR_PB=1
+    * CFG_HI_DAC_YPBPR_PR=3, CFG_HI_DAC_CVBS=2
+    */
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_YPBPR].enIntfType = HI_UNF_DISP_INTF_TYPE_YPBPR;
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_YPBPR].unIntf.stYPbPr.u8DacY  = HI_DAC_YPBPR_Y;
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_YPBPR].unIntf.stYPbPr.u8DacPb = HI_DAC_YPBPR_PB;
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_YPBPR].unIntf.stYPbPr.u8DacPr = HI_DAC_YPBPR_PR;
+
+
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].enIntfType= HI_UNF_DISP_INTF_TYPE_HDMI;
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].unIntf.enHdmi= 0;
+
+
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_CVBS].enIntfType = HI_UNF_DISP_INTF_TYPE_CVBS;
+    pstDispParam->stIntf[HI_UNF_DISP_INTF_TYPE_CVBS].unIntf.stCVBS.u8Dac = HI_DAC_CVBS;
+
+
+    memset(&(pstDispParam->stOffsetInfo), 0, sizeof(pstDispParam->stOffsetInfo));
+
+
+    for (i = 0; i < HI_UNF_DISP_INTF_TYPE_BUTT; i++)
+    {
+        if ((i != HI_UNF_DISP_INTF_TYPE_YPBPR) && (i != 
+        HI_UNF_DISP_INTF_TYPE_CVBS)  && (i != HI_UNF_DISP_INTF_TYPE_HDMI))
+        {
+            pstDispParam->stIntf[i].enIntfType = HI_UNF_DISP_INTF_TYPE_BUTT;
+        }
+    }
 }
 
 static HI_S32 PDM_GetMtdInfo(const HI_CHAR *pstrDataName, const HI_CHAR *pBootargs,
@@ -1187,6 +1252,10 @@ HI_S32 HI_DRV_PDM_GetDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispPar
     if (HI_SUCCESS != Ret)
     {
         HI_INFO_PDM("ERR: PDM_ReadBase, use default baseparam!\n");
+#ifdef HI_LOADER_SUPPORT
+		LoaderGetDefDispParam(enDisp, pstDispParam);
+		return HI_SUCCESS;
+#endif
         return HI_FAILURE;
     }
 
@@ -1194,6 +1263,10 @@ HI_S32 HI_DRV_PDM_GetDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispPar
     if (HI_SUCCESS != Ret)
     {
         HI_INFO_PDM("ERR: HI_DB_GetDBFromMem, use default baseparam!\n");
+#ifdef HI_LOADER_SUPPORT
+		LoaderGetDefDispParam(enDisp, pstDispParam);
+		return HI_SUCCESS;
+#endif
         return HI_FAILURE;
     }
 

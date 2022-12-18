@@ -33,8 +33,9 @@ static VIDEO_LAYER_STATUS_S   s_stVideoLayerStatus[DEF_VIDEO_LAYER_MAX_NUMBER];
 #endif
 static MMZ_BUFFER_S g_stBlackMMZ_HAL;
 static HI_DRV_VIDEO_FRAME_S g_stBlackFrame_HAL;
-#define DEF_BLACK_H 1080
-#define DEF_BLACK_W 1920
+#define DEF_BLACK_H 4
+#define DEF_BLACK_W 4096
+
 static HI_S32 HAL_SetDispMode(HI_U32 u32id, HI_DRV_DISP_STEREO_MODE_E eMode)
 {
     return Chip_Specific_SetDispMode(u32id, eMode);
@@ -349,12 +350,12 @@ HI_S32 WinHalSetColor_MPW(HI_U32 u32LayerId, HI_DRV_DISP_COLOR_SETTING_S *pstCol
     if ((u32LayerId == 0) || (u32LayerId == 1))
     {
         /*this  setting change the 4 params*/
-        DRV_PQ_SetHDPictureSetting(&stPictureSetting);
+        DRV_PQ_SetHDVideoSetting(&stPictureSetting);
     }
     else if ((u32LayerId == 3) || (u32LayerId == 4))
     {
         /*this  setting change the 4 params*/
-        DRV_PQ_SetSDPictureSetting(&stPictureSetting);
+        DRV_PQ_SetSDVideoSetting(&stPictureSetting);
     }
 
     return HI_SUCCESS;
@@ -405,13 +406,13 @@ HI_S32 WinHalSetPixFmt_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
         VDP_VID_SetInDataUVOrder(u32LayerId, 0);
         VDP_VID_SetZmeInFmt_Define1(u32LayerId, VDP_PROC_FMT_SP_420);
     }
-    else if (eFmt == HI_DRV_PIX_FMT_NV16)
+    else if (eFmt == HI_DRV_PIX_FMT_NV16_2X1)
     {
         VDP_VID_SetInDataFmt(u32LayerId, VDP_VID_IFMT_SP_422);
         VDP_VID_SetInDataUVOrder(u32LayerId, 1);
         VDP_VID_SetZmeInFmt_Define1(u32LayerId, VDP_PROC_FMT_SP_422);
     }
-    else if (eFmt == HI_DRV_PIX_FMT_NV61)
+    else if (eFmt == HI_DRV_PIX_FMT_NV61_2X1)
     {
         VDP_VID_SetInDataFmt(u32LayerId, VDP_VID_IFMT_SP_422);
         VDP_VID_SetInDataUVOrder(u32LayerId, 0);
@@ -508,6 +509,19 @@ HI_S32 TranPixFmtToAlg(HI_DRV_PIX_FORMAT_E enFmt)
             return 1;
     }
 
+}
+
+
+HI_BOOL GetLayerRevisedPixelFmt(HI_U32 u32LayerId,
+										 HI_RECT_S *pstOutRect,
+										 HI_DRV_PIX_FORMAT_E *penFmt,
+										 HI_DISP_DISPLAY_INFO_S *pstDispInfo)
+{
+	VIDEO_LAYER_CAPABILITY_S stSurfCapbility;
+	
+	GetCapability(u32LayerId, &stSurfCapbility);
+	
+	return Chip_Specific_WinGetRevisedPixelFmt(stSurfCapbility.bZme, pstOutRect, penFmt,pstDispInfo);
 }
 
 HI_S32 Get3DOutRect(HI_DRV_DISP_STEREO_E en3DMode, HI_RECT_S *pstOutRect, HI_RECT_S *pstReviseOutRect)
@@ -727,6 +741,19 @@ HI_S32 WinHalGetExtrLineParam(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
     return s32exl;
 }
 
+HI_S32 WinHalSetSecure_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
+{
+	HI_DRV_PIX_FORMAT_E eFmt = HI_DRV_PIX_BUTT;
+
+	if (!pstPara)
+	{
+		DISP_FATAL_RETURN();
+	}
+
+	VDP_VID_SetNoSecFlag(u32LayerId,!pstPara->bSecure);
+
+	return HI_SUCCESS;
+}
 HI_S32 WinHalSetFrame_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
 {
     HI_S32 s32exl;
@@ -735,45 +762,21 @@ HI_S32 WinHalSetFrame_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
 
     if (pstPara->bRegionMute == HI_TRUE)
     {
-        /*if the region should be mute, the cfg following
-          is not neccessary.*/
-        if (u32LayerId == VDP_LAYER_VID0 || u32LayerId == VDP_LAYER_VID3)
-        {
-            pstPara->pstFrame = &g_stBlackFrame_HAL;
-            pstPara->stIn.s32Width = pstPara->pstFrame->u32Width;
-            pstPara->stIn.s32Height = pstPara->pstFrame->u32Height;
-            pstPara->stIn.s32X = 0;
-            pstPara->stIn.s32Y = 0;
-			
-			pstPara->stInOrigin.s32Width = pstPara->pstFrame->u32Width;
-            pstPara->stInOrigin.s32Height = pstPara->pstFrame->u32Height;
-            pstPara->stInOrigin.s32X = 0;
-            pstPara->stInOrigin.s32Y = 0;
-			
-            pstPara->stOriRect.s32Width = pstPara->pstFrame->u32Width;
-            pstPara->stOriRect.s32Height = pstPara->pstFrame->u32Height;
-            pstPara->stOriRect.s32X = 0;
-            pstPara->stOriRect.s32Y = 0;            
-        }
-        else if (u32LayerId == VDP_LAYER_VID1 || u32LayerId == VDP_LAYER_VID4)
-        {
-            pstPara->pstFrame = &g_stBlackFrame_HAL;
-            pstPara->stIn.s32Width = pstPara->stVideo.s32Width;
-            pstPara->stIn.s32Height =  pstPara->stVideo.s32Height;
-            pstPara->stIn.s32X = 0;
-            pstPara->stIn.s32Y = 0;
-			
-            pstPara->stInOrigin = pstPara->stIn;
-			
-            pstPara->stOriRect.s32Width = pstPara->stVideo.s32Width;
-            pstPara->stOriRect.s32Height = pstPara->stVideo.s32Height;
-            pstPara->stOriRect.s32X = 0;
-            pstPara->stOriRect.s32Y = 0;
-        }     
-        else
-        {
-            return HI_SUCCESS;
-        }
+        pstPara->pstFrame = &g_stBlackFrame_HAL;
+        pstPara->stIn.s32Width = pstPara->stVideo.s32Width;
+        pstPara->stIn.s32Height = pstPara->stVideo.s32Height;
+        pstPara->stIn.s32X = 0;
+        pstPara->stIn.s32Y = 0;
+		
+		pstPara->stInOrigin.s32Width = pstPara->stVideo.s32Width;
+        pstPara->stInOrigin.s32Height = pstPara->stVideo.s32Height;
+        pstPara->stInOrigin.s32X = 0;
+        pstPara->stInOrigin.s32Y = 0;
+		
+        pstPara->stOriRect.s32Width = pstPara->stVideo.s32Width;
+        pstPara->stOriRect.s32Height = pstPara->stVideo.s32Height;
+        pstPara->stOriRect.s32X = 0;
+        pstPara->stOriRect.s32Y = 0;
     }
 
     pstPara->stDisp = pstPara->stVideo;
@@ -788,6 +791,11 @@ HI_S32 WinHalSetFrame_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
         return HI_FAILURE;
     }
 
+	if(WinHalSetSecure_MPW(u32LayerId,pstPara))
+	{
+        return HI_FAILURE;
+	}
+	
     if( WinHalSetPixFmt_MPW(u32LayerId, pstPara) )
     {
         return HI_FAILURE;
@@ -1151,7 +1159,9 @@ HI_S32 VideoLayer_CreateBlackFrame(HI_VOID)
     HI_U8  *pY;
     HI_U8  *pUV;
     HI_S32 s32Ret = HI_SUCCESS;
+	
     u32Size = DEF_BLACK_H*DEF_BLACK_W*2;
+	
     s32Ret = HI_DRV_MMZ_AllocAndMap("VDP_BlackFrm_HAL", "VO", u32Size, 0, &g_stBlackMMZ_HAL);
     if (s32Ret != HI_SUCCESS)
     {
@@ -1160,15 +1170,15 @@ HI_S32 VideoLayer_CreateBlackFrame(HI_VOID)
         return HI_FAILURE;
     }
 
-    g_stBlackFrame_HAL.ePixFormat = HI_DRV_PIX_FMT_NV21;
+    g_stBlackFrame_HAL.ePixFormat = HI_DRV_PIX_FMT_NV61_2X1;
     g_stBlackFrame_HAL.u32Height = DEF_BLACK_H;
     g_stBlackFrame_HAL.u32Width = DEF_BLACK_W;
-
+	
     g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_Y = g_stBlackMMZ_HAL.u32StartPhyAddr;
     g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_C = g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_Y
                                                 + g_stBlackFrame_HAL.u32Width*g_stBlackFrame_HAL.u32Height;
-    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_Y = DEF_BLACK_W;
-    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_C = DEF_BLACK_W;
+    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_Y = 0;
+    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_C = 0;	
     pY  = (HI_U8 *)(g_stBlackMMZ_HAL.u32StartVirAddr);
     DISP_MEMSET(pY, 0x10, u32Size/2);
     pUV = (HI_U8 *)(g_stBlackMMZ_HAL.u32StartVirAddr + DEF_BLACK_H*DEF_BLACK_W);
@@ -1224,6 +1234,7 @@ HI_S32 VideoLayer_Init(HI_VOID)
     s_stVieoLayerFunc.PF_SetFramePara   = WinHalSetFrame_MPW;
     s_stVieoLayerFunc.PF_Get3DOutRect   = Get3DOutRect;
 
+	s_stVieoLayerFunc.PF_GetLayerRevisedPixelFmt   = GetLayerRevisedPixelFmt;
     s_stVieoLayerFunc.PF_GetCSCReg  =  GetCSCReg;
     s_stVieoLayerFunc.PF_SetCSCReg  =  SetCSCReg;
 

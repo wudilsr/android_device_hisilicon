@@ -62,7 +62,11 @@ write_unknown_chunks(png_structrp png_ptr, png_const_inforp info_ptr,
          {
             /* TODO: review, what is wrong with a zero length unknown chunk? */
             if (up->size == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_warning(png_ptr, "");
+#else
                png_warning(png_ptr, "Writing zero-length unknown chunk");
+#endif
 
             png_write_chunk(png_ptr, up->name, up->data, up->size);
          }
@@ -97,7 +101,11 @@ png_write_info_before_PLTE(png_structrp png_ptr, png_const_inforp info_ptr)
    if ((png_ptr->mode & PNG_HAVE_PNG_SIGNATURE) != 0 && \
        png_ptr->mng_features_permitted != 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "MNG features are not allowed in a PNG datastream");
+#endif
       png_ptr->mng_features_permitted = 0;
    }
 #endif
@@ -146,8 +154,12 @@ png_write_info_before_PLTE(png_structrp png_ptr, png_const_inforp info_ptr)
       {
 #        ifdef PNG_WRITE_sRGB_SUPPORTED
             if ((info_ptr->valid & PNG_INFO_sRGB) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_app_warning(png_ptr, "");
+#else
                png_app_warning(png_ptr,
                   "profile matches sRGB but writing iCCP instead");
+#endif
 #        endif
 
          png_write_iCCP(png_ptr, info_ptr->iccp_name,
@@ -206,7 +218,11 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
           (png_uint_32)info_ptr->num_palette);
 
    else if ((info_ptr->color_type == PNG_COLOR_TYPE_PALETTE) !=0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Valid palette required for paletted images");
+#endif
 
 #ifdef PNG_WRITE_tRNS_SUPPORTED
    if ((info_ptr->valid & PNG_INFO_tRNS) !=0)
@@ -298,7 +314,11 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
          else
             info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_zTXt_WR;
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Unable to write international text");
+#endif
 #endif
       }
 
@@ -312,7 +332,11 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
          /* Mark this chunk as written */
          info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_zTXt_WR;
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Unable to write compressed text");
+#endif
 #endif
       }
 
@@ -327,7 +351,11 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
          info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_NONE_WR;
 #else
          /* Can't get here */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Unable to write uncompressed text");
+#endif
 #endif
       }
    }
@@ -352,11 +380,19 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
       return;
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "No IDATs written into file");
+#endif
 
 #ifdef PNG_WRITE_CHECK_FOR_INVALID_INDEX_SUPPORTED
    if (png_ptr->num_palette_max > png_ptr->num_palette)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_benign_error(png_ptr, "");
+#else
       png_benign_error(png_ptr, "Wrote palette index exceeding num_palette");
+#endif
 #endif
 
    /* See if user wants us to write information chunks */
@@ -395,7 +431,11 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
             else
                info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_zTXt_WR;
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "Unable to write international text");
+#endif
 #endif
          }
 
@@ -408,7 +448,11 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
             /* Mark this chunk as written */
             info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_zTXt_WR;
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "Unable to write compressed text");
+#endif
 #endif
          }
 
@@ -421,7 +465,11 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
             /* Mark this chunk as written */
             info_ptr->text[i].compression = PNG_TEXT_COMPRESSION_NONE_WR;
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "Unable to write uncompressed text");
+#endif
 #endif
          }
       }
@@ -694,44 +742,77 @@ png_write_row(png_structrp png_ptr, png_const_bytep row)
    {
       /* Make sure we wrote the header info */
       if ((png_ptr->mode & PNG_WROTE_INFO_BEFORE_PLTE) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr,
              "png_write_info was never called before png_write_row");
+#endif
 
       /* Check for transforms that have been set but were defined out */
 #if !defined(PNG_WRITE_INVERT_SUPPORTED) && defined(PNG_READ_INVERT_SUPPORTED)
       if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_INVERT_SUPPORTED is not defined");
+#endif
 #endif
 
 #if !defined(PNG_WRITE_FILLER_SUPPORTED) && defined(PNG_READ_FILLER_SUPPORTED)
       if ((png_ptr->transformations & PNG_FILLER) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_FILLER_SUPPORTED is not defined");
+#endif
+
 #endif
 #if !defined(PNG_WRITE_PACKSWAP_SUPPORTED) && \
     defined(PNG_READ_PACKSWAP_SUPPORTED)
       if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr,
              "PNG_WRITE_PACKSWAP_SUPPORTED is not defined");
+#endif
 #endif
 
 #if !defined(PNG_WRITE_PACK_SUPPORTED) && defined(PNG_READ_PACK_SUPPORTED)
       if ((png_ptr->transformations & PNG_PACK) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_PACK_SUPPORTED is not defined");
+#endif
 #endif
 
 #if !defined(PNG_WRITE_SHIFT_SUPPORTED) && defined(PNG_READ_SHIFT_SUPPORTED)
       if ((png_ptr->transformations & PNG_SHIFT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_SHIFT_SUPPORTED is not defined");
+#endif
 #endif
 
 #if !defined(PNG_WRITE_BGR_SUPPORTED) && defined(PNG_READ_BGR_SUPPORTED)
       if ((png_ptr->transformations & PNG_BGR) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_BGR_SUPPORTED is not defined");
+#endif
 #endif
 
 #if !defined(PNG_WRITE_SWAP_SUPPORTED) && defined(PNG_READ_SWAP_SUPPORTED)
       if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "PNG_WRITE_SWAP_SUPPORTED is not defined");
+#endif
 #endif
 
       png_write_start_row(png_ptr);
@@ -850,7 +931,11 @@ png_write_row(png_structrp png_ptr, png_const_bytep row)
     */
    if (row_info.pixel_depth != png_ptr->pixel_depth ||
       row_info.pixel_depth != png_ptr->transformed_pixel_depth)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal write transform logic error");
+#endif
 
 #ifdef PNG_MNG_FEATURES_SUPPORTED
    /* Write filter_method 64 (intrapixel differencing) only if
@@ -1017,7 +1102,12 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
 #ifdef PNG_WRITE_FILTER_SUPPORTED
          case 5:
          case 6:
-         case 7: png_app_error(png_ptr, "Unknown row filter for method 0");
+         case 7:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  		png_app_error(png_ptr, "");
+#else	
+		 	png_app_error(png_ptr, "Unknown row filter for method 0");
+#endif
             /* FALL THROUGH */
 #endif /* WRITE_FILTER */
          case PNG_FILTER_VALUE_NONE:
@@ -1040,7 +1130,12 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
             png_ptr->do_filter = (png_byte)filters; break;
 #else
          default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  		png_app_error(png_ptr, "");
+#else	
             png_app_error(png_ptr, "Unknown row filter for method 0");
+#endif
+
 #endif /* WRITE_FILTER */
       }
 
@@ -1069,7 +1164,11 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          {
             if (png_ptr->prev_row == NULL)
             {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_warning(png_ptr, "");
+#else
                png_warning(png_ptr, "Can't add Up filter after starting");
+#endif
                png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
                    ~PNG_FILTER_UP);
             }
@@ -1087,7 +1186,11 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          {
             if (png_ptr->prev_row == NULL)
             {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_warning(png_ptr, "");
+#else
                png_warning(png_ptr, "Can't add Average filter after starting");
+#endif
                png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
                    ~PNG_FILTER_AVG);
             }
@@ -1105,7 +1208,11 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          {
             if (png_ptr->prev_row == NULL)
             {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_warning(png_ptr, "");
+#else
                png_warning(png_ptr, "Can't add Paeth filter after starting");
+#endif
                png_ptr->do_filter &= (png_byte)(~PNG_FILTER_PAETH);
             }
 
@@ -1123,7 +1230,11 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
       }
    }
    else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Unknown custom filter method");
+#endif
 }
 
 /* This allows us to influence the way in which libpng chooses the "best"
@@ -1244,7 +1355,11 @@ png_init_filter_heuristics(png_structrp png_ptr, int heuristic_method,
    }
    else
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unknown filter heuristic method");
+#endif
       return 0;
    }
 }
@@ -1425,13 +1540,21 @@ png_set_compression_window_bits(png_structrp png_ptr, int window_bits)
     */
    if (window_bits > 15)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression windows <= 32k supported by PNG");
+#endif
       window_bits = 15;
    }
 
    else if (window_bits < 8)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression windows >= 256 supported by PNG");
+#endif
       window_bits = 8;
    }
 
@@ -1450,7 +1573,11 @@ png_set_compression_method(png_structrp png_ptr, int method)
     * deflate will fault it, so it is harmless to just warn here.
     */
    if (method != 8)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression method 8 is supported by PNG");
+#endif
 
    png_ptr->zlib_method = method;
 }
@@ -1501,13 +1628,21 @@ png_set_text_compression_window_bits(png_structrp png_ptr, int window_bits)
 
    if (window_bits > 15)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression windows <= 32k supported by PNG");
+#endif
       window_bits = 15;
    }
 
    else if (window_bits < 8)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression windows >= 256 supported by PNG");
+#endif
       window_bits = 8;
    }
 
@@ -1523,7 +1658,11 @@ png_set_text_compression_method(png_structrp png_ptr, int method)
       return;
 
    if (method != 8)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Only compression method 8 is supported by PNG");
+#endif
 
    png_ptr->zlib_text_method = method;
 }
@@ -1565,7 +1704,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 
    if ((info_ptr->valid & PNG_INFO_IDAT) == 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "no rows for png_write_image to write");
+#endif
+
       return;
    }
 
@@ -1579,7 +1723,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_INVERT_SUPPORTED
       png_set_invert_mono(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_INVERT_MONO not supported");
+#endif
+
 #endif
 
    /* Shift the pixels up to a legal bit depth and fill in
@@ -1590,7 +1739,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
       if ((info_ptr->valid & PNG_INFO_sBIT) != 0)
          png_set_shift(png_ptr, &info_ptr->sig_bit);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_SHIFT not supported");
+#endif
+
 #endif
 
    /* Pack pixels into bytes */
@@ -1598,7 +1752,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_PACK_SUPPORTED
       png_set_packing(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_PACKING not supported");
+#endif
+
 #endif
 
    /* Swap location of alpha bytes from ARGB to RGBA */
@@ -1606,7 +1765,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_SWAP_ALPHA_SUPPORTED
       png_set_swap_alpha(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_SWAP_ALPHA not supported");
+#endif
+
 #endif
 
    /* Remove a filler (X) from XRGB/RGBX/AG/GA into to convert it into
@@ -1620,9 +1784,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
       if ((transforms & PNG_TRANSFORM_STRIP_FILLER_AFTER) != 0)
       {
          if ((transforms & PNG_TRANSFORM_STRIP_FILLER_BEFORE) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  		png_app_error(png_ptr, "");
+#else	
             png_app_error(png_ptr,
                "PNG_TRANSFORM_STRIP_FILLER: BEFORE+AFTER not supported");
-
+#endif
          /* Continue if ignored - this is the pre-1.6.10 behavior */
          png_set_filler(png_ptr, 0, PNG_FILLER_AFTER);
       }
@@ -1630,7 +1797,12 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
       else if ((transforms & PNG_TRANSFORM_STRIP_FILLER_BEFORE) != 0)
          png_set_filler(png_ptr, 0, PNG_FILLER_BEFORE);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_STRIP_FILLER not supported");
+#endif
+
 #endif
    }
 
@@ -1639,7 +1811,11 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_BGR_SUPPORTED
       png_set_bgr(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_BGR not supported");
+#endif
 #endif
 
    /* Swap bytes of 16-bit files to most significant byte first */
@@ -1647,7 +1823,11 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_SWAP_SUPPORTED
       png_set_swap(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_SWAP_ENDIAN not supported");
+#endif
 #endif
 
    /* Swap bits of 1, 2, 4 bit packed pixel formats */
@@ -1655,7 +1835,11 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_PACKSWAP_SUPPORTED
       png_set_packswap(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_PACKSWAP not supported");
+#endif
 #endif
 
    /* Invert the alpha channel from opacity to transparency */
@@ -1663,7 +1847,11 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_WRITE_INVERT_ALPHA_SUPPORTED
       png_set_invert_alpha(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr, "PNG_TRANSFORM_INVERT_ALPHA not supported");
+#endif
 #endif
 
    /* ----------------------- end of transformations ------------------- */
@@ -1716,7 +1904,11 @@ png_image_write_init(png_imagep image)
       png_destroy_write_struct(&png_ptr, NULL);
    }
 
-   return png_image_error_ex(image, "png_image_write_: out of memory");
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   return png_image_error(image, "");
+#else
+   return png_image_error(image, "png_image_write_: out of memory");
+#endif
 }
 
 /* Arguments to png_image_write_main: */
@@ -1770,7 +1962,11 @@ png_write_image_16bit(png_voidp argument)
    }
 
    else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "png_write_image: internal call error");
+#endif
 
    /* Work out the output row end and count over this, note that the increment
     * above to 'row' means that row_end can actually be beyond the end of the
@@ -2178,8 +2374,12 @@ png_image_write_main(png_voidp argument)
       }
 
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(image->opaque->png_ptr, "");
+#else
          png_error(image->opaque->png_ptr,
             "no color-map for color-mapped image");
+#endif
    }
 
    else
@@ -2262,7 +2462,11 @@ png_image_write_main(png_voidp argument)
    /* That should have handled all (both) the transforms. */
    if ((format & ~(png_uint_32)(PNG_FORMAT_FLAG_COLOR | PNG_FORMAT_FLAG_LINEAR |
          PNG_FORMAT_FLAG_ALPHA | PNG_FORMAT_FLAG_COLORMAP)) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "png_write_image: unsupported transformation");
+#endif
 
    {
       png_const_bytep row = png_voidcast(png_const_bytep, display->buffer);
@@ -2372,13 +2576,21 @@ png_image_write_to_stdio(png_imagep image, FILE *file, int convert_to_8bit,
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+		 return png_image_error(image,"");
+#else
+         return png_image_error(image,
             "png_image_write_to_stdio: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_write_to_stdio: incorrect PNG_IMAGE_VERSION");
+#endif
 
    else
       return 0;
@@ -2422,7 +2634,11 @@ png_image_write_to_file(png_imagep image, const char *file_name,
                /* The image has already been cleaned up; this is just used to
                 * set the error (because the original write succeeded).
                 */
-               return png_image_error_ex(image, strerror(error));
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+			   return png_image_error(image, "");
+#else
+               return png_image_error(image, strerror(error));
+#endif
             }
 
             else
@@ -2435,18 +2651,29 @@ png_image_write_to_file(png_imagep image, const char *file_name,
          }
 
          else
-            return png_image_error_ex(image, strerror(errno));
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+		    return png_image_error(image, "");
+#else
+            return png_image_error(image, strerror(errno));
+#endif
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_image_error(image, "");
+#else
+         return png_image_error(image,
             "png_image_write_to_file: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_write_to_file: incorrect PNG_IMAGE_VERSION");
-
+#endif
    else
       return 0;
 }

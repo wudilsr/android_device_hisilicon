@@ -1,13 +1,10 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR/wOHYnSscFXiluy+ZK8OUOTBv+rW4wJwdYuzHdGlYJXGVzpkMxUBjFVffxOSNUdo+P/Z
-YZfYlrHkxoUvtJBQPvSjQ2iYUEokol8RMINhH+MMstaRSpbbe4yhFrinGpFaYg==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NIRPPHRIp4tDw0KuNvhYIciTJdXhHJZAQWfz60t
+2YLck3v/FP2W0NjnNpbAXiAHo3F3QlL0HJ9FJCtWNJGsdoTFnMgZZZ3a9w0m6uflFoqgxsmd
+//NEGyMbgsYH/7vsW+hGhnQ0WYT2AbsLX0+SnIO70NsU4sQ4NKN96GABp/+WLg==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
-
-
-
 
 
 
@@ -72,7 +69,7 @@ HI_U8 *g_pSrcMutualString[3] = {
     "butt",
 };
 
-HI_U8 *g_pPixString[8] = {
+HI_U8 *g_pPixString[14] = {
     "YCbCr420",
     "YCrCb420",
     "YCbCr411",
@@ -80,6 +77,12 @@ HI_U8 *g_pPixString[8] = {
     "YCrCb422",
     "YCbCr422_2X1",
     "YCrCb422_2X1",
+    "YCbCr420_cmp",
+    "YCrCb420_cmp",
+    "YCbCr422_cmp",
+    "YCrCb422_cmp",
+    "YCbCr422_2X1_cmp",
+    "YCrCb422_2X1_cmp",
     "butt",
 };
 
@@ -403,6 +406,8 @@ VPSS_INSTANCE_S *VPSS_CTRL_GetServiceInstance(VPSS_IP_E enIp)
 			{
 				(HI_VOID)VPSS_INST_SyncUsrCfg(pstInstance);
 
+				VPSS_INST_SyncTvpCfg(pstInstance);
+
 				s32CheckRet = VPSS_INST_CheckInstAvailable(pstInstance);
 				if(s32CheckRet == HI_SUCCESS)
 				{
@@ -576,7 +581,6 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
            || pstHalInfo->stInInfo.bProgressive == HI_TRUE)
         {
             VPSS_RWZB_GetRwzbData(&(pstInst->stRwzbInfo), &pstHalInfo->stRwzbInfo);
-        
         }
         
         stRwzbImage.bProgressive = pstHalInfo->stInInfo.bProgressive;
@@ -585,7 +589,7 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
         stRwzbImage.u32Width = pstHalInfo->stInInfo.u32Width;
         
         VPSS_RWZB_GetRwzbInfo(&(pstInst->stRwzbInfo), &pstHalInfo->stRwzbInfo, &stRwzbImage);
-        
+
         #endif
     }
 
@@ -647,7 +651,8 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
             if (   pstHalInfo->stInInfo.u32Width == 704 
                 && (pstHalInfo->stInInfo.u32Height == 576 || pstHalInfo->stInInfo.u32Height == 480)
                 && (pstHalInfo->stInInfo.u32Height == pstHalInfo->astPortInfo[i].stOutInfo.u32Height)
-                && pstHalInfo->astPortInfo[i].stOutInfo.u32Width == 720)
+                && pstHalInfo->astPortInfo[i].stOutInfo.u32Width == 720
+				&& pstInst->stPort[i].eAspMode == HI_DRV_ASP_RAT_MODE_FULL)
             {
                 pstHalInfo->astPortInfo[i].stVideoRect.s32Width = 
                                     pstHalInfo->stInInfo.u32Width;
@@ -659,8 +664,9 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
             else
             {
                 VPSS_INST_GetVideoRect(pstInst, i, &pstHalInfo->astPortInfo[i].stInCropRect,
-                    &pstHalInfo->astPortInfo[i].stVideoRect);
-            }
+                    &pstHalInfo->astPortInfo[i].stVideoRect,
+                    &pstHalInfo->astPortInfo[i].stOutCropRect);
+			}
 
             memcpy(&(pstFrmNode->stOutFrame.stLbxInfo),
                     &(pstHalInfo->astPortInfo[i].stVideoRect),
@@ -894,18 +900,35 @@ HI_U32 VPSS_CTRL_Zme2lAndRotateCfg(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 						pstFrm->u32Height = pstCur->u32Width;	
 					}
 
-					VPSS_OSAL_CalBufSize(&u32BufSize, &u32BufStride, pstFrm->u32Height,
-										  pstFrm->u32Width, pstPort[i]->eFormat, pstPort[i]->enOutBitWidth);
-					if ((pstBuf->stMMZBuf.u32Size != u32BufSize)
+					VPSS_OSAL_CalBufSize(&u32BufSize, 
+								&u32BufStride, 
+								pstFrm->u32Height,
+								pstFrm->u32Width, 
+								pstPort[i]->eFormat, 
+								pstPort[i]->enOutBitWidth);
+
+					if ((pstBuf->stMemBuf.u32Size != u32BufSize)
 						|| (pstBuf->u32Stride != u32BufStride))
 					{
-						if (pstBuf->stMMZBuf.u32Size != 0)
+						if (pstBuf->stMemBuf.u32Size != 0)
 						{
-							(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstBuf->stMMZBuf));
+							VPSS_OSAL_FreeMem(&(pstBuf->stMemBuf));
 						}
-
-						s32Ret = HI_DRV_MMZ_AllocAndMap("VPSS_RoBuf", "VPSS",
-														u32BufSize, 0, &(pstBuf->stMMZBuf));
+						
+						if (!pstInst->bSecure)
+						{
+							s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_NORMAL,u32BufSize,
+							"VPSS_RoBuf", 
+							"VPSS", 
+							&(pstBuf->stMemBuf));
+						}
+						else
+						{
+							s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_SECURE,u32BufSize,
+							"VPSS_RoBuf", 
+							"VPSS", 
+							&(pstBuf->stMemBuf));
+						}
 						if (s32Ret != HI_SUCCESS)
 						{
 							VPSS_FATAL("Alloc RoBuf Failed\n");
@@ -921,10 +944,10 @@ HI_U32 VPSS_CTRL_Zme2lAndRotateCfg(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 				if (HI_NULL != pstTask->pstFrmNodeRoBuf[i])
 				{
 					//释放旋转内存，节省SDK空间占用
-					if(0 != pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMMZBuf.u32Size)
+					if(0 != pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMemBuf.u32Size)
 					{
-						(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMMZBuf));
-						pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMMZBuf.u32Size = 0;
+						VPSS_OSAL_FreeMem(&(pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMemBuf));
+						pstTask->pstFrmNodeRoBuf[i]->stBuffer.stMemBuf.u32Size = 0;
 						pstTask->pstFrmNodeRoBuf[i]->stBuffer.u32Stride = 0;
 					}
 
@@ -1015,19 +1038,34 @@ HI_U32 VPSS_CTRL_Zme2lAndRotateCfg(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 			pstFrm->u32Width	= u32DstW;
 			pstFrm->u32Height	= u32DstH;
 
-			VPSS_OSAL_CalBufSize(&u32BufSize, &u32BufStride, pstFrm->u32Height,
-								  pstFrm->u32Width, HI_DRV_PIX_FMT_NV21, HI_DRV_PIXEL_BITWIDTH_10BIT);
+			VPSS_OSAL_CalBufSize(&u32BufSize, 
+								&u32BufStride, 
+								pstFrm->u32Height,
+								pstFrm->u32Width, 
+								HI_DRV_PIX_FMT_NV21, 
+								HI_DRV_PIXEL_BITWIDTH_10BIT);
 
-			if ((pstBuf->stMMZBuf.u32Size != u32BufSize)
+			if ((pstBuf->stMemBuf.u32Size != u32BufSize)
 				|| (pstBuf->u32Stride != u32BufStride))
 			{
-				if (pstBuf->stMMZBuf.u32Size != 0)
+				if (pstBuf->stMemBuf.u32Size != 0)
 				{
-					(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstBuf->stMMZBuf));
+					VPSS_OSAL_FreeMem(&(pstBuf->stMemBuf));
 				}
-
-				s32Ret = HI_DRV_MMZ_AllocAndMap("VPSS_ZME1LBuf", "VPSS",
-												u32BufSize, 0, &(pstBuf->stMMZBuf));
+                if (!pstInst->bSecure)
+						{
+							s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_NORMAL,u32BufSize,
+							"VPSS_ZME1LBuf", 
+							"VPSS", 
+							&(pstBuf->stMemBuf));
+						}
+						else
+						{
+							s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_SECURE,u32BufSize,
+							"VPSS_ZME1LBuf", 
+							"VPSS", 
+							&(pstBuf->stMemBuf));
+						}
 				if (s32Ret != HI_SUCCESS)
 				{
 					VPSS_FATAL("Alloc ZME1LBuf Failed\n");
@@ -1042,10 +1080,10 @@ HI_U32 VPSS_CTRL_Zme2lAndRotateCfg(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 		if ( HI_NULL != pstTask->pstFrmNodeZME1L)
 		{
 			//释放二级缩放内存，节省SDK空间占用
-			if(0 != pstTask->pstFrmNodeZME1L->stBuffer.stMMZBuf.u32Size)
+			if(0 != pstTask->pstFrmNodeZME1L->stBuffer.stMemBuf.u32Size)
 			{
-				(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstTask->pstFrmNodeZME1L->stBuffer.stMMZBuf));
-				pstTask->pstFrmNodeZME1L->stBuffer.stMMZBuf.u32Size = 0;
+				VPSS_OSAL_FreeMem(&(pstTask->pstFrmNodeZME1L->stBuffer.stMemBuf));
+				pstTask->pstFrmNodeZME1L->stBuffer.stMemBuf.u32Size = 0;
 				pstTask->pstFrmNodeZME1L->stBuffer.u32Stride = 0;
 
 				VPSS_VFREE(pstTask->pstFrmNodeZME1L);
@@ -1093,7 +1131,8 @@ HI_S32 VPSS_CTRL_StartZME2LTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask, HI_U32 Por
     else
     {
         VPSS_INST_GetVideoRect(pstInst, PortId, &pstHalInfo->astPortInfo[PortId].stInCropRect,
-            &pstHalInfo->astPortInfo[PortId].stVideoRect);
+            &pstHalInfo->astPortInfo[PortId].stVideoRect,
+            &pstHalInfo->astPortInfo[PortId].stOutCropRect);
     }
 
 	pstHalInfo->enNodeType = VPSS_HAL_NODE_ZME_2L;
@@ -1246,7 +1285,61 @@ HI_S32 VPSS_CTRL_StartRotateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask, HI_U32 Po
 
     return HI_SUCCESS;
 }
+HI_S32 VPSS_CTRL_GetOutBufferRect(HI_RECT_S stOriRect,HI_RECT_S *pstRevisedRect)
+{
+	HI_U32 u32OriW = 0,u32OriH = 0;
+	HI_U32 u32DstW = 0,u32DstH = 0;
+	HI_U32 u32RatioW;     
+	HI_U32 u32RatioH;     
+	HI_U32 u32TmpH;       
+	HI_U32 u32TmpW;
+	HI_U32 u32WidthLevel;
+	HI_U32 u32HeightLevel;
 
+	u32WidthLevel = 3840;
+	u32HeightLevel = 2160;
+
+	u32OriW = stOriRect.s32Width;
+	u32OriH = stOriRect.s32Height;
+
+	if (u32OriW < u32WidthLevel && u32OriH < u32HeightLevel)
+	{
+		u32DstW = u32OriW;
+		u32DstH = u32OriH;
+	}
+	else if (u32OriW >= u32WidthLevel && u32OriH >= u32HeightLevel)
+	{
+		u32DstW = u32WidthLevel;
+		u32DstH = u32HeightLevel;
+	}
+	else
+	{
+		u32RatioW = u32OriW*2048/u32WidthLevel;
+		u32RatioH = u32OriH*2048/u32HeightLevel; 
+
+		if (u32RatioW > u32RatioH)     
+		{
+			u32TmpW = u32OriW*2048/u32RatioW;
+			u32TmpH = u32OriH*2048/u32RatioW;
+		}
+		else
+		{
+			u32TmpW = u32OriW*2048/u32RatioH;
+			u32TmpH = u32OriH*2048/u32RatioH;
+		}
+
+		u32TmpW = u32TmpW & 0xfffffffe;
+		u32TmpH = u32TmpH & 0xfffffffc;
+
+		u32DstW = u32TmpW;
+		u32DstH = u32TmpH;
+	}
+
+	pstRevisedRect->s32Width = u32DstW;
+	pstRevisedRect->s32Height = u32DstH;
+
+	return HI_SUCCESS;
+}
 HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 {
     HI_S32 s32Ret = HI_FAILURE;  
@@ -1257,6 +1350,7 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
     HI_DRV_VPSS_BUFLIST_CFG_S*  pstBufListCfg;
     VPSS_IN_INTF_S stInIntf = {0};
     HI_DRV_VIDEO_FRAME_S *pstImage;
+	HI_DRV_VIDEO_PRIVATE_S *pstPriv;
 
     /*
         Traversal instance list to find a Available inst
@@ -1312,20 +1406,29 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 				else
 				{
 					HI_RECT_S stInRect;
+					HI_RECT_S stBufferRect;
 					VPSS_INST_GetInCrop(pstTask->pstInstance, u32Count, &stInRect);
-					if (stInRect.s32Width >= 3840 && stInRect.s32Height >= 2160)
-					{
-						u32StoreW = 3840;	
-						u32StoreH = 2160;	
-					}
-					else
-					{
-						u32StoreW = (HI_U32)stInRect.s32Width;
-						u32StoreH = (HI_U32)stInRect.s32Height;
-					}
+
+					VPSS_CTRL_GetOutBufferRect(stInRect,&stBufferRect);
+
+					u32StoreW = (HI_U32)stBufferRect.s32Width;
+					u32StoreH = (HI_U32)stBufferRect.s32Height;
 				}
 			}
-
+			
+			pstPriv = (HI_DRV_VIDEO_PRIVATE_S*) & (pstImage->u32Priv[0]);
+			if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_FRAME_FLAG)
+			{
+				pstPort->bCurDropped = HI_FALSE;
+			}
+			else
+			{
+				pstPort->bCurDropped = VPSS_INST_CheckIsDropped(pstTask->pstInstance,
+						pstPort->u32MaxFrameRate,
+						pstPort->u32OutCount);
+			}
+			if (pstPort->bCurDropped == HI_FALSE)
+			{
             /*2D image -> 1 outFrame 1 buffer*/
             if (pstImage->eFrmType == HI_DRV_FT_NOT_STEREO
                 || pstPort->b3Dsupport == HI_FALSE)
@@ -1333,7 +1436,9 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                 pstTask->pstFrmNode[u32Count * 2] =
                     VPSS_FB_GetEmptyFrmBuf(&(pstPort->stFrmInfo),
                                            u32StoreH, u32StoreW,
-                                           pstPort->eFormat,pstPort->enOutBitWidth);
+                                           pstPort->eFormat,
+										   pstPort->enOutBitWidth,
+										   pstTask->pstInstance->bSecure);
                 pstTask->pstFrmNode[u32Count * 2 + 1] = HI_NULL;
 
             }
@@ -1343,11 +1448,15 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                 pstTask->pstFrmNode[u32Count * 2] =
                     VPSS_FB_GetEmptyFrmBuf(&(pstPort->stFrmInfo),
                                            u32StoreH, u32StoreW,
-                                           pstPort->eFormat,pstPort->enOutBitWidth);
+                                           pstPort->eFormat,
+										   pstPort->enOutBitWidth,
+										   pstTask->pstInstance->bSecure);
                 pstTask->pstFrmNode[u32Count * 2 + 1] =
                     VPSS_FB_GetEmptyFrmBuf(&(pstPort->stFrmInfo),
                                            u32StoreH, u32StoreW,
-                                           pstPort->eFormat,pstPort->enOutBitWidth);
+                                           pstPort->eFormat,
+										   pstPort->enOutBitWidth,
+										   pstTask->pstInstance->bSecure);
                 if (pstTask->pstFrmNode[u32Count * 2] == HI_NULL
                     || pstTask->pstFrmNode[u32Count * 2 + 1] == HI_NULL)
                 {
@@ -1392,7 +1501,8 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                 }
                 else
                 {
-                    VPSS_FATAL("Port %x OutFormat isn't supported.\n",pstPort->s32PortId);
+                    VPSS_FATAL("Port %x OutFormat%d isn't supported.\n",
+						pstPort->s32PortId, pstPort->eFormat);
                 }
                 /*************************/
                 if(pstTask->pstFrmNode[u32Count*2] != HI_NULL)
@@ -1444,6 +1554,12 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             pstTask->pstFrmNode[u32Count * 2 + 1] = HI_NULL;
         }
     }
+        else
+        {
+            pstTask->pstFrmNode[u32Count * 2] = HI_NULL;
+            pstTask->pstFrmNode[u32Count * 2 + 1] = HI_NULL;
+        }
+    }
 
     for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER * 2; u32Count++)
     {
@@ -1458,13 +1574,27 @@ HI_S32 VPSS_CTRL_CreateTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
     {
         pstPort = &((pstTask->pstInstance)->stPort[u32Count]);
 		
-		if (pstPort->bEnble && pstTask->pstFrmNode[u32Count*2] == HI_NULL)
+		if (pstPort->bEnble == HI_TRUE
+				&& pstPort->bCurDropped == HI_FALSE 
+				&& pstTask->pstFrmNode[u32Count*2] == HI_NULL)
 		{
             s32Ret = HI_FAILURE;
             break;
 		}
 	}
 	
+	if (s32Ret == HI_SUCCESS)
+	{
+		for (u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
+		{
+			pstPort = &((pstTask->pstInstance)->stPort[u32Count]);
+
+			if (pstPort->bEnble == HI_TRUE) 
+			{
+				pstPort->u32OutCount++;
+			}
+		}
+	}
     return s32Ret;
 
 }
@@ -1530,10 +1660,10 @@ HI_S32 VPSS_CTRL_StartTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             else
             {
                 //释放旋转内存，节省SDK空间占用
-                if(0 != g_stVpssCtrl[enIp].stRoBuf[i].stMMZBuf.u32Size)
+                if(0 != g_stVpssCtrl[enIp].stRoBuf[i].stMemBuf.u32Size)
                 {
-                    (HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(g_stVpssCtrl[enIp].stRoBuf[i].stMMZBuf));
-                    g_stVpssCtrl[enIp].stRoBuf[i].stMMZBuf.u32Size = 0;
+					VPSS_OSAL_FreeMem(&(g_stVpssCtrl[enIp].stRoBuf[i].stMemBuf));
+                    g_stVpssCtrl[enIp].stRoBuf[i].stMemBuf.u32Size = 0;
                 }
             }
         }        
@@ -1564,105 +1694,6 @@ HI_S32 VPSS_CTRL_StartTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
     return s32Ret;
 }
 
-HI_S32 VPSS_CTRL_GetGlbMotionInfo(VPSS_TASK_S *pstTask)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    #if 0
-    HI_PQ_MOTION_INPUT_S stMotionInput;
-    HI_PQ_TNR_MOTION_PARAM_IN_S stParamIn;
-	HI_U32 u32WbcVirAddr;
-
-    u32WbcVirAddr = pstTask->stVpssHalInfo.u32stt_w_vir_addr;
-
-    if(HI_TRUE == pstTask->stVpssHalInfo.stInInfo.bProgressive)
-    {
-        stParamIn.u32HdlNo = pstTask->pstInstance->ID;
-        stParamIn.u32Height = pstTask->pstInstance->stInEntity.stStreamInfo.u32StreamH;
-		stParamIn.u32Width = pstTask->pstInstance->stInEntity.stStreamInfo.u32StreamW;
-		stParamIn.pstMotionReg = (S_VPSSWB_REGS_TYPE *)u32WbcVirAddr;
-        s32Ret = DRV_PQ_GetTnrGlobalMotion(&stParamIn,(HI_PQ_TNR_MOTION_RESULT_S *)(&pstTask->pstInstance->stGlbMotionRls));            
-    }
-    else
-    {
-        stMotionInput.u32HandleNo = pstTask->pstInstance->ID;
-        stMotionInput.u32Height = pstTask->pstInstance->stInEntity.stStreamInfo.u32StreamH;
-		stMotionInput.u32Width = pstTask->pstInstance->stInEntity.stStreamInfo.u32StreamW;
-		stMotionInput.pstMotionReg = (S_VPSSWB_REGS_TYPE *)u32WbcVirAddr;
-        s32Ret = DRV_PQ_GetDeiGlobalMotion(&stMotionInput,(HI_PQ_MOTION_INFO_S *)(&pstTask->pstInstance->stGlbMotionRls));
-    }
-
-	if(HI_SUCCESS != s32Ret)
-	{
-		VPSS_FATAL("Get GlobalMotion Info from pq failed\n");
-	}
-	#endif
-    return s32Ret;
-}
-
-
-HI_S32 VPSS_CTRL_GetDbInfo(VPSS_TASK_S *pstTask)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    #if 0
-	HI_PQ_DB_STR_PARAM_IN_S stParamIn;
-	HI_U32 u32WbcVirAddr;
-
-    u32WbcVirAddr = pstTask->stVpssHalInfo.u32stt_w_vir_addr;
-
-	stParamIn.u8SCDStr = pstTask->pstInstance->stSCDRls.SCW_P1;  // use scd calc result
-	stParamIn.u32HdlNo = pstTask->pstInstance->ID;
-	stParamIn.pstReg = (S_VPSSWB_REGS_TYPE *)u32WbcVirAddr;
-
-    if(HI_TRUE == pstTask->stVpssHalInfo.stInInfo.bProgressive)
-	{
-		stParamIn.eType = HI_PQ_DB_PROGRESSIVE;
-	}
-	else
-	{
-		stParamIn.eType = HI_PQ_DB_INTERLACE;
-	}
-
-	s32Ret = DRV_PQ_GetAdaptiveDBStrength(&stParamIn,&pstTask->pstInstance->stDBRls);
-
-
-	if(HI_SUCCESS != s32Ret)
-	{
-		VPSS_FATAL("Get DB Info from pq failed\n");
-	}
-	#endif
-    return s32Ret;
-
-}
-
-HI_S32 VPSS_CTRL_GetSCDInfo(VPSS_TASK_S *pstTask)
-{
-    #if 0
-	SCDInput stCDInput;
-	HI_U32 u32WbcVirAddr;
-
-
-    u32WbcVirAddr = pstTask->stVpssHalInfo.u32stt_w_vir_addr;
-
-	stCDInput.Width = pstTask->stVpssHalInfo.stInInfo.u32Width;
-	stCDInput.Height = pstTask->stVpssHalInfo.stInInfo.u32Height;
-	
-	if(HI_TRUE == pstTask->stVpssHalInfo.stInInfo.bProgressive)
-	{
-		stCDInput.Field = HI_DRV_FIELD_ALL;
-	}
-	else
-	{
-		stCDInput.Field = pstTask->stVpssHalInfo.stInInfo.enFieldMode;
-	}
-
-	VPSS_HAL_GetSCDInfo(u32WbcVirAddr,pstTask->pstInstance->stSCDRls.s32SCHist_CF);
-
-	SCDDetection(&stCDInput,&(pstTask->pstInstance->stSCDRls));
-	#endif
-	return HI_SUCCESS;
-
-}
-
 
 HI_S32 VPSS_CTRL_GetRwzbData(VPSS_IP_E enIP,VPSS_TASK_S *pstTask)
 {
@@ -1675,15 +1706,15 @@ HI_S32 VPSS_CTRL_GetRwzbData(VPSS_IP_E enIP,VPSS_TASK_S *pstTask)
     pstRwzb = &(pstInstance->stRwzbInfo);
     
     for(u32Count = 0; u32Count < 6 ; u32Count ++)
-    {
-    #if defined(CHIP_TYPE_hi3798mv100_a)||defined(CHIP_TYPE_hi3796mv100)||defined(CHIP_TYPE_hi3798mv100)
-       VPSS_HAL_GetDetPixel(enIP,u32Count,&(pstRwzb->u8RwzbData[u32Count][0]));
-	#endif
+	{
+#if defined(CHIP_TYPE_hi3798mv100_a)||defined(CHIP_TYPE_hi3796mv100)||defined(CHIP_TYPE_hi3798mv100)
+		VPSS_HAL_GetDetPixel(enIP,u32Count,&(pstRwzb->u8RwzbData[u32Count][0]));
+#endif
 
-	#if defined(CHIP_TYPE_hi3798cv200_a)
-       VPSS_HAL_GetDetPixel(pstTask->stVpssHalInfo,u32Count,&(pstRwzb->u8RwzbData[u32Count][0]));
-	#endif
-    }
+#if defined(CHIP_TYPE_hi3798cv200_a)||defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+		VPSS_HAL_GetDetPixel(pstTask->stVpssHalInfo.u32stt_w_vir_addr,u32Count,&(pstRwzb->u8RwzbData[u32Count][0]));
+#endif
+	}
     #endif
     
     return HI_SUCCESS;
@@ -1763,13 +1794,13 @@ HI_S32 VPSS_CTRL_UpdatePqWbcData(VPSS_INSTANCE_S *pstInstance,PQ_VPSS_WBC_REG_S 
     return HI_SUCCESS;
 }
 
-HI_S32 VPSS_CTRL_StorePrivData(VPSS_BUFFER_S *pstBuffer,HI_DRV_VIDEO_FRAME_S *pstPrivFrmData)
+HI_S32 VPSS_CTRL_StorePrivData(VPSS_BUFFER_S *pstVpssBuf,HI_DRV_VIDEO_FRAME_S *pstPrivFrmData)
 {
 	HI_U32 u32Addr;
 	HI_DRV_VIDEO_FRAME_S *pstPrivFrame;
 	MMZ_BUFFER_S *pstPrivDataBuf;
 
-	pstPrivDataBuf = &(pstBuffer->stPrivDataBuf);
+	pstPrivDataBuf = &(pstVpssBuf->stPrivDataBuf);
 
 	u32Addr = pstPrivDataBuf->u32StartPhyAddr;
 
@@ -1832,10 +1863,10 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
         }	
 	}
 	
-	VPSS_CTRL_GetRwzbData(enIp,pstTask);
-
 	VPSS_CTRL_UpdatePqWbcData(pstTask->pstInstance,(PQ_VPSS_WBC_REG_S *)pstTask->stVpssHalInfo.u32stt_w_vir_addr);
     
+	VPSS_CTRL_GetRwzbData(enIp,pstTask);
+
     /*step 1.0 :release done image*/
     VPSS_INST_CompleteImage(pstInstance);
 
@@ -1852,48 +1883,14 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 
         bDropped = HI_FALSE;
         if (pstLeftFbNode != HI_NULL || pstRightFbNode != HI_NULL)
-        {
-            //HI_RECT_S stLbxTmp = {0};
-            pstPort->u32OutCount ++;
-            bDropped = VPSS_INST_CheckIsDropped(pstInstance,
-                                                pstPort->u32MaxFrameRate,
-                                                pstPort->u32OutCount);
-
-            #if 0
-            /* 加入LBX统计信息 */
-            /* 1,获取LBX信息 */
-            /* 2,添加到帧结构体中 */
-            VPSS_INST_GetLbxInfo(pstInstance, u32Count, &stLbxTmp);
-
-            if (pstLeftFbNode != HI_NULL)
-            {
-                memcpy(&pstLeftFbNode->stOutFrame.stLbxInfo, &stLbxTmp, sizeof(HI_RECT_S));
-            }
-
-            if (pstRightFbNode != HI_NULL)
-            {
-                memcpy(&pstRightFbNode->stOutFrame.stLbxInfo, &stLbxTmp, sizeof(HI_RECT_S));
-            }
-            #endif
-            //Drop 2first frame for interlace stream
+        {            
+			//Drop 2first frame for interlace stream
             if(HI_FALSE == pstInstance->stInEntity.stStreamInfo.u32StreamProg && HI_NULL != pstInstance->stInEntity.pstWbcInfo[0])
             {
                 if((2 == pstInstance->stInEntity.pstWbcInfo[0]->u32CompleteCount)
                     || (3 == pstInstance->stInEntity.pstWbcInfo[0]->u32CompleteCount))
                 {
                     bDropped = HI_TRUE;
-                }
-            }
-            
-			//VPSS_ERROR("bStore %d\n",pstInstance->bStorePrivData);
-            //if the last frame  ,it can't be dropped
-            if (pstLeftFbNode != HI_NULL)
-            {
-                memcpy(&stTmpFrame, &(pstLeftFbNode->stOutFrame), sizeof(HI_DRV_VIDEO_FRAME_S));
-                pstPriv = (HI_DRV_VIDEO_PRIVATE_S*) & (stTmpFrame.u32Priv[0]);
-                if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_FRAME_FLAG)
-                {
-                    bDropped = HI_FALSE;
                 }
             }
         }
@@ -1926,7 +1923,7 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                 {
                     VPSS_INST_RelFrmBuffer(pstTask->pstInstance, pstPort->s32PortId,
                                            &(pstPort->stFrmInfo.stBufListCfg),
-                                           &(pstLeftFbNode->stBuffer.stMMZBuf));
+                                           &(pstLeftFbNode->stBuffer.stMemBuf));
                 }
                 VPSS_FB_AddEmptyFrmBuf(&(pstPort->stFrmInfo),
                                        pstTask->pstFrmNode[u32Count],
@@ -1985,7 +1982,7 @@ HI_S32 VPSS_CTRL_CompleteTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
                 {
                     VPSS_INST_RelFrmBuffer(pstTask->pstInstance, pstPort->s32PortId,
                                            &(pstPort->stFrmInfo.stBufListCfg),
-                                           &(pstRightFbNode->stBuffer.stMMZBuf));
+                                           &(pstRightFbNode->stBuffer.stMemBuf));
                 }
 
                 VPSS_FB_AddEmptyFrmBuf(&(pstPort->stFrmInfo),
@@ -2065,7 +2062,7 @@ HI_S32 VPSS_CTRL_ClearTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             {
                 VPSS_INST_RelFrmBuffer(pstTask->pstInstance,pstPort->s32PortId,
                         &(pstPort->stFrmInfo.stBufListCfg),
-                        &(pstTask->pstFrmNode[u32Count]->stBuffer.stMMZBuf));
+                        &(pstTask->pstFrmNode[u32Count]->stBuffer.stMemBuf));
             }
             VPSS_FB_AddEmptyFrmBuf(&(pstPort->stFrmInfo),
                 pstFbNode,
@@ -2080,7 +2077,7 @@ HI_S32 VPSS_CTRL_ClearTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
             {
                 VPSS_INST_RelFrmBuffer(pstTask->pstInstance,pstPort->s32PortId,
                         &(pstPort->stFrmInfo.stBufListCfg),
-                        &(pstTask->pstFrmNode[u32Count]->stBuffer.stMMZBuf));
+                        &(pstTask->pstFrmNode[u32Count]->stBuffer.stMemBuf));
             }
             VPSS_FB_AddEmptyFrmBuf(&(pstPort->stFrmInfo),
                             pstFbNode,
@@ -2097,125 +2094,125 @@ HI_S32 VPSS_CTRL_ClearTask(VPSS_IP_E enIp, VPSS_TASK_S *pstTask)
 
 HI_S32 VPSS_CTRL_ThreadProc(HI_VOID* pArg)
 {   
-    VPSS_IP_E enIp;
-    HI_S32 s32CreateRet   = HI_FAILURE;
-    HI_S32 s32StartRet    = HI_FAILURE;
-    HI_S32 s32WaitRet     = HI_FAILURE;
-    
-    HI_U32 u32NowTime = 0;
-    VPSS_CTRL_S *pstVpssCtrl = HI_NULL;
+	VPSS_IP_E enIp;
+	HI_S32 s32CreateRet   = HI_FAILURE;
+	HI_S32 s32StartRet    = HI_FAILURE;
+	HI_S32 s32WaitRet     = HI_FAILURE;
 
-    enIp = (VPSS_IP_E)pArg;
-    pstVpssCtrl = &(g_stVpssCtrl[enIp]);
+	HI_U32 u32NowTime = 0;
+	VPSS_CTRL_S *pstVpssCtrl = HI_NULL;
 
-    pstVpssCtrl->s32ThreadPos = 0;
-    
-    VPSS_OSAL_InitEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
-    VPSS_OSAL_InitEvent(&(pstVpssCtrl->stNewTask), EVENT_UNDO, EVENT_UNDO);
-    
-    pstVpssCtrl->stTask.u32LastTotal = 0;
-    pstVpssCtrl->stTask.u32SuccessTotal = 0;
-    pstVpssCtrl->stTask.u32Create = 0;
-    pstVpssCtrl->stTask.u32Fail = 0;
-    pstVpssCtrl->stTask.u32TimeOut= 0;
-    
-    while(!kthread_should_stop())
-    {
-        HI_S32 s32Ret = HI_FAILURE;
-        pstVpssCtrl->stTask.stState = TASK_STATE_READY;
-        
-        if(pstVpssCtrl->u32ThreadSleep == 1)
-        {
-            goto VpssThreadIdle;
-        }
-        
-        pstVpssCtrl->s32ThreadPos = 1;
-        
-        pstVpssCtrl->stTask.u32Create++;
-        
-        s32CreateRet =  VPSS_CTRL_CreateTask(enIp, &(pstVpssCtrl->stTask));
-        /* create success  running -> waitting */
-        if(s32CreateRet == HI_SUCCESS)
-        {
-            VPSS_INFO("...............CreateTask\n");
-            pstVpssCtrl->s32ThreadPos = 2;
+	enIp = (VPSS_IP_E)pArg;
+	pstVpssCtrl = &(g_stVpssCtrl[enIp]);
 
-            VPSS_HAL_SetClockEn(enIp, HI_TRUE);
-            
-            VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
-            s32StartRet = VPSS_CTRL_StartTask(enIp, &(pstVpssCtrl->stTask));
-            if (s32StartRet == HI_SUCCESS)
-            {
-                VPSS_INFO("...............StartTask\n");
-                /*
-                    start logic running, waitting for irq to wakeup thread
-                    */
-                pstVpssCtrl->stTask.stState = TASK_STATE_WAIT;
-                
-                s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskNext), HZ);
-                if (s32WaitRet == HI_SUCCESS)
-                {
-                    pstVpssCtrl->s32ThreadPos = 3;
+	pstVpssCtrl->s32ThreadPos = 0;
 
-                    VPSS_CTRL_CompleteTask(enIp, &(pstVpssCtrl->stTask));
+	VPSS_OSAL_InitEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
+	VPSS_OSAL_InitEvent(&(pstVpssCtrl->stNewTask), EVENT_UNDO, EVENT_UNDO);
 
-                    if(jiffies - u32NowTime >= HZ)
-                    {
-                        u32NowTime = jiffies;
-                        pstVpssCtrl->stTask.u32SucRate = pstVpssCtrl->stTask.u32SuccessTotal 
-                                                       - pstVpssCtrl->stTask.u32LastTotal;
-                        pstVpssCtrl->stTask.u32LastTotal = pstVpssCtrl->stTask.u32SuccessTotal;
-                    }
+	pstVpssCtrl->stTask.u32LastTotal = 0;
+	pstVpssCtrl->stTask.u32SuccessTotal = 0;
+	pstVpssCtrl->stTask.u32Create = 0;
+	pstVpssCtrl->stTask.u32Fail = 0;
+	pstVpssCtrl->stTask.u32TimeOut= 0;
 
-                    pstVpssCtrl->stTask.u32SuccessTotal ++;
-                }
-                else
-                {
-                    VPSS_FATAL("...............Wait OutTime Faild\n");
-                    pstVpssCtrl->s32ThreadPos = 4;
-                    pstVpssCtrl->stTask.u32TimeOut++;
-                    
-                    VPSS_CTRL_ClearTask(enIp, &(pstVpssCtrl->stTask));
-                }
-            }
-            else
-            {
-                /* 创建Task成功之后，start必须成功 */
-                VPSS_FATAL("...............StartTask Faild\n");
-                s32StartRet = HI_FAILURE;
-				
-                VPSS_CTRL_ClearTask(enIp, &(pstVpssCtrl->stTask));
-                
+	while(!kthread_should_stop())
+	{
+		HI_S32 s32Ret = HI_FAILURE;
+		pstVpssCtrl->stTask.stState = TASK_STATE_READY;
+
+		if(pstVpssCtrl->u32ThreadSleep == 1)
+		{
+			goto VpssThreadIdle;
+		}
+
+		pstVpssCtrl->s32ThreadPos = 1;
+
+		pstVpssCtrl->stTask.u32Create++;
+
+		s32CreateRet =  VPSS_CTRL_CreateTask(enIp, &(pstVpssCtrl->stTask));
+		/* create success  running -> waitting */
+		if(s32CreateRet == HI_SUCCESS)
+		{
+			VPSS_INFO("...............CreateTask\n");
+			pstVpssCtrl->s32ThreadPos = 2;
+
+			VPSS_HAL_SetClockEn(enIp, HI_TRUE);
+
+			VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stTaskNext), EVENT_UNDO, EVENT_UNDO);
+			s32StartRet = VPSS_CTRL_StartTask(enIp, &(pstVpssCtrl->stTask));
+			if (s32StartRet == HI_SUCCESS)
+			{
+				VPSS_INFO("...............StartTask\n");
+				/*
+				   start logic running, waitting for irq to wakeup thread
+				   */
+				pstVpssCtrl->stTask.stState = TASK_STATE_WAIT;
+
+				s32WaitRet = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stTaskNext), HZ);
+				if (s32WaitRet == HI_SUCCESS)
+				{
+					pstVpssCtrl->s32ThreadPos = 3;
+
+					VPSS_CTRL_CompleteTask(enIp, &(pstVpssCtrl->stTask));
+
+					if(jiffies - u32NowTime >= HZ)
+					{
+						u32NowTime = jiffies;
+						pstVpssCtrl->stTask.u32SucRate = pstVpssCtrl->stTask.u32SuccessTotal 
+							- pstVpssCtrl->stTask.u32LastTotal;
+						pstVpssCtrl->stTask.u32LastTotal = pstVpssCtrl->stTask.u32SuccessTotal;
+					}
+
+					pstVpssCtrl->stTask.u32SuccessTotal ++;
+				}
+				else
+				{
+					VPSS_FATAL("...............Wait OutTime Faild\n");
+					pstVpssCtrl->s32ThreadPos = 4;
+					pstVpssCtrl->stTask.u32TimeOut++;
+
+					VPSS_CTRL_ClearTask(enIp, &(pstVpssCtrl->stTask));
+				}
+			}
+			else
+			{
+				/* 创建Task成功之后，start必须成功 */
+				VPSS_FATAL("...............StartTask Faild\n");
+				s32StartRet = HI_FAILURE;
+
+				VPSS_CTRL_ClearTask(enIp, &(pstVpssCtrl->stTask));
+
 				goto  VpssThreadIdle;
-            }
+			}
 
-        }
-        else/*create failed or start failed running -> idle*/
-        {            
-            pstVpssCtrl->stTask.u32Fail++;
+		}
+		else/*create failed or start failed running -> idle*/
+		{            
+			pstVpssCtrl->stTask.u32Fail++;
 
 VpssThreadIdle:
-            pstVpssCtrl->s32ThreadPos = 5;
-            pstVpssCtrl->stTask.stState = TASK_STATE_IDLE;
+			pstVpssCtrl->s32ThreadPos = 5;
+			pstVpssCtrl->stTask.stState = TASK_STATE_IDLE;
 
-            //VPSS_HAL_SetClockEn(enIp, HI_FALSE);
+			VPSS_HAL_SetClockEn(enIp, HI_FALSE);
 
-            s32Ret = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stNewTask),HZ/100);
-            if(s32Ret == HI_SUCCESS)
-            {
-                VPSS_INFO("WakeUpThread Success.\n");
-            }
+			s32Ret = VPSS_OSAL_WaitEvent(&(pstVpssCtrl->stNewTask),HZ/100);
+			if(s32Ret == HI_SUCCESS)
+			{
+				VPSS_INFO("WakeUpThread Success.\n");
+			}
 
-            VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stNewTask), EVENT_UNDO, EVENT_UNDO);
+			VPSS_OSAL_ResetEvent(&(pstVpssCtrl->stNewTask), EVENT_UNDO, EVENT_UNDO);
 #ifdef ZME_2L_TEST
 			/*当上层出现stop操作时，释放缓存的buffer*/
 			if( HI_NULL != pstVpssCtrl->stTask.pstFrmNodeZME1L)  
 			{	
 				//释放旋转内存，节省SDK空间占用
-				if(0 != pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMMZBuf.u32Size)
+				if(0 != pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMemBuf.u32Size)
 				{
-					(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMMZBuf));
-					pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMMZBuf.u32Size = 0;
+					VPSS_OSAL_FreeMem(&(pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMemBuf));
+					pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.stMemBuf.u32Size = 0;
 					pstVpssCtrl->stTask.pstFrmNodeZME1L->stBuffer.u32Stride = 0;
 
 					VPSS_VFREE(pstVpssCtrl->stTask.pstFrmNodeZME1L);
@@ -2223,15 +2220,15 @@ VpssThreadIdle:
 				}
 			}
 #endif
-        }
-        
-    }
+		}
 
-    pstVpssCtrl->s32ThreadPos = 6;
+	}
 
-    VPSS_INFO("s32ThreadPos = %d...\n",pstVpssCtrl->s32ThreadPos);
-    
-    return HI_SUCCESS;
+	pstVpssCtrl->s32ThreadPos = 6;
+
+	VPSS_INFO("s32ThreadPos = %d...\n",pstVpssCtrl->s32ThreadPos);
+
+	return HI_SUCCESS;
 }
 
 HI_S32 VPSS_CTRL_CreateThread(VPSS_IP_E enIp)
@@ -2242,16 +2239,21 @@ HI_S32 VPSS_CTRL_CreateThread(VPSS_IP_E enIp)
     g_stVpssCtrl[enIp].hThread = 
         kthread_create(VPSS_CTRL_ThreadProc, (HI_VOID *)enIp, "HI_VPSS_Process");
     
-    if (HI_NULL == g_stVpssCtrl[enIp].hThread)
+	if( IS_ERR(g_stVpssCtrl[enIp].hThread) )
     {
         VPSS_FATAL("Can not create thread.\n");
         return HI_FAILURE;
     }
 
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+#else
     param.sched_priority = 99;
     sched_setscheduler(g_stVpssCtrl[enIp].hThread, SCHED_RR, &param);
     
+#ifndef HI_TVP_SUPPORT
 	kthread_bind(g_stVpssCtrl[enIp].hThread, 3);	
+#endif
+#endif
 
     wake_up_process(g_stVpssCtrl[enIp].hThread);
     
@@ -2353,6 +2355,7 @@ HI_U32 VPSS_CTRL_MallocInstanceId(HI_VOID)
         return u32VpssId;
     }
 }
+
 VPSS_HANDLE VPSS_CTRL_AddInstance(VPSS_INSTANCE_S *pstInstance)
 {
     HI_U32 u32VpssId;    
@@ -2422,69 +2425,68 @@ HI_S32 VPSS_CTRL_DelInstance(VPSS_INSTANCE_S* pstInstance)
 
 HI_S32 VPSS_CTRL_Init(HI_VOID)
 {
-    HI_S32 s32Ret;
-    HI_U32 i,j;
+	HI_S32 s32Ret;
+	HI_U32 i,j;
 
-    g_stVpssCtrl[0].bIPVaild = HI_TRUE;   
-    g_stVpssCtrl[1].bIPVaild = HI_FALSE;
-    
-    
-    for(i = 0; i < VPSS_IP_BUTT; i++)
-    {
-        if(HI_TRUE != g_stVpssCtrl[i].bIPVaild)
-        {
-            continue;
-        }
-        
-        if(0 == g_stVpssCtrl[i].s32IsVPSSOpen)
-        {           
-            s32Ret = VPSS_CTRL_RegistISR((VPSS_IP_E)i);
-            
-            if(HI_SUCCESS != s32Ret)
-            {
-                goto VPSS_IP_DEL_INT;
-            }
-            
-            VPSS_CTRL_InitInstList((VPSS_IP_E)i);
+	g_stVpssCtrl[0].bIPVaild = HI_TRUE;   
+	g_stVpssCtrl[1].bIPVaild = HI_FALSE;
 
-            s32Ret = VPSS_HAL_Init((VPSS_IP_E)i);            
-            if(HI_SUCCESS != s32Ret)
-            {
-                goto VPSS_IP_UnRegist_IRQ;
-            }
-            
-            s32Ret = VPSS_CTRL_CreateThread((VPSS_IP_E)i);
-            if (s32Ret != HI_SUCCESS)
-            {
-                VPSS_FATAL("VPSS_CTRL_CreateThread Failed\n");
-                goto VPSS_IP_HAL_DEL_INIT;
-            }
-        }
-        
-        g_stVpssCtrl[i].s32IsVPSSOpen++;
 
-    }
+	for(i = 0; i < VPSS_IP_BUTT; i++)
+	{
+		if(HI_TRUE != g_stVpssCtrl[i].bIPVaild)
+		{
+			continue;
+		}
 
-    return HI_SUCCESS;
+		if(0 == g_stVpssCtrl[i].s32IsVPSSOpen)
+		{           
+			s32Ret = VPSS_CTRL_RegistISR((VPSS_IP_E)i);
+
+			if(HI_SUCCESS != s32Ret)
+			{
+				goto VPSS_IP_DEL_INT;
+			}
+
+			VPSS_CTRL_InitInstList((VPSS_IP_E)i);
+
+			s32Ret = VPSS_HAL_Init((VPSS_IP_E)i);            
+			if(HI_SUCCESS != s32Ret)
+			{
+				goto VPSS_IP_UnRegist_IRQ;
+			}
+
+			s32Ret = VPSS_CTRL_CreateThread((VPSS_IP_E)i);
+			if (s32Ret != HI_SUCCESS)
+			{
+				VPSS_FATAL("VPSS_CTRL_CreateThread Failed\n");
+				goto VPSS_IP_HAL_DEL_INIT;
+			}
+		}
+
+		g_stVpssCtrl[i].s32IsVPSSOpen++;
+
+	}
+
+	return HI_SUCCESS;
 
 VPSS_IP_HAL_DEL_INIT: 
-    (HI_VOID)VPSS_HAL_DelInit((VPSS_IP_E)i);     
+	(HI_VOID)VPSS_HAL_DelInit((VPSS_IP_E)i);     
 VPSS_IP_UnRegist_IRQ:
-    (HI_VOID)VPSS_CTRL_UnRegistISR((VPSS_IP_E)i);     
-   
+	(HI_VOID)VPSS_CTRL_UnRegistISR((VPSS_IP_E)i);     
+
 VPSS_IP_DEL_INT:    
-    for(j = 0; j < i; j++)
-    {
-        if(HI_TRUE == g_stVpssCtrl[j].bIPVaild)
-        {
-            (HI_VOID)VPSS_CTRL_UnRegistISR((VPSS_IP_E)j); 
-            (HI_VOID)VPSS_HAL_DelInit((VPSS_IP_E)j);
-            (HI_VOID)VPSS_CTRL_DestoryThread((VPSS_IP_E)j); 
-        }
-    }
+	for(j = 0; j < i; j++)
+	{
+		if(HI_TRUE == g_stVpssCtrl[j].bIPVaild)
+		{
+			(HI_VOID)VPSS_CTRL_UnRegistISR((VPSS_IP_E)j); 
+			(HI_VOID)VPSS_HAL_DelInit((VPSS_IP_E)j);
+			(HI_VOID)VPSS_CTRL_DestoryThread((VPSS_IP_E)j); 
+		}
+	}
 
-    return HI_FAILURE;
-
+	return HI_FAILURE;
 }
 
 HI_S32 VPSS_CTRL_DelInit(HI_VOID)
@@ -2529,11 +2531,11 @@ HI_S32 VPSS_CTRL_DelInit(HI_VOID)
 				if ( g_stVpssCtrl[i].stTask.pstFrmNodeRoBuf[u32Count] != HI_NULL)
 				{
 					pstVpssBuf = &(g_stVpssCtrl[i].stTask.pstFrmNodeRoBuf[u32Count]->stBuffer);
-					if (pstVpssBuf->stMMZBuf.u32Size != 0)
+					if (pstVpssBuf->stMemBuf.u32Size != 0)
 					{
-						(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstVpssBuf->stMMZBuf));
+						(HI_VOID)VPSS_OSAL_FreeMem(&(pstVpssBuf->stMemBuf));
 						pstVpssBuf->u32Stride = 0;
-						pstVpssBuf->stMMZBuf.u32Size = 0;
+						pstVpssBuf->stMemBuf.u32Size = 0;
 
 						VPSS_VFREE(g_stVpssCtrl[i].stTask.pstFrmNodeRoBuf[u32Count]);
 						g_stVpssCtrl[i].stTask.pstFrmNodeRoBuf[u32Count] = HI_NULL;
@@ -2544,11 +2546,11 @@ HI_S32 VPSS_CTRL_DelInit(HI_VOID)
 				if ( g_stVpssCtrl[i].stTask.pstFrmNodeZME1L != HI_NULL)
 				{
 					pstVpssBuf = &(g_stVpssCtrl[i].stTask.pstFrmNodeZME1L->stBuffer);
-					if (pstVpssBuf->stMMZBuf.u32Size != 0)
+					if (pstVpssBuf->stMemBuf.u32Size != 0)
 					{
-						(HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstVpssBuf->stMMZBuf));
+						(HI_VOID)VPSS_OSAL_FreeMem(&(pstVpssBuf->stMemBuf));
 						pstVpssBuf->u32Stride = 0;
-						pstVpssBuf->stMMZBuf.u32Size = 0;
+						pstVpssBuf->stMemBuf.u32Size = 0;
 
 						VPSS_VFREE(g_stVpssCtrl[i].stTask.pstFrmNodeZME1L);
 						g_stVpssCtrl[i].stTask.pstFrmNodeZME1L = HI_NULL;
@@ -2556,11 +2558,11 @@ HI_S32 VPSS_CTRL_DelInit(HI_VOID)
 				}			
 			#else
                 pstVpssBuf = &(g_stVpssCtrl[i].stRoBuf[u32Count]);
-                if (pstVpssBuf->stMMZBuf.u32Size != 0)
+                if (pstVpssBuf->stMemBuf.u32Size != 0)
                 {
-                    HI_DRV_MMZ_UnmapAndRelease(&(pstVpssBuf->stMMZBuf));
-                    pstVpssBuf->u32Stride = 0;
-                    pstVpssBuf->stMMZBuf.u32Size = 0;
+					VPSS_OSAL_FreeMem(&(pstVpssBuf->stMemBuf));
+					pstVpssBuf->u32Stride = 0;
+					pstVpssBuf->stMemBuf.u32Size = 0;
                 }
 			#endif
             }          
@@ -2947,6 +2949,7 @@ irqreturn_t VPSS1_CTRL_IntService(HI_S32 irq, HI_VOID *dev_id)
     return IRQ_HANDLED;
 }
 
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3798cv200_a)
 HI_S32 VPSS_CTRL_ProcRead(struct seq_file *p, HI_VOID *v)
 {
     VPSS_INSTANCE_S* pstInstance;
@@ -2955,6 +2958,7 @@ HI_S32 VPSS_CTRL_ProcRead(struct seq_file *p, HI_VOID *v)
     VPSS_IN_IMAGELIST_STATE_S stImgListState;
     DRV_PROC_ITEM_S *pProcItem;
     VPSS_PORT_PRC_S *pstPortPrc[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];
+	HI_U8 *pProcPortFmt[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];
     VPSS_PORT_S *pstPort;
     HI_S32 s32SrcModuleID;
     HI_U32 u32Count;
@@ -2989,6 +2993,21 @@ HI_S32 VPSS_CTRL_ProcRead(struct seq_file *p, HI_VOID *v)
     {
         pstPort = &(pstInstance->stPort[u32Count]);
         VPSS_INST_GetPortPrc(pstInstance,pstPort->s32PortId,pstPortPrc[u32Count]);
+
+		if ( (pstPortPrc[u32Count]->eFormat - HI_DRV_PIX_FMT_NV12_CMP) <= 5 && 
+			 (pstPortPrc[u32Count]->eFormat >= HI_DRV_PIX_FMT_NV12_CMP) )
+		{
+			pProcPortFmt[u32Count] = g_pPixString[pstPortPrc[u32Count]->eFormat - HI_DRV_PIX_FMT_NV12_CMP + 7] ;
+		}
+		else if ((pstPortPrc[u32Count]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6 &&
+				 (pstPortPrc[u32Count]->eFormat >= HI_DRV_PIX_FMT_NV12))
+		{
+			pProcPortFmt[u32Count] = g_pPixString[pstPortPrc[u32Count]->eFormat - HI_DRV_PIX_FMT_NV12];
+		}
+		else
+		{
+			pProcPortFmt[u32Count] = g_pPixString[13];
+		}
     }
 
     s32SrcModuleID = (pstInstance->hDst & 0x00ff0000) >>16;
@@ -3046,15 +3065,9 @@ HI_S32 VPSS_CTRL_ProcRead(struct seq_file *p, HI_VOID *v)
                                                 g_pAlgModeString[pstInstance->stPort[2].bEnble],
         
         0,  
-                                                ((pstPortPrc[0]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
-                                                g_pPixString[pstPortPrc[0]->eFormat - HI_DRV_PIX_FMT_NV12]:
-                                                g_pPixString[7],
-                                                ((pstPortPrc[1]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
-                                                g_pPixString[pstPortPrc[1]->eFormat - HI_DRV_PIX_FMT_NV12]:
-                                                g_pPixString[7],
-                                                ((pstPortPrc[2]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
-                                                g_pPixString[pstPortPrc[2]->eFormat - HI_DRV_PIX_FMT_NV12]:
-                                                g_pPixString[7],                    
+												pProcPortFmt[0],
+												pProcPortFmt[1],
+												pProcPortFmt[2],                  
 
         g_pAlgModeString[pstInstance->bAlwaysFlushSrc], 
                                                 pstPortPrc[0]->s32OutputWidth,                                         
@@ -3200,6 +3213,301 @@ READFREE:
     return HI_SUCCESS;
     
 }
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+HI_S32 VPSS_CTRL_ProcRead(struct seq_file *p, HI_VOID *v)
+{
+	HI_CHAR asNodeState[VPSS_HAL_TASK_NODE_BUTT] = {0};
+    VPSS_INSTANCE_S* pstInstance;
+	VPSS_IN_STREAM_INFO_S* pstStreamInfo;
+    VPSS_IN_ENTITY_S* pstInEntity;
+    VPSS_IN_IMAGELIST_STATE_S stImgListState;
+    DRV_PROC_ITEM_S *pProcItem;
+    VPSS_PORT_PRC_S *pstPortPrc[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];
+    VPSS_PORT_S *pstPort;
+    HI_S32 s32SrcModuleID;
+    HI_U32 u32Count;
+    pProcItem = p->private;
+             
+    pstInstance = VPSS_CTRL_GetInstance((VPSS_HANDLE)pProcItem->data);
+
+    if(!pstInstance)
+    {
+        VPSS_FATAL("Can't get instance %x proc!\n",(VPSS_HANDLE)pProcItem->data);
+        return HI_FAILURE;
+    }
+
+	pstInEntity = &(pstInstance->stInEntity);
+    pstStreamInfo = &(pstInstance->stInEntity.stStreamInfo);
+    
+    VPSS_INST_GetSrcListState(pstInstance, &stImgListState);
+	
+    for(u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
+    {
+        pstPortPrc[u32Count] = VPSS_VMALLOC(sizeof(VPSS_PORT_PRC_S));
+        if (pstPortPrc[u32Count] == HI_NULL)
+        {
+            VPSS_FATAL("Vmalloc Proc space Failed.\n");
+            
+            goto READFREE;
+        }
+        memset(pstPortPrc[u32Count],0,sizeof(VPSS_PORT_PRC_S));
+        
+    }    
+
+    for(u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
+    {
+        pstPort = &(pstInstance->stPort[u32Count]);
+        VPSS_INST_GetPortPrc(pstInstance,pstPort->s32PortId,pstPortPrc[u32Count]);
+    }
+
+    s32SrcModuleID = (pstInstance->hDst & 0x00ff0000) >>16;
+
+	for(u32Count = 0; u32Count < VPSS_HAL_TASK_NODE_BUTT; u32Count++)
+	{
+		asNodeState[u32Count] = (pstInstance->abNodeVaild[u32Count] == HI_TRUE) ? '1':'0';
+	}
+
+    PROC_PRINT(p,
+        "--------VPSS%04x---------------|"   "------------------------PortInfo--------------------------|\n"
+        "ID               :0x%-8d   |"      "ID               :0x%-8d  |0x%-8d  |0x%-8d    |\n"    
+        "State/Pause      :%-10s   |"         "State            :%-3s         |%-3s         |%-3s           |\n"   
+        "SourceFormat     :%-10s   |"        "PixelFormat      :%-12s|%-12s|%-12s  |\n"                                 
+        "QuickOutPut      :%-10s   |"        "OutResolution    :%4d*%-4d   |%4d*%-4d   |%4d*%-4d     |\n"                     
+        "SourceID         :%-6s(%02x)   |"   "ColorSpace       :%-12s|%-12s|%-12s  |\n"
+        "Version          :%-10s   |"        "DispPixelAR(W/H) :%2d/%-2d       |%2d/%-2d       |%2d/%-2d         |\n"             
+        "                               |"   "Aspect Mode      :%-12s|%-12s|%-12s  |\n"                                 
+        "                               |"   "Support3DStream  :%-12s|%-12s|%-12s  |\n"                                 
+        "                               |"   "MaxFrameRate     :%-5d       |%-5d       |%-5d         |\n"                     
+        "-------- Algorithm-------------|"   "*LowDelay        :%-12s|%-12s|%-12s  |\n"                            
+        "P/I Setting   :%-10s      |"        "HorizonFlip      :%-12s|%-12s|%-12s  |\n"
+        "Deinterlace   :%-10s      |"        "VerticalFlip     :%-12s|%-12s|%-12s  |\n"
+        "Sharpness     :%-10s      |"        "Rotation         :%-12s|%-12s|%-12s  |\n"   
+		"*Trans        :%-10s      |"        "Incrop           :%d,%-d,%d,%-d|%d,%-d,%d,%-d|%d,%-d,%d,%-d  |\n"    
+        "*ProgRevise   :%-10s      |"        "Usercrop         :%d,%-d,%d,%-d|%d,%-d,%d,%-d|%d,%-d,%d,%-d  |\n"             
+        "                               |"   "VideoRect        :%d,%-d,%d,%-d|%d,%-d,%d,%-d|%d,%-d,%d,%-d  |\n"                    
+        "--------Detect Info------------|"   "InResolution     :%4d*%-4d   |%4d*%-4d   |%4d*%-4d     |\n"              
+        "TopFirst(Src):%6s(%-6s)   |"        "UsercropEn       :%-12s|%-12s|%-12s  |\n"             
+        "InRate(Src)  :%6d(%-6d)   |"        "										  |\n"
+        "Progressive/Interlace(Src):%-1s(%-1s)|""KeyFrameEn       :%-12s|%-12s|%-12s  |\n",
+
+        /* attribute */
+        pstInstance->ID,                                              
+        pstInstance->ID,        
+                                                pstPortPrc[0]->s32PortId,
+                                                pstPortPrc[1]->s32PortId,
+                                                pstPortPrc[2]->s32PortId,  
+        g_pInstState[pstInstance->enState],
+												g_pAlgModeString[pstInstance->stPort[0].bEnble],
+                                                g_pAlgModeString[pstInstance->stPort[1].bEnble],
+                                                g_pAlgModeString[pstInstance->stPort[2].bEnble],
+        
+        ((pstStreamInfo->ePixFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
+        g_pPixString[pstStreamInfo->ePixFormat - HI_DRV_PIX_FMT_NV12]:
+        g_pPixString[7],  
+                                                ((pstPortPrc[0]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
+                                                g_pPixString[pstPortPrc[0]->eFormat - HI_DRV_PIX_FMT_NV12]:
+                                                g_pPixString[7],
+                                                ((pstPortPrc[1]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
+                                                g_pPixString[pstPortPrc[1]->eFormat - HI_DRV_PIX_FMT_NV12]:
+                                                g_pPixString[7],
+                                                ((pstPortPrc[2]->eFormat - HI_DRV_PIX_FMT_NV12) <= 6)?
+                                                g_pPixString[pstPortPrc[2]->eFormat - HI_DRV_PIX_FMT_NV12]:
+                                                g_pPixString[7],                    
+
+        g_pAlgModeString[pstInstance->bAlwaysFlushSrc], 
+                                                (pstPortPrc[0]->s32OutputWidth == 0) ? pstStreamInfo->u32StreamW:pstPortPrc[0]->s32OutputWidth,                                         
+                                                (pstPortPrc[0]->s32OutputHeight == 0) ? pstStreamInfo->u32StreamH:pstPortPrc[0]->s32OutputHeight,                                                
+                                                (pstPortPrc[1]->s32OutputWidth == 0) ? pstStreamInfo->u32StreamW:pstPortPrc[1]->s32OutputWidth,                                         
+                                                (pstPortPrc[1]->s32OutputHeight == 0) ? pstStreamInfo->u32StreamH:pstPortPrc[1]->s32OutputHeight,
+                                                (pstPortPrc[2]->s32OutputWidth == 0) ? pstStreamInfo->u32StreamW:pstPortPrc[2]->s32OutputWidth,                                         
+                                                (pstPortPrc[2]->s32OutputHeight == 0) ? pstStreamInfo->u32StreamH:pstPortPrc[2]->s32OutputHeight,
+
+       
+        (s32SrcModuleID >= HI_ID_VFMW && s32SrcModuleID <= HI_ID_VENC)?
+         g_pSrcModuleString[s32SrcModuleID - HI_ID_VFMW]:
+        (s32SrcModuleID == 0?g_pSrcModuleString[0]:
+         g_pSrcModuleString[9]),
+         (pstInstance->hDst & 0x000000ff),
+                                                g_pCscString[pstPortPrc[0]->eDstCS],
+                                                g_pCscString[pstPortPrc[1]->eDstCS],
+                                                g_pCscString[pstPortPrc[2]->eDstCS],   
+         DEF_SDK_VERSIO_LOG,
+                                                pstPortPrc[0]->stDispPixAR.u32ARw,  
+                                                pstPortPrc[0]->stDispPixAR.u32ARh,       
+                                                pstPortPrc[1]->stDispPixAR.u32ARw,  
+                                                pstPortPrc[1]->stDispPixAR.u32ARh,
+                                                pstPortPrc[2]->stDispPixAR.u32ARw,  
+                                                pstPortPrc[2]->stDispPixAR.u32ARh,                                                        
+
+                                                g_pAspString[pstPortPrc[0]->eAspMode],  
+                                                g_pAspString[pstPortPrc[1]->eAspMode], 
+                                                g_pAspString[pstPortPrc[2]->eAspMode],                                                          
+
+                                                g_pAlgModeString[pstPortPrc[0]->b3Dsupport],
+                                                g_pAlgModeString[pstPortPrc[1]->b3Dsupport],
+                                                g_pAlgModeString[pstPortPrc[2]->b3Dsupport],
+//         asNodeState,                                       
+                                                pstPortPrc[0]->u32MaxFrameRate,  
+                                                pstPortPrc[1]->u32MaxFrameRate,
+                                                pstPortPrc[2]->u32MaxFrameRate,                  
+        /*alg config*/                             g_pAlgModeString[pstPortPrc[0]->bTunnelEnable],
+                                                g_pAlgModeString[pstPortPrc[1]->bTunnelEnable],
+                                                g_pAlgModeString[pstPortPrc[2]->bTunnelEnable],
+                                                  
+        g_pProgDetectString[pstInEntity->enProgInfo],  
+                                                g_pAlgModeString[pstPortPrc[0]->bHoriFlip],
+                                                g_pAlgModeString[pstPortPrc[1]->bHoriFlip],
+                                                g_pAlgModeString[pstPortPrc[2]->bHoriFlip],
+        g_pDeiString[pstInstance->stProcCtrl.eDEI],
+                                                g_pAlgModeString[pstPortPrc[0]->bVertFlip],
+                                                g_pAlgModeString[pstPortPrc[1]->bVertFlip],
+                                                g_pAlgModeString[pstPortPrc[2]->bVertFlip],
+        g_pAlgModeString[pstInstance->stProcCtrl.eSharpness],
+                                                g_pRotationString[pstPortPrc[0]->enRotation],
+                                                g_pRotationString[pstPortPrc[1]->enRotation],
+                                                g_pRotationString[pstPortPrc[2]->enRotation],
+		(pstInstance->stInEntity.stTransFbInfo.bNeedTrans == HI_TRUE)? "ON":"OFF",
+
+                                                pstInstance->stPort[0].stInRect.s32X,pstInstance->stPort[0].stInRect.s32Y,
+                                                pstInstance->stPort[0].stInRect.s32Width,pstInstance->stPort[0].stInRect.s32Height,
+                                                pstInstance->stPort[1].stInRect.s32X,pstInstance->stPort[1].stInRect.s32Y,
+                                                pstInstance->stPort[1].stInRect.s32Width,pstInstance->stPort[1].stInRect.s32Height, 
+                                                pstInstance->stPort[2].stInRect.s32X,pstInstance->stPort[2].stInRect.s32Y,
+                                                pstInstance->stPort[2].stInRect.s32Width,pstInstance->stPort[2].stInRect.s32Height,
+                                                
+		 g_pAlgModeString[pstInEntity->bProgRevise],
+                                                pstInstance->stPort[0].stCropRect.u32LeftOffset,pstInstance->stPort[0].stCropRect.u32TopOffset,
+                                                pstInstance->stPort[0].stCropRect.u32RightOffset,pstInstance->stPort[0].stCropRect.u32BottomOffset,
+                                                pstInstance->stPort[1].stCropRect.u32LeftOffset,pstInstance->stPort[1].stCropRect.u32TopOffset,
+                                                pstInstance->stPort[1].stCropRect.u32RightOffset,pstInstance->stPort[1].stCropRect.u32BottomOffset,  
+                                                pstInstance->stPort[2].stCropRect.u32LeftOffset,pstInstance->stPort[2].stCropRect.u32TopOffset,
+                                                pstInstance->stPort[2].stCropRect.u32RightOffset,pstInstance->stPort[2].stCropRect.u32BottomOffset, 
+                                                pstInstance->stPort[0].stVideoRect.s32X,pstInstance->stPort[0].stVideoRect.s32Y,
+                                                pstInstance->stPort[0].stVideoRect.s32Width,pstInstance->stPort[0].stVideoRect.s32Height,
+                                                pstInstance->stPort[1].stVideoRect.s32X,pstInstance->stPort[1].stVideoRect.s32Y,
+                                                pstInstance->stPort[1].stVideoRect.s32Width,pstInstance->stPort[1].stVideoRect.s32Height, 
+                                                pstInstance->stPort[2].stVideoRect.s32X,pstInstance->stPort[2].stVideoRect.s32Y,
+                                                pstInstance->stPort[2].stVideoRect.s32Width,pstInstance->stPort[2].stVideoRect.s32Height,  
+
+                                                pstStreamInfo->u32StreamW,pstStreamInfo->u32StreamH,
+                                                pstStreamInfo->u32StreamW,pstStreamInfo->u32StreamH,
+                                                pstStreamInfo->u32StreamW,pstStreamInfo->u32StreamH,     
+                                                
+        (pstStreamInfo->u32RealTopFirst == 0 || pstStreamInfo->u32RealTopFirst == 1)?
+        ((pstStreamInfo->u32RealTopFirst == 0)?"Bottom":"Top"):"NA",
+        (pstStreamInfo->u32StreamTopFirst == 0)?"Bottom":"Top",
+        
+                                                g_pAlgModeString[pstInstance->stPort[0].bUseCropRect],
+                                                g_pAlgModeString[pstInstance->stPort[1].bUseCropRect],
+                                                g_pAlgModeString[pstInstance->stPort[2].bUseCropRect],
+        pstStreamInfo->u32InRate*1000,pstStreamInfo->u32StreamInRate,
+        
+        (pstStreamInfo->u32StreamProg == 0)?
+        "I":"P",
+        (pstStreamInfo->u32StreamTopFirst == 0)?"I":"P" ,
+                                                g_pAlgModeString[pstInstance->stPort[0].bOnlyKeyFrame],
+                                                g_pAlgModeString[pstInstance->stPort[1].bOnlyKeyFrame],
+                                                g_pAlgModeString[pstInstance->stPort[2].bOnlyKeyFrame]                                                 
+        );
+
+
+    PROC_PRINT(p,
+    "-----SourceFrameList Info------|"  "--------------------OutFrameList Info---------------------|\n"            
+    "      (source to vpss)         |"  "                     (vpss to sink)                       |\n"          
+    "*Mutual Mode  :%-11s     |"        "BufManager       :%-10s  |%-10s   |%-10s   |\n"                              
+    "SrcChangeCnt  :%-11d     |"  "BufNumber        :%-2d+%-2d       |%-2d+%-2d        |%-2d+%-2d        |\n"          
+    "GetSrcImgHZ(Try/OK)  :%3d/%-3d  |" "BufFul           :%-2d          |%-2d           |%-2d           |\n"                         
+    "GetOutBufHZ(Try/OK)  :%3d/%-3d  |" "BufEmpty         :%-2d          |%-2d           |%-2d           |\n"                         
+    "ProcessHZ(Try/OK)    :%3d/%-3d  |" "AcquireHZ        :%-10d  |%-10d   |%-10d   |\n"  
+    "SrcList(PUT/COMPLETE/RELEASE): |"  "Acquire(Try/OK):              |             |             |\n"            
+    " %6d/%-6d/%-6d          |"         "              %6d/%-6d   |%6d/%-6d|%6d/%-6d|\n"                                   
+    "WbcList(COMPLETE[L/R]):        |"  "Release(Try/OK):              |             |             |\n"          
+    " %6d/%-6d                 |"       "              %6d/%-6d   |%6d/%-6d|%6d/%-6d|\n" 
+    "StWbcList(COMPLETE[L/R]):      |"  "OutRate          :%-10d  |%-10d   |%-10d   |\n"
+    " %6d/%-6d                 |"       "Releasing        :%-10d  |%-10d   |%-10d   |\n"   
+    "StDieList(COMPLETE[L/R]):      |"  "Waiting          :%-10d  |%-10d   |%-10d   |\n"
+    " %6d/%-6d                 |"       "Working          :%-10d  |%-10d   |%-10d   |\n"
+    "StCcclList(COMPLETE[L/R]):     |\n"
+    " %6d/%-6d                 |\n"  
+    "StNrlList(COMPLETE[L/R]):      |\n"
+    " %6d/%-6d                 |\n",    
+
+    g_pSrcMutualString[pstInstance->eSrcImgMode],           
+                                        g_pBufTypeString[pstPortPrc[0]->stBufListCfg.eBufType],
+                                        g_pBufTypeString[pstPortPrc[1]->stBufListCfg.eBufType],
+                                        g_pBufTypeString[pstPortPrc[2]->stBufListCfg.eBufType],
+                                        
+    pstInstance->u32ScenceChgCnt,
+    pstPortPrc[0]->stBufListCfg.u32BufNumber,       
+    pstPortPrc[0]->stFbPrc.u32ExtListNumb,
+    pstPortPrc[1]->stBufListCfg.u32BufNumber,                 
+    pstPortPrc[1]->stFbPrc.u32ExtListNumb,
+    pstPortPrc[2]->stBufListCfg.u32BufNumber,  
+    pstPortPrc[2]->stFbPrc.u32ExtListNumb,
+    pstInstance->u32ImgRate,
+    pstInstance->u32ImgSucRate,
+                                        pstPortPrc[0]->stFbPrc.u32FulListNumb, 
+                                        pstPortPrc[1]->stFbPrc.u32FulListNumb, 
+                                        pstPortPrc[2]->stFbPrc.u32FulListNumb,  
+    pstInstance->u32BufRate,
+    pstInstance->u32BufSucRate,
+                                        pstPortPrc[0]->stFbPrc.u32EmptyListNumb, 
+                                        pstPortPrc[1]->stFbPrc.u32EmptyListNumb, 
+                                        pstPortPrc[2]->stFbPrc.u32EmptyListNumb,  
+    pstInstance->u32CheckRate,
+    pstInstance->u32CheckSucRate,
+                                        pstPortPrc[0]->stFbPrc.u32GetHZ,
+                                        pstPortPrc[1]->stFbPrc.u32GetHZ,
+                                        pstPortPrc[2]->stFbPrc.u32GetHZ,  
+
+    pstInEntity->pstSrc->u32PutSrcCount,pstInEntity->pstSrc->u32CompleteSrcCount,pstInEntity->pstSrc->u32ReleaseSrcCount,
+                                        pstPortPrc[0]->stFbPrc.u32GetTotal, pstPortPrc[0]->stFbPrc.u32GetSuccess,
+                                        pstPortPrc[1]->stFbPrc.u32GetTotal, pstPortPrc[1]->stFbPrc.u32GetSuccess,
+                                        pstPortPrc[2]->stFbPrc.u32GetTotal, pstPortPrc[2]->stFbPrc.u32GetSuccess,  
+    
+    pstInEntity->pstWbcInfo[0]->u32CompleteCount,pstInEntity->pstWbcInfo[1]->u32CompleteCount,
+                                        pstPortPrc[0]->stFbPrc.u32RelTotal, pstPortPrc[0]->stFbPrc.u32RelSuccess,
+                                        pstPortPrc[1]->stFbPrc.u32RelTotal, pstPortPrc[1]->stFbPrc.u32RelSuccess,                                        
+                                        pstPortPrc[2]->stFbPrc.u32RelTotal, pstPortPrc[2]->stFbPrc.u32RelSuccess,
+
+                                        pstPortPrc[0]->stFbPrc.u32OutRate,
+                                        pstPortPrc[1]->stFbPrc.u32OutRate,
+                                        pstPortPrc[2]->stFbPrc.u32OutRate,
+    pstInEntity->pstSttWbc[0]->u32Cnt,pstInEntity->pstSttWbc[1]->u32Cnt,
+                                        pstPortPrc[0]->stFbPrc.u32WaitSinkRlsNumb,
+                                        pstPortPrc[1]->stFbPrc.u32WaitSinkRlsNumb,
+                                        pstPortPrc[2]->stFbPrc.u32WaitSinkRlsNumb,
+                                        pstPortPrc[0]->stFbPrc.u32FulListNumb - pstPortPrc[0]->stFbPrc.u32WaitSinkRlsNumb,
+                                        pstPortPrc[1]->stFbPrc.u32FulListNumb - pstPortPrc[1]->stFbPrc.u32WaitSinkRlsNumb,
+                                        pstPortPrc[2]->stFbPrc.u32FulListNumb - pstPortPrc[2]->stFbPrc.u32WaitSinkRlsNumb,                                       
+    pstInEntity->pstDieStInfo[0]->u32Cnt,pstInEntity->pstDieStInfo[1]->u32Cnt,
+                                        pstPortPrc[0]->stBufListCfg.u32BufNumber + pstPortPrc[0]->stFbPrc.u32ExtListNumb -
+                                        pstPortPrc[0]->stFbPrc.u32FulListNumb - pstPortPrc[0]->stFbPrc.u32EmptyListNumb,
+                                        pstPortPrc[1]->stBufListCfg.u32BufNumber + pstPortPrc[1]->stFbPrc.u32ExtListNumb -
+                                        pstPortPrc[1]->stFbPrc.u32FulListNumb - pstPortPrc[1]->stFbPrc.u32EmptyListNumb,
+                                        pstPortPrc[2]->stBufListCfg.u32BufNumber + pstPortPrc[2]->stFbPrc.u32ExtListNumb -
+                                        pstPortPrc[2]->stFbPrc.u32FulListNumb - pstPortPrc[2]->stFbPrc.u32EmptyListNumb, 
+
+    pstInEntity->pstCcclCntInfo[0]->u32Cnt,pstInEntity->pstCcclCntInfo[1]->u32Cnt,
+    pstInEntity->pstNrMadInfo[0]->u32Cnt,pstInEntity->pstNrMadInfo[1]->u32Cnt
+    ); 
+
+
+
+
+  
+READFREE:
+    for(u32Count = 0; u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER; u32Count++)
+    {
+        if (pstPortPrc[u32Count] != HI_NULL)
+            VPSS_VFREE(pstPortPrc[u32Count]);
+    }
+    return HI_SUCCESS;
+    
+}
+
+#endif
+
 
 HI_S32 VPSS_CTRL_ProcWrite(struct file * file,
     const char __user * buf, size_t count, loff_t *ppos)
@@ -3253,10 +3561,12 @@ HI_S32 VPSS_CTRL_ProcWrite(struct file * file,
                " print frameinfo  printinfo   src/port0/port1/port2              \n"
                " turn off info    none        src/port0/port1/port2               \n");
         HI_DRV_PROC_EchoHelper("\n"          
-               " set progress/interlace on/off   i2p  		 src  				on/off\n"  
-               " set vpssbypass                setbypass   	on/off\n"
-               " set uvinvert                   uvinvert   port0/port1/port2 	on/off\n"
-               " set rate                       setrate     on/off              framerate\n");                
+               " set progress/interlace on/off   i2p		 src				on/off\n"  
+               " set vpssbypass                setbypass	on/off\n"
+               " set uvinvert                   uvinvert   port0/port1/port2	on/off \n"
+               " set cmpon                      cmpon      port0/port1/port2		   \n"
+               " set cmpoff                     cmpoff     port0/port1/port2		   \n"
+               " set rate                       setrate     on/off            framerate\n");                
     }
     else
     {
@@ -3298,6 +3608,14 @@ HI_S32 VPSS_CTRL_ProcWrite(struct file * file,
         {
             stDbgCmd.enDbgType = DBG_SET_UV_INVERT;
         } 
+		else if (!HI_OSAL_Strncmp(chArg1,DEF_DBG_CMD_CMP_ON,DEF_FILE_NAMELENGTH))
+        {
+            stDbgCmd.enDbgType = DBG_SET_CMP_ON;
+        }
+		else if (!HI_OSAL_Strncmp(chArg1,DEF_DBG_CMD_CMP_OFF,DEF_FILE_NAMELENGTH))
+        {
+            stDbgCmd.enDbgType = DBG_SET_CMP_OFF;
+        }
         else if (!HI_OSAL_Strncmp(chArg1,DEF_DBG_CMD_SET_I2P,DEF_FILE_NAMELENGTH))
         {
             stDbgCmd.enDbgType = DBG_SET_I2P;

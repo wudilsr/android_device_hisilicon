@@ -41,6 +41,10 @@ static HI_U32 g_idr_pic_id = 0;
 #define SceneChangeLimit 50000
 #define SceneChangeLimit2 100000
 
+
+extern HI_VOID VENC_DRV_BoardInit(HI_VOID);
+extern HI_VOID VENC_DRV_BoardDeinit(HI_VOID);
+
 enum
 {
     VENC_YUV_420	= 0,
@@ -1882,22 +1886,42 @@ static void Venc_SetRegDefault( VeduEfl_EncPara_S  *pEncPara )
         870, 1097, 1382, 1741, 2193, 2763, 3482, 4095, 4095, 4095
     };
 
-    static intSearchIn isrD1 =
+#ifdef __VENC_S5V200L_EXT_CONFIG__
+    static intSearchIn isrD1 = 
+    {
+        { 5, 1 },  { 0, 1500 },  { 1, 1, 1, 1, 0, 0 },
+ 
+        {  { 2, 2, 0, 0}, { 8, 8, 0, 0},{ 13, 13, 1, 1},  
+            { 4, 4, 0, 0}, {  0,  0, 0, 0}, { 0, 0, 0, 0}
+        }
+    };
+    static intSearchIn isr720p = 
+    {
+        { 5, 0 },  { 0, 1500 },  { 1, 1, 1, 1, 0, 0 },
+ 
+         {  { 2, 2, 0, 0}, { 8, 8, 0, 0},{ 13, 13, 1, 1},  
+            { 4, 4, 0, 0}, {  0,  0, 0, 0}, { 0, 0, 0, 0}
+        }
+    };
+#else
+    static intSearchIn isrD1 = 
     {
         { 5, 2 },  { 0, 1500 },  { 1, 1, 1, 1, 0, 0 },
-
-        {   { 2, 2, 0, 0}, { 8, 8, 0, 0}, { 13, 13, 1, 1},
+ 
+        {  { 2, 2, 0, 0}, { 8, 8, 0, 0},{ 13, 13, 1, 1},  
             { 4, 4, 0, 0}, {  0,  0, 0, 0}, { 0, 0, 0, 0}
         }
     };
     static intSearchIn isr720p =
     {
         { 5, 1 },  { 0, 1500 },  { 1, 1, 1, 1, 0, 0 },
-
-        {   { 2, 2, 0, 0}, { 8, 8, 0, 0}, { 13, 13, 1, 1},
+ 
+         {  { 2, 2, 0, 0}, { 8, 8, 0, 0},{ 13, 13, 1, 1},  
             { 4, 4, 0, 0}, {  0,  0, 0, 0}, { 0, 0, 0, 0}
         }
     };
+#endif
+
     static intSearchIn isr1080p =
     {
         { 5, 0 },  { 0, 1500 },  { 1, 1, 1, 1, 0, 0 },
@@ -2599,6 +2623,10 @@ HI_S32 VENC_DRV_EflSortPriority_2(HI_S8 priority)
 
 HI_S32 VENC_DRV_EflCfgRegVenc( VeduEfl_EncPara_S* EncHandle )
 {
+   //open the clock before start the channel!    l00228308
+   VENC_DRV_BoardInit();
+   //add end
+
     VENC_HAL_CfgReg( EncHandle );
     return HI_SUCCESS;
 }
@@ -3169,7 +3197,7 @@ HI_S32 VENC_DRV_EflCreateVenc( VeduEfl_EncPara_S** pEncHandle, VeduEfl_EncCfg_S*
 
 	/* other */
 	pEncPara->bNeverEnc   = HI_TRUE;
-	pEncPara->SlcSplitMod = 1;                                          //just choose the mb line Mode 
+	pEncPara->SlcSplitMod = 0;   // 1;                                          //just choose the mb line Mode 
     pEncPara->NumRefIndex = 0;
 
 	if (pEncCfg->bOMXChn)
@@ -3182,7 +3210,7 @@ HI_S32 VENC_DRV_EflCreateVenc( VeduEfl_EncPara_S** pEncHandle, VeduEfl_EncCfg_S*
 	}
 	else
 	{
-#ifdef __VENC_98M_CONFIG__	
+#if (defined(__VENC_98M_CONFIG__) || defined(__VENC_S5V100_CONFIG__))	
 	   pEncPara->WithoutVPSS = 1;
 #else
        pEncPara->WithoutVPSS = 0;
@@ -5668,8 +5696,10 @@ static HI_VOID Venc_ISR( HI_VOID )
 		
 	    /* open vedu clock */
 		unTmpValue.bits.venc_cken     = 1;
+#ifndef __VENC_S5V200L_EXT_CONFIG__		
 		/* config vedu clock frequency: 200Mhz */
 		unTmpValue.bits.venc_clk_sel  = 0;
+#endif		
 		/* cancel reset */
 		unTmpValue.bits.venc_srst_req = 0;
 		g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;
@@ -5865,8 +5895,10 @@ static HI_VOID Venc_ISR( HI_VOID )
 				unTmpValue.bits.venc_cken     = 0;
 				g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;	
 				
+#ifndef __VENC_S5V200L_EXT_CONFIG__					
 				/* config vedu clock frequency*/
 				unTmpValue.bits.venc_clk_sel  = s32ClkSel;
+#endif
 				unTmpValue.bits.venc_cken     = 1;
 				g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;	
 				
@@ -5898,11 +5930,13 @@ static HI_VOID Venc_ISR( HI_VOID )
 		    else
 		    {
 		        VeduIpCtx.IpFree = 1;
+			  VENC_DRV_BoardDeinit();
 		    }
 		}
 		else
 		{
 		   VeduIpCtx.IpFree = 1;
+		   VENC_DRV_BoardDeinit();
 		}
         VENC_DRV_OsalGiveEvent(&g_VencWait_Stream[u32VeChn]);
 		if (g_stVencChn[u32VeChn].bOMXChn)

@@ -820,7 +820,7 @@ static int dwc_otg_driver_resume(struct device *dev)
 static const struct dev_pm_ops hiusbudc_pmops = {
 	.suspend = dwc_otg_driver_suspend,
 	.resume  = dwc_otg_driver_resume,
-#ifdef CONFIG_PM_HIBERNATE
+#if defined(CONFIG_PM_HIBERNATE) || defined(CONFIG_HISI_SNAPSHOT_BOOT)
 	.freeze = dwc_otg_driver_suspend,
 	.thaw = dwc_otg_driver_resume,
 	.poweroff = dwc_otg_driver_suspend,

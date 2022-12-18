@@ -376,9 +376,6 @@ static HI_VOID hi3716cv200_j83b_set_customreg_value(HI_U32 u32TunerPort, HI_BOOL
 {
     HI_U8 u8Val = 0;
     HI_U8 u8VersionReg = 0;
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3796cv100_a) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100_a) || defined(CHIP_TYPE_hi3798cv100)
-    U_PERI_CRG57 unTmpPeriCrg57;
-#endif
 
     qam_read_byte(u32TunerPort, MCTRL_1_ADDR, &u8VersionReg);
     if((u8VersionReg >> 5) == 5)
@@ -408,7 +405,12 @@ static HI_VOID hi3716cv200_j83b_set_customreg_value(HI_U32 u32TunerPort, HI_BOOL
         qam_write_bit( u32TunerPort, MCTRL_8_ADDR, 2, 1 );
     }
 
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3796cv100_a) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100_a) || defined(CHIP_TYPE_hi3798cv100)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400) \ 
+    || defined(CHIP_TYPE_hi3796cv100_a) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100_a) \
+    || defined(CHIP_TYPE_hi3798cv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+    U_PERI_CRG57 unTmpPeriCrg57;
+
     unTmpPeriCrg57.u32 = g_pstRegCrg->PERI_CRG57.u32;
     if(HI_UNF_TUNER_OUTPUT_MODE_SERIAL_50 == g_stTunerOps[u32TunerPort].enTsType
        || HI_UNF_TUNER_OUTPUT_MODE_SERIAL == g_stTunerOps[u32TunerPort].enTsType)

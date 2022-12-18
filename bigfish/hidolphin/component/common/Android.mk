@@ -23,7 +23,7 @@ endef
 
 LOCAL_PREBUILT_LIBS := $(call addprefixsuffix_so_list,$(LOCAL_MODULES_NAME))
 
-ifeq (5.0,$(findstring 5.0,$(PLATFORM_VERSION)))
+ifeq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
     LOCAL_32_BIT_ONLY :=true
 else
     ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULES_NAME)

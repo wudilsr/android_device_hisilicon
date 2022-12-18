@@ -268,6 +268,16 @@ typedef struct  hiAGC_TEST_S
 	HI_U32		u32Count;
 }AGC_TEST_S;
 
+
+typedef struct hiTUNER_POWER_SPECTRUM_DATA_PARAM_S
+{
+   HI_U32 u32freqStartInHz;
+   HI_U32 u32freqStepInHz;
+   HI_U32 u32numOfFreqSteps;
+   HI_S16 *ps16powerData;
+   
+}TUNER_POWER_SPECTRUM_DATA_PARAM_S;
+
 /* standard tuner operation */
 typedef struct _TUNER_OPS_S
 {
@@ -335,6 +345,7 @@ typedef struct _TUNER_OPS_S
 	HI_S32 (*tuner_get_isi_id)(HI_U32 u32TunerPort,HI_U8 u8Stream, HI_U8 *u8IsiId);
 	HI_S32 (*tuner_get_agc)(HI_U32 u32TunerPort,HI_U32 Fcenter,HI_U32 *u32Agc );
 	HI_S32 (*tuner_set_scramble)(HI_U32 u32TunerPort,HI_U32 u32Value );
+	HI_S32 (*tuner_get_powerspecdata)(HI_U32 u32TunerPort, HI_U32 u32freqStartInHz,HI_U32 u32freqStepInHz,HI_U32 u32numOfFreqSteps,HI_S16 *ps16powerData);
     /* Added end:l00185424 2011-11-28 For DVB-S/S2 */
 } TUNER_OPS_S;
 
@@ -397,6 +408,8 @@ extern  GPIO_I2C_EXT_FUNC_S *s_tuner_pGpioI2cFunc;
 #define TUNER_SET_ANTENNA_POWER_CMD _IOW(HI_TUNER_IOC_MAGIC, 47, TUNER_DATA_S)
 #define TUNER_TERSCAN_ACTION_CMD _IOWR(HI_TUNER_IOC_MAGIC, 48, TUNER_TERSCAN_INFO_S)
 #define TUNER_SET_SCRAMBLE_CMD   _IOW(HI_TUNER_IOC_MAGIC, 49, TUNER_DATA_S)
+#define TUNER_TUENR_POWER_SPECTRUM_DATA_CMD _IOWR(HI_TUNER_IOC_MAGIC, 49, TUNER_DATA_S)
+
 /*
 #define TUNER_BASE_CONNECT_CMD _IOW(HI_TUNER_IOC_MAGIC, 20, TUNER_SIGNAL_S)
 #define TUNER_BASE_SELECT_TYPE_CMD _IOW(HI_TUNER_IOC_MAGIC, 21, TUNER_DATABUF_S)

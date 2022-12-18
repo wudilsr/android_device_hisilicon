@@ -3,7 +3,7 @@ menu "DVB-C Demod Config"
 
 config  HI_DEMOD_TYPE_X5HDV2QAM
     bool "HI3130_INSIDE Support"
-    depends on HI3716CV200 || HI3716MV400 || HI3796CV100
+    depends on HI3716CV200 || HI3716MV400 || HI3796CV100 || HI3716MV410 || HI3716MV420
     default y
 
 config  HI_DEMOD_TYPE_HI3130
@@ -28,6 +28,16 @@ config  HI_DEMOD_TYPE_MXL214
     
 config  HI_DEMOD_TYPE_TDA18280
     bool "TDA18280 Support"
+    default n
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_HIFDVBC100
+    bool "HIFDVBC100 Support"
+    default n
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_HIFJ83B100
+    bool "HIFJ83B100 Support"
     default n
     select HI_GPIOI2C_SUPPORT
 endmenu

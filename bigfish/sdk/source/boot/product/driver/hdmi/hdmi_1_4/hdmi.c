@@ -340,7 +340,7 @@ HI_U32 HDMI_Display(HI_UNF_ENC_FMT_E enHdFmt, HI_UNF_HDMI_VIDEO_MODE_E einput, H
     //OpenHdmiDevice();
 
     //WriteDefaultConfigToEEPROM(); /* eeprom.c */
-#if !(defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100))
+#if !(defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420))
     if(!g_bHDMIResetFlag)
     {
         HW_ResetHDMITX();
@@ -813,7 +813,7 @@ HI_S32 HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_ENC_FMT_E enFormat)
     HI_S32  Ret;
     HI_BOOL Support4K = HI_FALSE;
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     if (!TX_RSEN_Status() || g_HDMICnt)
     {
         return HI_FAILURE;

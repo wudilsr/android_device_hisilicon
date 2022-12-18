@@ -141,6 +141,11 @@ typedef enum hiSVR_PLAYER_EVENT_E
     HI_SVR_PLAYER_EVENT_DOWNLOAD_START,    /**< hls segment download start, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:hls切片下载开始，参数为HI_FORMAT_MSG_DATA_S，移动规范定义 */
     HI_SVR_PLAYER_EVENT_DOWNLOAD_END,    /**< hls segment download finish, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:hls切片下载结束，参数为HI_FORMAT_MSG_DATA_S，移动规范定义 */
     HI_SVR_PLAYER_EVENT_DOWNLOAD_ERROR,    /**< hls segment download failed, the parameter HI_FORMAT_MSG_DATA_S. *//**< CNcomment:hls切片下载结束，参数为HI_FORMAT_MSG_DATA_S，移动规范定义 */
+
+    HI_SVR_PLAYER_EVENT_TS_SEGMENT_DOWNLOAD_START, /**< hls segment download start, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:hls切片下载开始，参数为HI_FORMAT_MSG_DATA_S，移动M3新框架规范定义 */
+    HI_SVR_PLAYER_EVENT_TS_SEGMENT_DOWNLOAD_END, /**< hls segment download finish, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:hls切片下载结束，参数为HI_FORMAT_MSG_DATA_S，移动M3新框架规范定义 */
+    HI_SVR_PLAYER_EVENT_HTTP_REDIRECT,           /**< http connect redirection, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:HTTP连接跳转，参数为HI_FORMAT_MSG_DATA_S，移动M3新框架规范定义 */
+    HI_SVR_PLAYER_EVENT_HTTP_CONNECTED,          /**< http connect success, the parameter is HI_FORMAT_MSG_DATA_S. *//**< CNcomment:HTTP连接成功，参数为HI_FORMAT_MSG_DATA_S，移动M3新框架规范定义 */
     HI_SVR_PLAYER_EVENT_BUTT
 } HI_SVR_PLAYER_EVENT_E;
 

@@ -54,8 +54,8 @@ HI_VOID do_runtimecheck()
     HI_U32 u32TempVal = 0;	
     HI_U32 u32SegParamAddr = 0;
     HI_U32 u32HashParaAddr = 0;
-
-     //check whether the runtime_check_en is enabled
+	
+	//check whether the runtime_check_en is enabled
     regAddr.val32 = 0xF8AB0084; //OTP:runtime_check_en indicator :0xF8AB0084[20],0x6[4]
     read_regVal();
     u32TempVal = regData.val32;
@@ -74,7 +74,9 @@ HI_VOID do_runtimecheck()
 #ifndef HI_ADVCA_RELEASE
     printf_str("u8SegNum: ");printf_hex(u8SegNum);
 #endif
+	
     u32SegParamAddr = CHECK_VECTOR_BASE_ADDR + 0x54;
+	
     for(i = 0; i < u8SegNum; i++)
     {
     	regAddr.val32 = u32SegParamAddr + (i * 8 + 0);
@@ -95,7 +97,9 @@ HI_VOID do_runtimecheck()
 #ifndef HI_ADVCA_RELEASE
         printf_str("\r\n------------------Runtime check is enabled, start runtime check------------------\r\n");	
 #endif
-        u32HashParaAddr = CHECK_VECTOR_BASE_ADDR + 0x14;
+		
+		u32HashParaAddr = CHECK_VECTOR_BASE_ADDR + 0x14;
+		
         for(i = 0; i < u8SegNum; i++)
         {
             //get the original hash value
@@ -182,13 +186,15 @@ HI_VOID GetDDRWakeUpParams(HI_VOID)
 #endif
 
     regAddr.val32 = 0xF80000CC;
-    regData.val32 = 0xF840E800;
+	
+	regData.val32 = DATA_BASE_ADDR + 0x800;
+
     write_regVal();
 
-    /* Get the chip type */
-    regAddr.val32 = DATA_CHIP;
+	regAddr.val32 = DATA_CHIP;
     read_regVal();
-    if (HI_CHIP_TYPE_HI3798M == regData.val8[3])
+	
+    if ((HI_CHIP_TYPE_HI3798M == regData.val8[3])||((HI_CHIP_TYPE_HI3716M == regData.val8[3])&&((HI_CHIP_VERSION_V410 == regData.val16[0])||(HI_CHIP_VERSION_V420 == regData.val16[0]))))
     {
         u32TempVal = 0xf8000f00;
     }
@@ -202,19 +208,19 @@ HI_VOID GetDDRWakeUpParams(HI_VOID)
     {
         regAddr.val32 = u32TempVal + i * 0x4;//HASH[i];	//A9 RAM address
         read_regVal();
-        regAddr.val32 = 0xF840E800 + i * 0x4;
+        regAddr.val32 = DATA_BASE_ADDR + 0x800 + i * 0x4;
         write_regVal();
     }
 
-    regAddr.val32 = 0xF840E800 + 5 * 0x4;
+    regAddr.val32 = DATA_BASE_ADDR + 0x800 + 5 * 0x4;
     regData.val32 = 0x01;
     write_regVal();
    
-    regAddr.val32 = 0xF840E800 + 6 * 0x4;
+    regAddr.val32 = DATA_BASE_ADDR + 0x800 + 6 * 0x4;
     regData.val32 = CHECK_ADDR;
     write_regVal();
     
-    regAddr.val32 = 0xF840E800 + 7 * 0x4;
+    regAddr.val32 = DATA_BASE_ADDR + 0x800 + 7 * 0x4;
     regData.val32 = CHECK_LENGTH;
     write_regVal();
     
@@ -228,12 +234,12 @@ HI_VOID GetDDRWakeUpParams(HI_VOID)
 
 HI_VOID SetDDRWakeUpParams(HI_VOID)
 {
-    regAddr.val32 = 0xF840D000;
+
+    regAddr.val32 = DATA_BASE_ADDR + 0x800 + 6 * 0x4;;
     regData.val32 = CHECK_ADDR;
     write_regVal();
     
-
-    regAddr.val32 = 0xF840D004;
+	regAddr.val32 = DATA_BASE_ADDR + 0x800 + 7 * 0x4;
     regData.val32 = CHECK_LENGTH;
     write_regVal();
     
@@ -254,8 +260,8 @@ HI_VOID ADVCA_RUN_CHECK(HI_VOID)
             write_regVal();
             break;
         }
-
-        regAddr.val32 = (DATA_BASE_ADDR + 0x520);
+		
+	    regAddr.val32 = DATA_ENTER_FLAG;
         read_regVal();
         if(TEMP_CHECK_TO_SUSPEND == regData.val32)
         {

@@ -341,7 +341,7 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
     HI_U32 u32MemSize = 0;
     HI_U8 offset = 0;
 
-    if ((0 == u32MaxMemorySize) || (HI_NULL == pu8Data) || (s_stFileHeader.u32FileLen > u32Len))
+    if ((0 == u32MaxMemorySize) || (HI_NULL == pu8Data) || ((HI_U32)s_stFileHeader.u64FileLen > u32Len))
     {
         return HI_FAILURE;
     }
@@ -362,7 +362,7 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         return HI_FAILURE;
     }
 
-    u32MemSize = s_stFileHeader.u32FileLen + PLUS_MEM_SIZE;
+    u32MemSize = (HI_U32)s_stFileHeader.u64FileLen + PLUS_MEM_SIZE;
     /* Malloc more size to store the data unaligned with 16 Bytes */
     pMemAddr = (HI_U8 *)LOADER_GetUsableMemory(u32MemSize, &u32Size);
     /* Malloc the whole size */
@@ -373,9 +373,9 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
     }
 
     /* Decrypt the whole data */
-    memcpy(pMemAddr, pu8Data, s_stFileHeader.u32FileLen);
+    memcpy(pMemAddr, pu8Data, (HI_U32)s_stFileHeader.u64FileLen);
 
-    ret = CA_SSD_DecryptUpgradeImage(pMemAddr, s_stFileHeader.u32FileLen);
+    ret = CA_SSD_DecryptUpgradeImage(pMemAddr, (HI_U32)s_stFileHeader.u64FileLen);
     if ( HI_SUCCESS != ret )
     {
         HI_ERR_LOADER("Decrypt upgrade image failed.\n");
@@ -408,7 +408,7 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         /* SSD Authenticate */
         ret = CA_SSD_Authenticate(pMemAddr + pImg->u32Offset + 8, 
                                 &(pImg->u32FileLength), 
-                                pImg->u32FlashAddr, 
+                                (HI_U32)pImg->u64FlashAddr, 
                                 pImg->uFlashType);
         if ( HI_SUCCESS != ret )
         {
@@ -479,7 +479,7 @@ HI_S32 LOADER_PROTOCOL_HisiCAFILE_Process(HI_U32 u32MaxMemorySize)
         u32FileNotAlignedByte = 16 - g_u32USBHeaderNotAligned;
     }
 
-    u32MemSize = s_stFileHeader.u32FileLen + PLUS_MEM_SIZE;
+    u32MemSize = (HI_U32)s_stFileHeader.u64FileLen + PLUS_MEM_SIZE;
     /* Malloc more size to store the data unaligned with 16 Bytes */
     pMemAddr = (HI_U8 *)LOADER_GetUsableMemory(u32MemSize, &u32Size);
     /* Malloc the whole size */
@@ -489,8 +489,8 @@ HI_S32 LOADER_PROTOCOL_HisiCAFILE_Process(HI_U32 u32MaxMemorySize)
         return HI_FAILURE;
     }
 
-    ret = LOADER_DOWNLOAD_Getdata(pMemAddr + g_u32USBHeaderLen + u32FileNotAlignedByte, (s_stFileHeader.u32FileLen - g_u32USBHeaderLen) - u32FileNotAlignedByte, &u32Size);
-    if ((HI_SUCCESS != ret) || (u32Size != (s_stFileHeader.u32FileLen - g_u32USBHeaderLen) - u32FileNotAlignedByte))
+    ret = LOADER_DOWNLOAD_Getdata(pMemAddr + g_u32USBHeaderLen + u32FileNotAlignedByte, ((HI_U32)s_stFileHeader.u64FileLen - g_u32USBHeaderLen) - u32FileNotAlignedByte, &u32Size);
+    if ((HI_SUCCESS != ret) || (u32Size != ((HI_U32)s_stFileHeader.u64FileLen - g_u32USBHeaderLen) - u32FileNotAlignedByte))
     {
         HI_ERR_LOADER("download upgrade failed.\n");
         LOADER_FreeUsableMemory(pMemAddr);
@@ -499,7 +499,7 @@ HI_S32 LOADER_PROTOCOL_HisiCAFILE_Process(HI_U32 u32MaxMemorySize)
 
     if (g_pstCallback && g_pstCallback->pfnOSDCallback)
     {
-    	(HI_VOID)g_pstCallback->pfnOSDCallback(OSD_EVENT_TYPE_DOWNLOAD, s_stFileHeader.u32FileLen, s_stFileHeader.u32FileLen);
+    	(HI_VOID)g_pstCallback->pfnOSDCallback(OSD_EVENT_TYPE_DOWNLOAD, (HI_U32)s_stFileHeader.u64FileLen, (HI_U32)s_stFileHeader.u64FileLen);
     }
 
     /* Copy the data decrypted already before */
@@ -538,7 +538,7 @@ HI_S32 LOADER_PROTOCOL_HisiCAFILE_Process(HI_U32 u32MaxMemorySize)
         /* SSD Authenticate */
         ret = CA_SSD_Authenticate(pMemAddr + pImg->u32Offset + 8, 
                                 &(pImg->u32FileLength), 
-                                pImg->u32FlashAddr, 
+                                (HI_U32)pImg->u64FlashAddr, 
                                 pImg->uFlashType);
         if ( HI_SUCCESS != ret )
         {

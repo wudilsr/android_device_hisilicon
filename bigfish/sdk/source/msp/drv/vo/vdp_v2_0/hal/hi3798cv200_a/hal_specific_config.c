@@ -404,7 +404,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,  2160,  82,  8,  3840, 384, 1276,       1,   1,  1,    88, 10, 1, 0,  0,  0}, /* 4k*2k 24hz */
    //{0x14000000, 0x02002063}, // 1080P60/50
    DISP_CLOCK_SOURCE_HD0,
-   {0x12E6A7EF, 0x2062}, //4k*2k
+   {0x11E6A7EF, 0x2062}, //4k*2k
    {HI_DRV_DISP_FMT_3840X2160_23_976, DISP_STEREO_NONE, HI_FALSE, {0,0,3840,2160},{0,0,3840,2160},{16,9}, 2397, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -412,7 +412,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,  2160,  82,  8,  3840, 384, 176,       1,   1,  1,    88, 10, 1, 0,  0,  0}, /* 4k*2k 30hz */
    //{0x14000000, 0x02002063}, // 1080P60/50
    DISP_CLOCK_SOURCE_HD0,
-   {0x12E6A7EF, 0x2062}, //4k*2k
+   {0x11E6A7EF, 0x2062}, //4k*2k
    {HI_DRV_DISP_FMT_3840X2160_29_97, DISP_STEREO_NONE, HI_FALSE, {0,0,3840,2160},{0,0,3840,2160},{16,9}, 2997, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -420,7 +420,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,   720,  25,  5,  1280, 260,110,      1,   1,  1,    40,  5,  1, 0,  0,  0}, /* 720P@60Hz */
 //   {0x24000000, 0x02002063}, // 1080i50
    DISP_CLOCK_SOURCE_HD0,
-   {0x24E6A7EF, 0x2062}, // 1080P60/50
+   {0x14E6A7EF, 0x2062}, // 1080P60/50
    {HI_DRV_DISP_FMT_720P_59_94, DISP_STEREO_NONE, HI_FALSE, {0,0,1280,720}, {0,0,1280,720},{16,9}, 5994, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -428,7 +428,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,  1080,  41,  4,  1920, 192, 88,      1,   1,  1,     44, 5, 1,  0,  0,  0}, /* 1080P@60Hz */
    //{0x14000000, 0x02002063}, // 1080P60/50
    DISP_CLOCK_SOURCE_HD0,
-   {0x22E6A7EF, 0x2062}, // 1080P60/50
+   {0x12E6A7EF, 0x2062}, // 1080P60/50
    {HI_DRV_DISP_FMT_1080P_59_94, DISP_STEREO_NONE, HI_FALSE, {0,0,1920,1080},{0,0,1920,1080},{16,9}, 5994, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -436,7 +436,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,  1080,  41,  4,  1920, 192, 88,       1,   1,  1,    44,  5, 1, 0,  0,  0}, /* 1080P@30Hz */
 //   {0x24000000, 0x02002063}, // 1080i50
    DISP_CLOCK_SOURCE_HD0,
-   {0x24E6A7EF, 0x2062}, // 1080P60/50
+   {0x14E6A7EF, 0x2062}, // 1080P60/50
    {HI_DRV_DISP_FMT_1080P_29_97, DISP_STEREO_NONE, HI_FALSE, {0,0,1920,1080},{0,0,1920,1080},{16,9}, 2997, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -444,7 +444,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   1,   2,  1080,  41,  4,  1920, 192, 638,       1,   1,  1,    44, 5, 1, 0,  0,  0}, /* 1080P@24Hz */
 //   {0x24000000, 0x02002063}, // 1080i50
    DISP_CLOCK_SOURCE_HD0,
-   {0x24E6A7EF, 0x2062}, // 1080P60/50
+   {0x14E6A7EF, 0x2062}, // 1080P60/50
    {HI_DRV_DISP_FMT_1080P_23_976, DISP_STEREO_NONE, HI_FALSE, {0,0,1920,1080},{0,0,1920,1080},{16,9}, 2397, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -452,7 +452,7 @@ static DISP_FMT_CFG_S s_stDispFormatParam[] =
  { {1,   0,   2,   540,  20,  2,  1920, 192, 88,  540, 21,  2,    44,  5, 908,   0,  0,  0}, /* 1080I@60Hz */
 //   {0x24000000, 0x02002063}, // 1080i50
    DISP_CLOCK_SOURCE_HD0,
-   {0x24E6A7EF, 0x2062}, // 1080P60/50
+   {0x14E6A7EF, 0x2062},
    {HI_DRV_DISP_FMT_1080i_59_94, DISP_STEREO_NONE, HI_TRUE, {0,0,1920,1080},{0,0,1920,1080},{16,9}, 5994, HI_DRV_CS_BT709_YUV_LIMITED}
  },
 
@@ -621,9 +621,14 @@ HI_S32 Chip_Specific_WinHalSetRegionMute(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstP
     {
         VDP_VID_SetRegionMuteEnable(u32LayerId,pstPara->u32RegionNum,HI_FALSE);
     }
+    else if ((u32LayerId == VDP_LAYER_VID1)
+        || (u32LayerId == VDP_LAYER_VID4))
+    {
+        VDP_VID_SetRegionMuteEnable(u32LayerId,pstPara->u32RegionNum,HI_FALSE);
+    }
     else
     {
-        VDP_VID_SetRegionMuteEnable(u32LayerId,pstPara->u32RegionNum, pstPara->bRegionMute);
+
     }
 
     return HI_SUCCESS;
@@ -693,9 +698,21 @@ HI_S32 Chip_Specific_WinDoFurtherZmeProcess(HI_U32 u32LayerId, WIN_HAL_PARA_S *p
     return HI_SUCCESS;
 }
 
+HI_BOOL Chip_Specific_WinGetRevisedPixelFmt(HI_BOOL  bHasZmeFunc, 
+															HI_RECT_S *pstOutRect, 
+															HI_DRV_PIX_FORMAT_E *penFmt,
+															HI_DISP_DISPLAY_INFO_S *pstDispInfo)
+{	
 
-
-
+	if ((!bHasZmeFunc) && (pstDispInfo->stFmtResolution.s32Width > 4096))
+	{
+		*penFmt = HI_DRV_PIX_FMT_NV61_2X1;
+		return HI_TRUE;
+	}
+    
+	
+	return HI_FALSE;
+}
 /*confirm  needed: fit for both compressed and uncompressed stream?*/
 HI_S32 Chip_Specific_WinHalSetAddr(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara, HI_S32 s32exl)
 {

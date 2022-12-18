@@ -14,11 +14,13 @@ BOOT_DIR  := $(SDK_DIR)/source/boot/miniboot
 else
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
 endif
-ifeq ($(O),)
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
 else
-PRODUCT_DIR  := $(O)/product
+PRODUCT_DIR := $(BOOT_DIR)/../product
 endif
+
 HIGO_DIR = .
 HIFB_DIR = hifb
 
@@ -37,8 +39,26 @@ CFLAGS := -g -Os -D__KERNEL__ -D__ARM__ -fno-strict-aliasing -fno-common -ffixed
 	  -Wall -Wstrict-prototypes -fno-stack-protector
 endif
 
-CFLAGS   += -I$(PRODUCT_DIR)/driver/include
-CFLAGS   += -I$(PRODUCT_DIR)/driver/include_inc
+
+
+#===============================================================================
+# higo include self
+#===============================================================================
+CFLAGS   += -I$(HIGO_DIR)/higo                        \
+            -I$(HIGO_DIR)/tde                         \
+            -I$(HIGO_DIR)/bmp                         \
+            -I$(HIGO_DIR)/jpeg                        \
+	    -I$(HIGO_DIR)/common                      \
+            -I$(HIGO_DIR)/hifb                        \
+            -I$(HIGO_DIR)/hifb/adp                    \
+            -I$(HIGO_DIR)/hifb/adp/include            \
+            -I$(HIGO_DIR)/hifb/adp/platform/include   \
+            -I$(HIGO_DIR)/hifb/adp/platform/src       \
+            -I$(PRODUCT_DIR)/driver/include           \
+            -I$(PRODUCT_DIR)/driver/include_inc
+
+CFLAGS   += -I$(BOOT_DIR)/include
+CFLAGS   += -I$(BOOT_DIR)/include/linux/mtd
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3719cv100 hi3718cv100 hi3719mv100 hi3718mv100),)
 CFLAGS   += -I$(PRODUCT_DIR)/driver/disp/vdp_v1_0/adp
@@ -50,58 +70,70 @@ CFLAGS   += -I$(PRODUCT_DIR)/driver/disp/vdp_v2_0/adp
 CFLAGS   += -I$(PRODUCT_DIR)/driver/disp/vdp_v2_0/drv
 endif
 
-CFLAGS   += -I$(BOOT_DIR)/include
-CFLAGS   += -I$(BOOT_DIR)/include/linux/mtd
-CFLAGS   += -I$(HIGO_DIR)/higo
-CFLAGS   += -I$(HIGO_DIR)/tde
-CFLAGS   += -I$(HIGO_DIR)/jpeg
-CFLAGS   += -I$(HIGO_DIR)/hifb
-CFLAGS   += -I$(HIGO_DIR)/hifb/adp
-CFLAGS   += -I$(HIGO_DIR)/hifb/adp/include
-CFLAGS   += -I$(HIGO_DIR)/hifb/adp/platform/include
-CFLAGS   += -I$(HIGO_DIR)/hifb/adp/platform/src
-CFLAGS += -DHI_BUILD_IN_BOOT
-CFLAGS += -DHIGO_BMP_SUPPORT
-CFLAGS += -DHIGO_CODE_CUT
-CFLAGS += -D__DISP_PLATFORM_BOOT__
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+CFLAGS   += -I$(PRODUCT_DIR)/driver/disp/vdp_v3_0/adp
+CFLAGS   += -I$(PRODUCT_DIR)/driver/disp/vdp_v3_0/drv
+endif
 
-LIBS     := $(HIGO_DIR)/libhigo.a
-SRC      := $(wildcard $(HIGO_DIR)/higo/*.c)
+CFLAGS   += -DHI_BUILD_IN_BOOT        \
+            -DHIGO_BMP_SUPPORT        \
+            -DHIGO_CODE_CUT           \
+            -D__DISP_PLATFORM_BOOT__
+
+#===============================================================================
+# higo need src file
+#===============================================================================
+SRC     := $(wildcard $(HIGO_DIR)/higo/*.c)
 SRC     += $(wildcard $(HIGO_DIR)/tde/*.c)
 SRC     += $(wildcard $(HIGO_DIR)/jpeg/*.c)
-#SRC     += $(wildcard $(HIGO_DIR)/hifb/*.c)
+SRC     += $(wildcard $(HIGO_DIR)/bmp/*.c)
+SRC     += $(wildcard $(HIGO_DIR)/common/*.c)
+SRC     +=  $(HIFB_DIR)/adp/platform/src/optm_hifb.c     \
+            $(HIFB_DIR)/adp/platform/src/optm_hal.c      \
+            $(HIFB_DIR)/adp/platform/src/optm_alg_csc.c  \
+            $(HIFB_DIR)/adp/platform/src/optm_alg_gzme.c \
+            $(HIFB_DIR)/adp/platform/src/optm_alg_gsharp.c
 
-HIFB_HAL_DIR:=cv200
 
-ifeq ($(CFG_HI_CHIP_TYPE),hi3796cv100)
-HIFB_HAL_DIR:=hi3798cv100
+HIFB_HAL_DIR  := cv200
+HIFB_PLAT_SRC := platform/src
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
+HIFB_HAL_DIR  := hi3798cv100
+HIFB_PLAT_SRC := platform
+else
+SRC += $(HIFB_DIR)/adp/platform/src/hifb_wbc.c
 endif
-ifeq ($(CFG_HI_CHIP_TYPE),hi3798cv100)
-HIFB_HAL_DIR:=hi3798cv100
-endif
 
-ifeq ($(CFG_HI_CHIP_TYPE),hi3798cv200_a)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200_a hi3798cv200),)
 HIFB_HAL_DIR:=hi3798cv200
 CFLAGS += -DCONFIG_JPEG_SET_SAMPLEFACTOR
 endif
 
-SRC += $(HIFB_DIR)/adp/platform/src/optm_hifb.c \
-        $(HIFB_DIR)/adp/platform/src/optm_hal.c \
-        $(HIFB_DIR)/adp/platform/src/optm_alg_csc.c \
-        $(HIFB_DIR)/adp/platform/src/optm_alg_gzme.c \
-        $(HIFB_DIR)/adp/platform/src/optm_alg_gsharp.c
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+CFLAGS += -DCONFIG_JPEG_SET_SAMPLEFACTOR
+CFLAGS += -DCONFIG_JPEG_DRI_SUPPORT
+endif
+
+
 S_SRC := 
 
 ifeq ($(wildcard $(MSP_DIR)/drv/hifb/adp/platform/alg/$(patsubst %-,%,$(CROSS_COMPILE))/*.S),)
-SRC += $(HIFB_DIR)/adp/platform/src/optm_alg_zme_coef.c
+SRC   += $(HIFB_DIR)/adp/platform/src/optm_alg_zme_coef.c
 else
 S_SRC += $(HIFB_DIR)/adp/platform/src/optm_alg_zme_coef.S
 endif
 
 OBJS := $(SRC:%.c=%.o)
+
 ifneq ($(S_SRC),)
 OBJS += $(S_SRC:%.S=%.o)
 endif
+
+#===============================================================================
+# lib file name
+#===============================================================================
+LIBS := $(HIGO_DIR)/libhigo.a
 
 
 #===============================================================================
@@ -124,9 +156,13 @@ prepare:
 || test ! -f $(MSP_DIR)/drv/hifb/adp/platform/alg/$(patsubst %-,%,$(CROSS_COMPILE))/optm_alg_zme_coef.S \
 || cp -rf $(MSP_DIR)/drv/hifb/adp/platform/alg/$(patsubst %-,%,$(CROSS_COMPILE))/*.S $(HIFB_DIR)/adp/platform/src
 	$(AT)-test -f $(HIFB_DIR)/adp/platform/include/optm_hifb.h \
-|| cp -rf $(MSP_DIR)/drv/hifb/adp/platform/include/*.h $(HIFB_DIR)/adp/platform/include
-	$(AT)-test -f $(HIFB_DIR)/adp/include/hifb_config.h \
-|| cp -rf $(MSP_DIR)/drv/hifb/adp/include/hifb_config.h  $(HIFB_DIR)/adp/platform/include
+|| cp -rf $(MSP_DIR)/drv/hifb/adp/platform/inc/*.h $(HIFB_DIR)/adp/platform/include
+	$(AT)-test -f $(HIFB_DIR)/adp/platform/include/hifb_config.h \
+|| cp -rf $(MSP_DIR)/drv/hifb/adp/inc/hifb_config.h  $(HIFB_DIR)/adp/platform/include
+	$(AT)-test -f $(HIFB_DIR)/adp/platform/src/hifb_wbc.c \
+|| cp -rf $(MSP_DIR)/drv/hifb/adp/${HIFB_PLAT_SRC}/*.c   $(HIFB_DIR)/adp/platform/src
+	$(AT)-test -f $(HIFB_DIR)/adp/platform/include//hifb_wbc.h \
+|| cp -rf $(MSP_DIR)/drv/hifb/adp/inc/hifb_wbc.h $(HIFB_DIR)/adp/platform/include
 	
 clean:
 	$(AT)rm -rf $(OBJS)

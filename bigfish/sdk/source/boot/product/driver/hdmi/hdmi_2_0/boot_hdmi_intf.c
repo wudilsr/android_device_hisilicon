@@ -4,9 +4,6 @@
 #include "drv_hdmi_common.h"
 #include "boot_hdmi_intf.h"
 
-
-#define HDMI_ERR printf
-#define HDMI_INFO printf
 #define CHECK_POINTER(p) \
 do{                      \
     if(HI_NULL == p){\
@@ -24,27 +21,32 @@ static HDMI_VIDEO_TIMING_E DispFmt2HdmiTiming(HI_U32 u32DispFmt)
     switch (u32DispFmt)
     {
         case HI_DRV_DISP_FMT_1080P_60:
+        case HI_DRV_DISP_FMT_1080P_59_94:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080P_60000;
             break;
         case HI_DRV_DISP_FMT_1080P_50:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080P_50000;
             break;
         case HI_DRV_DISP_FMT_1080P_30:
+        case HI_DRV_DISP_FMT_1080P_29_97:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080P_30000;
             break;
         case HI_DRV_DISP_FMT_1080P_25:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080P_25000;
             break;
         case HI_DRV_DISP_FMT_1080P_24:
+        case HI_DRV_DISP_FMT_1080P_23_976:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080P_24000;
             break;
         case HI_DRV_DISP_FMT_1080i_60:
+        case HI_DRV_DISP_FMT_1080i_59_94:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080I_60000;
             break;
         case HI_DRV_DISP_FMT_1080i_50:
             VideoTimingMode = HDMI_VIDEO_TIMING_1920X1080I_50000;
             break;
         case HI_DRV_DISP_FMT_720P_60:
+        case HI_DRV_DISP_FMT_720P_59_94:
             VideoTimingMode = HDMI_VIDEO_TIMING_1280X720P_60000;
             break;
         case HI_DRV_DISP_FMT_720P_50:
@@ -57,25 +59,38 @@ static HDMI_VIDEO_TIMING_E DispFmt2HdmiTiming(HI_U32 u32DispFmt)
             VideoTimingMode = HDMI_VIDEO_TIMING_720X480P_60000;
             break;
         case HI_DRV_DISP_FMT_3840X2160_24:
+        case HI_DRV_DISP_FMT_3840X2160_23_976:
             VideoTimingMode = HDMI_VIDEO_TIMING_3840X2160P_24000;
             break;            
         case HI_DRV_DISP_FMT_3840X2160_25:
             VideoTimingMode = HDMI_VIDEO_TIMING_3840X2160P_25000;
             break;  
         case HI_DRV_DISP_FMT_3840X2160_30:
+        case HI_DRV_DISP_FMT_3840X2160_29_97:
             VideoTimingMode = HDMI_VIDEO_TIMING_3840X2160P_30000;
             break;  
         case HI_DRV_DISP_FMT_4096X2160_24:    
             VideoTimingMode = HDMI_VIDEO_TIMING_4096X2160P_24000;
             break;
-#if 0
+        case HI_DRV_DISP_FMT_4096X2160_25:    
+            VideoTimingMode = HDMI_VIDEO_TIMING_4096X2160P_25000;
+            break;
+        case HI_DRV_DISP_FMT_4096X2160_30:    
+            VideoTimingMode = HDMI_VIDEO_TIMING_4096X2160P_30000;
+            break;
         case HI_DRV_DISP_FMT_3840X2160_50:
             VideoTimingMode = HDMI_VIDEO_TIMING_3840X2160P_50000;
             break;  
         case HI_DRV_DISP_FMT_3840X2160_60:
             VideoTimingMode = HDMI_VIDEO_TIMING_3840X2160P_60000;
             break; 
-#endif
+        case HI_DRV_DISP_FMT_4096X2160_50:    
+            VideoTimingMode = HDMI_VIDEO_TIMING_4096X2160P_50000;
+            break;
+        case HI_DRV_DISP_FMT_4096X2160_60:    
+            VideoTimingMode = HDMI_VIDEO_TIMING_4096X2160P_60000;
+            break;
+        case HI_DRV_DISP_FMT_1440x576i_50:
         case HI_DRV_DISP_FMT_PAL:
         case HI_DRV_DISP_FMT_PAL_B:
         case HI_DRV_DISP_FMT_PAL_B1:
@@ -100,6 +115,7 @@ static HDMI_VIDEO_TIMING_E DispFmt2HdmiTiming(HI_U32 u32DispFmt)
         case HI_DRV_DISP_FMT_SECAM_H:
             VideoTimingMode = HDMI_VIDEO_TIMING_720X576I_50000;
             break;
+        case HI_DRV_DISP_FMT_1440x480i_60:
         case HI_DRV_DISP_FMT_NTSC:
         case HI_DRV_DISP_FMT_NTSC_J:
         case HI_DRV_DISP_FMT_NTSC_443:
@@ -109,7 +125,7 @@ static HDMI_VIDEO_TIMING_E DispFmt2HdmiTiming(HI_U32 u32DispFmt)
             VideoTimingMode = HDMI_VIDEO_TIMING_640X480P_60000;
             break;
         default:
-            HDMI_INFO("Non CEA video timing:%d\n", u32DispFmt);
+            HDMI_INFO("Not CEA video timing:%d\n", u32DispFmt);
             // 4k2k && vesa
             VideoTimingMode = HDMI_VIDEO_TIMING_UNKNOWN;
             break;
@@ -118,10 +134,10 @@ static HDMI_VIDEO_TIMING_E DispFmt2HdmiTiming(HI_U32 u32DispFmt)
     return VideoTimingMode;
 }
 
-static HI_VOID DispFmt2VOAttr(HI_U32 u32DispFmt, HDMI_VO_ATTR_S *pstVideoAttr)
+static HI_VOID HdmiVOAttrInit(HDMI_VO_ATTR_S *pstVideoAttr)
 {
-    pstVideoAttr->enVideoTiming = DispFmt2HdmiTiming(u32DispFmt);
-  
+    //pstVideoAttr->enVideoTiming = DispFmt2HdmiTiming(u32DispFmt);
+
     if (pstVideoAttr->enVideoTiming > HDMI_VIDEO_TIMING_720X576P_50000)
     {
         pstVideoAttr->enColorimetry   = HDMI_COLORIMETRY__ITU_709;
@@ -146,12 +162,13 @@ static HI_VOID DispFmt2VOAttr(HI_U32 u32DispFmt, HDMI_VO_ATTR_S *pstVideoAttr)
     {
         pstVideoAttr->enRGBQuantization = HDMI_QUANTIZATION_RANGE_FULL;
     }
-    else 
+    else
     {
         pstVideoAttr->enYCCQuantization = HDMI_YCC_QUANTIZATION_RANGE_LIMITED;
     }
-
-    if (pstVideoAttr->enVideoTiming != HDMI_VIDEO_TIMING_UNKNOWN)
+    
+    if (pstVideoAttr->enVideoTiming != HDMI_VIDEO_TIMING_UNKNOWN &&
+        pstVideoAttr->enVideoTiming != HDMI_VIDEO_TIMING_640X480P_60000)
     {
         pstVideoAttr->enInColorSpace = HDMI_COLORSPACE_YCbCr444;
     }
@@ -163,7 +180,13 @@ static HI_VOID DispFmt2VOAttr(HI_U32 u32DispFmt, HDMI_VO_ATTR_S *pstVideoAttr)
     pstVideoAttr->enStereoMode    = HDMI_3D_BUTT;
     pstVideoAttr->enInBitDepth    = HDMI_VIDEO_BITDEPTH_10;
     pstVideoAttr->enActiveAspect  = HDMI_ACTIVE_ASPECT_PICTURE;
-   
+}
+
+
+static HI_VOID DispFmt2VOAttr(HI_U32 u32DispFmt, HDMI_VO_ATTR_S *pstVideoAttr)
+{
+    pstVideoAttr->enVideoTiming = DispFmt2HdmiTiming(u32DispFmt);
+    HdmiVOAttrInit(pstVideoAttr);
 }
 
 static HI_S32 HdmiDeviceInit(HDMI_DEVICE_S * pstHdmiDev)
@@ -182,48 +205,8 @@ static HI_S32 HdmiDeviceInit(HDMI_DEVICE_S * pstHdmiDev)
     
     /* video attribute init*/
     pstVideoAttr->enVideoTiming = HDMI_VIDEO_TIMING_1280X720P_50000;
-    if (pstVideoAttr->enVideoTiming > HDMI_VIDEO_TIMING_720X576P_50000)
-    {
-        pstVideoAttr->enColorimetry   = HDMI_COLORIMETRY__ITU_709;
-        pstVideoAttr->enPictureAspect = HDMI_PICTURE_ASPECT_16_9;
-        pstVideoAttr->enHvSyncPol     = HDMI_HV_SYNC_POL_HPVP;
-    }
-    else
-    {
-        pstVideoAttr->enColorimetry   = HDMI_COLORIMETRY__ITU_601;
-        pstVideoAttr->enPictureAspect = HDMI_PICTURE_ASPECT_4_3;
-        pstVideoAttr->enHvSyncPol     = HDMI_HV_SYNC_POL_HNVN;
-    }
-    
-    pstVideoAttr->u32PixelRepeat  = 1;
-    if (pstVideoAttr->enVideoTiming == HDMI_VIDEO_TIMING_720X480I_60000 ||
-        pstVideoAttr->enVideoTiming == HDMI_VIDEO_TIMING_720X576I_50000)
-    {
-        pstVideoAttr->u32PixelRepeat = 2;
-    }
+    HdmiVOAttrInit(pstVideoAttr);
 
-    if (pstVideoAttr->enVideoTiming <= HDMI_VIDEO_TIMING_640X480P_60000)
-    {
-        pstVideoAttr->enRGBQuantization = HDMI_QUANTIZATION_RANGE_FULL;
-    }
-    else 
-    {
-        pstVideoAttr->enYCCQuantization = HDMI_YCC_QUANTIZATION_RANGE_LIMITED;
-    }
-
-    if (pstVideoAttr->enVideoTiming != HDMI_VIDEO_TIMING_UNKNOWN)
-    {
-        pstVideoAttr->enInColorSpace = HDMI_COLORSPACE_YCbCr444;
-    }
-    else
-    {
-        pstVideoAttr->enInColorSpace = HDMI_COLORSPACE_RGB;
-    }
-    
-    pstVideoAttr->enStereoMode    = HDMI_3D_BUTT;
-    pstVideoAttr->enInBitDepth    = HDMI_VIDEO_BITDEPTH_10;
-    pstVideoAttr->enActiveAspect  = HDMI_ACTIVE_ASPECT_PICTURE; 
-    
     /* audio attribute init*/
     pstAudioAttr->enSoundIntf   = HDMI_AUDIO_INTERFACE__I2S;
     pstAudioAttr->enSampleFs    = HDMI_SAMPLE_RATE_48K;
@@ -240,6 +223,12 @@ HI_S32 DRV_HDMI_Open(HDMI_DEVICE_S* pstHdmiDev)
 
     /* open hdmi hal module*/
     s32Ret = HAL_HDMI_Open(HI_NULL, &pstHdmiDev->pstHdmiHal);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HDMI_ERR("HAL_HDMI_Open fail\n");
+        return HI_FAILURE;    
+    }
+    
     HdmiDeviceInit(pstHdmiDev);
     pstHdmiDev->pstHdmiHal->stHalCtx.hHdmiDev = pstHdmiDev;
     pstHdmiDev->pstHdmiHal->stHalCtx.u32HdmiID = pstHdmiDev->u32HdmiDevId;
@@ -436,6 +425,7 @@ static HI_S32 CheckVideoAttr(HDMI_VO_ATTR_S* pstVOAttr)
     return HI_SUCCESS;
 }
 
+
 static HI_S32 HdmiVideoPathSet(HDMI_DEVICE_S* pstHdmiDev, HDMI_VO_ATTR_S* pstVOAttr)
 {
     HDMI_VIDEO_CONFIG_S stVideoCfg = {0};
@@ -445,13 +435,15 @@ static HI_S32 HdmiVideoPathSet(HDMI_DEVICE_S* pstHdmiDev, HDMI_VO_ATTR_S* pstVOA
     CHECK_POINTER(pstHdmiDev->pstHdmiHal);
     
     pstAppAttr   = &pstHdmiDev->stAttr.stAppAttr;
-
-    stVideoCfg.enInBitDepth = pstVOAttr->enInBitDepth;
-    stVideoCfg.enHvSyncPol  = pstVOAttr->enHvSyncPol;
+    
+    stVideoCfg.u32PixelClk     = pstVOAttr->u32ClkFs;
+    stVideoCfg.enInBitDepth    = pstVOAttr->enInBitDepth;
+    stVideoCfg.enHvSyncPol     = pstVOAttr->enHvSyncPol;
     stVideoCfg.enQuantization  = pstVOAttr->enRGBQuantization;
     stVideoCfg.enInColorSpace  = pstVOAttr->enInColorSpace;
     stVideoCfg.enDeepColor     = pstAppAttr->enDeepColorMode;
-    stVideoCfg.enOutColorSpace = pstAppAttr->enOutColorSpace;
+    stVideoCfg.enOutColorSpace = pstAppAttr->bYUV420Enable ? HDMI_COLORSPACE_YCbCr420 : pstAppAttr->enOutColorSpace;
+    stVideoCfg.enOutColorSpace = pstAppAttr->bEnableHdmi ? stVideoCfg.enOutColorSpace : HDMI_COLORSPACE_RGB;
 
     switch (pstVOAttr->enColorimetry)
     {
@@ -549,51 +541,124 @@ HI_S32 DRV_HDMI_AttrGet(HDMI_DEVICE_S* pstHdmiDev, HDMI_ATTR_S *pstAttr)
     return HI_SUCCESS;
 }
 
-HI_S32 DRV_HDMI_AttrSet(HDMI_DEVICE_S* pstHdmiDev, HDMI_ATTR_S *pstAttr)
+#ifdef HDMI_SCDC_SUPPORT
+static HI_S32 HdmiScrambleEnableSet(HDMI_DEVICE_S* pstHdmiDev, HI_BOOL bEnable)
 {
-    HDMI_AO_ATTR_S*          pstAudioAttr;
-    HDMI_VO_ATTR_S*          pstVideoAttr;
-    HDMI_APP_ATTR_S*         pstAppAttr;
-    HDMI_TX_CAPABILITY_E     enTxCapability;
+    HDMI_SCDC_CONFIG_S       stScdcConfig;
     CHECK_POINTER(pstHdmiDev);
-    CHECK_POINTER(pstAttr);
-
-    pstAudioAttr = &pstAttr->stAOAttr;
-    pstVideoAttr = &pstAttr->stVOAttr;
-    pstAppAttr   = &pstAttr->stAppAttr;
-    CheckVideoAttr(pstVideoAttr);
-    memcpy(&pstHdmiDev->stAttr, pstAttr, sizeof(HDMI_ATTR_S)); 
+    CHECK_POINTER(pstHdmiDev->pstHdmiHal);
     
-    pstHdmiDev->pstHdmiHal->HAL_HDMI_TxCapabilityGet(pstHdmiDev->pstHdmiHal, &enTxCapability);
-    if (pstAppAttr->bEnableHdmi && pstVideoAttr->enVideoTiming >= HDMI_VIDEO_TIMING_3840X2160P_50000)
+    memset(&stScdcConfig, 0, sizeof(HDMI_SCDC_CONFIG_S));
+    stScdcConfig.bScdcEnable             = bEnable;
+    stScdcConfig.bScdcPresent            = HI_TRUE;
+    stScdcConfig.bRRCapable              = HI_FALSE;
+    stScdcConfig.bLTE340McscScramble     = HI_FALSE;
+    
+    if (bEnable)
     {
-        if (pstAppAttr->enOutColorSpace != HDMI_COLORSPACE_YCbCr420)
+        stScdcConfig.u32MaxTmdsCharacterRate = 600 * 1000000;
+        pstHdmiDev->pstHdmiHal->HAL_HDMI_PhyOutputEnableSet(pstHdmiDev->pstHdmiHal, HI_FALSE);
+    }
+    else
+    {
+        stScdcConfig.u32MaxTmdsCharacterRate = 300 * 1000000;
+    }
+    
+    HDMI_INFO("ScdcEnable:%d\n",stScdcConfig.bScdcEnable); 
+    HDMI_INFO("Scdc Config:ScdcPresent(%d),RRCapable(%d),LTE340McscScramble(%d),MaxTmdsCharacterRate(%d)\n",stScdcConfig.bScdcPresent,stScdcConfig.bRRCapable,stScdcConfig.bLTE340McscScramble,stScdcConfig.u32MaxTmdsCharacterRate);
+    pstHdmiDev->pstHdmiHal->HAL_HDMI_ScdcConfig(pstHdmiDev->pstHdmiHal, &stScdcConfig);
+    
+    return HI_SUCCESS;
+}
+#endif
+static HI_S32 HdmiModeSchedule(HDMI_DEVICE_S* pstHdmiDev)
+{
+
+    HDMI_TX_CAPABILITY_E     enTxCapability;
+    HDMI_APP_ATTR_S*         pstAppAttr;
+    HDMI_VO_ATTR_S*          pstVideoAttr;
+
+    pstAppAttr   = &pstHdmiDev->stAttr.stAppAttr;
+    pstVideoAttr = &pstHdmiDev->stAttr.stVOAttr;
+
+    pstHdmiDev->pstHdmiHal->HAL_HDMI_TxCapabilityGet(pstHdmiDev->pstHdmiHal, &enTxCapability); 
+
+    /* When video format is 4K50,60 or 4K30,25,24 deepclolor, switch to HDMI2.0*/
+    if (pstVideoAttr->enVideoTiming >= HDMI_VIDEO_TIMING_3840X2160P_50000)
+    {
+    #if 0  
+        if ((enTxCapability & HDMI_TX_SUPPORT_HDMI2_0) && 
+            pstAppAttr->bEnableHdmi == HI_TRUE &&
+            pstAppAttr->enOutColorSpace != HDMI_COLORSPACE_YCbCr420)
         {
-            if (enTxCapability & HDMI_TX_SUPPORT_HDMI2_0)
-            {
-                pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_HDMI_2_0;
-            }
-            else
-            {
-                HDMI_ERR("HDMI not support HDMI2.0\n");
-                return HI_FAILURE;
-            }
+            pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_HDMI_2_0;
+        }
+        else if (pstAppAttr->bEnableHdmi != HI_TRUE)
+        {
+            pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_DVI;
+            pstAppAttr->enOutColorSpace = HDMI_COLORSPACE_RGB;
+        }
+        else 
+        {
+            HDMI_ERR("source does not support HDMI2.0\n");
+            return HI_FAILURE;
+        }
+    #else
+        HDMI_INFO("Enable YUV420\n");
+        pstHdmiDev->enTmdsMode      = HDMI_TMDS_MODE_HDMI_1_4;  
+        pstAppAttr->bYUV420Enable = HI_TRUE;//In boot, when fmt is 4KP60, set outcolorspace YUV420 default   
+    #endif
+    } 
+    else
+    {
+        if (pstAppAttr->bEnableHdmi == HI_TRUE)
+        {
+            pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_HDMI_1_4;  
         }
         else
         {
-            if (enTxCapability & HDMI_TX_SUPPORT_YUV420)
-            {
-                pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_HDMI_1_4;
-            }
-            else
-            {
-                HDMI_ERR("HDMI not support YUV420\n");
-                return HI_FAILURE;
-            }
+            pstHdmiDev->enTmdsMode = HDMI_TMDS_MODE_DVI;
+            pstAppAttr->enOutColorSpace = HDMI_COLORSPACE_RGB;
         }
     }
+
+   
+#ifdef HDMI_SCDC_SUPPORT    
+    if (pstHdmiDev->enTmdsMode == HDMI_TMDS_MODE_HDMI_2_0)
+    {
+        HdmiScrambleEnableSet(pstHdmiDev, HI_TRUE);
+    }
+    else
+    {
+        HdmiScrambleEnableSet(pstHdmiDev, HI_FALSE);
+    }
+#endif  
+
+    pstHdmiDev->pstHdmiHal->HAL_HDMI_TmdsModeSet(pstHdmiDev->pstHdmiHal, pstHdmiDev->enTmdsMode);
+    HDMI_INFO("Tmds mode switch to %d\n",pstHdmiDev->enTmdsMode,pstAppAttr->enOutColorSpace);
+
+    return HI_SUCCESS;
+}
+
+
+HI_S32 DRV_HDMI_AttrSet(HDMI_DEVICE_S* pstHdmiDev, HDMI_ATTR_S *pstAttr)
+{
+    //HDMI_AO_ATTR_S*          pstAudioAttr;
+    HDMI_VO_ATTR_S*          pstVideoAttr;
+    //HDMI_APP_ATTR_S*         pstAppAttr;
+
+    CHECK_POINTER(pstHdmiDev);
+    CHECK_POINTER(pstAttr);
+
+    //pstAudioAttr = &pstAttr->stAOAttr;
+    pstVideoAttr = &pstAttr->stVOAttr;
+    //pstAppAttr   = &pstAttr->stAppAttr;
+    CheckVideoAttr(pstVideoAttr);
+    memcpy(&pstHdmiDev->stAttr, pstAttr, sizeof(HDMI_ATTR_S)); 
     
-    HdmiVideoPathSet(pstHdmiDev, pstVideoAttr);
+    HdmiModeSchedule(pstHdmiDev);
+    
+    HdmiVideoPathSet(pstHdmiDev, &pstHdmiDev->stAttr.stVOAttr);
     DRV_HDMI_AVIInfoFrameSend(&pstHdmiDev->stInfoFrame, HI_TRUE);
 #if 0
     HdmiAudioPathSet(pstHdmiDev, pstAudioAttr);
@@ -664,6 +729,7 @@ HI_S32 HI_DRV_HDMI_SetAttr(HI_UNF_HDMI_ID_E enHdmiID, HI_DRV_HDMI_ATTR_S *pstAtt
     //stAttr.stAppAttr.bEnableVideo    = pstAttr->bEnableVideo;
     stAttr.stAppAttr.enOutColorSpace = pstAttr->enVidOutMode;
     stAttr.stVOAttr.enInColorSpace   = pstAttr->enVidInMode;
+    stAttr.stVOAttr.u32ClkFs         = pstAttr->u32ClkFs;
     return DRV_HDMI_AttrSet(&s_stHdmiDev[enHdmiID], &stAttr);
 }
 #if 0

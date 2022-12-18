@@ -61,6 +61,8 @@ static int chk_fail_flag = E_STATUS_STOP;
 static char *file_data_buf;
 static char *line_buf;
 static unsigned char RSAKey[512] = {0};
+static unsigned char g_all_partition_hash[128] = {0};
+static unsigned char g_system_hash[32] = {0};
 static struct task_struct *verify_task = NULL;
 static struct notifier_block verify_pm_notifier;
 
@@ -69,6 +71,7 @@ static int __init parse_tag_rsakey(const struct tag *tag)
 		memset(RSAKey, 0, 512);
 		memcpy(RSAKey, &(tag->u), 256);
 		memcpy(RSAKey + 508, &(tag->u) + 256, 4);
+		memcpy(g_all_partition_hash, &(tag->u) + 256 + 4, 96);
 		return 0;
 }
 __tagtable(CONFIG_RSAKEY_TAG_VAL, parse_tag_rsakey);
@@ -95,8 +98,13 @@ static int filp_fread(char *buf, int len, struct file *filp)
 
 static int syschk_show(struct seq_file *m, void *v)
 {
+	int i = 0;
 	seq_printf(m, "Status: %s\n", status_str[chk_fail_flag]);
-	
+	for (i = 0; i < 32; i++)
+	{
+		seq_printf(m, "%02x", g_system_hash[i]);
+	}
+	seq_printf(m, "\n");
 	if (chk_fail_flag == E_STATUS_FAIL) {
 		seq_printf(m, "Errmsg: %s\n", errmsg);
 	}
@@ -212,6 +220,37 @@ static int sha256_filelist(struct file *filp, int actual_len, unsigned char *has
 	return 0;
 }
 
+/* calc hash of array */
+static int sha256_array(unsigned char *input, int len, unsigned char *hash)
+{
+	int ret;
+	struct crypto_hash *tfm;
+	struct hash_desc desc;
+	struct scatterlist sg;
+
+	tfm = crypto_alloc_hash("sha256", 0, CRYPTO_ALG_ASYNC);
+	if (IS_ERR(tfm)) {
+		pr_err("Failed to load transform for sha256: %ld\n", PTR_ERR(tfm));
+		return -1;
+	}
+
+	desc.tfm = tfm;
+	desc.flags = 0;
+
+	ret = crypto_hash_init(&desc);
+	if (ret) {
+		pr_err("hash init fail.\n");
+		return -1;
+	}
+
+	sg_init_one(&sg, input, len);
+	crypto_hash_update(&desc, &sg, len);
+	crypto_hash_final(&desc, hash);
+	crypto_free_hash(tfm);
+
+	return 0;
+}
+
 /* verify signature of system list file. */
 static int verify_filelist(struct file *filp, int file_size, int *actual_len)
 {
@@ -254,6 +293,7 @@ static int verify_filelist(struct file *filp, int file_size, int *actual_len)
 	ret = hirsa_pkcs1_verify( &key, RSA_PUBLIC, SIG_RSA_SHA256, 32, hash, sign);
 
 	*actual_len = actual_data_size;
+	memcpy(&g_all_partition_hash[96], hash, 32);
 	return ret;
 }
 
@@ -548,6 +588,15 @@ static int system_verify(void *unused)
 		/* verify success */
 		chk_fail_flag = E_STATUS_SUCCESS;
 		printk("Verify system files success!\n");
+
+		sha256_array(g_all_partition_hash, 128, g_system_hash);
+		printk("g_system_hash:\n");
+		for (i = 0; i < 32; i++)
+		{
+			printk("0x%02x ", g_system_hash[i]);
+			if ((i + 1) % 16 == 0)
+				printk("\n");
+		}
 	}
 	filp_close(filp, NULL);
 	kfree(file_data_buf);

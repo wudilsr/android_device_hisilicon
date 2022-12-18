@@ -41,7 +41,7 @@ typedef struct tagPARTITION_MEMORY_INFO_S
 
 typedef struct tagUPGRADE_MEM_INFO_S
 {
-    HI_U32                  u32TotalSize;
+    HI_U64                  u64TotalSize;
     HI_U32                  u32ReceivedSize;
     HI_U32                  u32PartNum;
     PARTITION_MEMORY_INFO_S astPartMemInfo[MAX_UPGRADE_IMAGE_NUM];
@@ -165,6 +165,32 @@ HI_U32 getBits (const HI_U8 *pBuf, HI_U32 u32ByteOffset, HI_U32 u32Startbit, HI_
     return v;
 }
 
+HI_U64 getBits64(const HI_U8 *pBuf, HI_U32 u32ByteOffset, HI_U32 u32Startbit)
+{
+    HI_U8 *b;
+    HI_U64 mask;
+    HI_U64 tmp_long;
+    HI_U8 tmp_long72;
+
+    b = (HI_U8*)&pBuf[u32ByteOffset + (u32Startbit >> 3)];
+    u32Startbit %= 8;
+    tmp_long72 = (HI_U64)(*(b));
+    tmp_long = (HI_U64)(((HI_U64)(*(b + 1)) << 56)
+                        + ((HI_U64)(*(b + 2)) << 48)
+                        + ((HI_U64)(*(b + 3)) << 40)
+                        + ((HI_U64)(*(b + 4)) << 32)
+                        + ((HI_U64)(*(b + 5)) << 24)
+                        + ((HI_U64)(*(b + 6)) << 16)
+                        + ((HI_U64)(*(b + 7)) << 8)
+                        + ((HI_U64)(*(b + 8))));
+    u32Startbit = 72 - (u32Startbit + 64);
+    tmp_long = tmp_long >> u32Startbit;
+    mask = (((HI_U64)0x0000000000000001ULL) << u32Startbit) - 1;
+    tmp_long72 &= mask;
+    tmp_long |= (tmp_long72 << (64 - u32Startbit));
+    return tmp_long;
+}
+
 HI_VOID ParseHeader(HI_U8 *pBuf, UsbHeader *pstHeader)
 {
     HI_U32 i, j, k;
@@ -178,8 +204,8 @@ HI_VOID ParseHeader(HI_U8 *pBuf, UsbHeader *pstHeader)
     k += 32;
     pstHeader->u32HeaderLen = getBits(pBuf, 0, k, 32);
     k += 32;
-    pstHeader->u32FileLen = getBits(pBuf, 0, k, 32);
-    k += 32;
+    pstHeader->u64FileLen = getBits64(pBuf, 0, k);
+    k += 64;
     pstHeader->u16ManuNum = getBits(pBuf, 0, k, 16);
     k    += 16;
     pBuf += k / 8;
@@ -187,7 +213,7 @@ HI_VOID ParseHeader(HI_U8 *pBuf, UsbHeader *pstHeader)
     HI_DBG_LOADER("pstHeader->u32MagicNum  = 0x%x\n", pstHeader->u32MagicNum );
     HI_DBG_LOADER("pstHeader->u32HeaderCrc = 0x%x\n", pstHeader->u32HeaderCrc );
     HI_DBG_LOADER("pstHeader->u32HeaderLen = 0x%x\n", pstHeader->u32HeaderLen );
-    HI_DBG_LOADER("pstHeader->u32FileLen   = 0x%x\n", pstHeader->u32FileLen );
+    HI_DBG_LOADER("pstHeader->u64FileLen   = 0x%Lx\n", pstHeader->u64FileLen );
     HI_DBG_LOADER("pstHeader->u16ManuNum   = 0x%x\n", pstHeader->u16ManuNum );
 
     if (pstHeader->u16ManuNum > USB_MANU_MAX_NUM)
@@ -239,10 +265,10 @@ HI_VOID ParseHeader(HI_U8 *pBuf, UsbHeader *pstHeader)
             k += 32;
             pImg->u32Offset = getBits(pBuf, 0, k, 32);
             k += 32;
-            pImg->u32FlashAddr = getBits(pBuf, 0, k, 32);
-            k += 32;
-            pImg->uPartition_endaddr = getBits(pBuf, 0, k, 32);
-            k += 32;
+            pImg->u64FlashAddr = getBits64(pBuf, 0, k);
+            k += 64;
+            pImg->u64Partition_endaddr = getBits64(pBuf, 0, k);
+            k += 64;
             pImg->uFlashType = getBits(pBuf, 0, k, 32);
             k += 32;
             pImg->lFlashIndex = getBits(pBuf, 0, k, 32);
@@ -252,8 +278,8 @@ HI_VOID ParseHeader(HI_U8 *pBuf, UsbHeader *pstHeader)
 
             HI_DBG_LOADER("pImg->u32FileLength      = 0x%x\n", pImg->u32FileLength );
             HI_DBG_LOADER("pImg->u32Offset          = 0x%x\n", pImg->u32Offset );
-            HI_DBG_LOADER("pImg->u32FlashAddr       = 0x%x\n", pImg->u32FlashAddr );
-            HI_DBG_LOADER("pImg->uPartition_endaddr = 0x%x\n", pImg->uPartition_endaddr );
+            HI_DBG_LOADER("pImg->u64FlashAddr       = 0x%Lx\n", pImg->u64FlashAddr );
+            HI_DBG_LOADER("pImg->u64Partition_endaddr = 0x%Lx\n", pImg->u64Partition_endaddr );
             HI_DBG_LOADER("pImg->uFlashType         = 0x%x\n", pImg->uFlashType );
             HI_DBG_LOADER("pImg->lFlashIndex        = 0x%x\n", pImg->lFlashIndex );
         }
@@ -272,7 +298,7 @@ HI_S32 InitUpgradeBuff(UsbManuInfo *pstManuInfo)
     g_stUpgradeMemInfo.u32PartNum = (HI_U32)pstManuInfo->u16ImgMapNum;
     g_stUpgradeMemInfo.u32ReceivedSize = 0;
 
-    HI_DBG_LOADER("totalsize %d\n", g_stUpgradeMemInfo.u32TotalSize);
+    HI_DBG_LOADER("totalsize %Ld\n", g_stUpgradeMemInfo.u64TotalSize);
 
     pstPartMemInfo = g_stUpgradeMemInfo.astPartMemInfo;
     for (ii = 0; ii < g_stUpgradeMemInfo.u32PartNum; ii++)
@@ -537,15 +563,15 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPa
         pstPartInfo[ii].u32PartitionId = ii + 1;
         pstPartInfo[ii].u32FlashType = pImg->uFlashType;
         pstPartInfo[ii].u32ImageFS = pImg->lFlashIndex;
-        pstPartInfo[ii].u32FlashStartAddr = pImg->u32FlashAddr;
-        pstPartInfo[ii].u32FlashEndAddr  = pImg->uPartition_endaddr;
+        pstPartInfo[ii].u64FlashStartAddr = pImg->u64FlashAddr;
+        pstPartInfo[ii].u64FlashEndAddr  = pImg->u64Partition_endaddr;
         pstPartInfo[ii].u32ImageDataSize = pImg->u32FileLength;
 
         HI_DBG_LOADER("usbip protocol part[%d] id                : %d\n", ii, pstPartInfo[ii].u32PartitionId);
         HI_DBG_LOADER("usbip protocol part[%d] u32FlashType      : %d\n", ii, pstPartInfo[ii].u32FlashType);
         HI_DBG_LOADER("usbip protocol part[%d] u32ImageFS        : 0x%x\n", ii, pstPartInfo[ii].u32ImageFS);
-        HI_DBG_LOADER("usbip protocol part[%d] u32FlashStartAddr : 0x%x\n", ii, pstPartInfo[ii].u32FlashStartAddr);
-        HI_DBG_LOADER("usbip protocol part[%d] u32FlashEndAddr   : 0x%x\n", ii, pstPartInfo[ii].u32FlashEndAddr);
+        HI_DBG_LOADER("usbip protocol part[%d] u64FlashStartAddr : 0x%Lx\n", ii, pstPartInfo[ii].u64FlashStartAddr);
+        HI_DBG_LOADER("usbip protocol part[%d] u64FlashEndAddr   : 0x%Lx\n", ii, pstPartInfo[ii].u64FlashEndAddr);
         HI_DBG_LOADER("usbip protocol part[%d] u32ImageDataSize  : 0x%x\n", ii, pstPartInfo[ii].u32ImageDataSize);
     }
 

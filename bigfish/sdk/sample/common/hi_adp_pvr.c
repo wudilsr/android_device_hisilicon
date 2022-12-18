@@ -38,9 +38,6 @@ typedef struct hiCODEC_VIDEO_CMD_S
 }HI_CODEC_VIDEO_CMD_S;
 
 /********************** Global Variable declaration **************************/
-static HI_S32       g_s32PvrRecChnNum[DMX_COUNT]; /* number of record channel for each demux */
-static HI_HANDLE    g_hPvrRecChns[DMX_COUNT][8];  /* handle of record channel for each demux */
-
 HI_BOOL             g_bIsRecStop = HI_FALSE;
 static HI_BOOL      g_bStopTsThread = HI_FALSE;
 HI_HANDLE           g_hTsBufForPlayBack;
@@ -67,11 +64,11 @@ HI_U8* PVR_GetEventTypeStringByID(HI_UNF_PVR_EVENT_E eEventID);
 #if 1
 HI_VOID SearchFileTsSendThread(HI_VOID *args)
 {
-    HI_UNF_STREAM_BUF_S   StreamBuf;
-    HI_U32            Readlen;
-    HI_S32            Ret;
-    HI_HANDLE         g_TsBuf;
-    TS_SEND_ARGS_S    *pstPara = args;
+    HI_U32 u32Readlen;
+    HI_S32 Ret;
+    HI_HANDLE       hTsBuf;
+    TS_SEND_ARGS_S  *pstPara = args;
+    HI_UNF_STREAM_BUF_S stStreamBuf;
 
     Ret = HI_UNF_DMX_AttachTSPort(pstPara->u32DmxId, pstPara->u32PortId);
     if (HI_SUCCESS != Ret)
@@ -80,7 +77,7 @@ HI_VOID SearchFileTsSendThread(HI_VOID *args)
         return;
     }
 
-    Ret = HI_UNF_DMX_CreateTSBuffer(pstPara->u32PortId, 0x200000, &g_TsBuf);
+    Ret = HI_UNF_DMX_CreateTSBuffer(pstPara->u32PortId, 0x200000, &hTsBuf);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_DMX_CreateTSBuffer failed.\n");
@@ -89,29 +86,29 @@ HI_VOID SearchFileTsSendThread(HI_VOID *args)
 
     while (!g_bStopTsThread)
     {
-        Ret = HI_UNF_DMX_GetTSBuffer(g_TsBuf, 188*50, &StreamBuf, 0);
+        Ret = HI_UNF_DMX_GetTSBuffer(hTsBuf, 188*50, &stStreamBuf, 0);
         if (Ret != HI_SUCCESS )
         {
             usleep(10 * 1000) ;
             continue;
         }
 
-        Readlen = fread(StreamBuf.pu8Data, sizeof(HI_S8), 188*50, pstPara->pTsFile);
-        if(Readlen <= 0)
+        u32Readlen = fread(stStreamBuf.pu8Data, sizeof(HI_S8), 188*50, pstPara->pTsFile);
+        if(u32Readlen <= 0)
         {
             sample_common_printf("read ts file error!\n");
             rewind(pstPara->pTsFile);
             continue;
         }
 
-        Ret = HI_UNF_DMX_PutTSBuffer(g_TsBuf, Readlen);
+        Ret = HI_UNF_DMX_PutTSBuffer(hTsBuf, u32Readlen);
         if (Ret != HI_SUCCESS )
         {
             sample_common_printf("call HI_UNF_DMX_PutTSBuffer failed.\n");
         }
     }
 
-    Ret = HI_UNF_DMX_DestroyTSBuffer(g_TsBuf);
+    Ret = HI_UNF_DMX_DestroyTSBuffer(hTsBuf);
     if (Ret != HI_SUCCESS )
     {
         sample_common_printf("call HI_UNF_DMX_DestroyTSBuffer failed.\n");
@@ -124,8 +121,8 @@ HI_VOID SearchFileTsSendThread(HI_VOID *args)
 HI_S32 PVR_SearchFile(HI_U32 u32DmxId, HI_U32 u32PortId, const HI_CHAR *pszFileName, PMT_COMPACT_TBL **ppProgTbl)
 {
     HI_S32 Ret;
-    pthread_t   TsThd;
-    TS_SEND_ARGS_S    stPara;
+    pthread_t TsThd;
+    TS_SEND_ARGS_S stPara;
     FILE *pTsFile;
 
     pTsFile = fopen(pszFileName, "rb");
@@ -156,118 +153,18 @@ HI_S32 PVR_SearchFile(HI_U32 u32DmxId, HI_U32 u32PortId, const HI_CHAR *pszFileN
 }
 
 #endif
-HI_S32 PVR_RecAddPid(HI_U32 u32DmxId, int pid, HI_UNF_DMX_CHAN_TYPE_E chnType)
-{
-    HI_U32 ret      = HI_SUCCESS;
-    HI_S32 chnIdx   = 0;
-    HI_HANDLE       hPidChn;
-
-    HI_UNF_DMX_CHAN_ATTR_S stChnAttr;
-
-    if(u32DmxId >= DMX_COUNT)
-    {
-        PRINT_SMP("IN PVR_RecAddPid the u32DmxId:%d is over than DMX_CNT:(%d)!!!\n", u32DmxId, DMX_COUNT);
-        return HI_FAILURE;
-    }
-
-    chnIdx   = g_s32PvrRecChnNum[u32DmxId];
-
-    //HI_MPI_DMX_SetRecodeType(u32DmxId, 1); /* 1== DESCRAM TS */
-
-    ret = HI_UNF_DMX_GetChannelHandle(u32DmxId, pid, &hPidChn);
-    if (HI_SUCCESS == ret)
-    {
-        SAMPLE_RUN(HI_UNF_DMX_GetChannelAttr(hPidChn, &stChnAttr), ret);
-        if (HI_SUCCESS != ret)
-        {
-            return ret;
-        }
-
-        if (stChnAttr.enOutputMode != HI_UNF_DMX_CHAN_OUTPUT_MODE_REC)
-        {
-            PRINT_SMP("Pid %d already open for PLAY, can NOT recorde\n", pid);
-            return ret;
-        }
-    }
-
-
-    /*demux get attribution of default channel *//*CNcomment:demux获取通道默认属性*/
-    SAMPLE_RUN(HI_UNF_DMX_GetChannelDefaultAttr(&stChnAttr), ret);
-    if (HI_SUCCESS != ret)
-    {
-        return ret;
-    }
-
-    stChnAttr.enChannelType = chnType;
-    //stChnAttr.enChannelType = HI_UNF_DMX_CHAN_TYPE_SEC;
-    stChnAttr.enCRCMode    = HI_UNF_DMX_CHAN_CRC_MODE_FORBID;
-    stChnAttr.u32BufSize   = 32;
-    stChnAttr.enOutputMode = HI_UNF_DMX_CHAN_OUTPUT_MODE_REC;
-
-
-    /*demux create channel *//*CNcomment: demux新建通道*/
-    SAMPLE_RUN(HI_UNF_DMX_CreateChannel(u32DmxId, &stChnAttr, &hPidChn), ret);
-    if (HI_SUCCESS != ret)
-    {
-        return ret;
-    }
-
-    /*demux set channel PID*//*CNcomment:demux 设置通道PID*/
-    SAMPLE_RUN(HI_UNF_DMX_SetChannelPID(hPidChn, pid), ret);
-    if (HI_SUCCESS != ret)
-    {
-        HI_UNF_DMX_DestroyChannel(hPidChn);
-        return ret;
-    }
-
-    /*demux open channel*//*CNcomment:demux打开通道*/
-    SAMPLE_RUN(HI_UNF_DMX_OpenChannel(hPidChn), ret);
-    if (HI_SUCCESS != ret)
-    {
-        HI_UNF_DMX_DestroyChannel(hPidChn);
-        return ret;
-    }
-
-    chnIdx %= 8; //by g_hPvrRecChns definition, the max column index should be less than 8
-
-    g_hPvrRecChns[u32DmxId][chnIdx] = hPidChn;
-    g_s32PvrRecChnNum[u32DmxId]++;
-
-    sample_common_printf("DMX:%d add PID OK, pid:%d/%#x, Type:%d\n", u32DmxId, pid, pid, chnType);
-
-    return HI_SUCCESS;
-}
-
-HI_S32 PVR_RecDelAllPid(HI_U32 u32DmxId)
-{
-    HI_S32 i;
-    HI_S32 ret = HI_SUCCESS;
-    HI_HANDLE hPidChn;
-
-    for (i = 0; i < g_s32PvrRecChnNum[u32DmxId]; i++)
-    {
-        hPidChn = g_hPvrRecChns[u32DmxId][i];
-        SAMPLE_RUN(HI_UNF_DMX_CloseChannel(hPidChn),ret);
-        SAMPLE_RUN(HI_UNF_DMX_DestroyChannel(hPidChn), ret);
-        sample_common_printf("DMX_DestroyChannel: %d.\n", hPidChn);
-    }
-
-    g_s32PvrRecChnNum[u32DmxId]= 0;
-
-    return ret;
-}
 
 HI_S32 PVR_SavePorgInfo(PVR_PROG_INFO_S *pstProgInfo, HI_CHAR *pszPvrRecFile)
 {
     HI_S32 ret;
-    PVR_PROG_INFO_S userData;
+    PVR_PROG_INFO_S stUserData;
 
     SAMPLE_CheckNullPTR(pstProgInfo);
 
-	memcpy(&userData, pstProgInfo, sizeof(PVR_PROG_INFO_S));
-	userData.u32MagicNumber = PVR_PROG_INFO_MAGIC;
+    memcpy(&stUserData, pstProgInfo, sizeof(PVR_PROG_INFO_S));
+    stUserData.u32MagicNumber = PVR_PROG_INFO_MAGIC;
 
-    ret = HI_UNF_PVR_SetUsrDataInfoByFileName(pszPvrRecFile, (HI_U8*)&userData, sizeof(PVR_PROG_INFO_S));
+    ret = HI_UNF_PVR_SetUsrDataInfoByFileName(pszPvrRecFile, (HI_U8*)&stUserData, sizeof(PVR_PROG_INFO_S));
     if (HI_SUCCESS != ret)
     {
         sample_common_printf("PVR_SetUsrDataInfoByFileName ERR:%#x.\n", ret);
@@ -283,7 +180,7 @@ HI_S32 PVR_SavePorgInfo(PVR_PROG_INFO_S *pstProgInfo, HI_CHAR *pszPvrRecFile)
                                          pstProgInfo->VElementPid);
     sample_common_printf("Type: A=%d, V=%d.\n", pstProgInfo->AudioType, pstProgInfo->VideoType);
     sample_common_printf("isClearStream: %d, isEncrypt: %d.\n", pstProgInfo->stRecAttr.bIsClearStream, pstProgInfo->stRecAttr.stEncryptCfg.bDoCipher);
-    sample_common_printf("indexType: %d, bRewind: %d. maxSize: 0x%llx\n", pstProgInfo->stRecAttr.enIndexType, pstProgInfo->stRecAttr.bRewind, pstProgInfo->stRecAttr.u64MaxFileSize);
+    sample_common_printf("indexType: %d, bRewind: %d. u64MaxSize: 0x%llx\n", pstProgInfo->stRecAttr.enIndexType, pstProgInfo->stRecAttr.bRewind, pstProgInfo->stRecAttr.u64MaxFileSize);
     sample_common_printf("------------------\n\n");
     usleep(10*1000);
 
@@ -294,25 +191,24 @@ HI_S32 PVR_SavePorgInfo(PVR_PROG_INFO_S *pstProgInfo, HI_CHAR *pszPvrRecFile)
 HI_S32 PVR_GetPorgInfo(PVR_PROG_INFO_S *pstProgInfo, const HI_CHAR *pszPvrRecFile)
 {
     HI_S32 ret;
-    HI_U32 dataRead;
-
-    PVR_PROG_INFO_S userData;
+    HI_U32 u32DataRead;
+    PVR_PROG_INFO_S stUserData;
 
     SAMPLE_CheckNullPTR(pstProgInfo);
     SAMPLE_CheckNullPTR(pszPvrRecFile);
 
-    ret = HI_UNF_PVR_GetUsrDataInfoByFileName(pszPvrRecFile, (HI_U8*)&userData,
-                                sizeof(PVR_PROG_INFO_S), &dataRead);
+    ret = HI_UNF_PVR_GetUsrDataInfoByFileName(pszPvrRecFile, (HI_U8*)&stUserData,
+                                sizeof(PVR_PROG_INFO_S), &u32DataRead);
     if (HI_SUCCESS != ret)
     {
         sample_common_printf("PVR_SetUsrDataInfoByFileName ERR:%#x.\n", ret);
         return ret;
     }
 
-	if (PVR_PROG_INFO_MAGIC == userData.u32MagicNumber)
-	{
-        memcpy(pstProgInfo, &(userData),  sizeof(PVR_PROG_INFO_S));
-	}
+    if (PVR_PROG_INFO_MAGIC == stUserData.u32MagicNumber)
+    {
+        memcpy(pstProgInfo, &(stUserData),  sizeof(PVR_PROG_INFO_S));
+    }
     else
     {
         //HI_U32 temp1 = 0;
@@ -347,7 +243,7 @@ HI_S32 PVR_GetPorgInfo(PVR_PROG_INFO_S *pstProgInfo, const HI_CHAR *pszPvrRecFil
     }
 
     sample_common_printf("isClearStream: %d, isEncrypt: %d.\n", pstProgInfo->stRecAttr.bIsClearStream, pstProgInfo->stRecAttr.stEncryptCfg.bDoCipher);
-    sample_common_printf("indexType: %d, bRewind: %d. maxSize: 0x%llx\n", pstProgInfo->stRecAttr.enIndexType, pstProgInfo->stRecAttr.bRewind, pstProgInfo->stRecAttr.u64MaxFileSize);
+    sample_common_printf("indexType: %d, bRewind: %d. u64MaxSize: 0x%llx\n", pstProgInfo->stRecAttr.enIndexType, pstProgInfo->stRecAttr.bRewind, pstProgInfo->stRecAttr.u64MaxFileSize);
     sample_common_printf("------------------\n");
     usleep(10*1000);
 
@@ -356,20 +252,12 @@ HI_S32 PVR_GetPorgInfo(PVR_PROG_INFO_S *pstProgInfo, const HI_CHAR *pszPvrRecFil
 
 HI_S32 PVR_checkIdx(char *pfileName)
 {
-#if 0
-    int  i;
-    PVR_INDEX_ENTRY_S entry;
-    HI_U64 lastOffset = 0;
-    HI_U32 sizeCalc;
-    HI_U32 scbuf[10];
-    HI_U32 LastSize=0;
-#endif
-    int ret = 0;
-    int pos;
-    int readNum;
-    PVR_IDX_HEADER_INFO_S headInfo;
+    HI_S32 ret = 0;
+    HI_S32 s32Pos;
+    HI_S32 s32ReadNum;
+    HI_S32 s32FileTsFd;
+    PVR_IDX_HEADER_INFO_S stHeadInfo = {0};
     FILE *fpIndex;
-    int fileTs;
 
     char indexName[256];
     snprintf(indexName, sizeof(indexName), "%s.idx", pfileName);
@@ -380,33 +268,33 @@ HI_S32 PVR_checkIdx(char *pfileName)
         sample_common_printf("can't open file %s to read!\n", indexName);
         return 2;
     }
-//    fileTs = open(pfileName, O_RDONLY | O_LARGEFILE);
-    fileTs = open(pfileName, O_RDONLY);
-    if (fileTs == -1)
+
+    s32FileTsFd = open(pfileName, O_RDONLY);
+    if (s32FileTsFd == -1)
     {
         sample_common_printf("can't open ts file %s to read!\n", indexName);
         fclose(fpIndex);
         return 2;
     }
     fseek(fpIndex, 0, SEEK_END);
-    pos = ftell(fpIndex);
+    s32Pos = ftell(fpIndex);
     rewind(fpIndex);
 
-    readNum = fread(&headInfo, 1, sizeof(PVR_IDX_HEADER_INFO_S), fpIndex);
-    if (readNum != sizeof(PVR_IDX_HEADER_INFO_S))
+    s32ReadNum = fread(&stHeadInfo, 1, sizeof(PVR_IDX_HEADER_INFO_S), fpIndex);
+    if (s32ReadNum != sizeof(PVR_IDX_HEADER_INFO_S))
     {
             perror("read failed:");
-            sample_common_printf("read head failed: want%d, get:%d\n", sizeof(PVR_IDX_HEADER_INFO_S), readNum);
+            sample_common_printf("read head failed: want%d, get:%d\n", sizeof(PVR_IDX_HEADER_INFO_S), s32ReadNum);
             return 3;
     }
     else
     {
-        if (headInfo.u32StartCode == 0x5A5A5A5A)
+        if (stHeadInfo.u32StartCode == 0x5A5A5A5A)
         {
-            sample_common_printf("This index file has head info: head size=%u, fileSize=%llu\n", headInfo.u32HeaderLen, headInfo.u64ValidSize);
+            sample_common_printf("This index file has head info: head size=%u, fileSize=%llu\n", stHeadInfo.u32HeaderLen, stHeadInfo.u64ValidSize);
             sample_common_printf("IndexEntrySize: %d, index file size:%d, headifo len:%d\n",
-                     sizeof(PVR_INDEX_ENTRY_S), pos, headInfo.u32HeaderLen);
-            fseek(fpIndex, headInfo.u32HeaderLen, SEEK_SET);
+                     sizeof(PVR_INDEX_ENTRY_S), s32Pos, stHeadInfo.u32HeaderLen);
+            fseek(fpIndex, stHeadInfo.u32HeaderLen, SEEK_SET);
         }
         else
         {
@@ -415,144 +303,11 @@ HI_S32 PVR_checkIdx(char *pfileName)
         }
     }
     sample_common_printf("\nframe info:\n");
-    sample_common_printf("====frame start:%d\n", headInfo.stCycInfo.u32StartFrame);
-    sample_common_printf("====frame end:  %d\n", headInfo.stCycInfo.u32EndFrame);
-    sample_common_printf("====frame last: %d\n", headInfo.stCycInfo.u32LastFrame);
+    sample_common_printf("====frame start:%d\n", stHeadInfo.stCycInfo.u32StartFrame);
+    sample_common_printf("====frame end:  %d\n", stHeadInfo.stCycInfo.u32EndFrame);
+    sample_common_printf("====frame last: %d\n", stHeadInfo.stCycInfo.u32LastFrame);
 
-#if 0
-    if (headInfo.stCycInfo.u32StartFrame > headInfo.stCycInfo.u32EndFrame)
-    {
-        fseek(fpIndex, (headInfo.stCycInfo.u32StartFrame * sizeof(PVR_INDEX_ENTRY_S) + headInfo.u32HeaderLen), SEEK_SET);
-
-        for (i = headInfo.stCycInfo.u32StartFrame; i <= headInfo.stCycInfo.u32LastFrame; i++)
-        {
-            readNum = fread(&entry, 1, sizeof(PVR_INDEX_ENTRY_S), fpIndex);
-            if (readNum != sizeof(PVR_INDEX_ENTRY_S))
-            {
-                perror("read failed:");
-                sample_common_printf("read failed: i =%u offset:%d want%d, get:%d\n", i, (headInfo.stCycInfo.u32StartFrame + i) * sizeof(PVR_INDEX_ENTRY_S), sizeof(PVR_INDEX_ENTRY_S), readNum);
-                getchar();
-                return 3;
-            }
-            else
-            {
-                if (4 != pread(fileTs, scbuf, 4, entry.u64Offset))
-                {
-                    sample_common_printf("F%04d: can NOT read TS, offset=0x%llx.\n", i, entry.u64Offset);
-                    //return ret + 1;
-                }
-                else
-                {
-                    if ((scbuf[0] & 0xffffff) != 0x010000)
-                    {
-                        sample_common_printf("F%04d: sc is %#x @ %llx/%llx, size=%d\n", i, scbuf[0], entry.u64Offset,entry.u64SeqHeadOffset,entry.u32FrameSize);
-                        //return -1;
-                        ret++;
-                    }
-                    else
-                    {
-                    //    printf("F%04d:  Offset=%llx, size=%d\n", i,   entry.u64Offset, entry.u32FrameSize);
-                    }
-                }
-
-                sizeCalc = (HI_U32)(entry.u64SeqHeadOffset - lastOffset);
-                if ((sizeCalc != LastSize) && (0 != LastSize))
-                {
-                    sample_common_printf("--F%04d: Size %u != %llx - %llx(%u)\n",i, entry.u32FrameSize, entry.u64SeqHeadOffset, lastOffset, sizeCalc);
-                }
-                lastOffset = entry.u64SeqHeadOffset;
-                LastSize = entry.u32FrameSize;
-            }
-        }
-
-        fseek(fpIndex, headInfo.u32HeaderLen, SEEK_SET);
-        for (i = 0; i < headInfo.stCycInfo.u32EndFrame; i++)
-        {
-            readNum = fread(&entry, 1, sizeof(PVR_INDEX_ENTRY_S), fpIndex);
-            if (readNum != sizeof(PVR_INDEX_ENTRY_S))
-            {
-                perror("read failed:");
-                sample_common_printf("read failed: want%d, get:%d\n", sizeof(PVR_INDEX_ENTRY_S), readNum);
-                getchar();
-                return 3;
-            }
-            else
-            {
-                if (4 != pread(fileTs, scbuf, 4, entry.u64Offset))
-                {
-                    sample_common_printf("F%04d: can NOT read TS, offset=0x%llx.\n", i, entry.u64Offset);
-                //    return ret + 1;
-                }
-                else
-                {
-                    if ((scbuf[0] & 0xffffff) != 0x010000)
-                    {
-                        sample_common_printf("F%04d: sc is %#x @ %llx/%llx, size=%d\n", i, scbuf[0], entry.u64Offset,entry.u64SeqHeadOffset, entry.u32FrameSize);
-                        //return -1;
-                        ret++;
-                    }
-                    else
-                    {
-                    //    printf("F%04d:  Offset=%llx, size=%d\n", i,   entry.u64Offset, entry.u32FrameSize);
-                    }
-                }
-
-                sizeCalc = (HI_U32)(entry.u64SeqHeadOffset - lastOffset);
-                if (sizeCalc != LastSize)
-                {
-                    //printf("--F%04d: Size %u != %llx - %llx(%u)\n",i, entry.u32FrameSize, entry.u64SeqHeadOffset , lastOffset, sizeCalc);
-                }
-                lastOffset = entry.u64SeqHeadOffset;
-                LastSize = entry.u32FrameSize;
-            }
-        }
-
-    }
-    else
-    {
-        for (i = headInfo.stCycInfo.u32StartFrame; i < headInfo.stCycInfo.u32EndFrame; i++)
-        {
-            readNum = fread(&entry, 1, sizeof(PVR_INDEX_ENTRY_S), fpIndex);
-            if (readNum != sizeof(PVR_INDEX_ENTRY_S))
-            {
-                perror("read failed:");
-                sample_common_printf("read failed: want%d, get:%d\n", sizeof(PVR_INDEX_ENTRY_S), readNum);
-                getchar();
-                return 3;
-            }
-            else
-            {
-                if (4 != pread(fileTs, scbuf, 4, entry.u64Offset))
-                {
-                    sample_common_printf("F%04d: can NOT read TS, offset=0x%llx.\n", i, entry.u64Offset);
-                //    return ret + 1;
-                }
-                else
-                {
-                    if ((scbuf[0] & 0xffffff) != 0x010000)
-                    {
-                        sample_common_printf("F%04d: sc is %#x @ %llx/%llx, size=%d\n", i, scbuf[0], entry.u64Offset,entry.u64SeqHeadOffset, entry.u32FrameSize);
-                        //return -1;
-                        ret++;
-                    }
-                    else
-                    {
-                //        printf("F%04d:  Offset=%llx, size=%d\n", i,   entry.u64Offset, entry.u32FrameSize);
-                    }
-                }
-                sizeCalc = (HI_U32)(entry.u64SeqHeadOffset - lastOffset);
-                if (sizeCalc != LastSize)
-                {
-                    //printf("--F%04d: Size %u != %llx - %llx(%u)\n",i, entry.u32FrameSize, entry.u64SeqHeadOffset, lastOffset, sizeCalc);
-                }
-                lastOffset = entry.u64SeqHeadOffset;
-                LastSize = entry.u32FrameSize;
-            }
-        }
-    }
-#endif
-
-    close(fileTs);
+    close(s32FileTsFd);
     fclose(fpIndex);
     if (ret)
     {
@@ -564,107 +319,118 @@ HI_S32 PVR_checkIdx(char *pfileName)
     }
     return ret;
 }
-HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID,
-            HI_BOOL bRewind, HI_BOOL bDoCipher, HI_U64 maxSize, HI_U32 *pRecChn)
-{
-    HI_U32 recChn;
-    HI_S32 ret = HI_SUCCESS;
-    HI_UNF_PVR_REC_ATTR_S   attr;
-    HI_U32                  VidPid;
-    HI_U32                  AudPid = 0;
-    PVR_PROG_INFO_S         fileInfo;
-    HI_CHAR                 szFileName[PVR_MAX_FILENAME_LEN];
-    attr.u32DemuxID    = u32DemuxID;
 
-    PVR_RecAddPid(attr.u32DemuxID, 0, HI_UNF_DMX_CHAN_TYPE_SEC);
-    PVR_RecAddPid(attr.u32DemuxID, pstProgInfo->PmtPid, HI_UNF_DMX_CHAN_TYPE_SEC);
+HI_S32 PVR_RecStart(char *path, PMT_COMPACT_PROG *pstProgInfo, HI_U32 u32DemuxID,
+                    HI_BOOL bRewind, HI_BOOL bDoCipher, HI_U64 u64MaxSize, HI_U32 *pu32RecChn)
+{
+    HI_U32 u32RecChn;
+    HI_S32 ret = HI_SUCCESS;
+    HI_U32 u32VidPid = 0;
+    HI_U32 u32AudPid = 0;
+    HI_UNF_PVR_REC_ATTR_S stRecAttr;
+    PVR_PROG_INFO_S       stFileInfo;
+    HI_CHAR               szFileName[PVR_MAX_FILENAME_LEN];
+
+    stRecAttr.u32DemuxID    = u32DemuxID;
 
     if (pstProgInfo->AElementNum > 0)
     {
-        AudPid  = pstProgInfo->AElementPid;
-        PVR_RecAddPid(attr.u32DemuxID, AudPid, HI_UNF_DMX_CHAN_TYPE_AUD);
+        u32AudPid = pstProgInfo->AElementPid;
     }
 
-    if (pstProgInfo->VElementNum > 0 )
+    if (pstProgInfo->VElementNum > 0)
     {
-        VidPid = pstProgInfo->VElementPid;
-        PVR_RecAddPid(attr.u32DemuxID, VidPid, HI_UNF_DMX_CHAN_TYPE_VID);
-        attr.u32IndexPid   = VidPid;
-        attr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_VIDEO;
-        attr.enIndexVidType = pstProgInfo->VideoType;
+        u32VidPid = pstProgInfo->VElementPid;
+        stRecAttr.u32IndexPid   = u32VidPid;
+        stRecAttr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_VIDEO;
+        stRecAttr.enIndexVidType = pstProgInfo->VideoType;
     }
     else
     {
-        attr.u32IndexPid   = AudPid;
-        attr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_AUDIO;
-        attr.enIndexVidType = HI_UNF_VCODEC_TYPE_BUTT;
+        stRecAttr.u32IndexPid   = u32AudPid;
+        stRecAttr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_AUDIO;
+        stRecAttr.enIndexVidType = HI_UNF_VCODEC_TYPE_BUTT;
     }
 
     snprintf(szFileName, sizeof(szFileName), "rec_v%d_a%d.ts",
                         pstProgInfo->VElementPid,
                         pstProgInfo->AElementPid);
 
-    snprintf(attr.szFileName, sizeof(attr.szFileName), "%s/", path);
+    snprintf(stRecAttr.szFileName, sizeof(stRecAttr.szFileName), "%s/", path);
 
-    strncat(attr.szFileName, szFileName, sizeof(szFileName) - strlen(attr.szFileName));
+    strncat(stRecAttr.szFileName, szFileName, sizeof(szFileName) - strlen(stRecAttr.szFileName));
 
-    attr.u32FileNameLen = strlen(attr.szFileName);
-    attr.u32ScdBufSize = PVR_STUB_SC_BUF_SZIE;
-    attr.u32DavBufSize = PVR_STUB_TSDATA_SIZE;
-    attr.enStreamType  = HI_UNF_PVR_STREAM_TYPE_TS;
-    attr.bRewind = bRewind;
-    attr.u64MaxFileSize= maxSize;//source;
-    attr.u64MaxTimeInMs= 0;
-    attr.bIsClearStream = HI_TRUE;
-    attr.u32UsrDataInfoSize = sizeof(PVR_PROG_INFO_S) + 100;/*the one in index file is a multipleit of 40 bytes*//*CNcomment:索引文件里是40个字节对齐的*/
+    stRecAttr.u32FileNameLen = strlen(stRecAttr.szFileName);
+    stRecAttr.u32ScdBufSize = PVR_STUB_SC_BUF_SZIE;
+    stRecAttr.u32DavBufSize = PVR_STUB_TSDATA_SIZE;
+    stRecAttr.enStreamType  = HI_UNF_PVR_STREAM_TYPE_TS;
+    stRecAttr.bRewind = bRewind;
+    stRecAttr.u64MaxFileSize= u64MaxSize;//source;
+    stRecAttr.u64MaxTimeInMs= 0;
+    stRecAttr.bIsClearStream = HI_TRUE;
+    stRecAttr.u32UsrDataInfoSize = sizeof(PVR_PROG_INFO_S) + 100;/*the one in index file is a multipleit of 40 bytes*//*CNcomment:索引文件里是40个字节对齐的*/
 
-    attr.stEncryptCfg.bDoCipher = bDoCipher;
-    attr.stEncryptCfg.enType = HI_UNF_CIPHER_ALG_AES;
-    attr.stEncryptCfg.u32KeyLen = 16;          /*strlen(PVR_CIPHER_KEY)*/
-    SAMPLE_RUN(HI_UNF_PVR_RecCreateChn(&recChn, &attr), ret);
+    stRecAttr.stEncryptCfg.bDoCipher = bDoCipher;
+    stRecAttr.stEncryptCfg.enType = HI_UNF_CIPHER_ALG_AES;
+    stRecAttr.stEncryptCfg.u32KeyLen = 16;          /*strlen(PVR_CIPHER_KEY)*/
+    SAMPLE_RUN(HI_UNF_PVR_RecCreateChn(&u32RecChn, &stRecAttr), ret);
     if (HI_SUCCESS != ret)
     {
         return ret;
     }
 
-    SAMPLE_RUN(HI_UNF_PVR_RecStartChn(recChn), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, 0), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, pstProgInfo->PmtPid), ret);
+    if (pstProgInfo->AElementNum > 0)
+    {
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, u32AudPid), ret);
+    }
+
+    if (pstProgInfo->VElementNum > 0)
+    {
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, u32VidPid), ret);
+    }
+
+    SAMPLE_RUN(HI_UNF_PVR_RecStartChn(u32RecChn), ret);
     if (HI_SUCCESS != ret)
     {
-        HI_UNF_PVR_RecDestroyChn(recChn);
+        HI_UNF_PVR_RecDelAllPID(u32RecChn);
+        HI_UNF_PVR_RecDestroyChn(u32RecChn);
         return ret;
     }
 
-    fileInfo.ProgID = pstProgInfo->ProgID;
-    fileInfo.PmtPid = pstProgInfo->PmtPid;
-    fileInfo.PcrPid = pstProgInfo->PcrPid;
-    fileInfo.VideoType = pstProgInfo->VideoType;
-    fileInfo.VElementNum = pstProgInfo->VElementNum;
-    fileInfo.VElementPid = pstProgInfo->VElementPid;
-    fileInfo.AudioType = pstProgInfo->AudioType;
-    fileInfo.AElementNum = pstProgInfo->AElementNum;
-    fileInfo.AElementPid = pstProgInfo->AElementPid;
-    memcpy(fileInfo.Audioinfo, pstProgInfo->Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
-    fileInfo.SubtType = pstProgInfo->SubtType;
-    fileInfo.u16SubtitlingNum = pstProgInfo->u16SubtitlingNum;
-    memcpy(fileInfo.SubtitingInfo, pstProgInfo->SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
-    memcpy(&(fileInfo.stSCTESubtInfo), &(pstProgInfo->stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
-    fileInfo.u16ClosedCaptionNum = pstProgInfo->u16ClosedCaptionNum;
-    memcpy(fileInfo.stClosedCaption, pstProgInfo->stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
-    fileInfo.u16ARIBCCPid = pstProgInfo->u16ARIBCCPid;
-    fileInfo.u16TtxNum = pstProgInfo->u16TtxNum;
-    memcpy(fileInfo.stTtxInfo, pstProgInfo->stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
+    stFileInfo.ProgID = pstProgInfo->ProgID;
+    stFileInfo.PmtPid = pstProgInfo->PmtPid;
+    stFileInfo.PcrPid = pstProgInfo->PcrPid;
+    stFileInfo.VideoType = pstProgInfo->VideoType;
+    stFileInfo.VElementNum = pstProgInfo->VElementNum;
+    stFileInfo.VElementPid = pstProgInfo->VElementPid;
+    stFileInfo.AudioType = pstProgInfo->AudioType;
+    stFileInfo.AElementNum = pstProgInfo->AElementNum;
+    stFileInfo.AElementPid = pstProgInfo->AElementPid;
+    memcpy(stFileInfo.Audioinfo, pstProgInfo->Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
+    stFileInfo.SubtType = pstProgInfo->SubtType;
+    stFileInfo.u16SubtitlingNum = pstProgInfo->u16SubtitlingNum;
+    memcpy(stFileInfo.SubtitingInfo, pstProgInfo->SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
+    memcpy(&(stFileInfo.stSCTESubtInfo), &(pstProgInfo->stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
+    stFileInfo.u16ClosedCaptionNum = pstProgInfo->u16ClosedCaptionNum;
+    memcpy(stFileInfo.stClosedCaption, pstProgInfo->stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
+    stFileInfo.u16ARIBCCPid = pstProgInfo->u16ARIBCCPid;
+    stFileInfo.u16TtxNum = pstProgInfo->u16TtxNum;
+    memcpy(stFileInfo.stTtxInfo, pstProgInfo->stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
 
-    memcpy(&(fileInfo.stRecAttr), &attr, sizeof(fileInfo.stRecAttr));
+    memcpy(&(stFileInfo.stRecAttr), &stRecAttr, sizeof(stFileInfo.stRecAttr));
 
-    SAMPLE_RUN(PVR_SavePorgInfo(&fileInfo, attr.szFileName), ret);
+    SAMPLE_RUN(PVR_SavePorgInfo(&stFileInfo, stRecAttr.szFileName), ret);
     if (HI_SUCCESS != ret)
     {
-        HI_UNF_PVR_RecStopChn(recChn);
-        HI_UNF_PVR_RecDestroyChn(recChn);
+        HI_UNF_PVR_RecStopChn(u32RecChn);
+        HI_UNF_PVR_RecDelAllPID(u32RecChn);
+        HI_UNF_PVR_RecDestroyChn(u32RecChn);
         return ret;
     }
 
-    *pRecChn = recChn;
+    *pu32RecChn = u32RecChn;
 
     return HI_SUCCESS;
 }
@@ -673,21 +439,20 @@ HI_S32 PVR_RecStop(HI_U32 u32RecChnID)
 {
     HI_S32 ret;
     HI_S32 ret2;
-    HI_UNF_PVR_REC_ATTR_S recAttr;
+    HI_UNF_PVR_REC_ATTR_S stRecAttr;
 
 
-    SAMPLE_RUN(HI_UNF_PVR_RecGetChn(u32RecChnID, &recAttr), ret2) ;
-    SAMPLE_RUN(HI_UNF_PVR_RecStopChn(u32RecChnID), ret) ;
-    SAMPLE_RUN(HI_UNF_PVR_RecDestroyChn(u32RecChnID), ret) ;
+    SAMPLE_RUN(HI_UNF_PVR_RecGetChn(u32RecChnID, &stRecAttr), ret2);
+    SAMPLE_RUN(HI_UNF_PVR_RecStopChn(u32RecChnID), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecDelAllPID(u32RecChnID), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecDestroyChn(u32RecChnID), ret);
     if (HI_SUCCESS == ret2)
     {
-        if (!recAttr.stEncryptCfg.bDoCipher)
+        if (!stRecAttr.stEncryptCfg.bDoCipher)
         {
-            //SAMPLE_RUN(PVR_checkIdx(recAttr.szFileName), ret);
+            //SAMPLE_RUN(PVR_checkIdx(stRecAttr.szFileName), ret);
         }
     }
-
-    PVR_RecDelAllPid(PVR_DMX_ID_REC) ;
 
     return ret;
 }
@@ -706,65 +471,63 @@ HI_S32 PVR_SwitchDmxSource(HI_U32 dmxId, HI_U32 protId)
 
 HI_S32 PVR_SetAvplayPidAndCodecType(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
 {
-    //HI_UNF_AVPLAY_STOP_OPT_S    Stop;
-
-    HI_U32                  VidPid;
-	HI_U32                  AudPid;
-
-    HI_UNF_VCODEC_ATTR_S        VdecAttr;
-    HI_UNF_ACODEC_ATTR_S        AdecAttr;
-//    HI_U32                  i;
-    HI_S32                  Ret;
-    HI_UNF_VCODEC_TYPE_E    enVidType;
-	HI_U32                  u32AudType;
-
+//    HI_U32 i;
+    HI_U32 u32VidPid;
+    HI_U32 u32AudPid;
+    HI_U32 u32AudType;
+    HI_S32 Ret;
+    HI_UNF_VCODEC_TYPE_E enVidType;
+    HI_UNF_VCODEC_ATTR_S stVdecAttr;
+    HI_UNF_ACODEC_ATTR_S stAdecAttr;
+    //HI_UNF_AVPLAY_STOP_OPT_S    stStopOption;
+    
     /*
-    Stop.enMode = HI_UNF_AVPLAY_STOP_MODE_BLACK;
-    Stop.u32TimeoutMs = 0;
+    stStopOption.enMode = HI_UNF_AVPLAY_STOP_MODE_BLACK;
+    stStopOption.u32TimeoutMs = 0;
 
-    Ret = HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &Stop);
+    Ret = HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &stStopOption);
     if (Ret != HI_SUCCESS )
     {
         printf("call HI_UNF_AVPLAY_Stop failed.\n");
         //return Ret;
     }
     */
-    HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &VdecAttr);
-    HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_ADEC, &AdecAttr);
+    HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &stVdecAttr);
+    HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_ADEC, &stAdecAttr);
 
-    if (pProgInfo->VElementNum > 0 )
+    if (pProgInfo->VElementNum > 0)
     {
-        VidPid = pProgInfo->VElementPid;
+        u32VidPid = pProgInfo->VElementPid;
         enVidType = pProgInfo->VideoType;
     }
     else
     {
-        VidPid = INVALID_TSPID;
+        u32VidPid = INVALID_TSPID;
         enVidType = HI_UNF_VCODEC_TYPE_BUTT;
     }
 
     if (pProgInfo->AElementNum > 0)
     {
-        AudPid  = pProgInfo->AElementPid;
+        u32AudPid  = pProgInfo->AElementPid;
         u32AudType = pProgInfo->AudioType;
     }
     else
     {
-        AudPid = INVALID_TSPID;
+        u32AudPid = INVALID_TSPID;
         u32AudType = 0xffffffff;
     }
 
-    if (VidPid != INVALID_TSPID)
+    if (u32VidPid != INVALID_TSPID)
     {
-        VdecAttr.enType = enVidType;
-        Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &VdecAttr);
+        stVdecAttr.enType = enVidType;
+        Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &stVdecAttr);
         if (Ret != HI_SUCCESS)
         {
             sample_common_printf("call HI_UNF_AVPLAY_SetAttr failed.\n");
             return Ret;
         }
 
-        Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID,&VidPid);
+        Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID, &u32VidPid);
         if (Ret != HI_SUCCESS)
         {
             sample_common_printf("call HI_UNF_AVPLAY_SetAttr failed.\n");
@@ -772,10 +535,10 @@ HI_S32 PVR_SetAvplayPidAndCodecType(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *p
         }
     }
 
-    if (AudPid != INVALID_TSPID)
+    if (u32AudPid != INVALID_TSPID)
     {
-        Ret = HIADP_AVPlay_SetAdecAttr(hAvplay,u32AudType,HD_DEC_MODE_RAWPCM,1);
-        Ret |= HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID,&AudPid);
+        Ret = HIADP_AVPlay_SetAdecAttr(hAvplay, u32AudType, HD_DEC_MODE_RAWPCM, 1);
+        Ret |= HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &u32AudPid);
         if (HI_SUCCESS != Ret)
         {
             sample_common_printf("HIADP_AVPlay_SetAdecAttr failed:%#x\n",Ret);
@@ -792,7 +555,7 @@ HI_S32 PVR_SetAvplayPidAndCodecType(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *p
 HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
 {
     HI_U32 ret = HI_SUCCESS;
-    HI_U32 pid = 0;
+    HI_U32 u32Pid = 0;
     HI_UNF_AVPLAY_MEDIA_CHAN_E enMediaType = 0;
     HI_UNF_AVPLAY_FRMRATE_PARAM_S stFrmRateAttr = {0};
     HI_UNF_SYNC_ATTR_S stSyncAttr = {0};
@@ -801,8 +564,8 @@ HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
 
     PVR_SetAvplayPidAndCodecType(hAvplay, pProgInfo);
 
-    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &pid);
-    if ((HI_SUCCESS != ret) || (0x1fff == pid))
+    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &u32Pid);
+    if ((HI_SUCCESS != ret) || (0x1fff == u32Pid))
     {
         sample_common_printf("has no audio stream!\n");
     }
@@ -811,8 +574,8 @@ HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
         enMediaType |= HI_UNF_AVPLAY_MEDIA_CHAN_AUD;
     }
 
-    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID, &pid);
-    if ((HI_SUCCESS != ret) || (0x1fff == pid))
+    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID, &u32Pid);
+    if ((HI_SUCCESS != ret) || (0x1fff == u32Pid))
     {
         sample_common_printf("has no video stream!\n");
     }
@@ -836,7 +599,7 @@ HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
         /*enable avplay A/V sync*//*CNcomment:使能avplay音视频同步*/
         if (HI_SUCCESS != HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr))
         {
-            sample_common_printf("get avplay sync attr fail!\n");
+            sample_common_printf("get avplay sync stRecAttr fail!\n");
             return HI_FAILURE;
         }
 
@@ -848,7 +611,7 @@ HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
 
         if (HI_SUCCESS != HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr))
         {
-            sample_common_printf("set avplay sync attr fail!\n");
+            sample_common_printf("set avplay sync stRecAttr fail!\n");
             return HI_FAILURE;
         }
     }
@@ -881,15 +644,15 @@ HI_S32 PVR_StartLivePlay(HI_HANDLE hAvplay, const PMT_COMPACT_PROG *pProgInfo)
 
 HI_S32 PVR_StopLivePlay(HI_HANDLE hAvplay)
 {
-    HI_UNF_AVPLAY_STOP_OPT_S option;
+    HI_UNF_AVPLAY_STOP_OPT_S stStopOption;
 
-    option.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
-    option.u32TimeoutMs = 0;
+    stStopOption.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
+    stStopOption.u32TimeoutMs = 0;
 
     sample_common_printf("stop live play ...\n");
 
     /*stop playing audio and video*//*CNcomment:停止音视频设备*/
-    return HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &option);
+    return HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &stStopOption);
 }
 
 
@@ -897,74 +660,75 @@ HI_S32 PVR_StopLivePlay(HI_HANDLE hAvplay)
 HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HANDLE hAvplay)
 {
     HI_S32 ret;
-    HI_U32 playChn;
-    PVR_PROG_INFO_S        fileInfo;
-    HI_UNF_PVR_PLAY_ATTR_S attr;
-    PMT_COMPACT_TBL        *pPmttal;
-    HI_U32 pid = 0;
+    HI_U32 u32PlayChn;
+    HI_U32 u32Pid = 0;
+    PVR_PROG_INFO_S        stFileInfo;
+    HI_UNF_PVR_PLAY_ATTR_S stRecAttr;
+    PMT_COMPACT_TBL        *pstPmttal;
     HI_UNF_AVPLAY_MEDIA_CHAN_E enMediaType = 0;
-    SAMPLE_CheckNullPTR(pszFileName);
-    SAMPLE_CheckNullPTR(pu32PlayChn);
     HI_UNF_AVPLAY_FRMRATE_PARAM_S stFrmRateAttr = {0};
     HI_UNF_SYNC_ATTR_S stSyncAttr = {0};
     HI_UNF_AVPLAY_TPLAY_OPT_S stTplayOpts = {0};
     HI_CODEC_VIDEO_CMD_S  stVdecCmdPara = {0};
     PMT_COMPACT_PROG stProgInfoTmp;
 
-    SAMPLE_RUN(PVR_GetPorgInfo(&fileInfo, pszFileName), ret);
+    SAMPLE_CheckNullPTR(pszFileName);
+    SAMPLE_CheckNullPTR(pu32PlayChn);
+
+    SAMPLE_RUN(PVR_GetPorgInfo(&stFileInfo, pszFileName), ret);
     if (HI_SUCCESS != ret)
     {
         PRINT_SMP("Can NOT get prog INFO, can't play.\n");
-        PVR_SearchFile(PVR_DMX_ID_LIVE, PVR_DMX_PORT_ID_PLAYBACK, pszFileName, &pPmttal);
-        PVR_SetAvplayPidAndCodecType(hAvplay, &(pPmttal->proginfo[0]));
+        PVR_SearchFile(PVR_DMX_ID_LIVE, PVR_DMX_PORT_ID_PLAYBACK, pszFileName, &pstPmttal);
+        PVR_SetAvplayPidAndCodecType(hAvplay, &(pstPmttal->proginfo[0]));
 
-        memcpy(attr.szFileName, pszFileName, strlen(pszFileName) + 1);
-        attr.u32FileNameLen = strlen(pszFileName);
-        attr.enStreamType = HI_UNF_PVR_STREAM_TYPE_TS;
-        attr.bIsClearStream = HI_TRUE;
+        memcpy(stRecAttr.szFileName, pszFileName, strlen(pszFileName) + 1);
+        stRecAttr.u32FileNameLen = strlen(pszFileName);
+        stRecAttr.enStreamType = HI_UNF_PVR_STREAM_TYPE_TS;
+        stRecAttr.bIsClearStream = HI_TRUE;
     }
     else
     {
 
-        stProgInfoTmp.ProgID = fileInfo.ProgID;
-        stProgInfoTmp.PmtPid = fileInfo.PmtPid;
-        stProgInfoTmp.PcrPid = fileInfo.PcrPid;
-        stProgInfoTmp.VideoType = fileInfo.VideoType;
-        stProgInfoTmp.VElementNum = fileInfo.VElementNum;
-        stProgInfoTmp.VElementPid = fileInfo.VElementPid;
-        stProgInfoTmp.AudioType = fileInfo.AudioType;
-        stProgInfoTmp.AElementNum = fileInfo.AElementNum;
-        stProgInfoTmp.AElementPid = fileInfo.AElementPid;
-        memcpy(stProgInfoTmp.Audioinfo, fileInfo.Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
-        stProgInfoTmp.SubtType = fileInfo.SubtType;
-        stProgInfoTmp.u16SubtitlingNum = fileInfo.u16SubtitlingNum;
-        memcpy(stProgInfoTmp.SubtitingInfo, fileInfo.SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
-        memcpy(&(stProgInfoTmp.stSCTESubtInfo), &(fileInfo.stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
-        stProgInfoTmp.u16ClosedCaptionNum = fileInfo.u16ClosedCaptionNum;
-        memcpy(stProgInfoTmp.stClosedCaption, fileInfo.stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
-        stProgInfoTmp.u16ARIBCCPid = fileInfo.u16ARIBCCPid;
-        stProgInfoTmp.u16TtxNum = fileInfo.u16TtxNum;
-        memcpy(stProgInfoTmp.stTtxInfo, fileInfo.stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
+        stProgInfoTmp.ProgID = stFileInfo.ProgID;
+        stProgInfoTmp.PmtPid = stFileInfo.PmtPid;
+        stProgInfoTmp.PcrPid = stFileInfo.PcrPid;
+        stProgInfoTmp.VideoType = stFileInfo.VideoType;
+        stProgInfoTmp.VElementNum = stFileInfo.VElementNum;
+        stProgInfoTmp.VElementPid = stFileInfo.VElementPid;
+        stProgInfoTmp.AudioType = stFileInfo.AudioType;
+        stProgInfoTmp.AElementNum = stFileInfo.AElementNum;
+        stProgInfoTmp.AElementPid = stFileInfo.AElementPid;
+        memcpy(stProgInfoTmp.Audioinfo, stFileInfo.Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
+        stProgInfoTmp.SubtType = stFileInfo.SubtType;
+        stProgInfoTmp.u16SubtitlingNum = stFileInfo.u16SubtitlingNum;
+        memcpy(stProgInfoTmp.SubtitingInfo, stFileInfo.SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
+        memcpy(&(stProgInfoTmp.stSCTESubtInfo), &(stFileInfo.stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
+        stProgInfoTmp.u16ClosedCaptionNum = stFileInfo.u16ClosedCaptionNum;
+        memcpy(stProgInfoTmp.stClosedCaption, stFileInfo.stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
+        stProgInfoTmp.u16ARIBCCPid = stFileInfo.u16ARIBCCPid;
+        stProgInfoTmp.u16TtxNum = stFileInfo.u16TtxNum;
+        memcpy(stProgInfoTmp.stTtxInfo, stFileInfo.stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
 
         PVR_SetAvplayPidAndCodecType(hAvplay, &(stProgInfoTmp));
 
-        memcpy(attr.szFileName, pszFileName, strlen(pszFileName) + 1);
-        attr.u32FileNameLen = strlen(pszFileName);
-        attr.enStreamType = fileInfo.stRecAttr.enStreamType;
-        attr.bIsClearStream = fileInfo.stRecAttr.bIsClearStream;
+        memcpy(stRecAttr.szFileName, pszFileName, strlen(pszFileName) + 1);
+        stRecAttr.u32FileNameLen = strlen(pszFileName);
+        stRecAttr.enStreamType = stFileInfo.stRecAttr.enStreamType;
+        stRecAttr.bIsClearStream = stFileInfo.stRecAttr.bIsClearStream;
     }
 
-    if (1 == fileInfo.stRecAttr.stEncryptCfg.bDoCipher&&ret==HI_SUCCESS)
+    if (1 == stFileInfo.stRecAttr.stEncryptCfg.bDoCipher&&ret==HI_SUCCESS)
     {
-        memcpy(&(attr.stDecryptCfg), &(fileInfo.stRecAttr.stEncryptCfg), sizeof(HI_UNF_PVR_CIPHER_S));
+        memcpy(&(stRecAttr.stDecryptCfg), &(stFileInfo.stRecAttr.stEncryptCfg), sizeof(HI_UNF_PVR_CIPHER_S));
 
         sample_common_printf("cipher info:\n");
-        sample_common_printf("  enType:%d\n", attr.stDecryptCfg.enType);
+        sample_common_printf("  enType:%d\n", stRecAttr.stDecryptCfg.enType);
     }
     else
     {
         sample_common_printf("cipher info: not encrypt\n");
-        attr.stDecryptCfg.bDoCipher = HI_FALSE;
+        stRecAttr.stDecryptCfg.bDoCipher = HI_FALSE;
     }
 
     ret = HI_UNF_DMX_AttachTSPort(PVR_DMX_ID_LIVE, PVR_DMX_PORT_ID_PLAYBACK);
@@ -983,14 +747,14 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
         return ret;
     }
     /*create new play channel*//*CNcomment:申请新的播放通道*/
-    SAMPLE_RUN(HI_UNF_PVR_PlayCreateChn(&playChn, &attr, hAvplay, g_hTsBufForPlayBack), ret);
+    SAMPLE_RUN(HI_UNF_PVR_PlayCreateChn(&u32PlayChn, &stRecAttr, hAvplay, g_hTsBufForPlayBack), ret);
     if (HI_SUCCESS != ret)
     {
         return ret;
     }
 
-    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &pid);
-    if ((HI_SUCCESS != ret) || (0x1fff == pid))
+    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_AUD_PID, &u32Pid);
+    if ((HI_SUCCESS != ret) || (0x1fff == u32Pid))
     {
         sample_common_printf("has no audio stream!\n");
     }
@@ -999,8 +763,8 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
         enMediaType |= HI_UNF_AVPLAY_MEDIA_CHAN_AUD;
     }
 
-    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID, &pid);
-    if ((HI_SUCCESS != ret) || (0x1fff == pid))
+    ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_VID_PID, &u32Pid);
+    if ((HI_SUCCESS != ret) || (0x1fff == u32Pid))
     {
         sample_common_printf("has no video stream!\n");
     }
@@ -1012,7 +776,7 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
     /*enable avplay A/V sync*//*CNcomment:使能avplay音视频同步*/
     if (HI_SUCCESS != HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr))
     {
-        sample_common_printf("get avplay sync attr fail!\n");
+        sample_common_printf("get avplay sync stRecAttr fail!\n");
         return HI_FAILURE;
     }
     stSyncAttr.enSyncRef = HI_UNF_SYNC_REF_AUDIO;
@@ -1023,7 +787,7 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
 
     if (HI_SUCCESS != HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr))
     {
-        sample_common_printf("set avplay sync attr fail!\n");
+        sample_common_printf("set avplay sync stRecAttr fail!\n");
         return HI_FAILURE;
     }
 
@@ -1035,14 +799,14 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
     if (HI_SUCCESS != ret)
     {
         printf("call HI_UNF_AVPLAY_Invoke failed.\n");
-        HI_UNF_PVR_PlayDestroyChn(playChn);
+        HI_UNF_PVR_PlayDestroyChn(u32PlayChn);
         return ret;
     }*/
 
-    SAMPLE_RUN(HI_UNF_PVR_PlayStartChn(playChn), ret);
+    SAMPLE_RUN(HI_UNF_PVR_PlayStartChn(u32PlayChn), ret);
     if (HI_SUCCESS != ret)
     {
-        HI_UNF_PVR_PlayDestroyChn(playChn);
+        HI_UNF_PVR_PlayDestroyChn(u32PlayChn);
         return ret;
     }
 
@@ -1072,33 +836,33 @@ HI_S32 PVR_StartPlayBack(const HI_CHAR *pszFileName, HI_U32 *pu32PlayChn, HI_HAN
         }
     }
 
-    *pu32PlayChn = playChn;
+    *pu32PlayChn = u32PlayChn;
     return HI_SUCCESS;
 }
 
 
 /*stop playback*//*CNcomment: 停止回放 */
-HI_VOID PVR_StopPlayBack(HI_U32 playChn)
+HI_VOID PVR_StopPlayBack(HI_U32 u32PlayChn)
 {
-    HI_UNF_AVPLAY_STOP_OPT_S stopOpt;
-    HI_UNF_PVR_PLAY_ATTR_S PlayAttr;
+    HI_UNF_AVPLAY_STOP_OPT_S stStopOpt;
+    HI_UNF_PVR_PLAY_ATTR_S stPlayAttr;
 
-    stopOpt.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
-    stopOpt.u32TimeoutMs = 0;
-    (HI_VOID)HI_UNF_PVR_PlayGetChn(playChn, &PlayAttr);
-    (HI_VOID)HI_UNF_PVR_PlayStopChn(playChn, &stopOpt);
-    (HI_VOID)HI_UNF_PVR_PlayDestroyChn(playChn);
+    stStopOpt.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
+    stStopOpt.u32TimeoutMs = 0;
+    (HI_VOID)HI_UNF_PVR_PlayGetChn(u32PlayChn, &stPlayAttr);
+    (HI_VOID)HI_UNF_PVR_PlayStopChn(u32PlayChn, &stStopOpt);
+    (HI_VOID)HI_UNF_PVR_PlayDestroyChn(u32PlayChn);
     (HI_VOID)HI_UNF_DMX_DestroyTSBuffer(g_hTsBufForPlayBack);
     (HI_VOID)HI_UNF_DMX_DetachTSPort(PVR_DMX_ID_LIVE);
 }
 
 HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTrack)
 {
-    HI_S32                  Ret;
-    HI_HANDLE               hAvplay;
-    HI_UNF_AVPLAY_ATTR_S        AvplayAttr;
-    HI_UNF_SYNC_ATTR_S          SyncAttr;
-    HI_UNF_AUDIOTRACK_ATTR_S  stTrackAttr;
+    HI_S32                   Ret;
+    HI_HANDLE                hAvplay;
+    HI_UNF_AVPLAY_ATTR_S     stAvplayAttr;
+    HI_UNF_SYNC_ATTR_S       stSyncAttr;
+    HI_UNF_AUDIOTRACK_ATTR_S stTrackAttr;
 
     if (phSoundTrack == NULL)
     {
@@ -1120,7 +884,7 @@ HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTra
         return Ret;
     }
 
-    Ret = HI_UNF_AVPLAY_GetDefaultConfig(&AvplayAttr, HI_UNF_AVPLAY_STREAM_TYPE_TS);
+    Ret = HI_UNF_AVPLAY_GetDefaultConfig(&stAvplayAttr, HI_UNF_AVPLAY_STREAM_TYPE_TS);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_AVPLAY_GetDefaultConfig failed.\n");
@@ -1128,14 +892,14 @@ HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTra
         return Ret;
     }
 
-    AvplayAttr.u32DemuxId = PVR_DMX_ID_LIVE;
+    stAvplayAttr.u32DemuxId = PVR_DMX_ID_LIVE;
 
 //#ifdef S_SUPPORT_4PLUS64
-    AvplayAttr.stStreamAttr.u32VidBufSize = 2*1024*1024;
-    AvplayAttr.stStreamAttr.u32AudBufSize = 192*1024;
+    stAvplayAttr.stStreamAttr.u32VidBufSize = 2*1024*1024;
+    stAvplayAttr.stStreamAttr.u32AudBufSize = 192*1024;
 //#endif
 
-    Ret = HI_UNF_AVPLAY_Create(&AvplayAttr, &hAvplay);
+    Ret = HI_UNF_AVPLAY_Create(&stAvplayAttr, &hAvplay);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_AVPLAY_Create failed.\n");
@@ -1143,7 +907,7 @@ HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTra
         return Ret;
     }
 
-    Ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &SyncAttr);
+    Ret = HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_AVPLAY_GetAttr failed.\n");
@@ -1151,13 +915,13 @@ HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTra
         return Ret;
     }
 
-    SyncAttr.enSyncRef = HI_UNF_SYNC_REF_AUDIO;
-    SyncAttr.stSyncStartRegion.s32VidPlusTime = 60;
-    SyncAttr.stSyncStartRegion.s32VidNegativeTime = -20;
-    SyncAttr.u32PreSyncTimeoutMs = 1000;
-    SyncAttr.bQuickOutput = HI_FALSE;
+    stSyncAttr.enSyncRef = HI_UNF_SYNC_REF_AUDIO;
+    stSyncAttr.stSyncStartRegion.s32VidPlusTime = 60;
+    stSyncAttr.stSyncStartRegion.s32VidNegativeTime = -20;
+    stSyncAttr.u32PreSyncTimeoutMs = 1000;
+    stSyncAttr.bQuickOutput = HI_FALSE;
 
-    Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &SyncAttr);
+    Ret = HI_UNF_AVPLAY_SetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSyncAttr);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_AVPLAY_SetAttr failed.\n");
@@ -1244,13 +1008,13 @@ HI_S32 PVR_AvplayInit(HI_HANDLE hWin, HI_HANDLE *phAvplay, HI_HANDLE* phSoundTra
 
 HI_S32  PVR_AvplayDeInit(HI_HANDLE hAvplay, HI_HANDLE hWin, HI_HANDLE hSoundTrack)
 {
-    HI_S32                      Ret;
-    HI_UNF_AVPLAY_STOP_OPT_S    Stop;
+    HI_S32                   Ret;
+    HI_UNF_AVPLAY_STOP_OPT_S stStopOpt;
 
-    Stop.enMode = HI_UNF_AVPLAY_STOP_MODE_BLACK;
-    Stop.u32TimeoutMs = 0;
+    stStopOpt.enMode = HI_UNF_AVPLAY_STOP_MODE_BLACK;
+    stStopOpt.u32TimeoutMs = 0;
 
-    Ret = HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &Stop);
+    Ret = HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &stStopOpt);
     if (Ret != HI_SUCCESS )
     {
         sample_common_printf("call HI_UNF_AVPLAY_Stop failed.\n");
@@ -1389,22 +1153,22 @@ HI_S32 PVR_RegisterCallBacks(HI_VOID)
 
 HI_U8* PVR_GetEventTypeStringByID(HI_UNF_PVR_EVENT_E eEventID)
 {
-    HI_U32 nNum = sizeof(g_stEventType)/sizeof(g_stEventType[0]);
-    HI_U32 nIndex = 0;
+    HI_U32 u32EventNum = sizeof(g_stEventType)/sizeof(g_stEventType[0]);
+    HI_U32 i;
     HI_U8* pszRet = HI_NULL;
 
-    for(nIndex=0; nIndex<nNum; nIndex++)
+    for (i = 0; i < u32EventNum; i++)
     {
-        if( eEventID == g_stEventType[nIndex].eEventID)
+        if (eEventID == g_stEventType[i].eEventID)
         {
-            pszRet = g_stEventType[nIndex].szEventTypeName;
+            pszRet = g_stEventType[i].szEventTypeName;
             break;
         }
     }
 
-    if(nIndex == nNum)
+    if (i == u32EventNum)
     {
-       pszRet = g_stEventType[nNum-1].szEventTypeName;
+       pszRet = g_stEventType[u32EventNum - 1].szEventTypeName;
     }
 
     return pszRet;
@@ -1427,18 +1191,16 @@ HI_VOID * NetStream(HI_VOID *args)
     struct sockaddr_in  ServerAddr;
     in_addr_t           IpAddr;
     struct ip_mreq      Mreq;
-    HI_U32              AddrLen;
-
-    HI_UNF_STREAM_BUF_S     StreamBuf;
-    HI_U32              ReadLen;
-    HI_U32              GetBufCount=0;
-    HI_U32              ReceiveCount=0;
+    HI_U32              u32AddrLen;
+    HI_U32              u32ReadLen;
+    HI_U32              u32GetBufCount=0;
+    HI_U32              u32ReceiveCount=0;
     HI_S32              Ret;
     HI_HANDLE           hTsBuf = 0;
+    HI_UNF_STREAM_BUF_S stStreamBuf;
+    NET_STREAM_PARAM_S  *pstThreadParam = (NET_STREAM_PARAM_S*)args;
 
-    NET_STREAM_PARAM_S *pstThreadParam = (NET_STREAM_PARAM_S*)args;
-
-    if(pstThreadParam == NULL)
+    if (pstThreadParam == NULL)
     {
         return NULL;
     }
@@ -1453,74 +1215,74 @@ HI_VOID * NetStream(HI_VOID *args)
 
         SocketFd = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
         if (SocketFd < 0)
-    	{
-    		sample_common_printf("wait send TS to port %d.\n", PVR_DMX_PORT_ID_IP);
-    		break;
-    	}
+        {
+            sample_common_printf("wait send TS to port %d.\n", PVR_DMX_PORT_ID_IP);
+            break;
+        }
 
         ServerAddr.sin_family = AF_INET;
-    	ServerAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    	ServerAddr.sin_port = htons(pstThreadParam->u16Port);
+        ServerAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+        ServerAddr.sin_port = htons(pstThreadParam->u16Port);
 
         if (bind(SocketFd,(struct sockaddr *)(&ServerAddr),sizeof(struct sockaddr_in)) < 0)
-    	{
-    		sample_common_printf("socket bind error [%d].\n", errno);
-    		break;;
-    	}
+        {
+            sample_common_printf("socket bind error [%d].\n", errno);
+            break;;
+        }
 
         IpAddr = inet_addr(pstThreadParam->szIgmpAddr);
 
         sample_common_printf("========================g_pszMultiAddr = %s, g_u16UdpPort=%u\n", pstThreadParam->szIgmpAddr, pstThreadParam->u16Port);
-    	if (IpAddr)
-    	{
-    		Mreq.imr_multiaddr.s_addr = IpAddr;
-    		Mreq.imr_interface.s_addr = htonl(INADDR_ANY);
-    		if (setsockopt(SocketFd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &Mreq, sizeof(struct ip_mreq)))
-    		{
-    			sample_common_printf("wait send TS to port %d.\n", PVR_DMX_PORT_ID_IP);
-    			break;
-    		}
-    	}
-
-        AddrLen = sizeof(ServerAddr);
-
-        while ( pstThreadParam->bStopNetStreamThread == HI_FALSE)
+        if (IpAddr)
         {
-            Ret = HI_UNF_DMX_GetTSBuffer(hTsBuf, 188*50, &StreamBuf, 0);
+            Mreq.imr_multiaddr.s_addr = IpAddr;
+            Mreq.imr_interface.s_addr = htonl(INADDR_ANY);
+            if (setsockopt(SocketFd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &Mreq, sizeof(struct ip_mreq)))
+            {
+                sample_common_printf("wait send TS to port %d.\n", PVR_DMX_PORT_ID_IP);
+                break;
+            }
+        }
+
+        u32AddrLen = sizeof(ServerAddr);
+
+        while (pstThreadParam->bStopNetStreamThread == HI_FALSE)
+        {
+            Ret = HI_UNF_DMX_GetTSBuffer(hTsBuf, 188*50, &stStreamBuf, 0);
             if (Ret != HI_SUCCESS)
-    		{
-                GetBufCount++;
-                if(GetBufCount >= 10)
+            {
+                u32GetBufCount++;
+                if(u32GetBufCount >= 10)
                 {
                     sample_common_printf("########## TS come too fast! #########, Ret=%d\n", Ret);
-            	    GetBufCount=0;
+                    u32GetBufCount=0;
                 }
 
                 usleep(10000) ;
-    			continue;
-    		}
-    		GetBufCount=0;
+                continue;
+            }
+            u32GetBufCount=0;
 
-            ReadLen = recvfrom(SocketFd, StreamBuf.pu8Data, StreamBuf.u32Size, 0,
-    		                   (struct sockaddr *)&ServerAddr, &AddrLen);
-    		if (ReadLen <= 0)
-    		{
-    		    ReceiveCount++;
-    		    if (ReceiveCount >= 50)
-    		    {
-    			    sample_common_printf("########## TS come too slow or net error! #########\n");
-    			    ReceiveCount = 0;
-    		    }
-    		}
+            u32ReadLen = recvfrom(SocketFd, stStreamBuf.pu8Data, stStreamBuf.u32Size, 0,
+                               (struct sockaddr *)&ServerAddr, &u32AddrLen);
+            if (u32ReadLen <= 0)
+            {
+                u32ReceiveCount++;
+                if (u32ReceiveCount >= 50)
+                {
+                    sample_common_printf("########## TS come too slow or net error! #########\n");
+                    u32ReceiveCount = 0;
+                }
+            }
             else
-    		{
-                ReceiveCount = 0;
-    			Ret = HI_UNF_DMX_PutTSBuffer(hTsBuf, ReadLen);
-    		    if (Ret != HI_SUCCESS )
+            {
+                u32ReceiveCount = 0;
+                Ret = HI_UNF_DMX_PutTSBuffer(hTsBuf, u32ReadLen);
+                if (Ret != HI_SUCCESS )
                 {
                     sample_common_printf("call HI_UNF_DMX_PutTSBuffer failed.\n");
                 }
-    		}
+            }
         }
     }while(0);
 

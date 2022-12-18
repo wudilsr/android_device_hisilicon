@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2007, 2009-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2007, 2009-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -61,14 +61,14 @@ extern "C" {
 
 #define MALI_TD_SET_PALETTE_ADDRESS(dest, val)  do { \
 		(dest)[0] = ((dest)[0] & 0xff1f0000) | (((val) & 0x00000007) << 21) | \
-					(((val) & 0x000007f8) << 5) | \
-					(((val) & 0x0007f800) >> 11); \
+		            (((val) & 0x000007f8) << 5) | \
+		            (((val) & 0x0007f800) >> 11); \
 		(dest)[1] = ((dest)[1] & 0x80ffffff) | (((val) & 0x0000007f) << 24); \
 	} while( 0 );
 
 #define MALI_TD_SET_TEXTURE_FORMAT(dest, val) do { \
 		(dest)[1] = ((dest)[1] & 0x7ffcffff) | (((val) & 0x00000001) << 31) | \
-					(((val) & 0x00000006) << 15); \
+		            (((val) & 0x00000006) << 15); \
 	} while(0);
 
 #define MALI_TD_SET_TEXTURE_DIMENSIONALITY(dest, val) do { \
@@ -77,12 +77,12 @@ extern "C" {
 
 #define MALI_TD_SET_LAMBDA_LOW_CLAMP(dest, val) do { \
 		(dest)[1] = ((dest)[1] & 0xff0ff0ff) | (((val) & 0x0000000f) << 20) | \
-					(((val) & 0x000000f0) << 4); \
+		            (((val) & 0x000000f0) << 4); \
 	} while(0);
 
 #define MALI_TD_SET_LAMBDA_HIGH_CLAMP(dest, val) do { \
 		(dest)[1] = ((dest)[1] & 0xffff0ff0) | (((val) & 0x0000000f) << 12) | \
-					(((val) & 0x000000f0) >> 4); \
+		            (((val) & 0x000000f0) >> 4); \
 	} while(0);
 
 #define MALI_TD_SET_LAMBDA_BIAS(dest, val) do { \
@@ -125,40 +125,40 @@ extern "C" {
 
 #define MALI_TD_SET_TEXTURE_DIMENSION_T(dest, val) do { \
 		(dest)[3] = ((dest)[3] & 0x0700ffff) | (((val) & 0x0000001f) << 27) | \
-                    (((val) & 0x00001fe0) << 11); \
+		            (((val) & 0x00001fe0) << 11); \
 	} while(0);
 
 #define MALI_TD_SET_TEXTURE_DIMENSION_R(dest, val) do { \
 		(dest)[3] = ((dest)[3] & 0xffff00e0) | (((val) & 0x000000ff) << 8) | \
-                    (((val) & 0x00001f00) >> 8); \
+		            (((val) & 0x00001f00) >> 8); \
 	} while(0);
 #define MALI_TD_SET_BORDER_COLOR_RED(dest, val) do { \
 		(dest)[3] = ((dest)[3] & 0xffffff1f) | (((val) & 0x00000007) << 5); \
 		(dest)[4] = ((dest)[4] & 0x00e0ffff) | (((val) & 0x000000ff) << 24) | \
-                    (((val) & 0x00001f00) << 8); \
+		            (((val) & 0x00001f00) << 8); \
 	} while( 0 );
 
 #define MALI_TD_SET_BORDER_COLOR_GREEN(dest, val) do { \
 		(dest)[4] = ((dest)[4] & 0xff1f00e0) | (((val) & 0x00000007) << 21) | \
-                    (((val) & 0x000007f8) << 5) | \
-                    (((val) & 0x0000f800) >> 11);  \
+		            (((val) & 0x000007f8) << 5) | \
+		            (((val) & 0x0000f800) >> 11);  \
 	} while(0);
 
 #define MALI_TD_SET_BORDER_COLOR_BLUE(dest, val) do { \
 		(dest)[4] = ((dest)[4] & 0xffffff1f) | (((val) & 0x00000007) << 5); \
 		(dest)[5] = ((dest)[5] & 0x00e0ffff) | (((val) & 0x000000ff) << 24) | \
-                    (((val) & 0x00001f00) << 8); \
-    } while(0);
+		            (((val) & 0x00001f00) << 8); \
+	} while(0);
 
 #define MALI_TD_SET_BORDER_COLOR_ALPHA(dest, val) do { \
 		(dest)[5] = ((dest)[5] & 0xff1f00e0) | (((val) & 0x00000007) << 21) | \
-                    (((val) & 0x000007f8) << 5) | \
-                    (((val) & 0x0000f800) >> 11);  \
+		            (((val) & 0x000007f8) << 5) | \
+		            (((val) & 0x0000f800) >> 11);  \
 	} while(0);
 #define MALI_TD_SET_SHADOW_MAPPING_AMBIENT(dest, val) do { \
 		(dest)[5] = ((dest)[5] & 0xffffff1f) | (((val) & 0x00000007) << 5); \
 		(dest)[6] = ((dest)[6] & 0x00e0ffff) | ((((val) >> 3) & 0x000000ff) << 24) | \
-					((((val) >> 3) & 0x00001f00) << 8); \
+		            ((((val) >> 3) & 0x00001f00) << 8); \
 	} while(0);
 
 #define MALI_TD_SET_TEXTURE_ADDRESSING_MODE(dest, val) do { \
@@ -188,384 +188,373 @@ extern "C" {
 #define MALI_TD_SET_MIPMAP_ADDRESS_0(dest, val) do { \
 		(dest)[6] = ((dest)[6] & 0xffffff3f) | (((val) & 0x00000003) << 6); \
 		(dest)[7] = ((dest)[7] & 0x000000ff) | ((((val) >> 2) & 0x000000ff) << 24) | \
-                    ((((val) >> 2) & 0x0000ff00) << 8) | \
-                    ((((val) >> 2) & 0x00ff0000) >> 8); \
+		            ((((val) >> 2) & 0x0000ff00) << 8) | \
+		            ((((val) >> 2) & 0x00ff0000) >> 8); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_1(dest, val) do { \
 		(dest)[7] = ((dest)[7] & 0xffffff00) | (((val) & 0x000000ff)); \
 		(dest)[8] = ((dest)[8] & 0x0000fcff) | (((val) & 0x0000ff00) << 16) | \
-                    (((val) & 0x00ff0000) << 0) | \
-                    (((val) & 0x03000000) >> 16); \
+		            (((val) & 0x00ff0000) << 0) | \
+		            (((val) & 0x03000000) >> 16); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_2(dest, val) do { \
 		(dest)[8] = ((dest)[8] & 0xffff0300) | (((val) & 0x0000003f) << 10) | \
-                    (((val) & 0x00003fc0) >> 6); \
+		            (((val) & 0x00003fc0) >> 6); \
 		(dest)[9] = ((dest)[9] & 0x00f0ffff) | ((((val) >> 14) & 0x000000ff) << 24) | \
-                    ((((val) >> 14) & 0x00000f00) << 8); \
+		            ((((val) >> 14) & 0x00000f00) << 8); \
 	} while( 0 );
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_3(dest, val) do { \
 		(dest)[9] = ((dest)[9] & 0xff0f0000) | (((val) & 0x0000000f) << 20) | \
-                    (((val) & 0x00000ff0) << 4) | \
-                    (((val) & 0x000ff000) >> 12); \
+		            (((val) & 0x00000ff0) << 4) | \
+		            (((val) & 0x000ff000) >> 12); \
 		(dest)[10] = ((dest)[10] & 0xc0ffffff) | (((val) >> 20) << 24); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_4(dest, val) do { \
 		(dest)[10] = ((dest)[10] & 0x3f000000) | (((val) & 0x00000003) << 30) | \
-                     (((val) & 0x000003fc) << 14) | \
-                     (((val) & 0x0003fc00) >> 2) | \
-                     (((val) & 0x03fc0000) >> 18); \
+		             (((val) & 0x000003fc) << 14) | \
+		             (((val) & 0x0003fc00) >> 2) | \
+		             (((val) & 0x03fc0000) >> 18); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_5(dest, val) do { \
 		(dest)[11] = ((dest)[11] & 0x000000fc) | (((val) & 0x000000ff) << 24) | \
-                     (((val) & 0x0000ff00) << 8) | \
-                     (((val) & 0x00ff0000) >> 8) | \
-                     (((val) & 0x03000000) >> 24); \
+		             (((val) & 0x0000ff00) << 8) | \
+		             (((val) & 0x00ff0000) >> 8) | \
+		             (((val) & 0x03000000) >> 24); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_6(dest, val) do { \
 		(dest)[11] = ((dest)[11] & 0xffffff03) | (((val) & 0x0000003f) << 2); \
 		(dest)[12] = ((dest)[12] & 0xfff00000) | ((((val) >> 6) & 0x000000ff) << 24) | \
-                     ((((val) >> 6) & 0x0000ff00) << 8) | \
-                     ((((val) >> 6) & 0x000f0000) >> 8);  \
+		             ((((val) >> 6) & 0x0000ff00) << 8) | \
+		             ((((val) >> 6) & 0x000f0000) >> 8);  \
 	} while(0);
-	
+
 #define MALI_TD_SET_MIPMAP_ADDRESS_7( dest, val ) do { \
 		(dest)[12] = ((dest)[12] & 0xffff0f00) | (((val) & 0x0000000f) << 12) | \
-                     (((val) & 0x00000ff0) >> 4); \
+		             (((val) & 0x00000ff0) >> 4); \
 		(dest)[13] = ((dest)[13] & 0x00c0ffff) | ((((val) >> 12) & 0x000000ff) << 24) | \
-                     ((((val) >> 12) & 0x00003f00) << 8); \
+		             ((((val) >> 12) & 0x00003f00) << 8); \
 	} while(0);
 
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_8(dest, val) do { \
 		(dest)[13] = ((dest)[13] & 0xff3f0000) | (((val) & 0x00000003) << 22) | \
-                     (((val) & 0x000003fc) << 6) | \
-                     (((val) & 0x0003fc00) >> 10); \
+		             (((val) & 0x000003fc) << 6) | \
+		             (((val) & 0x0003fc00) >> 10); \
 		(dest)[14] = ((dest)[14] & 0x00ffffff) | (((val) >> 18) << 24); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_9( dest, val ) do { \
 		(dest)[14] = ((dest)[14] & 0xff000000) | (((val) & 0x000000ff) << 16) | \
-                     (((val) & 0x0000ff00)) | \
-                     (((val) & 0x00ff0000) >> 16); \
+		             (((val) & 0x0000ff00)) | \
+		             (((val) & 0x00ff0000) >> 16); \
 		(dest)[15] = ((dest)[15] & 0xfcffffff) | (((val) & 0x03000000)); \
 	} while(0);
 
 #define MALI_TD_SET_MIPMAP_ADDRESS_10(dest, val) do { \
 		(dest)[15] = ((dest)[15] & 0x030000f0) | (((val) & 0x0000003f) << 26) | \
-                     (((val) & 0x00003fc0) << 10) | \
-                     (((val) & 0x003fc000) >> 6) | \
-                     (((val) & 0x03c00000) >> 22); \
+		             (((val) & 0x00003fc0) << 10) | \
+		             (((val) & 0x003fc000) >> 6) | \
+		             (((val) & 0x03c00000) >> 22); \
 	} while(0);
-
-
-/** MALI200 doesn't support texture stride for linear textures
- *  Texture stride will this only be set when target platform is MALI400
- */
-#if defined(USING_MALI400) || defined(USING_MALI450)
 
 #define MALI_TD_SET_TEXTURE_TOGGLE_STRIDE(dest, val) do { \
 		(dest)[2] = ((dest)[2] & 0xfffeffff) | ((val) << 16); \
 	} while( 0 );
+
 #define MALI_TD_SET_TEXTURE_STRIDE(dest, val) do { \
 		(dest)[0] = ((dest)[0] & 0xffff0000) | (((val) & 0x000000ff) << 8) | \
-					(((val) & 0x0000ff00) >> 8); \
+		            (((val) & 0x0000ff00) >> 8); \
 	} while( 0 );
-
-#endif
-
-
-
-
 
 #define MALI_TD_GET_TEXEL_FORMAT(dest) \
 	( \
-		(((dest)[0] & 0x3f000000) >> 24) \
+	  (((dest)[0] & 0x3f000000) >> 24) \
 	)
 
 #define MALI_TD_GET_TEXEL_ORDER_INVERT(dest) \
 	( \
-		(((dest)[0] & 0x40000000) >> 30) \
+	  (((dest)[0] & 0x40000000) >> 30) \
 	)
 
 #define MALI_TD_GET_TEXEL_RED_BLUE_SWAP(dest) \
 	( \
-		(((dest)[0] & 0x80000000) >> 31) \
+	  (((dest)[0] & 0x80000000) >> 31) \
 	)
 
 #define MALI_TD_GET_TEXEL_BIAS_SELECT(dest) \
 	( \
-		(((dest)[0] & 0x00030000) >> 16) \
+	  (((dest)[0] & 0x00030000) >> 16) \
 	)
 
 #define MALI_TD_GET_TEXEL_TOGGLE_MSB(dest) \
 	( \
-		(((dest)[0] & 0x00040000) >> 18) \
+	  (((dest)[0] & 0x00040000) >> 18) \
 	)
 
 #define MALI_TD_GET_PALETTE_FORMAT(dest) \
 	( \
-		(((dest)[0] & 0x00180000) >> 19) \
+	  (((dest)[0] & 0x00180000) >> 19) \
 	)
 
 #define MALI_TD_GET_PALETTE_ADDRESS(dest) \
 	( \
-		(((dest)[0] & 0x00e00000) >> 21) | \
-		(((dest)[0] & 0x0000ff00) >> 5) | \
-		(((dest)[0] & 0x000000ff) << 11) | \
-        (((dest)[1] & 0x7f000000) >> 5) \
+	  (((dest)[0] & 0x00e00000) >> 21) | \
+	  (((dest)[0] & 0x0000ff00) >> 5) | \
+	  (((dest)[0] & 0x000000ff) << 11) | \
+	  (((dest)[1] & 0x7f000000) >> 5) \
 	)
 
 #define MALI_TD_GET_TEXTURE_FORMAT(dest) \
 	( \
-		(((dest)[1] & 0x80000000) >> 31) | \
-        (((dest)[1] & 0x00030000) >> 15) \
+	  (((dest)[1] & 0x80000000) >> 31) | \
+	  (((dest)[1] & 0x00030000) >> 15) \
 	)
 
 #define MALI_TD_GET_TEXTURE_DIMENSIONALITY(dest) \
 	( \
-		(((dest)[1] & 0x000c0000) >> 18) \
+	  (((dest)[1] & 0x000c0000) >> 18) \
 	)
 
 #define MALI_TD_GET_LAMBDA_LOW_CLAMP(dest) \
 	( \
-		(((dest)[1] & 0x00f00000) >> 20) | \
-        (((dest)[1] & 0x00000f00) >> 4) \
+	  (((dest)[1] & 0x00f00000) >> 20) | \
+	  (((dest)[1] & 0x00000f00) >> 4) \
 	)
 
 #define MALI_TD_GET_LAMBDA_HIGH_CLAMP(dest) \
 	( \
-		(((dest)[1] & 0x0000f000) >> 12) | \
-        (((dest)[1] & 0x0000000f) << 4) \
+	  (((dest)[1] & 0x0000f000) >> 12) | \
+	  (((dest)[1] & 0x0000000f) << 4) \
 	)
 
 #define MALI_TD_GET_LAMBDA_BIAS(dest) \
 	( \
-		(((dest)[1] & 0x000000f0) >> 4) | \
-        (((dest)[2] & 0x1f000000) >> 20) \
+	  (((dest)[1] & 0x000000f0) >> 4) | \
+	  (((dest)[2] & 0x1f000000) >> 20) \
 	)
 
 #define MALI_TD_GET_ANISOTROPY_LOG2(dest) \
 	( \
-		(((dest)[2] & 0xe0000000) >> 29) \
+	  (((dest)[2] & 0xe0000000) >> 29) \
 	)
 
 #define MALI_TD_GET_MIPMAPPING_MODE(dest) \
 	( \
-		(((dest)[2] & 0x00060000) >> 17) \
+	  (((dest)[2] & 0x00060000) >> 17) \
 	)
 
 #define MALI_TD_GET_POINT_SAMPLE_MINIFY(dest) \
 	( \
-		(((dest)[2] & 0x00080000) >> 19) \
+	  (((dest)[2] & 0x00080000) >> 19) \
 	)
 
 #define MALI_TD_GET_POINT_SAMPLE_MAGNIFY(dest) \
 	( \
-		(((dest)[2] & 0x00100000) >> 20) \
+	  (((dest)[2] & 0x00100000) >> 20) \
 	)
 
 #define MALI_TD_GET_WRAP_MODE_S(dest) \
 	( \
-		(((dest)[2] & 0x00e00000) >> 21) \
+	  (((dest)[2] & 0x00e00000) >> 21) \
 	)
 
 #define MALI_TD_GET_WRAP_MODE_T(dest) \
 	( \
-		(((dest)[2] & 0x00000700) >> 8) \
+	  (((dest)[2] & 0x00000700) >> 8) \
 	)
-    
+
 #define MALI_TD_GET_WRAP_MODE_R(dest) \
 	( \
-		(((dest)[2] & 0x00003800) >> 11) \
+	  (((dest)[2] & 0x00003800) >> 11) \
 	)
 
 #define MALI_TD_GET_TEXTURE_DIMENSION_S(dest) \
 	( \
-		(((dest)[2] & 0x0000c000) >> 14) | \
-		(((dest)[2] & 0x000000ff) << 2) | \
-		(((dest)[3] & 0x07000000) >> 14) \
+	  (((dest)[2] & 0x0000c000) >> 14) | \
+	  (((dest)[2] & 0x000000ff) << 2) | \
+	  (((dest)[3] & 0x07000000) >> 14) \
 	)
 
 #define MALI_TD_GET_TEXTURE_DIMENSION_T(dest) \
 	( \
-		(((dest)[3] & 0xf8000000) >> 27) | \
-		(((dest)[3] & 0x00ff0000) >> 11) \
+	  (((dest)[3] & 0xf8000000) >> 27) | \
+	  (((dest)[3] & 0x00ff0000) >> 11) \
 	)
 
 #define MALI_TD_GET_TEXTURE_DIMENSION_R(dest) \
 	( \
-		(((dest)[3] & 0x0000ff00) >> 8) | \
-		(((dest)[3] & 0x0000001f) << 8) \
+	  (((dest)[3] & 0x0000ff00) >> 8) | \
+	  (((dest)[3] & 0x0000001f) << 8) \
 	)
 
 #define MALI_TD_GET_BORDER_COLOR_RED(dest) \
 	( \
-		(((dest)[3] & 0x000000e0) >> 5) | \
-		(((dest)[4] & 0xff000000) >> 21) | \
-		(((dest)[4] & 0x001f0000) >> 5) \
+	  (((dest)[3] & 0x000000e0) >> 5) | \
+	  (((dest)[4] & 0xff000000) >> 21) | \
+	  (((dest)[4] & 0x001f0000) >> 5) \
 	)
 
 #define MALI_TD_GET_BORDER_COLOR_GREEN(dest) \
 	( \
-		(((dest)[4] & 0x00e00000) >> 21) | \
-		(((dest)[4] & 0x0000ff00) >> 5) | \
-		(((dest)[4] & 0x0000001f) << 11) \
+	  (((dest)[4] & 0x00e00000) >> 21) | \
+	  (((dest)[4] & 0x0000ff00) >> 5) | \
+	  (((dest)[4] & 0x0000001f) << 11) \
 	)
 
 #define MALI_TD_GET_BORDER_COLOR_BLUE(dest) \
 	( \
-		(((dest)[4] & 0x000000e0) >> 5) | \
-		(((dest)[5] & 0xff000000) >> 21) | \
-		(((dest)[5] & 0x001f0000) >> 5) \
+	  (((dest)[4] & 0x000000e0) >> 5) | \
+	  (((dest)[5] & 0xff000000) >> 21) | \
+	  (((dest)[5] & 0x001f0000) >> 5) \
 	)
 
 #define MALI_TD_GET_BORDER_COLOR_ALPHA(dest) \
 	( \
-		(((dest)[5] & 0x00e00000) >> 21) | \
-		(((dest)[5] & 0x0000ff00) >> 5) | \
-		(((dest)[5] & 0x0000001f) << 11) \
+	  (((dest)[5] & 0x00e00000) >> 21) | \
+	  (((dest)[5] & 0x0000ff00) >> 5) | \
+	  (((dest)[5] & 0x0000001f) << 11) \
 	)
 
 #define MALI_TD_GET_SHADOW_MAPPING_AMBIENT(dest) \
 	( \
-		(((dest)[5] & 0x000000e0) >> 5) | \
-		(((dest)[6] & 0xff000000) >> 21) | \
-		(((dest)[6] & 0x001f0000) >> 5) \
+	  (((dest)[5] & 0x000000e0) >> 5) | \
+	  (((dest)[6] & 0xff000000) >> 21) | \
+	  (((dest)[6] & 0x001f0000) >> 5) \
 	)
 
 #define MALI_TD_GET_TEXTURE_ADDRESSING_MODE(dest) \
 	( \
-		(((dest)[6] & 0x00600000) >> 21) \
-    )
+	  (((dest)[6] & 0x00600000) >> 21) \
+	)
 
 #define MALI_TD_GET_BORDER_TEXEL_ENABLE(dest) \
 	( \
-		(((dest)[6] & 0x00800000) >> 23) \
-    )
+	  (((dest)[6] & 0x00800000) >> 23) \
+	)
 
 #define MALI_TD_GET_SHADOW_MAPPING_CMP_FUNC(dest) \
 	( \
-		(((dest)[6] & 0x00000700) >> 8) \
-    )
+	  (((dest)[6] & 0x00000700) >> 8) \
+	)
 
 #define MALI_TD_GET_SHADOW_MAPPING_CPY_RGB(dest) \
 	( \
-		(((dest)[6] & 0x00000800) >> 11) \
-    )
+	  (((dest)[6] & 0x00000800) >> 11) \
+	)
 
 #define MALI_TD_GET_SHADOW_MAPPING_CPY_ALPHA(dest) \
 	( \
-		(((dest)[6] & 0x00001000) >> 12) \
-    )
+	  (((dest)[6] & 0x00001000) >> 12) \
+	)
 
 #define MALI_TD_GET_TEXTURE_STACKING_ENABLE(dest) \
 	( \
-		(((dest)[6] & 0x00002000) >> 13) \
-    )
+	  (((dest)[6] & 0x00002000) >> 13) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_0(dest) \
 	( \
-		(((dest)[6] & 0x000000c0) >> 6) | \
-		(((dest)[7] & 0xff000000) >> 22) | \
-		(((dest)[7] & 0x00ff0000) >> 6) | \
-		(((dest)[7] & 0x0000ff00) << 10) \
-    )
+	  (((dest)[6] & 0x000000c0) >> 6) | \
+	  (((dest)[7] & 0xff000000) >> 22) | \
+	  (((dest)[7] & 0x00ff0000) >> 6) | \
+	  (((dest)[7] & 0x0000ff00) << 10) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_1(dest) \
 	( \
-		(((dest)[7] & 0x000000ff)) | \
-		(((dest)[8] & 0xff000000) >> 16) | \
-		(((dest)[8] & 0x00ff0000)) | \
-		(((dest)[8] & 0x00000300) << 16) \
-    )
+	  (((dest)[7] & 0x000000ff)) | \
+	  (((dest)[8] & 0xff000000) >> 16) | \
+	  (((dest)[8] & 0x00ff0000)) | \
+	  (((dest)[8] & 0x00000300) << 16) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_2(dest) \
 	( \
-		(((dest)[8] & 0x0000fc00) >> 10) | \
-		(((dest)[8] & 0x000000ff) << 6) | \
-		(((dest)[9] & 0xff000000) >> 10) | \
-		(((dest)[9] & 0x000f0000) << 6) \
-    )
+	  (((dest)[8] & 0x0000fc00) >> 10) | \
+	  (((dest)[8] & 0x000000ff) << 6) | \
+	  (((dest)[9] & 0xff000000) >> 10) | \
+	  (((dest)[9] & 0x000f0000) << 6) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_3(dest) \
 	( \
-		(((dest)[9] & 0x00f00000) >> 20) | \
-		(((dest)[9] & 0x0000ff00) >> 4) | \
-		(((dest)[9] & 0x000000ff) << 12) | \
-		(((dest)[10] & 0x3f000000) >> 4) \
-    )
+	  (((dest)[9] & 0x00f00000) >> 20) | \
+	  (((dest)[9] & 0x0000ff00) >> 4) | \
+	  (((dest)[9] & 0x000000ff) << 12) | \
+	  (((dest)[10] & 0x3f000000) >> 4) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_4(dest) \
 	( \
-		(((dest)[10] & 0xc0000000) >> 30) | \
-		(((dest)[10] & 0x00ff0000) >> 14) | \
-		(((dest)[10] & 0x0000ff00) << 2) | \
-		(((dest)[10] & 0x000000ff) << 18) \
-    )
+	  (((dest)[10] & 0xc0000000) >> 30) | \
+	  (((dest)[10] & 0x00ff0000) >> 14) | \
+	  (((dest)[10] & 0x0000ff00) << 2) | \
+	  (((dest)[10] & 0x000000ff) << 18) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_5(dest) \
-    ( \
-        (((dest)[11] & 0xff000000) >> 24) | \
-        (((dest)[11] & 0x00ff0000) >> 8) | \
-        (((dest)[11] & 0x0000ff00) << 8) | \
-        (((dest)[11] & 0x00000003) << 24) \
-    )
+	( \
+	  (((dest)[11] & 0xff000000) >> 24) | \
+	  (((dest)[11] & 0x00ff0000) >> 8) | \
+	  (((dest)[11] & 0x0000ff00) << 8) | \
+	  (((dest)[11] & 0x00000003) << 24) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_6(dest) \
-    ( \
-        (((dest)[11] & 0xff000000) >> 24) | \
-        (((dest)[11] & 0x00ff0000) >> 8) | \
-        (((dest)[11] & 0x0000ff00) << 8) | \
-        (((dest)[11] & 0x00000003) << 24) \
-    )
+	( \
+	  (((dest)[11] & 0xff000000) >> 24) | \
+	  (((dest)[11] & 0x00ff0000) >> 8) | \
+	  (((dest)[11] & 0x0000ff00) << 8) | \
+	  (((dest)[11] & 0x00000003) << 24) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_7(dest) \
-    ( \
-        (((dest)[12] & 0x0000f000) >> 12) | \
-        (((dest)[12] & 0x000000ff) << 4) | \
-        (((dest)[13] & 0xff000000) >> 12) | \
-        (((dest)[13] & 0x003f0000) << 4) \
-    )
+	( \
+	  (((dest)[12] & 0x0000f000) >> 12) | \
+	  (((dest)[12] & 0x000000ff) << 4) | \
+	  (((dest)[13] & 0xff000000) >> 12) | \
+	  (((dest)[13] & 0x003f0000) << 4) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_8(dest) \
-    ( \
-        (((dest)[13] & 0x00c00000) >> 22) | \
-        (((dest)[13] & 0x0000ff00) >> 6) | \
-        (((dest)[13] & 0x000000ff) << 10) | \
-        (((dest)[14] & 0xff000000) >> 6) \
-    )
+	( \
+	  (((dest)[13] & 0x00c00000) >> 22) | \
+	  (((dest)[13] & 0x0000ff00) >> 6) | \
+	  (((dest)[13] & 0x000000ff) << 10) | \
+	  (((dest)[14] & 0xff000000) >> 6) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_9(dest) \
-    ( \
-        (((dest)[14] & 0x00ff0000) >> 16) | \
-        (((dest)[14] & 0x0000ff00)) | \
-        (((dest)[14] & 0x000000ff) << 16) | \
-        (((dest)[15] & 0x03000000)) \
-    )
+	( \
+	  (((dest)[14] & 0x00ff0000) >> 16) | \
+	  (((dest)[14] & 0x0000ff00)) | \
+	  (((dest)[14] & 0x000000ff) << 16) | \
+	  (((dest)[15] & 0x03000000)) \
+	)
 
 #define MALI_TD_GET_MIPMAP_ADDRESS_10(dest) \
-    ( \
-        (((dest)[15] & 0xfc000000) >> 26) | \
-        (((dest)[15] & 0x00ff0000) >> 10) | \
-        (((dest)[15] & 0x0000ff00) << 6) | \
-        (((dest)[15] & 0x0000000f) << 22) \
-    )
+	( \
+	  (((dest)[15] & 0xfc000000) >> 26) | \
+	  (((dest)[15] & 0x00ff0000) >> 10) | \
+	  (((dest)[15] & 0x0000ff00) << 6) | \
+	  (((dest)[15] & 0x0000000f) << 22) \
+	)
 
 #define MALI_TD_GET_TEXTURE_TOGGLE_STRIDE(dest) \
 	( \
-		(((dest)[2] & 0x00010000) >> 16) \
+	  (((dest)[2] & 0x00010000) >> 16) \
 	)
 
 #define MALI_TD_GET_TEXTURE_STRIDE(dest) \
 	( \
-		(((dest)[0] & 0x0000ff00) >> 8) | \
-		(((dest)[0] & 0x000000ff) << 8) \
+	  (((dest)[0] & 0x0000ff00) >> 8) | \
+	  (((dest)[0] & 0x000000ff) << 8) \
 	)
 
 #else
@@ -912,12 +901,6 @@ These macros have been generated from the functions that are defined at the bott
 		MALI_DEBUG_ASSERT( _m200_td_get( (dest), 507, 482 ) == (val), ( "Value set in MALI_TD_SET_MIPMAP_ADDRESS_10 is different from what was retrieved\n" ) ); \
 	} while( 0 );
 
-
-/** MALI200 doesn't support texture stride for linear textures
- *  Texture stride will this only be set when target platform is MALI400
- */
-#if defined(USING_MALI400) || defined(USING_MALI450)
-
 #define MALI_TD_SET_TEXTURE_TOGGLE_STRIDE(dest, val) do { \
 		MALI_DEBUG_ASSERT( ( 72 >> 5 ) == ( 72 >> 5 ), ("Value is split into two words, should use split into two functions" ) ); \
 		MALI_DEBUG_ASSERT_RANGE( 2, 0, M200_TD_SIZE - 1 ); \
@@ -933,9 +916,6 @@ These macros have been generated from the functions that are defined at the bott
 		(dest)[0] = ( (dest)[ 0 ] & 0x0000ffff ) | ( ( val ) << 16 ); \
 		MALI_DEBUG_ASSERT( _m200_td_get( (dest), 31, 16 ) == (val), ( "Value set in MALI_TD_SET_TEXTURE_PITCH is different from what was retrieved\n" ) ); \
 	} while( 0 );
-
-#endif
-
 
 #define MALI_TD_GET_TEXEL_FORMAT( dest ) _m200_td_get( dest, 5, 0 )
 #define MALI_TD_GET_TEXEL_ORDER_INVERT( dest ) _m200_td_get( dest, 6, 6 )

@@ -12,4 +12,12 @@ config APP_SEMAPHORE_API
 	help
 	  Export semaphore API for SDK driver.
 
+config  TEE_DRIVER
+	tristate "Secure TEE driver"
+	default n
+	default y if SECURE_EXTENSION
+	depends on SECURE_EXTENSION
+	help
+	 Provides a communication interface between userspace and
+	 TrustZone Operating Environment.
 endmenu

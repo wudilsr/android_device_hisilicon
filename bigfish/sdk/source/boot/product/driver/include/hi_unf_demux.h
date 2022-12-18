@@ -20,14 +20,23 @@ extern "C" {
 
 typedef enum
 {
-    HI_UNF_DMX_PORT_TUNER_0,
-    HI_UNF_DMX_PORT_TUNER_1,
-    HI_UNF_DMX_PORT_TUNER_2,
-    HI_UNF_DMX_PORT_TUNER_3,
-    HI_UNF_DMX_PORT_TUNER_4,
-    HI_UNF_DMX_PORT_TUNER_5,
-    HI_UNF_DMX_PORT_TUNER_6,
-    HI_UNF_DMX_PORT_TUNER_7,
+    HI_UNF_DMX_PORT_IF_0 = 0x0,
+    HI_UNF_DMX_PORT_IF_1,
+    HI_UNF_DMX_PORT_IF_2,
+    HI_UNF_DMX_PORT_IF_3,
+    HI_UNF_DMX_PORT_IF_4,
+    HI_UNF_DMX_PORT_IF_5,
+    HI_UNF_DMX_PORT_IF_6,
+    HI_UNF_DMX_PORT_IF_7,
+
+    HI_UNF_DMX_PORT_TSI_0 = 0x20,
+    HI_UNF_DMX_PORT_TSI_1,
+    HI_UNF_DMX_PORT_TSI_2,
+    HI_UNF_DMX_PORT_TSI_3,
+    HI_UNF_DMX_PORT_TSI_4,
+    HI_UNF_DMX_PORT_TSI_5,
+    HI_UNF_DMX_PORT_TSI_6,
+    HI_UNF_DMX_PORT_TSI_7,
 
     HI_UNF_DMX_PORT_RAM_0 = 0x80,
     HI_UNF_DMX_PORT_RAM_1,
@@ -73,6 +82,46 @@ typedef enum
     HI_UNF_DMX_CHAN_OUTPUT_MODE_BUTT
 } HI_UNF_DMX_CHAN_OUTPUT_MODE_E;
 
+typedef enum hiUNF_DMX_PORT_MODE_E
+{
+    HI_UNF_DMX_PORT_MODE_EXTERNAL,   
+    HI_UNF_DMX_PORT_MODE_INTERNAL,   
+    HI_UNF_DMX_PORT_MODE_RAM,        
+
+    HI_UNF_DMX_PORT_MODE_BUTT
+} HI_UNF_DMX_PORT_MODE_E;
+
+typedef enum hiUNF_DMX_PORT_TYPE_E
+{
+    HI_UNF_DMX_PORT_TYPE_PARALLEL_BURST,         
+    HI_UNF_DMX_PORT_TYPE_PARALLEL_VALID,          
+    HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188,    
+    HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_204,    
+    HI_UNF_DMX_PORT_TYPE_PARALLEL_NOSYNC_188_204, 
+    HI_UNF_DMX_PORT_TYPE_SERIAL,                 
+    HI_UNF_DMX_PORT_TYPE_USER_DEFINED,           
+    HI_UNF_DMX_PORT_TYPE_SERIAL2BIT,             
+    HI_UNF_DMX_PORT_TYPE_SERIAL_NOSYNC,           
+    HI_UNF_DMX_PORT_TYPE_SERIAL2BIT_NOSYNC,     
+    HI_UNF_DMX_PORT_TYPE_AUTO,                    
+
+    HI_UNF_DMX_PORT_TYPE_BUTT
+} HI_UNF_DMX_PORT_TYPE_E;
+
+typedef struct hiUNF_DMX_PORT_ATTR_S
+{
+    HI_UNF_DMX_PORT_MODE_E enPortMod;  
+    HI_UNF_DMX_PORT_TYPE_E enPortType; 
+    HI_U32 u32SyncLostTh;              
+    HI_U32 u32SyncLockTh;              
+    HI_U32 u32TunerInClk;             
+    HI_U32 u32SerialBitSelector;       
+    HI_U32 u32TunerErrMod;           
+    HI_U32 u32UserDefLen1;          
+    HI_U32 u32UserDefLen2;           
+
+} HI_UNF_DMX_PORT_ATTR_S;
+
 typedef struct
 {
     HI_U32                          u32BufSize;
@@ -113,6 +162,8 @@ HI_S32 HI_UNF_DMX_DeInit(HI_VOID);
 
 HI_S32 HI_UNF_DMX_AttachTSPort(HI_U32 u32DmxId, HI_UNF_DMX_PORT_E enPortId);
 HI_S32 HI_UNF_DMX_DetachTSPort(HI_U32 u32DmxId);
+HI_S32 HI_UNF_DMX_GetTSPortAttr(HI_UNF_DMX_PORT_E enPortId, HI_UNF_DMX_PORT_ATTR_S *pstAttr);
+HI_S32 HI_UNF_DMX_SetTSPortAttr(HI_UNF_DMX_PORT_E enPortId, const HI_UNF_DMX_PORT_ATTR_S *pstAttr);
 
 HI_S32 HI_UNF_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel);
 HI_S32 HI_UNF_DMX_DestroyChannel(HI_HANDLE hChannel);

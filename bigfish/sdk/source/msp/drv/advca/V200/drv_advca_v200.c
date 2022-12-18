@@ -1533,19 +1533,18 @@ HI_S32 ca_getR2RAlg(HI_UNF_ADVCA_ALG_TYPE_E *pu32R2RAlgType)
     return HI_SUCCESS;
 }
 
-HI_S32 DRV_CA_OTP_V200_GetVendorId(HI_U32 *pu32VendorId)
+HI_S32 ca_getVendorId(CA_OTP_VENDOR_TYPE_E *pu32VendorId)
 {
-    HI_U32 u32SecureChipId = 0;
+    HI_U32 u32VendorId = 0;
 
     if (pu32VendorId == NULL)
     {
-        HI_ERR_CA("vendor id err, pSecureChipId == NULL ! \n");
+        HI_ERR_CA("vendor id err, pu32VendorId == NULL ! \n");
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    otp_rd_u32(OTP_SECURE_CHIP, u32SecureChipId);
-    u32SecureChipId = u32SecureChipId & 0xff;
-    *pu32VendorId = u32SecureChipId;
+    otp_rd_u32(OTP_SECURE_CHIP, u32VendorId);
+    *pu32VendorId = (CA_OTP_VENDOR_TYPE_E)(u32VendorId & 0xff);
 
     return HI_SUCCESS;
 }
@@ -1622,12 +1621,12 @@ HI_S32 ca_setTdesLock(HI_U32 tdesLock)
     return HI_SUCCESS;
 }
 
-HI_S32 ca_setVendorId(HI_UNF_ADVCA_VENDOR_TYPE_E secureChipId)
+HI_S32 ca_setVendorId(CA_OTP_VENDOR_TYPE_E secureChipId)
 {
     HI_U32 u32SecureChipId = 0;
     HI_U32 u32SecureChipP = 0;
     
-    if (secureChipId >= HI_UNF_ADVCA_VENDOR_BUTT)
+    if (secureChipId >= CA_OTP_VENDOR_BUTT)
     {
         return HI_ERR_CA_INVALID_PARA;
     }
@@ -2803,7 +2802,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         return HI_FAILURE;
     }
 
-    ret = DRV_CA_OTP_V200_GetVendorId(&u32VendorId);
+    ret = ca_getVendorId(&u32VendorId);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("%s:  get vendor type err ! \n", __FUNCTION__);
@@ -2818,7 +2817,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         {
             HI_U32 *pu32ChipId = (HI_U32*)arg;
 
-            if ((HI_UNF_ADVCA_VENDOR_CONAX == u32VendorId) || (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId))
+            if ((CA_OTP_VENDOR_CONAX == u32VendorId) || (CA_OTP_VENDOR_NAGRA == u32VendorId))
             {
                 ret = ca_getChipID(pu32ChipId);
             }
@@ -2841,7 +2840,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         }
         case CMD_CA_SET_MARKETID:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32MaketId = (HI_U32*)arg;
                 ret = ca_setMarketIDEx(*pu32MaketId);
@@ -2857,7 +2856,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         }
         case CMD_CA_GET_MARKETID:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32MarketId = (HI_U32*)arg;
                 ret = ca_getMarketIDEx(pu32MarketId);
@@ -2873,7 +2872,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         }
         case CMD_CA_SET_STBSN:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32StbSN = (HI_U32*)arg;
                 ret = ca_setStbSNEx(*pu32StbSN);
@@ -2892,7 +2891,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         }
         case CMD_CA_GET_STBSN:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32StbSN = (HI_U32*)arg;
                 ret = ca_getStbSNEx(pu32StbSN);
@@ -3186,14 +3185,14 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         }
         case CMD_CA_SET_VENDOR_ID:
         {
-            HI_UNF_ADVCA_VENDOR_TYPE_E *pu32VendorId = (HI_UNF_ADVCA_VENDOR_TYPE_E*)arg;
-            ret = ca_setVendorId(*pu32VendorId);
+            HI_U32 *pu32VendorId = (HI_U32 *)arg;
+            ret = ca_setVendorId((CA_OTP_VENDOR_TYPE_E)*pu32VendorId);
             break;
         }
         case CMD_CA_GET_VENDOR_ID:
         {
             HI_U32 *pu32VendorId = (HI_U32*)arg;
-            ret = DRV_CA_OTP_V200_GetVendorId(pu32VendorId);
+            ret = ca_getVendorId((CA_OTP_VENDOR_TYPE_E *)pu32VendorId);
             break;
         }
         case CMD_CA_SET_VENDOR_ID_LOCK:
@@ -3392,7 +3391,7 @@ HI_S32 DRV_ADVCA_V200_Ioctl(unsigned int cmd, void* arg)
         {
             CA_KEY_S *pKey = (CA_KEY_S*)arg;
 
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
             	if ( strlen(NAGRA_REVISION) > 25 )
             	{

@@ -12,17 +12,52 @@
  * voltage dependent data for each VDD.
  */
 static struct hi_opp_def __initdata hi_opp_def_list[] = {
-    /*OPP_INITIALIZER(true,  400000, HI_VDD_MPU_OPP1_UV),*/
+#if	   defined(CHIP_TYPE_hi3716mv410) \
+			|| defined(CHIP_TYPE_hi3716mv420)
+		OPP_INITIALIZER(true,  200000, HI_VDD_MPU_OPP11_UV),
+		OPP_INITIALIZER(true,  300000, HI_VDD_MPU_OPP12_UV),
+#endif
+
+#if    defined (CHIP_TYPE_hi3716cv200)   \
+            || defined (CHIP_TYPE_hi3716mv400)   \
+            || defined (CHIP_TYPE_hi3718cv100)   \
+            || defined (CHIP_TYPE_hi3719cv100)   \
+            || defined (CHIP_TYPE_hi3718mv100)   \
+            || defined (CHIP_TYPE_hi3719mv100)   \
+            || defined (CHIP_TYPE_hi3798cv100)   \
+            || defined (CHIP_TYPE_hi3796cv100)   \
+            || defined(CHIP_TYPE_hi3716mv410) 	 \
+			|| defined(CHIP_TYPE_hi3716mv420)	 \
+            || defined(CHIP_TYPE_hi3798cv200_a)
+    OPP_INITIALIZER(true,  400000, HI_VDD_MPU_OPP1_UV),
+#endif
     OPP_INITIALIZER(true,  600000, HI_VDD_MPU_OPP2_UV),
-    /*OPP_INITIALIZER(true,  800000, HI_VDD_MPU_OPP3_UV),*/
+#if    defined (CHIP_TYPE_hi3716cv200)   \
+            || defined (CHIP_TYPE_hi3716mv400)   \
+            || defined (CHIP_TYPE_hi3718cv100)   \
+            || defined (CHIP_TYPE_hi3719cv100)   \
+            || defined (CHIP_TYPE_hi3718mv100)   \
+            || defined (CHIP_TYPE_hi3719mv100)   \
+            || defined (CHIP_TYPE_hi3798cv100)   \
+            || defined (CHIP_TYPE_hi3796cv100)   \
+            || defined(CHIP_TYPE_hi3716mv410) 	 \
+			|| defined(CHIP_TYPE_hi3716mv420)	 \
+            || defined(CHIP_TYPE_hi3798cv200_a)
+    OPP_INITIALIZER(true,  800000, HI_VDD_MPU_OPP3_UV),
+#endif
     OPP_INITIALIZER(true, 1000000, HI_VDD_MPU_OPP4_UV),
+#if	   !defined(CHIP_TYPE_hi3716mv410)
     OPP_INITIALIZER(true, 1200000, HI_VDD_MPU_OPP5_UV),
+#endif    
 #if    defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
 	|| defined(CHIP_TYPE_hi3798mv100)   \
 	|| defined(CHIP_TYPE_hi3796mv100)   \
 	|| defined(CHIP_TYPE_hi3798cv200_a)
     OPP_INITIALIZER(true, 1500000, HI_VDD_MPU_OPP6_UV),
+#endif
+#if   defined(CHIP_TYPE_hi3798cv200_a)
+    OPP_INITIALIZER(true, 1600000, HI_VDD_MPU_OPP7_UV),
 #endif
 };
 

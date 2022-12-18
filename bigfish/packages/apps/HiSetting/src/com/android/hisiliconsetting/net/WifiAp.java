@@ -6,6 +6,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.net.wifi.WifiSsid;
 public class WifiAp implements Comparable<WifiAp>{
 
 	@Override
@@ -72,6 +73,8 @@ public class WifiAp implements Comparable<WifiAp>{
 
 	static String removeDoubleQuotes(String paramString)
 	{
+	    if(paramString==null)
+	        return WifiSsid.NONE;
 		int i = paramString.length();
 		if ((i > 1) && (paramString.charAt(0) == '"') && (paramString.charAt(i - 1) == '"'))
 			paramString = paramString.substring(1, i - 1);

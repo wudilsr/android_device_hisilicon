@@ -27,6 +27,10 @@ ifeq ($(CFG_HI_CHIP_TYPE),hi3719mv100)
 JPGE_SUPPORT := n
 endif
 
+ifeq ($(CFG_HI_CHIP_TYPE),hi3716mv410)
+JPGE_SUPPORT := n
+endif
+
 objects := gpio ir pdm pq hdmi vo hifb tde jpeg 
 
 ifeq ($(CFG_HI_HDMI_RX_SUPPORT),y)
@@ -41,7 +45,7 @@ endif
 
 ifneq ($(CFG_HI_LOADER_APPLOADER),y)
 ifneq ($(CFG_HI_LOADER_RECOVERY),y)
-objects += avplay sync adsp aiao aflt adec vfmw vdec vpss mce png pwm omxvdec pm
+objects += sync adsp aiao aflt adec vfmw vdec vpss mce png pwm omxvdec pm
 
 ifeq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
 objects += wdg

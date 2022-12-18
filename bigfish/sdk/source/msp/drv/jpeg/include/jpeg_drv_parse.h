@@ -92,7 +92,23 @@ Date				Author        		Modification
     		IMG_FMT_CMYK,               /**< CMYK       */
     		IMG_FMT_BUTT	
     	}IMG_FMT_E;
-         
+
+
+        /** enum of mem type, mmz or mmu */
+	    /** CNcomment:判断内存类型，是mmu还是mmz CNend */
+		typedef enum hiJPEG_MEMTYPE_E
+		{
+			JPEG_DRV_STREAM_MEM_MMU_TYPE            = 0X1,    /**< 0bit 码流内存为MMU类型              */
+			JPEG_DRV_YOUTPUT_MEM_MMU_TYPE           = 0X2,    /**< 1bit Y分量输出内存为MMU类型         */
+			JPEG_DRV_UVOUTPUT_MEM_MMU_TYPE          = 0X4,    /**< 2bit UV分量输出内存为MMU类型        */
+			JPEG_DRV_XRGBSAMPLE0_READ_MEM_MMU_TYPE  = 0X8,    /**< RGB输出需要的上采样0buffer读类型    */
+			JPEG_DRV_XRGBSAMPLE1_READ_MEM_MMU_TYPE  = 0X10,   /**< RGB输出需要的上采样1buffer读类型    */
+			JPEG_DRV_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE = 0X20,   /**< RGB输出需要的上采样0buffer写类型    */
+			JPEG_DRV_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE = 0X40,   /**< RGB输出需要的上采样1buffer写类型    */
+			JPEG_DRV_XRGBOUTPUT_MEM_MMU_TYPE        = 0X80,   /**< 7bitRGB输出内存为MMU类型            */
+			JPEG_DRV_MEMTYPE_BUTT
+		}JPEG_MEMTYPE_E;
+        
 		/** @} */  /** <!-- ==== enum Definition end ==== */
 		
 		/*************************** Structure Definition ****************************/
@@ -135,6 +151,8 @@ Date				Author        		Modification
              HI_S32   s32RestartInterval;
              HI_U32   u32DataLen[2];
              HI_U32   u32CurPos[2];
+             HI_U32   u32MemTypeMask;
+             HI_U64   u64LuPixValue;
              HI_U8    u8Fac[PIXEL_COMPONENT_NUM][2];
              HI_BOOL  bSofMark;
              HI_CHAR* pDataVir[2];

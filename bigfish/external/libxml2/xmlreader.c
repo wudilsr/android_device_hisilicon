@@ -1601,6 +1601,13 @@ node_end:
     return(0);
 }
 
+int
+xmlTextReaderInvoke(xmlTextReaderPtr reader, int invokeID, void *arg) {
+    if (reader == NULL || reader->input == NULL || reader->input->invokecallback == NULL)
+        return(-1);
+
+    return reader->input->invokecallback(reader->input->context, invokeID, arg);
+}
 /**
  * xmlTextReaderReadState:
  * @reader:  the xmlTextReaderPtr used

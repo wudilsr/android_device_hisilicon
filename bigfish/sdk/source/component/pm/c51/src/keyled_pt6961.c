@@ -114,7 +114,11 @@ void no_display_usr()
 }
 
 void KEYLED_Init_Usr(void)
-{	
+{
+#ifndef HI_ADVCA_RELEASE
+        printf_str("PT6961 Board Init \r\n");
+#endif
+	
 	keyled_pt6961_gpio_dirset();
 	no_display_usr();
 	

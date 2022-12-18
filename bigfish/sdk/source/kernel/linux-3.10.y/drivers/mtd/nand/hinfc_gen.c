@@ -10,7 +10,10 @@
 #include "hinfc_gen.h"
 
 /*****************************************************************************/
+struct nand_flash_dev *(*get_spi_nand_flash_type)(struct mtd_info *mtd,
+		unsigned char *id) = NULL;
 
+/*****************************************************************************/
 static struct match_t match_ecc[] = {
 	MATCH_SET_TYPE_DATA(NAND_ECC_NONE, "none"),
 	MATCH_SET_TYPE_DATA(NAND_ECC_1BIT_512, "1bit/512" ),

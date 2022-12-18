@@ -625,14 +625,41 @@ HI_S32 CI_Standby(HI_UNF_CI_PORT_E enCIPort)
 HI_S32 CI_Resume(HI_UNF_CI_PORT_E enCIPort)
 {
     HI_S32 s32Ret = HI_SUCCESS;
+    HI_UNF_CI_PCCD_E enCardId;
 
     CHECK_CIPORT_VALID(enCIPort);
     CIPORT_LOCK(enCIPort);
     CHECK_CI_OPENED(enCIPort);
 
+    if(!s_astCIDrvParam[enCIPort].bOpen)
+    {
+        return HI_SUCCESS;
+    }
+
     if (s_astCIDrvParam[enCIPort].stOP.ci_resume)
     {
         s32Ret = s_astCIDrvParam[enCIPort].stOP.ci_resume(enCIPort);
+        if (s32Ret != HI_SUCCESS)
+        {
+            return s32Ret;
+        }
+    }
+
+    if (!s_astCIDrvParam[enCIPort].stOP.ci_pccd_ts_bypass)
+    {
+         return HI_SUCCESS;
+    }
+      
+    for(enCardId=HI_UNF_CI_PCCD_A; enCardId<HI_UNF_CI_PCCD_BUTT; enCardId++)
+    {
+        if (s_astCIDrvParam[enCIPort].astCardParam[enCardId].bCardOpen)
+        {
+             s32Ret = s_astCIDrvParam[enCIPort].stOP.ci_pccd_ts_bypass(enCIPort, enCardId, HI_TRUE);
+             if (s32Ret != HI_SUCCESS)
+             {
+                return s32Ret;
+             }
+        }   
     }
 
     CIPORT_UNLOCK(enCIPort);

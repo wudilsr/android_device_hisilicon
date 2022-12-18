@@ -46,6 +46,9 @@ Date				Author        		Modification
 extern PNG_PROC_INFO_S s_stPngProcInfo; 
 #endif
 
+static spinlock_t s_PngRefLock;
+static HI_SIZE_T s_PngRefLockFlags;
+
 HI_VOID PngOsiAddTimer(HI_U32 u32Expires);
 HI_VOID PngOsiDelTimer(HI_VOID);
 static HI_VOID PngTimerFunc(unsigned long data);
@@ -69,7 +72,7 @@ DEFINE_TIMER(g_PngTimer, PngTimerFunc, 0, (unsigned long)&g_ActiveHandle);
 HI_BOOL g_bAddTimer = HI_FALSE;
 
 /* rle window physical address*/
-static HI_U32 g_u32RdcBufPhyaddr = 0;
+HI_U32 g_u32RdcBufPhyaddr = 0;
 
 /* Png device reference count*/
 static atomic_t g_PngRef = ATOMIC_INIT(0);
@@ -104,9 +107,10 @@ HI_S32 PngOsiInit(HI_VOID)
     }
 
     /* set rle window address */
-    PngHalSetRdcAddr(g_u32RdcBufPhyaddr);
+    //PngHalSetRdcAddr(g_u32RdcBufPhyaddr);
 
     g_bAddTimer = HI_FALSE;
+    spin_lock_init(&s_PngRefLock);
 
     return HI_SUCCESS;    
 }
@@ -139,16 +143,19 @@ static TDE_EXPORT_FUNC_S *ps_TdeExportFuncs;
 HI_S32 PngOsiOpen(HI_VOID)
 {
     HI_S32 s32Ret;
-    
+    PNG_LOCK(&s_PngRefLock, s_PngRefLockFlags);
     if (atomic_inc_return(&g_PngRef) == 1)
     {
+        PngHalOpen(); 
         ps_TdeExportFuncs = HI_NULL;
         s32Ret = HI_DRV_MODULE_GetFunction(HI_ID_TDE, (HI_VOID**)&ps_TdeExportFuncs);
         if((NULL == ps_TdeExportFuncs) || (HI_SUCCESS != s32Ret))
         {
+            PNG_UNLOCK(&s_PngRefLock, s_PngRefLockFlags);
             return -1;
         }
     }
+    PNG_UNLOCK(&s_PngRefLock, s_PngRefLockFlags);
     return 0;
 }
 
@@ -163,17 +170,15 @@ EXPORT_SYMBOL(PngOsiOpen);
 *********************************************************************************************/
 HI_VOID PngOsiClose(HI_VOID)
 {
+    PNG_LOCK(&s_PngRefLock, s_PngRefLockFlags);
     if (atomic_read(&g_PngRef) == 1)
     {
         PngOsiDelTimer();
-    
-        PngHalReset();
-
         PngOsiReset();
+        PngHalSetClock(HI_FALSE); 
     }
-
     atomic_dec(&g_PngRef);
-
+    PNG_UNLOCK(&s_PngRefLock, s_PngRefLockFlags);
     PNG_ASSERT(atomic_read(&g_PngRef) >= 0);
     
     return;
@@ -785,7 +790,6 @@ HI_S32 PngOsiDecode(HI_PNG_HANDLE s32Handle, HI_PNG_DECINFO_S *pstDecInfo)
             PNG_UP(&pstInstance->stInstanceLock);
 
 			PNG_UP(&g_DevMutex);
-			
             return HI_ERR_PNG_INTERRUPT;
         }
 
@@ -1299,21 +1303,24 @@ int PngOsiSuspend(HI_VOID)
 int pngOsiResume(HI_VOID)
 {
     /* resume */
-    //PngHalReset();
-    PngHalSetClock(HI_TRUE);
+    if(atomic_read(&g_PngRef)>0) 
+    {
+        //PngHalReset();
+        PngHalSetClock(HI_TRUE);
+        /* set rle window address */
+        PngHalSetRdcAddr(g_u32RdcBufPhyaddr);
 
-    /* set rle window address */
-    PngHalSetRdcAddr(g_u32RdcBufPhyaddr);
+        PngHalSetAxiAndTimeout();
+        
+        /* open all interrupt*/
+        PngHalSetIntmask(0xffffffff);
 
-    PngHalSetAxiAndTimeout();
-    
-    /* open all interrupt*/
-    PngHalSetIntmask(0xffffffff);
+        /* set err strategy: stopping when error is occoured */
+        PngHalSetErrmode(0xffff0000);
 
-    /* set err strategy: stopping when error is occoured */
-    PngHalSetErrmode(0xffff0000);
-
-    HI_PRINT("PNG resume OK\n");
+        HI_PRINT("PNG resume OK\n");
+        
+    }
     
     return HI_SUCCESS;
 }

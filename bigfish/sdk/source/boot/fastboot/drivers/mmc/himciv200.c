@@ -14,7 +14,8 @@
 #  include "himciv200_godbox.c"
 #endif
 
-#if defined(CONFIG_ARCH_S40) || defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_HI3798MX)
+#if defined(CONFIG_ARCH_S40) || defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_HI3798MX) \
+    || defined(CONFIG_ARCH_HI3716MV410)
 #  include "himciv200_s40.c"
 #endif
 
@@ -51,7 +52,7 @@ char *get_debug_type_string(int type)
 
 static unsigned int retry_count = MAX_RETRY_COUNT;
 
-#define MAX_DMA_DES	81920
+#define MAX_DMA_DES	20480
 static struct himci_dma_des hi_dma_des[MAX_DMA_DES]
 	__attribute__ ((aligned(512)));
 
@@ -138,18 +139,20 @@ static void hi_mci_control_cclk(struct himci_host *host, unsigned int flag)
 
 static void hi_mci_set_cclk(struct himci_host *host, unsigned int cclk)
 {
-	unsigned int reg_value;
+	unsigned int reg_value, srcclk;
 	cmd_arg_s cmd_reg;
 
 	HIMCI_DEBUG_FUN("Function Call: cclk %d", cclk);
 	HIMCI_ASSERT(host);
 	HIMCI_ASSERT(cclk);
 
+	srcclk = himci_get_clock();
+
 	/*set card clk divider value, clk_divider = Fmmcclk/(Fmmc_cclk * 2) */
 	reg_value = 0;
-	if (cclk < MMC_CLK) {
-		reg_value = MMC_CLK / (cclk * 2);
-		if (MMC_CLK % (cclk * 2))
+	if (cclk < srcclk) {
+		reg_value = srcclk / (cclk * 2);
+		if (srcclk % (cclk * 2))
 			reg_value++;
 		if (reg_value > 0xFF)
 			reg_value = 0xFF;
@@ -332,8 +335,6 @@ static int hi_mci_exec_cmd(struct himci_host *host, struct mmc_cmd *cmd,
 		cmd_reg.bits.read_write = 0;
 	}
 
-	cmd_reg.bits.wait_prvdata_complete = 1;
-
 	switch (cmd->resp_type) {
 	case MMC_RSP_NONE:
 		cmd_reg.bits.response_expect = 0;
@@ -367,6 +368,14 @@ static int hi_mci_exec_cmd(struct himci_host *host, struct mmc_cmd *cmd,
 		cmd_reg.bits.send_initialization = 1;
 	else
 		cmd_reg.bits.send_initialization = 0;
+
+	if (cmd->cmdidx == MMC_CMD_STOP_TRANSMISSION) {
+		cmd_reg.bits.stop_abort_cmd = 1;
+		cmd_reg.bits.wait_prvdata_complete = 0;
+	} else {
+		cmd_reg.bits.stop_abort_cmd = 0;
+		cmd_reg.bits.wait_prvdata_complete = 1;
+	}
 
 	cmd_reg.bits.card_number = 0;
 	cmd_reg.bits.cmd_index = cmd->cmdidx;
@@ -407,7 +416,7 @@ static int hi_mci_cmd_done(struct himci_host *host, unsigned int stat)
 			HIMCI_DEBUG_INFO("CMD Response of card is %08x",
 					 cmd->response[0]);
 		}
-		if (host->mmc.version && !IS_SD((&host->mmc))) {
+		if (host->mmc.version && !IS_SD((&host->mmc)) && !host->tunning) {
 			if ((cmd->resp_type == MMC_RSP_R1)
 				|| (cmd->resp_type == MMC_RSP_R1b)) {
 				if (cmd->response[0] & MMC_CS_ERROR_MASK) {
@@ -449,11 +458,15 @@ static void hi_mci_data_done(struct himci_host *host, unsigned int stat)
 static int hi_mci_wait_cmd_complete(struct himci_host *host)
 {
 	unsigned int wait_retry_count = 0;
+	unsigned int retry_num = retry_count;
 	unsigned int reg_data = 0;
 	int ret = 0;
 
 	HIMCI_DEBUG_FUN("Function Call");
 	HIMCI_ASSERT(host);
+
+	if(host->tunning)
+		retry_num = 1500;
 
 	do {
 		reg_data = himci_readl(host->base + MCI_RINTSTS);
@@ -463,7 +476,7 @@ static int hi_mci_wait_cmd_complete(struct himci_host *host)
 		}
 		udelay(100);
 		wait_retry_count++;
-	} while (wait_retry_count < retry_count);
+	} while (wait_retry_count < retry_num);
 
 	HIMCI_DEBUG_ERR("Wait cmd complete error! irq status is 0x%x",
 			reg_data);
@@ -474,11 +487,15 @@ static int hi_mci_wait_cmd_complete(struct himci_host *host)
 static int hi_mci_wait_data_complete(struct himci_host *host)
 {
 	unsigned int wait_retry_count = 0;
+	unsigned int retry_num = retry_count;
 	unsigned int reg_data = 0;
 
 	HIMCI_DEBUG_FUN("Function Call");
 	HIMCI_ASSERT(host);
 
+	if(host->tunning)
+		retry_num = 1500;
+	
 	do {
 		reg_data = himci_readl(host->base + MCI_RINTSTS);
 		if (reg_data & DTO_INT_STATUS) {
@@ -488,7 +505,7 @@ static int hi_mci_wait_data_complete(struct himci_host *host)
 		}
 		udelay(100);
 		wait_retry_count++;
-	} while (wait_retry_count < retry_count);
+	} while (wait_retry_count < retry_num);
 
 	HIMCI_DEBUG_ERR("Wait cmd complete error! irq status is 0x%x",
 			reg_data);
@@ -584,11 +601,6 @@ static int hi_mci_request(struct mmc *mmc, struct mmc_cmd *cmd,
 		ret = hi_mci_wait_data_complete(host);
 		if (ret)
 			goto request_end;
-
-		/* wait card complete */
-		ret = hi_mci_wait_card_complete(host);
-		if (ret)
-			goto request_end;
 	}
 
 	if (cmd->resp_type & MMC_RSP_BUSY) {
@@ -637,13 +649,105 @@ static void hi_mci_set_ios(struct mmc *mmc)
 
 	/* set UHS reg */
 	tmp_reg = himci_readl(host->base + MCI_UHS_REG);
-	if (mmc->card_caps & MMC_MODE_DDR_52MHz)
+	if (mmc->timing == MMC_TIMING_UHS_DDR50)
 		tmp_reg |= UHS_DDR_MODE;
 	else
 		tmp_reg &= ~UHS_DDR_MODE;
 
 	himci_writel(tmp_reg, host->base + MCI_UHS_REG);
 
+	/* set ddr reg */
+	tmp_reg = himci_readl(host->base + MCI_DDR_REG);
+	if (mmc->timing == MMC_TIMING_MMC_HS400) 
+		tmp_reg |= ENABLE_HS400_MODE;
+	else
+		tmp_reg &= ~ENABLE_HS400_MODE;
+
+	himci_writel(tmp_reg, host->base + MCI_DDR_REG);
+
+	/* set cardthrctl reg */
+	tmp_reg = himci_readl(host->base + MCI_CARDTHRCTL);
+	if (mmc->timing == MMC_TIMING_MMC_HS200)
+		tmp_reg = READ_THRESHOLD_SIZE;
+	if (mmc->timing == MMC_TIMING_MMC_HS400)
+		tmp_reg = RW_THRESHOLD_SIZE;
+
+	himci_writel(tmp_reg, host->base + MCI_CARDTHRCTL);
+
+}
+
+static int hi_mci_prepare_tuning(struct mmc *mmc, unsigned int timing)
+{
+	struct himci_host *host = mmc->priv;
+	
+	himci_set_timing(timing);
+	
+	return 0;
+	
+}
+
+static int hi_mci_execute_tuning(struct mmc *mmc, unsigned int datastrobe)
+{
+	unsigned int index,min,max,mask,offset,reg_addr;
+	unsigned int value, tmp_reg;
+	unsigned int startpoint, endpoint;
+	unsigned int found = 0;
+	int err = 0;
+	struct himci_host *host = mmc->priv;
+
+	himci_get_tuning_param(datastrobe,&min,&max,&mask,&offset,&reg_addr);
+		
+	host->tunning = 1;
+	for (index = min; index < max; index++) {
+		if (datastrobe)
+			value = (index < 8) ? (8-index) : index;
+		else
+			value = index;
+		
+		/* set phase shift */
+		tmp_reg = himci_readl(reg_addr);
+		tmp_reg &= ~mask;
+		tmp_reg |= (value << offset);
+		himci_writel(tmp_reg, reg_addr);
+		
+		himci_writel(ALL_INT_CLR, host->base + MCI_RINTSTS);
+
+		err = mmc_send_tuning(mmc);
+		if (err) {
+			/* find the end point */
+			if (found) 
+				break;
+		} else if (!found) {
+			/* find the first point */
+			found = 1;
+			startpoint = index;
+		}
+	}
+
+	if (found) {
+		endpoint = index - 1;
+		value = (startpoint + endpoint) / 2;
+
+		if (datastrobe)
+			value = (value < 8) ? (8-value) : value;
+		
+		tmp_reg = himci_readl(reg_addr);
+		tmp_reg &= ~mask;
+		tmp_reg |= (value << offset);
+		himci_writel(tmp_reg,reg_addr);
+		
+		printf("Tuning %s[%d,%d],set[%d]\n",
+			datastrobe?"datastrobe":"clk_sample",
+			startpoint, endpoint, value);
+	} else {
+		printf("no valid phase shift! use default\n");
+		return -1;
+	}
+
+	host->tunning = 0;
+	himci_writel(ALL_INT_CLR, host->base + MCI_RINTSTS);
+
+	return 0;
 }
 
 static int hi_mci_init(struct mmc *mmc)
@@ -706,11 +810,16 @@ static int hi_mci_initialize(bd_t * bis)
 	mmc->send_cmd = hi_mci_request;
 	mmc->set_ios = hi_mci_set_ios;
 	mmc->init = hi_mci_init;
+	mmc->prepare_tuning = hi_mci_prepare_tuning;
+	mmc->execute_tuning = hi_mci_execute_tuning;
 	mmc->host_caps = MMC_MODE_HS | MMC_MODE_HS_52MHz
 		| MMC_MODE_4BIT | MMC_MODE_8BIT;
 
 #if defined(CONFIG_ARCH_HI3798MX) || defined(CONFIG_ARCH_HIFONE)
-		mmc->host_caps |= MMC_MODE_DDR_52MHz;
+	mmc->host_caps |= MMC_MODE_DDR_52MHz;
+#endif
+#if defined(CONFIG_ARCH_HIFONE)
+//	mmc->host_caps |= MMC_MODE_HS200 | MMC_MODE_HS400;
 #endif
 	mmc->voltages = MMC_VDD_32_33 | MMC_VDD_33_34;
 
@@ -758,7 +867,8 @@ void check_ext_csd(struct mmc *mmc)
 	else
 		boot_bus_width = 0x1; /* 4bits */
 
-#if defined(CONFIG_ARCH_S40) ||defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_HI3798MX) || defined(CONFIG_ARCH_HIFONE)
+#if defined(CONFIG_ARCH_S40) ||defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_HI3798MX) || defined(CONFIG_ARCH_HIFONE)\
+	|| defined(CONFIG_ARCH_HI3716MV410)
 
 	/*
 	 * only s40 Architecture support reset pin

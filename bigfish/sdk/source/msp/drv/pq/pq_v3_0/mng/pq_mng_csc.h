@@ -18,15 +18,15 @@
 #include "pq_hal_csc.h"
 
 #ifdef __cplusplus
- #if __cplusplus
+#if __cplusplus
 extern "C" {
- #endif
+#endif
 #endif /* __cplusplus */
 
 /*窗口类型*/
 typedef enum hiCSC_WINDOW_E
 {
-    CSC_WINDOW_MAIN= 0,
+    CSC_WINDOW_MAIN = 0,
     CSC_WINDOW_SUB,
 
     CSC_WINDOW_BUTT
@@ -73,7 +73,7 @@ typedef struct hiCOLOR_SPACE_S
 
  */
 
-HI_S32 PQ_MNG_GetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
+HI_S32 PQ_MNG_GetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S* pstCscMode);
 
 /**
  \brief 设置CSC色彩空间转换;
@@ -87,7 +87,7 @@ HI_S32 PQ_MNG_GetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
 
  */
 
-HI_S32 PQ_MNG_SetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
+HI_S32 PQ_MNG_SetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S* pstCscMode);
 
 /**
  \brief 设置标清CSC图像设定;
@@ -100,7 +100,7 @@ HI_S32 PQ_MNG_SetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
 
  */
 
-HI_S32 PQ_MNG_SetSDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TEMPERATURE_S *pstColorTemp);
+HI_S32 PQ_MNG_SetSDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, COLOR_TEMPERATURE_S* pstColorTemp);
 
 /**
  \brief 获取标清CSC图像设定;
@@ -114,7 +114,7 @@ HI_S32 PQ_MNG_SetSDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TE
 
  */
 
-HI_S32 PQ_MNG_GetSDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TEMPERATURE_S *pstColorTemp);
+HI_S32 PQ_MNG_GetSDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, COLOR_TEMPERATURE_S* pstColorTemp);
 
 /**
  \brief 设置高清CSC图像设定;
@@ -127,7 +127,7 @@ HI_S32 PQ_MNG_GetSDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TE
 
  */
 
-HI_S32 PQ_MNG_SetHDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TEMPERATURE_S *pstColorTemp);
+HI_S32 PQ_MNG_SetHDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, COLOR_TEMPERATURE_S* pstColorTemp);
 
 /**
  \brief 获取高清CSC图像设定;
@@ -141,26 +141,18 @@ HI_S32 PQ_MNG_SetHDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TE
 
  */
 
-HI_S32 PQ_MNG_GetHDPictureSetting(PICTURE_SETTING_S *pstPictureSetting, COLOR_TEMPERATURE_S *pstColorTemp);
+HI_S32 PQ_MNG_GetHDPictureSetting(PICTURE_SETTING_S* pstPictureSetting, COLOR_TEMPERATURE_S* pstColorTemp);
 
-/**
- \brief 设置CSC转换模式;
- \attention \n
-无
+HI_S32 PQ_MNG_GetCscCoef(CSC_MODE_E enCscMode, CSC_COEF_S* pstCscCoef, CSC_DCCOEF_S* pstCscDCCoef);
 
- \param[in] enDisplayId
- \param[in] *pstCscMode
+HI_S32 PQ_MNG_Get8BitCscCoef(CSC_MODE_E enCscMode, CSC_COEF_S* pstCscCoef, CSC_DCCOEF_S* pstCscDCCoef);
 
- \retval ::HI_SUCCESS
 
- */
-
-HI_S32 PQ_MNG_SetCSC(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
 
 #ifdef __cplusplus
- #if __cplusplus
+#if __cplusplus
 }
- #endif
+#endif
 #endif /* __cplusplus */
 
 #endif

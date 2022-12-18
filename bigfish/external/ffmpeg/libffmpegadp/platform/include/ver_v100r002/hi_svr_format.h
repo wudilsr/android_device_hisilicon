@@ -91,6 +91,12 @@ extern "C" {
 /** the mask of mpeg dash descriptor's value */
 /** CNcomment: mpeg dash descriptor 的value 的mask值 */
 #define HI_FORMAT_DESCRIPTOR_VALUE_MASK (0x00FFFFFF)
+/** number of service descriptor in the information such as service name, service provider */
+/** CNcomment: 节目服务名称或服务提供的描述字符数 */
+#define HI_FORMAT_SERVICE_DESCRIPT_LEN      (64)
+/** Internet address maximum length */
+/** CNcomment: IP地址最大长度 */
+#define HI_FORMAT_IP_LEN (16)
 
 /*************************** Structure Definition ****************************/
 /** Version number definition */
@@ -266,6 +272,12 @@ typedef struct hiFORMAT_HLS_SEGMENT_INFO_S
     HI_S32    seq_num;                       /**< output parameter, the serial number of the current segment *//**< CNcomment:当前分片的序列号，输出参数 */
     HI_S64    bandwidth;                     /**< output parameter, the bandwidth demands of the current segment *//**< CNcomment:当前分片要求的带宽，输出参数，单位bits/s */
     HI_CHAR   url[HI_FORMAT_MAX_URL_LEN];    /**< output parameter, the url of the current segment *//**< CNcomment:当前分片的url，输出参数 */
+    HI_S64    ts_send_time;// timestamp of starting segment requestment
+    HI_S64    ts_first_btime;// timestamp for getting first packet of one segment
+    HI_S64    ts_last_btime;//  timestamp for getting last packet of one segment
+    HI_S64    ts_length; // file length of segment
+    HI_CHAR   http_res[4096];
+    HI_CHAR   ts_traceid[HI_FORMAT_MAX_URL_LEN];
 } HI_FORMAT_HLS_SEGMENT_INFO_S;
 
 /** The information of the playlist segment detail info */
@@ -296,6 +308,15 @@ typedef struct hiFORMAT_PLAYLIST_STREAM_DETAIL_S
         HI_FORMAT_PLAYLIST_SEGMENT_DETAIL_INFO_S    **segments;       /**< Output parameter, segments info *//**< CNcomment:分片信息，输出参数 */
     } SEGMENT_LIST_S;
 } HI_FORMAT_PLAYLIST_STREAM_DETAIL_S;
+
+/** The information of the URL info */
+/** CNcomment:URL的详细信息 */
+typedef struct hiFORMAT_URL_INFO_S
+{
+    HI_CHAR url[HI_FORMAT_MAX_URL_LEN]; /**< output parameter, the url of the connection *//**< CNcomment:当前连接的URL */
+    HI_S32 port; /**< output parameter, port number *//**< CNcomment:端口号*/
+    HI_CHAR ipaddr[HI_FORMAT_IP_LEN]; /**< output parameter, internet address *//**< CNcomment:IP地址*/
+} HI_FORMAT_URL_INFO_S;
 
 /** The infomation pass though to Demux */
 /** CNcomment:传递给解析器的播放信息 */
@@ -372,14 +393,19 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_SET_RECORD_STREAM,    /**< the command of setting record stream, the parameter is HI_BOOL */
     HI_FORMAT_INVOKE_GET_TRACE_SEEK,       /**< the command of getting seek proc info, the parameter is HI_SVR_PLAYER_PROC_SEEKINFO_S */
     HI_FORMAT_INVOKE_GET_SWITCH_PG_TIME,   /**< the command of getting proc switch-program time info, the parameter is HI_SVR_PLAYER_PROC_SWITCHPG_S */
+    HI_FORMAT_INVOKE_SET_TPLAY_MODE,       /**< the command of setting tplay mode, the parameter is ::HI_SVR_PLAYER_TPLAY_MODE_E*/ /**< CNcomment:设置TPlay模式，参数::HI_SVR_PLAYER_TPLAY_MODE_E*/
     HI_FORMAT_INVOKE_GET_AUDIO_FORMAT_BUFFER,    /**< the command of getting network audio stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_GET_VIDEO_FORMAT_BUFFER,    /**< the command of getting network video stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_SET_METARETRIVER_FLAG,       /**< set meta data retriver flag, the parameter is ::HI_S32*/ /**< CNcomment:设置文件媒体扫描标志，参数::HI_S32*/
     HI_FORMAT_INVOKE_SET_LOW_DELAY,        /**< the command of setting low delay, the parameter is ::HI_S32 */ /**< CNcomment:设置low delay模式，参数类型为::HI_S32 */
+    HI_FORMAT_INVOKE_SET_FREE_RUN,         /**< the command of setting play free run behavior, the parameter is ::HI_S32*, HI_TRUE:: play video only, as fast as possible; HI_FALSE: resume to normal play*//**< CNcomment:设置free run开关模式，参数类型为::HI_S32,  HI_TRUE:快速输出视频帧; HI_FALSE: 恢复正常播放*/
+    HI_FORMAT_INVOKE_SET_HTTP_DOWNLOAD_SIZE_ONCE,        /**< the command of setting download size each http connection in MB, the parameter is ::HI_S32 */ /**< CNcomment:设置每次http连接下载的数据大小，单位MB，参数类型为::HI_S32 */
 
     /* if hisilicon invoke command, please defined before USER */
     HI_FORMAT_INVOKE_PROTOCOL_USER=100,    /**< the command of setting data to user protocol *//**< CNcomment:设置用户协议数据 */
-
+    HI_FORMAT_INVOKE_GET_URL_INFO,
+    HI_FORMAT_INVOKE_SET_UUID,
+    HI_FORMAT_INVOKE_GET_HTTP_RS,
     HI_FORMAT_INVOKE_BUTT
 } HI_FORMAT_INVOKE_ID_E;
 
@@ -456,6 +482,7 @@ typedef enum hiFORMAT_MSG_NETWORK_E
     HI_FORMAT_MSG_NETWORK_ERROR_DISCONNECT,        /**< net work disconnect *//**< CNcomment:断网 */
     HI_FORMAT_MSG_NETWORK_ERROR_NOT_FOUND,      /**< file not found *//**< CNcomment:资源不可用 */
     HI_FORMAT_MSG_NETWORK_NORMAL,               /**< status of network is normal *//**< CNcomment:网络状态正常 */
+    HI_FORMAT_MSG_NETWORK_SEGMENT_COMPLETE,
     HI_FORMAT_MSG_NETWORK_ERROR_BUTT,
 } HI_FORMAT_MSG_NETWORK_E;
 
@@ -623,6 +650,8 @@ typedef struct hiFORMAT_PROGRAM_INFO_S
     HI_FORMAT_AUD_INFO_S *pastAudStream;   /**< Audio stream information *//**< CNcomment:音频流信息 */
     HI_U32 u32SubStreamNum;                /**< Number of subtitles *//**< CNcomment:字幕个数 */
     HI_FORMAT_SUB_INFO_S *pastSubStream;   /**< Subtitle information *//**< CNcomment:字幕信息 */
+    HI_CHAR aszServiceName[HI_FORMAT_SERVICE_DESCRIPT_LEN];       /**< Program service name info *//**< CNcomment:节目名称 */
+    HI_CHAR aszServiceProvider[HI_FORMAT_SERVICE_DESCRIPT_LEN];   /**<  Program service provider info *//**< CNcomment:节目提供商 */
 } HI_FORMAT_PROGRAM_INFO_S;
 
 /** Media file information */
@@ -666,6 +695,7 @@ typedef struct hiFORMAT_FRAME_S
 typedef struct hiFORMAT_THUMBNAIL_PARAM_S
 {
     HI_FORMAT_THUMB_PIXEL_FORMAT_E thumbPixelFormat;    /**< It is an input parameter. It specifies the picture format of the obtained thumbnail. *//**< CNcomment:输入参数：用于指定获取到的缩略图的图像格式 */
+    HI_S64 thumbnailTimeMs;          /**< It is an input parameter. It specifies the time of the obtained thumbnail. *//**< CNcomment:输入参数：用于获取指定时间的缩略图 */
     HI_S32 thumbnailSize;                               /**< It is an input parameter. It specifies the larger value between the width (tw) and height (th) of the obtained thumbnail.
                                                              Note: The value of thumbnailSize cannot be 0 in rule 1 and rule 2.
                                                              1. If the source video width (w) is greater than height (h), the width (tw) of the obtained thumbnail is thumbnailSize,

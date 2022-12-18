@@ -46,7 +46,11 @@ Date				Author        		Modification
 
 /** the first class is jpeg */
 /** CNcomment:第一级内存为jpeg分区 */
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+#define MMZ_TAG          "iommu"
+#else
 #define MMZ_TAG          "jpeg"
+#endif
 /** the second class is jpeg */
 /** CNcomment:第二级内存为graphics分区 */
 //#define MMZ_TAG_1        "graphics"
@@ -92,10 +96,13 @@ HI_S32	JPEG_HDEC_GetStreamMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle,const HI_U32 u
 		HI_CHAR *pVirBuf = NULL;
 		HI_U32 u32StreamSize = JPGD_STREAM_BUFFER;
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType  = HI_TRUE;
+#endif
+
 		JPEG_ASSERT((0 == u32MemSize),HI_FAILURE);
 
-		if(u32StreamSize < 4096)/*lint !e774 ignore by y00181162, because this cast is ok */  
-		{
+		if(u32StreamSize < 4096){/*lint !e774 ignore by y00181162, because this cast is ok */  
 			//JPEG_TRACE("the save stream size is small than the input buffer size\n");
 			return HI_FAILURE;
 		}
@@ -103,23 +110,29 @@ HI_S32	JPEG_HDEC_GetStreamMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle,const HI_U32 u
 		** use the third class manage to alloc mem,the stream buffer should 64bytes align
 		** CNcomment: 使用三级分配管理来分配内存 CNend\n
 		**/
-        #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		pPhyBuf = (HI_CHAR*)HI_GFX_AllocMem(pJpegHandle->s32MMZDev,u32MemSize, JPGD_HDEC_MMZ_STREAM_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE, &(pJpegHandle->pSaveStreamMemHandle));
-        #else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		pPhyBuf = (HI_CHAR*)HI_GFX_AllocMemEx(u32MemSize, JPGD_HDEC_MMZ_STREAM_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE, &bMemMMUType);
+	#else
 		pPhyBuf = (HI_CHAR*)HI_GFX_AllocMem(u32MemSize, JPGD_HDEC_MMZ_STREAM_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE);
-        #endif
-		if(NULL == pPhyBuf)
-		{
+	#endif
+#endif
+		if(NULL == pPhyBuf){
 			//JPEG_TRACE("%s %s %d == HI_GFX_AllocMem FAILURE\n",__FILE__,__FUNCTION__,__LINE__);
 			return HI_FAILURE;
 		}
-	    #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		pVirBuf = (HI_CHAR*)HI_GFX_MapCached(pJpegHandle->s32MMZDev,(unsigned long)pPhyBuf, pJpegHandle->pSaveStreamMemHandle);
-        #else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		pVirBuf = (HI_CHAR*)HI_GFX_MapCached((unsigned long)pPhyBuf, bMemMMUType);
+	#else
 		pVirBuf = (HI_CHAR*)HI_GFX_MapCached((unsigned long)pPhyBuf);
-        #endif
-		if(NULL == pVirBuf)
-		{
+	#endif
+#endif
+		if(NULL == pVirBuf){
 			//JPEG_TRACE("HI_GFX_MapCached FAILURE\n");
 			return HI_FAILURE;
 		}
@@ -140,6 +153,11 @@ HI_S32	JPEG_HDEC_GetStreamMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle,const HI_U32 u
 		**/
 		pJpegHandle->stHDecDataBuf.u32ReadDataSize	      = u32StreamSize;
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(HI_TRUE == bMemMMUType){
+			pJpegHandle->u32MemTypeMask |= JPEG_STREAM_MEM_MMU_TYPE;
+		}
+#endif
 
 		return HI_SUCCESS;
 
@@ -159,27 +177,34 @@ HI_S32	JPEG_HDEC_GetStreamMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle,const HI_U32 u
 HI_VOID JPEG_HDEC_FreeStreamMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 {
 
-      HI_S32 s32Ret = HI_SUCCESS;
+      HI_S32 s32Ret       = HI_SUCCESS;
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	  HI_BOOL bMemMMUType = HI_TRUE;
+#endif
 	
-      if(NULL == pJpegHandle)
-      {
+      if(NULL == pJpegHandle){
            JPEG_TRACE("%s :%s : %d (the pJpegHandle is NULL)\n",__FILE__,__FUNCTION__,__LINE__);
 		   return;
       }
 	  
-	  if( NULL == pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf)
-	  {
+	  if( NULL == pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf){
 		   return;
 	  }
-	  #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 	  s32Ret = HI_GFX_Unmap(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, pJpegHandle->pSaveStreamMemHandle);
 	  s32Ret = HI_GFX_FreeMem(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, pJpegHandle->pSaveStreamMemHandle);
-	  #else
-	  s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+	  bMemMMUType = (pJpegHandle->u32MemTypeMask & JPEG_STREAM_MEM_MMU_TYPE)? HI_TRUE : HI_FALSE;
+	  s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
+	  s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
+	#else
+  	  s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
 	  s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
-	  #endif
-	  if(HI_SUCCESS != s32Ret)
-	  {
+	#endif
+#endif
+	  if(HI_SUCCESS != s32Ret){
 	      JPEG_TRACE("HI_GFX_Unmap or  HI_GFX_FreeMem FAILURE\n");
 	      return;
 	  }
@@ -207,18 +232,23 @@ HI_S32 JPEG_HDEC_GetYUVMem(JPEG_HDEC_HANDLE_S_PTR	pJpegHandle)
 		HI_CHAR *pYUVVir  = NULL;
 		HI_U32 u32Align   = 0;
 		HI_S32 s32Ret = HI_SUCCESS;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType = HI_TRUE;
+#endif
+
 		/**
 		 ** check whether to alloc jpeg hard decode middle mem
 		 ** CNcomment: 判断是否分配硬件解码的中间buffer CNend\n
 		 **/
 #ifdef  CONFIG_JPEG_HARDDEC2ARGB
 		if(   (HI_TRUE == pJpegHandle->bOutYCbCrSP || HI_TRUE == pJpegHandle->bDecARGB)
-			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem))
+			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){
 #else
 		if(   (HI_TRUE == pJpegHandle->bOutYCbCrSP)
-			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem))	
+			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){
 #endif
-		{/**
+		 /**
 		  ** use user mem
 		  ** CNcomment: 使用用户内存 CNend\n
 		  **/
@@ -233,18 +263,17 @@ HI_S32 JPEG_HDEC_GetYUVMem(JPEG_HDEC_HANDLE_S_PTR	pJpegHandle)
 
 
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(HI_TRUE == pJpegHandle->bDecARGB)
-		{
+		if(HI_TRUE == pJpegHandle->bDecARGB){
 		  /**
 		   ** 4bytes align just ok
 		   ** CNcomment: 4字节对齐就可以了 CNend\n
 		   **/
 		   u32Align   = JPGD_HDEC_MMZ_ARGB_BUFFER_ALIGN;
 		   u32MemSize = pJpegHandle->stJpegSofInfo.u32YSize;
-		}
-		else
-#endif
+		}else{
+#else
 		{
+#endif
 		   u32Align   = JPGD_HDEC_MMZ_YUVSP_BUFFER_ALIGN;
 		   u32MemSize = pJpegHandle->stJpegSofInfo.u32YSize + pJpegHandle->stJpegSofInfo.u32CSize;
 		}
@@ -252,33 +281,41 @@ HI_S32 JPEG_HDEC_GetYUVMem(JPEG_HDEC_HANDLE_S_PTR	pJpegHandle)
 		 ** use the third class manage to alloc mem,the stream buffer should 128bytes align
 		 ** CNcomment: 使用三级分配管理来分配内存,buffer要128字节对齐 CNend\n
 		 **/
-		#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+	#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		pYUVPhy = (HI_CHAR*)HI_GFX_AllocMem(pJpegHandle->s32MMZDev,u32MemSize,u32Align,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE, &(pJpegHandle->pMiddleMemHandle));
+	#else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			pYUVPhy = (HI_CHAR*)HI_GFX_AllocMemEx(u32MemSize,u32Align,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE, &bMemMMUType);
 		#else
-		pYUVPhy = (HI_CHAR*)HI_GFX_AllocMem(u32MemSize,u32Align,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE);
+			pYUVPhy = (HI_CHAR*)HI_GFX_AllocMem(u32MemSize,u32Align,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE);
 		#endif
-		if(NULL == pYUVPhy)
-		{
+	#endif
+		if(NULL == pYUVPhy){
 		     //JPEG_TRACE("%s %s %d == HI_GFX_AllocMem FAILURE\n",__FILE__,__FUNCTION__,__LINE__);
 		     return HI_FAILURE;
 		}
 
-#ifndef CONFIG_JPEG_TEST_SAVE_YUVSP_DATA
+#if !defined(CONFIG_JPEG_TEST_SAVE_YUVSP_DATA) && !defined(CONFIG_JPEG_SOFTCSC_ENABLE)
 /** if need save yuvsp data,should virtual address **/
 		#ifdef  CONFIG_JPEG_HARDDEC2ARGB
-		if( (HI_TRUE == pJpegHandle->bOutYCbCrSP) || (HI_TRUE == pJpegHandle->bDecARGB))
+		if( (HI_TRUE == pJpegHandle->bOutYCbCrSP) || (HI_TRUE == pJpegHandle->bDecARGB)){
 		#else
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP)
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP){
 		#endif
-#endif
+#else
 		{
-			#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
-			pYUVVir = (HI_CHAR *)HI_GFX_MapCached(pJpegHandle->s32MMZDev,(unsigned long)pYUVPhy, pJpegHandle->pMiddleMemHandle);
-			#else
+#endif
+
+	#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+		 pYUVVir = (HI_CHAR *)HI_GFX_MapCached(pJpegHandle->s32MMZDev,(unsigned long)pYUVPhy, pJpegHandle->pMiddleMemHandle);
+	#else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			pYUVVir = (HI_CHAR *)HI_GFX_MapCached((unsigned long)pYUVPhy, bMemMMUType);
+		#else
 			pYUVVir = (HI_CHAR *)HI_GFX_MapCached((unsigned long)pYUVPhy);
-			#endif
-			if (NULL == pYUVVir)
-			{
+		#endif
+	#endif
+			if (NULL == pYUVVir){
 				//JPEG_TRACE("HI_GFX_MapCached FAILURE\n");
 				return HI_FAILURE;
 			}
@@ -287,13 +324,16 @@ HI_S32 JPEG_HDEC_GetYUVMem(JPEG_HDEC_HANDLE_S_PTR	pJpegHandle)
 			** CNcomment: 在使用该内存的地址初始化该内存，memset需要时间，使用与否慎用 CNend\n
 			**/
 			//memset(pYUVVir,0,u32MemSize);
-			#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+	#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 			s32Ret = HI_GFX_Flush(pJpegHandle->s32MMZDev,(unsigned long)pYUVPhy, pJpegHandle->pMiddleMemHandle);
-			#else
+	#else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			s32Ret = HI_GFX_Flush((unsigned long)pYUVPhy, bMemMMUType);
+		#else
 			s32Ret = HI_GFX_Flush((unsigned long)pYUVPhy);
-			#endif
-			if(HI_SUCCESS != s32Ret)
-			{
+		#endif
+	#endif
+			if(HI_SUCCESS != s32Ret){
 				return HI_FAILURE;
 			}
 			pJpegHandle->stMiddleSurface.pMiddleVir[0] = pYUVVir;
@@ -303,7 +343,13 @@ HI_S32 JPEG_HDEC_GetYUVMem(JPEG_HDEC_HANDLE_S_PTR	pJpegHandle)
 
 		pJpegHandle->stMiddleSurface.pMiddlePhy[0] = pYUVPhy;
 		pJpegHandle->stMiddleSurface.pMiddlePhy[1] = pYUVPhy + pJpegHandle->stJpegSofInfo.u32YSize;
-		 
+
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(HI_TRUE == bMemMMUType){
+			pJpegHandle->u32MemTypeMask |= JPEG_YOUTPUT_MEM_MMU_TYPE;
+			pJpegHandle->u32MemTypeMask |= JPEG_UVOUTPUT_MEM_MMU_TYPE;
+		}
+	#endif
 		return HI_SUCCESS;
 
 
@@ -323,59 +369,72 @@ HI_VOID JPEG_HDEC_FreeYUVMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 		HI_S32 s32Ret = HI_SUCCESS;
 
 
-		if(NULL == pJpegHandle)
-		{
+		if(NULL == pJpegHandle){
 			JPEG_TRACE("%s :%s : %d (the pJpegHandle is NULL)\n",__FILE__,__FUNCTION__,__LINE__);
 			return;
 		}
 
 #ifdef  CONFIG_JPEG_HARDDEC2ARGB
 		if(   (HI_TRUE == pJpegHandle->bOutYCbCrSP || (HI_TRUE == pJpegHandle->bDecARGB))
-			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem))
+			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){
 #else
 		if(   (HI_TRUE == pJpegHandle->bOutYCbCrSP)
-			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem))
+			&&(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){
 
 #endif
-		{/**
+	   /**
 		** use user mem
 		** CNcomment: 使用用户内存 CNend\n
 		**/
 			return;
 		}
 
-		if(NULL == pJpegHandle->stMiddleSurface.pMiddlePhy[0])
-		{
+		if(NULL == pJpegHandle->stMiddleSurface.pMiddlePhy[0]){
 			return;
 		}
 
-#ifndef CONFIG_JPEG_TEST_SAVE_YUVSP_DATA
-		#ifdef  CONFIG_JPEG_HARDDEC2ARGB
-		if( (HI_TRUE == pJpegHandle->bOutYCbCrSP) || (HI_TRUE == pJpegHandle->bDecARGB))
-		#else
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP)
-		#endif
+#if !defined(CONFIG_JPEG_TEST_SAVE_YUVSP_DATA) && !defined(CONFIG_JPEG_SOFTCSC_ENABLE)
+	#ifdef  CONFIG_JPEG_HARDDEC2ARGB
+		if( (HI_TRUE == pJpegHandle->bOutYCbCrSP) || (HI_TRUE == pJpegHandle->bDecARGB)){
+	#else
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP){
+	#endif
+#else
+	{
 #endif
-		{
-		    #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+	#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		    s32Ret = HI_GFX_Unmap(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], pJpegHandle->pMiddleMemHandle);
-			#else
+	#else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			if(   (pJpegHandle->u32MemTypeMask & JPEG_YOUTPUT_MEM_MMU_TYPE) \
+				&&(pJpegHandle->u32MemTypeMask & JPEG_UVOUTPUT_MEM_MMU_TYPE))
+				s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], HI_TRUE);
+			else
+				s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], HI_FALSE);
+		#else
 			s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0]);
-			#endif
-			if(HI_SUCCESS != s32Ret)
-			{
+		#endif
+	#endif
+			if(HI_SUCCESS != s32Ret){
 				JPEG_TRACE("HI_GFX_Unmap FAILURE\n");
 				return;
 			}
-		}
+	}
 
-		#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		s32Ret = HI_GFX_FreeMem(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], pJpegHandle->pMiddleMemHandle);
-		#else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(   (pJpegHandle->u32MemTypeMask & JPEG_YOUTPUT_MEM_MMU_TYPE)\
+			&&(pJpegHandle->u32MemTypeMask & JPEG_UVOUTPUT_MEM_MMU_TYPE))
+			s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], HI_TRUE);
+		else
+			s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0], HI_FALSE);
+	#else
 		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pMiddlePhy[0]);
-		#endif
-		if(HI_SUCCESS != s32Ret)
-		{
+	#endif
+#endif
+		if(HI_SUCCESS != s32Ret){
 			JPEG_TRACE("HI_GFX_FreeMem FAILURE\n");
 			return;
 		}
@@ -403,25 +462,41 @@ HI_S32 JPEG_HDEC_GetMinMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 		HI_U32 u32MemSize = 0;
 		HI_CHAR *pMinPhy  = NULL;
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType = HI_TRUE;
+#endif
+
    		u32MemSize = pJpegHandle->stJpegSofInfo.u32RGBSizeReg;
 
 		/**
 	 	 ** use the third class manage to alloc mem,the min buffer should 128bytes align
 	     ** CNcomment: 使用三级分配管理来分配内存,argb行buffer要128字节对齐 CNend\n
 	     **/
-	    #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
         pMinPhy = (HI_CHAR*)HI_GFX_AllocMem(pJpegHandle->s32MMZDev,u32MemSize,JPGD_HDEC_MMZ_YUVSP_BUFFER_ALIGN,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE, &(pJpegHandle->pMinMemHandle));
-        #else
+#else
+	 #ifdef CONFIG_JPEG_MMU_SUPPORT
+		pMinPhy = (HI_CHAR*)HI_GFX_AllocMemEx(u32MemSize,JPGD_HDEC_MMZ_YUVSP_BUFFER_ALIGN,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE, &bMemMMUType);
+	 #else
 		pMinPhy = (HI_CHAR*)HI_GFX_AllocMem(u32MemSize,JPGD_HDEC_MMZ_YUVSP_BUFFER_ALIGN,(HI_CHAR*)MMZ_TAG,(HI_CHAR*)MMZ_MODULE);
-		#endif
-		if(NULL == pMinPhy)
-		{
+	 #endif
+#endif
+		if(NULL == pMinPhy){
 		     //JPEG_TRACE("%s %s %d == HI_GFX_AllocMem FAILURE\n",__FILE__,__FUNCTION__,__LINE__);
 			 return HI_FAILURE;
 		}
 
 		pJpegHandle->pMinPhyBuf   =   pMinPhy;
-			
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(HI_TRUE == bMemMMUType){
+			pJpegHandle->u32MemTypeMask |= JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE;
+			pJpegHandle->u32MemTypeMask |= JPEG_XRGBSAMPLE1_READ_MEM_MMU_TYPE;
+			pJpegHandle->u32MemTypeMask |= JPEG_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE;
+			pJpegHandle->u32MemTypeMask |= JPEG_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE;
+		}
+#endif
+
 		return HI_SUCCESS;
 
 
@@ -440,23 +515,28 @@ HI_VOID JPEG_HDEC_FreeMinMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 
 	    HI_S32 s32Ret = HI_SUCCESS;
 
-		if(NULL == pJpegHandle)
-		{
+		if(NULL == pJpegHandle){
 			 JPEG_TRACE("%s :%s : %d (the pJpegHandle is NULL)\n",__FILE__,__FUNCTION__,__LINE__);
 			 return;
 		}
 
-		if(NULL == pJpegHandle->pMinPhyBuf)
-		{
+		if(NULL == pJpegHandle->pMinPhyBuf){
 		   return;
 		}
-        #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		s32Ret = HI_GFX_FreeMem(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->pMinPhyBuf, pJpegHandle->pMinMemHandle);
-		#else
-        s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->pMinPhyBuf);
-		#endif
-		if(HI_SUCCESS != s32Ret)
-		{
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(pJpegHandle->u32MemTypeMask & JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE)
+			s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->pMinPhyBuf,HI_TRUE);
+		else
+			s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->pMinPhyBuf,HI_FALSE);
+	#else
+		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->pMinPhyBuf);
+	#endif
+#endif
+		if(HI_SUCCESS != s32Ret){
 		   JPEG_TRACE("HI_GFX_FreeMem FAILURE\n");
 		   return;
 		}
@@ -479,21 +559,24 @@ HI_VOID JPEG_HDEC_FreeMinMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 HI_S32 JPEG_HDEC_GetOutMem(const struct jpeg_decompress_struct *cinfo)
 {
 
-
 		HI_U32 u32OutStride = 0;
 		HI_U32 u32MemSize   = 0;
 		HI_CHAR* pOutPhy    = NULL;
 		HI_CHAR* pOutVir    = NULL;
-        HI_S32 s32Ret = HI_SUCCESS;
+        HI_S32 s32Ret       = HI_SUCCESS;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+        HI_BOOL bMemMMUType = HI_TRUE;
+#endif
+
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP || HI_TRUE  == pJpegHandle->bDecARGB)
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP || HI_TRUE  == pJpegHandle->bDecARGB){
 #else
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP)
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP){
 #endif
-		{
 		/**
 		** shoule not csc,so not alloc output mem
 		** CNcomment: 不需要颜色空间转换，所以就不需要分配输出buffer CNend\n
@@ -501,8 +584,7 @@ HI_S32 JPEG_HDEC_GetOutMem(const struct jpeg_decompress_struct *cinfo)
 			return HI_SUCCESS;
 		}
 
-		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)
-		{  
+		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem){  
 		/**
 		** use user mem
 		** CNcomment: 使用用户内存 CNend\n
@@ -519,35 +601,46 @@ HI_S32 JPEG_HDEC_GetOutMem(const struct jpeg_decompress_struct *cinfo)
 		** CNcomment: 按照像素对齐 CNend\n
 		**/
 		/** 3字节对齐是有问题的，因为map不上来**/
-		#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		pOutPhy = (HI_CHAR*)HI_GFX_AllocMem(pJpegHandle->s32MMZDev,u32MemSize, JPGD_HDEC_MMZ_CSCOUT_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE, &(pJpegHandle->pOutMemHandle));
-        #else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		pOutPhy = (HI_CHAR*)HI_GFX_AllocMemEx(u32MemSize, JPGD_HDEC_MMZ_CSCOUT_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE, &bMemMMUType);
+	#else
 		pOutPhy = (HI_CHAR*)HI_GFX_AllocMem(u32MemSize, JPGD_HDEC_MMZ_CSCOUT_BUFFER_ALIGN, (HI_CHAR*)MMZ_TAG, (HI_CHAR*)MMZ_MODULE);
-		#endif
-		if(0 == pOutPhy)
-		{
+	#endif
+#endif
+		if(0 == pOutPhy){
 			//JPEG_TRACE("%s %s %d == HI_GFX_AllocMem FAILURE\n",__FILE__,__FUNCTION__,__LINE__);
 			return HI_FAILURE;
 		}
-		#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		pOutVir = (HI_CHAR*)HI_GFX_MapCached(pJpegHandle->s32MMZDev,(unsigned long)pOutPhy, pJpegHandle->pOutMemHandle);
-		#else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		pOutVir = (HI_CHAR*)HI_GFX_MapCached((unsigned long)pOutPhy, bMemMMUType);
+	#else
 		pOutVir = (HI_CHAR*)HI_GFX_MapCached((unsigned long)pOutPhy);
-		#endif
-		if (NULL == pOutVir)
-		{
+	#endif
+#endif
+		if (NULL == pOutVir){
 			//JPEG_TRACE("HI_GFX_MapCached FAILURE\n");
 			return HI_FAILURE;
 		}
 		/** memset 也需要耗时间，假如解码正常就不要memset操作了 **/
 		//memset(pOutVir,0,u32MemSize);
-		#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		s32Ret = HI_GFX_Flush(pJpegHandle->s32MMZDev,(unsigned long)pOutPhy, pJpegHandle->pOutMemHandle);
-        #else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		s32Ret = HI_GFX_Flush((unsigned long)pOutPhy, bMemMMUType);
+	#else
 		s32Ret = HI_GFX_Flush((unsigned long)pOutPhy);
-		#endif
-		if(HI_SUCCESS != s32Ret)
-		{
+	#endif
+#endif
+		if(HI_SUCCESS != s32Ret){
 			return HI_FAILURE;
 		}
 		/**
@@ -555,6 +648,12 @@ HI_S32 JPEG_HDEC_GetOutMem(const struct jpeg_decompress_struct *cinfo)
 		**/
 		pJpegHandle->stMiddleSurface.pOutPhy   =  pOutPhy;
 		pJpegHandle->stMiddleSurface.pOutVir   =  pOutVir;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(HI_TRUE == bMemMMUType){
+			pJpegHandle->u32MemTypeMask |= JPEG_XRGBOUTPUT_MEM_MMU_TYPE;
+		}
+#endif
 
 		return HI_SUCCESS;
 
@@ -573,40 +672,45 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 {
 
 		HI_S32 s32Ret = HI_SUCCESS;
-
-		if(NULL == pJpegHandle)
-		{
-				JPEG_TRACE("%s :%s : %d (the pJpegHandle is NULL)\n",__FILE__,__FUNCTION__,__LINE__);
-				return;
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType = HI_FALSE;
+#endif
+		if(NULL == pJpegHandle){
+			JPEG_TRACE("%s :%s : %d (the pJpegHandle is NULL)\n",__FILE__,__FUNCTION__,__LINE__);
+			return;
 		}
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP || HI_TRUE  == pJpegHandle->bDecARGB)
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP || HI_TRUE  == pJpegHandle->bDecARGB){
 #else
-		if(HI_TRUE == pJpegHandle->bOutYCbCrSP)
+		if(HI_TRUE == pJpegHandle->bOutYCbCrSP){
 #endif
-		{
 			return;
 		}
 
-		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)
-		{   
+		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem){   
 			return;
 		}
 
 
-		if(NULL == pJpegHandle->stMiddleSurface.pOutPhy)
-		{
+		if(NULL == pJpegHandle->stMiddleSurface.pOutPhy){
 			return;
 		}
-        #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
+
+#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 		s32Ret = HI_GFX_Unmap(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stMiddleSurface.pOutPhy, pJpegHandle->pOutMemHandle);
 		s32Ret = HI_GFX_FreeMem(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stMiddleSurface.pOutPhy, pJpegHandle->pOutMemHandle);
-		#else
+#else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		if(pJpegHandle->u32MemTypeMask & JPEG_XRGBOUTPUT_MEM_MMU_TYPE)
+			bMemMMUType = HI_TRUE;
+		s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy, bMemMMUType);
+		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy, bMemMMUType);
+	#else
 		s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy );
 		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy);
-		#endif
-		if(HI_SUCCESS != s32Ret)
-		{
+	#endif
+#endif
+		if(HI_SUCCESS != s32Ret){
 			JPEG_TRACE("HI_GFX_Unmap or HI_GFX_FreeMem FAILURE\n");
 			return;
 		}
@@ -635,12 +739,9 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 		HI_CHAR* pVir = NULL;
 		HI_S32 s32Cnt = 0;
 		
-		if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem))
-		{
+		if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem)){
 			s32MemSize = pJpgeHandle->EncIn.OutBufSize;
-		}
-		else
-		{
+		}else{
 			s32MemSize =  pJpgeHandle->stStreamInfo.u32InSize[0] \
 				        + pJpgeHandle->stStreamInfo.u32InSize[1] \
 				        + pJpgeHandle->stStreamInfo.u32InSize[2] \
@@ -652,8 +753,7 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 #else
 		pPhy = (HI_CHAR*)HI_GFX_AllocMem(s32MemSize, JPGD_HDEC_MMZ_STREAM_BUFFER_ALIGN, (HI_CHAR*)JPGE_TAG, (HI_CHAR*)JPGE_MODULE);
 #endif
-		if(NULL == pPhy)
-		{
+		if(NULL == pPhy){
 			JPEG_TRACE("=====%s %d failure\n",__FUNCTION__,__LINE__);
 			return HI_FAILURE;
 		}
@@ -662,8 +762,7 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 #else
 	    pVir = (HI_CHAR*)HI_GFX_Map((unsigned long)pPhy);
 #endif
-		if(NULL == pVir)
-		{
+		if(NULL == pVir){
 			#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 				HI_GFX_FreeMem(pJpgeHandle->s32MMZDev,(unsigned long)pPhy, pJpgeHandle->pMemHandle);
 			#else
@@ -680,8 +779,7 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 #else
 		s32Ret = HI_GFX_Flush((unsigned long)pPhy);
 #endif
-		if(HI_SUCCESS != s32Ret)
-		{
+		if(HI_SUCCESS != s32Ret){
 			#ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 				HI_GFX_Unmap(pJpgeHandle->s32MMZDev,(unsigned long)pPhy, pJpgeHandle->pMemHandle);
 				HI_GFX_FreeMem(pJpgeHandle->s32MMZDev,(unsigned long)pPhy, pJpgeHandle->pMemHandle);
@@ -693,10 +791,8 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 			return HI_FAILURE;
 		}
 
-		if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem))
-		{
-			for(s32Cnt = 0; s32Cnt < MAX_IN_PIXEL_COMPONENT_NUM; s32Cnt++)
-			{
+		if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem)){
+			for(s32Cnt = 0; s32Cnt < MAX_IN_PIXEL_COMPONENT_NUM; s32Cnt++){
 				pJpgeHandle->stMiddleBuf.pInPhy[s32Cnt] = pJpgeHandle->stStreamInfo.pInPhy[s32Cnt];
 				pJpgeHandle->stMiddleBuf.pInVir[s32Cnt] = pJpgeHandle->stStreamInfo.pInVir[s32Cnt];
 			}
@@ -734,16 +830,12 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 	HI_CHAR *pPhy = NULL;
 	HI_S32 s32Cnt = 0;
 	
-	if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem))
-	{
+	if( (HI_TRUE == pJpgeHandle->stStreamInfo.bUserPhyMem) && (HI_TRUE == pJpgeHandle->bCanUserPhyMem)){
 		pPhy = pJpgeHandle->stMiddleBuf.pInPhy[3];
-	}
-	else
-	{
+	}else{
 		pPhy = pJpgeHandle->stMiddleBuf.pInPhy[0];
 	}
-	if(NULL == pPhy)
-	{
+	if(NULL == pPhy){
 		return HI_SUCCESS;
 	}
 	
@@ -754,13 +846,11 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 	s32Ret = HI_GFX_Unmap((unsigned long)pPhy);
 	s32Ret = HI_GFX_FreeMem((unsigned long)pPhy);
 #endif
-	if(HI_SUCCESS != s32Ret)
-	{
+	if(HI_SUCCESS != s32Ret){
 	   JPEG_TRACE("=====%s %d failure\n",__FUNCTION__,__LINE__);
 	   return HI_FAILURE;
 	}
-	for(s32Cnt = 0; s32Cnt < MAX_IN_PIXEL_COMPONENT_NUM + 1; s32Cnt++)
-	{
+	for(s32Cnt = 0; s32Cnt < MAX_IN_PIXEL_COMPONENT_NUM + 1; s32Cnt++){
 		pJpgeHandle->stMiddleBuf.pInPhy[s32Cnt] = NULL;
 	}
 	

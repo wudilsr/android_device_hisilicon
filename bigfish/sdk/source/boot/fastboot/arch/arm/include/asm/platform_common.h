@@ -55,6 +55,10 @@
 #define _HIFONE_B02                   (0x0020281000LL)
 #define _HIFONE_B02_MASK              (0xFFFFFFFFFFLL)
 
+#define _HI3716M_V410                 (0x0137160410LL)
+#define _HI3716M_V420                 (0x0037160410LL)
+#define _HI3716M_V410_MASK            (0xFFFFFFFFFFLL)
+
 #define _HI3712_V100                  (0x0037120100LL)
 #define _HI3712_MASK                  (0x00FFFFFFFFLL)
 #define _HI3712_V100A      (0)
@@ -71,6 +75,7 @@
 #define DEV_HINFC301       0x02
 #define DEV_HINFC504       0x03
 #define DEV_HINFC610       0x04
+#define DEV_HIFMC100       0x05
 #define DEV_HINFC_MASK     0x0F
 
 #define DEV_EMMC_AUTO      0x10
@@ -82,6 +87,7 @@
 #define DEV_HISFC300       0x200
 #define DEV_HISFC350       0x300
 #define DEV_HISFC400       0x400
+#define DEV_NOR_HIFMC100   0x500
 #define DEV_HISFC_MASK     0xF00
 
 /* bootstrap type */

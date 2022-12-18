@@ -2,19 +2,32 @@
 #define __DRV_MCE_AVPLAY_H__
 
 #include <linux/semaphore.h>
+
 #include "hi_type.h"
-#include "hi_drv_avplay.h"
 #include "hi_mpi_vdec.h"
 #include "hi_unf_avplay.h"
 #include "hi_unf_common.h"
 #include "hi_drv_sync.h"
+#include "drv_mce_frc.h"
 #include "drv_demux_ext.h"
-#include "drv_avplay_ioctl.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef enum
+{
+    AVPLAY_PROC_ADEC_AO,
+    AVPLAY_PROC_DMX_ADEC,
+    AVPLAY_PROC_VDEC_VO,
+    AVPLAY_PROC_BUTT
+} AVPLAY_PROC_ID_E;
+
+typedef struct
+{
+    HI_HANDLE   hWindow;
+    HI_HANDLE   hPort;
+} AVPLAY_VID_PORT_AND_WIN_S;
 
 typedef struct tagMCE_AVPLAY_S
 {

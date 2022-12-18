@@ -41,15 +41,13 @@ HI_VOID OPTM_ALG_GDtiInit(OPTM_ALG_GDTI_DRV_PARA_S *pstDtiDrvPara, OPTM_ALG_GDTI
 
 HI_VOID OPTM_ALG_GDtiSet(OPTM_ALG_GDTI_DRV_PARA_S *pstDtiDrvPara, OPTM_ALG_GDTI_RTL_PARA_S *pstDtiRtlPara)
 {
-#define GFX_TI_MAX_RATIO_THD 3*4096
-#define GFX_TI_MED_H_RATIO_THD 2*4096
-#define GFX_TI_MIN_L_RATIO_THD 3072  /* (1080/2)*4096/720 */
-#define GFX_TI_MIN_RATIO_THD 2303
+	#define GFX_TI_MAX_RATIO_THD     3*4096
+	#define GFX_TI_MED_H_RATIO_THD   2*4096
+	#define GFX_TI_MIN_L_RATIO_THD   3072  /* (1080/2)*4096/720 */
+	#define GFX_TI_MIN_RATIO_THD     2303
 
-    HI_S32 s32InMinWh;
     HI_S32 s32HorRatio, s32VertRatio, s32MinRatio, s32MaxRatio;
 
-    s32InMinWh = OPTM_ALG_MIN2( pstDtiDrvPara->u32ZmeFrmWIn, pstDtiDrvPara->u32ZmeFrmHIn );
     s32HorRatio = pstDtiDrvPara->u32ZmeFrmWOut * 4096 / pstDtiDrvPara->u32ZmeFrmWIn;
     s32VertRatio = pstDtiDrvPara->u32ZmeFrmHOut * 4096 / pstDtiDrvPara->u32ZmeFrmHIn;
     s32MinRatio = OPTM_ALG_MIN2( s32HorRatio, s32VertRatio );

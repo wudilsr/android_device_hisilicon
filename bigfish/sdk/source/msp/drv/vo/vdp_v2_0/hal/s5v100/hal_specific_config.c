@@ -755,7 +755,21 @@ HI_S32 Chip_Specific_WinDoFurtherZmeProcess(HI_U32 u32LayerId, WIN_HAL_PARA_S *p
     return HI_SUCCESS;
 }
 
+HI_BOOL Chip_Specific_WinGetRevisedPixelFmt(HI_BOOL  bHasZmeFunc, 
+															HI_RECT_S *pstOutRect, 
+															HI_DRV_PIX_FORMAT_E *penFmt,
+															HI_DISP_DISPLAY_INFO_S *pstDispInfo)
+{	
 
+	if ((!bHasZmeFunc) && (pstDispInfo->stFmtResolution.s32Width > 4096))
+	{
+		*penFmt = HI_DRV_PIX_FMT_NV61_2X1;
+		return HI_TRUE;
+	}
+    
+	
+	return HI_FALSE;
+}
 /*confirm  needed: fit for both compressed and uncompressed stream?*/
 HI_S32 Chip_Specific_WinHalSetAddr(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara, HI_S32 s32exl)
 {

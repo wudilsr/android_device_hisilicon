@@ -27,6 +27,10 @@ LIB	= $(obj)libcommon.a
 
 COBJS-$(CONFIG_BOOTROM_SUPPORT) += bootstrap.o
 
+ifdef CONFIG_SECURE_BOOT_SUPPORT
+COBJS-y += loadsecureimg.o
+endif
+
 # core
 COBJS-y += main.o
 COBJS-y += console.o
@@ -58,7 +62,7 @@ COBJS-y += cmd_help.o
 endif
 COBJS-y += cmd_bootm.o
 COBJS-y += cmd_nvedit.o
-
+COBJS-$(CONFIG_HISI_SNAPSHOT_BOOT) += cmd_bootss.o
 # environment
 COBJS-y += env_common.o env_common_func.o
 COBJS-$(CONFIG_ENV_IS_IN_DATAFLASH) += env_dataflash.o
@@ -197,6 +201,7 @@ COBJS-$(CONFIG_DDR_TRAINING_HI3712V100)  += hi3712v100_ddr_training_printf.o
 COBJS-$(CONFIG_DDR_TRAINING_S40)  += s40_ddr_training_printf.o
 COBJS-$(CONFIG_DDR_TRAINING_HI3798MX)  += hi3798mx_ddr_training_printf.o
 COBJS-$(CONFIG_DDR_TRAINING_S5) += s5_ddr_training_printf.o
+COBJS-$(CONFIG_DDR_TRAINING_HI3716MV410)  += hi3716mv410_ddr_training_printf.o
 AOBJS-$(CONFIG_DDR_TRAINING) += ddr_training_entry.o
 AOBJS-$(CONFIG_MERGE_IMAGE_SUPPORT)  += merge_image.o
 

@@ -47,7 +47,7 @@ ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3
 OBJS += pq_v1_0/pq_debug.o pq_v1_0/pq_parse.o pq_v1_0/pq_comm.o
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100 hi3798cv200_a),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv410 hi3716mv420),)
 OBJS += pq_v2_0/pq_debug.o pq_v2_0/pq_parse.o pq_v2_0/pq_comm.o
 OBJS += $(SDK_DIR)/source/msp/api/pq/pq_v2_0/mpi_pq.o
 endif

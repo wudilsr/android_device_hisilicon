@@ -380,7 +380,9 @@ public class WifiActivity extends Activity{
         int net_id = mWifiManager.addNetwork(config);
         mWifiManager.enableNetwork(net_id, true);
         WifiAp ap = new WifiAp(config);
-        mDataLists.add(ap);
+        mDataLists.add(0, ap);
+        mWifiListAdapter = new WifiAdapter(WifiActivity.this,mDataLists, mWifiManager);
+        mWifilist.setAdapter(mWifiListAdapter);
         mWifiListAdapter.notifyDataSetChanged();
         index = mWifiListAdapter.getCount()-1;
         updateWifiState(DetailedState.CONNECTING);
@@ -543,32 +545,32 @@ public class WifiActivity extends Activity{
     }
     private void goConnect(){
         mCurInfo = mWifiManager.getConnectionInfo();
-        if(mCurWifi.security==0){
-        //no password go to connect
-        Log.i(TAG, "goConnect no pass");
-        int netid = 0;
-        mIsConnectting = true;
-        mWifiManager.disableNetwork(mCurInfo.getNetworkId());
-        WifiConfiguration config = WifiUtil.CreateWifiInfo(mCurWifi.ssid, null, mCurWifi.security);
-        netid = mWifiManager.addNetwork(config);
-        mDataLists.get(index).networkId = netid;
-        Log.i(TAG, "connectg has netid="+netid);
-        mWifiManager.enableNetwork(netid, true);
-        MoveToTop();
-        mWifiListAdapter.notifyDataSetChanged();
-        mWifilist.setSelection(0);
-        updateWifiState(DetailedState.CONNECTING);
-        startTimer();
-        mscanner.stopScan();
-        }else{
         mConfigList = mWifiManager.getConfiguredNetworks();
         final WifiConfiguration config = WifiUtil.IsExsits(mCurWifi, mConfigList);
         if(config!=null){
         //Log.i(TAG, "goConnect has save");
         ShowForgetDialog(mCurWifi,false);
         }else{
-        ShowPasswordView(true,mCurWifi);
-        }
+            if(mCurWifi.security==0){
+                //no password go to connect
+                Log.i(TAG, "goConnect no pass");
+                int netid = 0;
+                mIsConnectting = true;
+                mWifiManager.disableNetwork(mCurInfo.getNetworkId());
+                WifiConfiguration config_new = WifiUtil.CreateWifiInfo(mCurWifi.ssid, null, mCurWifi.security);
+                netid = mWifiManager.addNetwork(config_new);
+                mDataLists.get(index).networkId = netid;
+                Log.i(TAG, "connectg has netid="+netid);
+                mWifiManager.enableNetwork(netid, true);
+                MoveToTop();
+                mWifiListAdapter.notifyDataSetChanged();
+                mWifilist.setSelection(0);
+                updateWifiState(DetailedState.CONNECTING);
+                startTimer();
+                mscanner.stopScan();
+                }else{
+                    ShowPasswordView(true,mCurWifi);
+                }
         }
     }
     private void startTimer(){
@@ -632,7 +634,7 @@ public class WifiActivity extends Activity{
         int tem_index = 0;
         WifiAp tem_ap = null;
         WifiInfo mtemp = mWifiManager.getConnectionInfo();
-        if(null != mtemp&&!mtemp.getSSID().equals("0x")){//has ap connected
+        if(null != mtemp&&null!=mtemp.getSSID()&&!mtemp.getSSID().equals("0x")){//has ap connected
             topap = WifiAp.removeDoubleQuotes(mtemp.getSSID());
             Log.i(TAG, "get top ap ssid is curinfo="+mtemp.getSSID());
         }else{

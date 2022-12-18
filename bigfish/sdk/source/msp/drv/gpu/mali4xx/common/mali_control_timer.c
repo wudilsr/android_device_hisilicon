@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012, 2014 ARM Limited. All rights reserved.
+ * Copyright (C) 2010-2012, 2014-2015 ARM Limited. All rights reserved.
  * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
@@ -45,7 +45,7 @@ static void mali_control_timer_callback(void *arg)
 			mali_utilization_platform_realize(util_data);
 #endif
 
-			if ((MALI_TRUE == timer_running) && (MALI_TRUE == need_add_timer)) {
+			if (MALI_TRUE == need_add_timer) {
 				mali_control_timer_add(mali_control_timeout);
 			}
 		}
@@ -86,6 +86,8 @@ void mali_control_timer_term(void)
 
 mali_bool mali_control_timer_resume(u64 time_now)
 {
+	mali_utilization_data_assert_locked();
+
 	if (timer_running != MALI_TRUE) {
 		timer_running = MALI_TRUE;
 
@@ -101,9 +103,10 @@ mali_bool mali_control_timer_resume(u64 time_now)
 
 void mali_control_timer_pause(void)
 {
+	mali_utilization_data_assert_locked();
 	if (timer_running == MALI_TRUE) {
 		timer_running = MALI_FALSE;
-	}	
+	}
 }
 
 void mali_control_timer_suspend(mali_bool suspend)

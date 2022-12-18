@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mUt81hguHgV00Ibbvt+6Ly9ck0QsLZnzwsMTQTnzG6TsC0WAPtdW1sW/tM/q52TA/Yzq
-3zN6gLH4bMbpnD45kX8Nq03jmpM6KI29VwP+cs5FvuEjdhycxAHjy9txBzouQw==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxdEccG3a9aiWl+mI5RmRq1kj1YhGmPZGGa3hW7y3k15/usm/UIJNqa8NOq85yvfQak2/
+UYc2YslKEXKsA+PsEhXW0vPOpE3eo9hva9KDr4ft0FlXRsOJLHogDxtrbMlcjw==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -103,7 +117,6 @@ HI_S32 ALG_RATIO_RatioProcess(ALG_RATIO_DRV_PARA_S *pstDrvPara,ALG_RATIO_OUT_PAR
     // screen ratio w h, aspect ratio w h, output format w h
     HI_S32 sr_w, sr_h, ar_w = 0, ar_h = 0, f_w, f_h;
     // output video w h
-    HI_U32 i_w, i_h;
     //u32pixr1_out:tv pixel aspect ratio concluded from  tv resolution and  output aspect ratio.   pixel width / pixel height
     HI_S32 u32pixr1_out;
 
@@ -157,23 +170,32 @@ HI_S32 ALG_RATIO_RatioProcess(ALG_RATIO_DRV_PARA_S *pstDrvPara,ALG_RATIO_OUT_PAR
     }
     else //  HI_UNF_VO_ASPECT_CVRS_PAN_SCAN == enCvrsMode  ||  HI_UNF_VO_ASPECT_CVRS_COMBINED == enCvrsMode
     {
-        #if 0
         HI_U32 u32ZmeH;
         HI_U32 u32ZmeW;
         HI_U32 u32ExpH;
         HI_U32 u32ExpW;
 
         u32ExpH = pstDrvPara->stOutWnd.s32Width * (u32pixr1_out)*ar_h /ar_w;
-        u32ExpW = ar_w * pstDrvPara->stOutWnd.s32Height * ALG_RATIO_PIX_RATIO1 / u32pixr1_out / ar_h;
+		u32ExpW = ar_w * pstDrvPara->stOutWnd.s32Height * ALG_RATIO_PIX_RATIO1 / u32pixr1_out / ar_h;
+
+		u32ExpW = (u32ExpW + 0x3)&VPSS_WIDTH_ALIGN;
+		u32ExpH = (u32ExpH + 0x3)&VPSS_HEIGHT_ALIGN;
+
+
         if (u32ExpH > pstDrvPara->stOutWnd.s32Height * ALG_RATIO_PIX_RATIO1 )
         {
             u32ZmeW = pstDrvPara->stOutWnd.s32Width;
             u32ZmeH = u32ExpH /ALG_RATIO_PIX_RATIO1;
+			
+			u32ZmeH = (u32ZmeH + 0x3)&VPSS_HEIGHT_ALIGN;
+
             if (HI_DRV_ASP_RAT_MODE_COMBINED == pstDrvPara->eAspMode)
             {
                 u32ZmeH = pstDrvPara->stOutWnd.s32Height 
                             + (u32ZmeH - pstDrvPara->stOutWnd.s32Height)/2;
                 u32ZmeW = ar_w * u32ZmeH * ALG_RATIO_PIX_RATIO1 / u32pixr1_out / ar_h;
+				
+				u32ZmeW = (u32ZmeW+0x3)&VPSS_HEIGHT_ALIGN;
             }
         }
         else
@@ -184,27 +206,39 @@ HI_S32 ALG_RATIO_RatioProcess(ALG_RATIO_DRV_PARA_S *pstDrvPara,ALG_RATIO_OUT_PAR
             {
                 u32ZmeW = pstDrvPara->stOutWnd.s32Width
                             + (u32ZmeW - pstDrvPara->stOutWnd.s32Width)/2;
+							
                 u32ZmeH = u32ZmeW * (u32pixr1_out)*ar_h /ar_w / ALG_RATIO_PIX_RATIO1;
+
+				u32ZmeH = (u32ZmeH + 0x3)&VPSS_HEIGHT_ALIGN;
             }
         }
-        u32ZmeW = (u32ZmeW & VPSS_WIDTH_ALIGN) < 4092?(u32ZmeW & VPSS_WIDTH_ALIGN):4092;
+        u32ZmeW = (u32ZmeW & VPSS_HEIGHT_ALIGN) < 4092?(u32ZmeW & VPSS_HEIGHT_ALIGN):4092;
         u32ZmeH = (u32ZmeH & VPSS_HEIGHT_ALIGN) < 4092?(u32ZmeH & VPSS_HEIGHT_ALIGN):4092;
         
         pstOutPara->u32ZmeH = u32ZmeH;  
         pstOutPara->u32ZmeW = u32ZmeW;
 		
-        if (pstOutPara->u32ZmeH > pstDrvPara->stOutWnd.s32Height)
+        if (pstOutPara->u32ZmeH > pstDrvPara->stOutWnd.s32Height
+				&& pstOutPara->u32ZmeW <= pstDrvPara->stOutWnd.s32Width)
         {
             pstOutPara->stCropWnd.s32X = 0;
             pstOutPara->stCropWnd.s32Y = ((u32ZmeH-pstDrvPara->stOutWnd.s32Height)/2) & VPSS_HEIGHT_ALIGN;
             pstOutPara->stCropWnd.s32Height = pstDrvPara->stOutWnd.s32Height;
             pstOutPara->stCropWnd.s32Width = u32ZmeW;
         }
-        else
+        else if (pstOutPara->u32ZmeW > pstDrvPara->stOutWnd.s32Width
+				&& pstOutPara->u32ZmeH <= pstDrvPara->stOutWnd.s32Height)
         {
             pstOutPara->stCropWnd.s32X = ((u32ZmeW-pstDrvPara->stOutWnd.s32Width)/2) & VPSS_WIDTH_ALIGN;
             pstOutPara->stCropWnd.s32Y = 0;
             pstOutPara->stCropWnd.s32Height = u32ZmeH;
+            pstOutPara->stCropWnd.s32Width = pstDrvPara->stOutWnd.s32Width;
+        }
+		else 
+		{
+            pstOutPara->stCropWnd.s32X = 0;
+            pstOutPara->stCropWnd.s32Y = 0;
+            pstOutPara->stCropWnd.s32Height = pstDrvPara->stOutWnd.s32Height;
             pstOutPara->stCropWnd.s32Width = pstDrvPara->stOutWnd.s32Width;
         }
         
@@ -222,59 +256,6 @@ HI_S32 ALG_RATIO_RatioProcess(ALG_RATIO_DRV_PARA_S *pstDrvPara,ALG_RATIO_OUT_PAR
         pstOutPara->stOutScreen.s32Height = pstDrvPara->stScreen.s32Height;
         pstOutPara->stOutScreen.s32Width = pstDrvPara->stScreen.s32Width;
        
-        #else
-        HI_RECT_S InWnd = pstDrvPara->stInWnd;
-        // 1) u32pixr1_out: tv pixel aspect ratio concluded from  tv resolution and  output aspect ratio.   
-        // 2) u32pixr1_in:  expected pixel aspect ratio of input picture. 
-
-        // (i_w / i_h) * u32pixr1_in = (pOutWnd->s32Width / pOutWnd->s32Height) * u32pixr1_out
-        // (pInWnd->s32Width / pInWnd->s32Height) * u32pixr1_in = ar_w / ar_h
-        // (f_w / f_h) * u32pixr1_out = sr_w / sr_h
-        // if i_h is uncroped.set i_h = pInWnd->s32Width; then i_w can calculate
-        i_w = (pstDrvPara->stOutWnd.s32Width * ar_h * u32pixr1_out) / (pstDrvPara->stOutWnd.s32Height * ar_w);
-        i_w = (pstDrvPara->stInWnd.s32Width * i_w) / ALG_RATIO_PIX_RATIO1;
-        
-        if (i_w <= pstDrvPara->stInWnd.s32Width)
-        {            
-            if(HI_DRV_ASP_RAT_MODE_COMBINED == pstDrvPara->eAspMode)
-            {
-                i_w =i_w + (pstDrvPara->stInWnd.s32Width - i_w)/2;
-            }
-            
-            i_w = i_w & 0xfffffffeul;
-            
-            pstDrvPara->stInWnd.s32X = (pstDrvPara->stInWnd.s32X + (pstDrvPara->stInWnd.s32Width - i_w)/2) & 0xfffffffeul;
-            pstDrvPara->stInWnd.s32Width = i_w;
-        }
-        else
-        {
-            i_h = pstDrvPara->stInWnd.s32Width * pstDrvPara->stInWnd.s32Height / i_w;
-            
-            if (i_h >= pstDrvPara->stInWnd.s32Height)
-            {
-                return HI_SUCCESS;
-            }
-            
-            if (HI_DRV_ASP_RAT_MODE_COMBINED == pstDrvPara->eAspMode)
-            {
-                i_h = i_h + (pstDrvPara->stInWnd.s32Height - i_h)/2;
-            }
-           
-            i_h = i_h & 0xfffffffcul;
-            pstDrvPara->stInWnd.s32Y = 
-                    (pstDrvPara->stInWnd.s32Y + (pstDrvPara->stInWnd.s32Height - i_h)/2) & 0xfffffffcul;
-            pstDrvPara->stInWnd.s32Height = i_h;
-        }
-
-        //In Combined Mode crop half,leave shadow half
-        if (HI_DRV_ASP_RAT_MODE_COMBINED == pstDrvPara->eAspMode)
-        {
-            //HI_U32 NewAspectWidth = *AspectWidth, HI_U32 NewAspectHeight = *AspectHeight;           
-            ALG_RATIO_CropedAspect(&InWnd, &(pstDrvPara->stInWnd), &ar_w, &ar_h);
-
-            ALG_RATIO_LetterBox(ar_w, ar_h, &(pstDrvPara->stOutWnd), u32pixr1_out);            
-        }
-        #endif
     } 
     return HI_SUCCESS;
 }

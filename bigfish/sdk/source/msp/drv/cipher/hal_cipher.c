@@ -35,6 +35,9 @@
 
 extern HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E *penChipVersion);
 
+HI_S32 HAL_Cipher_HashEnable(HI_VOID);
+HI_S32 HAL_Cipher_HashDisable(HI_VOID);
+
 /***************************** Macro Definition ******************************/
 /*process of bit*/
 #define HAL_SET_BIT(src, bit)        ((src) |= (1<<bit))
@@ -250,6 +253,46 @@ HI_S32 HAL_Cipher_SetInBufNum(HI_U32 chnId, HI_U32 num)
     (HI_VOID)HAL_CIPHER_WriteReg(regAddr, num);
     
     HI_INFO_CIPHER(" cnt=%u\n", num);
+    
+    return HI_SUCCESS;
+}
+
+HI_S32 HAL_Cipher_GetSrcLstRaddr(HI_U32 chnId, HI_U32 *addr)
+{
+    HI_U32 regAddr  = 0;
+    HI_U32 regValue = 0;
+
+    if (CIPHER_PKGx1_CHAN == chnId || HI_NULL == addr)
+    {
+        return HI_ERR_CIPHER_INVALID_PARA;
+    }
+
+    regAddr = CIPHER_REG_CHANn_SRC_LST_RADDR(chnId);
+    (HI_VOID)HAL_CIPHER_ReadReg(regAddr, &regValue);
+    
+    *addr = regValue;
+
+    HI_INFO_CIPHER(" cnt=%u\n", regValue);
+    
+    return HI_SUCCESS;
+}
+
+HI_S32 HAL_Cipher_GetDestLstRaddr(HI_U32 chnId, HI_U32 *addr)
+{
+    HI_U32 regAddr  = 0;
+    HI_U32 regValue = 0;
+
+    if (CIPHER_PKGx1_CHAN == chnId || HI_NULL == addr)
+    {
+        return HI_ERR_CIPHER_INVALID_PARA;
+    }
+
+    regAddr = CIPHER_REG_CHANn_DEST_LST_RADDR(chnId);
+    (HI_VOID)HAL_CIPHER_ReadReg(regAddr, &regValue);
+    
+    *addr = regValue;
+
+    HI_INFO_CIPHER(" cnt=%u\n", regValue);
     
     return HI_SUCCESS;
 }
@@ -964,7 +1007,7 @@ HI_S32 HAL_Cipher_EnableInt(HI_U32 chnId, int intType)
     (HI_VOID)HAL_CIPHER_ReadReg(regAddr, &regValue);
 
     regValue |= (1 << 31); /* sum switch int_en */
-#if defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)|| defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)|| defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a) || defined (CHIP_TYPE_hi3716mv410) || defined (CHIP_TYPE_hi3716mv420)
     regValue |= (1 << 30); /* sec_int_en */
 #endif
 
@@ -1035,9 +1078,15 @@ HI_VOID HAL_Cipher_DisableAllInt(HI_VOID)
 {
     HI_U32 regAddr = 0;
     HI_U32 regValue = 0;
+    HI_U32 i;
 
     regAddr = CIPHER_REG_INT_EN;
-    regValue = 0;
+    (HI_VOID)HAL_CIPHER_ReadReg(regAddr, &regValue);
+    for(i=CIPHER_PKGxN_CHAN_MIN; i<=CIPHER_PKGxN_CHAN_MAX; i++)
+	{
+	    regValue &= ~(0x01 << i);
+    }
+    regValue &= 0x3FFFFFFF;
     (HI_VOID)HAL_CIPHER_WriteReg(regAddr, regValue);
 }
 
@@ -1120,8 +1169,12 @@ HI_VOID HAL_Cipher_EnableAllSecChn(HI_VOID)
 {
 	HI_U32 regAddr = CIPHER_REG_SEC_CHN_CFG;
 	HI_U32 regValue = 0;
+    HI_U32 i;
 
-	regValue = 0xffffffff;
+    for(i=CIPHER_PKGxN_CHAN_MIN; i<=CIPHER_PKGxN_CHAN_MAX; i++)
+	{
+	    regValue |= 0x01 << i;
+    }
     (HI_VOID)HAL_CIPHER_WriteReg(regAddr, regValue);
 	return;
 }
@@ -1394,6 +1447,8 @@ HI_S32 HAL_Cipher_CalcHashInit(CIPHER_HASH_DATA_S *pCipherHashData)
         return HI_FAILURE;
     }
 
+    HAL_Cipher_HashEnable();
+
     ret = HAL_CIPHER_WaitHashIdle();
     if(HI_SUCCESS != ret)
     {
@@ -1490,7 +1545,7 @@ HI_S32 HAL_Cipher_CalcHashUpdate(CIPHER_HASH_DATA_S *pCipherHashData)
     if( NULL == pCipherHashData )
     {
         HI_ERR_CIPHER("Error, Null pointer input!\n");
-        (HI_VOID)HAL_CIPHER_MarkHashIdle();
+        (HI_VOID)HAL_Cipher_HashSoftReset();
         return HI_FAILURE;
     }
 
@@ -1642,7 +1697,7 @@ HI_S32 HAL_Cipher_CalcHashFinal(CIPHER_HASH_DATA_S *pCipherHashData)
         return HI_FAILURE;
     }
 
-    (HI_VOID)HAL_Cipher_HashSoftReset();
+    (HI_VOID)HAL_Cipher_HashDisable();
     (HI_VOID)HAL_CIPHER_MarkHashIdle();
 
     return HI_SUCCESS;
@@ -1711,20 +1766,29 @@ HI_S32 HAL_Cipher_GetRandomNumber(CIPHER_RNG_S *pstRNG)
 
     (HI_VOID)HAL_CIPHER_ReadReg(IO_ADDRESS(REG_RNG_NUMBER_ADDR), &pstRNG->u32RNG);
 
+    u32RngCtrl &= ~0x03;
+    (HI_VOID)HAL_CIPHER_WriteReg(IO_ADDRESS(REG_RNG_BASE_ADDR), u32RngCtrl);
+
     return HI_SUCCESS;
 }
 
-HI_S32 HAL_Cipher_HashSoftReset(HI_VOID)
+HI_S32 HAL_Cipher_HashDisable(HI_VOID)
 {
     U_PERI_CRG49 unShaCrg;
 
 /* reset request */
     unShaCrg.u32 = g_pstRegCrg->PERI_CRG49.u32;
-    unShaCrg.bits.sha_cken = 1;
+    unShaCrg.bits.sha_cken = 0;
     unShaCrg.bits.sha_srst_req = 1;
     g_pstRegCrg->PERI_CRG49.u32 = unShaCrg.u32;
 
     mdelay(1);
+    return HI_SUCCESS;
+}
+
+HI_S32 HAL_Cipher_HashEnable(HI_VOID)
+{
+    U_PERI_CRG49 unShaCrg;
 
 /* cancel reset */
     unShaCrg.u32 = g_pstRegCrg->PERI_CRG49.u32;
@@ -1736,13 +1800,24 @@ HI_S32 HAL_Cipher_HashSoftReset(HI_VOID)
     return HI_SUCCESS;
 }
 
+HI_S32 HAL_Cipher_HashSoftReset(HI_VOID)
+{
+    HAL_Cipher_HashDisable();
+    HAL_Cipher_HashEnable();
+
+    return HI_SUCCESS;
+}
+
 HI_VOID HAL_Cipher_Init(void)
 {
     U_PERI_CRG48 unCipherCrg;
 
     unCipherCrg.u32 = g_pstRegCrg->PERI_CRG48.u32;
     /* reset request */
-#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) || defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a)) 
+#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) \
+    || defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) \
+    || defined (CHIP_TYPE_hi3798cv200_a) || defined (CHIP_TYPE_hi3716mv410) \
+	|| defined (CHIP_TYPE_hi3716mv420)) 
     unCipherCrg.bits.ca_kl_srst_req = 1;
 #endif
     unCipherCrg.bits.ca_ci_srst_req = 1;
@@ -1755,14 +1830,17 @@ HI_VOID HAL_Cipher_Init(void)
     mdelay(1);
 
     unCipherCrg.u32 = g_pstRegCrg->PERI_CRG48.u32;
-#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) || defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a))
+#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) \
+    || defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) \
+    || defined (CHIP_TYPE_hi3798cv200_a) || defined (CHIP_TYPE_hi3716mv410) \
+	|| defined (CHIP_TYPE_hi3716mv420))
     unCipherCrg.bits.ca_kl_srst_req = 0;
 #endif
     unCipherCrg.bits.ca_ci_srst_req = 0;
     unCipherCrg.bits.otp_srst_req = 0;
     /* make sure ca clock select : 200M */
-    unCipherCrg.bits.ca_ci_clk_sel = 0;
-//    unCipherCrg.bits.ca_ci_clk_sel = 1;
+//    unCipherCrg.bits.ca_ci_clk_sel = 0;
+    unCipherCrg.bits.ca_ci_clk_sel = 1;
     g_pstRegCrg->PERI_CRG48.u32 = unCipherCrg.u32;
 
     /* hash sw reset */

@@ -389,6 +389,7 @@ extern HI_S32 gpio_i2c_write_ext(HI_U32 I2cNum, HI_U8 devaddress, HI_U32 address
 
 extern HI_S32 tuner_i2c_send_data(HI_U32 u32I2cChannel, HI_U8 u8DevAddress, PTR_TUNER_I2C_DATA_S pstDataStruct);
 extern HI_S32 tuner_i2c_receive_data(HI_U32 u32I2cChannel, HI_U8 u8DevAddress, PTR_TUNER_I2C_DATA_S pstDataStruct);
+extern HI_S32 tuner_i2c_receive_data_si(HI_U32 u32I2cChannel, HI_U8 u8DevAddress, PTR_TUNER_I2C_DATA_S pstDataStruct);
 extern HI_VOID HI_TIMER_mdelay(HI_U32 msec);
 extern HI_S32 tuner_chip_reset(HI_U32 u32ResetGpioNo);
 //extern HI_VOID reset_special_process_flag(HI_BOOL flag);

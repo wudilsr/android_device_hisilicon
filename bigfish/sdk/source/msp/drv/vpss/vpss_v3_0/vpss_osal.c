@@ -1,13 +1,10 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR/79ggwlk6eN4t3QBeZ8heokKbIkew4uPPjbFXxUattUcxmBUmqhCiFmqd7iUpsCFpNGf
-mMfHFEWc+mBNFNGDwF9JMm4EAAQyOSQ0z/0zkt39gp2lavCHBekQqQXg5aCYZw==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxR/3w5P2RVFyzsCwmn6APtjnPh81b7i5TzYMCvw9ZXvKFXRkeiLthT6M1OTJzcHtgd6E
+1JNL6Kxe+1kxpxsWgNekl1BPHUNImj3RNMiW7WUrcsANLLRq+Wus28Wud8zqnQ==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
-
-
-
 
 
 
@@ -15,6 +12,11 @@ mMfHFEWc+mBNFNGDwF9JMm4EAAQyOSQ0z/0zkt39gp2lavCHBekQqQXg5aCYZw==#*/
 
 #include "vpss_osal.h"
 #include <linux/wait.h>
+
+#ifdef HI_TVP_SUPPORT
+#include "sec_mmz.h"
+#endif
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C"{
@@ -1185,7 +1187,7 @@ HI_S32 VPSS_OSAL_CalBufSize(HI_U32 *pSize,HI_U32 *pStride,HI_U32 u32Height,HI_U3
         case HI_DRV_PIX_FMT_NV12_CMP:
         case HI_DRV_PIX_FMT_NV21_CMP:
 			{
-			#if defined(CHIP_TYPE_hi3798cv200_a) 
+			#if defined(CHIP_TYPE_hifone) || defined(CHIP_TYPE_hi3716mv410)|| defined(CHIP_TYPE_hi3716mv420)
 				HI_U32 u32tempt = 0;
 				u32tempt = u32Width * ( (HI_DRV_PIXEL_BITWIDTH_10BIT == enOutBitWidth)? 10 : 8);
 				if ( u32Width <= 3584)
@@ -1253,8 +1255,8 @@ HI_S32 VPSS_OSAL_GetVpssVersion(VPSS_VERSION_E *penVersion, VPSS_CAPABILITY_U *p
 
 	penCapability->u32 = 0; //should be initialized
 
-#if 0
-	if (enChipType == HI_CHIP_TYPE_HI3716M && enChipVersion == HI_CHIP_VERSION_V410)
+	if (enChipType == HI_CHIP_TYPE_HI3716M 
+			&& (enChipVersion == HI_CHIP_VERSION_V410 || enChipVersion == HI_CHIP_VERSION_V420))
 	{
 		*penVersion = VPSS_VERSION_V3_0;
 		penCapability->bits.hi3716mv410 = HI_TRUE;
@@ -1263,18 +1265,12 @@ HI_S32 VPSS_OSAL_GetVpssVersion(VPSS_VERSION_E *penVersion, VPSS_CAPABILITY_U *p
     {
         *penVersion = VPSS_VERSION_V2_0;
     }
-#else
-	if 	(enChipType == HI_CHIP_TYPE_HI3798C)
-    {
-        *penVersion = VPSS_VERSION_V2_0;
-    }
-#endif
     else if (enChipType == HI_CHIP_TYPE_HI3716C)
     {
         *penVersion = VPSS_VERSION_BUTT;
     }
     else if (enChipType == HI_CHIP_TYPE_HI3798M_A || enChipType == HI_CHIP_TYPE_HI3796M ||
-	         enChipType == HI_CHIP_TYPE_HI3798M )
+			 enChipType == HI_CHIP_TYPE_HI3798M )
     {
         *penVersion = VPSS_VERSION_V1_0;
 		penCapability->bits.hi3798mv100 = HI_TRUE;
@@ -1356,6 +1352,95 @@ HI_S32 VPSS_OSAL_GetSysMemSize(HI_U32 *pu32MemSize)
     *pu32MemSize = u32Mem;
 
     return s32Ret;
+}
+
+HI_S32 VPSS_OSAL_AllocateMem(HI_U8 u8flag, 
+		HI_U32  u32Size,
+		HI_U8  *pu8ZoneName,
+		HI_U8  *pu8MemName,
+		VPSS_MEM_S *pstMem)
+{
+	HI_S32 s32Ret = HI_SUCCESS;
+
+    MMZ_BUFFER_S stMMZ;
+
+	if (u8flag == VPSS_MEM_FLAG_NORMAL)
+	{
+		s32Ret = HI_DRV_MMZ_AllocAndMap( pu8MemName, pu8ZoneName, 
+				u32Size, 0, &stMMZ);
+		if (s32Ret == HI_SUCCESS)
+		{
+			pstMem->u32Size = stMMZ.u32Size;
+			pstMem->u32StartPhyAddr = stMMZ.u32StartPhyAddr;
+			pstMem->u32StartVirAddr = stMMZ.u32StartVirAddr;
+			pstMem->u8flag = u8flag;
+		}
+	}
+	else if (u8flag == VPSS_MEM_FLAG_SECURE)
+	{
+#ifdef HI_TVP_SUPPORT
+		HI_U32 u32SecAddr;
+		
+		u32SecAddr = (HI_U32)HI_SEC_MMZ_New(u32Size,"SEC-MMZ",pu8MemName);
+		if (u32SecAddr != 0x0)
+		{
+			pstMem->u32Size = u32Size;
+			pstMem->u32StartPhyAddr = u32SecAddr;
+			pstMem->u32StartVirAddr = u32SecAddr;
+			pstMem->u8flag = u8flag;
+		}
+		else
+		{
+			VPSS_ERROR("alloc secure buffer failed\n");
+		}
+#else
+		s32Ret = HI_DRV_MMZ_AllocAndMap( pu8MemName, pu8ZoneName, 
+				u32Size, 0, &stMMZ);
+		if (s32Ret == HI_SUCCESS)
+		{
+			pstMem->u32Size = stMMZ.u32Size;
+			pstMem->u32StartPhyAddr = stMMZ.u32StartPhyAddr;
+			pstMem->u32StartVirAddr = stMMZ.u32StartVirAddr;
+			pstMem->u8flag = u8flag;
+		}
+#endif
+	}
+	else
+	{
+	
+	}
+	return s32Ret;
+}
+
+HI_S32 VPSS_OSAL_FreeMem(VPSS_MEM_S *pstMem)
+{
+    MMZ_BUFFER_S stMMZ;
+	HI_S32 s32Ret = HI_SUCCESS;
+
+	if (pstMem->u8flag == VPSS_MEM_FLAG_NORMAL)
+	{
+		stMMZ.u32StartPhyAddr = pstMem->u32StartPhyAddr;
+		stMMZ.u32StartVirAddr = pstMem->u32StartVirAddr;
+		stMMZ.u32Size = pstMem->u32Size;
+		HI_DRV_MMZ_UnmapAndRelease(&stMMZ);
+	}
+	else if (pstMem->u8flag == VPSS_MEM_FLAG_SECURE)
+	{
+#ifdef HI_TVP_SUPPORT
+		(HI_VOID)HI_SEC_MMZ_Delete(pstMem->u32StartPhyAddr);
+#else
+		stMMZ.u32StartPhyAddr = pstMem->u32StartPhyAddr;
+		stMMZ.u32StartVirAddr = pstMem->u32StartVirAddr;
+		stMMZ.u32Size = pstMem->u32Size;
+		HI_DRV_MMZ_UnmapAndRelease(&stMMZ);
+#endif
+	}
+	else
+	{
+	
+	}
+
+	return s32Ret;
 }
 
 #ifdef __cplusplus

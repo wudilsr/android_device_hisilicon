@@ -254,6 +254,8 @@ typedef struct
     
     HI_DRV_VPSS_PROCESS_S stProcCtrl;
 
+	HI_BOOL bSecure;
+
 }HI_DRV_VPSS_CFG_S;
 
 
@@ -315,6 +317,7 @@ typedef struct
                                         /**CNcomment:安全水线，0~100，为输出帧已完成的百分比.
                                                     0表示随时可给后级，100表示完全完成才能给后级 */
     HI_BOOL   b3Dsupport;
+    HI_BOOL   bPassThrough;
 
     HI_DRV_VPSS_ROTATION_E enRotation;
     HI_BOOL bVertFlip;

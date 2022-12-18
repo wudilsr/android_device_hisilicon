@@ -318,7 +318,7 @@ public class ServiceSettings extends Service {
                     + " eth.route:"+eth.route
                     + " eth.dns:"+eth.dns
                     + " eth.dns2:"+eth.dns2
-                    + " eth.mode:"+eth.mode); 
+                    + " eth.mode:"+eth.mode);
             if (ETH_CONN_MODE_PPPOE.equals(eth.mode)) {
                 mEthManager.setInterfaceName(PPPOE_INTERFACE);
                 mPppoeManager.setPppoeUsername(eth.username);
@@ -330,6 +330,10 @@ public class ServiceSettings extends Service {
                        && mEthManager.getEthernetState() == EthernetManager.ETHERNET_STATE_ENABLED) {
                     ifname = mEthManager.getInterfaceName();
                 }
+                if ((mPppoeManager.getConnectResult(ifname) == PppoeManager.PPPOE_CONNECT_RESULT_CONNECT)
+                 || (mPppoeManager.getConnectResult(ifname) == PppoeManager.PPPOE_CONNECT_RESULT_CONNECTING))
+                    mPppoeManager.disconnect(ifname);
+
                 Log.d(TAG, "setEthernetDevInfo ETH_CONN_MODE_PPPOE "
                     +" dev_name:" +ifname
                     +" username:" +eth.username
@@ -339,7 +343,7 @@ public class ServiceSettings extends Service {
                 return true;
             } else {
                 if (PppoeManager.PPPOE_STATE_DISCONNECT != mPppoeManager.getPppoeState()) {
-                    Log.d(TAG, "setEthernetDevInfo disconnect pppoe interface:"+mEthManager.getInterfaceName());    
+                    Log.d(TAG, "setEthernetDevInfo disconnect pppoe interface:"+mEthManager.getInterfaceName());
                     mPppoeManager.disconnect(mEthManager.getInterfaceName());
                     System.putInt(mContext.getContentResolver(), "pppoe_enable", 0);
                 }
@@ -403,7 +407,7 @@ public class ServiceSettings extends Service {
                         mEthManager.setEthernetMode(EthernetManager.ETHERNET_CONNECT_MODE_MANUAL, dhcpInfo);
                         mEthManager.setEthernetEnabled(true);
                         Log.d(TAG, "setEthernetDevInfo ETH_CONN_MODE_MANUAL ");
-                    } 
+                    }
                     return true;
                 }
             }
@@ -465,6 +469,7 @@ public class ServiceSettings extends Service {
             Log.d(TAG, "getValue key:"+key + " defValue:" +value);
             if (key.equals(CONFIG_RESOLUTIONS)) {
                 StringBuffer sb = new StringBuffer();
+                createEncFormat();
                 for (int i=0; i < mEncFormatMap.size(); i++) {
                     sb.append(mEncFormatMap.get(i).getEncFormatName());
                     if (i != mEncFormatMap.size() - 1) {
@@ -477,19 +482,19 @@ public class ServiceSettings extends Service {
                 int iHDMIMode = mAOService.getAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_HDMI);
                 int iSpdifMode = mAOService.getAudioOutput(HiAoService.AUDIO_OUTPUT_PORT_SPDIF);
                 Log.d(TAG, "getValue iHDMIMode:"+iHDMIMode + " iSpdifMode:" +iSpdifMode);
-                
+
                 switch (iHDMIMode) {
                     case HiAoService.AUDIO_OUTPUT_MODE_AUTO:
                     case HiAoService.AUDIO_OUTPUT_MODE_LPCM:
                     case HiAoService.AUDIO_OUTPUT_MODE_RAW:{
-                       audiomode += ",HDMI"; 
+                       audiomode += ",HDMI";
                     }break;
                     default:break;
                 }
                 switch (iSpdifMode) {
                     case HiAoService.AUDIO_OUTPUT_MODE_LPCM:
                     case HiAoService.AUDIO_OUTPUT_MODE_RAW:{
-                       audiomode += ",SPDIF"; 
+                       audiomode += ",SPDIF";
                     }break;
                     default:break;
                 }
@@ -530,7 +535,7 @@ public class ServiceSettings extends Service {
                 int cvrs = mDisplayManager.getAspectCvrs();
                 Log.d(TAG, "getValue getAspectCvrs:" +cvrs);
                 if (0 == cvrs) {//full screen
-                    ret = String.valueOf(cvrs); 
+                    ret = String.valueOf(cvrs);
                 } else {// 4:3 16:9
                     int ratio = mDisplayManager.getAspectRatio();
                     ret = String.valueOf(ratio + 1);
@@ -651,7 +656,7 @@ public class ServiceSettings extends Service {
                 }
             }
 
-            Log.d(TAG, " getEthernetIPv6DevInfo " 
+            Log.d(TAG, " getEthernetIPv6DevInfo "
                     + " dev_name:" + ethernetDevInfo.dev_name
                     + " username:" + ethernetDevInfo.username
                     + " password:" + ethernetDevInfo.password
@@ -707,7 +712,7 @@ public class ServiceSettings extends Service {
                 ethernetDevInfo.dns = dns1;
                 ethernetDevInfo.dns2 = dns2;
             }
-            Log.d(TAG, " getEthernetDevInfo " 
+            Log.d(TAG, " getEthernetDevInfo "
                     + " dev_name:" + ethernetDevInfo.dev_name
                     + " username:" + ethernetDevInfo.username
                     + " password:" + ethernetDevInfo.password
@@ -784,14 +789,24 @@ public class ServiceSettings extends Service {
             return mFormatStr;
         }
     }
+
     private HashMap<Integer, EncFormat> mEncFormatMap = new HashMap<Integer, EncFormat>();
 
     private void createEncFormat(){
         int index = 0;
+        mEncFormatMap.clear();
         DispFmt disfmt = mDisplayManager.GetDisplayCapability();
+        Log.d(TAG, "createEncFormat(): DispFmt=" + disfmt);
         if(disfmt != null) {
-            Log.d(TAG, "createEncFormat GetDisplayCapability ENC_FMT_3840X2160_30:" +disfmt.ENC_FMT_3840X2160_30
-                + " ENC_FMT_3840X2160_24:" +disfmt.ENC_FMT_3840X2160_24);
+            Log.d(TAG, "createEncFormat(): GetDisplayCapability 2160P30HZ=" + disfmt.ENC_FMT_3840X2160_30
+                + ", 2160P25HZ=" + disfmt.ENC_FMT_3840X2160_25 + ", 2160P24HZ=" + disfmt.ENC_FMT_3840X2160_24
+                + ", 1080P60HZ=" + disfmt.ENC_FMT_1080P_60 + ", 1080P50HZ=" + disfmt.ENC_FMT_1080P_50
+                + ", 1080P30HZ=" + disfmt.ENC_FMT_1080P_30 + ", 1080P25HZ=" + disfmt.ENC_FMT_1080P_25
+                + ", 1080P24HZ=" + disfmt.ENC_FMT_1080P_24 + ", 1080I60HZ=" + disfmt.ENC_FMT_1080i_60
+                + ", 1080I50HZ=" + disfmt.ENC_FMT_1080i_50 + ", 720P60HZ=" + disfmt.ENC_FMT_720P_60
+                + ", 720P50HZ=" + disfmt.ENC_FMT_720P_50 + ", 576P50HZ=" + disfmt.ENC_FMT_576P_50
+                + ", 480P60HZ=" + disfmt.ENC_FMT_480P_60 + ", PAL=" + disfmt.ENC_FMT_PAL
+                + ", NTSC=" + disfmt.ENC_FMT_NTSC);
             if (disfmt.ENC_FMT_3840X2160_30 == 1) {
                 mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_3840X2160_30, "2160P30HZ"));
             }
@@ -801,11 +816,36 @@ public class ServiceSettings extends Service {
             if (disfmt.ENC_FMT_3840X2160_24 == 1) {
                 mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_3840X2160_24, "2160P24HZ"));
             }
-            mEncFormatMap.put(index++, new EncFormat(0, "1080P60HZ"));
+            if (disfmt.ENC_FMT_1080P_60 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_60, "1080P60HZ"));
+            }
+            if (disfmt.ENC_FMT_1080P_50 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_50, "1080P50HZ"));
+            }
+            if (disfmt.ENC_FMT_1080P_30 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_30, "1080P30HZ"));
+            }
+            if (disfmt.ENC_FMT_1080P_25 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_25, "1080P25HZ"));
+            }
+            if (disfmt.ENC_FMT_1080P_24 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_24, "1080P24HZ"));
+            }
+            if (disfmt.ENC_FMT_1080i_60 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080i_60, "1080I60HZ"));
+            }
+            if (disfmt.ENC_FMT_1080i_50 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080i_50, "1080I50HZ"));
+            }
+            if (disfmt.ENC_FMT_720P_60 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_720P_60, "720P60HZ"));
+            }
+            if (disfmt.ENC_FMT_720P_50 == 1) {
+                mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_720P_50, "720P50HZ"));
+            }
+        } else {
+            mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_60, "1080P60HZ"));
             mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_50, "1080P50HZ"));
-            mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_30, "1080P30HZ"));
-            mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_25, "1080P25HZ"));
-            mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080P_24, "1080P24HZ"));
             mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080i_60, "1080I60HZ"));
             mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_1080i_50, "1080I50HZ"));
             mEncFormatMap.put(index++, new EncFormat(HiDisplayManager.ENC_FMT_720P_60, "720P60HZ"));

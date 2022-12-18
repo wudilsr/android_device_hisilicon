@@ -141,6 +141,45 @@ void hiusb_start_hcd_hifone(resource_size_t host_addr)
 			mdelay(10);
 #endif
 
+			/* 1port PHY¡ê?HS pre-emphasize 000 */
+  			writel(0xa018, PERI_USB1);
+  			udelay(10);
+  			writel(0xe018, PERI_USB1);
+			udelay(10);
+			writel(0xa018, PERI_USB1);
+			udelay(50);
+			
+			/* 1port PHY¡ê?squelch trigger point 175mV */
+  			writel(0xa16e, PERI_USB1);
+  			udelay(10);
+  			writel(0xe16e, PERI_USB1);
+			udelay(10);
+			writel(0xa16e, PERI_USB1);
+			udelay(50);
+			
+			/* 1port PHY¡ê?Rcomp=200mV¡ê?Vref=425mV */
+  			writel(0xa532, PERI_USB1);
+  			udelay(10);
+  			writel(0xe532, PERI_USB1);
+			udelay(10);
+			writel(0xa532, PERI_USB1);
+			udelay(50);
+			
+			writel(0xa703, PERI_USB1);
+  			udelay(10);
+  			writel(0xe703, PERI_USB1);
+			udelay(10);
+			writel(0xa703, PERI_USB1);
+			udelay(50);
+
+			/* 1port PHY¡ê?Icomp=212mV */
+  			writel(0xaabb, PERI_USB1);
+  			udelay(10);
+  			writel(0xeabb, PERI_USB1);
+			udelay(10);
+			writel(0xaabb, PERI_USB1);
+			udelay(50);
+			
 			/* cancel phy utmi port reset */
 			reg = readl(PERI_CRG47);
 			reg &= ~(USB2_PHY2_SRST_TREQ);
@@ -231,7 +270,80 @@ void hiusb_start_hcd_hifone(resource_size_t host_addr)
 #else
 			mdelay(10);
 #endif
+			/* 2port PHY¡ê?HS pre-emphasize¡ê?000 */
+  			writel(0xa018, PERI_USB0);
+  			udelay(10);
+  			writel(0xe018, PERI_USB0);
+			udelay(10);
+			writel(0xa018, PERI_USB0);
+			udelay(50);
 
+			writel(0xb018, PERI_USB0);
+  			udelay(10);
+  			writel(0xf018, PERI_USB0);
+			udelay(10);
+			writel(0xb018, PERI_USB0);
+			udelay(50);
+
+			/* 2port PHY¡ê?squelch trigger point 175mV */
+  			writel(0xa16e, PERI_USB0);
+  			udelay(10);
+  			writel(0xe16e, PERI_USB0);
+			udelay(10);
+			writel(0xa16e, PERI_USB0);
+			udelay(50);
+
+			writel(0xb16e, PERI_USB0);
+  			udelay(10);
+  			writel(0xf16e, PERI_USB0);
+			udelay(10);
+			writel(0xb16e, PERI_USB0);
+			udelay(50);
+
+			/* 2port PHY¡ê?Rcomp=187mV¡ê?Vref=425mV */
+  			writel(0xa5b2, PERI_USB0);
+  			udelay(10);
+  			writel(0xe5b2, PERI_USB0);
+			udelay(10);
+			writel(0xa5b2, PERI_USB0);
+			udelay(50);
+
+			writel(0xb5b2, PERI_USB0);
+  			udelay(10);
+  			writel(0xf5b2, PERI_USB0);
+			udelay(10);
+			writel(0xb5b2, PERI_USB0);
+			udelay(50);
+
+			writel(0xa703, PERI_USB0);
+  			udelay(10);
+  			writel(0xe703, PERI_USB0);
+			udelay(10);
+			writel(0xa703, PERI_USB0);
+			udelay(50);
+
+			writel(0xb703, PERI_USB0);
+  			udelay(10);
+  			writel(0xf703, PERI_USB0);
+			udelay(10);
+			writel(0xb703, PERI_USB0);
+			udelay(50);
+
+			/* 2port PHY¡ê?Icomp=187mV */
+  			writel(0xaa3b, PERI_USB0);
+  			udelay(10);
+  			writel(0xea3b, PERI_USB0);
+			udelay(10);
+			writel(0xaa3b, PERI_USB0);
+			udelay(50);
+
+			writel(0xba3b, PERI_USB0);
+  			udelay(10);
+  			writel(0xfa3b, PERI_USB0);
+			udelay(10);
+			writel(0xba3b, PERI_USB0);
+			udelay(50);
+			
 			/* cancel phy utmi  reset */
 			reg = readl(PERI_CRG47);
 			reg &= ~(USB2_PHY01_SRST_TREQ0);

@@ -56,6 +56,18 @@ GPU_VF_S gpu_freq_volt_table[MAX_FREQ_NUM] =
     {200000, 1000, 0x110,0x6}, 
     {150000, 1000, 0x110,0x7}
 };
+#elif defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
+GPU_VF_S gpu_freq_volt_table[MAX_FREQ_NUM] =
+{
+    {500000, 0, 0,0x0}, 
+    {432000, 0, 0,0x1}, 
+    {400000, 0, 0,0x2},
+    {345600, 0, 0,0x3}, 
+    {300000, 0, 0,0x4},
+    {250000, 0, 0,0x5}, 
+    {200000, 0, 0,0x7}, 
+    {150000, 0, 0,0x6}
+};
 #else
 GPU_VF_S gpu_freq_volt_table[MAX_FREQ_NUM] =
 {
@@ -260,7 +272,7 @@ void hisi_crg_clockon(void)
     /* clock on */
     gpuclock = (gpuclock | GPU_CLOCK_ENABLE_MASK);
 
-#if defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
     gpuclock = (gpuclock | GPU_CLOCK_PP0_ENABLE_MASK);
 #elif defined (CHIP_TYPE_hi3719mv100) || defined (CHIP_TYPE_hi3718mv100)
     gpuclock = (gpuclock | GPU_CLOCK_PP0_ENABLE_MASK | GPU_CLOCK_PP1_ENABLE_MASK);
@@ -280,7 +292,7 @@ void hisi_crg_clockoff(void)
     /* clock off */
     gpuclock = (gpuclock & (~GPU_CLOCK_ENABLE_MASK));
 
-#if defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
     gpuclock = (gpuclock & (~(GPU_CLOCK_PP0_ENABLE_MASK)));
 #elif defined (CHIP_TYPE_hi3719mv100) || defined (CHIP_TYPE_hi3718mv100)
     gpuclock = (gpuclock & (~(GPU_CLOCK_PP0_ENABLE_MASK | GPU_CLOCK_PP1_ENABLE_MASK)));
@@ -333,6 +345,10 @@ int clk_gpu_get_index(unsigned rate)
 
 int clk_gpu_set_voltage(unsigned int volt)
 {
+#if defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
+    return 0 ;
+#endif
+
 #if defined (CONFIG_HI_PMU_DEVICE_SELECT)
     u32 s32Ret;
     u8 u8VoltReg;

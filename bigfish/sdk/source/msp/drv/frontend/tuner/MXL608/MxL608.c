@@ -149,6 +149,7 @@ HI_S32 mxl608_init_tuner(HI_U32 u32TunerPort)
 		HI_ERR_TUNER("Error! MxLWare608_API_CfgTunerMode\n");	 
 	  }
 
+    return 0;
 }
 
 

@@ -46,6 +46,7 @@ namespace android {
         DETACHINTF,
         SETVIRTSTREEN,
         GETVIRTSCREEN,
+        GETVIRTSCREENSIZE,
         RESET,
         SETHDMISUSPENDTIME,
         GETHDMISUSPENDTIME,
@@ -652,6 +653,22 @@ namespace android {
                 return ret;
             }
 
+            virtual Rect getVirtScreenSize()
+            {
+                Rect rect(0, 0, 0, 0);
+                Parcel data, reply;
+                data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
+                remote()->transact(GETVIRTSCREENSIZE, data, &reply);
+                int32_t ret = reply.readInt32();
+                if(ret == 0)
+                {
+                    rect.right = reply.readInt32();
+                    rect.bottom = reply.readInt32();
+                }
+
+                return rect;
+            }
+
             virtual int reset()
             {
                 Parcel data, reply;
@@ -1032,6 +1049,14 @@ namespace android {
                 ret = getVirtScreen();
                 reply->writeInt32(0);
                 reply->writeInt32(ret);
+                return NO_ERROR;
+            case GETVIRTSCREENSIZE:
+                CHECK_INTERFACE(IDisplayService, data, reply);
+                value = data.readInt32();
+                rect = getVirtScreenSize();
+                reply->writeInt32(0);
+                reply->writeInt32(rect.right);
+                reply->writeInt32(rect.bottom);
                 return NO_ERROR;
             case RESET:
                 CHECK_INTERFACE(IDisplayService, data, reply);

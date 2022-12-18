@@ -17,7 +17,7 @@ LINK_FILES = $(SSRC)
 
 
 all: $(SSRC) $(LIB)
-	@rm -vf $(LINK_FILES)
+	@rm -f $(LINK_FILES)
 
 ddr_training: $(LIB)
 

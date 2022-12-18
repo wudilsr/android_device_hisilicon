@@ -11,14 +11,13 @@
 #define REG_READ(addr)                (*(volatile unsigned int *)(addr))
 #define REG_WRITE(val, addr)          ((*(volatile unsigned *) (addr)) = (val))
 
-
 #define DDR_BYTE_MAX                  4        /* support max byte */
 #define DDR_BIT_MAX                   (DDR_BYTE_MAX * 8) /* support max bit */
 #define DDR_REG_NAME_MAX              32       /* register name */
 
 #define DDR_SUPPORT_PHY_MAX           2        /* support max */
 /* DDR training register number. */
-#define DDR_TRAINING_REG_NUM          42
+#define DDR_TRAINING_REG_NUM          50
 /* register max. */
 #define DDR_TRAINING_REG_MAX	(DDR_TRAINING_REG_NUM * DDR_SUPPORT_PHY_MAX)
 
@@ -83,13 +82,6 @@ typedef struct ddr_training_result_st * (*ddr_cmd_entry_func)
 
 /* DDR training interface before boot */
 int ddr_sw_training_if(void *ddrtr_result);
-int ddr_hw_training_if(void);
-int ddr_mpr_training_if(void);
-int ddr_wl_if(void);
-int ddr_gating_if(void);
-int ddr_dataeye_training_if(void *ddrtr_result);
-int ddr_vref_training_if(void *ddrtr_result);
-int ddr_ac_training_if(void);
 
 /* DDR training check interface when boot */
 int check_ddr_training(void);

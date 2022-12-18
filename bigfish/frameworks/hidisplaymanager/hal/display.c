@@ -1,27 +1,3 @@
-/*
- * Copyright (C) 2008 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
- /*
-    Modification of display module.
-        1. UNF interfaces contain in libhi_avplay.so and other unforeseeable libraries.
-        2. BASEPARAME macros do not exist in SDK. It will need to be added when transplanting to formal version.
-
-
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -40,7 +16,6 @@
 #include <hi_type.h>
 #include <hi_unf_pdm.h>
 #include <hidisplay.h>
-
 
 #define TURN_ON_SD0
 
@@ -121,6 +96,13 @@ typedef struct DisplayParam{
 struct DisplayParam displayParam[HI_UNF_DISPLAY_BUTT];
 int set_stereo_outmode(int mode, int videofps);
 void param_to_string(HI_UNF_PDM_DISP_PARAM_S *baseParam, char* string);
+int set_virtual_screen(int outFmt);
+extern int setOptimalFormat(int able);
+extern int getOptimalFormat();
+extern HI_U32 set_HDMI_Suspend_Time(int iTime);
+extern HI_U32 get_HDMI_Suspend_Time();
+extern HI_U32 set_HDMI_Suspend_Enable(int iEnable);
+extern HI_U32 get_HDMI_Suspend_Enable();
 
 static int baseparam_disp_set(void *data, baseparam_option_e flag, int enDisp)
 {
@@ -487,6 +469,7 @@ int close_display_channel()
     }
     return ret;
 }
+
 int get_brightness(int *brightness)
 {
     HI_S32 ret = HI_SUCCESS;
@@ -682,7 +665,7 @@ int outrange_trans(HI_UNF_DISP_OFFSET_S *hd, HI_UNF_DISP_OFFSET_S *sd)
 
     if(fmt_sd == fmt_hd)
     {
-        *hd = *sd;
+        *sd = *hd;
     }
 
     ALOGI_IF(DISPLAY_DEBUG, "%s[%d], sd[%d,%d,%d,%d], hd[%d,%d,%d,%d]", __func__, __LINE__,
@@ -816,10 +799,10 @@ int get_graphic_out_range(int *l, int *t, int *r, int *b)
     return HI_SUCCESS;
 }
 
-void store_format(display_format_e format)
+void store_format(display_format_e format, display_format_e format_sd)
 {
-    ALOGE("Display:store_format format is %d",(int)format);
-    if(format >= DISPLAY_FMT_BUTT)
+    ALOGE("Display:store_format format is %d, format_sd is %d", (int)format, (int)format_sd);
+    if ((format >= DISPLAY_FMT_BUTT) || (format_sd >= DISPLAY_FMT_BUTT))
     {
         ALOGE("no such format");
         return;
@@ -842,7 +825,12 @@ void store_format(display_format_e format)
             int pos[4];
             get_graphic_out_range(&pos[0], &pos[1], &pos[2], &pos[3]);
             set_graphic_out_range(pos[0], pos[1], pos[2], pos[3]);
-            baseparam_set(&format, FORMAT);
+
+            baseparam_disp_set(&format, FORMAT, HI_UNF_DISP_HD0);
+#ifdef TURN_ON_SD0
+            baseparam_disp_set(&format_sd, FORMAT, HI_UNF_DISP_SD0);
+#endif
+
             mFormat = format;
         }
     }
@@ -852,6 +840,8 @@ int set_format(display_format_e format)
 {
     /* we do not support format of VGA. */
     HI_S32 ret = HI_SUCCESS;
+    int format_sd = HI_UNF_ENC_FMT_PAL;
+
     ALOGE("Display:set_format format is %d",(int)format);
     if(format >= DISPLAY_FMT_BUTT)
     {
@@ -867,7 +857,6 @@ int set_format(display_format_e format)
         return ret;
     }
 #else
-    int format_sd = HI_UNF_ENC_FMT_PAL;
     if(format <= DISPLAY_FMT_480P_60) {
         if ((DISPLAY_FMT_1080P_60 == format) || (DISPLAY_FMT_1080i_60 == format)
             || (DISPLAY_FMT_1080P_24 == format) || (DISPLAY_FMT_1080P_30 == format)
@@ -885,7 +874,8 @@ int set_format(display_format_e format)
     } else if( (format == DISPLAY_FMT_720P_50_FRAME_PACKING) ) {
         format_sd = HI_UNF_ENC_FMT_PAL;
     } else if( format >= DISPLAY_FMT_3840X2160_24 ) {
-        if (DISPLAY_FMT_3840X2160_25 == format) {
+        if ((DISPLAY_FMT_3840X2160_25 == format) || (DISPLAY_FMT_3840X2160_50 == format)
+            || (DISPLAY_FMT_4096X2160_25 == format) || (DISPLAY_FMT_4096X2160_50 == format)) {
             format_sd = HI_UNF_ENC_FMT_PAL;
         } else {
             format_sd = HI_UNF_ENC_FMT_NTSC;
@@ -910,7 +900,7 @@ int set_format(display_format_e format)
     }
 #endif
 
-    store_format((display_format_e)format);
+    store_format((display_format_e)format, (display_format_e)format_sd);
 
     return HI_SUCCESS;
 }
@@ -1078,6 +1068,7 @@ int set_hdcp(int  mode)
 
     return ret;
 }
+
 int get_hdcp()
 {
     HI_UNF_HDMI_ATTR_S stAttr;
@@ -1091,8 +1082,7 @@ int get_hdcp()
     return stAttr.bHDCPEnable;
 }
 
-
-int set_stereo_outmode(int mode,int videofps)
+int set_stereo_outmode(int mode, int videofps)
 {
     HI_S32 ret = -1;
     display_format_e currFmt;
@@ -1118,7 +1108,7 @@ int set_stereo_outmode(int mode,int videofps)
     {
         case HI_UNF_DISP_3D_NONE:
             //2d mode
-            tmpFmt = currFmt;
+            tmpFmt = (HI_UNF_ENC_FMT_E)currFmt;
             if( currFmt <= DISPLAY_FMT_1080i_50 ) { //1080P
                 if(videofps == 23) {
                     if(stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_24])
@@ -1139,7 +1129,7 @@ int set_stereo_outmode(int mode,int videofps)
                     if(stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_60])
                         tmpFmt = HI_UNF_ENC_FMT_1080P_59_94;
                 } else {
-                    tmpFmt = mFormat;
+                    tmpFmt = (HI_UNF_ENC_FMT_E)mFormat;
                 }
             } else if( (currFmt >= DISPLAY_FMT_3840X2160_24) && (currFmt <= DISPLAY_FMT_3840X2160_29_97)) { //4K
                 if(videofps == 23) {
@@ -1158,28 +1148,30 @@ int set_stereo_outmode(int mode,int videofps)
                     if(stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_30])
                         tmpFmt = HI_UNF_ENC_FMT_3840X2160_30;
                 } else {
-                    tmpFmt = mFormat;
+                    tmpFmt = (HI_UNF_ENC_FMT_E)mFormat;
                 }
             } else if( (currFmt == DISPLAY_FMT_720P_50) || (currFmt == DISPLAY_FMT_720P_60)) { //720P
                 if(videofps == 59) {
                     if(stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_720P_60])
                         tmpFmt = HI_UNF_ENC_FMT_720P_59_94;
                 } else {
-                    tmpFmt = mFormat;
+                    tmpFmt = (HI_UNF_ENC_FMT_E)mFormat;
                 }
             } else {
-                tmpFmt = mFormat;
+                tmpFmt = (HI_UNF_ENC_FMT_E)mFormat;
             }
-            ALOGE("set_stereo_outmode, tmpFmt = %d, ", tmpFmt);
-            if(currFmt == tmpFmt) return -1;
-
+            ALOGE("set_stereo_outmode, tmpFmt = %d, current mode = %d", tmpFmt, (int)mStereoMode);
+            if (((HI_UNF_ENC_FMT_E)currFmt == tmpFmt) && (mStereoMode == mode))
+            {
+                return -1;
+            }
             ALOGE("Set Disp to 2D mode, fmt = %d !", tmpFmt);
             ret = HI_UNF_DISP_SetFormat(HI_UNF_DISP_HD0, tmpFmt);
             if(ret != HI_SUCCESS) {
                 ALOGE("HI_UNF_DISP_SetFormat, err = 0x%x ", ret);
                 return -1;
             }
-            mFormat = tmpFmt;
+            mFormat = (display_format_e)tmpFmt;
             mStereoMode = mode;
             break;
 
@@ -1262,7 +1254,7 @@ int set_stereo_outmode(int mode,int videofps)
 
     if(en3d > HI_UNF_DISP_3D_NONE) {
         ALOGE("set_stereo_outmode, tmpFmt = %d, current mode = %d", tmpFmt, (int)mStereoMode);
-        if ((currFmt == tmpFmt) && (mStereoMode == en3d))
+        if (((HI_UNF_ENC_FMT_E)currFmt == tmpFmt) && (mStereoMode == en3d))
         {
             return -1;
         }
@@ -1305,7 +1297,6 @@ int restore_stereo_mode()
     return ret;
 }
 
-
 int set_righteye_first(int Outpriority)
 {
     HI_S32 ret = -1;
@@ -1339,7 +1330,6 @@ int get_righteye_first()
 {
     return eye_priority;
 }
-
 
 int set_disp_ratio(int ratio, int enDisp)
 {
@@ -1418,6 +1408,7 @@ int get_aspect_cvrs()
 
     return value;
 }
+
 int set_optimal_format_enable(int able)//0 is disable; 1 is enable
 {
     ALOGE("display:set_optimal_format_enable able is %d",able);
@@ -1429,17 +1420,18 @@ int get_optimal_format_enable()//0 is disable; 1 is enable
 {
     return getOptimalFormat();
 }
-void parseStringToIntArray(char* str,int *array)
+
+void parseStringToIntArray(char* str, int *array)
 {
     char* pStr = str;
     int *pArray = array;
     int value = 0;
     char  subStr[PROPERTY_LEN];
-    int i = 0;
-    int j = 0;
-    memset(subStr,0,PROPERTY_LEN);
-    ALOGE("@@@@-->length is %d",strlen(str));
-    for(i = 0;i < strlen(str);i++)
+    unsigned int i = 0;
+    unsigned int j = 0;
+    memset(subStr, 0, PROPERTY_LEN);
+    ALOGE("@@@@-->length is %d", strlen(str));
+    for(i = 0; i < strlen(str); i++)
     {
         if(*pStr != ',')
         {
@@ -1456,6 +1448,7 @@ void parseStringToIntArray(char* str,int *array)
         }
     }
 }
+
 int reset()
 {
     char buffer[PROPERTY_LEN];
@@ -1476,7 +1469,9 @@ int reset()
     set_saturation(Array[5]);
     set_graphic_out_range(Array[6],Array[7],Array[8],Array[9]);
     set_aspect_ratio(Array[10]);
+    ALOGD("reset: ready to save base params");
     baseparam_save();
+    ALOGD("reset: finish saving base params");
     return 0;
 }
 
@@ -1536,6 +1531,7 @@ int reload()
 //enable: 0->disabled (close this port), 1->enabled (open this port)
 int set_output_enable(int port, int enable)
 {
+    HI_S32 ret = HI_SUCCESS;
     ALOGD("set_output_enable, port=%d, enable=%d", port, enable);
 
     if (port != 0 && port != 1)
@@ -1557,15 +1553,21 @@ int set_output_enable(int port, int enable)
         stIntf_disp.unIntf.enHdmi = hdmi_interface;
         if (enable == 0 && hdmi_enable == 1) //close
         {
-            HI_UNF_DISP_DetachIntf(HI_UNF_DISP_HD0, &stIntf_disp, 1);
-            hdmi_enable = 0;
-            ALOGW("set_output_enable, close hdmi interface %d", hdmi_interface);
+            ret = HI_UNF_DISP_DetachIntf(HI_UNF_DISP_HD0, &stIntf_disp, 1);
+            if (ret == HI_SUCCESS)
+            {
+                hdmi_enable = 0;
+            }
+            ALOGW("set_output_enable, close hdmi interface %d, ret=%p", hdmi_interface, (void*)ret);
         }
         else if (enable == 1 && hdmi_enable == 0) //open
         {
-            HI_UNF_DISP_AttachIntf(HI_UNF_DISP_HD0, &stIntf_disp, 1);
-            hdmi_enable = 1;
-            ALOGW("set_output_enable, open hdmi interface %d", hdmi_interface);
+            ret = HI_UNF_DISP_AttachIntf(HI_UNF_DISP_HD0, &stIntf_disp, 1);
+            if (ret == HI_SUCCESS)
+            {
+                hdmi_enable = 1;
+            }
+            ALOGW("set_output_enable, open hdmi interface %d, ret=%p", hdmi_interface, (void*)ret);
         }
         else
         {
@@ -1579,15 +1581,21 @@ int set_output_enable(int port, int enable)
         stIntf_disp.unIntf.stCVBS.u8Dac = cvbs_dac_port;
         if (enable == 0 && cvbs_enable == 1) //close
         {
-            HI_UNF_DISP_DetachIntf(HI_UNF_DISP_SD0, &stIntf_disp, 1);
-            cvbs_enable = 0;
-            ALOGW("set_output_enable, close cvbs port %d", cvbs_dac_port);
+            ret = HI_UNF_DISP_DetachIntf(HI_UNF_DISP_SD0, &stIntf_disp, 1);
+            if (ret == HI_SUCCESS)
+            {
+                cvbs_enable = 0;
+            }
+            ALOGW("set_output_enable, close cvbs port %d, ret=%p", cvbs_dac_port, (void*)ret);
         }
         else if (enable == 1 && cvbs_enable == 0) //open
         {
-            HI_UNF_DISP_AttachIntf(HI_UNF_DISP_SD0, &stIntf_disp, 1);
-            cvbs_enable = 1;
-            ALOGW("set_output_enable, open cvbs port %d", cvbs_dac_port);
+            ret = HI_UNF_DISP_AttachIntf(HI_UNF_DISP_SD0, &stIntf_disp, 1);
+            if (ret == HI_SUCCESS)
+            {
+                cvbs_enable = 1;
+            }
+            ALOGW("set_output_enable, open cvbs port %d, ret=%p", cvbs_dac_port, (void*)ret);
         }
         else
 #endif
@@ -1596,7 +1604,7 @@ int set_output_enable(int port, int enable)
         }
     }
 
-    return 0;
+    return ret;
 }
 
 //port: 0->HDMI, 1->CVBS
@@ -1652,6 +1660,24 @@ int get_virtual_screen()
     } else {
         return -1;
     }
+}
+
+int get_virtual_screen_size(int *w, int *h)
+{
+    HI_S32 Ret;
+    HI_UNF_PDM_DISP_PARAM_S         stDispParam_disp1;
+
+    Ret = HI_UNF_PDM_GetBaseParam(HI_UNF_PDM_BASEPARAM_DISP1, &stDispParam_disp1);
+    if(HI_SUCCESS != Ret)
+    {
+        ALOGE("ERR: HI_UNF_PDM_GetBaseParam, Ret = %#x\n", Ret);
+        return -1;
+    }
+
+    *w = stDispParam_disp1.u32VirtScreenWidth;
+    *h = stDispParam_disp1.u32VirtScreenHeight;
+
+    return Ret;
 }
 
 int set_virtual_screen(int outFmt)
@@ -1905,28 +1931,32 @@ int disp_init()
         hdmi_interface = baseParam.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].unIntf.enHdmi;
         ALOGE("------>hd, hdmi_interface is %d", hdmi_interface);
     } else {
-        ALOGE("GetBaseParam Err--- %d", base_ret);
+        ALOGE("hd, GetBaseParam Err--- %p", (void*)base_ret);
     }
 
     base_sd_ret = HI_UNF_PDM_GetBaseParam(HI_UNF_DISP_SD0, &baseParam_sd);
     if(base_sd_ret == HI_SUCCESS) {
         cvbs_dac_port = baseParam_sd.stIntf[HI_UNF_DISP_INTF_TYPE_CVBS].unIntf.stCVBS.u8Dac;
-        ALOGE("------>sd,cvbs_dac_port is %d", cvbs_dac_port);
+        ALOGE("------>sd, cvbs_dac_port is %d", cvbs_dac_port);
     } else {
-        ALOGE("sd,GetBaseParam Err--- %d", base_ret);
+        ALOGE("sd, GetBaseParam Err--- %p", (void*)base_sd_ret);
     }
-    ALOGE("sd,GetBaseParam VirtScreenWidth:%d", baseParam.u32VirtScreenWidth);
-    char property[PROPERTY_VALUE_MAX];
-    if (property_get("ro.config.low_ram", property, NULL) > 0 && 1280 != baseParam.u32VirtScreenWidth && 720 != baseParam.u32VirtScreenHeight) {
+    ALOGE("sd, GetBaseParam VirtScreenWidth:%d", baseParam.u32VirtScreenWidth);
+
+    char property[PROPERTY_LEN];
+    property_get("ro.config.low_ram", property, "");
+    if ( (strcmp(property, "true") == 0) && (1280 != baseParam.u32VirtScreenWidth) && (720 != baseParam.u32VirtScreenHeight) ) {
         baseParam.u32VirtScreenWidth = 1280;
         baseParam.u32VirtScreenHeight = 720;
-        ret = HI_UNF_PDM_UpdateBaseParam(HI_UNF_PDM_BASEPARAM_DISP1, &baseParam);
+        HI_UNF_PDM_UpdateBaseParam(HI_UNF_PDM_BASEPARAM_DISP1, &baseParam);
+        HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISP_HD0, baseParam.u32VirtScreenWidth, baseParam.u32VirtScreenHeight);
+        HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISP_SD0, baseParam.u32VirtScreenWidth, baseParam.u32VirtScreenHeight);
     }
     checkScreenDPIConflict(baseParam.u32VirtScreenWidth, baseParam.u32VirtScreenHeight);
 
     ret = HIADP_HDMI_Init(HI_UNF_HDMI_ID_0, mFormat);
     if (ret != HI_SUCCESS) {
-        ALOGE("call HI_UNF_DISP_Init failed.\n");
+        ALOGE("call HIADP_HDMI_Init failed.\n");
         return ret;
     }
     memset(&displayParam, 0, sizeof(displayParam));
@@ -2059,6 +2089,7 @@ static int open_display(const struct hw_module_t* module, const char* name,
     ctx->device.detach_intf= detach_intf;
     ctx->device.set_virtual_screen = set_virtual_screen;
     ctx->device.get_virtual_screen = get_virtual_screen;
+    ctx->device.get_virtual_screen_size = get_virtual_screen_size;
     ctx->device.reset = reset;
     ctx->device.set_hdmi_suspend_time = set_hdmi_suspend_time;
     ctx->device.get_hdmi_suspend_time = get_hdmi_suspend_time;

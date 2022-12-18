@@ -19,6 +19,7 @@
 #include <mach/cpu.h>
 
 extern struct device_resource hi3716cv200_hinfc610_device_resource;
+extern struct device_resource hi3716mv410_hifmc100_device_resource;
 int ncq_fixed = 0;
 EXPORT_SYMBOL(ncq_fixed);
 int fbs_fixed = 0;
@@ -32,8 +33,13 @@ static struct device_resource *hi3716cv200_device_resource[] = {
 	&hi3716cv200_hinfc610_device_resource,
 	NULL,
 };
+static struct device_resource *hi3716mv410_device_resource[] = {
+	&hi3716mv410_hifmc100_device_resource,
+	NULL,
+};
 /*****************************************************************************/
 extern struct clk hi3716cv200_hinfc610_clk;
+extern struct clk hi3716mv410_hifmc100_clk;
 
 static struct clk hi3716cv200_uart_clk = {
 #ifdef CONFIG_S40_FPGA 
@@ -54,6 +60,9 @@ static struct clk_lookup hi3716cv200_lookups[] = {
 	{
 		.dev_id = "hinfc610",
 		.clk    = &hi3716cv200_hinfc610_clk,
+	}, { /* HIFMC */
+		.dev_id = "hifmc100",
+		.clk    = &hi3716mv410_hifmc100_clk,
 	}, { /* UART0 */
 		.dev_id		= "uart:0",
 		.clk		= &hi3716cv200_uart_clk,
@@ -175,6 +184,26 @@ struct cpu_info hi3716mv400_cpu_info =
 	.chipid = _HI3716MV400,
 	.chipid_mask = _HI3716MV400_MASK,
 	.resource = hi3716cv200_device_resource,
+	.init = hi3716cv200_cpu_init,
+};
+
+/* Hi3716Mv410 */
+struct cpu_info hi3716mv410_cpu_info =
+{
+	.name = "Hi3716Mv410",
+	.chipid = _HI3716MV410,
+	.chipid_mask = _HI3716MV410_MASK,
+	.resource = hi3716mv410_device_resource,
+	.init = hi3716cv200_cpu_init,
+};
+
+/* Hi3716Mv420 */
+struct cpu_info hi3716mv420_cpu_info =
+{
+	.name = "Hi3716Mv420",
+	.chipid = _HI3716MV420,
+	.chipid_mask = _HI3716MV410_MASK,
+	.resource = hi3716mv410_device_resource,
 	.init = hi3716cv200_cpu_init,
 };
 

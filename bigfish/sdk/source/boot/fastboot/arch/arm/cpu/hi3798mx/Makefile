@@ -6,10 +6,6 @@ LIB	= $(obj)lib$(CPU).a
 
 START   := start.o
 COBJS   := chip.o
-SOBJS   := ddrphy_training_func.o
-SOBJS   += ddrphy_training_print.o
-COBJS   += ddrphy_training.o
-COBJS   += ddr_dataeye_training.o
 COBJS   += lowlevel_init.o
 COBJS   += emmc_boot.o
 COBJS   += cpu.o

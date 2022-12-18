@@ -11,7 +11,7 @@
 #define HI_SATA_PHY0_CTLH       0x58
 #define HI_SATA_PHY1_CTLL       0x60
 #define HI_SATA_PHY1_CTLH       0x64
-#define HI_SATA_DIS_CLK     (1 << 12)
+#define HI_SATA_DIS_CLK         (1 << 12)
 #define HI_SATA_OOB_CTL         0x6c
 #define HI_SATA_PORT_PHYCTL     0x74
 
@@ -33,6 +33,10 @@ MODULE_PARM_DESC(mode_3g, "set sata 3G mode (0:1.5G(default);1:3G)");
 #endif
 #endif
 
+static int modelimit=2;
+module_param(modelimit, int , 0600);
+MODULE_PARM_DESC(modelimit, "set SATA mode (0:1.5G; 1:3G; 2:6G(default))");
+
 #ifdef CONFIG_ARCH_GODBOX
 #include "hi_ahci_sys_godbox_defconfig.c"
 #endif/*CONFIG_ARCH_GODBOX*/
@@ -41,11 +45,21 @@ MODULE_PARM_DESC(mode_3g, "set sata 3G mode (0:1.5G(default);1:3G)");
 #include "hi_ahci_sys_s40_defconfig.c"
 #endif/*CONFIG_ARCH_S40*/
 
+#ifdef CONFIG_ARCH_HIFONE
+#include "hi_ahci_sys_hifone_defconfig.c"
+#endif
+
 int hi_sata_init(struct device *dev, void __iomem *mmio)
 {
+#ifdef CONFIG_ARCH_HIFONE
+	hi_sata_init_hifone(mmio);
+#endif
+
 #ifdef CONFIG_ARCH_S40
 	hi_sata_init_s40(mmio);
-#else
+#endif
+
+#ifdef CONFIG_ARCH_GODBOX
 	unsigned int tmp;
 	int i;
 
@@ -91,9 +105,15 @@ EXPORT_SYMBOL(hi_sata_init);
 
 void hi_sata_exit(struct device *dev)
 {
-#if CONFIG_ARCH_S40
+#ifdef CONFIG_ARCH_HIFONE
+	hi_sata_exit_hifone();
+#endif
+
+#ifdef CONFIG_ARCH_S40
 	hi_sata_exit_s40();
-#else
+#endif
+
+#ifdef CONFIG_ARCH_GODBOX
 	hi_sata_phy_reset();
 	msleep(20);
 	hi_sata_reset();

@@ -1,6 +1,6 @@
 /******************************************************************************
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved. 
 *
 * This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
 * and may not be copied, reproduced, modified, disclosed to others, published or used, in
@@ -10,16 +10,17 @@
 File Name           : optm_hifb.c
 Version             : Initial Draft
 Author              : 
-Created             : 2014/08/06
+Created             : 2015/06/15
 Description         : 
 Function List       : 
 History             :
 Date                       Author                   Modification
-2014/08/06                 y00181162                Created file        
+2015/06/15                y00181162                Created file        
 ******************************************************************************/
 
 
 /*********************************add include here******************************/
+
 #ifndef HI_BUILD_IN_BOOT
 
 	#include <linux/string.h>
@@ -79,19 +80,6 @@ Date                       Author                   Modification
 
 #define CFG_HIFB_S40V2_PALNTSC_BUG
 
-#ifdef HI_BUILD_IN_BOOT
-	#ifdef HIGO_DEBUG
-		#define HIFB_ERROR   printf
-		#define HIFB_WARNING printf
-		#define HIFB_INFO(fmt...)
-		#define HIFB_FATAL   printf
-	#else
-		#define HIFB_ERROR(fmt...)
-		#define HIFB_WARNING(fmt...)
-		#define HIFB_INFO(fmt...)
-		#define HIFB_FATAL(fmt...)
-	#endif
-#endif
 
 #ifndef HI_BUILD_IN_BOOT
 	/* wait v blanking */
@@ -769,8 +757,6 @@ OPTM_VDP_GFX_IFMT_E OPTM_PixerFmtTransferToHalFmt(HIFB_COLOR_FMT_E enDataFmt);
 HI_S32 OPTM_GfxConfigSlvLayer(HIFB_LAYER_ID_E enLayerId, HI_RECT_S *pstRect);
 HI_S32 OPTM_GfxSetCsc(OPTM_GFX_GP_E enGfxGpId, OPTM_GFX_CSC_PARA_S *pstCscPara, HI_BOOL bIsBGRIn);
 HI_S32 OPTM_GfxOpenSlvLayer(HIFB_LAYER_ID_E enLayerId);
-HI_S32 OPTM_AllocAndMap(const char *bufname, char *zone_name, HI_U32 size, int align, MMZ_BUFFER_S *psMBuf);
-HI_VOID OPTM_UnmapAndRelease(MMZ_BUFFER_S *psMBuf);
 HI_S32 OPTM_Adapt_AllocAndMap(const char *bufname, char *zone_name, HI_U32 size, int align, MMZ_BUFFER_S *psMBuf);
 HI_S32 OPTM_GfxSetLayerAddr(HIFB_LAYER_ID_E enLayerId, HI_U32 u32Addr);
 HI_S32 OPTM_GfxSetLayerStride(HIFB_LAYER_ID_E enLayerId, HI_U32 u32Stride);
@@ -874,11 +860,9 @@ HI_S32 OPTM_GpInitFromDisp(OPTM_GFX_GP_E enGPId)
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
-HI_S32  OPTM_GFX_GetDevCap(const HIFB_CAPABILITY_S **pstCap)
+HI_VOID  OPTM_GFX_GetDevCap(const HIFB_CAPABILITY_S **pstCap)
 {
     *pstCap = &g_stGfxCap[0];
-
-    return HI_SUCCESS;
 }
 
 /***************************************************************************************
@@ -1004,7 +988,7 @@ HI_S32 OPTM_Aapt_Module_GetFunction(HI_U32 u32ModuleID, HI_VOID** ppFunc)
 HI_S32 OPTM_GfxInit(HI_VOID)
 {
     HI_S32 s32ret;
-    HI_U32 u32Phyaddr;
+    HI_U32 u32Phyaddr = 0;
 
     PRINT_IN;
 
@@ -1016,12 +1000,6 @@ HI_S32 OPTM_GfxInit(HI_VOID)
      **vdp register address
      **/
     u32Phyaddr = (HI_U32)IO_ADDRESS(CONFIG_VDP_REG_BASEADDR);
-    if (0 == u32Phyaddr)
-    {
-        HIFB_ERROR("fail to init hal register!\n");
-        return HI_FAILURE;
-    }
-
     OPTM_VDP_DRIVER_Initial(u32Phyaddr);
 
 	/**
@@ -1029,12 +1007,6 @@ HI_S32 OPTM_GfxInit(HI_VOID)
 	 **/
 #ifdef CFG_HIFB_COMPRESSION_SUPPORT
     u32Phyaddr = (HI_U32)IO_ADDRESS(CONFIG_HIFB_MDDRC_REG_BASEADDR);
-    if (0 == u32Phyaddr)
-    {
-        HIFB_ERROR("fail to init hal register!\n");
-        return HI_FAILURE;
-    }
-
     OPTM_MDDRC_DRIVER_Initial(u32Phyaddr);
 #endif
 
@@ -1131,7 +1103,7 @@ static HI_VOID OPTM_WorkQueueToOpenWbc(struct work_struct *data)
 	 **调用之前已经对这个数据赋值，HIFB_LAYER_SD_0
 	 **/
     u32LayerID = (HIFB_LAYER_ID_E)(pstOpenSlvWork->u32Data);
-    OPTM_GfxOpenSlvLayer(u32LayerID);
+    HIFB_WBC2_OpenSlvLayer(u32LayerID);
 }
 #endif
 
@@ -1158,12 +1130,6 @@ static HI_VOID OPTM_3DMode_Callback(struct work_struct *data)
     }
 
     pst3DModeWork = container_of(data, OPTM_GFX_WORK_S, work);
-
-    if (HI_NULL == pst3DModeWork)
-    {
-        return;
-    }
-
     enGpHalId     = (OPTM_GFX_GP_E)(pst3DModeWork->u32Data);
 
     if (enGpHalId >= OPTM_GFX_GP_BUTT)
@@ -1512,7 +1478,7 @@ static HI_S32 OPTM_GfxInitLayer(HIFB_LAYER_ID_E enLayerId)
 		/**
 		 **使用隔行
 		 **/
-        g_stGfxDevice[enLayerId].enReadMode  = VDP_RMODE_INTERLACE;
+        g_stGfxDevice[enLayerId].enReadMode  = VDP_RMODE_SELF_ADAPTION;
         OPTM_VDP_GFX_SetReadMode(g_stGfxDevice[enLayerId].enGfxHalId, g_stGfxDevice[enLayerId].enReadMode);
     }
 #endif
@@ -1754,7 +1720,7 @@ HI_S32 OPTM_GfxSetWbcAddr(OPTM_VDP_LAYER_WBC_E enWbcHalId, HI_U32 u32Addr, HI_U3
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
-HI_S32 OPTM_GfxOpenSlvLayer(HIFB_LAYER_ID_E enLayerId)
+HI_S32 HIFB_WBC2_OpenSlvLayer(HIFB_LAYER_ID_E enLayerId)
 {
     HI_S32        s32Ret;
     OPTM_GFX_GP_E enGPId;
@@ -1803,7 +1769,7 @@ HI_S32 OPTM_GfxOpenSlvLayer(HIFB_LAYER_ID_E enLayerId)
     }
 
     /*  3 set slv layer */
-    g_stGfxDevice[enLayerId].enReadMode = VDP_RMODE_INTERLACE;
+    g_stGfxDevice[enLayerId].enReadMode = VDP_RMODE_SELF_ADAPTION;
 
 	/**
      ** 设置标清图层信息寄存器
@@ -1848,6 +1814,7 @@ HI_S32 OPTM_GfxOpenSlvLayer(HIFB_LAYER_ID_E enLayerId)
 
     OPTM_GfxSetWbcAddr  (g_stGfxWbc2.enWbcHalId, g_stGfxWbc2.u32WriteBufAddr,g_stGfxWbc2.u32BufferStride);
 
+    OPTM_GfxSetLayerAddr(enLayerId, g_stGfxWbc2.u32ReadBufAddr);
     OPTM_GfxSetLayerStride(enLayerId, g_stGfxWbc2.u32BufferStride);
 
     g_stGfxDevice[enLayerId].bEnable = OPTM_JudgeWbcEnable();
@@ -3498,11 +3465,11 @@ HI_S32 OPTM_GfxSetGpRect(OPTM_GFX_GP_E enGpId, const HIFB_RECT * pstInputRect)
         }
 
         /*in wbc work mode, slavery channel show 2D image*/
-        if (HIFB_STEREO_SIDEBYSIDE_HALF == g_stGfxGPDevice[OPTM_MASTER_GPID].enTriDimMode)
+        if (HIFB_STEREO_SIDEBYSIDE_HALF == g_stGfxGPDevice[OPTM_SLAVER_GPID].enTriDimMode)
         {
             stGfxRect.u32IWth /= 2;
         }
-        else if (HIFB_STEREO_TOPANDBOTTOM == g_stGfxGPDevice[OPTM_MASTER_GPID].enTriDimMode)
+        else if (HIFB_STEREO_TOPANDBOTTOM == g_stGfxGPDevice[OPTM_SLAVER_GPID].enTriDimMode)
         {
             stGfxRect.u32IHgt /= 2;
         }
@@ -3931,9 +3898,6 @@ HI_S32 OPTM_GfxGetOSDData(HIFB_LAYER_ID_E enLayerId, HIFB_OSD_DATA_S *pstLayerDa
         pstLayerData->eState = HIFB_LAYER_STATE_DISABLE;
     }
 
-	/** 这个没有用到 **/
-    pstLayerData->u32BufferPhyAddr = g_stGfxDevice[enLayerId].NoCmpBufAddr;
-
 	/** 获取surface 帧buffer地址 **/
     OPTM_VDP_GFX_GetLayerAddr(OPTM_GetGfxHalId(enLayerId), &pstLayerData->u32RegPhyAddr);
 #ifdef CFG_HIFB_COMPRESSION_SUPPORT
@@ -4153,7 +4117,7 @@ HI_S32 OPTM_GFX_OpenWbc2(OPTM_GFX_WBC_S *pstWbc2)
 	/**
 	 **更新回写寄存器 
 	 **/
-    OPTM_VDP_WBC_SetRegUp     (pstWbc2->enWbcHalId);
+    //OPTM_VDP_WBC_SetRegUp     (pstWbc2->enWbcHalId);
 
     /** WBC打开 **/
     pstWbc2->bOpened = HI_TRUE;
@@ -4185,7 +4149,7 @@ HI_S32 OPTM_GFX_CloseWbc2(OPTM_GFX_WBC_S *pstWbc2)
 
 
     OPTM_VDP_WBC_SetEnable(pstWbc2->enWbcHalId, HI_FALSE);
-    OPTM_VDP_WBC_SetRegUp (pstWbc2->enWbcHalId);
+    //OPTM_VDP_WBC_SetRegUp (pstWbc2->enWbcHalId);
 
     PRINT_OUT;
 
@@ -4300,6 +4264,10 @@ HI_VOID OPTM_SlaverProcess(HI_VOID* u32Param0, HI_VOID* u32Param1)
         if (pGfxGp->unUpFlag.bits.Enable)
         {
             OPTM_VDP_GFX_SetLayerEnable(g_stGfxDevice[enLayerId].enGfxHalId, g_stGfxDevice[enLayerId].bEnable);
+			if (!g_stGfxDevice[enLayerId].bEnable)
+			{
+				OPTM_VDP_GFX_SetRegUp(g_stGfxDevice[enLayerId].enGfxHalId);
+			}
             OPTM_VDP_WBC_SetEnable(pstWbc2->enWbcHalId,g_stGfxDevice[enLayerId].bEnable);
             pGfxGp->unUpFlag.bits.Enable = 0;
         }
@@ -4504,7 +4472,7 @@ OPTM_VDP_DISP_MODE_E OPTM_GfxGetHalTriDimMode(HIFB_STEREO_MODE_E enMode)
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
-HI_S32 OPTM_GfxSetTriDimMode(HIFB_LAYER_ID_E enLayerId, HIFB_STEREO_MODE_E enMode)
+HI_S32 OPTM_GfxSetTriDimMode(HIFB_LAYER_ID_E enLayerId, HIFB_STEREO_MODE_E enMode, HIFB_STEREO_MODE_E enWbcSteroMode)
 {
     HI_U32 u32GpId;
     PRINT_IN;
@@ -4527,6 +4495,29 @@ HI_S32 OPTM_GfxSetTriDimMode(HIFB_LAYER_ID_E enLayerId, HIFB_STEREO_MODE_E enMod
     g_stGfxGPDevice[u32GpId].enTriDimMode = enMode;
 
     OPTM_VDP_GP_SetRegUp(g_stGfxDevice[enLayerId].enGPId);
+
+    /**
+     ** WBC_GP_INRECT == GP_INRECT
+     **/
+    if (IS_MASTER_GP(u32GpId))
+    {
+    	g_stGfxGPDevice[OPTM_SLAVER_GPID].enTriDimMode = enWbcSteroMode;
+        g_stGfxGPDevice[OPTM_SLAVER_GPID].stInRect.s32Width  = g_stGfxGPDevice[u32GpId].stInRect.s32Width;
+        g_stGfxGPDevice[OPTM_SLAVER_GPID].stInRect.s32Height = g_stGfxGPDevice[u32GpId].stInRect.s32Height;
+
+        if (HIFB_STEREO_MONO == enWbcSteroMode)
+        {
+            g_stGfxWbc2.enWbcMode = OPTM_WBC_MODE_MONO;
+        }
+        else
+        {
+            g_stGfxWbc2.enWbcMode = OPTM_WBC_MODE_LFET_EYE;
+        }
+
+        g_stGfxGPDevice[OPTM_SLAVER_GPID].unUpFlag.bits.WbcMode  = 1;
+        g_stGfxGPDevice[OPTM_SLAVER_GPID].unUpFlag.bits.InRect = 1;
+        g_stGfxGPDevice[OPTM_SLAVER_GPID].unUpFlag.bits.RegUp  = 1;
+    }
 
     PRINT_OUT;
 
@@ -4857,7 +4848,7 @@ HI_S32 OPTM_GPRecovery(OPTM_VDP_LAYER_GP_E enGPId)
         /**
          ** when in wbc mode , gfx4 have no zme, zme attached to wbc_gp0
          **/
-        g_stGfxDevice[HIFB_LAYER_SD_0].enReadMode = g_stGfxGPDevice[enGPId].bInterface ? VDP_RMODE_INTERLACE : VDP_RMODE_PROGRESSIVE;
+        g_stGfxDevice[HIFB_LAYER_SD_0].enReadMode = g_stGfxGPDevice[enGPId].bInterface ? VDP_RMODE_SELF_ADAPTION : VDP_RMODE_PROGRESSIVE;
         /**
          **Recover WBC_GP0, Gfx4, Gp1
          **/
@@ -4907,7 +4898,7 @@ HI_S32 OPTM_GPRecovery(OPTM_VDP_LAYER_GP_E enGPId)
             OPTM_GfxSetLayKeyMask(enLayerId, &g_stGfxDevice[enLayerId].stColorkey);
 #ifdef CFG_HIFB_STEREO3D_HW_SUPPORT
             OPTM_GfxSetTriDimEnable(enLayerId, g_stGfxDevice[enLayerId].b3DEnable);
-            OPTM_GfxSetTriDimMode(enLayerId, g_stGfxDevice[enLayerId].enTriDimMode);
+            OPTM_GfxSetTriDimMode(enLayerId, g_stGfxDevice[enLayerId].enTriDimMode, g_stGfxGPDevice[OPTM_SLAVER_GPID].enTriDimMode);
             OPTM_GfxSetTriDimAddr(enLayerId, g_stGfxDevice[enLayerId].u32TriDimAddr);
             OPTM_GFX_SetStereoDepth(enLayerId, g_stGfxDevice[enLayerId].s32Depth);
 #endif
@@ -4924,7 +4915,7 @@ HI_S32 OPTM_GPRecovery(OPTM_VDP_LAYER_GP_E enGPId)
 			/*gfx3 have no zme*/
             if (OPTM_VDP_LAYER_GFX3 == g_stGfxDevice[enLayerId].enGfxHalId)
             {
-                g_stGfxDevice[enLayerId].enReadMode = g_stGfxGPDevice[enGPId].bInterface ? VDP_RMODE_INTERLACE : VDP_RMODE_PROGRESSIVE;
+                g_stGfxDevice[enLayerId].enReadMode = g_stGfxGPDevice[enGPId].bInterface ? VDP_RMODE_SELF_ADAPTION : VDP_RMODE_PROGRESSIVE;
             }
 #endif
             OPTM_GfxSetLayerReadMode(enLayerId, g_stGfxDevice[enLayerId].enReadMode);
@@ -5060,6 +5051,7 @@ HI_S32 OPTM_Distribute_Callback(HI_VOID* u32Param0, HI_VOID* u32Param1)
 		 **/
 		queue_work(g_stGfxGPDevice[*pEnGpHalId].queue, &g_stGfxGPDevice[*pEnGpHalId].st3DModeChgWork.work);
 
+#if 0
         /**
          ** WBC_GP_INRECT == GP_INRECT
          **/
@@ -5081,6 +5073,7 @@ HI_S32 OPTM_Distribute_Callback(HI_VOID* u32Param0, HI_VOID* u32Param1)
             g_stGfxGPDevice[OPTM_SLAVER_GPID].unUpFlag.bits.InRect = 1;
             g_stGfxGPDevice[OPTM_SLAVER_GPID].unUpFlag.bits.RegUp  = 1;
         }
+#endif
     }
 #endif
 
@@ -5113,14 +5106,14 @@ HI_S32 OPTM_GFX_GetGpInInitFlag(OPTM_GFX_GP_E enGpId)
 }
 
 /***************************************************************************************
-* func          : OPTM_GFX_SetGfxMask
+* func          : OPTM_GFX_SetGPMask
 * description   : CNcomment: 这个接口只有开机logo才会用到，主要是用来过渡使用的 CNend\n
 * param[in]     : HI_VOID
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
 #ifndef HI_BUILD_IN_BOOT
-HI_S32 OPTM_GFX_SetGfxMask(OPTM_GFX_GP_E enGpId, HI_BOOL bFlag)
+HI_S32 OPTM_GFX_SetGPMask(OPTM_GFX_GP_E enGpId, HI_BOOL bFlag)
 {
     HIFB_OSD_DATA_S stLayerData;
     PRINT_IN;
@@ -5184,7 +5177,7 @@ HI_S32 OPTM_GFX_ClearLogoOsd(HIFB_LAYER_ID_E enLayerId)
         OPTM_VDP_WBC_SetEnable(g_stGfxWbc2.enWbcHalId, HI_FALSE);
         OPTM_VDP_WBC_SetLayerAddr(g_stGfxWbc2.enWbcHalId, HI_NULL,
                                     HI_NULL, HI_NULL, HI_NULL);
-        OPTM_VDP_WBC_SetRegUp (g_stGfxWbc2.enWbcHalId);
+        //OPTM_VDP_WBC_SetRegUp (g_stGfxWbc2.enWbcHalId);
 
         OPTM_VDP_GFX_SetLayerEnable(OPTM_GetGfxHalId(OPTM_SLAVER_LAYERID), HI_FALSE);
         OPTM_VDP_GFX_SetLayerAddrEX(OPTM_GetGfxHalId(OPTM_SLAVER_LAYERID), HI_NULL);
@@ -5982,6 +5975,16 @@ HI_S32 OPTM_GFX_SetCmpDDROpen(HIFB_LAYER_ID_E enLayerId, HI_BOOL bOpen)
 }
 #endif
 
+HI_S32 OPTM_GFX_GetHaltDispStatus(HIFB_LAYER_ID_E enLayerId, HI_BOOL *pbDispInit)
+{
+	OPTM_GFX_GP_E enGPId;
+
+    enGPId = g_stGfxDevice[enLayerId].enGPId;
+
+	*pbDispInit =  g_stGfxGPDevice[enGPId].bGpClose?HI_FALSE:HI_TRUE;
+
+	return HI_SUCCESS;
+}
 
 /***************************************************************************************
 * func          : OPTM_GFX_GetOps
@@ -6035,7 +6038,7 @@ HI_VOID OPTM_GFX_GetOps(OPTM_GFX_OPS_S *ops)
     ops->OPTM_GFX_SetGpInInitFlag   = OPTM_GFX_SetGpInInitFlag;
     ops->OPTM_GFX_GetGpInInitFlag   = OPTM_GFX_GetGpInInitFlag;
 #ifndef HI_BUILD_IN_BOOT
-    ops->OPTM_GFX_SetGfxMask        = OPTM_GFX_SetGfxMask;
+    ops->OPTM_GFX_SetGPMask         = OPTM_GFX_SetGPMask;
     ops->OPTM_GFX_GetGfxMask        = OPTM_GFX_GetGfxMask;
     ops->OPTM_GfxGetDispFMTSize     = OPTM_GfxGetDispFMTSize;
 	ops->OPTM_GFX_GetSlvLayerInfo   = OPTM_GFX_GetSlvLayerInfo;
@@ -6069,7 +6072,7 @@ HI_VOID OPTM_GFX_GetOps(OPTM_GFX_OPS_S *ops)
     ops->OPTM_GFX_ClearLogoOsd      = OPTM_GFX_ClearLogoOsd;
     ops->OPTM_GfxSetGpDeflicker     = OPTM_GfxSetGpDeflicker;
 #endif
-
+	ops->OPTM_GFX_GetHaltDispStatus = OPTM_GFX_GetHaltDispStatus;
 }
 
 /****************************************************************************************************

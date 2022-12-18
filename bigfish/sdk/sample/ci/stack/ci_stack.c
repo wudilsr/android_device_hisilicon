@@ -761,7 +761,7 @@ static HI_S32 ApplicationLayer(HI_UNF_CI_PCCD_E enCardId, HI_U16 u16SessionNum, 
             stAPDU.u32Size += 4; 
         }
         s32Ret = QueuePutAPDU(enCardId, &stAPDU);
-				break;  
+		break;  
 				    
     case A_RM_PROFILE:  
         stAPDU.u32Size = 0;
@@ -928,8 +928,16 @@ static HI_U32 SessionOpen(HI_UNF_CI_PCCD_E enCardId, HI_U32 u32ResourceId, APDU_
 
     if (s32Ret == HI_SUCCESS)
     {
-        stStackInfo[enCardId].stSession[pstAPDU->u16SessionNum].isOpen = HI_TRUE;
-		printf("Session setup: 0x%x\r\n", pstAPDU->u16SessionNum);
+        if (!stStackInfo[enCardId].stSession[pstAPDU->u16SessionNum].isOpen)
+        {
+		    HI_PRINT("Session setup: 0x%x\r\n", pstAPDU->u16SessionNum);
+            stStackInfo[enCardId].stSession[pstAPDU->u16SessionNum].isOpen = HI_TRUE;
+        }
+        else
+        {
+            HI_ERR_CI("resource busy: 0x%08X\n", u32ResourceId);
+            s32Ret = HI_FAILURE;
+        }
     }
 
     return s32Ret;
@@ -956,7 +964,6 @@ static HI_S32 SessionLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8SPDU, HI_U32 u32
     HI_U16 u16SessionNum;
     HI_U8 u8Status;
     HI_U32 u32Index = 0;
-    HI_U32 u32Length;
     SPDU_S stSPDU;
     APDU_S stAPDU;
 
@@ -964,7 +971,7 @@ static HI_S32 SessionLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8SPDU, HI_U32 u32
     memset(&stAPDU, 0, sizeof(stAPDU));
 
     u8Cmd = pu8SPDU[u32Index++];
-    u32Length= pu8SPDU[u32Index++];
+    u32Index++;//Length
     HI_INFO_CI("Session cmd 0x%02X\n", u8Cmd);
     switch(u8Cmd)
     {
@@ -1031,8 +1038,9 @@ static HI_S32 TransportLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8TPDU, HI_U32 u
     HI_U32 i;
 	HI_U8  *pbTpdu = HI_NULL;
 	HI_U32 u32TpduLen = 0;
-	pbTpdu = s_abTpdu[enCardId];
+    
 	u32TpduLen = s_u32TpduLen[enCardId];
+    pbTpdu = s_abTpdu[enCardId] + u32TpduLen;
 
     memset(&stTPDU, 0, sizeof(stTPDU));
 
@@ -1069,8 +1077,9 @@ static HI_S32 TransportLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8TPDU, HI_U32 u
 					HI_PRINT("\n");
 				}
 #endif
-                memcpy(&s_abTpdu[s_u32TpduLen], &pu8TPDU[u32Index], u32Length - 1);
-                s_u32TpduLen += u32Length - 1;
+                memcpy(pbTpdu, &pu8TPDU[u32Index], u32Length - 1);
+                u32TpduLen += u32Length - 1;
+                pbTpdu += u32Length - 1;
             }
             break;
 
@@ -1088,15 +1097,17 @@ static HI_S32 TransportLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8TPDU, HI_U32 u
 					HI_PRINT("\n");
 				}
 #endif
-				memcpy(&s_abTpdu[s_u32TpduLen], &pu8TPDU[u32Index], u32Length - 1);
-                s_u32TpduLen += u32Length - 1;
-				
-	 			if (s_u32TpduLen > 0)
+				memcpy(pbTpdu, &pu8TPDU[u32Index], u32Length - 1);
+                u32TpduLen += u32Length - 1;
+				pbTpdu += u32Length - 1;
+                
+	 			if (u32TpduLen > 0)
 				{
-					s32Ret = SessionLayer(enCardId, s_abTpdu, s_u32TpduLen);
+					s32Ret = SessionLayer(enCardId, s_abTpdu[enCardId], u32TpduLen);
 				}
-				memset(s_abTpdu,0x00, sizeof(s_abTpdu));
-				s_u32TpduLen = 0;
+                u32TpduLen = 0;
+                pbTpdu = s_abTpdu[enCardId];
+				memset(pbTpdu, 0x00, MAX_TPDU_BUF_SIZE);
 			}
             break;
             
@@ -1109,6 +1120,9 @@ static HI_S32 TransportLayer(HI_UNF_CI_PCCD_E enCardId, HI_U8 *pu8TPDU, HI_U32 u
         }
         u32Index+=u32Length-1;
     }
+
+    s_u32TpduLen[enCardId] = u32TpduLen;
+    
     return s32Ret;
 }
 

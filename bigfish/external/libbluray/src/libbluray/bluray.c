@@ -2229,7 +2229,7 @@ static BLURAY_TITLE_INFO* _fill_title_info(BLURAY *bd, NAV_TITLE* title, uint32_
             file_close(fp);
         } else {
             ci->break_flag = 1;
-            BD_DEBUG(DBG_BLURAY, "%s does not exist");
+            BD_DEBUG(DBG_BLURAY, "%s does not exist", f_name);
         }
 
         X_FREE(f_name);
@@ -3214,8 +3214,10 @@ char* _findPosterFile(const char *device_path)
             continue;
 
         else if (ent.d_name != NULL
-            && (strcasestr(ent.d_name, ".jpg") != NULL || strcasestr(ent.d_name, ".jpeg") != NULL
-                || strcasestr(ent.d_name, ".png") != NULL || strcasestr(ent.d_name, ".gif") != NULL))
+            && (strstr(ent.d_name, ".jpg") != NULL || strstr(ent.d_name, ".jpeg") != NULL
+                || strstr(ent.d_name, ".png") != NULL || strstr(ent.d_name, ".gif") != NULL
+                || strstr(ent.d_name, ".JPG") != NULL || strstr(ent.d_name, ".JPEG") != NULL
+                || strstr(ent.d_name, ".PNG") != NULL || strstr(ent.d_name, ".GIF") != NULL))
         {
             tmpPosterUri = str_printf("%s/BDMV/META/DL/%s", device_path, ent.d_name);
             tmpFile = file_open(tmpPosterUri, "rb");

@@ -1,11 +1,30 @@
 #!/system/bin/sh
+
+function check_session(){
+RESULT=0
+if [ $# -eq 1 ]
+then
+	RESULT=`busybox egrep -c "^[0-9]*:[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}$" $1`
+fi
+if [ $RESULT -eq 1 ]
+then
+	return 0
+else
+	return 1
+fi
+}
+
+PPPOE_SESSION_FILE=/data/ppp/pppoe.session
+
+#CONSOLEDEV=/dev/console
+
 if [ ! -r "/system/etc/ppp" ] ; then
-	echo "please chmod u+r /system/etc/ppp"
+	echo "please chmod u+r /system/etc/ppp" > $CONSOLEDEV
 	exit 1
 fi
 
 if [ ! -r "/system/etc/ppp/ppp.conf" ] ; then
-	echo "couldn't find it here or chmod u+r /system/etc/ppp/ppp.conf"
+	echo "couldn't find it here or chmod u+r /system/etc/ppp/ppp.conf" > $CONSOLEDEV
 	exit 1
 fi
 
@@ -14,15 +33,39 @@ busybox ifconfig $IFACE up
 
 if [  -f "/data/ppp/pppd.pid" ] ; then
 	echo "pppd-status: pppd is running!
-		I will stop it frist"
+		I will stop it frist" > $CONSOLEDEV
 	. /system/etc/ppp/ppp.disconnect
 fi
 if [  -f "/data/ppp/pppoe.pid" ] ; then
 	echo "pppoe-status: pppoe is running!
-		I will stop it frist"
+		I will stop it frist" > $CONSOLEDEV
 	. /system/etc/ppp/ppp.disconnect
 fi
 
-busybox setsid pppd pty "pppoe -p /data/ppp/pppoe.pid -I $IFACE -T 80 -U -m 1412" debug logfd 1 noipdefault noauth default-asyncmap show-password nodetach mtu 1492 mru 1492 noaccomp nodeflate nopcomp novj usepeerdns novjccomp lcp-echo-interval 20 lcp-echo-failure 3 user "$USER" password "$PASSWORD" &
+# Kill the last session first
+if [ -e $PPPOE_SESSION_FILE ] && [ -f $PPPOE_SESSION_FILE ] && check_session $PPPOE_SESSION_FILE
+then
+	PPPOE_SESSION=`cat $PPPOE_SESSION_FILE`
+	echo "The last session is $PPPOE_SESSION, to kill it." > $CONSOLEDEV
+	pppoe -I $IFACE -e $PPPOE_SESSION -k
+    sleep 0.4
+    pppoe -I $IFACE -e $PPPOE_SESSION -k
+    sleep 0.4
+    pppoe -I $IFACE -e $PPPOE_SESSION -k
+    sleep 0.2
+fi
+
+# get session id
+PPPOE_SESSION=`pppoe -p /data/ppp/pppoe.pid -I $IFACE -T 30 -t 6 -U -m 1412 -d`
+
+echo "$PPPOE_SESSION" > $PPPOE_SESSION_FILE
+if [ $? -eq 0 ] && check_session $PPPOE_SESSION_FILE
+then
+echo "The current session is $PPPOE_SESSION, try to connect." > $CONSOLEDEV
+#busybox setsid pppd pty "pppoe -p /data/ppp/pppoe.pid -I $IFACE -T 80 -U -m 1412" debug logfd 1 noipdefault noauth default-asyncmap show-password nodetach mtu 1492 mru 1492 noaccomp nodeflate nopcomp novj usepeerdns novjccomp lcp-echo-interval 20 lcp-echo-failure 3 user "$USER" password "$PASSWORD" &
+
+busybox setsid pppd  plugin librp-pppoe.so $IFACE rp_pppoe_sess $PPPOE_SESSION debug logfd 1 lcp-restart 2 noipdefault noauth default-asyncmap show-password nodetach mtu 1492 mru 1492 noaccomp nodeflate nopcomp novj usepeerdns novjccomp lcp-echo-interval 20 lcp-echo-failure 3 user "$USER" password "$PASSWORD" &
 
 echo "$!" > /data/ppp/pppd.pid
+
+fi

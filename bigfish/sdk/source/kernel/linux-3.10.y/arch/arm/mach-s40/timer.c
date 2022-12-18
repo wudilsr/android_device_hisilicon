@@ -21,6 +21,7 @@
 #include <mach/hardware.h>
 #include <mach/platform.h>
 #include <mach/irqs.h>
+#include <mach/cpu-info.h>
 #include <asm/hardware/timer-sp.h>
 #include <asm/mach/time.h>
 #include <asm/sched_clock.h>
@@ -304,6 +305,10 @@ static void __init s40_clocksource_init(void __iomem *base, const char *name)
 
 void __init s40_timer_init(void)
 {
+	/* timer23 has individual interrupt for hi3716mv410 */
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		TIMER(3)->irq.irq = INTNR_TIMER_3;
+	}
 #ifdef CONFIG_HAVE_ARM_LOCAL_TIMER
 	twd_local_timer_register(&twd_localtimer);
 #endif

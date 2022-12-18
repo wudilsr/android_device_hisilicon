@@ -337,6 +337,13 @@ Date				Author        		Modification
 					   pBufferSrc += s32Stride;
 					}
 			   }
+
+				if (ioctl(console_fd, FBIOPAN_DISPLAY, &vinfo) < 0)
+			        {
+			            printf("pan_display failed!\n");
+			            close(console_fd);
+			            return -1;
+			        } 
 		
 			   sleep(1);
 			

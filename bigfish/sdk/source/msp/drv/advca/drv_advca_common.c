@@ -129,7 +129,7 @@ HI_U32 DRV_ADVCA_SysReadReg(HI_U32 addr)
 
 HI_VOID DRV_ADVCA_Wait(HI_U32 us)
 {
-	ca_udelay(us);
+	return;
 }
 
 HI_S32 DRV_ADVCA_GetRevision(HI_U8 u8Revision[25])

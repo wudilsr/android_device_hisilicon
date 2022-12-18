@@ -12,6 +12,42 @@ config  HI_KEYLED_74HC164_SUPPORT
 	bool "74HC164 Keyled"
 	depends on HI_KEYLED_SUPPORT
 	default n
+	
+#menu "GpioKey Keyled"
+#     depends on HI_KEYLED_SUPPORT 
+menuconfig  HI_KEYLED_GPIOKEY_SUPPORT
+	bool "GpioKey Keyled Support"
+	depends on HI_KEYLED_SUPPORT
+	default n
+	config  HI_KEYLED_GPIOKEY_POWER_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Power Gpio Number"
+                default 0x2d
+        config  HI_KEYLED_GPIOKEY_OK_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "OK Gpio Number"
+                default 0xd
+        config  HI_KEYLED_GPIOKEY_MENU_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Menu Gpio Number"
+                default 0xe
+        config  HI_KEYLED_GPIOKEY_LEFT_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Left Gpio Number"
+                default 0xf
+        config  HI_KEYLED_GPIOKEY_RIGHT_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Right Gpio Number"
+                default 0x10
+        config  HI_KEYLED_GPIOKEY_UP_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Up Gpio Number"
+                default 0x12
+        config  HI_KEYLED_GPIOKEY_DOWN_GPIO
+                depends on  HI_KEYLED_GPIOKEY_SUPPORT
+                hex "Down Gpio Number"
+                default 0x11
+#endmenu	
 
 menuconfig HI_KEYLED_CT1642_SUPPORT
 	bool "Ct1642 Keyled Support"

@@ -206,7 +206,7 @@ HI_S32  main(HI_S32 argc,HI_CHAR *argv[])
                "       Running Count: the number of running.                      \n"
                "       Scene: 0: standard; 1: eth forward.                        \n"
                "       IR Type: 0:nec simple; 1:tc9012; 2:nec full; 3:sony_12bit; 4:raw.\n"
-               "       Keyled Type: 0: 74hc164; 1: pt6961; 2: ct1642; 3: pt6964; 4: fd650. \n"
+               "       Keyled Type: 0: 74hc164; 1: pt6961; 2: ct1642; 3: pt6964; 4: fd650 5: gpiokey. \n"
                "       Eth & USB Type: 0: Disable; 1: USB Wakeup; 2: Single packet; 3: Magic Packet; 4: Frame Filter. \n",
                 argv[0]);
         printf("Example: %s 0 2 1 0 0 2 0\n", argv[0]);
@@ -276,6 +276,10 @@ HI_S32  main(HI_S32 argc,HI_CHAR *argv[])
     else if (g_KeyledType == 4)
     {
         devType.kltype = HI_UNF_KEYLED_TYPE_FD650;
+    }
+	else if (g_KeyledType == 5)
+    {
+        devType.kltype = HI_UNF_KEYLED_TYPE_GPIOKEY;
     }
     else
     {
@@ -368,6 +372,12 @@ HI_S32  main(HI_S32 argc,HI_CHAR *argv[])
     else if(devType.kltype == HI_UNF_KEYLED_TYPE_FD650)
     {
         wakeup.u32KeypadPowerKey = 0x57;
+    }
+	else if(devType.kltype == HI_UNF_KEYLED_TYPE_GPIOKEY)
+    {
+    	wakeup.bGpioWakeUpEnable = 1;
+		wakeup.u32GpioNo = 45;
+        wakeup.u32KeypadPowerKey = 0x1;
     }
     else
     {

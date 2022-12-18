@@ -585,11 +585,9 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle,
     #ifndef TDE_BOOT
     if (TDE_JOB_WAKE_NOTIFY == enNotiType)
     {      
-        pstJob->u8WaitForDoneCount++;
         TDE_UNLOCK(&s_pstTDEOsiJobList->lock,lockflags);
         s32Ret = wait_event_interruptible_timeout(s_TdeBlockJobWq, (TDE_JOB_NOTIFY_BUTT == pstJob->enNotiType), u32TimeOut);
         TDE_LOCK(&s_pstTDEOsiJobList->lock,lockflags);
-        pstJob->u8WaitForDoneCount--;
         
         if (TDE_JOB_NOTIFY_BUTT == pstJob->enNotiType) 
         {
@@ -935,7 +933,10 @@ HI_VOID TdeOsiListNodeComp()
         pstDelJob = list_entry(s_pstTDEOsiJobList->stList.next, TDE_SWJOB_S, stList);
         s32Delhandle = pstDelJob->s32Handle;
         s_pstTDEOsiJobList->u32JobNum--;
-
+	if(s32Delhandle==s_pstTDEOsiJobList->s32HandleLast)
+	{
+		s_pstTDEOsiJobList->s32HandleLast = -1;		
+	}
         list_del_init(&pstDelJob->stList);
         
         if(TDE_JOB_WAKE_NOTIFY == pstDelJob->enNotiType)
@@ -951,6 +952,11 @@ HI_VOID TdeOsiListNodeComp()
                 pstDelJob->pFuncComplCB(pstDelJob->pFuncPara, &(pstDelJob->s32Handle));
                 TDE_LOCK(&s_pstTDEOsiJobList->lock,lockflags);
             }
+            if(pstDelJob->u8WaitForDoneCount!=0)
+	    {
+	        TDE_TRACE(TDE_KERN_DEBUG, "query handle %d complete!\n", pstDelJob->s32Handle);
+	        wake_up_interruptible(&pstDelJob->stQuery);
+	    }
             wake_up_interruptible(&s_TdeBlockJobWq);
         }
         else if (TDE_JOB_COMPL_NOTIFY == pstDelJob->enNotiType)

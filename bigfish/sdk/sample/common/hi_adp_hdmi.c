@@ -374,6 +374,7 @@ HI_S32 HIADP_HDMI_SetHDCPKey(HI_UNF_HDMI_ID_E enHDMIId)
 	u32Ret = HI_UNF_HDMI_LoadHDCPKey(enHDMIId,&stLoadKey);
 	free(stLoadKey.pu8InputEncryptedKey);
 	fclose(pBinFile);
+    sample_common_printf("Load HDCP Key:%s!!!\n",u32Ret?"FAILURE":"SUCCESS");
 
 	return u32Ret;
 }

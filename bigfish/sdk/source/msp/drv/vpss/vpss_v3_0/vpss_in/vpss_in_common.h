@@ -52,6 +52,7 @@ typedef struct
 {
     VPSS_VERSION_E enVersion;
 	VPSS_CAPABILITY_U enCapability;
+	HI_BOOL bSecure;
 }VPSS_IN_ENV_S;
 
 typedef struct 

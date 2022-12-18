@@ -26,6 +26,8 @@
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)	\
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 #define REG_BASE_GPIO5  0xF8004000
 #elif defined(CHIP_TYPE_hi3796cv100)    \

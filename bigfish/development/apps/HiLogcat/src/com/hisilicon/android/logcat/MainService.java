@@ -51,7 +51,6 @@ public class MainService extends Service {
 
             Log.d(TAG, "Capture logs finished");
         }
-        
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -69,6 +68,8 @@ public class MainService extends Service {
     public void onCreate() {
         super.onCreate();
         mDumpLogcatHandler = new DumpLogcatHandler();
+        mDumpLogcatHandler.removeMessages(MSG_DUMP_LOGCAT);
+        mDumpLogcatHandler.sendMessage(mDumpLogcatHandler.obtainMessage(MSG_DUMP_LOGCAT));
     }
 
     @Override
@@ -85,7 +86,5 @@ public class MainService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        mDumpLogcatHandler.removeMessages(MSG_DUMP_LOGCAT);
-        mDumpLogcatHandler.sendMessage(mDumpLogcatHandler.obtainMessage(MSG_DUMP_LOGCAT));
     }
 }

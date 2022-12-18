@@ -114,7 +114,10 @@ MediaObject*    ManualAdaptation::GetSegment            (int type)
     if (this->representationStreamType != SingleMediaSegment)
     {
         durationSeconds = dash::helpers::String::timeToSeconds(this->period->GetDuration());
+        if (durationSeconds <= 0)
+            durationSeconds = dash::helpers::String::timeToSeconds(this->mpd->GetMediaPresentationDuration());
         durationSeconds = 1000 * durationSeconds;
+
         curSegEndTime = GetSegmentEndTime(this->segmentNumber + segmentOffset);
         if (this->segmentNumber + segmentOffset > 0)
         {
@@ -124,9 +127,10 @@ MediaObject*    ManualAdaptation::GetSegment            (int type)
         {
             lastSegEndTime = 0;
         }
+
         if (durationSeconds > 0 &&  curSegEndTime > durationSeconds && lastSegEndTime >= durationSeconds)
         {
-            dash_log(DASH_LOG_ERROR, "[%s,%d] curSegEndTime %llu is beyond the period duration %llf!\n", __FUNCTION__, __LINE__, curSegEndTime, durationSeconds);
+            dash_log(DASH_LOG_ERROR, "[%s,%d] curSegNum %u, curSegEndTime %llu is beyond the period duration %llf!\n", __FUNCTION__, __LINE__, (this->segmentNumber + segmentOffset), curSegEndTime, durationSeconds);
             media = new MediaObject(LOGIC_EVENT_EOS|this->representationIndex);
             this->state = LOGIC_STATE_EOS;
             LeaveCriticalSection(&this->monitorMutex);

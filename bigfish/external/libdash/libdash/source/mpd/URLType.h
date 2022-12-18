@@ -32,6 +32,7 @@ namespace dash
                 const std::string&  GetSourceURL    ()  const;
                 const std::string&  GetRange        ()  const;
                 ISegment*           ToSegment       (const std::vector<IBaseUrl *>& baseurls) const;
+                ISegment*           ToSegment       (const std::vector<IBaseUrl *>& baseurls, const std::string &specialSourceURL) const;
 
                 void    SetSourceURL    (const std::string& sourceURL);
                 void    SetRange        (const std::string& range);

@@ -1347,17 +1347,25 @@ HI_S32 HI_MPI_HDMI_ReadEDID(HI_U8 *u8Edid, HI_U32 *u32EdidLength)
     HDMI_CHECK_NULL_PTR(u8Edid);
     HDMI_CHECK_NULL_PTR(u32EdidLength);
     
+    HI_HDMI_LOCK();
     EdidData.enHdmi=HI_UNF_HDMI_ID_0;
-    memset(&EdidData, 0, sizeof(HDMI_EDID_S));
-    ret = HI_MPI_HDMI_Force_GetEDID(EdidData.enHdmi,EdidData.u8Edid,&EdidData.u32Edidlength);
+    memset(&EdidData, 0, sizeof(HDMI_EDID_S));        
+    *u32EdidLength = 0;
 
-    if(ret != HI_SUCCESS)
+    ret = ioctl(g_HDMIDevFd, CMD_HDMI_READ_EDID, &EdidData);
+    if (ret != HI_SUCCESS)
     {
+        HI_HDMI_UNLOCK();
         HI_ERR_HDMI("forec get edid fail!\n");
         return ret;
     }
-    *u32EdidLength = EdidData.u32Edidlength;
-    memcpy(u8Edid, EdidData.u8Edid, EdidData.u32Edidlength);
+    HI_HDMI_UNLOCK();
+
+    if(EdidData.u8EdidValid == HI_TRUE)
+    {
+        *u32EdidLength = EdidData.u32Edidlength;
+        memcpy(u8Edid, EdidData.u8Edid, EdidData.u32Edidlength);
+    }  
     return ret;
 }
 

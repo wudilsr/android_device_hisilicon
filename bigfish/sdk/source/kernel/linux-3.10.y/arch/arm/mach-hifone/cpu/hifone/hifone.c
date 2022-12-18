@@ -73,20 +73,10 @@ static void hifone_cpu_init(struct cpu_info *info)
 		ARRAY_SIZE(hifone_lookups));	
 }
 /*****************************************************************************/
-/* Hi3798Mv100_a */
-struct cpu_info hi3798mv100_a_cpu_info =
+/* Hi3798Cv200_a */
+struct cpu_info hi3798cv200_a_cpu_info =
 {
-	.name = "Hi3798Mv100_a",
-	.chipid = _HI3798MV100_A,
-	.chipid_mask = _HI3798MV100_A_MASK,
-	.resource = hifone_device_resource,
-	.init = hifone_cpu_init,
-};
-
-/* Hi3798Mv100 */
-struct cpu_info hi3798mv100_cpu_info =
-{
-	.name = "HiFone B02(A7)",
+	.name = "Hi3798Cv200_a",
 	.chipid = _HIFONEB02,
 	.chipid_mask = _HIFONEB02_MASK,
 	.resource = hifone_device_resource,

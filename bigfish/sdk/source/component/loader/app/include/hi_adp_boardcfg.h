@@ -17,8 +17,50 @@ extern "C" {
 #endif
 
 #define TUNER_PORT              (HI_TUNER0_ID)
-#define DMX_PORT_TUNER      (HI_DEMUX_PORT)
 
+#define LOADER_I2C_INVALID 0xFF
+
+extern HI_U32 g_u32LoaderGpioScl;
+extern HI_U32 g_u32LoaderGpioSda;
+
+#if (0 == TUNER_PORT)
+#if defined(HI_DEMOD_USE_I2C)
+#define LOADER_USE_I2C
+#elif defined(HI_DEMOD_USE_GPIO)
+#define LOADER_USE_GPIO
+#endif
+#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER0_CONFIG(stTunerAttr)
+
+#elif (1 == TUNER_PORT)
+#if defined(HI_DEMOD1_USE_I2C)
+#define LOADER_USE_I2C
+#elif defined(HI_DEMOD1_USE_GPIO)
+#define LOADER_USE_GPIO
+#endif
+#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(1,stTunerAttr)
+
+#elif (2 == TUNER_PORT)
+#if defined(HI_DEMOD2_USE_I2C)
+#define LOADER_USE_I2C
+#elif defined(HI_DEMOD2_USE_GPIO)
+#define LOADER_USE_GPIO
+#endif
+#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(2,stTunerAttr)
+
+#elif (3 ==  TUNER_PORT)
+#if defined(HI_DEMOD2_USE_I2C)
+#define LOADER_USE_I2C
+#elif defined(HI_DEMOD2_USE_GPIO)
+#define LOADER_USE_GPIO
+#endif
+#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(3,stTunerAttr)
+#else
+#error "unexception cable tuner port config!"
+#endif
+
+
+/*single tuner use this brunch*/
+#if defined(LOADER_USE_I2C)
 #define __GET_TUNER0_CONFIG(stTunerAttr) \
 {\
     stTunerAttr.enSigType      = (HI_UNF_TUNER_SIG_TYPE_E)HI_TUNER_SIGNAL_TYPE; \
@@ -30,7 +72,24 @@ extern "C" {
     stTunerAttr.enI2cChannel   = HI_DEMOD_I2C_CHANNEL; \
     stTunerAttr.u32ResetGpioNo = HI_DEMOD_RESET_GPIO; \
 }
+#elif defined(LOADER_USE_GPIO)
+#define __GET_TUNER0_CONFIG(stTunerAttr) \
+{\
+    stTunerAttr.enSigType      = (HI_UNF_TUNER_SIG_TYPE_E)HI_TUNER_SIGNAL_TYPE; \
+    stTunerAttr.enTunerDevType = (HI_UNF_TUNER_DEV_TYPE_E)HI_TUNER_TYPE; \
+    stTunerAttr.u32TunerAddr   = HI_TUNER_DEV_ADDR; \
+    stTunerAttr.enDemodDevType = (HI_UNF_DEMOD_DEV_TYPE_E)HI_DEMOD_TYPE; \
+    stTunerAttr.u32DemodAddr   = HI_DEMOD_DEV_ADDR; \
+    stTunerAttr.enOutputMode   = (HI_UNF_TUNER_OUPUT_MODE_E)HI_DEMOD_TS_MODE; \
+    stTunerAttr.enI2cChannel   = LOADER_I2C_INVALID; \
+    stTunerAttr.u32ResetGpioNo = HI_DEMOD_RESET_GPIO; \
+    g_u32LoaderGpioScl = HI_DEMOD_GPIO_SCL;   \
+	g_u32LoaderGpioSda = HI_DEMOD_GPIO_SDA;	  \
+}
+#endif
 
+/*multi tuner ports use this brunch*/
+#ifdef LOADER_USE_I2C
 #define __GET_TUNER_CONFIG(u32TunerId,stTunerAttr) \
 { \
     stTunerAttr.enSigType      = (HI_UNF_TUNER_SIG_TYPE_E)HI_TUNER##u32TunerId##_SIGNAL_TYPE; \
@@ -42,17 +101,20 @@ extern "C" {
     stTunerAttr.enI2cChannel   = HI_DEMOD##u32TunerId##_I2C_CHANNEL; \
     stTunerAttr.u32ResetGpioNo = HI_DEMOD##u32TunerId##_RESET_GPIO; \
 }
-
-#if (0 == TUNER_PORT)
-#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER0_CONFIG(stTunerAttr)
-#elif (1 == TUNER_PORT)
-#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(1,stTunerAttr)
-#elif (2 == TUNER_PORT)
-#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(2,stTunerAttr)
-#elif (3 ==  TUNER_PORT)
-#define GET_TUNER_CONFIG(stTunerAttr)  __GET_TUNER_CONFIG(3,stTunerAttr)
-#else
-#error "unexception cable tuner port config!"
+#elif defined(LOADER_USE_GPIO)
+#define __GET_TUNER_CONFIG(u32TunerId,stTunerAttr) \
+{ \
+    stTunerAttr.enSigType      = (HI_UNF_TUNER_SIG_TYPE_E)HI_TUNER##u32TunerId##_SIGNAL_TYPE; \
+    stTunerAttr.enTunerDevType = (HI_UNF_TUNER_DEV_TYPE_E)HI_TUNER##u32TunerId##_TYPE; \
+    stTunerAttr.u32TunerAddr   = HI_TUNER##u32TunerId##_DEV_ADDR; \
+    stTunerAttr.enDemodDevType = (HI_UNF_DEMOD_DEV_TYPE_E)HI_DEMOD##u32TunerId##_TYPE; \
+    stTunerAttr.u32DemodAddr   = HI_DEMOD##u32TunerId##_DEV_ADDR; \
+    stTunerAttr.enOutputMode   = (HI_UNF_TUNER_OUPUT_MODE_E)HI_DEMOD##u32TunerId##_TS_MODE; \
+    stTunerAttr.enI2cChannel   = LOADER_I2C_INVALID; \
+    stTunerAttr.u32ResetGpioNo = HI_DEMOD##u32TunerId##_RESET_GPIO; \
+    g_u32LoaderGpioScl = HI_DEMOD##u32TunerId##_GPIO_SCL;   \
+	g_u32LoaderGpioSda = HI_DEMOD##u32TunerId##_GPIO_SDA;	  \
+}
 #endif
 
 #ifdef HI_LOADER_TUNER_SAT

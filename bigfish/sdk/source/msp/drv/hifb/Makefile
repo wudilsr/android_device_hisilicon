@@ -23,8 +23,9 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_API_INCLUDE)                    \
                 -I$(MSP_DRV_INCLUDE)                    \
                 -I$(MSP_DIR)/drv/hifb/include	        \
-                -I$(MSP_DIR)/drv/hifb/adp/include	\
-                -I$(MSP_DIR)/drv/hifb/adp/platform/include	\
+		 -I$(MSP_DIR)/drv/hifb/inc              \
+                -I$(MSP_DIR)/drv/hifb/adp/inc    	\
+                -I$(MSP_DIR)/drv/hifb/adp/platform/inc	\
                 -I$(MSP_DIR)/drv/hifb/adp/platform/alg  \
                 -I$(MSP_DIR)/drv/hifb/src      	        \
                 -I$(MSP_DIR)/drv/tde/include	        \
@@ -34,18 +35,21 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_DIR)/drv/jpeg/grc_cmm_inc
 
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100 hi3798mv100 hi3796mv100),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100 hi3798mv100 hi3796mv100 hi3716mv410 hi3716mv420),)
 EXTRA_CFLAGS += -I$(LINUX_DIR)/drivers/staging/android
-HAL_DIR := cv200
+HAL_DIR  := cv200
+PLAT_SRC := adp/platform/src
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
-HAL_DIR := hi3798cv100
+HAL_DIR  := hi3798cv100
+PLAT_SRC := adp/platform
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200 hi3798cv200_a),)
 EXTRA_CFLAGS += -I$(LINUX_DIR)/drivers/staging/android
-HAL_DIR := hi3798cv200
+HAL_DIR  := hi3798cv200
+PLAT_SRC := adp/platform/src
 endif
 
 EXTRA_CFLAGS += -I$(MSP_DIR)/drv/hifb/adp/platform/$(HAL_DIR)
@@ -99,7 +103,7 @@ DRIVER_PATH := $(MSP_DIR)/drv/hifb
 
 COMMON_FILES := $(wildcard $(DRIVER_PATH)/src/*.c)
 ADAPT_FILES  := $(wildcard $(DRIVER_PATH)/adp/src/*.c)
-ADAPT_FILES  += $(wildcard $(DRIVER_PATH)/adp/platform/src/*.c)
+ADAPT_FILES  += $(wildcard $(DRIVER_PATH)/${PLAT_SRC}/*.c)
 HAL_FILES    := $(wildcard $(DRIVER_PATH)/adp/platform/$(HAL_DIR)/*.c)
 ALG_FILES    := $(wildcard $(DRIVER_PATH)/adp/platform/alg/*.c)
 ALG_FILES    += $(wildcard $(DRIVER_PATH)/adp/platform/alg/$(CFG_HI_TOOLCHAINS_NAME)/*alg*.S)

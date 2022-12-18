@@ -53,6 +53,7 @@ public class MemLeak extends Activity
             Log.e(TAG, "InterruptedException: " + e);
         }
     }
+
     public void readInfo()
     {
         StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
@@ -67,22 +68,23 @@ public class MemLeak extends Activity
             mBuffer = null;
 
             String Result = new String(out.toByteArray(),"ISO-8859-1");
-            Log.i(TAG,"Result:"+Result);
+            Log.d(TAG, "/sys/kernel/debug/kmemleak:\n" + Result);
             this.mTermView.setText(Result);
             in.close();
         }
         catch (java.io.FileNotFoundException e)
         {
-            Log.i(TAG,"FileNotFoundException:"+e);
+            Log.d(TAG, "FileNotFoundException: " + e);
         }
         catch (java.io.IOException e)
         {
-            Log.i(TAG,"IOException:"+e);
+            Log.e(TAG, "IOException: " + e);
         }
         finally {
             StrictMode.setThreadPolicy(savedPolicy);
         }
     }
+
     public void onCreate(Bundle paramBundle)
     {
         super.onCreate(paramBundle);
@@ -97,5 +99,5 @@ public class MemLeak extends Activity
     {
         super.onDestroy();
     }
-    native String GetSDKVersion();
+    //native String GetSDKVersion();
 }

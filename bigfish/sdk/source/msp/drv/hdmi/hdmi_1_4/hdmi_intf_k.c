@@ -599,6 +599,14 @@ static HI_S32 hdmi_ProcessCmd(unsigned int cmd, HI_VOID *arg, HI_BOOL bUser)
             u32Ret = DRV_HDMI_Force_GetEDID(pEDID);
             break;
         }
+        case CMD_HDMI_READ_EDID:
+        {
+            HDMI_EDID_S *pEDID;
+			
+            pEDID = (HDMI_EDID_S*)arg;
+            u32Ret = DRV_HDMI_Read_EDID(pEDID);
+            break;
+        }    
         case CMD_HDMI_GET_HDMI_PLAYSTAUS:
         {
             HDMI_PLAYSTAUS_S *pPlayStaus;

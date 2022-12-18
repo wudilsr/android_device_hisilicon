@@ -2986,6 +2986,7 @@ typedef union
 #define ADDR_OQ_WORD6(OQId)             (0xE808 + ((OQId) << 4))    /* output description sub link-queue the seventh WORD corresponding address */
 #define ADDR_OQ_WORD7(OQId)             (0xE80C + ((OQId) << 4))    /* output description sub link-queue the eighth WORD corresponding address */
 
+#define ADDR_DBG_DETECT0                    (0x2320)
 
 // Define the union U_RAW_CLR_CHN
 typedef union
@@ -3436,6 +3437,21 @@ typedef union
     unsigned int    u32;
 
 } U_AHB_TEST_RESULT;
+
+// Define the union U_DBG_DETECT0
+typedef union
+{
+    // Define the struct bits
+    struct
+    {
+        unsigned int    dbg_out_sample_freq       : 16   ; // [15 .. 0]
+        unsigned int    Reserved_0            : 16  ; // [31 .. 16]
+    } bits;
+
+    // Define an unsigned member
+    unsigned int    u32;
+
+} U_DBG_DETECT0;
 
 #endif  // __DRV_DEMUX_REG_H__
 

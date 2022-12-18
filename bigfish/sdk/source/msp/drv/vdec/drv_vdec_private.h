@@ -14,7 +14,7 @@
 #include "hi_unf_avplay.h"
 #include "hi_drv_video.h"
 #include "hi_drv_vdec.h"
-
+#include "vfmw_ext.h"
 #ifdef __cplusplus
 #if __cplusplus
 extern "C"{
@@ -23,7 +23,7 @@ extern "C"{
 
 
 /* VDEC VERSION */
-#define VDEC_VERSION                (2015031900)
+#define VDEC_VERSION                (2015062400)
 
 #define VDEC_DBG_MODULE_VDI         (0x0)
 #define VDEC_DEBUG                  (0)
@@ -282,6 +282,7 @@ typedef struct tagVDEC_CHANNEL_S
     HI_BOOL                 bNewFrame;      /* use tlastFrm */
     HI_BOOL                 bNewUserData;
     HI_BOOL                 bIFrameErr;
+	HI_U8                   bAvsPlus;
 
     /*0: 1st and 2nd not get; 1: 1st get 2nd not get; 2: 1st and 2nd both get*/
     HI_U32                  u32ValidPtsFlag;
@@ -326,10 +327,13 @@ typedef struct tagVDEC_CHANNEL_S
     HI_U8                   u8ResolutionChange;
 
     HI_BOOL                 bIsIFrameDec;
-    HI_BOOL                 bUnSupportStream;
+    HI_U32                  u32UnSupportStream;
 
     HI_BOOL                 bLowdelay;
     HI_BOOL                 bProcRegister;
+#ifdef HI_TVP_SUPPORT
+	HI_BOOL                 bTvp;
+#endif	
     HI_BOOL                 bVPUProcRegister;
     HI_HANDLE               u32VPUhandle;
     VDEC_VPU_PARAM_S        stVPUParam;
@@ -396,6 +400,7 @@ HI_S32 VDEC_DRV_Suspend(PM_BASEDEV_S *pdev, pm_message_t state);
 HI_S32 VDEC_DRV_Resume(PM_BASEDEV_S *pdev);
 HI_S32 VDEC_DRV_DebugCtrl(HI_U32 u32Para1, HI_U32 u32Para2);
 VDEC_CHANNEL_S * VDEC_DRV_GetChan(HI_HANDLE hHandle);
+VFMW_EXPORT_FUNC_S* VDEC_DRV_GetVfmwExportFunc(HI_VOID);
 
 HI_S32 VDEC_DRV_Init(HI_VOID);
 HI_VOID VDEC_DRV_Exit(HI_VOID);

@@ -68,8 +68,7 @@ HI_S32 JPEG_HDEC_CSC_Open()
 
 	HI_S32 s32CscDev = -1;
 	s32CscDev = open(CSC_DEV, O_RDWR, 0);
-	if (s32CscDev < 0)
-	{
+	if (s32CscDev < 0){
 		return HI_ERR_TDE_DEV_OPEN_FAILED;
 	}
 	return s32CscDev;
@@ -101,12 +100,10 @@ HI_VOID JPEG_HDEC_CSC_Close(HI_S32 s32CscDev)
 HI_S32 JPEG_HDEC_CSC_BeginJob(HI_S32 s32CscDev)
 {
 	TDE_HANDLE s32Handle;
-	if(s32CscDev < 0)
-	{
+	if(s32CscDev < 0){
 		return HI_FAILURE;
 	}
-	if (ioctl(s32CscDev, TDE_BEGIN_JOB, &s32Handle) < 0)
-	{
+	if (ioctl(s32CscDev, TDE_BEGIN_JOB, &s32Handle) < 0){
 		return HI_ERR_TDE_INVALID_HANDLE;
 	}
 	return s32Handle;
@@ -121,18 +118,16 @@ HI_S32 JPEG_HDEC_CSC_BeginJob(HI_S32 s32CscDev)
 * retval		: HI_FAILURE	CNcomment: Ê§°Ü 	  CNend\n
 * others:		: NA
 *****************************************************************************/
-HI_S32 JPEG_HDEC_CSC_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  *pstMbRect, TDE2_SURFACE_S* pstDst,TDE2_RECT_S  *pstDstRect,TDE2_MBOPT_S* pstMbOpt,HI_S32 s32CscDev)
+HI_S32 JPEG_HDEC_CSC_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  *pstMbRect, TDE2_SURFACE_S* pstDst,TDE2_RECT_S  *pstDstRect,TDE2_MBOPT_S* pstMbOpt,HI_S32 s32CscDev,HI_BOOL bYCbCrMemMMUType,HI_BOOL bKRGBMemMMUType)
 {
 
 
 	TDE_MBBITBLT_CMD_S stMbBlit = {0};
 
-	if(s32CscDev < 0)
-	{
+	if(s32CscDev < 0){
 		return HI_FAILURE;
 	}
-	if ((NULL == pstMB) || (NULL == pstDst) || (NULL == pstMbOpt))
-	{
+	if ((NULL == pstMB) || (NULL == pstDst) || (NULL == pstMbOpt)){
 		return HI_ERR_TDE_NULL_PTR;
 	}
 
@@ -159,7 +154,18 @@ HI_S32 JPEG_HDEC_CSC_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S 
     stMbBlit.stDst.u8Alpha0       = pstDst->u8Alpha0;
     stMbBlit.stDst.u8Alpha1       = pstDst->u8Alpha1;
 	#endif
-	
+
+	if(HI_TRUE == bYCbCrMemMMUType){
+		;
+	}else{
+		;
+	}
+	if(HI_TRUE == bKRGBMemMMUType){
+		;
+	}else{
+		;
+	}
+
 	return ioctl(s32CscDev, TDE_MB_BITBLT, &stMbBlit);
 
 }
@@ -179,8 +185,7 @@ HI_S32 JPEG_HDEC_CSC_EndJob(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock,
 
 	TDE_ENDJOB_CMD_S stEndJob;
 
-	if(s32CscDev < 0)
-	{
+	if(s32CscDev < 0){
 		return HI_FAILURE;
 	}
 	/* Disable sync function */

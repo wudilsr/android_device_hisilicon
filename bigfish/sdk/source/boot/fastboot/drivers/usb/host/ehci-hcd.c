@@ -45,6 +45,9 @@
 #  include "hiusb-hifone.c"
 #endif
 
+#if defined(CONFIG_ARCH_HI3716MV410)
+#  include "hiusb-hi3716mv410.c"
+#endif
 
 static int usb_negotiation_timeout = 1;
 

@@ -46,6 +46,7 @@ extern "C"
 #define IEC61937_DATATYPE_DOLBY_TRUE_HD 22   /* True HD */
 
 #define IEC61937_DATATYPE_71_LPCM 0xf0
+#define IEC61937_DATATYPE_20_LPCM 0xf1
 
 #define IEC61937_DATATYPE_DTSCD 0xff         /* DTS CD */
 #define IEC61937_DATATYPE_DOLBY_SIMUL 0xfe
@@ -56,18 +57,16 @@ typedef enum
   AUTIL_CHIP_PLATFORM_S40,
   AUTIL_CHIP_TYPE_PLATFORM_S5,
   AUTIL_CHIP_TYPE_PLATFORM_BUTT,
-}AUTIL_CHIP_PLATFORM_E;
+} AUTIL_CHIP_PLATFORM_E;
 
-
-
-HI_U32			AUTIL_IEC61937DataType(HI_U16 *pu16IecData, HI_U32 u32IecDataSize);
-HI_S32			AUTIL_isIEC61937Hbr(HI_U32 u32IEC61937DataType, HI_U32 uSourceRate);
-HI_U32			AUTIL_CalcFrameSize(HI_U32 u32Ch, HI_U32 u32BitDepth);
-HI_U32			AUTIL_LatencyMs2ByteSize(HI_U32 u32LatencyMs, HI_U32 u32FrameSize, HI_U32 u32SampleRate);
-HI_U32			AUTIL_ByteSize2LatencyMs(HI_U32 u32DataBytes, HI_U32 u32FrameSize, HI_U32 u32SampleRate);
-HI_U32			AUTIL_VolumeLinear2RegdB(HI_U32 u32Linear);
-HI_U32			AUTIL_VolumedB2RegdB(HI_S32 dBVol);
-HI_S32			AUTIL_SetBitZeroOrOne(HI_U32* pu32Val, HI_U32 u32Bit, HI_U32 u32ZeroOrOne);
+HI_U32          AUTIL_IEC61937DataType(HI_U16* pu16IecData, HI_U32 u32IecDataSize);
+HI_S32          AUTIL_isIEC61937Hbr(HI_U32 u32IEC61937DataType, HI_U32 uSourceRate);
+HI_U32          AUTIL_CalcFrameSize(HI_U32 u32Ch, HI_U32 u32BitDepth);
+HI_U32          AUTIL_LatencyMs2ByteSize(HI_U32 u32LatencyMs, HI_U32 u32FrameSize, HI_U32 u32SampleRate);
+HI_U32          AUTIL_ByteSize2LatencyMs(HI_U32 u32DataBytes, HI_U32 u32FrameSize, HI_U32 u32SampleRate);
+HI_U32          AUTIL_VolumeLinear2RegdB(HI_U32 u32Linear);
+HI_U32          AUTIL_VolumedB2RegdB(HI_S32 dBVol);
+HI_S32          AUTIL_SetBitZeroOrOne(HI_U32* pu32Val, HI_U32 u32Bit, HI_U32 u32ZeroOrOne);
 HI_U32          AUTIL_BclkFclkDiv(HI_UNF_I2S_MCLK_SEL_E enMclkSel, HI_UNF_I2S_BCLK_SEL_E enBclkSel);
 HI_U32          AUTIL_MclkFclkDiv(HI_UNF_I2S_MCLK_SEL_E enMclkSel);
 
@@ -84,13 +83,14 @@ const HI_CHAR * AUTIL_Format2Name(HI_U32 u32Format);
 const HI_CHAR * AUTIL_CategoryCode2Name(HI_UNF_SND_SPDIF_CATEGORYCODE_E enCategory);
 const HI_CHAR * AUTIL_ScmsMode2Name(HI_UNF_SND_SPDIF_SCMSMODE_E enScms);
 
-HI_VOID			AUTIL_OS_GetTime(HI_U32 *t_ms);
-
-HI_VOID*		AUTIL_AO_MALLOC(HI_U32 u32ModuleID, HI_U32 u32Size, HI_S32 flag);
-HI_VOID			AUTIL_AO_FREE(HI_U32 u32ModuleID, HI_VOID* pMemAddr);
-HI_VOID*		AUTIL_AIAO_MALLOC(HI_U32 u32ModuleID, HI_U32 u32Size, HI_S32 flag);
-HI_VOID			AUTIL_AIAO_FREE(HI_U32 u32ModuleID, HI_VOID* pMemAddr);
-
+HI_VOID         AUTIL_OS_GetTime(HI_U32* t_ms);
+AIAO_I2S_CHNUM_E AUTIL_CHNUM_UNF2AIAO(HI_UNF_I2S_CHNUM_E enChannel);
+AIAO_BITDEPTH_E AUTIL_BITDEPTH_UNF2AIAO(HI_UNF_I2S_BITDEPTH_E enBitDepth);
+AIAO_I2S_MODE_E AUTIL_I2S_MODE_UNF2AIAO(HI_UNF_I2S_MODE_E enI2sMode);
+HI_VOID*        AUTIL_AO_MALLOC(HI_U32 u32ModuleID, HI_U32 u32Size, HI_S32 flag);
+HI_VOID         AUTIL_AO_FREE(HI_U32 u32ModuleID, HI_VOID* pMemAddr);
+HI_VOID*        AUTIL_AIAO_MALLOC(HI_U32 u32ModuleID, HI_U32 u32Size, HI_S32 flag);
+HI_VOID         AUTIL_AIAO_FREE(HI_U32 u32ModuleID, HI_VOID* pMemAddr);
 
 AUTIL_CHIP_PLATFORM_E  AUTIL_GetChipPlatform(HI_VOID);
 

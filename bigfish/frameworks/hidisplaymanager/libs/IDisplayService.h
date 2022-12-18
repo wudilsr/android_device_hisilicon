@@ -47,6 +47,7 @@ namespace android {
             virtual int detachIntf() = 0;
             virtual int setVirtScreen(int outFmt) = 0;
             virtual int getVirtScreen() = 0;
+            virtual Rect getVirtScreenSize() = 0;
             virtual int reset() = 0;
             virtual int setHDMISuspendTime(int iTime) = 0;
             virtual int getHDMISuspendTime() = 0;

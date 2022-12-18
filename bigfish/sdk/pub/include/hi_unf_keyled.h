@@ -36,6 +36,7 @@ typedef enum  hiUNF_KEYLED_TYPE_E
     HI_UNF_KEYLED_TYPE_CT1642,    /**<KEYLED type: CT1642*/                       /**<CNcomment:KEYLED型号：CT1642 */
     HI_UNF_KEYLED_TYPE_PT6964,	  /**<KEYLED type: PT6964*/                       /**<CNcomment:KEYLED型号：PT6964 */
     HI_UNF_KEYLED_TYPE_FD650,     /**<KEYLED type: FD650*/                        /**<CNcomment:KEYLED型号：FD650 */
+    HI_UNF_KEYLED_TYPE_GPIOKEY,   /**<KEYLED type :GPIOKEY*/   					 /**<CNcomment:GPIO按键面板*/
     HI_UNF_KEYLED_TYPE_BUTT       
 }HI_UNF_KEYLED_TYPE_E;
 

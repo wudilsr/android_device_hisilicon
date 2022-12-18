@@ -71,14 +71,6 @@ HI_S32 HI_DRV_CommonInit(HI_VOID)
         goto ErrExit_STAT;
     }
 
-    ret = HI_DRV_SYS_KInit();
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_SYS("HI_DRV_STAT_KInit failed:%#x!\n", ret);
-        goto ErrExit_SYS;
-    }
-
-
     ret = HI_DRV_MMNGR_Init(HI_KMODULE_MAX_COUNT, HI_KMODULE_MEM_MAX_COUNT);
     if(HI_SUCCESS != ret)
     {
@@ -110,8 +102,6 @@ ErrExit_MMZ:
 HI_VOID HI_DRV_CommonExit(HI_VOID)
 {
     HI_DRV_MMNGR_Exit();
-
-    HI_DRV_SYS_KExit();
 
     HI_DRV_STAT_KExit();
 

@@ -26,14 +26,14 @@
 		printf(" 0x%08x  0x%-4x%-4d%-4d\n", range, dqs, dq, win); \
 	} while (0)
 
-#define PRINT_DATAEYE_TITLE() \
+#define PRINT_DATAEYE_TITLE(phase) \
 	do { \
 		printf("%-4s", "DQ"); \
 		for (k = 0; k < PHY_DQ_BDL_LEVEL; k++) { \
 			printf("%-3d", k); \
 		} \
 		printf(" %-10s  %-6s%-4s%-4s\n", \
-			"RANGE", "DQS", "DQ", "WIN"); \
+			"RANGE", phase, "DQ", "WIN"); \
 	} while (0)
 #else
 #define PRINT_DATAEYE_WIN(dq_num, range, dqs, dq, win) \
@@ -50,7 +50,7 @@
 		printf(" 0x%08x  0x%-4x%-4d%-4d\n", range, dqs, dq, win); \
 	} while (0)
 
-#define PRINT_DATAEYE_TITLE() \
+#define PRINT_DATAEYE_TITLE(phase) \
 	do { \
 		printf("%-4s", "DQ");\
 		for (k = 0; k < PHY_DQ_BDL_LEVEL; k++) { \
@@ -58,7 +58,7 @@
 				printf("%-4d", k); \
 		} \
 		printf(" %-10s  %-6s%-4s%-4s\n", \
-			"RANGE", "DQS", "DQ", "WIN"); \
+			"RANGE", phase, "DQ", "WIN"); \
 	} while (0)
 #endif
 
@@ -96,76 +96,88 @@ static void ddr_training_reg_read_phy(unsigned int base_dmc,
 
 	/* WDQS */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "WDQS Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"WDQS Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXWDQSDLY(i);
 	}
 
 	/* WDQ Phase */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "WDQ Phase Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"WDQ Phase Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNWDQDLY(i);
 	}
 
 	/* WDQ BDL */
 	for (i = 0; i < byte_num; i++) {
 		/* DQ0-DQ3 */
-		sprintf(ddr_reg->reg[index].name,
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
 			"WDQ BDL DQ%d-DQ%d", (i << 3), ((i << 3) + 3));
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNWDQNBDL0(i);
 		/* DQ4-DQ7 */
-		sprintf(ddr_reg->reg[index].name,
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
 			"WDQ BDL DQ%d-DQ%d", ((i << 3) + 4), ((i << 3) + 7));
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNWDQNBDL1(i);
 	}
 
 	/* WDM */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "WDM Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"WDM Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNWDQNBDL2(i);
 	}
 
 	/* Write DO/DOS OE */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "Write DQ/DQS OE Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"Write DQ/DQS OE Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNOEBDL(i);
 	}
 
 	/* RDQS */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "RDQS Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"RDQS Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNRDQSDLY(i);
 	}
 
 	/* RDQ BDL */
 	for (i = 0; i < byte_num; i++) {
 		/* DQ0-DQ3 */
-		sprintf(ddr_reg->reg[index].name,
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
 			"RDQ BDL DQ%d-DQ%d", (i << 3), ((i << 3) + 3));
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNRDQNBDL0(i);
 		/* DQ4-DQ7 */
-		sprintf(ddr_reg->reg[index].name,
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
 			"RDQ BDL DQ%d-DQ%d", ((i << 3) + 4), ((i << 3) + 7));
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNRDQNBDL1(i);
 	}
 
 	/* Gate */
 	for (i = 0; i < byte_num; i++) {
-		sprintf(ddr_reg->reg[index].name, "Gate Byte%d", i);
+		snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX,
+			"Gate Byte%d", i);
 		ddr_reg->reg[index++].addr = base_phy + DDR_PHY_DXNRDQSGDLY(i);
 	}
 
 	/* AC CS */
-	sprintf(ddr_reg->reg[index].name, "CS");
+	snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX, "CS");
 	ddr_reg->reg[index++].addr = base_phy + DDR_PHY_ACCMDBDL2;
 
 	/* AC CLK */
-	sprintf(ddr_reg->reg[index].name, "CLK");
+	snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX, "CLK");
 	ddr_reg->reg[index++].addr = base_phy + DDR_PHY_ACPHYCTL7;
+
+	/* HOST Vref */
+	DDR_PHY_VREF_HOST_DISPLAY(base_phy, ddr_reg, index, byte_num);
+
+	/* DRAM Vref */
+	DDR_PHY_VREF_DRAM_DISPLAY(base_phy, ddr_reg, index, byte_num);
 
 	/* read register */
 	for (i = 0; i < index; i++) {
 		if (0 == ddr_reg->reg[i].addr)
-			break;
+			continue;
 
 		ddr_reg->reg[i].val = REG_READ(ddr_reg->reg[i].addr);
 	}
@@ -180,17 +192,23 @@ static void ddr_training_reg_read_phy(unsigned int base_dmc,
 static void ddr_training_reg_read(struct ddr_training_reg_st *ddr_reg)
 {
 	int i;
+	unsigned int cfg;
+
+	cfg = REG_READ(DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_CFG);
 
 	/* init */
 	for (i = 0; i < DDR_TRAINING_REG_MAX; i++)
 		ddr_reg->reg[i].addr = 0;
 
-	ddr_training_reg_read_phy(DDR_REG_BASE_DMC0,
-		DDR_REG_BASE_PHY0, ddr_reg, 0);
-#if DDR_PHY_NUM == 2
-	ddr_training_reg_read_phy(DDR_REG_BASE_DMC1,
-		DDR_REG_BASE_PHY1, ddr_reg, DDR_TRAINING_REG_NUM);
-#endif
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (0 == i && !(cfg & DDR_BYPASS_PHY0_MASK))
+			ddr_training_reg_read_phy(DDR_REG_BASE_DMC0,
+				DDR_REG_BASE_PHY0, ddr_reg, 0);
+		else if (1 == i && !(cfg & DDR_BYPASS_PHY1_MASK))
+			ddr_training_reg_read_phy(DDR_REG_BASE_DMC1,
+				DDR_REG_BASE_PHY1, ddr_reg,
+				DDR_TRAINING_REG_NUM);
+	}
 }
 
 /**
@@ -202,18 +220,26 @@ static void ddr_training_reg_read(struct ddr_training_reg_st *ddr_reg)
 static int ddr_cmd_result_print(struct ddr_training_data_st *ddrtr_data)
 {
 	unsigned int i, k, j;
-	unsigned int dq_num, dqs, dq, win;
+	unsigned int dq_num, dqs, dq, win, win_min, win_max, win_sum;
 
+	win_min = PHY_DQ_BDL_LEVEL;
+	win_max = 0;
+	win_sum = 0;
 	printf("Write window of prebit-deskew:\n");
 	printf("--------------------------------------------------------\n");
-	PRINT_DATAEYE_TITLE();
+	PRINT_DATAEYE_TITLE("DQPH");
 	for (j = 0; j < ddrtr_data->byte_num; j++) {
 		dqs = (REG_READ(ddrtr_data->base_phy + DDR_PHY_DXNWDQDLY(j))
 				>> PHY_WDQ_PHASE_BIT) & PHY_WDQ_PHASE_MASK;
 		for (i = 0; i < DDR_PHY_BIT_NUM; i++) {
-			dq_num = j * DDR_PHY_BIT_NUM + i;
+			dq_num = (j << 3) + i;
 			win = ddrtr_data->wr_bit_best[dq_num]
 				>> DDR_DATAEYE_RESULT_BIT;
+			if (win < win_min)
+				win_min = win;
+			if (win > win_max)
+				win_max = win;
+			win_sum += win;
 			dq =  ddrtr_data->wr_bit_best[dq_num]
 				& DDR_DATAEYE_RESULT_MASK;
 			PRINT_DATAEYE_WIN(dq_num,
@@ -221,18 +247,43 @@ static int ddr_cmd_result_print(struct ddr_training_data_st *ddrtr_data)
 					dqs, dq, win);
 		}
 	}
-	printf("--------------------------------------------------------\n\n");
+	printf("--------------------------------------------------------\n");
+	printf("Sum WIN: %d. Avg WIN: %d\n", win_sum,
+		win_sum / (ddrtr_data->byte_num * DDR_PHY_BIT_NUM));
+	printf("Min WIN: %d. DQ Index: ", win_min);
+	for (i = 0; i < DDR_BIT_MAX; i++) {
+		win = ddrtr_data->wr_bit_best[i]
+			>> DDR_DATAEYE_RESULT_BIT;
+		if (win == win_min)
+			printf("%d ", i);
+	}
+	printf("\nMax WIN: %d. DQ Index: ", win_max);
+	for (i = 0; i < DDR_BIT_MAX; i++) {
+		win = ddrtr_data->wr_bit_best[i]
+			>> DDR_DATAEYE_RESULT_BIT;
+		if (win == win_max)
+			printf("%d ", i);
+	}
+	printf("\n\n");
 
+	win_min = PHY_DQ_BDL_LEVEL;
+	win_max = 0;
+	win_sum = 0;
 	printf("Read window of prebit-deskew:\n");
 	printf("--------------------------------------------------------\n");
-	PRINT_DATAEYE_TITLE();
+	PRINT_DATAEYE_TITLE("DQS");
 	for (j = 0; j < ddrtr_data->byte_num; j++) {
 		dqs = REG_READ(ddrtr_data->base_phy + DDR_PHY_DXNRDQSDLY(j))
 				& PHY_RDQS_BDL_MASK;
 		for (i = 0; i < DDR_PHY_BIT_NUM; i++) {
-			dq_num = j * DDR_PHY_BIT_NUM + i;
+			dq_num = (j << 3) + i;
 			win = ddrtr_data->rd_bit_best[dq_num]
 				>> DDR_DATAEYE_RESULT_BIT;
+			if (win < win_min)
+				win_min = win;
+			if (win > win_max)
+				win_max = win;
+			win_sum += win;
 			dq =  ddrtr_data->rd_bit_best[dq_num]
 				& DDR_DATAEYE_RESULT_MASK;
 			PRINT_DATAEYE_WIN(dq_num,
@@ -241,15 +292,23 @@ static int ddr_cmd_result_print(struct ddr_training_data_st *ddrtr_data)
 		}
 	}
 	printf("--------------------------------------------------------\n");
-
-	printf("DRAM vref training: [0x%08x = 0x%08x]. Total WIN: %d.\n",
-		   0, 0, ddrtr_data->wr_win_sum); /* TODO: DRAM register */
-
-	printf("HOST vref training: [0x%08x = 0x%08x]. Total WIN: %d.\n",
-			(ddrtr_data->base_phy + DDR_PHY_IOCTL2),
-			REG_READ(ddrtr_data->base_phy + DDR_PHY_IOCTL2),
-			ddrtr_data->rd_win_sum);
-
+	printf("Sum WIN: %d. Avg WIN: %d\n", win_sum,
+		win_sum / (ddrtr_data->byte_num * DDR_PHY_BIT_NUM));
+	printf("Min WIN: %d. DQ Index: ", win_min);
+	for (i = 0; i < DDR_BIT_MAX; i++) {
+		win = ddrtr_data->rd_bit_best[i]
+			>> DDR_DATAEYE_RESULT_BIT;
+		if (win == win_min)
+			printf("%d ", i);
+	}
+	printf("\nMax WIN: %d. DQ Index: ", win_max);
+	for (i = 0; i < DDR_BIT_MAX; i++) {
+		win = ddrtr_data->rd_bit_best[i]
+			>> DDR_DATAEYE_RESULT_BIT;
+		if (win == win_max)
+			printf("%d ", i);
+	}
+	printf("\n\n");
 	return 0;
 }
 
@@ -261,8 +320,20 @@ static int ddr_cmd_result_print(struct ddr_training_data_st *ddrtr_data)
 void ddr_cmd_result_display(struct ddr_training_result_st *ddrtr_result)
 {
 	int i;
+	unsigned int cfg;
+
+	cfg = REG_READ(DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_CFG);
 
 	for (i = 0; i < DDR_PHY_NUM; i++) {
+
+		/* PHY0 bypass */
+		if ((cfg & DDR_BYPASS_PHY0_MASK) && 0 == i)
+			continue;
+
+		/* PHY1 bypass */
+		if ((cfg & DDR_BYPASS_PHY1_MASK) && 1 == i)
+			continue;
+
 		if (2 == DDR_PHY_NUM)
 			printf("\r\n[PHY%d]:\r\n", i);
 		ddr_cmd_result_print(&ddrtr_result->ddrtr_data[i]);
@@ -278,26 +349,36 @@ void ddr_cmd_result_display(struct ddr_training_result_st *ddrtr_result)
 void ddr_reg_result_display(struct ddr_training_reg_st *ddr_reg)
 {
 	int i;
+	unsigned int cfg;
 
 	ddr_training_reg_read(ddr_reg);
+	cfg = REG_READ(DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_CFG);
 
-	printf("\r\nDDR training register:\r\n");
 	for (i = 0; i < DDR_TRAINING_REG_MAX; i++) {
-		if (0 == i && 2 == DDR_PHY_NUM)
-			printf("[PHY0]:\r\n");
-
 		if (0 == ddr_reg->reg[i].addr)
-			break;
+			continue;
 
-		ddr_reg->reg[i].val = REG_READ(ddr_reg->reg[i].addr);
+		/* PHY0 bypass */
+		if ((cfg & DDR_BYPASS_PHY0_MASK)
+			&& i < DDR_TRAINING_REG_NUM)
+			continue;
+
+		/* PHY1 bypass */
+		if ((cfg & DDR_BYPASS_PHY1_MASK)
+			&& i >= DDR_TRAINING_REG_NUM)
+			continue;
+
+		if (0 == i && 2 == DDR_PHY_NUM)
+			printf("\r\n[PHY0]:\r\n");
+
+		if (DDR_TRAINING_REG_NUM  == i && 2 == DDR_PHY_NUM)
+			printf("\r\n[PHY1]:\r\n");
+
 		printf("[0x%08x = 0x%08x] %-32s", ddr_reg->reg[i].addr,
 				ddr_reg->reg[i].val, ddr_reg->reg[i].name);
 
 		if (i % 2)
 			printf("\r\n");
-
-		if ((DDR_TRAINING_REG_NUM - 1) == i && 2 == DDR_PHY_NUM)
-			printf("\r\n[PHY1]:\r\n");
 	}
 
 	printf("\r\n");
@@ -314,6 +395,9 @@ void *ddr_cmd_get_entry(void)
 	char *src_ptr = 0;
 	char *dst_ptr;
 	unsigned int length = 0;
+	unsigned int cfg;
+
+	cfg = REG_READ(DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_CFG);
 
 	src_ptr = ddr_training_cmd_start;
 	dst_ptr = (char *)(DDR_TRAINING_RUN_STACK);
@@ -324,9 +408,26 @@ void *ddr_cmd_get_entry(void)
 		return 0;
 	}
 
-	printf("SRAM address[0x%x] code address[0x%x] Size[%d]byte\n",
-			(unsigned int)dst_ptr,
-			(unsigned int)src_ptr, length);
+	printf("DDR training cmd size[%d]byte, cfg[0x%08X = 0x%08X]\n",
+		length, (DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_CFG),
+		cfg);
+
+	if (((cfg & DDR_BYPASS_PHY0_MASK) && (cfg & DDR_BYPASS_PHY1_MASK))
+		|| ((1 == DDR_PHY_NUM) && (cfg & DDR_BYPASS_PHY0_MASK))) {
+		printf("Please config DDR training item. Bypass bit:\n"
+			"[0]PHY0            : 0x1\n"
+			"[1]PHY1            : 0x2\n"
+			"[4]Write Leveling  : 0x10\n"
+			"[8]Gate            : 0x100\n"
+			"[16]Dataeye        : 0x10000\n"
+			"[20]HW             : 0x100000\n"
+			"[21]MPR            : 0x200000\n"
+			"[22]AC             : 0x400000\n"
+			"[24]Host Vref      : 0x1000000\n"
+			"[25]Dram Vref      : 0x2000000\n"
+			"[28]Dataeye Adjust : 0x10000000\n");
+		return 0;
+	}
 
 	ddr_cmd_prepare_copy();
 	memcpy(dst_ptr, src_ptr, length);
@@ -347,6 +448,7 @@ char *ddr_cmd_result_dump(struct ddr_training_reg_st *ddr_reg, char flags)
 	char *ptr;
 	/* 22 = strlen("0xffffffff=0xffffffff\n") */
 	static char buf[(DDR_TRAINING_REG_MAX * 22) + 1] = {0};
+	unsigned int length = 22;
 
 	ddr_training_reg_read(ddr_reg);
 
@@ -357,7 +459,8 @@ char *ddr_cmd_result_dump(struct ddr_training_reg_st *ddr_reg, char flags)
 		if (0 == ddr_reg->reg[i].addr)
 			break;
 
-		ptr += sprintf(ptr, "0x%08x=0x%08x%c",
+		ptr += snprintf(ptr, length,
+				"0x%08x=0x%08x%c",
 				ddr_reg->reg[i].addr,
 				ddr_reg->reg[i].val, flags);
 	}

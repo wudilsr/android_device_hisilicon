@@ -167,7 +167,7 @@ HI_S32 HI_UNF_AVPLAY_RegisterVcodecLib(const HI_CHAR *pFileName)
 {
     HI_S32 s32Ret;
 
-    s32Ret = HI_MPI_VDEC_RegisterVcodecLib(pFileName);
+    s32Ret = HI_MPI_AVPLAY_RegisterVcodecLib(pFileName);
 
     return s32Ret;
 }

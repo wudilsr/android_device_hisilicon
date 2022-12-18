@@ -25,6 +25,8 @@ extern struct cpu_info hi3718cv100_cpu_info;
 extern struct cpu_info hi3719cv100_cpu_info;
 extern struct cpu_info hi3716hv200_cpu_info;
 extern struct cpu_info hi3716mv400_cpu_info;
+extern struct cpu_info hi3716mv410_cpu_info;
+extern struct cpu_info hi3716mv420_cpu_info;
 extern struct cpu_info hi3718mv100_cpu_info;
 extern struct cpu_info hi3798cv100a_cpu_info;
 extern struct cpu_info hi3798cv100_cpu_info;
@@ -39,6 +41,8 @@ static struct cpu_info *support_cpu_info[] = {
 	&hi3719cv100_cpu_info,
 	&hi3716hv200_cpu_info,
 	&hi3716mv400_cpu_info,
+	&hi3716mv410_cpu_info,
+	&hi3716mv420_cpu_info,
 	&hi3718mv100_cpu_info,
 	&hi3798cv100a_cpu_info,
 	&hi3798cv100_cpu_info,

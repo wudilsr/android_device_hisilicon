@@ -166,8 +166,9 @@ void *__resmemalign(uint32 alignment, uint32 bytes, char *file, int line)
 
 	return ptr;
 }
+/*****************************************************************************/
 
-int  get_res_end(uint32 *end)
+int get_res_end(uint32 *end)
 {
 	char *bootargs;
 	char *tmp = NULL;
@@ -210,7 +211,8 @@ int  get_res_end(uint32 *end)
 	return 0;
 }
 /*****************************************************************************/
-void  resmem_init(void)
+
+void resmem_init(void)
 {
 	uint32 start, end, size;
 

@@ -120,6 +120,7 @@ typedef struct hiSYNTAX_EXTRA_DATA_S
     SINT32     s32KeepSPSPPS;                      /* keep global info in ctx for seek reset */
     SINT32     s32SupportAllP;                     /* support stream of all p frames */
 	SINT32     s32ModuleLowlyEnable;               /*模块间低延时使能标志*/
+    SINT32     s32LowdlyEnable;                    /*SCD帧内低延时使能标志*/
     VFMW_CONTROLINFO_S stPvrInfo;
 	#if 0
     SINT32    s32SupportBFrame;  /* 通道是否支持B帧解码是否支持B帧解码 0: 不支持 1: 支持*/
@@ -133,6 +134,9 @@ typedef struct hiSYNTAX_EXTRA_DATA_S
     //add by z00222166, 2012.11.20
     VDEC_DISPIC_PARAM_S stDisParams;  //丢帧参数
     SINT32 s32WaitFsFlag;//等待分配帧存标志l00273086
+
+    UINT32 widthInMB;
+    UINT32 heightInMB;
     //HEVC 10Bit
     SINT32 s32BitDepth;
     SINT32 s32BitDepthChanged;

@@ -59,7 +59,12 @@ endif
 
 CFLAGS  += -I$(MSP_DIR)/drv/hdmi/$(HDMI_TARGET)
 CFLAGS  += -DCONFIG_HDMI_STB_SDK
+CFLAGS  += -DDVI_SUPPORT
 
+ifeq ($(CFG_HI_HDMI_SUPPORT_HDCP), y)
+CFLAGS += -DHDCP_SUPPORT
+CFLAGS += -DHDMI_HDCP_SUPPORT
+endif
 MSP_OBJS := hdmi/$(HDMI_TARGET)/mpi_hdmi.o         \
             hdmi/$(HDMI_TARGET)/unf_hdmi.o
 
@@ -213,9 +218,12 @@ endif
 
 MSP_OBJS += ao/unf_sound.o  \
             ao/mpi_ao.o     \
-            ao/mpi_aef.o    \
             ao/mpi_vir.o    \
-			ao/mpi_lowlatency.o
+            ao/mpi_lowlatency.o
+
+ifeq ($(CFG_HI_HAEFFECT_BASE_SUPPORT),y)
+MSP_OBJS += ao/mpi_aef.o
+endif
 
 SMARTVOL_OBJS := $(shell cd ao/smartvol && $(AR) -x libsmartvol.a && echo *.o)
 
@@ -245,6 +253,117 @@ endif
 endif
 
 #--------------- VDEC ------------------
+#===============================================================================
+# 512M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_512))
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_512=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_512))
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_512=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_512))
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_512=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_512))
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_512=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_512=0
+endif
+
+#===============================================================================
+# 768M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_768))
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_768))
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_768))
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_768))
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=0
+endif
+#===============================================================================
+# 1024M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_1024))
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_1024=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_1024))
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_1024=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_1024))
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_1024=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_1024))
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_1024=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_1024=0
+endif
+
+#===============================================================================
+# 2048M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_2048))
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_2048=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_2048))
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_2048=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_2048))
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_2048=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_2048))
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_2048=1
+else
+CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_2048=0
+endif
+
+#===============================================================================
+# memory config end
+#===============================================================================
+
 ifneq ($(CFG_HI_LOADER_APPLOADER),y)
 
 ifeq ($(CFG_HI_VDEC_MJPEG_SUPPORT),y)
@@ -281,6 +400,10 @@ ifeq ($(CFG_HI_VDEC_DFS_SUPPORT),y)
 CFLAGS += -DHI_VDEC_DFS_SUPPORT=1
 else
 CFLAGS += -DHI_VDEC_DFS_SUPPORT=0
+endif
+
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+CFLAGS += -DHI_TVP_SUPPORT
 endif
 
 MSP_OBJS += vdec/hi_codec.o         \

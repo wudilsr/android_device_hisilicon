@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQno22+dG7COxUFa9FUMSEmwiqyHLY6kItjWlyOj
-ANaheCHM0Y1Qgm/LYRy5PVoEItwt79vLAEouINIId+EKvdX0KfQUcsMtJmSFBmcakRShnjPW
-s7ar/TGCM1IcCmVkodwDFdSHxGNu4UFGOJKiQQgiS/4+jM26YlxJ2s94ELHRIA==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NJ5vAPu/oxljuTsvJQOTqM/rc+aZJCW69Jife4y
+0B+Jv8QyrzZK+w8QiPpEehXQr/1OaStsG6RV0NCTne8kOtps2BQScgPyBTGs+5nwLuZCr3ci
+heeV0/LUMbDtS8YcLmTQuhd2Hb3OJ5/EQlysqCV3UQ/bqR4II8KSXEmVIf6qxg==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -70,7 +84,7 @@ UINT32 OSAL_GetTimeInUs(VOID)
 SINT32 OSAL_CreateTask( OSAL_TASK *pTask, SINT8 TaskName[], VOID *pTaskFunction )
 {
     *pTask = kthread_create(pTaskFunction, (VOID *)NULL, TaskName);
-    if( NULL == (*pTask) ) 
+    if (IS_ERR(*pTask))
     {
         dprint(PRN_FATAL, "can not create thread!\n");
         return( VF_ERR_SYS );
@@ -485,3 +499,17 @@ void klib_flush_cache(void *ptr, unsigned int phy_addr, unsigned int len)
 
 #endif
 
+VOID Sema_Init_with_Option(OSAL_SEMA *stSem)
+{
+    sema_init(stSem,1);
+}
+SINT32 Down_Interruptible_with_Option(OSAL_SEMA *stSem)
+{
+    SINT32 s32Ret;
+	s32Ret = down_interruptible(stSem);
+	return s32Ret;
+}
+VOID Up_Interruptible_with_Option(OSAL_SEMA *stSem)
+{
+	up(stSem);
+}

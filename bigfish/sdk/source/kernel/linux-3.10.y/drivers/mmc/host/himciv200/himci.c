@@ -875,7 +875,7 @@ static int hi_mci_do_start_signal_voltage_switch(struct himci_host *host,
 		/* Set 1.8V Signal Enable in the MCI_UHS_REG to 1 */
 		ctrl &= ~ENABLE_UHS_VDD_180;
 		himci_writel(ctrl, host->base + MCI_UHS_REG);
-		himci_ldo_config(0);
+		himci_ldo_config(0, host->host_crg_addr);
 
 		/* Wait for 5ms */
 		usleep_range(5000, 5500);
@@ -899,7 +899,7 @@ static int hi_mci_do_start_signal_voltage_switch(struct himci_host *host,
 		 */
 		ctrl |= ENABLE_UHS_VDD_180;
 		himci_writel(ctrl, host->base + MCI_UHS_REG);
-		himci_ldo_config(1);
+		himci_ldo_config(1, host->host_crg_addr);
 
 		/* Wait for 8ms */
 		usleep_range(8000, 8500);
@@ -931,7 +931,7 @@ static int hi_mci_do_start_signal_voltage_switch(struct himci_host *host,
 
 		ctrl &= ~ENABLE_UHS_VDD_180;
 		himci_writel(ctrl, host->base + MCI_UHS_REG);
-		himci_ldo_config(0);
+		himci_ldo_config(0, host->host_crg_addr);
 
 		/* Wait for 5ms */
 		usleep_range(5000, 5500);
@@ -959,8 +959,11 @@ static int hi_mci_start_signal_voltage_switch(struct mmc_host *mmc,
 					      struct mmc_ios *ios)
 {
 	struct himci_host *host = mmc_priv(mmc);
-	int err;
-	err = hi_mci_do_start_signal_voltage_switch(host, ios);
+	int err = 0;
+
+	if (mmc->index == 1 || mmc->index == 2 ) {
+		err = hi_mci_do_start_signal_voltage_switch(host, ios);
+	}
 	return err;
 }
 
@@ -1041,8 +1044,12 @@ static int hi_mci_get_ro(struct mmc_host *mmc)
 
 	himci_trace(2, "begin");
 	himci_assert(mmc);
-
+#ifdef CONFIG_ARCH_HIFONE
+	//TODO: XXX
+	ret = 0;
+#else
 	ret = hi_mci_ctrl_card_readonly(host);
+#endif
 
 	return ret;
 }
@@ -1180,7 +1187,7 @@ static irqreturn_t hisd_irq(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-static int __init hi_mci_probe(struct platform_device *pdev)
+static int hi_mci_probe(struct platform_device *pdev)
 {
 	struct mmc_host *mmc;
 	struct himci_host *host = NULL;
@@ -1278,6 +1285,7 @@ static int __init hi_mci_probe(struct platform_device *pdev)
 		goto out;
 	}
 
+	host->host_crg_addr = host_crg_res->start;
 	spin_lock_init(&host->lock);
 
 	/* enable mmc clk */
@@ -1339,7 +1347,7 @@ out:
 	return ret;
 }
 
-static int __exit hi_mci_remove(struct platform_device *pdev)
+static int hi_mci_remove(struct platform_device *pdev)
 {
 	struct mmc_host *mmc = platform_get_drvdata(pdev);
 

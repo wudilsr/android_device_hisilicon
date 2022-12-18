@@ -37,11 +37,9 @@
 #include "gralloc_priv.h"
 #include "gralloc_helper.h"
 
-#include <cutils/properties.h>
-#include <stdlib.h>
-
-// numbers of buffers for page flipping
-#define NUM_BUFFERS NUM_FB_BUFFERS
+#ifdef GRALLOC_HISILICON_PLUGIN
+#include "gralloc_hisilicon_adp.h"
+#endif
 
 static int swapInterval = 1;
 
@@ -109,11 +107,11 @@ static int fb_post(struct framebuffer_device_t *dev, buffer_handle_t buffer)
 			// enable VSYNC
 			interrupt = 1;
 
-            if (ioctl(m->framebuffer->fd, S3CFB_SET_VSYNC_INT, &interrupt) < 0)
-            {
-                AERR("S3CFB_SET_VSYNC_INT enable failed for fd: %d", m->framebuffer->fd);
-                return 0;
-            }
+			if (ioctl(m->framebuffer->fd, S3CFB_SET_VSYNC_INT, &interrupt) < 0)
+			{
+				//      AERR("S3CFB_SET_VSYNC_INT enable failed for fd: %d", m->framebuffer->fd);
+				return 0;
+			}
 
 			// wait for VSYNC
 #ifdef MALI_VSYNC_EVENT_REPORT_ENABLE
@@ -251,35 +249,27 @@ int init_frame_buffer_locked(struct private_module_t *module)
 	info.transp.offset  = 0;
 	info.transp.length  = 0;
 #else
-    /*
-     * Explicitly request 8/8/8
-     */
-    info.bits_per_pixel = 32;
-    info.red.offset     = 16;
-    info.red.length     = 8;
-    info.green.offset   = 8;
-    info.green.length   = 8;
-    info.blue.offset    = 0;
-    info.blue.length    = 8;
+	/*
+	 * Explicitly request 8/8/8
+	 */
+	info.bits_per_pixel = 32;
+	info.red.offset     = 16;
+	info.red.length     = 8;
+	info.green.offset   = 8;
+	info.green.length   = 8;
+	info.blue.offset    = 0;
+	info.blue.length    = 8;
     info.transp.offset  = 24;
     info.transp.length  = 8;
 #endif
+    /*
+     * Request NUM_BUFFERS screens (at lest 2 for page flipping)
+     */
+    info.yres_virtual = info.yres * NUM_FB_BUFFERS;
 
-	/*
-	 * Request NUM_BUFFERS screens (at lest 2 for page flipping)
-	 */
-	info.yres_virtual = info.yres * NUM_BUFFERS;
-
-	char property[PROPERTY_VALUE_MAX];
-	if (property_get("ro.config.low_ram", property, NULL) > 0)
-	{
-		if (info.xres != 1280 && info.yres != 720)
-		{
-			info.xres = 1280;
-			info.yres = 720;
-		}
-		info.yres_virtual = info.yres * (NUM_BUFFERS - 1);
-	}
+#ifdef GRALLOC_HISILICON_PLUGIN
+	pri_hisi_init_framebuffer(module, &info);
+#endif
 
 	uint32_t flags = PAGE_FLIP;
 
@@ -326,21 +316,14 @@ int init_frame_buffer_locked(struct private_module_t *module)
 
 	if (int(info.width) <= 0 || int(info.height) <= 0)
 	{
-                // the driver doesn't return that information
-                // default to 240 dpi
-                char default_dpi[PROPERTY_VALUE_MAX];
-                property_get("ro.sf.lcd_density", default_dpi, "240") ;
-                int value_dpi = atoi(default_dpi);
-                if(value_dpi)
-                {
-                        info.width  = ((info.xres * 25.4f) / value_dpi + 0.5f);
-                        info.height = ((info.yres * 25.4f) / value_dpi + 0.5f);
-                }
-                else
-                {
-                        info.width  = ((info.xres * 25.4f) / 240.0f + 0.5f);
-                        info.height = ((info.yres * 25.4f) / 240.0f + 0.5f);
-                }
+		// the driver doesn't return that information
+		// default to 160 dpi
+#ifdef GRALLOC_HISILICON_PLUGIN
+		pri_hisi_set_framebuffer_dpi(module, &info);
+#else
+		info.width  = ((info.xres * 25.4f) / 160.0f + 0.5f);
+		info.height = ((info.yres * 25.4f) / 160.0f + 0.5f);
+#endif
 	}
 
 	float xdpi = (info.xres * 25.4f) / info.width;
@@ -481,6 +464,10 @@ int framebuffer_device_open(hw_module_t const *module, const char *name, hw_devi
 	{
 		return status;
 	}
+
+#ifdef GRALLOC_HISILICON_PLUGIN
+	pri_hisi_framebuffer_device_open(module, name, device);
+#endif
 
 	private_module_t *m = (private_module_t *)module;
 	status = init_frame_buffer(m);

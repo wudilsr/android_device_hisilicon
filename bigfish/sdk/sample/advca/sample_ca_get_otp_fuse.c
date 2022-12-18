@@ -414,7 +414,87 @@ HI_S32 main(HI_S32 argc,HI_CHAR** argv)
     bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
     HI_DEBUG_ADVCA("TDES crypto engine : %s\n",  bEnable == HI_TRUE ? "Disabled" : "Enabled");
  #endif  /* for Hi3716mv310  */
- 
+
+    /*To check if the bootrom debug information is disabled*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_BOOTINFO_DEACTIVATION, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get bootrom debug information status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("bootrom debug information : %s\n",  bEnable == HI_TRUE ? "Disabled" : "Enabled");
+
+    /*To check if the RSA_Root_Key lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_RSA_KEY_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get RSA_Root_Key lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("RSA_Root_Key : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the STBSN lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_STBSN_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get STBSN lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("STBSN : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the Market ID lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_MSID_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get Market ID lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("Market ID : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the Version ID lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_VERSIONID_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get Version ID lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("Version ID : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the OEM_Root_Key lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_OEM_ROOTKEY_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get OEM_Root_Key lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("OEM_Root_Key : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the R2R_Root_Key lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_R2R_ROOTKEY_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get R2R_Root_Key lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("R2R_Root_Key : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+
+    /*To check if the JTAG Key lock flag is setted*/
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_JTAG_KEY_LOCK_FLAG, &stOtpAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_DEBUG_ADVCA("Get JTAG key lock status failed\n");
+        return HI_FAILURE;
+    }
+    bEnable = stOtpAttr.unOtpFuseAttr.stDefaultAttr.bEnable;
+    HI_DEBUG_ADVCA("JTAG key : %s\n",  bEnable == HI_TRUE ? "Locked" : "UnLock");
+  
     (HI_VOID)HI_UNF_ADVCA_DeInit();
     return Ret;
 }

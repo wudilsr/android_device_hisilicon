@@ -19,6 +19,7 @@
 #include "hi_unf_demux.h"
 #include "hi_unf_frontend.h"
 #include "download_ota.h"
+#include "protocol_ssu_ota.h"
 
 #ifdef __cplusplus
  #if __cplusplus
@@ -26,38 +27,21 @@ extern "C" {
  #endif
 #endif /* __cplusplus */
 
-#define GETFOURBYTE(n, p) \
-    do {\
-        n  = 0 | (*p << 24) | (*(p + 1) << 16) | (*(p + 2) << 8) | (*(p + 3)); \
-        p += 4; \
-    } while (0)
 
-#define SECTION_BUFFER_LENGTH (4096)
 
-#define DSMCC_MESSAGE_HEADER_LENTH (12)
-
-#define DSI_TABLE_ID (0x3B)
-#define DII_TABLE_ID (0x3B)
-#define DBB_TABLE_ID (0x3C)
-
-#define DSI_MESSAGE_ID (0x1006)
-#define DII_MESSAGE_ID (0x1002)
-#define DBB_MESSAGE_ID (0x1003)
-
-static HI_U32 g_u32GroupId = 0;
+HI_U16 g_u32Pid = 0;
+HI_U32 g_u32GroupId = 0;
+HI_U32 g_u32DataGramSize = 0;
+LOADER_DATA_INFO_S g_stDataInfo;
 
 static LOADER_DATA_S g_astData[MAX_UPGRADE_IMAGE_NUM];
 static HI_U32 g_au32CalculateCRC[MAX_UPGRADE_IMAGE_NUM];
 
 static LOADER_VERSION_INFO_S g_stVerInfo;
-static LOADER_DATA_INFO_S g_stDataInfo;
 
 static HI_U8 g_au8SectionBuffer[SECTION_BUFFER_LENGTH];
 
 static LOADERCALLBACKSET_S *g_pstCallback = HI_NULL;
-static HI_U16 g_u32Pid = 0;
-
-static HI_U32 g_u32DataGramSize = 0;
 
 static HI_S32 SSU_ParseDSI(HI_U8 *pu8DataBuf, HI_S32 s32Length)
 {
@@ -66,7 +50,7 @@ static HI_S32 SSU_ParseDSI(HI_U8 *pu8DataBuf, HI_S32 s32Length)
 
     do
     {
-        /*service id length add compatibilitydescriptor length is 22*/
+        /*service id length add compatibilitydescriptor length is 22, service id array is 20,and compatibilitydescriptor is 2*/
         if (s32Length < 22)
         {
             s32Ret = HI_FAILURE;
@@ -84,11 +68,11 @@ static HI_S32 SSU_ParseDSI(HI_U8 *pu8DataBuf, HI_S32 s32Length)
         HI_DBG_LOADER("s32GroupInfoIndicationLen:%d\n", s32GroupInfoIndicationLen);
 
         /*GroupInfoIndication structure*/
-        while (s32GroupInfoIndicationLen > 29)
+        while (s32GroupInfoIndicationLen > 33)    //original is 29 ,after support 64 bit u64GroupSize  29+4
         {
             HI_U16 u16GroupNum = 0;
             HI_U32 u32GroupId;
-            HI_U32 u32GroupSize;
+            HI_U64 u64GroupSize;
             HI_U16 u16GroupInfoLen;
             HI_U32 u16PrivateLen;
 
@@ -97,16 +81,16 @@ static HI_S32 SSU_ParseDSI(HI_U8 *pu8DataBuf, HI_S32 s32Length)
             s32GroupInfoIndicationLen -= 2;
             HI_DBG_LOADER("u16GroupNum:%d\n", u16GroupNum);
 
-            while (s32GroupInfoIndicationLen > 27)
+            while (s32GroupInfoIndicationLen > 31)   //original is 27, after support 64 bit u64GroupSize 27+4
             {
                 GETFOURBYTE(u32GroupId, pu8DataBuf);
                 s32GroupInfoIndicationLen -= 4;
 				g_u32GroupId = u32GroupId;
                 HI_DBG_LOADER("u32GroupId:%d\n", u32GroupId);
 
-                GETFOURBYTE(u32GroupSize, pu8DataBuf);
-                s32GroupInfoIndicationLen -= 4;
-                HI_DBG_LOADER("u32GroupSize:%d\n", u32GroupSize);
+                GETEIGHTBYTE(u64GroupSize, pu8DataBuf);
+                s32GroupInfoIndicationLen -= 8;
+                HI_DBG_LOADER("u64GroupSize:%Ld\n", u64GroupSize);
 
                 /*CompatibilityDescriptor*/
                 while (s32GroupInfoIndicationLen > 15)
@@ -165,7 +149,7 @@ static HI_S32 SSU_ParseDSI(HI_U8 *pu8DataBuf, HI_S32 s32Length)
                             g_stVerInfo.u32EndSn = (HI_U32)((u16Model << 16) | u16Version);
                         }
 
-                        g_stDataInfo.u32DataFullSize = u32GroupSize;
+                        g_stDataInfo.u64DataFullSize = u64GroupSize;
                         g_stDataInfo.bCheckFullCRC32 = HI_FALSE;
 
 						UNUSED(u8SpecifierType);
@@ -262,17 +246,17 @@ static HI_S32 SSU_ParseDII(HI_U8 *pu8DataBuf, HI_S32 s32Length)
 
 			/*module_extend_info*/
 			{
-				HI_U32 u32FlashStartAddr;
-				HI_U32 u32FlashEndAddr;
+				HI_U64 u64FlashStartAddr;
+				HI_U64 u64FlashEndAddr;
 				HI_U32 u32FlashType;
 				HI_U32 u32ImageFS;
 				HI_U32 u32PartCRC;
 
-				GETFOURBYTE(u32FlashStartAddr, pu8DataBuf);
-				s32Length -= 4;
+				GETEIGHTBYTE(u64FlashStartAddr, pu8DataBuf);
+				s32Length -= 8;
 
-				GETFOURBYTE(u32FlashEndAddr, pu8DataBuf);
-				s32Length -= 4;
+				GETEIGHTBYTE(u64FlashEndAddr, pu8DataBuf);
+				s32Length -= 8;
 
 				GETFOURBYTE(u32FlashType, pu8DataBuf);
 				s32Length -= 4;
@@ -287,14 +271,14 @@ static HI_S32 SSU_ParseDII(HI_U8 *pu8DataBuf, HI_S32 s32Length)
 				pstPartitionInfo->u32PartitionId   = u16ModuleId;
 				pstPartitionInfo->u32ImageDataSize = u32ModuleSize;
 				g_u32DataGramSize = u16BlockSize;
-				pstPartitionInfo->u32FlashStartAddr = u32FlashStartAddr;
-				pstPartitionInfo->u32FlashEndAddr = u32FlashEndAddr;
+				pstPartitionInfo->u64FlashStartAddr = u64FlashStartAddr;
+				pstPartitionInfo->u64FlashEndAddr = u64FlashEndAddr;
 				pstPartitionInfo->u32FlashType = u32FlashType;
 				pstPartitionInfo->u32ImageFS = u32ImageFS;
 				pstPartitionInfo->u32ImageDataCRC32 = u32PartCRC;
 
-				HI_DBG_LOADER("imagesize:0x%x, start:0x%x, end:0x%x, type:%d, Index:0x%x; PartCRC:0x%x, BlockSize: %d\n",
-						u32ModuleSize, u32FlashStartAddr, u32FlashEndAddr, u32FlashType,
+				HI_DBG_LOADER("imagesize:0x%x, start:0x%Lx, end:0x%Lx, type:%d, Index:0x%x; PartCRC:0x%x, BlockSize: %d\n",
+						u32ModuleSize, u64FlashStartAddr, u64FlashEndAddr, u32FlashType,
 						u32ImageFS, u32PartCRC, u16BlockSize);
 				/*
 				 * partition upgrade stream size which restrict less than 250MB(2^16*(4096-8-12-6-4)/1024/1024 - 6MB). 
@@ -326,7 +310,7 @@ static HI_S32 SSU_ParseDII(HI_U8 *pu8DataBuf, HI_S32 s32Length)
 	return s32Ret;
 }
 
-static HI_S32 SSU_GetIndexById(HI_U16 u16ModuleId, HI_U32 *pu32Index)
+HI_S32 SSU_GetIndexById(HI_U16 u16ModuleId, HI_U32 *pu32Index)
 {
     HI_U32 ii = 0;
 
@@ -560,7 +544,15 @@ HI_S32 LOADER_PROTOCOL_SSU_Init(HI_LOADER_TYPE_E enType, HI_VOID * para)
         else if (HI_UNF_TUNER_SIG_TYPE_SAT == pstOtaParam->eSigType)
         {
             g_u32Pid = pstOtaParam->unConnPara.stSat.u32OtaPid;
+	 	}
+        else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstOtaParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstOtaParam->eSigType)
+        {
+            g_u32Pid = pstOtaParam->unConnPara.stTer.u32OtaPid;
         }
+		else
+		{
+    		HI_ERR_LOADER("Invalid signal type.\n");		
+    	}
 
         return LOADER_DOWNLOAD_OTA_Init(para);
     }
@@ -755,7 +747,7 @@ HI_S32 LOADER_PROTOCOL_SSU_Process(HI_U32 u32MaxMemorySize)
 
 	s32Ret = OTA_InitUpgradeBuff(&g_stDataInfo, g_u32DataGramSize);
 
-	pMemAddr = LOADER_GetUsableMemory(g_stDataInfo.u32DataFullSize+PLUS_MEM_SIZE, &u32Size);
+	pMemAddr = LOADER_GetUsableMemory((HI_U32)g_stDataInfo.u64DataFullSize+PLUS_MEM_SIZE, &u32Size);
 	if (HI_NULL == pMemAddr)
 	{
 		HI_ERR_LOADER("There is no Usable Memory.\n");
@@ -800,7 +792,7 @@ HI_S32 LOADER_PROTOCOL_SSU_Process(HI_U32 u32MaxMemorySize)
 		if (g_pstCallback && g_pstCallback->pfnOSDCallback)
 		{
 			g_pstCallback->pfnOSDCallback(OSD_EVENT_TYPE_DOWNLOAD, OTA_GetDownLoadDataSize(),
-					g_stDataInfo.u32DataFullSize);
+					(HI_U32)g_stDataInfo.u64DataFullSize);
 		}
 
 		if ((DOWNLOAD_STATUS_PIECE_COMPLETE == enDLStatus)

@@ -1,14 +1,10 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR/3FxaT0tNdM7aixCI9nH8u0vA9+cMIUfTdVGlT6ndT3xDy4wm+p8o6+RJa3XX9YKJmPP
-VFZpDmQTjySGD22pqdkFcEWxhP1hVQTMNkFvT3JqkFgE5vAObBgmnEx+VD62Ew==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxT4PR2IhNgUkjaEPKqZEoR9eY0eD3v/BaQgz0F/sjkarusvgmxOR1C4bFYqSf79/BYim
+PMy+O3YOJdT3KB300EKy48O6Hq/Sa8W1i3SNn13+o6KqQ8frLQHwjldchlQYuA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
-
-
-
-
 
 
 
@@ -76,6 +72,10 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 
     VPSS_PORT_S *pstPort;
 
+    HI_CHIP_TYPE_E enChipType;
+    HI_CHIP_VERSION_E enChipVersion;
+
+
 	HI_U32 u32LevelH = 0;
 	HI_U32 u32LevelW = 0;
     
@@ -98,6 +98,18 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 		{
 			u32LevelW = VPSS_UHD_HIGH_W;
 			u32LevelH = VPSS_UHD_HIGH_H;
+
+			HI_DRV_SYS_GetChipVersion(&enChipType, &enChipVersion);
+
+			if (enChipType == HI_CHIP_TYPE_HI3798M || enChipType == HI_CHIP_TYPE_HI3796M) 
+			{
+				if (pstStreamInfo->u32InRate >= 25
+						&& pstStreamInfo->u32StreamProg == 0)
+				{
+					u32LevelW = VPSS_UHD_MIDDLE_W;
+					u32LevelH = VPSS_UHD_MIDDLE_H;
+				}
+			}
 		}
 	}
 	else
@@ -105,6 +117,7 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 		u32LevelW = VPSS_UHD_LOW_W;
 		u32LevelH = VPSS_UHD_LOW_H;
 	}
+
     for(u32Count = 0; 
         u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER;
         u32Count ++)
@@ -113,27 +126,34 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
         
         if(pstPort->s32PortId != VPSS_INVALID_HANDLE)
 		{
-			HI_RECT_S stLevelRect;
+			HI_RECT_S stLevelRect = {0};
 
 			{
-				HI_S32 s32OriWidth;
-				HI_S32 s32OriHeight;
-				HI_RECT_S stOriLevel;
+				HI_S32 s32OriWidth = 0;
+				HI_S32 s32OriHeight = 0;
+				HI_S32 s32OriARw = 0;
+				HI_S32 s32OriARh = 0;
+				HI_RECT_S stOriLevel = {0};
 
 				stOriLevel.s32Width = u32LevelW;
 				stOriLevel.s32Height = u32LevelH;
 				VPSS_INST_LevelRectGetOriRect(pstPort->stLevelOutRect,
 						stOriLevel,
 						&s32OriWidth,
-						&s32OriHeight);
+						&s32OriHeight,
+						&s32OriARw,
+						&s32OriARh);
 
 				if (s32OriWidth != 0xffffffff 
 						&& s32OriHeight != 0xffffffff)
 				{
 					pstPort->s32OutputWidth = s32OriWidth;	
 					pstPort->s32OutputHeight= s32OriHeight;	
+					pstPort->stDispPixAR.u32ARw = s32OriARw;
+					pstPort->stDispPixAR.u32ARh = s32OriARh;
 				}
 			}
+
             if ((pstPort->s32OutputWidth > u32LevelW
                 || pstPort->s32OutputHeight > u32LevelH)
                 #if 0
@@ -142,10 +162,10 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 				#endif
 					)
             {
-                HI_U32 u32RatioW;
-                HI_U32 u32RatioH;
-                HI_U32 u32TmpH;
-                HI_U32 u32TmpW;
+                HI_U32 u32RatioW = 0;
+                HI_U32 u32RatioH = 0;
+                HI_U32 u32TmpH = 0;
+                HI_U32 u32TmpW = 0;
 
                 if (pstPort->s32OutputHeight > u32LevelH)
                 {
@@ -177,6 +197,7 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
                     * pstPort->s32OutputWidth)/u32TmpW )
                     * u32TmpH) / pstPort->s32OutputHeight;
                     
+
                 pstPort->s32OutputWidth = u32TmpW;
                 pstPort->s32OutputHeight = u32TmpH;
                 
@@ -189,7 +210,9 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 				VPSS_INST_LevelRectSetReviseRect(pstPort->stLevelOutRect,
 						stLevelRect,
 						pstPort->s32OutputWidth,
-						pstPort->s32OutputHeight);
+						pstPort->s32OutputHeight,
+						pstPort->stDispPixAR.u32ARw,
+						pstPort->stDispPixAR.u32ARh);
 			}
 
 			if (pstInstance->u32UhdLevelW == VPSS_UHD_HIGH_W
@@ -213,19 +236,25 @@ HI_S32 VPSS_INST_RevisePortRect(VPSS_INSTANCE_S * pstInstance)
 			}
 
 			{
-				HI_S32 s32ReviseWidth;
-				HI_S32 s32ReviseHeight;
+				HI_S32 s32ReviseWidth = 0;
+				HI_S32 s32ReviseHeight = 0;
+				HI_S32 s32ReviseARw = 0;
+				HI_S32 s32ReviseARh = 0;
 
 				VPSS_INST_LevelRectGetReviseRect(pstPort->stLevelOutRect,
 						stLevelRect,
 						&s32ReviseWidth,
-						&s32ReviseHeight);
+						&s32ReviseHeight,
+						&s32ReviseARw,
+						&s32ReviseARh);
 
 				if (s32ReviseWidth != 0xffffffff 
 						&& s32ReviseHeight != 0xffffffff)
 				{
 					pstPort->s32OutputWidth = s32ReviseWidth;	
 					pstPort->s32OutputHeight= s32ReviseHeight;	
+					pstPort->stDispPixAR.u32ARw = s32ReviseARw;
+					pstPort->stDispPixAR.u32ARh = s32ReviseARh;
 				}
 			}
 		}
@@ -253,10 +282,11 @@ HI_S32 VPSS_INST_RevisePortCmpCfg(VPSS_INSTANCE_S * pstInstance)
         if(pstPort->s32PortId != VPSS_INVALID_HANDLE)
 		{
 			//only for hi3798cv200_a, only HD port support compression!
-			if ( pstStreamInfo->u32StreamW > 1920 && pstStreamInfo->u32StreamH > 1088 
+			if ( (((pstStreamInfo->u32StreamW > 1920 && pstStreamInfo->u32StreamH > 1088 
 				&& (HI_TRUE == pstInstance->enCapability.bits.hi3798cv200_a) 
 				&& (pstInstance->stInEntity.stStreamInfo.enSource == HI_DRV_SOURCE_DTV)
-                && (pstPort->s32PortId == 0))
+                && (pstPort->s32PortId == 0)) || ( pstPort->u32cmpflag == 1))
+                && pstPort->stFrmInfo.stBufListCfg.eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE) ) 
 			{
 				if ( HI_DRV_PIX_FMT_NV21 == pstPortCfg->eFormat )
 				{
@@ -291,18 +321,87 @@ HI_S32 VPSS_INST_RevisePortCmpCfg(VPSS_INSTANCE_S * pstInstance)
 				}
 				else if( HI_DRV_PIX_FMT_NV16_2X1_CMP == pstPortCfg->eFormat)
 				{
-				    pstPort->eFormat = HI_DRV_PIX_FMT_NV16_2X1; 
+					pstPort->eFormat = HI_DRV_PIX_FMT_NV16_2X1; 
 				}
 				else if ( HI_DRV_PIX_FMT_NV61_2X1_CMP == pstPortCfg->eFormat)
 				{
 					pstPort->eFormat = HI_DRV_PIX_FMT_NV61_2X1; 
 				}
 			}
+			
+			if ( ( pstPort->u32cmpflag == 2) 
+				&& pstPort->stFrmInfo.stBufListCfg.eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE)
+			{
+				if ( HI_DRV_PIX_FMT_NV21_CMP == pstPortCfg->eFormat
+					 || HI_DRV_PIX_FMT_NV21 == pstPortCfg->eFormat) 
+				{
+					pstPort->eFormat = HI_DRV_PIX_FMT_NV21; 
+				}
+				else if( HI_DRV_PIX_FMT_NV12_CMP == pstPortCfg->eFormat 
+						 || HI_DRV_PIX_FMT_NV12 == pstPortCfg->eFormat)
+				{	
+					pstPort->eFormat = HI_DRV_PIX_FMT_NV12; 
+				}
+				else if( HI_DRV_PIX_FMT_NV16_2X1_CMP == pstPortCfg->eFormat
+						 || HI_DRV_PIX_FMT_NV16_2X1 == pstPortCfg->eFormat)
+				{
+					pstPort->eFormat = HI_DRV_PIX_FMT_NV16_2X1; 
+				}
+				else if ( HI_DRV_PIX_FMT_NV61_2X1_CMP == pstPortCfg->eFormat
+						  || HI_DRV_PIX_FMT_NV61_2X1 == pstPortCfg->eFormat)
+				{
+					pstPort->eFormat = HI_DRV_PIX_FMT_NV61_2X1; 
+				}
+			}
+
 		}
 	}
 
 	return HI_SUCCESS;
 }
+
+HI_S32 VPSS_INST_RevisePortFormat(VPSS_INSTANCE_S * pstInstance)
+{
+    HI_U32 u32Count;
+    VPSS_PORT_S *pstPort;
+    VPSS_IN_STREAM_INFO_S *pstStreamInfo;
+
+    pstStreamInfo = &(pstInstance->stInEntity.stStreamInfo);
+
+    for(u32Count = 0; 
+        u32Count < DEF_HI_DRV_VPSS_PORT_MAX_NUMBER;
+        u32Count ++)
+    {
+        pstPort = &(pstInstance->stPort[u32Count]);
+        
+        if(pstPort->s32PortId != VPSS_INVALID_HANDLE)
+		{
+			if ((pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV12 
+			|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV16_2X1
+			|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV12_TILE
+			|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV12_TILE_CMP)
+			&& pstPort->eFormat == HI_DRV_PIX_FMT_NV21)
+			{   
+				pstPort->bUVInver = HI_TRUE;
+			}
+			else if((pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV21 
+				|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV61_2X1
+				|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV21_TILE
+				|| pstStreamInfo->ePixFormat == HI_DRV_PIX_FMT_NV21_TILE_CMP)
+				&& pstPort->eFormat == HI_DRV_PIX_FMT_NV12)
+			{
+				pstPort->bUVInver = HI_TRUE;
+			}
+			else
+			{
+				pstPort->bUVInver = HI_FALSE;
+			}
+		}
+	}
+
+	return HI_SUCCESS;
+}
+
 
 HI_S32 VPSS_INST_RevisePortOutBitWidth(VPSS_INSTANCE_S * pstInstance)
 {
@@ -409,6 +508,15 @@ HI_S32 VPSS_INST_DebugCfg(VPSS_INSTANCE_S * pstInstance)
 								 DBG_SET_UV_INVERT,
 								 &hDbgPart,
 								 &(pstPort->bUVInver));
+
+			VPSS_DBG_ReplyDbgCmd(&(pstInstance->stDbgCtrl),
+								 DBG_SET_CMP_ON,
+								 &hDbgPart,
+								 &(pstPort->u32cmpflag));
+			VPSS_DBG_ReplyDbgCmd(&(pstInstance->stDbgCtrl),
+								 DBG_SET_CMP_OFF,
+								 &hDbgPart,
+								 &(pstPort->u32cmpflag));
 		}
 	#endif
 		}
@@ -462,13 +570,6 @@ HI_S32 VPSS_INST_SyncUsrCfg(VPSS_INSTANCE_S * pstInstance)
                 pstPort->eFormat = pstPortCfg->eFormat;   
                 pstPort->s32OutputWidth = pstPortCfg->s32OutputWidth;
                 pstPort->s32OutputHeight = pstPortCfg->s32OutputHeight;
-                //pstPort->s32OutputWidth = 0;
-                //pstPort->s32OutputHeight = 0;
-
-				VPSS_INST_LevelRectSetOriRect(pstPort->stLevelOutRect,
-						pstPort->s32OutputWidth,
-						pstPort->s32OutputHeight); 
-				
                 
                 pstPort->eDstCS = pstPortCfg->eDstCS;
                 pstPort->stDispPixAR = pstPortCfg->stDispPixAR;
@@ -479,6 +580,12 @@ HI_S32 VPSS_INST_SyncUsrCfg(VPSS_INSTANCE_S * pstInstance)
 
                 pstPort->bOnlyKeyFrame = pstPortCfg->bOnlyKeyFrame;
                 pstPort->bLBDCropEn = pstPortCfg->bLBDCropEn;
+
+				VPSS_INST_LevelRectSetOriRect(pstPort->stLevelOutRect,
+						pstPort->s32OutputWidth,
+						pstPort->s32OutputHeight,
+						pstPort->stDispPixAR.u32ARw,
+						pstPort->stDispPixAR.u32ARh); 
 
                 memcpy(&pstPort->stVideoRect, &pstPortCfg->stVideoRect, sizeof(HI_RECT_S));
 
@@ -496,6 +603,7 @@ HI_S32 VPSS_INST_SyncUsrCfg(VPSS_INSTANCE_S * pstInstance)
                 pstPort->enRotation = pstPortCfg->enRotation;
                 pstPort->bHoriFlip = pstPortCfg->bHoriFlip;
                 pstPort->bVertFlip = pstPortCfg->bVertFlip;
+				pstPort->bPassThrough = pstPortCfg->bPassThrough;
 
                 pstPort->enOutBitWidth  = pstPortCfg->enOutBitWidth;
             }
@@ -505,14 +613,19 @@ HI_S32 VPSS_INST_SyncUsrCfg(VPSS_INSTANCE_S * pstInstance)
 
     }
 
+	(HI_VOID)VPSS_INST_DebugCfg(pstInstance);
+
     (HI_VOID)VPSS_INST_RevisePortRect(pstInstance);
 	
     (HI_VOID)VPSS_INST_RevisePortOutBitWidth(pstInstance);
 	
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+#else
     (HI_VOID)VPSS_INST_RevisePortCmpCfg(pstInstance);
+#endif
+
+	(HI_VOID)VPSS_INST_RevisePortFormat(pstInstance);
 	
-	(HI_VOID)VPSS_INST_DebugCfg(pstInstance);
-    
     VPSS_OSAL_UpSpin(&(pstInstance->stUsrSetSpin),&flags);
     
     for(u32Count = 0; 
@@ -823,6 +936,10 @@ HI_S32 VPSS_INST_Init(VPSS_INSTANCE_S *pstInstance,HI_DRV_VPSS_CFG_S *pstVpssCfg
     VPSS_RWZB_Init(&(pstInstance->stRwzbInfo));
 	
     VPSS_DBG_DbgInit(&(pstInstance->stDbgCtrl));
+
+	pstInstance->bSecure = pstVpssCfg->bSecure;
+
+	stInEnv.bSecure = pstInstance->bSecure;
 	
     s32Ret = VPSS_IN_Init(&(pstInstance->stInEntity),stInEnv);
     if (HI_SUCCESS != s32Ret)
@@ -930,6 +1047,7 @@ HI_S32 VPSS_INST_GetDefInstCfg(HI_DRV_VPSS_CFG_S *pstVpssCfg)
 
     pstVpssCfg->enProgInfo = HI_DRV_VPSS_PRODETECT_AUTO;
     pstVpssCfg->bProgRevise = HI_TRUE;
+    pstVpssCfg->bSecure = HI_FALSE;
     
     pstVpssCfg->enSrcCS = HI_DRV_CS_UNKNOWN;
     
@@ -972,6 +1090,10 @@ HI_S32 VPSS_INST_SetInstCfg(VPSS_INSTANCE_S *pstInstance,
     //VPSS_OSAL_DownLock(&(pstInstance->stInstLock));
     VPSS_OSAL_DownSpin(&(pstInstance->stUsrSetSpin),&flags);
     pstInstance->bCfgNew = HI_TRUE;    
+	if(pstInstance->enState == INSTANCE_STATE_STOP)
+	{
+		pstInstance->bTvpFirstCfg = HI_TRUE;	
+	}
     memcpy(pstInstUsrcCfg,pstVpssCfg,sizeof(HI_DRV_VPSS_CFG_S));
     //VPSS_OSAL_UpLock(&(pstInstance->stInstLock));
     VPSS_OSAL_UpSpin(&(pstInstance->stUsrSetSpin),&flags);
@@ -993,6 +1115,7 @@ HI_U32 VPSS_INST_GetInstCfg(VPSS_INSTANCE_S *pstInstance,
     pstVpssCfg->enProgInfo = pstInstUsrcCfg->enProgInfo;
     pstVpssCfg->bProgRevise = pstInstUsrcCfg->bProgRevise;
     pstVpssCfg->enSrcCS = pstInstUsrcCfg->enSrcCS;
+	pstVpssCfg->bSecure = pstInstUsrcCfg->bSecure;
     memcpy(&(pstVpssCfg->stProcCtrl),&(pstInstUsrcCfg->stProcCtrl),
                                         sizeof(HI_DRV_VPSS_PROCESS_S));
     VPSS_OSAL_UpSpin(&(pstInstance->stUsrSetSpin),&flags);
@@ -1058,6 +1181,8 @@ HI_U32 VPSS_INST_GetDefPortCfg(HI_DRV_VPSS_PORT_CFG_S *pstPortCfg)
     pstPortCfg->enRotation = HI_DRV_VPSS_ROTATION_DISABLE;
     pstPortCfg->bHoriFlip = HI_FALSE;
     pstPortCfg->bVertFlip = HI_FALSE;
+	pstPortCfg->bPassThrough = HI_FALSE;
+//	pstPortCfg->bPassThrough = HI_TRUE;
 
     pstPortCfg->enOutBitWidth = HI_DRV_PIXEL_BITWIDTH_8BIT;
 
@@ -1139,7 +1264,7 @@ HI_S32 VPSS_INST_DestoryPort(VPSS_INSTANCE_S *pstInstance,VPSS_HANDLE hPort)
         return HI_FAILURE;
     }
 
-    msleep(100);/*暂时规避释放buffer被中断打断的情况*/
+//    msleep(100);/*暂时规避释放buffer被中断打断的情况*/
     
     VPSS_FB_DelInit(&(pstPort->stFrmInfo));
 
@@ -1668,7 +1793,7 @@ HI_S32 VPSS_INST_CheckInstAvailable(VPSS_INSTANCE_S *pstInstance)
 
 HI_S32 VPSS_INST_RelFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE  hPort,
                                 HI_DRV_VPSS_BUFLIST_CFG_S   *pstBufCfg,
-                                MMZ_BUFFER_S *pstMMZBuf)
+                                VPSS_MEM_S *pstMemBuf)
 {
     HI_S32 s32Ret;
     HI_DRV_VPSS_FRMBUF_S stFrmBuf;
@@ -1688,15 +1813,15 @@ HI_S32 VPSS_INST_RelFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE  hPort,
     stFrmBuf.u32Size = pstBufCfg->u32BufSize;
     stFrmBuf.u32Stride = pstBufCfg->u32BufStride;
 
-    stFrmBuf.u32Size = pstMMZBuf->u32Size;
-    stFrmBuf.u32StartPhyAddr = pstMMZBuf->u32StartPhyAddr;
-    stFrmBuf.u32StartVirAddr = pstMMZBuf->u32StartVirAddr;
+    stFrmBuf.u32Size = pstMemBuf->u32Size;
+    stFrmBuf.u32StartPhyAddr = pstMemBuf->u32StartPhyAddr;
+    stFrmBuf.u32StartVirAddr = pstMemBuf->u32StartVirAddr;
     
     s32Ret = pstInstance->pfUserCallBack(pstInstance->hDst,VPSS_EVENT_REL_FRMBUFFER,&stFrmBuf);
 
     if(s32Ret == HI_SUCCESS)
     {
-        memset(pstMMZBuf,0,sizeof(MMZ_BUFFER_S));
+        memset(pstMemBuf,0,sizeof(VPSS_MEM_S));
     }
     
     return s32Ret;
@@ -1705,7 +1830,7 @@ HI_S32 VPSS_INST_GetFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE hPort,
                     HI_DRV_VPSS_BUFLIST_CFG_S* pstBufCfg,VPSS_BUFFER_S *pstBuffer,
                     HI_U32 u32StoreH,HI_U32 u32StoreW)
 {
-    MMZ_BUFFER_S *pstMMZBuf;
+    VPSS_MEM_S *pstMemBuf;
     MMZ_BUFFER_S *pstPrivDataBuf;
     HI_S32 s32Ret;
     HI_DRV_VPSS_BUFFER_TYPE_E eBufferType;
@@ -1720,7 +1845,7 @@ HI_S32 VPSS_INST_GetFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE hPort,
     eBufferType = pstBufCfg->eBufType;
     u32BufSize = pstBufCfg->u32BufSize;
     
-    pstMMZBuf = &(pstBuffer->stMMZBuf);
+    pstMemBuf = &(pstBuffer->stMemBuf);
 	pstPrivDataBuf = &(pstBuffer->stPrivDataBuf);
 
     if(pstInstance->pfUserCallBack == HI_NULL)
@@ -1737,9 +1862,9 @@ HI_S32 VPSS_INST_GetFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE hPort,
 
     if(s32Ret == HI_SUCCESS)
     {
-        pstMMZBuf->u32Size = stFrmBuf.u32Size;
-        pstMMZBuf->u32StartPhyAddr = stFrmBuf.u32StartPhyAddr;
-        pstMMZBuf->u32StartVirAddr= stFrmBuf.u32StartVirAddr;
+        pstMemBuf->u32Size = stFrmBuf.u32Size;
+        pstMemBuf->u32StartPhyAddr = stFrmBuf.u32StartPhyAddr;
+        pstMemBuf->u32StartVirAddr= stFrmBuf.u32StartVirAddr;
         pstBuffer->u32Stride = stFrmBuf.u32Stride;
 
 		pstPrivDataBuf->u32Size = stFrmBuf.u32PrivDataSize;
@@ -1897,11 +2022,11 @@ VPSS_HAL_NODE_TYPE_E VPSS_INST_Check2DNodeType(VPSS_INSTANCE_S* pstInst)
           */
 		if ( HI_TRUE == pstInst->enCapability.bits.hi3798mv100)
 		{
-	        return VPSS_HAL_NODE_UHD_SPLIT_L; //only for 98m
+			return VPSS_HAL_NODE_UHD_SPLIT_L; //only for 98m
 		}
 		else
 		{
-	        return VPSS_HAL_NODE_UHD;
+			return VPSS_HAL_NODE_UHD;
 		}
     }
     else
@@ -1987,7 +2112,7 @@ HI_VOID VPSS_INST_SetHalFrameInfo(HI_DRV_VIDEO_FRAME_S *pstFrame,
     pstHalFrm->bCompressd = pstFrame->bCompressd;
     pstHalFrm->enBitWidth = pstFrame->enBitWidth;
     pstHalFrm->bTopFirst = pstFrame->bTopFieldFirst;
-
+	pstHalFrm->bSecure = pstFrame->bSecure;
 	if ( HI_DRV_PIXEL_BITWIDTH_10BIT == pstFrame->enBitWidth)  //@f00241306 for dither
 	{
 #if defined(CHIP_TYPE_hi3798cv200_a) 
@@ -2071,16 +2196,19 @@ HI_VOID VPSS_INST_SetOutFrameInfo(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, VPSS_
         pstFrm->u32Height = u32DstW;
         VPSS_OSAL_CalBufSize(&u32BufSize, &u32BufStride, pstFrm->u32Height
                              , pstFrm->u32Width, pstPort->eFormat, pstPort->enOutBitWidth);
-        if ((pstBuf->stMMZBuf.u32Size != u32BufSize)
+        if ((pstBuf->stMemBuf.u32Size != u32BufSize)
             || (pstBuf->u32Stride != u32BufStride))
         {
-            if (pstBuf->stMMZBuf.u32Size != 0)
+            if (pstBuf->stMemBuf.u32Size != 0)
             {
-                (HI_VOID)HI_DRV_MMZ_UnmapAndRelease(&(pstBuf->stMMZBuf));
+				VPSS_OSAL_FreeMem(&(pstBuf->stMemBuf));
             }
 
-            s32Ret = HI_DRV_MMZ_AllocAndMap("VPSS_RoBuf", "VPSS",
-                                            u32BufSize, 0, &(pstBuf->stMMZBuf));
+			s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_NORMAL,
+					u32BufSize,
+					"VPSS_RoBuf", 
+					"VPSS",
+					&(pstBuf->stMemBuf));
             if (s32Ret != HI_SUCCESS)
             {
                 VPSS_FATAL("Alloc RoBuf Failed\n");
@@ -2166,7 +2294,7 @@ HI_VOID VPSS_INST_SetOutFrameInfo(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, VPSS_
     pstFrm->stLbxInfo.s32Height = u32DstH;
 
     /* 填充地址信息 */
-	u32PhyAddr = pstBuf->stMMZBuf.u32StartPhyAddr;
+	u32PhyAddr = pstBuf->stMemBuf.u32StartPhyAddr;
     u32Stride  = pstBuf->u32Stride;
 
     pstFrm->stBufAddr[enBufLR].u32Stride_Y  =  u32Stride;
@@ -2297,7 +2425,7 @@ HI_VOID VPSS_INST_SetRotationOutFrameInfo(VPSS_INSTANCE_S* pstInst, HI_U32 PortI
     pstFrm->stLbxInfo.s32Height = 0;
 
     /* 填充地址信息 */
-    u32PhyAddr = pstBuf->stMMZBuf.u32StartPhyAddr;
+    u32PhyAddr = pstBuf->stMemBuf.u32StartPhyAddr;
     u32Stride  = pstBuf->u32Stride;
 
     pstFrm->stBufAddr[enBufLR].u32Stride_Y  =  u32Stride;
@@ -2443,7 +2571,11 @@ HI_VOID VPSS_INST_GetInCrop(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_S *
     return;
 }
 
-HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_S *pstInCropRect, HI_RECT_S *pstVideoRect)
+HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, 
+								HI_U32 PortId, 
+								HI_RECT_S *pstInCropRect, 
+								HI_RECT_S *pstVideoRect,
+								HI_RECT_S *pstOutCropRect)
 {
     HI_U32 u32DstW;
     HI_U32 u32DstH;
@@ -2538,7 +2670,9 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_
         pstVideoRect->s32Width  = pVRct->s32Width;
         pstVideoRect->s32Height = pVRct->s32Height;
     }
-    else if (pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_LETTERBOX)
+    else if (pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_LETTERBOX
+				|| pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_COMBINED
+				|| pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_PANANDSCAN)
     {   
         HI_RECT_S stScreen;
         HI_RECT_S stOutWnd;
@@ -2630,7 +2764,6 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_
 
         }
         
-        
         stAspDrvPara.stOutWnd.s32X = 0;
         stAspDrvPara.stOutWnd.s32Y = 0;
         stAspDrvPara.stOutWnd.s32Height = stOutWnd.s32Height;
@@ -2653,6 +2786,7 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_
         
         stAspDrvPara.stUsrAsp.u32UserAspectHeight = pstPort->stCustmAR.u32ARh;
         stAspDrvPara.stUsrAsp.u32UserAspectWidth = pstPort->stCustmAR.u32ARw;
+
         #if 1
         switch(pstPort->enRotation)
         {
@@ -2682,22 +2816,44 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_
                     pstPort->eAspMode,&stScreen,
                     &stAspOutPara);
                    
-        /*Get Zme out H/W via AspAlg*/
-        pstVideoRect->s32X = stAspOutPara.stOutWnd.s32X;
-        pstVideoRect->s32Y = stAspOutPara.stOutWnd.s32Y;
-        pstVideoRect->s32Width  = stAspOutPara.stOutWnd.s32Width;
-        pstVideoRect->s32Height = stAspOutPara.stOutWnd.s32Height;
 
-        
+		if (pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_LETTERBOX)
+		{
+			/*Get Zme out H/W via AspAlg*/
+			pstVideoRect->s32X = stAspOutPara.stOutWnd.s32X;
+			pstVideoRect->s32Y = stAspOutPara.stOutWnd.s32Y;
+			pstVideoRect->s32Width  = stAspOutPara.stOutWnd.s32Width;
+			pstVideoRect->s32Height = stAspOutPara.stOutWnd.s32Height;
+
+			pstOutCropRect->s32X = 0;
+			pstOutCropRect->s32Y = 0;
+			pstOutCropRect->s32Width = pstVideoRect->s32Width;
+			pstOutCropRect->s32Height = pstVideoRect->s32Height;
+		}
+		else
+		{
+			pstVideoRect->s32X = stAspOutPara.stOutWnd.s32X;
+			pstVideoRect->s32Y = stAspOutPara.stOutWnd.s32Y;
+			pstVideoRect->s32Width  = stAspOutPara.u32ZmeW;
+			pstVideoRect->s32Height = stAspOutPara.u32ZmeH;
+
+			pstOutCropRect->s32X = stAspOutPara.stCropWnd.s32X;
+			pstOutCropRect->s32Y = stAspOutPara.stCropWnd.s32Y;
+			pstOutCropRect->s32Width = stAspOutPara.stCropWnd.s32Width;
+			pstOutCropRect->s32Height = stAspOutPara.stCropWnd.s32Height;
+		}
     }
-    else if (pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_FULL
-            || pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_PANANDSCAN
-            || pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_COMBINED)
+    else if (pstInst->stPort[PortId].eAspMode == HI_DRV_ASP_RAT_MODE_FULL)
     {
         pstVideoRect->s32X = 0;
         pstVideoRect->s32Y = 0;
         pstVideoRect->s32Width  = u32DstW;
         pstVideoRect->s32Height = u32DstH;
+
+		pstOutCropRect->s32X = 0;
+		pstOutCropRect->s32Y = 0;
+		pstOutCropRect->s32Width = pstVideoRect->s32Width;
+		pstOutCropRect->s32Height = pstVideoRect->s32Height;
     }
     else
     {
@@ -2705,6 +2861,10 @@ HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_
         pstVideoRect->s32Y = 0;
         pstVideoRect->s32Width  = u32DstW;
         pstVideoRect->s32Height = u32DstH;
+		pstOutCropRect->s32X = 0;
+		pstOutCropRect->s32Y = 0;
+		pstOutCropRect->s32Width = pstVideoRect->s32Width;
+		pstOutCropRect->s32Height = pstVideoRect->s32Height;
         VPSS_WARN("Aspect Mode %d can't support\n",pstInst->stPort[PortId].eAspMode);
         
     }
@@ -3015,7 +3175,7 @@ HI_S32 VPSS_INST_SetUhdLevel(VPSS_INSTANCE_S* pstInstance,HI_U32 u32WidthLevel,H
 	return HI_SUCCESS;
 }
 
-HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][3]) 
+HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][5]) 
 {
 	pMatrixRect[0][0].s32Width = VPSS_UHD_LOW_W;
 	pMatrixRect[0][0].s32Height = VPSS_UHD_LOW_H;
@@ -3023,6 +3183,10 @@ HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][3])
 	pMatrixRect[0][1].s32Height = 0xffffffff;
 	pMatrixRect[0][2].s32Width = 0xffffffff;
 	pMatrixRect[0][2].s32Height = 0xffffffff;
+	pMatrixRect[0][3].s32Width = 0xffffffff;
+	pMatrixRect[0][3].s32Height = 0xffffffff;
+	pMatrixRect[0][4].s32Width = 0xffffffff;
+	pMatrixRect[0][4].s32Height = 0xffffffff;
 
 	pMatrixRect[1][0].s32Width = VPSS_UHD_MIDDLE_W;
 	pMatrixRect[1][0].s32Height = VPSS_UHD_MIDDLE_H;
@@ -3030,6 +3194,10 @@ HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][3])
 	pMatrixRect[1][1].s32Height = 0xffffffff;
 	pMatrixRect[1][2].s32Width = 0xffffffff;
 	pMatrixRect[1][2].s32Height = 0xffffffff;
+	pMatrixRect[1][3].s32Width = 0xffffffff;
+	pMatrixRect[1][3].s32Height = 0xffffffff;
+	pMatrixRect[1][4].s32Width = 0xffffffff;
+	pMatrixRect[1][4].s32Height = 0xffffffff;
 
 	pMatrixRect[2][0].s32Width = VPSS_UHD_HIGH_W;
 	pMatrixRect[2][0].s32Height = VPSS_UHD_HIGH_H;
@@ -3037,11 +3205,19 @@ HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][3])
 	pMatrixRect[2][1].s32Height = 0xffffffff;
 	pMatrixRect[2][2].s32Width = 0xffffffff;
 	pMatrixRect[2][2].s32Height = 0xffffffff;
+	pMatrixRect[2][3].s32Width = 0xffffffff;
+	pMatrixRect[2][3].s32Height = 0xffffffff;
+	pMatrixRect[2][4].s32Width = 0xffffffff;
+	pMatrixRect[2][4].s32Height = 0xffffffff;
 
 	return HI_SUCCESS;
 }
 
-HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][3],HI_S32 s32OriWidth,HI_S32 s32OriHeight)
+HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][5],
+									HI_S32 s32OriWidth,
+									HI_S32 s32OriHeight,
+									HI_S32 s32OriARw,
+									HI_S32 s32OriARh)
 {
 	if (s32OriWidth != pMatrixRect[0][1].s32Width
 			|| s32OriHeight != pMatrixRect[0][1].s32Height)
@@ -3050,6 +3226,10 @@ HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][3],HI_S32 s32OriWid
 		pMatrixRect[0][1].s32Height = s32OriHeight;
 		pMatrixRect[0][2].s32Width = 0xffffffff;
 		pMatrixRect[0][2].s32Height = 0xffffffff;
+		pMatrixRect[0][3].s32Width = s32OriARw;
+		pMatrixRect[0][3].s32Height = s32OriARh;
+		pMatrixRect[0][4].s32Width = 0xffffffff;
+		pMatrixRect[0][4].s32Height = 0xffffffff;
 	}
 
 	if (s32OriWidth != pMatrixRect[1][1].s32Width
@@ -3059,6 +3239,10 @@ HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][3],HI_S32 s32OriWid
 		pMatrixRect[1][1].s32Height = s32OriHeight;
 		pMatrixRect[1][2].s32Width = 0xffffffff;
 		pMatrixRect[1][2].s32Height = 0xffffffff;
+		pMatrixRect[1][3].s32Width = s32OriARw;
+		pMatrixRect[1][3].s32Height = s32OriARh;
+		pMatrixRect[1][4].s32Width = 0xffffffff;
+		pMatrixRect[1][4].s32Height = 0xffffffff;
 	}
 
 	if (s32OriWidth != pMatrixRect[2][1].s32Width
@@ -3068,33 +3252,45 @@ HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][3],HI_S32 s32OriWid
 		pMatrixRect[2][1].s32Height = s32OriHeight;
 		pMatrixRect[2][2].s32Width = 0xffffffff;
 		pMatrixRect[2][2].s32Height = 0xffffffff;
+		pMatrixRect[2][3].s32Width = s32OriARw;
+		pMatrixRect[2][3].s32Height = s32OriARh;
+		pMatrixRect[2][4].s32Width = 0xffffffff;
+		pMatrixRect[2][4].s32Height = 0xffffffff;
 	}
 
 	return HI_SUCCESS;
 }
 
-HI_S32 VPSS_INST_LevelRectSetReviseRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectSetReviseRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 s32ReviseWidth,
-									HI_S32 s32ReviseHeight)
+									HI_S32 s32ReviseHeight,
+									HI_S32 s32ReviseARw,
+									HI_S32 s32ReviseARh)
 {
 	if (stLevelRect.s32Width == VPSS_UHD_LOW_W
 			&& stLevelRect.s32Height == VPSS_UHD_LOW_H)
 	{
 		pMatrixRect[0][2].s32Width = s32ReviseWidth;
 		pMatrixRect[0][2].s32Height = s32ReviseHeight;
+		pMatrixRect[0][4].s32Width = s32ReviseARw;
+		pMatrixRect[0][4].s32Height = s32ReviseARh;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_MIDDLE_W
 			&& stLevelRect.s32Height == VPSS_UHD_MIDDLE_H)
 	{
 		pMatrixRect[1][2].s32Width = s32ReviseWidth;
 		pMatrixRect[1][2].s32Height = s32ReviseHeight;
+		pMatrixRect[1][4].s32Width = s32ReviseARw;
+		pMatrixRect[1][4].s32Height = s32ReviseARh;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_HIGH_W
 			&& stLevelRect.s32Height == VPSS_UHD_HIGH_H)
 	{
 		pMatrixRect[2][2].s32Width = s32ReviseWidth;
 		pMatrixRect[2][2].s32Height = s32ReviseHeight;
+		pMatrixRect[2][4].s32Width = s32ReviseARw;
+		pMatrixRect[2][4].s32Height = s32ReviseARh;
 	}
 	else
 	{
@@ -3106,28 +3302,36 @@ HI_S32 VPSS_INST_LevelRectSetReviseRect(HI_RECT_S pMatrixRect[][3],
 	return HI_SUCCESS;
 }
 
-HI_S32 VPSS_INST_LevelRectGetReviseRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectGetReviseRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 *ps32ReviseWidth,
-									HI_S32 *ps32ReviseHeight)
+									HI_S32 *ps32ReviseHeight,
+									HI_S32 *ps32ReviseARw,
+									HI_S32 *ps32ReviseARh)
 {
 	if (stLevelRect.s32Width == VPSS_UHD_LOW_W
 			&& stLevelRect.s32Height == VPSS_UHD_LOW_H)
 	{
 		*ps32ReviseWidth = pMatrixRect[0][2].s32Width;
 		*ps32ReviseHeight= pMatrixRect[0][2].s32Height;
+		*ps32ReviseARw = pMatrixRect[0][4].s32Width;
+		*ps32ReviseARh = pMatrixRect[0][4].s32Height;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_MIDDLE_W
 			&& stLevelRect.s32Height == VPSS_UHD_MIDDLE_H)
 	{
 		*ps32ReviseWidth = pMatrixRect[1][2].s32Width;
 		*ps32ReviseHeight= pMatrixRect[1][2].s32Height;
+		*ps32ReviseARw = pMatrixRect[1][4].s32Width;
+		*ps32ReviseARh = pMatrixRect[1][4].s32Height;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_HIGH_W
 			&& stLevelRect.s32Height == VPSS_UHD_HIGH_H)
 	{
 		*ps32ReviseWidth = pMatrixRect[2][2].s32Width;
 		*ps32ReviseHeight= pMatrixRect[2][2].s32Height;
+		*ps32ReviseARw = pMatrixRect[2][4].s32Width;
+		*ps32ReviseARh = pMatrixRect[2][4].s32Height;
 	}
 	else
 	{
@@ -3139,28 +3343,36 @@ HI_S32 VPSS_INST_LevelRectGetReviseRect(HI_RECT_S pMatrixRect[][3],
 	return HI_SUCCESS;
 }
 
-HI_S32 VPSS_INST_LevelRectGetOriRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectGetOriRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 *ps32OriWidth,
-									HI_S32 *ps32OriHeight)
+									HI_S32 *ps32OriHeight,
+									HI_S32 *ps32OriARw,
+									HI_S32 *ps32OriARh)
 {
 	if (stLevelRect.s32Width == VPSS_UHD_LOW_W
 			&& stLevelRect.s32Height == VPSS_UHD_LOW_H)
 	{
 		*ps32OriWidth = pMatrixRect[0][1].s32Width;
 		*ps32OriHeight= pMatrixRect[0][1].s32Height;
+		*ps32OriARw = pMatrixRect[0][3].s32Width;
+		*ps32OriARh = pMatrixRect[0][3].s32Height;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_MIDDLE_W
 			&& stLevelRect.s32Height == VPSS_UHD_MIDDLE_H)
 	{
 		*ps32OriWidth = pMatrixRect[1][1].s32Width;
 		*ps32OriHeight= pMatrixRect[1][1].s32Height;
+		*ps32OriARw = pMatrixRect[1][3].s32Width;
+		*ps32OriARh = pMatrixRect[1][3].s32Height;
 	}
 	else if (stLevelRect.s32Width == VPSS_UHD_HIGH_W
 			&& stLevelRect.s32Height == VPSS_UHD_HIGH_H)
 	{
 		*ps32OriWidth = pMatrixRect[2][1].s32Width;
 		*ps32OriHeight= pMatrixRect[2][1].s32Height;
+		*ps32OriARw = pMatrixRect[2][3].s32Width;
+		*ps32OriARh = pMatrixRect[2][3].s32Height;
 	}
 	else
 	{
@@ -3187,6 +3399,67 @@ HI_S32 VPSS_INST_EnableStorePriv(VPSS_INSTANCE_S* pstInstance,HI_BOOL bStore)
 	VPSS_OSAL_UpSpin(&(pstInstance->stUsrSetSpin),&flags);
 
 	return HI_SUCCESS;
+}
+HI_S32 VPSS_INST_SyncTvpCfg(VPSS_INSTANCE_S *pstInstance)
+{
+	HI_BOOL bSecure;
+
+	bSecure = pstInstance->stUsrInstCfg.bSecure;
+
+	if (pstInstance->bSecure != bSecure)
+	{
+		if (pstInstance->bTvpFirstCfg == HI_TRUE)	
+		{
+			pstInstance->bSecure = bSecure;
+
+			pstInstance->bTvpFirstCfg = HI_FALSE;
+		}
+		else
+		{
+			VPSS_ERROR("vpss is working ,can't change secure config from %d to %d\n",pstInstance->bSecure,bSecure);
+		}
+	}
+
+	return HI_SUCCESS;
+}
+
+HI_BOOL VPSS_INST_CheckPassThrough(VPSS_INSTANCE_S *pstInstance,HI_DRV_VIDEO_FRAME_S *pstInImage)
+{
+	HI_U32 u32Count;
+	HI_BOOL bPassThrough = HI_TRUE;
+	VPSS_PORT_S *pstPort;
+
+	/*if one port can't passthrough ,the instance can't passthrough*/
+	for (u32Count = 0; u32Count < VPSS_PORT_MAX_NUMB; u32Count++)
+	{
+		pstPort = &(pstInstance->stPort[u32Count]);
+		
+		if (pstPort->bEnble == HI_TRUE
+				&& pstPort->s32PortId != HI_INVALID_HANDLE)	
+		{
+			//can passthrough scene
+			if ((pstPort->s32OutputWidth == 0 && pstPort->s32OutputHeight == 0)
+					|| (pstPort->s32OutputWidth == pstInImage->u32Width
+						&& pstPort->s32OutputHeight == pstInImage->u32Height)
+			   )
+			{
+				if (pstPort->bPassThrough == HI_TRUE)
+				{
+					bPassThrough &= HI_TRUE;
+				}
+				else
+				{
+					bPassThrough &= HI_FALSE;
+				}
+			}
+			else
+			{
+				bPassThrough &= HI_FALSE;
+			}
+		}
+	}
+
+	return bPassThrough;
 }
 #ifdef __cplusplus
  #if __cplusplus

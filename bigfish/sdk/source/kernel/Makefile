@@ -49,6 +49,19 @@ endif
 else
 INITRAMFS_SOURCE = $(ROOTBOX_DIR)
 endif
+
+###############################################################################
+# TVP Config                                                                  #
+###############################################################################
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+SECURITY_FLAGS := CONFIG_SUPPORT_CA=y CONFIG_CA_RUNTIME_CHECK=y CONFIG_CA_WARKUP_CHECK=y CONFIG_SECURE_EXTENSION=y CONFIG_TEE_DRIVER=y
+SECURITY_CFLAGS := "-DCONFIG_SUPPORT_CA -DCONFIG_CA_RUNTIME_CHECK -DCONFIG_CA_WARKUP_CHECK -DCONFIG_SECURE_EXTENSION -DCONFIG_TEE_DRIVER"
+SECURITY_AFLAGS := "-DCONFIG_SUPPORT_CA -DCONFIG_CA_RUNTIME_CHECK -DCONFIG_CA_WARKUP_CHECK -DCONFIG_SECURE_EXTENSION -DCONFIG_TEE_DRIVER"
+
+EXTRA_FLAGS_KERNEL+=$(SECURITY_FLAGS)
+CFLAGS_KERNEL+=$(SECURITY_CFLAGS)
+AFLAGS_KERNEL+=$(SECURITY_AFLAGS)
+endif
 ###############################################################################
 
 all: $(PREFIX)/hi_kernel.bin
@@ -61,17 +74,20 @@ $(BUILD_DIR)/arch/arm/boot/uImage: prepare
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		CONFIG_MSP=$(CFG_MSP) \
 		CONFIG_ADVCA=$(CFG_ADVCA) \
+		$(EXTRA_FLAGS_KERNEL) \
 		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) uImage
 	make -C $(BUILD_DIR) ARCH=arm \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		CONFIG_MSP=$(CFG_MSP) \
 		CONFIG_ADVCA=$(CFG_ADVCA) \
+		$(EXTRA_FLAGS_KERNEL) \
 		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) modules
 
 menuconfig: prepare
 	make -C $(BUILD_DIR) ARCH=arm \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		CONFIG_MSP=$(CFG_MSP) \
+		$(EXTRA_FLAGS_KERNEL) \
 		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) menuconfig
 
 $(BUILD_DIR)/tar:
@@ -88,6 +104,7 @@ ifeq ($(CFG_HI_MSP_BUILDIN),y)
 endif
 	make -C $(BUILD_DIR) ARCH=arm \
 		CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(EXTRA_FLAGS_KERNEL) \
 		CFLAGS_KERNEL=$(CFLAGS_KERNEL) AFLAGS_KERNEL=$(AFLAGS_KERNEL) $(KERNEL_CONFIG)
 
 install: all
@@ -117,6 +134,7 @@ fs_buildin: prepare $(INITRAMFS_SOURCE)
 		CROSS_COMPILE=$(CROSS_COMPILE) \
 		CONFIG_MSP=$(CFG_MSP) \
 		CONFIG_ADVCA=$(CFG_ADVCA) \
+		$(EXTRA_FLAGS_KERNEL) \
 		CFLAGS_KERNEL=$(CFLAGS_KERNEL) \
 		AFLAGS_KERNEL=$(AFLAGS_KERNEL) \
 		CONFIG_CC_OPTIMIZE_FOR_SIZE=$(CONFIG_CC_OPTIMIZE_FOR_SIZE) \
@@ -140,13 +158,19 @@ uninstall:
 
 distclean: clean
 	@test ! -d $(BUILD_DIR) || make -C $(BUILD_DIR) ARCH=arm \
-		CROSS_COMPILE=$(CROSS_COMPILE) distclean
+		CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(EXTRA_FLAGS_KERNEL) \
+		CFLAGS_KERNEL=$(CFLAGS_KERNEL) \
+		AFLAGS_KERNEL=$(AFLAGS_KERNEL) distclean
 
 clean:
 	@test ! -d $(BUILD_DIR) || test ! -f $(shell pwd)/$(KERNEL).tar.bz2 \
 		|| test ! -d $(KERNEL_PATCH_DIR) || rm -rf $(BUILD_DIR)
 	@test ! -d $(BUILD_DIR) || make -C $(BUILD_DIR) ARCH=arm \
-		CROSS_COMPILE=$(CROSS_COMPILE) clean
+		CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(EXTRA_FLAGS_KERNEL) \
+		CFLAGS_KERNEL=$(CFLAGS_KERNEL) \
+		AFLAGS_KERNEL=$(AFLAGS_KERNEL) clean
 	@test ! -f $(PREFIX)/hi_kernel.bin || rm -rf  $(PREFIX)/hi_kernel.bin
 ifdef CFG_HI_ADVCA_FUNCTION
 ifeq ($(CFG_HI_LOADER_APPLOADER),y)

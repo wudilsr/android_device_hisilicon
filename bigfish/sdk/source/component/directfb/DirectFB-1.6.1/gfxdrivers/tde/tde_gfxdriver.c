@@ -153,7 +153,10 @@ driver_init_driver( CoreGraphicsDevice  *device,
         D_ERROR("tde init error\n");
         return DFB_INIT;
      }
+ #ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
+ ..
      dfb_layers_register(dfb_screens_at(DSCID_PRIMARY), driver_data, &hisi_layer_funcs);
+ #endif
      return DFB_OK;
 }
 

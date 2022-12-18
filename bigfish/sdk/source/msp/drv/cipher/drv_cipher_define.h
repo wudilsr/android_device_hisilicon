@@ -36,6 +36,18 @@
 #define CI_BUF_LIST_FLAG_IVSET_BIT  (21)
 #define CI_BUF_LIST_FLAG_EOL_BIT    (22)
 
+#define HI_PRINT_HEX(name, str, len) \
+{\
+    HI_U32 _i = 0;\
+    HI_PRINT("[%s]:\n", name);\
+    for ( _i = 0 ; _i < (len); _i++ )\
+    {\
+        if( (_i % 16 == 0) && (_i != 0)) HI_PRINT("\n");\
+        HI_PRINT("\\x%02x", *((str)+_i));\
+    }\
+    HI_PRINT("\n");\
+}
+
 typedef struct hiCI_BUF_LIST_ENTRY_S
 {
     HI_U32  u32DataAddr;    /* Phy Addr */

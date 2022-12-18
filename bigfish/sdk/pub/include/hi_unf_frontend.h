@@ -183,6 +183,8 @@ typedef enum    hiUNF_TUNER_DEV_TYPE_E
     HI_UNF_TUNER_DEV_TYPE_TDA182I5A,             /**<TDA182I5A*/       			/**<CNcomment:支持TDA182I5A芯片*/
     HI_UNF_TUNER_DEV_TYPE_SI2144,             /**<Si2144*/       			/**<CNcomment:支持Si2144芯片*/
     HI_UNF_TUNER_DEV_TYPE_AV2018,             /**<AV2018*/       			/**<CNcomment:支持AV2018芯片*/
+    HI_UNF_TUNER_DEV_TYPE_MXL251,		      /**<MXL251*/				    /**<CNcomment:支持MXL251芯片*/
+    HI_UNF_TUNER_DEV_TYPE_M88TC3800,			/**<M88TC3800*/				    /**<CNcomment:支持M88TC3800芯片*/
     HI_UNF_TUNER_DEV_TYPE_BUTT                  /**<Invalid value*/             /**<CNcomment:非法边界值*/
 } HI_UNF_TUNER_DEV_TYPE_E ;
 
@@ -206,6 +208,9 @@ typedef enum    hiUNF_DEMOD_DEV_TYPE_E
     HI_UNF_DEMOD_DEV_TYPE_3137,                 /**External Hi3137*/        /**<CNcomment:支持外部hi3137芯片*/
     HI_UNF_DEMOD_DEV_TYPE_MXL214,               /**<External mxl214*/       /**<CNcomment:外部MXL214芯片*/
     HI_UNF_DEMOD_DEV_TYPE_TDA18280,             /**<External tda18280*/       /**<CNcomment:外部tda18280芯片*/
+    HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100,				/**<External HiFdvbc100*/       /**<CNcomment:内部QAM HiFdvbc100芯片*/
+    HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100,				/**<External HiFj83b100*/       /**<CNcomment:内部QAM HiFj83b100芯片*/
+    HI_UNF_DEMOD_DEV_TYPE_MXL251,				/**<External mxl251*/		/**<CNcomment:外部MXL251芯片*/
     HI_UNF_DEMOD_DEV_TYPE_BUTT                  /**<Invalid value*/         /**<CNcomment:非法边界值*/
 } HI_UNF_DEMOD_DEV_TYPE_E;
 
@@ -2314,6 +2319,24 @@ N/A
 N/A
 */
 HI_S32 HI_UNF_TUNER_SetScramble(HI_U32 u32TunerId,HI_U32 u32N);
+
+/**
+\brief Acquire data to display spectrum.
+CNcomment:\brief 获取全频段频谱的数据。CNend
+\attention \n
+N/A
+\param[in]  u32TunerId    Tuner port ID. The port ID can be 0-2.                                                                          CNcomment:TUNER端口号，取值为0-2 CNend
+\param[in]  u32freqStartInHz     The sample data start freqency (Hz), For examle: 435000000 Hz, 698000000 Hz (1000HZ~1300000000HZ).     CNcomment:采集的数据开始频点( 赫兹)，例如: 435000000 Hz,698000000 Hz(范围: 1000HZ~1300000000HZ)。CNend
+\param[in]  u32freqStepInHz     The sample data step(Hz), For examle: 10000 Hz, 20000 Hz (greater than 10000Hz).                CNcomment:采集的数据步长( 赫兹)，例如: 10000 Hz,20000 Hz (范围: 10000Hz 以上)。CNend
+\param[in]  u32numOfFreqSteps     The sample data number, For examle: 1000, 10000.                                          CNcomment:采集的数据个数，例如: 1000,10000。CNend
+\param[out] ps16powerData      The buffer to store data.                                                                                      CNcomment:数据存储区。CNend
+\retval ::HI_SUCCESS   Success                                               CNcomment:成功 CNend
+\retval ::HI_FAILURE   Calling this API fails.                               CNcomment:API系统调用失败 CNend
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_TUNER_GetTunerPowerSpectrumData(HI_U32 u32TunerId, HI_U32 u32freqStartInHz,HI_U32 u32freqStepInHz,HI_U32 u32numOfFreqSteps,HI_S16 *ps16powerData);
+
 
 /** @} */  /** <!-- ==== API declaration end ==== */
 #ifdef __cplusplus

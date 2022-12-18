@@ -194,7 +194,9 @@ int kern_load(const char *addr)
 
 	printf ("Starting kernel ...\n\n");
 
+#ifdef CONFIG_NET
 	setup_eth_param();
+#endif
 
 	params = get_kern_tags((uint32)kernel);
 

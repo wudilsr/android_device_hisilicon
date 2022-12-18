@@ -287,14 +287,29 @@ static HI_S32 UsbCheckFile(const HI_CHAR *pstrFileName)
 		Usb_rtrim(aucLine);
 		if (0 == HI_OSAL_Strncmp(aucLine, UPGRD_USB_DEV, sizeof(UPGRD_USB_DEV) ))
 		{
-			continue;
+			if (fgets(aucLine, sizeof(aucLine), pf_read))
+            {
+                Usb_rtrim(aucLine);
+                if (HI_SUCCESS != UDISK_Mount(aucLine, "/tmp", NULL, &fs_mnt))
+                {
+                    continue;
+                }             
+            }
+            else
+            {
+                if (HI_SUCCESS != UDISK_Mount(UPGRD_USB_DEV, "/tmp", NULL, &fs_mnt))
+                {
+                     continue;
+                }
+            }
 		}
-
-		if (HI_SUCCESS != UDISK_Mount(aucLine, "/tmp", NULL, &fs_mnt))
+		else
 		{
-			continue;
+			if (HI_SUCCESS != UDISK_Mount(aucLine, "/tmp", NULL, &fs_mnt))
+			{
+				continue;
+			}
 		}
-
 		HI_DBG_LOADER("upgrade file name:%s\n", pstrFileName);
 
 		memset(&statbuf, 0, sizeof(statbuf));

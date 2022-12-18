@@ -29,26 +29,37 @@
 #if __cplusplus
 extern "C" {
 #endif
-#endif /* __cplusplus */
+#endif
 
-
+#ifndef HI_ADVCA_FUNCTION_RELEASE
 #define HI_FATAL_PQ(fmt...) HI_TRACE(HI_LOG_LEVEL_FATAL, HI_ID_PQ, fmt)
 #define HI_ERR_PQ(fmt...)   HI_TRACE(HI_LOG_LEVEL_ERROR, HI_ID_PQ, fmt)
 #define HI_WARN_PQ(fmt...)  HI_TRACE(HI_LOG_LEVEL_WARNING, HI_ID_PQ, fmt)
 #define HI_INFO_PQ(fmt...)  HI_TRACE(HI_LOG_LEVEL_INFO, HI_ID_PQ, fmt)
 #define HI_DEBUG_PQ(fmt...) HI_TRACE(HI_LOG_LEVEL_DBG, HI_ID_PQ, fmt)
+#else
+#define HI_FATAL_PQ(fmt...)
+#define HI_ERR_PQ(fmt...)
+#define HI_WARN_PQ(fmt...)
+#define HI_INFO_PQ(fmt...)
+#define HI_DEBUG_PQ(fmt...)
+#endif
+
 
 /* 卖场模式 */
 typedef enum hiPQ_DEMO_E
 {
-    HI_PQ_DEMO_DBDR = 0  ,
+    HI_PQ_DEMO_DB = 0    ,
+    HI_PQ_DEMO_DR        ,
+    HI_PQ_DEMO_DM        ,
+    HI_PQ_DEMO_DBM       ,
     HI_PQ_DEMO_NR        ,
     HI_PQ_DEMO_SHARPNESS ,
     HI_PQ_DEMO_DCI       ,
-    HI_PQ_DEMO_WCG       ,
-    //HI_PQ_DEMO_FRC     ,
     HI_PQ_DEMO_COLOR     ,
     HI_PQ_DEMO_SR        ,
+    HI_PQ_DEMO_TNR       ,
+    HI_PQ_DEMO_DEI       ,
     HI_PQ_DEMO_ALL       ,
 
     HI_PQ_DEMO_BUTT
@@ -62,40 +73,29 @@ typedef enum hiHIPQ_MODULE_E
     HI_PQ_MODULE_SNR          ,
     HI_PQ_MODULE_DB           ,
     HI_PQ_MODULE_DR           ,
+    HI_PQ_MODULE_DM           ,
+    HI_PQ_MODULE_DBM          ,
     HI_PQ_MODULE_HSHARPNESS   ,
     HI_PQ_MODULE_SHARPNESS    ,
     HI_PQ_MODULE_CCCL         ,
-    HI_PQ_MODULE_COLOR_CORING ,
-    HI_PQ_MODULE_BLUE_STRETCH ,
-    HI_PQ_MODULE_GAMMA        ,
-    HI_PQ_MODULE_DBC          ,
     HI_PQ_MODULE_DCI          ,
     HI_PQ_MODULE_COLOR        ,
-    HI_PQ_MODULE_ES           ,
     HI_PQ_MODULE_SR           ,
     HI_PQ_MODULE_FRC          ,
-    HI_PQ_MODULE_WCG          ,
+    HI_PQ_MODULE_ALL          ,
 
     HI_PQ_MODULE_BUTT
 }  HI_PQ_MODULE_E;
 
-/* 色温设定 */
-typedef struct hiPQ_COLOR_TEMP_S
+/*亮度/对比度/色调/饱和度设定*/
+typedef struct hiPQ_IMAGE_PARAM_S
 {
-    HI_S16 s16RedGain;
-    HI_S16 s16GreenGain;
-    HI_S16 s16BlueGain;
-    HI_S16 s16RedOffset;
-    HI_S16 s16GreenOffset;
-    HI_S16 s16BlueOffset;
-}  HI_PQ_COLOR_TEMP_S;
+    HI_U16 u16Brightness;
+    HI_U16 u16Contrast;
+    HI_U16 u16Hue;
+    HI_U16 u16Saturation;
 
-/* PQ文件路径 */
-typedef struct hiPQ_PATH_S
-{
-    HI_CHAR cPqPath[128];
-} HI_PQ_PATE_S;
-
+} HI_PQ_IMAGE_PARAM_S;
 
 /*
  * 模块开关属性
@@ -115,18 +115,29 @@ typedef struct hiPQ_DEMO_S
     HI_BOOL bOnOff; /*开关*/
 } HI_PQ_DEMO_S;
 
+/* 卖场模式 显示方式*/
+typedef enum hiPQ_DEMO_MODE_E
+{
+    HI_PQ_DEMO_MODE_FIXED_R = 0,
+    HI_PQ_DEMO_MODE_FIXED_L,
+    HI_PQ_DEMO_MODE_SCROLL_R,
+    HI_PQ_DEMO_MODE_SCROLL_L,
+
+    HI_PQ_DEMO_MODE_BUTT
+} HI_PQ_DEMO_MODE_E;
+
 /*
  * 寄存器属性
  */
 typedef struct hiPQ_REGISTER_S
 {
-    HI_U32 u32RegAddr;     //register addr
-    HI_U8  u8Lsb;          //register lsb
-    HI_U8  u8Msb;          //register msb
-    HI_U8  u8SourceMode;   //video source
-    HI_U8  u8OutputMode;   //output mode
-    HI_U32 u32Module;      //module
-    HI_U32 u32Value;       //register value
+    HI_U32 u32RegAddr;     /* register addr */
+    HI_U8  u8Lsb;          /* register lsb */
+    HI_U8  u8Msb;          /* register msb */
+    HI_U8  u8SourceMode;   /* video source */
+    HI_U8  u8OutputMode;   /* output mode */
+    HI_U32 u32Module;      /* module */
+    HI_U32 u32Value;       /* register value */
 } HI_PQ_REGISTER_S;
 
 /*ACM 寄存器控制参数结构*/
@@ -174,6 +185,14 @@ typedef struct hiPQ_TNR_S
     HI_S32 s32MappingK[4];
 } HI_PQ_TNR_S;
 
+/* YFmotion 的映射曲线  */
+typedef struct hiPQ_TNR_FMOTION_S
+{
+    HI_S16 s16YFmotion[32];
+    HI_S16 s16CFmotion[32];
+} HI_PQ_TNR_FMOTION_S;
+
+
 /*SNR的pixmean-ratio结构*/
 typedef struct hiPQ_SNR_PIXMEAN_2_RATIO_S
 {
@@ -204,10 +223,10 @@ typedef struct hiPQ_SNR_PIXDIFF_2_EDGESTR_S
 /*SR演示模式*/
 typedef enum hiPQ_SR_DEMO_E
 {
-    HI_PQ_SR_DISABLE  = 0,//关掉SR,只ZME
-    HI_PQ_SR_ENABLE_R,  //  右边SR
-    HI_PQ_SR_ENABLE_L,  //左边SR
-    HI_PQ_SR_ENABLE_A,  //全屏
+    HI_PQ_SR_DISABLE  = 0,/* 关SR,只ZME */
+    HI_PQ_SR_ENABLE_R,    /* 右边SR */
+    HI_PQ_SR_ENABLE_L,    /* 左边SR */
+    HI_PQ_SR_ENABLE_A,    /* 全屏 */
 
     HI_PQ_SR_DEMO_BUTT
 } HI_PQ_SR_DEMO_E;
@@ -225,31 +244,31 @@ typedef struct hiPQ_SIX_BASE_COLOR_S
 /*ACM GAIN 消息结构*/
 typedef struct hiPQ_COLOR_GAIN_S
 {
-    HI_U32 u32GainMode;   /*0:SD;1:HD;2:UHD*/
-    HI_U32 u32Gainluma;   /*表示对Hue的增益，范围0-1023*/
-    HI_U32 u32Gainhue;    /*表示对Hue的增益，范围0-1023*/
-    HI_U32 u32Gainsat;    /*表示对Luma的增益*/
+    HI_U32 u32GainMode;   /* 0:SD;1:HD;2:UHD */
+    HI_U32 u32Gainluma;   /* 表示对Hue的增益，Range:0-1023 */
+    HI_U32 u32Gainhue;    /* 表示对Hue的增益，Range:0-1023 */
+    HI_U32 u32Gainsat;    /* 表示对Luma的增益 */
 } HI_PQ_COLOR_GAIN_S;
 
 /*颜色增强类型*/
 typedef enum hiPQ_COLOR_ENHANCE_E
 {
-    HI_PQ_COLOR_ENHANCE_FLESHTONE = 0,    //肤色增强
-    HI_PQ_COLOR_ENHANCE_SIX_BASE,         //六基色增强,自定义颜色的增强
-    HI_PQ_COLOR_ENHANCE_SPEC_COLOR_MODE,  //固定模式的颜色增强模式
+    HI_PQ_COLOR_ENHANCE_FLESHTONE = 0,    /* 肤色增强 */
+    HI_PQ_COLOR_ENHANCE_SIX_BASE,         /* 六基色增强,自定义颜色的增强 */
+    HI_PQ_COLOR_ENHANCE_SPEC_COLOR_MODE,  /* 固定模式的颜色增强模式 */
     HI_PQ_COLOR_ENHANCE_BUTT
 } HI_PQ_COLOR_ENHANCE_E;
 
 /*六基色增强参数*/
 typedef struct  hiPQ_SIX_BASE_S
 {
-    HI_U32  u32Red;       //范围:0~100
-    HI_U32  u32Green;     //范围:0~100
-    HI_U32  u32Blue;      //范围:0~100
+    HI_U32  u32Red;       /* Range:0~100 */
+    HI_U32  u32Green;     /* Range:0~100 */
+    HI_U32  u32Blue;      /* Range:0~100 */
 
-    HI_U32  u32Cyan;      //范围:0~100
-    HI_U32  u32Magenta;   //范围:0~100
-    HI_U32  u32Yellow;    //范围:0~100
+    HI_U32  u32Cyan;      /* Range:0~100 */
+    HI_U32  u32Magenta;   /* Range:0~100 */
+    HI_U32  u32Yellow;    /* Range:0~100 */
 } HI_PQ_SIX_BASE_S;
 
 
@@ -268,10 +287,10 @@ typedef enum hiPQ_FLESHTONE_E
 /*颜色增强类型*/
 typedef enum hiPQ_COLOR_SPEC_MODE_E
 {
-    HI_PQ_COLOR_MODE_RECOMMEND = 0, //推荐的颜色增强模式
-    HI_PQ_COLOR_MODE_BLUE,          //固定的蓝色增强模式
-    HI_PQ_COLOR_MODE_GREEN,         //固定的绿色增强模式
-    HI_PQ_COLOR_MODE_BG,            //固定的蓝绿色增强模式
+    HI_PQ_COLOR_MODE_RECOMMEND = 0, /* 推荐的颜色增强模式 */
+    HI_PQ_COLOR_MODE_BLUE,          /* 固定的蓝色增强模式 */
+    HI_PQ_COLOR_MODE_GREEN,         /* 固定的绿色增强模式 */
+    HI_PQ_COLOR_MODE_BG,            /* 固定的蓝绿色增强模式 */
     HI_PQ_COLOR_MODE_BUTT
 } HI_PQ_COLOR_SPEC_MODE_E;
 
@@ -279,19 +298,19 @@ typedef enum hiPQ_COLOR_SPEC_MODE_E
 /*颜色增强参数*/
 typedef struct  hiPQ_COLOR_ENHANCE_S
 {
-    HI_PQ_COLOR_ENHANCE_E    enColorEnhanceType;   //色彩增强类型
+    HI_PQ_COLOR_ENHANCE_E    enColorEnhanceType; /* 色彩增强类型 */
     union
     {
-        HI_PQ_FLESHTONE_E    enFleshtone;        //肤色增强参数
-        HI_PQ_SIX_BASE_S     stSixBase;          //六基色增强参数
-        HI_PQ_COLOR_SPEC_MODE_E   enColorMode;   //固定的颜色增强模式
+        HI_PQ_FLESHTONE_E    enFleshtone;        /* 肤色增强参数 */
+        HI_PQ_SIX_BASE_S     stSixBase;          /* 六基色增强参数 */
+        HI_PQ_COLOR_SPEC_MODE_E   enColorMode;   /* 固定的颜色增强模式 */
 
     } unColorGain;
 } HI_PQ_COLOR_ENHANCE_S;
 
 /*用户接口*/
-#define HIIOC_PQ_S_COLORTEMP            _IOW(HI_ID_PQ, 1, HI_PQ_COLOR_TEMP_S)         /* 设置色温参数*/
-#define HIIOC_PQ_G_COLORTEMP            _IOR(HI_ID_PQ, 2, HI_PQ_COLOR_TEMP_S)         /* 获取色温参数*/
+//#define HIIOC_PQ_S_COLORTEMP            _IOW(HI_ID_PQ, 1, HI_PQ_COLOR_TEMP_S)         /* 设置色温参数*/
+//#define HIIOC_PQ_G_COLORTEMP            _IOR(HI_ID_PQ, 2, HI_PQ_COLOR_TEMP_S)         /* 获取色温参数*/
 
 #define HIIOC_PQ_S_SD_BRIGHTNESS        _IOW(HI_ID_PQ, 3, HI_U32)                     /* 设置标清BRIGHTNESS level*/
 #define HIIOC_PQ_G_SD_BRIGHTNESS        _IOR(HI_ID_PQ, 4, HI_U32)                     /* 获取标清BRIGHTNESS level*/
@@ -305,8 +324,8 @@ typedef struct  hiPQ_COLOR_ENHANCE_S
 #define HIIOC_PQ_S_SD_HUE               _IOW(HI_ID_PQ, 9, HI_U32)                     /* 设置标清HUE level*/
 #define HIIOC_PQ_G_SD_HUE               _IOR(HI_ID_PQ, 10, HI_U32)                    /* 获取标清HUE level*/
 
-#define HIIOC_PQ_S_NR                   _IOW(HI_ID_PQ, 11, HI_U32)                    /* 设置NR level*/
-#define HIIOC_PQ_G_NR                   _IOR(HI_ID_PQ, 12, HI_U32)                    /* 获取NR level*/
+#define HIIOC_PQ_S_TNR                  _IOW(HI_ID_PQ, 11, HI_U32)                    /* 设置TNR level*/
+#define HIIOC_PQ_G_TNR                  _IOR(HI_ID_PQ, 12, HI_U32)                    /* 获取TNR level*/
 
 #define HIIOC_PQ_S_SHARPNESS            _IOW(HI_ID_PQ, 13, HI_U32)                    /* 设置SHARPNESS level*/
 #define HIIOC_PQ_G_SHARPNESS            _IOR(HI_ID_PQ, 14, HI_U32)                    /* 获取SHARPNESS level*/
@@ -337,7 +356,7 @@ typedef struct  hiPQ_COLOR_ENHANCE_S
 #define HIIOC_PQ_S_SIXBASECOLOR         _IOW(HI_ID_PQ, 30, HI_PQ_SIX_BASE_COLOR_S)    /* 设置 六基色类型*/
 #define HIIOC_PQ_G_SIXBASECOLOR         _IOR(HI_ID_PQ, 31, HI_PQ_SIX_BASE_COLOR_S)    /* 获取六基色类型*/
 
-#define HIIOC_PQ_S_PQ_PATH              _IOW(HI_ID_PQ, 32, HI_PQ_PATE_S)              /* 设置 PQ文件路径*/
+//#define HIIOC_PQ_S_PQ_PATH              _IOW(HI_ID_PQ, 32, HI_PQ_PATE_S)              /* 设置 PQ文件路径*/
 
 #define HIIOC_PQ_S_NR_AUTO              _IOW(HI_ID_PQ, 33, HI_U32)                    /* 设置NR自动模式*/
 #define HIIOC_PQ_G_NR_AUTO              _IOR(HI_ID_PQ, 34, HI_U32)                    /* 获取NR自动模式*/
@@ -409,7 +428,7 @@ typedef struct  hiPQ_COLOR_ENHANCE_S
 #define HIIOC_PQ_G_HD_CONTRAST          _IOR(HI_ID_PQ, 87, HI_U32)                    /* 获取高清CONTRAST level*/
 
 #define HIIOC_PQ_S_HD_SATURATION        _IOW(HI_ID_PQ, 88, HI_U32)                    /* 设置高清SATURATION level*/
-#define HIIOC_PQ_G_HD_SATURATION        _IOR(HI_ID_PQ,89, HI_U32)                     /* 获取高清SATURATION level*/
+#define HIIOC_PQ_G_HD_SATURATION        _IOR(HI_ID_PQ, 89, HI_U32)                    /* 获取高清SATURATION level*/
 
 #define HIIOC_PQ_S_HD_HUE               _IOW(HI_ID_PQ, 90, HI_U32)                    /* 设置高清HUE level*/
 #define HIIOC_PQ_G_HD_HUE               _IOR(HI_ID_PQ, 91, HI_U32)                    /* 获取高清HUE level*/
@@ -424,6 +443,24 @@ typedef struct  hiPQ_COLOR_ENHANCE_S
 
 #define HIIOC_PQ_S_ACM_CTRL             _IOW(HI_ID_PQ, 97, HI_PQ_COLOR_CTRL_S)        /* 设置ACM 控制寄存器*/
 #define HIIOC_PQ_G_ACM_CTRL             _IOR(HI_ID_PQ, 98, HI_PQ_COLOR_CTRL_S)        /* 获取ACM 控制寄存器*/
+
+#define HIIOC_PQ_S_DEMO_MODE            _IOW(HI_ID_PQ, 99, HI_PQ_DEMO_MODE_E)         /* 设置各算法模块卖场模式显示方式*/
+#define HIIOC_PQ_G_DEMO_MODE            _IOR(HI_ID_PQ, 100, HI_PQ_DEMO_MODE_E)        /* 获取各算法模块卖场模式显示方式*/
+
+#define HIIOC_PQ_S_GRAPH_SD_PARAM       _IOW(HI_ID_PQ, 101, HI_PQ_IMAGE_PARAM_S)               /* 设置图形标清参数*/
+#define HIIOC_PQ_G_GRAPH_SD_PARAM       _IOR(HI_ID_PQ, 102, HI_PQ_IMAGE_PARAM_S)               /* 获取图形标清参数*/
+
+#define HIIOC_PQ_S_GRAPH_HD_PARAM       _IOW(HI_ID_PQ, 103, HI_PQ_IMAGE_PARAM_S)               /* 设置图形高清参数*/
+#define HIIOC_PQ_G_GRAPH_HD_PARAM       _IOR(HI_ID_PQ, 104, HI_PQ_IMAGE_PARAM_S)               /* 获取图形高清参数*/
+
+#define HIIOC_PQ_S_VIDEO_SD_PARAM       _IOW(HI_ID_PQ, 105, HI_PQ_IMAGE_PARAM_S)               /* 设置视频标清参数*/
+#define HIIOC_PQ_G_VIDEO_SD_PARAM       _IOR(HI_ID_PQ, 106, HI_PQ_IMAGE_PARAM_S)               /* 获取视频标清参数*/
+
+#define HIIOC_PQ_S_VIDEO_HD_PARAM       _IOW(HI_ID_PQ, 107, HI_PQ_IMAGE_PARAM_S)               /* 设置视频高清参数*/
+#define HIIOC_PQ_G_VIDEO_HD_PARAM       _IOR(HI_ID_PQ, 108, HI_PQ_IMAGE_PARAM_S)               /* 获取视频高清参数*/
+
+#define HIIOC_PQ_S_TNR_FMOTION_MAPPING  _IOW(HI_ID_PQ, 109, HI_PQ_TNR_FMOTION_S)               /*写TNR FMotionMapping 曲线*/
+#define HIIOC_PQ_G_TNR_FMOTION_MAPPING  _IOR(HI_ID_PQ, 110, HI_PQ_TNR_FMOTION_S)               /*读TNR FMotionMapping 曲线*/
 
 #ifdef __cplusplus
 #if __cplusplus

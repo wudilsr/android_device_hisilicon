@@ -1106,6 +1106,63 @@ N/A
 */
 HI_S32 HI_UNF_PVR_UnRegisterExtraCallBack(HI_U32 u32ChnID, HI_UNF_PVR_EXTRA_CALLBACK_E enExtraCallbackType);
 
+/**
+\brief create pid channel and create the binding relationship of rec channel.  CNcomment:创建PID  通道并建立与录制通道的绑定关系。 CNend
+\attention \n
+You can call this api after creating the rec channl successfully.  CNcomment:该接口必须在成功创建录制通道后被调用
+\param[in] u32ChnID  Channel ID  CNcomment:通道号 CNend
+\param[in] u32Pid  PID value CNcomment: PID 值 CNend
+\retval ::HI_SUCCESS  Success. CNcomment: 成功。CNend
+\retval ::HI_FAILURE  Calling this API fails. CNcomment: API系统调用失败。CNend
+\retval ::HI_ERR_PVR_INVALID_CHNID  The recorde channel ID is invalide. CNcomment: 通道号非法。CNend
+\retval ::HI_ERR_PVR_CHN_NOT_INIT  The recorde channel is not initialized. CNcomment:   指定的通道未初始化。CNend
+\retval ::HI_ERR_PVR_NOT_INIT  The recorde channel is not initialized. CNcomment: PVR录制模块未初始化。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized. CNcomment: 模块没有初始化。CNend
+\retval ::HI_ERR_DMX_INVALID_PARA  The input parameter is invalid. CNcomment: 输入参数非法。CNend
+\retval ::HI_ERR_DMX_NULL_PTR  The pointer is null. CNcomment: 指针参数为空。CNend
+\retval ::HI_ERR_DMX_NOT_SUPPORT  This function is not supported. CNcomment: 不支持此功能。CNend
+\see \nN/A
+*/
+HI_S32 HI_UNF_PVR_RecAddPID(HI_U32 u32ChnID, HI_U32 u32Pid);
+
+/**
+\brief destroy pid channel and destroy the relationship with rec channel.  CNcomment:销毁PID  通道并解除与录制通道的绑定关系。 CNend
+\attention \n
+You can call this api before destroying the rec channl.  CNcomment:该接口必须在销毁录制通道前被调用
+\param[in] u32ChnID  Channel ID  CNcomment:通道号 CNend
+\param[in] u32Pid  PID value CNcomment: PID 值 CNend
+\retval ::HI_SUCCESS  Success. CNcomment:成功。CNend
+\retval ::HI_FAILURE  Calling this API fails. CNcomment:API系统调用失败。CNend
+\retval ::HI_ERR_PVR_INVALID_CHNID  The recorde channel ID is invalide. CNcomment: 通道号非法。CNend
+\retval ::HI_ERR_PVR_CHN_NOT_INIT  The recorde channel is not initialized. CNcomment:   指定的通道未初始化。CNend
+\retval ::HI_ERR_PVR_NOT_INIT  The recorde channel is not initialized. CNcomment: PVR录制模块未初始化。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized. CNcomment: 模块没有初始化。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized. CNcomment:模块没有初始化。CNend
+\retval ::HI_ERR_DMX_INVALID_PARA  The input parameter is invalid. CNcomment:输入参数非法。CNend
+\retval ::HI_ERR_DMX_NULL_PTR  The pointer is null. CNcomment:指针参数为空。CNend
+\see \nN/A
+*/
+HI_S32 HI_UNF_PVR_RecDelPID(HI_U32 u32ChnID, HI_U32 u32Pid);
+
+/**
+\brief destroy any pid channel which has binding relationship with rec channel.  CNcomment:销毁所有与录制通道有绑定关系的PID 通道。 CNend
+\attention \n
+
+\param[in] u32ChnID  Channel ID  CNcomment:通道号 CNend
+\retval ::HI_SUCCESS  Success. CNcomment:成功。CNend
+\retval ::HI_FAILURE  Calling this API fails. CNcomment:API系统调用失败。CNend
+\retval ::HI_ERR_PVR_INVALID_CHNID  The recorde channel ID is invalide. CNcomment: 通道号非法。CNend
+\retval ::HI_ERR_PVR_CHN_NOT_INIT  The recorde channel is not initialized. CNcomment:   指定的通道未初始化。CNend
+\retval ::HI_ERR_PVR_NOT_INIT  The recorde channel is not initialized. CNcomment: PVR录制模块未初始化。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized. CNcomment: 模块没有初始化。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized. CNcomment:模块没有初始化。CNend
+\retval ::HI_ERR_DMX_INVALID_PARA  The input parameter is invalid. CNcomment:输入参数非法。CNend
+\retval ::HI_ERR_DMX_NULL_PTR  The pointer is null. CNcomment:指针参数为空。CNend
+\see \n\see \nN/A
+*/
+HI_S32 HI_UNF_PVR_RecDelAllPID(HI_U32 u32ChnID);
+
+
 /** @} */  /** <!-- ==== API Declaration End ==== */
 
 #ifdef __cplusplus

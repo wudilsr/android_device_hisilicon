@@ -55,7 +55,7 @@ static atomic_t freq_table_users = ATOMIC_INIT(0);
 static unsigned int max_freq;
 static unsigned int current_target_freq;
 static bool hi_cpufreq_ready;
-bool hi_cpufreq_suspended = 0;
+unsigned int cpu_dvfs_enable = HI_TRUE;
 
 static DEFINE_MUTEX(hi_cpufreq_lock);
 
@@ -181,7 +181,7 @@ static int hi_cpufreq_target(struct cpufreq_policy *policy,
 
     current_target_freq = freq_table[i].frequency;
 
-    if (!hi_cpufreq_suspended)
+    if (cpu_dvfs_enable)
     {
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
     ret = hi_cpufreq_scale(current_target_freq, policy->cur);
@@ -213,30 +213,48 @@ static inline void freq_table_free(void)
     }
 }
 
-#ifndef HI_ADVCA_FUNCTION_RELEASE
-#ifndef MODULE
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 72))
 extern void cpufreq_interactive_boost(void);
-static void cpufreq_interactive_input_event(struct input_handle *handle,  
-                        unsigned int type,  
-                        unsigned int code, int value)  
-{ 
-	unsigned int ret;
-	struct cpufreq_policy cur_policy;
+#else
+extern void cpufreq_interactive_boost(struct cpufreq_interactive_tunables *tunables);
+#endif
 
-    if ((type == EV_SYN) && (code == SYN_REPORT)) 
+int pm_cpufreq_boost(void)
+{
+    int ret;
+    struct cpufreq_policy cur_policy;
+
+    ret = cpufreq_get_policy(&cur_policy, 0);
+    if (ret)
     {
-		ret = cpufreq_get_policy(&cur_policy, 0);		
-		if (ret)
-		{
-			return;
-		}
-        
-		if (!strnicmp(cur_policy.user_policy.governor->name, "interactive", CPUFREQ_NAME_LEN))
-        {
-			cpufreq_interactive_boost();
-		} 		
+        return ret;
     }
-} 
+
+    if (!strnicmp(cur_policy.user_policy.governor->name, "interactive", CPUFREQ_NAME_LEN))
+    {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 72))
+        cpufreq_interactive_boost();
+#else
+        cpufreq_interactive_boost(cur_policy.governor_data);
+#endif
+    }
+
+    return 0;
+}
+
+#ifndef HI_ADVCA_FUNCTION_RELEASE
+ #ifndef MODULE
+static void cpufreq_interactive_input_event(struct input_handle *handle,
+                                            unsigned int type,
+                                            unsigned int code, int value)
+{
+    if ((type == EV_SYN) && (code == SYN_REPORT))
+    {
+        pm_cpufreq_boost();
+    }
+
+    return;
+}
 
 static int cpufreq_interactive_input_connect(struct input_handler *handler,
                                           struct input_dev *dev,

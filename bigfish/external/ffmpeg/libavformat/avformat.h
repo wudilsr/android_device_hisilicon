@@ -1440,6 +1440,8 @@ typedef struct hls_stream_info_s {
         int64_t         *last_time;      /* last sending packet pts */
         int64_t         pts_offset;     /* pts offset */
         int64_t         seek_offset;
+        int64_t         *last_org_pts;     /* last_time = last_org_pts + pts_offset */
+        int64_t         *discontinue_pts;  /* discontinue pts of one stream, is org pts */
     } seg_demux;
 
     /*Segments key */
@@ -1454,6 +1456,15 @@ typedef struct hls_stream_info_s {
     int video_codec;
     int audio_codec;
 } hls_stream_info_t;
+    /** The information of the URL info */
+    /** CNcomment:URL的详细信息 */
+    typedef struct HLS_URL_INFO_S
+    {
+        char url[INITIAL_URL_SIZE]; /**< output parameter, the url of the connection *//**< CNcomment:当前连接的URL */
+        int port; /**< output parameter, port number *//**< CNcomment:端口号*/
+        char ipaddr[16]; /**< output parameter, internet address *//**< CNcomment:IP地址*/
+        int enable;
+    } HLS_URL_INFO_S;
 
 typedef struct HLSContext_s {
     const AVClass           *class_option;             /**< Class for private options. */
@@ -1495,6 +1506,16 @@ typedef struct HLSContext_s {
     char                    save_hls_path[INITIAL_URL_SIZE];
     int                     timeshift_time;
     time_t                  timeshift_start_program_time;
+    char                    *uuid;
+    char                    *http_res;
+    int                     seg_position;
+    int                     seg_count;
+    int64_t                 ts_send_time;// timestamp of starting segment requestment
+    int64_t                 ts_first_btime;// timestamp for getting first packet of one segment
+    int64_t                 ts_last_btime;//  timestamp for getting last packet of one segment
+    int64_t                 ts_length; // file length of segment
+    char                    ts_traceid[INITIAL_URL_SIZE];
+    HLS_URL_INFO_S          stHlsUrlInfo;
 } HLSContext;
 
 typedef struct m3u9_segment_s

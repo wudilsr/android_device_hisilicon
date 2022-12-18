@@ -35,7 +35,7 @@ Note
               ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
        To generate the .apk files, add the following code to the Android.mk file:
               ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_PACKAGE_NAME)
-     4. If you want to compile security chip version, you should set HISILICON_SECURITY_L2 true in the file device/hisilicon/Hi3798MV100/device.mk:
+     4. If you want to compile security chip version, you should set HISILICON_SECURITY_L2 true in the file device/hisilicon/Hi3798MV100/customer.mk:
               HISILICON_SECURITY_L2 := true
         Otherwise, the default version is non-security chip version.
         If you burn the non-security chip version to the board, the board will be lock as a non-security chip board and you can't burn a security chip version anymore.

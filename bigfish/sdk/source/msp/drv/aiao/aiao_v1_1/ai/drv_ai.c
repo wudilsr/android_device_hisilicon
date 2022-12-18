@@ -81,13 +81,13 @@ static HI_BOOL AICheckPortValid(HI_UNF_AI_E enAiPort)
         HI_ERR_AI("just support I2S0 and I2S1 Port!\n");
         return HI_FALSE;
     }
-#elif defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)
+#elif defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) || defined(CHIP_TYPE_hi3716mv420)|| defined(CHIP_TYPE_hi3716mv410)
     if (HI_UNF_AI_I2S0 != enAiPort)
     {
         HI_ERR_AI("just support I2S0 Port!\n");
         return HI_FALSE;
     }
-#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)\
+#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100) \
       || defined(CHIP_TYPE_hi3798cv200_a)
     if((HI_UNF_AI_I2S0 != enAiPort) && (HI_UNF_AI_I2S1 != enAiPort)
     && (HI_UNF_AI_HDMI0!= enAiPort) && (HI_UNF_AI_HDMI1!= enAiPort) && (HI_UNF_AI_HDMI2!= enAiPort) && (HI_UNF_AI_HDMI3!= enAiPort))
@@ -326,9 +326,9 @@ static HI_VOID AISetPortIfAttr(HI_UNF_AI_E enAiPort, HI_UNF_AI_ATTR_S *pstAiAttr
         {
             pstIfAttr->enCrgMode = AIAO_CRG_MODE_SLAVE;
         }
-        pstIfAttr->enI2SMode = (AIAO_I2S_MODE_E)(pstAiAttr->unAttr.stI2sAttr.stAttr.enI2sMode);
-        pstIfAttr->enChNum = (AIAO_I2S_CHNUM_E)(pstAiAttr->unAttr.stI2sAttr.stAttr.enChannel);
-        pstIfAttr->enBitDepth = (AIAO_BITDEPTH_E)(pstAiAttr->unAttr.stI2sAttr.stAttr.enBitDepth);
+        pstIfAttr->enI2SMode = AUTIL_I2S_MODE_UNF2AIAO(pstAiAttr->unAttr.stI2sAttr.stAttr.enI2sMode);
+        pstIfAttr->enChNum = AUTIL_CHNUM_UNF2AIAO(pstAiAttr->unAttr.stI2sAttr.stAttr.enChannel);
+        pstIfAttr->enBitDepth = AUTIL_BITDEPTH_UNF2AIAO(pstAiAttr->unAttr.stI2sAttr.stAttr.enBitDepth);
         pstIfAttr->u32PcmDelayCycles = pstAiAttr->unAttr.stI2sAttr.stAttr.enPcmDelayCycle;
         if(pstAiAttr->unAttr.stI2sAttr.stAttr.bPcmSampleRiseEdge == HI_TRUE)
         {
@@ -342,8 +342,8 @@ static HI_VOID AISetPortIfAttr(HI_UNF_AI_E enAiPort, HI_UNF_AI_ATTR_S *pstAiAttr
     else if(HI_UNF_AI_HDMI0 == enAiPort || HI_UNF_AI_HDMI1 == enAiPort
     || HI_UNF_AI_HDMI2 == enAiPort || HI_UNF_AI_HDMI3 == enAiPort)
     {
-        pstIfAttr->enChNum = (AIAO_I2S_CHNUM_E)(pstAiAttr->unAttr.stHDMIAttr.enChannel);
-        pstIfAttr->enBitDepth = (AIAO_BITDEPTH_E)(pstAiAttr->unAttr.stHDMIAttr.enBitDepth);
+        pstIfAttr->enChNum = AUTIL_CHNUM_UNF2AIAO(pstAiAttr->unAttr.stHDMIAttr.enChannel);
+        pstIfAttr->enBitDepth = AUTIL_BITDEPTH_UNF2AIAO(pstAiAttr->unAttr.stHDMIAttr.enBitDepth);
     }
     else if(HI_UNF_AI_ADC0 == enAiPort || HI_UNF_AI_ADC1 == enAiPort
     || HI_UNF_AI_ADC2 == enAiPort || HI_UNF_AI_ADC3 == enAiPort || HI_UNF_AI_ADC4 == enAiPort)
@@ -1798,7 +1798,8 @@ HI_S32 AI_DRV_WriteProc( struct file* file, const char __user* buf, size_t count
         return HI_FAILURE;
     }
 
-    (HI_VOID)sscanf(pstProcItem->entry_name, "ai%1d", &u32Ai);
+    //(HI_VOID)sscanf(pstProcItem->entry_name, "ai%1d", &u32Ai);
+    u32Ai = (pstProcItem->entry_name[2] - '0');
     if(u32Ai >= AI_MAX_TOTAL_NUM)
     {
         HI_ERR_AI("Invalid Ai ID:%d.\n", u32Ai);

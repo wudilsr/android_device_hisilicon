@@ -54,6 +54,14 @@ namespace dash
                  *  @return     a pointer to a dash::mpd::ISegment object
                  */
                 virtual ISegment*           ToSegment       (const std::vector<IBaseUrl *>& baseurls) const = 0;
+
+                /**
+                 *  Returns a pointer to a dash::mpd::ISegment object, that can be downloaded
+                 *  @param      baseurls    a reference to a vector of pointers to dash::mpd::IBaseUrl objects representing the path to \c \@specialSourceURL
+                 *  @param      specialSourceURL    if @sourceURL is invalid, use specialSourceURL instead of it.
+                 *  @return     a pointer to a dash::mpd::ISegment object
+                 */
+                virtual ISegment*           ToSegment       (const std::vector<IBaseUrl *>& baseurls, const std::string &specialSourceURL) const = 0;
         };
     }
 }

@@ -2,7 +2,7 @@
 # export variables
 #===============================================================================
 ifeq ($(CFG_HI_EXPORT_FLAG),)
-SDK_DIR     := $(shell pwd)/../../../../../..
+SDK_DIR     := $(shell pwd)/../../../../..
 include $(SDK_DIR)/base.mak
 endif
 

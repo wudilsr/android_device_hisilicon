@@ -64,9 +64,11 @@ HI_S32 SI_TX_PHY_HighBandwidth(HI_BOOL bTermEn)
         COM_INFO("term_en low 0x%x\n", u32phyreg);
     }
 
-#elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
-    || defined(CHIP_TYPE_hi3716mv310)
+#elif  defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     COM_INFO("No source termination ctrl 0x%x\n", u32phyreg);
 #endif
@@ -100,7 +102,9 @@ HI_S32 SI_TX_PHY_GetOutPutEnable(void)
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     SI_TX_PHY_ReadRegister(PHY_OE_ADDR, &u32Value);
     if ((u32Value & RG_TX_RSTB) != RG_TX_RSTB)
@@ -133,7 +137,9 @@ HI_S32 SI_TX_PHY_DisableHdmiOutput(void)
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
     /* disable HDMI PHY Output:reg 0/bit 0 */
     SI_TX_PHY_ReadRegister(PHY_OE_ADDR,&u32Reg);
     u32Reg &= ~RG_TX_RSTB;
@@ -166,7 +172,9 @@ HI_S32 SI_TX_PHY_EnableHdmiOutput(void)
     
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     /* disable HDMI PHY Output:reg 0/bit 0 */
     SI_TX_PHY_ReadRegister(PHY_OE_ADDR,&u32Reg);
@@ -256,6 +264,31 @@ void SI_TX_PHY_INIT(void)
 
     // I think power up at last will imporve stability of pll
     SI_TX_PHY_WriteRegister(PHY_PWD_ADDR,0x01);
+    
+#elif  defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
+
+    // oe
+    SI_TX_PHY_WriteRegister(PHY_OE_ADDR,0x00);
+
+    // audio clk
+    SI_TX_PHY_WriteRegister(PHY_AUD_ADDR,0x02);
+
+    // swing & bw ctrl
+    SI_TX_PHY_WriteRegister(PHY_PLL1_ADDR,0x40);
+
+    // deep color & pixel repeat ctrl
+    SI_TX_PHY_WriteRegister(PHY_PLL2_ADDR,0x09);
+
+    // driver setting , slew rate ctrl
+    SI_TX_PHY_WriteRegister(PHY_DRV_ADDR,0xC0);
+
+    // clk invert
+    SI_TX_PHY_WriteRegister(PHY_CLK_ADDR,0x00);
+
+    // I think power up at last will imporve stability of pll
+    SI_TX_PHY_WriteRegister(PHY_PWD_ADDR,0x01);
+
 #endif
 }
 
@@ -288,7 +321,9 @@ HI_S32 SI_TX_PHY_PowerDown(HI_BOOL bPwdown)
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     SI_TX_PHY_ReadRegister(PHY_PWD_ADDR,&u32Value);
     if(bPwdown)
@@ -357,7 +392,9 @@ HI_S32 SI_TX_PHY_SetDeepColor(HI_U8 bDeepColor)
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     /* Config kudu IP for DeepColor*/
     SI_TX_PHY_ReadRegister(PHY_PLL2_ADDR,&u32Value);
@@ -437,7 +474,9 @@ HI_S32 SI_TX_PHY_4KRisingTime(HI_BOOL b4KFmt)
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     COM_INFO("need not cfg rising time 0x%x\n", u32phyreg);
 
@@ -454,7 +493,7 @@ static HI_S32 SI_TX_PHY_SwingCtrl(HI_U32 u32TMDSClk)
 {
 #if defined(BOARD_TYPE_S40V2_fpga)
 
-#elif defined(CHIP_TYPE_hi3716cv200)   \
+#elif  defined(CHIP_TYPE_hi3716cv200)   \
     || defined(CHIP_TYPE_hi3716cv200es) \
     || defined(CHIP_TYPE_hi3716mv400)   \
     || defined(CHIP_TYPE_hi3718cv100)   \
@@ -463,18 +502,20 @@ static HI_S32 SI_TX_PHY_SwingCtrl(HI_U32 u32TMDSClk)
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3796cv100_a) \
-    || defined(CHIP_TYPE_hi3796cv100)      \
-    || defined(CHIP_TYPE_hi3798cv100_a)    \
+    || defined(CHIP_TYPE_hi3796cv100)   \
+    || defined(CHIP_TYPE_hi3798cv100_a) \
     || defined(CHIP_TYPE_hi3798cv100)
 
 #elif defined(CHIP_TYPE_hi3798mv100_a) \
     || defined(CHIP_TYPE_hi3798mv100)  \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv310)  
+    
     // taiyan phy, use encoder in ctrl
 
     HI_U32 u32phyreg = 0;
 
-    SI_TX_PHY_ReadRegister(0x06,&u32phyreg);
+    SI_TX_PHY_ReadRegister(PHY_PLL1_ADDR,&u32phyreg);
     u32phyreg &= ~0x03;
 
     if(u32TMDSClk <= 27)        // TMDS_clock <= 27M
@@ -492,6 +533,27 @@ static HI_S32 SI_TX_PHY_SwingCtrl(HI_U32 u32TMDSClk)
 
     COM_INFO("writing phy PHY_PLL1_ADDR(0x%2X:swing):0x%x \n", PHY_PLL1_ADDR, u32phyreg);
     SI_TX_PHY_WriteRegister(PHY_PLL1_ADDR, u32phyreg);
+    
+#elif  defined(CHIP_TYPE_hi3716mv420)  \
+    || defined(CHIP_TYPE_hi3716mv410)
+    // swing 
+    HI_U32 u32phyreg = 0;
+
+    if(u32TMDSClk < 165)        // TMDS_clock <165
+    {
+        u32phyreg = 0x40;
+    }
+    else                        //165M <= TMDS_clock 
+    {
+        u32phyreg = 0x42;
+    }
+
+    SI_TX_PHY_WriteRegister(PHY_PLL1_ADDR, u32phyreg);
+    COM_INFO("writing phy PHY_PLL1_ADDR(0x%2X:swing):0x%x ", PHY_PLL1_ADDR, u32phyreg);
+    SI_TX_PHY_ReadRegister(PHY_PLL1_ADDR,&u32phyreg);
+    COM_INFO("== 0x%x \n", u32phyreg);
+
+    
 #endif
 
     return HI_SUCCESS;

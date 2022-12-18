@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR/yCHRrrZECZAgd9YIKlOd2LECOhs3GF7d575HxFGQbVCKTaMKy+HZs58X5nBuQYE+vWx
-BhENNN1W4LeK4/Gwlp/CHNyJT+tSz3j+tIyfBW6ivs4zK4tsjrhwOvtSd9+QWw==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxfrQYoS9O/a+I/cWz+MDisbAjsD5KFIrcIeGGiZDY/EpfZz4yTQUTN1IxyOmuKGuIQsJ
+/GtE+mO/FyeUbHi3x9ku7PeahRqJz77K5pFECI9B6CRSE/BIfW4IELowSncRSw==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -57,7 +71,7 @@ HI_S32 VPSS_DBG_DbgDeInit(VPSS_DBG_S *pstDbg)
 }
 HI_S32 VPSS_DBG_SendDbgCmd(VPSS_DBG_S *pstDbg,VPSS_DBG_CMD_S *pstCmd)
 {
-    HI_U32  u32Count;
+    HI_U32  u32Count = 0;
 
     VPSS_DBG_PORT_S *pstPortDbg;
     VPSS_DBG_INST_S *pstInstDbg;
@@ -225,6 +239,32 @@ HI_S32 VPSS_DBG_SendDbgCmd(VPSS_DBG_S *pstDbg,VPSS_DBG_CMD_S *pstCmd)
                     break;
                 default:
                     VPSS_ERROR("Invalid Port %d\n",pstCmd->hDbgPart);
+			}
+			break;
+		case DBG_SET_CMP_ON:
+            switch(pstCmd->hDbgPart)
+            {
+                case DEF_DBG_PORT0_ID:
+                    u32Count = pstCmd->hDbgPart - DEF_DBG_PORT0_ID;
+                    pstPortDbg = &(pstDbg->stPortDbg[u32Count]);
+					pstPortDbg->unInfo.bits.cmp = 1;					
+					printk("set prot%d cmp on !!\n", u32Count);
+                    break;
+                default:
+                    VPSS_ERROR("Invalid Port %d, only HD port support cmp\n",u32Count);
+			}
+			break;
+		case DBG_SET_CMP_OFF:
+            switch(pstCmd->hDbgPart)
+            {
+                case DEF_DBG_PORT0_ID:
+                    u32Count = pstCmd->hDbgPart - DEF_DBG_PORT0_ID;
+                    pstPortDbg = &(pstDbg->stPortDbg[u32Count]);
+					pstPortDbg->unInfo.bits.cmp = 2;					
+					printk("set prot%d cmp off !!\n", u32Count);
+                    break;
+                default:
+                    VPSS_ERROR("Invalid Port %d, only HD port support cmp\n",u32Count);
 			}
 			break;
         case DBG_SET_I2P:
@@ -396,7 +436,7 @@ HI_S32 VPSS_DBG_ReplyDbgCmd(VPSS_DBG_S *pstDbg,VPSS_DEBUG_E enCmd,HI_VOID* para1
                         HI_DRV_VIDEO_PRIVATE_S *pstPriv;
                         pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstFrm->u32Priv[0]);
                         
-                        HI_PRINT("Frame Info:Index %d Type %d Format %d W %d H %d LW %d LH %d PTS %d Rate %d Cnt %d Fidelity %d u32LastFlag %d,oriField %d,BitWidth %d\n",
+                        HI_PRINT("Frame Info:Index %d Type %d Format %d W %d H %d LW %d LH %d PTS %d Rate %d Cnt %d Fidelity %d u32LastFlag %d,oriField %d,BitWidth %d,u32TunnelPhyAddr %x\n",
                                 pstFrm->u32FrameIndex,
                                 pstFrm->eFrmType,
                                 pstFrm->ePixFormat,
@@ -410,7 +450,8 @@ HI_S32 VPSS_DBG_ReplyDbgCmd(VPSS_DBG_S *pstDbg,VPSS_DEBUG_E enCmd,HI_VOID* para1
                                 pstPriv->u32Fidelity,
                                 pstPriv->u32LastFlag,
                                 pstPriv->eOriginField,
-                                pstFrm->enBitWidth);
+                                pstFrm->enBitWidth,
+                                pstFrm->u32TunnelPhyAddr);
                     }
                     break;
                 default:
@@ -456,6 +497,48 @@ HI_S32 VPSS_DBG_ReplyDbgCmd(VPSS_DBG_S *pstDbg,VPSS_DEBUG_E enCmd,HI_VOID* para1
 					else
 					{
 						*bUV_Invert = HI_FALSE;
+					}
+					break;
+				default:
+				VPSS_FATAL("Invalid para2 %#x\n",u32DbgPart);
+        	}
+            break;
+		case DBG_SET_CMP_ON:
+            switch (u32DbgPart)
+            {
+				HI_U32 *bCmpflag;
+				
+                case DEF_DBG_PORT0_ID:
+                case DEF_DBG_PORT1_ID:
+                case DEF_DBG_PORT2_ID:
+					u32Count = u32DbgPart - DEF_DBG_PORT0_ID;
+					pstPortDbg = &(pstDbg->stPortDbg[u32Count]);
+					bCmpflag = (HI_U32 *)para2;
+						
+					if (pstPortDbg->unInfo.bits.cmp == 1 )
+					{
+						*bCmpflag = 1;	
+					}
+					break;
+				default:
+				VPSS_FATAL("Invalid para2 %#x\n",u32DbgPart);
+        	}
+            break;
+		case DBG_SET_CMP_OFF:
+            switch (u32DbgPart)
+            {
+				HI_U32 *bCmpflag;
+				
+                case DEF_DBG_PORT0_ID:
+                case DEF_DBG_PORT1_ID:
+                case DEF_DBG_PORT2_ID:
+					u32Count = u32DbgPart - DEF_DBG_PORT0_ID;
+					pstPortDbg = &(pstDbg->stPortDbg[u32Count]);
+					bCmpflag = (HI_U32 *)para2;
+						
+					if (pstPortDbg->unInfo.bits.cmp == 2 )
+					{
+						*bCmpflag = 2;	
 					}
 					break;
 				default:

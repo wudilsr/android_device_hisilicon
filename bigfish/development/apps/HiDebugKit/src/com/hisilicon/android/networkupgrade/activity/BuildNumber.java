@@ -39,17 +39,17 @@ public class BuildNumber extends Activity
 
     /*static
     {
-		try
-		{
-			System.loadLibrary("SDKVersion");
-		}
-		catch(Exception e)
-	    {
-		    Log.e(TAG, "loadLibrary failed");
-	    }
+        try
+        {
+            System.loadLibrary("SDKVersion");
+        }
+        catch(Exception e)
+        {
+            Log.e(TAG, "loadLibrary failed");
+        }
     }*/
 
-    public void readBootargsInfo()
+    public void readKernelVersion()
     {
         StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
         try
@@ -63,17 +63,17 @@ public class BuildNumber extends Activity
             mBuffer = null;
 
             String Result2 = new String(out.toByteArray(),"ISO-8859-1");
-            Log.i(TAG,"Result2:"+Result2);
+            Log.d(TAG, "/proc/version:\n" + Result2);
             this.mTermView2.setText(Result2);
             in.close();
         }
         catch (java.io.FileNotFoundException e)
         {
-            Log.i(TAG,"FileNotFoundException:"+e);
+            Log.e(TAG, "FileNotFoundException: " + e);
         }
         catch (java.io.IOException e)
         {
-            Log.i(TAG,"IOException:"+e);
+            Log.e(TAG, "IOException: " + e);
         }
         finally {
             StrictMode.setThreadPolicy(savedPolicy);
@@ -86,24 +86,31 @@ public class BuildNumber extends Activity
         setContentView(R.layout.buildnumber);
         String Result1 = SystemProperties.get("ro.build.version.release");
         this.mTermView1 = ((TextView)findViewById(R.id.command_output1));
-        this.mTermView1.setText(Result1);
+        this.mTermView1.setText(Result1 + "\n");
         this.mTermView2 = ((TextView)findViewById(R.id.command_output2));
-        readBootargsInfo();
+        readKernelVersion();
         /*String Result3 = GetSDKVersion();
         Log.i(TAG,"Result3:"+Result3);
         this.mTermView3 = ((TextView)findViewById(R.id.command_output3));
-        this.mTermView3.setText(Result3);*/
+        this.mTermView3.setText(Result3 + "\n");*/
         this.mTermView4 = ((TextView)findViewById(R.id.command_output4));
         String Result4 = SystemProperties.get("ro.opengles.version");
-        if(Result4.equals("65536"))
-            this.mTermView4.setText("OpenGL ES-CM 1.0");
-        else if(Result4.equals("65537"))
-            this.mTermView4.setText("OpenGL ES-CM 1.1");
-        else if(Result4.equals("131072"))
-            this.mTermView4.setText("OpenGL ES 2.0");
+        if (Result4.equals("65536")) {
+            this.mTermView4.setText("OpenGL ES-CM 1.0\n");
+        } else if (Result4.equals("65537")) {
+            this.mTermView4.setText("OpenGL ES-CM 1.1\n");
+        } else if (Result4.equals("131072")) {
+            this.mTermView4.setText("OpenGL ES 2.0\n");
+        } else if (Result4.equals("196608")) {
+            this.mTermView4.setText("OpenGL ES 3.0\n");
+        } else if (Result4.equals("196609")) {
+            this.mTermView4.setText("OpenGL ES 3.1\n");
+        } else {
+            this.mTermView4.setText("Unknown\n");
+        }
         String Result5 = SystemProperties.get("ro.build.display.id");
         this.mTermView5 = ((TextView)findViewById(R.id.command_output5));
-        this.mTermView5.setText(Result5);
+        this.mTermView5.setText(Result5 + "\n");
     }
 
     protected void onDestroy()

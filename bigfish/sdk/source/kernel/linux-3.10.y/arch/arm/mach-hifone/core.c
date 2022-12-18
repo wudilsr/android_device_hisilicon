@@ -38,11 +38,11 @@
 #include "platsmp.h"
 #include <mach/cpu.h>
 
-#ifdef CONFIG_PM_HIBERNATE
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
 #include <asm/hibernate.h>
 #include <linux/hibernate_param.h>
-unsigned long userapi_addr;
-unsigned long hibdrv_addr;
+unsigned long qbboot_addr;
+
 unsigned long baseparam_addr;
 unsigned long baseparam_size;
 #endif
@@ -97,25 +97,69 @@ void __init hifone_gic_init_irq(void)
 /*****************************************************************************/
 
 static struct map_desc hifone_io_desc[] __initdata = {
-	/* S40_IOCH1 */
+	/* HIFONE_IOCH1 */
 	{
-		.virtual	= S40_IOCH1_VIRT,
-		.pfn		= __phys_to_pfn(S40_IOCH1_PHYS),
-		.length		= S40_IOCH1_SIZE,
+		.virtual	= HIFONE_IOCH1_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH1_PHYS),
+		.length		= HIFONE_IOCH1_SIZE,
 		.type		= MT_DEVICE
 	},
-#if defined(CONFIG_PM_HIBERNATE) && !defined(HIBERNATE_HIBDRV_FLOATING)
+	/* HIFONE_IOCH2 */
 	{
-		.virtual    = HIBERNATE_HIBDRV_VIRT & 0xfff00000,
-		.length     = HIBERNATE_HIBDRV_SIZE,
-		.type       = MT_MEMORY_DMA_READY,
+		.virtual	= HIFONE_IOCH2_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH2_PHYS),
+		.length 	= HIFONE_IOCH2_SIZE,
+		.type		= MT_DEVICE
 	},
+	/* HIFONE_IOCH3 */
 	{
-		.virtual    = USER_API_VIRT & 0xfff00000,
-		.length     = USER_API_SIZE,
-		.type       = MT_MEMORY_DMA_READY,
+		.virtual	= HIFONE_IOCH3_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH3_PHYS),
+		.length 	= HIFONE_IOCH3_SIZE,
+		.type		= MT_DEVICE
 	},
-#endif
+	/* HIFONE_IOCH4 */
+	{
+		.virtual	= HIFONE_IOCH4_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH4_PHYS),
+		.length 	= HIFONE_IOCH4_SIZE,
+		.type		= MT_DEVICE
+	},
+	/* HIFONE_IOCH5 */
+	{
+		.virtual	= HIFONE_IOCH5_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH5_PHYS),
+		.length 	= HIFONE_IOCH5_SIZE,
+		.type		= MT_DEVICE
+	},
+	/* HIFONE_IOCH6 */
+	{
+		.virtual	= HIFONE_IOCH6_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH6_PHYS),
+		.length 	= HIFONE_IOCH6_SIZE,
+		.type		= MT_DEVICE
+	},
+	/* HIFONE_IOCH7 */
+	{
+		.virtual	= HIFONE_IOCH7_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH7_PHYS),
+		.length 	= HIFONE_IOCH7_SIZE,
+		.type		= MT_DEVICE
+	},
+	/* HIFONE_IOCH8 */
+	{
+		.virtual	= HIFONE_IOCH8_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH8_PHYS),
+		.length 	= HIFONE_IOCH8_SIZE,
+		.type		= MT_DEVICE
+	},
+	/* HIFONE_IOCH9 */
+	{
+		.virtual	= HIFONE_IOCH9_VIRT,
+		.pfn		= __phys_to_pfn(HIFONE_IOCH9_PHYS),
+		.length 	= HIFONE_IOCH9_SIZE,
+		.type		= MT_DEVICE
+	},
 };
 /*****************************************************************************/
 
@@ -210,11 +254,11 @@ void __init pdm_reserve_mem(void)
 		ret = memblock_reserve(phyaddr, addrlen);
 		if (ret)
 			goto error;
-#ifdef CONFIG_PM_HIBERNATE
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
 		if (!snapshot) {
 			baseparam_addr = phyaddr;
 			baseparam_size = addrlen;
-			printk(KERN_DEBUG "No snapshot: 0x%X, 0x%X\n", baseparam_addr, baseparam_size);
+			printk(KERN_DEBUG "No snapshot: 0x%lX, 0x%lX\n", baseparam_addr, baseparam_size);
 		}
 #endif
 	}
@@ -249,9 +293,9 @@ int pdm_free_reserve_mem(u32 phyaddr, u32 size)
 EXPORT_SYMBOL(pdm_free_reserve_mem);
 
 
-#if defined(CONFIG_PM_HIBERNATE)
+#if defined(CONFIG_HISI_SNAPSHOT_BOOT)
 
-void hibernate_reserve_region(char *region, int num)
+void hibernate_reserve_region(char *region)
 {
 	char hibernate_tag[128];
 	char *ptr;
@@ -269,36 +313,26 @@ void hibernate_reserve_region(char *region, int num)
 	ptr = strstr(hibernate_tag, EQUAL_MARK);
 	if (!ptr)
 		goto error;
+
 	ptr += sizeof(EQUAL_MARK) - 1;
 	if (ptr >= hibernate_tag + tag_len)
 		goto error;
 
-		phyaddr = simple_strtoul(ptr, NULL, 16);
-	if (phyaddr & 0xfffff){
+	phyaddr = simple_strtoul(ptr, NULL, 16);
+	if (phyaddr & 0xfffff) {
 		printk(KERN_ERR "hibernate drv start addr is not 1MB aligned : %x\n", phyaddr);
 		goto error;
 	}
 
-#if 0
-	ret = memblock_reserve(phyaddr, HIBERNATE_HIBDRV_SIZE);
-#else
-	ret = memblock_reserve(phyaddr, hifone_io_desc[num].length);
-#endif
-		if (ret)
-			goto error;
+	ret = memblock_reserve(phyaddr, QB_BOOT_SIZE);
 
-	hifone_io_desc[num].pfn = __phys_to_pfn(phyaddr & 0xfff00000);
+	if (ret)
+		goto error;
 
-	if (strcmp(region, "userapi")==0)
-		userapi_addr = phyaddr;
-#if 0
-	printk(KERN_ERR "phy :%x  pfn:%ld\n", phyaddr, hifone_io_desc[0].pfn);
-#else
-	else
-		hibdrv_addr = phyaddr;
-	printk(KERN_INFO "phy:%x pfn:%lx\n", phyaddr, hifone_io_desc[num].pfn);
-#endif
-
+	if (strcmp(region, "qbboot") == 0) {
+		qbboot_addr = phyaddr;
+		printk(KERN_INFO "Qbboot: phyaddr 0x%08X, pfn 0x%08lX\n", phyaddr, __phys_to_pfn(phyaddr));
+	}
 	return;
 error:
 	printk(KERN_ERR "Invalid hibernate tag, errno :%d\n", ret);
@@ -311,16 +345,13 @@ error:
  **/
 void __init hibernate_reserve_mem(void)
 {
-	hibernate_reserve_region("wpaddr", 1);
-	hibernate_reserve_region("userapi", 2);
+	hibernate_reserve_region("qbboot");
 }
 
 int __hibernate_pfn_valid (unsigned long pfn)
 {
-	if (((pfn >= __phys_to_pfn(hibdrv_addr)) && (pfn < (__phys_to_pfn(hibdrv_addr) +
-			(HIBERNATE_HIBDRV_SIZE >> PAGE_SHIFT)))) ||
-		((pfn >= __phys_to_pfn(userapi_addr)) && (pfn < (__phys_to_pfn(userapi_addr) +
-			(USER_API_SIZE >> PAGE_SHIFT)))) || 
+	if (((pfn >= __phys_to_pfn(qbboot_addr)) &&
+	(pfn < (__phys_to_pfn(qbboot_addr) + (QB_BOOT_SIZE >> PAGE_SHIFT)))) || 
 		((pfn >= __phys_to_pfn(baseparam_addr)) && (pfn < (__phys_to_pfn(baseparam_addr) +
 			(baseparam_size >> PAGE_SHIFT)))))
 		return 0;
@@ -335,15 +366,21 @@ void __init hifone_map_io(void)
 	int i;
 
 	iotable_init(hifone_io_desc, ARRAY_SIZE(hifone_io_desc));
-
+	printk(KERN_DEBUG "-------------Fixed IO Mapping----------\n");
+	printk(KERN_DEBUG "Virt,            Phys,             Size\n");
 
 	for (i = 0; i < ARRAY_SIZE(hifone_io_desc); i++) {
+		printk(KERN_DEBUG "0x%08lX,    0x%08X,    0x%08lX\n", 
+			hifone_io_desc[i].virtual, 
+			__pfn_to_phys(hifone_io_desc[i].pfn),
+			hifone_io_desc[i].length);
 		edb_putstr(" V: ");	edb_puthex(hifone_io_desc[i].virtual);
 		edb_putstr(" P: ");	edb_puthex(hifone_io_desc[i].pfn);
 		edb_putstr(" S: ");	edb_puthex(hifone_io_desc[i].length);
 		edb_putstr(" T: ");	edb_putul(hifone_io_desc[i].type);
 		edb_putstr("\n");
 	}
+	printk(KERN_DEBUG "--------------------------------------\n");
 
 	edb_trace();
 }
@@ -371,8 +408,6 @@ static struct amba_device HIL_AMBADEV_NAME(name) =		\
 HIL_AMBA_DEVICE(uart0, "uart:0",  UART0,    NULL);
 HIL_AMBA_DEVICE(uart1, "uart:1",  UART1,    NULL);
 HIL_AMBA_DEVICE(uart2, "uart:2",  UART2,    NULL);
-HIL_AMBA_DEVICE(uart3, "uart:3",  UART3,    NULL);
-HIL_AMBA_DEVICE(uart4, "uart:4",  UART4,    NULL);
 
 static struct amba_device *amba_devs[] __initdata = {
 	&HIL_AMBADEV_NAME(uart0),
@@ -414,7 +449,7 @@ static void __init hifone_reserve(void)
 	hisi_declare_heap_memory();
 #endif
 
-#if defined(CONFIG_PM_HIBERNATE) && !defined(HIBERNATE_HIBDRV_FLOATING)
+#if defined(CONFIG_HISI_SNAPSHOT_BOOT)
 	hibernate_reserve_mem();
 #endif
 

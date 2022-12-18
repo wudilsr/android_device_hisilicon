@@ -118,7 +118,16 @@ typedef struct tagLoaderCabPara
     HI_U32 u32OtaModulation;   /**< constellation count.0:16QAM 1:32QAM 2:64QAM 3:128QAM 4:256QAM  *//**<CNcomment: QAM方式，0:16QAM 1:32QAM 2:64QAM 3:128QAM 4:256QAM  */
 } HI_LOADER_CAB_PARA_S;
 
-/*Define Cable tuner parameter */
+/*Define Terrestrial tuner parameter */
+typedef struct tagLoaderTerPara
+{
+    HI_U32 u32OtaPid;          /**< TS PID. The parameter is vital and set it with caution..*//**<CNcomment: PID */
+    HI_U32 u32OtaFreq;         /**< frequency pointer in kHz, for example, 177500. *//**<CNcomment: 频点，单位 kHz */
+    HI_U32 u32OtaBandWidth;     /**< BandWidth in kHz, for example, 7000. *//**<CNcomment: 带宽，单位 kHz */
+    HI_U32 u32OtaModulation;   /**< constellation count.0:16QAM 1:32QAM 2:64QAM 3:128QAM 4:256QAM  *//**<CNcomment: QAM方式，0:16QAM 1:32QAM 2:64QAM 3:128QAM 4:256QAM  */
+} HI_LOADER_TER_PARA_S;
+
+/*Define Sat tuner parameter */
 typedef struct tagLoaderSatPara
 {
     HI_U32 u32OtaPid;          /**< TS PID. The parameter is vital and set it with caution..*//**<CNcomment: PID */
@@ -139,6 +148,7 @@ typedef struct tagLoaderSatPara
     HI_TUNER_SWITCH4PORT_S  st4Port;
     HI_U32                  u32Switch22K; /** 22KHz switch *//**<CNcomment: 22K开关 */
     HI_U32                  u32LNBPower;/*LNB Power*//**<CNcomment: LNB供电控制 */
+    HI_BOOL   u32UnicFlag;             /**<u32UnicFlag, used by unicable .*//**<CNcomment: unicable使用标志位 */
 } HI_LOADER_SAT_PARA_S;
 
 /*Define Turner parameter */
@@ -149,6 +159,7 @@ typedef struct tagOTAParaInfo
     {
         HI_LOADER_CAB_PARA_S stCab;       /**<Cable signal parameter *//**<CNcomment: 有线信号参数 */
         HI_LOADER_SAT_PARA_S stSat;        /**<Satellite signal parameter*//**<CNcomment: 卫星信号参数 */
+        HI_LOADER_TER_PARA_S stTer;        /**<Terrestrial signal parameter*//**<CNcomment: 地面信号参数 */
     } unConnPara;
 } HI_LOADER_OTA_PARA_S;
 

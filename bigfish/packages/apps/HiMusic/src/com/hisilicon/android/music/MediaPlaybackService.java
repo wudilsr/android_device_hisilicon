@@ -49,6 +49,7 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemProperties;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -318,8 +319,10 @@ public class MediaPlaybackService extends Service {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 if (isPlaying()) {
+                    mWakeLock.acquire();
                     pause();
                     isMusicPlaying = true;
+                    mWakeLock.release();
                 } else {
                     isMusicPlaying = false;
                 }
@@ -403,7 +406,9 @@ public class MediaPlaybackService extends Service {
         // case.
         Message msg = mDelayedStopHandler.obtainMessage();
         mDelayedStopHandler.sendMessageDelayed(msg, IDLE_DELAY);
-        registerMusicPowerReceiver();
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            registerMusicPowerReceiver();
+        }
 
     }
 
@@ -441,7 +446,7 @@ public class MediaPlaybackService extends Service {
             unregisterReceiver(mUnmountReceiver);
             mUnmountReceiver = null;
         }
-        if (PowerReceiver != null) {
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
             unregisterReceiver(PowerReceiver);
         }
         mWakeLock.release();
@@ -779,9 +784,15 @@ public class MediaPlaybackService extends Service {
      */
     public void closeExternalStorageFiles(String storagePath) {
         // stop playback and clean up if the SD card is going to be unmounted.
-        stop(true);
-        notifyChange(QUEUE_CHANGED);
-        notifyChange(META_CHANGED);
+         if(mFileToPlay.length()>storagePath.length()){
+            int len = storagePath.length();
+            String tmp = mFileToPlay.substring(0, len);
+            if(tmp.equals(storagePath)){
+                stop(true);
+                notifyChange(QUEUE_CHANGED);
+                notifyChange(META_CHANGED);
+            }
+        }
     }
 
     /**
@@ -1785,18 +1796,18 @@ public class MediaPlaybackService extends Service {
             }
             mShuffleMode = shufflemode;
             if (mShuffleMode == SHUFFLE_AUTO) {
-                if (makeAutoShuffleList()) {
-                    mPlayListLen = 0;
-                    doAutoShuffleUpdate();
-                    mPlayPos = 0;
-                    openCurrent();
-                    play();
-                    notifyChange(META_CHANGED);
-                    return;
-                } else {
+               // if (makeAutoShuffleList()) {
+               //     mPlayListLen = 0;
+               //     doAutoShuffleUpdate();
+               //     mPlayPos = 0;
+               //     openCurrent();
+               //     play();
+               //     notifyChange(META_CHANGED);
+               //     return;
+               // } else {
                     // failed to build a list of files to shuffle
                     mShuffleMode = SHUFFLE_NONE;
-                }
+              //  }
             }
             saveQueue(false);
         }

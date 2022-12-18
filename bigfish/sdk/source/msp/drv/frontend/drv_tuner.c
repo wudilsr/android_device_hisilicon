@@ -427,7 +427,8 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
     HI_U32 u32RegVal = 0;
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U8 u8ChipReset = 0;
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     U_PERI_CRG58 unTmpPeriCrg58;
     unTmpPeriCrg58.u32 = g_pstRegCrg->PERI_CRG58.u32;
 #endif
@@ -532,7 +533,7 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
                 }
 
                 /*config adc clk 28.8MHz*/
-#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
                 /*config qamadc_clk_sel 28.8MHz,  PERI_CRG58[9:8]:00*/
                 unTmpPeriCrg58.bits.qamadc_clk_sel = 0;//PERI_CRG58[9:8]:00
                 /*config qamctrl_clk_sel 25MHz , PERI_CRG58[11:10]:00; \
@@ -553,7 +554,8 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
                 g_pstRegCrg->PERI_CRG58.u32 = unTmpPeriCrg58.u32;
 #endif
 
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
                 g_stTunerOps[u32TunerPort].tuner_connect                = hi3716cv200_connect;
                 g_stTunerOps[u32TunerPort].tuner_get_status             = hi3716cv200_get_status;
                 g_stTunerOps[u32TunerPort].tuner_get_ber                = hi3716cv200_get_ber;
@@ -647,7 +649,7 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
             else
             {
                 /*config adc clk 25MHz*/
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
                 /*config qamadc_clk_sel 25MHz,  PERI_CRG58[9:8]:01*/
                 unTmpPeriCrg58.bits.qamadc_clk_sel = 0x01;
                 /*config qamctrl_clk_sel 25MHz , PERI_CRG58[11:10]:01; \
@@ -666,7 +668,8 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
 
                 g_pstRegCrg->PERI_CRG58.u32 = unTmpPeriCrg58.u32;
 #endif
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
                 g_stTunerOps[u32TunerPort].tuner_connect = hi3716cv200_j83b_connect;
                 g_stTunerOps[u32TunerPort].tuner_get_status = hi3716cv200_j83b_get_status;
                 g_stTunerOps[u32TunerPort].tuner_get_ber = hi3716cv200_j83b_get_ber;
@@ -898,6 +901,7 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
             g_stTunerOps[u32TunerPort].tuner_get_signal_strength  = mxl254_get_signal_strength;
             g_stTunerOps[u32TunerPort].tuner_set_ts_type = mxl254_set_ts_type;
             g_stTunerOps[u32TunerPort].tuner_connect_timeout =mxl254_connect_timeout;
+			g_stTunerOps[u32TunerPort].tuner_get_powerspecdata =  mxl254_get_powerspecdata;
             break;
         }
 #endif
@@ -916,6 +920,43 @@ HI_S32 tuner_select_type(HI_U32 u32TunerPort, HI_TunerAttr_S *pstTunerAttr,
             break;
         }
 #endif
+
+#if defined(DEMOD_DEV_TYPE_HIFDVBC100)
+        case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+        {
+			g_stTunerOps[u32TunerPort].tuner_init = HiFDVBC100_Init;
+            g_stTunerOps[u32TunerPort].tuner_connect = HiFDVBC100_Connect;
+            g_stTunerOps[u32TunerPort].tuner_get_status = HiFDVBC100_GetStatus;
+            g_stTunerOps[u32TunerPort].tuner_get_ber = HiFDVBC100_GetBer;
+            g_stTunerOps[u32TunerPort].tuner_get_snr = HiFDVBC100_GetSnr;
+            g_stTunerOps[u32TunerPort].tuner_get_signal_strength  = HiFDVBC100_GetSignalStrength;
+            g_stTunerOps[u32TunerPort].tuner_set_ts_type = HiFDVBC100_SetTsType;
+            g_stTunerOps[u32TunerPort].tuner_connect_timeout = HiFDVBC100_connect_timeout;
+            g_stTunerOps[u32TunerPort].tuner_get_freq_symb_offset = HiFDVBC100_GetFreqSymbOffset;
+			g_stTunerOps[u32TunerPort].tuner_get_registers = HiFDVBC100_read_tuner_registers;
+			g_stTunerOps[u32TunerPort].tuner_get_signal_info = HiFDVBC100_GetSignalInfo;
+            break;
+        }
+#endif
+
+#if defined(DEMOD_DEV_TYPE_HIFJ83B100)
+        case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+        {
+			g_stTunerOps[u32TunerPort].tuner_init = HiFJ83B100_Init;
+            g_stTunerOps[u32TunerPort].tuner_connect = HiFJ83B100_Connect;
+            g_stTunerOps[u32TunerPort].tuner_get_status = HiFJ83B100_GetStatus;
+            g_stTunerOps[u32TunerPort].tuner_get_ber = HiFJ83B100_GetBer;
+            g_stTunerOps[u32TunerPort].tuner_get_snr = HiFJ83B100_GetSnr;
+            g_stTunerOps[u32TunerPort].tuner_get_signal_strength  = HiFJ83B100_GetSignalStrength;
+            g_stTunerOps[u32TunerPort].tuner_set_ts_type = HiFJ83B100_SetTsType;
+            g_stTunerOps[u32TunerPort].tuner_connect_timeout = HiFJ83B100_connect_timeout;
+            g_stTunerOps[u32TunerPort].tuner_get_freq_symb_offset = HiFJ83B100_GetFreqSymbOffset;
+			g_stTunerOps[u32TunerPort].tuner_get_registers = HiFJ83B100_read_tuner_registers;
+			g_stTunerOps[u32TunerPort].tuner_get_signal_info = HiFJ83B100_GetSignalInfo;
+            break;
+        }
+#endif
+
         default:
         {
             HI_ERR_TUNER("demod type error:%d",g_stTunerOps[u32TunerPort].enDemodDevType);
@@ -2804,6 +2845,41 @@ HI_S32 tuner_osr_set_scramble(PTR_TUNER_DATA_S pstTunerDataStr)
 
     return s32Ret;
 }
+
+HI_S32 tuner_osr_getpowerspecdata(PTR_TUNER_DATA_S pstTunerDataStr)
+{
+    HI_U32 u32TunerPort = 0;
+    HI_S32 s32Ret = 0;
+	TUNER_POWER_SPECTRUM_DATA_PARAM_S *stSpectrumParam = 0;
+    //TUNER_SAMPLE_DATA_PARAM_S *pstSampleParam = 0;
+
+    /* get tuner port  number and if tuner port is not supported , return fault */
+    u32TunerPort = pstTunerDataStr->u32Port;
+    if (HI_SUCCESS != tuner_check_port(u32TunerPort))
+    {
+        return HI_FAILURE;
+    }
+
+    stSpectrumParam = (TUNER_POWER_SPECTRUM_DATA_PARAM_S *)(pstTunerDataStr->u32Data);
+
+    /* if tuner get status operation is not setted, return fault */
+    if (!g_stTunerOps[u32TunerPort].tuner_get_powerspecdata) /* check if tuner_get_current_plp_type is supported */
+    {
+        HI_ERR_TUNER( "tuner service function ptr is NULL!\n");
+        return -EFAULT;
+    }
+
+    /* tuner_get_powerspecdata */
+    s32Ret = g_stTunerOps[u32TunerPort].tuner_get_powerspecdata(u32TunerPort, stSpectrumParam->u32freqStartInHz, stSpectrumParam->u32freqStepInHz, \
+                                    stSpectrumParam->u32numOfFreqSteps,stSpectrumParam->ps16powerData);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_TUNER( "\n tuner_get_powerspecdata failed \n");
+        return s32Ret;
+    }
+
+    return s32Ret;
+}
 /*
  *    ioctl method.  enable user to contrl tuner
  *    parameter:
@@ -3081,6 +3157,13 @@ HI_S32 tuner_ioctl(struct inode *inode, struct file *file, HI_U32 cmd, HI_VOID *
             s32Ret = tuner_osr_get_agc(pstPara);
             break;
         }
+		case TUNER_TUENR_POWER_SPECTRUM_DATA_CMD:
+	    {
+		    TUNER_DATA_S *pstPara = (TUNER_DATA_S *)arg;
+		    s32Ret = tuner_osr_getpowerspecdata(pstPara);
+			
+		    break;
+	    }
         default:
         {
             s32Ret= -EFAULT;
@@ -3273,14 +3356,11 @@ HI_S32  hi3796c_disable_crg(void)
 
 static HI_VOID tuner_enable_crg(HI_VOID)
 {
-#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
      U_PERI_CRG57 unTmpPeriCrg57;
      U_PERI_CRG58 unTmpPeriCrg58;
      U_PERI_QAM    unTmpPeriQam;
-#endif
-    g_u32CrgEnableFlag = 1;
 
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
     unTmpPeriCrg57.u32 = g_pstRegCrg->PERI_CRG57.u32;
     unTmpPeriCrg58.u32 = g_pstRegCrg->PERI_CRG58.u32;
     unTmpPeriQam.u32 = g_pstRegPeri->PERI_QAM.u32;
@@ -3329,21 +3409,22 @@ static HI_VOID tuner_enable_crg(HI_VOID)
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
     hi3796c_enable_crg();
 #endif
+
+    g_u32CrgEnableFlag = 1;
+
 }
 
 static HI_VOID tuner_disable_crg(HI_VOID)
 {
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
-    U_PERI_CRG57 unTmpPeriCrg57;
-#endif
-
     if (0 == g_u32CrgEnableFlag)
     {
         return;
     }
     g_u32CrgEnableFlag = 0;
 
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    U_PERI_CRG57 unTmpPeriCrg57;
+
     unTmpPeriCrg57.u32 = g_pstRegCrg->PERI_CRG57.u32;
     {
      /*config qam_*_cken open, PERI_CRG57[6:0]:0000000*/
@@ -3358,9 +3439,8 @@ static HI_VOID tuner_disable_crg(HI_VOID)
     unTmpPeriCrg57.bits.qam_tsout_cken = 0;
     }
     g_pstRegCrg->PERI_CRG57.u32 = unTmpPeriCrg57.u32;
-#endif
-
-#if defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+    
+#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
     hi3796c_disable_crg();
 #endif
 }
@@ -3368,7 +3448,7 @@ static HI_VOID tuner_disable_crg(HI_VOID)
 
 static HI_VOID tuner_enable_adc(HI_VOID)
 {
-#if defined (CHIP_TYPE_hi3716cv200)|| defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716cv200)|| defined (CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     HI_U32 i=30;
     U_PERI_QAM_ADC0 unTmpPeriQamADC0;
     U_PERI_QAM_ADC1 unTmpPeriQamADC1;
@@ -3414,7 +3494,7 @@ static HI_VOID tuner_enable_adc(HI_VOID)
 
 static HI_VOID tuner_disable_adc(HI_VOID)
 {
-#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     U_PERI_QAM_ADC0 unTmpPeriQamADC0;
 
     unTmpPeriQamADC0.u32 = g_pstRegPeri->PERI_QAM_ADC0.u32;
@@ -3820,6 +3900,8 @@ HI_S32 tuner_proc_read(struct seq_file *p, HI_VOID *v)
             case HI_UNF_DEMOD_DEV_TYPE_J83B:
             case HI_UNF_DEMOD_DEV_TYPE_MXL254:
             case HI_UNF_DEMOD_DEV_TYPE_MXL214:
+			case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+			case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
                 switch(g_stTunerOps[u32TunerPort].stCurrPara.enQamType)
                 {
                     case QAM_TYPE_16:
@@ -4016,6 +4098,12 @@ HI_S32 tuner_proc_read(struct seq_file *p, HI_VOID *v)
             case HI_UNF_DEMOD_DEV_TYPE_TDA18280:
                 strncpy(acDemodType, "tda18280", sizeof(acDemodType));
                 break;
+			case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+				strncpy(acDemodType, "FDVBC100", sizeof(acDemodType));
+				break;
+			case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+				strncpy(acDemodType, "FJ83B100", sizeof(acDemodType));
+				break;
             default:
                 strncpy(acDemodType, "unknown demod", sizeof( acDemodType ) );
                 break;
@@ -4522,7 +4610,7 @@ HI_S32 tuner_proc_read_diseqc(struct seq_file *p, HI_VOID *v)
 	return HI_SUCCESS;
 }
 
-#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 /*RAM_SIZE * 32BIT*/
 #define  RAM_SIZE  8192
 
@@ -5117,7 +5205,14 @@ HI_S32 HI_DRV_TUNER_Init(HI_VOID)
     }
 
     init_waitqueue_head(&g_QamSpecialProcessWQ);
+
     pThread = kthread_create(x5hdqam_special_process, NULL, "x5hdqam_sop");
+    if (IS_ERR(pThread))
+    {
+        HI_ERR_TUNER("kthread_create failed\n");
+        return HI_FAILURE;
+    }
+
     wake_up_process(pThread);
 
     return HI_SUCCESS;
@@ -5173,27 +5268,7 @@ HI_S32 tuner_i2c_receive_data(HI_U32 u32I2cChannel, HI_U8 u8DevAddress, PTR_TUNE
 
     u32DataLen = pstDataStruct->u32ReceiveLength;
     pu8Data = pstDataStruct->pu8ReceiveBuf;
-#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
-    if(HI_STD_I2C_NUM > u32I2cNo)
-    {
-        //s32Ret = HI_DRV_I2C_Read(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-        s32Ret = s_tuner_pI2cFunc->pfnI2cRead(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
 
-        if(HI_SUCCESS != s32Ret)
-        {
-            return s32Ret;
-        }
-    }
-    else
-    {
-        //s32Ret = HI_DRV_GPIOI2C_ReadExt(u32I2cNo, (HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-        s32Ret =  s_tuner_pGpioI2cFunc->pfnGpioI2cReadExt(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-        if(HI_SUCCESS != s32Ret)
-        {
-            return s32Ret;
-        }
-    }
-#else
     if(HI_STD_I2C_NUM > u32I2cNo)
     {
         //s32Ret = HI_DRV_I2C_Read(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
@@ -5212,7 +5287,6 @@ HI_S32 tuner_i2c_receive_data(HI_U32 u32I2cChannel, HI_U8 u8DevAddress, PTR_TUNE
             return s32Ret;
         }
     }
-#endif
 
     return HI_SUCCESS;
 }
@@ -5297,6 +5371,13 @@ HI_S32 qam_read_byte(HI_U32 u32TunerPort, HI_U8 u8RegAddr, HI_U8 *pu8RegVal)
         s32Ret = tuner_i2c_receive_data(HI3136I_I2C_CHAN,
             g_stTunerOps[u32TunerPort].u32DemodAddress, &stI2cDataStr);
     }
+#if defined(DEMOD_DEV_TYPE_HIFDVBC100) || defined(DEMOD_DEV_TYPE_HIFJ83B100)
+	else if (HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100 == g_stTunerOps[u32TunerPort].enDemodDevType
+		|| HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100 == g_stTunerOps[u32TunerPort].enDemodDevType)
+	{
+		s32Ret = tuner_i2c_receive_data(7,g_stTunerOps[u32TunerPort].u32DemodAddress, &stI2cDataStr);
+	}
+#endif
     else
     {
         s32Ret = tuner_i2c_receive_data(g_stTunerOps[u32TunerPort].enI2cChannel,
@@ -5412,6 +5493,14 @@ HI_S32 qam_write_byte(HI_U32 u32TunerPort, HI_U8 u8RegAddr, HI_U8 u8RegVal)
         s32Ret = tuner_i2c_send_data(HI3136I_I2C_CHAN,
             g_stTunerOps[u32TunerPort].u32DemodAddress, &stI2cDataStr);
     }
+#if defined(DEMOD_DEV_TYPE_HIFDVBC100) || defined(DEMOD_DEV_TYPE_HIFJ83B100)
+	else if (HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100 == g_stTunerOps[u32TunerPort].enDemodDevType
+		|| HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100 == g_stTunerOps[u32TunerPort].enDemodDevType)
+    {
+        //printk("%s, %d, HI3136I_I2C_CHAN = %d, %x\n", __func__, __LINE__, HI3136I_I2C_CHAN, g_stTunerOps[u32TunerPort].u32DemodAddress);
+        s32Ret = tuner_i2c_send_data(7,g_stTunerOps[u32TunerPort].u32DemodAddress, &stI2cDataStr);
+    }
+#endif
     else
     {
         s32Ret = tuner_i2c_send_data(g_stTunerOps[u32TunerPort].enI2cChannel,
@@ -7639,7 +7728,7 @@ HI_S32 HI_DRV_TUNER_Connect(HI_U32  u32tunerId , const HI_UNF_TUNER_CONNECT_PARA
         return HI_SUCCESS;
     }
 
-    return HI_SUCCESS;
+    return HI_FAILURE;
 }
 
 HI_S32 HI_DRV_TUNER_GetStatus(HI_U32    u32tunerId , HI_UNF_TUNER_STATUS_S  *pstTunerStatus)
@@ -7863,7 +7952,8 @@ EXPORT_SYMBOL(HI_DRV_TUNER_GetRssi);
 EXPORT_SYMBOL(HI_DRV_TUNER_GetFreqSymbOffset);
 EXPORT_SYMBOL(HI_DRV_TUNER_SetLnbOut);
 
-#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
+#if defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 EXPORT_SYMBOL(qam_ram_collect_data);
 #endif
 

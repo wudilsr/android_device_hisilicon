@@ -37,6 +37,7 @@ static UMAP_DEVICE_S            PvrDev;
 static struct file_operations   PvrFileOps;
 static HI_U32                   PvrPlayChan[PVR_PLAY_MAX_CHN_NUM];
 static HI_U32                   PvrRecChan[PVR_REC_MAX_CHN_NUM];
+static HI_U32                   PvrDecodeAbility;
 
 HI_DECLARE_MUTEX(PvrMutex);
 
@@ -154,6 +155,38 @@ static HI_S32 PVR_Ioctl(struct inode *inode, struct file *file, HI_U32 cmd, HI_V
             break;
         }
 
+        case CMD_PVR_ACQUIRE_DECODE_ABILITY:
+        {
+            if (PvrDecodeAbility > *((HI_U32 *)arg))
+            {
+                PvrDecodeAbility -= *((HI_U32 *)arg);
+            }
+            else
+            {
+                ret = HI_FAILURE;
+            }
+            break;
+        }
+
+        case CMD_PVR_RELEASE_DECODE_ABILITY:
+        {
+            if (PvrDecodeAbility + *((HI_U32 *)arg) > PVR_PLAY_DECODE_ABILITY)
+            {
+                ret = HI_FAILURE;
+            }
+            else
+            {
+                PvrDecodeAbility += *((HI_U32 *)arg);
+            }
+            break;
+        }
+
+        case CMD_PVR_GET_DECODE_ABILITY:
+        {
+            *((HI_U32 *)arg) = PvrDecodeAbility;
+            break;
+        }
+        
         default:
             ret = -ENOIOCTLCMD;
     }
@@ -235,6 +268,8 @@ HI_S32 PVR_DRV_ModInit(HI_VOID)
     {
         PvrRecChan[i] = 0;
     }
+
+    PvrDecodeAbility = PVR_PLAY_DECODE_ABILITY;
 
 #ifdef MODULE
     HI_PRINT("Load hi_pvr.ko success.  \t(%s)\n", VERSION_STRING);

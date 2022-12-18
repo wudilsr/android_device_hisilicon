@@ -173,18 +173,12 @@ HI_S32 DmxScdToVideoIndex(HI_BOOL bUseTimeStamp,const DMX_IDX_DATA_S *ScData, FI
         return HI_FAILURE;
     }
 
-    /* need to calculate global offset, that is, the size from start record to current, included rewind */
-    if (DMX_INDEX_SC_TYPE_PTS != IndexData.u8IndexType)
+    if (unlikely(DMX_INDEX_SC_TYPE_PTS == IndexData.u8IndexType && PVR_INDEX_INVALID_PTSMS == IndexData.u32PtsMs))
     {
-        CurrGlobalOffset = PVR_SCDIndexCalcGlobalOffset(bUseTimeStamp,&IndexData);
+        return HI_FAILURE;
     }
-    else
-    {
-        if (PVR_INDEX_INVALID_PTSMS == IndexData.u32PtsMs)
-        {
-            return HI_FAILURE;
-        }
-    }
+
+    CurrGlobalOffset = PVR_SCDIndexCalcGlobalOffset(bUseTimeStamp, &IndexData);
 
     pstFidx->s64GlobalOffset    = (HI_S64)CurrGlobalOffset;
     pstFidx->u32PtsMs           = IndexData.u32PtsMs;

@@ -55,6 +55,8 @@ typedef struct
     HI_U32                  u32Channels;
     HI_U32                  u32SampleRate;
     HI_S32                  s32BitPerSample;
+
+    HI_BOOL                 bAddMute;
     /* internal state */
     HI_U32                  hCast;
     HI_U32                  CastId;

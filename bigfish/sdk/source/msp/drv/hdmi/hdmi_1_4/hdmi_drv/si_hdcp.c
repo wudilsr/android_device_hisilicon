@@ -752,7 +752,7 @@ void SI_ReAthentication( void )
     WriteByteHDMITXP0(HDCP_CTRL_ADDR,0x0);//RI CMD
     WriteByteHDMITXP0(HDCP_CTRL_ADDR,0x04);//RI CMD
 
-    // load ksv    
+    // load Aksv    
     WriteByteHDMITXP0(0xf9,0x0);
     WriteByteHDMITXP0(0xfa,0x20);
     
@@ -773,6 +773,7 @@ void SI_ReAthentication( void )
     if((epst & 0x7f) != 1)
        HDCP_ERR("error(1)\n");
 
+    // Aksv check CRC 
     WriteByteHDMITXP0(0xf9,0x0);
     WriteByteHDMITXP0(0xfa,0x04);
 

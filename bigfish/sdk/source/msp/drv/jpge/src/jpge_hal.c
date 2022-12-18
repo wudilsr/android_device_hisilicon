@@ -527,8 +527,6 @@ HI_S32 Jpge_Open( HI_VOID )
     /* map reg_base_addr to virtual address */
     JpgeIpCtx.pRegBase = (HI_U32 *)JpgeOsal_MapRegisterAddr( JPGE_REG_BASE_ADDR, 0x1000 );
 
-    Jpge_SetClock();
-    
     /* init lock & mutex */
     JpgeOsal_LockInit ( &JpgeIpCtx.ChnLock  );
     JpgeOsal_MutexInit( &JpgeIpCtx.ChnMutex );
@@ -587,6 +585,10 @@ HI_S32 Jpge_Create( HI_U32 *pEncHandle, Jpge_EncCfg_S *pEncCfg )
     if( i == JPGE_MAX_CHN )
     {
         return HI_FAILURE;
+    }
+
+     if(NULL == pEncPara){
+    	return HI_FAILURE;
     }
     
     /* init mutex */
@@ -730,6 +732,23 @@ HI_VOID Jpge_SetClock(HI_VOID)
     return;
 }
 
+HI_VOID Jpge_CloseClock(HI_VOID)
+{
+    U_PERI_CRG36 unTempValue;
+
+    unTempValue.u32 = g_pstRegCrg->PERI_CRG36.u32;
+
+	/*disable clock */
+    unTempValue.bits.jpge_cken = 0x0;
+	
+    /*cancel reset*/
+    unTempValue.bits.jpge_srst_req = 0x0;
+
+    g_pstRegCrg->PERI_CRG36.u32 = unTempValue.u32;
+    
+    return;
+}
+
 /******************************************************************************
 Function   : 
 Description: 
@@ -767,6 +786,10 @@ HI_S32 Jpge_Create_toVenc( HI_U32 *pEncHandle, Jpge_EncCfg_S *pEncCfg )
     if( i == JPGE_MAX_CHN )
     {
         return HI_FAILURE;
+    }
+
+    if(NULL == pEncPara){
+    	return HI_FAILURE;
     }
     
     /* init mutex */

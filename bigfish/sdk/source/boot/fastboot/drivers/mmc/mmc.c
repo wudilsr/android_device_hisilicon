@@ -33,9 +33,41 @@
 #include <mmc.h>
 #include <div64.h>
 
+#define MMC_RW_STEP_BLKS 65536
+
 static struct list_head mmc_devices;
 static int cur_dev_num = -1;
 static char test_ext_csd[512] = {0};
+
+const u8 tuning_blk_pattern_4bit[MMC_TUNING_BLK_PATTERN_4BIT_SIZE] = {
+	0xff, 0x0f, 0xff, 0x00, 0xff, 0xcc, 0xc3, 0xcc,
+	0xc3, 0x3c, 0xcc, 0xff, 0xfe, 0xff, 0xfe, 0xef,
+	0xff, 0xdf, 0xff, 0xdd, 0xff, 0xfb, 0xff, 0xfb,
+	0xbf, 0xff, 0x7f, 0xff, 0x77, 0xf7, 0xbd, 0xef,
+	0xff, 0xf0, 0xff, 0xf0, 0x0f, 0xfc, 0xcc, 0x3c,
+	0xcc, 0x33, 0xcc, 0xcf, 0xff, 0xef, 0xff, 0xee,
+	0xff, 0xfd, 0xff, 0xfd, 0xdf, 0xff, 0xbf, 0xff,
+	0xbb, 0xff, 0xf7, 0xff, 0xf7, 0x7f, 0x7b, 0xde,
+};
+
+const u8 tuning_blk_pattern_8bit[MMC_TUNING_BLK_PATTERN_8BIT_SIZE] = {
+	0xff, 0xff, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00,
+	0xff, 0xff, 0xcc, 0xcc, 0xcc, 0x33, 0xcc, 0xcc,
+	0xcc, 0x33, 0x33, 0xcc, 0xcc, 0xcc, 0xff, 0xff,
+	0xff, 0xee, 0xff, 0xff, 0xff, 0xee, 0xee, 0xff,
+	0xff, 0xff, 0xdd, 0xff, 0xff, 0xff, 0xdd, 0xdd,
+	0xff, 0xff, 0xff, 0xbb, 0xff, 0xff, 0xff, 0xbb,
+	0xbb, 0xff, 0xff, 0xff, 0x77, 0xff, 0xff, 0xff,
+	0x77, 0x77, 0xff, 0x77, 0xbb, 0xdd, 0xee, 0xff,
+	0xff, 0xff, 0xff, 0x00, 0xff, 0xff, 0xff, 0x00,
+	0x00, 0xff, 0xff, 0xcc, 0xcc, 0xcc, 0x33, 0xcc,
+	0xcc, 0xcc, 0x33, 0x33, 0xcc, 0xcc, 0xcc, 0xff,
+	0xff, 0xff, 0xee, 0xff, 0xff, 0xff, 0xee, 0xee,
+	0xff, 0xff, 0xff, 0xdd, 0xff, 0xff, 0xff, 0xdd,
+	0xdd, 0xff, 0xff, 0xff, 0xbb, 0xff, 0xff, 0xff,
+	0xbb, 0xbb, 0xff, 0xff, 0xff, 0x77, 0xff, 0xff,
+	0xff, 0x77, 0x77, 0xff, 0x77, 0xbb, 0xdd, 0xee,
+};
 
 int mmc_switch(struct mmc *mmc, u8 set, u8 index, u8 value);
 
@@ -84,6 +116,8 @@ int mmc_send_status(struct mmc *mmc, int timeout)
 		printf("Timeout waiting card ready\n");
 		return TIMEOUT;
 	}
+	if (cmd.response[0] & MMC_STATUS_SWITCH_ERROR) 
+		return SWITCH_ERR;
 
 	return 0;
 }
@@ -92,7 +126,8 @@ int mmc_set_blocklen(struct mmc *mmc, int len)
 {
 	struct mmc_cmd cmd;
 
-	if (mmc->card_caps & MMC_MODE_DDR_52MHz)
+	if ((mmc->timing & MMC_TIMING_UHS_DDR50)
+		||(mmc->timing & MMC_TIMING_MMC_HS400))
 		return 0;
 
 	cmd.cmdidx = MMC_CMD_SET_BLOCKLEN;
@@ -224,7 +259,12 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 	struct mmc_data data;
 	int err;
 	struct mmc *mmc = find_mmc_device(dev_num);
+	int stoperr;
 	int blklen;
+	u32 total;
+	s32 cnt;
+	char *databuf = (char *)src;
+	ulong blkaddr = start;
 
 	if (!mmc)
 		return -1;
@@ -238,40 +278,61 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 		return err;
 	}
 
-	if (blkcnt > 1)
-		cmd.cmdidx = MMC_CMD_WRITE_MULTIPLE_BLOCK;
-	else
-		cmd.cmdidx = MMC_CMD_WRITE_SINGLE_BLOCK;
+	cnt = blkcnt;
+	total = 0;
+	while (cnt > 0) {
+		u32 step;
+		if (cnt > MMC_RW_STEP_BLKS) {
+			step = MMC_RW_STEP_BLKS;
+			cnt -= MMC_RW_STEP_BLKS;
+		} else {
+			step = cnt;
+			cnt = 0;
+		}
 
-	if (mmc->high_capacity)
-		cmd.cmdarg = start;
-	else
-		cmd.cmdarg = start * blklen;
+		if (step > 1)
+			cmd.cmdidx = MMC_CMD_WRITE_MULTIPLE_BLOCK;
+		else
+			cmd.cmdidx = MMC_CMD_WRITE_SINGLE_BLOCK;
 
-	cmd.resp_type = MMC_RSP_R1;
-	cmd.flags = 0;
+		if (mmc->high_capacity)
+			cmd.cmdarg = blkaddr;
+		else
+			cmd.cmdarg = blkaddr * blklen;
 
-	data.src = src;
-	data.blocks = blkcnt;
-	data.blocksize = blklen;
-	data.flags = MMC_DATA_WRITE;
-
-	err = mmc_send_cmd(mmc, &cmd, &data);
-
-	if (err) {
-		printf("mmc write failed\n\r");
-		return err;
-	}
-
-	if (blkcnt > 1) {
-		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
-		cmd.cmdarg = 0;
-		cmd.resp_type = MMC_RSP_R1b;
+		cmd.resp_type = MMC_RSP_R1;
 		cmd.flags = 0;
-		mmc_send_cmd(mmc, &cmd, NULL);
+
+		data.src = databuf;
+		data.blocks = step;
+		data.blocksize = blklen;
+		data.flags = MMC_DATA_WRITE;
+		
+		err = mmc_send_cmd(mmc, &cmd, &data);
+
+		if (err) {
+			printf("mmc write failed\n\r");
+			return err;
+		}
+
+		if (step > 1) {
+			cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
+			cmd.cmdarg = 0;
+			cmd.resp_type = MMC_RSP_R1b;
+			cmd.flags = 0;
+			stoperr = mmc_send_cmd(mmc, &cmd, NULL);
+			if (stoperr) {
+				printf("mmc write stop failed!\n");
+				return stoperr;
+			}
+		}
+
+		databuf  += step * blklen;
+		blkaddr  += step;
+		total    += step;
 	}
 
-	return blkcnt;
+	return total;
 }
 
 int mmc_read_block(struct mmc *mmc, void *dst, uint blocknum)
@@ -356,6 +417,11 @@ static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 	struct mmc_data data;
 	int err;
 	int stoperr = 0;
+	u32 total;
+	s32 cnt;
+	char *databuf = dst;
+	ulong blkaddr = start;
+
 	struct mmc *mmc = find_mmc_device(dev_num);
 
 	if (!mmc)
@@ -369,44 +435,109 @@ static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 		return err;
 	}
 
-	if (blkcnt > 1)
-		cmd.cmdidx = MMC_CMD_READ_MULTIPLE_BLOCK;
-	else
-		cmd.cmdidx = MMC_CMD_READ_SINGLE_BLOCK;
+	cnt = blkcnt;
+	total = 0;
+	while (cnt > 0) {
+		u32 step;
+		if (cnt > MMC_RW_STEP_BLKS) {
+			step = MMC_RW_STEP_BLKS;
+			cnt -= MMC_RW_STEP_BLKS;
+		} else {
+			step = cnt;
+			cnt = 0;
+		}
 
-	if (mmc->high_capacity)
-		cmd.cmdarg = start;
-	else
-		cmd.cmdarg = start * mmc->read_bl_len;
+		if (step > 1)
+			cmd.cmdidx = MMC_CMD_READ_MULTIPLE_BLOCK;
+		else
+			cmd.cmdidx = MMC_CMD_READ_SINGLE_BLOCK;
 
+		if (mmc->high_capacity)
+			cmd.cmdarg = blkaddr;
+		else
+			cmd.cmdarg = blkaddr * mmc->read_bl_len;
+
+		cmd.resp_type = MMC_RSP_R1;
+		cmd.flags = 0;
+
+		data.dest = databuf;
+		data.blocks = step;
+		data.blocksize = mmc->read_bl_len;
+		data.flags = MMC_DATA_READ;
+		err = mmc_send_cmd(mmc, &cmd, &data);
+
+		if (err) {
+			printf("mmc read failed\n\r");
+			return err;
+		}
+
+		if (step > 1) {
+			cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
+			cmd.cmdarg = 0;
+			cmd.resp_type = MMC_RSP_R1b;
+			cmd.flags = 0;
+			stoperr = mmc_send_cmd(mmc, &cmd, NULL);
+			if (stoperr) {
+				printf("mmc read stop failed!\n");
+				return stoperr;
+			}
+
+		}
+
+		databuf  += step * mmc->read_bl_len;
+		blkaddr  += step;
+		total    += step;
+	}
+
+	return total;
+}
+
+int mmc_send_tuning(struct mmc* mmc)
+{
+	struct mmc_cmd cmd = {0};
+	struct mmc_data data = {0};
+	const u8 *tuning_block_pattern;
+	int size, err = 0;
+	u8 *data_buf;
+
+	if (mmc->bus_width == 8) {
+		tuning_block_pattern = tuning_blk_pattern_8bit;
+		size = sizeof(tuning_blk_pattern_8bit);
+	} else if (mmc->bus_width == 4){
+		tuning_block_pattern = tuning_blk_pattern_4bit;
+		size = sizeof(tuning_blk_pattern_4bit);
+	}else {
+		return -EINVAL;
+	} 
+		
+	data_buf = malloc(size);
+	if (!data_buf)
+		return -ENOMEM;
+	
+	cmd.cmdidx = MMC_CMD_SEND_TUNING_BLOCK_HS200;
 	cmd.resp_type = MMC_RSP_R1;
 	cmd.flags = 0;
 
-	data.dest = dst;
-	data.blocks = blkcnt;
-	data.blocksize = mmc->read_bl_len;
+	data.dest = data_buf;
+	data.blocks = 1;
+	data.blocksize = size;
 	data.flags = MMC_DATA_READ;
 
 	err = mmc_send_cmd(mmc, &cmd, &data);
 
-	if (err) {
-		printf("mmc read failed\n\r");
-		return err;
-	}
+	cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
+	cmd.resp_type = MMC_RSP_R1;
 
-	if (blkcnt > 1) {
-		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
-		cmd.cmdarg = 0;
-		cmd.resp_type = MMC_RSP_R1b;
-		cmd.flags = 0;
-		stoperr = mmc_send_cmd(mmc, &cmd, NULL);
-		if (stoperr) {
-			printf("mmc read stop failed!\n");
-			return stoperr;
-		}
+	mmc_send_cmd(mmc, &cmd, NULL);
 
-	}
-	return blkcnt;
+	mmc_send_status(mmc, 1000);
+
+	if (memcmp(data_buf, tuning_block_pattern, size))
+		err = -EIO;
+
+out:
+	free(data_buf);
+	return err;
 }
 
 int mmc_go_idle(struct mmc* mmc)
@@ -548,15 +679,24 @@ int mmc_send_ext_csd(struct mmc *mmc, char *ext_csd)
 int mmc_switch(struct mmc *mmc, u8 set, u8 index, u8 value)
 {
 	struct mmc_cmd cmd;
+	int timeout = 1000;
+	int ret;
 
 	cmd.cmdidx = MMC_CMD_SWITCH;
 	cmd.resp_type = MMC_RSP_R1b;
 	cmd.cmdarg = (MMC_SWITCH_MODE_WRITE_BYTE << 24) |
-		(index << 16) |
-		(value << 8);
+				 (index << 16) |
+				 (value << 8);
 	cmd.flags = 0;
 
-	return mmc_send_cmd(mmc, &cmd, NULL);
+	ret = mmc_send_cmd(mmc, &cmd, NULL);
+
+	/* Waiting for the ready status */
+	if (!ret)
+		ret = mmc_send_status(mmc, timeout);
+
+	return ret;
+
 }
 
 int mmc_change_freq(struct mmc *mmc)
@@ -577,12 +717,12 @@ int mmc_change_freq(struct mmc *mmc)
 
 	if (err)
 		return err;
-	cardtype = ext_csd[EXT_CSD_CARD_TYPE] & 0xf;
+	cardtype = ext_csd[EXT_CSD_CARD_TYPE] & EXT_CSD_CARD_TYPE_MASK;
 
 	err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_HS_TIMING, 1);
 
 	if (err)
-		return err;
+		return err == SWITCH_ERR ? 0 : err;
 
 	/* Now check to see that it worked */
 	err = mmc_send_ext_csd(mmc, ext_csd);
@@ -593,6 +733,14 @@ int mmc_change_freq(struct mmc *mmc)
 	/* No high-speed support */
 	if (!ext_csd[EXT_CSD_HS_TIMING])
 		return 0;
+
+	if (cardtype & EXT_CSD_CARD_TYPE_SDR_200) {
+		mmc->card_caps |= MMC_MODE_HS200;
+	}
+
+	if (cardtype & EXT_CSD_CARD_TYPE_HS400) {
+		mmc->card_caps |= MMC_MODE_HS400;
+	}
 
 	/* High Speed is set, there are two types: 52MHz and 26MHz */
 	if (cardtype & EXT_CSD_CARD_TYPE_52) {
@@ -777,6 +925,12 @@ void mmc_set_bus_width(struct mmc *mmc, uint width)
 {
 	mmc->bus_width = width;
 
+	mmc_set_ios(mmc);
+}
+
+void mmc_set_timing(struct mmc *mmc, unsigned int timing)
+{
+	mmc->timing = timing;
 	mmc_set_ios(mmc);
 }
 
@@ -1016,6 +1170,52 @@ int mmc_startup(struct mmc *mmc)
 			mmc->tran_speed = 50000000;
 		else
 			mmc->tran_speed = 25000000;
+		
+	} else if (mmc->card_caps & MMC_MODE_HS200) {
+		int idx;
+		static unsigned ext_csd_bits[] = {
+			EXT_CSD_BUS_WIDTH_4,
+			EXT_CSD_BUS_WIDTH_8,
+		};
+		static unsigned bus_widths[] = {
+			4, 8,
+		};
+
+		idx = (mmc->host_caps & MMC_MODE_8BIT) ? 1 : 0;
+		for (; idx > 0; idx--) {
+			err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL,
+				EXT_CSD_BUS_WIDTH, ext_csd_bits[idx]);
+			if (err)
+				continue;
+			mmc_set_bus_width(mmc, bus_widths[idx]);
+
+			err = mmc_send_ext_csd(mmc, test_ext_csd);
+			if (!err && ext_csd[EXT_CSD_REV] \
+				== test_ext_csd[EXT_CSD_REV]) {
+				break;
+			}
+		}
+
+		/* switch to HS200 mode if bus width set successfully */
+		if (!err){
+			err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_HS_TIMING, 2);
+		}
+		
+		if(err)
+			return err;
+
+		mmc_set_timing(mmc, MMC_TIMING_MMC_HS200);
+
+		if (mmc->card_caps&MMC_MODE_HS400) {
+			mmc->tran_speed = 150000000;
+			if (mmc->prepare_tuning)
+				mmc->prepare_tuning(mmc, MMC_TIMING_MMC_HS400);
+		} else {
+			mmc->tran_speed = 200000000;
+			if (mmc->prepare_tuning)
+				mmc->prepare_tuning(mmc, MMC_TIMING_MMC_HS200);
+		}
+
 	} else {
 		int idx;
 		static unsigned ext_csd_bits[] = {
@@ -1036,7 +1236,10 @@ int mmc_startup(struct mmc *mmc)
 		static unsigned widths[] = {
 			8, 4, 8, 4, 1,
 		};
-
+		
+		if (mmc->card_caps & MMC_MODE_DDR_52MHz)
+			mmc_set_timing(mmc, MMC_TIMING_UHS_DDR50);
+		
 		for (idx=0; idx < sizeof(ext_csd_bits)/sizeof(ext_csd_bits[0]); idx++) {
 			unsigned int extw = ext_csd_bits[idx];
 
@@ -1072,6 +1275,58 @@ int mmc_startup(struct mmc *mmc)
 	}
 
 	mmc_set_clock(mmc, mmc->tran_speed);
+
+	if ((mmc->card_caps & MMC_MODE_HS200)||(mmc->card_caps & MMC_MODE_HS400)) {
+		if (mmc->execute_tuning)
+			err = mmc->execute_tuning(mmc, 0);
+		if (err) {
+			printf("cclk_in_sample tuning failed\n");
+			return err;
+		}
+	}
+
+	if (mmc->card_caps & MMC_MODE_HS400) {
+		/*
+		* HS400 mode requires 8-bit bus width
+		*/
+		if (mmc->bus_width != 8) {
+			printf("HS400 mode requires 8-bit bus width\n");
+			return -1;
+		}
+
+		/*
+		* Before switching to dual data rate operation for HS400,
+		* it is required to convert from HS200 mode to HS mode.
+		*/
+		mmc_set_timing(mmc, MMC_TIMING_MMC_HS);
+
+		mmc_set_clock(mmc, 26000000);
+
+		err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL,
+			   EXT_CSD_HS_TIMING, 1);
+		if (err) {
+			printf("switch to high-speed from hs200 failed, err:%d\n", err);
+			return err;
+		}
+
+		err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL,
+			 EXT_CSD_BUS_WIDTH, EXT_CSD_DDR_BUS_WIDTH_8);
+		if (err) {
+			printf("switch to bus width for hs400 failed, err:%d\n", err);
+			return err;
+		}
+
+		err = mmc_switch(mmc, EXT_CSD_CMD_SET_NORMAL,
+			   EXT_CSD_HS_TIMING, 3);
+		if (err) {
+			printf("%s: switch to hs400 failed, err:%d\n", err);
+			return err;
+		}
+
+		mmc_set_timing(mmc, MMC_TIMING_MMC_HS400);
+		mmc_set_clock(mmc, mmc->tran_speed);
+
+	}
 
 	/* fill in device description */
 	mmc->block_dev.lun = 0;

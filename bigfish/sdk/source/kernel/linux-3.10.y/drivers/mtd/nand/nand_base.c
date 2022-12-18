@@ -431,6 +431,7 @@ static int nand_default_block_markbad(struct mtd_info *mtd, loff_t ofs)
 static int nand_check_wp(struct mtd_info *mtd)
 {
 	int fl_state;
+	int result;
 	struct nand_chip *chip = mtd->priv;
 
 	/* Broken xD cards report WP despite being writable */
@@ -445,14 +446,19 @@ static int nand_check_wp(struct mtd_info *mtd)
 	/* Check the WP bit */
 	chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
 
+#ifdef CONFIG_MTD_NAND_HISFC400
 	/* restore chip state. */
 	chip->state = fl_state;
 
-#ifdef CONFIG_MTD_NAND_HISFC400
-	return (chip->read_byte(mtd) & NAND_STATUS_WP) ? 1 : 0;
-#else
-	return (chip->read_byte(mtd) & NAND_STATUS_WP) ? 0 : 1;
+	retrun (chip->read_byte(mtd) & NAND_STATUS_WP) ? 1 : 0;
 #endif
+
+	result = (chip->read_byte(mtd) & NAND_STATUS_WP) ? 0 : 1;
+
+	/* restore chip state. */
+	chip->state = fl_state;
+
+	return result;
 }
 
 /**
@@ -838,8 +844,6 @@ static int nand_wait(struct mtd_info *mtd, struct nand_chip *chip)
 	 */
 	ndelay(100);
 
-	chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
-
 	if (in_interrupt() || oops_in_progress)
 		panic_nand_wait(mtd, chip, timeo);
 	else {
@@ -856,6 +860,9 @@ static int nand_wait(struct mtd_info *mtd, struct nand_chip *chip)
 		}
 	}
 	led_trigger_event(nand_led_trigger, LED_OFF);
+
+	/* read status register here to confirm chip is ready or not. */
+	chip->cmdfunc(mtd, NAND_CMD_STATUS, -1, -1);
 
 	status = (int)chip->read_byte(mtd);
 	/* This can happen if in case of timeout or buggy dev_ready */
@@ -3252,7 +3259,10 @@ static struct nand_flash_dev *nand_get_flash_type(struct mtd_info *mtd,
 	 * some nand, the id bytes signification is nonstandard 
 	 * with the linux kernel.
 	 */
-	type = hinfc_get_flash_type(mtd, chip, id_data, &busw);
+	if (get_spi_nand_flash_type)
+		type = get_spi_nand_flash_type(mtd, id_data);
+	else
+		type = hinfc_get_flash_type(mtd, chip, id_data, &busw);
 	if (type)
 		goto ident_done;
 

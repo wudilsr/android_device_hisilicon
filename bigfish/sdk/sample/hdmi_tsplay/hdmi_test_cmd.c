@@ -74,7 +74,13 @@ static HDMI_INPUT_PARAM_S Hdmi_V_Timing[] =
     {HI_UNF_ENC_FMT_3840X2160_24, "3840X2160_24",},    /* 4Kx2K_24      */
     {HI_UNF_ENC_FMT_3840X2160_25, "3840X2160_25",},    /* 4Kx2K_25      */
     {HI_UNF_ENC_FMT_3840X2160_30, "3840X2160_30",},    /* 4Kx2K_30      */
-    {HI_UNF_ENC_FMT_4096X2160_24, "4096X2160_24",},    /* 4Kx2K_30      */
+    {HI_UNF_ENC_FMT_3840X2160_50, "3840X2160_50",},    /* 4Kx2K_50      */
+    {HI_UNF_ENC_FMT_3840X2160_60, "3840X2160_60",},    /* 4Kx2K_60      */
+    {HI_UNF_ENC_FMT_4096X2160_24, "4096X2160_24",},    
+    {HI_UNF_ENC_FMT_4096X2160_25, "4096X2160_25",},    
+    {HI_UNF_ENC_FMT_4096X2160_30, "4096X2160_30",},    
+    {HI_UNF_ENC_FMT_4096X2160_50, "4096X2160_50",},     
+    {HI_UNF_ENC_FMT_4096X2160_60, "4096X2160_60",},      
 #if 0
     {HI_UNF_ENC_FMT_PAL,        "PAL",},           /* B D G H I PAL */
     {HI_UNF_ENC_FMT_PAL_N,      "PAL_N",},         /* (N)PAL        */
@@ -129,7 +135,8 @@ static HI_U8  Hdmi_AdjustString(HI_CHAR *ptr);
 static HI_U32 Hdmi_ParseArg(HI_U32 argc);
 static HI_U32 hdmi_hdmi_force(void);
 static HI_U32 hdmi_dvi_force(void);
-static HI_U32 hdmi_display_edid(void);
+static HI_U32 hdmi_force_read_edid(void);
+static HI_U32 hdmi_read_edid(void);
 static HI_U32 hdmi_out_enable(void);
 static HI_U32 hdmi_out_disable(void);
 HI_U32 hdmi_video_timing(HI_U32 u32TimingIndex);
@@ -158,7 +165,7 @@ static HI_U32 hdmi_ReOpenTest(HI_U32 loop);
 static HI_U32 hdmi_ReStartTest(HI_U32 loop);
 static HI_U32 hdmi_EDIDTest(HI_U32 loop);
 static HI_U32 hdmi_RegDebug(HI_U32 Debugflag);
-static HI_U32 hdmi_RandomSwitch(HI_U8 EnableFlag);
+static HI_U32 hdmi_RandomSwitch(HI_U32 loop);
 
 static HI_U32 hdmi_set_disp_3d(HI_UNF_DISP_3D_E en3D);
 
@@ -283,57 +290,59 @@ static HI_U32 Hdmi_ParseArg(HI_U32 argc)
     /* Parse HDMI input command */
     if ( (0 == strcmp("help", (char *)args[0])) || (0 == strcmp("h", (char *)args[0])) )
     {
-        printf("List all testtool command\n");
-        printf("help          list all command we provide\n");
-        printf("q             quit sample test\n");
-//      printf("hdmi_debug    Display all relative status\n");
-//        printf("play_stop     force to stop  A/V decoder\n");
-//        printf("play_start    force to start A/V decoder\n");
-        printf("hdmi_hdmi_force   force to hdmi output\n");
-        printf("hdmi_dvi_force    force to enter dvi output mode\n");
-        printf("hdmi_display_edid display current sink EDID message\n");
-//        printf("hdmi_out_enable   enable hdmi/dvi output\n");
-//        printf("hdmi_out_disable  disable hdmi/dvi output\n");
-        printf("hdmi_deepcolor    set video deepcolor mode\n");
-        printf("hdmi_xvycc        set video xvYCC output\n");
-        printf("hdmi_video_timing set video output timing format\n");
-        printf("hdmi_color_mode   set video color output(RGB/YCbCr)\n");
-        printf("hdmi_apectrate    set video apectrate only to 576P/I, 480P/I\n");
-        printf("hdmi_reversecolor set video color space 601<-->709\n");
-        printf("hdmi_rgbfullrange    set video color RGB fullrange\n");
-        printf("hdmi_ycbcrfullrange  set video color YCbCr fullrange\n");
-        printf("hdmi_attach_intf  attach hdmi to disp \n");
-        printf("hdmi_detach_intf  detach hdmi from disp \n");
+        printf("\t List all testtool command\n");
+        printf("\t help          list all command we provide\n");
+        printf("\t q             quit sample test\n");
+//      printf("\t hdmi_debug    Display all relative status\n");
+//      printf("\t play_stop     force to stop  A/V decoder\n");
+//      printf("\t play_start    force to start A/V decoder\n");
+        printf("\t hdmi_hdmi_force   force to hdmi output\n");
+        printf("\t hdmi_dvi_force    force to enter dvi output mode\n");
+        printf("\t hdmi_display_edid  display current sink EDID message\n");
+        printf("\t hdmi_edid_test 	   read sink EDID test\n");
+//      printf("\t hdmi_out_enable   enable hdmi/dvi output\n");
+//      printf("\t hdmi_out_disable  disable hdmi/dvi output\n");
+        printf("\t hdmi_deepcolor    set video deepcolor mode\n");
+        printf("\t hdmi_xvycc        set video xvYCC output\n");
+        printf("\t hdmi_video_timing set video output timing format\n");
+        printf("\t hdmi_color_mode   set video color output(RGB/YCbCr)\n");
+        printf("\t hdmi_apectrate    set video apectrate only to 576P/I, 480P/I\n");
+        printf("\t hdmi_reversecolor set video color space 601<-->709\n");
+        printf("\t hdmi_rgbfullrange    set video color RGB fullrange\n");
+        printf("\t hdmi_ycbcrfullrange  set video color YCbCr fullrange\n");
+        printf("\t hdmi_attach_intf  attach hdmi to disp \n");
+        printf("\t hdmi_detach_intf  detach hdmi from disp \n");
 
         
 #if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-        printf("hdmi_v_mute       set video output mute/unmute\n");
-        printf("hdmi_a_freq       set audio output frequence\n");
+        printf("\t hdmi_v_mute       set video output mute/unmute\n");
+        printf("\t hdmi_a_freq       set audio output frequence\n");
 
-        printf("hdmi_a_mute       set audio output mute/unmute\n");
-        printf("hdmi_a_downsample set audio output downsample\n");
+        printf("\t hdmi_a_mute       set audio output mute/unmute\n");
+        printf("\t hdmi_a_downsample set audio output downsample\n");
 #endif /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-        printf("hdmi_av_mute      set video&audio mute/unmute\n");
+        printf("\t hdmi_av_mute      set video&audio mute/unmute\n");
 #if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-        printf("hdmi_a_channel8  set audio multi channel(8) output\n");
-        printf("hdmi_a_passtru       set audio passThrough / No passThrough\n");
+        printf("\t hdmi_a_channel8  set audio multi channel(8) output\n");
+        printf("\t hdmi_a_passtru       set audio passThrough / No passThrough\n");
 #endif /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-        printf("hdmi_hdcp         set HDCP, to be define\n");
-        printf("hdmi_cecautoping  set CEC command, Autoping\n");
-        printf("cec_setcm         set CEC command\n");
-        printf("cec_getcm         get CEC command\n");
-        printf("cec_enable        enable cec.\n");
-        printf("cec_disable        enable cec.\n");
-        printf("hdmi_reset        set hdmi reset command\n");
-        printf("hdmi_reopen       set hdmi reopen command\n");
-        printf("hdmi_restart      set hdmi restart command\n");
-        printf("hdmi_edid_test    set hdmi edid test command\n");
-        printf("hdmi_reg          debug hdmi register command\n");
-        printf("hdmi_randomswitch set hdmi random switch\n");
-        printf("hdmi_set_disp_3d  Set disp 3d mode\n");
+        printf("\t hdmi_hdcp         set HDCP, to be define\n");
+        printf("\t hdmi_cecautoping  set CEC command, Autoping\n");
+        printf("\t cec_setcm         set CEC command\n");
+        printf("\t cec_getcm         get CEC command\n");
+        printf("\t cec_enable        enable cec.\n");
+        printf("\t cec_disable        enable cec.\n");
+        printf("\t hdmi_reset        set hdmi reset command\n");
+        printf("\t hdmi_reopen       set hdmi reopen command\n");
+        printf("\t hdmi_restart      set hdmi restart command\n");
+        printf("\t hdmi_edid_test    set hdmi edid test command\n");
+        printf("\t hdmi_reg          debug hdmi register command\n");
+        printf("\t hdmi_randomswitch set hdmi random switch\n");
+        printf("\t hdmi_set_disp_3d  Set disp 3d mode\n");
+        printf("\t audio_pass        aduio passthrough setting\n");
 #if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
-        printf("hdmi_picture_display display a picture\n");
-        printf("hdmi_picture_clear   clear a picure\n");
+        printf("\t hdmi_picture_display display a picture\n");
+        printf("\t hdmi_picture_clear   clear a picure\n");
 #endif /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
     }
     else if (0 == strcmp("play_stop", (char *)args[0]))
@@ -358,13 +367,16 @@ static HI_U32 Hdmi_ParseArg(HI_U32 argc)
         /* force to Output dvi signal */
         RetError = hdmi_dvi_force();
     }
-#if 1 
-    else if (0 == strcmp("hdmi_display_edid", (char *)args[0]))
+    else if (0 == strcmp("force_read_edid", (char *)args[0]))
     {
         /* display EDID from memory */
-        RetError = hdmi_display_edid();
+        RetError = hdmi_force_read_edid();
     }
-#endif 
+    else if (0 == strcmp("hdmi_display_edid", (char *)args[0]))
+    {
+        /* STB EDID Buffer read */
+        RetError = hdmi_read_edid();
+    }
     else if (0 == strcmp("hdmi_out_enable", (char *)args[0]))
     {
         /* enable hdmi output */
@@ -521,10 +533,39 @@ static HI_U32 Hdmi_ParseArg(HI_U32 argc)
         }
         else if(timing_index == 28)
         {
+            printf("3840X2160_50\n");
+            timing_index = HI_UNF_ENC_FMT_3840X2160_50;
+        }
+        else if(timing_index == 29)
+        {
+            printf("3840X2160_60\n");
+            timing_index = HI_UNF_ENC_FMT_3840X2160_60;
+        }
+        else if(timing_index == 30)
+        {
             printf("4096X2160_24\n");
             timing_index = HI_UNF_ENC_FMT_4096X2160_24;
         }
-        
+        else if(timing_index == 31)
+        {
+            printf("4096X2160_25\n");
+            timing_index = HI_UNF_ENC_FMT_4096X2160_25;
+        }
+        else if(timing_index == 32)
+        {
+            printf("4096X2160_30\n");
+            timing_index = HI_UNF_ENC_FMT_4096X2160_30;
+        }       
+        else if(timing_index == 33)
+        {
+            printf("4096X2160_50\n");
+            timing_index = HI_UNF_ENC_FMT_4096X2160_50;
+        }
+        else if(timing_index == 34)
+        {
+            printf("4096X2160_60\n");
+            timing_index = HI_UNF_ENC_FMT_4096X2160_60;
+        }  
         RetError = hdmi_video_timing(timing_index);
     }
     else if (0 == strcmp("hdmi_color_mode", (char *)args[0]))
@@ -935,8 +976,8 @@ static HI_U32 Hdmi_ParseArg(HI_U32 argc)
         /* HDMI Reset test */
         if (1 >= argc)
         {
-            printf("Usage:hdmi_RandomSwitch times\n");
-            printf("hdcpflag: 0:disable, 1:enable\n");
+            printf("Usage: hdmi random switch timing test!  loop = args[1] \n");
+            //printf("hdcpflag: 0:disable, 1:enable\n");
             return RetError;
         }
         RetError = hdmi_RandomSwitch(Hdmi_String_to_Integer(args[1]));
@@ -955,6 +996,30 @@ static HI_U32 Hdmi_ParseArg(HI_U32 argc)
             return RetError;
         }
         RetError = hdmi_set_disp_3d(Hdmi_String_to_Integer(args[1]));
+    }
+    else if (0 == strcmp("audio_pass", (char *)args[0]))
+   	{
+		if (1 >= argc)
+        {
+            printf("    Usage:audio_pass  0/1\n");
+            printf("        0 	: audio pass through off\n");
+			printf("        1 	: audio pass through on\n");
+            return RetError;
+        }
+		
+        if (*args[1]== '1')
+        {
+            RetError = HI_UNF_SND_SetHdmiMode(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_HDMI0, HI_UNF_SND_SPDIF_MODE_RAW);
+            //RetError = HI_MPI_AO_SND_SetSpdifMode(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_SPDIF0, HI_UNF_SND_SPDIF_MODE_RAW); 
+            //HI_UNF_SND_SetHdmiPassThrough(HI_UNF_SND_0, HI_TRUE);
+            printf("    hmdi pass-through on!\n");
+        }
+        else if (*args[1]== '0')
+        {
+            RetError = HI_UNF_SND_SetHdmiMode(HI_UNF_SND_0, HI_UNF_SND_OUTPUTPORT_HDMI0, HI_UNF_SND_SPDIF_MODE_LPCM); 
+            //RetError = HI_UNF_SND_SetHdmiPassThrough(HI_UNF_SND_0, HI_FALSE);
+            printf("    hmdi pass-through off!\n");
+        }
     }
 #if 0 /*--NO MODIFY : COMMENT BY CODINGPARTNER--*/
     else if (0 == strcmp("hdmi_picture_display", (char *)args[0]))
@@ -1016,20 +1081,20 @@ static HI_U32 hdmi_dvi_force(void)
     
     return RetError;
 }
-
-static HI_U32 hdmi_display_edid(void)
+static HI_U32 hdmi_force_read_edid(void)
 {
     HI_U32     u32Len = 0;
     HI_U32     RetError = HI_SUCCESS;
     HI_U32     index;
     HI_U8      u8Edid[512] = {0};
 
-    printf("hdmi_display_edid enter with HI_UNF_HDMI_Force_GetEDID \n");
+    printf(" enter with HI_UNF_HDMI_Force_GetEDID \n");
     RetError = HI_UNF_HDMI_Force_GetEDID(enTest_Hdmi_ID,u8Edid,&u32Len);
 
     if (RetError != HI_SUCCESS)
     {
         printf("can not get sink Attribute\n");
+        return RetError;
     }
 
     if(u32Len > 512)
@@ -1038,15 +1103,55 @@ static HI_U32 hdmi_display_edid(void)
         u32Len = 512;
     }
     
+    printf("\n-------------Force Read EDID Data  --------------\n\n");
     for (index = 0; index < u32Len; index ++)
     {
-        printf("%02x ", u8Edid[index]);
+        printf(" %02x", u8Edid[index]);
         if (0 == ((index + 1) % 16))
         {
             printf("\n");
         }
     }
-    printf("hdmi_display_edid end\n");
+    printf("\n-------------------- END ------------------------\n");
+    printf(" HI_UNF_HDMI_Force_GetEDID end \n");
+    
+    return RetError;
+}
+
+static HI_U32 hdmi_read_edid(void)
+{
+    HI_U32     u32Len = 0;
+    HI_U32     RetError = HI_SUCCESS;
+    HI_U32     index;
+    HI_U8      u8Edid[512] = {0};
+
+    printf("hdmi_redid enter with HI_UNF_HDMI_ReadEDID \n");
+    RetError = HI_UNF_HDMI_ReadEDID(u8Edid, &u32Len);
+
+    if (RetError != HI_SUCCESS)
+    {
+        printf("can not get EDID from memory!\n");
+        return RetError;
+    }
+
+    if(u32Len > 512)
+    {
+        printf("Edid Len %d is biger than 512! \n",u32Len);
+        u32Len = 512;
+    }
+
+    printf("\n------------------- EDID Data  -------------------\n\n");
+    for (index = 0; index < u32Len; index ++)
+    {
+        printf(" %02x", u8Edid[index]);
+        if (0 == ((index + 1) % 16))
+        {
+            printf("\n");
+        }
+    }
+    printf("\n---------------------- END ----------------------\n");
+    
+    printf("hdmi_read_edid end\n");
     
     return RetError;
 }
@@ -1601,7 +1706,6 @@ static HI_U32 hdmi_reversecolor(HI_U32 u32reversecolorIndex)
 HI_U32 hdmi_deepcolor(HI_U32 u32DeepColorFlag)
 {
     HI_U32 RetError = HI_SUCCESS;
-    HI_UNF_HDMI_ATTR_S            attr;
     HI_UNF_EDID_BASE_INFO_S       sinkCap;
 
     RetError = HI_UNF_HDMI_GetSinkCapability(enTest_Hdmi_ID, &sinkCap);
@@ -1637,14 +1741,15 @@ HI_U32 hdmi_deepcolor(HI_U32 u32DeepColorFlag)
     }
     
     printf("hdmi_deepcolor u32DeepColorFlag:%d\n", u32DeepColorFlag);
-    HI_UNF_HDMI_SetAVMute(enTest_Hdmi_ID, HI_TRUE);
+    HI_UNF_HDMI_Stop(enTest_Hdmi_ID);
     HI_UNF_HDMI_SetDeepColor(enTest_Hdmi_ID, u32DeepColorFlag);    
-
+/*
     HI_UNF_HDMI_GetAttr(enTest_Hdmi_ID, &attr);
     attr.enDeepColorMode = u32DeepColorFlag;
     HI_UNF_HDMI_SetAttr(enTest_Hdmi_ID, &attr);
-    HI_UNF_HDMI_SetAVMute(enTest_Hdmi_ID, HI_FALSE);
-        
+*/ 
+    HI_UNF_HDMI_Start(enTest_Hdmi_ID);
+       
     /* We should fill General Control packet, hdmi chip do it in driver level */
     return RetError;
 }
@@ -2063,9 +2168,9 @@ HI_U32 hdmi_hdcp(HI_U32 hdcpflag)
         attr.bHDCPEnable= HI_FALSE;
     }
     
-    //HI_UNF_HDMI_SetAVMute(enTest_Hdmi_ID, HI_TRUE);
+   // HI_UNF_HDMI_Stop(enTest_Hdmi_ID);
     RetError = HI_UNF_HDMI_SetAttr(enTest_Hdmi_ID, &attr);
-    //HI_UNF_HDMI_SetAVMute(enTest_Hdmi_ID, HI_FALSE);
+  //  HI_UNF_HDMI_Start(enTest_Hdmi_ID);
    
     
     return RetError;
@@ -2343,87 +2448,98 @@ static HI_U32 SI_DDC_Adjust(void)
 
 static HI_U32 hdmi_EDIDTest(HI_U32 loop)
 {
-    HI_U32 u32BaseAddr, value;
-    HI_U32 Timeout, index;
-    
+    HI_U32     u32Len = 0;
+    HI_U32     u32LenForce = 0;
+    HI_U32     RetError = HI_SUCCESS;
+    HI_U32     index;
+    HI_U8      u8Edid[512] = {0};
+    HI_U8      u8EdidForce[512] = {0};
+    HI_U8      *pu8NewData = HI_NULL ;
+    HI_U8      *pu8OldData = HI_NULL ;
+
     if (loop <= 0)
     {
-        loop = 10;
+        loop = 1;
     }
     else if(loop >= 1000)
     {
         loop = 1000;
     }
+
+    printf(">> enter with hdmi_EDIDTest \n");
+    RetError = HI_UNF_HDMI_ReadEDID(u8Edid, &u32Len);
+
+    if (RetError != HI_SUCCESS)
+    {
+        printf("can not get EDID from memory!\n");
+    }
+
+    if(u32Len > 512)
+    {
+        printf("Edid Len %d is biger than 512! \n",u32Len);
+        u32Len = 512;
+    }
+
+    printf("\n---------------- EDID[%3d] Data  ----------------\n\n", u32Len);
+    for (index = 0; index < u32Len; index ++)
+    {
+        printf(" %02x", u8Edid[index]);
+        if (0 == ((index + 1) % 16))
+        {
+            printf("\n");
+        }
+    }
+    printf("\n---------------------- END ----------------------\n");
     
-    u32BaseAddr = 0xf8ce03c8; //0x7a:0xf2:DDC I2C Target Slave Address Register
-    HI_SYS_ReadRegister(u32BaseAddr, &value);
-    printf("DDC Status(0x7a:0xf2):0x%x\n", value);
-        
-    printf("Begin to do EDID test\n");
-    SI_DDC_Adjust();
+    usleep(100*1000);
+    pu8NewData = u8EdidForce;
+    pu8OldData = u8Edid;
     
     while(loop --)
     {
-        usleep(200*1000);
-        printf("continue to loop:%d\n", loop);
-        
-        /*the addr of edid is 0xa0*/
-        u32BaseAddr = 0xf8ce03b4; //0x7a:0xed:DDC I2C Target Slave Address Register
-        HI_SYS_WriteRegister(0xf8ce03b4, 0xa0);
-        /* get the data of seg 0(256)*/
-        //Set DDC Segment Address:0
-        u32BaseAddr = 0xf8ce03b8; //0x7a:0xee:DDC I2C Target Slave Address Register
-        HI_SYS_WriteRegister(u32BaseAddr, 0x0);
-        //Set DDC offset, try to Read EDID version, offset 0x12, 0x13.
-        u32BaseAddr = 0xf8ce03bc; //0x7a:0xef:DDC I2C Target Slave Address Register
-        HI_SYS_WriteRegister(u32BaseAddr, 0x12);
-        
-        //The total number of bytes to be read from the slave.
-        u32BaseAddr = 0xf8ce03c0; //0x7a:0xf0:DDC I2C Target Slave Address Register
-        HI_SYS_WriteRegister(u32BaseAddr, 0x08);
-        //HI_SYS_WriteRegister(u32BaseAddr, 0x01);
-        //clear DDC fifo, 0x09:0b1001 = Clear FIFO
-        u32BaseAddr = 0xf8ce03cc; //0x7a:0xf3:DDC I2C Command Register
-        HI_SYS_WriteRegister(u32BaseAddr, 0x09);
-        /*begin the read operation of ddc*/
-        //start read edid, 0x02:0b0010 = Sequential Read with no ACK on last byte
-        u32BaseAddr = 0xf8ce03cc; //0x7a:0xf3:DDC I2C Command Register
-        HI_SYS_WriteRegister(u32BaseAddr, 0x02);
-        
-        usleep(10*1000);
-        
-        Timeout = 100;
-        while((Timeout) ++ < 10)
+        RetError = HI_UNF_HDMI_Force_GetEDID(enTest_Hdmi_ID, pu8NewData, &u32LenForce);
+
+        if (RetError != HI_SUCCESS)
         {
-            //read DDC status!
-            u32BaseAddr = 0xf8ce03c8; //0x7a:0xf2:DDC I2C Target Slave Address Register
+            printf("----EDID [can not get],");
+        }
+        else if((u32LenForce != u32Len)||(memcmp(pu8NewData, pu8OldData, u32LenForce))) 
+        {
+        
+            printf("------Buffer EDID[%d] != Force Read EDID[%d]------\n", u32Len, u32LenForce);
             
-            HI_SYS_ReadRegister(u32BaseAddr, &value);
-            if((value & 0x10) == 0)
+            for (index = 0; index < u32LenForce; index ++)
             {
-                break;
+                printf(" %02x", pu8NewData[index]);
+                if (0 == ((index + 1) % 16))
+                {
+                    printf("\n");
+                }
             }
-            usleep(10*1000);
+            printf("----EDID [change],");
         }
-        if(Timeout == 0)
+        else
         {
-            printf("*****DDC status:0x%x busy!!!", value);
-            return 0;
+            printf("----EDID [no change],");
         }
         
-        u32BaseAddr = 0xf8ce03d4; //0x7a:0xf2:DDC I2C Target Slave Address Register
-        HI_SYS_ReadRegister(u32BaseAddr, &value);
-        printf("we will read %d bytes\n", value);
-        for(index = 0; index < value; index ++)
+        u32Len = u32LenForce;
+        if(loop%2)
         {
-            HI_U32 data;
-            u32BaseAddr = 0xf8ce03d0; //0x7a:0xf2:DDC I2C Target Slave Address Register
-            HI_SYS_ReadRegister(u32BaseAddr, &data); 
-            printf("%02d:0x%x\n", index, data);           
+            pu8NewData = u8Edid;
+            pu8OldData = u8EdidForce;
         }
-        printf("Read Succeeed!!!!");
-        printf("\n\n");
+        else
+        {
+            pu8NewData = u8EdidForce;
+            pu8OldData = u8Edid;
+        }
+        
+        usleep(200*1000);
+        printf("  continue to loop:%d\n", loop);
+            
     }
+    printf("hdmi_redid end<<\n");
     
     return 0;
 }
@@ -2456,18 +2572,17 @@ HI_U32 HDMI_Test_CMD(HI_CHAR * u8String)
     
 }
     
-static HI_U32 hdmi_RandomSwitch(HI_U8 EnableFlag)
+static HI_U32 hdmi_RandomSwitch(HI_U32 loop)
 {
     HI_U32 RetError = HI_SUCCESS;
     HI_U32 CurrentIndex;
     struct timeval Time0;
-    HI_U32 index = 1;
 
     gettimeofday(&Time0, NULL);
     srand(Time0.tv_usec);
 #if 1
     //while(index)// ++  < 10)
-    while(index ++  < 10)
+    while(loop--)
     {
         CurrentIndex = rand();        
         CurrentIndex %= (HI_UNF_ENC_FMT_NTSC + 1);

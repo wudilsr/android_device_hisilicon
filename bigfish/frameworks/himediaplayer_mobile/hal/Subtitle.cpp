@@ -15,6 +15,7 @@
 #include "SkRect.h"
 #include <gui/Surface.h>
 #include "HiMediaDefine.h"
+#include "DisplayClient.h"
 #include "hidisplay.h"
 #include FT_SYNTHESIS_H
 #include FT_STROKER_H
@@ -2660,6 +2661,7 @@ int SubtitleFontManager::RenderGfx()
             InSize = bwidth * bheight;
         }
 
+/*
         char resolution[PROP_VALUE_MAX];
         int resolutions;
         property_get("persist.sys.resolution", resolution, "720");
@@ -2681,7 +2683,17 @@ int SubtitleFontManager::RenderGfx()
                 LOGV("resolutions=%d,x=%d,y=%d",resolutions,x,y);
             }
         }
+*/
 
+        int w = 0;
+        int h = 0;
+        DisplayClient DspClient;
+        DspClient.GetVirtScreenSize(&w, &h);
+
+        float ratioAdjust = (float)w/(float)mWinwidth;
+        ratio *= ratioAdjust;
+        y *= ratioAdjust;
+        x *= ratioAdjust;
 
         if (0 == mSubFramePackType)
         {
@@ -2770,15 +2782,9 @@ int SubtitleFontManager::RenderGfx()
             int mSurfaceWidth = 0;
             int mSurfaceHeight = 0;
 
-            property_get("persist.sys.resolution", buffer, "720");
-            resolution = atoi(buffer);
-            if(resolution == 1080) {
-                mSurfaceWidth = 1920;
-                mSurfaceHeight = 1080;
-            } else {
-                mSurfaceWidth = 1280;
-                mSurfaceHeight = 720;
-            }
+            DisplayClient DspClient;
+            DspClient.GetVirtScreenSize(&mSurfaceWidth, &mSurfaceHeight);
+
             unsigned char* pBMP = NULL;
             pBMP = (unsigned char*)malloc(mSurfaceWidth*mSurfaceHeight*4);
 

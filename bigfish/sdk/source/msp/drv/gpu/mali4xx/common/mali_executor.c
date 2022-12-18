@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 ARM Limited. All rights reserved.
+ * Copyright (C) 2012-2015 ARM Limited. All rights reserved.
  * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
@@ -938,11 +938,20 @@ void mali_executor_group_power_down(struct mali_group *groups[],
 	MALI_DEBUG_PRINT(3, ("Executor: powering down %u groups\n", num_groups));
 
 	for (i = 0; i < num_groups; i++) {
-		/* Groups must be either disabled or inactive */
+		/* Groups must be either disabled or inactive. while for virtual group,
+		 * it maybe in empty state, because when we meet pm_runtime_suspend,
+		 * virtual group could be powered off, and before we acquire mali_executor_lock,
+		 * we must release mali_pm_state_lock, if there is a new physical job was queued,
+		 * all of physical groups in virtual group could be pulled out, so we only can
+		 * powered down an empty virtual group. Those physical groups will be powered
+		 * up in following pm_runtime_resume callback function.
+		 */
 		MALI_DEBUG_ASSERT(mali_executor_group_is_in_state(groups[i],
 				  EXEC_STATE_DISABLED) ||
 				  mali_executor_group_is_in_state(groups[i],
-						  EXEC_STATE_INACTIVE));
+						  EXEC_STATE_INACTIVE) ||
+				  mali_executor_group_is_in_state(groups[i],
+						  EXEC_STATE_EMPTY));
 
 		MALI_DEBUG_PRINT(3, ("Executor: powering down group %s\n",
 				     mali_group_core_description(groups[i])));
@@ -993,7 +1002,7 @@ void mali_executor_abort_session(struct mali_session_data *session)
 			struct mali_pp_job *pp_job = NULL;
 
 			mali_executor_complete_group(virtual_group, MALI_FALSE,
-						     MALI_FALSE, NULL, &pp_job);
+						     MALI_TRUE, NULL, &pp_job);
 
 			if (NULL != pp_job) {
 				/* PP job completed, make sure it is freed */
@@ -1009,7 +1018,7 @@ void mali_executor_abort_session(struct mali_session_data *session)
 			struct mali_pp_job *pp_job = NULL;
 
 			mali_executor_complete_group(group, MALI_FALSE,
-						     MALI_FALSE, NULL, &pp_job);
+						     MALI_TRUE, NULL, &pp_job);
 
 			if (NULL != pp_job) {
 				/* PP job completed, make sure it is freed */
@@ -1399,7 +1408,6 @@ static mali_bool mali_executor_physical_rejoin_virtual(struct mali_group *group)
 	MALI_DEBUG_ASSERT(MALI_FALSE == mali_group_is_virtual(group));
 
 	/* Make sure group and virtual group have same status */
-
 	if (MALI_GROUP_STATE_INACTIVE == mali_group_get_state(virtual_group)) {
 		if (mali_group_deactivate(group)) {
 			trigger_pm_update = MALI_TRUE;
@@ -1455,8 +1463,8 @@ static mali_bool mali_executor_virtual_group_is_usable(void)
 {
 #if defined(CONFIG_MALI450)
 	MALI_DEBUG_ASSERT_EXECUTOR_LOCK_HELD();
-	return (EXEC_STATE_INACTIVE == virtual_group_state ||
-		EXEC_STATE_IDLE == virtual_group_state) ?
+	return ((EXEC_STATE_INACTIVE == virtual_group_state ||
+		EXEC_STATE_IDLE == virtual_group_state)&&(virtual_group->state != MALI_GROUP_STATE_ACTIVATION_PENDING)) ?
 	       MALI_TRUE : MALI_FALSE;
 #else
 	return MALI_FALSE;
@@ -1657,7 +1665,7 @@ static void mali_executor_schedule(void)
 
 				MALI_DEBUG_ASSERT_POINTER(job);
 				MALI_DEBUG_ASSERT(sub_job <= MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS);
-				
+
 				/* Put job + group on list of jobs to start later on */
 
 				groups_to_start[num_jobs_to_start] = group;
@@ -1684,9 +1692,9 @@ static void mali_executor_schedule(void)
 
 	/* 3. Deactivate idle pp group , must put deactive here before active vitual group
 	 *    for cover case first only has physical job in normal queue but group inactive,
-	 *    so delay the job start go to active group, when group activated, 
+	 *    so delay the job start go to active group, when group activated,
 	 *    call scheduler again, but now if we get high queue virtual job,
-	 *    we will do nothing in schedule cause executor schedule stop 
+	 *    we will do nothing in schedule cause executor schedule stop
 	 */
 
 	if (MALI_TRUE == mali_executor_deactivate_list_idle(deactivate_idle_group
@@ -1707,7 +1715,7 @@ static void mali_executor_schedule(void)
 			trigger_pm_update = MALI_TRUE;
 		}
 	}
-	
+
 	/* 5. To power up group asap, we trigger pm update here. */
 
 	if (MALI_TRUE == trigger_pm_update) {
@@ -1865,7 +1873,7 @@ static struct mali_pp_job *mali_executor_complete_pp(struct mali_group *group,
 	mali_pp_job_mark_sub_job_completed(job, success);
 	job_is_done = mali_pp_job_is_complete(job);
 
-	if (job_is_done && release_jobs) {
+	if (job_is_done && release_jobs) { 
 		/* This will potentially queue more GP and PP jobs */
 		mali_timeline_tracker_release(&job->tracker);
 	}
@@ -2286,7 +2294,6 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 {
 	int current_core_scaling_mask[MALI_MAX_NUMBER_OF_DOMAINS] = { 0 };
 	int target_core_scaling_mask[MALI_MAX_NUMBER_OF_DOMAINS] = { 0 };
-	mali_bool update_global_core_scaling_mask = MALI_FALSE;
 	int i;
 
 	MALI_DEBUG_ASSERT(0 < target_core_nr);
@@ -2349,7 +2356,6 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 			struct mali_pm_domain *domain;
 
 			if (num_physical_pp_cores_enabled >= target_core_nr) {
-				update_global_core_scaling_mask = MALI_TRUE;
 				break;
 			}
 
@@ -2379,11 +2385,9 @@ static void mali_executor_core_scale(unsigned int target_core_nr)
 	 * Here, we may still have some pp cores not been enabled because of some
 	 * pp cores need to be disabled are still in working state.
 	 */
-	if (update_global_core_scaling_mask) {
-		for (i = 0; i < MALI_MAX_NUMBER_OF_DOMAINS; i++) {
-			if (0 < target_core_scaling_mask[i]) {
-				core_scaling_delay_up_mask[i] = target_core_scaling_mask[i];
-			}
+	for (i = 0; i < MALI_MAX_NUMBER_OF_DOMAINS; i++) {
+		if (0 < target_core_scaling_mask[i]) {
+			core_scaling_delay_up_mask[i] = target_core_scaling_mask[i];
 		}
 	}
 

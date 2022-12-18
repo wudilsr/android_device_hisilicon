@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2md7VfsktL+PCFs8hR/52MGFH7Uee78FR1tbgMiu9SdB3s1uiE8Y59g2blFHBd/XxbjtP
-Ouw8WGjEzhCedIbCmI+yMb7xe9OEbPMMhHSlKhWuE8MnRwnCAd3dbHMmmykMzA==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxcATGKl5Z1fsoKqM5OeEcMx+v9piclgV5S9t9nZhdQPTVh9QDSpyZpV18o8diriMbdhT
+dzEu0u2+vPdOV+pMPRRGn1ND6YJBjpunB8WFwWEso6J6QpHs3DeIV9XlB/A+Cg==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -747,7 +761,7 @@ HI_S32 VPSS_IMG_Regist(VPSS_IMAGELIST_INFO_S *pstImgInfo,
 HI_S32 VPSS_IMG_Init(VPSS_IMAGELIST_INFO_S *pstImgInfo)
 {
     VPSS_IMAGELIST_INFO_S *pstImageList;
-    VPSS_IMAGE_NODE_S *pstImageNode;
+    VPSS_IMAGE_NODE_S *pstImageNode[VPSS_SOURCE_MAX_NUMB];
     HI_U32 u32Count;
     
     pstImageList = pstImgInfo;
@@ -770,16 +784,16 @@ HI_S32 VPSS_IMG_Init(VPSS_IMAGELIST_INFO_S *pstImgInfo)
     u32Count = 0;
     while(u32Count < VPSS_SOURCE_MAX_NUMB)
     {
-        pstImageNode = (VPSS_IMAGE_NODE_S*)VPSS_VMALLOC(sizeof(VPSS_IMAGE_NODE_S));
-        if (pstImageNode == HI_NULL)
+        pstImageNode[u32Count] = (VPSS_IMAGE_NODE_S*)VPSS_VMALLOC(sizeof(VPSS_IMAGE_NODE_S));
+        if (pstImageNode[u32Count] == HI_NULL)
         {
             VPSS_FATAL("vmalloc imageNode failed\n");
             goto V1_VMALLOC_ERROR;
         }
-        memset(&(pstImageNode->stSrcImage), 0, 
+        memset(&(pstImageNode[u32Count]->stSrcImage), 0, 
                 sizeof(HI_DRV_VIDEO_FRAME_S));
         
-        list_add_tail(&(pstImageNode->node), 
+        list_add_tail(&(pstImageNode[u32Count]->node), 
                         &(pstImageList->stEmptyImageList));
         u32Count++;
     }

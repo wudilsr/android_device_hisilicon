@@ -178,7 +178,7 @@ typedef enum hiDRV_PIX_FORMAT_E
 
     /****** HISI  contiguoustwo planes -- one Y, one Cr + Cb interleaved ******/
     HI_DRV_PIX_FMT_NV08_CMP,     /*08   Y/CbCr 4:0:0 compressed @*/
-    HI_DRV_PIX_FMT_NV80_CMP,     /*08   Y/CrCb 4:0:0 compressed @*/ 	
+    HI_DRV_PIX_FMT_NV80_CMP,     /*08   Y/CrCb 4:0:0 compressed @*/		
     HI_DRV_PIX_FMT_NV12_CMP ,    /* 12  Y/CbCr 4:2:0 compressed */
     HI_DRV_PIX_FMT_NV21_CMP ,    /* 12  Y/CrCb 4:2:0 compressed */
     HI_DRV_PIX_FMT_NV16_CMP ,    /* 16  Y/CbCr 4:2:2 compressed */
@@ -501,9 +501,11 @@ typedef struct hiDRV_VIDEO_FRAME_S
 
     HI_BOOL bIsFirstIFrame;
     HI_BOOL bStillFrame;
+	HI_BOOL bSecure;
 
     HI_DRV_VIDEO_TB_ADJUST_E    enTBAdjust;
 	HI_RECT_S                stLbxInfo;
+    HI_U32 u32StreamVirtAddr;
 
 		
 		/***********below should be deleted************/
@@ -523,6 +525,7 @@ typedef struct hiDRV_VIDEO_FRAME_S
 
     //HI_DRV_FIELD_MODE_E  eOriginField;
     //HI_RECT_S stOriginImageRect;  /* orgin image rectagle without letterbox */
+
 }HI_DRV_VIDEO_FRAME_S;
 
 /* video frame or field */
@@ -616,6 +619,7 @@ typedef struct hiDRV_WIN_PRIV_INFO_S
 	HI_DRV_ROT_ANGLE_E enRotation;
     HI_BOOL bVertFlip;
     HI_BOOL bHoriFlip;
+	HI_BOOL bPassThrough;
     
     /*Display MaxRate*/
     HI_U32 u32MaxRate;     /* in 1/100 Hz', if 0, full rate */

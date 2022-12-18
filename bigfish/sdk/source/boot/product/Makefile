@@ -20,16 +20,18 @@ gccincdir := $(shell $(CC) -print-file-name=include)
 objects := adp logo driver
 
 ifeq ($(CFG_HI_LOADER_SUPPORT),y)
-ifneq ($(CFG_HI_MINIBOOT_SUPPORT),y)
 objects += loader
-endif
 endif
 
 objects_clean       := $(addsuffix _clean,$(objects))
 objects_install     := $(addsuffix _install,$(objects))
 objects_uninstall   := $(addsuffix _uninstall,$(objects))
 
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
 PRODUCT_DIR := $(SDK_DIR)/source/boot/product
+endif
 
 ifeq ($(CFG_HI_MINIBOOT_SUPPORT),y)
 CFLAGS  :=  -g -Os -fno-strict-aliasing -fno-common -ffixed-r8 \
@@ -104,6 +106,10 @@ ifeq ($(CFG_HI_PM_POWERUP_MODE1_SUPPORT), y)
 CFLAGS += -DHI_PM_POWERUP_MODE1_SUPPORT
 endif
 
+ifeq ($(CFG_HI_AVS_SUPPORT), y)
+CFLAGS += -DHI_AVS_SUPPORT
+endif
+
 LIBS := libproduct.a
 SUBLIBS := $(foreach sub,$(objects),$(sub)/lib$(sub).a)
 MAINLIB := libmain.a
@@ -129,11 +135,6 @@ clean: $(objects_clean)
 install: $(objects_install)
 
 uninstall: $(objects_uninstall)
-
-ifneq ($(O),)
-PRODUCT_DIR := $(O)/product
-CFLAGS += -I$(PRODUCT_DIR)/driver/include_inc
-endif
 
 $(MAINLIB): $(MAINOBJ)
 	$(AT)$(AR) -rc $@ $^

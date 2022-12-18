@@ -1,14 +1,31 @@
-//#include "hi_common.h"
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           :hi_api_tde.c
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         :
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y0081162                 Created file        
+******************************************************************************/
+
+/*********************************add include here******************************/
 #include "tde_osictl.h"
 
 #include "hi_tde_api.h"
 #include "tde_define.h"
-#ifdef __cplusplus
-#if __cplusplus
-extern "C" {
-#endif  /* __cplusplus */
-#endif  /* __cplusplus */
 
+
+/***************************** Macro Definition ******************************/
 #define TDE_CHECK_FD() \
     do {                                         \
         if (0 == g_s32TDeRef)                    \
@@ -17,7 +34,14 @@ extern "C" {
         }                                        \
     } while (0)
 
+/*************************** Structure Definition ****************************/
+
+/********************** Global Variable declaration **************************/
+
 static HI_S32 g_s32TDeRef = 0;
+
+/******************************* API declaration *****************************/
+
 extern int  tde_osr_init(void);
 extern void tde_osr_deinit(void);
 
@@ -44,7 +68,6 @@ HI_S32 HI_TDE2_Open(HI_VOID)
 
 HI_VOID HI_TDE2_Close(HI_VOID)
 {
-#if 1
     if (g_s32TDeRef == 0)
     {
         return;
@@ -59,7 +82,7 @@ HI_VOID HI_TDE2_Close(HI_VOID)
 
     /* 去初始化内存、寄存器、状态机 */
     tde_osr_deinit();
-#endif
+
     return;
 }
 
@@ -125,7 +148,6 @@ HI_S32   HI_TDE2_EndJob(TDE_HANDLE s32Handle, HI_BOOL bSync, HI_BOOL bBlock, HI_
     return TdeOsiEndJob(s32Handle, bBlock, u32TimeOut, bSync, HI_NULL, HI_NULL);
 }
 
-
 /*****************************************************************************
 * Function:      HI_TDE2_MbBlit
 * Description:   宏块处理接口
@@ -153,24 +175,16 @@ HI_S32      HI_TDE2_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  
 }
 
 
-
-
 HI_S32 HI_TDE2_SetAlphaThresholdValue(HI_U8 u8ThresholdValue)
 {
     TDE_CHECK_FD();
 
     return TdeOsiSetAlphaThresholdValue(u8ThresholdValue);
 }
+
 HI_S32 HI_TDE2_SetAlphaThresholdState(HI_BOOL bEnAlphaThreshold)
 {
     TDE_CHECK_FD();
 
     return TdeOsiSetAlphaThresholdState(bEnAlphaThreshold);
 }
-
-#ifdef __cplusplus
-#if __cplusplus
-}
-#endif  /* __cplusplus */
-#endif  /* __cplusplus */
-

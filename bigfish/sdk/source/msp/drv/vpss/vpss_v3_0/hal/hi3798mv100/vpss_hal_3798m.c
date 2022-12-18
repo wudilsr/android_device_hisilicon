@@ -1,10 +1,14 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mcDeKLSqkFi+oVjmazvYwNqQ54XDJ8U6iBRI3pzywzm2anQSs5REp40sZPOMc2bFp4IH
-iAwDF3dmvpHtgUhBj30v1N1mbm4y5OJtEHSmv0JIg+vmFUjitUXZmX8xInxNMQ==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxd7u+UhRqklAcQVLLrgqgAK0K2lzPoY+Gih7827D96OOFCz22fnz0+E7g+oCN97JdMXR
+yiS1YM/nDiYxQXALRvvVNkOU4VRvK+z2k0r9a0LkTTAet8mpcODDAuGRhu2uLA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
 
 
 
@@ -103,69 +107,6 @@ ZME_FORMAT_E VPSS_HAL_GetZmeFmt(HI_DRV_PIX_FORMAT_E enFormat)
     }
 
     return enZmeFmt;
-}
-
-HI_S32 VPSS_HAL_GetZmeCoef(VPSS_IP_E enIP,VPSS_HAL_ZME_PARAM_S *pstZmeParam, 
-    HI_U32 *pu32YH, HI_U32 *pu32CH, HI_U32 *pu32YV, HI_U32 *pu32CV)
-{
-    HI_U32 i;
-    HI_S32 s32Ret;
-    HI_PQ_SCALER_S stScalerH, stScalerV;
-
-    /* 找一个可用的系数地址 */
-    for (i=0; i<VPSS_ZME_COEF_NUM; i++)
-    {
-        if (HI_FALSE == stHalCtx[enIP].abUsed[i])
-        {
-            stHalCtx[enIP].abUsed[i] = HI_TRUE;
-            break;
-        }
-    }
-
-    if(i>=VPSS_ZME_COEF_NUM)
-    {
-        VPSS_FATAL("No Enough Zme Coef Phy\n");
-        return HI_FAILURE;
-    }
-
-    stScalerH.bHorizontal = HI_TRUE;
-	stScalerH.bYUV        = pstZmeParam->bYUV;
-    stScalerH.u32YRatio   = pstZmeParam->u32YHRatio;
-    stScalerH.u32CRatio   = pstZmeParam->u32CHRatio;
-    stScalerH.enInFmt     = pstZmeParam->enInFmt;
-    stScalerH.enOutFmt    = pstZmeParam->enOutFmt;
-
-    s32Ret = DRV_PQ_GetVpssScalerCoef(&stScalerH, 
-                (HI_VOID *)stHalCtx[enIP].au32ZmeCoefVir[i][0],
-                (HI_VOID*)stHalCtx[enIP].au32ZmeCoefVir[i][1]);
-    if(s32Ret != HI_SUCCESS)
-    {
-        VPSS_FATAL("H Coef Get Failed\n");
-        return HI_FAILURE;
-    }
-
-    stScalerV.bHorizontal = HI_FALSE;
-	stScalerV.bYUV        = pstZmeParam->bYUV;
-    stScalerV.u32YRatio   = pstZmeParam->u32YVRatio;
-    stScalerV.u32CRatio   = pstZmeParam->u32CVRatio;
-    stScalerV.enInFmt     = pstZmeParam->enInFmt;
-    stScalerV.enOutFmt    = pstZmeParam->enOutFmt;
-
-    s32Ret = DRV_PQ_GetVpssScalerCoef(&stScalerV, 
-                (HI_VOID *)stHalCtx[enIP].au32ZmeCoefVir[i][2],
-                (HI_VOID*)stHalCtx[enIP].au32ZmeCoefVir[i][3]);
-    if(s32Ret != HI_SUCCESS)
-    {
-        VPSS_FATAL("V Coef Get Failed\n");
-        return HI_FAILURE;
-    }
-
-    *pu32YH = stHalCtx[enIP].au32ZmeCoefPhy[i][0];
-    *pu32CH = stHalCtx[enIP].au32ZmeCoefPhy[i][1];
-    *pu32YV = stHalCtx[enIP].au32ZmeCoefPhy[i][2];
-    *pu32CV = stHalCtx[enIP].au32ZmeCoefPhy[i][3];
-
-    return HI_SUCCESS;
 }
 
 HI_S32 VPSS_HAL_SetDnrCfg(VPSS_IP_E enIP,HI_U32 u32AppVir, 
@@ -588,16 +529,126 @@ HI_S32 VPSS_HAL_SetPortCfg(VPSS_IP_E enIP,HI_U32 u32AppVir,
 					enPort,
 					u32Count);
 
-			/* LBX */
-			VPSS_REG_SetLBABg(u32AppVir, enPort, 0x108080, 0x7f);
-			VPSS_REG_SetLBAVidPos(u32AppVir, enPort, 
-					u32VidX,
-					u32VidY,
-					u32VidH,
-					u32VidW);
+			/*CROP*/
+			{
+				HI_U32 u32CropX;	
+				HI_U32 u32CropY;	
+				HI_U32 u32CropWidth;	
+				HI_U32 u32CropHeight;	
 
-			VPSS_REG_SetLBADispPos(u32AppVir, enPort, 0, 0, 
-					pstOutFrm->u32Height, pstOutFrm->u32Width);
+				if (pstHalInfo->enNodeType == VPSS_HAL_NODE_UHD_SPLIT_L)
+				{
+					u32CropX = pstHalPort->stOutCropRect.s32X;
+					u32CropY = pstHalPort->stOutCropRect.s32Y;
+					u32CropWidth = pstHalPort->stOutCropRect.s32Width/2;
+					u32CropHeight = pstHalPort->stOutCropRect.s32Height;
+				}
+				else if (pstHalInfo->enNodeType == VPSS_HAL_NODE_UHD_SPLIT_R)
+				{
+					u32CropX = 0;
+					u32CropY = pstHalPort->stOutCropRect.s32Y;
+					u32CropWidth = pstHalPort->stOutCropRect.s32Width/2;
+					u32CropHeight = pstHalPort->stOutCropRect.s32Height;
+				}
+				else
+				{
+					u32CropX = pstHalPort->stOutCropRect.s32X;
+					u32CropY = pstHalPort->stOutCropRect.s32Y;
+					u32CropWidth = pstHalPort->stOutCropRect.s32Width;
+					u32CropHeight = pstHalPort->stOutCropRect.s32Height;
+				}
+
+#if 0
+				VPSS_ERROR("u32CropX %d Y %d W %d H %d\n",u32CropX,u32CropY,u32CropWidth,u32CropHeight);
+#endif
+				VPSS_REG_SetPortCropPos(u32AppVir,enPort,
+						u32CropY,
+						u32CropX);
+				VPSS_REG_SetPortCropSize(u32AppVir,enPort,
+						u32CropHeight,
+						u32CropWidth); 
+			}
+
+			VPSS_REG_SetPortCropEn(u32AppVir,enPort,HI_TRUE);
+			/* LBX */
+			if (pstHalPort->stOutCropRect.s32X == 0 
+					&& pstHalPort->stOutCropRect.s32Y == 0)
+			{
+				VPSS_REG_SetLBABg(u32AppVir, enPort, 0x108080, 0x7f);
+				VPSS_REG_SetLBAVidPos(u32AppVir, enPort, 
+						u32VidX,
+						u32VidY,
+						u32VidH,
+						u32VidW);
+
+				VPSS_REG_SetLBADispPos(u32AppVir, enPort, 0, 0, 
+						pstOutFrm->u32Height, pstOutFrm->u32Width);
+			}
+			else
+			{
+				HI_U32 u32LbxDispX;
+				HI_U32 u32LbxDispY;
+				HI_U32 u32LbxDispW;
+				HI_U32 u32LbxDispH;
+
+				HI_U32 u32LbxVidX;
+				HI_U32 u32LbxVidY;
+				HI_U32 u32LbxVidW;
+				HI_U32 u32LbxVidH;
+
+
+				if (pstHalInfo->enNodeType == VPSS_HAL_NODE_UHD_SPLIT_L)
+				{
+					u32LbxDispX = 0;
+					u32LbxDispY = 0;
+					u32LbxDispW = pstOutFrm->u32Width;
+					u32LbxDispH = pstOutFrm->u32Height;
+
+					u32LbxVidX = (pstOutFrm->u32Width-pstHalPort->stOutCropRect.s32Width/2)&VPSS_WIDTH_ALIGN;
+					u32LbxVidY = (pstOutFrm->u32Height-pstHalPort->stOutCropRect.s32Height)/2&VPSS_HEIGHT_ALIGN;
+					u32LbxVidW = pstHalPort->stOutCropRect.s32Width/2;
+					u32LbxVidH = pstHalPort->stOutCropRect.s32Height;
+				}
+				else if (pstHalInfo->enNodeType == VPSS_HAL_NODE_UHD_SPLIT_R)
+				{
+					u32LbxDispX = 0;
+					u32LbxDispY = 0;
+					u32LbxDispW = pstOutFrm->u32Width;
+					u32LbxDispH = pstOutFrm->u32Height;
+
+					u32LbxVidX = 0;
+					u32LbxVidY = (pstOutFrm->u32Height-pstHalPort->stOutCropRect.s32Height)/2&VPSS_HEIGHT_ALIGN;
+					u32LbxVidW = pstHalPort->stOutCropRect.s32Width/2;
+					u32LbxVidH = pstHalPort->stOutCropRect.s32Height;
+				}
+				else
+				{
+					u32LbxDispX = 0;
+					u32LbxDispY = 0;
+					u32LbxDispW = pstOutFrm->u32Width;
+					u32LbxDispH = pstOutFrm->u32Height;
+
+					u32LbxVidX = (pstOutFrm->u32Width-pstHalPort->stOutCropRect.s32Width)/2&VPSS_WIDTH_ALIGN;
+					u32LbxVidY = (pstOutFrm->u32Height-pstHalPort->stOutCropRect.s32Height)/2&VPSS_HEIGHT_ALIGN;
+					u32LbxVidW = pstHalPort->stOutCropRect.s32Width;
+					u32LbxVidH = pstHalPort->stOutCropRect.s32Height;
+				}
+				
+				VPSS_REG_SetLBABg(u32AppVir, enPort, 0x108080, 0x7f);
+#if 0
+				VPSS_ERROR("u32LbxDispX %d Y %d W %d H %d\n",u32LbxDispX,u32LbxDispY,u32LbxDispW,u32LbxDispH); 
+				VPSS_ERROR("u32LbxVidX %d Y %d W %d H %d\n",u32LbxVidX,u32LbxVidY,u32LbxVidW,u32LbxVidH); 
+#endif
+				VPSS_REG_SetLBADispPos(u32AppVir, enPort, u32LbxDispX, u32LbxDispY, 
+						u32LbxDispH, u32LbxDispW);
+
+				VPSS_REG_SetLBAVidPos(u32AppVir, enPort, 
+						u32LbxVidX,
+						u32LbxVidY,
+						u32LbxVidH,
+						u32LbxVidW); 
+			}
+
 			VPSS_REG_SetLBAEn(u32AppVir, enPort, HI_TRUE);
 
 
@@ -682,6 +733,8 @@ HI_S32 VPSS_HAL_SetFieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
         VPSS_REG_SetImgTile(u32AppVir,CUR_FIELD,HI_FALSE);
     }
 
+	VPSS_REG_SetProtEn(u32AppVir,pstHalInfo->stInInfo.bSecure);
+
     VPSS_REG_SetImgFormat(u32AppVir, pstHalInfo->stInInfo.enFormat);
 
     pstCur = &pstHalInfo->stInInfo.stAddr;
@@ -755,6 +808,9 @@ HI_S32 VPSS_HAL_SetFrameNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
 	/*rwzb*/
     VPSS_HAL_SetRwzbCfg(u32AppVir, &(pstHalInfo->stRwzbInfo));
     #endif
+
+
+	VPSS_REG_SetProtEn(u32AppVir,pstHalInfo->stInInfo.bSecure);
     
     /* 输入源信息 */
     VPSS_REG_SetInCropEn(u32AppVir, HI_FALSE);
@@ -830,6 +886,8 @@ HI_S32 VPSS_HAL_Set5FieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     
     VPSS_REG_ResetAppReg(u32AppVir, pstHalInfo->pstPqCfg);
     
+	VPSS_REG_SetProtEn(u32AppVir,pstHalInfo->stInInfo.bSecure);
+	
     /* 输入源信息 */
     VPSS_REG_SetInCropEn(u32AppVir, HI_FALSE);
     //VPSS_REG_SetImgBitWidth(u32AppVir, pstHalInfo->stInInfo.enBitWidth);
@@ -1053,6 +1111,7 @@ HI_S32 VPSS_HAL_SetUHDNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     }
     VPSS_REG_SetImgFormat(u32AppVir, pstHalInfo->stInInfo.enFormat);
 
+	VPSS_REG_SetProtEn(u32AppVir,pstHalInfo->stInInfo.bSecure);
     
     pstCur = &pstHalInfo->stInInfo.stAddr;
     VPSS_REG_SetImgSize(u32AppVir, 
@@ -1185,6 +1244,8 @@ HI_S32 VPSS_HAL_SetUHDSplitNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     {
         VPSS_REG_SetImgTile(u32AppVir,CUR_FIELD,HI_FALSE);
     }
+
+	VPSS_REG_SetProtEn(u32AppVir,pstHalInfo->stInInfo.bSecure);
 
     VPSS_REG_SetImgFormat(u32AppVir, pstHalInfo->stInInfo.enFormat);
 

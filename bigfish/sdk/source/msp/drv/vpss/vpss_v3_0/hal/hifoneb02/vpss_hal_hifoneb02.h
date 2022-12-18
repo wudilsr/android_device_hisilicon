@@ -148,6 +148,7 @@ typedef struct hiVPSS_HAL_FRAME_S{
     HI_DRV_PIXEL_BITWIDTH_E  enBitWidth;
     HI_U32 u32TunnelAddr;
     HI_BOOL  bTopFirst;
+	HI_BOOL  bSecure;
 }VPSS_HAL_FRAME_S;
 
 
@@ -156,6 +157,7 @@ typedef struct hiVPSS_HAL_PORT_INFO_S
     HI_BOOL    bEnable;
     HI_RECT_S  stInCropRect; /* PORT CROP信息 */
     HI_RECT_S  stVideoRect; /* 真实显示区域 */
+    HI_RECT_S   stOutCropRect;
     HI_DRV_VPSS_ROTATION_E enRotation; /* 旋转信息 */
     HI_BOOL bNeedFlip;
     HI_BOOL bNeedMirror;
@@ -253,7 +255,7 @@ HI_S32 VPSS_HAL_StartLogic(VPSS_IP_E enIP,
 
 HI_S32 VPSS_HAL_GetSCDInfo(HI_U32 u32AppAddr,HI_S32 s32SCDInfo[32]);
 
-HI_VOID VPSS_HAL_GetDetPixel(VPSS_HAL_INFO_S stVpssHalInfo,HI_U32 BlkNum, HI_U8* pstData);
+HI_VOID VPSS_HAL_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData);
 
 HI_S32 VPSS_HAL_GetBaseRegAddr(VPSS_IP_E enIP,
                                  HI_U32 *pu32PhyAddr,

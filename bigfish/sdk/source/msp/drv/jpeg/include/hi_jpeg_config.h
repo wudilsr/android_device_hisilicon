@@ -96,7 +96,7 @@ extern "C"
 
 	/** if need use soft csc to debug whether the hard csc has problem */
 	/** CNcomment:使用软件转换来定位硬件转换是否有问题 */
-    #define CONFIG_JPEG_SOFTCSC_ENABLE
+    //#define CONFIG_JPEG_SOFTCSC_ENABLE
 
 	/** use hard idct method */
 	/** CNcomment:使用硬件得IDCT算法 */
@@ -132,9 +132,6 @@ extern "C"
 	/** dec jpeg file output lu pixel value sum */
 	/** CNcomment:统计亮度值 */
 	#define CONFIG_JPEG_OUTPUT_LUPIXSUM
-	/** if support jpeg hard dec to argb8888 */
-	/** CNcomment:是否支持jpeg硬件解码输出argb8888 */
-	#define CONFIG_JPEG_HARDDEC2ARGB
 	/** CNcomment:这里由于DDR无法处理跨4K内存的问题，所以JPGD逻辑
 	 ** 要对跨4K内存进行处理，否则会有一段段小黑条
 	 ** 0x0 - 0x1000 - 0x2000 - 0x3000 内存起始地址+大小要在区间内的问题 */
@@ -201,20 +198,20 @@ extern "C"
     #ifdef CONFIG_JPEG_OUTPUT_CROP
         #undef CONFIG_JPEG_OUTPUT_CROP
     #endif
-    #ifdef CONFIG_JPEG_HARDDEC2ARGB
-	    #undef CONFIG_JPEG_HARDDEC2ARGB
-    #endif
-
+    
     /** 底下几颗芯片需要配置采样因子 **/
     #if   !defined(CHIP_TYPE_hi3798cv200_a)   \
        && !defined(CHIP_TYPE_hi3798cv200)     \
        && !defined(CHIP_TYPE_hi3716mv410)     \
+       && !defined(CHIP_TYPE_hi3716mv420)     \
        && !defined(CHIP_TYPE_hi3751av500)
 		#undef CONFIG_JPEG_SET_SAMPLEFACTOR
 	#endif
 
     /** 底下几颗芯片需要配置dri，否则花屏 **/
     #if   !defined(CHIP_TYPE_hi3716mv410)     \
+       && !defined(CHIP_TYPE_hi3716mv420)     \
+       && !defined(CHIP_TYPE_hi3798cv200)     \
        && !defined(CHIP_TYPE_hi3531a)
 		#undef CONFIG_JPEG_DRI_SUPPORT
 	#endif
@@ -236,6 +233,13 @@ extern "C"
 		#ifdef HI_MCE_SUPPORT
 			#undef HI_MCE_SUPPORT
 		#endif
+	#endif
+
+
+	#if defined(CHIP_TYPE_hi3798cv200)
+	/** support mmu **/
+	 	#define CONFIG_JPEG_MMU_SUPPORT
+	 	#define CONFIG_JPEG_HARDDEC2ARGB
 	#endif
     
 	/****************************************************************************
@@ -295,7 +299,6 @@ extern "C"
 		#define CONFIG_JPEG_CSC_DISABLE
 		#undef CONFIG_JPEG_USE_SDK_CRG_ENABLE
 	#endif
-
 	
     #ifdef CONFIG_GFX_ADVCA_RELEASE
 	    /** this is not has warning message */
@@ -311,7 +314,6 @@ extern "C"
 
     /** @} */  /*! <!-- Macro Definition end */
 
-	
     /*************************** Structure Definition ****************************/
 	
     /***************************  The enum of Jpeg image format  ******************/

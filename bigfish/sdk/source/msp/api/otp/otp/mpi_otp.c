@@ -585,6 +585,174 @@ HI_S32 HI_MPI_OTP_Read(HI_U32 u32Addr, HI_U32 *pu32Value)
     return HI_SUCCESS;
 }
 
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#define OTP_INTERNAL_DATALOCK_0         (0x10)
+#define OTP_INTERNAL_PVLOCK_1           (0x0C)
+#define OTP_ADVCA_ID_WORD_ADDR          (0xa8)
+#define ADVCA_ID_WORD 			        (0x6EDBE953)
+#define OTP_INTERNAL_PV_1		        (0x04)
+#define OTP_RIGHT_CTRL_EN_ADDR	        (0x19)
+#define OTP_SCS_EN_BAK_ADDR		        (0xad)
+#define OTP_JTAG_MODE_BAK_ADDR	        (0xae)
+#define OTP_RIGHT_CTRL_EN_BAK_ADDR	    (0xaf)
+#define OTP_SELF_BOOT_DIABLE_BAK_ADDR	(0x1c)
+
+HI_S32 HI_MPI_OTP_GetIDWordLockFlag(HI_BOOL *pbLockFlag)
+{
+    HI_S32 s32Ret   = HI_SUCCESS;
+    HI_U32 u32Value = 0;
+    
+    if (NULL == pbLockFlag)
+    {
+        HI_ERR_OTP("Invalid param, null pointer!\n");
+        return HI_FAILURE;
+    }
+
+    CHECK_OTP_INIT();
+
+    s32Ret = HI_MPI_OTP_Read(OTP_INTERNAL_DATALOCK_0, &u32Value);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("Failed to read otp!\n");
+        return HI_FAILURE;
+    }
+
+    if (1 == ((u32Value >> 10) & 0x1))
+    {
+        *pbLockFlag = HI_TRUE;
+    }
+    else
+    {
+        *pbLockFlag = HI_FALSE;
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_MPI_OTP_LockIDWord(HI_VOID)
+{
+    HI_S32 s32Ret   = HI_SUCCESS;
+    HI_U32 u32Value = 0;
+    HI_U8 u8Value   = 0;
+
+    CHECK_OTP_INIT();
+
+    s32Ret = HI_MPI_OTP_Read(OTP_INTERNAL_DATALOCK_0, &u32Value);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("Failed to read otp!\n");
+        return HI_FAILURE;        
+    }
+
+    /* Check ID_WORD locked or not */
+    u8Value = (u32Value >> 8) & 0x04;  
+    if (0 == u8Value)
+    {
+        /* Lock ID_WORD */
+        u8Value = ((u32Value >> 8) | 0x04) & 0xff;
+        s32Ret = HI_MPI_OTP_WriteByte(OTP_INTERNAL_DATALOCK_0 + 1, u8Value);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_OTP("Failed to Lock IDWord!\n");
+            return HI_FAILURE;
+        }
+    }
+
+    /* secure_chip_flag_lock */
+    s32Ret = HI_MPI_OTP_Read(OTP_INTERNAL_PVLOCK_1, &u32Value);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("Failed to read otp!\n");
+        return HI_FAILURE; 
+    }
+
+    /* Check secure_chip_flag locked or not */
+    u8Value = (u32Value & 0x1);
+    if (0 == u8Value)
+    {
+        /* Lock secure_chip_flag */
+        u8Value = (u32Value | 0x1) & 0xff;
+        s32Ret = HI_MPI_OTP_WriteByte(OTP_INTERNAL_PVLOCK_1, u8Value);
+        if(HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_OTP("Write secure_chip_flag_lock failed!\n");
+            return HI_FAILURE;
+        }
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_MPI_OTP_BurnToSecureChipset(HI_VOID)
+{
+    HI_S32 s32Ret   = HI_SUCCESS;
+    HI_U32 u32Value = 0;
+    HI_BOOL bIsIDWordLocked = HI_FALSE;
+
+    CHECK_OTP_INIT();
+    s32Ret = HI_MPI_OTP_GetIDWordLockFlag(&bIsIDWordLocked);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("Get ADVCA_ID_WORD Lock Flag Error!\n");
+        return HI_FAILURE;
+    }
+    if(HI_TRUE == bIsIDWordLocked)
+    {
+        HI_ERR_OTP("ADVCA_ID_WORD already lock!\n");
+        return HI_FAILURE;        
+    }
+
+    s32Ret = HI_MPI_OTP_Read(OTP_ADVCA_ID_WORD_ADDR, &u32Value);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("Get ADVCA_ID_WORD Error!\n");
+        return HI_FAILURE;
+    }
+
+    
+    if(ADVCA_ID_WORD == u32Value)
+    {
+        HI_ERR_OTP("It's secure chipset already, can not set again!\n");
+        return HI_SUCCESS;
+    }
+
+    /* echo write 0x04 0x01 > /proc/msp/otp //secure_chip_flag */
+    s32Ret  = HI_MPI_OTP_WriteByte(OTP_INTERNAL_PV_1, 0x01);
+    /* echo write 0x19 0x08 > /proc/msp/otp  //right_ctrl_en */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_RIGHT_CTRL_EN_ADDR, 0x08);
+
+    /* 
+    echo write 0xa8 0x53 > /proc/msp/otp  //Advca ID_WORD
+    echo write 0xa9 0xe9 > /proc/msp/otp  //Advca ID_WORD
+    echo write 0xaa 0xdb > /proc/msp/otp  //Advca ID_WORD
+    echo write 0xab 0x6e > /proc/msp/otp  //Advca ID_WORD
+    */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_ADVCA_ID_WORD_ADDR,     0x53);
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_ADVCA_ID_WORD_ADDR + 1, 0xe9);
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_ADVCA_ID_WORD_ADDR + 2, 0xdb);
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_ADVCA_ID_WORD_ADDR + 3, 0x6e);
+
+    /* echo write 0xad 0x81 > /proc/msp/otp  //scs_en_bak */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_SCS_EN_BAK_ADDR, 0x81);
+
+    /* echo write 0xae 0x42 > /proc/msp/otp  //jtag_mode_bak */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_JTAG_MODE_BAK_ADDR, 0x42);
+    
+    /* echo write 0xaf 0xff > /proc/msp/otp  //right_ctrl_en_bak */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_RIGHT_CTRL_EN_BAK_ADDR, 0xff);
+
+    /* echo write 0x1c 0x11 > /proc/msp/otp  //self_boot_disable_bak */
+    s32Ret |= HI_MPI_OTP_WriteByte(OTP_SELF_BOOT_DIABLE_BAK_ADDR, 0x11);
+    
+    if(HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_OTP("BurnToSecureChipset failed!\n");
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+#endif
 HI_S32 HI_MPI_OTP_TEST(HI_U8 u8TestValue[16])
 {
     HI_S32 s32Ret = HI_SUCCESS;

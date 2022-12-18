@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -1304,37 +1304,6 @@ MALI_STATIC_FORCE_INLINE mali_bool _mali_sys_config_string_get_bool(const char *
 
 	return retval;
 }
-
-typedef void mali_library;
-
-/**
- * Dynamically load a shared library.
- * @param name Name of library file to load.
- * @return A handle to the loaded library, or NULL for failure.
- */
-MALI_IMPORT mali_library *_mali_sys_library_load(const char *name) MALI_CHECK_RESULT;
-
-/**
- * Unload a previously dynamically loaded shared library.
- * @param handle Handle to the library to unload (as returned from _mali_sys_library_load).
- */
-MALI_IMPORT void _mali_sys_library_unload(mali_library *handle);
-
-/**
- * Calls the specific initialization function inside the specified library
- *
- * The initialization function is declared as;
- *     int mali_library_init(void* arg);
- *
- * For operating systems relying on ordinals, this function must be the first one.
- *
- * @param handle Handle to dynimic library to initialize.
- * @param param Pointer passed to initialization funcion within library.
- * @param retval value returned by the init function.
- * @return MALI_TRUE if init function was called, otherwise MALI_FALSE.
- */
-MALI_IMPORT mali_bool _mali_sys_library_init(mali_library *handle, void *param, u32 *retval) MALI_CHECK_RESULT;
-
 
 #define MALI_USE_MEMCPY32 1
 #if MALI_USE_MEMCPY32

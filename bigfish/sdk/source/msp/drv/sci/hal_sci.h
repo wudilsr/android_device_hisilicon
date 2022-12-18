@@ -20,6 +20,8 @@
     || defined(CHIP_TYPE_hi3796mv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 #define IRQ_SCI0    (36 + 32)
 #define IRQ_SCI1    (37 + 32)
@@ -40,8 +42,7 @@
 
 #endif
 
-#define SCI_DFT_REF_CLOCK1  96000UL         /* v200 sci clk*/
-#define SCI_DFT_REF_CLOCK2  60000UL         /* mv300 sci clk*/
+#define SCI_DFT_REF_CLOCK  60000UL
 
 #define SCI_FIFO_SIZE      32
 

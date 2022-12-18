@@ -224,6 +224,9 @@ int main(int argc, char *argv[])
                 printf("\t\tdisptest getaspectcvrs\n");
                 printf("\t\t--get aspectcvrs mode\n");
 
+                printf("\t\tdisptest getvirtualscreensize\n");
+                printf("\t\t--get virtual screen size\n");
+
                 printf("\t\tdisptest setsaveparam\n");
                 printf("\t\t--set saveparam\n");
 
@@ -329,6 +332,12 @@ int main(int argc, char *argv[])
                 {
                     printf("=========save baseparam failed !========\n");
                 }
+            }
+            else if (0==strncmp("getvirtualscreensize",argv[1],sizeof("getvirtualscreensize")))
+            {
+                int w = 0; int h = 0;
+                ret = disp.GetVirtScreenSize(&w, &h);
+                printf("=========the virtual screen size w = %d, h = %d ========\n", w, h);
             }
             else
             {

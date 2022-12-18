@@ -153,13 +153,13 @@ static HI_S32 AENC_DRV_Open(struct inode * inode, struct file * filp)
 
 static HI_S32 AENC_DRV_Release(struct inode * inode, struct file * filp)
 {
-    AENC_KADDR_S  *psKAddrElem;
+    AENC_KADDR_S*  psKAddrElem;
     HI_S32 Ret;
-	HI_U32 u32ChanId;
-	HI_CHAR aszBuf[16];
+    HI_U32 u32ChanId;
+    HI_CHAR aszBuf[16];
 
     Ret = down_interruptible(&g_AencMutex);
-    psKAddrElem = (AENC_KADDR_S  *) filp->private_data;
+    psKAddrElem = (AENC_KADDR_S*) filp->private_data;
 
     if (!psKAddrElem)
     {
@@ -173,14 +173,15 @@ static HI_S32 AENC_DRV_Release(struct inode * inode, struct file * filp)
         return -1;
     }
 
-	(HI_VOID)sscanf(psKAddrElem->szProcMmzName, "AENC_Proc%02d", &u32ChanId);
-	snprintf(aszBuf, sizeof(aszBuf), "aenc%02d", u32ChanId);
-	HI_DRV_PROC_RemoveModule(aszBuf);
+    //(HI_VOID)sscanf(psKAddrElem->szProcMmzName, "AENC_Proc%02d", &u32ChanId);
+    u32ChanId = (psKAddrElem->szProcMmzName[9] - '0') * 10 + (psKAddrElem->szProcMmzName[10] - '0');
+    snprintf(aszBuf, sizeof(aszBuf), "aenc%02d", u32ChanId);
+    HI_DRV_PROC_RemoveModule(aszBuf);
 
     if (psKAddrElem->psAencKernelAddr)
-	{
-		HI_DRV_MMZ_UnmapAndRelease(&psKAddrElem->AencProcMmz);
-	}
+    {
+        HI_DRV_MMZ_UnmapAndRelease(&psKAddrElem->AencProcMmz);
+    }
 
     psKAddrElem->psAencKernelAddr = NULL;
     psKAddrElem->bUsed = HI_FALSE;
@@ -489,19 +490,19 @@ static PM_BASEOPS_S aenc_drvops =
 static HI_S32 AENC_DRV_ReadProc( struct seq_file* p, HI_VOID* v )
 {
     HI_U32 u32ChNum;
-    DRV_PROC_ITEM_S *pstProcItem;
+    DRV_PROC_ITEM_S* pstProcItem;
 
     pstProcItem = p->private;
-	
+
     if (HI_NULL == pstProcItem)
     {
         HI_ERR_AENC("the proc item pointer of aenc  is NULL\n");
         return HI_FAILURE;
     }
-	
-    (HI_VOID)sscanf(pstProcItem->entry_name, "aenc%2d", &u32ChNum);
-	
-    if(u32ChNum >= AENC_INSTANCE_MAXNUM)
+
+    //(HI_VOID)sscanf(pstProcItem->entry_name, "aenc%2d", &u32ChNum);
+    u32ChNum = (pstProcItem->entry_name[4] - '0') * 10 + (pstProcItem->entry_name[5] - '0');
+    if (u32ChNum >= AENC_INSTANCE_MAXNUM)
     {
         PROC_PRINT(p, "Invalid Aenc ID:%d.\n", u32ChNum);
         return HI_FAILURE;
@@ -536,8 +537,8 @@ static HI_S32 AENC_DRV_WriteProc(struct file * file, const char __user * buf, si
         return HI_FAILURE;
     }
 
-    ( HI_VOID )sscanf( pstProcItem->entry_name, "aenc%2d", &u32ChNum );
-
+    //( HI_VOID )sscanf( pstProcItem->entry_name, "aenc%2d", &u32ChNum );
+    u32ChNum = (pstProcItem->entry_name[4] - '0') * 10 + (pstProcItem->entry_name[5] - '0');
     if ( u32ChNum >= AENC_INSTANCE_MAXNUM )
     {
         HI_ERR_AENC( "Invalid Aenc ID:%02d.\n", u32ChNum );

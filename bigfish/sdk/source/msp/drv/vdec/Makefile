@@ -26,7 +26,14 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_DRV_INCLUDE)                    \
                 -I$(MSP_DIR)/api/vdec                   \
                 -I$(MSP_DIR)/drv/vdec                   \
-                -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0
+                -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0/scene/stb  \
+                -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0         		
+
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+EXTRA_CFLAGS += -I$(TEE_INCLUDE)                           \
+                -I$(TVP_DIR)/libteec/inc                   \
+                -I$(TVP_DIR)/libteec/sec_mmz/inc			
+endif
 
 #===============================================================================
 # 512M ddr memory config flags
@@ -63,6 +70,40 @@ EXTRA_CFLAGS += -DHI_VIDEO_SCD_BUF_SIZE_IN_512=$(CFG_HI_VIDEO_SCD_BUF_SIZE_IN_51
 
 EXTRA_CFLAGS += -DHI_VIDEO_MAX_VDH_BUF_IN_512=$(CFG_HI_VIDEO_MAX_VDH_BUF_IN_512)
 
+#===============================================================================
+# 768M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_768))
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=1
+else
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_768))
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=1
+else
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_768))
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=1
+else
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_768))
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=1
+else
+EXTRA_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=0
+endif
+
+EXTRA_CFLAGS += -DHI_VIDEO_MAX_REF_FRAME_NUM_IN_768=$(CFG_HI_VIDEO_MAX_REF_FRAME_NUM_IN_768)
+
+EXTRA_CFLAGS += -DHI_VIDEO_MAX_DISP_FRAME_NUM_IN_768=$(CFG_HI_VIDEO_MAX_DISP_FRAME_NUM_IN_768)
+
+EXTRA_CFLAGS += -DHI_VIDEO_SCD_BUF_SIZE_IN_768=$(CFG_HI_VIDEO_SCD_BUF_SIZE_IN_768)
+
+EXTRA_CFLAGS += -DHI_VIDEO_MAX_VDH_BUF_IN_768=$(CFG_HI_VIDEO_MAX_VDH_BUF_IN_768)
 #===============================================================================
 # 1024M ddr memory config flags
 #===============================================================================
@@ -163,12 +204,21 @@ else
 EXTRA_CFLAGS += -DHI_VDEC_USERDATA_CC_SUPPORT=0
 endif
 
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_TVP_SUPPORT
+endif
+
 ifeq (y,$(CFG_HI_VDEC_VPU_SUPPORT))
 EXTRA_CFLAGS += -DHI_VDEC_VPU_SUPPORT=1
 else
 EXTRA_CFLAGS += -DHI_VDEC_VPU_SUPPORT=0
 endif
 
+ifeq (y,$(CFG_HI_VDEC_PRE_ALLOC_VDHMMZ_SUPPORT))
+EXTRA_CFLAGS += -DPRE_ALLOC_VDEC_VDH_MMZ=1
+else
+EXTRA_CFLAGS += -DPRE_ALLOC_VDEC_VDH_MMZ=0
+endif
 KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers
 KBUILD_EXTRA_SYMBOLS += $(MSP_DIR)/drv/vfmw/vfmw_v4.0/Module.symvers
 

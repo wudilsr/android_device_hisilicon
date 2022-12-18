@@ -1,33 +1,56 @@
 /******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : hi_tde_type.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
+******************************************************************************/
 
-  Copyright (C), 2001-2011, Huawei Tech. Co., Ltd.
+#ifndef __HI_TDE_TYPE_H__
+#define __HI_TDE_TYPE_H__
 
- ******************************************************************************
- File Name     : tde_type.h
-Version       : Initial Draft
-Author        : w54130
-Created       : 2007/5/21
-Last Modified :
-Description   : TDE public type
-Function List :
-History       :
-1.Date        : 2007/5/21
-Author      : w54130
-Modification: Created file
 
- ******************************************************************************/
-#ifndef __TDE_TYPE_H__
-#define __TDE_TYPE_H__
+/*********************************add include here******************************/
 
+
+#include "hi_tde_errcode.h"
+
+/*****************************************************************************/
 
 #ifdef __cplusplus
 #if __cplusplus
-extern "C"{
+   extern "C"
+{
 #endif
-#endif /* End of #ifdef __cplusplus */
+#endif /* __cplusplus */
 
-//#include "hi_tde_cfg.h"
-#include "hi_tde_errcode.h"
+
+
+/***************************** Macro Definition ******************************/
+
+
+/*************************** Structure Definition ****************************/
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
+
+
+
 
 /****************************************************************************/
 /*                             TDE2 types define                             */
@@ -45,54 +68,13 @@ typedef HI_VOID (* TDE_TRIG_SEL)(HI_U32);
 /**RGB and packet YUV formats*/
 /**CNcomment:RGB和Packet YUV 颜色格式 */
 typedef enum hiTDE2_COLOR_FMT_E
-{
-#ifndef HIGO_CODE_CUT
-    TDE2_COLOR_FMT_RGB444 = 0,          /**<For the RGB444 format, red occupies four bits, green occupies four bits, and blue occupies four bits. Other formats may be deduced by analogy.*//**<CNcomment:RGB444格式, Red占4bits Green占4bits, Blue占4bits,其余格式依此类推 */
-    TDE2_COLOR_FMT_BGR444,              /**<BGR444 format*//**<CNcomment:BGR444格式 */    
-    TDE2_COLOR_FMT_RGB555,              /**<RGB555 format*//**<CNcomment:RGB555格式 */
-    TDE2_COLOR_FMT_BGR555,              /**<BGR555 format*//**<CNcomment:BGR555格式 */
-#endif    
-    TDE2_COLOR_FMT_RGB565,              /**<RGB565 format*//**<CNcomment:RGB565格式 */
-#ifndef HIGO_CODE_CUT 
-    TDE2_COLOR_FMT_BGR565,              /**<BGR565 format*//**<CNcomment:BGR565格式 */
-    TDE2_COLOR_FMT_RGB888,              /**<RGB888 format*//**<CNcomment:RGB888格式 */
-    TDE2_COLOR_FMT_BGR888,              /**<BGR888 format*//**<CNcomment:BGR888格式 */
-    TDE2_COLOR_FMT_ARGB4444,          /**<ARGB4444 format*//**<CNcomment:ARGB4444格式 */
-    TDE2_COLOR_FMT_ABGR4444,           /**<ABGR4444 format*//**<CNcomment:ABGR4444格式 */
-    TDE2_COLOR_FMT_RGBA4444,            /**<RGBA4444 format*//**<CNcomment:RGBA4444格式 */
-    TDE2_COLOR_FMT_BGRA4444,            /**<BGRA4444 format*//**<CNcomment:BGRA4444格式 */
-#endif    
-    TDE2_COLOR_FMT_ARGB1555,            /**<ARGB1555 format*//**<CNcomment:ARGB1555格式 */
-#ifndef HIGO_CODE_CUT  
-    TDE2_COLOR_FMT_ABGR1555,            /**<ABGR1555 format*//**<CNcomment:ABGR1555格式 */
-    TDE2_COLOR_FMT_RGBA1555,            /**<RGBA1555 format*//**<CNcomment:RGBA1555格式 */
-    TDE2_COLOR_FMT_BGRA1555,            /**<BGRA1555 format*//**<CNcomment:BGRA1555格式 */
-    TDE2_COLOR_FMT_ARGB8565,            /**<ARGB8565 format*//**<CNcomment:ARGB8565格式 */
-    TDE2_COLOR_FMT_ABGR8565,            /**<ABGR8565 format*//**<CNcomment:ABGR8565格式 */
-    TDE2_COLOR_FMT_RGBA8565,            /**<RGBA8565 format*//**<CNcomment:RGBA8565格式 */
-    TDE2_COLOR_FMT_BGRA8565,            /**<BGRA8565 format*//**<CNcomment:BGRA8565格式 */
-#endif    
+{ 
+    TDE2_COLOR_FMT_RGB565,              /**<RGB565 format*//**<CNcomment:RGB565格式 */   
+    TDE2_COLOR_FMT_ARGB1555,            /**<ARGB1555 format*//**<CNcomment:ARGB1555格式 */  
     TDE2_COLOR_FMT_ARGB8888,            /**<ARGB8888 format*//**<CNcomment:ARGB8888格式 */
-#ifndef HIGO_CODE_CUT 
-    TDE2_COLOR_FMT_ABGR8888,            /**<ABGR8888 format*//**<CNcomment:ABGR8888格式 */
-    TDE2_COLOR_FMT_RGBA8888,            /**<RGBA8888 format*//**<CNcomment:RGBA8888格式 */
-    TDE2_COLOR_FMT_BGRA8888,            /**<BGRA8888 format*//**<CNcomment:BGRA8888格式 */
-    TDE2_COLOR_FMT_CLUT1,               /**<1-bit palette format without alpha component. Each pixel occupies one bit.*//**<CNcomment:无Alpha分量,调色板1bit格式,每个像用1个bit表示 */
-    TDE2_COLOR_FMT_CLUT2,               /**<2-bit palette format without alpha component. Each pixel occupies two bits.*//**<CNcomment:无Alpha分量,调色板2bit格式,每个像用2个bit表示 */
-    TDE2_COLOR_FMT_CLUT4,               /**<4-bit palette format without alpha component. Each pixel occupies four bits.*//**<CNcomment:无Alpha分量,调色板4bit格式,每个像用4个bit表示 */
-    TDE2_COLOR_FMT_CLUT8,               /**<8-bit palette format without alpha component. Each pixel occupies eight bits.*//**<CNcomment:无Alpha分量,调色板8bit格式,每个像用8个bit表示 */
-    TDE2_COLOR_FMT_ACLUT44,             /**<1-bit palette format with alpha component. Each pixel occupies one bit.*//**<CNcomment:有Alpha分量,调色板1bit格式,每个像用1个bit表示 */
-    TDE2_COLOR_FMT_ACLUT88,             /**<1-bit palette format with alpha component. Each pixel occupies one bit.*//**<CNcomment:有Alpha分量,调色板1bit格式,每个像用1个bit表示 */
-    TDE2_COLOR_FMT_A1,                  /**<Alpha format. Each pixel occupies one bit.*//**<CNcomment:alpha格式，每个点用1bit */
-    TDE2_COLOR_FMT_A8,                  /**<Alpha format. Each pixel occupies eight bits.*//**<CNcomment:alpha格式，每个点用8bit */
-#endif
     TDE2_COLOR_FMT_YCbCr888,            /**<YUV packet format without alpha component*//**<CNcomment:YUV packet格式，无alpha分量*/
     TDE2_COLOR_FMT_AYCbCr8888,          /**<YUV packet format with alpha component*//**<CNcomment:YUV packet格式，有alpha分量*/
     TDE2_COLOR_FMT_YCbCr422,            /**<YUV packet422 format*//**<CNcomment:YUV packet422格式 */
-#ifndef HIGO_CODE_CUT
-    TDE2_COLOR_FMT_byte,                /**<Only for fast copy*//**<CNcomment:仅用于数据快速copy*/
-    TDE2_COLOR_FMT_halfword,            /**<Only for fast copy*//**<CNcomment:仅用于数据快速copy*/
-#endif
     TDE2_COLOR_FMT_JPG_YCbCr400MBP,     /**<Semi-planar YUV400 format, for JPG decoding*//**<CNcomment:Semi-planar YUV400格式 ,对应于JPG解码*/
     TDE2_COLOR_FMT_JPG_YCbCr422MBHP,    /**<Semi-planar YUV422 format, horizontal sampling, for JPG decoding*//**<CNcomment:Semi-planar YUV422格式,水平方向采样，对应于JPG解码 */
     TDE2_COLOR_FMT_JPG_YCbCr422MBVP,    /**<Semi-planar YUV422 format, vertical sampling, for JPG decoding*//**<CNcomment:Semi-planar YUV422格式,垂直方向采样，对应于JPG解码 */
@@ -499,13 +481,15 @@ typedef enum hiTDE_DEFLICKER_LEVEL_E
 }TDE_DEFLICKER_LEVEL_E;
 
 
+
+
 #ifdef __cplusplus
+					   
 #if __cplusplus
+					   
 }
+
 #endif
-#endif /* End of #ifdef __cplusplus */
-
-
-#endif /* End of #ifndef __TDE_TYPE_H__ */
-
-
+#endif /* __cplusplus */
+					   
+#endif /* __HI_TDE_TYPE_H__ */

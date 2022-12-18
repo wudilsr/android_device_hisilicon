@@ -22,11 +22,10 @@ HI_U32  g_JpgMemOffset = 0;
 static HI_U32 g_JpgDecAddr = 0;
 static HI_U32 g_JpgDecLen = 0;
 
-HI_S32 HI_MMB_Init(HI_U32 uStartAddr , HI_U32 uLen)
+HI_VOID HI_MMB_Init(HI_U32 uStartAddr , HI_U32 uLen)
 {
     g_JpgDecAddr = uStartAddr;
     g_JpgDecLen = uLen;
-    return HI_SUCCESS;
 }
 
 HI_S32 HI_MMB_DeInit( HI_VOID)

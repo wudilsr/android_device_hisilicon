@@ -298,7 +298,7 @@ resume_start:
 
 	/* Restore DDRPHY Register */
 	mov	r4, #4
-	ldr	r1, =0xf840e100
+	ldr	r1, =0xf8407100
 	ldr	r3, =0xf8a38210
 
 copy_loop:

@@ -227,6 +227,9 @@ void no_display_usr(void)
 
 void KEYLED_Init_Usr(void)
 {
+#ifndef HI_ADVCA_RELEASE
+        printf_str("ANSG08 Board Init \r\n");
+#endif
     no_display_usr();
 
     return;

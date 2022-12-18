@@ -139,14 +139,14 @@ static HI_S32 DecompressBitmap(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8D
         return HI_FAILURE;
     }
 
-    u32Width   = pstParseInfo->stOutputData.u32ButtomXPos - pstParseInfo->stOutputData.u32TopXPos + 1;
+    u32Width   = pstParseInfo->stOutputData.u32BottomXPos - pstParseInfo->stOutputData.u32TopXPos + 1;
     u16CurData = (HI_U8)(*pu8Data);
 
     if (SCTE_SUBT_BACKGROUD_FRAMED == pstParseInfo->stOutputData.enBackgroundStyle)
     {
         u32LineNumber = pstParseInfo->stOutputData.u32TopYPos - pstParseInfo->stOutputData.stFramed.u32TopYPos;
         u32RowNumber = pstParseInfo->stOutputData.u32TopXPos - pstParseInfo->stOutputData.stFramed.u32TopXPos;
-        u32Width = pstParseInfo->stOutputData.stFramed.u32ButtomXPos - pstParseInfo->stOutputData.stFramed.u32TopXPos;
+        u32Width = pstParseInfo->stOutputData.stFramed.u32BottomXPos - pstParseInfo->stOutputData.stFramed.u32TopXPos;
     }
 
     pstParseInfo->stOutputData.u32BitWidth = SUBT_COLOR_RGB888_SIZE;
@@ -318,8 +318,8 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     u16BitmapHeadLen += 2;
     pstParseInfo->stOutputData.u32TopXPos = ((pu8Data[0] << 8) | pu8Data[1]) >> 4; //BTH
     pstParseInfo->stOutputData.u32TopYPos = ((pu8Data[1] << 8) | pu8Data[2]) & 0x0fff; //BTV
-    pstParseInfo->stOutputData.u32ButtomXPos = ((pu8Data[3] << 8) | pu8Data[4]) >> 4; //BBH
-    pstParseInfo->stOutputData.u32ButtomYPos = ((pu8Data[4] << 8) | pu8Data[5]) & 0x0fff; //BBV
+    pstParseInfo->stOutputData.u32BottomXPos = ((pu8Data[3] << 8) | pu8Data[4]) >> 4; //BBH
+    pstParseInfo->stOutputData.u32BottomYPos = ((pu8Data[4] << 8) | pu8Data[5]) & 0x0fff; //BBV
 
     pu8Data += 6;
     u16BitmapHeadLen += 6;
@@ -335,15 +335,15 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     {
         pstParseInfo->stOutputData.stFramed.u32TopXPos = ((pu8Data[0] << 8) | pu8Data[1]) >> 4; //FTH
         pstParseInfo->stOutputData.stFramed.u32TopYPos = ((pu8Data[1] << 8) | pu8Data[2]) & 0x0fff; //FTV
-        pstParseInfo->stOutputData.stFramed.u32ButtomXPos = ((pu8Data[3] << 8) | pu8Data[4]) >> 4; //FBH
-        pstParseInfo->stOutputData.stFramed.u32ButtomYPos = ((pu8Data[4] << 8) | pu8Data[5]) & 0x0fff; //FBV
+        pstParseInfo->stOutputData.stFramed.u32BottomXPos = ((pu8Data[3] << 8) | pu8Data[4]) >> 4; //FBH
+        pstParseInfo->stOutputData.stFramed.u32BottomYPos = ((pu8Data[4] << 8) | pu8Data[5]) & 0x0fff; //FBV
         pu8Data += 6;
         u16BitmapHeadLen += 6;
         pstParseInfo->stOutputData.stFramed.u32FrameColor = YUV2RGB(pu8Data);
 
-        u32SubtArea = (pstParseInfo->stOutputData.stFramed.u32ButtomXPos
+        u32SubtArea = (pstParseInfo->stOutputData.stFramed.u32BottomXPos
                        - pstParseInfo->stOutputData.stFramed.u32TopXPos + 1)
-                      * (pstParseInfo->stOutputData.stFramed.u32ButtomYPos
+                      * (pstParseInfo->stOutputData.stFramed.u32BottomYPos
                          - pstParseInfo->stOutputData.stFramed.u32TopYPos + 1);
         u32SubtDataLen = SCTE_SUBT_BPP * u32SubtArea;
 
@@ -386,9 +386,9 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     else
     {
          /*Allocate the memery of subtData*/
-        u32SubtArea = (pstParseInfo->stOutputData.u32ButtomXPos
+        u32SubtArea = (pstParseInfo->stOutputData.u32BottomXPos
                         - pstParseInfo->stOutputData.u32TopXPos + 1)
-                      * (pstParseInfo->stOutputData.u32ButtomYPos
+                      * (pstParseInfo->stOutputData.u32BottomYPos
                         - pstParseInfo->stOutputData.u32TopYPos + 1);
 
         u32SubtDataLen = SCTE_SUBT_BPP * u32SubtArea;

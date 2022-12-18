@@ -18,7 +18,7 @@
 #include "processor.h"
 
 #ifdef HI_TVP_SUPPORT
-#include <demo_task2_cmdid.h>
+#include "sec_mmz.h"
 #endif
 
 
@@ -141,54 +141,68 @@ static inline const HI_PCHAR channel_show_protocol(HI_U32 protocol)
     return s;
 }
 
-static inline const HI_PCHAR channel_show_color_format(HI_U32 format)
+static inline const HI_PCHAR channel_show_dfs_state(eDFS_STATE state)
+{
+	switch (state)
+    {
+       case DFS_INIT:
+            return "INIT";
+            break;
+
+       case DFS_WAIT_ALLOC:
+            return "WAIT ALLOC";
+            break;
+
+       case DFS_WAIT_INSERT:
+            return "WAIT INSERT";
+            break;
+
+       case DFS_WAIT_BIND:
+            return "WAIT BIND";
+            break;
+
+       case DFS_WAIT_FILL:
+            return "WAIT FILL";
+            break;
+			
+       case DFS_WAIT_ACTIVATE:
+            return "WAIT ACTIVATE";
+            break;
+			
+       case DFS_ALREADY_ALLOC:
+            return "ALREADY ALLOC";
+            break;
+			
+       default:
+            return "UNKOWN";
+            break;
+	}
+}
+
+static inline const HI_PCHAR channel_show_color_format(OMX_PIX_FORMAT_E format)
 {
     HI_PCHAR s;
     switch (format)
     {
-       case HI_DRV_PIX_FMT_NV12:
-           s = "YUV420_NV12";
+       case OMX_PIX_FMT_NV12:
+           s = "YUV420SemiPlanar";
            break;
 
-       case HI_DRV_PIX_FMT_NV21:
-           s = "YUV420_NV21";
+       case OMX_PIX_FMT_NV21:
+           s = "YVU420SemiPlanar";
            break;
 
-       case HI_DRV_PIX_FMT_NV16:
-           s = "YUV422_NV16";
+       case OMX_PIX_FMT_YUV420Planar:
+           s = "YUV420Planar";
            break;
 
-       case HI_DRV_PIX_FMT_NV61:
-           s = "YUV422_NV61";
+       case OMX_PIX_FMT_YUV420Tile:
+           s = "YUV420Tile";
            break;
-
-       case HI_DRV_PIX_FMT_NV16_2X1:
-           s = "YUV422_NV16_2X1";
-           break;
-
-       case HI_DRV_PIX_FMT_NV61_2X1:
-           s = "YUV422_NV61_2X1";
-           break;
-
-       case HI_DRV_PIX_FMT_NV24:
-           s = "YUV444_NV24";
-           break;
-
-       case HI_DRV_PIX_FMT_NV42:
-           s = "YUV444_NV42";
-           break;
-
-       case HI_DRV_PIX_FMT_ARGB8888:
-           s = "ARGB8888";
-           break;
-
-       case HI_DRV_PIX_FMT_YUV420p:
-           s = "YUV420_Planar";
-           break;
-
+		   
        default:
-           OmxPrint(OMX_INFO, "other format %d\n", format);
-           s = "other format";
+           OmxPrint(OMX_ERR, "unkown format %d\n", format);
+           s = "unkown format";
            break;
     }
 
@@ -222,6 +236,9 @@ static HI_VOID channel_show_chan_config(OMXVDEC_DRV_CFG *pcfg)
     OmxPrint(OMX_INFO, "\n");
     OmxPrint(OMX_INFO, " IsOmxPath        = %d\n", pcfg->chan_cfg.s32IsOmxPath);
     OmxPrint(OMX_INFO, " Protocol         = %s\n", channel_show_protocol(pcfg->chan_cfg.eVidStd));
+    OmxPrint(OMX_INFO, " Resolution       = %dx%d\n", pcfg->cfg_width, pcfg->cfg_height);
+    OmxPrint(OMX_INFO, " Stride           = %d\n", pcfg->cfg_stride);    
+    OmxPrint(OMX_INFO, " UseNativeBuf     = %d\n", pcfg->m_use_native_buf);     
     OmxPrint(OMX_INFO, " ColorFormat      = %s\n", channel_show_color_format(pcfg->cfg_color_format));
     OmxPrint(OMX_INFO, " IsAdvProfile     = %d\n", pcfg->chan_cfg.StdExt.Vc1Ext.IsAdvProfile);
     OmxPrint(OMX_INFO, " CodecVersion     = %d\n", pcfg->chan_cfg.StdExt.Vc1Ext.CodecVersion);
@@ -307,30 +324,30 @@ static HI_S32 channel_delete_chan_record(OMXVDEC_ENTRY *omxvdec, OMXVDEC_CHAN_CT
 static HI_S32 channel_map_kernel_viraddr(OMXVDEC_BUF_DESC *puser_buf, HI_VOID **kern_vaddr)
 {
     HI_S32        ret;
-    MMZ_BUFFER_S  stMMZBuf;
-    memset(&stMMZBuf, 0, sizeof(MMZ_BUFFER_S));
+    MMZ_BUFFER_S  stBuffer;
+    memset(&stBuffer, 0, sizeof(MMZ_BUFFER_S));
 
-    if (OMX_USE_NATIVE_TYPE == puser_buf->buffer_type)
+    if (OMX_USE_NATIVE == puser_buf->buffer_type)
     {
        *kern_vaddr = __va(puser_buf->phyaddr);
     }
 #ifdef HI_TVP_SUPPORT
-    else if (OMX_ALLOCATE_SECURE_TYPE == puser_buf->buffer_type)
+    else if (OMX_ALLOCATE_SECURE == puser_buf->buffer_type)
     {
        *kern_vaddr = (HI_VOID *)(puser_buf->phyaddr);
     }
 #endif
     else
     {
-       stMMZBuf.u32StartPhyAddr = puser_buf->phyaddr;
+       stBuffer.u32StartPhyAddr = puser_buf->phyaddr;
 
-       ret = HI_DRV_MMZ_Map(&stMMZBuf);
+       ret = HI_DRV_MMZ_Map(&stBuffer);
        if (HI_SUCCESS != ret)
        {
-           OmxPrint(OMX_FATAL, "%s call HI_DRV_MMZ_Map failed!\n", __func__);
+           OmxPrint(OMX_FATAL, "%s call MEM_Map failed!\n", __func__);
            return HI_FAILURE;
        }
-       *kern_vaddr = (HI_VOID *)stMMZBuf.u32StartVirAddr;
+       *kern_vaddr = (HI_VOID *)stBuffer.u32StartVirAddr;
     }
 
 	return HI_SUCCESS;
@@ -338,16 +355,12 @@ static HI_S32 channel_map_kernel_viraddr(OMXVDEC_BUF_DESC *puser_buf, HI_VOID **
 
 static HI_S32 channel_unmap_kernel_viraddr(OMXVDEC_BUF_S *puser_buf)
 {
-    MMZ_BUFFER_S  stMMZBuf;
-    memset(&stMMZBuf, 0, sizeof(MMZ_BUFFER_S));
+    MMZ_BUFFER_S  stBuffer;
+    memset(&stBuffer, 0, sizeof(MMZ_BUFFER_S));
 
-    if (OMX_USE_TYPE      == puser_buf->buf_type
-     || OMX_ALLOCATE_TYPE == puser_buf->buf_type)
-    {
-       stMMZBuf.u32StartVirAddr = (UINT32)puser_buf->kern_vaddr;
-       HI_DRV_MMZ_Unmap(&stMMZBuf);
-    }
-    puser_buf->kern_vaddr = HI_NULL;
+	stBuffer.u32StartVirAddr = (HI_U32)puser_buf->kern_vaddr;
+    stBuffer.u32StartPhyAddr = puser_buf->phy_addr;
+	HI_DRV_MMZ_Unmap(&stBuffer);
 
 	return HI_SUCCESS;
 }
@@ -356,7 +369,7 @@ static OMXVDEC_BUF_S *channel_lookup_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC
 {
 	HI_S32         i = 0;
     HI_S32        *num_of_buffers = HI_NULL;
-	HI_VOID       *tmp_addr       = HI_NULL;
+	HI_U32        tmp_addr        = 0;
 	OMXVDEC_BUF_S *buf_addr_table = HI_NULL;
 
 	if (HI_NULL == pchan || HI_NULL == puser_buf)
@@ -383,8 +396,8 @@ static OMXVDEC_BUF_S *channel_lookup_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC
 
 	for (i = 0; i < *num_of_buffers; i++)
     {
-        tmp_addr = buf_addr_table[i].user_vaddr;
-        if (puser_buf->bufferaddr == tmp_addr)
+        tmp_addr = buf_addr_table[i].phy_addr;
+        if (puser_buf->phyaddr == tmp_addr)
         {
             break;
         }
@@ -392,6 +405,8 @@ static OMXVDEC_BUF_S *channel_lookup_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC
 
     if (i < *num_of_buffers)
     {
+	    // in alloc usr path, insert in table before map user addr, so update user addr here
+        buf_addr_table[i].user_vaddr = puser_buf->bufferaddr;
         return &buf_addr_table[i];
     }
 
@@ -404,7 +419,7 @@ static HI_U32 channel_insert_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 {
 	HI_S32   i = 0;
 	HI_VOID *kern_vaddr     = HI_NULL;
-	HI_VOID *user_vaddr     = HI_NULL;
+	HI_U32   phyaddr        = 0;
 	HI_S32  *num_of_buffers = HI_NULL;
 
 	OMXVDEC_BUF_S *buf_addr_table;
@@ -440,28 +455,28 @@ static HI_U32 channel_insert_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 		return HI_FAILURE;
 	}
     
-	user_vaddr = puser_buf->bufferaddr;
+	phyaddr = puser_buf->phyaddr;
 	i = 0;
-	while ((i < *num_of_buffers) && (user_vaddr != buf_addr_table[i].user_vaddr))
+	while ((i < *num_of_buffers) && (phyaddr != buf_addr_table[i].phy_addr))
     {
         i++;
     }
 
 	if (i < *num_of_buffers)
     {
-        OmxPrint(OMX_ERR, "%s: user_vaddr = 0x%08x already insert\n", __func__, (HI_U32)user_vaddr);
+        OmxPrint(OMX_ERR, "%s: phyaddr = 0x%x already insert\n", __func__, phyaddr);
         return HI_FAILURE;
     }
 
 	/* get kernel virtual address */
 	if (channel_map_kernel_viraddr(puser_buf, &kern_vaddr) != HI_SUCCESS)
     {
-        OmxPrint(OMX_FATAL, "%s: get_addr failed (user_vaddr: 0x%08x)\n", __func__, (HI_U32)user_vaddr);
+        OmxPrint(OMX_FATAL, "%s: get_addr failed (phyaddr: 0x%x)\n", __func__, phyaddr);
 		return HI_FAILURE;
 	}
 
 	pbuf              = buf_addr_table + *num_of_buffers;
-	pbuf->user_vaddr  = user_vaddr;
+	pbuf->user_vaddr  = puser_buf->bufferaddr;
 	pbuf->phy_addr    = puser_buf->phyaddr;
 	pbuf->kern_vaddr  = kern_vaddr;
 	pbuf->client_data = puser_buf->client_data;
@@ -469,19 +484,19 @@ static HI_U32 channel_insert_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 	pbuf->act_len     = 0;
 	pbuf->offset      = 0;
     pbuf->buf_type    = puser_buf->buffer_type;
-
-    pbuf->status = BUF_STATE_IDLE;
-
-	buf_addr_table[*num_of_buffers].buf_id = *num_of_buffers;
-	*num_of_buffers = *num_of_buffers + 1;
+    pbuf->status      = BUF_STATE_IDLE;
+	pbuf->buf_id      = *num_of_buffers;
+	
+	*num_of_buffers += 1;
 
 	if (puser_buf->dir == PORT_DIR_INPUT)
     {
-        OmxPrint(OMX_INBUF, "Insert Input Buffer, PhyAddr = 0x%08x, VirAddr = %p, Success!\n", puser_buf->phyaddr, puser_buf->bufferaddr);
+        OmxPrint(OMX_INBUF, "Insert Input Buffer, PhyAddr = 0x%08x, Success!\n", puser_buf->phyaddr);
     }
     else
     {
-        OmxPrint(OMX_OUTBUF, "Insert Output Buffer, PhyAddr = 0x%08x, VirAddr = %p, Success!\n", puser_buf->phyaddr, puser_buf->bufferaddr);
+        OmxPrint(OMX_OUTBUF, "Insert Output Buffer, PhyAddr = 0x%08x, Success!\n", puser_buf->phyaddr);
+       
     }
 
 	return HI_SUCCESS;
@@ -491,8 +506,8 @@ static HI_U32 channel_delete_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 {
 	HI_U32 i            = 0;
 	HI_S32 is_find      = 0;
+	HI_U32 phyaddr      = 0;
 	unsigned long flags = 0;
-	HI_VOID           *user_vaddr     = HI_NULL;
     spinlock_t        *p_lock         = HI_NULL;
 	HI_U32            *num_of_buffers = HI_NULL;
 	OMXVDEC_BUF_S     *ptmp           = HI_NULL;
@@ -524,15 +539,15 @@ static HI_U32 channel_delete_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 		return HI_FAILURE;
 	}
 
-	user_vaddr = puser_buf->bufferaddr;
-	while ((i < *num_of_buffers) && (user_vaddr != buf_addr_table[i].user_vaddr))
+	phyaddr = puser_buf->phyaddr;
+	while ((i < *num_of_buffers) && (phyaddr != buf_addr_table[i].phy_addr))
     {
         i++;
     }
 
 	if (i == *num_of_buffers)
     {
-        OmxPrint(OMX_ERR, "%s: user_virt_addr = 0x%08x not found", __func__, (HI_U32)user_vaddr);
+        OmxPrint(OMX_ERR, "%s: phyaddr = 0x%x not found", __func__, phyaddr);
         return HI_FAILURE;
 	}
 
@@ -540,12 +555,16 @@ static HI_U32 channel_delete_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 
 	if (BUF_STATE_USING == pbuf->status)
     {
-        OmxPrint(OMX_ERR, "WARN: buffer 0x%p still in use?!\n", user_vaddr);
+        OmxPrint(OMX_ERR, "WARN: buffer 0x%x still in use?!\n", phyaddr);
         //return HI_FAILURE;   //not exit, force continue
 	}
 
-    /* unmap kernel virtual address */
-	channel_unmap_kernel_viraddr(pbuf);
+    if (OMX_ALLOCATE_DRIVER != puser_buf->buffer_type)
+    {
+        /* unmap kernel virtual address */
+        channel_unmap_kernel_viraddr(pbuf);
+    }
+    pbuf->kern_vaddr = HI_NULL;
 
 	if (i < (*num_of_buffers - 1))
     {
@@ -556,24 +575,24 @@ static HI_U32 channel_delete_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
         spin_lock_irqsave(p_lock, flags);
         if (!list_empty(p_queue))
         {
-          list_for_each_entry_safe(p_qbuf, ptmp, p_queue, list)
-          {
-              if (buf_addr_table[*num_of_buffers - 1].user_vaddr == (p_qbuf->user_vaddr))
-              {
-                  is_find = 1;
-                  /* delete old node in list */
-                  list_del(&p_qbuf->list);
-                  break;
-              }
-          }
-        
-          /* insert new node into list */
-          if (is_find)
-          {
-              list_add_tail(&pbuf->list, p_queue);
-          }
-        }
-        spin_unlock_irqrestore(p_lock, flags);
+			list_for_each_entry_safe(p_qbuf, ptmp, p_queue, list)
+			{
+				if (buf_addr_table[*num_of_buffers - 1].phy_addr == (p_qbuf->phy_addr))
+				{
+					is_find = 1;
+					/* delete old node in list */
+					list_del(&p_qbuf->list);
+					break;
+				}
+			}
+
+			/* insert new node into list */
+			if (is_find)
+			{
+				list_add_tail(&pbuf->list, p_queue);
+			}
+		}
+		spin_unlock_irqrestore(p_lock, flags);
     }
 
     memset(&buf_addr_table[*num_of_buffers - 1], 0, sizeof(OMXVDEC_BUF_S));
@@ -591,81 +610,77 @@ static HI_U32 channel_delete_addr_table(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DES
 	return HI_SUCCESS;
 }
 
-static HI_S32 channel_release_idle_buffers(OMXVDEC_CHAN_CTX *pchan, ePORT_DIR dir)
+HI_S32 channel_insert_in_raw_list(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_S *pstream)
 {
-	unsigned long flags;
+	HI_S32 is_find = 0;
+	unsigned long  flags;
 	OMXVDEC_BUF_S *pbuf = HI_NULL;
-	OMXVDEC_BUF_S *ptmp = HI_NULL;
-	OMXVDEC_BUF_DESC user_buf;
-    memset(&user_buf, 0, sizeof(OMXVDEC_BUF_DESC));
-
-	pbuf = ptmp = HI_NULL;
-
-	if (HI_NULL == pchan)
+    
+    spin_lock_irqsave(&pchan->raw_lock, flags);
+    if (!(list_empty(&pchan->raw_queue)))
     {
-        OmxPrint(OMX_FATAL, "%s param invalid!\n", __func__);
-        return HI_FAILURE;
-	}
-
-	if (dir == PORT_DIR_OUTPUT || dir == PORT_DIR_BOTH)
-    {
-		spin_lock_irqsave(&pchan->yuv_lock, flags);
-		list_for_each_entry_safe(pbuf, ptmp, &pchan->yuv_queue, list)
+        list_for_each_entry(pbuf, &pchan->raw_queue, list)
         {
-			if (BUF_STATE_USING == pbuf->status)
-			{
-				continue;
+            if (pstream->phy_addr == pbuf->phy_addr)
+            {
+                is_find = 1;
+                break;
             }
-
-			user_buf.dir          = PORT_DIR_OUTPUT;
-			user_buf.bufferaddr   = pbuf->user_vaddr;
-			user_buf.buffer_len   =  pbuf->buf_len;
-			user_buf.client_data  = pbuf->client_data;
-			user_buf.flags        = 0;
-			user_buf.data_len     = 0;
-			user_buf.timestamp    = 0;
-
-            pbuf->status = BUF_STATE_IDLE;
-			list_del(&pbuf->list);
-
-			message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_S_SUCCESS, (HI_VOID *)&user_buf);
-            OmxPrint(OMX_OUTBUF, "Release Idle Out Buffer: phy addr = 0x%08x\n", pbuf->phy_addr);
-		}
-		spin_unlock_irqrestore(&pchan->yuv_lock, flags);
-	}
-
-	if (dir == PORT_DIR_INPUT || dir == PORT_DIR_BOTH)
-    {
-        spin_lock_irqsave(&pchan->raw_lock, flags);
-        list_for_each_entry_safe(pbuf, ptmp, &pchan->raw_queue, list)
+        }
+    
+        if (is_find)
         {
-            if (BUF_STATE_USING == pbuf->status)
+            OmxPrint(OMX_ERR, "0x%x already in raw list!\n", pstream->phy_addr);
+            spin_unlock_irqrestore(&pchan->raw_lock, flags);
+            return HI_FAILURE;
+        }
+    }
+
+    OmxPrint(OMX_INBUF, "Empty this buffer, phyaddr: 0x%08x, data_len: %d\n", pstream->phy_addr, pstream->act_len);
+    
+    /* insert the stream packet to raw queue */
+    pstream->status = BUF_STATE_QUEUED;
+    list_add_tail(&pstream->list, &pchan->raw_queue);
+    
+    spin_unlock_irqrestore(&pchan->raw_lock, flags);
+
+    return HI_SUCCESS;
+}
+
+HI_S32 channel_insert_in_yuv_list(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_S *pframe)
+{
+	HI_S32 is_find = 0;
+	unsigned long  flags;
+	OMXVDEC_BUF_S *pbuf = HI_NULL;
+    
+    spin_lock_irqsave(&pchan->yuv_lock, flags);
+    if (!(list_empty(&pchan->yuv_queue)))
+    {
+        list_for_each_entry(pbuf, &pchan->yuv_queue, list)
+        {
+            if (pframe->phy_addr == pbuf->phy_addr)
             {
-                continue;
+                is_find = 1;
+                break;
             }
+        }
+    
+        if (is_find)
+        {
+            OmxPrint(OMX_ERR, "0x%x already in yuv list!\n", pframe->phy_addr);
+            spin_unlock_irqrestore(&pchan->yuv_lock, flags);
+            return HI_FAILURE;
+        }
+    }
 
-            pbuf->status = BUF_STATE_IDLE;
-            list_del(&pbuf->list);
+	OmxPrint(OMX_OUTBUF, "Fill this buffer, phyaddr:0x%08x\n", pframe->phy_addr);
 
-            if (pbuf->buf_id != LAST_FRAME_BUF_ID)
-            {
-                user_buf.dir = PORT_DIR_INPUT;
-                user_buf.bufferaddr = pbuf->user_vaddr;
-                user_buf.buffer_len =  pbuf->buf_len;
-                user_buf.client_data = pbuf->client_data;
+	pframe->status = BUF_STATE_QUEUED;
+	list_add_tail(&pframe->list, &pchan->yuv_queue);
+    
+	spin_unlock_irqrestore(&pchan->yuv_lock, flags);
 
-                user_buf.data_len = 0;
-                user_buf.timestamp = 0;
-
-                pbuf->act_len = user_buf.data_len;
-                message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_S_SUCCESS, (void *)&user_buf);
-                OmxPrint(OMX_OUTBUF, "Release Idle In Buffer: phy addr = 0x%08x\n", pbuf->phy_addr);
-            }
-		}
-		spin_unlock_irqrestore(&pchan->raw_lock, flags);
-	}
-
-	return HI_SUCCESS;
+    return HI_SUCCESS;
 }
 
 static HI_S32 channel_add_last_frame(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_S *pstream)
@@ -835,7 +850,10 @@ HI_S32 channel_create_inst(struct file *fd, OMXVDEC_DRV_CFG *pcfg)
         OmxPrint(OMX_FATAL, "%s call msg_queue_init failed!\n", __func__);
 		goto cleanup1;
 	}
-	
+
+    pchan->bLowdelay = pcfg->chan_cfg.s32LowdlyEnable;
+    pchan->m_use_native_buf = pcfg->m_use_native_buf;
+    
     /* Create decoder */
     channel_show_chan_config(pcfg);
     pchan->out_width  = pcfg->cfg_width;
@@ -863,23 +881,24 @@ HI_S32 channel_create_inst(struct file *fd, OMXVDEC_DRV_CFG *pcfg)
         TableSize = (pcfg->cfg_inbuf_num+pcfg->cfg_outbuf_num)*sizeof(OMXVDEC_BUF_S);
         TotalSize = TableSize;
         
-        ret = HI_DRV_MMZ_AllocAndMap("OMXVDEC_EXTRA", "OMXVDEC", TotalSize, 0, &pchan->stExtraMMZBuf);
+        ret = HI_DRV_MMZ_AllocAndMap("OMXVDEC_EXTRA", "OMXVDEC", TotalSize, 0, &pchan->channel_extra_buf);
         if (ret != HI_SUCCESS)
         {
             OmxPrint(OMX_FATAL, "%s alloc extra buffer mem failed\n", __func__);
             goto cleanup4;
         }
         
-        pchan->pInputBufTable        = (HI_VOID *)(pchan->stExtraMMZBuf.u32StartVirAddr);
-        pchan->pOutputBufTable       = pchan->pInputBufTable + pcfg->cfg_inbuf_num*sizeof(OMXVDEC_BUF_S);
-        pchan->u32MaxInBufNum        = pcfg->cfg_inbuf_num;
-        pchan->u32MaxOutBufNum       = pcfg->cfg_outbuf_num;
+        pchan->in_buf_table        = (HI_VOID *)(pchan->channel_extra_buf.u32StartVirAddr);
+        pchan->out_buf_table       = pchan->in_buf_table + pcfg->cfg_inbuf_num*sizeof(OMXVDEC_BUF_S);
+        pchan->max_in_buf_num      = pcfg->cfg_inbuf_num;
+        pchan->max_out_buf_num     = pcfg->cfg_outbuf_num;
+        pchan->eEXTRAMemAlloc      = ALLOC_BY_MMZ;
 
-        pchan->last_frame.phy_addr   = (HI_U32)HI_SEC_MMZ_New(LAST_FRAME_BUF_SIZE, OMXVDEC_SEC_ZONE, "SEC_OMXVDEC_LAST_FRAME");
+        pchan->last_frame.phy_addr = (HI_U32)HI_SEC_MMZ_New(LAST_FRAME_BUF_SIZE, OMXVDEC_SEC_ZONE, "SEC_OMXVDEC_LAST_FRAME");
         if (0 == pchan->last_frame.phy_addr)
         {
             OmxPrint(OMX_FATAL, "%s alloc sec last frame mem failed\n", __func__);
-            omxvdec_release_mem(&pchan->stExtraMMZBuf);
+            omxvdec_release_mem(&pchan->channel_extra_buf, pchan->eEXTRAMemAlloc);
             goto cleanup4;
         }
         
@@ -906,6 +925,7 @@ HI_S32 channel_create_inst(struct file *fd, OMXVDEC_DRV_CFG *pcfg)
         pchan->out_buf_table         = pchan->in_buf_table + pcfg->cfg_inbuf_num*sizeof(OMXVDEC_BUF_S);
         pchan->max_in_buf_num        = pcfg->cfg_inbuf_num;
         pchan->max_out_buf_num       = pcfg->cfg_outbuf_num;
+        pchan->eEXTRAMemAlloc        = ALLOC_BY_MMZ; 
     }
     
 	spin_lock_irqsave(&pchan->chan_lock, flags);
@@ -937,8 +957,8 @@ HI_S32 channel_release_inst(OMXVDEC_CHAN_CTX *pchan)
 	eCHAN_STATE state;
 	OMXVDEC_BUF_S *pbuf    = HI_NULL;
 	OMXVDEC_ENTRY *omxvdec = HI_NULL;
-    MMZ_BUFFER_S stMMZBuf;
-    memset(&stMMZBuf, 0, sizeof(MMZ_BUFFER_S));
+    MMZ_BUFFER_S stBuffer;
+    memset(&stBuffer, 0, sizeof(MMZ_BUFFER_S));
 
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
@@ -990,21 +1010,22 @@ HI_S32 channel_release_inst(OMXVDEC_CHAN_CTX *pchan)
     for (i=0; i<pchan->max_in_buf_num; i++)
     {
        pbuf = &((OMXVDEC_BUF_S *)(pchan->in_buf_table))[i];
-       if (BUF_STATE_INVALID != pbuf->status && OMX_USE_NATIVE_TYPE != pbuf->buf_type)
+       if (BUF_STATE_INVALID != pbuf->status && OMX_ALLOCATE_DRIVER != pbuf->buf_type)
        {
-           stMMZBuf.u32StartPhyAddr = pbuf->phy_addr;
-           stMMZBuf.u32StartVirAddr = (HI_U32)pbuf->kern_vaddr;
-           HI_DRV_MMZ_Unmap(&stMMZBuf);
+           stBuffer.u32StartPhyAddr = pbuf->phy_addr;
+           stBuffer.u32StartVirAddr = (HI_U32)pbuf->kern_vaddr;
+           HI_DRV_MMZ_Unmap(&stBuffer);
        }
     }
+    
     for (i=0; i<pchan->max_out_buf_num; i++)
     {
        pbuf = &((OMXVDEC_BUF_S *)(pchan->out_buf_table))[i];
-       if (BUF_STATE_INVALID != pbuf->status && OMX_USE_NATIVE_TYPE != pbuf->buf_type)
+       if (BUF_STATE_INVALID != pbuf->status && OMX_ALLOCATE_DRIVER != pbuf->buf_type)
        {
-           stMMZBuf.u32StartPhyAddr = pbuf->phy_addr;
-           stMMZBuf.u32StartVirAddr = (HI_U32)pbuf->kern_vaddr;
-           HI_DRV_MMZ_Unmap(&stMMZBuf);
+           stBuffer.u32StartPhyAddr = pbuf->phy_addr;
+           stBuffer.u32StartVirAddr = (HI_U32)pbuf->kern_vaddr;
+           HI_DRV_MMZ_Unmap(&stBuffer);
        }
     }
 
@@ -1013,8 +1034,8 @@ HI_S32 channel_release_inst(OMXVDEC_CHAN_CTX *pchan)
         filp_close(pchan->raw_file, HI_NULL);
         pchan->raw_file = HI_NULL;
     }
-
-    omxvdec_release_mem(&pchan->channel_extra_buf);
+    
+    omxvdec_release_mem(&pchan->channel_extra_buf, pchan->eEXTRAMemAlloc);
 #ifdef HI_TVP_SUPPORT
     if (HI_TRUE == pchan->is_tvp)
     {
@@ -1150,13 +1171,13 @@ HI_S32 channel_reset_inst(OMXVDEC_CHAN_CTX *pchan)
     ret = processor_reset_inst(pchan);
     if (ret != HI_SUCCESS)
     {
-        OmxPrint(OMX_FATAL, "%s call channel_reset_with_vpss failed!\n", __func__);
+        OmxPrint(OMX_FATAL, "%s reset processor failed!\n", __func__);
     }
 
     ret = decoder_reset_inst_with_option(pchan);
     if (ret != HI_SUCCESS)
     {
-        OmxPrint(OMX_FATAL, "%s call channel_reset_with_vfmw failed!\n", __func__);
+        OmxPrint(OMX_FATAL, "%s reset decoder failed!\n", __func__);
     }
 
     pchan->reset_pending = 0;
@@ -1239,7 +1260,7 @@ HI_S32 channel_bind_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser
 
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
-	if (HI_NULL == pchan || HI_NULL == puser_buf || HI_NULL == puser_buf->bufferaddr)
+	if (HI_NULL == pchan || HI_NULL == puser_buf || 0 == puser_buf->phyaddr)
     {
         OmxPrint(OMX_FATAL, "%s param invalid!\n", __func__);
 		return HI_FAILURE;
@@ -1252,7 +1273,7 @@ HI_S32 channel_bind_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser
 		return HI_FAILURE;
 	}
 
-	/*in order to deal with when using android_native_buffer, the stide is not match!*/
+	/*in order to deal with when using android_native_buffer, the stride is not match!*/
 	if (pchan->out_stride != puser_buf->out_frame.stride)
 	{
 		pchan->out_stride = puser_buf->out_frame.stride;
@@ -1269,7 +1290,7 @@ HI_S32 channel_unbind_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *pus
 
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
-    if (HI_NULL == pchan || HI_NULL == puser_buf || HI_NULL == puser_buf->bufferaddr)
+    if (HI_NULL == pchan || HI_NULL == puser_buf || 0 == puser_buf->phyaddr)
     {
         OmxPrint(OMX_FATAL, "%s param invalid!\n", __func__);
         return HI_FAILURE;
@@ -1308,31 +1329,22 @@ HI_S32 channel_empty_this_stream(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puse
     	if (HI_NULL == pstream)
         {
             OmxPrint(OMX_ERR, "%s call channel_lookup_addr_table failed!\n", __func__);
-	        message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_ERR_BITSTREAM_ERR, (HI_VOID *)puser_buf);
+	        message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_ERR_ILLEGAL_OP, (HI_VOID *)puser_buf);
     	    return HI_FAILURE;
     	}
-
-    	pstream->act_len = puser_buf->data_len;
-    	pstream->offset  = puser_buf->data_offset;
-        if (puser_buf->data_len > 0)
+        
+        pstream->act_len    = puser_buf->data_len;
+        pstream->offset     = puser_buf->data_offset;
+        pstream->time_stamp = puser_buf->timestamp;
+        pstream->flags      = puser_buf->flags;
+        
+        ret = channel_insert_in_raw_list(pchan, pstream);
+        if (ret != HI_SUCCESS)
         {
-        	pstream->time_stamp = puser_buf->timestamp;
+	        message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_ERR_ILLEGAL_OP, (HI_VOID *)puser_buf);
+    	    return HI_FAILURE;
         }
-        else
-        {
-            OmxPrint(OMX_WARN, "puser_buf->data_len = 0\n");
-        	pstream->time_stamp = -1;
-        }
-    	pstream->flags = puser_buf->flags;
-
-    	OmxPrint(OMX_INBUF, "empty this buffer, phyaddr: 0x%08x, data_len: %d\n", pstream->phy_addr, puser_buf->data_len);
-
-    	/* insert the streampacket to raw_queue */
-    	pstream->status = BUF_STATE_QUEUED;
-    	spin_lock_irqsave(&pchan->raw_lock, flags);
-    	list_add_tail(&pstream->list, &pchan->raw_queue);
-    	spin_unlock_irqrestore(&pchan->raw_lock, flags);
-
+        
         /* save raw process*/
     #ifdef HI_TVP_SUPPORT
         // debug support: add save secure stream method 
@@ -1381,7 +1393,7 @@ HI_S32 channel_empty_this_stream(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puse
 
 HI_S32 channel_fill_this_frame(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf)
 {
-	unsigned long flags;
+	HI_S32         ret    = HI_FAILURE;
 	OMXVDEC_BUF_S *pframe = HI_NULL;
 
 	OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
@@ -1396,20 +1408,20 @@ HI_S32 channel_fill_this_frame(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_
 	if (HI_NULL == pframe)
     {
         OmxPrint(OMX_ERR, "%s call channel_lookup_addr_table failed!\n", __func__);
+        message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_ERR_ILLEGAL_OP, (HI_VOID *)puser_buf);
         return HI_FAILURE;
 	}
-
+    
 	pframe->offset	= puser_buf->data_offset;
 	pframe->act_len	= 0;
-
-	OmxPrint(OMX_OUTBUF, "fill this buffer, phyaddr:0x%08x, data_len: %d\n", pframe->phy_addr, puser_buf->data_len);
-
-	pframe->status = BUF_STATE_QUEUED;
-
-	spin_lock_irqsave(&pchan->yuv_lock, flags);
-	list_add_tail(&pframe->list, &pchan->yuv_queue);
-	spin_unlock_irqrestore(&pchan->yuv_lock, flags);
-
+    
+    ret = channel_insert_in_yuv_list(pchan, pframe);
+    if (ret != HI_SUCCESS)
+    {
+        message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_ERR_ILLEGAL_OP, (HI_VOID *)puser_buf);
+	    return HI_FAILURE;
+    }
+        
 	OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return HI_SUCCESS;
@@ -1426,58 +1438,164 @@ HI_S32 channel_get_message(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_MSG_INFO *pmsg)
 	return message_dequeue(pchan->msg_queue, pmsg);
 }
 
-HI_S32 channel_flush_inst(OMXVDEC_CHAN_CTX *pchan, ePORT_DIR dir)
+HI_S32 channel_flush_in_port(OMXVDEC_CHAN_CTX *pchan)
 {
-    OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
+	unsigned long flags;
+	OMXVDEC_BUF_S *pbuf = HI_NULL;
+	OMXVDEC_BUF_S *ptmp = HI_NULL;
+	OMXVDEC_BUF_DESC user_buf;
+    memset(&user_buf, 0, sizeof(OMXVDEC_BUF_DESC));
 
-	channel_release_idle_buffers(pchan, dir);
+	pbuf = ptmp = HI_NULL;
 
-	if ((PORT_DIR_INPUT == dir) || (PORT_DIR_BOTH == dir))
+    spin_lock_irqsave(&pchan->raw_lock, flags);
+    list_for_each_entry_safe(pbuf, ptmp, &pchan->raw_queue, list)
     {
-		if (pchan->raw_use_cnt > 0)
+        if (BUF_STATE_USING == pbuf->status)
         {
-            pchan->input_flush_pending = 1;
+            continue;
         }
-		else
-        {
-            message_queue(pchan->msg_queue, VDEC_MSG_RESP_FLUSH_INPUT_DONE, VDEC_S_SUCCESS, HI_NULL);
-		}
-		OmxPrint(OMX_RAWCTRL, "Input Flush...\n");
-	}
 
-	if ((PORT_DIR_OUTPUT == dir) || (PORT_DIR_BOTH == dir))
-    {
-		if (pchan->yuv_use_cnt > 0)
-        {
-			pchan->output_flush_pending = 1;
-        }
-		else
-        {
-			message_queue(pchan->msg_queue, VDEC_MSG_RESP_FLUSH_OUTPUT_DONE, VDEC_S_SUCCESS, HI_NULL);
-		}
+        pbuf->status = BUF_STATE_IDLE;
+        list_del(&pbuf->list);
 
-        if (!pchan->recfg_flag)   // flush command called by seek
+        if (pbuf->buf_id != LAST_FRAME_BUF_ID)
         {
-            OmxPrint(OMX_INFO, "Call to clear remain pictures.\n");
-            channel_reset_inst(pchan);  // reset channel to clear old image
-            pchan->seek_pending = 1;
+            user_buf.dir = PORT_DIR_INPUT;
+            user_buf.bufferaddr = pbuf->user_vaddr;
+            user_buf.buffer_len =  pbuf->buf_len;
+            user_buf.client_data = pbuf->client_data;
+
+            user_buf.data_len = 0;
+            user_buf.timestamp = 0;
+            
+            pbuf->act_len = user_buf.data_len;
+            message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_S_SUCCESS, (void *)&user_buf);
+            OmxPrint(OMX_OUTBUF, "Release Idle In Buffer: phy addr = 0x%08x\n", pbuf->phy_addr);
         }
-        else // flush command called by resolution change
+        else
         {
-	        OmxPrint(OMX_INFO, "Wait for output with no clear.\n");
-            pchan->recfg_flag = 0;
+            pchan->eos_in_list = 0;
         }
 	}
+    
+    if (pchan->raw_use_cnt > 0)
+    {
+        pchan->input_flush_pending = 1;
+    }
+    else
+    {
+        message_queue(pchan->msg_queue, VDEC_MSG_RESP_FLUSH_INPUT_DONE, VDEC_S_SUCCESS, HI_NULL);
+    }
 
-	if (pchan->input_flush_pending)
+	spin_unlock_irqrestore(&pchan->raw_lock, flags);
+
+    if (pchan->input_flush_pending)
     {
         OmxPrint(OMX_INBUF, "Call vfmw to release input buffers.\n");
-		decoder_clear_stream(pchan);  // call decoder to return all es buffer
+        decoder_command_handler(pchan, DEC_CMD_CLEAR_STREAM, HI_NULL); // call decoder to return all es buffer  
+    }
+
+	return HI_SUCCESS;
+}
+
+HI_S32 channel_flush_out_port(OMXVDEC_CHAN_CTX *pchan)
+{
+    unsigned long flags;
+    OMXVDEC_BUF_S *pbuf = HI_NULL;
+    OMXVDEC_BUF_S *ptmp = HI_NULL;
+    OMXVDEC_BUF_DESC user_buf;
+
+    OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
+	
+    if (1 == pchan->recfg_flag) // flush command called by resolution change
+    {
+        OmxPrint(OMX_INFO, "Wait for output with no clear.\n");
+        pchan->recfg_flag = 0;
+    }
+    else // flush command called by seek
+    {
+        OmxPrint(OMX_INFO, "Call to clear remain pictures.\n");
+        channel_reset_inst(pchan);  // reset channel to clear old image
+        pchan->seek_pending = 1;
+    }
+    
+    memset(&user_buf, 0, sizeof(OMXVDEC_BUF_DESC));
+
+    pbuf = ptmp = HI_NULL;
+
+    spin_lock_irqsave(&pchan->yuv_lock, flags);
+    list_for_each_entry_safe(pbuf, ptmp, &pchan->yuv_queue, list)
+    {
+        if (BUF_STATE_USING == pbuf->status)
+        {
+            continue;
+        }
+
+        user_buf.dir          = PORT_DIR_OUTPUT;
+        user_buf.bufferaddr   = pbuf->user_vaddr;
+        user_buf.buffer_len   =  pbuf->buf_len;
+        user_buf.client_data  = pbuf->client_data;
+        user_buf.flags        = 0;
+        user_buf.data_len     = 0;
+        user_buf.timestamp    = 0;
+        
+        pbuf->status = BUF_STATE_IDLE;
+        list_del(&pbuf->list);
+
+        message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_S_SUCCESS, (HI_VOID *)&user_buf);
+        OmxPrint(OMX_OUTBUF, "Release Idle Out Buffer: phy addr = 0x%08x\n", pbuf->phy_addr);
+    }
+
+	if (pchan->yuv_use_cnt > 0)
+    {
+		pchan->output_flush_pending = 1;
+    }
+	else
+    {
+		message_queue(pchan->msg_queue, VDEC_MSG_RESP_FLUSH_OUTPUT_DONE, VDEC_S_SUCCESS, HI_NULL);
 	}
+    spin_unlock_irqrestore(&pchan->yuv_lock, flags);
+
+	OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
+	
+    return HI_SUCCESS;
+}
+
+HI_S32 channel_flush_inst(OMXVDEC_CHAN_CTX *pchan, ePORT_DIR dir)
+{
+    HI_S32 ret_in  = HI_SUCCESS;
+    HI_S32 ret_out = HI_SUCCESS;
+    
+    OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
+
+	if (HI_NULL == pchan)
+    {
+        OmxPrint(OMX_FATAL, "%s param invalid!\n", __func__);
+        return HI_FAILURE;
+	}
+
+    if ((PORT_DIR_INPUT == dir) || (PORT_DIR_BOTH == dir))
+    {
+        ret_in = channel_flush_in_port(pchan);
+        if (ret_in != HI_SUCCESS)
+        {
+            OmxPrint(OMX_ERR, "channel_flush_in_port failed!\n");
+        }
+    }
+
+    if ((PORT_DIR_OUTPUT == dir) || (PORT_DIR_BOTH == dir))
+    {
+        ret_out = channel_flush_out_port(pchan);
+        if (ret_out != HI_SUCCESS)
+        {
+            OmxPrint(OMX_ERR, "channel_flush_out_port failed!\n");
+        }
+    }
 
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
-	return HI_SUCCESS;
+    return (ret_in | ret_out);
 }
 
 HI_S32 channel_report_message(OMXVDEC_CHAN_CTX *pchan, HI_U32 msgcode, HI_VOID *priv)
@@ -1615,7 +1733,7 @@ OMXVDEC_CHAN_CTX* channel_find_inst_by_processor_id(OMXVDEC_ENTRY *omxvdec, HI_S
 	return pchan;
 }
 
-OMXVDEC_CHAN_CTX* channel_find_inst_wait_alloc(OMXVDEC_ENTRY *omxvdec)
+OMXVDEC_CHAN_CTX* channel_find_inst_need_wake_up(OMXVDEC_ENTRY *omxvdec)
 {
     HI_S8 find = 0;
 	unsigned long flags;
@@ -1664,7 +1782,15 @@ HI_VOID channel_proc_entry(struct seq_file *p, OMXVDEC_CHAN_CTX *pchan)
     PROC_PRINT(p, "%-25s :%d\n",    "Stride",       pchan->out_stride);
     PROC_PRINT(p, "%-25s :%s\n",    "ColorFormat",  channel_show_color_format(pchan->color_format));
     PROC_PRINT(p, "%-25s :%d\n",    "EosFlag",      pchan->eos_recv_flag);
-    PROC_PRINT(p, "%-25s :%d\n",    "EofFlag",      pchan->eof_send_flag);
+    PROC_PRINT(p, "%-25s :%d\n",    "EosInList",    pchan->eos_in_list);
+    PROC_PRINT(p, "%-25s :%d\n",    "EofFlag",      pchan->eof_send_flag);    
+	PROC_PRINT(p, "%-25s :%s\n",    "DfsState",     channel_show_dfs_state(pchan->dfs_alloc_flag));
+	
+	if (STD_VP6 == pchan->protocol || STD_VP6A == pchan->protocol || STD_VP6F == pchan->protocol)
+	{
+    PROC_PRINT(p, "%-25s :%d\n",    "VP6 Reversed", pchan->bReversed);        
+	}
+	
     if (DFS_ALREADY_ALLOC == pchan->dfs_alloc_flag)
     {
     PROC_PRINT(p, "%-25s :%dms\n",    "DelayTime",    pchan->dfs_delay_time);

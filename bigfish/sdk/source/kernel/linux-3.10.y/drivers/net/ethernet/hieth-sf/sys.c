@@ -9,6 +9,7 @@
 #include "glb.h"
 #include "sys.h"
 
+extern bool enable_autoeee;
 #ifdef CONFIG_ARCH_GODBOX
 #  include "sys-godbox.c"
 #endif

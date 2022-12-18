@@ -281,6 +281,8 @@ namespace sampleplayer
                 bool    _SetCurrentPeriod(dash::mpd::IPeriod *period);
                 int      InitAdaptionSets();
                 int     _GetPresentationFromBandWidth(std::vector<dash::mpd::IRepresentation *> represenations, uint32_t bandWidth);
+                bool   _findFFSignInAdaptationSet(dash::mpd::IAdaptationSet * adaptationSet);
+                bool   _IsISOFF();
 
         };
     }

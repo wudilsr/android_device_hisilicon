@@ -28,9 +28,10 @@ CFLAGS   := -g -Os -fno-strict-aliasing -fno-common \
 ################################################################################
 START    := start.o
 COBJS    := arm_exception.o chip.o emmc_boot.o lowlevel_init.o \
-	startup.o cache-cp15.o uart.o mmu.o image_data.o \
-	ddrphy_training.o ddrphy_training_func.o ddr_dataeye_training.o \
-	ddrphy_training_print.o
+	startup.o cache-cp15.o uart.o mmu.o image_data.o
+
+DDR_TRAINING_COBJS := ddr_training_impl.o ddr_training_ctl.o ddr_training_boot.o ddr_training_custom.o
+COBJS    += $(DDR_TRAINING_COBJS)
 
 REG      := $(wildcard $(TOPDIR)/*.reg $(TOPDIR)/.reg)
 
@@ -86,9 +87,11 @@ image_data.o: image_data.S image_data.lzma
 
 #############################################################################
 
+$(DDR_TRAINING_COBJS):
+	ln -fs $(TOPDIR)/drivers/ddr/$@ ./
+
 SRC := start.S arm_exception.S chip.c lowlevel_init.c  \
-	early_timer.c himci_boot.c uart.S ddrphy_training.c ddrphy_training_func.S \
-	ddrphy_training_print.S himci_boot_hi3798mx.c ddr_dataeye_training.h
+	early_timer.c himci_boot.c uart.S himci_boot_hi3798mx.c
 
 $(SRC):
 	ln -fs ../$@ ./
@@ -97,9 +100,6 @@ SRC += emmc_boot.c
 emmc_boot.c: himci_boot.c himci_boot_hi3798mx.c early_timer.c
 	ln -fs ../$@ ./
 
-SRC += ddr_dataeye_training.c
-ddr_dataeye_training.c: ddr_dataeye_training.h
-	ln -fs ../$@ ./
 
 SRC += mmu.S cache-cp15.c
 

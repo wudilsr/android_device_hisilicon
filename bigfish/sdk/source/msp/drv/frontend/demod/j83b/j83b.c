@@ -287,9 +287,7 @@ HI_VOID j83b_get_registers(HI_U32 u32TunerPort, void *p)
 static HI_VOID j83b_set_customreg_value(HI_U32 u32TunerPort, HI_BOOL bInversion, HI_U32 u32SymbolRate)
 {
     HI_U8 u8Val =0;
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
-    U_PERI_CRG57 unTmpPeriCrg57;
-#endif
+
     /*set adc type*/
     if ( QAM_AD_OUTSIDE == g_stTunerOps[u32TunerPort].u8AdcType )
     {
@@ -312,7 +310,10 @@ static HI_VOID j83b_set_customreg_value(HI_U32 u32TunerPort, HI_BOOL bInversion,
         qam_write_bit( u32TunerPort, MCTRL_8_ADDR, 2, 1 );
     }
 
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+     U_PERI_CRG57 unTmpPeriCrg57;
 
      unTmpPeriCrg57.u32 = g_pstRegCrg->PERI_CRG57.u32;
 

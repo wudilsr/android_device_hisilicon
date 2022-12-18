@@ -69,7 +69,9 @@ Date				Author        		Modification
     #define CMD_JPG_DECOUTINFO               _IOWR(VID_CMD_MAGIC, 0x14,  HI_DRV_JPEG_OUTMSG_S)
     #define CMD_JPG_DECODE                   _IOWR(VID_CMD_MAGIC, 0x15,  HI_JPEG_DECINFO_S)
     #define CMD_JPG_DESTORYDEC               _IOWR(VID_CMD_MAGIC, 0x16,  HI_S32)
-
+    #define CMD_JPG_GETLUPIXSUM              _IOWR(VID_CMD_MAGIC, 0x17,  HI_DRV_JPEG_OUTMSG_S)
+    #define CMD_JPG_SETMEMTYPE               _IOWR(VID_CMD_MAGIC, 0x18,  HI_DRV_JPEG_INMSG_S)
+    
     #define MAX_COMPONENT_NUM                3
     
     /*************************** Structure Definition ****************************/
@@ -196,7 +198,8 @@ Date				Author        		Modification
          HI_U32   u32SaveLen[2];     /** 存码流的两个buffer的大小     **/
          HI_U32   s32InWidth;        /** 输入图像宽                   **/
 		 HI_U32   s32InHeight;       /** 输入图像高                   **/
-         HI_U32   s32DecHandle;      /** 解码器                       **/
+         HI_U32   u32DecHandle;      /** 解码器                       **/
+         HI_U32   u32MemMask;		 /** 使用的内存类型               **/
          HI_BOOL  bUserPhyMem;       /** 是否传入的为物理地址         **/
          JPG_FMT_E enInFmt;          /** 输入图像像素格式             **/
 	}HI_DRV_JPEG_INMSG_S;
@@ -207,8 +210,10 @@ Date				Author        		Modification
          HI_U32   u32OutWidth[MAX_COMPONENT_NUM];
 		 HI_U32   u32OutHeight[MAX_COMPONENT_NUM];
          HI_U32   u32OutStride[MAX_COMPONENT_NUM];
-         HI_S32   s32Scale;          /** only support 0-2-4-8 **/
-         HI_U32   s32DecHandle;      /** 解码器               **/
+         HI_U32   u32OutSize[MAX_COMPONENT_NUM];   /** 内存分配和uv地址偏移使用这个值 **/
+         HI_S32   s32Scale;                        /** only support 1-2-4-8 **/
+         HI_U32   u32DecHandle;                    /** 解码器               **/
+         HI_U64   u64LuPixValue;
          HI_BOOL  bOutYuvSp420;
          HI_BOOL  bLuPixSum;
          JPG_FMT_E enOutFmt;
@@ -246,62 +251,85 @@ Date				Author        		Modification
     * func          : HI_DRV_JPEG_CreateDec
     * description   : ctreate jpeg decoder.
                       CNcomment: 创建解码器 CNend\n
-    * param[in]     : *ps32Handle
+    * param[in]     : *pu32Handle
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 HI_DRV_JPEG_CreateDec(HI_S32 *ps32Handle);
+    HI_S32 HI_DRV_JPEG_CreateDec(HI_U32 *pu32Handle);
 
+	/***************************************************************************
+    * func          : HI_DRV_JPEG_SetDecMemType
+    * description   : 设置解码器内存使用类型.
+                      CNcomment: 创建解码器 CNend\n
+    * param[in]     : u32Handle
+    * param[in]     : u32MemTypeMask
+    * retval        : HI_SUCCESS 成功
+    * retval        : HI_FAILURE 失败
+    * others:       : NA
+    ****************************************************************************/
+    HI_S32 HI_DRV_JPEG_SetDecMemType(HI_U32 u32Handle,HI_U32 u32MemTypeMask);
+	
     
     /***************************************************************************
     * func          : HI_DRV_JPEG_DecInfo
     * description   : get jpeg input infomation.
                       CNcomment: 获取图片输入信息 CNend\n
-    * param[in]     : s32Handle
+    * param[in]     : u32Handle
     * param[in]     : *stInMsg
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 HI_DRV_JPEG_DecInfo(HI_S32 s32Handle,HI_DRV_JPEG_INMSG_S *stInMsg);
+    HI_S32 HI_DRV_JPEG_DecInfo(HI_U32 u32Handle,HI_DRV_JPEG_INMSG_S *stInMsg);
     
     /***************************************************************************
     * func          : HI_DRV_JPEG_DecOutInfo
     * description   : get jpeg output infomation.
                       CNcomment: 获取图片输出信息 CNend\n
-    * param[in]     : s32Handle
+    * param[in]     : u32Handle
     * param[in]     : *stOutMsg
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 HI_DRV_JPEG_DecOutInfo(HI_S32 s32Handle,HI_DRV_JPEG_OUTMSG_S *stOutMsg);
+    HI_S32 HI_DRV_JPEG_DecOutInfo(HI_U32 u32Handle,HI_DRV_JPEG_OUTMSG_S *stOutMsg);
 
     /***************************************************************************
     * func          : HI_DRV_JPEG_DecFrame
     * description   : dec one frame.
                      CNcomment: 解码一帧图片 CNend\n
-    * param[in]     : s32Handle
+    * param[in]     : u32Handle
     * param[in]     : *stInMsg
     * param[in]     : *stOutMsg
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 HI_DRV_JPEG_DecFrame(HI_S32 s32Handle,HI_DRV_JPEG_INMSG_S *stInMsg,HI_DRV_JPEG_OUTMSG_S *stOutMsg);
+    HI_S32 HI_DRV_JPEG_DecFrame(HI_U32 u32Handle,HI_DRV_JPEG_INMSG_S *stInMsg,HI_DRV_JPEG_OUTMSG_S *stOutMsg);
 
     /***************************************************************************
     * func          : HI_DRV_JPEG_DestoryDec
     * description   : destory decode.
                       CNcomment: 销毁解码器 CNend\n
-    * param[in]     : s32Handle
+    * param[in]     : u32Handle
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 HI_DRV_JPEG_DestoryDec(HI_S32 s32Handle);
+    HI_S32 HI_DRV_JPEG_DestoryDec(HI_U32 u32Handle);
 
+	/***************************************************************************************
+	* func			: HI_DRV_JPEG_GetLuPixSum
+	* description	: get lu pix sum
+					  CNcomment: 获取亮度值和 CNend\n
+	* param[in] 	: u32Handle
+	* retval		:
+	* retval		:
+	* others:		: NA
+	***************************************************************************************/
+	HI_VOID HI_DRV_JPEG_GetLuPixSum(HI_U32 u32Handle,HI_U64* pu64LuPixValue);
+	
     /****************************************************************************/
 
 

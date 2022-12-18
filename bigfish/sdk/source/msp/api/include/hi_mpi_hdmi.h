@@ -25,6 +25,7 @@
 #else
 #include "hi_unf_disp.h"
 #include "hi_drv_hdmi.h"
+#include "drv_hdmi_ioctl.h"
 #include "hi_drv_disp.h"
 #endif
 
@@ -36,6 +37,117 @@ extern "C"
 #endif
 
 #if defined(HI_HDMI_SUPPORT_2_0)
+#define HDMI_UDEEPCOLOR_2_KDEEPCOLOR(udeepcolor, kdeepcolor) \
+do{\
+    if (HI_UNF_HDMI_DEEP_COLOR_24BIT == udeepcolor)\
+    {\
+        kdeepcolor = HDMI_DEEP_COLOR_24BIT;\
+    }\
+    else if (HI_UNF_HDMI_DEEP_COLOR_30BIT == udeepcolor)\
+    {\
+        kdeepcolor = HDMI_DEEP_COLOR_30BIT;\
+    }\
+    else if (HI_UNF_HDMI_DEEP_COLOR_36BIT == udeepcolor)\
+    {\
+        kdeepcolor = HDMI_DEEP_COLOR_36BIT;\
+    }\
+    else if (HI_UNF_HDMI_DEEP_COLOR_OFF == udeepcolor)\
+    {\
+        kdeepcolor = HDMI_DEEP_COLOR_OFF;\
+    }\
+    else\
+    {\
+        kdeepcolor = HDMI_DEEP_COLOR_BUTT;\
+    }\
+}while(0)
+
+#define HDMI_KDEEPCOLOR_2_UDEEPCOLOR(kdeepcolor, udeepcolor) \
+do{\
+    if (HDMI_DEEP_COLOR_24BIT == kdeepcolor)\
+    {\
+        udeepcolor = HI_UNF_HDMI_DEEP_COLOR_24BIT;\
+    }\
+    else if (HDMI_DEEP_COLOR_30BIT == kdeepcolor)\
+    {\
+        udeepcolor = HI_UNF_HDMI_DEEP_COLOR_30BIT;\
+    }\
+    else if (HDMI_DEEP_COLOR_36BIT == kdeepcolor)\
+    {\
+        udeepcolor = HI_UNF_HDMI_DEEP_COLOR_36BIT;\
+    }\
+    else if (HDMI_DEEP_COLOR_OFF == kdeepcolor)\
+    {\
+        udeepcolor = HI_UNF_HDMI_DEEP_COLOR_OFF;\
+    }\
+    else\
+    {\
+        udeepcolor = HI_UNF_HDMI_DEEP_COLOR_BUTT;\
+    }\
+}while(0)
+
+#define HDMI_UEVENTTYPE_2_KEVENTTYPE(ueventtype, keventtype) \
+do{\
+    if (HI_UNF_HDMI_EVENT_HOTPLUG == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_HOTPLUG;\
+    }\
+    else if (HI_UNF_HDMI_EVENT_NO_PLUG == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_HOTUNPLUG;\
+    }\
+    else if (HI_UNF_HDMI_EVENT_EDID_FAIL == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_EDID_FAIL;\
+    }\
+    else if (HI_UNF_HDMI_EVENT_HDCP_FAIL == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_HDCP_FAIL;\
+    }\
+    else if (HI_UNF_HDMI_EVENT_HDCP_SUCCESS == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_HDCP_SUCCESS;\
+    }\
+    else if (HI_UNF_HDMI_EVENT_HDCP_USERSETTING == ueventtype)\
+    {\
+        keventtype = HDMI_EVENT_HDCP_USERSETTING;\
+    }\
+    else\
+    {\
+        keventtype = HDMI_EVENT_BUTT;\
+    }\
+}while(0)
+
+#define HDMI_KEVENTTYPE_2_UEVENTTYPE(keventtype, ueventtype) \
+do{\
+    if (HDMI_EVENT_HOTPLUG == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_HOTPLUG;\
+    }\
+    else if (HDMI_EVENT_HOTUNPLUG == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_NO_PLUG;\
+    }\
+    else if (HDMI_EVENT_EDID_FAIL == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_EDID_FAIL;\
+    }\
+    else if (HDMI_EVENT_HDCP_FAIL == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_HDCP_FAIL;\
+    }\
+    else if (HDMI_EVENT_HDCP_SUCCESS == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_HDCP_SUCCESS;\
+    }\
+    else if (HDMI_EVENT_HDCP_USERSETTING == keventtype)\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_HDCP_USERSETTING;\
+    }\
+    else\
+    {\
+        ueventtype = HI_UNF_HDMI_EVENT_BUTT;\
+    }\
+}while(0)
 
 HI_S32 HI_MPI_HDMI_ComInit(void);
 HI_S32 HI_MPI_HDMI_ComDeInit(void);
@@ -43,17 +155,15 @@ HI_S32 HI_MPI_HDMI_ComOpen(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_OPEN_PARA_S *pst
 HI_S32 HI_MPI_HDMI_ComClose(HI_UNF_HDMI_ID_E enHdmi);
 HI_S32 HI_MPI_HDMI_ComStart(HI_UNF_HDMI_ID_E enHdmi);
 HI_S32 HI_MPI_HDMI_ComStop(HI_UNF_HDMI_ID_E enHdmi);
+HI_S32 HI_MPI_HDMI_ComSetAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_APP_ATTR_S *pstAppAttr);
+HI_S32 HI_MPI_HDMI_ComGetAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_APP_ATTR_S *pstAppAttr);
+HI_S32 HI_MPI_HDMI_ComSetAOAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_AO_ATTR_S *pstDrvAOAttr);
+HI_S32 HI_MPI_HDMI_ComGetAOAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_AO_ATTR_S *pstDrvAOAttr);
+HI_S32 HI_MPI_HDMI_ComSetVOAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_VO_ATTR_S *pstDrvVOAttr);
+HI_S32 HI_MPI_HDMI_ComGetVOAttr(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_VO_ATTR_S *pstDrvVOAttr);
 
-HI_S32 HI_MPI_HDMI_ComSetAttr(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_ATTR_S *pstAttr);
-HI_S32 HI_MPI_HDMI_ComGetAttr(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_ATTR_S *pstAttr);
-HI_S32 HI_MPI_HDMI_ComSetAOAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_AUDIO_ATTR_S *pstHDMIAOAttr);
-HI_S32 HI_MPI_HDMI_ComGetAOAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_AUDIO_ATTR_S *pstHDMIAOAttr);
-HI_S32 HI_MPI_HDMI_ComSetVOAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_VIDEO_ATTR_S *pstHDMIVOAttr);
-HI_S32 HI_MPI_HDMI_ComGetVOAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_VIDEO_ATTR_S *pstHDMIVOAttr);
-
-
-HI_S32 HI_MPI_HDMI_ComSetInfoFrame(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_INFOFRAME_S *pstInfoFrame);
-HI_S32 HI_MPI_HDMI_ComGetInfoFrame(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_INFOFRAME_TYPE_E enInfoFrameType, HI_UNF_HDMI_INFOFRAME_S *pstInfoFrame);
+HI_S32 HI_MPI_HDMI_ComSetInfoFrame(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_INFOFRAME_S *pstInfoFrame);
+HI_S32 HI_MPI_HDMI_ComGetInfoFrame(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_INFOFRAME_S *pstInfoFrame);
 HI_S32 HI_MPI_HDMI_ComSetDeepColor(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_DEEP_COLOR_E enDeepColor);
 HI_S32 HI_MPI_HDMI_ComGetDeepColor(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_DEEP_COLOR_E *penDeepColor);
 HI_S32 HI_MPI_HDMI_ComSetxvYCCMode(HI_UNF_HDMI_ID_E enHdmi, HI_BOOL bEnalbe);
@@ -61,8 +171,7 @@ HI_S32 HI_MPI_HDMI_ComSetAVMute(HI_UNF_HDMI_ID_E enHdmi, HI_BOOL bAvMute);
 
 HI_S32 HI_MPI_HDMI_ComGetStatus(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_STATUS_S *pHdmiStatus);
 
-
-HI_S32 HI_MPI_HDMI_ComGetSinkCapability(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_EDID_BASE_INFO_S *pstSinkCap);
+HI_S32 HI_MPI_HDMI_ComGetSinkCapability(HI_UNF_HDMI_ID_E enHdmi, DRV_HDMI_SINK_CAPABILITY_S *pstDrvCap);
 HI_S32 HI_MPI_HDMI_ComForceGetEDID(HI_UNF_HDMI_ID_E enHdmi, HI_U8 *u8Edid, HI_U32 *u32EdidLength);
 HI_S32 HI_MPI_HDMI_ComReadEDID(HI_U8 *u8Edid, HI_U32 *u32EdidLength);
 
@@ -77,14 +186,13 @@ HI_S32 HI_MPI_HDMI_ComCECStatus(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_STATUS_
 HI_S32 HI_MPI_HDMI_ComCECEnable(HI_UNF_HDMI_ID_E enHdmi);
 HI_S32 HI_MPI_HDMI_ComCECDisable(HI_UNF_HDMI_ID_E enHdmi);
 
-#if defined  (CONFIG_HDMI_STB_SDK)
-
+#ifdef HDMI_HDCP_SUPPORT
 HI_S32 HI_MPI_HDMI_ComLoadHDCPKey(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_LOAD_KEY_S *pstLoadKey);
+#endif
 
 HI_S32 HI_MPI_HDMI_ComGetDelay(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_DELAY_S *pstDelay);
 HI_S32 HI_MPI_HDMI_ComSetDelay(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_DELAY_S *pstDelay);
 
-#endif
 
 #else
 

@@ -571,7 +571,11 @@ png_chunk_report(png_const_structrp png_ptr, png_const_charp message, int error)
 PNG_FUNCTION(void,
 png_fixed_error,(png_const_structrp png_ptr, png_const_charp name),PNG_NORETURN)
 {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+#  define fixed_message " "
+#else
 #  define fixed_message "fixed point overflow in "
+#endif
 #  define fixed_message_ln ((sizeof fixed_message)-1)
    int  iin;
    char msg[fixed_message_ln+PNG_MAX_ERROR_TEXT];
@@ -643,14 +647,22 @@ png_set_longjmp_fn(png_structrp png_ptr, png_longjmp_ptr longjmp_fn,
              * control.  It's always possible to fix this up, but for the moment
              * this is a png_error because that makes it easy to detect.
              */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Libpng jmp_buf still allocated");
+#endif
             /* png_ptr->jmp_buf_ptr = &png_ptr->jmp_buf_local; */
          }
       }
 
       if (size != jmp_buf_size)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Application jmp_buf size changed");
+#endif
          return NULL; /* caller will probably crash: no choice here */
       }
    }
@@ -729,24 +741,30 @@ png_default_error,(png_const_structrp png_ptr, png_const_charp error_message),
       if ((offset > 1) && (offset < 15))
       {
          error_number[offset - 1] = '\0';
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          fprintf(stderr, "libpng error no. %s: %s",
              error_number, error_message + offset + 1);
          fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
       }
 
       else
       {
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          fprintf(stderr, "libpng error: %s, offset=%d",
              error_message, offset);
          fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
       }
    }
    else
 #endif
    {
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       fprintf(stderr, "libpng error: %s", error_message ? error_message :
          "undefined");
       fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
    }
 #else
    PNG_UNUSED(error_message) /* Make compiler happy */
@@ -800,24 +818,30 @@ png_default_warning(png_const_structrp png_ptr, png_const_charp warning_message)
       if ((offset > 1) && (offset < 15))
       {
          warning_number[offset + 1] = '\0';
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          fprintf(stderr, "libpng warning no. %s: %s",
              warning_number, warning_message + offset);
          fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
       }
 
       else
       {
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          fprintf(stderr, "libpng warning: %s",
              warning_message);
          fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
       }
    }
    else
 #  endif
 
    {
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       fprintf(stderr, "libpng warning: %s", warning_message);
       fprintf(stderr, PNG_STRING_NEWLINE);
+#endif
    }
 #else
    PNG_UNUSED(warning_message) /* Make compiler happy */
@@ -905,12 +929,11 @@ png_safe_error),(png_structp png_nonconst_ptr, png_const_charp error_message),
 
       /* Missing longjmp buffer, the following is to help debugging: */
       {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          size_t pos = png_safecat(image->message, (sizeof image->message), 0,
             "bad longjmp: ");
 #else
-         size_t pos = png_safecat(image->message, (sizeof image->message), 0,
-            "");
+         size_t pos = png_safecat(image->message, (sizeof image->message), 0, "");
 #endif
          png_safecat(image->message, (sizeof image->message), pos,
              error_message);

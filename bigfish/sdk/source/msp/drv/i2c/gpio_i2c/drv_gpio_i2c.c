@@ -75,6 +75,12 @@
 #define GPIO_7_BASE     IO_ADDRESS(HI_GPIO_7_ADDR)
 #define GPIO_8_BASE     IO_ADDRESS(HI_GPIO_8_ADDR)
 #define GPIO_9_BASE     IO_ADDRESS(HI_GPIO_9_ADDR)
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+#define GPIO_6_BASE     IO_ADDRESS(HI_GPIO_6_ADDR)
+#define GPIO_7_BASE     IO_ADDRESS(HI_GPIO_7_ADDR)
+#define GPIO_8_BASE     IO_ADDRESS(HI_GPIO_8_ADDR)
+#define GPIO_9_BASE     IO_ADDRESS(HI_GPIO_9_ADDR)
+#define GPIO_10_BASE     IO_ADDRESS(HI_GPIO_10_ADDR)
 #elif defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3798mv100)
 #define GPIO_6_BASE     IO_ADDRESS(HI_GPIO_6_ADDR)
 
@@ -1352,8 +1358,14 @@ HI_S32 HI_DRV_GPIOI2C_Init(HI_VOID)
         g_u32GpioRegAddrs[7] = GPIO_7_BASE;
         g_u32GpioRegAddrs[8] = GPIO_8_BASE;
         g_u32GpioRegAddrs[9] = GPIO_9_BASE;
-    #elif defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3798mv100)
-        g_u32GpioRegAddrs[6] = GPIO_6_BASE;
+	#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+		g_u32GpioRegAddrs[6] = GPIO_6_BASE;
+        g_u32GpioRegAddrs[7] = GPIO_7_BASE;
+        g_u32GpioRegAddrs[8] = GPIO_8_BASE;
+        g_u32GpioRegAddrs[9] = GPIO_9_BASE;
+		g_u32GpioRegAddrs[10] = GPIO_10_BASE;
+	#elif defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3798mv100)
+		g_u32GpioRegAddrs[6] = GPIO_6_BASE;
     #elif  defined(CHIP_TYPE_hi3716cv200)   \
         || defined(CHIP_TYPE_hi3716mv400)   \
         || defined(CHIP_TYPE_hi3718cv100)   \

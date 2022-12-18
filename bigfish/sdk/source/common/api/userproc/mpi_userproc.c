@@ -366,45 +366,42 @@ static HI_VOID* MPI_UPROC_Thread(HI_VOID* pParam)
         if (strlen(stCMD.stCmd.aszCmd) > 0)
         {
             HI_INFO_UPROC("proc GetCMD success: %s.\n", stCMD.stCmd.aszCmd);
-
-            stBuffer.pu8Buf = (HI_U8*)HI_MEM_Map(stCMD.stEntry.stBuf.u32StartPhyAddr, 
-                                                                    stCMD.stEntry.stBuf.u32Size);
+			
+			stBuffer.pu8Buf = (HI_U8*)HI_MALLOC(HI_ID_PROC, HI_PROC_BUFFER_SIZE);
             if (HI_NULL != stBuffer.pu8Buf)
-            {
-                stBuffer.u32Offset = 0;
-                stBuffer.u32Size = stCMD.stEntry.stBuf.u32Size;
+			{
+				stBuffer.u32Offset   = 0;
+				stBuffer.u32Size     = HI_PROC_BUFFER_SIZE;
+				memset(stBuffer.pu8Buf, 0, stBuffer.u32Size);             
+            	/* read */
+	            if (0 == HI_OSAL_Strncmp(HI_UPROC_READ_CMD, stCMD.stCmd.aszCmd, strlen(HI_UPROC_READ_CMD)+1))
+	            {
 
-                memset(stBuffer.pu8Buf, 0, stBuffer.u32Size);
-
-                /* read */
-                if (0 == HI_OSAL_Strncmp(HI_UPROC_READ_CMD, stCMD.stCmd.aszCmd, strlen(HI_UPROC_READ_CMD)+1))
-                {
                     stCMD.stEntry.pfnShowFunc(&stBuffer, stCMD.stEntry.pPrivData);
 
-                     if (HI_SUCCESS != ioctl(g_stUprocParam.s32Fd, UMPIOC_WAKE_READ_TASK, 0))
+                    if (HI_SUCCESS != ioctl(g_stUprocParam.s32Fd, UMPIOC_WAKE_READ_TASK, &stBuffer))
                     {
                         HI_ERR_UPROC("proc print fail.\n");
-                     }
-                }
-                else /* write */
-                {
-                    stCMD.stEntry.pfnCmdFunc(&stBuffer, 
-                                MPI_UPROC_ParseCmd(stCMD.stCmd.aszCmd), 
-                                g_stUprocParam.apu8Cmd, 
-                                stCMD.stEntry.pPrivData);
-                    
-                     if (HI_SUCCESS != ioctl(g_stUprocParam.s32Fd, UMPIOC_WAKE_WRITE_TASK, 0))
-                     {
-                         HI_ERR_UPROC("proc print fail.\n");
-                     }
-                }
+                    }
+	            }
+	            else /* write */
+	            {
+                	stCMD.stEntry.pfnCmdFunc(&stBuffer,
+                            MPI_UPROC_ParseCmd(stCMD.stCmd.aszCmd),
+                            g_stUprocParam.apu8Cmd,
+                            stCMD.stEntry.pPrivData);
 
-                HI_MEM_Unmap(stBuffer.pu8Buf);
-            }
-            else
-            {
-                HI_ERR_UPROC("map usrproc log buffer failed.\n");
-            }
+                 	if (HI_SUCCESS != ioctl(g_stUprocParam.s32Fd, UMPIOC_WAKE_WRITE_TASK, &stBuffer))
+                 	{
+                     	HI_ERR_UPROC("proc print fail.\n");
+                 	}
+	            }
+				HI_FREE(HI_ID_PROC, stBuffer.pu8Buf);
+			}
+			else
+	        {
+	            HI_ERR_UPROC("map usrproc log buffer failed.\n");
+	        }
         }
 
         usleep(10*1000);

@@ -71,7 +71,7 @@ function configBootArgs()
 
 function configOutOfMemory()
 {
-    local HISI_BIGFISH_CFG=$ANDROID_BUILD_TOP/device/hisilicon/bigfish/build/device_common.mk
+    local HISI_BIGFISH_CFG=$ANDROID_BUILD_TOP/device/hisilicon/$TARGET_PRODUCT/device.mk
     local OOM_MINFREE_CFG=$ANDROID_BUILD_TOP/frameworks/base/core/res/res/values/config.xml
     #local OOM_MINFREE_CFG=$ANDROID_BUILD_TOP/frameworks/base/services/java/com/android/server/am/ProcessList.java
     

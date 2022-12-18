@@ -170,6 +170,7 @@ HI_S32 WIN_VIR_Create(HI_DRV_WIN_ATTR_S *pWinAttr, VIRTUAL_S **ppstVirWin)
     pstVirWin->pfnQueueFrm = HI_NULL;
     pstVirWin->pfnDequeueFrame = HI_NULL;
     pstVirWin->enRotation = HI_DRV_ROT_ANGLE_0;
+    pstVirWin->u32FrmRate = 1000;
     pstVirWin->bHoriFlip = HI_FALSE;
     pstVirWin->bVertFlip = HI_FALSE;
     *ppstVirWin = pstVirWin;
@@ -245,7 +246,7 @@ HI_S32 WIN_VIR_SendAttrToSource(VIRTUAL_S *pstVirWin)
 		stWinPriv.ePixFmt = HI_DRV_PIX_FMT_NV21;
 
 		//Max Frame Rate 1000 means 1000fps
-		stWinPriv.u32MaxRate =  1000;
+		stWinPriv.u32MaxRate =  pstVirWin->u32FrmRate;
 
 		stWinPriv.stOutRect.s32X = 0;
 		stWinPriv.stOutRect.s32Y = 0;
@@ -307,6 +308,16 @@ HI_S32 WIN_VIR_SetAttr(VIRTUAL_S *pstVirWin,HI_DRV_WIN_ATTR_S *pWinAttr)
     
     return HI_SUCCESS;
 }
+
+HI_S32 WIN_VIR_SetFrmRate(VIRTUAL_S *pstVirWin,HI_U32 u32FrmRate)
+{
+    pstVirWin->u32FrmRate= u32FrmRate;
+
+    WIN_VIR_SendAttrToSource(pstVirWin);
+
+    return HI_SUCCESS;
+}
+
 HI_S32 WIN_VIR_SetSize(VIRTUAL_S *pstVirWin,HI_U32 u32Width,HI_U32 u32Height)
 {
     

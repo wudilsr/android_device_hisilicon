@@ -96,6 +96,8 @@ static HI_UNF_KEYLED_TIME_S s_keyled_time = {
 };
 #define FD650_SEC_TIME (1000)
 
+DEFINE_SPINLOCK(fd650lock);
+
 static int s_display_switch = DISPLAY_ON;
 static int s_key_curr = KEY_MACRO_NO;
 static int s_key_last = KEY_MACRO_NO;
@@ -311,6 +313,9 @@ HI_U8  FD650_RdByte( void )
 
 void FD650_Write( HI_U16 cmd )
 {
+	HI_SIZE_T flag;
+    
+    spin_lock_irqsave(&fd650lock, flag); 
     //keyled_trace(8,"\n  FD650 FD650_Write\n");
 
     FD650_Start();
@@ -318,12 +323,18 @@ void FD650_Write( HI_U16 cmd )
     FD650_WrByte((HI_U8)cmd);
     FD650_Stop();
 
+	spin_unlock_irqrestore(&fd650lock, flag);
+
     return;
 }
 
 HI_U8 FD650_Read( void )
 {
     HI_U8 keycode = 0;
+
+	HI_SIZE_T flag;
+    
+    spin_lock_irqsave(&fd650lock, flag);      
 
 	//keyled_trace(8,"\n  FD650 FD650_Read \n");
 	
@@ -344,6 +355,8 @@ HI_U8 FD650_Read( void )
     //{
     //    printk("FD650 get:%x!\n", keycode);
     //}
+
+	spin_unlock_irqrestore(&fd650lock, flag);  
 
     return keycode;
 }
@@ -385,7 +398,11 @@ HI_S32 keyled_fd650_display_config(HI_U8 *u8buf)
 
 HI_S32 keyled_fd650_tx_byte(HI_U8 u8data)
 {
+	HI_SIZE_T flag;
+    
+    spin_lock_irqsave(&fd650lock, flag);  
     FD650_WrByte(u8data);
+	spin_unlock_irqrestore(&fd650lock, flag);  
     return 0;
 }
 

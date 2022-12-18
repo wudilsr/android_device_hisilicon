@@ -73,7 +73,7 @@ typedef struct
 
     /*CTI*/
     HI_BOOL bEnCTI;
-    HI_S32   s32CTIHPTmp[3];
+    HI_S32   s32CTIHPTmp[5];
     HI_S16  s16CTICompsatRatio;
     HI_U16  u16CTICoringThrsh;
     HI_U16  u16CTIUnderSwingThrsh;

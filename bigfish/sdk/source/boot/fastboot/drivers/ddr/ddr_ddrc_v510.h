@@ -11,6 +11,7 @@
 /******** DMC **************************/
 /* base address: DDR_REG_BASE_DMC0 DDR_REG_BASE_DMC1 */
 /* register offset address */
+#define DDR_DMC_CFG_PD			0x28   /* PowerDown */
 #define DDR_DMC_CFG_DDRMODE		0x50
 #define DDR_DMC_CFG_EMRS01		0xf0
 #define DDR_DMC_TIMING2			0x108
@@ -33,6 +34,7 @@
 #define DMC_MEM_WIDTH_MASK		0x3
 #define DMC_MRS_MASK			0xffff  /* [15:0] Mode Register mask */
 #define DMC_MR0_BL_MASK			0x3
+#define DMC_CFG_DRAM_TYPE_MASK	0xf /* [3:0]101:DDR2, 110:DDR3, 111:DDR4 */
 
 /* register bit */
 #define DMC_MEM_WIDTH_BIT		4       /* storing data bus width */
@@ -54,6 +56,14 @@
 #define DMC_CMD_RANK0			0x1
 #define DMC_MR0_BL_BUST8		0x0      /* BC8 (fixed) */
 #define DMC_MR0_BL_BUST4		0x2      /* BC4 (fixed) */
+#define DMC_AUTO_TIMING_DIS		0xfffff000 /* auto refresh disable */
+#define DMC_POWER_DOWN_DIS		0xfffffffe /* powerDown disable */
+#define DMC_SCRAMB_DIS			0xffffbfff /* scramb disable */
+#define DMC_CFG_DRAM_TYPE_DDR4	0x7        /* DDR4 */
+
+#ifndef DDR_PHY_NUM
+#define DDR_PHY_NUM				2 /* phy number */
+#endif
 
 #define DMC_SFC_CMD_WRITE(sfc_cmd, addr) \
 		REG_WRITE(sfc_cmd | (1 << DMC_SFC_PRE_DIS_BIT), addr)
@@ -69,6 +79,13 @@
 				DDR_DMC_SFC_RDATA7, DDR_DMC_SFC_RDATA6, \
 				DDR_DMC_SFC_RDATA5, DDR_DMC_SFC_RDATA4)
 
+#define DMC_DISABLE_SCRAMB(relate_reg, i, base_dmc) \
+			REG_WRITE(relate_reg->dmc_scramb[i] & DMC_SCRAMB_DIS, \
+				base_dmc + DDR_DMC_CFG_DDRMODE)
+
+#define DMC_RESTORE_SCRAMB(relate_reg, i, base_dmc) \
+			REG_WRITE(relate_reg->dmc_scramb[i], \
+				base_dmc + DDR_DMC_CFG_DDRMODE);
 /******** AXI **************************/
 /**
  *              DMC -- PHY
@@ -78,9 +95,50 @@
  *              DMC -- PHY
  */
 /* base address: DDR_REG_BASE_AXI */
-#define DDR_AXI_RNG0MAP                  0x104
-#define DDR_AXI_RNG1MAP                  0x114
+/* register offset address */
+#define DDR_AXI_REGION_ATTRIB0           0x104  /* region 0 */
+#define DDR_AXI_REGION_ATTRIB1           0x114  /* region 1 */
 
-#define DDR_AXI_RNG_MASK                 0xffff0000
-#define DDR_AXI_RNG0_VAL                 0x4
-#define DDR_AXI_RNG1_VAL                 0x5
+/* register mask */
+#define AXI_REGION_ATTRIB_CH_MASK        0xffff0000 /* channel mask */
+
+/* register value */
+/* Map to the single channel, independent address */
+#define AXI_RNG_ATTR_CH_MODE             0x4
+#define AXI_RNG_ATTR_CH_START_0          0x0
+#define AXI_RNG_ATTR_CH_START_1          0x1
+
+/********data define************************************/
+struct ddr_ddrc_data {
+	unsigned int region_attrib[DDR_PHY_NUM];
+};
+
+#define DDR_AXI_SAVE_FUNC(relate_reg) \
+	do { \
+		relate_reg->ddrc.region_attrib[0]   = \
+			REG_READ(DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB0); \
+		relate_reg->ddrc.region_attrib[1]   = \
+			REG_READ(DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB1); \
+	} while (0)
+
+#define DDR_AXI_RESTORE_FUNC(relate_reg) \
+	do { \
+		REG_WRITE(relate_reg->ddrc.region_attrib[0], \
+			DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB0); \
+		REG_WRITE(relate_reg->ddrc.region_attrib[1], \
+			DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB1); \
+	} while (0)
+
+#define DDR_AXI_SWITCH_FUNC(index, relate_reg) \
+	do { \
+		unsigned int ch_start = (index == 0 ? \
+			AXI_RNG_ATTR_CH_START_0 : AXI_RNG_ATTR_CH_START_1); \
+		REG_WRITE((relate_reg->ddrc.region_attrib[0] \
+			& AXI_REGION_ATTRIB_CH_MASK) \
+			| AXI_RNG_ATTR_CH_MODE | ch_start, \
+			DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB0); \
+		REG_WRITE((relate_reg->ddrc.region_attrib[1] \
+			& AXI_REGION_ATTRIB_CH_MASK) \
+			| AXI_RNG_ATTR_CH_MODE | ch_start, \
+			DDR_REG_BASE_AXI + DDR_AXI_REGION_ATTRIB1); \
+	} while (0)

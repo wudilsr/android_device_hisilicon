@@ -206,7 +206,12 @@ typedef enum {
 /* This option is defined if the board driver allocates its own buffers
    (e.g. because it needs them DMA-coherent */
 #define NAND_OWN_BUFFERS	0x00040000
+
 /* Options set by nand scan */
+
+#define NAND_BBT_2ND_PAGE	0x10000000
+#define NAND_BBT_LAST_PAGE	0x20000000
+
 /* bbt has already been read */
 #define NAND_BBT_SCANNED	0x40000000
 /* Nand scan has allocated controller struct */
@@ -374,6 +379,7 @@ struct nand_chip {
 	u16		(*read_word)(struct mtd_info *mtd);
 	void		(*write_buf)(struct mtd_info *mtd, const uint8_t *buf, int len);
 	void		(*read_buf)(struct mtd_info *mtd, uint8_t *buf, int len);
+	void		(*cache_read_buf)(struct mtd_info *mtd, uint8_t *buf, int len, uint8_t *oobbuf, int ooblen);
 	int		(*verify_buf)(struct mtd_info *mtd, const uint8_t *buf, int len);
 	void		(*select_chip)(struct mtd_info *mtd, int chip);
 	int		(*block_bad)(struct mtd_info *mtd, loff_t ofs, int getchip);
@@ -405,6 +411,7 @@ struct nand_chip {
 	int		badblockpos;
 
 	int 		state;
+	int		is_spi_nand;
 
 	uint8_t		*oob_poi;
 	struct nand_hw_control  *controller;
@@ -440,6 +447,8 @@ struct nand_chip {
 #define NAND_MFR_AMD		0x01
 #define NAND_MFR_EON		0x92
 #define NAND_MFR_GIGA		0xc8
+#define NAND_MFR_GD		0xc8
+#define NAND_MFR_ESMT		0xC8
 #define NAND_MFR_WINBOND	0xef
 
 /**
@@ -457,10 +466,10 @@ struct nand_chip {
 struct nand_flash_dev {
 	char *name;
 	int id;
-	unsigned long pagesize;
-	unsigned long chipsize;
-	unsigned long erasesize;
-	unsigned long options;
+	unsigned int pagesize;
+	unsigned int chipsize;
+	unsigned int erasesize;
+	unsigned int options;
 };
 
 /**

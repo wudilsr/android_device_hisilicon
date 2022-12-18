@@ -38,18 +38,10 @@
  * with older builds.
  */
 #if ZLIB_VERNUM < 0x1260
-#ifndef PNG_NO_STRING
 #  define PNGZ_MSG_CAST(s) png_constcast(char*,s)
-#else
-#  define PNGZ_MSG_CAST(s) png_constcast(char*,"")
-#endif
 #  define PNGZ_INPUT_CAST(b) png_constcast(png_bytep,b)
 #else
-#ifndef PNG_NO_STRING
 #  define PNGZ_MSG_CAST(s) (s)
-#else
-#  define PNGZ_MSG_CAST(s) ("")
-#endif
 #  define PNGZ_INPUT_CAST(b) (b)
 #endif
 

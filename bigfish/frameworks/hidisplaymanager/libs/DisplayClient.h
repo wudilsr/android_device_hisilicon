@@ -49,6 +49,7 @@ namespace android
             int detachIntf();
             int setVirtScreen(int outFmt);
             int getVirtScreen();
+            int GetVirtScreenSize(int *w, int *h);
             int Reset();
             int SetHDMISuspendTime(int iTime);
             int GetHDMISuspendTime();

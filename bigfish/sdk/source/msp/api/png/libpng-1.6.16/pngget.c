@@ -893,14 +893,13 @@ png_get_sCAL_fixed(png_const_structrp png_ptr, png_const_inforp info_ptr,
        * if neither floating point APIs nor internal floating point arithmetic
        * are enabled.
        */
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       *width = png_fixed(png_ptr, atof(info_ptr->scal_s_width), "sCAL width");
       *height = png_fixed(png_ptr, atof(info_ptr->scal_s_height),
          "sCAL height");
 #else
 	  *width = png_fixed(png_ptr, atof(info_ptr->scal_s_width), "");
-      *height = png_fixed(png_ptr, atof(info_ptr->scal_s_height),
-         "");
+      *height = png_fixed(png_ptr, atof(info_ptr->scal_s_height), "");
 #endif
       return (PNG_INFO_sCAL);
    }

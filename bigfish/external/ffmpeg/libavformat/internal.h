@@ -84,7 +84,7 @@ do {\
      || ret == AVERROR(ENOTCONN) || ret == AVERROR(ESHUTDOWN)      \
      || ret == AVERROR(ECONNREFUSED) || ret == AVERROR(EHOSTDOWN)  \
      || ret == AVERROR(EHOSTUNREACH) || ret == AVERROR(EALREADY)   \
-     || ret == AVERROR(EINPROGRESS))
+     || ret == AVERROR(EINPROGRESS)  || ret == AVERROR(ETIME))
 
 #define IS_RTMP_URL(member) \
     ( \

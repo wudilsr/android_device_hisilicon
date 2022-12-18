@@ -163,7 +163,7 @@ HI_S32 HI_PNG_Open(HI_VOID)
     if (-1 == g_s32MemFd)
     {
         close(g_s32PngFd);
-	g_s32PngFd = -1;
+        g_s32PngFd = -1;
         pthread_mutex_unlock(&g_PngMutex);
         return HI_ERR_PNG_DEV_NOEXIST;
     }
@@ -172,7 +172,7 @@ HI_S32 HI_PNG_Open(HI_VOID)
     if (g_s32MemFd < 0)
     {
         close(g_s32PngFd);
-	g_s32PngFd = -1;
+        g_s32PngFd = -1;
         pthread_mutex_unlock(&g_PngMutex);
         return HI_ERR_PNG_DEV_NOEXIST;
     }
@@ -843,3 +843,54 @@ HI_VOID PNG_UnMap(HI_U32 u32Phyaddr, HI_VOID *pVir, HI_U32 u32Size)
     return;
 }
 #endif
+
+HI_VOID HI_PNG_GetStream(HI_PNG_HANDLE s32Handle, HI_VOID **ppStream, HI_U32 *pu32Len)
+{
+	PNG_READ_INFO_S *pReadParam;
+	HI_S32 s32Ret;
+
+	do
+	{
+		s32Ret = pthread_mutex_lock(&gs_PngApiInstance[s32Handle - 1].stLock);
+	} while (s32Ret != HI_SUCCESS);
+
+	if (HI_NULL == gs_PngApiInstance[s32Handle - 1].pMemHead)
+	{
+		pthread_mutex_unlock(&gs_PngApiInstance[s32Handle - 1].stLock);
+		*ppStream = NULL;
+		*pu32Len = 0;
+		return;
+	}
+	
+    if (HI_NULL == gs_PngApiInstance[s32Handle - 1].pReadParam)
+    {
+        gs_PngApiInstance[s32Handle - 1].pReadParam = (PNG_READ_INFO_S *)malloc(sizeof(PNG_READ_INFO_S));
+        if (HI_NULL == gs_PngApiInstance[s32Handle - 1].pReadParam)
+        {
+            pthread_mutex_unlock(&gs_PngApiInstance[s32Handle - 1].stLock);
+			*ppStream = NULL;
+			*pu32Len = 0;
+			return;
+        }
+        gs_PngApiInstance[s32Handle - 1].pReadParam->u32Read = 0;
+        gs_PngApiInstance[s32Handle - 1].pReadParam->pstMemNode = gs_PngApiInstance[s32Handle - 1].pMemHead;
+    }
+
+	pReadParam = gs_PngApiInstance[s32Handle - 1].pReadParam;
+	if (NULL == pReadParam->pstMemNode)
+	{
+		pthread_mutex_unlock(&gs_PngApiInstance[s32Handle - 1].stLock);
+		*ppStream = NULL;
+		*pu32Len = 0;
+		return;
+	}
+	*ppStream = pReadParam->pstMemNode->stBuf.pVir;
+	*pu32Len = pReadParam->pstMemNode->stBuf.u32Len;	
+
+	pReadParam->pstMemNode = pReadParam->pstMemNode->pNext;
+
+	pthread_mutex_unlock(&gs_PngApiInstance[s32Handle - 1].stLock);
+
+	return;
+}
+

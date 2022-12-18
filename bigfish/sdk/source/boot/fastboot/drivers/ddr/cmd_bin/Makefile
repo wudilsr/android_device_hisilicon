@@ -44,14 +44,14 @@ LINK_FILES = $(SSRC) uart.S ddr_training_custom.c
 .PHONY: $(DDR_CMD).bin
 all: $(DDR_CMD).bin
 	#remove soft link files
-	@rm -vf $(LINK_FILES) *.o *.d *.elf *.map *.srec
+	@rm -f $(LINK_FILES) *.o *.d *.elf *.map *.srec
 
 $(DDR_CMD).bin: $(DDR_CMD).elf
 	$(OBJCOPY) -O srec $(PWD)/$(DDR_CMD).elf $(DDR_CMD).srec
 	$(OBJCOPY) --gap-fill=0xff -O binary $(PWD)/$(DDR_CMD).elf $@
 
 $(DDR_CMD).elf: $(START) $(COBJS) ddr_cmd.lds
-	@echo CMD_TEXT_BASE=$(CMD_TEXT_BASE)
+	#@echo CMD_TEXT_BASE=$(CMD_TEXT_BASE)
 	$(LD) -Bstatic -T ddr_cmd.lds -Ttext $(CMD_TEXT_BASE) $(START) \
 		$(COBJS) $(AOBJS) -Map $(DDR_CMD).map -o $@
 

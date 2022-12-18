@@ -826,8 +826,6 @@ char* bd_get_sub_ts_path(BLURAY *bd, unsigned sub_path_ref, unsigned clip_ref);
 int bd_set_seekflag(BLURAY *bd, int seekflag);
 int bd_get_poster(BLURAY *bd, BLURAY_POSTER_INFO** ppPosterInfo);
 int bd_free_poster(BLURAY *bd);
-
-extern char *strcasestr(const char *haystack, const char *needle);
 #ifdef __cplusplus
 };
 #endif

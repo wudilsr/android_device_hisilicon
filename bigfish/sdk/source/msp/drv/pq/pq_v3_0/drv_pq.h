@@ -30,30 +30,37 @@
 #include "hi_drv_module.h"
 
 #include "pq_mng_acm.h"
-//#include "pq_mng_nr.h"
-#include "pq_mng_sharpen.h"
 #include "pq_mng_csc.h"
 #include "pq_mng_dei.h"
 #include "pq_mng_dci.h"
-#include "pq_mng_scaler.h"
 #include "pq_mng_ifmd.h"
-//#include "pq_mng_pfmd.h"
 #include "pq_mng_sr.h"
 #include "pq_mng_pq_table.h"
-#include "pq_mng_ua.h"
+#include "pq_mng_zme.h"
 
 #include "pq_hal_comm.h"
 #include "pq_hal_acm.h"
 #include "pq_hal_dci.h"
-#include "pq_hal_sharpen.h"
 #include "pq_hal_sr.h"
-//#include "pq_hal_fmd.h"
+#include "pq_hal_dbdr.h"
+#include "pq_hal_sharpen.h"
+
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
-#include "pq_mng_dbdr_98m.h"
-#else
+#include "pq_mng_sharpen.h"
 #include "pq_mng_dbdr.h"
 #endif
 
+#if defined(CHIP_TYPE_hi3798cv200_a)
+#include "pq_mng_dbdm.h"
+#include "pq_mng_hsharpen.h"
+#endif
+
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+#include "pq_mng_sharpen.h"
+#include "pq_mng_dbdm.h"
+#include "pq_mng_deshoot.h"
+#include "pq_mng_tnr.h"
+#endif
 
 
 
@@ -65,53 +72,87 @@ extern "C" {
 
 #define PQ_NAME            "HI_PQ"
 
-#define NUM2LEVEL(Num)   ((Num) * 100 + 127) / 255
-#define LEVEL2NUM(Level) ((Level) * 255 + 50) / 100
+#define NUM2LEVEL(Num)   (((Num) * 100 + 127) / 255)
+#define LEVEL2NUM(Level) (((Level) * 255 + 50) / 100)
 
 /*用户PQ 数据结构*/
 typedef struct  hiDRV_PQ_PARAM_S
 {
-    PICTURE_SETTING_S   stSDPictureSetting;
-    PICTURE_SETTING_S   stHDPictureSetting;
+    PICTURE_SETTING_S stSDPictureSetting;  /*graph SD setting*/
+    PICTURE_SETTING_S stHDPictureSetting;  /*graph HD setting*/
+    PICTURE_SETTING_S stSDVideoSetting;    /*video SD setting*/
+    PICTURE_SETTING_S stHDVideoSetting;    /*video HD setting*/
     COLOR_TEMPERATURE_S stColorTemp;
     HI_PQ_DCI_WIN_S     stDciWin;
-    HI_U32  u32NRLevel;
+    HI_U32  u32TNRLevel;
     HI_U32  u32Sharpness;
     HI_U32  u32DBLevel;
     HI_U32  u32DRLevel;
     HI_U32  u32ColorGainLevel;
     HI_U32  u32DCILevelGain;
-    HI_U32  u323dSharpen;
     HI_U32  u32NrAuto;
     HI_BOOL bDemoOnOff[HI_PQ_DEMO_BUTT];
     HI_BOOL bModuleOnOff[HI_PQ_MODULE_BUTT];
     HI_PQ_COLOR_ENHANCE_S stColorEnhance;
+    HI_PQ_DEMO_MODE_E enDemoMode;
 } HI_DRV_PQ_PARAM_S;
 
 
-/**
- \brief 去初始化客户PQ模块;
- \attention \n
-  无
-
- \param[in]
-
- \retval ::HI_SUCCESS
-
- */
-HI_S32 DRV_PQ_Comsumer_DeInit(HI_VOID);
-
-/**
- \brief 初始化客户PQ模块;
- \attention \n
-  无
-
- \param[in] pszPath: PQ Table文件路径, 如果pszPath参数为空指针, 会采用PQ SDK内部默认参数;
-
- \retval ::HI_SUCCESS
-
- */
-HI_S32 DRV_PQ_Comsumer_Init(HI_CHAR* pszPath);
+/*proc info struct*/
+typedef struct hiPQ_PROC_INFO_S
+{
+    /* DEI FMD */
+    HI_BOOL bDeiEn;
+    HI_U32  u32DeiOutSel;
+    HI_U32  u32DeiGloblGain;
+    HI_S32  s32DeiDirMch;
+    HI_S32  s32DeiFieldOrder;      /* 顶底场序 */
+    HI_U32  u32DeiEdgeSmEn;
+    /* ZME */
+    HI_BOOL bVpssZmeFirEn;
+    HI_BOOL bVdpZmeFirEn;
+    HI_BOOL bVpssZmeMedEn;
+    HI_BOOL bVdpZmeMedEn;
+    /* SR */
+    HI_BOOL bSrEn;
+    HI_U32  u32SrMode;
+    HI_U32  u32SrSharpStr;
+    /* Dither Enable */
+    HI_BOOL bDnrDithEn;
+    HI_BOOL bVpssDithEn;
+    HI_BOOL bVdpDithEn;
+    /* DCI */
+    HI_BOOL bDciEn;
+    HI_U32  u32DciLevelGain;
+    HI_U16  u16DciGain0;
+    HI_U16  u16DciGain1;
+    HI_U16  u16DciGain2;
+    HI_U16  u16DciHStart;
+    HI_U16  u16DciHEnd;
+    HI_U16  u16DciVStart;
+    HI_U16  u16DciVEnd;
+    /* ACM */
+    HI_BOOL bAcmEn;
+    HI_U32  u32AcmLumaGain;
+    HI_U32  u32AcmHueGain;
+    HI_U32  u32AcmSatGain;
+    HI_U32  u32ColorMode;
+    HI_U32  u32FleshStr;
+    /* DBDM/DBDR */
+    HI_BOOL bDbEn;
+    HI_BOOL bDmEn;
+    HI_BOOL bDrEn;
+    HI_U32  u32DbStr;
+    HI_U32  u32DmStr;
+    /* Deshoot */
+    HI_BOOL bDeshootEn;
+    HI_U32  u32DeshootMode;
+    /* TNR */
+    HI_BOOL bTnrEn;
+    HI_U32  u32TnrStr;
+    /* CSC */
+    CSC_MODE_S stCSC[HAL_DISP_LAYER_BUTT];
+} PQ_PROC_INFO_S;
 
 /**
  \brief 显示PQ状态信息
@@ -124,6 +165,9 @@ HI_S32 DRV_PQ_Comsumer_Init(HI_CHAR* pszPath);
 
  */
 HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data);
+
+HI_S32 DRV_PQ_ProcWrite(struct file* file,
+                        const char __user* buf, size_t count, loff_t* ppos);
 
 /**
  \brief 获取标清亮度
@@ -360,32 +404,6 @@ HI_S32 DRV_PQ_SetSharpness(HI_U32 u32Sharpness);
 
 
 /**
- \brief 获取色温参数
- \attention \n
-无
-
- \param[in] pstColorTemp: 色温属性
-
- \retval::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_GetColorTemp(HI_PQ_COLOR_TEMP_S* pstColorTemp);
-
-/**
- \brief 设置色温参数
- \attention \n
-无
-
- \param[out] pstColorTemp: 色温属性
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_SetColorTemp(HI_PQ_COLOR_TEMP_S* pstColorTemp);
-
-/**
  \brief 获取降噪强度
  \attention \n
 无
@@ -397,63 +415,20 @@ HI_S32 DRV_PQ_SetColorTemp(HI_PQ_COLOR_TEMP_S* pstColorTemp);
 
  */
 
-HI_S32 DRV_PQ_GetNRLevel(HI_U32* pu32NRLevel);
-
-
+HI_S32 DRV_PQ_GetTnrLevel(HI_U32* pu32NRLevel);
 
 /**
- \brief 获取块降噪De-blocking强度
+ \brief 设置降噪强度
  \attention \n
 无
 
- \param[out] *pu32DBLevel: 降噪等级, 有效范围: 0~255
-
+ \param[in] u32tNRLevel: 降噪等级, 有效范围: 0~255
 
  \retval ::HI_SUCCESS
 
  */
 
-HI_S32 DRV_PQ_GetDeBlocking(HI_U32* pu32DBLevel);
-
-/**
- \brief 设置块降噪de-blocking强度
- \attention \n
-无
-
- \param[in] u32DBLevel: 降噪等级, 有效范围: 0~255
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_SetDeBlocking(HI_U32 u32DBLevel);
-
-/**
- \brief 获取去纹躁de-ringing强度
- \attention \n
-无
-
- \param[out] *pu32DBLevel: 降噪等级, 有效范围: 0~255
-
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_GetDeRinging(HI_U32* pu32DRLevel);
-
-/**
- \brief 设置去纹躁de-ringing强度
- \attention \n
-无
-
- \param[in] u32DBLevel: 降噪等级, 有效范围: 0~255
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_SetDeRinging(HI_U32 u32DRLevel);
+HI_S32 DRV_PQ_SetTnrLevel(HI_U32 u32TnrLevel);
 
 /**
  \brief 获取颜色增强
@@ -532,70 +507,6 @@ HI_S32 DRV_PQ_SetDCILevelGain(HI_U32 u32DCILevelGain);
  */
 
 HI_S32 DRV_PQ_SetDCIWgtLut(DCI_WGT_S* pstDciCoef);
-
-/**
- \brief 获取NR 自动开关状态
- \attention \n
-  无
-
- \param[out] pu32OnOff
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_GetNrAutoMode(HI_U32* pu32OnOff);
-
-/**
- \brief 设置NR自动开关
- \attention \n
-  无
-
- \param[in] u32OnOff 开关
-
- \retval ::HI_SUCCESS
-
- */
-HI_S32 DRV_PQ_SetNrAutoMode(HI_U32 u32OnOff);
-
-/**
- \brief 获取3D Sharpness 模式状态
- \attention \n
-  无
-
- \param[out] pu32OnOff
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_Get3DSharpMode(HI_U32* pu32OnOff);
-
-/**
- \brief 设置3D Sharpness 模式
- \attention \n
-  无
-
- \param[in] u32OnOff 开关
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 DRV_PQ_Set3DSharpMode(HI_U32 u32OnOff);
-
-/**
- \brief 获取各通道的CSC(用于调试)
- \attention \n
-无
-
- \param[in] enDisplayId
- \param[out] pstCSCMode
-
- \retval ::HI_SUCCESS
-
- */
-HI_S32 DRV_PQ_GetCSCMode(HI_PQ_CSC_ID_E enDisplayId, HI_PQ_VDP_CSC_S* pstCSCMode);
 
 
 /**
@@ -738,12 +649,36 @@ HI_S32 DRV_PQ_SetSixBaseColorLevel(HI_PQ_SIX_BASE_S* pstSixBaseColorOffset);
  */
 HI_S32 DRV_PQ_SetColorEnhanceMode(HI_PQ_COLOR_SPEC_MODE_E enColorSpecMode);
 
+/**
+ \brief set demo display mode
+ \attention \n
+  无
+
+ \param[in] enDemoMode ;
+
+ \retval ::HI_SUCCESS
+
+ */
+HI_S32 DRV_PQ_SetDemoDispMode(HI_PQ_DEMO_MODE_E enDemoMode);
+
+/**
+ \brief get demo display mode
+ \attention \n
+  无
+
+ \param[in] penDemoMode ;
+
+ \retval ::HI_SUCCESS
+
+ */
+HI_S32 DRV_PQ_GetDemoDispMode(HI_PQ_DEMO_MODE_E* penDemoMode);
+
+
 
 HI_S32 DRV_PQ_SetReg(HI_PQ_REGISTER_S* pstAttr);
 
 HI_S32 DRV_PQ_GetReg(HI_PQ_REGISTER_S* pstAttr);
 
-HI_S32 DRV_PQ_GetPqParam(HI_VOID);
 
 
 #ifdef __cplusplus

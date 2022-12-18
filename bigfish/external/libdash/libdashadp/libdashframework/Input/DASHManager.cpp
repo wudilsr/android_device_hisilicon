@@ -170,9 +170,6 @@ void        DASHManager::Stop                           ()
     dash_log(DASH_LOG_INFO, "[%s,%d][%p]dash manager stopping...\n", __FUNCTION__, __LINE__, this);
     this->state = DASH_MANAGER_STATE_REQUEST_STOP;
     this->isDownloading = false;
-    this->totalConsumedUS = 0;
-    this->totalDownloadBytes = 0;
-    this->downloadInfoNodes.clear();
 
     if (this->bufferingThread != NULL)
     {
@@ -209,6 +206,9 @@ void        DASHManager::Stop                           ()
     this->downloadSegmentNum = 0;
     this->readSegmentNum = 0;
     this->logic->SetPosition(0);
+    this->totalConsumedUS = 0;
+    this->totalDownloadBytes = 0;
+    this->downloadInfoNodes.clear();
     this->state = DASH_MANAGER_STATE_STOPPED;
     dash_log(DASH_LOG_INFO, "[%s,%d][%p]dash manager stopping done.\n", __FUNCTION__, __LINE__, this);
 }

@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR/3/ILvJjvCDnm6hvWJCDVpee346Pwz3XWlbkrVm6bFiOdXjgCwNGkl75+gw0J+qVX6Nt
-i8jMOJOjJuHL3bH57kbOJla/TcZpeIX9YlH8Xb9V+dJ5yWYGZgrlunJWSAPZ9w==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxdEccG3a9aiWl+mI5RmRq1l/to5G4GxooHXw39LhCX4CDTyxxre18BXTDwhFkum2Hnhl
+KLGdSsQ7UL6HCSiG3QSX8VbHQDCzgNIs1qK1Cyd20Y3oAvIvKyYfDN30wAqP4Q==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -29,7 +43,7 @@ HI_S32 VPSS_FB_Init(VPSS_FB_INFO_S *pstFrameList,
     HI_S32 s32Ret;
     VPSS_FB_NODE_S* pstNode;
     VPSS_BUFFER_S* pstBuf;
-    MMZ_BUFFER_S* pstMMZBuf;
+    VPSS_MEM_S* pstMemBuf;
     MMZ_BUFFER_S* pstPrivDataBuf;
     HI_DRV_VPSS_BUFLIST_CFG_S* pstBufCfg;
 
@@ -69,26 +83,26 @@ HI_S32 VPSS_FB_Init(VPSS_FB_INFO_S *pstFrameList,
 
 			pstBuf->u32Stride = 0;
 
-			pstMMZBuf = &( pstBuf->stMMZBuf );
+			pstMemBuf = &( pstBuf->stMemBuf );
 			pstPrivDataBuf = &(pstBuf->stPrivDataBuf);
 
 			switch(pstBufCfg->eBufType)
 			{
 				case HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE:
-                    pstMMZBuf->u32StartPhyAddr = 0;
-                    pstMMZBuf->u32StartVirAddr = 0;
-                    pstMMZBuf->u32Size = 0;
-
+                    pstMemBuf->u32StartPhyAddr = 0;
+                    pstMemBuf->u32StartVirAddr = 0;
+                    pstMemBuf->u32Size = 0;
+                    pstMemBuf->u8flag = VPSS_MEM_FLAG_NORMAL;
                     pstPrivDataBuf->u32StartPhyAddr = 0;
                     pstPrivDataBuf->u32StartVirAddr = 0;
                     pstPrivDataBuf->u32Size = 0;
 					s32Ret = HI_SUCCESS;
                     break;
                 case HI_DRV_VPSS_BUF_USER_ALLOC_MANAGE:
-                    pstMMZBuf->u32StartPhyAddr = 0;
-                    pstMMZBuf->u32StartVirAddr = 0;
-                    pstMMZBuf->u32Size = pstBufListCfg->u32BufSize;
-
+                    pstMemBuf->u32StartPhyAddr = 0;
+                    pstMemBuf->u32StartVirAddr = 0;
+                    pstMemBuf->u32Size = pstBufListCfg->u32BufSize;
+                    pstMemBuf->u8flag = VPSS_MEM_FLAG_NORMAL;
                     pstPrivDataBuf->u32StartPhyAddr = 0;
                     pstPrivDataBuf->u32StartVirAddr = 0;
                     pstPrivDataBuf->u32Size = 0;
@@ -145,7 +159,7 @@ HI_S32 VPSS_FB_DelInit(VPSS_FB_INFO_S *pstFrameList)
     VPSS_FB_NODE_S *pstTarget;
     LIST *pos, *n;
     HI_U32 u32DelCount;
-    MMZ_BUFFER_S *pstMMZ;
+    VPSS_MEM_S *pstMemBuf;
     pstBufCfg = &(pstFrameList->stBufListCfg);
 
     u32DelCount = 0;
@@ -155,13 +169,13 @@ HI_S32 VPSS_FB_DelInit(VPSS_FB_INFO_S *pstFrameList)
     {
         pstTarget = list_entry(pos, VPSS_FB_NODE_S, node);
 
-        pstMMZ = &(pstTarget->stBuffer.stMMZBuf);
+        pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
         
 		if (pstBufCfg->eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE)
 		{    
-			if (pstMMZ->u32StartPhyAddr != 0 || pstMMZ->u32StartVirAddr!= 0)
+			if (pstMemBuf->u32StartPhyAddr != 0 || pstMemBuf->u32StartVirAddr!= 0)
 			{
-				HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->stBuffer.stMMZBuf));
+				VPSS_OSAL_FreeMem(pstMemBuf);
 			}
 		}
         list_del_init(pos);
@@ -177,12 +191,12 @@ HI_S32 VPSS_FB_DelInit(VPSS_FB_INFO_S *pstFrameList)
     {
         pstTarget = list_entry(pos, VPSS_FB_NODE_S, node);
 
-        pstMMZ = &(pstTarget->stBuffer.stMMZBuf);
+        pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
         if (pstBufCfg->eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE)
 		{    
-			if (pstMMZ->u32StartPhyAddr != 0 || pstMMZ->u32StartVirAddr!= 0)
+			if (pstMemBuf->u32StartPhyAddr != 0 || pstMemBuf->u32StartVirAddr!= 0)
 			{
-				HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->stBuffer.stMMZBuf));
+				VPSS_OSAL_FreeMem(pstMemBuf);
 			}
 		}
 
@@ -199,12 +213,12 @@ HI_S32 VPSS_FB_DelInit(VPSS_FB_INFO_S *pstFrameList)
     {
         pstTarget = list_entry(pos, VPSS_FB_NODE_S, node);
 
-        pstMMZ = &(pstTarget->stBuffer.stMMZBuf);
+        pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
         if (pstBufCfg->eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE)
 		{    
-			if (pstMMZ->u32StartPhyAddr != 0 || pstMMZ->u32StartVirAddr!= 0)
+			if (pstMemBuf->u32StartPhyAddr != 0 || pstMemBuf->u32StartVirAddr!= 0)
 			{
-				HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->stBuffer.stMMZBuf));
+				VPSS_OSAL_FreeMem(pstMemBuf);
 			}
 		}
 
@@ -382,10 +396,10 @@ HI_S32 VPSS_FB_RelFulFrmBuf(VPSS_FB_INFO_S *pstFrameList,HI_DRV_VIDEO_FRAME_S *p
 
         pstBuf = &(pstTarget->stBuffer);
 
-        if(pstBuf->stMMZBuf.u32StartPhyAddr
+        if(pstBuf->stMemBuf.u32StartPhyAddr
            == pstFrame->stBufAddr[0].u32PhyAddr_Y
             /*FOR 3D FRM*/
-           || pstBuf->stMMZBuf.u32StartPhyAddr
+           || pstBuf->stMemBuf.u32StartPhyAddr
            == pstFrame->stBufAddr[1].u32PhyAddr_Y)
         {
             if(pstTarget->stOutFrame.u32FrameIndex != pstFrame->u32FrameIndex)
@@ -478,10 +492,13 @@ VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBufNoMmz(VPSS_FB_INFO_S *pstFrameList,HI_DRV
     
     if (pstTarget)
     {    
-        if((pstTarget->stBuffer.stMMZBuf.u32StartPhyAddr != 0))
+        if((pstTarget->stBuffer.stMemBuf.u32StartPhyAddr != 0))
         {
-            HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->stBuffer.stMMZBuf));
-            pstTarget->stBuffer.stMMZBuf.u32Size = 0;
+			VPSS_MEM_S *pstMemBuf;
+            pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
+					VPSS_OSAL_FreeMem(pstMemBuf);
+                    pstMemBuf->u32Size = 0;
+                    pstTarget->stBuffer.u32Stride = 0;
         }
         memcpy(&(pstTarget->stOutFrame), pstFrame, 
                 sizeof(HI_DRV_VIDEO_FRAME_S));
@@ -496,13 +513,15 @@ VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBufNoMmz(VPSS_FB_INFO_S *pstFrameList,HI_DRV
 
 VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBuf(VPSS_FB_INFO_S *pstFrameList,
                             HI_U32 u32Height,HI_U32 u32Width,
-                            HI_DRV_PIX_FORMAT_E ePixFormat,HI_DRV_PIXEL_BITWIDTH_E  enOutBitWidth)
+                            HI_DRV_PIX_FORMAT_E ePixFormat,
+							HI_DRV_PIXEL_BITWIDTH_E  enOutBitWidth,
+							HI_BOOL bSecure)
 {
     HI_S32 s32Ret;
     VPSS_FB_NODE_S *pstTarget;
     LIST *pos, *n;
     HI_DRV_VPSS_BUFLIST_CFG_S* pstBufCfg;
-    MMZ_BUFFER_S *pstMMZ;
+    VPSS_MEM_S *pstMemBuf;
     unsigned long flags;
     pstBufCfg = &( pstFrameList->stBufListCfg );
 
@@ -525,32 +544,44 @@ VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBuf(VPSS_FB_INFO_S *pstFrameList,
             HI_U32 u32BufSize = 0;
             HI_U32 u32BufStride = 0;
 
-            pstMMZ = &(pstTarget->stBuffer.stMMZBuf);
+            pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
             
             VPSS_OSAL_CalBufSize(&u32BufSize, &u32BufStride, 
                         u32Height, u32Width, ePixFormat,enOutBitWidth);
                       
-            if (pstMMZ->u32Size == 0 
+            if (pstMemBuf->u32Size == 0 
                || pstTarget->stBuffer.u32Stride == 0
-               || u32BufSize != pstMMZ->u32Size
+               || u32BufSize != pstMemBuf->u32Size
                || u32BufStride != pstTarget->stBuffer.u32Stride)
             {
-                if (pstMMZ->u32StartPhyAddr != 0)
+                if (pstMemBuf->u32StartPhyAddr != 0)
                 {
-                    HI_DRV_MMZ_UnmapAndRelease(pstMMZ);
-                    pstMMZ->u32Size = 0;
+					VPSS_OSAL_FreeMem(pstMemBuf);
+                    pstMemBuf->u32Size = 0;
                     pstTarget->stBuffer.u32Stride = 0;
                 }
 				
-                s32Ret = HI_DRV_MMZ_AllocAndMap( "VPSS_FrmBuf", "VPSS", 
-                                            u32BufSize, 0, 
-                                            pstMMZ);
+				if (!bSecure)
+				{
+					s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_NORMAL,u32BufSize,
+							"VPSS_FrmBuf", 
+							"VPSS", 
+							pstMemBuf);
+				}
+				else
+				{
+					s32Ret = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_SECURE,u32BufSize,
+							"VPSS_FrmBuf", 
+							"VPSS", 
+							pstMemBuf);
+				}
+
                 if (s32Ret == HI_FAILURE)
                 {
-                    pstMMZ->u32Size = 0;
+                    pstMemBuf->u32Size = 0;
                     pstTarget->stBuffer.u32Stride = 0;
-                    pstMMZ->u32StartPhyAddr = 0;
-                    pstMMZ->u32StartVirAddr = 0;
+                    pstMemBuf->u32StartPhyAddr = 0;
+                    pstMemBuf->u32StartVirAddr = 0;
                     VPSS_FB_AddEmptyFrmBuf(pstFrameList, pstTarget,VPSS_FB_TYPE_NORMAL);
                     VPSS_FATAL("Dynamic Alloc Buffer Failed.BufSize %#x\n",u32BufSize);
                     return HI_NULL;
@@ -820,7 +851,7 @@ HI_S32 VPSS_FB_AllocExtBuffer(VPSS_FB_INFO_S *pstFrameList,HI_U32 u32ExtNumb)
     HI_U32 i;
     VPSS_FB_NODE_S* pstNode;
     VPSS_BUFFER_S* pstBuf;
-    MMZ_BUFFER_S* pstMMZBuf;
+    VPSS_MEM_S* pstMemBuf;
     HI_DRV_VPSS_BUFLIST_CFG_S* pstBufCfg;
     HI_S32 s32Ret;
     unsigned long flags;
@@ -863,10 +894,10 @@ HI_S32 VPSS_FB_AllocExtBuffer(VPSS_FB_INFO_S *pstFrameList,HI_U32 u32ExtNumb)
 
                 pstBuf->u32Stride = 0;
 
-                pstMMZBuf = &( pstBuf->stMMZBuf );
-                pstMMZBuf->u32StartPhyAddr = 0;
-                pstMMZBuf->u32StartVirAddr = 0;
-                pstMMZBuf->u32Size = 0;
+                pstMemBuf = &(pstBuf->stMemBuf);
+                pstMemBuf->u32StartPhyAddr = 0;
+                pstMemBuf->u32StartVirAddr = 0;
+                pstMemBuf->u32Size = 0;
                 
                 VPSS_FB_AddEmptyFrmBuf(pstFrameList,pstNode,VPSS_FB_TYPE_EXTERN);
                 
@@ -887,7 +918,7 @@ HI_S32 VPSS_FB_RlsExtBuffer(VPSS_FB_INFO_S *pstFrameList)
     HI_DRV_VPSS_BUFLIST_CFG_S *pstBufCfg;
     VPSS_FB_NODE_S *pstTarget;
     LIST *pos, *n;
-    MMZ_BUFFER_S *pstMMZ;
+    VPSS_MEM_S *pstMemBuf;
     HI_U32 u32RlsCnt;
     HI_U32 i;
     unsigned long flags;
@@ -913,16 +944,12 @@ HI_S32 VPSS_FB_RlsExtBuffer(VPSS_FB_INFO_S *pstFrameList)
         if (pstRlsNode[i] != HI_NULL)
         {
             pstTarget = pstRlsNode[i];
-            pstMMZ = &(pstTarget->stBuffer.stMMZBuf);
+            pstMemBuf = &(pstTarget->stBuffer.stMemBuf);
             if (pstBufCfg->eBufType == HI_DRV_VPSS_BUF_VPSS_ALLOC_MANAGE)
 			{    
-				if (pstMMZ->u32StartPhyAddr != 0 || pstMMZ->u32StartVirAddr != 0)
+				if (pstMemBuf->u32StartPhyAddr != 0 || pstMemBuf->u32StartVirAddr != 0)
 				{
-					HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->stBuffer.stMMZBuf));
-				}
-				else
-				{
-					
+					VPSS_OSAL_FreeMem(pstMemBuf);
 				}
 			}
             VPSS_VFREE(pstTarget);

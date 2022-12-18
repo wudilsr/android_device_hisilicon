@@ -90,8 +90,14 @@ typedef enum {
 	PORT_SETTING_CHANGE_STATE,
 	PORT_SETTING_RECONFIG_STATE,
 	ERROR_STATE
-} test_status;
+} inst_status;
 
+typedef enum {
+	THREAD_INVALID = 0,
+	THREAD_WAITING,
+	THREAD_RUNNING,
+	THREAD_BUTT
+} thread_status;
 
 typedef enum {
 	FREE_HANDLE_AT_LOADED = 1,
@@ -123,22 +129,20 @@ typedef struct
     FILE  *inputBufferFileFd;
     
     Queue *etb_queue;
-    Queue *fbd_queue;
+    Queue *ftb_queue;
     
     pthread_t ebd_thread_id;
     pthread_t fbd_thread_id;
     
     //MUTEXT
     pthread_mutex_t	etb_lock;
-    pthread_mutex_t	fbd_lock;
-    pthread_mutex_t	lock;
-    pthread_cond_t	cond;
-    pthread_mutex_t	eos_lock;
-    pthread_mutex_t  enable_lock;
+    pthread_mutex_t	ftb_lock;
+    pthread_mutex_t	event_lock;
+    pthread_cond_t	event_cond;
     
     //SEMA
     sem_t etb_sem;
-    sem_t fbd_sem;
+    sem_t ftb_sem;
     sem_t in_flush_sem;
     sem_t out_flush_sem;
     sem_t seek_sem;
@@ -158,10 +162,13 @@ typedef struct
     int width;
     int sliceheight;
     int stride;
+    
     int used_ip_buf_cnt;
     int used_op_buf_cnt;
-    int ebd_cnt;
-    int fbd_cnt;
+    int free_ip_buf_cnt;
+    int free_op_buf_cnt;
+	int receive_frame_cnt;
+    
     int bInputEosReached;
     int bOutputEosReached;
     int flush_input_progress;
@@ -169,47 +176,39 @@ typedef struct
     int seeking_progress;
     int fbd_thread_exit;
     int ebd_thread_exit;
-    
-    unsigned cmd_data;
-    unsigned etb_count;
-    unsigned free_op_buf_cnt;
-    
+        
     char in_filename[512];
     
-    unsigned int timestampInterval;
-    codec_format codec_format_option;
+	int test_option;
     int alloc_use_option;
-    freeHandle_test freeHandle_option;
     int sent_disabled;
-    test_status currentStatus;
-    test_status preStatus;
+    codec_format codec_format_option;
+    freeHandle_test freeHandle_option;
     
+    inst_status currentStatus;
+    inst_status preStatus;
+    thread_status  EtbStatus;
+    thread_status  FtbStatus;
+    
+	bool frame_in_packet;
+	bool readsize_add_in_stream;
+
+    int last_cmd;
+   	int start_time;
+	int stop_time;
+    int frame_flag;
+    int send_cnt;
+    unsigned long frame_len;
+    unsigned timestampInterval;
+	 
+	int tvp_option;
+    HI_MMZ_BUF_S  pCAStreamBuf;
     HI_MMZ_BUF_S buffer[10];
+	STR_CONTEXT_S stContext;
     
     struct timeval t_first_send;
 	struct timeval t_last_get;
 	struct timeval t_cur_get;
-    
-    int last_cmd;
-   
-    unsigned long frame_len;
-    int frame_flag;
-    int send_cnt;
-	int receive_frame_cnt;
-	 
-	int test_option;
-	STR_CONTEXT_S stContext;
-	
-	bool frame_in_packet;
-
-	bool readsize_add_in_stream;
-
-	int tvp_option;
-    HI_MMZ_BUF_S  pCAStreamBuf;
-
-	int start_time;
-	int stop_time;
-
 }OmxTestInfo_S;
 
 
@@ -222,7 +221,6 @@ static int disable_output_port(OmxTestInfo_S *);
 static int enable_output_port(OmxTestInfo_S *);
 static int output_port_reconfig(OmxTestInfo_S *);
 static int seek_progress(OmxTestInfo_S *);
-static void free_output_buffers(OmxTestInfo_S *);
 static int Init_Decoder(OmxTestInfo_S *);
 static int Play_Decoder(OmxTestInfo_S *);
 static int open_video_file (OmxTestInfo_S *);

@@ -190,6 +190,8 @@ static DisplayLayerFuncs primaryLayerFuncs = {
      .FlipRegion         = primaryFlipRegion,
 };
 
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
+
 /******************************************************************************/
 /* hisilicon screen private data type. */
 typedef struct 
@@ -219,6 +221,10 @@ dfb_res_map map[] = {
 	{HI_DRV_DISP_FMT_576P_50, DSETV_PAL, DSEF_50HZ, DSOR_720_576, DSESM_PROGRESSIVE},	/* 576P 50Hz */
 	{HI_DRV_DISP_FMT_480P_60, DSETV_NTSC, DSEF_60HZ, DSOR_720_480, DSESM_PROGRESSIVE},	/* 480P 60Hz */
 };
+
+#endif
+
+
 static DFBResult primaryInitScreen  ( CoreScreen           *screen,
                                       CoreGraphicsDevice   *device,
                                       void                 *driver_data,
@@ -244,6 +250,9 @@ static DFBResult primaryGetVSyncCount( CoreScreen           *screen,
                                        void                 *driver_data,
                                        void                 *screen_data,
                                        unsigned long        *ret_count );
+
+
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
 
 static int hisi_screen_data_size(void);
 
@@ -285,6 +294,9 @@ static DFBResult hisi_get_screen_size   ( CoreScreen                  *screen,
 		void                        *screen_data,
 		int                         *ret_width,
 		int                         *ret_height );
+
+#endif
+
 static ScreenFuncs primaryScreenFuncs = {
      .InitScreen    = primaryInitScreen,
      .SetPowerMode  = primarySetPowerMode,
@@ -292,15 +304,17 @@ static ScreenFuncs primaryScreenFuncs = {
      .GetScreenSize = primaryGetScreenSize,
      .GetVSyncCount = primaryGetVSyncCount,
 
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
      .ScreenDataSize	= hisi_screen_data_size,
-     .InitEncoder	= hisi_init_encoder,
+     .InitEncoder	    = hisi_init_encoder,
      .TestEncoderConfig	= hisi_test_encoder_config,
      .SetEncoderConfig	= hisi_config_encoder,
-#if 1
-     .InitMixer	= hisi_init_mixer,
+	 #if 1
+     .InitMixer	        = hisi_init_mixer,
      .SetMixerConfig	= hisi_config_mixer,
+	 #endif
+     .GetScreenSize     = hisi_get_screen_size,
 #endif
-     .GetScreenSize = hisi_get_screen_size,
 };
 
 /******************************************************************************/
@@ -1117,6 +1131,9 @@ init_modes( void )
      return DFB_OK;
 }
 
+
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
+
 /******************************************************************************/
 /******************************************************************************/
 /*				Hisilicon opentv 5 adapter code			*/
@@ -1165,6 +1182,8 @@ HI_S32 O5SDK_Disp_Init(HI_DRV_DISP_FMT_E enFormat)
 
 	stInt.eID = HI_DRV_DISP_INTF_CVBS0;
 	stInt.u8VDAC_Y_G = 3;
+	stInt.u8VDAC_Pb_B = 0xff;
+	stInt.u8VDAC_Pr_R = 0xff;
 	ret = HI_MPI_DISP_AddIntf(HI_DRV_DISPLAY_0 , &stInt);
 	if (ret)
 	{
@@ -1531,6 +1550,10 @@ static DFBResult hisi_get_screen_size   ( CoreScreen                  *screen,
 	return DFB_OK;
 }
 /*			End Hisilicon opentv 5 adapter code			*/
+
+#endif
+
+
 static DFBResult
 primaryInitScreen( CoreScreen           *screen,
                    CoreGraphicsDevice   *device,
@@ -1540,6 +1563,7 @@ primaryInitScreen( CoreScreen           *screen,
 {
      D_DEBUG_AT( FBDev_Primary, "%s()\n", __FUNCTION__ );
 
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
      /* Set the screen capabilities. */
      description->caps = DSCCAPS_VSYNC | DSCCAPS_POWER_MANAGEMENT
 		| DSCCAPS_ENCODERS ;//| DSCCAPS_MIXERS;	/* For Hisilicon adapter code */
@@ -1548,12 +1572,16 @@ primaryInitScreen( CoreScreen           *screen,
      description->encoders = 1;
      //description->mixers = 1; /* FIXME! How many? */
      /* End for Hisilicon adapter code */
-
+	 memset(screen_data, 0, sizeof(hisi_screen_data));
+	 
+#else
+	 description->caps = DSCCAPS_VSYNC | DSCCAPS_POWER_MANAGEMENT;
+#endif
      /* Set the screen name. */
      snprintf( description->name,
                DFB_SCREEN_DESC_NAME_LENGTH, "FBDev Primary Screen" );
 
-     memset(screen_data, 0, sizeof(hisi_screen_data));
+     
 
      return DFB_OK;
 }
@@ -2053,6 +2081,8 @@ dfb_fbdev_pan( int xoffset, int yoffset, bool onsync )
      struct fb_var_screeninfo *var;
      FBDevShared              *shared = dfb_fbdev->shared;
 
+	 static int index = 1;
+	 
      if (!shared->fix.xpanstep && !shared->fix.ypanstep && !shared->fix.ywrapstep)
           return DFB_OK;
 
@@ -2091,6 +2121,11 @@ dfb_fbdev_pan( int xoffset, int yoffset, bool onsync )
 
      var->activate = onsync ? FB_ACTIVATE_VBL : FB_ACTIVATE_NOW;
 
+	 if(index)
+	 {
+		index = 0;
+		return DFB_OK;
+	 }
 #if 0
      ret = fusion_call_execute( &shared->fbdev_ioctl, FCEF_NONE, FBIOPAN_DISPLAY, var, &result );
      if (ret)

@@ -846,26 +846,27 @@ ulong sata_read_write(int dev, ulong blknr, lbaint_t blkcnt, void *buffer,
 
 	if (dev > host->nr_ports) {
 		printf("\nInvaild port number %d\n", dev);
-		return -1;
+		return 0;
 	}
 
 	if ((!blkcnt) || (blkcnt > MAX_BLKCNT)
 			|| (blknr > sata_dev_desc[dev].lba)
 			|| ((u64)blknr + blkcnt > sata_dev_desc[dev].lba)) {
 		printf("\nInvalid blkcnt/blknr(out of range)!\n");
-		return -1;
+		printf("blkcnt %lu, blknr %lu, dev lba %lu \n", blkcnt, blknr, sata_dev_desc[dev].lba);
+		return 0;
 	}
 
 	status = readl(port_mmio + PORT_SCR_STAT);
 	if ((status & 0xf) != 0x03) {
 		printf("\nNo Link on port %d!\n", dev);
-		return -1;
+		return 0;
 	}
 
 	slot_map = readl(port_mmio + PORT_CMD_ISSUE);
 	if (slot_map) {
 		printf("\nslot map is not empty! slot\n");
-		return -1;
+		return 0;
 	}
 
 	/* check BSY state */
@@ -873,7 +874,7 @@ ulong sata_read_write(int dev, ulong blknr, lbaint_t blkcnt, void *buffer,
 			30 * _1ms, ATA_BUSY);
 	if (status & ATA_BUSY) {
 		printf("\nBSY check. timeout.\n");
-		return -1;
+		return 0;
 	}
 
 	printf("\n");
@@ -882,7 +883,7 @@ ulong sata_read_write(int dev, ulong blknr, lbaint_t blkcnt, void *buffer,
 		u32 num = 0, percent_complete = -1;
 		if (ctrlc()) {
 			printf("\nAborted!\n");
-			return -1;
+			return 0;
 		}
 
 		if (print_rate) {
@@ -946,7 +947,7 @@ ulong sata_read_write(int dev, ulong blknr, lbaint_t blkcnt, void *buffer,
 			trace_ahci("dev=%d, slot_map=%x, rc=%d\n",
 					dev, slot_map, rc);
 			print_rate = 0;
-			return -1;
+			return 0;
 		}
 	}
 

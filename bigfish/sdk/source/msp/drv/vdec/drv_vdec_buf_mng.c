@@ -228,6 +228,9 @@ typedef struct tagBUFMNG_INST_S
     HI_U32      u32Index;           /* Index */
 #endif
     BUFMNG_ALLOC_TYPE_E enAllocType;/* MMZ alloc type */
+	#ifdef HI_TVP_SUPPORT
+    HI_BOOL     bTvp;
+	#endif
     HI_BOOL bMMZMap;                /* Need unmap when destroy */
     spinlock_t stSpinLock;          /* Spin lock */
     struct list_head stBlockHead;   /* Buffer manager block list head */
@@ -346,15 +349,36 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
         else
 #endif
         {
-            s32Ret = HI_DRV_MMZ_AllocAndMap(pstConfig->aszName, HI_NULL, pstConfig->u32Size, 0, &stMMZAllocBuf);
-            if (HI_SUCCESS != s32Ret)
-            {
-                HI_FATAL_BUFMNG("Alloc MMZ fail:0x%x.\n", s32Ret);
-                return HI_ERR_BM_NO_MEMORY;
+         #ifdef HI_TVP_SUPPORT
+            if(HI_TRUE == pstConfig->bTvp)
+            {      
+                HI_U32 u32PhyBufAddr = 0;
+                HI_ERR_VDEC("%s: Alloc SEC MMZ(%s), size = %d \n", __func__, pstConfig->aszName, pstConfig->u32Size);
+                u32PhyBufAddr = (HI_U32)HI_SEC_MMZ_New(pstConfig->u32Size, BUFMNG_SEC_ZONE, pstConfig->aszName);
+                if (0 == u32PhyBufAddr)
+                {
+                    HI_FATAL_BUFMNG("%s: Alloc SEC MMZ(%s) failed.\n", __func__, pstConfig->aszName);
+                    return HI_ERR_BM_NO_MEMORY;
+                } 
+                //HI_ERR_VDEC("%s: Alloc SEC MMZ(%s) u32PhyAddr=%x u32Size=%x Success\n", __func__, pstConfig->aszName, u32PhyBufAddr, pstConfig->u32Size);
+                pstConfig->u32PhyAddr = u32PhyBufAddr;
+                pstConfig->pu8KnlVirAddr = (HI_U8*)u32PhyBufAddr;    
             }
+            else
+         #endif
+            {
 
-            pstConfig->u32PhyAddr = stMMZAllocBuf.u32StartPhyAddr;
-            pstConfig->pu8KnlVirAddr = (HI_U8*)stMMZAllocBuf.u32StartVirAddr;
+	            s32Ret = HI_DRV_MMZ_AllocAndMap(pstConfig->aszName, HI_NULL, pstConfig->u32Size, 0, &stMMZAllocBuf);
+
+	            if (HI_SUCCESS != s32Ret)
+	            {
+	                HI_FATAL_BUFMNG("Alloc MMZ fail:0x%x.\n", s32Ret);
+	                return HI_ERR_BM_NO_MEMORY;
+	            }
+
+	            pstConfig->u32PhyAddr = stMMZAllocBuf.u32StartPhyAddr;
+	            pstConfig->pu8KnlVirAddr = (HI_U8*)stMMZAllocBuf.u32StartVirAddr;
+	        }
         }
     }
 
@@ -367,7 +391,16 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
         HI_FATAL_BUFMNG("No memory.\n");
         if (BUFMNG_ALLOC_INNER == pstConfig->enAllocType)
         {
-            HI_DRV_MMZ_UnmapAndRelease(&stMMZAllocBuf);
+         #ifdef HI_TVP_SUPPORT
+            if(HI_TRUE == pstConfig->bTvp)
+            {
+                HI_SEC_MMZ_Delete(pstConfig->u32PhyAddr); 
+            }
+            else
+         #endif
+            {
+                HI_DRV_MMZ_UnmapAndRelease(&stMMZAllocBuf);
+            }
         }
         return HI_ERR_BM_NO_MEMORY;
     }
@@ -379,6 +412,9 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
 
     /* Init instance parameter */
     pstInst->hBuf = *phBuf;
+	#ifdef HI_TVP_SUPPORT
+    pstInst->bTvp = pstConfig->bTvp;
+	#endif
     pstInst->u32PhyAddr = pstConfig->u32PhyAddr;
     pstInst->pu8UsrVirAddr = pstConfig->pu8UsrVirAddr;
     if (HI_NULL == pstConfig->pu8KnlVirAddr)
@@ -400,7 +436,16 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
                 else
 #endif
                 {
-                    HI_DRV_MMZ_UnmapAndRelease(&stMMZAllocBuf);
+                 #ifdef HI_TVP_SUPPORT
+                    if(HI_TRUE == pstConfig->bTvp)
+                    {
+                        HI_SEC_MMZ_Delete(pstConfig->u32PhyAddr);
+                    }
+                    else
+                 #endif
+                    { 
+                    	HI_DRV_MMZ_UnmapAndRelease(&stMMZAllocBuf);
+                    }
                 }
             }
             HI_KFREE_BUFMNG(pstInst);
@@ -512,8 +557,16 @@ HI_S32 BUFMNG_Destroy(HI_HANDLE hBuf)
         stMMZBuf.u32StartPhyAddr = pstInst->u32PhyAddr;
         stMMZBuf.u32StartVirAddr = (HI_U32)pstInst->pu8KnlVirAddr;
         stMMZBuf.u32Size = pstInst->u32Size;
-        BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
-        HI_DRV_MMZ_Unmap(&stMMZBuf);
+	    BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
+     #ifdef HI_TVP_SUPPORT
+        if(HI_TRUE == pstInst->bTvp)
+        {
+        }
+        else
+     #endif
+        {
+        	HI_DRV_MMZ_Unmap(&stMMZBuf);
+        }
     }
 
     /* If need, free */
@@ -531,8 +584,17 @@ HI_S32 BUFMNG_Destroy(HI_HANDLE hBuf)
             stMMZBuf.u32StartPhyAddr = pstInst->u32PhyAddr;
             stMMZBuf.u32StartVirAddr = (HI_U32)pstInst->pu8KnlVirAddr;
             stMMZBuf.u32Size = pstInst->u32Size;
-            BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
-            HI_DRV_MMZ_UnmapAndRelease(&stMMZBuf);
+	        BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
+         #ifdef HI_TVP_SUPPORT
+            if(HI_TRUE == pstInst->bTvp)
+            {
+                HI_SEC_MMZ_Delete(pstInst->u32PhyAddr); 
+            }
+            else
+         #endif
+            {
+                HI_DRV_MMZ_UnmapAndRelease(&stMMZBuf);
+            }
         }
     }
 
@@ -1516,7 +1578,7 @@ HI_S32 BUFMNG_SaveYuv(HI_S32 Handle, HI_DRV_VIDEO_FRAME_S *pstFrame,HI_UNF_VCODE
             V_Array = U_Array + pstFrame->u32Width * pstFrame->u32Height / 4;
         }
 
-        Stride = pstFrame->stBufAddr[0].u32Stride_Y;
+        //Stride = pstFrame->stBufAddr[0].u32Stride_Y;
 
         /* Y */
         for (i=0; i<pstFrame->u32Height; i++)

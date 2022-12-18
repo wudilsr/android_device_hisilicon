@@ -86,6 +86,8 @@ static I2C_SHARE_S g_astI2cShare[HI_MAX_I2C_NUM];
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)
 static HI_U32   g_astI2cIRQ[HI_MAX_I2C_NUM] = {I2C0_IRQ, I2C1_IRQ, I2C2_IRQ, I2C3_IRQ, I2C4_IRQ, I2CQAM_IRQ};
+#elif  defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+static HI_U32   g_astI2cIRQ[HI_MAX_I2C_NUM] = {I2C0_IRQ, I2C1_IRQ, I2C2_IRQ, I2C3_IRQ, I2C4_IRQ, I2CADC_IRQ, I2CQAM_IRQ};
 #elif  defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)
 static HI_U32   g_astI2cIRQ[HI_MAX_I2C_NUM] = {I2C0_IRQ, I2C1_IRQ, I2C2_IRQ, I2C3_IRQ, I2CQAMC_IRQ, I2CADC_IRQ, I2CQAMT_IRQ, I2C7_IRQ};
@@ -1293,6 +1295,8 @@ HI_S32 i2c_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
     regI2CStore[0] = g_pstRegCrg->PERI_CRG27.u32;
 #endif
@@ -1324,6 +1328,8 @@ HI_S32 i2c_pm_resume(PM_BASEDEV_S *pdev)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
     g_pstRegCrg->PERI_CRG27.u32 = regI2CStore[0];
 #endif
@@ -1643,6 +1649,11 @@ HI_S32 HI_DRV_I2C_Init(HI_VOID)
     g_I2cKernelAddr[3] = IO_ADDRESS(I2C3_PHY_ADDR);
     g_I2cKernelAddr[4] = IO_ADDRESS(I2C4_PHY_ADDR);
     g_I2cKernelAddr[5] = IO_ADDRESS(I2CQAM_PHY_ADDR);
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	g_I2cKernelAddr[3] = IO_ADDRESS(I2C3_PHY_ADDR);
+    g_I2cKernelAddr[4] = IO_ADDRESS(I2C4_PHY_ADDR);
+	g_I2cKernelAddr[5] = IO_ADDRESS(I2CADC_PHY_ADDR);
+    g_I2cKernelAddr[6] = IO_ADDRESS(I2CQAM_PHY_ADDR);
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
     g_I2cKernelAddr[3] = IO_ADDRESS(I2C3_PHY_ADDR);
     g_I2cKernelAddr[4] = IO_ADDRESS(I2C_QAMC_PHY_ADDR);
@@ -1668,6 +1679,11 @@ HI_S32 HI_DRV_I2C_Init(HI_VOID)
     u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
     u32RegVal &= ~0x222222;
     u32RegVal |= 0x111111;
+    g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
+    u32RegVal &= ~0x2222222;
+    u32RegVal |= 0x1111111;
     g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
     u32RegVal = g_pstRegCrg->PERI_CRG27.u32;
@@ -1711,6 +1727,10 @@ HI_VOID HI_DRV_I2C_DeInit(HI_VOID)
     || defined(CHIP_TYPE_hi3796mv100)
     u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
     u32RegVal |= 0x222222;
+    g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
+    u32RegVal |= 0x2222222;
     g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
     u32RegVal = g_pstRegCrg->PERI_CRG27.u32;

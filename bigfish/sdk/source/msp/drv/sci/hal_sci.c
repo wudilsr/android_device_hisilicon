@@ -55,6 +55,8 @@ HI_VOID SCI_HAL_SetSCIClock(HI_UNF_SCI_PORT_E enSciPort, HI_BOOL bEnable)
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
     U_PERI_CRG29 uTmpValue;
 
@@ -100,6 +102,8 @@ HI_VOID SCI_HAL_SetSCIReset(HI_UNF_SCI_PORT_E enSciPort)
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     U_PERI_CRG29 uTmpValue;
@@ -140,6 +144,8 @@ HI_VOID SCI_HAL_ClearSCIReset(HI_UNF_SCI_PORT_E enSciPort)
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     U_PERI_CRG29 uTmpValue;
@@ -372,6 +378,8 @@ HI_VOID SCI_HAL_SetResetMode(HI_UNF_SCI_PORT_E enSciPort, HI_UNF_SCI_MODE_E enRe
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     U_PERI_SIM_OD_CTRL uTmpValue;
@@ -427,6 +435,8 @@ HI_VOID SCI_HAL_SetVccEnMode(HI_UNF_SCI_PORT_E enSciPort, HI_UNF_SCI_MODE_E enVc
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     U_PERI_SIM_OD_CTRL uTmpValue;

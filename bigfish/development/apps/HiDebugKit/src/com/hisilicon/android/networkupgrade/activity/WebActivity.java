@@ -175,22 +175,12 @@ public class WebActivity extends Activity
                             file2.delete();
                         }
 
-                        int result = checkCAUpdateFile();
-                        if(result == 0)
-                        {
                             Log.i(TAG,"update check success");
                             HiSysManager hisys = new HiSysManager();
                             hisys.upgrade(mDownloadPath);
                             Intent newIntent = new Intent("android.intent.action.MASTER_CLEAR");
                             newIntent.putExtra("mount_point", mDownloadPath);
                             sendBroadcast(newIntent);
-                        }
-                        else if(result == -1)
-                        {
-                            Toast checkToast = Toast.makeText(WebActivity.this, R.string.file_check_failed,
-                                                        Toast.LENGTH_SHORT);
-                            checkToast.show();
-                        }
                     }
 
                     progressBar.dismiss();
@@ -355,13 +345,6 @@ public class WebActivity extends Activity
         return bRet;
     }
 
-    public int checkCAUpdateFile(){
-
-        File file = new File("/mnt/sdcard/update.zip");
-        HiSysManager hisys = new HiSysManager();
-        int result = hisys.updateCAFile(file.getAbsolutePath(),file.getAbsolutePath());
-        return result;
-    }
 
     private class DownloadFile extends AsyncTask <String, Integer, String>
     {

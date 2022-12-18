@@ -136,7 +136,8 @@ LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_TAG := optional
 include $(BUILD_PREBUILT)
 
-include $(LOCAL_PATH)/ThirdPartyApplications/Android.mk \
-        $(LOCAL_PATH)/nfsClient/Android.mk \
+include $(LOCAL_PATH)/nfsClient/Android.mk \
         $(LOCAL_PATH)/enforce/Android.mk
+
+-include $(LOCAL_PATH)/ThirdPartyApplications/Android.mk
 -include $(GPLAY_LOCAL_PATH)/googleplay/Android.mk

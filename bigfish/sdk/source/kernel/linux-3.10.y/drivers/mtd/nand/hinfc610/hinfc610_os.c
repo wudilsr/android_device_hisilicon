@@ -204,6 +204,7 @@ static int hinfc610_os_probe(struct platform_device * pltdev)
 
 fail:
 	hinfc610_nand_destory(host);
+	host->enable(host, DISABLE);
 
 	iounmap(chip->IO_ADDR_W);
 	iounmap(host->iobase);

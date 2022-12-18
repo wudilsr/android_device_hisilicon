@@ -434,7 +434,6 @@ HI_S32 HI_TDE_ShowSurface( TDE2_SURFACE_S *pstSurface, HI_U32 u32PosX, HI_U32 u3
     TDE_HANDLE tdeHandle;
     TDE2_RECT_S copyRect = {0, 0, pstSurface->u32Width, pstSurface->u32Height};
     TDE2_OPT_S stOpt = {0};
-    HI_BOOL bShow = HI_TRUE;
     HI_S32 ret ;
     ret= Display_Init();
     if(HI_SUCCESS != ret)
@@ -503,12 +502,12 @@ HI_S32 HI_TDE_ShowSurface( TDE2_SURFACE_S *pstSurface, HI_U32 u32PosX, HI_U32 u3
     stFbSurface.u32Width = pstSurface->u32Width;
     stFbSurface.u32Stride = fix.line_length;
 
-    if (ioctl(fd, FBIOPUT_SHOW_HIFB, &bShow) < 0)
+    if (ioctl(fd, FBIOPAN_DISPLAY, &var) < 0)
     {
-        Printf("show failed!\n");
+        printf("pan_display failed!\n");
         close(fd);
         return -1;
-    }
+    } 
 
     ret = HI_TDE2_Open();
     if(ret < 0)

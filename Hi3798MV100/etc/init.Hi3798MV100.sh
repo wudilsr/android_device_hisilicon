@@ -16,7 +16,7 @@ echo "\n\nWelcome to HiAndroid\n\n" > /dev/kmsg
 LOW_RAM=`getprop ro.config.low_ram`
 case $LOW_RAM in
  true)
-  echo "\n\nenter 512M low_ram mode\n\n" > /dev/kmsg
+  echo "\n\nenter low_ram mode\n\n" > /dev/kmsg
   echo 104857600 > /sys/block/zram0/disksize
   mkswap /dev/block/zram0
   swapon /dev/block/zram0
@@ -29,5 +29,12 @@ case $LOW_RAM in
  esac
 
 # Forced standby restart function
-sleep 3;
-echo 0x1 0x1 > /proc/msp/pm
+SUSPEND_RESTAR=`getprop persist.suspend.mode`
+case $SUSPEND_RESTAR in
+ deep_restart)
+  sleep 3;
+  echo 0x1 0x1 > /proc/msp/pm
+  ;;
+ *)
+  ;;
+ esac

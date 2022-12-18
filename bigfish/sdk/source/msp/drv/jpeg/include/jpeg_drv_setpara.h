@@ -92,14 +92,14 @@ Date				Author        		Modification
     * func          : jpeg_send_stream
     * description   : send the continue stream.
                      CNcomment: 送续码流 CNend\n
-    * param[in]     : s32DecHandle
+    * param[in]     : u32DecHandle
     * param[in] 	: ps32Offset
     * param[in] 	: pbReachEOF
     * retval        : HI_SUCCESS 成功
     * retval        : HI_FAILURE 失败
     * others:       : NA
     ****************************************************************************/
-    HI_S32 jpeg_send_stream(HI_S32 s32DecHandle,HI_S32 *ps32Offset,HI_BOOL *pbReachEOF);
+    HI_S32 jpeg_send_stream(HI_U32 u32DecHandle,HI_S32 *ps32Offset,HI_BOOL *pbReachEOF);
     
 	/** @} */  /** <!-- ==== API Declaration End ==== */
 

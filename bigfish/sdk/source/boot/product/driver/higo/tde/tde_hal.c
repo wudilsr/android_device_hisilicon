@@ -503,8 +503,12 @@ extern HI_U32 g_u32TdeSqCurProcNum;
 
 #endif
 
+
+#if 0
+/** deal with codecc **/
 /** 抗闪烁级别 默认为自动 */
 STATIC TDE_DEFLICKER_LEVEL_E s_eDeflickerLevel = TDE_DEFLICKER_AUTO;
+#endif
 
 /*alpha判决开关*/
 STATIC HI_BOOL s_bEnAlphaThreshold = HI_FALSE;
@@ -801,35 +805,11 @@ HI_VOID TdeHalNodeInitNd(TDE_HWNode_S* pHWNode, HI_BOOL bChild)
     TDE_INS_U unIns;
 
     TDE_ASSERT(HI_NULL != pHWNode);
-
-    /* 如果是子节点, 还需要父节点的设置信息,只把Update清空 */
-    if (bChild)
-    {
-        TDE_2D_RSZ_U unRsz;
-	    HI_BOOL bClipOut = pHWNode->u32TDE_CLIP_START >> 31;
-	  
-        unRsz.u32All = pHWNode->u32TDE_2D_RSZ;
-        unRsz.stBits.u32VfCoefReload = 0;/* 如果是子节点则不需要更新参数表 */
-        unRsz.stBits.u32HfCoefReload = 0;
-        pHWNode->u32TDE_2D_RSZ = unRsz.u32All;
-        pHWNode->u64TDE_UPDATE = 0;
-        TDE_SET_UPDATE(u32TDE_2D_RSZ, pHWNode->u64TDE_UPDATE);
-
-	 if(bClipOut)
-	 {
-        TDE_SET_UPDATE(u32TDE_CLIP_START, pHWNode->u64TDE_UPDATE);
-        TDE_SET_UPDATE(u32TDE_CLIP_STOP, pHWNode->u64TDE_UPDATE);
-	 }
-    }
-    else /* 否则所有信息清空 */
-    {
-        memset(pHWNode, 0, sizeof(TDE_HWNode_S));
-    }
-    
-    /* 开启链表完成中断,同步链表可更新中断, 关闭节点完成中断 */
-    unIns.u32All = pHWNode->u32TDE_INS;
+   
+    unIns.u32All              = 0;
     unIns.stBits.u32SqIrqMask = TDE_SQ_MASK_DISABLE_ALL;
     unIns.stBits.u32AqIrqMask = TDE_SQ_MASK_DISABLE_ALL;
+
     pHWNode->u32TDE_INS = unIns.u32All;
     TDE_SET_UPDATE(u32TDE_INS, pHWNode->u64TDE_UPDATE);
 }
@@ -895,7 +875,7 @@ HI_U32 TdeHalNodeGetNdSize(TDE_HWNode_S* pHWNode)
             u32Size++;
         }
     }
-    return (u32Size << 0x2);/* 根据Word返回字节数 */
+    return (HI_U32)(u32Size << 0x2);/* 根据Word返回字节数 */
 }
 
 /*****************************************************************************
@@ -1160,17 +1140,7 @@ HI_VOID TdeHalNodeSetSrcMbY(TDE_HWNode_S* pHWNode, TDE_DRV_SURFACE_S* pDrvMbY, T
     TDE_ASSERT(HI_NULL != pHWNode);
     TDE_ASSERT(HI_NULL != pDrvMbY);
 
-    if (TDE_MB_RASTER_OPT == enMbOpt)
-    {
-        /* 如果是宏块与光栅混合操作模式,亮度信息直接设置到Src2中 */
-        TdeHalNodeSetSrc2(pHWNode, pDrvMbY);
-
-        return;
-    }
-    else
-    {
-        TdeHalNodeSetSrc1(pHWNode, pDrvMbY);
-    }
+    TdeHalNodeSetSrc1(pHWNode, pDrvMbY);
 
     if (TDE_MB_Y_FILTER == enMbOpt || TDE_MB_CONCA_FILTER == enMbOpt)
     {
@@ -1939,6 +1909,8 @@ HI_VOID TdeHalNodeSetFlicker(TDE_HWNode_S* pHWNode, TDE_DRV_FLICKER_CMD_S* pFlic
     }
     unRsz.stBits.u32DfeMod = (HI_U32)pFlicker->enDfeMode;
 
+#if 0
+	/** deal with warning **/
     /*配置缓存节点*/
     switch(s_eDeflickerLevel)
     {
@@ -1960,8 +1932,9 @@ HI_VOID TdeHalNodeSetFlicker(TDE_HWNode_S* pHWNode, TDE_DRV_FLICKER_CMD_S* pFlic
             pHWNode->u32TDE_DFE_COEF0 = 0x0f001a13;
             break;
         }
-        default:   
+        default:
         {
+#endif
             pHWNode->u32TDE_DFE_COEF0 = (HI_U32)pFlicker->u8Coef0NextLine 
                 | ((HI_U32)pFlicker->u8Coef0CurLine << 8)
                 | ((HI_U32)pFlicker->u8Coef0LastLine << 16)
@@ -1977,9 +1950,11 @@ HI_VOID TdeHalNodeSetFlicker(TDE_HWNode_S* pHWNode, TDE_DRV_FLICKER_CMD_S* pFlic
             pHWNode->u32TDE_DFE_COEF3 = (HI_U32)pFlicker->u8Coef3NextLine 
                 | ((HI_U32)pFlicker->u8Coef3CurLine << 8)
                 | ((HI_U32)pFlicker->u8Coef3LastLine << 16);
+#if 0
                     break;
         }
     }
+#endif
 
     pHWNode->u32TDE_INS = unIns.u32All;
     pHWNode->u32TDE_2D_RSZ = unRsz.u32All;

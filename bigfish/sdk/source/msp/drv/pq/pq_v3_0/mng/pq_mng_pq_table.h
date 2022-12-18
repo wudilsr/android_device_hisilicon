@@ -16,30 +16,33 @@
 
 #include "hi_drv_pq.h"
 
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
 #endif
-#endif /* __cplusplus */
+#endif
 
-#pragma pack(1)
+/*soft table pq bin define*/
+#define PQ_SOFT_IP_DETECT    0xfffe0001
 
 
 /*PQ Bin Module类型*/
 typedef enum hiPQ_BIN_MODULE_E
 {
-    PQ_MODULE_DEI = 0x1,
-    PQ_MODULE_FMD = 0x2,
-    PQ_MODULE_HSHARPEN = 0x4,
-    PQ_MODULE_DNR = 0x8,
-    PQ_MODULE_DCI = 0x10,
-    PQ_MODULE_ACM = 0x20,
-    PQ_MODULE_SHARPEN_CTRL = 0x40,
-    PQ_MODULE_SHARPEN_COMM = 0x80,
-    PQ_MODULE_SR = 0x100,
-    PQ_MODULE_DB = 0x200,
-    PQ_MODULE_DR_HD = 0x400,
-    PQ_MODULE_ALL = 0xffff,
+    PQ_BIN_MODULE_DEI      = 0x1,
+    PQ_BIN_MODULE_FMD      = 0x2,
+    PQ_BIN_MODULE_SHARPEN  = 0x4,
+    PQ_BIN_MODULE_DNR      = 0x8,
+    PQ_BIN_MODULE_DCI      = 0x10,
+    PQ_BIN_MODULE_ACM      = 0x20,
+    PQ_BIN_MODULE_HSHARPEN = 0x40,
+    PQ_BIN_MODULE_SR       = 0x100,
+    PQ_BIN_MODULE_DB       = 0x200,
+    PQ_BIN_MODULE_DM       = 0x400,
+    PQ_BIN_MODULE_TNR      = 0x800,
+    PQ_BIN_MODULE_DS       = 0x1000,
+    PQ_BIN_MODULE_ALL      = 0xffff,
 } PQ_BIN_MODULE_E;
 
 /*PQ Source Mode*/
@@ -72,29 +75,12 @@ typedef enum hiPQ_REG_TYPE_E
 } PQ_REG_TYPE_E;
 
 
-/**
- \brief 去初始化pq table;
- \attention \n
-无
-
- \param[in]
-
- \retval ::HI_SUCCESS
-
- */
+/* check Timing Source Mode*/
+PQ_SOURCE_MODE_E PQ_MNG_CheckSourceMode(HI_U32 u32Width, HI_U32 u32Height);
+/* check Timing Output Mode*/
+PQ_OUTPUT_MODE_E PQ_MNG_CheckOutputMode(HI_BOOL bSRState);
 
 HI_S32 PQ_MNG_DeInitPQTable(HI_VOID);
-
-/**
- \brief 加载解析PQTable;
- \attention \n
-  无
-
- \param[in];
-
- \retval ::HI_SUCCESS
-
- */
 
 HI_S32 PQ_MNG_InitPQTable(PQ_PARAM_S* pstPqParam, HI_BOOL bDefault);
 
@@ -106,17 +92,25 @@ HI_S32 PQ_MNG_SetVpssReg(HI_U32 u32Addr, HI_U8 u8Lsb, HI_U8 u8Msb, HI_U32 u32Val
 
 HI_S32 PQ_MNG_LoadPhyList(PQ_REG_TYPE_E enRegType, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode, PQ_BIN_MODULE_E enModule);
 
-PQ_SOURCE_MODE_E PQ_MNG_CheckSourceMode(HI_U32 u32Width, HI_U32 u32Height);/* check Timing Source Mode*/
+HI_S32 PQ_MNG_InitPhyList(HI_U32 u32ID, PQ_REG_TYPE_E enRegType, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode, PQ_BIN_MODULE_E enModule);
 
-PQ_OUTPUT_MODE_E PQ_MNG_CheckOutputMode(HI_BOOL bSRState);/* check Timing Output Mode*/
+HI_U32 PQ_MNG_GetSoftTable(HI_U32 u32Lut, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode, HI_U32 u32DefaultValue);
 
+HI_S32 PQ_MNG_SetSoftTable(HI_U32 u32Lut, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode, HI_U32 u32Value);
 
+HI_U32 PQ_MNG_GetArraySoftTable(HI_U32 u32Lut, HI_U32 Array[], HI_U32 u32Num, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode, HI_U32 u32DefaultArray[]);
+
+HI_S32 PQ_MNG_SetReg(HI_PQ_REGISTER_S* pstAttr, PQ_SOURCE_MODE_E enSourceMode, PQ_OUTPUT_MODE_E enOutputMode);
+
+HI_S32 PQ_MNG_GetReg(HI_PQ_REGISTER_S* pstAttr);
+
+HI_VOID PQ_MNG_PrintTable( HI_BOOL bIsAll, HI_U32 u32PriAddr);
 
 
 #ifdef __cplusplus
 #if __cplusplus
 }
 #endif
-#endif /* __cplusplus */
+#endif
 
 #endif

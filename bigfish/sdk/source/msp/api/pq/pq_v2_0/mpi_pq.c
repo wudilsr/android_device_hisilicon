@@ -25,8 +25,7 @@
 
 #include "hi_type.h"
 #include "hi_mpi_pq.h"
-
-
+#include "hi_mpi_mem.h"
 
 /* PQ设备文件描述符 */
 static HI_S32 sg_s32PQFd = -1;
@@ -52,9 +51,6 @@ extern "C" {
 
 HI_S32 HI_MPI_PQ_Init(HI_CHAR* pszPath)
 {
-    HI_S32 s32Ret = HI_FAILURE;
-    HI_PQ_PATE_S stPqPath;
-
     if (HI_TRUE == sg_bPQInitFlag)
     {
         return HI_SUCCESS;
@@ -69,21 +65,6 @@ HI_S32 HI_MPI_PQ_Init(HI_CHAR* pszPath)
     }
     sg_bPQInitFlag = HI_TRUE;
 
-    /* PQ配置文件路径*/
-    if (pszPath != NULL)
-    {
-        memset(&stPqPath, 0, sizeof(HI_PQ_PATE_S));
-        strncpy(stPqPath.cPqPath, pszPath, sizeof(stPqPath.cPqPath) - 1);
-        s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_PQ_PATH, &stPqPath);
-        if (s32Ret != HI_SUCCESS)
-        {
-            HI_ERR_PQ("set pq bin path error!");
-        }
-    }
-    else
-    {
-        //HI_ERR_PQ("pq bin path is invalid,Use default PQ setting!");
-    }
     return HI_SUCCESS;
 }
 
@@ -385,6 +366,83 @@ HI_S32 HI_MPI_PQ_SetHue(HI_DRV_DISPLAY_E enChan, HI_U32 u32Hue)
     return s32Ret;
 }
 
+HI_S32 HI_MPI_PQ_SetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLAY_E enChan, HI_PQ_IMAGE_PARAM_S stParam)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+
+    if (HI_MPI_PQ_IMAGE_GRAPH == enType)
+    {
+        if (HI_DRV_DISPLAY_0 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_GRAPH_SD_PARAM, &stParam);
+        }
+        else if (HI_DRV_DISPLAY_1 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_GRAPH_HD_PARAM, &stParam);
+        }
+    }
+    else if (HI_MPI_PQ_IMAGE_VIDEO == enType)
+    {
+        if (HI_DRV_DISPLAY_0 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_VIDEO_SD_PARAM, &stParam);
+        }
+        else if (HI_DRV_DISPLAY_1 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_VIDEO_HD_PARAM, &stParam);
+        }
+    }
+
+    return s32Ret;
+}
+
+HI_S32 HI_MPI_PQ_GetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLAY_E enChan, HI_PQ_IMAGE_PARAM_S* pstParam)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+
+    if (pstParam == HI_NULL)
+    {
+        return HI_FAILURE;
+    }
+
+    if (HI_MPI_PQ_IMAGE_GRAPH == enType)
+    {
+        if (HI_DRV_DISPLAY_0 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_GRAPH_SD_PARAM, pstParam);
+        }
+        else if (HI_DRV_DISPLAY_1 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_GRAPH_HD_PARAM, pstParam);
+        }
+    }
+    else if (HI_MPI_PQ_IMAGE_VIDEO == enType)
+    {
+        if (HI_DRV_DISPLAY_0 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_VIDEO_SD_PARAM, pstParam);
+        }
+        else if (HI_DRV_DISPLAY_1 == enChan)
+        {
+            s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_VIDEO_HD_PARAM, pstParam);
+        }
+    }
+
+    return s32Ret;
+}
+
 /**
  \brief 获取降噪强度
  \attention \n
@@ -397,7 +455,7 @@ HI_S32 HI_MPI_PQ_SetHue(HI_DRV_DISPLAY_E enChan, HI_U32 u32Hue)
 
  */
 
-HI_S32 HI_MPI_PQ_GetNR(HI_U32* pu32NRLevel)
+HI_S32 HI_MPI_PQ_GetTNR(HI_U32* pu32NRLevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
     if (sg_bPQInitFlag == HI_FALSE)
@@ -405,7 +463,7 @@ HI_S32 HI_MPI_PQ_GetNR(HI_U32* pu32NRLevel)
         HI_ERR_PQ("PQ not  init!");
         return HI_FAILURE;
     }
-    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_NR, pu32NRLevel);
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_TNR, pu32NRLevel);
 
     return s32Ret;
 }
@@ -415,13 +473,13 @@ HI_S32 HI_MPI_PQ_GetNR(HI_U32* pu32NRLevel)
  \attention \n
 无
 
- \param[in] u32NRLevel: 降噪等级, 有效范围: 0~255
+ \param[in] u32TNRLevel: 降噪等级, 有效范围: 0~255
 
  \retval ::HI_SUCCESS
 
  */
 
-HI_S32 HI_MPI_PQ_SetNR(HI_U32 u32NRLevel)
+HI_S32 HI_MPI_PQ_SetTNR(HI_U32 u32TNRLevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
     if (sg_bPQInitFlag == HI_FALSE)
@@ -429,7 +487,7 @@ HI_S32 HI_MPI_PQ_SetNR(HI_U32 u32NRLevel)
         HI_ERR_PQ("PQ not  init!");
         return HI_FAILURE;
     }
-    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_NR, &u32NRLevel);
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_TNR, &u32TNRLevel);
 
     return s32Ret;
 }
@@ -680,78 +738,6 @@ HI_S32 HI_MPI_PQ_SetDeRinging(HI_U32 u32DRlevel)
     return s32Ret;
 }
 
-/**
- \brief 获取色温参数
- \attention \n
-无
-
- \param[in] pstColorTemp：色温参数
- \param[out]
-
- \retval ::HI_SUCCESS
-
- */
-
-/*HI_S32 HI_MPI_PQ_GetColorTemp( HI_UNF_PQ_COLOR_TEMP_S *pstColorTemp)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    HI_PQ_COLOR_TEMP_S stColorTemp = {0};
-
-    if(sg_bPQInitFlag==HI_FALSE)
-    {
-        HI_ERR_PQ("PQ not  init!");
-        return HI_FAILURE;
-    }
-    s32Ret = ioctl(sg_s32PQFd,HIIOC_PQ_G_COLORTEMP,&stColorTemp);
-    if(HI_SUCCESS != s32Ret)
-    {
-        return HI_FAILURE;
-    }
-    pstColorTemp->u32BlueGain    = (HI_U32)stColorTemp.s16BlueGain;
-    pstColorTemp->u32GreenGain   = (HI_U32)stColorTemp.s16GreenGain;
-    pstColorTemp->u32RedGain     = (HI_U32)stColorTemp.s16RedGain;
-    pstColorTemp->u32BlueOffset  = (HI_U32)stColorTemp.s16BlueOffset;
-    pstColorTemp->u32GreenOffset = (HI_U32)stColorTemp.s16GreenOffset;
-    pstColorTemp->u32RedOffset   = (HI_U32)stColorTemp.s16RedOffset;
-
-    return HI_SUCCESS;
-}
-*/
-
-
-/**
- \brief 设置色温参数
- \attention \n
-无
-
- \param[in] pstColorTemp:色温参数
- \param[out]
-
- \retval ::HI_SUCCESS
-
- */
-
-/*HI_S32 HI_MPI_PQ_SetColorTemp(HI_UNF_PQ_COLOR_TEMP_S *pstColorTemp)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    HI_PQ_COLOR_TEMP_S stColorTemp = {0};
-
-    if(sg_bPQInitFlag==HI_FALSE)
-    {
-        HI_ERR_PQ("PQ not  init!");
-        return HI_FAILURE;
-    }
-    stColorTemp.s16BlueGain    = (HI_S16)pstColorTemp->u32BlueGain;
-    stColorTemp.s16GreenGain   = (HI_S16)pstColorTemp->u32GreenGain;
-    stColorTemp.s16RedGain     = (HI_S16)pstColorTemp->u32RedGain;
-    stColorTemp.s16BlueOffset  = (HI_S16)pstColorTemp->u32BlueOffset;
-    stColorTemp.s16GreenOffset = (HI_S16)pstColorTemp->u32GreenOffset;
-    stColorTemp.s16RedOffset   = (HI_S16)pstColorTemp->u32RedOffset;
-    s32Ret = ioctl(sg_s32PQFd,HIIOC_PQ_S_COLORTEMP,&stColorTemp);
-
-    return HI_SUCCESS;
-}*/
-
 
 /**
  \brief 获取颜色增强
@@ -994,6 +980,10 @@ HI_S32 HI_MPI_PQ_GetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
     {
         stPQModule.enModule = HI_PQ_MODULE_SR;
     }
+    else if (HI_UNF_PQ_MODULE_TNR == enFlags)
+    {
+        stPQModule.enModule = HI_PQ_MODULE_TNR;
+    }
     else
     {
         HI_ERR_PQ("PQ MODULE is error!");
@@ -1046,6 +1036,10 @@ HI_S32 HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_E enFlags, HI_U32 u32OnOff)
     else if (HI_UNF_PQ_MODULE_SR == enFlags)
     {
         stPQModule.enModule = HI_PQ_MODULE_SR;
+    }
+    else if (HI_UNF_PQ_MODULE_TNR == enFlags)
+    {
+        stPQModule.enModule = HI_PQ_MODULE_TNR;
     }
     else
     {
@@ -1106,6 +1100,18 @@ HI_S32 HI_MPI_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff)
     {
         stDemo.enModule = HI_PQ_DEMO_SR;
     }
+    else if (HI_UNF_PQ_DEMO_TNR == enFlags)
+    {
+        stDemo.enModule = HI_PQ_DEMO_TNR;
+    }
+    else if (HI_UNF_PQ_DEMO_DEI == enFlags)
+    {
+        stDemo.enModule = HI_PQ_DEMO_DEI;
+    }
+    else if (HI_UNF_PQ_DEMO_DBM == enFlags)
+    {
+        stDemo.enModule = HI_PQ_DEMO_DBM;
+    }
     else if (HI_UNF_PQ_DEMO_ALL == enFlags)
     {
         stDemo.enModule = HI_PQ_DEMO_ALL;
@@ -1119,6 +1125,63 @@ HI_S32 HI_MPI_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff)
     s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_DEMO, &stDemo);
     return s32Ret;
 }
+
+/**
+ \brief 设置卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] enMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_MPI_PQ_SetDemoMode( HI_DRV_DISPLAY_E enChan, HI_PQ_DEMO_MODE_E enMode)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_DEMO_MODE, &enMode);
+    return s32Ret;
+}
+
+/**
+ \brief 获取卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] penMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_MPI_PQ_GetDemoMode( HI_DRV_DISPLAY_E enChan, HI_PQ_DEMO_MODE_E* penMode)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    if (penMode == HI_NULL)
+    {
+        return HI_FAILURE;
+    }
+
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_DEMO_MODE, penMode);
+    return s32Ret;
+}
+
 
 /**
  \brief 设置PQ寄存器
@@ -1238,7 +1301,7 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
         return HI_FAILURE;
     }
 
-    pstAcmLut = (HI_PQ_ACM_LUT_S*)malloc(sizeof(HI_PQ_ACM_LUT_S));
+    pstAcmLut = (HI_PQ_ACM_LUT_S*)HI_MALLOC(HI_ID_PQ, sizeof(HI_PQ_ACM_LUT_S));
     if (HI_NULL == pstAcmLut)
     {
         HI_ERR_PQ("%s:pstAcmLut is Null poniter!\n", __FUNCTION__);
@@ -1249,7 +1312,7 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
     if (HI_FALSE == sg_bPQInitFlag)
     {
         HI_ERR_PQ("PQ not  init!");
-        free(pstAcmLut);
+        HI_FREE(HI_ID_PQ, pstAcmLut);
         pstAcmLut = HI_NULL;
         return HI_FAILURE;
     }
@@ -1263,7 +1326,7 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
     memcpy(pstAcmLut->as16Lut, pstColorTable->as16Sat, sizeof(pstAcmLut->as16Lut));
     s32Ret |= ioctl(sg_s32PQFd, HIIOC_PQ_S_ACM_SAT, pstAcmLut);
 
-    free(pstAcmLut);
+    HI_FREE(HI_ID_PQ, pstAcmLut);
     pstAcmLut = HI_NULL;
 
     return s32Ret;
@@ -1585,6 +1648,32 @@ HI_S32 HI_MPI_PQ_SetTNRChromMotionMapping( HI_PQ_TNR_S* pstTnrData)
 
     s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_TNR_C_MOTION_MAPPING, (HI_PQ_TNR_S*)pstTnrData);
 
+    return s32Ret;
+}
+
+HI_S32 HI_MPI_PQ_GetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_G_TNR_FMOTION_MAPPING, (HI_PQ_TNR_FMOTION_S*)pstTnrFMotion);
+    return s32Ret;
+}
+
+HI_S32 HI_MPI_PQ_SetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    if (sg_bPQInitFlag == HI_FALSE)
+    {
+        HI_ERR_PQ("PQ not  init!");
+        return HI_FAILURE;
+    }
+
+    s32Ret = ioctl(sg_s32PQFd, HIIOC_PQ_S_TNR_FMOTION_MAPPING, (HI_PQ_TNR_FMOTION_S*)pstTnrFMotion);
     return s32Ret;
 }
 

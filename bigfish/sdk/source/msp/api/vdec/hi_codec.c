@@ -253,7 +253,7 @@ static CODEC_PARAM_S* CODEC_FindUsableCodec(HI_CODEC_TYPE_E enType, HI_CODEC_ID_
                 /* Yes, I get it! */
                 if ((enID == pstSupport->enID) && (0 != (enType & pstSupport->u32Type)))
                 {
-                    CODEC_UNLOCK(s_stParam.stMutex);
+                    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
                     return pstCodecParam;
                 }
 
@@ -262,7 +262,7 @@ static CODEC_PARAM_S* CODEC_FindUsableCodec(HI_CODEC_TYPE_E enType, HI_CODEC_ID_
         }
     }
 
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
 
     /* Fail */
     return HI_NULL;
@@ -271,16 +271,16 @@ static CODEC_PARAM_S* CODEC_FindUsableCodec(HI_CODEC_TYPE_E enType, HI_CODEC_ID_
 static HI_VOID CODEC_UnRegister(CODEC_PARAM_S* pstCodecParam)
 {    
     /* Destroy all instance of this codec */
-    CODEC_LOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_LOCK(pstCodecParam->stMutex);
     CODEC_FREE_INST_LIST(pstCodecParam);
-    CODEC_UNLOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_UNLOCK(pstCodecParam->stMutex);
 
     /* Delete this codec from list */
-    CODEC_LOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_LOCK(s_stParam.stMutex);
     list_del(&pstCodecParam->stCodecNode);
     s_stParam.bCodecAlloc[pstCodecParam->hCodec] = HI_FALSE;
     s_stParam.u16CodecNum--;
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
 
 #if (HI_VDEC_REG_CODEC_SUPPORT == 1)
     /* Free resource */
@@ -454,7 +454,7 @@ HI_S32 HI_CODEC_RegisterLib(const HI_CHAR *pszCodecDllName)
     }
 
     /* 5. Add CODEC_PARAM_S to codec list */
-    CODEC_LOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_LOCK(s_stParam.stMutex);
 
     /* Alloc codec handle */
     for (i=0; i<HI_CODEC_MAX_NUMBER; i++)
@@ -468,7 +468,7 @@ HI_S32 HI_CODEC_RegisterLib(const HI_CHAR *pszCodecDllName)
     
     if ((HI_INVALID_HANDLE == hCodecHandle) || (HI_CODEC_MAX_NUMBER == hCodecHandle))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         HI_FREE_CODEC(pstCodecParam);
         HI_ERR_CODEC("Too many codecs registered.\n");
         return HI_ERR_CODEC_NOENOUGHRES;
@@ -489,7 +489,7 @@ HI_S32 HI_CODEC_RegisterLib(const HI_CHAR *pszCodecDllName)
     pstCodecParam->bRegByLib = HI_TRUE;
     if (0 != pthread_mutex_init(&pstCodecParam->stMutex, HI_NULL))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         s32Ret = HI_ERR_CODEC_NOENOUGHRES;
         goto err3;
     }
@@ -503,7 +503,7 @@ HI_S32 HI_CODEC_RegisterLib(const HI_CHAR *pszCodecDllName)
     /* Set handle flag */
     s_stParam.bCodecAlloc[hCodecHandle] = HI_TRUE;
 
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
     
     HI_INFO_CODEC("HI_CODEC_RegisterLib %s OK\n", pszCodecDllName);
     return HI_SUCCESS;
@@ -512,7 +512,7 @@ err3:
     HI_FREE_CODEC(pstCodecParam->pszLibName);
 err2:
     HI_FREE_CODEC(pstCodecParam);
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
 err1:
     dlclose(pDllModule);
 err0:
@@ -558,7 +558,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     {
         HI_ERR_CODEC("Register %s fail: invalid method.\n", pszCodec->pszName);
         s32Ret = HI_ERR_CODEC_INVALIDPARAM;
-        goto err0;
+        goto err1;
     }
 
     HI_INFO_CODEC("HI_CODEC_RegisterStruct(%s) check methods success, go...\n", pszCodec->pszName);
@@ -573,7 +573,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     }
 
     /* 5. Add CODEC_PARAM_S to codec list */
-    CODEC_LOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_LOCK(s_stParam.stMutex);
 
     /* Alloc codec handle */
     for (i=0; i<HI_CODEC_MAX_NUMBER; i++)
@@ -587,7 +587,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     
     if ((HI_INVALID_HANDLE == hCodecHandle) || (HI_CODEC_MAX_NUMBER == hCodecHandle))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         HI_FREE_CODEC(pstCodecParam);
 		HI_FREE_CODEC(pstCodec);
         HI_ERR_CODEC("Too many codecs registered.\n");
@@ -599,7 +599,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     if (HI_NULL == pstCodecParam->pszLibName)
     {
         HI_ERR_CODEC("No memory.\n");
-	    CODEC_UNLOCK(s_stParam.stMutex);
+	    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         s32Ret = HI_ERR_CODEC_NOENOUGHRES;
         goto err2;
     }
@@ -609,7 +609,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     pstCodecParam->bRegByLib = HI_FALSE;
     if (0 != pthread_mutex_init(&pstCodecParam->stMutex, HI_NULL))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         s32Ret = HI_ERR_CODEC_NOENOUGHRES;
         goto err3;
     }
@@ -623,7 +623,7 @@ HI_S32 HI_CODEC_RegisterFunc(const HI_CODEC_S *pszCodec)
     /* Set handle flag */
     s_stParam.bCodecAlloc[hCodecHandle] = HI_TRUE;
 
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
     
     return HI_SUCCESS;
 
@@ -695,7 +695,7 @@ HI_S32 HI_CODEC_Register(HI_CODEC_S* pstCodec)
         return HI_ERR_CODEC_NOENOUGHRES;
     }
 
-    CODEC_LOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_LOCK(s_stParam.stMutex);
 
     /* Alloc codec handle */
     for (i=0; i<HI_CODEC_MAX_NUMBER; i++)
@@ -709,7 +709,7 @@ HI_S32 HI_CODEC_Register(HI_CODEC_S* pstCodec)
     
     if ((HI_INVALID_HANDLE == hCodecHandle) || (HI_CODEC_MAX_NUMBER == hCodecHandle))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         HI_FREE_CODEC(pstCodecParam);
         HI_ERR_CODEC("Too many codecs registered.\n");
         return HI_ERR_CODEC_NOENOUGHRES;
@@ -725,7 +725,7 @@ HI_S32 HI_CODEC_Register(HI_CODEC_S* pstCodec)
     pstCodecParam->bRegByLib = HI_FALSE;
     if (0 != pthread_mutex_init(&pstCodecParam->stMutex, HI_NULL))
     {
-        CODEC_UNLOCK(s_stParam.stMutex);
+        (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         HI_FREE_CODEC(pstCodecParam);
         return HI_FAILURE;
     }
@@ -744,7 +744,7 @@ HI_S32 HI_CODEC_Register(HI_CODEC_S* pstCodec)
     /* Set handle flag */
     s_stParam.bCodecAlloc[hCodecHandle] = HI_TRUE;
 
-    CODEC_UNLOCK(s_stParam.stMutex);
+    (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
     HI_INFO_CODEC("HI_CODEC_Register OK\n");
 
     return HI_SUCCESS;
@@ -817,6 +817,10 @@ HI_CODEC_S* HI_CODEC_Create(HI_HANDLE* phInst, const HI_CODEC_OPENPARAM_S * pstP
     if (HI_NULL == pstInst)
     {
         s32Ret = pstCodecParam->pstCodec->Destroy(*phInst);
+		if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_CODEC("Destroy Codec failed:%d.\n",s32Ret);
+        }
         return HI_NULL;
     }
 
@@ -824,9 +828,9 @@ HI_CODEC_S* HI_CODEC_Create(HI_HANDLE* phInst, const HI_CODEC_OPENPARAM_S * pstP
     pstInst->hInst = CODEC_MAKE_HANDLE(pstCodecParam->hCodec, *phInst);
 
     /* Add instance to list */
-    CODEC_LOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_LOCK(pstCodecParam->stMutex);
     list_add_tail(&pstInst->stInstNode, &pstCodecParam->stInstHead);
-    CODEC_UNLOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_UNLOCK(pstCodecParam->stMutex);
 
     *phInst = pstInst->hInst;
 
@@ -850,19 +854,19 @@ HI_S32 HI_CODEC_Destory(HI_HANDLE hInst)
         return HI_ERR_CODEC_INVALIDPARAM;
     }
 
-    CODEC_LOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_LOCK(pstCodecParam->stMutex);
 
     /* Find instance */
     CODEC_FIND_INST(hInst, pstCodecParam, pstInst);
     if (HI_NULL == pstInst)
     {
-        CODEC_UNLOCK(pstCodecParam->stMutex);
+        (HI_VOID)CODEC_UNLOCK(pstCodecParam->stMutex);
         return HI_ERR_CODEC_INVALIDPARAM;
     }
 
     /* Delete instance from list */
     list_del(&pstInst->stInstNode);
-    CODEC_UNLOCK(pstCodecParam->stMutex);
+    (HI_VOID)CODEC_UNLOCK(pstCodecParam->stMutex);
     
     /* Stop and Destroy instance */
     if (pstCodecParam->pstCodec->Stop)

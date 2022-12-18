@@ -27,6 +27,7 @@
 #define _MMC_H_
 
 #include <linux/list.h>
+#include <asm/errno.h>
 
 #define SD_VERSION_SD			0x20000
 #define SD_VERSION_3			(SD_VERSION_SD | 0x300)
@@ -54,6 +55,8 @@
 #define MMC_MODE_SPI			(1 << 4)
 #define MMC_MODE_HC			(1 << 5)
 #define MMC_MODE_DDR_52MHz		(1 << 6)
+#define MMC_MODE_HS200		(1 << 7)
+#define MMC_MODE_HS400		(1 << 8)
 
 #define SD_DATA_4BIT	0x00040000
 
@@ -66,6 +69,7 @@
 #define UNUSABLE_ERR		-17 /* Unusable Card */
 #define COMM_ERR		-18 /* Communications Error */
 #define TIMEOUT			-19
+#define SWITCH_ERR			-21 /* Card reports failure to switch mode */
 
 #define MMC_CMD_GO_IDLE_STATE		0
 #define MMC_CMD_SEND_OP_COND		1
@@ -82,6 +86,7 @@
 #define MMC_CMD_SET_BLOCKLEN		16
 #define MMC_CMD_READ_SINGLE_BLOCK	17
 #define MMC_CMD_READ_MULTIPLE_BLOCK	18
+#define MMC_CMD_SEND_TUNING_BLOCK_HS200	21
 #define MMC_CMD_WRITE_SINGLE_BLOCK	24
 #define MMC_CMD_WRITE_MULTIPLE_BLOCK	25
 #define MMC_CMD_ERASE_GROUP_START	35
@@ -106,12 +111,19 @@
 #define MMC_HS_TIMING		0x00000100
 #define MMC_HS_52MHZ		0x2
 
+#define MMC_TIMING_LEGACY		(0x1<<0)
+#define MMC_TIMING_MMC_HS		(0x1<<1)
+#define MMC_TIMING_UHS_DDR50	(0x1<<2)
+#define MMC_TIMING_MMC_HS200	(0x1<<3)
+#define MMC_TIMING_MMC_HS400	(0x1<<4)
+
 #define OCR_BUSY	0x80000000
 #define OCR_HCS		0x40000000
 
 #define SECURE_ERASE		0x80000000
 
 #define MMC_STATUS_MASK		(~0x0206BF7F)
+#define MMC_STATUS_SWITCH_ERROR	(1 << 7)
 #define MMC_STATUS_RDY_FOR_DATA (1 << 8)
 #define MMC_STATUS_CURR_STATE	(0xf << 9)
 #define MMC_STATUS_ERROR	(1 << 19)
@@ -185,12 +197,27 @@
 #define EXT_CSD_CMD_SET_SECURE		(1<<1)
 #define EXT_CSD_CMD_SET_CPSECURE	(1<<2)
 
+#define EXT_CSD_CARD_TYPE_MASK	0xFF	/* Mask out reserved bits */
 #define EXT_CSD_CARD_TYPE_26	(1<<0)	/* Card can run at 26MHz */
 #define EXT_CSD_CARD_TYPE_52	(1<<1)	/* Card can run at 52MHz */
 #define EXT_CSD_CARD_TYPE_DDR_1_8V	(1 << 2)
 #define EXT_CSD_CARD_TYPE_DDR_1_2V	(1 << 3)
 #define EXT_CSD_CARD_TYPE_DDR_52	(EXT_CSD_CARD_TYPE_DDR_1_8V \
 					| EXT_CSD_CARD_TYPE_DDR_1_2V)
+
+#define EXT_CSD_CARD_TYPE_SDR_1_8V	(1<<4)	/* Card can run at 200MHz */
+#define EXT_CSD_CARD_TYPE_SDR_1_2V	(1<<5)	/* Card can run at 200MHz */
+						/* SDR mode @1.2V I/O */
+
+#define EXT_CSD_CARD_TYPE_SDR_200	(EXT_CSD_CARD_TYPE_SDR_1_8V | \
+					 EXT_CSD_CARD_TYPE_SDR_1_2V)
+
+#define EXT_CSD_CARD_TYPE_HS400_1_8V	(1<<6)	/* Card can run at 200MHz */
+							/* DDR mode @1.8V I/O */
+#define EXT_CSD_CARD_TYPE_HS400_1_2V	(1<<7)	/* Card can run at 200MHz */
+							/* DDR mode @1.2V I/O */
+#define EXT_CSD_CARD_TYPE_HS400		(EXT_CSD_CARD_TYPE_HS400_1_8V  \
+					| EXT_CSD_CARD_TYPE_HS400_1_2V)
 
 #define EXT_CSD_BUS_WIDTH_1	0	/* Card is in 1 bit mode */
 #define EXT_CSD_BUS_WIDTH_4	1	/* Card is in 4 bit mode */
@@ -232,6 +259,10 @@
 #define EXT_CSD_SEC_BD_BLK_EN	1<<2
 #define EXT_CSD_SEC_GB_CL_EN	1<<4
 #define EXT_CSD_SEC_SANITIZE	1<<6  /* v4.5 only */
+
+/*  tunning fuction */
+#define MMC_TUNING_BLK_PATTERN_4BIT_SIZE	 64
+#define MMC_TUNING_BLK_PATTERN_8BIT_SIZE	128
 
 struct mmc_cid {
 	unsigned long psn;
@@ -311,6 +342,7 @@ struct mmc {
 	uint f_max;
 	int high_capacity;
 	uint bus_width;
+	uint timing;
 	uint clock;
 	uint card_caps;
 	uint host_caps;
@@ -330,12 +362,15 @@ struct mmc {
 			struct mmc_cmd *cmd, struct mmc_data *data);
 	void (*set_ios)(struct mmc *mmc);
 	int (*init)(struct mmc *mmc);
+	int	(*execute_tuning)(struct mmc *mmc, unsigned int datastrobe);
+	int	(*prepare_tuning)(struct mmc *mmc, unsigned int timing);
 };
 
 int mmc_register(struct mmc *mmc);
 int mmc_initialize(bd_t *bis);
 int mmc_init(struct mmc *mmc);
 int mmc_read(struct mmc *mmc, u64 src, uchar *dst, int size);
+int mmc_send_tuning(struct mmc *mmc);
 struct mmc *find_mmc_device(int dev_num);
 void print_mmc_devices(char separator);
 int board_mmc_getcd(u8 *cd, struct mmc *mmc);

@@ -1,11 +1,16 @@
 /******************************************************************************
+*
+* Copyright (C) 2014-2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
+*  and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+*****************************************************************************
 
-  Copyright (C), 2012-2050, Hisilicon Tech. Co., Ltd.
-
-******************************************************************************
   File Name     : pq_hal_comm.h
   Version       : Initial Draft
-  Author        : l00212594
+  Author        : p00203646
   Created       : 2013/10/15
   Description   :
 
@@ -19,8 +24,8 @@
 #endif
 #include "hi_type.h"
 #include "hi_debug.h"
-#include "hi_module.h"
 #include "hi_reg_common.h"
+#include "hi_drv_pq.h"
 
 
 #ifdef __cplusplus
@@ -28,6 +33,9 @@
 extern "C" {
 #endif
 #endif /* __cplusplus */
+
+#define REG_BASE_ADDR_MASK  0xffff0000
+#define REG_OFFSET_ADDR_MASK  0x0000ffff
 
 #define VPSS_HANDLE_NUM    16
 #define VDP_CHN_MAX        3
@@ -39,6 +47,7 @@ extern "C" {
 #define VDP_CHN_OFFSET     0x400
 #define VDP_VID_OFFSET     0x800
 #define VDP_VP_OFFSET      0x800
+
 
 #define PQ_TRACE(level, range, fmt...) \
     do{\
@@ -56,19 +65,50 @@ extern "C" {
         }\
     }while(0)
 
-typedef enum hiPQ_HAL_VDP_CHN_E
-{
-    VDP_CHN_DHD0    = 0,
-    VDP_CHN_DHD1    = 1,
-    VDP_CHN_DSD0    = 2,
-    VDP_CHN_WBC0    = 3,
-    VDP_CHN_WBC1    = 4,
-    VDP_CHN_WBC2    = 5,
-    VDP_CHN_WBC3    = 6,
-    VDP_CHN_NONE    = 7,
-    VDP_CHN_BUTT
+#define PQ_DBG() \
+    do{\
+        HI_PRINT("<-PQ DBG->%s %d\n",__func__,__LINE__);\
+    }while(0)
 
-} PQ_HAL_VDP_CHN_E;
+#ifndef HI_ADVCA_FUNCTION_RELEASE
+#define pqprint(type, fmt, arg...)  PQ_HAL_PrintMsg(type, fmt, ##arg)
+#else
+#define pqprint(type, fmt, arg...)
+#endif
+
+
+/*PQ Bin Module类型*/
+typedef enum hiPQ_PRN_TYPE_E
+{
+    PQ_PRN_NOTHING  = 0,          /*不打印信息，初始化时使用*/
+    PQ_PRN_FATAL    = 0x1,        /*致命异常（fatal error），比如未知异常*/
+    PQ_PRN_ERROR    = 0x2,        /*一般异常（error），比如语法错误*/
+    PQ_PRN_WARNING  = 0x4,        /*告警异常*/
+    PQ_PRN_INFO     = 0x8,        /*通知信息*/
+    PQ_PRN_DBG      = 0x10,       /*调试信息*/
+
+    PQ_PRN_VPSS     = 0x20,       /*VPSS 调试信息*/
+    PQ_PRN_VDP      = 0x40,       /*VDP 调试信息*/
+    PQ_PRN_TABLE    = 0x80,       /*PQ Table 调试信息打印*/
+
+    PQ_PRN_DEI      = 0x100,      /*DEI 算法调试信息打印*/
+    PQ_PRN_FMD_READ = 0x200,      /*FMD_READ 算法调试信息打印*/
+    PQ_PRN_FMD_CALC = 0x400,      /*FMD_CALC 算法调试信息打印*/
+    PQ_PRN_HSHARPEN = 0x800,      /*HSHARPEN 算法调试信息打印*/
+    PQ_PRN_DNR      = 0x1000,     /*DNR 算法调试信息打印*/
+    PQ_PRN_DCI      = 0x2000,     /*DCI 算法调试信息打印*/
+    PQ_PRN_ACM      = 0x4000,     /*ACM 算法调试信息打印*/
+    PQ_PRN_SHARPEN  = 0x10000,    /*SHARPEN 算法调试信息打印*/
+    PQ_PRN_SR       = 0x20000,    /*SR 算法调试信息打印*/
+    PQ_PRN_DB_READ  = 0x40000,    /*DB_READ 算法调试信息打印*/
+    PQ_PRN_DB_CALC  = 0x80000,    /*DB_CALC 算法调试信息打印*/
+    PQ_PRN_DM       = 0x100000,   /*DM 算法调试信息打印*/
+    PQ_PRN_CSC      = 0x200000,   /*CSC 算法调试信息打印*/
+    PQ_PRN_ZME      = 0x400000,   /*ZME 算法调试信息打印*/
+    PQ_PRN_TNR      = 0x800000,   /*TNR 算法调试信息打印*/
+
+    PQ_PRN_ALWS     = 0xffffffff  /*不受控打印*/
+} PQ_PRN_TYPE_E;
 
 typedef enum tagPQ_HAL_LAYER_VP_E
 {
@@ -333,32 +373,21 @@ HI_U32 PQ_HAL_GetU32ByBit( HI_U32 ulData, HI_U8 ucMaxBit, HI_U8 ucMinBit);
 
  */
 HI_VOID PQ_HAL_SetU32ByBit( HI_U32* pulData, HI_U8 ucMaxBit, HI_U8 ucMinBit, HI_U32 ulValue);
-
 HI_BOOL PQ_HAL_IsVpssReg(HI_U32 u32RegAddr);
-
 HI_BOOL PQ_HAL_IsVdpReg(HI_U32 u32RegAddr);
-
 HI_BOOL PQ_HAL_IsSpecialReg(HI_U32 u32RegAddr);
-
-HI_U32 PQ_HAL_RegRead(volatile HI_U32 a);
-
+HI_U32  PQ_HAL_RegRead(volatile HI_U32 a);
 HI_VOID PQ_HAL_RegWrite(volatile HI_U32 a, HI_U32 value);
+HI_S32  PQ_REG_RegWrite(volatile HI_U32* a, HI_U32 b);
+HI_U32  PQ_REG_RegRead(volatile HI_U32* a);
+HI_U32  PQ_HAL_CalCRC32(HI_U32 crc, HI_U8* buf, HI_U32 size);
+HI_S32  PQ_HAL_PrintMsg(HI_U32 type, const HI_S8* format, ...);
+HI_S32  PQ_HAL_SetPrintType(HI_U32 type);
+HI_S32  PQ_HAL_GetVpssDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff);
+HI_S32  PQ_HAL_GetDnrDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff);
+HI_S32  PQ_HAL_GetVdpDitherEn(HI_BOOL* bOnOff);
 
-HI_S32 PQ_REG_RegWrite(volatile HI_U32* a, HI_U32 b);
 
-HI_U32 PQ_REG_RegRead(volatile HI_U32* a);
-
-HI_U32 PQ_HAL_CalCRC32(HI_U32 crc, HI_U8* buf, HI_U32 size);
-
-#if 0
-struct file* PQ_HAL_FileOpen(const char* filename, int flags, int mode);
-void PQ_HAL_FileClose(struct file* filp);
-int PQ_HAL_FileRead(char* buf, unsigned int len, struct file* filp);
-int PQ_HAL_FileWrite(char* buf, int len, struct file* filp);
-int PQ_HAL_FileSeek(loff_t offset, int origin, struct file* filp);
-int PQ_HAL_FileTell(struct file* filp);
-HI_U32 PQ_HAL_GetSysTime(HI_VOID);
-#endif
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -1,29 +1,43 @@
 /******************************************************************************
-  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
- ******************************************************************************
- File Name     : tde_errcode.h
-Version       : Initial Draft
-Author        : Hisilicon multimedia software group
-Created       : 2005/4/23
-Last Modified :
-Description   : err code define
-Function List :
-History       : May modify the code to errcode.h FOR hi3110
- ******************************************************************************/
-#ifndef __TDE_ERRCODE_H__
-#define __TDE_ERRCODE_H__
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : hi_tde_errcode.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
+******************************************************************************/
 
-//#include "hi_debug.h"
+#ifndef __HI_TDE_ERRCODE_H__
+#define __HI_TDE_ERRCODE_H__
+
+
+/*********************************add include here******************************/
+
 #include "hi_type.h"
+
+/*****************************************************************************/
 
 #ifdef __cplusplus
 #if __cplusplus
-extern "C"{
+   extern "C"
+{
 #endif
 #endif /* __cplusplus */
 
-//#define HI_ID_TDE 100
-/* tde start err no. */ 
+
+
+/***************************** Macro Definition ******************************/
 #define HI_ERR_TDE_BASE  ((HI_S32)( ((0x80UL + 0x20UL)<<24) | (100 << 16 ) | (4 << 13) | 1 ))
 
 enum 
@@ -42,14 +56,24 @@ enum
     HI_ERR_TDE_QUERY_TIMEOUT,                    /**<  query time out */
     HI_ERR_TDE_INTERRUPT              /* blocked job was interrupted */
 };
-    
+
+
+/*************************** Structure Definition ****************************/
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
+
 
 #ifdef __cplusplus
+					   
 #if __cplusplus
+					   
 }
+
 #endif
 #endif /* __cplusplus */
-
-#endif /* __TDE_ERRCODE_H__*/
-
-
+					   
+#endif /* __HI_TDE_ERRCODE_H__ */

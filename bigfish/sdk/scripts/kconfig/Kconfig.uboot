@@ -81,14 +81,13 @@ config HI_BUILD_WITH_PRODUCT
 source "scripts/kconfig/Kconfig.bootloader"
 
 menuconfig HI_BUILD_WITH_FRONTEND
-       bool "Build Frontend Code in Fastboot"
-       depends on HI_BUILD_WITH_PRODUCT
-       default y
+	bool "Build Frontend Code in Fastboot"
+	depends on HI_BUILD_WITH_PRODUCT
+	default y
 
 config HI_BOOT_DISEQC_SUPPORT
 	depends on HI_BUILD_WITH_FRONTEND
 	bool "DISEQC Support"
-	default y  if(HI3712 || HI3715)
 	default n
 
 menu "Tuner Used in Fastboot"
@@ -107,6 +106,16 @@ config  HI_BOOT_TUNER_TYPE_TDCC
 config  HI_BOOT_TUNER_TYPE_TDA18250
 	depends on HI_BUILD_WITH_FRONTEND
 	bool "TDA18250 Support"
+	default y
+	
+config  HI_BOOT_TUNER_TYPE_TDA18250B
+	depends on HI_BUILD_WITH_FRONTEND
+	bool "TDA18250B Support"
+	default y
+	
+config  HI_BOOT_TUNER_TYPE_SI2147
+	depends on HI_BUILD_WITH_FRONTEND
+	bool "SI2147 Support"
 	default y
 	
 config  HI_BOOT_TUNER_TYPE_TMX7070X
@@ -144,7 +153,7 @@ endmenu
 menu "Demod Used in Fastboot"
 	depends on HI_BUILD_WITH_FRONTEND
 
-config  HI_BOOT_DEMOD_TYPE_X5HDV2QAM
+config  HI_BOOT_DEMOD_TYPE_HI3130I
 	depends on HI_BUILD_WITH_FRONTEND
 	bool "HI3130_INSIDE Support"
 	default y

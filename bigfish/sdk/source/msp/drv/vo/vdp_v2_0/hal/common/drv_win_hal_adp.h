@@ -9,6 +9,10 @@ HI_S32 Chip_Specific_WinHalSetAddr(HI_U32 u32LayerId,
 				WIN_HAL_PARA_S *pstPara,
 				HI_S32 s32exl);
 
+HI_BOOL Chip_Specific_WinGetRevisedPixelFmt(HI_BOOL  bHasZmeFunc, 
+															HI_RECT_S *pstOutRect, 
+															HI_DRV_PIX_FORMAT_E *penFmt,
+															HI_DISP_DISPLAY_INFO_S *pstDispInfo);
 HI_S32 Chip_Specific_WinDoFurtherZmeProcess(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara);
 
 HI_S32 Chip_Specific_WinHalSetRegionMute(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara);

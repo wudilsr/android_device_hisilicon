@@ -605,3 +605,19 @@ char *u32tohhstr(uint32 size)
 	return u64tohhstr((uint64)size);
 }
 
+/*****************************************************************************/
+/**
+ *  ultohstr - turn sizes to human readable format.
+ */
+char *ultohstr(unsigned long long size)
+{
+	int ix;
+	static char buffer[20];
+	char *fmt[] = {
+		"%llu", "%lluK", "%lluM", "%lluG", "%lluT", "%lluT"};
+	for (ix = 0; (ix < 5) && !(size & 0x3FF) && size; ix++) {
+		size = (size >> 10);
+	}
+	snprintf(buffer, sizeof(buffer), fmt[ix], size);
+	return buffer;
+}

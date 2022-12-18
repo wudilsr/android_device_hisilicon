@@ -431,10 +431,7 @@ HI_S32 HI_DRV_ADVCA_Crypto(DRV_ADVCA_EXTFUNC_PARAM_S stParam)
     }
     else if(HI_UNF_CIPHER_CA_TYPE_GDRM == stParam.enCAType)  //transfer from cipher engine
     {
-        ret = DRV_ADVCA_CryptGDRM(stParam.AddrID,
-                          (HI_U32 *)stParam.pu8Data,
-                          stParam.bIsDeCrypt,
-                          (HI_UNF_ADVCA_CA_TARGET_E)stParam.enTarget);
+        
     }
     else if(HI_UNF_CIPHER_CA_TYPE_BLPK == stParam.enCAType) //transfer from cipher engine
     {
@@ -463,7 +460,7 @@ HI_S32 DRV_ADVCA_GetVendorId(HI_U32 *pu32VendorId)
         return HI_ERR_CA_INVALID_PARA;
     }
     
-    ret = DRV_CA_OTP_V200_GetSecureChipId(pu32VendorId);
+    ret = DRV_CA_OTP_V200_GetVendorId((CA_OTP_VENDOR_TYPE_E *)pu32VendorId);
 
     return ret;
 }

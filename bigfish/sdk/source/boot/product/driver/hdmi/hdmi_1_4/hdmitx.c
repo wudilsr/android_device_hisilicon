@@ -64,6 +64,8 @@ void Encoder_Adjust(void)
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
 
     TX_PHY_DVIEncoder(HI_FALSE);
@@ -118,7 +120,9 @@ HI_VOID HW_ResetCtrl(int iEnable)
     }
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
 
     if (iEnable == 0)
     {
@@ -263,21 +267,26 @@ void SW_ResetHDMITX(void)
     RegVal &= ~ BIT_TX_PD;
     WriteByteHDMITXP0 (TX_SYS_CTRL1_ADDR, RegVal);         // 0x35->0x37 GVG
 
+    AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    //DelayMS(1);
+    DelayMS(5);
+    ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
+    DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+    
     while ( !siiIsTClockStable() && --TimeOut )
     {
-        DelayMS(1);         // wait for input pixel clock to stabilze
+        DelayMS(5);         // wait for input pixel clock to stabilze
     }
 
     if (TimeOut == 0)
     {
-       HDMIPrint("TClock UnStable before sw reset \n");
+    
+        AssertHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(10);
+        ReleaseHDMITX_SWReset(BIT_TX_SW_RST);
+        DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        HDMIPrint("TClock UnStable before sw reset <--\n");
     }
-
-    AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-    DelayMS(1);
-    //DelayMS(5);
-    ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-    DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
     //DelayMS(5);     // allow TCLK (sent to Rx across the HDMS link) to stabilize
 
     //DelayMS(1);
@@ -323,6 +332,8 @@ HI_S32 TX_CTRL_DVIEncoder(HI_BOOL bEnable)
 {
 #if    defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
 
     HI_U32 u32Value;

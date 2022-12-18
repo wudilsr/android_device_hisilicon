@@ -1200,7 +1200,7 @@ HI_VOID hi_tuner_getsignalinfo(char * para)
     {
         HI_TUNER_ERR("HI_UNF_TUNER_GetSNR failed\n");
     }
-    HI_TUNER_ERR("SNR:\t\t\t%d\n", u32SNR);
+    HI_TUNER_INFO("SNR:\t\t\t%d\n", u32SNR);
 
     s32Ret = HI_UNF_TUNER_GetSignalStrength(s_s32TunerPort, &u32SignalStrength);
     if (HI_SUCCESS != s32Ret)
@@ -1208,8 +1208,16 @@ HI_VOID hi_tuner_getsignalinfo(char * para)
         HI_TUNER_ERR("HI_UNF_TUNER_GetSignalStrength failed\n");
     }
     HI_TUNER_INFO("Signal Strength:\t%ddBuv\n", u32SignalStrength);
-
-    if ((HI_UNF_TUNER_SIG_TYPE_SAT <= s_stConnectPara.enSigType) ||
+    if(HI_UNF_TUNER_SIG_TYPE_CAB == s_stConnectPara.enSigType)
+    {
+        s32Ret = HI_UNF_TUNER_GetSignalQuality(s_s32TunerPort, &u32SignalQuality);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_TUNER_ERR("HI_UNF_TUNER_GetSignalQuality failed\n");
+        }
+        HI_TUNER_INFO("Signal Quality:\t\t%d%%\n", u32SignalQuality);
+    }
+    else if ((HI_UNF_TUNER_SIG_TYPE_SAT <= s_stConnectPara.enSigType) ||
         (HI_UNF_TUNER_SIG_TYPE_DTMB >= s_stConnectPara.enSigType))
     {
         s32Ret = HI_UNF_TUNER_GetSignalInfo(s_s32TunerPort, &stInfo);
@@ -1732,7 +1740,7 @@ void * tcprcv(void *arg)
 
     while( 1)
     {
-        s32RcvLength = read(s32NewFd, acRecvBuf, 1500);
+        s32RcvLength = read(s32NewFd, acRecvBuf, sizeof(acRecvBuf));
         if(s32RcvLength > 0)
         {
             acRecvBuf[s32RcvLength] = 0;

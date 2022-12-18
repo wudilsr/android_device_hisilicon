@@ -8,6 +8,9 @@ CFLAGS += -I$(COMMON_DIR)/api/flash/include
 CFLAGS += -I$(COMPONENT_DIR)/curl/include
 CFLAGS += -I$(COMPONENT_DIR)/loader/app/ca/
 
+ROOTBOXHOME_DIR := $(SDK_DIR)/pub/rootbox/home
+ROOTBOXHOME_EXIST := $(shell if [ -d $(ROOTBOXHOME_DIR) ]; then echo "exist"; else echo "notexist"; fi;)
+
 LOADER_SRC += hi_adp_osd.c \
               crc32.c
 
@@ -66,6 +69,15 @@ install: all
 	-$(AT)cp -rvf $(CURDIR)/$(image) release
 	-$(AT)cp -rvf $(CURDIR)/res release
 	-$(AT)cd release; find . -name .svn | xargs rm -Rf; cd -
+ifeq ($(ROOTBOXHOME_EXIST), exist)
+ifeq ($(CFG_HI_ADVCA_SUPPORT), y)
+	-$(AT)$(SCP) -rvf $(CURDIR)/$(image) $(ROOTBOXHOME_DIR)
+	-$(AT)$(SCP) -rvf $(CURDIR)/res $(ROOTBOXHOME_DIR)
+else
+	-$(AT)cp -rvf $(CURDIR)/$(image) $(ROOTBOXHOME_DIR)
+	-$(AT)cp -rvf $(CURDIR)/res $(ROOTBOXHOME_DIR)
+endif
+endif
 
 clean:
 ifeq ($(CFG_HI_ADVCA_SUPPORT), y)

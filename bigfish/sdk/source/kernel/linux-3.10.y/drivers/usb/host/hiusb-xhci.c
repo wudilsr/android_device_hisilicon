@@ -218,7 +218,7 @@ static int hiusb_xhci_hcd_drv_resume(struct device *dev)
 static const struct dev_pm_ops hiusb_xhci_pmops = {
 	.suspend = hiusb_xhci_hcd_drv_suspend,
 	.resume  = hiusb_xhci_hcd_drv_resume,
-#ifdef CONFIG_PM_HIBERNATE
+#if defined(CONFIG_PM_HIBERNATE) || defined(CONFIG_HISI_SNAPSHOT_BOOT)
 	.freeze = hiusb_xhci_hcd_drv_suspend,
 	.thaw = hiusb_xhci_hcd_drv_resume,
 	.poweroff = hiusb_xhci_hcd_drv_suspend,

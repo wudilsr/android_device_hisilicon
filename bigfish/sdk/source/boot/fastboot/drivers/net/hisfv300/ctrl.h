@@ -61,6 +61,7 @@
 /* bits of UD_GLB_RO_IQFRM_DES */
 #define BITS_RXPKG_LEN		MK_BITS(0, 11)
 #define BITS_RXPKG_ID		MK_BITS(12, 6)
+
 #define BITS_FRM_VLAN_VID	MK_BITS(18, 1)
 #define BITS_FD_VID_VID		MK_BITS(19, 1)
 #define BITS_FD_VLANID		MK_BITS(20, 12)
@@ -100,6 +101,7 @@
 
 
 #define is_recv_packet(ld) (hieth_readl(ld, GLB_RW_IRQ_RAW) & (UD_BIT_NAME(HIETH_INT_RX_RDY)))
+#define is_recv_packet_rx(ld) ((hieth_readl(ld, UD_REG_NAME(GLB_RO_QUEUE_STAT)) >> 8) & 0x3F)
 //#define hw_set_rxpkg_finish(ld) hieth_writel_bits(ld, 1, GLB_RW_IRQ_RAW, UD_BIT_NAME(HIETH_INT_RX_RDY))
 #define hw_set_rxpkg_finish(ld) hieth_writel(ld, UD_BIT_NAME(HIETH_INT_RX_RDY), GLB_RW_IRQ_RAW)
 

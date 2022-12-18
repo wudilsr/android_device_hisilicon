@@ -311,10 +311,14 @@ HI_S32 WinBuf_ReleaseCaptureFrame(WB_POOL_S *pstWinBP, HI_DRV_VIDEO_FRAME_S *pst
 
     /*we may capture normal frame or black frame, so there exists a branch. */
     if (pstWinBP->pstCapture)
-        pstCaptureFrame = (HI_DRV_VIDEO_FRAME_S *)pstWinBP->pstCapture->u32Data;
-    else
-        pstCaptureFrame =   BP_GetBlackFrameInfo();
-
+	{
+    	pstCaptureFrame = (HI_DRV_VIDEO_FRAME_S *)pstWinBP->pstCapture->u32Data;
+	}
+	else
+	{
+        WIN_FATAL(" release wrong capture frame.\n");
+        return HI_ERR_VO_INVALID_OPT;
+    } 
     /* when release, if capture not equal to capture frame nor equal to black
        frame,return error.
     */

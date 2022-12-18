@@ -1,10 +1,17 @@
 
 #ifndef __BOOT_HDMI_INTF_H__
 #define __BOOT_HDMI_INTF_H__
-#include "hi_type.h"
 #include <uboot.h>
-#include "hdmi_hal.h"
+#include "hi_type.h"
+#include "hi_debug.h"
 #include "drv_hdmi_common.h"
+#include "hdmi_hal.h"
+#include "hi_drv_disp.h"
+
+#define HDMI_WARN(format...)    HI_WARN_PRINT(HI_ID_HDMI, format)
+#define HDMI_ERR(format...)     HI_ERR_PRINT(HI_ID_HDMI, format)
+#define HDMI_FATAL(format...)   HI_FATAL_PRINT(HI_ID_HDMI, format)
+#define HDMI_INFO(format...)    HI_INFO_PRINT(HI_ID_HDMI, format)
 
 #undef offsetof
 #define offsetof(__type, __member) ((unsigned int) &((__type *)0)->__member)

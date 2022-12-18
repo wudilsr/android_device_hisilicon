@@ -258,17 +258,17 @@ static HI_S32 ADEC_DRV_Release(struct inode * inode, struct file * filp)
         up(&g_AdecMutex);
         return -1;
     }
-    
-	(HI_VOID)sscanf(psKAddrElem->szProcMmzName, "ADEC_Proc%02d", &u32ChanId);
-    
-	snprintf(aszBuf, sizeof(aszBuf), "adec%02d", u32ChanId);
-	HI_DRV_PROC_RemoveModule(aszBuf);
-	
-	if (psKAddrElem->psAdecKernelAddr)
-	{
-		HI_DRV_MMZ_UnmapAndRelease(&psKAddrElem->AdecProcMmz);
-	}
-	psKAddrElem->psAdecKernelAddr = NULL;
+
+    //(HI_VOID)sscanf(psKAddrElem->szProcMmzName, "ADEC_Proc%02d", &u32ChanId);
+    u32ChanId = (psKAddrElem->szProcMmzName[9] - '0') * 10 + (psKAddrElem->szProcMmzName[10] - '0');
+    snprintf(aszBuf, sizeof(aszBuf), "adec%02d", u32ChanId);
+    HI_DRV_PROC_RemoveModule(aszBuf);
+
+    if (psKAddrElem->psAdecKernelAddr)
+    {
+        HI_DRV_MMZ_UnmapAndRelease(&psKAddrElem->AdecProcMmz);
+    }
+    psKAddrElem->psAdecKernelAddr = NULL;
     psKAddrElem->bUsed = HI_FALSE;
     up(&g_AdecMutex);
     return 0;
@@ -606,19 +606,19 @@ static PM_BASEOPS_S adec_drvops = {
 static HI_S32 ADEC_DRV_ReadProc( struct seq_file* p, HI_VOID* v )
 {
     HI_U32 u32ChNum;
-    DRV_PROC_ITEM_S *pstProcItem;
+    DRV_PROC_ITEM_S* pstProcItem;
 
     pstProcItem = p->private;
-	
+
     if (HI_NULL == pstProcItem)
     {
         HI_ERR_ADEC("the proc item pointer of adec  is NULL\n");
         return HI_FAILURE;
     }
-	
-    (HI_VOID)sscanf(pstProcItem->entry_name, "adec%2d", &u32ChNum);
-	
-    if(u32ChNum >= ADEC_INSTANCE_MAXNUM)
+
+    //(HI_VOID)sscanf(pstProcItem->entry_name, "adec%2d", &u32ChNum);
+    u32ChNum = (pstProcItem->entry_name[4] - '0') * 10 + (pstProcItem->entry_name[5] - '0');
+    if (u32ChNum >= ADEC_INSTANCE_MAXNUM)
     {
         PROC_PRINT(p, "Invalid Adec ID:%d.\n", u32ChNum);
         return HI_FAILURE;
@@ -654,8 +654,8 @@ static HI_S32 ADEC_DRV_WriteProc(struct file * file, const char __user * buf, si
         return HI_FAILURE;
     }
 
-    ( HI_VOID )sscanf( pstProcItem->entry_name, "adec%2d", &u32ChNum );
-
+    //( HI_VOID )sscanf( pstProcItem->entry_name, "adec%2d", &u32ChNum );
+    u32ChNum = (pstProcItem->entry_name[4] - '0') * 10 + (pstProcItem->entry_name[5] - '0');
     if ( u32ChNum >= ADEC_INSTANCE_MAXNUM )
     {
         HI_ERR_ADEC( "Invalid Adec ID:%02d.\n", u32ChNum );

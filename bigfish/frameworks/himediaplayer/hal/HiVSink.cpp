@@ -26,8 +26,8 @@ static void writeMetadata(ANativeWindowBuffer* buf, HI_SVR_PICTURE_S* pics)
             reinterpret_cast<const private_handle_t*>(buf->handle));
     unsigned char* metadata_ptr = (unsigned char *)mmap(NULL, handle->ion_metadata_size,
             PROT_READ | PROT_WRITE, MAP_SHARED, handle->metadata_fd, 0);
-    if (!metadata_ptr) {
-        ALOGE("mmap metadata buffer failed");
+    if (!metadata_ptr || (void *)-1 == metadata_ptr) {
+        ALOGV("mmap metadata buffer failed");
         return;
     }
 
@@ -405,7 +405,7 @@ int HiVSink::dispatchGetMinBufNb(va_list args)
         return HI_FAILURE;
     }
 
-    if (mUsage & GRALLOC_USAGE_HISI_MASK) {
+    if (mUsage & GRALLOC_USAGE_HISI_VDP) {
         minUndequeuedBuffers += 2;
     }
 

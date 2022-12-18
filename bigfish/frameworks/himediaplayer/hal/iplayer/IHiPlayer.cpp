@@ -14,10 +14,10 @@
 #include <cutils/sockets.h>
 #include <utils/Log.h>
 #include "HiNSClient.h"
-#include "IHiNSService.h"
 
 #define LOG_TAG         "IHiPlayer"
-
+#define NET_SHARED     "/system/bin/netshared"
+#define SOCKET_PATH     "configserver"
 #define MOUNT_POINT     "/mnt/xbmc"
 #define MOUNT_ISO_POINT "/mnt/xbmciso"
 #define BUFFER_SIZE     4096
@@ -27,6 +27,7 @@ using namespace android;
 extern "C"{
 static HiMediaPlayer * g_hiMediaPlayer=NULL;
 static char g_newurl[BUFFER_SIZE] = {0};
+static int hasNetShared = -1;
 
 static char* intToBytes2(int n) {
     char *b = (char *)malloc(4);
@@ -60,7 +61,7 @@ static int isMount(const char* mountpoint)
     FILE * fp;
     char tmp[1024]={0};
     if((fp = popen("mount","r"))==NULL){
-        ALOGE("check mount error !");
+        ALOGV("check mount error !");
         return -1;
     }
     while(fgets(tmp,sizeof(tmp),fp)!= NULL){
@@ -81,7 +82,7 @@ static int runCMD(char *cmd)
     if((fb = popen(cmd,"r")) == NULL)
     {
         char * mesg = strerror(errno);
-        ALOGE("runCMD error :%d:%s: %s",errno,mesg,cmd);
+        ALOGV("runCMD error :%d:%s: %s",errno,mesg,cmd);
         return -1;
     }
 
@@ -326,6 +327,139 @@ void killProcessesWithOpenFiles(const char *path, int action) {
 #define NOD_CMD_SIZE 512
 #define UNMOUNT_RETRIES  5
 
+int sendCMD(char *cmd)
+{
+    int s_iClientSocket = -1;
+    int ret = 0;
+    char buffer[1024];
+    int i = 0;
+    char *srcLen = cmd;
+    s_iClientSocket = socket(PF_LOCAL, SOCK_STREAM, 0);
+    if(s_iClientSocket==-1)
+    {
+        return -1;
+    }
+    ret = socket_local_client_connect(s_iClientSocket, SOCKET_PATH, 1, SOCK_STREAM);
+    if (ret<0)
+    {
+        ALOGV("sendCMD  error ret=%d",-1);
+        close(s_iClientSocket);
+        return -1;
+    }
+    int strLen = strlen(cmd);
+    char *sendLen = intToBytes2(strLen);
+    char *allLen = (char *)malloc(strLen+5);
+    for (i = 0; i < (strLen + 4); i++) {
+        if (i < 4) {
+            allLen[i] = sendLen[i];
+        } else {
+            allLen[i] = srcLen[i - 4];
+        }
+    }
+    allLen[i] ='\0';
+    if (writex(s_iClientSocket, allLen, strLen+5)==0)
+    {
+        LOGD("sendCMD %s",allLen+4);
+        if(read(s_iClientSocket,buffer,sizeof(buffer))>0)
+        {
+            int mountRet = -1;
+            LOGI("sendCMD retbuffer=%s\n",buffer);
+            sscanf(buffer,"ret = %d",&mountRet);
+            if (strstr(buffer,"execute ok") || 0==mountRet)
+            {
+                free(sendLen);
+                free(allLen);
+                close(s_iClientSocket);
+                LOGD("sendCMD OK ret=%d",mountRet);
+                return 0;
+            }
+            else if (strstr(buffer,"failed execute")||strstr(buffer,"invalid size"))
+            {
+                free(sendLen);
+                free(allLen);
+                close(s_iClientSocket);
+                if (strstr(buffer,"ret = 01")||(mountRet>=0))
+                {
+                    LOGD("[%4d] sendCMD failed ret=%d, but mount looks OK",__LINE__,mountRet);
+                    return 0;
+                }else
+                {
+                    LOGD("[%4d] sendCMD failed ret=%d",__LINE__,-1);
+                    return -1;
+                }
+            }
+            else
+            {
+            }
+        }
+    }
+    free(sendLen);
+    free(allLen);
+    close(s_iClientSocket);
+    LOGD("[%4d] sendCMD failed ret=%d",__LINE__,-1);
+    return -1;
+}
+int NSMount(char *buf)
+{
+    int ret = -1;
+    if(hasNetShared == 0)
+    {
+        ret = HiNSClient::NSMount(buf);
+    }
+    else
+    {
+        char *buff =(char *)malloc(strlen(buf) + 100);
+        sprintf(buff, "system busybox mount %s", buf);
+        ret = sendCMD(buff);
+    }
+    return ret;
+}
+int NSUnMount(char *buf)
+{
+    int ret = -1;
+    if(hasNetShared == 0)
+    {
+        ret = HiNSClient::NSUnMount(buf);
+    }
+    else
+    {
+        char *buff =(char *)malloc(strlen(buf) + 100);
+        sprintf(buff, "system busybox %s", buf);
+        ret = sendCMD(buff);
+    }
+    return ret;
+}
+int NSSh(HI_NS_CMD_TYPE_E type, const char *path)
+{
+    int ret = -1;
+    if(hasNetShared == 0)
+    {
+        ret = HiNSClient::NSSh(type ,path);
+    }
+    else
+    {
+        char *buff =(char *)malloc(strlen(path) + 100);
+        if(type == HI_NS_CMD_TYPE_RMM)
+        {
+            memset(buff,0,sizeof(buff));
+            sprintf(buff, "system busybox rm -r %s",path);
+            ret = sendCMD(buff);
+        }
+        else if(type == HI_NS_CMD_TYPE_LOSETUPM)
+        {
+            memset(buff,0,sizeof(buff));
+            sprintf(buff, "system busybox losetup -d %s",path);
+            ret = sendCMD(buff);
+        }
+        else if(type == HI_NS_CMD_TYPE_ISOMKNODM)
+        {
+            memset(buff,0,sizeof(buff));
+            sprintf(buff, "system busybox mknod %s", path);
+            ret = sendCMD(buff);
+        }
+    }
+    return ret;
+}
 int ISOdoMount(const char *fsPath, const char *mountPoint)
 {
     int rt = -1;
@@ -357,7 +491,7 @@ int ISOdoMount(const char *fsPath, const char *mountPoint)
         for(loopNum; loopNum <= (loopMax +1) ; loopNum ++){
             memset(nod_cmd_buf,0,NOD_CMD_SIZE);
             sprintf(nod_cmd_buf, "/dev/loop%d b 7 %d",loopNum,loopNum);
-            HiNSClient::NSSh(HI_NS_CMD_TYPE_ISOMKNODM ,nod_cmd_buf);
+            NSSh(HI_NS_CMD_TYPE_ISOMKNODM ,nod_cmd_buf);
         }
     }
 
@@ -372,7 +506,7 @@ int ISOdoMount(const char *fsPath, const char *mountPoint)
                 memset(buff,0,sizeof(buff));
                 sprintf(buff, "-t udf -o loop \"%s\" %s", fsPath, mountPoint);
 
-                rt = HiNSClient::NSMount(buff);
+                rt = NSMount(buff);
                 if(rt==0)
                 {
                     goto doClose;
@@ -382,7 +516,7 @@ int ISOdoMount(const char *fsPath, const char *mountPoint)
     }
     memset(buff,0,sizeof(buff));
     sprintf(buff, "-o loop \"%s\" %s", fsPath, mountPoint);
-    rt = HiNSClient::NSMount(buff);
+    rt = NSMount(buff);
 doClose:
     if(fb){
         pclose(fb);
@@ -402,7 +536,7 @@ int ISOdoUnmount(const char *path)
     ALOGV("Unmounting %s", path);
     for (i = 1; i <= UNMOUNT_RETRIES; i++) {
         sprintf(buff, "%s %s","umount -l ", path);
-        ret = HiNSClient::NSUnMount(buff);
+        ret = NSUnMount(buff);
         if (ret==0)
         {
             break;
@@ -418,7 +552,7 @@ int ISOdoUnmount(const char *path)
         usleep(100*1000);
     }
 
-    HiNSClient::NSSh(HI_NS_CMD_TYPE_RMM ,path);
+    NSSh(HI_NS_CMD_TYPE_RMM ,path);
 
     struct dirent* ent = NULL;
     DIR *pDir;
@@ -429,7 +563,7 @@ int ISOdoUnmount(const char *path)
                 &&((ent->d_name[4]) < 0x3a)) {
             char loop_dev[32] = {0};
             sprintf(loop_dev, "%s/%s", "/dev", ent->d_name);
-            HiNSClient::NSSh(HI_NS_CMD_TYPE_LOSETUPM ,loop_dev);
+            NSSh(HI_NS_CMD_TYPE_LOSETUPM ,loop_dev);
         }
     }
     free(buff);
@@ -453,11 +587,11 @@ int umount_samba_nfs(const char* mountpoint)
 
     char cmdStr[BUFFER_SIZE] = {0};
     snprintf( cmdStr, BUFFER_SIZE, "%s %s","umount ", mountpoint);
-    ret = HiNSClient::NSUnMount(cmdStr);
+    ret = NSUnMount(cmdStr);
     if(ret != 0)
     {
         snprintf( cmdStr, BUFFER_SIZE, "%s %s","umount -l ", mountpoint);
-        ret = HiNSClient::NSUnMount(cmdStr);
+        ret = NSUnMount(cmdStr);
     }
 
     return ret;
@@ -528,7 +662,7 @@ int hostnametoip(const char *pc, char* ipstr)
     {
         counter++;
         if (counter>100){
-            ALOGE("%d %s()try 100 times give up!!",__LINE__,__FUNCTION__);
+            ALOGV("%d %s()try 100 times give up!!",__LINE__,__FUNCTION__);
             pclose(fd);
             return -1;
         }
@@ -592,12 +726,12 @@ int mount_samba_nfs(IPlay_URL_S *urls, const char* mountpoint, char* target_file
         while (ret!=0 && strlen(exportdir)>=1)//cyclic mount
         {
             snprintf( cmdStr, BUFFER_SIZE, "-o nolock,tcp  -t nfs \"%s:/%s\" %s", urls->hostName, exportdir, mountpoint);
-            ret = HiNSClient::NSMount(cmdStr);
+            ret = NSMount(cmdStr);
             if (ret!=0 && (strlen(exportdir)>=2) && (exportdir[strlen(exportdir)-1]=='/'))
             {
                 exportdir[strlen(exportdir)-1] = 0; //del '/'
                 snprintf( cmdStr, BUFFER_SIZE, "-o nolock,tcp  -t nfs \"%s:/%s\" %s", urls->hostName, exportdir, mountpoint);
-                ret = HiNSClient::NSMount(cmdStr);
+                ret = NSMount(cmdStr);
             }
             if (ret!=0)
             {
@@ -655,7 +789,7 @@ int mount_samba_nfs(IPlay_URL_S *urls, const char* mountpoint, char* target_file
                         urls->hostName, fulldir, mountpoint, username, urls->password);
             }
 
-            ret = HiNSClient::NSMount(cmdStr);
+            ret = NSMount(cmdStr);
             if (0==ret)
             {
                 break;
@@ -741,6 +875,7 @@ bool IPlay_init(IPlay_URL_S *urls, void * p_cookie)
 {
     ALOGV("[%4d]%s  IN",__LINE__, __FUNCTION__);
 
+    hasNetShared = access(NET_SHARED, F_OK);
     if(mount_samba_nfs(urls,MOUNT_POINT,g_newurl) != 0)
     {
         return false;
@@ -799,7 +934,7 @@ int IPlay_start()
     {
         return NO_INIT;
     }
-
+    IPlay_setSync(100);
     return g_hiMediaPlayer->start();
 }
 
@@ -1059,6 +1194,24 @@ int IPlay_setMute(bool bOnOff)
     return reply.readInt32();
 }
 
+int IPlay_setSync(int speed)
+{
+
+    if (g_hiMediaPlayer == NULL)
+    {
+        return NO_INIT;
+    }
+    Parcel request;
+    Parcel reply;
+    request.writeInt32(CMD_SET_AVSYNC_START_REGION);
+    request.writeInt32(speed);
+    request.writeInt32(-speed);
+    request.setDataPosition(0);
+    g_hiMediaPlayer->invoke(request, &reply);
+    reply.setDataPosition(0);
+    return reply.readInt32();
+}
+
 int IPlay_tplay(int speed)
 {
     ALOGV("[%4d]%s  IN",__LINE__, __FUNCTION__);
@@ -1139,7 +1292,7 @@ int IPlay_GetAudioStream()
     int ret = reply.readInt32();
     int audiostream  = reply.readInt32();
 
-    ALOGE("[%4d]%s  ID:%d  audiostream:%d ret:%d",__LINE__, __FUNCTION__, CMD_GET_AUDIO_TRACK_PID, audiostream, ret);
+    ALOGV("[%4d]%s  ID:%d  audiostream:%d ret:%d",__LINE__, __FUNCTION__, CMD_GET_AUDIO_TRACK_PID, audiostream, ret);
     return audiostream;
 }
 
@@ -1207,7 +1360,7 @@ int  IPlay_GetSubtitleCount()
         return subcount;
     }
 
-    ALOGE("[%4d]%s  failed ret=%d",__LINE__, __FUNCTION__, ret);
+    ALOGV("[%4d]%s  failed ret=%d",__LINE__, __FUNCTION__, ret);
     return ret;
 }
 

@@ -30,7 +30,9 @@
 #include <linux/atomic.h>
 #include <linux/kthread.h>
 #include <linux/crc32.h>
-
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+#include <linux/mount.h>
+#endif
 #include "power.h"
 
 #define HIBERNATE_SIG	"S1SUSPEND"
@@ -216,7 +218,9 @@ struct block_device *hib_resume_bdev;
 /*
  * Saving part
  */
-
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+static int flush_swap_writer(struct swap_map_handle *handle);
+#endif
 static int mark_swapfiles(struct swap_map_handle *handle, unsigned int flags)
 {
 	int error;
@@ -230,8 +234,15 @@ static int mark_swapfiles(struct swap_map_handle *handle, unsigned int flags)
 		swsusp_header->flags = flags;
 		if (flags & SF_CRC32_MODE)
 			swsusp_header->crc32 = handle->crc32;
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+		*(unsigned long *)((&swsusp_header->image) - 1) =
+			(unsigned long)swsusp_arch_resume;
+#endif
 		error = hib_bio_write_page(swsusp_resume_block,
 					swsusp_header, NULL);
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+	flush_swap_writer(handle);
+#endif
 	} else {
 		printk(KERN_ERR "PM: Swap header not found!\n");
 		error = -ENODEV;
@@ -265,6 +276,54 @@ static int swsusp_swap_check(void)
 
 	return res;
 }
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+static int swsusp_hb_bdev_check(void)
+{
+    char spath[64];
+    struct block_device *bdev = NULL;
+    dev_t device;
+
+	pr_debug("\nhb_bdev_file=%s\n", hb_bdev_file);
+
+    if (hb_bdev_file[0] == 0)
+				return -1;
+
+    strncpy(spath, hb_bdev_file, sizeof(spath));
+
+	if (strncmp(spath, "/dev/block/", 11) == 0)
+		strcpy(spath + 5, spath + 11);
+
+    device = name_to_dev_t(spath);
+
+	pr_debug("\ndevice=%u\n", device);
+
+    if (device == MKDEV(0, 0))
+				return -1;
+
+    bdev = bdget(device);
+    if (!bdev)
+				return -1;
+
+    bdput(bdev);
+
+    return 0;
+}
+
+int swsusp_check_storage_all(void)
+{
+    int ret;
+    ret = swsusp_hb_bdev_check();
+    if (ret >= 0)
+				return 1; /* use hb_bdev device */
+
+		return -1;
+}
+#else
+int swsusp_check_storage_all(void)
+{
+		return 0; /* use swap device always */
+}
+#endif /* CONFIG_HISI_SNAPSHOT_BOOT */
 
 /**
  *	write_page - Write one page to given swap location.
@@ -800,6 +859,258 @@ static int enough_swap(unsigned int nr_pages, unsigned int flags)
 	return free_swap > required;
 }
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+
+#define PAGE_NR(x) (((x) + PAGE_SIZE - 1) / PAGE_SIZE)
+
+#include "qbcompress.h"
+
+static int hb_bdev_write_header(struct compress_writer *writer,
+				union sscomp_header *sscomp)
+{
+	int ret;
+
+	ret = writer->write(writer, 0, PAGE_NR(sizeof(*sscomp)), sscomp);
+	if (ret != PAGE_NR(sizeof(*sscomp))) {
+		printk(KERN_ERR "PM: %s: write() failed\n", __func__);
+		return -EFAULT;
+	}
+
+	return 0;
+}
+
+static int hb_bdev_write_data(struct compress_writer *writer,
+				struct sscomp_block *block,
+				size_t *src_len,
+				sector_t *write_offs_page_i)
+{
+		void *buf = (void *)writer->dst;
+		int ret;
+		sector_t page_nr;
+
+		ret = writer->compress(writer, block, src_len);
+		if (ret <= 0) {
+				printk(KERN_ERR "PM: %s: compress() failed\n", __func__);
+				return -EFAULT;
+		}
+
+		page_nr = ret;
+		ret = writer->write(writer, *write_offs_page_i, page_nr, buf);
+		if (ret != page_nr) {
+				printk(KERN_ERR "PM: %s: write() failed\n", __func__);
+				return -EFAULT;
+		}
+	pr_debug("hb_bdev_write_data success!!");
+
+		*write_offs_page_i += page_nr;
+
+		return 0;
+}
+
+static inline int hb_bdev_write_finish(struct compress_writer *writer)
+{
+	return writer->finish(writer);
+}
+
+static inline void __hb_bdev_unpack_pfn(void *mem)
+{
+		unsigned long *pfn = mem;
+		while ((void *)pfn < mem + PAGE_SIZE) {
+				*pfn <<= PAGE_SHIFT;
+				pfn++;
+		}
+}
+
+extern unsigned int crc32_check(
+		unsigned int crc, const unsigned char *p, unsigned int len);
+
+static int hb_bdev_save_image(struct compress_writer *writer,
+				struct snapshot_handle *snapshot)
+{
+		union sscomp_header *sscomp = &writer->sscomp;
+		struct sscomp_block *block = &sscomp->b.blocks[0];
+		unsigned int nr_pages;
+		size_t filled_src = 0;
+		sector_t write_offs_page_i;
+		int ret;
+
+		write_offs_page_i = PAGE_NR(sizeof(*sscomp));
+
+    /* meta block(s) */
+		nr_pages = sscomp->info.meta_pages;
+		while (nr_pages) {
+				ret = snapshot_read_next(snapshot);
+				if (ret <= 0) {
+						printk(KERN_ERR "PM: snapshot_read_next() failed\n");
+						return -EFAULT;
+				}
+
+				memcpy((void *)writer->src + filled_src, data_of(*snapshot),
+						PAGE_SIZE);
+
+		__hb_bdev_unpack_pfn((void *)writer->src + filled_src);
+
+#ifdef USE_SHA1
+		hb_bdev_sha1_update((void *)writer->src + filled_src, PAGE_SIZE);
+#else
+		sscomp->info.crc32 = crc32_check(
+				sscomp->info.crc32, (void *)writer->src + filled_src, PAGE_SIZE);
+#endif
+		filled_src += PAGE_SIZE;
+		if (filled_src >= writer->src_buf_sz) {
+				ret = hb_bdev_write_data(writer, block, &filled_src,
+						&write_offs_page_i);
+				if (ret)
+						return -EFAULT;
+				sscomp->info.meta_blocks++;
+						block++;
+		}
+				nr_pages--;
+		}
+
+		while (filled_src > 0) {
+				ret = hb_bdev_write_data(writer, block, &filled_src,
+						&write_offs_page_i);
+		if (ret)
+				return -EFAULT;
+				sscomp->info.meta_blocks++;
+				block++;
+		}
+
+    /* copy block(s) */
+		nr_pages = sscomp->info.data_pages;
+		while (nr_pages) {
+				ret = snapshot_read_next(snapshot);
+				if (ret <= 0) {
+						printk(KERN_ERR "PM: snapshot_read_next() failed\n");
+						return -EFAULT;
+				}
+
+				memcpy((void *)writer->src + filled_src, data_of(*snapshot),
+						PAGE_SIZE);
+
+#ifdef USE_SHA1
+		hb_bdev_sha1_update((void *)writer->src + filled_src, PAGE_SIZE);
+#else
+		sscomp->info.crc32 = crc32_check(
+				sscomp->info.crc32, (void *)writer->src + filled_src, PAGE_SIZE);
+#endif
+		filled_src += PAGE_SIZE;
+		if (filled_src >= writer->src_buf_sz) {
+				ret = hb_bdev_write_data(writer, block, &filled_src,
+						&write_offs_page_i);
+				if (ret)
+						return -EFAULT;
+						sscomp->info.data_blocks++;
+						block++;
+		}
+		nr_pages--;
+		}
+
+		while (filled_src > 0) {
+				ret = hb_bdev_write_data(writer, block, &filled_src,
+						&write_offs_page_i);
+				if (ret)
+						return -EFAULT;
+						sscomp->info.data_blocks++;
+						block++;
+		}
+
+		printk(KERN_INFO "PM: compressed: %u pages to %llu pages.\n",
+				sscomp->info.meta_pages + sscomp->info.data_pages,
+				(unsigned long long)write_offs_page_i
+				- PAGE_NR(sizeof(*sscomp)));
+
+		printk(KERN_INFO "PM: written: %u meta blocks and %u data blocks\n",
+			sscomp->info.meta_blocks, sscomp->info.data_blocks);
+
+		return 0;
+}
+
+
+static int swsusp_compress_and_write(unsigned int flags)
+{
+    struct compress_writer *writer = get_susp_compress_writer(hb_bdev_file);
+    struct snapshot_handle snapshot;
+    struct swsusp_info *susp_info;
+    union sscomp_header *sscomp;
+    unsigned int meta_pages, copy_pages;
+    int error;
+
+    if (!writer) {
+				printk(KERN_ERR "PM: Cannot get compress-writer\n");
+				return -EFAULT;
+    }
+
+    sscomp = &writer->sscomp;
+    /* invalidate existing one */
+    memset(writer->pagebuf, 0, PAGE_SIZE);
+    error = hb_bdev_write_header(writer, writer->pagebuf);
+    if (error)
+				goto out_finish;
+    memset(&snapshot, 0, sizeof(struct snapshot_handle));
+    error = snapshot_read_next(&snapshot);
+    if (error < PAGE_SIZE) {
+				if (error >= 0)
+						 error = -EFAULT;
+				goto out_error;
+    }
+
+    susp_info = (struct swsusp_info *)data_of(snapshot);
+    copy_pages = susp_info->image_pages;
+    meta_pages = susp_info->pages - susp_info->image_pages - 1;
+	pr_debug("\ncopy_pages=%x", copy_pages);
+	pr_debug("\nmeta_pages=%x", meta_pages);
+    if (!copy_pages && !meta_pages) {
+				error = -EINVAL;
+				goto out_error;
+    }
+
+    sscomp->info.meta_pages = meta_pages;
+    sscomp->info.data_pages = copy_pages;
+
+#ifdef USE_SHA1
+    hb_bdev_sha1_init();
+    strncpy(sscomp->info.sha1sum, "Not checked yet!",
+				sizeof(sscomp->info.sha1sum));
+#else
+    sscomp->info.crc32 = 0;
+#endif
+
+    error = hb_bdev_save_image(writer, &snapshot);
+    if (error)
+				goto out_finish;
+
+#ifdef USE_SHA1
+    hb_bdev_sha1_final(sscomp->info.sha1sum);
+#endif
+
+    /* update */
+    memcpy(sscomp->info.magic, SSCOMP_MAGIC_4, sizeof(sscomp->info.magic));
+    sscomp->info.ctl_func = (unsigned long)swsusp_arch_resume;
+
+
+    error = hb_bdev_write_header(writer, sscomp);
+	if (error)
+		goto out_finish;
+
+	error = hb_bdev_write_finish(writer);
+
+out_finish:
+
+out_error:
+    put_susp_compress_writer(writer);
+    return error;
+}
+
+#else
+
+static inline swsusp_compress_and_write(unsigned int flags)
+{
+    return -RESTARTSYS;
+}
+
+#endif /* CONFIG_HISI_SNAPSHOT_BOOT */
 /**
  *	swsusp_write - Write entire image and metadata.
  *	@flags: flags to pass to the "boot" kernel in the image header
@@ -818,6 +1129,11 @@ int swsusp_write(unsigned int flags)
 	unsigned long pages;
 	int error;
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+	error = swsusp_check_storage_all();
+	if (error == 1)
+		return swsusp_compress_and_write(flags);
+#endif
 	pages = snapshot_get_image_size();
 	error = get_swap_writer(&handle);
 	if (error) {
@@ -1435,10 +1751,12 @@ int swsusp_check(void)
 			goto put;
 
 		if (!memcmp(HIBERNATE_SIG, swsusp_header->sig, 10)) {
+#ifndef	CONFIG_HISI_SNAPSHOT_BOOT
 			memcpy(swsusp_header->sig, swsusp_header->orig_sig, 10);
 			/* Reset swap signature now */
 			error = hib_bio_write_page(swsusp_resume_block,
 						swsusp_header, NULL);
+#endif
 		} else {
 			error = -EINVAL;
 		}

@@ -1,4 +1,4 @@
-ifeq ($(PLATFORM_VERSION), 5.0)
+ifeq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
 PNG_MODULE_MAKEFILES := $(call all-named-subdir-makefiles, libpng_for_5.0)
 else
 PNG_MODULE_MAKEFILES := $(call all-named-subdir-makefiles, libpng)

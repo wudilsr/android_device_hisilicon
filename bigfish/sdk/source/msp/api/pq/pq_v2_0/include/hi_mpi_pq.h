@@ -62,6 +62,12 @@ typedef struct hiMPI_ACM_PARAM_S
 } MPI_ACM_PARAM_S;
 
 
+typedef enum hiMPI_PQ_IMAGE_TYPE_E
+{
+    HI_MPI_PQ_IMAGE_GRAPH = 0,          /**<graph image */
+    HI_MPI_PQ_IMAGE_VIDEO,              /**<video image */
+    HI_MPI_PQ_IMAGE_BUTT
+} HI_MPI_PQ_IMAGE_TYPE_E;
 
 /**
  \PQ初始化
@@ -200,27 +206,27 @@ extern HI_S32 HI_MPI_PQ_SetSaturation(HI_DRV_DISPLAY_E enChan, HI_U32 u32Saturat
  \attention \n
 无
 
- \param[out] pu32NRLevel: 降噪等级, 有效范围: 0~255
+ \param[out] pu32TNRLevel: 降噪等级, 有效范围: 0~255
 
 
  \retval ::HI_SUCCESS
 
  */
 
-extern HI_S32 HI_MPI_PQ_GetNR(HI_U32* pu32NRLevel);
+extern HI_S32 HI_MPI_PQ_GetTNR(HI_U32* pu32TNRLevel);
 
 /**
  \brief 设置降噪强度
  \attention \n
 无
 
- \param[in] u32NRLevel: 降噪等级, 有效范围: 0~255
+ \param[in] u32TNRLevel: 降噪等级, 有效范围: 0~255
 
  \retval ::HI_SUCCESS
 
  */
 
-extern HI_S32 HI_MPI_PQ_SetNR(HI_U32 u32NRLevel);
+extern HI_S32 HI_MPI_PQ_SetTNR(HI_U32 u32TNRLevel);
 
 /**
  \brief 获取自动降噪开关状态
@@ -503,6 +509,36 @@ extern HI_S32 HI_MPI_PQ_GetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32* pu32OnO
 extern HI_S32 HI_MPI_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff);
 
 /**
+ \brief 设置卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] enMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_MPI_PQ_SetDemoMode( HI_DRV_DISPLAY_E enChan, HI_PQ_DEMO_MODE_E enMode);
+
+/**
+ \brief 获取卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] penMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_MPI_PQ_GetDemoMode( HI_DRV_DISPLAY_E enChan, HI_PQ_DEMO_MODE_E* penMode);
+
+
+
+/**
  \brief 设置PQ寄存器
  \attention \n
 无
@@ -750,6 +786,11 @@ extern HI_S32 HI_MPI_PQ_GetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData);
 
 extern HI_S32 HI_MPI_PQ_SetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData);
 
+extern HI_S32 HI_MPI_PQ_GetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion);
+
+extern HI_S32 HI_MPI_PQ_SetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion);
+
+
 /**
  \brief 获取SNR的pixmean-ratio曲线
  \attention \n
@@ -799,9 +840,10 @@ extern HI_S32 HI_MPI_PQ_GetSNRPixdiff2Edgestr( HI_PQ_SNR_PIXDIFF_2_EDGESTR_S* ps
  */
 
 extern HI_S32 HI_MPI_PQ_SetSNRPixdiff2Edgestr( HI_PQ_SNR_PIXDIFF_2_EDGESTR_S* pstSnrData);
-
 extern HI_S32 HI_MPI_PQ_GetDciLevel(HI_U32* pu32DCIlevel);
 extern HI_S32 HI_MPI_PQ_SetDciLevel( HI_U32 u32DCIlevel);
+extern HI_S32 HI_MPI_PQ_SetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLAY_E enChan, HI_PQ_IMAGE_PARAM_S stParam);
+extern HI_S32 HI_MPI_PQ_GetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLAY_E enChan, HI_PQ_IMAGE_PARAM_S* pstParam);
 
 
 #ifdef __cplusplus

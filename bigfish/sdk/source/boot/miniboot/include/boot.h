@@ -58,7 +58,6 @@ extern unsigned int get_ca_vendor(void);
 extern unsigned int get_timer_clock(void);
 
 unsigned int get_ddr_size(void);
-char *ultohstr(unsigned long long size);
 
 void start_cmdline(void);
 

@@ -343,6 +343,8 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_GET_LAST_VIDBUF_PTS,  /**< the command of getting pts in video buffer, the parameter is ::HI_S64 */ /**< CNcomment:获取视频缓冲最后一帧pts，参数类型为::HI_S64 */
     HI_FORMAT_INVOKE_GET_LAST_AUDBUF_PTS,  /**< the command of getting pts in audio buffer, the parameter is ::HI_S64 */ /**< CNcomment:获取音频缓冲最后一帧pts，参数类型为::HI_S64 */
     HI_FORMAT_INVOKE_GET_HLS_SECOND_LEVEL_URL, /**< the command of getting hls second level url, the parameter is ::HI_CHAR* */ /**< CNcomment:获取hls的二级列表，参数类型为::HI_CHAR* */
+    HI_FORMAT_INVOKE_GET_AUDIO_FORMAT_BUFFER,    /**< the command of getting network audio stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
+    HI_FORMAT_INVOKE_GET_VIDEO_FORMAT_BUFFER,    /**< the command of getting network video stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_BUTT
 } HI_FORMAT_INVOKE_ID_E;
 
@@ -407,7 +409,6 @@ typedef struct hiFORMAT_BUFFER_STATUS_S
 {
     HI_S64 s64BufferSize;    /**< The data size(bytes) of the buffer, data in hiplayer's buffer and data in decoder's buffer are all included. */
     HI_S64 s64Duration;    /**<The relative time that the data can be played to, data in hiplayer's buffer and data in decoder's buffer are all included. */
-    HI_CHAR szUrl[HI_FORMAT_MAX_URL_LEN];    /**< currrent playing url */
 } HI_FORMAT_BUFFER_STATUS_S;
 
 /** Type of network errors */
@@ -420,6 +421,7 @@ typedef enum hiFORMAT_MSG_NETWORK_E
     HI_FORMAT_MSG_NETWORK_ERROR_DISCONNECT,        /**< net work disconnect *//**< CNcomment:断网 */
     HI_FORMAT_MSG_NETWORK_ERROR_NOT_FOUND,      /**< file not found *//**< CNcomment:资源不可用 */
     HI_FORMAT_MSG_NETWORK_NORMAL,               /**< status of network is normal *//**< CNcomment:网络状态正常 */
+    HI_FORMAT_MSG_NETWORK_HTTP_CODE,
     HI_FORMAT_MSG_NETWORK_ERROR_BUTT,
 } HI_FORMAT_MSG_NETWORK_E;
 
@@ -441,6 +443,21 @@ typedef struct hiFORMAT_MSG_DATA_S
     HI_S32 s32DataLen;
     HI_VOID *pData;
 }HI_FORMAT_MSG_DATA_S;
+
+typedef struct hiFORMAT_MSG_TS_SEGMENT_START_S
+{
+    HI_S32 s32Sequence;             //sequence number of ts segment
+    HI_S64 s64Filesize;             //Bytes
+    HI_S32 s32Duration;             //ms
+} HI_FORMAT_MSG_TS_SEGMENT_START_S;
+
+typedef struct hiFORMAT_MSG_TS_SEGMENT_END_S
+{
+    HI_S32 s32BandWidth;            //bps
+    HI_S64 s64Offset;               //Bytes
+    HI_U64 u64SpendTime;            //ms
+} HI_FORMAT_MSG_TS_SEGMENT_END_S;
+
 /** Type of the message packets */
 /** CNcomment:消息事件报文类型 */
 typedef enum hiFORMAT_MSG_TYPE_E
@@ -457,6 +474,10 @@ typedef enum hiFORMAT_MSG_TYPE_E
     HI_FORMAT_MSG_SEGMENT_DOWNLOAD_START, /**< hls segment download start *//**< CNcomment:开始下载hls segment */
     HI_FORMAT_MSG_SEGMENT_DOWNLOAD_END, /**< hls segment download finish *//**< CNcomment:完成下载hls segment */
     HI_FORMAT_MSG_SEGMENT_DOWNLOAD_ERROR, /**< hls segment download failed *//**< CNcomment:hls segment 下载失败*/
+    HI_FORMAT_MSG_TS_SEGMENT_DOWNLOAD_START, /* hls ts segment download start, :HI_FORMAT_MSG_TS_SEGMENT_START_S */
+    HI_FORMAT_MSG_TS_SEGMENT_DOWNLOAD_END,   /* hls ts segment download end, :HI_FORMAT_MSG_TS_SEGMENT_END_S */
+    HI_FORMAT_MSG_HTTP_REDIRECT,
+    HI_FORMAT_MSG_HTTP_CONNECTED,
     HI_FORMAT_MSG_USER_PRIVATE = 100,/**< private message *//**< CNcomment:用户私有消息定义 */
     HI_FORMAT_MSG_BUTT,
 } HI_FORMAT_MSG_TYPE_E;

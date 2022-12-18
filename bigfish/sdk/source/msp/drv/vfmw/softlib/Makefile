@@ -37,23 +37,31 @@ SDEC_KO_DIR   := $(MSP_DIR)/drv/vfmw/softlib
 VFMW_INC_ROOT := $(SRC_ROOT)/msp/drv/vfmw/vfmw_v4.0
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100),)
-ifdef CFG_HI_ADVCA_FUNCTION
-include $(VFMW_INC_ROOT)/firmware/product/Hi3716CV200_advca/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
-else
-include $(VFMW_INC_ROOT)/firmware/product/Hi3716CV200/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
-endif
+include $(VFMW_INC_ROOT)/firmware/product/Hi3716CV200/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
-include $(VFMW_INC_ROOT)/firmware/product/Hi3798CV100/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
+include $(VFMW_INC_ROOT)/firmware/product/Hi3798CV100/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
-include $(VFMW_INC_ROOT)/firmware/product/Hi3798MV100/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
+include $(VFMW_INC_ROOT)/firmware/product/Hi3798MV100/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200_a),)
 include $(VFMW_DIR)/firmware/product/Hi3798CV200/HD_FULL/vfmw_make.cfg
+endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+include $(VFMW_INC_ROOT)/firmware/product/Hi3716MV410/HD_FULL/vfmw_make.cfg
+endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3751v100),)
+include $(VFMW_INC_ROOT)/firmware/product/HiS5V100/HD_FULL/vfmw_make.cfg
+endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3751v200),)
+include $(VFMW_INC_ROOT)/firmware/product/HiS5V200/HD_FULL/vfmw_make.cfg
 endif
 
 export HWMEDIA_DIR = $(SDEC_KO_DIR)/hwmedia_v1.1

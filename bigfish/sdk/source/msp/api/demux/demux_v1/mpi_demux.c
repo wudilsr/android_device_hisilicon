@@ -1868,7 +1868,7 @@ HI_S32 HI_MPI_DMX_AcquireEs(HI_HANDLE hChannel, HI_UNF_ES_BUF_S *pEsBuf)
         u32ChId = DMX_CHANID(hChannel);
         u32PhyAddr = (HI_U32)Param.stEsBuf.pu8Buf;
         if ((u32PhyAddr >= g_stChanBuf[u32ChId].u32BufPhyAddr)
-            && ((u32PhyAddr + Param.stEsBuf.u32BufLen - g_stChanBuf[u32ChId].u32BufPhyAddr) < g_stChanBuf[u32ChId].u32BufSize))
+            && ((u32PhyAddr + Param.stEsBuf.u32BufLen - g_stChanBuf[u32ChId].u32BufPhyAddr) <= g_stChanBuf[u32ChId].u32BufSize))
         {
             pEsBuf->pu8Buf = (HI_U8*)((u32PhyAddr - g_stChanBuf[u32ChId].u32BufPhyAddr)
                                       + g_stChanBuf[u32ChId].u32BufUsrVirAddr);
@@ -2127,7 +2127,7 @@ HI_S32 HI_MPI_DMX_AcquireRecIndex(HI_HANDLE hRecChn, HI_UNF_DMX_REC_INDEX_S *pst
     return ret;
 }
 
-#ifdef DMX_DATAINDEX_V2_SUPPORT
+#ifndef DMX_DATAINDEX_V1_SUPPORT
 static HI_S32 DMXMixRecDataAndIndex(HI_UNF_DMX_REC_DATA_INDEX_S *Old, HI_UNF_DMX_REC_DATA_INDEX_S *New)
 {
     HI_S32 ret = HI_FAILURE;
@@ -2217,10 +2217,11 @@ HI_S32 HI_MPI_DMX_AcquireRecDataAndIndex(HI_HANDLE hRecChn, HI_UNF_DMX_REC_DATA_
     }
     
     /* 
-     * FIXME:
      * recv more until no available data. this policy maybe has some implicit risk.
      * DMXAcquireRecDataAndIndex always return success if stream comes too fast.
      * There may be result ts rec buffer overflow.
+     * For example, define DMX_SUPPORT_SCRAMB_SOFT_IDX will enable soft index and 
+     * this while will dead loop.
      */
     while(1)
     {
@@ -2244,6 +2245,7 @@ HI_S32 HI_MPI_DMX_AcquireRecDataAndIndex(HI_HANDLE hRecChn, HI_UNF_DMX_REC_DATA_
         if (HI_SUCCESS != ret)
         {
             /*
+             * FIXME:
              * in theory, we should backup RecDataidx if DMXMixRecDataAndIndex failed.
              * but now, we think it's OK because of DMX_MAX_IDX_ACQUIRED_EACH_TIME
              * is big enough hold all valid index one time.
@@ -2385,5 +2387,13 @@ HI_S32 HI_MPI_DMX_Invoke(HI_UNF_DMX_INVOKE_TYPE_E enCmd, const HI_VOID *pCmdPara
     HI_ERR_DEMUX("unknow cmd:%d.\n",enCmd);
     return HI_ERR_DMX_INVALID_PARA;
    
+}
+
+HI_S32 HI_MPI_DMX_GetResumeCount(HI_U32 *pCount)
+{
+    MPIDmxCheckDeviceFd();
+    MPIDmxCheckPointer(pCount);
+
+    return ioctl(g_s32DmxFd, CMD_DEMUX_GET_RESUME_COUNT, pCount);
 }
 

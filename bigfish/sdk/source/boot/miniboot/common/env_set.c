@@ -355,6 +355,8 @@ static enum flash_type_t get_env_media(void)
 	FT_SPIFLASH;
 #elif defined(CONFIG_ENV_NAND)
 	FT_NAND;
+#elif defined(CONFIG_ENV_SPI_NAND)
+	FT_SNAND;
 #else
 	FT_NONE;
 #endif
@@ -366,6 +368,7 @@ static enum flash_type_t get_env_media(void)
 	default:
 	case BOOT_MEDIA_UNKNOWN:  flashtype = FT_NONE;     break;
 	case BOOT_MEDIA_NAND:     flashtype = FT_NAND;     break;
+	case BOOT_MEDIA_SPI_NAND: flashtype = FT_SNAND;    break;
 	case BOOT_MEDIA_SPIFLASH: flashtype = FT_SPIFLASH; break;
 	case BOOT_MEDIA_EMMC:     flashtype = FT_EMMC;     break;
 	}

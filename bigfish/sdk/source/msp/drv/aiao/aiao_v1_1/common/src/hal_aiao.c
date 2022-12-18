@@ -175,7 +175,9 @@ static HI_VOID   HAL_AIAO_BoardI2SReset(HI_VOID)
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
 
 #if defined (HI_UNF_I2S0_MCLK_SUPPORT)
         g_pstRegIO->ioshare_reg110.u32 = 0x0;
@@ -220,9 +222,12 @@ static HI_VOID   HAL_AIAO_BoardI2SReset(HI_VOID)
     || defined(CHIP_TYPE_hi3719cv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3751v100)	\
+    || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
     /* IO SharePin configure should be in Boot */
 #if 0
     #if defined (HI_UNF_I2S1_MCLK_SUPPORT)
@@ -715,9 +720,11 @@ HI_S32                  HAL_AIAO_P_Open_Veri(AIAO_PORT_ID_E enPortID, const AIAO
     HI_U32 Id = PORT2ID(enPortID);
     AIAO_IsrFunc *pisr;
     //AIAO_I2S_BOARD_CONFIG *pstI2SBorad;
+#if !defined(HI_AIAO_VERIFICATION_SUPPORT)
 #if defined (HI_I2S0_SUPPORT) || defined (HI_I2S1_SUPPORT)
     HI_S32 n;
 #endif 
+#endif
 
     Ret = HAL_AIAO_P_Check(enPortID);
     if(HI_FAILURE == Ret)
@@ -1344,7 +1351,11 @@ HI_U32  HAL_AIAO_P_ALSA_FLASH(AIAO_PORT_ID_E enPortID)
 
 #if defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100) 
 #define PERIOND_NUM 6  /* 4/16 */
-#elif defined (CHIP_TYPE_hi3798mv100) || defined (CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3798cv200_a)
+#elif    defined (CHIP_TYPE_hi3798mv100)  \
+      || defined (CHIP_TYPE_hi3796mv100)  \
+      || defined(CHIP_TYPE_hi3798cv200_a) \
+      || defined(CHIP_TYPE_hi3716mv410)   \
+      || defined(CHIP_TYPE_hi3716mv420)
 #define PERIOND_NUM 4
 #else
 #define PERIOND_NUM 2
@@ -1600,14 +1611,14 @@ HI_VOID HAL_AIAO_P_GetBorardTxI2SDfAttr(HI_U32 u32BoardI2sNum, HI_UNF_I2S_ATTR_S
     memcpy(pAttr, &g_stAiaoTxI2SDefaultOpenAttr, sizeof(AIAO_PORT_USER_CFG_S));
 
     pAttr->stIfAttr.enCrgMode = (HI_TRUE == pstI2sAttr->bMaster) ? AIAO_CRG_MODE_MASTER : AIAO_CRG_MODE_SLAVE;
-    pAttr->stIfAttr.enChNum = (AIAO_I2S_CHNUM_E)(pstI2sAttr->enChannel);
-    pAttr->stIfAttr.enBitDepth  = (AIAO_BITDEPTH_E)(pstI2sAttr->enBitDepth);
+    pAttr->stIfAttr.enChNum = AUTIL_CHNUM_UNF2AIAO(pstI2sAttr->enChannel);
+    pAttr->stIfAttr.enBitDepth  = AUTIL_BITDEPTH_UNF2AIAO(pstI2sAttr->enBitDepth);
     pAttr->stIfAttr.u32FCLK_DIV = AUTIL_BclkFclkDiv(pstI2sAttr->enMclkSel, pstI2sAttr->enBclkSel);
     pAttr->stIfAttr.u32BCLK_DIV = (HI_U32)pstI2sAttr->enBclkSel;
     pAttr->stIfAttr.eCrgSource = pstI2SBorad->enTxCrgSource;
     pAttr->stIfAttr.enSource = pstI2SBorad->enTxSource;
     pAttr->stIfAttr.u32PcmDelayCycles = 0;
-    pAttr->stIfAttr.enI2SMode = (AIAO_I2S_MODE_E)(pstI2sAttr->enI2sMode);
+    pAttr->stIfAttr.enI2SMode = AUTIL_I2S_MODE_UNF2AIAO(pstI2sAttr->enI2sMode);
     if (HI_UNF_I2S_PCM_MODE == pstI2sAttr->enI2sMode)
     {
         pAttr->stIfAttr.enRiseEdge = (HI_TRUE

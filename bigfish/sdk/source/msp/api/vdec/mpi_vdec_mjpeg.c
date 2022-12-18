@@ -720,6 +720,11 @@ HI_S32 MJPEG_DecodeFrame(HI_HANDLE hInst, HI_CODEC_STREAM_S * pstIn, HI_CODEC_FR
 
 	stJpegInfo.bOutInfo = HI_FALSE;
 	s32Ret = HI_JPEG_GetJpegInfo(&cinfo,&stJpegInfo);
+	if(HI_SUCCESS != s32Ret)
+	{
+	   HI_ERR_VDEC("HI_JPEG_GetJpegInfo failure\n");
+	}
+
 	/*********************************************************************/
 	cinfo.scale_num   = 1 ;
 	cinfo.scale_denom = 1;
@@ -754,7 +759,10 @@ HI_S32 MJPEG_DecodeFrame(HI_HANDLE hInst, HI_CODEC_STREAM_S * pstIn, HI_CODEC_FR
 	}
 	stJpegInfo.bOutInfo = HI_TRUE;
 	s32Ret = HI_JPEG_GetJpegInfo(&cinfo,&stJpegInfo);
-
+    if(HI_SUCCESS != s32Ret)
+	{
+	   HI_ERR_VDEC("HI_JPEG_GetJpegInfo failure\n");
+	}
 	memset(&stSurfaceDesc,0,sizeof(HI_JPEG_SURFACE_DESCRIPTION_S));
 	stSurfaceDesc.stOutSurface.pOutPhy[0]  = (HI_CHAR*)pstOut->stOutputAddr.u32Phy;
 	stSurfaceDesc.stOutSurface.pOutPhy[1]  = (HI_CHAR*)(pstOut->stOutputAddr.u32Phy + stJpegInfo.u32OutSize[0]);

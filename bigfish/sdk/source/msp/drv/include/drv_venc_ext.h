@@ -13,7 +13,7 @@ extern "C" {
    venc will get / release frame or send private info to sourec by function pointer */
 typedef HI_S32  (*FN_VENC_GET_FRAME)(HI_HANDLE handle, HI_DRV_VIDEO_FRAME_S* pstImage);
 typedef HI_S32  (*FN_VENC_PUT_FRAME)(HI_HANDLE handle, HI_DRV_VIDEO_FRAME_S* pstImage);
-typedef HI_S32  (*FN_VENC_CHANGE_INFO)(HI_HANDLE handle, HI_U32 u32Width, HI_U32 u32Height);
+typedef HI_S32  (*FN_VENC_CHANGE_INFO)(HI_HANDLE handle, HI_U32 u32Width, HI_U32 u32Height, HI_U32 u32FrmRate);
 
 typedef struct hiDRV_VENC_SRC_INFO_S
 {

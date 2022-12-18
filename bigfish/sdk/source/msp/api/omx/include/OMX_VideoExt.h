@@ -138,7 +138,9 @@ typedef enum OMX_HISI_EXTERN_INDEXTYPE {
 	OMX_GoogleIndexEnableAndroidNativeBuffers,
 	OMX_GoogleIndexGetAndroidNativeBufferUsage,
 	OMX_GoogleIndexUseAndroidNativeBuffer,
-	OMX_GoogleIndexUseAndroidNativeBuffer2
+	OMX_GoogleIndexUseAndroidNativeBuffer2,
+	OMX_HisiIndexFastOutputMode,
+    OMX_HISIIndexParamVideoAdaptivePlaybackMode,
 }OMX_HISI_EXTERN_INDEXTYPE;
 
 /**
@@ -155,6 +157,7 @@ typedef struct OMX_HISI_PARAM_CHANNELATTRIBUTES  {
     OMX_U32 nStreamOverflowThreshold;
     OMX_U32 nDecodeMode;
     OMX_U32 nPictureOrder;
+    OMX_U32 nLowdlyEnable;
 }  OMX_HISI_PARAM_CHANNELATTRIBUTES;
 
 #ifdef ANDROID // native buffer
@@ -189,6 +192,31 @@ typedef struct GetAndroidNativeBufferUsageParams  {
     OMX_U32 nUsage;
 } GetAndroidNativeBufferUsageParams;
 
+
+// A pointer to this struct is passed to OMX_SetParameter() when the extension
+// index "OMX.google.android.index.prepareForAdaptivePlayback" is given.
+//
+// This method is used to signal a video decoder, that the user has requested
+// seamless resolution change support (if bEnable is set to OMX_TRUE).
+// nMaxFrameWidth and nMaxFrameHeight are the dimensions of the largest
+// anticipated frames in the video.  If bEnable is OMX_FALSE, no resolution
+// change is expected, and the nMaxFrameWidth/Height fields are unused.
+//
+// If the decoder supports dynamic output buffers, it may ignore this
+// request.  Otherwise, it shall request resources in such a way so that it
+// avoids full port-reconfiguration (due to output port-definition change)
+// during resolution changes.
+//
+// DO NOT USE THIS STRUCTURE AS IT WILL BE REMOVED.  INSTEAD, IMPLEMENT
+// METADATA SUPPORT FOR VIDEO DECODERS.
+typedef struct PrepareForAdaptivePlaybackParams {
+    OMX_U32 nSize;
+    OMX_VERSIONTYPE nVersion;
+    OMX_U32 nPortIndex;
+    OMX_BOOL bEnable;
+    OMX_U32 nMaxFrameWidth;                                                                                                                                                                                    
+    OMX_U32 nMaxFrameHeight;
+}PrepareForAdaptivePlaybackParams;
 #endif
 
 #ifdef __cplusplus

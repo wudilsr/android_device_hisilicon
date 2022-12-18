@@ -168,7 +168,7 @@ HI_S32 SI_GetParseCapability(HI_U8 *pu8Edid, HI_U32 u32EdidLength,HI_UNF_HDMI_SI
 #endif
 HI_S32 SI_SetForceSinkCapability(HI_VOID);
 
-HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 size);
+HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 *size);
 
 HI_U8 SI_Force_GetEDID(HI_U8 *datablock, HI_U32 *length);
 HI_U8 Transfer_VideoTimingFromat_to_VModeTablesIndex(HI_UNF_ENC_FMT_E unfFmt);

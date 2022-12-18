@@ -32,7 +32,9 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                    \
  
 ifeq ($(CFG_HI_TVP_SUPPORT),y)
 EXTRA_CFLAGS += -DHI_TVP_SUPPORT
-EXTRA_CFLAGS += -I$(TEE_INCLUDE) 
+EXTRA_CFLAGS += -I$(TEE_INCLUDE)                           \
+                -I$(TVP_DIR)/libteec/inc                   \
+                -I$(TVP_DIR)/libteec/sec_mmz/inc
 endif
 
 KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers

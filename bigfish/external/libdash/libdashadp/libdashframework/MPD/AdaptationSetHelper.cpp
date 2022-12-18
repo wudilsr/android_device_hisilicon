@@ -56,6 +56,15 @@ bool                            AdaptationSetHelper::IsAudioAdaptationSet   (das
     if (adaptationSet->GetMimeType() != "")
         if (adaptationSet->GetMimeType().find("audio") != std::string::npos)
             return true;
+    //if MimeType in representation section,we must find it.
+    std::vector<IRepresentation *> representations = adaptationSet->GetRepresentation();
+    for (size_t i = 0;i < representations.size();i++)
+    {
+        IRepresentation * representation =representations.at(i);
+        if (representation->GetMimeType() != "")
+            if (representation->GetMimeType().find("audio") != std::string::npos)
+                return true;
+    }
 
     if (adaptationSet->GetContentType() != "")
         if (adaptationSet->GetContentType().find("audio") != std::string::npos)
@@ -85,6 +94,15 @@ bool                            AdaptationSetHelper::IsVideoAdaptationSet   (das
     if (adaptationSet->GetMimeType() != "")
         if (adaptationSet->GetMimeType().find("video") != std::string::npos)
             return true;
+    //if MimeType in representation section,we must find it.
+    std::vector<IRepresentation *> representations = adaptationSet->GetRepresentation();
+    for (size_t i = 0;i < representations.size();i++)
+    {
+        IRepresentation * representation =representations.at(i);
+        if (representation->GetMimeType() != "")
+            if (representation->GetMimeType().find("video") != std::string::npos)
+                return true;
+    }
 
     if (adaptationSet->GetContentType() != "")
         if (adaptationSet->GetContentType().find("video") != std::string::npos)
@@ -105,6 +123,16 @@ bool                        AdaptationSetHelper::IsSubTitleAdaptationSet     (da
 {
     if (adaptationSet->GetMimeType() != "")
            if (adaptationSet->GetMimeType().find("text") != std::string::npos)
+                return true;
+    //if MimeType in representation section,we must find it.
+    std::vector<IRepresentation *> representations = adaptationSet->GetRepresentation();
+    for (size_t i = 0;i < representations.size();i++)
+    {
+        IRepresentation * representation =representations.at(i);
+        if (representation->GetMimeType() != "")
+            if (representation->GetMimeType().find("text") != std::string::npos)
+                return true;
+    }
 
     if (adaptationSet->GetContentType() != "")
         if (adaptationSet->GetContentType().find("text") != std::string::npos)

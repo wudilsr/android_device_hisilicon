@@ -315,6 +315,7 @@ HI_S32 VI_DRV_BufPut(VI_FB_ROOT_S *pRoot, HI_U32 u32PhyAddr)
     if (HI_NULL != u32PhyAddr)
     {
         pTmpFb->u32PhysAddr = u32PhyAddr;
+        HI_DRV_SYS_GetTimeStampMs(&pTmpFb->u32Pts);
     }
     
     list_move_tail(&pTmpFb->list, &pRoot->busy_list);

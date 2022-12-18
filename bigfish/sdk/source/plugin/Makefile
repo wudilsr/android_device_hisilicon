@@ -13,6 +13,10 @@ ifeq ($(CFG_HI_OPENTV5_SUPPORT),y)
 objects += opentv5 
 endif
 
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+objects += tee
+endif
+
 objects_clean:=${addsuffix _clean,${objects}}
 objects_install:=${addsuffix _install,${objects}}
 objects_uninstall:=${addsuffix _uninstall,${objects}}

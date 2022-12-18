@@ -35,7 +35,7 @@ lunch Hi3798MV100-eng 或 lunch Hi3798MV100-user
               ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
        编译生成文件为apk时，则需要在Android.mk中增加：
               ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_PACKAGE_NAME)
-     4.如果要编译的是安全芯片版本，需要在device/hisilicon/Hi3798MV100/device.mk中，将HISILICON_SECURITY_L2的值配置为true。
+     4.如果要编译的是安全芯片版本，需要在device/hisilicon/Hi3798MV100/customer.mk中，将HISILICON_SECURITY_L2的值配置为true。
               HISILICON_SECURITY_L2 := true
        否则默认编译的是非安全芯片版本，烧到单板上会把单板锁定位非安全芯片，无法再烧安全芯片版本。
        更多详细内容请参考文档《海思安全方案L2使用指南》。

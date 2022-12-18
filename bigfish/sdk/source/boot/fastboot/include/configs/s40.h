@@ -484,6 +484,10 @@ Addr
 #  define CONFIG_LIBATA
 #  define CONFIG_SYS_SATA_MAX_DEVICE          1
 #  define CFG_HZ                              93750
+#  define CONFIG_EFI_PARTITION
+#ifndef CONFIG_CMD_FAT
+#define CONFIG_CMD_FAT
+#endif
 #endif
 
 /*-----------------------------------------------------------------------

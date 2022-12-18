@@ -13,7 +13,6 @@ LOCAL_SHARED_LIBRARIES := \
     libutils\
     libcutils\
     libui\
-    libandroid_runtime \
     libhardware
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/../hal \

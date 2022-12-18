@@ -3778,6 +3778,47 @@ public class HiMediaPlayerInvoke
     public final static int CMD_SET_VIDEO_FREE_RUN = CMD_INVOKE_BASE + 330; // 1: play video only, as fast as possible; 0: resume to normal play.
     /**
        <br>
+       set audio channel<br>
+       <h3>Description:</h3>
+        set the mode of audio channels  <br>
+       <h3>Request:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>int</p></td>
+                <td>Value of audio channels</p></td>
+            </tr>
+            <tr>
+                <td>1</p></td>
+                <td>int</p></td>
+                <td></p></td>
+            </tr>
+            </table>
+       <h3>Reply:</h3>
+       <table border="1" cellspacing="0" cellpadding="0">
+       <tr>
+            <th>Parcel Index</th>
+            <th>Type</th>
+            <th>Value</th>
+       </tr>
+       <tr>
+            <td>0</p></td>
+            <td>int</p></td>
+            <td>return value<br>status code see system/core/include/utils/Errors.h</p></td>
+       </tr>
+       </table>
+       <br>
+       <h3>Attention:</h3>
+       This is valid for android mediaplayer interface.
+    */
+    public final static int CMD_SET_AUDIO_CHANNEL =  CMD_INVOKE_BASE + 331;
+    /**
+       <br>
        set low delay<br>
        <h3>Description:</h3>
        you can set low delay after prepared before start.<br>
@@ -3816,8 +3857,7 @@ public class HiMediaPlayerInvoke
        <h3>Attention:</h3>
        This is valid for android mediaplayer interface.
     */
-    public final static int CMD_SET_LOW_DELAY = CMD_INVOKE_BASE + 331; // set low delay mode, should use before starting to play, 1: enable; 0:disable.
-
+    public final static int CMD_SET_LOW_DELAY = CMD_INVOKE_BASE + 332; // set low delay mode, should use before starting to play, 1: enable; 0:disable.
     /**
        <br>
        set timeshift duration<br>
@@ -3858,8 +3898,122 @@ public class HiMediaPlayerInvoke
        <h3>Attention:</h3>
        This is valid for android mediaplayer interface.
     */
-    public final static int CMD_SET_TIMESHIFT_DURATION = CMD_INVOKE_BASE + 332;
-
+    public final static int CMD_SET_TIMESHIFT_DURATION = CMD_INVOKE_BASE + 333;
+    /**
+        <br>
+        Set  mode for tplay.<br>
+        <h3>Description:</h3>
+        you can set different mode to play video only.:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>int</p></td>
+                <td>Value of CMD_SET_TPLAY_MODE</p></td>
+            </tr>
+            <tr>
+                <td>1</p></td>
+                <td>int</p></td>
+                <td>0 : smooth tplay mode  1: I frame tplay mode. </p></td>
+            </tr>
+            </table>
+        <h3>Reply:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th>Parcel Index</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>0</p></td>
+                    <td>int</p></td>
+                    <td>return value<br>status code see system/core/include/utils/Errors.h</p></td>
+                </tr>
+            </table>
+        <br>
+        <h3>Attention:</h3>
+        you can also use {@see com.hisilicon.android.mediaplayer.HiMediaPlayer#setTplayMode} to set mode type.
+        refer to {@see com.hisilicon.android.mediaplayer.setTplayMode#mode}
+    */
+    public final static int CMD_SET_TPLAY_MODE = CMD_INVOKE_BASE + 334; // 0 : smooth tplay mode  1: I frame tplay mode.
+    /**
+       <br>
+       get mediaplayer url<br>
+       <h3>Description:</h3>
+        get mediaplayer url <br>
+       <h3>Request:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>int</p></td>
+            </tr>
+            <tr>
+                <td>1</p></td>
+                <td>int</p></td>
+            </tr>
+            </table>
+       <h3>Reply:</h3>
+       <table border="1" cellspacing="0" cellpadding="0">
+       <tr>
+            <th>Parcel Index</th>
+            <th>Type</th>
+       </tr>
+       <tr>
+            <td>0</p></td>
+            <td>int</p></td>
+            <td>return value<br>status code see system/core/include/utils/Errors.h</p></td>
+       </tr>
+       </table>
+       <br>
+       <h3>Attention:</h3>
+       This is valid for android mediaplayer interface.
+    */
+    public final static int INVOKE_ID_CMD_GET_MEDIA_URL = CMD_INVOKE_BASE + 500;
+    /**
+       <br>
+       get mediaplayer connect id<br>
+       <h3>Description:</h3>
+        get mediaplayer connect id<br>
+       <h3>Request:</h3>
+            <table border="1" cellspacing="0" cellpadding="0">
+            <tr>
+                <th>Parcel Index</th>
+                <th>Type</th>
+            </tr>
+            <tr>
+                <td>0</p></td>
+                <td>int</p></td>
+            </tr>
+            <tr>
+                <td>1</p></td>
+                <td>int</p></td>
+            </tr>
+            </table>
+       <h3>Reply:</h3>
+       <table border="1" cellspacing="0" cellpadding="0">
+       <tr>
+            <th>Parcel Index</th>
+            <th>Type</th>
+       </tr>
+       <tr>
+            <td>0</p></td>
+            <td>int</p></td>
+            <td>return value<br>status code see system/core/include/utils/Errors.h</p></td>
+       </tr>
+       </table>
+       <br>
+       <h3>Attention:</h3>
+       This is valid for android mediaplayer interface.
+    */
+    public final static int INVOKE_ID_GET_CMD_CONNECT_ID = CMD_INVOKE_BASE + 501;
     /**
             <b>Unsurport ID.</b>
         */

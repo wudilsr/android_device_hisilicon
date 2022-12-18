@@ -97,7 +97,11 @@ void  DOMParser::XMLReaderErrorCallback(void *arg,
 
 bool    DOMParser::Parse                    (int *err)
 {
+    char *redirectURL = NULL;
+    int ret;
+
     *err = DashError_Success;
+
     this->reader = xmlReaderForFile(this->hisiUrl.c_str(), NULL, 0);
     if(this->reader == NULL)
     {
@@ -108,7 +112,17 @@ bool    DOMParser::Parse                    (int *err)
    // xmlTextReaderSetErrorHandler(this->reader, XMLReaderErrorCallback, (void *)this);
 
     if(xmlTextReaderRead(this->reader))
+    {
+        /*check if HTTP URL has been redirected.*/
+        ret = xmlTextReaderInvoke(this->reader, XML_INVOKE_GET_HTTP_REDIRECT_URL, &redirectURL);
+        if (0 == ret &&
+            redirectURL != NULL)
+        {
+            dash_log(DASH_LOG_INFO, "[%s,%d] use libxml redirected url='%s' \n", __FUNCTION__, __LINE__, redirectURL);
+            this->url.assign(redirectURL);
+        }
         this->root = this->ProcessNode(err);
+    }
 
     if(this->root == NULL)
     {

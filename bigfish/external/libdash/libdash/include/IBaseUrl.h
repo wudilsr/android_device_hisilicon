@@ -62,6 +62,15 @@ namespace dash
                  *  @return     a pointer to a dash::mpd::ISegment object
                  */
                 virtual ISegment*           ToMediaSegment      (const std::vector<IBaseUrl *>& baseurls) const = 0;
+
+                 /**
+                 *  Returns a pointer to a dash::mpd::ISegment object which represents a media segment that can be downloaded. Should be used for single base urls inside
+                 *  a representation.
+                 *  @param      baseurls    a vector of pointers to dash::mpd::IBaseUrl objects that represent the path to the media segment
+                 *  @param      range       the byte range speficied to the url.
+                 *  @return     a pointer to a dash::mpd::ISegment object
+                 */
+                virtual ISegment*           ToMediaSegment      (const std::vector<IBaseUrl *>& baseurls, const std::string &range) const = 0;
         };
     }
 }

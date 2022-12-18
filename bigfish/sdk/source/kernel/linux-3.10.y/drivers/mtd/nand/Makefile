@@ -8,6 +8,8 @@ obj-$(CONFIG_MTD_NAND_BCH)		+= nand_bch.o
 obj-$(CONFIG_MTD_NAND_IDS)		+= nand_ids.o
 obj-$(CONFIG_MTD_SM_COMMON) 		+= sm_common.o
 
+obj-$(CONFIG_MTD_NAND_HIFMC100_NAND)	+= hifmc100_nand/
+obj-$(CONFIG_MTD_SPINAND_HIFMC100)	+= hifmc100_snand/
 obj-$(CONFIG_MTD_NAND_HISFC400)		+= hisfc400/
 obj-$(CONFIG_MTD_NAND_HINFC504)		+= hinfc504/
 obj-$(CONFIG_MTD_NAND_HINFC610)		+= hinfc610/
@@ -54,7 +56,7 @@ obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+= gpmi-nand/
 obj-$(CONFIG_MTD_NAND_XWAY)		+= xway_nand.o
 obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+= bcm47xxnflash/
 
-nand-objs := nand_base.o nand_bbt.o hinfc_gen.o
+nand-objs := nand_base.o nand_bbt.o hinfc_gen.o hifmc100_gen.o
 ifdef CONFIG_MTD_NAND_HISFC400
 	nand-objs += hisfc_spl_ids.o
 else

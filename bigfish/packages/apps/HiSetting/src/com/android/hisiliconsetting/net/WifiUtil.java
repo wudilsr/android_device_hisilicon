@@ -6,6 +6,7 @@ import com.android.hisiliconsetting.R;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiSsid;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.util.Log;
@@ -137,6 +138,8 @@ public class WifiUtil
         }
   public static String ChangeSSID(String infossid){
         String id = null;
+        if(infossid==null)
+           return WifiSsid.NONE;
         int end = infossid.length();
         id = infossid.substring(1, end-1);
         return id;

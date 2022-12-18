@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-COMPONENT_MODULE := ha_effect ha_codec hifat resampler playready
+COMPONENT_MODULE := ha_codec hifat resampler playready
 
 ifeq ($(CFG_HI_FREETYPE_FONT_SUPPORT),y)
 COMPONENT_MODULE += freetype 
@@ -16,6 +16,10 @@ endif
 
 ifeq ($(CFG_HI_BLUETOOTH_SUPPORT),y)
 COMPONENT_MODULE += bluetooth
+endif
+
+ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
+objects += ha_effect
 endif
 
 ifeq ($(CFG_HI_VOIP_SUPPORT),y)

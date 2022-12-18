@@ -584,10 +584,10 @@ int spectrum_do(short *PcmBuf, short channels, short *EnergyOut, int i_band)
     int i, b, maxval, band_start, band_stop;
 
     //PEAK_DATA peaks[PEAK_COUNT];
-    int FftOut[1024 / 2];
-    float_t RealIn[1024];
-    float_t RealOut[1024 / 2];
-    float_t ImagOut[1024 / 2];
+    int FftOut[1024 / 2] = {0};
+    float_t RealIn[1024] = {0};
+    float_t RealOut[1024 / 2] = {0};
+    float_t ImagOut[1024 / 2] = {0};
     int *xscale = 0;
 
     //if(!window_tab)

@@ -37,9 +37,11 @@ extern "C" {
  #endif
 #endif /* __cplusplus */
 
- #include "stdio.h"
- #include "stdlib.h"
- #include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "hi_drv_struct.h"
 
 #define HA_HW_ENCODEC_SUPPORT 
 
@@ -155,6 +157,7 @@ typedef struct hiAENC_CHANNEL_S
 static AENC_CHAN_S *g_pstAencChan[AENC_INSTANCE_MAXNUM];
 
 static HI_S32 g_s32AencInitCnt = 0;
+static const HI_CHAR g_acAencDevName[] = "/dev/" UMAP_DEVNAME_AENC;
 
 #define AENC_LOCK_DECLARE(p_mutex) ;                 \
     static pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -1665,10 +1668,11 @@ static HI_S32 AENCSentInputData(AENC_CHAN_S  *pstAencChan, HI_UNF_AO_FRAMEINFO_S
     return HI_SUCCESS;
 }
 
-static HI_S32 AENCOpenDevice(HI_CHAR  *pathname, const HI_S32 Flags)
+//static HI_S32 AENCOpenDevice(HI_CHAR  *pathname, const HI_S32 Flags)
+static HI_S32 AENCOpenDevice()
 {
     HI_S32 AudioDevFd = -1;
-
+#if 0
     struct stat st;
 
     if (HI_FAILURE == stat (pathname, &st))
@@ -1682,12 +1686,12 @@ static HI_S32 AENCOpenDevice(HI_CHAR  *pathname, const HI_S32 Flags)
         HI_FATAL_AENC("%s is no device\n", pathname);
         return HI_FAILURE;
     }
-
-    AudioDevFd = open(pathname, Flags, 0);
+#endif
+    AudioDevFd = open(g_acAencDevName, O_RDWR, 0);
     if (-1 == AudioDevFd)
     {
         //HI_FATAL_AENC("Cannot open '%s': %d, %s\n", pathname, errno, strerror (errno));
-        HI_FATAL_AENC("Cannot open '%s'!\n", pathname);
+        HI_FATAL_AENC("Cannot open '%s'!\n", UMAP_DEVNAME_AENC);
         return HI_FAILURE;
     }
 
@@ -1697,6 +1701,11 @@ static HI_S32 AENCOpenDevice(HI_CHAR  *pathname, const HI_S32 Flags)
 static HI_S32 AENCCloseDevice(HI_S32 AudioDevFd)
 {
     HI_S32 ret = HI_SUCCESS;
+
+    if (AudioDevFd < 0)
+    {
+        return HI_FAILURE;
+    }
 
     ret = close(AudioDevFd);
     if (HI_SUCCESS != ret)
@@ -1884,7 +1893,7 @@ HI_S32 AENC_Open(HI_HANDLE *phAenc, const HI_UNF_AENC_ATTR_S *pstAencAttr)
     HI_U32 i;
     HI_S32 nRet;
     AENC_CHAN_S *pstAencChan;
-    HI_CHAR pathname[64];
+    //HI_CHAR pathname[64];
     HI_U32 phy_adress;
     AENC_ATTR_S stAencAttr;
 
@@ -1924,8 +1933,8 @@ HI_S32 AENC_Open(HI_HANDLE *phAenc, const HI_UNF_AENC_ATTR_S *pstAencAttr)
     AENC_LOCK(&pstAencChan->mutex);
 
     /* Check if initialized */
-    snprintf((HI_CHAR*)pathname, sizeof(pathname), "/dev/%s", DRV_AENC_DEVICE_NAME);
-    pstAencChan->AencDevFd = AENCOpenDevice((HI_CHAR*)pathname, O_RDWR);
+    //snprintf((HI_CHAR*)pathname, sizeof(pathname), "/dev/%s", DRV_AENC_DEVICE_NAME);
+    pstAencChan->AencDevFd = AENCOpenDevice();
     if (pstAencChan->AencDevFd < 0)
     {
         HI_ERR_AENC("AENCOpenDevice err \n");
@@ -1983,7 +1992,7 @@ HI_S32 AENC_Open(HI_HANDLE *phAenc, const HI_UNF_AENC_ATTR_S *pstAencAttr)
     g_sAencLinearSRC[pstAencChan->u32ChID].InRate = 0;
 #endif
 
-    pstAencChan->bAutoSRC   = HI_TRUE; //HI_FALSE;
+    pstAencChan->bAutoSRC   = HI_TRUE;
     pstAencChan->beAssigned = HI_TRUE;
     pstAencChan->bStart = HI_FALSE;
     pstAencChan->stAttach.eType = ANEC_SOURCE_BUTT;

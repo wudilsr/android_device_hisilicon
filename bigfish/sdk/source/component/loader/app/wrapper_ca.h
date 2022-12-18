@@ -28,6 +28,16 @@ extern HI_S32 OTA_Hisi_ParsePartitionControlSection(const HI_U8 *pu8SectionData,
 extern HI_S32 GetIndexByOTAId(HI_U32 u32PartId, HI_U32 *pu32Index);
 #endif
 
+#ifdef __PROTOCOL_SSU_OTA_CA_C__
+/*The following global variables and functions are from protocol_ssu_ota.c */
+extern HI_U32 g_u32GroupId;
+extern LOADER_DATA_INFO_S g_stDataInfo;
+extern HI_U32 g_u32DataGramSize;
+extern HI_U32 g_u32Pid;
+extern HI_S32 SSU_ParseDSMCC(const HI_U8 *pu8SectionData, HI_S32 s32Length);
+extern HI_S32 SSU_GetIndexById(HI_U16 u16ModuleId, HI_U32 *pu32Index);
+#endif
+
 #ifdef __PROTOCOL_HISI_FILE_CA_C__
 /*The following global variables and functions are from protocol_hisi_file.c */
 extern UsbManuInfo *s_pstManu;

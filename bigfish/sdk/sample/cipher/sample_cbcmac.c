@@ -52,7 +52,7 @@ HI_S32 Setconfiginfo(HI_HANDLE chnHandle, HI_U8 *pu8Key)
 
     memset(&CipherCtrl, 0, sizeof(CipherCtrl));
 
-    CipherCtrl.bKeyByCA = HI_TRUE;
+    CipherCtrl.bKeyByCA = HI_FALSE;
     CipherCtrl.enAlg = HI_UNF_CIPHER_ALG_AES;
     CipherCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_CBC;
     CipherCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
@@ -89,6 +89,7 @@ HI_S32 main(HI_S32 argc, char *argv[])
         0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
         0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
     };
+    HI_U8 mac[16] = {0xdf, 0xa6, 0x67, 0x47, 0xde, 0x9a, 0xe6, 0x30, 0x30, 0xca, 0x32, 0x61, 0x14, 0x97, 0xc8, 0x27};
 	HI_HANDLE hCipherHandle = 0;
 	HI_UNF_CIPHER_ATTS_S stCipherAttr = {0};
 	
@@ -126,8 +127,15 @@ HI_S32 main(HI_S32 argc, char *argv[])
         HI_UNF_CIPHER_DeInit();
         (HI_VOID)HI_SYS_DeInit();
 		return HI_FAILURE;
-}
-
+    }
+    if (memcmp(u8MacValue, mac, 16) != 0)
+	{
+		HI_ERR_CIPHER("Cipher cmac Failed!\n");
+        HI_UNF_CIPHER_DeInit();
+        (HI_VOID)HI_SYS_DeInit();
+		return HI_FAILURE;
+    }
+    
 	HI_UNF_CIPHER_DeInit();
 	HI_SYS_DeInit();
 

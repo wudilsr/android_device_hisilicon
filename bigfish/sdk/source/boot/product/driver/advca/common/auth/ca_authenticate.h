@@ -74,11 +74,11 @@ History       :
 #define CA_EncryptDDRImageAndBurnFlashAddr(format, arg...) \
         HI_CA_EncryptDDRImageAndBurnFlashAddr(format, ## arg)
 
-#define CA_GetEncryptFlashImgInfoByAddr(format, arg...) \
-        HI_CA_GetEncryptFlashImgInfoByAddr(format, ## arg)
+#define CA_GetFlashImgInfoByAddr(format, arg...) \
+        HI_CA_GetFlashImgInfoByAddr(format, ## arg)
 
-#define CA_GetEncryptFlashImgInfoByName(format, arg...) \
-        HI_CA_GetEncryptFlashImgInfoByName(format, ## arg)
+#define CA_GetFlashImgInfoByName(format, arg...) \
+        HI_CA_GetFlashImgInfoByName(format, ## arg)
 
 #define CA_ImgAuthenticate(format, arg...) \
         HI_CA_ImgAuthenticate(format, ## arg)
@@ -176,21 +176,17 @@ HI_U32 HI_CA_ImgAuthenticate(HI_U32 StartAddr,HI_U32 length,HI_U8 u8Signature[RS
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
 HI_U32 HI_CA_GetAuthMode(HI_U8* pPartionName);
 
-/*
-    Get header structure of encrypted image by partition name
-*/
-HI_S32 HI_CA_GetFlashImgInfoByName(HI_U8* pPartionName,HI_CAImgHead_S* pstImgInfo);
 #endif
 
 /*
-    Get header structure of encrypted image by partition name
+    Get header structure of image by partition name
 */
-HI_S32 HI_CA_GetEncryptFlashImgInfoByName(HI_U8* pPartionName,HI_CAImgHead_S* pstImgInfo);
+HI_S32 HI_CA_GetFlashImgInfoByName(HI_U8* pPartionName,HI_CAImgHead_S* pstImgInfo, HI_BOOL *pIsEncrypt);
 
 /*
-    Get header structure of encrypted image by partition address
+    Get header structure of image by partition address
 */
-HI_S32 HI_CA_GetEncryptFlashImgInfoByAddr(HI_U32 PartionAddr,HI_CAImgHead_S* pstImgInfo);
+HI_S32 HI_CA_GetFlashImgInfoByAddr(HI_U32 PartionAddr,HI_CAImgHead_S* pstImgInfo, HI_BOOL *pIsEncrypt);
 
 /*
     Encrypt image from DDR address, and burn the encrypted image to the given partition address

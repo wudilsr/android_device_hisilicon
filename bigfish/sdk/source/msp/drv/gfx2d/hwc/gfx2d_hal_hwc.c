@@ -728,6 +728,7 @@ static inline HI_S32 InitDevReg(HI_VOID)
     gs_pstHWCReg->u32HwcRst = 0x1;
     gs_pstHWCReg->unBusLimiter.stBits.bit1CkGtEn = 0x1;
     gs_pstHWCReg->u32HwcAqCtl = 0x80000000;
+	gs_pstHWCReg->unAxiId.stBits.bit1ReqSepEn4k = 0x1;
 
     return HI_SUCCESS;
 }

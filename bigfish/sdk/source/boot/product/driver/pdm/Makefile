@@ -9,13 +9,18 @@ endif
 #===============================================================================
 # local variables
 #===============================================================================
-
 ifeq ($(CFG_HI_MINIBOOT_SUPPORT),y)
 BOOT_DIR  := $(SDK_DIR)/source/boot/miniboot
 else
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
 endif
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
+PRODUCT_DIR := $(BOOT_DIR)/../product
+endif
+
 PDM_DIR := $(PRODUCT_DIR)/driver/pdm
 
 ifndef CFLAGS
@@ -37,6 +42,7 @@ CFLAGS   += -I$(PRODUCT_DIR)/driver/include
 CFLAGS   += -I$(PRODUCT_DIR)/driver/include_inc
 CFLAGS   += -I$(BOOT_DIR)/arch/arm/include
 CFLAGS   += -I$(BOOT_DIR)/include
+CFLAGS   += $(CFG_HI_BOARD_CONFIGS)
 
 LIBS     := libpdm.a
 OBJS     := drv_pdm.o

@@ -131,6 +131,47 @@ HI_S32 LOADER_PROTOCOL_HisiCAOTA_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstP
  */
 HI_S32 LOADER_PROTOCOL_HisiCAOTA_Process(HI_U32 u32MaxMemorySize);
 
+/************************Prototype for CAOTA**********************************/
+/**
+ \brief initialize SSU CA ota protocol .
+ \attention \n
+ \param[in] enType: download data type
+ \param[in] para: download parameters
+ \retval ::HI_SUCCESS : initialize success
+ \retval ::HI_FAILURE : initialize failed
+ */
+HI_S32 LOADER_PROTOCOL_SSUCAOTA_Init(HI_LOADER_TYPE_E enType, HI_VOID * para);
+
+HI_S32 LOADER_PROTOCOL_SSUCAOTA_RegisterCallback(LOADERCALLBACKSET_S *pstCallback);
+
+/**
+ \brief deinitialize SSU CA ota protocol.
+ \attention \n
+ \retval ::HI_SUCCESS : deinitialize success
+ \retval ::HI_FAILURE : deinitialize failed
+ */
+HI_VOID LOADER_PROTOCOL_SSUCAOTA_DeInit(HI_VOID);
+
+/**
+ \brief get partition infomation of hisi ca ota protocol upgrade stream.
+ \attention \n
+ \param[in] datainfo:
+ \retval ::HI_SUCCESS : success
+ \retval ::HI_FAILURE : failure
+ */
+HI_S32 LOADER_PROTOCOL_SSUCAOTA_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPartInfo, HI_U32 u32BufNum,
+                                                HI_U32 *pu32PartNum);
+
+/**
+ \brief receive upgrade data, and call datacallback to notice caller the data.
+ \attention \n
+ \param[in] datacallback:
+ \param[in] u32MaxMemorySize:  max memory size the implementer can malloc
+ \retval ::HI_SUCCESS : success
+ \retval ::HI_FAILURE : failure
+ */
+HI_S32 LOADER_PROTOCOL_SSUCAOTA_Process(HI_U32 u32MaxMemorySize);
+
 #else
 
 /************************Prototype for NONCA FILE**********************************/
@@ -162,6 +203,18 @@ static inline HI_S32 LOADER_PROTOCOL_HisiCAOTA_GetPartitionInfo(LOADER_PARTITION
                                                 HI_U32 *pu32PartNum) {return HI_SUCCESS;}
 
 static inline HI_S32 LOADER_PROTOCOL_HisiCAOTA_Process(HI_U32 u32MaxMemorySize) {return HI_SUCCESS;}
+
+/************************Prototype for NONSSUCA OTA**********************************/
+static inline HI_S32 LOADER_PROTOCOL_SSUCAOTA_Init(HI_LOADER_TYPE_E enType, HI_VOID * para) {return HI_SUCCESS;}
+
+static inline HI_S32 LOADER_PROTOCOL_SSUCAOTA_RegisterCallback(LOADERCALLBACKSET_S *pstCallback) {return HI_SUCCESS;}
+
+static inline HI_VOID LOADER_PROTOCOL_SSUCAOTA_DeInit(HI_VOID) {return;}
+
+static inline HI_S32 LOADER_PROTOCOL_SSUCAOTA_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPartInfo, HI_U32 u32BufNum,
+                                                HI_U32 *pu32PartNum) {return HI_SUCCESS;}
+
+static inline HI_S32 LOADER_PROTOCOL_SSUCAOTA_Process(HI_U32 u32MaxMemorySize) {return HI_SUCCESS;}
 
 
 #endif          /*HI_ADVCA_SUPPORT*/

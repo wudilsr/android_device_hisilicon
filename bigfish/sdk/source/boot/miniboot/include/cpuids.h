@@ -28,6 +28,11 @@
 #define _HI3716M_V100                 (0x0837200200LL)
 #define _HI3716M_V200                 (0x0837160200LL)
 #define _HI3716M_V300                 (0x0837160300LL)
+/* for Hi3716MV310 BGA, chipid is 0x0037160310LL, 
+ * for Hi3716MV310 QFP, chipid is 0x0137160310LL */
+#define _HI3716M_V310                 (0x0037160310LL)
+#define _HI3716M_V320                 (0x0237160310LL)
+#define _HI3110E_V500                 (0x0337160310LL)
 #define _HI3716C_V200ES               (0x0019400200LL)
 #define _HI3716C_V100                 (0x1E37200200LL)
 #define _HI3716C_V200                 (0x0037160200LL)

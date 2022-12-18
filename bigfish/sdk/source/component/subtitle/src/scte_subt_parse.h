@@ -26,8 +26,8 @@ typedef struct tagSCTE_SUBT_BACKGROUND_FRAMED_S
     HI_U32 u32FrameColor;
     HI_U32 u32TopXPos;
     HI_U32 u32TopYPos;
-    HI_U32 u32ButtomXPos;
-    HI_U32 u32ButtomYPos;
+    HI_U32 u32BottomXPos;
+    HI_U32 u32BottomYPos;
 } SCTE_SUBT_BACKGROUND_FRAMED_S;
 
 typedef struct tagSCTE_SUBT_OUTLINE_DROPSHADOW_S
@@ -67,8 +67,8 @@ typedef struct tagSCTE_SUBT_OUTPUT_S
 
     HI_U32 u32TopXPos;
     HI_U32 u32TopYPos;
-    HI_U32 u32ButtomXPos;
-    HI_U32 u32ButtomYPos;
+    HI_U32 u32BottomXPos;
+    HI_U32 u32BottomYPos;
 
     HI_U32 u32SubtColor;
     HI_U32 u32PTS;

@@ -69,6 +69,8 @@
 #define NAND_MFR_MICRON      0x2c
 #define NAND_MFR_AMD         0x01
 #define NAND_MFR_EON         0x92
+#define NAND_MFR_GIGA        0xc8
+#define NAND_MFR_WINBOND     0xef
 
 const char *get_nand_vendor(int id0);
 

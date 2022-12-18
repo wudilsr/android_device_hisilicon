@@ -31,46 +31,6 @@ static HI_U32  s_bt_UsedSize = 0;
 #define MEM_ALIGN_SIZE 16
 #endif
 static BT_FREE_S *s_bt_pFreeBlock = NULL;
-static HI_S32 HIGO_InitMemoryBlock(HI_VOID)
-{
-#ifndef HIGO_CODE_CUT
-    s_bt_pFreeBlock = (BT_FREE_S*)s_bt_BufferHead;
-    if(NULL == s_bt_pFreeBlock)
-    {
-        return HI_FAILURE;
-    }
-    s_bt_pFreeBlock->u32Size = s_bt_BufferSize;
-    s_bt_pFreeBlock->pNext = NULL;
-    s_bt_bInitalize = 1;
-#endif    
-    return HI_SUCCESS;
-}
-HI_S32 HIGO_InitMemory(HI_VOID)
-{
-#ifndef HIGO_CODE_CUT
-    HI_S32 ret;
-    MMZ_BUFFER_S  psMBuf;
-    
-    ret = HI_MEM_Alloc(&psMBuf.u32StartPhyAddr, DEC_BUF_LEN);
-    if(ret != HI_SUCCESS)
-    {
-        HIGO_ERROR(ret);
-        return HI_FAILURE;
-    }        
-    
-    if(s_bt_bInitalize) 
-    {
-        return HI_FAILURE;
-    }
-    if((0 == psMBuf.u32StartPhyAddr) || (DEC_BUF_LEN < sizeof(BT_FREE_S)))
-    {
-        return HI_FAILURE;
-    }
-    s_bt_BufferHead = (HI_VOID*)psMBuf.u32StartPhyAddr;
-    s_bt_BufferSize = DEC_BUF_LEN;
-  #endif    
-    return HIGO_InitMemoryBlock();
-}
 
 HI_VOID* HIGO_Malloc2(HI_U32 u32Size)
 {
@@ -224,21 +184,6 @@ HI_VOID HIGO_Free2(HI_VOID* pAddr)
         }
     }
 #endif    
-}
-
-HI_VOID HIGO_DeInitMemory(HI_VOID)
-{
-#ifndef HIGO_CODE_CUT
-    if(s_bt_bInitalize)
-    {
-        s_bt_BufferHead = NULL;
-        s_bt_pFreeBlock = NULL;
-        s_bt_bInitalize = 0;
-        s_bt_BufferSize = 0;
-        s_bt_UsedSize =0;
-    }
-#endif    
-    return;
 }
 
 BT_FREE_S* HIGO_GetFreeList(HI_VOID)

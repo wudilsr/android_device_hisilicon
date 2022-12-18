@@ -4,6 +4,7 @@
 #include "hi_unf_demux.h"
 #include "hi_error_mpi.h"
 #include "demux_func.h"
+#include "demux_config.h"
 
 HI_S32 HI_UNF_DMX_Init(HI_VOID)
 {
@@ -17,43 +18,43 @@ HI_S32 HI_UNF_DMX_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
+#define GetRawPortId(enPortId) ({ \
+    HI_U32 RawPortId; \
+    switch (enPortId) \
+    { \
+        case HI_UNF_DMX_PORT_IF_0 :\
+        case HI_UNF_DMX_PORT_IF_1 :\
+        case HI_UNF_DMX_PORT_IF_2 :\
+        case HI_UNF_DMX_PORT_IF_3 :\
+        case HI_UNF_DMX_PORT_IF_4 :\
+        case HI_UNF_DMX_PORT_IF_5 :\
+        case HI_UNF_DMX_PORT_IF_6 :\
+        case HI_UNF_DMX_PORT_IF_7 :\
+            RawPortId = (HI_U32)enPortId - HI_UNF_DMX_PORT_IF_0;\
+            RawPortId = RawPortId >= HI_DMX_IFPORT_CNT ? -1 : RawPortId; \
+            break;\
+        case HI_UNF_DMX_PORT_TSI_0 :\
+        case HI_UNF_DMX_PORT_TSI_1 :\
+        case HI_UNF_DMX_PORT_TSI_2 :\
+        case HI_UNF_DMX_PORT_TSI_3 :\
+        case HI_UNF_DMX_PORT_TSI_4 :\
+        case HI_UNF_DMX_PORT_TSI_5 :\
+        case HI_UNF_DMX_PORT_TSI_6 :\
+        case HI_UNF_DMX_PORT_TSI_7 : \
+            RawPortId = (HI_U32)enPortId - HI_UNF_DMX_PORT_TSI_0;\
+            RawPortId = RawPortId >= HI_DMX_TSIPORT_CNT ? -1 : RawPortId + HI_DMX_IFPORT_CNT; \
+            break;\
+        default: \
+              return HI_ERR_DMX_INVALID_PARA; \
+    } \
+    RawPortId; \
+})
+
 HI_S32 HI_UNF_DMX_AttachTSPort(HI_U32 u32DmxId, HI_UNF_DMX_PORT_E enPortId)
 {
     HI_U32 PortId;
 
-    switch (enPortId)
-    {
-        case HI_UNF_DMX_PORT_TUNER_0 :
-        case HI_UNF_DMX_PORT_TUNER_1 :
-        case HI_UNF_DMX_PORT_TUNER_2 :
-        case HI_UNF_DMX_PORT_TUNER_3 :
-        case HI_UNF_DMX_PORT_TUNER_4 :
-        case HI_UNF_DMX_PORT_TUNER_5 :
-        case HI_UNF_DMX_PORT_TUNER_6 :
-        case HI_UNF_DMX_PORT_TUNER_7 :
-        {
-            PortId = (HI_U32)enPortId;
-
-            break;
-        }
-
-        case HI_UNF_DMX_PORT_RAM_0 :
-        case HI_UNF_DMX_PORT_RAM_1 :
-        case HI_UNF_DMX_PORT_RAM_2 :
-        case HI_UNF_DMX_PORT_RAM_3 :
-        case HI_UNF_DMX_PORT_RAM_4 :
-        case HI_UNF_DMX_PORT_RAM_5 :
-        case HI_UNF_DMX_PORT_RAM_6 :
-        case HI_UNF_DMX_PORT_RAM_7 :
-        {
-            return HI_ERR_DMX_NOT_SUPPORT;
-        }
-
-        default :
-        {
-            return HI_ERR_DMX_INVALID_PARA;
-        }
-    }
+    PortId = GetRawPortId(enPortId);
 
     return DmxAttachTunerPort(u32DmxId, PortId);
 }
@@ -61,6 +62,24 @@ HI_S32 HI_UNF_DMX_AttachTSPort(HI_U32 u32DmxId, HI_UNF_DMX_PORT_E enPortId)
 HI_S32 HI_UNF_DMX_DetachTSPort(HI_U32 u32DmxId)
 {
     return DmxDetachPort(u32DmxId);
+}
+
+HI_S32 HI_UNF_DMX_GetTSPortAttr(HI_UNF_DMX_PORT_E enPortId, HI_UNF_DMX_PORT_ATTR_S *pstAttr)
+{
+    HI_U32 PortId;
+
+    PortId = GetRawPortId(enPortId);
+
+    return DmxGetTSPortAttr(PortId, pstAttr);
+}
+
+HI_S32 HI_UNF_DMX_SetTSPortAttr(HI_UNF_DMX_PORT_E enPortId, const HI_UNF_DMX_PORT_ATTR_S *pstAttr)
+{
+    HI_U32 PortId;
+
+    PortId = GetRawPortId(enPortId);
+
+    return DmxSetTSPortAttr(PortId, pstAttr);
 }
 
 HI_S32 HI_UNF_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel)

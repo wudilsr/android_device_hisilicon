@@ -261,6 +261,13 @@ typedef enum hiUNF_TTX_CB_E
     HI_UNF_TTX_CB_BUTT            /**<Invalid callback type*//**<CNcomment:无效回调类型 */
 } HI_UNF_TTX_CB_E;
 
+typedef enum hiUNF_TTX_PACKET_TYPE_E
+{
+    HI_UNF_TTX_PACKET_TYPE_PES,  /**<ETSI EN DVB 300472 teletext syntax data packets, including PES header information*//**<CNcomment:ETSI EN 300472 DVB teletext语法数据包,包括PES头部信息*/
+    HI_UNF_TTX_PACKET_TYPE_RAW,   /**<ETSI EN DVB 300706 teletext syntax data packets, not including PES header information*//**<CNcomment:ETSI EN 300706 DVB teletext语法数据包,不包括PES头部信息*/
+    HI_UNF_TTX_PACKET_TYPE_BUTT,
+}HI_UNF_TTX_PACKET_TYPE_E;
+
 /** Callback function *//** CNcomment:回调函数 */
 typedef HI_S32 (*HI_UNF_TTX_CB_FN)(HI_HANDLE hTTX, HI_UNF_TTX_CB_E enCB, HI_VOID *pvCBParam);
 
@@ -464,6 +471,41 @@ none.
 */
 HI_S32 HI_UNF_TTX_ExecCmd(HI_HANDLE hTTX,
                           HI_UNF_TTX_CMD_E enCMD, HI_VOID *pvCMDParam);
+
+
+/** 
+\brief  Setting max interval time of the teletext. 
+CNcomment:设置图文最大的时间偏差。CNend 
+\attention \n 
+None 
+\param[in] handle Handle of teletext instance. CNcomment:TTX实例句柄。CNend 
+\param[in] u32IntervalMs max interval of teletext, unit is Millisecondes.
+CNcomment:图文最大的时间偏差值，单位ms。CNend 
+
+\retval ::HI_SUCCESS  Operation success. CNcomment:成功。CNend 
+\retval ::HI_FAILURE  Operation fail. CNcomment:失败。CNend 
+
+\see \n 
+None 
+*/ 
+HI_S32 HI_UNF_TTX_SetMaxInterval(HI_HANDLE hTTX, HI_U32 u32IntervalMs ); 
+
+/**
+\brief  Setting teletext packet type.
+CNcomment:设置图文解析的数据包类型。CNend
+\attention \n
+None
+\param[in] handle Handle of teletext instance. CNcomment:TTX实例句柄。CNend
+\param[in] enPacketType the type of teletext packet
+CNcomment:图文数据包类型。CNend
+
+\retval ::HI_SUCCESS  Operation success. CNcomment:成功。CNend
+\retval ::HI_FAILURE  Operation fail. CNcomment:失败。CNend
+
+\see \n
+None
+*/
+HI_S32 HI_UNF_TTX_SetPacketType (HI_HANDLE hTTX, HI_UNF_TTX_PACKET_TYPE_E enPacketType);
 
 /** @} */  /** <!-- ==== API declaration end ==== */
 

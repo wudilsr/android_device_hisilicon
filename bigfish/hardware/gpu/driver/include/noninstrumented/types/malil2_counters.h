@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2008-2010, 2013-2014 ARM Limited
+ * (C) COPYRIGHT 2008-2010, 2013, 2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -10,10 +10,6 @@
 
 #ifndef _MALIL2_COUNTERS_H_
 #define _MALIL2_COUNTERS_H_
-
-#if defined(USING_MALI200)
-#error "This functionality is not supported on Mali200"
-#endif
 
 #define MALI_L2_GROUP_OFFSET 1000
 #define MALI_L2_GP_CORE_OFFSET MALI_L2_GROUP_OFFSET

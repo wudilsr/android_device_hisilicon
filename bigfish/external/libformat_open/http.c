@@ -75,6 +75,8 @@ static const AVOption options[] = {
 {"cookies", "set cookies to be sent in applicable future requests, use newline delimited Set-Cookie HTTP field value syntax", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "not support byte range", OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"download_speed_collect_freq_ms", "download speed collect freq", OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+{"download_size_once", "download size each connection, in MB", OFFSET(download_size_once), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+{"traceId", "",  OFFSET(traceId), AV_OPT_TYPE_STRING, { 0 }, 0, 0, D|E},
 {NULL}
 };
 #else
@@ -90,6 +92,8 @@ static const AVOption options[] = {
 {"cookies", "", OFFSET(cookies), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"not_support_byte_range", "",  OFFSET(not_support_byte_range), AV_OPT_TYPE_STRING, {.str = NULL}, 0, 0, DEC},
 {"download_speed_collect_freq_ms", "",  OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+{"download_size_once", "download size each connection, in MB", OFFSET(download_size_once), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, D|E},
+{"traceId", "",  OFFSET(traceId), AV_OPT_TYPE_STRING, { 0 }, 0, 0, D|E},
 {NULL}
 };
 #endif
@@ -343,6 +347,12 @@ static int http_open_cnx(URLContext *h)
         {
             goto fail;
         }
+        /*if err is EPIPE,reset connect*/
+        if (err == AVERROR(EPIPE))
+        {
+            err = AVERROR(ECONNRESET);
+            goto fail;
+        }
 
         /* case 1: FIXME, if server doesn't support Range request, connection will fail, we can't fix this issue now.
          * case 2: when first connection timeout, if we set seek_flag to 0, reconnection will without Range request,
@@ -444,6 +454,9 @@ retry:
         goto redo;
     }
 
+    h->port = port;
+    av_strlcpy(&h->ipaddr, &s->hd->ipaddr, sizeof(h->ipaddr));
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d] port=%d, s->hd->ipaddr=%s \n", __FILE_NAME__, __LINE__, port, s->hd->ipaddr);
     return 0;
  fail:
     if (hd)
@@ -476,6 +489,39 @@ static int http_open(URLContext *h, const char *uri, int flags)
     s->filesize = -1;
     s->seek_flag = 1;   /* changed by taijie */
     s->off = 0;//set offset to 0 while connecting
+    s->one_connect_limited_size = 0;
+
+#if defined (ANDROID_VERSION)
+        /* assign http download size per connection.
+         * FIXME: only support 'connection:close' */
+        char buffer[PROPERTY_VALUE_MAX];
+        memset(buffer, 0, PROPERTY_VALUE_MAX);
+        if(property_get("media.http.limitedsize", buffer, NULL)
+            && atoi(buffer) > 0)
+        {
+            s->one_connect_limited_size = atoi(buffer)*1024*1024;
+            if (0 > s->one_connect_limited_size)
+            {
+                s->one_connect_limited_size = 0;
+            }
+        }
+        else if (0 < s->download_size_once)
+        {
+            s->one_connect_limited_size = s->download_size_once * 1024 * 1024;
+            if (0 > s->one_connect_limited_size)
+            {
+                s->one_connect_limited_size = 0;
+            }
+        }
+        else
+        {
+            s->one_connect_limited_size = 0;
+        }
+
+        av_log(NULL, AV_LOG_ERROR, "one connect limited size: %dMB", s->one_connect_limited_size/(1024*1024));
+#endif
+
+    s->end = s->one_connect_limited_size;
 
     //h00186041 can not resume play when reconnect the network in suho sometimes
     s->reconnect = 0; /* init, connect status. */
@@ -973,9 +1019,16 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
         not_support_byte_range = atoi(s->not_support_byte_range);
     }
 
-    if (!has_header(s->headers, "\r\nRange: ") && !post && s->seek_flag == 1 && !not_support_byte_range)
-        len += av_strlcatf(headers + len, sizeof(headers) - len,
-            "Range: bytes=%"PRId64"-\r\n", s->off);
+    if (!has_header(s->headers, "\r\nRange: ") && !post && s->seek_flag == 1 && !not_support_byte_range) {
+        if (s->end > s->off && s->end > 0) {
+            len += av_strlcatf(headers + len, sizeof(headers) - len,
+                "Range: bytes=%"PRId64"-%"PRId64"\r\n", s->off, s->end);
+        }
+        else {
+            len += av_strlcatf(headers + len, sizeof(headers) - len,
+                "Range: bytes=%"PRId64"-\r\n", s->off);
+        }
+    }
 
     if (!has_header(s->headers, "\r\nConnection: ")) {
         if (s->multiple_requests) {
@@ -985,6 +1038,12 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
             len += av_strlcpy(headers + len, "Connection: close\r\n",
                           sizeof(headers) - len);
         }
+    }
+
+    if (NULL != s->traceId) {
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] set traceId: %s\n", __FUNCTION__, __LINE__, s->traceId);
+        len += av_strlcatf(headers + len, sizeof(headers) - len,
+            "EagleEye-TraceId: %s\r\n", s->traceId);
     }
 
     if (!has_header(s->headers, "\r\nHost: "))
@@ -1041,7 +1100,9 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
              headers,
              authstr ? authstr : "",
              proxyauthstr ? "Proxy-" : "", proxyauthstr ? proxyauthstr : "");
-
+    if (NULL != s->traceId) {
+        av_strlcpy(h->http_res, s->buffer, strlen(s->buffer));
+    }
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] %s\n", __FILE_NAME__, __LINE__, s->buffer);
     av_freep(&authstr);
     av_freep(&proxyauthstr);
@@ -1142,11 +1203,14 @@ static int http_reconnect(URLContext *h,HTTPContext *old, int flag)
 
     h->priv_data = s;
     s->user_agent = av_strdup(old->user_agent);
+    s->headers = av_strdup(old->headers);
     s->referer = av_strdup(old->referer);
     s->not_support_byte_range = av_strdup(old->not_support_byte_range);
     s->filesize = -1;
     s->chunksize = -1;
     s->off = old->off;
+    s->end = old->end;
+    s->one_connect_limited_size = old->one_connect_limited_size;
     s->seek_flag = old->seek_flag;
     s->class = old->class;
     s->http_code = 0;
@@ -1166,6 +1230,8 @@ static int http_reconnect(URLContext *h,HTTPContext *old, int flag)
         old->http_code= s->http_code;
         av_free(s->user_agent);
         s->user_agent = NULL;
+        av_free(s->headers);
+        s->headers = NULL;
         av_freep(&s->referer);
         av_freep(&s->not_support_byte_range);
         av_free (s);
@@ -1266,7 +1332,7 @@ HTTP_READ_AGAIN:
     ret = http_read(h, buf, size);
     end = av_gettime();
 
-    if (ret == 0)
+    if (ret == 0 && (s->end <= 0 || s->end > s->off))
     {
         /* (0 >= s->filesize && 0 == s->is_chunks_finished): if the stream is live stream or chunk mode.
                * (s->filesize > 0 && s->off < s->filesize): if file is normal file and offset is in filesize, use range mode.
@@ -1280,13 +1346,31 @@ HTTP_READ_AGAIN:
             reconnect = 1;
         }
     }
+    else if (s->end < (s->filesize - 1) && s->filesize > 0 && s->one_connect_limited_size > 0
+        && (AVERROR_EOF == ret || s->off >= s->end || ret == 0))
+    {
+        if(AVERROR_EOF == ret || ret == 0)
+        {
+            av_log(NULL, AV_LOG_ERROR, "[%s:%d] set reconnect = 1, reconnect at once, filesize = %lld, ret:%d, s->off:%lld, s->end:%lld, size:%d\n",
+                __FILE_NAME__, __LINE__, s->filesize, ret, s->off, s->end, size);
+            reconnect = 1;
+            s->off = s->end + 1;
+            s->end = s->off + s->one_connect_limited_size;
+            s->end = s->end > s->filesize ? s->filesize - 1 : s->end;
+        }
+        else
+        {
+            av_log(NULL, AV_LOG_INFO, "[%s:%d] need reconnect next time, filesize = %lld, ret:%d, s->off:%lld, s->end:%lld, size:%d\n",
+                __FILE_NAME__, __LINE__, s->filesize, ret, s->off, s->end, size);
+        }
+    }
 
     if (reconnect == 1 || (CHECK_NET_INTERRUPT(ret)))
     {
         s->errtag = 1;
         reconnect = 0;
-        av_log(NULL, AV_LOG_ERROR, "[%s:%d] http_main_read, ret=%d,off:%lld,filesize:%lld\n",
-            __FILE_NAME__,__LINE__,ret,s->off, s->filesize);
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] http_main_read, start reconnect, ret=%d,off:%lld,filesize:%lld\n",
+            __FILE_NAME__, __LINE__, ret, s->off, s->filesize);
 
         if (s->http_code >= 400 &&  s->http_code < 1000)
         {
@@ -1298,7 +1382,7 @@ HTTP_READ_AGAIN:
             {
                 url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_TIMEOUT, "http");
             }
-            else
+            else if (ret < 0)
             {
                 url_errorcode_cb(h->interrupt_callback.opaque, ret, "http");
             }
@@ -1381,7 +1465,7 @@ HTTP_READ_AGAIN:
         tmp->errtag |= s->errtag;
         /* reback http://10.141.105.210:8080/#/c/1640/ patch */
         //if (0 < s->filesize && tmp->off != s->off)
-        if (tmp->off != s->off)
+        if (tmp->off != s->off && s->end <= 0)
         {
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] offset is not right,off=%lld read and discard data\n",
                 __FILE_NAME__,__LINE__, tmp->off);
@@ -1560,6 +1644,11 @@ static int64_t http_seek(URLContext *h, int64_t off, int whence)
     }
     s->seek_flag = 1;
     s->change_seek_flag = 0;
+    if (s->one_connect_limited_size > 0) {
+        s->end = s->off + s->one_connect_limited_size;
+        s->end = s->end > s->filesize ? s->filesize - 1 : s->end;
+        av_log(h, AV_LOG_INFO, "seek end:%lld\n", s->end);
+    }
 
     /* if it fails, continue on old connection */
     ret = http_open_cnx(h);

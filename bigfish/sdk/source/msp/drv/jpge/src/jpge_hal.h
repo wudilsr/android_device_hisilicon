@@ -85,6 +85,7 @@ typedef struct
 } Jpge_IpCtx_S;
 
 HI_VOID Jpge_SetClock(HI_VOID);
+HI_VOID Jpge_CloseClock(HI_VOID);
 
 /*************************************************************************************/
 #ifdef __cplusplus

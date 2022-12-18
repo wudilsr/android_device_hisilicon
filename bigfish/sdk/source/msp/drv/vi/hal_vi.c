@@ -43,6 +43,8 @@ HI_VOID ViRegWrite(HI_U32 a, HI_U32 b)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
 HI_VOID VI_DRV_SetWorkMode(HI_BOOL bLowDelay, HI_BOOL bInnerClk)
@@ -108,6 +110,8 @@ HI_U32 VI_DRV_GetVicapInt(HI_VOID)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
 HI_VOID VI_DRV_SetVicapIntMask(HI_U32 int_pt0_en, HI_U32 int_ch0_en)
@@ -968,6 +972,8 @@ HI_VOID VI_DRV_SetChLhFirOffset(HI_U32 ChId, HI_S32 hluma_offset)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     /* complement */
@@ -1108,6 +1114,8 @@ HI_U32 inline VI_DRV_Conver_FirCoef(HI_S32 s32Value)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
 HI_VOID VI_DRV_SetChLhFirCoef(HI_U32 ChId, HI_U32 phase_offset, const HI_S32 hlCoef[8])
@@ -1540,6 +1548,8 @@ HI_VOID VI_DRV_SetChDesDis(HI_U32 ChId, HI_U32 u32YDis, HI_U32 u32CDis)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
 HI_VOID VI_DRV_SetChDesAddr(HI_U32 ChId, HI_U32 u32YAddr, HI_U32 u32CAddr)
@@ -1873,6 +1883,8 @@ HI_VOID VI_DRV_SetTiming_BT1120(HI_U32 PtId)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
     stMsk.u32GOff = 0x8;
 #endif
@@ -2036,6 +2048,8 @@ HI_VOID VI_DRV_SetVcapInit(HI_U32 ChId, VI_DRV_CHN_STORE_INFO *pstStoreCfg)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
     VI_DRV_SetWorkMode(HI_FALSE, HI_FALSE);
     VI_DRV_SetVicapIntMask(0, 1);
@@ -2061,6 +2075,8 @@ HI_VOID VI_DRV_SetChZme(HI_U32 ChId, VI_DRV_CHN_ZME_INFO * pstZmeInfo)
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 
     int vi_coefficient4_cubic[18][4] =
@@ -2157,6 +2173,8 @@ HI_VOID VI_DRV_SetChZme(HI_U32 ChId, VI_DRV_CHN_ZME_INFO * pstZmeInfo)
         || defined(CHIP_TYPE_hi3798cv100)   \
         || defined(CHIP_TYPE_hi3798mv100)   \
         || defined(CHIP_TYPE_hi3796mv100)   \
+        || defined(CHIP_TYPE_hi3716mv410)   \
+        || defined(CHIP_TYPE_hi3716mv420)   \
         || defined(CHIP_TYPE_hi3798cv200_a)
         VI_DRV_SetChLhFirCoef(ChId, i, vi_coefficient8_cubic[i]);
         VI_DRV_SetChChFirCoef(ChId, i, vi_coefficient4_cubic[i]);

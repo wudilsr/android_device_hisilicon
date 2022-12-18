@@ -37,11 +37,14 @@ choice
 config  HI_BOOTLOADER_TUNER_CAB
 	bool "Cable"
 
-config  HI_BOOTLOADER_TUNER_TER
-	bool "Terrestrial"
-
 config  HI_BOOTLOADER_TUNER_SAT
 	bool "Satellite"
+
+config  HI_BOOTLOADER_TUNER_DVB_T
+    bool "Terrestrial DVB_T"
+
+config  HI_BOOTLOADER_TUNER_DVB_T2
+    bool "Terrestrial DVB_T2"
 endchoice
 
 #------------------------------------------------

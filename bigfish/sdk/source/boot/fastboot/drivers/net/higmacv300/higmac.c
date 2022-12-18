@@ -6,6 +6,12 @@
 
 #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
 
+/* suppose higmac_board_info[i] was initialed! */
+#define for_each_gmac_netdev_local_priv(ld, i)  \
+	for (i = 0; i < CONFIG_GMAC_NUMS &&     \
+		({ld = &higmac_board_info[i].higmac_ld; 1;}); \
+		i++)
+
 struct higmac_board_info higmac_board_info[CONFIG_GMAC_NUMS] = {
 	{
 		{
@@ -466,27 +472,40 @@ int eth_rx(void)
 	int rx_bq_wr_offset = 0;
 	int rx_bq_rd_offset = 0;
 	int len = 0;
+	int wr_rd_dist;
+	int i;
 	higmac_desc* rx_fq_desc= ld->rx_fq_addr;
 	higmac_desc* rx_bq_desc= ld->rx_bq_addr;
 
 	rx_fq_wr_offset = higmac_readl_bits(ld, RX_FQ_WR_ADDR, BITS_RX_FQ_WR_ADDR);
 	rx_fq_rd_offset = higmac_readl_bits(ld, RX_FQ_RD_ADDR, BITS_RX_FQ_RD_ADDR);
 
-	if (rx_fq_wr_offset != rx_fq_rd_offset)
-	{
-		higmac_writel_bits(ld, rx_fq_rd_offset, RX_FQ_WR_ADDR, BITS_RX_FQ_WR_ADDR);
-		//printf("rx fq is error!\n");
-		return -1;
+	if (rx_fq_wr_offset >= rx_fq_rd_offset)
+		wr_rd_dist = (HIGMAC_HWQ_RX_FQ_DEPTH << DESC_BYTE_SHIFT)
+			- (rx_fq_wr_offset - rx_fq_rd_offset);
+	else
+		wr_rd_dist = rx_fq_rd_offset - rx_fq_wr_offset;
+
+	wr_rd_dist >>= DESC_BYTE_SHIFT;/* offset was counted on bytes, desc size = 2^5 */
+
+	/*
+	 * wr_rd_dist - 1 for logic reason.
+	 * Logic think the desc pool is full filled, ...?
+	 */
+	for (i = 0; i < wr_rd_dist - 1; i++) {
+		rx_fq_desc = ld->rx_fq_addr + (rx_fq_wr_offset >> DESC_BYTE_SHIFT);
+		rx_fq_desc->data_buff_addr = (unsigned int)malloc(HIETH_MAX_FRAME_SIZE);
+		if ((void *)rx_fq_desc->data_buff_addr == NULL)
+			break;
+		rx_fq_desc->descvid = DESC_VLD_FREE;
+		rx_fq_desc->buffer_len = (HIETH_MAX_FRAME_SIZE - 1);
+		rx_fq_desc->data_len = 8;
+
+		rx_fq_wr_offset += DESC_SIZE;
+		if (rx_fq_wr_offset >= (HIGMAC_HWQ_RX_FQ_DEPTH << DESC_BYTE_SHIFT))
+			rx_fq_wr_offset = 0;
+		higmac_writel_bits(ld, rx_fq_wr_offset, RX_FQ_WR_ADDR, BITS_RX_FQ_WR_ADDR);
 	}
-
-	rx_fq_desc += (rx_fq_wr_offset>>5);
-	rx_fq_desc->data_buff_addr = (unsigned int)NetRxPackets[0];
-	rx_fq_desc->descvid = DESC_VLD_FREE;
-	rx_fq_desc->buffer_len = (HIETH_MAX_FRAME_SIZE - 1);
-	rx_fq_desc->data_len = 8;
-
-	rx_fq_wr_offset = (rx_fq_wr_offset == (HIGMAC_HWQ_RX_FQ_DEPTH - 1)<<5) ? 0 : rx_fq_wr_offset + DESC_SIZE;
-	higmac_writel_bits(ld, rx_fq_wr_offset, RX_FQ_WR_ADDR, BITS_RX_FQ_WR_ADDR);
 
 	/* enable Rx */
 	//higmac_desc_enable(ld, RX_OUTCFF_WR_DESC_ENA|RX_CFF_RD_DESC_ENA);
@@ -494,11 +513,9 @@ int eth_rx(void)
 
 	rx_bq_wr_offset = higmac_readl_bits(ld, RX_BQ_WR_ADDR, BITS_RX_BQ_WR_ADDR);
 	rx_bq_rd_offset = higmac_readl_bits(ld, RX_BQ_RD_ADDR, BITS_RX_BQ_RD_ADDR);
-	rx_bq_desc += (rx_bq_rd_offset>>5);
+	rx_bq_desc += (rx_bq_rd_offset >> DESC_BYTE_SHIFT);
 
-	rx_bq_rd_offset = (rx_bq_rd_offset == (HIGMAC_HWQ_RX_BQ_DEPTH - 1)<<5) ? 0 : rx_bq_rd_offset + DESC_SIZE;
-
-	while(--timeout_us && (rx_bq_wr_offset != rx_bq_rd_offset))
+	while(--timeout_us && (rx_bq_wr_offset == rx_bq_rd_offset))
 	{
 		rx_bq_wr_offset = higmac_readl_bits(ld, RX_BQ_WR_ADDR, BITS_RX_BQ_WR_ADDR);
 		udelay(1);
@@ -509,17 +526,26 @@ int eth_rx(void)
 		return -1;
 	}
 
+	rx_bq_rd_offset += DESC_SIZE;
+	if (rx_bq_rd_offset >= (HIGMAC_HWQ_RX_BQ_DEPTH << DESC_BYTE_SHIFT))
+		rx_bq_rd_offset = 0;
+
 	len = rx_bq_desc->data_len;
 	if (HIGMAC_INVALID_RXPKG_LEN(len)) {
-		//printf("rx packet len error %x\n",len);
+		higmac_writel_bits(ld, rx_bq_rd_offset, RX_BQ_RD_ADDR, BITS_RX_BQ_RD_ADDR);
+		free((void *)rx_bq_desc->data_buff_addr);
 		return -1;
 	}
 	if (gmac_debug)
 		printf("got packet!\n");
-	/*NetRecive*/
-	NetReceive(NetRxPackets[0], len);
+
+	memcpy((void *)NetRxPackets[0], (void *)rx_bq_desc->data_buff_addr, len);
+	free((void *)rx_bq_desc->data_buff_addr);
 
 	higmac_writel_bits(ld, rx_bq_rd_offset, RX_BQ_RD_ADDR, BITS_RX_BQ_RD_ADDR);
+
+	/*NetRecive*/
+	NetReceive(NetRxPackets[0], len);
 
 	/* disable Rx */
 	//higmac_writel_bits(ld, 0, PORT_EN, BITS_RX_EN);
@@ -554,7 +580,7 @@ int eth_send(volatile void* packet, int length)
 #if (CONFIG_GMAC_NUMS > 2)
 	tso_ver = higmac_readl_bits(ld, CRF_MIN_PACKET, BIT_TSO_VERSION);
 #endif
-	tx_bq_desc += (tx_bq_wr_offset>>5);
+	tx_bq_desc += (tx_bq_wr_offset >> DESC_BYTE_SHIFT);
 	tx_bq_desc->data_buff_addr =(unsigned int)packet;
 	tx_bq_desc->descvid = DESC_VLD_BUSY;
 #if (CONFIG_GMAC_NUMS > 2)
@@ -569,7 +595,9 @@ int eth_send(volatile void* packet, int length)
 	tx_bq_desc->data_len = length;
 	tx_bq_desc->buffer_len =  (HIETH_MAX_FRAME_SIZE - 1);;
 
-	tx_bq_wr_offset = (tx_bq_wr_offset == (HIGMAC_HWQ_TX_BQ_DEPTH - 1)<<5) ? 0 : tx_bq_wr_offset + DESC_SIZE;
+	tx_bq_wr_offset += DESC_SIZE;
+	if (tx_bq_wr_offset >= (HIGMAC_HWQ_TX_BQ_DEPTH << DESC_BYTE_SHIFT))
+		tx_bq_wr_offset = 0;
 	higmac_writel_bits(ld, tx_bq_wr_offset, TX_BQ_WR_ADDR, BITS_TX_BQ_WR_ADDR);
 
 	/* enable tx */
@@ -578,7 +606,9 @@ int eth_send(volatile void* packet, int length)
 
 	tx_rq_wr_offset = higmac_readl_bits(ld, TX_RQ_WR_ADDR, BITS_TX_RQ_WR_ADDR);
 	tx_rq_rd_offset = higmac_readl_bits(ld, TX_RQ_RD_ADDR, BITS_TX_RQ_RD_ADDR);
-	tx_rq_rd_offset = (tx_rq_rd_offset == (HIGMAC_HWQ_TX_RQ_DEPTH - 1)<<5) ? 0 : tx_rq_rd_offset + DESC_SIZE;
+	tx_rq_rd_offset += DESC_SIZE;
+	if (tx_rq_rd_offset >= (HIGMAC_HWQ_TX_RQ_DEPTH << DESC_BYTE_SHIFT))
+		tx_rq_rd_offset = 0;
 
 	while(--timeout_us && (tx_rq_rd_offset != tx_rq_wr_offset))
 	{
@@ -636,6 +666,8 @@ static int gmac_inited;
 static int higmac_init(void)
 {
 	int ret = 0;
+	struct higmac_netdev_local *ld;
+	int i;
 
 	/* init once to save time */
 	if (!gmac_inited) {
@@ -700,24 +732,26 @@ static int higmac_init(void)
 			}
 		}
 #endif
+		for_each_gmac_netdev_local_priv(ld, i) {
+			higmac_glb_preinit_dummy(ld);
+
+			ret = higmac_set_hwq_depth(ld);
+			if (ret) {
+				printf("init eth%d hw desc queue depth fail!\n", i);
+				goto glb_init;
+			}
+
+			ret = higmac_init_hw_desc_queue(ld);
+			if (ret) {
+				printf("init eth%d hw desc queue fail!\n", i);
+				goto hw_desc_init;
+			}
+		}
 	}
 
 	ret = select_current_linked_phy();
 	if (ret)
 		goto mdiobus_init;
-
-	higmac_glb_preinit_dummy(current_ld);
-	ret = higmac_set_hwq_depth(current_ld);
-	if (ret) {
-		printf("init hw desc queue depth fail!\n");
-		goto glb_init;
-	}
-
-	ret = higmac_init_hw_desc_queue(current_ld);
-	if (ret) {
-		printf("init hw desc queue fail!\n");
-		goto hw_desc_init;
-	}
 
 	higmac_desc_enable(current_ld, RX_OUTCFF_WR_DESC_ENA|RX_CFF_RD_DESC_ENA);
 	higmac_writel_bits(current_ld, 1, PORT_EN, BITS_RX_EN);

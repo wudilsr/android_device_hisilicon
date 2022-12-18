@@ -423,15 +423,9 @@
  */
 
 /* Version information for png.h - this should match the version in png.c */
-#if 1
-/** version reserve **/
 #define PNG_LIBPNG_VER_STRING "1.6.16"
 #define PNG_HEADER_VERSION_STRING \
      " libpng version 1.6.16 - December 22, 2014\n"
-#else
-#define PNG_LIBPNG_VER_STRING ""
-#define PNG_HEADER_VERSION_STRING ""
-#endif
 
 #define PNG_LIBPNG_VER_SONUM   16
 #define PNG_LIBPNG_VER_DLLNUM  16
@@ -1989,7 +1983,6 @@ PNG_EXPORT(109, void, png_set_benign_errors,
 #    define png_benign_error png_error
 #    define png_chunk_benign_error png_chunk_error
 #  endif
-#define png_set_benign_errors(png_ptr, allowed)
 #endif
 
 /* The png_set_<chunk> functions are for storing values in the png_info_struct.
@@ -3264,6 +3257,9 @@ PNG_EXPORT(243, int, png_get_palette_max, (png_const_structp png_ptr,
 PNG_EXPORT(244, int, png_set_option, (png_structrp png_ptr, int option,
    int onoff));
 #endif /* SET_OPTION */
+
+
+PNG_EXPORT(507, void, png_push_set_exception_mode, (png_structp png_ptr, png_byte u8Mode));
 
 /*******************************************************************************
  *  END OF HARDWARE AND SOFTWARE OPTIONS

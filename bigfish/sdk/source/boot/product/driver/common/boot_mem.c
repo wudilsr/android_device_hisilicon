@@ -12,8 +12,10 @@ HI_S32 HI_MEM_Alloc(HI_U32 *pu32PhyAddr, HI_U32 Len)
     
     //*pu32PhyAddr = (HI_U32)malloc(Len);
     *pu32PhyAddr = (HI_U32)reserve_mem_alloc(Len, &AllocSize);
-    
-    return HI_SUCCESS;
+    if (HI_NULL != *pu32PhyAddr) 
+        return HI_SUCCESS;
+    else
+        return HI_FAILURE;
 }
 
 

@@ -67,6 +67,10 @@ static HI_U8 KeyPressFlag = 0;
 
 void KEYLED_Init_Usr(void)
 {
+#ifndef HI_ADVCA_RELEASE
+        printf_str("74HC164 Board Init \r\n");
+#endif
+
 	KeyPressFlag = 0;
 
     /* Disable keyled  */

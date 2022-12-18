@@ -67,6 +67,8 @@ typedef struct
     HI_U32 u32BufDataFormat;          /**<I/O, 0, linear pcm, 1, iec61937 */
     HI_U32 u32BufLatencyThdMs;   /* 40 ~ 1000 ms */
 
+    HI_BOOL bAddMute;
+
 } AIAO_CAST_ATTR_S;
 
 

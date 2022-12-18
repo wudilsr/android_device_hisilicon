@@ -206,7 +206,6 @@ static HI_S32 VDEC_DRV_GetProcArg(HI_CHAR*  chCmd,HI_CHAR*  chArg,HI_U32 u32ArgI
         HI_CHAR chArg1[VDEC_MAX_PROC_ARGS_SIZE] = {0};
         HI_CHAR chArg2[VDEC_MAX_PROC_ARGS_SIZE] = {0};
         HI_CHAR chArg3[VDEC_MAX_PROC_ARGS_SIZE*8] = {0};
-        u32CmdCount = 0;
 
         /*clear empty space*/
         u32Count = 0;
@@ -435,14 +434,14 @@ static HI_S32 VDEC_DRV_CtrlWriteProc(struct file * file,
             }
         }
     }
-    else if(0==strncmp(dat1,"maskdfs",10))
+    else if(0==strncmp(dat1,"maskdfs",7))
     {
-        if(0==strncmp(dat2,"on",10))
+        if(0==strncmp(dat2,"on",2))
         {
             MaskCtrlWord = MaskCtrlWord|0x1;
             HI_DRV_PROC_EchoHelper("Mask dynamic fs.\n");
         }
-        else if(0==strncmp(dat2,"off",10))
+        else if(0==strncmp(dat2,"off",3))
         {
             MaskCtrlWord = MaskCtrlWord&0xFFFFFFFE;
             HI_DRV_PROC_EchoHelper("Unmask dynamic fs.\n");
@@ -471,6 +470,7 @@ static HI_S32 VDEC_DRV_WriteProc(struct file * file,
     HI_HANDLE hHandle = 0;
     HI_S32 s32Ret = HI_FAILURE;
     VDEC_CHANNEL_S *pstChan = HI_NULL;
+    VFMW_EXPORT_FUNC_S* pfnVfmwFunc = HI_NULL;
 
     hHandle = (pProcItem->entry_name[4]-48)*10 + ((pProcItem->entry_name[5]) - 48);
     /**
@@ -485,8 +485,9 @@ static HI_S32 VDEC_DRV_WriteProc(struct file * file,
     {
         HI_ERR_VDEC("ERR: chan %d is not init!\n",hHandle);
         return 0;
-    }
-
+	}
+	
+    pfnVfmwFunc = VDEC_DRV_GetVfmwExportFunc();
     hHandle = (HI_ID_VDEC << 16) | hHandle;
     if(count >= sizeof(buf))
     {
@@ -517,7 +518,7 @@ static HI_S32 VDEC_DRV_WriteProc(struct file * file,
     {
          if(0==strncmp(dat2,"start",5))
          {
-             s32Ret = VDEC_Control(pstChan->hChan, VDEC_CID_START_LOWDLAY_CALC, &hHandle);
+             s32Ret = (pfnVfmwFunc->pfnVfmwControl)(pstChan->hChan, VDEC_CID_START_LOWDLAY_CALC, &hHandle);
              if (VDEC_OK != s32Ret)
              {
                  HI_ERR_VDEC("VFMW CFG_CHAN err!\n");
@@ -527,7 +528,7 @@ static HI_S32 VDEC_DRV_WriteProc(struct file * file,
          }
          else if (0==strncmp(dat2,"stop",4))
          {
-             s32Ret = VDEC_Control(pstChan->hChan, VDEC_CID_STOP_LOWDLAY_CALC, &hHandle);
+			 s32Ret = (pfnVfmwFunc->pfnVfmwControl)(pstChan->hChan, VDEC_CID_STOP_LOWDLAY_CALC, &hHandle);
              if (VDEC_OK != s32Ret)
              {
                  HI_ERR_VDEC("VFMW CFG_CHAN err!\n");
@@ -566,6 +567,9 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
     HI_CHAR aszCapLevel[10];
     HI_CHAR aszProtocolLevel[10];
     HI_HANDLE hVpss = HI_INVALID_HANDLE;
+
+	HI_CHAR *s_CodecType = HI_NULL;
+		
     pstProcItem = p->private;
 
     if (0 == strncmp(pstProcItem->entry_name, "vdec_ctrl",9))
@@ -798,6 +802,23 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
         {
             HI_ERR_VDEC("VDEC_FindVpssHandleByVdecHandle ERR\n");
         }
+
+		if( pstChan->stCurCfg.enType <= HI_UNF_VCODEC_TYPE_BUTT)
+		{
+			if (pstChan->bAvsPlus == 1 && pstChan->stCurCfg.enType == HI_UNF_VCODEC_TYPE_AVS)
+			{
+				s_CodecType = "AVS+";
+			}
+			else
+			{
+				s_CodecType = s_aszVdecType[pstChan->stCurCfg.enType];
+			}
+		}
+		else
+		{
+			s_CodecType = "UNKNOW";
+		}
+		
         PROC_PRINT(p, "============================== VDEC%d ================================\n", i);
         PROC_PRINT(p,
                         "Work State                          : %s\n",
@@ -817,8 +838,7 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
                         "CtrlOption*                         : 0x%x\n"
                         "Capability                          : %s/%s/%s\n"
                         "Dynamic Frame Store                 : %s\n",
-                        (pstChan->stCurCfg.enType
-                         <= HI_UNF_VCODEC_TYPE_BUTT) ? (s_aszVdecType[pstChan->stCurCfg.enType]) : "UNKNOW",
+                        s_CodecType,
                         pstChan->stCurCfg.enType,
 
                         aszDecMode,
@@ -1237,7 +1257,7 @@ HI_S32 VDEC_DRV_ModInit(HI_VOID)
     ret = VDEC_DRV_RegisterProc(&s_stProcParam);
     if (HI_SUCCESS != ret)
     {
-        HI_FATAL_VDEC("Reg proc fail!\n");
+        HI_FATAL_VDEC("Reg proc fail!,ret=%d\n",ret);
         return HI_FAILURE;
     }
 

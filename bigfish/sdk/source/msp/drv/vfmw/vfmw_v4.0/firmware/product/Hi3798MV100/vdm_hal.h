@@ -249,9 +249,14 @@ typedef struct hiVDMHAL_FUN_PTR_S
     /*VDM_DRV*/
     VOID (*pfun_VDMDRV_OpenHardware)(SINT32 VdhId);
 	VOID (*pfun_VDMDRV_CloseHardware)(SINT32 VdhId);
+
+    VOID (*pfun_DSPDRV_OpenHardware)(SINT32 VdhId);
+    VOID (*pfun_DSPDRV_CloseHardware)(SINT32 VdhId);
+
     VOID (*pfun_SCDDRV_OpenHardware)(SINT32 ScdId);
     VOID (*pfun_SCDDRV_CloseHardware)(SINT32 ScdId);
     SINT32 (*pfun_BPDDRV_OpenHardware)(VOID);	
+    SINT32 (*pfun_BPDDRV_CloseHardware)(VOID);	
 	/*VDM_HAL*/
     VOID (*pfun_VDMHAL_GetCharacter)(VOID);	
     SINT32 (*pfun_VDMHAL_GetHalMemSize)(VOID);
@@ -261,6 +266,7 @@ typedef struct hiVDMHAL_FUN_PTR_S
 	SINT32 (*pfun_VDMHAL_ArrangeMem_BTL)( SINT32 MemAddr, SINT32 MemSize, SINT32 Width, SINT32 Height, SINT32 PmvNum, SINT32 s32MaxRefFrameNum, SINT32 s32DisplayFrameNum, SINT32 UserDec, VDMHAL_MEM_ARRANGE_S *pVdmMemArrange ,SINT32 s32Btl1Dt2DEnable, SINT32 s32BtlDbdrEnable );
 	VOID (*pfun_VDMHAL_ResetVdm)( SINT32 VdhId );
 	VOID (*pfun_VDMHAL_GlbReset)( VOID );
+	VOID (*pfun_VDMHAL_GlbResetX)( SINT32 VdhId );
     VOID (*pfun_VDMHAL_ClearIntState)( SINT32 VdhId );
     VOID (*pfun_VDMHAL_MaskInt)( SINT32 VdhId );
     VOID (*pfun_VDMHAL_EnableInt)( SINT32 VdhId );	
@@ -359,6 +365,33 @@ do \
     }  \
 }while(0)
 
+#define DSPDRV_OpenHardware(VdhId) \
+    do \
+    { \
+        if(NULL != g_vdm_hal_fun_ptr.pfun_DSPDRV_OpenHardware)  \
+        { \
+            g_vdm_hal_fun_ptr.pfun_DSPDRV_OpenHardware(VdhId); \
+        }  \
+        else  \
+        {  \
+            VDMHAL_NULL_FUN_PRINT;  \
+        }  \
+    }while(0)
+
+#define DSPDRV_CloseHardware(VdhId) \
+    do \
+    { \
+        if(NULL != g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware)  \
+        { \
+            g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware(VdhId); \
+        }  \
+        else  \
+        {  \
+            VDMHAL_NULL_FUN_PRINT;  \
+        }  \
+    }while(0)
+
+
 #define SCDDRV_OpenHardware(ScdId) \
 do \
 { \
@@ -424,6 +457,19 @@ do \
         VDMHAL_NULL_FUN_PRINT;  \
     }  \
 }while(0)
+
+#define VDMHAL_GlbResetX(VdhId) \
+    do \
+    { \
+        if(NULL != g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbResetX)  \
+        { \
+            g_vdm_hal_fun_ptr.pfun_VDMHAL_GlbResetX(VdhId); \
+        }  \
+        else  \
+        {  \
+            VDMHAL_NULL_FUN_PRINT;  \
+        }  \
+    }while(0)
     
 #define VDMHAL_ClearIntState(VdhId) \
 do \
@@ -600,6 +646,10 @@ do \
 		g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem_BTL( MemAddr, MemSize, Width, Height, PmvNum, s32MaxRefFrameNum, s32DisplayFrameNum, UserDec, pVdmMemArrange , s32Btl1Dt2DEnable, s32BtlDbdrEnable):\
 		VDMHAL_NULL_FUN_PTR)
 
+#define BPDDRV_CloseHardware() \
+	(g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware? \
+		g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware(): \
+		VDMHAL_NULL_FUN_PTR)
 #endif
 
 

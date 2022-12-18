@@ -30,37 +30,37 @@ static void hi_sata_poweron(void)
 void hi_sata_init(void __iomem * mmio)
 {
 	hi_sata_poweron();
-	msleep(20);
+	msleep(10);
 
 	/* Config SATA clock */
 	writel(0x1f, REG_BASE_PERI_CTRL + 0x20A8);
-	msleep(100);
+	msleep(10);
 	writel(0x1, REG_BASE_PERI_CTRL + 0x20AC);
-	msleep(100);
+	msleep(10);
 
 	/* Config and reset the SATA PHY, SSC enabled */
 	writel(0x49000679, REG_BASE_SATA + 0xA0);
-	msleep(100);
+	msleep(10);
 	writel(0x49000678, REG_BASE_SATA + 0xA0);
-	msleep(100);
+	msleep(10);
 
 	/* Config PHY controller register 1 */
-	writel(0x345eA4, REG_BASE_SATA + 0x148);
-	msleep(100);
+	writel(0x345cb8, REG_BASE_SATA + 0x148);
+	msleep(10);
 	/* Config PHY controller register 2, and reset SerDes lane */
-	writel(0x00060552, REG_BASE_SATA + 0x14C);
-	msleep(100);
-	writel(0x00020552, REG_BASE_SATA + 0x14C);
-	msleep(100);
+	writel(0x00060545, REG_BASE_SATA + 0x14C);
+	msleep(10);
+	writel(0x00020545, REG_BASE_SATA + 0x14C);
+	msleep(10);
 
 	/* Data invert between phy and sata controller */
 	writel(0x8, REG_BASE_SATA + 0xA4);
-	msleep(100);
+	msleep(10);
 	/* Config Spin-up */
 	writel(0x600000, REG_BASE_SATA + 0x118);
-	msleep(100);
+	msleep(10);
 	writel(0x600002, REG_BASE_SATA + 0x118);
-	msleep(100);
+	msleep(10);
 	/*
 	 * Config SATA Port phy controller.
 	 * To take effect for 0xF990014C,
@@ -68,10 +68,13 @@ void hi_sata_init(void __iomem * mmio)
 	 * and then force it to 6G mode.
 	 */
 	writel(0xE100000, REG_BASE_SATA + 0x174);
-	msleep(100);
+	msleep(10);
 	writel(0xE5A0000, REG_BASE_SATA + 0x174);
-	msleep(100);
+	msleep(10);
 	writel(0xE4A0000, REG_BASE_SATA + 0x174);
-	msleep(1000);
+	msleep(10);
 
+	writel(0xE250000, REG_BASE_SATA + 0x174);
+	msleep(10);
 }
+

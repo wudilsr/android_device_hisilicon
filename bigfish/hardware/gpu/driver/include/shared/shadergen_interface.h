@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2007-2010, 2012-2014 ARM Limited
+ * (C) COPYRIGHT 2007-2010, 2012-2013, 2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -55,14 +55,6 @@ MALI_IMPORT unsigned *_gles_fragment_shadergen_generate_shader(const struct frag
  * @return 1 if the states are equivalent, 0 if not
  */
 MALI_IMPORT int _gles_fragment_shadergen_states_equivalent(const struct fragment_shadergen_state *state1, const struct fragment_shadergen_state *state2);
-
-/**
- * Checks if two vertex generator states are equivalent.
- * @param state1 A pointer to the first vertex generator state. Must be != NULL
- * @param state2 A pointer to the second vertex generator state. Must be != NULL
- * @return 1 if the states are equivalent, 0 if not
- */
-MALI_IMPORT int _gles_vertex_shadergen_states_equivalent(const struct vertex_shadergen_state *state1, const struct vertex_shadergen_state *state2);
 
 /**
 * Checks if two vertex generator states are equivalent.

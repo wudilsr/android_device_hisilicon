@@ -120,13 +120,18 @@ typedef union
     /* Define the struct bits */
     struct
     {
-        unsigned int    pop_adj_r             : 3   ; /* [2..0]  */
-        unsigned int    pop_adj_l             : 3   ; /* [5..3]  */
-        unsigned int    reserved_0            : 13  ; /* [18..6]  */
+        unsigned int    pop_direct_r          : 1   ; /* [0]  */
+        unsigned int    pop_adj_res           : 2   ; /* [2..1]  */
+        unsigned int    pop_direct_l          : 1   ; /* [3]  */
+        unsigned int    pop_adj_clk           : 2   ; /* [5..4]  */
+        unsigned int    reserved_0            : 1   ; /* [6]  */
+        unsigned int    verf_extmod           : 1   ; /* [7]  */
+        unsigned int    reserved_1            : 11  ; /* [18..8]  */
         unsigned int    clksel                : 3   ; /* [21..19]  */
         unsigned int    data_bits             : 2   ; /* [23..22]  */
-        unsigned int    Reserved              : 8   ; /* [31..24]  */
+        unsigned int    reserved_2            : 8   ; /* [31..24]  */
     } bits;
+
 
     /* Define an unsigned member */
     unsigned int    u32;
@@ -138,8 +143,8 @@ typedef union
     /* Define the struct bits */
     struct
     {
-        unsigned int    pd_dffr               : 1   ; /* [0]  */
-        unsigned int    pd_dffl               : 1   ; /* [1]  */
+        unsigned int    ctrl_dffr             : 1   ; /* [0]  */
+        unsigned int    ctrl_dffl             : 1   ; /* [1]  */
         unsigned int    pd_vref               : 1   ; /* [2]  */
         unsigned int    Pd_ctcm_ibias         : 1   ; /* [3]  */
         unsigned int    pd_ibias              : 1   ; /* [4]  */

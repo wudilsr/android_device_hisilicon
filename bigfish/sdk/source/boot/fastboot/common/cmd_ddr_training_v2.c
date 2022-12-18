@@ -17,6 +17,7 @@
 #define DDR_CODE_CONTENT_ALIGN      0x100000
 
 #define DDR_CMD_SW_STR              "training"
+#define DDR_CMD_TR_STR              "tr"
 #define DDR_CMD_HW_STR              "hw"
 #define DDR_CMD_MPR_STR             "mpr"
 #define DDR_CMD_WL_STR              "wl"
@@ -81,6 +82,8 @@ static int cmd_ddr_match(const char *str, int *cmd)
 	static int wl_done;  /* Write leveling control */
 
 	if (!strncmp(str, DDR_CMD_SW_STR, sizeof(DDR_CMD_SW_STR))) {
+		*cmd = DDR_TRAINING_CMD_SW_NO_WL;
+	} else if (!strncmp(str, DDR_CMD_TR_STR, sizeof(DDR_CMD_TR_STR))) {
 		if (wl_done) {
 			*cmd = DDR_TRAINING_CMD_SW_NO_WL;
 		} else {
@@ -315,7 +318,7 @@ int check_ddr_training(void)
 	printf("Set training value from bootenv to DDR controller.\n");
 	for (i = 0; i < DDR_TRAINING_REG_MAX; i++) {
 		if (0 == ddr_reg->reg[i].addr)
-			break;
+			continue;
 
 		REG_WRITE(ddr_reg->reg[i].val, ddr_reg->reg[i].addr);
 	}
@@ -366,7 +369,8 @@ int do_ddr_training(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 U_BOOT_CMD(
 	ddr, CONFIG_SYS_MAXARGS, 1,	do_ddr_training,
 	"ddr training function",
-	"training    - DDR sofeware(WL/Gate/Dataeye/Vref) training.\n"
+	"training    - DDR sofeware(Gate/Dataeye/Vref) training.\n"
+	"ddr tr          - DDR sofeware(WL/Gate/Dataeye/Vref) training.\n"
 	"ddr wl          - DDR Write leveling training.\n"
 	"ddr gate        - DDR gate training.\n"
 	"ddr dataeye     - DDR dataeye training and display training result.\n"

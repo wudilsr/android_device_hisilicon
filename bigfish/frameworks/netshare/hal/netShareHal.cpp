@@ -58,19 +58,22 @@ int isSystemSuccessful(pid_t status)
 static int ping_ip(const char *str)
 {
 	int i = 0 ;
-	int j = 0 ;
 	char ip[20] = {0};
 	char temp[100] = {0};
+	char isnum[8] = {0};
 	char *t = NULL;
 	char *tm = NULL;
 	if(str)
-		strncpy(temp, str, 100);
-	for(  ;temp[i]!=0;i++ ){
-		if (isdigit(temp[i])){
-			t = &temp[i];
-			break;
-		}
-	}
+        strncpy(temp, str, 100);
+    for(  ;temp[i]!=0;i++ ){
+        if (isdigit(temp[i])){
+            strncpy(isnum ,&temp[i] ,7);
+            if((strchr(isnum,0x2e)) && (!strchr(isnum,0x20))) {
+                t = &temp[i];
+                break;
+            }
+        }
+    }
 	if(!t){
 		ALOGE("%d, Server haven't ip !", __LINE__);
 		return 0;

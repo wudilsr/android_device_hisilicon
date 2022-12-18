@@ -385,4 +385,6 @@ HI_S32 VPSS_REG_SetPreZme(HI_U32 u32AppVAddr,
                             VPSS_REG_PREZME_E enHor,VPSS_REG_PREZME_E enVer);
 HI_S32 VPSS_REG_SetPortZmeEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bPortZmeEn);
                             
+
+HI_S32 VPSS_REG_SetProtEn(HI_U32 u32AppAddr,HI_BOOL  bSecure);
 #endif

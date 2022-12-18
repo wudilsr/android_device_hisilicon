@@ -110,13 +110,15 @@
 /* SDIO REG */
 #define REG_PERI_CRG39               0x9C
 #define REG_PERI_CRG40               0xA0
+#define REG_PERI_CRG160              0x280
 #define REG_PERI_CRG163              0x28C
+#define REG_PERI_CRG164              0x290
 #define REG_EMMC_PERI_CRG            REG_PERI_CRG40
 #define REG_SDCARD_PERI_CRG          REG_PERI_CRG39
 
 #define SDIO_DRV_PS_MASK             (0x7 << 16)
 #define SDIO_SAP_PS_MASK             (0x7 << 12)
-#define SDIO_CLK_MASK                (0x3 << 8)
+#define SDIO_CLK_MASK                (0x7 << 8)
 
 #define SDIO_CLK_MODE                (0x1 << 19)
 
@@ -138,6 +140,9 @@
 #define SDIO_SAP_PS_270_145          (0b110 << 12)
 #define SDIO_SAP_PS_315_167DOT5      (0b111 << 12)
 
+#define SDIO_PHASE_NUM               (8)
+#define SDIO_SAP_PS_MASK             (0x7 << 12)
+
 #define SDIO_CLK_75M               (0b000 << 8)
 #define SDIO_CLK_100M              (0b001 << 8)
 #define SDIO_CLK_50M               (0b010 << 8)
@@ -148,6 +153,16 @@
 #define SDIO_SRST_REQ                  (0x1 << 4)
 #define SDIO_CKEN                      (0x1 << 1)
 #define SDIO_BUS_CKEN                  (0x1 << 0)
+
+#define DRV_STENGTH_MASK               (0xf << 11)
+#define DRV_STENGTH_18V_4MA            (0b1100 << 11)
+#define DRV_STENGTH_18V_6MA            (0b1011 << 11)
+#define DRV_STENGTH_18V_8MA            (0b1001 << 11)
+#define DRV_STENGTH_18V_9MA            (0b1000 << 11)
+#define DRV_STENGTH_18V_13MA           (0b0100 << 11)
+#define DRV_STENGTH_18V_18MA           (0b0000 << 11)
+
+#define DRV_SLEV_RATE                  (0x1<<10)
 
 #define HIGMACV300_MAC0_IF              0x300C
 #define HIGMACV300_MAC1_IF              0x3010

@@ -304,7 +304,17 @@ static Bool tda_write (UInt8 uAddress, UInt8 uSubAddress, UInt32 uNbData, UInt8 
 		return HI_FAILURE;
 	}
 
-	qam_config_i2c_out (s_u32Tda18250ATunerPort, 1);
+#if defined(DEMOD_DEV_TYPE_HIFDVBC100) || defined(DEMOD_DEV_TYPE_HIFJ83B100)
+    if(g_stTunerOps[s_u32Tda18250ATunerPort].enDemodDevType == HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100
+		|| g_stTunerOps[s_u32Tda18250ATunerPort].enDemodDevType == HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100)
+    {
+		HI_INFO_TUNER("no config out.\n");
+    }
+	else
+#endif
+	{
+		qam_config_i2c_out (s_u32Tda18250ATunerPort, 1);
+	}
 
 	pu8Tmp = pDataBuff;
 	au8SendData[0] = uSubAddress;
@@ -337,8 +347,17 @@ static Bool tda_read (UInt8 uAddress, UInt8 uSubAddress, UInt32 uNbData, UInt8 *
 	//HI_U8 au8RcvData[65] = { 0 };
 	HI_U8 au8RcvData[TDA18250A_REG_MAP_NB_BYTES] = { 0 };
 
-
-	qam_config_i2c_out (s_u32Tda18250ATunerPort, 1);
+#if defined(DEMOD_DEV_TYPE_HIFDVBC100) || defined(DEMOD_DEV_TYPE_HIFJ83B100)
+    if(g_stTunerOps[s_u32Tda18250ATunerPort].enDemodDevType == HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100
+		|| g_stTunerOps[s_u32Tda18250ATunerPort].enDemodDevType == HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100)
+    {
+		HI_INFO_TUNER("no config out.\n");
+    }
+	else
+#endif
+	{
+		qam_config_i2c_out (s_u32Tda18250ATunerPort, 1);
+	}
 	memset ((void *) au8RcvData, 0, sizeof (au8RcvData));
 
 	stI2cDataStr.pu8ReceiveBuf = au8RcvData;

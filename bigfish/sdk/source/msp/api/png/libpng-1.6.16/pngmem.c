@@ -152,7 +152,11 @@ png_malloc_array,(png_const_structrp png_ptr, int nelements,
    size_t element_size),PNG_ALLOCATED)
 {
    if (nelements <= 0 || element_size == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal error: array alloc");
+#endif
 
    return png_malloc_array_checked(png_ptr, nelements, element_size);
 }
@@ -164,7 +168,11 @@ png_realloc_array,(png_const_structrp png_ptr, png_const_voidp old_array,
    /* These are internal errors: */
    if (add_elements <= 0 || element_size == 0 || old_elements < 0 ||
       (old_array == NULL && old_elements > 0))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal error: array realloc");
+#endif
 
    /* Check for overflow on the elements count (so the caller does not have to
     * check.)
@@ -208,7 +216,11 @@ png_malloc,(png_const_structrp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
    ret = png_malloc_base(png_ptr, size);
 
    if (ret == NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+       png_error(png_ptr, ""); /* 'm' means png_malloc */
+#else
        png_error(png_ptr, "Out of memory"); /* 'm' means png_malloc */
+#endif
 
    return ret;
 }
@@ -227,7 +239,11 @@ png_malloc_default,(png_const_structrp png_ptr, png_alloc_size_t size),
    ret = png_malloc_base(NULL/*use malloc*/, size);
 
    if (ret == NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, ""); /* 'M' means png_malloc_default */
+#else
       png_error(png_ptr, "Out of Memory"); /* 'M' means png_malloc_default */
+#endif
 
    return ret;
 }
@@ -247,8 +263,12 @@ png_malloc_warn,(png_const_structrp png_ptr, png_alloc_size_t size),
 
       if (ret != NULL)
          return ret;
-
+	  
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Out of memory");
+#endif
    }
 
    return NULL;

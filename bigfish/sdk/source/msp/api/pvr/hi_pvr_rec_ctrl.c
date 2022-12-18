@@ -226,6 +226,7 @@ STATIC INLINE HI_VOID PVRRecCheckExistFile(HI_CHAR* pTsFileName)
 STATIC INLINE HI_S32 PVRRecCheckUserCfg(const HI_UNF_PVR_REC_ATTR_S *pUserCfg)
 {
     HI_U32 i;
+    HI_SYS_VERSION_S stSysVer = {0};
 
     CHECK_REC_DEMUX_ID((HI_S32)(pUserCfg->u32DemuxID));
 
@@ -323,10 +324,24 @@ STATIC INLINE HI_S32 PVRRecCheckUserCfg(const HI_UNF_PVR_REC_ATTR_S *pUserCfg)
         /* check whether the demux id used or not */
         if (HI_UNF_PVR_REC_STATE_INVALID != g_stPvrRecChns[i].enState)
         {
-            if (g_stPvrRecChns[i].stUserCfg.u32DemuxID == pUserCfg->u32DemuxID)
+            if (HI_SUCCESS != HI_SYS_GetVersion(&stSysVer))
             {
-                HI_ERR_PVR("demux %d already has been used to record.\n", pUserCfg->u32DemuxID);
-                return HI_ERR_PVR_ALREADY;
+                HI_FATAL_PVR("Cannot get system version\n");
+                return HI_FAILURE;
+            }
+
+            switch (stSysVer.enChipTypeHardWare)
+            {
+                case HI_CHIP_TYPE_HI3716M:
+                    if ((HI_CHIP_VERSION_V410 == stSysVer.enChipVersion) || 
+                        (HI_CHIP_VERSION_V420 == stSysVer.enChipVersion))
+                        break;
+                default:
+                    if (g_stPvrRecChns[i].stUserCfg.u32DemuxID == pUserCfg->u32DemuxID)
+                    {
+                        HI_ERR_PVR("demux %d already has been used to record.\n", pUserCfg->u32DemuxID);
+                        return HI_ERR_PVR_ALREADY;
+                    }
             }
 
             /* recording for the same file name or not*/
@@ -498,7 +513,11 @@ HI_S32 PVRRecTsQueuePush(PVR_REC_CHN_S  *pChnAttr, HI_U8 *psRecData, HI_U32 u32L
         memcpy(pRecQueue->pu8Tail, psRecData, u32Len);
     }
 
-    pRecQueue->pu8Tail = (HI_U8 *)(u32QueueStart + ((u32QueueTail + u32Len) % pRecQueue->u32Size)); 
+    pRecQueue->pu8Tail = (HI_U8 *)(u32QueueStart + ((u32QueueTail + u32Len) % pRecQueue->u32Size));
+    if ((HI_U32)pRecQueue->pu8Tail == u32QueueEnd)
+    {
+        pRecQueue->pu8Tail = pRecQueue->pu8RecData;
+    }
 
     /*For debug*/
     if((HI_U32)pRecQueue->pu8Tail > u32QueueEnd)
@@ -542,11 +561,18 @@ static HI_S32 PVRRecTsQueuePollBuff(PVR_REC_CHN_S *pChnAttr, HI_U8 **pTsBuffData
     u32QueueHead = (HI_U32)pRecQueue->pu8Head - u32QueueStart;
     u32QueueTail = (HI_U32)pRecQueue->pu8Tail - u32QueueStart;
 
+    if ((HI_U32)(pRecQueue->pu8Head) > u32QueueEnd)
+    {
+        HI_FATAL_PVR("Queue head %x is outside the queue %x\n",
+                      (HI_U32)(pRecQueue->pu8Head), u32QueueEnd);
+        return HI_FAILURE;
+    }
+
     *pTsBuffData = pRecQueue->pu8Head;
     u32PollSize = PVR_REC_TS_QUEUE_BLOCK;
 
     u32QueueUsedSize = pRecQueue->u32Size - PVRRecTsQueueGetValidSize(pChnAttr);
-    
+
     if(u32PollSize > u32QueueUsedSize)
     {
         if (u32QueueHead > u32QueueTail)
@@ -559,6 +585,10 @@ static HI_S32 PVRRecTsQueuePollBuff(PVR_REC_CHN_S *pChnAttr, HI_U8 **pTsBuffData
         }
     }
 
+    if ((HI_U32)(pRecQueue->pu8Head) + u32PollSize > u32QueueEnd)
+    {
+        u32PollSize = u32QueueEnd - (HI_U32)(pRecQueue->pu8Head);
+    }
     *pu32DataLen = u32PollSize;
 
     return HI_SUCCESS;  
@@ -580,6 +610,10 @@ static HI_S32 PVRRecTsQueuePollHead(PVR_REC_CHN_S *pChnAttr, HI_U32 u32DataLen)
     u32QueueTail = (HI_U32)pRecQueue->pu8Tail - u32QueueStart;
 
     pRecQueue->pu8Head = (HI_U8 *)(u32QueueStart + ((u32QueueHead + u32DataLen) % pRecQueue->u32Size));
+    if ((HI_U32)pRecQueue->pu8Head == u32QueueEnd)
+    {
+        pRecQueue->pu8Head = pRecQueue->pu8RecData;
+    }
 
     if((HI_U32)pRecQueue->pu8Head == u32QueueTail)  
     {  
@@ -811,6 +845,12 @@ STATIC HI_S32 PVRRecCycWriteStream(HI_UNF_DMX_REC_DATA_S stDmxTsData, PVR_REC_CH
     }
     else
     {
+        if (pRecChn->IndexHandle == HI_NULL)
+        {
+            HI_FATAL_PVR("Index handle is null\n");
+            return HI_FAILURE;
+        }
+        
         u64MaxSize =  pRecChn->IndexHandle->stCycMgr.u64MaxCycSize;
     }
 
@@ -905,7 +945,7 @@ STATIC HI_S32 PVRRecCycWriteStream(HI_UNF_DMX_REC_DATA_S stDmxTsData, PVR_REC_CH
 #ifndef HI_PVR_L2_CACHE_SUPPORT
         pRecChn->IndexHandle->u64FileSizeGlobal = pRecChn->u64CurFileSize;
 #endif
-        pRecChn->IndexHandle->u64FileOffset = pRecChn->u64CurWritePos;
+//        pRecChn->IndexHandle->u64FileOffset = pRecChn->u64CurWritePos;
         if ((u64LastFileSize < pRecChn->IndexHandle->stCurPlayFrame.u64GlobalOffset) &&
             (pRecChn->u64CurFileSize > pRecChn->IndexHandle->stCurPlayFrame.u64GlobalOffset))
         {
@@ -972,92 +1012,16 @@ STATIC INLINE HI_VOID PVRRecCheckRecPosition(PVR_REC_CHN_S *pChnAttr)
 #ifdef HI_PVR_L2_CACHE_SUPPORT
 static HI_VOID PVRRecFlushAllToFile(PVR_REC_CHN_S *pstChn)
 {
-    HI_U32 u32ExtraSize, u32WriteSize,u32QueueDataSize;
     HI_UNF_DMX_REC_DATA_S stRecData = {0};
-    PVR_INDEX_ENTRY_S *pstEndEntry = HI_NULL;
-    PVR_REC_TS_DATA_QUEUE_S *pstQueue = &pstChn->stRecTsQueue;
 
-    u32QueueDataSize = pstQueue->u32Size - PVRRecTsQueueGetValidSize(pstChn);
-    if (u32QueueDataSize == 0)
+    while (PVRRecTsQueueGetValidSize(pstChn) != pstChn->stRecTsQueue.u32Size)
     {
-        HI_INFO_PVR("this no data in cache\n");
-        goto FLUSH_INDEX;
-    }
-
-    if(HI_NULL != pstChn->IndexHandle)
-    {
-        pstEndEntry = &(pstChn->IndexHandle->stCurRecFrame);
-        //如果当前文件大小已经超过了endframe，则不用刷cache
-        if (pstChn->u64CurFileSize >= (pstEndEntry->u64GlobalOffset + pstEndEntry->u32FrameSize))
-        {
-            HI_INFO_PVR("Writefilepos %llx is already lead endframe %llx\n", 
-                        pstChn->u64CurFileSize, pstEndEntry->u64GlobalOffset);
-            goto FLUSH_INDEX;
-        }
-
-        //如果当前文件大小没超过endframe但加上cache里面数据超过endframe，
-        //则只写入指定大小的数据
-        if (u32QueueDataSize + pstChn->u64CurFileSize > (pstEndEntry->u64GlobalOffset + pstEndEntry->u32FrameSize))
-        {
-            if (pstChn->u64CurFileSize >= pstEndEntry->u64GlobalOffset)
-            {
-                u32ExtraSize = u32QueueDataSize + (HI_U32)(pstChn->u64CurFileSize - pstEndEntry->u64GlobalOffset) - pstEndEntry->u32FrameSize;
-            }
-            else
-            {
-                u32ExtraSize = u32QueueDataSize - (HI_U32)(pstEndEntry->u64GlobalOffset - pstChn->u64CurFileSize) - pstEndEntry->u32FrameSize;
-            }
-            u32WriteSize = u32QueueDataSize - u32ExtraSize;
-            HI_INFO_PVR("[TScache+curfilesize %x+%llx = total %llx] big than [index+frmsize %llx+%x = total %llx], write %x extra %x\n",
-                         u32QueueDataSize, pstChn->u64CurFileSize, u32QueueDataSize + pstChn->u64CurFileSize,
-                         pstEndEntry->u64GlobalOffset, pstEndEntry->u32FrameSize, pstEndEntry->u64GlobalOffset + pstEndEntry->u32FrameSize,
-                         u32WriteSize, u32ExtraSize);
-        }
-        else
-        {
-            HI_INFO_PVR("cache+file %llx behand index %llx\n", u32QueueDataSize + pstChn->u64CurFileSize,pstEndEntry->u64GlobalOffset);
-        }
-    }
-    
-    (HI_VOID)PVRRecTsQueuePollBuff(pstChn, &(stRecData.pDataAddr), &stRecData.u32Len);
-    HI_INFO_PVR("Firstpollbuf len %x queuehead/tail/start/ghoffset/gtoffset %x/%x/%x/%llx/%llx\n", 
-                stRecData.u32Len, pstQueue->pu8Head, pstQueue->pu8Tail, pstQueue->pu8RecData,
-                pstQueue->u64HeadGolbalOffset, pstQueue->u64TailGolbalOffset);
-    while(stRecData.u32Len)
-    {
-        //如果将要写到指定位置，则写到指定位置为止
-        if ((u32WriteSize != 0) && (stRecData.u32Len >= u32WriteSize))
-        {
-            stRecData.u32Len = u32WriteSize;
-        }
-        
+        (HI_VOID)PVRRecTsQueuePollBuff(pstChn, &(stRecData.pDataAddr), &stRecData.u32Len);
         (HI_VOID)PVRRecCycWriteStream(stRecData, pstChn);
         (HI_VOID)PVRRecTsQueuePollHead(pstChn, stRecData.u32Len);
-        if (u32WriteSize != 0)
-        {
-            HI_INFO_PVR("Left %d=writesize %d -datalen %d\n", u32WriteSize-stRecData.u32Len, u32WriteSize, stRecData.u32Len);
-            u32WriteSize -= stRecData.u32Len;
-            if (u32WriteSize == 0)
-            {
-                HI_INFO_PVR("Flush ts over\n");
-                break;
-            }
-        }
-        (HI_VOID)PVRRecTsQueuePollBuff(pstChn, &(stRecData.pDataAddr), &stRecData.u32Len);
-        HI_INFO_PVR("Processing flush ts len %x queuehead/tail/start/ghoffset/gtoffset %x/%x/%x/%llx/%llx\n", 
-                    stRecData.u32Len, pstQueue->pu8Head, pstQueue->pu8Tail, pstQueue->pu8RecData,
-                    pstQueue->u64HeadGolbalOffset, pstQueue->u64TailGolbalOffset);
     }
 
-    HI_INFO_PVR("Flush ts finish!!! ts %llx endoffset %llx\n", pstChn->u64CurFileSize, pstEndEntry->u64GlobalOffset);
-
-FLUSH_INDEX:
-    if(HI_NULL != pstChn->IndexHandle)
-    {
-        (HI_VOID)PVR_Index_FlushToFile(pstChn->IndexHandle);
-    }
-
-    return ;
+    (HI_VOID)PVR_Index_FlushToFile(pstChn->IndexHandle);
 }
 
 #ifndef PVR_ACQUIREDATAINDX
@@ -1085,7 +1049,7 @@ STATIC HI_S32 PVRRecSaveIndexToCache(PVR_REC_CHN_S *pRecChn)
         }
         
         #ifdef DUMP_DMX_DATA
-        if (g_pvrfpIdxReceive )
+        if (g_pvrfpIdxReceive)
         {
             fwrite(&stDmxIndexInfo, 1, sizeof(stDmxIndexInfo), g_pvrfpIdxReceive);
         }
@@ -1119,9 +1083,8 @@ STATIC HI_S32 PVRRecSaveIndexToCache(PVR_REC_CHN_S *pRecChn)
 }
 #endif
 
-STATIC HI_VOID * PVRRecSaveToCache(HI_VOID *args)
+STATIC HI_VOID *PVRRecSaveToCache(HI_VOID *args)
 {
-    HI_U32 u32OverflowTimes = 0;
     HI_S32 ret = HI_SUCCESS;
     HI_CHAR szScFileName[PVR_MAX_FILENAME_LEN] = {0};
 #ifdef PVR_ACQUIREDATAINDX
@@ -1130,6 +1093,7 @@ STATIC HI_VOID * PVRRecSaveToCache(HI_VOID *args)
     HI_UNF_DMX_REC_DATA_S *pstData = HI_NULL;
     HI_UNF_DMX_REC_INDEX_S *pstIdx = HI_NULL;
 #else
+    HI_U32 u32OverflowTimes = 0;
     HI_UNF_DMX_REC_DATA_S stRecData = {0};
 #endif
     PVR_REC_CHN_S *pRecChn = (PVR_REC_CHN_S *)args;
@@ -1307,23 +1271,6 @@ STATIC HI_VOID * PVRRecSaveToCache(HI_VOID *args)
                         {
                             usleep(10*1000);
                         }
-                        else
-                        {
-                            if (PVRPlayCheckSlowPauseBack(pRecChn->stUserCfg.szFileName))
-                            {
-                            #if 0
-                                /* rec reach to play */
-                                if (PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle))
-                                {
-                                    /* force play to move forward */
-                                    (HI_VOID)PVR_Index_SeekToStart(pRecChn->IndexHandle);
-                                    PVR_Intf_DoEventCallback(pRecChn->u32ChnID, HI_UNF_PVR_EVENT_REC_REACH_PLAY, 0);
-                                    PVR_Intf_AddEventHistory(&pRecChn->stEventHistory, HI_UNF_PVR_EVENT_REC_REACH_PLAY);
-                                }
-                            #endif
-                                (HI_VOID)PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle);
-                            }
-                        }
                     }while(ret != HI_SUCCESS);
                 }
             }
@@ -1403,7 +1350,7 @@ STATIC HI_VOID * PVRRecSaveToCache(HI_VOID *args)
 
             (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
             
-            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
+//            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
             
             if ((HI_NULL != pRecChn->IndexHandle) && (pRecChn->IndexHandle->bRecReachFix))
                 break;
@@ -1411,6 +1358,28 @@ STATIC HI_VOID * PVRRecSaveToCache(HI_VOID *args)
         else if ((ret == HI_ERR_DMX_NOAVAILABLE_DATA) || (ret == HI_ERR_DMX_TIMEOUT))
         {
             usleep(10 * 1000);
+        }
+        else if (ret == HI_ERR_DMX_OVERFLOW_BUFFER)
+        {
+            HI_ERR_PVR(" =======buf flow\n");
+            ret = HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            if (ret != HI_SUCCESS)
+            {
+                HI_ERR_PVR("Dmx stop rec chn failed! ret %x\n", ret);
+                break;
+            }
+
+            ret = HI_UNF_DMX_StartRecChn(pRecChn->DemuxRecHandle);
+            if (ret != HI_SUCCESS)
+            {
+                HI_ERR_PVR("Dmx start rec chn failed! ret %x\n", ret);
+                break;
+            }
+
+            PVR_Intf_DoEventCallback(pRecChn->u32ChnID, HI_UNF_PVR_EVENT_REC_DISK_SLOW, pRecChn->IndexHandle->stCurRecFrame.u32DisplayTimeMs);
+            PVR_Intf_AddEventHistory(&pRecChn->stEventHistory,HI_UNF_PVR_EVENT_REC_DISK_SLOW);
+
+            PVR_Index_ProcOverFlow(pRecChn->IndexHandle);
         }
         else
         {
@@ -1483,7 +1452,7 @@ STATIC HI_VOID* PVRRecSaveToFile(HI_VOID *args)
 PVR_SAVE_INDEX:
         if (pRecChn->IndexHandle == HI_NULL)
             continue;
-        
+
         ret = PVR_Index_SaveToFile(pRecChn->IndexHandle, HI_FALSE);
         if (ret != HI_SUCCESS)
         {
@@ -1662,21 +1631,6 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
         {
             (HI_VOID)PVR_Index_SaveFramePosition(pRecChn->IndexHandle, &stRecIndex, 0);
 
-            if (PVRPlayCheckSlowPauseBack(pRecChn->stUserCfg.szFileName))
-            {
-                #if 0
-                /* rec reach to play */
-                if (PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle))
-                {
-                    /* force play to move forward */
-                    (HI_VOID)PVR_Index_SeekToStart(pRecChn->IndexHandle);
-                    PVR_Intf_DoEventCallback(pRecChn->u32ChnID, HI_UNF_PVR_EVENT_REC_REACH_PLAY, 0);
-                    PVR_Intf_AddEventHistory(&pRecChn->stEventHistory, HI_UNF_PVR_EVENT_REC_REACH_PLAY);
-                }
-                #endif
-                (HI_VOID)PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle);
-            }
-
             bNeedNewIndex = HI_TRUE;
         }
         else
@@ -1701,7 +1655,7 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
 
 STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
 {
-    HI_U32 i, u32OverflowTimes = 0;
+    HI_U32 i;
     HI_S32 ret;
     HI_UNF_DMX_REC_DATA_S *pstData = HI_NULL;
     HI_UNF_DMX_REC_INDEX_S *pstIdx = HI_NULL;
@@ -1749,25 +1703,10 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
                 {
                     pstIdx = &(stDataIdx.stIndex[i]);
                     (HI_VOID)PVR_Index_SaveFramePosition(pRecChn->IndexHandle, pstIdx, HI_FALSE);
-
-                    if (PVRPlayCheckSlowPauseBack(pRecChn->stUserCfg.szFileName))
-                    {
-                        #if 0
-                        /* rec reach to play */
-                        if (PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle))
-                        {
-                            /* force play to move forward */
-                            (HI_VOID)PVR_Index_SeekToStart(pRecChn->IndexHandle);
-                            PVR_Intf_DoEventCallback(pRecChn->u32ChnID, HI_UNF_PVR_EVENT_REC_REACH_PLAY, 0);
-                            PVR_Intf_AddEventHistory(&pRecChn->stEventHistory, HI_UNF_PVR_EVENT_REC_REACH_PLAY);
-                        }
-                        #endif
-                        (HI_VOID)PVR_Index_CheckSetRecReachPlay(pRecChn->IndexHandle);
-                    }
                 }
             }
 
-            for(i = 0; i < stDataIdx.u32RecDataCnt; i++)
+            for (i = 0; i < stDataIdx.u32RecDataCnt; i++)
             {
                 pstData = &stDataIdx.stRecData[i];
                 if ((0 == pstData->u32Len) || (0 != pstData->u32Len%188) || (0 != pstData->u32Len%16))
@@ -1794,11 +1733,11 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
                     continue;
                 }
 
-                if((NULL != pRecChn->writeCallBack) && 
-                   (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pRecChn->stUserCfg.enStreamType) &&
-                   (pRecChn->IndexHandle != HI_NULL))
+                if ((NULL != pRecChn->writeCallBack) && 
+                    (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pRecChn->stUserCfg.enStreamType) &&
+                    (pRecChn->IndexHandle != HI_NULL))
                 {
-                    if(PVR_INDEX_REWIND_BY_TIME == pRecChn->IndexHandle->stCycMgr.enRewindType)
+                    if (PVR_INDEX_REWIND_BY_TIME == pRecChn->IndexHandle->stCycMgr.enRewindType)
                     {
                         if (HI_SUCCESS != PVRRecProcExtCallBack(pRecChn, 
                                                                 pstData, 
@@ -1834,9 +1773,14 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
 
             if (ret != HI_SUCCESS)
                 break;
-            
+
+            if (pRecChn->IndexHandle != HI_NULL)
+            {
+                PVR_Index_PushStartWhenTsLead(pRecChn->IndexHandle, pRecChn->u64CurFileSize);
+            }
+
             PVRRecCheckRecPosition(pRecChn);
-            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
+//            u32OverflowTimes = PVRRecCheckRecBufStatus(u32OverflowTimes, pRecChn);
 
             (HI_VOID)HI_UNF_DMX_ReleaseRecDataAndIndex(pRecChn->DemuxRecHandle, &stDataIdx);
         }
@@ -1844,6 +1788,27 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
         {
             usleep(10);
             continue;
+        }
+        else if (ret == HI_ERR_DMX_OVERFLOW_BUFFER)
+        {
+            ret = HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
+            if (ret != HI_SUCCESS)
+            {
+                HI_ERR_PVR("Dmx stop rec chn failed! ret %x\n", ret);
+                break;
+            }
+
+            ret = HI_UNF_DMX_StartRecChn(pRecChn->DemuxRecHandle);
+            if (ret != HI_SUCCESS)
+            {
+                HI_ERR_PVR("Dmx start rec chn failed! ret %x\n", ret);
+                break;
+            }
+
+            PVR_Intf_DoEventCallback(pRecChn->u32ChnID, HI_UNF_PVR_EVENT_REC_DISK_SLOW, pRecChn->IndexHandle->stCurRecFrame.u32DisplayTimeMs);
+            PVR_Intf_AddEventHistory(&pRecChn->stEventHistory,HI_UNF_PVR_EVENT_REC_DISK_SLOW);
+
+            PVR_Index_ProcOverFlow(pRecChn->IndexHandle);
         }
         else
         {
@@ -1854,7 +1819,7 @@ STATIC HI_VOID *PVRRecSaveIndexAndStreamRoutine(HI_VOID *args)
 
     if (HI_UNF_PVR_REC_STATE_STOP != pRecChn->enState)
     {
-        HI_INFO_PVR("-----PVRRecSaveToFile exiting with error:%#x...\n", ret);
+        HI_ERR_PVR("-----PVRRecSaveToFile exiting with error:%#x...\n", ret);
         PVRRecCheckError(pRecChn, ret);
     }
 
@@ -1951,7 +1916,7 @@ PVR_REC_CHN_S* PVRRecGetChnAttrByName(const HI_CHAR *pFileName)
         HI_ERR_PVR("File name point is NULL.\n");
         return NULL;
     }
-    
+
     for (i = 0; i < PVR_REC_MAX_CHN_NUM; i++)
     {
         if  (!strncmp(g_stPvrRecChns[i].stUserCfg.szFileName, pFileName, strlen(pFileName)) )
@@ -1969,88 +1934,6 @@ PVR_REC_CHN_S* PVRRecGetChnAttrByName(const HI_CHAR *pFileName)
     }
 
     return NULL;
-}
-
-HI_S32 PVRRecStartDemux(PVR_REC_CHN_S *pRecChn, HI_UNF_PVR_STREAM_TYPE_E enRecType, const HI_UNF_PVR_REC_ATTR_S *pUserCfg, HI_BOOL bIsClearStream)
-{
-    HI_S32 ret = 0;
-    HI_UNF_DMX_REC_ATTR_S stRecAttr;
-
-    stRecAttr.u32DmxId        = pUserCfg->u32DemuxID;
-    stRecAttr.u32RecBufSize   = pUserCfg->u32DavBufSize;
-    stRecAttr.enVCodecType    = pUserCfg->enIndexVidType;
-    stRecAttr.u32IndexSrcPid  = pUserCfg->u32IndexPid;
-
-    if (HI_UNF_PVR_STREAM_TYPE_ALL_TS == enRecType)
-    {
-        stRecAttr.enRecType   = HI_UNF_DMX_REC_TYPE_ALL_PID;
-    }
-    else
-    {
-        stRecAttr.enRecType   = HI_UNF_DMX_REC_TYPE_SELECT_PID;
-    }
-
-    if (HI_TRUE == bIsClearStream)
-    {
-        stRecAttr.bDescramed  = HI_TRUE;
-    }
-    else
-    {
-        stRecAttr.bDescramed  = HI_FALSE;
-    }
-
-    switch (pUserCfg->enIndexType)
-    {
-        case HI_UNF_PVR_REC_INDEX_TYPE_VIDEO :
-            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_VIDEO;
-            break;
-
-        case HI_UNF_PVR_REC_INDEX_TYPE_AUDIO :
-            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_AUDIO;
-            break;
-
-        case HI_UNF_PVR_REC_INDEX_TYPE_NONE :
-        default :
-            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_NONE;
-    }
-
-    ret = HI_UNF_DMX_CreateRecChn(&stRecAttr, &(pRecChn->DemuxRecHandle));
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_PVR("Create demux rec channel fail, ret=0x%x\n", ret);
-        return ret;
-    }
-
-    ret = HI_UNF_DMX_StartRecChn(pRecChn->DemuxRecHandle);
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_PVR("Start demux rec channel failed, ret=0x%x\n", ret);
-        (void)HI_UNF_DMX_DestroyRecChn(pRecChn->DemuxRecHandle);        
-        return ret;
-    }
-
-    return ret;
-}
-
-HI_S32 PVRRecStopDemux(PVR_REC_CHN_S *pRecChn)
-{
-    HI_S32 ret;
-
-    ret = HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_PVR("Stop demux rec channel failed, ret=0x%x\n", ret);
-        return ret;
-    }
-    
-    ret = HI_UNF_DMX_DestroyRecChn(pRecChn->DemuxRecHandle);
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_PVR("Destroy demux rec channel failed, ret=0x%x\n", ret);
-        return ret;
-    }
-
-    return ret;
 }
 
 
@@ -2235,13 +2118,13 @@ HI_S32 HI_PVR_RecInit(HI_VOID)
 #ifdef PVR_PROC_SUPPORT
         memset(pProcDirName, 0, sizeof(pProcDirName));
         if (!PVRPlayCheckInitStat())
-        {    
+        {
             ret = HI_MODULE_Register(HI_ID_PVR, PVR_USR_PROC_DIR);
             if (HI_SUCCESS != ret)
             {
                 HI_ERR_PVR("HI_MODULE_Register(\"%s\") return %d\n", PVR_USR_PROC_DIR, ret);
             }
-    
+
             /* Add proc dir */
             snprintf(pProcDirName, sizeof(pProcDirName), "%s_%d", PVR_USR_PROC_DIR, u32CurPid);
             ret = HI_PROC_AddDir(pProcDirName);
@@ -2343,11 +2226,12 @@ HI_S32 HI_PVR_RecDeInit(HI_VOID)
 *****************************************************************************/
 HI_S32 HI_PVR_RecCreateChn(HI_U32 *pu32ChnID, const HI_UNF_PVR_REC_ATTR_S *pstRecAttr)
 {
-    HI_S32 ret;
-    HI_U64 fileSizeReal;
-    HI_UNF_PVR_REC_ATTR_S stRecAttrLocal;
-    PVR_REC_CHN_S *pChnAttr = NULL;
     HI_U32 u32RecIdInteral, i;
+    HI_S32 ret;
+    HI_U64 u64FileSizeReal;
+    HI_UNF_PVR_REC_ATTR_S stRecAttrLocal;
+    HI_UNF_DMX_REC_ATTR_S stRecAttr = {0};
+    PVR_REC_CHN_S *pChnAttr = HI_NULL;
 
     PVR_CHECK_POINTER(pu32ChnID);
     PVR_CHECK_POINTER(pstRecAttr);
@@ -2361,8 +2245,8 @@ HI_S32 HI_PVR_RecCreateChn(HI_U32 *pu32ChnID, const HI_UNF_PVR_REC_ATTR_S *pstRe
         return ret;
     }
 
-    fileSizeReal = (stRecAttrLocal.u64MaxFileSize / PVR_FIFO_WRITE_BLOCK_SIZE) * PVR_FIFO_WRITE_BLOCK_SIZE;
-    stRecAttrLocal.u64MaxFileSize = fileSizeReal;
+    u64FileSizeReal = (stRecAttrLocal.u64MaxFileSize / PVR_FIFO_WRITE_BLOCK_SIZE) * PVR_FIFO_WRITE_BLOCK_SIZE;
+    stRecAttrLocal.u64MaxFileSize = u64FileSizeReal;
 
     pChnAttr = PVRRecFindFreeChn();
     if (NULL == pChnAttr)
@@ -2374,11 +2258,11 @@ HI_S32 HI_PVR_RecCreateChn(HI_U32 *pu32ChnID, const HI_UNF_PVR_REC_ATTR_S *pstRe
     PVR_LOCK(&(pChnAttr->stMutex));
     u32RecIdInteral = pChnAttr->u32ChnID - PVR_REC_START_NUM;
 
-    /* create an data file and open it                                         */
+    /* create an data file and open it */
     pChnAttr->dataFile = PVR_OPEN64(stRecAttrLocal.szFileName, PVR_FOPEN_MODE_DATA_WRITE);
     if (PVR_FILE_INVALID_FILE == pChnAttr->dataFile)
     {
-        HI_ERR_PVR("create stream file error!\n");
+        HI_ERR_PVR("Create stream file error!\n");
         PVR_REMOVE_FILE64(stRecAttrLocal.szFileName);
         pChnAttr->enState = HI_UNF_PVR_REC_STATE_INVALID;
         ioctl(g_s32PvrFd, CMD_PVR_DESTROY_REC_CHN, (HI_S32)&(u32RecIdInteral));
@@ -2386,14 +2270,14 @@ HI_S32 HI_PVR_RecCreateChn(HI_U32 *pu32ChnID, const HI_UNF_PVR_REC_ATTR_S *pstRe
         return HI_ERR_PVR_FILE_CANT_OPEN;
     }
 
-    PVR_SET_MAXFILE_SIZE(pChnAttr->dataFile, fileSizeReal);
+    PVR_SET_MAXFILE_SIZE(pChnAttr->dataFile, u64FileSizeReal);
 
     /* save chn user-config attr */
     memcpy(&pChnAttr->stUserCfg, &stRecAttrLocal, sizeof(HI_UNF_PVR_REC_ATTR_S));
-    pChnAttr->stUserCfg.u64MaxFileSize = fileSizeReal;
+    pChnAttr->stUserCfg.u64MaxFileSize = u64FileSizeReal;
     if (HI_UNF_PVR_STREAM_TYPE_ALL_TS != pstRecAttr->enStreamType)
     {
-        /* get a new index handle                                                  */
+        /* get a new index handle  */
         pChnAttr->IndexHandle = PVR_Index_CreatRec(pChnAttr->u32ChnID, &stRecAttrLocal);
         if (HI_NULL_PTR == pChnAttr->IndexHandle)
         {
@@ -2423,15 +2307,66 @@ HI_S32 HI_PVR_RecCreateChn(HI_U32 *pu32ChnID, const HI_UNF_PVR_REC_ATTR_S *pstRe
         pChnAttr->IndexHandle = HI_NULL;
     }
 
-    for(i = 0; i < PVR_REC_EVENT_HISTORY_NUM; i++)
+    stRecAttr.u32DmxId       = pChnAttr->stUserCfg.u32DemuxID;
+    stRecAttr.u32RecBufSize  = pChnAttr->stUserCfg.u32DavBufSize;
+    stRecAttr.enVCodecType   = pChnAttr->stUserCfg.enIndexVidType;
+    stRecAttr.u32IndexSrcPid = pChnAttr->stUserCfg.u32IndexPid;
+    
+    if (HI_UNF_PVR_STREAM_TYPE_ALL_TS == pChnAttr->stUserCfg.enStreamType)
+    {
+        stRecAttr.enRecType = HI_UNF_DMX_REC_TYPE_ALL_PID;
+    }
+    else
+    {
+        stRecAttr.enRecType = HI_UNF_DMX_REC_TYPE_SELECT_PID;
+    }
+
+    if (HI_TRUE == pChnAttr->stUserCfg.bIsClearStream)
+    {
+        stRecAttr.bDescramed = HI_TRUE;
+    }
+    else
+    {
+        stRecAttr.bDescramed = HI_FALSE;
+    }
+
+    switch (pChnAttr->stUserCfg.enIndexType)
+    {
+        case HI_UNF_PVR_REC_INDEX_TYPE_VIDEO :
+            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_VIDEO;
+            break;
+
+        case HI_UNF_PVR_REC_INDEX_TYPE_AUDIO :
+            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_AUDIO;
+            break;
+
+        case HI_UNF_PVR_REC_INDEX_TYPE_NONE :
+        default :
+            stRecAttr.enIndexType = HI_UNF_DMX_REC_INDEX_TYPE_NONE;
+    }
+
+    ret = HI_UNF_DMX_CreateRecChn(&stRecAttr, &pChnAttr->DemuxRecHandle);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_PVR("Dmx create rec chn failed! ret %x\n");
+        (HI_VOID)PVR_Index_Destroy(pChnAttr->IndexHandle, PVR_INDEX_REC);
+        PVR_CLOSE64(pChnAttr->dataFile);
+        PVR_REMOVE_FILE64(stRecAttrLocal.szFileName);
+        pChnAttr->enState = HI_UNF_PVR_REC_STATE_INVALID;
+        ioctl(g_s32PvrFd, CMD_PVR_DESTROY_REC_CHN, (HI_S32)&(u32RecIdInteral));
+        PVR_UNLOCK(&(pChnAttr->stMutex));
+        return ret;
+    }
+
+    for (i = 0; i < PVR_REC_EVENT_HISTORY_NUM; i++)
     {
         pChnAttr->stEventHistory.enEventHistory[i] = HI_UNF_PVR_EVENT_BUTT;
     }
     pChnAttr->stEventHistory.u32Write = 0;
 
-    HI_INFO_PVR("file size adjust to :%lld.\n", fileSizeReal);
+    HI_INFO_PVR("file size adjust to :%lld.\n", u64FileSizeReal);
 
-    /* here we get record channel successfully                              */
+    /* here we get record channel successfully */
     *pu32ChnID = pChnAttr->u32ChnID;
     HI_INFO_PVR("record creat ok\n");
     PVR_UNLOCK(&(pChnAttr->stMutex));
@@ -2465,7 +2400,7 @@ HI_S32 HI_PVR_RecDestroyChn(HI_U32 u32ChnID)
     PVR_LOCK(&(pRecChn->stMutex));
     CHECK_REC_CHN_INIT_UNLOCK(pRecChn);
 
-    /* to affirm record channel stopped                                        */
+    /* to affirm record channel stopped */
     if ((HI_UNF_PVR_REC_STATE_RUNNING == pRecChn->enState)
         || (HI_UNF_PVR_REC_STATE_PAUSE == pRecChn->enState)
         || (HI_UNF_PVR_REC_STATE_STOPPING == pRecChn->enState))
@@ -2475,9 +2410,11 @@ HI_S32 HI_PVR_RecDestroyChn(HI_U32 u32ChnID)
         return HI_ERR_PVR_BUSY;
     }
 
-    /* we don't care about whether it is timeshifting!                           */
+    /* we don't care about whether it is timeshifting! */
 
-    /* close index handle                                                      */
+    (HI_VOID)HI_UNF_DMX_DestroyRecChn(pRecChn->DemuxRecHandle);
+
+    /* close index handle */
     if (HI_NULL != pRecChn->IndexHandle)
     {
         (HI_VOID)PVR_Index_Destroy(pRecChn->IndexHandle, PVR_INDEX_REC);
@@ -2486,10 +2423,10 @@ HI_S32 HI_PVR_RecDestroyChn(HI_U32 u32ChnID)
     (HI_VOID)PVRRecReleaseCipher(pRecChn);
     (HI_VOID)PVR_FSYNC64(pRecChn->dataFile);
 
-    /* close data file                                                         */
+    /* close data file */
     (HI_VOID)PVR_CLOSE64(pRecChn->dataFile);
 
-    /* set channel state to invalid                                         */
+    /* set channel state to invalid */
     pRecChn->enState = HI_UNF_PVR_REC_STATE_INVALID;
     u32RecIdInteral = u32ChnID - PVR_REC_START_NUM;
 
@@ -2610,11 +2547,11 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
 
     //PVRRecCheckExistFile(pUserCfg->szFileName);
 
-    /* create record thread to receive index from the channel                 */
-    ret = PVRRecStartDemux(pRecChn, pUserCfg->enStreamType, pUserCfg, pUserCfg->bIsClearStream);
+    /* create record thread to receive index from the channel */
+    ret = HI_UNF_DMX_StartRecChn(pRecChn->DemuxRecHandle);
     if (ret != HI_SUCCESS)
     {
-        HI_ERR_PVR("start demux record channel failure!\n");
+        HI_ERR_PVR("start demux record channel failure! ret %x\n", ret);
         pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
         PVR_UNLOCK(&(pRecChn->stMutex));
         return ret;
@@ -2652,7 +2589,7 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
     if (HI_SUCCESS != PVRRecTsQueueInit(pRecChn))
     {
         pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
-        (HI_VOID)PVRRecStopDemux(pRecChn);
+        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
         PVR_UNLOCK(&(pRecChn->stMutex));
         return HI_FAILURE;
     }
@@ -2663,7 +2600,7 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
         pRecChn->enState = HI_UNF_PVR_REC_STATE_STOP;
         HI_ERR_PVR("Create save cache thread failure!\n");
         PVRRecTsQueueDeInit(pRecChn);
-        (HI_VOID)PVRRecStopDemux(pRecChn);
+        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
         PVR_UNLOCK(&(pRecChn->stMutex));
         return HI_FAILURE;
     }
@@ -2675,9 +2612,8 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
         HI_ERR_PVR("create record STREAM thread failure!\n");
         (HI_VOID)pthread_join(pRecChn->RecordCacheThread, NULL);
         PVRRecTsQueueDeInit(pRecChn);
-        (HI_VOID)PVRRecStopDemux(pRecChn);
+        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
         pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
-//        PVR_UNLOCK(&(pRecChn->stMutex));
         return HI_FAILURE;
     }
 #else
@@ -2686,7 +2622,7 @@ HI_S32 HI_PVR_RecStartChn(HI_U32 u32ChnID)
     if (ret != HI_SUCCESS)
     {
         HI_ERR_PVR("create record STREAM thread failure!\n");
-        (HI_VOID)PVRRecStopDemux(pRecChn);
+        (HI_VOID)HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
         pRecChn->enState = HI_UNF_PVR_REC_STATE_INIT;
         PVR_UNLOCK(&(pRecChn->stMutex));
         return HI_FAILURE;
@@ -2780,7 +2716,7 @@ HI_S32 HI_PVR_RecStopChn(HI_U32 u32ChnID)
     PVRRecTsQueueDeInit(pRecChn);
 #endif
 
-    ret = PVRRecStopDemux(pRecChn);
+    ret = HI_UNF_DMX_StopRecChn(pRecChn->DemuxRecHandle);
     if (HI_SUCCESS != ret)
     {
         PVR_UNLOCK(&(pRecChn->stMutex));
@@ -2789,7 +2725,7 @@ HI_S32 HI_PVR_RecStopChn(HI_U32 u32ChnID)
     }
     else
     {
-        HI_INFO_PVR("stop demux%d ok\n", pRecChn->stUserCfg.u32DemuxID);
+        HI_INFO_PVR("stop demux rec ok\n");
     }
 
     PVR_UNLOCK(&(pRecChn->stMutex));
@@ -3188,6 +3124,73 @@ HI_S32 HI_PVR_GetCAData(const HI_CHAR *pIdxFileName, HI_U8 *pInfo, HI_U32 u32Buf
      PVR_CLOSE(s32Fd);
      return s32Ret;
 }
+
+HI_S32 HI_PVR_RecAddPid(HI_U32 u32ChnID, HI_U32 u32Pid)
+{
+    HI_S32 s32Ret;
+    HI_HANDLE hPidChn;
+    PVR_REC_CHN_S *pstRecChn = HI_NULL;
+
+    CHECK_REC_CHNID(u32ChnID);
+
+    pstRecChn = PVR_GET_RECPTR_BY_CHNID(u32ChnID);
+
+    s32Ret = HI_UNF_DMX_AddRecPid(pstRecChn->DemuxRecHandle, u32Pid, &hPidChn);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HI_ERR_PVR("Dmx add rec pid %d failed! ret %x\n", u32Pid, s32Ret);
+    }
+
+    return s32Ret;
+}
+
+HI_S32 HI_PVR_RecDelPid(HI_U32 u32ChnID, HI_U32 u32Pid)
+{
+    HI_S32 s32Ret;
+    HI_HANDLE hPidChn;
+    PVR_REC_CHN_S *pstRecChn = HI_NULL;
+
+    CHECK_REC_CHNID(u32ChnID);
+
+    pstRecChn = PVR_GET_RECPTR_BY_CHNID(u32ChnID);
+
+    s32Ret = HI_UNF_DMX_GetChannelHandle(pstRecChn->stUserCfg.u32DemuxID, u32Pid, &hPidChn);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HI_ERR_PVR("Dmx get pid handle failed! ret %x. demuxid %d, pid %d\n", 
+                    s32Ret, pstRecChn->stUserCfg.u32DemuxID, u32Pid);
+        return s32Ret;
+    }
+
+    s32Ret = HI_UNF_DMX_DelRecPid(pstRecChn->DemuxRecHandle, hPidChn);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HI_ERR_PVR("Dmx del rec pid %d failed! ret %x\n", u32Pid, s32Ret);
+        return s32Ret;
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_S32 HI_PVR_RecDelAllPid(HI_U32 u32ChnID)
+{
+    HI_S32 s32Ret;
+    PVR_REC_CHN_S *pstRecChn = HI_NULL;
+
+    CHECK_REC_CHNID(u32ChnID);
+
+    pstRecChn = PVR_GET_RECPTR_BY_CHNID(u32ChnID);
+
+    s32Ret = HI_UNF_DMX_DelAllRecPid(pstRecChn->DemuxRecHandle);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HI_ERR_PVR("Dmx del all rec pid failed! ret %x\n", s32Ret);
+    }
+
+    return s32Ret;
+}
+
+
 
 #ifdef __cplusplus
 #if __cplusplus

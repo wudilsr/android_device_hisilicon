@@ -1626,9 +1626,16 @@ HI_VOID VDP_VDAC_SetClk(HI_DRV_DISPLAY_E enDisp,DISP_VENC_E eDate, HI_U32 uVdac)
 {
 
     U_PERI_CRG54 unTmpValue;
+	
+#if defined (CHIP_HIFONEB02)
+	U_PERI_CRG71 unTmpCRG71Value;
+	unTmpCRG71Value.u32 = g_pstRegCrg->PERI_CRG71.u32;
+	unTmpCRG71Value.bits.vdac_chop_cken = HI_TRUE;
+	g_pstRegCrg->PERI_CRG71.u32 = unTmpCRG71Value.u32;
+#endif
 
     unTmpValue.u32 = g_pstRegCrg->PERI_CRG54.u32;
-
+	
     /*select VDaCx clk*/
     switch(uVdac)
     {
@@ -1663,6 +1670,7 @@ HI_VOID VDP_VDAC_SetClk(HI_DRV_DISPLAY_E enDisp,DISP_VENC_E eDate, HI_U32 uVdac)
     }
 
     g_pstRegCrg->PERI_CRG54.u32 = unTmpValue.u32;
+	
 }
 
 

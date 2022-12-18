@@ -40,8 +40,11 @@ extern "C"
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)\
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
 #define DSP0_CLOCK_HZ     (300*1000*1000)    /*50M fpga*/
 #else
 #error YOU MUST DEFINE  CHIP_TYPE!

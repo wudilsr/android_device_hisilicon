@@ -1,6 +1,9 @@
 ifneq ($(CFG_HI_LOADER_APPLOADER),y)
 VDEC_DIR := vdec
 
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+LOCAL_CFLAGS += -DHI_TVP_SUPPORT
+endif
 ifeq (y,$(CFG_HI_VDEC_REG_CODEC_SUPPORT))
 LOCAL_CFLAGS += -DHI_VDEC_REG_CODEC_SUPPORT=1
 else
@@ -37,6 +40,117 @@ LOCAL_CFLAGS += -DHI_VDEC_DFS_SUPPORT=1
 else
 LOCAL_CFLAGS += -DHI_VDEC_DFS_SUPPORT=0
 endif
+
+#===============================================================================
+# 512M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_512))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_512=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_512))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_512=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_512))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_512=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_512=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_512))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_512=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_512=0
+endif
+
+#===============================================================================
+# 768M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_768))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_768))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_768))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_768=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_768))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_768=0
+endif
+#===============================================================================
+# 1024M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_1024))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_1024=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_1024))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_1024=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_1024))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_1024=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_1024=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_1024))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_1024=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_1024=0
+endif
+
+#===============================================================================
+# 2048M ddr memory config flags
+#===============================================================================
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_1080P_IN_2048))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_2048=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_1080P_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_MVC_IN_2048))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_2048=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_MVC_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_2160P_IN_2048))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_2048=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_2160P_IN_2048=0
+endif
+
+ifeq (y, $(CFG_HI_VIDEO_PRE_CAP_4K_IN_2048))
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_2048=1
+else
+LOCAL_CFLAGS += -DHI_VIDEO_PRE_CAP_4K_IN_2048=0
+endif
+
+#===============================================================================
+# memory config end
+#===============================================================================
 
 LOCAL_SRC_FILES += $(VDEC_DIR)/hi_codec.c
 LOCAL_SRC_FILES += $(VDEC_DIR)/mpi_vdec_adapter.c

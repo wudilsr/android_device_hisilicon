@@ -3291,6 +3291,21 @@ typedef union
         unsigned int    u32;
 
 } U_V0_NCADDR;
+/* Define the union U_V0_TILE_STRIDE */
+typedef union
+{
+    /* Define the struct bits */
+    struct
+    {
+        unsigned int    tile_stride           : 16  ; /* [15..0]  */
+        unsigned int    tile_cstride          : 16  ; /* [31..16]  */
+    } bits;
+
+    /* Define an unsigned member */
+    unsigned int    u32;
+
+} U_V0_TILE_STRIDE;
+
 /* Define the union U_V0_MULTI_MODE */
 typedef union
 {
@@ -9545,6 +9560,23 @@ typedef union
     unsigned int    u32;
 
 } U_WBC_GP0_DITHER_COEF1;
+
+/* Define the union U_WBC_GP0_HPZME */
+typedef union
+{
+    /* Define the struct bits */
+    struct
+    {
+        unsigned int    reserved_0            : 29  ; /* [28..0]  */
+        unsigned int    hpzme_mode            : 1   ; /* [29]  */
+        unsigned int    hpzme_mid_en          : 1   ; /* [30]  */
+        unsigned int    hpzme_en              : 1   ; /* [31]  */
+    } bits;
+
+    /* Define an unsigned member */
+    unsigned int    u32;
+
+} U_WBC_GP0_HPZME;
 
 /* Define the union U_WBC_G0_CTRL */
 typedef union
@@ -16540,7 +16572,7 @@ typedef struct
     U_V0_PARAUP            V0_PARAUP                         ; /* 0x840 */
     U_V0_CPOS              V0_CPOS                           ; /* 0x844 */
     U_V0_DRAWMODE          V0_DRAWMODE                       ; /* 0x848 */
-    unsigned int           reserved_17                     ; /* 0x84c */
+    unsigned int           reserved_16                     ; /* 0x84c */
     U_V0_HLCOEFAD          V0_HLCOEFAD                       ; /* 0x850 */
     U_V0_HCCOEFAD          V0_HCCOEFAD                       ; /* 0x854 */
     U_V0_VLCOEFAD          V0_VLCOEFAD                       ; /* 0x858 */
@@ -16552,7 +16584,7 @@ typedef struct
     U_V0_BK                V0_BK                             ; /* 0x870 */
     U_V0_ALPHA             V0_ALPHA                          ; /* 0x874 */
     U_V0_MUTE_BK           V0_MUTE_BK                        ; /* 0x878 */
-    unsigned int           reserved_18                     ; /* 0x87c */
+    unsigned int           reserved_17                     ; /* 0x87c */
     U_V0_CSC_IDC           V0_CSC_IDC                        ; /* 0x880 */
     U_V0_CSC_ODC           V0_CSC_ODC                        ; /* 0x884 */
     U_V0_CSC_IODC          V0_CSC_IODC                       ; /* 0x888 */
@@ -16561,7 +16593,7 @@ typedef struct
     U_V0_CSC_P2            V0_CSC_P2                         ; /* 0x894 */
     U_V0_CSC_P3            V0_CSC_P3                         ; /* 0x898 */
     U_V0_CSC_P4            V0_CSC_P4                         ; /* 0x89c */
-    unsigned int           reserved_19[8]                     ; /* 0x8a0~0x8bc */
+    unsigned int           reserved_18[8]                     ; /* 0x8a0~0x8bc */
     U_V0_HSP               V0_HSP                            ; /* 0x8c0 */
     U_V0_HLOFFSET          V0_HLOFFSET                       ; /* 0x8c4 */
     U_V0_HCOFFSET          V0_HCOFFSET                       ; /* 0x8c8 */
@@ -16572,150 +16604,151 @@ typedef struct
     U_V0_VSR               V0_VSR                            ; /* 0x8dc */
     U_V0_VOFFSET           V0_VOFFSET                        ; /* 0x8e0 */
     U_V0_VBOFFSET          V0_VBOFFSET                       ; /* 0x8e4 */
-    unsigned int           reserved_20[2]                     ; /* 0x8e8~0x8ec */
+    unsigned int           reserved_19[2]                     ; /* 0x8e8~0x8ec */
     U_V0_ZMECOEF           V0_ZMECOEF                        ; /* 0x8f0 */
     U_V0_ZMECOEFAD         V0_ZMECOEFAD                      ; /* 0x8f4 */
-    unsigned int           reserved_21[34]                     ; /* 0x8f8~0x97c */
+    unsigned int           reserved_20[34]                     ; /* 0x8f8~0x97c */
     U_V0_IFIRCOEF01        V0_IFIRCOEF01                     ; /* 0x980 */
     U_V0_IFIRCOEF23        V0_IFIRCOEF23                     ; /* 0x984 */
     U_V0_IFIRCOEF45        V0_IFIRCOEF45                     ; /* 0x988 */
     U_V0_IFIRCOEF67        V0_IFIRCOEF67                     ; /* 0x98c */
-    unsigned int           reserved_22[28]                     ; /* 0x990~0x9fc */
+    unsigned int           reserved_21[28]                     ; /* 0x990~0x9fc */
     U_V0_P0RESO            V0_P0RESO                         ; /* 0xa00 */
     U_V0_P0LADDR           V0_P0LADDR                        ; /* 0xa04 */
     U_V0_P0CADDR           V0_P0CADDR                        ; /* 0xa08 */
     U_V0_P0STRIDE          V0_P0STRIDE                       ; /* 0xa0c */
     U_V0_P0VFPOS           V0_P0VFPOS                        ; /* 0xa10 */
     U_V0_P0VLPOS           V0_P0VLPOS                        ; /* 0xa14 */
-    unsigned int           reserved_23[2]                     ; /* 0xa18~0xa1c */
+    unsigned int           reserved_22[2]                     ; /* 0xa18~0xa1c */
     U_V0_P1RESO            V0_P1RESO                         ; /* 0xa20 */
     U_V0_P1LADDR           V0_P1LADDR                        ; /* 0xa24 */
     U_V0_P1CADDR           V0_P1CADDR                        ; /* 0xa28 */
     U_V0_P1STRIDE          V0_P1STRIDE                       ; /* 0xa2c */
     U_V0_P1VFPOS           V0_P1VFPOS                        ; /* 0xa30 */
     U_V0_P1VLPOS           V0_P1VLPOS                        ; /* 0xa34 */
-    unsigned int           reserved_24[2]                     ; /* 0xa38~0xa3c */
+    unsigned int           reserved_23[2]                     ; /* 0xa38~0xa3c */
     U_V0_P2RESO            V0_P2RESO                         ; /* 0xa40 */
     U_V0_P2LADDR           V0_P2LADDR                        ; /* 0xa44 */
     U_V0_P2CADDR           V0_P2CADDR                        ; /* 0xa48 */
     U_V0_P2STRIDE          V0_P2STRIDE                       ; /* 0xa4c */
     U_V0_P2VFPOS           V0_P2VFPOS                        ; /* 0xa50 */
     U_V0_P2VLPOS           V0_P2VLPOS                        ; /* 0xa54 */
-    unsigned int           reserved_25[2]                     ; /* 0xa58~0xa5c */
+    unsigned int           reserved_24[2]                     ; /* 0xa58~0xa5c */
     U_V0_P3RESO            V0_P3RESO                         ; /* 0xa60 */
     U_V0_P3LADDR           V0_P3LADDR                        ; /* 0xa64 */
     U_V0_P3CADDR           V0_P3CADDR                        ; /* 0xa68 */
     U_V0_P3STRIDE          V0_P3STRIDE                       ; /* 0xa6c */
     U_V0_P3VFPOS           V0_P3VFPOS                        ; /* 0xa70 */
     U_V0_P3VLPOS           V0_P3VLPOS                        ; /* 0xa74 */
-    unsigned int           reserved_26[2]                     ; /* 0xa78~0xa7c */
+    unsigned int           reserved_25[2]                     ; /* 0xa78~0xa7c */
     U_V0_P4RESO            V0_P4RESO                         ; /* 0xa80 */
     U_V0_P4LADDR           V0_P4LADDR                        ; /* 0xa84 */
     U_V0_P4CADDR           V0_P4CADDR                        ; /* 0xa88 */
     U_V0_P4STRIDE          V0_P4STRIDE                       ; /* 0xa8c */
     U_V0_P4VFPOS           V0_P4VFPOS                        ; /* 0xa90 */
     U_V0_P4VLPOS           V0_P4VLPOS                        ; /* 0xa94 */
-    unsigned int           reserved_27[2]                     ; /* 0xa98~0xa9c */
+    unsigned int           reserved_26[2]                     ; /* 0xa98~0xa9c */
     U_V0_P5RESO            V0_P5RESO                         ; /* 0xaa0 */
     U_V0_P5LADDR           V0_P5LADDR                        ; /* 0xaa4 */
     U_V0_P5CADDR           V0_P5CADDR                        ; /* 0xaa8 */
     U_V0_P5STRIDE          V0_P5STRIDE                       ; /* 0xaac */
     U_V0_P5VFPOS           V0_P5VFPOS                        ; /* 0xab0 */
     U_V0_P5VLPOS           V0_P5VLPOS                        ; /* 0xab4 */
-    unsigned int           reserved_28[2]                     ; /* 0xab8~0xabc */
+    unsigned int           reserved_27[2]                     ; /* 0xab8~0xabc */
     U_V0_P6RESO            V0_P6RESO                         ; /* 0xac0 */
     U_V0_P6LADDR           V0_P6LADDR                        ; /* 0xac4 */
     U_V0_P6CADDR           V0_P6CADDR                        ; /* 0xac8 */
     U_V0_P6STRIDE          V0_P6STRIDE                       ; /* 0xacc */
     U_V0_P6VFPOS           V0_P6VFPOS                        ; /* 0xad0 */
     U_V0_P6VLPOS           V0_P6VLPOS                        ; /* 0xad4 */
-    unsigned int           reserved_29[2]                     ; /* 0xad8~0xadc */
+    unsigned int           reserved_28[2]                     ; /* 0xad8~0xadc */
     U_V0_P7RESO            V0_P7RESO                         ; /* 0xae0 */
     U_V0_P7LADDR           V0_P7LADDR                        ; /* 0xae4 */
     U_V0_P7CADDR           V0_P7CADDR                        ; /* 0xae8 */
     U_V0_P7STRIDE          V0_P7STRIDE                       ; /* 0xaec */
     U_V0_P7VFPOS           V0_P7VFPOS                        ; /* 0xaf0 */
     U_V0_P7VLPOS           V0_P7VLPOS                        ; /* 0xaf4 */
-    unsigned int           reserved_30[2]                     ; /* 0xaf8~0xafc */
+    unsigned int           reserved_29[2]                     ; /* 0xaf8~0xafc */
     U_V0_P8RESO            V0_P8RESO                         ; /* 0xb00 */
     U_V0_P8LADDR           V0_P8LADDR                        ; /* 0xb04 */
     U_V0_P8CADDR           V0_P8CADDR                        ; /* 0xb08 */
     U_V0_P8STRIDE          V0_P8STRIDE                       ; /* 0xb0c */
     U_V0_P8VFPOS           V0_P8VFPOS                        ; /* 0xb10 */
     U_V0_P8VLPOS           V0_P8VLPOS                        ; /* 0xb14 */
-    unsigned int           reserved_31[2]                     ; /* 0xb18~0xb1c */
+    unsigned int           reserved_30[2]                     ; /* 0xb18~0xb1c */
     U_V0_P9RESO            V0_P9RESO                         ; /* 0xb20 */
     U_V0_P9LADDR           V0_P9LADDR                        ; /* 0xb24 */
     U_V0_P9CADDR           V0_P9CADDR                        ; /* 0xb28 */
     U_V0_P9STRIDE          V0_P9STRIDE                       ; /* 0xb2c */
     U_V0_P9VFPOS           V0_P9VFPOS                        ; /* 0xb30 */
     U_V0_P9VLPOS           V0_P9VLPOS                        ; /* 0xb34 */
-    unsigned int           reserved_32[2]                     ; /* 0xb38~0xb3c */
+    unsigned int           reserved_31[2]                     ; /* 0xb38~0xb3c */
     U_V0_P10RESO           V0_P10RESO                        ; /* 0xb40 */
     U_V0_P10LADDR          V0_P10LADDR                       ; /* 0xb44 */
     U_V0_P10CADDR          V0_P10CADDR                       ; /* 0xb48 */
     U_V0_P10STRIDE         V0_P10STRIDE                      ; /* 0xb4c */
     U_V0_P10VFPOS          V0_P10VFPOS                       ; /* 0xb50 */
     U_V0_P10VLPOS          V0_P10VLPOS                       ; /* 0xb54 */
-    unsigned int           reserved_33[2]                     ; /* 0xb58~0xb5c */
+    unsigned int           reserved_32[2]                     ; /* 0xb58~0xb5c */
     U_V0_P11RESO           V0_P11RESO                        ; /* 0xb60 */
     U_V0_P11LADDR          V0_P11LADDR                       ; /* 0xb64 */
     U_V0_P11CADDR          V0_P11CADDR                       ; /* 0xb68 */
     U_V0_P11STRIDE         V0_P11STRIDE                      ; /* 0xb6c */
     U_V0_P11VFPOS          V0_P11VFPOS                       ; /* 0xb70 */
     U_V0_P11VLPOS          V0_P11VLPOS                       ; /* 0xb74 */
-    unsigned int           reserved_34[2]                     ; /* 0xb78~0xb7c */
+    unsigned int           reserved_33[2]                     ; /* 0xb78~0xb7c */
     U_V0_P12RESO           V0_P12RESO                        ; /* 0xb80 */
     U_V0_P12LADDR          V0_P12LADDR                       ; /* 0xb84 */
     U_V0_P12CADDR          V0_P12CADDR                       ; /* 0xb88 */
     U_V0_P12STRIDE         V0_P12STRIDE                      ; /* 0xb8c */
     U_V0_P12VFPOS          V0_P12VFPOS                       ; /* 0xb90 */
     U_V0_P12VLPOS          V0_P12VLPOS                       ; /* 0xb94 */
-    unsigned int           reserved_35[2]                     ; /* 0xb98~0xb9c */
+    unsigned int           reserved_34[2]                     ; /* 0xb98~0xb9c */
     U_V0_P13RESO           V0_P13RESO                        ; /* 0xba0 */
     U_V0_P13LADDR          V0_P13LADDR                       ; /* 0xba4 */
     U_V0_P13CADDR          V0_P13CADDR                       ; /* 0xba8 */
     U_V0_P13STRIDE         V0_P13STRIDE                      ; /* 0xbac */
     U_V0_P13VFPOS          V0_P13VFPOS                       ; /* 0xbb0 */
     U_V0_P13VLPOS          V0_P13VLPOS                       ; /* 0xbb4 */
-    unsigned int           reserved_36[2]                     ; /* 0xbb8~0xbbc */
+    unsigned int           reserved_35[2]                     ; /* 0xbb8~0xbbc */
     U_V0_P14RESO           V0_P14RESO                        ; /* 0xbc0 */
     U_V0_P14LADDR          V0_P14LADDR                       ; /* 0xbc4 */
     U_V0_P14CADDR          V0_P14CADDR                       ; /* 0xbc8 */
     U_V0_P14STRIDE         V0_P14STRIDE                      ; /* 0xbcc */
     U_V0_P14VFPOS          V0_P14VFPOS                       ; /* 0xbd0 */
     U_V0_P14VLPOS          V0_P14VLPOS                       ; /* 0xbd4 */
-    unsigned int           reserved_37[2]                     ; /* 0xbd8~0xbdc */
+    unsigned int           reserved_36[2]                     ; /* 0xbd8~0xbdc */
     U_V0_P15RESO           V0_P15RESO                        ; /* 0xbe0 */
     U_V0_P15LADDR          V0_P15LADDR                       ; /* 0xbe4 */
     U_V0_P15CADDR          V0_P15CADDR                       ; /* 0xbe8 */
     U_V0_P15STRIDE         V0_P15STRIDE                      ; /* 0xbec */
     U_V0_P15VFPOS          V0_P15VFPOS                       ; /* 0xbf0 */
     U_V0_P15VLPOS          V0_P15VLPOS                       ; /* 0xbf4 */
-    unsigned int           reserved_38[130]                     ; /* 0xbf8~0xdfc */
+    unsigned int           reserved_37[130]                     ; /* 0xbf8~0xdfc */
     U_V0_NADDR             V0_NADDR                          ; /* 0xe00 */
     U_V0_NCADDR            V0_NCADDR                         ; /* 0xe04 */
-    unsigned int           reserved_39[10]                     ; /* 0xe08~0xe2c */
+    U_V0_TILE_STRIDE       V0_TILE_STRIDE                    ; /* 0xe08 */
+    unsigned int           reserved_38[9]                     ; /* 0xe0c~0xe2c */
     U_V0_MULTI_MODE        V0_MULTI_MODE                     ; /* 0xe30 */
-    unsigned int           reserved_40[3]                     ; /* 0xe34~0xe3c */
+    unsigned int           reserved_39[3]                     ; /* 0xe34~0xe3c */
     U_V0_LADDROFFSET       V0_LADDROFFSET                    ; /* 0xe40 */
     U_V0_CADDROFFSET       V0_CADDROFFSET                    ; /* 0xe44 */
     U_V0_TILE_LOFFSET      V0_TILE_LOFFSET                   ; /* 0xe48 */
     U_V0_TILE_COFFSET      V0_TILE_COFFSET                   ; /* 0xe4c */
-    unsigned int           reserved_41[44]                     ; /* 0xe50~0xefc */
+    unsigned int           reserved_40[44]                     ; /* 0xe50~0xefc */
     U_V0_16REGIONENL       V0_16REGIONENL                    ; /* 0xf00 */
-    unsigned int           reserved_42                     ; /* 0xf04 */
+    unsigned int           reserved_41                     ; /* 0xf04 */
     U_V0_16MUTE            V0_16MUTE                         ; /* 0xf08 */
-    unsigned int           reserved_43                     ; /* 0xf0c */
+    unsigned int           reserved_42                     ; /* 0xf0c */
     U_V0_DCMP_CTRL         V0_DCMP_CTRL                      ; /* 0xf10 */
-    unsigned int           reserved_44[3]                     ; /* 0xf14~0xf1c */
+    unsigned int           reserved_43[3]                     ; /* 0xf14~0xf1c */
     U_V0_DCMP_LSTATE0      V0_DCMP_LSTATE0                   ; /* 0xf20 */
     U_V0_DCMP_LSTATE1      V0_DCMP_LSTATE1                   ; /* 0xf24 */
     U_V0_DCMP_CSTATE0      V0_DCMP_CSTATE0                   ; /* 0xf28 */
     U_V0_DCMP_CSTATE1      V0_DCMP_CSTATE1                   ; /* 0xf2c */
     U_V0_DCMPERRCLR        V0_DCMPERRCLR                     ; /* 0xf30 */
     U_V0_DCMP_ERR          V0_DCMP_ERR                       ; /* 0xf34 */
-    unsigned int           reserved_45[2]                     ; /* 0xf38~0xf3c */
+    unsigned int           reserved_44[2]                     ; /* 0xf38~0xf3c */
     U_ES_MODE              ES_MODE                           ; /* 0xf40 */
     U_ES_DIR_RATIO_0       ES_DIR_RATIO_0                    ; /* 0xf44 */
     U_ES_DIR_RATIO_1       ES_DIR_RATIO_1                    ; /* 0xf48 */
@@ -16736,17 +16769,17 @@ typedef struct
     U_ES_STATUS_0          ES_STATUS_0                       ; /* 0xf84 */
     U_ES_STATUS_1          ES_STATUS_1                       ; /* 0xf88 */
     U_ES_STATUS_2          ES_STATUS_2                       ; /* 0xf8c */
-    unsigned int           reserved_46[5148]                     ; /* 0xf90~0x5ffc */
+    unsigned int           reserved_45[5148]                     ; /* 0xf90~0x5ffc */
     U_VP0_CTRL             VP0_CTRL                          ; /* 0x6000 */
     U_VP0_UPD              VP0_UPD                           ; /* 0x6004 */
     U_VP0_IRESO            VP0_IRESO                         ; /* 0x6008 */
-    unsigned int           reserved_47                     ; /* 0x600c */
+    unsigned int           reserved_46                     ; /* 0x600c */
     U_VP0_DCI_CAD          VP0_DCI_CAD                       ; /* 0x6010 */
     U_VP0_ACM_CAD          VP0_ACM_CAD                       ; /* 0x6014 */
     U_VP0_SHARP_CAD        VP0_SHARP_CAD                     ; /* 0x6018 */
     U_VP0_PARAUP           VP0_PARAUP                        ; /* 0x601c */
     U_VP0_GALPHA           VP0_GALPHA                        ; /* 0x6020 */
-    unsigned int           reserved_48[7]                     ; /* 0x6024~0x603c */
+    unsigned int           reserved_47[7]                     ; /* 0x6024~0x603c */
     U_VP0_DFPOS            VP0_DFPOS                         ; /* 0x6040 */
     U_VP0_DLPOS            VP0_DLPOS                         ; /* 0x6044 */
     U_VP0_VFPOS            VP0_VFPOS                         ; /* 0x6048 */
@@ -16754,11 +16787,11 @@ typedef struct
     U_VP0_BK               VP0_BK                            ; /* 0x6050 */
     U_VP0_ALPHA            VP0_ALPHA                         ; /* 0x6054 */
     U_VP0_MUTE_BK          VP0_MUTE_BK                       ; /* 0x6058 */
-    unsigned int           reserved_49[9]                     ; /* 0x605c~0x607c */
+    unsigned int           reserved_48[9]                     ; /* 0x605c~0x607c */
     U_VP0_DOF_CTRL         VP0_DOF_CTRL                      ; /* 0x6080 */
     U_VP0_DOF_STEP         VP0_DOF_STEP                      ; /* 0x6084 */
     U_VP0_DOF_BKG          VP0_DOF_BKG                       ; /* 0x6088 */
-    unsigned int           reserved_50[5]                     ; /* 0x608c~0x609c */
+    unsigned int           reserved_49[5]                     ; /* 0x608c~0x609c */
     U_VP0_CSC_IDC          VP0_CSC_IDC                       ; /* 0x60a0 */
     U_VP0_CSC_ODC          VP0_CSC_ODC                       ; /* 0x60a4 */
     U_VP0_CSC_IODC         VP0_CSC_IODC                      ; /* 0x60a8 */
@@ -16780,7 +16813,7 @@ typedef struct
     U_VPWCG_L2NONCOEF0     VPWCG_L2NONCOEF0                  ; /* 0x60e8 */
     U_VPWCG_L2NONCOEF1     VPWCG_L2NONCOEF1                  ; /* 0x60ec */
     U_VPWCG_L2NONCOEF2     VPWCG_L2NONCOEF2                  ; /* 0x60f0 */
-    unsigned int           reserved_51[3]                     ; /* 0x60f4~0x60fc */
+    unsigned int           reserved_50[3]                     ; /* 0x60f4~0x60fc */
     U_VP0_DCICTRL          VP0_DCICTRL                       ; /* 0x6100 */
     U_VP0_DCIHPOS          VP0_DCIHPOS                       ; /* 0x6104 */
     U_VP0_DCIVPOS          VP0_DCIVPOS                       ; /* 0x6108 */
@@ -16825,7 +16858,7 @@ typedef struct
     U_VP0_ACM_ADJ          VP0_ACM_ADJ                       ; /* 0x61a4 */
     U_VP0_ACM_PARARD       VP0_ACM_PARARD                    ; /* 0x61a8 */
     U_VP0_ACM_PARA_DATA    VP0_ACM_PARA_DATA                 ; /* 0x61ac */
-    unsigned int           reserved_52[4]                     ; /* 0x61b0~0x61bc */
+    unsigned int           reserved_51[4]                     ; /* 0x61b0~0x61bc */
     U_VP0_CSC1_IDC         VP0_CSC1_IDC                      ; /* 0x61c0 */
     U_VP0_CSC1_ODC         VP0_CSC1_ODC                      ; /* 0x61c4 */
     U_VP0_CSC1_IODC        VP0_CSC1_IODC                     ; /* 0x61c8 */
@@ -16834,7 +16867,7 @@ typedef struct
     U_VP0_CSC1_P2          VP0_CSC1_P2                       ; /* 0x61d4 */
     U_VP0_CSC1_P3          VP0_CSC1_P3                       ; /* 0x61d8 */
     U_VP0_CSC1_P4          VP0_CSC1_P4                       ; /* 0x61dc */
-    unsigned int           reserved_53[8]                     ; /* 0x61e0~0x61fc */
+    unsigned int           reserved_52[8]                     ; /* 0x61e0~0x61fc */
     U_SPCTRL               SPCTRL                            ; /* 0x6200 */
     U_SPDETAILADJ          SPDETAILADJ                       ; /* 0x6204 */
     U_SPRATIO              SPRATIO                           ; /* 0x6208 */
@@ -16931,47 +16964,47 @@ typedef struct
     U_SPCGRADDIFFTHR       SPCGRADDIFFTHR                    ; /* 0x6374 */
     U_SP_PARARD            SP_PARARD                         ; /* 0x6378 */
     U_SP_PARA_DATA         SP_PARA_DATA                      ; /* 0x637c */
-    unsigned int           reserved_54[32]                     ; /* 0x6380~0x63fc */
+    unsigned int           reserved_53[32]                     ; /* 0x6380~0x63fc */
     U_DHD0_BSCTRL          DHD0_BSCTRL                       ; /* 0x6400 */
-    unsigned int           reserved_55[3]                     ; /* 0x6404~0x640c */
+    unsigned int           reserved_54[3]                     ; /* 0x6404~0x640c */
     U_DHD0_BSRDELTA0       DHD0_BSRDELTA0                    ; /* 0x6410 */
     U_DHD0_BSRDELTA1       DHD0_BSRDELTA1                    ; /* 0x6414 */
     U_DHD0_BSGDELTA0       DHD0_BSGDELTA0                    ; /* 0x6418 */
     U_DHD0_BSGDELTA1       DHD0_BSGDELTA1                    ; /* 0x641c */
-    unsigned int           reserved_56[760]                     ; /* 0x6420~0x6ffc */
+    unsigned int           reserved_55[760]                     ; /* 0x6420~0x6ffc */
     U_G0_CTRL              G0_CTRL                           ; /* 0x7000 */
     U_G0_UPD               G0_UPD                            ; /* 0x7004 */
-    unsigned int           reserved_57[2]                     ; /* 0x7008~0x700c */
+    unsigned int           reserved_56[2]                     ; /* 0x7008~0x700c */
     U_G0_ADDR              G0_ADDR                           ; /* 0x7010 */
-    unsigned int           reserved_58                     ; /* 0x7014 */
+    unsigned int           reserved_57                     ; /* 0x7014 */
     U_G0_NADDR             G0_NADDR                          ; /* 0x7018 */
     U_G0_STRIDE            G0_STRIDE                         ; /* 0x701c */
     U_G0_IRESO             G0_IRESO                          ; /* 0x7020 */
     U_G0_SFPOS             G0_SFPOS                          ; /* 0x7024 */
-    unsigned int           reserved_59[2]                     ; /* 0x7028~0x702c */
+    unsigned int           reserved_58[2]                     ; /* 0x7028~0x702c */
     U_G0_CBMPARA           G0_CBMPARA                        ; /* 0x7030 */
     U_G0_CKEYMAX           G0_CKEYMAX                        ; /* 0x7034 */
     U_G0_CKEYMIN           G0_CKEYMIN                        ; /* 0x7038 */
     U_G0_CMASK             G0_CMASK                          ; /* 0x703c */
     U_G0_PARAADDR          G0_PARAADDR                       ; /* 0x7040 */
     U_G0_PARAUP            G0_PARAUP                         ; /* 0x7044 */
-    unsigned int           reserved_60[2]                     ; /* 0x7048~0x704c */
+    unsigned int           reserved_59[2]                     ; /* 0x7048~0x704c */
     U_G0_DCMP_ADDR         G0_DCMP_ADDR                      ; /* 0x7050 */
     U_G0_DCMP_NADDR        G0_DCMP_NADDR                     ; /* 0x7054 */
     U_G0_DCMP_OFFSET       G0_DCMP_OFFSET                    ; /* 0x7058 */
-    unsigned int           reserved_61[9]                     ; /* 0x705c~0x707c */
+    unsigned int           reserved_60[9]                     ; /* 0x705c~0x707c */
     U_G0_DFPOS             G0_DFPOS                          ; /* 0x7080 */
     U_G0_DLPOS             G0_DLPOS                          ; /* 0x7084 */
     U_G0_VFPOS             G0_VFPOS                          ; /* 0x7088 */
     U_G0_VLPOS             G0_VLPOS                          ; /* 0x708c */
     U_G0_BK                G0_BK                             ; /* 0x7090 */
     U_G0_ALPHA             G0_ALPHA                          ; /* 0x7094 */
-    unsigned int           reserved_62[2]                     ; /* 0x7098~0x709c */
+    unsigned int           reserved_61[2]                     ; /* 0x7098~0x709c */
     U_G0_DOF_CTRL          G0_DOF_CTRL                       ; /* 0x70a0 */
     U_G0_DOF_STEP          G0_DOF_STEP                       ; /* 0x70a4 */
     U_G0_DOF_BKG           G0_DOF_BKG                        ; /* 0x70a8 */
     U_G0_DOF_ALPHA         G0_DOF_ALPHA                      ; /* 0x70ac */
-    unsigned int           reserved_63[4]                     ; /* 0x70b0~0x70bc */
+    unsigned int           reserved_62[4]                     ; /* 0x70b0~0x70bc */
     U_G0_CSC_IDC           G0_CSC_IDC                        ; /* 0x70c0 */
     U_G0_CSC_ODC           G0_CSC_ODC                        ; /* 0x70c4 */
     U_G0_CSC_IODC          G0_CSC_IODC                       ; /* 0x70c8 */
@@ -16980,7 +17013,7 @@ typedef struct
     U_G0_CSC_P2            G0_CSC_P2                         ; /* 0x70d4 */
     U_G0_CSC_P3            G0_CSC_P3                         ; /* 0x70d8 */
     U_G0_CSC_P4            G0_CSC_P4                         ; /* 0x70dc */
-    unsigned int           reserved_64[968]                     ; /* 0x70e0~0x7ffc */
+    unsigned int           reserved_63[968]                     ; /* 0x70e0~0x7ffc */
     U_GP0_CTRL             GP0_CTRL                          ; /* 0x8000 */
     U_GP0_UPD              GP0_UPD                           ; /* 0x8004 */
     U_GP0_ORESO            GP0_ORESO                         ; /* 0x8008 */
@@ -16988,16 +17021,16 @@ typedef struct
     U_GP0_HCOEFAD          GP0_HCOEFAD                       ; /* 0x8010 */
     U_GP0_VCOEFAD          GP0_VCOEFAD                       ; /* 0x8014 */
     U_GP0_PARAUP           GP0_PARAUP                        ; /* 0x8018 */
-    unsigned int           reserved_65                     ; /* 0x801c */
+    unsigned int           reserved_64                     ; /* 0x801c */
     U_GP0_GALPHA           GP0_GALPHA                        ; /* 0x8020 */
-    unsigned int           reserved_66[55]                     ; /* 0x8024~0x80fc */
+    unsigned int           reserved_65[55]                     ; /* 0x8024~0x80fc */
     U_GP0_DFPOS            GP0_DFPOS                         ; /* 0x8100 */
     U_GP0_DLPOS            GP0_DLPOS                         ; /* 0x8104 */
     U_GP0_VFPOS            GP0_VFPOS                         ; /* 0x8108 */
     U_GP0_VLPOS            GP0_VLPOS                         ; /* 0x810c */
     U_GP0_BK               GP0_BK                            ; /* 0x8110 */
     U_GP0_ALPHA            GP0_ALPHA                         ; /* 0x8114 */
-    unsigned int           reserved_67[2]                     ; /* 0x8118~0x811c */
+    unsigned int           reserved_66[2]                     ; /* 0x8118~0x811c */
     U_GP0_CSC_IDC          GP0_CSC_IDC                       ; /* 0x8120 */
     U_GP0_CSC_ODC          GP0_CSC_ODC                       ; /* 0x8124 */
     U_GP0_CSC_IODC         GP0_CSC_IODC                      ; /* 0x8128 */
@@ -17012,21 +17045,21 @@ typedef struct
     U_GP0_ZME_VSP          GP0_ZME_VSP                       ; /* 0x814c */
     U_GP0_ZME_VSR          GP0_ZME_VSR                       ; /* 0x8150 */
     U_GP0_ZME_VOFFSET      GP0_ZME_VOFFSET                   ; /* 0x8154 */
-    unsigned int           reserved_68[2]                     ; /* 0x8158~0x815c */
+    unsigned int           reserved_67[2]                     ; /* 0x8158~0x815c */
     U_GP0_ZME_LTICTRL      GP0_ZME_LTICTRL                   ; /* 0x8160 */
     U_GP0_ZME_LHPASSCOEF   GP0_ZME_LHPASSCOEF                ; /* 0x8164 */
     U_GP0_ZME_LTITHD       GP0_ZME_LTITHD                    ; /* 0x8168 */
-    unsigned int           reserved_69                     ; /* 0x816c */
+    unsigned int           reserved_68                     ; /* 0x816c */
     U_GP0_ZME_LHFREQTHD    GP0_ZME_LHFREQTHD                 ; /* 0x8170 */
     U_GP0_ZME_LGAINCOEF    GP0_ZME_LGAINCOEF                 ; /* 0x8174 */
-    unsigned int           reserved_70[2]                     ; /* 0x8178~0x817c */
+    unsigned int           reserved_69[2]                     ; /* 0x8178~0x817c */
     U_GP0_ZME_CTICTRL      GP0_ZME_CTICTRL                   ; /* 0x8180 */
     U_GP0_ZME_CHPASSCOEF   GP0_ZME_CHPASSCOEF                ; /* 0x8184 */
     U_GP0_ZME_CTITHD       GP0_ZME_CTITHD                    ; /* 0x8188 */
-    unsigned int           reserved_71                     ; /* 0x818c */
+    unsigned int           reserved_70                     ; /* 0x818c */
     U_GP0_ZMECOEF          GP0_ZMECOEF                       ; /* 0x8190 */
     U_GP0_ZMECOEFAD        GP0_ZMECOEFAD                     ; /* 0x8194 */
-    unsigned int           reserved_72[10]                     ; /* 0x8198~0x81bc */
+    unsigned int           reserved_71[10]                     ; /* 0x8198~0x81bc */
     U_GP0_WCG_NON2LCTRL    GP0_WCG_NON2LCTRL                 ; /* 0x81c0 */
     U_GP0_WCG_NON2LCOEF0   GP0_WCG_NON2LCOEF0                ; /* 0x81c4 */
     U_GP0_WCG_NON2LCOEF1   GP0_WCG_NON2LCOEF1                ; /* 0x81c8 */
@@ -17040,29 +17073,29 @@ typedef struct
     U_GP0_WCG_L2NONCOEF0   GP0_WCG_L2NONCOEF0                ; /* 0x81e8 */
     U_GP0_WCG_L2NONCOEF1   GP0_WCG_L2NONCOEF1                ; /* 0x81ec */
     U_GP0_WCG_L2NONCOEF2   GP0_WCG_L2NONCOEF2                ; /* 0x81f0 */
-    unsigned int           reserved_73[899]                     ; /* 0x81f4~0x8ffc */
+    unsigned int           reserved_72[899]                     ; /* 0x81f4~0x8ffc */
     U_WBC_DHD0_CTRL        WBC_DHD0_CTRL                     ; /* 0x9000 */
     U_WBC_DHD0_UPD         WBC_DHD0_UPD                      ; /* 0x9004 */
-    unsigned int           reserved_74[2]                     ; /* 0x9008~0x900c */
+    unsigned int           reserved_73[2]                     ; /* 0x9008~0x900c */
     U_WBC_DHD0_YADDR       WBC_DHD0_YADDR                    ; /* 0x9010 */
     U_WBC_DHD0_CADDR       WBC_DHD0_CADDR                    ; /* 0x9014 */
     U_WBC_DHD0_STRIDE      WBC_DHD0_STRIDE                   ; /* 0x9018 */
-    unsigned int           reserved_75                     ; /* 0x901c */
+    unsigned int           reserved_74                     ; /* 0x901c */
     U_WBC_DHD0_ORESO       WBC_DHD0_ORESO                    ; /* 0x9020 */
     U_WBC_DHD0_FCROP       WBC_DHD0_FCROP                    ; /* 0x9024 */
     U_WBC_DHD0_LCROP       WBC_DHD0_LCROP                    ; /* 0x9028 */
-    unsigned int           reserved_76                     ; /* 0x902c */
+    unsigned int           reserved_75                     ; /* 0x902c */
     U_WBC_DHD0_LOWDLYCTRL   WBC_DHD0_LOWDLYCTRL              ; /* 0x9030 */
     U_WBC_DHD0_TUNLADDR    WBC_DHD0_TUNLADDR                 ; /* 0x9034 */
     U_WBC_DHD0_LOWDLYSTA   WBC_DHD0_LOWDLYSTA                ; /* 0x9038 */
-    unsigned int           reserved_77                     ; /* 0x903c */
+    unsigned int           reserved_76                     ; /* 0x903c */
     U_WBC_DHD0_PARAUP      WBC_DHD0_PARAUP                   ; /* 0x9040 */
-    unsigned int           reserved_78[3]                     ; /* 0x9044~0x904c */
+    unsigned int           reserved_77[3]                     ; /* 0x9044~0x904c */
     U_WBC_DHD0_HLCOEFAD    WBC_DHD0_HLCOEFAD                 ; /* 0x9050 */
     U_WBC_DHD0_HCCOEFAD    WBC_DHD0_HCCOEFAD                 ; /* 0x9054 */
     U_WBC_DHD0_VLCOEFAD    WBC_DHD0_VLCOEFAD                 ; /* 0x9058 */
     U_WBC_DHD0_VCCOEFAD    WBC_DHD0_VCCOEFAD                 ; /* 0x905c */
-    unsigned int           reserved_79[16]                     ; /* 0x9060~0x909c */
+    unsigned int           reserved_78[16]                     ; /* 0x9060~0x909c */
     U_WBC_DHD0_HISTOGRAM0   WBC_DHD0_HISTOGRAM0              ; /* 0x90a0 */
     U_WBC_DHD0_HISTOGRAM1   WBC_DHD0_HISTOGRAM1              ; /* 0x90a4 */
     U_WBC_DHD0_HISTOGRAM2   WBC_DHD0_HISTOGRAM2              ; /* 0x90a8 */
@@ -17081,29 +17114,29 @@ typedef struct
     U_WBC_DHD0_HISTOGRAM15   WBC_DHD0_HISTOGRAM15            ; /* 0x90dc */
     U_WBC_DHD0_DBG_WBC_STA   WBC_DHD0_DBG_WBC_STA            ; /* 0x90e0 */
     U_WBC_DHD0_DBG_WBC_LINE_CNT   WBC_DHD0_DBG_WBC_LINE_CNT  ; /* 0x90e4 */
-    unsigned int           reserved_80[2]                     ; /* 0x90e8~0x90ec */
+    unsigned int           reserved_79[2]                     ; /* 0x90e8~0x90ec */
     U_WBC_DHD0_CHECKSUM_Y   WBC_DHD0_CHECKSUM_Y              ; /* 0x90f0 */
     U_WBC_DHD0_CHECKSUM_C   WBC_DHD0_CHECKSUM_C              ; /* 0x90f4 */
-    unsigned int           reserved_81[2]                     ; /* 0x90f8~0x90fc */
+    unsigned int           reserved_80[2]                     ; /* 0x90f8~0x90fc */
     U_WBC_DHD0_DITHER_CTRL   WBC_DHD0_DITHER_CTRL            ; /* 0x9100 */
     U_WBC_DHD0_DITHER_COEF0   WBC_DHD0_DITHER_COEF0          ; /* 0x9104 */
     U_WBC_DHD0_DITHER_COEF1   WBC_DHD0_DITHER_COEF1          ; /* 0x9108 */
-    unsigned int           reserved_82                     ; /* 0x910c */
+    unsigned int           reserved_81                     ; /* 0x910c */
     U_WBC_DHD0_HCDS        WBC_DHD0_HCDS                     ; /* 0x9110 */
     U_WBC_DHD0_HCDS_COEF0   WBC_DHD0_HCDS_COEF0              ; /* 0x9114 */
     U_WBC_DHD0_HCDS_COEF1   WBC_DHD0_HCDS_COEF1              ; /* 0x9118 */
-    unsigned int           reserved_83[13]                     ; /* 0x911c~0x914c */
+    unsigned int           reserved_82[13]                     ; /* 0x911c~0x914c */
     U_WBC_DHD0_HPZME       WBC_DHD0_HPZME                    ; /* 0x9150 */
-    unsigned int           reserved_84[91]                     ; /* 0x9154~0x92bc */
+    unsigned int           reserved_83[91]                     ; /* 0x9154~0x92bc */
     U_WBC_DHD0_ZME_HSP     WBC_DHD0_ZME_HSP                  ; /* 0x92c0 */
     U_WBC_DHD0_ZME_HLOFFSET   WBC_DHD0_ZME_HLOFFSET          ; /* 0x92c4 */
     U_WBC_DHD0_ZME_HCOFFSET   WBC_DHD0_ZME_HCOFFSET          ; /* 0x92c8 */
-    unsigned int           reserved_85[3]                     ; /* 0x92cc~0x92d4 */
+    unsigned int           reserved_84[3]                     ; /* 0x92cc~0x92d4 */
     U_WBC_DHD0_ZME_VSP     WBC_DHD0_ZME_VSP                  ; /* 0x92d8 */
     U_WBC_DHD0_ZME_VSR     WBC_DHD0_ZME_VSR                  ; /* 0x92dc */
     U_WBC_DHD0_ZME_VOFFSET   WBC_DHD0_ZME_VOFFSET            ; /* 0x92e0 */
     U_WBC_DHD0_ZME_VBOFFSET   WBC_DHD0_ZME_VBOFFSET          ; /* 0x92e4 */
-    unsigned int           reserved_86[6]                     ; /* 0x92e8~0x92fc */
+    unsigned int           reserved_85[6]                     ; /* 0x92e8~0x92fc */
     U_WBC_DHD0_CSCIDC      WBC_DHD0_CSCIDC                   ; /* 0x9300 */
     U_WBC_DHD0_CSCODC      WBC_DHD0_CSCODC                   ; /* 0x9304 */
     U_WBC_DHD0_CSCP0       WBC_DHD0_CSCP0                    ; /* 0x9308 */
@@ -17111,22 +17144,24 @@ typedef struct
     U_WBC_DHD0_CSCP2       WBC_DHD0_CSCP2                    ; /* 0x9310 */
     U_WBC_DHD0_CSCP3       WBC_DHD0_CSCP3                    ; /* 0x9314 */
     U_WBC_DHD0_CSCP4       WBC_DHD0_CSCP4                    ; /* 0x9318 */
-    unsigned int           reserved_87[57]                     ; /* 0x931c~0x93fc */
+    unsigned int           reserved_86[57]                     ; /* 0x931c~0x93fc */
     U_WBC_GP0_CTRL         WBC_GP0_CTRL                      ; /* 0x9400 */
     U_WBC_GP0_UPD          WBC_GP0_UPD                       ; /* 0x9404 */
-    unsigned int           reserved_88[2]                     ; /* 0x9408~0x940c */
+    unsigned int           reserved_87[2]                     ; /* 0x9408~0x940c */
     U_WBC_GP0_YADDR        WBC_GP0_YADDR                     ; /* 0x9410 */
     U_WBC_GP0_CADDR        WBC_GP0_CADDR                     ; /* 0x9414 */
     U_WBC_GP0_STRIDE       WBC_GP0_STRIDE                    ; /* 0x9418 */
-    unsigned int           reserved_89                     ; /* 0x941c */
+    unsigned int           reserved_88                     ; /* 0x941c */
     U_WBC_GP0_ORESO        WBC_GP0_ORESO                     ; /* 0x9420 */
     U_WBC_GP0_FCROP        WBC_GP0_FCROP                     ; /* 0x9424 */
     U_WBC_GP0_LCROP        WBC_GP0_LCROP                     ; /* 0x9428 */
-    unsigned int           reserved_90[53]                     ; /* 0x942c~0x94fc */
+    unsigned int           reserved_89[53]                     ; /* 0x942c~0x94fc */
     U_WBC_GP0_DITHER_CTRL   WBC_GP0_DITHER_CTRL              ; /* 0x9500 */
     U_WBC_GP0_DITHER_COEF0   WBC_GP0_DITHER_COEF0            ; /* 0x9504 */
     U_WBC_GP0_DITHER_COEF1   WBC_GP0_DITHER_COEF1            ; /* 0x9508 */
-    unsigned int           reserved_91[189]                     ; /* 0x950c~0x97fc */
+    unsigned int           reserved_90[17]                     ; /* 0x950c~0x954c */
+    U_WBC_GP0_HPZME        WBC_GP0_HPZME                     ; /* 0x9550 */
+    unsigned int           reserved_91[171]                     ; /* 0x9554~0x97fc */
     U_WBC_G0_CTRL          WBC_G0_CTRL                       ; /* 0x9800 */
     U_WBC_G0_UPD           WBC_G0_UPD                        ; /* 0x9804 */
     U_WBC_G0_CMP           WBC_G0_CMP                        ; /* 0x9808 */
@@ -17578,32 +17613,32 @@ typedef struct
     U_LVDS_PHYCTRL1        LVDS_PHYCTRL1                     ; /* 0xd414 */
     U_LVDS_PHYCTRL2        LVDS_PHYCTRL2                     ; /* 0xd418 */
     U_LVDS_SPHYSTAT        LVDS_SPHYSTAT                     ; /* 0xd41c */
-    unsigned int           reserved_151[56]                     ; /* 0xd420~0xd4fc */
+    unsigned int           reserved_152[56]                     ; /* 0xd420~0xd4fc */
     U_VBO_CTRL             VBO_CTRL                          ; /* 0xd500 */
     U_VBO_PHYCTRL          VBO_PHYCTRL                       ; /* 0xd504 */
     U_VBO_PHYSTAT          VBO_PHYSTAT                       ; /* 0xd508 */
-    unsigned int           reserved_152[61]                     ; /* 0xd50c~0xd5fc */
+    unsigned int           reserved_153[61]                     ; /* 0xd50c~0xd5fc */
     U_PWM_CONTROL          PWM_CONTROL                       ; /* 0xd600 */
     U_DIMMING_PWM_DUTY     DIMMING_PWM_DUTY                  ; /* 0xd604 */
     U_PWM_FREQ             PWM_FREQ                          ; /* 0xd608 */
     U_PWM_M                PWM_M                             ; /* 0xd60c */
     U_PWM_P                PWM_P                             ; /* 0xd610 */
     U_PWM_Q                PWM_Q                             ; /* 0xd614 */
-    unsigned int           reserved_153[2]                     ; /* 0xd618~0xd61c */
+    unsigned int           reserved_154[2]                     ; /* 0xd618~0xd61c */
     U_LR_SYNC_CONTROL      LR_SYNC_CONTROL                   ; /* 0xd620 */
     U_LR_SYNC_M            LR_SYNC_M                         ; /* 0xd624 */
-    unsigned int           reserved_154[6]                     ; /* 0xd628~0xd63c */
+    unsigned int           reserved_155[6]                     ; /* 0xd628~0xd63c */
     U_LR_GLASS_CONTROL     LR_GLASS_CONTROL                  ; /* 0xd640 */
     U_LR_GLASS_M           LR_GLASS_M                        ; /* 0xd644 */
-    unsigned int           reserved_155[6]                     ; /* 0xd648~0xd65c */
+    unsigned int           reserved_156[6]                     ; /* 0xd648~0xd65c */
     U_PWM_1D1CONTROL       PWM_1D1CONTROL                    ; /* 0xd660 */
     U_DIMMING_PWM_1D1_DUTY   DIMMING_PWM_1D1_DUTY            ; /* 0xd664 */
     U_PWM_1D1_FREQ         PWM_1D1_FREQ                      ; /* 0xd668 */
-    unsigned int           reserved_156[5]                     ; /* 0xd66c~0xd67c */
+    unsigned int           reserved_157[5]                     ; /* 0xd66c~0xd67c */
     U_PWM_1D2CONTROL       PWM_1D2CONTROL                    ; /* 0xd680 */
     U_DIMMING_PWM_1D2_DUTY   DIMMING_PWM_1D2_DUTY            ; /* 0xd684 */
     U_PWM_1D2_FREQ         PWM_1D2_FREQ                      ; /* 0xd688 */
-    unsigned int           reserved_157[5]                     ; /* 0xd68c~0xd69c */
+    unsigned int           reserved_158[5]                     ; /* 0xd68c~0xd69c */
     U_PWM_1D3CONTROL       PWM_1D3CONTROL                    ; /* 0xd6a0 */
     U_DIMMING_PWM_1D3_DUTY   DIMMING_PWM_1D3_DUTY            ; /* 0xd6a4 */
     U_PWM_1D3_FREQ         PWM_1D3_FREQ                      ; /* 0xd6a8 */

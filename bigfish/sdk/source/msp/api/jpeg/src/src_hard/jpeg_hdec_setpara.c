@@ -58,8 +58,7 @@ Date				Author        		Modification
 static HI_VOID JPEG_HDEC_ImagFmt2HardFmt(const HI_JPEG_FMT_E enJpegFmt,HI_U32 *pu32Fmt)
 {
 
-		switch(enJpegFmt)
-		{
+		switch(enJpegFmt){
 			case JPEG_FMT_YUV400:
 				   *pu32Fmt = 0;
 			   break;
@@ -112,8 +111,7 @@ static HI_S32 JPEG_HDEC_SetSof(const struct jpeg_decompress_struct *cinfo)
 		 ** CNcomment: 设置图片类型 CNend\n
 		 **/
 		JPEG_HDEC_ImagFmt2HardFmt(pJpegHandle->enImageFmt,&u32HardFmt);
-		if(u32HardFmt >= 7)
-		{
+		if(u32HardFmt >= 7){
 			return HI_FAILURE;
 		}
 		JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr, JPGD_REG_PICTYPE, (HI_S32)u32HardFmt); 
@@ -123,8 +121,8 @@ static HI_S32 JPEG_HDEC_SetSof(const struct jpeg_decompress_struct *cinfo)
 		 ** CNcomment: 设置解码缩放比例 CNend\n
 		 **/
 		#ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(HI_TRUE == pJpegHandle->bDecARGB)
-		{   /**
+		if(HI_TRUE == pJpegHandle->bDecARGB){  
+			/**
 			 ** do not write data to ddr and no scale
 			 ** CNcomment: 不往DDR写YUV数据并且不缩放并且不缩放，默认值为0x34 CNend\n
 			 **/
@@ -148,8 +146,7 @@ static HI_S32 JPEG_HDEC_SetSof(const struct jpeg_decompress_struct *cinfo)
 
 #ifdef CONFIG_JPEG_FPGA_TEST_SET_DIFFERENT_OUTSTANDING_VALUE
 		HI_JPEG_GetOutstandingValue(&s32OutstandingValue,&bOutStandingFlag);
-		if(HI_TRUE == bOutStandingFlag)
-		{
+		if(HI_TRUE == bOutStandingFlag){
 			s32DefaultScale = JPEG_HDEC_ReadReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_SCALE);
 			JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr, \
 								 JPGD_REG_SCALE,			   \
@@ -159,8 +156,7 @@ static HI_S32 JPEG_HDEC_SetSof(const struct jpeg_decompress_struct *cinfo)
 			JPEG_TRACE("please enter getchar to next\n");
 			getchar();
 			#endif
-			if( (0x10 != (s32DefaultScale & s32OutstandingValue & 0xf0)) && (0x20 != (s32DefaultScale & s32OutstandingValue & 0xf0)))
-			{
+			if( (0x10 != (s32DefaultScale & s32OutstandingValue & 0xf0)) && (0x20 != (s32DefaultScale & s32OutstandingValue & 0xf0))){
 				JPEG_TRACE("=====================================================================\n");
 				JPEG_TRACE("set the outstanding value failure,please enter getchar to exit\n");
 				JPEG_TRACE("s32DefaultScale = 0x%x\n",s32DefaultScale);
@@ -178,8 +174,7 @@ static HI_S32 JPEG_HDEC_SetSof(const struct jpeg_decompress_struct *cinfo)
 		 **  但硬件的限制是根据解码分辨率来着
 		 **  ~0x3ff03ff = 0x111111 0000000000(w)	111111 0000000000(h) = 8192 * 8192 CNend\n
 		 **/
-		if ( 0 != ((pJpegHandle->stJpegSofInfo.u32InWandH & (~0x3ff03ff))) ) 
-		{
+		if ( 0 != ((pJpegHandle->stJpegSofInfo.u32InWandH & (~0x3ff03ff))) ) {
 			return HI_FAILURE;
 		}
         JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr, JPGD_REG_PICSIZE, (HI_S32)pJpegHandle->stJpegSofInfo.u32InWandH);
@@ -232,6 +227,66 @@ static HI_VOID JPEG_HDEC_SetDri(const struct jpeg_decompress_struct *cinfo)
 
 
 /*****************************************************************************
+* func			: JPEG_HDEC_SetMemtype
+* description	: set mem type
+				  CNcomment: 设置内存类型   	    CNend\n
+* param[in] 	: cinfo 	 CNcomment: 解码对象    CNend\n
+* others:		: NA
+*****************************************************************************/
+static HI_VOID JPEG_HDEC_SetMemtype(const struct jpeg_decompress_struct *cinfo)
+{
+	/**=========================================================================
+	 ** [0] :  1 MMZ   0 MMU   读码流内存类型
+	 ** [1] :  1 MMZ   0 MMU   Y分量输出内存类型
+	 ** [2] :  1 MMZ   0 MMU   UV分量输出内存类型
+	 ** ...
+	 **======================================================================**/
+	JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
+	HI_U32 u32Mask =   JPEG_STREAM_MEM_MMU_TYPE            \
+		             | JPEG_YOUTPUT_MEM_MMU_TYPE           \
+		             | JPEG_UVOUTPUT_MEM_MMU_TYPE          \
+		             | JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE  \
+		             | JPEG_XRGBSAMPLE1_READ_MEM_MMU_TYPE  \
+		             | JPEG_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE \
+		             | JPEG_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE \
+					 | JPEG_XRGBOUTPUT_MEM_MMU_TYPE;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	if(pJpegHandle->u32MemTypeMask & JPEG_STREAM_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_STREAM_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_YOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_YOUTPUT_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_UVOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_UVOUTPUT_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_XRGBSAMPLE1_READ_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_XRGBSAMPLE1_READ_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE;
+    }
+	if(pJpegHandle->u32MemTypeMask & JPEG_XRGBOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_XRGBOUTPUT_MEM_MMU_TYPE;
+    }
+	JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_MMU_BYPASS,u32Mask);
+	//JPEG_TRACE("===%s %s %d u32Mask = 0x%x\n",__FILE__,__FUNCTION__,__LINE__,u32Mask);
+#else
+	/** 非mmu，都bypass **/
+	JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_MMU_BYPASS,u32Mask);
+#endif
+	return;
+}
+
+
+/*****************************************************************************
 * func			: JPEG_HDEC_SetStreamBuf
 * description	: set stream buffer message
 				  CNcomment: 设置码流buffer寄存器 	   CNend\n
@@ -255,8 +310,7 @@ HI_VOID JPEG_HDEC_SetStreamBuf(const struct jpeg_decompress_struct *cinfo)
 		**            硬件buffer只有有两个值即可，真正使用的存储码流的buffer，
 		**            必须在这两个值之间 CNend\n
 		**/
-		if(HI_TRUE == pJpegHandle->stHDecDataBuf.bUserPhyMem && HI_FALSE == pJpegHandle->stHDecDataBuf.bNeedStreamReturn)
-		{
+		if(HI_TRUE == pJpegHandle->stHDecDataBuf.bUserPhyMem && HI_FALSE == pJpegHandle->stHDecDataBuf.bNeedStreamReturn){
 			u64StreamSize = pJpegHandle->stHDecDataBuf.u64DataSize + u32Offset;
 			/**
 			** this can insure the start buffer is before the stream address
@@ -267,14 +321,10 @@ HI_VOID JPEG_HDEC_SetStreamBuf(const struct jpeg_decompress_struct *cinfo)
 			pStartStreamPhy = (HI_CHAR*)(((unsigned long)pStartStreamPhy + u32Align - 1) & (~(u32Align - 1)));
 			pStartStreamPhy = pStartStreamPhy - u32Offset;
 			pEndStreamPhy   = (HI_CHAR*)((unsigned long)pJpegHandle->stHDecDataBuf.pDataPhyBuf + (unsigned long)u64StreamSize);
-		}
-		else if(HI_TRUE == pJpegHandle->stHDecDataBuf.bNeedStreamReturn)
-		{/** 码流回绕 **/
+		}else if(HI_TRUE == pJpegHandle->stHDecDataBuf.bNeedStreamReturn){/** 码流回绕 **/
 			pStartStreamPhy = pJpegHandle->stHDecDataBuf.pStartBufPhy;
 			pEndStreamPhy   = pStartStreamPhy + pJpegHandle->stHDecDataBuf.s32BufLen;
-		}
-		else
-		{
+		}else{
 			u64StreamSize   = JPGD_HARD_BUFFER;
 			pStartStreamPhy = pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf;
 			pEndStreamPhy   = (HI_CHAR*)(pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf + u64StreamSize);
@@ -372,12 +422,9 @@ static HI_VOID JPEG_HDEC_SetDecARGBPara(const struct jpeg_decompress_struct *cin
 		s32CropStargPos = (HI_S32)((HI_U32)(s32CropX) | ((HI_U32)s32CropY << 16));
 		s32CropEndPos   = (HI_S32)(((HI_U32)s32CropEndX) | ((HI_U32)s32CropEndY << 16));
 
-		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)
-		{
+		if(HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem){
 			JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_ARGBOUTSTRIDE,pJpegHandle->stOutDesc.stOutSurface.u32OutStride[0]);
-		}
-		else
-		{
+		}else{
 			JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_ARGBOUTSTRIDE,pJpegHandle->stJpegSofInfo.u32DisplayStride);
 		}
 		JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_OUTSTARTPOS,s32CropStargPos);
@@ -402,27 +449,46 @@ static HI_VOID JPEG_HDEC_SetDecARGBPara(const struct jpeg_decompress_struct *cin
 		** set output type register
 		** CNcomment: 设置输出类型以及是否滤波寄存器 CNend\n
 		**/
-		if(HI_TRUE == pJpegHandle->stDecCoef.bEnHorMedian)
-		{
+		if(HI_TRUE == pJpegHandle->stDecCoef.bEnHorMedian){
 			s32HorFliter = 0x8; /** 1000 **/
 		}
 
-		if(HI_TRUE == pJpegHandle->stDecCoef.bEnVerMedian)
-		{
+		if(HI_TRUE == pJpegHandle->stDecCoef.bEnVerMedian){
 			s32VerFliter = 0x10; /** 10000 **/
 		}
+
+
+		/** [8~10]
+		 ** 000：ABGR 8888；
+		 ** 001：ARGB 8888；
+		 ** 010: ABGR 1555；
+		 ** 011: ARGB 1555；
+		 ** 100:  BGR  565；
+		 ** 101:  RGB  565；
+		 ** 110:  BGR  888；
+		 ** 111:  RGB  888；
+		**/
 		#ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
 		if(JCS_ARGB_8888 == cinfo->out_color_space || JCS_RGBA_8888 == cinfo->out_color_space)
 		#else
         if(JCS_ARGB_8888 == cinfo->out_color_space)
 		#endif
 		{
-			s32OutType  =  0x1;
-		}
-
-		if(JCS_ABGR_8888 == cinfo->out_color_space)
-		{
-			s32OutType  =  0x0;
+			s32OutType  =  0x100;
+		}else if(JCS_ABGR_8888 == cinfo->out_color_space){
+			s32OutType  =  0x000;
+		}else if(JCS_ARGB_1555 == cinfo->out_color_space){
+			s32OutType  =  0x300;
+		}else if(JCS_ABGR_1555 == cinfo->out_color_space){
+			s32OutType  =  0x200;
+		}else if(JCS_RGB_565 == cinfo->out_color_space){
+			s32OutType  =  0x500;
+		}else if(JCS_BGR_565 == cinfo->out_color_space){
+			s32OutType  =  0x400;
+		}else if(JCS_RGB == cinfo->out_color_space){
+			s32OutType  =  0x700;
+		}else{
+			s32OutType  =  0x600;
 		}
 
 		s32OutPut = s32HorFliter | s32VerFliter | s32OutType;
@@ -595,16 +661,13 @@ static HI_VOID JPEG_HDEC_SetCropAndARGBInfo(const struct jpeg_decompress_struct 
 
 		JPEG_HDEC_SetDecARGBPara(cinfo);
 
-		if(HI_TRUE == pJpegHandle->stDecCoef.bSetHorSampleCoef)
-		{
+		if(HI_TRUE == pJpegHandle->stDecCoef.bSetHorSampleCoef){
 			JPEG_HDEC_SetHorSampleCoef(pJpegHandle);
 		}
-		if(HI_TRUE == pJpegHandle->stDecCoef.bSetVerSampleCoef)
-		{
+		if(HI_TRUE == pJpegHandle->stDecCoef.bSetVerSampleCoef){
 			JPEG_HDEC_SetVerSampleCoef(pJpegHandle);
 		}
-		if(HI_TRUE == pJpegHandle->stDecCoef.bSetCSCCoef)
-		{
+		if(HI_TRUE == pJpegHandle->stDecCoef.bSetCSCCoef){
 			JPEG_HDEC_SetCSCCoef(pJpegHandle);
 		}
 }
@@ -689,8 +752,7 @@ static HI_VOID JPEG_HDEC_SetPress(const struct jpeg_decompress_struct *cinfo)
 
 	HI_GFX_GetTimeStamp(&u32CursecTime,&u32CurUsecTime);
 	tmp = (rand() + u32CurUsecTime) % 4; 
-	if(tmp > 0)	
-	{
+	if(tmp > 0)	{
 		/** 带反压 **/
 	 	Axi_Press_bypass_flag = 0;
 	}
@@ -713,8 +775,7 @@ static HI_VOID JPEG_HDEC_SetPress(const struct jpeg_decompress_struct *cinfo)
 	/** 扣脉冲 **/ 
 	a = rand()%31 + 1;
 	b = rand()%31 + 1;
-	if (a > b)
-	{
+	if (a > b){
 		b = a;
 	}
 	D32_01 = 0;
@@ -821,6 +882,12 @@ HI_S32 JPEG_HDEC_SetPara(const struct jpeg_decompress_struct *cinfo)
 		 ** CNcomment: 设置dri得值 CNend\n
 		 **/
 		JPEG_HDEC_SetDri(cinfo);
+
+		/**
+		 ** set mem type
+		 ** CNcomment: 设置内存类型 CNend\n
+		 **/
+		JPEG_HDEC_SetMemtype(cinfo);
 
 		/**
 		 ** set stream buffer message

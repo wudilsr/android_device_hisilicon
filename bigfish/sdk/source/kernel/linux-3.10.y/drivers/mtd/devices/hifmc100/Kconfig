@@ -1,0 +1,38 @@
+#
+# hisilicon flash memory controller device version 100
+#
+
+menuconfig MTD_HIFMC100
+	tristate "hisilicon flash memory controller device version 100 driver"
+	depends on (ARCH_S40)
+	default n if (ARCH_S40)
+	select MTD_SPI_IDS
+	help
+	  Hisilicon flash memory controller device version 100.
+	  Hisilicon flash memory controller version 100 support
+	  DMA transfers while reading and write the spi flash,
+	  which will improve the performace very much.
+
+if MTD_HIFMC100
+
+config HIFMC100_BUFFER_BASE_ADDRESS
+	hex "hifmc100 read/write memory base address"
+	default "0xFE200000" if (ARCH_S40)
+
+config HIFMC100_REG_BASE_ADDRESS
+	hex "hifmc100 register base address"
+	default "0xF9950000" if (ARCH_S40)
+
+config HIFMC100_CHIP_NUM
+	int "hifmc100 spi chip number"
+	default 2 if (ARCH_S40)
+
+config HIFMC100_ENABLE_CHIPSELECT_0
+	bool "use spi device on chipselect 0"
+	default y if (ARCH_S40)
+
+config HIFMC100_ENABLE_CHIPSELECT_1
+	bool "use spi device on chipselect 1"
+	default n if (ARCH_S40)
+
+endif # MTD_HIFMC100

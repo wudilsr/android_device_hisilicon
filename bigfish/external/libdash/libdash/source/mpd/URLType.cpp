@@ -55,3 +55,21 @@ ISegment*           URLType::ToSegment      (const std::vector<IBaseUrl *>& base
 
     return NULL;
 }
+
+ISegment*           URLType::ToSegment      (const std::vector<IBaseUrl *>& baseurls, const std::string &specialSourceURL) const
+{
+    Segment *seg;
+
+    if (this->sourceURL != "")
+        return NULL;
+
+    seg = new Segment();
+
+    if(seg->Init(baseurls, specialSourceURL, this->range, this->type))
+        return seg;
+
+    delete(seg);
+
+    return NULL;
+}
+

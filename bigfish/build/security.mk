@@ -44,9 +44,17 @@ $(EMMC_SECURITY_SIGN): $(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGET
 	$(hide) cp -arv $(SECURE_OBJ_DIR)/fastboot.bin $(SECURE_OUTPUT_DIR)/fastboot.bin
 	$(hide) $(SECURE_SIGN_TOOL) -t 2 -c $(SECURE_CONFIG_DIR)/common_bootargs_config.cfg -k $(SECURE_RSA_KEY_DIR) -r $(SECURE_INPUT_DIR) -o $(SECURE_OBJ_DIR)
 	$(hide) cp -arv $(SECURE_OBJ_DIR)/bootargs.bin $(SECURE_OUTPUT_DIR)/bootargs.bin
+ifeq ($(strip $(HISILICON_SECURITY_L2_COMMON_MODE_SIGN)),true)
+	$(hide) $(SECURE_SIGN_TOOL) -t 2 -c $(SECURE_CONFIG_DIR)/common_recovery_config.cfg -k $(SECURE_RSA_KEY_DIR) -r $(SECURE_INPUT_DIR) -o $(SECURE_OBJ_DIR)
+else
 	$(hide) $(SECURE_SIGN_TOOL) -t 3 -c $(SECURE_CONFIG_DIR)/special_recovery_config.cfg -k $(SECURE_RSA_KEY_DIR) -r $(SECURE_INPUT_DIR) -o $(SECURE_OBJ_DIR)
+endif
 	$(hide) cp -arv $(SECURE_OBJ_DIR)/recovery.img $(SECURE_OUTPUT_DIR)/recovery.img
+ifeq ($(strip $(HISILICON_SECURITY_L2_COMMON_MODE_SIGN)),true)
+	$(hide) $(SECURE_SIGN_TOOL) -t 2 -c $(SECURE_CONFIG_DIR)/common_kernel_config.cfg -k $(SECURE_RSA_KEY_DIR) -r $(SECURE_INPUT_DIR) -o $(SECURE_OBJ_DIR)
+else
 	$(hide) $(SECURE_SIGN_TOOL) -t 3 -c $(SECURE_CONFIG_DIR)/special_kernel_config.cfg -k $(SECURE_RSA_KEY_DIR) -r $(SECURE_INPUT_DIR) -o $(SECURE_OBJ_DIR)
+endif
 	$(hide) cp -arv $(SECURE_OBJ_DIR)/kernel.img $(SECURE_OUTPUT_DIR)/kernel.img
 	@echo ----- Sign Security Image: $@ --------
 

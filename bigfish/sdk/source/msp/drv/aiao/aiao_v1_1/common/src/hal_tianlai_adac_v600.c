@@ -117,8 +117,6 @@ HI_VOID Digfi_DacSetPd(HI_VOID)
     SC_PERI_TIANLAI_ADAC2 Adac2;
 
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;    
-    Adac2.bits.pd_dffr = 0;
-    Adac2.bits.pd_dffl = 0;
     Adac2.bits.pd_vref = 0;
     Adac2.bits.Pd_ctcm_ibias = 0;
     Adac2.bits.pd_ibias = 0;
@@ -133,8 +131,8 @@ HI_VOID Digfi_DacSetPopAdj(HI_VOID)
     SC_PERI_TIANLAI_ADAC1 Adac1;
 
     Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;    
-    Adac1.bits.pop_adj_l = 0;
-    Adac1.bits.pop_adj_r = 0;
+    Adac1.bits.pop_direct_r = 0;
+    Adac1.bits.pop_direct_l = 0;
     g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;
 }
 
@@ -268,44 +266,77 @@ HI_VOID Digfi_DacSetSampleRate(HI_UNF_SAMPLE_RATE_E SR)
 
 static HI_VOID Digfi_DacPoweup(HI_BOOL bResume)
 {
-    SC_PERI_TIANLAI_ADAC0 Adac0;
+    SC_PERI_TIANLAI_ADAC1 Adac1;
     SC_PERI_TIANLAI_ADAC2 Adac2; 
-#ifndef HI_SND_MUTECTL_SUPPORT
-    if(HI_TRUE == bResume)
-    {
-        //msleep(100); //add for resume popfree
-    }
-#endif
 
-    /* step 1: open popfree */
+    Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
+    Adac2.bits.Td_sel = 0x0;  //change it to 00,01,10,11
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+
+    /* step 1: pop adj  */
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_adj_res = 0x1;  //change it to 00,01,10,11
+    Adac1.bits.pop_adj_clk = 0x1;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;
+
+    /* step 3: pd setting 2 */
+    Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
+    Adac2.bits.pd_dacr = 1;
+    Adac2.bits.pd_dacl = 1;
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+
+    Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
+    Adac2.bits.mute_dacl = 1;
+    Adac2.bits.mute_dacr = 1;
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_direct_l = 0;
+    Adac1.bits.pop_direct_r = 0;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;    
+ 
+
+     /* step 2: pd setting 1 */
+     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
+     Adac2.bits.pd_ctcm = 0;
+     Adac2.bits.Pd_ctcm_ibias = 0;
+     Adac2.bits.pd_ibias = 0;
+     g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+
+    /* step 4: open popfree */
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.popfreel = 1;
     Adac2.bits.popfreer = 1;
-#ifdef HI_SND_MUTECTL_SUPPORT  
+#ifdef HI_SND_MUTECTL_SUPPORT
     // fast power up enable
     Adac2.bits.fs = 1;
 #else
     //fast power up not enable
     Adac2.bits.fs = 0; //add for popfree
 #endif    
-    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
-
-    /*step 2: pd_vref power up	*/
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32; 
+    
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.pd_vref = 0;
-    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;//0xf0 
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32; 
+   
 
-    /*step 3: open DAC */
+    /* step 5: pop direct setting */
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_direct_l = 1;
+    Adac1.bits.pop_direct_r = 1;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;
+
+#ifndef HI_SND_MUTECTL_SUPPORT  
+    msleep(500);   
+#endif
+
+    /*step 6: open DAC */
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.pd_dacr = 0;
     Adac2.bits.pd_dacl = 0;
     g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
     
-    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
-    Adac0.bits.pd_dacr = 0;
-    Adac0.bits.pd_dacl = 0;
-    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
-
 #ifdef HI_SND_MUTECTL_SUPPORT  
     if(HI_TRUE == bResume)
     {
@@ -316,22 +347,11 @@ static HI_VOID Digfi_DacPoweup(HI_BOOL bResume)
     }
 #endif  
 
-    /*step 4: close profree */
-    Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
-    Adac2.bits.popfreel = 0;
-    Adac2.bits.popfreer = 0;
-    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;//0x00
-
-    /*step 5: disable mute */
+    /*step 7: disable mute */
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.mute_dacl = 0;
     Adac2.bits.mute_dacr = 0;
-    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
-    
-    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
-    Adac0.bits.mute_dacl = 0;
-    Adac0.bits.mute_dacr = 0;
-    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;   
 
     return;
 }
@@ -349,37 +369,53 @@ HI_VOID ADAC_FastPowerEnable(HI_BOOL bEnable)
 
 static HI_VOID Digfi_DacPowedown(HI_BOOL bSuspend)
 {
-    SC_PERI_TIANLAI_ADAC0 Adac0;
+    SC_PERI_TIANLAI_ADAC1 Adac1;
     SC_PERI_TIANLAI_ADAC2 Adac2;
+    HI_U32 u32Volume;
+   
+    
+    for(u32Volume = 0x06; u32Volume <= 0x7f; u32Volume += 10)
+    {
+        Digfi_DacSetVolume(u32Volume,u32Volume);
+        msleep(1);
+    }
 
-    /*step 1: enable mute */
-    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
-    Adac0.bits.mute_dacl = 1;
-    Adac0.bits.mute_dacr = 1;
-    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_adj_res = 0x3;
+    Adac1.bits.pop_adj_clk = 0x1;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;
+
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_direct_l = 1;
+    Adac1.bits.pop_direct_r = 1;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32;
 
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.mute_dacl = 1;
     Adac2.bits.mute_dacr = 1;
     g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
-
+    
     /*step 2: open popfree */
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.popfreel = 1;
     Adac2.bits.popfreer = 1;
     g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
-
-    /*step 3: close DAC */
-    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
-    Adac0.bits.pd_dacl = 1;
-    Adac0.bits.pd_dacr = 1;
-    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+	
 
     Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
     Adac2.bits.pd_dacl = 1;
     Adac2.bits.pd_dacr = 1;
     g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+  
+   
+    Adac1.u32 = g_pstRegPeri->PERI_TIANLA_ADAC1.u32;
+    Adac1.bits.pop_direct_l = 0;
+    Adac1.bits.pop_direct_r = 0;
+    g_pstRegPeri->PERI_TIANLA_ADAC1.u32 = Adac1.u32; 
+
+
 #ifndef HI_SND_MUTECTL_SUPPORT
+	msleep(2000);
     if(HI_TRUE == bSuspend) //add for suspend popfree
     {
         Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
@@ -403,9 +439,17 @@ static HI_VOID Digfi_DacPowedown(HI_BOOL bSuspend)
         Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
         Adac2.bits.pd_vref = 1;
         g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+#ifndef HI_SND_MUTECTL_SUPPORT
+        msleep(50);  
+#endif
     }
+        Adac2.u32 = g_pstRegPeri->PERI_TIANLA_ADAC2.u32;
+        Adac2.bits.pd_ctcm = 1;
+        Adac2.bits.Pd_ctcm_ibias = 1;
+        Adac2.bits.pd_ibias = 1;
+        g_pstRegPeri->PERI_TIANLA_ADAC2.u32 = Adac2.u32;
+        
 
-    return;
 }
 
 static HI_VOID Digfi_DacInit(HI_UNF_SAMPLE_RATE_E SR, HI_BOOL bResume)
@@ -413,10 +457,6 @@ static HI_VOID Digfi_DacInit(HI_UNF_SAMPLE_RATE_E SR, HI_BOOL bResume)
     Digfi_DacPoweup(bResume);
     Digfi_DacSetDataBits();
     Digfi_DacSetSampleRate(SR);
-    Digfi_DacSetChopper(HI_TRUE);
-    Digfi_DacSetPath();
-    Digfi_DacSetAdj();
-    Digfi_DacSetPd();
     Digfi_DacSetVolume(0x06, 0x06);   /* 0dB */
 }
 
@@ -486,11 +526,30 @@ The start-up sequence consists on several steps in a pre-determined order as fol
 5. reset the signal path (rstdpz to low and back to high after 100ns)
 6. start the individual codec blocks
  */
+HI_VOID Digfi_DacInitDigital(HI_VOID)
+{
+    SC_PERI_TIANLAI_ADAC0 Adac0;
+    
+    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+    Adac0.bits.pd_dacr = 0;
+    Adac0.bits.pd_dacl = 0;
+    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    
+    Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+    Adac0.bits.mute_dacl = 0;
+    Adac0.bits.mute_dacr = 0;
+    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    
+    Digfi_DacSetVolume(0x7f, 0x7f); 
+    Digfi_DacSetPath();
+}
+
 
 HI_VOID ADAC_TIANLAI_Init(HI_UNF_SAMPLE_RATE_E enSR, HI_BOOL bResume)
 {
-    Digfi_ADACEnable();
+    Digfi_ADACEnable(); 
     msleep(1);   //discharge
+    Digfi_DacInitDigital();
     Digfi_DacInit(enSR, bResume);
 }
 

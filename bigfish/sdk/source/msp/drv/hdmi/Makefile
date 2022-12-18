@@ -220,7 +220,9 @@ DRV_OBJS += $(HDMI_VER)/drv_hdmi_infoframe.o \
             $(HDMI_VER)/drv_hdmi_edid.o \
             $(HDMI_VER)/drv_hdmi_edid_test.o \
             $(HDMI_VER)/drv_hdmi_intf.o \
-            $(HDMI_VER)/drv_hdmi_intf_k.o
+            $(HDMI_VER)/drv_hdmi_intf_k.o \
+			$(HDMI_VER)/drv_hdmi_proc.o \
+			$(HDMI_VER)/drv_hdmi_compatibility.o
 
 $(MOD_NAME)-y := $(DRV_OBJS)
 endif

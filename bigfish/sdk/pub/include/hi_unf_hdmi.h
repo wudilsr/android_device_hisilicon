@@ -873,16 +873,6 @@ CNcomment:无 CNend
 HI_S32 HI_UNF_HDMI_GetCECCommand(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_CMD_S  *pCECCmd, HI_U32 timeout);
 
 /**
-\brief enable the cec func. CNcomment:CEC 使能打开 CNend
-\attention \n
-\param[in] enHdmi   hdmi device id. CNcomment:HDMI设备ID CNend
-\retval HI_SUCCESS     success. CNcomment:成功 CNend
-\retval please refer to the err code definitino of mpi.CNcomment:请参考MPI错误码 CNend
-\see \n
-CNcomment:无 CNend
-*/
-
-/**
 \brief register CEC callback function. CNcomment:注册获取CEC回调函数 CNend
 \attention \n
 \param[in] enHdmi   hdmi device id. CNcomment:HDMI设备ID CNend
@@ -906,7 +896,15 @@ CNcomment:无 CNend
 */
 HI_S32 HI_UNF_HDMI_UnRegCECCallBackFunc(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CECCALLBACK pCECCallback);
 
-
+/**
+\brief enable the cec func. CNcomment:CEC 使能打开 CNend
+\attention \n
+\param[in] enHdmi   hdmi device id. CNcomment:HDMI设备ID CNend
+\retval HI_SUCCESS     success. CNcomment:成功 CNend
+\retval please refer to the err code definitino of mpi.CNcomment:请参考MPI错误码 CNend
+\see \n
+CNcomment:无 CNend
+*/
 HI_S32 HI_UNF_HDMI_CEC_Enable(HI_UNF_HDMI_ID_E enHdmi);
 
 /**

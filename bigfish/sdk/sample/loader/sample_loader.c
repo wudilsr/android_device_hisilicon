@@ -177,6 +177,48 @@ static HI_S32 OTA_Cable(HI_LOADER_CAB_PARA_S *pstCableInfo)
 	return HI_SUCCESS;
 }
 
+static HI_S32 OTA_Terrestrial(HI_LOADER_TER_PARA_S *pstTerInfo)
+{
+	HI_U32 tmp;
+
+	printf("> Input PID[%d]", pstTerInfo->u32OtaPid);
+	MODIFY_NUMBER(pstTerInfo->u32OtaPid);
+	if ((pstTerInfo->u32OtaPid < 32) || (pstTerInfo->u32OtaPid > 8190))
+	{
+		printf("pid error should be 32~8190\n");
+		return -1;
+	}
+
+	printf("> Input Frequency(KHz)[%d]", pstTerInfo->u32OtaFreq);
+	if (0 == get_input_number(&tmp)) 
+		pstTerInfo->u32OtaFreq = tmp;
+
+	if ((pstTerInfo->u32OtaFreq/1000 < 100) || (pstTerInfo->u32OtaFreq/1000 > 900))
+	{
+		printf("frequency error, should be 100~900\n");
+		return -1;
+	}
+
+	printf("> Input BandWidth(MHz)[%d]", pstTerInfo->u32OtaBandWidth/1000);
+       if (0 == get_input_number(&tmp)) 
+		pstTerInfo->u32OtaBandWidth = tmp * 1000;
+	if ((pstTerInfo->u32OtaBandWidth < 6000) || (pstTerInfo->u32OtaBandWidth > 9000))
+	{
+		printf("BandWidth error, should be 6000~9000\n");
+		return -1;
+	}
+
+	printf("> Input Modulation(0-16,1-32,2-64,3-128,4-256Qam)[%d]", pstTerInfo->u32OtaModulation);
+	MODIFY_NUMBER(pstTerInfo->u32OtaModulation);
+	if ((pstTerInfo->u32OtaModulation < 0) || (pstTerInfo->u32OtaModulation > 4))
+	{
+		printf("modulation error, should be 0~4\n");
+		return -1;
+	}
+
+	return HI_SUCCESS;
+}
+
 static HI_S32 OTA_Satellite(HI_LOADER_SAT_PARA_S *pstSateInfo)
 {
 	HI_U32 tmp;
@@ -204,20 +246,39 @@ static HI_S32 OTA_Satellite(HI_LOADER_SAT_PARA_S *pstSateInfo)
 		return -1;
 	}
 
-	printf("> Input LNB Low Frequency(MHZ)[%d]", pstSateInfo->u32LowLO);
-	MODIFY_NUMBER(pstSateInfo->u32LowLO);
-
-	printf("> Input LNB High Frequency(MHZ)[%d]", pstSateInfo->u32HighLO);
-	MODIFY_NUMBER(pstSateInfo->u32HighLO);
-
 	printf("> Input LNB Power Typte(0-LNB Power Off, 1-LNB Power On)[%d]", pstSateInfo->u32LNBPower);
+    MODIFY_NUMBER(pstSateInfo->u32LNBPower);
 	if (pstSateInfo->u32LNBPower > 1)
 	{
 		printf("LNB Power Error!");
 		return -1;
 	}
-	MODIFY_NUMBER(pstSateInfo->u32LNBPower);
+	else if (1 == pstSateInfo->u32LNBPower)
+	{   
+    	printf("> Select whether use unicable(0-no, 1-yes)[%d]",pstSateInfo->u32UnicFlag);
+	    MODIFY_NUMBER(pstSateInfo->u32UnicFlag);
+	    if (pstSateInfo->u32UnicFlag > 1)
+	    {
+	        printf("Unicable flag error!\n");
+		 return -1;
+	    }
+		else if ((pstSateInfo->u32UnicFlag != 1))
+		{
+		    printf("> Input LNB Low Frequency(MHZ)[%d]", pstSateInfo->u32LowLO);
+		    MODIFY_NUMBER(pstSateInfo->u32LowLO);
 
+		    printf("> Input LNB High Frequency(MHZ)[%d]", pstSateInfo->u32HighLO);
+		    MODIFY_NUMBER(pstSateInfo->u32HighLO);
+		}
+	}
+	else
+	{
+	    printf("> Input LNB Low Frequency(MHZ)[%d]", pstSateInfo->u32LowLO);
+	    MODIFY_NUMBER(pstSateInfo->u32LowLO);
+
+	    printf("> Input LNB High Frequency(MHZ)[%d]", pstSateInfo->u32HighLO);
+	    MODIFY_NUMBER(pstSateInfo->u32HighLO);
+	}
 	printf("> Input 22K Switch(0-Off, 1-On)[%d]", pstSateInfo->u32Switch22K);
 	if (pstSateInfo->u32Switch22K > 1)
 	{
@@ -361,6 +422,15 @@ static HI_VOID ShowSelect(HI_LOADER_PARAMETER_S *pstLoaderInfo)
             printf("Symrate		: %d(Kbps)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stCab.u32OtaSymbRate);
             printf("Modulation		: %dQAM\n",16 * (1 << pstLoaderInfo->stPara.stOTAPara.unConnPara.stCab.u32OtaModulation));
         }
+        else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstLoaderInfo->stPara.stOTAPara.eSigType || 
+                    HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstLoaderInfo->stPara.stOTAPara.eSigType)
+        {
+            printf("Tuner Type		: Terrestrial DVB-T/T2\n");
+            printf("PID			: %d\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stTer.u32OtaPid);
+            printf("Frequency		: %5.1f(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stTer.u32OtaFreq/ 1000.0);
+            printf("BandWidth	        : %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stTer.u32OtaBandWidth/ 1000);
+            printf("Modulation		: %dQAM\n",16 * (1 << pstLoaderInfo->stPara.stOTAPara.unConnPara.stTer.u32OtaModulation));
+        }
         else if (HI_UNF_TUNER_SIG_TYPE_SAT == pstLoaderInfo->stPara.stOTAPara.eSigType)
         {
             printf("Tuner Type		: Satellite\n");
@@ -388,16 +458,21 @@ static HI_VOID ShowSelect(HI_LOADER_PARAMETER_S *pstLoaderInfo)
                 break;
             }
 
-            printf("LNB Low Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32LowLO);
-            printf("LNB High Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32HighLO);
-
             switch (pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32LNBPower)
             {
             case 0:
                 printf("LNB Power 		: Power Off\n");
+                printf("LNB Low Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32LowLO);
+                printf("LNB High Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32HighLO);
                 break;
             case 1:
                 printf("LNB Power 		: Power On\n");
+                printf("Unicable Support        : %s\n", (pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32UnicFlag ==1 ?"YES":"NO"));
+                if (pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32UnicFlag !=1)
+                {
+                    printf("LNB Low Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32LowLO);
+                    printf("LNB High Frequency	: %d(MHZ)\n",pstLoaderInfo->stPara.stOTAPara.unConnPara.stSat.u32HighLO);
+                }
                 break;
 
             default:
@@ -538,9 +613,9 @@ HI_S32 TriggerLoaderUpgrd(HI_VOID)
 	{
 		HI_U32 tmp = 0;
 
-		printf("> Select signal type(0-CAB, 1-SAT)");
+		printf("> Select signal type(0-CAB, 1-SAT, 2-DVB-T, 3-DVB-T2)");
 		MODIFY_NUMBER(tmp);
-		if (tmp != 0 && tmp != 1)
+		if ((tmp < 0) || (tmp > 3))
 		{
 			printf("Invalid input\n");
 			return -1;
@@ -552,11 +627,23 @@ HI_S32 TriggerLoaderUpgrd(HI_VOID)
 			if (HI_SUCCESS != OTA_Cable(&(stLoaderInfo.stPara.stOTAPara.unConnPara.stCab)))
 				return -1;
 		}
-		else /*set for satelite signal*/
+		else if (1 == tmp)/*set for satelite signal*/
 		{
 			stLoaderInfo.stPara.stOTAPara.eSigType = HI_UNF_TUNER_SIG_TYPE_SAT;
 			if (HI_SUCCESS != OTA_Satellite(&(stLoaderInfo.stPara.stOTAPara.unConnPara.stSat)))
 				return -1;
+		}
+        else if (2 == tmp)/*set for Terrestrial dvb-t signal*/
+		{
+			stLoaderInfo.stPara.stOTAPara.eSigType = HI_UNF_TUNER_SIG_TYPE_DVB_T;
+			if (HI_SUCCESS != OTA_Terrestrial(&(stLoaderInfo.stPara.stOTAPara.unConnPara.stTer)))
+			return -1;
+		}
+        else/*set for Terrestrial dvb-t2 signal*/
+		{
+			stLoaderInfo.stPara.stOTAPara.eSigType = HI_UNF_TUNER_SIG_TYPE_DVB_T2;
+			if (HI_SUCCESS != OTA_Terrestrial(&(stLoaderInfo.stPara.stOTAPara.unConnPara.stTer)))
+			return -1;
 		}
 	}
 	else if (stLoaderInfo.eUpdateType == HI_LOADER_TYPE_IP)

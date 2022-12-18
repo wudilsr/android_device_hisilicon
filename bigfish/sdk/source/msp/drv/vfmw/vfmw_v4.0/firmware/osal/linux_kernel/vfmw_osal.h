@@ -215,6 +215,9 @@ VOID   KernelFlushCache(VOID *ptr, UINT32 phy_addr, UINT32 len);
 SINT32 OSAL_DOWN_INTERRUPTIBLE(VOID);
 VOID   OSAL_UP(VOID);
 VOID   OSAL_SEMA_INTIT(VOID);
+SINT32 Down_Interruptible_with_Option(OSAL_SEMA *stSem);
+VOID Up_Interruptible_with_Option(OSAL_SEMA *stSem);
+VOID Sema_Init_with_Option(OSAL_SEMA *stSem);
 
 #endif
 

@@ -150,6 +150,8 @@ int       MultimediaManager::InitAdaptionSets()
     for (i = 0; i < this->subtitleState.size(); i++)
         this->subtitleState.at(i) = MANAGER_STATE_IDLE;
 
+    _IsISOFF();//depend on InitAdaptionSets();
+
     return 0;
 }
 
@@ -182,7 +184,6 @@ bool    MultimediaManager::Init                             (const std::string& 
 
     _SetCurrentPeriod(this->mpd->GetPeriods().at(0));
 
-    IsISOFF();
     IsLive();
     InitAdaptionSets();
 
@@ -1775,7 +1776,7 @@ uint32_t    MultimediaManager::GetVideoAdaptationSetNum()
 
 uint32_t    MultimediaManager::GetAudioAdaptationSetNum()
 {
-    if (mpd->GetPeriods().size() <= 0 || (false == this->isISOFF))
+    if (mpd->GetPeriods().size() <= 0 )//|| (false == this->isISOFF)// do not depend on isISOFF, it is inited behind
         return 0;
 
     IPeriod * period = GetCurrentPeriod();
@@ -1790,7 +1791,7 @@ uint32_t    MultimediaManager::GetAudioAdaptationSetNum()
 
 uint32_t    MultimediaManager::GetSubtitleAdaptationSetNum()
 {
-    if (mpd->GetPeriods().size() <= 0 || (false == this->isISOFF))
+    if (mpd->GetPeriods().size() <= 0)//|| (false == this->isISOFF)// do not depend on isISOFF, it is inited behind
         return 0;
 
     IPeriod * period = GetCurrentPeriod();
@@ -2052,20 +2053,116 @@ uint32_t    MultimediaManager::GetSubtitlePositionFromTime(int adaptationSetInde
     return 0;
 }
 
-bool        MultimediaManager::IsISOFF()
+bool        MultimediaManager::_findFFSignInAdaptationSet(dash::mpd::IAdaptationSet * adaptationSet)
 {
+    int j, repCount;
+
+    if (adaptationSet == NULL)
+        return false;
+
+    if (adaptationSet->GetMimeType().find("mp4") != std::string::npos)
+    {
+        this->isISOFF = true;
+        return true;
+    }
+    else if (adaptationSet->GetMimeType().find("mp2t") != std::string::npos)
+    {
+        this->isISOFF = false;
+        return true;
+    }
+
+    repCount = adaptationSet->GetRepresentation().size();
+    for (j = 0; j < repCount; j++)
+    {
+        if (adaptationSet->GetRepresentation().at(j)->GetMimeType().find("mp4") != std::string::npos)
+        {
+            this->isISOFF = true;
+            return true;
+        }
+        else if (adaptationSet->GetRepresentation().at(j)->GetMimeType().find("mp2t") != std::string::npos)
+        {
+            this->isISOFF = false;
+            return true;
+         }
+    }
+
+    return false;
+}
+
+bool        MultimediaManager::_IsISOFF()
+{
+    int i, adaptCount;
+    bool bFileFormatFound = false;
+    std::vector<dash::mpd::IAdaptationSet *> *adaptationSet = NULL;
+
     if (!mpd->GetProfiles().empty())
     {
         std::string profile = mpd->GetProfiles().at(0);
+        /*
         if (profile.find("isoff") != std::string::npos)
             this->isISOFF = true;
         else if (profile.find("mp2t") != std::string::npos)
             this->isISOFF = false;
+            */
+         if (profile.find("mp2t") != std::string::npos)
+         {
+            this->isISOFF = false;
+            bFileFormatFound = true;
+         }
+         else
+         {
+            if (profile.find("isoff") != std::string::npos)
+            {
+                this->isISOFF = true;
+                bFileFormatFound = true;
+            }
+            else
+            {
+                if (this->videoAdaptationSets.size() > 0)
+                {
+                    adaptationSet = &(this->videoAdaptationSets);
+                    adaptCount = this->videoAdaptationSets.size();
+                }
+                else if (this->audioAdaptationSets.size() > 0)
+                {
+                    adaptationSet = &(this->audioAdaptationSets);
+                    adaptCount = this->audioAdaptationSets.size();
+                }
+
+                if (adaptationSet != NULL && adaptCount > 0)
+                {
+                    for (i = 0; i < adaptCount; i ++)
+                    {
+                        if(_findFFSignInAdaptationSet(adaptationSet->at(i)))
+                        {
+                            bFileFormatFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+         }
+
+         if (bFileFormatFound == false)
+         {
+            dash_log(DASH_LOG_ERROR, "[%s,%d] dash segment file format is unknown, isISOFF default to %d...\n",
+                __FUNCTION__, __LINE__, this->isISOFF);
+         }
 
         return this->isISOFF;
     }
 
     return false;
+}
+
+bool        MultimediaManager::IsISOFF()
+{
+    if (this->mpd == NULL)
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] MultimediaManager not inited, the result is not trusty!\n", __FUNCTION__, __LINE__);
+    }
+
+    return this->isISOFF;
 }
 
 std::string&    MultimediaManager::GetVideoIndexSegment()
@@ -2317,7 +2414,15 @@ int           MultimediaManager::SetVideoRepresentationSAPs(int adaptationSetInd
         return -1;
     }
 
+    if (this->videoState.at(adaptationSetIndex) == MANAGER_STATE_RUNNING)
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSetIndex %d is running, must set saps in stop state! \n",
+            __FUNCTION__, __LINE__, adaptationSetIndex);
+        return -1;
+    }
+
     adaptationSet = this->videoAdaptationSets.at(adaptationSetIndex);
+
     if (adaptationSet->GetRepresentation().size() <= representationIndex)
     {
          dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSet %d , representationIndex %d invalid, scope [0, %u)\n",
@@ -2338,6 +2443,13 @@ int           MultimediaManager::SetAudioRepresentationSAPs(int adaptationSetInd
     {
         dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSetIndex %d invalid, scope [0, %u(%u))\n",
             __FUNCTION__, __LINE__, adaptationSetIndex, this->audioLogics.size(), this->audioAdaptationSets.size());
+        return -1;
+    }
+
+    if (this->audioState.at(adaptationSetIndex) == MANAGER_STATE_RUNNING)
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSetIndex %d is running, must set saps in stop state! \n",
+            __FUNCTION__, __LINE__, adaptationSetIndex);
         return -1;
     }
 
@@ -2362,6 +2474,13 @@ int           MultimediaManager::SetSubtitleRepresentationSAPs(int adaptationSet
     {
         dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSetIndex %d invalid, scope [0, %u(%u))\n",
             __FUNCTION__, __LINE__, adaptationSetIndex, this->audioLogics.size(), this->audioAdaptationSets.size());
+        return -1;
+    }
+
+    if (this->subtitleState.at(adaptationSetIndex) == MANAGER_STATE_RUNNING)
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] AdaptationSetIndex %d is running, must set saps in stop state! \n",
+            __FUNCTION__, __LINE__, adaptationSetIndex);
         return -1;
     }
 

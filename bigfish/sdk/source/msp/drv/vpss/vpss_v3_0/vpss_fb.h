@@ -26,7 +26,7 @@ extern "C"{
 
 
 typedef struct hiVPSS_BUFFER_S{
-    MMZ_BUFFER_S stMMZBuf;
+    VPSS_MEM_S stMemBuf;
     HI_U32 u32Stride;
     MMZ_BUFFER_S stPrivDataBuf;
 }VPSS_BUFFER_S;
@@ -106,7 +106,9 @@ HI_S32 VPSS_FB_RelFulFrmBufNoMmz(VPSS_FB_INFO_S *pstFrameList,HI_DRV_VIDEO_FRAME
 VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBufNoMmz(VPSS_FB_INFO_S *pstFrameList,HI_DRV_VIDEO_FRAME_S *pstFrame);
 VPSS_FB_NODE_S * VPSS_FB_GetEmptyFrmBuf(VPSS_FB_INFO_S *pstFrameList,
                             HI_U32 u32Height,HI_U32 u32Width,
-                            HI_DRV_PIX_FORMAT_E ePixFormat,HI_DRV_PIXEL_BITWIDTH_E  enOutBitWidth);
+                            HI_DRV_PIX_FORMAT_E ePixFormat,
+							HI_DRV_PIXEL_BITWIDTH_E  enOutBitWidth,
+							HI_BOOL bSecure);
 HI_S32 VPSS_FB_AddFulFrmBuf(VPSS_FB_INFO_S *pstFrameList,VPSS_FB_NODE_S *pstFBNode);
 HI_S32 VPSS_FB_AddEmptyFrmBuf(VPSS_FB_INFO_S *pstFrameList,
                                 VPSS_FB_NODE_S *pstFBNode,

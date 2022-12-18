@@ -43,35 +43,18 @@ void set_core_voltage(void)
 	unsigned int mid_cpu_volt = (readl(REG_BASE_SCTL+REG_SC_GEN18) >> 8) & 0xff;
 	unsigned int min_cpu_volt = readl(REG_BASE_SCTL+REG_SC_GEN18) & 0xff;
 	unsigned int chipid = readl(REG_BASE_SCTL + REG_SC_SYSID0);
-
-	if ((unsigned int)_HI3798M_V100 == chipid
-		|| (unsigned int)_HI3796M_V100 == chipid) {
-		/* change freq to 1.2g */
-		writel(0x305, 0xf8a22048);
-		writel(0x705, 0xf8a22048);
-	}
+	unsigned int packagetype = (readl(REG_BASE_PERI_CTRL + REG_PERI_SOC_FUSE) >> 16) & 0x1f;
 
 	/* hpm 0             */
 	/* clock is 200M, set time division to (200/50 - 1) */
-	regval = readl(0xf8a23058);
-	regval &= 0xffffffc0;
-	regval |= 3;
-	writel(regval, 0xf8a23058);
-
 	regval = readl(0xf8a23064);
 	regval &= 0x00ffffff;
 	regval |= (1 << 24);
 	writel(regval, 0xf8a23064);
 
 	/* hpm enable */
-	regval = readl(0xf8a23058);
-	regval |= (1 << 24);
-	writel(regval, 0xf8a23058);
 
-	/* hpm monitor enable */
-	regval = readl(0xf8a23058);
-	regval |= (1 << 26);
-	writel(regval, 0xf8a23058);
+	writel(0x05000003, 0xf8a23058);
 
 	delay(6000000);
 
@@ -115,6 +98,14 @@ void set_core_voltage(void)
 	writel(regval, REG_BASE_SCTL+REG_SC_GEN17);
 
 	delay(8000000);
+	
+	if (((unsigned int)_HI3798M_V100 == chipid
+                || (unsigned int)_HI3796M_V100 == chipid)
+                && (packagetype != 0x7)) {
+                /* change freq to 1.2g */
+                writel(0x305, 0xf8a22048);
+                writel(0x705, 0xf8a22048);
+        }
 
 	return;
 }

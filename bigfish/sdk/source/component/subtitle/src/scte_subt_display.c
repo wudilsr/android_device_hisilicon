@@ -95,15 +95,15 @@ HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_HANDLE hDisplay, SCTE_SUBT_OUTPUT_S *pst
     {
         pstDisplayInfo->pstDisplayParam->u32x = pstOutData->stFramed.u32TopXPos;
         pstDisplayInfo->pstDisplayParam->u32y = pstOutData->stFramed.u32TopYPos;
-        pstDisplayInfo->pstDisplayParam->u32w = (pstOutData->stFramed.u32ButtomXPos - pstOutData->stFramed.u32TopXPos) + 1;
-        pstDisplayInfo->pstDisplayParam->u32h = (pstOutData->stFramed.u32ButtomYPos - pstOutData->stFramed.u32TopYPos) + 1;
+        pstDisplayInfo->pstDisplayParam->u32w = (pstOutData->stFramed.u32BottomXPos - pstOutData->stFramed.u32TopXPos) + 1;
+        pstDisplayInfo->pstDisplayParam->u32h = (pstOutData->stFramed.u32BottomYPos - pstOutData->stFramed.u32TopYPos) + 1;
     }
     else if (SCTE_SUBT_BACKGROUD_TRANSPARENT == pstOutData->enBackgroundStyle)
     {
         pstDisplayInfo->pstDisplayParam->u32x = pstOutData->u32TopXPos;
         pstDisplayInfo->pstDisplayParam->u32y = pstOutData->u32TopYPos;
-        pstDisplayInfo->pstDisplayParam->u32w = (pstOutData->u32ButtomXPos - pstOutData->u32TopXPos) + 1;
-        pstDisplayInfo->pstDisplayParam->u32h = (pstOutData->u32ButtomYPos - pstOutData->u32TopYPos) + 1;
+        pstDisplayInfo->pstDisplayParam->u32w = (pstOutData->u32BottomXPos - pstOutData->u32TopXPos) + 1;
+        pstDisplayInfo->pstDisplayParam->u32h = (pstOutData->u32BottomYPos - pstOutData->u32TopYPos) + 1;
     }
 
     switch(pstOutData->enDispStandard)

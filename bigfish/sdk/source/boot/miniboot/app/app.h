@@ -127,7 +127,10 @@ extern const void *flash_get_info(u_int flash);
 #define BOOT_MEDIA_DDR                         (1)
 #define BOOT_MEDIA_NAND                        (2)
 #define BOOT_MEDIA_SPIFLASH                    (3)
-#define BOOT_MEDIA_EMMC                        (4)
+#define BOOT_MEDIA_SPI_NAND                    (4)
+#define BOOT_MEDIA_EMMC                        (5)
+#define BOOT_MEDIA_SD                          (6)
+
 extern int get_boot_media(void);
 
 /* for ca nagra only */

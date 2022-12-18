@@ -42,8 +42,22 @@ typedef struct hiSO_NODE_S
 
 #define SO_ADD_EXT_BYTE_NUM   (4)
 #define SO_NODE_SIZE          sizeof(SO_NODE_S)
-#define SO_QUEUE_LOCK()       pthread_mutex_lock(&pSoQueue->lock);
-#define SO_QUEUE_UNLOCK()     pthread_mutex_unlock(&pSoQueue->lock);
+
+#define SO_QUEUE_LOCK()  \
+    do{\
+        int ret = pthread_mutex_lock(&pSoQueue->lock);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_lock(QUEUE) failure,ret = 0x%x\n",ret);\
+        }\
+    }while(0)
+
+#define SO_QUEUE_UNLOCK()  \
+    do{\
+        int ret = pthread_mutex_unlock(&pSoQueue->lock);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_unlock(QUEUE) failure,ret = 0x%x\n",ret);\
+        }\
+    }while(0)
 
 static HI_S32 _SO_GetBufLen(const SO_INFO_S *pstInfo)
 {

@@ -77,11 +77,19 @@ bool                        Path::GetStartAndEndBytes   (const std::string &byte
     size_t found = 0;
 
     found = byteRange.find('-');
-    if (found != std::string::npos && found < byteRange.size()-1 )
+    if (found != std::string::npos && found <= byteRange.size()-1 )
     {
         startByte = strtoul(byteRange.substr(0, found).c_str(), NULL, 10);
-        endByte = strtoul(byteRange.substr(found+1, std::string::npos).c_str(), NULL, 10);
-        return (startByte <= endByte);
+        if (found < byteRange.size()-1 )
+        {
+            endByte = strtoul(byteRange.substr(found+1, std::string::npos).c_str(), NULL, 10);
+            return (startByte <= endByte);
+        }
+        else//no end range, such as "0-"
+        {
+            endByte = (size_t)-1;
+            return (startByte >= 0);
+        }
     }
 
     return false;

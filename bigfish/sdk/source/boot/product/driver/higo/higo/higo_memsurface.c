@@ -38,29 +38,18 @@ static HI_S32 s_HiGoInitSurCount = 0;
 
 /******************************* API declaration *****************************/
 
-HI_S32 HIGO_InitSurface()
+HI_VOID HIGO_InitSurface()
 {
-    HI_S32 s32Ret;
-    
     /** re initial and remember initial times */
     if (UN_INIT_STATE != s_HiGoInitSurCount)
     {
-        /** */
         s_HiGoInitSurCount++;
-        return HI_SUCCESS;
-    }  
-
-    s32Ret = HIGO_InitMemory();
-    if (HI_SUCCESS != s32Ret)
-    {
-        HIGO_ERROR(s32Ret);
-        goto err0;
+        return;
     }
-
+    
     s_HiGoInitSurCount++;
-    return HI_SUCCESS;
-err0:
-    return s32Ret;
+    
+    return;
 }
 
 HI_S32 HIGO_DeinitSurface()
@@ -78,9 +67,7 @@ HI_S32 HIGO_DeinitSurface()
         s_HiGoInitSurCount--;
         return HI_SUCCESS;
     }
-
-    HIGO_DeInitMemory();
-
+    
     /** */
     s_HiGoInitSurCount--;
     return HI_SUCCESS;
@@ -139,28 +126,13 @@ HI_S32 HIGO_CreateSurfaceFromMem(const HIGO_SURINFO_S *pSurInfo, HIGO_MOD_E Mode
     }
 
     /** set surface as memory type*/
-    ret = Surface_SetSurfaceType(Surface, HIGO_SUR_EMPTY_E);
-    if (HI_SUCCESS != ret)
-    {
-        HIGO_ERROR(ret);
-        goto err1;
-    }
-    
-    /** set privad  data */
-    ret = Surface_SetSurfacePrivateData (Surface, HIGO_MOD_MEMSURFACE, pData);
-    if (HI_SUCCESS != ret)
-    {
-        HIGO_ERROR(ret);
-        goto err1;
-    }
+    Surface_SetSurfaceType(Surface, HIGO_SUR_EMPTY_E);
+    Surface_SetSurfacePrivateData (Surface, HIGO_MOD_MEMSURFACE, pData);
 
     *pSurface = Surface;
-    //printf ("w = %d, h = %d, Pitch = %d, Size = %d.\n", Width, Height, pData[0].Pitch, Size);
 
     return HI_SUCCESS;
-err1:
-    Surface_FreeSurface(Surface);
-    return ret;
+
 }
 
 
@@ -176,7 +148,7 @@ HI_S32 HIGO_CreateSurface(const HIGO_SURINFO_S *pSurInfo, HIGO_MOD_E Mode, HIGO_
     HI_PIXELDATA pData;
     HI_U32 Size;
     HIGO_HANDLE Surface;
-    HI_S32 ret;
+    HI_S32 ret = 0;
     HI_VOID * ptr;
     HI_U32 WStride0 = 0, WStride1 = 0, HStride0 = 0, HStride1 = 0;
     CHECK_SURFACE_INIT();
@@ -246,33 +218,21 @@ HI_S32 HIGO_CreateSurface(const HIGO_SURINFO_S *pSurInfo, HIGO_MOD_E Mode, HIGO_
     
     /** create Surface */
     ret = Surface_CreateSurface(&Surface, pSurInfo->Width, pSurInfo->Height, pSurInfo->PixelFormat);
-    if (HI_SUCCESS != ret)
-    {
+    if (HI_SUCCESS != ret){
         HIGO_ERROR(ret);
         goto err0;
     }
+    
     /** set surface memory type*/
-    ret = Surface_SetSurfaceType(Surface, HIGO_SUR_MEM_E);
-    if (HI_SUCCESS != ret)
-    {
-        HIGO_ERROR(ret);
-        goto err1;
-    }
+    Surface_SetSurfaceType(Surface, HIGO_SUR_MEM_E);
 
     /** set privad data  */
-    ret = Surface_SetSurfacePrivateData (Surface, HIGO_MOD_MEMSURFACE, pData);
-    if (HI_SUCCESS != ret)
-    {
-        HIGO_ERROR(ret);
-        goto err1;
-    }
+    Surface_SetSurfacePrivateData (Surface, HIGO_MOD_MEMSURFACE, pData);
 
     *pSurface = Surface;
-    //printf ("w = %d, h = %d, Pitch = %d, Size = %d.\n", Width, Height, pData[0].Pitch, Size);
 
-    return HI_SUCCESS;
-err1:
-    Surface_FreeSurface(Surface);
+    return ret;
+
 err0:
     HIGO_MMZ_Free(ptr);
 

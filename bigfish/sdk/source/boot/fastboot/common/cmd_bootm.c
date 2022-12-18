@@ -99,6 +99,11 @@ static void *boot_get_kernel (cmd_tbl_t *cmdtp, int flag,int argc, char *argv[],
 extern int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
 extern void show_bootimg_header(void *buf);
 
+#ifdef CONFIG_SECURE_BOOT_SUPPORT
+extern int is_trustedcore_img(char *buf);
+extern int do_load_secure_os(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
+#endif
+
 /*
  *  Continue booting an OS image; caller already has:
  *  - copied image header to global variable `header'
@@ -610,6 +615,17 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	ulong		load_end = 0;
 	int		ret;
 	boot_os_fn	*boot_fn;
+
+#ifdef CONFIG_SECURE_BOOT_SUPPORT
+	/* Load Trustedcore OS */
+	if (2 == argc) {
+		char *buf = (char *)simple_strtoul(argv[1], NULL, 16);
+		if (is_trustedcore_img(buf)) {
+			return do_load_secure_os(cmdtp, flag, argc, argv);
+		}
+	}
+#endif
+
 #ifndef CONFIG_RELOC_FIXUP_WORKS
 	static int relocated = 0;
 

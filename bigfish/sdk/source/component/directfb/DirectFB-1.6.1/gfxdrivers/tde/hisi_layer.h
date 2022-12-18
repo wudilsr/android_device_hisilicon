@@ -1,5 +1,8 @@
 #ifndef __HISI_LAYER_H__
 #define __HISI_LAYER_H__
+
+
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
 #include <config.h>
 
 #include <asm/types.h>
@@ -19,5 +22,7 @@
 #include <core/layers.h>
 
 extern DisplayLayerFuncs hisi_layer_funcs;
+#endif
+
 
 #endif

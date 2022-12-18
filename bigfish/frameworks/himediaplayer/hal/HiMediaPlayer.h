@@ -466,6 +466,9 @@ private:
         status_t          selectSubtitleTrack(int trackIndex);
         virtual int       SetOrigAndroidPath(int flags);
         int               AddExtTimedTextStream(const char *pTimedTextFilePath);
+        static status_t   getAudioCodecFormat(HI_S32 s32AudioFormat, HI_CHAR * pszAudioCodec);
+        status_t          getVideoCodecFormat(HI_S32 s32VideoFormat, HI_CHAR * pszVideoCodec);
+        static status_t   getAudioChannelString(HI_S32 s32AudioChannel, HI_CHAR * pszAudioChannel);
 
         HI_HANDLE getHandle()
         {
@@ -505,7 +508,9 @@ private:
         int mPreOutputFormat;
         bool mUseStaticResource;
         int mTimeShiftDuration;
-
+        int mYunosSource;
+        HI_S32 mS32ErrorCode;
+        char mUUID[HI_FORMAT_TITLE_MAX_LEN];
         /* subtitle type, SUB_DEFAULT_FRAME_PACK:auto recognise,  0:normal 2d subtitle, 1:sbs subtitle, 2:tab subtitle */
         int mSubFramePackType;
 
@@ -552,8 +557,6 @@ private:
         int             createAVPlay();
         int             destroyAVPlay();
         status_t        storeTimedTextData(const char * data, int size, int timeMs, Parcel * parcel);
-        status_t        getAudioCodecFormat(HI_S32 s32AudioFormat, HI_CHAR * pszAudioCodec);
-        status_t        getVideoCodecFormat(HI_S32 s32VideoFormat, HI_CHAR * pszVideoCodec);
         status_t        transStringcode(HI_CHAR * ps8In, HI_S32 s32InLen, HI_CHAR * ps8Out, HI_S32 * ps32OutLen);
         bool            IsMustASyncPrepareUrl(char *uri);
         bool            IsUseVsinkWindow();
@@ -592,5 +595,22 @@ private:
         static int      TimedTextOnclear(int u32UserData, void *pArg);
         static AvPlayInstances mAVPlayInstances;
     };
+    enum{
+          HA_AUD_CH_MONO = 1,
+          HA_AUD_CH_STEREO,
+          HA_AUD_CH_3_0,
+          HA_AUD_CH_4_0,
+          HA_AUD_CH_5_0,
+          HA_AUD_CH_5_1,
+          HA_AUD_CH_7_1,
+         };
+
+    enum ANDROID_ERROR_EXTRA_Mobaihe
+    {
+        /* for adapting mobaihe event info  */
+        MEDIA_INFO_EXTEND_BUFFER_LENGTH = 5000,
+        MEDIA_INFO_EXTEND_FIRST_FRAME_TIME = 5001,
+    };
+
 }; // namespace
 #endif

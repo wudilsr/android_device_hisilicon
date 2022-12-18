@@ -349,7 +349,7 @@ typedef struct hiCA_CAVENDOR_ATTR_S
 #define CMD_CA_SET_SECRET_KEY_LOCK              _IO(HI_ID_CA, 0x60)
 #define CMD_CA_GET_SECRET_KEY_LOCK              _IOR(HI_ID_CA, 0x61, HI_U32)
 
-#define CMD_CA_SET_VENDOR_ID                    _IOW(HI_ID_CA, 0x62, HI_UNF_ADVCA_VENDOR_TYPE_E)
+#define CMD_CA_SET_VENDOR_ID                    _IOW(HI_ID_CA, 0x62, HI_U32)
 #define CMD_CA_GET_VENDOR_ID                    _IOR(HI_ID_CA, 0x63, HI_U32)
 #define CMD_CA_SET_VENDOR_ID_LOCK               _IO(HI_ID_CA, 0x64)
 #define CMD_CA_GET_VENDOR_ID_LOCK               _IOR(HI_ID_CA, 0x65, HI_U32)
@@ -545,6 +545,7 @@ HI_S32 DRV_ADVCA_EncryptCipher(HI_U32 AddrID, HI_U32 *pDataIn);
 HI_S32 DRV_ADVCA_DecryptCipher(HI_U32 AddrID, HI_U32 *pDataIn);
 
 /** CA vendor type*/
+/*
 typedef enum hiUNF_ADVCA_VENDOR_TYPE_E
 {
     HI_UNF_ADVCA_VENDOR_NONE  = 0x0,
@@ -562,7 +563,8 @@ typedef enum hiUNF_ADVCA_VENDOR_TYPE_E
     HI_UNF_ADVCA_VENDOR_VIACCESS,
     HI_UNF_ADVCA_VENDOR_BUTT
 }HI_UNF_ADVCA_VENDOR_TYPE_E;
-
+*/
+    
 typedef union
 {
     struct 

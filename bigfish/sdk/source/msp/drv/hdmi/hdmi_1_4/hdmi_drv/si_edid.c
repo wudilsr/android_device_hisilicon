@@ -307,8 +307,10 @@ static HI_U32 SI_DDC_Adjust(void)
         g_pstRegIO->ioshare_reg125.u32 = 0x00;
     }
 
-#elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+#elif  defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     EDID_INFO("Adjust in 3798mv100 Series\n");
     //gpio
@@ -460,11 +462,54 @@ static HI_S32 CheckHeader(HI_U8 *pData)
     return HI_SUCCESS;
 }
 
+static HI_S32 ParseSinkName(HI_U8 *pData, HI_U8 **u8pName)
+{
+    HI_U32 u32Index;
+    *u8pName = NULL;
+    const HI_U8 monitor_name_header[] = {0x00, 0x00, 0x00};
+
+    for (u32Index = FIRST_DETAILED_TIMING_ADDR; u32Index < 512; u32Index ++)
+    {
+        if(0 == memcmp(&pData[u32Index], monitor_name_header, sizeof(monitor_name_header)))
+        {   
+            u32Index += 3;
+            if(0xFF == pData[u32Index])         /*Display Product Serial Number*/
+            {
+                *u8pName = *u8pName ? *u8pName : pData+u32Index + 2;
+                EDID_INFO("Serial Number:%s\n",*u8pName);
+            }
+            else if (0xFE == pData[u32Index])   /*Alphanumeric Data String*/
+            {
+                *u8pName = *u8pName ? *u8pName : pData+u32Index + 2;
+                EDID_INFO("ParseSink:%s\n",*u8pName);
+            }
+            else if (0xFC == pData[u32Index])   /*Display Product Name*/
+            {
+                *u8pName = pData+u32Index + 2;
+                EDID_INFO("ParseSinkName:%s\n",*u8pName);
+            }
+                
+        }
+        //EDID_INFO("BAD_HEADER Index:%d, 0x%02x\n",u32Index, pData[u32Index]);
+    }
+    
+    if(NULL == *u8pName)
+    {
+        return HI_FAILURE;
+    }
+    else
+    {
+        return HI_SUCCESS;
+    }
+}
+    
+
 static HI_S32 ParseVendorInfo(EDID_FIRST_BLOCK_INFO *pData)
 {
     HI_U16 u16Index,u16Data;
     HI_UNF_EDID_BASE_INFO_S *pSinkCap = DRV_Get_SinkCap(HI_UNF_HDMI_ID_0);
     HI_UNF_EDID_MANUFACTURE_INFO_S *pstVendor = &pSinkCap->stMfrsInfo;
+    HI_U8 *u8pName = NULL;
 
    	if(pData == NULL)
 	{
@@ -492,10 +537,17 @@ static HI_S32 ParseVendorInfo(EDID_FIRST_BLOCK_INFO *pData)
 	pstVendor->u32Week = pData->mfg_week;
 	pstVendor->u32Year = pData->mfg_year + 1990;
 
+    memset(pstVendor->u8pSinkName, 0, 14);
+  	if((HI_SUCCESS == ParseSinkName((HI_U8*)pData, &u8pName))&&(NULL != u8pName))
+	{
+		memcpy(pstVendor->u8pSinkName, u8pName, 13);
+        pstVendor->u8pSinkName[13] = '\0';
+    }
 	EDID_INFO("mfg name[%s]\n",pstVendor->u8MfrsName);
 	EDID_INFO("code:%d\n",pstVendor->u32ProductCode);
 	EDID_INFO("serial:%d\n",pstVendor->u32SerialNumber);
 	EDID_INFO("year:%d,week:%d\n",pstVendor->u32Year, pstVendor->u32Week);
+	EDID_INFO("sinkName:%s\n",pstVendor->u8pSinkName);
 
     return HI_SUCCESS;
 }
@@ -1665,14 +1717,26 @@ HI_U8 SI_ParseEDID(HI_U8 *DisplayType)
     return HI_SUCCESS;
 }
 
-HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 size)
+HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 *size)
 {
-    if (size > 512)
+    HI_U32 BlockNum = 0;
+    
+    if ((HI_NULL == DataBlock)||(HI_NULL == size))
     {
-        size = 512;
+        EDID_ERR("ReadEDID add==NULL: &buf=0x%p,&size=0x%p\n",DataBlock, size);
+        return HI_FAILURE;
+    }
+    
+    BlockNum = GetExtBlockNum(g_EdidMen[EXT_BLOCK_ADDR]);
+    if(BlockNum > 3)
+    {
+        BlockNum = 3;
     }
 
-    memcpy(DataBlock, g_EdidMen, size);
+    *size = 128 + 128 * BlockNum;
+
+    memcpy(DataBlock, g_EdidMen, *size);
+    
     return HI_SUCCESS;
 }
 
@@ -1680,7 +1744,6 @@ HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 size)
 HI_U8 SI_Force_GetEDID(HI_U8 *datablock, HI_U32 *length)
 {
     HI_U32 ret;
-    HI_U32 BlockNum = 0;
     HI_U8  DisplayType = 0;
 
     ret = SI_ReadSinkEDID();
@@ -1690,15 +1753,7 @@ HI_U8 SI_Force_GetEDID(HI_U8 *datablock, HI_U32 *length)
         return ret;
     }
 
-    SI_Proc_ReadEDIDBlock(datablock, EDID_SIZE);
-    BlockNum = GetExtBlockNum(g_EdidMen[EXT_BLOCK_ADDR]);
-
-    if(BlockNum > 3)
-    {
-        BlockNum = 3;
-    }
-
-    *length = 128 + 128 * BlockNum;
+    SI_Proc_ReadEDIDBlock(datablock, length);
 
     if(!SI_ParseEDID(&DisplayType))
     {

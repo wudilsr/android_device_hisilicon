@@ -700,7 +700,9 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
     || defined(CHIP_TYPE_hi3716mv400)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)	\
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)
     printf("please input vccen mode (default %d): %d-CMOS, %d-OD, others-default\n", HI_SCI_VCCEN_MODE, HI_UNF_SCI_MODE_CMOS,
             HI_UNF_SCI_MODE_OD);
 

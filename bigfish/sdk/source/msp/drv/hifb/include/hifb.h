@@ -288,7 +288,7 @@ typedef struct
 typedef enum
 {        
     HIFB_FMT_RGB565 = 0,    /**<  RGB565 16bpp */   
-    HIFB_FMT_RGB888,		  /**<  RGB888 24bpp */
+    HIFB_FMT_RGB888,		/**<  RGB888 24bpp */
     HIFB_FMT_KRGB444,       /**<  RGB444 16bpp */
     HIFB_FMT_KRGB555,       /**<  RGB555 16bpp */
     

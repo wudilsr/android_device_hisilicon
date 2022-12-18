@@ -1,6 +1,6 @@
 /******************************************************************************
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
+* Copyright (C) 2014-2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
 * This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 *  and may not be copied, reproduced, modified, disclosed to others, published or used, in
@@ -10,43 +10,18 @@
 
   File Name     : pq_hal_comm.c
   Version       : Initial Draft
-  Author        : l00212594
+  Author        : p00203646
   Created       : 2013/10/15
   Description   :
 
 ******************************************************************************/
 
-#ifndef  __PQ_PLATFORM_BOOT__
-
-#include <linux/delay.h>        /* for ndelay(ns) */
-#include <linux/fs.h>
-#include <linux/semaphore.h>
-#include <linux/module.h>
-#include <linux/errno.h>
-#include <linux/stddef.h>
-#include <linux/sched.h>
-#include <asm/uaccess.h>
-
 #include "hi_drv_mem.h"
-#endif
-
-#include "hi_type.h"
 #include "pq_hal_comm.h"
-#include "hi_debug.h"
 
-#define REG_BASE_ADDR_MASK  0xffff0000
-#define REG_OFFSET_ADDR_MASK  0x0000ffff
-
-#ifdef HI_PQ_V2_0
-#define VPSS_REGS_ADDR 0xff340000
-#define VDP_REGS_ADDR 0xff120000
-#endif
-
-#ifdef HI_PQ_V3_0
-#define VPSS_REGS_ADDR 0xf8cb0000UL
-#define VDP_REGS_ADDR 0xf8cc0000UL
+#define VPSS_REGS_ADDR    0xf8cb0000UL
+#define VDP_REGS_ADDR     0xf8cc0000UL
 #define SPECIAL_REGS_ADDR 0xfffe0000UL
-#endif
 
 #define VPSS_PQ_REG_SIZE(start, end)\
     (offsetof(S_CAS_REGS_TYPE, end) + sizeof(HI_U32) -\
@@ -57,28 +32,27 @@
      offsetof(S_VDP_REGS_TYPE, start))
 
 
-#ifndef  __PQ_PLATFORM_BOOT__
-static HI_U32 PQ_TRACE_RANGE = HI_LOG_LEVEL_ERROR;
-#endif
-
-/* VPSS/VDP/PWM 本地寄存器，用于初始化参数*/
+/* VPSS/VDP 本地寄存器，用于初始化参数*/
 static S_CAS_REGS_TYPE* sg_pstVPSSRegLocal = NULL;
+static S_VDP_REGS_TYPE* sg_pstVDPRegLocal  = NULL;
 
-static S_VDP_REGS_TYPE* sg_pstVDPRegLocal = NULL;
-
-/* VPSS/VDP/PWM 虚拟寄存器，用于配置参数*/
+/* VPSS/VDP 虚拟寄存器，用于配置参数*/
 static S_CAS_REGS_TYPE*    sg_pstVPSSRegMem[VPSS_HANDLE_NUM]    = {NULL};
 static S_VPSSWB_REGS_TYPE* sg_pstVPSSWbcRegMem[VPSS_HANDLE_NUM] = {NULL};
-
-static S_VDP_REGS_TYPE* sg_pstVDPRegMem = NULL;
+static S_VDP_REGS_TYPE*    sg_pstVDPRegMem = NULL;
 
 /* VPSS模块开关参数*/
 static PQ_HAL_MODULE_S* sg_pstPQModuleLocal = NULL;
-
-static PQ_HAL_MODULE_S* sg_pstPQModuleMem = NULL;
+static PQ_HAL_MODULE_S* sg_pstPQModuleMem   = NULL;
 
 /* PQ HAL初始化标志位*/
 static HI_BOOL sg_bHALInit = HI_FALSE;
+
+/* 打印使能开关 */
+static HI_U32 sg_PrintType = PQ_PRN_NOTHING;
+
+/* 打印中间结果的暂存区域 */
+static HI_S8  sg_PrintMsg[1024];
 
 
 /**
@@ -100,25 +74,25 @@ HI_S32  PQ_HAL_Init(HI_VOID)
 #ifndef  __PQ_PLATFORM_BOOT__
 
     sg_pstVPSSRegLocal = (S_CAS_REGS_TYPE*)HI_KMALLOC(HI_ID_PQ, sizeof(S_CAS_REGS_TYPE), GFP_KERNEL);
-    if (sg_pstVPSSRegLocal == NULL)
+    if (sg_pstVPSSRegLocal == HI_NULL)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "sg_pstVPSSRegLocal can not kmalloc!\n");
+        HI_ERR_PQ("sg_pstVPSSRegLocal can not kmalloc!\n");
         return HI_FAILURE;
     }
     memset(sg_pstVPSSRegLocal, 0, sizeof(S_CAS_REGS_TYPE));
 
     sg_pstVDPRegLocal = (S_VDP_REGS_TYPE*)HI_KMALLOC(HI_ID_PQ, sizeof(S_VDP_REGS_TYPE), GFP_KERNEL);
-    if (sg_pstVDPRegLocal == NULL)
+    if (sg_pstVDPRegLocal == HI_NULL)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "sg_pstVDPRegLocal can not kmalloc!\n");
+        HI_ERR_PQ("sg_pstVDPRegLocal can not kmalloc!\n");
         return HI_FAILURE;
     }
     memset(sg_pstVDPRegLocal, 0, sizeof(S_VDP_REGS_TYPE));
 
     sg_pstPQModuleLocal = (PQ_HAL_MODULE_S*)HI_KMALLOC(HI_ID_PQ, sizeof(PQ_HAL_MODULE_S), GFP_KERNEL);
-    if (sg_pstPQModuleLocal == NULL)
+    if (sg_pstPQModuleLocal == HI_NULL)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "sg_pstPQModuleLocal can not kmalloc!\n");
+        HI_ERR_PQ("sg_pstPQModuleLocal can not kmalloc!\n");
         return HI_FAILURE;
     }
     memset(sg_pstPQModuleLocal, 0, sizeof(PQ_HAL_MODULE_S));
@@ -167,7 +141,7 @@ HI_S32  PQ_HAL_Deinit(HI_VOID)
 
     return HI_SUCCESS;
 }
-#ifndef __PQ_PLATFORM_BOOT__
+
 
 /**
  \brief 更新VPSS PQ;
@@ -247,7 +221,66 @@ HI_VOID PQ_HAL_UpdateVpssPQ(S_CAS_REGS_TYPE* pDstVpssAddr, S_CAS_REGS_TYPE* pSrc
            (HI_VOID*)(&pSrcVpssAddr->VPSS_HSPCFG7), u32RegSize);
 
     //pDstVpssAddr->VPSS_CTRL.bits.hsp_en = pSrcVpssAddr->VPSS_CTRL.bits.hsp_en;
+#endif
 
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+    /* iglb_en */
+    pDstVpssAddr->VPSS_CTRL.bits.iglb_en = pSrcVpssAddr->VPSS_CTRL.bits.iglb_en;
+    /* TNR */
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_TNR_MODE, VPSS_TNR_TE_YCMT_MAPPING_K2 );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_TNR_MODE),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_TNR_MODE), u32RegSize);
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_TNR_TE_YCEG_MAPPING_CTRL, VPSS_TNR_EDGE_CMOVING_CK );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_TNR_TE_YCEG_MAPPING_CTRL),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_TNR_TE_YCEG_MAPPING_CTRL), u32RegSize);
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_TNR_CLUT10, VPSS_TNR_CLUT67 );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_TNR_CLUT10),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_TNR_CLUT10), u32RegSize);
+
+    /* FMD */
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_PDPHISTTHD1, VPSS_PDREGION );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_PDPHISTTHD1),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_PDPHISTTHD1), u32RegSize);
+
+    pDstVpssAddr->VPSS_DIECTRL.bits.die_out_sel_c = pSrcVpssAddr->VPSS_DIECTRL.bits.die_out_sel_c;
+    pDstVpssAddr->VPSS_DIECTRL.bits.die_out_sel_l = pSrcVpssAddr->VPSS_DIECTRL.bits.die_out_sel_l;
+    pDstVpssAddr->VPSS_PDCTRL.bits.dir_mch_l      = pSrcVpssAddr->VPSS_PDCTRL.bits.dir_mch_l;
+    pDstVpssAddr->VPSS_PDCTRL.bits.dir_mch_c      = pSrcVpssAddr->VPSS_PDCTRL.bits.dir_mch_c;
+
+    /* DM */
+    pDstVpssAddr->VPSS_DB_CTRL.bits.dm_en = pSrcVpssAddr->VPSS_DB_CTRL.bits.dm_en;
+
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_DM_DIR, VPSS_DM_LUT4 );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_DM_DIR),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_DM_DIR), u32RegSize);
+
+    /* DB */
+    pDstVpssAddr->VPSS_DB_CTRL.bits.db_lum_ver_en          = pSrcVpssAddr->VPSS_DB_CTRL.bits.db_lum_ver_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.db_lum_hor_en          = pSrcVpssAddr->VPSS_DB_CTRL.bits.db_lum_hor_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.db_chr_ver_en          = pSrcVpssAddr->VPSS_DB_CTRL.bits.db_chr_ver_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.db_chr_hor_en          = pSrcVpssAddr->VPSS_DB_CTRL.bits.db_chr_hor_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.db_chr_hor_mid_grey_en = pSrcVpssAddr->VPSS_DB_CTRL.bits.db_chr_hor_mid_grey_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.dbm_demo_en            = pSrcVpssAddr->VPSS_DB_CTRL.bits.dbm_demo_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.dbm_demo_mode          = pSrcVpssAddr->VPSS_DB_CTRL.bits.dbm_demo_mode;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.det_size_en            = pSrcVpssAddr->VPSS_DB_CTRL.bits.det_size_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.det_hy_en              = pSrcVpssAddr->VPSS_DB_CTRL.bits.det_hy_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.det_hc_en              = pSrcVpssAddr->VPSS_DB_CTRL.bits.det_hc_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.det_vy_en              = pSrcVpssAddr->VPSS_DB_CTRL.bits.det_vy_en;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.dbm_out_mode           = pSrcVpssAddr->VPSS_DB_CTRL.bits.dbm_out_mode;
+    pDstVpssAddr->VPSS_DB_CTRL.bits.dbm_out_sel_gain       = pSrcVpssAddr->VPSS_DB_CTRL.bits.dbm_out_sel_gain;
+
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_DB_DIR, VPSS_DBD_BLKSIZE );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_DB_DIR),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_DB_DIR), u32RegSize);
+
+    u32RegSize = VPSS_PQ_REG_SIZE(VPSS_DB_BORD_FLAG[0], VPSS_DB_BORD_FLAG[128] );
+    memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_DB_BORD_FLAG),
+           (HI_VOID*)(&pSrcVpssAddr->VPSS_DB_BORD_FLAG), u32RegSize);
+
+    /* VPSS CTRL DB DM dbm_en control by vpss*/
+    /*
+    pDstVpssAddr->VPSS_CTRL.bits.dbm_en = pSrcVpssAddr->VPSS_CTRL.bits.dbm_en;
+    */
 #endif
 
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
@@ -277,7 +310,6 @@ HI_VOID PQ_HAL_UpdateVpssPQ(S_CAS_REGS_TYPE* pDstVpssAddr, S_CAS_REGS_TYPE* pSrc
     memcpy((HI_VOID*)(&pDstVpssAddr->VPSS_VHD_LTI_CTRL),
            (HI_VOID*)(&pSrcVpssAddr->VPSS_VHD_LTI_CTRL), u32RegSize);
 #endif
-
 }
 
 
@@ -339,8 +371,14 @@ HI_VOID PQ_HAL_UpdateVdpPQ(S_VDP_REGS_TYPE* pDstVdpAddr, S_VDP_REGS_TYPE* pSrcVd
            (HI_VOID*)(&pSrcVdpAddr->SR_CTRL), u32RegSize);
 #endif
 
-    return;
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+    /* Sharpen */
+    u32RegSize = VDP_PQ_REG_SIZE(SPCTRL, SPEDGEEI);
+    memcpy((HI_VOID*)(&pDstVdpAddr->SPCTRL),
+           (HI_VOID*)(&pSrcVdpAddr->SPCTRL), u32RegSize);
+#endif
 
+    return;
 }
 
 /**
@@ -360,7 +398,7 @@ HI_S32 PQ_HAL_UpdateVpssReg(HI_U32 u32HandleNo, S_CAS_REGS_TYPE* pstVPSSReg, S_V
 
     if (u32HandleNo >= VPSS_HANDLE_NUM)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS HandleNo[%d] over range!\n", u32HandleNo);
+        HI_ERR_PQ("VPSS HandleNo[%d] over range!\n", u32HandleNo);
         return HI_FAILURE;
     }
 
@@ -453,7 +491,7 @@ HI_BOOL PQ_HAL_CheckVpssValid(HI_U32 u32HandleNo)
 {
     if (u32HandleNo >= VPSS_HANDLE_NUM)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS HandleNo=%d is over range!\n", u32HandleNo);
+        HI_ERR_PQ("VPSS HandleNo=%d is over range!\n", u32HandleNo);
         return HI_FALSE;
     }
 
@@ -495,11 +533,11 @@ HI_BOOL PQ_HAL_CheckVdpValid(HI_VOID)
  */
 S_CAS_REGS_TYPE* PQ_HAL_GetVpssReg(HI_U32 u32HandleNo)
 {
-    S_CAS_REGS_TYPE* pstVPSSReg = NULL;
+    S_CAS_REGS_TYPE* pstVPSSReg = HI_NULL;
 
     if (u32HandleNo >= VPSS_HANDLE_NUM)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS HandleNo=%d is over range!\n", u32HandleNo);
+        HI_ERR_PQ("VPSS HandleNo=%d is over range!\n", u32HandleNo);
         return NULL;
     }
 
@@ -528,21 +566,21 @@ S_CAS_REGS_TYPE* PQ_HAL_GetVpssReg(HI_U32 u32HandleNo)
  */
 S_VPSSWB_REGS_TYPE* PQ_HAL_GetVpssWbcReg(HI_U32 u32HandleNo)
 {
-    S_VPSSWB_REGS_TYPE* pstVPSSWbcReg = NULL;
+    S_VPSSWB_REGS_TYPE* pstVPSSWbcReg = HI_NULL;
 
     if (u32HandleNo >= VPSS_HANDLE_NUM)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS HandleNo=%d is over range!\n", u32HandleNo);
+        HI_ERR_PQ("VPSS HandleNo=%d is over range!\n", u32HandleNo);
         return NULL;
     }
 
-    if (sg_pstVPSSWbcRegMem[u32HandleNo] != NULL)
+    if (sg_pstVPSSWbcRegMem[u32HandleNo] != HI_NULL)
     {
         pstVPSSWbcReg = sg_pstVPSSWbcRegMem[u32HandleNo];
     }
     else
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "ERROR: VPSS Wbc REG is null point!\n");
+        HI_ERR_PQ("ERROR: VPSS Wbc REG is null point!\n");
     }
 
     return pstVPSSWbcReg;
@@ -615,8 +653,8 @@ PQ_HAL_MODULE_S* PQ_HAL_GetPQModule(HI_VOID)
  */
 HI_S32 PQ_HAL_WriteRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32 u32Value)
 {
-    S_CAS_REGS_TYPE* pstVPSSReg = NULL;
-    S_VDP_REGS_TYPE* pstVDPReg = NULL;
+    S_CAS_REGS_TYPE* pstVPSSReg = HI_NULL;
+    S_VDP_REGS_TYPE* pstVDPReg = HI_NULL;
     HI_U32 u32OffsetAddr = 0x0;
 
     u32OffsetAddr = u32RegAddr & REG_OFFSET_ADDR_MASK;
@@ -624,9 +662,9 @@ HI_S32 PQ_HAL_WriteRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32 u32Val
     if ((PQ_HAL_IsVpssReg(u32RegAddr) == HI_TRUE) && (u32HandleNo < VPSS_HANDLE_NUM))
     {
         pstVPSSReg = PQ_HAL_GetVpssReg(u32HandleNo);
-        if (pstVPSSReg == NULL)
+        if (pstVPSSReg == HI_NULL)
         {
-            PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS REG is null point!\n");
+            HI_ERR_PQ("VPSS REG is null point!\n");
             return HI_FAILURE;
         }
         *(HI_U32*)((HI_VOID*)pstVPSSReg + u32OffsetAddr) = u32Value;
@@ -634,26 +672,24 @@ HI_S32 PQ_HAL_WriteRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32 u32Val
     else if (PQ_HAL_IsVdpReg(u32RegAddr) == HI_TRUE)
     {
         pstVDPReg = PQ_HAL_GetVdpReg();
-        if (pstVDPReg == NULL)
+        if (pstVDPReg == HI_NULL)
         {
-            PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VDP REG is null point!\n");
+            HI_ERR_PQ("VDP REG is null point!\n");
             return HI_FAILURE;
         }
         *(HI_U32*)((HI_VOID*)pstVDPReg + u32OffsetAddr) = u32Value;
     }
     else
-    {
-        //PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "(HandleNum=%d)Reg=0x%x is not VPSS/VDP register!\n", u32HandleNo, u32RegAddr);
-    }
+    {}
 
     return HI_SUCCESS;
 }
 
-/*读寄存器*/
+/* 读寄存器 */
 HI_S32 PQ_HAL_ReadRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32* pu32Value)
 {
-    S_CAS_REGS_TYPE* pstVPSSReg = NULL;
-    S_VDP_REGS_TYPE* pstVDPReg = NULL;
+    S_CAS_REGS_TYPE* pstVPSSReg = HI_NULL;
+    S_VDP_REGS_TYPE* pstVDPReg = HI_NULL;
     HI_U32 u32OffsetAddr = 0x0;
 
     u32OffsetAddr = u32RegAddr & REG_OFFSET_ADDR_MASK;
@@ -663,7 +699,7 @@ HI_S32 PQ_HAL_ReadRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32* pu32Va
         pstVPSSReg = PQ_HAL_GetVpssReg(u32HandleNo);
         if (pstVPSSReg == NULL)
         {
-            PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VPSS REG is null point!\n");
+            HI_ERR_PQ("VPSS REG is null point!\n");
             return HI_FAILURE;
         }
         *pu32Value = *((HI_U32*)((HI_VOID*)pstVPSSReg + u32OffsetAddr));
@@ -673,33 +709,18 @@ HI_S32 PQ_HAL_ReadRegister(HI_U32 u32HandleNo, HI_U32 u32RegAddr, HI_U32* pu32Va
         pstVDPReg = PQ_HAL_GetVdpReg();
         if (pstVDPReg == NULL)
         {
-            PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "VDP REG is null point!\n");
+            HI_ERR_PQ("VDP REG is null point!\n");
             return HI_FAILURE;
         }
         *pu32Value = *((HI_U32*)((HI_VOID*)pstVDPReg + u32OffsetAddr));
     }
     else
-    {
-        //PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "(HandleNum=%d)Reg=0x%x is not VPSS/VDP register!\n", u32HandleNo, u32RegAddr);
-    }
+    {}
 
     return HI_SUCCESS;
 }
 
-/**
-  \brief 按照起始BIT位复制U32参数;
-  \attention \n
-   无
-
-  \param[in] u32Src
-  \param[in] u32SrcStartBit
-  \param[out] *pu32Dst
-  \param[in] u32DstStartBit
-  \param[in] u32Num
-
-  \retval ::HI_SUCCESS
-
-*/
+/* 按照起始BIT位复制U32参数 */
 HI_VOID PQ_HAL_CopyU32ByBit(HI_U32 u32Src, HI_U32 u32SrcStartBit, HI_U32* pu32Dst, HI_U32 u32DstStartBit, HI_U32 u32Num)
 {
     HI_U32 u32SrcTmp = 0;
@@ -709,27 +730,26 @@ HI_VOID PQ_HAL_CopyU32ByBit(HI_U32 u32Src, HI_U32 u32SrcStartBit, HI_U32* pu32Ds
 
     if (((u32SrcStartBit + u32Num) > 32) || (u32DstStartBit + u32Num) > 32)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "param is illegal!!\n");
-        return ;
+        HI_ERR_PQ("param is illegal!!\n");
+        return;
     }
 
-    //保存src需要拷贝的u32Num个bits，并移动到dst指定的位置//将高位清0
+    /* 保存src需要拷贝的u32Num个bits，并移动到dst指定的位置; 将高位清0 */
     u32SrcTmp = u32Src << (32 - u32SrcStartBit - u32Num);
 
-    //将指定的u32Num位移到低bit位上
+    /* 将指定的u32Num位移到低bit位上 */
     u32SrcTmp = u32SrcTmp >> (32 - u32Num);
-
     u32SrcTmp = u32SrcTmp << u32DstStartBit;
 
-    //保存dst的0bit到u32DstStartBit位
-    u32DstTmpLow = *pu32Dst << (32 - u32DstStartBit); //将高位清0
+    /* 保存dst的0bit到u32DstStartBit位 */
+    u32DstTmpLow = *pu32Dst << (32 - u32DstStartBit); /* 将高位清0 */
     u32DstTmpLow = u32DstTmpLow >> (32 - u32DstStartBit);
 
-    //保存dst的u32DstStartBit + u32Num位到32bit
+    /* 保存dst的u32DstStartBit + u32Num位到32bit */
     u32DstTmpHigh = *pu32Dst >> (u32DstStartBit + u32Num);
     u32DstTmpHigh = u32DstTmpHigh << (u32DstStartBit + u32Num);
 
-    //计算结果
+    /* 计算结果 */
     u32DstTmp = u32DstTmpHigh | u32SrcTmp | u32DstTmpLow;
     *pu32Dst = u32DstTmp;
 
@@ -752,10 +772,10 @@ HI_VOID  PQ_HAL_U32SetBit( HI_U32* pulData, HI_U8 ucBitNo)
 
     if (ucBitNo > 31)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "PQ_MNG_U32SetBit bit over range!\n");
+        HI_ERR_PQ("PQ_MNG_U32SetBit bit over range!\n");
         return;
     }
-    // Bits Mask
+    /* Bits Mask */
     ulBitsMask = 0x00000001;
     ulBitsMask = ulBitsMask << ucBitNo;
 
@@ -779,10 +799,10 @@ HI_VOID PQ_HAL_U32ClearBit( HI_U32* pulData, HI_U8 ucBitNo)
 
     if (ucBitNo > 31)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "PQ_MNG_U32ClearBit bit over range!\n");
+        HI_ERR_PQ("PQ_MNG_U32ClearBit bit over range!\n");
         return;
     }
-    // Bits Mask
+    /* Bits Mask */
     ulBitsMask = 0x00000001;
     ulBitsMask = ulBitsMask << ucBitNo;
 
@@ -814,14 +834,14 @@ HI_U32 PQ_HAL_GetU32ByBit( HI_U32 ulData, HI_U8 ucMaxBit, HI_U8 ucMinBit)
     }
     if (ucFlagEr == HI_TRUE)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "NTDRIVER_BITS_u32GetData bit over range!\n");
+        HI_ERR_PQ("NTDRIVER_BITS_u32GetData bit over range!\n");
         return ucFlagEr;
     }
 
     ulData = ulData << (31 - ucMaxBit);
     ulData = ulData >> (31 - ucMaxBit);
     ulData = (ulData >> ucMinBit);
-    return  ulData;
+    return ulData;
 }
 
 /**
@@ -849,11 +869,11 @@ HI_VOID PQ_HAL_SetU32ByBit( HI_U32* pulData, HI_U8 ucMaxBit, HI_U8 ucMinBit, HI_
     }
     if (ucFlagEr == HI_TRUE)
     {
-        PQ_TRACE(HI_LOG_LEVEL_ERROR, PQ_TRACE_RANGE, "NTDRIVER_BITS_u32SetData bit over range!\n");
+        HI_ERR_PQ("NTDRIVER_BITS_u32SetData bit over range!\n");
         return;
     }
 
-    // Bits Mask
+    /* Bits Mask */
     ulBitsMask = 0xFFFFFFFF;
     ulBitsMask = ulBitsMask >> ucMinBit;
     ulBitsMask = ulBitsMask << (31 - ucMaxBit + ucMinBit);
@@ -901,7 +921,7 @@ HI_VOID PQ_HAL_RegWrite(volatile HI_U32 a, HI_U32 value)
 {
     *((HI_U32*)a) = value;
 
-    return ;
+    return;
 }
 
 HI_S32 PQ_REG_RegWrite(volatile HI_U32* a, HI_U32 b)
@@ -915,136 +935,76 @@ HI_U32 PQ_REG_RegRead(volatile HI_U32* a)
     return (*(a));
 }
 
-#else
-
-/**
- \brief 获取VDP当前寄存器;
- \attention \n
-  无
- \param[in] none
- \retval ::VDP寄存器指针
- */
-S_VDP_REGS_TYPE* PQ_HAL_GetVdpReg(HI_VOID)
+HI_S32 PQ_HAL_PrintMsg(HI_U32 type, const HI_S8* format, ...)
 {
-    S_VDP_REGS_TYPE* pstVDPReg = NULL;
+    va_list args;
+    HI_S32  nTotalChar = 0;
 
-    pstVDPReg = (S_VDP_REGS_TYPE*)0xf8cc0000;
-
-    return pstVDPReg;
-}
-
-HI_U32 PQ_HAL_RegRead(volatile HI_U32 a)
-{
-    return (*((HI_U32*)a));
-}
-
-HI_VOID PQ_HAL_RegWrite(volatile HI_U32 a, HI_U32 value)
-{
-    *((HI_U32*)a) = value;
-
-    return ;
-}
-
-#endif
-
-#if 0
-struct file* PQ_HAL_FileOpen(const char* filename, int flags, int mode)
-{
-    struct file* filp = filp_open(filename, flags, mode);
-    return (IS_ERR(filp)) ? NULL : filp;
-}
-
-void PQ_HAL_FileClose(struct file* filp)
-{
-    if (filp)
-    { filp_close(filp, NULL); }
-}
-
-int PQ_HAL_FileRead(char* buf, unsigned int len, struct file* filp)
-{
-    int readlen;
-    mm_segment_t oldfs;
-
-    if (filp == NULL)
-    { return -ENOENT; }
-
-    if (filp->f_op->read == NULL)
-    { return -ENOSYS; }
-
-    if (((filp->f_flags & O_ACCMODE) & (O_RDONLY | O_RDWR)) != 0)
-    { return -EACCES; }
-
-    oldfs = get_fs();
-    set_fs(KERNEL_DS);
-    readlen = filp->f_op->read(filp, buf, len, &filp->f_pos);
-    set_fs(oldfs);
-
-    return readlen;
-}
-
-int PQ_HAL_FileWrite(char* buf, int len, struct file* filp)
-{
-    int writelen;
-    mm_segment_t oldfs;
-
-    if (NULL == buf)
+    /* 信息类型过滤 */
+    if ((PQ_PRN_ALWS != type) && (0 == (sg_PrintType & type))) /* 该类别打印没有打开 */
     {
-        printk("kfile_write: buf = NULL!\n");
-        return -ENOENT;
+        return HI_FAILURE;
+    }
+    /* 将信息打印成字符串 */
+    va_start( args, format );
+    nTotalChar = vsnprintf( sg_PrintMsg, sizeof(sg_PrintMsg), format, args );
+    va_end( args );
+
+    if ((nTotalChar <= 0) || (nTotalChar >= 1023))
+    {
+        return HI_FAILURE;
     }
 
-    if (filp == NULL)
-    { return -ENOENT; }
-
-    if (filp->f_op->write == NULL)
-    { return -ENOSYS; }
-
-    if (((filp->f_flags & O_ACCMODE) & (O_WRONLY | O_RDWR)) == 0)
-    { return -EACCES; }
-
-    oldfs = get_fs();
-    set_fs(KERNEL_DS);
-    writelen = filp->f_op->write(filp, buf, len, &filp->f_pos);
-    set_fs(oldfs);
-
-    return writelen;
-}
-
-int PQ_HAL_FileSeek(loff_t offset, int origin, struct file* filp)
-{
-    int seeklen;
-    mm_segment_t oldfs;
-
-    if (filp == NULL)
-    { return -ENOENT; }
-
-    if (filp->f_op->llseek == NULL)
-    { return -ENOSYS; }
-
-    if (((filp->f_flags & O_ACCMODE) & (O_RDONLY | O_RDWR)) != 0)
-    { return -EACCES; }
-
-    oldfs = get_fs();
-    set_fs(KERNEL_DS);
-    seeklen = filp->f_op->llseek(filp, offset, origin);
-    set_fs(oldfs);
-
-    return seeklen;
-}
-
-int PQ_HAL_FileTell(struct file* filp)
-{
-    return filp->f_pos;
-}
-
-HI_U32 PQ_HAL_GetSysTime(HI_VOID)
-{
-    HI_U64   SysTime;
-
-    SysTime = sched_clock();
-
-    do_div(SysTime, 1000000);
-
-    return (HI_U32)SysTime;
-}
+#ifndef  HI_ADVCA_FUNCTION_RELEASE
+    return ( HI_PRINT("%s", sg_PrintMsg) );
+#else
+    return HI_SUCCESS;
 #endif
+
+}
+
+HI_S32 PQ_HAL_SetPrintType(HI_U32 type)
+{
+    sg_PrintType = type;
+    return HI_SUCCESS;
+}
+
+HI_S32 PQ_HAL_GetVpssDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff)
+{
+#if defined(CHIP_TYPE_hi3798cv200_a)
+    S_CAS_REGS_TYPE* pstVpssVirReg = HI_NULL;
+    pstVpssVirReg = PQ_HAL_GetVpssReg(u32HandleNo);
+    PQ_CHECK_NULL_PTR(pstVpssVirReg);
+
+    *bOnOff = pstVpssVirReg->VPSS_VHD0CTRL.bits.vhd0_dither_en;
+#endif
+    return HI_SUCCESS;
+}
+
+HI_S32 PQ_HAL_GetDnrDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff)
+{
+#if defined(CHIP_TYPE_hi3798cv200_a)
+    S_CAS_REGS_TYPE* pstVpssVirReg = HI_NULL;
+    pstVpssVirReg = PQ_HAL_GetVpssReg(u32HandleNo);
+    PQ_CHECK_NULL_PTR(pstVpssVirReg);
+
+    *bOnOff = pstVpssVirReg->VPSS_DNR_INFO.bits.dnr_dither_en;
+#endif
+    return HI_SUCCESS;
+}
+
+HI_S32 PQ_HAL_GetVdpDitherEn(HI_BOOL* bOnOff)
+{
+#if defined(CHIP_TYPE_hi3798cv200_a)
+    S_VDP_REGS_TYPE* pstVdpReg = NULL;
+    U_WBC_DHD0_DITHER_CTRL WBC_DHD0_DITHER_CTRL;
+
+    pstVdpReg = PQ_HAL_GetVdpReg();
+    WBC_DHD0_DITHER_CTRL.u32 = PQ_HAL_RegRead((HI_U32) & (pstVdpReg->WBC_DHD0_DITHER_CTRL.u32));/* VDP_LAYER_WBC_HD0 */
+    *bOnOff = WBC_DHD0_DITHER_CTRL.bits.dither_en;
+#endif
+    return HI_SUCCESS;
+}
+
+
+

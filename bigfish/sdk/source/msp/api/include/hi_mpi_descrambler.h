@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 #endif
-#if defined(CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 #define DMX_KEYHANDLE_MAGIC      (0x5)
 #define DMX_KEYID(KeyHandle)    ((KeyHandle) & 0x000000ff)
 #define DMX_KEYHANDLE(DmxId, KeyId)    ((HI_ID_DEMUX << 24) | (DMX_KEYHANDLE_MAGIC << 16) | ((DmxId << 8) & 0x0000ff00) | (KeyId & 0x000000ff))

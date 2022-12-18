@@ -5,11 +5,14 @@ choice
 
 config  LINUX-3.10.y
 	bool "linux-3.10.y"
+config  LINUX-3.10.y-L
+	bool "linux-3.10.y-L"
 endchoice
 
 config  HI_KERNEL_VERSION
 	string
 	default linux-3.10.y if LINUX-3.10.y
+	default linux-3.10.y-L if LINUX-3.10.y-L
 
 config  HI_KERNEL_CFG
 	prompt "Kernel Config File"

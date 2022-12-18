@@ -32,6 +32,8 @@
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 
 #define HI_SCI_PORT_NUM     (1)

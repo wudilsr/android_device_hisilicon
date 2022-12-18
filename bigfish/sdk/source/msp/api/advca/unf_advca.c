@@ -47,7 +47,7 @@ static HI_S32 g_AdvcaInitCounter = -1;
 
 static HI_UNF_ADVCA_KEYLADDER_LEV_E g_dvbLadder;
 static HI_UNF_ADVCA_KEYLADDER_LEV_E g_r2rLadder;
-static HI_UNF_ADVCA_VENDOR_TYPE_E g_vendorType;
+static HI_UNF_ADVCA_VENDORID_E g_vendorType;
 
 /*for PVR*/
 #define PVR_CA_MAX_CHANNEL 5
@@ -233,7 +233,7 @@ HI_S32 HI_UNF_ADVCA_Init(HI_VOID)
             return HI_FAILURE;
         }
 
-        g_vendorType = (HI_UNF_ADVCA_VENDOR_TYPE_E)u32VendorType;
+        g_vendorType = (HI_UNF_ADVCA_VENDORID_E)u32VendorType;
 
         for ( i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++ )
         {            
@@ -278,7 +278,7 @@ HI_S32 HI_UNF_ADVCA_DeInit(HI_VOID)
 	
     g_dvbLadder = HI_UNF_ADVCA_KEYLADDER_BUTT;
     g_r2rLadder = HI_UNF_ADVCA_KEYLADDER_BUTT;
-    g_vendorType = HI_UNF_ADVCA_VENDOR_NONE;
+    g_vendorType = HI_UNF_ADVCA_NULL;
 
     return HI_SUCCESS;
 }
@@ -873,18 +873,33 @@ HI_S32 HI_UNF_ADVCA_GetSecBootStat(HI_BOOL *pbEnable,HI_UNF_ADVCA_FLASH_TYPE_E *
     if (val)
     {
         *pbEnable = HI_TRUE;
-        /**Get the startup flash type. CNcomment:获取安全启动的Flash类型 CNend*/
-        ret = ioctl(g_s32CaFd, CMD_CA_GET_BOOTMODE, penFlashType);
-        if (HI_SUCCESS != ret)
-        {
-            HI_ERR_CA("ca ioctl CMD_CA_GET_BOOTMODE err. \n");
-            return ret;
-        }
     }
     else
     {
         *pbEnable = HI_FALSE;
+    }
+    
+    /**Get boot flash selection control flag. CNcomment:获取flash启动类型控制标志 CNend*/
+    ret = ioctl(g_s32CaFd, CMD_CA_GET_BOOTSEL_CTRL, &val);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("ca ioctl CMD_CA_GET_BOOTSEL_CTRL err. \n");
+        return ret;
+    }
+    
+    if(0 == val)
+    {
         *penFlashType = HI_UNF_ADVCA_FLASH_TYPE_BUTT;
+        HI_INFO_CA("Boot mode is controlled by chipset pin. \n");
+        return HI_SUCCESS;
+    }
+
+    /**Get the startup flash type. CNcomment:获取安全启动的Flash类型 CNend*/
+    ret = ioctl(g_s32CaFd, CMD_CA_GET_BOOTMODE, penFlashType);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("ca ioctl CMD_CA_GET_BOOTMODE err. \n");
+        return ret;
     }
 
     return HI_SUCCESS;
@@ -914,7 +929,7 @@ HI_S32 HI_UNF_ADVCA_EnableSecBoot(HI_UNF_ADVCA_FLASH_TYPE_E enFlashType)
 
     if (enFlashType >= HI_UNF_ADVCA_FLASH_TYPE_BUTT)
     {
-        HI_ERR_CA("enFlashType >=HI_UNF_ADVCA_FLASH_TYPE_BUTT, invalid.\n");
+        HI_ERR_CA("enFlashType >= HI_UNF_ADVCA_FLASH_TYPE_BUTT, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
     if(enFlashType == HI_UNF_ADVCA_FLASH_TYPE_NOR)
@@ -1557,7 +1572,7 @@ HI_S32 HI_UNF_ADVCA_LoadLpk(HI_U8 *pEncryptedLpk)
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_VENDOR_CONAX != g_vendorType)
+    if (HI_UNF_ADVCA_CONAX != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
@@ -1608,7 +1623,7 @@ static HI_S32 HI_ADVCA_DecryptLptBlock(HI_U8 *pEncryptedBlock,HI_U8 *pPlainBlock
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_VENDOR_CONAX != g_vendorType)
+    if (HI_UNF_ADVCA_CONAX != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
@@ -1659,7 +1674,7 @@ HI_S32 HI_UNF_ADVCA_DecryptLptParam(HI_U8 *pCipherText,HI_S32 s32TextLen,HI_U8 *
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_VENDOR_CONAX != g_vendorType)
+    if (HI_UNF_ADVCA_CONAX != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
@@ -2186,6 +2201,7 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
     HI_U32 u32VendorType = 0;
     HI_U8  SessionKey1[16];
     HI_U8  SessionKey2[16];
+    HI_UNF_CIPHER_CTRL_S CipherCtrl; 
     HI_UNF_ADVCA_KEYLADDER_LEV_E enStage = HI_UNF_ADVCA_KEYLADDER_BUTT;
     HI_U8 u8CipherKey[16] = {0x10, 0x6b, 0xe2, 0x28, 0xc6, 0x7b, 0x82, 0x09, 0x6a, 0x17, 0xc7, 0x25, 0xe5, 0xd5, 0x55, 0x4e};
     HI_U8 u8KeyladderKey1[16] = {0xb4, 0x8a, 0x34, 0xee, 0x36, 0x74, 0x8b, 0xf8, 0x98, 0x11, 0x10, 0x2c, 0x27, 0x8c, 0xe6, 0xdf};
@@ -2206,9 +2222,9 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
         HI_ERR_CA("get vendor type err. \n");
         return HI_FAILURE;
     }
-    g_vendorType = (HI_UNF_ADVCA_VENDOR_TYPE_E)u32VendorType;
+    g_vendorType = (HI_UNF_ADVCA_VENDORID_E)u32VendorType;
     
-    if (HI_UNF_ADVCA_VENDOR_NOVEL != g_vendorType)
+    if (HI_UNF_ADVCA_NOVEL != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied:%d != %d!\n", HI_UNF_ADVCA_NOVEL, g_vendorType);
         return HI_ERR_CA_NOT_SUPPORT;
@@ -2216,7 +2232,8 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
     
     memset(SessionKey1,0,sizeof(SessionKey1)); 
     memset(SessionKey2,0,sizeof(SessionKey2)); 
-    HI_UNF_CIPHER_CTRL_S CipherCtrl;    
+    memset(&CipherCtrl, 0, sizeof(HI_UNF_CIPHER_CTRL_S));
+
     /*open and config keyladder*/
 	ret = HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_AES);
     ret = HI_UNF_ADVCA_GetR2RKeyLadderStage(&enStage);
@@ -2294,7 +2311,7 @@ HI_S32 HI_UNF_ADVCA_NovelDataEncrypt(HI_U8 *pPlainText, HI_U32 TextLen, HI_U8 *p
         return ret;     
     }
 
-    if (HI_UNF_ADVCA_VENDOR_NOVEL != g_vendorType)
+    if (HI_UNF_ADVCA_NOVEL != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
@@ -2324,7 +2341,7 @@ HI_S32 HI_UNF_ADVCA_NovelDataDecrypt(HI_U8 *pCipherText, HI_U32 TextLen, HI_U8 *
         return ret;     
     }
 
-    if (HI_UNF_ADVCA_VENDOR_NOVEL != g_vendorType)
+    if (HI_UNF_ADVCA_NOVEL != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
@@ -2795,9 +2812,9 @@ HI_S32 HI_UNF_ADVCA_SetCSA3KeyLadderStage(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage)
         return HI_ERR_CA_NOT_INIT;
     }
 
-    if ((enStage >= HI_UNF_ADVCA_KEYLADDER_BUTT) || (enStage < HI_UNF_ADVCA_KEYLADDER_LEV2))
+    if( (HI_UNF_ADVCA_KEYLADDER_LEV2 != enStage) && (HI_UNF_ADVCA_KEYLADDER_LEV3 != enStage))
     {
-        HI_ERR_CA("enStage = %d, invalid.\n", enStage);
+        HI_ERR_CA("Invalid keyladder level select! Only supported 2 or 3 level\n");
         return HI_ERR_CA_INVALID_PARA;
     }
 
@@ -3270,6 +3287,8 @@ HI_S32 HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(HI_UNF_R2RKeyladder_Cipher_Info_
     (HI_VOID)sem_post(&g_PVRSem); 
     return HI_FAILURE;  
 }
+
+#ifdef HI_PVR_SUPPORT
 /*the following APIs is for ADVCA_PVR*/
 static unsigned char new_rand()
 {
@@ -3544,7 +3563,6 @@ HI_S32 ADVCA_PVR_GetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrC
     return HI_SUCCESS;  
 }
 
-#ifdef HI_PVR_SUPPORT
 HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
 {
     HI_S32 ret = HI_SUCCESS;
@@ -5656,18 +5674,9 @@ HI_S32 HI_UNF_ADVCA_SetMiscKlLevel(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel)
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if(HI_UNF_ADVCA_KEYLADDER_LEV2 == enLevel)
-    {
-        bTmp = HI_FALSE;
-    }
-    else
-    {
-        bTmp = HI_TRUE;
-    }
-
     memset(&stCmdParam, 0, sizeof(stCmdParam));
     stCmdParam.enCmdChildID = CMD_CHILD_ID_SET_MISC_LV_SEL;
-    memcpy(stCmdParam.pu8ParamBuf, &bTmp, sizeof(HI_BOOL));
+    memcpy(stCmdParam.pu8ParamBuf, &enLevel, sizeof(HI_UNF_ADVCA_KEYLADDER_LEV_E));
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
@@ -6226,6 +6235,18 @@ HI_S32 HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_TYPE_E enKeyLadderTy
         return ret;
     }
 
+    if (HI_UNF_ADVCA_KEYLADDER_GDRM == enKeyLadderType) 
+    {
+        if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT == pstKeyladderAttr->unKlAttr.stGDRMAttr.enGDRMKlAttr)
+        {
+            memcpy(pstKeyladderAttr->unKlAttr.stGDRMAttr.au8Output, stKeyladderAttr.stKeyladderAttr.unKlAttr.stGDRMAttr.au8Output, 16);
+        }
+        else if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_GETFLAG == pstKeyladderAttr->unKlAttr.stGDRMAttr.enGDRMKlAttr)
+        {
+            memcpy(pstKeyladderAttr->unKlAttr.stGDRMAttr.au8Output, stKeyladderAttr.stKeyladderAttr.unKlAttr.stGDRMAttr.au8Output, 4);
+        }
+    }
+    
     return ret;
 }
 

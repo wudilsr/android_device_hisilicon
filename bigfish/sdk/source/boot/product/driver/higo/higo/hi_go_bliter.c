@@ -1,25 +1,35 @@
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : hi_go_bliter.c
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         :
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y0081162                 Created file        
+******************************************************************************/
 
-/**
- \file
- \brief bliter module
- \author Shenzhen Hisilicon Co., Ltd.
- \date 2010 - 2010
- \version  draft
- \author w66592
- \date 2010-1-26
- */
+/*********************************add include here******************************/
 
 #include "hi_type.h"
 #include "hi_go_bliter.h"
 #include "hi_go_comm.h"
 #include "higo_common.h"
 #include "higo_blit.h"
-#ifdef TEST_IN_ROOTBOX
-#include "higo_rect.h"
-#endif
 #include "adp_gfx.h"
 
+
 /***************************** Macro Definition ******************************/
+
 
 #define CHECK_BLITINIT() \
 do \
@@ -66,35 +76,13 @@ while(0)
          return HIGO_ERR_INVROPTYPE; \
     }
 
-#define CHECK_KEY(pSrcSurface, pDstSurface, BlitOpt) \
-do\
-{\
-    HI_COLOR CKey;\
-    HI_S32 s32Ret;\
-    if (BlitOpt.ColorKeyFrom == HIGO_CKEY_SRC)\
-    {\
-        s32Ret = Surface_GetSurfaceColorKey((HIGO_HANDLE)pSrcSurface, &CKey);\
-        if (s32Ret != HI_SUCCESS)\
-        {\
-            HIGO_ERROR(HIGO_ERR_NOCOLORKEY);\
-            return HIGO_ERR_NOCOLORKEY;\
-        }\
-    }\
-    else if (BlitOpt.ColorKeyFrom == HIGO_CKEY_DST)\
-    {\
-        s32Ret = Surface_GetSurfaceColorKey((HIGO_HANDLE)pDstSurface, &CKey);\
-        if (s32Ret != HI_SUCCESS)\
-        {\
-            HIGO_ERROR(HIGO_ERR_NOCOLORKEY);\
-            return HIGO_ERR_NOCOLORKEY;\
-        }\
-    }\
- }while(0)   
-
 /*************************** Structure Definition ****************************/
 
 /********************** Global Variable declaration **************************/
+
 static HI_S32 s_InitBlitCount = 0;
+
+
 /******************************* API declaration *****************************/
 HI_S32 HIGO_InitBliter()
 {
@@ -164,10 +152,8 @@ HI_S32 HI_GO_FillRect(HI_HANDLE Surface, const HI_RECT* pRect, HI_COLOR Color, H
     return HI_SUCCESS;
     
 }
-
 static HI_BOOL IsVaildCombOpt(const HIGO_BLTOPT_S* pCompOpt)
 {
-#ifndef HIGO_CODE_CUT
     HI_U32 Opt = 0, Mirror = 0, Rotate = 0;
 
     if (pCompOpt->EnableGlobalAlpha || (pCompOpt->PixelAlphaComp != HIGO_COMPOPT_NONE))
@@ -209,10 +195,8 @@ static HI_BOOL IsVaildCombOpt(const HIGO_BLTOPT_S* pCompOpt)
     {
        return HI_TRUE;
     }
-   
-#endif   
     return HI_FALSE;
-
+        
 }
 
 HI_S32 HI_GO_Blit (HI_HANDLE SrcSurface, const HI_RECT* pSrcRect,
@@ -238,17 +222,8 @@ HI_S32 HI_GO_Blit (HI_HANDLE SrcSurface, const HI_RECT* pSrcRect,
         HIGO_MemSet(&BlitOpt, 0, sizeof(HIGO_BLTOPT_S));
     }
 
-    /** check the mix is right */
-    CHECK_PALPHATYPE(BlitOpt.PixelAlphaComp);
-    CHECK_COLORKEYTYPE(BlitOpt.ColorKeyFrom);
-    if (BlitOpt.EnableRop)
-    {
-        CHECK_ROPTYPE(BlitOpt.Rop);
-    }
-
     pSrcSurface = SrcSurface;
     pDstSurface = DstSurface;
-
     /** check the mix is right */
     if (IsVaildCombOpt(&BlitOpt))
     {
@@ -256,8 +231,6 @@ HI_S32 HI_GO_Blit (HI_HANDLE SrcSurface, const HI_RECT* pSrcRect,
         ret = HIGO_ERR_UNSUPPORTED;
         goto RET;
     }
-
-    CHECK_KEY(pSrcSurface, pDstSurface, BlitOpt);
 
      /** handle source rectangle  */
     HIGO_GetSurfaceRealRect(pSrcSurface, pSrcRect, &OptSrcRect);
@@ -283,5 +256,5 @@ HI_S32 HI_GO_Blit (HI_HANDLE SrcSurface, const HI_RECT* pSrcRect,
 
 RET:
     return ret;
-    //return HI_SUCCESS;
+	
 }

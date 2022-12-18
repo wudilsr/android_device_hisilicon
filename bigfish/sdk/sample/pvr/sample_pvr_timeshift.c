@@ -26,7 +26,7 @@
 
 #ifndef ANDROID
 
-#define DISPLAY_JPEG
+//#define DISPLAY_JPEG
 #ifdef DISPLAY_JPEG
 #include "hi_go_gdev.h"
 #include "hi_go_bliter.h"
@@ -36,34 +36,40 @@
 #include "hi_go_gdev.h"
 #include "hi_go_bliter.h"
 #include "hi_go_text.h"
-
 #endif
 
-static pthread_t   g_TimeThread;
+#ifdef ENABLE_IR_PRG
+#include "hi_unf_ir.h"
+#endif
+
+#define MAX_TIMESHIFT_REC_FILE_SIZE       (4000*1024*1024LLU)
+
+
+static pthread_t g_TimeThread;
+HI_U32 g_PlayChn = 0xffffffff;
 HI_U32 g_TunerFreq;
 HI_U32 g_TunerSrate;
 HI_U32 g_ThirdParam;
-static HI_UNF_ENC_FMT_E   g_enDefaultFmt = HI_UNF_ENC_FMT_1080P_60;
+HI_BOOL g_bIsPlayStop = HI_FALSE;
+static HI_UNF_ENC_FMT_E g_enDefaultFmt = HI_UNF_ENC_FMT_1080P_60;
 PMT_COMPACT_TBL   *g_pProgTbl = HI_NULL;
-HI_HANDLE               g_hTsBufForPvrPlayBack;
+
 HI_HANDLE hLayer_pvr = HI_INVALID_HANDLE;
 HI_HANDLE hLayerSurface_pvr;
 HI_HANDLE hFont_pvr = HI_INVALID_HANDLE;
-HI_BOOL g_bIsPlayStop = HI_FALSE;
-HI_U32 g_RecChn;
-HI_U32 g_PlayChn = 0xffffffff;
-int g_thread_run = 1;
-extern HI_S32 g_s32SMemFd;
 
 
+#ifdef ENABLE_IR_PRG
+pthread_t g_IrThread = 0;
+HI_BOOL g_bIrTaskRunning = HI_FALSE;
+HI_HANDLE g_hIrAvplay = 0;
 
-#define MAX_TIMESHIFT_REC_FILE_SIZE       (4000*1024*1024LLU)
-#define MODULE_MEM_TEST_INFO  _IOWR(0, 8, int)
+HI_S32 IRProcess(HI_U32 u32RecChn);
+#endif
 
-
-HI_S32 DmxInitAndSearch(HI_U32 tunerId)
+HI_S32 DmxInitAndSearch(HI_U32 u32TunerID)
 {
-    HI_S32   Ret;
+    HI_S32 Ret;
 
     Ret = HI_UNF_DMX_Init();
     if (Ret != HI_SUCCESS)
@@ -71,7 +77,7 @@ HI_S32 DmxInitAndSearch(HI_U32 tunerId)
         sample_common_printf("call HI_UNF_DMX_Init failed.\n");
         return Ret;
     }
-    Ret = HIADP_DMX_AttachTSPort(PVR_DMX_ID_LIVE, tunerId);
+    Ret = HIADP_DMX_AttachTSPort(PVR_DMX_ID_LIVE, u32TunerID);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_DMX_AttachTSPort failed.\n");
@@ -79,7 +85,7 @@ HI_S32 DmxInitAndSearch(HI_U32 tunerId)
         return Ret;
     }
 
-    Ret = HIADP_DMX_AttachTSPort(PVR_DMX_ID_REC, tunerId);
+    Ret = HIADP_DMX_AttachTSPort(PVR_DMX_ID_REC, u32TunerID);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_DMX_AttachTSPort for REC failed.\n");
@@ -88,7 +94,7 @@ HI_S32 DmxInitAndSearch(HI_U32 tunerId)
     }
 
     HIADP_Search_Init();
-    Ret = HIADP_Search_GetAllPmt(0,&g_pProgTbl);
+    Ret = HIADP_Search_GetAllPmt(PVR_DMX_ID_LIVE, &g_pProgTbl);
     if (HI_SUCCESS != Ret)
     {
         sample_common_printf("call HIADP_Search_GetAllPmt failed\n");
@@ -256,13 +262,10 @@ HI_S32 BlitPic(HI_HANDLE* phLayerHD)
 #endif
 
 
-
-
 HI_S32 OsdInit(HI_VOID)
 {
 #ifndef ANDROID
-
-    HI_S32   s32Ret;
+    HI_S32 s32Ret;
     HIGO_LAYER_INFO_S stLayerInfo = {0};
     HIGO_TEXT_INFO_S stTextInfo;
 
@@ -309,7 +312,6 @@ HI_S32 OsdInit(HI_VOID)
         return HI_FAILURE;
     }
     HI_GO_RefreshLayer(hLayer_pvr, NULL);
-
 #endif
 
     return HI_SUCCESS;
@@ -358,6 +360,7 @@ HI_S32 DrawString(HI_U32 u32TimeType, HI_CHAR *szText)
 
 HI_VOID * StatuThread(HI_VOID *args)
 {
+    HI_U32 u32RecChn = (HI_U32)args;
     HI_S32 Ret;
     HI_UNF_PVR_REC_ATTR_S stRecAttr;
     HI_UNF_PVR_REC_STATUS_S RecstStatus;
@@ -370,11 +373,11 @@ HI_VOID * StatuThread(HI_VOID *args)
     while (HI_FALSE == g_bIsPlayStop)
     {
         sleep(1);
-        (void)HI_UNF_PVR_RecGetChn(g_RecChn, &stRecAttr);
+        (void)HI_UNF_PVR_RecGetChn(u32RecChn, &stRecAttr);
 #ifdef ANDROID
         sample_common_printf("----------------------------------\n");
 #endif
-        Ret = HI_UNF_PVR_RecGetStatus(g_RecChn, &RecstStatus);
+        Ret = HI_UNF_PVR_RecGetStatus(u32RecChn, &RecstStatus);
         if (HI_SUCCESS == Ret)
         {
             snprintf(Rectimestr, sizeof(Rectimestr),"Rec time:%ds", RecstStatus.u32CurTimeInMs/1000);
@@ -415,25 +418,26 @@ HI_VOID * StatuThread(HI_VOID *args)
     return NULL;
 }
 
-HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
+HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
 {
+    HI_U32                  i;
+    HI_U32                  u32Tuner;
+    HI_U32                  u32ProgCount = 0;
+    HI_U32                  aProgNum[8] = {0};        //one demux can support  creating 8 record channel
+    HI_U32                  aRecChn[8];
     HI_S32                  Ret;
-    HI_HANDLE               hWin;
     HI_CHAR                 InputCmd[32];
-    HI_U32                  u32ProgNum;
-
+    HI_BOOL                 bLive = HI_TRUE;
+    HI_BOOL                 bPause = HI_FALSE;
     HI_HANDLE               hAvplay;
     HI_HANDLE               hSoundTrack;
-    HI_UNF_PVR_REC_ATTR_S       RecAttr;
-    PMT_COMPACT_PROG            *pstCurrentProgInfo;
-    HI_BOOL                bLive = HI_TRUE;
-    HI_BOOL                bPause = HI_FALSE;
+    HI_HANDLE               hWin;
+    HI_UNF_PVR_REC_ATTR_S   stRecAttr;
+    PMT_COMPACT_PROG        *pstCurrentProgInfo;
 #ifdef DISPLAY_JPEG
-    HI_HANDLE hLayer_HD;
-    HI_U32                u32Jpeg = 0;
+    HI_HANDLE               hLayer_HD;
+    HI_U32                  u32Jpeg = 0;
 #endif
-    HI_U32                      Tuner;
-
 
     if (8 == argc)
     {
@@ -441,7 +445,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = strtol(argv[3],NULL,0);
         g_ThirdParam = strtol(argv[4],NULL,0);
         g_enDefaultFmt = HIADP_Disp_StrToFmt(argv[5]);
-        Tuner = strtol(argv[6],NULL,0);	
+        u32Tuner = strtol(argv[6],NULL,0);	
 #ifdef DISPLAY_JPEG
         u32Jpeg = strtol(argv[7],NULL,0);
 #endif
@@ -452,7 +456,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = strtol(argv[3],NULL,0);
         g_ThirdParam = strtol(argv[4],NULL,0);
         g_enDefaultFmt = HIADP_Disp_StrToFmt(argv[5]);
-        Tuner = strtol(argv[6],NULL,0);
+        u32Tuner = strtol(argv[6],NULL,0);
     }
     else if (6 == argc)
     {
@@ -460,7 +464,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = strtol(argv[3],NULL,0);
         g_ThirdParam = strtol(argv[4],NULL,0);
         g_enDefaultFmt = HIADP_Disp_StrToFmt(argv[5]);
-        Tuner = 0;
+        u32Tuner = 0;
     }
     else if (5 == argc)
     {
@@ -468,7 +472,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = strtol(argv[3],NULL,0);
         g_ThirdParam = strtol(argv[4],NULL,0);
         g_enDefaultFmt = HI_UNF_ENC_FMT_1080i_50;
-        Tuner = 0;
+        u32Tuner = 0;
     }
     else if(4 == argc)
     {
@@ -476,7 +480,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = strtol(argv[3],NULL,0);
         g_ThirdParam = (g_TunerFreq>1000) ? 0 : 64;
         g_enDefaultFmt = HI_UNF_ENC_FMT_1080i_50;
-        Tuner = 0;
+        u32Tuner = 0;
     }
     else if(3 == argc)
     {
@@ -484,7 +488,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         g_TunerSrate = (g_TunerFreq>1000) ? 27500 : 6875;
         g_ThirdParam = (g_TunerFreq>1000) ? 0 : 64;
         g_enDefaultFmt = HI_UNF_ENC_FMT_1080i_50;
-        Tuner = 0;
+        u32Tuner = 0;
     }
     else
     {
@@ -493,7 +497,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 "           For cable, used as qamtype, value can be 16|32|[64]|128|256|512 defaut[64] \n"
                 "           For satellite, used as polarization, value can be [0] horizontal | 1 vertical defaut[0] \n"
                 "       vo_format:2160P_30|2160P_24|1080P_60|1080P_50|1080i_60|[1080i_50]|720P_60|720P_50\n"
-                "       Tuner: value can be 0, 1, 2, 3\n", 
+                "       u32Tuner: value can be 0, 1, 2, 3\n", 
                 argv[0]);
         printf("Example: %s ./ 618 6875 64 1080i_50 0 0\n", argv[0]);
         printf("  Board HI3796CDMO1B support 3 tuners: \n");
@@ -515,7 +519,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
 
     sample_common_printf("HIADP_Tuner_Connect, frequency:%d, Symbol:%d, Qam:%d\n", g_TunerFreq,g_TunerSrate,g_ThirdParam);
 
-    Ret = HIADP_Tuner_Connect(Tuner,g_TunerFreq,g_TunerSrate,g_ThirdParam);
+    Ret = HIADP_Tuner_Connect(u32Tuner, g_TunerFreq, g_TunerSrate, g_ThirdParam);
     if (HI_SUCCESS != Ret)
     {
         sample_common_printf("call HIADP_Tuner_Connect failed. Ret = 0x%x\n", Ret);
@@ -523,7 +527,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         return Ret;
     }
 
-    Ret = DmxInitAndSearch(Tuner);
+    Ret = DmxInitAndSearch(u32Tuner);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call VoInit failed.\n");
@@ -545,7 +549,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     }
 
     Ret = HIADP_VO_Init(HI_UNF_VO_DEV_MODE_NORMAL);
-    Ret |= HIADP_VO_CreatWin(HI_NULL,&hWin);
+    Ret |= HIADP_VO_CreatWin(HI_NULL, &hWin);
     if (HI_SUCCESS != Ret)
     {
         sample_common_printf("call HIADP_VO_Init failed.\n");
@@ -557,6 +561,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call VoInit failed.\n");
+        HIADP_VO_DeInit();
         return Ret;
     }
 
@@ -585,50 +590,58 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         return Ret;
     }
 
-    printf("please input the number of program to timeshift:\n");
-    u32ProgNum = 0;
+    printf("please input the numbers of program to record, the first program num will timeshift:\n");
 
-    while (0 == u32ProgNum)
+    do
     {
-#ifndef ANDROID
-        if (!SAMPLE_GET_INPUTCMD(InputCmd))
+        sleep(1);
+        SAMPLE_GET_INPUTCMD(InputCmd);
+        HI_U32 u32Strlen = strlen(InputCmd);
+        HI_CHAR *pTmp = InputCmd;
+        for (i = 0; i < u32Strlen; i++)
         {
-            sleep(1);
+            if (*pTmp >= '0' && *pTmp <= '7')
+            {
+                aProgNum[u32ProgCount] = atoi(pTmp);
+                u32ProgCount++;
+            }
+            else if (*pTmp == 'q')
+            {
+                return 0;
+            }
+            pTmp++;
+        }
+
+        if (u32ProgCount == 0)
+        {
+            sample_common_printf("input invalid! pleasd input again\n");
             continue;
         }
-#else
-        SAMPLE_GET_INPUTCMD(InputCmd);
-#endif
-
-        if ('q' == InputCmd[0])
-        {
-            return 0;
-        }
-
-        u32ProgNum = atoi(InputCmd);
+    }while(0);
+    
+    for (i = 0; i < u32ProgCount; i++)
+    {
+        pstCurrentProgInfo = g_pProgTbl->proginfo + (aProgNum[i]%g_pProgTbl->prog_num);
+        PVR_RecStart(argv[1], pstCurrentProgInfo, PVR_DMX_ID_REC, 1,0, MAX_TIMESHIFT_REC_FILE_SIZE, &aRecChn[i]);
     }
 
-    pstCurrentProgInfo = g_pProgTbl->proginfo
-                         + ((u32ProgNum-1)% g_pProgTbl->prog_num);
+#ifdef ENABLE_IR_PRG
+    g_hIrAvplay = hAvplay;    
+    IRProcess(aRecChn[0]);
+#endif
 
-    PVR_RecStart(argv[1], pstCurrentProgInfo,PVR_DMX_ID_REC, 1,0, MAX_TIMESHIFT_REC_FILE_SIZE, &g_RecChn);
-
-
-    pthread_create(&g_TimeThread, HI_NULL, StatuThread, HI_NULL);
-
-    //u32ProgNum = u32ProgNum+1;
-    //pstCurrentProgInfo = g_pProgTbl->proginfo
-     //                    + ((u32ProgNum-1)% g_pProgTbl->prog_num);
-    //PVR_RecStart(argv[1], pstCurrentProgInfo,PVR_DMX_ID_REC+1, 1,0, MAX_TIMESHIFT_REC_FILE_SIZE, &RecChn2);
+    pthread_create(&g_TimeThread, HI_NULL, StatuThread, (HI_VOID *)aRecChn[0]);
 
     bLive = HI_TRUE;
     bPause = HI_FALSE;
+    pstCurrentProgInfo = g_pProgTbl->proginfo + aProgNum[0]%g_pProgTbl->prog_num;
     Ret = PVR_StartLivePlay(hAvplay, pstCurrentProgInfo);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call SwitchProg failed.\n");
         return Ret;
     }
+
     OsdInit();
     DrawString(0, "Live");
 
@@ -650,7 +663,6 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
 #endif
         if ('q' == InputCmd[0])
         {
-            g_thread_run = 0;
             g_bIsPlayStop = HI_TRUE;
             printf("prepare to exit!\n");
             break;
@@ -677,8 +689,8 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 if (bLive)  /*when live, switch to shift play */
                 {
                     printf("switch to timeshift...\n");
-                    HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                    SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                    HI_UNF_PVR_RecGetChn(aRecChn[0], &stRecAttr);
+                    SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                     bLive = HI_FALSE;
                 }
                 else  /* when shift, just to resume*/
@@ -699,7 +711,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 {
                     PVR_StopLivePlay(hAvplay);
 
-                    Ret = HI_UNF_PVR_PlayPauseChn(g_RecChn);
+                    Ret = HI_UNF_PVR_PlayPauseChn(aRecChn[0]);
                     if (Ret != HI_SUCCESS)
                     {
                         sample_common_printf("call HI_UNF_PVR_PlayPauseChn failed.\n");
@@ -757,7 +769,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
 
                 /*now, stop live play*/
                 PVR_StopLivePlay(hAvplay);
-                Ret = HI_UNF_PVR_PlayPauseChn(g_RecChn);
+                Ret = HI_UNF_PVR_PlayPauseChn(aRecChn[0]);
                 if (Ret != HI_SUCCESS)
                 {
                     sample_common_printf("call HI_UNF_PVR_PlayPauseChn failed.\n");
@@ -765,8 +777,8 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 }
 
                 /*rewind from pause position */
-                HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                HI_UNF_PVR_RecGetChn(aRecChn[0], &stRecAttr);
+                SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 bLive = HI_FALSE;
                 u32RTimes = u32RTimes%6;
                 stTrickMode.enSpeed = -(0x1 << (u32RTimes+1)) * HI_UNF_PVR_PLAY_SPEED_NORMAL;
@@ -805,9 +817,9 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
             printf("PVR normal play now.\n");
             if (g_PlayChn == 0xffffffff)
             {
-                HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                printf("switch to timeshift:%s\n", RecAttr.szFileName);
-                SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                HI_UNF_PVR_RecGetChn(aRecChn[0],&stRecAttr);
+                printf("switch to timeshift:%s\n", stRecAttr.szFileName);
+                SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 sample_common_printf("PlayChn ============= %d\n", g_PlayChn);
                 bLive = HI_FALSE;
             }
@@ -996,7 +1008,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
             {
                 PVR_StopPlayBack(g_PlayChn);
 
-                Ret = PVR_StartPlayBack(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                Ret = PVR_StartPlayBack(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 if (Ret != HI_SUCCESS)
                 {
                     sample_common_printf("call PVR_StartPlayBack failed.\n");
@@ -1037,12 +1049,22 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
 
     pthread_join(g_TimeThread, HI_NULL);
 
-    PVR_RecStop(g_RecChn);
-    //PVR_RecStop(RecChn2);
+    for (i = 0; i < u32ProgCount; i++)
+    {
+        PVR_RecStop(aRecChn[i]);
+    }
     if (0xffffffff != g_PlayChn)
     {
         PVR_StopPlayBack(g_PlayChn);
     }
+
+#ifdef ENABLE_IR_PRG
+    g_bIrTaskRunning = HI_FALSE;
+    pthread_join(g_IrThread, HI_NULL);
+
+    HI_UNF_IR_DeInit();
+#endif
+
     PVR_AvplayDeInit(hAvplay, hWin, hSoundTrack);
 
     HI_UNF_VO_DestroyWindow(hWin);
@@ -1054,4 +1076,219 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     return 0;
 }
 
+
+#ifdef ENABLE_IR_PRG
+const HI_CHAR IR_Stuts_Str[3][10] =
+{
+    "DOWN",
+    "HOLD",
+    "UP",
+};
+
+typedef enum tagKEY{
+    KEY_FF = 0x29d6ff00,
+    KEY_RW = 0x25daff00,
+    KEY_STOP = 0x2fd0ff00,
+    KEY_PLAY = 0x3cc3ff00,
+    KEY_F1 = 0x7b84ff00,
+    KEY_F2 = 0x8689ff00,
+    KEY_F3 = 0x26d9ff00,
+    KEY_F4 = 0x6996ff00,
+    KEY_SEEK = 0x7d82ff00
+}KEY_PAD;
+
+HI_VOID *IR_ReceiveTask(HI_VOID *args)
+{
+    HI_U32 u32RecChn = (HI_U32)args;
+    HI_U32 u32Rate = 0;
+    HI_U32 u32PauseFlag = 0xffffffff;
+    HI_U32 u32SeekFlag = 0xffffffff;
+    HI_S32 Ret = 0;
+    HI_U64 u64KeyId = 0;
+    HI_UNF_KEY_STATUS_E enPressStatus = HI_UNF_KEY_STATUS_DOWN;
+    HI_UNF_IR_PROTOCOL_E enProtocol = HI_UNF_IR_NEC;
+
+    while (g_bIrTaskRunning)
+    {
+        /*get ir press codevalue & press status*/
+        Ret = HI_UNF_IR_GetValue(&enPressStatus, &u64KeyId, 200);
+        if (HI_SUCCESS == Ret)
+        {
+            Ret = HI_UNF_IR_GetProtocol(&enProtocol);
+            if (enPressStatus == 0)
+            {
+                switch(u64KeyId)
+                {
+                    case KEY_PLAY:
+                    {
+                        u32Rate = 0;
+
+                        if(u32PauseFlag == 0xffffffff)
+                        {
+                            printf("PVR pause now.\n");
+                            Ret = HI_UNF_PVR_PlayPauseChn(g_PlayChn);
+                            if (Ret != HI_SUCCESS)
+                            {
+                                sample_common_printf("call HI_UNF_PVR_PlayPauseChn failed.\n");
+                            }
+                            u32PauseFlag = 0;
+                        }
+                        else
+                        {
+                            printf("PVR resume now.\n");
+                            Ret = HI_UNF_PVR_PlayResumeChn(g_PlayChn);
+                            if (Ret != HI_SUCCESS)
+                            {
+                                sample_common_printf("call HI_UNF_PVR_PlayResumeChn failed.\n");
+                            }
+
+                            u32PauseFlag = 0xffffffff;
+                        }
+                    }
+                    break;
+                    case KEY_FF:
+                    case KEY_RW:
+                    {
+                        HI_UNF_PVR_PLAY_MODE_S stTrickMode;
+
+                        u32Rate = u32Rate%5;
+                        stTrickMode.enSpeed = (0x1 << (u32Rate+1)) * HI_UNF_PVR_PLAY_SPEED_NORMAL;
+
+                        if(u64KeyId == KEY_RW)
+                        {
+                            stTrickMode.enSpeed *= -1;
+                        }
+
+                        printf("trick mod:%d\n", stTrickMode.enSpeed);
+                        Ret = HI_UNF_PVR_PlayTPlay(g_PlayChn, &stTrickMode);
+                        if (Ret != HI_SUCCESS)
+                        {
+                            sample_common_printf("call HI_UNF_PVR_PlayTPlay failed.\n");
+                        }
+
+                        u32Rate++;
+                        u32PauseFlag = 0;
+                    }
+                    break;
+                    case KEY_STOP:
+                        printf("====To stop player channel is %d\n", g_PlayChn);
+                        PVR_StopPlayBack(g_PlayChn);
+                        u32PauseFlag = 0;
+                    break;
+                    case KEY_F1:
+                    case KEY_F2:
+                    case KEY_F3:
+                    case KEY_F4:
+                    {
+                        HI_UNF_PVR_REC_ATTR_S stRecAttr;
+
+                        u32PauseFlag = 0xffffffff;
+
+                        if(g_PlayChn != 0xffffffff)
+                        {
+                            PVR_StopPlayBack(g_PlayChn);
+                        }
+
+                        HI_UNF_PVR_RecGetChn(u32RecChn,&stRecAttr);
+                        PVR_StartPlayBack(stRecAttr.szFileName, &g_PlayChn, g_hIrAvplay);
+                        printf("====Created Player channel is %d\n", g_PlayChn);
+                    }
+                    break;
+                    case KEY_SEEK:
+                    {
+                        HI_UNF_PVR_PLAY_POSITION_S stPos;
+                        u32Rate = 0;
+
+                        u32PauseFlag = 0xffffffff;
+
+                        stPos.enPositionType = HI_UNF_PVR_PLAY_POS_TYPE_TIME;
+                        stPos.s64Offset = 0;
+                        if(u32SeekFlag == 0xffffffff)
+                        {
+                            stPos.s32Whence = SEEK_SET;
+                            u32SeekFlag = 0;
+                            printf("\033[5;31mseek to start\n\033[0m");
+                        }
+                        else
+                        {
+                            printf("\033[5;31mseek to end\n\033[0m");
+                            stPos.s32Whence = SEEK_END;
+                            u32SeekFlag = 0xffffffff;
+                        }
+
+                        Ret = HI_UNF_PVR_PlaySeek(g_PlayChn, &stPos);
+                        if (Ret != HI_SUCCESS)
+                        {
+                            sample_common_printf("call HI_UNF_PVR_PlayStep failed.\n");
+                        }
+                    }
+                    break;
+                    default:
+                        printf(" IR   KeyId : 0x%llx   enPressStatus :%d[%s]\n", u64KeyId, enPressStatus, IR_Stuts_Str[enPressStatus]);
+                    break;
+                }
+            }
+        }
+        usleep(10*1000);
+    }
+    return 0;
+}
+
+HI_S32  IRProcess(HI_U32 u32RecChn)
+{
+    HI_S32 Ret;
+
+    /*open ir device*/
+    Ret = HI_UNF_IR_Init();
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        return Ret;
+    }
+
+    Ret = HI_UNF_IR_EnableKeyUp(HI_TRUE);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        HI_UNF_IR_DeInit();
+        return Ret;
+    }
+
+    Ret = HI_UNF_IR_SetRepKeyTimeoutAttr(108);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        HI_UNF_IR_DeInit();
+        return Ret;
+    }
+
+    Ret = HI_UNF_IR_EnableRepKey(HI_TRUE);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        HI_UNF_IR_DeInit();
+        return Ret;
+    }
+
+    Ret = HI_UNF_IR_Enable(HI_TRUE);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        HI_UNF_IR_DeInit();
+        return Ret;
+    }
+
+    g_bIrTaskRunning = HI_TRUE;
+
+    /*create a thread for ir receive*/
+    Ret = pthread_create(&g_IrThread, NULL, IR_ReceiveTask, (HI_VOID *)u32RecChn);
+    if (0 != Ret)
+    {
+        sample_common_printf("%s: %d ErrorCode=0x%x\n", __FILE__, __LINE__, Ret);
+        perror("pthread_create");
+    }
+
+    return HI_SUCCESS;
+}
+#endif
 

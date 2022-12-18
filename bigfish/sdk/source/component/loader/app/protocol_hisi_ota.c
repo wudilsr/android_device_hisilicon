@@ -48,6 +48,13 @@ extern "C" {
         p += 4; \
     } while (0)
 
+#define GETEIGHTBYTE(n, p) \
+	do {\
+		n = 0 | (HI_U64)(*p) << 56 | (HI_U64)(*(p + 1)) << 48 | (HI_U64)(*(p + 2)) << 40 | (HI_U64)(*(p + 3)) << 32 \
+        	  | (HI_U64)(*(p + 4)) << 24 | (HI_U64)(*(p + 5)) << 16 | (HI_U64)(*(p + 6)) << 8 | (HI_U64)(*(p + 7)); \
+        p += 8; \
+	} while (0)
+
 #define PART_DESCRIPTION_LEN (12 + 2)
 #define RESERVED_DATA_LEN (sizeof(HI_U8) + sizeof(HI_U16) + sizeof(HI_U32) + sizeof(HI_U32))
 
@@ -239,7 +246,9 @@ static HI_BOOL ParseDownloadInfo(const HI_U8* pu8DesData, HI_S32 s32DescLen, HIS
             pu8DesData++;
 
             /*gets part descritption length */
-            s32Len = 8 + ((pu8DesData + 4)[0] * PART_DESCRIPTION_LEN);
+			/*here 8 is sizeof(download_data_totalsize 64bit),12 is 8+2*sizeof(u8t) +sizeof(part_descritption_length 16bit) */
+            s32Len = 12 + ((pu8DesData + 8)[0] * PART_DESCRIPTION_LEN);             
+            HI_DBG_LOADER("partdeslen:0x%.2X(%d)\n", s32Len, s32Len);
 
             /*gets download description length*/
             if ((2 + s32Len) >= s32DescLen)
@@ -251,8 +260,8 @@ static HI_BOOL ParseDownloadInfo(const HI_U8* pu8DesData, HI_S32 s32DescLen, HIS
             u32DownDescLen = *(pu8DesData + s32Len);
 
             HI_DBG_LOADER("u32DownDescLen:0x%.2X(%d)\n", u32DownDescLen, u32DownDescLen);
-
-            s32Len = 8 + (((pu8DesData + 6)[0] << 8) | (pu8DesData + 6)[1])
+            /*12 is same as above, 10 is sizeof(download_data_totalsize 64bit) + 2* sizeof(u8t) */
+            s32Len = 12 + (((pu8DesData + 10)[0] << 8) | (pu8DesData + 10)[1])
                      + u32DownDescLen + 1 + RESERVED_DATA_LEN;
 
             HI_DBG_LOADER("s32Len = 0x%x(%d)\n", s32Len, s32Len);
@@ -270,9 +279,10 @@ static HI_BOOL ParseDownloadInfo(const HI_U8* pu8DesData, HI_S32 s32DescLen, HIS
 
             s32DescLen -= (s32Len + 2);
 
-            pTmpControlHead->u32Download_data_totalsize = u8Data[0] << 24 | u8Data[1] << 16
-                                                          | u8Data[2] << 8 | u8Data[3];
-            u8Data += 4;
+            pTmpControlHead->u64Download_data_totalsize = (HI_U64)u8Data[0] << 56 | (HI_U64)u8Data[1] << 48
+                                                          | (HI_U64)u8Data[2] << 40 | (HI_U64)u8Data[3]<<32 | (HI_U64)u8Data[4] << 24
+                                                          | (HI_U64)u8Data[5] << 16 | (HI_U64)u8Data[6] << 8 | (HI_U64)u8Data[7];
+            u8Data += 8;
 
             /*get partition number*/
             pTmpControlHead->u8Partiton_number = *u8Data;
@@ -326,9 +336,9 @@ static HI_BOOL ParseDownloadInfo(const HI_U8* pu8DesData, HI_S32 s32DescLen, HIS
 
                 if (PARTMODE == pstruUpgrdPartInfo->u32Download_mode)
                 {
-                    /*get upgrade address*/
+                    /*get upgrade address ,this adress does't use backward*/
                     GETFOURBYTE(u32Temp, u8Data);
-                    pstruUpgrdPartInfo->u32Download_addr = u32Temp;
+                    pstruUpgrdPartInfo->u64Download_addr = u32Temp;
 
                     /*get upgrade size*/
                     GETFOURBYTE(u32Temp, u8Data);
@@ -452,6 +462,7 @@ static HI_BOOL ParsePartitionControl(const HI_U8* pu8SecData, HI_S32 s32DescLen,
 
 	HI_U16 u16Temp = 0;
 	HI_U32 u32Temp = 0;
+    HI_U64 u64Temp = 0;
 
 	u32PartNum--;
 
@@ -530,9 +541,9 @@ static HI_BOOL ParsePartitionControl(const HI_U8* pu8SecData, HI_S32 s32DescLen,
 
 				if (PARTMODE == pTmpPartInfo->u32Download_mode)
 				{
-					GETFOURBYTE(u32Temp, u8Data);
-					pTmpPartInfo[u32PartNum].u32Download_addr = u32Temp;
-					HI_DBG_LOADER("parse partinfo desc: brun flash addr: 0x%x\n", pTmpPartInfo[u32PartNum].u32Download_addr);
+					GETEIGHTBYTE(u64Temp, u8Data);
+					pTmpPartInfo[u32PartNum].u64Download_addr = u64Temp;
+					HI_DBG_LOADER("parse partinfo desc: brun flash addr: 0x%Lx\n", pTmpPartInfo[u32PartNum].u64Download_addr);
 				}
 				else
 				{
@@ -578,10 +589,10 @@ static HI_BOOL ParsePartitionControl(const HI_U8* pu8SecData, HI_S32 s32DescLen,
 					HI_DBG_LOADER("parse partinfo desc: brun flash index: 0x%x\n",
 								pTmpPartInfo[u32PartNum].u32Download_FlashIndex);
 
-					GETFOURBYTE(u32Temp, u8Data);
-					pTmpPartInfo[u32PartNum].u32Partition_endaddr = u32Temp;
-					HI_DBG_LOADER("parse partinfo desc: brun u32Partition_endaddr: 0x%x\n",
-							pTmpPartInfo[u32PartNum].u32Partition_endaddr);
+					GETEIGHTBYTE(u64Temp, u8Data);
+					pTmpPartInfo[u32PartNum].u64Partition_endaddr = u64Temp;
+					HI_DBG_LOADER("parse partinfo desc: brun u64Partition_endaddr: 0x%Lx\n",
+							pTmpPartInfo[u32PartNum].u64Partition_endaddr);
 #endif
 				}
 				else
@@ -671,7 +682,7 @@ HI_S32 OTA_Hisi_ParseDownloadControlSection(const HI_U8 *pu8SectionData, HI_S32 
         g_stVerInfo.u32StartSn = pstUpgrdInfo->u32startSn;
         g_stVerInfo.u32EndSn = pstUpgrdInfo->u32endSn;
 
-        g_stDataInfo.u32DataFullSize  = pstUpgrdInfo->u32Download_data_totalsize;
+        g_stDataInfo.u64DataFullSize  = pstUpgrdInfo->u64Download_data_totalsize;
         g_stDataInfo.u32DataFullCRC32 = pstUpgrdInfo->u32Full_CRC32;
         g_stDataInfo.bCheckFullCRC32 = HI_TRUE;
         g_stDataInfo.u32PartitionNum = pstUpgrdInfo->u8Partiton_number;
@@ -694,7 +705,6 @@ HI_S32 OTA_Hisi_ParseDownloadControlSection(const HI_U8 *pu8SectionData, HI_S32 
             g_stDataInfo.pstPartitionInfo[ii].u32ImageDataSize = pstUpgrdInfo->pPartInfo[ii].u32Download_size;
             g_u32DataGramSize = DATAGRAMLEN;
             g_stDataInfo.pstPartitionInfo[ii].u32ImageDataCRC32 = pstUpgrdInfo->pPartInfo[ii].u32Download_CRC32;
-            g_stDataInfo.pstPartitionInfo[ii].u32FlashStartAddr = pstUpgrdInfo->pPartInfo[ii].u32Datagram_start_addr;
 
             HI_DBG_LOADER("partition %d datasize :%d\n", ii, g_stDataInfo.pstPartitionInfo[ii].u32ImageDataSize);
         }
@@ -778,11 +788,11 @@ HI_S32 OTA_Hisi_ParsePartitionControlSection(const HI_U8 *pu8SectionData, HI_S32
 
 		pPartInfo->u32FlashType = pstPartInfo[u32PartNum - 1].u32Download_FlashType;
 		pPartInfo->u32ImageFS = pstPartInfo[u32PartNum - 1].u32Download_FlashIndex;
-		pPartInfo->u32FlashStartAddr = pstPartInfo[u32PartNum - 1].u32Download_addr;
-		pPartInfo->u32FlashEndAddr = pstPartInfo[u32PartNum - 1].u32Partition_endaddr;
+		pPartInfo->u64FlashStartAddr = pstPartInfo[u32PartNum - 1].u64Download_addr;
+		pPartInfo->u64FlashEndAddr = pstPartInfo[u32PartNum - 1].u64Partition_endaddr;
 
-		HI_DBG_LOADER("type:%d, start:0x%x, end:0x%x, index:x%x\n", pPartInfo->u32FlashType,
-				pPartInfo->u32FlashStartAddr, pPartInfo->u32FlashEndAddr, pPartInfo->u32ImageFS);
+		HI_DBG_LOADER("type:%d, start:0x%Lx, end:0x%Lx, index:x%x\n", pPartInfo->u32FlashType,
+				pPartInfo->u64FlashStartAddr, pPartInfo->u64FlashEndAddr, pPartInfo->u32ImageFS);
 	}
 
 	HI_DBG_LOADER("parse PartitionControlSection: ==end==\n" );
@@ -990,6 +1000,14 @@ HI_S32 LOADER_PROTOCOL_HisiOTA_Init(HI_LOADER_TYPE_E enType, HI_VOID * para)
         {
             g_u32Pid = pstOtaParam->unConnPara.stSat.u32OtaPid;
         }
+        else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstOtaParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstOtaParam->eSigType)
+        {
+            g_u32Pid = pstOtaParam->unConnPara.stTer.u32OtaPid;
+        }
+        else
+        {
+			HI_ERR_LOADER("Invalid signal type.\n");
+        }
 
         return LOADER_DOWNLOAD_OTA_Init(para);
     }
@@ -1196,7 +1214,7 @@ HI_S32 LOADER_PROTOCOL_HisiOTA_Process(HI_U32 u32MaxMemorySize)
 
 	s32Ret = OTA_InitUpgradeBuff(&g_stDataInfo, g_u32DataGramSize);
 
-	pMemAddr = LOADER_GetUsableMemory(g_stDataInfo.u32DataFullSize+PLUS_MEM_SIZE, &u32Size);
+	pMemAddr = LOADER_GetUsableMemory((HI_U32)g_stDataInfo.u64DataFullSize+PLUS_MEM_SIZE, &u32Size);
 	if (NULL == pMemAddr)
 	{
 		HI_ERR_LOADER("There is no Usable Memory");
@@ -1240,7 +1258,7 @@ HI_S32 LOADER_PROTOCOL_HisiOTA_Process(HI_U32 u32MaxMemorySize)
 		if (g_pstCallback && g_pstCallback->pfnOSDCallback)
 		{
 			g_pstCallback->pfnOSDCallback(OSD_EVENT_TYPE_DOWNLOAD, OTA_GetDownLoadDataSize(),
-					g_stDataInfo.u32DataFullSize);
+					(HI_U32)g_stDataInfo.u64DataFullSize);
 		}
 
 		if ((DOWNLOAD_STATUS_PIECE_COMPLETE == enDLStatus)

@@ -168,6 +168,53 @@ static int set_random_mac_address(unsigned char *mac, unsigned char *ethaddr)
 	return 0;
 }
 
+static int hieth_init_hw_desc_queue(struct hieth_netdev_local *ld)
+{
+	struct hieth_frame_desc* queue_phy_addr = NULL;
+	int queue_count = 0;
+	int i;
+
+	/* init rx fq */
+	queue_count = HIETH_HW_DESC_DEPTH;
+
+	queue_phy_addr= (struct hieth_frame_desc*)malloc(queue_count * sizeof(struct hieth_frame_desc));
+	if (queue_phy_addr == NULL)
+	{
+		printf("alloc rx fq error!\n");
+		return 1;
+	}
+
+	memset((void*)queue_phy_addr, 0, queue_count * sizeof(struct hieth_frame_desc));
+	ld->hieth_desc_head = queue_phy_addr;
+	ld->desc_hw_offset = 0;
+	ld->desc_rec_offset = 0;
+
+	for(i =0;i<HIETH_HW_DESC_DEPTH;i++){
+		queue_phy_addr[i].frm_addr = (unsigned long)malloc(2048);
+		queue_phy_addr[i].frm_len = 0;
+	}
+	return 0;
+}
+
+static int hieth_destroy_hw_desc_queue(struct hieth_netdev_local *ld)
+{
+	struct hieth_frame_desc* queue_phy_addr = ld->hieth_desc_head;
+	int i;
+
+	if (queue_phy_addr) {
+		for (i =0;i<HIETH_HW_DESC_DEPTH;i++){
+			free((void *)queue_phy_addr[i].frm_addr);
+		}
+
+		free(ld->hieth_desc_head);
+		ld->hieth_desc_head = NULL;
+	}
+	ld->desc_hw_offset = 0;
+	ld->desc_rec_offset = 0;
+
+	return 0;
+}
+
 int eth_set_host_mac_address(void)
 {
 	char *s;
@@ -276,7 +323,7 @@ static int hieth_net_open(struct hieth_netdev_local *ld)
 	ld->link_stat = 0;
 	hieth_adjust_link(ld);
 
-	hieth_irq_enable(ld, UD_BIT_NAME(HIETH_INT_RX_RDY));
+	hieth_irq_enable(ld, UD_BIT_NAME(HIETH_INT_MULTI_RXRDY));
 
 	return 0;
 }
@@ -305,6 +352,8 @@ static int hieth_dev_probe_init(int port)
 
 	hieth_glb_preinit_dummy(ld);
 
+	hieth_init_hw_desc_queue(ld);
+
 	hieth_sys_allstop();
 
 	return 0;
@@ -312,6 +361,8 @@ static int hieth_dev_probe_init(int port)
 
 static int hieth_dev_remove(struct hieth_netdev_local *ld)
 {
+	hieth_destroy_hw_desc_queue(ld);
+
 	return 0;
 }
 
@@ -447,42 +498,59 @@ _link_ok:
 int eth_rx(void)
 {
 	int recvq_ready, timeout_us = 10000;
-	struct hieth_frame_desc fd;
 	struct hieth_netdev_local *ld = hieth_curr;
+	struct hieth_frame_desc *fd;
+	struct hieth_frame_desc receive_fd;	
+	int hw_offset,rec_offset;
+
+	fd = ld->hieth_desc_head;
+	hw_offset = ld->desc_hw_offset;
+	rec_offset = ld->desc_rec_offset;
 
 	/* check this we can add a Rx addr */
 	recvq_ready =
-	    hieth_readl_bits(ld, UD_REG_NAME(GLB_RO_QUEUE_STAT),
-			     BITS_RECVQ_RDY);
-	if (!recvq_ready) {
+		hieth_readl_bits(ld, UD_REG_NAME(GLB_RO_QUEUE_STAT),
+				BITS_RECVQ_RDY);
+	if (!recvq_ready) 
 		hieth_trace(7, "hw can't add a rx addr.");
+
+	while(recvq_ready &&
+			((hw_offset + 1) % HIETH_HW_DESC_DEPTH != rec_offset)) {
+		receive_fd = fd[hw_offset];
+		hw_recvq_setfd(ld, receive_fd);
+
+		hw_offset = (hw_offset + 1) % HIETH_HW_DESC_DEPTH;
+
+		recvq_ready =
+			hieth_readl_bits(ld, UD_REG_NAME(GLB_RO_QUEUE_STAT),
+					BITS_RECVQ_RDY);
 	}
-
-	/* enable rx int */
-	hieth_irq_enable(ld, UD_BIT_NAME(HIETH_INT_RX_RDY));
-
-	/* fill rx hwq fd */
-	fd.frm_addr = (unsigned long)NetRxPackets[0];
-	fd.frm_len = 0;
-	hw_recvq_setfd(ld, fd);
+	ld->desc_hw_offset = hw_offset;
 
 	/* receive packed, loop in NetLoop */
-	while (--timeout_us && !is_recv_packet(ld))
+	while (--timeout_us && !is_recv_packet_rx(ld))
 		udelay(1);
 
-	if (is_recv_packet(ld)) {
+	if (is_recv_packet_rx(ld)) {
+		receive_fd = fd[rec_offset];
 
-		/*hwid = hw_get_rxpkg_id(ld); */
-		fd.frm_len = hw_get_rxpkg_len(ld);
+		receive_fd.frm_len = hw_get_rxpkg_len(ld);
+
 		hw_set_rxpkg_finish(ld);
 
-		if (HIETH_INVALID_RXPKG_LEN(fd.frm_len)) {
-			hieth_error("frm_len invalid (%d).", fd.frm_len);
+		if (HIETH_INVALID_RXPKG_LEN(receive_fd.frm_len)) {
+			hieth_error("frm_len invalid (%d).", receive_fd.frm_len);
 			goto _error_exit;
 		}
 
+		memcpy((void *)NetRxPackets[0], (void *)receive_fd.frm_addr,
+				receive_fd.frm_len);
+
 		/* Pass the packet up to the protocol layers. */
-		NetReceive((void *)fd.frm_addr, fd.frm_len);
+		NetReceive(NetRxPackets[0], receive_fd.frm_len);
+
+		rec_offset = (rec_offset + 1) % HIETH_HW_DESC_DEPTH;
+		ld->desc_rec_offset = rec_offset;
 
 		return 0;
 	} else {

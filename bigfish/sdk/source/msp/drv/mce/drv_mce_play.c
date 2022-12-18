@@ -51,7 +51,8 @@
 #include "hi_drv_gpioi2c.h"
 #include "drv_pq_ext.h"
 
-
+#define MCE_INVALID_I2C_CHN     0xFF
+#define MCE_INVALID_TUNERINCLK  0xFFFF
 
 #define MCE_DMX_ID              0
 #define MCE_DMX_TS_PORT         0
@@ -73,6 +74,8 @@
     }while(0)
 
 extern MCE_S   g_Mce;
+
+static HI_U32 GpioI2cChn = MCE_INVALID_I2C_CHN;
 
 HI_S32 MCE_Init(HI_VOID);
 HI_S32 MCE_DeInit(HI_VOID);
@@ -458,95 +461,254 @@ HI_S32 MCE_ADP_VoCreateWin(HI_HANDLE *phWin)
 }
 
 #ifdef HI_FRONTEND_SUPPORT
-HI_S32 MCE_ADP_DmxAttachTunerPort(HI_U32 DmxId, HI_U32 PortId)
+HI_S32 MCE_ADP_GetTunerAttr(HI_U32 TunerId, HI_UNF_TUNER_ATTR_S *TunerAttr, HI_U32 *GpioSDA, HI_U32 *GpioSCL)
+{
+    TunerAttr->enI2cChannel = MCE_INVALID_I2C_CHN;
+
+    switch (TunerId)
+    {
+        case 0:
+            TunerAttr->enSigType        = HI_TUNER_SIGNAL_TYPE;
+            TunerAttr->enTunerDevType   = HI_TUNER_TYPE;
+            TunerAttr->u32TunerAddr     = HI_TUNER_DEV_ADDR;
+            TunerAttr->enDemodDevType   = HI_DEMOD_TYPE;
+            TunerAttr->u32DemodAddr     = HI_DEMOD_DEV_ADDR;
+            TunerAttr->enOutputMode     = HI_DEMOD_TS_MODE;
+            TunerAttr->u32ResetGpioNo   = HI_DEMOD_RESET_GPIO;
+        #if defined(HI_DEMOD_USE_I2C)
+            TunerAttr->enI2cChannel     = HI_DEMOD_I2C_CHANNEL;
+        #elif defined(HI_DEMOD_USE_GPIO)
+            *GpioSCL = HI_DEMOD_GPIO_SCL;
+            *GpioSDA = HI_DEMOD_GPIO_SDA;
+        #endif
+            break;
+
+        case 1:
+            TunerAttr->enSigType        = HI_TUNER1_SIGNAL_TYPE;
+            TunerAttr->enTunerDevType   = HI_TUNER1_TYPE;
+            TunerAttr->u32TunerAddr     = HI_TUNER1_DEV_ADDR;
+            TunerAttr->enDemodDevType   = HI_DEMOD1_TYPE;
+            TunerAttr->u32DemodAddr     = HI_DEMOD1_DEV_ADDR;
+            TunerAttr->enOutputMode     = HI_DEMOD1_TS_MODE;
+            TunerAttr->u32ResetGpioNo   = HI_DEMOD1_RESET_GPIO;
+        #if defined(HI_DEMOD1_USE_I2C)
+            TunerAttr->enI2cChannel     = HI_DEMOD1_I2C_CHANNEL;
+        #elif defined(HI_DEMOD1_USE_GPIO)
+            *GpioSCL = HI_DEMOD1_GPIO_SCL;
+            *GpioSDA = HI_DEMOD1_GPIO_SDA;
+        #endif
+            break;
+
+        case 2:
+            TunerAttr->enSigType        = HI_TUNER2_SIGNAL_TYPE;
+            TunerAttr->enTunerDevType   = HI_TUNER2_TYPE;
+            TunerAttr->u32TunerAddr     = HI_TUNER2_DEV_ADDR;
+            TunerAttr->enDemodDevType   = HI_DEMOD2_TYPE;
+            TunerAttr->u32DemodAddr     = HI_DEMOD2_DEV_ADDR;
+            TunerAttr->enOutputMode     = HI_DEMOD2_TS_MODE;
+            TunerAttr->u32ResetGpioNo   = HI_DEMOD2_RESET_GPIO;
+        #if defined(HI_DEMOD2_USE_I2C)
+            TunerAttr->enI2cChannel     = HI_DEMOD2_I2C_CHANNEL;
+        #elif defined(HI_DEMOD2_USE_GPIO)
+            *GpioSCL = HI_DEMOD2_GPIO_SCL;
+            *GpioSDA = HI_DEMOD2_GPIO_SDA;
+        #endif
+            break;
+
+        case 3:
+            TunerAttr->enSigType        = HI_TUNER3_SIGNAL_TYPE;
+            TunerAttr->enTunerDevType   = HI_TUNER3_TYPE;
+            TunerAttr->u32TunerAddr     = HI_TUNER3_DEV_ADDR;
+            TunerAttr->enDemodDevType   = HI_DEMOD3_TYPE;
+            TunerAttr->u32DemodAddr     = HI_DEMOD3_DEV_ADDR;
+            TunerAttr->enOutputMode     = HI_DEMOD3_TS_MODE;
+            TunerAttr->u32ResetGpioNo   = HI_DEMOD3_RESET_GPIO;
+        #if defined(HI_DEMOD3_USE_I2C)
+            TunerAttr->enI2cChannel     = HI_DEMOD3_I2C_CHANNEL;
+        #elif defined(HI_DEMOD3_USE_GPIO)
+            *GpioSCL = HI_DEMOD3_GPIO_SCL;
+            *GpioSDA = HI_DEMOD3_GPIO_SDA;
+        #endif
+            break;
+
+        default:
+            HI_ERR_MCE("TunerId %u error\n", TunerId);
+            return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_S32 MCE_ADP_DmxAttachTunerPort(HI_U32 DmxId, HI_U32 TunerId)
 {
     HI_S32                      Ret;
-    HI_U32                      DrvDmxAttachPort;
-    HI_UNF_DMX_PORT_E           UnfDmxAttachPort;
-    HI_UNF_TUNER_ATTR_S         TunerAttr;
-    HI_UNF_DMX_PORT_ATTR_S      DmxAttachPortAttr;
-    
-    GET_TUNER_CONFIG(TunerAttr);
+    HI_U32                      PortId;
+    HI_UNF_DMX_PORT_ATTR_S      PortAttr;
+    HI_UNF_DMX_PORT_TYPE_E      PortType;
+    HI_U32                      BitSelector;
+    HI_U32                      TunerInClk = MCE_INVALID_TUNERINCLK;
+    HI_UNF_DMX_CAPABILITY_S     DmxCap;
 
-    if(HI_UNF_TUNER_SIG_TYPE_SAT == TunerAttr.enSigType)
+    switch (TunerId)
     {
-        UnfDmxAttachPort = HI_DEMUX_PORT;
-        DrvDmxAttachPort = UnfDmxAttachPort - HI_UNF_DMX_PORT_TSI_0;
-        
-        HI_DRV_DMX_TunerPortGetAttr(DrvDmxAttachPort, &DmxAttachPortAttr);
+        case 0 :
+            PortId = HI_DEMUX_PORT;
+            break;
 
-        switch (UnfDmxAttachPort)
-        {
-        case HI_UNF_DMX_PORT_TSI_0:
+        case 1 :
+            PortId = HI_DEMUX1_PORT;
+            break;
+
+        case 2 :
+            PortId = HI_DEMUX2_PORT;
+            break;
+
+        case 3 :
+            PortId = HI_DEMUX3_PORT;
+            break;
+
         default:
-            DmxAttachPortAttr.enPortType = HI_TSI0_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI0_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI0_CLK_PHASE_REVERSE;
-            break;
-        case HI_UNF_DMX_PORT_TSI_1:
-            DmxAttachPortAttr.enPortType = HI_TSI1_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI1_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI1_CLK_PHASE_REVERSE;
-            break;
-        case HI_UNF_DMX_PORT_TSI_2:
-            DmxAttachPortAttr.enPortType = HI_TSI2_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI2_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI2_CLK_PHASE_REVERSE;
-            break;
-        case HI_UNF_DMX_PORT_TSI_3:
-            DmxAttachPortAttr.enPortType = HI_TSI3_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI3_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI3_CLK_PHASE_REVERSE;
-            break;
-        case HI_UNF_DMX_PORT_TSI_4:
-            DmxAttachPortAttr.enPortType = HI_TSI4_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI4_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI4_CLK_PHASE_REVERSE;
-            break;
-        case HI_UNF_DMX_PORT_TSI_5:
-            DmxAttachPortAttr.enPortType = HI_TSI5_TYPE;
-            DmxAttachPortAttr.u32SerialBitSelector = HI_TSI5_BIT_SELECTOR;
-            DmxAttachPortAttr.u32TunerInClk = HI_TSI5_CLK_PHASE_REVERSE;
-            break;
-        }
-        
-        HI_DRV_DMX_TunerPortSetAttr(DrvDmxAttachPort, &DmxAttachPortAttr);
-
-        Ret = HI_DRV_DMX_AttachTunerPort(MCE_DMX_ID, DrvDmxAttachPort);
-        if(HI_SUCCESS != Ret)
-        {
-            HI_ERR_MCE("ERR: HI_DRV_DMX_AttachTunerPort!\n");
             return HI_FAILURE;
-        }    
     }
-    else
+
+    Ret = HI_DRV_DMX_GetCapability(&DmxCap);
+    if (HI_SUCCESS != Ret)
     {
-        Ret = HI_DRV_DMX_AttachTunerPort(MCE_DMX_ID, MCE_DMX_DVB_PORT);
-        if(HI_SUCCESS != Ret)
-        {
-            HI_ERR_MCE("ERR: HI_DRV_DMX_AttachTunerPort!\n");
-            return HI_FAILURE;
-        }        
+        HI_ERR_MCE("HI_DRV_DMX_GetCapability failed 0x%x\n", Ret);
+
+        return HI_FAILURE;
     }
 
-    return HI_SUCCESS;   
-}
-#endif
+    switch (PortId)
+    {
+        case HI_UNF_DMX_PORT_IF_0 :
+            PortType    = HI_IF0_TYPE;
+            BitSelector = HI_IF0_BIT_SELECTOR;
+            break;
 
-#ifdef HI_FRONTEND_SUPPORT
+        case HI_UNF_DMX_PORT_TSI_0 :
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI0_TYPE;
+            BitSelector = HI_TSI0_BIT_SELECTOR;
+            TunerInClk  = HI_TSI0_CLK_PHASE_REVERSE;
+            break;
+
+        case HI_UNF_DMX_PORT_TSI_1 :
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI1_TYPE;
+            BitSelector = HI_TSI1_BIT_SELECTOR;
+            TunerInClk  = HI_TSI1_CLK_PHASE_REVERSE;
+            break;
+
+        case HI_UNF_DMX_PORT_TSI_2 :
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI2_TYPE;
+            BitSelector = HI_TSI2_BIT_SELECTOR;
+            TunerInClk  = HI_TSI2_CLK_PHASE_REVERSE;
+            break;
+
+        case HI_UNF_DMX_PORT_TSI_3 :
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI3_TYPE;
+            BitSelector = HI_TSI3_BIT_SELECTOR;
+            TunerInClk  = HI_TSI3_CLK_PHASE_REVERSE;
+            break;
+
+        case HI_UNF_DMX_PORT_TSI_4:
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI4_TYPE;
+            BitSelector = HI_TSI4_BIT_SELECTOR;
+            TunerInClk  = HI_TSI4_CLK_PHASE_REVERSE;
+            break;
+
+        case HI_UNF_DMX_PORT_TSI_5:
+            PortId = PortId - HI_UNF_DMX_PORT_TSI_0 + DmxCap.u32IFPortNum;
+
+            PortType    = HI_TSI5_TYPE;
+            BitSelector = HI_TSI5_BIT_SELECTOR;
+            TunerInClk  = HI_TSI5_CLK_PHASE_REVERSE;
+            break;
+
+        default :
+            HI_ERR_MCE("PortId error 0x%x\n", PortId);
+            return HI_FAILURE;
+    }
+
+    Ret = HI_DRV_DMX_TunerPortGetAttr(PortId, &PortAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_MCE("HI_DRV_DMX_TunerPortGetAttr failed 0x%x\n", Ret);
+        return HI_FAILURE;
+    }
+
+    PortAttr.enPortType = PortType;
+    PortAttr.u32SerialBitSelector = BitSelector;
+
+    if (MCE_INVALID_TUNERINCLK != TunerInClk)
+    {
+        PortAttr.u32TunerInClk = TunerInClk;
+    }
+
+    Ret = HI_DRV_DMX_TunerPortSetAttr(PortId, &PortAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_MCE("HI_DRV_DMX_TunerPortSetAttr failed 0x%x\n", Ret);
+        return HI_FAILURE;
+    }
+
+    Ret = HI_DRV_DMX_AttachTunerPort(DmxId, PortId);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_MCE("HI_DRV_DMX_AttachTunerPort failed 0x%x\n", Ret);
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+
 HI_S32 MCE_ADP_TunerConnect(HI_UNF_MCE_DVB_PARAM_S stParam)
 {
-    HI_S32                              Ret;
-    HI_UNF_TUNER_ATTR_S                 stAttr;
-    HI_UNF_TUNER_SAT_ATTR_S             stSatTunerAttr;
-    HI_UNF_TUNER_TSOUT_SET_S            stTsOut;
+    HI_S32                  Ret;
+    HI_U32                  GpioSDA = 0;
+    HI_U32                  GpioSCL = 0;
+    HI_UNF_TUNER_ATTR_S     TunerAttr;
 
-    Ret = HI_DRV_TUNER_GetDeftAttr(TUNER_USE, &stAttr);
-    GET_TUNER_CONFIG(stAttr);
-    Ret |= HI_DRV_TUNER_SetAttr(TUNER_USE, &stAttr);
-
-    if (HI_UNF_TUNER_SIG_TYPE_SAT == stAttr.enSigType)
+    Ret = MCE_ADP_GetTunerAttr(TUNER_USE, &TunerAttr, &GpioSDA, &GpioSCL);
+    if (HI_SUCCESS != Ret)
     {
+        HI_ERR_MCE("GetTunerAttr failed\n");
+
+        return HI_FAILURE;
+    }
+
+    if (MCE_INVALID_I2C_CHN == TunerAttr.enI2cChannel)
+    {
+        Ret = HI_DRV_GPIOI2C_CreateGpioI2c(&GpioI2cChn, GpioSCL, GpioSDA);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_ERR_MCE("HI_DRV_GPIOI2C_CreateGpioI2c failed 0x%x\n", Ret);
+            return HI_FAILURE;
+        }
+
+        TunerAttr.enI2cChannel = GpioI2cChn;
+    }
+
+    Ret = HI_DRV_TUNER_SetAttr(TUNER_USE, &TunerAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_MCE("HI_DRV_TUNER_SetAttr failed 0x%x\n", Ret);
+        goto DESTROY_GPIO;
+    }
+
+    if (HI_UNF_TUNER_SIG_TYPE_SAT == TunerAttr.enSigType)
+    {
+        HI_UNF_TUNER_SAT_ATTR_S     stSatTunerAttr;
+        HI_UNF_TUNER_TSOUT_SET_S    stTsOut;
     #if (HI_TUNER_SIGNAL_TYPE == 2)
         GET_SAT_TUNER_CONFIG(stSatTunerAttr);
     #endif
@@ -564,14 +726,24 @@ HI_S32 MCE_ADP_TunerConnect(HI_UNF_MCE_DVB_PARAM_S stParam)
 
      #ifdef HI_TUNER_OUTPUT_PIN0
         GET_TUNER_TSOUT_CONFIG(stTsOut);
-    
+
         Ret |= HI_DRV_TUNER_SetTsOut(TUNER_USE, &stTsOut);
-	 #endif
+     #endif
     }
 
-    Ret |= HI_DRV_TUNER_Connect(TUNER_USE, &stParam.stConnectPara, 0);
+    Ret = HI_DRV_TUNER_Connect(TUNER_USE, &stParam.stConnectPara, 500);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_MCE("HI_DRV_TUNER_Connect failed 0x%x\n", Ret);
+        goto DESTROY_GPIO;
+    }
 
     return Ret;
+
+DESTROY_GPIO:
+    HI_DRV_GPIOI2C_DestroyGpioI2c(GpioI2cChn);
+
+    return HI_FAILURE;
 }
 #endif
 
@@ -589,15 +761,15 @@ HI_S32 MCE_TsThread(HI_VOID *args)
     pMce = (MCE_S *)args;
 
     while(!pMce->bTsThreadStop)
-    {    
+    {
         if (bSendEnd)
-        {            
+        {
             Ret = HI_DRV_AVPLAY_IsBufEmpty(pMce->hAvplay, &bIsEmpty);
             if (HI_SUCCESS == Ret)
             {
                 if (HI_TRUE == bIsEmpty)
                 {
-                    pMce->playEnd = HI_TRUE;   
+                    pMce->playEnd = HI_TRUE;
                 }
             }
 
@@ -636,7 +808,7 @@ HI_S32 MCE_TsThread(HI_VOID *args)
         {
             if (CycleCount >= pMce->stStopParam.u32PlayCount)
             {
-            	HI_DRV_AVPLAY_FlushStream(pMce->hAvplay);
+                HI_DRV_AVPLAY_FlushStream(pMce->hAvplay);
                 bSendEnd = HI_TRUE;
             }
         }
@@ -888,7 +1060,7 @@ HI_S32 MCE_TsPlayStart(MCE_S *pMce)
     }
 
     pMce->BeginTime = MCE_GetCurTime();
-    
+
     pMce->bTsThreadStop = HI_FALSE;
     pMce->pPlayTask = kthread_create(MCE_TsThread, pMce, "HI_MCE_TsPlay");
     if(IS_ERR(pMce->pPlayTask))
@@ -947,14 +1119,14 @@ HI_S32 MCE_AniThread(HI_VOID *args)
     HI_U32 u32PicIndex = 0;
 
     pMce = (MCE_S *)args;
-	HI_DRV_AVPLAY_Step(pMce->hAvplay, HI_NULL);
-	
+    HI_DRV_AVPLAY_Step(pMce->hAvplay, HI_NULL);
+
     while(!pMce->bAniThreadStop)
-    {   
-		Ret = HI_DRV_AVPLAY_ProcStatus(pMce->hAvplay, HI_UNF_AVPLAY_BUF_ID_ES_VID, &bStatus);
-		if ((HI_SUCCESS == Ret) && (HI_TRUE == bStatus))
-		{
-			msleep(pMce->stMceParam.stPlayParam.unParam.stAniParam.au32PicTime[u32PicIndex]);
+    {
+        Ret = HI_DRV_AVPLAY_ProcStatus(pMce->hAvplay, HI_UNF_AVPLAY_BUF_ID_ES_VID, &bStatus);
+        if ((HI_SUCCESS == Ret) && (HI_TRUE == bStatus))
+        {
+            msleep(pMce->stMceParam.stPlayParam.unParam.stAniParam.au32PicTime[u32PicIndex]);
             /* 1.Mce stop/exit operation will occur during the sleep*/
             /* 2.A system crash will occur when the release of resources continue to have access*/
             /* 3.Re-determination condition after wake up.*/
@@ -963,25 +1135,25 @@ HI_S32 MCE_AniThread(HI_VOID *args)
                 break;
             }
 
-			++u32PicIndex;
+            ++u32PicIndex;
             if ((u32PicIndex >= pMce->stMceParam.stPlayParam.unParam.stAniParam.u32PicCount)
                 || (u32PicIndex >= ANI_MAX_PIC_SUPPORT))
             {
                 u32PicIndex = 0;
                 CycleCount++;
 
-				if (HI_UNF_MCE_PLAYCTRL_BY_COUNT == pMce->stStopParam.enCtrlMode)
-		        {
-		            if (CycleCount >= pMce->stStopParam.u32PlayCount)
-		            {
-		                HI_DRV_AVPLAY_FlushStream(pMce->hAvplay);
-		                pMce->playEnd = HI_TRUE;
-						continue;
-		            }
-		        }
+                if (HI_UNF_MCE_PLAYCTRL_BY_COUNT == pMce->stStopParam.enCtrlMode)
+                {
+                    if (CycleCount >= pMce->stStopParam.u32PlayCount)
+                    {
+                        HI_DRV_AVPLAY_FlushStream(pMce->hAvplay);
+                        pMce->playEnd = HI_TRUE;
+                        continue;
+                    }
+                }
             }
 
-			HI_DRV_AVPLAY_Step(pMce->hAvplay, HI_NULL);
+            HI_DRV_AVPLAY_Step(pMce->hAvplay, HI_NULL);
         }
         else
         {
@@ -1557,7 +1729,17 @@ HI_S32  MCE_DvbPlayExit(MCE_S *pMce, HI_UNF_MCE_EXITPARAM_S *pstExitParam)
         HI_ERR_MCE("ERR: HI_DRV_DMX_DetachPort!\n");
         return Ret;
     }
-    /**/
+
+    if (MCE_INVALID_I2C_CHN != GpioI2cChn)
+    {
+        Ret = HI_DRV_GPIOI2C_DestroyGpioI2c(GpioI2cChn);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_ERR_MCE("DestroyGpioI2c failed 0x%x\n", Ret);
+            return Ret;
+        }
+    }
+
     Ret = MCE_ADP_VoClose();
     if(HI_SUCCESS != Ret)
     {

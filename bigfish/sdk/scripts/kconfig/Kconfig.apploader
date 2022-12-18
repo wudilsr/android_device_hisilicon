@@ -64,11 +64,14 @@ choice
 config  HI_APPLOADER_TUNER_CAB
 	bool "Cable"
 
-config  HI_APPLOADER_TUNER_TER
-	bool "Terrestrial"
-
 config  HI_APPLOADER_TUNER_SAT
 	bool "Satellite"
+
+config  HI_APPLOADER_TUNER_DVB_T
+    bool "Terrestrial DVB_T"
+
+config  HI_APPLOADER_TUNER_DVB_T2
+  	bool "Terrestrial DVB_T2"
 endchoice
 
 #------------------------------------------------

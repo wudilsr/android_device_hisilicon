@@ -30,6 +30,7 @@
 #define USB2_HST_PHY_SYST_REQ           (1<<16)
 #define USB2_OTG_PHY_SRST_REQ           (1<<17)
 #define USB2_ADP_SRST_REQ               (1<<18)
+#define USB2_CLK48_SEL                  (1<<20)
 
 
 #define PERI_CRG47                      __io_address(0xF8A22000 + 0xbc)
@@ -113,6 +114,9 @@ void hiusb_start_hcd_s40(void)
 			| USB2_HST_PHY_SYST_REQ
 			| USB2_OTG_PHY_SRST_REQ);
 
+		if ((_HI3716MV410 == get_chipid()) || (_HI3716MV420 == get_chipid()))
+			reg |= USB2_CLK48_SEL;
+
 		writel(reg, PERI_CRG46);
 		udelay(200);
 
@@ -144,6 +148,16 @@ void hiusb_start_hcd_s40(void)
 #endif
 		/* for ssk usb storage ok */
 		msleep(10);
+
+		if ((_HI3716MV410 == get_chipid()) || (_HI3716MV420 == get_chipid())) {
+			/* open ref clk */
+			reg = readl(PERI_CRG47);
+			reg |= (USB_PHY0_REF_CKEN
+				| USB_PHY1_REF_CKEN
+				| USB_PHY2_REF_CKEN);
+			writel(reg, PERI_CRG47);
+			udelay(300);
+		}
 		
 		/* cancel power on reset */
 		reg = readl(PERI_CRG47);
@@ -190,6 +204,14 @@ void hiusb_start_hcd_s40(void)
 			udelay(500);
 		}
 
+		if ((_HI3716MV410 == get_chipid()) || (_HI3716MV420 == get_chipid())) {
+		/* config PHY clock,added by Ludeng/289009*/
+			writel(0xA604, PERI_USB1);
+			writel(0xE604, PERI_USB1);
+			writel(0xA604, PERI_USB1);
+			mdelay(10);
+		}
+
 		/* cancel port reset */
 		reg = readl(PERI_CRG47);
 		reg &=~(USB_PHY0_SRST_TREQ
@@ -208,7 +230,7 @@ void hiusb_start_hcd_s40(void)
 				| USB_PHY2_REF_CKEN);
 		}
 		writel(reg, PERI_CRG47);
-		udelay(300);
+		mdelay(10);
 
 		/* cancel control reset */
 		reg = readl(PERI_CRG46);

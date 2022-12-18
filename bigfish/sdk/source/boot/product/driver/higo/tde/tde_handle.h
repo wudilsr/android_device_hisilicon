@@ -1,31 +1,48 @@
 /******************************************************************************
-
-  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
-
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
 ******************************************************************************
-  File Name             :   handle.h
-  Version               :   Initial Draft
-  Author                :   Hisilicon multimedia software group
-  Created               :   2008/03/05
-  Last Modified         :
-  Description           :
-  Function List         :
-  History               :
-  1.Date                :   2008/03/05
-    Author              :   w54130
-Modification            :   Created file
+File Name           : tde_handle.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
 ******************************************************************************/
-#ifndef  __HI_HANDLE_MGR_H__
-#define  __HI_HANDLE_MGR_H__
+
+#ifndef __TDE_HANDLE_H__
+#define __TDE_HANDLE_H__
+
+
+/*********************************add include here******************************/
 
 #include "tde_define.h"
 #include "list.h"
 
+/*****************************************************************************/
+
 #ifdef __cplusplus
- #if __cplusplus
-extern "C" {
- #endif
-#endif /* End of #ifdef __cplusplus */
+#if __cplusplus
+   extern "C"
+{
+#endif
+#endif /* __cplusplus */
+
+
+
+/***************************** Macro Definition ******************************/
+
+
+/*************************** Structure Definition ****************************/
+
 
 typedef struct hiHandleMgr
 {
@@ -63,6 +80,15 @@ STATIC HI_S32 s_s32HandleNum = 0;
     }while(0)
 
 #define TDE_IS_JOB_FULL() (s_s32HandleNum == TDE_MAX_JOB_NUM)
+
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
+
+
 STATIC HI_BOOL  initial_handle(HI_VOID)
 {
     if (NULL == s_pstTdeHandleList)
@@ -152,10 +178,14 @@ STATIC HI_VOID destroy_handle(HI_VOID)
     return;
 }
 
-#ifdef __cplusplus
- #if __cplusplus
-}
- #endif
-#endif /* End of #ifdef __cplusplus */
 
-#endif /* __HI_HANDLE_MGR_H__ */
+
+#ifdef __cplusplus
+
+#if __cplusplus
+
+}
+#endif
+#endif /* __cplusplus */
+
+#endif /* __TDE_HANDLE_H__ */

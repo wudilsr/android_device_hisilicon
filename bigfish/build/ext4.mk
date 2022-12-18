@@ -16,6 +16,7 @@ $(EXT4_IMG):$(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGET) $(INSTALL
 	cp -r $(PRODUCT_OUT)/sdcard.img $(EMMC_PRODUCT_OUT)/sdcard.ext4
 	cp -r $(PRODUCT_OUT)/private.img $(EMMC_PRODUCT_OUT)/private.ext4
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
+ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 	cp -r $(PRODUCT_OUT)/userdata.img $(SECURITY_PRODUCTION_OUT)/userdata.ext4
 	cp -r $(PRODUCT_OUT)/cache.img $(SECURITY_PRODUCTION_OUT)/cache.ext4
 	cp -r $(PRODUCT_OUT)/sdcard.img $(SECURITY_PRODUCTION_OUT)/sdcard.ext4
@@ -23,6 +24,7 @@ ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
 	cp -r $(PRODUCT_OUT)/cache.img $(SECURITY_MAINTAIN_OUT)/cache.ext4
 	cp -r $(PRODUCT_OUT)/sdcard.img $(SECURITY_MAINTAIN_OUT)/sdcard.ext4
 	cp -r $(PRODUCT_OUT)/private.img $(SECURITY_MAINTAIN_OUT)/private.ext4
+endif
 endif
 .PHONY: ext4fs
 ext4fs: $(EXT4_IMG)

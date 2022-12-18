@@ -269,7 +269,7 @@
 
 #define DMX_REC_EXCLUDE_PID_SUPPORT
 #define DMX_REC_EXCLUDE_PID_NUM         (30)
-#define DMX_REC_TIME_STAMP_SUPPORT       /*only 3719 support this */
+#define DMX_REC_TIME_STAMP_SUPPORT      
 
 /*=================================CHIP_TYPE_hi3718cv100,CHIP_TYPE_hi3718mv100==================================*/
 #elif defined(CHIP_TYPE_hi3718cv100)  || defined (CHIP_TYPE_hi3718mv100) /*not support descrambler*/
@@ -384,7 +384,7 @@
 
 #define DMX_REC_EXCLUDE_PID_SUPPORT
 #define DMX_REC_EXCLUDE_PID_NUM         (30)
-#define DMX_REC_TIME_STAMP_SUPPORT       /*only 3719 and 3751 support this */
+#define DMX_REC_TIME_STAMP_SUPPORT       
 #elif defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
 
 #define DMX_INT_NUM                     (82 + 32)/*A9一共有128个中断，A9自己占用32个*/
@@ -441,6 +441,7 @@
 #define DMX_REC_EXCLUDE_PID_NUM         (30)
 
 #define DMX_SUPPORT_RAM_CLK_AUTO_CTL
+#define DMX_SUPPORT_DMX_CLK_DYNAMIC_TUNE
 #else
 
 #error must define CHIP_TYPE

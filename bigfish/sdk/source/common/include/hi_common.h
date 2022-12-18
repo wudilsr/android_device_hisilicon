@@ -77,8 +77,21 @@ typedef enum hiCHIP_VERSION_E
     HI_CHIP_VERSION_V200 = 0x200,
     HI_CHIP_VERSION_V300 = 0x300,
     HI_CHIP_VERSION_V400 = 0x400,
+    HI_CHIP_VERSION_V410 = 0x410,
+    HI_CHIP_VERSION_V420 = 0x420,
     HI_CHIP_VERSION_BUTT
 }HI_CHIP_VERSION_E;
+
+typedef enum
+{
+    HI_CHIP_PACKAGE_TYPE_BGA_15_15 = 0,
+    HI_CHIP_PACKAGE_TYPE_BGA_16_16,
+    HI_CHIP_PACKAGE_TYPE_BGA_19_19,
+    HI_CHIP_PACKAGE_TYPE_BGA_23_23,
+    HI_CHIP_PACKAGE_TYPE_BGA_31_31,
+    HI_CHIP_PACKAGE_TYPE_QFP_216,
+    HI_CHIP_PACKAGE_TYPE_BUTT
+} HI_CHIP_PACKAGE_TYPE_E;
 
 /** Define the chip support attrs */
 typedef enum hiCHIP_CAP_E
@@ -242,6 +255,19 @@ N/A CNcomment: 无 CNend
 N/A CNcomment: 无 CNend
 */
 HI_S32 HI_SYS_GetVersion(HI_SYS_VERSION_S *pstVersion);
+
+
+/**
+@brief Obtains the package type. CNcomment: 获取封装类型 CNend
+@attention \n
+N/A CNcomment: 无 CNend
+@param[out] penPackageType Pointer to the package type (output). CNcomment: 指针类型，输出封装类型。 CNend
+@retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+@retval ::HI_FAILURE Calling this API fails. CNcomment: API系统调用失败 CNend
+@see \n
+N/A CNcomment: 无 CNend
+*/
+HI_S32 HI_SYS_GetChipPackageType(HI_CHIP_PACKAGE_TYPE_E *penPackageType);
 
 
 /**

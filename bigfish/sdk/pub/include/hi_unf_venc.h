@@ -119,6 +119,8 @@ typedef struct hiUNF_VENC_CHN_ATTR_S
     HI_U32                      u32Qlevel;        /**<The value ranges from 1 to 99 for the JPGE, it is just valid for JPEG Encoder.*/ /**<CNcomment: JPGE取值范围1-99，只在定义了JPEG编码器情况下才有效 */
     HI_U32                      u32DriftRateThr;  /**<Encoder bitrate fluctuation threshold.If u32DriftRateThr = 20 means the fluctuation of threshold is 20%*/ 
                                                   /**<CNcomment: 编码器码率波动阈值，如设置成20，表示波动阈值为20%*/ 	
+    HI_U32                      u32SplitSize;     /**<Split size. The size is in the unit of minimum coded unit (MCU) for the JPEG format and byte for the MP4 format. The split size can be ignored in H.263 format.*/
+                                                  /**<CNcomment: 分割的大小，JPGE下以MCU为单位,H264或者MP4以字节为单位, H263不关心 */
 }HI_UNF_VENC_CHN_ATTR_S;
 
 /** @} */  /** <!-- ==== Struct Definition End ==== */

@@ -40,7 +40,7 @@
     <string name="logcat_info">Log records in the /sdcard/logcat file</string>
     <string name="dmesg_start">Dmesg start</string>
     <string name="dmesg_info">Dmesg records in the /sdcard/dmesg file</string>
-    <string name="hdmi">HDMI EDID</string>
+    <string name="hdmi">HDMI info</string>
     <string name="memleak">memleak</string>
     <string name="media_mem">media_mem</string>
     <string name="meminfo">meminfo</string>
@@ -50,7 +50,7 @@
     <string name="android_version">Android Version</string>
     <string name="kernel_version">Kernel Version</string>
     <string name="sdk_version">SDK Version</string>
-    <string name="gpu_version">GPU Version</string>
+    <string name="opengles_version">OpenGL ES Version</string>
     <string name="system_version">System Version</string>
     <string name="file_check_failed">CA File Check Failed</string>
 </resources>

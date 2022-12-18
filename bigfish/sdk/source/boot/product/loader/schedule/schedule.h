@@ -3,8 +3,8 @@
 
 #include "hi_type.h"
 
-#define KEY_MENU 3
-#define KEY_OK 5
+#define KEY_MENU 0
+#define KEY_OK 1
 
 #define UIH_NMLEN 32
 

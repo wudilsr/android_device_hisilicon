@@ -172,11 +172,20 @@ typedef enum
     CMD_SET_VIDEO_SURFACE_OUTPUT,
     CMD_SET_WIN_FREEZE_MODE,
     CMD_SET_SUB_SURFACE  = CMD_INVOKE_BASE + 328,
+    CMD_INPUT_AUDIO_CODEC_LIB,
     CMD_SET_VIDEO_FREE_RUN,         // 1: play video only, as fast as possible; 0: resume to normal play.
-    CMD_SET_AUDIO_CHANNEL =  CMD_INVOKE_BASE + 331,
+    CMD_SET_AUDIO_CHANNEL =  CMD_INVOKE_BASE + 331, //set the mode of audio channels.
     CMD_SET_LOW_DELAY,              // set low delay mode, should use before starting to play, 1: enable; 0:disable.
     CMD_SET_TIMESHIFT_DURATION,     // set duration of timeshift playing.
+    CMD_SET_TPLAY_MODE,
+    CMD_GET_MEDIA_URL = CMD_INVOKE_BASE + 500,
+    CMD_CONNECT_ID = CMD_INVOKE_BASE + 501,
+
     CMD_TYPE_BUTT = CMD_INVOKE_BASE + 1000,                     //unsurport ID
+    CMD_YUNOS_SOURCE                   = 0x1f000000,
+    CMD_YUNOS_TS_INFO                  = 0x1f000001,
+    CMD_YUNOS_HTTP_DOWNLOAD_ERROR_INFO = 0x1f000002,
+    CMD_YUNOS_MEDIA_INFO               = 0x1f000003,
 } cmd_type_e;
 
 typedef enum

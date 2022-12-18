@@ -926,6 +926,7 @@ config ARCH_HI3798MX
 	select USB_ARCH_HAS_OHCI
 	select USB_ARCH_HAS_EHCI
 	select USB_ARCH_HAS_XHCI
+	select ARM_HAS_SG_CHAIN
 	help
 	  This enables support for Hisilicon HI3798MX platform.
 	  With the advanced ARM Cortex A7 processor,

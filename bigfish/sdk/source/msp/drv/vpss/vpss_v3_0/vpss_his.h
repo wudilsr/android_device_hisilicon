@@ -9,7 +9,7 @@
 
 typedef struct
 {
-    MMZ_BUFFER_S stMBuf;
+    VPSS_MEM_S stMemBuf;
     HI_U32 u32MadMvAddr[3];
 }HIS_MAD_MEM_S;
 
@@ -25,7 +25,7 @@ typedef struct
     HI_U32 u32Stride;
 }VPSS_HIS_ADDR_S;
 
-HI_S32 VPSS_HIS_Init(VPSS_HIS_INFO_S *pstHisInfo);
+HI_S32 VPSS_HIS_Init(VPSS_HIS_INFO_S *pstHisInfo,HI_BOOL bSecure);
 
 HI_S32 VPSS_HIS_DeInit(VPSS_HIS_INFO_S *pstHisInfo);
 

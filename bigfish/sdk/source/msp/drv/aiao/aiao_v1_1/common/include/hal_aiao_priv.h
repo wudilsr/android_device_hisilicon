@@ -80,7 +80,10 @@ typedef union
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
-	|| defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
         unsigned int Reserved_3            : 2; // [19..18]
         unsigned int aiao_mclk_sel         : 2; // [21..20]
         unsigned int Reserved_4            : 10; // [31..22]
@@ -1580,9 +1583,9 @@ HI_VOID                 AIAO_HW_SetBuf(AIAO_PORT_ID_E enPortID, AIAO_BufInfo_S *
 HI_VOID                 AIAO_HW_GetDbgBclkCnt(AIAO_PORT_ID_E enPortID, HI_U32 *pu32BclkCnt);
 HI_VOID                 AIAO_HW_GetDbgWsCnt(AIAO_PORT_ID_E enPortID, HI_U32 *pu32WsCnt);
 #ifdef HI_AIAO_TIMER_SUPPORT
-HI_VOID  AIAO_TIMER_SetEnable(AIAO_PORT_ID_E enPortID,HI_S32 bEn);
-HI_VOID  AIAO_TIMER_SetAttr(AIAO_PORT_ID_E enPortID,const AIAO_IfTimerAttr_S *pstIfAttr,HI_U32 u32Config);
-HI_VOID AIAO_TIMER_ClearTimer(AIAO_PORT_ID_E enPortID);
+HI_VOID  AIAO_TIMER_SetEnable(AIAO_TIMER_ID_E enTimerID,HI_S32 bEn);
+HI_VOID  AIAO_TIMER_SetAttr(AIAO_TIMER_ID_E enTimerID,const AIAO_IfTimerAttr_S *pstIfAttr,HI_U32 u32Config);
+HI_VOID  AIAO_TIMER_ClearTimer(AIAO_TIMER_ID_E enTimerID);
 
 #endif
 #ifdef __cplusplus

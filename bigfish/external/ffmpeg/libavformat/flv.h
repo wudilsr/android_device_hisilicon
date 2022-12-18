@@ -50,6 +50,9 @@
 #define KEYFRAMES_TIMESTAMP_TAG  "times"
 #define KEYFRAMES_BYTEOFFSET_TAG "filepositions"
 
+/* when flv file don't have the valid matadata and the data in the end of file is not the valid stream data,
+   we try to search the valid max pts in end of the file in case the file is not large then FLV_SEEK_MAX_SIZE */
+#define FLV_SEEK_MAX_SIZE         20*1024*1024
 
 enum {
     FLV_HEADER_FLAG_HASVIDEO = 1,

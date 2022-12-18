@@ -27,6 +27,8 @@
 
 /* configuerable values */
 
+#define HIETH_HW_DESC_DEPTH 72
+
 #define ETH_IO_ADDRESS_BASE REG_BASE_SF
 
 #define ETH_MDIO_FRQDIV	2
@@ -38,7 +40,7 @@
 #define HIETH_SFV300_NAME "hieth_sfv300"
 #define MAX_PHY_NAME_LEN         6     /*max limited as : 0:255 */
 #define HIETH_MAX_QUEUE_DEPTH    64
-#define HIETH_HW_RXQ_DEPTH       1     /*uboot */
+#define HIETH_HW_RXQ_DEPTH       52     /*uboot */
 #define HIETH_HW_TXQ_DEPTH       1     /*uboot */
 
 #define HIETH_MAX_FRAME_SIZE     PKTSIZE_ALIGN	/*1536 */
@@ -104,6 +106,10 @@ struct hieth_frame_desc {
 struct hieth_netdev_local {
 	unsigned long iobase_phys;     /* physical io addr */
 	int port:1;		       /* 0 => up port,    1 => down port */
+
+	int desc_hw_offset; /*the offset where we feed hw*/
+	int desc_rec_offset;/*the offset where we receve the package*/
+	struct hieth_frame_desc *hieth_desc_head;
 
 	const char *phy_name;
 	int link_stat;

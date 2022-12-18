@@ -37,6 +37,26 @@ extern "C" {
 #define I2C4_IRQ            (32 + 43)   //I2C ADC
 #define I2CQAM_IRQ          (32 + 44)   //I2C QAM,not used
 
+#elif  defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define EXCHANGE_IN_INTERRUPT
+
+#define I2C0_PHY_ADDR       (0xF8B10000)
+#define I2C1_PHY_ADDR       (0xF8B11000)
+#define I2C2_PHY_ADDR       (0xF8B12000)
+#define I2C3_PHY_ADDR       (0xF8B13000)
+#define I2C4_PHY_ADDR       (0xF8B14000)
+#define I2CADC_PHY_ADDR     (0xF8B16000)    //I2C ADC
+#define I2CQAM_PHY_ADDR     (0xF8B17000)    //I2C QAM
+
+#define I2C0_IRQ            (32 + 38)
+#define I2C1_IRQ            (32 + 39)
+#define I2C2_IRQ            (32 + 40)
+#define I2C3_IRQ            (32 + 41)
+#define I2C4_IRQ            (32 + 42)
+#define I2CADC_IRQ          (32 + 43)	//I2C ADC
+#define I2CQAM_IRQ          (32 + 44)   //I2C QAM
+
 #elif defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
 
 #define EXCHANGE_IN_INTERRUPT

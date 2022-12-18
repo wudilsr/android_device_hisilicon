@@ -442,7 +442,7 @@ HI_S32 VI_Convert_WinInfo(HI_DRV_WIN_PRIV_INFO_S* pstWinInfo, HI_DRV_VPSS_CFG_S 
     return HI_SUCCESS;
 }
 
-HI_S32 VI_PHY_AddFrameInfo(HI_UNF_VI_E enPort, HI_U32 u32Chn, HI_U32 u32FBNum)
+HI_S32 VI_PHY_AddFrameInfo(HI_UNF_VI_E enPort, HI_U32 u32Chn, HI_U32 u32FBNum, HI_U32 u32Pts)
 {
     HI_HANDLE hVi;
     HI_U32 u32Width, u32Height, u32Stride;
@@ -479,7 +479,8 @@ HI_S32 VI_PHY_AddFrameInfo(HI_UNF_VI_E enPort, HI_U32 u32Chn, HI_U32 u32FBNum)
     g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32DisplayCenterY = u32Height / 2;
     g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32ErrorLevel = 0;
     //g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32Pts = VI_UtilsGetPTS(); //todo: move to interrupt
-    HI_DRV_SYS_GetTimeStampMs(&g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32Pts);
+    //HI_DRV_SYS_GetTimeStampMs(&g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32Pts);
+    g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32Pts = u32Pts;
     g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32SrcPts = g_ViDrv[enPort][u32Chn].stFrame[u32FBNum].u32Pts;
 
     g_ViDrv[enPort][u32Chn].u32FrameCnt++;
@@ -836,6 +837,8 @@ HI_S32 VI_Vpss_Destroy(HI_HANDLE hVi, VPSS_HANDLE hVpss)
 
 HI_VOID VI_PHY_BoardInit(HI_UNF_VI_INPUT_MODE_E enInputMode)
 {
+    HI_INFO_VI("enInputMode:%d \n",enInputMode);
+
 #if    defined(CHIP_TYPE_hi3716cv200)   \
     || defined(CHIP_TYPE_hi3716mv400)   \
     || defined(CHIP_TYPE_hi3718cv100)   \
@@ -878,6 +881,8 @@ HI_VOID VI_PHY_BoardInit(HI_UNF_VI_INPUT_MODE_E enInputMode)
 
 HI_VOID VI_PHY_BoardDeinit(HI_VOID)
 {
+    HI_INFO_VI("VI_PHY_BoardDeinit\n");
+
 #if    defined(CHIP_TYPE_hi3716cv200)   \
     || defined(CHIP_TYPE_hi3716mv400)   \
     || defined(CHIP_TYPE_hi3718cv100)   \
@@ -888,8 +893,10 @@ HI_VOID VI_PHY_BoardDeinit(HI_VOID)
     unTmpValue.u32 = g_pstRegCrg->PERI_CRG55.u32;
     unTmpValue.bits.vi_bus_cken = 0;
     unTmpValue.bits.vi0_cken = 0;
-    unTmpValue.bits.vi_bus_srst_req = 1;
-    unTmpValue.bits.vi0_srst_req = 1;
+    //unTmpValue.bits.vi_bus_srst_req = 1;
+    //unTmpValue.bits.vi0_srst_req = 1;
+    unTmpValue.bits.vi_bus_srst_req = 0;
+    unTmpValue.bits.vi0_srst_req = 0;
     unTmpValue.bits.vi0_pctrl = 0;
 #if    defined(CHIP_TYPE_hi3716cv200)   \
     || defined(CHIP_TYPE_hi3716mv400)   \
@@ -1245,7 +1252,7 @@ HI_S32 VI_DRV_ReleaseImage(HI_HANDLE hPort, HI_DRV_VIDEO_FRAME_S* pstFrame)
     return HI_SUCCESS;
 }
 
-HI_S32 VI_DRV_ChangeVencInfo(HI_HANDLE hPort, HI_U32 u32Width, HI_U32 u32Height)
+HI_S32 VI_DRV_ChangeVencInfo(HI_HANDLE hPort, HI_U32 u32Width, HI_U32 u32Height, HI_U32 u32FrmRate)
 {
     HI_S32 Ret;
     HI_UNF_VI_E enPort = HI_UNF_VI_PORT0;
@@ -1395,7 +1402,7 @@ HI_S32 VI_DRV_AcquireFrame(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S *pstFrame)
             /* generate frame info in REAL VI mode */
             if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
             {
-                (HI_VOID)VI_PHY_AddFrameInfo(enPort,u32Chn,i);
+                (HI_VOID)VI_PHY_AddFrameInfo(enPort,u32Chn,i,stFbAttr.u32Pts);
             }
 
             memcpy(&stFrameUnf, &g_ViDrv[enPort][u32Chn].stFrame[i], sizeof(HI_UNF_VIDEO_FRAME_INFO_S));
@@ -1970,6 +1977,84 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
 
 #else
 
+static HI_S32 VI_HPY_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
+{
+    HI_UNF_VI_E enPort = HI_UNF_VI_PORT0;
+    HI_U32 u32Chn = 0;
+    VI_DRV_CHN_STORE_INFO stStoreCfg;
+    VI_DRV_CHN_ZME_INFO stZmeInfo;
+    HI_U32 u32Width, u32Height;
+    HI_U32 Coef[2] = {16, 16};
+    RECT_S stCapRect;
+
+
+    if (HI_UNF_VI_MODE_HDMIRX == pstAttr->enInputMode)
+    {
+        g_ViDrv[enPort][u32Chn].bProgressive = (pstAttr->bInterlace == HI_FALSE)? HI_TRUE : HI_FALSE;
+
+        if ((720 == pstAttr->u32Width)&&(HI_TRUE == pstAttr->bInterlace))
+        {
+            VI_DRV_SetTiming_BT656(enPort);
+        }
+        else
+        {
+            VI_DRV_SetTiming_BT1120(enPort);
+        }
+    }     
+    u32Width  = (HI_U32)pstAttr->stInputRect.s32Width;
+    u32Height = (HI_U32)pstAttr->stInputRect.s32Height;
+
+    stStoreCfg.enPixFormat = pstAttr->enVideoFormat;
+    stStoreCfg.u32BitWidth = 8;
+    stStoreCfg.u32Width  = u32Width;
+    stStoreCfg.u32Height = u32Height;
+    stStoreCfg.u32Stride =(u32Width + 15) & 0xFFFFFFF0;
+
+    stZmeInfo.stSrcSize.u32Width  = u32Width;
+    stZmeInfo.stSrcSize.u32Height = u32Height;
+    stZmeInfo.enSrcPixFormat = HI_UNF_FORMAT_YUV_SEMIPLANAR_422;
+
+    stZmeInfo.stDstSize.u32Width  = u32Width;
+    stZmeInfo.stDstSize.u32Height = u32Height;
+    stZmeInfo.enDstPixFormat = HI_UNF_FORMAT_YUV_SEMIPLANAR_422;
+    VI_DRV_SetChZme(VI_PHY_CHN0, &stZmeInfo);
+
+    if (HI_UNF_FORMAT_YUV_SEMIPLANAR_420 == stStoreCfg.enPixFormat)
+    {
+        VI_DRV_SetChVcdsEn(VI_PHY_CHN0, HI_TRUE);
+        VI_DRV_SetChVcdsCoef(VI_PHY_CHN0, Coef);
+    }
+    else if (HI_UNF_FORMAT_YUV_SEMIPLANAR_422 == stStoreCfg.enPixFormat)
+    {
+         VI_DRV_SetChVcdsEn(VI_PHY_CHN0, HI_FALSE);
+    }
+    else
+    {
+        HI_ERR_VI("unsupport VI store mode %d\n", stStoreCfg.enPixFormat);
+        VI_PHY_BoardDeinit();
+        return HI_ERR_VI_INVALID_PARA;
+    }
+
+    stStoreCfg.bProgressive = g_ViDrv[enPort][u32Chn].bProgressive;
+    VI_DRV_SetVcapInit(VI_PHY_CHN0, &stStoreCfg);
+
+    /* SP444-> SP422 */
+    VI_DRV_SetChSkip(VI_PHY_CHN0, 0xffffffff, 0xaaaaaaaa);
+    /*window crop*/
+    stCapRect.s32X = pstAttr->stInputRect.s32X;
+    stCapRect.s32Y = (HI_TRUE == g_ViDrv[enPort][u32Chn].bProgressive) ?\
+                    pstAttr->stInputRect.s32Y : pstAttr->stInputRect.s32Y >> 1;
+    stCapRect.u32Width = (HI_U32)pstAttr->stInputRect.s32Width;
+    stCapRect.u32Height = (HI_U32)pstAttr->stInputRect.s32Height;
+    
+    VI_DRV_SetChCrop(VI_PHY_CHN0, HI_FALSE, &stCapRect);
+    HI_INFO_VI("VIattr change rect:xy.%d,%d,wh:%dx%d\n",pstAttr->stInputRect.s32X, pstAttr->stInputRect.s32Y, pstAttr->stInputRect.s32Width, pstAttr->stInputRect.s32Height);
+
+    return HI_SUCCESS;
+        
+}
+
+
 HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
 {
     HI_S32 Ret;
@@ -1983,7 +2068,20 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
 
     VI_CHECK_NULL_PTR(pstAttr);
     GET_PORT_CHN(hVi, enPort, u32Chn);
+    
+    if ((HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
+        && (pstAttr->bVirtual == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
+        && (pstAttr->enBufMgmtMode ==  g_ViDrv[enPort][u32Chn].stAttr.enBufMgmtMode)
+        && (pstAttr->u32BufNum ==  g_ViDrv[enPort][u32Chn].stAttr.u32BufNum)
+        && (pstAttr->enInputMode == g_ViDrv[enPort][u32Chn].stAttr.enInputMode))
+    {
+    
+        VI_HPY_SetAttr( hVi, pstAttr);
 
+        HI_INFO_VI("VIattr change rect:xy.%d,%d,wh:%dx%d\n",pstAttr->stInputRect.s32X, pstAttr->stInputRect.s32Y, pstAttr->stInputRect.s32Width, pstAttr->stInputRect.s32Height);
+        
+        goto CHANGE_RECT;
+    }
     /* rebuild VI buffer */
     memset(&stBufAttr, 0, sizeof(VI_FB_ATTR_S));
     if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
@@ -2109,6 +2207,7 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
     else if ((HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
              && (HI_FALSE == pstAttr->bVirtual))
     {
+    
         VI_PHY_Destroy(hVi);
 
         Ret = VI_PHY_Create(hVi, pstAttr);
@@ -2118,6 +2217,7 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
             return HI_FAILURE;
         }
     }
+CHANGE_RECT:
 
     memcpy(&g_ViDrv[enPort][u32Chn].stAttr, pstAttr, sizeof(HI_UNF_VI_ATTR_S));
     return HI_SUCCESS;
@@ -2724,7 +2824,7 @@ HI_S32 HI_DRV_VI_UsrAcquireFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFr
             /* generate frame info in REAL VI mode */
             if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
             {
-                (HI_VOID)VI_PHY_AddFrameInfo(enPort,u32Chn,i);
+                (HI_VOID)VI_PHY_AddFrameInfo(enPort,u32Chn,i, stFbAttr.u32Pts);
             }
 
             memcpy(pstFrame, &g_ViDrv[enPort][u32Chn].stFrame[i], sizeof(HI_UNF_VIDEO_FRAME_INFO_S));

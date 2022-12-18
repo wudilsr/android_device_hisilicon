@@ -5571,12 +5571,10 @@ HI_S32     TdeOsiQuickFlicker(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstSrc, TDE2
 {
     HI_S32 s32Ret = HI_FAILURE;
     TDE2_OPT_S stOpt = {0};
-    HI_BOOL bDeflicker;
-
+    
     stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_BOTH;
   
     stOpt.bResize = HI_TRUE;
-    bDeflicker = (stOpt.enDeflickerMode == TDE2_DEFLICKER_MODE_NONE)?HI_FALSE:HI_TRUE;
     if ((s32Ret = TdeOsiBlit(s32Handle,NULL,NULL, pstSrc, pstSrcRect, 
                                      pstDst, pstDstRect,&stOpt)) < 0)
     {
@@ -6330,8 +6328,6 @@ STATIC INLINE HI_S32 TdeOsiBitmapMaskCheckPara(TDE2_SURFACE_S* pstBackGround, TD
                                                TDE2_RECT_S  *pstMaskRect, TDE2_SURFACE_S* pstDst,
                                                TDE2_RECT_S  *pstDstRect)
 {
-    TDE_COLORFMT_CATEGORY_E enSrc1Category;
-    TDE_COLORFMT_CATEGORY_E enDstCategory;
 
     if ((NULL == pstBackGround) || (NULL == pstBackGroundRect) || (NULL == pstForeGround)
         || (NULL == pstForeGroundRect)
@@ -6347,13 +6343,6 @@ STATIC INLINE HI_S32 TdeOsiBitmapMaskCheckPara(TDE2_SURFACE_S* pstBackGround, TD
     TDE_CHECK_NOT_MB(pstMask->enColorFmt);
     TDE_CHECK_NOT_MB(pstDst->enColorFmt);
 
-    
-    enSrc1Category = TdeOsiGetFmtCategory(pstBackGround->enColorFmt);
-
-    
-    enDstCategory = TdeOsiGetFmtCategory(pstDst->enColorFmt);
-    
-   
     if (TdeOsiCheckSurface(pstBackGround, pstBackGroundRect) < 0)
     {
         TDE_TRACE(TDE_KERN_INFO, "pstBackGroundRect does not correct!\n");

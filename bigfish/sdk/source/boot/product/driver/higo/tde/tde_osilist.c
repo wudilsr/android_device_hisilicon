@@ -584,7 +584,7 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle, TDE_LIST_TYPE_E enListType,
     HI_BOOL bValid;
     TDE_SWNODE_S *pstTailNode = NULL;
     HI_S32 s32Ret;
-    HI_U8 *pBuf;
+    //HI_U8 *pBuf;
 
     /* 获取job信息 */
     bValid = query_handle(s32Handle, &pHandleMgr);
@@ -615,7 +615,7 @@ HI_S32 TdeOsiListSubmitJob(TDE_HANDLE s32Handle, TDE_LIST_TYPE_E enListType,
     pstTailNode = pstJob->pstTailNode;
     pstTailNode->enNotiType = enNotiType;
 
-    pBuf = (HI_U8 *)pstTailNode->stNodeBuf.pBuf + TDE_NODE_HEAD_BYTE;
+    //pBuf = (HI_U8 *)pstTailNode->stNodeBuf.pBuf + TDE_NODE_HEAD_BYTE;
     
     pstJob->bSubmitted = HI_TRUE;
     pstJob->enNotiType   = enNotiType;

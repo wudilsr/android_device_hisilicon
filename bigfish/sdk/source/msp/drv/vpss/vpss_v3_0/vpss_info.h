@@ -14,8 +14,10 @@
 #define DEF_DBG_CMD_UHD_LOW "low"
 #define DEF_DBG_CMD_UHD_USR "adaptive"
 #define DEF_DBG_CMD_SET_UV  "uvinvert"
+#define DEF_DBG_CMD_CMP_ON     "cmpon"
+#define DEF_DBG_CMD_CMP_OFF    "cmpoff"
 #define DEF_DBG_CMD_SET_I2P "i2p"
-#define DEF_DBG_CMD_SETBYPASS     "setbypass"
+#define DEF_DBG_CMD_SETBYPASS  "setbypass"
 #define DEF_DBG_CMD_SETRATE    "setrate"
 
 #define DEF_DBG_SRC    "src"
@@ -31,7 +33,7 @@
 #define DEF_DBG_PORT1_ID  0x2
 #define DEF_DBG_PORT2_ID  0x3
 
-#define DEF_SDK_VERSIO_LOG "20150310"
+#define DEF_SDK_VERSIO_LOG "2015041700"
 typedef enum hiVPSS_DEBUG_E{
     DBG_W_YUV = 0,
     DBG_W_STREAM ,
@@ -44,6 +46,8 @@ typedef enum hiVPSS_DEBUG_E{
 	DBG_SET_UHD_HIGH,
 	DBG_SET_UHD_USR,
 	DBG_SET_UV_INVERT,
+	DBG_SET_CMP_ON,
+	DBG_SET_CMP_OFF,
 	DBG_SET_I2P,
 	DBG_SET_FRMRATE,
     DBG_BUTT
@@ -95,8 +99,9 @@ typedef union{
         unsigned int    writeyuv             : 4   ;  
         unsigned int    writestream          : 1   ;  
         unsigned int    uv_invert            : 1   ; 
+        unsigned int    cmp                  : 2   ;  //defalt 0, ON 01, OFF 02, 03 reserved
 		unsigned int    reserve_2            : 1   ;
-        unsigned int    reserve_3            : 23  ;
+        unsigned int    reserve_3            : 21  ;
         
     } bits;
     // Define an unsigned member

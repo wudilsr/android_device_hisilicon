@@ -27,6 +27,7 @@
 #include <linux/moduleparam.h>
 #include <linux/slab.h>
 #include <linux/dmi.h>
+#include <mach/cpu-info.h>
 
 #include "xhci.h"
 
@@ -4644,8 +4645,9 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
 	int			retval;
 	u32			temp;
 
-	/* Accept arbitrarily long scatter-gather lists */
-	hcd->self.sg_tablesize = ~0;
+	/* Limit the block layer scatter-gather lists to half a segment. */
+	hcd->self.sg_tablesize = TRBS_PER_SEGMENT / 2;
+
 	/* XHCI controllers don't stop the ep queue on short packets :| */
 	hcd->self.no_stop_on_short = 1;
 
@@ -4748,6 +4750,12 @@ MODULE_LICENSE("GPL");
 static int __init xhci_hcd_init(void)
 {
 	int retval;
+	
+#ifdef CONFIG_ARCH_HI3798MX
+	const char * cpuversion = get_cpu_version();
+	if ((cpuversion)&&('Q' == cpuversion[0]))
+		return 0;
+#endif	
 
 	retval = xhci_register_pci();
 	if (retval < 0) {
@@ -4808,6 +4816,12 @@ module_init(xhci_hcd_init);
 
 static void __exit xhci_hcd_cleanup(void)
 {
+#ifdef CONFIG_ARCH_HI3798MX
+	const char * cpuversion = get_cpu_version();
+	if ((cpuversion)&&('Q' == cpuversion[0]))
+		return;
+#endif
+
 	xhci_unregister_pci();
 	xhci_unregister_plat();
 #ifdef CONFIG_HIUSB_XHCI

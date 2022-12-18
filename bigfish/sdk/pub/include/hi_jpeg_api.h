@@ -99,6 +99,22 @@ Date				Author        		Modification
 		JPEG_MEMCHECK_BUTT	
 	}HI_JPEG_MEMCHECK_E;
 
+
+	/** enum of mem type, mmz or mmu */
+    /** CNcomment:判断内存类型，是mmu还是mmz CNend */
+	typedef enum hiHI_JPEG_MEMTYPE_E
+	{
+		JPEG_STREAM_MEM_MMU_TYPE            = 0X1,    /**< 0bit 码流内存为MMU类型              */
+		JPEG_YOUTPUT_MEM_MMU_TYPE           = 0X2,    /**< 1bit Y分量输出内存为MMU类型         */
+		JPEG_UVOUTPUT_MEM_MMU_TYPE          = 0X4,    /**< 2bit UV分量输出内存为MMU类型        */
+		JPEG_XRGBSAMPLE0_READ_MEM_MMU_TYPE  = 0X8,    /**< RGB输出需要的上采样0buffer读类型    */
+		JPEG_XRGBSAMPLE1_READ_MEM_MMU_TYPE  = 0X10,   /**< RGB输出需要的上采样1buffer读类型    */
+		JPEG_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE = 0X20,   /**< RGB输出需要的上采样0buffer写类型    */
+		JPEG_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE = 0X40,   /**< RGB输出需要的上采样1buffer写类型    */
+		JPEG_XRGBOUTPUT_MEM_MMU_TYPE        = 0X80,   /**< 7bitRGB输出内存为MMU类型            */
+		JPEG_MEMTYPE_BUTT
+	}HI_JPEG_MEMTYPE_E;
+	
     /** @} */  /** <!-- ==== enum Definition end ==== */
 	
 	/*************************** Structure Definition ****************************/
@@ -195,6 +211,7 @@ Date				Author        		Modification
          HI_U32   u32OutWidth[MAX_PIXEL_COMPONENT_NUM];
 		 HI_U32   u32OutHeight[MAX_PIXEL_COMPONENT_NUM];
          HI_U32   u32OutStride[MAX_PIXEL_COMPONENT_NUM];
+         HI_U32   u32OutSize[MAX_PIXEL_COMPONENT_NUM];
          HI_S32   s32Scale;
          HI_BOOL  bOutYuvSp420;
          HI_BOOL  bLuPixSum;
@@ -482,7 +499,25 @@ Date				Author        		Modification
 	*/
 	HI_S32 HI_JPEG_SetLeaveMemSize(const struct jpeg_decompress_struct *cinfo, HI_JPEG_MEMSIZE_INFO_S sMemSizeInfo);
 
-    
+
+    /** 
+	\brief set the mem type. CNcomment:设置内存类型 CNend
+	\attention \n
+	HI_JPEG_SetMemType should have called before start decompress.\n
+	CNcomment:在调用HI_JPEG_SetMemType之前必须已经创建好了解码器 CNend\n
+	
+	\param[in]	cinfo. CNcomment:解码对象 CNend
+	\param[in]	u32MemTypeMask. CNcomment:内存使用类型 CNend
+	
+	\retval ::HI_SUCCESS 
+	\retval ::HI_FAILURE
+	
+	\see \n
+	::HI_JPEG_SetMemType
+	*/
+	HI_S32 HI_JPEG_SetMemType(const struct jpeg_decompress_struct *cinfo,const HI_U32 u32MemTypeMask);
+
+
     /** 
     \brief open jpeg device. CNcomment:打开jpeg设备 CNend
     \attention \n
@@ -521,7 +556,7 @@ Date				Author        		Modification
     NA.\n
     CNcomment:CNend\n
     
-    \param[in]  *ps32Handle.  CNcomment:返回解码器句柄 CNend
+    \param[in]  *pu32Handle.  CNcomment:返回解码器句柄 CNend
     
     \retval ::HI_SUCCESS 
     \retval ::HI_FAILURE
@@ -529,8 +564,25 @@ Date				Author        		Modification
     \see \n
     ::HI_JPEG_CreateDec
     */
-    HI_S32 HI_JPEG_CreateDec(HI_S32 *ps32Handle);
+    HI_S32 HI_JPEG_CreateDec(HI_U32 *pu32Handle);
 
+
+    /** 
+    \brief set dec memory type. CNcomment: 设置解码需要的内存类型 CNend
+    \attention \n
+    NA.\n
+    CNcomment:CNend\n
+    
+    \param[in]  u32Handle.         CNcomment:解码器句柄 CNend
+    \param[in]  u32MemTypeMask.    CNcomment:内存类型   CNend
+    
+    \retval ::HI_SUCCESS 
+    \retval ::HI_FAILURE
+    
+    \see \n
+    ::HI_JPEG_SetDecMemType
+    */
+    HI_S32 HI_JPEG_SetDecMemType(HI_U32 u32Handle,HI_U32 u32MemTypeMask);
     
     /** 
     \brief get jpeg input information. CNcomment:获取图片输入信息 CNend
@@ -538,7 +590,7 @@ Date				Author        		Modification
     NA.\n
     CNcomment:CNend\n
     
-    \param[in]  s32Handle.  CNcomment:解码器句柄 CNend
+    \param[in]  u32Handle.  CNcomment:解码器句柄 CNend
     \param[in]  stInMsg.    CNcomment:输入信息   CNend
     
     \retval ::HI_SUCCESS 
@@ -547,7 +599,7 @@ Date				Author        		Modification
     \see \n
     ::HI_JPEG_DecInfo
     */
-    HI_S32 HI_JPEG_DecInfo(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg);
+    HI_S32 HI_JPEG_DecInfo(HI_U32 u32Handle,HI_JPEG_INMSG_S *stInMsg);
     
     /** 
     \brief get jpeg output information. CNcomment:获取图片输输出信息 CNend
@@ -555,7 +607,7 @@ Date				Author        		Modification
     NA.\n
     CNcomment:CNend\n
 
-    \param[in]  s32Handle.  CNcomment:解码器句柄 CNend
+    \param[in]  u32Handle.  CNcomment:解码器句柄 CNend
     \param[in]  stOutMsg.   CNcomment:输入信息   CNend
 
     \retval ::HI_SUCCESS 
@@ -564,7 +616,7 @@ Date				Author        		Modification
     \see \n
     ::HI_JPEG_DecOutInfo
     */
-    HI_S32 HI_JPEG_DecOutInfo(HI_S32 s32Handle,HI_JPEG_OUTMSG_S *stOutMsg);
+    HI_S32 HI_JPEG_DecOutInfo(HI_U32 u32Handle,HI_JPEG_OUTMSG_S *stOutMsg);
 
     /** 
     \brief start jpeg hard decode. CNcomment:启动jpeg硬件解码 CNend
@@ -572,7 +624,7 @@ Date				Author        		Modification
     NA.\n
     CNcomment:CNend\n
 
-    \param[in]  s32Handle.  CNcomment:解码器句柄 CNend
+    \param[in]  u32Handle.  CNcomment:解码器句柄 CNend
     \param[in]  stInMsg.    CNcomment:输入信息   CNend
     \param[in]  stOutMsg.   CNcomment:输出信息   CNend
     
@@ -582,7 +634,25 @@ Date				Author        		Modification
     \see \n
     ::HI_JPEG_Decode
     */
-    HI_S32 HI_JPEG_Decode(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S *stOutMsg);
+    HI_S32 HI_JPEG_Decode(HI_U32 u32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S *stOutMsg);
+
+	/** 
+	\brief get lu pixle sum value from omx decode. CNcomment:驱动解码获取亮度值 CNend
+	\attention \n
+	If you want to get the luminance value, you can call this function, \n
+	but you should call it after HI_JPEG_Decode.\n
+	CNcomment:要是想得到亮度值，可以调用该函数，但必须在HI_JPEG_Decode之后调用而且解码 CNend\n
+	
+	\param[in]	u32Handle. CNcomment:解码句柄 CNend
+	\param[out]	u64LuPixSum. CNcomment:输出亮度值 CNend
+	
+	\retval ::HI_SUCCESS 
+	\retval ::HI_FAILURE
+	
+	\see \n
+	::HI_JPEG_GetOmxLuPixSum
+	*/
+	HI_S32 HI_JPEG_GetOmxLuPixSum(HI_U32 u32Handle,HI_U64 *u64LuPixSum);
 
     /** 
     \brief destory all decode. CNcomment:销毁所有解码器 CNend
@@ -590,7 +660,7 @@ Date				Author        		Modification
     NA.\n
     CNcomment:CNend\n
 
-    \param[in]  s32Handle.  CNcomment:解码器句柄 CNend
+    \param[in]  u32Handle.  CNcomment:解码器句柄 CNend
     
     \retval ::HI_SUCCESS 
     \retval ::HI_FAILURE
@@ -598,7 +668,7 @@ Date				Author        		Modification
     \see \n
     ::HI_JPEG_DestoryDec
     */
-    HI_S32 HI_JPEG_DestoryDec(HI_S32 s32Handle);
+    HI_S32 HI_JPEG_DestoryDec(HI_U32 u32Handle);
     
 	/** @} */  /** <!-- ==== API Declaration End ==== */
 

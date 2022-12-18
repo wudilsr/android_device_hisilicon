@@ -280,6 +280,24 @@ HI_U32 TrackGetMultiPcmChannels(HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
     return pstAOFrame->u32Channels - AO_TRACK_NORMAL_CHANNELNUM;
 }
 
+HI_U32 TrackGetMultiPcmSampleRate(HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
+{
+
+    switch (pstAOFrame->u32SampleRate)
+    {
+        case HI_UNF_SAMPLE_RATE_32K:
+        case HI_UNF_SAMPLE_RATE_44K:
+        case HI_UNF_SAMPLE_RATE_48K:
+        case HI_UNF_SAMPLE_RATE_88K:
+        case HI_UNF_SAMPLE_RATE_96K:
+        case HI_UNF_SAMPLE_RATE_176K:
+        case HI_UNF_SAMPLE_RATE_192K:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 HI_U32 TrackGetPcmBufAddr(HI_UNF_AO_FRAMEINFO_S * pstAOFrame)
 {
     return (HI_U32)pstAOFrame->ps32PcmBuffer;
@@ -392,10 +410,50 @@ static HI_VOID TRACKDbgCountSendData(SND_TRACK_STATE_S *pTrack)
     pTrack->u32SendCnt++;
 }
 
+HI_VOID TRACKBuildMultiPcmStreamAttr(SND_CARD_STATE_S *pCard, HI_UNF_AO_FRAMEINFO_S *pstAOFrame, SND_TRACK_STREAM_ATTR_S * pstStreamAttr)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    HI_DRV_HDMI_AUDIO_CAPABILITY_S stSinkCap;
+
+    memset(&stSinkCap, 0, sizeof(HI_DRV_HDMI_AUDIO_CAPABILITY_S));
+
+    /*get the capability of the max pcm channels of the output device*/
+    if (pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetAudioCapability)
+    {
+        s32Ret = (pCard->pstHdmiFunc->pfnHdmiGetAudioCapability)(HI_UNF_HDMI_ID_0, &stSinkCap);
+    }
+
+#if 0    //#if defined(HDMI_AUDIO_PASSTHROUGH_DEBUG)
+    if (HI_TRUE == pCard->bHdmiDebug)
+    {
+        if (HI_UNF_SND_HDMI_MODE_RAW == pCard->enUserHdmiMode)
+        {
+            s32Ret = HI_SUCCESS; /* cheat SND work at hdmi plun-in status without hdmi device */
+            stSinkCap.u32MaxPcmChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
+        }
+    }
+#endif
+
+    if (HI_SUCCESS == s32Ret)
+    {
+        if (stSinkCap.u32MaxPcmChannels > AO_TRACK_NORMAL_CHANNELNUM)
+        {
+            pstStreamAttr->u32HbrBitDepth = pstAOFrame->s32BitPerSample;
+            pstStreamAttr->u32HbrSampleRate = pstAOFrame->u32SampleRate;
+            pstStreamAttr->u32HbrFormat = IEC61937_DATATYPE_71_LPCM;
+            pstStreamAttr->u32HbrChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
+            pstStreamAttr->u32OrgMultiPcmChannels = TrackGetMultiPcmChannels(pstAOFrame);
+            pstStreamAttr->u32HbrBytesPerFrame = TrackGetMultiPcmSize(pstAOFrame);
+            pstStreamAttr->pHbrDataBuf = (HI_VOID*)TrackGetMultiPcmAddr(pstAOFrame);
+        }
+    }
+}
+
 HI_VOID TRACKBuildStreamAttr(SND_CARD_STATE_S *pCard, HI_UNF_AO_FRAMEINFO_S *pstAOFrame, SND_TRACK_STREAM_ATTR_S * pstStreamAttr)
 {
     HI_U32 u32IEC61937DataType;
-    HI_S32 s32Ret = HI_FAILURE;
+
     memset(pstStreamAttr, 0, sizeof(SND_TRACK_STREAM_ATTR_S));
 
     // lbr
@@ -454,189 +512,59 @@ HI_VOID TRACKBuildStreamAttr(SND_CARD_STATE_S *pCard, HI_UNF_AO_FRAMEINFO_S *pst
         pstStreamAttr->u32HbrBytesPerFrame = TrackGetHbrSize(pstAOFrame);
         pstStreamAttr->pHbrDataBuf = (HI_VOID*)TrackGetHbrBufAddr(pstAOFrame);
     }
-    else if (TrackGetMultiPcmChannels(pstAOFrame))
+    else if (pstStreamAttr->u32LbrFormat == IEC61937_DATATYPE_NULL && pstStreamAttr->u32HbrFormat == IEC61937_DATATYPE_NULL)
     {
-#if defined(CHIP_TYPE_hi3798cv200_a)
-        HI_UNF_EDID_BASE_INFO_S* pstSinkCap = HI_NULL;
-        HI_U32 i = 0;
-
-        pstSinkCap = AUTIL_AO_MALLOC(HI_ID_AO, sizeof(HI_UNF_EDID_BASE_INFO_S), GFP_KERNEL);
-
-        /*get the capability of the max pcm channels of the output device*/
-        if (pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetSinkCapability)
+        if (HI_UNF_SND_HDMI_MODE_AUTO == pCard->enUserHdmiMode && pstAOFrame->u32Channels > AO_TRACK_NORMAL_CHANNELNUM)
         {
-            HI_ERR_AO("pfnHdmiGetSinkCapability\n");
-            s32Ret = (pCard->pstHdmiFunc->pfnHdmiGetSinkCapability)(HI_UNF_HDMI_ID_0, pstSinkCap);
+            TRACKBuildMultiPcmStreamAttr(pCard, pstAOFrame, pstStreamAttr);
         }
-
-#if defined(HDMI_AUDIO_PASSTHROUGH_DEBUG)
-
-        if (HI_TRUE == pCard->bHdmiDebug)
+        else if (HI_UNF_SND_HDMI_MODE_RAW == pCard->enUserHdmiMode)
         {
-            if (HI_UNF_SND_HDMI_MODE_RAW == pCard->enUserHdmiMode)
+            pstStreamAttr->u32HbrBitDepth = pstAOFrame->s32BitPerSample;
+            pstStreamAttr->u32HbrSampleRate = pstAOFrame->u32SampleRate;
+
+            if (pstAOFrame->u32Channels > AO_TRACK_NORMAL_CHANNELNUM)
             {
-                s32Ret = HI_SUCCESS; /* cheat SND work at hdmi plun-in status without hdmi device */
-                pstStreamAttr->u32HbrBitDepth = pstAOFrame->s32BitPerSample;
-                pstStreamAttr->u32HbrSampleRate = pstAOFrame->u32SampleRate;
                 pstStreamAttr->u32HbrFormat = IEC61937_DATATYPE_71_LPCM;
                 pstStreamAttr->u32HbrChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
                 pstStreamAttr->u32OrgMultiPcmChannels = TrackGetMultiPcmChannels(pstAOFrame);
                 pstStreamAttr->u32HbrBytesPerFrame = TrackGetMultiPcmSize(pstAOFrame);
                 pstStreamAttr->pHbrDataBuf = (HI_VOID*)TrackGetMultiPcmAddr(pstAOFrame);
             }
-        }
-
-#endif
-
-        if (HI_SUCCESS == s32Ret)
-        {
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
+            else if (TrackGetMultiPcmSampleRate(pstAOFrame))
             {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_PCM)
-                {
-                    if (pstSinkCap->stAudioInfo[i].u8AudChannel > AO_TRACK_NORMAL_CHANNELNUM)
-                    {
-                        pstStreamAttr->u32HbrBitDepth = pstAOFrame->s32BitPerSample;
-                        pstStreamAttr->u32HbrSampleRate = pstAOFrame->u32SampleRate;
-                        pstStreamAttr->u32HbrFormat = IEC61937_DATATYPE_71_LPCM;
-                        pstStreamAttr->u32HbrChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
-                        pstStreamAttr->u32OrgMultiPcmChannels = TrackGetMultiPcmChannels(pstAOFrame);
-                        pstStreamAttr->u32HbrBytesPerFrame = TrackGetMultiPcmSize(pstAOFrame);
-                        pstStreamAttr->pHbrDataBuf = (HI_VOID*)TrackGetMultiPcmAddr(pstAOFrame);
-                    }
-                }
+                pstStreamAttr->u32HbrFormat = IEC61937_DATATYPE_20_LPCM;
+                pstStreamAttr->u32HbrChannels = pstAOFrame->u32Channels;
+                pstStreamAttr->u32OrgMultiPcmChannels = pstAOFrame->u32Channels;
+                pstStreamAttr->u32HbrBytesPerFrame = pstAOFrame->u32PcmSamplesPerFrame * AUTIL_CalcFrameSize(pstAOFrame->u32Channels, pstAOFrame->s32BitPerSample);
+                pstStreamAttr->pHbrDataBuf = (HI_VOID*)pstAOFrame->ps32PcmBuffer;
+            }         
+        }
+        else if (HI_UNF_SND_HDMI_MODE_HBR2LBR == pCard->enUserHdmiMode && TrackGetMultiPcmSampleRate(pstAOFrame))
+        {
+            pstStreamAttr->u32LbrBitDepth = pstAOFrame->s32BitPerSample;
+            pstStreamAttr->u32LbrSampleRate = pstAOFrame->u32SampleRate;
+            pstStreamAttr->u32LbrFormat = IEC61937_DATATYPE_20_LPCM;
+            pstStreamAttr->u32OrgMultiPcmChannels = pstAOFrame->u32Channels;
+            pstStreamAttr->pLbrDataBuf = (HI_VOID*)pstAOFrame->ps32PcmBuffer;
+
+            if (pstAOFrame->u32Channels > AO_TRACK_NORMAL_CHANNELNUM)
+            {
+                pstStreamAttr->u32LbrChannels = AO_TRACK_NORMAL_CHANNELNUM;
+                pstStreamAttr->u32LbrBytesPerFrame = pstAOFrame->u32PcmSamplesPerFrame * AUTIL_CalcFrameSize(AO_TRACK_NORMAL_CHANNELNUM, pstAOFrame->s32BitPerSample);
+            }
+            else
+            {
+                pstStreamAttr->u32LbrChannels = pstAOFrame->u32Channels;
+                pstStreamAttr->u32LbrBytesPerFrame = pstAOFrame->u32PcmSamplesPerFrame * AUTIL_CalcFrameSize(pstAOFrame->u32Channels, pstAOFrame->s32BitPerSample);
             }
         }
-        else
-        {
-            HI_ERR_AO("pfnHdmiGetSinkCapability failed(%#x)\n", s32Ret);
-        }
-        if (pstSinkCap != HI_NULL)
-        {
-            AUTIL_AO_FREE(HI_ID_AO, pstSinkCap);
-        }
-
-#else
-        HI_DRV_HDMI_AUDIO_CAPABILITY_S stSinkCap;
-
-        /*get the capability of the max pcm channels of the output device*/
-        if (pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetAudioCapability)
-        {
-            s32Ret = (pCard->pstHdmiFunc->pfnHdmiGetAudioCapability)(HI_UNF_HDMI_ID_0, &stSinkCap);
-        }
-
-#if defined(HDMI_AUDIO_PASSTHROUGH_DEBUG)
-
-        if (HI_TRUE == pCard->bHdmiDebug)
-        {
-            if (HI_UNF_SND_HDMI_MODE_RAW == pCard->enUserHdmiMode)
-            {
-                s32Ret = HI_SUCCESS; /* cheat SND work at hdmi plun-in status without hdmi device */
-                stSinkCap.u32MaxPcmChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
-            }
-        }
-
-#endif
-
-        if (HI_SUCCESS == s32Ret)
-        {
-            if (stSinkCap.u32MaxPcmChannels > AO_TRACK_NORMAL_CHANNELNUM)
-            {
-                pstStreamAttr->u32HbrBitDepth = pstAOFrame->s32BitPerSample;
-                pstStreamAttr->u32HbrSampleRate = pstAOFrame->u32SampleRate;
-                pstStreamAttr->u32HbrFormat = IEC61937_DATATYPE_71_LPCM;
-                pstStreamAttr->u32HbrChannels = AO_TRACK_MUTILPCM_CHANNELNUM;
-                pstStreamAttr->u32OrgMultiPcmChannels = TrackGetMultiPcmChannels(pstAOFrame);
-                pstStreamAttr->u32HbrBytesPerFrame = TrackGetMultiPcmSize(pstAOFrame);
-                pstStreamAttr->pHbrDataBuf = (HI_VOID*)TrackGetMultiPcmAddr(pstAOFrame);
-            }
-        }
-
-#endif
     }
-
 
     // pcm
     TrackBuildPcmAttr(pstAOFrame, pstStreamAttr);
 }
 
-#if defined(CHIP_TYPE_hi3798cv200_a)
-static SND_HDMI_MODE_E TRACKHdmiEdidChange(HI_UNF_EDID_BASE_INFO_S *pstSinkCap, HI_U32 u32Format)
-{
-    HI_U32 i = 0;
-
-    switch (u32Format)
-    {
-        case IEC61937_DATATYPE_NULL:
-            return SND_HDMI_MODE_PCM;
-
-        case IEC61937_DATATYPE_DOLBY_DIGITAL:
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
-            {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_AC3)
-                {
-                    return SND_HDMI_MODE_LBR;
-                }
-            }
-
-            return SND_HDMI_MODE_PCM;
-
-        case IEC61937_DATATYPE_DTS_TYPE_I:
-        case IEC61937_DATATYPE_DTS_TYPE_II:
-        case IEC61937_DATATYPE_DTS_TYPE_III:
-        case IEC61937_DATATYPE_DTSCD:
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
-            {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_DTS)
-                {
-                    return SND_HDMI_MODE_LBR;
-                }
-            }
-
-            return SND_HDMI_MODE_PCM;
-
-        case IEC61937_DATATYPE_DOLBY_DIGITAL_PLUS:
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
-            {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_DDP)
-                {
-                    return SND_HDMI_MODE_HBR;
-                }
-            }
-
-            return SND_HDMI_MODE_LBR;
-
-        case IEC61937_DATATYPE_DTS_TYPE_IV:
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
-            {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_DTS_HD)
-                {
-                    return SND_HDMI_MODE_HBR;
-                }
-            }
-
-            return SND_HDMI_MODE_LBR;
-
-        case IEC61937_DATATYPE_DOLBY_TRUE_HD:
-            for (i = 0; i < pstSinkCap->u32AudioInfoNum; i++)
-            {
-                if (pstSinkCap->stAudioInfo[i].enAudFmtCode == HI_UNF_EDID_AUDIO_FORMAT_CODE_MAT)
-                {
-                    return SND_HDMI_MODE_HBR;
-                }
-            }
-
-            return SND_HDMI_MODE_LBR;
-
-        case IEC61937_DATATYPE_71_LPCM:
-            return SND_HDMI_MODE_HBR;
-
-        default:
-            HI_WARN_AO("Failed to judge edid cabability of format %d\n", u32Format);
-            return SND_HDMI_MODE_PCM;
-    }
-}
-#else
 static SND_HDMI_MODE_E TRACKHdmiEdidChange(HI_DRV_HDMI_AUDIO_CAPABILITY_S *pstSinkCap, HI_U32 u32Format)
 {
     switch(u32Format)
@@ -705,7 +633,6 @@ static SND_HDMI_MODE_E TRACKHdmiEdidChange(HI_DRV_HDMI_AUDIO_CAPABILITY_S *pstSi
             return SND_HDMI_MODE_PCM;       
     }
 }
-#endif
 
 TRACK_STREAMMODE_CHANGE_E GetHdmiChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_STREAM_ATTR_S *pstAttr)
 {
@@ -760,28 +687,6 @@ TRACK_STREAMMODE_CHANGE_E GetHdmiChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_S
     }
     else
     {
-#if defined(CHIP_TYPE_hi3798cv200_a)
-        HI_UNF_EDID_BASE_INFO_S* pstSinkCap = HI_NULL;
-        mode = SND_HDMI_MODE_LBR;
-        pstSinkCap = AUTIL_AO_MALLOC(HI_ID_AO, sizeof(HI_UNF_EDID_BASE_INFO_S), GFP_KERNEL);
-        if (HI_NULL == pstSinkCap)
-        {
-            HI_ERR_AO("malloc pstSinkCap failed!\n");
-            return TRACK_STREAMMODE_CHANGE_NONE;
-        }
-
-        if (pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetSinkCapability)
-        {
-            //HI_ERR_AO("pfnHdmiGetSinkCapability\n");
-            s32Ret = (pCard->pstHdmiFunc->pfnHdmiGetSinkCapability)(HI_UNF_HDMI_ID_0, pstSinkCap);
-        }
-        else
-        {
-            HI_ERR_AO("pfnHdmiGetSinkCapability Fail\n");
-            s32Ret = HI_FAILURE;
-        }
-
-#else
         HI_DRV_HDMI_AUDIO_CAPABILITY_S stSinkCap;
         mode = SND_HDMI_MODE_LBR;
 
@@ -791,11 +696,9 @@ TRACK_STREAMMODE_CHANGE_E GetHdmiChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_S
         }
         else
         {
-            HI_ERR_AO("pfnHdmiGetAudioCapability Fail\n");
+            //HI_ERR_AO("pfnHdmiGetAudioCapability Fail\n");
             s32Ret = HI_FAILURE;
         }
-
-#endif
 
         if (pstAttr->u32HbrFormat)
         {
@@ -816,11 +719,7 @@ TRACK_STREAMMODE_CHANGE_E GetHdmiChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_S
 
             if ((HI_UNF_SND_HDMI_MODE_AUTO == pCard->enUserHdmiMode) && (HI_SUCCESS == s32Ret))
             {
-#if defined(CHIP_TYPE_hi3798cv200_a)
-                mode = TRACKHdmiEdidChange(pstSinkCap, pstAttr->u32HbrFormat);
-#else
                 mode = TRACKHdmiEdidChange(&stSinkCap, pstAttr->u32HbrFormat);
-#endif
             }
         }
 
@@ -828,23 +727,9 @@ TRACK_STREAMMODE_CHANGE_E GetHdmiChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_S
         {
             if ((HI_UNF_SND_HDMI_MODE_AUTO == pCard->enUserHdmiMode) && (HI_SUCCESS == s32Ret))
             {
-#if defined(CHIP_TYPE_hi3798cv200_a)
-                mode = TRACKHdmiEdidChange(pstSinkCap, pstAttr->u32LbrFormat);
-#else
                 mode = TRACKHdmiEdidChange(&stSinkCap, pstAttr->u32LbrFormat);
-#endif
             }
         }
-
-#if defined(CHIP_TYPE_hi3798cv200_a)
-
-        if (pstSinkCap != HI_NULL)
-        {
-            AUTIL_AO_FREE(HI_ID_AO, pstSinkCap);
-        }
-
-#endif
-
     }
 
     if (SND_HDMI_MODE_PCM == mode)
@@ -905,6 +790,11 @@ TRACK_STREAMMODE_CHANGE_E GetSpdifChangeMode(SND_CARD_STATE_S *pCard, SND_TRACK_
     HI_HANDLE hSndOp = SND_GetOpHandlebyOutType(pCard, SND_OUTPUT_TYPE_SPDIF);
     HI_BOOL bdisPassThrough = HI_FALSE;
     TRACK_STREAMMODE_CHANGE_E enChange = TRACK_STREAMMODE_CHANGE_NONE;
+
+    if (pstAttr->u32LbrFormat == IEC61937_DATATYPE_20_LPCM)
+    {
+        return TRACK_STREAMMODE_CHANGE_NONE;
+    }
 
     s32Ret = SND_GetOpAttr(pCard, SND_GetOpOutputport(hSndOp), &stSndPortAttr);
     if(HI_SUCCESS != s32Ret)
@@ -1149,6 +1039,13 @@ static HI_VOID  HDMIAudioChange(SND_CARD_STATE_S *pCard, TRACK_STREAMMODE_CHANGE
         {
             enAudioFormat = HI_UNF_EDID_AUDIO_FORMAT_CODE_DTS;
         }
+        else if(IEC61937_DATATYPE_20_LPCM == pstAttr->u32LbrFormat)
+        {
+            Channels = pstAttr->u32LbrChannels;
+            enHdmiSoundIntf = HDMI_AUDIO_INTERFACE_I2S;
+            enAudioFormat = HI_UNF_EDID_AUDIO_FORMAT_CODE_PCM;  
+            Rate = pstAttr->u32PcmSampleRate;
+        }
     }
     else if ((TRACK_STREAMMODE_CHANGE_PCM2HBR == enMode) || (TRACK_STREAMMODE_CHANGE_LBR2HBR == enMode)
              || (TRACK_STREAMMODE_CHANGE_HBR2HBR == enMode))
@@ -1156,11 +1053,12 @@ static HI_VOID  HDMIAudioChange(SND_CARD_STATE_S *pCard, TRACK_STREAMMODE_CHANGE
         Rate = pstAttr->u32HbrSampleRate;
         Channels = pstAttr->u32HbrChannels;
         enHdmiSoundIntf = HDMI_AUDIO_INTERFACE_HBR;
-        if(IEC61937_DATATYPE_71_LPCM==pstAttr->u32HbrFormat)
+        if(IEC61937_DATATYPE_71_LPCM == pstAttr->u32HbrFormat || IEC61937_DATATYPE_20_LPCM == pstAttr->u32HbrFormat)
         {
             Channels = pstAttr->u32OrgMultiPcmChannels;
             enHdmiSoundIntf = HDMI_AUDIO_INTERFACE_I2S;   //verify
             enAudioFormat = HI_UNF_EDID_AUDIO_FORMAT_CODE_PCM;  
+            Rate = pstAttr->u32PcmSampleRate;
         }
         else if (IEC61937_DATATYPE_DOLBY_DIGITAL_PLUS == pstAttr->u32HbrFormat)
         {
@@ -2504,7 +2402,7 @@ HI_S32 TRACK_CreateNew(SND_CARD_STATE_S *pCard, HI_UNF_AUDIOTRACK_ATTR_S *pstAtt
     state->stTrackAbsGain.s32GainL = AO_MAX_LINEARVOLUME;
     state->stTrackAbsGain.s32GainR = AO_MAX_LINEARVOLUME;
     state->bMute = HI_FALSE;
-	state->enChannelMode= HI_UNF_TRACK_MODE_STEREO;	
+    state->enChannelMode= HI_UNF_TRACK_MODE_STEREO;
     state->u32SendTryCnt = 0;
     state->u32SendCnt = 0;
     state->u32AddMuteFrameNum = 0;
@@ -2683,7 +2581,7 @@ HI_S32 TRACK_SendData(SND_CARD_STATE_S *pCard,HI_U32 u32TrackID, HI_UNF_AO_FRAME
 
     //if it is invaild samplerate, discard audio frame and return HI_SUCCESS(avoid printing).
     CHECK_AO_FRAME_NOSTANDART_SAMPLERATE(pstAOFrame->u32SampleRate);
-	CHECK_AO_FRAME_BITDEPTH(pstAOFrame->s32BitPerSample);
+    CHECK_AO_FRAME_BITDEPTH(pstAOFrame->s32BitPerSample);
     TRACKDbgCountTrySendData(pTrack);
 
     TRACKBuildStreamAttr(pCard, (HI_UNF_AO_FRAMEINFO_S *)pstAOFrame, &stStreamAttr);
@@ -2769,7 +2667,7 @@ HI_S32 TRACK_SetPriority(SND_CARD_STATE_S *pCard, HI_U32 u32TrackID, HI_BOOL bEn
 
     if(pTrack->enCurnStatus != SND_TRACK_STATUS_START)
     {
-        HI_ERR_AO("Please make track start first !\n");
+        HI_WARN_AO("Please make track start first !\n");
         return HI_ERR_AO_NOTSUPPORT;
     }       
 

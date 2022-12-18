@@ -17,13 +17,14 @@ HI_U8 DigDisCode_ct1642[10] = {0xfc, 0x60, 0xda, 0xf2, 0x66, 0xb6, 0xbe, 0xe0, 0
 HI_U8 DigDisCode_pt6964[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f};
 HI_U8 DigDisCode_fd650[10]  = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f};
 
-const HI_CHAR keyled_name[5][16] =
+const HI_CHAR keyled_name[6][16] =
 {
     "74HC164",
     "PT6961",
     "CT1642",
     "PT6964",
-    "FD650"
+    "FD650",
+    "GPIOKEY"
 };
 
 HI_U8 DigDisCode[10] = {0};
@@ -106,7 +107,8 @@ int  main(int argc, char *argv[])
                "keyled_type = 1: PT6961 \n"
                "keyled_type = 2: CT1642 \n"
                "keyled_type = 3: PT6964 \n"
-               "keyled_type = 4: FD650 \n");
+               "keyled_type = 4: FD650 \n"
+               "keyled_type = 5: GPIOKEY \n");
         return HI_FAILURE;
     }
     else
@@ -121,7 +123,8 @@ int  main(int argc, char *argv[])
                "keyled_type = 1: PT6961 \n"
                "keyled_type = 2: CT1642 \n"
                "keyled_type = 3: PT6964 \n"
-               "keyled_type = 4: FD650 \n");
+               "keyled_type = 4: FD650 \n"
+               "keyled_type = 5: GPIOKEY \n");
         return HI_FAILURE;
     }
     printf("Test keyled_type %s\n", keyled_name[keyled_type]);

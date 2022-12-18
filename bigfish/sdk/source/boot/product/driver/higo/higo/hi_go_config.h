@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 /***************************** Macro Definition ******************************/
-//#define HIGO_BMP_SUPPORT
+#define HIGO_BMP_SUPPORT
 //#define HIGO_GIF_SUPPORT
 #define HIGO_JPEG_SUPPORT
 //#define HIGO_PNG_SUPPORT

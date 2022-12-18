@@ -369,6 +369,7 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_SET_RECORD_STREAM,    /**< the command of setting record stream, the parameter is HI_BOOL */
     HI_FORMAT_INVOKE_GET_TRACE_SEEK,       /**< the command of getting seek proc info, the parameter is HI_SVR_PLAYER_PROC_SEEKINFO_S */
     HI_FORMAT_INVOKE_GET_SWITCH_PG_TIME,   /**< the command of getting proc switch-program time info, the parameter is HI_SVR_PLAYER_PROC_SWITCHPG_S */
+    HI_FORMAT_INVOKE_SET_TPLAY_MODE,       /**< the command of setting tplay mode, the parameter is ::HI_SVR_PLAYER_TPLAY_MODE_E*/ /**< CNcomment:设置TPlay模式，参数::HI_SVR_PLAYER_TPLAY_MODE_E*/
     HI_FORMAT_INVOKE_GET_AUDIO_FORMAT_BUFFER,    /**< the command of getting network audio stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_GET_VIDEO_FORMAT_BUFFER,    /**< the command of getting network video stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_SET_METARETRIVER_FLAG,       /**< set meta data retriver flag, the parameter is ::HI_S32*/ /**< CNcomment:设置文件媒体扫描标志，参数::HI_S32*/

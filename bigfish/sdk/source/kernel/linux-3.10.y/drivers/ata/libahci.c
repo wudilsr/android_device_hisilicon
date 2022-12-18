@@ -49,7 +49,9 @@
 
 static int ahci_skip_host_reset;
 int ahci_ignore_sss;
+#ifdef CONFIG_ARCH_S40
 extern int fbs_fixed;
+#endif
 static int fbs_en = 1;
 EXPORT_SYMBOL_GPL(ahci_ignore_sss);
 
@@ -2158,8 +2160,11 @@ static void ahci_pmp_attach(struct ata_port *ap)
 	cmd = readl(port_mmio + PORT_CMD);
 	cmd |= PORT_CMD_PMP;
 	writel(cmd, port_mmio + PORT_CMD);
-
+#ifdef CONFIG_ARCH_S40
 	if (fbs_en && fbs_fixed)
+#else
+	if (fbs_en)
+#endif
 		ahci_enable_fbs(ap);
 	else
 		ahci_disable_fbs(ap);

@@ -272,8 +272,22 @@ HI_VOID ISR_CallbackForWinManage(HI_HANDLE hDst, const HI_DRV_DISP_CALLBACK_INFO
             {
                 /*check wether the layer is set  or not.*/
                 pWin = stDispWindow.pstWinArray[hDst][i];
+				
+                if (pWin)
+                {
+                    atomic_set(&pWin->stCfg.bNewAttrFlag, 1);
+                    pWin->bDispInfoChange = HI_TRUE;
+                }
+
+				if ((pWin) && pWin->u32VideoLayer == VDP_LAYER_VID_BUTT)
+				{
+					continue;	
+				}
+
                 if( (pWin) && (!pWin->stVLayerFunc.PF_ChckLayerInit(pWin->u32VideoLayer)))
+				{
                     (HI_VOID)pWin->stVLayerFunc.PF_SetDefault(pWin->u32VideoLayer);
+				}
 
                 if ((pWin) && (pWin->stWinLayerOpt.bEffective)
                         && (pWin->stWinLayerOpt.layerOptType == LAYER_OPT_ZORDER_ADJUST))
@@ -292,11 +306,6 @@ HI_VOID ISR_CallbackForWinManage(HI_HANDLE hDst, const HI_DRV_DISP_CALLBACK_INFO
                     pWin->stWinLayerOpt.bEffective = HI_FALSE;
                     pWin->stWinLayerOpt.layerOptType = LAYER_OPT_BUTT;
                     pWin->stWinLayerOpt.pParam = HI_NULL;
-                }
-                if (pWin)
-                {
-                    atomic_set(&pWin->stCfg.bNewAttrFlag, 1);
-                    pWin->bDispInfoChange = HI_TRUE;
                 }
             }
 
@@ -454,12 +463,6 @@ HI_S32 WIN_Init(HI_VOID)
         return HI_ERR_VO_DEPEND_DEVICE_NOT_READY;
     }
 
-    if (HI_SUCCESS != BP_CreateBlackFrame())
-    {
-        WIN_ERROR("Create Black Frame failed!\n");
-        return HI_ERR_VO_MALLOC_FAILED;
-    }
-
     DISP_MEMSET(&stDispWindow, 0, sizeof(DISPLAY_WINDOW_S));
 
     VideoLayer_Init();
@@ -529,7 +532,6 @@ HI_S32 WIN_DeInit(HI_VOID)
     }
 
     VideoLayer_DeInit();
-    BP_DestroyBlackFrame();
     s_s32WindowGlobalFlag = WIN_DEVICE_STATE_CLOSE;
 
     WIN_INFO("VO has been DEinited!\n");
@@ -1981,6 +1983,7 @@ HI_S32 WinSendAttrToSource(WINDOW_S *pstWin, HI_DISP_DISPLAY_INFO_S *pstDispInfo
     HI_BOOL bHorSrEnable = HI_FALSE;
     HI_BOOL bVerSrEnable = HI_FALSE;
     HI_U32 u32BitWidthShouldSetting = 0;
+	HI_DRV_PIX_FORMAT_E enFmt;
 #if defined (CHIP_HIFONEB02)
     HI_BOOL bCmpShouldOpen = 0;
     VIDEO_LAYER_STATUS_S stVideoLayerStatus;
@@ -2141,6 +2144,18 @@ HI_S32 WinSendAttrToSource(WINDOW_S *pstWin, HI_DISP_DISPLAY_INFO_S *pstDispInfo
             stInfo.bCompressFlag = 1;
         else
             stInfo.bCompressFlag = 0;
+		
+		if (pstWin->stVLayerFunc.PF_GetLayerRevisedPixelFmt(pstWin->u32VideoLayer,
+															&stInfo.stOutRect,
+															&enFmt,
+															pstDispInfo))
+		{
+			stInfo.ePixFmt = HI_DRV_PIX_FMT_NV61_2X1;
+		}
+		else
+		{
+            stInfo.ePixFmt = HI_DRV_PIX_FMT_NV21;
+		}
 #endif
         pfTmpSendWinInfo = pstWin->stCfg.stSource.pfSendWinInfo;
         if (pfTmpSendWinInfo)
@@ -2397,6 +2412,8 @@ HI_S32 WinCheckFrame(HI_DRV_VIDEO_FRAME_S *pFrameInfo)
             || (HI_DRV_PIX_FMT_NV21 == pFrameInfo->ePixFormat)
             || (HI_DRV_PIX_FMT_NV21_CMP == pFrameInfo->ePixFormat)
             || (HI_DRV_PIX_FMT_NV12_CMP == pFrameInfo->ePixFormat)
+            || (HI_DRV_PIX_FMT_NV16_2X1 == pFrameInfo->ePixFormat)
+            || (HI_DRV_PIX_FMT_NV61_2X1 == pFrameInfo->ePixFormat)
           )
        )
     {
@@ -4202,7 +4219,10 @@ HI_S32 WIN_DetachSink(HI_HANDLE hWin, HI_HANDLE hSink)
     return s32Ret;
 }
 
-HI_S32 WIN_SetVirtualAttr(HI_HANDLE hWin, HI_U32 u32Width,HI_U32 u32Height)
+HI_S32 WIN_SetVirtualAttr(HI_HANDLE hWin, 
+                        HI_U32 u32Width,
+                        HI_U32 u32Height,
+                        HI_U32 u32FrmRate)
 {
     VIRTUAL_S *pstVirWin;
     HI_S32 s32Ret;
@@ -4211,6 +4231,8 @@ HI_S32 WIN_SetVirtualAttr(HI_HANDLE hWin, HI_U32 u32Width,HI_U32 u32Height)
 
     s32Ret = WIN_VIR_SetSize(pstVirWin, u32Width,u32Height);
 
+    s32Ret |= WIN_VIR_SetFrmRate(pstVirWin, u32FrmRate);
+    
     return s32Ret;
 }
 HI_S32 WIN_AcquireFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
@@ -4745,6 +4767,8 @@ HI_VOID Win_GenerateConfigInfo(WINDOW_S *pstWin,
     pstLayerPara->bRegionMute  = 0;
     pstLayerPara->stIn         = pstFrame->stDispRect;
     pstLayerPara->stInOrigin   = pstFrame->stDispRect;
+
+	pstLayerPara->bSecure = pstFrame->bSecure;
 
 
     /*this rect just for post scaler dealer.*/
@@ -5501,13 +5525,6 @@ HI_DRV_VIDEO_FRAME_S * WinGetFrameToConfig(WINDOW_S *pstWin, const HI_DRV_DISP_C
         WinClearBlackFrameFlag(pstWin);
     }
 
-/*
-    if(!pstFrame)
-    {
-        pstFrame = BP_GetBlackFrameInfo();
-        WinSetBlackFrameFlag(pstWin);
-    }
-*/
 
     return pstFrame;
 }
@@ -6056,7 +6073,8 @@ HI_S32 WinCaptureFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pstFrame, HI_U32 *s
       || ((HI_TRUE == pstWin->bReset)
              && (HI_DRV_WIN_SWITCH_BLACK == pstWin->stRst.enResetMode)))
     {
-        pstFrmTmp = BP_GetBlackFrameInfo();
+        WIN_ERROR("err! get black frame!\n");
+        return HI_ERR_VO_WIN_UNSUPPORT;
     }
     else
     {
@@ -6064,10 +6082,6 @@ HI_S32 WinCaptureFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pstFrame, HI_U32 *s
             return HI_ERR_VO_INVALID_OPT;
 
         pstFrmTmp = WinBuf_GetCapturedFrame(&pstWin->stBuffer.stWinBP);
-        if (HI_NULL == pstFrmTmp)
-        {
-            pstFrmTmp = BP_GetBlackFrameInfo();
-        }
     }
 
     if (HI_NULL == pstFrmTmp)

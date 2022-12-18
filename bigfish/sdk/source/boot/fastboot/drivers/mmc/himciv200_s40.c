@@ -26,3 +26,18 @@ static void hi_mci_sys_init(void)
 	
 	udelay(1000);
 }
+
+static unsigned int himci_get_clock(void)
+{
+	unsigned int clk = MMC_CLK;
+
+	return clk;
+}
+
+static void himci_set_timing(unsigned int timing)
+{}
+
+static void himci_get_tuning_param(int datastrobe, unsigned int * min,
+		unsigned int * max, unsigned int * mask, 
+		unsigned int * offset, unsigned int * reg_addr)
+{}

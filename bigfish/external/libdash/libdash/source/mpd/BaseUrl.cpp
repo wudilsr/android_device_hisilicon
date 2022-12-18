@@ -58,3 +58,22 @@ ISegment*           BaseUrl::ToMediaSegment     (const std::vector<IBaseUrl *>& 
 
     return NULL;
 }
+ISegment*           BaseUrl::ToMediaSegment     (const std::vector<IBaseUrl *>& baseurls, const std::string &range) const
+{
+    Segment *seg;
+
+    if (this->byteRange != "")
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] this baseURL already has range:%s\n", __FUNCTION__, __LINE__, this->byteRange.c_str());
+        return NULL;
+    }
+
+    seg = new Segment();
+
+    if(seg->Init(baseurls, this->url, range, dash::metrics::MediaSegment))
+        return seg;
+
+    delete(seg);
+
+    return NULL;
+}

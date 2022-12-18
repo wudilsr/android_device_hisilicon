@@ -551,5 +551,7 @@ config MTD_NAND_XWAY
 source "drivers/mtd/nand/hisfc400/Kconfig"
 source "drivers/mtd/nand/hinfc610/Kconfig"
 source "drivers/mtd/nand/hinfc504/Kconfig"
+source "drivers/mtd/nand/hifmc100_nand/Kconfig"
+source "drivers/mtd/nand/hifmc100_snand/Kconfig"
 
 endif # MTD_NAND

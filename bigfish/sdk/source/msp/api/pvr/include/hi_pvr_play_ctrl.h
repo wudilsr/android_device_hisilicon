@@ -205,6 +205,7 @@ typedef struct hiPVR_PLAY_CHN_S
     HI_U32           u32chnID;
     HI_U32           u32CurPlayTimeMs;
     HI_U32           u32GopNumOfStart;
+    HI_U32           u32UseDecodeAbility;    /* decode ability consumed by play chn */
     HI_U64           u64CurReadPos;          /* current data file read position */  
     HI_U64           u64TsFileSize;          /* the size of ts file, to control the end for playing without index file */
     PVR_FILE64       s32DataFile;             /* descriptor of play file */
@@ -230,7 +231,6 @@ typedef struct hiPVR_PLAY_CHN_S
     
     HI_UNF_SYNC_REF_E       enLastSyncState;
     HI_UNF_PVR_PLAY_STATE_E enState;                 /* play state */
-    HI_UNF_PVR_PLAY_STATE_E enLastState;                 /* last play state */
     HI_UNF_PVR_PLAY_SPEED_E enSpeed;
     HI_PVR_SMOOTH_PARA_S stFBAttr;
     HI_UNF_PVR_PLAY_ATTR_S        stUserCfg;               /* play attributes for user configure */

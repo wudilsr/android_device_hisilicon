@@ -206,7 +206,7 @@ HI_S32 si2147_tuner_resume (HI_U32 u32TunerPort)
 {   
     s_u32Si2147TunerPort = u32TunerPort;
     si2147_init_tuner(s_u32Si2147TunerPort);    
-    return;	
+    return HI_SUCCESS;	
 }
 
 

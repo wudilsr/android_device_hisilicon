@@ -15,6 +15,7 @@
 #include "SkRect.h"
 #include <gui/Surface.h>
 #include "HiMediaDefine.h"
+#include "DisplayClient.h"
 #include "hidisplay.h"
 #include FT_SYNTHESIS_H
 #include FT_STROKER_H
@@ -2453,7 +2454,7 @@ static void bmp_save(const char *filename, unsigned char* buffer, int w, int h, 
     int x,y,v;
     FILE *f;
     char fname[1024];
-    snprintf(fname, sizeof(fname), "%s", filename);
+    snprintf(fname, sizeof(fname), "%s.tmp", filename);
     BMP bmp;
 
     bmp.BM[0]   = 'B';
@@ -2506,6 +2507,7 @@ static void bmp_save(const char *filename, unsigned char* buffer, int w, int h, 
     fclose(f);
     ALOGE("save (%s) OK wxh = (%d x %d)",fname, w, h);
 
+    rename(fname, filename);
     return;
 }
 
@@ -2743,15 +2745,9 @@ int SubtitleFontManager::RenderGfx()
             int mSurfaceWidth = 0;
             int mSurfaceHeight = 0;
 
-            property_get("persist.sys.resolution", buffer, "720");
-            resolution = atoi(buffer);
-            if(resolution == 1080) {
-                mSurfaceWidth = 1920;
-                mSurfaceHeight = 1080;
-            } else {
-                mSurfaceWidth = 1280;
-                mSurfaceHeight = 720;
-            }
+            DisplayClient DspClient;
+            DspClient.GetVirtScreenSize(&mSurfaceWidth, &mSurfaceHeight);
+
             unsigned char* pBMP = NULL;
             pBMP = (unsigned char*)malloc(mSurfaceWidth*mSurfaceHeight*4);
 

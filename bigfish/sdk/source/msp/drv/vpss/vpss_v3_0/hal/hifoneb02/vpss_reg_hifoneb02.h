@@ -4662,7 +4662,7 @@ HI_S32 VPSS_REG_EnPort(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_BOOL bEnable);
 /**************   TUNL  ******************/
 
 HI_S32 VPSS_REG_SetCurTunlAddr(HI_U32 u32AppAddr,REG_FRAMEPOS_E  ePort,HI_U32 u32TunlAddr);
-HI_S32 VPSS_REG_SetCurTunlEn(HI_U32 u32AppAddr,HI_BOOL u32CurTunlEn);
+HI_S32 VPSS_REG_SetCurTunlEn(HI_U32 u32AppAddr, REG_CHANELPOS_E ePort, HI_BOOL u32TunlEn);
 HI_S32 VPSS_REG_SetCurTunlInterval(HI_U32 u32AppAddr,REG_FRAMEPOS_E ePort,HI_S32  s32CurTunlInterval);
 HI_S32 VPSS_REG_SetTunlAddr(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_U32 u32TunlAddr);
 HI_S32 VPSS_REG_SetTunlEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_BOOL  bEnTunl);
@@ -4682,7 +4682,7 @@ HI_S32 VPSS_REG_SetDeiParaAddr(HI_U32 u32AppAddr,HI_U32 u32ParaPhyAddr);
 /**************PORT  CONFIG******************/
 HI_S32 VPSS_REG_SetPortMirrorEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bMirrorEn);
 HI_S32 VPSS_REG_SetPortFlipEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bFlipEn);
-HI_S32 VPSS_REG_SetPortPixBitW(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, REG_PIX_BITW_E ePixBitW);
+HI_S32 VPSS_REG_SetPortPixBitW(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_DRV_PIXEL_BITWIDTH_E ePixBitW);
 HI_S32 VPSS_REG_SetPortDitherEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bDitherEn);
 HI_S32 VPSS_REG_SetPortUVInvert(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bUVInvert);
 HI_S32 VPSS_REG_SetPortDitherMode(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, REG_DITHER_MODE_E eDitherMode);
@@ -4753,7 +4753,7 @@ HI_S32 VPSS_REG_SetPreVfirMode(HI_U32 u32AppAddr, VPSS_REG_PORT_E ePort, HI_U32 
 /**************ctrl cfg******************/
 HI_S32 VPSS_REG_SetZmeEn(HI_U32 u32AppAddr, VPSS_REG_PORT_E ePort, HI_U32 u32ZmeEn);
 HI_S32 VPSS_REG_SetUVConvertEn(HI_U32 u32AppAddr,HI_U32 u32EnUV);
-HI_S32 VPSS_REG_SetPixBitW(HI_U32 u32AppAddr,REG_PIX_BITW_E ePixBitW);
+HI_S32 VPSS_REG_SetPixBitW(HI_U32 u32AppAddr,HI_DRV_PIXEL_BITWIDTH_E ePixBitW);
 HI_S32 VPSS_REG_SetImgFormat(HI_U32 u32AppAddr,HI_DRV_PIX_FORMAT_E eFormat);
 HI_S32 VPSS_REG_SetFrmFormat(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort,HI_DRV_PIX_FORMAT_E eFormat);
 HI_S32 VPSS_REG_SetImgReadMod(HI_U32 u32AppAddr,HI_BOOL bField);

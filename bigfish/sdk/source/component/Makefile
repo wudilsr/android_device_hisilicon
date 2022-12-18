@@ -9,7 +9,7 @@ endif
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #       variable
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-objects:= ha_codec ha_effect hifat 
+objects:= ha_codec hifat 
 
 ifeq ($(CFG_HI_FREETYPE_FONT_SUPPORT),y)
 objects += freetype
@@ -29,6 +29,10 @@ endif
 
 ifeq ($(CFG_HI_VOIP_SUPPORT),y)
 objects += usbphone voip
+endif
+
+ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
+objects += ha_effect
 endif
 
 ifeq ($(CFG_HI_KARAOKE_SUPPORT),y)

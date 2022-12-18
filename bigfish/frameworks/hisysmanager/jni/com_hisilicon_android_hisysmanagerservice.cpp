@@ -47,15 +47,6 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_upgrade(JNIEnv *env,
 static jint com_hisilicon_android_hisysmanager_HiSysManager_reset(JNIEnv *env, jobject clazz){
     return HiSysManagerClient().reset();
 }
-static jint com_hisilicon_android_hisysmanager_HiSysManager_updateCAFile(JNIEnv *env, jobject clazz, jstring path1,jstring path2){
-    const char* szStr1 = (env)->GetStringUTFChars(path1, 0 );
-    const char* szStr2 = (env)->GetStringUTFChars(path2, 0 );
-    String8 mpath1 = String8(szStr1);
-    String8 mpath2 = String8(szStr2);
-    (env)->ReleaseStringUTFChars(path1, szStr1);
-    (env)->ReleaseStringUTFChars(path2, szStr2);
-    return HiSysManagerClient().updateCAFile(mpath1,mpath2);
-}
 static jint com_hisilicon_android_hisysmanager_HiSysManager_enterSmartStandby(JNIEnv *env, jobject clazz){
     return HiSysManagerClient().enterSmartStandby();
 }
@@ -288,7 +279,6 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_getDRMKey(JNIEnv *en
 static JNINativeMethod gMethods[] = {
         {"upgrade", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_upgrade},
         {"reset", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_reset},
-        {"updateCAFile", "(Ljava/lang/String;Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_updateCAFile},
         {"enterSmartStandby", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_enterSmartStandby},
         {"quitSmartStandby", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_quitSmartStandby},
         {"setFlashInfo", "(Ljava/lang/String;IILjava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setFlashInfo},

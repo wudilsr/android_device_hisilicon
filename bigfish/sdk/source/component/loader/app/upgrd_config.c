@@ -344,19 +344,19 @@ eKeyPress LOADER_KEYLED_Key_Convert(HI_U32 RawKey)
 {
     switch (RawKey)
     {
-    case 6:
-        return APP_KEY_UP;
-    case 1:
-        return APP_KEY_DOWN;
-    case 4:
-        return APP_KEY_LEFT;
-    case 2:
-        return APP_KEY_RIGHT;
-    case 3:
+    case 0:
         return APP_KEY_MENU;
-    case 5:
+    case 1:
         return APP_KEY_OK;
-    case 7:
+    case 2:
+        return APP_KEY_LEFT;
+    case 3:
+        return APP_KEY_RIGHT;
+    case 4:
+        return APP_KEY_UP;
+    case 5:
+        return APP_KEY_DOWN;
+    case 6:
         return APP_KEY_EXIT;
     default:
         return APP_KEY_UNKNOWN;
@@ -526,6 +526,13 @@ HI_S32 LOADER_CheckUpgradeTypePolicy(UPGRD_LOADER_INFO_S *pstLoaderDBInfo, HI_LO
 					pstParam->unConnPara.stCab.u32OtaFreq = pstDLOtaParam->u32Frequency;
 					pstParam->unConnPara.stCab.u32OtaSymbRate   = pstDLOtaParam->u32SymbolRate;
 					pstParam->unConnPara.stCab.u32OtaModulation = pstDLOtaParam->enModulation;
+				}
+                else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstParam->eSigType)
+                {
+                    pstParam->unConnPara.stTer.u32OtaPid  = pstDLOtaParam->u16TsPID;
+                    pstParam->unConnPara.stTer.u32OtaFreq = pstDLOtaParam->u32Frequency;
+                    pstParam->unConnPara.stTer.u32OtaBandWidth = pstDLOtaParam->u32BandWidth;
+                    pstParam->unConnPara.stTer.u32OtaModulation = pstDLOtaParam->enModulation;
 				}
 				else if (HI_UNF_TUNER_SIG_TYPE_SAT == pstParam->eSigType)
 				{

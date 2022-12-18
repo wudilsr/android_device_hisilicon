@@ -111,12 +111,11 @@ struct nand_sync {
 struct read_retry_t {
 	int type;
 	int count;
-	int (*set_rr_param)(struct hinfc_host *host, int param);
-	int (*get_rr_param)(struct hinfc_host *host);
-	int (*reset_rr_param)(struct hinfc_host *host);
-	int (*enable_enhanced_slc)(struct hinfc_host *host, int enable);
+	int (*set_rr_param)(void *host, int param);
+	int (*get_rr_param)(void *host);
+	int (*reset_rr_param)(void *host);
+	int (*enable_enhanced_slc)(void *host, int enable);
 };
-
 struct nand_dev_t {
 	struct nand_flash_dev flash_dev;
 

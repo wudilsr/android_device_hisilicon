@@ -60,7 +60,6 @@ HI_VOID sample_dec_phymemin_scanlinesout(HI_CHAR *pFileName)
 		HI_U32 u32MemSize  = 0;
 
 		HI_BOOL bHardDec;
-		HI_S32 s32Ret       = HI_SUCCESS;
 		
 		FILE* pInFile          = NULL;
         HI_U64 u64FileSize     = 0;
@@ -158,7 +157,7 @@ HI_VOID sample_dec_phymemin_scanlinesout(HI_CHAR *pFileName)
 
 		
         stJpegInfo.bOutInfo = HI_TRUE;
-		s32Ret = HI_JPEG_GetJpegInfo(&cinfo,&stJpegInfo);
+		HI_JPEG_GetJpegInfo(&cinfo,&stJpegInfo);
 
         u32Width   = stJpegInfo.u32Width[0];
 		u32Height  = stJpegInfo.u32Height[0];

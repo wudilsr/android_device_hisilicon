@@ -1436,6 +1436,10 @@ extern void zone_pcp_reset(struct zone *zone);
 /* page_alloc.c */
 extern int min_free_kbytes;
 
+#ifdef CONFIG_CMA
+extern int cma_watermark;
+#endif
+
 /* nommu.c */
 extern atomic_long_t mmap_pages_allocated;
 extern int nommu_shrink_inode_mappings(struct inode *, size_t, size_t);

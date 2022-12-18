@@ -155,6 +155,7 @@ extern HI_U32 g_DDRSize ;
 extern AUTHALG_E g_AuthAlg ;
 extern HI_U8  g_customer_blpk[16];
 extern HI_U32 g_EnvFlashAddr;
+HI_U8  g_partition_hash[96] = {0};
 
 unsigned long DVB_CRC32(unsigned char *buf, int length);
 
@@ -640,189 +641,6 @@ HI_U32 HI_CA_ImgAuthenticate(HI_U32 StartAddr,HI_U32 length,HI_U8 u8Signature[RS
     return ret;
 }
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
-HI_S32 HI_CA_GetFlashImgInfoByName(HI_U8* pPartionName, HI_CAImgHead_S* pstImgInfo)
-{
-    HI_S32 ret = 0;
-    HI_U8 CAImageArea[CAImgHeadAreaLen] = {0};
-    HI_U32 u32CRC32Value = 0;
-    HI_Flash_InterInfo_S flashInfo;
-
-    CA_CheckPointer(pPartionName);
-    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName, 0ULL, NAND_PAGE_SIZE,(HI_U8*)CAImageArea, &flashInfo),ret);
-    memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
-    if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
-    {
-        HI_INFO_CA("ImgInfo.u8MagicNumber:\n", pstImgInfo->u8MagicNumber);
-        printf_hex(pstImgInfo->u8MagicNumber, sizeof(pstImgInfo->u8MagicNumber));
-
-        HI_INFO_CA("Magic number check success\n");
-
-        /*Check if the total length is valid*/
-        if ((pstImgInfo->u32TotalLen > (HI_U32)flashInfo.PartSize) || (pstImgInfo->u32TotalLen < NAND_PAGE_SIZE))
-        {
-            HI_ERR_CA("The total length of image %d invalid!\n", pPartionName);
-            return -1;
-        }
-
-        /*Check if the other lengthes of the header are valid*/
-        if ((pstImgInfo->u32CodeOffset != NAND_PAGE_SIZE) || (pstImgInfo->u32SignedImageLen == 0) || (pstImgInfo->u32SignedImageLen > pstImgInfo->u32TotalLen) ||
-                (pstImgInfo->u32SignatureOffset == 0) || (pstImgInfo->u32SignatureOffset > pstImgInfo->u32TotalLen))
-        {
-            HI_ERR_CA("The header data of image %d invalid!\n", pPartionName);
-            return -1;
-        }
-
-        //Clacluate CRC32!
-        u32CRC32Value = DVB_CRC32((HI_U8 *)pstImgInfo, (sizeof(HI_CAImgHead_S) - 4));
-        if(u32CRC32Value == pstImgInfo->u32CRC32)
-        {
-            HI_INFO_CA("CRC32 check ok\n");
-        }
-        else
-        {
-            HI_ERR_CA("CRC32Value:%x != pstImgInfo->CRC32:%x\n", u32CRC32Value, pstImgInfo->u32CRC32);
-            return HI_FAILURE;
-        }
-
-        return 0;
-    }
-}
-#endif
-
-HI_S32 HI_CA_GetEncryptFlashImgInfoByName(HI_U8* pPartionName,HI_CAImgHead_S* pstImgInfo)
-{
-    HI_S32 ret = 0;
-    HI_U8 CAImageArea[CAImgHeadAreaLen] = {0};
-    HI_U32 u32CRC32Value = 0;
-    HI_Flash_InterInfo_S flashInfo;
-
-    CA_CheckPointer(pPartionName);
-    CA_CheckPointer(pstImgInfo);
-
-    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName, 0ULL, NAND_PAGE_SIZE,(HI_U8*)CAImageArea, &flashInfo),ret);
-    memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
-    if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
-    {
-        HI_ERR_CA("Img has not be encrypted\n");
-
-        HI_INFO_CA("ImgInfo.u8MagicNumber:\n", pstImgInfo->u8MagicNumber);
-        printf_hex(pstImgInfo->u8MagicNumber, sizeof(pstImgInfo->u8MagicNumber));
-
-        HI_INFO_CA("CAIMGHEAD_MAGICNUMBER:\n", CAIMGHEAD_MAGICNUMBER);
-        printf_hex(CAIMGHEAD_MAGICNUMBER, sizeof(CAIMGHEAD_MAGICNUMBER));
-
-        return -1;
-    }
-    else
-    {
-        HI_INFO_CA("Img has already be encrypted\n");
-        CA_ASSERT(CA_DataDecrypt(CAImageArea,CAImgHeadAreaLen,CAImageArea),ret);
-        udelay(100000);//wait fo decrypt end,this code is essential
-        memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
-        if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
-        {
-            HI_INFO_CA("Magic number check success\n");
-
-            /*Check if the total length is valid*/
-            if ((pstImgInfo->u32TotalLen > (HI_U32)flashInfo.PartSize) || (pstImgInfo->u32TotalLen < NAND_PAGE_SIZE))
-            {
-                HI_ERR_CA("The total length of image %d invalid!\n", pPartionName);
-                return -1;
-            }
-
-            /*Check if the other lengthes of the header are valid*/
-            if ((pstImgInfo->u32CodeOffset != NAND_PAGE_SIZE) || (pstImgInfo->u32SignedImageLen == 0) || (pstImgInfo->u32SignedImageLen > pstImgInfo->u32TotalLen) ||
-                    (pstImgInfo->u32SignatureOffset == 0) || (pstImgInfo->u32SignatureOffset > pstImgInfo->u32TotalLen))
-            {
-                HI_ERR_CA("The header data of image %d invalid!\n", pPartionName);
-                return -1;
-            }
-
-            //Clacluate CRC32!
-            u32CRC32Value = DVB_CRC32((HI_U8 *)pstImgInfo, (sizeof(HI_CAImgHead_S) - 4));
-            if(u32CRC32Value == pstImgInfo->u32CRC32)
-            {
-                HI_INFO_CA("CRC32 check ok\n");
-            }
-            else
-            {
-                HI_ERR_CA("CRC32Value:%x != pstImgInfo->CRC32:%x\n", u32CRC32Value, pstImgInfo->u32CRC32);
-                return HI_FAILURE;
-            }
-
-            return 0;
-        }
-        else
-        {
-            HI_INFO_CA("Magic number err, get Img information failed\n");
-            return -1;
-        }
-    }
-}
-
-HI_S32 HI_CA_GetEncryptFlashImgInfoByAddr(HI_U32 PartionAddr,HI_CAImgHead_S* pstImgInfo)
-{
-    HI_S32 ret = 0;
-    HI_U8 CAImageArea[CAImgHeadAreaLen] = {0};
-    HI_U32 u32CRC32Value = 0;
-    HI_Flash_InterInfo_S flashInfo;
-
-    CA_CheckPointer(pstImgInfo);
-    CA_ASSERT(CA_flash_read_addr(PartionAddr,NAND_PAGE_SIZE,(HI_U8*)CAImageArea, &flashInfo),ret);
-    memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
-    if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
-    {
-        HI_ERR_CA("Img has not be encrypted\n");
-        return -1;
-    }
-    else
-    {
-        HI_INFO_CA("Img has already be encrypted\n");
-        CA_ASSERT(CA_DataDecrypt(CAImageArea,CAImgHeadAreaLen,CAImageArea),ret);
-        udelay(100000);//wait fo decrypt end,this code is essential
-        memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
-        if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
-        {
-            HI_INFO_CA("Magic number check right\n");
-
-            /*Check if the total length is valid*/
-            if ((pstImgInfo->u32TotalLen > (HI_U32)flashInfo.PartSize) || (pstImgInfo->u32TotalLen < NAND_PAGE_SIZE))
-            {
-                HI_ERR_CA("The total length of image invalid!\n");
-                return -1;
-            }
-
-            /*Check if the other lengthes of the header are valid*/
-            if ((pstImgInfo->u32CodeOffset != NAND_PAGE_SIZE) || (pstImgInfo->u32SignedImageLen == 0) || (pstImgInfo->u32SignedImageLen > pstImgInfo->u32TotalLen) ||
-                    (pstImgInfo->u32SignatureOffset == 0) || (pstImgInfo->u32SignatureOffset > pstImgInfo->u32TotalLen))
-            {
-                HI_ERR_CA("The header data of image invalid!\n");
-                return -1;
-            }
-
-            //Clacluate CRC32!
-            u32CRC32Value = DVB_CRC32((HI_U8 *)pstImgInfo, (sizeof(HI_CAImgHead_S) - 4));
-            if(u32CRC32Value == pstImgInfo->u32CRC32)
-            {
-                HI_INFO_CA("CRC32 check ok\n");
-            }
-            else
-            {
-                HI_ERR_CA("CRC32Value:%x != pstImgInfo->CRC32:%x\n", u32CRC32Value, pstImgInfo->u32CRC32);
-                return HI_FAILURE;
-            }
-            return 0;
-        }
-        else
-        {
-            HI_INFO_CA("Magic number err, get Img information failed\n");
-            return -1;
-        }
-    }
-
-}
-
 HI_S32 HI_CA_EncryptDDRImageAndBurnFlashAddr(HI_U8* pImageDDRAddress, HI_U32 PartionAddr)
 {
     HI_S32 ret = 0;
@@ -924,10 +742,78 @@ HI_S32 HI_CA_EncryptDDRImageAndBurnFlashNameByLen(HI_U8* pImageDDRAddress, HI_U3
 
 }
 
+HI_S32 HI_CA_GetFlashImgInfoByName(HI_U8* pPartionName, HI_CAImgHead_S* pstImgInfo, HI_BOOL *pIsEncrypt)
+{
+    HI_S32 ret = 0;
+    HI_U8 CAImageArea[CAImgHeadAreaLen] = {0};
+    HI_U32 u32CRC32Value = 0;
+    HI_Flash_InterInfo_S flashInfo;
+
+    CA_CheckPointer(pPartionName);
+    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName, 0ULL, NAND_PAGE_SIZE,(HI_U8*)CAImageArea, &flashInfo),ret);
+    memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
+    if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
+    {
+        HI_INFO_CA("Img has not be encrypted\n");
+        *pIsEncrypt = HI_FALSE;
+    }
+    else
+    {
+        CA_ASSERT(CA_DataDecrypt(CAImageArea,CAImgHeadAreaLen,CAImageArea),ret);
+        udelay(100000);//wait fo decrypt end,this code is essential
+        memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
+        if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
+        {
+            HI_INFO_CA("Img has be encrypted\n");
+            *pIsEncrypt = HI_TRUE;
+        }
+        else
+        {
+            HI_INFO_CA("Magic number err, get Img information failed\n");
+            return -1;
+        }
+    }
+
+    HI_INFO_CA("ImgInfo.u8MagicNumber:\n", pstImgInfo->u8MagicNumber);
+    printf_hex(pstImgInfo->u8MagicNumber, sizeof(pstImgInfo->u8MagicNumber));
+
+    HI_INFO_CA("Magic number check success\n");
+
+    /*Check if the total length is valid*/
+    if ((pstImgInfo->u32TotalLen > (HI_U32)flashInfo.PartSize) || (pstImgInfo->u32TotalLen < NAND_PAGE_SIZE))
+    {
+        HI_ERR_CA("The total length of image %d invalid!\n", pPartionName);
+        return -1;
+    }
+
+    /*Check if the other lengthes of the header are valid*/
+    if ((pstImgInfo->u32CodeOffset != NAND_PAGE_SIZE) || (pstImgInfo->u32SignedImageLen == 0) || (pstImgInfo->u32SignedImageLen > pstImgInfo->u32TotalLen) ||
+            (pstImgInfo->u32SignatureOffset == 0) || (pstImgInfo->u32SignatureOffset > pstImgInfo->u32TotalLen))
+    {
+        HI_ERR_CA("The header data of image %d invalid!\n", pPartionName);
+        return -1;
+    }
+
+    //Clacluate CRC32!
+    u32CRC32Value = DVB_CRC32((HI_U8 *)pstImgInfo, (sizeof(HI_CAImgHead_S) - 4));
+    if(u32CRC32Value == pstImgInfo->u32CRC32)
+    {
+        HI_INFO_CA("CRC32 check ok\n");
+    }
+    else
+    {
+        HI_ERR_CA("CRC32Value:%x != pstImgInfo->CRC32:%x\n", u32CRC32Value, pstImgInfo->u32CRC32);
+        return -1;
+    }
+
+    return 0;
+}
+
 HI_S32 HI_CA_DecryptFlashImage2DDR(HI_CHAR* pPartionName)
 {
     HI_S32 ret = 0;
     HI_CAImgHead_S ImgInfo;
+    HI_BOOL IsEncrypt = HI_TRUE;
 
     CA_CheckPointer(pPartionName);
 
@@ -935,11 +821,14 @@ HI_S32 HI_CA_DecryptFlashImage2DDR(HI_CHAR* pPartionName)
 
     CA_ASSERT(CA_AuthenticateInit(HI_CA_KEY_GROUP_1),ret);
 
-    CA_ASSERT(HI_CA_GetEncryptFlashImgInfoByName((HI_U8 *)pPartionName, &ImgInfo),ret);
+    CA_ASSERT(HI_CA_GetFlashImgInfoByName((HI_U8 *)pPartionName, &ImgInfo, &IsEncrypt),ret);
 
     CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName,0ULL, ImgInfo.u32TotalLen, (HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL),ret);
-
-    CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS, ImgInfo.u32TotalLen, (HI_U8 *)IMG_VERIFY_ADDRESS),ret);
+    if (HI_TRUE == IsEncrypt)
+    {
+        CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS, ImgInfo.u32TotalLen, (HI_U8 *)IMG_VERIFY_ADDRESS),ret);
+    }
+    
     if(memcmp(ImgInfo.u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(ImgInfo.u8MagicNumber)))
     {
         HI_ERR_CA("Img format error\n");
@@ -975,71 +864,125 @@ HI_U32 HI_CA_GetAuthMode(HI_U8* pPartionName)
         return COMMON_MODE;
     }
 }
-
-HI_S32 HI_CA_FlashAuthenticateByName(HI_U8* pPartionName,HI_U32 *ImgInDDRAddress)
-{
-    HI_S32 ret = 0;
-    HI_CAImgHead_S ImgInfo;
-    HI_U8 u8Signature[SIGNATURE_LEN] = {0};
-    HI_U8* pImageSignature = NULL;
-
-    memset(&ImgInfo,0,sizeof(ImgInfo));
-    CA_CheckPointer(pPartionName);
-
-    CA_ASSERT(CA_AuthenticateInit(HI_CA_KEY_GROUP_1),ret);
-
-    CA_ASSERT(HI_CA_GetFlashImgInfoByName(pPartionName,&ImgInfo),ret);
-
-    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName,0ULL,ImgInfo.u32TotalLen,(HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL),ret);
-
-    pImageSignature = (HI_U8*)(IMG_VERIFY_ADDRESS + ImgInfo.u32SignatureOffset );
-    memcpy(u8Signature,pImageSignature,SIGNATURE_LEN);
-
-    CA_ASSERT(HI_CA_ImgAuthenticate(IMG_VERIFY_ADDRESS,ImgInfo.u32SignedImageLen,u8Signature),ret);
-    if(ImgInDDRAddress)
-    {
-        *ImgInDDRAddress = IMG_VERIFY_ADDRESS + ImgInfo.u32CodeOffset ;
-    }
-
-    HI_INFO_CA("HI_CA_FlashAuthenticateByName %s successed\n",pPartionName);
-    CA_AuthenticateDeInit();
-
-    return ret;
-}
-#else
-HI_S32 HI_CA_FlashAuthenticateByName(HI_U8* pPartionName,HI_U32 *ImgInDDRAddress)
-{
-    HI_S32 ret = 0;
-    HI_CAImgHead_S ImgInfo;
-    HI_U8 u8Signature[SIGNATURE_LEN] = {0};
-    HI_U8* pImageSignature = NULL;
-
-    memset(&ImgInfo,0,sizeof(ImgInfo));
-    CA_CheckPointer(pPartionName);
-
-    CA_ASSERT(CA_AuthenticateInit(HI_CA_KEY_GROUP_1),ret);
-
-    CA_ASSERT(HI_CA_GetEncryptFlashImgInfoByName(pPartionName,&ImgInfo),ret);
-
-    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName,0ULL,ImgInfo.u32TotalLen,(HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL),ret);
-
-    CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS,ImgInfo.u32TotalLen,(HI_U8 *)IMG_VERIFY_ADDRESS),ret);
-
-    pImageSignature = (HI_U8*)(IMG_VERIFY_ADDRESS + ImgInfo.u32SignatureOffset );
-    memcpy(u8Signature,pImageSignature,SIGNATURE_LEN);
-
-    CA_ASSERT(HI_CA_ImgAuthenticate(IMG_VERIFY_ADDRESS,ImgInfo.u32SignedImageLen,u8Signature),ret);
-    if(ImgInDDRAddress)
-    {
-        *ImgInDDRAddress = IMG_VERIFY_ADDRESS + ImgInfo.u32CodeOffset ;
-    }
-
-    HI_INFO_CA("HI_CA_FlashAuthenticateByName %s successed\n",pPartionName);
-    CA_AuthenticateDeInit();
-
-    return ret;
-}
 #endif
+
+
+HI_S32 HI_CA_FlashAuthenticateByName(HI_U8* pPartionName,HI_U32 *ImgInDDRAddress)
+{
+    HI_S32 ret = 0;
+    HI_CAImgHead_S ImgInfo;
+    HI_U8 u8Signature[SIGNATURE_LEN] = {0};
+    HI_U8* pImageSignature = NULL;
+    HI_BOOL bEncrypt = HI_TRUE;
+    HI_U8 u8Hash[32] = {0};
+
+    memset(&ImgInfo,0,sizeof(ImgInfo));
+    CA_CheckPointer(pPartionName);
+
+    CA_ASSERT(CA_AuthenticateInit(HI_CA_KEY_GROUP_1),ret);
+
+    CA_ASSERT(HI_CA_GetFlashImgInfoByName(pPartionName,&ImgInfo, &bEncrypt),ret);   
+    CA_ASSERT(CA_flash_read((HI_CHAR*)pPartionName,0ULL,ImgInfo.u32TotalLen,(HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL),ret);
+
+    if (HI_TRUE == bEncrypt)
+    {
+        CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS,ImgInfo.u32TotalLen,(HI_U8 *)IMG_VERIFY_ADDRESS),ret);
+    }
+
+    pImageSignature = (HI_U8*)(IMG_VERIFY_ADDRESS + ImgInfo.u32SignatureOffset );
+    memcpy(u8Signature,pImageSignature,SIGNATURE_LEN);
+
+    CA_ASSERT(HI_CA_ImgAuthenticate(IMG_VERIFY_ADDRESS,ImgInfo.u32SignedImageLen,u8Signature),ret);
+    if(ImgInDDRAddress)
+    {
+        *ImgInDDRAddress = IMG_VERIFY_ADDRESS + ImgInfo.u32CodeOffset ;
+    }
+
+    HI_INFO_CA("HI_CA_FlashAuthenticateByName %s successed\n",pPartionName);
+
+    sha2(u8Signature, SIGNATURE_LEN, u8Hash, 0);
+    if (!memcmp(pPartionName, "recovery", sizeof(pPartionName)))
+    {
+        memcpy(&g_partition_hash[32], u8Hash, 32);
+    }
+    if (!memcmp(pPartionName, "kernel", sizeof(pPartionName)))
+    {
+        memcpy(&g_partition_hash[64], u8Hash, 32);
+    }
+    HI_SIMPLEINFO_CA("g_partition_hash:\n");
+    printf_hex(g_partition_hash, 96);
+    CA_AuthenticateDeInit();
+
+    return ret;
+}
+
+
+HI_S32 HI_CA_GetFlashImgInfoByAddr(HI_U32 PartionAddr,HI_CAImgHead_S* pstImgInfo, HI_BOOL *pIsEncrypt)
+{
+    HI_S32 ret = 0;
+    HI_U8 CAImageArea[CAImgHeadAreaLen] = {0};
+    HI_U32 u32CRC32Value = 0;
+    HI_Flash_InterInfo_S flashInfo;
+
+    CA_CheckPointer(pstImgInfo);
+    CA_ASSERT(CA_flash_read_addr(PartionAddr,NAND_PAGE_SIZE,(HI_U8*)CAImageArea, &flashInfo),ret);
+    memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
+    if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
+    {
+        HI_INFO_CA("Img has not be encrypted\n");
+        *pIsEncrypt = HI_FALSE;
+    }
+    else
+    {
+        CA_ASSERT(CA_DataDecrypt(CAImageArea,CAImgHeadAreaLen,CAImageArea),ret);
+        udelay(100000);//wait fo decrypt end,this code is essential
+        memcpy(pstImgInfo,CAImageArea,sizeof(HI_CAImgHead_S));
+        if(!memcmp(pstImgInfo->u8MagicNumber,CAIMGHEAD_MAGICNUMBER,sizeof(pstImgInfo->u8MagicNumber)))
+        {
+            HI_INFO_CA("Img has be encrypted\n");
+            *pIsEncrypt = HI_TRUE;
+        }
+        else
+        {
+            HI_INFO_CA("Magic number err, get Img information failed\n");
+            return -1;
+        }
+    }
+
+    HI_INFO_CA("ImgInfo.u8MagicNumber:\n", pstImgInfo->u8MagicNumber);
+    printf_hex(pstImgInfo->u8MagicNumber, sizeof(pstImgInfo->u8MagicNumber));
+
+    HI_INFO_CA("Magic number check success\n");
+
+    /*Check if the total length is valid*/
+    if ((pstImgInfo->u32TotalLen > (HI_U32)flashInfo.PartSize) || (pstImgInfo->u32TotalLen < NAND_PAGE_SIZE))
+    {
+        HI_ERR_CA("The total length of image invalid!\n");
+        return -1;
+    }
+
+    /*Check if the other lengthes of the header are valid*/
+    if ((pstImgInfo->u32CodeOffset != NAND_PAGE_SIZE) || (pstImgInfo->u32SignedImageLen == 0) || (pstImgInfo->u32SignedImageLen > pstImgInfo->u32TotalLen) ||
+            (pstImgInfo->u32SignatureOffset == 0) || (pstImgInfo->u32SignatureOffset > pstImgInfo->u32TotalLen))
+    {
+        HI_ERR_CA("The header data of image invalid!\n");
+        return -1;
+    }
+
+    //Clacluate CRC32!
+    u32CRC32Value = DVB_CRC32((HI_U8 *)pstImgInfo, (sizeof(HI_CAImgHead_S) - 4));
+    if(u32CRC32Value == pstImgInfo->u32CRC32)
+    {
+        HI_INFO_CA("CRC32 check ok\n");
+    }
+    else
+    {
+        HI_ERR_CA("CRC32Value:%x != pstImgInfo->CRC32:%x\n", u32CRC32Value, pstImgInfo->u32CRC32);
+        return -1;
+    }
+    return 0;
+
+}
 
 HI_S32 HI_CA_FlashAuthenticateByAddr(HI_U32 PartionAddr,HI_BOOL bisBootargsArea,HI_U32 *ImgInDDRAddress)
 {
@@ -1047,17 +990,21 @@ HI_S32 HI_CA_FlashAuthenticateByAddr(HI_U32 PartionAddr,HI_BOOL bisBootargsArea,
     HI_CAImgHead_S ImgInfo;
     HI_U8 u8Signature[SIGNATURE_LEN] = {0};
     HI_U8* pImageSignature = NULL;
+    HI_BOOL bEncrypt = HI_TRUE;
+
 
     memset(&ImgInfo,0,sizeof(ImgInfo));
     CA_CheckPointer(ImgInDDRAddress);
 
     CA_ASSERT(CA_AuthenticateInit(HI_CA_KEY_GROUP_1),ret);
 
-    CA_ASSERT(HI_CA_GetEncryptFlashImgInfoByAddr(PartionAddr,&ImgInfo),ret);
-
+    CA_ASSERT(HI_CA_GetFlashImgInfoByAddr(PartionAddr, &ImgInfo, &bEncrypt),ret);
     CA_ASSERT(CA_flash_read_addr(PartionAddr,ImgInfo.u32TotalLen,(HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL),ret);
 
-    CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS,ImgInfo.u32TotalLen,(HI_U8 *)IMG_VERIFY_ADDRESS),ret);
+    if (HI_TRUE == bEncrypt)
+    {
+        CA_ASSERT(CA_DataDecrypt((HI_U8 *)IMG_VERIFY_ADDRESS,ImgInfo.u32TotalLen,(HI_U8 *)IMG_VERIFY_ADDRESS),ret);
+    }
 
     pImageSignature = (HI_U8*)(IMG_VERIFY_ADDRESS + ImgInfo.u32SignatureOffset );
     memcpy(u8Signature,pImageSignature,SIGNATURE_LEN);
@@ -1774,12 +1721,11 @@ HI_S32 CA_CommonParse_SubCommand(HI_U8 *string, HI_U32 length, HI_U8 *ImageName,
 
 HI_S32 CA_Common_Search_SignHeader(HI_U8 *PartitionSignName, HI_CASignImageTail_S *pSignImageInfo, HI_U32 *pOffset)
 {
-    HI_S32 ret = 0, index = 0;
+    HI_S32 ret = 0, index = 0, i = 0;
     HI_U32 PartitionSize = 0;
-    HI_S32 ReadSize = NAND_PAGE_SIZE;
-    HI_U8 CAImageArea[NAND_PAGE_SIZE] = {0};
-    HI_U32 IsFoundFlag = HI_FALSE;
+    HI_U8 *CAImageArea = HI_NULL;
     HI_U32 offset;
+    HI_U32 PageSize = 0;
 
     CA_CheckPointer(pOffset);
     offset = *pOffset;
@@ -1787,64 +1733,80 @@ HI_S32 CA_Common_Search_SignHeader(HI_U8 *PartitionSignName, HI_CASignImageTail_
     CA_CheckPointer(PartitionSignName);
     HI_INFO_CA("PartitionSignName:%s\n", PartitionSignName);
     CA_ASSERT(CA_flash_GetSize((HI_CHAR *)PartitionSignName, &PartitionSize),ret);
+    CA_ASSERT(CA_flash_GetPageSize((HI_CHAR *)PartitionSignName, &PageSize), ret);
 
-    for(index = offset/ReadSize; index < PartitionSize / ReadSize; index ++)
+    if (PageSize <= NAND_PAGE_SIZE)
     {
-        CA_ASSERT(CA_flash_read((HI_CHAR*)PartitionSignName, ReadSize * index, ReadSize,(HI_U8*)CAImageArea, HI_NULL),ret);
-        memcpy(pSignImageInfo, CAImageArea, sizeof(HI_CASignImageTail_S));
-        if(!memcmp(pSignImageInfo->u8MagicNumber, CAIMGHEAD_MAGICNUMBER, sizeof(pSignImageInfo->u8MagicNumber)))
+        PageSize = NAND_PAGE_SIZE;
+		if(NAND_PAGE_SIZE % PageSize != 0)
+		{
+		    HI_ERR_CA("NAND_PAGE_SIZE(%d) % PageSize(%d) != 0\n", NAND_PAGE_SIZE, PageSize);
+		    return HI_FAILURE;
+		}
+    }
+
+    CAImageArea = (HI_U8 *)malloc(PageSize);
+    if (NULL == CAImageArea)
+    {
+        HI_ERR_CA("malloc CAImageArea Fail\n");
+        return HI_FAILURE;
+    }
+    
+    for(index = offset / PageSize; index < PartitionSize / PageSize; index ++)
+    {
+        CA_ASSERT(CA_flash_read((HI_CHAR*)PartitionSignName, PageSize * index, PageSize,(HI_U8*)CAImageArea, HI_NULL),ret);
+        for (i = 0; i < PageSize / NAND_PAGE_SIZE; i++)  //PageSize must >= NAND_PAGE_SIZE
         {
-            unsigned int CRC32Value;
-            HI_INFO_CA("Sign Header found!\n");
-            IsFoundFlag = HI_TRUE;
-            //Clacluate CRC32!
-            CRC32Value = DVB_CRC32((HI_U8 *)pSignImageInfo, (sizeof(HI_CASignImageTail_S) - 4));
-            if(CRC32Value == pSignImageInfo->CRC32)
+            memcpy(pSignImageInfo, CAImageArea + i * NAND_PAGE_SIZE, sizeof(HI_CASignImageTail_S));
+            if(!memcmp(pSignImageInfo->u8MagicNumber, CAIMGHEAD_MAGICNUMBER, sizeof(pSignImageInfo->u8MagicNumber)))
             {
-                *pOffset = ReadSize * index;
-                HI_INFO_CA("CRC32 check ok\n");
-            }
-            else
-            {
-                HI_ERR_CA("CRC32Value:%x != pSignImageInfo->CRC32:%x\n", CRC32Value, pSignImageInfo->CRC32);
-                return HI_FAILURE;
-            }
+                unsigned int CRC32Value;
+                HI_INFO_CA("Sign Header found!\n");
+                //Clacluate CRC32!
+                CRC32Value = DVB_CRC32((HI_U8 *)pSignImageInfo, (sizeof(HI_CASignImageTail_S) - 4));
+                if(CRC32Value == pSignImageInfo->CRC32)
+                {                    
+                    *pOffset = index * PageSize + i * NAND_PAGE_SIZE;
+                    HI_INFO_CA("CRC32 check ok\n");
 #ifdef SPARSE_EXT4
-            if (0 == IsSparseFlag && !memcmp(PartitionSignName, SYSTEM_SIGN_PARTITION, strlen(SYSTEM_SIGN_PARTITION)))
-            {
-                HI_U32 pTmp = 0;
-                ret = HI_MEM_Alloc(&pTmp, PartitionSize - ReadSize * index);
-                if (HI_SUCCESS != ret)
-                {
-                    return HI_FAILURE;
+                    if (0 == IsSparseFlag && !memcmp(PartitionSignName, SYSTEM_SIGN_PARTITION, strlen(SYSTEM_SIGN_PARTITION)))
+                    {
+                        HI_U32 pTmp = 0;
+                        ret = HI_MEM_Alloc(&pTmp, PartitionSize - PageSize * index);
+                        if (HI_SUCCESS != ret)
+                        {
+                            free (CAImageArea);
+                            return HI_FAILURE;
+                        }
+                        CA_CheckPointer((HI_VOID *)pTmp);
+                        CA_ASSERT(CA_flash_read((HI_CHAR*)PartitionSignName, PageSize * index, PartitionSize - PageSize * index, pTmp, HI_NULL), ret);
+                        pSparseHead = (sparse_header_t *)(pTmp + i * NAND_PAGE_SIZE + pSignImageInfo->u32TotalsectionID * NAND_PAGE_SIZE);
+                        if (IS_SPARSE(pSparseHead))  /* sparse ext4 */
+                        {
+                            IsSparseFlag = 1;
+                            pChunkHead = (sign_chunk_header_t *)(pTmp + i * NAND_PAGE_SIZE + pSignImageInfo->u32TotalsectionID * NAND_PAGE_SIZE + pSparseHead->file_hdr_sz);
+                            pSignChunkInfo = (HI_U32 *)(pTmp + i * NAND_PAGE_SIZE + pSignImageInfo->u32TotalsectionID * NAND_PAGE_SIZE + pSparseHead->file_hdr_sz + pSparseHead->chunk_hdr_sz * pSparseHead->total_chunks);
+                        }
+                        else  /* not sparse ext4 */
+                        {
+                            IsSparseFlag = 2;
+                        }
+                    }
+#endif
+    				free (CAImageArea);
+                    return HI_SUCCESS;
                 }
-                CA_CheckPointer((HI_VOID *)pTmp);
-                CA_ASSERT(CA_flash_read((HI_CHAR*)PartitionSignName, ReadSize * index, PartitionSize - ReadSize * index, pTmp, HI_NULL), ret);
-                pSparseHead = (sparse_header_t *)(pTmp + pSignImageInfo->u32TotalsectionID * ReadSize);
-                if (IS_SPARSE(pSparseHead))  /* sparse ext4 */
+                else
                 {
-                    IsSparseFlag = 1;
-                    pChunkHead = (sign_chunk_header_t *)(pTmp + pSignImageInfo->u32TotalsectionID * ReadSize + pSparseHead->file_hdr_sz);
-                    pSignChunkInfo = (HI_U32 *)(pTmp + pSignImageInfo->u32TotalsectionID * ReadSize + pSparseHead->file_hdr_sz + pSparseHead->chunk_hdr_sz * pSparseHead->total_chunks);
-                }
-                else  /* not sparse ext4 */
-                {
-                    IsSparseFlag = 2;
+                    HI_ERR_CA("CRC32Value:%x != pSignImageInfo->CRC32:%x\n", CRC32Value, pSignImageInfo->CRC32);
+                    free (CAImageArea);
+                    return HI_FAILURE; 
                 }
             }
-#endif
-            break;
-        }
-        else
-        {
-            continue;
         }
     }
-    if(IsFoundFlag == HI_TRUE)
-    {
-        //Debug pSignImageInfor!
-        return 0;
-    }
+ 
+    free(CAImageArea);
     return HI_FAILURE;
 }
 
@@ -2080,6 +2042,18 @@ HI_S32 HI_CA_CommonVerify_Signature(HI_U8 *PartitionImagenName, HI_U8 *Partition
     }
 
     HI_INFO_CA("Check Authenitication is ok\n");
+
+    HI_SIMPLEINFO_CA("u8Hash1:\n");
+    printf_hex(SignImageInfo.u8Sha, 32);
+    if (!memcmp(PartitionImagenName, "recovery", sizeof(PartitionImagenName)))
+    {
+        memcpy(&g_partition_hash[32], SignImageInfo.u8Sha, 32);
+    }
+    if (!memcmp(PartitionImagenName, "kernel", sizeof(PartitionImagenName)))
+    {
+        memcpy(&g_partition_hash[64], SignImageInfo.u8Sha, 32);
+    }
+
     CA_AuthenticateDeInit();
 
     return 0;
@@ -2301,6 +2275,7 @@ HI_S32 HI_CA_CommonVerify_BootPara(HI_U32 u32ParaPartionAddr, HI_U32 u32ParaPari
 
     HI_INFO_CA("Check Authenitication is ok\n");
 
+    memcpy(g_partition_hash, SignImageInfo.u8Sha, 32);
     CA_AuthenticateDeInit();
     return ret;
 }

@@ -65,6 +65,11 @@ CFLAGS += -DCONFIG_GFX_STB_SDK
 #CFLAGS += -DCONFIG_GFX_TV_SDK
 
 
+ifdef CFG_HI_STATIC_LIB_ONLY
+#directfb needed
+CFLAGS += -fPIC
+endif
+
 #=====================================================================================
 #use signal£¬not use mutex
 #=====================================================================================
@@ -261,11 +266,7 @@ endif
 #===============================================================================
 #begin complie
 #===============================================================================
-ifdef CFG_HI_STATIC_LIB_ONLY
-all:  libjpeg9a.a
-else
 all:  libjpeg9a.a libjpeg9a.so
-endif 
 
 
 libjpeg9a.a:  $(LIBOBJECTS)

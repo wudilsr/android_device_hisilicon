@@ -29,18 +29,6 @@ extern "C"{
 #define MAX_URI_NUM         (2048)
 #define MAX_FP_ID_LENGTH    (0x100)
 
-/** Key ladder selecting parameters */
-/** CNcomment:使用哪个key ladder标志 */
-typedef enum hiUNF_ADVCA_CA_TYPE_E
-{
-    HI_UNF_ADVCA_CA_TYPE_R2R       = 0x0,    /**< Using R2R key ladder */                                                 /**< CNcomment:使用R2R key ladder */
-    HI_UNF_ADVCA_CA_TYPE_SP        = 0x1,    /**< Using SP key ladder */                                                  /**< CNcomment:使用SP key ladder */
-    HI_UNF_ADVCA_CA_TYPE_CSA2      = 0x1,    /**< Using CSA2 key ladder */                                                /**< CNcomment:使用CSA2 key ladder */
-    HI_UNF_ADVCA_CA_TYPE_CSA3      = 0x1,    /**< Using CSA3 key ladder */                                                /**< CNcomment:使用CSA3 key ladder */
-    HI_UNF_ADVCA_CA_TYPE_MISC      = 0x2,    /**< Using MISC ladder */                                                    /**< CNcomment:使用SP key ladder */
-    HI_UNF_ADVCA_CA_TYPE_GDRM      = 0x3,    /**< Using GDRM ladder */                                                    /**< CNcomment:使用GDRM key ladder */
-}HI_UNF_ADVCA_CA_TYPE_E;
-
 /** advanced CA session serect key class*/
 typedef enum hiUNF_ADVCA_KEYLADDER_LEV_E
 {
@@ -233,17 +221,11 @@ typedef enum hiUNF_ADVCA_VENDORID_E
     HI_UNF_ADVCA_NOVEL      = 0x06,        /**<NOVEL Chipset, Marked with Y*/
     HI_UNF_ADVCA_VERIMATRIX = 0x07,        /**<VERIMATRIX Chipset, Marked with M*/
     HI_UNF_ADVCA_CTI        = 0x08,        /**<CTI Chipset, Marked with T*/
-    HI_UNF_ADVCA_COMMONDCA  = 0x0b,        /**<COMMONCA Chipset, Marked with H*/
+    HI_UNF_ADVCA_COMMONCA   = 0x0b,        /**<COMMONCA Chipset, Marked with H*/
     HI_UNF_ADVCA_DCAS       = 0x0c,        /**<DCAS CA Chipset*/
+    HI_UNF_ADVCA_PANACCESS  = 0x0e,        /**<PANACCESS CA Chipset*/
     HI_UNF_ADVCA_VENDORIDE_BUTT
 }HI_UNF_ADVCA_VENDORID_E;
-
-typedef struct hiUNF_ADVCA_GDRM_ATTS_S
-{
-    HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel;
-	HI_BOOL bIsDecrypt;
-	HI_HANDLE *phCipherHandle;
-}HI_UNF_ADVCA_GDRM_ATTS_S;
 
 /** Advca CA lock type */
 typedef enum hiUNF_ADVCA_LOCK_TYPE
@@ -274,7 +256,7 @@ After setting the OTP fuse, please power off and then power on the STB to make t
 typedef enum hiUNF_ADVCA_OTP_FUSE_E
 {
     HI_UNF_ADVCA_OTP_NULL = 0,
-    HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION, /**<Whether to enable the secure boot authentication, HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S*//**<CNcomment: 安全启动是否开启, HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION, /**<Whether to enable the secure boot authentication, set the boot flash type together, HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S*//**<CNcomment: 安全启动是否开启，同时设置安全启动flash类型, HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S*/
     HI_UNF_ADVCA_OTP_BOOT_DECRYPTION_ACTIVATION, /**<Whether to enable the secure boot decryption, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: boot解密功能是否开启, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
     HI_UNF_ADVCA_OTP_SELF_BOOT_DEACTIVATION, /**<Whether to disable the self boot, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 自举是否关闭, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
     HI_UNF_ADVCA_OTP_DDR_WAKEUP_DEACTIVATION, /**<Whether to disable the DDR wakeup, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 待机原地唤醒是否关闭 , HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
@@ -316,6 +298,23 @@ typedef enum hiUNF_ADVCA_OTP_FUSE_E
     HI_UNF_ADVCA_OTP_IRDETO_ITCSA3_ACTIVATION, /**<Whether to enbale the irdeto tweaked CSA3, it is for Irdeto MSR2.2 or higher chipset, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: Irdeto私有CSA3算法是否开启, 只有支持Irdeto MSR2.2以上标准的芯片才支持。HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
     HI_UNF_ADVCA_OTP_BOOTINFO_DEACTIVATION, /**<Whether to disable the bootinfo, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: Bootinfo是否关闭, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
     HI_UNF_ADVCA_OTP_ITCSA3_IMLB, /**<Irdeto MSR2.2 tweaked CSA3 IMLB, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: Irdeto私有CSA3算法IMLB,HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/    
+    HI_UNF_ADVCA_OTP_USB_DEACTIVATION, /**<Whether to disable the usb host, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 禁止USB设备, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION, /**<Whether to disable serial port, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 禁止串口功能, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION, /**<Whether to disable the ethernet, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 禁止网络, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION, /**<Whether to disable the SM4 crypto engine, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: SM4解密引擎是否关闭 , HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION, /**<Whether to disable the TDES crypto engine, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: TDES解密引擎是否关闭 , HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
+
+    HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION_ONLY,   /**<Enable secure boot authentication only, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*//**<CNcomment: 安全启动使能， HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S*/
+    HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE,   /**<Boot flash type, HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE_ATTR_S*//**<CNcomment: 安全启动flash类型， HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE_ATTR_S*/
+    
+    HI_UNF_ADVCA_OTP_RSA_KEY_LOCK_FLAG,   /**< Get the lock flag of RSA_Root_key, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取RSA_Root_Key lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_STBSN_LOCK_FLAG,   /**< Get the lock flag of STBSN, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取STBSN lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_MSID_LOCK_FLAG,   /**< Get the lock flag of MSID, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取MSID lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_VERSIONID_LOCK_FLAG,   /**< Get the lock flag of VersionID, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取VersionID lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_OEM_ROOTKEY_LOCK_FLAG,   /**< Get the lock flag of OEM_Root_key, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取OEM_Root_key lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_R2R_ROOTKEY_LOCK_FLAG,   /**< Get the lock flag of R2R_Root_key, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取R2R_Root_key lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_JTAG_KEY_LOCK_FLAG,   /**< Get the lock flag of JTAG key, HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取JTAG key lock标记，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/     
+    HI_UNF_ADVCA_OTP_TZ_AREA_LOCK_FLAG,   /**< Get the lock flag of OTP trust area, when otp_tz_area_enable is set, these lock flags can only be accessed by secure cpu , HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/ /**<CNcomment: 获取OTP trust area lock标记，当otp_tz_area_enable被设置时，这些标记只能被安全CPU读取，HI_UNF_ADVCA_OTP_DEFAULT_ATTR_S*/
     HI_UNF_ADVCA_OTP_FUSE_BUTT
 }HI_UNF_ADVCA_OTP_FUSE_E;
 
@@ -326,6 +325,14 @@ typedef struct hiUNF_ADVCA_OTP_SECURE_BOOT_ATTR_S
     HI_BOOL bEnable;    /**<Is secure boot check enable or not*/
     HI_UNF_ADVCA_FLASH_TYPE_E enFlashType; /**<Boot flash type*/
 }HI_UNF_ADVCA_OTP_SECURE_BOOT_ATTR_S;
+
+/**Defines the boot flash type.*/
+/**CNcomment: 定义安全启动flash类型结构体*/
+typedef struct hiUNF_ADVCA_OTP_BOOT_FLASH_TYPE_ATTR_S
+{
+    HI_BOOL bBootSelCtrl;    /**<0--the boot flash type is defined by chipset pin, 1--the boot flash type is defined by OTP value*/
+    HI_UNF_ADVCA_FLASH_TYPE_E enFlashType; /**<Boot flash type, only valid when bBootSelCtrl is 1*/
+}HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE_ATTR_S;
 
 /**Defines the default attribute of OTP fuse. If one OTP fuse can ONLY be "Enable" or "Disable",
 then we will use this attribute.*/
@@ -414,6 +421,7 @@ typedef struct hiUNF_ADVCA_OTP_ATTR_S
         HI_UNF_ADVCA_VERSION_ID_ATTR_S           stVersionId;  /**<Bootloadder version ID attribute*/
 		HI_UNF_ADVCA_VMX_BL_FUSE_S				 stVMXBLFuse;  /**<Vmx Bootloadder specific fuse attribute*/
         HI_UNF_ADVCA_ITCSA3_IMLB_ATTR_S          stItCsa3IMLB; /**<Irdeto tweaked CSA3 IMLB attribute*/		
+        HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE_ATTR_S  stBootFlashType;   /**<Boot flash type attribute*/
     }unOtpFuseAttr;
 }HI_UNF_ADVCA_OTP_ATTR_S;
 
@@ -421,13 +429,14 @@ typedef struct hiUNF_ADVCA_OTP_ATTR_S
 /**CNcomment: 定义keyladder类型ID.*/
 typedef enum hiUNF_ADVCA_KEYLADDER_TYPE_E
 {
-    HI_UNF_ADVCA_KEYLADDER_CSA2 = 0,    /**<CSA2 keyladder*/
-    HI_UNF_ADVCA_KEYLADDER_CSA3,          /**<CSA3 keyladder*/
+    HI_UNF_ADVCA_KEYLADDER_CSA2 = 0,        /**<CSA2 keyladder*/
+    HI_UNF_ADVCA_KEYLADDER_CSA3,            /**<CSA3 keyladder*/
     HI_UNF_ADVCA_KEYLADDER_R2R,             /**<R2R keyladder*/
     HI_UNF_ADVCA_KEYLADDER_SP,              /**<SP keyladder*/
-    HI_UNF_ADVCA_KEYLADDER_MISC,        /**<MISC keyladder*/
+    HI_UNF_ADVCA_KEYLADDER_MISC,            /**<MISC keyladder*/
     HI_UNF_ADVCA_KEYLADDER_LP,              /**<LP keyladder*/
-    HI_UNF_ADVCA_KEYLADDER_TA,            /**<TA keyladder, only for Irdeto MSR2.2*/ 
+    HI_UNF_ADVCA_KEYLADDER_TA,              /**<TA keyladder, only for Irdeto MSR2.2*/ 
+    HI_UNF_ADVCA_KEYLADDER_GDRM,            /**<Google DRM key ladder*/
     HI_UNF_ADVCA_KEYLADDER_TYPE_BUTT
 }HI_UNF_ADVCA_KEYLADDER_TYPE_E;
 
@@ -582,19 +591,43 @@ typedef struct hiUNF_ADVCA_KEYLADDER_TA_ATTR_S
     HI_U32 u32TranDataLen;                                  /**<Transformation data length*/
 }HI_UNF_ADVCA_KEYLADDER_TA_ATTR_S;
 
+/**Defines the attribute of the Google DRM keyladder type ID.*/
+/**CNcomment: 定义Google DRM keyladder属性类型ID.*/
+typedef enum hiUNF_ADVCA_KEYLADDER_GDRM_ATTR_E
+{
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENABLE = 0,    /**<Use GDRM keyladder or not. Before using the GDRM keyladder, should set this attribute to HI_TRUE, and after using, should set it to HI_FALSE.*/
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT,       /**<Encrypt clear device key*/    
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_SESSION_KEY,   /**<Keyladder session key*/
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_GETFLAG,       /**<Get flag*/
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_BUTT
+}HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_E;
+
+/**Defines the attribute of Google DRM keyladder.*/
+/**CNcomment: 定义Google DRM keyladder属性结构体.*/
+typedef struct hiUNF_ADVCA_KEYLADDER_GDRM_ATTR_S
+{  
+    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_E  enGDRMKlAttr;
+    HI_BOOL bEnable;                                  /**<Use GDRM keyladder or not. Before using the GDRM keyladder, should be set to HI_TRUE, and after using, should set it to HI_FALSE.*/
+    HI_UNF_ADVCA_KEYLADDER_LEV_E enStage;       /**<Keyladder stage of the session key to be set*/
+    HI_HANDLE hCipherHandle;                    /**<cipher handle, if enStage is HI_UNF_ADVCA_KEYLADDER_LEV3, hCipherHandle should be set*/
+    HI_U8 au8SessionKey[32];                     /**<if select HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT it is clear device key, if select HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_SESSION_KEY, it is session key*/
+    HI_U8 au8Output[16];                          /**<if HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT is set, it is encrypted device key, if HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_GETFLAG is set, it is flag*/                                                   
+}HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_S;
+
 /**Defines the attribute of all of the keyladder.*/
 /**CNcomment: 定义所有 keyladder属性结构体.*/
 typedef struct hiUNF_ADVCA_KEYLADDER_ATTR_S
 {
     union
     {
-        HI_UNF_ADVCA_KEYLADDER_CSA2_ATTR_S 	stCSA2KlAttr;   /**<CSA2 keyladder attribute*/
-        HI_UNF_ADVCA_KEYLADDER_CSA3_ATTR_S 	stCSA3KlAttr;   /**<CSA3 keyladder attribute*/
-        HI_UNF_ADVCA_KEYLADDER_R2R_ATTR_S          stR2RKlAttr;     /**<R2R keyladder attribute*/
-        HI_UNF_ADVCA_KEYLADDER_SP_ATTR_S 	        stSPKlAttr;       /**<SP keyladder attribute*/   
-        HI_UNF_ADVCA_KEYLADDER_LP_ATTR_S             stLpKlAttr;       /**<LP keyladder attribute*/  
-        HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_S        stMiscKlAttr;    /**<MISC keyladder attribute*/
-        HI_UNF_ADVCA_KEYLADDER_TA_ATTR_S            stTAKlAttr;     /**<TA keyladder attribute, only for Irdeto MSR2.2*/
+        HI_UNF_ADVCA_KEYLADDER_CSA2_ATTR_S 	    stCSA2KlAttr;       /**<CSA2 keyladder attribute*/
+        HI_UNF_ADVCA_KEYLADDER_CSA3_ATTR_S 	    stCSA3KlAttr;       /**<CSA3 keyladder attribute*/
+        HI_UNF_ADVCA_KEYLADDER_R2R_ATTR_S       stR2RKlAttr;        /**<R2R keyladder attribute*/
+        HI_UNF_ADVCA_KEYLADDER_SP_ATTR_S 	    stSPKlAttr;         /**<SP keyladder attribute*/   
+        HI_UNF_ADVCA_KEYLADDER_LP_ATTR_S        stLpKlAttr;         /**<LP keyladder attribute*/  
+        HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_S      stMiscKlAttr;       /**<MISC keyladder attribute*/
+        HI_UNF_ADVCA_KEYLADDER_TA_ATTR_S        stTAKlAttr;         /**<TA keyladder attribute, only for Irdeto MSR2.2*/
+        HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_S      stGDRMAttr;         /**<Google DRM keyladder attribute*/
     }unKlAttr;
 }HI_UNF_ADVCA_KEYLADDER_ATTR_S;
 

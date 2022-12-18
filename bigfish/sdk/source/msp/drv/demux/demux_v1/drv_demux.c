@@ -99,8 +99,8 @@ static DEMUX_EXPORT_FUNC_S s_DmxExportFuncs =
     .pfnDmxResume       = DMX_OsiResume,
 };
 
-static uint DmxPoolBufSize  = DMX_DEFAULT_POOLBUFFER_SIZE;
-static uint DmxBlockSize    = DMX_FQ_COM_BLKSIZE;
+uint DmxPoolBufSize  = DMX_DEFAULT_POOLBUFFER_SIZE;
+uint DmxBlockSize    = DMX_FQ_COM_BLKSIZE;
 
 module_param(DmxPoolBufSize, uint, S_IRUGO);
 module_param(DmxBlockSize, uint, S_IRUGO);
@@ -155,14 +155,7 @@ static HI_VOID DMXGetExternalParameter(HI_U32 *BufSize)
 
 /**************************** external functions ******************************/
 
-/*****************************************************************************
- Prototype    : HI_DRV_DMX_Init
- Description  : DEMUX module initialize function
- Input        : None
- Output       : None
- Return Value :
-*****************************************************************************/
-HI_S32 HI_DRV_DMX_Init(HI_VOID)
+HI_S32 HI_DRV_DMX_BasicInit(HI_VOID)
 {
     HI_S32 ret;
 
@@ -176,7 +169,7 @@ HI_S32 HI_DRV_DMX_Init(HI_VOID)
 
     DMXGetExternalParameter(&DmxPoolBufSize);
 
-    ret = DMX_OsiDeviceInit(DmxPoolBufSize, DmxBlockSize);
+    ret = DMX_OsiDeviceInit();
     if (HI_SUCCESS != ret)
     {
         HI_DRV_MODULE_UnRegister(HI_ID_DEMUX);
@@ -186,6 +179,33 @@ HI_S32 HI_DRV_DMX_Init(HI_VOID)
     }
 
     return HI_SUCCESS;
+}
+
+/*****************************************************************************
+ Prototype    : HI_DRV_DMX_Init
+ Description  : DEMUX module initialize function
+ Input        : None
+ Output       : None
+ Return Value :
+*****************************************************************************/
+HI_S32 HI_DRV_DMX_Init(HI_VOID)
+{
+    HI_S32 ret;
+
+    ret = HI_DRV_DMX_BasicInit();
+    if (HI_SUCCESS != ret)
+    {
+        goto out;
+    }
+
+    ret = DMX_StartAllDmx();
+    if (HI_SUCCESS != ret)
+    {
+        goto out;
+    }
+
+out:
+    return ret;
 }
 
 /*****************************************************************************
@@ -218,7 +238,24 @@ HI_VOID HI_DRV_DMX_DeInit(HI_VOID)
 *****************************************************************************/
 HI_S32 HI_DRV_DMX_Open(HI_VOID)
 {
-    return HI_DRV_MODULE_GetFunction(HI_ID_SYNC, (HI_VOID**)&g_pSyncFunc);
+    HI_S32 ret = HI_FAILURE;
+
+    ret = DMX_StartAllDmx();
+    if (HI_SUCCESS != ret)
+    {
+        goto out;
+    }
+    
+    ret = HI_DRV_MODULE_GetFunction(HI_ID_SYNC, (HI_VOID**)&g_pSyncFunc);
+    if (HI_SUCCESS != ret)
+    {
+        goto out;
+    }
+
+    ret = HI_SUCCESS;
+
+out:
+    return ret;
 
 }
 
@@ -370,6 +407,13 @@ HI_BOOL HI_DRV_DMX_IsTSIAttachTSO(HI_U32 PortId, HI_UNF_DMX_TSO_PORT_E* TSO)
         return HI_FALSE;   
     }
     return DMX_OsiIsTSIAttachTSO(PortId,TSO); 
+}
+
+HI_S32 HI_DRV_DMX_GetResumeCount(HI_U32 *pCount)
+{  
+    CHECKPOINTER(pCount);
+
+    return DMX_OsiGetResumeCount(pCount);            
 }
 
 
@@ -1186,10 +1230,14 @@ HI_S32 HI_DRV_DMX_DestroyRecChn(HI_HANDLE RecHandle)
 
     RecId = DMX_RECID(RecHandle);
 
-    ret = DMX_DRV_REC_DestroyChannel(RecId);
+    ret = DMX_DRV_REC_DelAllRecPid(RecId);
     if (HI_SUCCESS == ret)
     {
-        g_stDmxOsr.RecFile[RecId] = 0;
+        ret = DMX_DRV_REC_DestroyChannel(RecId);
+        if (HI_SUCCESS == ret)
+        {
+            g_stDmxOsr.RecFile[RecId] = 0;
+        }
     }
 
     return ret;
@@ -1863,6 +1911,9 @@ static HI_VOID DMX_OsrSaveDmxTs_Stop(HI_VOID)
 HI_S32 DMX_OsrDebugCtrl(HI_U32 cmd,DMX_DEBUG_CMD_CTRl cmdctrl,HI_U32 param)
 {
     HI_S32 ret;
+
+    DMX_StartAllDmx();
+    
     switch (cmd)
     {
         case DMX_DEBUG_CMD_SAVE_ES:

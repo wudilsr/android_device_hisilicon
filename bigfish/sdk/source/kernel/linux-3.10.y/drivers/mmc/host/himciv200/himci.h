@@ -106,6 +106,7 @@ struct himci_host {
 	unsigned long      pending_events;
 	unsigned int       power_status;
 	int devid;
+	resource_size_t    host_crg_addr;
 
 #define HIMCI_PEND_DTO_b  (0)
 #define HIMCI_PEND_DTO_m  (1 << HIMCI_PEND_DTO_b)

@@ -17,7 +17,6 @@
 ******************************************************************************/
 
 #include <stddef.h>
-#include <stdio.h>
 #include <platform.h>
 
 #define TO_UINT32(_p)   (*(volatile unsigned int *)(_p))
@@ -52,21 +51,3 @@ unsigned int get_ddr_size(void)
 	TO_UINT32(membase) = orgin;
 	return ddr_size;
 }
-
-/*****************************************************************************/
-/**
- *  ultohstr - turn sizes to human readable format.
- */
-char *ultohstr(unsigned long long size)
-{
-	int ix;
-	static char buffer[20]; 
-	char *fmt[] = {
-		"%llu", "%lluK", "%lluM", "%lluG", "%lluT", "%lluT"};
-	for (ix = 0; (ix < 5) && !(size & 0x3FF) && size; ix++) {
-		size = (size >> 10);
-	}
-	snprintf(buffer, sizeof(buffer), fmt[ix], size);
-	return buffer;
-}
-

@@ -202,6 +202,7 @@ typedef struct hiUNF_SND_CAST_ATTR_S
 {
     HI_U32  u32PcmFrameMaxNum;     /**<Max frame of the PCM data at cast buffer*/ /**<CNcomment: 最大可缓存帧数*/
     HI_U32  u32PcmSamplesPerFrame; /**<Number of sample of the PCM data*/ /**<CNcomment: PCM数据采样点数量*/
+    HI_BOOL bAddMute;              /**<Add mute frame in cast or not>*/ /**<CNcomment: cast是否插入静音帧*/
 } HI_UNF_SND_CAST_ATTR_S;
 
 /**HDMI MODE:AUTO,LPCM,RAW,HBR2LBR*/

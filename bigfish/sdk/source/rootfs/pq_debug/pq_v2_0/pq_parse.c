@@ -17,8 +17,10 @@
 
 #include "hi_debug.h"
 #include "hi_common.h"
+#include "hi_mpi_mem.h"
 #include "pq_comm.h"
 #include "pq_comm_def.h"
+
 
 /*-----------------------------------------------------------------------------*/
 /* Local Constant Definitions                                                  */
@@ -37,6 +39,23 @@ static HI_S32 HI_PQ_WriteRegs(HI_S32 client_sockfd, HI_U8* pu8Buffer);
 static HI_S32 HI_PQ_ReadDCIHistgram(HI_S32 client_sockfd, HI_U8* pu8Buffer);
 static HI_S32 HI_PQ_ReadDCI(HI_S32 client_sockfd, HI_U8* pu8Buffer);
 static HI_S32 HI_PQ_WriteACM(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRLumaPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRLumaPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRChromPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRChromPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRLumaMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRLumaMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRChromMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRChromMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRLumaFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRLumaFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRChromFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRChromFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_SetTNRFMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+static HI_S32 HI_PQ_GetTNRFMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer);
+
+
+
 
 
 
@@ -61,6 +80,22 @@ PQ_DBG_CMD_FUN_S stPQCmdFunction[] =
     {PQ_CMD_READ_DCI_LUT, HI_PQ_ReadDCI},
     {PQ_CMD_WRITE_DCI_LUT, HI_PQ_WriteRegs},
     {PQ_CMD_READ_HIST, HI_PQ_ReadDCIHistgram},
+
+    {PQ_CMD_READ_TNR_PIXMEAN_TO_RATIO_LUMA,        HI_PQ_GetTNRLumaPixMean2Ratio},
+    {PQ_CMD_READ_TNR_PIXMEAN_TO_RATIO_CHROMA,      HI_PQ_GetTNRChromPixMean2Ratio},
+    {PQ_CMD_READ_TNR_MOTION_MAPPING_LUMA,          HI_PQ_GetTNRLumaMotionMapping},
+    {PQ_CMD_READ_TNR_MOTION_MAPPING_CHROMA,        HI_PQ_GetTNRChromMotionMapping},
+    {PQ_CMD_READ_TNR_FINAL_MOTION_MAPPING_LUMA,    HI_PQ_GetTNRLumaFinalMotionMapping},
+    {PQ_CMD_READ_TNR_FINAL_MOTION_MAPPING_CHROMA,  HI_PQ_GetTNRChromFinalMotionMapping},
+    {PQ_CMD_WRITE_TNR_PIXMEAN_TO_RATIO_LUMA,       HI_PQ_SetTNRLumaPixMean2Ratio},
+    {PQ_CMD_WRITE_TNR_PIXMEAN_TO_RATIO_CHROMA,     HI_PQ_SetTNRChromPixMean2Ratio},
+    {PQ_CMD_WRITE_TNR_MOTION_MAPPING_LUMA,         HI_PQ_SetTNRLumaMotionMapping},
+    {PQ_CMD_WRITE_TNR_MOTION_MAPPING_CHROMA,       HI_PQ_SetTNRChromMotionMapping},
+    {PQ_CMD_WRITE_TNR_FINAL_MOTION_MAPPING_LUMA,   HI_PQ_SetTNRLumaFinalMotionMapping},
+    {PQ_CMD_WRITE_TNR_FINAL_MOTION_MAPPING_CHROMA, HI_PQ_SetTNRChromFinalMotionMapping},
+    {PQ_CMD_READ_FMOTION_MAPPING,                  HI_PQ_GetTNRFMotionMapping},
+    {PQ_CMD_WRITE_FMOTION_MAPPING,                 HI_PQ_SetTNRFMotionMapping},
+
     //{PQ_CMD_BUTT, NULL},
 };
 
@@ -218,7 +253,20 @@ HI_S32 PQ_Parse_ProcessCmd(HI_S32 client_sockfd, HI_U8* pu8Buf)
         case PQ_CMD_READ_DCI_LUT :
         case PQ_CMD_WRITE_DCI_LUT:
         case PQ_CMD_READ_HIST:
-
+        case PQ_CMD_READ_TNR_PIXMEAN_TO_RATIO_LUMA:
+        case PQ_CMD_READ_TNR_PIXMEAN_TO_RATIO_CHROMA:
+        case PQ_CMD_READ_TNR_MOTION_MAPPING_LUMA:
+        case PQ_CMD_READ_TNR_MOTION_MAPPING_CHROMA:
+        case PQ_CMD_READ_TNR_FINAL_MOTION_MAPPING_LUMA:
+        case PQ_CMD_READ_TNR_FINAL_MOTION_MAPPING_CHROMA:
+        case PQ_CMD_WRITE_TNR_PIXMEAN_TO_RATIO_LUMA:
+        case PQ_CMD_WRITE_TNR_PIXMEAN_TO_RATIO_CHROMA:
+        case PQ_CMD_WRITE_TNR_MOTION_MAPPING_LUMA:
+        case PQ_CMD_WRITE_TNR_MOTION_MAPPING_CHROMA:
+        case PQ_CMD_WRITE_TNR_FINAL_MOTION_MAPPING_LUMA:
+        case PQ_CMD_WRITE_TNR_FINAL_MOTION_MAPPING_CHROMA:
+        case PQ_CMD_READ_FMOTION_MAPPING:
+        case PQ_CMD_WRITE_FMOTION_MAPPING:
             HI_INFO_PQ("pqtools:receive command[%d]\n", u32Cmd);
             break;
         default:
@@ -328,10 +376,10 @@ HI_S32 HI_SendData(HI_S32 client_sockfd, HI_U8* pu8Data, HI_U32 u32Conunt)
     HI_CalCheckSum(pu8Data, u32Conunt, &u32CheckSum);
     u32CountSum = u32Conunt + sizeof(u32CheckSum);
     u32SendLen = u32Conunt + 9;
-    pu8SendData = (HI_U8*)malloc(u32SendLen);
+    pu8SendData = (HI_U8*)HI_MALLOC(HI_ID_PQ, u32SendLen);
     if (NULL == pu8SendData)
     {
-        HI_ERR_PQ("malloc error\n");
+        HI_ERR_PQ("MALLOC error\n");
         return HI_FAILURE;
     }
     memset(pu8SendData, 0, u32SendLen);
@@ -344,12 +392,12 @@ HI_S32 HI_SendData(HI_S32 client_sockfd, HI_U8* pu8Data, HI_U32 u32Conunt)
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_PQ("send checksum error!\n");
-        free(pu8SendData);
+        HI_FREE(HI_ID_PQ, pu8SendData);
         pu8SendData = NULL;
         return HI_FAILURE;
     }
 
-    free(pu8SendData);
+    HI_FREE(HI_ID_PQ, pu8SendData);
     pu8SendData = NULL;
 
     return HI_SUCCESS;
@@ -458,10 +506,10 @@ static HI_S32 HI_PQ_ReadRegs(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
     HI_U32 u32AddrType = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32RegType);
 
-    pu32Value = (HI_U32*)malloc(u32MsgLen);
+    pu32Value = (HI_U32*)HI_MALLOC(HI_ID_PQ, u32MsgLen);
     if (NULL == pu32Value)
     {
-        HI_ERR_PQ("malloc failed\n");
+        HI_ERR_PQ("MALLOC failed\n");
         return HI_FAILURE;
     }
     memset(pu32Value, 0, u32MsgLen);
@@ -474,14 +522,14 @@ static HI_S32 HI_PQ_ReadRegs(HI_S32 client_sockfd, HI_U8* pu8Buffer)
         {
             PQ_Parse_SendErrorFlag(client_sockfd, HI_INVALID_ADDRESS_TYPE);
             HI_ERR_PQ("Reg address[0x%x] type error\n", u32RegAddr);
-            free(pu32Value);
+            HI_FREE(HI_ID_PQ, pu32Value);
             pu32Value = NULL;
             return HI_FAILURE;
         }
 
         if (HI_SUCCESS != PQ_DBG_ReadVirtualReg(u32RegAddr, pu32Value, u32MsgLen))
         {
-            free(pu32Value);
+            HI_FREE(HI_ID_PQ, pu32Value);
             pu32Value = NULL;
             return HI_FAILURE;
         }
@@ -494,7 +542,7 @@ static HI_S32 HI_PQ_ReadRegs(HI_S32 client_sockfd, HI_U8* pu8Buffer)
         {
             if (HI_SUCCESS != HI_SYS_ReadRegister(u32RegAddr, pRead))
             {
-                free(pu32Value);
+                HI_FREE(HI_ID_PQ, pu32Value);
                 return HI_FAILURE;
             }
             u32RegAddr += sizeof(HI_U32);
@@ -507,12 +555,12 @@ static HI_S32 HI_PQ_ReadRegs(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_PQ("send data error!\n");
-        free(pu32Value);
+        HI_FREE(HI_ID_PQ, pu32Value);
         pu32Value = NULL;
         return HI_FAILURE;
     }
 
-    free(pu32Value);
+    HI_FREE(HI_ID_PQ, pu32Value);
     pu32Value = NULL;
 
     return HI_SUCCESS;
@@ -694,10 +742,10 @@ HI_S32 HI_PQ_ReadDCI(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     HI_U32 u32RegAddr = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Addr);
     HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
 
-    pu8MsgBuffer = (HI_U8*)malloc(u32MsgLen);
+    pu8MsgBuffer = (HI_U8*)HI_MALLOC(HI_ID_PQ, u32MsgLen);
     if (NULL == pu8MsgBuffer)
     {
-        HI_ERR_PQ("malloc failed\n");
+        HI_ERR_PQ("MALLOC failed\n");
         return HI_FAILURE;
     }
     memset(pu8MsgBuffer, 0, u32MsgLen);
@@ -706,7 +754,7 @@ HI_S32 HI_PQ_ReadDCI(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_PQ("PQ_DRV_ReadDCI error!\n");
-        free(pu8MsgBuffer);
+        HI_FREE(HI_ID_PQ, pu8MsgBuffer);
         pu8MsgBuffer = HI_NULL;
         return HI_FAILURE;
     }
@@ -715,12 +763,12 @@ HI_S32 HI_PQ_ReadDCI(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_PQ("send data error!\n");
-        free(pu8MsgBuffer);
+        HI_FREE(HI_ID_PQ, pu8MsgBuffer);
         pu8MsgBuffer = HI_NULL;
         return HI_FAILURE;
     }
 
-    free(pu8MsgBuffer);
+    HI_FREE(HI_ID_PQ, pu8MsgBuffer);
     pu8MsgBuffer = HI_NULL;
 
     return s32Ret;
@@ -753,4 +801,465 @@ HI_S32 HI_PQ_WriteACM(HI_S32 client_sockfd, HI_U8* pu8Buffer)
     return s32Ret;
 }
 
+static HI_S32 HI_PQ_SetTNRLumaPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRLumaPixMean2Ratio(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRLumaPixMean2Ratio error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRLumaPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRLumaPixMean2Ratio(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRLumaPixMean2Ratio error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRChromPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRChromPixMean2Ratio(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRChromPixMean2Ratio error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRChromPixMean2Ratio(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRChromPixMean2Ratio(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRChromPixMean2Ratio error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRLumaMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRLumaMotionMapping(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRLumaMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRLumaMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRLumaMotionMapping(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRLumaMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRChromMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRChromMotionMapping(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRChromMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRChromMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRChromMotionMapping(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRChromMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRLumaFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRLumaFinalMotionMapping(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRLumaFinalMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRLumaFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRLumaFinalMotionMapping(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRLumaFinalMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRChromFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_S* pstTnrTable = (HI_PQ_TNR_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRChromFinalMotionMapping(pstTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRChromFinalMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRChromFinalMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_S stTnrTable;
+
+    memset(&stTnrTable, 0, sizeof(HI_PQ_TNR_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRChromFinalMotionMapping(&stTnrTable);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRChromFinalMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrTable, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
+
+static HI_S32 HI_PQ_SetTNRFMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U8* pu8ValidData = pu8Buffer + OFFSET_OF(HI_MDBG_MSG_S, pu8Data);
+    HI_PQ_TNR_FMOTION_S* pstTnrFMotion = (HI_PQ_TNR_FMOTION_S*)pu8ValidData;
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+    s32Ret = HI_MPI_PQ_SetTNRFMotionMapping(pstTnrFMotion);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_SetTNRFMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendEnd(client_sockfd, ECHO_BYE);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send end error!\n");
+        PQ_Parse_SendErrorFlag(client_sockfd, HI_RUN_ERROR);
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 HI_PQ_GetTNRFMotionMapping(HI_S32 client_sockfd, HI_U8* pu8Buffer)
+{
+    CHECK_PTR_REINT(pu8Buffer);
+
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32MsgLen = GET_VALUE(pu8Buffer, HI_MDBG_MSG_S, u32Len);
+    HI_PQ_TNR_FMOTION_S stTnrFMotion;
+
+    memset(&stTnrFMotion, 0, sizeof(HI_PQ_TNR_FMOTION_S));
+
+    s32Ret = HI_MPI_PQ_Init(HI_NULL);
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_MPI_PQ_GetTNRFMotionMapping(&stTnrFMotion);
+    if (HI_FAILURE == s32Ret)
+    {
+        HI_ERR_PQ("HI_MPI_PQ_GetTNRFMotionMapping error!\n");
+        HI_MPI_PQ_DeInit();
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_DeInit();
+    CHECK_RETURN(s32Ret);
+
+    s32Ret = HI_SendData(client_sockfd, (HI_U8*)&stTnrFMotion, u32MsgLen);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_PQ("send data error!\n");
+        return HI_FAILURE;
+    }
+
+    return s32Ret;
+
+}
 

@@ -20,6 +20,31 @@ History       :
 extern "C" {
 #endif /* end of__cplusplus */
 
+#define GETFOURBYTE(n, p) \
+    do {\
+        n  = 0 | (*p << 24) | (*(p + 1) << 16) | (*(p + 2) << 8) | (*(p + 3)); \
+        p += 4; \
+    } while (0)
+
+#define GETEIGHTBYTE(n, p) \
+	do {\
+     	 n = 0 | (HI_U64)(*p) << 56 | (HI_U64)(*(p + 1)) << 48 | (HI_U64)(*(p + 2)) << 40 | (HI_U64)(*(p + 3)) << 32 \
+               | (HI_U64)(*(p + 4)) << 24 | (HI_U64)(*(p + 5)) << 16 | (HI_U64)(*(p + 6)) << 8 | (HI_U64)(*(p + 7)); \
+           p += 8; \
+	} while (0)
+
+#define SECTION_BUFFER_LENGTH (4096)
+
+#define DSMCC_MESSAGE_HEADER_LENTH (12)
+
+#define DSI_TABLE_ID (0x3B)
+#define DII_TABLE_ID (0x3B)
+#define DBB_TABLE_ID (0x3C)
+
+#define DSI_MESSAGE_ID (0x1006)
+#define DII_MESSAGE_ID (0x1002)
+#define DBB_MESSAGE_ID (0x1003)
+
 /*************************** Structure Definition ****************************/
 /** \addtogroup      H_2_1*/
 /** @{ */  /** <!?a[Forced upgrade data structure] */

@@ -12,7 +12,8 @@ gmac_debug=0
 bootcmd=mmc read 0 0x1FFBFC0 0x4B000 0x5000; bootm 0x1FFBFC0
 bootargs=console=ttyAMA0,115200 blkdevparts=mmcblk0:1M(fastboot)ro,1M(bootargs)ro,10M(recovery)ro,2M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel)ro,20M(misc),8M(userapi),8M(hibdrv),8M(qbflag),300M(qbdata),800M(system),1024M(userdata),500M(cache),50M(private),-(sdcard)
 recoverybootargs=console=ttyAMA0,115200 blkdevparts=mmcblk0:1M(fastboot),1M(bootargs),10M(recovery),2M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel),20M(misc),8M(userapi),8M(hibdrv),8M(qbflag),300M(qbdata),800M(system),1024M(userdata),500M(cache),50M(private),-(sdcard)
-bootargs_512M=mem=512M mmz=ddr,0,0,235M
+bootargs_512M=mem=512M mmz=ddr,0,0,110M
+bootargs_768M=mem=768M mmz=ddr,0,0,300M
 bootargs_1G=mem=1G mmz=ddr,0,0,435M
 bootargs_2G=mem=2G mmz=ddr,0,0,620M
 stdin=serial

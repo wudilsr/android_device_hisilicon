@@ -40,7 +40,8 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                                         
                 -I$(FRONTEND_DIR)/demod/CXD2837/lib                                 \
                 -I$(FRONTEND_DIR)/tuner/Rafael836                                   \
                 -I$(FRONTEND_DIR)/tuner/SiLabs						\
-		-I$(FRONTEND_DIR)/tuner/Si2144
+		-I$(FRONTEND_DIR)/tuner/Si2144						\
+		-I$(FRONTEND_DIR)/tuner/hiFDVBC100
 
 EXTRA_CFLAGS += -I$(SOURCE_DIR)/common/include/
 EXTRA_CFLAGS += -I$(SOURCE_DIR)/common/drv/include/
@@ -212,6 +213,18 @@ hi_tuner-y  +=  demod/NXP18280/tda18280.o\
                 demod/NXP18280/tmbslTDA18204_RegDef.o  \
                 demod/NXP18280/tmutilOM3990.o
 EXTRA_CFLAGS += -DDEMOD_DEV_TYPE_TDA18280
+endif
+
+ifeq ($(CFG_HI_DEMOD_TYPE_HIFDVBC100),y)
+hi_tuner-y  +=  demod/hiFoneCab100/hiF_DVBC100.o \
+		demod/hiFoneCab100/hal_hiFoneCab100.o
+EXTRA_CFLAGS += -DDEMOD_DEV_TYPE_HIFDVBC100
+endif
+
+ifeq ($(CFG_HI_DEMOD_TYPE_HIFJ83B100),y)
+hi_tuner-y  +=  demod/hiFoneCab100/hiF_J83B100.o \
+		demod/hiFoneCab100/hal_hiFoneCab100.o
+EXTRA_CFLAGS += -DDEMOD_DEV_TYPE_HIFJ83B100
 endif
 
 DRIV_DIR=$(KECS_DIR)/drv/tuner_pilot

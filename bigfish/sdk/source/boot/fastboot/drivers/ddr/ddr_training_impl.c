@@ -11,18 +11,59 @@
 #include <ddr_interface.h>
 
 #define __common__
+#ifdef DDR_TRAINING_STAT_CONFIG
+/**
+ * ddr_training_save
+ * @mask
+ * @phy
+ * @byte
+ * @dq
+ *
+ * Save training result in stat register.
+ */
+static void ddr_training_save(unsigned int mask, unsigned int phy,
+	int byte, int dq)
+{
+	unsigned int stat;
+	unsigned int phy_index;
+
+	stat = REG_READ(DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_STAT);
+	/* only record the first error */
+	if (stat)
+		return;
+
+	stat = mask;
+
+	if (0 != phy) {
+		phy_index = (DDR_REG_BASE_PHY0 == phy ?
+			DDR_ERR_PHY0 : DDR_ERR_PHY1);
+		stat |= phy_index;
+	}
+
+	if (-1 != byte)
+		stat |= (byte << DDR_ERR_BYTE_BIT);
+
+	if (-1 != dq)
+		stat |= (dq << DDR_ERR_DQ_BIT);
+
+	REG_WRITE(stat, DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_STAT);
+}
+#endif
 /**
  * ddr_training_stat
- * @val
+ * @mask
+ * @phy
+ * @byte
+ * @dq
  *
  * Record error code in register.
  */
-void ddr_training_stat(unsigned int val)
+void ddr_training_stat(unsigned int mask, unsigned int phy, int byte, int dq)
 {
-	REG_WRITE((REG_READ(DDR_REG_BASE_SYSCTRL
-		+ SYSCTRL_DDR_TRAINING_STAT))
-		| val, DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_STAT);
-
+	ddr_training_error(mask, phy, byte, dq);
+#ifdef DDR_TRAINING_STAT_CONFIG
+	ddr_training_save(mask, phy, byte, dq);
+#endif
 }
 
 /**
@@ -46,6 +87,176 @@ int ddr_training_check_bypass(unsigned int mask)
 	}
 }
 
+#if !defined(DDR_TRAINING_CUT_CODE_CONFIG) || defined(DDR_TRAINING_CMD)
+/**
+ * ddr_training_phy_disable
+ * @index
+ *
+ * Check PHY whether disable.
+ * DDR_TRUE: PHY is disable.
+ * DDR_FALSE: PHY is not disable.
+ */
+int ddr_training_phy_disable(int index)
+{
+	unsigned int mask;
+	mask = (index == 0 ? DDR_BYPASS_PHY0_MASK : DDR_BYPASS_PHY1_MASK);
+	return ddr_training_check_bypass(mask);
+}
+
+/**
+ * ddr_training_get_base
+ * @index
+ * @base_dmc
+ * @base_phy
+ *
+ * Get DMC and PHY register base address.
+ */
+void ddr_training_get_base(int index, unsigned int *base_dmc,
+	unsigned int *base_phy)
+{
+	*base_dmc = (index == 0 ? DDR_REG_BASE_DMC0 : DDR_REG_BASE_DMC1);
+	*base_phy = (index == 0 ? DDR_REG_BASE_PHY0 : DDR_REG_BASE_PHY1);
+}
+
+/**
+ * ddr_training_save_reg
+ * @relate_reg
+ * @mask
+ *
+ * Save register value before training.
+ */
+void ddr_training_save_reg(struct tr_relate_reg *relate_reg, unsigned int mask)
+{
+	int i = 0;
+	unsigned int base_dmc, base_phy;
+
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+
+		/* save reg value */
+		relate_reg->auto_ref_timing[i] =
+			REG_READ(base_dmc + DDR_DMC_TIMING2);
+		relate_reg->power_down[i] =
+			REG_READ(base_dmc + DDR_DMC_CFG_PD);
+		relate_reg->dmc_scramb[i] =
+			REG_READ(base_dmc + DDR_DMC_CFG_DDRMODE);
+		relate_reg->misc_scramb[i] = REG_READ(base_phy + DDR_PHY_MISC);
+		relate_reg->ac_phy_ctl[i] =
+			REG_READ(base_phy + DDR_PHY_ACPHYCTL4);
+
+		/* set new value */
+		switch (mask) {
+		case DDR_BYPASS_WL_MASK:
+			/* disable auto refresh */
+			REG_WRITE(relate_reg->auto_ref_timing[i]
+				& DMC_AUTO_TIMING_DIS,
+				base_dmc + DDR_DMC_TIMING2);
+			break;
+		case DDR_BYPASS_GATE_MASK:
+			/* disable auto refresh */
+			REG_WRITE(relate_reg->auto_ref_timing[i]
+				& DMC_AUTO_TIMING_DIS,
+				base_dmc + DDR_DMC_TIMING2);
+
+			if (!(REG_READ(base_phy + DDR_PHY_DRAMCFG)
+					& PHY_DRAMCFG_MA2T)) /* set 1T */
+				REG_WRITE(0x0, base_phy + DDR_PHY_ACPHYCTL4);
+			break;
+		case DDR_BYPASS_HW_MASK:
+			if (!(REG_READ(base_phy + DDR_PHY_DRAMCFG)
+					& PHY_DRAMCFG_MA2T)) /* set 1T */
+				REG_WRITE(0x0, base_phy + DDR_PHY_ACPHYCTL4);
+			break;
+		default:
+			break;
+		}
+
+		REG_WRITE(relate_reg->power_down[i] & DMC_POWER_DOWN_DIS,
+			base_dmc + DDR_DMC_CFG_PD);
+		REG_WRITE(relate_reg->misc_scramb[i] & PHY_MISC_SCRAMB_DIS,
+			base_phy + DDR_PHY_MISC);
+
+		DMC_DISABLE_SCRAMB(relate_reg, i, base_dmc);
+	}
+
+	DDR_AXI_SAVE_FUNC(relate_reg);
+
+	/* save customer reg */
+	DDR_TRAINING_SAVE_REG_FUNC((void *)relate_reg, mask);
+
+	DDR_ASM_DSB();
+}
+
+/**
+ * ddr_training_restore_reg
+ * @relate_reg
+ *
+ * Restore register value after training.
+ */
+void ddr_training_restore_reg(struct tr_relate_reg *relate_reg)
+{
+	int i = 0;
+	unsigned int base_dmc, base_phy;
+
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+
+		/* enable auto refresh*/
+		REG_WRITE(relate_reg->auto_ref_timing[i],
+			base_dmc + DDR_DMC_TIMING2);
+		REG_WRITE(relate_reg->power_down[i],
+			base_dmc + DDR_DMC_CFG_PD);
+		REG_WRITE(relate_reg->misc_scramb[i],
+			base_phy + DDR_PHY_MISC);
+		if (!(REG_READ(base_phy + DDR_PHY_DRAMCFG)
+				& PHY_DRAMCFG_MA2T))
+			REG_WRITE(relate_reg->ac_phy_ctl[i],
+				base_phy + DDR_PHY_ACPHYCTL4);
+
+		DMC_RESTORE_SCRAMB(relate_reg, i, base_dmc);
+	}
+
+	DDR_AXI_RESTORE_FUNC(relate_reg);
+
+	/* restore customer reg */
+	DDR_TRAINING_RESTORE_REG_FUNC((void *)relate_reg);
+
+	DDR_ASM_DSB();
+}
+
+/**
+ * ddr_training_switch_axi
+ * @index
+ * @relate_reg
+ *
+ * Switch AXI to DMC0 or DMC1 for DDRT test.
+ */
+void ddr_training_switch_axi(int index, struct tr_relate_reg *relate_reg)
+{
+	DDR_AXI_SWITCH_FUNC(index, relate_reg);
+}
+#endif
+
+/**
+ * ddr_dmc_get_reversed
+ * @base_dmc
+ *
+ * Get reversed data for DDRT.
+ */
+unsigned int ddr_dmc_get_reversed(unsigned int base_dmc)
+{
+	unsigned int offset;
+	offset = (base_dmc == DDR_REG_BASE_DMC0 ?
+		SYSCTRL_DDRT_PATTERN : SYSCTRL_DDRT_PATTERN_SEC);
+	return REG_READ(DDR_REG_BASE_SYSCTRL + offset);
+}
+
 /**
  * ddr_dmc_sfc_cmd
  * @base_dmc
@@ -58,6 +269,8 @@ int ddr_training_check_bypass(unsigned int mask)
 static void ddr_dmc_sfc_cmd(unsigned int base_dmc, unsigned int sfc_cmd,
 	unsigned int sfc_addr, unsigned int sfc_bank)
 {
+	unsigned int count = 0;
+
 	/* set sfc cmd */
 	DMC_SFC_CMD_WRITE(sfc_cmd, base_dmc + DDR_DMC_SFCCMD);
 	/* set col and row */
@@ -66,6 +279,18 @@ static void ddr_dmc_sfc_cmd(unsigned int base_dmc, unsigned int sfc_cmd,
 	DMC_SFC_BANK_WRITE(sfc_bank, base_dmc + DDR_DMC_SFCBANK);
 	/* excute cmd */
 	REG_WRITE(0x1, base_dmc + DDR_DMC_SFCREQ);
+
+	DDR_ASM_DSB();
+
+	while (count < DDR_SFC_WAIT_TIMEOUT) { /* wait command finished */
+		if (!(REG_READ(base_dmc + DDR_DMC_SFCREQ) & 0x1))
+			break;
+
+		count++;
+	}
+
+	if (count >= DDR_HWR_WAIT_TIMEOUT)
+		DDR_ERROR("SFC cmd wait timeout.");
 }
 
 /**
@@ -92,6 +317,8 @@ void ddr_phy_cfg_update(unsigned int base_phy)
 	/* set 0 to end the reset signal */
 	tmp &= ~(1 << PHY_PHYCONN_RST_BIT);
 	REG_WRITE(tmp, base_phy + DDR_PHY_PHYINITCTRL);
+
+	DDR_ASM_DSB();
 }
 
 /**
@@ -203,7 +430,7 @@ static unsigned int ddr_ddrt_read(unsigned int addr)
 
 	if (times >= DDRT_READ_TIMEOUT) {
 		DDR_FATAL("DDRT wait timeout.");
-		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT);
+		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT, 0, -1, -1);
 	}
 
 	return data0;
@@ -237,9 +464,9 @@ void ddr_ddrt_init(unsigned int base_dmc, unsigned int mode)
 	unsigned int mem_width;
 	unsigned int mem_config;
 
-	DDR_DEBUG("DDRT init.");
+	DDR_DEBUG("DDRT[%x] init.", DDR_REG_BASE_DDRT);
 
-	ddr_ddrt_prepare();
+	DDR_TRAINING_DDRT_PREPARE_FUNC();
 
 	mem_width = ((REG_READ(base_dmc + DDR_DMC_CFG_DDRMODE)
 				>> DMC_MEM_WIDTH_BIT) & DMC_MEM_WIDTH_MASK);
@@ -251,9 +478,6 @@ void ddr_ddrt_init(unsigned int base_dmc, unsigned int mode)
 	/* DDR Address Base */
 	DDRT_REG_WRITE(DDRT_CFG_BASE_ADDR,
 		DDR_REG_BASE_DDRT + DDRT_DDR_BASE_ADDR);
-	/* 128bit BURST4 */
-	DDRT_REG_WRITE(DDRT_CFG_BURST_CFG,
-		DDR_REG_BASE_DDRT + DDRT_BURST_CONFIG);
 	/* DDRT test DDR using space */
 	DDRT_REG_WRITE(ddr_ddrt_get_test_addr(),
 		DDR_REG_BASE_DDRT + DDRT_ADDR);
@@ -261,6 +485,8 @@ void ddr_ddrt_init(unsigned int base_dmc, unsigned int mode)
 
 	if (DDR_DDRT_MODE_GATE == mode) {
 		/* Read or Write Once */
+		DDRT_REG_WRITE(DDRT_CFG_BURST_CFG_GATE,
+			DDR_REG_BASE_DDRT + DDRT_BURST_CONFIG);
 		DDRT_REG_WRITE(0x0,  DDR_REG_BASE_DDRT + DDRT_BURST_NUM);
 		DDRT_REG_WRITE(0x0,  DDR_REG_BASE_DDRT + DDRT_ADDR_NUM);
 		DDRT_REG_WRITE(0x0,  DDR_REG_BASE_DDRT + DDRT_LOOP_NUM);
@@ -268,8 +494,10 @@ void ddr_ddrt_init(unsigned int base_dmc, unsigned int mode)
 			DDR_REG_BASE_DDRT + DDRT_REVERSED_DQ);
 	} else {
 		/* reversed data form register init table */
-		DDRT_REG_WRITE(REG_READ(DDR_REG_BASE_SYSCTRL
-			+ SYSCTRL_DDRT_PATTERN),
+		/* 128bit BURST4 */
+		DDRT_REG_WRITE(DDRT_CFG_BURST_CFG_DATAEYE,
+			DDR_REG_BASE_DDRT + DDRT_BURST_CONFIG);
+		DDRT_REG_WRITE(ddr_dmc_get_reversed(base_dmc),
 			DDR_REG_BASE_DDRT + DDRT_REVERSED_DQ);
 		DDRT_REG_WRITE(DDRT_CFG_BURST_NUM,
 			DDR_REG_BASE_DDRT + DDRT_BURST_NUM);
@@ -301,6 +529,8 @@ int ddr_ddrt_test(unsigned int mask, int byte, int dq)
 	DDRT_REG_WRITE(mask | DDRT_CFG_START, DDR_REG_BASE_DDRT + DDRT_OP);
 	DDRT_REG_WRITE(0, DDR_REG_BASE_DDRT + DDRT_STATUS);
 
+	DDR_ASM_DSB();
+
 	do {
 		regval = DDRT_REG_READ(DDR_REG_BASE_DDRT + DDRT_STATUS);
 		times++;
@@ -309,7 +539,7 @@ int ddr_ddrt_test(unsigned int mask, int byte, int dq)
 
 	if (times >= DDRT_WAIT_TIMEOUT) {
 		DDR_FATAL("DDRT wait timeout.");
-		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT);
+		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT, 0, -1, -1);
 		return -1;
 	}
 
@@ -419,39 +649,30 @@ static unsigned int ddr_adjust_trend_check(unsigned int base_phy,
 	unsigned int dq_bdl = 0;
 	unsigned int size;
 
-	if (DDR_MODE_WRITE == mode)
-		/* 32 BDL middle[13, 17]. 128 BDL middle[55, 71] */
-		/* 1 Phase = (DDR_BDL_PHASE_TRANSFORM) BDL */
-		size = DDR_BDL_PHASE_TRANSFORM >> 1;
-	else
-		size = 1;
+	/* 32 BDL middle[13, 17]. 128 BDL middle[55, 71] */
+	/* 1 Phase = (DDR_BDL_PHASE_TRANSFORM) BDL */
+	size = DDR_BDL_PHASE_TRANSFORM >> 1;
 
 	dq_bdl =  ddr_adjust_get_average(base_phy, byte_index, mode);
 
 	/* increase adjust step to accelerate */
 	if (accel) {
-		/* bdl < 25% or bdl > 75%. */
-		if (dq_bdl < (PHY_DQ_BDL_LEVEL >> 2)
-		 || dq_bdl > ((PHY_DQ_BDL_LEVEL >> 1)
-			+ (PHY_DQ_BDL_LEVEL >> 2))) {
-			(*accel) =  (*accel) << 3;  /* level 3 */
-		} else if (dq_bdl < ((PHY_DQ_BDL_LEVEL >> 1)
-				- (PHY_DQ_BDL_LEVEL >> 3))
-			|| dq_bdl > ((PHY_DQ_BDL_LEVEL >> 1)
-				+ (PHY_DQ_BDL_LEVEL >> 3))) {
-			/* bdl in [25%, 38.5%] or [62.5%, 75%] */
-			(*accel) = (*accel) << 2;   /* level 2 */
-		} else if (dq_bdl < ((PHY_DQ_BDL_LEVEL >> 1) - 1)
-				|| dq_bdl > ((PHY_DQ_BDL_LEVEL >> 1) + 1)) {
-			/* bdl in [38.5%, middle - 1] or [middle + 1 62.5%] */
-			(*accel) = (*accel) << 1;   /* level 1 */
-		}
+		if (dq_bdl > PHY_DQ_BDL_MIDDLE)
+			*accel = dq_bdl - PHY_DQ_BDL_MIDDLE;
+		else if (dq_bdl < PHY_DQ_BDL_MIDDLE)
+			*accel = PHY_DQ_BDL_MIDDLE - dq_bdl;
+
+		DDR_INFO("byte[%x] bdl[%x] middle[%x] accel[%x] rdqs[%x]",
+			byte_index, dq_bdl, PHY_DQ_BDL_MIDDLE, *accel,
+			REG_READ(base_phy + DDR_PHY_DXNRDQSDLY(byte_index))
+			& PHY_RDQS_BDL_MASK);
 	}
+
 	/* window on left */
-	if (dq_bdl < ((PHY_DQ_BDL_LEVEL >> 1) - 1 - size))
+	if (dq_bdl < (PHY_DQ_BDL_MIDDLE - size))
 		return DDR_WIN_LEFT;
 	/* on right */
-	else if (dq_bdl > ((PHY_DQ_BDL_LEVEL >> 1) - 1 + size))
+	else if (dq_bdl > (PHY_DQ_BDL_MIDDLE + size))
 		return DDR_WIN_RIGHT;
 	else
 		return DDR_WIN_MIDDLE;
@@ -573,10 +794,14 @@ static void ddr_adjust_move_win(struct training_data *training,
 	int i;
 	int accel;
 	int trend;
+	unsigned int max_value;
+
+	max_value = (DDR_MODE_WRITE == mode ?
+		PHY_WDQ_PHASE_MASK : PHY_RDQS_BDL_MASK);
 
 	def_val = ddr_adjust_get_val(training->base_phy, byte_index, mode);
 	cur_val = def_val;
-	for (i = 0; i < PHY_RDQS_BDL_MASK; i++) {
+	for (i = 0; i <= max_value; i++) {
 		accel = step;
 		/* write mode no need to accelerate */
 		if (DDR_MODE_WRITE == mode)
@@ -604,6 +829,8 @@ static void ddr_adjust_move_win(struct training_data *training,
 		if (ddr_dataeye_deskew(training, byte_index, mode)) {
 			ddr_adjust_set_val(training->base_phy,
 				byte_index, def_val, mode);
+			/* MUST deskew dataeye after restore rdqs */
+			ddr_dataeye_deskew(training, byte_index, mode);
 			DDR_ERROR("Byte[%x] deskew fail, restore[%x].",
 					byte_index, def_val);
 			break;
@@ -622,15 +849,16 @@ static void ddr_adjust_move_win(struct training_data *training,
 static void ddr_adjust_byte(struct training_data *training,
 			unsigned int byte_index, unsigned int mode)
 {
+	unsigned int trend = ddr_adjust_trend_check(training->base_phy,
+			byte_index, 0, mode);
+
 	/* window on left, move to right */
-	if (DDR_WIN_LEFT == ddr_adjust_trend_check(training->base_phy,
-			byte_index, 0, mode))
+	if (DDR_WIN_LEFT == trend)
 		ddr_adjust_move_win(training, byte_index,
-			DDR_RDDQS_BDL_STEP, DDR_WIN_RIGHT, mode);
+			DDR_DQS_ADJ_STEP, DDR_WIN_RIGHT, mode);
 	/* window on right, move to left */
-	else if (DDR_WIN_RIGHT == ddr_adjust_trend_check(training->base_phy,
-			byte_index, 0, mode))
-		ddr_adjust_move_win(training, byte_index, DDR_RDDQS_BDL_STEP,
+	else if (DDR_WIN_RIGHT == trend)
+		ddr_adjust_move_win(training, byte_index, DDR_DQS_ADJ_STEP,
 							DDR_WIN_LEFT, mode);
 	/* window on middle, no need to move */
 	else
@@ -932,6 +1160,9 @@ int ddr_dataeye_deskew(struct training_data *training,
 					/* restore default value */
 					ddr_phy_set_dq_bdl(training->base_phy,
 						def_dq, byte_index, i, mode);
+					ddr_training_stat(DDR_ERR_DATAEYE,
+						training->base_phy,
+						byte_index, i);
 					return -1;
 				}
 			}
@@ -960,11 +1191,12 @@ int ddr_dataeye_deskew(struct training_data *training,
  * @base_dmc
  * @base_phy
  * @ddrtr_result
+ * @adjust
  *
  * DDR write and read dataeye training
  */
 int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
-					void *ddrtr_result)
+	void *ddrtr_result, unsigned int adjust)
 {
 	struct training_data tmp_result;
 	struct training_data *training = &tmp_result;
@@ -976,8 +1208,7 @@ int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
 	training->ddr_byte_num       = ddr_phy_get_byte_num(base_dmc);
 	training->base_phy           = base_phy;
 	training->base_dmc           = base_dmc;
-	training->ddrt_reversed_data = REG_READ(DDR_REG_BASE_SYSCTRL
-		+ SYSCTRL_DDRT_PATTERN);
+	training->ddrt_reversed_data = ddr_dmc_get_reversed(base_dmc);
 	training->dq_check_type      = DDR_CHECK_TYPE_DDRT;
 
 	/* write dataeye training */
@@ -987,7 +1218,7 @@ int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
 	if (result) {
 		DDR_ERROR("PHY[%x] Write dataeye training fail.",
 				training->base_phy);
-	} else {
+	} else if (DDR_TRUE == adjust) {
 		/* write dataeye training result adjust */
 		ddr_adjust_dataeye(training, DDR_MODE_WRITE);
 	}
@@ -1003,7 +1234,7 @@ int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
 	if (result) {
 		DDR_ERROR("PHY[%x] Read dataeye training fail.",
 			training->base_phy);
-	} else {
+	} else if (DDR_TRUE == adjust) {
 		/* adjust dataeye training */
 		ddr_adjust_dataeye(training, DDR_MODE_READ);
 	}
@@ -1016,6 +1247,37 @@ int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
 
 #define __hardware_training__
 #ifdef DDR_HW_TRAINING_CONFIG
+#ifdef DDR_HW_READ_ADJ_CONFIG
+/**
+ * ddr_hw_read_adj
+ * @base_phy
+ * @byte_num
+ *
+ * Adjust rdqs and dq after hw read training.
+ * When define DDR_TRAINING_ADJUST_DISABLE, MUST define DDR_HW_READ_ADJ_CONFIG.
+ */
+static void ddr_hw_read_adj(unsigned int base_phy, unsigned int byte_num)
+{
+	int i;
+
+	DDR_DEBUG("DDR hw read adjust.");
+
+	/* assume read dataeye window on left */
+	for (i = 0; i < byte_num; i++) {
+		REG_WRITE(REG_READ(base_phy + DDR_PHY_DXNRDQNBDL0(i))
+			+ PHY_DQ_MIDDLE_VAL,
+			base_phy + DDR_PHY_DXNRDQNBDL0(i));
+		REG_WRITE(REG_READ(base_phy + DDR_PHY_DXNRDQNBDL1(i))
+			+ PHY_DQ_MIDDLE_VAL,
+			base_phy + DDR_PHY_DXNRDQNBDL1(i));
+		REG_WRITE(REG_READ(base_phy + DDR_PHY_DXNRDQSDLY(i))
+			+ PHY_RDQS_MIDDLE_VAL,
+			base_phy + DDR_PHY_DXNRDQSDLY(i));
+	}
+}
+#else
+static void ddr_hw_read_adj(unsigned int base_phy, unsigned int byte_num) {}
+#endif /* DDR_HW_READ_ADJ_CONFIG */
 /**
  * ddr_hw_dataeye_read
  * @base_phy
@@ -1027,8 +1289,9 @@ static int ddr_hw_dataeye_read(unsigned int base_phy,
 				unsigned int byte_num)
 {
 	int i;
+	unsigned int count = 0;
 
-	/* gating init */
+	/* clear */
 	for (i = 0; i < byte_num; i++) {
 		REG_WRITE(0, base_phy + DDR_PHY_DXNRDQNBDL0(i));
 		REG_WRITE(0, base_phy + DDR_PHY_DXNRDQNBDL1(i));
@@ -1043,19 +1306,27 @@ static int ddr_hw_dataeye_read(unsigned int base_phy,
 			| PHY_PHYINITCTRL_INIT_EN,
 			base_phy + DDR_PHY_PHYINITCTRL);
 
-	while (1) { /* auto cleared to 0 after training finished */
+	/* auto cleared to 0 after training finished */
+	while (count < DDR_HWR_WAIT_TIMEOUT) {
 		if (!(REG_READ(base_phy + DDR_PHY_PHYINITCTRL)
 			& PHY_PHYINITCTRL_MASK))
 			break;
+
+		count++;
 	}
+
+	if (count >= DDR_HWR_WAIT_TIMEOUT)
+		DDR_ERROR("HWR wait timeout.");
 
 	if (REG_READ(base_phy + DDR_PHY_PHYINITSTATUS)
 				& PHY_PHYINITSTATUS_RDET_ERR) {
 		/* read dataeye calibration error */
 		DDR_FATAL("Phy[%x] hw read dataeye fail", base_phy);
-		ddr_training_stat(DDR_ERR_HW_RD_DATAEYE);
+		ddr_training_stat(DDR_ERR_HW_RD_DATAEYE, base_phy, -1, -1);
 		return -1;
 	}
+
+	ddr_hw_read_adj(base_phy, byte_num);
 
 	return 0;
 }
@@ -1239,8 +1510,7 @@ static int ddr_mpr_find_rdq(unsigned int base_dmc, unsigned int base_phy)
 	training->ddr_byte_num       = ddr_phy_get_byte_num(base_dmc);
 	training->base_phy           = base_phy;
 	training->base_dmc           = base_dmc;
-	training->ddrt_reversed_data = REG_READ(DDR_REG_BASE_SYSCTRL
-		+ SYSCTRL_DDRT_PATTERN);
+	training->ddrt_reversed_data = ddr_dmc_get_reversed(base_dmc);
 	/* find rdq via mpr */
 	training->dq_check_type      = DDR_CHECK_TYPE_MPR;
 
@@ -1268,7 +1538,8 @@ static int ddr_mpr_find_rdq(unsigned int base_dmc, unsigned int base_phy)
 
 				DDR_FATAL("PHY[%x] Byte[%x] DQ[%x] MPR fail",
 					base_phy, byte_index, dq_index);
-				ddr_training_stat(DDR_ERR_MPR);
+				ddr_training_stat(DDR_ERR_MPR, base_phy,
+					byte_index, dq_index);
 				return -1;
 			}
 		}
@@ -1293,6 +1564,7 @@ static int ddr_mpr_find_rdqs(unsigned int base_dmc, unsigned int base_phy,
 	unsigned int rdqs_end   = PHY_RDQS_BDL_MASK;
 	unsigned int rdqs_mid;
 	unsigned int val, delay;
+	unsigned int count = 0;
 	int found = DDR_FALSE;
 
 	/* set rdq to middle value */
@@ -1307,7 +1579,7 @@ static int ddr_mpr_find_rdqs(unsigned int base_dmc, unsigned int base_phy,
 	delay    = delay & (~PHY_RDQS_BDL_MASK);
 
 	/* find rdqs */
-	for (val = 0; val < PHY_RDQS_BDL_MASK; val++) {
+	for (val = 0; val <= PHY_RDQS_BDL_MASK; val++) {
 		REG_WRITE(delay | val,
 			base_phy + DDR_PHY_DXNRDQSDLY(byte_index));
 		ddr_phy_cfg_update(base_phy);
@@ -1315,7 +1587,9 @@ static int ddr_mpr_find_rdqs(unsigned int base_dmc, unsigned int base_phy,
 		if (!ddr_mpr_check(base_dmc, byte_index, -1)) {
 			if (DDR_FALSE == found) {
 				rdqs_start = val; /* found start value */
-				found = DDR_TRUE;
+				count++;
+				if (DDR_MPR_RDQS_FIND_TIMES == count)
+					found = DDR_TRUE;
 			}
 		} else {
 			if (DDR_TRUE == found) {
@@ -1334,7 +1608,8 @@ static int ddr_mpr_find_rdqs(unsigned int base_dmc, unsigned int base_phy,
 	} else {
 		DDR_FATAL("PHY[%x] Byte[%x] not find RDQS, restore.",
 			base_phy, byte_index);
-		ddr_training_stat(DDR_ERR_MPR);
+		ddr_training_stat(DDR_ERR_MPR, base_phy,
+					byte_index, -1);
 	}
 
 	REG_WRITE(delay | rdqs_mid, base_phy + DDR_PHY_DXNRDQSDLY(byte_index));
@@ -1390,7 +1665,7 @@ int ddr_mpr_training(unsigned int base_dmc, unsigned int base_phy)
 
 	/* restore DDR bust */
 	if (DDR_PHY_BYTE_MAX == byte_num) {
-		mr0 = (REG_READ(base_dmc + DDR_DMC_CFG_EMRS01)
+		mr0 = (REG_READ(base_phy + DDR_PHY_MODEREG01)
 			& DMC_MRS_MASK);
 		sfc_cmd = (mr0 << DMC_SFC_CMD_MRS_BIT)
 			| DMC_CMD_TYPE_LMR;
@@ -1405,78 +1680,171 @@ int ddr_mpr_check(unsigned int base_dmc, unsigned int byte_index,
 
 #define __vref_training__
 #ifdef DDR_VREF_TRAINING_CONFIG
+#ifdef DDR_VREF_WITHOUT_BDL_CONFIG
+/**
+ * ddr_vref_save_bdl
+ * @base_phy
+ * @bytenum
+ * @mode
+ * @dq_data
+ *
+ * Save dataeye dq bdl before vref training.
+ */
+static void ddr_vref_save_bdl(unsigned int base_phy, unsigned int bytenum,
+	unsigned int mode, struct tr_dq_data *dq_data)
+{
+	int i;
+
+	for (i = 0; i < bytenum; i++) {
+		if (DDR_MODE_WRITE == mode) {
+			dq_data->dq03[i] = REG_READ(base_phy
+				+ DDR_PHY_DXNWDQNBDL0(i));
+			dq_data->dq47[i] = REG_READ(base_phy
+				+ DDR_PHY_DXNWDQNBDL1(i));
+			dq_data->wdm[i] = REG_READ(base_phy
+				+ DDR_PHY_DXNWDQNBDL2(i));
+		} else {
+			dq_data->dq03[i] = REG_READ(base_phy
+				+ DDR_PHY_DXNRDQNBDL0(i));
+			dq_data->dq47[i] = REG_READ(base_phy
+				+ DDR_PHY_DXNRDQNBDL1(i));
+		}
+	}
+}
+
+/**
+ * ddr_vref_restore_bdl
+ * @base_phy
+ * @bytenum
+ * @mode
+ * @dq_data
+ * @training
+ *
+ * Restore dataeye dq bdl after vref training.
+ */
+static void ddr_vref_restore_bdl(unsigned int base_phy, unsigned int bytenum,
+	unsigned int mode, struct tr_dq_data *dq_data,
+	struct training_data *training)
+{
+	int i, j;
+	unsigned int bdl;
+
+	for (i = 0; i < bytenum; i++) {
+		if (DDR_MODE_WRITE == mode) {
+			REG_WRITE(dq_data->dq03[i],
+				base_phy + DDR_PHY_DXNWDQNBDL0(i));
+			REG_WRITE(dq_data->dq47[i],
+				base_phy + DDR_PHY_DXNWDQNBDL1(i));
+			REG_WRITE(dq_data->wdm[i],
+				base_phy + DDR_PHY_DXNWDQNBDL2(i));
+		} else {
+			REG_WRITE(dq_data->dq03[i],
+				base_phy + DDR_PHY_DXNRDQNBDL0(i));
+			REG_WRITE(dq_data->dq47[i],
+				base_phy + DDR_PHY_DXNRDQNBDL1(i));
+		}
+		for (j = 0; j < DDR_PHY_BIT_NUM; j++) {
+			if (j < 4)
+				bdl = dq_data->dq03[i];
+			else
+				bdl = dq_data->dq47[i];
+
+			training->ddr_bit_best[(i << 3) + j] =
+			(training->ddr_bit_best[(i << 3) + j]
+			 & (~DDR_DATAEYE_RESULT_MASK))
+			| ((bdl >> ((j & 0x3) << 3)) & PHY_BDL_MASK);
+		}
+	}
+}
+#else
+static void ddr_vref_save_bdl(unsigned int base_phy, unsigned int bytenum,
+	unsigned int mode, struct tr_dq_data *dq_data)
+{
+}
+static void ddr_vref_restore_bdl(unsigned int base_phy, unsigned int bytenum,
+	unsigned int mode, struct tr_dq_data *dq_data,
+	struct training_data *training)
+{
+}
+#endif /* DDR_VREF_WITHOUT_BDL_CONFIG */
+
 /**
  * ddr_vref_set
  * @base_phy
+ * @byte_index
  * @val
  * @mode
+ * @bytenum
  *
  * Set DDR Vref value.
  */
 static void ddr_vref_set(unsigned int base_phy, unsigned int val,
-		unsigned int mode)
+	unsigned int byte_index, unsigned int mode, unsigned int bytenum)
 {
-	unsigned int ref_range;
-	unsigned int ref_sel;
-	unsigned int vref;
-
-	if (DDR_MODE_READ == mode) { /*HOST vref */
-		ref_range = (val >> 3) & 0x3;
-		/* ioctl_genvref_rangel_0 */
-		ref_sel   = val & 0x7;
-		/* ioctl_genvref_refsel_0 */
-		vref      = (ref_sel << 12) | ref_range;
-
-		REG_WRITE(vref, base_phy + DDR_PHY_IOCTL2);
+	if (DDR_MODE_READ == mode) { /* HOST vref */
+		DDR_PHY_VREF_HOST_SET(base_phy, val, bytenum);
 	} else {	  /*DRAM vref */
-		/* TODO: for DDR4 DRAM vref register */
+		DDR_PHY_VREF_DRAM_SET(base_phy, val, byte_index);
 	}
+	DDR_INFO("byte[%x] mode[%x] set vref [%x]", byte_index, mode, val);
 }
 
 /**
  * ddr_vref_get
  * @base_phy
+ * @byte_index
  * @mode
  *
  * Get DDR Vref value.
  */
-static unsigned int ddr_vref_get(unsigned int base_phy, unsigned int mode)
+static unsigned int ddr_vref_get(unsigned int base_phy,
+	unsigned int byte_index, unsigned int mode)
 {
-	unsigned int val;
-	unsigned int ref_range;
-	unsigned int ref_sel;
+	unsigned int val = 0;
 
 	if (DDR_MODE_READ == mode) {	/*HOST vref */
-		val = REG_READ(base_phy + DDR_PHY_IOCTL2);
-		/* ioctl_genvref_rangel_0 */
-		ref_range = val & 0x3;
-		/* ioctl_genvref_refsel_0 */
-		ref_sel   = (val >> 12) & 0x7;
-		val = (ref_range << 3) | ref_sel;
+		DDR_PHY_VREF_HOST_GET(base_phy, val);
 	} else {      /*DRAM vref */
-		/* TODO: for DDR4 DRAM vref register */
+		DDR_PHY_VREF_DRAM_GET(base_phy, val, byte_index);
 	}
+	DDR_INFO("byte[%x] mode[%x] get vref [%x]", byte_index, mode, val);
 	return val;
 }
 
 /**
  * ddr_vref_get_win
  * @training
+ * @byte_index
  * @mode
  * @vref
  *
  * Get totol win number of training result.
  */
 static unsigned int ddr_vref_get_win(struct training_data *training,
-	unsigned int mode, int vref)
+	unsigned int byte_index, unsigned int mode, int vref)
 {
+	unsigned int vref_min = DDR_VREF_HOST_VAL_MIN;
+	unsigned int vref_max = DDR_VREF_HOST_VAL_MAX;
+	int vref_set;
+
 	training->ddr_win_sum = 0;
 
-	if (vref >= DDR_VREF_VAL_MIN && vref <= DDR_VREF_VAL_MAX)
-		ddr_vref_set(training->base_phy, vref, mode);
+	if (DDR_MODE_WRITE == mode) {
+		vref_min = DDR_VREF_DRAM_VAL_MIN;
+		vref_max = DDR_VREF_DRAM_VAL_MAX;
+	}
 
-	/* check one byte(8 DQ) */
-	ddr_dataeye_deskew(training, 0, mode);
+	if (vref < vref_min)
+		vref_set = vref_min;
+	else if (vref > vref_max)
+		vref_set = vref_max;
+	else
+		vref_set = vref;
+
+	ddr_vref_set(training->base_phy, vref_set, byte_index, mode,
+		training->ddr_byte_num);
+
+	ddr_dataeye_deskew(training, byte_index, mode);
 
 	return training->ddr_win_sum;
 }
@@ -1484,6 +1852,7 @@ static unsigned int ddr_vref_get_win(struct training_data *training,
 /**
  * ddr_vref_find_best
  * @training
+ * @byte_index
  * @mode
  * @vref
  * @step
@@ -1491,23 +1860,40 @@ static unsigned int ddr_vref_get_win(struct training_data *training,
  * Find the best vref which win number is max.
  */
 static unsigned int ddr_vref_find_best(struct training_data *training,
-	unsigned int mode, unsigned int vref, int step)
+	unsigned int byte_index, unsigned int mode, unsigned int vref,
+	int step)
 {
 	int cur_vref;
 	unsigned int best_vref;
 	unsigned int cur_win;
 	unsigned int max_win;
 	unsigned int lower_times = 0;
+	unsigned int vref_min = DDR_VREF_HOST_VAL_MIN;
+	unsigned int vref_max = DDR_VREF_HOST_VAL_MAX;
+
+	if (DDR_MODE_WRITE == mode) {
+		vref_min = DDR_VREF_DRAM_VAL_MIN;
+		vref_max = DDR_VREF_DRAM_VAL_MAX;
+	}
 
 	max_win   = training->ddr_win_sum;
-	best_vref = vref;
 	cur_vref  = vref + step;
 
-	/*find parabola vertex */
-	while (cur_vref >= DDR_VREF_VAL_MIN
-		&& cur_vref <= DDR_VREF_VAL_MAX) {
-		cur_win = ddr_vref_get_win(training, mode, cur_vref);
+	if (vref < vref_min)
+		best_vref = vref_min;
+	else if (vref > vref_max)
+		best_vref = vref_max;
+	else
+		best_vref = vref;
 
+	/*find parabola vertex */
+	while (cur_vref >= vref_min
+		&& cur_vref <= vref_max) {
+		cur_win = ddr_vref_get_win(training, byte_index,
+			mode, cur_vref);
+		DDR_INFO("PHY[%x] byte[%x] vref[%x] win[%x] mode[%x]",
+			training->base_phy, byte_index, cur_vref,
+			cur_win, mode);
 		if (cur_win < max_win) {
 			lower_times++;
 			if (DDR_VREF_COMPARE_TIMES == lower_times) {
@@ -1528,11 +1914,13 @@ static unsigned int ddr_vref_find_best(struct training_data *training,
 /**
  * ddr_vref_cal
  * @training
+ * @byte_index
  * @mode
  *
  * DDR Vref calibrate and set the best value.
  */
-static void ddr_vref_cal(struct training_data *training, unsigned int mode)
+static void ddr_vref_cal(struct training_data *training,
+	unsigned int byte_index, unsigned int mode)
 {
 	unsigned int def_vref;
 	unsigned int best_vref;
@@ -1540,10 +1928,14 @@ static void ddr_vref_cal(struct training_data *training, unsigned int mode)
 	unsigned int left_win;
 	unsigned int right_win;
 
-	def_vref  = ddr_vref_get(training->base_phy, mode);
-	def_win   = ddr_vref_get_win(training, mode, def_vref);
-	left_win  = ddr_vref_get_win(training, mode, def_vref - 1);
-	right_win = ddr_vref_get_win(training, mode, def_vref + 1);
+	def_vref  = ddr_vref_get(training->base_phy, byte_index, mode);
+	def_win   = ddr_vref_get_win(training, byte_index, mode, def_vref);
+	left_win  = ddr_vref_get_win(training, byte_index, mode, def_vref - 1);
+	right_win = ddr_vref_get_win(training, byte_index, mode, def_vref + 1);
+
+	DDR_INFO("PHY[%x] byte[%x] vref[%x] win[%x][%x][%x] mode[%x]",
+		training->base_phy, byte_index, def_vref, left_win,
+		def_win, right_win, mode);
 
 	/* With vref increments, WIN number is a parabola.
 	   So firstly determine the result on left or right.*/
@@ -1552,64 +1944,64 @@ static void ddr_vref_cal(struct training_data *training, unsigned int mode)
 		best_vref = def_vref;
 	} else if (left_win < right_win) { /* the result on right*/
 		best_vref = ddr_vref_find_best(training,
-			mode, def_vref + 1, 1);
+			byte_index, mode, def_vref + 1, 1);
 	} else if (left_win > right_win) { /* the result on left*/
 		best_vref = ddr_vref_find_best(training,
-			mode, def_vref - 1, -1);
+			byte_index, mode, def_vref - 1, -1);
 	} else {
+		/* when [-1, 1] cat not determine the direction,
+		   the cur vref should be or very close to best vref */
 		best_vref = def_vref;
 	}
 
-	ddr_vref_set(training->base_phy, best_vref, mode);
+	ddr_vref_set(training->base_phy, best_vref, byte_index, mode,
+		training->ddr_byte_num);
 }
 
 /**
  * ddr_vref_training
  * @base_dmc
  * @base_phy
+ * @mode
  *
  * DDR vref training.
  */
 int ddr_vref_training(unsigned int base_dmc, unsigned int base_phy,
-				void *ddrtr_result)
+				void *ddrtr_result, unsigned int mode)
 {
 	struct training_data tmp_result;
 	struct training_data *training = &tmp_result;
+	struct tr_dq_data dq_data;
 	int result = 0;
 	int i;
 
-	DDR_DEBUG("DDR Vref training.");
+	DDR_DEBUG("DDR Vref[%x] training.", mode);
 
 	training->ddr_byte_num       = ddr_phy_get_byte_num(base_dmc);
 	training->base_phy           = base_phy;
 	training->base_dmc           = base_dmc;
-	training->ddrt_reversed_data = REG_READ(DDR_REG_BASE_SYSCTRL
-		+ SYSCTRL_DDRT_PATTERN);
+	training->ddrt_reversed_data = ddr_dmc_get_reversed(base_dmc);
 	training->dq_check_type      = DDR_CHECK_TYPE_DDRT;
 
-	/* DRAM Vref*/
-#ifdef DDR_DDR4_CONFIG
-	ddr_vref_cal(training, DDR_MODE_WRITE);   /* Only for DDR4 */
-	/* write deskew again on best vref. */
-	for (i = 0; i < training->ddr_byte_num; i++)
-		result += ddr_dataeye_deskew(training, i, DDR_MODE_WRITE);
-	ddr_result_data_save(ddrtr_result, training, DDR_MODE_WRITE);
-#else
-#ifdef DDR_TRAINING_CMD
-	/* for training cmd print result */
-	for (i = 0; i < training->ddr_byte_num; i++)
-		result += ddr_dataeye_deskew(training, i, DDR_MODE_WRITE);
-	ddr_result_data_save(ddrtr_result, training, DDR_MODE_WRITE);
-#endif /* DDR_TRAINING_CMD */
-#endif /* DDR_DDR4_CONFIG */
+	ddr_vref_save_bdl(base_phy, training->ddr_byte_num, mode, &dq_data);
 
-	/* Host Vref */
-	ddr_vref_cal(training, DDR_MODE_READ);
-	/* read deskew again on best vref. */
-	for (i = 0; i < training->ddr_byte_num; i++)
-		result += ddr_dataeye_deskew(training, i, DDR_MODE_READ);
+	/* vref calibrate */
+	if (DDR_MODE_READ == mode)
+		/* only check one byte */
+		ddr_vref_cal(training, 0, mode);
+	else
+		for (i = 0; i < training->ddr_byte_num; i++)
+			ddr_vref_cal(training, i, mode);
 
-	ddr_result_data_save(ddrtr_result, training, DDR_MODE_READ);
+	/* dataeye deskew again on best vref. */
+	for (i = 0; i < training->ddr_byte_num; i++)
+		result += ddr_dataeye_deskew(training, i, mode);
+
+	ddr_vref_restore_bdl(base_phy, training->ddr_byte_num, mode,
+		&dq_data, training);
+
+	ddr_result_data_save(ddrtr_result, training, mode);
+
 	return result;
 }
 #endif /* DDR_VREF_TRAINING_CONFIG */
@@ -1934,12 +2326,13 @@ static int ddr_wl_process(unsigned int base_phy, unsigned int byte_num,
 	if (DDR_DELAY_PHASE == type)
 		length = PHY_WDQS_PHASE_MASK;
 	else
-		length = PHY_DQ_BDL_LEVEL;
+		length = PHY_BDL_MASK;
 
 	/* find WDQS phase or bdl, assume CLK Delay > DQS Delay */
-	for (i = 0; i < length; i++) {
+	for (i = 0; i <= length; i++) {
 		ddr_phy_cfg_update(base_phy);
 		REG_WRITE(0x1, base_phy + DDR_PHY_SWTWLDQS);
+		DDR_ASM_DSB();
 		wl_result = REG_READ(base_phy + DDR_PHY_SWTRLT)
 				& PHY_SWTRLT_WL_MASK;
 		REG_WRITE(0x0, base_phy + DDR_PHY_SWTWLDQS);
@@ -1965,12 +2358,11 @@ static int ddr_wl_process(unsigned int base_phy, unsigned int byte_num,
 		if (DDR_DELAY_BDL == type) {
 			DDR_FATAL("PHY[%x] WL fail, result[%x]",
 					base_phy, wl_result);
-			if (DDR_REG_BASE_PHY0 == base_phy)
-				ddr_training_stat(DDR_ERR_WL | DDR_ERR_PHY0
-					| (wl_result << DDR_ERR_WL_BYTE_BIT));
-			else
-				ddr_training_stat(DDR_ERR_WL | DDR_ERR_PHY1
-					| (wl_result << DDR_ERR_WL_BYTE_BIT));
+			for (j = 0; j < byte_num; j++)
+				if (!(wl_result & (1 << j)))
+					ddr_training_stat(DDR_ERR_WL,
+						base_phy, j, -1);
+
 		} else
 			DDR_DEBUG("PHY[%x] WL not found phase, result[%x]",
 					base_phy, wl_result);
@@ -2025,11 +2417,9 @@ int ddr_write_leveling(unsigned int base_dmc, unsigned int base_phy)
 
 	/* check phase result */
 	for (i = 0; i < byte_num; i++) {
-		/* find phase error, restore old value to find bdl. */
+		/* find phase error, keep max value to find bdl. */
 		/* find phase ok, decrease to find bdl. */
-		if (result)
-			wdqs_new.phase[i] = wdqs_old.phase[i];
-		else
+		if (!result)
 			ddr_phase_dec(&wdqs_new.phase[i]);
 
 		REG_WRITE(wdqs_new.phase[i] << PHY_WDQS_PHASE_BIT,
@@ -2094,7 +2484,7 @@ static int ddr_gate_find_phase(unsigned int base_phy, unsigned int byte_num,
 			/* find gate phase fail */
 			DDR_FATAL("find gate phase[%x] fail.",
 				rdqsg->phase[i]);
-			ddr_training_stat(DDR_ERR_GATING);
+			ddr_training_stat(DDR_ERR_GATING, base_phy, -1, -1);
 			return -1;
 		} else {
 			/* decrease one setp to find bdl */
@@ -2122,15 +2512,20 @@ static int ddr_gate_find_bdl(unsigned int base_phy, unsigned int byte_num,
 	int i, j;
 	unsigned int gate_result;
 	unsigned int tmp;
+	unsigned int swtmode = REG_READ(base_phy + DDR_PHY_SWTMODE);
 
 	for (i = 0; i < byte_num; i++)
 		rdqsg->bdl[i] = 0;
 
-	for (i = 0; i < PHY_BDL_MASK; i++) {
+	/* enable phy sw gate training mode */
+	REG_WRITE(swtmode | (1 << PHY_SWTMODE_SW_GTMODE_BIT),
+		base_phy + DDR_PHY_SWTMODE);
+
+	for (i = 0; i < PHY_GATE_BDL_MAX; i++) {
 		ddr_phy_cfg_update(base_phy);
 		ddr_ddrt_test(DDRT_READ_ONLY_MODE, -1, -1);
 		gate_result = (REG_READ(base_phy + DDR_PHY_SWTRLT) >> 8)
-					& PHY_SWTRLT_WL_MASK;
+					& PHY_SWTRLT_GATE_MASK;
 		if (gate_result == ((1 << byte_num) - 1))
 			break;
 
@@ -2155,15 +2550,17 @@ static int ddr_gate_find_bdl(unsigned int base_phy, unsigned int byte_num,
 		}
 	}
 
-	if (i == PHY_BDL_MASK) {  /* find gate bdl fail */
+	/* disable phy sw gate training mode */
+	REG_WRITE(swtmode & (~(1 << PHY_SWTMODE_SW_GTMODE_BIT)),
+		base_phy + DDR_PHY_SWTMODE);
+
+	if (i == PHY_GATE_BDL_MAX) {  /* find gate bdl fail */
 		DDR_FATAL("PHY[%x] find gate bdl fail. result[%x]",
 				base_phy, gate_result);
-		if (DDR_REG_BASE_PHY0 == base_phy)
-			ddr_training_stat(DDR_ERR_GATING | DDR_ERR_PHY0
-				| (gate_result << DDR_ERR_GATE_BYTE_BIT));
-		else
-			ddr_training_stat(DDR_ERR_GATING | DDR_ERR_PHY1
-				| (gate_result << DDR_ERR_GATE_BYTE_BIT));
+		for (j = 0; j < byte_num; j++)
+			if (!(gate_result & (1 << j)))
+				ddr_training_stat(DDR_ERR_GATING,
+					base_phy, j, -1);
 		return -1;
 	} else
 		return 0;
@@ -2321,7 +2718,7 @@ static int ddr_ac_ddrt_test(unsigned int mask)
 
 	if (times >= DDRT_WAIT_TIMEOUT) {
 		DDR_FATAL("DDRT wait timeout.");
-		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT);
+		ddr_training_stat(DDR_ERR_DDRT_TIME_OUT, 0, -1, -1);
 		return -1;
 	}
 
@@ -2348,8 +2745,6 @@ static int ddr_ac_ddrt_test(unsigned int mask)
 static int ddr_ac_check_cs(unsigned int base_phy, unsigned int def_cs,
 					unsigned int step)
 {
-	unsigned int test_addr = ddr_ddrt_get_test_addr();
-
 	ddr_ac_set_cs(base_phy, def_cs + step);
 	ddr_phy_cfg_update(base_phy);
 
@@ -2376,7 +2771,6 @@ static int ddr_ac_check_clk(unsigned int base_phy, unsigned int def_clk,
 	unsigned int step)
 {
 	int i;
-	unsigned int test_addr = ddr_ddrt_get_test_addr();
 	unsigned int wdqs_phase_range, wdq_phase_range, phase_range;
 
 	/* set new value */
@@ -2427,7 +2821,7 @@ static int ddr_ac_find_cs(unsigned int base_phy)
 	unsigned int def_cs, step;
 
 	def_cs = ddr_ac_get_cs(base_phy);
-	for (step = 1; step < (PHY_BDL_MASK - def_cs); step++) {
+	for (step = 1; step <= (PHY_BDL_MASK - def_cs); step++) {
 		if (ddr_ac_check_cs(base_phy, def_cs, step)) {
 			DDR_DEBUG("PHY[%x] default cs[%x], find diff_cs[%x]",
 					base_phy, def_cs, step);
@@ -2459,7 +2853,7 @@ static int ddr_ac_find_clk(unsigned int base_phy, unsigned int byte_num)
 		def_phase.bdl[i]   = REG_READ(base_phy + DDR_PHY_DXNWDQDLY(i));
 	}
 
-	for (step = 1; step < (PHY_ACPHY_CLK_MAX - def_clk); step++) {
+	for (step = 1; step <= (PHY_ACPHY_CLK_MAX - def_clk); step++) {
 		if (ddr_ac_check_clk(base_phy, def_clk, byte_num,
 					&def_phase, step)) {
 			DDR_DEBUG("PHY[%x] default clk[%x], find diff_clk[%x]",

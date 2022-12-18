@@ -25,6 +25,11 @@ extern int hisfc350_spiflash_init(struct spi_flash ** spiflash,
 	struct mtd_info_ex ** spiinfo);
 #endif
 
+#ifdef CONFIG_HIFMC100_SPI_NOR_SUPPORT
+extern int hifmc100_spiflash_init(struct spi_flash **spiflash,
+					struct mtd_info_ex **spiinfo_ex);
+#endif
+
 /*****************************************************************************/
 
 static struct spi_flash * spiflash = NULL;
@@ -51,6 +56,11 @@ struct spi_flash *spi_flash_probe(unsigned int bus, unsigned int cs,
 		hisfc350_spiflash_init(&spiflash, &spiinfo_ex);
 #endif
 
+#ifdef CONFIG_HIFMC100_SPI_NOR_SUPPORT
+	if (devs == DEV_HISFC_AUTO || devs == DEV_NOR_HIFMC100)
+		hifmc100_spiflash_init(&spiflash, &spiinfo_ex);
+#endif
+
 	return spiflash;
 }
 /*****************************************************************************/
@@ -72,6 +82,10 @@ struct mtd_info_ex * get_spiflash_info(void)
 #ifdef CONFIG_SPI_FLASH_HISFC350
 	if (devs == DEV_HISFC_AUTO || devs == DEV_HISFC350)
 		hisfc350_spiflash_init(&spiflash, &spiinfo_ex);
+#endif
+
+#ifdef CONFIG_HIFMC100_SPI_NOR_SUPPORT
+	hifmc100_spiflash_init(&spiflash, &spiinfo_ex);
 #endif
 
 	return spiinfo_ex;

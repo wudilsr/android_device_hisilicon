@@ -17,13 +17,11 @@
 #ifndef __HI_MPI_AVPLAY_H__
 #define __HI_MPI_AVPLAY_H__
 
-#include "hi_drv_avplay.h"
-#include "drv_avplay_ioctl.h"
+#include "hi_unf_avplay.h"
 
 #ifdef __cplusplus
 #if __cplusplus
-	extern "C"
-	{
+extern "C" {
 #endif
 #endif
 
@@ -31,6 +29,7 @@ HI_S32 HI_MPI_AVPLAY_Init(HI_VOID);
 HI_S32 HI_MPI_AVPLAY_DeInit(HI_VOID);
 HI_S32 HI_MPI_AVPLAY_GetDefaultConfig(HI_UNF_AVPLAY_ATTR_S *pstAvAttr, HI_UNF_AVPLAY_STREAM_TYPE_E enCfg);
 HI_S32 HI_MPI_AVPLAY_RegisterAcodecLib(const HI_CHAR *pFileName);
+HI_S32 HI_MPI_AVPLAY_RegisterVcodecLib(const HI_CHAR *pFileName);
 HI_S32 HI_MPI_AVPLAY_FoundSupportDeoder(const HA_FORMAT_E enFormat,HI_U32 * penDstCodecID);
 HI_S32 HI_MPI_AVPLAY_ConfigAcodec( const HI_U32 enDstCodecID, HI_VOID *pstConfigStructure);
 HI_S32 HI_MPI_AVPLAY_Create(const HI_UNF_AVPLAY_ATTR_S *pstAvAttr, HI_HANDLE *phAvplay);
@@ -57,9 +56,9 @@ HI_S32 HI_MPI_AVPLAY_Reset(HI_HANDLE hAvplay, const HI_UNF_AVPLAY_RESET_OPT_S *p
 HI_S32 HI_MPI_AVPLAY_GetBuf(HI_HANDLE  hAvplay,
                             HI_UNF_AVPLAY_BUFID_E enBufId,
                             HI_U32                u32ReqLen,
-                            HI_UNF_STREAM_BUF_S  *pstData, 
+                            HI_UNF_STREAM_BUF_S  *pstData,
                             HI_U32                u32TimeOutMs);
-                            
+
 HI_S32 HI_MPI_AVPLAY_PutBuf(HI_HANDLE hAvplay, HI_UNF_AVPLAY_BUFID_E enBufId,
                                        HI_U32 u32ValidDataLen, HI_U32 u32Pts, HI_UNF_AVPLAY_PUTBUFEX_OPT_S *pstExOpt);
 

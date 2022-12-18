@@ -35,7 +35,7 @@ extern "C"{
 
 #ifndef UNF_VERSION_CODE
 #define UNF_VERSION_CODE        UNF_VERSION(3, 2)
-#define UNF_SUBVERSION_CODE     9
+#define UNF_SUBVERSION_CODE     11
 #define UNF_PRODUCT_CODE        1
 #endif
 

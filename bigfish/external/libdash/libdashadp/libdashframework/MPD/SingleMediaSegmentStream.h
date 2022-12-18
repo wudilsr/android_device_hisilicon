@@ -40,7 +40,12 @@ namespace libdash
                     virtual int                            SetSAPs            (std::vector<uint64_t> &saps);
 
                  private:
-                    std::vector<uint64_t>                               saps;
+                    std::vector<uint64_t>           saps;
+                    bool                            useSaps; //use saps to create media segment
+                    std::string                     mediaSegmentByteRange;//if the Initialization && media data are in the same single segment, use this range to avoid  repeat downloading the Initialization data
+
+                    dash::mpd::ISegment*         _GetInitializationSegment        ();
+                    dash::mpd::ISegment*         _GetPrivateInitializationSegment        ();
             };
         }
     }

@@ -298,11 +298,11 @@ typedef struct hiADEC_PROC_ITEM_S
     HI_BOOL        bAdecWorkEnable;
     HI_CHAR        szCodecType[32];
     HI_CHAR        szCodecDescription[32];
-    HI_U32           u32CodecID;
-    HI_BOOL         enFmt;        
+    HI_U32         u32CodecID;
+    HI_BOOL        enFmt;
     HI_UNF_SAMPLE_RATE_E enSampleRate;
     HI_UNF_BIT_DEPTH_E   enBitWidth;
-    HI_U32          u32PcmSamplesPerFrame;
+    HI_U32           u32PcmSamplesPerFrame;
     HI_U32           u32FramnNm;
     HI_U32           u32ErrFrameNum;
     HI_U32           u32BufSize;
@@ -315,8 +315,8 @@ typedef struct hiADEC_PROC_ITEM_S
     HI_U32           u32FrameWriteWrap;
     HI_U32           u32PtsLost;
     HI_U32           u32Volume;
-	HI_U32           u32OutChannels;
-	HI_U32           u32BitsOutBytesPerFrame;
+    HI_U32           u32OutChannels;
+    HI_U32           u32BitsOutBytesPerFrame;
     HI_U32           u32DbgGetBufCount_Try;
     HI_U32           u32DbgGetBufCount;
     HI_U32           u32DbgPutBufCount_Try;
@@ -332,9 +332,9 @@ typedef struct hiADEC_PROC_ITEM_S
 
     ADEC_CMD_CTRL_E    enPcmCtrlState;
     ADEC_CMD_CTRL_E    enEsCtrlState;
-    HI_U32                  u32SavePcmCnt;
-    HI_U32                  u32SaveEsCnt;
-    HI_CHAR              filePath[512];   
+    HI_U32             u32SavePcmCnt;
+    HI_U32             u32SaveEsCnt;
+    HI_CHAR            filePath[512];
 
     HI_U32           ThreadBeginTime;
     HI_U32           ThreadEndTime;

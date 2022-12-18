@@ -103,6 +103,28 @@ EXPORT_SYMBOL(get_cpu_name);
 
 const char * get_cpu_version(void)
 {
+	int val = 0;
+	
+	val = readl(__io_address(REG_BASE_PERI_CTRL + REG_PERI_SOC_FUSE));
+	val = ((val>>16) & 0x1F);
+
+	switch(val) {
+		case 0x00:
+			current_cpu_info->cpuversion = "BGA_23_23";
+			break;
+		case 0x01:
+			current_cpu_info->cpuversion = "BGA_19_19";
+			break;
+		case 0x03:
+			current_cpu_info->cpuversion = "BGA_15_15";
+			break;
+		case 0x07:
+			current_cpu_info->cpuversion = "QFP_216";
+			break;
+		default:
+			break;
+	}
+
 	return current_cpu_info->cpuversion;
 }
 EXPORT_SYMBOL(get_cpu_version);

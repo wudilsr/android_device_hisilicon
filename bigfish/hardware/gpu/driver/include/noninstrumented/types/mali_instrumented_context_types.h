@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2007-2014 ARM Limited
+ * (C) COPYRIGHT 2007-2013, 2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -76,11 +76,9 @@ typedef struct mali_instrumented_context
 	mali_log_callback *callbacks;    /**< an array of callbacks registered */
 	u32 numcallbacks;                /**< the number of callbacks in the callbacks array */
 
-#if !defined(USING_MALI200)
 	u32 prev_l2_perf_counters_count;           /**< Temporary hold the number of counters for the last completed frame */
 	u32 prev_l2_perf_counter_id[2];            /**< Temporary hold the Ids from the last completed PP frame */
 	u32 prev_l2_perf_values_raw[2];            /**< Temporary hold the values from the last completed frame */
-#endif
 
 	u32 egl_start_index;              /**< index into counters where the EGL counters exported to the plug-in begin */
 	u32 egl_num_counters;             /**< the number of EGL counters exported to the plug-in, starting at egl_start_index */
@@ -115,11 +113,9 @@ typedef struct mali_instrumented_frame
                                                counters  in mali_instrumented_context */
 	mali_bool profiling_buffer_realloced; /**< MALI_TRUE if the profiling buffer has been realloced
                                                this frame. */
-#if !defined(USING_MALI200)
 	u32 l2_perf_counters_count;           /**< Temporary hold the number of counters for the last completed PP job for this frame */
 	u32 l2_perf_counter_id[2];            /**< Temporary hold the Ids from the last completed PP job for this frame */
 	u32 l2_perf_values_raw[2];            /**< Temporary hold the values from the last completed PP job for this frame */
-#endif
 } mali_instrumented_frame;
 
 

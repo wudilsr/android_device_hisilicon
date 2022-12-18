@@ -465,7 +465,7 @@ int Si2147_Init                (L1_Si2147_Context *api)
 ************************************************************************************************************************/
 int Si2147_UpdateChannelScanFrequency(int freq,int channelsFound)
 {
-  int abort_scan = 0;
+  /*int abort_scan = 0;*/
   static int previousFrequency;
 /*** Insert user code to display realtime updates of the frequency being scanned and channel status (number found ) **/
 /* add check for user abort here */
@@ -483,9 +483,9 @@ int Si2147_UpdateChannelScanFrequency(int freq,int channelsFound)
   }
   previousFrequency=freq;
 
-  if (abort_scan)
+  /*if (abort_scan)
     return 1;
-  else
+  else*/
     return 0;
   }
  /************************************************************************************************************************

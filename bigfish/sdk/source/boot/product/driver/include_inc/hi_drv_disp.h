@@ -347,6 +347,7 @@ typedef struct hiDISP_DISPLAY_INFO_S
     HI_U32 u32Vline;
 
     /*just a back of display setting, for virt screen and  offset set.*/
+	HI_DRV_DISP_FMT_E eFmt;
     HI_RECT_S stVirtaulScreen;
     HI_DRV_DISP_OFFSET_S stOffsetInfo;
     HI_RECT_S stFmtResolution;

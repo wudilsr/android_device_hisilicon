@@ -27,7 +27,7 @@ do \
 { \
     HI_RECT SurfaceRect = {0}; \
     HI_S32 s32Ret; \
-    (HI_VOID)Surface_GetSurfaceSize(pSurface, &(SurfaceRect.w), &(SurfaceRect.h)); \
+    Surface_GetSurfaceSize(pSurface, &(SurfaceRect.w), &(SurfaceRect.h)); \
     s32Ret = HIGO_GetRealRect(&SurfaceRect, pRect, pOptRect); \
     if (HI_SUCCESS != s32Ret) \
     {\
@@ -81,11 +81,8 @@ typedef enum
 
 
 /******************************* API declaration *****************************/
-/*#ifndef TEST_IN_ROOTBOX
-HI_S32 HIGO_InitSurface(HI_VOID *pBuffer , HI_U32 u32BufLen );
-#else*/
-HI_S32 HIGO_InitSurface(HI_VOID);
-//#endif
+HI_VOID HIGO_InitSurface(HI_VOID);
+
 
 HI_S32 HIGO_DeinitSurface(HI_VOID);
 /** 
@@ -122,7 +119,7 @@ HI_VOID HIGO_FreeSurface(HIGO_HANDLE Surface);
 \retval none
 \return none
 */
-HI_S32 Surface_SetSurfaceType(HIGO_HANDLE Surface, HIGO_SUR_TYPE_E Type);
+HI_VOID Surface_SetSurfaceType(HIGO_HANDLE Surface, HIGO_SUR_TYPE_E Type);
 
 /**
  \brief create common surface structure 
@@ -160,7 +157,7 @@ HI_VOID Surface_FreeSurfacePrivateData(HIGO_HANDLE Surface);
  \retval HI_SUCCESS  
  \return HI_S32
  */
-HI_S32 Surface_SetSurfacePrivateData(HIGO_HANDLE Surface, HIGO_MOD_E Module, const HI_PIXELDATA pData);
+HI_VOID Surface_SetSurfacePrivateData(HIGO_HANDLE Surface, HIGO_MOD_E Module, const HI_PIXELDATA pData);
 
 /**
  \brief set Surface color palette 
@@ -170,16 +167,6 @@ HI_S32 Surface_SetSurfacePrivateData(HIGO_HANDLE Surface, HIGO_MOD_E Module, con
  \return HI_S32
  */
 HI_S32 Surface_SetSurfacePalette(HIGO_HANDLE Surface, const HI_PALETTE Palette);
-#ifdef TEST_IN_ROOTBOX
-/**
- \brief  get Surface color palette 
- \param[in] Surface Surface handle 
- \param[out] Palette  
- \retval HI_SUCCESS  
- \return HI_S32
- */
-HI_S32 Surface_GetSurfacePalette(HIGO_HANDLE Surface, HI_PALETTE Palette);
-#endif
 
 /**
  \brief set Surface color key 
@@ -243,7 +230,7 @@ HI_S32 Surface_UnlockSurface(HIGO_HANDLE Surface);
  \retval HIGO_ERR_NULLPTR pWidth and pHeight can't all null 
  \return HI_S32
  */
-HI_S32 Surface_GetSurfaceSize(HIGO_HANDLE Surface, HI_S32* pWidth, HI_S32* pHeight);
+HI_VOID Surface_GetSurfaceSize(HIGO_HANDLE Surface, HI_S32* pWidth, HI_S32* pHeight);
 
 /**
  \brief get surface pixel format

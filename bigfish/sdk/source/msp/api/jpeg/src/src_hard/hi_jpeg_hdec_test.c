@@ -103,8 +103,7 @@ HI_S32 HI_JPEG_OpenScenFile(const struct jpeg_decompress_struct *cinfo)
 	 strncat(pFileName,pNum,strlen(pNum));
 	 
 	 pJpegHandle->pScenFile = fopen(pFileName,"wb+");
-	 if(NULL == pJpegHandle->pScenFile)
-	 {
+	 if(NULL == pJpegHandle->pScenFile){
 	 	JPEG_TRACE("open scen file failure\n");
 		return HI_FAILURE;
 	 }
@@ -130,8 +129,7 @@ HI_VOID HI_JPEG_CloseScenFile(const struct jpeg_decompress_struct *cinfo)
 {
 	 JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 	 
-	 if(NULL != pJpegHandle->pScenFile)
-	 {
+	 if(NULL != pJpegHandle->pScenFile){
 	 	fclose(pJpegHandle->pScenFile);
 	 }
 	 pJpegHandle->pScenFile = NULL;
@@ -155,19 +153,13 @@ static HI_VOID HI_JPEG_GetScenData(const struct jpeg_decompress_struct *cinfo)
 	    JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 	
 		/* 寄存器(含表) */
-		for (offset = 0xc; offset <= 0x6bc; offset+=4)
-		{
+		for (offset = 0xc; offset <= 0x6bc; offset+=4){
 
-			if(JPGD_REG_STADD == offset)
-			{
+			if(JPGD_REG_STADD == offset){
 				cnt++;
-			}
-			else if(JPGD_REG_ENDADD == offset)
-			{
+			}else if(JPGD_REG_ENDADD == offset){
 				cnt++;
-			}
-			else
-			{   
+			}else{   
 				pJpegHandle->s32RegData[cnt] = JPEG_HDEC_ReadReg(pJpegHandle->pJpegRegVirAddr,offset);
 				cnt++;
 			}
@@ -193,30 +185,23 @@ static HI_VOID HI_JPEG_PrintScenData(const struct jpeg_decompress_struct *cinfo,
 
 		JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-		if(NULL != pJpegHandle->pScenFile)
-		{
-
+		if(NULL != pJpegHandle->pScenFile){
 			SCEN_PRINT(pJpegHandle->pScenFile,"=====================================================\n");
 			SCEN_PRINT(pJpegHandle->pScenFile,"   the register data \n");
 			SCEN_PRINT(pJpegHandle->pScenFile,"=====================================================\n");
 			/* 寄存器(含表)，从VAHB_STRIDE开始 */
-			for (offset = 0xc; offset <= 0x6bc; offset+=4)
-			{
+			for (offset = 0xc; offset <= 0x6bc; offset+=4){
 
-				if(JPGD_REG_STADD == offset)
-				{
+				if(JPGD_REG_STADD == offset){
 					PRN_SCENE(pJpegHandle->pScenFile,CV200_JPEG_BASE + offset, (HI_U32)pStreamStartBuf);
 					cnt++;
-				}
-				else if(JPGD_REG_ENDADD == offset)
-				{/**
+				}else if(JPGD_REG_ENDADD == offset){
+				  /**
 				  **这个是码流buffer,一直在发生改变，所以这个数据不准确
 				  **/
 					PRN_SCENE(pJpegHandle->pScenFile,CV200_JPEG_BASE + offset, (HI_U32)pStreamEndBuf);
 					cnt++;
-				}
-				else
-				{
+				}else{
 					PRN_SCENE(pJpegHandle->pScenFile,CV200_JPEG_BASE + offset, pJpegHandle->s32RegData[cnt]);
 					cnt++;
 				}
@@ -262,9 +247,7 @@ HI_VOID HI_JPEG_OutScenData(const struct jpeg_decompress_struct *cinfo, \
 		  SCEN_PRINT(pJpegHandle->pScenFile,"	the dec data \n");
 		  SCEN_PRINT(pJpegHandle->pScenFile,"=====================================================\n");
 		  SCEN_PRINT(pJpegHandle->pScenFile,"======================= data begin ==================\n\n");
-		  for(offset = 0; offset < u64DataSize; offset+=4)
-		  {
-		  
+		  for(offset = 0; offset < u64DataSize; offset+=4){
 			   data =	(pData[offset+3] << 24)
 					  | (pData[offset+2] << 16)
 					  | (pData[offset+1] << 8)
@@ -276,12 +259,9 @@ HI_VOID HI_JPEG_OutScenData(const struct jpeg_decompress_struct *cinfo, \
 				**/
 		  
 		  }
-		  if(HI_TRUE == bStartFirst)
-		  {
+		  if(HI_TRUE == bStartFirst){
 			  PRN_SCENE(pJpegHandle->pScenFile,CV200_JPEG_BASE,0x00000001);
-		  }
-		  else
-		  {
+		  }else{
 			  PRN_SCENE(pJpegHandle->pScenFile,CV200_JPEG_BASE+4,0x00000001);
 		  }
 		  SCEN_PRINT(pJpegHandle->pScenFile,"\n======================= data end ==================\n");
@@ -388,8 +368,7 @@ HI_VOID HI_JPEG_SaveBmp(HI_U32 u32DataPhy,HI_U32 u32Width,HI_U32 u32Height,HI_U3
 	 HI_CHAR pFileName[256];
 	 static HI_U32 u32Cnt = 0;
 
-	 switch(cinfo->out_color_space)
-	 {
+	 switch(cinfo->out_color_space){
          case JCS_ARGB_8888:
          	strncpy(pColorSpace,"ABGR8888",strlen("ABGR8888"));
 			pColorSpace[strlen("ABGR8888")] = '\0';
@@ -506,8 +485,7 @@ HI_VOID HI_JPEG_SaveYUVSP(const struct jpeg_decompress_struct *cinfo)
 
 		JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-		if( 0 != access(CAPTURE_YUVSP_START, 0)) 
-		{
+		if( 0 != access(CAPTURE_YUVSP_START, 0)) {
 			JPEG_TRACE("\n===============================================================================\n");
 			JPEG_TRACE("请先创建 %s 文件\n",CAPTURE_YUVSP_START);
 			JPEG_TRACE("touch %s\n",CAPTURE_YUVSP_START);
@@ -523,8 +501,7 @@ HI_VOID HI_JPEG_SaveYUVSP(const struct jpeg_decompress_struct *cinfo)
 		JPEG_TRACE("===============================================================================\n");
 
 		pOutFile = fopen(pFileName,"wb+");
-		if(NULL == pOutFile)
-		{
+		if(NULL == pOutFile){
 			JPEG_TRACE("open %s failure\n",pFileName);
 		}
 		u32YWidth  = pJpegHandle->stJpegSofInfo.u32YWidth;
@@ -540,23 +517,18 @@ HI_VOID HI_JPEG_SaveYUVSP(const struct jpeg_decompress_struct *cinfo)
 		/**===============================================================
 		保存Y亮度数据
 		===============================================================**/
-		if(0 != u32YWidth)
-		{
+		if(0 != u32YWidth){
 			pTmp = pYAddr;
-			for(s32Cnt = 0; s32Cnt < (HI_S32)u32YHeight; s32Cnt++)
-			{
+			for(s32Cnt = 0; s32Cnt < (HI_S32)u32YHeight; s32Cnt++){
 				fwrite(pTmp, u32YWidth, 1, pOutFile);
 				pTmp += u32YStride;
 			}
 		}
-		if(0 != u32CWidth)
-		{
+		if(0 != u32CWidth){
 			pTmp = pUVAddr;
-			for( s32Cnt = 0; s32Cnt < (HI_S32)u32CHeight; s32Cnt ++ )
-			{
+			for( s32Cnt = 0; s32Cnt < (HI_S32)u32CHeight; s32Cnt ++ ){
 
-				for(s32Cnt1=0; s32Cnt1 < (HI_S32)u32CWidth; s32Cnt1++ )
-				{
+				for(s32Cnt1=0; s32Cnt1 < (HI_S32)u32CWidth; s32Cnt1++ ){
 					pTmpCbCr[s32Cnt1] = pTmp[2*s32Cnt1 + 1];
 				}
 
@@ -565,11 +537,8 @@ HI_VOID HI_JPEG_SaveYUVSP(const struct jpeg_decompress_struct *cinfo)
 				pTmp += u32CStride;
 			}
 			pTmp = pUVAddr;
-			for( s32Cnt = 0; s32Cnt < (HI_S32)u32CHeight; s32Cnt ++ )
-			{
-
-				for(s32Cnt1=0; s32Cnt1 < (HI_S32)u32CWidth; s32Cnt1++ )
-				{
+			for( s32Cnt = 0; s32Cnt < (HI_S32)u32CHeight; s32Cnt ++ ){
+				for(s32Cnt1=0; s32Cnt1 < (HI_S32)u32CWidth; s32Cnt1++ ){
 					pTmpCbCr[s32Cnt1] = pTmp[2*s32Cnt1 + 0];
 				}
 
@@ -585,12 +554,10 @@ HI_VOID HI_JPEG_SaveYUVSP(const struct jpeg_decompress_struct *cinfo)
 
 
 		pHdrFile = fopen(pHdrName,"wb+");
-		if(NULL == pHdrFile)
-		{
+		if(NULL == pHdrFile){
 			JPEG_TRACE("open %s failure\n",pHdrName);
 		}
-		switch(eFmt)
-		{
+		switch(eFmt){
 			case JPEG_FMT_YUV400:
 				DADA_WRITE(pHdrFile, "format = \"Y\" ;\n");
 				break;
@@ -669,12 +636,9 @@ HI_VOID HI_JPEG_IfHardDec(const struct jpeg_decompress_struct *cinfo,HI_BOOL *pH
 {
 
     JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-    if(HI_TRUE == pJpegHandle->bHdecEnd)
-    {
+    if(HI_TRUE == pJpegHandle->bHdecEnd){
        *pHardDec  = HI_TRUE;
-    }
-	else
-	{
+    }else{
 	   *pHardDec  = HI_FALSE;
 	}
 
@@ -697,16 +661,12 @@ HI_S32 HI_JPEG_HardDecNow()
 
 		HI_S32 s32CapabilityReg = 0;
 
-		if( (NULL != g_pJpegRegVirAddr) && (FALSE == sg_bDecFinish) && (sg_s32JpegDev >= 0))
-		{
+		if( (NULL != g_pJpegRegVirAddr) && (FALSE == sg_bDecFinish) && (sg_s32JpegDev >= 0)){
 			s32CapabilityReg  = JPEG_HDEC_ReadReg(g_pJpegRegVirAddr, JPGD_REG_TIME);
 		}
-		if(0 == s32CapabilityReg)
-		{
+		if(0 == s32CapabilityReg){
 			return HI_FAILURE;
-		}
-		else
-		{
+		}else{
 			JPEG_TRACE("==========================================================\n");
 			JPEG_TRACE("s32CapabilityReg = %d\n",s32CapabilityReg);
 			JPEG_TRACE("==========================================================\n");
@@ -725,8 +685,7 @@ HI_S32 HI_JPEG_HardDecNow()
 *****************************************************************************/
 HI_VOID HI_JPEG_RandomReset()
 {
-	 if(sg_s32JpegDev >= 0)
-	 {
+	 if(sg_s32JpegDev >= 0){
 	 	 JPEG_TRACE("================================================================\n");
 		 JPEG_TRACE("开始复位\n");
 		 JPEG_TRACE("================================================================\n");

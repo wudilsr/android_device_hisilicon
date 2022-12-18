@@ -1,13 +1,13 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-ifeq (5.0,$(findstring 5.0,$(PLATFORM_VERSION)))
+ifeq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
 LOCAL_32_BIT_ONLY :=true
 endif
 include $(SDK_DIR)/Android.def
 
 LOCAL_MODULE:= sample_svrlog
-ifneq (5.0,$(findstring 5.0,$(PLATFORM_VERSION)))
+ifneq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 endif
 

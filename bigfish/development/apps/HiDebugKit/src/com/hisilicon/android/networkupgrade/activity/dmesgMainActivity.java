@@ -145,10 +145,10 @@ public class dmesgMainActivity  extends Activity
                 mBuffer = null;
 
                 Result = new String(out.toByteArray(), "ISO-8859-1");
-                Log.i(TAG, Result);
+                Log.d(TAG, Result);
                 in.close();
             } catch (java.io.IOException e) {
-                Log.i(TAG, "IOException:" + e);
+                Log.e(TAG, "IOException: " + e);
             }
         }
     }

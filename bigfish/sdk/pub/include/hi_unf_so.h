@@ -405,6 +405,23 @@ None
 */
 HI_S32 HI_UNF_SO_SendData(HI_HANDLE handle, const HI_UNF_SO_SUBTITLE_INFO_S *pstSubInfo, HI_U32 u32TimeOutMs);
 
+/** 
+\brief  Setting max interval time of the subtitle. 
+CNcomment:设置字幕最大的时间偏差。CNend 
+\attention \n 
+None 
+\param[in] handle Handle of SO instance. CNcomment:so实例句柄。CNend 
+\param[in] u32IntervalMs max interval of subtitle, unit is Millisecondes.
+CNcomment:字幕最大的时间偏差值，单位ms。CNend 
+
+\retval ::HI_SUCCESS  Operation success. CNcomment:成功。CNend 
+\retval ::HI_FAILURE  Operation fail. CNcomment:失败。CNend 
+
+\see \n 
+None 
+*/ 
+HI_S32 HI_UNF_SO_SetMaxInterval(HI_HANDLE handle, HI_U32 u32IntervalMs ); 
+
 /** @} */  /** <!-- ==== API Declaration End ==== */
 
 #ifdef __cplusplus

@@ -12,7 +12,9 @@
 #include "schedule.h"
 #include "hi_unf_keyled.h"
 #include "hi_common.h"
+#ifndef HI_MINIBOOT_SUPPORT
 #include "common.h"
+#endif
 #include "loader_upgrade.h"
 #include "loaderdb_info.h"
 #include "hi_drv_gpio.h"
@@ -111,8 +113,11 @@ static HI_S32 GetDataBlockInfo(const HI_CHAR *pstrDataName, const HI_CHAR *boota
 
 		memset(buf, 0, sizeof(buf));
 		memcpy(buf, pstr, pstr2 - pstr);
+#ifndef HI_MINIBOOT_SUPPORT
 		pstDataInfo->u32Offset = simple_strtoul(buf, HI_NULL, 16);
-
+#else
+        pstDataInfo->u32Offset = simple_strtoul_2(buf, HI_NULL, 16);
+#endif
 		/*get size*/
 		pstr  = pstr2 + 1;
 		pstr2 = strstr(pstr, " ");
@@ -128,8 +133,12 @@ static HI_S32 GetDataBlockInfo(const HI_CHAR *pstrDataName, const HI_CHAR *boota
 
 		memset(buf, 0, sizeof(buf));
 		memcpy(buf, pstr, pstr2 - pstr);
-		pstDataInfo->u32Size = simple_strtoul(buf, HI_NULL, 16);
-	}
+#ifndef HI_MINIBOOT_SUPPORT
+        pstDataInfo->u32Size = simple_strtoul(buf, HI_NULL, 16);
+#else
+        pstDataInfo->u32Size = simple_strtoul_2(buf, HI_NULL, 16);
+#endif
+    }
 
 	return HI_SUCCESS;
 }
@@ -727,7 +736,7 @@ HI_S32 Loader_Main()
 #ifdef HI_LOADER_APPLOADER
 	else
 	{
-		return Customer_Boot(HI_FLASH_TYPE_BUTT, KERNEL, 0, 0);
+		return 0;
 	}
 #endif
 

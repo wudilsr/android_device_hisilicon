@@ -14,11 +14,8 @@
 /**
  **ZME水平精度设置
  **/
+#include "optm_hifb.h"
 #include "hifb_config.h"
-
-
-extern HI_S32 OPTM_AllocAndMap(const char *bufname, char *zone_name, HI_U32 size, int align, MMZ_BUFFER_S *psMBuf);
-extern HI_VOID OPTM_UnmapAndRelease(MMZ_BUFFER_S *psMBuf);
 
 const HI_S16 *g_pOPTMGfxZmeCoef[GZME_COEF_RATIO_BUTT][GZME_COEF_TYPE_BUTT] =
 {   //HL8T8P                                 VL4T16P                                           HC8T8P                                 VC4T16P                                           VL2T16P                                                VC2T16P
@@ -409,10 +406,10 @@ static HI_S32 OPTM_GZmeLoadSDCoefV(OPTM_GZME_COEF_RATIO_E enCoefRatio, HI_U8 *pu
 ***************************************************************************************/
 HI_VOID OPTM_GZmeLoadCoefHV(OPTM_ALG_GZME_MEM_S *pstGZmeCoefMem)
 {
-    HI_U8 *pu8CurAddr;
-    HI_U32 u32NumSize;
-    HI_U32 u32PhyAddr;
-    OPTM_ALG_GZME_COEF_ADDR_S *pstAddrTmp;
+    HI_U8 *pu8CurAddr  = 0;
+    HI_U32 u32NumSize  = 0;
+    HI_U32 u32PhyAddr  = 0;
+    OPTM_ALG_GZME_COEF_ADDR_S *pstAddrTmp = NULL;
 
     pu8CurAddr = (HI_U8 *)(pstGZmeCoefMem->stMBuf.u32StartVirAddr);
     u32PhyAddr = pstGZmeCoefMem->stMBuf.u32StartPhyAddr;
@@ -614,7 +611,7 @@ HI_VOID OPTM_GZmeLoadCoefHV(OPTM_ALG_GZME_MEM_S *pstGZmeCoefMem)
 
     OPTM_GTinyZmeLoadCoefV(GZME_COEF_0,  pu8CurAddr);
     pstAddrTmp->u32Zme2T16PCoefAddrVL_0 = u32PhyAddr;
-    u32PhyAddr   += u32NumSize;
+    //u32PhyAddr   += u32NumSize;
     pu8CurAddr   += u32NumSize;
     
 }
@@ -872,34 +869,50 @@ HI_VOID OPTM_ALG_GZmeComnSet(OPTM_ALG_GZME_MEM_S *pstMem, OPTM_ALG_GZME_DRV_PARA
     
     //config vertical chroma zme tap and zme order
     pstZmeRtlPara->bZmeTapVC = 0;
-   
+
+   	
     /*
     Default is V First, Ver Filter uses four line buffer, Hor first can save same calculations, 
     But in HiFoneB2, Because Line Buffer is 8bits, So default is Ver first
     */
-    pstZmeRtlPara->bZmeOrder = GZME_ORDER_VH; //Hor First
-
+    if ((pstZmeDrvPara->u32ZmeFrmWOut > 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn <= 1920))
+    {
+        pstZmeRtlPara->bZmeOrder = GZME_ORDER_VH; //Ver First
+    }
+    else if ((pstZmeDrvPara->u32ZmeFrmWOut <= 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn > 1920))
+    {
+        pstZmeRtlPara->bZmeOrder = GZME_ORDER_HV; //Hor First
+    }
+    else
+    {
+		pstZmeRtlPara->bZmeOrder = GZME_ORDER_VH; //Ver First
+    }
+    
     if (pstZmeDrvPara->u32ZmeFrmWOut == pstZmeDrvPara->u32ZmeFrmWIn)
     {
         pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_4;//Ver 4Tap
     }
     else
     {
-        if ((pstZmeDrvPara->u32ZmeFrmWOut < 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn < 1920))
+        if ((pstZmeDrvPara->u32ZmeFrmWOut <= 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn <= 1920))
         {
             pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_4;//Ver 4Tap
         }
-        else if  ((pstZmeDrvPara->u32ZmeFrmWOut < 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn > 1920))
+        else if ((pstZmeDrvPara->u32ZmeFrmWOut <= 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn > 1920))
         {
             pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_2;//Ver 2Tap
         }
-        else if ((pstZmeDrvPara->u32ZmeFrmWOut > 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn < 1920))
+        else if ((pstZmeDrvPara->u32ZmeFrmWOut > 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn <= 1920))
         {
             pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_4;//Ver 4Tap
         }
         else if ((pstZmeDrvPara->u32ZmeFrmWOut > 1920)&&(pstZmeDrvPara->u32ZmeFrmWIn > 1920))
         {
             pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_2;//Ver 2Tap
+        }
+        else
+        {
+            pstZmeRtlPara->bZmeTapV  = GZME_VER_TAP_4;//Ver 4Tap
         }
 
     }

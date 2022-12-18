@@ -92,11 +92,12 @@ typedef enum hiUNF_EDID_AUDIO_SPEAKER_E
 /**EDID MANUFACTURE Info struct*//**CNcomment:EDID制造商信息 */
 typedef struct hiUNF_EDID_MANUFACTURE_INFO_E
 {
-    HI_U8               u8MfrsName[4];   /**<Manufacture name*//**<CNcomment:设备厂商标识 */
-    HI_U32              u32ProductCode;  /**<Product code*//**<CNcomment:设备ID */
-    HI_U32              u32SerialNumber; /**<Serial numeber of Manufacture*//**<CNcomment:设备序列号 */
-    HI_U32              u32Week;         /**<the week of manufacture*//**<CNcomment:设备生产日期(周) */
-    HI_U32              u32Year;         /**<the year of manufacture*//**<CNcomment:设备生产日期(年) */
+    HI_U8      u8MfrsName[4];            /**<Manufacture name*//**<CNcomment:设备厂商标识 */
+    HI_U32     u32ProductCode;           /**<Product code*//**<CNcomment:设备ID */
+    HI_U32     u32SerialNumber;          /**<Serial numeber of Manufacture*//**<CNcomment:设备序列号 */
+    HI_U32     u32Week;                  /**<the week of manufacture*//**<CNcomment:设备生产日期(周) */
+    HI_U32     u32Year;                  /**<the year of manufacture*//**<CNcomment:设备生产日期(年) */
+    HI_U8      u8pSinkName[14];          /**<Sink Name*//**<CNcomment:设备名称*/
 }HI_UNF_EDID_MANUFACTURE_INFO_S;
 
 /**EDID Colorimety Info struct*//**CNcomment:EDID 色调信息结构体 */
@@ -107,9 +108,9 @@ typedef struct hiUNF_EDID_COLORIMETRY_S
     HI_BOOL    bsYCC601       ;          /**<The sink is support sYCC601 or not flag*//**<CNcomment:是否支持sYCC601颜色格式 */
     HI_BOOL    bAdobleYCC601  ;          /**<The sink is support AdobleYCC601 or not flag*//**<CNcomment:是否支持AdobleYCC601颜色格式 */ 
     HI_BOOL    bAdobleRGB     ;          /**<The sink is support AdobleRGB or not flag*//**<CNcomment:是否支持AdobleRGB颜色格式 */  
-    HI_BOOL    bBT2020cYCC    ;           /**<The sink is support BT2020cYCC or not flag*//**<CNcomment:是否支持BT2020cYCC颜色格式 */  
-    HI_BOOL    bBT2020YCC     ;           /**<The sink is support BT2020YCC or not flag*//**<CNcomment:是否支持BT2020YCC颜色格式 */  
-    HI_BOOL    bBT2020RGB     ;           /**<The sink is support BT2020RGB or not flag*//**<CNcomment:是否支持BT2020RGB颜色格式 */  
+    HI_BOOL    bBT2020cYCC    ;          /**<The sink is support BT2020cYCC or not flag*//**<CNcomment:是否支持BT2020cYCC颜色格式 */  
+    HI_BOOL    bBT2020YCC     ;          /**<The sink is support BT2020YCC or not flag*//**<CNcomment:是否支持BT2020YCC颜色格式 */  
+    HI_BOOL    bBT2020RGB     ;          /**<The sink is support BT2020RGB or not flag*//**<CNcomment:是否支持BT2020RGB颜色格式 */  
 } HI_UNF_EDID_COLORIMETRY_S;
 
 /**EDID color space Info struct*//**CNcomment:EDID 色彩空间信息结构体 */

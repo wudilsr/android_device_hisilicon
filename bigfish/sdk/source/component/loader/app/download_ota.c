@@ -19,6 +19,7 @@
 #include "hi_adp_boardcfg.h"
 #include "upgrd_common.h"
 #include "upgrd_config.h"
+#include "hi_unf_i2c.h"
 
 #ifdef HI_LOADER_BOOTLOADER
  #include <uboot.h>
@@ -30,6 +31,13 @@ extern "C" {
  #endif
 #endif /* __cplusplus */
 
+/* define the tuner number from cfg.mak */
+#define LOADER_FIRST_TUNER   0
+#define LOADER_SECOND_TUNER  1
+#define LOADER_THIRD_TUNER   2
+#define LOADER_FOURTH_TUNER  3
+
+
 #define TUNER_DURATION (500) //ms
 
 #define DMX_TRY_TIMES (1000)
@@ -37,6 +45,9 @@ extern "C" {
 
 #define LOADER_INVALID_CHAN_ID 0xFFFFFFFF
 #define LOADER_INVALID_FILTER_ID 0xFFFFFFFF
+
+HI_U32 g_u32LoaderGpioScl = 0;
+HI_U32 g_u32LoaderGpioSda = 0;
 
 static HI_HANDLE g_hChannel = LOADER_INVALID_CHAN_ID;
 static HI_HANDLE g_hFilter = LOADER_INVALID_FILTER_ID;
@@ -53,6 +64,21 @@ HI_S32 LOADER_GetTunerAttr(HI_UNF_TUNER_ATTR_S *pstTunerAttr)
     }
 
     GET_TUNER_CONFIG(stAttr);
+	
+#if defined(LOADER_USE_GPIO)
+	HI_U32 u32LoaderI2cNum = 0;
+	if (LOADER_I2C_INVALID == stAttr.enI2cChannel)
+	{
+		if (HI_SUCCESS == HI_UNF_I2C_CreateGpioI2c(&u32LoaderI2cNum, g_u32LoaderGpioScl, g_u32LoaderGpioSda))
+		{
+			stAttr.enI2cChannel = u32LoaderI2cNum;
+		}
+		else
+		{
+			HI_ERR_LOADER("created i2c num error!,the num is %d\n", u32LoaderI2cNum);
+		}
+	}
+#endif
 
     memcpy(pstTunerAttr, &stAttr, sizeof(HI_UNF_TUNER_ATTR_S));
     
@@ -77,22 +103,94 @@ HI_S32 LOADER_GetSatAttr(HI_UNF_TUNER_SAT_ATTR_S *pstSatAttr)
 }
 #endif
 
+static HI_S32 LOADER_AttachTSPort(HI_U32 Dmxid, HI_U32 TunerID)
+{
+    HI_S32                      Ret;
+    HI_UNF_DMX_PORT_E           DmxAttachPort;
+    HI_UNF_DMX_PORT_ATTR_S      DmxAttachPortAttr;
+    if (LOADER_FIRST_TUNER == TunerID)
+    {
+        DmxAttachPort = HI_DEMUX_PORT;
+    }
+    else if (LOADER_SECOND_TUNER == TunerID)
+    {
+        DmxAttachPort = HI_DEMUX1_PORT;
+    }
+    else if (LOADER_THIRD_TUNER == TunerID)
+    {
+        DmxAttachPort = HI_DEMUX2_PORT;
+    }
+    else if (LOADER_FOURTH_TUNER == TunerID)
+    {
+        DmxAttachPort = HI_DEMUX3_PORT;
+    }
+    else
+    {
+        printf("No this tuner device\n");
+        return HI_FAILURE;
+    }
+    Ret = HI_UNF_DMX_GetTSPortAttr(DmxAttachPort, &DmxAttachPortAttr);
+    switch (DmxAttachPort)
+    {
+    case HI_UNF_DMX_PORT_IF_0:
+    default:
+        DmxAttachPortAttr.enPortType = HI_IF0_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_IF0_BIT_SELECTOR;
+        break;
+    case HI_UNF_DMX_PORT_TSI_0:
+        DmxAttachPortAttr.enPortType = HI_TSI0_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI0_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI0_CLK_PHASE_REVERSE;
+        break;
+    case HI_UNF_DMX_PORT_TSI_1:
+        DmxAttachPortAttr.enPortType = HI_TSI1_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI1_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI1_CLK_PHASE_REVERSE;
+        break;
+    case HI_UNF_DMX_PORT_TSI_2:
+        DmxAttachPortAttr.enPortType = HI_TSI2_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI2_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI2_CLK_PHASE_REVERSE;
+        break;
+    case HI_UNF_DMX_PORT_TSI_3:
+        DmxAttachPortAttr.enPortType = HI_TSI3_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI3_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI3_CLK_PHASE_REVERSE;
+        break;
+    case HI_UNF_DMX_PORT_TSI_4:
+        DmxAttachPortAttr.enPortType = HI_TSI4_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI4_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI4_CLK_PHASE_REVERSE;
+        break;
+    case HI_UNF_DMX_PORT_TSI_5:
+        DmxAttachPortAttr.enPortType = HI_TSI5_TYPE;
+        DmxAttachPortAttr.u32SerialBitSelector = HI_TSI5_BIT_SELECTOR;
+        DmxAttachPortAttr.u32TunerInClk = HI_TSI5_CLK_PHASE_REVERSE;
+        break;
+    }
+    Ret |= HI_UNF_DMX_SetTSPortAttr(DmxAttachPort, &DmxAttachPortAttr);
+    if (HI_SUCCESS != Ret)
+    {
+        printf("call HI_UNF_DMX_SetTSPortAttr failed.\n");
+        return HI_FAILURE;
+    }
+    Ret = HI_UNF_DMX_AttachTSPort(Dmxid, DmxAttachPort);
+    if (HI_SUCCESS != Ret)
+    {
+        printf("call HI_UNF_DMX_AttachTSPort.\n");
+        return HI_FAILURE;
+    }
+    return HI_SUCCESS;
+}
+
 static HI_S32 LOADER_Demux_Init(HI_VOID)
 {
     HI_S32 s32Ret = 0;
-#if defined(HI_LOADER_APPLOADER)
-    HI_UNF_DMX_PORT_ATTR_S stAttr;
-#endif
 
     s32Ret |= HI_UNF_DMX_Init();
 
-#if defined(HI_LOADER_TUNER_DVB_T) || defined(HI_LOADER_TUNER_DVB_T2) || defined(HI_LOADER_TUNER_SAT)
-    HI_UNF_DMX_GetTSPortAttr(DMX_PORT_TUNER, &stAttr);
-    stAttr.enPortType = HI_UNF_DMX_PORT_TYPE_SERIAL;
-    stAttr.u32SerialBitSelector = 0;
-    HI_UNF_DMX_SetTSPortAttr(DMX_PORT_TUNER, &stAttr);
-#endif
-    s32Ret |= HI_UNF_DMX_AttachTSPort(0, (HI_UNF_DMX_PORT_E)DMX_PORT_TUNER);
+
+    s32Ret |= LOADER_AttachTSPort(0, TUNER_PORT);
 
     return s32Ret;
 }
@@ -134,7 +232,7 @@ static HI_S32 DOWNLOAD_OTA_TUNER_Init(HI_U32 u32TunerPort, HI_LOADER_OTA_PARA_S 
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_LOADER("call LOADER_GetTunerAttr failed.\n");
-        HI_UNF_TUNER_Close(TUNER_PORT);
+        HI_UNF_TUNER_Close(u32TunerPort);
         HI_UNF_TUNER_DeInit();
         return s32Ret;
     }
@@ -144,11 +242,32 @@ static HI_S32 DOWNLOAD_OTA_TUNER_Init(HI_U32 u32TunerPort, HI_LOADER_OTA_PARA_S 
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_LOADER("call HI_UNF_TUNER_SetAttr failed.\n");
-        HI_UNF_TUNER_Close(TUNER_PORT);
+        HI_UNF_TUNER_Close(u32TunerPort);
         HI_UNF_TUNER_DeInit();
         return s32Ret;
     }
-    
+
+#if defined(HI_LOADER_TUNER_DVB_T) || defined(HI_LOADER_TUNER_DVB_T2)
+{
+    HI_UNF_TUNER_TER_ATTR_S     stTerTunerAttr = {0};
+
+    stTerTunerAttr.u32DemodClk    = HI_TER_DEMOD_REF_CLOCK; 
+	stTerTunerAttr.u16TunerMaxLPF    = HI_TER_TUNER_MAX_LPF; 
+    stTerTunerAttr.u16TunerI2CClk    = HI_TER_TUNER_I2C_CLOCK; 
+	stTerTunerAttr.u32ResetGpioNo = HI_DEMOD_RESET_GPIO;
+	stTerTunerAttr.enRFAGC        = HI_UNF_TUNER_RFAGC_NORMAL;
+    stTerTunerAttr.enTSClkPolar   = HI_UNF_TUNER_TSCLK_POLAR_RISING;
+    stTerTunerAttr.enTSFormat     = HI_UNF_TUNER_TS_FORMAT_TS;
+    stTerTunerAttr.enTSSerialPIN  = HI_UNF_TUNER_TS_FORMAT_TS;
+    s32Ret = HI_UNF_TUNER_SetTerAttr(u32TunerPort, &stTerTunerAttr);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_LOADER("call HI_UNF_TUNER_SetTerAttr failed.\n");
+        return s32Ret;
+    }
+}   
+#endif
+
 #ifdef HI_LOADER_TUNER_SAT
 	{
 	    HI_UNF_TUNER_SAT_ATTR_S stSatAttr;
@@ -156,7 +275,7 @@ static HI_S32 DOWNLOAD_OTA_TUNER_Init(HI_U32 u32TunerPort, HI_LOADER_OTA_PARA_S 
 	    if (HI_SUCCESS != s32Ret)
 	    {
 	        HI_ERR_LOADER("call LOADER_GetSatAttr failed.\n");
-	        HI_UNF_TUNER_Close(TUNER_PORT);
+	        HI_UNF_TUNER_Close(u32TunerPort);
 	        HI_UNF_TUNER_DeInit();
 	        return s32Ret;
 	    }
@@ -165,7 +284,7 @@ static HI_S32 DOWNLOAD_OTA_TUNER_Init(HI_U32 u32TunerPort, HI_LOADER_OTA_PARA_S 
 	    if (HI_SUCCESS != s32Ret)
 	    {
 	        HI_ERR_LOADER("call HI_UNF_TUNER_SetSatAttr failed.\n");
-	        HI_UNF_TUNER_Close(TUNER_PORT);
+	        HI_UNF_TUNER_Close(u32TunerPort);
 	        HI_UNF_TUNER_DeInit();
 	        return s32Ret;
 	    }
@@ -237,28 +356,42 @@ static HI_S32 DOWNLOAD_OTA_TUNER_Init(HI_U32 u32TunerPort, HI_LOADER_OTA_PARA_S 
         }
 
         /* Before connect or blindscan, you need config LNB */
-        if ((pstPara->unConnPara.stSat.u32LowLO == pstPara->unConnPara.stSat.u32HighLO)
-           || (0 == pstPara->unConnPara.stSat.u32LowLO)
-           || (0 == pstPara->unConnPara.stSat.u32HighLO))
+        if (HI_TRUE == pstPara->unConnPara.stSat.u32UnicFlag)  /* DVB-S unicable*/
         {
-            stLNBConfig.enLNBType = HI_UNF_TUNER_FE_LNB_SINGLE_FREQUENCY;
-        }
-        else
-        {
-            stLNBConfig.enLNBType = HI_UNF_TUNER_FE_LNB_DUAL_FREQUENCY;
-        }
-
-        stLNBConfig.u32LowLO  = pstPara->unConnPara.stSat.u32LowLO;
-        stLNBConfig.u32HighLO = pstPara->unConnPara.stSat.u32HighLO;
-
-        if ((6000 > pstPara->unConnPara.stSat.u32HighLO) && (6000 > pstPara->unConnPara.stSat.u32LowLO))
-        {
-            stLNBConfig.enLNBBand = HI_UNF_TUNER_FE_LNB_BAND_C;
-        }
-        else
-        {
+            stLNBConfig.enLNBType = HI_UNF_TUNER_FE_LNB_UNICABLE;
+            stLNBConfig.u32LowLO = 9750;
+            stLNBConfig.u32HighLO = 10600;
             stLNBConfig.enLNBBand = HI_UNF_TUNER_FE_LNB_BAND_KU;
+            stLNBConfig.u8UNIC_SCRNO = 0;
+            stLNBConfig.u32UNICIFFreqMHz = 1210;
+            stLNBConfig.enSatPosn = HI_UNF_TUNER_SATPOSN_A;
+            HI_DBG_LOADER("Set LNB config DVB-S unicable.\n");
         }
+        else
+        {
+            if ((pstPara->unConnPara.stSat.u32LowLO == pstPara->unConnPara.stSat.u32HighLO)
+               || (0 == pstPara->unConnPara.stSat.u32LowLO)
+               || (0 == pstPara->unConnPara.stSat.u32HighLO))
+            {
+                stLNBConfig.enLNBType = HI_UNF_TUNER_FE_LNB_SINGLE_FREQUENCY;
+            }
+            else
+            {
+                stLNBConfig.enLNBType = HI_UNF_TUNER_FE_LNB_DUAL_FREQUENCY;
+            }
+            stLNBConfig.u32LowLO  = pstPara->unConnPara.stSat.u32LowLO;
+            stLNBConfig.u32HighLO = pstPara->unConnPara.stSat.u32HighLO;
+
+            if ((6000 > pstPara->unConnPara.stSat.u32HighLO) && (6000 > pstPara->unConnPara.stSat.u32LowLO))
+            {
+                stLNBConfig.enLNBBand = HI_UNF_TUNER_FE_LNB_BAND_C;
+            }
+            else
+            {
+                stLNBConfig.enLNBBand = HI_UNF_TUNER_FE_LNB_BAND_KU;
+            }
+        }
+        
 
         s32Ret = HI_UNF_TUNER_SetLNBConfig(u32TunerPort, &stLNBConfig);
         if (HI_SUCCESS != s32Ret)
@@ -333,10 +466,36 @@ static HI_S32 DOWNLOAD_OTA_LockTuner(HI_LOADER_OTA_PARA_S *pstOtaParam, HI_U32 u
 					break;
 				}
 
-			case HI_UNF_TUNER_SIG_TYPE_DVB_T:
-				{
-					break;
-				}
+        case HI_UNF_TUNER_SIG_TYPE_DVB_T:
+        case HI_UNF_TUNER_SIG_TYPE_DVB_T2:
+        {
+            stConnectParam.unConnectPara.stTer.bReverse = (HI_BOOL)0;
+            stConnectParam.unConnectPara.stTer.u32Freq = pstOtaParam->unConnPara.stTer.u32OtaFreq;
+            stConnectParam.unConnectPara.stTer.u32BandWidth = pstOtaParam->unConnPara.stTer.u32OtaBandWidth;
+            switch (pstOtaParam->unConnPara.stTer.u32OtaModulation)
+            {
+            case 0:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_16;
+                break;
+            case 1:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_32;
+                break;
+            case 2:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_64;
+                break;
+            case 3:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_128;
+                break;
+            case 4:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_256;
+                break;
+            default:
+                stConnectParam.unConnectPara.stTer.enModType = HI_UNF_MOD_TYPE_QAM_64;
+                break;
+            }
+
+            break;
+        }
 
 			default:
 				break;

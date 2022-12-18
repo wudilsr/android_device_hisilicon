@@ -242,19 +242,19 @@ HI_S32 HIFB_DRV_GetDispSize(HIFB_LAYER_ID_E enLayerId, HIFB_RECT *pstOutputRect)
 * others:       : NA
 ***************************************************************************************/
 #ifdef CFG_HIFB_STEREO3D_HW_SUPPORT  
-HI_S32 HIFB_DRV_SetTriDimMode(HI_U32 u32LayerId, HIFB_STEREO_MODE_E enStereoMode)
+HI_S32 HIFB_DRV_SetTriDimMode(HI_U32 u32LayerId, HIFB_STEREO_MODE_E enStereoMode, HIFB_STEREO_MODE_E enWbcSteroMode)
 {
-     if( HIFB_STEREO_MONO == enStereoMode)
-     {
-     	g_stGfxOps.OPTM_GfxSetTriDimEnable(u32LayerId, HI_FALSE);
-		return g_stGfxOps.OPTM_GfxSetTriDimMode(u32LayerId, HIFB_STEREO_MONO);
-     }
-     else
-     {
-        g_stGfxOps.OPTM_GfxSetTriDimEnable(u32LayerId, HI_TRUE);
-		return g_stGfxOps.OPTM_GfxSetTriDimMode(u32LayerId, enStereoMode);
-     }
+	if( HIFB_STEREO_MONO == enStereoMode)
+	{
+		g_stGfxOps.OPTM_GfxSetTriDimEnable(u32LayerId, HI_FALSE);
+	}
+	else
+	{
+		g_stGfxOps.OPTM_GfxSetTriDimEnable(u32LayerId, HI_TRUE);
+	}
+	return g_stGfxOps.OPTM_GfxSetTriDimMode(u32LayerId, enStereoMode, enWbcSteroMode);
 }
+
 /***************************************************************************************
 * func			: HIFB_DRV_SetTriDimAddr
 * description	: CNcomment: 设置3D显示地址 CNend\n
@@ -303,10 +303,7 @@ HI_S32 HIFB_DRV_SetLayerPreMult(HIFB_LAYER_ID_E enLayerId, HI_BOOL bEnable)
     return g_stGfxOps.OPTM_GfxSetLayerPreMult(enLayerId, bEnable);
 }
 
-HI_S32  HIFB_DRV_SetClutAddr(HIFB_LAYER_ID_E enLayerId, HI_U32 u32PhyAddr)
-{
-    return g_stGfxOps.OPTM_GfxSetClutAddr(enLayerId, u32PhyAddr);
-}
+
 HI_S32 HIFB_DRV_SetIntCallback(HIFB_CALLBACK_TPYE_E eCallbackType, IntCallBack pCallBack, HIFB_LAYER_ID_E enLayerId)
 {
     return g_stGfxOps.OPTM_GfxSetCallback(enLayerId, pCallBack, eCallbackType);
@@ -325,9 +322,9 @@ HI_S32 HIFB_DRV_OpenLayer(HIFB_LAYER_ID_E enLayerId)
     return g_stGfxOps.OPTM_GfxOpenLayer(enLayerId);
 }
 
-HI_S32 HIFB_DRV_GetOSDData(HIFB_LAYER_ID_E enLayerId, HIFB_OSD_DATA_S *pstLayerData)
+HI_VOID HIFB_DRV_GetOSDData(HIFB_LAYER_ID_E enLayerId, HIFB_OSD_DATA_S *pstLayerData)
 {
-	return g_stGfxOps.OPTM_GfxGetOSDData(enLayerId, pstLayerData);
+	g_stGfxOps.OPTM_GfxGetOSDData(enLayerId, pstLayerData);
 }
 
 
@@ -385,17 +382,16 @@ HI_S32 HIFB_DRV_ResumeCompression(HIFB_LAYER_ID_E enLayerId)
      return HI_SUCCESS;
 }
 
-HI_S32 HIFB_DRV_GetGFXCap(const HIFB_CAPABILITY_S **pstCap)
+/***************************************************************************************
+* func          : HIFB_DRV_GetGFXCap
+* description   : CNcomment: 获取图层能力级 CNend\n
+* param[in]     : HI_VOID
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
+HI_VOID HIFB_DRV_GetGFXCap(const HIFB_CAPABILITY_S **pstCap)
 {
 	g_stGfxOps.OPTM_GFX_GetDevCap(pstCap);
-
-	if (HI_NULL == pstCap)
-	{
-		HIFB_ERROR("GFX get device capability failed!\n");
-		return HI_FAILURE;
-	}
-
-	return HI_SUCCESS;
 }
 
 HI_S32 HIFB_DRV_SetScreenFlag(HIFB_LAYER_ID_E enLayerId, HI_BOOL bFlag)
@@ -422,7 +418,7 @@ HI_S32 HIFB_DRV_GetInitScreenFlag(HIFB_LAYER_ID_E enLayerId)
 
 HI_S32 HIFB_DRV_SetLayerMaskFlag(HIFB_LAYER_ID_E enLayerId, HI_BOOL bFlag)
 {
-	g_stGfxOps.OPTM_GFX_SetGfxMask(OPTM_GetGfxGpId(enLayerId), bFlag);
+	g_stGfxOps.OPTM_GFX_SetGPMask(OPTM_GetGfxGpId(enLayerId), bFlag);
 	return HI_SUCCESS;
 }
 
@@ -494,6 +490,10 @@ HI_S32 HIFB_DRV_GetSlvLayerInfo(HIFB_SLVLAYER_DATA_S *pstLayerInfo)
     return g_stGfxOps.OPTM_GFX_GetSlvLayerInfo(pstLayerInfo);
 }
 
+HI_S32 HIFB_DRV_GetHaltDispStatus(HIFB_LAYER_ID_E enLayerId,HI_BOOL *pbDispInit)
+{
+	return g_stGfxOps.OPTM_GFX_GetHaltDispStatus(enLayerId, pbDispInit);
+}
 
 /***************************************************************************************
 * func          : HIFB_DRV_GetDevOps
@@ -515,7 +515,6 @@ HI_VOID HIFB_DRV_GetDevOps(HIFB_DRV_OPS_S    *Ops)
 	Ops->HIFB_DRV_OpenLayer         = HIFB_DRV_OpenLayer;
 	Ops->HIFB_DRV_PauseCompression  = HIFB_DRV_PauseCompression;
 	Ops->HIFB_DRV_ResumeCompression = HIFB_DRV_ResumeCompression;
-	Ops->HIFB_DRV_SetClutAddr       = HIFB_DRV_SetClutAddr;
 	Ops->HIFB_DRV_SetColorReg       = HIFB_DRV_SetColorReg;
 #ifdef CFG_HIFB_STEREO3D_HW_SUPPORT    
 	Ops->HIFB_DRV_SetTriDimMode     = HIFB_DRV_SetTriDimMode;
@@ -528,7 +527,6 @@ HI_VOID HIFB_DRV_GetDevOps(HIFB_DRV_OPS_S    *Ops)
 	Ops->HIFB_DRV_SetLayerPriority  = HIFB_DRV_SetLayerPriority;
 	Ops->HIFB_DRV_UpdataLayerReg    = HIFB_DRV_UpdataLayerReg;	
 	Ops->HIFB_DRV_WaitVBlank        = HIFB_DRV_WaitVBlank;
-	Ops->HIFB_DRV_SetLayerDataFmt   = HIFB_DRV_SetLayerDataFmt;
 	Ops->HIFB_DRV_SetLayerKeyMask   = HIFB_DRV_SetLayerKeyMask;
 	Ops->HIFB_DRV_SetLayerPreMult   = HIFB_DRV_SetLayerPreMult;
 	Ops->HIFB_DRV_SetIntCallback    = HIFB_DRV_SetIntCallback;
@@ -556,6 +554,6 @@ HI_VOID HIFB_DRV_GetDevOps(HIFB_DRV_OPS_S    *Ops)
 	Ops->HIFB_DRV_SetCmpDDROpen     = HIFB_DRV_SetCmpDDROpen;
     Ops->HIFB_DRV_SetGpDeflicker    = HIFB_DRV_SetGpDeflicker;
 	Ops->HIFB_DRV_GetSlvLayerInfo   = HIFB_DRV_GetSlvLayerInfo;
-	
+	Ops->HIFB_DRV_GetHaltDispStatus = HIFB_DRV_GetHaltDispStatus;
 	return;
 }

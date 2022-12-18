@@ -62,15 +62,6 @@ endif
 ifeq (y,$(CFG_HI_HACODEC_WMADECODE_SUPPORT))
 LOCAL_SRC_PRELIBS += libHA.AUDIO.WMA.decode
 endif
-ifeq (y,$(CFG_HI_CAPTION_TTX_SUPPORT))
-LOCAL_SRC_PRELIBS += libhi_ttx
-endif
-ifeq (y,$(CFG_HI_CAPTION_CC_SUPPORT))
-LOCAL_SRC_PRELIBS += libhi_cc
-endif
-ifeq (y,$(CFG_HI_3G_SUPPORT))
-LOCAL_SRC_PRELIBS += libhi_3g
-endif
 
 LOCAL_MODULES_NAME := $(call hisdk_check_file_print, $(LOCAL_SRC_PRELIBS))
 LOCAL_PREBUILT_LIBS := $(call addsuffix_so_list, $(LOCAL_MODULES_NAME))

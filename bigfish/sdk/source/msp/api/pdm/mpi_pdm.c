@@ -21,7 +21,7 @@
 #define PDM_DEVICE_INFO_DEF_NAME         "deviceinfo"
 
 #define PDM_BASE_PARAM_MAX_LEN      (16*1024*1024)
-#define PDM_LOGO_MAX_LEN            (12*1024*1024)
+#define PDM_LOGO_MAX_LEN            (20*1024*1024)
 #define PDM_LOGO_PARAM_MAX_LEN      (128*1024)
 #define PDM_FASTPLAY_MAX_LEN        (50*1024*1024)
 #define PDM_FASTPLAY_PARAM_MAX_LEN  (128*1024)

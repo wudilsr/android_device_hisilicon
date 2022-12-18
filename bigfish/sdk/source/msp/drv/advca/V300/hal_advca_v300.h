@@ -25,7 +25,8 @@ typedef struct
     HI_UNF_ADVCA_SP_DSC_MODE_E   enDscMode;
     HI_UNF_ADVCA_KEYLADDER_LEV_E MaxLevel;  //Max level
     HI_U32                       Keyladder_Ready;     //Max level
-    HI_U8                        SessionKey[16][16];
+    HI_U8                        SessionKey[16][32];
+    HI_U8                        GG_Flag[4];
     HI_U32                       SessionKey_sec[16];
     HI_U8                        LastEvenKey[16];
     HI_U32                       LastEvenKey_secTime;
@@ -40,6 +41,7 @@ extern CA_KEYLADDER_INFO_S g_SPInfo;
 extern CA_KEYLADDER_INFO_S g_MiscInfo;
 extern CA_KEYLADDER_INFO_S g_DCASInfo;
 extern CA_KEYLADDER_INFO_S g_TAInfo;
+extern CA_KEYLADDER_INFO_S g_GDRMInfo;
 
 HI_VOID DRV_ADVCA_SystemSetClock(HI_VOID);
 HI_VOID DRV_ADVCA_SystemSetReset(HI_VOID);

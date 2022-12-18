@@ -110,7 +110,7 @@ static alsa_handle_t _defaultsOut = {
     channels    : 2,
     sampleRate  : DEFAULT_SAMPLE_RATE,
     latency     : 250000, // Desired Delay in usec
-    bufferSize  : 4096, // Desired Number of samples
+    bufferSize  : 2048, // Desired Number of samples
     modPrivate  : 0,
 };
 

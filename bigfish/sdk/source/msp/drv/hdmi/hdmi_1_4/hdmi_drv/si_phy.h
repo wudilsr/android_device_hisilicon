@@ -20,7 +20,9 @@
 
 #elif  defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
 // 50Mhz
 #define OSC_CLK_SELECT  50000000
@@ -46,7 +48,10 @@
 #endif
 //#define BOARD_TYPE_S40V2_fpga
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 typedef enum
 {
     HI_HDMI_PHY_AUDIO_CLK_5P3   = 0x00,

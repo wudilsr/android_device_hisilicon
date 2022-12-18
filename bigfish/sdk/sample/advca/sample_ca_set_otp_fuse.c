@@ -100,15 +100,13 @@ MSID in the boot is equalled to the MSID in the OTP.\n",
 
 "[HI_UNF_ADVCA_OTP_MISC_ROOTKEY] - This fuse is used to set the MISC root key in the OTP\n",    
 
-"[HI_UNF_ADVCA_OTP_HDCP_ROOTKEY] - This fuse is used to set the HDCP root key in the OTP\n",
-
 "[HI_UNF_ADVCA_OTP_OEM_ROOTKEY] - This fuse is used to set the OEM root key in the OTP\n",
+
+"[HI_UNF_ADVCA_OTP_ESCK_ROOTKEY] - This fuse is used to set the ESCK root key in the OTP\n",    
 
 "[HI_UNF_ADVCA_OTP_JTAG_KEY] - This fuse is used to set the JTAG root key in the OTP\n",
 
 "[HI_UNF_ADVCA_OTP_CHIP_ID] - This fuse is used to set the CHIP ID in the OTP\n",
-
-"[HI_UNF_ADVCA_OTP_ESCK_ROOTKEY] - This fuse is used to set the ESCK root key in the OTP\n",    
 
 "[HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID] - This fuse is used to set the Market Segment ID in the OTP.\n",    
 
@@ -182,44 +180,43 @@ HI_VOID show_usage(HI_VOID)
             "If you are not clear about the OTP fuse, please contact HiSilicon.\n");
 
     HI_DEBUG_ADVCA("\notp fuse id:\n\n");
-    HI_DEBUG_ADVCA("1: HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION\n");
-    HI_DEBUG_ADVCA("2: HI_UNF_ADVCA_OTP_BOOT_DECRYPTION_ACTIVATION\n");
-    HI_DEBUG_ADVCA("3: HI_UNF_ADVCA_OTP_SELF_BOOT_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("4: HI_UNF_ADVCA_OTP_DDR_WAKEUP_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("5: HI_UNF_ADVCA_OTP_CSA2_KL_LEVEL_SEL\n");
-    HI_DEBUG_ADVCA("6: HI_UNF_ADVCA_OTP_R2R_KL_LEVEL_SEL\n");
-    HI_DEBUG_ADVCA("7: HI_UNF_ADVCA_OTP_SP_KL_LEVEL_SEL\n");
-    HI_DEBUG_ADVCA("8: HI_UNF_ADVCA_OTP_CSA3_KL_LEVEL_SEL\n");
-    HI_DEBUG_ADVCA("9: HI_UNF_ADVCA_OTP_LP_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("10: HI_UNF_ADVCA_OTP_CSA2_CW_HARDONLY_ACTIVATION\n");
-    HI_DEBUG_ADVCA("11: HI_UNF_ADVCA_OTP_SP_CW_HARDONLY_ACTIVATION\n");
-    HI_DEBUG_ADVCA("12: HI_UNF_ADVCA_OTP_CSA3_CW_HARDONLY_ACTIVATION\n");
-    HI_DEBUG_ADVCA("13: HI_UNF_ADVCA_OTP_CSA2_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("14: HI_UNF_ADVCA_OTP_SP_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("15: HI_UNF_ADVCA_OTP_CSA3_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("16: HI_UNF_ADVCA_OTP_MISC_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("17: HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("18: HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("19: HI_UNF_ADVCA_OTP_DDR_SCRAMBLE_ACTIVATION\n");
-    HI_DEBUG_ADVCA("20: HI_UNF_ADVCA_OTP_GLOBAL_LOCK_ACTIVATION\n");
-    HI_DEBUG_ADVCA("21: HI_UNF_ADVCA_OTP_RUNTIME_CHECK_ACTIVATION\n");
-    HI_DEBUG_ADVCA("22: HI_UNF_ADVCA_OTP_DDR_WAKEUP_CHECK_ACTIVATION\n");
-    HI_DEBUG_ADVCA("23: HI_UNF_ADVCA_OTP_VERSION_ID_CHECK_ACTIVATION\n");
-    HI_DEBUG_ADVCA("24: HI_UNF_ADVCA_OTP_BOOT_MSID_CHECK_ACTIVATION\n");
-    HI_DEBUG_ADVCA("25: HI_UNF_ADVCA_OTP_JTAG_MODE\n");
-    HI_DEBUG_ADVCA("26: HI_UNF_ADVCA_OTP_JTAG_READ_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("27: HI_UNF_ADVCA_OTP_CSA2_ROOTKEY\n");
-    HI_DEBUG_ADVCA("28: HI_UNF_ADVCA_OTP_R2R_ROOTKEY\n");
-    HI_DEBUG_ADVCA("29: HI_UNF_ADVCA_OTP_SP_ROOTKEY\n");
-    HI_DEBUG_ADVCA("30: HI_UNF_ADVCA_OTP_CSA3_ROOTKEY\n");
-    HI_DEBUG_ADVCA("31: HI_UNF_ADVCA_OTP_MISC_ROOTKEY\n");
-    HI_DEBUG_ADVCA("32: HI_UNF_ADVCA_OTP_HDCP_ROOTKEY\n");
-    HI_DEBUG_ADVCA("33: HI_UNF_ADVCA_OTP_OEM_ROOTKEY\n");
-    HI_DEBUG_ADVCA("34: HI_UNF_ADVCA_OTP_JTAG_KEY\n");
-    HI_DEBUG_ADVCA("35: HI_UNF_ADVCA_OTP_CHIP_ID\n");
-    HI_DEBUG_ADVCA("36: HI_UNF_ADVCA_OTP_ESCK_ROOTKEY\n");
-    HI_DEBUG_ADVCA("37: HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID\n");
-    HI_DEBUG_ADVCA("38: HI_UNF_ADVCA_OTP_VERSION_ID\n");
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION\n", HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_BOOT_DECRYPTION_ACTIVATION\n", HI_UNF_ADVCA_OTP_BOOT_DECRYPTION_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SELF_BOOT_DEACTIVATION\n", HI_UNF_ADVCA_OTP_SELF_BOOT_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_DDR_WAKEUP_DEACTIVATION\n", HI_UNF_ADVCA_OTP_DDR_WAKEUP_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA2_KL_LEVEL_SEL\n", HI_UNF_ADVCA_OTP_CSA2_KL_LEVEL_SEL);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_R2R_KL_LEVEL_SEL\n", HI_UNF_ADVCA_OTP_R2R_KL_LEVEL_SEL);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SP_KL_LEVEL_SEL\n", HI_UNF_ADVCA_OTP_SP_KL_LEVEL_SEL);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA3_KL_LEVEL_SEL\n", HI_UNF_ADVCA_OTP_CSA3_KL_LEVEL_SEL);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_LP_DEACTIVATION\n", HI_UNF_ADVCA_OTP_LP_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA2_CW_HARDONLY_ACTIVATION\n", HI_UNF_ADVCA_OTP_CSA2_CW_HARDONLY_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SP_CW_HARDONLY_ACTIVATION\n", HI_UNF_ADVCA_OTP_SP_CW_HARDONLY_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA3_CW_HARDONLY_ACTIVATION\n", HI_UNF_ADVCA_OTP_CSA3_CW_HARDONLY_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA2_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_CSA2_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SP_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_SP_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA3_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_CSA3_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_MISC_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_MISC_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_DDR_SCRAMBLE_ACTIVATION\n", HI_UNF_ADVCA_OTP_DDR_SCRAMBLE_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_GLOBAL_LOCK_ACTIVATION\n", HI_UNF_ADVCA_OTP_GLOBAL_LOCK_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_RUNTIME_CHECK_ACTIVATION\n", HI_UNF_ADVCA_OTP_RUNTIME_CHECK_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_DDR_WAKEUP_CHECK_ACTIVATION\n", HI_UNF_ADVCA_OTP_DDR_WAKEUP_CHECK_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_VERSION_ID_CHECK_ACTIVATION\n", HI_UNF_ADVCA_OTP_VERSION_ID_CHECK_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_BOOT_MSID_CHECK_ACTIVATION\n", HI_UNF_ADVCA_OTP_BOOT_MSID_CHECK_ACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_JTAG_MODE\n", HI_UNF_ADVCA_OTP_JTAG_MODE);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_JTAG_READ_DEACTIVATION\n", HI_UNF_ADVCA_OTP_JTAG_READ_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA2_ROOTKEY\n", HI_UNF_ADVCA_OTP_CSA2_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_R2R_ROOTKEY\n", HI_UNF_ADVCA_OTP_R2R_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SP_ROOTKEY\n", HI_UNF_ADVCA_OTP_SP_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CSA3_ROOTKEY\n", HI_UNF_ADVCA_OTP_CSA3_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_MISC_ROOTKEY\n", HI_UNF_ADVCA_OTP_MISC_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_OEM_ROOTKEY\n", HI_UNF_ADVCA_OTP_OEM_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_ESCK_ROOTKEY\n", HI_UNF_ADVCA_OTP_ESCK_ROOTKEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_JTAG_KEY\n", HI_UNF_ADVCA_OTP_JTAG_KEY);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CHIP_ID\n", HI_UNF_ADVCA_OTP_CHIP_ID);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID\n", HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_VERSION_ID\n", HI_UNF_ADVCA_OTP_VERSION_ID);
 #if 0
     HI_DEBUG_ADVCA("42: HI_UNF_ADVCA_OTP_USB_DEACTIVATION\n");
     HI_DEBUG_ADVCA("43: HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION\n");
@@ -383,8 +380,9 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
             {
                 memset(cTmpBuf, 0, sizeof(cTmpBuf));
                 memcpy(cTmpBuf, cUserInput + i * 2, 2);
-                stOtpAttr.unOtpFuseAttr.stKeyladderRootKey.u8RootKey[i] = strtol(cTmpBuf, NULL, 0);
+                stOtpAttr.unOtpFuseAttr.stKeyladderRootKey.u8RootKey[i] = strtol(cTmpBuf, NULL, 16);
             }           
+
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
             
@@ -399,47 +397,51 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
             {
                 memset(cTmpBuf, 0, sizeof(cTmpBuf));
                 memcpy(cTmpBuf, cUserInput + i * 2, 2);
-                stOtpAttr.unOtpFuseAttr.stKeyladderRootKey.u8RootKey[i] = strtol(cTmpBuf, NULL, 0);
+                stOtpAttr.unOtpFuseAttr.stKeyladderRootKey.u8RootKey[i] = strtol(cTmpBuf, NULL, 16);
             }
+
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
 
         case HI_UNF_ADVCA_OTP_CHIP_ID:
             
-            HI_DEBUG_ADVCA("Please input the CHIP ID, it is a 32 bit integer, for example, 0x12345678\n");
+            HI_DEBUG_ADVCA("Please input the CHIP ID, it is a 32 bit integer, for example, 12345678\n");
             HI_U32 u32ChipId = 0;
             fgets(cUserInput, 512, stdin);
-            u32ChipId = strtol(cUserInput, NULL, 0);
+            u32ChipId = strtol(cUserInput, NULL, 16);
             stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[0] = (HI_U8)(u32ChipId >> 24);
-            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[0] = (HI_U8)(u32ChipId >> 16);
-            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[0] = (HI_U8)(u32ChipId >> 8);
-            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[0] = (HI_U8)u32ChipId;
+            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[1] = (HI_U8)(u32ChipId >> 16);
+            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[2] = (HI_U8)(u32ChipId >> 8);
+            stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[3] = (HI_U8)u32ChipId;
+
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
 
         case HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID: 
             
-            HI_DEBUG_ADVCA("Please input the MSID, it is a 32 bit integer, for example, 0x12345678\n");
+            HI_DEBUG_ADVCA("Please input the MSID, it is a 32 bit integer, for example, 12345678\n");
             fgets(cUserInput, 512, stdin);
-            u32MSID = strtol(cUserInput, NULL, 0);
+            u32MSID = strtol(cUserInput, NULL, 16);
             
             stOtpAttr.unOtpFuseAttr.stMarketId.u8MSID[0] = (HI_U8)(u32MSID >> 24);
             stOtpAttr.unOtpFuseAttr.stMarketId.u8MSID[1] = (HI_U8)(u32MSID >> 16);
             stOtpAttr.unOtpFuseAttr.stMarketId.u8MSID[2] = (HI_U8)(u32MSID >> 8);
             stOtpAttr.unOtpFuseAttr.stMarketId.u8MSID[3] = (HI_U8)u32MSID;
+
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
             
         case HI_UNF_ADVCA_OTP_VERSION_ID:
 
-            HI_DEBUG_ADVCA("Please input the Version ID, it is a 32 bit integer, for example, 0x12345678\n");
+            HI_DEBUG_ADVCA("Please input the Version ID, it is a 32 bit integer, for example, 12345678\n");
             fgets(cUserInput, 512, stdin);
-            u32VersionId = strtol(cUserInput, NULL, 0);
+            u32VersionId = strtol(cUserInput, NULL, 16);
             
             stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId[0] = (HI_U8)(u32VersionId >> 24);
             stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId[1] = (HI_U8)(u32VersionId >> 16);
             stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId[2] = (HI_U8)(u32VersionId >> 8);
             stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId[3] = (HI_U8)u32VersionId;
+
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
         }

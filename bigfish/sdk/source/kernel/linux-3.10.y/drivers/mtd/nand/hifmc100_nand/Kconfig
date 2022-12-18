@@ -1,0 +1,99 @@
+#
+# drivers/mtd/nand/hifmc100/Kconfig
+# add by hisilicon 2014.10.9
+#
+
+menuconfig MTD_NAND_HIFMC100_NAND
+	tristate "Hisilicon Flash Memory Controller v100 nand device Support"
+	depends on MTD_NAND
+	default n if (ARCH_S40)
+	select MISC_FILESYSTEMS
+	select MTD_BLOCK
+	help
+	  Hisilicon Flash Memory Controller version 100 is called hifmc100 for
+	  short. The controller support registers and DMA transfers while
+	  reading or writing the nand flash.
+
+if MTD_NAND_HIFMC100_NAND
+
+config HIFMC100_NAND_MAX_CHIP
+	int "number of spi nand flash chip (1, 2)"
+	default 1
+	help
+	  flash memory controller v100 device only support 1 or 2 nand
+	  flash chip, your should not config other value.
+
+config HIFMC100_NAND_CACHE_ENABLE
+	bool "enable nand cache feature"
+	default y
+	help
+	  enable cache feature may improve nand startup speed on some file system
+
+config HIFMC100_NAND_DBG_NAND_DEBUG
+	bool "Debug: create debug file to control debug type"
+	default y
+	help
+	  Create "debug" file to control debug type.
+
+config HIFMC100_NAND_DBG_NAND_DUMP
+	bool "Debug: display read/write/erase process nand data"
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG
+	default y
+	help
+	  Create "dump" file dump to display all nand operation and data.
+
+config HIFMC100_NAND_DBG_NAND_ERASE_COUNT
+	bool "Debug: display last erase count"
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG
+	default y
+	help
+	  Create "erase_count" file to display last erase count.
+
+config HIFMC100_NAND_DBG_NAND_READ_COUNT
+	bool "Debug: display last read count"
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG
+	default y
+	help
+	  Create "read_count" file to display last read count.
+
+config HIFMC100_NAND_DBG_NAND_ECC_COUNT
+	bool "Debug: display last ecc count."
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG
+	default y
+	help
+	  Create "ecc_count" to display last ecc count.
+
+config HIFMC100_NAND_DBG_NAND_READ_RETRY
+	bool "Debug: display read_retry process"
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG
+	default y
+	help
+	  Create read_retry file to display read_retry process.
+ 
+config HIFMC100_NAND_DBG_NAND_CACHE
+	bool "Debug: display cache information"
+	depends on HIFMC100_NAND_DBG_NAND_DEBUG && HIFMC100_NAND_CACHE_ENABLE
+	default y
+	help
+	  Create data file to display cache information.
+
+choice
+	prompt "Pagesize and Ecc Type Select"
+
+config HIFMC100_NAND_AUTO_PAGESIZE_ECC
+	bool "Auto"
+	help
+	  auto-sensed the page size and ecc type value. driver will
+	  try each of page size and ecc type one by one till flash
+	  can be read and wrote accurately.
+	  so the page size and ecc type is match adaptively without
+	  switch on the board
+
+config HIFMC100_NAND_PAGESIZE_AUTO_ECC_NONE
+	bool "Pagesize Auto, Ecc None"
+	help
+	  select pagesize 2K, ecc none.
+
+endchoice
+
+endif # MTD_NAND_HIFMC100_NAND

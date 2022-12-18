@@ -140,6 +140,11 @@ void higmac_sys_init(void)
 	unsigned long p = 0;
 	volatile unsigned int v = 0;
 
+#ifdef CONFIG_HI3716MV410_FPGA
+	/* timing */
+	writel(0x40033002, 0xF8A20050);
+#endif
+
 	/*soft reset*/
 	p = (unsigned long)(HIGMAC_SYS_CTL_IO_BASE);
 
@@ -147,6 +152,8 @@ void higmac_sys_init(void)
 	if (_HI3798CV100A == get_chipid() || _HI3798CV100 == get_chipid()
 		|| _HI3796CV100 == get_chipid()) 
 		v |= 0x0f3ff;//reset g1, g0, mac_if1, mac_if0
+	else if (_HI3716M_V410 == get_chipid())
+		v |= 7 << 22;
 	else
 		v |= 0x0f3f;//reset g1, g0, mac_if1, mac_if0
 #if (CONFIG_GMAC_NUMS > 2)
@@ -160,6 +167,8 @@ void higmac_sys_init(void)
 	if (_HI3798CV100A == get_chipid() || _HI3798CV100 == get_chipid()
 		|| _HI3796CV100 == get_chipid()) 
 		v &= ~(0xf << 12);//undo reset
+	else if (_HI3716M_V410 == get_chipid())
+		v &= ~(3 << 22);
 	else
 #ifdef CONFIG_ARCH_HIFONE
 		v &= ~(1<<11 | 1<< 10 | 1<<9 | 1 <<8);//undo reset
@@ -247,7 +256,7 @@ int higmac_set_hwq_depth(struct higmac_netdev_local *ld)
 	higmac_writel_bits(ld, 1, RX_FQ_REG_EN, \
 		BITS_RX_FQ_DEPTH_EN);
 
-	higmac_writel_bits(ld, HIGMAC_HWQ_RX_FQ_DEPTH<<3, RX_FQ_DEPTH, \
+	higmac_writel_bits(ld, HIGMAC_HWQ_RX_FQ_DEPTH << DESC_WORD_SHIFT, RX_FQ_DEPTH, \
 		BITS_RX_FQ_DEPTH);
 
 	higmac_writel_bits(ld, 0, RX_FQ_REG_EN, \
@@ -262,7 +271,7 @@ int higmac_set_hwq_depth(struct higmac_netdev_local *ld)
 	higmac_writel_bits(ld, 1, RX_BQ_REG_EN, \
 		BITS_RX_BQ_DEPTH_EN);
 
-	higmac_writel_bits(ld, HIGMAC_HWQ_RX_BQ_DEPTH<<3, RX_BQ_DEPTH, \
+	higmac_writel_bits(ld, HIGMAC_HWQ_RX_BQ_DEPTH << DESC_WORD_SHIFT, RX_BQ_DEPTH, \
 		BITS_RX_BQ_DEPTH);
 
 	higmac_writel_bits(ld, 0, RX_BQ_REG_EN, \
@@ -277,7 +286,7 @@ int higmac_set_hwq_depth(struct higmac_netdev_local *ld)
 	higmac_writel_bits(ld, 1, TX_BQ_REG_EN, \
 		BITS_TX_BQ_DEPTH_EN);
 
-	higmac_writel_bits(ld, HIGMAC_HWQ_TX_BQ_DEPTH<<3, TX_BQ_DEPTH, \
+	higmac_writel_bits(ld, HIGMAC_HWQ_TX_BQ_DEPTH << DESC_WORD_SHIFT, TX_BQ_DEPTH, \
 		BITS_TX_BQ_DEPTH);
 
 	higmac_writel_bits(ld, 0, TX_BQ_REG_EN, \
@@ -292,7 +301,7 @@ int higmac_set_hwq_depth(struct higmac_netdev_local *ld)
 	higmac_writel_bits(ld, 1, TX_RQ_REG_EN, \
 		BITS_TX_RQ_DEPTH_EN);
 
-	higmac_writel_bits(ld, HIGMAC_HWQ_TX_RQ_DEPTH<<3, TX_RQ_DEPTH, \
+	higmac_writel_bits(ld, HIGMAC_HWQ_TX_RQ_DEPTH << DESC_WORD_SHIFT, TX_RQ_DEPTH, \
 		BITS_TX_RQ_DEPTH);
 
 	higmac_writel_bits(ld, 0, TX_RQ_REG_EN, \

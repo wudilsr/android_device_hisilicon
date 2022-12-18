@@ -102,8 +102,6 @@ public class BDActivityNavigation extends ActivityFrame implements OnClickListen
         initView();
         initVariable();
         initListener();
-        //initReceiver(mReceiverNetwork);
-        //initReceiver(mReceiverUSB);
     }
 
     @Override
@@ -118,7 +116,7 @@ public class BDActivityNavigation extends ActivityFrame implements OnClickListen
     {
         LogTool.v("");
         mBDInfo.closeBluray();
-        finish();
+        //finish();
         super.onPause();
 
         //finishActivityWithAnim();
@@ -127,6 +125,7 @@ public class BDActivityNavigation extends ActivityFrame implements OnClickListen
     @Override
     protected void onResume()
     {
+        dismissProgressDialog();
         LogTool.v("");
         bindData();
         super.onResume();

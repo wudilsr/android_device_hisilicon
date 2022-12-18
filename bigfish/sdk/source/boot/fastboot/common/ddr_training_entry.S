@@ -58,3 +58,11 @@ s5_ddr_training_data_start:
 s5_ddr_training_data_end:
 #endif /* CONFIG_DDR_TRAINING_S5 */
 
+#ifdef CONFIG_DDR_TRAINING_HI3716MV410
+.globl hi3716mv410_ddr_training_data_start
+hi3716mv410_ddr_training_data_start:
+.incbin "../arch/arm/cpu/hi3716mv410/ddr_training/hi3716mv410/ddr_training.bin"
+.globl hi3716mv410_ddr_training_data_end
+hi3716mv410_ddr_training_data_end:
+#endif /* CONFIG_DDR_TRAINING_HI3716MV410 */
+

@@ -309,7 +309,7 @@ typedef enum hiUNF_DMX_CHAN_OUTPUT_MODE_E
     HI_UNF_DMX_CHAN_OUTPUT_MODE_PLAY = 0x1,     /**<Mode of playing audios/videos or receiving data*/ /**< CNcomment:音视频播放或数据接收 */
     HI_UNF_DMX_CHAN_OUTPUT_MODE_REC  = 0x2,     /**<Recording mode*/ /**< CNcomment:录制 */
     HI_UNF_DMX_CHAN_OUTPUT_MODE_PLAY_REC = 0x3, /**<Mode of recording and playing data or receiving data*/ /**< CNcomment:同时录制和播放或数据接收 */
-    HI_UNF_DMX_CHAN_OUTPUT_MODE_BUTT = -1
+    HI_UNF_DMX_CHAN_OUTPUT_MODE_BUTT
 } HI_UNF_DMX_CHAN_OUTPUT_MODE_E;
 
 /**Channel attribute*/
@@ -1029,6 +1029,39 @@ PES通道建议使用64K以上的buffer大小，如果小于64K会被默认修改为64K\n
 HI_S32 HI_UNF_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr,
             HI_HANDLE *phChannel);
 
+/**
+\brief Creates or reuse a channel based on PID.CNcomment:根据PID 创建或复用一个通道。CNend
+\attention \n
+It is recommended to call HI_UNF_DMX_GetChannelDefaultAttr to query default channel attributes before calling HI_UNF_DMX_CreateChannel.
+For the Section channel and ECM/EMM channel, you can set the CRC mode, and dynamically change the CRC mode by calling HI_UNF_DMX_SetChannelAttr.\n
+For other channels, the CRC check is always disabled. If you select other CRC modes, the CRC disable mode takes effect by default.\n
+You need to set the buffer size when creating a channel. The buffer size is in the unit of byte and the default size is 16 KB.\n
+It is recommended to set the buffer size to a value greater than 4 KB for the Section channel, ECM/EMM channel, or post channel. If the buffer size is smaller than 4 KB, the size of 4 KB is used by default.\n
+It is recommended to set the buffer size to a value greater than 64 KB for the PES channel. If the buffer size is smaller than 64 KB, the size of 64 KB is used by default.\n
+The playing channel and playing/recording channel cannot be created at the same time./n
+The audio/video playing channels are allocated and managed by the player.
+CNcomment:建议调用此接口之前，建议先调用HI_UNF_DMX_GetChannelDefaultAttr获取通道默认属性\n
+只有section类型的通道和ecm emm类型的通道支持设置CRC模式，并且可以通过属性设置接口动态修改CRC模式\n
+其他类型通道只支持设置为CRC禁止，如果选择了其他类型的CRC会被默认修改为CRC禁止\n
+在申请通道时注意Buffer大小的配置，默认大小为16K，buffer大小的单位为字节\n
+Section、ecm emm和POST通道的buffer大小至少为4K，如果小于4K会被默认修改为4K\n
+PES通道建议使用64K以上的buffer大小，如果小于64K会被默认修改为64K\n
+播放类型和同时播放与录制类型的音视频通道是不能申请的\n
+音视频的播放通道由Player统一分配和管理。CNend
+\param[in] u32DmxId  DEMUX ID. CNcomment: DEMUX号。CNend
+\param[in] u32Pid  PID. CNcomment: PID 值。CNend
+\param[in] pstChAttr  Pointer to the attributes of an input channel. For details, see the description of HI_UNF_DMX_CHAN_ATTR_S.CNcomment:指针类型，输入通道属性。请参见::HI_UNF_DMX_CHAN_ATTR_S。CNend
+\param[out] phChannel  Pointer to the handle of an allocated channel.CNcomment:指针类型，输出分配的通道Handle。。CNend
+\retval ::HI_SUCCESS Success.CNcomment:成功。CNend
+\retval ::HI_FAILURE  Calling this API fails.CNcomment:API系统调用失败。CNend
+\retval ::HI_ERR_DMX_NOT_INIT  The DEMUX module is not initialized.CNcomment:模块没有初始化。CNend
+\retval ::HI_ERR_DMX_INVALID_PARA  The input parameter is invalid. CNcomment:输入参数非法。CNend
+\retval ::HI_ERR_DMX_NULL_PTR  The pointer is null. CNcomment:指针参数为空。CNend
+\retval ::HI_ERR_DMX_NOFREE_CHAN  There is no available channel.CNcomment:没有空闲通道。CNend
+\see \n
+ N/A.CNcomment:无。CNend
+*/
+HI_S32 HI_UNF_DMX_CreateChannelWithPID(HI_U32 u32DmxId, HI_U32 u32Pid, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel);
 
 /**
 \brief Destroys an existing PID channel.CNcomment:销毁创建的PID通道。CNend

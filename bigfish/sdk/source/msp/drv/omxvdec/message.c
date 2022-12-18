@@ -93,6 +93,10 @@ HI_S32  message_queue(msg_queue_s *queue, HI_U32 msgcode, HI_U32 status, HI_VOID
         {
 		    memcpy(&msg->msg_info.msgdata, priv, sizeof(OMXVDEC_IMG_SIZE));
         }
+        else if(VDEC_EVT_REPORT_DEC_SIZE_CHG == msgcode)
+        {
+            memcpy(&msg->msg_info.msgdata, priv, sizeof(OMXVDEC_DEC_SIZE));
+        }
 		else
 		{
 		    memcpy(&msg->msg_info.msgdata, priv, sizeof(OMXVDEC_BUF_DESC));
@@ -142,7 +146,7 @@ HI_S32 message_dequeue(msg_queue_s *queue, OMXVDEC_MSG_INFO *pmsg_info)
         }
         else
         {
-            OmxPrint(OMX_INFO, "%s: wait msg timeout.\n", __func__); 
+            OmxPrint(OMX_VER, "%s: wait msg timeout.\n", __func__); 
         }
 		return -EAGAIN;
 	}
@@ -175,16 +179,16 @@ shutdown:
 msg_queue_s* message_queue_init(HI_U32 max_msg_num)
 {
 	HI_U32 nqueues;
-	msg_queue_s *queue = NULL;
-	msg_data_s *data = NULL;
+	msg_queue_s *queue = HI_NULL;
+	msg_data_s *data = HI_NULL;
 
 	OmxPrint(OMX_TRACE, "msg prepare to init.\n");
     
 	queue = kzalloc(sizeof(msg_queue_s), GFP_KERNEL);
-	if (NULL == queue)
+	if (HI_NULL == queue)
        {
 	       OmxPrint(OMX_FATAL, "%s call kzalloc for queue failed.\n", __func__);
-		return NULL;
+		return HI_NULL;
 	}
 
 	spin_lock_init(&queue->lock);
@@ -197,11 +201,12 @@ msg_queue_s* message_queue_init(HI_U32 max_msg_num)
 	/* alloc element for seg stream */
 	nqueues = max_msg_num;
 	data = queue->alloc = kzalloc(sizeof(msg_data_s) * nqueues, GFP_KERNEL);
-	if (NULL == data) 
+    
+	if (HI_NULL == data) 
     {
         OmxPrint(OMX_FATAL, "%s call kzalloc for data failed.\n", __func__);
         kfree(queue);
-        return NULL;
+        return HI_NULL;
     }
 
 	for (; nqueues; data++, nqueues--)
@@ -235,9 +240,10 @@ HI_VOID message_queue_deinit(msg_queue_s *queue)
 	    msleep(10);
         slp_cnt++;
     }
-
+      
 	kfree(queue->alloc);
-	queue->alloc = HI_NULL;
+	queue->alloc = HI_NULL;  
+    
 	kfree(queue);
 	queue = HI_NULL;
     

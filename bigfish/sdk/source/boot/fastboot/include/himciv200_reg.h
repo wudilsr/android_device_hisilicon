@@ -39,6 +39,8 @@
 #define MCI_IDINTEN		0x90
 #define MCI_DSCADDR		0x94
 #define MCI_BUFADDR		0x98
+#define MCI_CARDTHRCTL	0x100
+#define MCI_DDR_REG		0x10c
 
 #if defined(CONFIG_HIMCI_V100)
 #  define MCI_FIFO_START                                    0x100
@@ -175,7 +177,12 @@
 #define DATA_BUSY	(0x1<<9)
 
 /* MCI_FIFOTH(0x4c) details */
+#if defined(CONFIG_ARCH_HIFONE)
+#define BURST_SIZE	(0x4<<28)
+#else
 #define BURST_SIZE	(0x2<<28)
+#endif
+
 #define FIFO_DEPTH	256
 #define RX_WMARK	((FIFO_DEPTH/2 - 1) << 16)
 #define TX_WMARK	((FIFO_DEPTH/2) << 0)
@@ -193,3 +200,10 @@
 #define RI		(0x1<<1)
 #define NI		(0x1<<8)
 #endif
+
+/* MCI_DDR(0x100) details */
+#define READ_THRESHOLD_SIZE	(0x02000001)
+#define RW_THRESHOLD_SIZE	(0x02000005)
+
+/* MCI_DDR(0x10C) details */
+#define ENABLE_HS400_MODE	(0x1<<31)

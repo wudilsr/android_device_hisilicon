@@ -358,7 +358,7 @@ HI_VOID Sys_rdReg(HI_U32 addr, HI_U32 *pu32Result)
 
 HI_VOID Sys_wtReg(HI_U32 addr, HI_U32 u32Result)
 {
-    HI_REG_READ32(addr, u32Result);
+    HI_REG_WRITE32(addr, u32Result);
     return;
 }
 
@@ -509,11 +509,14 @@ static HI_S32 DRV_ADVCA_ProcGetCAVendorType(struct seq_file* p)
     case HI_UNF_ADVCA_CTI:
         PROC_PRINT(p, "CA vendor type: 0x%08x(CTI)\n", u32VendorID);
         break;
-    case HI_UNF_ADVCA_COMMONDCA:
+    case HI_UNF_ADVCA_COMMONCA:
         PROC_PRINT(p, "CA vendor type: 0x%08x(CommonCA)\n", u32VendorID);
         break;
     case HI_UNF_ADVCA_DCAS:
         PROC_PRINT(p, "CA vendor type: 0x%08x(DCAS)\n", u32VendorID);
+        break;
+    case HI_UNF_ADVCA_PANACCESS:
+        PROC_PRINT(p, "CA vendor type: 0x%08x(Panaccess)\n", u32VendorID);
         break;
     default:
         PROC_PRINT(p, "CA vendor type: 0x%08x(UnkownCA)\n", u32VendorID);
@@ -831,6 +834,7 @@ static HI_S32 DRV_ADVCA_ProcGetBootMode(struct seq_file* p)
 {
     HI_S32 ret = HI_SUCCESS;
     HI_UNF_ADVCA_FLASH_TYPE_E enBootMode = HI_UNF_ADVCA_FLASH_TYPE_BUTT;
+	HI_U32 u32BootSel = 0;
 
     ret = DRV_ADVCA_V300_Ioctl(CMD_CA_GET_BOOTMODE, &enBootMode);
     if(ret != HI_SUCCESS)
@@ -838,6 +842,19 @@ static HI_S32 DRV_ADVCA_ProcGetBootMode(struct seq_file* p)
         PROC_PRINT(p, "Get Boot Mode failed!: 0x%x\n", ret);
         return ret;
     }
+
+	ret = DRV_ADVCA_V300_Ioctl(CMD_CA_GET_BOOTSEL_CTRL, &u32BootSel);
+    if(ret != HI_SUCCESS)
+    {
+        PROC_PRINT(p, "Get BootSel ctrl failed!: 0x%x\n", ret);
+        return ret;
+    }
+
+	if(0 == u32BootSel)
+	{
+		PROC_PRINT(p, "boot mode is controlled by chipset pin\n");
+		return HI_SUCCESS;
+	}
 
     PROC_PRINT(p, "Boot Mode: %s\n", enBootMode == HI_UNF_ADVCA_FLASH_TYPE_SPI ? "SPI" :
     (enBootMode == HI_UNF_ADVCA_FLASH_TYPE_NAND ? "NAND" : (enBootMode == HI_UNF_ADVCA_FLASH_TYPE_EMMC ? "EMMC" : 
@@ -1207,7 +1224,47 @@ static HI_S32 DRV_ADVCA_ProcGetKeyLadderinfo(struct seq_file* p)
     ADVCA_DebugKey(p, g_DCASInfo.LastEvenKey);
     PROC_PRINT(p, "DCAS Odd   [time:0x%08x]:", g_DCASInfo.LastOddKey_secTime);
     ADVCA_DebugKey(p, g_DCASInfo.LastOddKey);
-    
+
+    PROC_PRINT(p, "====================================\n");
+    PROC_PRINT(p, "Widevine Key Ladder Stage: %d Level\n", g_GDRMInfo.MaxLevel);
+
+    if (((g_GDRMInfo.Keyladder_Ready >> 3) & 0x1) == 0)
+    {
+        PROC_PRINT(p, "Widevine status: encrypt device key\n");
+        PROC_PRINT(p, "Clean Device key     [time:0x%08x]:", g_GDRMInfo.SessionKey_sec[0]);
+        ADVCA_DebugKey(p, g_GDRMInfo.SessionKey[0]);
+        PROC_PRINT(p, "Encrypted Device key [time:0x%08x]:", g_GDRMInfo.SessionKey_sec[0]);
+        ADVCA_DebugKey(p, g_GDRMInfo.SessionKey[1]);
+    }
+    else
+    {
+        PROC_PRINT(p, "Widevine status: decrypt data\n");
+        for(index = 0; index < g_GDRMInfo.MaxLevel - 1; index++)
+        {
+            PROC_PRINT(p, "Widevine klad%d [time:0x%08x]:", index, g_GDRMInfo.SessionKey_sec[index]);
+            ADVCA_DebugKey(p, g_GDRMInfo.SessionKey[index]);
+        }
+
+        PROC_PRINT(p, "Widevine klad%d [time:0x%08x]:", HI_UNF_ADVCA_KEYLADDER_LEV3, g_GDRMInfo.SessionKey_sec[index]);
+        for (index = 0; index < 32; index++)
+        {
+            if (index == 16)
+            {
+                PROC_PRINT(p, "\n");
+                PROC_PRINT(p, "Widevine klad%d [time:0x%08x]:", HI_UNF_ADVCA_KEYLADDER_LEV3, g_GDRMInfo.SessionKey_sec[HI_UNF_ADVCA_KEYLADDER_LEV3]);
+            }
+            PROC_PRINT(p, "%02X ", g_GDRMInfo.SessionKey[HI_UNF_ADVCA_KEYLADDER_LEV3][index]);
+
+        }
+        PROC_PRINT(p, "\n");
+        PROC_PRINT(p, "Widevine Flag:");
+        for (index = 0; index < 4; index++)
+        {
+            PROC_PRINT(p, "%02X ", g_GDRMInfo.GG_Flag[index]);
+        }
+        PROC_PRINT(p, "\n");
+
+    }
     return HI_SUCCESS;
 }
 

@@ -39,7 +39,7 @@ all:
 	$(AT)rm -rf lib/lib*
 
 ifeq ($(CFG_HI_EGL_TYPE), fb)
-	$(AT)cp include/EGL/platform_fbdev/EGL/$(target)/eglplatform.h include/EGL/ -rf
+	$(AT)cp include/EGL/platform_fbdev/EGL/$(target)/*.h include/EGL/ -rf
 	$(AT)cp lib/platform_fbdev/$(CFG_HI_TOOLCHAINS_NAME)/$(target)/*.so lib/ -rf
 endif
 

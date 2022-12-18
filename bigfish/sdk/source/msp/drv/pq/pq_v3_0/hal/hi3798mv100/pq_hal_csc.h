@@ -1,15 +1,21 @@
 /******************************************************************************
+*
+* Copyright (C) 2014-2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
+*  and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+*****************************************************************************
 
-  Copyright (C), 2012-2014, Hisilicon Tech. Co., Ltd.
-
-******************************************************************************
   File Name     : pq_hal_csc.h
   Version       : Initial Draft
-  Author        : Hisilicon PQ software group
-  Created       : 2012/09/18
+  Author        : p00203646
+  Created       : 2013/09/18
   Description   :
 
 ******************************************************************************/
+
 
 #ifndef __PQ_HAL_CSC_H__
 #define __PQ_HAL_CSC_H__
@@ -17,9 +23,9 @@
 #include "hi_type.h"
 
 #ifdef __cplusplus
- #if __cplusplus
+#if __cplusplus
 extern "C" {
- #endif
+#endif
 #endif /* __cplusplus */
 
 /*视频层类型*/
@@ -30,8 +36,8 @@ typedef enum hiHAL_DISP_LAYER_E
     HAL_DISP_LAYER_V2    ,
     HAL_DISP_LAYER_V3    ,
     HAL_DISP_LAYER_V4    ,
-  //HAL_DISP_LAYER_VP0   ,
-  //HAL_DISP_LAYER_VP1   ,
+    //HAL_DISP_LAYER_VP0   ,
+    //HAL_DISP_LAYER_VP1   ,
 
     HAL_DISP_LAYER_BUTT
 } HAL_DISP_LAYER_E;
@@ -41,14 +47,14 @@ typedef enum hiCSC_MODE_E
 {
     HAL_CSC_YUV2RGB_601 = 0  ,   // YCbCr_601 LIMIT-> RGB
     HAL_CSC_YUV2RGB_709      ,   // YCbCr_709 LIMIT-> RGB
-    HAL_CSC_RGB2YUV_601      ,   // RGB->YCbCr_601 LIMIT  
+    HAL_CSC_RGB2YUV_601      ,   // RGB->YCbCr_601 LIMIT
     HAL_CSC_RGB2YUV_709      ,   // RGB->YCbCr_709 LIMIT
     HAL_CSC_YUV2YUV_709_601  ,   // YCbCr_709 LIMIT->YCbCr_601 LIMIT
     HAL_CSC_YUV2YUV_601_709  ,   // YCbCr_601 LIMIT->YCbCr_709 LIMIT
     HAL_CSC_YUV2YUV          ,   // YCbCr LIMIT->YCbCr LIMIT
     HAL_CSC_YUV2RGB_601_FULL ,   // YCbCr_601 FULL-> RGB
     HAL_CSC_YUV2RGB_709_FULL ,   // YCbCr_709 FULL-> RGB
-    HAL_CSC_RGB2YUV_601_FULL ,   // RGB->YCbCr_601 FULL  
+    HAL_CSC_RGB2YUV_601_FULL ,   // RGB->YCbCr_601 FULL
     HAL_CSC_RGB2YUV_709_FULL ,   // RGB->YCbCr_709 FULL
     HAL_CSC_RGB2RGB          ,   // RGB->RGB
 
@@ -67,7 +73,7 @@ typedef enum hiCOLOR_SPACE_TYPE_E
     OPTM_CS_eXvYCC_709 = OPTM_CS_eItu_R_BT_709,
     OPTM_CS_eXvYCC_601 = 8         ,
     OPTM_CS_eRGB = 9               ,
-    
+
     OPTM_CS_BUTT
 } COLOR_SPACE_TYPE_E;
 
@@ -128,47 +134,6 @@ typedef struct  hiCSC_MODE_S
     CSC_MODE_E  enCSC;
 } CSC_MODE_S;
 
-/**
- \brief 设置CSC参数;
- \attention \n
-无
-
- \param[in] enDisplayId
- \param[in] pstCSCParameter
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 PQ_HAL_SetCSCPictureParam(HAL_DISP_LAYER_E enDisplayId, CSC_PARA_S *pstCSCParameter);
-
-/**
- \brief 获取CSC转换模式;
- \attention \n
-无
-
- \param[in] enDisplayId
- \param[out] pstCscMode
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 PQ_HAL_GetCSCMode(HAL_DISP_LAYER_E enDisplayId, CSC_MODE_S *pstCscMode);
-
-/**
- \brief 设置CSC转换模式;
- \attention \n
-无
-
- \param[in] eLayer
- \param[in] eCSCMode
-
- \retval ::HI_SUCCESS
-
- */
-
-HI_S32 PQ_HAL_SetCSCMode(HAL_DISP_LAYER_E enLayer, CSC_MODE_E enCscMode);
 
 /**
  \brief 打开CSC模块
@@ -184,13 +149,15 @@ HI_S32 PQ_HAL_SetCSCMode(HAL_DISP_LAYER_E enLayer, CSC_MODE_E enCscMode);
 
 HI_S32 PQ_HAL_EnableCSC(HAL_DISP_LAYER_E enLayer, HI_BOOL bCscEn);
 
-HI_S32 PQ_HAL_GetCscCoef(CSC_MODE_E enCscMode, CSC_COEF_S *pstCscCoef, CSC_DCCOEF_S *pstCscDCCoef);
+HI_S32 PQ_HAL_SetCscCoef(HAL_DISP_LAYER_E enChan, CSC_COEF_S* pstCscCoef);
 
-HI_S32 PQ_HAL_Get8BitCscCoef(CSC_MODE_E enCscMode, CSC_COEF_S *pstCscCoef, CSC_DCCOEF_S *pstCscDCCoef);
+HI_S32 PQ_HAL_SetCscDcCoef(HAL_DISP_LAYER_E enLayer, CSC_DCCOEF_S* pstCscCoef);
+
+
 #ifdef __cplusplus
- #if __cplusplus
+#if __cplusplus
 }
- #endif
+#endif
 #endif /* __cplusplus */
 
 #endif

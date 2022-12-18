@@ -15,7 +15,13 @@ BOOT_DIR  := $(SDK_DIR)/source/boot/miniboot
 else
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
 endif
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
 PRODUCT_DIR := $(BOOT_DIR)/../product
+endif
+
 COMMON_DIR  := $(PRODUCT_DIR)/driver/common
 
 ifndef CFLAGS
@@ -68,6 +74,25 @@ OBJS   += tuner/tda18250/tda18250.o \
           tuner/tda18250/tmddTDA18250Instance.o
 endif
 
+ifeq ($(CFG_HI_BOOT_TUNER_TYPE_TDA18250B),y)
+CFLAGS += -DHI_BOOT_TUNER_DEV_TYPE_TDA18250B
+OBJS   += tuner/tda18250b/tda18250b.o \
+	  tuner/tda18250b/tmbslTDA18250A.o \
+	  tuner/tda18250b/tmbslTDA18250A_Advanced.o 
+endif
+
+ifeq ($(CFG_HI_BOOT_TUNER_TYPE_SI2147),y)
+CFLAGS += -DHI_BOOT_TUNER_DEV_TYPE_SI2147
+OBJS   += tuner/si2147/Si2147.o \
+	  tuner/si2147/Si2147_L0_Connection.o \
+	  tuner/si2147/Si2147_L1_API.o \
+	  tuner/si2147/Si2147_L1_Commands.o \
+	  tuner/si2147/Si2147_L1_Properties.o \
+	  tuner/si2147/Si2147_L2_API.o \
+	  tuner/si2147/Si2147_Properties_Strings.o \
+	  tuner/si2147/Si2147_User_Properties.o  			  
+endif
+
 ifeq ($(CFG_HI_BOOT_TUNER_TYPE_TMX7070X),y)
 CFLAGS += -DHI_BOOT_TUNER_DEV_TYPE_TMX7070X
 OBJS   += tuner/tmx7070x.o
@@ -115,9 +140,9 @@ OBJS   += tuner/MXL603/MxL603_OEM_Drv.o \
 	  tuner/MXL603/MxL603.o
 endif
 
-ifeq ($(CFG_HI_BOOT_DEMOD_TYPE_X5HDV2QAM),y)
-CFLAGS += -DHI_BOOT_DEMOD_DEV_TYPE_X5HDV2QAM
-OBJS   += demod/x5hdqamv200/x5hdqamv200.o
+ifeq ($(CFG_HI_BOOT_DEMOD_TYPE_HI3130I),y)
+CFLAGS += -DHI_BOOT_DEMOD_DEV_TYPE_HI3130I
+OBJS   += demod/hi3716cv200/hi3716cv200.o
 endif
 
 ifeq ($(CFG_HI_BOOT_DEMOD_TYPE_HI3136),y)

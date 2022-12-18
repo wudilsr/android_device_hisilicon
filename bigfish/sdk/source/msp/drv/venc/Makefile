@@ -85,6 +85,11 @@ EXTRA_CFLAGS += -D__VENC_98M_CONFIG__
 EXTRA_CFLAGS += -D__VENC_SUPPORT_JPGE__
 endif
 
+ifeq  ($(CFG_HI_CHIP_TYPE),hi3716mv420)
+EXTRA_CFLAGS += -D__VENC_98M_CONFIG__
+EXTRA_CFLAGS += -D__VENC_SUPPORT_JPGE__
+endif
+
 EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(COMMON_API_INCLUDE)                 \
                 -I$(COMMON_DRV_INCLUDE)                 \

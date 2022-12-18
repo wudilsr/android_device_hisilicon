@@ -254,13 +254,13 @@ jpeg_start_decompress (j_decompress_ptr cinfo)
 				}
 				else if(  (HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)   \
                         &&(HI_TRUE == pJpegHandle->bInHardDec)                      \
-                        &&(HI_TRUE == pJpegHandle->bFirstContinueStream))
+                        &&(HI_TRUE == pJpegHandle->bFirstContinueStream)            \
+                        &&(HI_TRUE == pJpegHandle->bFillInput))
 				{/** 只有针对第一段续码流失败有效，其它情况无法回退，其实不是第一次出错发生概率比较低 **/
 					#if 0
                       register_my_src(cinfo);
 					#else
 					  pJpegHandle->bFirstDec = HI_FALSE;
-					 return HI_FALSE;
 					#endif
 				}
                 else if(  (HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)   \
@@ -278,7 +278,7 @@ jpeg_start_decompress (j_decompress_ptr cinfo)
 					/**nothing to do**/
 				}
 			#else
-				if((HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)&&(HI_TRUE == pJpegHandle->bInHardDec))
+				if((HI_FALSE == pJpegHandle->stHDecDataBuf.bUseInsideData)&&(HI_TRUE == pJpegHandle->bInHardDec) && (HI_TRUE == pJpegHandle->bFillInput))
 				{/**
 		   		  ** when use external stream,if hard decode failure,user should resume the stream,and call this function again
 		          ** CNcomment: 如果是使用外部处理码流，则直接返回失败，然后用户回退码流之后重新调用该接口进行软解 CNend\n
@@ -536,7 +536,12 @@ static HI_U32 jpeg_hard_read_scanlines(j_decompress_ptr cinfo,
 		                                           JDIMENSION max_lines)
 {
        HI_S32 row_ctr = 0;
+       
+    #ifdef CONFIG_JPEG_SOFTCSC_ENABLE
+       row_ctr = JPEG_HDEC_SoftCSC(cinfo);
+    #else
 	   row_ctr = JPEG_HDEC_HardCSC(cinfo);
+   	#endif
 	   if(HI_SUCCESS != row_ctr)
 	   {/**
 		 ** because the jpeg hard dec success,so the csc must success
@@ -682,7 +687,11 @@ static HI_U32 jpeg_hard_read_tile_scanlines(j_decompress_ptr cinfo, huffman_inde
 {
 
        HI_S32 row_ctr = 0;
+	#ifdef CONFIG_JPEG_SOFTCSC_ENABLE
+       row_ctr = JPEG_HDEC_SoftCSC(cinfo);
+    #else
 	   row_ctr = JPEG_HDEC_HardCSC(cinfo);
+   	#endif
 	   if(HI_SUCCESS != row_ctr)
 	   {/**
 		 ** because the jpeg hard dec success,so the csc must success

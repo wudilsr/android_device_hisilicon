@@ -251,7 +251,7 @@ HI_S32 HI_UNF_PQ_GetCommOption(HI_UNF_PQ_OPT_COMMON_S* pstCommOption)
  \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
  \see \n
  N/A CNcomment: 无 CNend
-	*/
+ */
 
 HI_S32 HI_UNF_PQ_UpdatePqParam(HI_VOID)
 {
@@ -267,8 +267,7 @@ HI_S32 HI_UNF_PQ_UpdatePqParam(HI_VOID)
  \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
  \see \n
  N/A CNcomment: 无 CNend
-	*/
-
+ */
 HI_S32 HI_UNF_PQ_SetDefaultParam(HI_VOID)
 {
     HI_S32 s32Ret;
@@ -291,7 +290,6 @@ HI_S32 HI_UNF_PQ_SetDefaultParam(HI_VOID)
     return s32Ret;
 }
 
-
 /**
  \brief 获取亮度
  \attention \n
@@ -303,7 +301,6 @@ HI_S32 HI_UNF_PQ_SetDefaultParam(HI_VOID)
  \retval ::HI_SUCCESS
 
  */
-
 HI_S32 HI_UNF_PQ_GetBrightness(HI_UNF_DISP_E enChan, HI_U32* pu32Brightness)
 {
     HI_S32 s32Ret = HI_FAILURE;
@@ -339,7 +336,7 @@ HI_S32 HI_UNF_PQ_SetBrightness(HI_UNF_DISP_E enChan, HI_U32 u32Brightness)
 {
     if ( u32Brightness > 100)
     {
-        printf("The brightness is out of range!");
+        HI_ERR_PQ("The brightness is out of range!");
 
         return HI_FAILURE;
     }
@@ -395,7 +392,7 @@ HI_S32 HI_UNF_PQ_SetContrast(HI_UNF_DISP_E enChan, HI_U32 u32Contrast)
 {
     if ( u32Contrast > 100)
     {
-        printf("The Contrast is out of range!");
+        HI_ERR_PQ("The Contrast is out of range!");
 
         return HI_FAILURE;
     }
@@ -450,12 +447,71 @@ HI_S32 HI_UNF_PQ_SetHue(HI_UNF_DISP_E enChan, HI_U32 u32Hue)
 {
     if ( u32Hue > 100)
     {
-        printf("The Hue level is out of range!");
+        HI_ERR_PQ("The Hue level is out of range!");
 
         return HI_FAILURE;
     }
 
     return HI_MPI_PQ_SetHue((HI_DRV_DISPLAY_E)enChan, u32Hue);
+}
+
+/**
+ \brief 设置图像基本参数
+ \attention \n
+无
+ \param[in] enType: Graph or Video  CNcomment: 设置的是图形还是视频 CNend
+ \param[in] enChan: Destination DISP channel  CNcomment: 目标通道号 CNend
+ \param[in] stParam:Basic Image Param CNcomment:图像基本参数CNend
+
+
+ \retval ::HI_SUCCESS CNcomment: 成功 CNend
+
+ */
+
+
+HI_S32 HI_UNF_PQ_SetBasicImageParam(HI_UNF_PQ_IMAGE_TYPE_E enType, HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_PARAM_S stParam)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_PQ_IMAGE_PARAM_S stImageParam;
+
+    stImageParam.u16Brightness = stParam.u32Brightness;
+    stImageParam.u16Contrast   = stParam.u32Contrast;
+    stImageParam.u16Hue        = stParam.u32Hue;
+    stImageParam.u16Saturation = stParam.u32Saturation;
+
+    s32Ret = HI_MPI_PQ_SetBasicImageParam((HI_MPI_PQ_IMAGE_TYPE_E)enType, (HI_DRV_DISPLAY_E)enChan, stImageParam);
+
+    return s32Ret;
+}
+
+/**
+ \brief 获取图像基本参数
+ \attention \n
+无
+ \param[in] enType: Graph or Video  CNcomment: 选择的是图形还是视频 CNend
+ \param[in] enChan: Destination DISP channel  CNcomment: 目标通道号 CNend
+ \param[in] pstParam:Basic Image Param CNcomment:图像基本参数 CNend
+
+
+ \retval ::HI_SUCCESS CNcomment: 成功 CNend
+
+ */
+
+
+HI_S32 HI_UNF_PQ_GetBasicImageParam(HI_UNF_PQ_IMAGE_TYPE_E enType, HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_PARAM_S* pstParam)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    HI_PQ_IMAGE_PARAM_S stImageParam = {0};
+
+    s32Ret = HI_MPI_PQ_GetBasicImageParam((HI_MPI_PQ_IMAGE_TYPE_E)enType, (HI_DRV_DISPLAY_E)enChan, &stImageParam);
+
+    pstParam->u32Brightness = stImageParam.u16Brightness;
+    pstParam->u32Contrast   = stImageParam.u16Contrast;
+    pstParam->u32Hue        = stImageParam.u16Hue;
+    pstParam->u32Saturation = stImageParam.u16Saturation;
+
+    return s32Ret;
 }
 
 /**
@@ -505,7 +561,7 @@ HI_S32 HI_UNF_PQ_SetSaturation(HI_UNF_DISP_E enChan, HI_U32 u32Saturation)
 {
     if ( u32Saturation > 100)
     {
-        printf("The Saturation level is out of range!");
+        HI_ERR_PQ("The Saturation level is out of range!");
 
         return HI_FAILURE;
     }
@@ -518,7 +574,7 @@ HI_S32 HI_UNF_PQ_SetSaturation(HI_UNF_DISP_E enChan, HI_U32 u32Saturation)
  \attention \n
 无
 
- \param[out] pu32NRLevel: 降噪等级, 有效范围: 0~255
+ \param[out] pu32NRLevel: 降噪等级, 有效范围: 0~100
 
 
  \retval ::HI_SUCCESS
@@ -532,7 +588,7 @@ HI_S32 HI_UNF_PQ_GetNR(HI_UNF_DISP_E enChan, HI_U32* pu32NRLevel)
         return HI_FAILURE;
     }
 
-    return HI_MPI_PQ_GetNR(pu32NRLevel);
+    return HI_MPI_PQ_GetTNR(pu32NRLevel);
 }
 
 /**
@@ -540,7 +596,7 @@ HI_S32 HI_UNF_PQ_GetNR(HI_UNF_DISP_E enChan, HI_U32* pu32NRLevel)
  \attention \n
 无
 
- \param[in] u32NRLevel: 降噪等级, 有效范围: 0~255
+ \param[in] u32NRLevel: 降噪等级, 有效范围: 0~100
 
  \retval ::HI_SUCCESS
 
@@ -548,14 +604,14 @@ HI_S32 HI_UNF_PQ_GetNR(HI_UNF_DISP_E enChan, HI_U32* pu32NRLevel)
 
 HI_S32 HI_UNF_PQ_SetNR(HI_UNF_DISP_E enChan, HI_U32 u32NRLevel)
 {
-    if ( u32NRLevel > 255)
+    if ( u32NRLevel > 100)
     {
-        printf("The NR level is out of range!");
+        HI_ERR_PQ("The NR level is out of range!");
 
         return HI_FAILURE;
     }
 
-    return HI_MPI_PQ_SetNR(u32NRLevel);
+    return HI_MPI_PQ_SetTNR(u32NRLevel);
 }
 
 /**
@@ -681,7 +737,7 @@ HI_S32 HI_UNF_PQ_SetSharpness(HI_UNF_DISP_E enChan, HI_U32 u32Sharpness)
 {
     if ( u32Sharpness > 100)
     {
-        printf("The Sharpness level is out of range!");
+        HI_ERR_PQ("The Sharpness level is out of range!");
 
         return HI_FAILURE;
     }
@@ -725,7 +781,7 @@ HI_S32 HI_UNF_PQ_SetDeBlocking(HI_UNF_DISP_E enChan, HI_U32 u32DBlevel)
 {
     if ( u32DBlevel > 255)
     {
-        printf("The DB level is out of range!");
+        HI_ERR_PQ("The DB level is out of range!");
 
         return HI_FAILURE;
     }
@@ -770,7 +826,7 @@ HI_S32 HI_UNF_PQ_SetDeRinging(HI_UNF_DISP_E enChan, HI_U32 u32DRlevel)
 {
     if ( u32DRlevel > 255)
     {
-        printf("The DR level is out of range!");
+        HI_ERR_PQ("The DR level is out of range!");
 
         return HI_FAILURE;
     }
@@ -825,7 +881,7 @@ HI_S32 HI_UNF_PQ_SetColorGain(HI_UNF_DISP_E enChan, HI_U32 u32ColorGainLevel)
 {
     if ( u32ColorGainLevel > 100)
     {
-        printf("The ColorGain level is out of range!");
+        HI_ERR_PQ("The ColorGain level is out of range!");
 
         return HI_FAILURE;
     }
@@ -869,7 +925,7 @@ HI_S32 HI_UNF_PQ_SetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E enFles
 {
     if ( enFleshToneLevel >= HI_UNF_PQ_FLESHTONE_GAIN_BUTT)
     {
-        printf("The FleshTone level is out of range!");
+        HI_ERR_PQ("The FleshTone level is out of range!");
 
         return HI_FAILURE;
     }
@@ -926,6 +982,7 @@ HI_S32 HI_UNF_PQ_SetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32 u32OnOff)
         s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_DCI, u32OnOff);
         s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_COLOR, u32OnOff);
         s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_SR, u32OnOff);
+        s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_TNR, u32OnOff);
     }
     else
     {
@@ -955,6 +1012,46 @@ HI_S32 HI_UNF_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff)
     }
 
     return HI_MPI_PQ_SetDemo(enFlags, u32OnOff);
+}
+
+/**
+ \brief 设置卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] enMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetDemoMode( HI_UNF_DISP_E enChan, HI_UNF_PQ_DEMO_MODE_E enMode)
+{
+    return HI_MPI_PQ_SetDemoMode((HI_DRV_DISPLAY_E)enChan, (HI_PQ_DEMO_MODE_E)enMode);
+}
+
+
+/**
+ \brief 获取卖场模式显示方式
+ \attention \n
+无
+
+ \param[in] enChan
+ \param[in] enMode
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetDemoMode( HI_UNF_DISP_E enChan, HI_UNF_PQ_DEMO_MODE_E* penMode)
+{
+    if (HI_NULL == penMode)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetDemoMode((HI_DRV_DISPLAY_E)enChan, (HI_PQ_DEMO_MODE_E*)penMode);
 }
 
 /**

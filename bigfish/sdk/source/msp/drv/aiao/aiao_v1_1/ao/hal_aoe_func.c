@@ -527,7 +527,7 @@ HI_S32 iHAL_AOE_AIP_SetCmd(AOE_AIP_ID_E enAIP, AOE_AIP_CMD_E newcmd)
         Ack = iHAL_AOE_AIP_AckCmd(enAIP);
         if (AOE_AIP_CMD_DONE != Ack)
         {
-            HI_ERR_AO("\nAIP SetCmd(0x%x) failed(0x%x)", newcmd, Ack);
+            HI_ERR_AO("AIP SetCmd(0x%x) failed(0x%x)\n", newcmd, Ack);
             return HI_FAILURE;
         }
     }
@@ -799,6 +799,7 @@ HI_S32 iHAL_AOE_AOP_SetAttr(AOE_AOP_ID_E enAOP, AOE_AOP_CHN_ATTR_S *pstAttr)
 
     AopReg->AOP_BUFF_ATTR.bits.buf_priority = ((HI_TRUE == pstAttr->stRbfOutAttr.bRbfHwPriority) ? 1 : 0);
 
+    AopReg->AOP_CTRL.bits.ena_add_mute  = ((HI_TRUE == pstAttr->stRbfOutAttr.bAddMute) ? 1 : 0);  //only for cast aop
     AopReg->AOP_BUFF_ATTR.bits.buf_latency = pstAttr->stRbfOutAttr.u32BufLatencyThdMs;
 
     return HI_SUCCESS;

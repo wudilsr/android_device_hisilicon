@@ -21,6 +21,7 @@
 #include "hi_drv_proc.h"      //proc相关接口依赖
 #include "drv_omxvdec.h"
 
+#define BPP_MODE_ENABLE                   (0)
 
 #define MAX_OPEN_COUNT	                  (32)
 #define MAX_CHANNEL_NUM                   (MAX_OPEN_COUNT)
@@ -34,7 +35,7 @@
 #define OMX_INBUF			              (5)
 #define OMX_OUTBUF	 		       	      (6)
 #define OMX_VPSS	 		              (7)
-#define OMX_RAWCTRL	 		       	      (8)
+#define OMX_VER  	 		       	      (8)
 #define OMX_PTS                           (9)
 
 extern HI_U32 g_TraceOption;
@@ -104,8 +105,13 @@ typedef struct {
   VOID* 	 pProcessorFunc; 	  /*processor external functions*/
 }OMXVDEC_FUNC;
 
+typedef enum {
+	ALLOC_BY_MMZ = 0,
+	ALLOC_BY_PRE,
+	ALLOC_BY_SEC,
+}eMEM_ALLOC;
 
-HI_VOID omxvdec_release_mem(MMZ_BUFFER_S *pMMZ_Buf);
+HI_VOID omxvdec_release_mem(MMZ_BUFFER_S *pMMZ_Buf, eMEM_ALLOC eMemAlloc);
 
 #endif
 

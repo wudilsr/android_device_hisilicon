@@ -10,7 +10,7 @@ import android.widget.MediaController;
 
 import com.hisilicon.hardware.CommonActivity;
 import com.hisilicon.hardwaretest.R;
-import com.hisilicon.android.hisysmanager.HiSysManager;
+
 public class HDMITestActivity extends CommonActivity implements
         OnCompletionListener {
     private String filePath;
@@ -18,7 +18,7 @@ public class HDMITestActivity extends CommonActivity implements
     private FullScreenVideoView videoView;
     private MediaController media;
     private MediaPlayer player;
-    private HiSysManager mhisys;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +29,6 @@ public class HDMITestActivity extends CommonActivity implements
             finish();
             return;
         }
-        mhisys = new HiSysManager();
-        mhisys.adjustDevState("/proc/msp/pm_core","volt=1140");
         setContentView(R.layout.hdmi_test_activity);
         initView();
     }
@@ -58,7 +56,6 @@ public class HDMITestActivity extends CommonActivity implements
         if (null != player) {
             player.release();
         }
-        mhisys.adjustDevState("/proc/msp/pm_core","volt=0");
         super.onDestroy();
     }
 

@@ -18,8 +18,10 @@ endif
 #===============================================================================
 ADSP_DRV_INCLUDE    := $(MSP_DIR)/drv/adsp/adsp_v1_1/include
 ADSP_DRV_INCLUDE_1  := $(MSP_DIR)/drv/adsp/adsp_v1_1/include/comp
-HA_CODEC_INCLUDE    := $(COMPONENT_DIR)/ha_codec/include
+# HA_CODEC_INCLUDE    := $(COMPONENT_DIR)/ha_codec/include
 HA_EFFECT_INCLUDE   := $(COMPONENT_DIR)/ha_effect/include
+
+# CFG_HI_SND_AFLT_SUPPORT := y
 
 #===============================================================================
 # Tensilica Audio Lib
@@ -36,12 +38,13 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_API_INCLUDE)                    \
                 -I$(MSP_DRV_INCLUDE)                    \
                 -I$(ADSP_DRV_INCLUDE)                   \
-                -I$(HA_CODEC_INCLUDE)                   \
-                -I$(HA_EFFECT_INCLUDE)                  \
                 -I$(ADSP_XA_INCLUDE)                    \
                 -I$(ADSP_XA_MP3DEC_INC)                 \
                 -I$(ADSP_DRV_INCLUDE_1)
 
+ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
+EXTRA_CFLAGS += -I$(HA_EFFECT_INCLUDE)
+endif
 ##just for TQE test for hw aoe
 #CFG_TQE_FOR_SND_AOE_HW_SUPPORT = Y
 
@@ -52,7 +55,19 @@ endif
 ifneq ($(CFG_HI_SND_AOE_HW_SUPPORT),y)
 #simulate support
 
-HIFIDIR := ./hifi
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
+HIFIDIR := ./hifi/Hi3798CV100/$(CFG_HI_TOOLCHAINS_NAME)
+else ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796mv100 hi3798mv100),)
+HIFIDIR := ./hifi/Hi3798MV100/$(CFG_HI_TOOLCHAINS_NAME)
+else ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+ifdef CFG_HI_ADVCA_FUNCTION
+HIFIDIR := ./hifi/Hi3716MV410/$(CFG_HI_TOOLCHAINS_NAME)_advca
+else
+HIFIDIR := ./hifi/Hi3716MV410/$(CFG_HI_TOOLCHAINS_NAME)
+endif
+else ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200_a),)
+HIFIDIR := ./hifi/Hi3798CV200_A/$(CFG_HI_TOOLCHAINS_NAME)
+endif
 
 EXTRA_CFLAGS +=  \
 		-I$(MSP_DIR)/drv/adsp/adsp_v1_1/$(HIFIDIR)/common/include \
@@ -71,7 +86,7 @@ EXTRA_CFLAGS +=  \
 endif
 
 EXTRA_CFLAGS += -DHI_SND_AOE_SWSIMULATE_SUPPORT
-EXTRA_CFLAGS += -DHI_SND_AFLT_SWSIMULATE_SUPPORT
+
 else
 EXTRA_CFLAGS += -DHI_SND_DSP_HW_SUPPORT
 endif
@@ -81,7 +96,12 @@ EXTRA_CFLAGS += -DINTERLEAVED_OUTPUT
 EXTRA_CFLAGS += -DPCM_DECODER_SUPPORT
 #only use debug for mp3 decoder
 #EXTRA_CFLAGS += -DMP3_DECODER_SUPPORT
+
+ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_SND_AFLT_SWSIMULATE_SUPPORT
 EXTRA_CFLAGS += -DBASE_EFFECT_SUPPORT
+EXTRA_CFLAGS += -DHI_SND_AFLT_SUPPORT
+endif
 EXTRA_CFLAGS += -DHI_SND_TIMER_CAST
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100 hi3798mv100 hi3796mv100),)
@@ -133,11 +153,14 @@ $(MOD_NAME)-y += $(HIFIDIR)/aoe/src/engine/aoe_engine.o
 $(MOD_NAME)-y += $(HIFIDIR)/aoe/src/aoe_main.o
 $(MOD_NAME)-y += $(HIFIDIR)/aoe/src/aoe_reg.o
 
-$(MOD_NAME)-y += $(HIFIDIR)/aflt/src/aflt_main.o
-$(MOD_NAME)-y += $(HIFIDIR)/aflt/src/aflt_func.o
-$(MOD_NAME)-y += $(HIFIDIR)/component/codec/iapcm_dec/iapcm_dec.o
-$(MOD_NAME)-y += $(HIFIDIR)/component/codec/iapcm_dec/iapcm_dec_comp.o
-
+ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
+$(MOD_NAME)-y += $(HIFIDIR)/aflt/src/aflt_main.o                             \
+                 $(HIFIDIR)/aflt/src/aflt_func.o                             \
+                 $(HIFIDIR)/component/codec/iapcm_dec/iapcm_dec.o            \
+                 $(HIFIDIR)/component/codec/iapcm_dec/iapcm_dec_comp.o       \
+                 $(HIFIDIR)/component/effect/base_effect/base_effect_comp.o  \
+                 $(HIFIDIR)/component/effect/base_effect/base_effect_volume.o
+endif
 #only use debug for mp3 decoder
 #$(MOD_NAME)-y+= $(HIFIDIR)/component/codec/iamp3_dec/comp_mp3dec_wrap.o       \
                 $(HIFIDIR)/component/codec/iamp3_dec/mp3_decoder.o            \
@@ -155,9 +178,6 @@ $(MOD_NAME)-y += $(HIFIDIR)/component/codec/iapcm_dec/iapcm_dec_comp.o
                 $(HIFIDIR)/component/codec/iamp3_dec/synthesis.o              \
                 $(HIFIDIR)/component/codec/iamp3_dec/trig_rom.o               \
                 $(HIFIDIR)/component/codec/iamp3_dec/armgcc/asmpoly_gcc.o
-
-$(MOD_NAME)-y+= $(HIFIDIR)/component/effect/base_effect/base_effect_comp.o \
-                $(HIFIDIR)/component/effect/base_effect/base_effect_volume.o
 
 else
 $(MOD_NAME)-y += kfile_ops_func.o dsp_elf_func.o

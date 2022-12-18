@@ -48,7 +48,7 @@ static volatile PNG_HAL_REGISTER_S *g_pstPngReg = HI_NULL;
 /* vitural address to reset registet base*/
 static volatile HI_U32 *g_pu32RegReset = HI_NULL;
 #endif
-
+#include "png_define.h"
 static HI_U32 g_u32PngIrqNum = 0;
 static HI_U32 g_u32PngRegAddr = 0;
 
@@ -84,12 +84,18 @@ HI_S32 PngHalInit(HI_VOID)
     	return HI_ERR_PNG_SYS;
     }
 	#endif
-	
+    PngHalSetClock(HI_FALSE); 
+     return HI_SUCCESS; 
+}
+
+extern HI_U32 g_u32RdcBufPhyaddr;
+HI_S32 PngHalOpen(HI_VOID) 
+{
     /* register reset*/
     //PngHalReset();
-    
     PngHalSetClock(HI_TRUE);
-    
+
+    PngHalSetRdcAddr(g_u32RdcBufPhyaddr);
     /* config AXI */
     g_pstPngReg->u32AXIConfig = 0x20441;
 
@@ -155,16 +161,12 @@ HI_VOID PngHalReset(HI_VOID)
     *g_pu32RegReset |= 0x10;
 #endif
 
-    while(1)
+    /*make sure reset is effective*/
+    for (i = 0; i < 100; i++)
     {
-    	for (i = 0; i < 100; i++)
-    	{
-    	}
-    	if (0 == g_pstPngReg->u32RstBusy)
-    	{
-    		break;
-    	}
     }
+    
+    
 #ifdef CONFIG_PNG_USE_SDK_CRG_ENABLE
 	unTempValue.u32 = g_pstRegCrg->PERI_CRG33.u32;
 	/*cancel reset*/
@@ -192,18 +194,18 @@ HI_VOID PngHalSetClock(HI_BOOL bEnable)
 
 	if (bEnable)
 	{
-	    /*cancel reset*/
-	    unTempValue.bits.pgd_srst_req = 0x0;
-
 	    /*enable clock*/
 	    unTempValue.bits.pgd_cken = 0x1;
+	    /*cancel reset*/
+	    unTempValue.bits.pgd_srst_req = 0x0;
 	}
 	else
 	{
-		/*disable clock*/
+	    /*reset*/ 
+        unTempValue.bits.pgd_srst_req = 0x1; 
+	    /*disable clock*/
 	    unTempValue.bits.pgd_cken = 0x0;
 	}
-
     g_pstRegCrg->PERI_CRG33.u32 = unTempValue.u32;
 #else
     /* open clock*/

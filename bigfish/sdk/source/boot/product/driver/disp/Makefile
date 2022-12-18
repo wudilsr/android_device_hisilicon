@@ -23,7 +23,7 @@ PRODUCT_DIR := $(BOOT_DIR)/../product
 endif
 
 COMMON_DIR  := $(PRODUCT_DIR)/driver/common
-DISP_DIR    := $(PRODUCT)/driver/disp
+DISP_DIR    := $(PRODUCT_DIR)/driver/disp
 
 ifndef CFLAGS
 include $(BOOT_DIR)/define.mak
@@ -65,6 +65,12 @@ HAL_DIR := 3798m
 DRIVER_PATH := vdp_v2_0
 endif
 
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+HAL_DIR := mv410
+DRIVER_PATH := vdp_v3_0
+endif
+
+
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3719cv100 hi3718mv100),)
 INCLUDE_DIR := hi3716cv200
 endif
@@ -80,6 +86,11 @@ endif
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
 INCLUDE_DIR := hi3798mv100
 endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+INCLUDE_DIR := hi3716mv410
+endif
+
 
 CFLAGS  += -I$(PRODUCT_DIR)/driver/include
 CFLAGS  += -I$(PRODUCT_DIR)/driver/include_inc
@@ -143,19 +154,17 @@ prepare:
 	$(AT)-test -e $(DISP_DIR)/$(DRIVER_PATH)/hal/s5v100 || mkdir -p $(DISP_DIR)/$(DRIVER_PATH)/hal/s5v100
 	$(AT)-test -e $(DISP_DIR)/$(DRIVER_PATH)/hal/3798m_a || mkdir -p $(DISP_DIR)/$(DRIVER_PATH)/hal/3798m_a
 	$(AT)-test -e $(DISP_DIR)/$(DRIVER_PATH)/hal/3798m || mkdir -p $(DISP_DIR)/$(DRIVER_PATH)/hal/3798m
+	$(AT)-test -e $(DISP_DIR)/$(DRIVER_PATH)/hal/mv410 || mkdir -p $(DISP_DIR)/$(DRIVER_PATH)/hal/mv410
 	echo $(DISP_DIR)
 
 ifeq ($(DRIVER_PATH), vdp_v1_0)
 	cp -rf $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/alg/drv_disp_alg_csc* $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/alg/drv_disp_alg_rgb2yuv* $(DISP_DIR)/$(DRIVER_PATH)/alg 
+	cp -rf $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_mcvn* $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_vbi* $(DISP_DIR)/vdp_v1_0/drv/
+	cp -rf $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_cgms*  $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_cgms* $(DISP_DIR)/vdp_v1_0/drv/
 else
 	cp -rf $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/hal/common/drv_disp_rwzb.h   $(DISP_DIR)/$(DRIVER_PATH)/hal/common
 	cp -rf $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/hal/common/drv_disp_rwzb.c   $(DISP_DIR)/$(DRIVER_PATH)/hal/common
 	cp -rf $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/alg/drv_disp_alg_rgb2yuv* $(DISP_DIR)/$(DRIVER_PATH)/alg
-endif
-
-ifeq ($(DRIVER_PATH), vdp_v1_0)
-	cp -rf $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_mcvn* $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_vbi* $(DISP_DIR)/vdp_v1_0/drv/
-	cp -rf $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_cgms*  $(MSP_DIR)/drv/vo/vdp_v1_0/drv/drv_cgms* $(DISP_DIR)/vdp_v1_0/drv/
 endif
 
 	cp -rf $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/com/drv_disp_osal* $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/com/drv_disp_com.h $(MSP_DIR)/drv/vo/$(DRIVER_PATH)/com/drv_disp_version.h $(DISP_DIR)/$(DRIVER_PATH)/com

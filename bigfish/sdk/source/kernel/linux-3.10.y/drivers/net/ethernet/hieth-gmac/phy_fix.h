@@ -14,6 +14,7 @@
 #define REALTEK_PHY_MASK		(0xfffffff0)
 #define HISILICON_PHY_ID_FE_S40		(0x20669813)
 #define HISILICON_PHY_ID_FESTAV200	(0x20669823)
+#define HISILICON_PHY_ID_FESTAV300      (0x20669843)
 #define HISILICON_PHY_MASK		(0xfffffff0)
 
 /* the following two copied from phy_quirk()

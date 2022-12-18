@@ -34,11 +34,16 @@ static int jpge_pm_resume(PM_BASEDEV_S *pdev);
 
 static atomic_t g_JPGECount = ATOMIC_INIT(0);
 
+static HI_BOOL gs_bClockOpen = HI_FALSE;
+
+	
 static JPGE_EXPORT_FUNC_S s_JpgeExportFuncs =
-{ 
-    .pfnJpgeCreateChn   = Jpge_Create_toVenc,
-	.pfnJpgeDestroyChn  = Jpge_Destroy,
-	.pfnJpgeEncodeFrame = Jpge_Encode_toVenc,
+{
+	.pfnJpgeInit                = Jpge_Init,
+	.pfnJpgeDeInit             = Jpge_DInit,
+      .pfnJpgeCreateChn        = Jpge_Create_toVenc,
+	.pfnJpgeDestroyChn       = Jpge_Destroy,
+	.pfnJpgeEncodeFrame    = Jpge_Encode_toVenc,
 	.pfnJpgeSuspend		= jpge_pm_suspend,
 	.pfnJpgeResume		= jpge_pm_resume,
 };
@@ -47,9 +52,9 @@ static int jpge_open(struct inode *finode, struct file  *ffile)
 {
     if (1 == atomic_inc_return(&g_JPGECount))
     {
-        //do nothing..??
+    	Jpge_SetClock();;
     }
-
+    
     return 0;
 }
 
@@ -60,23 +65,33 @@ int JpgeOsiOpen(HI_VOID)
 
 static int jpge_release(struct inode *finode, struct file  *ffile)
 {
+
     if (atomic_dec_and_test(&g_JPGECount))
     {
-        //do nothing..??
+    	Jpge_CloseClock();
     }
 
     if ( atomic_read(&g_JPGECount) < 0 )
     {
         atomic_set(&g_JPGECount, 0);
     }
+    
     return 0;
 }
 
 int JpgeOsiClose(HI_VOID)
 {
-    return jpge_release(NULL, NULL);
+      return jpge_release(NULL, NULL);
 }
 
+HI_VOID Jpge_Init(HI_VOID)
+{
+	 jpge_open(NULL, NULL);
+}
+HI_VOID Jpge_DInit(HI_VOID)
+{
+	jpge_release(NULL, NULL);
+}
 
 static long jpge_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
 {
@@ -211,15 +226,34 @@ void JPGE_DRV_ModExit(void)
 
 static int jpge_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 {
-    HI_PRINT("JPGE suspend OK\n");
+
+	U_PERI_CRG36 unTempValue;
+
+	unTempValue.u32 = g_pstRegCrg->PERI_CRG36.u32;
+
+	if(0x1 == unTempValue.bits.jpge_cken)
+	{
+		gs_bClockOpen = HI_TRUE;
+	}
+	else
+	{
+		gs_bClockOpen = HI_FALSE;
+	}
+
+
+	HI_PRINT("JPGE suspend OK\n");
+    
     return 0;
 }
 
 /* wait for resume */
 static int jpge_pm_resume(PM_BASEDEV_S *pdev)
 {
-    Jpge_SetClock();
 
+	if(HI_TRUE == gs_bClockOpen)
+    {
+    	Jpge_SetClock();
+	}
     HI_PRINT("JPGE resume OK\n");
     return 0;
 }

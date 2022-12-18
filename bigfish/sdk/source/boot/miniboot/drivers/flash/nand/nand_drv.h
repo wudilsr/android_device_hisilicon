@@ -25,6 +25,7 @@
 
 #include "nand_ctrl.h"
 #include "nand_chip.h"
+#include "spi_nand_chip.h"
 
 /* nand driver interface. */
 struct nand_dev_t {
@@ -44,10 +45,12 @@ struct nand_dev_t {
 	int blockmask;
 	int chipshift;
 	uint64 chipmask;
+	int is_spi_nand;
 
 	char *bootmsg;
 
 	struct nand_chip_info_t *nand_info;
+	struct spi_nand_chip_info_t *spi_nand_info;
 
 /* (Controller) Current support ecc/page detect, in some condition it does not support. */
 #define NANDC_HW_AUTO                         0x01
@@ -131,6 +134,7 @@ struct nand_dev_t {
 typedef struct nand_dev_t *(*nand_driver_init_fn)(void);
 
 extern nand_driver_init_fn nand_driver_init;
+extern nand_driver_init_fn spi_nand_driver_init;
 
 int set_nand_info(struct nand_dev_t *nand_dev);
 

@@ -40,13 +40,9 @@ typedef struct _BT_FREE_S
 
 /******************************* API declaration *****************************/
 
-HI_S32 HIGO_InitMemory(HI_VOID);
-
 HI_VOID* HIGO_Malloc2(HI_U32 u32Size);
 
 HI_VOID HIGO_Free2(HI_VOID* pAddr);
-
-HI_VOID HIGO_DeInitMemory(HI_VOID);
 
 BT_FREE_S* HIGO_GetFreeList(HI_VOID);
 #ifdef __cplusplus

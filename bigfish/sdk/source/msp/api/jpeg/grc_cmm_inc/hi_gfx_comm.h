@@ -290,10 +290,8 @@ static inline HI_S32 HI_GFX_GetTimeStamp(HI_U32 *pu32TimeMs, HI_U32 *pu32TimeUs)
 			return HI_FAILURE;
 		}
 
-		if(HI_NULL != pu32TimeMs)
-		{
-			*pu32TimeMs = (HI_U32)(timenow.tv_sec*1000 + timenow.tv_nsec/1000000);
-		}
+		*pu32TimeMs = (HI_U32)(timenow.tv_sec*1000 + timenow.tv_nsec/1000000);
+
 		if(HI_NULL != pu32TimeUs)
 		{
 			*pu32TimeUs = (HI_U32)(timenow.tv_sec*1000000 + timenow.tv_nsec/1000);

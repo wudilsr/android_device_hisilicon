@@ -15,6 +15,7 @@ extern "C" {
 #endif
 #include "libavformat/avformat.h"
 #include "libavformat/avio_internal.h"
+#include "libavformat/isom.h"
 #include "libavformat/isom_encryption.h"
 #include "libavutil/opt.h"
 #include "libavutil/base64.h"
@@ -73,7 +74,8 @@ typedef struct {
     uint16_t    reserved;
     uint16_t    reference_count;
     AVIndexEntry  *index_entries;
-    int         entries_nb;
+    int            entries_nb;
+    int64_t      anchor_point_offset;
 }SidxInfo;
 
 typedef struct {
@@ -88,12 +90,6 @@ typedef struct {
     char     codecs[DASH_ATTR_STR_LEN];
     int        bandwidthBps;
 }DASHRepresentation;
-
-typedef struct {
-    SidxInfo *pstSidxInfo;
-    HI_U8    *pstSidxData;
-
-}DASHRepresentationIndexes;
 
 typedef struct {
     char  lang[DASH_ATTR_STR_LEN];
@@ -335,7 +331,7 @@ typedef struct tagADTSHeader
 #define STRING_MATCH(str1, str2)  (!strncmp(str1, str2, (strlen(str1) > strlen(str2)?strlen(str1):strlen(str2))))
 
 
-extern uint8_t* ff_mov_get_sidx_data(AVFormatContext *s);
+extern int  ff_mov_get_sidx_data(AVFormatContext *s,int stream_index, MOVSidx *sidx);
 
 extern int ff_index_search_timestamp(const AVIndexEntry * entries,int nb_entries,int64_t wanted_timestamp,int flags);
 extern int ff_add_index_entry(AVIndexEntry **index_entries,
@@ -462,6 +458,8 @@ static HI_S32 _SVR_DASH_ParseNalInplace(HI_U8 *pu8Data, HI_U32 u32InDataLen, HI_
             if (u32RealOutLen + ReadLen + 3 >= u32InBufLen)
             {
                 //FORMAT_PRINT("vid frame data erro, len is large than 3m \n");
+                av_log(0, AV_LOG_ERROR, "[%s,%d] u32InBufLen=%u is not enough(need > %u)\n",
+                __FUNCTION__, __LINE__, u32InBufLen, (u32RealOutLen + ReadLen + 3));
                 break;
             }
 
@@ -493,6 +491,111 @@ static HI_S32 _SVR_DASH_ParseNalInplace(HI_U8 *pu8Data, HI_U32 u32InDataLen, HI_
     else
     {
         *pu32OutDataLen = u32RealOutLen;
+    }
+
+    return HI_SUCCESS;
+}
+
+static HI_S32 _SVR_DASH_ParseNalInplace1(HI_U8 *pu8Data, HI_U32 u32InDataLen,
+    HI_U32 u32StartCodeLen, HI_U8 **pu8OutData, HI_U32 *pu32OutDataLen)
+{
+    HI_S32 nal_num = 0;
+    HI_S32 ReadLen = 0;
+    HI_U8* pos = pu8Data;
+    HI_U8* buf =  NULL;
+    HI_U8* pu8OutBuf =  NULL;
+    HI_U32 u32OutBufLen = 0;
+
+    if (4 == u32StartCodeLen)
+    {
+        if (0x00 == pu8Data[0] && 0x00 == pu8Data[1] && 0x00 == pu8Data[2] && 0x01 == pu8Data[3])
+        {
+            /* not need parse nal */
+            return HI_SUCCESS;
+        }
+    }
+    else if (3 == u32StartCodeLen || 2 == u32StartCodeLen)
+    {
+        /* if start code = 0x00000001, the start code len is wrong */
+
+        if ((0x00 == pu8Data[0] && 0x00 == pu8Data[1] && 0x01 == pu8Data[2])
+            || (0x00 == pu8Data[0] && 0x00 == pu8Data[1] && 0x00 == pu8Data[2] && 0x01 == pu8Data[3]))
+        {
+            /* not need parse nal */
+            return HI_SUCCESS;
+        }
+    }
+
+    HI_U32 u32RealOutLen = 0;
+
+    while (u32InDataLen > u32StartCodeLen && pos < (pu8Data + u32InDataLen - u32StartCodeLen))
+    {
+        _SVR_DASH_Get_be321(pos,(HI_U32*)&ReadLen, u32StartCodeLen);
+
+        if (ReadLen > ((pu8Data + u32InDataLen) - (pos + u32StartCodeLen)) || ReadLen < 0)
+            break;
+
+        if (4 == u32StartCodeLen)
+        {
+            pos[0]= 0x00;
+            pos[1]= 0x00;
+            pos[2]= 0x00;
+            pos[3]= 0x01;
+            pos += (ReadLen + 4);
+        }
+        else if (3 == u32StartCodeLen)
+        {
+            pos[0]= 0x00;
+            pos[1]= 0x00;
+            pos[2]= 0x01;
+            pos += (ReadLen + 3);
+        }
+        else
+        {
+            av_log(0, AV_LOG_ERROR, "%s,%d\n", __FUNCTION__, __LINE__);
+            if (pu8OutBuf == NULL )
+            {
+                u32OutBufLen = u32InDataLen + 2048;
+                pu8OutBuf = (HI_U8 *)av_realloc(pu8OutBuf, u32OutBufLen);
+                buf = pu8OutBuf;
+            }
+
+            if (u32RealOutLen + ReadLen + 3 + u32StartCodeLen > u32OutBufLen)
+            {
+                u32OutBufLen = FFMAX((u32RealOutLen + ReadLen + 3 + u32StartCodeLen), (u32OutBufLen + 2048));
+                pu8OutBuf = (HI_U8 *)av_realloc(pu8OutBuf, u32OutBufLen);
+                buf = pu8OutBuf + u32RealOutLen;
+            }
+
+
+            buf[0] = 0x00;
+            buf[1] = 0x00;
+            buf[2] = 0x01;
+
+            memcpy(buf + 3, pos + u32StartCodeLen, ReadLen);
+            u32RealOutLen += (ReadLen + 3);
+            buf += (ReadLen + 3);
+            pos += (ReadLen + u32StartCodeLen);
+
+            if ((HI_U32)(pu8Data + u32InDataLen - pos) <= u32StartCodeLen)
+            {
+                memcpy(buf, pos, (pu8Data + u32InDataLen - pos));
+                u32RealOutLen += (pu8Data + u32InDataLen - pos);
+                pos = pu8Data + u32InDataLen;
+                break;
+            }
+        }
+
+        nal_num++;
+    }
+
+    if ((4 == u32StartCodeLen) || (3 == u32StartCodeLen))
+    {
+    }
+    else
+    {
+        *pu32OutDataLen = u32RealOutLen;
+        *pu8OutData = pu8OutBuf;
     }
 
     return HI_SUCCESS;
@@ -844,6 +947,171 @@ static HI_S32 _SVR_DASH_DecAdtsExtradata(HI_U8 *pu8Buf, HI_U32 u32Size, HI_U32 *
     return HI_SUCCESS;
 }
 
+static HI_S32 _SVR_DASH_Hevc_GetStartCodeLen(HI_U8* pFrame,HI_U32 u32FrameSize)
+{
+    HI_S32 length,i;
+    HI_U8* data = pFrame;
+    #define CHECK_TIME_CNT 5
+    //1.check length for just one nal
+    if(((data[0] << 8) + data[1] + 2) == u32FrameSize)
+    {
+        return 2;
+    }
+    if(((data[0] << 16) + (data[1] << 8) + data[2] + 3) == u32FrameSize)
+    {
+        return 3;
+    }
+    if(((data[0] << 24) + (data[1] << 16) + (data[2] << 8) + data[3] + 4) == u32FrameSize)
+    {
+        return 4;
+    }
+    //2.check length for muti nal
+    //check if length size is 2
+    //todo:error probably happen here
+    if(data[0] == 0 && data[1] != 0)
+    {
+        length = data[1] + 2;
+        for(i=0;i<CHECK_TIME_CNT;i++)//check 5 times
+        {
+            if((length + 2) < u32FrameSize)
+            {
+                if(data[length] == 0 && data[length + 1] != 0)
+                {
+                    length += data[length + 1] + 2;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else if(length == u32FrameSize)//get the end
+            {
+                return 2;
+            }
+        }
+        if(i == CHECK_TIME_CNT)
+        {
+            return 2;
+        }
+    }
+    //check if length size is 3
+    if(data[0] == 0 && (data[1] != 0 || data[2] != 0))
+    {
+        length = (data[1] << 8) + data[2] + 3;
+        for(i=0;i<CHECK_TIME_CNT;i++)//check 5 times
+        {
+            if((length + 3) < u32FrameSize)
+            {
+                if(data[length] == 0 && (data[length + 1] != 0 || data[length + 2] != 0))
+                {
+                    length += (data[1] << 8) + data[2] + 3;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else if(length == u32FrameSize)//get the end
+            {
+                return 3;
+            }
+        }
+        if(i == CHECK_TIME_CNT)
+        {
+            return 3;
+        }
+    }
+
+    return 4;//return 4 as default
+}
+//ref to hevc.c function hevc_decode_extradata of ffmpeg version 2.1.3
+static HI_S32 _SVR_DASH_Hevc_GetExtDataNal(HI_S8* pExtradata,HI_U32 u32Extdatasize,HI_S8* pDstData,
+                                             HI_S32 u32DstBufLen,HI_U32* pDstDataLen,HI_U32 u32StartCodeLen)
+{
+    HI_S32 i,j,nal_len_size,num_arrays,usedsize,lengthSize;
+    HI_S8* buf;
+
+    buf = pDstData;
+    *pDstDataLen = 0;
+
+    if (u32Extdatasize > 21 &&(pExtradata[0] || pExtradata[1] || pExtradata[2] > 1))
+    {
+        pExtradata += 21;
+        nal_len_size = (pExtradata[0] & 3) + 1;
+        num_arrays   = pExtradata[1];
+        pExtradata += 2;
+        usedsize = 23;
+
+        /* Decode nal units from hvcC. */
+        for (i = 0; i < num_arrays; i++) {
+           // int type = pExtradata[0] & 0x3f;
+            int cnt  = (pExtradata[1] << 8) + pExtradata[2];
+            pExtradata += 3;
+            usedsize += 3;
+
+            for (j = 0; j < cnt; j++) {
+                // +2 for the nal size field
+                int nalsize = (pExtradata[0] << 8) + pExtradata[1];
+                if ((u32Extdatasize - usedsize) < nalsize) {
+                    av_log(0, AV_LOG_WARNING, "Invalid NAL unit size in pExtradata.\n");
+                    return -1;
+                }
+                if(u32DstBufLen >= (nalsize + u32StartCodeLen))
+                {
+                    if(u32StartCodeLen == 4)
+                    {
+                        buf[0] = 0;
+                        buf[1] = 0;
+                        buf[2] = 0;
+                        buf[3] = 1;
+                        lengthSize = 4;
+                    }
+                    else
+                    {
+                        buf[0] = 0;
+                        buf[1] = 0;
+                        buf[2] = 1;
+                        lengthSize = 3;
+                    }
+                    memcpy(buf + lengthSize,pExtradata + 2,nalsize);//replace length field as start code
+                    buf = buf + nalsize + lengthSize;
+                    *pDstDataLen += nalsize + lengthSize;
+                    u32DstBufLen -= (nalsize + lengthSize);
+                }
+                else
+                {
+                    av_log(0, AV_LOG_ERROR, "Invalid buffersize size in u32DstBufLen:%d,nalsize:%d.\n",u32DstBufLen,nalsize);
+                    return -1;
+                }
+                pExtradata += nalsize + 2;
+                usedsize += nalsize + 2;
+            }
+        }
+    }
+    else
+    {
+        //the whole extra data as a nal
+        if(u32DstBufLen >= (u32Extdatasize + 3))
+        {
+            buf[0] = 0;
+            buf[1] = 0;
+            buf[2] = 1;
+            memcpy(buf + 3,pExtradata,u32Extdatasize);
+            *pDstDataLen = u32Extdatasize + 3;
+            buf += u32Extdatasize + 3;
+            u32DstBufLen -= (u32Extdatasize + 3);
+        }
+        else
+        {
+            av_log(0, AV_LOG_ERROR, "Invalid buffersize size in u32DstBufLen:%d,u32Extdatasize:%d.\n",u32DstBufLen,u32Extdatasize);
+            return -1;
+        }
+    }
+
+    return 0;
+
+}
+
 static HI_S32 _SVR_DASH_AddExtraData(CodecID u32Format, AVStream *st, AVFormatContext *ic, AVPacket* pkt)
 {
     HI_U32 u32ExtraDataSize = 0;
@@ -940,8 +1208,51 @@ static HI_S32 _SVR_DASH_AddExtraData(CodecID u32Format, AVStream *st, AVFormatCo
             pkt->size = pkt->size + u32FrameHeaderLen + u32SpsPpsLen;
         }
     }
+    else if  (AV_CODEC_ID_HEVC == u32Format)
+    {
+        HI_U8  *pu8ParsedPktData = NULL;
+        HI_U32  u32ParsedPktDataLen = 0;
 
-    if (CODEC_ID_AAC == u32Format)
+
+        bKeyFrame = ((AV_PKT_FLAG_KEY & pkt->flags) == AV_PKT_FLAG_KEY) ? HI_TRUE : HI_FALSE;
+        u32ExtraDataSize = st->codec->extradata_size;
+        pu8AExtraData = st->codec->extradata;
+        u32SpsPpsLen = 0;
+        u32StartcodeLen = _SVR_DASH_Hevc_GetStartCodeLen(pkt->data, pkt->size);//get u32StartcodeLen first
+
+        _SVR_DASH_ParseNalInplace1(pkt->data, pkt->size, u32StartcodeLen,
+           &pu8ParsedPktData, &u32ParsedPktDataLen);
+
+        if (u32ParsedPktDataLen > 0 && pu8ParsedPktData != NULL)
+        {
+            av_free(pkt->data);
+            pkt->data = pu8ParsedPktData;
+            pkt->size = u32ParsedPktDataLen;
+        }
+
+        if (bKeyFrame == HI_TRUE &&
+            NULL != pu8AExtraData &&
+            u32ExtraDataSize < DASH_VID_EXTEND_DATA_LEN)
+        {
+            _SVR_DASH_Hevc_GetExtDataNal((HI_S8 *)pu8AExtraData,u32ExtraDataSize,(HI_S8 *)pu8VidData,DASH_VID_EXTEND_DATA_LEN,&u32SpsPpsLen,u32StartcodeLen);
+            if (u32SpsPpsLen > 0)
+            {
+                pu8PktData = (HI_U8 *)av_realloc(pkt->data, (pkt->size + u32SpsPpsLen));
+                if (pu8PktData == NULL)
+                {
+                    av_free(pu8VidData);
+                    pu8VidData = NULL;
+                    return AVERROR(ENOMEM);
+                }
+                pkt->data = pu8PktData;
+                memmove(pkt->data + u32SpsPpsLen, pkt->data, pkt->size);
+                memcpy(pkt->data, pu8VidData, u32SpsPpsLen);
+                pkt->size = pkt->size + u32SpsPpsLen;
+            }
+        }
+
+    }
+    else if (CODEC_ID_AAC == u32Format)
     {
         u32ExtraDataSize = st->codec->extradata_size;
         pu8AExtraData = st->codec->extradata;
@@ -1377,7 +1688,6 @@ static int _SVR_DASH_HandleEvent(DASHIOMap *map, int event)
     {
         case LOGIC_EVENT_PRE_INITSEGMENT:
             {
-                DASHMember *pstMember = map->dash_member;
                 MultimediaManager *manager = (MultimediaManager *)(map->dash_member->manager);
                 IAdaptationSet *adaptionset = NULL;
                 IRepresentation *representation = NULL;
@@ -1711,7 +2021,7 @@ static int _SVR_DASH_ReadSegment(void *opaque, uint8_t *buf, int buf_size)
 static int _SVR_DASH_ReadSegmentWrap(void *opaque, uint8_t *buf, int buf_size)
 {
     int ret;
-    DASHIOMap *map = (DASHIOMap *)opaque;
+//    DASHIOMap *map = (DASHIOMap *)opaque;
 
    // dash_log(DASH_LOG_INFO, "map[%p] type %d adapt[%d], represent[%d] read start\n", map, map->param.type, map->param.adaptionset_index, map->param.representation_index);
     ret = _SVR_DASH_ReadSegment(opaque, buf, buf_size);
@@ -1759,6 +2069,10 @@ static HI_S32 _SVR_DASH_SetMetaData(MultimediaManager *manager,
         if (adaptionset->GetLang().length() > 0)
         {
             av_dict_set(&(ic->streams[i]->metadata), "language",adaptionset->GetLang().c_str(), 0);
+        }
+        else
+        {
+            av_dict_set(&(ic->streams[i]->metadata), "language","und", 0);
         }
     }
 
@@ -2005,7 +2319,7 @@ static HI_S32 _SVR_DASH_SetupContext(DASHMember *pstMember, AVFormatContext **su
     }
     else
     {
-        dash_log(DASH_LOG_ERROR, "[%s,%d][SETUP] %d streams found\n", __FUNCTION__, __LINE__, (*sub)->nb_streams);
+        dash_log(DASH_LOG_ERROR, "[%s,%d][SETUP] ic=%p, %d streams found\n", __FUNCTION__, __LINE__, (*sub), (*sub)->nb_streams);
     }
 
     //manager may be updated during _SVR_DASH_ReadPacket, must update it when refer to it.
@@ -2101,7 +2415,7 @@ static HI_S32 _SVR_DASH_Setup(DASHMember *pstMember)
         if (pstMember->aud_nb > 0)
         {
             HI_S64 s64EarlistPts = ((pstMember->s64AudioLastPts > pstMember->s64AudioFirstPts) && \
-                (pstMember->s64AudioFirstPts >= 0))?(pstMember->s64AudioLastPts - pstMember->s64AudioFirstPts):0;
+                (pstMember->s64AudioFirstPts != AV_NOPTS_VALUE))?(pstMember->s64AudioLastPts - pstMember->s64AudioFirstPts):0;
             Option stOption = {1, 0, s64EarlistPts};
 
             if (NULL == pstMember->aud_ic)
@@ -2264,6 +2578,43 @@ static HI_S32 _SVR_DASH_CheckIndexChanged(SidxInfo * pSidxInfo, HI_S64 s64NewPts
     return HI_FAILURE;
 }
 
+static HI_S32 _SVR_DASH_CompareCodecs(const std::vector<std::string> &vec1, const std::vector<std::string> &vec2, int index)
+{
+    size_t dot1,dot2,len1, len2;
+    int ret;
+
+    if (vec1.size() <= 0 || vec2.size() <= 0)
+    {
+        return 0;
+    }
+
+    index = 0;
+    dot1 = vec1.at(0).find('.');//std::string::npos
+    if (dot1 == std::string::npos)
+    {
+        len1 = vec1.at(0).length();
+    }
+    else
+    {
+        len1 = dot1;
+    }
+    dot2 = vec2.at(0).find('.');
+    if (dot2 == std::string::npos)
+    {
+        len2 = vec2.at(0).length();
+    }
+    else
+    {
+        len2 = dot2;
+    }
+
+    ret = vec1.at(0).compare(0, FFMAX(len1,len2), vec2.at(0), 0 , FFMAX(len1,len2));
+   // dash_log(DASH_LOG_INFO, "[%s,%d] string(%s,%s) length(%d,%d) compare ret %d\n",
+    //    __FUNCTION__, __LINE__, vec1.at(0).c_str(), vec2.at(0).c_str(), len1, len2, ret);
+
+    return ret;
+}
+
 static inline HI_S32 _SVR_DASH_SelectRepresentation(DASHMember * pstMember,
                                                                                       AVMediaType eType,
                                                                                       HI_S32 s32AdaptationSetIndex,
@@ -2308,6 +2659,24 @@ static inline HI_S32 _SVR_DASH_SelectRepresentation(DASHMember * pstMember,
                     s32RepresentationIndex = 0;
                 }
              }
+             else if (s32RepresentationIndex != pstMember->s32AudioRepresentationIndex)
+             {
+                adaptionset = manager->GetAudioAdaptionSet(s32AdaptationSetIndex);
+                if (adaptionset != NULL &&
+                    adaptionset->GetRepresentation().size() > pstMember->s32AudioRepresentationIndex &&
+                    pstMember->s32AudioRepresentationIndex >= 0)
+                {
+                    HI_S32 s32OldRepresentationIndex = pstMember->s32AudioRepresentationIndex;
+
+                    if (_SVR_DASH_CompareCodecs(adaptionset->GetRepresentation().at(s32OldRepresentationIndex)->GetCodecs(),
+                        adaptionset->GetRepresentation().at(s32RepresentationIndex)->GetCodecs(), 0))
+                    {
+                        dash_log(DASH_LOG_WARNING, "[%s,%d] audio codecs not match, do not change representation!\n",
+                            __FUNCTION__, __LINE__);
+                        s32RepresentationIndex = pstMember->s32AudioRepresentationIndex;
+                    }
+                }
+             }
             break;
         case AVMEDIA_TYPE_SUBTITLE:
             s32RepresentationIndex = manager->CheckSubtitleCurrentIndex(u32BandWidth);
@@ -2326,6 +2695,7 @@ static inline HI_S32 _SVR_DASH_SelectRepresentation(DASHMember * pstMember,
                 }
              }
             break;
+          default:;
     }
 
     return s32RepresentationIndex;
@@ -2334,7 +2704,6 @@ static inline HI_S32 _SVR_DASH_SelectRepresentation(DASHMember * pstMember,
 static inline  HI_BOOL _SVR_DASH_PresentationIsMatch(IRepresentation *pstRepresentation, DASHRepresentation *pstToBeMatchedAttr)
 {
     HI_BOOL bMatched = HI_FALSE;
-    HI_S32   s32Len;
     HI_U32   u32BandWidth;
     char     id[DASH_ATTR_STR_LEN];
 
@@ -2386,6 +2755,23 @@ static HI_BOOL _SVR_DASH_UpdatePresentationAttr(DASHRepresentation *pstPresentat
     }
 
     return bAttrChanged;
+}
+
+static inline const char *_SVR_DASH_GetMediaTypeName(AVMediaType type)
+{
+    switch(type)
+    {
+        case AVMEDIA_TYPE_VIDEO:
+            return "VIDEO";
+        case AVMEDIA_TYPE_AUDIO:
+            return "AUDIO";
+        case AVMEDIA_TYPE_SUBTITLE:
+            return "SUBTITLE";
+        default:
+            return "UNKNOWN";
+    }
+
+    return "UNKNOWN";
 }
 
 //set representationindex to MultimediaManager, when resentation changed, return HI_TRUE
@@ -2556,8 +2942,8 @@ static HI_BOOL _SVR_DASH_CheckRepresentationChanged(DASHMember * pstMember, AVMe
             if (u32BandWidth == 0)
                 return HI_FALSE;
             s32VideoRepresentationIndex = _SVR_DASH_SelectRepresentation(pstMember, eType, pstMember->s32VideoAdaptationSetIndex,u32BandWidth);
-            dash_log(DASH_LOG_ERROR, "[%s,%d][BW] representation index %d returned with bw %u,current representation index %d\n",
-                __FUNCTION__, __LINE__, s32VideoRepresentationIndex, u32BandWidth, pstMember->s32VideoRepresentationIndex);
+            dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s] download bandwidth %u, current representation index %d, new representation index %d.\n",
+                __FUNCTION__, __LINE__, _SVR_DASH_GetMediaTypeName(eType), u32BandWidth, pstMember->s32VideoRepresentationIndex, s32VideoRepresentationIndex);
             if (s32VideoRepresentationIndex == pstMember->s32VideoRepresentationIndex ||
                 s32VideoRepresentationIndex < 0)
                 return HI_FALSE;
@@ -2580,8 +2966,8 @@ static HI_BOOL _SVR_DASH_CheckRepresentationChanged(DASHMember * pstMember, AVMe
                 return HI_FALSE;
             s32AudioRepresentationIndex = _SVR_DASH_SelectRepresentation(pstMember, eType, \
                 pstMember->s32AudioAdaptationSetIndex,u32BandWidth);
-            dash_log(DASH_LOG_ERROR, "[%s,%d][BW] representation index %d returned with bw %u,current representation index %d\n",
-                __FUNCTION__, __LINE__, s32AudioRepresentationIndex, u32BandWidth, pstMember->s32AudioRepresentationIndex);
+            dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s] download bandwidth %u, current representation index %d, new representation index %d.\n",
+                __FUNCTION__, __LINE__, _SVR_DASH_GetMediaTypeName(eType), u32BandWidth, pstMember->s32AudioRepresentationIndex, s32AudioRepresentationIndex);
             if (s32AudioRepresentationIndex == pstMember->s32AudioRepresentationIndex ||
                 s32AudioRepresentationIndex < 0)
                 return HI_FALSE;
@@ -2605,8 +2991,8 @@ static HI_BOOL _SVR_DASH_CheckRepresentationChanged(DASHMember * pstMember, AVMe
                 return HI_FALSE;
             s32SubtitleRepresentationIndex = _SVR_DASH_SelectRepresentation(pstMember, eType,\
                 pstMember->s32SubtitleAdaptationSetIndex,u32BandWidth);
-            dash_log(DASH_LOG_ERROR, "[%s,%d][BW] representation index %d returned with bw %u,current representation index %d\n",
-                __FUNCTION__, __LINE__, s32SubtitleRepresentationIndex, u32BandWidth, pstMember->s32SubtitleRepresentationIndex);
+            dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s] download bandwidth %u, current representation index %d, new representation index %d.\n",
+                __FUNCTION__, __LINE__, u32BandWidth, pstMember->s32SubtitleRepresentationIndex, s32SubtitleRepresentationIndex);
             if (s32SubtitleRepresentationIndex == pstMember->s32SubtitleRepresentationIndex ||
                 s32SubtitleRepresentationIndex < 0)
                 return HI_FALSE;
@@ -2633,7 +3019,6 @@ static HI_BOOL _SVR_DASH_CheckRepresentationChanged(DASHMember * pstMember, AVMe
 
 static HI_BOOL _SVR_DASH_CheckEos(DASHMember * pstMember)
 {
-    MultimediaManager *manager = (MultimediaManager *)pstMember->manager;
     AVIOInterruptCB *cb = &(pstMember->ic->interrupt_callback);
 
     if (cb && cb->callback && (cb->callback(cb->opaque)))
@@ -3551,7 +3936,6 @@ playready_decrypt_fail:
 static inline  HI_BOOL _SVR_DASH_PeriodIsMatch(IPeriod *period, DASHPeriod *pstToBeMatchedAttr)
 {
     HI_BOOL bMatched = HI_FALSE;
-    HI_S32   s32Len;
     char     id[DASH_ATTR_STR_LEN];
     char     start[DASH_ATTR_STR_LEN];
     char     duration[DASH_ATTR_STR_LEN];
@@ -3824,7 +4208,6 @@ static HI_BOOL _SVR_DASH_CheckSingleSegmentSwitchable(DASHMember * pstMember, AV
 {
     HI_S32 i, rep_count;
     HI_S32 s32AdaptionSetIndex;
-    MultimediaManager * manager = (MultimediaManager *)pstMember->manager;
 
     if (type == AVMEDIA_TYPE_VIDEO)
     {
@@ -3891,13 +4274,7 @@ static HI_BOOL _SVR_DASH_CheckSingleSegmentSwitchable(DASHMember * pstMember, AV
 
 static HI_BOOL _SVR_DASH_ISOFFBandWidthChg(DASHMember * pstMember, AVMediaType eMediaType)
 {
-    MultimediaManager * manager = (MultimediaManager *)pstMember->manager;
-    HI_U32 u32VideoPosition = 0;
-    HI_U32 u32AudioPosition = 0;
-    HI_S64 s64FirstPts = 0;
-    HI_U32 u32SubtitlePosition  = 0;
     HI_BOOL bChanged = HI_FALSE;
-    AVStream * st = NULL;
 
     if (HI_TRUE != pstMember->bSetupFinish)
         return bChanged;
@@ -4110,7 +4487,6 @@ static HI_S32 _SVR_DASH_TSBandWidthChg(DASHMember * pstMember, AVPacket * pkt, A
 static HI_BOOL _SVR_DASH_CheckBandWidthChanged(DASHMember * pstMember, HI_BOOL bForce, AVMediaType eForceType)
 {
     HI_BOOL bChanged = HI_FALSE;
-    HI_S64 s64CurTime = av_gettime();
     HI_BOOL bVidNeedCheck = HI_FALSE;
     HI_BOOL bAudNeedCheck = HI_FALSE;
     HI_BOOL bSubNeedCheck = HI_FALSE;
@@ -4210,7 +4586,8 @@ static HI_BOOL _SVR_DASH_CheckBandWidthChanged(DASHMember * pstMember, HI_BOOL b
         pstMember->eLastCheckBWType != AVMEDIA_TYPE_SUBTITLE)
         return HI_FALSE;
 
-    dash_log(DASH_LOG_ERROR, "[%s,%d][BW] start to check bandwidth, type %d....\n", __FUNCTION__, __LINE__, pstMember->eLastCheckBWType);
+    dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s] start to check bandwidth...\n",
+        __FUNCTION__, __LINE__, _SVR_DASH_GetMediaTypeName(pstMember->eLastCheckBWType));
 
     if (pstMember->bIsISOFF)
     {
@@ -4224,7 +4601,13 @@ static HI_BOOL _SVR_DASH_CheckBandWidthChanged(DASHMember * pstMember, HI_BOOL b
     pstMember->s64LastCheckBWTime = av_gettime();
     if (bChanged != HI_TRUE)
     {
-        dash_log(DASH_LOG_ERROR, "[%s,%d][BW] resentation not changed, type %d.\n", __FUNCTION__, __LINE__, pstMember->eLastCheckBWType);
+        dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s] resentation not changed.\n",
+            __FUNCTION__, __LINE__, _SVR_DASH_GetMediaTypeName(pstMember->eLastCheckBWType));
+    }
+    else
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d][BW][%s][CHANGED] resentation changed success.\n",
+            __FUNCTION__, __LINE__, _SVR_DASH_GetMediaTypeName(pstMember->eLastCheckBWType));
     }
 
     return bChanged;
@@ -4241,7 +4624,7 @@ static HI_S32 _SVR_DASH_ParseSubPacket(DASHMember * pstMember, AVPacket *pkt, Su
     switch(eSubtitleType)
     {
         case Subtitle_TTML:
-            if (NULL == pstMember->ttml_ic[pstMember->sub_index] || NULL == pstMember->ttml_ic[pstMember->sub_index]->pb);
+            if (NULL == pstMember->ttml_ic[pstMember->sub_index] || NULL == pstMember->ttml_ic[pstMember->sub_index]->pb)
                 return HI_FAILURE;
 
             pb = pstMember->ttml_ic[pstMember->sub_index]->pb;
@@ -4335,7 +4718,7 @@ static HI_S32 _SVR_DASH_ReadAudFrame(DASHMember * pstMember, AVPacket * pkt)
         if (map->eos == DASHIO_EOS_PRESENTATION_CHANGED)
         {
             HI_S64 s64EarlistPts = (pstMember->s64AudioLastPts > pstMember->s64AudioFirstPts && \
-                (pstMember->s64AudioFirstPts >= 0))?(pstMember->s64VideoLastPts - pstMember->s64AudioFirstPts):0;
+                (pstMember->s64AudioFirstPts != AV_NOPTS_VALUE))?(pstMember->s64VideoLastPts - pstMember->s64AudioFirstPts):0;
             Option stOption = {1, map->param.representation_index, s64EarlistPts};
 
             dash_log(DASH_LOG_ERROR, "[%s,%d][BW] audio[%d] map[%p] pb=%p adaptionset_index=%d,rep_index changed to %d ,reopen the avformat!\n",
@@ -5053,12 +5436,14 @@ size_t  _SVR_DASH_CurlResponseCallback(void *contents, size_t size, size_t nmemb
 }
 
 /*for no Garbleds output when server have response*/
+/*
 size_t  _SVR_DASH_CurlEmptyCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
     size_t  realsize = size * nmemb;
 
     return  realsize;
 }
+*/
 
 size_t _SVR_DASH_CurlHeaderCallback(void * headerData, size_t size,size_t nmemb,void * userdata)
 {
@@ -5207,8 +5592,6 @@ static HI_S32 _SVR_DASH_DetectURL(DASHMember *pstMember, const HI_CHAR *pURL, HI
 static HI_BOOL _SVR_DASH_IsSingleSegmentSeekable(DASHMember * pstMember)
 {
     HI_S32 i, j, rep_count;
-    HI_S32 s32AdpIndex = pstMember->s32VideoAdaptationSetIndex;
-    HI_S32 s32RepIndex = pstMember->s32VideoRepresentationIndex;
     MultimediaManager * manager = (MultimediaManager *)pstMember->manager;
 
     if (SINGLE_MEDIA_SEGMENT != pstMember->eRepresentationType)
@@ -5267,17 +5650,15 @@ static HI_BOOL _SVR_DASH_IsSingleSegmentSeekable(DASHMember * pstMember)
     return HI_TRUE;
 }
 
-static HI_S32 _SVR_DASH_SeekSingleSegment(DASHMember * pstMember, HI_S32 s32StreamIndex, HI_S64 s64Pts)
+static HI_S32 _SVR_DASH_SeekSingleSegment(DASHMember * pstMember, HI_S32 s32StreamIndex, HI_S64 s64Pts, HI_FORMAT_SEEK_FLAG_E eFlag)
 {
     MultimediaManager * manager = (MultimediaManager *)pstMember->manager;
     HI_U32 u32Position = 0;
-    HI_S32 s32Index = 0;
+    HI_S32 s32VideoIndex = 0, s32AudioIndex = 0;//s32SubtitleIndex = 0;
     HI_S64 s64SeekPts = s64Pts;
-    HI_U32 i = 0;
+    HI_S64 s64VideoLastPts = 0, s64AudioLastPts = 0;
     SidxInfo *pSidxInfo = NULL;
     AVStream * st = NULL;
-    AVIOContext * pb = NULL;
-    HI_S32 s32Ret = HI_FAILURE;
     HI_S32 s32StreamNb;
     HI_S32 s32AdpIndex;
     HI_S32 s32RepIndex;
@@ -5309,31 +5690,74 @@ static HI_S32 _SVR_DASH_SeekSingleSegment(DASHMember * pstMember, HI_S32 s32Stre
 
     if (pstMember->vid_nb > 0)
     {
-        if (0 == s64Pts)
+        s32AdpIndex = pstMember->s32VideoAdaptationSetIndex;
+        s32RepIndex = pstMember->s32VideoRepresentationIndex;
+        pSidxInfo = pstMember->stCurPeriod.videoAdaptionsets.at(s32AdpIndex).representationsSidxinfo.at(s32RepIndex);
+        if (pSidxInfo == NULL)
+            return HI_FAILURE;
+        s32StreamNb = pstMember->vid_ic[pstMember->s32VideoAdaptationSetIndex]->nb_streams;
+        st = pstMember->vid_ic[pstMember->s32VideoAdaptationSetIndex]->streams[s32StreamNb - 1];
+        s64SeekPts = s64Pts;
+        if (st->time_base.den != 0 && st->time_base.num != 0)
         {
-            u32Position = 0;
-            pstMember->s64VideoLastPts = pstMember->s64VideoFirstPts;
+            s64SeekPts = s64Pts * st->time_base.den /st->time_base.num;
+            s64SeekPts /= 1000;
+            dash_log(DASH_LOG_INFO, "[%s,%d][SEEK] video pts update to %lld\n", __FUNCTION__, __LINE__, s64SeekPts);
         }
-        else
+        s32VideoIndex = ff_index_search_timestamp(pSidxInfo->index_entries, pSidxInfo->entries_nb, s64SeekPts, eFlag|AVSEEK_FLAG_ANY);
+        if (s32VideoIndex < 0)
         {
-            s32AdpIndex = pstMember->s32VideoAdaptationSetIndex;
-            s32RepIndex = pstMember->s32VideoRepresentationIndex;
-            pSidxInfo = pstMember->stCurPeriod.videoAdaptionsets.at(s32AdpIndex).representationsSidxinfo.at(s32RepIndex);
+            dash_log(DASH_LOG_ERROR, "[%s,%d][SEEK] video index not found for pts=%lld\n", __FUNCTION__, __LINE__, s64SeekPts);
+            return HI_FAILURE;
+        }
+        //u32Position = (HI_U32)pSidxInfo->index_entries[s32Index].pos;
+        s64SeekPts = pSidxInfo->index_entries[s32VideoIndex].timestamp;
+        dash_log(DASH_LOG_INFO, "[%s,%d][SEEK] seekto %lld find video pts=%lld, index=%d, time_base:%d/%d\n",
+            __FUNCTION__, __LINE__, s64Pts, s64SeekPts, s32VideoIndex, st->time_base.num, st->time_base.den);
+        //Chcek URL is valid or not before seek
+        #if 0
+        URL = manager->GetVideoSegmentURL(pstMember->s32VideoAdaptationSetIndex, pstMember->s32VideoRepresentationIndex, 0);
+        if (URL == "")
+            return HI_FAILURE;
+
+        s32Ret = _SVR_DASH_DetectURL(pstMember, URL.c_str(),u32Position);
+        if (HI_FAILURE == s32Ret)
+            return s32Ret;
+        #endif
+         if (st->time_base.den != 0 && st->time_base.num != 0)
+            s64VideoLastPts = s64SeekPts * 1000 * st->time_base.num / st->time_base.den;
+        else
+            s64VideoLastPts = s64SeekPts;
+    }
+
+    if (pstMember->bIsISOFF)
+    {
+        if (pstMember->aud_nb > 0)
+        {
+            s32AdpIndex = pstMember->s32AudioAdaptationSetIndex;
+            s32RepIndex = pstMember->s32AudioRepresentationIndex;
+            pSidxInfo = pstMember->stCurPeriod.audioAdaptionsets.at(s32AdpIndex).representationsSidxinfo.at(s32RepIndex);
             if (pSidxInfo == NULL)
                 return HI_FAILURE;
-            s32StreamNb = pstMember->vid_ic[pstMember->s32VideoAdaptationSetIndex]->nb_streams;
-            st = pstMember->vid_ic[pstMember->s32VideoAdaptationSetIndex]->streams[s32StreamNb - 1];
+            s32StreamNb = pstMember->aud_ic[pstMember->s32AudioAdaptationSetIndex]->nb_streams;
+            st = pstMember->aud_ic[pstMember->s32AudioAdaptationSetIndex]->streams[s32StreamNb - 1];
+            s64SeekPts = s64Pts;
             if (st->time_base.den != 0 && st->time_base.num != 0)
             {
-                s64Pts = s64Pts * st->time_base.den /st->time_base.num;
-                s64Pts /= 1000;
-                dash_log(DASH_LOG_ERROR, "[%s,%d][SEEK] video pts update to %lld\n", __FUNCTION__, __LINE__, s64Pts);
+                s64SeekPts = s64Pts * st->time_base.den /st->time_base.num;
+                s64SeekPts /= 1000;
+                dash_log(DASH_LOG_ERROR, "[%s,%d][SEEK] audio pts update to %lld\n", __FUNCTION__, __LINE__, s64SeekPts);
             }
-            s32Index = ff_index_search_timestamp(pSidxInfo->index_entries, pSidxInfo->entries_nb, s64Pts, AVSEEK_FLAG_ANY);
-            if (s32Index < 0)
+            s32AudioIndex= ff_index_search_timestamp(pSidxInfo->index_entries, pSidxInfo->entries_nb, s64SeekPts, eFlag|AVSEEK_FLAG_ANY);
+            if (s32AudioIndex < 0)
+            {
+                dash_log(DASH_LOG_ERROR, "[%s,%d][SEEK] audio index not found for pts=%lld\n", __FUNCTION__, __LINE__, s64SeekPts);
                 return HI_FAILURE;
+            }
             //u32Position = (HI_U32)pSidxInfo->index_entries[s32Index].pos;
-            s64SeekPts = pSidxInfo->index_entries[s32Index].timestamp;
+            s64SeekPts = pSidxInfo->index_entries[s32AudioIndex].timestamp;
+            dash_log(DASH_LOG_INFO, "[%s,%d][SEEK] seekto %lld find audio pts=%lld, index=%d, time_base:%d/%d\n",
+                __FUNCTION__, __LINE__, s64Pts, s64SeekPts, s32AudioIndex, st->time_base.num, st->time_base.den);
 
             //Chcek URL is valid or not before seek
             #if 0
@@ -5346,59 +5770,9 @@ static HI_S32 _SVR_DASH_SeekSingleSegment(DASHMember * pstMember, HI_S32 s32Stre
                 return s32Ret;
             #endif
              if (st->time_base.den != 0 && st->time_base.num != 0)
-                pstMember->s64VideoLastPts = s64SeekPts * 1000 * st->time_base.num / st->time_base.den;
+                s64AudioLastPts = s64SeekPts * 1000 * st->time_base.num / st->time_base.den;
             else
-                pstMember->s64VideoLastPts = s64SeekPts;
-        }
-        pstMember->u32VideoPosition = s32Index;
-    }
-
-    if (pstMember->bIsISOFF)
-    {
-        if (pstMember->aud_nb > 0)
-        {
-            if (0 == s64Pts)
-            {
-                u32Position = 0;
-                pstMember->s64AudioLastPts = pstMember->s64AudioFirstPts;
-            }
-            else
-            {
-                s32AdpIndex = pstMember->s32AudioAdaptationSetIndex;
-                s32RepIndex = pstMember->s32AudioRepresentationIndex;
-                pSidxInfo = pstMember->stCurPeriod.audioAdaptionsets.at(s32AdpIndex).representationsSidxinfo.at(s32RepIndex);
-                if (pSidxInfo == NULL)
-                    return HI_FAILURE;
-                s32StreamNb = pstMember->aud_ic[pstMember->s32AudioAdaptationSetIndex]->nb_streams;
-                st = pstMember->aud_ic[pstMember->s32AudioAdaptationSetIndex]->streams[s32StreamNb - 1];
-                if (st->time_base.den != 0 && st->time_base.num != 0)
-                {
-                    s64Pts = s64Pts * st->time_base.den /st->time_base.num;
-                    s64Pts /= 1000;
-                    dash_log(DASH_LOG_ERROR, "[%s,%d][SEEK] audio pts update to %lld\n", __FUNCTION__, __LINE__, s64Pts);
-                }
-                s32Index = ff_index_search_timestamp(pSidxInfo->index_entries, pSidxInfo->entries_nb, s64Pts, AVSEEK_FLAG_ANY);
-                if (s32Index < 0)
-                    return HI_FAILURE;
-                //u32Position = (HI_U32)pSidxInfo->index_entries[s32Index].pos;
-                s64SeekPts = pSidxInfo->index_entries[s32Index].timestamp;
-
-                //Chcek URL is valid or not before seek
-                #if 0
-                URL = manager->GetVideoSegmentURL(pstMember->s32VideoAdaptationSetIndex, pstMember->s32VideoRepresentationIndex, 0);
-                if (URL == "")
-                    return HI_FAILURE;
-
-                s32Ret = _SVR_DASH_DetectURL(pstMember, URL.c_str(),u32Position);
-                if (HI_FAILURE == s32Ret)
-                    return s32Ret;
-                #endif
-                 if (st->time_base.den != 0 && st->time_base.num != 0)
-                    pstMember->s64AudioLastPts = s64SeekPts * 1000 * st->time_base.num / st->time_base.den;
-                else
-                    pstMember->s64AudioLastPts = s64SeekPts;
-            }
-            pstMember->u32AudioPosition = s32Index;
+                s64AudioLastPts = s64SeekPts;
         }
     }
 
@@ -5424,20 +5798,28 @@ static HI_S32 _SVR_DASH_SeekSingleSegment(DASHMember * pstMember, HI_S32 s32Stre
     }
 #endif
 
+    //all success, change the global varibles
+    if (pstMember->vid_nb > 0)
+    {
+        pstMember->s64VideoLastPts = s64VideoLastPts;
+        pstMember->u32VideoPosition = (HI_U32)s32VideoIndex;
+    }
+
+    if (pstMember->aud_nb > 0)
+    {
+        pstMember->s64AudioLastPts = s64AudioLastPts;
+        pstMember->u32AudioPosition = (HI_U32)s32AudioIndex;
+    }
+
     return HI_SUCCESS;
 }
 
 static HI_S32 _SVR_DASH_SeekMultiSegment(DASHMember * pstMember, HI_S32 s32StreamIndex, HI_S64 s64Pts, HI_FORMAT_SEEK_FLAG_E eFlag)
 {
     MultimediaManager * manager = (MultimediaManager *)pstMember->manager;
-    HI_U32 u32SegmentDuration = 0;
     HI_U32 u32Position = 0;
-    HI_S32 s32Index = 0;
     HI_S32 s32Direct = 1;
     HI_S64 s64SeekPts = s64Pts;
-    SidxInfo *pSidxInfo = NULL;
-    AVStream * st = NULL;
-    AVIOContext * pb = NULL;
 
     if (eFlag == HI_FORMAT_AVSEEK_FLAG_BACKWARD)
     {
@@ -5539,7 +5921,7 @@ static HI_U64 _SVR_DASH_RB64(HI_U8 **ppu8Data)
     return u64Val;
 }
 
-static HI_S32 _SVR_DASH_AddIndexEntry(SidxInfo *pSidxInfo, HI_U8 *pu8Data)
+static HI_S32 _SVR_DASH_AddIndexEntry(SidxInfo *pSidxInfo, HI_U8 *pu8Data, HI_S32 s32DataSize)
 {
     HI_U32 i = 0;
     HI_S64 s64Pos = 0;
@@ -5549,6 +5931,10 @@ static HI_S32 _SVR_DASH_AddIndexEntry(SidxInfo *pSidxInfo, HI_U8 *pu8Data)
     HI_U32 u32RefSize = 0;
     HI_U32 u32SubSegDuration = 0;
     HI_U32 u32AllocatedSize = 0;
+    HI_VOID *tmp;
+
+    if (s32DataSize < 24 || pu8Data == NULL || pSidxInfo == NULL)
+        return HI_FAILURE;
 
     pSidxInfo->version = _SVR_DASH_R8(&pu8Data);
     pSidxInfo->flag = _SVR_DASH_RB24(&pu8Data);
@@ -5575,30 +5961,48 @@ static HI_S32 _SVR_DASH_AddIndexEntry(SidxInfo *pSidxInfo, HI_U8 *pu8Data)
 
     pSidxInfo->reserved = _SVR_DASH_RB16(&pu8Data);
     pSidxInfo->reference_count = _SVR_DASH_RB16(&pu8Data);
-/*
-    dash_log("pts = %lld offset = %lld\n", pSidxInfo->earliest_presentation_time, pSidxInfo->first_offset);
-    dash_log("reserved = %d\n", pSidxInfo->reserved);
-    dash_log("ref_count = %d\n",pSidxInfo->reference_count);
-*/
+
+    /*
+    dash_log(DASH_LOG_INFO,"earliest_presentation_time = %lld first_offset = %lld\n", pSidxInfo->earliest_presentation_time, pSidxInfo->first_offset);
+    dash_log(DASH_LOG_INFO,"reserved = %d\n", pSidxInfo->reserved);
+    dash_log(DASH_LOG_INFO,"ref_count = %d\n",pSidxInfo->reference_count);
+    dash_log(DASH_LOG_INFO,"anchor_point_offset = %d\n",pSidxInfo->anchor_point_offset);
+    */
+
     if (0 != pSidxInfo->reference_count)
-        pSidxInfo->index_entries = (AVIndexEntry *)av_mallocz(pSidxInfo->reference_count * sizeof(AVIndexEntry));
+    {
+        u32AllocatedSize = ((1 + pSidxInfo->reference_count) * sizeof(AVIndexEntry));
+        pSidxInfo->index_entries = (AVIndexEntry *)av_mallocz(u32AllocatedSize);
+        if (pSidxInfo->index_entries == NULL)
+        {
+            dash_log(DASH_LOG_INFO,"[%s,%d] malloc %u bytes for index_entries fail, no memory\n",
+                __FUNCTION__, __LINE__, ((1 + pSidxInfo->reference_count) * sizeof(AVIndexEntry)));
+            return HI_FAILURE;
+        }
+    }
     else
+    {
+        dash_log(DASH_LOG_WARNING,"[%s,%d] reference_count is 0 \n", __FUNCTION__, __LINE__);
         return HI_FAILURE;
+    }
 
     s64Pts += pSidxInfo->earliest_presentation_time;
     s64Pos += pSidxInfo->first_offset;
+    if (pSidxInfo->anchor_point_offset > 0)
+        s64Pos += pSidxInfo->anchor_point_offset;
 
+    dash_log(DASH_LOG_INFO, "[%s,%d] add index entry (num=%hu) start ...\n", __FUNCTION__, __LINE__, 1 + pSidxInfo->reference_count);
 
+   // dash_log(DASH_LOG_INFO, "add index[%d]  s64Pts=%lld, s64Pos=%lld, u8RefType=%#x, u32RefSize=%u,u32SubSegDuration=%u\n", pSidxInfo->entries_nb, s64Pts, s64Pos, 0, 0, 0);
     ff_add_index_entry(&pSidxInfo->index_entries, &pSidxInfo->entries_nb, &u32AllocatedSize, \
                 s64Pos, s64Pts, 0, 0, AVINDEX_KEYFRAME);
 
     for (i = 0; i < pSidxInfo->reference_count; i++)
     {
-
         //reference_type    1bit
         //reference_size    31bit
         u32Temp = _SVR_DASH_RB32(&pu8Data);
-        u8RefType = (u32Temp & 0x80000000) >> 24;
+        u8RefType = (u32Temp & 0x80000000) >> 31;
         u32RefSize = u32Temp & 0x7fffffff;
 
         //subsegment_duration   32bit
@@ -5614,38 +6018,46 @@ static HI_S32 _SVR_DASH_AddIndexEntry(SidxInfo *pSidxInfo, HI_U8 *pu8Data)
         s64Pts += u32SubSegDuration;
         s64Pos += u32RefSize;
 
-        u32AllocatedSize = pSidxInfo->entries_nb * sizeof(AVIndexEntry);
+      //  dash_log(DASH_LOG_INFO, "add index[%d]  s64Pts=%lld, s64Pos=%lld, u8RefType=%#x, u32RefSize=%u,u32SubSegDuration=%u\n", pSidxInfo->entries_nb, s64Pts, s64Pos, u8RefType, u32RefSize, u32SubSegDuration);
+        u32AllocatedSize = FFMAX(pSidxInfo->entries_nb * sizeof(AVIndexEntry), u32AllocatedSize);
         ff_add_index_entry(&pSidxInfo->index_entries, &pSidxInfo->entries_nb, &u32AllocatedSize, \
             s64Pos, s64Pts, 0, 0, AVINDEX_KEYFRAME);
-
-        //dash_log("index: %d pos = %lld pts = %lld\n",(i + 1) ,s64Pos,s64Pts);
     }
+
+    dash_log(DASH_LOG_INFO, "[%s,%d] add index entry (num=%hu) done.\n", __FUNCTION__, __LINE__, pSidxInfo->reference_count);
 
     return HI_SUCCESS;
 }
 
 static inline HI_S32 _SVR_DASH_DoBuildIndex(AVFormatContext *ic, CurlDataMember *curlMember, SidxInfo **ppstSidxInfo)
 {
-    HI_S32 s32Ret = HI_SUCCESS;
+    HI_S32 s32Ret = HI_SUCCESS, i;
+    MOVSidx stSidxData = {0};
     SidxInfo *pstSidxInfo = NULL;
-    HI_U8    *pSidxData = NULL;
-    HI_U32   u32SidxSize = 0;
 
     pstSidxInfo = (SidxInfo *)av_mallocz(sizeof(SidxInfo));
     if (curlMember == NULL)
     {
-        pSidxData = ff_mov_get_sidx_data(ic);
-        if (pSidxData == NULL)
+        for (i = 0; i < ic->nb_streams; i++)
+        {
+            if (ff_mov_get_sidx_data(ic, i, &stSidxData) == 0)
+                break;
+        }
+
+        if (i == ic->nb_streams)
+        {
             s32Ret = HI_FAILURE;
+            dash_log(DASH_LOG_ERROR, "[%s,%d] ff_mov_get_sidx_data fail!\n", __FUNCTION__, __LINE__);
+        }
     }
     else
     {
         s32Ret = _SVR_DASH_DownloadSidx(curlMember, curlMember->download_Url);
-        pSidxData = curlMember->pData;
-        u32SidxSize= curlMember->size;
+        stSidxData.sidx_data = curlMember->pData;
+        stSidxData.sidx_data_size = curlMember->size;
         curlMember->pData = NULL;
         curlMember->size = 0;
-        s32Ret = _SVR_DASH_SearchSidxTag(&pSidxData, &u32SidxSize);
+        s32Ret = _SVR_DASH_SearchSidxTag(&stSidxData.sidx_data, (HI_U32 *)&stSidxData.sidx_data_size);
     }
 
     if (HI_FAILURE == s32Ret)
@@ -5655,14 +6067,15 @@ static inline HI_S32 _SVR_DASH_DoBuildIndex(AVFormatContext *ic, CurlDataMember 
     }
     else
     {
-        _SVR_DASH_AddIndexEntry(pstSidxInfo, pSidxData);
+        pstSidxInfo->anchor_point_offset = stSidxData.anchor_point_offset;
+        _SVR_DASH_AddIndexEntry(pstSidxInfo, stSidxData.sidx_data, stSidxData.sidx_data_size);
         *ppstSidxInfo = pstSidxInfo;
     }
 
-    if (curlMember != NULL && pSidxData != NULL)
+    if (curlMember != NULL && stSidxData.sidx_data  != NULL)
     {
-        u32SidxSize = 0;
-        av_freep(&pSidxData);
+        stSidxData.sidx_data_size  = 0;
+        av_freep(&stSidxData.sidx_data);
     }
 
     if (pstSidxInfo != NULL)
@@ -5683,7 +6096,7 @@ static HI_S32 _SVR_DASH_BuildIndex(DASHMember * pstMember, DASHPeriod *pstAttr)
     if (SINGLE_MEDIA_SEGMENT != pstMember->eRepresentationType)
         return HI_SUCCESS;
 
-    dash_log(DASH_LOG_ERROR, "[%s,%d] start to build indexes....\n", __FUNCTION__, __LINE__);
+    dash_log(DASH_LOG_INFO, "[%s,%d] start to build indexes....\n", __FUNCTION__, __LINE__);
 
     manager->Stop();
 
@@ -5716,10 +6129,14 @@ static HI_S32 _SVR_DASH_BuildIndex(DASHMember * pstMember, DASHPeriod *pstAttr)
                     pstMember->curlDataMember.download_Url = manager->GetVideoIndexSegment().c_str();
                     s32Ret = _SVR_DASH_DoBuildIndex(ic, &pstMember->curlDataMember, &pstSidxInfo);
                 }
+                if (pstAttr->videoAdaptionsets.at(i).representationsSidxinfo.at(j) != NULL)
+                {
+                    av_free(pstAttr->videoAdaptionsets.at(i).representationsSidxinfo.at(j));
+                }
                 pstAttr->videoAdaptionsets.at(i).representationsSidxinfo.at(j) = pstSidxInfo;
                 _SVR_DASHIO_Remove(pstMember, (DASHIOMap *)(ic->pb->opaque));
                 ic->pb->opaque = NULL;
-                dash_log(DASH_LOG_ERROR, "[%s,%d] build video[%d][%d] index entries return %d, pstSidxInfo[%p] entries_nb:%d\n",
+                dash_log(DASH_LOG_INFO, "[%s,%d] build video[%d][%d] index entries return %d, pstSidxInfo[%p] entries_nb:%d\n",
                     __FUNCTION__, __LINE__, i, j, s32Ret, pstSidxInfo, (pstSidxInfo != NULL?pstSidxInfo->entries_nb:0));
             }
             if (ic != NULL)
@@ -5765,10 +6182,14 @@ static HI_S32 _SVR_DASH_BuildIndex(DASHMember * pstMember, DASHPeriod *pstAttr)
                     pstMember->curlDataMember.download_Url = manager->GetAudioIndexSegment().c_str();
                     s32Ret = _SVR_DASH_DoBuildIndex(ic, &pstMember->curlDataMember, &pstSidxInfo);
                 }
+                if (pstAttr->audioAdaptionsets.at(i).representationsSidxinfo.at(j) != NULL)
+                {
+                    av_free(pstAttr->audioAdaptionsets.at(i).representationsSidxinfo.at(j));
+                }
                 pstAttr->audioAdaptionsets.at(i).representationsSidxinfo.at(j) = pstSidxInfo;
                 _SVR_DASHIO_Remove(pstMember, (DASHIOMap *)(ic->pb->opaque));
                 ic->pb->opaque = NULL;
-                dash_log(DASH_LOG_ERROR, "[%s,%d] build audio[%d][%d] index entries return %d, entries_nb:%d\n",
+                dash_log(DASH_LOG_INFO, "[%s,%d] build audio[%d][%d] index entries return %d, entries_nb:%d\n",
                     __FUNCTION__, __LINE__, i, j, s32Ret, (pstSidxInfo != NULL?pstSidxInfo->entries_nb:0));
             }
             if(ic != NULL)
@@ -5810,6 +6231,10 @@ static HI_S32 _SVR_DASH_BuildIndex(DASHMember * pstMember, DASHPeriod *pstAttr)
             if (s32Ret == HI_SUCCESS)
             {
                 s32Ret = _SVR_DASH_DoBuildIndex(ic, NULL, &pstSidxInfo);
+                if (pstAttr->subtitleAdaptionsets.at(i).representationsSidxinfo.at(j) != NULL)
+                {
+                    av_free(pstAttr->subtitleAdaptionsets.at(i).representationsSidxinfo.at(j));
+                }
                 pstAttr->subtitleAdaptionsets.at(i).representationsSidxinfo.at(j) = pstSidxInfo;
                 _SVR_DASHIO_Remove(pstMember, (DASHIOMap *)(ic->pb->opaque));
                 ic->pb->opaque = NULL;
@@ -5832,7 +6257,8 @@ static HI_S32 _SVR_DASH_BuildIndex(DASHMember * pstMember, DASHPeriod *pstAttr)
 #endif
 
     _SVR_DASH_FreeMasterStream(pstMember);
-    dash_log(DASH_LOG_ERROR, "[%s,%d] build indexes....done\n", __FUNCTION__, __LINE__);
+
+    dash_log(DASH_LOG_INFO, "[%s,%d] build indexes....done\n", __FUNCTION__, __LINE__);
 
     return HI_SUCCESS;
 }
@@ -5893,8 +6319,15 @@ static HI_S32 _SVR_DASH_Init(DASHMember *pstMember)
     pstMember->eLastCheckBWType = AVMEDIA_TYPE_UNKNOWN;
     pstMember->bForcePrint = HI_TRUE;
 
-    if (pstMember->bIsISOFF == HI_FALSE)
+    if (pstMember->bIsISOFF == HI_FALSE &&
+         pstMember->ic->is_live_stream)
+    {
+        dash_log(DASH_LOG_ERROR, "[%s,%d] live stream with mpegts file format is not supported!\n");
         return HI_FAILURE;
+    }
+
+   // if (pstMember->bIsISOFF == HI_FALSE)
+   //     return HI_FAILURE;
 
     pthread_mutex_init(&pstMember->mUserStreamInfoLock, NULL);
 
@@ -6428,6 +6861,8 @@ static HI_S32 _SVR_DASH_SetSAPs(DASHMember *pstMember)
     if (SINGLE_MEDIA_SEGMENT != pstMember->eRepresentationType)
         return HI_SUCCESS;
 
+    dash_log(DASH_LOG_INFO, "[%s,%d] set SAPs start...\n", __FUNCTION__, __LINE__);
+
     saps.clear();
     for (i = 0; i< pstMember->vid_nb; i++)
     {
@@ -6507,6 +6942,8 @@ static HI_S32 _SVR_DASH_SetSAPs(DASHMember *pstMember)
     }
     saps.clear();
 
+    dash_log(DASH_LOG_INFO, "[%s,%d] set SAPs done.\n", __FUNCTION__, __LINE__);
+
     return HI_SUCCESS;
 }
 
@@ -6537,8 +6974,8 @@ static HI_S32 _SVR_DASH_PlayPeriod(DASHMember *pstMember, IPeriod * period, HI_B
         pstMember->sub_nb = 0;
         pstMember->eRepresentationType = (REPRESENTATION_STREAM_TYPE)manager->GetRepresentationStreamType();
 
-        dash_log(DASH_LOG_ERROR, "[%s,%d] vid_nb:%d, aud_nb:%d, sub_nb:%d\n", __FUNCTION__, __LINE__,
-            pstMember->vid_nb, pstMember->aud_nb, pstMember->sub_nb);
+        dash_log(DASH_LOG_ERROR, "[%s,%d] vid_nb:%d, aud_nb:%d, sub_nb:%d, eRepresentationType=%d\n", __FUNCTION__, __LINE__,
+            pstMember->vid_nb, pstMember->aud_nb, pstMember->sub_nb, pstMember->eRepresentationType);
 
         if (pstMember->vid_nb + pstMember->aud_nb <= 0)
         {
@@ -6710,7 +7147,6 @@ HI_S32 HI_SVR_DASH_SeekPts(HI_HANDLE fmtHandle, HI_S32 s32StreamIndex, HI_S64 s6
     IPeriod *period = NULL;
     HI_S64 s64PtsInMs;
     HI_BOOL bNewPeriod = HI_FALSE;
-    HI_U32 i = 0;
 
     if (pstMember->ic->is_live_stream)
         return HI_FAILURE;
@@ -6753,7 +7189,7 @@ HI_S32 HI_SVR_DASH_SeekPts(HI_HANDLE fmtHandle, HI_S32 s32StreamIndex, HI_S64 s6
         case SINGLE_MEDIA_SEGMENT:
             //Do I frame seek in this case
             pstMember->bFirstFrame = HI_TRUE;
-            s32Ret = _SVR_DASH_SeekSingleSegment(pstMember, s32StreamIndex, s64Pts);
+            s32Ret = _SVR_DASH_SeekSingleSegment(pstMember, s32StreamIndex, s64Pts, eFlag);
             break;
         case SEGMENT_TEMPLATE:
         case SEGMENT_LIST:
@@ -6814,7 +7250,7 @@ HI_S32 HI_SVR_DASH_SeekPts(HI_HANDLE fmtHandle, HI_S32 s32StreamIndex, HI_S64 s6
             pstMember->s64SubtitleLastPts, pstMember->s64VideoFirstPts, pstMember->s64AudioFirstPts, pstMember->s64SubtitleFirstPts);
     }
 
-    return HI_SUCCESS;
+    return s32Ret;
 }
 
 HI_S32 HI_SVR_DASH_Close(HI_HANDLE fmtHandle)
@@ -6856,13 +7292,15 @@ HI_S32 HI_SVR_DASH_Close(HI_HANDLE fmtHandle)
     }
 #endif
 
-    memset(pstMember, 0, sizeof(DASHMember));
-    av_free(pstMember);
-
 #if defined (HISUB_SUPPORT)
     if (HI_TRUE == pstMember->bHiSubInit)
         (HI_VOID)HI_SVR_SUB_Parse_DeInit();
 #endif
+
+    memset(pstMember, 0, sizeof(DASHMember));
+    av_free(pstMember);
+    pstMember = NULL;
+
     dash_log(DASH_LOG_ERROR, "[%s,%d] close dash OK\n", __FUNCTION__, __LINE__);
 
     return HI_SUCCESS;

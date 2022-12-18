@@ -46,6 +46,10 @@
 
 #define HI_GPIO_GROUP_NUM   9
 
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define HI_GPIO_GROUP_NUM   11
+
 #elif  defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)
 
@@ -137,6 +141,23 @@
 #define     HI_GPIO_4_ADDR 0xF8B24000
 #define     HI_GPIO_5_ADDR 0xF8004000
 #define     HI_GPIO_6_ADDR 0xF8B26000
+
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define 	HI_GPIO_MAX_GROUP_NUM	11
+#define     HI_GPIO_IRQ_NO (108 + 32)
+
+#define     HI_GPIO_0_ADDR 0xF8B20000
+#define     HI_GPIO_1_ADDR 0xF8B21000
+#define     HI_GPIO_2_ADDR 0xF8B22000
+#define     HI_GPIO_3_ADDR 0xF8B23000
+#define     HI_GPIO_4_ADDR 0xF8B24000
+#define     HI_GPIO_5_ADDR 0xF8004000
+#define     HI_GPIO_6_ADDR 0xF8B26000
+#define     HI_GPIO_7_ADDR 0xF8B27000
+#define     HI_GPIO_8_ADDR 0xF8B28000
+#define     HI_GPIO_9_ADDR 0xF8B29000
+#define     HI_GPIO_10_ADDR 0xF8B2A000
 
 #elif defined(CHIP_TYPE_hi3798cv200_a)
 

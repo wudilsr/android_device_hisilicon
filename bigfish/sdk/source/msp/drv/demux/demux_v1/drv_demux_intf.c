@@ -35,6 +35,7 @@
 
 /**************************** global variables ****************************/
 static UMAP_DEVICE_S g_stDemuxDev;
+extern DMX_DEV_OSI_S *g_pDmxDevOsi;
 #define INVALID_OQ_ID 256
 #ifdef HI_DEMUX_PROC_SUPPORT
 /****************************** internal function *****************************/
@@ -283,6 +284,13 @@ static HI_S32 DMXProcRead_debug(struct seq_file *p, HI_VOID *v)
 static HI_S32 DMXProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 DmxId;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
+
 #ifdef DMX_TAG_DEAL_SUPPORT
     PROC_PRINT(p, "DmxId\tPortId\tTagPortId\n");
 #else
@@ -341,6 +349,7 @@ static HI_S32 DMXProcRead(struct seq_file *p, HI_VOID *v)
 
     PROC_PRINT(p, "type \"echo help > /proc/msp/demux_main\" to get help information\n");
 
+out:
     return HI_SUCCESS;
 }
 
@@ -462,6 +471,12 @@ static HI_S32 DMXPortProcRead(struct seq_file *p, HI_VOID *v)
     HI_UNF_DMX_TSO_PORT_ATTR_S  TSOPortAttr;
     HI_U32                      PortID;
     HI_UNF_DMX_TSO_PORT_E       TSIAttachTSO;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, " --------------------------------IF port--------------------------\n");
     PROC_PRINT(p, " Id  AllTsCnt   ErrTsCnt  Lock/lost  ClkReverse    BitSel   Type\n");
@@ -688,12 +703,20 @@ static HI_S32 DMXPortProcRead(struct seq_file *p, HI_VOID *v)
         }
     }
 #endif
+
+out:
     return HI_SUCCESS;
 }
 
 static HI_S32 DMXChanProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32  ChanId;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, "Id DmxId  PID\tType Mod Stat  KeyId    Acquire(Try/Ok)    Release\n");
 
@@ -729,6 +752,7 @@ static HI_S32 DMXChanProcRead(struct seq_file *p, HI_VOID *v)
              );
     }
 
+out:
     return HI_SUCCESS;
 }
 
@@ -900,6 +924,12 @@ static HI_S32 DMXChanBufProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 i;
 
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
+
     PROC_PRINT(p, "Id  Size  BlkCnt BlkSize Read Write Used Overflow\n");
 
     for (i = 0; i < DMX_CHANNEL_CNT; i++)
@@ -935,6 +965,8 @@ static HI_S32 DMXChanBufProcRead(struct seq_file *p, HI_VOID *v)
     {
         DMXChanBufProcRead_debug(p,v);
     }
+
+out:    
     return HI_SUCCESS;
 }
 
@@ -942,6 +974,12 @@ static HI_S32 DMXFilterProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 FilterId;
     HI_U32 i;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, "Id ChanId Depth Param\n");
 
@@ -983,12 +1021,19 @@ static HI_S32 DMXFilterProcRead(struct seq_file *p, HI_VOID *v)
         PROC_PRINT(p, "\n");
     }
 
-    return 0;
+out:
+    return HI_SUCCESS;
 }
 
 static HI_S32 DMXPcrProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 PcrId;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, "Id DmxId PID    CurrPcr     CurrScr\n");
 
@@ -1006,12 +1051,19 @@ static HI_S32 DMXPcrProcRead(struct seq_file *p, HI_VOID *v)
             PcrId, PcrInfo->DmxId, PcrInfo->PcrPid, PcrInfo->PcrValue, PcrInfo->ScrValue);
     }
 
+out:
     return HI_SUCCESS;
 }
 
 static HI_S32 DMXRecProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 RecId;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, "DmxId Type Descramed Status  Size  BlkCnt BlkSize Read Write Overflow\n");
 
@@ -1049,12 +1101,19 @@ static HI_S32 DMXRecProcRead(struct seq_file *p, HI_VOID *v)
             RecInfo.BlockSize, RecInfo.BufRead, RecInfo.BufWrite, RecInfo.Overflow);
     }
 
+out:
     return HI_SUCCESS;
 }
 
 static HI_S32 DMXRecScdProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 RecId;
+
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
 
     PROC_PRINT(p, "DmxId Type  Pid    Size BlkCnt BlkSize Read Write Overflow\n");
 
@@ -1091,6 +1150,7 @@ static HI_S32 DMXRecScdProcRead(struct seq_file *p, HI_VOID *v)
             ScdInfo.BlockSize, ScdInfo.BufRead, ScdInfo.BufWrite, ScdInfo.Overflow);
     }
 
+out:
     return HI_SUCCESS;
 }
 #endif
@@ -1136,6 +1196,13 @@ static HI_S32 DMXGlobalIoctl(struct file *file, HI_U32 cmd, HI_VOID *arg)
         {
             HI_UNF_DMX_TSI_ATTACH_TSO_S *pPara = (HI_UNF_DMX_TSI_ATTACH_TSO_S *)arg;
             ret = HI_DRV_DMX_TSIAttachTSO(pPara);
+            break;
+        }
+
+        case CMD_DEMUX_GET_RESUME_COUNT:
+        {
+            HI_U32 *pCount = (HI_U32 *)arg;
+            ret = HI_DRV_DMX_GetResumeCount(pCount);
             break;
         }
 
@@ -2137,7 +2204,7 @@ HI_S32 DMX_DRV_ModInit(HI_VOID)
 #endif
 
 #ifndef HI_MCE_SUPPORT
-    if (HI_SUCCESS != HI_DRV_DMX_Init())
+    if (HI_SUCCESS != HI_DRV_DMX_BasicInit())
     {
         goto out;
     }

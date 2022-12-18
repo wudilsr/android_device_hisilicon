@@ -264,6 +264,9 @@ attribute_deprecated int url_poll(URLPollEntry *poll_table, int n, int timeout);
 #define NETWORK_NORMAL      0x1
 #define NETWORK_TIMEOUT     11
 #define NETWORK_DISCONNECT  12      // FIXME if there is a suitable value
+#define NETWORK_HTTP_CODE   13
+#define NETWORK_HTTP_REDIRECT   14
+#define NETWORK_HTTP_CONNECTED   15
 
 typedef int URLInterruptCB(void);
 typedef int URLErrorCodeCB(void* userdata, int s32Err,char* cStr);

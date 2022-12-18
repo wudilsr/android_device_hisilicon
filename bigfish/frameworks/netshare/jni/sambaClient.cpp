@@ -366,7 +366,7 @@ static int umountlist()
 static int my_umount(const char *path)
 {
 	char buf[MAX_SIZE] = {0};
-	int ret = HiNSClient::NSMount(path);
+	int ret = HiNSClient::NSUnMount(path);
 	if(ret == 0 && strstr(path, ":") == NULL)
 	{
 		int i = getMountpointOrderNum(path);

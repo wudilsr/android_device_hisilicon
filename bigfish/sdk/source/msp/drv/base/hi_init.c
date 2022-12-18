@@ -29,7 +29,6 @@
 #include "drv_tde_ext.h"
 #include "drv_tuner_ext.h"
 #include "drv_png_ext.h"
-#include "drv_avplay_ext.h"
 #include "drv_disp_ext.h"
 #include "drv_hdmi_ext.h"
 #include "drv_cipher_ext.h"
@@ -115,9 +114,7 @@ HI_S32 HI_DRV_LoadModules(HI_VOID)
     TUNER_DRV_ModInit();
 #endif
 
-#ifndef CHIP_TYPE_hi3798cv200_a
     DMX_DRV_ModInit();
-#endif
 
     CIPHER_DRV_ModInit();
 
@@ -128,8 +125,6 @@ HI_S32 HI_DRV_LoadModules(HI_VOID)
 
 #if !defined(HI_LOADER_APPLOADER) && !defined(HI_LOADER_RECOVERY)
     PWM_DRV_ModInit();
-
-    AVPLAY_DRV_ModInit();
 
 #ifdef HI_PVR_SUPPORT
     PVR_DRV_ModInit();
@@ -179,7 +174,7 @@ HI_S32 HI_DRV_LoadModules(HI_VOID)
 
     PNG_DRV_ModInit();
 
-#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100))
+#if !(defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) || defined(CHIP_TYPE_hi3716mv410))
     JPGE_DRV_ModInit();
 #endif
 

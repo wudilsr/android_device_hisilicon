@@ -41,7 +41,7 @@ static int caculate_sr_size(HI_RECT_S *pstFrameRect,
 #endif
 
     /*no matter 98m or 98c, when winnum >2, sr should not opened.*/
-    if ((u32WinNum >= 2) || (bExistScaleDown) || (enStereo != DISP_STEREO_NONE))
+    if ((bExistScaleDown) || (enStereo != DISP_STEREO_NONE))
     {
         return HI_FALSE;
     }

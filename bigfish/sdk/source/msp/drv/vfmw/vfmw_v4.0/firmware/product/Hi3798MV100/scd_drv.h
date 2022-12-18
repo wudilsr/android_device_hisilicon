@@ -881,7 +881,7 @@ VOID GetFreeSegBuf( SEG_ARRAY_S *pStreamSegArray, SINT32 *pAddr, SINT32 *pLength
       pStreamSeg  待插入码流片段的描述信息
   返回值  成功返回FMW_OK，否则返回错误码
 ************************************************************************/
-SINT32 InsertStreamSeg( SEG_ARRAY_S *pStreamSegArray, STREAM_SEG_S *pStreamSeg );
+SINT32 InsertStreamSeg( SEG_ARRAY_S *pStreamSegArray, STREAM_SEG_S *pStreamSeg ,SINT32 InstID);
 
 /************************************************************************
   原型  SINT32 GetStreamSeg( SEG_ARRAY_S *pStreamSegArray, STREAM_SEG_S *pStreamSeg )
@@ -936,6 +936,7 @@ SINT32 SM_GetInstanceRawDiscontinue(SINT32 InstID);
 SINT32 SM_SetRawDiscontinueFlag(SINT32 InstID, SINT32 Flag);
 SINT32 SM_GetInstanceStreamEmptyFlag(SINT32 InstID);
 VOID SM_InstInit(VOID);
+VOID SCDDRV_ResetSCD(SINT32 ChanID);
 
 /************************************************************************
   原型  SINT32 SM_Reset ( SINT32 SmID )
@@ -1223,7 +1224,7 @@ VOID PrintSmInfo(SINT32 SmID);
 
 SINT32 SM_SeekPts(SINT32 ChanID, UINT64 *pArgs);
 SINT32 SM_AllocDSPCtxMem(SINT32 SmID);
-VOID SM_DeletDSPCtxMem(SINT32 SmID);
+VOID SM_DeletDSPCtxMem(MEM_RECORD_S *pstDSPMem);
 VOID WriteHexFile(SINT32 eVidStd,SINT32 ScdId);
 
 /***********************************************************************

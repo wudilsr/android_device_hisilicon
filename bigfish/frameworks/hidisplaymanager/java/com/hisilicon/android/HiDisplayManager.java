@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.hisilicon.android;
 
 import android.util.Log;
@@ -27,17 +11,17 @@ import com.hisilicon.android.DispFmt;
 */
 public class HiDisplayManager  {
 
-    /*
-     * Format and its value
-     * It must be defined same as hi_unf_display.h
-     * /
+    /**
+     * Display format and its value.<br>
+     * It must be defined same as device/hisilicon/bigfish/frameworks/hidisplaymanager/libs/displaydef.h.
+     */
     public final static int ENC_FMT_1080P_60 = 0;         /*1080p60hz*/
     public final static int ENC_FMT_1080P_50 = 1;         /*1080p50hz*/
     public final static int ENC_FMT_1080P_30 = 2;         /*1080p30hz*/
     public final static int ENC_FMT_1080P_25 = 3;         /*1080p25hz*/
     public final static int ENC_FMT_1080P_24 = 4;         /*1080p24hz*/
     public final static int ENC_FMT_1080i_60 = 5;         /*1080i60hz*/
-    public final static int ENC_FMT_1080i_50 = 6;         /*1080i60hz*/
+    public final static int ENC_FMT_1080i_50 = 6;         /*1080i50hz*/
     public final static int ENC_FMT_720P_60 = 7;          /*720p60hz*/
     public final static int ENC_FMT_720P_50 = 8;          /*720p50hz*/
     public final static int ENC_FMT_576P_50 = 9;          /*576p50hz*/
@@ -97,9 +81,13 @@ public class HiDisplayManager  {
     public final static int ENC_FMT_1080P_23_976             = 0x10f;
     public final static int ENC_FMT_1080i_59_94              = 0x110;
 
+    /** 3D mode. Type: 2D mode */
     public final static int HI_DISP_MODE_NORMAL = 0;
+    /** 3D mode. Type: frame packing */
     public final static int HI_DISP_MODE_FRAME_PACKING = 1;
+    /** 3D mode. Type: side by side half */
     public final static int HI_DISP_MODE_SIDE_BY_SIDE = 2;
+    /** 3D mode. Type: top and bottom */
     public final static int HI_DISP_MODE_TOP_BOTTOM = 3;
 
     private IHiDisplayManager m_Display;
@@ -111,12 +99,12 @@ public class HiDisplayManager  {
     }
 
     /**
-     * set image brightness.
+     * Set image brightness.
+     * <p>
+     * Set the image brightness value.<br>
      * <br>
-     * CN:设置图像亮度
-     * @param brightness<br>
-     *       CN:亮度
-     * @return int
+     * @param brightness image brightness value. The range is 0~100, and 0 means the min brightness value.
+     * @return 0 if the brightness is set successfully, -1 otherwise.
      */
     public int setBrightness(int brightness)
     {
@@ -129,12 +117,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get image brightness.
+     * Get image brightness.
+     * <p>
+     * Get the current image brightness value.<br>
      * <br>
-     * CN:获取图像亮度
-     * @return brightness<br>
-     *       CN:亮度
+     * @return the current image brightness if getting successfully, -1 otherwise.
      */
     public int getBrightness()
     {
@@ -147,13 +136,14 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set image saturation.
+     * Set image saturation.
+     * <p>
+     * Set the image saturation value.<br>
      * <br>
-     * CN:设置图像饱和度
-     * @param saturation<br>
-     *       CN:饱和度
-     * @return int
+     * @param saturation image saturation value. The range is 0~100, and 0 means the min saturation value.
+     * @return 0 if the saturation is set successfully, -1 otherwise.
      */
     public int setSaturation(int saturation)
     {
@@ -166,12 +156,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get image saturation.
+     * Get image saturation.
+     * <p>
+     * Get the current image saturation value.<br>
      * <br>
-     * CN:获取图像饱和度
-     * @return saturation<br>
-     *       CN:饱和度
+     * @return the current image saturation if getting successfully, -1 otherwise.
      */
     public int getSaturation()
     {
@@ -184,13 +175,14 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set image contrast.
+     * Set image contrast.
+     * <p>
+     * Set the image contrast value.<br>
      * <br>
-     * CN:设置图像对比度
-     * @param contrast<br>
-     *       CN:对比度
-     * @return int
+     * @param contrast image contrast value. The range is 0~100, and 0 means the min contrast value.
+     * @return 0 if the contrast is set successfully, -1 otherwise.
      */
     public int setContrast(int contrast)
     {
@@ -203,12 +195,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get image contrast.
+     * Get image contrast.
+     * <p>
+     * Get the current image contrast value.<br>
      * <br>
-     * CN:获取图像对比度
-     * @return contrast<br>
-     *       CN:对比度
+     * @return the current image contrast if getting successfully, -1 otherwise.
      */
     public int getContrast()
     {
@@ -221,13 +214,14 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set image hue.
+     * Set image hue.
+     * <p>
+     * Set the image hue value.<br>
      * <br>
-     * CN:设置图像色度
-     * @param hue<br>
-     *       CN:色度
-     * @return int
+     * @param hue image hue value. The range is 0~100, and 0 means the min hue value.
+     * @return 0 if the hue is set successfully, -1 otherwise.
      */
     public int setHue(int hue)
     {
@@ -240,12 +234,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get image hue.
+     * Get image hue.
+     * <p>
+     * Get the current image hue value.<br>
      * <br>
-     * CN:获取图像色度
-     * @return hue<br>
-     *       CN:色度
+     * @return the current image hue if getting successfully, -1 otherwise.
      */
     public int getHue()
     {
@@ -258,13 +253,14 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set display format.
+     * Set display format.
+     * <p>
+     * Set the display format value.<br>
      * <br>
-     * CN:设置显示制式
-     * @param fmt format<br>
-     *       CN:fmt 制式
-     * @return int
+     * @param fmt display format.
+     * @return 0 if the format is set successfully, -1 otherwise.
      */
     public int setFmt(int fmt)
     {
@@ -277,12 +273,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get display format.
+     * Get display format.
+     * <p>
+     * Get the current display format value.<br>
      * <br>
-     * CN:获取显示制式
-     * @return fmt format<br>
-     *       CN:fmt 制式
+     * @return the current display format if getting successfully, -1 otherwise.
      */
     public int getFmt()
     {
@@ -295,37 +292,38 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set screen display area size.
+     * Set screen display area size.
+     * <p>
+     * Set the size of screen display area.<br>
+     * The size is described by offsets of display area in real screen.
      * <br>
-     * CN:设置屏幕显示区域大小
-     * @param x:screen display area coordinate origin x <br>
-     *       CN:屏幕显示区域x坐标
-     * @param y:screen display area coordinate origin y <br>
-     *       CN:屏幕显示区域y坐标
-     * @param x:screen display area width <br>
-     *       CN:屏幕显示区域宽度
-     * @param x:screen display area height <br>
-     *       CN:屏幕显示区域高度
-     * @return int
+     * @param left left offset in pixel. The range is [0, 200].
+     * @param top top offset in pixel. The range is [0, 200].
+     * @param right right offset in pixel. The range is [0, 200].
+     * @param bottom bottom offset in pixel. The range is [0, 200].
+     * @return 0 if the size is set successfully, -1 otherwise.
      */
-    public int setOutRange(int x,int y,int w ,int h)
+    public int setOutRange(int left, int top, int right, int bottom)
     {
         try
         {
-            return m_Display.setOutRange(x,y,w,h);
+            return m_Display.setOutRange(left, top, right, bottom);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
+
     /**
-     * get screen display area size.
+     * Get screen display area size.
+     * <p>
+     * Get the size of screen display area.<br>
+     * The size is described by offsets of display area in real screen.
      * <br>
-     * CN:获取屏幕显示区域大小
-     * @return rect
-     *     CN:返回矩形
+     * @return a Rect object if getting successfully, null otherwise.
      */
     public Rect getOutRange()
     {
@@ -338,31 +336,33 @@ public class HiDisplayManager  {
             return null;
         }
     }
+
     /**
-     * set Macro Vision.
+     * Set Macrovision mode.
+     * <p>
+     * Set Macrovision output type.<br>
      * <br>
-     * CN:设置Macro版本
-     * @param mode<br>
-     *       CN:模式
-     * @return int
+     * @param mode Macrovision mode.
+     * @return 0 if the mode is set successfully, -1 otherwise.
      */
-    public int setMacroVision(int enMode)
+    public int setMacroVision(int mode)
     {
         try
         {
-            return m_Display.setMacroVision(enMode);
+            return m_Display.setMacroVision(mode);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
+
     /**
-     * get Macro Vision.
+     * Get Macrovision mode.
+     * <p>
+     * Get the current Macrovision output type.<br>
      * <br>
-     * CN:获取Macro版本
-     * @return mode<br>
-     *       CN:模式
+     * @return the current Macrovision mode if getting successfully, -1 otherwise.
      */
     public int getMacroVision()
     {
@@ -375,31 +375,33 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set HDCP.
+     * Set HDCP mode.
+     * <p>
+     * Set status of HDCP mode.<br>
      * <br>
-     * CN:设置HDCP
-     * @param mode<br>
-     *       CN:模式
-     * @return int
+     * @param enabled enabled status of HDCP mode.
+     * @return 0 if the mode is set successfully, -1 otherwise.
      */
-    public int setHdcp(boolean mode)
+    public int setHdcp(boolean enabled)
     {
         try
         {
-            return m_Display.setHdcp(mode);
+            return m_Display.setHdcp(enabled);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
+
     /**
-     * get HDCP.
+     * Get HDCP mode.
+     * <p>
+     * Get the current enabled status of HDCP mode.<br>
      * <br>
-     * CN:获取HDCP
-     * @return mode<br>
-     *       CN:模式
+     * @return the current enabled status if getting successfully, -1 otherwise.
      */
     public int getHdcp()
     {
@@ -412,36 +414,40 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set stereo out mode.
+     * Set 3D output mode.
+     * <p>
+     * Set 3D display mode and format.<br>
+     * The format will be decided by video fps.
      * <br>
-     * CN:设置立体声输出模式
-     * @param mode<br>
-     *       CN:模式
-     * @return int
+     * @param mode 3D mode.
+     * @param videoFps video fps.
+     * @return 0 if the size is set successfully, -1 otherwise.
      */
-    public int SetStereoOutMode(int mode, int videofps)
+    public int SetStereoOutMode(int mode, int videoFps)
     {
         try
         {
-            if(mode < HI_DISP_MODE_NORMAL || mode > HI_DISP_MODE_TOP_BOTTOM)
+            if (mode < HI_DISP_MODE_NORMAL || mode > HI_DISP_MODE_TOP_BOTTOM)
             {
-                Log.e(TAG, "stereo mode must be in 0,1,2,3,please check it .");
+                Log.e(TAG, "stereo mode must be 0, 1, 2 or 3. Please check it.");
                 return -1;
             }
-            return m_Display.setStereoOutMode(mode, videofps);
+            return m_Display.setStereoOutMode(mode, videoFps);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
+
     /**
-     * get stereo out mode.
+     * Get 3D output mode.
+     * <p>
+     * Get 3D display mode.<br>
      * <br>
-     * CN:获取立体声输出模式
-     * @return mode<br>
-     *       CN:模式
+     * @return the current 3D mode if getting successfully, -1 otherwise.
      */
     public int GetStereoOutMode()
     {
@@ -454,32 +460,33 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set right eye priority.
+     * Set right eye priority.
+     * <p>
+     * Set right eye first for 3D output.<br>
      * <br>
-     * CN:设置右眼优先
-     * @param Outpriority<br>
-     *       CN:优先级
-     * @return int
+     * @param priority priority of right eye. The range is [0, 1].
+     * @return 0 if the priority is set successfully, -1 otherwise.
      */
-    public int SetRightEyeFirst(int Outpriority)
+    public int SetRightEyeFirst(int priority)
     {
         try
         {
-            return m_Display.setRightEyeFirst(Outpriority);
+            return m_Display.setRightEyeFirst(priority);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
-     /**
-     * set right eye priority.
+
+    /**
+     * Get right eye priority.
+     * <p>
+     * Get the current right eye priority for 3D output.<br>
      * <br>
-     * CN:设置右眼优先级别
-     * @param Outpriority<br>
-     *       CN:优先级
-     * @return int
+     * @return the current priority if getting successfully, -1 otherwise.
      */
     public int GetRightEyeFirst()
     {
@@ -493,6 +500,14 @@ public class HiDisplayManager  {
         }
     }
 
+    /**
+     * Get HDMI sink capability.
+     * <p>
+     * Get the capability of HDMI sink.<br>
+     * The capability is described by class DispFmt.
+     * <br>
+     * @return a DispFmt object if getting successfully, null otherwise.
+     */
     public DispFmt GetDisplayCapability()
     {
         try
@@ -504,13 +519,15 @@ public class HiDisplayManager  {
             return null;
         }
     }
+
     /**
-     * set video aspect ratio.
+     * Set video aspect ratio.
+     * <p>
+     * Set video aspect ratio.<br>
+     * Set aspect ratio attribute of display device.
      * <br>
-     * CN:设置视频宽高比
-     * @param ratio 0:auto,1:4:3,2:16:9<br>
-     *      CN:比例 0:自动,1:4:3,2:16:9
-     * @return int
+     * @param ratio aspect ratio. 0 auto, 1 4:3, 2 16:9.
+     * @return 0 if the ratio is set successfully, -1 otherwise.
      */
     public int setAspectRatio(int ratio)
     {
@@ -523,12 +540,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get video aspect ratio.
+     * Get video aspect ratio.
+     * <p>
+     * Get the current video aspect ratio.<br>
      * <br>
-     * CN:获取视频宽高比
-     * @return ratio 0:auto,1:4:3,2:16:9<br>
-     *      CN:比例 0:自动,1:4:3,2:16:9
+     * @return the current aspect ratio if getting successfully(0 auto, 1 4:3, 2 16:9), -1 otherwise.
      */
     public int getAspectRatio()
     {
@@ -541,13 +559,14 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * set maintain aspect ratio mode.
+     * Set maintain aspect ratio.
+     * <p>
+     * Set maintain aspect ratio.<br>
      * <br>
-     * CN:设置视频宽高比转换方式
-     * @param cvrs 0:extrude,1:add black<br>
-     *     CN:模式 0:拉伸,1:加黑边
-     * @return int
+     * @param cvrs aspect ratio. 0 extrude, 1 add black.
+     * @return 0 if the ratio is set successfully, -1 otherwise.
      */
     public int setAspectCvrs(int cvrs)
     {
@@ -560,12 +579,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get maintain aspect ratio mode.
+     * Get maintain aspect ratio.
+     * <p>
+     * Get the current maintain aspect ratio.<br>
      * <br>
-     * CN:获取视频宽高比转换方式
-     * @return cvrs 0:extrude,1:add black<br>
-     *      CN:模式 0:拉伸,1:加黑边
+     * @return the current cvrs if getting successfully(0 extrude, 1 add black), -1 otherwise.
      */
     public int getAspectCvrs()
     {
@@ -578,27 +598,33 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * enable format to optimal format
+     * Set optimal display format.
+     * <p>
+     * Set the enabled status of optimal display format.<br>
      * <br>
-     * @param able 0:disable,1:enable
-     * @return int
+     * @param enabled enabled status of optimal display format. 0 disabled, 1 enabled.
+     * @return 0 if the status is set successfully, -1 otherwise.
      */
-    public int setOptimalFormatEnable(int able)
+    public int setOptimalFormatEnable(int enabled)
     {
         try
         {
-            return m_Display.setOptimalFormatEnable(able);
+            return m_Display.setOptimalFormatEnable(enabled);
         }
         catch(Exception ex)
         {
             return -1;
         }
     }
+
     /**
-     * get optimal format enable or not
+     * Get optimal display format.
+     * <p>
+     * Whether optimal display format is enabled or not.<br>
      * <br>
-     * @return able 0:disable,1:enable
+     * @return the current status if getting successfully(0 disabled, 1 enabled), -1 otherwise.
      */
     public int getOptimalFormatEnable()
     {
@@ -611,11 +637,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * get display device type
+     * Get display device type.
+     * <p>
+     * Get the current display device type.<br>
      * <br>
-     * CN:
-     * @return type,1 is tv,0 is pc<br>
+     * @return the current device type if getting successfully(0 hdmi is not connected, 1 tv, 2 pc), -1 otherwise.
      */
     public int getDisplayDeviceType()
     {
@@ -628,11 +656,13 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
     /**
-     * save parameter.
+     * Save parameter.
+     * <p>
+     * Save display parameters.<br>
      * <br>
-     * CN:保存参数
-     * @return int
+     * @return 0 if parameters is saved successfully, -1 otherwise
      */
     public int SaveParam()
     {
@@ -646,6 +676,13 @@ public class HiDisplayManager  {
         }
     }
 
+    /**
+     * Attach interface.
+     * <p>
+     * Attach the interface by setting display interface parameter.<br>
+     * <br>
+     * @return 0 if attaching successfully, -1 otherwise.
+     */
     public int attachIntf()
     {
         try
@@ -658,6 +695,13 @@ public class HiDisplayManager  {
         }
     }
 
+    /**
+     * Detach interface.
+     * <p>
+     * Detach the interface by canceling display interface parameter.<br>
+     * <br>
+     * @return 0 if detaching successfully, -1 otherwise.
+     */
     public int detachIntf()
     {
         try
@@ -669,6 +713,15 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+
+    /**
+     * Set virtual screen.
+     * <p>
+     * Set the resolution of virtual screen.<br>
+     * <br>
+     * @param outFmt resolution of virtual screen. 0: width 1280, height 720; 1: width 1920, height 1080.
+     * @return 0 if the resolution is set successfully, -1 otherwise.
+     */
     public int setVirtScreen(int outFmt)
     {
         try
@@ -681,6 +734,13 @@ public class HiDisplayManager  {
         }
     }
 
+    /**
+     * Get virtual screen.
+     * <p>
+     * Get the current resolution of virtual screen.<br>
+     * <br>
+     * @return the current resolution if getting successfully(0 720p, 1 1080p), -1 otherwise.
+     */
     public int getVirtScreen()
     {
         try
@@ -694,10 +754,32 @@ public class HiDisplayManager  {
     }
 
     /**
-     * reset brightness/chroma/contrast/saturation to 50.
+     * Get virtual screen size.
+     * <p>
+     * Get the current virtual screen size of virtual screen.<br>
      * <br>
-     * CN:
-     * @return 0<br>
+     * @return the current virtual screen rect if getting successfully.
+     */
+    public Rect getVirtScreenSize()
+    {
+        try
+        {
+            Rect rect = new Rect(0, 0, 0, 0);
+            rect = m_Display.getVirtScreenSize();
+            return rect;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Reset parameter.
+     * <p>
+     * Reset display parameters to default values.<br>
+     * <br>
+     * @return 0 if parameters is reset successfully, -1 otherwise
      */
     public int reset()
     {
@@ -712,16 +794,18 @@ public class HiDisplayManager  {
     }
 
     /**
-      * set hdmi suspend time.
-      * <br>
-      * @param iTime :time
-      * @return int
-      */
-    public int setHDMISuspendTime(int iTime)
+     * Set hdmi suspend time.
+     * <p>
+     * Set the delay time of hdmi suspend.<br>
+     * <br>
+     * @param time delay time in millisecond.
+     * @return 0 if the time is set successfully, -1 otherwise.
+     */
+    public int setHDMISuspendTime(int time)
     {
         try
         {
-            return m_Display.setHDMISuspendTime(iTime);
+            return m_Display.setHDMISuspendTime(time);
         }
         catch(Exception ex)
         {
@@ -730,10 +814,12 @@ public class HiDisplayManager  {
     }
 
     /**
-    * get hdmi suspend time.
-    * <br>
-    * @return int
-    */
+     * Get hdmi suspend time.
+     * <p>
+     * Get the current delay time of hdmi suspend.<br>
+     * <br>
+     * @return the current time if getting successfully, -1 otherwise.
+     */
     public int getHDMISuspendTime()
     {
         try
@@ -747,15 +833,18 @@ public class HiDisplayManager  {
     }
 
     /**
-    * set hdmi suspend enable.
-    * @param iEnable :enable
-    * @return int
-    */
-    public int setHDMISuspendEnable(int iEnable)
+     * Set hdmi suspend enable.
+     * <p>
+     * Set the enabled status of hdmi suspend.<br>
+     * <br>
+     * @param enabled enabled status of hdmi suspend. 0 disabled, 1 enabled.
+     * @return 0 if the status is set successfully, -1 otherwise.
+     */
+    public int setHDMISuspendEnable(int enabled)
     {
         try
         {
-            return m_Display.setHDMISuspendEnable(iEnable);
+            return m_Display.setHDMISuspendEnable(enabled);
         }
         catch(Exception ex)
         {
@@ -764,9 +853,12 @@ public class HiDisplayManager  {
     }
 
     /**
-    * get hdmi suspend enable.
-    * @return int
-    */
+     * Get hdmi suspend enable.
+     * <p>
+     * Whether hdmi suspend is enabled or not.<br>
+     * <br>
+     * @return the current status if getting successfully(0 disabled, 1 enabled), -1 otherwise.
+     */
     public int getHDMISuspendEnable()
     {
         try
@@ -779,6 +871,13 @@ public class HiDisplayManager  {
         }
     }
 
+    /**
+     * Reload parameter.
+     * <p>
+     * Reload display parameters from baseparam.img.<br>
+     * <br>
+     * @return 0 if parameters is reloaded successfully, -1 otherwise
+     */
     public int reload()
     {
         try
@@ -792,11 +891,14 @@ public class HiDisplayManager  {
     }
 
     /**
-      * setOutputEnable: enable output port or not.
-      * @param port: 0 -> HDMI, 1 -> CVBS
-      * @param enable: 0 -> disabled (close this port), 1 -> enabled (open this port)
-      * @return 0 -> success, -1 -> fail
-      */
+     * Set output port enable.
+     * <p>
+     * Set output port status -- enable output port or not.<br>
+     * <br>
+     * @param port output port. 0 -> HDMI, 1 -> CVBS.
+     * @param enable enable status. 0 -> disabled (close this port), 1 -> enabled (open this port).
+     * @return 0 if the status is set successfully, -1 otherwise
+     */
     public int setOutputEnable(int port, int enable)
     {
         try
@@ -810,10 +912,13 @@ public class HiDisplayManager  {
     }
 
     /**
-      * getOutputEnable: get output port status.
-      * @param port: 0 -> HDMI, 1 -> CVBS
-      * @return 0 -> disabled, 1 -> enabled
-      */
+     * Get output port enable.
+     * <p>
+     * Get enable status of output port.<br>
+     * <br>
+     * @param port output port. 0 -> HDMI, 1 -> CVBS.
+     * @return 0 disabled, -1 enabled
+     */
     public int getOutputEnable(int port)
     {
         try

@@ -59,6 +59,7 @@ COBJS-$(CONFIG_NAND_OMAP_GPMC) += omap_gpmc.o
 COBJS-$(CONFIG_NAND_PLAT) += nand_plat.o
 COBJS-$(CONFIG_NAND_GODBOX_V1)  += hinfc300.o
 COBJS-$(CONFIG_NAND_FLASH_HINFC301)  += hinfc301.o
+COBJS-$(CONFIG_FMC100_SUPPORT)  += hifmc100_nand_gen.o
 
 COBJS-$(CONFIG_NAND_FLASH_HINFC504)  += hinfc504.o hinfc504_gen.o \
 	hinfc504_read_retry_hynix_bg_cdie.o \

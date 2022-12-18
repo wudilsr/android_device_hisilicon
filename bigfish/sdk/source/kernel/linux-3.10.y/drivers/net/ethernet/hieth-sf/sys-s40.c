@@ -10,6 +10,9 @@
 #define HIETH_SYSREG_BASE               ((void __iomem *)IO_ADDRESS(0xF8A22000))
 #define HIETH_SYSREG_REG                0x00CC
 #define HIETHPHY_SYSREG_REG             0x0120
+#define HIETH_SF_SRST_REQ_BIT           5 
+#define HIETH_SF_BUS_SRST_REQ_BIT       4
+
 #define INTERNAL_FEPHY_ADDR             ((void __iomem *)IO_ADDRESS(0xF8A20118))
 #define HIETH_FEPHY_SELECT              ((void __iomem *)IO_ADDRESS(0xF8A20008))
 #define HIETH_FEPHY_LDO_CTRL            ((void __iomem *)IO_ADDRESS(0xF8A20844))
@@ -34,7 +37,13 @@ static void hieth_set_regbit(void __iomem * addr, int bit, int shift)
 
 static void hieth_reset(int rst)
 {
-	hieth_set_regbit(HIETH_SYSREG_BASE + HIETH_SYSREG_REG, rst, 0);
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		hieth_set_regbit(HIETH_SYSREG_BASE + HIETH_SYSREG_REG, rst, HIETH_SF_BUS_SRST_REQ_BIT);
+		hieth_set_regbit(HIETH_SYSREG_BASE + HIETH_SYSREG_REG, rst, HIETH_SF_SRST_REQ_BIT);
+	} else {
+		hieth_set_regbit(HIETH_SYSREG_BASE + HIETH_SYSREG_REG, rst, 0);
+	}
+
 	udelay(100);
 }
 
@@ -44,8 +53,17 @@ static inline void hieth_clk_ena(void)
 
 	/* SF */
 	val = readl(HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
-	val |= (1 << 1);
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		val |= (3 << 0);
+		val |= (0xF << 12);
+	} else {
+		val |= (1 << 1);
+	}
 	writel(val, HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
+
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		enable_autoeee = true;
+	}
 }
 
 static inline void hieth_clk_dis(void)
@@ -54,7 +72,12 @@ static inline void hieth_clk_dis(void)
 
 	/* SF */
 	val = readl(HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
-	val &= ~(1 << 1);
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		val &= ~(3 << 0);
+		val &= ~(0xF << 12);
+	} else {
+		val &= ~(1 << 1);
+	}
 	writel(val, HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
 }
 
@@ -62,11 +85,15 @@ static void hieth_internal_phy_reset(void)
 {
 	unsigned int val;
 
-	val = readl(HIETH_FEPHY_SELECT);
-	if ((val & (1 << 8)) != 0)
-		return;/* if not use fephy, leave it's clk disabled */
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		writel(0x8, HIETH_FEPHY_LDO_CTRL);/* LDO output 1.1V */
+	} else {
+		val = readl(HIETH_FEPHY_SELECT);
+		if ((val & (1 << 8)) != 0)
+			return;/* if not use fephy, leave it's clk disabled */
 
-	writel(0x68, HIETH_FEPHY_LDO_CTRL);/* LDO output 1.1V */
+		writel(0x68, HIETH_FEPHY_LDO_CTRL);/* LDO output 1.1V */
+	}
 
 	/* FEPHY enable clock */
 	val = readl(HIETH_SYSREG_BASE + HIETHPHY_SYSREG_REG);
@@ -126,10 +153,13 @@ static void hieth_external_phy_reset(void)
 {
 	unsigned int val;
 
-	/* if use internal fephy, return */
-	val = readl(HIETH_FEPHY_SELECT);
-	if ((val & (1 << 8)) == 0)
-		return;
+	if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+	} else {
+		/* if use internal fephy, return */
+		val = readl(HIETH_FEPHY_SELECT);
+		if ((val & (1 << 8)) == 0)
+			return;
+	}
 
 	/************************************************/
 	/* reset external phy with default reset pin */
@@ -180,29 +210,45 @@ static void hieth_funsel_restore(void)
 
 int hieth_port_reset(struct hieth_netdev_local *ld, int port)
 {
+	long long chipid = get_chipid();
 
 	hieth_assert(port == ld->port);
 
-	if (ld->port == UP_PORT) {
-		/* Note: sf ip need reset twice */
-		hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+	/*soft reset */
+	if (chipid == _HI3719MV100) {
+		hieth_writel_bits(ld, 1, GLB_SOFT_RESET,
+				  BITS_ETH_SOFT_RESET_ALL);
 		msleep(1);
-		hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+		hieth_writel_bits(ld, 0, GLB_SOFT_RESET,
+				  BITS_ETH_SOFT_RESET_ALL);
 		msleep(1);
-		hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+		hieth_writel_bits(ld, 1, GLB_SOFT_RESET,
+				  BITS_ETH_SOFT_RESET_ALL);
 		msleep(1);
-		hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
-	} else if (ld->port == DOWN_PORT) {
-		/* Note: sf ip need reset twice */
-		hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
-		msleep(1);
-		hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
-		msleep(1);
-		hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
-		msleep(1);
-		hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
-	} else
-		BUG();
+		hieth_writel_bits(ld, 0, GLB_SOFT_RESET,
+				  BITS_ETH_SOFT_RESET_ALL);
+	} else {
+		if (ld->port == UP_PORT) {
+			/* Note: sf ip need reset twice */
+			hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+			msleep(1);
+			hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+			msleep(1);
+			hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+			msleep(1);
+			hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_UP);
+		} else if (ld->port == DOWN_PORT) {
+			/* Note: sf ip need reset twice */
+			hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
+			msleep(1);
+			hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
+			msleep(1);
+			hieth_writel_bits(ld, 1, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
+			msleep(1);
+			hieth_writel_bits(ld, 0, GLB_SOFT_RESET, BITS_ETH_SOFT_RESET_DOWN);
+		} else
+			BUG();
+	}
 
 	return 0;
 }

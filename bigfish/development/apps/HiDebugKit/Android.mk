@@ -7,8 +7,6 @@ LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := $(call all-subdir-java-files)
 
-LOCAL_JAVA_LIBRARIES :=
-
 LOCAL_JNI_SHARED_LIBRARIES := libandroid_runtime
 
 LOCAL_PACKAGE_NAME := HiDebugKit

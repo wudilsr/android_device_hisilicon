@@ -881,6 +881,10 @@ HI_S32 JPEG_HDEC_SendStreamFromVirMem(j_decompress_ptr cinfo)
 
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType  = HI_FALSE;
+#endif
+
 #ifdef CONFIG_JPEG_FPGA_TEST_SAVE_SCEN_ENABLE
 		/**
 		 ** output the scen message to file
@@ -998,7 +1002,13 @@ HI_S32 JPEG_HDEC_SendStreamFromVirMem(j_decompress_ptr cinfo)
 #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 			s32Ret = HI_GFX_Flush(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, pJpegHandle->pSaveStreamMemHandle);
 #else
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+			if (pJpegHandle->u32MemTypeMask & JPEG_STREAM_MEM_MMU_TYPE)
+				bMemMMUType  = HI_TRUE;
+			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
+	#else
 			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
+	#endif
 #endif
 			if(HI_SUCCESS != s32Ret)
 			{
@@ -1229,6 +1239,10 @@ HI_S32 JPEG_HDEC_SendStreamFromFile(j_decompress_ptr cinfo)
         my_src_ptr src = (my_src_ptr)cinfo->src;
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType  = HI_FALSE;
+#endif
+
 #ifdef CONFIG_JPEG_FPGA_TEST_SAVE_SCEN_ENABLE
 		/**
 		** output the scen message to file
@@ -1406,7 +1420,14 @@ HI_S32 JPEG_HDEC_SendStreamFromFile(j_decompress_ptr cinfo)
 #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 			s32Ret = HI_GFX_Flush(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, pJpegHandle->pSaveStreamMemHandle);
 #else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			if (pJpegHandle->u32MemTypeMask & JPEG_STREAM_MEM_MMU_TYPE)
+				bMemMMUType  = HI_TRUE;
+			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
+		#else
+
 			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
+		#endif
 #endif
 			if(HI_SUCCESS != s32Ret)
 			{
@@ -1664,7 +1685,8 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 		HI_BOOL bReachEOF         = HI_FALSE;
 		HI_BOOL bStartDec         = HI_FALSE;
 		HI_S32  s32Cnt            = 0;
-		HI_S32  s32RetVal         = HI_SUCCESS;
+		HI_BOOL bRetVal           = HI_TRUE;
+		HI_S32  s32ByteInBuffer   = 0;
 #ifdef CONFIG_JPEG_FPGA_TEST_SAVE_SCEN_ENABLE
 		HI_BOOL bStartFirst = HI_TRUE;
 #endif
@@ -1691,6 +1713,10 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType  = HI_FALSE;
+#endif
+
 #ifdef CONFIG_JPEG_FPGA_TEST_SAVE_SCEN_ENABLE
 		/**
 		** output the scen message to file
@@ -1716,7 +1742,8 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 #ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
 		pJpegHandle->u32CurrentOffset = cinfo->src->current_offset - cinfo->src->bytes_in_buffer;
 #endif
-		  
+
+		s32ByteInBuffer = cinfo->src->bytes_in_buffer;
 		do 
 		{/** decode continue stream **/
 
@@ -1754,7 +1781,7 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 				u32ReadSize = 0;
 				if (0 == cinfo->src->bytes_in_buffer)
 				{
-					s32RetVal = (*cinfo->src->fill_input_buffer)(cinfo);
+					bRetVal = (*cinfo->src->fill_input_buffer)(cinfo);
 					if (0==cinfo->src->bytes_in_buffer)
 					{
 						break;
@@ -1786,23 +1813,30 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 			}
 			else
 			{/** is last stream data **/
-				s32RetVal = cinfo->src->fill_input_buffer(cinfo);
+				bRetVal = cinfo->src->fill_input_buffer(cinfo);
 				if (cinfo->src->bytes_in_buffer)
 				{
 					bReachEOF = HI_FALSE;
 				}
 
 			}
-			if(HI_FALSE == s32RetVal)
-			{
-				/**do nothing,cancle pc-lint warning **/
+			if(HI_FALSE == bRetVal && 0XFF != pStreamStartVirAddr[u32NeedDecCnt - 2] && 0XD9 != pStreamStartVirAddr[u32NeedDecCnt - 1])
+			{/** 不是最后的码流，调用填充数据又没有实现填充的功能 **/
+				pJpegHandle->bFillInput  = HI_FALSE;
+				goto FAIL;
 			}
 			
 			/** 刷码流数据 **/
 #ifdef CONFIG_JPEG_USE_PRIVATE_MMZ
 			s32Ret = HI_GFX_Flush(pJpegHandle->s32MMZDev,(unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, pJpegHandle->pSaveStreamMemHandle);
 #else
+		#ifdef CONFIG_JPEG_MMU_SUPPORT
+			if (pJpegHandle->u32MemTypeMask & JPEG_STREAM_MEM_MMU_TYPE)
+				bMemMMUType  = HI_TRUE;
+			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
+		#else
 			s32Ret = HI_GFX_Flush((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
+		#endif
 #endif
 			if(HI_SUCCESS != s32Ret)
 			{
@@ -1943,9 +1977,8 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 		return HI_SUCCESS;
 
 		/** if decode failure jump here **/
-		FAIL:
-
-		cinfo->src->bytes_in_buffer  = 0;
+FAIL:
+		cinfo->src->bytes_in_buffer = s32ByteInBuffer;
 		/**
 		** change the read stream dispose
 		** CNcomment:硬件解码失败之后读码流还是走原先软解的路了 CNend\n

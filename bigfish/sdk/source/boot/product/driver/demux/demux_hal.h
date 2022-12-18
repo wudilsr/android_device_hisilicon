@@ -22,7 +22,11 @@ typedef enum
 HI_VOID DmxHalConfigHardware(HI_VOID);
 HI_S32  DmxHalGetInitStatus(HI_VOID);
 
-HI_VOID DmxHalDvbPortSetAttr(HI_U32 PortId);
+HI_VOID DmxHalDvbPortSetAttr(HI_U32 PortId,  HI_UNF_DMX_PORT_TYPE_E  PortType,
+        HI_U32                  SyncOn,
+        HI_U32                  SyncOff,
+        HI_U32                  TunerInClk,
+        HI_U32                  BitSelector);
 HI_VOID DmxHalDvbPortSetTsCountCtrl(HI_U32 PortId, HI_U32 option);
 HI_VOID DmxHalDvbPortSetErrTsCountCtrl(HI_U32 PortId, HI_U32 option);
 

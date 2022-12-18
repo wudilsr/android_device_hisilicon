@@ -22,11 +22,11 @@ do \
     } \
 }while(0)
 
-#if  defined(CHIP_TYPE_hi3798cv200_a)
-#define  HDCP_KEY_RAM_SIZE                      512
-#else
+
+
+
 #define  HDCP_KEY_RAM_SIZE                      320
-#endif
+
 #define  HDCP_KEY_PRIME_SIZE                    320
 #define  HDCP_KEY_TOOL_FILE_SIZE                384
 #define  HDCP_KEY_CHIP_FILE_SIZE               (HDCP_KEY_RAM_SIZE + 12)

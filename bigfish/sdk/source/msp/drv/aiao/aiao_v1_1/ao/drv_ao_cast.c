@@ -329,6 +329,8 @@ HI_S32 CAST_GetDefAttr(HI_UNF_SND_CAST_ATTR_S * pstDefAttr)
 {
     pstDefAttr->u32PcmFrameMaxNum = AO_CAST_DEFATTR_FRAMEMAXNUM;
     pstDefAttr->u32PcmSamplesPerFrame = AO_CAST_DEFATTR_SAMPLESPERFRAME;
+    pstDefAttr->bAddMute = HI_TRUE;
+	
     /*
     pstDefAttr->s32BitPerSample = AO_CAST_DEFATTR_BITSPERSAMPLE;
     pstDefAttr->u32Channels = AO_CAST_DEFATTR_CHANNEL;
@@ -377,6 +379,7 @@ HI_S32 CAST_CreateNew(SND_CARD_STATE_S *pCard, HI_UNF_SND_CAST_ATTR_S *pstCastAt
     state->u32SampleBytes = AUTIL_CalcFrameSize(state->u32Channels , (HI_U32)state->s32BitPerSample);
     state->u32FrameBytes = pstCastAttr->u32PcmSamplesPerFrame *  state->u32SampleBytes; 
     state->u32FrameSamples = pstCastAttr->u32PcmSamplesPerFrame;
+    state->bAddMute = pstCastAttr->bAddMute;
 
     state->bUserEnableSetting = HI_FALSE;               
     state->enCurnStatus = SND_CAST_STATUS_STOP;

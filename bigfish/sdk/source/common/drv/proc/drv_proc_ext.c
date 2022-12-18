@@ -29,6 +29,8 @@ struct proc_dir_entry *g_pCMPI_proc = NULL;
 struct proc_dir_entry *g_pHisi_proc = NULL;
 static DRV_PROC_ITEM_S s_proc_items[MAX_PROC_ENTRIES];
 
+static DEFINE_MUTEX(s_proc_mutex_lock);
+
 static int CMPI_proc_open(struct inode *inode, struct file *file)
 {
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0)
@@ -221,10 +223,10 @@ ssize_t HI_DRV_PROC_ModuleWrite(struct file * file,
     
     szBuffer[count > 1 ? count -1 : 0] = '\0' ;
     
-    //printk("proc command:%s\n", szBuffer);
+    //HI_PRINT("proc command:%s\n", szBuffer);
     if (CMPI_PROC_PaserCommand(szBuffer, &para1, &para2) > 0)
     {
-        //printk("value:0x%x, 0x%x\n", para1,  para2);
+        //HI_PRINT("value:0x%x, 0x%x\n", para1,  para2);
         fun_ctl(para1, para2);
     }
     else
@@ -248,14 +250,18 @@ static DRV_PROC_ITEM_S *proc_addModule(char *entry_name, DRV_PROC_EX_S* pFnOp, v
     {
         return NULL;
     }
-    
+
+	mutex_lock(&s_proc_mutex_lock);
     for (i = 0; i < MAX_PROC_ENTRIES; i++)
         if (! s_proc_items[i].entry)
             break;
 
     if (MAX_PROC_ENTRIES == i)
-        return NULL;
-
+    {
+		mutex_unlock(&s_proc_mutex_lock);
+		HI_PRINT("ERROR: add proc entry %s over LIMIT:%#x\n",  entry_name, MAX_PROC_ENTRIES);
+		return NULL;
+    }
     HI_OSAL_Strncpy(s_proc_items[i].entry_name, entry_name, sizeof(s_proc_items[i].entry_name) - 1);
 
     if (pFnOp != NULL)
@@ -275,10 +281,17 @@ static DRV_PROC_ITEM_S *proc_addModule(char *entry_name, DRV_PROC_EX_S* pFnOp, v
 
     entry = proc_create_data(entry_name, 0, g_pCMPI_proc, &CMPI_proc_ops, &s_proc_items[i]);
     if (!entry)
-        return NULL;
-
+    {
+		mutex_unlock(&s_proc_mutex_lock);
+		return NULL;
+    }
+	
     s_proc_items[i].entry = entry;
 
+	mutex_unlock(&s_proc_mutex_lock);
+	
+	//HI_PRINT("add: i:%#x, entry_name:%s\n", i, s_proc_items[i].entry_name);
+	
     return &s_proc_items[i];
 #else
     return &s_proc_items[0];
@@ -289,14 +302,25 @@ static HI_VOID proc_removeModule(char *entry_name)
 {
 #if !(0 == HI_PROC_SUPPORT)
     int i;
+	
+	mutex_lock(&s_proc_mutex_lock);
     for (i = 0; i < MAX_PROC_ENTRIES; i++)
+    {
         if (! HI_OSAL_Strncmp(s_proc_items[i].entry_name, entry_name, sizeof(s_proc_items[i].entry_name)))
             break;
+    }
+	
     if (MAX_PROC_ENTRIES == i)
-        return ;
-    
+    {
+    	mutex_unlock(&s_proc_mutex_lock);
+		HI_PRINT("Not find the entry:%s\n", entry_name);
+		return ;
+    }
     remove_proc_entry(s_proc_items[i].entry_name, g_pCMPI_proc);
+	//HI_PRINT("remove: i:%#x, entry_name:%s, %s\n", i, entry_name, s_proc_items[i].entry_name);
     s_proc_items[i].entry = NULL;
+
+	mutex_unlock(&s_proc_mutex_lock);
 
 #endif
 }

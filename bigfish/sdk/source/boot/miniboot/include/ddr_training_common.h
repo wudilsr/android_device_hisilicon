@@ -27,7 +27,7 @@ struct regval_t {
 struct ddrtr_result_t {
 	unsigned int count;
 #define DDR_TRAINING_MAX_VALUE       20
-	struct regval_t reg[20];
+	struct regval_t reg[DDR_TRAINING_MAX_VALUE];
 	char data[1024];
 };
 

@@ -97,7 +97,7 @@ HI_S32 Logo_Main(HI_BOOL bNeedFastplay)
         return Ret;
     }
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     HI_UNF_HDMI_Init();
 
     if (g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].enIntfType == HI_UNF_DISP_INTF_TYPE_HDMI &&
@@ -120,7 +120,7 @@ HI_S32 Logo_Main(HI_BOOL bNeedFastplay)
 
         Ret = HI_DRV_PDM_GetLogoData(stLogoParam.u32LogoLen, &u32LogoDataAddr);
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
         if (g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].enIntfType == HI_UNF_DISP_INTF_TYPE_HDMI &&
             g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].unIntf.enHdmi == HI_UNF_HDMI_ID_0){
             HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_0, g_stDispParam1.enFormat);
@@ -136,7 +136,7 @@ HI_S32 Logo_Main(HI_BOOL bNeedFastplay)
                 goto FREE_SURFACE;
             }
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
             if (g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].enIntfType == HI_UNF_DISP_INTF_TYPE_HDMI &&
                 g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].unIntf.enHdmi == HI_UNF_HDMI_ID_0){
                 HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_0, g_stDispParam1.enFormat);
@@ -157,7 +157,7 @@ HI_S32 Logo_Main(HI_BOOL bNeedFastplay)
                 goto FREE_SURFACE;
             }
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
             if (g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].enIntfType == HI_UNF_DISP_INTF_TYPE_HDMI &&
                 g_stDispParam1.stIntf[HI_UNF_DISP_INTF_TYPE_HDMI].unIntf.enHdmi == HI_UNF_HDMI_ID_0){
                 HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_0, g_stDispParam1.enFormat);
@@ -536,6 +536,9 @@ int fastapp_entry(int argc, char *argv[])
 
 #ifdef HI_ADVCA_SUPPORT
     c51_loadCode();
+ #ifdef HI_AVS_SUPPORT
+    set_core_voltage_ca();
+ #endif
 #endif
 
     return 0;

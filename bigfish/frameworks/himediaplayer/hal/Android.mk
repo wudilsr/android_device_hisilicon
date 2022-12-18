@@ -19,9 +19,6 @@ LOCAL_SRC_FILES +=  \
     HiVSink.cpp \
     HiASink.cpp \
 
-LOCAL_SRC_FILES +=      \
-    iplayer/IHiPlayer.cpp
-
 LOCAL_SHARED_LIBRARIES :=       \
     libbinder                   \
     libcutils                   \
@@ -48,7 +45,8 @@ LOCAL_SHARED_LIBRARIES += \
     libui \
     libhidisplayclient \
     libharfbuzz \
-    libft2
+    libft2 \
+    libstagefright_foundation
 
  LOCAL_STATIC_LIBRARIES += \
     libxml2 \

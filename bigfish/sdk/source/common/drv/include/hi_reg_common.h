@@ -48,6 +48,16 @@
 #include "./hi3798cv200_a/hi_reg_vdp.h"
 #include "./hi3798cv200_a/hi_reg_vpss_wbc.h"
 
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420) 
+
+#include "./hi3716mv410/hi_reg_sys.h"
+#include "./hi3716mv410/hi_reg_peri.h"
+#include "./hi3716mv410/hi_reg_io.h"
+#include "./hi3716mv410/hi_reg_crg.h"
+#include "./hi3716mv410/hi_reg_vpss.h"
+#include "./hi3716mv410/hi_reg_vdp.h"
+#include "./hi3716mv410/hi_reg_vpss_wbc.h"
+
 #endif
 
 #define HI_SYS_BASE_ADDR        0xF8000000

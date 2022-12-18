@@ -65,6 +65,8 @@ static TDE_EXPORT_FUNC_S *ps_TdeExportFuncs = HI_NULL;
 ***************************************************************************************/
 HI_S32 HIFB_DRV_TdeOpen(HI_VOID)
 {
+	HI_S32 s32Ret = 0;
+	
     if(HI_NULL != ps_TdeExportFuncs)
     {
         return HI_SUCCESS;
@@ -81,12 +83,24 @@ HI_S32 HIFB_DRV_TdeOpen(HI_VOID)
         HIFB_ERROR("Tde is not available!\n");
         return HI_FAILURE;
     }
+
+	s32Ret = ps_TdeExportFuncs->pfnTdeOpen();
+	if (s32Ret < 0)
+	{
+		HIFB_ERROR("Tde open failed!\n");
+        return HI_FAILURE;
+	}
     return HI_SUCCESS;
 }
 
 
 HI_S32 HIFB_DRV_TdeClose(HI_VOID)
 {
+	if (ps_TdeExportFuncs)
+	{
+		ps_TdeExportFuncs->pfnTdeClose();
+	}
+
 	ps_TdeExportFuncs = HI_NULL;
     return HI_SUCCESS;
 }
@@ -193,63 +207,61 @@ HI_BOOL HIFB_IsTdeColorFmtClut(TDE2_COLOR_FMT_E enColorFmt)
 ***************************************************************************************/
 HI_S32 HIFB_DRV_Blit(HIFB_BUFFER_S *pSrcImg, HIFB_BUFFER_S *pDstImg,  HIFB_BLIT_OPT_S *pstOpt, HI_BOOL bRefreshScreen)
 {
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
     TDE2_SURFACE_S stSrcSur = {0};
     TDE2_SURFACE_S stDstSur = {0};
-    TDE2_RECT_S stSrcRect;
-    TDE2_RECT_S stDstRect;
-    TDE_HANDLE handle;
-    TDE2_OPT_S stOpt = {0};    
-    TDE_DEFLICKER_LEVEL_E enTdeDflkLevel;
+    TDE2_RECT_S stSrcRect   = {0};
+    TDE2_RECT_S stDstRect   = {0};
+    TDE_HANDLE handle = 0;
+    TDE2_OPT_S stOpt  = {0};    
+    TDE_DEFLICKER_LEVEL_E enTdeDflkLevel = TDE_DEFLICKER_BUTT;
 
-    if(NULL == ps_TdeExportFuncs)
-    {
+    if(NULL == ps_TdeExportFuncs){
         HIFB_ERROR("Tde is not available!\n");
         return HI_FAILURE;
     }
 
     /** confing src*/
-    stSrcSur.u32PhyAddr = pSrcImg->stCanvas.u32PhyAddr;
-    stSrcSur.u32Width = pSrcImg->stCanvas.u32Width;
-    stSrcSur.u32Height = pSrcImg->stCanvas.u32Height;
-    stSrcSur.u32Stride = pSrcImg->stCanvas.u32Pitch;
+    stSrcSur.u32PhyAddr   = pSrcImg->stCanvas.u32PhyAddr;
+    stSrcSur.u32Width     = pSrcImg->stCanvas.u32Width;
+    stSrcSur.u32Height    = pSrcImg->stCanvas.u32Height;
+    stSrcSur.u32Stride    = pSrcImg->stCanvas.u32Pitch;
     stSrcSur.bAlphaMax255 = HI_TRUE;
-    stSrcSur.bYCbCrClut = HI_FALSE;
-    stSrcSur.enColorFmt = HIFB_DRV_ConvFmt(pSrcImg->stCanvas.enFmt);
-    stSrcSur.u8Alpha0 = pstOpt->stAlpha.u8Alpha0;
-    stSrcSur.u8Alpha1 = pstOpt->stAlpha.u8Alpha1;
-    if (!((stSrcSur.u8Alpha0 == 0) && (stSrcSur.u8Alpha1 == 0)))
-    {
+    stSrcSur.bYCbCrClut   = HI_FALSE;
+    stSrcSur.enColorFmt   = HIFB_DRV_ConvFmt(pSrcImg->stCanvas.enFmt);
+    stSrcSur.u8Alpha0     = pstOpt->stAlpha.u8Alpha0;
+    stSrcSur.u8Alpha1     = pstOpt->stAlpha.u8Alpha1;
+    
+    if (!((stSrcSur.u8Alpha0 == 0) && (stSrcSur.u8Alpha1 == 0))){
         stSrcSur.bAlphaExt1555 = HI_TRUE;
     }
 
-    stSrcRect.s32Xpos = pSrcImg->UpdateRect.x;
-    stSrcRect.s32Ypos = pSrcImg->UpdateRect.y;
-    stSrcRect.u32Width = pSrcImg->UpdateRect.w;
-    stSrcRect.u32Height = pSrcImg->UpdateRect.h;
+    stSrcRect.s32Xpos    = pSrcImg->UpdateRect.x;
+    stSrcRect.s32Ypos    = pSrcImg->UpdateRect.y;
+    stSrcRect.u32Width   = pSrcImg->UpdateRect.w;
+    stSrcRect.u32Height  = pSrcImg->UpdateRect.h;
 
     /** confing dst*/
-    stDstSur.u32PhyAddr = pDstImg->stCanvas.u32PhyAddr;
-    stDstSur.u32Width = pDstImg->stCanvas.u32Width;
-    stDstSur.u32Height = pDstImg->stCanvas.u32Height;
-    stDstSur.u32Stride = pDstImg->stCanvas.u32Pitch;
+    stDstSur.u32PhyAddr   = pDstImg->stCanvas.u32PhyAddr;
+    stDstSur.u32Width     = pDstImg->stCanvas.u32Width;
+    stDstSur.u32Height    = pDstImg->stCanvas.u32Height;
+    stDstSur.u32Stride    = pDstImg->stCanvas.u32Pitch;
     stDstSur.bAlphaMax255 = HI_TRUE;
-    stDstSur.bYCbCrClut = HI_FALSE;
-    stDstSur.enColorFmt = HIFB_DRV_ConvFmt(pDstImg->stCanvas.enFmt);
-    stDstSur.u8Alpha0 = pstOpt->stAlpha.u8Alpha0;
-    stDstSur.u8Alpha1 = pstOpt->stAlpha.u8Alpha1;
+    stDstSur.bYCbCrClut   = HI_FALSE;
+    stDstSur.enColorFmt   = HIFB_DRV_ConvFmt(pDstImg->stCanvas.enFmt);
+    stDstSur.u8Alpha0     = pstOpt->stAlpha.u8Alpha0;
+    stDstSur.u8Alpha1     = pstOpt->stAlpha.u8Alpha1;
 
-    stDstRect.s32Xpos = pDstImg->UpdateRect.x;
-    stDstRect.s32Ypos = pDstImg->UpdateRect.y;
-    stDstRect.u32Width = pDstImg->UpdateRect.w;
+    stDstRect.s32Xpos   = pDstImg->UpdateRect.x;
+    stDstRect.s32Ypos   = pDstImg->UpdateRect.y;
+    stDstRect.u32Width  = pDstImg->UpdateRect.w;
     stDstRect.u32Height = pDstImg->UpdateRect.h;
 
 
     stOpt.bResize = pstOpt->bScale;
-    //if (((HI_U32)stSrcSur.enColorFmt >= (HI_U32)HIFB_FMT_1BPP) && ((HI_U32)stSrcSur.enColorFmt <= (HI_U32)HIFB_FMT_ACLUT88))
-    if (HIFB_IsTdeColorFmtClut(stSrcSur.enColorFmt))
-    {
-        stOpt.bClutReload = HI_TRUE;
+    
+    if (HIFB_IsTdeColorFmtClut(stSrcSur.enColorFmt)){
+        stOpt.bClutReload       = HI_TRUE;
         stSrcSur.pu8ClutPhyAddr = (HI_U8 *)pstOpt->u32CmapAddr;
         stDstSur.pu8ClutPhyAddr = (HI_U8 *)pstOpt->u32CmapAddr;
     }
@@ -257,164 +269,140 @@ HI_S32 HIFB_DRV_Blit(HIFB_BUFFER_S *pSrcImg, HIFB_BUFFER_S *pDstImg,  HIFB_BLIT_
     switch(pstOpt->enAntiflickerLevel)
     {
         case HIFB_LAYER_ANTIFLICKER_NONE:
-        {
             stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_NONE;
             enTdeDflkLevel = TDE_DEFLICKER_BUTT;
             break;
-        }
         case HIFB_LAYER_ANTIFLICKER_LOW:
-        {
             stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_BOTH;
             enTdeDflkLevel = TDE_DEFLICKER_LOW;
             break;
-        }
         case HIFB_LAYER_ANTIFLICKER_MIDDLE:
-        {
             stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_BOTH;
             enTdeDflkLevel = TDE_DEFLICKER_MIDDLE;
             break;
-        }
         case HIFB_LAYER_ANTIFLICKER_HIGH:
-        {
             stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_BOTH;
             enTdeDflkLevel = TDE_DEFLICKER_HIGH;
             break;
-        }
         case HIFB_LAYER_ANTIFLICKER_AUTO:
-        {
             stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_BOTH;
             enTdeDflkLevel = TDE_DEFLICKER_AUTO;
             break;
-        }
         default:
-		{
 			stOpt.enDeflickerMode = TDE2_DEFLICKER_MODE_NONE;
 			enTdeDflkLevel = TDE_DEFLICKER_BUTT;
             break;
-		}
-
     }
 
-    if(TDE_DEFLICKER_BUTT != enTdeDflkLevel)
-    {
+    if(TDE_DEFLICKER_BUTT != enTdeDflkLevel){
         ps_TdeExportFuncs->pfnTdeSetDeflickerLevel(enTdeDflkLevel);
     }
 
-    if (pstOpt->stCKey.bKeyEnable)
-    {
-        //if (((HIFB_COLOR_FMT_E)(stSrcSur.enColorFmt) >= HIFB_FMT_1BPP) && ((HIFB_COLOR_FMT_E)(stSrcSur.enColorFmt) <= HIFB_FMT_ACLUT88))
-		if (HIFB_IsTdeColorFmtClut(stSrcSur.enColorFmt))
-        {
+    if (pstOpt->stCKey.bKeyEnable){
+		if (HIFB_IsTdeColorFmtClut(stSrcSur.enColorFmt)){
             stOpt.enColorKeyMode = TDE2_COLORKEY_MODE_FOREGROUND;
             stOpt.unColorKeyValue.struCkClut.stAlpha.bCompIgnore = HI_TRUE;
-            stOpt.unColorKeyValue.struCkClut.stClut.bCompOut = pstOpt->stCKey.u32KeyMode;
-            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMax = pstOpt->stCKey.u8BlueMax;
-            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMin = pstOpt->stCKey.u8BlueMin;
-            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMask = 0xff;
-        }
-        else
-        {
+            stOpt.unColorKeyValue.struCkClut.stClut.bCompOut     = pstOpt->stCKey.u32KeyMode;
+            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMax    = pstOpt->stCKey.u8BlueMax;
+            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMin    = pstOpt->stCKey.u8BlueMin;
+            stOpt.unColorKeyValue.struCkClut.stClut.u8CompMask   = 0xff;
+        }else{
             stOpt.enColorKeyMode = TDE2_COLORKEY_MODE_FOREGROUND;
             stOpt.unColorKeyValue.struCkARGB.stAlpha.bCompIgnore = HI_TRUE;
-            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMax = pstOpt->stCKey.u8RedMax;
-            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMin = pstOpt->stCKey.u8RedMin;
-            stOpt.unColorKeyValue.struCkARGB.stRed.bCompOut = pstOpt->stCKey.u32KeyMode;
-            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMask = 0xff;
+            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMax     = pstOpt->stCKey.u8RedMax;
+            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMin     = pstOpt->stCKey.u8RedMin;
+            stOpt.unColorKeyValue.struCkARGB.stRed.bCompOut      = pstOpt->stCKey.u32KeyMode;
+            stOpt.unColorKeyValue.struCkARGB.stRed.u8CompMask    = 0xff;
             
-            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMax = pstOpt->stCKey.u8GreenMax;
-            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMin = pstOpt->stCKey.u8GreenMin;
-            stOpt.unColorKeyValue.struCkARGB.stGreen.bCompOut = pstOpt->stCKey.u32KeyMode;
-            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMask = 0xff;
+            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMax   = pstOpt->stCKey.u8GreenMax;
+            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMin   = pstOpt->stCKey.u8GreenMin;
+            stOpt.unColorKeyValue.struCkARGB.stGreen.bCompOut    = pstOpt->stCKey.u32KeyMode;
+            stOpt.unColorKeyValue.struCkARGB.stGreen.u8CompMask  = 0xff;
             
-            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMax = pstOpt->stCKey.u8BlueMax;
-            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMin = pstOpt->stCKey.u8BlueMin;
-            stOpt.unColorKeyValue.struCkARGB.stBlue.bCompOut = pstOpt->stCKey.u32KeyMode;
-            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMask = 0xff;
+            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMax    = pstOpt->stCKey.u8BlueMax;
+            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMin    = pstOpt->stCKey.u8BlueMin;
+            stOpt.unColorKeyValue.struCkARGB.stBlue.bCompOut     = pstOpt->stCKey.u32KeyMode;
+            stOpt.unColorKeyValue.struCkARGB.stBlue.u8CompMask   = 0xff;
         }
     }
+    
     stOpt.u8GlobalAlpha = 255;
-    if (pstOpt->stAlpha.bAlphaEnable)
-    {
-        stOpt.enAluCmd = TDE2_ALUCMD_BLEND;
-        stOpt.u8GlobalAlpha = pstOpt->stAlpha.u8GlobalAlpha;
+    
+    if (pstOpt->stAlpha.bAlphaEnable){
+        stOpt.enAluCmd       = TDE2_ALUCMD_BLEND;
+        stOpt.u8GlobalAlpha  = pstOpt->stAlpha.u8GlobalAlpha;
         stOpt.enOutAlphaFrom = TDE2_OUTALPHA_FROM_NORM;
         stOpt.stBlendOpt.bGlobalAlphaEnable = HI_TRUE;
-        stOpt.stBlendOpt.bPixelAlphaEnable = HI_TRUE;
+        stOpt.stBlendOpt.bPixelAlphaEnable  = HI_TRUE;
         stOpt.stBlendOpt.bSrc1AlphaPremulti = HI_TRUE;
         stOpt.stBlendOpt.bSrc2AlphaPremulti = HI_TRUE;
-        //stOpt.stBlendOpt.eBlendCmd = TDE2_BLENDCMD_SRCOVER;
-		stOpt.stBlendOpt.eBlendCmd = TDE2_BLENDCMD_SRC;
+		stOpt.stBlendOpt.eBlendCmd          = TDE2_BLENDCMD_SRC;
 
-    }
-    else
-    {
+    }else{
         stOpt.enOutAlphaFrom = TDE2_OUTALPHA_FROM_FOREGROUND;
     }
 
     s32Ret = ps_TdeExportFuncs->pfnTdeEnableRegionDeflicker(pstOpt->bRegionDeflicker);
-    if (s32Ret != HI_SUCCESS)
-    {
+    if (s32Ret != HI_SUCCESS){
         HIFB_ERROR("enable region deflicker failed!\n");
         return s32Ret;
     }
 
-    if (pstOpt->stClip.bClip)
-    {
+    if (pstOpt->stClip.bClip){
         stOpt.enClipMode = pstOpt->stClip.bInRegionClip ? TDE2_CLIPMODE_INSIDE : TDE2_CLIPMODE_OUTSIDE;
-        stOpt.stClipRect.s32Xpos = pstOpt->stClip.stClipRect.x;
-        stOpt.stClipRect.s32Ypos = pstOpt->stClip.stClipRect.y;
-        stOpt.stClipRect.u32Width = pstOpt->stClip.stClipRect.w;
-        stOpt.stClipRect.u32Height = pstOpt->stClip.stClipRect.h;
+        stOpt.stClipRect.s32Xpos    = pstOpt->stClip.stClipRect.x;
+        stOpt.stClipRect.s32Ypos    = pstOpt->stClip.stClipRect.y;
+        stOpt.stClipRect.u32Width   = pstOpt->stClip.stClipRect.w;
+        stOpt.stClipRect.u32Height  = pstOpt->stClip.stClipRect.h;
     }
 
     s32Ret = ps_TdeExportFuncs->pfnTdeBeginJob(&handle);
-    if(s32Ret != HI_SUCCESS)
-    {
+    if(s32Ret != HI_SUCCESS){
         HIFB_ERROR("begin job failed\n");
         return s32Ret;
     }
 
-    s32Ret = ps_TdeExportFuncs->pfnTdeBlit(handle, &stDstSur, &stDstRect, &stSrcSur, &stSrcRect, &stDstSur, \
-                     &stDstRect, &stOpt);
-    if(s32Ret != HI_SUCCESS)
-    {
+    s32Ret = ps_TdeExportFuncs->pfnTdeBlit(handle,     \
+    	                                   &stDstSur,  \
+    	                                   &stDstRect, \
+    	                                   &stSrcSur,  \
+    	                                   &stSrcRect, \
+    	                                   &stDstSur,  \
+                                           &stDstRect, \
+                                           &stOpt);
+    if(s32Ret != HI_SUCCESS){
         HIFB_ERROR("tde blit failed\n");    
         ps_TdeExportFuncs->pfnTdeCancelJob(handle);
         return s32Ret;
     }
 
-    if (pstOpt->bCallBack)
-    {/**
+    if (pstOpt->bCallBack){
+     /**
       **要是TDE任务完成，tde内部会调用pstOpt->pfnCallBack这个函数，这个在fb注册过了
       **/
-        s32Ret = ps_TdeExportFuncs->pfnTdeEndJob(handle,                         \
-			                                       pstOpt->bBlock,                \
-			                                       100,                            \
-			                                       HI_FALSE,                       \
-                                                  (TDE_FUNC_CB)pstOpt->pfnCallBack,\
-                                                  pstOpt->pParam);
-    }
-    else
-    {
-        s32Ret = ps_TdeExportFuncs->pfnTdeEndJob(handle,                    \
+        s32Ret = ps_TdeExportFuncs->pfnTdeEndJob(handle,                            \
+			                                       pstOpt->bBlock,                  \
+			                                       100,                             \
+			                                       HI_FALSE,                        \
+                                                   (TDE_FUNC_CB)pstOpt->pfnCallBack,\
+                                                   pstOpt->pParam);
+    }else{
+        s32Ret = ps_TdeExportFuncs->pfnTdeEndJob(handle,                     \
 			                                       pstOpt->bBlock,           \
 			                                       100,                      \
 			                                       HI_FALSE,                 \
-                                                   HI_NULL,                   \
+                                                   HI_NULL,                  \
                                                    HI_NULL);
     }
-    if(s32Ret != HI_SUCCESS)
-    {
+    if(s32Ret != HI_SUCCESS){
         HIFB_ERROR("end job failed\n"); 
         ps_TdeExportFuncs->pfnTdeCancelJob(handle);
         return s32Ret;
     }
     
-    if (pstOpt->bRegionDeflicker)
-    {
+    if (pstOpt->bRegionDeflicker){
         s32Ret = ps_TdeExportFuncs->pfnTdeEnableRegionDeflicker(HI_FALSE);
-        if (s32Ret != HI_SUCCESS)
-        {
+        if (s32Ret != HI_SUCCESS){
             HIFB_ERROR("disable region deflicker failed!\n");
             return s32Ret;
         }

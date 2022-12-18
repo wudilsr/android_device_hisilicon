@@ -48,6 +48,17 @@ HI_VOID hi3136_config_i2c_out(HI_U32 u32TunerPort, HI_BOOL bTuner);
 #define  LDPC_ITER_ADDR     0x82
 #define  LDPC_ITER_DEFAULT  0x50
 
+#define HI_TUNER_CHECKPOINTER(ptr)                                   \
+    do                                                      \
+    {                                                       \
+        if (!(ptr))                                         \
+        {                                                   \
+            HI_INFO_TUNER("pointer is null\n");             \
+            return HI_ERR_TUNER_INVALID_POINT;                     \
+        }                                                   \
+    } while (0)
+
+
 #if 0
 #define          POLAR_SWITCH					0     /*0 level for 18V,1 level for 13V*/
 /*Diseqc Command word*/
@@ -184,6 +195,7 @@ HI_VOID hi3136_config_i2c_out(HI_U32 u32TunerPort, HI_BOOL bTuner);
 #define		QAM_DEBUG_ADDR			0xc0
 #define		DAGC_BASE_ADDR			0xd0
 
+#define	    EQU_CTRL_2_ADDR		    EQU_BASE_ADDR + 0x01  //20130305
 #define		EQU_CTRL_3_ADDR			EQU_BASE_ADDR + 0x02
 #define		EQU_CTRL_4_ADDR			EQU_BASE_ADDR + 0x03
 #define		EQU_CTRL_6_ADDR			EQU_BASE_ADDR + 0x04
@@ -372,6 +384,7 @@ HI_VOID hi3136_config_i2c_out(HI_U32 u32TunerPort, HI_BOOL bTuner);
 /*******************add by huyupeng 2010.05.19 for X5HD***************/
 #define     DEPHASE_BASE_ADDR			    0xe0
 #define     DEPHASE_CTRL_ADDR		    	DEPHASE_BASE_ADDR + 0x0a
+#define     FOUR_REG_SEL_ADDR               DEPHASE_BASE_ADDR + 0x00       //20130723                                                      
 #define     DEPHASE_GAIN_K_HI_ADDR			DEPHASE_BASE_ADDR + 0x01
 #define     DEPHASE_GAIN_K_LO_ADDR			DEPHASE_BASE_ADDR + 0x02
 #define     DEPHASE_STA_NUM_BASE_HI_ADDR	DEPHASE_BASE_ADDR + 0x03
@@ -416,13 +429,15 @@ HI_VOID hi3136_config_i2c_out(HI_U32 u32TunerPort, HI_BOOL bTuner);
 #define     SFREQ_CR_LOST_COUNT_ADDR		SFREQ_ERR_BASE_ADDR + 0x05   // CR Lost Counter
 #define     SFREQ_ERR_SCALE_ADDR            SFREQ_ERR_BASE_ADDR + 0x06   // [7:4] SCALE1 [3:0] SCALE2 
 
+#define     SFREQ_SCALE55_ADDR SFREQ_SCALE77_ADDR
 #define     SFREQ_AGC1_INIT_ADDR            SFREQ_ERR_BASE_ADDR + 0x07
 #define     SFREQ_AGC_BIT_SELECT_ADDR       SFREQ_ERR_BASE_ADDR + 0x08
-#define     SFREQ_SCALE55_ADDR              SFREQ_ERR_BASE_ADDR + 0x09
+#define     SFREQ_SCALE77_ADDR              SFREQ_ERR_BASE_ADDR + 0x09  //20130305
 #define     SFREQ_PHASE_LARGE_ADDR          SFREQ_ERR_BASE_ADDR + 0x0a
 #define     SFREQ_PHASE_SMALL_ADDR          SFREQ_ERR_BASE_ADDR + 0x0b
 #define     SFREQ_HOLD_COUNT_ADDR           SFREQ_ERR_BASE_ADDR + 0x0c
 #define     SFREQ_STA_COUNT_ADDR            SFREQ_ERR_BASE_ADDR + 0x0d
+#define     SFREQ_SCALE88_ADDR              SFREQ_ERR_BASE_ADDR + 0x0e  //20130305
 #define     SFREQ_FREQ_JIT_ADDR             SFREQ_ERR_BASE_ADDR + 0x0f
 #define     SFREQ_COUNT_OUT_1_ADDR          DP_BASE_ADDR + 0x12
 #define     SFREQ_COUNT_OUT_2_ADDR          DP_BASE_ADDR + 0x13
@@ -532,6 +547,22 @@ extern HI_VOID x5hdqamv200_test_single_agc( HI_U32 u32TunerPort, AGC_TEST_S * ps
 extern HI_VOID x5hdqamv200_manage_after_chipreset(HI_U32 u32TunerPort);
 extern HI_VOID x5hdqamv200_get_registers(HI_U32 u32TunerPort, void *p);
 extern HI_VOID x5hdqamv200_connect_timeout(HI_U32 u32ConnectTimeout);
+
+/*for hi3716cv200*/
+extern HI_S32 hi3716cv200_connect(HI_U32 u32TunerPort, TUNER_ACC_QAM_PARAMS_S *pstChannel);
+extern HI_S32 hi3716cv200_get_status (HI_U32 u32TunerPort, HI_UNF_TUNER_LOCK_STATUS_E  *penTunerStatus);
+extern HI_S32 hi3716cv200_get_signal_strength(HI_U32 u32TunerPort, HI_U32 *pu32SignalStrength);
+extern HI_S32 hi3716cv200_get_ber(HI_U32 u32TunerPort, HI_U32* pu32ber);
+extern HI_S32 hi3716cv200_get_snr(HI_U32 u32TunerPort, HI_U32* pu32SNR);
+extern HI_S32 hi3716cv200_set_ts_type(HI_U32 u32TunerPort, HI_UNF_TUNER_OUPUT_MODE_E enTsType);
+extern HI_S32 hi3716cv200_config_tuner(HI_U32 u32TunerPort, HI_U32 dbRFfreq, HI_S32 times);
+extern HI_S32 hi3716cv200_get_freq_symb_offset(HI_U32 u32TunerPort, HI_U32 * pu32Freq, HI_U32 * pu32Symb );
+extern HI_S32 hi3716cv200_get_rs(HI_U32 u32TunerPort, HI_U32 *pu32Rs);
+extern HI_VOID hi3716cv200_test_single_agc( HI_U32 u32TunerPort, AGC_TEST_S * pstAgcTest );
+extern HI_VOID hi3716cv200_manage_after_chipreset(HI_U32 u32TunerPort);
+extern HI_VOID hi3716cv200_get_registers(HI_U32 u32TunerPort, void *p);
+extern HI_VOID hi3716cv200_connect_timeout(HI_U32 u32ConnectTimeout);
+
 
 /*for x5hd*/
 extern HI_S32 x5hdqam_connect(HI_U32 u32TunerPort, TUNER_ACC_QAM_PARAMS_S* pstChannel);

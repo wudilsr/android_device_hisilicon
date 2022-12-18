@@ -456,24 +456,31 @@ static HI_BOOL AOCheckOutPortIsValid(HI_UNF_SND_OUTPUTPORT_E enOutPort)
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100) \
-	|| defined(CHIP_TYPE_hi3798cv200_a)
-    if((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort)
+    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3798cv200_a)
+    if ((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_HDMI0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_I2S0 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_I2S1 != enOutPort))
     {
         HI_ERR_AI("just support I2S0, I2S1, DAC0, SPDIF0 and HDMI0 Port!\n");
         return HI_FALSE;
     }
-#elif defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)
-    if((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort)
+#elif defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100) || defined(CHIP_TYPE_hi3716mv420)
+    if ((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_HDMI0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_I2S0 != enOutPort))
     {
         HI_ERR_AI("just support I2S0, DAC0, SPDIF0 and HDMI0 Port!\n");
         return HI_FALSE;
     }
+#elif defined(CHIP_TYPE_hi3716mv410)
+    if ((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort)
+        && (HI_UNF_SND_OUTPUTPORT_HDMI0 != enOutPort))
+    {
+        HI_ERR_AI("just support DAC0, SPDIF0 and HDMI0 Port!\n");
+        return HI_FALSE;
+    }
 #elif defined(CHIP_TYPE_hi3751v100)  || defined(CHIP_TYPE_hi3751v100b)
-    if((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_EXT_DAC1 != enOutPort)
+    if ((HI_UNF_SND_OUTPUTPORT_DAC0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_EXT_DAC1 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_EXT_DAC2 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_EXT_DAC3 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_SPDIF0 != enOutPort) && (HI_UNF_SND_OUTPUTPORT_I2S0 != enOutPort)
         && (HI_UNF_SND_OUTPUTPORT_I2S1 != enOutPort))
@@ -482,7 +489,7 @@ static HI_BOOL AOCheckOutPortIsValid(HI_UNF_SND_OUTPUTPORT_E enOutPort)
         return HI_FALSE;
     }
 #else
-    #error YOU MUST DEFINE  CHIP_TYPE!
+#error YOU MUST DEFINE  CHIP_TYPE!
 #endif
 
     return HI_TRUE;
@@ -755,7 +762,7 @@ HI_S32 AO_SND_Close(HI_UNF_SND_E enSound, HI_BOOL bSuspend)
 }
 
 //zgjiere; HI_UNF_SND_OUTPUTPORT_ALL
-static HI_S32 AO_SND_SetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute)
+HI_S32 AO_SND_SetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute)
 {
     SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
 
@@ -767,7 +774,7 @@ static HI_S32 AO_SND_SetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOut
     return SND_SetOpMute(pCard, enOutPort, bMute);
 }
 
-static HI_S32 AO_SND_GetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL *pbMute)
+HI_S32 AO_SND_GetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL *pbMute)
 {
     SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
 
@@ -2466,194 +2473,172 @@ static volatile HI_BOOL bSaveThread2SuspendFlag = HI_FALSE;	//HI_TRUE means  sus
 
 static HI_S32 SndProcSaveThread(void *Arg)
 {
-	HI_S32 s32Ret;
-	SND_PCM_SAVE_ATTR_S *pstThreadArg = (SND_PCM_SAVE_ATTR_S *)Arg;
-	//SND_PCM_SAVE_ATTR_S stThreadArg;
+    HI_S32 s32Ret = HI_FAILURE, s32Len = 0;
+    SND_PCM_SAVE_ATTR_S* pstThreadArg = (SND_PCM_SAVE_ATTR_S*)Arg;
 
-	//use cast
-	HI_UNF_SND_CAST_ATTR_S stCastAttr;
-	AO_Cast_Create_Param_S  stCastParam;
+    //use cast
+    HI_UNF_SND_CAST_ATTR_S stCastAttr;
+    AO_Cast_Create_Param_S  stCastParam;
     AO_Cast_Enable_Param_S stEnableAttr;
-	AO_Cast_Info_Param_S stCastInfo;
-	AO_Cast_Data_Param_S stCastData;
+    AO_Cast_Info_Param_S stCastInfo;
+    AO_Cast_Data_Param_S stCastData;
     HI_HANDLE hHandle = HI_INVALID_HANDLE;
-	HI_UNF_SND_E  enSound;
-	struct file *fileHandle;
-	struct file *devfileHandle;
+    HI_UNF_SND_E  enSound;
+    struct file* fileHandle;
+    struct file* devfileHandle;
 
-	//stThreadArg.enSound = pstThreadArg->enSound;
-	//stThreadArg.fileHandle = pstThreadArg->fileHandle;
-	//stThreadArg.devfileHandle = pstThreadArg->devfileHandle;
+    enSound = SND_CARD_GetSnd(pstThreadArg->pCard);
+    fileHandle = pstThreadArg->pCard->fileHandle;
+    devfileHandle = pstThreadArg->devfileHandle;
 
-	enSound = SND_CARD_GetSnd(pstThreadArg->pCard);
-	fileHandle = pstThreadArg->pCard->fileHandle;
-	devfileHandle = pstThreadArg->devfileHandle;
-
-	CHECK_AO_SNDCARD_OPEN(enSound);
-	CHECK_AO_NULL_PTR(fileHandle);
+    CHECK_AO_SNDCARD_OPEN(enSound);
+    CHECK_AO_NULL_PTR(fileHandle);
 
     s32Ret = down_interruptible(&g_AoMutex);
-	bSaveThread2SuspendFlag = HI_TRUE;
+    bSaveThread2SuspendFlag = HI_TRUE;
 
-	s32Ret = AO_Cast_GetDefAttr(&stCastAttr);
-	if(HI_SUCCESS != s32Ret)
-	{
-		up(&g_AoMutex);
-		goto Close_File;
-	}
+    s32Ret = AO_Cast_GetDefAttr(&stCastAttr);
+    if (HI_SUCCESS != s32Ret)
+    {
+        up(&g_AoMutex);
+        goto Close_File;
+    }
 
-	stCastParam.enSound = enSound;
-	memcpy(&stCastParam.stCastAttr, &stCastAttr, sizeof(HI_UNF_SND_CAST_ATTR_S));
-	//HI_ERR_AO(" u32PcmFrameMaxNum=%d \n", stCastParam.stCastAttr.u32PcmFrameMaxNum);
-	//HI_ERR_AO(" u32PcmSamplesPerFrame=%d \n", stCastParam.stCastAttr.u32PcmSamplesPerFrame);
+    stCastParam.enSound = enSound;
+    memcpy(&stCastParam.stCastAttr, &stCastAttr, sizeof(HI_UNF_SND_CAST_ATTR_S));
 
-	if (HI_SUCCESS == AO_Cast_AllocHandle(&hHandle, fileHandle, &stCastParam.stCastAttr))
-	{
-		s32Ret = AO_Cast_Create(enSound, &stCastParam.stCastAttr, &s_stAoDrv.astCastEntity[hHandle & AO_CAST_CHNID_MASK].stRbfMmz,
-							 hHandle);
-		if (HI_SUCCESS != s32Ret)
-		{
-			AO_Cast_FreeHandle(hHandle);
-			up(&g_AoMutex);
-			goto Close_File;
-		}
-		//AO_Cast_SaveSuspendAttr(stCastParam.enSound, hHandle, &stCastParam.stCastAttr);   //NO resume
-		stCastParam.u32ReqSize = s_stAoDrv.astCastEntity[hHandle & AO_CAST_CHNID_MASK].u32ReqSize;
-		stCastParam.hCast = hHandle;
-	}
-	else
-	{
-		up(&g_AoMutex);
-		goto Close_File;
-	}
+    if (HI_SUCCESS == AO_Cast_AllocHandle(&hHandle, fileHandle, &stCastParam.stCastAttr))
+    {
+        s32Ret = AO_Cast_Create(enSound, &stCastParam.stCastAttr, &s_stAoDrv.astCastEntity[hHandle & AO_CAST_CHNID_MASK].stRbfMmz,
+                                hHandle);
+        if (HI_SUCCESS != s32Ret)
+        {
+            AO_Cast_FreeHandle(hHandle);
+            up(&g_AoMutex);
+            goto Close_File;
+        }
+        stCastParam.u32ReqSize = s_stAoDrv.astCastEntity[hHandle & AO_CAST_CHNID_MASK].u32ReqSize;
+        stCastParam.hCast = hHandle;
+    }
+    else
+    {
+        up(&g_AoMutex);
+        goto Close_File;
+    }
 
-	stCastInfo.hCast = stCastParam.hCast;
+    stCastInfo.hCast = stCastParam.hCast;
     s32Ret = AO_Cast_GetInfo(stCastInfo.hCast, &stCastInfo);
-	if(HI_SUCCESS != s32Ret)
-	{
-		HI_ERR_AO(" AO_Cast_GetInfo Failed\n");
-		up(&g_AoMutex);
-		goto Destory_Cast;
-	}
-	//HI_ERR_AO(" stCastInfo u32KernelVirtAddr=0x%x \n", stCastInfo.u32KernelVirtAddr);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_AO(" AO_Cast_GetInfo Failed\n");
+        up(&g_AoMutex);
+        goto Destory_Cast;
+    }
 
-	stEnableAttr.hCast = stCastParam.hCast;
+    stEnableAttr.hCast = stCastParam.hCast;
     stEnableAttr.bCastEnable = HI_TRUE;
-	s32Ret = AO_Cast_SetEnable(stEnableAttr.hCast, stEnableAttr.bCastEnable);
-	if(HI_SUCCESS != s32Ret)
-	{
-		HI_ERR_AO(" AO_Cast_SetEnable Enable Failed\n");
-		up(&g_AoMutex);
-		//return HI_FAILURE;
-		goto Destory_Cast;
-	}
+    s32Ret = AO_Cast_SetEnable(stEnableAttr.hCast, stEnableAttr.bCastEnable);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_AO(" AO_Cast_SetEnable Enable Failed\n");
+        up(&g_AoMutex);
+        goto Destory_Cast;
+    }
     up(&g_AoMutex);
 
-	stCastData.hCast = stCastParam.hCast;
-	while(HI_TRUE == bSaveThreadRunFlag) // NO !kthread_should_stop() to avoid dead lock
-	{
-		HI_U32 u32PcmSize;
+    stCastData.hCast = stCastParam.hCast;
+    while (HI_TRUE == bSaveThreadRunFlag) // NO !kthread_should_stop() to avoid dead lock
+    {
+        HI_U32 u32PcmSize;
 
-		s32Ret = down_interruptible(&g_AoMutex);
-		if(bSuspend2SaveThreadFlag == HI_TRUE)
-		{
-			//HI_ERR_AO("bSuspend2SaveThreadFlag  True!\n");
-			up(&g_AoMutex);
-			goto Destory_Cast;
-		}
+        s32Ret = down_interruptible(&g_AoMutex);
+        if (bSuspend2SaveThreadFlag == HI_TRUE)
+        {
+            up(&g_AoMutex);
+            goto Destory_Cast;
+        }
 
         s32Ret = AO_Cast_ReadData(stCastData.hCast, &stCastData);
-		up(&g_AoMutex);
-		if(HI_SUCCESS == s32Ret)
-		{
-			if(stCastData.stAOFrame.u32PcmSamplesPerFrame == 0)
-			{
-				msleep(5);
-				continue;
-			}
-			else
-			{
-				//HI_ERR_AO(" Once Length : %d\n", u32PcmSize);
-				//HI_ERR_AO(" Once Offset : %d\n", stCastData.u32DataOffset);
-				u32PcmSize = stCastData.stAOFrame.u32PcmSamplesPerFrame * stCastData.stAOFrame.u32Channels * stCastData.stAOFrame.s32BitPerSample / 8;
-				if(fileHandle)
-				{
-					HI_S32 s32Len = HI_DRV_FILE_Write(fileHandle, (HI_S8 *)(stCastInfo.u32KernelVirtAddr + stCastData.u32DataOffset) , u32PcmSize);
-					if (s32Len != u32PcmSize)
-					{
-						HI_ERR_AO("HI_DRV_FILE_Write failed!\n");
-						pstThreadArg->pCard->enSaveState = SND_DEBUG_CMD_CTRL_STOP;
-						goto Destory_Cast;
-					}
+        up(&g_AoMutex);
+        if (HI_SUCCESS == s32Ret)
+        {
+            if (stCastData.stAOFrame.u32PcmSamplesPerFrame == 0)
+            {
+                msleep(5);
+                continue;
+            }
+            else
+            {
+                u32PcmSize = stCastData.stAOFrame.u32PcmSamplesPerFrame * stCastData.stAOFrame.u32Channels * stCastData.stAOFrame.s32BitPerSample / 8;
 
-				}
-				else
-				{
-					HI_ERR_AO("stThreadArg.fileHandle is NULL!\n");
-					goto Destory_Cast;
-				}
-				s32Ret = down_interruptible(&g_AoMutex);
-				if(bSuspend2SaveThreadFlag == HI_TRUE)
-				{
-					//HI_ERR_AO("bSuspend2SaveThreadFlag  True!\n");
-					up(&g_AoMutex);
-					goto Destory_Cast;
-				}
+                // fileHandle is already checked
+                s32Len = HI_DRV_FILE_Write(fileHandle, (HI_S8*)(stCastInfo.u32KernelVirtAddr + stCastData.u32DataOffset) , u32PcmSize);
+                if (s32Len != u32PcmSize)
+                {
+                    HI_ERR_AO("HI_DRV_FILE_Write failed!\n");
+                    pstThreadArg->pCard->enSaveState = SND_DEBUG_CMD_CTRL_STOP;
+                    goto Destory_Cast;
+                }
+                s32Ret = down_interruptible(&g_AoMutex);
+                if (bSuspend2SaveThreadFlag == HI_TRUE)
+                {
+                    up(&g_AoMutex);
+                    goto Destory_Cast;
+                }
 
-				s32Ret = AO_Cast_ReleseData(stCastData.hCast, &stCastData);
-				up(&g_AoMutex);
-				if(HI_SUCCESS != s32Ret)
-				{
-					goto Close_File;
-				}
-			}
-		}
-		else
-		{
-			goto Close_File;
-		}
-	}
+                s32Ret = AO_Cast_ReleseData(stCastData.hCast, &stCastData);
+                up(&g_AoMutex);
+                if (HI_SUCCESS != s32Ret)
+                {
+                    goto Close_File;
+                }
+            }
+        }
+        else
+        {
+            goto Close_File;
+        }
+    }
 
 Destory_Cast:
-	CHECK_AO_CAST_OPEN(stCastParam.hCast);
+    CHECK_AO_CAST_OPEN(stCastParam.hCast);
     s32Ret = down_interruptible(&g_AoMutex);
-	s32Ret = AO_Cast_Destory(stCastParam.hCast);
-	AO_Cast_FreeHandle(stCastParam.hCast);
-	up(&g_AoMutex);
+    s32Ret = AO_Cast_Destory(stCastParam.hCast);
+    AO_Cast_FreeHandle(stCastParam.hCast);
+    up(&g_AoMutex);
 Close_File:
-	if(fileHandle)
-	{
-		HI_DRV_FILE_Close(fileHandle);
-	}
-	s32Ret = AO_Snd_Kclose(enSound, devfileHandle);
-	if(HI_SUCCESS != s32Ret)
-	{
-		HI_ERR_AO("AO_Snd_Kclose %d failed \n", (HI_U32)enSound);
-	}
-	s32Ret = AO_DRV_Krelease(devfileHandle);
-	if(HI_SUCCESS != s32Ret)
-	{
-		HI_ERR_AO("AO_DRV_Krelease\n");
-	}
-	bSaveThread2SuspendFlag = HI_FALSE;
-	return HI_SUCCESS;
-
+    if (fileHandle)
+    {
+        HI_DRV_FILE_Close(fileHandle);
+    }
+    s32Ret = AO_Snd_Kclose(enSound, devfileHandle);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_AO("AO_Snd_Kclose %d failed \n", (HI_U32)enSound);
+    }
+    s32Ret = AO_DRV_Krelease(devfileHandle);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_AO("AO_DRV_Krelease\n");
+    }
+    bSaveThread2SuspendFlag = HI_FALSE;
+    return HI_SUCCESS;
 }
 
 HI_S32 SND_WriteProc(SND_CARD_STATE_S *pCard, SND_DEBUG_CMD_CTRL_E enCmd)
 {
     HI_CHAR szPath[AO_SOUND_PATH_NAME_MAXLEN + AO_SOUND_FILE_NAME_MAXLEN] = {0};
-	HI_UNF_SND_E  enSound;
-	static struct  task_struct	*g_pstSndSaveThread = NULL;	//name todo
-	static SND_PCM_SAVE_ATTR_S  stThreadArg;
-	static AO_SND_Open_Param_S  stSndOpenParam;
-	static struct file   g_file;	//just a dev handle no use
-	struct tm now;
-	HI_S32 s32Ret;
-	enSound = SND_CARD_GetSnd(pCard);
-	if(SND_DEBUG_CMD_CTRL_START == enCmd && pCard->enSaveState == SND_DEBUG_CMD_CTRL_STOP)
-	{
-        if(HI_SUCCESS != HI_DRV_FILE_GetStorePath(szPath, AO_SOUND_PATH_NAME_MAXLEN))
+    HI_UNF_SND_E  enSound;
+    static struct  task_struct*  g_pstSndSaveThread = NULL; //name todo
+    static SND_PCM_SAVE_ATTR_S  stThreadArg;
+    static AO_SND_Open_Param_S  stSndOpenParam;
+    static struct file   g_file;    //just a dev handle no use
+    struct tm now;
+    HI_S32 s32Ret;
+    enSound = SND_CARD_GetSnd(pCard);
+    if (SND_DEBUG_CMD_CTRL_START == enCmd && pCard->enSaveState == SND_DEBUG_CMD_CTRL_STOP)
+    {
+        if (HI_SUCCESS != HI_DRV_FILE_GetStorePath(szPath, AO_SOUND_PATH_NAME_MAXLEN))
         {
             HI_ERR_AO("get store path failed\n");
             return HI_FAILURE;
@@ -2668,53 +2653,53 @@ HI_S32 SND_WriteProc(SND_CARD_STATE_S *pCard, SND_DEBUG_CMD_CTRL_E enCmd)
             HI_ERR_AO("open %s error\n", szPath);
             return HI_FAILURE;
         }
-		//stThreadArg.enSound = enSound;
-		//stThreadArg.fileHandle = pCard->fileHandle;
-		stThreadArg.pCard = pCard;
-		stThreadArg.devfileHandle = &g_file;
+        //stThreadArg.enSound = enSound;
+        //stThreadArg.fileHandle = pCard->fileHandle;
+        stThreadArg.pCard = pCard;
+        stThreadArg.devfileHandle = &g_file;
 
-		stSndOpenParam.enSound = enSound;
-		up(&g_AoMutex);
-		s32Ret = AO_DRV_Kopen(&g_file);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_ERR_AO("AO_DRV_Kopen failed\n");
-		}
+        stSndOpenParam.enSound = enSound;
+        up(&g_AoMutex);
+        s32Ret = AO_DRV_Kopen(&g_file);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_AO("AO_DRV_Kopen failed\n");
+        }
 
-		s32Ret = AO_Snd_Kopen(&stSndOpenParam, &g_file);	//never first open
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_ERR_AO("AO_Snd_Kopen failed\n");
-		}
-		s32Ret = down_interruptible(&g_AoMutex);
+        s32Ret = AO_Snd_Kopen(&stSndOpenParam, &g_file);    //never first open
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_AO("AO_Snd_Kopen failed\n");
+        }
+        s32Ret = down_interruptible(&g_AoMutex);
 
-		bSaveThreadRunFlag = HI_TRUE;
-		g_pstSndSaveThread = kthread_create(SndProcSaveThread, &stThreadArg, "AoSndProcSave");		//Name To Do
-        if(HI_NULL == g_pstSndSaveThread)
-		{
+        bSaveThreadRunFlag = HI_TRUE;
+        g_pstSndSaveThread = kthread_create(SndProcSaveThread, &stThreadArg, "AoSndProcSave");      //Name To Do
+        if (IS_ERR(g_pstSndSaveThread))
+        {
             HI_ERR_AO("creat sound proc write thread failed\n");
             return HI_FAILURE;
-		}
-		pCard->enSaveState = enCmd;
-		wake_up_process(g_pstSndSaveThread);
+        }
+        pCard->enSaveState = enCmd;
+        wake_up_process(g_pstSndSaveThread);
 
-		pCard->u32SaveCnt++;
+        pCard->u32SaveCnt++;
 
-	}
+    }
 
-	if(SND_DEBUG_CMD_CTRL_STOP == enCmd && pCard->enSaveState == SND_DEBUG_CMD_CTRL_START)
-	{
-		bSaveThreadRunFlag = HI_FALSE;
-	    //kthread_stop(g_pstSndSaveThread);
-		g_pstSndSaveThread = HI_NULL;
+    if (SND_DEBUG_CMD_CTRL_STOP == enCmd && pCard->enSaveState == SND_DEBUG_CMD_CTRL_START)
+    {
+        bSaveThreadRunFlag = HI_FALSE;
+        //kthread_stop(g_pstSndSaveThread);
+        g_pstSndSaveThread = HI_NULL;
 
-		//Warnning : HI_DRV_FILE_Close called in Thread, To avoid hold mutex lock long time
-		pCard->enSaveState = enCmd;
-	}
+        //Warnning : HI_DRV_FILE_Close called in Thread, To avoid hold mutex lock long time
+        pCard->enSaveState = enCmd;
+    }
 
-//	if(pCard)
-//		pCard->enSaveState = enCmd;
-	return HI_SUCCESS;
+    //  if(pCard)
+    //      pCard->enSaveState = enCmd;
+    return HI_SUCCESS;
 }
 static HI_S32 AOReadSndProc( struct seq_file* p, HI_UNF_SND_E enSnd )
 {
@@ -2780,8 +2765,8 @@ HI_S32 AO_DRV_ReadProc( struct seq_file* p, HI_VOID* v )
 
     pstProcItem = p->private;
 
-    (HI_VOID)sscanf(pstProcItem->entry_name, "sound%1d", &u32Snd);
-
+    //(HI_VOID)sscanf(pstProcItem->entry_name, "sound%1d", &u32Snd);
+    u32Snd = (pstProcItem->entry_name[5] - '0');
     if(u32Snd >= AO_MAX_TOTAL_SND_NUM)
     {
         PROC_PRINT(p, "Invalid Sound ID:%d.\n", u32Snd);
@@ -2873,7 +2858,8 @@ HI_S32 AO_DRV_WriteProc(struct file* file, const char __user* buf, size_t count,
         return HI_FAILURE;
     }
 
-    (HI_VOID)sscanf(pstProcItem->entry_name, "sound%1d", &u32Snd);
+    //(HI_VOID)sscanf(pstProcItem->entry_name, "sound%1d", &u32Snd);
+    u32Snd = (pstProcItem->entry_name[5] - '0');
     if (u32Snd >= AO_MAX_TOTAL_SND_NUM)
     {
         HI_ERR_AO("Invalid Sound ID:%d.\n", u32Snd);

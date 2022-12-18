@@ -304,7 +304,8 @@ start_pass (j_decompress_ptr cinfo)
 	 * IFAST_SCALE_BITS.
 	 */
 	IFAST_MULT_TYPE * ifmtbl = (IFAST_MULT_TYPE *) compptr->dct_table;
-#define CONST_BITS 14
+     
+     #define CONST_BITS 14
      #ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
 		#ifdef ANDROID_ARMV6_IDCT
 			 /* Precomputed values scaled up by 15 bits. */

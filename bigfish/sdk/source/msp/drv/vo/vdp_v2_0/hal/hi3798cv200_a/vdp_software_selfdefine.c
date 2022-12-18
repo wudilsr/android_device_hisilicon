@@ -1511,7 +1511,7 @@ HI_VOID VDP_DATE_ResetFmt(DISP_VENC_E eDate, HI_DRV_DISP_FMT_E enFmt)
         DATE_COEFF0.bits.pbpr_lpf_en = 0;
 
         VDP_RegWrite((HI_U32)(&(pVdpReg->DATE_COEFF0.u32)), DATE_COEFF0.u32);
-        SDATE_Setc_gain(1);
+        SDATE_Setc_gain(0);
 
         // to get good SCH parameters, set video_phase_delta as 0x9A
         VDP_RegWrite((HI_U32)(&(pVdpReg->DATE_COEFF22.u32)), SCH_PHASE);

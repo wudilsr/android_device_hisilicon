@@ -1,13 +1,6 @@
-#+++++++++++++++++++++++++++++++++++++++++++++++++++
-#menu "VENC Config"
-#--------------------------------
 
 config  HI_VENC_SUPPORT
-	help
-	    this option should be chosen on transcode scene
-	depends on !HI3712
 	bool "VENC Support" 
 	default n
-
-#endmenu
-#+++++++++++++++++++++++++++++++++++++++++++++++++++
+	help
+	    this option should be chosen on transcode scene

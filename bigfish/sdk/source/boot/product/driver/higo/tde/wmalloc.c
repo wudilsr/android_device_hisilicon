@@ -1,16 +1,39 @@
-/*****************************************************************************/
-/*                Copyright 2009 - 2014, Huawei Tech. Co., Ltd.              */
-/*                           ALL RIGHTS RESERVED                             */
-/*                                                                           */
-/* FileName: wmalloc.c                                                       */
-/* Version: 01a 内存管理的实现                                               */
-/*                                                                           */
-/* History:                                                                  */
-/* 1. 01a,2009-2-25, w54130 Create this file.                                 */
-/*****************************************************************************/
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : wmalloc.c
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         :
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y0081162                 Created file        
+******************************************************************************/
+
+/*********************************add include here******************************/
 #include "tde_define.h"
 #include "wmalloc.h"
-#include "hifb_debug.h"
+
+
+
+/***************************** Macro Definition ******************************/
+#define TDE_UNIT64_NUM          1536                                                /* 96k */
+#define TDE_UNIT128_NUM         640                                                 /* 80k */
+#define TDE_UNIT128_OFFSET     (TDE_UNIT64_NUM * 64)
+#define TDE_UNIT1024_NUM        32                                                  /* 32k */
+#define TDE_UNIT1024_OFFSET     (TDE_UNIT128_OFFSET + TDE_UNIT128_NUM * 128)
+#define TDE_MEMPOOL_SIZE        (TDE_UNIT1024_OFFSET + (TDE_UNIT1024_NUM * 1024))    /* 208k */
+
+
+/*************************** Structure Definition ****************************/
 typedef struct _MemoryBlock
 {
     HI_U32          nSize;
@@ -29,18 +52,15 @@ typedef enum
     UNIT_SIZE_BUTT
 }UNIT_SIZE_E;
 
+
+/********************** Global Variable declaration **************************/
 static MemoryBlock g_struMemBlock[UNIT_SIZE_BUTT]; 
 
-#define PRINTMEMINFO() do\
-{\
-    TDE_TRACE(TDE_KERN_DEBUG, "-----------------------------------------------------\n");\
-    TDE_TRACE(TDE_KERN_DEBUG, "\tMemBlock Info\ttotal\tfree\n");\
-    TDE_TRACE(TDE_KERN_DEBUG, "\t64\t%d\t%d\n", TDE_UNIT64_NUM, g_struMemBlock[UNIT_SIZE_64].nFree);\
-    TDE_TRACE(TDE_KERN_DEBUG, "\t128\t%d\t%d\n", TDE_UNIT128_NUM, g_struMemBlock[UNIT_SIZE_128].nFree);\
-    TDE_TRACE(TDE_KERN_DEBUG, "\t1024\t%d\t%d\n", TDE_UNIT1024_NUM, g_struMemBlock[UNIT_SIZE_1024].nFree);\
-    TDE_TRACE(TDE_KERN_DEBUG, "------------------------------------------------------\n");\
-}while(0)
+STATIC HI_U32 g_u32MemPoolPhyAddr;
+STATIC HI_U32 g_u32MemPoolVrtAddr;
+STATIC HI_U32 g_u32MemPoolSize;
 
+/******************************* API declaration *****************************/
 HI_S32 MemoryBlockInit(UNIT_SIZE_E eUnitSize, HI_U32 nUnitNum, HI_U8 *pAddr) 
 {
     HI_U16 i;
@@ -175,31 +195,12 @@ HI_S32 wfree(HI_VOID *ptr)
     return HI_FAILURE;
 }
 
-/************************ 以上和tde无关，可以移植到其他模块使用************************/
-
-/************************ 以下和tde的封装相关 ******************************************/
-
-#define TDE_UNIT64_NUM      1536    /* 96k */
-#define TDE_UNIT64_OFFSET   0
-#define TDE_UNIT128_NUM     640     /* 80k */
-#define TDE_UNIT128_OFFSET  (TDE_UNIT64_NUM * 64)
-#define TDE_UNIT1024_NUM    32       /* 32k */
-#define TDE_UNIT1024_OFFSET (TDE_UNIT128_OFFSET + TDE_UNIT128_NUM * 128)
-#define TDE_MEMPOOL_SIZE    (TDE_UNIT1024_OFFSET + (TDE_UNIT1024_NUM * 1024))    /* 208k */
-
-
-//STATIC TDE_DECLARE_PMMB(g_pstruMemPool);
-STATIC HI_U32 g_u32MemPoolPhyAddr;
-STATIC HI_U32 g_u32MemPoolVrtAddr;
-STATIC HI_U32 g_u32MemPoolSize;
-
 HI_S32 wmeminit(void)
-{ 
-   // g_u32MemPoolPhyAddr = TDE_MEM_NEW(TDE_MEMPOOL_SIZE, 4, "ddr", "TDE_MEMPOOL");
+{
+
     TDE_MEM_NEW(g_u32MemPoolPhyAddr,TDE_MEMPOOL_SIZE, 4, "ddr", "TDE_MEMPOOL");
     if (0 == g_u32MemPoolPhyAddr)
     {
-        Debug("new MMZ failed!\n");
         return HI_FAILURE;
     }
 
@@ -207,7 +208,6 @@ HI_S32 wmeminit(void)
     if (g_u32MemPoolVrtAddr == 0)
     {
         TDE_MEM_FREE(g_u32MemPoolPhyAddr);
-        Debug("map mem failed!\n");
         return HI_FAILURE;
     }
 
@@ -217,9 +217,9 @@ HI_S32 wmeminit(void)
     MemoryBlockInit(UNIT_SIZE_1024, TDE_UNIT1024_NUM, (HI_VOID *)(g_u32MemPoolVrtAddr + TDE_UNIT1024_OFFSET));
 
     g_u32MemPoolSize = TDE_UNIT1024_OFFSET + TDE_UNIT1024_NUM * 1024;
-    PRINTMEMINFO();
     
     return HI_SUCCESS;
+	
 }
 
 HI_VOID wmemterm(void)
@@ -227,9 +227,9 @@ HI_VOID wmemterm(void)
     TDE_MEM_UNMAP(g_u32MemPoolPhyAddr);
     TDE_MEM_FREE(g_u32MemPoolPhyAddr);
 
-    g_u32MemPoolPhyAddr = 0;
-    g_u32MemPoolVrtAddr = 0;
-    g_u32MemPoolSize = 0;
+    g_u32MemPoolPhyAddr  = 0;
+    g_u32MemPoolVrtAddr  = 0;
+    g_u32MemPoolSize     = 0;
 
     return;
     
@@ -270,7 +270,5 @@ HI_U32 wgetfreenum(HI_VOID)
         u32FreeUnitNum = (u32FreeUnitNum > g_struMemBlock[eUnitSize].nFree)?g_struMemBlock[eUnitSize].nFree:u32FreeUnitNum;
     }
 
-
     return u32FreeUnitNum;
 }
-

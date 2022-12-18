@@ -351,6 +351,14 @@ static int http_open_cnx(URLContext *h)
         {
             goto fail;
         }
+        /* case 1: FIXME, if server doesn't support Range request, connection will fail, we can't fix this issue now.
+         * case 2: when first connection timeout, if we set seek_flag to 0, reconnection will without Range request,
+         * server will not return Content-range to us, we can't get filesize, and read will timeout when eof.
+         * So we can't set seek_flag to 0 here.
+         * case 3: when read timeout, if we set seek_flag to 0, reconnection will without Range request, we can't continue
+         * read the data from old position, this may cause eof. So we can't set seek_flag to 0 here.
+         */
+        #if 0
         if (s->change_seek_flag ==1 && s->seek_flag != 0
             && (s->http_code == 416 || s->http_code == 406 || s->http_code == 403 || s->http_code == 400 || s->http_code == 0 || s->http_code == 500))
         {
@@ -363,6 +371,7 @@ static int http_open_cnx(URLContext *h)
             s->hd = NULL;
             goto redo;
         }
+        #endif
         //*add by liangwei for test
         //if (s->http_code < 400 || s->http_code >= 500)
         if (!s->willtry && willtry < try_max_count && 0 == s->http_code)
@@ -419,6 +428,8 @@ static int http_open_cnx(URLContext *h)
         snprintf(tmp, sizeof(tmp), "%s", s->location);
         h->moved_url = av_strdup(tmp);
 
+        url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_HTTP_REDIRECT, h->moved_url);
+
         goto redo;
     }//end if
 
@@ -466,6 +477,7 @@ static int http_open(URLContext *h, const char *uri, int flags)
     int retryTimes = 0;
     int ret;
     int64_t   start_time = 0;
+    int64_t   spend_time = 0;
     char hoststr[URL_SIZE];
 
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] http_open(%s, %d)\n", __FILE_NAME__, __LINE__,uri,flags);
@@ -538,8 +550,9 @@ static int http_open(URLContext *h, const char *uri, int flags)
         s->errtag = 1;
     }
     //s->seek_flag = 0;   /* changed by taijie */
+    spend_time = abs(av_gettime() - start_time);
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] http_open s->seek_flag=%d\n", __FILE_NAME__, __LINE__,s->seek_flag);
-    if (abs(av_gettime() - start_time) > HTTP_CONNECT_TIMEOUT)
+    if (spend_time > HTTP_CONNECT_TIMEOUT)
     {
         url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_TIMEOUT, "http");
     }
@@ -548,6 +561,11 @@ static int http_open(URLContext *h, const char *uri, int flags)
     {
         url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_NORMAL, "http");
         s->errtag   = 0;
+    }
+
+    if (ret == 0)
+    {
+        url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_HTTP_CONNECTED, (char *)&spend_time);
     }
 
     return ret;
@@ -1040,7 +1058,7 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
              authstr ? authstr : "",
              proxyauthstr ? "Proxy-" : "", proxyauthstr ? proxyauthstr : "");
 
-  //  av_log(NULL, AV_LOG_ERROR, "[%s:%d] %s\n", __FILE_NAME__, __LINE__, s->buffer);
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d] %s\n", __FILE_NAME__, __LINE__, s->buffer);
     av_freep(&authstr);
     av_freep(&proxyauthstr);
 
@@ -1087,10 +1105,10 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
             av_log(h, AV_LOG_ERROR, "http get line failed, error:%d\n", err);
             return err;//AVERROR(EIO);
         }
-/*
+
         av_log(NULL, AV_LOG_ERROR, "[%s:%d] header='%s'\n",
             __FILE_NAME__, __LINE__, line);
-*/
+
         if (0 == new_cookies)
             err = process_line(h, line, s->line_count, 1, new_location, &new_cookies);
         else
@@ -1105,6 +1123,8 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
             break;
         s->line_count++;
     }
+
+    url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_HTTP_CODE, (char *)&s->http_code);
 
     if (s->reconnect == 1 && (s->http_code == 200 || s->http_code == 206)) {
         av_log(NULL, AV_LOG_ERROR, "[%s,%d] http_connect Transfer-Encoding connect return 0\n",

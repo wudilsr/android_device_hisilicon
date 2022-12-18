@@ -356,6 +356,18 @@ static struct amba_device *amba_devs_hi3719mv100[] __initdata = {
 	&HIL_AMBADEV_NAME(uart2),
 };
 
+#ifdef CONFIG_S40_FPGA
+static struct amba_device *amba_devs_hi3716mv410[] __initdata = {
+	&HIL_AMBADEV_NAME(uart2),
+	&HIL_AMBADEV_NAME(uart0),
+};	
+#else
+static struct amba_device *amba_devs_hi3716mv410[] __initdata = {
+	&HIL_AMBADEV_NAME(uart0),
+	&HIL_AMBADEV_NAME(uart2),
+};
+#endif
+
 static struct amba_device *amba_devs[] __initdata = {
 	&HIL_AMBADEV_NAME(uart0),
 	&HIL_AMBADEV_NAME(uart1),
@@ -417,6 +429,11 @@ void __init s40_init(void)
 		for (i = 0; i < ARRAY_SIZE(amba_devs_hi3719mv100); i++) {
 			edb_trace();
 			amba_device_register(amba_devs_hi3719mv100[i], &iomem_resource);
+		}
+	} else if ((get_chipid() == _HI3716MV410) || (get_chipid() == _HI3716MV420)) {
+		for (i = 0; i < ARRAY_SIZE(amba_devs_hi3716mv410); i++) {
+			edb_trace();
+			amba_device_register(amba_devs_hi3716mv410[i], &iomem_resource);
 		}
 	} else {
 		for (i = 0; i < ARRAY_SIZE(amba_devs); i++) {

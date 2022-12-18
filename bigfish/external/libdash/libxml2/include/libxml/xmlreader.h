@@ -128,6 +128,10 @@ XMLPUBFUN int XMLCALL
 XMLPUBFUN int XMLCALL
 			xmlTextReaderRead	(xmlTextReaderPtr reader);
 
+/*@invokeID: type is enum  XMLInvokeID*/
+XMLPUBFUN int XMLCALL
+			xmlTextReaderInvoke(xmlTextReaderPtr reader, int invokeID, void *arg);
+
 #ifdef LIBXML_WRITER_ENABLED
 XMLPUBFUN xmlChar * XMLCALL
 			xmlTextReaderReadInnerXml(xmlTextReaderPtr reader);

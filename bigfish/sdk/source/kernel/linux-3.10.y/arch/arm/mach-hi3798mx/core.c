@@ -37,6 +37,7 @@
 
 #include "platsmp.h"
 #include <mach/cpu.h>
+#include <linux/himisc.h>
 
 #ifdef CONFIG_PM_HIBERNATE
 #include <asm/hibernate.h>
@@ -377,6 +378,10 @@ static void __init hi3798mx_reserve(void)
 {
 	/* Reserve memory for PDM modoule*/
 	pdm_reserve_mem();
+
+	initmrd_reserve_memory();
+
+	initfile_reserve_memory();
 
 #ifdef CONFIG_SUPPORT_DSP_RUN_MEM
 	/* Reserve memory for DSP */

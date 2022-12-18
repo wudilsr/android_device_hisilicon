@@ -53,6 +53,10 @@
 #include "drv_keyled_std.h"
 #endif
 
+#ifdef KEYLED_GPIOKEY
+#include "drv_keyled_gpiokey.h"
+#endif
+
 #ifdef KEYLED_PT6961
 #include "drv_keyled_pt6961.h"
 #endif
@@ -165,6 +169,37 @@ static HI_S32 KEYLEDSelectType(HI_UNF_KEYLED_TYPE_E enKeyLedType)
 
         g_stKeyLedOpt.KEYLED_Suspend = KEYLED_Suspend;
         g_stKeyLedOpt.KEYLED_Resume	 = KEYLED_Resume;
+
+		bInitializedFlag = HI_TRUE;
+#endif
+    }
+
+	else if (enKeyLedType == HI_UNF_KEYLED_TYPE_GPIOKEY)
+    {
+#ifdef KEYLED_GPIOKEY
+        HI_INFO_KEYLED("select gpiokey keyled\n");
+
+        g_stKeyLedOpt.KEYLED_KEY_Open  = KEYLED_KEY_Open_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_Close = KEYLED_KEY_Close_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_Reset = KEYLED_KEY_Reset_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_GetValue = KEYLED_KEY_GetValue_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_SetBlockTime = KEYLED_KEY_SetBlockTime_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_SetRepTime = KEYLED_KEY_SetRepTime_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_IsRepKey = KEYLED_KEY_IsRepKey_GpioKey;
+        g_stKeyLedOpt.KEYLED_KEY_IsKeyUp  = KEYLED_KEY_IsKeyUp_GpioKey;
+
+        g_stKeyLedOpt.KEYLED_LED_Open  = KEYLED_LED_Open_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_Close = KEYLED_LED_Close_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_Display = KEYLED_LED_Display_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_DisplayTime  = KEYLED_LED_DisplayTime_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_SetFlashPin  = KEYLED_LED_SetFlashPin_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_SetFlashFreq = KEYLED_LED_SetFlashFreq_GpioKey;
+        g_stKeyLedOpt.KEYLED_LED_DisplayLED = HI_NULL;
+        g_stKeyLedOpt.KEYLED_SetMode = HI_NULL;
+		g_stKeyLedOpt.KEYLED_GetProcInfo = HI_NULL;
+
+        g_stKeyLedOpt.KEYLED_Suspend = KEYLED_Suspend_GpioKey;
+        g_stKeyLedOpt.KEYLED_Resume	 = KEYLED_Resume_GpioKey;
 
 		bInitializedFlag = HI_TRUE;
 #endif
@@ -762,7 +797,8 @@ HI_S32 KEYLED_DRV_ModInit(HI_VOID)
         || defined (KEYLED_CT1642)  \
         || defined (KEYLED_PT6961)  \
         || defined (KEYLED_PT6964)  \
-        || defined (KEYLED_FD650)
+        || defined (KEYLED_FD650)	\
+        || defined (KEYLED_GPIOKEY)
 #else
     HI_ERR_KEYLED("keyled init failed \n");
     return HI_FAILURE;
@@ -823,6 +859,31 @@ HI_S32 KEYLED_DRV_ModInit(HI_VOID)
 
     g_stKeyLedOpt.KEYLED_Suspend = KEYLED_Suspend;
     g_stKeyLedOpt.KEYLED_Resume	 = KEYLED_Resume;
+#endif
+
+#ifdef KEYLED_GPIOKEY
+    HI_INFO_KEYLED("select gpio keyled\n");
+
+	g_stKeyLedOpt.KEYLED_KEY_Open  = KEYLED_KEY_Open_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_Close = KEYLED_KEY_Close_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_Reset = KEYLED_KEY_Reset_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_GetValue = KEYLED_KEY_GetValue_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_SetBlockTime = KEYLED_KEY_SetBlockTime_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_SetRepTime = KEYLED_KEY_SetRepTime_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_IsRepKey = KEYLED_KEY_IsRepKey_GpioKey;
+    g_stKeyLedOpt.KEYLED_KEY_IsKeyUp  = KEYLED_KEY_IsKeyUp_GpioKey;
+
+    g_stKeyLedOpt.KEYLED_LED_Open  = KEYLED_LED_Open_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_Close = KEYLED_LED_Close_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_Display = KEYLED_LED_Display_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_DisplayTime  = KEYLED_LED_DisplayTime_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_SetFlashPin  = KEYLED_LED_SetFlashPin_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_SetFlashFreq = KEYLED_LED_SetFlashFreq_GpioKey;
+    g_stKeyLedOpt.KEYLED_LED_DisplayLED = HI_NULL;
+    g_stKeyLedOpt.KEYLED_SetMode = HI_NULL;
+
+    g_stKeyLedOpt.KEYLED_Suspend = KEYLED_Suspend_GpioKey;
+    g_stKeyLedOpt.KEYLED_Resume	 = KEYLED_Resume_GpioKey;
 #endif
 
 #ifdef KEYLED_CT1642

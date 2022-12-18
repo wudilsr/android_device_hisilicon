@@ -71,6 +71,7 @@ HI_BOOL g_bHDCPKeyLoadFlag = HI_FALSE;
 
 #define CI_BUF_LIST_SetIVFlag(u32Flags)
 #define CI_BUF_LIST_SetEndFlag(u32Flags)
+#define HDCP_KEY_RAM_LONG_SIZE    (512)
 
 CIPHER_EXPORT_FUNC_S s_CipherExportFuncs =
 {
@@ -343,8 +344,6 @@ static HI_S32 s_DRV_Cipher_CryptoHdcpKey(HI_U8 *pu8Input,
     HI_DRV_CIPHER_TASK_S stCITask;
     HI_U32 i = 0;
 
-    HI_DECLARE_MUTEX(CipherMutexKernel);
-
     if (NULL == pu8Input)
     {
         HI_ERR_CIPHER("Invalid param!\n");
@@ -362,11 +361,6 @@ static HI_S32 s_DRV_Cipher_CryptoHdcpKey(HI_U8 *pu8Input,
     }
 
     softChnId = HI_HANDLE_GET_CHNID(hCipherHandle);
-
-    if(down_interruptible(&CipherMutexKernel))
-    {
-        return -ERESTARTSYS;
-    }
 
     u32KeyBlock = u32InputLen / 16;
     for (i = 0;i < u32KeyBlock; i++)
@@ -410,7 +404,7 @@ static HI_S32 s_DRV_Cipher_CryptoHdcpKey(HI_U8 *pu8Input,
         }
     }
 
-    if (HI_DRV_HDCPKEY_RX0 == enHdcpKeyType || HI_DRV_HDCPKEY_RX1 == enHdcpKeyType)
+    if ((HI_DRV_HDCPKEY_RX0 == enHdcpKeyType) || (HI_DRV_HDCPKEY_RX1 == enHdcpKeyType))
     {
         (HI_VOID)DRV_CIPHER_SetHdcpkeyRxRead(CIPHER_HDCP_KEY_RD_RX_RAM);
     }
@@ -420,7 +414,7 @@ static HI_S32 s_DRV_Cipher_CryptoHdcpKey(HI_U8 *pu8Input,
     }
 
 __EXIT_HDCP__:
-    up(&CipherMutexKernel);
+    (HI_VOID)DRV_CIPHER_SetHdcpModeEn(CIPHER_HDCP_MODE_NO_HDCP_KEY);
     if(HI_SUCCESS != ret)
     {
         (HI_VOID)DRV_CIPHER_ClearHdcpConfig();
@@ -474,6 +468,10 @@ HI_S32 DRV_CipherInitHardWareChn(HI_U32 chnId )
     {
         ;
     }
+
+    /*if cipher not be reset, the current ptr may not be zero*/
+    HAL_Cipher_GetSrcLstRaddr(chnId, &pChan->unInData.stPkgNMng.u32CurrentPtr);
+    HAL_Cipher_GetDestLstRaddr(chnId, &pChan->unOutData.stPkgNMng.u32CurrentPtr);
 
     return HI_SUCCESS;
 }
@@ -1068,12 +1066,13 @@ irqreturn_t DRV_Cipher_ISR(HI_S32 irq, HI_VOID *devId)
 
 HI_S32 DRV_CIPHER_Init(HI_VOID)
 {
-    HI_U32 i,j, hwChnId;
+    HI_U32 i,j, hwChnId, ChnIdx;
     HI_S32 ret;
     HI_U32 bufSizeChn = 0; /* all the buffer list size, included data buffer size and IV buffer size */
     HI_U32 databufSizeChn = 0; /* max list number data buffer size */
     HI_U32 ivbufSizeChn = 0; /* all the list IV size */
     HI_U32 bufSizeTotal = 0; /* all the channel buffer size */
+    HI_U32 u32ClrAllInt;
     MMZ_BUFFER_S   cipherListBuf;
     CIPHER_CHAN_S *pChan;
 
@@ -1081,7 +1080,12 @@ HI_S32 DRV_CIPHER_Init(HI_VOID)
     memset(&g_stCipherChans, 0, sizeof(g_stCipherChans));
     memset(&g_stCipherSoftChans, 0, sizeof(g_stCipherSoftChans));
 
-    for (i = 0; i < CIPHER_SOFT_CHAN_NUM; i++)
+    g_stCipherOsrChn[CIPHER_PKGx1_CHAN].g_bSoftChnOpen = HI_FALSE;
+    g_stCipherOsrChn[CIPHER_PKGx1_CHAN].g_bDataDone = HI_FALSE;
+    g_stCipherOsrChn[CIPHER_PKGx1_CHAN].pWichFile = NULL;
+    init_waitqueue_head(&(g_stCipherOsrChn[CIPHER_PKGx1_CHAN].cipher_wait_queue));
+    g_stCipherOsrChn[CIPHER_PKGx1_CHAN].pstDataPkg = NULL;
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
         g_stCipherOsrChn[i].g_bSoftChnOpen = HI_FALSE;
         g_stCipherOsrChn[i].g_bDataDone = HI_FALSE;
@@ -1137,7 +1141,9 @@ HI_S32 DRV_CIPHER_Init(HI_VOID)
     bufSizeChn = (databufSizeChn * 2) + ivbufSizeChn;/* inBuf + outBuf + keyBuf */
     bufSizeTotal = bufSizeChn * (CIPHER_PKGxN_CHAN_MAX - CIPHER_PKGxN_CHAN_MIN + 1) ; /* only 7 channels need buf */
 
+#ifndef HI_TVP_SUPPORT
     HAL_Cipher_Init();
+#endif
     HAL_Cipher_DisableAllInt();
 
     /* allocate 7 channels size */
@@ -1181,14 +1187,15 @@ startPhyAddr
  |              IV buf                  |             IN buf                    |             OUT buf
  startVirAddr
 */
-    for (i = 0; i < CIPHER_PKGxN_CHAN_MAX; i++)
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
         /* config channel from 1 to 7 */
-        hwChnId = i+CIPHER_PKGxN_CHAN_MIN;
+        hwChnId = i;
+        ChnIdx = i - CIPHER_PKGxN_CHAN_MIN;
         pChan = &g_stCipherChans[hwChnId];
 
-        pChan->astCipherIVValue[0].u32PhyAddr = cipherListBuf.u32StartPhyAddr + (i * bufSizeChn);
-        pChan->astCipherIVValue[0].pu32VirAddr = (HI_U32 *)(cipherListBuf.u32StartVirAddr + (i * bufSizeChn));
+        pChan->astCipherIVValue[0].u32PhyAddr = cipherListBuf.u32StartPhyAddr + (ChnIdx * bufSizeChn);
+        pChan->astCipherIVValue[0].pu32VirAddr = (HI_U32 *)(cipherListBuf.u32StartVirAddr + (ChnIdx * bufSizeChn));
 
         for (j = 1; j < CIPHER_MAX_LIST_NUM; j++)
         {
@@ -1210,9 +1217,9 @@ startPhyAddr
     }
 
     /* debug info */
-    for (i = 0; i < CIPHER_PKGxN_CHAN_MAX; i++)
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
-        hwChnId = i+CIPHER_PKGxN_CHAN_MIN;
+        hwChnId = CIPHER_PKGxN_CHAN_MIN;
         pChan = &g_stCipherChans[hwChnId];
 
         HI_INFO_CIPHER("Chn%02x, IV:%#x/%p In:%#x/%p, Out:%#x/%p.\n", i,
@@ -1222,43 +1229,65 @@ startPhyAddr
             pChan->astCipherIVValue[0].u32PhyAddr + ivbufSizeChn + databufSizeChn, pChan->pstOutBuf );
     }
 
-    HAL_Cipher_ClrIntState(0xffffffff);
+    u32ClrAllInt = 0x00;
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
+    {
+        u32ClrAllInt |= 0x01 << i;
+        u32ClrAllInt |= 0x01 << (i+7);
+    }
+    u32ClrAllInt |= 0x01 << 8;
+    u32ClrAllInt |= 0x01 << 16;
+    HAL_Cipher_ClrIntState(u32ClrAllInt);
 
     /* request irq */
     ret = request_irq(CIPHER_IRQ_NUMBER, DRV_Cipher_ISR, IRQF_DISABLED, "hi_cipher_irq", &g_stCipherComm);
     if(HI_SUCCESS != ret)
     {
         HAL_Cipher_DisableAllInt();
-        HAL_Cipher_ClrIntState(0xffffffff);
+        HAL_Cipher_ClrIntState(u32ClrAllInt);
 
         HI_ERR_CIPHER("Irq request failure, ret=%#x.", ret);
         HI_DRV_MMZ_UnmapAndRelease(&(g_stCipherComm.stPhyBuf));
         return HI_FAILURE;
     }
 
-#if    defined(CHIP_TYPE_hi3719mv100)   \
-    || defined(CHIP_TYPE_hi3718mv100)   \
-    || defined(CHIP_TYPE_hi3751v100)    \
-    || defined(CHIP_TYPE_hi3751v100b)   \
-    || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
-	|| defined (CHIP_TYPE_hi3798cv200_a)
+#ifndef HI_TVP_SUPPORT
+#if    defined(CHIP_TYPE_hi3719mv100)    \
+    || defined(CHIP_TYPE_hi3718mv100)    \
+    || defined(CHIP_TYPE_hi3751v100)     \
+    || defined(CHIP_TYPE_hi3751v100b)    \
+    || defined(CHIP_TYPE_hi3798mv100)    \
+    || defined(CHIP_TYPE_hi3796mv100)    \
+	|| defined (CHIP_TYPE_hi3798cv200_a) \
+	|| defined (CHIP_TYPE_hi3716mv410)   \
+	|| defined (CHIP_TYPE_hi3716mv420)
 	
     HAL_Cipher_EnableAllSecChn();
+#endif
 #endif
     return HI_SUCCESS;
 }
 
 HI_VOID DRV_CIPHER_DeInit(HI_VOID)
 {
+
     HI_U32 i, hwChnId;
-
-    HAL_Cipher_DisableAllInt();
-    HAL_Cipher_ClrIntState(0xffffffff);
-
-    for (i = 0; i < CIPHER_PKGxN_CHAN_MAX; i++)
+    HI_U32 u32ClrAllInt;
+    u32ClrAllInt = 0x00;
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
-        hwChnId = i+CIPHER_PKGxN_CHAN_MIN;
+        u32ClrAllInt |= 0x01 << i;
+        u32ClrAllInt |= 0x01 << (i+7);
+    }
+    u32ClrAllInt |= 0x01 << 8;
+    u32ClrAllInt |= 0x01 << 16;
+    HAL_Cipher_ClrIntState(u32ClrAllInt);
+    HAL_Cipher_DisableAllInt();
+    HAL_Cipher_ClrIntState(u32ClrAllInt);
+
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
+    {
+        hwChnId = i;
         DRV_CipherDeInitHardWareChn(hwChnId);
     }
 
@@ -1281,12 +1310,13 @@ HI_VOID HI_DRV_CIPHER_Suspend(HI_VOID)
 
 HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
 {
-    HI_U32 i, j, hwChnId;
+    HI_U32 i, j, hwChnId, ChnIdx;
     HI_S32 ret = HI_SUCCESS;
     HI_U32 bufSizeChn = 0;      /* all the buffer list size, included data buffer size and IV buffer size */
     HI_U32 databufSizeChn = 0;  /* max list number data buffer size */
     HI_U32 ivbufSizeChn = 0;    /* all the list IV size */
     HI_U32 bufSizeTotal = 0;    /* all the channel buffer size */
+    HI_U32 u32ClrAllInt;
     MMZ_BUFFER_S   cipherListBuf;
     CIPHER_CHAN_S *pChan;
 
@@ -1324,16 +1354,17 @@ HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
         pChan->chnId = i;
     }
 
-    for (i = 0; i < CIPHER_PKGxN_CHAN_MAX; i++)
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
         /* config channel from 1 to 7 */
-        hwChnId = i + CIPHER_PKGxN_CHAN_MIN;
+        hwChnId = i;
+        ChnIdx = i - CIPHER_PKGxN_CHAN_MIN;
         pChan = &g_stCipherChans[hwChnId];
 
         pChan->astCipherIVValue[0].u32PhyAddr
-            = cipherListBuf.u32StartPhyAddr + (i * bufSizeChn);
+            = cipherListBuf.u32StartPhyAddr + (ChnIdx * bufSizeChn);
         pChan->astCipherIVValue[0].pu32VirAddr
-            = (HI_U32*)(cipherListBuf.u32StartVirAddr + (i * bufSizeChn));
+            = (HI_U32*)(cipherListBuf.u32StartVirAddr + (ChnIdx * bufSizeChn));
 
         for (j = 1; j < CIPHER_MAX_LIST_NUM; j++)
         {
@@ -1356,7 +1387,15 @@ HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
         DRV_CipherInitHardWareChn(hwChnId);
     }
 
-    HAL_Cipher_ClrIntState(0xffffffff);
+    u32ClrAllInt = 0x00;
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
+    {
+        u32ClrAllInt |= 0x01 << i;
+        u32ClrAllInt |= 0x01 << (i+8);
+    }
+    u32ClrAllInt |= 0x01 << 8;
+    u32ClrAllInt |= 0x01 << 16;
+    HAL_Cipher_ClrIntState(u32ClrAllInt);
 
     /* request irq */
     ret = request_irq(CIPHER_IRQ_NUMBER, DRV_Cipher_ISR, IRQF_DISABLED, "hi_cipher_irq", &g_stCipherComm);
@@ -1370,7 +1409,12 @@ HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
         return ret;
     }
 
-    for(i = 0; i < CIPHER_CHAN_NUM; i++)
+    if (g_stCipherSoftChans[CIPHER_PKGx1_CHAN].bOpen)
+    {
+        DRV_CIPHER_OpenChn(CIPHER_PKGx1_CHAN);
+        DRV_CIPHER_ConfigChn(CIPHER_PKGx1_CHAN, &g_stCipherSoftChans[CIPHER_PKGx1_CHAN].stCtrl);
+    }
+    for (i = CIPHER_PKGxN_CHAN_MIN; i <= CIPHER_PKGxN_CHAN_MAX; i++)
     {
         if (g_stCipherSoftChans[i].bOpen)
         {
@@ -1379,14 +1423,19 @@ HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
         }
     }
 
+#ifndef HI_TVP_SUPPORT
 #if    defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3751v100b)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
-	|| defined(CHIP_TYPE_hi3798cv200_a)
+	|| defined(CHIP_TYPE_hi3798cv200_a) \
+	|| defined (CHIP_TYPE_hi3716mv410)  \
+	|| defined (CHIP_TYPE_hi3716mv420)
+	
     HAL_Cipher_EnableAllSecChn();
+#endif
 #endif
 
 	if(HI_TRUE == g_bHDCPKeyLoadFlag)
@@ -1618,7 +1667,7 @@ HI_S32 DRV_CIPHER_Encrypt(CIPHER_DATA_S *pstCIData)
         if (0 == wait_event_interruptible_timeout(g_stCipherOsrChn[softChnId].cipher_wait_queue,
                     g_stCipherOsrChn[softChnId].g_bDataDone != HI_FALSE, 200))
         {
-            HI_ERR_CIPHER("Encrypt time out! \n");
+            HI_ERR_CIPHER("Encrypt time out! CIPHER_IRQ_NUMBER: %d \n", CIPHER_IRQ_NUMBER);
             return HI_FAILURE;
         }
 
@@ -1921,7 +1970,7 @@ HI_S32 HI_DRV_CIPHER_EncryptMulti(CIPHER_DATA_S *pstCIData)
     if (0== wait_event_interruptible_timeout(g_stCipherOsrChn[softChnId].cipher_wait_queue,
                 g_stCipherOsrChn[softChnId].g_bDataDone != HI_FALSE, 200))
     {
-        HI_ERR_CIPHER("Decrypt time out \n");
+        HI_ERR_CIPHER("Decrypt time out! CIPHER_IRQ_NUMBER: %d \n", CIPHER_IRQ_NUMBER);
 		up(&g_CipherMutexKernel);
         return HI_FAILURE;
     }
@@ -1995,7 +2044,7 @@ HI_S32 HI_DRV_CIPHER_DecryptMulti(CIPHER_DATA_S *pstCIData)
     if (0== wait_event_interruptible_timeout(g_stCipherOsrChn[softChnId].cipher_wait_queue,
                 g_stCipherOsrChn[softChnId].g_bDataDone != HI_FALSE, 200))
     {
-        HI_ERR_CIPHER("Decrypt time out \n");
+        HI_ERR_CIPHER("Decrypt time out! CIPHER_IRQ_NUMBER: %d \n", CIPHER_IRQ_NUMBER);
 		up(&g_CipherMutexKernel);
         return HI_FAILURE;
     }
@@ -2456,14 +2505,90 @@ HI_S32 HI_DRV_CIPHER_LoadHdcpKey(HI_DRV_CIPHER_FLASH_ENCRYPT_HDCPKEY_S *pstFlash
 	up(&g_CipherMutexKernel);
 	return ret;
 }
+
+#if defined (CHIP_TYPE_hi3798cv200_a)
+static HI_S32 DRV_CIPHER_HdcpKeyExpand512(HI_DRV_CIPHER_HDCP_ROOT_KEY_TYPE_E enRootKeyType,
+                                          HI_U8 *pu8In, HI_U8 *pu8Out)
+{
+    HI_S32 ret = HI_SUCCESS;
+    HI_U32 softChnId = 0;
+    HI_U32 u32KeyBlock = 0;
+    HI_UNF_CIPHER_CTRL_S CipherCtrl;
+    HI_DRV_CIPHER_TASK_S pCITask;
+    HI_U32 i = 0;
+    HI_U8 *pu8HdcpKey;
+    CIPHER_HANDLE_S stCIHandle;
+    if ((pu8In == HI_NULL) || (pu8Out == HI_NULL) )
+    {
+        HI_ERR_CIPHER("NULL Pointer, Invalid param input!\n");
+        return HI_FAILURE;  
+    }
+    (HI_VOID)DRV_CIPHER_SetHdcpModeEn(CIPHER_HDCP_MODE_HDCP_KEY);
+    memset(&pCITask, 0, sizeof(pCITask));
+    memset(&CipherCtrl, 0, sizeof(CipherCtrl));
+    memset(pu8Out, 0, HDCP_KEY_RAM_LONG_SIZE);
+    memcpy(pu8Out, pu8In, HDCP_KEY_RAM_SIZE);
+    pu8Out[HDCP_KEY_RAM_LONG_SIZE - 2] = 0x00; //AV Content Protection
+    pu8Out[HDCP_KEY_RAM_LONG_SIZE - 1] = 0xFF; //OTP Locked
+    pu8HdcpKey = pu8Out + HDCP_KEY_RAM_SIZE;
+    memcpy((HI_VOID*)CipherCtrl.u32IV, pu8In + (HDCP_KEY_RAM_SIZE - CI_IV_SIZE), CI_IV_SIZE);
+    ret = s_DRV_CIPHER_CreateHandleForHDCPKeyInternal(&stCIHandle.hCIHandle);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CIPHER("(DRV_CIPHER_OpenChn failed\n");
+        (HI_VOID)DRV_CIPHER_ClearHdcpConfig();
+        return HI_FAILURE;
+    }
+    softChnId = HI_HANDLE_GET_CHNID(stCIHandle.hCIHandle);
+    u32KeyBlock = (HDCP_KEY_RAM_LONG_SIZE - HDCP_KEY_RAM_SIZE) / 16;
+    for(i = 0;i < u32KeyBlock; i++)
+    {   
+        ret = DRV_CIPHER_HdcpParamConfig(CIPHER_HDCP_MODE_HDCP_KEY, enRootKeyType, HI_DRV_HDCPKEY_RX0);
+        if ( HI_FAILURE == ret)
+        {
+            goto __EXIT_HDCP__;
+        }
+        CipherCtrl.enAlg = HI_UNF_CIPHER_ALG_AES;
+        CipherCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_CBC;
+        CipherCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
+        CipherCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
+        CipherCtrl.stChangeFlags.bit1IV = (0 == i) ? 1 : 0;
+        ret = DRV_CIPHER_ConfigChn(softChnId, &CipherCtrl);
+        if(HI_SUCCESS != ret)
+        {
+            HI_ERR_CIPHER("DRV cipher config handle failed!\n");
+            goto __EXIT_HDCP__;
+        }
+        memcpy((HI_U8 *)(pCITask.stData2Process.u32DataPkg), pu8HdcpKey + (i * 16), 16);
+        pCITask.stData2Process.u32length = 16;
+        pCITask.stData2Process.bDecrypt = HI_FALSE;
+        pCITask.u32CallBackArg = softChnId;
+        ret = DRV_CIPHER_CreatTask(softChnId, &pCITask, NULL, NULL);
+        if (HI_SUCCESS != ret)
+        {
+            HI_ERR_CIPHER("(DRV_CIPHER_CreatTask call failed\n");
+            goto __EXIT_HDCP__;
+        }
+        memcpy(pu8HdcpKey + ( i * 16), (HI_U8 *)(pCITask.stData2Process.u32DataPkg), 16);
+    }
+__EXIT_HDCP__:
+    (HI_VOID)DRV_CIPHER_SetHdcpModeEn(CIPHER_HDCP_MODE_NO_HDCP_KEY);
+    (HI_VOID)DRV_CIPHER_ClearHdcpConfig();
+    (HI_VOID)DRV_CIPHER_DestroyHandle(stCIHandle.hCIHandle);
+    return HI_SUCCESS;
+}
+#endif
+
 HI_S32 DRV_CIPHER_LoadHdcpKey(HI_DRV_CIPHER_FLASH_ENCRYPT_HDCPKEY_S *pstFlashHdcpKey)
 {
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 u32Crc32Result = 0;
     HI_DRV_CIPHER_HDCP_ROOT_KEY_TYPE_E enRootKeyType;
     HI_U32 u32Tmp = 0;
+    HI_U8  *pu8HdcpKey = HI_NULL;
+    HI_U32 HdcpKeylen= 0;
 
-    if( NULL == pstFlashHdcpKey)
+    if( HI_NULL == pstFlashHdcpKey)
     {
         HI_ERR_CIPHER("NULL Pointer, Invalid param input!\n");
         return HI_FAILURE;
@@ -2505,9 +2630,27 @@ HI_S32 DRV_CIPHER_LoadHdcpKey(HI_DRV_CIPHER_FLASH_ENCRYPT_HDCPKEY_S *pstFlashHdc
             HI_ERR_CIPHER("HDCP KEY CRC32_1 compare failed!");
             return HI_FAILURE;
         }
-
-        s32Ret = s_DRV_Cipher_CryptoHdcpKey(pstFlashHdcpKey->u8Key + 4,
-                                         HDCP_KEY_RAM_SIZE,
+#if defined (CHIP_TYPE_hi3798cv200_a)
+        pu8HdcpKey = (HI_U8*)vmalloc(HDCP_KEY_RAM_LONG_SIZE);
+        if (pu8HdcpKey == HI_NULL)
+        {
+            HI_ERR_CIPHER("HDCP malloc buff failed!\n");
+            return HI_FAILURE;
+        }
+        s32Ret = DRV_CIPHER_HdcpKeyExpand512(enRootKeyType, pstFlashHdcpKey->u8Key + 4, pu8HdcpKey);
+        if (pu8HdcpKey == HI_NULL)
+        {
+            vfree(pu8HdcpKey);
+            HI_ERR_CIPHER("Hdcp Key expand to 512 failed!\n");
+            return HI_FAILURE;
+        } 
+        HdcpKeylen = HDCP_KEY_RAM_LONG_SIZE;
+#else
+        pu8HdcpKey = pstFlashHdcpKey->u8Key + 4;
+        HdcpKeylen = HDCP_KEY_RAM_SIZE;
+#endif
+        s32Ret = s_DRV_Cipher_CryptoHdcpKey(pu8HdcpKey,
+                                         HdcpKeylen,
                                          pstFlashHdcpKey->enHDCPKeyType,
                                          enRootKeyType,
                                          HI_NULL);
@@ -2519,6 +2662,9 @@ HI_S32 DRV_CIPHER_LoadHdcpKey(HI_DRV_CIPHER_FLASH_ENCRYPT_HDCPKEY_S *pstFlashHdc
 
         memcpy(&g_stFlashHdcpKey, pstFlashHdcpKey, sizeof(HI_DRV_CIPHER_FLASH_ENCRYPT_HDCPKEY_S));
         g_bHDCPKeyLoadFlag = HI_TRUE;
+#if defined (CHIP_TYPE_hi3798cv200_a)
+        vfree(pu8HdcpKey);
+#endif
 
     }
     else   // HDCP2.x Rx/Tx or other
@@ -2589,10 +2735,6 @@ static HI_VOID s_DRV_CIPHER_FormatHDCPKey(HI_UNF_HDCP_DECRYPT_S *pSrcKey, HI_U8 
     u8DstKey[6] = CheckSum & 0xff;
     u8DstKey[7] = (CheckSum >> 8) & 0xff;
 
-#if defined (CHIP_TYPE_hi3798cv200_a)
-    u8DstKey[HDCP_KEY_RAM_SIZE - 2] = 0x00; //AV Content Protection
-    u8DstKey[HDCP_KEY_RAM_SIZE - 1] = 0xFF; //OTP Locked
-#endif
     
     return;
 }
@@ -2825,6 +2967,7 @@ static HI_S32 s_DRV_CIPHER_CryptoFormattedHDCPKey(HI_U8 *pu8Input,
     }
 
 __EXIT_HDCP__:
+    (HI_VOID)DRV_CIPHER_SetHdcpModeEn(CIPHER_HDCP_MODE_NO_HDCP_KEY);
     (HI_VOID)DRV_CIPHER_ClearHdcpConfig();
     (HI_VOID)DRV_CIPHER_DestroyHandle(stCIHandle.hCIHandle);
 

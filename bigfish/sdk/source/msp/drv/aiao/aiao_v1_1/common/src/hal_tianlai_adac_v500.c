@@ -39,6 +39,10 @@
 #include "hi_reg_common.h"
 #include "drv_ao_private.h"
 
+#if defined(HI_SND_MUTECTL_SUPPORT) && (defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100))
+#include "hi_drv_sys.h"
+#endif
+
 #define  DBG_ADAC_DISABLE_TIMER
 
 /*----------------------------audio codec-----------------------------------*/
@@ -169,9 +173,27 @@ static HI_VOID Digfi_DacPoweup(HI_BOOL bResume)
     Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
     Adac0.bits.popfreel = 1;
     Adac0.bits.popfreer = 1;
-#ifdef HI_SND_MUTECTL_SUPPORT  
+#ifdef HI_SND_MUTECTL_SUPPORT
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+    {
+        HI_CHIP_PACKAGE_TYPE_E enPackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+
+        HI_DRV_SYS_GetChipPackageType(&enPackageType);
+        if (HI_CHIP_PACKAGE_TYPE_QFP_216 != enPackageType)
+        {
+            // fast power up enable
+            Adac0.bits.fs = 1;
+        }
+        else
+        {
+            //fast power up not enable
+            Adac0.bits.fs = 0; //add for popfree
+        }
+    }
+#else
     // fast power up enable
     Adac0.bits.fs = 1;
+#endif
 #else
     //fast power up not enable
     Adac0.bits.fs = 0; //add for popfree
@@ -189,7 +211,24 @@ static HI_VOID Digfi_DacPoweup(HI_BOOL bResume)
     Adac0.bits.pd_dacl = 0;
     g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;//0x30
 
-#ifdef HI_SND_MUTECTL_SUPPORT  
+#ifdef HI_SND_MUTECTL_SUPPORT
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+    {
+        HI_CHIP_PACKAGE_TYPE_E enPackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+
+        HI_DRV_SYS_GetChipPackageType(&enPackageType);
+        if (HI_CHIP_PACKAGE_TYPE_QFP_216 != enPackageType)
+        {
+            if(HI_TRUE == bResume)
+            {
+                msleep(10);   
+                Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+                Adac0.bits.fs = 0; //add for popfree
+                g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+            }
+        }
+    }
+#else
     if(HI_TRUE == bResume)
     {
         msleep(10);   
@@ -197,6 +236,7 @@ static HI_VOID Digfi_DacPoweup(HI_BOOL bResume)
         Adac0.bits.fs = 0; //add for popfree
         g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
     }
+#endif
 #endif  
 
     /*step 4: close profree */
@@ -262,7 +302,57 @@ static HI_VOID Digfi_DacPowedown(HI_BOOL bSuspend)
     Adac0.bits.pd_dacl = 1;
     Adac0.bits.pd_dacr = 1;
     g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
-#ifndef HI_SND_MUTECTL_SUPPORT
+#ifdef HI_SND_MUTECTL_SUPPORT
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+    {
+        HI_CHIP_PACKAGE_TYPE_E enPackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+
+        HI_DRV_SYS_GetChipPackageType(&enPackageType);
+        if (HI_CHIP_PACKAGE_TYPE_QFP_216 == enPackageType)
+        {   //HI_SND_MUTECTL_SUPPORT is not defined
+            if(HI_TRUE == bSuspend) //add for suspend popfree
+            {
+                Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+                Adac0.bits.fs = 0;
+                Adac0.bits.popfreel = 1;
+                Adac0.bits.popfreer = 1;
+                Adac0.bits.pd_vref = 1;
+                g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+         
+                msleep(2*1000);
+                Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+                Adac0.bits.fs = 1;
+                Adac0.bits.popfreel = 0;
+                Adac0.bits.popfreer = 0;
+                g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+            }
+            else
+            {
+                /*step 4: pd_vref power down	*/
+                Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+                Adac0.bits.pd_vref = 1;
+                g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+            }
+        }
+        else
+        {   //HI_SND_MUTECTL_SUPPORT is defined
+            /*step 4: pd_vref power down	*/
+            Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+            Adac0.bits.pd_vref = 1;
+            g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+        }
+    }
+#else
+    {   //HI_SND_MUTECTL_SUPPORT is defined
+        /*step 4: pd_vref power down	*/
+        Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+        Adac0.bits.pd_vref = 1;
+        g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    }
+#endif
+
+#else
+    //HI_SND_MUTECTL_SUPPORT is not defined
     if(HI_TRUE == bSuspend) //add for suspend popfree
     {
         Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
@@ -278,16 +368,15 @@ static HI_VOID Digfi_DacPowedown(HI_BOOL bSuspend)
         Adac0.bits.popfreel = 0;
         Adac0.bits.popfreer = 0;
         g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
-}
-else
+    }
+    else
+    {
+        /*step 4: pd_vref power down	*/
+        Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
+        Adac0.bits.pd_vref = 1;
+        g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
+    }
 #endif
-{
-	/*step 4: pd_vref power down	*/
-	Adac0.u32 = g_pstRegPeri->PERI_TIANLA_ADAC0.u32;
-    Adac0.bits.pd_vref = 1;
-    g_pstRegPeri->PERI_TIANLA_ADAC0.u32 = Adac0.u32;
-}
-
     return;
 }
 

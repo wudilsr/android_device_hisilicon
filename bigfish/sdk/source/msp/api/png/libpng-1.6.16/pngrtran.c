@@ -48,8 +48,12 @@ png_set_crc_action(png_structrp png_ptr, int crit_action, int ancil_action)
          break;
 
       case PNG_CRC_WARN_DISCARD:    /* Not a valid action for critical data */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr,
             "Can't discard critical data on CRC error");
+#endif
       case PNG_CRC_ERROR_QUIT:                                /* Error/quit */
 
       case PNG_CRC_DEFAULT:
@@ -101,12 +105,19 @@ png_rtran_ok(png_structrp png_ptr, int need_IHDR)
    if (png_ptr != NULL)
    {
       if ((png_ptr->flags & PNG_FLAG_ROW_INIT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr,
             "invalid after png_start_read_image or png_read_update_info");
+#endif
 
       else if (need_IHDR && (png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr, "invalid before the PNG header has been read");
-
+#endif
       else
       {
          /* Turn on failure to initialize correctly for all transforms. */
@@ -134,7 +145,11 @@ png_set_background_fixed(png_structrp png_ptr,
 
    if (background_gamma_code == PNG_BACKGROUND_GAMMA_UNKNOWN)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Application must supply a known background gamma");
+#endif
       return;
    }
 
@@ -157,7 +172,7 @@ png_set_background(png_structrp png_ptr,
     png_const_color_16p background_color, int background_gamma_code,
     int need_expand, double background_gamma)
 {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    png_set_background_fixed(png_ptr, background_color, background_gamma_code,
       need_expand, png_fixed(png_ptr, background_gamma, "png_set_background"));
 #else
@@ -269,7 +284,11 @@ convert_gamma_value(png_structrp png_ptr, double output_gamma)
    output_gamma = floor(output_gamma + .5);
 
    if (output_gamma > PNG_FP_MAX || output_gamma < PNG_FP_MIN)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_fixed_error(png_ptr, "");
+#else
       png_fixed_error(png_ptr, "gamma value");
+#endif
 
    return (png_fixed_point)output_gamma;
 }
@@ -298,7 +317,11 @@ png_set_alpha_mode_fixed(png_structrp png_ptr, int mode,
     * values are reasonable this may have to be changed.
     */
    if (output_gamma < 70000 || output_gamma > 300000)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "output gamma out of expected range");
+#endif
 
    /* The default file gamma is the inverse of the output gamma; the output
     * gamma may be changed below so get the file value first:
@@ -351,7 +374,11 @@ png_set_alpha_mode_fixed(png_structrp png_ptr, int mode,
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "invalid alpha mode");
+#endif
    }
 
    /* Only set the default gamma if the file gamma has not been set (this has
@@ -379,8 +406,12 @@ png_set_alpha_mode_fixed(png_structrp png_ptr, int mode,
       png_ptr->transformations &= ~PNG_BACKGROUND_EXPAND;
 
       if ((png_ptr->transformations & PNG_COMPOSE) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr,
             "conflicting calls to set alpha mode and background");
+#endif
 
       png_ptr->transformations |= PNG_COMPOSE;
    }
@@ -828,10 +859,18 @@ png_set_gamma_fixed(png_structrp png_ptr, png_fixed_point scrn_gamma,
     * libpng-1.6.0.
     */
    if (file_gamma <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "invalid file gamma in png_set_gamma");
+#endif
 
    if (scrn_gamma <= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "invalid screen gamma in png_set_gamma");
+#endif
 
    /* Set the gamma values unconditionally - this overrides the value in the PNG
     * file if a gAMA chunk was present.  png_set_alpha_mode provides a
@@ -981,7 +1020,11 @@ png_set_rgb_to_gray_fixed(png_structrp png_ptr, int error_action,
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "invalid error action to rgb_to_gray");
+#endif
          break;
    }
 
@@ -993,8 +1036,12 @@ png_set_rgb_to_gray_fixed(png_structrp png_ptr, int error_action,
       /* Make this an error in 1.6 because otherwise the application may assume
        * that it just worked and get a memory overwrite.
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr,
         "Cannot do RGB_TO_GRAY without EXPAND_SUPPORTED");
+#endif
 
       /* png_ptr->transformations &= ~PNG_RGB_TO_GRAY; */
    }
@@ -1020,9 +1067,12 @@ png_set_rgb_to_gray_fixed(png_structrp png_ptr, int error_action,
       else
       {
          if (red >= 0 && green >= 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_app_warning(png_ptr, "");
+#else
             png_app_warning(png_ptr,
                "ignoring out of range rgb_to_gray coefficients");
-
+#endif
          /* Use the defaults, from the cHRM chunk if set, else the historical
           * values which are close to the sRGB/HDTV/ITU-Rec 709 values.  See
           * png_do_rgb_to_gray for more discussion of the values.  In this case
@@ -1049,7 +1099,7 @@ void PNGAPI
 png_set_rgb_to_gray(png_structrp png_ptr, int error_action, double red,
    double green)
 {
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    png_set_rgb_to_gray_fixed(png_ptr, error_action,
       png_fixed(png_ptr, red, "rgb to gray red coefficient"),
       png_fixed(png_ptr, green, "rgb to gray green coefficient"));
@@ -1593,8 +1643,12 @@ png_init_read_transformations(png_structrp png_ptr)
           * libpng to date.
           */
          if ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr,
                "libpng does not support gamma+background+rgb_to_gray");
+#endif
 
          if ((png_ptr->color_type == PNG_COLOR_TYPE_PALETTE) != 0)
          {
@@ -1749,7 +1803,11 @@ png_init_read_transformations(png_structrp png_ptr)
                   break;
 
                default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "invalid background gamma type");
+#endif
             }
 
             g_sig = png_gamma_significant(g);
@@ -1956,7 +2014,11 @@ png_read_transform_info(png_structrp png_ptr, png_inforp info_ptr)
          info_ptr->num_trans = 0;
 
          if (png_ptr->palette == NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error (png_ptr, "");
+#else
             png_error (png_ptr, "Palette is NULL in indexed image");
+#endif
       }
       else
       {
@@ -4196,7 +4258,11 @@ png_do_encode_alpha(png_row_infop row_info, png_bytep row, png_structrp png_ptr)
    /* Only get to here if called with a weird row_info; no harm has been done,
     * so just issue a warning.
     */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   png_warning(png_ptr, "");
+#else
    png_warning(png_ptr, "png_do_encode_alpha: unexpected call");
+#endif
 }
 #endif
 
@@ -4724,7 +4790,11 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
        * error is incredibly rare and incredibly easy to debug without this
        * information.
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "NULL row buffer");
+#endif
    }
 
    /* The following is debugging; prior to 1.5.4 the code was never compiled in;
@@ -4740,7 +4810,11 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
        * png_read_update_info() after setting transforms that expand pixels.
        * This check added to libpng-1.2.19 (but not enabled until 1.5.4).
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Uninitialized row");
+#endif
    }
 
 #ifdef PNG_READ_EXPAND_SUPPORTED
@@ -4787,11 +4861,19 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
          png_ptr->rgb_to_gray_status=1;
          if ((png_ptr->transformations & PNG_RGB_TO_GRAY) ==
              PNG_RGB_TO_GRAY_WARN)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "png_do_rgb_to_gray found nongray pixel");
+#endif
 
          if ((png_ptr->transformations & PNG_RGB_TO_GRAY) ==
              PNG_RGB_TO_GRAY_ERR)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "png_do_rgb_to_gray found nongray pixel");
+#endif
       }
    }
 #endif
@@ -4900,7 +4982,11 @@ png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
           png_ptr->palette_lookup, png_ptr->quantize_index);
 
       if (row_info->rowbytes == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "png_do_quantize returned rowbytes=0");
+#endif
    }
 #endif /* READ_QUANTIZE */
 

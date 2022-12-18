@@ -535,12 +535,13 @@ HI_S32 DRV_GPIO_Close(struct inode *inode, struct file *filp)
 
 HI_S32 DRV_GPIO_SetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  enOutputType)
 {
+	
 #if    defined(CHIP_TYPE_hi3716cv200)   \
-    || defined(CHIP_TYPE_hi3716mv400)   \
-    || defined(CHIP_TYPE_hi3718cv100)   \
-    || defined(CHIP_TYPE_hi3719cv100)   \
-    || defined(CHIP_TYPE_hi3718mv100)   \
-    || defined(CHIP_TYPE_hi3719mv100)
+		|| defined(CHIP_TYPE_hi3716mv400)	\
+		|| defined(CHIP_TYPE_hi3718cv100)	\
+		|| defined(CHIP_TYPE_hi3719cv100)	\
+		|| defined(CHIP_TYPE_hi3718mv100)	\
+		|| defined(CHIP_TYPE_hi3719mv100)
 
     HI_U32 u32Value = 0;
     HI_U32 u32Bit = 0;
@@ -552,8 +553,7 @@ HI_S32 DRV_GPIO_SetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  enOutp
     {
         return HI_ERR_GPIO_NOT_SUPPORT;
     }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
 
     u32Bit = u32GpioNo % 8;
     u32Value &= ~(1 << u32Bit);
@@ -562,38 +562,21 @@ HI_S32 DRV_GPIO_SetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  enOutp
     g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32 = u32Value;
 
     return HI_SUCCESS;
+
 #elif defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
-    HI_U32 u32Value = 0;
-    HI_U32 u32Bit = 0;
 
-    if ((u32GpioNo < 5 * 8 + 0)
-        || (u32GpioNo > 5 * 8 + 7)
-        || (u32GpioNo == 5 * 8 + 3)
-        || (u32GpioNo == 5 * 8 + 4))
-    {
-        return HI_ERR_GPIO_NOT_SUPPORT;
-    }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
-
-    u32Bit = u32GpioNo % 8;
-    u32Value &= ~(1 << u32Bit);
-    u32Value |= enOutputType << u32Bit;
-
-    g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32 = u32Value;
-
-    return HI_SUCCESS;
-#elif defined(CHIP_TYPE_hi3798cv200_a)
 	HI_U32 u32Value = 0;
     HI_U32 u32Bit = 0;
-
-    if ((u32GpioNo < 5 * 8 + 0)
-        || (u32GpioNo > 5 * 8 + 7))
-    {
-        return HI_ERR_GPIO_NOT_SUPPORT;
-    }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+	
+	if ((u32GpioNo < 5 * 8 + 0)
+		|| (u32GpioNo > 5 * 8 + 7)
+		|| (u32GpioNo == 5 * 8 + 3)
+		|| (u32GpioNo == 5 * 8 + 4))
+	{
+		return HI_ERR_GPIO_NOT_SUPPORT;
+	}
+	
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
 
     u32Bit = u32GpioNo % 8;
     u32Value &= ~(1 << u32Bit);
@@ -603,76 +586,60 @@ HI_S32 DRV_GPIO_SetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  enOutp
 
     return HI_SUCCESS;
 
-//FIXME hi3798cv100 no such register SC_GPIO_OD_CTRL
-#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
-    return HI_SUCCESS;
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420) || defined(CHIP_TYPE_hi3798cv200_a)
 
+	HI_U32 u32Value = 0;
+    HI_U32 u32Bit = 0;
+	
+	if ((u32GpioNo < 5 * 8 + 0)
+		|| (u32GpioNo >= 5 * 8 + 7))
+	{
+			return HI_ERR_GPIO_NOT_SUPPORT;
+	}
+
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+
+    u32Bit = u32GpioNo % 8;
+    u32Value &= ~(1 << u32Bit);
+    u32Value |= enOutputType << u32Bit;
+
+    g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32 = u32Value;
+
+    return HI_SUCCESS;
+	
+	//FIXME hi3798cv100 no such register SC_GPIO_OD_CTRL
+#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+		return HI_SUCCESS;
+	
 #else
-    return HI_ERR_GPIO_NOT_SUPPORT;
+		return HI_ERR_GPIO_NOT_SUPPORT;
 #endif
+
 }
 
 HI_S32 DRV_GPIO_GetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  *penOutputType)
 {
+
 #if    defined(CHIP_TYPE_hi3716cv200)   \
-    || defined(CHIP_TYPE_hi3716mv400)   \
-    || defined(CHIP_TYPE_hi3718cv100)   \
-    || defined(CHIP_TYPE_hi3719cv100)   \
-    || defined(CHIP_TYPE_hi3718mv100)   \
-    || defined(CHIP_TYPE_hi3719mv100)
+			|| defined(CHIP_TYPE_hi3716mv400)	\
+			|| defined(CHIP_TYPE_hi3718cv100)	\
+			|| defined(CHIP_TYPE_hi3719cv100)	\
+			|| defined(CHIP_TYPE_hi3718mv100)	\
+			|| defined(CHIP_TYPE_hi3719mv100)
 
-    HI_U32 u32Value = 0;
-    HI_U32 u32Bit = 0;
-
-    if ((u32GpioNo < 5 * 8 + 0)
-        || (u32GpioNo > 5 * 8 + 7)
-        || (u32GpioNo == 5 * 8 + 5)
-        || (u32GpioNo == 5 * 8 + 6))
-    {
-        return HI_ERR_GPIO_NOT_SUPPORT;
-    }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
-
-    u32Bit = u32GpioNo % 8;
-
-    u32Value = (u32Value >> u32Bit) & 0x1;
-    *penOutputType = (HI_UNF_GPIO_OUTPUTTYPE_E)u32Value;
-
-    return HI_SUCCESS;
-
-#elif defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
-    HI_U32 u32Value = 0;
-    HI_U32 u32Bit = 0;
-
-    if ((u32GpioNo < 5 * 8 + 0)
-        || (u32GpioNo > 5 * 8 + 7)
-        || (u32GpioNo == 5 * 8 + 3)
-        || (u32GpioNo == 5 * 8 + 4))
-    {
-        return HI_ERR_GPIO_NOT_SUPPORT;
-    }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
-
-    u32Bit = u32GpioNo % 8;
-
-    u32Value = (u32Value >> u32Bit) & 0x1;
-    *penOutputType = (HI_UNF_GPIO_OUTPUTTYPE_E)u32Value;
-
-    return HI_SUCCESS;
-
-#elif defined(CHIP_TYPE_hi3798cv200_a)
+	
 	HI_U32 u32Value = 0;
-    HI_U32 u32Bit = 0;
+	HI_U32 u32Bit = 0;
+	
+	if ((u32GpioNo < 5 * 8 + 0)
+		|| (u32GpioNo > 5 * 8 + 7)
+		|| (u32GpioNo == 5 * 8 + 5)
+		|| (u32GpioNo == 5 * 8 + 6))
+	{
+		return HI_ERR_GPIO_NOT_SUPPORT;
+	}
 
-    if ((u32GpioNo < 5 * 8 + 0)
-        || (u32GpioNo > 5 * 8 + 7))
-    {
-        return HI_ERR_GPIO_NOT_SUPPORT;
-    }
-
-    u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
 
     u32Bit = u32GpioNo % 8;
 
@@ -680,13 +647,59 @@ HI_S32 DRV_GPIO_GetOutputType(HI_U32 u32GpioNo, HI_UNF_GPIO_OUTPUTTYPE_E  *penOu
     *penOutputType = (HI_UNF_GPIO_OUTPUTTYPE_E)u32Value;
 
     return HI_SUCCESS;
+	
+#elif defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
 
-//FIXME hi3798cv100 no such register SC_GPIO_OD_CTRL
-#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+	
+	HI_U32 u32Value = 0;
+	HI_U32 u32Bit = 0;
+		
+	if ((u32GpioNo < 5 * 8 + 0)
+		|| (u32GpioNo > 5 * 8 + 7)
+		|| (u32GpioNo == 5 * 8 + 3)
+		|| (u32GpioNo == 5 * 8 + 4))
+	{
+		return HI_ERR_GPIO_NOT_SUPPORT;
+	}
+
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+
+    u32Bit = u32GpioNo % 8;
+
+    u32Value = (u32Value >> u32Bit) & 0x1;
+    *penOutputType = (HI_UNF_GPIO_OUTPUTTYPE_E)u32Value;
+
     return HI_SUCCESS;
+	
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420) || defined(CHIP_TYPE_hi3798cv200_a)
+
+	
+	HI_U32 u32Value = 0;
+	HI_U32 u32Bit = 0;
+		
+	if ((u32GpioNo < 5 * 8 + 0)
+		|| (u32GpioNo >= 5 * 8 + 7))
+	{
+			return HI_ERR_GPIO_NOT_SUPPORT;
+	}
+
+	u32Value = g_pstRegSysCtrl->SC_GPIO_OD_CTRL.u32;
+
+    u32Bit = u32GpioNo % 8;
+
+    u32Value = (u32Value >> u32Bit) & 0x1;
+    *penOutputType = (HI_UNF_GPIO_OUTPUTTYPE_E)u32Value;
+
+    return HI_SUCCESS;
+		
+		//FIXME hi3798cv100 no such register SC_GPIO_OD_CTRL
+#elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
+		return HI_SUCCESS;
+		
 #else
-    return HI_ERR_GPIO_NOT_SUPPORT;
+		return HI_ERR_GPIO_NOT_SUPPORT;
 #endif
+
 }
 
 HI_S32 HI_DRV_GPIO_RegisterServerFunc(HI_U32 u32GpioNo, HI_VOID (*func)(HI_U32))
@@ -896,6 +909,13 @@ HI_S32 HI_DRV_GPIO_Init(void)
 
 #elif defined(CHIP_TYPE_hi3796mv100)||defined(CHIP_TYPE_hi3798mv100)
 	g_GpioUsrAddr[6] = IO_ADDRESS(HI_GPIO_6_ADDR);
+
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	g_GpioUsrAddr[6] = IO_ADDRESS(HI_GPIO_6_ADDR);
+    g_GpioUsrAddr[7] = IO_ADDRESS(HI_GPIO_7_ADDR);
+    g_GpioUsrAddr[8] = IO_ADDRESS(HI_GPIO_8_ADDR);
+    g_GpioUsrAddr[9] = IO_ADDRESS(HI_GPIO_9_ADDR);
+	g_GpioUsrAddr[10] = IO_ADDRESS(HI_GPIO_10_ADDR);
 
 #elif  defined(CHIP_TYPE_hi3716cv200)   \
     || defined(CHIP_TYPE_hi3716mv400)   \

@@ -255,6 +255,22 @@ HI_S32 HI_UNF_PVR_UnRegisterExtraCallBack(HI_U32 u32ChnID, HI_UNF_PVR_EXTRA_CALL
     return HI_PVR_UnRegisterExtraCallBack(u32ChnID, enExtraCallbackType);
 }
 
+HI_S32 HI_UNF_PVR_RecAddPID(HI_U32 u32ChnID, HI_U32 u32Pid)
+{
+    return HI_PVR_RecAddPid(u32ChnID, u32Pid);
+}
+
+HI_S32 HI_UNF_PVR_RecDelPID(HI_U32 u32ChnID, HI_U32 u32Pid)
+{
+    return HI_PVR_RecDelPid(u32ChnID, u32Pid);
+}
+
+HI_S32 HI_UNF_PVR_RecDelAllPID(HI_U32 u32ChnID)
+{
+    return HI_PVR_RecDelAllPid(u32ChnID);
+}
+
+
 #ifdef __cplusplus
 #if __cplusplus
 }

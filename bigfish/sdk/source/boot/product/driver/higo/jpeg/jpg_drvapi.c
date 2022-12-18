@@ -25,47 +25,11 @@ extern "C"{
 //static VCOS_sem_t s_semEngage;
 static HI_VOID *s_pRegAddr = HI_NULL;
 
-
-#define JPGDRV_CHECK(jpgfd) \
-do {\
-    if (0 >= jpgfd) \
-    { \
-        HI_TRACE(HI_LOG_LEVEL_ERROR, JPEG, \
-                 "%s\n", "Dev don't open.");\
-        return HI_ERR_JPG_DEV_NOOPEN;\
-    }\
-}while(0)
-
 #define JPGDRV_REGISTER_LENGTH 0x108
 
 
-
-//HI_U32 X5_REGS[0x64F] = {0};
-
-HI_S32 HI_JPG_Open(HI_VOID)
+HI_VOID JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID **pVhbRegPtr)
 {
-
-    return HI_SUCCESS;
-}
-HI_S32 HI_JPG_Close(HI_VOID)
-{
-
-    return HI_SUCCESS;
-}
-HI_S32 JPGDRV_GetDevice(HI_VOID)
-{
-    return HI_SUCCESS;
-}
-HI_S32 JPGDRV_ReleaseDevice(HI_VOID)
-{
-    return HI_SUCCESS;
-}
-
-HI_S32 JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID **pVhbRegPtr)
-{
-#ifndef JPG_OS_BOOT
-
-#else
     U_PERI_CRG31 unTempValue;
 
     s_pRegAddr = (HI_VOID*)JPEG_HW_ADDRESS;
@@ -83,9 +47,6 @@ HI_S32 JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID *
     }
 
     *pRegPtr = (HI_VOID*)JPEG_HW_ADDRESS;
-
-#endif
-    return HI_SUCCESS;
 }
 
 #define  JPGHDEC_READ_REG(baseaddr, offset, value) \
@@ -93,36 +54,23 @@ HI_S32 JPGDRV_GetRegisterAddr(HI_VOID **pRegPtr, HI_VOID **pRstRegPtr, HI_VOID *
     ((value) = *(volatile HI_U32 *)((HI_U32)(baseaddr) + (offset)) );\
 }
 
-HI_S32 JPGDRV_GetIntStatus(JPG_INTTYPE_E *pIntType, HI_U32 TimeOut)
+HI_VOID JPGDRV_GetIntStatus(JPG_INTTYPE_E *pIntType, HI_U32 TimeOut)
 {
     HI_U32    IntVal = 0;
     HI_U32    Addr;
-
-#ifndef JPG_OS_BOOT
-
-
-#else
-	Addr = JPEG_HW_ADDRESS + 0x100;  /* X5_JPGREG_INT */
+	Addr   = JPEG_HW_ADDRESS + 0x100;
     IntVal = (*(HI_U32*)(Addr))&0x7;
-//    printf("++Addr 0x%x inval %d\n",Addr,IntVal);
-    if(IntVal == 1)
-    	{
+
+    if(IntVal == 1){
     	*pIntType = JPG_INTTYPE_FINISH;
-    	}
-    else if(IntVal == 4)
-    	{
+    }else if(IntVal == 4){
     	*pIntType = JPG_INTTYPE_CONTINUE;
-    	}
-    else  if(IntVal == 2)
-    	{
+    }else  if(IntVal == 2){
     	*pIntType = JPG_INTTYPE_ERROR;
-    	}
-    else *pIntType = JPG_INTTYPE_NONE;
+    }else *pIntType = JPG_INTTYPE_NONE;
 
    if(IntVal != 0)
-        (*(HI_U32*)(Addr)) = IntVal;
-#endif
-    return HI_SUCCESS;
+      (*(HI_U32*)(Addr)) = IntVal;
 }
 
 

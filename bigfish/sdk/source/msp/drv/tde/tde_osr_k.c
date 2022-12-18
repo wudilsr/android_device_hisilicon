@@ -32,6 +32,9 @@ typedef unsigned long       HI_UL;
 STATIC spinlock_t s_taskletlock;
 extern struct miscdevice gfx_dev;
 
+static spinlock_t s_TdeRefLock;
+static HI_SIZE_T s_TdeRefLockFlags;
+
 STATIC int tde_osr_isr(int irq, void *dev_id);
 STATIC void tde_tasklet_func(unsigned long int_status);
 
@@ -114,6 +117,7 @@ HI_S32 tde_init_module_k(HI_VOID)
         return ret;
     }
     spin_lock_init(&s_taskletlock);
+    spin_lock_init(&s_TdeRefLock);
     
     return 0;
 }
@@ -132,27 +136,30 @@ HI_VOID tde_cleanup_module_k(HI_VOID)
 
 int tde_open(struct inode *finode, struct file  *ffile)
 {
+    TDE_LOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     if (1 == atomic_inc_return(&g_TDECount))
     {
-        (HI_VOID)TdeHalOpen();
+        TdeHalResumeInit(); 
     }
-
+    TDE_UNLOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     return 0;
 }
 
 int tde_release(struct inode *finode, struct file  *ffile)
 {
+    TDE_LOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     if (atomic_dec_and_test(&g_TDECount))
     {
+    	TdeHalClose(); 
         //todo:
         //tasklet_kill(&tde_tasklet);
     }
-    TdeFreePendingJob();
     if ( atomic_read(&g_TDECount) < 0 )
     {
         atomic_set(&g_TDECount, 0);
     }
-
+    TDE_UNLOCK(&s_TdeRefLock, s_TdeRefLockFlags);
+    TdeFreePendingJob();
     return 0;
 }
 
@@ -568,8 +575,10 @@ int tde_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 /* wait for resume */
 int tde_pm_resume(PM_BASEDEV_S *pdev)
 {
-    TdeHalResumeInit();
-
+    if ( atomic_read(&g_TDECount) > 0 ) 
+    {
+        TdeHalResumeInit();
+    }
     HI_PRINT("TDE resume OK\n");
 
     return 0;

@@ -282,7 +282,7 @@ STATIC_FUNC HI_S32 JPGCheckPicAvail(JPG_STATE_E ParseState, HI_U32 CurIdx, HI_U3
     return Ret;
 }
 
-STATIC_FUNC HI_S32 JPGConvert2DecInfo(const JPG_PICPARSEINFO_S* pParseInfo, const JPG_SURFACE_S* pSurface,
+static HI_VOID JPGConvert2DecInfo(const JPG_PICPARSEINFO_S* pParseInfo, const JPG_SURFACE_S* pSurface,
                                   JPGDEC_DECODEATTR_S* pDecodeAttr)
 {
     HI_U32 i;
@@ -298,8 +298,6 @@ STATIC_FUNC HI_S32 JPGConvert2DecInfo(const JPG_PICPARSEINFO_S* pParseInfo, cons
         pDecodeAttr->pDcHuffTbl[i] = pParseInfo->pDcHuffTbl[i];
         pDecodeAttr->pAcHuffTbl[i] = pParseInfo->pAcHuffTbl[i];
     }
-
-    return HI_SUCCESS;
 }
 
 STATIC_FUNC HI_S32 JPGCopyParseBuf2HDBuf(const JPG_CYCLEBUF_S* pParseBuf,
@@ -308,17 +306,19 @@ STATIC_FUNC HI_S32 JPGCopyParseBuf2HDBuf(const JPG_CYCLEBUF_S* pParseBuf,
     JPGBUF_DATA_S  stData;
     JPGDEC_WRITESTREAM_S stWriteStrm;
     HI_U8  EOIBuf[2] = {0xFF, 0xD9};
-    HI_U8  SOIBuf[2] = {0xFF, 0xD8};
+   // HI_U8  SOIBuf[2] = {0xFF, 0xD8};
 
-    JPGBUF_DATA_S  stDataTmp;
+    //JPGBUF_DATA_S  stDataTmp;
     HI_U32         CurOffset = EoiOffset;
-    HI_U32         HeadLen;
+   // HI_U32         HeadLen;
     HI_VOID (*JPGDEC_SendStream)(JPG_HANDLE Handle,
                                  JPGDEC_WRITESTREAM_S* pStreamInfo);
 
     JPGDEC_SendStream = JPGHDEC_SendStream;
     (HI_VOID)JPGBUF_GetDataBtwWhRh(pParseBuf, &stData);
 
+#if 0
+	/** deal with codecc **/
     if(JPG_DECTYPE_SW == DecType)
     {
         VCOS_memcpy(&stDataTmp, &stData, sizeof(JPGBUF_DATA_S));
@@ -337,6 +337,7 @@ STATIC_FUNC HI_S32 JPGCopyParseBuf2HDBuf(const JPG_CYCLEBUF_S* pParseBuf,
         //BM_TRACE("sendstream addr1 0x%x len 0x%x\n",stWriteStrm.pStreamAddr,stWriteStrm.StreamLen);
         JPGDEC_SendStream(HDecHandle, &stWriteStrm);
     }
+#endif
 
     assert(stData.u32Len[0] + stData.u32Len[1] >= CurOffset);
 
@@ -458,27 +459,10 @@ HI_S32 JPG_CreateDecoder(JPG_HANDLE *pHandle, JPG_IMGTYPE_E ImgType, HI_U32 ImgL
     HI_S32          s32Ret;
     JPG_DECCTX_S*   pstCtx;
     JPG_HANDLE       JpgHandle;
-//    HI_VOID*           pVirtAddr = HI_NULL;
     HI_U32               DecSize;
-//    HI_U32                PhysAddr = 0;
 
     JPG_CHECK_NULLPTR(pHandle);
     JPG_CHECK_ENUM(ImgType, JPG_IMGTYPE_BUTT);
-
-
-#if 1//ndef X5_JPEG
-
-    s32Ret = JPGDRV_GetDevice();
-
-    if(HI_SUCCESS != s32Ret)
-    {
-        s32Ret = (HI_ERR_JPG_DEC_BUSY == s32Ret) ? s32Ret : HI_FAILURE;
-        return s32Ret;
-    }
-#endif
-
-	//JPG_Handle_Clear();
-
 
 #if 1
     DecSize = JPGDEC_MEMSIZE
@@ -557,9 +541,6 @@ HI_S32 JPG_CreateDecoder(JPG_HANDLE *pHandle, JPG_IMGTYPE_E ImgType, HI_U32 ImgL
         JPGFMW_Free(&s_DecCtrlMem.s_DecMem);
     /*LABEL0: */
      LABEL0:
-#if  1//ndef X5_JPEG
-        (HI_VOID)JPGDRV_ReleaseDevice();
-#endif
         return s32Ret;
 }
 
@@ -594,10 +575,6 @@ HI_S32  JPG_DestroyDecoder(JPG_HANDLE Handle)
     JPGFMW_Free(&s_DecCtrlMem.s_DecMem);
 
     JPG_Handle_Free(Handle);
-
-	#if 1 //ndef X5_JPEG
-    (HI_VOID)JPGDRV_ReleaseDevice();
-	#endif
 
     return HI_SUCCESS;
 }
@@ -721,7 +698,6 @@ HI_S32  JPG_Decode(JPG_HANDLE Handle, const JPG_SURFACE_S *pSurface, HI_U32 Inde
     else
     {
         pstCtx->State = JPG_STATE_PARSEERR;
-        //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "Decoder not supported!\n");
         return HI_ERR_JPG_NOSUPPORT_FMT;
     }
 
@@ -764,7 +740,7 @@ HI_S32  JPG_Decode(JPG_HANDLE Handle, const JPG_SURFACE_S *pSurface, HI_U32 Inde
 
         pstCtx->pstruCurrentDec->JPGDEC_Reset(pstCtx->HDecHandle);
 
-     s32Ret = JPGConvert2DecInfo(pCurPicInfo, pSurface, &stDecAttr);
+    JPGConvert2DecInfo(pCurPicInfo, pSurface, &stDecAttr);
 
     (HI_VOID)JPGBUF_GetDataBtwWhRh(&pstCtx->ParseBuf, &stData);
 
@@ -776,7 +752,6 @@ HI_S32  JPG_Decode(JPG_HANDLE Handle, const JPG_SURFACE_S *pSurface, HI_U32 Inde
         {
             /* AI7D02581 */
             pstCtx->State = JPG_STATE_DECODEERR;
-            //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "Parse fail before Decoding!\n");
             return HI_ERR_JPG_DEC_FAIL;
         }
 
@@ -1012,9 +987,10 @@ HI_S32  JPG_GetPicInfo(JPG_HANDLE Handle, JPG_PICINFO_S *pPicInfo,
 
     if(HI_SUCCESS == s32Ret)
     {
-        Avail = JPGCheckPicAvail(pstCtx->State, (HI_U32)pstCtx->CurrIndex,
-                                 pstCtx->ThumbCnt, Index);
-        assert(HI_SUCCESS == Avail);
+        Avail = JPGCheckPicAvail(pstCtx->State, (HI_U32)pstCtx->CurrIndex,pstCtx->ThumbCnt, Index);
+		if(HI_SUCCESS != Avail){
+        	return HI_FAILURE;
+		}
        JPG_GETCURPICINFO(pstCtx->ParseHandle, Index, pCurPicInfo);
 
 
@@ -1084,12 +1060,12 @@ HI_S32  JPG_GetStatus(JPG_HANDLE Handle, JPG_STATE_E *pState, HI_U32 *pIndex)
 
 HI_S32  JPG_SendStream(HI_U32 Handle, JPGDEC_WRITESTREAM_S *pWriteInfo)
 {
-    JPG_DECCTX_S*     pstCtx;
-    HI_U32  FreeLen;
-    HI_U32  MinLen;
-    HI_S32 Offset;
-    HI_S32 s32Ret;
-    HI_BOOL bEOI;
+    JPG_DECCTX_S*  pstCtx = NULL;
+    HI_U32  FreeLen = 0;
+    HI_U32  MinLen  = 0;
+    HI_S32 Offset   = 0;
+    HI_S32 s32Ret   = HI_SUCCESS;
+    HI_BOOL bEOI    = HI_FALSE;
     JPGDEC_WRITESTREAM_S HdStreamInfo;
     JPG_PARSESTATE_S  stParseState;
     HI_S32  Avail = HI_FAILURE;
@@ -1155,8 +1131,11 @@ HI_S32  JPG_SendStream(HI_U32 Handle, JPGDEC_WRITESTREAM_S *pWriteInfo)
                 }
 
                 pstCtx->State = JPG_STATE_PARSING;
-                s32Ret = JPGPARSE_Parse(pstCtx->ParseHandle, &pstCtx->ParseBuf,
-                                        pstCtx->ReqIndex, pstCtx->bReqExif, &stParseState);
+                (HI_VOID)JPGPARSE_Parse(pstCtx->ParseHandle,    \
+                	                    &pstCtx->ParseBuf,      \
+                                        pstCtx->ReqIndex,       \
+                                        pstCtx->bReqExif,       \
+                                        &stParseState);
                 pstCtx->State = JPG_TransformParseState(stParseState.State);
 
                 pstCtx->CurrIndex  = stParseState.Index;
@@ -1166,7 +1145,6 @@ HI_S32  JPG_SendStream(HI_U32 Handle, JPGDEC_WRITESTREAM_S *pWriteInfo)
                      && (HI_TRUE == pWriteInfo->EndFlag)
                      && (pWriteInfo->StreamLen == pWriteInfo->CopyLen))
                 {
-                    //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "File end, parse err!\n");
                     pstCtx->State = JPGPARSE_STATE_PARSEERR;
                 }
             }

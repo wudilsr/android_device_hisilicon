@@ -50,16 +50,16 @@ menuconfig HI_TEMP_CTRL_CONFIG
 	default n
         config  HI_TEMP_CTRL_DOWN_THRESHOLD
                 depends on HI_TEMP_CTRL_CONFIG
-                hex "Down Threshold Register Value of Temperature"
-                default 0xdc 
+                hex "Down Threshold Value of Temperature"
+                default 0x73 
         config  HI_TEMP_CTRL_UP_THRESHOLD
                 depends on HI_TEMP_CTRL_CONFIG
-                hex "Up Threshold Register Value of Temperature"
-                default 0xc8
+                hex "Up Threshold Value of Temperature"
+                default 0x64
         config  HI_TEMP_CTRL_REBOOT_THRESHOLD
                 depends on HI_TEMP_CTRL_CONFIG
-                hex "Reboot Threshold Register Value of Temperature"
-                default 0xea
+                hex "Reboot Threshold Value of Temperature"
+                default 0x7d
 #+++++++++++++++++++++++++++++++++++++
 endmenu
 #+++++++++++++++++++++++++++++++++++++

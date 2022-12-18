@@ -139,14 +139,11 @@ extern "C" {
 
 #define DMX_DEFAULT_POST_TH             0
 
-/* speed is 15 ,it means the Max speed of a IP port equal :
-100 Mbps@MV300
-126 Mbps@CV200
-We consider this speed is enough for IP port,
-user can change this value small to get more speed of IP port,
-but that may cause the total speed of demux be stress
+/*
+ * disable dynamic tune dmx clk: crg64.pvr_dmx_clk_sel * 8 / (DMX_DEFAULT_IP_SPEED + 1 ) = iprate(mbps)
+ * enable dynamic tune dmx clk: actual_dmx_clk(offset:0x2320) * 8 / (DMX_DEFAULT_IP_SPEED + 1 ) = iprate(mbps)
 */
-#define DMX_DEFAULT_IP_SPEED              15
+#define DMX_DEFAULT_IP_SPEED              9
 
 
 #define DMX_KEY_HARDONLY_FLAG           0xffffffff
@@ -544,7 +541,7 @@ typedef struct
     HI_BOOL                     bClearDetected;
     HI_BOOL                     bSCDBufIsEmpty;
     struct semaphore            LockRec;
-#ifdef DMX_DATAINDEX_V2_SUPPORT    
+#ifndef DMX_DATAINDEX_V1_SUPPORT    
     struct list_head          head;
     HI_U32                      PrevFrameEndAddr;
     HI_U32                      BlockStartAddr;
@@ -555,6 +552,12 @@ typedef struct
     HI_U32                      RecBufReadPhyAddr;
 #endif
 } DMX_RecInfo_S;
+
+typedef enum
+{
+    DMX_DEV_INACTIVED = 0x0,
+    DMX_DEV_ACTIVED = 0x1,
+} DMX_Dev_State_E;
 
 typedef struct hiDMX_DEV_OSI_S
 {
@@ -576,13 +579,14 @@ typedef struct hiDMX_DEV_OSI_S
     HI_U32                      KeyOtherHardFlag;
     HI_U32                      AVChanCount;
     HI_S32                      Reference;       /*Reference count ,for multi-process*/
+    DMX_Dev_State_E           State;
+    HI_U32                      ResumeCnt;
     wait_queue_head_t           DmxWaitQueue;
     struct semaphore            lock_Channel;
     struct semaphore            lock_AVChan;
     struct semaphore            lock_Filter;
     struct semaphore            lock_Key;
-    struct semaphore            lock_OqBuf;
-    spinlock_t                  splock_OqBuf;
+    spinlock_t                      splock_OqBuf;
 } DMX_DEV_OSI_S;
 
 /*

@@ -274,7 +274,7 @@ void hisi_pmc_global_powerdown(void)
 
 static int hisi_pmu_powerup(void)
 {
- #if defined (CHIP_TYPE_hi3716mv400)
+ #if defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
     hisi_pmu_powerup_singlecore(GPU_CORE_PP0);
 
  #elif defined (CHIP_TYPE_hi3719mv100) || defined (CHIP_TYPE_hi3718mv100)
@@ -298,7 +298,7 @@ static int hisi_pmu_powerdown(void)
 {
     hisi_crg_clockoff();
 
- #if defined (CHIP_TYPE_hi3716mv400)
+ #if defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
     hisi_pmu_powerdown_singlecore(GPU_CORE_PP0);
 
  #elif defined (CHIP_TYPE_hi3719mv100) || defined (CHIP_TYPE_hi3718mv100)

@@ -212,6 +212,11 @@
 #define DDC_STATUS                          (0xF2)
 #define DDC_DELAY_CNT                       (0xF6)
 
+#define HRES_L                              (0x3A)  //h_RES[7:0]
+#define HRES_H                              (0x3B)  //H_RES[12:8]
+#define VRES_L                              (0x3C)  //V_RES[7:0]
+#define VRES_H                              (0x3D)  //V_RES[10:8]
+
 
 //-----------------------------------------------------
 #define TX_SLV1								(0x7A)

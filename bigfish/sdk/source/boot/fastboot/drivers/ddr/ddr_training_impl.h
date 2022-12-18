@@ -52,6 +52,10 @@
 /* [CUSTOM] ddrt reversed data */
 #define SYSCTRL_DDRT_PATTERN              0xa0
 #endif
+#ifndef SYSCTRL_DDRT_PATTERN_SEC
+/* [CUSTOM] ddrt reversed data for second PHY. If not defined, keep same.*/
+#define SYSCTRL_DDRT_PATTERN_SEC          (SYSCTRL_DDRT_PATTERN)
+#endif
 #ifndef SYSCTRL_DDR_TRAINING_CFG
 /* [CUSTOM] ddr training item */
 #define SYSCTRL_DDR_TRAINING_CFG          0xd0
@@ -61,22 +65,32 @@
 #define SYSCTRL_DDR_TRAINING_STAT         0x9c
 #endif
 
-/* Write leveling. [4]=1:Disable */
-#define DDR_BYPASS_WL_MASK                0x10
-/* Gate training. [8]=1:Disable */
-#define DDR_BYPASS_GATE_MASK              0x100
-/* Dataeye training. [16]=1:Disable */
-#define DDR_BYPASS_DATAEYE_MASK           0x10000
-/* Hardware read deskew training. [20]=1:Disable */
-#define DDR_BYPASS_HW_MASK                0x100000
-/* MPR training. [21]=1:Disable */
-#define DDR_BYPASS_MPR_MASK               0x200000
-/* AC training. [22]=1:Disable */
-#define DDR_BYPASS_AC_MASK                0x400000
-/* HOST_VREF. [24]=1:Disable */
-#define DDR_BYPASS_VREF_MASK              0x1000000
-/* Dataeye adjust. [28]=1:Disable */
-#define DDR_BYPASS_DATAEYE_ADJ_MASK       0x10000000
+/****** special config define*******************************************/
+#ifdef DDR_DATAEYE_NORMAL_NOT_ADJ_CONFIG
+/* Adjust dataeye window consume a lot of time, disable it will make boot
+ * faster.
+ * NOTE: The WDQ Phase and RDQS MUST be config a good value in the init table
+ * to avoid window trend to one side.
+ */
+#define DDR_DATAEYE_NORMAL_ADJUST   (DDR_FALSE)
+#else
+#define DDR_DATAEYE_NORMAL_ADJUST   (DDR_TRUE)
+#endif
+/* MUST adjust dataeye window after HW or MPR training */
+#define DDR_DATAEYE_ABNORMAL_ADJUST       (DDR_TRUE)
+
+/****** ddr training item bypass mask define ****************************/
+#define DDR_BYPASS_PHY0_MASK        0x1 /* [0]PHY0 training */
+#define DDR_BYPASS_PHY1_MASK        0x2 /* [1]PHY1 training */
+#define DDR_BYPASS_WL_MASK          0x10 /* [4]Write leveling */
+#define DDR_BYPASS_GATE_MASK        0x100 /* [8]Gate training */
+#define DDR_BYPASS_DATAEYE_MASK     0x10000 /* [16]Dataeye training */
+#define DDR_BYPASS_HW_MASK          0x100000 /* [20]Hardware read training */
+#define DDR_BYPASS_MPR_MASK         0x200000 /* [21]MPR training */
+#define DDR_BYPASS_AC_MASK          0x400000 /* [22]AC training */
+#define DDR_BYPASS_VREF_HOST_MASK   0x1000000 /* [24]Host Vref training */
+#define DDR_BYPASS_VREF_DRAM_MASK   0x2000000 /* [25]DRAM Vref training */
+#define DDR_BYPASS_DATAEYE_ADJ_MASK 0x10000000 /* [28]Dataeye adjust */
 
 /****** common define **********************************************/
 /* special ddrt need special read and write register */
@@ -91,14 +105,23 @@
 #define DDR_MODE_READ                     (1 << 0)
 #define DDR_MODE_WRITE                    (1 << 1)
 
+/* DSB to make sure the operation is complete */
+#define DDR_ASM_DSB()                     __asm__ __volatile__("dsb")
+
+#define DDR_HWR_WAIT_TIMEOUT	          (500)
+#define DDR_SFC_WAIT_TIMEOUT	          (100)
+
 #define DDR_FIND_DQ_BOTH                  (1 << 0) /* find a valid value*/
 /* x is valid, (x-1) is invalid*/
 #define DDR_FIND_DQ_LEFT                  (1 << 1)
 /* x is valid, (x+1) is invalid*/
 #define DDR_FIND_DQ_RIGHT                 (1 << 2)
 
-#define DDR_VREF_VAL_MAX                  (0x1f)        /* 78.75%*VDDIO */
-#define DDR_VREF_VAL_MIN                  (0x0)         /* 40.00%*VDDIO */
+#define DDR_VREF_HOST_VAL_MAX             (0x1f)        /* 78.75%*VDDIO */
+#define DDR_VREF_HOST_VAL_MIN             (0x0)         /* 40.00%*VDDIO */
+
+#define DDR_VREF_DRAM_VAL_MAX             (0x32)        /* 92.50%*VDDIO */
+#define DDR_VREF_DRAM_VAL_MIN             (0x0)         /* 60.00%*VDDIO */
 
 #define DDR_PHY_BYTE_MAX                  4
 #define DDR_PHY_BIT_NUM                   8
@@ -121,14 +144,16 @@
 /* Dataeye DQ deskew times for best result. More bigger more slower. */
 #define DDR_LOOP_TIMES_LMT                1
 /* Compare times when find best vref value. More bigger more slower. */
-#define DDR_VREF_COMPARE_TIMES            2
+#define DDR_VREF_COMPARE_TIMES            3
+/* MPR Find first start rdqs times. More bigger, start rdqs more bigger . */
+#define DDR_MPR_RDQS_FIND_TIMES           3
 
 #define DDR_DATAEYE_RESULT_MASK           0xffff
 #define DDR_DATAEYE_RESULT_BIT            16
 
 #define DDR_WL_BDL_STEP                   2 /* wl bdl step */
 #define DDR_GATE_BDL_STEP                 2 /* gate bdl step */
-#define DDR_RDDQS_BDL_STEP                1 /* RDDQS bdl step */
+#define DDR_DQS_ADJ_STEP                  1 /* WR/RD DQS adjust step */
 
 #define DDR_DDRT_MODE_GATE                (1 << 0)
 #define DDR_DDRT_MODE_DATAEYE             (1 << 1)
@@ -160,7 +185,7 @@
 #define DDR_FATAL(fmt...)
 #endif /* DDR_TRAINING_CMD && DDR_TRAINING_LOG_CONFIG */
 
-/* [13:0] Error type */
+/* [11:0] Error type */
 /* 0x00000001 Write Leveling error */
 #define DDR_ERR_WL                        (1 << 0)
 /* 0x00000002 Hardware Gatining error */
@@ -173,30 +198,24 @@
 #define DDR_ERR_HW_RD_DATAEYE			  (1 << 4)
 /* 0x00000020 MPR error */
 #define DDR_ERR_MPR                       (1 << 5)
+/* 0x00000040 Dataeye error */
+#define DDR_ERR_DATAEYE                   (1 << 6)
 
+/* [13:12] Error phy */
+/* 0x00001000 PHY0 training error */
+#define DDR_ERR_PHY0                      (1 << 12)
+/* 0x00002000 PHY1 training error */
+#define DDR_ERR_PHY1                      (1 << 13)
 
-/* [15:14] Error phy */
-/* 0x00004000 PHY0 training error */
-#define DDR_ERR_PHY0                      (14 << 0)
-/* 0x00008000 PHY1 training error */
-#define DDR_ERR_PHY1                      (15 << 0)
-
-/* [31:24] Error byte */
-#define DDR_ERR_WL_BYTE_BIT               28  /* [31:28] Byte0-3 WL error */
-#define DDR_ERR_GATE_BYTE_BIT             24  /* [27:24] Byte0-3 Gate error */
-
-/**
- * 0x10000001 : Byte0 Write Leveling training error
- * 0x20000001 : Byte1 Write Leveling training error
- * 0x40000001 : Byte2 Write Leveling training error
- * 0x80000001 : Byte3 Write Leveling training error
- * 0x01000004 : Byte0 Gate trainng error
- * 0x02000004 : Byte1 Gate trainng error
- * 0x04000004 : Byte2 Gate trainng error
- * 0x08000004 : Byte3 Gate trainng error
- */
+#define DDR_ERR_BYTE_BIT                  24 /* [28:24] Error DQ0-31 */
+#define DDR_ERR_DQ_BIT                    20 /* [22:20] Error Byte0-3 */
 
 /*******data define*********************************************/
+#ifndef DDR_RELATE_REG_DECLARE
+struct tr_custom_reg {
+};
+#endif
+
 struct training_data {
 	unsigned short int ddr_byte_num;
 	unsigned int base_phy;
@@ -213,49 +232,39 @@ struct ddr_delay_st {
 	unsigned int bdl[DDR_PHY_BYTE_MAX];
 };
 
+struct tr_relate_reg {
+	unsigned int auto_ref_timing[DDR_PHY_NUM];
+	unsigned int power_down[DDR_PHY_NUM];
+	unsigned int dmc_scramb[DDR_PHY_NUM];
+	unsigned int misc_scramb[DDR_PHY_NUM];
+	unsigned int ac_phy_ctl[DDR_PHY_NUM];
+	struct tr_custom_reg custom;
+	struct ddr_ddrc_data ddrc;
+};
+
+struct tr_dq_data {
+	unsigned int dq03[DDR_PHY_BYTE_MAX]; /* DQ0-DQ3 BDL */
+	unsigned int dq47[DDR_PHY_BYTE_MAX]; /* DQ4-DQ7 BDL */
+	unsigned int wdm[DDR_PHY_BYTE_MAX];  /* WDM */
+};
 
 /*******function interface define*********************************************/
 #ifndef DDR_SW_TRAINING_FUNC
 #define DDR_SW_TRAINING_FUNC_PUBLIC
 #define DDR_SW_TRAINING_FUNC        ddr_sw_training_func
 #endif
-#ifndef DDR_HW_TRAINING_FUNC
-#define DDR_HW_TRAINING_FUNC_PUBLIC
-#define DDR_HW_TRAINING_FUNC        ddr_hw_training_func
+/*******Custom function ***********************************************/
+#ifndef DDR_TRAINING_DDRT_PREPARE_FUNC
+#define DDR_TRAINING_DDRT_PREPARE_FUNC()
 #endif
-#ifndef DDR_MPR_TRAINING_FUNC
-#define DDR_MPR_TRAINING_FUNC_PUBLIC
-#define DDR_MPR_TRAINING_FUNC       ddr_mpr_training_func
+#ifndef DDR_TRAINING_SAVE_REG_FUNC
+#define DDR_TRAINING_SAVE_REG_FUNC(relate_reg, mask)
 #endif
-#ifndef DDR_WL_FUNC
-#define DDR_WL_FUNC_PUBLIC
-#define DDR_WL_FUNC                 ddr_wl_func
-#endif
-#ifndef DDR_GATING_FUNC
-#define DDR_GATING_FUNC_PUBLIC
-#define DDR_GATING_FUNC             ddr_gating_func
-#endif
-#ifndef DDR_DATAEYE_TRAINING_FUNC
-#define DDR_DATAEYE_TRAINING_FUNC_PUBLIC
-#define DDR_DATAEYE_TRAINING_FUNC   ddr_dataeye_training_func
-#endif
-#ifndef DDR_VREF_TRAINING_FUNC
-#define DDR_VREF_TRAINING_FUNC_PUBLIC
-#define DDR_VREF_TRAINING_FUNC      ddr_vref_training_func
-#endif
-#ifndef DDR_AC_TRAINING_FUNC
-#define DDR_AC_TRAINING_FUNC_PUBLIC
-#define DDR_AC_TRAINING_FUNC        ddr_ac_training_func
+#ifndef DDR_TRAINING_RESTORE_REG_FUNC
+#define DDR_TRAINING_RESTORE_REG_FUNC(relate_reg)
 #endif
 /*******function define*********************************************/
 int ddr_sw_training_func(void *ddrtr_result);
-int ddr_hw_training_func(void);
-int ddr_mpr_training_func(void);
-int ddr_wl_func(void);
-int ddr_gating_func(void);
-int ddr_dataeye_training_func(void *ddrtr_result);
-int ddr_vref_training_func(void *ddrtr_result);
-int ddr_ac_training_func(void);
 
 void ddr_phy_cfg_update(unsigned int base_phy);
 void ddr_phy_set_dq_bdl(unsigned int base_phy, unsigned int deskew_value,
@@ -267,11 +276,12 @@ int ddr_mpr_training(unsigned int base_dmc, unsigned int base_phy);
 int ddr_write_leveling(unsigned int base_dmc, unsigned int base_phy);
 int ddr_gate_training(unsigned int base_dmc, unsigned int base_phy);
 int ddr_dataeye_training(unsigned int base_dmc, unsigned int base_phy,
-	void *ddrtr_result);
+	void *ddrtr_result, unsigned int adjust);
 int ddr_vref_training(unsigned int base_dmc, unsigned int base_phy,
-	void *ddrtr_result);
+	void *ddrtr_result, unsigned int mode);
+int ddr_ac_training(unsigned int base_dmc, unsigned int base_phy);
 int ddr_dataeye_deskew(struct training_data *training,
-	unsigned int byte_index,  unsigned int mode);
+	unsigned int byte_index, unsigned int mode);
 void ddr_adjust_dataeye(struct training_data *training,
 	unsigned int mode);
 void ddr_result_data_save(void *ddrtr_result,
@@ -282,9 +292,18 @@ int ddr_dataeye_check_dq(const struct training_data *training,
 	unsigned int byte_index, unsigned int dq_index);
 void ddr_ddrt_init(unsigned int base_dmc, unsigned int mode);
 int ddr_training_check_bypass(unsigned int mask);
+int ddr_training_phy_disable(int index);
+void ddr_training_save_reg(struct tr_relate_reg *relate_reg,
+	unsigned int mask);
+void ddr_training_restore_reg(struct tr_relate_reg *relate_reg);
+void ddr_training_get_base(int index, unsigned int *base_dmc,
+	unsigned int *base_phy);
+void ddr_training_switch_axi(int index, struct tr_relate_reg *relate_reg);
+unsigned int ddr_dmc_get_reversed(unsigned int base_dmc);
 void ddr_training_log(const char *func, int level, const char *fmt, ...);
-void ddr_training_stat(unsigned int val);
+void ddr_training_stat(unsigned int mask, unsigned int phy, int byte, int dq);
+void ddr_training_error(unsigned int mask, unsigned int phy, int byte, int dq);
+void ddr_training_start(void);
+void ddr_training_suc(void);
 unsigned int ddr_phy_get_byte_num(unsigned int base_dmc);
-void ddr_ddrt_prepare(void);
-
 #endif /* __ASSEMBLY__ */

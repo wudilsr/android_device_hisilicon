@@ -9,9 +9,14 @@ endif
 #===============================================================================
 # local variables
 #===============================================================================
-
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
+PRODUCT_DIR := $(BOOT_DIR)/../product
+endif
+
 COMMON_DIR  := $(PRODUCT_DIR)/driver/common
 
 ifndef CFLAGS

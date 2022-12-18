@@ -7,3 +7,7 @@ endif
 ifeq ($(BOARD_BLUETOOTH_DEVICE_REALTEK),y)
 include $(HISI_PLATFORM_PATH)/bluetooth/realtek8xxx/rtk_lib/Android.mk
 endif
+
+ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U),y)
+include $(HISI_PLATFORM_PATH)/bluetooth/mt76x2u/system/Android.mk
+endif

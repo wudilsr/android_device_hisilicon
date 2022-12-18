@@ -54,10 +54,10 @@ extern "C" {
 
 /*clock value*/
 #define SYSTEM_CLK                       (24)               /* unit:MHz 108M*/
-#define CLKTIM_DEFAULT                   (1500)           /* unit:KHz 500*/
-#define FRETIM_DEFAULT                   (1000)           /* unit:Hz 200H*/
+#define CLKTIM_DEFAULT                   (1000)           /* unit:KHz 500*/
+#define FRETIM_DEFAULT                   (200)           /* unit:Hz 200H*/
 #define FLASHTIM_DEFAULT                 (60)           /* unit:Hz 10Hz*/
-#define KEY_DEFAULT                      (120)             /* unit:Hz 4Hz */
+#define KEY_DEFAULT                      (25)             /* unit:Hz 4Hz */
 
 /*frequency level*/
 #define FREQ_LEVEL1                      (108)           /* 108Hz */

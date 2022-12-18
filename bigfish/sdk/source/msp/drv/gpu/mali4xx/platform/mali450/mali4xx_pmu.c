@@ -380,6 +380,11 @@ int gpu_temperature_disable_dvfs(void)
 	u16 average = 0;
 	static int temperature_disable_dvfs = 0;
 
+	if(0 == mali_dvfs_enable)
+	{
+		return 0 ;
+	}
+
 	for (j = 0; j < 2; j++)
 	{
 		regval = mali_hw_core_register_read(hisi_pmc, PMC_REG_ADDR_TEMPERATURE + 0x4 * j);
@@ -389,6 +394,7 @@ int gpu_temperature_disable_dvfs(void)
 		}
 	}
 	temperature = (average / 8);
+	temperature  = (temperature * 180) / 255 - 40;
 
 	if(temperature < CFG_TEMP_CTRL_UP_THRESHOLD)
 	{		

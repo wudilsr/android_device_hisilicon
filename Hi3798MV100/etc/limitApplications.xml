@@ -3,13 +3,9 @@
     <key>
         <apkName>MultiScreenServer.apk</apkName>
         <apkName>HandsetForMultiScreen.apk</apkName>
+        <apkName>LiveWallpapersPicker.apk</apkName>
+        <apkName>Keyguard.apk</apkName>
         <apkName>TeleService.apk</apkName>
-        <apkName>WallpaperCropper.apk</apkName>
         <apkName>HiMediaShare.apk</apkName>
-        <apkName>Email.apk</apkName>
-        <apkName>Music.apk</apkName>
-        <apkName>Calendar.apk</apkName>
-        <apkName>TeleService.apk</apkName>
-        <apkName>MusicFX.apk</apkName>
     </key>
 </Applications>

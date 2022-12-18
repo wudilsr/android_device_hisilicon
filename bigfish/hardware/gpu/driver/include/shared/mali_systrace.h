@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2013-2014 ARM Limited
+ * (C) COPYRIGHT 2013-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -70,7 +70,7 @@ enum mali_mem_systrace_category
 	 * The systrace level for sub memory usages, please refer to mali_mem_systrace_get_level.
 	 */
 
-	MALI_MEM_SYSTRACE_LEVEL_1	 = 1,
+	MALI_MEM_SYSTRACE_LEVEL_1    = 1,
 	MALI_MEM_SYSTRACE_LEVEL_2,
 	MALI_MEM_SYSTRACE_LEVEL_3,
 	MALI_MEM_SYSTRACE_LEVEL_4,
@@ -149,9 +149,9 @@ void mali_systrace_memory_value(int cat, const char *str, int value);
 #define MALI_SYSTRACE_ASYNC_BEGIN(cat,str,cookie)  mali_systrace_begin_async(cat,str,cookie)
 #define MALI_SYSTRACE_ASYNC_END(cat,str,cookie)    mali_systrace_end_async(cat,str,cookie)
 #define MALI_SYSTRACE_VALUE(cat, str,val)          mali_systrace_value(cat,str,val)
-#define MALI_SYSTRACE_MEMORY_ENABLED(cat)	   mali_systrace_memory_enabled(cat)
-#define MALI_SYSTRACE_MEMORY_BEGIN(cat,str)	   mali_systrace_memory_begin(cat,str)
-#define MALI_SYSTRACE_MEMORY_END(cat)	           mali_systrace_memory_end(cat)
+#define MALI_SYSTRACE_MEMORY_ENABLED(cat)      mali_systrace_memory_enabled(cat)
+#define MALI_SYSTRACE_MEMORY_BEGIN(cat,str)    mali_systrace_memory_begin(cat,str)
+#define MALI_SYSTRACE_MEMORY_END(cat)              mali_systrace_memory_end(cat)
 #define MALI_SYSTRACE_MEMORY_VALUE(cat,str,value)  mali_systrace_memory_value(cat,str,value)
 
 
@@ -162,7 +162,7 @@ void mali_systrace_memory_value(int cat, const char *str, int value);
 #define MALI_SYSTRACE_ASYNC_BEGIN(cat,str,cookie)
 #define MALI_SYSTRACE_ASYNC_END(cat,str,cookie)
 #define MALI_SYSTRACE_VALUE(cat,str,val)
-#define MALI_SYSTRACE_MEMORY_ENABLED(cat)	NULL
+#define MALI_SYSTRACE_MEMORY_ENABLED(cat)   NULL
 #define MALI_SYSTRACE_MEMORY_BEGIN(cat,str)
 #define MALI_SYSTRACE_MEMORY_END(cat)
 #define MALI_SYSTRACE_MEMORY_VALUE(cat,str,value)

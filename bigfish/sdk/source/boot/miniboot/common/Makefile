@@ -26,3 +26,5 @@ SRCS-$(CONFIG_BOOTARGS_MERGE) += params.c
 
 SRCS-$(CONFIG_ARCH_S40) += board_s40.c
 SRCS-$(CONFIG_ARCH_HI3798MX) += board_hi3798mx.c
+SRCS-$(CONFIG_ARCH_GODBOX) += board_godbox.c
+SRCS-$(CONFIG_ARCH_HI3716MV310) += board_hi3716mv310.c

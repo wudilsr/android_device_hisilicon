@@ -51,6 +51,10 @@ HI_S32 LOADER_PROTOCOL_Init(HI_LOADER_TYPE_E enDownloadType, HI_VOID * pDownload
         g_enProtocolType = PROTOCOL_TYPE_HISI_CAOTA;
 		s32Ret = LOADER_PROTOCOL_HisiCAOTA_Init(enDownloadType,
 				&(((HI_LOADER_PARAMETER_S *)pDownloadPara)->stPara.stOTAPara));
+#elif defined HI_LOADER_PROTOCOL_SSU_OTA
+        g_enProtocolType = PROTOCOL_TYPE_SSU_CAOTA;
+		s32Ret = LOADER_PROTOCOL_SSUCAOTA_Init(enDownloadType,
+				&(((HI_LOADER_PARAMETER_S *)pDownloadPara)->stPara.stOTAPara));
 #else
 		HI_FATAL_LOADER("invalid OTA protocol type!\n");
 		s32Ret = HI_FAILURE;
@@ -144,6 +148,7 @@ HI_S32 LOADER_PROTOCOL_RegisterCallback(LOADERCALLBACKSET_S *pstCallback)
     }
 
     case PROTOCOL_TYPE_HISI_FILE:
+    case PROTOCOL_TYPE_HISI_CAFILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
         if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
@@ -197,12 +202,12 @@ HI_S32 LOADER_PROTOCOL_RegisterCallback(LOADERCALLBACKSET_S *pstCallback)
         break;
     }
 
-    case PROTOCOL_TYPE_HISI_CAFILE:
+    case PROTOCOL_TYPE_SSU_CAOTA:
     {
-#ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if (HI_LOADER_TYPE_USB == g_enDownloadType)
+#ifdef HI_LOADER_PROTOCOL_SSU_OTA
+        if (HI_LOADER_TYPE_OTA == g_enDownloadType)
         {
-            s32Ret = LOADER_PROTOCOL_HisiFILE_RegisterCallback(pstCallback);
+            s32Ret = LOADER_PROTOCOL_SSUCAOTA_RegisterCallback(pstCallback);
         }
         else
         {
@@ -241,6 +246,13 @@ HI_VOID LOADER_PROTOCOL_DeInit(HI_VOID)
 			
 			break;
 		}
+		case PROTOCOL_TYPE_HISI_CAOTA:
+		{
+		  if (HI_LOADER_TYPE_OTA == g_enDownloadType)
+		      LOADER_PROTOCOL_HisiCAOTA_DeInit();
+            
+		  break;
+		}
 #endif
 
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
@@ -250,6 +262,13 @@ HI_VOID LOADER_PROTOCOL_DeInit(HI_VOID)
 				LOADER_PROTOCOL_HisiFILE_DeInit();
 			
 			break;
+		}
+		case PROTOCOL_TYPE_HISI_CAFILE:
+		{
+		  if (HI_LOADER_TYPE_USB == g_enDownloadType)
+		      LOADER_PROTOCOL_HisiCAFILE_DeInit();
+            
+		  break;
 		}
 #endif
 
@@ -261,28 +280,14 @@ HI_VOID LOADER_PROTOCOL_DeInit(HI_VOID)
 			
 			break;
 		}
+        case PROTOCOL_TYPE_SSU_CAOTA:
+		{
+			if (HI_LOADER_TYPE_OTA == g_enDownloadType)
+				LOADER_PROTOCOL_SSUCAOTA_DeInit();
+			
+			break;
+		}
 #endif
-
-#ifdef HI_LOADER_PROTOCOL_HISI_OTA
-        case PROTOCOL_TYPE_HISI_CAOTA:
-        {
-            if (HI_LOADER_TYPE_OTA == g_enDownloadType)
-                LOADER_PROTOCOL_HisiCAOTA_DeInit();
-            
-            break;
-        }
-#endif
-        
-#ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        case PROTOCOL_TYPE_HISI_CAFILE:
-        {
-            if (HI_LOADER_TYPE_USB == g_enDownloadType)
-                LOADER_PROTOCOL_HisiCAFILE_DeInit();
-            
-            break;
-        }
-#endif
-
 
 		default:
 			HI_FATAL_LOADER("invalid protocol(%d) type!\n", g_enProtocolType);
@@ -308,6 +313,7 @@ HI_S32 LOADER_PROTOCOL_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersionInfo)
     switch (g_enProtocolType)
     {
     case PROTOCOL_TYPE_HISI_OTA:
+    case PROTOCOL_TYPE_HISI_CAOTA:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_OTA
         if (HI_LOADER_TYPE_OTA == g_enDownloadType)
@@ -344,6 +350,7 @@ HI_S32 LOADER_PROTOCOL_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersionInfo)
     }
 
     case PROTOCOL_TYPE_SSU:
+    case PROTOCOL_TYPE_SSU_CAOTA:
     {
 #ifdef HI_LOADER_PROTOCOL_SSU_OTA
         if (HI_LOADER_TYPE_OTA == g_enDownloadType)
@@ -357,24 +364,6 @@ HI_S32 LOADER_PROTOCOL_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersionInfo)
 
 #else
         HI_ERR_LOADER("SSU protocol is not select!");
-#endif
-        break;
-    }
-
-    case PROTOCOL_TYPE_HISI_CAOTA:
-    {
-#ifdef HI_LOADER_PROTOCOL_HISI_OTA
-        if (HI_LOADER_TYPE_OTA == g_enDownloadType)
-        {
-            s32Ret = LOADER_PROTOCOL_HisiOTA_GetVersionInfo(pstVersionInfo);
-        }
-        else
-        {
-            s32Ret = HI_FAILURE;
-        }
-
-#else
-        HI_ERR_LOADER("HISI protocol is not select!");
 #endif
         break;
     }
@@ -435,6 +424,7 @@ HI_S32 LOADER_PROTOCOL_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPartInfo, H
     }
 
     case PROTOCOL_TYPE_HISI_FILE:
+    case PROTOCOL_TYPE_HISI_CAFILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
         if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
@@ -473,15 +463,15 @@ HI_S32 LOADER_PROTOCOL_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPartInfo, H
         break;
     }
 
-    case PROTOCOL_TYPE_HISI_CAFILE:
+    case PROTOCOL_TYPE_SSU_CAOTA:
     {
-#ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if (HI_LOADER_TYPE_USB == g_enDownloadType)
-            s32Ret = LOADER_PROTOCOL_HisiFILE_GetPartitionInfo(pstPartInfo, u32BufNum, pu32PartNum);
+#ifdef HI_LOADER_PROTOCOL_SSU_OTA
+        if (HI_LOADER_TYPE_OTA == g_enDownloadType)
+            s32Ret = LOADER_PROTOCOL_SSUCAOTA_GetPartitionInfo(pstPartInfo, u32BufNum, pu32PartNum);
         else
             s32Ret = HI_FAILURE;
 #else
-        HI_ERR_LOADER("HISI file protocol is not select!");
+        HI_ERR_LOADER("SSU CAOTA protocol is not select!");
 #endif
         break;
     }
@@ -555,6 +545,19 @@ HI_S32 LOADER_PROTOCOL_Process(HI_U32 u32MaxMemorySize)
 #ifdef HI_LOADER_PROTOCOL_HISI_OTA
 		if (HI_LOADER_TYPE_OTA == g_enDownloadType)
 			s32Ret = LOADER_PROTOCOL_HisiCAOTA_Process(u32MaxMemorySize);
+		else
+			s32Ret = HI_FAILURE;
+#else
+		HI_FATAL_LOADER("HISI OTA protocol is not select!");
+#endif
+		break;
+	}
+    
+    case PROTOCOL_TYPE_SSU_CAOTA:
+	{
+#ifdef HI_LOADER_PROTOCOL_SSU_OTA
+		if (HI_LOADER_TYPE_OTA == g_enDownloadType)
+			s32Ret = LOADER_PROTOCOL_SSUCAOTA_Process(u32MaxMemorySize);
 		else
 			s32Ret = HI_FAILURE;
 #else

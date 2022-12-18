@@ -301,7 +301,7 @@ static HI_S32 ADP_Layer_RefreshLayer(HIFB_LAYER_REFRESH_S *pstLayerAttr)
     }
     
     OPTM_GfxUpLayerReg(pstLayerAttr->u32LayerID);
-
+	
     return HI_SUCCESS;
 }
 #ifndef HIGO_CODE_CUT
@@ -387,27 +387,14 @@ HI_VOID HIGO_ADP_CapabilityInquire(HI_U32 LayerID,  HIGO_LAYER_CAP_S** pstruCap)
 
 HI_S32 HIGO_ADP_GetDefaultParam(HI_U32  LayerID, HIGO_LAYER_INFO_S *pLayerInfo)
 {
-//#ifndef HIGO_CODE_CUT
-    if (IS_SD_LAYER(LayerID))
-    {   
+    if (IS_SD_LAYER(LayerID)){   
         HIGO_MemCopy(pLayerInfo, &s_HiGoLayerDefInfo[SD_INDEX], sizeof(HIGO_LAYER_INFO_S));
-    }
-    else if (IS_HD_LAYER(LayerID))
-    {  
+    }else if (IS_HD_LAYER(LayerID)){  
         HIGO_MemCopy(pLayerInfo, &s_HiGoLayerDefInfo[HD_INDEX], sizeof(HIGO_LAYER_INFO_S));
-    }
-    else if (IS_AD_LAYER(LayerID))
-    {   
-        HIGO_MemCopy(pLayerInfo, &s_HiGoLayerDefInfo[AD_INDEX], sizeof(HIGO_LAYER_INFO_S));        
-    }
-    else
-    {
+    }else{
         HIGO_ERROR(HIGO_ERR_INVPARAM);
         return HIGO_ERR_INVPARAM;
     }
-//#else
-//    HIGO_MemCopy(pLayerInfo, &s_HiGoLayerDefInfo[0], sizeof(HIGO_LAYER_INFO_S));
-//#endif
     pLayerInfo->LayerID = (HIGO_LAYER_E)LayerID;
     return HI_SUCCESS;
 }
@@ -603,7 +590,7 @@ HI_S32 HIGO_ADP_CreateLayer(HI_U32  LayerID, HIGO_LAYER_INFO_S *pLayerInfo)
 			OPTM_GFX_SetTCFlag(HI_TRUE);
 		}
 		
-		OPTM_GfxOpenSlvLayer(HIFB_LAYER_SD_0);
+		HIFB_WBC2_OpenSlvLayer(HIFB_LAYER_SD_0);
 		OPTM_GpInitFromDisp(OPTM_GFX_GP_1);
 	}
 

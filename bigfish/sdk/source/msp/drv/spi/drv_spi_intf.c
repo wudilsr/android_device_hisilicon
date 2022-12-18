@@ -1,6 +1,6 @@
 /*********************************************************************************
 *
-*  Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*  Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
 *  This program is confidential and proprietary to Hisilicon Technologies Co., Ltd.
 *  (Hisilicon), and may not be copied, reproduced, modified, disclosed to
@@ -20,7 +20,7 @@
 #include <mach/hardware.h>
 #include <linux/interrupt.h>
 #include <linux/slab.h>
-	 
+
 #include <mach/hardware.h>
 #include "hi_drv_spi.h"
 #include "hi_common.h"
@@ -45,65 +45,65 @@ extern HI_S32 HI_DRV_SPI_Ioctl(struct file *file, HI_U32 cmd, HI_SIZE_T arg);
 
 HI_S32 SPI_ProcRead(struct seq_file *p, HI_VOID *v)
 {
-	HI_U8 fform,spo,sph,dss,blend;
+    HI_U8 fform,spo,sph,dss,blend;
     PROC_PRINT(p, "---------Hisilicon SPI Info---------\n");
-	PROC_PRINT(p, "---------------SPI0-----------------\n");
-	HI_DRV_SPI_GetFrom(0,&fform,&spo,&sph,&dss);
-	if(fform==0)
-	{
-		PROC_PRINT(p,"--Motorola SPI--\n");
-		PROC_PRINT(p,"--spo=%d--\n",spo);
-		PROC_PRINT(p,"--sph=%d--\n",sph);
-	}
-	else if(fform==1)
-	{
-		PROC_PRINT(p,"--T1 SPI--\n");
-	}
-	else
-	{
-		PROC_PRINT(p,"-- Microwire SPI--\n");
-	}
-	blend=HI_DRV_SPI_GetBlend(0);
-	if(blend)
-	{
-		PROC_PRINT(p,"--big-end--\n");
-	}
-	else
-	{
-		PROC_PRINT(p,"--little-end--\n");
-	}
-	PROC_PRINT(p, "\n");
+    PROC_PRINT(p, "---------------SPI0-----------------\n");
+    HI_DRV_SPI_GetFrom(0,&fform,&spo,&sph,&dss);
+    if(fform==0)
+    {
+        PROC_PRINT(p,"--Motorola SPI--\n");
+        PROC_PRINT(p,"--spo=%d--\n",spo);
+        PROC_PRINT(p,"--sph=%d--\n",sph);
+    }
+    else if(fform==1)
+    {
+        PROC_PRINT(p,"--T1 SPI--\n");
+    }
+    else
+    {
+        PROC_PRINT(p,"-- Microwire SPI--\n");
+    }
+    blend=HI_DRV_SPI_GetBlend(0);
+    if(blend)
+    {
+        PROC_PRINT(p,"--big-end--\n");
+    }
+    else
+    {
+        PROC_PRINT(p,"--little-end--\n");
+    }
+    PROC_PRINT(p, "\n");
 #if  defined(CHIP_TYPE_hi3718mv100)   \
-			|| defined(CHIP_TYPE_hi3719mv100)
-		return HI_SUCCESS;	
+            || defined(CHIP_TYPE_hi3719mv100)
+        return HI_SUCCESS;
 #endif
-	PROC_PRINT(p, "---------------SPI1-----------------\n");
-	HI_DRV_SPI_GetFrom(1,&fform,&spo,&sph,&dss);
-	if(fform==0)
-	{
-		PROC_PRINT(p,"--Motorola SPI--\n");
-		PROC_PRINT(p,"--spo=%d--\n",spo);
-		PROC_PRINT(p,"--sph=%d--\n",sph);
-	}
-	else if(fform==1)
-	{
-		PROC_PRINT(p,"--T1 SPI--\n");
-	}
-	else
-	{
-		PROC_PRINT(p,"-- Microwire SPI--\n");
-	}
-	blend=HI_DRV_SPI_GetBlend(1);
-	if(blend)
-	{
-		PROC_PRINT(p,"--big-end--\n");
-	}
-	else
-	{
-		PROC_PRINT(p,"--little-end--\n");
-	}
-	PROC_PRINT(p, "\n");
-	
+    PROC_PRINT(p, "---------------SPI1-----------------\n");
+    HI_DRV_SPI_GetFrom(1,&fform,&spo,&sph,&dss);
+    if(fform==0)
+    {
+        PROC_PRINT(p,"--Motorola SPI--\n");
+        PROC_PRINT(p,"--spo=%d--\n",spo);
+        PROC_PRINT(p,"--sph=%d--\n",sph);
+    }
+    else if(fform==1)
+    {
+        PROC_PRINT(p,"--T1 SPI--\n");
+    }
+    else
+    {
+        PROC_PRINT(p,"-- Microwire SPI--\n");
+    }
+    blend=HI_DRV_SPI_GetBlend(1);
+    if(blend)
+    {
+        PROC_PRINT(p,"--big-end--\n");
+    }
+    else
+    {
+        PROC_PRINT(p,"--little-end--\n");
+    }
+    PROC_PRINT(p, "\n");
+
     return HI_SUCCESS;
 }
 
@@ -111,7 +111,7 @@ HI_S32 SPI_ProcRead(struct seq_file *p, HI_VOID *v)
 static long HI_SSP_INTF_Ioctl(struct file *file, HI_U32 cmd, HI_SIZE_T arg)
 {
     long ret = HI_FAILURE;
-	if (down_interruptible(&sem_spi))
+    if (down_interruptible(&sem_spi))
     {
         HI_FATAL_SPI("ssp ioctl Semaphore lock is  error. \n");
         return HI_FAILURE;
@@ -119,14 +119,14 @@ static long HI_SSP_INTF_Ioctl(struct file *file, HI_U32 cmd, HI_SIZE_T arg)
     switch (cmd)
     {
     case CMD_SPI_OPEN:
-	case CMD_SPI_CLOSE:
+    case CMD_SPI_CLOSE:
     case CMD_SPI_WRITE:
     case CMD_SPI_READ:
-	case CMD_SPI_SET_ATTR:
-	case CMD_SPI_GET_ATTR:
-	case CMD_SPI_SET_BLEND:
-	case CMD_SPI_GET_BLEND:
-	case CMD_SPI_READEX:
+    case CMD_SPI_SET_ATTR:
+    case CMD_SPI_GET_ATTR:
+    case CMD_SPI_SET_BLEND:
+    case CMD_SPI_GET_BLEND:
+    case CMD_SPI_READEX:
         {
             ret = HI_DRV_SPI_Ioctl(file, cmd, arg);
             break;
@@ -139,37 +139,37 @@ static long HI_SSP_INTF_Ioctl(struct file *file, HI_U32 cmd, HI_SIZE_T arg)
         }
     }
 
-	 up(&sem_spi);
+     up(&sem_spi);
 
     return ret;
 }
 
 HI_S32 HI_SPI_DEV_Open(struct inode *inode, struct file *filp)
 {
-	return HI_SUCCESS;
+    return HI_SUCCESS;
 }
 
 
 HI_S32 HI_SPI_DEV_Close(struct inode *inode, struct file *filp)
 {
-	return HI_SUCCESS;
+    return HI_SUCCESS;
 }
 
 static struct file_operations SPI_FOPS =
 {
-	owner: THIS_MODULE,
-	open:HI_SPI_DEV_Open,
-	unlocked_ioctl: HI_SSP_INTF_Ioctl,
-	release: HI_SPI_DEV_Close,
+    owner: THIS_MODULE,
+    open:HI_SPI_DEV_Open,
+    unlocked_ioctl: HI_SSP_INTF_Ioctl,
+    release: HI_SPI_DEV_Close,
 };
 
 
 HI_S32 SPI_DRV_ModInit(HI_VOID)
 {
     DRV_PROC_ITEM_S  *pProcItem;
-	
-	HI_INIT_MUTEX(&sem_spi);
-	HI_DRV_SPI_Init();
+
+    HI_INIT_MUTEX(&sem_spi);
+    HI_DRV_SPI_Init();
 
     /* SSP driver register */
     snprintf(g_SpiRegisterData.devfs_name, sizeof(g_SpiRegisterData.devfs_name), UMAP_DEVNAME_SPI);
@@ -190,7 +190,7 @@ HI_S32 SPI_DRV_ModInit(HI_VOID)
         return HI_FAILURE;
     }
 
-	pProcItem->read  = SPI_ProcRead;
+    pProcItem->read  = SPI_ProcRead;
 
 #ifdef MODULE
     HI_PRINT("Load hi_spi.ko success.  \t(%s)\n", VERSION_STRING);
@@ -201,10 +201,10 @@ HI_S32 SPI_DRV_ModInit(HI_VOID)
 
 HI_VOID  SPI_DRV_ModExit(HI_VOID)
 {
-     HI_DRV_PROC_RemoveModule(HI_MOD_SPI);
-	 HI_DRV_DEV_UnRegister(&g_SpiRegisterData); 
+    HI_DRV_PROC_RemoveModule(HI_MOD_SPI);
+    HI_DRV_DEV_UnRegister(&g_SpiRegisterData);
 
-	 HI_DRV_SPI_DeInit();
+    HI_DRV_SPI_DeInit();
 }
 
 #ifdef MODULE

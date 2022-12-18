@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2008-2014 ARM Limited
+ * (C) COPYRIGHT 2008-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -27,6 +27,7 @@
 #define TIMELINE_PROFILING_FUNC_ID_glProgramUniform2ivEXT 0xcdf8b024
 #define TIMELINE_PROFILING_FUNC_ID_glStartTilingQCOM 0xcb93c025
 #define TIMELINE_PROFILING_FUNC_ID_eglMakeCurrent 0x50f0e82c
+#define TIMELINE_PROFILING_FUNC_ID_eglUnbindWaylandDisplayWL 0x9cd7034
 #define TIMELINE_PROFILING_FUNC_ID_glTexEnvx 0xe3a24836
 #define TIMELINE_PROFILING_FUNC_ID_glDeleteProgramPipelinesEXT 0x2d94a838
 #define TIMELINE_PROFILING_FUNC_ID_glGetTexParameterxv 0x5982e039
@@ -317,6 +318,8 @@
 #define TIMELINE_PROFILING_FUNC_ID_glGenFramebuffers 0x44289464
 #define TIMELINE_PROFILING_FUNC_ID_glGetVertexAttribiv 0xcb024a11
 #define TIMELINE_PROFILING_FUNC_ID_glProgramUniform2fvEXT 0x427e446c
+#define TIMELINE_PROFILING_FUNC_ID_eglBindWaylandDisplayWL 0x7213c46d
+#define TIMELINE_PROFILING_FUNC_ID_eglQueryWaylandBufferWL 0x50e6417e
 #define TIMELINE_PROFILING_FUNC_ID_glRenderbufferStorageMultisampleIMG 0xa4b8f472
 #define TIMELINE_PROFILING_FUNC_ID_glPushDebugGroupKHR 0x6c381c73
 #define TIMELINE_PROFILING_FUNC_ID_glSampleCoverage 0x6c410f55
@@ -365,6 +368,7 @@
 #define TIMELINE_PROFILING_FUNC_ID_glGetInteger64vAPPLE 0x599034fb
 #define TIMELINE_PROFILING_FUNC_ID_glDebugMessageInsertKHR 0xfc87762a
 #define TIMELINE_PROFILING_FUNC_ID_glVertexAttrib4fv 0x6c5bad02
+#define TIMELINE_PROFILING_FUNC_ID_eglSwapBuffersWithDamageKHR 0xca8d0503
 #define TIMELINE_PROFILING_FUNC_ID_eglCreateImageKHR 0x3b989d07
 #define TIMELINE_PROFILING_FUNC_ID_glTextureStorage1DEXT 0x673a150a
 #define TIMELINE_PROFILING_FUNC_ID_eglQueryNativeWindowNV 0x202ec510
@@ -444,6 +448,7 @@
 #define TIMELINE_PROFILING_FUNC_ID_glVertexAttrib2f 0xa33d8e27
 #define TIMELINE_PROFILING_FUNC_ID_glGetAttribLocation 0xd652e62a
 #define TIMELINE_PROFILING_FUNC_ID_glOrthofOES 0xb76d962b
+#define TIMELINE_PROFILING_FUNC_ID_eglSetDamageRegionKHR 0xf766de30
 #define TIMELINE_PROFILING_FUNC_ID_glUseProgramStagesEXT 0x4f133e34
 #define TIMELINE_PROFILING_FUNC_ID_eglCreateStreamProducerSurfaceKHR 0x236b4755
 #define TIMELINE_PROFILING_FUNC_ID_glPointParameterxv 0x1cefbd0a
@@ -466,6 +471,7 @@
 #define TIMELINE_PROFILING_FUNC_ID_glCompressedTexImage2D 0x36947e73
 #define TIMELINE_PROFILING_FUNC_ID_glExtGetProgramsQCOM 0x4de52e74
 #define TIMELINE_PROFILING_FUNC_ID_glGetShaderPrecisionFormat 0xb4f8e67c
+#define TIMELINE_PROFILING_FUNC_ID_eglSwapBuffersWithDamageEXT 0xe17a5915
 #define TIMELINE_PROFILING_FUNC_ID_glStencilMaskSeparate 0x9f646e89
 #define TIMELINE_PROFILING_FUNC_ID_glTexStorage1DEXT 0x5a06be8a
 #define TIMELINE_PROFILING_FUNC_ID_glLinkProgram 0xc5df9e8b
@@ -483,6 +489,7 @@
 #define TIMELINE_PROFILING_FUNC_ID_glGetBooleanv 0x35de76b2
 #define TIMELINE_PROFILING_FUNC_ID_glDeleteFencesNV 0x758fcebc
 #define TIMELINE_PROFILING_FUNC_ID_glLightModelf 0x78c916c3
+#define TIMELINE_PROFILING_FUNC_ID_eglCreateWaylandBufferFromImageWL 0xf0d176c9
 #define TIMELINE_PROFILING_FUNC_ID_glProgramUniform1ivEXT 0x9c8f93cd
 #define TIMELINE_PROFILING_FUNC_ID_glEnableClientState 0xc9944ed0
 #define TIMELINE_PROFILING_FUNC_ID_glProgramUniform1iEXT 0x573b96d2

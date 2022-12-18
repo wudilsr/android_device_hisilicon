@@ -37,6 +37,10 @@ extern "C" {
 
 #define HI_STD_I2C_NUM  5
 
+#elif  defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define HI_STD_I2C_NUM  7
+
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100) || defined(CHIP_TYPE_hi3798cv200_a)
 
 #define HI_STD_I2C_NUM  8
@@ -69,6 +73,7 @@ HI_S32 HI_DRV_I2C_SetRate(HI_U32 I2cNum, HI_U32 I2cRate);
 HI_S32 HI_DRV_I2C_WriteConfig(HI_U32 I2cNum, HI_U8 I2cDevAddr);
 HI_S32 HI_DRV_I2C_Write(HI_U32 I2cNum, HI_U8 I2cDevAddr, HI_U32 I2cRegAddr, HI_U32 I2cRegAddrByteNum, HI_U8 *pData, HI_U32 DataLen);
 HI_S32 HI_DRV_I2C_Read(HI_U32 I2cNum, HI_U8 I2cDevAddr, HI_U32 I2cRegAddr, HI_U32 I2cRegAddrByteNum, HI_U8 * pData, HI_U32 DataLen);
+HI_S32 HI_DRV_I2C_Read_si(HI_U32 I2cNum, HI_U8 I2cDevAddr, HI_U32 I2cRegAddr, HI_U32 I2cRegAddrByteNum, HI_U8 * pData, HI_U32 DataLen);
 HI_S32 HI_DRV_I2C_Init(HI_VOID);
 HI_VOID HI_DRV_I2C_Exit(HI_VOID);
 

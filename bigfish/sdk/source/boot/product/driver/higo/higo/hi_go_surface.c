@@ -141,7 +141,9 @@ HI_S32 HI_GO_GetSurfaceSize(HI_HANDLE Surface, HI_S32* pWidth, HI_S32* pHeight)
         return HIGO_ERR_NULLPTR;
     }
 
-    return Surface_GetSurfaceSize (Surface, pWidth, pHeight);
+    Surface_GetSurfaceSize (Surface, pWidth, pHeight);
+
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_GO_GetSurfacePixelFormat(HI_HANDLE Surface, HIGO_PF_E* pPixelFormat)

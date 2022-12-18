@@ -84,6 +84,10 @@ ifeq ($(CFG_HI_WIFI_DEVICE_BCM43236),y)
 objects += usb_bcm43xx
 endif
 
+ifeq ($(CFG_HI_WIFI_DEVICE_MT76X2U),y)
+objects += usb_mt76x2u
+endif
+
 objects_clean:=$(addsuffix _clean,$(objects))
 objects_install:=$(addsuffix _install,$(objects))
 objects_uninstall:=$(addsuffix _uninstall,$(objects))

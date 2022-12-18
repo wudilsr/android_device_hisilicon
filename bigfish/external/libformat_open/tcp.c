@@ -137,7 +137,7 @@ static void tcp_getAddrInfo(void *arg)
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
-    av_log(NULL, AV_LOG_ERROR, "[%s:%d] thread, hostname:%s,port:%s\n",__FILE_NAME__,__LINE__,hostname,portstr);
+    av_log(NULL, AV_LOG_INFO, "[%s:%d] thread, hostname:%s,port:%s\n",__FILE_NAME__,__LINE__,hostname,portstr);
 
     cmsg = 1;
     ret = write(fd1[1],&cmsg,1);
@@ -199,7 +199,7 @@ static void tcp_getAddrInfo(void *arg)
     }
     else
     {
-        av_log(NULL, AV_LOG_ERROR, "[%s:%d] errcode:%d,ai:0x%x\n",__FILE_NAME__,__LINE__,errcode,ai);
+        av_log(NULL, AV_LOG_WARNING, "[%s:%d] errcode:%d,ai:0x%x\n",__FILE_NAME__,__LINE__,errcode,ai);
         pstThread->ai = ai;
         pstThread->errcode = errcode;
     }
@@ -215,7 +215,7 @@ static void tcp_getAddrInfo(void *arg)
     close(fd1[1]);
     close(fd2[0]);
     close(fd2[1]);
-    av_log(NULL, AV_LOG_ERROR, "[%s:%d] thread exit!\n",__FILE_NAME__,__LINE__);
+    av_log(NULL, AV_LOG_WARNING, "[%s:%d] thread exit!\n",__FILE_NAME__,__LINE__);
     pthread_detach(pthread_self()); //thread quit
 }
 
@@ -252,6 +252,7 @@ static int tcp_set_keepAlive(int fd, int start, int interval, int count)
 static int tcp_open(URLContext *h, const char *uri, int flags)
 {
     struct addrinfo hints, *ai, *cur_ai;
+    struct sockaddr_in *soketaddr = NULL;
     int port, fd = -1;
     TCPContext *s = h->priv_data;
     fd_set rfds;
@@ -408,7 +409,7 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
         }
     }
 
-    av_log(NULL, AV_LOG_ERROR, "[%s:%d] get addrinfo ok,ret=%d\n",__FILE_NAME__,__LINE__,ret);
+    av_log(NULL, AV_LOG_INFO, "[%s:%d] get addrinfo ok,ret=%d\n",__FILE_NAME__,__LINE__,ret);
 
     cur_ai = stThread.ai;
     ai = stThread.ai;
@@ -530,7 +531,10 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
     h->is_streamed = 1;
     s->fd = fd;
     s->quit_flag = 0;
-
+    /* Get ip address */
+    soketaddr = (struct sockaddr_in *)cur_ai->ai_addr;
+    av_strlcpy(&h->ipaddr, inet_ntoa(soketaddr->sin_addr), sizeof(h->ipaddr));
+    av_log(NULL, AV_LOG_ERROR, "[%s:%d] tcp connect h->ipaddr=%s\n",__FILE_NAME__,__LINE__,h->ipaddr);
     #if defined (ANDROID_VERSION)
     char value[PROPERTY_VALUE_MAX];
     property_get("tcp.timeout", value, NULL);

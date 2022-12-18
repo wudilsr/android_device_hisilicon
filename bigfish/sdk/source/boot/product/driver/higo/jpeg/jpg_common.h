@@ -39,7 +39,6 @@
 #endif
 
 #include "hi_type.h"
-#include "hi_debug.h"
 #include "hi_jpg_errcode.h"
 #include "hi_jpg_type.h"
 

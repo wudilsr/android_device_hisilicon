@@ -115,7 +115,7 @@ void print_part_efi(block_dev_desc_t * dev_desc)
 	}
 	/* This function validates AND fills in the GPT header and PTE */
 	if (is_gpt_valid(dev_desc, GPT_PRIMARY_PARTITION_TABLE_LBA,
-			 &(gpt_head), pgpt_pte) != 1) {
+			 gpt_head, pgpt_pte) != 1) {
 		printf("%s: *** ERROR: Invalid GPT ***\n", __FUNCTION__);
 		return;
 	}
@@ -123,7 +123,7 @@ void print_part_efi(block_dev_desc_t * dev_desc)
 	debug("%s: gpt-entry at 0x%08X\n", __FUNCTION__, (unsigned int)*pgpt_pte);
 
 	printf("Part  Start LBA  End LBA\n");
-	for (i = 0; i < le32_to_int(gpt_head.num_partition_entries); i++) {
+	for (i = 0; i < le32_to_int(gpt_head->num_partition_entries); i++) {
 
 		if (is_pte_valid(&(*pgpt_pte)[i])) {
 			printf("%s%d  0x%llX    0x%llX\n", GPT_ENTRY_NAME,
@@ -157,7 +157,7 @@ int get_partition_info_efi(block_dev_desc_t * dev_desc, int part,
 
 	/* This function validates AND fills in the GPT header and PTE */
 	if (is_gpt_valid(dev_desc, GPT_PRIMARY_PARTITION_TABLE_LBA,
-			&(gpt_head), pgpt_pte) != 1) {
+			gpt_head, pgpt_pte) != 1) {
 		printf("%s: *** ERROR: Invalid GPT ***\n", __FUNCTION__);
 		return -1;
 	}
@@ -188,8 +188,8 @@ int test_part_efi(block_dev_desc_t * dev_desc)
 	ALLOC_CACHE_ALIGN_BUFFER(legacy_mbr, legacymbr, 1);
 
 	/* Read legacy MBR from block 0 and validate it */
-	if ((dev_desc->block_read(dev_desc->dev, 0, 1, (ulong *) & legacymbr) != 1)
-		|| (is_pmbr_valid(&legacymbr) != 1)) {
+	if ((dev_desc->block_read(dev_desc->dev, 0, 1, (ulong *)legacymbr) != 1)
+		|| (is_pmbr_valid(legacymbr) != 1)) {
 		return -1;
 	}
 	return 0;

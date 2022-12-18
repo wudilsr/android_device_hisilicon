@@ -59,8 +59,8 @@
 #if defined(HAVE_CONFIG_H) && !defined(PNG_NO_CONFIG_H)
 #  include <config.h>
 
-   /* Pick up the definition of 'restrict' from config.h if it was read: */
-    #  define PNG_RESTRICT restrict
+/* Pick up the definition of 'restrict' from config.h if it was read: */
+#  define PNG_RESTRICT restrict
 #endif
 
 /* To support symbol prefixing it is necessary to know *before* including png.h
@@ -1660,11 +1660,6 @@ PNG_INTERNAL_FUNCTION(void,png_app_error,(png_const_structrp png_ptr,
 
 PNG_INTERNAL_FUNCTION(void,png_chunk_report,(png_const_structrp png_ptr,
    png_const_charp message, int error),PNG_EMPTY);
-#ifndef PNG_WARNINGS_SUPPORTED
-#define png_chunk_report_ex(png_ptr, message, error) png_chunk_report(png_ptr, "", error)
-#else
-#define png_chunk_report_ex(png_ptr, message, error) png_chunk_report(png_ptr, message, error)
-#endif
    /* Report a recoverable issue in chunk data.  On read this is used to report
     * a problem found while reading a particular chunk and the
     * png_chunk_benign_error or png_chunk_warning function is used as
@@ -1911,12 +1906,6 @@ PNG_INTERNAL_FUNCTION(int,png_safe_execute,(png_imagep image,
  */
 PNG_INTERNAL_FUNCTION(int,png_image_error,(png_imagep image,
    png_const_charp error_message),PNG_EMPTY);
-
-#ifdef PNG_WARNINGS_SUPPORTED
-#define png_image_error_ex(image, error_message) png_image_error(image, error_message)
-#else
-#define png_image_error_ex(image, error_message) png_image_error(image, "")
-#endif
 
 #ifndef PNG_SIMPLIFIED_READ_SUPPORTED
 /* png_image_free is used by the write code but not exported */

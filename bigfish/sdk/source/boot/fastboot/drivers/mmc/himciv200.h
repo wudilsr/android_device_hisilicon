@@ -16,9 +16,22 @@
 
 #define MAX_RETRY_COUNT		1000000
 
-#define MMC_CLK			100000000
-#define MMC_CCLK_MAX		50000000
-#define MMC_CCLK_MIN		60000
+#if defined(CONFIG_ARCH_GODBOX)
+#define MMC_CLK           50000000
+#define MMC_CCLK_MAX      50000000
+#define MMC_CCLK_MIN      60000
+#elif defined(CONFIG_ARCH_S40) || defined(CONFIG_ARCH_HI3798MX) || defined(CONFIG_ARCH_S5)\
+	|| defined(CONFIG_ARCH_HI3716MV410)
+#define MMC_CLK           100000000
+#define MMC_CCLK_MAX      50000000
+#define MMC_CCLK_MIN      60000
+#elif  defined(CONFIG_ARCH_HIFONE)
+#define MMC_CLK           200000000
+#define MMC_CCLK_MAX      200000000
+#define MMC_CCLK_MIN      60000
+#else
+#error "MMC_CLK MMC_CCLK_MAX MMC_CCLK_MIN NOT defined!"
+#endif
 
 /* Base address of SD card register */
 #define HI_MCI_INTR		(48+32)
@@ -107,6 +120,7 @@ struct himci_host {
     int              cmd_id;
     struct mmc_cmd *cmd;
     struct himci_dma_des *dma_des;
+    int              tunning;
 };
 
 typedef union {

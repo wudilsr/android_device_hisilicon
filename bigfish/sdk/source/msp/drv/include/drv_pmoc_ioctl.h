@@ -73,6 +73,7 @@ typedef struct hiC51_PmocDev_S
 #define HI_PMOC_ENTER_SMARTSTANDBY_CMD  _IOW(HI_ID_PM, 0x0A, HI_U32)
 #define HI_PMOC_QUIT_SMARTSTANDBY_CMD   _IO (HI_ID_PM, 0x0B)
 #define HI_PMOC_GET_WAKEUP_CMD          _IOR(HI_ID_PM, 0x0C, C51_PMOC_VAL_S)
+#define HI_PMOC_BOOST_CPU               _IO (HI_ID_PM, 0x0D)
 
 #ifdef __cplusplus
 #if __cplusplus

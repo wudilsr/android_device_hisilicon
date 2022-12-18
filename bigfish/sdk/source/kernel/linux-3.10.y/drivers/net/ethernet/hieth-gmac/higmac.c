@@ -1639,10 +1639,10 @@ int higmac_dev_resume(struct platform_device *dev)
 		if (!ld->phy)
 			continue;
 
+		higmac_restart(ld);
 		/* phy_fix was called by phy_connect */
 		phy_connect_direct(ld->netdev, ld->phy, higmac_adjust_link,
 				higmac_board_info[i].phy_intf);
-		higmac_restart(ld);
 		ld->monitor.expires = jiffies + HIGMAC_MONITOR_TIMER;
 		mod_timer(&ld->monitor, ld->monitor.expires);
 		ld->link_stat = DEFAULT_LINK_STAT;

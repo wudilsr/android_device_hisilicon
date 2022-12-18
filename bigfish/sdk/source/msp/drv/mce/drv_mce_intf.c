@@ -462,7 +462,12 @@ HI_S32 MCE_DRV_ModInit(HI_VOID)
     DRV_PROC_ITEM_S     *pProcItem = HI_NULL;
 
     Ret = HI_DRV_MODULE_Register(HI_ID_FASTPLAY, MCE_NAME, HI_NULL);
-
+    if (HI_SUCCESS != Ret)
+    {
+        HI_FATAL_MCE("register fastplay failed.\n");
+        return HI_FAILURE;
+    }
+    
     HI_OSAL_Snprintf(ProcName, sizeof(ProcName), "%s", HI_MOD_MCE);
 
     pProcItem = HI_DRV_PROC_AddModule(ProcName, HI_NULL, HI_NULL);

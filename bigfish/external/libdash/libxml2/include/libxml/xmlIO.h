@@ -22,6 +22,9 @@ extern "C" {
  * I/O structures.
  */
 
+enum xmlInvokeID {
+    XML_INVOKE_GET_HTTP_REDIRECT_URL = 0,
+};
 /**
  * xmlInputMatchCallback:
  * @filename: the filename or URI
@@ -52,6 +55,10 @@ typedef void * (XMLCALL *xmlInputOpenCallback) (char const *filename);
  * Returns the number of bytes read or -1 in case of error
  */
 typedef int (XMLCALL *xmlInputReadCallback) (void * context, char * buffer, int len);
+
+/*@invokeID: type is XMLInvokeID*/
+typedef int (XMLCALL *xmlInputInvokeCallback) (void * context, int invokeID, void *arg);
+
 /**
  * xmlInputCloseCallback:
  * @context:  an Input context
@@ -126,6 +133,7 @@ struct _xmlParserInputBuffer {
     void*                  context;
     xmlInputReadCallback   readcallback;
     xmlInputCloseCallback  closecallback;
+    xmlInputInvokeCallback invokecallback;
 
     xmlCharEncodingHandlerPtr encoder; /* I18N conversions to UTF-8 */
 
@@ -206,6 +214,13 @@ XMLPUBFUN int XMLCALL
 						 xmlInputOpenCallback openFunc,
 						 xmlInputReadCallback readFunc,
 						 xmlInputCloseCallback closeFunc);
+
+XMLPUBFUN int XMLCALL
+	xmlRegisterInputCallbacks2		(xmlInputMatchCallback matchFunc,
+						 xmlInputOpenCallback openFunc,
+						 xmlInputReadCallback readFunc,
+						 xmlInputCloseCallback closeFunc,
+						 xmlInputInvokeCallback invokeFunc);
 
 xmlParserInputBufferPtr
 	__xmlParserInputBufferCreateFilename(const char *URI,
@@ -339,6 +354,11 @@ XMLPUBFUN int XMLCALL
 	xmlIOHTTPRead			(void * context,
 					 char * buffer,
 					 int len);
+
+/*@invokeID: type is enum XMLInvokeID*/
+XMLPUBFUN int XMLCALL
+	xmlIOHTTPInvoke			(void * context, int invokeID, void *arg);
+
 XMLPUBFUN int XMLCALL
 	xmlIOHTTPClose			(void * context);
 #endif /* LIBXML_HTTP_ENABLED */

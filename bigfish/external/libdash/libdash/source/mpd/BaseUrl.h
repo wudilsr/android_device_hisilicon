@@ -37,7 +37,7 @@ namespace dash
                 void    SetByteRange        (const std::string& byteRange);
 
                 virtual ISegment* ToMediaSegment (const std::vector<IBaseUrl *>& baseurls) const;
-
+                virtual ISegment* ToMediaSegment (const std::vector<IBaseUrl *>& baseurls, const std::string &range) const;
             private:
                 std::string url;
                 std::string serviceLocation;

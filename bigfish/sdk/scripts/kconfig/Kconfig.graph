@@ -11,26 +11,15 @@ config  LIB_JPEG_VERSION_9A
         bool "libjpeg-9a"
 endchoice
 
-config  HI_LIB_JPEG_VERSION
-        string
-        default libjpeg-6b      if LIB_JPEG_VERSION_6B
-        default libjpeg-9a      if LIB_JPEG_VERSION_9A
-
 choice
         prompt "png version"
-        default LIB_PNG_VERSION_1.4.0
+        default LIB_PNG_VERSION_1_4_0
 
-config  LIB_PNG_VERSION_1.4.0
+config  LIB_PNG_VERSION_1_4_0
         bool "libpng-1.4.0"
-config  LIB_PNG_VERSION_1.6.16
+config  LIB_PNG_VERSION_1_6_16
         bool "libpng-1.6.16"
 endchoice
-
-config  HI_LIB_PNG_VERSION
-        string
-        default libpng-1.4.0     if LIB_PNG_VERSION_1.4.0
-        default libpng-1.6.16	 if LIB_PNG_VERSION_1.6.16
-
 
 config  HIFB_STEREO3D_SUPPORT
         bool "Hardware Stereo3d Support"
@@ -47,25 +36,20 @@ config	HIFB_SCROLLTEXT_SUPPORT
 config  HIFB_CURSOR_SUPPORT
 	bool "Cursor in FB Support"
 	default n
-	
+
 config	HI_PNG_DECODER_SUPPORT
 	bool "Png Decoder Support"
 	default y
 
-config	HI_RLE_DECODER_SUPPORT
-	depends on HI3712 
-	bool "Rle Decoder Support"
-	default n
-		
-config	HI_FREETYPE_FONT_SUPPORT 
+config	HI_FREETYPE_FONT_SUPPORT
 	bool "Freetype Font Support"
-	default y	
-	
+	default y
+
 config 	HI_TDE_CSCTMPBUFFER_SIZE
 	hex "TDE Temporary Buffer Size for YUV Semi-planar to YUV Package 422 or ARGB Conversion"
         default 0x0
 	help
-	  Regard to low quality, the size is 0. 
+	  Regard to low quality, the size is 0.
 	  Regard to middle quality, the size is (input width * input height * 2).
 	  Regard to high quality, the size is(output width * output height * 3).
 
@@ -78,7 +62,7 @@ config 	HI_HD0_FB_VRAM_SIZE
 	default 7200
         help
           For 1280*720, triple buffer, ARGB8888 format, the size is calculated as below:
-          (1280*720*4*2/1024)KB  
+          (1280*720*4*2/1024)KB
 
 config  HI_HD1_FB_VRAM_SIZE
         int "KB, HD1 FrameBuffer Size"
@@ -93,29 +77,13 @@ config  HI_HD2_FB_VRAM_SIZE
         help
           For 1280*720, triple buffer, ARGB8888 format, the size is calculated as below:
           (1280*720*4*2/1024)KB
-      
+
 config 	HI_SD0_FB_VRAM_SIZE
 	int "KB, SD0 FrameBuffer Size "
 	default 0
         help
           For 720*576, triple buffer, ARGB8888 format, the size is calculated as below:
-          (720*576*4*2/1024)KB      
-        
-config 	HI_AD0_FB_VRAM_SIZE
-	depends on HI3712 && HIFB_SCROLLTEXT_SUPPORT
-	int "KB, AD0 FrameBuffer Size"
-	default 400
-	help
-          For 1280*720, double buffer, ARGB8888 format, the size is calculated as below:
-          (1280*720*4/1024)KB
-          
-config 	HI_AD1_FB_VRAM_SIZE   
-	depends on HI3712 && HIFB_SCROLLTEXT_SUPPORT
-	int "KB, AD1 FrameBuffer Size"
-	default 400
-	help
-          For 1280*720, double buffer, ARGB8888 format, the size is calculated as below:
-          (1280*720*4/1024)KB
-          
+          (720*576*4*2/1024)KB
+
 endmenu
 #+++++++++++++++++++++++++++++++++++++++++++++++++++

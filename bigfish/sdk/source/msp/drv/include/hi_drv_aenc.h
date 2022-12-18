@@ -287,7 +287,7 @@ typedef struct hiAENC_PROC_ITEM_S
     HI_INFO_PRINT(HI_ID_AENC, fmt)
 
 /********************** Global Variable declaration **************************/
-#define DRV_AENC_DEVICE_NAME "hi_aenc"
+//#define DRV_AENC_DEVICE_NAME "hi_aenc"
 
 /* 'IOC_TYPE_ADEC' means ADEC magic macro */
 #define     DRV_AENC_PROC_INIT _IOW(HI_ID_AENC, 0, AENC_PROC_ITEM_S *)

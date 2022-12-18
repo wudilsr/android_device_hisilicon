@@ -331,7 +331,8 @@ Addr
 /*****************************************************************************/
 /* DDR training Configuration */
 /******************************************************************************/
-#define CONFIG_DDR_TRAINING
+//#define CONFIG_DDR_TRAINING
+#define CONFIG_DDR_TRAINING_V2
 
 /*****************************************************************************/
 /* eMMC Flash Configuration */

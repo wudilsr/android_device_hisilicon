@@ -172,6 +172,7 @@ namespace android {
         {
             thumbParam.thumbnailSize = 128;
         }
+        thumbParam.thumbnailTimeMs = (timeUs + 500)/1000;
 
         if (HI_FAILURE == HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_THUMBNAIL, (HI_VOID *)&thumbParam)
             || thumbParam.width == 0

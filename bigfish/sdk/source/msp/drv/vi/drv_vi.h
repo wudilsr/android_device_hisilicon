@@ -22,6 +22,8 @@
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 #include "drv_vi_reg_hi3716cv200.h"
 #endif
@@ -150,7 +152,8 @@ HI_VOID               VI_PHY_Destroy(HI_HANDLE hVi);
 irqreturn_t           VI_PHY_InterruptHandler(int irq, void *dev_id);
 
 HI_S32                VI_DRV_ReleaseImage(HI_HANDLE hPort, HI_DRV_VIDEO_FRAME_S* pstFrame);
-HI_S32                VI_DRV_ChangeVencInfo(HI_HANDLE hPort, HI_U32 u32Width, HI_U32 u32Height);
+HI_S32                VI_DRV_ChangeVencInfo(HI_HANDLE hPort, HI_U32 u32Width, HI_U32 u32Height, HI_U32 u32FrmRate);
+
 HI_S32                VI_DRV_ChangeWinInfo(HI_HANDLE hPort, HI_DRV_WIN_PRIV_INFO_S* pstWinInfo);
 HI_S32                VI_DRV_AcquireFrame(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S  *pstFrame);
 HI_S32                VI_DRV_ReleaseFrame(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S  *pstFrame);

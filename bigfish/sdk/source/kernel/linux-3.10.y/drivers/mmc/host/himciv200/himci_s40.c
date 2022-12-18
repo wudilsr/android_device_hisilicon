@@ -178,7 +178,7 @@ static void hi_mci_sys_ctrl_suspend(struct himci_host *host,
 	}
 }
 
-static void himci_ldo_config(unsigned int flag)
+static void himci_ldo_config(unsigned int flag, resource_size_t host_crg_addr)
 {
 	if (flag == 0) {
 		/* 3.3v output */

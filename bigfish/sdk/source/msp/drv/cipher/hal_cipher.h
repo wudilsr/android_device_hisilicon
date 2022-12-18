@@ -48,14 +48,17 @@ extern "C" {
 #define  CIPHER_IRQ_NUMBER                      (53 + 32)
 #elif defined (CHIP_TYPE_hi3719mv100)   \
    || defined (CHIP_TYPE_hi3718mv100)   \
-   || defined (CHIP_TYPE_hi3798mv100)   \
+   || (defined (CHIP_TYPE_hi3798mv100) && !defined (HI_TVP_SUPPORT)) \
    || defined (CHIP_TYPE_hi3796mv100)   \
-   || defined (CHIP_TYPE_hi3798cv200_a)
+   || defined (CHIP_TYPE_hi3798cv200_a) \
+   || defined (CHIP_TYPE_hi3716mv410)   \
+   || defined (CHIP_TYPE_hi3716mv420)
 #define  CIPHER_IRQ_NUMBER                      (126 + 32)
 #elif defined (CHIP_TYPE_hi3716cv200)   \
    || defined (CHIP_TYPE_hi3716mv400)   \
    || defined (CHIP_TYPE_hi3718cv100)   \
-   || defined (CHIP_TYPE_hi3719cv100)
+   || defined (CHIP_TYPE_hi3719cv100)   \
+   || defined (CHIP_TYPE_hi3798mv100)
 #define  CIPHER_IRQ_NUMBER                      (75 + 32)
 #elif defined(CHIP_TYPE_hi3751v100) || defined (CHIP_TYPE_hi3751v100b) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
 #ifdef HI_FPGA
@@ -68,7 +71,11 @@ extern "C" {
 #define  CIPHER_CHAN_NUM                        (8)
 #define  CIPHER_PKGx1_CHAN                      (0)
 #define  CIPHER_PKGxN_CHAN_MIN                  (1)
+#ifdef HI_TVP_SUPPORT
+#define  CIPHER_PKGxN_CHAN_MAX                  (3)
+#else
 #define  CIPHER_PKGxN_CHAN_MAX                  (7)
+#endif
 #define  CIPHER_HMAC_KEY_LEN                    (16)
 
 /*************************** Structure Definition ****************************/
@@ -97,6 +104,8 @@ HI_S32 HAL_Cipher_GetOutBufNum(HI_U32 chnId, HI_U32 *pNum);
 HI_S32 HAL_Cipher_SetInBufCnt(HI_U32 chnId, HI_U32 num);
 HI_S32 HAL_Cipher_SetInBufEmpty(HI_U32 chnId, HI_U32 num);
 HI_S32 HAL_Cipher_SetInBufNum(HI_U32 chnId, HI_U32 num);
+HI_S32 HAL_Cipher_GetSrcLstRaddr(HI_U32 chnId, HI_U32 *addr);
+HI_S32 HAL_Cipher_GetDestLstRaddr(HI_U32 chnId, HI_U32 *addr);
 HI_S32 HAL_Cipher_SetOutBufCnt(HI_U32 chnId, HI_U32 num);
 HI_S32 HAL_Cipher_SetOutBufFull(HI_U32 chnId, HI_U32 num);
 HI_S32 HAL_Cipher_SetOutBufNum(HI_U32 chnId, HI_U32 num);

@@ -37,10 +37,12 @@ extern "C" {
 #include "hi_gfx_comm.h"
 #endif
 
+#define HIPNG_TRACE(fmt,args...) //printf("[%s:%d]"fmt, __FUNCTION__, __LINE__, ##args)
+
 #define HIPNG_NO_DEC 0x0
-#define HIPNG_SW_DEC 0x1
-#define HIPNG_HW_DEC 0x2
-#define HIPNG_HWCOPY_DEC 0x4
+#define HIPNG_SW_DEC 0x1	/*软解码*/
+#define HIPNG_HW_DEC 0x2	/*硬解码*/
+#define HIPNG_HWCOPY_DEC 0x4	/*硬解码并拷贝到用户buf*/
 
     /* the  Control structure of hardware dec */
     typedef struct tag_hipng_struct_hwctl_s
@@ -68,6 +70,30 @@ extern "C" {
 	    HI_S32 s32MmzFd;
 		HI_VOID *pTmpMemData;
 		HI_VOID *pPallateMemData;
+
+		HI_PNG_BUF_S stBuf;		/*向驱动申请的码流buf*/
+		HI_U32 u32StreamLen;	/*码流buf中的有效数据长度*/
+		HI_U8 u8ReadHeadCount;	/*待读取的idat块的头部字节数*/
+		HI_BOOL bCrc;			/*是否为读取CRC数据状态，调试用，验证数据读取是否正常*/
+		HI_U8 u8PushState;	/*流式解码失败*/
+		png_bytep save_buffer_ptr;        /* current location in save_buffer */
+   		png_bytep save_buffer;            /* buffer for previously read data */
+   		png_bytep current_buffer_ptr;     /* current location in current_buffer */
+   		png_bytep current_buffer;         /* buffer for recently used data */
+   		png_size_t save_buffer_size;      /* amount of data now in save_buffer */
+   		png_size_t save_buffer_max;       /* total size of save_buffer */
+   		png_size_t buffer_size;           /* total amount of available input data */
+   		png_size_t current_buffer_size;
+		png_uint_32 push_length;
+		png_uint_32 mode;
+		png_byte pixel_depth;
+
+		HI_U8 u8ExceptionMode;
+		HI_BOOL bHasStream;
+		HI_BOOL bChunkheadValid;
+		png_byte chunkHead[8];
+
+		HI_U8 u8IdatCount;
 	}hipng_struct_hwctl_s;
 
     /*****************************************************************
@@ -110,6 +136,11 @@ extern "C" {
 
     HI_VOID hipng_set_outfmt(png_structp png_ptr, int transforms);
 
+	HI_VOID hipng_push_switch_process(png_structp png_ptr);
+
+	HI_S32 hipng_push_decode(png_structp png_ptr);
+
+	HI_S32 hipng_push_stream(png_structp png_ptr);
 
 #ifdef __cplusplus
 #if __cplusplus

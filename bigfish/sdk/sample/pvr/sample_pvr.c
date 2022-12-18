@@ -1481,7 +1481,7 @@ HI_VOID ParseArg_Reset(int argc)
 HI_S32 ParseArg_Rec(HI_S32 argc, HI_BOOL bStartStop)
 {
     PVR_USERDATA_S userdata;
-    HIPVR_INFO *pvrinfo;
+    HIPVR_INFO *pvrinfo = HI_NULL;
     HI_S32 demuxid;
     HI_S32 program;
 
@@ -1555,8 +1555,6 @@ HI_S32 ParseArg_Timethift(HI_S32 argc, HI_BOOL bStartStop)
     PVR_USERDATA_S userdata;
     HIPVR_INFO *pvrinfo, *pvrinfoplayback;
     HI_S32 program;
-    HI_S32 scrambledStream = 0; //scrambled stream
-    HI_S32 cipher = 0; //to cipher or not
 
     if (bStartStop == HI_TRUE)
     {
@@ -1573,20 +1571,6 @@ HI_S32 ParseArg_Timethift(HI_S32 argc, HI_BOOL bStartStop)
         }
 
         program = strtol(args[1], 0, 0);
-        switch (argc)
-        {
-        case 3:
-            break;
-        case 4:
-            scrambledStream = strtol(args[3], 0, 0);
-            break;
-        case 5:
-            scrambledStream = strtol(args[3], 0, 0);
-            cipher = strtol(args[4], 0, 0);
-            break;
-        default:
-            return HI_FAILURE;
-        }
 
         PVR_Dmx_GetProgram(program, &userdata);
         PVR_Pvr_GetInfo(PVR_DEMUX_REC_0, &pvrinfo);

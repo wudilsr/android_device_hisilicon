@@ -54,19 +54,39 @@ HI_S32 jpeg_mem_alloc(HI_S32 s32DecHandle)
     HI_CHAR* pDataPhy   = 0;
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
 
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	HI_BOOL bMemMMUType = HI_TRUE;
+	pDataPhy = (HI_CHAR*)HI_GFX_AllocMemEx("JPEG_STREAM_BUF", "iommu", u32LayerSize, &bMemMMUType);
+#else
     pDataPhy = (HI_CHAR*)HI_GFX_AllocMem("JPEG_STREAM_BUF",NULL,u32LayerSize);
-    if(NULL == pDataPhy)
+#endif
+	if(NULL == pDataPhy)
     {
         return HI_FAILURE;
     }
-    pDataVir = (HI_CHAR*)HI_GFX_MapCached((HI_U32)pDataPhy,u32LayerSize);
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+    pDataVir = (HI_CHAR*)HI_GFX_MapCached((HI_U32)pDataPhy,u32LayerSize, bMemMMUType);
+#else
+	pDataVir = (HI_CHAR*)HI_GFX_MapCached((HI_U32)pDataPhy,u32LayerSize);
+#endif
     if(NULL == pDataVir)
     {
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+        HI_GFX_FreeMem((HI_U32)pDataPhy, bMemMMUType);
+	#else
         HI_GFX_FreeMem((HI_U32)pDataPhy);
+	#endif
         return HI_FAILURE;
     }
     pstImgInfo->pStreamPhy  = pDataPhy;
     pstImgInfo->pStreamVir  = pDataVir;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	if(HI_TRUE == bMemMMUType){
+		pstImgInfo->u32MemTypeMask |= JPEG_DRV_STREAM_MEM_MMU_TYPE;
+	}
+#endif
 
     return HI_SUCCESS;
     
@@ -89,12 +109,22 @@ HI_VOID jpeg_mem_destory(HI_S32 s32DecHandle)
     }
     if(NULL != pstImgInfo->pStreamVir)
     {
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType = (pstImgInfo->u32MemTypeMask & JPEG_DRV_STREAM_MEM_MMU_TYPE)? HI_TRUE : HI_FALSE;
+		HI_GFX_Unmap((HI_VOID*)pstImgInfo->pStreamVir, bMemMMUType);
+	#else
         HI_GFX_Unmap((HI_VOID*)pstImgInfo->pStreamVir);
+	#endif
         pstImgInfo->pStreamVir = NULL;
     }
     if(NULL != pstImgInfo->pStreamPhy)
     {
+	#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_BOOL bMemMMUType = (pstImgInfo->u32MemTypeMask & JPEG_DRV_STREAM_MEM_MMU_TYPE)? HI_TRUE : HI_FALSE;
+		HI_GFX_FreeMem((HI_U32)pstImgInfo->pStreamPhy, bMemMMUType);
+	#else
         HI_GFX_FreeMem((HI_U32)pstImgInfo->pStreamPhy);
+	#endif
         pstImgInfo->pStreamPhy = NULL;
     }
     

@@ -1,6 +1,56 @@
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : tde_filterpara.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
+******************************************************************************/
+
+#ifndef __TDE_FILTERPARA_H__
+#define __TDE_FILTERPARA_H__
+
+
+/*********************************add include here******************************/
+
+
+/*****************************************************************************/
+
+#ifdef __cplusplus
+#if __cplusplus
+   extern "C"
+{
+#endif
+#endif /* __cplusplus */
+
+
+
+/***************************** Macro Definition ******************************/
+
+
+/*************************** Structure Definition ****************************/
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
+
+
+
 HI_U8 OrgVfCoef[TDE_PARA_VTABLE_ORG_SIZE * TDE_PARA_VTABLE_NUM] = 
 {
-
 //Ëõ·Å±È>1.1
 0x00,  0x00,    0x40,  0x00, 0x00, 
 0x00,  0xfe,    0x3d,  0x05, 0x00, 
@@ -322,3 +372,14 @@ HI_U32 Tde8x32Coef[TDE_PARA_HTABLE_ORG_SIZE / 4 * TDE_PARA_HTABLE_NUM] =
 
 };
 
+
+
+#ifdef __cplusplus
+
+#if __cplusplus
+
+}
+#endif
+#endif /* __cplusplus */
+
+#endif /* __TDE_FILTERPARA_H__ */

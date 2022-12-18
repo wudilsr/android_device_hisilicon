@@ -16,11 +16,7 @@
 #include "higo_common.h"
 #include "higo_surface.h"
 #include "higo_adp_sys.h"
-#ifdef TEST_IN_ROOTBOX
-#include "adp_vmem.h"
-#else
 #include "higo_memory.h"
-#endif
 
 /***************************** Macro Definition ******************************/
 #define MAKERGB(r, g, b) (0xff000000 | ((r) << 16) | ((g) << 8) | (b))
@@ -284,60 +280,49 @@ HI_VOID Surface_CalculateBitsPerPixel0(HIGO_PF_E PixelFormat, HI_U32* pBits)
 
 HI_VOID Surface_CalculateStride0(HIGO_PF_E PixelFormat, HI_U32 Width, HI_U32 Height, HI_U32* pWStride, HI_U32* pHStride)
 {
-    HI_U32 BitPerPixel;
-    HI_U32 WAlign = 0, HAlign = 0;
+    HI_U32 BitPerPixel = 0;
+    HI_U32 WAlign = SURFACE_ALIGN_0;
+    HI_U32 HAlign = SURFACE_ALIGN_0;
 
     Surface_CalculateBitsPerPixel0(PixelFormat, &BitPerPixel);
 
     switch (PixelFormat)
     {
-/*    case HIGO_PF_A8:
-    case HIGO_PF_A1:
-    case HIGO_PF_CLUT1:
-    case HIGO_PF_CLUT4:
-    case HIGO_PF_CLUT8:
-        WAlign = SURFACE_ALIGN_4;
-        HAlign = SURFACE_ALIGN_0;
-        break;
-        */
-    case HIGO_PF_0444:
-    case HIGO_PF_4444:
-    case HIGO_PF_1555:
-    case HIGO_PF_0555:
-    case HIGO_PF_565:
-    case HIGO_PF_8565:
-    case HIGO_PF_8888:
-    case HIGO_PF_0888:
-        WAlign = SURFACE_ALIGN_4;
-        HAlign = SURFACE_ALIGN_0;
-        break;
-    case HIGO_PF_YUV400:
-        WAlign = SURFACE_ALIGN_128;
-        HAlign = SURFACE_ALIGN_8;
-        break;
-    case HIGO_PF_YUV420:
-        WAlign = SURFACE_ALIGN_128;
-        HAlign = SURFACE_ALIGN_16;
-        break;
-    case HIGO_PF_YUV422:
-        WAlign = SURFACE_ALIGN_128;
-        HAlign = SURFACE_ALIGN_8;
-        break;
-    case HIGO_PF_YUV422_V:
-        WAlign = SURFACE_ALIGN_128;
-        HAlign = SURFACE_ALIGN_16;
-        break;
-    case HIGO_PF_YUV444:    
-        WAlign = SURFACE_ALIGN_128;
-        HAlign = SURFACE_ALIGN_8;
-        break;
-    default:
-        WAlign = SURFACE_ALIGN_0;
-        HAlign = SURFACE_ALIGN_0;
-        return;
+	    case HIGO_PF_0444:
+	    case HIGO_PF_4444:
+	    case HIGO_PF_1555:
+	    case HIGO_PF_0555:
+	    case HIGO_PF_565:
+	    case HIGO_PF_8565:
+	    case HIGO_PF_8888:
+	    case HIGO_PF_0888:
+	        WAlign = SURFACE_ALIGN_4;
+	        HAlign = SURFACE_ALIGN_0;
+	        break;
+	    case HIGO_PF_YUV400:
+	        WAlign = SURFACE_ALIGN_128;
+	        HAlign = SURFACE_ALIGN_8;
+	        break;
+	    case HIGO_PF_YUV420:
+	        WAlign = SURFACE_ALIGN_128;
+	        HAlign = SURFACE_ALIGN_16;
+	        break;
+	    case HIGO_PF_YUV422:
+	        WAlign = SURFACE_ALIGN_128;
+	        HAlign = SURFACE_ALIGN_8;
+	        break;
+	    case HIGO_PF_YUV422_V:
+	        WAlign = SURFACE_ALIGN_128;
+	        HAlign = SURFACE_ALIGN_16;
+	        break;
+	    case HIGO_PF_YUV444:    
+	        WAlign = SURFACE_ALIGN_128;
+	        HAlign = SURFACE_ALIGN_8;
+	        break;
+	    default:
+	        return;
     }
-
-    //*pWStride = ((Width * BitPerPixel + ((WAlign - 1)<<3))>>3)&(~(WAlign - 1));
+    
     *pWStride = (((Width * BitPerPixel + 7 )>>3) + (WAlign - 1))&(~(WAlign - 1));
 
     if (HAlign != 0)
@@ -406,16 +391,10 @@ HI_VOID Surface_CalculateStride1(HIGO_PF_E PixelFormat, HI_U32 Width, HI_U32 Hei
 }
 
 
-HI_S32 Surface_SetSurfaceType(HIGO_HANDLE Surface, HIGO_SUR_TYPE_E Type)
+HI_VOID Surface_SetSurfaceType(HIGO_HANDLE Surface, HIGO_SUR_TYPE_E Type)
 {
     HIGO_SURFACE_S* pSurfaceInstance = (HIGO_SURFACE_S*) Surface;
-
-    HIGO_ASSERT (HI_NULL != pSurfaceInstance);
-
     pSurfaceInstance->Type = Type;
-
-    return HI_SUCCESS;
-
 }
 
 HI_S32 Surface_CreateSurface(HIGO_HANDLE* pSurface, HI_S32 Width, HI_S32 Height, HIGO_PF_E PixelFormat)
@@ -464,23 +443,12 @@ HI_S32 Surface_CreateSurface(HIGO_HANDLE* pSurface, HI_S32 Width, HI_S32 Height,
     return HI_SUCCESS;
 }
 
-HI_S32 Surface_SetSurfacePrivateData(HIGO_HANDLE Surface, HIGO_MOD_E Model, const HI_PIXELDATA pData)
+
+HI_VOID Surface_SetSurfacePrivateData(HIGO_HANDLE Surface, HIGO_MOD_E Model, const HI_PIXELDATA pData)
 {
     HIGO_SURFACE_S* pSurfaceInstance = (HIGO_SURFACE_S*) Surface;
-
-    HIGO_ASSERT (HI_NULL != pSurfaceInstance);
-
-    if (HI_TRUE == pSurfaceInstance->Locked)
-    {
-        //HIGO_SetError(HIGO_ERR_LOCKED);
-        //return HIGO_ERR_LOCKED;
-    }
-
     pSurfaceInstance->Model = Model;
-
-    /* copy surface pixel data  */
     HIGO_MemCopy(pSurfaceInstance->Data, pData, sizeof(HI_PIXELDATA));
-    return HI_SUCCESS;
 }
 
 HI_VOID Surface_FreeSurfacePrivateData(HIGO_HANDLE Surface)
@@ -561,7 +529,6 @@ HI_S32 Surface_GetSurfaceColorKey(HIGO_HANDLE Surface, HI_COLOR* pColorKey)
 
     if (HI_TRUE != p->HasColorKey)
     {
-        //HIGO_SetError(HIGO_ERR_NOCOLORKEY);
         HIGO_ERROR(HIGO_ERR_NOCOLORKEY);
         return HIGO_ERR_NOCOLORKEY;
     }
@@ -624,23 +591,16 @@ HI_S32 Surface_UnlockSurface(HIGO_HANDLE Surface)
     return HI_SUCCESS;
 }
 
-HI_S32 Surface_GetSurfaceSize(HIGO_HANDLE Surface, HI_S32* pWidth, HI_S32* pHeight)
+HI_VOID Surface_GetSurfaceSize(HIGO_HANDLE Surface, HI_S32* pWidth, HI_S32* pHeight)
 {
     HIGO_SURFACE_S* p = (HIGO_SURFACE_S*) Surface;
-
-    HIGO_ASSERT ((HI_NULL != pWidth) || (HI_NULL != pHeight));
-
-    if (HI_NULL != pWidth)
-    {
+    if (HI_NULL != pWidth){
         *pWidth = p->Width;
     }
 
-    if (HI_NULL != pHeight)
-    {
+    if (HI_NULL != pHeight){
         *pHeight = p->Height;
     }
-
-    return HI_SUCCESS;
 }
 HI_S32 Surface_GetSurfacePixelFormat(HIGO_HANDLE Surface, HIGO_PF_E* pPixelFormat, HI_U32* pBpp)
 {
@@ -649,9 +609,14 @@ HI_S32 Surface_GetSurfacePixelFormat(HIGO_HANDLE Surface, HIGO_PF_E* pPixelForma
     HIGO_ASSERT (HI_NULL != pPixelFormat);
 
     *pPixelFormat = p->PixelFormat;
+
+#ifndef HIGO_CODE_CUT
+	/** deal with codecc **/
     if (pBpp)
     {
         Surface_CalculateBpp0(p->PixelFormat, pBpp);
     }
+#endif
+
     return HI_SUCCESS;
 }

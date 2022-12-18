@@ -73,6 +73,14 @@ HI_S32 LOADER_PROTOCOL_HisiCAOTA_Init(HI_LOADER_TYPE_E enType, HI_VOID * para)
         {
             g_u32Pid = pstOtaParam->unConnPara.stSat.u32OtaPid;
         }
+        else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstOtaParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstOtaParam->eSigType)
+        {
+            g_u32Pid = pstOtaParam->unConnPara.stTer.u32OtaPid;
+        }
+        else
+        {
+            HI_ERR_LOADER("Invalid signal type.\n");		
+        }
 
         s32Ret = LOADER_DOWNLOAD_OTA_Init(para);
         if (HI_SUCCESS != s32Ret)
@@ -225,7 +233,7 @@ HI_S32 LOADER_PROTOCOL_HisiCAOTA_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstP
 
     s32Ret = OTA_InitUpgradeBuff(&g_stDataInfo, g_u32DataGramSize);
 
-    g_pMemAddr = LOADER_GetUsableMemory(g_stDataInfo.u32DataFullSize+PLUS_MEM_SIZE, &u32Size);
+    g_pMemAddr = LOADER_GetUsableMemory((HI_U32)g_stDataInfo.u64DataFullSize+PLUS_MEM_SIZE, &u32Size);
     if (NULL == g_pMemAddr)
     {
         HI_ERR_LOADER("There is no Usable Memory");
@@ -269,7 +277,7 @@ HI_S32 LOADER_PROTOCOL_HisiCAOTA_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstP
         if (g_pstCallback && g_pstCallback->pfnOSDCallback)
         {
             (HI_VOID)g_pstCallback->pfnOSDCallback(OSD_EVENT_TYPE_DOWNLOAD, OTA_GetDownLoadDataSize(),
-                    g_stDataInfo.u32DataFullSize);
+                    (HI_U32)g_stDataInfo.u64DataFullSize);
         }
 
         /*There is only 1 piece for CA OTA loader*/

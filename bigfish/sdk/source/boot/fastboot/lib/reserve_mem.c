@@ -47,6 +47,9 @@ static unsigned long reserve_mem_free = 0;
 static unsigned long reserve_mem_bound = 0;
 static unsigned long reserve_hibdrv_mem = 0;
 static unsigned long reserve_userapi_mem = 0;
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+static unsigned long reserve_qbboot_mem = 0;
+#endif
 static int reserve_mem_init_flag = 0;
 
 int set_reserve_mem_bound(unsigned long bound)
@@ -70,7 +73,12 @@ char *get_userapi_reserve_mem(void)
 {
 	return (char *)reserve_userapi_mem;
 }
-
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+char *get_qbboot_reserve_mem(void)
+{
+	return (char *)reserve_qbboot_mem;
+}
+#endif
 void *reserve_mem_alloc(unsigned int size, unsigned int *allocsize)
 {
 
@@ -163,6 +171,16 @@ int reserve_mem_init(void)
 		HIBERNATE_ALLOC_ALIGN, NULL) + HIBERNATE_ALLOC_ALIGN;
 	reserve_userapi_mem &= ~(HIBERNATE_ALLOC_ALIGN - 1);
 #endif
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+	if (CONFIG_HIBERNATE_QBBOOT_SIZE%ALLOC_ALIGN) {
+		printf("CONFIG_HIBERNATE_QBBOOT_SIZE(%d) should align with ALLOC_ALIGN(%d)",
+			CONFIG_HIBERNATE_QBBOOT_SIZE, ALLOC_ALIGN);
+		return -1;
+	}
+	reserve_qbboot_mem = (unsigned long)reserve_mem_alloc(CONFIG_HIBERNATE_QBBOOT_SIZE +
+		HIBERNATE_ALLOC_ALIGN, NULL) + HIBERNATE_ALLOC_ALIGN;
+	reserve_qbboot_mem &= ~(HIBERNATE_ALLOC_ALIGN - 1);
+#endif	
 	return 0;
 
 error_out:

@@ -27,6 +27,8 @@
     || defined(CHIP_TYPE_hi3716c)  \
     || defined(CHIP_TYPE_hi3716m)  \
     || defined(CHIP_TYPE_hi3712)	\
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)	\
     || defined(CHIP_TYPE_hi3798cv200_a)
 #define HI_WDG_NUM  (1)
 #elif  defined(CHIP_TYPE_hi3716cv200)   \

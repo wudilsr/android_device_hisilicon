@@ -10,9 +10,6 @@
 /* size for each cpu*/
 #define PM_PER_CPU_STORE_SIZE	(0x400)
 
-#define MCU_START_CTRL  0xf840f000      /* mcu start control */
-
-#define SRAM_BASE_VIRT  0xff000000      /* according to io.h, asm file can not use complex IO_ADDRESS */
 
 /* General CPU constants */
 #define MODE_USR        0x10
@@ -47,16 +44,6 @@
 #define ICD_IPR   0x400 @ priority registers
 #define ICD_IPTR  0x800 @ processor target registers
 #define ICD_ICFR  0xC00 @ interrupt configuration registers
-
-/* General SCU constants */
-#define SCU_CONTROL_OFFSET              (0x00)
-#define SCU_CONFIG_OFFSET               (0x04)
-#define SCU_POWER_STATE_OFFSET          (0x08)
-#define SCU_SEC_INVALID_REG_OFFSET      (0x0c)
-#define SCU_FILTER_START_OFFSET         (0x40)
-#define SCU_FILTER_END_OFFSET           (0x44)
-#define SCU_ACCESS_CONTROL_OFFSET       (0x50)
-#define SCU_NONSEC_CONTROL_OFFSET       (0x54)
 
 .macro mode_save, rd
 	@ save current mode r0~r12, r14, so we can use them
@@ -185,32 +172,6 @@
 	mcr	p15, 0, r4, c1, c0, 0		@ Save control register
 .endm
 
-@scu_save r1 - scu reg base
-.macro scu_save, rd
-	LDR	r2,[r1,#SCU_FILTER_START_OFFSET]
-	LDR	r3,[r1,#SCU_FILTER_END_OFFSET]
-	LDR	r4,[r1,#SCU_ACCESS_CONTROL_OFFSET]
-	LDR	r5,[r1,#SCU_NONSEC_CONTROL_OFFSET]
-	LDR	r6,[r1,#SCU_CONTROL_OFFSET]
-	LDR	r7,[r1,#SCU_POWER_STATE_OFFSET]
-	STMIA	\rd!, {r2-r7}
-.endm
-
-.macro scu_restore, rd
-	LDMDB	\rd!, {r2-r7}
-	STR	r2,[r1,#SCU_FILTER_START_OFFSET]
-	STR	r3,[r1,#SCU_FILTER_END_OFFSET]
-	STR	r4,[r1,#SCU_ACCESS_CONTROL_OFFSET]
-	STR	r5,[r1,#SCU_NONSEC_CONTROL_OFFSET]
-
-	LDR	r8, =0xFFFF
-	STR	r8, [r1, #SCU_SEC_INVALID_REG_OFFSET]	@invalidate the duplicate TAG store
-
-	STR	r6,[r1,#SCU_CONTROL_OFFSET]
-	STR	r7,[r1,#SCU_POWER_STATE_OFFSET]
-.endm
-
-
 /*
  *-------------------------------------------------------------------------
  *   Function: hilpm_godpsleep
@@ -228,11 +189,6 @@ store_current:
 	/*--->save mode , cp15*/
 	mode_save r0
 	cp15_save r0
-
-	ldr	r2, =scureg_base
-	ldr	r1, [r2]
-
-	scu_save r0
 
 	mov	r6, r0
 
@@ -277,18 +233,12 @@ store_resume:
 #else
 	str	r5, [r4, #REG_SC_GEN30]
 #endif /* CONFIG_CA_WARKUP_CHECK */
-	ldr	r0, =IO_ADDRESS(0xf8a9007C)
-	ldr	r0, [r0]
-	and	r0, r0, #0xFF00
-	ldr	r1, =0x4000
-	cmp	r0, r1
+
 #ifdef CONFIG_CA_WARKUP_CHECK
-	bne	entry_ddr_wakeup_check
+	b	entry_ddr_wakeup_check
 #else
-	bne	enable_mcu
+	b	enable_mcu
 #endif
-	ldr	r5, =0x0
-	str	r5, [r4, #REG_SC_GEN28]
 
 #ifdef CONFIG_CA_WARKUP_CHECK
 entry_ddr_wakeup_check:
@@ -317,11 +267,13 @@ loop_copy_to_ddr:
 #endif /* CONFIG_CA_WARKUP_CHECK */
 
 enable_mcu:
-	ldr	r1, =IO_ADDRESS(MCU_START_CTRL)
+	ldr	r1, =hi_mcu_ctrl_virt
+	ldr	r1, [r1]
 	ldr	r2, [r1]
 	orr	r2, #0x1
 	str	r2, [r1]
-	ldr	r1, =IO_ADDRESS(0xf840e520)
+	ldr	r1, =hi_standby_flag_virt
+	ldr	r1, [r1]
 	ldr	r2, =0x12345678
 	str	r2, [r1]
 
@@ -392,11 +344,6 @@ _serial_init:
 	ldr	r1, [r1]
 	add	r0, r1, r0
 
-
-	@ scu restore
-	ldr	r1, =(REG_BASE_A9_PERI + REG_A9_PERI_SCU)
-	scu_restore r0
-
 	cp15_restore r0
 	mode_restore r0
 
@@ -410,27 +357,12 @@ _serial_init:
 	mcr	p15, 0, r0, c7, c5, 0    /* invalidate icache */
 
 	/* Invalidate L1 D-cache */
-	mcr	p15, 2, r0, c0, c0, 0    /* select L1 data cache */
-	mrc	p15, 1, r3, c0, c0, 0    /* Read Current Cache Size Identification Register */
-	movw	r1, #0x1ff               /* replace ldr r1, =0x1ff */
-	and	r3, r1, r3, LSR #13      /* r3 = (number of sets -1) */
-	mov	r0, #0
-l1_way_loop:
-	mov	r1, #0                   /* r1->set counter */
-l1_line_loop:
-	mov	r2, r0, LSL #30
-	orr	r2, r1, LSL #5           /* r2->set/way cache-op format */
-	mcr	p15, 0, r2, c7, c6, 2    /* Invalidate line described by r2 */
-	add	r1, r1, #1               /* Increment set counter */
-	cmp	r1, r3                   /* Check if the last set is reached... */
-	ble	l1_line_loop             /* if not, continue the set_loop */
-	add	r0, r0, #1               /* else, Increment way counter */
-	cmp	r0, #4                   /* Check if the last way is reached... */
-	blt	l1_way_loop              /* if not, continue the way_loop */
+	bl	v7_invalidate_l1
 
 	@ enable mmu and C
 	mrc	p15, 0, r1, c1, c0, 0
 	orr	r1, #5
+	isb
 	mcr	p15, 0, r1, c1, c0, 0
 
 	bx	r9

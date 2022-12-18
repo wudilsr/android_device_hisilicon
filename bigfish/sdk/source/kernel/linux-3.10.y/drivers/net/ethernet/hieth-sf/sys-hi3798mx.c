@@ -49,8 +49,11 @@ static inline void hieth_clk_ena(void)
 	/* SF */
 	val = readl(HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
 	val |= (3 << 0);
+	val |= (1 << 2); /* 27MHz */
 	val |= (0xF << 12);
 	writel(val, HIETH_SYSREG_BASE + HIETH_SYSREG_REG);
+
+	enable_autoeee = true;
 }
 
 static inline void hieth_clk_dis(void)

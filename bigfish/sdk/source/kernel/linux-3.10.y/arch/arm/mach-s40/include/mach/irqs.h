@@ -8,6 +8,7 @@
 #define INTNR_WATCHDOG          (HISI_GIC_IRQ_START + 4)
 #define INTNR_TIMER_0_1         (HISI_GIC_IRQ_START + 24)
 #define INTNR_TIMER_2_3         (HISI_GIC_IRQ_START + 25)
+#define INTNR_TIMER_3           (HISI_GIC_IRQ_START + 58)  /* for Hi3716Mv410 */
 #define INTNR_TIMER_4_5         (HISI_GIC_IRQ_START + 26)
 #define INTNR_TIMER_6_7         (HISI_GIC_IRQ_START + 27)
 #define INTNR_TIMER_8_9         (HISI_GIC_IRQ_START + 28)  //Only for s5 platform
@@ -44,7 +45,7 @@
 #define INTNR_A9_PMU_INT1       (HISI_GIC_IRQ_START + 9)
 #define INTNR_A9_PMU_INT2       (HISI_GIC_IRQ_START + 10)  //Only for s5 platform
 #define INTNR_A9_PMU_INT3       (HISI_GIC_IRQ_START + 11)  //Only for s5 platform
-#define NR_IRQS                 (HISI_GIC_IRQ_START + 128)
+#define NR_IRQS                 (HISI_GIC_IRQ_START + 160)
 
 #define MAX_GIC_NR              1
 

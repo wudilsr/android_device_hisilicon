@@ -482,7 +482,7 @@ retry:
                     return -1;
                 // TEARDOWN is required on Real-RTSP, but might make
                 // other servers close the connection.
-                if (rt->server_type == RTSP_SERVER_REAL)
+                if (rt->server_type == RTSP_SERVER_REAL || rt->server_type == RTSP_SERVER_RTP)
                     ff_rtsp_send_cmd(s, "TEARDOWN", rt->control_uri, NULL,
                                      reply, NULL);
                 /*l00192899 modify,UDP timeout,but session_id is fine,should not make it 0*/

@@ -41,6 +41,12 @@ HI_S32 HI_MPI_OTP_ReadStbRootKey(HI_U8 *pu8Key, HI_U32 u32KeyLen);
 HI_S32 HI_MPI_OTP_LockStbRootKey(HI_VOID);
 HI_S32 HI_MPI_OTP_GetStbRootKeyLockFlag(HI_BOOL *pbKeyLockFlag);
 HI_S32 HI_MPI_OTP_TEST(HI_U8 u8TestValue[16]);
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+HI_S32 HI_MPI_OTP_GetIDWordLockFlag(HI_BOOL *pbLockFlag);
+HI_S32 HI_MPI_OTP_LockIDWord(HI_VOID);
+HI_S32 HI_MPI_OTP_BurnToSecureChipset(HI_VOID);
+#endif
+
 #ifdef __cplusplus
  #if __cplusplus
 }

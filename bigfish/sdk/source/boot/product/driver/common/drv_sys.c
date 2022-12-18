@@ -87,6 +87,7 @@ HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E
             default:
                 ChipType    = HI_CHIP_TYPE_HI3798M;
                 ChipVersion = HI_CHIP_VERSION_V100;
+                break;
         }
     }
 #elif defined(CHIP_TYPE_hi3798cv200_a)
@@ -94,6 +95,21 @@ HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E
     {
         ChipType    = HI_CHIP_TYPE_HI3798C_A;
         ChipVersion = HI_CHIP_VERSION_V200;
+    }
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    if (0x37160410 == g_pstRegSysCtrl->SC_SYSID)
+    {
+        switch (g_pstRegPeri->PERI_SOC_FUSE_0.bits.chip_id)
+        {
+            case 0x0:
+                ChipType    = HI_CHIP_TYPE_HI3716M;
+                ChipVersion = HI_CHIP_VERSION_V420;
+                break;
+            default:
+                ChipType    = HI_CHIP_TYPE_HI3716M;
+                ChipVersion = HI_CHIP_VERSION_V410;
+                break;
+        }        
     }
 #endif
 
@@ -172,6 +188,22 @@ HI_S32 HI_DRV_SYS_GetChipPackageType(HI_CHIP_PACKAGE_TYPE_E *penPackageType)
         *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_31_31;
         return HI_SUCCESS;
     }
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    if (0x37160410 == g_pstRegSysCtrl->SC_SYSID)
+    {
+        switch (g_pstRegPeri->PERI_SOC_FUSE_0.bits.chip_id)
+        {
+            case 0x0:
+                *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_19_19;
+                break;
+            case 0x1:
+                *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_16_16;
+                break;
+            default :
+                return HI_FAILURE;
+        }        
+    }
+    return HI_SUCCESS;
 #else
     #error "Unkown chip type and package type!"
 #endif

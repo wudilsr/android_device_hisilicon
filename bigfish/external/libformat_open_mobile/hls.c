@@ -390,6 +390,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
     int  hls_finished = 0;
     int consume_ms;
     int64_t download_start_time;
+    int duration_in_second = 0;
 
     /**make resolution change available from 3716c-0.6.3 r41002 changed by duanqingpeng**/
     /*HLSContext *hls_c = NULL;
@@ -516,9 +517,10 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         } else if (av_strstart(line, "#EXTINF:", &ptr)) {
             is_segment = 1;
             duration   = atof(ptr) * 1000;
-            if (duration > 0 && duration < hls->seg_list.hls_target_duration)
-                hls->seg_list.hls_target_duration = duration;
-            else if (duration == 0)
+            duration_in_second = duration / 1000;
+            if (duration_in_second > 0 && duration_in_second < hls->seg_list.hls_target_duration)
+                hls->seg_list.hls_target_duration = duration_in_second;
+            else if (duration_in_second == 0)
                 hls->seg_list.hls_target_duration = hls->seg_list.hls_target_duration;
 
             //av_log(NULL, AV_LOG_ERROR, "#EXTINF:%d ,fresh target duraion = %d \n",
@@ -1560,6 +1562,9 @@ reopen:
                     open_fail = 0;
                 }
             }
+
+            c->cur_seg->filesize = url_filesize(v->seg_stream.input);
+            url_errorcode_cb(c->interrupt_callback.opaque, HLS_EVENT_TS_SEGMENT_DOWNLOAD_START, (void *)c);
         }
     }
 
@@ -1599,6 +1604,7 @@ reopen:
         snprintf(event_info, sizeof(event_info), "%lld",  c->seg_download_consume / 1000);
         av_log(0, AV_LOG_ERROR, "hls segment %d download finish, consume:%lld\n", v->seg_list.hls_seg_cur, c->seg_download_consume / 1000);
         url_errorcode_cb(c->interrupt_callback.opaque, HLS_EVENT_SEGMENT_DOWNLOAD_END, event_info);
+        url_errorcode_cb(c->interrupt_callback.opaque, HLS_EVENT_TS_SEGMENT_DOWNLOAD_END, (void *)c);
         c->cur_download_url[0] = 0;
     }
     c->seg_download_consume = 0;

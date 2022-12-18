@@ -127,7 +127,7 @@ Date				Author        		Modification
 	 * retval		 : HI_FAILURE	 CNcomment: Ê§°Ü       CNend\n
 	 * others:		 : NA
 	 *****************************************************************************/
-	 HI_S32 JPEG_HDEC_CSC_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  *pstMbRect, TDE2_SURFACE_S* pstDst,TDE2_RECT_S  *pstDstRect,TDE2_MBOPT_S* pstMbOpt,HI_S32 s32CscDev);
+	 HI_S32 JPEG_HDEC_CSC_MbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  *pstMbRect, TDE2_SURFACE_S* pstDst,TDE2_RECT_S  *pstDstRect,TDE2_MBOPT_S* pstMbOpt,HI_S32 s32CscDev,HI_BOOL bYCbCrMemMMUType,HI_BOOL bKRGBMemMMUType);
 
 
 	 /*****************************************************************************

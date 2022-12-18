@@ -85,16 +85,22 @@ config CA_SUPPORT_ADVCA
 	help
 	  support advca, which is the real CA.
 
+config SECURE_EXTENSION
+	bool "security extension support"
+	default n
+	help
+	  Include Security Extension.
+
 menuconfig SUPPORT_DSP_RUN_MEM
 	bool "Support DSP run memory"
 	default y
-	help 
+	help
 	  Support DSP run memory
 
 config DSP_RUN_MEM_ADDR
 	hex "DSP run memory address"
 	depends on SUPPORT_DSP_RUN_MEM
-	default "0x2000000" 
+	default "0x2000000"
 	help
 	  The start address of DSP run memory.
 

@@ -13,14 +13,16 @@ extern "C"{
 #endif /* __cplusplus */
 
 //HI3716Cv200 Series
-#if    defined(CHIP_TYPE_hi3716cv200)   \
-    || defined(CHIP_TYPE_hi3716mv400)   \
-    || defined(CHIP_TYPE_hi3718cv100)   \
-    || defined(CHIP_TYPE_hi3719cv100)   \
-    || defined(CHIP_TYPE_hi3718mv100)   \
-    || defined(CHIP_TYPE_hi3719mv100)   \
-    || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3716cv200) \
+    || defined(CHIP_TYPE_hi3716mv400) \
+    || defined(CHIP_TYPE_hi3718cv100) \
+    || defined(CHIP_TYPE_hi3719cv100) \
+    || defined(CHIP_TYPE_hi3718mv100) \
+    || defined(CHIP_TYPE_hi3719mv100) \
+    || defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
 #define HDMI_TX_BASE_ADDR     0xf8ce0000L
 

@@ -32,7 +32,7 @@ static HI_S32 DRV_ADVCA_V300_Ioctl_Child(CA_CMD_SUPPER_ID_S *pstCmdParam)
         case CMD_CHILD_ID_GET_VENDOR_ID:
         {
             CA_OTP_VENDOR_TYPE_E *penVendorID = (CA_OTP_VENDOR_TYPE_E *)pstCmdParam->pu8ParamBuf;
-            ret = DRV_CA_OTP_V200_GetSecureChipId(penVendorID);
+            ret = DRV_CA_OTP_V200_GetVendorId(penVendorID);
             break;
         }
         case CMD_CHILD_ID_SET_KL_DPA_CLK_SEL_EN:
@@ -132,8 +132,15 @@ static HI_S32 DRV_ADVCA_V300_Ioctl_Child(CA_CMD_SUPPER_ID_S *pstCmdParam)
         }
         case CMD_CHILD_ID_CA_GDRM_CRYPT:
         {
-            CA_CRYPTPM_S stParam = *(CA_CRYPTPM_S *)pstCmdParam->pu8ParamBuf;
-            ret = HAL_ADVCA_V300_CryptGDRM(stParam.ladder, stParam.pDin, 0, 1, stParam.enKlTarget);
+            HI_U32 u32GDRMFlag = 0;
+            CA_GDRM_CRYPTPM_S *pstParam = (CA_GDRM_CRYPTPM_S *)pstCmdParam->pu8ParamBuf;
+            
+            ret = HAL_ADVCA_V300_CryptGDRM(pstParam->stCACryptParams.ladder, pstParam->stCACryptParams.pDin, pstParam->u32KeyAddr, 1, pstParam->stCACryptParams.enKlTarget);
+            if (HI_UNF_ADVCA_KEYLADDER_LEV3 == pstParam->stCACryptParams.ladder)
+            {
+                ret |= HAL_ADVCA_V300_GetGDRMFlag(&u32GDRMFlag);
+                *(pstParam->pu32GDRMFlag) = u32GDRMFlag;
+            }
             break;
         }
         case CMD_CHILD_ID_GET_CHECKSUM_FLAG:
@@ -605,7 +612,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         return HI_FAILURE;
     }
 
-    ret = DRV_CA_OTP_V200_GetSecureChipId(&u32VendorId);
+    ret = DRV_CA_OTP_V200_GetVendorId((CA_OTP_VENDOR_TYPE_E *)&u32VendorId);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("%s:  get vendor type err ! \n", __FUNCTION__);
@@ -619,7 +626,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         {
             HI_U32 *pu32ChipId = (HI_U32*)arg;
 
-            if ((HI_UNF_ADVCA_VENDOR_CONAX == u32VendorId) || (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId))
+            if ((CA_OTP_VENDOR_CONAX == u32VendorId) || (CA_OTP_VENDOR_NAGRA == u32VendorId))
             {
                 ret = DRV_CA_OTP_V200_GetChipId(pu32ChipId);
             }
@@ -638,7 +645,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         }
         case CMD_CA_SET_MARKETID:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 u32MaketId = *(HI_U32*)arg;
                 ret = DRV_CA_OTP_V200_Set_MarketId(u32MaketId);
@@ -658,7 +665,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         }
         case CMD_CA_GET_MARKETID:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32MarketId = (HI_U32*)arg;
                 ret = DRV_CA_OTP_V200_MarketId(pu32MarketId);
@@ -677,7 +684,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         }
         case CMD_CA_SET_STBSN:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 u32StbSN = *(HI_U32*)arg;
                 ret = DRV_CA_OTP_V200_Set_STBSN(u32StbSN);
@@ -697,7 +704,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         }
         case CMD_CA_GET_STBSN:
         {
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
                 HI_U32 *pu32StbSN = (HI_U32*)arg;
                 ret = DRV_CA_OTP_V200_GetSTBSN(pu32StbSN);
@@ -788,12 +795,12 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         case CMD_CA_SET_BOOTMODE:
         {
             HI_UNF_ADVCA_FLASH_TYPE_E BootMode = *(HI_UNF_ADVCA_FLASH_TYPE_E*)arg;
-            ret = DRV_CA_OTP_V200_SetBootMode(BootMode);
+            ret = DRV_CA_OTP_V200_SetBootMode((CA_OTP_FLASH_TYPE_E)BootMode);
             break;
         }
         case CMD_CA_GET_BOOTMODE:
         {
-            HI_UNF_ADVCA_FLASH_TYPE_E *pBootMode = (HI_UNF_ADVCA_FLASH_TYPE_E*)arg;
+            HI_UNF_ADVCA_FLASH_TYPE_E *pBootMode = (HI_UNF_ADVCA_FLASH_TYPE_E *)arg;
             ret = DRV_CA_OTP_V200_GetBootMode((CA_OTP_FLASH_TYPE_E *)pBootMode);
             break;
         }
@@ -1052,23 +1059,23 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         }
         case CMD_CA_SET_STBSN_LOCK:
         {
-            ret = DRV_CA_OTP_V200_SetStbSnP();
+            ret = DRV_CA_OTP_V200_SetStbSnLock_0();
             break;
         }
         case CMD_CA_SET_MKTID_LOCK:
         {
-            ret = DRV_CA_OTP_V200_SetMktIdP();
+            ret = DRV_CA_OTP_V200_SetMktIdLock();
             break;
         }
         case CMD_CA_SET_VENDOR_ID:
         {
             CA_OTP_VENDOR_TYPE_E vendorType = *(CA_OTP_VENDOR_TYPE_E*)arg;
-            ret = DRV_CA_OTP_V200_SetSecureChipId(vendorType);
+            ret = DRV_CA_OTP_V200_SetVendorId(vendorType);
             break;
         }
         case CMD_CA_SET_VENDOR_ID_LOCK:
         {
-            ret = DRV_CA_OTP_V200_SetSecureChipP();
+            ret = DRV_CA_OTP_V200_SetVendorIdLock();
             break;
         }
         case CMD_CA_SET_VERSION_ID_LOCK:
@@ -1448,25 +1455,25 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         case CMD_CA_GET_STBSN_LOCK:
         {
             HI_U32 *pu32StbSnP = (HI_U32*)arg;
-            ret = DRV_CA_OTP_V200_GetStbSnP(pu32StbSnP);
+            ret = DRV_CA_OTP_V200_GetStbSnLock_0(pu32StbSnP);
             break;
         }
         case CMD_CA_GET_MKTID_LOCK:
         {
             HI_U32 *pu32MKTKDLock = (HI_U32*)arg;
-            ret = DRV_CA_OTP_V200_GetMktIdP(pu32MKTKDLock);
+            ret = DRV_CA_OTP_V200_GetMktIdLock(pu32MKTKDLock);
             break;
         }
         case CMD_CA_GET_VENDOR_ID:
         {
-            HI_UNF_ADVCA_VENDOR_TYPE_E *pu32SecureChipId = (HI_UNF_ADVCA_VENDOR_TYPE_E*)arg;
-            ret = DRV_CA_OTP_V200_GetSecureChipId((CA_OTP_VENDOR_TYPE_E *)pu32SecureChipId);
+            CA_OTP_VENDOR_TYPE_E *penVendorId = (CA_OTP_VENDOR_TYPE_E *)arg;
+            ret = DRV_CA_OTP_V200_GetVendorId(penVendorId);
             break;
         }
         case CMD_CA_GET_VENDOR_ID_LOCK:
         {
-            HI_U32 *pu32SecureChipP = (HI_U32*)arg;
-            ret = DRV_CA_OTP_V200_GetSecureChipP(pu32SecureChipP);
+            HI_U32 *pu32VendorIdLock = (HI_U32*)arg;
+            ret = DRV_CA_OTP_V200_GetVendorIdLock(pu32VendorIdLock);
             break;
         }
         case CMD_CA_GET_VERSION_ID_LOCK:
@@ -1886,7 +1893,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         {
             HI_U32 u32MarketIdSet;
             HI_BOOL *pbIsMarketIdSet = (HI_BOOL*)arg;
-            ret = DRV_CA_OTP_V200_GetMktIdP(&u32MarketIdSet);
+            ret = DRV_CA_OTP_V200_GetMktIdLock(&u32MarketIdSet);
             if (ret)
             {
                 ret = HI_FAILURE;
@@ -2065,7 +2072,7 @@ HI_S32 DRV_ADVCA_V300_Ioctl(HI_U32 cmd, HI_VOID* arg)
         {
             CA_KEY_S *pKey = (CA_KEY_S*)arg;
 
-            if (HI_UNF_ADVCA_VENDOR_NAGRA == u32VendorId)
+            if (CA_OTP_VENDOR_NAGRA == u32VendorId)
             {
             	if ( strlen(NAGRA_REVISION) > 25)
             	{

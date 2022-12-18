@@ -42,6 +42,32 @@ static VPSS_EXPORT_FUNC_S* pVpssFunc = HI_NULL;
 
 
 /*============== INTERNAL FUNCTION =============*/
+static HI_DRV_PIX_FORMAT_E processor_color_omx_to_hal(OMX_PIX_FORMAT_E format)
+{
+    HI_DRV_PIX_FORMAT_E ret_color;
+    switch (format)
+    {
+       case OMX_PIX_FMT_NV12:
+           ret_color =  HI_DRV_PIX_FMT_NV12;
+           break;
+
+       case OMX_PIX_FMT_NV21:
+           ret_color = HI_DRV_PIX_FMT_NV21;
+           break;
+
+       case OMX_PIX_FMT_YUV420Planar:
+           ret_color = HI_DRV_PIX_FMT_YUV420M;
+           break;
+
+       default:
+           OmxPrint(OMX_ERR, "vpss not support format %d, return default NV12\n", format);
+           ret_color = HI_DRV_PIX_FMT_NV12;
+           break;
+    }
+
+    return ret_color;
+}
+
 static HI_S32 processor_get_frame(OMXVDEC_CHAN_CTX *pchan, EXTERNAL_FRAME_STORE_S *frame, HI_U32 expect_length)
 {
 	unsigned long flags;
@@ -279,7 +305,7 @@ static HI_S32 processor_report_frame(OMXVDEC_CHAN_CTX *pchan, HI_DRV_VIDEO_FRAME
     pbuf->act_len = user_buf.data_len;
     OmxPrint(OMX_PTS, "Put Time Stamp: %lld\n", user_buf.timestamp);
 
-    if (VPSS_GOT_LAST_FRAME == pchan->last_frame_info[0])
+    if (PROCESSOR_GOT_LAST_FRAME == pchan->last_frame_info[0])
     {
        /* vpss last frame flag */
        if (DEF_HI_DRV_VPSS_LAST_FRAME_FLAG == pstPriv->u32LastFlag)
@@ -340,8 +366,15 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
         
         pchan->out_width  = ImgSize.frame_width  = pVpssFrm->u32FrmW;
         pchan->out_height = ImgSize.frame_height = pVpssFrm->u32FrmH;
-        pchan->out_stride = ImgSize.frame_stride = HI_SYS_GET_STRIDE(pchan->out_width);
 
+        if (pchan->m_use_native_buf)
+        {
+            pchan->out_stride = ImgSize.frame_stride = HI_SYS_GET_STRIDE(pchan->out_width);
+        }
+        else
+        {
+            pchan->out_stride = ImgSize.frame_stride = HI_OMX_GET_STRIDE(pchan->out_width);
+        }
         pchan->recfg_flag = 1;
         channel_report_message(pchan, VDEC_EVT_REPORT_IMG_SIZE_CHG, (HI_VOID *)&ImgSize);
 
@@ -360,7 +393,7 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
 		return HI_FAILURE;
 	}
 
-    ExpectedSize = FRAME_SIZE(pVpssFrm->u32Stride, pVpssFrm->u32FrmH);
+    ExpectedSize = DEFAULT_FRAME_SIZE(pVpssFrm->u32Stride, pVpssFrm->u32FrmH);
 
     ret = processor_get_frame(pchan, &OutFrame, ExpectedSize);
     if(ret != HI_SUCCESS)
@@ -398,7 +431,7 @@ static HI_S32 processor_release_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *p
         return HI_FAILURE;
     }
 
-    if (VPSS_GOT_LAST_FRAME == pchan->last_frame_info[0])
+    if (PROCESSOR_GOT_LAST_FRAME == pchan->last_frame_info[0])
     {
       /* vpss last frame flag */
        if (DEF_HI_DRV_VPSS_LAST_FRAME_FLAG == pstPriv->u32LastFlag)
@@ -610,18 +643,18 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     }
 
 	/* read ready image struct from vfmw. */
-    memset(&stImage, 0, sizeof(IMAGE));
+    //memset(&stImage, 0, sizeof(IMAGE));
     ret = pchan->image_ops.read_image(pchan->decoder_id, &stImage);
 	if(ret != HI_SUCCESS)
     {
-        if (VFMW_REPORT_LAST_FRAME == pchan->last_frame_info[0])
+        if (DECODER_REPORT_LAST_FRAME == pchan->last_frame_info[0])
         {
             /* 最后一帧已经被拿走 / 最后一帧上报失败的情况处理 */
-            if((pchan->last_frame_vpss_got == pchan->last_frame_image_id)
+            if((pchan->last_frame_processor_got == pchan->last_frame_image_id)
             || (REPORT_LAST_FRAME_FAIL == pchan->last_frame_info[1]))
             {
                OmxPrint(OMX_INFO, "VPSS got no frame to handle, report a fake one!\n");
-               pchan->last_frame_info[0] = VPSS_GOT_LAST_FRAME;
+               pchan->last_frame_info[0] = PROCESSOR_GOT_LAST_FRAME;
                ret = processor_report_last_frame(pchan); /* 输出假的最后一帧 */
 
 			   if (ret != HI_SUCCESS)
@@ -689,6 +722,23 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
                     break;
             }
         }
+    }
+
+    //set reverse 
+    if ((STD_VP6 == pchan->protocol) || (STD_VP6F == pchan->protocol) || (STD_VP6A == pchan->protocol))
+    {
+        if (STD_VP6A == pchan->protocol)
+        {
+            pstFrame->u32Circumrotate = pchan->bReversed&0x1;
+        }
+        else
+        {
+            pstFrame->u32Circumrotate = !(pchan->bReversed&0x1);
+        }
+    }
+    else
+    {
+        pstFrame->u32Circumrotate = 0;
     }
 
     switch (stImage.format & 0x300)
@@ -785,13 +835,36 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     u32fpsDecimal                               = stImage.frame_rate%1000;
     pstFrame->u32FrameRate                      = u32fpsInteger*1000 + (u32fpsDecimal + 500) / 1000;
 
+
+    if (HI_TRUE == pchan->bLowdelay)
+    {
+        pstFrame->u32TunnelPhyAddr = stImage.line_num_phy_addr;
+    }
+    else
+    {
+        pstFrame->u32TunnelPhyAddr = 0;
+    }
+
+
     if (1 == stImage.last_frame)
     {
         pchan->last_frame_image_id = REALID(stImage.image_id);
     }
 
-    pchan->last_frame_vpss_got = REALID(stImage.image_id);
+    pchan->last_frame_processor_got = REALID(stImage.image_id);
     OmxPrint(OMX_VPSS, "VPSS read image success!\n");
+
+#ifdef HI_TVP_SUPPORT
+    /* Check if is secure frame */
+    if (1 == stImage.is_SecureFrame)
+    {
+        pstFrame->bSecure = HI_TRUE;
+    }
+    else
+    {
+        pstFrame->bSecure = HI_FALSE;
+    }
+#endif
 
     return 0;
 }
@@ -894,7 +967,7 @@ HI_S32 processor_exit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, HI_U32 color_format)
+HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, OMX_PIX_FORMAT_E color_format)
 {
     HI_S32 ret;
     HI_DRV_VPSS_CFG_S stVpssCfg;
@@ -918,6 +991,10 @@ HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, HI_U32 color_format)
         OmxPrint(OMX_FATAL, "%s call HI_DRV_VPSS_GetDefaultCfg failed, ret = %d\n", __func__, ret);
         return HI_FAILURE;
     }
+
+#ifdef HI_TVP_SUPPORT	
+	stVpssCfg.bSecure = pchan->is_tvp;
+#endif
 
     stVpssCfg.bProgRevise = g_DeInterlaceEnable; //开关DEI
     ret = (pVpssFunc->pfnVpssCreateVpss)(&stVpssCfg, &pchan->processor_id);
@@ -953,7 +1030,7 @@ HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, HI_U32 color_format)
     pchan->color_format                 = color_format;
     stVpssPortCfg.s32OutputWidth        = 0;    // 宽高设为0表示根据输入自适应配置
     stVpssPortCfg.s32OutputHeight       = 0;
-    stVpssPortCfg.eFormat               = color_format;
+    stVpssPortCfg.eFormat               = processor_color_omx_to_hal(color_format);
     stVpssPortCfg.stBufListCfg.eBufType = HI_DRV_VPSS_BUF_USER_ALLOC_MANAGE;
     if (HI_TRUE == g_FrameRateLimit)
     {

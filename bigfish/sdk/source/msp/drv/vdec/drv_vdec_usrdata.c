@@ -57,6 +57,8 @@ typedef struct
 
 /***************************** Global Definition *****************************/
 
+/************************* ** Extern function declaration ********************/
+HI_S32 VDEC_FindChannelHandleByInstance(HI_HANDLE hHandle, VDEC_CHANNEL_S **pstChan);
 
 /***************************** Static Definition *****************************/
 
@@ -119,6 +121,9 @@ HI_S32 USRDATA_Alloc(HI_HANDLE hHandle, HI_DRV_VDEC_USERDATABUF_S* pstBuf)
     stBufInstCfg.pu8UsrVirAddr = HI_NULL;
     stBufInstCfg.pu8KnlVirAddr = HI_NULL;
     stBufInstCfg.u32Size = pstBuf->u32Size;
+	#ifdef HI_TVP_SUPPORT
+    stBufInstCfg.bTvp          = HI_FALSE;
+	#endif
     snprintf(stBufInstCfg.aszName, sizeof(stBufInstCfg.aszName),"VDEC_UsrData%02d", (HI_U8)hHandle);
     s32Ret = BUFMNG_Create(&hBuf, &stBufInstCfg);
     if (s32Ret != HI_SUCCESS)
@@ -237,6 +242,7 @@ HI_S32 USRDATA_Put(HI_HANDLE hHandle, USRDAT* pstUsrData, HI_UNF_VIDEO_USERDATA_
     HI_BOOL bOverFlow = HI_FALSE;
     BUFMNG_BUF_S stBuf;
     HI_UNF_VIDEO_USERDATA_S *pstPutData;
+    VDEC_CHANNEL_S *pstChan = HI_NULL;    
 
     stBuf.u32Size = sizeof(HI_UNF_VIDEO_USERDATA_S) + pstUsrData->data_size;
     s32Ret = BUFMNG_GetWriteBuffer(g_stUsrData[hHandle].hBuf, &stBuf);
@@ -261,7 +267,23 @@ HI_S32 USRDATA_Put(HI_HANDLE hHandle, USRDAT* pstUsrData, HI_UNF_VIDEO_USERDATA_
     pstPutData->u32Length = pstUsrData->data_size;
     pstPutData->bBufferOverflow = bOverFlow;
 	pstPutData->bTopFieldFirst = pstUsrData->top_field_first;
-    memcpy(stBuf.pu8KnlVirAddr+sizeof(HI_UNF_VIDEO_USERDATA_S), pstUsrData->data, pstUsrData->data_size);
+
+    s32Ret = VDEC_FindChannelHandleByInstance(hHandle, &pstChan);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_VDEC("call VDEC_FindChannelHandleByInstance failed! ret:%d\n",s32Ret);
+        return HI_FAILURE;
+    }
+        
+ #ifdef HI_TVP_SUPPORT
+    if (HI_TRUE == pstChan->bTvp)
+    {
+    }
+    else
+ #endif
+    {
+        memcpy(stBuf.pu8KnlVirAddr+sizeof(HI_UNF_VIDEO_USERDATA_S), pstUsrData->data, pstUsrData->data_size);
+    }
     pstPutData->pu8Buffer = stBuf.pu8UsrVirAddr + sizeof(HI_UNF_VIDEO_USERDATA_S);
     stBuf.u32Marker = enType;
 

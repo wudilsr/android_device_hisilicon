@@ -41,6 +41,7 @@ endif
 
 CFLAGS += -DHDMI_BUILD_IN_BOOT
 CFLAGS += -DCONFIG_HDMI_STB_SDK
+CFLAGS += -DHDMI_SCDC_SUPPORT
 
 HAL := Hifone
 HAL_DIR := hal/$(HAL)
@@ -59,6 +60,7 @@ CFLAGS	 += -I$(HAL_DIR)/driver/common
 CFLAGS	 += -I$(HAL_DIR)/driver/cra
 CFLAGS	 += -I$(HAL_DIR)/driver/tx
 CFLAGS	 += -I$(HAL_DIR)/driver/tx/tx_hdmi
+CFLAGS	 += -I$(HAL_DIR)/driver/tx/scdc
 CFLAGS	 += -I$(HAL_DIR)/driver/tx/videopath
 CFLAGS	 += -I$(HAL_DIR)/library/log
 CFLAGS	 += -I$(HAL_DIR)/library/malloc
@@ -84,7 +86,7 @@ OBJS    += $(HAL_DIR)/driver/common/si_drv_common.o \
 		$(HAL_DIR)/library/time/si_lib_time.o \
 		$(HAL_DIR)/platform/platform.o \
 		$(HAL_DIR)/platform/sii_time.o 									
-
+OBJS    += $(HAL_DIR)/driver/tx/scdc/si_mod_tx_scdc.o
 #===============================================================================
 # rules
 #===============================================================================

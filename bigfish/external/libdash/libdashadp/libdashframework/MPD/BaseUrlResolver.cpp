@@ -19,6 +19,9 @@ std::vector<dash::mpd::IBaseUrl *> BaseUrlResolver::ResolveBaseUrl(IMPD *mpd, IP
 {
     std::vector<dash::mpd::IBaseUrl *> urls;
 
+    if (mpd == NULL)
+        return urls;
+
     if (mpd->GetBaseUrls().size() > 0)
     {
         if (mpd->GetBaseUrls().size() > mpdBaseUrl)
@@ -26,14 +29,14 @@ std::vector<dash::mpd::IBaseUrl *> BaseUrlResolver::ResolveBaseUrl(IMPD *mpd, IP
         else
             urls.push_back(mpd->GetBaseUrls().at(0));
     }
-    if (period->GetBaseURLs().size() > 0)
+    if (period != NULL && period->GetBaseURLs().size() > 0)
     {
         if (period->GetBaseURLs().size() > periodBaseUrl)
             urls.push_back(period->GetBaseURLs().at(periodBaseUrl));
         else
             urls.push_back(period->GetBaseURLs().at(0));
     }
-    if (adaptationSet->GetBaseURLs().size() > 0)
+    if (adaptationSet != NULL && adaptationSet->GetBaseURLs().size() > 0)
     {
         if (adaptationSet->GetBaseURLs().size() > adaptationSetBaseUrl)
             urls.push_back(adaptationSet->GetBaseURLs().at(adaptationSetBaseUrl));

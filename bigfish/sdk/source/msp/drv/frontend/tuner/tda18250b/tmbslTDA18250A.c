@@ -3562,9 +3562,9 @@ iTDA18250A_OverrideICP(
     tmDBGPRINTEx(DEBUGLVL_INOUT, "iTDA18250A_OverrideICP(0x%08X)", pObj->tUnitW);
 
     /*
-    if fvco<6552 MHz ==> icp = 150µ (register = 01b)
-    if fvco<6860 MHz ==> icp = 300µ (register = 10b)
-    500µA elsewhere (register 00b)
+    if fvco<6552 MHz ==> icp = 150? (register = 01b)
+    if fvco<6860 MHz ==> icp = 300? (register = 10b)
+    500 elsewhere (register 00b)
 
     Reminder : fvco = postdiv*presc*(RFfreq+IFfreq) 
     */

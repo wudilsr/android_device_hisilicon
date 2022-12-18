@@ -168,6 +168,7 @@ typedef struct {
     DownSpeed downspeed;
     int protocal_flag;
     int force_seek;
+    int opaque_not_urlcontex;
 } AVIOContext;
 
 /* unbuffered I/O */
@@ -196,6 +197,9 @@ typedef struct URLContext {
     //char    *headers_server;   /**< headers call back from http server */
     char    *moved_url; /**< 302 Moved Temporarily keep host name string */
     void    *parent;
+    int port;
+    char ipaddr[16];
+    char http_res[4096];
 } URLContext;
 
 #define URL_PROTOCOL_FLAG_NESTED_SCHEME 1 /*< The protocol name can be the first part of a nested protocol scheme */
@@ -263,6 +267,7 @@ attribute_deprecated int url_poll(URLPollEntry *poll_table, int n, int timeout);
 #define NETWORK_NORMAL      0x1
 #define NETWORK_TIMEOUT     11
 #define NETWORK_DISCONNECT  12      // FIXME if there is a suitable value
+#define NETWORK_TS_SEGMENT_COMPLETE 20
 #define NETWORK_PRIVATE     100
 
 typedef int URLInterruptCB(void);

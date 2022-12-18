@@ -26,18 +26,25 @@ extern "C" {
 #endif
 #endif
 
-#if defined(CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 /***************************** Macro Definition ******************************/
 
 #define DMX_DMXID(ChanHandle)  ( ((ChanHandle) & 0x0000ff00) >> 8)
 
 #define DMX_CHANHANDLE_MAGIC      (0x1)
 #define DMX_CHANID(ChanHandle)      ((ChanHandle) & 0x000000ff)
-#define DMX_CHANHANDLE(DmxId, ChanId)      ((HI_ID_DEMUX << 24) | (DMX_CHANHANDLE_MAGIC << 16) | ((DmxId << 8) & 0x0000ff00) | (ChanId & 0x000000ff))
+#define DMX_CHANHANDLE(DmxId, ChanId)    ((HI_ID_DEMUX << 28) | (DMX_CHANHANDLE_MAGIC << 24) | \
+                    ((0 << 16) & 0xff0000) | ((DmxId << 8) & 0x0000ff00) | (ChanId & 0x000000ff))
+/* 
+ * compatible and extend(bit16 ~ bit24) 
+ */
+#define DMX_CHANHANDLE2(DmxId, ChanId, Mode) ((HI_ID_DEMUX << 28) | (DMX_CHANHANDLE_MAGIC << 24) | \
+                    ((Mode << 16) & 0xff0000) | ((DmxId << 8) & 0x0000ff00) | (ChanId & 0x000000ff))
+                    
 #define DMX_CHECK_CHANHANDLE(ChanHandle)                                \
     do                                                                  \
     {                                                                   \
-        if (((ChanHandle >> 24) & 0x000000ff) != HI_ID_DEMUX && ((ChanHandle >> 16) & 0x000000ff) != DMX_CHANHANDLE_MAGIC) \
+        if (((ChanHandle >> 28) & 0x0000000f) != HI_ID_DEMUX && ((ChanHandle >> 24) & 0x0000000f) != DMX_CHANHANDLE_MAGIC) \
         {\
             HI_ERR_DEMUX("Invalid Channel handle(0x%x)\n", ChanHandle); \
             return HI_ERR_DMX_INVALID_PARA;\
@@ -135,8 +142,8 @@ HI_S32 HI_MPI_DMX_GetTSBufferHandle(HI_UNF_DMX_PORT_E enPortId, HI_HANDLE *phTsB
 /*Buffer for video and audio channel should be attached,it's meaningless to config when apply them *//*CNcomment: 音视频通道的buffer需要绑定，在申请时配置没有意义*/
 HI_S32 HI_MPI_DMX_GetPortMode(HI_U32 u32DmxId, HI_UNF_DMX_PORT_MODE_E *penPortMod);
 HI_S32 HI_MPI_DMX_GetChannelDefaultAttr(HI_UNF_DMX_CHAN_ATTR_S *pstChAttr);
-HI_S32 HI_MPI_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr,
-            HI_HANDLE *phChannel);
+HI_S32 HI_MPI_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel);
+HI_S32 HI_MPI_DMX_CreateChannelWithPID(HI_U32 u32DmxId, HI_U32 u32Pid, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel);
 HI_S32 HI_MPI_DMX_DestroyChannel(HI_HANDLE hChannel);
 HI_S32 HI_MPI_DMX_GetChannelAttr(HI_HANDLE hChannel, HI_UNF_DMX_CHAN_ATTR_S *pstChAttr);
 HI_S32 HI_MPI_DMX_SetChannelAttr(HI_HANDLE hChannel, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr);
@@ -232,6 +239,7 @@ typedef struct hiDMX_IDX_DATA_S
 } DMX_IDX_DATA_S;
 
 HI_S32 HI_MPI_DMX_Invoke(HI_UNF_DMX_INVOKE_TYPE_E enCmd, const HI_VOID *pCmdPara);
+HI_S32 HI_MPI_DMX_GetResumeCount(HI_U32 *pCount);
 
 #ifdef __cplusplus
 #if __cplusplus

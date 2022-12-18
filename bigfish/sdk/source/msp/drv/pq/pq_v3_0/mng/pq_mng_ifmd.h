@@ -2,6 +2,7 @@
 #define __PQ_MNG_IFMD_H__
 
 #include "hi_type.h"
+
 #include "pq_hal_comm.h"
 #include "pq_hal_fmd.h"
 #include "pq_mng_pq_table.h"
@@ -11,9 +12,9 @@
 #if __cplusplus
 extern "C" {
 #endif
-#endif /* End of #ifdef __cplusplus */
+#endif
 
-//IFMD相关
+
 typedef enum
 {
     ALG_DEI_MODE_5FLD = 0,
@@ -38,11 +39,11 @@ typedef struct
 
 typedef struct
 {
-    HI_BOOL   Pd32Det;
-    HI_BOOL   WithOvlpTitle;
-    HI_S8      PdState;
-    HI_S8      RptFlag;
-    HI_S8      PdSubState; /*10 sub state to set pd para. meaningless when pd32det is false*/
+    HI_BOOL Pd32Det;
+    HI_BOOL WithOvlpTitle;
+    HI_S8   PdState;
+    HI_S8   RptFlag;
+    HI_S8   PdSubState; /*10 sub state to set pd para. meaningless when pd32det is false*/
 } PD32_INFO_S;
 
 typedef struct
@@ -50,7 +51,6 @@ typedef struct
     HI_S32 Count;
 } PD32_PHASE_INFO_S;
 
-/*------------------------structs' definitions---------------------------*/
 typedef struct
 {
     HI_S32 histFrmITDiff[5];   /* save five successive history FrmITDiff values for calculating mean value. */
@@ -74,7 +74,7 @@ typedef struct
     HI_S32 frame_pcc_crss;
     HI_S32 frame_match_tkr;
     HI_S32 frame_nonmatch_tkr;
-    HI_S8 phaseCnt[2];         /* 22pulldown phase counter */
+    HI_S8  phaseCnt[2];        /* 22pulldown phase counter */
     HI_BOOL pld22Lock;         /* lock state:0-unlock; 1-lock */
 } PLD22_CNTXT_S;
 
@@ -99,14 +99,12 @@ typedef struct
     HI_U8 g_nxtreffld;    /* reference field for the coming frame */
 } REF_FLD_S;
 
-
 typedef struct
 {
     HI_U8 g_lstbtmode;
     HI_U8 g_curbtmode;
     HI_U8 g_nxtbtmode;
 } BTMODE_S;
-
 
 /*structure of pulldown software result */
 typedef struct
@@ -115,24 +113,31 @@ typedef struct
     HI_BOOL NxtIs2ndFld;          /*表示驱动下一次配置给逻辑的参考场是否为第二场*/
     HI_BOOL BtMode;               /*表示计算统计信息时，配置给逻辑的场序*/
     HI_BOOL RefFld;               /*表示计算统计信息时，配置给逻辑的参考场,算法人员描述的参考场也是逻辑人员的当前场*/
-    HI_S32 s32PbDelay;            /*delayed fields*/
-    HI_S32 SadBuf[16], SadCnt, *pSadRd, *pSadWt;
-    PD32_INFO_S Pld32InfoBuf[5], PdInfo;
-    PD32_PHASE_INFO_S Phases32[5];
-    HI_S8 Last32Phase;
-    HI_S32 SADDiffAcc;
-    HI_S32 FieldOrder;
-    HI_S8 SceneChange[2];
-    HI_S32 ScSadBuf[6];
+    HI_S32  s32PbDelay;           /*delayed fields*/
+    HI_S32  SadCnt;
+    HI_S32  SadBuf[16];
+    HI_S32*  pSadRd;
+    HI_S32*  pSadWt;
+
+    HI_S8   MainState;
+    HI_S8   PrevMainState;
+    HI_S8   init_symbol;
+    HI_S8   SceneChange[2];
+    HI_S8   Last32Phase;
+    HI_S32  SADDiffAcc;
+    HI_S32  FieldOrder;
+
+    HI_S32  ScSadBuf[6];
+    HI_U16  sadReg[16][3];
     HI_BOOL Pld22LockState[3];   /* lock state of last 3 fields */
     PLD22_CNTXT_S Pld22Ctx;
-    HI_U16 sadReg[16][3];
-    HI_S8 MainState;
-    HI_S8 PrevMainState;
-    HI_S8 init_symbol;
+
+    PD32_INFO_S PdInfo;
+    PD32_INFO_S Pld32InfoBuf[5];
+    PD32_PHASE_INFO_S Phases32[5];
 
     REPEAT_S stRepeatHist;
-    DROP_S stDropHist;
+    DROP_S   stDropHist;
 } ALG_FMD_CTX_S;
 
 
@@ -140,20 +145,20 @@ typedef struct
 typedef struct
 {
     HI_S32 STILLBLK_THR;    /* 8bit [0:255] */
-} STILLBLK_THD_S;  /* still block */
+} STILLBLK_THD_S;
 
 
 /* submission information struct for hardware (exterior interface) */
 typedef struct
 {
-    HI_BOOL  DirMch;
-    HI_BOOL  DieOutSelLum;
-    HI_BOOL  DieOutSelChr;
-    HI_BOOL  EdgeSmoothEn; /* 仅在2:2电影模式且边缘平滑使能情况下为1*/
+    HI_BOOL DirMch;
+    HI_BOOL DieOutSelLum;
+    HI_BOOL DieOutSelChr;
+    HI_BOOL EdgeSmoothEn;   /* 仅在2:2电影模式且边缘平滑使能情况下为1*/
 
-    HI_BOOL  SceneChange;  /* 场景切换信息 */
-    HI_S32 s32FieldOrder;  /* 顶地场序 */
-    HI_S32 s32FilmType;    /* 电影模式 */
+    HI_BOOL SceneChange;    /* 场景切换信息 */
+    HI_S32  s32FieldOrder;  /* 顶地场序 */
+    HI_S32  s32FilmType;    /* 电影模式 */
 } ALG_FMD_RTL_OUTPARA_S;
 
 
@@ -164,7 +169,7 @@ typedef struct
     HI_S32  s32DeiMdLum;   /* 0-5 field; 1-4 filed; 2-3 field; 3-reserved */
     HI_S32  s32DeiMdChr;
     HI_BOOL bDeiRst;       /* 0-reset invalid; 1-reset valid,don't read history motion infomation; */
-    HI_S32  FodEnable;     /* field order detect enable on-off: 1-enable; 0-disable,forced to top first; 2-disable,forced to bottom first; 3-disable,default; */
+    HI_S32  FodEnable;     /* field order detect enable on-off: 1-enable; 2-disable,forced to top first; 3-disable,forced to bottom first; 0-disable,default; */
     HI_BOOL Pld22Enable;   /* Interleaved/Progressive detect enable on-off: 1-enable; 0-disable */
     HI_BOOL Pld32Enable;   /* pulldown detect enable on-off: 1-enable; 0-disable */
     HI_BOOL EdgeSmoothEn;  /* edge smooth enable on-off: 1-disable; 0-enable */
@@ -187,7 +192,6 @@ typedef struct
     ALG_MAD_RTL_STATPARA_S stMadRtlStatPara; /* 需要从逻辑读的统计信息 */
 } ALG_DEI_DRV_PARA_S;
 
-
 typedef struct
 {
     HI_U32          u32InitFlag;
@@ -198,37 +202,31 @@ typedef struct
     ALG_FMD_RTL_OUTPARA_S stRtlOutParaBak;/* 当DEI逻辑Timeout时，使用上一次的计算结果*/
 } ALG_FMD_SOFTINFO_S;
 
-
-typedef struct
+typedef enum hiPQ_DIE_OUT_MODE_E
 {
-    HI_U32   u32HandleNo;
-    HI_U32   u32WidthY;
-    HI_U32   u32HeightY;
-    HI_S32   s32FieldOrder; /* 顶底场序 顶场优先底场优先 */
-    HI_S32   s32FieldMode;  /* 顶底场标志 */
-    HI_U32   u32FrameRate;
-    HI_BOOL  bPreInfo;      /* DEI逻辑处理timeout，仍旧处理上一场*/
-    ALG_VDEC_INFO_S stVdecInfo;
+    DIE_OUT_MODE_AUTO = 0,
+    DIE_OUT_MODE_FIR,
+    DIE_OUT_MODE_COPY,
+    DIE_OUT_MODE_BUTT
+} PQ_DIE_OUT_MODE_E;
 
-    S_VPSSWB_REGS_TYPE* pstIfmdHardOutReg; /* 读取ifmd的状态寄存器 */
-} PQ_IFMD_CALC_S;
-
-typedef enum
+typedef enum hiPQ_FOD_MODE_E
 {
-    IP_DECTECT_INTERLACE_PRIMARY = 0,
-    IP_DECTECT_PROGRESSIVE_PRIMARY,
-    IP_DECTECT_BUTT
-} PQ_IFMD_IP_DECTECT_E;
+    PQ_FOD_ENABLE_AUTO  = 1,
+    PQ_FOD_TOP_FIRST    = 2,
+    PQ_FOD_BOTTOM_FIRST = 3,
+    PQ_FOD_MODE_BUTT
+} PQ_FOD_MODE_E;
 
 
 HI_S32 PQ_MNG_IFMD_SofewareParaInitByHandleNo(HI_U32 u32HandleNo);
 HI_S32 PQ_MNG_InitIfmd(PQ_PARAM_S* pstPqParam);
 HI_S32 PQ_MNG_DeInitIfmd(HI_VOID);
-//HI_S32 ALG_FmdSet(ALG_FMD_SOFTINFO_S* pstFmdSoftInfo, ALG_DEI_DRV_PARA_S* pstDeiDrvPara, ALG_FMD_RTL_OUTPARA_S* pstFmdRtlOutPara);
-HI_S32 PQ_MNG_IFMD_GetPlayBackConfig(IFMD_TotalHardPara* pIfmdTotalHardPara,
-                                                 PQ_IFMD_CALC_S* pstIfmdCalc, REG_PLAYBACK_CONFIG_S* pstIfmdResult);
-HI_S32 PQ_MNG_IFMD_SetIPDetect(HI_U32 u32Addr, HI_U8 u8Lsb, HI_U8 u8Msb, HI_U32 u32Value);
-HI_S32 PQ_MNG_SetIFmdEn(HI_U32 u32HandleNo, HI_U32 u32IFmdEn);
+HI_S32 PQ_MNG_IfmdDect(PQ_IFMD_CALC_S* pstIfmdCalc, REG_PLAYBACK_CONFIG_S* pstIfmdResult);
+HI_S32 PQ_MNG_GetIfmdDectInfo(REG_PLAYBACK_CONFIG_S* pstIfmdInfo);
+HI_S32 PQ_MNG_SetDieOutMode(PQ_DIE_OUT_MODE_E enMode);
+HI_S32 PQ_MNG_SetFodMode(PQ_FOD_MODE_E enMode);
+HI_S32 PQ_MNG_GetDeiMdLum(HI_VOID);
 
 
 #ifdef __cplusplus
@@ -238,5 +236,5 @@ HI_S32 PQ_MNG_SetIFmdEn(HI_U32 u32HandleNo, HI_U32 u32IFmdEn);
 
 #endif
 
-#endif /*End of #ifndef __MNG_PQ_IFMD_H__ */
+#endif
 

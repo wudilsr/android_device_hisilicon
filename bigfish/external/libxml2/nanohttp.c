@@ -156,6 +156,7 @@ typedef struct xmlNanoHTTPCtxt {
     z_stream *strm;	/* Zlib stream object */
     int usesGzip;	/* "Content-Encoding: gzip" was detected */
 #endif
+    char *redirectURL;
 } xmlNanoHTTPCtxt, *xmlNanoHTTPCtxtPtr;
 
 static int initialized = 0;
@@ -427,6 +428,7 @@ xmlNanoHTTPFreeCtxt(xmlNanoHTTPCtxtPtr ctxt) {
     if (ctxt->mimeType != NULL) xmlFree(ctxt->mimeType);
     if (ctxt->location != NULL) xmlFree(ctxt->location);
     if (ctxt->authHeader != NULL) xmlFree(ctxt->authHeader);
+    if (ctxt->redirectURL != NULL) xmlFree(ctxt->redirectURL);
 #ifdef HAVE_ZLIB_H
     if (ctxt->strm != NULL) {
 	inflateEnd(ctxt->strm);
@@ -1309,6 +1311,23 @@ xmlNanoHTTPRead(void *ctx, void *dest, int len) {
     return(len);
 }
 
+int
+xmlNanoHTTPInvoke(void *ctx, int invokeID, void *arg) {
+    xmlNanoHTTPCtxtPtr ctxt = (xmlNanoHTTPCtxtPtr) ctx;
+
+    if (ctx == NULL)
+        return (-1);
+
+    if (invokeID == XML_INVOKE_GET_HTTP_REDIRECT_URL) {
+        if (arg == NULL)
+            return (-1);
+
+        *((char **)arg) = ctxt->redirectURL;
+        return 0;
+    }
+
+    return -1;
+}
 /**
  * xmlNanoHTTPClose:
  * @ctx:  the HTTP context
@@ -1638,9 +1657,17 @@ retry:
 
     if ((redir != NULL) && (redirURL != NULL)) {
 	*redir = redirURL;
+    if (ctxt->redirectURL != NULL)
+        xmlFree(ctxt->redirectURL);
+    ctxt->redirectURL = xmlMemStrdup(redirURL);
     } else {
-	if (redirURL != NULL)
-	    xmlFree(redirURL);
+	if (redirURL != NULL) {
+        if (ctxt->redirectURL != NULL)
+           xmlFree(ctxt->redirectURL);
+	   // xmlFree(redirURL);
+	   ctxt->redirectURL = redirURL;
+	   redirURL = NULL;
+	}
 	if (redir != NULL)
 	    *redir = NULL;
     }

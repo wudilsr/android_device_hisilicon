@@ -1,14 +1,55 @@
-/*****************************************************************************/
-/*                Copyright 2009 - 2014, Huawei Tech. Co., Ltd.              */
-/*                           ALL RIGHTS RESERVED                             */
-/*                                                                           */
-/* FileName: wmalloc.h                                                       */
-/* Version: 01a 内存管理头文件                                               */
-/*                                                                           */
-/* History:                                                                  */
-/* 1. 01a,2009-2-25, w54130 Create this file.                                 */
-/*****************************************************************************/
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : wmalloc.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
+******************************************************************************/
+
+#ifndef __WMALLOC_H__
+#define __WMALLOC_H__
+
+
+/*********************************add include here******************************/
+
 #include "hi_type.h"
+
+/*****************************************************************************/
+
+#ifdef __cplusplus
+#if __cplusplus
+   extern "C"
+{
+#endif
+#endif /* __cplusplus */
+
+
+
+/***************************** Macro Definition ******************************/
+
+
+/*************************** Structure Definition ****************************/
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
+
+
+
 
 /******************************************************************************
 *Function: wmeminit
@@ -80,3 +121,13 @@ others: 无
 *******************************************************************************/
 HI_U32 wgetfreenum(HI_VOID);
 
+
+#ifdef __cplusplus
+
+#if __cplusplus
+
+}
+#endif
+#endif /* __cplusplus */
+
+#endif /* __WMALLOC_H__ */

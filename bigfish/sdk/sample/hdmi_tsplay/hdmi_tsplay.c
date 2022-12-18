@@ -114,44 +114,56 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     HI_UNF_AVPLAY_ATTR_S        AvplayAttr;
     HI_UNF_SYNC_ATTR_S          SyncAttr;
     HI_UNF_AVPLAY_STOP_OPT_S    Stop;
-	
-	//when use cec cmd, we need longer cmd len
+
+    //when use cec cmd, we need longer cmd len
     HI_CHAR                 InputCmd[128];
     HI_UNF_ENC_FMT_E   enFormat = HI_UNF_ENC_FMT_1080i_50;
     HI_U32             ProgNum;
 
-	HI_HANDLE                   hTrack;
-	HI_UNF_AUDIOTRACK_ATTR_S    stTrackAttr;	
-	
-    if (3 == argc)
+    HI_HANDLE                   hTrack;
+    HI_UNF_AUDIOTRACK_ATTR_S    stTrackAttr;
+    HI_SYS_VERSION_S            SysVersion;
+    HI_CHIP_TYPE_E              ChipType    = HI_CHIP_TYPE_BUTT;
+    HI_CHIP_VERSION_E           ChipVersion = HI_CHIP_VERSION_BUTT;
+
+    if (argc < 2)
+    {
+        printf("Usage: %s file [vo_format]\n", argv[0]);
+        printf("\tvo_format: 2160P_30 | 2160P_24 | 1080P_60 | 1080P_50 | 1080i_60 | 1080i_50 | 720P_60 | 720P_50\n");
+        printf("\t\t   480p_60 | 576P_50 | PAL | NTSC\n");
+        printf("Example: %s ./test.ts 1080P_60\n", argv[0]);
+        return 0;
+    }
+
+    if (argc >= 3)
     {
         enFormat = HIADP_Disp_StrToFmt(argv[2]);
-    }
-    else if (2 == argc)
-    {
-        enFormat = HI_UNF_ENC_FMT_1080i_50;
-
-    }
-    else
-    {
-        printf("Usage: sample_tsplay file [vo_format]\n"
-               "       vo_format:2160P_30|2160P_24|1080P_60|1080P_50|1080i_60|[1080i_50]|720P_60|720P_50\n"
-               "                 |480p_60|576P_50|PAL|NTSC \n");
-        printf("Example:./sample_tsplay ./test.ts 1080i_50\n");
-        return 0;
     }
 
     g_pTsFile = fopen(argv[1], "rb");
     if (!g_pTsFile)
-	{
+    {
         printf("open file %s error!\n", argv[1]);
-		return -1;
-	}
+        return -1;
+    }
 
     HI_SYS_Init();
-    system("echo volt=1140 > /proc/msp/pm_core");
+
+    Ret = HI_SYS_GetVersion(&SysVersion);
+    if (HI_SUCCESS == Ret)
+    {
+        ChipType    = SysVersion.enChipTypeHardWare;
+        ChipVersion = SysVersion.enChipVersion;
+
+        if (   ((HI_CHIP_TYPE_HI3798M == ChipType) && (HI_CHIP_VERSION_V100 == ChipVersion))
+            || ((HI_CHIP_TYPE_HI3796M == ChipType) && (HI_CHIP_VERSION_V100 == ChipVersion)) )
+        {
+            system("echo volt=1140 > /proc/msp/pm_core");
+        }
+    }
+
     HIADP_MCE_Exit();
-    
+
     Ret = HIADP_Snd_Init();
     if (HI_SUCCESS != Ret)
     {
@@ -180,8 +192,8 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     {
         printf("call HI_UNF_DMX_Init failed.\n");
         goto DISP_DEINIT;
-    } 
-    
+    }
+
     Ret = HI_UNF_DMX_AttachTSPort(PLAY_DMX_ID,HI_UNF_DMX_PORT_RAM_0);
     if (HI_SUCCESS != Ret)
     {
@@ -211,7 +223,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     }
 
     Ret = HI_UNF_AVPLAY_GetDefaultConfig(&AvplayAttr, HI_UNF_AVPLAY_STREAM_TYPE_TS);
-	AvplayAttr.u32DemuxId = PLAY_DMX_ID;
+    AvplayAttr.u32DemuxId = PLAY_DMX_ID;
     AvplayAttr.stStreamAttr.u32VidBufSize = (3*1024*1024);
     Ret |= HI_UNF_AVPLAY_Create(&AvplayAttr, &hAvplay);
     if (Ret != HI_SUCCESS)
@@ -253,7 +265,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         printf("call HI_UNF_SND_GetDefaultTrackAttr failed.\n");
         goto WIN_DETACH;
     }
-    Ret = HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &hTrack); 
+    Ret = HI_UNF_SND_CreateTrack(HI_UNF_SND_0, &stTrackAttr, &hTrack);
     if (Ret != HI_SUCCESS)
     {
         printf("call HI_SND_Attach failed.\n");
@@ -298,21 +310,21 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     pthread_mutex_lock(&g_TsMutex);
     rewind(g_pTsFile);
     HI_UNF_DMX_ResetTSBuffer(g_TsBuf);
-    
+
     Ret = HIADP_AVPlay_PlayProg(hAvplay,g_pProgTbl,ProgNum,HI_TRUE);
     if (Ret != HI_SUCCESS)
     {
         printf("call SwitchProg failed.\n");
         goto AVPLAY_STOP;
     }
-    
+
     pthread_mutex_unlock(&g_TsMutex);
 
     while(1)
     {
-   
+
         //SAMPLE_GET_INPUTCMD(InputCmd);
-		printf("please input 'h' to get help or 'q' to quit!\n");
+        printf("please input 'h' to get help or 'q' to quit!\n");
         printf("hdmi_cmd >");
         memset(InputCmd, 0, 128);
         SAMPLE_GET_INPUTCMD(InputCmd);
@@ -322,9 +334,9 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
             break;
         }
 
-		HDMI_Test_CMD(InputCmd);
-		#if 0
-		ProgNum = atoi(InputCmd);
+        HDMI_Test_CMD(InputCmd);
+        #if 0
+        ProgNum = atoi(InputCmd);
         if (ProgNum == 0)
             ProgNum = 1;
 
@@ -332,13 +344,13 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         rewind(g_pTsFile);
         HI_UNF_DMX_ResetTSBuffer(g_TsBuf);
         pthread_mutex_unlock(&g_TsMutex);
-		Ret = HIADP_AVPlay_PlayProg(hAvplay,g_pProgTbl,ProgNum-1,HI_TRUE);
-		if (Ret != HI_SUCCESS)
-		{
-			printf("call SwitchProgfailed!\n");
-			break;
-		}
-		#endif
+        Ret = HIADP_AVPlay_PlayProg(hAvplay,g_pProgTbl,ProgNum-1,HI_TRUE);
+        if (Ret != HI_SUCCESS)
+        {
+            printf("call SwitchProgfailed!\n");
+            break;
+        }
+        #endif
     }
 
 AVPLAY_STOP:
@@ -359,8 +371,8 @@ SND_DETACH:
     HI_UNF_SND_Detach(hTrack, hAvplay);
 
 TRACK_DESTROY:
-    HI_UNF_SND_DestroyTrack(hTrack); 
-    
+    HI_UNF_SND_DestroyTrack(hTrack);
+
 WIN_DETACH:
     HI_UNF_VO_SetWindowEnable(g_hWin,HI_FALSE);
     HI_UNF_VO_DetachWindow(g_hWin, hAvplay);
@@ -388,13 +400,18 @@ VO_DEINIT:
     HIADP_VO_DeInit();
 
 DISP_DEINIT:
-	HIADP_Disp_DeInit();
+    HIADP_Disp_DeInit();
 
 SND_DEINIT:
     HIADP_Snd_DeInit();
 
 SYS_DEINIT:
-    system("echo volt=0 > /proc/msp/pm_core");
+    if (   ((HI_CHIP_TYPE_HI3798M == ChipType) && (HI_CHIP_VERSION_V100 == ChipVersion))
+        || ((HI_CHIP_TYPE_HI3796M == ChipType) && (HI_CHIP_VERSION_V100 == ChipVersion)) )
+    {
+        system("echo volt=0 > /proc/msp/pm_core");
+    }
+
     HI_SYS_DeInit();
 
     fclose(g_pTsFile);

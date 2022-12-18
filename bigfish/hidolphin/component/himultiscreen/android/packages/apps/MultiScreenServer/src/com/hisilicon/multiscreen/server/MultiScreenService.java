@@ -61,6 +61,7 @@ import com.hisilicon.multiscreen.protocol.message.PushMessage;
 import com.hisilicon.multiscreen.protocol.message.PushMessageHead;
 import com.hisilicon.multiscreen.protocol.server.IPushMessageHandler;
 import com.hisilicon.multiscreen.protocol.server.PushServer;
+import com.hisilicon.multiscreen.protocol.server.ServerControl;
 import com.hisilicon.multiscreen.protocol.utils.AppListTransmitter;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
 import com.hisilicon.multiscreen.protocol.utils.MultiScreenIntentAction;
@@ -458,6 +459,8 @@ public class MultiScreenService extends Service implements IPushMessageHandler
         initMessageHandler();
 
         initSpeechModule();
+
+        initServerControlModule();
     }
 
     /**
@@ -529,6 +532,12 @@ public class MultiScreenService extends Service implements IPushMessageHandler
     private void initSpeechModule()
     {
 
+    }
+
+    private void initServerControlModule()
+    {
+        ServerControl sc = new ServerControl(this);
+        sc.init();
     }
 
     private String readFriendlyName()

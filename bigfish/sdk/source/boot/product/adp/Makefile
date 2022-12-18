@@ -9,13 +9,18 @@ endif
 #===============================================================================
 # local variables
 #===============================================================================
-
 ifeq ($(CFG_HI_MINIBOOT_SUPPORT),y)
-BOOT_DIR  := $(SDK_DIR)/source/boot/miniboot
+BOOT_DIR := $(SDK_DIR)/source/boot/miniboot
 else
-BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
+BOOT_DIR := $(SDK_DIR)/source/boot/fastboot
 endif
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
+PRODUCT_DIR := $(BOOT_DIR)/../product
+endif
+
 ADP_DIR := $(PRODUCT_DIR)/logo
 
 ifndef CFLAGS

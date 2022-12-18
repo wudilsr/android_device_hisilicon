@@ -44,6 +44,13 @@ extern struct clk mpu_ck;
 #define CPU_VMIN 920 /*mv*/
 #define CORE_VMAX 1315 /*mv*/
 #define CORE_VMIN 900 /*mv*/
+#elif  defined(CHIP_TYPE_hi3716mv410) \
+	 || defined(CHIP_TYPE_hi3716mv420)
+
+#define CPU_VMAX 1400 /*mv*///0.9-1.38
+#define CPU_VMIN 900 /*mv*/
+#define CORE_VMAX 1315 /*mv*///0.9 1.25
+#define CORE_VMIN 900 /*mv*/
 #elif  defined(CHIP_TYPE_hi3798cv200_a)
 #define CPU_VMAX 1150 /*mv*/
 #define CPU_VMIN 750 /*mv*/
@@ -90,30 +97,22 @@ static I2C_EXT_FUNC_S *s_pI2CFunc = HI_NULL;
 #endif
 
 #define AVS_STEP 10 /*mv*/
-#define AVS_INTERVAL 20 /*ms*/
+#define AVS_INTERVAL 10 /*ms*/
 
 unsigned long cur_cpu_volt  = 1300;
 unsigned long cur_core_volt = 1150;
 unsigned long init_core_volt = 1150;
 
 #ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-struct  timer_list cpu_avs_timer;
-#else
 static struct task_struct *pstAVSThread = HI_NULL;
 HI_DECLARE_MUTEX(g_CPUAVSMutex);
-#endif
-
 static unsigned int cur_cpu_vmax;
 static unsigned int cpu_avs_enable = HI_TRUE;
 #endif
 
-unsigned int cpu_dvfs_enable = HI_TRUE;
-
 int core_volt_scale(unsigned int volt);
 
 DEFINE_MUTEX(hi_dvfs_lock);
-DEFINE_SPINLOCK(hi_avs_lock);
 
 /**
  * struct hi_dvfs_info - The per vdd dvfs info
@@ -232,6 +231,9 @@ static void device_volt_scale(unsigned char device_addr,  unsigned char pmu_reg)
 
 int cpu_volt_scale(unsigned int volt)
 {
+#if	defined(CHIP_TYPE_hi3716mv410)
+	return 0;
+#endif
 #ifndef HI_PMU_DEVICE_SELECT
     HI_INFO_PM("%s,volt=%d\n", __FUNCTION__, volt);
 
@@ -292,94 +294,6 @@ void CPU_AVS_Enable(unsigned int enable)
 extern unsigned int cur_cpu_hpm;
 extern unsigned int cur_cpu_vmin;
 
-#ifndef HI_CPU_AVS_THREAD
-static HI_VOID avs_timeout_handler(unsigned long data)
-{
-    HI_U16 u16HpmCode, u16HpmCodeAverage = 0;
-    HI_U32 u32RegVal;
-    HI_S16 s16HpmDelta;
-    HI_U8 i;
-    unsigned long flag;
-
-    spin_lock_irqsave(&hi_avs_lock, flag);
-
-    /* read current code */
-    for (i = 0; i < 2; i++)
-    {
-        HI_REG_READ32(PERI_PMC31, u32RegVal);
-        u16HpmCode = (u32RegVal & HPM_PC_RECORED_MASK);
-        u16HpmCodeAverage += u16HpmCode;
-        u16HpmCode = ((u32RegVal >> 12) & HPM_PC_RECORED_MASK);
-        u16HpmCodeAverage += u16HpmCode;
-
-        HI_REG_READ32(PERI_PMC32, u32RegVal);
-        u16HpmCode = (u32RegVal & HPM_PC_RECORED_MASK);
-        u16HpmCodeAverage += u16HpmCode;
-        u16HpmCode = ((u32RegVal >> 12) & HPM_PC_RECORED_MASK);
-        u16HpmCodeAverage += u16HpmCode;
-    }
-
-    u16HpmCodeAverage = u16HpmCodeAverage / (i * 4);
-
-    s16HpmDelta = u16HpmCodeAverage - cur_cpu_hpm;
-
-    del_timer(&cpu_avs_timer);
-
-    if (HI_FALSE == cpu_avs_enable)
-    {
-        spin_unlock_irqrestore(&hi_avs_lock, flag);
-        return;
-    }
-
-    /* compare code value */
-    if (s16HpmDelta <= 0x1)
-    {
-        /* up 10mv */
-        if (cur_cpu_volt < cur_cpu_vmax)
-        {
-            cpu_volt_scale(cur_cpu_volt + AVS_STEP);
-        }
-
-        HI_INFO_PM("\n up u16HpmCodeMin = 0x%x cur_cpu_hpm = 0x%x \n", u16HpmCodeAverage, cur_cpu_hpm);
-
-        /* restart timer */
-        cpu_avs_timer.expires = jiffies + msecs_to_jiffies(AVS_INTERVAL);
-    }
-    else if (s16HpmDelta >= 0xa)
-    {
-	    i = s16HpmDelta / 8;
-
-        /*down  ix10mv */
-        if (cur_cpu_volt > cur_cpu_vmin)
-        {
-            if ((cur_cpu_volt - AVS_STEP * i) <  cur_cpu_vmin)
-            {
-                cpu_volt_scale(cur_cpu_vmin);
-            }
-            else
-            {
-                cpu_volt_scale(cur_cpu_volt - AVS_STEP * i);
-            }
-        }
-
-        /* restart timer */
-        cpu_avs_timer.expires = jiffies + msecs_to_jiffies(AVS_INTERVAL);
-    }
-    else
-    {
-        /* restart timer */
-        cpu_avs_timer.expires = jiffies + msecs_to_jiffies(AVS_INTERVAL * 10);
-    }
-
-    add_timer(&cpu_avs_timer);
-    spin_unlock_irqrestore(&hi_avs_lock, flag);
-
-    return;
-}
-
-#endif //end of HI_CPU_AVS_THREAD
-
-#ifdef HI_CPU_AVS_THREAD
 HI_S32 cpu_avs_thread(void *Arg)
 {
     HI_U16 u16HpmCode, u16HpmCodeAverage = 0;
@@ -465,7 +379,6 @@ HI_S32 cpu_avs_thread(void *Arg)
 
     return HI_SUCCESS;
 }
-#endif //end of HI_CPU_AVS_THREAD
 
 #endif //end of HI_AVS_SUPPORT
 
@@ -503,11 +416,6 @@ void mpu_init_volt(void)
 #endif
 
 #ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-    /* init timer for avs */
-    cpu_avs_timer.function = avs_timeout_handler;
-    init_timer(&cpu_avs_timer);
-#else
     pstAVSThread = kthread_create(cpu_avs_thread, NULL, "cpu_avs");
     if (IS_ERR(pstAVSThread))
     {
@@ -516,7 +424,6 @@ void mpu_init_volt(void)
     }
     wake_up_process(pstAVSThread);
 #endif
-#endif
 
     return;
 }
@@ -524,15 +431,11 @@ void mpu_init_volt(void)
 void mpu_deinit_volt(void)
 {
 #ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-    del_timer(&cpu_avs_timer);
-#else
     if (pstAVSThread)
     {
         kthread_stop(pstAVSThread);
         pstAVSThread = HI_NULL;
     }
-#endif
 #endif
 }
 
@@ -586,14 +489,8 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
 {
     struct clk * clk;
     int ret;
-    unsigned long flag;
 
     HI_INFO_PM("%s rate=%ld\n", __FUNCTION__, tdvfs_info->new_freq);
-
-    if (HI_FALSE == cpu_dvfs_enable)
-    {
-        return 0;
-    }
 
     clk = &mpu_ck;
     if (tdvfs_info->new_freq == tdvfs_info->old_freq)
@@ -603,7 +500,6 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
     else if (tdvfs_info->new_freq > tdvfs_info->old_freq)
     {
 #ifdef HI_AVS_SUPPORT
-#ifdef HI_CPU_AVS_THREAD
         CPU_AVS_Enable(HI_FALSE);
         ret = down_interruptible(&g_CPUAVSMutex);
         if (ret)
@@ -611,10 +507,6 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
             HI_ERR_PM("lock g_CPUAVSMutex error.\n");
             return ret;
         }
-#else
-        spin_lock_irqsave(&hi_avs_lock, flag);
-        del_timer(&cpu_avs_timer);
-#endif
 #endif
         ret = cpu_volt_scale(tdvfs_info->volt);
         if (ret)
@@ -624,18 +516,15 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
         }
 
 #ifdef HI_AVS_SUPPORT
-#ifdef HI_CPU_AVS_THREAD
         up(&g_CPUAVSMutex);
 #endif
-#endif
 
-        mdelay(15);
+        msleep(10);
         ret = clk_set_rate(clk, tdvfs_info->new_freq);
         if (ret)
         {
             HI_ERR_PM("%s: scale freq to %ld falt\n",
                       __func__, tdvfs_info->new_freq);
-            spin_unlock_irqrestore(&hi_avs_lock, flag);
             return ret;
         }
     }
@@ -652,7 +541,6 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
         msleep(10);
 
 #ifdef HI_AVS_SUPPORT
-#ifdef HI_CPU_AVS_THREAD
         CPU_AVS_Enable(HI_FALSE);
         ret = down_interruptible(&g_CPUAVSMutex);
         if (ret)
@@ -660,10 +548,6 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
             HI_ERR_PM("lock g_CPUAVSMutex error.\n");
             return ret;
         }
-#else
-        spin_lock_irqsave(&hi_avs_lock, flag);
-        del_timer(&cpu_avs_timer);
-#endif
 #endif
         ret = cpu_volt_scale(tdvfs_info->volt);
         if (ret)
@@ -673,25 +557,12 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
         }
 
 #ifdef HI_AVS_SUPPORT
-#ifdef HI_CPU_AVS_THREAD
         up(&g_CPUAVSMutex);
-#endif
 #endif
     }
 
 #ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-    /* Do not open avs in 400M and 600M */
-    if ((tdvfs_info->new_freq > 400000) && (HI_TRUE == cpu_avs_enable) && (tdvfs_info->new_freq < 1500000))
-    {
-        cur_cpu_vmax = tdvfs_info->volt;
-        HI_INFO_PM("\n  cur_cpu_vmax = %d \n", cur_cpu_vmax);
-        cpu_avs_timer.expires = jiffies + msecs_to_jiffies(AVS_INTERVAL * 2);
-        add_timer(&cpu_avs_timer);
-    }
-    spin_unlock_irqrestore(&hi_avs_lock, flag);
-#else
-    if ((tdvfs_info->new_freq > 600000) && (tdvfs_info->new_freq < 1500000))
+    if ((tdvfs_info->new_freq > 400000) && (tdvfs_info->new_freq < 1500000))
     {
         /* save basic cpu volt as the max volt of AVS */
         cur_cpu_vmax = tdvfs_info->volt;
@@ -700,7 +571,6 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
         msleep(8);
         CPU_AVS_Enable(HI_TRUE);
     }
-#endif
 #endif
 
     return ret;

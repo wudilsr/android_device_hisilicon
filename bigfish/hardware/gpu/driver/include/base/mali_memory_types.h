@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -145,7 +145,7 @@ typedef struct mali_mem
 
 	mali_mem_subtype memory_subtype; /**< The memory subtype */
 
-	u32 memory_usage;	/** < The usage of GLES */
+	u32 memory_usage;   /** < The usage of GLES */
 
 	mali_bool is_pow2; /**< Is pow2? */
 	mali_bool is_allocated; /**< Current allocation status */
@@ -208,6 +208,7 @@ typedef struct mali_mem
 #endif
 	mali_atomic_int ref_count; /**< Reference count of users of the memory */
 	mali_atomic_int read_counter; /**< Read counter. Used to decide when COW is needed */
+	mali_atomic_int gpu_read_pending;       /**< The number of pending gpu read flush(es) */
 	struct mali_fence writer_fence; /**< Fence for waiting on jobs that are writing to this memory */
 } mali_mem;
 

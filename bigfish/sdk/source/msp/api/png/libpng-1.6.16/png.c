@@ -35,7 +35,11 @@ png_set_sig_bytes(png_structrp png_ptr, int num_bytes)
       return;
 
    if (num_bytes > 8)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Too many bytes for PNG signature");
+#endif
 
    png_ptr->sig_bytes = (png_byte)(num_bytes < 0 ? 0 : num_bytes);
 }
@@ -82,8 +86,12 @@ png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
 
    if (items >= (~(png_alloc_size_t)0)/size)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning (png_voidcast(png_structrp, png_ptr), "");
+#else
       png_warning (png_voidcast(png_structrp, png_ptr),
          "Potential overflow in png_zalloc()");
+#endif
       return NULL;
    }
 
@@ -195,6 +203,7 @@ png_user_version_check(png_structrp png_ptr, png_const_charp user_png_ver)
    if ((png_ptr->flags & PNG_FLAG_LIBRARY_MISMATCH) != 0)
    {
 #ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       size_t pos = 0;
       char m[128];
 
@@ -206,6 +215,9 @@ png_user_version_check(png_structrp png_ptr, png_const_charp user_png_ver)
       PNG_UNUSED(pos)
 
       png_warning(png_ptr, m);
+#else
+      png_warning(png_ptr, "");
+#endif
 #endif
 
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
@@ -442,7 +454,11 @@ png_data_freer(png_const_structrp png_ptr, png_inforp info_ptr,
       info_ptr->free_me &= ~mask;
 
    else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Unknown freer parameter in png_data_freer");
+#endif
 }
 
 void PNGAPI
@@ -793,7 +809,11 @@ png_convert_to_rfc1123(png_structrp png_ptr, png_const_timep ptime)
    {
       /* The only failure above if png_ptr != NULL is from an invalid ptime */
       if (png_convert_to_rfc1123_buffer(png_ptr->time_buffer, ptime) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Ignoring invalid time value");
+#endif
 
       else
          return png_ptr->time_buffer;
@@ -810,9 +830,6 @@ png_const_charp PNGAPI
 png_get_copyright(png_const_structrp png_ptr)
 {
    PNG_UNUSED(png_ptr)  /* Silence compiler warning about unused png_ptr */
-#ifdef PNG_NO_STRING
-   return "";
-#else
 #ifdef PNG_STRING_COPYRIGHT
    return PNG_STRING_COPYRIGHT
 #else
@@ -829,7 +846,6 @@ png_get_copyright(png_const_structrp png_ptr)
       Copyright (c) 1996-1997 Andreas Dilger\
       Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.";
 #  endif
-#endif
 #endif
 }
 
@@ -1015,48 +1031,84 @@ png_zstream_error(png_structrp png_ptr, int ret)
    {
       default:
       case Z_OK:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("unexpected zlib return code");
+#endif
          break;
 
       case Z_STREAM_END:
          /* Normal exit */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("unexpected end of LZ stream");
+#endif
          break;
 
       case Z_NEED_DICT:
          /* This means the deflate stream did not have a dictionary; this
           * indicates a bogus PNG.
           */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("missing LZ dictionary");
+#endif
          break;
 
       case Z_ERRNO:
          /* gz APIs only: should not happen */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("zlib IO error");
+#endif
          break;
 
       case Z_STREAM_ERROR:
          /* internal libpng error */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("bad parameters to zlib");
+#endif
          break;
 
       case Z_DATA_ERROR:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("damaged LZ stream");
+#endif
          break;
 
       case Z_MEM_ERROR:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("insufficient memory");
+#endif
          break;
 
       case Z_BUF_ERROR:
          /* End of input or output; not a problem if the caller is doing
           * incremental read or write.
           */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("truncated");
+#endif
          break;
 
       case Z_VERSION_ERROR:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("unsupported zlib version");
+#endif
          break;
 
       case PNG_UNEXPECTED_ZLIB_RETURN:
@@ -1065,7 +1117,11 @@ png_zstream_error(png_structrp png_ptr, int ret)
           * and change pngpriv.h.  Note that this message is "... return",
           * whereas the default/Z_OK one is "... return code".
           */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("unexpected zlib return");
+#endif
          break;
    }
 }
@@ -1103,16 +1159,24 @@ png_colorspace_check_gamma(png_const_structrp png_ptr,
        */
       if ((colorspace->flags & PNG_COLORSPACE_FROM_sRGB) != 0 || from == 2)
       {
-         png_chunk_report_ex(png_ptr, "gamma value does not match sRGB",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_ERROR);
+#else
+         png_chunk_report(png_ptr, "gamma value does not match sRGB",
             PNG_CHUNK_ERROR);
+#endif
          /* Do not overwrite an sRGB value */
          return from == 2;
       }
 
       else /* sRGB tag not involved */
       {
-         png_chunk_report_ex(png_ptr, "gamma value does not match libpng estimate",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WARNING);
+#else
+         png_chunk_report(png_ptr, "gamma value does not match libpng estimate",
             PNG_CHUNK_WARNING);
+#endif
          return from == 1;
       }
    }
@@ -1138,7 +1202,7 @@ png_colorspace_set_gamma(png_const_structrp png_ptr,
    png_const_charp errmsg;
 
    if (gAMA < 16 || gAMA > 625000000)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "gamma value out of range";
 #else
 	  errmsg = "";
@@ -1148,7 +1212,7 @@ png_colorspace_set_gamma(png_const_structrp png_ptr,
       /* Allow the application to set the gamma value more than once */
       else if ((png_ptr->mode & PNG_IS_READ_STRUCT) != 0 &&
          (colorspace->flags & PNG_COLORSPACE_FROM_gAMA) != 0)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          errmsg = "duplicate";
 #else
 	  errmsg = "";
@@ -1180,7 +1244,7 @@ png_colorspace_set_gamma(png_const_structrp png_ptr,
 
    /* Error exit - errmsg has been set. */
    colorspace->flags |= PNG_COLORSPACE_INVALID;
-   png_chunk_report_ex(png_ptr, errmsg, PNG_CHUNK_WRITE_ERROR);
+   png_chunk_report(png_ptr, errmsg, PNG_CHUNK_WRITE_ERROR);
 }
 
 void /* PRIVATE */
@@ -1707,7 +1771,11 @@ png_colorspace_set_xy_and_XYZ(png_const_structrp png_ptr,
           100) == 0)
       {
          colorspace->flags |= PNG_COLORSPACE_INVALID;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_benign_error(png_ptr, "");
+#else
          png_benign_error(png_ptr, "inconsistent chromaticities");
+#endif
          return 0; /* failed */
       }
 
@@ -1756,7 +1824,11 @@ png_colorspace_set_chromaticities(png_const_structrp png_ptr,
           * values.  Likely as not a color management system will fail too.
           */
          colorspace->flags |= PNG_COLORSPACE_INVALID;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_benign_error(png_ptr, "");
+#else
          png_benign_error(png_ptr, "invalid chromaticities");
+#endif
          break;
 
       default:
@@ -1764,7 +1836,11 @@ png_colorspace_set_chromaticities(png_const_structrp png_ptr,
           * want error reports so for the moment it is an error.
           */
          colorspace->flags |= PNG_COLORSPACE_INVALID;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "internal error checking chromaticities");
+#endif
          break;
    }
 
@@ -1787,12 +1863,20 @@ png_colorspace_set_endpoints(png_const_structrp png_ptr,
       case 1:
          /* End points are invalid. */
          colorspace->flags |= PNG_COLORSPACE_INVALID;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_benign_error(png_ptr, "");
+#else
          png_benign_error(png_ptr, "invalid end points");
+#endif
          break;
 
       default:
          colorspace->flags |= PNG_COLORSPACE_INVALID;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "internal error checking chromaticities");
+#endif
          break;
    }
 
@@ -1843,11 +1927,11 @@ png_icc_profile_error(png_const_structrp png_ptr, png_colorspacerp colorspace,
    png_const_charp name, png_alloc_size_t value, png_const_charp reason)
 {
    size_t pos;
-   char message[196]; /* see below for calculation */
+   char message[196] = {0}; /* see below for calculation */
 
    if (colorspace != NULL)
       colorspace->flags |= PNG_COLORSPACE_INVALID;
-#  ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
    pos = png_safecat(message, (sizeof message), 0, "profile '"); /* 9 chars */
    pos = png_safecat(message, pos+79, pos, name); /* Truncate to 79 chars */
    pos = png_safecat(message, (sizeof message), pos, "': "); /* +2 = 90 */
@@ -1859,7 +1943,7 @@ png_icc_profile_error(png_const_structrp png_ptr, png_colorspacerp colorspace,
       message[pos++] = ':';
       message[pos++] = ' ';
    }
-
+#  ifdef PNG_WARNINGS_SUPPORTED
    else
       {
          char number[PNG_NUMBER_BUFFER_SIZE]; /* +24 = 114*/
@@ -1869,29 +1953,21 @@ png_icc_profile_error(png_const_structrp png_ptr, png_colorspacerp colorspace,
                PNG_NUMBER_FORMAT_x, value));
          pos = png_safecat(message, (sizeof message), pos, "h: "); /*+2 = 116*/
       }
+#  endif
    /* The 'reason' is an arbitrary message, allow +79 maximum 195 */
    pos = png_safecat(message, (sizeof message), pos, reason);
    PNG_UNUSED(pos)
-#  endif
-
+#endif
    /* This is recoverable, but make it unconditionally an app_error on write to
     * avoid writing invalid ICC profiles into PNG files (i.e., we handle them
     * on read, with a warning, but on write unless the app turns off
     * application errors the PNG won't be written.)
     */
-   png_chunk_report_ex(png_ptr, message,
+   png_chunk_report(png_ptr, message,
       (colorspace != NULL) ? PNG_CHUNK_ERROR : PNG_CHUNK_WRITE_ERROR);
 
    return 0;
 }
-#ifdef PNG_WARNINGS_SUPPORTED
-#define png_icc_profile_error_ex(png_ptr, colorspace,name, value, reason)\
-			png_icc_profile_error(png_ptr, colorspace,name, value, reason)
-#else
-#define png_icc_profile_error_ex(png_ptr, colorspace,name, value, reason)\
-			png_icc_profile_error(png_ptr, colorspace,"", value, "")
-#endif
-
 #endif /* sRGB || iCCP */
 
 #ifdef PNG_sRGB_SUPPORTED
@@ -1933,17 +2009,29 @@ png_colorspace_set_sRGB(png_const_structrp png_ptr, png_colorspacerp colorspace,
     * be ignored.)
     */
    if (intent < 0 || intent >= PNG_sRGB_INTENT_LAST)
-      return png_icc_profile_error_ex(png_ptr, colorspace, "sRGB",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, "", (unsigned)intent, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, "sRGB",
          (unsigned)intent, "invalid sRGB rendering intent");
+#endif
 
    if ((colorspace->flags & PNG_COLORSPACE_HAVE_INTENT) != 0 &&
       colorspace->rendering_intent != intent)
-      return png_icc_profile_error_ex(png_ptr, colorspace, "sRGB",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, "", (unsigned)intent, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, "sRGB",
          (unsigned)intent, "inconsistent rendering intents");
+#endif
 
    if ((colorspace->flags & PNG_COLORSPACE_FROM_sRGB) != 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_benign_error(png_ptr, "");
+#else
       png_benign_error(png_ptr, "duplicate sRGB information ignored");
+#endif
       return 0;
    }
 
@@ -1953,8 +2041,12 @@ png_colorspace_set_sRGB(png_const_structrp png_ptr, png_colorspacerp colorspace,
    if ((colorspace->flags & PNG_COLORSPACE_HAVE_ENDPOINTS) != 0 &&
       !png_colorspace_endpoints_match(&sRGB_xy, &colorspace->end_points_xy,
          100))
-      png_chunk_report_ex(png_ptr, "cHRM chunk does not match sRGB",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_report(png_ptr, "", PNG_CHUNK_ERROR);
+#else
+      png_chunk_report(png_ptr, "cHRM chunk does not match sRGB",
          PNG_CHUNK_ERROR);
+#endif
 
    /* This check is just done for the error reporting - the routine always
     * returns true when the 'from' argument corresponds to sRGB (2).
@@ -1998,9 +2090,12 @@ png_icc_check_length(png_const_structrp png_ptr, png_colorspacerp colorspace,
    png_const_charp name, png_uint_32 profile_length)
 {
    if (profile_length < 132)
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, profile_length,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, profile_length, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, profile_length,
          "too short");
-
+#endif
    return 1;
 }
 
@@ -2018,34 +2113,54 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
     */
    temp = png_get_uint_32(profile);
    if (temp != profile_length)
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, temp,
          "length does not match profile");
+#endif
 
    temp = (png_uint_32) (*(profile+8));
    if (temp > 3 && (profile_length & 3))
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, profile_length,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, profile_length, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, profile_length,
          "invalid length");
+#endif
 
    temp = png_get_uint_32(profile+128); /* tag count: 12 bytes/tag */
    if (temp > 357913930 || /* (2^32-4-132)/12: maximum possible tag count */
       profile_length < 132+12*temp) /* truncated tag table */
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, temp,
          "tag count too large");
+#endif
 
    /* The 'intent' must be valid or we can't store it, ICC limits the intent to
     * 16 bits.
     */
    temp = png_get_uint_32(profile+64);
    if (temp >= 0xffff) /* The ICC limit */
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, temp,
          "invalid rendering intent");
+#endif
 
    /* This is just a warning because the profile may be valid in future
     * versions.
     */
    if (temp >= PNG_sRGB_INTENT_LAST)
-      (void)png_icc_profile_error_ex(png_ptr, NULL, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      (void)png_icc_profile_error(png_ptr, NULL, name, temp, "");
+#else
+      (void)png_icc_profile_error(png_ptr, NULL, name, temp,
          "intent outside defined range");
+#endif
 
    /* At this point the tag table can't be checked because it hasn't necessarily
     * been loaded; however, various header fields can be checked.  These checks
@@ -2061,8 +2176,12 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
     */
    temp = png_get_uint_32(profile+36); /* signature 'ascp' */
    if (temp != 0x61637370)
-      return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+      return png_icc_profile_error(png_ptr, colorspace, name, temp,
          "invalid signature");
+#endif
 
    /* Currently the PCS illuminant/adopted white point (the computational
     * white point) are required to be D50,
@@ -2072,8 +2191,12 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
     * following is just a warning.
     */
    if (memcmp(profile+68, D50_nCIEXYZ, 12) != 0)
-      (void)png_icc_profile_error_ex(png_ptr, NULL, name, 0/*no tag value*/,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      (void)png_icc_profile_error(png_ptr, NULL, name, 0/*no tag value*/, "");
+#else
+      (void)png_icc_profile_error(png_ptr, NULL, name, 0/*no tag value*/,
          "PCS illuminant is not D50");
+#endif
 
    /* The PNG spec requires this:
     * "If the iCCP chunk is present, the image samples conform to the colour
@@ -2100,19 +2223,31 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
    {
       case 0x52474220: /* 'RGB ' */
          if ((color_type & PNG_COLOR_MASK_COLOR) == 0)
-            return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+            return png_icc_profile_error(png_ptr, colorspace, name, temp,
                "RGB color space not permitted on grayscale PNG");
+#endif
          break;
 
       case 0x47524159: /* 'GRAY' */
          if ((color_type & PNG_COLOR_MASK_COLOR) != 0)
-            return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+            return png_icc_profile_error(png_ptr, colorspace, name, temp,
                "Gray color space not permitted on RGB PNG");
+#endif
          break;
 
       default:
-         return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+         return png_icc_profile_error(png_ptr, colorspace, name, temp,
             "invalid ICC profile color space");
+#endif
    }
 
    /* It is up to the application to check that the profile class matches the
@@ -2136,8 +2271,12 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
 
       case 0x61627374: /* 'abst' */
          /* May not be embedded in an image */
-         return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+         return png_icc_profile_error(png_ptr, colorspace, name, temp,
             "invalid embedded Abstract ICC profile");
+#endif
 
       case 0x6C696E6B: /* 'link' */
          /* DeviceLink profiles cannot be interpreted in a non-device specific
@@ -2146,16 +2285,24 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * therefore a DeviceLink profile should not be found embedded in a
           * PNG.
           */
-         return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+         return png_icc_profile_error(png_ptr, colorspace, name, temp,
             "unexpected DeviceLink ICC profile class");
+#endif
 
       case 0x6E6D636C: /* 'nmcl' */
          /* A NamedColor profile is also device specific, however it doesn't
           * contain an AToB0 tag that is open to misinterpretation.  Almost
           * certainly it will fail the tests below.
           */
-         (void)png_icc_profile_error_ex(png_ptr, NULL, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         (void)png_icc_profile_error(png_ptr, NULL, name, temp, "");
+#else
+         (void)png_icc_profile_error(png_ptr, NULL, name, temp,
             "unexpected NamedColor ICC profile class");
+#endif
          break;
 
       default:
@@ -2164,8 +2311,12 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * tag content to ensure they are backward compatible with one of the
           * understood profiles.
           */
-         (void)png_icc_profile_error_ex(png_ptr, NULL, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         (void)png_icc_profile_error(png_ptr, NULL, name, temp, "");
+#else
+         (void)png_icc_profile_error(png_ptr, NULL, name, temp,
             "unrecognized ICC profile class");
+#endif
          break;
    }
 
@@ -2180,8 +2331,12 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
          break;
 
       default:
-         return png_icc_profile_error_ex(png_ptr, colorspace, name, temp,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_icc_profile_error(png_ptr, colorspace, name, temp, "");
+#else
+         return png_icc_profile_error(png_ptr, colorspace, name, temp,
             "unexpected ICC PCS encoding");
+#endif
    }
 
    return 1;
@@ -2217,16 +2372,24 @@ png_icc_check_tag_table(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * only a warning here because libpng does not care about the
           * alignment.
           */
-         (void)png_icc_profile_error_ex(png_ptr, NULL, name, tag_id,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         (void)png_icc_profile_error(png_ptr, NULL, name, tag_id, "");
+#else
+         (void)png_icc_profile_error(png_ptr, NULL, name, tag_id,
             "ICC profile tag start not a multiple of 4");
+#endif
       }
 
       /* This is a hard error; potentially it can cause read outside the
        * profile.
        */
       if (tag_start > profile_length || tag_length > profile_length - tag_start)
-         return png_icc_profile_error_ex(png_ptr, colorspace, name, tag_id,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_icc_profile_error(png_ptr, colorspace, name, tag_id, "");
+#else
+         return png_icc_profile_error(png_ptr, colorspace, name, tag_id,
             "ICC profile tag outside profile");
+#endif
    }
 
    return 1; /* success, maybe with warnings */
@@ -2380,8 +2543,12 @@ png_compare_ICC_profile_with_sRGB(png_const_structrp png_ptr,
                       * discourage their use, skip the 'have_md5' warning below,
                       * which is made irrelevant by this error.
                       */
-                     png_chunk_report_ex(png_ptr, "known incorrect sRGB profile",
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                     png_chunk_report(png_ptr, "", PNG_CHUNK_ERROR);
+#else
+                     png_chunk_report(png_ptr, "known incorrect sRGB profile",
                         PNG_CHUNK_ERROR);
+#endif
                   }
 
                   /* Warn that this being done; this isn't even an error since
@@ -2390,9 +2557,13 @@ png_compare_ICC_profile_with_sRGB(png_const_structrp png_ptr,
                    */
                   else if (png_sRGB_checks[i].have_md5 == 0)
                   {
-                     png_chunk_report_ex(png_ptr, "out-of-date sRGB profile with"
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                     png_chunk_report(png_ptr, "", PNG_CHUNK_WARNING);
+#else
+                     png_chunk_report(png_ptr, "out-of-date sRGB profile with"
                         " no signature",
                         PNG_CHUNK_WARNING);
+#endif
                   }
 
                   return 1+png_sRGB_checks[i].is_broken;
@@ -2404,9 +2575,13 @@ png_compare_ICC_profile_with_sRGB(png_const_structrp png_ptr,
           * way.  This probably indicates a data error or uninformed hacking.
           * Fall through to "no match".
           */
-         png_chunk_report_ex(png_ptr, "Not recognizing known sRGB profile that"
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_report(png_ptr, "", PNG_CHUNK_WARNING);
+#else
+         png_chunk_report(png_ptr, "Not recognizing known sRGB profile that"
              " has been edited", 
              PNG_CHUNK_WARNING);
+#endif
          break;
 # endif
          }
@@ -2505,9 +2680,12 @@ png_colorspace_set_rgb_coefficients(png_structrp png_ptr)
 
          /* Check for an internal error. */
          if (r+g+b != 32768)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr,
                "internal error handling cHRM coefficients");
-
+#endif
          else
          {
             png_ptr->rgb_to_gray_red_coeff   = (png_uint_16)r;
@@ -2520,7 +2698,11 @@ png_colorspace_set_rgb_coefficients(png_structrp png_ptr)
        * bug is fixed.
        */
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "internal error handling cHRM->XYZ");
+#endif
    }
 }
 #endif
@@ -2549,12 +2731,20 @@ png_check_IHDR(png_const_structrp png_ptr,
    /* Check for width and height valid values */
    if (width == 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Image width is zero in IHDR");
+#endif
       error = 1;
    }
    else if (width > PNG_UINT_31_MAX)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid image width in IHDR");
+#endif
       error = 1;
    }
 
@@ -2576,7 +2766,11 @@ png_check_IHDR(png_const_structrp png_ptr,
        * extensive, therefore much more dangerous and much more difficult to
        * write in a way that avoids compiler warnings.
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Image width is too large for this architecture");
+#endif
       error = 1;
    }
    else
@@ -2587,19 +2781,31 @@ png_check_IHDR(png_const_structrp png_ptr,
       if (width > PNG_USER_WIDTH_MAX)
 #     endif
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Image width exceeds user limit in IHDR");
+#endif
          error = 1;
       }
    }
 
    if (height == 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Image height is zero in IHDR");
+#endif
       error = 1;
    }
    else if (height > PNG_UINT_31_MAX)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid image height in IHDR");
+#endif
       error = 1;
    }
    else
@@ -2610,7 +2816,11 @@ png_check_IHDR(png_const_structrp png_ptr,
       if (height > PNG_USER_HEIGHT_MAX)
 #     endif
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Image height exceeds user limit in IHDR");
+#endif
          error = 1;
       }
    }
@@ -2619,14 +2829,22 @@ png_check_IHDR(png_const_structrp png_ptr,
    if (bit_depth != 1 && bit_depth != 2 && bit_depth != 4 &&
        bit_depth != 8 && bit_depth != 16)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid bit depth in IHDR");
+#endif
       error = 1;
    }
 
    if (color_type < 0 || color_type == 1 ||
        color_type == 5 || color_type > 6)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid color type in IHDR");
+#endif
       error = 1;
    }
 
@@ -2635,19 +2853,31 @@ png_check_IHDR(png_const_structrp png_ptr,
          color_type == PNG_COLOR_TYPE_GRAY_ALPHA ||
          color_type == PNG_COLOR_TYPE_RGB_ALPHA) && bit_depth < 8))
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid color type/bit depth combination in IHDR");
+#endif
       error = 1;
    }
 
    if (interlace_type >= PNG_INTERLACE_LAST)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unknown interlace method in IHDR");
+#endif
       error = 1;
    }
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unknown compression method in IHDR");
+#endif
       error = 1;
    }
 
@@ -2663,7 +2893,11 @@ png_check_IHDR(png_const_structrp png_ptr,
     */
    if ((png_ptr->mode & PNG_HAVE_PNG_SIGNATURE) != 0 &&
        png_ptr->mng_features_permitted != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "MNG features are not allowed in a PNG datastream");
+#endif
 
    if (filter_type != PNG_FILTER_TYPE_BASE)
    {
@@ -2673,13 +2907,21 @@ png_check_IHDR(png_const_structrp png_ptr,
           (color_type == PNG_COLOR_TYPE_RGB ||
           color_type == PNG_COLOR_TYPE_RGB_ALPHA)))
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Unknown filter method in IHDR");
+#endif
          error = 1;
       }
 
       if ((png_ptr->mode & PNG_HAVE_PNG_SIGNATURE) != 0)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid filter method in IHDR");
+#endif
          error = 1;
       }
    }
@@ -2687,13 +2929,21 @@ png_check_IHDR(png_const_structrp png_ptr,
 #  else
    if (filter_type != PNG_FILTER_TYPE_BASE)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unknown filter method in IHDR");
+#endif
       error = 1;
    }
 #  endif
 
    if (error == 1)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid IHDR data");
+#endif
 }
 
 #if defined(PNG_sCAL_SUPPORTED) || defined(PNG_pCAL_SUPPORTED)
@@ -3195,7 +3445,11 @@ png_ascii_from_fp(png_const_structrp png_ptr, png_charp ascii, png_size_t size,
    }
 
    /* Here on buffer too small. */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   png_error(png_ptr, "");
+#else
    png_error(png_ptr, "ASCII conversion buffer too small");
+#endif
 }
 
 #  endif /* FLOATING_POINT */
@@ -3269,7 +3523,11 @@ png_ascii_from_fixed(png_const_structrp png_ptr, png_charp ascii,
    }
 
    /* Here on buffer too small. */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   png_error(png_ptr, "");
+#else
    png_error(png_ptr, "ASCII conversion buffer too small");
+#endif
 }
 #   endif /* FIXED_POINT */
 #endif /* READ_SCAL */
@@ -3434,7 +3692,11 @@ png_muldiv_warn(png_const_structrp png_ptr, png_fixed_point a, png_int_32 times,
    if (png_muldiv(&result, a, times, divisor) != 0)
       return result;
 
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   png_warning(png_ptr, "");
+#else
    png_warning(png_ptr, "fixed point overflow ignored");
+#endif
    return 0;
 }
 #endif
@@ -4159,7 +4421,11 @@ png_build_gamma_table(png_structrp png_ptr, int bit_depth)
    */
   if (png_ptr->gamma_table != NULL || png_ptr->gamma_16_table != NULL)
   {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+    png_warning(png_ptr, "");
+#else
     png_warning(png_ptr, "gamma table being rebuilt");
+#endif
     png_destroy_gamma_table(png_ptr);
   }
 
@@ -4513,7 +4779,11 @@ png_image_free_function(png_voidp argument)
 #     ifdef PNG_SIMPLIFIED_WRITE_SUPPORTED
          png_destroy_write_struct(&c.png_ptr, &c.info_ptr);
 #     else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(c.png_ptr, "");
+#else
          png_error(c.png_ptr, "simplified write not supported");
+#endif
 #     endif
    }
    else
@@ -4521,7 +4791,11 @@ png_image_free_function(png_voidp argument)
 #     ifdef PNG_SIMPLIFIED_READ_SUPPORTED
          png_destroy_read_struct(&c.png_ptr, &c.info_ptr, NULL);
 #     else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(c.png_ptr, "");
+#else
          png_error(c.png_ptr, "simplified read not supported");
+#endif
 #     endif
    }
 

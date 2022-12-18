@@ -41,6 +41,11 @@ CFG_FPGA := 1
 else
 CFG_FPGA := 0
 endif
+
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+CFG_HI_SECURE_BOOT_SUPPORT=y
+endif
+
 ########################## CONFIG_GODBOX_PLATFORM ##############################
 ifeq ($(findstring hi3712,$(CFG_HI_CHIP_TYPE)), hi3712)
 CONFIG_HI3712_PLATFORM := y
@@ -108,6 +113,10 @@ endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200 hi3798cv200_a),)
 BOOTCONFIG     = hifone
+endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+BOOTCONFIG     = hi3716mv410
 endif
 
 BOOTCONFIG_UPPER:=$(shell echo $(BOOTCONFIG) | tr '[a-z]' '[A-Z]')
@@ -257,6 +266,8 @@ endif
 		"PMU Device config" $@
 	@$(CONFIG_EXPORT) "CONFIG_USB_SUPPORT=$(CFG_HI_BOOT_USB_SUPPORT)" \
 		"USB Driver config" $@
+	@$(CONFIG_EXPORT) "CONFIG_SECURE_BOOT_SUPPORT=$(CFG_HI_SECURE_BOOT_SUPPORT)" \
+		"Secure boot config" $@
 #+++++++++++++++++++++ADVCA compile options+++++++++++++++++++++++++++++++++++++++++++++
 ifneq ($(BOOT_ADVCA_PROGRAMMER),y)
 ifeq ($(CFG_HI_ADVCA_SUPPORT),y)

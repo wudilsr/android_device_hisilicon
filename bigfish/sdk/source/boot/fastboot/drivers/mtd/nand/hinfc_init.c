@@ -37,6 +37,9 @@ extern int hinfc610_nand_get_rr_param(char *param);
 int hisfc400_init(struct nand_chip *chip);
 #endif
 
+#ifdef CONFIG_HIFMC100_NAND_SUPPORT
+extern int hifmc100_nand_init(struct nand_chip *chip);
+#endif
 /*****************************************************************************/
 
 int board_nand_init(struct nand_chip *chip)
@@ -69,6 +72,22 @@ int board_nand_init(struct nand_chip *chip)
 		if (ret != -ENODEV)
 			return ret;
 	}
+#endif
+
+#ifdef CONFIG_HIFMC100_SPI_NAND_SUPPORT
+		if ((devs == DEV_HINFC_AUTO) || (devs == DEV_HIFMC100)) {
+			ret = hifmc100_spi_nand_init(chip);
+			if (ret != -ENODEV)
+				return ret;
+		}
+#endif
+
+#ifdef CONFIG_HIFMC100_NAND_SUPPORT
+			if ((devs == DEV_HINFC_AUTO) || (devs == DEV_HIFMC100)) {
+				ret = hifmc100_nand_init(chip);
+				if (ret != -ENODEV)
+					return ret;
+			}
 #endif
 
 #ifdef CONFIG_NAND_FLASH_HISFC400

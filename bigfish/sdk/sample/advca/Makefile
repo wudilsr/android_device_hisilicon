@@ -48,6 +48,7 @@ image :=    sample_ca_lpk                   \
             sample_ca_dcas_tsplay           \
             sample_ca_novel_tsplay          \
             sample_ca_irdeto_msr2.2	    \
+            sample_ca_widevine_keyladder\
 	    sample_ca_gettrustzonestatus    \
 	    sample_ca_enabletrustzone
 
@@ -237,7 +238,9 @@ sample_ca_gettrustzonestatus: sample_ca_gettrustzonestatus.c ${COMMON_FILES}
 sample_ca_enabletrustzone: sample_ca_enabletrustzone.c ${COMMON_FILES}
 	@echo "compiling $@..."
 	@$(CC) -o $@ $^ $(CFLAGS) $(LIBPATH) $(LIB)
-
+sample_ca_widevine_keyladder: sample_ca_widevine_keyladder.c ${COMMON_FILES}
+	@echo "compiling $@..."
+	@$(CC) -o $@ $^ $(CFLAGS) $(LIBPATH) $(LIB)
 
 clean:
 	-@rm -f $(image)

@@ -78,9 +78,9 @@ HI_S32 JpgeOsal_MutexInit( JPGE_SEM_S *pMutex )
 
 HI_S32 JpgeOsal_MutexLock( JPGE_SEM_S *pMutex )
 {
- 
-    HI_S32 s32Ret = 0;
-    s32Ret = down_interruptible(pMutex);
+    if(down_interruptible(pMutex)){
+		return HI_FAILURE;
+    }
     return HI_SUCCESS;
 }
 

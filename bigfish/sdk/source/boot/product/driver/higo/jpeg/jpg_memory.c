@@ -1,5 +1,4 @@
 #include "hi_type.h"
-#include "hi_debug.h"
 #include "higo_common.h"
 #include "hi_api_mmz.h"
 #include "jpg_common.h"

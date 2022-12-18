@@ -21,7 +21,8 @@ import android.widget.ListView;
 import com.hisilicon.hardware.util.Common;
 import com.hisilicon.hardwaretest.R;
 import com.sample.atc.utils.SampleUtils;
-
+import com.hisilicon.android.hisysmanager.HiSysManager;
+import android.os.SystemProperties;
 public class HDMITestService extends Service {
 
     private final String TAG = "TSPlayService";
@@ -50,6 +51,9 @@ public class HDMITestService extends Service {
     private final int SUCCESS = 0;
     private int tempPosition = -1;
 
+    private final int TIM_1080P50 = 10;
+    private final int TIM_1080P60 = 5;
+    private final int DEEP_36BIT = 2;
     private ArrayList<HashMap<String, String>> list;
     private ArrayList<String[]> messages;
     private ArrayList<String[]> values;
@@ -61,7 +65,9 @@ public class HDMITestService extends Service {
     private ViewItem viewItem;
     private Context context;
     private ArrayList<Integer> defaultStatus;
-
+    private boolean setVolt;
+    private  final String PROPERTY_PATH = "ro.product.name";
+    private HiSysManager mhisys;
     private Handler mhandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -86,6 +92,7 @@ public class HDMITestService extends Service {
                 tempPosition = positions.get(position);
                 initStatus();
                 refreshData();
+                setVolt();
                 break;
             default:
                 break;
@@ -101,6 +108,7 @@ public class HDMITestService extends Service {
         sample = new SampleUtils();
         sample.hdmiInit();
         sample.hdmiOpen();
+		mhisys = new HiSysManager();
         super.onCreate();
     }
 
@@ -119,10 +127,15 @@ public class HDMITestService extends Service {
     @Override
     public void onDestroy() {
         reset();
+        if (setVolt)
+       mhisys.adjustDevState("/proc/msp/pm_core","volt=0");
+
         super.onDestroy();
     }
 
     private void init() {
+        String device = SystemProperties.get(PROPERTY_PATH);
+        setVolt = "Hi3798MV100".equals(device) || "Hi3796MV100".equals(device);
         initArray();
         initMessages();
         initValues();
@@ -573,6 +586,19 @@ public class HDMITestService extends Service {
         refreshData();
     }
 
+    private void setVolt() {
+        if (!setVolt)
+            return;
+        int timPosition = Common.video_timing_position;
+        int deepPosition = Common.deepcolor_position;
+        if (timPosition >= Common.video_timing_array.length - 4)
+            mhisys.adjustDevState("/proc/msp/pm_core","volt=1140");
+        else if (deepPosition == DEEP_36BIT
+                && (timPosition == TIM_1080P50 || timPosition == TIM_1080P60)) {
+            mhisys.adjustDevState("/proc/msp/pm_core","volt=1140");
+        } else
+            mhisys.adjustDevState("/proc/msp/pm_core","volt=0");
+    }
     private void doEventCenter(final int position) {
         if (DISPLAY_RESET == position) {
             reset();
@@ -621,6 +647,7 @@ public class HDMITestService extends Service {
                 tempPosition = positions.get(position);
                 initStatus();
                 refreshData();
+                setVolt();
             }
         }
     }

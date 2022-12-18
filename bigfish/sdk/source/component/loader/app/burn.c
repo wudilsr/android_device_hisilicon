@@ -80,8 +80,8 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
 {
     HI_U8 i = 0;
     HI_Flash_InterInfo_S stFlashInfo;
-    HI_U32 u32StartAddr;
-    HI_U32 u32EndAddr;
+    HI_U64 u64StartAddr;
+    HI_U64 u64EndAddr;
     HI_U64 u64FlashSize = 0;
     HI_U32 u32FlashType;
     HI_U32 u32ImageFS = 0;
@@ -90,18 +90,18 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
 
     for (i = 0; i < u32PartitionNum; i++)
     {
-        u32StartAddr = pstPartionInfo[i].u32FlashStartAddr;
-        u32EndAddr   = pstPartionInfo[i].u32FlashEndAddr;
+        u64StartAddr = pstPartionInfo[i].u64FlashStartAddr;
+        u64EndAddr   = pstPartionInfo[i].u64FlashEndAddr;
         u32FlashType = pstPartionInfo[i].u32FlashType;
         u32ImageFS = pstPartionInfo[i].u32ImageFS;
 
-        HI_DBG_LOADER("FlashType:%x, u32ImageFS:0x%08x, StartAddr:%x EndAddr:0x%08x \n",
-                u32FlashType, u32ImageFS, u32StartAddr, u32EndAddr);
+        HI_DBG_LOADER("FlashType:%x, u32ImageFS:0x%08x, StartAddr:%Lx EndAddr:0x%08Lx \n",
+                u32FlashType, u32ImageFS, u64StartAddr, u64EndAddr);
         
-        hHandle = HI_Flash_Open((HI_FLASH_TYPE_E)u32FlashType, NULL, (HI_U64)u32StartAddr, (HI_U64)(u32EndAddr - u32StartAddr));
+        hHandle = HI_Flash_Open((HI_FLASH_TYPE_E)u32FlashType, NULL, (HI_U64)u64StartAddr, (HI_U64)(u64EndAddr - u64StartAddr));
         if (HI_INVALID_HANDLE == hHandle)
         {
-            HI_DBG_LOADER("Failed to open flash, Type:%x StartAddr:%x.\n", u32FlashType, u32StartAddr);
+            HI_DBG_LOADER("Failed to open flash, Type:%x StartAddr:%Lx.\n", u32FlashType, u64StartAddr);
             return HI_UPGRD_DATA_ERROR;
         }
 
@@ -111,11 +111,11 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
             return HI_UPGRD_DATA_ERROR;
         }
         u64FlashSize = stFlashInfo.TotalSize;
-        if ((HI_U64)u32EndAddr > u64FlashSize)
+        if ((HI_U64)u64EndAddr > u64FlashSize)
         {
             HI_DBG_LOADER("Invalid end address.(flash size: 0x%08llx, file end addr is: 0x%08llx)",
                     u64FlashSize,
-                    (HI_U64)u32EndAddr);
+                    (HI_U64)u64EndAddr);
             HI_Flash_Close(hHandle);
             return HI_UPGRD_DATA_ERROR;
         }
@@ -129,7 +129,7 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
         g_pstFlashDataInfo[i].u64WriteOffset = 0;
         g_pstFlashDataInfo[i].u32PartitionCalCRC = 0xffffffff;
         g_pstFlashDataInfo[i].bErased = HI_FALSE;
-        g_pstFlashDataInfo[i].u64PartitionSize = (HI_U64)(u32EndAddr - u32StartAddr);
+        g_pstFlashDataInfo[i].u64PartitionSize = (HI_U64)(u64EndAddr - u64StartAddr);
         g_pstFlashDataInfo[i].LOADER_BURN_WriteData =  HI_NULL;
         g_pstFlashDataInfo[i].private =  HI_NULL;
 

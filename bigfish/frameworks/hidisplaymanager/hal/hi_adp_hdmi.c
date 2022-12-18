@@ -144,6 +144,12 @@ static HI_CHAR *g_pDispFmtString[HI_UNF_ENC_FMT_BUTT+1] = {
     "BUTT"
 };
 
+extern int get_format(display_format_e *format);
+extern int set_format(display_format_e format);
+extern int baseparam_save(void);
+int getOptimalFormat();
+int isCapabilityChanged(int getCapResult,HI_UNF_EDID_BASE_INFO_S *pstSinkAttr);
+void capToString(char* buffer,HI_UNF_EDID_BASE_INFO_S cap);
 
 HI_UNF_ENC_FMT_E stringToUnfFmt(HI_CHAR *pszFmt)
 {
@@ -176,7 +182,6 @@ HI_UNF_ENC_FMT_E stringToUnfFmt(HI_CHAR *pszFmt)
     }
     return fmtReturn;
 }
-
 
 static HI_VOID HDMI_PrintAttr(HI_UNF_HDMI_ATTR_S *pstHDMIAttr)
 {
@@ -295,7 +300,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     getCapRet = HI_UNF_HDMI_GetSinkCapability(hHdmi, &stSinkCap);
     ALOGE("\n getCapRet = %d \n", getCapRet);
     int j;
-    for(j = 0; j< 4 ;j++)
+    for(j = 0; j < 10; j++)
     {
         ALOGE("4k[%d] = %d \n", j, stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_24+j]);
     }
@@ -340,6 +345,10 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     int fmtRet = get_format(&format);
     ALOGE("\n get current format is %d \n",(int)format);
 
+    char perfer[BUFLEN] = {0};
+    property_get("persist.sys.optimalfmt.perfer", perfer, "native");
+    ALOGD("persist.sys.optimalfmt.perfer=%s", perfer);
+
     // 1.HI_UNF_HDMI_GetSinkCapability failed
     if(getCapRet != HI_SUCCESS)
     {
@@ -348,7 +357,18 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         {
             ALOGE("---------->is TV<------------\n");
             displayType = 1;
-            stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
+            if ((strcmp("i50hz", perfer) == 0) || (strcmp("p50hz", perfer) == 0))
+            {
+                stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_50;
+            }
+            else if ((strcmp("i60hz", perfer) == 0) || (strcmp("p60hz", perfer) == 0))
+            {
+                stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
+            }
+            else
+            {
+                stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
+            }
             if((fmtRet == HI_SUCCESS) && (format < DISPLAY_FMT_BUTT)) {
                 ALOGE("current format ok" );
                 set_format(format);
@@ -377,11 +397,88 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     {
         if(stHdmiAttr.bEnableHdmi == HI_TRUE) //tv
         {
-            // native format err case
-            if(stSinkCap.enNativeFormat > DISPLAY_FMT_720P_50)
+            if (strcmp("i50hz", perfer) == 0)
             {
-                if( (stSinkCap.enNativeFormat < DISPLAY_FMT_3840X2160_24)
-                    || (stSinkCap.enNativeFormat == DISPLAY_FMT_BUTT) ) {
+                if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_25] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_3840X2160_25;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080i_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080i_50;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080P_50;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_720P_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_50;
+                }
+            }
+            else if (strcmp("p50hz", perfer) == 0)
+            {
+                if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_25] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_3840X2160_25;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080P_50;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080i_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080i_50;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_720P_50] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_50;
+                }
+            }
+            else if (strcmp("i60hz", perfer) == 0)
+            {
+                if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_30] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_3840X2160_30;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080i_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080i_60;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080P_60;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_720P_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
+                }
+            }
+            else if (strcmp("p60hz", perfer) == 0)
+            {
+                if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_3840X2160_30] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_3840X2160_30;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080P_60;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080i_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080i_60;
+                }
+                else if (stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_720P_60] == 1)
+                {
+                    stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_720P_60;
+                }
+            }
+
+            // native format err case
+            if(stSinkCap.enNativeFormat > HI_UNF_ENC_FMT_720P_50)
+            {
+                if( (stSinkCap.enNativeFormat < HI_UNF_ENC_FMT_3840X2160_24)
+                    || (stSinkCap.enNativeFormat == HI_UNF_ENC_FMT_BUTT) ) {
                     ALOGE("\n tv: get optimum format failed \n");
                     if(stSinkCap.bSupportFormat[HI_UNF_ENC_FMT_1080P_60] == 1) {
                         stSinkCap.enNativeFormat = HI_UNF_ENC_FMT_1080P_60;
@@ -428,7 +525,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
                 else//for pc
                 {
                     if( (fmtRet == HI_SUCCESS)
-                        && (format == HI_UNF_ENC_FMT_VESA_1024X768_60) ) {
+                        && ((HI_UNF_ENC_FMT_E)format == HI_UNF_ENC_FMT_VESA_1024X768_60) ) {
                         ALOGE("\n pc: current is optimum format" );
                         set_format(format);
                     } else {
@@ -621,10 +718,15 @@ int getOptimalFormat()//0 is disable; 1 is enable
     int value = 0;
 
     char property_buffer[BUFLEN] = {0};
-    char product_target[BUFLEN] = {0};
+    char product_format[BUFLEN] = {0};
     property_get("persist.sys.qb.enable", property_buffer, "false");
     if(property_buffer != NULL && (strcmp(property_buffer,"true")==0) && (hdmiHotPlugCase == 1))
     {
+        property_get("persist.sys.optimalfmt.enable", product_format, "0");
+        if (strcmp("0", product_format) == 0)
+        {
+            return 0;
+        }
         if(hdmiEDIDFlag == 1)
             value = 1;
         else
@@ -632,15 +734,7 @@ int getOptimalFormat()//0 is disable; 1 is enable
     }
     else
     {
-        property_get("ro.product.target", product_target, "ott");
-        if (strcmp("shcmcc", product_target) == 0)
-        {
-            property_get("persist.sys.optimalfmt.enable", buffer, "0");
-        }
-        else
-        {
-            property_get("persist.sys.optimalfmt.enable", buffer, "1");
-        }
+        property_get("persist.sys.optimalfmt.enable", buffer, "1");
         value = atoi(buffer);
         ALOGE("getOptimalFormat, enable = %d", value);
         return value;
@@ -780,7 +874,6 @@ void capToString(char* buffer,HI_UNF_EDID_BASE_INFO_S cap)
     *(buffer+index) = '\0';
 }
 
-
 HI_U32 set_HDMI_Suspend_Time(int iTime)
 {
     ALOGE("iTime is %d",iTime);
@@ -894,7 +987,6 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
             break;
         case HI_UNF_HDMI_EVENT_RSEN_CONNECT:
             ALOGE("HDMI_Suspend_Callback: hdmi connected");
-            alarm(0);
             HI_UNF_HDMI_CEC_STATUS_S cecStatus;
             HI_UNF_HDMI_CECStatus(g_stHdmiArgs.enHdmi,&cecStatus);
             if(cecStatus.bEnable == HI_TRUE) {
@@ -902,6 +994,7 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
             } else {
                 nCecMode = DETECTED_BUT_NO_CEC;
             }
+            ALOGD("HDMI_Suspend_Callback: hdmi connected, nCecMode = %d", nCecMode);
             break;
         case HI_UNF_HDMI_EVENT_RSEN_DISCONNECT:
             ALOGE("HDMI_Suspend_Callback: hdmi disconnected");
@@ -915,7 +1008,6 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
 
     return;
 }
-
 
 static HI_U32 HDCPFailCount = 0;
 HI_VOID HDMI_HdcpFail_Proc(HI_VOID *pPrivateData)
@@ -950,9 +1042,9 @@ HI_VOID HDMI_Event_Proc(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateData)
     switch ( event )
     {
         case HI_UNF_HDMI_EVENT_HOTPLUG:
-	     hdmiHotPlugCase = 1;
+            hdmiHotPlugCase = 1;
             HDMI_HotPlug_Proc(pPrivateData);
-	     hdmiHotPlugCase = 0;
+            hdmiHotPlugCase = 0;
             break;
         case HI_UNF_HDMI_EVENT_NO_PLUG:
             HDMI_UnPlug_Proc(pPrivateData);
@@ -982,7 +1074,6 @@ HI_VOID HDMI_Event_Proc(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateData)
 
     return;
 }
-
 
 #ifdef HI_HDCP_SUPPORT
 HI_S32 HIADP_HDMI_SetHDCPKey(HI_UNF_HDMI_ID_E enHDMIId)
@@ -1120,6 +1211,7 @@ HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
     ALOGI_IF(DEBUG_HDMI_INIT, "HDMI init exit %s(%d)" , __func__, __LINE__);
     return HI_SUCCESS;
 }
+
 HI_S32 HIADP_HDMI_DeInit(HI_UNF_HDMI_ID_E enHDMIId)
 {
 

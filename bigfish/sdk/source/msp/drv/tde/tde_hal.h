@@ -596,6 +596,15 @@ HI_S32  TdeHalInit(HI_U32 u32BaseAddr);
 * Others:        None
 *****************************************************************************/
 HI_S32 TdeHalOpen(HI_VOID);
+/*****************************************************************************
+* Function:      TdeHalClose
+* Description:  close the tde
+* Input:         None
+* Output:        None
+* Return:        None
+* Others:        None
+*****************************************************************************/
+HI_S32 TdeHalClose(HI_VOID);
 
 /*****************************************************************************
 * Function:      TdeHalRelease

@@ -67,8 +67,7 @@ HI_VOID JPEG_HDEC_WriteReg(volatile HI_CHAR *pJpegRegVirAddr, HI_S32 s32PhyOff, 
 		** the phycial offset address can not larger than register length
 		** CNcomment: 偏移地址不能大于寄存器长度 CNend\n
 		**/
-		if(s32PhyOff < JPGD_REG_LENGTH)
-		{
+		if(s32PhyOff < JPGD_REG_LENGTH){
 		    ps32Addr  = (volatile HI_S32*)(pJpegRegVirAddr + s32PhyOff); /*lint !e826 ignore by y00181162, because this is needed */  
 			*ps32Addr = s32Val;
 		}
@@ -109,8 +108,7 @@ HI_VOID JPEG_HDEC_CpyData2Reg(volatile HI_CHAR *pJpegRegVirAddr,const HI_VOID *p
       
 		HI_U32 u32Cnt = 0;
 
-		for(u32Cnt = 0; u32Cnt < u32Bytes; u32Cnt += 4)
-		{
+		for(u32Cnt = 0; u32Cnt < u32Bytes; u32Cnt += 4){
 			*(volatile int *)(pJpegRegVirAddr + s32PhyOff + u32Cnt)=*(int *)((char*)pInMem + u32Cnt);/*lint !e826 ignore by y00181162, because this is needed */  
 		}
 
@@ -133,8 +131,7 @@ HI_S32 JPEG_HDEC_CpyData2Buf(const volatile HI_CHAR *pJpegRegVirAddr,const HI_S3
 
 		HI_U32 u32Cnt = 0;
 
-		for(u32Cnt = 0; u32Cnt < u32Bytes; u32Cnt += 4)
-		{ 
+		for(u32Cnt = 0; u32Cnt < u32Bytes; u32Cnt += 4){ 
 			*(volatile int *)((char*)pOutMem + u32Cnt)=*(int *)(pJpegRegVirAddr + s32PhyOff + u32Cnt);/*lint !e826 ignore by y00181162, because this is needed */  
 		}
 		return HI_SUCCESS;

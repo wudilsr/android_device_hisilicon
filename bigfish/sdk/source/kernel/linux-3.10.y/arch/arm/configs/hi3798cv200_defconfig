@@ -516,6 +516,7 @@ CONFIG_SUSPEND=y
 CONFIG_SUSPEND_FREEZER=y
 CONFIG_HAS_WAKELOCK=y
 CONFIG_WAKELOCK=y
+# CONFIG_HISI_SNAPSHOT_BOOT is not set
 CONFIG_PM_SLEEP=y
 CONFIG_PM_SLEEP_SMP=y
 # CONFIG_PM_AUTOSLEEP is not set
@@ -1011,7 +1012,45 @@ CONFIG_SCSI_LOWLEVEL=y
 # CONFIG_SCSI_DEBUG is not set
 # CONFIG_SCSI_DH is not set
 # CONFIG_SCSI_OSD_INITIATOR is not set
-# CONFIG_ATA is not set
+CONFIG_HI_SATA=y
+CONFIG_HI_SATA_IOBASE=0xF9900000
+CONFIG_HI_SATA_IOSIZE=0x00010000
+CONFIG_HI_SATA_IRQNUM=102
+CONFIG_HI_SATA_PORTS=2
+CONFIG_HI_SATA_PORT1=y
+CONFIG_ATA=y
+# CONFIG_ATA_NONSTANDARD is not set
+CONFIG_ATA_VERBOSE_ERROR=y
+CONFIG_SATA_PMP=y
+
+#
+# Controllers with non-SFF native interface
+#
+CONFIG_SATA_AHCI_PLATFORM=m
+CONFIG_ATA_SFF=y
+
+#
+# SFF controllers with custom DMA interface
+#
+CONFIG_ATA_BMDMA=y
+
+#
+# SATA SFF controllers with BMDMA
+#
+# CONFIG_SATA_HIGHBANK is not set
+# CONFIG_SATA_MV is not set
+
+#
+# PATA SFF controllers with BMDMA
+#
+
+#
+# PIO-only SFF controllers
+#
+
+#
+# Generic fallback / legacy drivers
+#
 # CONFIG_MD is not set
 # CONFIG_TARGET_CORE is not set
 CONFIG_NETDEVICES=y
@@ -2048,6 +2087,7 @@ CONFIG_ARM_GIC=y
 # Hisilicon driver support
 #
 # CONFIG_APP_CAPABLE is not set
+CONFIG_APP_SEMAPHORE_API=y
 
 #
 # File systems

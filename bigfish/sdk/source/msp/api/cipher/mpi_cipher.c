@@ -1207,6 +1207,8 @@ HI_S32 HI_MPI_CIPHER_CalcMAC(HI_HANDLE hCipherHandle, HI_U8 *pInputData, HI_U32 
     if(bIsFirstBlock) //if first block, reset the configure handle and generate the subkey again
     {
         Ret = HI_MPI_CIPHER_GetHandleConfig(hCipherHandle, &stCipherCtrl);
+        stCipherCtrl.stChangeFlags.bit1IV = 1;
+        memset ((HI_U8*)stCipherCtrl.u32IV, 0, 16);
         Ret |= HI_MPI_CIPHER_ConfigHandle(hCipherHandle, &stCipherCtrl);
         if(Ret != HI_SUCCESS)
         {
@@ -1221,6 +1223,8 @@ HI_S32 HI_MPI_CIPHER_CalcMAC(HI_HANDLE hCipherHandle, HI_U8 *pInputData, HI_U32 
 
         //After genreate the subkey, reset the configure handle
         Ret = HI_MPI_CIPHER_GetHandleConfig(hCipherHandle, &stCipherCtrl);
+        stCipherCtrl.stChangeFlags.bit1IV = 1;
+        memset ((HI_U8*)stCipherCtrl.u32IV, 0, 16);
         Ret |= HI_MPI_CIPHER_ConfigHandle(hCipherHandle, &stCipherCtrl);
         if(Ret != HI_SUCCESS)
         {

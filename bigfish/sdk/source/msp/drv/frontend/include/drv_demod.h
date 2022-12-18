@@ -1023,6 +1023,44 @@ extern HI_S32 hi3137_config_i2c_out(HI_U32 u32TunerPort);
 extern HI_S32 hi3137_config_i2c_close(HI_U32 u32TunerPort);
 #endif
 
+#ifdef DEMOD_DEV_TYPE_HIFDVBC100
+extern HI_S32 HiFDVBC100_Init(HI_U32 u32TunerPort, HI_U8 enI2cChannel, HI_UNF_TUNER_DEV_TYPE_E enTunerDevType);
+extern HI_S32 HiFDVBC100_Connect(HI_U32 u32TunerPort, TUNER_ACC_QAM_PARAMS_S *pstChannel);
+extern HI_S32 HiFDVBC100_DisConnect(HI_VOID);
+extern HI_S32 HiFDVBC100_GetStatus(HI_U32 u32TunerPort, HI_UNF_TUNER_LOCK_STATUS_E  *penTunerStatus);
+extern HI_S32 HiFDVBC100_Standby(HI_U32 u32Standby);
+extern HI_VOID HiFDVBC100_GetRegisters(HI_VOID *p);
+extern HI_S32 HiFDVBC100_GetSignalInfo(HI_U32 u32TunerPort, HI_UNF_TUNER_SIGNALINFO_S *pstInfo);
+extern HI_S32 HiFDVBC100_GetBer(HI_U32 u32TunerPort, HI_U32 *pu32ber);
+
+extern HI_S32 HiFDVBC100_GetSnr(HI_U32 u32TunerPort, HI_U32* pu32SNR);
+extern HI_S32 HiFDVBC100_GetSignalStrength(HI_U32 u32TunerPort, HI_U32 *pu32SignalStrength);
+extern HI_S32 HiFDVBC100_SetTsType(HI_U32 u32TunerPort, HI_UNF_TUNER_OUPUT_MODE_E enTsType);
+extern HI_S32 HiFDVBC100_GetFreqSymbOffset(HI_U32 u32TunerPort, HI_U32 * pu32Freq, HI_U32 * pu32Symb );
+extern HI_S32 HiFDVBC100_GetRs(HI_U32 u32TunerPort,HI_U32 * pu32Rs);
+extern HI_VOID HiFDVBC100_connect_timeout(HI_U32 u32ConnectTimeout);
+extern HI_VOID HiFDVBC100_read_tuner_registers(HI_U32 u32TunerPort, struct seq_file * p);
+#endif
+
+#ifdef DEMOD_DEV_TYPE_HIFJ83B100
+extern HI_S32 HiFJ83B100_Init(HI_U32 u32TunerPort, HI_U8 enI2cChannel, HI_UNF_TUNER_DEV_TYPE_E enTunerDevType);
+extern HI_S32 HiFJ83B100_Connect(HI_U32 u32TunerPort, TUNER_ACC_QAM_PARAMS_S *pstChannel);
+extern HI_S32 HiFJ83B100_DisConnect(HI_VOID);
+extern HI_S32 HiFJ83B100_GetStatus(HI_U32 u32TunerPort, HI_UNF_TUNER_LOCK_STATUS_E  *penTunerStatus);
+extern HI_S32 HiFJ83B100_Standby(HI_U32 u32Standby);
+extern HI_VOID HiFJ83B100_GetRegisters(HI_VOID *p);
+extern HI_S32 HiFJ83B100_GetSignalInfo(HI_U32 u32TunerPort, HI_UNF_TUNER_SIGNALINFO_S *pstInfo);
+extern HI_S32 HiFJ83B100_GetBer(HI_U32 u32TunerPort, HI_U32 *pu32ber);
+
+extern HI_S32 HiFJ83B100_GetSnr(HI_U32 u32TunerPort, HI_U32* pu32SNR);
+extern HI_S32 HiFJ83B100_GetSignalStrength(HI_U32 u32TunerPort, HI_U32 *pu32SignalStrength);
+extern HI_S32 HiFJ83B100_SetTsType(HI_U32 u32TunerPort, HI_UNF_TUNER_OUPUT_MODE_E enTsType);
+extern HI_S32 HiFJ83B100_GetFreqSymbOffset(HI_U32 u32TunerPort, HI_U32 * pu32Freq, HI_U32 * pu32Symb );
+extern HI_S32 HiFJ83B100_GetRs(HI_U32 u32TunerPort,HI_U32 * pu32Rs);
+extern HI_VOID HiFJ83B100_connect_timeout(HI_U32 u32ConnectTimeout);
+extern HI_VOID HiFJ83B100_read_tuner_registers(HI_U32 u32TunerPort, struct seq_file * p);
+#endif
+
 #ifdef DEMOD_DEV_TYPE_MXL254
 extern HI_S32   mxl254_init(HI_U32 u32TunerPort, HI_U8 enI2cChannel, HI_UNF_TUNER_DEV_TYPE_E enTunerDevType);
 extern HI_S32   mxl254_connect(HI_U32 u32TunerPort, TUNER_ACC_QAM_PARAMS_S *pstChannel);
@@ -1032,6 +1070,8 @@ extern HI_VOID  mxl254_connect_timeout(HI_U32 u32ConnectTimeout);
 extern HI_S32   mxl254_get_status (HI_U32 u32TunerPort, HI_UNF_TUNER_LOCK_STATUS_E  *penTunerStatus);
 extern HI_S32   mxl254_get_ber(HI_U32 u32TunerPort, HI_U32* pu32ber);
 extern HI_S32   mxl254_get_signal_strength(HI_U32 u32TunerPort, HI_U32* pu32SignalStrength);
+extern HI_S32   mxl254_get_powerspecdata(HI_U32 u32TunerPort, HI_U32 u32freqStartInHz,HI_U32 u32freqStepInHz,HI_U32 u32numOfFreqSteps,HI_S16 *ps16powerData);
+
 #endif
 #ifdef DEMOD_DEV_TYPE_TDA18280
 //for tda18280

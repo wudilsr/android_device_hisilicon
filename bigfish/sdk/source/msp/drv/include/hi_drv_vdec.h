@@ -23,6 +23,7 @@
 #include "hi_debug.h"
 //add by l00225186
 #include "hi_drv_video.h"
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C"{
@@ -54,6 +55,13 @@ typedef enum tagVDEC_RESET_TYPE_E
     VDEC_RESET_TYPE_IDLE,
     VDEC_RESET_TYPE_INVALID
 }HI_DRV_VDEC_RESET_TYPE_E;
+
+typedef struct
+{
+    HI_U32 u32StartVirAddr;
+    HI_U32 u32StartPhyAddr;
+    HI_U32 u32Size;
+} VDEC_MMZ_BUFFER_S;
 
 typedef struct hiVDEC_BTL_S
 {
@@ -92,6 +100,9 @@ typedef struct hiVDEC_STREAM_BUF_S
     HI_U32              u32Size;    /* Buffer size[in] */
     HI_HANDLE           hHandle;    /* Stream buffer handle [out] */
     HI_U32              u32PhyAddr; /* Buffer phy address [out] */
+	#ifdef HI_TVP_SUPPORT
+    HI_BOOL             bTvp;      /*Trust Video Path Flag[in]*/
+	#endif
 }HI_DRV_VDEC_STREAM_BUF_S;
 
 /** Stream buffer status */
@@ -234,6 +245,7 @@ HI_S32 HI_DRV_VDEC_SetFrmPackingType(HI_HANDLE hVdec,HI_UNF_VIDEO_FRAME_PACKING_
 HI_S32 HI_DRV_VDEC_GetFrmPackingType(HI_HANDLE hVdec,HI_UNF_VIDEO_FRAME_PACKING_TYPE_E *penFramePackType);
 HI_S32 HI_DRV_VDEC_GetVideoFrameInfo(HI_HANDLE hVdec, HI_UNF_AVPLAY_VIDEO_FRAME_INFO_S *pstVideoFrameInfo);
 HI_VOID HI_DRV_VDEC_GetVcmpFlag(HI_BOOL *pbVcmpFlag);
+HI_S32 HI_DRV_VDEC_GetPreAllocVideoBuffer(VDEC_MMZ_BUFFER_S *pstMMZBuf);
 
 #ifdef __cplusplus
 #if __cplusplus

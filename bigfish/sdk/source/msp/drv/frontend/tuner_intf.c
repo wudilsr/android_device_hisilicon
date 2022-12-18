@@ -55,10 +55,10 @@ extern HI_S32 tuner_proc_read_diseqc(struct seq_file *p, HI_VOID *v);
 extern HI_S32 tuner_resume(PM_BASEDEV_S *pdev);
 extern HI_S32 tuner_suspend (PM_BASEDEV_S *pdev, pm_message_t state);
 
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 extern HI_S32 qam_ram_collect_data(struct file * file, const char __user * buf, size_t count, loff_t *ppos);
 extern HI_S32 adc_collect_data(struct file * file, const char __user * buf, size_t count, loff_t *ppos);
-
 
 #endif
 
@@ -92,7 +92,8 @@ static UMAP_DEVICE_S  hi_tuner_dev =
     .drvops = &tuner_baseOps
 };
 
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 HI_S32 qam_ram_collect(struct seq_file * p, HI_VOID * v)
 {
      return HI_SUCCESS;
@@ -158,7 +159,9 @@ HI_S32 TUNER_DRV_ModInit(HI_VOID)
     }
     tuner_reg_proc->read = tuner_proc_read_diseqc;
 
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    
 	DRV_PROC_ITEM_S *ram_collect_proc = NULL;
 
     ram_collect_proc = HI_DRV_PROC_AddModule("qam_ram_collect", NULL, NULL);
@@ -203,7 +206,8 @@ err0:
 
 HI_VOID TUNER_DRV_ModExit(HI_VOID)
 {
-#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)
+#if defined(CHIP_TYPE_hi3716cv200es) || defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3716mv400)\
+    || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     HI_DRV_PROC_RemoveModule("qam_ram_collect");
 	HI_DRV_PROC_RemoveModule("tuner_qtc");
 #endif

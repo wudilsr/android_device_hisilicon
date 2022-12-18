@@ -51,7 +51,7 @@ static HI_U32 flag   = 1;
 #endif
 
 static HI_U32 g_end_pts[2] = {0xffffffff, 0xffffffff};
-
+static HI_BOOL g_IsEosFull = 0;
 #if 1
 HI_U32 g_etb_cnt = 0;
 HI_U32 g_ftb_cnt = 0;
@@ -2117,6 +2117,14 @@ static OMX_ERRORTYPE empty_this_buffer_proxy(
     {
         g_end_pts[0] = puser_buf->user_buf.timestamp0;
         g_end_pts[1] = puser_buf->user_buf.timestamp1;
+	 if (puser_buf->user_buf.data_len)
+	 {
+	      g_IsEosFull = 1;
+	 }
+	 else
+	 {
+	      g_IsEosFull = 0;
+	 }
     }
     g_etb_cnt++;
     DEBUG_PRINT_EFTB("[ETB] VirAddr = %p,flag = 0x%lx,pts = %lld,cnt = %d\n",pomx_buf->pBuffer,
@@ -2379,7 +2387,10 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE*  pcom_priv, void* message
                 pomx_buf->nFlags |= OMX_BUFFERFLAG_EOS;
                 g_end_pts[0] = 0xffffffff;
                 g_end_pts[1] = 0xffffffff;
+		   if (!g_IsEosFull)
+		   {
                 pomx_buf->nFilledLen = 0;
+		   }
             }
 #if 0
             if (puser_buf->timestamp < 0)
@@ -5871,7 +5882,11 @@ OMX_ERRORTYPE component_init(OMX_HANDLETYPE phandle,
     init_event_queue(&pcom_priv->m_ftb_q);
     init_event_queue(&pcom_priv->m_etb_q);
 
-    pthread_mutex_init(&pcom_priv->m_lock, NULL);
+    if (pthread_mutex_init(&pcom_priv->m_lock, NULL))
+    {
+        error = OMX_ErrorInsufficientResources;
+        goto error_exit;
+    }
     sem_init(&pcom_priv->m_cmd_lock,  0, 0);
     sem_init(&pcom_priv->m_async_sem, 0, 0);
 #ifdef ENABLE_BUFFER_LOCK
@@ -5997,6 +6012,7 @@ error_exit0:
     pthread_mutex_destroy(&pcom_priv->m_lock);
     sem_destroy(&pcom_priv->m_cmd_lock);
     sem_destroy(&pcom_priv->m_async_sem);
+error_exit:
     free(pcom_priv);
     pcomp->pComponentPrivate = NULL;
 

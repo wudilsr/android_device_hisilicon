@@ -1,6 +1,7 @@
 #ifndef __HI_ADEC_CORE_H__
 #define __HI_ADEC_CORE_H__
 
+#include <stdio.h>
 #include "hi_type.h"
 #include "hi_unf_sound.h"
 
@@ -52,6 +53,7 @@ extern "C"{
 #elif ADEC_INPUTBUF_PADDING_SIZE < ADEC_MAX_INPUT_FRAME
 #error "ADEC_INPUTBUF_PADDING_SIZE must bigger than  ADEC_MAX_INPUT_FRAME"
 #endif
+
 
 typedef struct hiADEC_Stream_OutBuf_S
 {
@@ -126,9 +128,6 @@ typedef struct hiADEC_CHANNEL_S
     HI_U32               u32TotalAdecTime;
     HI_U32               u32StartTime;
     HI_U32               u32EndTime;
-    pthread_mutex_t      ApiMutex;
-    pthread_mutex_t      DataMutex;
-    pthread_mutex_t      IOMutex;
     HI_BOOL              AdecThreadRun;
     pthread_t            AdecThreadInst;
     HI_U32               u32CodecID;                 /* decoder u32CodecID                         */
@@ -136,6 +135,8 @@ typedef struct hiADEC_CHANNEL_S
     HI_BOOL              bHwDecoder;
     HI_S32               AdecDevFd;
     HI_S32               s32BsConsumeBytes;
+    FILE*                pfEs;
+    FILE*                pfPcm;
     ADEC_INFO_S          decAttr;
     ADEC_PTS_QUE_S       PTSQue;
     ADEC_MIDSTATE_S      midState;

@@ -27,7 +27,7 @@ typedef struct tagFLASH_DATA_INFO_S
 {
     HI_HANDLE         hFlashHandle;
     HI_U32              u32PartitionId;
-    HI_U32              u64PartitionSize;
+    HI_U64              u64PartitionSize;
     HI_BOOL            bErased;
     HI_FLASH_TYPE_E     enFlashType;
     HI_U32              u32FlashBlockSize;

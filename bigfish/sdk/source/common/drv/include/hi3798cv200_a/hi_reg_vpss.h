@@ -877,12 +877,16 @@ typedef union
     /* Define the struct bits */
     struct
     {
-        unsigned int    vhd0_tunl_finish_line : 12  ; /* [11..0]  */
-        unsigned int    reserved_0            : 16  ; /* [27..12]  */
-        unsigned int    vhd0_tunl_en          : 1   ; /* [28]  */
-        unsigned int    reserved_1            : 1   ; /* [29]  */
-        unsigned int    vsd_tunl_en           : 1   ; /* [30]  */
-        unsigned int    cur_tunl_en           : 1   ; /* [31]  */
+		unsigned int    vhd0_tunl_en 		  : 1  ; /* [0]  */
+		unsigned int    reserved 		      : 1  ; /* [1]  */
+		unsigned int    vsd_tunl_en 		  : 1  ; /* [2]  */
+		unsigned int    read_tunl_en 		  : 1  ; /* [3]  */
+        unsigned int    read_tunl_sel 		  : 2  ; /* [5..4]  */
+        unsigned int    reserved1             : 2  ; /* [7..6]  */
+        unsigned int    read_tunl_rd_interval : 8   ; /* [15..8]  */
+        unsigned int    vhd0_tunl_finish_line : 13  ; /* [28..16]  */
+        unsigned int    vhd0_tunl_mode        : 2   ; /* [30..29]  */
+        unsigned int    reserved0             : 1   ; /* [31]  */
     } bits;
 
     /* Define an unsigned member */
@@ -896,13 +900,9 @@ typedef union
     /* Define the struct bits */
     struct
     {
-        unsigned int    vsd_tunl_finish_line  : 12  ; /* [11..0]  */
-        unsigned int    reserved_0            : 4   ; /* [15..12]  */
-        unsigned int    cur_tunl_rd_interval  : 8   ; /* [23..16]  */
-        unsigned int    vhd0_tunl_mode        : 2   ; /* [25..24]  */
-        unsigned int    reserved_1            : 2   ; /* [27..26]  */
-        unsigned int    vsd_tunl_mode         : 2   ; /* [29..28]  */
-        unsigned int    reserved_2            : 2   ; /* [31..30]  */
+        unsigned int    vsd_tunl_finish_line  : 13  ; /* [12..0]  */
+        unsigned int    vsd_tunl_mode         : 2   ; /* [14..13]  */
+        unsigned int    reserved              : 17   ; /* [31..15]  */
     } bits;
 
     /* Define an unsigned member */

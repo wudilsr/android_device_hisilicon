@@ -40,7 +40,7 @@
     <string name="logcat_info">Log将记录在/sdcard/logcat文件中</string>
     <string name="dmesg_start">启动Dmesg</string>
     <string name="dmesg_info">Dmesg将记录在/sdcard/dmesg文件中</string>
-    <string name="hdmi">HDMI EDID</string>
+    <string name="hdmi">HDMI信息</string>
     <string name="memleak">memleak</string>
     <string name="media_mem">media_mem</string>
     <string name="meminfo">meminfo</string>
@@ -50,7 +50,7 @@
     <string name="android_version">Android版本</string>
     <string name="kernel_version">Kernel版本</string>
     <string name="sdk_version">SDK版本</string>
-    <string name="gpu_version">GPU版本</string>
+    <string name="opengles_version">OpenGL ES版本</string>
     <string name="system_version">System版本</string>
     <string name="file_check_failed">安全校验失败</string>
 </resources>

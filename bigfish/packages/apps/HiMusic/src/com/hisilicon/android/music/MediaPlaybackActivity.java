@@ -168,8 +168,10 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 if (mPowerdown) {
                     try {
                         if (mService.isPlaying()) {
+                            acquireWakeLock();
                             isPlaying = true;
                             doPauseResume();
+                            mWakeLock.release();
                         }
 
                     } catch (RemoteException ex) {
@@ -194,6 +196,16 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             }
         }
     };
+
+    private void acquireWakeLock() {
+        synchronized (mWakeLock) {
+            try {
+                mWakeLock.acquire();
+               } catch (Exception e) {
+                Log.e(TAG, "exception in acquireWakeLock()", e);
+            }
+           }
+    }
 
     private void registerpowerReceiver() {
         IntentFilter powerFilter = new IntentFilter();
@@ -288,8 +300,9 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
             seeker.setOnSeekBarChangeListener(mSeekListener);
         }
         mProgress.setMax(1000);
-
-        registerpowerReceiver();
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            registerpowerReceiver();
+        }
         mTouchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
 
         Intent intent = getIntent();
@@ -698,7 +711,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
     public void onDestroy() {
         mAlbumArtWorker.quit();
         super.onDestroy();
-        if (powerReceiver != null) {
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
             unregisterReceiver(powerReceiver);
         }
         if (conn != null) {

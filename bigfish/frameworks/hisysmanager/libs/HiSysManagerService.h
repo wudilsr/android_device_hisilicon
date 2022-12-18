@@ -26,7 +26,6 @@ public:
     static void instantiate();
     virtual int upgrade(String8 path);
     virtual int reset();
-    virtual int updateCAFile(String8 path1,String8 path2) ;
     virtual int enterSmartStandby();
     virtual int quitSmartStandby();
     virtual int setFlashInfo(String8 warpflag,int offset,int offlen,String8 info);

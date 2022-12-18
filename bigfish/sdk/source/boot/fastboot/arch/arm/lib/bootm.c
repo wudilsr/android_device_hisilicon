@@ -27,6 +27,7 @@
 #include <image.h>
 #include <u-boot/zlib.h>
 #include <asm/byteorder.h>
+#include <asm/sizes.h>
 #include <ethcfg.h>
 #include <params.h>
 
@@ -88,7 +89,7 @@ static void setup_sdkversion_tag(bd_t *bd);
 static void setup_bootreg_tag(bd_t *bd);
 #endif
 
-#if defined(CONFIG_RSAKEY_TAG)	
+#if defined(CONFIG_RSAKEY_TAG)
 static void setup_rsakey_tag(void);
 #endif
 
@@ -99,6 +100,45 @@ static struct tag *params;
 #endif /* CONFIG_SETUP_MEMORY_TAGS || CONFIG_CMDLINE_TAG || CONFIG_INITRD_TAG */
 
 #if defined(CONFIG_BOOTARGS_MERGE)
+static void bootargs_adjust_mmz_offset(unsigned int ddrsize, char *name)
+{
+	int i;
+	char *param[4];
+	char *args;
+	char *mmz_param, *mmz_pos;
+	unsigned long long size, offset;
+	char tmp_args[100];
+
+	args = getenv(name);
+	if (!args) {
+		return;
+	}
+
+	mmz_pos = mmz_param = strstr(args, "mmz=");
+	if (!mmz_param) {
+		return;
+	}
+
+	memcpy(tmp_args, args, mmz_pos - args);
+	mmz_pos = mmz_pos - args + tmp_args;
+
+	/* eg: mmz=ddr,0,0,256M,  0-mmz=ddr, 1-0, 2-0, 3-256M */
+	for (i = 0; (param[i] = strsep(&mmz_param, ",")) != NULL;) {
+		if (++i == 4)
+			break;
+	}
+
+	size = memparse(param[3], NULL);
+
+	offset = ((ddrsize/3) * 2) - size;
+
+	snprintf(mmz_pos, 50, "%s,%s,%s,%s", param[0], param[1],
+			ultohstr((unsigned long long)offset), param[3]);
+
+	setenv(name, tmp_args);
+	return;
+}
+
 static char *bootargs_merge(void)
 {
 	char *args_merge;
@@ -107,6 +147,9 @@ static char *bootargs_merge(void)
 
 	snprintf(args_merge_name, sizeof(args_merge_name), "bootargs_%s",
 		 ultohstr((unsigned long long)ddrsize));
+
+	if((ddrsize == (SZ_512M + SZ_256M)) || (ddrsize == (SZ_1G + SZ_512M)))
+		bootargs_adjust_mmz_offset(ddrsize, args_merge_name);
 
 	args_merge = getenv(args_merge_name);
 
@@ -529,6 +572,7 @@ static void setup_param_tag(bd_t *bd)
 /* rsa public key is defined and assigned value in product code. */
 extern unsigned char g_customer_rsa_public_key_N[256];
 extern unsigned int g_customer_rsa_public_key_E;
+extern unsigned char g_partition_hash[96];
 
 /* transfer rsakey to linux */
 static void setup_rsakey_tag(void)
@@ -536,7 +580,7 @@ static void setup_rsakey_tag(void)
 	unsigned char key_e[4];
 	unsigned int rsakey_e = g_customer_rsa_public_key_E;
 	params->hdr.tag = CONFIG_RSAKEY_TAG_VAL;
-	params->hdr.size = (sizeof (struct tag_header) + 256 + sizeof(g_customer_rsa_public_key_E)) >> 2;
+	params->hdr.size = (sizeof (struct tag_header) + 256 + sizeof(g_customer_rsa_public_key_E) + 96) >> 2;
 
 	memcpy(&params->u, g_customer_rsa_public_key_N, 256);
 
@@ -546,6 +590,7 @@ static void setup_rsakey_tag(void)
 	key_e[3] = 0xff & (rsakey_e);
 
 	memcpy(&params->u+256, key_e, 4);
+	memcpy(&params->u+256+4, g_partition_hash, 96);
 
 	params = tag_next (params);
 }

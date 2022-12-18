@@ -30,7 +30,6 @@
 #include <platform.h>
 #include <cpuinfo.h>
 #include <mmu.h>
-#include <boot.h>
 #include "himciv200_reg.h"
 #include "himciv200.h"
 #include "mmc_drv.h"

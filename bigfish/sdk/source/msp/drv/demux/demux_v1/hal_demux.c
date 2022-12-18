@@ -51,8 +51,25 @@ spinlock_t DmxHalLcok = __SPIN_LOCK_UNLOCKED(DmxHalLcok);
 #define DEMUX_UMMAP_DDR_PHYADDRESS(phys)    kunmap((phys_to_page(phys)))
 
 
-/*注意,此函数暂时没有考虑CV200扣脉冲计算,因为目前没有使能此功能*/
-HI_U32 DmxHalGetClk(HI_VOID)
+#if  defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+/*
+ * sample dynamic tune dmx clk through register(0x2320).
+ */
+HI_U32 DmxHalGetDmxClk(HI_VOID)
+{
+    U_DBG_DETECT0 DbgDetect;
+
+    DbgDetect.u32 = DMX_READ_REG(ADDR_DBG_DETECT0);
+
+    return DbgDetect.bits.dbg_out_sample_freq;
+}
+#else
+
+#ifdef DMX_SUPPORT_DMX_CLK_DYNAMIC_TUNE
+#error "This chip don't support dynamic tune dmx clk."
+#endif
+
+HI_U32 DmxHalGetDmxClk(HI_VOID)
 {
     HI_U32 Clk = 250;
 
@@ -63,9 +80,7 @@ HI_U32 DmxHalGetClk(HI_VOID)
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
-    || defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3798cv100)   
     U_PERI_CRG64 PeriCrg64;
     PeriCrg64.u32 = g_pstRegCrg->PERI_CRG64.u32;
     switch ( PeriCrg64.bits.pvr_dmx_clk_sel )
@@ -76,14 +91,12 @@ HI_U32 DmxHalGetClk(HI_VOID)
         case 0x1 :
             Clk = 288;
             break;
-#if ! (defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100))
         case 0x2 :
             Clk = 200;
             break;
         case 0x3 :
             Clk = 150;
             break;
-#endif
     }
 #elif defined(CHIP_TYPE_hi3716m)
     HI_CHIP_TYPE_E      ChipType;
@@ -158,6 +171,7 @@ HI_U32 DmxHalGetClk(HI_VOID)
 
     return Clk;
 }
+#endif
 
 
 /***********************************************************************************
@@ -1595,7 +1609,12 @@ HI_BOOL DmxHalIsFlushChannelDone(HI_VOID)
 
     glb_flush.u32 = DMX_READ_REG(DMX_GLB_FLUSH);
 
-    return glb_flush.bits.flush_done ? HI_TRUE : HI_FALSE;
+    if (glb_flush.bits.flush_done)
+    {
+        return HI_TRUE;
+    }
+    
+    return HI_FALSE;
 }
 
 /***********************************************************************************
@@ -1835,7 +1854,12 @@ HI_BOOL DmxHalFQIsEnableOverflowInt(HI_U32 FqId)
 
     value = DMX_READ_REG(ENA_FQ_CHN_0(offset));
 
-    return (value & (1 << bit)) ? HI_TRUE : HI_FALSE;
+    if (value & (1 << bit))
+    {
+        return HI_TRUE;
+    }
+    
+    return HI_FALSE;
 }
 
 /***********************************************************************************
@@ -2506,7 +2530,12 @@ HI_BOOL DmxHalGetIPBPStatus(HI_U32 PortId)
 
     spin_unlock_irqrestore(&DmxHalLcok, u32LockFlag);
 
-    return (status32 || status40);
+    if (status32 || status40)
+    {
+        return HI_TRUE;
+    }
+
+    return HI_FALSE;
 }
 
 /***********************************************************************************
@@ -2954,6 +2983,28 @@ HI_VOID DmxHalGetCurrentSCR(HI_U32 *ScrClk)
     *ScrClk = DMX_READ_REG(DMX_SCR_VALUE1);
 }
 
+#ifdef DMX_SUPPORT_DMX_CLK_DYNAMIC_TUNE
+HI_VOID DmxHalDynamicTuneDmxClk(HI_U32 Reduce)
+{
+    U_PERI_CRG64 PeriCrg64;
+
+    PeriCrg64.u32 = g_pstRegCrg->PERI_CRG64.u32;
+    
+    PeriCrg64.bits.sw_dmxclk_loaden = 0;
+    
+    g_pstRegCrg->PERI_CRG64.u32 = PeriCrg64.u32;
+
+    mb();
+
+    PeriCrg64.u32 = g_pstRegCrg->PERI_CRG64.u32;
+
+    PeriCrg64.bits.sw_dmx_clk_div = Reduce & 0x1f;
+    PeriCrg64.bits.sw_dmxclk_loaden = 1;
+
+    g_pstRegCrg->PERI_CRG64.u32 = PeriCrg64.u32;
+}
+#endif
+
 #if defined(CHIP_TYPE_hi3716h) || defined(CHIP_TYPE_hi3716c)
 
 HI_VOID DmxHalConfigHardware(HI_VOID)
@@ -3250,7 +3301,7 @@ HI_VOID DmxHalGetTSOClkCfg(HI_U32 PortId,HI_BOOL *ClkReverse,HI_U32 *enClk,HI_U3
 ***********************************************************************************/
 HI_VOID DmxHalAttachFilter(HI_U32 FilterId, HI_U32 ChanId)
 {
-    HI_U32  filter_en = 1 << (FilterId & 0x1F);
+    HI_U32  filter_en;
 #ifndef DMX_REGION_SUPPORT
     HI_U32  value;
     HI_U32  offset;
@@ -3275,6 +3326,8 @@ HI_VOID DmxHalAttachFilter(HI_U32 FilterId, HI_U32 ChanId)
     DMX_WRITE_REG(DMX_FILTER_ID(ChanId, i), value);
 
     filter_en = (1 << i);
+#else
+    filter_en = 1 << (FilterId & 0x1F);
 #endif
     filter_en |= DMX_READ_REG(DMX_FILTER_EN(ChanId));
 
@@ -3390,7 +3443,12 @@ HI_BOOL DmxHalGetOQEopIntStatus(HI_U32 OQId)
 
     value = DMX_READ_REG(INT_OQ_EOP_0(offset));
 
-    return (value & (1 << bit)) ? HI_TRUE : HI_FALSE;
+    if (value & (1 << bit))
+    {
+        return HI_TRUE;
+    }
+    
+    return HI_FALSE;
 }
 
 /*
@@ -3508,7 +3566,12 @@ HI_BOOL DmxHalOQGetOverflowIntStatus(HI_U32 OQId)
     value = DMX_READ_REG(INT_OQ_CHN_0(offset));
     spin_unlock_irqrestore(&DmxHalLcok, u32LockFlag);
 
-    return (value & (1 << bit)) ? HI_TRUE : HI_FALSE;
+    if (value & (1 << bit))
+    {
+        return HI_TRUE;
+    }
+
+    return HI_FALSE;
 }
 
 HI_VOID DmxHalOQClearOverflowInt(HI_U32 OQId)
@@ -3875,8 +3938,16 @@ HI_VOID DmxHalFQEnableRecive(HI_U32 FQId, HI_BOOL Enable)
 HI_S32 DmxHalGetInitStatus(HI_VOID)
 {
     HI_S32 ret      = HI_FAILURE;
-    HI_U32 FqStatus = DMX_READ_REG(FQ_INIT_DONE) & DMX_MASK_BIT_0;
-    HI_U32 OqStatus = DMX_READ_REG(OQ_INIT_DONE) & DMX_MASK_BIT_0;
+    HI_U32 FqStatus, OqStatus;
+    unsigned long start = jiffies, end = start + HZ; /* 1s */
+
+    do 
+    {
+        FqStatus = DMX_READ_REG(FQ_INIT_DONE) & DMX_MASK_BIT_0;
+        OqStatus = DMX_READ_REG(OQ_INIT_DONE) & DMX_MASK_BIT_0;
+
+        udelay(10);
+    }while((FqStatus || OqStatus) && time_in_range(jiffies, start, end));
 
     if (!FqStatus && !OqStatus)
     {
@@ -4530,7 +4601,7 @@ HI_VOID DmxHalSetAllRecExcludePid(HI_U32 RecCfgID, HI_U32 DmxID, HI_U32 PID)
 
 #endif
 
-#ifdef DMX_REC_TIME_STAMP_SUPPORT    /*only hi3719 support this */
+#ifdef DMX_REC_TIME_STAMP_SUPPORT 
 
 /***********************************************************************************
 * Function      : DmxHalConfigRecTsTimeStamp

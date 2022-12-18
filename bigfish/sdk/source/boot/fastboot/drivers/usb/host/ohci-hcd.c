@@ -167,6 +167,9 @@ static void td_submit_job(struct usb_device *dev, unsigned long pipe,
 #  include "hiusb-hifone.c"
 #endif
 
+#if defined(CONFIG_ARCH_HI3716MV410)
+#  include "hiusb-hi3716mv410.c"
+#endif
 
 /*-------------------------------------------------------------------------*
  * URB support functions

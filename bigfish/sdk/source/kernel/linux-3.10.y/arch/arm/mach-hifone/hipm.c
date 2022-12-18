@@ -17,9 +17,12 @@
 #include <mach/sram.h>
 #include <mach/hardware.h>
 
-void __iomem *hi_sc_virtbase;
-void __iomem *hi_crg_virtbase;
-void __iomem *hi_scu_virtbase;
+void __iomem *hi_sc_virtbase  = NULL;
+void __iomem *hi_crg_virtbase = NULL;
+void __iomem *hi_scu_virtbase = NULL;
+void __iomem *hi_mcu_virtbase = NULL;
+void __iomem *hi_mcu_ctrl_virt     = NULL;
+void __iomem *hi_standby_flag_virt = NULL;
 
 /*ddr address for save cpu context*/
 extern unsigned int hi_pm_ddrbase;
@@ -367,6 +370,9 @@ static int __init hi_pm_init(void)
 {
 	hi_sc_virtbase = (void __iomem *)IO_ADDRESS(REG_BASE_SCTL);
 	hi_crg_virtbase = (void __iomem *)IO_ADDRESS(REG_BASE_CRG);
+	hi_mcu_virtbase = (void __iomem *)ioremap_nocache(REG_BASE_MCU, 0x10000);
+	hi_mcu_ctrl_virt = hi_mcu_virtbase + 0xF000;
+	hi_standby_flag_virt = hi_mcu_virtbase + 0x7520;
 
 	hi_pm_ddrbase =
 	    (unsigned int)kzalloc((PM_CTX_BUF_SIZE), GFP_DMA | GFP_KERNEL);

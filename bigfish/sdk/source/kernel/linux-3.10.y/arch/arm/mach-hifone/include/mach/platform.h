@@ -20,6 +20,8 @@
 #define REG_BASE_SCI1                                   0x101F4000
 #define REG_BASE_CRG                                    0xF8A22000
 
+#define REG_BASE_MCU                                    0xF8400000
+
 #define REG_BASE_CPU_LP                                 0xF8A22048
 #define REG_CPU_LP_CPU_SW_BEGIN                         10
 #define CPU_REG_BASE_RST                                0xF8A22050

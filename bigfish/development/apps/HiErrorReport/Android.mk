@@ -12,8 +12,6 @@ LOCAL_STATIC_JAVA_LIBRARIES += HiErrorReport-smtp-1.4.5
 
 LOCAL_SRC_FILES := $(call all-subdir-java-files)
 
-LOCAL_JAVA_LIBRARIES :=
-
 LOCAL_JNI_SHARED_LIBRARIES := libandroid_runtime
 
 LOCAL_PACKAGE_NAME := HiErrorReport

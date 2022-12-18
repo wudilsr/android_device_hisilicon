@@ -23,6 +23,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
 import android.net.ConnectivityManager;
 import android.net.ethernet.EthernetManager;
 import android.net.NetworkInfo;
@@ -42,6 +46,9 @@ import android.os.ServiceManager;
 import android.os.storage.IMountService;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -50,10 +57,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hisilicon.android.mediaplayer.HiMediaPlayer;
-import com.hisilicon.android.mediaplayer.HiMediaPlayer.OnCompletionListener;
-import com.hisilicon.android.mediaplayer.HiMediaPlayer.OnErrorListener;
-import com.hisilicon.android.mediaplayer.HiVideoView;
 import com.hisilicon.android.sdkinvoke.HiSdkinvoke;
 import com.hisilicon.android.hisysmanager.HiSysManager;
 public class factorytestActivity extends Activity {
@@ -96,7 +99,9 @@ public class factorytestActivity extends Activity {
 
     private Button btn_change_output;
 
-    private HiVideoView localHiVideoView;
+    private SurfaceView surfaceView;
+    private SurfaceHolder surfaceHolder;
+    private MediaPlayer player;
 
     private IntentFilter WifiFilter;
     private IntentFilter USBsdcardFilter;
@@ -149,7 +154,7 @@ public class factorytestActivity extends Activity {
                 break;
 
             case WHAT_UPGRADE_TIME:
-                if (localHiVideoView.isPlaying())
+                if (player.isPlaying())
                     playTime++;
                 rst_play_time.setText(MessageFormat.format(
                         "{0,number,00}:{1,number,00}:{2,number,00}",
@@ -336,6 +341,10 @@ public class factorytestActivity extends Activity {
         if (ethtimer != null) {
             ethtimer.cancel();
         }
+        if (player.isPlaying()) {
+            player.stop();
+        }
+        player.release();
     }
 
     @Override
@@ -357,8 +366,7 @@ public class factorytestActivity extends Activity {
     }
 
     private void initView() {
-        localHiVideoView = (HiVideoView) findViewById(R.id.VideoView01);
-        localHiVideoView.setFocusable(false);
+
         rst_play_time = (TextView) findViewById(R.id.time);
         rst_version = (TextView) findViewById(R.id.version);
         rst_net_mac = (TextView) findViewById(R.id.netmacid);
@@ -393,7 +401,7 @@ public class factorytestActivity extends Activity {
                 changeOutputDisplay();
             }
         });
-        btn_change_output.requestFocus();
+        rst_version.requestFocus();
     }
 
     private void init() {
@@ -529,28 +537,47 @@ public class factorytestActivity extends Activity {
             System.out.println("CG LOG call is not test.wmv .....\n");
         } else {
             Log.i(TAG, "begin play!");
-            localHiVideoView.setVideoPath(testvideoinfo[0]);
-            new MediaController(this);
-            localHiVideoView.start();
-            localHiVideoView
-                    .setOnCompletionListener(new HiMediaPlayer.OnCompletionListener() {
-                        public void onCompletion(
-                                HiMediaPlayer paramAnonymousHiMediaPlayer) {
-                            localHiVideoView.start();
+            surfaceView = (SurfaceView) findViewById(R.id.VideoView01);
+            surfaceHolder = surfaceView.getHolder();
+            surfaceHolder.addCallback(new Callback() {
+                @Override
+                public void surfaceDestroyed(SurfaceHolder arg0) {
+                }
+                @Override
+                public void surfaceCreated(SurfaceHolder arg0) {
+                    player = new MediaPlayer();
+                    player.setDisplay(surfaceHolder);
+                    player.setOnCompletionListener(new OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer arg0) {
+                            arg0.start();
                             System.out
                                     .println("CG LOG call restart testvideo .....\n");
                         }
                     });
-            localHiVideoView
-                    .setOnErrorListener(new HiMediaPlayer.OnErrorListener() {
-                        public boolean onError(HiMediaPlayer mp, int what,
-                                int extra) {
+                    player.setOnErrorListener(new OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer arg0, int arg1,
+                                int arg2) {
                             HiSdkinvoke mSDKInvoke = new HiSdkinvoke();
                             mSDKInvoke.hiBitSet(0xF8000044, 4, 3, 0x00);
                             mSDKInvoke.hiGpioBitSet(0xF8004000, 3, 1);
                             System.out
                                     .println("CG LOG call stop testvideo .....\n");
                             return true;
+                        }
+                    });
+                    try {
+                        player.setDataSource(testvideoinfo[0]);
+                        player.prepare();
+                        player.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void surfaceChanged(SurfaceHolder arg0, int arg1,
+                        int arg2, int arg3) {
                         }
                     });
         }

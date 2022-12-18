@@ -57,16 +57,6 @@ int HiSysManagerClient::reset()
     }
     return ret;
 }
-int HiSysManagerClient::updateCAFile(String8 path1,String8 path2)
-{
-    int ret = -1;
-    const sp<IHiSysManagerService>& ps = getSysManagerService();
-    if(ps != 0)
-    {
-        ret = ps->updateCAFile(path1,path2);
-    }
-    return ret;
-}
 int HiSysManagerClient::enterSmartStandby()
 {
     int ret = -1;

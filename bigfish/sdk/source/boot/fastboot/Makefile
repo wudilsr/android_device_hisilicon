@@ -218,11 +218,14 @@ endif
 LIBS += drivers/mtd/libmtd.a
 ifdef CONFIG_NAND_SUPPORT
 LIBS += drivers/mtd/nand/libnand.a
-#ifdef CONFIG_NAND_FLASH_HISFC400
+ifdef CONFIG_NAND_FLASH_HISFC400
 LIBS += drivers/mtd/nand/hisfc400/libhisfc400.a
-#endif
+endif
+LIBS += drivers/mtd/nand/hifmc100_nand/libhifmc100_nand.a
+LIBS += drivers/mtd/nand/hifmc100_snand/libhifmc100_snand.a
 endif
 LIBS += drivers/mtd/spi/libspi_flash.a
+LIBS += drivers/mtd/spi/hifmc100/libhifmc100.a
 LIBS += drivers/net/libnet.a
 LIBS += drivers/net/phy/libphy.a
 
@@ -577,7 +580,13 @@ s5_config: unconfig
 	@echo "CFG_REG_END    = 9680"  >> platform.mk
 	@$(MKCONFIG) $(@:_config=) arm s5 s5
 
-TARGETS := godbox s40 hi3798mx s5 hifone
+hi3716mv410_config: unconfig
+	@echo "CFG_REG_START  = 64"   > platform.mk
+	@echo "CFG_REG_LENGTH = 8192"  >> platform.mk
+	@echo "CFG_REG_END    = 8256"  >> platform.mk
+	@$(MKCONFIG) $(@:_config=) arm hi3716mv410 hi3716mv410
+
+TARGETS := godbox s40 hi3798mx s5 hifone hi3716mv410
 #########################################################################
 
 .PHONY: mini-boot.clean

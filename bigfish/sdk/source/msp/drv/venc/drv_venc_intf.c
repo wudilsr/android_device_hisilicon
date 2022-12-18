@@ -225,7 +225,13 @@ static HI_S32 VENC_DRV_Open(struct inode *finode, struct file  *ffile)
     } 
 	
 #ifdef __VENC_SUPPORT_JPGE__	
-	Ret = HI_DRV_MODULE_GetFunction(HI_ID_JPGENC, (HI_VOID**)&pJpgeFunc);
+    Ret = HI_DRV_MODULE_GetFunction(HI_ID_JPGENC, (HI_VOID**)&pJpgeFunc);
+    if(HI_SUCCESS != Ret)
+    {
+         HI_ERR_VENC("GetFunction from JPGE  failed.\n");
+		return HI_FAILURE;
+    }  
+    pJpgeFunc->pfnJpgeInit();
 #endif
     return HI_SUCCESS;
 }
@@ -276,6 +282,10 @@ static HI_S32 VENC_DRV_Close(struct inode *finode, struct file  *ffile)
             up(&g_VencMutex);
             return HI_FAILURE;
         }
+
+#ifdef __VENC_SUPPORT_JPGE__	
+       pJpgeFunc->pfnJpgeDeInit();
+#endif
 
         //VENC_DRV_BoardDeinit();   //change to destroy channel
     }
@@ -351,7 +361,7 @@ HI_S32 VENC_DRV_Resume(HI_VOID)
     Ret = down_interruptible(&g_VencMutex);
     if (1 == atomic_inc_return(&g_VencCount))
     {
-        VENC_DRV_BoardInit();
+        //VENC_DRV_BoardInit();   ==>rmove to the 
 		VENC_DRV_InitEvent();
         Ret = VENC_DRV_EflResumeVedu();
         if (HI_SUCCESS != Ret)

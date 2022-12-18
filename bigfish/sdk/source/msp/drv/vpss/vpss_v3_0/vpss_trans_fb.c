@@ -1,16 +1,10 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mbjlxqBuu/+sjbVZYjtBvLy/MKRYPzsOL1hV9dks0spxSAUlWU9QI4A4Nv5v3Sr2qZIG
-s4zfaeYaS3k0v8AIBr+Hw1A9PKOLQgcWSljY2HfkEqLretym3B3y7IJRj89v2Q==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxd7u+UhRqklAcQVLLrgqgAJP+8+MgD9yXlV/fLCNBogeP51ymevTsbr4ARehaqvzVJup
+m89im4FCNSyw4hiF9hcFb20AW4LWvSTJ4h+zMKqhhFQDqll+SRg8OJDMwjEMdQ==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
-
-
-
-
-
-
 
 #include "vpss_trans_fb.h"
 #include "vpss_instance.h"
@@ -33,6 +27,7 @@ HI_BOOL VPSS_TRANS_FB_CheckTileFmt(HI_DRV_VIDEO_FRAME_S *pstFrame)
         return HI_FALSE;
     }
 }
+
 HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDEO_FRAME_S *pstFrame)
 {
     HI_U32 u32Width;
@@ -41,6 +36,7 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
     HI_DRV_VIDEO_PRIVATE_S *pstPriv; 
     VPSS_IN_STREAM_INFO_S* pstStreamInfo;
     VPSS_INSTANCE_S* pstInstance;
+	HI_BOOL bProgressive;
 
     if(!pstTransFbList->bInit)
     {
@@ -51,6 +47,7 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
     pstInstance = (VPSS_INSTANCE_S *)(pstTransFbList->pstInstance);
     u32Width = pstFrame->u32Width;
     u32FrameRate = pstFrame->u32FrameRate; 
+	bProgressive = pstFrame->bProgressive;
     pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstFrame->u32Priv[0]);
     enInputSrc = pstPriv->stVideoOriginalInfo.enSource;
     pstStreamInfo = &(pstInstance->stInEntity.stStreamInfo);
@@ -60,11 +57,14 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
         return HI_TRUE;
     }
 	
-#if 0
+#if 1
 #if defined(CHIP_TYPE_hi3716mv410)
-    //1080P@60,VPSS trans it to vdp
-    if((HI_DRV_SOURCE_DTV == enInputSrc) && (VPSS_TRANS_FB_CheckTileFmt(pstFrame))
-        && (u32Width >= 1920) && (u32FrameRate >= 50000))
+    if((HI_DRV_SOURCE_DTV == enInputSrc) 
+			&& (VPSS_TRANS_FB_CheckTileFmt(pstFrame))
+			&& (u32Width >= 1920) 
+			&& (u32FrameRate >= 50000)
+			&& (bProgressive == HI_TRUE) 
+			&& (VPSS_INST_CheckPassThrough(pstInstance,pstFrame)))
     {
         pstStreamInfo->u32StreamInRate = pstFrame->u32FrameRate;
         pstStreamInfo->u32StreamTopFirst = pstFrame->bTopFieldFirst;
@@ -76,7 +76,10 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
         pstStreamInfo->u32Pts = pstFrame->u32Pts;        
         return HI_TRUE;
     }
+#elif defined(CHIP_TYPE_hi3716mv420)
+
 #elif defined(CHIP_TYPE_hi3798cv200_a)
+#if 0
 	if((HI_DRV_SOURCE_DTV == enInputSrc) && (VPSS_TRANS_FB_CheckTileFmt(pstFrame))
 		&& (u32Width > 1920) && (u32FrameRate >= 50000))
 	{
@@ -92,6 +95,7 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
 		pstTransFbList->bNeedTrans = HI_TRUE;	 
 		return HI_TRUE;
 	}
+#endif
 #endif
 #endif
  //   if(u32Width > 1920)
@@ -112,10 +116,11 @@ HI_BOOL VPSS_TRANS_FB_NeedTrans(VPSS_TRANS_FB_INFO_S *pstTransFbList,HI_DRV_VIDE
     }
     else
     {
-    	pstTransFbList->bNeedTrans = HI_FALSE;
+		pstTransFbList->bNeedTrans = HI_FALSE;
         return HI_FALSE;
     }
 }
+
 HI_S32 VPSS_TRANS_FB_Init(VPSS_TRANS_FB_INFO_S *pstTransFbList, HI_VOID* pstInstance)
 {
     if(HI_NULL == pstInstance)

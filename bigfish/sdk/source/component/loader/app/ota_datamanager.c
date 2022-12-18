@@ -39,7 +39,7 @@ typedef struct tagPARTITION_MEMORY_INFO_S
 
 typedef struct tagUPGRADE_MEM_INFO_S
 {
-    HI_U32                  u32TotalSize;
+    HI_U64                  u64TotalSize;
     HI_U32                  u32ReceivedSize;
     HI_U32                  u32PartNum;
     PARTITION_MEMORY_INFO_S astPartMemInfo[MAX_UPGRADE_IMAGE_NUM];
@@ -133,10 +133,10 @@ HI_S32 OTA_InitUpgradeBuff(LOADER_DATA_INFO_S *pstUpgradeInfo, HI_U32 u32DataGra
 
     memset(&g_stUpgradeMemInfo, 0, sizeof(g_stUpgradeMemInfo));
     g_stUpgradeMemInfo.u32PartNum   = pstUpgradeInfo->u32PartitionNum;
-    g_stUpgradeMemInfo.u32TotalSize = pstUpgradeInfo->u32DataFullSize;
+    g_stUpgradeMemInfo.u64TotalSize = pstUpgradeInfo->u64DataFullSize;
     g_stUpgradeMemInfo.u32ReceivedSize = 0;
 
-    HI_DBG_LOADER("totalsize %d\n", g_stUpgradeMemInfo.u32TotalSize);
+    HI_DBG_LOADER("totalsize %Ld\n", g_stUpgradeMemInfo.u64TotalSize);
 
     pstPartMemInfo = g_stUpgradeMemInfo.astPartMemInfo;
     for (ii = 0; ii < g_stUpgradeMemInfo.u32PartNum; ii++)

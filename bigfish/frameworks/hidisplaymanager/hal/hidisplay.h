@@ -176,6 +176,7 @@ typedef struct display_device_t
     int (*detach_intf)();
     int (*set_virtual_screen)(int outFmt);
     int (*get_virtual_screen)();
+    int (*get_virtual_screen_size)(int *w, int *h);
     int (*reset)();
     int(*set_hdmi_suspend_time)(int iTime);
     int(*get_hdmi_suspend_time)();

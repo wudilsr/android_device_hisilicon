@@ -1,32 +1,48 @@
-/*****************************************************************************
-*             Copyright 2006 - 2014, Hisilicon Tech. Co., Ltd.
-*                           ALL RIGHTS RESERVED
-* FileName: tde_os_listi.h
-* Description:TDE osi list interface define
+/******************************************************************************
 *
-* History:
-* Version   Date          Author        DefectNum       Description
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
 *
-*****************************************************************************/
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : tde_osilist.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
+******************************************************************************/
 
 #ifndef _TDE_OSILIST_H_
 #define _TDE_OSILIST_H_
 
-#ifdef __cplusplus
- #if __cplusplus
-extern "C" {
- #endif /* __cplusplus */
-#endif  /* __cplusplus */
+
+/*********************************add include here******************************/
 
 #include "list.h"
 #include "tde_define.h"
 #include "hi_tde_type.h"
 
+/*****************************************************************************/
 
-/****************************************************************************/
-/*                             TDE osi list types define                         */
-/****************************************************************************/
+#ifdef __cplusplus
+#if __cplusplus
+   extern "C"
+{
+#endif
+#endif /* __cplusplus */
 
+
+
+/***************************** Macro Definition ******************************/
+
+
+/*************************** Structure Definition ****************************/
 /* 软件链表节点数据结构 */
 typedef struct hiTDE_SWNODE_S
 {
@@ -59,10 +75,13 @@ typedef struct hiTDE_SWJOB_S
     TDE_SWNODE_S *pstParentCmd;     /*用来记录父节点*/
 }TDE_SWJOB_S;
 
-/****************************************************************************/
-/*                             TDE osi list functions define                */
-/****************************************************************************/
 
+
+
+/********************** Global Variable declaration **************************/
+
+
+/******************************* API declaration *****************************/
 /*****************************************************************************
 * Function:      TdeOsiSuspListInit
 * Description:   初始化软件内部用于缓存TDE操作的全局链表
@@ -132,33 +151,13 @@ HI_S32      TdeOsiListSubmitJob(TDE_HANDLE s32Handle, TDE_LIST_TYPE_E enListType
                                 HI_U32 u32TimeOut, TDE_FUNC_CB pFuncComplCB, HI_VOID *pFuncPara,
                                 TDE_NOTIFY_MODE_E enNotiType);
 
-/*****************************************************************************
- Prototype    : TdeOsiListReset
- Description  : Reset所有状态,释放链表空间
- Input        : 无
- Output       : NONE
- Return Value : HI_SUCCESS/HI_FAILURE
- Calls        :
- Called By    :
-*****************************************************************************/
-HI_VOID TdeOsiListReset(HI_VOID);
-
-#if 0
-/*****************************************************************************
-* Function:      TdeOsiNodeComp
-* Description:
-* Input:         TDE_LIST_TYPE_E enListType
-* Output:        无
-* Return:        创建的任务句柄
-* Others:        无
-*****************************************************************************/
-HI_VOID     TdeOsiListNodeComp(TDE_LIST_TYPE_E enListType);
-#endif
 
 #ifdef __cplusplus
- #if __cplusplus
-}
- #endif /* __cplusplus */
-#endif  /* __cplusplus */
 
-#endif  /* _TDE_OSILIST_H_ */
+#if __cplusplus
+
+}
+#endif
+#endif /* __cplusplus */
+
+#endif /* __TDE_OSILIST_H__ */

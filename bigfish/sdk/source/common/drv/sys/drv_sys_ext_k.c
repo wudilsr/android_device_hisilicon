@@ -14,13 +14,13 @@
 #include <mach/hardware.h>
 #include <linux/sched.h>
 #include <linux/math64.h>
+#include <linux/hikapi.h>
 
 #include "hi_type.h"
 #include "hi_debug.h"
 #include "hi_reg_common.h"
 #include "hi_drv_sys.h"
 #include "hi_drv_reg.h"
-#include "hiuapi.h"
 
 #define DIV_NS_TO_MS  1000000
 #define HI_OTP_BASE_ADDR  0xf8ab0000
@@ -117,6 +117,7 @@ HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E
             default:
                 ChipType    = HI_CHIP_TYPE_HI3798M;
                 ChipVersion = HI_CHIP_VERSION_V100;
+                break;
         }
     }
 #elif defined(CHIP_TYPE_hi3798cv200_a)
@@ -124,6 +125,21 @@ HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E
     {
         ChipType    = HI_CHIP_TYPE_HI3798C_A;
         ChipVersion = HI_CHIP_VERSION_V200;
+    }
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    if (0x37160410 == g_pstRegSysCtrl->SC_SYSID)
+    {
+        switch (g_pstRegPeri->PERI_SOC_FUSE_0.bits.chip_id)
+        {
+            case 0x0:
+                ChipType    = HI_CHIP_TYPE_HI3716M;
+                ChipVersion = HI_CHIP_VERSION_V420;
+                break;
+            default:
+                ChipType    = HI_CHIP_TYPE_HI3716M;
+                ChipVersion = HI_CHIP_VERSION_V410;
+                break;
+        }       
     }
 #endif
 
@@ -204,6 +220,22 @@ HI_S32 HI_DRV_SYS_GetChipPackageType(HI_CHIP_PACKAGE_TYPE_E *penPackageType)
         *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_31_31;
         return HI_SUCCESS;
     }
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    if (0x37160410 == g_pstRegSysCtrl->SC_SYSID)
+    {
+        switch (g_pstRegPeri->PERI_SOC_FUSE_0.bits.chip_id)
+        {
+            case 0x0:
+                *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_19_19;
+                break;
+            case 0x1:
+                *penPackageType = HI_CHIP_PACKAGE_TYPE_BGA_16_16;
+                break;
+            default :
+                return HI_FAILURE;
+        }        
+    }
+    return HI_SUCCESS;
 #else
     #error "Unkown chip type and package type!"
 #endif
@@ -246,7 +278,9 @@ HI_S32 HI_DRV_SYS_GetDolbySupport(HI_U32 *pu32Support)
     *pu32Support = !(g_pstRegPeri->PERI_CHIP_INFO4.bits.dolby_flag);
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)    \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+	|| defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
     *pu32Support = !(g_pstRegPeri->CHIPSET_INFO.bits.dolby_flag);
 #else
     *pu32Support = 0;
@@ -271,7 +305,9 @@ HI_S32 HI_DRV_SYS_GetDtsSupport(HI_U32 *pu32Support)
     *pu32Support = g_pstRegPeri->PERI_CHIP_INFO4.bits.dts_flag;
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)    \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+	|| defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
     *pu32Support = g_pstRegPeri->CHIPSET_INFO.bits.dts_flag;
 #else
     *pu32Support = 0;
@@ -296,7 +332,9 @@ HI_S32 HI_DRV_SYS_GetRoviSupport(HI_U32 *pu32Support)
     *pu32Support = g_pstRegPeri->PERI_SOC_FUSE.bits.mven;
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)    \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+	|| defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
     *pu32Support = g_pstRegPeri->PERI_SOC_FUSE_0.bits.mven;
 #else
     *pu32Support = 0;
@@ -340,7 +378,9 @@ HI_S32 HI_DRV_SYS_GetAdvcaSupport(HI_U32 *pu32Support)
     || defined(CHIP_TYPE_hi3798cv100) \
     || defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+	|| defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
     *pu32Support = 0;
 #endif
 
@@ -349,41 +389,37 @@ HI_S32 HI_DRV_SYS_GetAdvcaSupport(HI_U32 *pu32Support)
 
 HI_S32 HI_DRV_SYS_GetMemConfig(HI_SYS_MEM_CONFIG_S *pstConfig)
 {
-#if defined(CHIP_TYPE_hi3798mv100) \
- || defined(CHIP_TYPE_hi3796mv100) \
- || defined(CHIP_TYPE_hi3798cv200_a)
+    HI_S32 ret;
 
-    HI_U32      Ret;
-
-    if (HI_NULL != pstConfig)
+    if (HI_NULL == pstConfig)
     {
-        Ret = get_mem_size(&(pstConfig->u32TotalSize), HIUAPI_GET_RAM_SIZE);
-
-        Ret |= get_mem_size(&(pstConfig->u32MMZSize), HIUAPI_GET_CMA_SIZE);
-
-        if (Ret != HI_SUCCESS)
-        {
-            HI_ERR_SYS("get_mem_size ERR, Ret=%#x\n", Ret);
-            return HI_FAILURE;
-        }
+        return HI_FAILURE;
     }
-    else
+
+    ret = get_mem_size(&pstConfig->u32TotalSize, HIKAPI_GET_RAM_SIZE);
+    if (HI_SUCCESS != ret)
     {
-        HI_ERR_SYS("invalid DDR conf ptr\n");
+        HI_ERR_SYS("get TotalSize failed\n");
+        return HI_FAILURE;
+    }
+
+    ret = get_mem_size(&pstConfig->u32MMZSize, HIKAPI_GET_CMA_SIZE);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_SYS("get CmaSize failed\n");
         return HI_FAILURE;
     }
 
     return HI_SUCCESS;
-#else
-    return HI_FAILURE;
-#endif
 }
 
 HI_S32 HI_DRV_SYS_GetDieID(HI_U64 *pu64dieid)
 {
 #if defined(CHIP_TYPE_hi3798mv100) \
  || defined(CHIP_TYPE_hi3796mv100) \
- || defined(CHIP_TYPE_hi3798cv200_a)
+ || defined(CHIP_TYPE_hi3798cv200_a) \
+ || defined(CHIP_TYPE_hi3716mv410)   \
+ || defined(CHIP_TYPE_hi3716mv420)
 
     HI_U64 id0 = 0;
     HI_U64 id0_0 = 0, id0_1 = 0;
@@ -422,17 +458,6 @@ HI_S32 HI_DRV_SYS_GetDieID(HI_U64 *pu64dieid)
     *pu64dieid = 0;
     return HI_SUCCESS;
 #endif
-}
-
-
-HI_S32 HI_DRV_SYS_KInit(HI_VOID)
-{
-    return 0;
-}
-
-HI_VOID HI_DRV_SYS_KExit(HI_VOID)
-{
-    return ;
 }
 
 EXPORT_SYMBOL(HI_DRV_SYS_GetChipVersion);

@@ -8,9 +8,9 @@
 ################################################################################
 
 # SDK configure
-HISI_SDK_ANDROID_CFG := hi3798mdmo1a_hi3798mv100_android_cfg.mak
-HISI_SDK_SECURE_CFG := hi3798mdmo1a_hi3798mv100_android_security_cfg.mak
-HISI_SDK_RECOVERY_CFG := hi3798mdmo1a_hi3798mv100_android_recovery_cfg.mak
+HISI_SDK_ANDROID_CFG := hi3798mdmo_hi3798mv100_android_cfg.mak
+HISI_SDK_SECURE_CFG := hi3798mdmo_hi3798mv100_android_security_cfg.mak
+HISI_SDK_RECOVERY_CFG := hi3798mdmo_hi3798mv100_android_recovery_cfg.mak
 SDK_CFG_DIR := configs/hi3798mv100
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
 SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_SECURE_CFG)
@@ -74,8 +74,8 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 
 PAGE_BLOCK_SIZE :=8k_2M 4k_1M
 
-# Enable WiFi module used in the board.
-# Supported WiFi modules:
+# Enable WiFi Only module used in the board.
+# Supported WiFi Only modules:
 #   RealTek RTL8188EUS (1T1R 2.4G)(Supported mode: STA, AP, WiFi Direct)
 #   RealTek RTL8188ETV (1T1R 2.4G)(Supported mode: STA, AP, WiFi Direct)
 #   RealTek RTL8192EU  (2T2R 2.4G)(Supported mode: STA, AP, WiFi Direct)
@@ -114,26 +114,46 @@ BOARD_WLAN_DEVICE_QCA1021G := n
 # QCA1021X
 BOARD_WLAN_DEVICE_QCA1021X := y
 
-############################################################################
-#bcm and csr could not be y at the same time, only support one bluetooth every build
-############################################################################
+#Supported BT Only modules:
+# BROADCOM BCM20705   (BT4.0)
+# CSR CSR8510         (BT4.0)
+# RealTek RTL8761     (BT4.0)
+#Supported WiFi + BT Combo modules:
+# MediaTek MT7632U  (WiFi: 2T2R 2.4G+5G(Supported mode: STA, AP, WiFi Direct), BT: BT4.0)
+# RealTek RTL8723BU (WiFi: 2T2R 2.4G+5G(Supported mode: STA, AP, WiFi Direct), BT: BT4.0)
 
-#bcm20705
+#enable BT Only module or WiFi + BT Combo module used in the board
+# Set to 'y', enable the BT Only module or WiFi+BT Combo module, the driver will be compiled.
+# Set to 'n', disable the BT Only module or WiFi+BT Combo module, the driver won't be compiled.
+# Can set only one module to 'y' every build.
+# Example:
+# enable RTL8723BU WiFi+BT : BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
+# if MT7632U is set to y, must modify device\hisilicon\Hi3798MV100\etc\init.Hi3798MV100.rc as follows:
+# write /proc/sys/vm/min_free_kbytes 32768 (from 10240 to 32768 to get more memory)
+
+################################################################################
+#ATTENTION:ONLY ONE MODULE CAN BE SET TO "y" AT SAME TIME AS FOLLOWs:
+################################################################################
+# BCM20705 BT Only
 BOARD_BLUETOOTH_DEVICE_BCM20705 := n
-#csr8510
+# CSR8510 BT Only
 BOARD_BLUETOOTH_DEVICE_CSR8510 := n
-
-#realtek8761
+# RTL8761 BT Only
 BOARD_BLUETOOTH_DEVICE_RTL8761 := n
-# Bluetooth and WiFi combo
-#combo Realtek RTL8723BU
+# MT7632U WiFi+BT Combo
+BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U := n
+# RTL8723BU WiFi+BT Combo
 BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
+
+
+
 ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU),y)
 BOARD_BLUETOOTH_DEVICE_REALTEK := y
 endif
 ifeq ($(BOARD_BLUETOOTH_DEVICE_RTL8761),y)
 BOARD_BLUETOOTH_DEVICE_REALTEK := y
 endif
+
 
 
 ################################################################################

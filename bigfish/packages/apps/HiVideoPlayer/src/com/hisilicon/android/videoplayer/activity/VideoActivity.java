@@ -112,6 +112,9 @@ import android.media.AudioManager;
 import android.os.SystemProperties;
 import com.hisilicon.android.HiDisplayManager;
 import com.hisilicon.android.DispFmt;
+// add for low - power state
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callback
 {
@@ -301,13 +304,42 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
     private int m3DSubtitle = 0;
     private LanguageXmlParser mLanguageXmlParser;
 
-    private static int HI_2D_MODE = 0;
-    private static int HI_3D_MODE = 1;
+    private static final int HI_2D_MODE = HiDisplayManager.HI_DISP_MODE_NORMAL;
+    private static final int HI_3D_MODE_FRAME_PACKING = HiDisplayManager.HI_DISP_MODE_FRAME_PACKING;
+    private static final int HI_3D_MODE_SIDE_BY_SIDE = HiDisplayManager.HI_DISP_MODE_SIDE_BY_SIDE;
+    private static final int HI_3D_MODE_TOP_BOTTOM = HiDisplayManager.HI_DISP_MODE_TOP_BOTTOM;
+    private static int HI_3D_MODE = HI_3D_MODE_FRAME_PACKING;
+
     private static final int HI_VIDEOFORMAT_TYPE_MVC = 35;
 
     private boolean[] flags = new boolean[]{false,false,false,false,false};//,false,false,false};
 
     private static ArrayList<ShooterSubinfo> mShooterSubinfoList = new ArrayList<ShooterSubinfo>();
+
+    // Add for low - power state
+    private WakeLock wakeLock = null;
+
+    private final BroadcastReceiver mPowerReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*Power Down*/
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.w(TAG, "recevie Intent.ACTION_SCREEN_OFF");
+                // require Lock
+                acquireWakeLock();
+                if(videoView != null && videoView.mMediaPlayer != null){
+                    if(videoView.isPlaying()){
+                        videoView.pause();
+                        play.setBackgroundResource(R.drawable.play_button);
+                    }
+                }else{
+                    Log.i(TAG, "videoView is not Ready!");
+                }
+                // release Lock
+                wakeLock.release();
+            }
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -327,6 +359,39 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
         mBDInfo = new BDInfo();
         toast = new ToastUtil();
         init();
+
+        // Init Suspend Mode when equal 'deep_resume'
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            PowerControllerInit();
+        }
+    }
+    /**
+    *  Init Power Controller
+    */
+    public void PowerControllerInit()
+    {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getCanonicalName());
+
+        // PowerManager Broadcast
+        IntentFilter powerIntentFilter = new IntentFilter();
+        powerIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        powerIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
+        registerReceiver(mPowerReceiver, powerIntentFilter);
+    }
+
+    /**
+    * require WakeLock
+    */
+    private void acquireWakeLock() {
+        synchronized (wakeLock) {
+            try {
+                wakeLock.acquire();
+            } catch (Exception e) {
+                Log.e(TAG, "exception in acquireWakeLock()", e);
+            }
+        }
     }
 
     protected void onNewIntent(Intent intent)
@@ -720,7 +785,8 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
                 if (m3DMVCAdapte == 1)
                 {
                     //videoView.setStereoStrategy(1);
-                    mDisplayManager.SetStereoOutMode(1,0);
+                    mDisplayManager.SetStereoOutMode(HI_3D_MODE_FRAME_PACKING, 0);
+                    //mDisplayManager.SetStereoOutMode(HI_3D_MODE, 0);
                     mCurrentMode = 1;
                 }
                 else
@@ -895,7 +961,7 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
 
             initSeekSecondaryProgress();
 
-            videoView.setStereoVideoFmt(0);
+            videoView.setStereoVideoFmt(0); //0: Normal frame
             mDisplayManager.SetRightEyeFirst(0);
             mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
             mType = 0;
@@ -1802,40 +1868,46 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
                                                                            View arg1, int arg2, long arg3)
                                                    {
                                                        stereoItemDialog.dismiss();
+                                                       Log.d(TAG, "Before item clicked: List item=" + arg2
+                                                           + ", mCurrentMode=" + mCurrentMode + ", m3DMode=" + m3DMode);
                                                        switch (arg2)
                                                        {
                                                        case 0 :
                                                            if(m3DMode)
                                                            {
-                                                                if (mCurrentMode == 0)
+                                                                if (mCurrentMode == 0) //2D -> 3D MVC Mode
                                                                 {
-                                                                    mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                                    if (SystemProperties.getBoolean("ro.config.low_ram", false)) {
+                                                                        mDisplayManager.SetStereoOutMode(HI_3D_MODE_FRAME_PACKING, 0);
+                                                                    } else {
+                                                                        mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                                    }
                                                                     mCurrentMode = 1;
                                                                 }
-                                                                else if (mCurrentMode == 1)
+                                                                else if (mCurrentMode == 1) //3D -> 2D Mode
                                                                 {
                                                                     mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                     mCurrentMode = 0;
                                                                 }
-                                                                else if (mCurrentMode == 2 || mCurrentMode == 3
-                                                                    || mCurrentMode == 3 || mCurrentMode == 4)
+                                                                else if (mCurrentMode == 2 || mCurrentMode == 3 //3D -> 2D Mode
+                                                                    ||  mCurrentMode == 4) //2D -> 2D Orginal Mode
                                                                 {
-                                                                    videoView.setStereoVideoFmt(0);
+                                                                    videoView.setStereoVideoFmt(0); //0: Normal frame
                                                                     mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                     mCurrentMode = 0;
                                                                 }
                                                            }
                                                            else
                                                            {
-                                                                if (mCurrentMode == 0)
+                                                                if (mCurrentMode == 0) //2D SBS Mode -> 2D
                                                                 {
-                                                                    videoView.setStereoVideoFmt(1);
+                                                                    videoView.setStereoVideoFmt(1); //1: Side by side
                                                                     mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                     mCurrentMode = 1;
                                                                 }
-                                                                else if (mCurrentMode == 1)
+                                                                else if (mCurrentMode == 1) //2D -> 2D Orginal Mode
                                                                 {
-                                                                    videoView.setStereoVideoFmt(0);
+                                                                    videoView.setStereoVideoFmt(0); //0: Normal frame
                                                                     mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                     mCurrentMode = 0;
                                                                 }
@@ -1844,13 +1916,17 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
                                                        case 1:
                                                            if(m3DMode)
                                                            {
-                                                                if (mCurrentMode == 0)
+                                                                if (mCurrentMode == 0) //2D -> 3D SBS Mode
                                                                 {
-                                                                    videoView.setStereoVideoFmt(1);
-                                                                    mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                                    videoView.setStereoVideoFmt(1); //1: Side by side
+                                                                    if (SystemProperties.getBoolean("ro.config.low_ram", false)) {
+                                                                        mDisplayManager.SetStereoOutMode(HI_3D_MODE_SIDE_BY_SIDE, 0);
+                                                                    } else {
+                                                                        mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                                    }
                                                                     mCurrentMode = 2;
                                                                 }
-                                                                else if (mCurrentMode == 1 || mCurrentMode == 2)
+                                                                else if (mCurrentMode == 1 || mCurrentMode == 2) //3D Side Exchange
                                                                 {
                                                                     if (mDisplayManager.GetRightEyeFirst() == 0)
                                                                     {
@@ -1862,39 +1938,46 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
                                                                     }
                                                                 }
                                                            }
-                                                           else
+                                                           else //2D TAB Mode -> 2D
                                                            {
-                                                                videoView.setStereoVideoFmt(2);
+                                                                videoView.setStereoVideoFmt(2); //2: Top and bottom
                                                                 mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                 mCurrentMode = 1;
                                                            }
                                                            break;
                                                        case 2:
-                                                           if (mCurrentMode == 0)
+                                                           if (mCurrentMode == 0) //2D -> 3D TAB Mode
                                                            {
-                                                               videoView.setStereoVideoFmt(2);
-                                                               mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                               videoView.setStereoVideoFmt(2); //2: Top and bottom
+                                                                if (SystemProperties.getBoolean("ro.config.low_ram", false)) {
+                                                                    mDisplayManager.SetStereoOutMode(HI_3D_MODE_TOP_BOTTOM, 0);
+                                                                } else {
+                                                                    mDisplayManager.SetStereoOutMode(HI_3D_MODE,0);
+                                                                }
                                                                mCurrentMode = 3;
                                                            }
+                                                           break;
                                                        case 3:
-                                                           if (mCurrentMode == 0)
+                                                           if (mCurrentMode == 0) //2D SBS Mode -> 2D
                                                            {
-                                                               videoView.setStereoVideoFmt(1);
+                                                               videoView.setStereoVideoFmt(1); //1: Side by side
                                                                mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                mCurrentMode = 4;
                                                            }
+                                                           break;
                                                        case 4:
-                                                           if (mCurrentMode == 0)
+                                                           if (mCurrentMode == 0) //2D TAB Mode -> 2D
                                                            {
-                                                               videoView.setStereoVideoFmt(2);
+                                                               videoView.setStereoVideoFmt(2); //2: Top and bottom
                                                                mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
                                                                mCurrentMode = 4;
                                                            }
-
                                                            break;
                                                        default:
                                                            break;
                                                        }
+                                                       Log.d(TAG, "After item clicked: List item=" + arg2
+                                                           + ", mCurrentMode=" + mCurrentMode + ", m3DMode=" + m3DMode);
                                                    }
                                                });
     }
@@ -3835,7 +3918,7 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
     {
         if(!isFirstClick)
         {
-            videoView.setStereoVideoFmt(0);
+            videoView.setStereoVideoFmt(0); //0: Normal frame
             mDisplayManager.SetRightEyeFirst(0);
             mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
             mType = 0;
@@ -4988,6 +5071,101 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
 
     protected void onStop()
     {
+/*
+      if (subSetDialog != null)
+        {
+            subSetDialog.dismiss();
+            subSetDialog = null;
+        }
+
+        if (menuDialog != null)
+        {
+            menuDialog.dismiss();
+            menuDialog = null;
+        }
+
+        if (subtitleSetDialog != null)
+        {
+            subtitleSetDialog.dismiss();
+            subtitleSetDialog = null;
+        }
+
+        if (subtitleAdvSetDialog != null)
+        {
+            subtitleAdvSetDialog.dismiss();
+            subtitleAdvSetDialog = null;
+        }
+
+        if (stereoItemDialog != null)
+        {
+            stereoItemDialog.dismiss();
+            stereoItemDialog = null;
+        }
+
+        if (currView != null)
+        {
+            vHandler.removeCallbacks(vThread);
+            vHandler = null;
+        }
+
+        if ((pointDialog != null) && pointDialog.isShowing())
+        {
+            pointDialog.dismiss();
+            pointDialog = null;
+        }
+
+        //if(SystemProperties.get("ro.iptv.enable").equals("false"))
+        //{
+            Common.setLoadSuccess(false);
+            Common.isScanDialogShow = false;
+
+            if (videoView != null)
+            {
+                videoView.setStereoVideoFmt(0); //0: Normal frame
+                mType = 0;
+                mCurrentMode = 0;
+                isEnded = true;
+                videoView.destroyPlayer();
+                mDisplayManager.SetRightEyeFirst(0);
+                mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
+            }
+
+            if (database != null && database.isOpen())
+            {
+                database.close();
+            }
+
+            database = null;
+
+            if (nameSizeDismissHandler != null)
+            {
+                nameSizeDismissHandler.removeCallbacks(nameSizeDismissThread);
+                nameSizeDismissHandler = null;
+                nameSizeDismissThread = null;
+            }
+
+            if (conn != null)
+            {
+                unbindService(conn);
+                stopService(new Intent(Constants.ACTION));
+                conn = null;
+            }
+
+            if(m3DMode && m3DTiming)
+            {
+                Log.i(TAG,"mOriginalFmt:"+mOriginalFmt+" mDisplayManager.getFmt:"+mDisplayManager.getFmt());
+                if(mOriginalFmt != mDisplayManager.getFmt())
+                    mDisplayManager.setFmt(mOriginalFmt);
+            }
+
+            finish();
+        //}*/
+        super.onStop();
+    }
+
+    protected void onDestroy()
+    {
+        // which is in onStop move to Here
         if (subSetDialog != null)
         {
             subSetDialog.dismiss();
@@ -5029,61 +5207,21 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
             pointDialog.dismiss();
             pointDialog = null;
         }
-        //if(SystemProperties.get("ro.iptv.enable").equals("false"))
-        //{
-            Common.setLoadSuccess(false);
-            Common.isScanDialogShow = false;
 
-            if (videoView != null)
-            {
-                videoView.setStereoVideoFmt(0);
-                mType = 0;
-                mCurrentMode = 0;
-                isEnded = true;
-                videoView.destroyPlayer();
-                mDisplayManager.SetRightEyeFirst(0);
-                mDisplayManager.SetStereoOutMode(HI_2D_MODE,0);
-            }
+        Common.setLoadSuccess(false);
+        Common.isScanDialogShow = false;
 
-            if (database != null && database.isOpen())
-            {
-                database.close();
-            }
+        if(m3DMode && m3DTiming)
+        {
+            Log.i(TAG,"mOriginalFmt:"+mOriginalFmt+" mDisplayManager.getFmt:"+mDisplayManager.getFmt());
+            if(mOriginalFmt != mDisplayManager.getFmt())
+                mDisplayManager.setFmt(mOriginalFmt);
+        }
 
-            database = null;
-
-            if (nameSizeDismissHandler != null)
-            {
-                nameSizeDismissHandler.removeCallbacks(nameSizeDismissThread);
-                nameSizeDismissHandler = null;
-                nameSizeDismissThread = null;
-            }
-
-            if (conn != null)
-            {
-                unbindService(conn);
-                stopService(new Intent(Constants.ACTION));
-                conn = null;
-            }
-
-            if(m3DMode && m3DTiming)
-            {
-                Log.i(TAG,"mOriginalFmt:"+mOriginalFmt+" mDisplayManager.getFmt:"+mDisplayManager.getFmt());
-                if(mOriginalFmt != mDisplayManager.getFmt())
-                    mDisplayManager.setFmt(mOriginalFmt);
-            }
-
-            finish();
-        //}
-        super.onStop();
-    }
-
-    protected void onDestroy()
-    {
         isInVideoBroadcast(1);
         if (videoView != null)
         {
-            videoView.setStereoVideoFmt(0);
+            videoView.setStereoVideoFmt(0); //0: Normal frame
             mType = 0;
             mCurrentMode = 0;
             isEnded = true;
@@ -5113,6 +5251,10 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
             conn = null;
         }
         UnregisterReceiverScreen();
+
+        if(SystemProperties.get("persist.suspend.mode").equals("deep_resume")) {
+            unregisterReceiver(mPowerReceiver);
+        }
         super.onDestroy();
     }
 

@@ -15,6 +15,20 @@ static inline void delay (unsigned long loops)
 		"bne 1b":"=r" (loops):"0" (loops));
 }
 
+static void board_set_ddr_size(void)
+{
+	unsigned int tmp = readl(REG_MEM_COMB);
+	unsigned int mem_mode = (tmp & (MEM_MODE_MASK << MEM_MODE_SHIFT));
+	unsigned int mem_comb;
+
+	if (!mem_mode)
+		return;
+
+	mem_comb = (tmp >> MEM_COMB_SHIFT) & MEM_COMB_MASK;
+	tmp = (SZ_256M << mem_comb) + (SZ_128M << mem_comb);
+	preset_ddr_size(tmp);
+}
+
 /*
  * Miscellaneous platform dependent initialisations
  */
@@ -29,6 +43,8 @@ int board_init (void)
 	gd->bd->bi_arch_number = MACH_TYPE_GODBOX;
 	gd->bd->bi_boot_params = CFG_BOOT_PARAMS;
 	gd->flags = 0;
+
+	board_set_ddr_size();
 
 	ddr_base = MEM_BASE_DDR;
 	size = mmu_init(ddr_base, MEM_BASE_DDR, get_ddr_size());

@@ -42,6 +42,10 @@ h9ftCp/2uGMQ26Qj4Yyv4n8lr8/qf+iOuuThA1hXRqgtS0ifGVbJFHGPMqEG3g==*/
 
 typedef  struct file   FILE;
 
+#define VPSS_MEM_FLAG_NORMAL 0x0
+#define VPSS_MEM_FLAG_SECURE 0x1
+#define VPSS_MEM_FLAG_MMU 0x2
+
 
 
 /************************************************************************/
@@ -124,4 +128,20 @@ HI_S32 VPSS_OSAL_GetCurTime(HI_U32 *pu32Hour,HI_U32 *pu32Minute,
                                    HI_U32 *pu32Second);
 
 HI_S32 VPSS_OSAL_GetSysMemSize(HI_U32 *pu32MemSize);
+
+typedef struct hiVPSS_MEM_S
+{
+	HI_U8 u8flag;
+	HI_U32 u32Size;
+	HI_U32 u32StartPhyAddr;
+	HI_U32 u32StartVirAddr;
+} VPSS_MEM_S;
+
+HI_S32 VPSS_OSAL_AllocateMem(HI_U8 u8flag, 
+		HI_U32  u32Size,
+		HI_U8  *pu8ZoneName,
+		HI_U8  *pu8MemName,
+		VPSS_MEM_S *pstMem);
+
+HI_S32 VPSS_OSAL_FreeMem(VPSS_MEM_S *pstMem);
 #endif

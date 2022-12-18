@@ -44,6 +44,16 @@ typedef enum hiREG_FRAMEPOS_E
     BUTT_FRAME
 }REG_FRAMEPOS_E;
 
+typedef enum hiREG_CHANELPOS_E
+{
+    CUR_CHANEL = 0,
+    NEXT1_CHANEL,
+    NEXT2_CHANEL,
+    REF_CHANEL,
+    BUTT_CHANEL
+}REG_CHANELPOS_E;
+
+
 typedef enum hiREG_TUNLPOS_E
 {
     ROW_2_WIRTE_TUNL = 0,

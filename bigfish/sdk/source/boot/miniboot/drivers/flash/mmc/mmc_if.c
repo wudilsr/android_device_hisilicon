@@ -179,8 +179,11 @@ int64 mmcdev_read(uint64 from, char *buf, uint64 size)
 
 	blk_start = from / mmcdev->blocksize;
 	blk_cnt   = size / mmcdev->blocksize;
-	blk_cnt   = mmcdev->read(mmcdev, blk_start, blk_cnt, buf);
-	read_bytes = mmcdev->blocksize * blk_cnt;
+
+	if (blk_cnt) {
+		blk_cnt   = mmcdev->read(mmcdev, blk_start, blk_cnt, buf);
+		read_bytes = mmcdev->blocksize * blk_cnt;
+	}
 
 	last_bytes = size % mmcdev->blocksize;	
 	if (last_bytes) {

@@ -8,8 +8,6 @@ extern "C" {
 #endif
 #endif /* __cplusplus */
 
-#pragma pack(1)
-
 static PQ_PHY_REG_S sg_stPhyReg[] =
 {
     /*Addr              Lsb          Msb      SourceMode   OutputMode  Module     Value             Description*/
@@ -536,7 +534,7 @@ static PQ_PHY_REG_S sg_stPhyReg[] =
     {0xF8cc4158,    28,      31,        0,        0,      0x10,       2},         //dci_gainneg_cbcr8
     /*DCI_NEG_SLP*/
     {0xF8cc415c,    22,      31,        0,        0,      0x10,       8},         //dci_gainneg_slp0
-    {0xF8cc415c,    12,      21,        0,        0,      0x10,       12},        //dci_gainneg_slp1
+    {0xF8cc415c,    12,      21,        0,        0,      0x10,      12},        //dci_gainneg_slp1
     {0xF8cc415c,    2,       11,        0,        0,      0x10,       0},         //dci_gainneg_slp2
     {0xF8cc4160,    22,      31,        0,        0,      0x10,       0},         //dci_gainneg_slp3
     {0xF8cc4160,    12,      21,        0,        0,      0x10,       0},         //dci_gainneg_slp4
@@ -585,19 +583,19 @@ static PQ_PHY_REG_S sg_stPhyReg[] =
     {0xf8cc41a0,    29,      29,        0,        0,      0x20,       1},         //acm_stretch
     {0xf8cc41a0,    28,      28,        0,        0,      0x20,       1},         //acm_cliprange
     {0xf8cc41a0,    27,      27,        0,        0,      0x20,       0},         //acm_cliporwrap
-    {0xf8cc41a0,    0,       7,         0,        0,      0x20,       0},         //acm_cbcrthr
+    {0xf8cc41a0,    0,       8,         0,        0,      0x20,       0},         //acm_cbcrthr
     /*VP0_ACM_GAIN_SD_SOURCE*/
-    {0xf8cc41a4,    20,      29,        1,        0,      0x20,     112},         //acm_gain_luma_sd
-    {0xf8cc41a4,    10,      19,        1,        0,      0x20,     112},         //acm_gain_hue_sd
-    {0xf8cc41a4,    0,       9,         1,        0,      0x20,     112},         //acm_gain_sat_sd
+    {0xf8cc41a4,    20,      29,        1,        0,      0x20,      80},         //acm_gain_luma_sd
+    {0xf8cc41a4,    10,      19,        1,        0,      0x20,      80},         //acm_gain_hue_sd
+    {0xf8cc41a4,    0,       9,         1,        0,      0x20,      80},         //acm_gain_sat_sd
     /*VP0_ACM_GAIN_HD_SOURCE*/
-    {0xf8cc41a4,    20,      29,        2,        0,      0x20,     112},         //acm_gain_luma_hd
-    {0xf8cc41a4,    10,      19,        2,        0,      0x20,     112},         //acm_gain_hue_hd
-    {0xf8cc41a4,    0,       9,         2,        0,      0x20,     112},         //acm_gain_sat_hd
+    {0xf8cc41a4,    20,      29,        2,        0,      0x20,      80},         //acm_gain_luma_hd
+    {0xf8cc41a4,    10,      19,        2,        0,      0x20,      80},         //acm_gain_hue_hd
+    {0xf8cc41a4,    0,       9,         2,        0,      0x20,      80},         //acm_gain_sat_hd
     /*VP0_ACM_GAIN_UHD_SOURCE*/
-    {0xf8cc41a4,    20,      29,        3,        0,      0x20,     112},         //acm_gain_luma_uhd
-    {0xf8cc41a4,    10,      19,        3,        0,      0x20,     112},         //acm_gain_hue_uhd
-    {0xf8cc41a4,    0,       9,         3,        0,      0x20,     112},         //acm_gain_sat_uhd
+    {0xf8cc41a4,    20,      29,        3,        0,      0x20,      80},         //acm_gain_luma_uhd
+    {0xf8cc41a4,    10,      19,        3,        0,      0x20,      80},         //acm_gain_hue_uhd
+    {0xf8cc41a4,    0,       9,         3,        0,      0x20,      80},         //acm_gain_sat_uhd
 
     /************************************SR*************************************/
     /*SD Source*/

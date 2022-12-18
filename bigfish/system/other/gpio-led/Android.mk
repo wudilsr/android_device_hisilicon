@@ -9,7 +9,13 @@ LOCAL_CFLAGS += -D$(CHIPNAME)
 
 LOCAL_SRC_FILES := gpio-led.cpp
 
-LOCAL_SHARED_LIBRARIES := libcutils
+LOCAL_C_INCLUDES := \
+        $(TOP)/device/hisilicon/bigfish/sdk/source/common/include \
+        $(TOP)/device/hisilicon/bigfish/sdk/source/msp/include
+
+
+
+LOCAL_SHARED_LIBRARIES := libcutils libhi_common libhi_msp
 
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 

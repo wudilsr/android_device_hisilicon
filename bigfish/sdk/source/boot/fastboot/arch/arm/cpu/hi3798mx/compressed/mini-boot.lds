@@ -9,14 +9,18 @@ SECTIONS
 	. = ALIGN(4);
 	.text	:
 	{
+		__text_start = .;
 		start.o	(.text)
 		lowlevel_init.o	(.text)
-		ddrphy_training.o (.text)
-		ddrphy_training_func.o (.text)
+		ddr_training_impl.o   (.text)
+		ddr_training_ctl.o    (.text)
+		ddr_training_boot.o   (.text)
+		ddr_training_custom.o (.text)
 		emmc_boot.o	(.text)
 		chip.o	(.text)
 		uart.o (.text)
-		ddr_dataeye_training.o (.text)
+		__init_end = .;
+		ASSERT(((__init_end - __text_start) < 0x7400), "init sections too big!");
 		image_data.o	(.text)
 		*(.text)
 	}

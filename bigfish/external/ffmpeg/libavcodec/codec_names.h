@@ -907,3 +907,6 @@ case CODEC_ID_FFMETADATA:
     return "ffmetadata";
 case AV_CODEC_ID_HEVC:
     return "hevc";
+case CODEC_ID_VP9:
+    { extern AVCodec ff_vp9_decoder;
+    return ff_vp9_decoder.name; }

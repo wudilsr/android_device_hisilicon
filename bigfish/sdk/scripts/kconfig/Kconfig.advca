@@ -19,6 +19,12 @@ config  ADVCA_CTI
 	bool "Cti"
 config  ADVCA_VERIMATRIX
 	bool "Verimatrix"
+config  ADVCA_IRDETO
+	bool "Irdeto"
+config  ADVCA_PANACCESS
+	bool "Panaccess"
+config  ADVCA_DCAS
+	bool "Dcas"
 config  ADVCA_OTHER
 	bool "Other"
 endchoice
@@ -32,6 +38,9 @@ config  HI_ADVCA_TYPE
 	default SUMA            if ADVCA_SUMA
 	default CTI             if ADVCA_CTI
 	default VERIMATRIX      if ADVCA_VERIMATRIX
+	default IRDETO		if ADVCA_IRDETO
+	default PANACCESS	if ADVCA_PANACCESS
+	default DCAS		if ADVCA_DCAS
 	default OTHER           if ADVCA_OTHER
 #--------------------------------
 

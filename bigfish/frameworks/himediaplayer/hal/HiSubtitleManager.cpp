@@ -309,7 +309,7 @@ int subManager::subOndraw(HI_U32 u32UserData, const HI_UNF_SO_SUBTITLE_INFO_S *p
 
     pSubManager = (subManager*)u32UserData;
 
-    if ( pSubManager == NULL )
+    if ( pSubManager == NULL || pstInfo == NULL )
     {
         LOGE("[subOndraw] pSubManager is NULL");
         return HI_FAILURE;
@@ -470,7 +470,7 @@ int subManager::subOnclear(HI_U32 u32UserData, HI_VOID *pArg)
     subManager* pSubManager = (subManager*)u32UserData;
     HI_UNF_SO_CLEAR_PARAM_S *pstClearParam = NULL;
 
-    if (pSubManager == NULL)
+    if (pSubManager == NULL || pArg == NULL)
     {
         LOGE("pSubManager is NULL");
         return HI_FAILURE;

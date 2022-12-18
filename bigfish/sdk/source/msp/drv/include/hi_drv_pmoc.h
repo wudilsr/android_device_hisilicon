@@ -7,8 +7,8 @@
 /* add register macro */
 #if defined (CHIP_TYPE_hi3716m) || defined (CHIP_TYPE_hi3716c) || defined (CHIP_TYPE_hi3716h)
 #define C51_BASE             0x600b0000
-#define C51_SIZE             0x10000
-#define C51_DATA             0xe000
+#define C51_SIZE             0x8000
+#define C51_DATA             0x7000
 #define MCU_CODE_MAXSIZE     0x5000
 #elif defined (CHIP_TYPE_hi3712)
 #define C51_BASE             0x0
@@ -25,11 +25,13 @@
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798cv200_a) \
     || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)	\
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)
 #define C51_BASE             0xf8400000
-#define C51_SIZE             0x10000
-#define C51_DATA             0xe000
-#define MCU_CODE_MAXSIZE     0x5000
+#define C51_SIZE             0x8000  //32K
+#define C51_DATA             0x7000  //28K
+#define MCU_CODE_MAXSIZE     0x5000  //20K
 #else
 #error YOU MUST DEFINE  CHIP_TYPE!
 #endif
@@ -89,8 +91,7 @@
 #define HI_VDD_MPU_OPP4_HPM 0x157
 #define HI_VDD_MPU_OPP5_HPM 0x195
 #elif  defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3796cv100)   \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3796cv100)
 #define HI_VDD_MPU_OPP1_UV 1000
 #define HI_VDD_MPU_OPP2_UV 1000
 #define HI_VDD_MPU_OPP3_UV 1100
@@ -109,12 +110,57 @@
 #define HI_VDD_MPU_OPP4_HPM 0x160
 #define HI_VDD_MPU_OPP5_HPM 0x190
 #define HI_VDD_MPU_OPP6_HPM 0x250
+#elif defined(CHIP_TYPE_hi3716mv410)    \
+    || defined(CHIP_TYPE_hi3716mv420)
+#define HI_VDD_MPU_OPP1_UV 1380
+#define HI_VDD_MPU_OPP2_UV 1380
+#define HI_VDD_MPU_OPP3_UV 1380
+#define HI_VDD_MPU_OPP4_UV 1380
+#define HI_VDD_MPU_OPP5_UV 1380
+#define HI_VDD_MPU_OPP11_UV 1380
+#define HI_VDD_MPU_OPP12_UV 1380
+#define HI_VDD_MPU_OPP1_VMIN 1300
+#define HI_VDD_MPU_OPP2_VMIN 1300
+#define HI_VDD_MPU_OPP3_VMIN 1300
+#define HI_VDD_MPU_OPP4_VMIN 1300
+#define HI_VDD_MPU_OPP5_VMIN 1300
+#define HI_VDD_MPU_OPP11_VMIN 1300
+#define HI_VDD_MPU_OPP12_VMIN 1300
+#define HI_VDD_MPU_OPP1_HPM 0x100
+#define HI_VDD_MPU_OPP2_HPM 0x100
+#define HI_VDD_MPU_OPP3_HPM 0xc8
+#define HI_VDD_MPU_OPP4_HPM 0xf6
+#define HI_VDD_MPU_OPP5_HPM 0x120
+#define HI_VDD_MPU_OPP11_HPM 0x100
+#define HI_VDD_MPU_OPP12_HPM 0x100
+#elif  defined(CHIP_TYPE_hi3798cv200_a)
+#define HI_VDD_MPU_OPP1_UV 800
+#define HI_VDD_MPU_OPP2_UV 800
+#define HI_VDD_MPU_OPP3_UV 830
+#define HI_VDD_MPU_OPP4_UV 890
+#define HI_VDD_MPU_OPP5_UV 970
+#define HI_VDD_MPU_OPP6_UV 1110
+#define HI_VDD_MPU_OPP7_UV 1150
+#define HI_VDD_MPU_OPP1_VMIN 800
+#define HI_VDD_MPU_OPP2_VMIN 800
+#define HI_VDD_MPU_OPP3_VMIN 800
+#define HI_VDD_MPU_OPP4_VMIN 800
+#define HI_VDD_MPU_OPP5_VMIN 860
+#define HI_VDD_MPU_OPP6_VMIN 970
+#define HI_VDD_MPU_OPP7_VMIN 1100
+#define HI_VDD_MPU_OPP1_HPM 0x100
+#define HI_VDD_MPU_OPP2_HPM 0x100
+#define HI_VDD_MPU_OPP3_HPM 0xc8
+#define HI_VDD_MPU_OPP4_HPM 0xf6
+#define HI_VDD_MPU_OPP5_HPM 0x120
+#define HI_VDD_MPU_OPP6_HPM 0x160
+#define HI_VDD_MPU_OPP7_HPM 0x172
 #elif  defined(CHIP_TYPE_hi3798mv100)    \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)	
 #define HI_VDD_MPU_OPP1_UV 980
-#define HI_VDD_MPU_OPP2_UV 1120
-#define HI_VDD_MPU_OPP3_UV 1250
-#define HI_VDD_MPU_OPP4_UV 1250
+#define HI_VDD_MPU_OPP2_UV 1150
+#define HI_VDD_MPU_OPP3_UV 1300
+#define HI_VDD_MPU_OPP4_UV 1300
 #define HI_VDD_MPU_OPP5_UV 1420
 #define HI_VDD_MPU_OPP6_UV 1495
 #define HI_VDD_MPU_OPP1_VMIN 980
@@ -141,7 +187,7 @@ typedef struct hiCPU_VF_S
     unsigned int vsetting;      /* the setting voltage of DVFS */
 } CPU_VF_S;
 
-#define MAX_FREQ_NUM 6
+#define MAX_FREQ_NUM 7
 extern CPU_VF_S cpu_freq_hpm_table[MAX_FREQ_NUM];
 
 #define HI_FATAL_PM(fmt...) HI_FATAL_PRINT(HI_ID_PM, fmt)

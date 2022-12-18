@@ -20,11 +20,11 @@ JPGE_SUPPORT := y
 SATA_SUPPORT := y
 USB3_SUPPORT := n
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv400 hi3718mv100 hi3719mv100 hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv400 hi3718mv100 hi3719mv100 hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100 hi3716mv410),)
 SATA_SUPPORT := n
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3718mv100 hi3719mv100),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3718mv100 hi3719mv100 hi3716mv410),)
 JPGE_SUPPORT := n
 endif
 
@@ -56,16 +56,6 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
     endif
 
 	$(AT)echo "insmod hi_i2c.ko"                >> load
-
-    ifeq ($(CFG_HI_GPU_MALI400_SUPPORT),y)
-		$(AT)echo "insmod mali.ko"              >> load
-    else ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
-		$(AT)echo "insmod mali.ko"              >> load
-    else ifeq ($(CFG_HI_GPU_MALI700_SUPPORT),y)
-		$(AT)echo "insmod kds.ko"               >> load
-		$(AT)echo "insmod mali_kbase.ko"        >> load
-    endif
-
 	$(AT)echo "insmod hi_tde.ko"                >> load
 	$(AT)echo "insmod hi_otp.ko"                >> load
 	$(AT)echo "insmod hi_demux.ko"              >> load
@@ -97,7 +87,6 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
 		$(AT)echo "insmod hi_pvr.ko"            >> load
     endif
 
-	$(AT)echo "insmod hi_avplay.ko"             >> load
 	$(AT)echo "insmod hi_mce.ko"                >> load
 
     ifeq ($(CFG_HI_FRONTEND_SUPPORT),y)
@@ -109,14 +98,23 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
     ifndef CFG_HI_ADVCA_FUNCTION
 		$(AT)echo "# About hi_fb:"                  >> load
 		$(AT)echo "#  For 1920*1080, triple buffer, ARGB8888 format, use:" >> load
-		$(AT)echo "#  insmod hi_fb.ko video=\"hi_fb:vram0_size:16200, vram4_size:2430\""    >> load
+		$(AT)echo "#  insmod hi_fb.ko video=\"hi_fb:vram0_size:16200,vram4_size:2430\""    >> load
 		$(AT)echo "#  For 1280*720, use:"    >> load
-		$(AT)echo "#  insmod hi_fb.ko video=\"hi_fb:vram0_size:7200, vram2_size:2430\""     >> load
+		$(AT)echo "#  insmod hi_fb.ko video=\"hi_fb:vram0_size:7200,vram2_size:2430\""     >> load
 		$(AT)echo "#  Insmod hi_fb.ko with no args will use defaule value,The defaule value is set by cfg.mak."  >> load
 		$(AT)echo "#  vram0 is memory size for HD and vram4 is for SD0. The size is calculated as below:" >> load
 		$(AT)echo "#  vram0_size = (1920*1080*4*2/1024)KB; vram4_size = (720*576*2*2/1024)KB" >> load
     endif
 	$(AT)echo "insmod hi_fb.ko"                 >> load
+
+    ifeq ($(CFG_HI_GPU_MALI400_SUPPORT),y)
+		$(AT)echo "insmod mali.ko"              >> load
+    else ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
+		$(AT)echo "insmod mali.ko"              >> load
+    else ifeq ($(CFG_HI_GPU_MALI700_SUPPORT),y)
+		$(AT)echo "insmod kds.ko"               >> load
+		$(AT)echo "insmod mali_kbase.ko"        >> load
+    endif
 
     ifneq ($(CFG_HI_IR_TYPE_LIRC),y)
 		$(AT)echo "insmod hi_ir.ko"             >> load
@@ -227,7 +225,12 @@ endif
 
 ifeq ($(CFG_HI_DVFS_CPU_SUPPORT),y)
 	$(AT)echo "echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"    >> load
+	$(AT)echo "echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate"    >> load
+ ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
+	$(AT)echo "echo 1000000 >/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"  >> load
+ else
 	$(AT)echo "echo 1200000 >/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"  >> load
+ endif
 endif
 
 	$(AT)(chmod +x load; mv ./load $(MODULE_DIR)/load)
@@ -329,6 +332,15 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
 		$(AT)echo "rmmod hi_ir"                 >> unload
     endif
 
+    ifeq ($(CFG_HI_GPU_MALI400_SUPPORT),y)
+		$(AT)echo "rmmod mali"                  >> unload
+    else ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
+		$(AT)echo "rmmod mali"                  >> unload
+    else ifeq ($(CFG_HI_GPU_MALI700_SUPPORT),y)
+		$(AT)echo "rmmod mali_kbase"            >> unload
+		$(AT)echo "rmmod kds"                   >> unload
+    endif
+
 	$(AT)echo "rmmod hi_fb"                     >> unload
 	$(AT)echo "rmmod hi_pwm"                    >> unload
 
@@ -337,7 +349,6 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
     endif
 
 	$(AT)echo "rmmod hi_mce"                    >> unload
-	$(AT)echo "rmmod hi_avplay"                 >> unload
 
     ifeq ($(CFG_HI_PVR_SUPPORT),y)
 		$(AT)echo "rmmod hi_pvr"                >> unload
@@ -371,16 +382,6 @@ ifneq ($(CFG_HI_MSP_BUILDIN),y)
 	$(AT)echo "rmmod hi_demux"                  >> unload
 	$(AT)echo "rmmod hi_otp"                    >> unload
 	$(AT)echo "rmmod hi_tde"                    >> unload
-
-    ifeq ($(CFG_HI_GPU_MALI400_SUPPORT),y)
-		$(AT)echo "rmmod mali"                  >> unload
-    else ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
-		$(AT)echo "rmmod mali"                  >> unload
-    else ifeq ($(CFG_HI_GPU_MALI700_SUPPORT),y)
-		$(AT)echo "rmmod mali_kbase"            >> unload
-		$(AT)echo "rmmod kds"                   >> unload
-    endif
-
 	$(AT)echo "rmmod hi_i2c"                    >> unload
 
     ifeq ($(CFG_HI_GPIOI2C_SUPPORT),y)

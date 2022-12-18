@@ -37,6 +37,7 @@ import android.net.EthernetDataTracker;
 import android.net.pppoe.PppoeManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
+import android.net.NetworkUtils;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
@@ -65,6 +66,7 @@ import android.os.IBinder;
 import android.os.StrictMode;
 import android.os.INetworkManagementService;
 import android.os.ServiceManager;
+import android.os.SystemProperties;
 import com.android.internal.app.IUsageStats;
 import java.net.URL;
 import java.net.URLConnection;
@@ -118,11 +120,13 @@ public class HiRMService extends Service {
     private static final int WIFI_ENABLED = 1;
 
 	private static final int EVENT_PARAM_CHANGED = 0;
+    static final int PHY_LINK_DOWN = 0;
+    static final int PHY_LINK_UP = 1;
 
     private static final int SMARTFLAG_AWAKE = 0;
     private static final int SMARTFLAG_SUSPEND = 1;
     private static final int SMARTSUSPEND_DELAY = 2 * 1000;
-    private static final int PRIORITY_MAX = 1000;
+    private static final int PRIORITY_MIN = -1000;
 
     private SystemUpgrade mSystemUpgrade;
     private LogoUpgrade mLogoUpgrade;
@@ -147,47 +151,60 @@ public class HiRMService extends Service {
             home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             home.addCategory(Intent.CATEGORY_HOME);
             String message;
+            String suspend_mode = SystemProperties.get("persist.suspend.mode", "deep_restart");
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 if(DEBUG) {
                     Log.w(TAG, "ACTION_SCREEN_OFF");
                 }
-                if(smartSuspendFlag == SMARTFLAG_SUSPEND)
+                if("smart_suspend".equals(suspend_mode)) {
                     return;
-                startActivity(home);
-                acquireWakeLock();
-                mhisys.adjustDevState("/proc/msp/hdmi0","oe 0");
-                mhisys.adjustDevState("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor","userspace");
-                removeUpgrade();
-                killApp();
-//                message = "system busybox killall cp";
-//                writeSocket(message);
-                if(DEBUG) {
-                    Log.d(TAG, "after forceStopPackage");
                 }
-                if(SystemProperties.get("ro.thirdparty.dhcp").equals("true")) {
-                    releaseLock();
-                } else {
-                    prepareSuspend();
-
-                    if (!mWifiMode.getEnableFlag() && !mEthMode.getEnableFlag()
+                acquireWakeLock(suspend_mode);
+                if("deep_launcher".equals(suspend_mode)){
+                    startActivity(home);
+                    mhisys.adjustDevState("/proc/msp/hdmi0","oe 0");
+                    mhisys.adjustDevState("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor","userspace");
+                    killApp();
+                    //message = "system busybox killall cp";
+                    //writeSocket(message);
+                    if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
+                        prepareSuspend();
+                    }
+                } else if ("deep_resume".equals(suspend_mode) | "deep_restart".equals(suspend_mode)) {
+                    mhisys.adjustDevState("/proc/msp/hdmi0","oe 0");
+                    mhisys.adjustDevState("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor","userspace");
+                    if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
+                        if(DEBUG) {
+                            Log.d(TAG, "prepareSuspend-----start");
+                        }
+                        prepareSuspend();
+                        if(DEBUG) {
+                            Log.d(TAG, "prepareSuspend-----end");
+                        }
+                    }
+                }
+                removeUpgrade();
+                if (!mWifiMode.getEnableFlag() && !mEthMode.getEnableFlag()
                             && !mBluetoothMode.getEnableFlag() && !mWifiapMode.getEnableFlag()) {
                             releaseLock();
                     }
-                    abortBroadcast();
-                }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-		if(smartSuspendFlag == SMARTFLAG_AWAKE)
-                   return ;
-                refreshTimeThread t = new refreshTimeThread();
-                t.start();
+                if("smart_suspend".equals(suspend_mode)) {
+                    return;
+                }else if ("deep_resume".equals(suspend_mode)) {
+                    if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
+                        prepareResume();
+                    }
+                }else if ("deep_launcher".equals(suspend_mode)) {
+                    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    if (launchName != null) {
+                        am.forceStopPackage(launchName);
+                    }
+                    if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
+                        prepareResume();
+                    }
+                }
                 downloadUpgrade();
-                ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                if (launchName != null) {
-                    am.forceStopPackage(launchName);
-                }
-                if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
-                    prepareResume();
-                }
                 if(CHIP_98C.equals(HiSdkinvoke.getChipVersion())){
                     mhisys.doInitSh(0);
                 } else {
@@ -195,7 +212,6 @@ public class HiRMService extends Service {
                 }
                 if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
                     registerReceiver(mNetReceiver, intentFilter);
-                    abortBroadcast();
                 }
             } else if (intent.getAction().equals(SMART_SUSPEND_ENTER)) {
                 //startActivity(home);
@@ -243,6 +259,9 @@ public class HiRMService extends Service {
     private final BroadcastReceiver mNetReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if(DEBUG) {
+                Log.d(TAG, "mNetReceiver onReceive --" + intent.getAction());
+            }
             if (intent.getAction()
                     .equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                 if (mWifiMode.getEnableFlag()
@@ -394,11 +413,9 @@ public class HiRMService extends Service {
 
     public void onCreate() {
         mhisys= new HiSysManager();
-        refreshTimeThread t = new refreshTimeThread();
-        t.start();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mDownloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.SUSPEND_WAKE_LOCK, this
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this
                 .getClass().getCanonicalName());
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mWifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -430,13 +447,18 @@ public class HiRMService extends Service {
             mThread.start();
             mHandler = new MyHandler(mThread.getLooper());
         }
+        if(NetworkUtils.getNetlinkStatus("eth0") == PHY_LINK_DOWN) {
+            phy_link = false;
+        } else {
+            phy_link = true;
+        }
 
         IntentFilter powerIntentFilter = new IntentFilter();
         powerIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
         powerIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         powerIntentFilter.addAction(SMART_SUSPEND_ENTER);
         powerIntentFilter.addAction(SMART_SUSPEND_QUIT);
-        powerIntentFilter.setPriority(PRIORITY_MAX);
+        powerIntentFilter.setPriority(PRIORITY_MIN);
         registerReceiver(mPowerReceiver, powerIntentFilter);
 
         intentFilter = new IntentFilter();
@@ -495,37 +517,6 @@ public class HiRMService extends Service {
 
         super.onCreate();
     }
-    class refreshTimeThread extends Thread{
-        public void run(){
-               getNetTime();
-           }
-        }
-    public void getNetTime(){
-        int count = 1;
-        while(count < 13)
-        {
-           try
-            {
-              URL url = new URL("http://www.baidu.com/");
-              URLConnection uc = url.openConnection();
-              uc.connect();
-              long time = uc.getDate();
-              Date date = new Date(time);
-              SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-              dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-              String settime = dateFormat.format(date);
-              mhisys.getNetTime(settime);
-              break;
-            }catch (Exception e) {
-                e.printStackTrace();
-                count++;
-                try{
-                Thread.sleep(10000);
-                }catch (Exception ee) {}
-            }
-         }
-    }
-
     public String getLocalMacAddress() {
         IBinder b = ServiceManager
                 .getService(Context.NETWORKMANAGEMENT_SERVICE);
@@ -692,6 +683,9 @@ public class HiRMService extends Service {
                 || mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
             mWifiMode.setEnableFlag(true);
             mWifiMode.setLockFlag(true);
+            if(DEBUG) {
+                Log.d(TAG, "setWifiEnabled-----false");
+            }
             mWifiManager.setWifiEnabled(false);
         }
 
@@ -706,6 +700,9 @@ public class HiRMService extends Service {
                 && phy_link) {
             mEthMode.setEnableFlag(true);
             mEthMode.setLockFlag(true);
+            if(DEBUG) {
+                Log.d(TAG, "setEthernetEnabled-----false");
+            }
             mEthManager.setEthernetEnabled(false);
         }
 
@@ -713,6 +710,9 @@ public class HiRMService extends Service {
                 && mLocalAdapter.getState() == BluetoothAdapter.STATE_ON) {
             mBluetoothMode.setEnableFlag(true);
             mBluetoothMode.setLockFlag(true);
+            if(DEBUG) {
+                Log.d(TAG, "mLocalAdapter-----disable");
+            }
             mLocalAdapter.disable();
         }
     }
@@ -735,7 +735,15 @@ public class HiRMService extends Service {
             mLocalAdapter.enable();
         }
     }
-    private void acquireWakeLock() {
+    private void acquireWakeLock(String suspend_mode) {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if ("deep_launcher".equals(suspend_mode) | "deep_restart".equals(suspend_mode)) {
+            wakeLock = pm.newWakeLock(PowerManager.SUSPEND_WAKE_LOCK, this
+                .getClass().getCanonicalName());
+        } else {
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this
+                .getClass().getCanonicalName());
+        }
         synchronized (wakeLock) {
             try {
                 wakeLock.acquire();
@@ -786,7 +794,9 @@ public class HiRMService extends Service {
                         && !PACKAGE_SUYINGAIDL.equals(actRSI.processName)
                         && !PACKAGE_SUYINGAPK.equals(actRSI.processName)
                         && !isLiveWallPaper(actRSI.processName)) {
-                    Log.d(TAG, "apk:  " + actRSI.processName);
+                    if(DEBUG) {
+                        Log.d(TAG, "apk:  " + actRSI.processName);
+                    }
                     am.forceStopPackage(actRSI.processName);
                 } else if (actRSI.flags == ActivityManager.RunningAppProcessInfo.FLAG_HAS_ACTIVITIES) {
                     int flag = 0;
@@ -809,7 +819,9 @@ public class HiRMService extends Service {
                         && actRSI.flags != ActivityManager.RunningAppProcessInfo.FLAG_HAS_ACTIVITIES
                         && !PACKAGE_SKYPLAY.equals(actRSI.processName)
                         && !isLiveWallPaper(actRSI.processName)) {
-                    Log.d(TAG, "apk:  " + actRSI.processName);
+                    if(DEBUG) {
+                        Log.d(TAG, "apk:  " + actRSI.processName);
+                    }
                     am.forceStopPackage(actRSI.processName);
                 } else if (actRSI.flags == ActivityManager.RunningAppProcessInfo.FLAG_HAS_ACTIVITIES) {
                     int flag = 0;
@@ -822,7 +834,9 @@ public class HiRMService extends Service {
                         }
                     }
                     if (flag == 0 && !isLiveWallPaper(actRSI.processName)) {
-                        Log.d(TAG, "launcher:  " + actRSI.processName);
+                        if(DEBUG) {
+                            Log.d(TAG, "launcher:  " + actRSI.processName);
+                        }
                         am.forceStopPackage(actRSI.processName);
                     }
                 }
@@ -835,6 +849,9 @@ public class HiRMService extends Service {
                 && !mWifiapMode.getLockFlag() && !mBluetoothMode.getLockFlag()) {
             if(SystemProperties.get("ro.thirdparty.dhcp").equals("false")) {
                 unregisterReceiver(mNetReceiver);
+            }
+            if(DEBUG) {
+                Log.d(TAG, "wakeLock-----release");
             }
             wakeLock.release();
         }

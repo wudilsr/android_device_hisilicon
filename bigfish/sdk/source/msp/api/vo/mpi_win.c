@@ -1557,7 +1557,7 @@ HI_S32 HI_MPI_WIN_CalMediaRect(HI_CHIP_TYPE_E enChipType,
         return s32Ret;
     }
 
-    if(u32OriW <= u32WidthLevel && u32OriH <= u32HeightLevel)
+    if(u32OriW < u32WidthLevel && u32OriH < u32HeightLevel)
     {
         u32DstW = u32OriW;
         u32DstH = u32OriH;

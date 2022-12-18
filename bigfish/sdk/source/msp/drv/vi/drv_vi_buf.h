@@ -5,6 +5,7 @@
 #include "hi_drv_mmz.h"
 #include "hi_mpi_vi.h"
 #include "hi_unf_vi.h"
+#include "hi_drv_sys.h"
 
 /* buffer descriptor */
 typedef struct hiVI_FB_S
@@ -13,6 +14,7 @@ typedef struct hiVI_FB_S
     HI_U32  u32Index;
     HI_BOOL bUsed;
     HI_U32  u32PhysAddr;
+    HI_U32  u32Pts;
 } VI_FB_S;
 
 typedef struct hiVI_FB_ROOT_S

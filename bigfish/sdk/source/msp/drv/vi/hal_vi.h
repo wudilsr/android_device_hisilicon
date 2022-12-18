@@ -13,6 +13,8 @@
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 #include "drv_vi_reg_hi3716cv200.h"
 #endif
@@ -187,6 +189,8 @@ HI_U32 VI_DRV_GetVicapInt(HI_VOID);
     || defined(CHIP_TYPE_hi3798cv100)   \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3798cv200_a)
 HI_VOID VI_DRV_SetWorkMode(HI_BOOL bLowDelay, HI_BOOL bInnerClk);
 HI_VOID VI_DRV_SetVicapIntMask(HI_U32 int_pt0_en, HI_U32 int_ch0_en);

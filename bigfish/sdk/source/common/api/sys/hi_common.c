@@ -278,7 +278,8 @@ HI_S32 HI_SYS_GetVersion(HI_SYS_VERSION_S *pstVersion)
     /* for detect soft and chip dismatch */
 #if defined(CHIP_TYPE_hi3716cv200)
     pstVersion->enChipTypeSoft = HI_CHIP_TYPE_HI3716C;
-#elif defined(CHIP_TYPE_hi3716mv400)
+#elif defined(CHIP_TYPE_hi3716mv400) || defined(CHIP_TYPE_hi3716mv410) \
+   || defined(CHIP_TYPE_hi3716mv420)
     pstVersion->enChipTypeSoft = HI_CHIP_TYPE_HI3716M;
 #elif defined(CHIP_TYPE_hi3718cv100)
     pstVersion->enChipTypeSoft = HI_CHIP_TYPE_HI3718C;
@@ -305,6 +306,27 @@ HI_S32 HI_SYS_GetVersion(HI_SYS_VERSION_S *pstVersion)
     HI_SYS_UNLOCK();
 
     return HI_SUCCESS;
+}
+
+HI_S32 HI_SYS_GetChipPackageType(HI_CHIP_PACKAGE_TYPE_E *penPackageType)
+{
+    HI_S32 ret = HI_FAILURE;
+
+    if (NULL == penPackageType)
+    {
+        return HI_FAILURE;
+    }
+
+    HI_SYS_LOCK();
+
+    if (s_s32SysFd >= 0)
+    {
+        ret = ioctl(s_s32SysFd, SYS_GET_CHIPPACKAGETYPE, (HI_U32*)penPackageType);
+    }
+
+    HI_SYS_UNLOCK();
+
+    return ret;
 }
 
 static HI_S32 GetChipCapSupportHelper(HI_CHIP_CAP_E enChipCap, HI_U32 *pu32Support)
@@ -433,30 +455,30 @@ HI_S32 HI_SYS_CRC32(HI_U8 *pu8Src, HI_U32 u32SrcLen, HI_U32 *pu32Dst)
     unsigned long   CrcTable[256];          /*Calculate CRC32*/
     unsigned long   crc = 0xffffffff;
 
-    if(First) 
+    if(First)
     {
         int    i, j;
         unsigned long crc_accum;
-        
-        for (i = 0;  i < 256;  i++) 
+
+        for (i = 0;  i < 256;  i++)
         {
             crc_accum =  ( i << 24 );
-            
-            for (j = 0; j < 8; j++) 
+
+            for (j = 0; j < 8; j++)
             {
                 if( crc_accum & 0x80000000L )
                     crc_accum = ( crc_accum << 1 ) ^ poly_nomial;
                 else
                     crc_accum = ( crc_accum << 1 );
             }
-            
+
             CrcTable[i] = crc_accum;
         }
-    
+
         First = 0;
     }
-    
-    while (u32SrcLen--) 
+
+    while (u32SrcLen--)
     {
         crc = (crc << 8) ^ CrcTable[((crc >> 24) ^ *pu8Src++) & 0xff];
     }

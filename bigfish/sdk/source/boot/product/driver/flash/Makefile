@@ -15,7 +15,13 @@ BOOT_DIR  := $(SDK_DIR)/source/boot/miniboot
 else
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
 endif
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
+else
+PRODUCT_DIR := $(BOOT_DIR)/../product
+endif
+
 FLASH_DIR := $(PRODUCT_DIR)/driver/flash
 
 ifeq ($(CFLAGS),)

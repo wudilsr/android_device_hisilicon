@@ -85,8 +85,8 @@ typedef struct hiUPGRD_UpgrdPartInfo_S
     HI_U32   u32Download_ver;           /**< Version to upgrade*/
     HI_U32   u32Download_FlashType;     /**< Flash type*/
     HI_U32   u32Download_FlashIndex;    /**< Flash chip select*/
-    HI_U32   u32Download_addr;          /**< Address to upgrade*/
-    HI_U32   u32Partition_endaddr;      /**< End address of upgrade partition*/
+    HI_U64   u64Download_addr;          /**< Address to upgrade*/
+    HI_U64   u64Partition_endaddr;      /**< End address of upgrade partition*/
     HI_U32   u32Download_size;          /**< Size to upgrade*/
     HI_U32   u32Download_CRC32;         /**< CRC to upgrade*/
     HI_U32   u32Datagram_number;        /**< Number datagrams*/
@@ -125,7 +125,7 @@ typedef struct hiHISI_OTA_INFO_S
     HI_U16                 u16FactoryId;               /**<  Vendor ID */
     HI_U32                 u32Software_ver;            /**< Software version- High level */
     HI_U32                 u32HardwareVer;             /**<  Hardware version */
-    HI_U32                 u32Download_data_totalsize; /**< Size of the entire upgrade data package*/
+    HI_U64                 u64Download_data_totalsize; /**< Size of the entire upgrade data package*/
     UPGRD_UpgrdPartInfo_S *pPartInfo;                  /**< Partition information pointer*/
     HI_CHAR                strUpgrdReason[UPGRD_DESCRIPTION_LENGTH];/**<  Upgrade description information*/
     HI_U32                 u32appver;                  /**< Application version  */

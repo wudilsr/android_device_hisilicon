@@ -31,7 +31,11 @@
 #include "mali4xx_pmu.h"
 #include "mali4xx_core_scaling.h"
 
+#if defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
+#define MALI_BASE_ADDRESS 0xf9200000
+#else
 #define MALI_BASE_ADDRESS 0xf8c00000
+#endif
 
 #define INTERRUPT_SIGNAL 94 + 32
 
@@ -109,7 +113,11 @@ static struct mali_gpu_device_data mali_gpu_data =
     .utilization_callback = mali_gpu_utilization_callback,
 	.pmu_switch_delay       = 0x1ff, /* do not have to be this high on FPGA, but it is good for testing to have a delay */
 	.max_job_runtime        = 60000, /* 60 seconds */
+#if defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
+    .pmu_domain_config = {0x1, 0x4, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0},
+#else
     .pmu_domain_config = {0x1, 0x4, 0x8, 0x10, 0x20, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0},
+#endif
  };
 
 int mali_platform_device_register(void)
@@ -120,7 +128,7 @@ int mali_platform_device_register(void)
     int num_pp_cores = 4;
 #elif defined (CHIP_TYPE_hi3719mv100) || defined (CHIP_TYPE_hi3718mv100)
     int num_pp_cores = 2;
-#elif defined (CHIP_TYPE_hi3716mv400)
+#elif defined (CHIP_TYPE_hi3716mv400) || defined (CHIP_TYPE_hi3716mv420) || defined (CHIP_TYPE_hi3716mv410)
     int num_pp_cores = 1;
 #else
     int num_pp_cores = 0;

@@ -1,37 +1,57 @@
 /******************************************************************************
-
-  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
-
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
 ******************************************************************************
-  File Name             :   tde_buffer.h
-  Version               :   Initial Draft
-  Author                :   Hisilicon multimedia software group
-  Created               :   2008/03/05
-  Last Modified         :
-  Description           :
-  Function List         :
-  History               :
-  1.Date                :   2008/03/24
-    Author              :   w54130
-Modification            :   Created file
+File Name           : tde_buffer.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/08/06
+Description         : 
+Function List       : 
+History             :
+Date                       Author                   Modification
+2014/08/06                 y00181162                Created file        
 ******************************************************************************/
-#ifndef  __HI_TDE_BUFFER_H__
-#define  __HI_TDE_BUFFER_H__
+
+#ifndef __TDE_BUFFER_H__
+#define __TDE_BUFFER_H__
+
+
+/*********************************add include here******************************/
+
 
 #include "tde_define.h"
 
+/*****************************************************************************/
+
 #ifdef __cplusplus
- #if __cplusplus
-extern "C" {
- #endif
-#endif /* End of #ifdef __cplusplus */
+#if __cplusplus
+   extern "C"
+{
+#endif
+#endif /* __cplusplus */
+
+
+
+/***************************** Macro Definition ******************************/
 
 #define TDE_SCREEN_HEIGHT 720
 #define TDE_SCREEM_WIDTH 576
 
+/*************************** Structure Definition ****************************/
+
+
+/********************** Global Variable declaration **************************/
 
 STATIC HI_U32 s_u32TDEPhyBuff[TDE_BUFFER_USAGE_BUTT] = {0, 0, 0};
 STATIC HI_U32 s_u32TDEBuffRef = 0;
+
+/******************************* API declaration *****************************/
 
 static HI_U32  TDE_AllocPhysicBuff(TDE_BUFFER_USAGE_E enBuffUsage)
 {
@@ -44,7 +64,6 @@ static HI_U32  TDE_AllocPhysicBuff(TDE_BUFFER_USAGE_E enBuffUsage)
 
     if (0 == s_u32TDEPhyBuff[TDE_BUFFER_USAGE_BITMAP])
     {
-        //u32PhyAddr = TDE_MEM_NEW(TDE_MEMPOOL_SIZE, 4, "TDE_TEMP_BUFFER", "ddr") + 0x100000;
         TDE_MEM_NEW(u32PhyAddr,TDE_SCREEN_HEIGHT * TDE_SCREEM_WIDTH * 4, 4, "TDE_TEMP_BUFFER", "ddr");
         if (u32PhyAddr == 0)
         {
@@ -79,10 +98,14 @@ static HI_VOID TDE_FreePhysicBuff(HI_VOID)
     return;
 }
 
-#ifdef __cplusplus
- #if __cplusplus
-}
- #endif
-#endif /* End of #ifdef __cplusplus */
 
-#endif /* __HI_HANDLE_MGR_H__ */
+
+#ifdef __cplusplus
+
+#if __cplusplus
+
+}
+#endif
+#endif /* __cplusplus */
+
+#endif /* __TDE_BUFFER_H__ */

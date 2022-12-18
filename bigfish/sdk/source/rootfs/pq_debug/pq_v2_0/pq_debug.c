@@ -21,11 +21,8 @@
 
 #include "pq_comm_def.h"
 #include "drv_pq_define.h"
+#include "hi_mpi_mem.h"
 #include <arpa/inet.h>
-
-
-#pragma pack(1)
-
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -408,10 +405,10 @@ static HI_VOID* DBG_NetProcess(HI_VOID* args)
 
     client_sockfd = *(HI_S32*)args;
 
-    pPara = (HI_U8*)malloc(CMDBUF_SIZE);
+    pPara = (HI_U8*)HI_MALLOC(HI_ID_PQ, CMDBUF_SIZE);
     if (NULL == pPara)
     {
-        HI_ERR_PQ("malloc failed\n");
+        HI_ERR_PQ("MALLOC failed\n");
         return NULL;
     }
     memset(pPara, 0, CMDBUF_SIZE);
@@ -453,7 +450,7 @@ static HI_VOID* DBG_NetProcess(HI_VOID* args)
         break;
     }
 
-    free(pPara);
+    HI_FREE(HI_ID_PQ, pPara);
     pPara = HI_NULL;
     if (client_sockfd > 0)
     {

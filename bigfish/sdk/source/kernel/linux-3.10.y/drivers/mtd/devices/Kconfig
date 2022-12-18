@@ -288,5 +288,6 @@ config MTD_SPI_IDS
 	  If your use hisfc300 and hisfc350, this function should be select.
 
 source "drivers/mtd/devices/hisfc350/Kconfig"
+source "drivers/mtd/devices/hifmc100/Kconfig"
 
 endmenu

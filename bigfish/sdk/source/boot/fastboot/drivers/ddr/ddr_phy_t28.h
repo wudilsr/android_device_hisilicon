@@ -12,6 +12,7 @@
 /* control the initialization of the PHY */
 #define DDR_PHY_PHYINITCTRL	0x4
 #define DDR_PHY_PHYINITSTATUS	0x8	/* Read Data Eye Calibration Error*/
+#define DDR_PHY_DRAMCFG		0x2c    /* DRAM config register */
 #define DDR_PHY_MODEREG01	0x64	/* Extend Mode Register 01 */
 #define DDR_PHY_MODEREG23	0x68	/* Extend Mode Register 23 */
 /* update delay setting in registers to PHY */
@@ -22,10 +23,12 @@
 #define DDR_PHY_SWTRLT		0xa8	/* S/W training result*/
 /* Host vref. [5:0]range [17:12]refsel */
 #define DDR_PHY_IOCTL2		0xB4
+#define DDR_PHY_DVRFTCTRL	0xC4    /* DRAM VREF Training */
 /* AC command bit delay line setting */
-#define DDR_PHY_ACCMDBDL2		0x128
+#define DDR_PHY_ACCMDBDL2		0x1040
+#define DDR_PHY_ACPHYCTL4	0x1064  /* AC block PHY control register*/
 /* AC block PHY control register */
-#define DDR_PHY_ACPHYCTL7		0x18C
+#define DDR_PHY_ACPHYCTL7		0x1070
 /* WR DQ0-DQ3 [6:0] [14:8] [22:16] [30:24] delay value of the bit delay line
 on write path */
 #define DDR_PHY_DXNWDQNBDL0(n)	(0x210 + ((n) << 7))
@@ -56,6 +59,10 @@ phase shift of the Read DQS to create 90 degree delays*/
 #define DDR_PHY_DXNRDBOUND(n)	(0x250 + ((n) << 7))
 /* write boundary  right 4:0 left 20:16 */
 #define DDR_PHY_DXNWDBOUND(n)	(0x254 + ((n) << 7))
+/* [5:0] DRAM VREF(DQ) training result */
+#define DDR_PHY_DVREFT_STATUS(n)	(0x270 + ((n) << 7))
+/* [4:0] Host PHY VREF(DQ) training result */
+#define DDR_PHY_HVREFT_STATUS(n)	(0x274 + ((n) << 7))
 
 /* register mask */
 #define PHY_BDL_MASK			0x7f	/* [6:0] */
@@ -65,10 +72,13 @@ phase shift of the Read DQS to create 90 degree delays*/
 /* hardware gate training result */
 #define PHY_INITSTATUS_GT_MASK		0x20
 #define PHY_SWTRLT_WL_MASK		0xf
+#define PHY_SWTRLT_GATE_MASK	0xf
 #define PHY_WDQ_PHASE_MASK		0x1f
 #define PHY_PHYINITCTRL_MASK		0xffff	/* [15:0] all stat */
 /* Read Data Eye Calibration Error */
 #define PHY_PHYINITSTATUS_RDET_ERR	0x100
+#define PHY_VRFTRES_DVREF_MASK	0x3f /* [5:0] */
+#define PHY_VRFTRES_HVREF_MASK	0x1f /* [4:0] */
 
 /* register bit */
 #define PHY_MISC_UPDATE_BIT	19	/* [CUSTOM] delay config update bit */
@@ -88,20 +98,32 @@ phase shift of the Read DQS to create 90 degree delays*/
 #define PHY_ACPHY_DRAMCLK0_BIT		25	/* [25] halft_dramclk0 */
 #define PHY_ACPHY_DRAMCLK1_BIT		24	/* [24] halft_dramclk1 */
 #define PHY_ACPHY_DRAMCLK_EXT_BIT	3 /* [3] halft_dramclk0 */
+#define PHY_SWTMODE_SW_GTMODE_BIT	1 /* [1] SW gate training */
 
 /* value */
+#define PHY_PHYINITCTRL_DVREFT_SYNC	0x40000 /* DRAM VREF Synchronize */
 /* Read Data Eye Training Enable. */
 #define PHY_PHYINITCTRL_RDET_EN		0x100
 #define PHY_PHYINITCTRL_DLYMEAS_EN	0x4	/* Delay Measurement Enable */
 /* PHY Initialization Enable. */
 #define PHY_PHYINITCTRL_INIT_EN		0x1
-/* DQ range[0, 0x7f],  middle value is 0x40 */
-#define PHY_DQ_MIDDLE_VAL		0x40404040
+/* RDQS range[0, 0x7f], middle value is 0x40, but it affected by
+   temperature, so middle value change to 0x30 */
+#define PHY_RDQS_MIDDLE_VAL		0x30
+/* DQ range[0, 0x7f],  middle value is 0x40, but it affected by
+   temperature, so middle value change to 0x30 */
+#define PHY_DQ_MIDDLE_VAL		0x30303030
+#define PHY_MISC_SCRAMB_DIS		0xfffeffff	/* scrambler disable */
+#define PHY_GATE_BDL_MAX        0xfe /* [6:0]rdqsg_bdl + [22:16]rdqsgtxbdl */
+#define PHY_DVRFTCTRL_PDAEN_EN	0x80000000 /* pda enable */
+/* [5] two cycle on address or command.(2T timing) */
+#define PHY_DRAMCFG_MA2T		0x20
 
 /* other */
 #define PHY_RDQSG_PHASE_STEP		2       /* gate training phase step. */
 #define PHY_GATE_PHASE_MARGIN		8       /* gate phase margin */
 #define PHY_DQ_BDL_LEVEL		128     /* [CUSTOM] DQ BDL range */
+#define PHY_DQ_BDL_MIDDLE		48 /* special middle DQ BDL value */
 #define PHY_RDQSG_PHASE_MAX		0x3c    /* RDQSG phase max value */
 #define PHY_ACPHY_CLK_MAX	0xf /* halft_dramclk0 + cp1p_dclk0 */
 /**
@@ -127,3 +149,72 @@ phase shift of the Read DQS to create 90 degree delays*/
 /* [CUSTOM] relation between BDL and Phase. 1 phase = 16 bdl, 16 = 1 << 4 */
 #define DDR_BDL_PHASE_REL		4
 #endif
+
+/* PHY t28 all byte use a same value */
+#define DDR_PHY_VREF_HOST_SET(base_phy, val, bytenum) \
+	do { \
+		int i = 0; \
+		unsigned int hvreft; \
+		for (i = 0; i < bytenum; i++) { \
+			hvreft = REG_READ(base_phy + DDR_PHY_HVREFT_STATUS(i)) \
+				& (~PHY_VRFTRES_HVREF_MASK); \
+			REG_WRITE(hvreft | val, \
+			base_phy + DDR_PHY_HVREFT_STATUS(i)); \
+		} \
+	} while (0)
+
+#define DDR_PHY_VREF_HOST_GET(base_phy, val) \
+	{ \
+		val = REG_READ(base_phy + DDR_PHY_HVREFT_STATUS(0)) \
+			& PHY_VRFTRES_HVREF_MASK; \
+	}
+
+#define DDR_PHY_VREF_HOST_DISPLAY(base_phy, ddr_reg, index, byte_num) \
+	do { \
+		for (i = 0; i < byte_num; i++) { \
+			snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX, \
+				"Host Vref Byte%d", i); \
+			ddr_reg->reg[index++].addr = \
+				base_phy + DDR_PHY_HVREFT_STATUS(i); \
+		} \
+	} while (0)
+
+/* DRAM vref operations */
+#define DDR_PHY_VREF_DRAM_SET(base_phy, val, byte_index) \
+	do { \
+		unsigned int dvrftctrl = \
+			REG_READ(base_phy + DDR_PHY_DVRFTCTRL); \
+		unsigned int dvreft = REG_READ(base_phy \
+			+ DDR_PHY_DVREFT_STATUS(byte_index)) \
+			& (~PHY_VRFTRES_DVREF_MASK); \
+		REG_WRITE(dvrftctrl | PHY_DVRFTCTRL_PDAEN_EN, \
+			base_phy + DDR_PHY_DVRFTCTRL); \
+		REG_WRITE(dvreft | val, \
+			base_phy + DDR_PHY_DVREFT_STATUS(byte_index)); \
+		REG_WRITE(PHY_PHYINITCTRL_DVREFT_SYNC \
+			| PHY_PHYINITCTRL_INIT_EN, \
+			base_phy + DDR_PHY_PHYINITCTRL); \
+		while (1) { \
+			if (!(REG_READ(base_phy + DDR_PHY_PHYINITCTRL) \
+				& PHY_PHYINITCTRL_INIT_EN)) \
+				break; \
+		} \
+		REG_WRITE(dvrftctrl & (~PHY_DVRFTCTRL_PDAEN_EN), \
+			base_phy + DDR_PHY_DVRFTCTRL); \
+	} while (0)
+
+#define DDR_PHY_VREF_DRAM_GET(base_phy, val, byte_index) \
+	{ \
+		val = REG_READ(base_phy + DDR_PHY_DVREFT_STATUS(byte_index)) \
+			& PHY_VRFTRES_DVREF_MASK; \
+	}
+
+#define DDR_PHY_VREF_DRAM_DISPLAY(base_phy, ddr_reg, index, byte_num) \
+	do { \
+		for (i = 0; i < byte_num; i++) { \
+			snprintf(ddr_reg->reg[index].name, DDR_REG_NAME_MAX, \
+				"DRAM Vref Byte%d", i); \
+			ddr_reg->reg[index++].addr = \
+				base_phy + DDR_PHY_DVREFT_STATUS(i); \
+		} \
+	} while (0)

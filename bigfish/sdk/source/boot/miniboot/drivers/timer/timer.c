@@ -49,6 +49,23 @@ struct timer_ctrl_t {
 	uint32 cycle; /* timer source cycle */
 };
 
+#if defined(CONFIG_ARCH_HI3716MV310)
+static struct timer_ctrl_t __timer_ctrl[3] = {
+	{
+		.init = 0,
+		.base = TIMER0_BASE,
+		.irqnr = TIMER0_IRQ_NR,
+	}, {
+		.init = 0,
+		.base = TIMER1_BASE,
+		.irqnr = TIMER1_IRQ_NR,
+	}, {
+		.init = 0,
+		.base = TIMER2_BASE,
+		.irqnr = TIMER2_IRQ_NR,
+	}
+};
+#else
 static struct timer_ctrl_t __timer_ctrl[8] = {
 	{
 		.init = 0,
@@ -84,6 +101,7 @@ static struct timer_ctrl_t __timer_ctrl[8] = {
 		.irqnr = TIMER7_IRQ_NR,
 	}
 };
+#endif
 
 #define GET_TIMER_CTRL(_index)   (&__timer_ctrl[_index])
 

@@ -16,15 +16,15 @@ endif
 #===============================================================================
 # local variables
 #===============================================================================
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100),)
-EXTRA_CFLAGS += -DAIAO_ALSA_DRV_V1
-ALSA_DIR = alsa/dsp_mix
-endif
+#ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100),)
+#EXTRA_CFLAGS += -DAIAO_ALSA_DRV_V1
+#ALSA_DIR = alsa/dsp_mix
+#endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3751v100 hi3798cv100 hi3796cv100 hi3798mv100 hi3796mv100 hi3798cv200_a),)
+#ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3751v100 hi3798cv100 hi3796cv100 hi3798mv100 hi3796mv100 hi3798cv200_a),)
 EXTRA_CFLAGS += -DAIAO_ALSA_DRV_V2
 ALSA_DIR = alsa/dsp_mix_v2
-endif
+#endif
 
 ADSP_DRV_INCLUDE := $(MSP_DIR)/drv/adsp/adsp_v1_1/include
 
@@ -113,7 +113,7 @@ $(MOD_NAME)-y += common/src/hal_tianlai_adac_v510.o
 EXTRA_CFLAGS += -DHI_TIANLAI_V510
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100, hi3798mv100, hi3796mv100),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100 hi3798mv100 hi3796mv100 hi3716mv410 hi3716mv420),)
 $(MOD_NAME)-y += common/src/hal_tianlai_adac_v500.o
 EXTRA_CFLAGS += -DHI_TIANLAI_V500
 endif
@@ -122,6 +122,7 @@ ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200_a),)
 $(MOD_NAME)-y += common/src/hal_tianlai_adac_v600.o
 EXTRA_CFLAGS += -DHI_TIANLAI_V600
 endif
+
 ifeq ($(CFG_HI_AIAO_VERIFICATION_SUPPORT),y)
 EXTRA_CFLAGS += -DHI_AIAO_VERIFICATION_SUPPORT
 $(MOD_NAME)-y += common/src/drv_aiao_veri.o
@@ -136,7 +137,7 @@ $(MOD_NAME)-y += ao/drv_ao.o \
 		 ao/hal_aoe.o \
 		 ao/drv_ao_intf.o
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100 hi3798cv200_a),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv410 hi3716mv420),)
 EXTRA_CFLAGS += -DHI_AIAO_TIMER_SUPPORT
 $(MOD_NAME)-y +=timer/drv_timer.o
 endif

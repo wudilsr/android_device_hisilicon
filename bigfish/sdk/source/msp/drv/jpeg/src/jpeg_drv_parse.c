@@ -85,7 +85,6 @@ Date				Author        		Modification
 
 #define OUT_ROUND_UP(a,b)                   ( ((a) + (b) - (1)) / (b) )
 
-//#define CONIFG_PARSE_DEBUG
 
 /*************************** Structure Definition ****************************/
 
@@ -226,31 +225,64 @@ static HI_BOOL parse_fist_marker(HI_S32 s32DecHandle)
 * retval		: HI_FAILURE 失败
 * others:		: NA
 ***************************************************************************************/
-static HI_VOID parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
+static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 {
 
     HI_S32 s32Code = 0;
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
-    
-    while(pstImgInfo->u32CurPos[0] <= pstImgInfo->u32DataLen[0] && pstImgInfo->u32CurPos[1] <= pstImgInfo->u32DataLen[1])
+
+	if(0 == pstImgInfo->u32DataLen[1])
+	{
+	    while(pstImgInfo->u32CurPos[0] < pstImgInfo->u32DataLen[0])
+	    {
+	        INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        while(s32Code != 0xFF) 
+	        {
+	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        }
+	        do
+	        {
+	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        } while (s32Code == 0xFF);
+	        
+	        if (s32Code != 0)
+	        {
+	           break;
+	        }
+	    }
+	    if(pstImgInfo->u32CurPos[0] == pstImgInfo->u32DataLen[0])
+	    {/** 已经解析到头了 **/
+			return HI_ERR_JPEG_DATA_SUPPORT;
+	    }
+	}
+    else
     {
-        INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-        while(s32Code != 0xFF) 
-        {
-          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-        }
-        do
-        {
-          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-        } while (s32Code == 0xFF);
-        
-        if (s32Code != 0)
-        {
-           break;
-        }
+		while(pstImgInfo->u32CurPos[0] <= pstImgInfo->u32DataLen[0] && pstImgInfo->u32CurPos[1] < pstImgInfo->u32DataLen[1])
+	    {
+	        INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        while(s32Code != 0xFF) 
+	        {
+	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        }
+	        do
+	        {
+	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
+	        } while (s32Code == 0xFF);
+	        
+	        if (s32Code != 0)
+	        {
+	           break;
+	        }
+	    }
+		if(pstImgInfo->u32CurPos[1] == pstImgInfo->u32DataLen[1])
+	    {/** 已经解析到头了 **/
+			return HI_ERR_JPEG_DATA_SUPPORT;
+	    }
     }
     
     *ps32Mark = s32Code;
+
+    return HI_SUCCESS;
 }
 
 /***************************************************************************************
@@ -282,6 +314,35 @@ static HI_BOOL parse_dri_marker(HI_S32 s32DecHandle)
       return HI_TRUE;
 }
 
+/***************************************************************************************
+* func			: parse_appn_marker
+* description	: parse appn data.
+				  CNcomment: 过滤这个硬件不感兴趣的标记 CNend\n
+* retval		: HI_SUCCESS 成功
+* retval		: HI_FAILURE 失败
+* others:		: NA
+***************************************************************************************/
+static HI_BOOL parse_appn_marker(HI_S32 s32DecHandle)
+{
+
+	HI_S32 s32Len = 0;
+	IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
+
+	INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
+	s32Len -= 2;
+
+	if( (pstImgInfo->u32CurPos[0] + s32Len) < pstImgInfo->u32DataLen[0])
+	{
+		pstImgInfo->u32CurPos[0] = pstImgInfo->u32CurPos[0] + s32Len;
+	}
+	else
+	{
+		pstImgInfo->u32CurPos[1] = pstImgInfo->u32CurPos[1] + (s32Len - (pstImgInfo->u32DataLen[0] - pstImgInfo->u32CurPos[0]));
+		pstImgInfo->u32CurPos[0] = pstImgInfo->u32DataLen[0];
+	}
+
+	return HI_TRUE;
+}
 
 /***************************************************************************************
 * func			: parse_sofn_marker
@@ -299,18 +360,8 @@ static HI_BOOL parse_sofn_marker(HI_S32 s32DecHandle)
     HI_S32 s32Code = 0;
     HI_S32 s32Cnt  = 0;
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
-    
-#ifdef CONIFG_PARSE_DEBUG
-    mdelay(100);
-    JPEG_TRACE("\n===============================================%s %d\n",__func__,__LINE__);
-    JPEG_TRACE("begin parse_sofn_marker\n");
-#endif
 
     INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
-
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("s32Len = %d\n",s32Len);
-#endif
 
     INPUT_BYTE_DATA(s32DecHandle,s32DataPrecision,1);
 
@@ -320,17 +371,9 @@ static HI_BOOL parse_sofn_marker(HI_S32 s32DecHandle)
         return HI_FALSE;
     }
 
-#ifdef CONIFG_PARSE_DEBUG
-   JPEG_TRACE("s32DataPrecision = %d\n",s32DataPrecision);
-#endif
-
     INPUT_BYTE_DATA(s32DecHandle,pstImgInfo->s32InHeight,2);
     INPUT_BYTE_DATA(s32DecHandle,pstImgInfo->s32InWidth,2);
     INPUT_BYTE_DATA(s32DecHandle,pstImgInfo->s32NumComponent,1);
-
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("w = %d h = %d numcomponent = %d\n",pstImgInfo->s32InWidth,pstImgInfo->s32InHeight,pstImgInfo->s32NumComponent);
-#endif
 
     s32Len -= 8;
     if (s32Len != pstImgInfo->s32NumComponent * 3)
@@ -421,12 +464,6 @@ static HI_BOOL parse_sofn_marker(HI_S32 s32DecHandle)
        return HI_FALSE;
     }
 
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("end parse_sofn_marker\n");
-    JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
-    mdelay(100);
-#endif
-
     return HI_TRUE;
 
 }
@@ -446,6 +483,15 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
     HI_S32 s32Cnt1  = 0;
     HI_S32 s32Code  = 0;
     HI_S32 s32Code1 = 0;
+
+#ifndef CONFIG_JPEG_SET_SAMPLEFACTOR/**hifone has revise this bug **/
+	/** HSCP201405300013 HSCP201405290010 DTS2014061006717**/
+	HI_S32 ci = 0;
+	HI_BOOL bY22 = HI_FALSE;
+	HI_BOOL bU12 = HI_FALSE;
+	HI_BOOL bV12 = HI_FALSE;
+#endif
+
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
     
     if(HI_FALSE == pstImgInfo->bSofMark)
@@ -454,23 +500,9 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
         return HI_FALSE;
     }
 
-#ifdef CONIFG_PARSE_DEBUG
-    mdelay(100);
-    JPEG_TRACE("\n===============================================%s %d\n",__func__,__LINE__);
-    JPEG_TRACE("begin parse_sos_marker\n");
-#endif
-
     INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
 
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("s32Len = %d\n",s32Len);
-#endif
-
     INPUT_BYTE_DATA(s32DecHandle,s32NumComponent,1);
-
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("s32NumComponent = %d\n",s32NumComponent);
-#endif
 
     if (s32Len != (s32NumComponent * 2 + 6) || s32NumComponent < 1 || s32NumComponent > NUM_COMPS_IN_SCAN)
     {   
@@ -512,14 +544,27 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
     pstImgInfo->s32Ah = (s32Code >> 4) & 15;
     pstImgInfo->s32Al = (s32Code     ) & 15;
 
-#ifdef CONIFG_PARSE_DEBUG
-    JPEG_TRACE("pstImgInfo->s32Ss = %d\n",pstImgInfo->s32Ss);
-    JPEG_TRACE("pstImgInfo->s32Se = %d\n",pstImgInfo->s32Se);
-    JPEG_TRACE("pstImgInfo->s32Ah = %d\n",pstImgInfo->s32Ah);
-    JPEG_TRACE("pstImgInfo->s32Al = %d\n",pstImgInfo->s32Al);
-    JPEG_TRACE("end parse_sos_marker\n");
-    JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
-    mdelay(100);
+
+
+#ifndef CONFIG_JPEG_SET_SAMPLEFACTOR/**hifone has revise this bug **/
+	/** HSCP201405300013 HSCP201405290010 DTS2014061006717**/
+	for (ci = 0; ci < pstImgInfo->s32ComInScan; ci++)
+	{
+		if( (0 == ci) && (2 == pstImgInfo->u8Fac[ci][0]) && (2 == pstImgInfo->u8Fac[ci][1]))
+			bY22 = HI_TRUE;
+		if( (1 == ci) && (1 == pstImgInfo->u8Fac[ci][0]) && (2 == pstImgInfo->u8Fac[ci][1]))
+			bU12 = HI_TRUE;
+		if( (2 == ci) && (1 == pstImgInfo->u8Fac[ci][0]) && (2 == pstImgInfo->u8Fac[ci][1]))
+			bV12 = HI_TRUE;
+	}
+	if( (HI_TRUE == bY22) && (HI_TRUE == bU12) && (HI_TRUE == bV12))
+	{
+		return HI_FAILURE;
+	}
+	if( (IMG_FMT_YUV444 == pstImgInfo->eImgFmt) && (HI_TRUE == bU12) && (HI_TRUE == bV12))
+	{
+		return HI_FAILURE;
+	}
 #endif
 
     return HI_TRUE;
@@ -545,18 +590,8 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
       HI_S32 s32Cnt      = 0;
       JPEG_HUFF_TBL *htblptr = NULL;
       IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
-      
-#ifdef CONIFG_PARSE_DEBUG
-      mdelay(100);
-      JPEG_TRACE("\n===============================================%s %d\n",__func__,__LINE__);
-      JPEG_TRACE("begin parse_dht_marker\n");
-#endif
 
       INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
-
-#ifdef CONIFG_PARSE_DEBUG
-      JPEG_TRACE("s32Len = %d\n",s32Len);
-#endif
 
       s32Len -= 2;
       
@@ -598,19 +633,23 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
             if(s32HTIndex & 0x10)
             {/** AC table definition **/
                   s32HTIndex -= 0x10;
+                  if(s32HTIndex < 0 || s32HTIndex >= MAX_NUM_HUFF_TBLS)
+  	              {/** deal codecc warning **/
+  	                JPEG_TRACE("the dht index is error\n");
+  	                return HI_FALSE;
+  	              }
                   htblptr = &pstImgInfo->AcHuffTbl[s32HTIndex];
                   pstImgInfo->AcHuffTbl[s32HTIndex].bHasHuffTbl = HI_TRUE;
-                  #ifdef CONIFG_PARSE_DEBUG
-                    JPEG_TRACE("AcHuffTbl[%d].bHasHuffTbl = %d\n",s32HTIndex,pstImgInfo->AcHuffTbl[s32HTIndex].bHasHuffTbl);
-                  #endif
             } 
             else
             {/** DC table definition **/
+                  if(s32HTIndex < 0 || s32HTIndex >= MAX_NUM_HUFF_TBLS)
+  	              {/** deal codecc warning **/
+  	                JPEG_TRACE("the dht index is error\n");
+  	                return HI_FALSE;
+  	              }
                   htblptr = &pstImgInfo->DcHuffTbl[s32HTIndex];
                   pstImgInfo->DcHuffTbl[s32HTIndex].bHasHuffTbl = HI_TRUE;
-                  #ifdef CONIFG_PARSE_DEBUG
-                    JPEG_TRACE("DcHuffTbl[%d].bHasHuffTbl = %d\n",s32HTIndex,pstImgInfo->DcHuffTbl[s32HTIndex].bHasHuffTbl);
-                  #endif
                   if(0 == s32HTIndex)
                   {
                     pstImgInfo->s32LuDcLen[0] = bits[11];
@@ -620,12 +659,6 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
                     pstImgInfo->s32LuDcLen[4] = bits[15];
                     pstImgInfo->s32LuDcLen[5] = bits[16];
                   }
-            }
-
-            if (s32HTIndex < 0 || s32HTIndex >= MAX_NUM_HUFF_TBLS)
-            {
-                JPEG_TRACE("the dht index is error\n");
-                return HI_FALSE;
             }
             memcpy(htblptr->bits, bits, sizeof(htblptr->bits));
             memcpy(htblptr->huffval, huffval, sizeof(htblptr->huffval));
@@ -637,13 +670,6 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
          JPEG_TRACE("the dht len is error\n");
          return HI_FALSE;
       }
-      
-#ifdef CONIFG_PARSE_DEBUG
-      JPEG_TRACE("end parse_dht_marker\n");
-      JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
-      mdelay(100);
-#endif
-
 
 #ifndef CONFIG_JPEG_DRI_SUPPORT
       if(      0 != pstImgInfo->s32LuDcLen[0] || 0 != pstImgInfo->s32LuDcLen[1] \
@@ -692,18 +718,7 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
 
       IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
 
-      
-#ifdef CONIFG_PARSE_DEBUG
-      mdelay(100);
-      JPEG_TRACE("\n===============================================%s %d\n",__func__,__LINE__);
-      JPEG_TRACE("begin parse_dqt_marker\n");
-#endif
-
       INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
-
-#ifdef CONIFG_PARSE_DEBUG
-      JPEG_TRACE("s32Len = %d\n",s32Len);
-#endif
 
       s32Len -= 2;
 
@@ -763,14 +778,7 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
          return HI_FALSE;
       }
 
-#ifdef CONIFG_PARSE_DEBUG
-      JPEG_TRACE("end parse_dqt_marker\n");
-      JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
-      mdelay(100);
-#endif
-
       return HI_TRUE;
-
 }
 
 /***************************************************************************************
@@ -787,20 +795,14 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
 
     HI_S32 s32Mark = 0;
 
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
     /** 这个值要初始化为－1 **/
     pstImgInfo->s32RestartInterval = -1;
-        
+
     if(NULL == pstInMsg)
     {
         return HI_ERR_JPEG_PARA_NULL;
     }
-
-#ifdef CONIFG_PARSE_DEBUG
-   mdelay(100);
-   JPEG_TRACE("\n===============================================%s %d\n",__func__,__LINE__);
-   JPEG_TRACE("begin jpg_dec_parse\n");
-#endif
 
     /** 输入码流信息 **/
     pstImgInfo->pDataVir[0]   = pstInMsg->pSaveVir[0];
@@ -810,22 +812,19 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
     pstImgInfo->u32CurPos[0]  = 0;
     pstImgInfo->u32CurPos[1]  = 0;
 
-#ifdef CONIFG_PARSE_DEBUG
-   JPEG_TRACE("end jpg_dec_parse\n");
-   JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
-   mdelay(100);
-#endif
-
-    if(! parse_fist_marker(pstInMsg->s32DecHandle))
+    if(! parse_fist_marker(pstInMsg->u32DecHandle))
     {
         JPEG_TRACE("is not a jpeg\n");
         return HI_ERR_JPEG_NOT_JPEG;
     }
-    
+
     while(pstImgInfo->u32CurPos[0] <= pstImgInfo->u32DataLen[0] && pstImgInfo->u32CurPos[1] <= pstImgInfo->u32DataLen[1])
     {
-        parse_next_marker(pstInMsg->s32DecHandle,&s32Mark);
-        
+    
+        if(HI_SUCCESS != parse_next_marker(pstInMsg->u32DecHandle,&s32Mark))
+        {
+    	     return HI_ERR_JPEG_DATA_SUPPORT;
+        }
         switch(s32Mark)
         {
 
@@ -834,7 +833,7 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             /** baseline --- huffman **/
             case M_JPEG_SOF0:
             case M_JPEG_SOF1:
-                  if(! parse_sofn_marker(pstInMsg->s32DecHandle))
+                  if(! parse_sofn_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_SOFN_EXIT;
                   }
@@ -872,10 +871,14 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             case M_JPEG_APP13:
             case M_JPEG_APP14:
             case M_JPEG_APP15:
+                  if(! parse_appn_marker(pstInMsg->u32DecHandle))
+                  {
+            	     return HI_ERR_JPEG_SOFN_EXIT;
+                  }
                   break;
             
             case M_JPEG_SOS:
-                  if(! parse_sos_marker(pstInMsg->s32DecHandle))
+                  if(! parse_sos_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_SOS_EXIT;
                   }
@@ -883,20 +886,20 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
                   return HI_SUCCESS;
                   
             case M_JPEG_DHT:
-                  if(! parse_dht_marker(pstInMsg->s32DecHandle))
+                  if(! parse_dht_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_PARSE_DHT;
                   }
                   break;
               
             case M_JPEG_DQT:
-                 if(! parse_dqt_marker(pstInMsg->s32DecHandle))
+                  if(! parse_dqt_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_PARSE_DQT;
                   }
                   break;
             case M_JPEG_DRI:
-                  if(! parse_dri_marker(pstInMsg->s32DecHandle))
+                  if(! parse_dri_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_DRI;
                   }
@@ -911,7 +914,8 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             case M_JPEG_RST7:
                   break;
             case M_JPEG_EOI:
-                  break;
+            	  /** 对于纯硬件来说，这里说明没有解析到其它数据 **/
+                  return HI_ERR_JPEG_DATA_SUPPORT;
             /** hard decode not need this message **/
             case M_JPEG_DAC:
             case M_JPEG_COM:
@@ -919,9 +923,8 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             case M_JPEG_DNL: /* Ignore DNL ... perhaps the wrong thing */
                 break;
             default:
-                break;
+            	return HI_ERR_JPEG_DATA_SUPPORT;
          }
-
     }
     
     return HI_ERR_JPEG_DATA_SUPPORT;
@@ -939,20 +942,22 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
 HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 {
 
-    HI_S32 s32OutYWidth   = 0;
-    HI_S32 s32OutYHeight  = 0;
-    HI_S32 s32OutYStride  = 0;
-    HI_S32 s32OutUVWidth  = 0;
-    HI_S32 s32OutUVHeight = 0;
-    HI_S32 s32OutUVStride = 0;
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+    HI_S32 s32OutTmpYHeight     = 0;  /** 分配Y内存大小使用  **/
+    HI_S32 s32OutTmpUVHeight    = 0;  /** 分配UV内存大小使用 **/
+    HI_S32 s32OutYWidth         = 0;
+    HI_S32 s32OutYHeight        = 0;
+    HI_S32 s32OutYStride        = 0;
+    HI_S32 s32OutUVWidth        = 0;
+    HI_S32 s32OutUVHeight       = 0;
+    HI_S32 s32OutUVStride       = 0;
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
     
-    if(0 != pstOutMsg->s32Scale && 2 != pstOutMsg->s32Scale && 4 != pstOutMsg->s32Scale && 8 != pstOutMsg->s32Scale)
+    if(1 != pstOutMsg->s32Scale && 2 != pstOutMsg->s32Scale && 4 != pstOutMsg->s32Scale && 8 != pstOutMsg->s32Scale)
     {
         JPEG_TRACE("the dec scale is not support\n");
         return HI_FAILURE;
     }
-    if(0 == pstOutMsg->s32Scale)
+    if(1 == pstOutMsg->s32Scale)
     {
        s32OutYWidth  = pstImgInfo->s32InWidth;
        s32OutYHeight = pstImgInfo->s32InHeight;
@@ -964,24 +969,27 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
     }
     if(s32OutYWidth  <= 1) s32OutYWidth  = 2;
     if(s32OutYHeight <= 1) s32OutYHeight = 2;
-
     
+	s32OutTmpYHeight = (1 == pstImgInfo->u8Fac[0][1]) ? ((s32OutYHeight + JPEG_DRV_MCU_8ALIGN - 1) & (~(JPEG_DRV_MCU_8ALIGN - 1)))  : ((s32OutYHeight + JPEG_DRV_MCU_16ALIGN - 1) & (~(JPEG_DRV_MCU_16ALIGN - 1)));
+
     jpeg_para_getstride(s32OutYWidth,&s32OutYStride,64);
 
     switch(pstImgInfo->eImgFmt)
     {
         case IMG_FMT_YUV400:
-            s32OutUVStride  = 0;
-            s32OutUVWidth   = 0;
-	        s32OutUVHeight  = 0;
+            s32OutUVStride      = 0;
+            s32OutUVWidth       = 0;
+	        s32OutUVHeight      = 0;
+	        s32OutTmpUVHeight   = 0;
             pstOutMsg->enOutFmt = JPG_FMT_YUV400;
             break;
         case IMG_FMT_YUV420:
-            s32OutUVStride = s32OutYStride;
-            s32OutYWidth   = (s32OutYWidth  >> 1) << 1;
-	        s32OutYHeight  = (s32OutYHeight >> 1) << 1;
-	        s32OutUVWidth  = s32OutYWidth  >> 1;
-	        s32OutUVHeight = s32OutYHeight >> 1;
+            s32OutUVStride      = s32OutYStride;
+            s32OutYWidth        = (s32OutYWidth  >> 1) << 1;
+	        s32OutYHeight       = (s32OutYHeight >> 1) << 1;
+	        s32OutUVWidth       = s32OutYWidth  >> 1;
+	        s32OutUVHeight      = s32OutYHeight >> 1;
+	        s32OutTmpUVHeight   = s32OutTmpYHeight >> 1;
             pstOutMsg->enOutFmt = JPG_FMT_YUV420;
             break;
         case IMG_FMT_YUV422_21:
@@ -990,12 +998,13 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 	        s32OutUVWidth   = s32OutYWidth >> 1;
             if(HI_TRUE == pstOutMsg->bOutYuvSp420)
             {
-                s32OutUVHeight  = s32OutYHeight >> 1;
+                s32OutTmpUVHeight = s32OutTmpYHeight >> 1;
             }
             else
             {
-	            s32OutUVHeight  = s32OutYHeight;
+	            s32OutTmpUVHeight   = s32OutTmpYHeight;
             }
+            s32OutUVHeight      = s32OutYHeight;
             pstOutMsg->enOutFmt = JPG_FMT_YUV422_21;
             break;
         case IMG_FMT_YUV422_12:
@@ -1007,36 +1016,49 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
             {
                 s32OutUVStride = s32OutYStride << 1;
             }
-            s32OutYHeight   = (s32OutYHeight >> 1) << 1;
-	        s32OutUVWidth   = s32OutYWidth;
-	        s32OutUVHeight  = s32OutYHeight >> 1;
+            s32OutYHeight       = (s32OutYHeight >> 1) << 1;
+	        s32OutUVWidth       = s32OutYWidth;
+	        s32OutUVHeight      = s32OutYHeight >> 1;
+	        s32OutTmpUVHeight   = s32OutTmpYHeight >> 1;
             pstOutMsg->enOutFmt = JPG_FMT_YUV422_12;
             break;
         case IMG_FMT_YUV444:
             if(HI_TRUE == pstOutMsg->bOutYuvSp420)
             {
-            	s32OutUVStride = s32OutYStride;
-                s32OutUVHeight  = s32OutYHeight >> 1;
+            	s32OutUVStride    = s32OutYStride;
+                s32OutTmpUVHeight = s32OutTmpYHeight >> 1;
             }
             else
             {
-                s32OutUVStride = s32OutYStride << 1;
-                s32OutUVHeight  = s32OutYHeight;
+                s32OutUVStride    = s32OutYStride << 1;
+                s32OutTmpUVHeight = s32OutTmpYHeight;
+                
             }
-            s32OutUVWidth   = s32OutYWidth;
+            s32OutUVWidth       = s32OutYWidth;
+            s32OutUVHeight      = s32OutYHeight;
             pstOutMsg->enOutFmt = JPG_FMT_YUV444;
             break;
         default:
             return HI_FAILURE;
     }
+
+	if(HI_TRUE == pstOutMsg->bOutYuvSp420 && JPG_FMT_YUV400 != pstOutMsg->enOutFmt)
+	{
+		s32OutYWidth	= (0 == s32OutYWidth  % 2)? s32OutYWidth  : (s32OutYWidth  - 1);
+		s32OutYHeight	= (0 == s32OutYHeight % 2)? s32OutYHeight : (s32OutYHeight - 1);
+		s32OutUVWidth	= s32OutYWidth  >> 1;
+		s32OutUVHeight  = s32OutYHeight >> 1;
+	}
    
     pstOutMsg->u32OutWidth[0]  = s32OutYWidth;
     pstOutMsg->u32OutHeight[0] = s32OutYHeight;
     pstOutMsg->u32OutStride[0] = s32OutYStride;
+	pstOutMsg->u32OutSize[0]   = s32OutYStride * s32OutTmpYHeight;
 
     pstOutMsg->u32OutWidth[1]  = s32OutUVWidth;
     pstOutMsg->u32OutHeight[1] = s32OutUVHeight;
     pstOutMsg->u32OutStride[1] = s32OutUVStride;
+    pstOutMsg->u32OutSize[1]   = s32OutUVStride * s32OutTmpUVHeight;
 
     if(HI_TRUE == pstOutMsg->bOutYuvSp420)
     {
@@ -1057,7 +1079,7 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 HI_VOID jpeg_get_imginfo(HI_DRV_JPEG_INMSG_S *pstInMsg)
 {
 
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
     
     if(NULL == pstInMsg)
         return;

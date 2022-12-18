@@ -51,7 +51,7 @@ ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3
 LOCAL_SRC_FILES += pq_v1_0/pq_debug.c pq_v1_0/pq_parse.c pq_v1_0/pq_comm.c
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100 hi3798cv200_a),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100 hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv410 hi3716mv420),)
 LOCAL_SRC_FILES += pq_v2_0/pq_debug.c pq_v2_0/pq_parse.c pq_v2_0/pq_comm.c
 PQ_API_DIR=../../msp/api/pq/pq_v2_0
 LOCAL_SRC_FILES += $(PQ_API_DIR)/mpi_pq.c

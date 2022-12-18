@@ -158,9 +158,9 @@ static struct spi_nand_driver spi_nand_driver_giga = {
 
 /*****************************************************************************/
 static struct nand_flash_special_dev nand_flash_special_dev[] = {
-	/* ALL-FLASH AFS1GQ4UAGWC4 */
+	/* ALL-FLASH AFS4GQ4UAGWC4 */
 	{
-		.name      = "AFS1GQ4UAGWC4",
+		.name      = "AFS4GQ4UAGWC4",
 		.id        = {0xc2, 0xd4},
 		.length    = 2,
 		.chipsize  = SZ_512M,
@@ -185,9 +185,9 @@ static struct nand_flash_special_dev nand_flash_special_dev[] = {
 		},
 		.driver    = &spi_nand_driver_giga,
 	},
-	/* ALL-FLASH AFS1GQ4UADWC2 */
+	/* ALL-FLASH AFS2GQ4UADWC2 */
 	{
-		.name      = "AFS1GQ4UADWC2",
+		.name      = "AFS2GQ4UADWC2",
 		.id        = {0xc1, 0x52},
 		.length    = 2,
 		.chipsize  = SZ_256M,
@@ -503,20 +503,20 @@ static struct nand_flash_special_dev nand_flash_special_dev[] = {
 		.oobsize   = 256,
 		.badblock_pos    = BBP_FIRST_PAGE,
 		.read      = {
-			&READ_STD(1, INFINITE, 120),
-			&READ_DUAL(1, INFINITE, 120),
-			&READ_DUAL_ADDR(1, INFINITE, 120),
-			&READ_QUAD(1, INFINITE, 120),
-			&READ_QUAD_ADDR(1, INFINITE, 120),
+			&READ_STD(1, INFINITE, 24),
+//			&READ_DUAL(1, INFINITE, 24),
+//			&READ_DUAL_ADDR(1, INFINITE, 24),
+//			&READ_QUAD(1, INFINITE, 24),
+//			&READ_QUAD_ADDR(1, INFINITE, 24),
 			0
 		},
 		.write     = {
-			&WRITE_STD(0, 256, 120),
-			&WRITE_QUAD(0, 256, 120),
+			&WRITE_STD(0, 256, 24),
+//			&WRITE_QUAD(0, 256, 24),
 			0
 		},
 		.erase     = {
-			&ERASE_SECTOR_256K(0, SZ_256K, 120),
+			&ERASE_SECTOR_256K(0, SZ_256K, 75),
 			0
 		},
 		.driver    = &spi_nand_driver_giga,

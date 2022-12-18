@@ -164,7 +164,9 @@ Modification  : Created file
 
 #define MAX_LOG_LEN           (512)
 
-HI_U8 u8DecOpenBuf[1024];
+DTSHD_DECODE_OPENCONFIG_S           DtsDecConfig;
+DOLBYPLUS_DECODE_OPENCONFIG_S       DolbyDecConfig;
+HA_BLURAYLPCM_DECODE_OPENCONFIG_S   BlyRayDecConfig;
 
 HI_VOID IPTV_ADAPTER_PLAYER_LOG(HI_CHAR *pFuncName, HI_U32 u32LineNum, const HI_CHAR *format, ...);
 
@@ -486,7 +488,8 @@ static bool vFormat2HiType(vformat_t vformat, int *hiVformart)
 static bool aFormat2HiType(aformat_t afmt, HA_CODEC_ID_E *hiADecType, HI_BOOL *bIsBigEndian)
 {
     HI_S32    s32Ret = HI_SUCCESS;
-
+    HI_S32    Ret;
+    
     PLAYER_LOGI("### Input audio codec ID: %d \n", afmt);
     if (0 == IS_AFMT_VALID(afmt))
     {
@@ -563,9 +566,6 @@ static bool aFormat2HiType(aformat_t afmt, HA_CODEC_ID_E *hiADecType, HI_BOOL *b
 
 HI_VOID getAudAttrByType(HI_UNF_ACODEC_ATTR_S *pstAdecAttr, HI_U8  *pu8Extradata, HI_BOOL bIsBigEndian)
 {
-    DOLBYPLUS_DECODE_OPENCONFIG_S stDolbyDecConfig;
-    DTSHD_DECODE_OPENCONFIG_S stDtsHdDecConfig;
-    HA_BLURAYLPCM_DECODE_OPENCONFIG_S stLpcmDecConfig;
     WAV_FORMAT_S stWavFormat;
 
     switch (pstAdecAttr->enType)
@@ -591,7 +591,7 @@ HI_VOID getAudAttrByType(HI_UNF_ACODEC_ATTR_S *pstAdecAttr, HI_U8  *pu8Extradata
         break;
         case HA_AUDIO_ID_DOLBY_PLUS:
         {
-        DOLBYPLUS_DECODE_OPENCONFIG_S *pstConfig = (DOLBYPLUS_DECODE_OPENCONFIG_S *)u8DecOpenBuf;
+        DOLBYPLUS_DECODE_OPENCONFIG_S *pstConfig = &DolbyDecConfig;
         HA_DOLBYPLUS_DecGetDefalutOpenConfig(pstConfig);
         HA_DOLBYPLUS_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
         break;
@@ -643,15 +643,15 @@ HI_VOID getAudAttrByType(HI_UNF_ACODEC_ATTR_S *pstAdecAttr, HI_U8  *pu8Extradata
 
         case HA_AUDIO_ID_DTSHD:
         {
-        DTSHD_DECODE_OPENCONFIG_S *pstConfig = (DTSHD_DECODE_OPENCONFIG_S *)u8DecOpenBuf;
-                HA_DTSHD_DecGetDefalutOpenConfig(pstConfig);
-                HA_DTSHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
+        DTSHD_DECODE_OPENCONFIG_S *pstConfig = &DtsDecConfig;
+        HA_DTSHD_DecGetDefalutOpenConfig(pstConfig);
+        HA_DTSHD_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
         break;
         }
 
         case HA_AUDIO_ID_BLYRAYLPCM:
         {
-        HA_BLURAYLPCM_DECODE_OPENCONFIG_S *pstConfig = (HA_BLURAYLPCM_DECODE_OPENCONFIG_S *)u8DecOpenBuf;
+        HA_BLURAYLPCM_DECODE_OPENCONFIG_S *pstConfig = &BlyRayDecConfig;
         HA_BLYRAYLPCM_DecGetDefalutOpenConfig(pstConfig);
         HA_BLYRAYLPCM_DecGetDefalutOpenParam(&(pstAdecAttr->stDecodeParam), pstConfig);
         break;

@@ -143,7 +143,7 @@ HI_VOID JPEG_HDEC_Resume(const struct jpeg_decompress_struct *cinfo)
 		** waite cancel reset success
 		** CNcomment:等待撤消复位成功 CNend\n
 		**/   
-		usleep(1); /** 1ms at least **/
+		//msleep(1); /** 1ms at least **/
 
 		s32RetVal = ioctl(pJpegHandle->s32JpegDev, CMD_JPG_GETRESUMEVALUE, &stResumeValue);
 		if(HI_SUCCESS != s32RetVal)

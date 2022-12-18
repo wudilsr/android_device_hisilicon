@@ -182,6 +182,7 @@ Date				Author        		Modification
 		  HI_BOOL  bCSCEnd;                   /**< color space convert success                  *//**<CNcomment:颜色空间转换成功               */
 		  HI_BOOL  bOutYCbCrSP;               /**< if output yuvsp                              *//**<CNcomment:是否解码输出yuv semi_planer    */
           HI_BOOL  bFirstDec;                 /**< if use external stream, call dec agine       *//**<CNcomment: 如果使用外部码流，硬件解码失败第二次调用 */
+          HI_BOOL  bFillInput;				  /**< the fill input whether release read stream   *//**<CNcomment: fill input码流填充回调接口是否实现码流填充 */
           HI_U32   u32StrideAlign;            /**< how many bytes the output stride align       *//**<CNcomment: 输出stride几个字节对齐        */
 		  #ifdef CONFIG_JPEG_HARDDEC2ARGB
 		  HI_BOOL  bDecARGB;                  /**< the jpeg support dec to argb                 *//**<CNcomment:jpeg硬件支持解码输出ARGB        */
@@ -208,6 +209,7 @@ Date				Author        		Modification
 		  HI_U32   u32DecTime;                 /**< calc the decode time                        *//**<CNcomment:计算解码时间                */
 		  HI_U32   u32CurTime;                 /**< calc the current time                       *//**<CNcomment:获取当前的时间              */
 		  #endif
+		  HI_U32   u32MemTypeMask;			   /**< the memory type mask                        *//**<CNcomment:内存类型掩码                */
 		  HI_S32   s32ClientData;              /**< the client pointer of private structure     *//**<CNcomment:私有结构体指针              */
 		  HI_S32   s32JpegDev;				   /**< the jpeg device						        *//**<CNcomment:jpeg设备					*/
 		  HI_U32   u32ScalRation;              /**< the dec scale                               *//**<CNcomment:缩放比例                    */

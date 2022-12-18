@@ -353,11 +353,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
             g_bReadFrameSize = HI_TRUE;
             VdecType = HI_UNF_VCODEC_TYPE_DIVX3;
         }
-        else if (!strcasecmp("mvc", argv[2]))
-        {
-            VdecType = HI_UNF_VCODEC_TYPE_MVC;
-        }
-           else if (!strcasecmp("mjpeg", argv[2]))
+        else if (!strcasecmp("mjpeg", argv[2]))
         {
             g_bReadFrameSize = HI_TRUE;
             VdecType = HI_UNF_VCODEC_TYPE_MJPEG;

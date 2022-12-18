@@ -460,19 +460,13 @@ STATIC TDE_DRV_FILTER_MODE_E g_enTdeFilterMode[TDE2_FILTER_MODE_BUTT + 1] = {
 };
 
 /*是否局部抗闪烁标志*/
-STATIC HI_BOOL s_bRegionDeflicker = HI_FALSE;
+//STATIC HI_BOOL s_bRegionDeflicker = HI_FALSE;
 /****************************************************************************/
 /*                             TDE osi ctl 内部接口定义                     */
 /****************************************************************************/
 STATIC TDE_COLORFMT_CATEGORY_E   TdeOsiGetFmtCategory(TDE2_COLOR_FMT_E enFmt);
 
 STATIC TDE_COLORFMT_TRANSFORM_E  TdeOsiGetFmtTransType(TDE2_COLOR_FMT_E enSrc2Fmt, TDE2_COLOR_FMT_E enDstFmt);
-
-/* AI7D02649 beg */
-STATIC  HI_S32             TdeOsiSetClutOpt(TDE2_SURFACE_S * pClutSur, TDE2_SURFACE_S * pOutSur, TDE_CLUT_USAGE_E* penClutUsage, 
-                                                  HI_BOOL bClutReload, TDE_HWNode_S* pstHWNode);
-
-/* AI7D02649 end */
 
 STATIC HI_S32                    TdeOsiGetScanInfo(TDE2_SURFACE_S *pSrc, TDE2_RECT_S *pstSrcRect,
                                                    TDE2_SURFACE_S *pstDst,
@@ -531,8 +525,6 @@ STATIC HI_S32                    TdeOsi2SourceFill(TDE_HANDLE s32Handle, TDE2_SU
                                                    TDE2_RECT_S  *pstDstRect, TDE2_FILLCOLOR_S *pstFillColor,
                                                    TDE2_OPT_S *pstOpt);
 #endif
-STATIC  HI_S32             TdeOsiCheckSurface(TDE2_SURFACE_S* pstSurface, TDE2_RECT_S  *pstRect);
-STATIC  HI_S32             TdeOsiCheckMbSurface(TDE2_MB_S* pstMbSurface, TDE2_RECT_S  *pstRect);
 STATIC  HI_S32             TdeOsiCheckYc422RPara(TDE2_SURFACE_S* pstSrcSurface, TDE2_RECT_S *pstSrcRect, 
                                                        TDE2_SURFACE_S* pstDstSurface, TDE2_RECT_S *pstDstRect, 
                                                        HI_BOOL bDeflicker, HI_BOOL bResize);
@@ -565,8 +557,10 @@ STATIC HI_S32                   TdeOsiSetClipPara(TDE2_SURFACE_S * pstBackGround
                                                    TDE2_OPT_S * pstOpt,
                                                    TDE_HWNode_S *pstHwNode);
 
+#ifndef HIGO_CODE_CUT
 STATIC HI_S32                    TdeOsiMbSetClipPara(TDE2_RECT_S * pstDstRect, TDE2_MBOPT_S *pstMbOpt,
                                                      TDE_HWNode_S *pstHwNode);
+#endif
 
 STATIC HI_VOID                   TdeOsiSetBaseOptParaForBlit(TDE2_OPT_S * pstOpt, TDE2_SURFACE_S* pstSrc1, TDE2_SURFACE_S* pstSrc2,
                                                              TDE_OPERATION_CATEGORY_E enOptCategory, TDE_HWNode_S *pstHwNode);
@@ -667,296 +661,7 @@ STATIC  HI_VOID TdeOsiPrintNodeInfo(TDE_HWNode_S* pHWNode)
 #endif
 
 
-#ifndef HIGO_CODE_CUT
-/****************************************************************************/
-/*                             TDE osi ctl 内部接口实现                     */
-/****************************************************************************/
 
-/*  Y  =  (263 * R + 516 * G + 100 * B) >> 10 + 16 */
-/*  Cb =  (-152 * R - 298 * G + 450 * B) >> 10  + 128 */
-/*  Cr =  (450 * R - 377 * G - 73 * B) >> 10  + 128 */
-STATIC HI_S32 rgb2ycc(HI_U8 r, HI_U8 g, HI_U8 b, HI_U8 *y, HI_U8 *cb, HI_U8 *cr)
-{
-    *y = ((((263 * r + 516 * g + 100 * b) >> 9) + 1) >> 1) + 16;
-    *cb = ((((-152 * r - 298 * g+ 450 * b) >> 9) + 1) >> 1)  + 128;
-    *cr = ((((450 * r - 377 * g - 73 * b) >> 9) + 1) >> 1)  + 128;
-
-    return 0;
-}
-
-/*  R  =  ((298 * (Y-16) + 0 * (Cb-128) + 409 * (Cr-128)) >> 8 */
-/*  G =  ((298 * (Y-16) - 100 * (Cb-128) - 208 * (Cr-128)) >> 8 */
-/*  B = ((298 * (Y-16) + 517 * (Cb-128) - 0 * (Cr-128)) >> 8 */
-STATIC HI_S32 ycc2rgb(HI_U8 y, HI_U8 cb, HI_U8 cr, HI_U8 *r, HI_U8 *g, HI_U8 *b)
-{
-    *r = (((298 *(y -16) + 409 * (cr - 128)) >> 7) + 1) >> 1;
-    *g = (((298 * (y - 16) - 100 * (cb - 128) - 208 * (cr - 128)) >> 7) + 1) >> 1;
-    *b = (((298 *(y -16) + 517 * (cb - 128)) >> 7) + 1) >> 1;
-
-    return 0;
-}
-#if 0
-/*****************************************************************************
- Prototype       : TdeOsiConvertFormat
- Description     : 将TDE上层格式转换成驱动层像素格式
- Input           : TDE2_COLOR_FMT_E    **
-                   TDE_DRV_COLOR_FMT_E*
- Output          : None
- Return Value    : 
- Global Variable   
-    Read Only    : 
-    Read & Write : 
-  History         
-  1.Date         : 2012/11/9
-    Author       : hjin
-    Modification : Created function
-
-*****************************************************************************/
-
-STATIC HI_S32 TdeOsiConvertFormat(TDE2_COLOR_FMT_E enColorFmt, TDE_DRV_COLOR_FMT_E *enDrvColorFmt)
-{
-    switch (enColorFmt)
-    {
-        case TDE2_COLOR_FMT_RGB444:
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_RGB444;
-            break;             
-        case TDE2_COLOR_FMT_RGB555:
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_RGB555;
-            break;            
-        case TDE2_COLOR_FMT_RGB565:
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_RGB565;
-            break;             
-        case TDE2_COLOR_FMT_RGB888:
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_RGB888;
-            break;            
-        case TDE2_COLOR_FMT_ARGB4444:  
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_ARGB4444;
-            break;
-               
-        case TDE2_COLOR_FMT_ARGB1555:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_ARGB1555;
-            break;   
-        case TDE2_COLOR_FMT_ARGB8565:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_ARGB8565;
-             break;
-        case TDE2_COLOR_FMT_ARGB8888:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_ARGB8888;
-            break;          
-       /* case TDE2_COLOR_FMT_CLUT1:
-          *enDrvColorFmt = TDE_DRV_COLOR_FMT_CLUT1;
-          break;
-        case TDE2_COLOR_FMT_CLUT2: 
-          *enDrvColorFmt = TDE_DRV_COLOR_FMT_CLUT2;
-          break;
-          
-        case TDE2_COLOR_FMT_CLUT4:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_CLUT4;
-            break;
-            */
-        case TDE2_COLOR_FMT_CLUT8: 
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_CLUT8;
-            break;
-                     
-        case TDE2_COLOR_FMT_YCbCr888:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_YCbCr888;
-            break;
-        case TDE2_COLOR_FMT_AYCbCr8888:     
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_AYCbCr8888;
-            break;
-        case TDE2_COLOR_FMT_YCbCr422:   
-            *enDrvColorFmt = TDE_DRV_COLOR_FMT_YCbCr422;
-            break;
-        default:
-            return HI_FAILURE;
-            break;        
-    }
-    return HI_SUCCESS;
-}
-
-#endif
-
-/*****************************************************************************
- Prototype       : TdeOsiColorConvert
- Description     : 将RGB空间的其他象素格式转换为ARGB8888格式
- Input           : enColorFmt    **
-                   u32InColor    **
-                   pu32OutColor  **
- Output          : None
- Return Value    : 
- Global Variable   
-    Read Only    : 
-    Read & Write : 
-  History         
-  1.Date         : 2008/5/21
-    Author       : wming
-    Modification : Created function
-
-*****************************************************************************/
-STATIC HI_S32 TdeOsiColorConvert(TDE2_FILLCOLOR_S *pstFillColor, TDE2_SURFACE_S *pstSur, HI_U32 *pu32OutColor)
-{
-    HI_U8 a, r, g, b, y, cb, cr;
-    HI_U8 bits_a, bits_r, bits_g, bits_b;
-    TDE_COLORFMT_TRANSFORM_E enColorTrans;
-
-    TDE_ASSERT(NULL != pstFillColor);
-    TDE_ASSERT(NULL != pstSur);
-    TDE_ASSERT(NULL != pu32OutColor);
-    enColorTrans = TdeOsiGetFmtTransType(pstFillColor->enColorFmt, pstSur->enColorFmt);
-    
-    switch(pstFillColor->enColorFmt)
-    {
-        case TDE2_COLOR_FMT_RGB444:
-        {
-            bits_a = 0;
-            bits_r = 4;
-            bits_g = 4;
-            bits_b = 4;
-            pstFillColor->u32FillColor &= 0xfff;
-            break;
-        }
-        case TDE2_COLOR_FMT_RGB555:
-        {
-            bits_a = 0;
-            bits_r = 5;
-            bits_g = 5;
-            bits_b = 5;
-            pstFillColor->u32FillColor &= 0x7fff;
-            break;
-        }
-        case TDE2_COLOR_FMT_RGB565:
-        {
-            bits_a = 0;
-            bits_r = 5;
-            bits_g = 6;
-            bits_b = 5;
-            pstFillColor->u32FillColor &= 0xffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_RGB888:
-        {
-            bits_a = 0;
-            bits_r = 8;
-            bits_g = 8;
-            bits_b = 8;
-            pstFillColor->u32FillColor &= 0xffffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_ARGB4444:
-        {
-            bits_a = 4;
-            bits_r = 4;
-            bits_g = 4;
-            bits_b = 4;
-            pstFillColor->u32FillColor &= 0xffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_ARGB1555:
-        {
-            bits_a = 1;
-            bits_r = 5;
-            bits_g = 5;
-            bits_b = 5;
-            pstFillColor->u32FillColor &= 0xffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_ARGB8565:
-        {
-            bits_a = 8;
-            bits_r = 5;
-            bits_g = 6;
-            bits_b = 5;
-            pstFillColor->u32FillColor &= 0xffffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_ARGB8888:
-        {
-            bits_a = 8;
-            bits_r = 8;
-            bits_g = 8;
-            bits_b = 8;
-            pstFillColor->u32FillColor &= 0xffffffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_YCbCr888:
-        {
-            bits_a = 0;
-            bits_r = 8;
-            bits_g = 8;
-            bits_b = 8;
-            pstFillColor->u32FillColor &= 0xffffff;
-            break;
-        }
-        case TDE2_COLOR_FMT_AYCbCr8888:
-        {
-            bits_a = 8;
-            bits_r = 8;
-            bits_g = 8;
-            bits_b = 8;
-            break;
-        }
-        default:
-            TDE_TRACE(TDE_KERN_ERR, "Unsupported color!\n");
-            return -1;
-    }
-
-    if(TDE2_COLOR_FMT_ARGB1555 != pstFillColor->enColorFmt)
-    {
-        a = (pstFillColor->u32FillColor >> (bits_b + bits_g + bits_r)) << (8-bits_a) ; 
-    }
-    else
-    {
-        if(pstFillColor->u32FillColor >> 15)
-        {
-            a = pstSur->u8Alpha1;
-        }
-        else
-        {
-            a = pstSur->u8Alpha0;
-        }
-    }
-
-    /* 低位补0 */
-    r = (pstFillColor->u32FillColor >> (bits_b + bits_g)) << (8-bits_r) ; 
-    g = (pstFillColor->u32FillColor >> bits_b) << (8-bits_g) ;
-    b = pstFillColor->u32FillColor << (8-bits_b) ;
-
-    if(255 == a )
-    {
-        a  = 0x80;
-    }
-    else
-    {
-        a = a >> 1;
-    }
-
-    switch(enColorTrans)
-    {
-        case TDE_COLORFMT_TRANSFORM_ARGB_ARGB:
-        case TDE_COLORFMT_TRANSFORM_YCbCr_YCbCr:
-        {
-            *pu32OutColor = (a << 24) + (r << 16) + (g << 8) + b;
-            return 0;
-        }
-
-        case TDE_COLORFMT_TRANSFORM_ARGB_YCbCr:
-        {
-            rgb2ycc(r, g, b, &y, &cb, &cr);
-            *pu32OutColor = (a << 24) + (y << 16) + (cb << 8) + cr;
-            return 0;
-        }
-        
-        case TDE_COLORFMT_TRANSFORM_YCbCr_ARGB:
-        {
-            ycc2rgb(r, g, b, &y, &cb, &cr);
-            *pu32OutColor = (a << 24) + (y << 16) + (cb << 8) + cr;
-            return 0;
-        }
-        default:
-            TDE_TRACE(TDE_KERN_ERR, "Unsupported color transport!\n");
-            return -1;
-    }
-}
-#endif
 /*****************************************************************************
 * Function:      TdeOsiCheckResizePara
 * Description:   检查缩放比例限制
@@ -996,7 +701,7 @@ STATIC TDE_COLORFMT_CATEGORY_E TdeOsiGetFmtCategory(TDE2_COLOR_FMT_E enFmt)
     {
         return TDE_COLORFMT_CATEGORY_ARGB;
     }
-#ifndef HIGO_CODE_CUT   
+#ifndef HIGO_CODE_CUT
     /* 目标是查找表格式 */
     else if (enFmt <= TDE2_COLOR_FMT_ACLUT88)
     {
@@ -1203,63 +908,6 @@ STATIC  HI_BOOL TdeOsiWhetherContainAlpha(TDE2_COLOR_FMT_E enColorFmt)
     default:
         return HI_FALSE;
     }
-}
-
-/*****************************************************************************
-* Function:      TdeOsiSetClutOpt
-* Description:   设置Clut参数
-* Input:         pClutSur Clut位图信息
-*                penClutUsage  返回Clut使用类型:扩展/校正
-*                bClutReload   是否重加载Clut表
-*                pstHWNode     硬件节点信息
-* Output:        无
-* Return:        TDE_CLUT_USAGE_E 查找表用途
-* Others:        修改 AI7D02649 增加
-*****************************************************************************/
-STATIC  HI_S32 TdeOsiSetClutOpt(TDE2_SURFACE_S * pClutSur, TDE2_SURFACE_S * pOutSur, TDE_CLUT_USAGE_E* penClutUsage, 
-                                      HI_BOOL bClutReload, TDE_HWNode_S* pstHWNode)
-{
-#ifndef HIGO_CODE_CUT
-    if (((HI_U8*)-1 != pClutSur->pu8ClutPhyAddr)&&(HI_NULL != pClutSur->pu8ClutPhyAddr))
-    {
-        TDE_COLORFMT_CATEGORY_E enFmtCate;
-            
-        enFmtCate = TdeOsiGetFmtCategory(pOutSur->enColorFmt);
-
-        /* 当用户输入Clut类型与输出格式类型不一致时,返回错误 */
-        if ( (!pClutSur->bYCbCrClut && TDE_COLORFMT_CATEGORY_YCbCr == enFmtCate) 
-             || (pClutSur->bYCbCrClut && TDE_COLORFMT_CATEGORY_ARGB == enFmtCate) )
-        {
-            TDE_TRACE(TDE_KERN_ERR, "clut fmt not same\n");
-            return HI_ERR_TDE_UNSUPPORTED_OPERATION;
-        }
-        
-        /* 因为不支持输出CSC，所以输出和背景颜色空间一致，在三源操作时，clut要转向背景，这里用输出颜色空间来代替背景的颜色空间 */
-        *penClutUsage = TdeOsiGetClutUsage(pClutSur->enColorFmt, pOutSur->enColorFmt);/*AI7D02757*/
-        if (TDE_CLUT_CLUT_BYPASS > *penClutUsage)
-        {
-            TDE_DRV_CLUT_CMD_S stClutCmd;
-            if (TDE_CLUT_COLOREXPENDING == *penClutUsage)
-            {
-                stClutCmd.enClutMode = TDE_COLOR_EXP_CLUT_MODE;
-            }
-            else
-            {
-                stClutCmd.enClutMode = TDE_COLOR_CORRCT_CLUT_MODE;
-            }
-
-            if(((HI_U32)pClutSur->pu8ClutPhyAddr)%4)
-            {
-                TDE_TRACE(TDE_KERN_ERR, "pClutSur->pu8ClutPhyAddr=%p\n", pClutSur->pu8ClutPhyAddr);
-                return HI_ERR_TDE_NOT_ALIGNED;
-            }
-
-            stClutCmd.pu8PhyClutAddr = pClutSur->pu8ClutPhyAddr;
-            TdeHalNodeSetClutOpt(pstHWNode, &stClutCmd, bClutReload);
-        }
-    }
-    #endif
-    return HI_SUCCESS;
 }
 
 /*****************************************************************************
@@ -1981,10 +1629,12 @@ STATIC HI_S32 TdeOsiSetMbPara(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
         TdeHalNodeSetMbMode(pHWNode, &stMbCmd);
         TdeHalNodeSetGlobalAlpha(pHWNode, pMbOpt->u8OutAlpha);
 
+#ifndef HIGO_CODE_CUT
         if ((s32Ret = TdeOsiMbSetClipPara(pstDstRect, pMbOpt, pHWNode)) < 0)
         {
             return s32Ret;
         }
+#endif
 
         TdeHalNodeSetColorConvert(pHWNode, &stConv);
         /* 如果没有作滤波操作,直接完成节点设置 */
@@ -2090,11 +1740,14 @@ STATIC HI_S32 TdeOsiSetMbPara(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
         TdeHalNodeSetMbMode(pHWNode, &stMbCmd);
         TdeOsiSetFilterOptAdjInfo(&stDrvS1Tmp, &stDrvDst, &stFilterOpt, TDE_CHILD_SCALE_MB_CONCA_H);
 
+#ifndef HIGO_CODE_CUT
         if ((s32Ret = TdeOsiMbSetClipPara(pstDstRect, pMbOpt, pHWNode)) < 0)
         {
             TdeOsiListPutPhyBuff(u32WorkBufNum);
             return s32Ret;
         }
+#endif
+
         if ((s32Ret = TdeOsiSetNodeFinish(s32Handle, pHWNode, u32WorkBufNum, TDE_NODE_SUBM_ALONE)) < 0)
         {
             TdeOsiListPutPhyBuff(u32WorkBufNum);
@@ -2144,11 +1797,14 @@ STATIC HI_S32 TdeOsiSetMbPara(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
         stMbCmd.enMbMode = TDE_MB_CONCA_FILTER;
         TdeHalNodeSetMbMode(pHWNode, &stMbCmd);
 
+#ifndef HIGO_CODE_CUT
         if ((s32Ret = TdeOsiMbSetClipPara(pstDstRect, pMbOpt, pHWNode)) < 0)
         {
             TdeOsiListPutPhyBuff(u32WorkBufNum);
             return s32Ret;
         }
+#endif
+
         TdeOsiCalcMbFilterOpt(&stFilterOpt, pstMB->enMbFmt, TDE2_MB_COLOR_FMT_JPG_YCbCr444MBP, 
                               &stAdjFieldRect, pstDstRect, HI_FALSE, HI_FALSE, TDE_FRAME_PIC_MODE);
         TDE_FILLUP_RECT_BY_DRVSURFACE(stInRect, stDrvS1);
@@ -2182,11 +1838,15 @@ STATIC HI_S32 TdeOsiSetMbPara(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
             TdeHalNodeSetBaseOperate(pHWNode, TDE_MB_2OPT, TDE_ALU_NONE, 0);
             stMbCmd.enMbMode = TDE_MB_CONCA_FILTER;
             TdeHalNodeSetMbMode(pHWNode, &stMbCmd);
+
+#ifndef HIGO_CODE_CUT
             if ((s32Ret = TdeOsiMbSetClipPara(pstDstRect, pMbOpt, pHWNode)) < 0)
             {
                 TdeOsiListPutPhyBuff(u32WorkBufNum);
                 return s32Ret;
             }
+ #endif
+ 
             TdeOsiCalcMbFilterOpt(&stFilterOpt, pstMB->enMbFmt, TDE2_MB_COLOR_FMT_JPG_YCbCr444MBP, 
                                   &stAdjFieldRect, pstDstRect, HI_FALSE, HI_FALSE, TDE_FRAME_PIC_MODE);
             TDE_FILLUP_RECT_BY_DRVSURFACE(stInRect, stDrvS1);
@@ -2218,11 +1878,16 @@ STATIC HI_S32 TdeOsiSetMbPara(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
         TdeHalNodeSetBaseOperate(pHWNode, TDE_MB_2OPT, TDE_ALU_CONCA, 0);
         stMbCmd.enMbMode = TDE_MB_UPSAMP_CONCA;
         TdeHalNodeSetMbMode(pHWNode, &stMbCmd);
+
+        #ifndef HIGO_CODE_CUT
         if ((s32Ret = TdeOsiMbSetClipPara(pstDstRect, pMbOpt, pHWNode)) < 0)
         {
             TdeOsiListPutPhyBuff(u32WorkBufNum);
             return s32Ret;
         }
+        #endif
+
+        
         TdeOsiCalcMbFilterOpt(&stFilterOpt, pstMB->enMbFmt, TDE2_MB_COLOR_FMT_JPG_YCbCr444MBP, 
                               &stAdjFieldRect, &stAdjFieldRect, HI_TRUE, HI_TRUE, enPicMode);
         TDE_FILLUP_RECT_BY_DRVSURFACE(stInRect, stDrvS2);
@@ -2488,6 +2153,9 @@ STATIC  HI_U32 TdeOsiMbCalcVStep(HI_U32 u32Hi, HI_U32 u32Ho,
             return (((u32Hi - 1) << (TDE_FLOAT_BITLEN)) / (u32Ho - 1) ) << 1;  /* 2 * step */
         }
     }
+
+#if 0
+	/** deal with codecc **/
     if (bCbCr && TDE2_MB_COLOR_FMT_JPG_YCbCr422MBHP == enOutFmt)
     {
         if (TDE2_MB_COLOR_FMT_JPG_YCbCr420MBP == enInFmt)
@@ -2503,6 +2171,7 @@ STATIC  HI_U32 TdeOsiMbCalcVStep(HI_U32 u32Hi, HI_U32 u32Ho,
             return (((u32Hi - 1) << (TDE_FLOAT_BITLEN)) / (u32Ho - 1) ) << 1;  /* 2 * step */
         }
     }
+#endif
     return (((u32Hi - 1) << (TDE_FLOAT_BITLEN + 1)) / (u32Ho - 1) + 1) >> 1;    /* step */
 }
 
@@ -3059,7 +2728,6 @@ STATIC HI_S32 TdeOsiSetFilterChildNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode
     {
         for (i = u32FirstNum + 1; i < (HI_S32)u32SliceNum; i++)
         {
-            //TdeHalNodeInitNd(pNode, HI_TRUE);
             /* AE5D03390:软件规避区域外clip bug */
             TdeHalNodeInitChildNd(pNode,u32TDE_CLIP_START, u32TDE_CLIP_STOP);
             /*配置子节点的滤波参数信息*/
@@ -3088,7 +2756,6 @@ STATIC HI_S32 TdeOsiSetFilterChildNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode
     {
         for (i = u32FirstNum - 1; i >= 0; i--)
         {
-            //TdeHalNodeInitNd(pNode, HI_TRUE);
             /* AE5D03390:软件规避区域外clip bug */
             TdeHalNodeInitChildNd(pNode,u32TDE_CLIP_START, u32TDE_CLIP_STOP);
             TdeOsiSetResizePara(pNode, pstFilterOpt, TDE_NODE_SUBM_CHILD);
@@ -3148,6 +2815,7 @@ typedef struct tagUpdateInfo
 	HI_S32 def_offsetdown; //the down offset of deflicker
 }UpdateInfo;
 
+#if 0
 static void TdeOsiGetHUpdateInfo(UpdateConfig *reg, UpdateInfo *info, int scaler_en)
 {
 	HI_S32 zme_hinstart=0, zme_hinstop=0;
@@ -3233,6 +2901,7 @@ static void TdeOsiGetHUpdateInfo(UpdateConfig *reg, UpdateInfo *info, int scaler
 
     return ;
 }
+
 
 static void TdeOsiGetVUpdateInfo(UpdateConfig *reg, UpdateInfo *info, int scaler_en, int deflicker_en)
 {
@@ -3450,7 +3119,7 @@ static void TdeOsiGetVUpdateInfo(UpdateConfig *reg, UpdateInfo *info, int scaler
 	}
 	
 }
-
+#endif
 
 /*****************************************************************************
 * Function:      TdeOsiSetFilterNode
@@ -3471,18 +3140,18 @@ STATIC HI_S32 TdeOsiSetFilterNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode, TDE
     TDE2_COLOR_FMT_E enInFmt;
     TDE2_COLOR_FMT_E enOutFmt;
 
-    UpdateConfig reg;
-    UpdateInfo info;
+    //UpdateConfig reg;
+    //UpdateInfo info;
 
-    TDE2_RECT_S stUpdateInRect;
-    TDE2_RECT_S stUpdateOutRect;
+    //TDE2_RECT_S stUpdateInRect;
+    //TDE2_RECT_S stUpdateOutRect;
 
-    HI_BOOL bDeflicker;
-    HI_BOOL bScale = HI_FALSE;
+    //HI_BOOL bDeflicker;
+    //HI_BOOL bScale = HI_FALSE;
     
     enInFmt = pstForeGround->enColorFmt;
     enOutFmt = pstDst->enColorFmt;
-    bDeflicker = (TDE2_DEFLICKER_MODE_NONE == enDeflickerMode)?HI_FALSE:HI_TRUE;
+    //bDeflicker = (TDE2_DEFLICKER_MODE_NONE == enDeflickerMode)?HI_FALSE:HI_TRUE;
     
     /* 计算垂直/水平步长和垂直水平offset */
     if (1 >= pOutRect->u32Width)
@@ -3532,6 +3201,8 @@ STATIC HI_S32 TdeOsiSetFilterNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode, TDE
 
     pstFilterOpt->bCoefSym = HI_TRUE; /* 算法提供场景,始终打开不对称 */
 
+#if 0
+
     reg.ori_in_height = pstForeGround->u32Height;
     reg.ori_in_width = pstForeGround->u32Width;
     reg.zme_out_height = pstDst->u32Height;
@@ -3545,6 +3216,9 @@ STATIC HI_S32 TdeOsiSetFilterNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode, TDE
         UpdateW:%d, UpdateH:%d\n", reg.ori_in_height, reg.ori_in_width, reg.zme_out_height, reg.zme_out_width,\
         reg.update_instart_w, reg.update_instart_h, reg.update_in_width, reg.update_in_height);
     /*局部抗闪烁*/
+
+	/** deal with codecc,s_bRegionDeflicker not set true **/
+
     if (((pstForeGround->u32Width != pInRect->u32Width) || (pstForeGround->u32Height != pInRect->u32Height))
         && s_bRegionDeflicker)
     {
@@ -3616,6 +3290,7 @@ STATIC HI_S32 TdeOsiSetFilterNode(TDE_HANDLE s32Handle, TDE_HWNode_S* pNode, TDE
         return TdeOsiSetFilterChildNode(s32Handle, pNode, &stUpdateInRect, &stUpdateOutRect, enDeflickerMode, pstFilterOpt);
     }
     else
+#endif
     {
         return TdeOsiSetFilterChildNode(s32Handle, pNode, pInRect, pOutRect, enDeflickerMode, pstFilterOpt);
     }
@@ -3805,16 +3480,6 @@ STATIC HI_S32 TdeOsi1SourceFill(TDE_HANDLE s32Handle, TDE2_SURFACE_S *pstDst,
         return HI_ERR_TDE_NULL_PTR;
     }
 
-    if (TdeOsiCheckSurface(pstDst, pstDstRect) < 0)
-    {
-        return HI_ERR_TDE_INVALID_PARA;
-    }
-#ifndef HIGO_CODE_CUT
-    /* 写操作时, subbyte格式对齐要求起始点字节对齐 */
-    TDE_CHECK_SUBBYTE_STARTX(pstDstRect->s32Xpos, pstDstRect->u32Width, pstDst->enColorFmt);
-
-    TdeOsiAdjPara4YCbCr422R(pstDst, pstDstRect, pstFillColor);
-#endif
     /* 调用TdeHalNodeInitNd(&stHWNode)初始化节点 */
     TdeHalNodeInitNd(&stHWNode, HI_FALSE);
 
@@ -3896,29 +3561,9 @@ STATIC HI_S32 TdeOsi1SourceFill(TDE_HANDLE s32Handle, TDE2_SURFACE_S *pstDst,
         }
         #endif
     }
-#ifndef HIGO_CODE_CUT
-    /* 单源1操作需要匹配填充格式到目标格式 */
-    if (TDE_NORM_FILL_1OPT == enBaseMode)
-    {
-        if(TdeOsiColorConvert(pstFillColor, pstDst, &stDrvColorFill.u32FillData) < 0)
-        {
-            return HI_ERR_TDE_INVALID_PARA;
-        }
-		/*fill data已转换为相应的8888格式， 解决dest和fill data做rop时 fill data数据不对问题 
-		 modify by w54723*/
-		stDrvColorFill.enDrvColorFmt = TDE_DRV_COLOR_FMT_ARGB8888;
-    }
-    else
-#endif        
-    {
-        stDrvColorFill.u32FillData = pstFillColor->u32FillColor;
-		/*fill data可直接填充到目的， 解决dest和fill data做rop时 fill data数据不对问题 
-		 modify by w54723*/
-		stDrvColorFill.enDrvColorFmt = g_enTdeCommonDrvColorFmt[pstFillColor->enColorFmt];
-		/*解决颜色格式转换不匹配的问题
-		 modify by h180450*/
-       // TdeOsiConvertFormat(pstFillColor->enColorFmt, &stDrvColorFill.enDrvColorFmt);
-    }
+
+    stDrvColorFill.u32FillData = pstFillColor->u32FillColor;
+	stDrvColorFill.enDrvColorFmt = g_enTdeCommonDrvColorFmt[pstFillColor->enColorFmt];
 
 
     /* 调用TdeHalNodeSetBaseOperate设置基本操作命令 */
@@ -3986,157 +3631,6 @@ static HI_S32 TdeOsiCheckYc422RPara(TDE2_SURFACE_S* pstSrcSurface, TDE2_RECT_S *
 }
 
 /*****************************************************************************
-* Function:      TdeOsiCheckSurface
-* Description:   根据用户传入的位图尺寸和操作区域尺寸调整为正确的操作区域
-* Input:         pstSurface: 位图信息
-*                pstRect: 位图操作区域
-* Output:        无
-* Return:        成功/失败
-* Others:        无
-*****************************************************************************/
-static HI_S32 TdeOsiCheckSurface(TDE2_SURFACE_S* pstSurface, TDE2_RECT_S  *pstRect)
-{
-#ifndef HIGO_CODE_CUT
-    HI_S32 s32Bpp;
-    HI_U32 u32BytePerPixel;
-
-    TDE_CHECK_COLORFMT(pstSurface->enColorFmt);
-
-    if ((TDE_MAX_SURFACE_PITCH < pstSurface->u32Stride)
-        || (0 == pstSurface->u32Stride)
-        || (0 == pstRect->u32Height)
-        || (0 == pstRect->u32Width)
-        || (pstRect->s32Xpos < 0)
-        || ((HI_U32)pstRect->s32Xpos >= pstSurface->u32Width)
-        || (pstRect->s32Ypos < 0)
-        || ((HI_U32)pstRect->s32Ypos >= pstSurface->u32Height))
-    {
-        TDE_TRACE(TDE_KERN_ERR, "sw:%d, sh:%d, stride:%x, x:%d, y:%d, w:%d, h:%d\n", pstSurface->u32Width,
-            pstSurface->u32Height, pstSurface->u32Stride, pstRect->s32Xpos, pstRect->s32Ypos,
-            pstRect->u32Width, pstRect->u32Height);
-        TDE_TRACE(TDE_KERN_ERR, "invalid surface size or operation area!");
-        return -1;
-    }
-
-    if (TDE2_COLOR_FMT_BUTT <= pstSurface->enColorFmt)
-    {
-        TDE_TRACE(TDE_KERN_ERR, "Unkown color format!\n");
-        return -1;
-    }
-
-    if ((TDE2_COLOR_FMT_YCbCr422 == pstSurface->enColorFmt)
-        && ((pstRect->s32Xpos & 0x1) || (pstRect->u32Width & 0x1)))
-    {
-        TDE_TRACE(TDE_KERN_ERR, "x, width of YCbCr422R couldn't be odd!\n");
-        return -1;
-    }
-
-    s32Bpp = TdeOsiGetbppByFmt(pstSurface->enColorFmt);
-
-    /* 非subbyte格式按照象素格式对齐 */
-    if ((s32Bpp >= 8) && (s32Bpp != 24))
-    {
-        u32BytePerPixel = (s32Bpp >> 3);
-
-        /* 检查起始地址对齐 */
-        if (pstSurface->u32PhyAddr % u32BytePerPixel)
-        {
-            TDE_TRACE(TDE_KERN_ERR, "Bitmap address is not aligned!\n");
-            return -1;
-        }
-
-        /* 检查stride对齐 */
-        if (pstSurface->u32Stride % u32BytePerPixel)
-        {
-            TDE_TRACE(TDE_KERN_ERR, "stride is not aligned!\n");
-
-            return -1;
-        }
-    }
-    else if (s32Bpp == 24)
-    {        
-        /*检查起始地址对齐*/
-        if (pstSurface->u32PhyAddr % 4)
-        {
-            TDE_TRACE(TDE_KERN_ERR, "Bitmap address is not aligned!\n");
-            return -1;
-        }
-
-        /* 检查stride对齐 */
-        if (pstSurface->u32Stride % 4)
-        {
-            TDE_TRACE(TDE_KERN_ERR, "stride is not aligned!\n");
-
-            return -1;
-        }
-    }
-
-    if (pstRect->s32Xpos + pstRect->u32Width > pstSurface->u32Width)
-    {
-        /* AI7D02547 */
-        pstRect->u32Width = pstSurface->u32Width - pstRect->s32Xpos;
-    }
-
-    if (pstRect->s32Ypos + pstRect->u32Height > pstSurface->u32Height)
-    {
-        /* AI7D02547 */
-        pstRect->u32Height = pstSurface->u32Height - pstRect->s32Ypos;
-    }
-
-    /* 调整后判断尺寸是否超出限制 AI7D02785 */ 
-    if ((TDE_MAX_RECT_WIDTH < pstRect->u32Width)
-        || (TDE_MAX_RECT_HEIGHT < pstRect->u32Height))
-    {
-        TDE_TRACE(TDE_KERN_ERR, "invalid operation area!");
-        return -1;
-    }
-#endif
-    return 0;
-}
-
-/*****************************************************************************
-* Function:      TdeOsiCheckMbSurface
-* Description:   根据用户传入的位图尺寸和操作区域尺寸调整为正确的操作区域
-* Input:         pstSurface: 位图信息
-*                pstRect: 位图操作区域
-* Output:        无
-* Return:        成功/失败
-* Others:        无
-*****************************************************************************/
-static HI_S32 TdeOsiCheckMbSurface(TDE2_MB_S* pstMbSurface, TDE2_RECT_S  *pstRect)
-{
-#ifndef HIGO_CODE_CUT
-    TDE_CHECK_MBCOLORFMT(pstMbSurface->enMbFmt);
-    
-    if ((pstRect->s32Xpos < 0)
-        || (TDE_MAX_RECT_WIDTH < pstRect->u32Width)
-        || (TDE_MAX_RECT_HEIGHT < pstRect->u32Height)
-        || (0 == pstRect->u32Height)
-        || (0 == pstRect->u32Width)
-        || (TDE_MAX_SURFACE_PITCH < pstMbSurface->u32YStride)
-        || (TDE_MAX_SURFACE_PITCH < pstMbSurface->u32CbCrStride)
-        || ((HI_U32)pstRect->s32Xpos >= pstMbSurface->u32YWidth)
-        || (pstRect->s32Ypos < 0)
-        || ((HI_U32)pstRect->s32Ypos >= pstMbSurface->u32YHeight))
-    {
-        TDE_TRACE(TDE_KERN_ERR, "invalid parameter in operation rect!\n");
-        return -1;
-    }
-
-    if (pstRect->s32Xpos + pstRect->u32Width > pstMbSurface->u32YWidth)
-    {
-        pstRect->u32Width = pstMbSurface->u32YWidth - pstRect->s32Xpos;
-    }
-
-    if (pstRect->s32Ypos + pstRect->u32Height > pstMbSurface->u32YHeight)
-    {
-        pstRect->u32Height = pstMbSurface->u32YHeight - pstRect->s32Ypos;
-    }
-#endif
-    return 0;
-}
-
-/*****************************************************************************
 * Function:      TdeOsiGetOptCategory
 * Description:   分析TDE操作的类型
 * Input:         pstBackGround: 背景位图信息
@@ -4168,31 +3662,10 @@ STATIC TDE_OPERATION_CATEGORY_E  TdeOsiGetOptCategory(TDE2_SURFACE_S * pstBackGr
         return TDE_OPERATION_BUTT;
     }
 
-    /* 调整目标位图操作区域rect */
-    if (TdeOsiCheckSurface(pstDst, pstDstRect) < 0)
-    {
-        TDE_TRACE(TDE_KERN_ERR, "\n");
-        return TDE_OPERATION_BUTT;
-    }
-
     /* 双源判断 */
     if ((NULL != pstBackGround) && (NULL != pstForeGround))
     {
         if ((NULL == pstBackGroundRect) || (NULL == pstForeGroundRect) || (NULL == pstOpt))
-        {
-            TDE_TRACE(TDE_KERN_ERR, "\n");
-            return TDE_OPERATION_BUTT;
-        }
-
-        /* 调整背景位图操作区域rect */
-        if (TdeOsiCheckSurface(pstBackGround, pstBackGroundRect) < 0)
-        {
-            TDE_TRACE(TDE_KERN_ERR, "\n");
-            return TDE_OPERATION_BUTT;
-        }
-
-        /* 调整前景位图操作区域rect */
-        if (TdeOsiCheckSurface(pstForeGround, pstForeGroundRect) < 0)
         {
             TDE_TRACE(TDE_KERN_ERR, "\n");
             return TDE_OPERATION_BUTT;
@@ -4247,13 +3720,6 @@ STATIC TDE_OPERATION_CATEGORY_E  TdeOsiGetOptCategory(TDE2_SURFACE_S * pstBackGr
     }
 
     if (NULL == pTmpSrc2Rect)
-    {
-        TDE_TRACE(TDE_KERN_ERR, "\n");
-        return TDE_OPERATION_BUTT;
-    }
-
-    /* 调整位图操作区域rect */
-    if (TdeOsiCheckSurface(pTmpSrc2, pTmpSrc2Rect) < 0)
     {
         TDE_TRACE(TDE_KERN_ERR, "\n");
         return TDE_OPERATION_BUTT;
@@ -4402,12 +3868,14 @@ STATIC HI_S32 TdeOsiConvertMbSurface(TDE2_MB_S* pstMB, TDE2_RECT_S  *pstMbRect, 
     pstDrvCbCr->enColorFmt = g_enTdeMbDrvColorFmt[pstMB->enMbFmt];
     pstDrvCbCr->u32PhyAddr = (TDE_BOTTOM_FIELD_PIC_MODE == enPicMode) ? 
                              (pstMB->u32CbCrPhyAddr + pstMB->u32CbCrStride) : (pstMB->u32CbCrPhyAddr);
-
+#if 0
+	/** deal with codecc **/
     if (bCbCr2Opt)
     {
         enAdjColorFmt = TDE_DRV_COLOR_FMT_YCbCr444MB;
     }
-    
+#endif
+
     if (TDE_FRAME_PIC_MODE == enPicMode)
     {
         pstDrvCbCr->u32Pitch = pstMB->u32CbCrStride;
@@ -4724,6 +4192,8 @@ STATIC HI_S32 TdeOsiSetPatternClipPara(TDE2_SURFACE_S * pstBackGround, TDE2_RECT
 }
 #endif
 
+
+#ifndef HIGO_CODE_CUT
 /*****************************************************************************
 * Function:      TdeOsiMbSetClipPara
 * Description:   MB操作设置Clip裁减区域参数
@@ -4737,7 +4207,6 @@ STATIC HI_S32 TdeOsiSetPatternClipPara(TDE2_SURFACE_S * pstBackGround, TDE2_RECT
 STATIC HI_S32 TdeOsiMbSetClipPara(TDE2_RECT_S * pstDstRect, TDE2_MBOPT_S *pstMbOpt,
                                  TDE_HWNode_S *pstHwNode)
 {
-#ifndef HIGO_CODE_CUT
     TDE2_RECT_S stInterRect = {0};
     
     TDE_ASSERT(NULL != pstDstRect);
@@ -4769,9 +4238,10 @@ STATIC HI_S32 TdeOsiMbSetClipPara(TDE2_RECT_S * pstDstRect, TDE2_MBOPT_S *pstMbO
         TDE_TRACE(TDE_KERN_ERR, "error clip mode!\n");
         return HI_ERR_TDE_INVALID_PARA;
     }
-#endif    
     return 0;
 }
+#endif
+
 
 /*****************************************************************************
  Prototype       : TdeOsiSetExtAlpha
@@ -4846,15 +4316,19 @@ STATIC HI_VOID TdeOsiSetBaseOptParaForBlit(TDE2_OPT_S * pstOpt, TDE2_SURFACE_S* 
         return;
     }
 
+/** deal with codecc,not return TDE_COLORFMT_CATEGORY_An**/
+#ifndef HIGO_CODE_CUT
     if (HI_NULL != pstSrc1 && HI_NULL != pstSrc2)
     {
-        if ( (TDE_COLORFMT_CATEGORY_An == TdeOsiGetFmtCategory(pstSrc2->enColorFmt))
-              && (TDE_COLORFMT_CATEGORY_ARGB == TdeOsiGetFmtCategory(pstSrc1->enColorFmt)
-                  || TDE_COLORFMT_CATEGORY_YCbCr == TdeOsiGetFmtCategory(pstSrc1->enColorFmt)) )
+    	
+        if (   (TDE_COLORFMT_CATEGORY_An == TdeOsiGetFmtCategory(pstSrc2->enColorFmt))
+            && (  TDE_COLORFMT_CATEGORY_ARGB == TdeOsiGetFmtCategory(pstSrc1->enColorFmt)
+               || TDE_COLORFMT_CATEGORY_YCbCr == TdeOsiGetFmtCategory(pstSrc1->enColorFmt)) )
         {
             enAlu = TDE_SRC1_BYPASS;
         }
     }
+#endif
 
     if (TDE2_ALUCMD_ROP == pstOpt->enAluCmd)
     {
@@ -4952,10 +4426,9 @@ STATIC  HI_VOID TdeOsiSetResizePara(TDE_HWNode_S* pstHwNode, TDE_FILTER_OPT* pst
 
 STATIC  HI_VOID TdeOsiSetDeflickerPara(TDE_HWNode_S* pstHwNode, TDE2_DEFLICKER_MODE_E enDeflickerMode, TDE_FILTER_OPT* pstFilterOpt)
 {
+
     TDE_DRV_FLICKER_CMD_S stFlickerCmd;
     HI_BOOL bDeflicker = (TDE2_DEFLICKER_MODE_NONE == enDeflickerMode)?HI_FALSE:HI_TRUE;
-
-//#define __TDE_CHECK_SLICE_DATA__
 
 #ifndef __TDE_CHECK_SLICE_DATA__
     HI_U8 u8DefTable[] = {0, 64, 0, 12, 40, 12, 15, 37, 15, 17, 34, 17,
@@ -4964,19 +4437,37 @@ STATIC  HI_VOID TdeOsiSetDeflickerPara(TDE_HWNode_S* pstHwNode, TDE2_DEFLICKER_M
     HI_U8 u8DefTable[] = {0, 64, 0, 0, 64, 0, 0, 64, 0, 0, 64, 0,
                           0, 64, 0};
 #endif
+
     memset(&stFlickerCmd, 0, sizeof(TDE_DRV_FLICKER_CMD_S));
     /* 根据算法提供的参数和各个阀值设置stFlicker */
-    if (HI_TRUE == bDeflicker)
-    {
+    if (HI_TRUE == bDeflicker){
         stFlickerCmd.enDfeMode = TDE_DRV_AUTO_FILTER;
     }
-    
-    memcpy((HI_VOID*)&stFlickerCmd.u8Coef0LastLine, (const HI_VOID *)u8DefTable, sizeof(u8DefTable));
 
+    stFlickerCmd.u8Coef0LastLine = u8DefTable[0];
+    stFlickerCmd.u8Coef0CurLine  = u8DefTable[1];
+    stFlickerCmd.u8Coef0NextLine = u8DefTable[2];
+    stFlickerCmd.u8Coef1LastLine = u8DefTable[3];
+    stFlickerCmd.u8Coef1CurLine  = u8DefTable[4];
+    stFlickerCmd.u8Coef1NextLine = u8DefTable[5];
+    stFlickerCmd.u8Coef2LastLine = u8DefTable[6];
+    stFlickerCmd.u8Coef2CurLine  = u8DefTable[7];
+    stFlickerCmd.u8Coef2NextLine = u8DefTable[8];
+    stFlickerCmd.u8Coef3LastLine = u8DefTable[9];
+    stFlickerCmd.u8Coef3CurLine  = u8DefTable[10];
+    stFlickerCmd.u8Coef3NextLine = u8DefTable[11];
+    stFlickerCmd.u8Threshold0    = u8DefTable[12];
+    stFlickerCmd.u8Threshold1    = u8DefTable[13];
+    stFlickerCmd.u8Threshold2    = u8DefTable[14];
+    
     stFlickerCmd.enFilterV = pstFilterOpt->enFilterMode;
     stFlickerCmd.enDeflickerMode = enDeflickerMode;
     TdeHalNodeSetFlicker(pstHwNode, &stFlickerCmd);
+
 }
+
+
+
 
 /* AE5D03390:软件规避区域外clip bug */
 STATIC HI_S32 TdeOsiAdjClipPara(TDE_HWNode_S* pHWNode)
@@ -5069,12 +4560,7 @@ STATIC HI_S32 TdeOsiSetNodeFinish(TDE_HANDLE s32Handle, TDE_HWNode_S* pHWNode,
     }
 
     /*写入需要修改的寄存器值。下一节点的地址和更新标识，需要在下一节点提交时写入*/
-    if (TdeHalNodeMakeNd((HI_CHAR *)pBuf + TDE_NODE_HEAD_BYTE, pHWNode) < 0)
-    {
-        TDE_TRACE(TDE_KERN_INFO, "TdeHalNodeMakeNd fail!\n");
-        TDE_FREE(pBuf);
-        return HI_ERR_TDE_INVALID_PARA;
-    }
+    TdeHalNodeMakeNd((HI_CHAR *)pBuf + TDE_NODE_HEAD_BYTE, pHWNode);
 
 #ifdef  TDE_DEBUG
     TdeOsiPrintNodeInfo(pHWNode);
@@ -5250,7 +4736,7 @@ STATIC HI_S32 TdeOsiSingleSrc2Blit(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstFore
                                    TDE2_RECT_S  *pstDstRect,
                                    TDE2_OPT_S* pstOpt)
 {
-    TDE_HWNode_S stHWNode;
+    TDE_HWNode_S stHWNode = {0};
     TDE_DRV_SURFACE_S stSrcDrvSurface;
     TDE_DRV_SURFACE_S stDstDrvSurface;
     TDE_SCANDIRECTION_S stSrcScanInfo;
@@ -5260,9 +4746,6 @@ STATIC HI_S32 TdeOsiSingleSrc2Blit(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstFore
     TDE2_RECT_S stFGOptArea;
     TDE2_RECT_S stDstOptArea;
     TDE_FILTER_OPT stFilterOpt = {0};
-    HI_S32 s32Ret = HI_FAILURE;
-
-    TDE_CLUT_USAGE_E enClutUsage = TDE_CLUT_USAGE_BUTT;
 
     if (NULL == pstOpt)
         return HI_ERR_TDE_NULL_PTR;
@@ -5328,12 +4811,6 @@ STATIC HI_S32 TdeOsiSingleSrc2Blit(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstFore
     /* 调用TdeHalNodeSetColorConvert设置编码 */
     TdeHalNodeSetColorConvert(&stHWNode, &stConv);
 
-    /* 颜色扩展或颜色校正 */ /*AI7D02757*/
-    if((s32Ret = TdeOsiSetClutOpt(pstForeGround, pstDst, &enClutUsage, pstOpt->bClutReload, &stHWNode)) < 0)
-    {
-        return s32Ret;
-    }
-
     TdeOsiSetBaseOptParaForBlit(pstOpt, HI_NULL, pstForeGround,TDE_OPERATION_SINGLE_SRC2, &stHWNode);
 
     TdeOsiSetExtAlpha(HI_NULL, pstForeGround, &stHWNode); /* AI7D02681 */
@@ -5390,10 +4867,7 @@ STATIC HI_S32 TdeOsiDoubleSrcBlit(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstBackG
     TDE2_RECT_S stFGOptArea;
     TDE2_RECT_S stDstOptArea;
     TDE_FILTER_OPT stFilterOpt = {0};
-    HI_S32 s32Ret = HI_FAILURE;
     TDE_DRV_CONV_MODE_CMD_S stConv = {0};
-
-    TDE_CLUT_USAGE_E enClutUsage = TDE_CLUT_USAGE_BUTT;
 
     if (TdeOsiCheckDoubleSrcOpt(pstBackGround->enColorFmt, pstForeGround->enColorFmt, pstDst->enColorFmt,
                                 pstOpt) < 0)
@@ -5457,68 +4931,6 @@ STATIC HI_S32 TdeOsiDoubleSrcBlit(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstBackG
 
     /* 调用TdeHalNodeSetColorConvert设置编码 */
     TdeHalNodeSetColorConvert(&stHWNode, &stConv);
-
-    /* 颜色扩展或颜色校正 */ /*AI7D02757*/
-    if((s32Ret = TdeOsiSetClutOpt(pstForeGround, pstDst, &enClutUsage, pstOpt->bClutReload, &stHWNode)) < 0)
-    {
-        return s32Ret;
-    }
-#ifndef HIGO_CODE_CUT
-    /* colorkey设置 */
-    if (TDE2_COLORKEY_MODE_NONE != pstOpt->enColorKeyMode)
-    {
-        TDE_DRV_COLORKEY_CMD_S stColorkey;
-        TDE_COLORFMT_CATEGORY_E enFmtCategory;
-        stColorkey.unColorKeyValue = pstOpt->unColorKeyValue;
-
-        switch (pstOpt->enColorKeyMode)
-        {
-        case TDE2_COLORKEY_MODE_BACKGROUND:
-            stColorkey.enColorKeyMode = TDE_DRV_COLORKEY_BACKGROUND;
-
-            /* 获取背景象素格式分类 */
-            enFmtCategory = TdeOsiGetFmtCategory(pstBackGround->enColorFmt);
-            if (enFmtCategory >= TDE_COLORFMT_CATEGORY_BUTT)
-            {
-                TDE_TRACE(TDE_KERN_ERR, "Unknown fmt category!\n");
-                return HI_ERR_TDE_INVALID_PARA;
-            }
-
-            /* 针对背景做colorkey */
-            TdeHalNodeSetColorKey(&stHWNode, enFmtCategory, &stColorkey);
-
-            break;
-
-        case TDE2_COLORKEY_MODE_FOREGROUND:
-            if (TDE_CLUT_COLOREXPENDING != enClutUsage
-                && TDE_CLUT_CLUT_BYPASS != enClutUsage)
-            {
-                /* 不带调色板的普通模式必须在颜色校正后作color key          */
-                stColorkey.enColorKeyMode = TDE_DRV_COLORKEY_FOREGROUND_AFTER_CLUT;
-            }
-            else
-            {
-                stColorkey.enColorKeyMode = TDE_DRV_COLORKEY_FOREGROUND_BEFORE_CLUT;
-            }
-
-            /* 获取前景象素格式分类 */
-            enFmtCategory = TdeOsiGetFmtCategory(pstForeGround->enColorFmt);
-            if (enFmtCategory >= TDE_COLORFMT_CATEGORY_BUTT)
-            {
-                TDE_TRACE(TDE_KERN_ERR, "Unknown fmt category!\n");
-                return HI_ERR_TDE_INVALID_PARA;
-            }
-
-            /* 针对前景做colorkey */
-            TdeHalNodeSetColorKey(&stHWNode, enFmtCategory, &stColorkey);
-            break;
-
-        default:
-            TDE_TRACE(TDE_KERN_ERR, "\n");
-            return HI_ERR_TDE_INVALID_PARA;
-        }
-    }
-#endif
 
     TdeOsiSetBaseOptParaForBlit(pstOpt, pstBackGround, pstForeGround, TDE_OPERATION_DOUBLE_SRC, &stHWNode);
 
@@ -5599,18 +5011,6 @@ STATIC HI_S32 TdeOsiYC422TmpOpt(TDE_HANDLE s32Handle, TDE2_SURFACE_S* pstForeGro
     {
         TDE_TRACE(TDE_KERN_ERR, "Could not output the format For YCbCr422R!\n");
         return HI_ERR_TDE_UNSUPPORTED_OPERATION;
-    }
-
-    s32Ret = TdeOsiCheckSurface(pstForeGround, pstForeGroundRect);
-    if (s32Ret < 0)
-    {
-        return HI_ERR_TDE_INVALID_PARA;
-    }
-    
-    s32Ret = TdeOsiCheckSurface(pstDst, pstDstRect);
-    if (s32Ret < 0)
-    {
-        return HI_ERR_TDE_INVALID_PARA;
     }
     
     if (!pstOpt->bResize)
@@ -5764,25 +5164,6 @@ HI_S32     TdeOsiMbBlit(TDE_HANDLE s32Handle, TDE2_MB_S* pstMB, TDE2_RECT_S  *ps
     {
         TDE_TRACE(TDE_KERN_ERR, "Contains NULL ptr!\n");
         return HI_ERR_TDE_NULL_PTR;
-    }
-
-    /*x5HD支持RGB输出*/
-    #if 0
-    /* 由于没有颜色空间转换,不支持RGB输出 */
-    if (TDE2_COLOR_FMT_YCbCr888 != pstDst->enColorFmt
-        && TDE2_COLOR_FMT_AYCbCr8888 != pstDst->enColorFmt
-        && TDE2_COLOR_FMT_YCbCr422 != pstDst->enColorFmt)
-    {
-        TDE_TRACE(TDE_KERN_INFO, "MacroBlock does not support CSC!\n");
-        return HI_ERR_TDE_INVALID_PARA;
-    }
-    #endif
-
-    /* 参数检查与校正 */
-    if (TdeOsiCheckSurface(pstDst, pstDstRect) < 0
-        || TdeOsiCheckMbSurface(pstMB, pstMbRect) < 0)
-    {
-        return HI_ERR_TDE_INVALID_PARA;
     }
 
     if((pstDstRect->u32Height == pstMbRect->u32Height)

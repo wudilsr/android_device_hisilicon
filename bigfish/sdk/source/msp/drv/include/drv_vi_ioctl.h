@@ -59,7 +59,7 @@ typedef struct hiVI_FRAME_S
 } VI_FRAME_S;
 
 typedef int (*PFN_VI_DRV_RlsImage)(HI_HANDLE, HI_DRV_VIDEO_FRAME_S*);
-typedef int (*PFN_VI_DRV_ChangeVencInfo)(HI_HANDLE, HI_U32, HI_U32);
+typedef int (*PFN_VI_DRV_ChangeVencInfo)(HI_HANDLE, HI_U32, HI_U32, HI_U32);
 typedef int (*PFN_VI_DRV_ChangeWinInfo)(HI_HANDLE, HI_DRV_WIN_PRIV_INFO_S*);
 
 typedef struct hiVI_VPSS_PORT_PARAM_S

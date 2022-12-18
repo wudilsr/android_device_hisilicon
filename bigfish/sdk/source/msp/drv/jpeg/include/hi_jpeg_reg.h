@@ -49,25 +49,35 @@ Date				Author        		Modification
 	#ifndef CONFIG_JPEG_USE_SDK_CRG_ENABLE
 		#define JPGD_CRG_REG_PHYADDR		      (0xf8a22000 + 0X7C)
 	#endif
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	#define JPGD_MMU_REG_BASEADDR				  (JPGD_REG_BASEADDR + 0xF000)
+	#define JPGD_MMU_IRQ_MMU_NUM                   (99 + 32)
+	#define JPGD_MMU_IRQ_SMMU_NUM                  (127 + 32)
+#endif
+
 	#define JPGD_CLOCK_SELECT			          0x000 				/** 时钟频率选择,这个是200MHz **/
 	#define JPGD_CLOCK_ON				          0x1					/** 打开时钟，这里或操作	  **/
 	#define JPGD_CLOCK_OFF				          0xFFFFFFFE		    /** 关闭时钟，这里与操作 	 **/
 	#define JPGD_RESET_REG_VALUE 		          0x10					/** 复位，这里或操作		  **/
 	#define JPGD_UNRESET_REG_VALUE		          0xFFFFFFEF		    /** 不复位，这里与操作		 **/
-
-
+	
     /** 寄存器长度，当逻辑功能增加的时候，确认该长度是否可以 **/
 	#ifdef CONFIG_JPEG_TEST_CHIP_PRESS
 	/**FPGA测试的时候逻辑会增加一个反压的模块，多了一些寄存器
 	 **所以映射长度要长一些 **/
-	#define JPGD_REG_LENGTH                      0xFF30
+	#define JPGD_REG_LENGTH                          0xFF30
 	#else
 	/** the length of register */
 	/** CNcomment:jpeg寄存器长度，注意要覆盖所有寄存器 */
-	#define JPGD_REG_LENGTH					     0x6BF			 /** <64K  **/
+	#define JPGD_REG_LENGTH					         0x6BF  /** <64K  **/
 	#endif
 	
-	#define JPGD_CRG_REG_LENGTH				     0x4
+	#define JPGD_CRG_REG_LENGTH				         0x4
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	#define JPGD_MMU_REG_LENGTH				         0x340
+#endif
 
 	/** JPEG register that decoding start */
 	/** CNcomment:jpeg 开始解码寄存器 */
@@ -195,7 +205,11 @@ Date				Author        		Modification
     #define JPGD_REG_DRI   			                 0x128
     #define JPGD_REG_DRI_CNT_CFG			         0x12C
     #define JPGD_REG_DRI_CNT       			         0x130
-    
+
+    /** add mmu memory register */
+	/** CNcomment:增加对mmu内存操作的寄存器 */
+    #define JPGD_REG_MMU_BYPASS    			         0x134
+
 	/** dqt set register */
 	/** CNcomment:量化表寄存器 */
 	#define JPGD_REG_QUANT						     0x200
@@ -240,6 +254,58 @@ Date				Author        		Modification
 	#define JPGD_REG_PRESS_FF20                    0xff20
 #endif
 
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	/** 针对mmu基址进行偏移的0xf000,这些是公共寄存器，放到公共文件中操作 **/
+	#define JPGD_REG_SMMU_SCR                      0x0     /** SMMU全局控制寄存器           **/
+	#define JPGD_REG_SMMU_LP_CTRL                  0x8     /** SMMU低功耗控制寄存器         **/
+	
+	#define JPGD_REG_INTMASK_S                     0x10    /** SMMU安全中断屏蔽寄存器       **/
+	#define JPGD_REG_INTMASK_NS                    0x20    /** SMMU非安全屏蔽寄存器         **/
+	
+	#define JPGD_REG_SMMU_INTRAW_S                 0x14    /** SMMU安全中断源寄存器         **/
+	#define JPGD_REG_SMMU_INTRAW_NS                0x24    /** SMMU非安全中断源寄存器       **/
+
+	#define JPGD_REG_SMMU_INTSTAT_S                0x18    /** SMMU安全中断状态寄存器       **/
+	#define JPGD_REG_SMMU_INTSTAT_NS               0x28    /** SMMU非安全中断状态寄存器     **/
+
+	#define JPGD_REG_SMMU_INTCLR_S                 0x1C    /** SMMU安全中断清除寄存器       **/
+	#define JPGD_REG_SMMU_INTCLR_NS                0x2C    /** SMMU非安全中断清除寄存器     **/
+
+	#define JPGD_REG_SMMU_SCB_TTBR                 0x208    /** SMMU安全页表基地址寄存器    **/
+	#define JPGD_REG_SMMU_CB_TTBR                  0x20C    /** SMMU非安全页表基地址寄存器  **/
+
+	#define JPGD_REG_SMMU_ERR_RDADDR               0x304    /** SMMU读错误地址默认寄存器    **/
+	#define JPGD_REG_SMMU_ERR_WRADDR               0x308    /** SMMU写错误地址默认寄存器    **/
+
+	/** 暂时没有用到的 **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_PTW_S         0x310    /** SMMU安全预取错误地址寄存器     **/
+	#define JPGD_REG_SMMU_FAULT_ID_PTW_S           0x314    /** SMMU安全预取错误ID寄存器       **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_PTW_NS        0x320    /** SMMU非安全预取错误地址寄存器   **/
+	#define JPGD_REG_SMMU_FAULT_ID_PTW_NS          0x324    /** SMMU非安全预取错误ID寄存器     **/
+	#define JPGD_REG_SMMU_FAULT_PTW_NUM            0x328    /** SMMU预取错误PTWQ序列寄存器     **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_WR_S          0x330    /** SMMU安全写错误虚拟地址寄存器   **/
+	#define JPGD_REG_SMMU_FAULT_TLB_WR_S           0x334    /** SMMU_FAULT_TLB_WR_S            **/
+	#define JPGD_REG_SMMU_FAULT_ID_WR_S            0x338    /** SMMU安全写错误ID寄存器         **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_WR_NS         0x340    /** SMMU非安全写错误虚拟地址寄存器 **/
+	#define JPGD_REG_SMMU_FAULT_TLB_WR_NS          0x344    /** SMMU非安全写错误页表寄存器     **/
+	#define JPGD_REG_SMMU_FAULT_ID_WR_NS           0x348    /** SMMU非安全写错误ID寄存器       **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_RD_S          0x350    /** SMMU安全读错误虚拟地址寄存器   **/
+	#define JPGD_REG_SMMU_FAULT_TLB_RD_S           0x354    /** SMMU安全读错误页表寄存器       **/
+	#define JPGD_REG_SMMU_FAULT_ID_RD_S            0x358    /** SMMU安全读错误ID寄存器         **/
+	#define JPGD_REG_SMMU_FAULT_ADDR_RD_NS         0x360    /** SMMU非安全读错误虚拟地址寄存器 **/
+	#define JPGD_REG_SMMU_FAULT_TLB_RD_NS          0x364    /** SMMU非安全读错误页表寄存器     **/
+	#define JPGD_REG_SMMU_FAULT_ID_RD_NS           0x368    /** SMMU非安全读错误ID寄存器       **/
+	#define JPGD_REG_SMMU_FAULT_TBU_INFO           0x36C    /** SMMU TBU错误信息寄存器         **/
+	#define JPGD_REG_SMMU_FAULT_TBU_DBG            0x370    /** SMMU TBU DBG信息寄存器         **/
+	#define JPGD_REG_SMMU_PREF_BUFFER_EMPTY        0x374    /** SMMU预取buffer空状态寄存器     **/
+	#define JPGD_REG_SMMU_PTWQ_IDLE                0x378    /** SMMU预取PTWQ空闲状态寄存器     **/
+	#define JPGD_REG_SMMU_RESET_STATE              0x37C    /** SMMU复位状态寄存器             **/
+	#define JPGD_REG_SMMU_MASTER_DBG0              0x380    /** SMMU MASTER DBG0寄存器         **/
+	#define JPGD_REG_SMMU_MASTER_DBG1              0x384    /** SMMU MASTER DBG1寄存器         **/
+	#define JPGD_REG_SMMU_MASTER_DBG2              0x388    /** SMMU MASTER DBG2寄存器         **/
+	#define JPGD_REG_SMMU_MASTER_DBG3              0x38C    /** SMMU MASTER DBG3寄存器         **/
+#endif
 	
     /*************************** Structure Definition ****************************/
 

@@ -86,6 +86,34 @@ HI_S32 CA_flash_GetSize(HI_CHAR *pPartionName, HI_U32 *Size)
     return 0;
 }
 
+HI_S32 CA_flash_GetPageSize(HI_U8 *PartitionSignName, HI_U32 *u32PageSize)
+{
+    HI_S32 Ret = 0;
+    HI_HANDLE flashhandle = HI_INVALID_HANDLE;
+    HI_Flash_InterInfo_S FlashInfo;
+    
+    *u32PageSize = 0;
+    
+    flashhandle = HI_Flash_OpenByName(PartitionSignName);
+    if ((0 == flashhandle) || (HI_INVALID_HANDLE == flashhandle))
+    {
+        HI_ERR_CA("HI_Flash_Open(%s) error\n", PartitionSignName);
+        return -1;
+    }
+
+    Ret = HI_Flash_GetInfo(flashhandle, &FlashInfo);
+    if (Ret)
+    {
+        HI_ERR_CA("HI_Flash_GetInfo partion %s error\n", PartitionSignName);
+        HI_Flash_Close(flashhandle);
+        return -1;
+    }
+    *u32PageSize = (HI_U32)FlashInfo.PageSize;
+    
+    HI_Flash_Close(flashhandle);
+    return 0;
+}
+
 
 HI_S32 CA_flash_GetFlashAddressFromParitonName(HI_FLASH_TYPE_E enFlashType, HI_CHAR *pPartitionName, HI_U32 *Address)
 {

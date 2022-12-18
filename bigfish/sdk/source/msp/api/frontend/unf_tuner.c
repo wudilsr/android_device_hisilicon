@@ -74,6 +74,12 @@ History         :
 //#define SAT_LO_KU_L_2 (9750)
 //#define SAT_LO_KU_H_2 (10750)
 
+
+#define SPEC_RF_START_KHZ (1000) /*Hz,1kHz*/
+#define SPEC_RF_END_KHZ (1300000000) /*Hz,1.3GHz*/
+#define SPEC_RF_STEP_MIN_KHZ (10000) /*Hz,10kHz*/
+
+
 #define SAT_DOWNLINK_FREQ_KU_MID (11700)
 
 #define DISEQC_DELAY_TIME_MS (15)
@@ -3104,7 +3110,7 @@ HI_S32 HI_UNF_TUNER_Connect(HI_U32  u32tunerId, const HI_UNF_TUNER_CONNECT_PARA_
     HI_S32       s32Ret = HI_SUCCESS;
     TUNER_DATA_S stTunerData;
     TUNER_ACC_QAM_PARAMS_S stTunerPara = {0};
-    static TUNER_SIGNAL_S stTunerSignal;
+    TUNER_SIGNAL_S stTunerSignal;
 	static pthread_t*     pTerSignalDetect = HI_NULL; /* terr signal detect thread */
     HI_U32 u32TimeSpan = 0;
 	HI_U32 i,u32Value = 1,u32New,u32N;
@@ -3830,6 +3836,30 @@ HI_S32 HI_UNF_TUNER_GetBER(HI_U32   u32tunerId , HI_U32 *pu32BER)
 		
 		 break;
 	    }
+        /*add HiFhone demod for DVB-C*/
+        case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+        /* now jump into case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100*/
+        case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+        {
+            dBer = (HI_DOUBLE)((HI_DOUBLE)stTunerDataBuf.u32DataBuf[0]/16384.0) ;
+	    
+	        i = 0;
+	        if (dBer != 0)
+	        {
+	            while (dBer < 1)
+	            {
+	                dBer *= 10;
+	                i++;
+	            }
+	        }
+	        
+	        /*get the integer and exponent part by Scientific notation, keep three effective digits*/
+	        /*CNcomment:科学计数法得到整数位和指数，保留三位有效数字*/
+	        pu32BER[0] = (HI_U32)dBer;
+	        pu32BER[1] = ((HI_U32)(dBer * 1000)) % 1000;
+	        pu32BER[2] = (HI_U32)i;
+		    break;
+        }
 	    default:
 			
 		break;
@@ -3893,6 +3923,7 @@ HI_S32 HI_UNF_TUNER_GetSNR(HI_U32   u32tunerId , HI_U32 *pu32SNR)               
 {
     HI_DOUBLE u32Snr = 0;
     HI_DOUBLE dTmp = 0.0;
+    HI_DOUBLE dTmp_HiDVBC = 0.0;	
     HI_DOUBLE dSnrEva = 0;
     HI_S32 s32Result;
     TUNER_DATA_S stTunerData;
@@ -3956,88 +3987,134 @@ HI_S32 HI_UNF_TUNER_GetSNR(HI_U32   u32tunerId , HI_U32 *pu32SNR)               
     else
     {
         dTmp = ( HI_DOUBLE )stTunerData.u32Data;
+        dTmp_HiDVBC = dTmp / ( pow(2.0, 11.0) );
         dTmp  =  dTmp / ( pow(2.0, 20.0) );
         switch (s_strCurTunerAttr[u32tunerId].enDemodDevType)
         {
-        case HI_UNF_DEMOD_DEV_TYPE_NONE:
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_3130I:
-        case HI_UNF_DEMOD_DEV_TYPE_3130E:
-        case HI_UNF_DEMOD_DEV_TYPE_J83B:
-        switch (s_stCurrentSignal[u32tunerId].enQamType)
-        {
-            case QAM_TYPE_16:
-                dSnrEva = 10.0 * log10((5.0 / 18.0) / dTmp);
-                u32Snr = dSnrEva;
+            case HI_UNF_DEMOD_DEV_TYPE_NONE:
                 break;
 
-            case QAM_TYPE_32:
-                dSnrEva = 10.0 * log10(0.2 / dTmp);
-                u32Snr = dSnrEva;
+            case HI_UNF_DEMOD_DEV_TYPE_3130I:
+            case HI_UNF_DEMOD_DEV_TYPE_3130E:
+            case HI_UNF_DEMOD_DEV_TYPE_J83B:
+            switch (s_stCurrentSignal[u32tunerId].enQamType)
+            {
+                case QAM_TYPE_16:
+                    dSnrEva = 10.0 * log10((5.0 / 18.0) / dTmp);
+                    u32Snr = dSnrEva;
+                    break;
+
+                case QAM_TYPE_32:
+                    dSnrEva = 10.0 * log10(0.2 / dTmp);
+                    u32Snr = dSnrEva;
+                    break;
+
+                case QAM_TYPE_64:
+                    dSnrEva = 10.0 * log10(((42.0 / 14.0) / 14.0) / dTmp);
+                    u32Snr = dSnrEva;
+                    break;
+
+                case QAM_TYPE_128:
+                    dSnrEva = 10.0 * log10(((82.0 / 22.0) / 22.0) / dTmp);
+                    u32Snr = dSnrEva;
+                    break;
+
+                case QAM_TYPE_256:
+                    dSnrEva = 10.0 * log10(((170.0 / 32.0) / 32.0) / dTmp);
+                    u32Snr = dSnrEva;
+                    break;
+
+                default:
+                    return HI_FAILURE;
+            }
                 break;
 
-            case QAM_TYPE_64:
-                dSnrEva = 10.0 * log10(((42.0 / 14.0) / 14.0) / dTmp);
-                u32Snr = dSnrEva;
+            case HI_UNF_DEMOD_DEV_TYPE_3136:
+            case HI_UNF_DEMOD_DEV_TYPE_3136I:
+                if (stTunerData.u32Data)
+                {
+                    u32Snr = 10.0 * log10(8192.0 / (HI_DOUBLE)(stTunerData.u32Data));
+                }
+                else
+                {
+                    u32Snr = 50.0;
+                }
                 break;
 
-            case QAM_TYPE_128:
-                dSnrEva = 10.0 * log10(((82.0 / 22.0) / 22.0) / dTmp);
-                u32Snr = dSnrEva;
+            case HI_UNF_DEMOD_DEV_TYPE_AVL6211:
+                u32Snr = (HI_U32)(stTunerData.u32Data / 100.0);
                 break;
 
-            case QAM_TYPE_256:
-                dSnrEva = 10.0 * log10(((170.0 / 32.0) / 32.0) / dTmp);
-                u32Snr = dSnrEva;
+            case HI_UNF_DEMOD_DEV_TYPE_MXL101:
+                u32Snr = stTunerData.u32Data;
                 break;
 
+            case HI_UNF_DEMOD_DEV_TYPE_MN88472:
+                u32Snr = stTunerData.u32Data;
+                break;
+
+            case HI_UNF_DEMOD_DEV_TYPE_IT9170:
+                u32Snr = stTunerData.u32Data;
+                break;
+
+            case HI_UNF_DEMOD_DEV_TYPE_IT9133:
+                u32Snr = stTunerData.u32Data;
+                break;
+            case HI_UNF_DEMOD_DEV_TYPE_MXL254:
+            case HI_UNF_DEMOD_DEV_TYPE_MXL214:
+                u32Snr = (HI_DOUBLE) (stTunerData.u32Data /10);
+                break;
+            case HI_UNF_DEMOD_DEV_TYPE_TDA18280:
+                u32Snr = (HI_DOUBLE) (stTunerData.u32Data);
+                break; 
+
+            case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+            /* now jump into case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100*/
+            case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+        	 	switch (s_strCurTunerConnectPara[u32tunerId].enSigType)
+         		{
+         			case HI_UNF_TUNER_SIG_TYPE_CAB:
+        				switch (s_stCurrentSignal[u32tunerId].enQamType)
+        			        {
+                                    case QAM_TYPE_16:           
+                                        dSnrEva = 10.0 * log10(161 / dTmp_HiDVBC);
+                                        u32Snr = dSnrEva;
+                                        break;
+
+                                    case QAM_TYPE_32:
+                                        dSnrEva = 10.0 * log10(180 / dTmp_HiDVBC);
+                                        u32Snr = dSnrEva;
+                                        break;
+
+                                    case QAM_TYPE_64:
+                                        dSnrEva = 10.0 * log10(168 / dTmp_HiDVBC);
+                                        u32Snr = dSnrEva;
+                                        break;
+
+                                    case QAM_TYPE_128:
+                                        dSnrEva = 10.0 * log10(184 / dTmp_HiDVBC);
+                                        u32Snr = dSnrEva;
+                                        break;
+
+                                    case QAM_TYPE_256:
+                                        dSnrEva = 10.0 * log10(170 / dTmp_HiDVBC);
+                                        u32Snr = dSnrEva;
+                                        break;
+
+                                    default:
+                                        return HI_FAILURE;
+                                }
+        				break;
+                        case HI_UNF_TUNER_SIG_TYPE_DTMB:    /*为方便以后扩展，还是用switch语句*/
+                        /* now jump into default*/
+                        default:
+                            HI_ERR_TUNER("s_strCurTunerConnectPara[u32TunerId].enSigType:%d\n",s_strCurTunerConnectPara[u32tunerId].enSigType);
+                            return HI_FAILURE;
+                }
+                break;
             default:
-                return HI_FAILURE;
-        }
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_3136:
-        case HI_UNF_DEMOD_DEV_TYPE_3136I:
-            if (stTunerData.u32Data)
-            {
-                u32Snr = 10.0 * log10(8192.0 / (HI_DOUBLE)(stTunerData.u32Data));
+                return HI_ERR_TUNER_INVALID_PARA;
             }
-            else
-            {
-                u32Snr = 50.0;
-            }
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_AVL6211:
-            u32Snr = (HI_U32)(stTunerData.u32Data / 100.0);
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_MXL101:
-            u32Snr = stTunerData.u32Data;
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_MN88472:
-            u32Snr = stTunerData.u32Data;
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_IT9170:
-            u32Snr = stTunerData.u32Data;
-            break;
-
-        case HI_UNF_DEMOD_DEV_TYPE_IT9133:
-            u32Snr = stTunerData.u32Data;
-            break;
-         case HI_UNF_DEMOD_DEV_TYPE_MXL254:
-	     case HI_UNF_DEMOD_DEV_TYPE_MXL214:
-            u32Snr = (HI_DOUBLE) (stTunerData.u32Data /10);
-            break;
-	    case HI_UNF_DEMOD_DEV_TYPE_TDA18280:
-            u32Snr = (HI_DOUBLE) (stTunerData.u32Data);
-            break; 
-        default:
-            return HI_ERR_TUNER_INVALID_PARA;
-        }
         *pu32SNR = (HI_U32)u32Snr;
     }
     return HI_SUCCESS;
@@ -4601,17 +4678,18 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
     HI_S32 s32Result,s32Delta;
     TUNER_DATA_S stTunerData;
     TUNER_SIGNALINFO_S stTunerSignalInfo;
-	TUNER_DATABUF_S stTunerDataBuf;
+    TUNER_DATABUF_S stTunerDataBuf;
     HI_U32 u32SNR = 0;
-	HI_U32 i=0;
+    HI_U32 i=0;
     HI_DOUBLE dTmp = 0;
-	HI_DOUBLE dSnrEva = 0;
-	HI_DOUBLE dCNnordig = 0;
-	HI_DOUBLE dSnrSQI = 0;
-	HI_DOUBLE dBerSQI = 0;
-	HI_DOUBLE dBer = 0;
-
-	HI_DOUBLE dSQI = 0;
+    HI_DOUBLE dSnrEva = 0;
+    HI_DOUBLE dCNnordig = 0;
+    HI_DOUBLE dSnrSQI = 0;
+    HI_DOUBLE dBerSQI = 0;
+    HI_DOUBLE dBer = 0;
+    
+    HI_DOUBLE dSQI = 0;
+    HI_DOUBLE dTmp_HiDVBC = 0.0;	
 
     stTunerData.u32Port = u32TunerId;
     stTunerData.u32Data = 0;
@@ -4712,7 +4790,50 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
 			
             dSnrEva = (HI_DOUBLE) (stTunerData.u32Data);
             break; 
-        
+
+        case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+        /* now jump into case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100*/
+        case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+            dTmp = ( HI_DOUBLE )stTunerData.u32Data;
+            dTmp_HiDVBC = dTmp / ( pow(2.0, 11.0) );
+            dTmp  =  dTmp / ( pow(2.0, 20.0) );
+            switch (s_strCurTunerConnectPara[u32TunerId].enSigType)
+            {
+                case HI_UNF_TUNER_SIG_TYPE_CAB:
+                    switch (s_stCurrentSignal[u32TunerId].enQamType)
+                    {
+                        case QAM_TYPE_16:           
+                            dSnrEva = 10.0 * log10(161 / dTmp_HiDVBC);
+                            break;
+                     
+                        case QAM_TYPE_32:
+                            dSnrEva = 10.0 * log10(180 / dTmp_HiDVBC);
+                            break;
+                     
+                        case QAM_TYPE_64:
+                            dSnrEva = 10.0 * log10(168 / dTmp_HiDVBC);
+                            break;
+                     
+                        case QAM_TYPE_128:
+                            dSnrEva = 10.0 * log10(184 / dTmp_HiDVBC);
+                            break;
+
+                        case QAM_TYPE_256:
+                            dSnrEva = 10.0 * log10(170 / dTmp_HiDVBC);
+                            break;
+
+                        default:
+                            HI_ERR_TUNER("s_stCurrentSignal[u32TunerId].unMODPOL.enQamType:%d\n",s_stCurrentSignal[u32TunerId].enQamType);
+                            return HI_FAILURE;
+                    }
+                    break;
+                case HI_UNF_TUNER_SIG_TYPE_DTMB:    /*为方便以后扩展，还是用switch语句*/
+                /* now jump into default*/
+                default:
+                    HI_ERR_TUNER("s_strCurTunerConnectPara[u32TunerId].enSigType:%d\n",s_strCurTunerConnectPara[u32TunerId].enSigType);
+                    return HI_FAILURE;
+            }
+            break;
         default:
             u32SNR = stTunerData.u32Data;
     }
@@ -4847,12 +4968,12 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
         };
 
         HI_U8 i,j;
-        double f32CNReceive = 0,f32NordigReference = 0,f32CNRelative = 0,f32SNRReceive = 0;
+        double dCNReceive = 0,dNordigReference = 0,dCNRelative = 0,dSNRReceive = 0;
 
         switch (s_strCurTunerAttr[u32TunerId].enDemodDevType)
         {
         case HI_UNF_DEMOD_DEV_TYPE_MXL101:
-            f32SNRReceive = ((HI_DOUBLE)stTunerData.u32Data)/10000;
+            dSNRReceive = ((HI_DOUBLE)stTunerData.u32Data)/10000;
 
             s32Result = ioctl(s_s32TunerFd, TUNER_GET_SIGANLINFO_CMD, (int)&stTunerSignalInfo);
             if (HI_SUCCESS == s32Result)
@@ -4865,7 +4986,7 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
                         {
                             if(stCNNordigP1[i][j].enFECRate == stTunerSignalInfo.stInfo.unSignalInfo.stTer.enFECRate)
                             {
-                                f32NordigReference = stCNNordigP1[i][j].f16NordigP1;
+                                dNordigReference = stCNNordigP1[i][j].f16NordigP1;
                             }
                         }
                     }
@@ -4877,33 +4998,33 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
                 return HI_ERR_TUNER_FAILED_GETSIGNALQUALITY;
             }
 
-            f32CNReceive = f32SNRReceive - 1;
-            f32CNRelative = f32CNReceive - f32NordigReference;
-            if(f32CNRelative >= 0)
+            dCNReceive = dSNRReceive - 1;
+            dCNRelative = dCNReceive - dNordigReference;
+            if(dCNRelative >= 0)
             {
-                if(f32CNRelative >= 10)
+                if(dCNRelative >= 10)
                 {
                     *pu32SignalQuality = 99;
                 }
-                else if(f32CNRelative >= 6)
+                else if(dCNRelative >= 6)
                 {
-                    *pu32SignalQuality = 75 + (f32CNRelative - 6) * 24 / 4.0;
+                    *pu32SignalQuality = 75 + (dCNRelative - 6) * 24 / 4.0;
                 }
-                else if (f32CNRelative >= 3.5)  /* > 3.5dB */
+                else if (dCNRelative >= 3.5)  /* > 3.5dB */
                 {
-                    *pu32SignalQuality = 45 + (f32CNRelative - 3.5) * 30 / 2.5;
+                    *pu32SignalQuality = 45 + (dCNRelative - 3.5) * 30 / 2.5;
                 }
-                else if (f32CNRelative >= 2)  /* > 2dB */
+                else if (dCNRelative >= 2)  /* > 2dB */
                 {
-                    *pu32SignalQuality = 30 + (f32CNRelative - 2) * 15 / 1.5;
+                    *pu32SignalQuality = 30 + (dCNRelative - 2) * 15 / 1.5;
                 }
-                else if(f32CNRelative >= 1)  /* > 1dB */
+                else if(dCNRelative >= 1)  /* > 1dB */
                 {
-                    *pu32SignalQuality = 15 + (f32CNRelative-1) * 15 / 1.0;
+                    *pu32SignalQuality = 15 + (dCNRelative-1) * 15 / 1.0;
                 }
                 else
                 {
-                    *pu32SignalQuality = 5 + (f32CNRelative ) *10 ;
+                    *pu32SignalQuality = 5 + (dCNRelative ) *10 ;
                 }
             }
             else
@@ -5020,8 +5141,8 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
 				
 		}
 	   
-	    dSnrSQI = dSnrEva - dCNnordig;
-		
+            dSnrSQI = dSnrEva - dCNnordig;
+            
 		//ber
 	    s32Result= ioctl(s_s32TunerFd, TUNER_GET_BER_CMD, (int)&stTunerDataBuf);
 	    if (HI_SUCCESS != s32Result)
@@ -5032,63 +5153,68 @@ HI_S32 HI_UNF_TUNER_GetSignalQuality(HI_U32 u32TunerId, HI_U32 *pu32SignalQualit
 
 	    /* Modified begin: l00185424 2011-11-26 Support satellite */
 	    /* If the signal type is cable, convert the data here. */
-	   
         switch (s_strCurTunerAttr[u32TunerId].enDemodDevType)
-	    {
-
-	         case HI_UNF_DEMOD_DEV_TYPE_NONE:
-	            break;
-	         case HI_UNF_DEMOD_DEV_TYPE_3130I:
-	         case HI_UNF_DEMOD_DEV_TYPE_3130E:
-	         case HI_UNF_DEMOD_DEV_TYPE_J83B:
-		         {
-		            /* conver to value */
-		            dBer = ((HI_DOUBLE)(((stTunerDataBuf.u32DataBuf[0] & 0xFF) << 16) + ((stTunerDataBuf.u32DataBuf[1] & 0xFF) << 8)
-		                    + (stTunerDataBuf.u32DataBuf[2] & 0xFF)) / 8388608.0);
-		          break;
-		         }
-	         case HI_UNF_DEMOD_DEV_TYPE_MXL254:
-			 case HI_UNF_DEMOD_DEV_TYPE_MXL214:  
-		         //{
-		          // dBer = (HI_DOUBLE)(stTunerDataBuf.u32DataBuf[0]) ;
-		           //break;
-		         //}
-			 case HI_UNF_DEMOD_DEV_TYPE_TDA18280:
-			    { 
-			        
-					dBer = 1;
+        {
+                case HI_UNF_DEMOD_DEV_TYPE_NONE:
+                break;
+                case HI_UNF_DEMOD_DEV_TYPE_3130I:
+                case HI_UNF_DEMOD_DEV_TYPE_3130E:
+                case HI_UNF_DEMOD_DEV_TYPE_J83B:
+                {
+                /* conver to value */
+                dBer = ((HI_DOUBLE)(((stTunerDataBuf.u32DataBuf[0] & 0xFF) << 16) + ((stTunerDataBuf.u32DataBuf[1] & 0xFF) << 8)
+                        + (stTunerDataBuf.u32DataBuf[2] & 0xFF)) / 8388608.0);
+                break;
+                }
+                case HI_UNF_DEMOD_DEV_TYPE_MXL254:
+                case HI_UNF_DEMOD_DEV_TYPE_MXL214:  
+                 //{
+                  // dBer = (HI_DOUBLE)(stTunerDataBuf.u32DataBuf[0]) ;
+                   //break;
+                 //}
+                case HI_UNF_DEMOD_DEV_TYPE_TDA18280:
+                { 
+                    
+                    dBer = 1;
                     for(i=0;i<stTunerDataBuf.u32DataBuf[2];i++)
                     {
                        dBer = 10 * dBer;
                     }
-				    dBer = ((stTunerDataBuf.u32DataBuf[0] + (HI_DOUBLE)stTunerDataBuf.u32DataBuf[1] / 1000)) / dBer ; 
-					
-				    break;
-			    }
-	        default:
+                    dBer = ((stTunerDataBuf.u32DataBuf[0] + (HI_DOUBLE)stTunerDataBuf.u32DataBuf[1] / 1000)) / dBer ; 
 
-	            break;
+                    break;
+                }
+                case HI_UNF_DEMOD_DEV_TYPE_HIFDVBC100:
+                /* now jump into case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100*/
+                case HI_UNF_DEMOD_DEV_TYPE_HIFJ83B100:
+                {
+                    dBer = (HI_DOUBLE)((HI_DOUBLE)stTunerDataBuf.u32DataBuf[0]/16384.0) ;
+                    dBer = dBer*10*10*4/204/8;  /*此公式由PER转换成BER*/
+                    
+                    break;
+                }
+                default:
+                break;
 	     }
-	     if(dBer != 0.000000)
-	     {
-		     dBerSQI = 20*log10(1/dBer)- 40;
-			
-			 //SQI
-			 dSQI = ((dSnrSQI - 3)/10 + 1) *dBerSQI + 30;
-			 
-			 
-	          if(dSQI >= 100)
-	          {
-	          	   dSQI = 100;
-	          }
-	     }
-		 else
-	 	 {
-	 	     dSQI = 100;
-	 	 }
-		
-		 *pu32SignalQuality = (HI_U32)dSQI;
-		 //
+
+            if(dBer != 0.000000)
+            {
+                dBerSQI = 20*log10(1/dBer)- 40;
+                
+                //SQI
+                dSQI = ((dSnrSQI - 3)/10 + 1) *dBerSQI + 30;
+             
+                if(dSQI >= 100)
+                {
+                   dSQI = 100;
+                }
+            }
+            else
+            {
+                 dSQI = 100;
+            }
+
+            *pu32SignalQuality = (HI_U32)dSQI;
 	}
 	else
     {
@@ -6552,5 +6678,82 @@ HI_S32 HI_UNF_TUNER_UnicLOFREQ(HI_U32 u32TunerId,HI_U8 u8SCRNO,HI_U8 u8LoFreqNo)
     HI_S32 s32Ret = 0;
     s32Ret =  UNIC_LOFREQ(u32TunerId,u8SCRNO,u8LoFreqNo);
     return s32Ret;
+}
+
+HI_S32 HI_UNF_TUNER_GetTunerPowerSpectrumData(HI_U32 u32TunerId, HI_U32 u32freqStartInHz,HI_U32 u32freqStepInHz,HI_U32 u32numOfFreqSteps,HI_S16 *ps16powerData)
+{
+    HI_S16 *ps16ADData = 0;
+	TUNER_POWER_SPECTRUM_DATA_PARAM_S stSpectrumParam;
+    HI_U32 u32DataLen = 0;
+    TUNER_DATA_S stTunerData = {0};
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 i= 0;
+
+    CHECK_TUNER_OPEN();
+
+    if (UNF_TUNER_NUM <= u32TunerId)
+    {
+        HI_ERR_TUNER("Input parameter(u32TunerId) invalid,invalid tunerId is: %d\n", u32TunerId);
+        return HI_ERR_TUNER_INVALID_PORT;
+    }
+
+    if (HI_NULL == ps16powerData)
+    {
+        HI_ERR_TUNER("pu32Data is NULL\n");
+        return HI_ERR_TUNER_INVALID_PARA;
+    }
+
+    if((u32freqStartInHz < SPEC_RF_START_KHZ) || (u32freqStartInHz > SPEC_RF_END_KHZ))
+	{
+	    HI_ERR_TUNER("invalid parameter u32freqStartInHz = %d\n",u32freqStartInHz);
+        return HI_ERR_TUNER_INVALID_PARA;
+	}
+	if(u32freqStepInHz < SPEC_RF_STEP_MIN_KHZ)
+	{
+	    HI_ERR_TUNER("invalid parameter u32freqStepInHz = %d\n",u32freqStepInHz);
+        return HI_ERR_TUNER_INVALID_PARA;
+	}
+
+    if((0 == u32numOfFreqSteps) ||(( u32freqStartInHz + u32freqStepInHz * u32numOfFreqSteps) > SPEC_RF_END_KHZ ))
+    {
+        HI_ERR_TUNER("invalid parameter u32numOfFreqSteps = %d\n",u32numOfFreqSteps);
+        return HI_ERR_TUNER_INVALID_PARA;
+    }
+
+    /*malloc mem*/
+    ps16ADData = (HI_S16 *)HI_MALLOC(HI_ID_TUNER, u32numOfFreqSteps * sizeof(HI_S16));
+    if (HI_NULL == ps16ADData)
+    {
+        HI_ERR_TUNER("Malloc fail!\n");
+        return HI_FAILURE;
+    }
+
+    /*sample data of ADC*/
+
+	stSpectrumParam.u32freqStartInHz = u32freqStartInHz;	
+	stSpectrumParam.u32freqStepInHz = u32freqStepInHz;
+	stSpectrumParam.u32numOfFreqSteps = u32numOfFreqSteps;
+	stSpectrumParam.ps16powerData = ps16ADData;
+
+    stTunerData.u32Port = u32TunerId;
+    stTunerData.u32Data = (HI_U32)&stSpectrumParam;
+
+    s32Ret = ioctl(s_s32TunerFd, TUNER_TUENR_POWER_SPECTRUM_DATA_CMD, &stTunerData);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_TUNER("Tuner sample data fail.\n");
+        HI_FREE(HI_ID_TUNER, ps16ADData);
+        return HI_ERR_TUNER_FAILED_SAMPLEDATA;
+    }
+    for(i=0;i<u32numOfFreqSteps;i++)
+    {
+        ps16powerData[i] = ps16ADData[i];
+		
+    }
+
+	
+    /*free buffer and return*/
+    HI_FREE(HI_ID_TUNER, ps16ADData);
+    return HI_SUCCESS;
 }
 

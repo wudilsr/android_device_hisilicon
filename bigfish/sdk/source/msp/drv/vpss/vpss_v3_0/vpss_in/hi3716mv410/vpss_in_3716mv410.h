@@ -67,6 +67,8 @@ typedef struct
     HI_BOOL bProgRevise;
     HI_BOOL bAlwaysFlushSrc;
     HI_DRV_COLOR_SPACE_E enSrcCS;
+
+	HI_BOOL bSecure;
     
 
     VPSS_IN_STREAM_INFO_S stStreamInfo;

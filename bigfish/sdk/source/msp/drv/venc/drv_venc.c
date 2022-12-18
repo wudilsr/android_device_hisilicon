@@ -64,7 +64,7 @@ volatile HI_U32 g_VENCCrgCtrl = 0;
 //HI_S32 VencThreadGetIFrame(HI_VOID * arg);
 
 HI_U32 g_vedu_chip_id = 0;
-static HI_U32 g_venc_curent_chn_num = 0;
+//static HI_U32 g_venc_curent_chn_num = 0;
 extern VPSS_EXPORT_FUNC_S *pVpssFunc;
 
 #ifdef __VENC_SUPPORT_JPGE__
@@ -490,17 +490,24 @@ HI_VOID VENC_DRV_BoardInit(HI_VOID)
     unTmpValue.bits.venc_srst_req = 1;
     g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;
 
-    msleep(1);
+    //msleep(1);
 
     /* open vedu clock */
     unTmpValue.bits.venc_cken     = 1;
-    /* config vedu clock frequency: 200Mhz */
-    unTmpValue.bits.venc_clk_sel  = 0;
+#ifdef 	__VENC_98M_CONFIG__
+    /* config vedu clock frequency: 0:200Mhz  2: 150M*/
+    unTmpValue.bits.venc_clk_sel  = 2;
+#else
+
+#ifndef  __VENC_S5V200L_EXT_CONFIG__	
+    unTmpValue.bits.venc_clk_sel  = 0;   //选用默认频率
+#endif	
+#endif
     /* cancel reset */
     unTmpValue.bits.venc_srst_req = 0;
     g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;
 
-    msleep(1);
+    //msleep(1);   //change by l00228308
 }
 
 HI_VOID VENC_DRV_BoardDeinit(HI_VOID)
@@ -511,7 +518,7 @@ HI_VOID VENC_DRV_BoardDeinit(HI_VOID)
     unTmpValue.bits.venc_srst_req = 1;
     g_pstRegCrg->PERI_CRG35.u32 = unTmpValue.u32;
 
-    msleep(1);
+    //msleep(1);  change by l00228308
 
     /* close vedu clock */
     unTmpValue.bits.venc_cken     = 0;
@@ -635,7 +642,8 @@ HI_S32 VENC_DRV_CreateChn(VeduEfl_EncPara_S** phVencChn, venc_chan_cfg *pstAttr,
 	{
 	    EncCfg.bRCSkipFrmEn = HI_FALSE;
 	}
-	
+
+#if 0	
     if (EncCfg.SlcSplitEn)
     {
         if (pVencUnfAttrs->u32Width >= 1280)
@@ -655,6 +663,17 @@ HI_S32 VENC_DRV_CreateChn(VeduEfl_EncPara_S** phVencChn, venc_chan_cfg *pstAttr,
     {
         EncCfg.SplitSize  = 0;
     }
+#else
+    if (EncCfg.SlcSplitEn)
+    {
+ 
+        EncCfg.SplitSize  = pVencUnfAttrs->u32SplitSize;
+    }
+    else
+    {
+        EncCfg.SplitSize  = 0;
+    }   
+#endif
     EncCfg.bOMXChn  = bOMXChn;
 
     s32Ret = VENC_DRV_EflCreateVenc(phVencChn, &EncCfg);
@@ -789,11 +808,6 @@ HI_S32 VENC_DRV_CreateChn(VeduEfl_EncPara_S** phVencChn, venc_chan_cfg *pstAttr,
     g_stVencChn[i].stProcWrite.bTimeModeRun = HI_TRUE;
 #endif
 
-    g_venc_curent_chn_num++;
-    if (g_venc_curent_chn_num == 1)
-    {
-        VENC_DRV_BoardInit();
-    }
     return HI_SUCCESS;
 
 create_error_3:
@@ -908,11 +922,6 @@ HI_S32 VENC_DRV_DestroyChn( VeduEfl_EncPara_S* hVencChn)
     spin_unlock_irqrestore(&g_SendFrame_Lock[u32VeChn], flags);
     HI_INFO_VENC("VENC_DestroyChn %d OK\n", u32VeChn);
 
-    g_venc_curent_chn_num--;
-    if (g_venc_curent_chn_num == 0)
-    {
-        VENC_DRV_BoardDeinit();
-    }
     return HI_SUCCESS;
 }
 
@@ -1012,7 +1021,10 @@ HI_S32 VENC_DRV_AttachInput(VeduEfl_EncPara_S* hVencChn, HI_HANDLE hSrc, HI_MOD_
             stSrcInfo.pfChangeInfo = (VE_CHANGE_INFO_FUNC)(pDispFunc->pfnDispSetCastAttr);
         }
         D_VENC_CHECK_PTR(stSrcInfo.pfChangeInfo);
-        ret = (stSrcInfo.pfChangeInfo)(hSrc, pstVenc->stChnUserCfg.u32Width, pstVenc->stChnUserCfg.u32Height);
+        ret = (stSrcInfo.pfChangeInfo)(hSrc, 
+                            pstVenc->stChnUserCfg.u32Width, 
+                            pstVenc->stChnUserCfg.u32Height,
+                            pstVenc->stChnUserCfg.u32TargetFrmRate);
         if (ret != HI_SUCCESS)
         {
             HI_ERR_VENC("stSrcInfo.pfChangeInfo failed!\n");
@@ -1057,7 +1069,10 @@ HI_S32 VENC_DRV_SetSrcInfo(VeduEfl_EncPara_S* hVencChn, HI_DRV_VENC_SRC_INFO_S* 
     {
         case HI_ID_VI:
             D_VENC_CHECK_PTR(pstSrcInfo->pfChangeInfo);
-            s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, pEncPara->PicWidth, pEncPara->PicHeight);
+            s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, 
+                                    pEncPara->PicWidth, 
+                                    pEncPara->PicHeight,
+                                    pEncPara->VoFrmRate);
             if (HI_SUCCESS != s32Ret)
             {
                 HI_ERR_VENC("The first time SetInfo to VI failed!ret = %x\n", s32Ret);
@@ -1074,7 +1089,11 @@ HI_S32 VENC_DRV_SetSrcInfo(VeduEfl_EncPara_S* hVencChn, HI_DRV_VENC_SRC_INFO_S* 
             break;
         case HI_ID_VO:
             D_VENC_CHECK_PTR(pstSrcInfo->pfChangeInfo);
-            s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, pEncPara->PicWidth, pEncPara->PicHeight);
+            s32Ret = (pstSrcInfo->pfChangeInfo)(pstSrcInfo->hSrc, 
+                                    pEncPara->PicWidth, 
+                                    pEncPara->PicHeight,
+                                    pEncPara->VoFrmRate);
+                                    
             if (HI_SUCCESS != s32Ret)
             {
                 HI_ERR_VENC("The first time SetInfo to WINDOW failed!ret = %x\n", s32Ret);
@@ -1634,6 +1653,7 @@ HI_S32 VENC_DRV_StopReceivePic(VeduEfl_EncPara_S* EncHandle)
             pVpssFunc->pfnVpssSendCommand(g_stVencChn[u32VeChn].hVPSS, HI_DRV_VPSS_USER_COMMAND_RESET, HI_NULL);
         }
     }
+
     return s32Ret;
 }
 
@@ -1744,7 +1764,10 @@ HI_S32 VENC_DRV_SetAttr(VeduEfl_EncPara_S* EncHandle, HI_UNF_VENC_CHN_ATTR_S* ps
                 return HI_ERR_VENC_NOT_SUPPORT;
             }
 #endif
-            if (HI_SUCCESS != (pstEncChnPara->stSrcInfo.pfChangeInfo)(pstEncChnPara->stSrcInfo.handle, pstAttr->u32Width, pstAttr->u32Height))
+            if (HI_SUCCESS != (pstEncChnPara->stSrcInfo.pfChangeInfo)(pstEncChnPara->stSrcInfo.handle, 
+                                                pstAttr->u32Width, 
+                                                pstAttr->u32Height,
+                                                pstAttr->u32TargetFrmRate))
             {
                 HI_ERR_VENC("Src Handle(%x) change Info failed!.\n", pstEncChnPara->stSrcInfo.handle);
                 return HI_FAILURE;

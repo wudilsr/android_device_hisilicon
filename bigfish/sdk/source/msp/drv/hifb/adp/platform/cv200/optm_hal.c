@@ -64,7 +64,12 @@ Date                       Author                   Modification
 
 /********************** Global Variable declaration **************************/
 volatile S_VOU_CV200_REGS_TYPE* pOptmVdpReg = NULL;
-volatile OPTM_MDDRC_REGS_S *pMddrcReg = NULL;
+
+#ifdef CFG_HIFB_COMPRESSION_SUPPORT
+volatile OPTM_MDDRC_REGS_S *pMddrcReg       = NULL;
+#endif
+
+
 
 /******************************* API declaration *****************************/
 
@@ -86,7 +91,9 @@ HI_VOID  OPTM_VDP_DRIVER_Initial(HI_U32 virAddr)
 #ifndef HI_BUILD_IN_BOOT
 HI_VOID  OPTM_MDDRC_DRIVER_Initial(HI_U32 virAddr)
 {
-	pMddrcReg = (OPTM_MDDRC_REGS_S*)virAddr;
+	#ifdef CFG_HIFB_COMPRESSION_SUPPORT
+		pMddrcReg = (OPTM_MDDRC_REGS_S*)virAddr;
+	#endif
 }
 #endif
 
@@ -702,12 +709,7 @@ HI_VOID  OPTM_VDP_GFX_SetParaUpd  (HI_U32 u32Data, OPTM_VDP_DISP_COEFMODE_E enMo
 
 
 }
-#if 0
-HI_VOID OPTM_VDP_GFX_SetDispMode(HI_U32 u32Data, OPTM_VDP_DISP_MODE_E enDispMode)
-{
-	return;
-}
-#endif
+
 //3D MODE
 #ifndef HI_BUILD_IN_BOOT
 HI_VOID  OPTM_VDP_GFX_SetThreeDimDofEnable    (HI_U32 u32Data, HI_U32 bEnable)
@@ -1078,19 +1080,6 @@ HI_VOID OPTM_VDP_GFX_SetLayerNAddr(HI_U32 u32Data, HI_U32 u32NAddr)
 }
 #endif
 
-#if 0
-HI_VOID  OPTM_VDP_GFX_SetMuteEnable(HI_U32 u32Data, HI_U32 bEnable)
-{
-    volatile U_G0_CTRL G0_CTRL;
-	
-	OPTM_HAL_CHECK_LAYER_VALID(u32Data);
-
-    G0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->G0_CTRL.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-    G0_CTRL.bits.mute_en = bEnable;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->G0_CTRL.u32) + u32Data * CONFIG_HIFB_GFX_OFFSET), G0_CTRL.u32); 
-}
-#endif
-
 
 /***************************************************************************************
 * func          : OPTM_VDP_GFX_SetPreMultEnable
@@ -1148,21 +1137,6 @@ HI_VOID  OPTM_VDP_GFX_SetUpdMode(HI_U32 u32Data, HI_U32 u32Mode)
 }
 
 
-#if 0
-HI_VOID  OPTM_VDP_GFX_SetFlipEnable(HI_U32 u32Data, HI_U32 bEnable)
-{
-    volatile U_G0_CTRL G0_CTRL;
-	
-	OPTM_HAL_CHECK_LAYER_VALID(u32Data);
-
-    G0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->G0_CTRL.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-    G0_CTRL.bits.flip_en = bEnable;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->G0_CTRL.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_CTRL.u32); 
-}
-#endif
-    
-
-
 //-------------------------------------------------------------------
 //GP_BEGIN
 //-------------------------------------------------------------------
@@ -1195,6 +1169,13 @@ HI_VOID  OPTM_VDP_GP_SetParaUpd       (HI_U32 u32Data, OPTM_VDP_GP_PARA_E enMode
 }
 
 
+/***************************************************************************************
+* func          : OPTM_VDP_GP_SetIpOrder
+* description   : CNcomment: 设置GP CTRL CNend\n
+* param[in]     : HI_VOID
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
 HI_VOID OPTM_VDP_GP_SetIpOrder (HI_U32 u32Data, HI_U32 u32Chn, OPTM_VDP_GP_ORDER_E enIpOrder)
 {
     volatile U_GP0_CTRL GP0_CTRL ;
@@ -1216,6 +1197,7 @@ HI_VOID OPTM_VDP_GP_SetIpOrder (HI_U32 u32Data, HI_U32 u32Chn, OPTM_VDP_GP_ORDER
         }
         switch(enIpOrder)
         {
+        	#if 0/** deal with codecc **/
             case VDP_GP_ORDER_NULL:
             {
                 GP0_CTRL.bits.mux1_sel = 2;
@@ -1225,6 +1207,7 @@ HI_VOID OPTM_VDP_GP_SetIpOrder (HI_U32 u32Data, HI_U32 u32Chn, OPTM_VDP_GP_ORDER
 
                 break;
             }
+            #endif
             case VDP_GP_ORDER_CSC:
             {
                 GP0_CTRL.bits.mux1_sel = 0;
@@ -1281,6 +1264,7 @@ HI_VOID OPTM_VDP_GP_SetIpOrder (HI_U32 u32Data, HI_U32 u32Chn, OPTM_VDP_GP_ORDER
         }
         switch(enIpOrder)
         {
+        	#if 0/** deal with codecc **/
             case VDP_GP_ORDER_NULL:
             {
                 GP0_CTRL.bits.mux1_sel = 1;
@@ -1290,6 +1274,7 @@ HI_VOID OPTM_VDP_GP_SetIpOrder (HI_U32 u32Data, HI_U32 u32Chn, OPTM_VDP_GP_ORDER
 
                 break;
             }
+            #endif
             case VDP_GP_ORDER_CSC:
             {
                 GP0_CTRL.bits.mux1_sel = 1;
@@ -1380,49 +1365,25 @@ HI_VOID  OPTM_VDP_GP_GetRect  (HI_U32 u32Data, OPTM_VDP_DISP_RECT_S  *pstRect)
 {
     volatile U_GP0_IRESO GP0_IRESO;
     volatile U_GP0_ORESO GP0_ORESO;
-
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_GetRect() Select Wrong GP Layer ID\n");
-        return ;
-    }
-
-    GP0_IRESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
+    
+    GP0_IRESO.u32    = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
     pstRect->u32IWth = GP0_IRESO.bits.iw + 1;
     pstRect->u32IHgt = GP0_IRESO.bits.ih + 1;  
 
-    GP0_ORESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
+    GP0_ORESO.u32    = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
     pstRect->u32OWth = GP0_ORESO.bits.ow + 1; 
     pstRect->u32OHgt = GP0_ORESO.bits.oh + 1;
-
-    return ;
+ 
 }
 #endif
-#if 0
-HI_VOID  OPTM_VDP_GP_SetRect  (HI_U32 u32Data, OPTM_VDP_DISP_RECT_S  stRect)
-{
-    volatile U_GP0_IRESO GP0_IRESO;
-    volatile U_GP0_ORESO GP0_ORESO;
 
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetRect() Select Wrong GP Layer ID\n");
-        return ;
-    }
-
-    GP0_IRESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_IRESO.bits.iw = stRect.u32IWth - 1;
-    GP0_IRESO.bits.ih = stRect.u32IHgt - 1;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_IRESO.u32); 
-
-    GP0_ORESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_ORESO.bits.ow = stRect.u32OWth - 1;
-    GP0_ORESO.bits.oh = stRect.u32OHgt - 1;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_ORESO.u32); 
-
-    return ;
-}
-#endif
+/***************************************************************************************
+* func          : OPTM_VDP_GP_SetLayerReso
+* description   : CNcomment: 设置GP输入输出分辨率 CNend\n
+* param[in]     : HI_VOID
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
 HI_VOID  OPTM_VDP_GP_SetLayerReso (HI_U32 u32Data, OPTM_VDP_DISP_RECT_S  stRect)
 {
     volatile U_GP0_VFPOS GP0_VFPOS;
@@ -1438,7 +1399,7 @@ HI_VOID  OPTM_VDP_GP_SetLayerReso (HI_U32 u32Data, OPTM_VDP_DISP_RECT_S  stRect)
         return ;
     }
 
-    /*video position */ 
+    /* video position */ 
     GP0_VFPOS.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VFPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
     GP0_VFPOS.bits.video_xfpos = stRect.u32VX;
     GP0_VFPOS.bits.video_yfpos = stRect.u32VY;
@@ -1471,95 +1432,6 @@ HI_VOID  OPTM_VDP_GP_SetLayerReso (HI_U32 u32Data, OPTM_VDP_DISP_RECT_S  stRect)
 
     return ;
 }   
-#if 0 
-HI_VOID  OPTM_VDP_GP_SetVideoPos     (HI_U32 u32Data, OPTM_VDP_RECT_S  stRect)
-{
-   volatile U_GP0_VFPOS GP0_VFPOS;
-   volatile U_GP0_VLPOS GP0_VLPOS;
-
-   if(u32Data >= OPTM_GP_MAX)
-   {
-       HI_PRINT("Error,OPTM_VDP_GP_SetVideoPos() Select Wrong Video Layer ID\n");
-       return ;
-   }
-   
-  
-   /*video position */ 
-   GP0_VFPOS.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VFPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-   GP0_VFPOS.bits.video_xfpos = stRect.u32X;
-   GP0_VFPOS.bits.video_yfpos = stRect.u32Y;
-   OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VFPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_VFPOS.u32); 
-   
-   GP0_VLPOS.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VLPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-   GP0_VLPOS.bits.video_xlpos = stRect.u32X + stRect.u32Wth - 1;
-   GP0_VLPOS.bits.video_ylpos = stRect.u32Y + stRect.u32Hgt - 1;
-   OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VLPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_VLPOS.u32); 
-   return ;
-}   
-   
-HI_VOID  OPTM_VDP_GP_SetDispPos     (HI_U32 u32Data, OPTM_VDP_RECT_S  stRect)
-{
-   volatile U_GP0_DFPOS GP0_DFPOS;
-   volatile U_GP0_DLPOS GP0_DLPOS;
-
-   if(u32Data >= OPTM_GP_MAX)
-   {
-       HI_PRINT("Error,OPTM_VDP_GP_SetDispPos() Select Wrong Video Layer ID\n");
-       return ;
-   }
-   
-  
-   /*video position */ 
-   GP0_DFPOS.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_DFPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-   GP0_DFPOS.bits.disp_xfpos = stRect.u32X;
-   GP0_DFPOS.bits.disp_yfpos = stRect.u32Y;
-   OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_DFPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_DFPOS.u32); 
-   
-   GP0_DLPOS.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_DLPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-   GP0_DLPOS.bits.disp_xlpos = stRect.u32X + stRect.u32Wth - 1;
-   GP0_DLPOS.bits.disp_ylpos = stRect.u32Y + stRect.u32Hgt - 1;
-   OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_DLPOS.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_DLPOS.u32); 
-   return ;
-}   
-
-HI_VOID  OPTM_VDP_GP_SetInReso (HI_U32 u32Data, OPTM_VDP_RECT_S  stRect)
-{
-    volatile U_GP0_IRESO GP0_IRESO;
-
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetInReso() Select Wrong GP Layer ID\n");
-        return ;
-    }
-
-    GP0_IRESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_IRESO.bits.iw = stRect.u32Wth - 1;
-    GP0_IRESO.bits.ih = stRect.u32Hgt - 1;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_IRESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_IRESO.u32); 
-
-    return ;
-}  
-
-
-HI_VOID  OPTM_VDP_GP_SetOutReso (HI_U32 u32Data, OPTM_VDP_RECT_S  stRect)
-{
-    volatile U_GP0_ORESO GP0_ORESO;
-
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetOutReso() Select Wrong GP Layer ID\n");
-        return ;
-    }
-
-
-    GP0_ORESO.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_ORESO.bits.ow = stRect.u32Wth - 1;
-    GP0_ORESO.bits.oh = stRect.u32Hgt - 1;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ORESO.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_ORESO.u32); 
-
-    return ;
-}  
-#endif
 
 /***************************************************************************************
 * func          : OPTM_VDP_GP_SetLayerGalpha
@@ -1584,33 +1456,6 @@ HI_VOID  OPTM_VDP_GP_SetLayerGalpha (HI_U32 u32Data, HI_U32 u32Alpha)
 
     return ;
 }
-
-#if 0
-HI_VOID  OPTM_VDP_GP_SetLayerBkg(HI_U32 u32Data, OPTM_VDP_BKG_S stBkg)
-{
-    volatile U_GP0_BK GP0_BK;
-    volatile U_GP0_ALPHA     GP0_ALPHA;
-
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetLayerBkg() Select Wrong GPeo Layer ID\n");
-        return ;
-    }
-
-    GP0_BK.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_BK.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_BK.bits.vbk_y  = stBkg.u32BkgY;
-    GP0_BK.bits.vbk_cb = stBkg.u32BkgU;
-    GP0_BK.bits.vbk_cr = stBkg.u32BkgV;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_BK.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_BK.u32); 
-
-    GP0_ALPHA.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ALPHA.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_ALPHA.bits.vbk_alpha = stBkg.u32BkgA;
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ALPHA.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_ALPHA.u32); 
-
-    return ;
-}
-#endif
-
 
 
 /***************************************************************************************
@@ -1748,200 +1593,6 @@ HI_VOID  OPTM_VDP_GP_SetCscEnable   (HI_U32 u32Data, HI_U32 u32bCscEn)
     return ;
 }
 
-
-#if 0
-HI_VOID OPTM_VDP_GP_SetCscMode(HI_U32 u32Data, OPTM_VDP_CSC_MODE_E enCscMode)
-                                                           
-{
-#if 0
-    volatile OPTM_VDP_CSC_COEF_S    st_csc_coef;
-    volatile OPTM_VDP_CSC_DC_COEF_S st_csc_dc_coef;
-
-    HI_U32 u32Pre   = 1 << 10;
-    HI_U32 u32DcPre = 4;//1:8bit; 4:10bit
-
-    if(enCscMode == VDP_CSC_RGB2YUV_601)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(0.299  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(0.587  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(0.114  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(-0.172 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.339 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)(0.511  * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(0.511  * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(-0.428 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(-0.083 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(0 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)( 16 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(128 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(128 * u32DcPre);
-    }
-    else if(enCscMode == VDP_CSC_YUV2RGB_601)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(1.371  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.698 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)(-0.336 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(1.732  * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(-16  * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(-128 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(-128 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(0 * u32DcPre);
-    }
-    else if(enCscMode == VDP_CSC_RGB2YUV_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(0.213  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(0.715  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(0.072  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(-0.117 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.394 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)( 0.511 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)( 0.511 * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(-0.464 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(-0.047 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(0 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)(16  * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(128 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(128 * u32DcPre);
-    }
-    else if(enCscMode == VDP_CSC_YUV2RGB_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(1.540  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.183 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)(-0.459 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(1.816  * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(-16  * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(-128 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(-128 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(0 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(0 * u32DcPre);
-    }
-    else if(enCscMode == VDP_CSC_YUV2YUV_709_601)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(-16  * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(-128 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(-128 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)(16 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(128 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(128 * u32DcPre);
-    }
-    else if(enCscMode == VDP_CSC_YUV2YUV_601_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(-16  * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(-128 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(-128 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)(16 * u32DcPre) ;
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(128 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(128 * u32DcPre);
-    }
-    else
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)1 * u32Pre;
-        st_csc_coef.csc_coef01     = (HI_S32)0 * u32Pre;
-        st_csc_coef.csc_coef02     = (HI_S32)0 * u32Pre;
-
-        st_csc_coef.csc_coef10     = (HI_S32)0 * u32Pre;
-        st_csc_coef.csc_coef11     = (HI_S32)1 * u32Pre;
-        st_csc_coef.csc_coef12     = (HI_S32)0 * u32Pre;
-
-        st_csc_coef.csc_coef20     = (HI_S32)0 * u32Pre;
-        st_csc_coef.csc_coef21     = (HI_S32)0 * u32Pre;
-        st_csc_coef.csc_coef22     = (HI_S32)1 * u32Pre;
-
-        st_csc_dc_coef.csc_in_dc2  = (HI_S32)(-16  * u32DcPre);
-        st_csc_dc_coef.csc_in_dc1  = (HI_S32)(-128 * u32DcPre);
-        st_csc_dc_coef.csc_in_dc0  = (HI_S32)(-128 * u32DcPre);
-
-        st_csc_dc_coef.csc_out_dc2 = (HI_S32)( 16 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc1 = (HI_S32)(128 * u32DcPre);
-        st_csc_dc_coef.csc_out_dc0 = (HI_S32)(128 * u32DcPre);
-    }
-    
-    OPTM_VDP_GP_SetCscCoef  (u32Data,st_csc_coef);
-    OPTM_VDP_GP_SetCscDcCoef(u32Data,st_csc_dc_coef);
-#endif
-    return ;
-}    
-#endif
-
-#if 0
-HI_VOID OPTM_VDP_GP_SetDispMode(HI_U32 u32Data, OPTM_VDP_DISP_MODE_E enDispMode)
-{
-#if 0
-    volatile U_GP0_CTRL GP0_CTRL;
-    
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetDispMode() Select Wrong Video Layer ID\n");
-        return ;
-    }
-
-    
-    GP0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->GP0_CTRL.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-    GP0_CTRL.bits.disp_mode = enDispMode;
-    OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->GP0_CTRL.u32) + u32Data * CONFIG_HIFB_GFX_OFFSET), GP0_CTRL.u32); 
-#endif
-    return ;
-}
-#endif
 
 //-------------------------------------------------------------------
 // GP.ZME begin
@@ -2181,7 +1832,6 @@ HI_VOID OPTM_VDP_GP_SetZmeHfirOrder        (HI_U32 u32Data, HI_U32 u32HfirOrder)
     
     if(u32Data >= OPTM_GP_MAX)
     {
-        HI_PRINT("Error,OPTM_VDP_GP_SetZmeHfirOrder() Select Wrong Video Layer ID\n");
         return ;
     }
     
@@ -2223,68 +1873,17 @@ HI_VOID OPTM_VDP_GP_SetZmeCoefAddr  (HI_U32 u32Data, HI_U32 u32Mode, HI_U32 u32A
     return ;
 }
 
-#if 0
-HI_VOID OPTM_VDP_GP_SetParaRd   (HI_U32 u32Data, OPTM_VDP_GP_PARA_E enMode)
+/***************************************************************************************
+* func          : OPTM_VDP_GP_SetZmeTabV
+* description   : CNcomment: 设置ZME阶数，用来做微缩使用 HIFONE B02新增 CNend\n
+* param[in]     : HI_VOID
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
+HI_VOID OPTM_VDP_GP_SetZmeTabV(HI_U32 u32Data, HI_U32 u32ZmeTabV)
 {
-    volatile U_GP0_PARARD GP0_PARARD;
-
-    GP0_PARARD.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_PARARD.u32) + u32Data * CONFIG_HIFB_GP_OFFSET));
-
-    if(u32Data >= OPTM_GP_MAX)
-    {
-        HI_PRINT("Error,OPTM_VDP_GP_SetParaRd() Select Wrong Video Layer ID\n");
-        return ;
-    }
-    if(enMode == VDP_GP_PARA_ZME_HORL)
-    {
-        GP0_PARARD.bits.gp0_hlcoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_PARA_ZME_HORC)
-    {
-        GP0_PARARD.bits.gp0_hccoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_PARA_ZME_VERL)
-    {
-        GP0_PARARD.bits.gp0_vlcoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_PARA_ZME_VERC)
-    {
-        GP0_PARARD.bits.gp0_vccoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_GTI_PARA_ZME_HORL)
-    {
-        GP0_PARARD.bits.gp0_gti_hlcoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_GTI_PARA_ZME_HORC)
-    {
-        GP0_PARARD.bits.gp0_gti_hccoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_GTI_PARA_ZME_VERL)
-    {
-        GP0_PARARD.bits.gp0_gti_vlcoef_rd = 0x1;
-    }
-    
-    if(enMode == VDP_GP_PARA_ZME_VERC)
-    {
-        GP0_PARARD.bits.gp0_gti_vccoef_rd = 0x1;
-    }
-    
-    else
-    {
-        HI_PRINT("error,VDP_VID_SetParaUpd() select wrong mode!\n");
-    }
-    
-    OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_PARARD.u32) + u32Data * CONFIG_HIFB_GP_OFFSET), GP0_PARARD.u32); 
     return ;
 }
-#endif
-
 //-------------------------------------------------------------------
 // GP.ZME.GTI(LTI/CTI) begin
 //-------------------------------------------------------------------
@@ -2544,205 +2143,6 @@ HI_VOID  OPTM_VDP_GP_SetTiDefThd(HI_U32 u32Data, HI_U32 u32Md)
 }
 
 
-
-#if 0
-///////////////////////GO ZME  BEGIN///
-/* graphic0 layer zoom enable */
-HI_VOID  VDP_GFX_SetZmeEnable(HI_U32 u32Data,OPTM_VDP_ZME_MODE_E enMode,HI_U32 bEnable)
-{
-    U_G0_HSP G0_HSP;
-    U_G0_VSP G0_VSP;
-
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_GFX_SetZmeEnable() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-
-    if((enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-    {
-
-
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hsc_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32); 
-    }
-
-    if((enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vsc_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32); 
-    }
-}
-
-HI_VOID VDP_GFX_SetZmeFirEnable(HI_U32 u32Data, OPTM_VDP_ZME_MODE_E enMode, HI_U32 bEnable)
-{
-    
-    U_G0_VSP G0_VSP;
-    U_G0_HSP G0_HSP;
-
-    
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_SetZmeFirEnable() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-
-    /* g0 layer zoom enable */
-    if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hfir_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32); 
-    }
-
-    if((enMode == VDP_ZME_MODE_ALPHA)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hafir_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32); 
-    }
-
-    if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vfir_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32); 
-    }
-
-    if((enMode == VDP_ZME_MODE_ALPHAV)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vafir_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32); 
-    }
-
-}
-
-/* Vou set Median filter enable */
-HI_VOID  VDP_GFX_SetZmeMidEnable(HI_U32 u32Data,OPTM_VDP_ZME_MODE_E enMode, HI_U32 bEnable)
-{
-    U_G0_HSP G0_HSP;
-    U_G0_VSP G0_VSP;
-
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_GFX_SetZmeMidEnable() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-    /* G0 layer zoom enable */
-    if((enMode == VDP_ZME_MODE_HORL) || (enMode == VDP_ZME_MODE_HOR) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hlmid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32);  
-    }
-    if((enMode == VDP_ZME_MODE_HORC) || (enMode == VDP_ZME_MODE_HOR) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hchmid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32);  
-    }
-    if((enMode == VDP_ZME_MODE_ALPHA) || (enMode == VDP_ZME_MODE_HOR) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HSP.bits.hamid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32);  
-    }
-    if((enMode == VDP_ZME_MODE_VERL) || (enMode == VDP_ZME_MODE_VER) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vlmid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32);  
-    }
-    if((enMode == VDP_ZME_MODE_VERC) || (enMode == VDP_ZME_MODE_VER) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vchmid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32);
-    }
-    if((enMode == VDP_ZME_MODE_ALPHAV) || (enMode == VDP_ZME_MODE_VER) || (enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VSP.bits.vamid_en = bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32);
-    }
-
-
-
-}
-
-HI_VOID VDP_GFX_SetZmeHfirOrder(HI_U32 u32Data, HI_U32 uHfirOrder)
-{
-    U_G0_HSP G0_HSP;
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_GFX_SetZmeHfirOrder() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-
-    G0_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-    G0_HSP.bits.hfir_order = uHfirOrder;
-    OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HSP.u32);
-
-
-}
-HI_VOID VDP_GFX_SetZmeVerTap(HI_U32 u32Data, OPTM_VDP_ZME_MODE_E enMode, HI_U32 u32VerTap)
-{
-    U_G0_VSP G0_VSP;
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_GFX_SetZmeVerTap() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-
-    G0_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-    G0_VSP.bits.vsc_luma_tap = u32VerTap;
-    OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VSP.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VSP.u32);
-}
-
-/* Vou set zoom inital phase */
-HI_VOID  VDP_GFX_SetZmePhase(HI_U32 u32Data, OPTM_VDP_ZME_MODE_E enMode,HI_S32 s32Phase)
-{
-    U_G0_HOFFSET G0_HOFFSET;
-    U_G0_VOFFSET G0_VOFFSET;
-    if(u32Data >= OPTM_GFX_MAX)
-    {
-        HI_PRINT("Error,VDP_GFX_SetZmePhase() Select Wrong Graph Layer ID\n");
-        return ;
-    }
-
-    if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HOFFSET.bits.hor_loffset = (s32Phase);
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HOFFSET.u32); 
-    }
-    if((enMode == VDP_ZME_MODE_HORC)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_HOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_HOFFSET.bits.hor_coffset = (s32Phase);
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_HOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_HOFFSET.u32); 
-    }
-
-    if((enMode == VDP_ZME_MODE_VERT)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_HOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VOFFSET.bits.vtp_offset = (s32Phase);
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VOFFSET.u32); 
-    }
-    if((enMode == VDP_ZME_MODE_VERB)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-    {
-        G0_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->G0_VOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET));
-        G0_VOFFSET.bits.vbtm_offset = (s32Phase);
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->G0_VOFFSET.u32)+ u32Data * CONFIG_HIFB_GFX_OFFSET), G0_VOFFSET.u32); 
-    }
-
-
-}
-//GFX END
-#endif
 //-------------------------------------------------------------------
 //WBC_DHD0_BEGIN
 //-------------------------------------------------------------------
@@ -2758,14 +2158,6 @@ HI_VOID OPTM_VDP_WBC_SetAutoSt(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 bEnable)
         WBC_GP0_CTRL.bits.auto_stop_en=  bEnable;
         OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_GP0_CTRL.u32)), WBC_GP0_CTRL.u32);
     }
-#if 0	
-    else if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-        WBC_DHD0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CTRL.u32)));
-        WBC_DHD0_CTRL.bits.auto_stop_en=  bEnable;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CTRL.u32)), WBC_DHD0_CTRL.u32);
-    }
-#endif	
 	else if(enLayer == OPTM_VDP_LAYER_WBC_G0)
     {
         WBC_G0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_G0_CTRL.u32)));
@@ -2971,42 +2363,6 @@ HI_VOID OPTM_VDP_WBC_SetOutFmt(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_WBC_OFMT_E
 
 
 }
-#if 0
-HI_VOID OPTM_VDP_WBC_SetSpd(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 u32ReqSpd)
-{
-    volatile U_WBC_DHD0_CTRL WBC_DHD0_CTRL;
-    volatile U_WBC_GP0_CTRL WBC_GP0_CTRL;
-	volatile U_WBC_G0_CTRL    WBC_G0_CTRL;
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-        WBC_DHD0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CTRL.u32)));
-        WBC_DHD0_CTRL.bits.req_interval = u32ReqSpd;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CTRL.u32)), WBC_DHD0_CTRL.u32);
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        WBC_GP0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_GP0_CTRL.u32)));
-        WBC_GP0_CTRL.bits.req_interval = u32ReqSpd;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_GP0_CTRL.u32)), WBC_GP0_CTRL.u32);
-    }
-	else if(enLayer == OPTM_VDP_LAYER_WBC_G0)
-    {
-        WBC_G0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_G0_CTRL.u32)));
-        WBC_G0_CTRL.bits.req_interval = u32ReqSpd;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_G0_CTRL.u32)), WBC_G0_CTRL.u32);
-    }
-
-    else if(enLayer == OPTM_VDP_LAYER_WBC_G4)
-    {
-        WBC_G0_CTRL.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_CTRL.u32)+CONFIG_HIFB_WBC_OFFSET));
-        WBC_G0_CTRL.bits.req_interval = u32ReqSpd;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_CTRL.u32)+CONFIG_HIFB_WBC_OFFSET), WBC_G0_CTRL.u32);
-    }
-
-}
-#endif
-
 /***************************************************************************************
 * func          : OPTM_VDP_WBC_SetLayerAddr
 * description   : CNcomment: 设置WBC回写地址 CNend\n
@@ -3138,59 +2494,19 @@ HI_VOID OPTM_VDP_WBC_SetDitherMode  (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_DITH
     }
 
 }
-#if 0
-HI_VOID OPTM_VDP_WBC_SetDitherCoef  (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_DITHER_COEF_S dither_coef)
 
+/***************************************************************************************
+* func          : OPTM_VDP_WBC_SetPreZmeEnable
+* description   : CNcomment: 设置预缩放使能 CNend\n
+* param[in]     : enLayer  : 回写点
+* param[in]     : bEnable  : 是否开预缩放使能
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
+HI_VOID OPTM_VDP_WBC_SetPreZmeEnable(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 bEnable)
 {
-    
-    volatile U_WBC_DHD0_DITHER_COEF0 WBC_DHD0_DITHER_COEF0;
-    volatile U_WBC_DHD0_DITHER_COEF1 WBC_DHD0_DITHER_COEF1;
-
-    volatile U_WBC_GP0_DITHER_COEF0 WBC_GP0_DITHER_COEF0;
-    volatile U_WBC_GP0_DITHER_COEF1 WBC_GP0_DITHER_COEF1;
-
-
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-
-        WBC_DHD0_DITHER_COEF0.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_DITHER_COEF0.u32)));
-        WBC_DHD0_DITHER_COEF0.bits.dither_coef0 = dither_coef.dither_coef0 ;
-        WBC_DHD0_DITHER_COEF0.bits.dither_coef1 = dither_coef.dither_coef1 ;
-        WBC_DHD0_DITHER_COEF0.bits.dither_coef2 = dither_coef.dither_coef2 ;
-        WBC_DHD0_DITHER_COEF0.bits.dither_coef3 = dither_coef.dither_coef3 ;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_DITHER_COEF0.u32)), WBC_DHD0_DITHER_COEF0.u32);
-
-        WBC_DHD0_DITHER_COEF1.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_DITHER_COEF1.u32)));
-        WBC_DHD0_DITHER_COEF1.bits.dither_coef4 = dither_coef.dither_coef4 ;
-        WBC_DHD0_DITHER_COEF1.bits.dither_coef5 = dither_coef.dither_coef5 ;
-        WBC_DHD0_DITHER_COEF1.bits.dither_coef6 = dither_coef.dither_coef6 ;
-        WBC_DHD0_DITHER_COEF1.bits.dither_coef7 = dither_coef.dither_coef7 ;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_DITHER_COEF1.u32)), WBC_DHD0_DITHER_COEF1.u32);
-
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-
-        WBC_GP0_DITHER_COEF0.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_GP0_DITHER_COEF0.u32)));
-        WBC_GP0_DITHER_COEF0.bits.dither_coef0 = dither_coef.dither_coef0 ;
-        WBC_GP0_DITHER_COEF0.bits.dither_coef1 = dither_coef.dither_coef1 ;
-        WBC_GP0_DITHER_COEF0.bits.dither_coef2 = dither_coef.dither_coef2 ;
-        WBC_GP0_DITHER_COEF0.bits.dither_coef3 = dither_coef.dither_coef3 ;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_GP0_DITHER_COEF0.u32)), WBC_GP0_DITHER_COEF0.u32);
-
-        WBC_GP0_DITHER_COEF1.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_GP0_DITHER_COEF1.u32)));
-        WBC_GP0_DITHER_COEF1.bits.dither_coef4 = dither_coef.dither_coef4 ;
-        WBC_GP0_DITHER_COEF1.bits.dither_coef5 = dither_coef.dither_coef5 ;
-        WBC_GP0_DITHER_COEF1.bits.dither_coef6 = dither_coef.dither_coef6 ;
-        WBC_GP0_DITHER_COEF1.bits.dither_coef7 = dither_coef.dither_coef7 ;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_GP0_DITHER_COEF1.u32)), WBC_GP0_DITHER_COEF1.u32);
-
-    }
-
-
 }
-#endif
+
 
 
 /***************************************************************************************
@@ -3249,990 +2565,6 @@ HI_VOID  OPTM_VDP_WBC_SetCropReso (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_DISP_R
 
     return ;
 }
-
-#if 0
-HI_VOID OPTM_VDP_WBC_SetZmeCoefAddr(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_WBC_PARA_E u32Mode, HI_U32 u32Addr)
-{
-    //volatile U_WBC_DHD0_HCOEFAD WBC_DHD0_HCOEFAD;
-    //volatile U_WBC_DHD0_VCOEFAD WBC_DHD0_VCOEFAD;
-    volatile U_GP0_HCOEFAD      GP0_HCOEFAD;
-    volatile U_GP0_VCOEFAD      GP0_VCOEFAD;
-
-    if( enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-#if 0    
-        if(u32Mode == VDP_WBC_PARA_ZME_HOR)
-        {
-            WBC_DHD0_HCOEFAD.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_HCOEFAD.u32)));
-            WBC_DHD0_HCOEFAD.bits.coef_addr = u32Addr;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_HCOEFAD.u32)), WBC_DHD0_HCOEFAD.u32); 
-        }
-        else if(u32Mode == VDP_WBC_PARA_ZME_VER)
-        {
-            WBC_DHD0_VCOEFAD.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_VCOEFAD.u32)));
-            WBC_DHD0_VCOEFAD.bits.coef_addr = u32Addr;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_VCOEFAD.u32)), WBC_DHD0_VCOEFAD.u32); 
-        }
-        else
-        {
-            HI_PRINT("Error,VDP_WBC_DHD0_SetZmeCoefAddr() Select a Wrong Mode!\n");
-        }
-#endif
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-
-        if(u32Mode == VDP_WBC_PARA_ZME_HOR)
-        {
-            GP0_HCOEFAD.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_HCOEFAD.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_HCOEFAD.bits.coef_addr = u32Addr;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_HCOEFAD.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_HCOEFAD.u32); 
-        }
-        else if(u32Mode == VDP_WBC_PARA_ZME_VER)
-        {
-            GP0_VCOEFAD.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VCOEFAD.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_VCOEFAD.bits.coef_addr = u32Addr;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_VCOEFAD.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_VCOEFAD.u32); 
-        }
-        else
-        {
-            HI_PRINT("Error,OPTM_VDP_GP_SetZmeCoefAddr() Select a Wrong Mode!\n");
-        }
-    }
-    return ;
-
-}
-#endif
-
-#if 0
-HI_VOID  OPTM_VDP_WBC_SetParaUpd (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_WBC_PARA_E enMode)
-{
-    volatile U_WBC_DHD0_PARAUP WBC_DHD0_PARAUP;
-    volatile U_GP0_PARAUP GP0_PARAUP;
-
-    WBC_DHD0_PARAUP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_DHD0_PARAUP.u32)));
-
-    GP0_PARAUP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_PARAUP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-
-    if( enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-#if 0
-        if(enMode == VDP_WBC_PARA_ZME_HOR)
-        {
-            WBC_DHD0_PARAUP.bits.wbc_hcoef_upd = 0x1;
-        }
-        else if(enMode == VDP_WBC_PARA_ZME_VER)
-        {
-            WBC_DHD0_PARAUP.bits.wbc_vcoef_upd = 0x1;
-        }
-        else
-        {
-            HI_PRINT("error,VDP_WBC_DHD0_SetParaUpd() select wrong mode!\n");
-        }
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_PARAUP.u32)), WBC_DHD0_PARAUP.u32); 
-#endif
-        return ;
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        if(enMode == VDP_WBC_PARA_ZME_HOR)
-        {
-            GP0_PARAUP.bits.gp0_hcoef_upd = 0x1;
-        }
-        else if(enMode == VDP_WBC_PARA_ZME_VER)
-        {
-            GP0_PARAUP.bits.gp0_vcoef_upd = 0x1;
-        }
-        else
-        {
-            HI_PRINT("error,OPTM_VDP_GP_SetParaUpd() select wrong mode!\n");
-        }
-
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_PARAUP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_PARAUP.u32); 
-        return ;
-    }
-}
-#endif
-
-#if 0
-HI_VOID OPTM_VDP_WBC_SetZmeEnable  (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_ZME_MODE_E enMode, HI_U32 u32bEnable)
-{
-    volatile U_WBC_DHD0_ZME_HSP WBC_DHD0_ZME_HSP;
-    volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-    volatile U_GP0_ZME_HSP      GP0_ZME_HSP;
-    volatile U_GP0_ZME_VSP      GP0_ZME_VSP;
-
-    /*WBC zoom enable */
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hlmsc_en = u32bEnable;
-            WBC_DHD0_ZME_HSP.bits.hlfir_en = 1;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_HORC)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hchmsc_en = u32bEnable;
-            WBC_DHD0_ZME_HSP.bits.hchfir_en = 1;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_NONL)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.non_lnr_en = u32bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32);  
-        }
-
-
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vlmsc_en = u32bEnable;
-            WBC_DHD0_ZME_VSP.bits.vlfir_en = 1;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vchmsc_en = u32bEnable;
-            WBC_DHD0_ZME_VSP.bits.vchfir_en = 1;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32); 
-        }
-
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        if((enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hsc_en = u32bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vsc_en = u32bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-
-        return ;
-    }
-
-    return ;
-
-}
-
-/* WBC set Median filter enable */
-HI_VOID  OPTM_VDP_WBC_SetMidEnable(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_ZME_MODE_E enMode,HI_U32 bEnable)
-
-{
-
-    volatile U_WBC_DHD0_ZME_HSP WBC_DHD0_ZME_HSP;
-    volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-    volatile U_GP0_ZME_HSP      GP0_ZME_HSP;
-    volatile U_GP0_ZME_VSP      GP0_ZME_VSP;
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hlmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32);
-
-        }
-
-        if((enMode == VDP_ZME_MODE_HORC)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hchmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32);  
-        }
-
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vlmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);  
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vchmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);  
-        }
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        if((enMode == VDP_ZME_MODE_ALPHA)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hamid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-        if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hlmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_HORC)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hchmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_ALPHAV)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vamid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vlmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vchmid_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-    }
-    return;
-
-}
-
-HI_VOID OPTM_VDP_WBC_SetFirEnable(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_ZME_MODE_E enMode, HI_U32 bEnable)
-{
-    volatile U_WBC_DHD0_ZME_HSP WBC_DHD0_ZME_HSP;
-    volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-    volatile U_GP0_ZME_HSP      GP0_ZME_HSP;
-    volatile U_GP0_ZME_VSP      GP0_ZME_VSP;
-    
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        if((enMode == VDP_ZME_MODE_HORL)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hlfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32);
-
-        }
-
-        if((enMode == VDP_ZME_MODE_HORC)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-            WBC_DHD0_ZME_HSP.bits.hchfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32);  
-        }
-
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vlfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);  
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vchfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);  
-        }
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        if((enMode == VDP_ZME_MODE_ALPHA)||(enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hafir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HSP.bits.hfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_ALPHAV)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vafir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VSP.bits.vfir_en = bEnable;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSP.u32); 
-        }
-    }
-     
-     
-    return ;
-    
-}
-
-HI_VOID OPTM_VDP_WBC_SetZmeVerTap(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_ZME_MODE_E enMode, HI_U32 u32VerTap)
-
-{
-    volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        /*
-        if ((enMode == VDP_ZME_MODE_VERL) || (enMode == VDP_ZME_MODE_VER) || (enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vsc_luma_tap = u32VerTap;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);
-        }
-        */
-
-
-        if ((enMode == VDP_ZME_MODE_VERC) || (enMode == VDP_ZME_MODE_VER) || (enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-            WBC_DHD0_ZME_VSP.bits.vsc_chroma_tap = u32VerTap;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32);
-        }
-    }
-
-}
-
-HI_VOID OPTM_VDP_WBC_SetZmeHfirOrder(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 u32HfirOrder)
-{
-    volatile U_WBC_DHD0_ZME_HSP WBC_DHD0_ZME_HSP;    
-    volatile U_GP0_ZME_HSP      GP0_ZME_HSP;
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-
-        WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-        WBC_DHD0_ZME_HSP.bits.hfir_order = u32HfirOrder;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32); 
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_ZME_HSP.bits.hfir_order = u32HfirOrder;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-    }
-    return ;
-}
-
-HI_VOID OPTM_VDP_WBC_SetZmeHorRatio(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 u32Ratio)
-
-{
-    volatile U_WBC_DHD0_ZME_HSP WBC_DHD0_ZME_HSP;
-    volatile U_GP0_ZME_HSP      GP0_ZME_HSP;
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-
-
-        WBC_DHD0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)));
-        WBC_DHD0_ZME_HSP.bits.hratio = u32Ratio;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_HSP.u32)), WBC_DHD0_ZME_HSP.u32); 
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        GP0_ZME_HSP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_ZME_HSP.bits.hratio = u32Ratio;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HSP.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HSP.u32); 
-    }
-    return ;
-}
-
-HI_VOID  OPTM_VDP_WBC_SetZmeInFmt(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_PROC_FMT_E u32Fmt)
-{
-    volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-
-        WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-        WBC_DHD0_ZME_VSP.bits.zme_in_fmt = u32Fmt;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32); 
-    }
-
-    return ;
-}
-
-HI_VOID  OPTM_VDP_WBC_SetZmeOutFmt(OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_PROC_FMT_E u32Fmt)
-{
-   volatile U_WBC_DHD0_ZME_VSP WBC_DHD0_ZME_VSP;
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        WBC_DHD0_ZME_VSP.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)));
-        WBC_DHD0_ZME_VSP.bits.zme_out_fmt = u32Fmt;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSP.u32)), WBC_DHD0_ZME_VSP.u32); 
-    }
-
-    return ;
-}
-
-HI_VOID  OPTM_VDP_WBC_SetZmeVerRatio(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 u32Ratio)
-{
-    volatile U_WBC_DHD0_ZME_VSR WBC_DHD0_ZME_VSR;
-    volatile U_GP0_ZME_VSR        GP0_ZME_VSR;
-    
-    
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0 )
-    {
-        WBC_DHD0_ZME_VSR.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSR.u32)));
-        WBC_DHD0_ZME_VSR.bits.vratio = u32Ratio;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VSR.u32)), WBC_DHD0_ZME_VSR.u32); 
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        GP0_ZME_VSR.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSR.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_ZME_VSR.bits.vratio = u32Ratio;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VSR.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VSR.u32); 
-    }
-    return ;
-}
-
-HI_VOID  OPTM_VDP_WBC_SetZmePhase    (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_ZME_MODE_E enMode,HI_S32 s32Phase)
-{
-    volatile U_WBC_DHD0_ZME_VOFFSET   WBC_DHD0_ZME_VOFFSET;
-    volatile U_WBC_DHD0_ZME_VBOFFSET  WBC_DHD0_ZME_VBOFFSET;
-    volatile U_GP0_ZME_HOFFSET        GP0_ZME_HOFFSET;
-    volatile U_GP0_ZME_VOFFSET        GP0_ZME_VOFFSET;
-    
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VOFFSET.u32)));
-            WBC_DHD0_ZME_VOFFSET.bits.vluma_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VOFFSET.u32)), WBC_DHD0_ZME_VOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VOFFSET.u32)));
-            WBC_DHD0_ZME_VOFFSET.bits.vchroma_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VOFFSET.u32)), WBC_DHD0_ZME_VOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERB)||(enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VBOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VBOFFSET.u32)));
-            WBC_DHD0_ZME_VBOFFSET.bits.vbluma_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VBOFFSET.u32)), WBC_DHD0_ZME_VBOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERB)||(enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            WBC_DHD0_ZME_VBOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VBOFFSET.u32)));
-            WBC_DHD0_ZME_VBOFFSET.bits.vbchroma_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_ZME_VBOFFSET.u32)), WBC_DHD0_ZME_VBOFFSET.u32); 
-        }
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        if((enMode == VDP_ZME_MODE_HORL) || (enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HOFFSET.bits.hor_loffset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_HORC) || (enMode == VDP_ZME_MODE_HOR)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_HOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_HOFFSET.bits.hor_coffset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_HOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_HOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERL)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VOFFSET.bits.vbtm_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VOFFSET.u32); 
-        }
-
-        if((enMode == VDP_ZME_MODE_VERC)||(enMode == VDP_ZME_MODE_VER)||(enMode == VDP_ZME_MODE_ALL))
-        {
-            GP0_ZME_VOFFSET.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-            GP0_ZME_VOFFSET.bits.vtp_offset = s32Phase;
-            OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_ZME_VOFFSET.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_ZME_VOFFSET.u32); 
-        }
-    }
-
-    return ;
-}
-
-HI_VOID  OPTM_VDP_WBC_SetCscEnable  (OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 enCSC)
-{   
-    volatile U_WBC_DHD0_CSCIDC WBC_DHD0_CSCIDC;
-    volatile U_GP0_CSC_IDC     GP0_CSC_IDC;
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-
-        WBC_DHD0_CSCIDC.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCIDC.u32)));        
-        WBC_DHD0_CSCIDC.bits.csc_en = enCSC;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCIDC.u32)), WBC_DHD0_CSCIDC.u32);
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-
-        GP0_CSC_IDC.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IDC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_IDC.bits.csc_en = enCSC;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IDC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_CSC_IDC.u32); 
-
-    }
-    return ;
-}
-
-HI_VOID   OPTM_VDP_WBC_SetCscDcCoef(OPTM_VDP_LAYER_WBC_E enLayer,OPTM_VDP_CSC_DC_COEF_S stCscCoef)
-{   
-    volatile U_WBC_DHD0_CSCIDC WBC_DHD0_CSCIDC;
-    volatile U_WBC_DHD0_CSCODC WBC_DHD0_CSCODC;
-    volatile U_GP0_CSC_IDC  GP0_CSC_IDC;
-    volatile U_GP0_CSC_ODC  GP0_CSC_ODC;
-    volatile U_GP0_CSC_IODC GP0_CSC_IODC;
-    
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-        WBC_DHD0_CSCIDC.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCIDC.u32)));
-        
-        WBC_DHD0_CSCIDC.bits.cscidc2 = stCscCoef.csc_in_dc2;
-        WBC_DHD0_CSCIDC.bits.cscidc1 = stCscCoef.csc_in_dc1;
-        WBC_DHD0_CSCIDC.bits.cscidc0 = stCscCoef.csc_in_dc0;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCIDC.u32)), WBC_DHD0_CSCIDC.u32);
-
-        WBC_DHD0_CSCODC.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCODC.u32)));
-        WBC_DHD0_CSCODC.bits.cscodc2 = stCscCoef.csc_out_dc2;
-        WBC_DHD0_CSCODC.bits.cscodc1 = stCscCoef.csc_out_dc1;
-        WBC_DHD0_CSCODC.bits.cscodc0 = stCscCoef.csc_out_dc0;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCODC.u32)), WBC_DHD0_CSCODC.u32);
-    }
-
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        GP0_CSC_IDC.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IDC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_IDC.bits.cscidc1  = stCscCoef.csc_in_dc1;
-        GP0_CSC_IDC.bits.cscidc0  = stCscCoef.csc_in_dc0;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IDC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_CSC_IDC.u32); 
-
-        GP0_CSC_ODC.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_ODC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_ODC.bits.cscodc1 = stCscCoef.csc_out_dc1;
-        GP0_CSC_ODC.bits.cscodc0 = stCscCoef.csc_out_dc0;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_ODC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_CSC_ODC.u32); 
-
-        GP0_CSC_IODC.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IODC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_IODC.bits.cscodc2 = stCscCoef.csc_out_dc2;
-        GP0_CSC_IODC.bits.cscidc2 = stCscCoef.csc_in_dc2;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_IODC.u32) + OPTM_WBC_GP0_SEL * CONFIG_HIFB_GP_OFFSET), GP0_CSC_IODC.u32); 
-    }
-    return ;
-}
-
-HI_VOID   OPTM_VDP_WBC_SetCscCoef(OPTM_VDP_LAYER_WBC_E enLayer,OPTM_VDP_CSC_COEF_S stCscCoef)
-{   
-    volatile U_WBC_DHD0_CSCP0        WBC_DHD0_CSCP0;
-    volatile U_WBC_DHD0_CSCP1        WBC_DHD0_CSCP1;
-    volatile U_WBC_DHD0_CSCP2        WBC_DHD0_CSCP2;
-    volatile U_WBC_DHD0_CSCP3        WBC_DHD0_CSCP3;
-    volatile U_WBC_DHD0_CSCP4        WBC_DHD0_CSCP4;
-    volatile U_GP0_CSC_P0            GP0_CSC_P0;
-    volatile U_GP0_CSC_P1            GP0_CSC_P1;
-    volatile U_GP0_CSC_P2            GP0_CSC_P2;
-    volatile U_GP0_CSC_P3            GP0_CSC_P3;
-    volatile U_GP0_CSC_P4            GP0_CSC_P4;
-
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-        WBC_DHD0_CSCP0.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP0.u32)));
-        WBC_DHD0_CSCP0.bits.cscp00 = stCscCoef.csc_coef00;
-        WBC_DHD0_CSCP0.bits.cscp01 = stCscCoef.csc_coef01;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP0.u32)), WBC_DHD0_CSCP0.u32);
-
-        WBC_DHD0_CSCP1.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP1.u32)));
-        WBC_DHD0_CSCP1.bits.cscp02 = stCscCoef.csc_coef02;
-        WBC_DHD0_CSCP1.bits.cscp10 = stCscCoef.csc_coef10;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP1.u32)), WBC_DHD0_CSCP1.u32);
-
-        WBC_DHD0_CSCP2.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP2.u32)));
-        WBC_DHD0_CSCP2.bits.cscp11 = stCscCoef.csc_coef11;
-        WBC_DHD0_CSCP2.bits.cscp12 = stCscCoef.csc_coef12;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP2.u32)), WBC_DHD0_CSCP2.u32);
-
-        WBC_DHD0_CSCP3.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP3.u32)));
-        WBC_DHD0_CSCP3.bits.cscp20 = stCscCoef.csc_coef20;
-        WBC_DHD0_CSCP3.bits.cscp21 = stCscCoef.csc_coef21;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP3.u32)), WBC_DHD0_CSCP3.u32);
-
-        WBC_DHD0_CSCP4.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP4.u32)));
-        WBC_DHD0_CSCP4.bits.cscp22 = stCscCoef.csc_coef22;
-        OPTM_VDP_RegWrite((HI_U32)(&(pOptmVdpReg->WBC_DHD0_CSCP4.u32)), WBC_DHD0_CSCP4.u32);
-    }
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        GP0_CSC_P0.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P0.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_P0.bits.cscp00 = stCscCoef.csc_coef00;
-        GP0_CSC_P0.bits.cscp01 = stCscCoef.csc_coef01;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P0.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET), GP0_CSC_P0.u32);
-
-        GP0_CSC_P1.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P1.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_P1.bits.cscp02 = stCscCoef.csc_coef02;
-        GP0_CSC_P1.bits.cscp10 = stCscCoef.csc_coef10;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P1.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET), GP0_CSC_P1.u32);
-
-        GP0_CSC_P2.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P2.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_P2.bits.cscp11 = stCscCoef.csc_coef11;
-        GP0_CSC_P2.bits.cscp12 = stCscCoef.csc_coef12;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P2.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET), GP0_CSC_P2.u32);
-
-        GP0_CSC_P3.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P3.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_P3.bits.cscp20 = stCscCoef.csc_coef20;
-        GP0_CSC_P3.bits.cscp21 = stCscCoef.csc_coef21;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P3.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET), GP0_CSC_P3.u32);
-
-        GP0_CSC_P4.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P4.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET));
-        GP0_CSC_P4.bits.cscp22 = stCscCoef.csc_coef22;
-        OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->GP0_CSC_P4.u32)+OPTM_WBC_GP0_SEL*CONFIG_HIFB_GP_OFFSET), GP0_CSC_P4.u32);
-    }    
-
-}
-
-HI_VOID OPTM_VDP_WBC_SetCscMode( OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_CSC_MODE_E enCscMode)
-{
-#if 0
-    OPTM_VDP_CSC_COEF_S    st_csc_coef;
-    OPTM_VDP_CSC_DC_COEF_S st_csc_dc_coef;
-
-    HI_U32 u32Pre   ;//= 1 << 10;
-    HI_U32 u32DcPre ;//= 4;//1:8bit; 4:10bit
-
-    if(enLayer == OPTM_VDP_LAYER_WBC_HD0)
-    {
-        u32Pre   = 1 << 8;
-        u32DcPre = 1;//1:8bit; 4:10bit
-        if(enCscMode == VDP_CSC_RGB2YUV_601)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(0.299  * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(0.587  * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)(0.114  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(-0.172 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.339 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)(0.511  * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(0.511  * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(-0.428 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(-0.083 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = 0 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc1  = 0 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc0  = 0 * u32DcPre;
-
-        st_csc_dc_coef.csc_out_dc2 =  16 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc1 = 128 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc0 = 128 * u32DcPre;
-    }
-    else if(enCscMode == VDP_CSC_YUV2RGB_601)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(1.371  * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)(-0.698 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)(-0.336 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)(1.732  * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-        st_csc_dc_coef.csc_out_dc2 =  0 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc1 =  0 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc0 =  0 * u32DcPre;
-    }
-    else if(enCscMode == VDP_CSC_RGB2YUV_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(0.213  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(0.715  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(0.072  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(-0.117 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.394 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)( 0.511 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)( 0.511 * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(-0.464 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(-0.047 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = 0 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc1  = 0 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc0  = 0 * u32DcPre;
-
-        st_csc_dc_coef.csc_out_dc2 = 16  * u32DcPre;
-        st_csc_dc_coef.csc_out_dc1 = 128 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc0 = 128 * u32DcPre;
-    }
-    else if(enCscMode == VDP_CSC_YUV2RGB_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)(1.540  * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)(-0.183 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)(-0.459 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)(1.816  * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-        st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-        st_csc_dc_coef.csc_out_dc2 = 0 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc1 = 0 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc0 = 0 * u32DcPre;
-    }
-    else if(enCscMode == VDP_CSC_YUV2YUV_709_601)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-        st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-        st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-        st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-        st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-        st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-        st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-        st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-        st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-        st_csc_dc_coef.csc_out_dc2 =   16 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc1 =  128 * u32DcPre;
-        st_csc_dc_coef.csc_out_dc0 =  128 * u32DcPre;
-    }
-    else if(enCscMode == VDP_CSC_YUV2YUV_601_709)
-    {
-        st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-        st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-        st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =   16 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 =  128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 =  128 * u32DcPre;
-        }
-        OPTM_VDP_WBC_SetCscCoef  ( enLayer,st_csc_coef);
-        OPTM_VDP_WBC_SetCscDcCoef( enLayer,st_csc_dc_coef);
-    } 
-    else if(enLayer == OPTM_VDP_LAYER_WBC_GP0)
-    {
-        u32Pre   = 1 << 10;
-        u32DcPre = 4;//1:8bit; 4:10bit
-        if(enCscMode == VDP_CSC_RGB2YUV_601)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(0.299  * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(0.587  * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)(0.114  * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(-0.172 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)(-0.339 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)(0.511  * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(0.511  * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)(-0.428 * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)(-0.083 * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = 0 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = 0 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = 0 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =  16 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 = 128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 = 128 * u32DcPre;
-        }
-        else if(enCscMode == VDP_CSC_YUV2RGB_601)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)(1.371  * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)(-0.698 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)(-0.336 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)(1.732  * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =  0 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 =  0 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 =  0 * u32DcPre;
-        }
-        else if(enCscMode == VDP_CSC_RGB2YUV_709)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(0.213  * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(0.715  * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)(0.072  * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(-0.117 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)(-0.394 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)( 0.511 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)( 0.511 * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)(-0.464 * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)(-0.047 * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = 0 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = 0 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = 0 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 = 16  * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 = 128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 = 128 * u32DcPre;
-        }
-        else if(enCscMode == VDP_CSC_YUV2RGB_709)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(    1  * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(    0  * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)(1.540  * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     1 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)(-0.183 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)(-0.459 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(    1  * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)(1.816  * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)(    0  * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 = 0 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 = 0 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 = 0 * u32DcPre;
-        }
-        else if(enCscMode == VDP_CSC_YUV2YUV_709_601)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =   16 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 =  128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 =  128 * u32DcPre;
-        }
-        else if(enCscMode == VDP_CSC_YUV2YUV_601_709)
-        {
-            st_csc_coef.csc_coef00     = (HI_S32)(     1 * u32Pre);
-            st_csc_coef.csc_coef01     = (HI_S32)(-0.116 * u32Pre);
-            st_csc_coef.csc_coef02     = (HI_S32)( 0.208 * u32Pre);
-
-            st_csc_coef.csc_coef10     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef11     = (HI_S32)( 1.017 * u32Pre);
-            st_csc_coef.csc_coef12     = (HI_S32)( 0.114 * u32Pre);
-
-            st_csc_coef.csc_coef20     = (HI_S32)(     0 * u32Pre);
-            st_csc_coef.csc_coef21     = (HI_S32)( 0.075 * u32Pre);
-            st_csc_coef.csc_coef22     = (HI_S32)( 1.025 * u32Pre);
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =   16 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 =  128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 =  128 * u32DcPre;
-        }
-        else
-        {
-            st_csc_coef.csc_coef00     = 1 * u32Pre;
-            st_csc_coef.csc_coef01     = 0 * u32Pre;
-            st_csc_coef.csc_coef02     = 0 * u32Pre;
-
-            st_csc_coef.csc_coef10     = 0 * u32Pre;
-            st_csc_coef.csc_coef11     = 1 * u32Pre;
-            st_csc_coef.csc_coef12     = 0 * u32Pre;
-
-            st_csc_coef.csc_coef20     = 0 * u32Pre;
-            st_csc_coef.csc_coef21     = 0 * u32Pre;
-            st_csc_coef.csc_coef22     = 1 * u32Pre;
-
-            st_csc_dc_coef.csc_in_dc2  = -16  * u32DcPre;
-            st_csc_dc_coef.csc_in_dc1  = -128 * u32DcPre;
-            st_csc_dc_coef.csc_in_dc0  = -128 * u32DcPre;
-
-            st_csc_dc_coef.csc_out_dc2 =  16 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc1 = 128 * u32DcPre;
-            st_csc_dc_coef.csc_out_dc0 = 128 * u32DcPre;
-        }
-        OPTM_VDP_GP_SetCscCoef  (OPTM_WBC_GP0_SEL,st_csc_coef);
-        OPTM_VDP_GP_SetCscDcCoef(OPTM_WBC_GP0_SEL,st_csc_dc_coef);
-    }
-#endif
-
-    return ;
-}
-#endif
-
-
-//-------------------------------------------------------------------
-//WBC_DHD0_END
 
 //-------------------------------------------------------------------
 //WBC_GFX_BEGIN
@@ -4387,19 +2719,7 @@ HI_VOID  OPTM_VDP_SetCMPInRect (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_RECT_S *p
     {
         WBC_G0_FCROP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_FCROP.u32)));
         WBC_G0_FCROP.bits.wfcrop = pstRect->u32X;
-#if 0		
-		if (WBC_G0_FCROP.bits.wfcrop)
-		{
-			WBC_G0_FCROP.bits.wfcrop -= 1;
-		}
-#endif		
         WBC_G0_FCROP.bits.hfcrop = pstRect->u32Y;
-#if 0
-		if (WBC_G0_FCROP.bits.hfcrop)
-		{
-			WBC_G0_FCROP.bits.hfcrop -= 1;
-		}
-#endif		
         OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_FCROP.u32)), WBC_G0_FCROP.u32);
 
         WBC_G0_LCROP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_LCROP.u32)));
@@ -4413,20 +2733,7 @@ HI_VOID  OPTM_VDP_SetCMPInRect (OPTM_VDP_LAYER_WBC_E enLayer, OPTM_VDP_RECT_S *p
     {
         WBC_G0_FCROP.u32 = OPTM_VDP_RegRead((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_FCROP.u32)+CONFIG_HIFB_WBC_OFFSET));
         WBC_G0_FCROP.bits.wfcrop = pstRect->u32X;
-#if 0		
-		if (WBC_G0_FCROP.bits.wfcrop)
-		{
-			WBC_G0_FCROP.bits.wfcrop -= 1;
-		}
-#endif		
 		WBC_G0_FCROP.bits.hfcrop = pstRect->u32Y;
-#if 0
-		if (WBC_G0_FCROP.bits.hfcrop)
-		{
-			WBC_G0_FCROP.bits.hfcrop -= 1;
-		}
-#endif	
-
 
         OPTM_VDP_RegWrite((HI_U32)((HI_U32)&(pOptmVdpReg->WBC_G0_FCROP.u32)+CONFIG_HIFB_WBC_OFFSET), WBC_G0_FCROP.u32); 
 
@@ -4472,9 +2779,10 @@ HI_VOID  OPTM_VDP_WBC_SetCMPOutSize(OPTM_VDP_LAYER_WBC_E enLayer, HI_U32 u32Widt
 /*配置内存检测区域首尾地址*/
 HI_VOID OPTM_MDDRC_SetZoneAddr(HI_U32 u32Section, HI_U32 u32StartAddr, HI_U32 u32EndAddr)
 {
+
+#ifdef CFG_HIFB_COMPRESSION_SUPPORT
     volatile U_AWADDR_SRVLNC_START awaddr_srvlnc_start;   
     volatile U_AWADDR_SRVLNC_END awaddr_srvlnc_end;
-
     if(u32Section <= (CONFIG_HIFB_MDDRC_MAX_ZONE-1))
     {
         awaddr_srvlnc_start.u32 = u32StartAddr;
@@ -4490,13 +2798,16 @@ HI_VOID OPTM_MDDRC_SetZoneAddr(HI_U32 u32Section, HI_U32 u32StartAddr, HI_U32 u3
     {
         return;
     }
-    
+#endif
     return;
+
 }
 
 HI_VOID OPTM_MDDRC_GetStatus(HI_U32 *u32Status)
 {
-    *u32Status = OPTM_VDP_RegRead((HI_U32)&(pMddrcReg->awaddr_srvlnc_status));        
+#ifdef CFG_HIFB_COMPRESSION_SUPPORT
+    *u32Status = OPTM_VDP_RegRead((HI_U32)&(pMddrcReg->awaddr_srvlnc_status));
+#endif
 }
 
 OPTM_VDP_DISP_MODE_E OPTM_DISP_GetDispMode  (HI_U32 u32Data)
@@ -4512,22 +2823,38 @@ OPTM_VDP_DISP_MODE_E OPTM_DISP_GetDispMode  (HI_U32 u32Data)
 	return (OPTM_VDP_DISP_MODE_E)DHD0_CTRL.bits.disp_mode;
 }
 
+
+/***************************************************************************************
+* func          : OPTM_VDP_DISP_GetIntSignal
+* description   : CNcomment: 获取中断状态 CNend\n
+* param[in]     : HI_VOID
+* retval        : NA
+* others:       : NA
+***************************************************************************************/
 HI_U32 OPTM_VDP_DISP_GetIntSignal(HI_U32 u32intmask)
 {
-	    /* clear interrupt status */
-        volatile U_VOINTSTA VOINTSTA;
-        
-        /* read interrupt status */
-        VOINTSTA.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->VOINTSTA.u32)));
-        
-        return (VOINTSTA.u32 & u32intmask);
+    /**
+     ** clear interrupt status,这里的中断掩码位为GWBC0，0x100，仅处理回写中断
+     **/
+    volatile U_VOINTSTA VOINTSTA;
+    
+    /**
+     ** read interrupt status 
+     **/
+    VOINTSTA.u32 = OPTM_VDP_RegRead((HI_U32)(&(pOptmVdpReg->VOINTSTA.u32)));
+
+	return (VOINTSTA.u32 & u32intmask);
+	
 }
+
 
 HI_VOID OPTM_ClearIntSignal(HI_U32 u32intmask)
 {
-	 /* clear interrupt status */
-    //volatile U_VOMSKINTSTA VOMSKINTSTA;
+	/* clear interrupt status */
     OPTM_VDP_RegWrite((HI_U32)&(pOptmVdpReg->VOMSKINTSTA.u32), u32intmask);
 }
 #endif
 
+//-------------------------------------------------------------------
+//WBC_GFX_END
+//-------------------------------------------------------------------

@@ -87,6 +87,12 @@
         HIWDG1_BASE,
         HIWDG2_BASE,
     };
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    #define HIWDG0_BASE 0xF8A2C000
+    static unsigned int g_au32RegBase[WDG_MAX_NUM] =
+    {
+	HIWDG0_BASE,
+    };
 #endif
 
 #define HIWDG_LOAD 0x000

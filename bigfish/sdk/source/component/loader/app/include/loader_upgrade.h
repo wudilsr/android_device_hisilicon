@@ -25,8 +25,8 @@ typedef struct tagLOADER_PARTITION_INFO_S
 {
     HI_U32 u32PartitionId;        /**< Partition id */
     HI_U32 u32FlashType;          /**< Flash type */
-    HI_U32 u32FlashStartAddr;     /**< Partition start Address in Flash */
-    HI_U32 u32FlashEndAddr;       /**< Partition end Address in Flash */
+    HI_U64 u64FlashStartAddr;     /**< Partition start Address in Flash */
+    HI_U64 u64FlashEndAddr;       /**< Partition end Address in Flash */
     HI_U32 u32ImageFS;            /**< Image file system */
     HI_U32 u32ImageDataSize;      /**< Image Size */
     HI_U32 u32ImageDataCRC32;     /**< CRC of Image data*/
@@ -51,7 +51,7 @@ typedef struct tagLOADER_VERSION_INFO_S
 
 typedef struct tagLOADER_DATA_INFO_S
 {
-    HI_U32                   u32DataFullSize;                   /**< Size of the entire upgrade data package*/
+    HI_U64                   u64DataFullSize;                   /**< Size of the entire upgrade data package*/
     HI_U32                   u32DataFullCRC32;                   /**<  CRC information to be updated*/
     HI_BOOL                  bCheckFullCRC32;                   /**< whether to check total data CRC*/
     HI_U32                   u32PartitionNum;

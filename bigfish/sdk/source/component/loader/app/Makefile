@@ -1,9 +1,9 @@
 ifeq ($(CFG_HI_EXPORT_FLAG),)
 
-ifeq ($(CFG_HI_LOADER_BOOTLOADER),y)
-SDK_DIR := $(shell pwd)/../../../../..
-else
+ifeq ($(CFG_HI_LOADER_APPLOADER),y)
 SDK_DIR := $(shell pwd)/../../../..
+else
+SDK_DIR := $(shell pwd)/../../../../..
 endif
 
 include $(SDK_DIR)/base.mak
@@ -22,7 +22,7 @@ CC := $(CROSS_COMPILE)gcc
 
 gccincdir := $(shell $(CC) -print-file-name=include)
 
-CFLAGS := -g -Os -D__KERNEL__ -D__ARM__ -fno-strict-aliasing -fno-common -ffixed-r8 \
+CFLAGS := -g -Os -D__ARM__ -fno-strict-aliasing -fno-common -ffixed-r8 \
           -nostdinc -isystem $(gccincdir) $(MKFLAGS) -I$(PRODUCT_DIR) \
           -fno-builtin -ffreestanding  -pipe -marm  -mabi=aapcs-linux  \
           -mno-thumb-interwork -march=armv7-a \
@@ -56,6 +56,9 @@ endif
 
 ifeq ($(CFG_HI_LOADER_BOOTLOADER),y)
 CFLAGS += -DHI_LOADER_BOOTLOADER
+ifeq ($(CFG_HI_BUILD_WITH_IR), y)
+CFLAGS += -DHI_BUILD_WITH_IR
+endif
 endif
 
 ifeq ($(CFG_HI_LOADER_APPLOADER),y)
@@ -109,6 +112,14 @@ ifneq ($(CFG_HI_APPLOADER_TUNER_CAB)_$(CFG_HI_BOOTLOADER_TUNER_CAB),_)
 CFLAGS += -DHI_LOADER_TUNER_CAB
 endif
 
+ifneq ($(CFG_HI_APPLOADER_TUNER_DVB_T)_$(CFG_HI_BOOTLOADER_TUNER_DVB_T),_)
+CFLAGS += -DHI_LOADER_TUNER_DVB_T
+endif
+
+ifneq ($(CFG_HI_APPLOADER_TUNER_DVB_T2)_$(CFG_HI_BOOTLOADER_TUNER_DVB_T2),_)
+CFLAGS += -DHI_LOADER_TUNER_DVB_T2
+endif
+
 ifneq ($(CFG_HI_APPLOADER_TUNER_SAT)_$(CFG_HI_BOOTLOADER_TUNER_SAT),_)
 CFLAGS += -DHI_LOADER_TUNER_SAT
 ifeq ($(CFG_HI_DISEQC_SUPPORT),y)
@@ -130,6 +141,9 @@ endif
 ifneq ($(CFG_HI_APPLOADER_PROTOCOL_SSU_OTA)_$(CFG_HI_BOOTLOADER_PROTOCOL_SSU_OTA),_)
 CFLAGS += -DHI_LOADER_PROTOCOL_SSU_OTA
 LOADER_SRC += protocol_ssu_ota.c
+ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
+LOADER_SRC += protocol_ssu_ota_ca.c
+endif
 endif
 
 ifneq ($(CFG_HI_APPLOADER_PROTOCOL_HISI_OTA)_$(CFG_HI_BOOTLOADER_PROTOCOL_HISI_OTA),_)

@@ -11,7 +11,7 @@
 
 #define SDIO_DRV_PS_MASK             (0x7 << 16)
 #define SDIO_SAP_PS_MASK             (0x7 << 12)
-#define SDIO_CLK_MASK                (0x3 << 8)
+#define SDIO_CLK_MASK                (0x7 << 8)
 
 #define SDIO_CLK_MODE                (0x1 << 19)
 
@@ -149,14 +149,40 @@ static void hi_mci_sys_ctrl_suspend(struct himci_host *host,
 	}
 }
 
-static void himci_ldo_config(unsigned int flag)
+static void himci_ldo_config(unsigned int flag, resource_size_t host_crg_addr)
 {
-	if (flag == 0) {
-		/* 3.3v output */
-		himci_writel(0x60, SD_LDO_BASE_CRG);
-	} else {
-		/* 1.8v output */
-		himci_writel(0x20, SD_LDO_BASE_CRG);
+	unsigned int tmp_reg; 
+
+	if ((SDIO_REG_BASE_CRG + PERI_CRG39) == (unsigned int)host_crg_addr) {
+		if (flag == 0) {
+			/* 3.3v output */
+			tmp_reg = himci_readl(SD_LDO_BASE_CRG);
+			tmp_reg &= ~0x700000;
+			tmp_reg |= 0x600000;
+			himci_writel(tmp_reg, SD_LDO_BASE_CRG);
+		} else {
+			/* 1.8v output */
+			tmp_reg = himci_readl(SD_LDO_BASE_CRG);
+			tmp_reg &= ~0x700000;
+			tmp_reg |= 0x200000;
+			himci_writel(tmp_reg, SD_LDO_BASE_CRG);
+		}
+	} 
+
+	if ((SDIO_REG_BASE_CRG + PERI_CRG163) == (unsigned int)host_crg_addr) {
+		if (flag == 0) {
+			/* 3.3v output */
+			tmp_reg = himci_readl(SD_LDO_BASE_CRG);
+			tmp_reg &= ~0x70;
+			tmp_reg |= 0x60;
+			himci_writel(tmp_reg, SD_LDO_BASE_CRG);
+		} else {
+			/* 1.8v output */
+			tmp_reg = himci_readl(SD_LDO_BASE_CRG);
+			tmp_reg &= ~0x70;
+			tmp_reg |= 0x20;
+			himci_writel(tmp_reg, SD_LDO_BASE_CRG);
+		}
 	}
 
 }

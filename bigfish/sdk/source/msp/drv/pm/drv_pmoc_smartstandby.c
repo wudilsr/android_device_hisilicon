@@ -67,13 +67,10 @@ static HI_U32 g_u32HoldModules = 0x0;
 #define PM_LOW_SUSPEND_FLAG   0x5FFFFFFF
 
 #ifdef HI_DVFS_CPU_SUPPORT
-extern bool hi_cpufreq_suspended;
+extern unsigned int cpu_dvfs_enable;
 #endif
 
 #ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-extern struct  timer_list cpu_avs_timer;
-#endif
 extern void CPU_AVS_Enable(unsigned int enable);
 #endif
 
@@ -124,14 +121,11 @@ HI_S32 PMEnterSmartStandby(HI_U32 u32HoldModules)
 
 #ifdef HI_DVFS_CPU_SUPPORT
     /* close dvfs, avs */
-    hi_cpufreq_suspended = 1;
+    cpu_dvfs_enable = HI_FALSE;
 
-#ifdef HI_AVS_SUPPORT
-#ifndef HI_CPU_AVS_THREAD
-    del_timer(&cpu_avs_timer);
-#else
+ #ifdef HI_AVS_SUPPORT
     CPU_AVS_Enable(HI_FALSE);
-#endif
+ #endif
 
 #endif
 
@@ -396,10 +390,6 @@ HI_S32 PMEnterSmartStandby(HI_U32 u32HoldModules)
     }
 #endif
 
-    //clk_set_rate(&mpu_ck, 400000);
-    //cpu_volt_scale(900);
-    //core_volt_scale(1050);
-#endif
 #ifdef CONFIG_SMP
     //cpu_down(1);
 #endif
@@ -438,12 +428,6 @@ HI_S32 PMQuitSmartStandby(HI_VOID)
     VPSS_EXPORT_FUNC_S *pstVpssFunc;
 #ifdef CONFIG_SMP
     //cpu_up(1);
-#endif
-
-#ifdef HI_DVFS_CPU_SUPPORT
-    //cpu_volt_scale(1300);
-    //core_volt_scale(1150);
-
 #endif
 
 #if 0
@@ -706,7 +690,7 @@ HI_S32 PMQuitSmartStandby(HI_VOID)
     }
 
 #ifdef HI_DVFS_CPU_SUPPORT
-    hi_cpufreq_suspended = 0;
+     cpu_dvfs_enable = HI_TRUE;
 #endif
 
     return HI_SUCCESS;

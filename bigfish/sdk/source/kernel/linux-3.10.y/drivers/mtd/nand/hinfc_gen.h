@@ -91,9 +91,9 @@ struct nand_sync {
 struct read_retry_t {
 	int type;
 	int count;
-	int (*set_rr_param)(struct hinfc_host *host, int param);
-	int (*get_rr_param)(struct hinfc_host *host);
-	int (*reset_rr_param)(struct hinfc_host *host);
+	int (*set_rr_param)(void *host, int param);
+	int (*get_rr_param)(void *host);
+	int (*reset_rr_param)(void *host);
 };
 
 struct ecc_info_t {
@@ -101,8 +101,7 @@ struct ecc_info_t {
 	int ecctype;
 	int threshold;
 	int section;
-	void (*dump)(struct hinfc_host *host, unsigned char ecc[],
-		     int *max_bitsflag);
+	void (*dump)(void *host, unsigned char ecc[], int *max_bitsflag);
 };
 
 struct nand_dev_t {
@@ -178,6 +177,9 @@ struct nand_flash_dev *hinfc_nand_probe(struct mtd_info *mtd,
 struct nand_flash_dev *hisfc_nand_probe(struct mtd_info *mtd,
 					struct nand_chip *chip,
 					struct nand_dev_t *nand_dev);
+
+extern struct nand_flash_dev *(*get_spi_nand_flash_type)
+	(struct mtd_info *mtd, unsigned char *id);
 
 void hinfc_nand_param_adjust(struct mtd_info *mtd, struct nand_chip *chip);
 

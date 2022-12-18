@@ -25,7 +25,8 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(COMMON_DRV_INCLUDE)                 \
                 -I$(MSP_UNF_INCLUDE)                    \
                 -I$(MSP_API_INCLUDE)                    \
-                -I$(MSP_DRV_INCLUDE)
+                -I$(MSP_DRV_INCLUDE)                    \
+		-I$(KERNEL_DIR)/linux-3.10.y/drivers/hisilicon/sec_mmz
 
 KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers
 
@@ -55,7 +56,7 @@ ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
     DRIVER_PATH := $(CURDIR)/vpss_v2_0
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv410),)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv410 hi3716mv420),)
     EXTRA_CFLAGS += -I$(VPSS_DIR)/vpss_v3_0/                    \
                     -I$(VPSS_DIR)/vpss_v3_0/hal                 \
                     -I$(VPSS_DIR)/vpss_v3_0/hal/hi3798mv100     \
@@ -89,18 +90,19 @@ $(MOD_NAME)-y   :=  vpss_v1_0/vpss_osal.o               \
                     vpss_v1_0/vpss_hal_cv200.o
 
 ALG_SRCS := $(wildcard $(VPSS_DIR)/vpss_v1_0/alg/vpss_alg_zme.c)
-ALG_DIR := alg
-
 
 ifneq ($(ALG_SRCS),)
-$(MOD_NAME)-y += vpss_v1_0/$(ALG_DIR)/vpss_alg_zme.o
-$(MOD_NAME)-y += vpss_v1_0/$(ALG_DIR)/vpss_alg_fmd.o
+    $(MOD_NAME)-y += vpss_v1_0/alg/vpss_alg_zme.o
+    $(MOD_NAME)-y += vpss_v1_0/alg/vpss_alg_fmd.o
 else
-ifdef CFG_HI_ADVCA_FUNCTION
-ALG_DIR := alg_advca
-endif
-$(MOD_NAME)-y += vpss_v1_0/$(ALG_DIR)/$(CFG_HI_TOOLCHAINS_NAME)/vpss_alg_zme.o
-$(MOD_NAME)-y += vpss_v1_0/$(ALG_DIR)/$(CFG_HI_TOOLCHAINS_NAME)/vpss_alg_fmd.o
+    ifdef CFG_HI_ADVCA_FUNCTION
+        ALG_DIR := vpss_v1_0/alg/$(CFG_HI_TOOLCHAINS_NAME)_advca
+    else
+        ALG_DIR := vpss_v1_0/alg/$(CFG_HI_TOOLCHAINS_NAME)
+    endif
+
+    $(MOD_NAME)-y += $(ALG_DIR)/vpss_alg_zme.o
+    $(MOD_NAME)-y += $(ALG_DIR)/vpss_alg_fmd.o
 endif
 endif
 
@@ -159,7 +161,7 @@ $(MOD_NAME)-y   +=  \
             vpss_v3_0/vpss_trans_fb.o
 endif
 
-ifeq ($(CFG_HI_CHIP_TYPE), hi3716mv410)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
 $(MOD_NAME)-y   +=  \
             vpss_v3_0/hal/hi3716mv410/vpss_reg_3716mv410.o \
             vpss_v3_0/hal/hi3716mv410/vpss_hal_3716mv410.o \

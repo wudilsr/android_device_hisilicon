@@ -102,13 +102,14 @@ public class DVDActivityNavigation extends ActivityFrame implements OnClickListe
     {
         LogTool.v("");
         mDVDInfo.closeDVD();
-        finish();
+        //finish();
         super.onPause();
     }
 
     @Override
     protected void onResume()
     {
+        dismissProgressDialog();
         LogTool.v("");
         bindData();
         super.onResume();

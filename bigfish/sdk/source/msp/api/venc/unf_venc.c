@@ -107,6 +107,7 @@ HI_S32 HI_UNF_VENC_GetDefaultAttr(HI_UNF_VENC_CHN_ATTR_S* pstAttr)
     pstAttr->enVencProfile    = HI_UNF_H264_PROFILE_HIGH;
     pstAttr->u32RotationAngle = 0;
     pstAttr->bSlcSplitEn      = HI_FALSE;
+    pstAttr->u32SplitSize    = 10*1024;
     pstAttr->u32StrmBufSize   = 1280 * 720 * 2;
 
     pstAttr->u32Width         = 1280;

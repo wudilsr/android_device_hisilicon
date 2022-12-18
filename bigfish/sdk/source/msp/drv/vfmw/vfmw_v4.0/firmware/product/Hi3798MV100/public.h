@@ -40,7 +40,7 @@
 /***********************************************************************
       VFMWµÄ°æ±¾ºÅ
  ***********************************************************************/
-#define  VFMW_VERSION_NUM       (2015032000)
+#define  VFMW_VERSION_NUM       (2015071001)
 
 /***********************************************************************
       constants 
@@ -701,6 +701,14 @@ do{                                                         \
     {                                                   \
         g_event_report( chan_id, EVNT_FAKE_FRAME, (UINT8*)0, 0);  \
     }                                                       \
+}while(0)
+
+#define REPORT_VID_STD_ERROR(chan_id)                       \
+do{ 														\
+    if( NULL != g_event_report )							\
+    {														\
+	    g_event_report( chan_id, EVNT_VIDSTD_ERROR, (UINT8*)0, 0);  \
+	}														\
 }while(0)
 
 

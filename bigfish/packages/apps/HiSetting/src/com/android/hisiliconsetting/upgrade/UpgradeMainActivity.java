@@ -25,7 +25,7 @@ public class UpgradeMainActivity extends Activity implements OnClickListener {
     private RelativeLayout onlineLayout;
     private String mpath = null;
     private static ProgressDialog progressBar = null;
-    private static checkCAUpdateThread mThread = null;
+    private static checkUpdateThread mThread = null;
     private Context mcontent = null;
 
     @Override
@@ -77,7 +77,7 @@ public class UpgradeMainActivity extends Activity implements OnClickListener {
                         .getString(R.string.file_checking));
                 progressBar.setCancelable(false);
                 progressBar.show();
-                mThread = new checkCAUpdateThread(path);
+                mThread = new checkUpdateThread(path);
                 mThread.start();
                 break;
             }
@@ -131,34 +131,25 @@ public class UpgradeMainActivity extends Activity implements OnClickListener {
         dialog.SetText(getResources().getString(R.string.local_title_confirm));
     }
 
-    private class checkCAUpdateThread extends Thread {
+    private class checkUpdateThread extends Thread {
         public String updatePath = null;
 
-        public checkCAUpdateThread(String path) {
+        public checkUpdateThread(String path) {
             this.updatePath = path;
         }
 
         public void run() {
-            checkCAUpdateFile(updatePath);
+            checkUpdateFile(updatePath);
         }
     }
 
-    public void checkCAUpdateFile(String updatePath) {
+    public void checkUpdateFile(String updatePath) {
         File file = new File(updatePath + "/update.zip");
-        HiSysManager hisys = new HiSysManager();
-        int result = hisys.updateCAFile(file.getAbsolutePath(),file.getAbsolutePath());
-        if (result == 0) {
             Log.i(TAG, "CAUpdateFile Check Success!");
             Message msg = mHandler.obtainMessage(1);
             msg.arg1 = 0;
             msg.obj = updatePath;
             mHandler.sendMessage(msg);
-        } else if (result == -1) {
-            Log.i(TAG, "CAUpdateFile Check Failed!");
-            Message msg = mHandler.obtainMessage(1);
-            msg.arg1 = -1;
-            msg.obj = updatePath;
-            mHandler.sendMessage(msg);
-        }
+        
     }
 }

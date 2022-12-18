@@ -150,6 +150,7 @@ typedef struct tagWIN_HAL_PARA_S
 {
     HI_DRV_DISP_STEREO_E en3Dmode;
     HI_BOOL bRightEyeFirst;
+	HI_BOOL bSecure;
 
     HI_DRV_VIDEO_FRAME_S *pstFrame;
 
@@ -212,6 +213,7 @@ typedef struct tagVIDEO_LAYER_FUNCTIONG_S
 
     HI_S32 (*PF_SetFramePara)(HI_U32 u32Layer, WIN_HAL_PARA_S *pstPara);
     HI_S32 (*PF_Get3DOutRect)(HI_DRV_DISP_STEREO_E en3DMode, HI_RECT_S *pstOutRect, HI_RECT_S *pstReviseOutRect);
+	HI_S32 (*PF_GetLayerRevisedPixelFmt)(HI_U32 u32LayerId, HI_RECT_S *pstOutRect, HI_DRV_PIX_FORMAT_E *penFmt,HI_DISP_DISPLAY_INFO_S *pstDispInfo);	
     HI_S32 (*PF_GetCSCReg)(HI_U32 u32Data, HI_U32 *pdata);
     HI_S32 (*PF_SetCSCReg)(HI_U32 u32Data, HI_U32 *pdata);
     HI_S32 (*PF_SetZMEPhase)(HI_U32 u32Data, HI_S32 s32PhaseL, HI_S32 s32PhaseC);

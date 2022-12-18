@@ -253,7 +253,7 @@ static MXL_STATUS_E mxl_lockDemod(MXL_HRCLS_CHAN_ID_E chanId, MXL_HRCLS_DMD_ID_E
       mpegXptParams.clkFreq = MXL_HRCLS_MPEG_CLK_56_21MHz; 
       mpegXptParams.mpegPadDrv.padDrvMpegSyn = MXL_HRCLS_MPEG_DRV_MODE_2X;  // default setting;
       mpegXptParams.mpegPadDrv.padDrvMpegDat = MXL_HRCLS_MPEG_DRV_MODE_2X;  // default setting;
-      mpegXptParams.mpegPadDrv.padDrvMpegVal = MXL_HRCLS_MPEG_DRV_MODE_1X;  // default setting;
+      mpegXptParams.mpegPadDrv.padDrvMpegVal = MXL_HRCLS_MPEG_DRV_MODE_2X;  // default setting;
 
       // In MxL254 and NO_MUX_4 mode, outputId = demodId
       // Check MxLWare API User Guide for other modes' mappings
@@ -604,7 +604,7 @@ HI_S32 mxl254_init(HI_U32 u32TunerPort, HI_U8 enI2cChannel, HI_UNF_TUNER_DEV_TYP
 	   // status = MxLWare_HRCLS_API_CfgDemodMpegOutGlobalParams(HRCLS_DEVICE_ID, MXL_HRCLS_MPEG_CLK_POSITIVE, MXL_HRCLS_MPEG_DRV_MODE_1X, MXL_HRCLS_MPEG_CLK_42_18MHz);
 	  //}
 
-	  #if 0
+	  #if 1
 	  // Only needed for 4-wire TS mode, skip for 3-wire mode
 	  status = MxLWare_HRCLS_API_CfgDemodMpegOutGlobalParams(HRCLS_DEVICE_ID, MXL_HRCLS_MPEG_CLK_POSITIVE, MXL_HRCLS_MPEG_DRV_MODE_1X, MXL_HRCLS_MPEG_CLK_56_21MHz);
 	  if (status != MXL_SUCCESS)
@@ -724,13 +724,7 @@ HI_S32 mxl254_get_ber(HI_U32 u32TunerPort, HI_U32 *pu32ber)
         HI_ERR_TUNER("Bad u32TunerPort\n");
         return HI_FAILURE;
     }
-	status = MxLWare_HRCLS_API_CfgDemodErrorStatClear(HRCLS_DEVICE_ID,u32TunerPort);
-	if (MXL_SUCCESS != status)
-    {
-	   HI_ERR_TUNER("mxl254_get_ber error!\n");
-          return HI_FAILURE;
-    }
-	msleep(1000);
+	
     status = MxLWare_HRCLS_API_ReqDemodErrorStat(HRCLS_DEVICE_ID,u32TunerPort,&statscount);
     if (MXL_SUCCESS != status)
     {
@@ -775,6 +769,14 @@ HI_S32 mxl254_get_ber(HI_U32 u32TunerPort, HI_U32 *pu32ber)
 	    pu32ber[2] = (HI_U32)0;
 
 	}
+
+	status = MxLWare_HRCLS_API_CfgDemodErrorStatClear(HRCLS_DEVICE_ID,u32TunerPort);
+	if (MXL_SUCCESS != status)
+	{
+		HI_ERR_TUNER("mxl254_get_ber error!\n");
+		return HI_FAILURE;
+	}
+
 #endif
 #if 0
 	if (statscount.CwReceived > 0)
@@ -812,6 +814,26 @@ HI_S32 mxl254_get_ber(HI_U32 u32TunerPort, HI_U32 *pu32ber)
 
 	return HI_SUCCESS;
 }
+
+HI_S32 mxl254_get_powerspecdata(HI_U32 u32TunerPort, HI_U32 u32freqStartInHz,HI_U32 u32freqStepInHz,HI_U32 u32numOfFreqSteps,HI_S16 *ps16powerData)
+{
+	MXL_STATUS_E status = MXL_FAILURE;
+    UINT16   equivalentNoiseBw = 0;
+	HI_TUNER_CHECKPOINTER( ps16powerData);
+	if (u32TunerPort >= MAX_TUNER)
+	{
+		HI_ERR_TUNER("Bad u32TunerPort\n");
+		return HI_FAILURE;
+	}
+	status = MxLWare_HRCLS_API_ReqTunerPowerSpectrum(HRCLS_DEVICE_ID,u32freqStartInHz,u32freqStepInHz,u32numOfFreqSteps,ps16powerData);
+    if (MXL_SUCCESS != status) 
+	{
+	   HI_ERR_TUNER("mxl254_get_powerspecdata error!\n");
+	   return HI_FAILURE;
+	}
+	return HI_SUCCESS;
+}
+
 
 #endif
 

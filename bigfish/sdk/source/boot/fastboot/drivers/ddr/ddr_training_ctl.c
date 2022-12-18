@@ -18,363 +18,114 @@
  */
 int ddr_sw_training_func(void *ddrtr_result)
 {
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	struct tr_relate_reg relate_reg_timing;
+	struct tr_relate_reg relate_reg_ac;
 	int result = 0;
+	int i;
 
-	result  = ddr_wl_if();
-	result += ddr_dataeye_training_if(ddrtr_result);
+	ddr_training_start();
 
-	if (result && !ddr_training_check_bypass(DDR_BYPASS_HW_MASK)) {
-		result  = ddr_hw_training_if();
-		result += ddr_dataeye_training_if(ddrtr_result);
+#ifdef DDR_TRAINING_STAT_CONFIG
+	/* clear stat register */
+	REG_WRITE(0x0, DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_STAT);
+#endif
+
+	ddr_training_save_reg(&relate_reg, 0);
+
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+
+		/* check hardware gating */
+		if (REG_READ(base_phy + DDR_PHY_PHYINITSTATUS)
+			& PHY_INITSTATUS_GT_MASK) {
+			DDR_FATAL("PHY[%x] hw gating fail.", base_phy);
+			ddr_training_stat(DDR_ERR_HW_GATING,
+				base_phy, -1, -1);
+		}
+
+#ifdef DDR_WL_TRAINING_CONFIG
+		/* write leveling */
+		if (!ddr_training_check_bypass(DDR_BYPASS_WL_MASK)) {
+			ddr_training_save_reg(&relate_reg_timing,
+				DDR_BYPASS_WL_MASK);
+			result += ddr_write_leveling(base_dmc, base_phy);
+			ddr_training_restore_reg(&relate_reg_timing);
+		}
+#endif
+		/* dataeye/gate/vref need switch axi */
+		ddr_training_switch_axi(i, &relate_reg);
+
+		/* dataeye */
+		if (!ddr_training_check_bypass(DDR_BYPASS_DATAEYE_MASK)) {
+			ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_NORMAL_ADJUST);
+		}
+
+#ifdef DDR_HW_TRAINING_CONFIG
+		/* hardware read */
+		if (result && !ddr_training_check_bypass(DDR_BYPASS_HW_MASK)) {
+			ddr_training_save_reg(&relate_reg_ac,
+				DDR_BYPASS_HW_MASK);
+			result = ddr_hw_training(base_dmc, base_phy);
+			ddr_training_restore_reg(&relate_reg_ac);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_ABNORMAL_ADJUST);
+		}
+#endif
+
+#ifdef DDR_MPR_TRAINING_CONFIG
+		/* mpr */
+		if (result && !ddr_training_check_bypass(DDR_BYPASS_MPR_MASK)) {
+			result = ddr_mpr_training(base_dmc, base_phy);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_ABNORMAL_ADJUST);
+		}
+#endif
+
+#ifdef DDR_GATE_TRAINING_CONFIG
+		/* gate */
+		if (!ddr_training_check_bypass(DDR_BYPASS_GATE_MASK)) {
+			ddr_training_save_reg(&relate_reg_timing,
+				DDR_BYPASS_GATE_MASK);
+			ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_GATE);
+			result += ddr_gate_training(base_dmc, base_phy);
+			ddr_training_restore_reg(&relate_reg_timing);
+		}
+#endif
+
+#ifdef DDR_VREF_TRAINING_CONFIG
+		ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_HOST_MASK)) {
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_READ);
+		}
+
+#ifdef DDR_PHY_T28_CONFIG
+		/* dram vref training enable && DDR4 */
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_DRAM_MASK)
+			&& DMC_CFG_DRAM_TYPE_DDR4 ==
+				(REG_READ(base_dmc + DDR_DMC_CFG_DDRMODE)
+					& DMC_CFG_DRAM_TYPE_MASK)) {
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_WRITE);
+		}
+#endif /* DDR_PHY_T28_CONFIG */
+#endif /* DDR_VREF_TRAINING_CONFIG */
 	}
 
-	if (result && !ddr_training_check_bypass(DDR_BYPASS_MPR_MASK)) {
-		result  = ddr_mpr_training_if();
-		result += ddr_dataeye_training_if(ddrtr_result);
-	}
+	ddr_training_restore_reg(&relate_reg);
 
-	result += ddr_gating_if();
-	result += ddr_vref_training_if(ddrtr_result);
+	if (!result)
+		ddr_training_suc();
 	return result;
 }
 #endif /* DDR_SW_TRAINING_FUNC_PUBLIC */
-
-#if defined(DDR_HW_TRAINING_CONFIG) && defined(DDR_HW_TRAINING_FUNC_PUBLIC)
-/**
- * ddr_hw_training_func
- * @void
- *
- *
- */
-int ddr_hw_training_func(void)
-{
-	int result = 0;
-	/* hardware training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_HW_MASK))
-		return 0;
-
-	result  = ddr_hw_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-#if DDR_PHY_NUM == 2
-	result += ddr_hw_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1);
-#endif
-
-	return result;
-}
-#else
-int ddr_hw_training_func(void)
-{
-	DDR_WARNING("Not support DDR HW training.");
-	return 0;
-}
-#endif /* DDR_HW_TRAINING_CONFIG */
-
-#if defined(DDR_MPR_TRAINING_CONFIG) && defined(DDR_MPR_TRAINING_FUNC_PUBLIC)
-/**
- * ddr_mpr_training_func
- * @void
- *
- *
- */
-int ddr_mpr_training_func(void)
-{
-	int result = 0;
-	/* MPR training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_MPR_MASK))
-		return 0;
-
-	result  = ddr_mpr_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-#if DDR_PHY_NUM == 2
-	result += ddr_mpr_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1);
-#endif
-
-	return result;
-}
-#else
-int ddr_mpr_training_func(void)
-{
-	DDR_WARNING("Not support DDR MPR training.");
-	return 0;
-}
-#endif /* DDR_MPR_TRAINING_CONFIG */
-
-#if defined(DDR_WL_TRAINING_CONFIG) && defined(DDR_WL_FUNC_PUBLIC)
-/**
- * ddr_wl_func
- * @void
- *
- *
- */
-int ddr_wl_func(void)
-{
-	int result = 0;
-	unsigned int auto_ref_timing;
-
-	/* write leveling disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_WL_MASK))
-		return 0;
-
-	auto_ref_timing = REG_READ(DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-#if DDR_PHY_NUM == 2
-	/* disable auto refresh*/
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-			DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-			DDR_REG_BASE_DMC1 + DDR_DMC_TIMING2);
-	result  = ddr_write_leveling(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-	result += ddr_write_leveling(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1);
-	/* enable auto refresh*/
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC1 + DDR_DMC_TIMING2);
-#else
-	/* disable auto refresh*/
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-			DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-	result  = ddr_write_leveling(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-	/* enable auto refresh*/
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-#endif
-
-	return result;
-}
-#else
-int ddr_wl_func()
-{
-	DDR_WARNING("Not support DDR WL training.");
-	return 0;
-}
-#endif /* DDR_WL_TRAINING_CONFIG */
-
-#if defined(DDR_GATE_TRAINING_CONFIG) && defined(DDR_GATING_FUNC_PUBLIC)
-/**
- * ddr_gating_func
- * @void
- *
- *
- */
-int ddr_gating_func(void)
-{
-	int result = 0;
-	unsigned int auto_ref_timing;
-#if DDR_PHY_NUM == 2
-	unsigned int ddr_rng_map0;
-	unsigned int ddr_rng_map1;
-#endif
-	/* gate training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_GATE_MASK)) {
-		/* check hardware gating */
-		if (REG_READ(DDR_REG_BASE_PHY0 + DDR_PHY_PHYINITSTATUS)
-						& PHY_INITSTATUS_GT_MASK) {
-			DDR_FATAL("hardware gating fail.");
-			ddr_training_stat(DDR_ERR_HW_GATING);
-			return -1;
-		}
-
-#if DDR_PHY_NUM == 2
-		if (REG_READ(DDR_REG_BASE_PHY1 + DDR_PHY_PHYINITSTATUS)
-						& PHY_INITSTATUS_GT_MASK) {
-			DDR_FATAL("hardware gating fail.");
-			ddr_training_stat(DDR_ERR_HW_GATING);
-			return -1;
-		}
-#endif
-		return 0;
-	}
-
-	ddr_ddrt_init(DDR_REG_BASE_DMC0, DDR_DDRT_MODE_GATE);
-
-	auto_ref_timing = REG_READ(DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-
-#if DDR_PHY_NUM == 2
-	/* disable auto refresh*/
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-			DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-			DDR_REG_BASE_DMC1 + DDR_DMC_TIMING2);
-
-	/*record the original value of AXI*/
-	ddr_rng_map0 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	ddr_rng_map1 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-
-	/*set ddrt link to DMC0*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	ddr_gate_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-
-	/*set ddrt link to DMC1*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	ddr_gate_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1);
-
-	/*backup to original value*/
-	REG_WRITE(ddr_rng_map0, DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE(ddr_rng_map1, DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-
-	/* enable auto refresh*/
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC1 + DDR_DMC_TIMING2);
-#else
-	/* disable auto refresh*/
-	REG_WRITE(auto_ref_timing & 0xfffff000,
-				DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-
-	result  = ddr_gate_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-
-	/* enable auto refresh*/
-	REG_WRITE(auto_ref_timing, DDR_REG_BASE_DMC0 + DDR_DMC_TIMING2);
-#endif
-
-	return result;
-}
-#else
-int ddr_gating_func(void)
-{
-	DDR_WARNING("Not support DDR gate training.");
-	return 0;
-}
-#endif /* DDR_GATE_TRAINING_CONFIG */
-
-#ifdef DDR_DATAEYE_TRAINING_FUNC_PUBLIC
-/**
- * ddr_dataeye_training_func
- * @ddrtr_result
- *
- *
- */
-int ddr_dataeye_training_func(void *ddrtr_result)
-{
-	int result = 0;
-#if DDR_PHY_NUM == 2
-	unsigned int ddr_rng_map0;
-	unsigned int ddr_rng_map1;
-#endif
-	/* dataeye training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_DATAEYE_MASK))
-		return 0;
-
-	ddr_ddrt_init(DDR_REG_BASE_DMC0, DDR_DDRT_MODE_DATAEYE);
-
-#if DDR_PHY_NUM == 2
-	/*record the original value of AXI*/
-	ddr_rng_map0 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	ddr_rng_map1 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-
-	/*set ddrt link to DMC0*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	result += ddr_dataeye_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0,
-								ddrtr_result);
-
-	/*set ddrt link to DMC1*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	result += ddr_dataeye_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1,
-								ddrtr_result);
-
-	/*backup to original value*/
-	REG_WRITE(ddr_rng_map0, DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE(ddr_rng_map1, DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-#else
-	result  = ddr_dataeye_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0,
-				ddrtr_result);
-#endif
-
-	return result;
-}
-#endif /* DDR_DATAEYE_TRAINING_FUNC_PUBLIC */
-
-#if defined(DDR_VREF_TRAINING_CONFIG) && defined(DDR_VREF_TRAINING_FUNC_PUBLIC)
-/**
- * ddr_vref_training_func
- * @void
- *
- *
- */
-int ddr_vref_training_func(void *ddrtr_result)
-{
-	int result = 0;
-#if DDR_PHY_NUM == 2
-	unsigned int ddr_rng_map0;
-	unsigned int ddr_rng_map1;
-#endif
-	/* vref training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_VREF_MASK))
-		return 0;
-
-#if DDR_PHY_NUM == 2
-	/*record the original value of AXI*/
-	ddr_rng_map0 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	ddr_rng_map1 = REG_READ(DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-
-	/*set ddrt link to DMC0*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG0_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	result = ddr_vref_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0,
-								ddrtr_result);
-
-	/*set ddrt link to DMC1*/
-	REG_WRITE((ddr_rng_map0 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE((ddr_rng_map1 & DDR_AXI_RNG_MASK) + DDR_AXI_RNG1_VAL,
-					DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-	result = ddr_vref_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1,
-								ddrtr_result);
-
-	/*backup to original value*/
-	REG_WRITE(ddr_rng_map0, DDR_REG_BASE_AXI + DDR_AXI_RNG0MAP);
-	REG_WRITE(ddr_rng_map1, DDR_REG_BASE_AXI + DDR_AXI_RNG1MAP);
-#else
-	result = ddr_vref_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0,
-								ddrtr_result);
-#endif
-
-	return result;
-}
-#else
-int ddr_vref_training_func(void *ddrtr_result)
-{
-	DDR_WARNING("Not support DDR vref training.");
-	return 0;
-}
-#endif /* DDR_VREF_TRAINING_CONFIG */
-
-#if defined(DDR_AC_TRAINING_CONFIG) && defined(DDR_AC_TRAINING_FUNC_PUBLIC)
-/**
- * ddr_ac_training_func
- * @void
- *
- *
- */
-int ddr_ac_training_func(void)
-{
-	int result = 0;
-	/* AC training disable */
-	if (ddr_training_check_bypass(DDR_BYPASS_AC_MASK))
-		return 0;
-
-	result  = ddr_ac_training(DDR_REG_BASE_DMC0, DDR_REG_BASE_PHY0);
-#if DDR_PHY_NUM == 2
-	result += ddr_ac_training(DDR_REG_BASE_DMC1, DDR_REG_BASE_PHY1);
-#endif
-
-	return result;
-}
-#else
-int ddr_ac_training_func(void)
-{
-	DDR_WARNING("Not support DDR AC training.");
-	return 0;
-}
-#endif /* DDR_MPR_TRAINING_CONFIG */
 
 /**
  * ddr_sw_training_if
@@ -385,81 +136,4 @@ int ddr_ac_training_func(void)
 int ddr_sw_training_if(void *ddrtr_result)
 {
 	return DDR_SW_TRAINING_FUNC(ddrtr_result);
-}
-
-/**
- * ddr_hw_training_if
- * @void
- *
- *
- */
-int ddr_hw_training_if(void)
-{
-	return DDR_HW_TRAINING_FUNC();
-}
-
-/**
- * ddr_mpr_training_if
- * @void
- *
- *
- */
-int ddr_mpr_training_if(void)
-{
-	return DDR_MPR_TRAINING_FUNC();
-}
-
-/**
- * ddr_wl_if
- * @void
- *
- *
- */
-int ddr_wl_if(void)
-{
-	return DDR_WL_FUNC();
-}
-
-/**
- * ddr_gating_if
- * @void
- *
- *
- */
-int ddr_gating_if(void)
-{
-	return DDR_GATING_FUNC();
-}
-
-/**
- * ddr_dataeye_training_if
- * @ddrtr_result
- *
- *
- */
-int ddr_dataeye_training_if(void *ddrtr_result)
-{
-	return DDR_DATAEYE_TRAINING_FUNC(ddrtr_result);
-}
-
-/**
- * ddr_vref_training_if
- * @void
- *
- *
- */
-int ddr_vref_training_if(void *ddrtr_result)
-{
-	return DDR_VREF_TRAINING_FUNC(ddrtr_result);
-}
-
-/**
- * ddr_ac_training_if
- * @void
- *
- *
- */
-int ddr_ac_training_if(void)
-{
-	return DDR_AC_TRAINING_FUNC();
 }

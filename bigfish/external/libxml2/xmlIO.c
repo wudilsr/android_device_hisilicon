@@ -117,6 +117,7 @@ typedef struct _xmlInputCallback {
     xmlInputOpenCallback opencallback;
     xmlInputReadCallback readcallback;
     xmlInputCloseCallback closecallback;
+    xmlInputInvokeCallback invokecallback;
 } xmlInputCallback;
 
 #define MAX_INPUT_CALLBACK 15
@@ -1963,6 +1964,11 @@ xmlIOHTTPRead(void * context, char * buffer, int len) {
     return ret;
 }
 
+int
+xmlIOHTTPInvoke (void * context, int invokeID, void *arg) {
+    return xmlNanoHTTPInvoke(context, invokeID, arg);
+}
+
 #ifdef LIBXML_OUTPUT_ENABLED
 /**
  * xmlIOHTTPWrite
@@ -2279,6 +2285,35 @@ xmlRegisterInputCallbacks(xmlInputMatchCallback matchFunc,
     xmlInputCallbackTable[xmlInputCallbackNr].opencallback = openFunc;
     xmlInputCallbackTable[xmlInputCallbackNr].readcallback = readFunc;
     xmlInputCallbackTable[xmlInputCallbackNr].closecallback = closeFunc;
+    xmlInputCallbackTable[xmlInputCallbackNr].invokecallback = NULL;
+    xmlInputCallbackInitialized = 1;
+    return(xmlInputCallbackNr++);
+}
+
+/**
+ * xmlRegisterInputCallbacks2:
+ * @matchFunc:  the xmlInputMatchCallback
+ * @openFunc:  the xmlInputOpenCallback
+ * @readFunc:  the xmlInputReadCallback
+ * @closeFunc:  the xmlInputCloseCallback
+ * @invokeFunc:  the xmlInputInvokeCallback
+ *
+ * Register a new set of I/O callback for handling parser input.
+ *
+ * Returns the registered handler number or -1 in case of error
+ */
+int
+xmlRegisterInputCallbacks2(xmlInputMatchCallback matchFunc,
+	xmlInputOpenCallback openFunc, xmlInputReadCallback readFunc,
+	xmlInputCloseCallback closeFunc, xmlInputInvokeCallback invokeFunc) {
+    if (xmlInputCallbackNr >= MAX_INPUT_CALLBACK) {
+	return(-1);
+    }
+    xmlInputCallbackTable[xmlInputCallbackNr].matchcallback = matchFunc;
+    xmlInputCallbackTable[xmlInputCallbackNr].opencallback = openFunc;
+    xmlInputCallbackTable[xmlInputCallbackNr].readcallback = readFunc;
+    xmlInputCallbackTable[xmlInputCallbackNr].closecallback = closeFunc;
+    xmlInputCallbackTable[xmlInputCallbackNr].invokecallback = invokeFunc;
     xmlInputCallbackInitialized = 1;
     return(xmlInputCallbackNr++);
 }
@@ -2337,8 +2372,8 @@ xmlRegisterDefaultInputCallbacks(void) {
 #endif /* HAVE_ZLIB_H */
 
 #ifdef LIBXML_HTTP_ENABLED
-    xmlRegisterInputCallbacks(xmlIOHTTPMatch, xmlIOHTTPOpen,
-	                      xmlIOHTTPRead, xmlIOHTTPClose);
+    xmlRegisterInputCallbacks2(xmlIOHTTPMatch, xmlIOHTTPOpen,
+	                      xmlIOHTTPRead, xmlIOHTTPClose, xmlIOHTTPInvoke);
 #endif /* LIBXML_HTTP_ENABLED */
 
 #ifdef LIBXML_FTP_ENABLED
@@ -2666,6 +2701,7 @@ __xmlParserInputBufferCreateFilename(const char *URI, xmlCharEncoding enc) {
 	ret->context = context;
 	ret->readcallback = xmlInputCallbackTable[i].readcallback;
 	ret->closecallback = xmlInputCallbackTable[i].closecallback;
+        ret->invokecallback = xmlInputCallbackTable[i].invokecallback;
 #ifdef HAVE_ZLIB_H
 	if ((xmlInputCallbackTable[i].opencallback == xmlGzfileOpen) &&
 		(strcmp(URI, "-") != 0)) {

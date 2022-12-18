@@ -37,7 +37,11 @@ png_read_data(png_structrp png_ptr, png_bytep data, png_size_t length)
       (*(png_ptr->read_data_fn))(png_ptr, data, length);
 
    else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Call to NULL read function");
+#endif
 }
 
 #ifdef PNG_STDIO_SUPPORTED
@@ -60,7 +64,11 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    check = fread(data, 1, length, png_voidcast(png_FILE_p, png_ptr->io_ptr));
 
    if (check != length)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Read Error");
+#endif
 }
 #endif
 
@@ -107,9 +115,13 @@ png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
    if (png_ptr->write_data_fn != NULL)
    {
       png_ptr->write_data_fn = NULL;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr,
           "Can't set both read_data_fn and write_data_fn in the"
           " same structure");
+#endif
    }
 #endif
 

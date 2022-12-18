@@ -1305,6 +1305,9 @@ HI_S32  HIADP_Search_GetAllPmt(HI_U32 u32DmxId, PMT_COMPACT_TBL **ppProgTable)
             case HI_UNF_VCODEC_TYPE_HEVC:
                 sample_common_printf("\tVideo Stream Type HEVC\n");
                 break;
+            case HI_UNF_VCODEC_TYPE_AVS:
+                sample_common_printf("\tVideo Stream Type AVS\n");
+                break;
             default:
                 sample_common_printf("\tVideo Stream Type error\n");
             }

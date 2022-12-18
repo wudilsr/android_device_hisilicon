@@ -23,24 +23,27 @@ EXTRA_CFLAGS += $(CFG_HI_KMOD_CFLAGS)
 EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)    \
                 -I$(COMMON_DRV_INCLUDE)
 
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+EXTRA_CFLAGS += -I$(TEE_INCLUDE)
+endif
 ################################################################################################
 #    PRODUCT
 ################################################################################################
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100),)
-ifdef CFG_HI_ADVCA_FUNCTION
-include $(VFMW_DIR)/firmware/product/Hi3716CV200_advca/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
-else
-include $(VFMW_DIR)/firmware/product/Hi3716CV200/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
-endif
+include $(VFMW_DIR)/firmware/product/Hi3716CV200/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
-include $(VFMW_DIR)/firmware/product/Hi3798CV100/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
+include $(VFMW_DIR)/firmware/product/Hi3798CV100/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
-include $(VFMW_DIR)/firmware/product/Hi3798MV100/HD_FULL_$(CFG_HI_TOOLCHAINS_NAME)/vfmw_make.cfg
+include $(VFMW_DIR)/firmware/product/Hi3798MV100/HD_FULL/vfmw_make.cfg
+endif
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+include $(VFMW_DIR)/firmware/product/Hi3716MV410/HD_FULL/vfmw_make.cfg
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3751v100),)

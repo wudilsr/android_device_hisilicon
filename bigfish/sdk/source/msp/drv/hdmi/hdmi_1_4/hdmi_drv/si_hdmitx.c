@@ -103,9 +103,11 @@ void SI_Encoder_Adjust(void)
     SI_TX_PHY_DVIEncoder(HI_TRUE);
     SI_TX_CTRL_DVIEncoder(HI_FALSE);
 
-#elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
-    || defined(CHIP_TYPE_hi3716mv310)
+#elif  defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     SI_TX_PHY_DVIEncoder(HI_FALSE);
     SI_TX_CTRL_DVIEncoder(HI_TRUE);
@@ -120,7 +122,11 @@ HI_VOID SI_HW_ResetCtrl(int iEnable)
     {
         u32Ctrller = 0x3f;
     }
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
     else if (iEnable == 2)
     {
         u32Ctrller = 0x403f;
@@ -208,13 +214,15 @@ void SI_HW_ResetHDMITX(void)
     //otherwise, there will be cause clock unstable.
     COM_INFO("TX_SYS_CTRL1_ADDR To 0x35 \n");
     WriteByteHDMITXP0 (TX_SYS_CTRL1_ADDR, 0x35);
-#elif  defined(CHIP_TYPE_hi3718mv100)   \
-    || defined(CHIP_TYPE_hi3719mv100)   \
-    || defined(CHIP_TYPE_hi3796cv100)   \
-    || defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
-    || defined(CHIP_TYPE_hi3716mv310)
+#elif  defined(CHIP_TYPE_hi3718mv100) \
+    || defined(CHIP_TYPE_hi3719mv100) \
+    || defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100) \
+    || defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
     COM_INFO("TX_SYS_CTRL1_ADDR To 0x37 \n");
     //WriteByteHDMITXP0 (TX_SYS_CTRL1_ADDR, 0x37);
 #endif
@@ -267,7 +275,7 @@ HI_BOOL SI_IsHDMIResetting(void)
     if((ReadByteHDMITXP0( TX_SWRST_ADDR ) & 0x01 ) ||
        (u32Ctrller & 0x300) || (u32Phy & 0x10))
     {
-        //HI_INFO_HDMI("HDMI Is Resetting...\n");
+        HI_INFO_HDMI("TX_SWRST:%x,CRG67:0x%x,CRG68:0x%x\n", ReadByteHDMITXP0( TX_SWRST_ADDR ), u32Ctrller, u32Phy);
         return HI_TRUE;
     }
 
@@ -723,7 +731,9 @@ HI_S32 SI_TX_CTRL_DVIEncoder(HI_BOOL bEnable)
 {
 #if    defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
-    || defined(CHIP_TYPE_hi3716mv310)
+    || defined(CHIP_TYPE_hi3716mv310) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     HI_U32 u32Value;
     /* Taiyan Phy has no dvi encoder,

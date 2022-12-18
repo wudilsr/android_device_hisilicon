@@ -47,7 +47,7 @@ MXL_STATUS MxLWare608_API_CfgDrvInit(UINT8 devId, void* oemDataPtr)
 
   if (oemDataPtr)
   {
-    if (devId <= MXL608_MAX_NUM_DEVICES) MxL608_OEM_DataPtr[devId] = oemDataPtr;
+    if (devId < MXL608_MAX_NUM_DEVICES) MxL608_OEM_DataPtr[devId] = oemDataPtr;
     else status = MXL_INVALID_PARAMETER;
   }
 

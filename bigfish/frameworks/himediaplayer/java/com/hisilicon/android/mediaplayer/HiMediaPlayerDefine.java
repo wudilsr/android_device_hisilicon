@@ -570,6 +570,7 @@ public class HiMediaPlayerDefine
         public final static int DEFINE_ENCODE_FORMAT_SUBT_CP874_Thai = 30;
         public final static int DEFINE_ENCODE_FORMAT_SUBT_UNICODE_32LE_Universal_Character_Set = 31;
         public final static int DEFINE_ENCODE_FORMAT_SUBT_UNICODE_32BE_Universal_Character_Set = 32;
+        public final static int DEFINE_ENCODE_FORMAT_SUBT_CP949_Korean = 33;
     }
 
     /**

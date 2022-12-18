@@ -454,6 +454,21 @@ namespace android
         return ret;
     }
 
+    int DisplayClient::GetVirtScreenSize(int *w, int *h)
+    {
+        Rect rect(0, 0, 0, 0);
+        const sp<IDisplayService>& ps = getDisplayService();
+
+        if(ps != 0)
+        {
+            rect = ps->getVirtScreenSize();
+            *w = rect.right;
+            *h = rect.bottom;
+        }
+        return 0;
+    }
+
+
     int DisplayClient::Reset()
     {
         int ret = -1;

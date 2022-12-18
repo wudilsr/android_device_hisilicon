@@ -136,7 +136,8 @@ ifneq ($(findstring $(CFG_HI_ENC_CFLAGS), CONFIG_GFX_JPGE_ENC_ENABLE),)
 LOCAL_CFLAGS += -D$(CFG_HI_ENC_CFLAGS)
 endif
 
-ifeq ($(PLATFORM_VERSION), 5.0)
+
+ifeq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
 LOCAL_CFLAGS += -DGFX_ION_64
 endif
 
@@ -198,7 +199,8 @@ LOCAL_C_INCLUDES += $(MSP_DIR)/api/tde/include/
 LOCAL_C_INCLUDES += $(MSP_DIR)/api/jpge/include/
 LOCAL_C_INCLUDES += $(MSP_DIR)/drv/include/
 LOCAL_C_INCLUDES += $(MSP_DIR)/drv/jpeg/include/
-ifeq ($(PLATFORM_VERSION), 5.0)
+
+ifeq (5.,$(findstring 5.,$(PLATFORM_VERSION)))
 LOCAL_C_INCLUDES += system/core/libion/kernel-headers
 endif
 

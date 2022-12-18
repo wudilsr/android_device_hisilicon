@@ -55,10 +55,10 @@ struct nand_flash_special_dev
 	struct nand_flash_dev *(*probe)(struct nand_dev_t *nand_dev);
 	char *name;
 
-	unsigned long pagesize;
-	unsigned long erasesize;
-	unsigned long oobsize;
-	unsigned long options;
+	unsigned int pagesize;
+	unsigned int erasesize;
+	unsigned int oobsize;
+	unsigned int options;
 	unsigned int read_retry_type;
 
 #define BBP_LAST_PAGE                    0x01
@@ -440,12 +440,12 @@ static struct nand_flash_special_dev nand_flash_special_dev[] =
 		.flags = NAND_RANDOMIZER,
 	},
 	{	/* TLC 60bit/1k 19nm */
-		.name      = "TC58TEG5DCKTAx0 19nm MLC",
+		.name	   = "TC58TEG5DCKTAx0 19nm MLC",
 		/* datasheet says 6 bytes id data, but really has 8 bytes. */
-		.id        = {0x98, 0xD7, 0x84, 0x93, 0x72, 0x50, 0x08, 0x04},
+		.id	   = {0x98, 0xD7, 0x84, 0x93, 0x72, 0x50, 0x08, 0x04},
 		.length    = 6,
 		.chipsize  = _4G,
-		.probe     = NULL,
+		.probe	   = NULL,
 		.pagesize  = _16K,
 		.erasesize = _4M,
 		.oobsize   = 1280,
@@ -455,11 +455,11 @@ static struct nand_flash_special_dev nand_flash_special_dev[] =
 		.flags = NAND_RANDOMIZER,
 	},
 	{
-		.name      = "Tx58TEGxDDKTAx0 19nm MLC",
-		.id        = {0x98, 0xDE, 0x94, 0x93, 0x76, 0x50},
+		.name	   = "Tx58TEGxDDKTAx0 19nm MLC",
+		.id	   = {0x98, 0xDE, 0x94, 0x93, 0x76, 0x50},
 		.length    = 6,
 		.chipsize  = _4G,
-		.probe     = NULL,
+		.probe	   = NULL,
 		.pagesize  = _16K,
 		.erasesize = _4M,
 		.oobsize   = 1280,
@@ -693,9 +693,9 @@ static struct nand_flash_special_dev nand_flash_special_dev[] =
 
 struct nand_tag nandtag[1] = {{{0},0,0,0,0,0,0,{0}}};
 
-struct nand_flash_dev *nand_get_special_flash_type(struct mtd_info *mtd,
-						   struct nand_chip *chip,
-						   struct nand_dev_t *nand_dev)
+static struct nand_flash_dev *
+nand_get_special_flash_type(struct mtd_info *mtd, struct nand_chip *chip,
+			    struct nand_dev_t *nand_dev)
 {
 	int ix;
 	struct nand_flash_special_dev *spl_dev;

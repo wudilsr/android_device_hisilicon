@@ -27,7 +27,7 @@ import com.hisilicon.android.hisysmanager.HiSysManager;
 
 public class HDMI extends Activity
 {
-	
+
     public static final String TAG = "HDMI";
 
     private TextView mTermView;
@@ -53,9 +53,11 @@ public class HDMI extends Activity
                 out2.write(mBuffer, 0, count);
 
             String Result1 = new String(out1.toByteArray(),"ISO-8859-1");
-            Log.i(TAG,"Result1:"+Result1);
+            Result1 = "/proc/msp/hdmi0_sink:\n" + Result1;
+            Log.d(TAG, Result1);
             String Result2 = new String(out2.toByteArray(),"ISO-8859-1");
-            Log.i(TAG,"Result2:"+Result2);
+            Result2 = "\n/proc/msp/hdmi0:\n" + Result2;
+            Log.d(TAG, Result2);
 
             in1.close();
             in2.close();
@@ -66,23 +68,34 @@ public class HDMI extends Activity
             while((count = in3.read(mBuffer,0,8 * 1024)) != -1)
                 out3.write(mBuffer, 0, count);
             String Result3 = new String(out3.toByteArray(),"ISO-8859-1");
-            Log.i(TAG, "Result3:" + Result3);
+            Result3 = "\nhimd.l 0xf8ce0000 - 0xf8ce0800:\n" + Result3;
+            Log.d(TAG, Result3);
             in3.close();
 
-            this.mTermView.setText(Result1 + Result2 + Result3);
+            FileInputStream in4 = new FileInputStream("/sdcard/tmp1");
+            ByteArrayOutputStream out4 = new ByteArrayOutputStream();
+            while((count = in4.read(mBuffer,0,8 * 1024)) != -1)
+                out4.write(mBuffer, 0, count);
+            String Result4 = new String(out4.toByteArray(),"ISO-8859-1");
+            Result4 = "\nhimd.l 0xf8ce1800 - 0xf8ce18ff:\n" + Result4;
+            Log.d(TAG, Result4);
+            in4.close();
+
+            this.mTermView.setText(Result1 + Result2 + Result3 + Result4);
         }
         catch (java.io.FileNotFoundException e)
         {
-            Log.i(TAG,"FileNotFoundException:"+e);
+            Log.e(TAG, "FileNotFoundException: " + e);
         }
         catch (java.io.IOException e)
         {
-            Log.i(TAG,"IOException:"+e);
+            Log.e(TAG, "IOException: " + e);
         }
         finally {
             StrictMode.setThreadPolicy(savedPolicy);
         }
     }
+
     public void onCreate(Bundle paramBundle)
     {
         super.onCreate(paramBundle);

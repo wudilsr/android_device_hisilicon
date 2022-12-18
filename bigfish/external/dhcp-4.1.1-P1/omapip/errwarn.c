@@ -37,6 +37,12 @@
 #include <errno.h>
 #include <syslog.h>
 
+#if ANDROID_CHANGES
+#define LOG_TAG "dhclient"
+#include <android/log.h>
+
+#endif
+
 #ifdef DEBUG
 int log_perror = -1;
 #else
@@ -66,6 +72,9 @@ void log_fatal (const char * fmt, ... )
 
 #ifndef DEBUG
   syslog (log_priority | LOG_ERR, "%s", mbuf);
+#endif
+#ifdef ANDROID_LOG_FATAL
+            __android_log_write(ANDROID_LOG_ERROR, LOG_TAG, mbuf);
 #endif
 
   /* Also log it to stderr? */
@@ -117,6 +126,10 @@ int log_error (const char * fmt, ...)
   syslog (log_priority | LOG_ERR, "%s", mbuf);
 #endif
 
+#ifdef ANDROID_CHANGES
+          __android_log_write(ANDROID_LOG_ERROR, LOG_TAG, mbuf);
+#endif
+
   if (log_perror) {
 	  IGNORE_RET (write (STDERR_FILENO, mbuf, strlen (mbuf)));
 	  IGNORE_RET (write (STDERR_FILENO, "\n", 1));
@@ -144,6 +157,10 @@ int log_info (const char *fmt, ...)
   syslog (log_priority | LOG_INFO, "%s", mbuf);
 #endif
 
+#ifdef ANDROID_CHANGES
+        __android_log_write(ANDROID_LOG_INFO, LOG_TAG, mbuf);
+#endif
+
   if (log_perror) {
 	  IGNORE_RET (write (STDERR_FILENO, mbuf, strlen (mbuf)));
 	  IGNORE_RET (write (STDERR_FILENO, "\n", 1));
@@ -169,6 +186,10 @@ int log_debug (const char *fmt, ...)
 
 #ifndef DEBUG
   syslog (log_priority | LOG_DEBUG, "%s", mbuf);
+#endif
+
+#ifdef ANDROID_CHANGES
+      __android_log_write(ANDROID_LOG_DEBUG, LOG_TAG, mbuf);
 #endif
 
   if (log_perror) {

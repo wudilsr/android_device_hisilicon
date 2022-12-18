@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mYc5Wwoe4Rmiqg1pKwxQ6/epbXLFTTPi/KBDwyb7ixQmPaq2owlrpP39WCIBW+5WJ9D1
-0UEhNAS1rrcxB25XffR/REwDU3nMtSQpQ/+0c4LoMaAKEaZGshTiww9cBE+K6g==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxbV2A19XJVYlT6WmtaXheTP2dFJLFefF/0SB878Ycll/P2yxFAvYlP04zEdOjRGB/EsP
+lsMMoBJUrKFoKI0h2qEqoKcnFammKwB15Q0luBpLkgYnJLP8EDqh83IaiEez1w==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6261,6 +6275,27 @@ HI_S32 VPSS_REG_SetPortZmeEn(HI_U32 u32AppAddr,VPSS_REG_PORT_E ePort, HI_BOOL bP
     
     
     return HI_SUCCESS;
+}
+
+HI_S32 VPSS_REG_SetProtEn(HI_U32 u32AppAddr,HI_BOOL  bSecure)
+{
+	U_VPSS_CTRL VPSS_CTRL;
+
+	VPSS_REG_S *pstReg;
+
+	pstReg = (VPSS_REG_S*)u32AppAddr;
+
+	VPSS_CTRL.u32 = VPSS_REG_RegRead(&(pstReg->VPSS_CTRL.u32));
+	if (bSecure)
+	{
+		VPSS_CTRL.bits.prot = 0x0;    
+	}
+	else
+	{
+		VPSS_CTRL.bits.prot = 0x2;    
+	}
+	VPSS_REG_RegWrite(&(pstReg->VPSS_CTRL.u32), VPSS_CTRL.u32); 
+	return HI_SUCCESS;
 }
 #ifdef __cplusplus
  #if __cplusplus

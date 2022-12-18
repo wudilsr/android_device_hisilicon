@@ -8,7 +8,7 @@ LOCAL_CFLAGS := \
 				-DLOCALSTATEDIR=\"/data/misc/dhcp/dhclient6.leases\" \
 				-D__clang__ \
 				-U_FORTIFY_SOURCE \
-				-D__linux
+				-D__linux -DANDROID_CHANGES
 LOCAL_MODULE = libdhcp
 LOCAL_MODULE_TAGS = optional
 LOCAL_SHARED_LIBRARIES := libc libcutils
@@ -21,7 +21,7 @@ LOCAL_C_INCLUDES := \
 					$(LOCAL_PATH)/includes
 LOCAL_CFLAGS := \
 				-DMINIRES_LIB \
-				-DHMAC_MD5
+				-DHMAC_MD5 -DANDROID_CHANGES
 LOCAL_MODULE = libres
 LOCAL_MODULE_TAGS = optional
 LOCAL_SHARED_LIBRARIES := libc libcutils
@@ -34,7 +34,7 @@ LOCAL_C_INCLUDES := \
 					$(LOCAL_PATH)/includes
 LOCAL_CFLAGS := \
 				-DMINIRES_LIB \
-				-DHMAC_MD5
+				-DHMAC_MD5 -DANDROID_CHANGES
 LOCAL_MODULE = libdst
 LOCAL_MODULE_TAGS = optional
 LOCAL_SHARED_LIBRARIES := libc libcutils
@@ -46,7 +46,7 @@ LOCAL_SRC_FILES :=  \
 LOCAL_C_INCLUDES := \
 					$(LOCAL_PATH)/includes
 LOCAL_CFLAGS := \
-				-DHAVE_CONFIG_H
+				-DHAVE_CONFIG_H -DANDROID_CHANGES
 LOCAL_MODULE = libomapi
 LOCAL_MODULE_TAGS = optional
 LOCAL_SHARED_LIBRARIES := libc libcutils
@@ -68,7 +68,7 @@ LOCAL_CFLAGS := \
 				-D_PATH_DHCLIENT_SCRIPT=\"/system/etc/dhclient-script\" \
 				-DCLIENT_PATH=\"/system/bin\" \
 				-D_PATH_DHCLIENT6_PID=\"/data/misc/dhcp/dhclient6.pid\" \
-				-DLOCALSTATEDIR=\"/data/misc/dhcp/dhclient6.leases\"
+				-DLOCALSTATEDIR=\"/data/misc/dhcp/dhclient6.leases\" -DANDROID_CHANGES
 LOCAL_MODULE = dhclient
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_MODULE_TAGS = optional

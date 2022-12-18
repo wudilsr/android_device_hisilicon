@@ -225,7 +225,31 @@ Date				Author        		Modification
 	* others:		: NA
 	***************************************************************************************/
 	HI_S32 jpg_osr_dec(HI_JPEG_DECINFO_S *stDecInfo);
-    
+
+	/***************************************************************************************
+	* func			: jpg_osr_getlupixsum
+	* description	: get lu pix sum
+					  CNcomment: 获取亮度值和 CNend\n
+	* param[in] 	: s32Handle
+	* retval		: HI_SUCCESS
+	* retval		: HI_FAILURE
+	* others:		: NA
+	***************************************************************************************/
+	HI_VOID jpg_osr_getlupixsum(HI_S32 s32Handle,HI_U64* pu64LuPixValue);
+
+
+	/***************************************************************************************
+	* func			: jpg_osr_setmemtype
+	* description	: set memory type.
+					  CNcomment: 设置内存类型 CNend\n
+	* param[in] 	: s32Handle
+	* param[in] 	: u32MemMask
+	* retval		: HI_SUCCESS 成功
+	* retval		: HI_FAILURE 失败
+	* others:		: NA
+	***************************************************************************************/
+	HI_VOID jpg_osr_setmemtype(HI_S32 s32Handle,HI_U32 u32MemMask);
+	
 	/** @} */  /** <!-- ==== API Declaration End ==== */
 
     /****************************************************************************/

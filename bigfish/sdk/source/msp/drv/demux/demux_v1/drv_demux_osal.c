@@ -18,11 +18,11 @@ extern "C"{
 
 HI_VOID DMX_AcrtUsSleep(HI_U32 us)
 {
-    HI_S32 ret;
     ktime_t expires;
+    
     expires = ktime_add_ns(ktime_get(), us*1000);
     set_current_state(TASK_UNINTERRUPTIBLE);
-    ret = schedule_hrtimeout(&expires, HRTIMER_MODE_ABS);
+    schedule_hrtimeout(&expires, HRTIMER_MODE_ABS);
 }
 
 #ifdef __cplusplus

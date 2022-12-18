@@ -1068,6 +1068,10 @@ static const u32 phy_fix_param[] = {
 	0x33f8,0x01
 };
 
+static const u32 phy_v300_fix_param[] = {
+#include "festa_v300_2204.h"
+};
+
 int set_phy_expanded_access_mode(struct phy_device *phy_dev, int access_mode)
 {
 	int v, ret;
@@ -1156,6 +1160,20 @@ int hisilicon_fephy_fix(struct phy_device *phy_dev)
 	return 0;
 }
 
+int hisilicon_fephy_v300_fix(struct phy_device *phy_dev)
+{
+	int count;
+
+	count = sizeof(phy_v300_fix_param) / sizeof(phy_v300_fix_param[0]);
+	if (count % 2)
+		pr_warn("internal FEPHY fix register count is not right.\n");
+	count /= 2;
+
+	phy_expanded_write_bulk(phy_dev, phy_v300_fix_param, count);
+
+	return 0;
+}
+
 /*
  * for a better Electromagnetic Compatibility
  */
@@ -1218,6 +1236,8 @@ void phy_register_fixups(void)
 			REALTEK_PHY_MASK, realtek_gephy_fix);
 	phy_register_fixup_for_uid(HISILICON_PHY_ID_FESTAV200,
 			HISILICON_PHY_MASK, hisilicon_fephy_fix);
+	phy_register_fixup_for_uid(HISILICON_PHY_ID_FESTAV300,
+			HISILICON_PHY_MASK, hisilicon_fephy_v300_fix);
 	phy_register_fixup_for_uid(PHY_ID_KSZ8051MNL,
 			DEFAULT_PHY_MASK, KSZ8051MNL_phy_fix);
 	phy_register_fixup_for_uid(PHY_ID_KSZ8081RNB,

@@ -125,6 +125,7 @@ struct IPlay_URL_S
  int IPlay_setVideoRatio(int p_ratio);
  int IPlay_setVideoCvrs(int crvs);
  int IPlay_setMute(bool bOnOff);
+ int IPlay_setSync(int speed);
  int IPlay_tplay(int speed);
 
  void IPlay_getSubString(unsigned char* pSubString);

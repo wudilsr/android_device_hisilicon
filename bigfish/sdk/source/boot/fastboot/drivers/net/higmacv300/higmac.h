@@ -81,8 +81,8 @@ enum {/* DEFAULT: DUPLEX_FULL */
 
 #define HIGMAC_MAX_QUEUE_DEPTH	(SZ_1K*2)
 
-#define HIGMAC_HWQ_RX_FQ_DEPTH	2
-#define HIGMAC_HWQ_RX_BQ_DEPTH	2
+#define HIGMAC_HWQ_RX_FQ_DEPTH	64
+#define HIGMAC_HWQ_RX_BQ_DEPTH	64
 #define HIGMAC_HWQ_TX_BQ_DEPTH	2
 #define HIGMAC_HWQ_TX_RQ_DEPTH	2
 
@@ -99,7 +99,10 @@ enum {/* DEFAULT: DUPLEX_FULL */
 #define DESC_FL_LAST		1
 #define DESC_FL_FULL		3
 
-#define DESC_SIZE		32
+#define DESC_WORD_SHIFT		(3)
+#define DESC_BYTE_SHIFT		(DESC_WORD_SHIFT + 2)
+#define DESC_WORD_CNT		(1 << DESC_WORD_SHIFT)
+#define DESC_SIZE		(1 << DESC_BYTE_SHIFT)
 
 typedef struct higmac_descriptor {
 	unsigned int data_buff_addr;

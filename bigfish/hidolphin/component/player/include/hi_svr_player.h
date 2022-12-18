@@ -51,6 +51,15 @@ typedef enum hiSVR_PLAYER_PLAY_MODE_E
     HI_SVR_PLAYER_PLAYMODE_BUTT
 } HI_SVR_PLAYER_PLAY_MODE_E;
 
+/** The tplay mode of the player */
+/** CNcomment:播放器tplay模式 */
+typedef enum hiSVR_PLAYER_TPLAY_MODE_E
+{
+    HI_SVR_PLAYER_TPLAYMODE_SMOOTH = 0x0, /**< smooth tplay mode *//**< CNcomment: 平滑快进模式 */
+    HI_SVR_PLAYER_TPLAYMODE_IFRAME= 0x1,/**< I frame tplay mode. *//**< CNcomment: I帧快进模式*/
+    HI_SVR_PLAYER_TPLAYMODE_BUTT
+} HI_SVR_PLAYER_TPLAY_MODE_E;
+
 /** Player attribute ID */
 /** CNcomment:播放器属性ID */
 typedef enum hiSVR_PLAYER_ATTR_E
@@ -795,6 +804,7 @@ typedef struct hiSVR_FORMAT_PARAMETER_S
     HI_S64          s64BufMaxSize;             /**< set buffer max peak(bytes), only used for network play, 0 is invalid */
     HI_CHAR         *pCookie;                  /**< http cookie info */
     HI_CHAR         *pHeaders;                 /**< http headers info */
+    HI_CHAR         *pUUID;                    /**< http UUID info */
     HI_FORMAT_HLS_START_MODE_E eHlsStartMode;  /**< hls start mode, only used for m3u8 play, default is HI_FORMAT_HLS_MODE_NORMAL */
     HI_HANDLE       hDRMClient;                /**< DRM Client handle created by user, only used for playing the drm file, 0 is invalid */
     HI_S32          s32DstCodeType;            /**< Dest codetype, value is::HI_CHARSET_CODETYPE_E, 0: mean not set */
@@ -807,6 +817,7 @@ typedef struct hiSVR_FORMAT_PARAMETER_S
     HI_S32          s32HlsLiveStartNum;        /**< hls live stream start play number*/
     HI_S32          s32MetaDataFlag;          /**< meta data retriver flag*/
     HI_S32          s32TimeShiftDuration;
+    HI_S32          s32DownloadSizeOnce;
 } HI_SVR_FORMAT_PARAMETER_S;
 
 /**

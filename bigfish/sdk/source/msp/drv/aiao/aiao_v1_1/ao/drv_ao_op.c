@@ -30,6 +30,10 @@
 #include "audio_util.h"
 #include "hi_audsp_aflt.h"  //TODO for AFLT_MAX_CHAN_NUM
 
+#if defined(HI_SND_MUTECTL_SUPPORT) && (defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100))
+#include "hi_drv_sys.h"
+#endif
+
 static AIAO_PORT_ID_E SndOpGetPort(HI_UNF_SND_OUTPUTPORT_E enOutPort,SND_AOP_TYPE_E enType)
 {
     AIAO_PORT_ID_E enPortId;
@@ -476,6 +480,8 @@ static HI_S32 SndOpCreateCast(HI_HANDLE *phSndOp, HI_HANDLE *phCast, HI_UNF_SND_
     stAopAttr.stRbfOutAttr.u32BufSampleRate = stCastAttr.u32BufSampleRate;
     stAopAttr.stRbfOutAttr.u32BufDataFormat = 0;
     stAopAttr.stRbfOutAttr.bRbfHwPriority = HI_FALSE;
+
+    stAopAttr.stRbfOutAttr.bAddMute = pstUserCastAttr->bAddMute;
     stAopAttr.stRbfOutAttr.u32BufLatencyThdMs = AOE_AOP_BUFF_LATENCYMS_DF;
     Ret = HAL_AOE_AOP_Create(&enAOP, &stAopAttr);
     if (HI_SUCCESS != Ret)
@@ -488,6 +494,7 @@ static HI_S32 SndOpCreateCast(HI_HANDLE *phSndOp, HI_HANDLE *phCast, HI_UNF_SND_
     stCastAttr.extDmaMem.u32BufPhyAddr = pstMMz->u32StartPhyAddr;
     stCastAttr.extDmaMem.u32BufVirAddr = pstMMz->u32StartVirAddr;
     stCastAttr.extDmaMem.u32BufSize = uBufSize;
+    stCastAttr.bAddMute = pstUserCastAttr->bAddMute;  //TODO proc
     iHAL_AOE_AOP_GetRptrAndWptrRegAddr(enAOP, &stCastAttr.extDmaMem.u32WptrAddr, &stCastAttr.extDmaMem.u32RptrAddr);
     Ret = HAL_CAST_Create(&enCast, &stCastAttr);
     if (HI_SUCCESS != Ret)
@@ -943,7 +950,7 @@ HI_S32 SndOpSetAttr(HI_HANDLE hSndOp, SND_OP_ATTR_S *pstSndPortAttr)
                 state->ActiveId = SND_AOP_TYPE_SPDIF; // lbr or hbr(ddp)
             }
         }
-        else if(IEC61937_DATATYPE_71_LPCM == pstSndPortAttr->u32DataFormat)
+        else if(IEC61937_DATATYPE_71_LPCM == pstSndPortAttr->u32DataFormat || IEC61937_DATATYPE_20_LPCM == pstSndPortAttr->u32DataFormat)
         {
             state->ActiveId = SND_AOP_TYPE_I2S;   //7.1 lpcm
         }
@@ -1330,7 +1337,29 @@ HI_VOID SND_DestroyOp(SND_CARD_STATE_S *pCard, HI_BOOL bSuspend)
     {
         if (pCard->hSndOp[u32PortNum])
         {
-#ifdef HI_SND_MUTECTL_SUPPORT  
+#ifdef HI_SND_MUTECTL_SUPPORT
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+            HI_CHIP_PACKAGE_TYPE_E enPackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+            HI_S32 s32Ret = HI_SUCCESS;
+            s32Ret = HI_DRV_SYS_GetChipPackageType(&enPackageType);
+            if (s32Ret != HI_SUCCESS)
+            {
+                HI_ERR_AO("HI_DRV_SYS_GetChipPackageType failed!\n");
+                return;
+            }
+
+            if (HI_CHIP_PACKAGE_TYPE_QFP_216 != enPackageType)
+            {
+                if(HI_UNF_SND_OUTPUTPORT_DAC0 == ((SND_OP_STATE_S *)pCard->hSndOp[u32PortNum])->enOutPort)
+                {
+                    //if(HI_TRUE == bSuspend)
+                    {
+                        SndOpEnableMuteCtrl((HI_U32)pCard);
+                    }
+                    del_timer(&pCard->stMuteDisableTimer);
+                }
+            }
+#else
             if(HI_UNF_SND_OUTPUTPORT_DAC0 == ((SND_OP_STATE_S *)pCard->hSndOp[u32PortNum])->enOutPort)
             {
                 //if(HI_TRUE == bSuspend)
@@ -1339,6 +1368,7 @@ HI_VOID SND_DestroyOp(SND_CARD_STATE_S *pCard, HI_BOOL bSuspend)
                 }
                 del_timer(&pCard->stMuteDisableTimer);
             }
+#endif
 #endif
             SndOpDestroy(pCard->hSndOp[u32PortNum], bSuspend);
             pCard->hSndOp[u32PortNum] = HI_NULL;
@@ -1362,6 +1392,43 @@ HI_S32 SND_CreateOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_ATTR_S *pstAttr,
         }
 		pCard->hSndOp[u32PortNum] = hSndOp;
 #ifdef HI_SND_MUTECTL_SUPPORT
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+        {
+            HI_CHIP_PACKAGE_TYPE_E enPackageType = HI_CHIP_PACKAGE_TYPE_BUTT;
+            HI_S32 s32Ret = HI_SUCCESS;
+            s32Ret = HI_DRV_SYS_GetChipPackageType(&enPackageType);
+            if (s32Ret != HI_SUCCESS)
+            {
+                HI_ERR_AO("HI_DRV_SYS_GetChipPackageType failed!\n");
+                return s32Ret;
+            }
+            if (HI_CHIP_PACKAGE_TYPE_QFP_216 != enPackageType)
+            {
+                if(HI_UNF_SND_OUTPUTPORT_DAC0 == pstAttr->stOutport[u32PortNum].enOutPort)
+                {
+                    /* Get gpio functions */
+                    if (HI_SUCCESS != HI_DRV_MODULE_GetFunction(HI_ID_GPIO, (HI_VOID**)&pCard->pstGpioFunc))
+                    {
+                        HI_ERR_AO("Get gpio function err\n");
+                        goto SND_CreateOp_ERR_EXIT;
+                    }
+                    
+                    init_timer(&pCard->stMuteDisableTimer);
+                    pCard->stMuteDisableTimer.function = (void *)SndOpDisableMuteCtrl;
+                    pCard->stMuteDisableTimer.data = (HI_U32)pCard;
+                    if(HI_TRUE == bResume)
+                    {
+                        pCard->stMuteDisableTimer.expires = (jiffies + msecs_to_jiffies(AO_SND_MUTE_RESUME_DISABLE_TIMEMS));
+                    }
+                    else
+                    {
+                        pCard->stMuteDisableTimer.expires = (jiffies + msecs_to_jiffies(AO_SND_MUTE_RESUME_DISABLE_TIMEMS));
+                    }
+                    add_timer(&pCard->stMuteDisableTimer);
+                }
+            }
+        }
+#else
         if(HI_UNF_SND_OUTPUTPORT_DAC0 == pstAttr->stOutport[u32PortNum].enOutPort)
         {
             /* Get gpio functions */
@@ -1384,6 +1451,7 @@ HI_S32 SND_CreateOp(SND_CARD_STATE_S *pCard, HI_UNF_SND_ATTR_S *pstAttr,
             }
             add_timer(&pCard->stMuteDisableTimer);
         }
+#endif
 #endif
     }
     

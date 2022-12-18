@@ -21,7 +21,6 @@ void surfaceSetting::init()
 {
     LOGV("surfaceSetting::init");
     char buffer[PROP_VALUE_MAX];
-    int resolution = 720;
     DisplayClient dispClient;
 
     char buffer_orientation[PROP_VALUE_MAX];
@@ -39,17 +38,9 @@ void surfaceSetting::init()
 
     mSurfaceX = 0;
     mSurfaceY = 0;
-    memset(buffer, 0, PROP_VALUE_MAX);
-    property_get("persist.sys.resolution", buffer, "720");
-    resolution = atoi(buffer);
-    LOGV("surfaceSetting::init, resolution = %d",resolution);
-    if(resolution == 1080) {
-        mSurfaceWidth = 1920;
-        mSurfaceHeight = 1080;
-    } else {
-        mSurfaceWidth = 1280;
-        mSurfaceHeight = 720;
-    }
+
+    dispClient.GetVirtScreenSize(&mSurfaceWidth, &mSurfaceHeight);
+
     mRatio.width = -1;
     mRatio.height = -1;
 

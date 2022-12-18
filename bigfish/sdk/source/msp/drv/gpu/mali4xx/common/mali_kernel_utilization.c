@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2014 ARM Limited. All rights reserved.
+ * Copyright (C) 2010-2015 ARM Limited. All rights reserved.
  * 
  * This program is free software and is provided to you under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation, and any use by you of this program is subject to the terms of such GNU licence.
@@ -417,6 +417,11 @@ void mali_utilization_data_lock(void)
 void mali_utilization_data_unlock(void)
 {
 	_mali_osk_spinlock_irq_unlock(utilization_data_lock);
+}
+
+void mali_utilization_data_assert_locked(void)
+{
+	MALI_DEBUG_ASSERT_LOCK_HELD(utilization_data_lock);
 }
 
 u32 _mali_ukk_utilization_gp_pp(void)

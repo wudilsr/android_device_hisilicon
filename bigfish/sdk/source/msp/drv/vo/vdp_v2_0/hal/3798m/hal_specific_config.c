@@ -715,6 +715,21 @@ HI_S32 Chip_Specific_WinDoFurtherZmeProcess(HI_U32 u32LayerId, WIN_HAL_PARA_S *p
     return HI_SUCCESS;
 }
 
+HI_BOOL Chip_Specific_WinGetRevisedPixelFmt(HI_BOOL  bHasZmeFunc, 
+															HI_RECT_S *pstOutRect, 
+															HI_DRV_PIX_FORMAT_E *penFmt,
+															HI_DISP_DISPLAY_INFO_S *pstDispInfo)
+{	
+
+	if ((!bHasZmeFunc) && (pstDispInfo->stFmtResolution.s32Width > 1920))
+	{
+		*penFmt = HI_DRV_PIX_FMT_NV61_2X1;
+		return HI_TRUE;
+	}
+    
+	
+	return HI_FALSE;
+}
 /*confirm  needed: fit for both compressed and uncompressed stream?*/
 HI_S32 Chip_Specific_WinHalSetAddr(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara, HI_S32 s32exl)
 {
@@ -730,6 +745,8 @@ HI_S32 Chip_Specific_WinHalSetAddr(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara, H
     pstAddr = &(pstPara->pstFrame->stBufAddr[0]);
     if (  (pstPara->pstFrame->ePixFormat == HI_DRV_PIX_FMT_NV12)
         ||(pstPara->pstFrame->ePixFormat == HI_DRV_PIX_FMT_NV21)
+        ||(pstPara->pstFrame->ePixFormat == HI_DRV_PIX_FMT_NV16_2X1)
+        ||(pstPara->pstFrame->ePixFormat == HI_DRV_PIX_FMT_NV61_2X1)
         ) {
 
         SrcAddrL[0]  = pstAddr[0].u32PhyAddr_Y;
@@ -906,8 +923,8 @@ HI_S32 Chip_Specific_SetLayerCapability(VIDEO_LAYER_CAPABILITY_S *pstVideoLayerC
 
 
     pstVideoLayerCap[eId].u32BitWidth = 10;
-    pstVideoLayerCap[eId].u32LayerWidthMax   = 1920;
-    pstVideoLayerCap[eId].u32LayerHeightMax  = 1200;
+    pstVideoLayerCap[eId].u32LayerWidthMax   = 3840;
+    pstVideoLayerCap[eId].u32LayerHeightMax  = 2160;
 
     pstVideoLayerCap[eId].stLayerProcInfo.bDci = HI_FALSE;
     pstVideoLayerCap[eId].stLayerProcInfo.bSR  = HI_FALSE;
@@ -1024,7 +1041,6 @@ HI_S32 Chip_Specific_DispSelectPll(HI_DRV_DISPLAY_E eChn, HI_U32 uPllIndex)
         g_pstRegCrg->PERI_CRG54.u32 = PERI_CRG54Tmp.u32;
     }
 
-    VDP_SelectClk(VDP_CLK_MODE_300MHZ);
 
     return HI_SUCCESS;
 }
@@ -1063,45 +1079,61 @@ HI_VOID  Chip_Specific_DispSetPll(DISP_PLL_SOURCE_E enPllIndex,HI_U32 u32PllxReg
 /* 3716cv200  add hdmi pix*/
 HI_VOID Chip_Specific_DispSetChanClk(HI_DRV_DISPLAY_E eChn, DISP_FMT_CFG_S *pstCfg)
 {
-    U_PERI_CRG54 PERI_CRG54Tmp;
+	U_PERI_CRG54 PERI_CRG54Tmp;
 
-    PERI_CRG54Tmp.u32  = g_pstRegCrg->PERI_CRG54.u32;
-    if ((pstCfg->stInfo.eFmt >= HI_DRV_DISP_FMT_PAL )
-        && (pstCfg->stInfo.eFmt <= HI_DRV_DISP_FMT_1440x480i_60 )
-        )
-    {
-         /*if SD format  : select clk_vo_xd : clk_hdmi  1:2 */
-         if (HI_DRV_DISPLAY_0 == eChn)
-         {
-            PERI_CRG54Tmp.bits.vo_sd_hdmi_clk_sel = CLK_HDMI_VO_1_2;
-         }
-         else
-         {
-            PERI_CRG54Tmp.bits.vo_hd_hdmi_clk_sel = CLK_HDMI_VO_1_2;
-         }
+		PERI_CRG54Tmp.u32  = g_pstRegCrg->PERI_CRG54.u32;
+		if ((pstCfg->stInfo.eFmt >= HI_DRV_DISP_FMT_PAL )
+				&& (pstCfg->stInfo.eFmt <= HI_DRV_DISP_FMT_1440x480i_60 )
+		   )
+		{
+			/*if SD format  : select clk_vo_xd : clk_hdmi  1:2 */
+				if (HI_DRV_DISPLAY_0 == eChn)
+				{
+					PERI_CRG54Tmp.bits.vo_sd_hdmi_clk_sel = CLK_HDMI_VO_1_2;
+				}
+				else
+				{
+					PERI_CRG54Tmp.bits.vo_hd_hdmi_clk_sel = CLK_HDMI_VO_1_2;
+				}
+			
+				g_pstRegCrg->PERI_CRG54.u32= PERI_CRG54Tmp.u32;
+		}
+		else
+		{
+			/*if not SD format  : select clk_vo_xd : clk_hdmi  1:1 */
+				if (HI_DRV_DISPLAY_0 == eChn)
+				{
+					PERI_CRG54Tmp.bits.vo_sd_hdmi_clk_sel = CLK_HDMI_VO_1_1;
+				}
+				else
+				{
+					PERI_CRG54Tmp.bits.vo_hd_hdmi_clk_sel = CLK_HDMI_VO_1_1;
+				}
+			g_pstRegCrg->PERI_CRG54.u32= PERI_CRG54Tmp.u32;
+		}
+	
+		Chip_Specific_DispSelectPll(eChn, pstCfg->enPllIndex);
 
-        g_pstRegCrg->PERI_CRG54.u32= PERI_CRG54Tmp.u32;
-    }
-    else
-    {
-        /*if not SD format  : select clk_vo_xd : clk_hdmi  1:1 */
-        if (HI_DRV_DISPLAY_0 == eChn)
-         {
-            PERI_CRG54Tmp.bits.vo_sd_hdmi_clk_sel = CLK_HDMI_VO_1_1;
-         }
-         else
-         {
-            PERI_CRG54Tmp.bits.vo_hd_hdmi_clk_sel = CLK_HDMI_VO_1_1;
-         }
-        g_pstRegCrg->PERI_CRG54.u32= PERI_CRG54Tmp.u32;
-    }
 
-    Chip_Specific_DispSelectPll(eChn, pstCfg->enPllIndex);
-    if ( (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_3840X2160_50)
-		|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_3840X2160_60)
-		|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_4096X2160_50)
-		|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_4096X2160_60)
-		)
+		if (HI_DRV_DISPLAY_1 == eChn)
+		{
+			if ( (pstCfg->stInfo.eFmt >= HI_DRV_DISP_FMT_VESA_1920X1200_60) 
+					&& (pstCfg->stInfo.eFmt <= HI_DRV_DISP_FMT_3840X2160_29_97)
+			   )
+			{
+				VDP_SelectClk(VDP_CLK_MODE_300MHZ);
+			}
+			else
+			{
+				VDP_SelectClk(VDP_CLK_MODE_300MHZ);
+			}
+		}
+
+	if ( (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_3840X2160_50)
+			|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_3840X2160_60)
+			|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_4096X2160_50)
+			|| (pstCfg->stInfo.eFmt == HI_DRV_DISP_FMT_4096X2160_60)
+	   )
 	{
 		VDP_DISP_SelectChanClkDiv(eChn, CLOCK_DIV_1);
 	}
@@ -1110,9 +1142,11 @@ HI_VOID Chip_Specific_DispSetChanClk(HI_DRV_DISPLAY_E eChn, DISP_FMT_CFG_S *pstC
 		VDP_DISP_SelectChanClkDiv(eChn, CLOCK_DIV_2);
 	}
 #ifndef HI_DISP_DOUBLE_HD_SUPPORT
-    if  (HI_DRV_DISPLAY_1 == eChn)
+	if  (HI_DRV_DISPLAY_1 == eChn)
 #endif
-        Chip_Specific_DispSetPll(pstCfg->enPllIndex, pstCfg->u32Pll[0], pstCfg->u32Pll[1]);
+	{
+		Chip_Specific_DispSetPll(pstCfg->enPllIndex, pstCfg->u32Pll[0], pstCfg->u32Pll[1]);
+	}
 }
 
 

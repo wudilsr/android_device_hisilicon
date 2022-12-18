@@ -1,20 +1,13 @@
-#+++++++++++++++++++++++++++++++++++++++++++++++++++
-#menu "VI Config"
-#--------------------------------
-
 config  HI_VI_SUPPORT
-	bool "VI Support"
-	default n
+    bool "VI Support"
+    default n
 
 config  HI_VI_BT656_HIGH8
-	depends on HI_VI_SUPPORT
-	bool "VI BT656 selection High 8bit"
-	default n
+    bool "VI BT656 selection High 8bit"
+    depends on HI_VI_SUPPORT
+    default n
 
 config  HI_HDMI_RX_SUPPORT
-	bool "HDMI RX Support"
-	depends on HI_VI_SUPPORT && (HI3796CV100 || HI3798CV100)
-	default y
-
-#endmenu
-#+++++++++++++++++++++++++++++++++++++++++++++++++++
+    bool "HDMI RX Support"
+    depends on HI_VI_SUPPORT && (HI3796CV100 || HI3798CV100 || HI3798CV200_A)
+    default y

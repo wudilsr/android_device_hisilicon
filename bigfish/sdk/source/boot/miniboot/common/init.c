@@ -73,7 +73,9 @@ int boot_start(void)
 
 	cpu_enable_irq();
 
+#ifdef CONFIG_NET
 	eth_config_init();
+#endif
 
 #ifdef CONFIG_BOOTARGS_MERGE
 	bootargs_prepare();

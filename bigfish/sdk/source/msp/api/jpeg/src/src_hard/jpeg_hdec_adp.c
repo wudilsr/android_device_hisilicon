@@ -80,8 +80,7 @@ static HI_VOID JPEG_HDEC_GetOutSize(const HI_U32 u32Ration,    \
                                                    HI_U32 *pu32OutHeight)
 {
 
-       switch(u32Ration)
-	   {
+       switch(u32Ration){
 		     case 0:
 		         *pu32OutWidth  = u32InWidth;
 		         *pu32OutHeight = u32InHeight;
@@ -137,24 +136,15 @@ static HI_VOID JPEG_HDEC_GetScale(j_decompress_ptr cinfo)
 		 ** the user set scale
 		 ** CNcomment: 用户设置需要的缩放比例 CNend\n
 		 **/
-		if(cinfo->scale_num * 8 <= cinfo->scale_denom)
-		{
+		if(cinfo->scale_num * 8 <= cinfo->scale_denom){
 		    u32Ration = JPEG_SCALEDOWN_8;
-		}
-		else if(cinfo->scale_num * 4 <= cinfo->scale_denom)
-		{
+		}else if(cinfo->scale_num * 4 <= cinfo->scale_denom){
 		    u32Ration = JPEG_SCALEDOWN_4;
-		}
-		else if(cinfo->scale_num * 2 <= cinfo->scale_denom)
-		{
+		}else if(cinfo->scale_num * 2 <= cinfo->scale_denom){
 			u32Ration = JPEG_SCALEDOWN_2;
-		}
-		else if(cinfo->scale_num == cinfo->scale_denom)
-		{
+		}else if(cinfo->scale_num == cinfo->scale_denom){
 		     u32Ration = JPEG_SCALEDOWN_1;
-		}
-		else
-		{
+		}else{
 		     u32Ration = JPEG_SCALEDOWN_BUTT;
 		}
 
@@ -166,32 +156,24 @@ static HI_VOID JPEG_HDEC_GetScale(j_decompress_ptr cinfo)
 		**/
 		u32YWidth   = u32TdeInWidth;
 		u32YHeight  = u32TdeInHeight;
-		for(u32Scale = JPEG_SCALEDOWN_1; u32Scale <= JPEG_SCALEDOWN_8; u32Scale++ )
-		{
-		    if(JPEG_ALIGNED_SCALE(cinfo->image_width, u32Scale) == u32YWidth)
-		    {
+		for(u32Scale = JPEG_SCALEDOWN_1; u32Scale <= JPEG_SCALEDOWN_8; u32Scale++ ){
+		    if(JPEG_ALIGNED_SCALE(cinfo->image_width, u32Scale) == u32YWidth){
 		        break;
 		    }
 		}
 
 		/*如果宽度小于8，则缩放系数有可能重复,这时要看高度*/
-		if(JPEG_ALIGNED_SCALE(cinfo->image_width, (u32Scale+1)) == u32YWidth)
-		{
-			for(u32Scale = JPEG_SCALEDOWN_1; u32Scale <= JPEG_SCALEDOWN_8; u32Scale++)
-			{
-				if(JPEG_ALIGNED_SCALE(cinfo->image_height, u32Scale) == u32YHeight)
-				{
+		if(JPEG_ALIGNED_SCALE(cinfo->image_width, (u32Scale+1)) == u32YWidth){
+			for(u32Scale = JPEG_SCALEDOWN_1; u32Scale <= JPEG_SCALEDOWN_8; u32Scale++){
+				if(JPEG_ALIGNED_SCALE(cinfo->image_height, u32Scale) == u32YHeight){
 				    break;
 				}
 			}
 		}
 
-		if(u32Scale < u32Ration)
-		{
+		if(u32Scale < u32Ration){
 		    u32TmpScale = u32Scale;
-		}
-		else
-		{
+		}else{
 		    u32TmpScale = u32Ration;
 		}
 
@@ -201,16 +183,28 @@ static HI_VOID JPEG_HDEC_GetScale(j_decompress_ptr cinfo)
 		** CNcomment: 判断jpeg硬件是否支持解码输出argb8888或者abgr8888 CNend\n
 		**/
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-        #ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
-		if(   (0 == u32TmpScale)
-			   &&(   JCS_ARGB_8888 == cinfo->out_color_space
-			      || JCS_RGBA_8888 == cinfo->out_color_space
-			      || JCS_ABGR_8888 == cinfo->out_color_space))
-	    #else
-        if(   (0 == u32TmpScale)
-			   &&(   JCS_ARGB_8888 == cinfo->out_color_space
-			      || JCS_ABGR_8888 == cinfo->out_color_space))
-		#endif
+    #ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
+		if(   (0 == u32TmpScale)\
+			   &&(   JCS_ARGB_8888 == cinfo->out_color_space \
+			      || JCS_RGBA_8888 == cinfo->out_color_space \
+			      || JCS_ABGR_8888 == cinfo->out_color_space \
+			      || JCS_ARGB_1555 == cinfo->out_color_space \
+			      || JCS_ABGR_1555 == cinfo->out_color_space \
+			      || JCS_RGB_565   == cinfo->out_color_space \
+			      || JCS_BGR_565   == cinfo->out_color_space \
+			      || JCS_RGB       == cinfo->out_color_space \
+			      || JCS_BGR       == cinfo->out_color_space))
+	#else
+        if(   (0 == u32TmpScale)\
+			   &&(   JCS_ARGB_8888 == cinfo->out_color_space \
+			      || JCS_ABGR_8888 == cinfo->out_color_space \
+			      || JCS_ARGB_1555 == cinfo->out_color_space \
+			      || JCS_ABGR_1555 == cinfo->out_color_space \
+			      || JCS_RGB_565   == cinfo->out_color_space \
+			      || JCS_BGR_565   == cinfo->out_color_space \
+			      || JCS_RGB       == cinfo->out_color_space \
+			      || JCS_BGR       == cinfo->out_color_space))
+    #endif
 		{
 		    pJpegHandle->bDecARGB	=  HI_TRUE;
 		}
@@ -243,8 +237,7 @@ static HI_VOID JPEG_HDEC_GetScale(j_decompress_ptr cinfo)
 
 
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(0 != u32TmpScale)
-		{
+		if(0 != u32TmpScale){
 			pJpegHandle->bDecARGB	=  HI_FALSE;
 		}
 #endif
@@ -292,6 +285,8 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 	    HI_U32 u32UVHeight     = 0;
 		#ifdef CONFIG_JPEG_HARDDEC2ARGB
         HI_U32 u32McuWidth     = 0;
+		#endif
+		#if defined(CONFIG_JPEG_OUTPUT_CROP) && defined(CONFIG_JPEG_HARDDEC2ARGB)
 		HI_U32 u32DecSize      = 0;
 		#endif
 		HI_U32 u32YSize        = 0;
@@ -302,8 +297,8 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 		#if defined(CONFIG_JPEG_OUTPUT_CROP) && defined(CONFIG_JPEG_HARDDEC2ARGB)
-		if(HI_TRUE == pJpegHandle->stOutDesc.bCrop && HI_TRUE == pJpegHandle->bDecARGB)
-		{/**
+		if(HI_TRUE == pJpegHandle->stOutDesc.bCrop && HI_TRUE == pJpegHandle->bDecARGB){
+		 /**
 		  **  if set HI_JPEG_SetOutDesc,the crop is change
 		  **  CNcomment: 设置完输出裁剪的时候所需要的大小发生变化了，所以重新计算一次 CNend\n
 		  **/
@@ -313,8 +308,7 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		}
         #endif
 
-		if(HI_TRUE == pJpegHandle->stJpegSofInfo.bCalcSize)
-		{
+		if(HI_TRUE == pJpegHandle->stJpegSofInfo.bCalcSize){
 		    return;
 		}
 		/**
@@ -327,12 +321,9 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		   ||(JCS_YUV420_SP    == cinfo->out_color_space)
 		   ||(JCS_YUV422_SP_12 == cinfo->out_color_space)
 		   ||(JCS_YUV422_SP_21 == cinfo->out_color_space)
-		   ||(JCS_YUV444_SP	   == cinfo->out_color_space))
-		{
+		   ||(JCS_YUV444_SP	   == cinfo->out_color_space)){
 			pJpegHandle->bOutYCbCrSP   = HI_TRUE;
-		}
-		else
-		{
+		}else{
 			pJpegHandle->bOutYCbCrSP    = HI_FALSE;
 		}
 
@@ -363,14 +354,12 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		u32DecWidth  = (1 == pJpegHandle->u8Fac[0][0])?((cinfo->image_width  + JPEG_MCU_8ALIGN - 1) & (~(JPEG_MCU_8ALIGN - 1))) : ((cinfo->image_width   + JPEG_MCU_16ALIGN - 1) & (~(JPEG_MCU_16ALIGN - 1)));
 		u32DecHeight = (1 == pJpegHandle->u8Fac[0][1])?((cinfo->image_height + JPEG_MCU_8ALIGN - 1) & (~(JPEG_MCU_8ALIGN - 1))) : ((cinfo->image_height  + JPEG_MCU_16ALIGN - 1) & (~(JPEG_MCU_16ALIGN - 1)));
 		#ifdef CONFIG_JPEG_HARDDEC2ARGB
-		u32McuWidth	= YInWidth;
+		u32McuWidth	= (1 == pJpegHandle->u8Fac[0][0])? (YInWidth / JPEG_MCU_8ALIGN) : (YInWidth / JPEG_MCU_16ALIGN);
 		#endif
-		switch(pJpegHandle->enImageFmt)
-	    {
+		switch(pJpegHandle->enImageFmt){
 
 	        case JPEG_FMT_YUV400:
 	        {
-	    
 	            CHeightTmp  = 0;
 				u32UVStride = 0;
 				#ifdef CONFIG_JPEG_OUTPUT_YUV420SP
@@ -464,8 +453,7 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		u32DecHeight = u32DecHeight >> pJpegHandle->u32ScalRation;
 		
 #ifdef CONFIG_JPEG_OUTPUT_YUV420SP
-		if(HI_TRUE == pJpegHandle->bOutYUV420SP && JPEG_FMT_YUV400 != pJpegHandle->enImageFmt)
-		{
+		if(HI_TRUE == pJpegHandle->bOutYUV420SP && JPEG_FMT_YUV400 != pJpegHandle->enImageFmt){
 			u32YWidth	= (0 == u32YWidth  % 2)? u32YWidth  : (u32YWidth  - 1);
 			u32YHeight	= (0 == u32YHeight % 2)? u32YHeight : (u32YHeight - 1);
 			u32UVWidth	= u32YWidth >> 1;
@@ -476,8 +464,8 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		/** the decode size, argb output
 		 ** CNcomment:解码分辨率大小，ARGB输出的 CNend\n
 		 **/
-		if(HI_FALSE == pJpegHandle->stOutDesc.bCrop)
-		{	/**
+		if(HI_FALSE == pJpegHandle->stOutDesc.bCrop){	
+			/**
 			 ** is dec width and height,if not set crop message,use this
 			 ** CNcomment:解码分辨率,如果没有设置裁剪分辨率那么就使用默认的输出大小 CNend\n
 			 **/
@@ -487,8 +475,7 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 			 pJpegHandle->stOutDesc.stCropRect.h = (HI_S32)cinfo->output_height;
 		}
 		/** revise by y00181162,for iphone test,the components is not right **/
-        switch(cinfo->out_color_space)
-		{
+        switch(cinfo->out_color_space){
 			case JCS_RGB:
 			case JCS_BGR:
 			case JCS_CrCbY:
@@ -530,12 +517,10 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 		cinfo->output_components = cinfo->out_color_components;
 		
 #ifdef CONFIG_JPEG_HARDDEC2ARGB
-		if(HI_TRUE == pJpegHandle->bDecARGB)
-		{
+		if(HI_TRUE == pJpegHandle->bDecARGB){
 		    u32YSize  = pJpegHandle->stJpegSofInfo.u32DisplayStride * pJpegHandle->stOutDesc.stCropRect.h;
 			u32CSize  = 0;
-		}
-		else
+		}else
 #endif
 		{
 		    u32YSize = YHeightTmp * u32YStride;

@@ -62,6 +62,7 @@
 /*macro for v350*/
 #define SPI_IF_ERASE_SECTOR_256K      (0x08)  /* 256K */
 /*****************************************************************************/
+#define SPI_4BYTE_ADDR_LEN            (4)     /*address len 4Byte*/
 
 #define SPI_CMD_WREN                                0x06   /* Write Enable */
 //-----------------------------------------------------------------------------
@@ -75,7 +76,14 @@
 #define SPI_CMD_BE                                  0xC7   /* chip erase */
 //-----------------------------------------------------------------------------
 #define SPI_CMD_RDSR                                0x05   /* Read Status Register */
+#define SPI_CMD_RDSR1                               0x35   /* Read Status Register-1 */
 #define SPI_CMD_RDID                                0x9F   /* Read Identification */
+#define SPI_CMD_RDCR                                0x35   /* Read Config Register */
+//-----------------------------------------------------------------------------
+#define SPI_CMD_WRSR                                0x01   /* Write Status Register */
+#define SPI_CMD_WRSR2                               0x31   /* Write Status Register-2 */
+#define SPI_CMD_WRSR3                               0x11   /* Write Status Register-3 */
+
 //-----------------------------------------------------------------------------
 #define SPI_CMD_PP                                  0x02   /* Page Programming */
 #define SPI_CMD_WRITE_DUAL                          0xA2   /* fast program dual input */
@@ -121,7 +129,17 @@ struct spi_info {
 	struct spi_operation *write[8];
 	struct spi_operation *erase[8];
 	struct spi_driver *driver;
+
+#define SPI_NOR_ADDR_3B		0x01 /* spi nor support 3B addr mode only. */
+#define SPI_NOR_ADDR_4B		0x02 /* spi nor support 4B addr mode only. */
+#define SPI_NOR_ADDR_3B_4B	0x04 /* spi nor support 3B/4B addr mode, default 3B */
+	unsigned int   flags;
 };
+/*****************************************************************************/
+
+#define IS_SPI_NOR_3B(_dev)	(_dev->flags & SPI_NOR_ADDR_3B)
+#define IS_SPI_NOR_4B(_dev)	(_dev->flags & SPI_NOR_ADDR_4B)
+#define IS_SPI_NOR_3B_4B(_dev)	(_dev->flags & SPI_NOR_ADDR_3B_4B)
 /*****************************************************************************/
 
 struct spi_info *spi_serach_ids(struct spi_info *spi_info_table,

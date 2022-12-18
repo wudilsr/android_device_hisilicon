@@ -209,12 +209,6 @@ typedef struct
     HI_DRV_VIDEO_FRAME_S stFrame;
 }BUF_STT_S;
 HI_S32 BP_GetBufState(BUF_POOL_S *pstBP, BUF_STT_S *pstBufState);
-HI_S32 BP_CreateBlackFrame(HI_VOID);
-HI_S32 BP_DestroyBlackFrame(HI_VOID);
-HI_DRV_VIDEO_FRAME_S *BP_GetBlackFrameInfo(HI_VOID);
-
-
-
 
 #ifdef __cplusplus
  #if __cplusplus

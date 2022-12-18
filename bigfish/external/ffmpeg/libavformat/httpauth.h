@@ -78,7 +78,8 @@ typedef struct {
     int64_t chunksize;      /**< Used if "Transfer-Encoding: chunked" otherwise -1. */
     char *user_agent;
     char *referer;
-    int64_t off, discard_off, filesize;
+    int64_t off, end, discard_off, filesize;
+    int one_connect_limited_size;
     char location[MAX_URL_SIZE];
     HTTPAuthState auth_state;
     HTTPAuthState proxy_auth_state;
@@ -99,7 +100,9 @@ typedef struct {
     int post_datalen;// make sure post_datalen is next to post_data in HTTPContext, so that av_opt_set_bin can set its value
     char* not_support_byte_range;
     int download_speed_collect_freq_ms;
+    int download_size_once; //Bytes
     int64_t last_get_speed_time;
+    char *traceId;
 } HTTPContext;
 
 void ff_http_auth_handle_header(HTTPAuthState *state, const char *key,

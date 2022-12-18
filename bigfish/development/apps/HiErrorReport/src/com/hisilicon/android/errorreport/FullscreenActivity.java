@@ -334,10 +334,11 @@ public class FullscreenActivity extends Activity {
              try
              {
                     String Result = SystemProperties.get("ro.build.version.release");
-                    Log.i(TAG,"readVersion :"+Result);
+                    Log.i(TAG,"AndroidVersion:" + Result);
                     FileWriter fw = new FileWriter(LogFile,true);
                     fw.write("AndroidVersion :\r\n"+Result+"\r\n\r\n");
                     fw.flush();
+                    fw.close();
              }
              catch (java.io.FileNotFoundException e)
              {
@@ -365,11 +366,12 @@ public class FullscreenActivity extends Activity {
                  mBuffer = null;
 
                  String Result = new String(out.toByteArray(),"ISO-8859-1");
-                 Log.i(TAG,"readBootargsInfo :"+Result);
+                 Log.i(TAG,"KernelVersion:" + Result);
                  in.close();
                  FileWriter fw = new FileWriter(LogFile,true);
                  fw.write("KernelVersion :\r\n"+Result+"\r\n\r\n");
                  fw.flush();
+                 fw.close();
              }
              catch (java.io.FileNotFoundException e)
              {
@@ -414,6 +416,7 @@ public class FullscreenActivity extends Activity {
                  FileWriter fw = new FileWriter(LogFile,true);
                  fw.write("BootargsInfo :\r\n"+Result+"\r\n\r\n");
                  fw.flush();
+                 fw.close();
             }
             catch (java.io.FileNotFoundException e)
             {
@@ -450,6 +453,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("MemInfo :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             }
             catch (java.io.FileNotFoundException e)
             {
@@ -486,6 +490,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("MediaMem :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             }
             catch (java.io.FileNotFoundException e)
             {
@@ -539,6 +544,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("GPUInfo :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             }
             catch (java.io.FileNotFoundException e)
             {
@@ -592,6 +598,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("MemLeak :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             }
             catch (java.io.FileNotFoundException e)
             {
@@ -637,6 +644,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("Dmesg :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             } catch (java.io.IOException e) {
                 Log.i(TAG, "IOException:" + e);
             }
@@ -685,6 +693,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(LogFile,true);
                 fw.write("Logcat :\r\n"+Result+"\r\n\r\n");
                 fw.flush();
+                fw.close();
             } catch (java.io.IOException e) {
                 Log.i(TAG, "IOException:" + e);
             }
@@ -771,6 +780,7 @@ public class FullscreenActivity extends Activity {
                 FileWriter fw = new FileWriter(outFilePath, append);
                 fw.write(procFilePath + ":\r\n" + Result + "\r\n\r\n");
                 fw.flush();
+                fw.close();
             } catch (java.io.FileNotFoundException e) {
                 Log.e(TAG, "FileNotFoundException:" + e);
             } catch (java.io.IOException e) {

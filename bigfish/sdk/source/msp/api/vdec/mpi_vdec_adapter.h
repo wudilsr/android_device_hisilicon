@@ -155,7 +155,12 @@ HI_S32 VPSS_Control(HI_HANDLE handle, HI_U32 u32CMD, HI_VOID * pParam);
 HI_S32 VDEC_AllocHandle(HI_HANDLE *phHandle);
 HI_S32 VDEC_FreeHandle(HI_HANDLE hHandle);
 
+#ifndef HI_TVP_SUPPORT
 HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize);
+#else
+HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr);
+HI_S32 VDEC_SetTVP(HI_HANDLE hInst, HI_UNF_AVPLAY_TVP_ATTR_S* pParam);
+#endif
 HI_S32 VDEC_DestroyStreamBuf(HI_HANDLE hBuf);
 HI_S32 VDEC_GetStreamBuf(HI_HANDLE hBuf, HI_U32 u32RequestSize, VDEC_ES_BUF_S *pstBuf);
 HI_S32 VDEC_PutStreamBuf(HI_HANDLE hBuf, const VDEC_ES_BUF_S *pstBuf);

@@ -77,7 +77,7 @@ typedef HI_S32 (* FN_DISP_UnRegCallback)(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CA
 typedef HI_S32 (* FN_DISP_ExtAttach)( HI_HANDLE hCast, HI_HANDLE hSink);
 typedef HI_S32 (* FN_DISP_ExtDeAttach)( HI_HANDLE hCast, HI_HANDLE hSink);
 
-typedef HI_S32 (* FN_DISP_SetCastAttr)( HI_HANDLE hCast, HI_U32 u32Width,HI_U32 u32Height);
+typedef HI_S32 (* FN_DISP_SetCastAttr)( HI_HANDLE hCast, HI_U32 u32Width, HI_U32 u32Height, HI_U32 u32FrmRate);
 typedef HI_S32 (* FN_DISP_GetCastAttr)( HI_HANDLE hCast, HI_DRV_DISP_Cast_Attr_S *pstCastAttr);
 typedef HI_S32 (*FN_DISP_UpdatePqData)(HI_U32 u32UpdateType,PQ_PARAM_S * pstPqParam);
 typedef HI_S32 (*FN_DISP_Suspend)(PM_BASEDEV_S *pdev, pm_message_t state);

@@ -36,6 +36,9 @@ $(MOD_NAME)-y += ./sha/drv_cipher_sha1.o ./sha/drv_cipher_sha2.o
 
 REMOVED_FILES := "*.o" "*.ko" "*.order" "*.symvers" "*.mod" "*.mod.*" "*.cmd" ".tmp_versions" "modules.builtin"
 
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_TVP_SUPPORT
+endif
 #===============================================================================
 #   rules
 #===============================================================================

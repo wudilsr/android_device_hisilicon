@@ -32,13 +32,13 @@ public class MemInfo extends Activity
 
     byte[] mBuffer = new byte[8 * 1024];
 
-    
+
     public void readInfo()
     {
         StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
         try
         {
-            FileInputStream in = new FileInputStream("/data/misc/cmdline");
+            FileInputStream in = new FileInputStream("/proc/meminfo");
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             int count = -1;
             while((count = in.read(mBuffer,0,8 * 1024)) != -1)
@@ -47,17 +47,17 @@ public class MemInfo extends Activity
             mBuffer = null;
 
             String Result = new String(out.toByteArray(),"ISO-8859-1");
-            Log.i(TAG,"Result:"+Result);
+            Log.d(TAG, "/proc/meminfo:\n" + Result);
             this.mTermView.setText(Result);
             in.close();
         }
         catch (java.io.FileNotFoundException e)
         {
-            Log.i(TAG,"FileNotFoundException:"+e);
+            Log.e(TAG, "FileNotFoundException: " + e);
         }
         catch (java.io.IOException e)
         {
-            Log.i(TAG,"IOException:"+e);
+            Log.e(TAG, "IOException: " + e);
         }
         finally {
             StrictMode.setThreadPolicy(savedPolicy);

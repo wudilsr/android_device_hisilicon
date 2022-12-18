@@ -40,13 +40,17 @@ Date                       Author                   Modification
 #include "hi_module.h"
 #include "hi_drv_module.h"
 #include "hi_drv_proc.h"
+#include "drv_pdm_ext.h"
+
 
 #include "hifb_drv.h"
-
 #include "hifb.h"
 #include "hifb_p.h"
 #include "hifb_comm.h"
-#include "drv_pdm_ext.h"
+
+#ifdef CFG_HIFB_LOGO_SUPPORT
+#include "hifb_logo.h"
+#endif
 
 #ifdef CFG_HIFB_FENCE_SUPPORT  
 #include "hifb_fence.h"
@@ -87,42 +91,9 @@ Date                       Author                   Modification
 #define IS_1BUF_MODE(par)  ((par->stExtendInfo.enBufMode == HIFB_LAYER_BUF_ONE))
 
 
-#ifdef CFG_HIFB_LOGO_SUPPORT
-	#define HIFB_HD_LOGO_LAYER_ID          HIFB_LAYER_HD_1
-	#define HIFB_SD_LOGO_LAYER_ID          CONFIG_HIFB_SD_LOGO_LAYER_ID
-#endif
-
-
 #define FBNAME "HI_FB"
 
 /*************************** Structure Definition ****************************/
-
-#ifdef CFG_HIFB_LOGO_SUPPORT
-	typedef enum tagHIFB_LOGO_CHANNEL_E
-	{
-		HIFB_LOGO_CHN_HD = 0,
-		HIFB_LOGO_CHN_SD = 1,
-		HIFB_LOGO_CHN_BUTT,
-	}HIFB_LOGO_CHANNEL_E;
-
-	typedef struct tagHIFB_LOGO_INFO_S
-	{
-		HI_BOOL          bShow;
-		HI_BOOL          bTransitted;
-		HIFB_LAYER_ID_E  enLogoID;
-	    struct work_struct freeLogoMemWork;
-	}HIFB_LOGO_INFO_S;
-
-	typedef struct tagHIFB_LOGO_S
-	{
-		HI_U32           u32LogoNum;
-		HIFB_LOGO_INFO_S stLogoInfo[HIFB_LOGO_CHN_BUTT];	
-	}HIFB_LOGO_S;
-
-	static HIFB_LOGO_S g_sLogo;
-#endif
-
-
 #ifdef CFG_HIFB_FENCE_SUPPORT  
 	static HIFB_SYNC_INFO_S s_SyncInfo;
 #endif
@@ -295,7 +266,11 @@ static struct fb_fix_screeninfo s_stDefFix[HIFB_LAYER_TYPE_BUTT] =
 };
 
 
-/* default variable information */
+/**
+ ** default variable information
+ ** default fmt is argb1555,because argb1555 is always support
+ ** 默认使用argb1555,这个是支持得，其它24/32不一定支持
+ **/
 static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
 {
     /*for HD layer*/
@@ -307,10 +282,10 @@ static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
         .xoffset        = 0,
         .yoffset        = 0,
         .bits_per_pixel = HIFB_DEF_DEPTH,
-        .red			= {16, 8, 0},
-        .green			= {8, 8, 0},
-        .blue			= {0, 8, 0},
-        .transp			= {24, 8, 0},
+        .red			= {10, 5, 0},
+        .green			= { 5, 5, 0},
+        .blue			= { 0, 5, 0},
+        .transp			= {15, 1, 0},
         .activate		= FB_ACTIVATE_NOW,
         .pixclock		= -1, /* pixel clock in ps (pico seconds) */
         .left_margin	= -1, /* time from sync to picture	*/
@@ -329,10 +304,10 @@ static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
         .xoffset        = 0,
         .yoffset        = 0,
         .bits_per_pixel = HIFB_DEF_DEPTH,
-        .red			= {16, 8, 0},
-        .green			= {8, 8, 0},
-        .blue			= {0, 8, 0},
-        .transp			= {24, 8, 0},
+        .red			= {10, 5, 0},
+        .green			= { 5, 5, 0},
+        .blue			= { 0, 5, 0},
+        .transp			= {15, 1, 0},
         .activate		= FB_ACTIVATE_NOW,
         .pixclock		= -1, /* pixel clock in ps (pico seconds) */
         .left_margin	= -1, /* time from sync to picture	*/
@@ -351,10 +326,10 @@ static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
         .xoffset        = 0,
         .yoffset        = 0,
         .bits_per_pixel = HIFB_DEF_DEPTH,
-        .red			= {16, 8, 0},
-        .green			= {8, 8, 0},
-        .blue			= {0, 8, 0},
-        .transp			= {24, 8, 0},
+        .red			= {10, 5, 0},
+        .green			= { 5, 5, 0},
+        .blue			= { 0, 5, 0},
+        .transp			= {15, 1, 0},
         .activate		= FB_ACTIVATE_NOW,
         .pixclock		= -1, /* pixel clock in ps (pico seconds) */
         .left_margin	= -1, /* time from sync to picture	*/
@@ -373,10 +348,10 @@ static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
         .xoffset        = 0,
         .yoffset        = 0,
         .bits_per_pixel = HIFB_DEF_DEPTH,
-        .red			= {16, 8, 0},
-        .green			= {8, 8, 0},
-        .blue			= {0, 8, 0},
-        .transp			= {24, 8, 0},
+        .red			= {10, 5, 0},
+        .green			= { 5, 5, 0},
+        .blue			= { 0, 5, 0},
+        .transp			= {15, 1, 0},
         .activate		= FB_ACTIVATE_NOW,
         .pixclock		= -1, /* pixel clock in ps (pico seconds) */
         .left_margin	= -1, /* time from sync to picture	*/
@@ -388,8 +363,10 @@ static struct fb_var_screeninfo s_stDefVar[HIFB_LAYER_TYPE_BUTT] =
     }
 };
 
-/* bit filed info of color fmt, the order must be the same as HIFB_COLOR_FMT_E */
-static HIFB_ARGB_BITINFO_S s_stArgbBitField[] =
+/**
+ ** bit filed info of color fmt, the order must be the same as HIFB_COLOR_FMT_E 
+ **/
+HIFB_ARGB_BITINFO_S s_stArgbBitField[HIFB_MAX_PIXFMT_NUM] =
 {   /*RGB565*/
     {
         .stRed    = {11, 5, 0},
@@ -614,183 +591,6 @@ extern HI_S32 hifb_init_module_k(HI_VOID);
 
 
 /***************************************************************************************
-* func          : hifb_freelogomem_work
-* description   : CNcomment: 清logo内存 CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-#ifdef CFG_HIFB_LOGO_SUPPORT
-static HI_VOID hifb_freelogomem(HIFB_LOGO_CHANNEL_E enLogoChn)
-{
-    PDM_EXPORT_FUNC_S *ps_PdmExportFuncs = HI_NULL;
-
-    if (HI_SUCCESS != HI_DRV_MODULE_GetFunction(HI_ID_PDM, (HI_VOID**)&ps_PdmExportFuncs))
-    {
-        return;
-    }
-
-    if(HI_NULL == ps_PdmExportFuncs)
-    {
-        return;
-    }
-
-	 /*msleep 80ms to asure wbc closed or screen addr switched*/
-	msleep(80);
-    if (HIFB_LOGO_CHN_HD == enLogoChn)
-    {
-        //ps_PdmExportFuncs->pfnPDM_ReleaseReserveMem(DISPLAY_BUFFER_HD);
-        //ps_PdmExportFuncs->pfnPDM_ReleaseReserveMem(OPTM_GFX_WBC2_BUFFER);
-        HIFB_INFO("<<<<<<<<freen mem %s>>>>>>>>>\n", DISPLAY_BUFFER_HD);
-        HIFB_INFO("<<<<<<<<freen mem %s>>>>>>>>>\n", OPTM_GFX_WBC2_BUFFER);
-    }
-    else
-    {
-        //ps_PdmExportFuncs->pfnPDM_ReleaseReserveMem(DISPLAY_BUFFER_SD);
-        HIFB_INFO("<<<<<<<<freen mem %s>>>>>>>>>\n", DISPLAY_BUFFER_SD);
-    }
-
-    if (0 == g_sLogo.u32LogoNum)
-    {
-        //ps_PdmExportFuncs->pfnPDM_ReleaseReserveMem(HIFB_ZME_COEF_BUFFER);
-        HIFB_INFO("<<<<<<<<freen mem %s>>>>>>>>>\n", HIFB_ZME_COEF_BUFFER);
-    }
-
-    return;
-}
-
-
-static HI_VOID hifb_freelogomem_work(struct work_struct *work)
-{
-	HIFB_LOGO_INFO_S *pstLogoInfo = NULL;
-	HIFB_LOGO_CHANNEL_E enLogoChn;
-
-	pstLogoInfo = (HIFB_LOGO_INFO_S *)container_of(work, HIFB_LOGO_INFO_S, freeLogoMemWork); 
-
-	if (IS_HD_LAYER(pstLogoInfo->enLogoID) || IS_MINOR_HD_LAYER(pstLogoInfo->enLogoID))
-	{
-		enLogoChn = HIFB_LOGO_CHN_HD;
-	}
-	else
-	{
-		enLogoChn = HIFB_LOGO_CHN_SD;
-	}	
-
-	hifb_freelogomem(enLogoChn);
-	
-    return;
-}
-
-
-
-/***************************************************************************************
-* func          : hifb_logo_init
-* description   : CNcomment: logo初始化，这里只是设置一下掩码和对应的图层打开标记 CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-static HI_S32 hifb_logo_init(HI_VOID)
-{
-    HI_S32 s32Ret;
-	HIFB_LOGO_CHANNEL_E enLogoChn;
-    HIFB_OSD_DATA_S pstLogoLayerData; 
-
-	g_sLogo.u32LogoNum = 0; 
-	/**
-	 ** 这个参数在去初始化logo中的处理还是有点问题
-	 ** 高清通道，标清通道，两个通道都用是在TC双显中
-	 **/
-	for (enLogoChn = 0; enLogoChn < HIFB_LOGO_CHN_BUTT; enLogoChn++)
-	{
-		/**
-		 **bTransitted是否完成开机过渡
-		 **/
-	    g_sLogo.stLogoInfo[enLogoChn].bTransitted = HI_FALSE;
-		/**
-		 **98M用HD1和SD0做为开机logo
-		 **/
-		g_sLogo.stLogoInfo[enLogoChn].enLogoID = (HIFB_LOGO_CHN_HD == enLogoChn) ? HIFB_HD_LOGO_LAYER_ID : HIFB_SD_LOGO_LAYER_ID;		
-		/**
-		 ** judge whether has logo
-		 ** 这里只想获取图层是否使能
-		 **/
-		s32Ret = s_stDrvOps.HIFB_DRV_GetOSDData(g_sLogo.stLogoInfo[enLogoChn].enLogoID, &pstLogoLayerData);
-	    if (s32Ret != HI_SUCCESS)
-	    {
-	        HIFB_ERROR("failed to Get OSDData%d !\n",g_sLogo.stLogoInfo[enLogoChn].enLogoID);                
-	        return s32Ret;
-	    }	
-		if (pstLogoLayerData.eState == HIFB_LAYER_STATE_ENABLE)   
-	    {/** 只有在有开机logo得情况下才能进入 **/
-	    	g_sLogo.u32LogoNum++;
-	        g_sLogo.stLogoInfo[enLogoChn].bShow = HI_TRUE;
-			/** 开机logo没有过渡完 **/
-	        s_stDrvOps.HIFB_DRV_SetLayerMaskFlag(g_sLogo.stLogoInfo[enLogoChn].enLogoID, HI_TRUE);
-			HIFB_INFO("<<<<<<<<<<<<<start with boot logo, ID:%d>>>>>>>>>>>>>>>\n", g_sLogo.stLogoInfo[enLogoChn].enLogoID);
-	    }
-	}    
-	
-    return HI_SUCCESS;
-	
-}
-
-
-/***************************************************************************************
-* func          : hifb_clear_logo
-* description   : CNcomment: 清logo CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-static HI_VOID hifb_clear_logo(HI_U32 u32LayerID, HI_BOOL bModExit)
-{
-
-	HIFB_LAYER_ID_E enLogoLayerId;
-	HIFB_LOGO_CHANNEL_E enLogoChn;
-	
-	if (IS_HD_LAYER(u32LayerID) || IS_MINOR_HD_LAYER(u32LayerID))
-	{
-		enLogoChn = HIFB_LOGO_CHN_HD;
-	}
-	else
-	{
-		enLogoChn = HIFB_LOGO_CHN_SD;
-	}
-
-	if (!g_sLogo.stLogoInfo[enLogoChn].bShow)
-	{/** 没有开机logo不需要处理，保证只进来一次g_sLogo.u32LogoNum = 1有问题**/
-		return;
-	}
-	
-	/** 这里用G1 **/
-	enLogoLayerId = g_sLogo.stLogoInfo[enLogoChn].enLogoID;
-	/** 过渡完可以切换显示地址了 **/
-    s_stDrvOps.HIFB_DRV_SetLayerMaskFlag(enLogoLayerId, HI_FALSE);
-    s_stDrvOps.HIFB_DRV_ClearLogo(enLogoLayerId);
-    s_stDrvOps.HIFB_DRV_UpdataLayerReg(enLogoLayerId);
-    /*wait for logo closed ,so we can free logo buffer*/
-    //s_stDrvOps.HIFB_DRV_WaitVBlank(u32LayerID);
-
-    //hifb_freelogomem_work(enLogoChn);
-    if (bModExit)
-	{
-		hifb_freelogomem(enLogoChn);
-	}	
-	else
-	{
-		INIT_WORK(&(g_sLogo.stLogoInfo[enLogoChn].freeLogoMemWork), hifb_freelogomem_work);
-    	schedule_work(&(g_sLogo.stLogoInfo[enLogoChn].freeLogoMemWork));    
-	}
-	
-    g_sLogo.stLogoInfo[enLogoChn].bShow = HI_FALSE;
-    g_sLogo.stLogoInfo[enLogoChn].bTransitted = HI_TRUE;
-
-    HIFB_INFO("<<<<<<<<<<<<<hifb_clear_logo>>>>>>>>>>>>>>>\n");
-}
-#endif
-
-/***************************************************************************************
 * func          : hifb_getfmtbyargb
 * description   : CNcomment: 从argb中判断像素格式 CNend\n
 * param[in]     : HI_VOID
@@ -832,8 +632,7 @@ static HIFB_COLOR_FMT_E hifb_getfmtbyargb(
                 return i;
             }
         }
-    } 
-    i = HIFB_FMT_BUTT;
+    }
 	
     switch(u32ColorDepth)
     {
@@ -948,35 +747,28 @@ HI_S32 hifb_checkmem_enough(struct fb_info *info,HI_U32 u32Pitch,HI_U32 u32Heigh
     HI_U32 u32Buffersize = 0;
     HIFB_PAR_S *par = (HIFB_PAR_S *)info->par;
     
-    switch(par->stExtendInfo.enBufMode)
-    {
+    switch(par->stExtendInfo.enBufMode){
         case HIFB_LAYER_BUF_DOUBLE:
         case HIFB_LAYER_BUF_DOUBLE_IMMEDIATE:
-        {
             u32BufferNum = 2;
             break;
-        }
         case HIFB_LAYER_BUF_ONE:
 		case HIFB_LAYER_BUF_STANDARD:
-        {
             u32BufferNum = 1;
             break;
-        }
         default:
-            return HI_SUCCESS;
+        	u32BufferNum = 0;
+            break;
     }
 	
     u32Buffersize = u32BufferNum * u32Pitch * u32Height;
 	
-    if(info->fix.smem_len >= u32Buffersize)
-    {
+    if(info->fix.smem_len >= u32Buffersize){
         return HI_SUCCESS;
+    }else{
+		HIFB_ERROR("memory is not enough!  now is %d u32Pitch %d u32Height %d expect %d\n",info->fix.smem_len,u32Pitch, u32Height,u32Buffersize);
+		return HI_FAILURE;
     }
-
-	HIFB_ERROR("memory is not enough!  now is %d u32Pitch %d u32Height %d expect %d\n",info->fix.smem_len,u32Pitch, u32Height,u32Buffersize);
-    
-    return HI_FAILURE;
-	
 }
 
 
@@ -1219,6 +1011,17 @@ static HI_VOID hifb_assign_dispbuf(HI_U32 u32LayerId)
 		if (IS_2BUF_MODE(pstPar) || IS_1BUF_MODE(pstPar))
 		{
 			u32StartAddr = info->fix.smem_start;
+			if (1 == pstPar->stRunInfo.u32BufNum)
+	        {
+	            pstPar->st3DInfo.u32DisplayAddr[0] = u32StartAddr;
+				pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr;
+	        }
+	        else if (2 == pstPar->stRunInfo.u32BufNum)
+	        {
+	            pstPar->st3DInfo.u32DisplayAddr[0] = u32StartAddr;
+	            pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr + u32BufSize;
+	        }
+			return;
 		}
 		else if ( (0 == pstPar->st3DInfo.st3DMemInfo.u32StereoMemStart) 
                 || (0 == pstPar->st3DInfo.st3DMemInfo.u32StereoMemLen)
@@ -1238,8 +1041,13 @@ static HI_VOID hifb_assign_dispbuf(HI_U32 u32LayerId)
         }
         else if (2 == pstPar->stRunInfo.u32BufNum)
         {/** 使用双buferr **/
-            pstPar->st3DInfo.u32DisplayAddr[0] = u32StartAddr;
-            pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr + u32BufSize;
+        	pstPar->st3DInfo.u32DisplayAddr[0] = u32StartAddr;
+        	if (pstPar->st3DInfo.enOutStereoMode ==  HIFB_STEREO_SIDEBYSIDE_HALF)
+            	pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr + pstPar->st3DInfo.st3DSurface.u32Pitch / 2;
+			else if (pstPar->st3DInfo.enOutStereoMode ==  HIFB_STEREO_TOPANDBOTTOM)
+				pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr + pstPar->st3DInfo.st3DSurface.u32Pitch * pstPar->stExtendInfo.u32DisplayHeight/ 2;
+			else
+				pstPar->st3DInfo.u32DisplayAddr[1] = u32StartAddr + u32BufSize;
         }
     }
     else
@@ -1611,11 +1419,33 @@ static HI_S32 hifb_set_par(struct fb_info *info)
 	HI_U32 u32BufSize = 0;
 	HI_U32 u32InSize  = 0;
     HIFB_PAR_S *pstPar = NULL;
-	HI_U32 u32StartAddr = 0;
 	
     HIFB_COLOR_FMT_E enFmt;
     pstPar = (HIFB_PAR_S *)info->par;    	
 
+	switch(pstPar->stBaseInfo.u32LayerID){
+		case HIFB_LAYER_HD_0:
+		case HIFB_LAYER_HD_1:
+		case HIFB_LAYER_HD_2:
+		case HIFB_LAYER_HD_3:
+			if(info->var.xres > CONFIG_HIFB_HD_LAYER_MAXWIDTH || info->var.yres > CONFIG_HIFB_HD_LAYER_MAXHEIGHT){
+				HIFB_INFO("the hd input ui size is not support\n ");
+				return HI_FAILURE;
+			}
+			break;
+		case HIFB_LAYER_SD_0:
+		case HIFB_LAYER_SD_1:
+		case HIFB_LAYER_SD_2:
+		case HIFB_LAYER_SD_3:
+			if(info->var.xres > CONFIG_HIFB_SD_LAYER_MAXWIDTH || info->var.yres > CONFIG_HIFB_SD_LAYER_MAXHEIGHT){
+				HIFB_INFO("the sd input ui size is not support\n ");
+				return HI_FAILURE;
+			}
+			break;
+		default:
+		 	return HI_FAILURE;
+	}
+	
 	/**
 	 **根据屏幕可变信息来获取像素格式
 	 **/
@@ -1652,6 +1482,11 @@ static HI_S32 hifb_set_par(struct fb_info *info)
 			pstPar->stRunInfo.u32ScreenAddr       = info->fix.smem_start;
         	pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_DISPLAYADDR;        
         	pstPar->stRunInfo.bModifying          = HI_FALSE;
+        	/**
+        	 **DTS2015041701277, android fastplay to app
+        	 **底层有判断是否开机logo存在，要是存在不更新地址
+        	 **/
+        	s_stDrvOps.HIFB_DRV_SetLayerAddr(pstPar->stBaseInfo.u32LayerID, info->fix.smem_start);
     	}	
 	}
 	else
@@ -1681,15 +1516,11 @@ static HI_S32 hifb_set_par(struct fb_info *info)
     if(   (pstPar->bSetStereoMode)
         && (HIFB_LAYER_BUF_STANDARD == pstPar->stExtendInfo.enBufMode))
     {
-    	HI_U32 u32BufferSize;
 		/**
 		 ** the stride of 3D buffer
 		 **/
 		u32InSize = info->var.xres * info->var.bits_per_pixel >> 3;
 		HI_HIFB_GetStride(u32InSize,&u32Stride,CONFIG_HIFB_STRIDE_16ALIGN);
-	
-        u32BufferSize = u32Stride * info->var.yres; 
-		u32BufferSize *= pstPar->stRunInfo.u32BufNum; /** 内存个数 **/
 				
 		/*config 3D surface par*/
 		pstPar->st3DInfo.st3DSurface.enFmt    = enFmt;		
@@ -1701,27 +1532,16 @@ static HI_S32 hifb_set_par(struct fb_info *info)
 	    pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_STRIDE;
 		pstPar->stRunInfo.bModifying          = HI_FALSE;
 
-		s32Ret = hifb_checkandalloc_3dmem(pstPar->stBaseInfo.u32LayerID, u32BufferSize);
-		if (HI_SUCCESS != s32Ret)
-		{
-			HIFB_INFO("fail to alloc 3d memory, set_fb_par failure.\n ");
-			return s32Ret;
-		}
-		
-		/*the stride of N3D buffer*/
-	   u32InSize = info->var.xres_virtual * info->var.bits_per_pixel >> 3;
-	   HI_HIFB_GetStride(u32InSize,&u32Stride,CONFIG_HIFB_STRIDE_16ALIGN); 
-       info->fix.line_length = u32Stride;
-		
+   		info->fix.line_length = u32Stride;
     }	
-    else	
+
+	/*If alloc 3D mem failed, change to 2D*/
+	else
 #endif		
     {        
         /* set the stride if stride change */
 		u32InSize = info->var.xres_virtual * info->var.bits_per_pixel >> 3;
 	    HI_HIFB_GetStride(u32InSize,&u32Stride,CONFIG_HIFB_STRIDE_16ALIGN);
-		
-        u32StartAddr = info->fix.smem_start ;
         
         if(  u32Stride != info->fix.line_length ||(info->var.yres != pstPar->stExtendInfo.u32DisplayHeight))
         {
@@ -1803,74 +1623,68 @@ static HI_S32 hifb_pan_display(struct fb_var_screeninfo *var, struct fb_info *in
     HIFB_PAR_S *par = (HIFB_PAR_S *)info->par;
     HI_U32 u32DisplayAddr = 0;
     HI_U32 u32StartAddr   = info->fix.smem_start ;    
+#ifdef CFG_HIFB_STEREO3D_HW_SUPPORT
+	HI_S32 s32Ret;
+#endif
+	HI_U32 u32Align = 0xf;
 	
 	if(HIFB_LAYER_BUF_STANDARD != par->stExtendInfo.enBufMode)
 	{/** 不是标准刷新就不操作了 **/
 		return HI_SUCCESS;
 	}
 
-    if (!par->bPanReady)
+#ifdef CFG_HIFB_STEREO3D_HW_SUPPORT
+	if (par->bSetStereoMode)
+	{
+		u32Align = 0x0;
+	}
+#endif
+
+    if (var->bits_per_pixel >= 8)
     {
-        par->bPanReady = HI_TRUE;
-		#ifdef CFG_HIFB_LOGO_TO_APP
-		return HI_SUCCESS;
-		#endif
+        u32DisplayAddr = (u32StartAddr + info->fix.line_length * var->yoffset
+                       + var->xoffset * (var->bits_per_pixel >> 3))&(~u32Align);
     }
+    else
+    {
+        u32DisplayAddr = (u32StartAddr + info->fix.line_length * var->yoffset
+                       + var->xoffset * var->bits_per_pixel / 8) & (~u32Align);
+    }
+	
+    if((info->var.bits_per_pixel == 24)&&((info->var.xoffset !=0)||(info->var.yoffset !=0)))
+    {
+        HI_U32 TmpData;
+
+        TmpData = (u32StartAddr + info->fix.line_length * var->yoffset
+                       + var->xoffset * (var->bits_per_pixel >> 3))/16/3;
+        u32DisplayAddr = TmpData * 16 * 3;
+    }
+
 
     /*stereo 3d  mode*/
 #ifdef CFG_HIFB_STEREO3D_HW_SUPPORT
-    if(par->bSetStereoMode && par->stExtendInfo.enBufMode == HIFB_LAYER_BUF_STANDARD)
-    {/** 标准刷新，3D模式 **/
-    	HI_S32 s32Ret     = 0;
-    	HI_U32 u32TmpAddr = 0;
-		HI_U32 u32Stride  = 0;
-		HI_U32 u32InSize  = 0;
+    if(par->bSetStereoMode)
+    {
+    	/** 标准刷新，3D模式 **/
 		HIFB_BLIT_OPT_S stBlitOpt;
 		HIFB_BUFFER_S stDispBuf;
-		HI_U32 u32BufferSize = 0;
-		
-		/**
-		 ** the stride of 3D buffer
-		 **/
-		u32InSize = info->var.xres * info->var.bits_per_pixel >> 3;
-	    HI_HIFB_GetStride(u32InSize,&u32Stride,CONFIG_HIFB_STRIDE_16ALIGN);
-		
-		u32BufferSize = u32Stride * info->var.yres; 
-		/** buffer数，初始化中设置，两个 **/
-		u32BufferSize *= par->stRunInfo.u32BufNum;
 
-	    /**
-	     ** N3D display buffer address
-	     ** 非3D
-	     **/
-		if (info->var.bits_per_pixel >= 8)
-		{
-			u32TmpAddr =    info->fix.smem_start 
-				          + info->fix.line_length * info->var.yoffset
-		                  + info->var.xoffset * (info->var.bits_per_pixel >> 3);
-		}
-		else
-		{
-			u32TmpAddr = (   info->fix.smem_start
-				           + info->fix.line_length * info->var.yoffset
-		                   + info->var.xoffset * info->var.bits_per_pixel / 8);
-		}
-
-	    if((info->var.bits_per_pixel == 24)&&((info->var.xoffset != 0)||(info->var.yoffset != 0)))
-	    {
-	        HI_U32 TmpData;
-
-	        TmpData = (   info->fix.smem_start 
-				        + info->fix.line_length * info->var.yoffset
-	                    + info->var.xoffset * (info->var.bits_per_pixel >> 3))/16/3;
-	        u32TmpAddr = TmpData * 16 * 3;
-	    }
+		if(HIFB_STEREO_FRMPACKING == par->st3DInfo.enOutStereoMode
+			|| (0 == par->st3DInfo.st3DMemInfo.u32StereoMemStart))
+        {
+            par->stRunInfo.bModifying          = HI_TRUE;
+    		par->stRunInfo.u32ScreenAddr       = u32DisplayAddr;
+    		par->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_REFRESH;
+            par->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_DISPLAYADDR;        
+            par->stRunInfo.bModifying          = HI_FALSE;
+            return HI_SUCCESS;
+        }
 
 		/**config N3D display buffer that we blit to 3D buffer*/
 		memset(&stDispBuf, 0x0, sizeof(stDispBuf));
 		stDispBuf.stCanvas.enFmt      = par->stExtendInfo.enColFmt;
 		stDispBuf.stCanvas.u32Pitch   = info->fix.line_length;
-		stDispBuf.stCanvas.u32PhyAddr = u32TmpAddr;
+		stDispBuf.stCanvas.u32PhyAddr = u32DisplayAddr;
 		stDispBuf.stCanvas.u32Width   = info->var.xres;
 		stDispBuf.stCanvas.u32Height  = info->var.yres;
 		
@@ -1881,26 +1695,12 @@ static HI_S32 hifb_pan_display(struct fb_var_screeninfo *var, struct fb_info *in
 		/**end*/
 
 		/**config N3D display buffer that we blit to 3D buffer*/
-		memcpy(&par->st3DInfo.st3DSurface, &stDispBuf.stCanvas, sizeof(HIFB_SURFACE_S));
-		par->st3DInfo.st3DSurface.u32Pitch = u32Stride;
-    
-		s32Ret = hifb_checkandalloc_3dmem(par->stBaseInfo.u32LayerID, u32BufferSize);
-		if (HI_SUCCESS != s32Ret)
-		{
-			HIFB_INFO("fail to alloc 3d memory, pandisplay failure.\n ");
-			return s32Ret;
-		}
-		
-       if(   HIFB_LAYER_BUF_STANDARD == par->stExtendInfo.enBufMode
-		  && HIFB_STEREO_FRMPACKING  == par->st3DInfo.enOutStereoMode)
-        {
-            par->stRunInfo.bModifying          = HI_TRUE;
-    		par->stRunInfo.u32ScreenAddr       = u32TmpAddr;
-    		par->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_REFRESH;
-            par->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_DISPLAYADDR;        
-            par->stRunInfo.bModifying          = HI_FALSE;
-            return HI_SUCCESS;
-        }
+		par->st3DInfo.st3DSurface.enFmt = stDispBuf.stCanvas.enFmt;
+		par->st3DInfo.st3DSurface.u32Width = stDispBuf.stCanvas.u32Width;
+		par->st3DInfo.st3DSurface.u32Height = stDispBuf.stCanvas.u32Height;
+		//memcpy(&par->st3DInfo.st3DSurface, &stDispBuf.stCanvas, sizeof(HIFB_SURFACE_S));
+		//par->st3DInfo.st3DSurface.u32Pitch = u32Stride;
+    		
 		par->st3DInfo.st3DSurface.u32PhyAddr = par->st3DInfo.u32DisplayAddr[par->stRunInfo.u32IndexForInt];
 		/**end*/
 		
@@ -1927,31 +1727,7 @@ static HI_S32 hifb_pan_display(struct fb_var_screeninfo *var, struct fb_info *in
     }	
     else//mono mode
  #endif
-    {
-        /**
-         ** set the stride and display start address
-         **/
-        if (var->bits_per_pixel >= 8)
-        {
-            u32DisplayAddr = (u32StartAddr + info->fix.line_length * var->yoffset
-                           + var->xoffset * (var->bits_per_pixel >> 3))&0xfffffff0;
-        }
-        else
-        {
-            u32DisplayAddr = (u32StartAddr + info->fix.line_length * var->yoffset
-                           + var->xoffset * var->bits_per_pixel / 8) & 0xfffffff0;
-        }
-		
-        if((info->var.bits_per_pixel == 24)&&((info->var.xoffset !=0)||(info->var.yoffset !=0)))
-        {
-            HI_U32 TmpData;
-    
-            TmpData = (u32StartAddr + info->fix.line_length * var->yoffset
-                           + var->xoffset * (var->bits_per_pixel >> 3))/16/3;
-            u32DisplayAddr = TmpData * 16 * 3;
-    
-        }
-        
+    {        
         par->stRunInfo.bModifying          = HI_TRUE;
 		par->stRunInfo.u32ScreenAddr       = u32DisplayAddr;
 		par->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_REFRESH;
@@ -1965,6 +1741,15 @@ static HI_S32 hifb_pan_display(struct fb_var_screeninfo *var, struct fb_info *in
         }
     }
 
+
+    if (!par->bPanReady)
+    {
+        par->bPanReady = HI_TRUE;
+		#ifdef CFG_HIFB_LOGO_SUPPORT
+		return HI_SUCCESS;
+		#endif
+    }
+    
 #ifdef CFG_HIFB_LOGO_SUPPORT		
 	hifb_clear_logo(par->stBaseInfo.u32LayerID, HI_FALSE);
 #endif	
@@ -2281,10 +2066,12 @@ static HI_S32 hifb_flip_screenaddr(HI_U32 u32LayerId)
 #ifdef CFG_HIFB_FENCE_SUPPORT  
 static HI_VOID hifb_frame_end_callback(HI_VOID)
 {
+	s_SyncInfo.bFrameHit = HI_FALSE;
 
 	while(atomic_read(&s_SyncInfo.s32RefreshCnt) > 0)
     {
     	/** 更新一帧数据 **/
+	s_SyncInfo.bFrameHit = HI_TRUE;
 		atomic_dec(&s_SyncInfo.s32RefreshCnt);
         if(s_SyncInfo.pstTimeline)
         {/** 时间轴不为空 **/
@@ -2332,6 +2119,8 @@ static HI_S32 hifb_vo_callback(HI_VOID *pParaml, HI_VOID *pParamr)
         pstPar->stFrameInfo.u32Fps =  pstPar->stFrameInfo.u32RefreshFrame;
         pstPar->stFrameInfo.u32RefreshFrame = 0;
     }
+
+    pstPar->stFrameInfo.bFrameHit = HI_FALSE;
 
     if (!pstPar->stRunInfo.bModifying)
     {
@@ -2441,6 +2230,7 @@ static HI_S32 hifb_vo_callback(HI_VOID *pParaml, HI_VOID *pParamr)
 	        {
 	        
                 pstPar->stFrameInfo.u32RefreshFrame++;
+		    	pstPar->stFrameInfo.bFrameHit = HI_TRUE;
 	            s_stDrvOps.HIFB_DRV_SetLayerAddr(*pu32LayerId, pstPar->stRunInfo.u32ScreenAddr);
 				pstPar->stRunInfo.u32ParamModifyMask &= ~HIFB_LAYER_PARAMODIFY_DISPLAYADDR;
 
@@ -2450,7 +2240,20 @@ static HI_S32 hifb_vo_callback(HI_VOID *pParaml, HI_VOID *pParamr)
 	 			 **/
 				if (pstPar->bSetStereoMode)
 				{
-					pstPar->st3DInfo.u32rightEyeAddr = pstPar->stRunInfo.u32ScreenAddr;
+					if ((pstPar->st3DInfo.enOutStereoMode == HIFB_STEREO_FRMPACKING)
+						|| (0 != pstPar->st3DInfo.st3DMemInfo.u32StereoMemStart)
+						|| (HIFB_LAYER_BUF_STANDARD != pstPar->stExtendInfo.enBufMode))
+					{
+						pstPar->st3DInfo.u32rightEyeAddr = pstPar->stRunInfo.u32ScreenAddr;
+					}
+					else if (pstPar->st3DInfo.enOutStereoMode == HIFB_STEREO_SIDEBYSIDE_HALF)
+					{
+						pstPar->st3DInfo.u32rightEyeAddr = pstPar->stRunInfo.u32ScreenAddr + pstPar->st3DInfo.st3DSurface.u32Pitch / 2;
+					}
+					else if (pstPar->st3DInfo.enOutStereoMode == HIFB_STEREO_TOPANDBOTTOM)
+					{
+						pstPar->st3DInfo.u32rightEyeAddr = pstPar->stRunInfo.u32ScreenAddr + pstPar->st3DInfo.st3DSurface.u32Pitch * pstPar->stExtendInfo.u32DisplayHeight / 2;
+					}
 					s_stDrvOps.HIFB_DRV_SetTriDimAddr(*pu32LayerId, pstPar->st3DInfo.u32rightEyeAddr);
 				}
          		#endif
@@ -2487,7 +2290,7 @@ static HI_S32 hifb_vo_callback(HI_VOID *pParaml, HI_VOID *pParamr)
     }
     else if (pstPar->stExtendInfo.enBufMode == HIFB_LAYER_BUF_ONE)
     {/** 单buffer模式，通知WBC回写pGfxGp->unUpFlag.bits.RegUp **/
-                  s_stDrvOps.HIFB_DRV_UpdataLayerReg(*pu32LayerId);
+        s_stDrvOps.HIFB_DRV_UpdataLayerReg(*pu32LayerId);
     }
     
 
@@ -2674,7 +2477,7 @@ static HI_S32 hifb_refresh_1buf(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 ***************************************************************************************/
 static HI_S32 hifb_refresh_2buf(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 {
-	HI_S32 s32Ret;
+	HI_S32 s32Ret = HI_SUCCESS;
 	HI_U32 u32Index;
 	HIFB_PAR_S *pstPar;
     struct fb_info *info;    
@@ -2684,7 +2487,6 @@ static HI_S32 hifb_refresh_2buf(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 	HIFB_BLIT_OPT_S stBlitOpt;    
     HIFB_OSD_DATA_S stOsdData;
 
-	s32Ret   = 0;
 	info     = s_stLayer[u32LayerId].pstInfo;
 	pstPar   = (HIFB_PAR_S *)info->par;
 	u32Index = pstPar->stRunInfo.u32IndexForInt;
@@ -2808,7 +2610,6 @@ static HI_S32 hifb_refresh_2buf_immediate_display(HI_U32 u32LayerId, HIFB_BUFFER
 	HIFB_BLIT_OPT_S stBlitOpt;	  
 	HIFB_OSD_DATA_S stOsdData;
 
-	s32Ret	 = 0;
 	info	 = s_stLayer[u32LayerId].pstInfo;
 	pstPar	 = (HIFB_PAR_S *)info->par;
 	u32Index = pstPar->stRunInfo.u32IndexForInt;
@@ -2927,7 +2728,6 @@ RET:
 static HI_S32 hifb_refresh_panbuf(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 {
     HI_S32 s32Ret;
-	HI_U32 u32Stride;
 	HI_U32 u32TmpAddr;    
 	HIFB_RECT UpdateRect;
 	HIFB_BLIT_OPT_S stBlitOpt;
@@ -2959,8 +2759,6 @@ static HI_S32 hifb_refresh_panbuf(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf
             HIFB_ERROR("you should pan first\n");
             return HI_FAILURE;
         }
-
-        u32Stride = par->st3DInfo.st3DSurface.u32Pitch;
                 
         memset(&stBlitOpt, 0, sizeof(HIFB_BLIT_OPT_S));
         stBlitOpt.bScale = HI_TRUE;
@@ -3207,7 +3005,6 @@ static HI_S32 hifb_refresh_1buf_3D(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBu
 ***************************************************************************************/
 static HI_S32 hifb_refresh_2buf_3D(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 {
-	HI_S32 s32Ret;
 	HI_U32 u32Index;
 	HIFB_PAR_S *pstPar;
     struct fb_info *info;    
@@ -3216,7 +3013,6 @@ static HI_S32 hifb_refresh_2buf_3D(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBu
 	HIFB_BLIT_OPT_S stBlitOpt;    
     HIFB_OSD_DATA_S stOsdData;
 
-	s32Ret   = 0;
 	info     = s_stLayer[u32LayerId].pstInfo;
 	pstPar   = (HIFB_PAR_S *)info->par;
 	u32Index = pstPar->stRunInfo.u32IndexForInt;
@@ -3312,7 +3108,6 @@ static HI_S32 hifb_refresh_2buf_3D(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBu
 ***************************************************************************************/
 static HI_S32 hifb_refresh_2buf_immediate_display_3D(HI_U32 u32LayerId, HIFB_BUFFER_S *pstCanvasBuf)
 {
-	HI_S32 s32Ret = HI_SUCCESS;
 	HI_U32 u32Index = 0;
 	HIFB_PAR_S *pstPar;
 	struct fb_info *info;	 
@@ -3320,7 +3115,6 @@ static HI_S32 hifb_refresh_2buf_immediate_display_3D(HI_U32 u32LayerId, HIFB_BUF
 	HIFB_BUFFER_S stBackBuf;		
 	HIFB_BLIT_OPT_S stBlitOpt;	  
 
-	s32Ret	 = 0;
 	info	 = s_stLayer[u32LayerId].pstInfo;
 	pstPar	 = (HIFB_PAR_S *)info->par;
 	u32Index = pstPar->stRunInfo.u32IndexForInt;
@@ -3544,13 +3338,14 @@ static HI_S32 hifb_alloccanbuf(struct fb_info *info, HIFB_LAYER_INFO_S * pLayerI
 * retval        : NA
 * others:       : NA
 ***************************************************************************************/
+#ifdef CFG_HIFB_FENCE_SUPPORT  
 static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
 {
-
-#ifdef CFG_HIFB_FENCE_SUPPORT  
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
     struct fb_info *info;
     HIFB_HWC_LAYERINFO_S stLayerInfo;
+    HI_BOOL bDispEnable;
+	
     if (copy_from_user(&stLayerInfo, argp, sizeof(HIFB_HWC_LAYERINFO_S)))
     {
         return -EFAULT;
@@ -3574,16 +3369,13 @@ static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
       **禁止显示一个buffer的内容直到该fence被触发,也就是s32AcquireFenceFd被释放
       **才能进行更新显示
       **/
-        hifb_fence_wait(stLayerInfo.s32AcquireFenceFd, 1000);
+        hifb_fence_wait(stLayerInfo.s32AcquireFenceFd, 3000);
     }
 
 	/**
 	 **测试帧率
 	 **/
     par->stFrameInfo.u32RefreshFrame++;
-
-	/** GPU已经绘制完，可以刷新了 **/
-    atomic_inc(&s_SyncInfo.s32RefreshCnt);
 
     if(par->bSetStereoMode)
     {/** 3d模式情况下 **/
@@ -3627,6 +3419,10 @@ static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
 	    s_stDrvOps.HIFB_DRV_UpdataLayerReg(par->stBaseInfo.u32LayerID);
 	}
 
+	/** GPU已经绘制完，可以刷新了 **/
+    atomic_inc(&s_SyncInfo.s32RefreshCnt);
+
+
     if (copy_to_user(argp,&stLayerInfo,sizeof(HIFB_HWC_LAYERINFO_S)))
     {/**
       **释放没有用的fence
@@ -3640,10 +3436,26 @@ static HI_S32 hifb_hwcrefresh(HIFB_PAR_S* par, HI_VOID __user *argp)
 #endif	
     
     par->bHwcRefresh = HI_TRUE;
-#endif    
+
+	s_stDrvOps.HIFB_DRV_GetHaltDispStatus(par->stBaseInfo.u32LayerID, &bDispEnable);
+	if (!bDispEnable)
+	{
+		while(atomic_read(&s_SyncInfo.s32RefreshCnt) > 0)
+	    {
+			atomic_dec(&s_SyncInfo.s32RefreshCnt);
+	        if(s_SyncInfo.pstTimeline)
+	        {
+			    sw_sync_timeline_inc(s_SyncInfo.pstTimeline, 1);
+	            s_SyncInfo.u32Timeline++;
+	        }
+		}
+	}
+ 
     return HI_SUCCESS;
 
 }
+#endif
+
 /***************************************************************************************
 * func          : hifb_onrefresh
 * description   : CNcomment: 刷新 CNend\n
@@ -4038,12 +3850,22 @@ static HI_S32 hifb_ioctl(struct fb_info *info, HI_U32 cmd, unsigned long arg)
     {
         case FBIO_HWC_REFRESH:
         {
-            s32Ret = hifb_hwcrefresh(par, argp);
+        	#ifdef CFG_HIFB_FENCE_SUPPORT
+	            s32Ret = hifb_hwcrefresh(par, argp);
+	            if(HI_SUCCESS != s32Ret){
+	                HIFB_ERROR("hifb_hwcrefresh failed!ret=%x\n", s32Ret);
+	                return HI_FAILURE;
+	            }
+	        #endif
             break;
         }
         case FBIO_REFRESH:
         {
             s32Ret = hifb_onrefresh(par, argp);
+            if(HI_SUCCESS != s32Ret){
+                HIFB_ERROR("hifb_onrefresh failed!ret=%x\n", s32Ret);
+                return HI_FAILURE;
+            }
             break;
         }
         case FBIOGET_CANVAS_BUFFER:
@@ -4057,6 +3879,10 @@ static HI_S32 hifb_ioctl(struct fb_info *info, HI_U32 cmd, unsigned long arg)
     	case FBIOPUT_LAYER_INFO:
     	{
             s32Ret= hifb_onputlayerinfo(info, par, argp);
+            if(HI_SUCCESS != s32Ret){
+                HIFB_ERROR("hifb_onputlayerinfo failed!ret=%x\n", s32Ret);
+                return HI_FAILURE;
+            }
             break;
     	}
     	case FBIOGET_LAYER_INFO:
@@ -4868,6 +4694,7 @@ static HI_VOID hifb_3DMode_callback(HI_VOID * pParaml,HI_VOID * pParamr)
 	HIFB_STEREO_MODE_E *penStereoMode;
 	struct fb_info *info;
     HIFB_PAR_S *pstPar;
+	HI_S32 s32Ret;
 
 	pu32LayerId   = (HI_U32 *)pParaml;
 	penStereoMode = (HIFB_STEREO_MODE_E *)pParamr;
@@ -4875,6 +4702,7 @@ static HI_VOID hifb_3DMode_callback(HI_VOID * pParaml,HI_VOID * pParamr)
 	info   = s_stLayer[*pu32LayerId].pstInfo;
 	pstPar = (HIFB_PAR_S *)(info->par);
 
+	pstPar->st3DInfo.enOutStereoMode = *penStereoMode;
 	if (HIFB_STEREO_MONO == *penStereoMode)
 	{
 		pstPar->bSetStereoMode = HI_FALSE;
@@ -4884,16 +4712,42 @@ static HI_VOID hifb_3DMode_callback(HI_VOID * pParaml,HI_VOID * pParamr)
             /** free old buffer*/
             HIFB_INFO("free old stereo buffer\n");
             hifb_freestereobuf(pstPar);
+			pstPar->st3DInfo.st3DMemInfo.u32StereoMemStart = 0;
         }       
 	}
 	else
 	{
-		pstPar->bSetStereoMode = HI_TRUE; 
-		s_stDrvOps.HIFB_DRV_SetTriDimAddr(*pu32LayerId, pstPar->st3DInfo.u32rightEyeAddr);
+	    if(HIFB_LAYER_BUF_STANDARD == pstPar->stExtendInfo.enBufMode)
+	    {
+	    	HI_U32 u32BufferSize;
+			HI_U32 u32Stride;
+			/**
+			 ** the stride of 3D buffer
+			 **/
+			u32Stride = info->var.xres * info->var.bits_per_pixel >> 3;
+			HI_HIFB_GetStride(u32Stride,&u32Stride,CONFIG_HIFB_STRIDE_16ALIGN);
+
+	        u32BufferSize = u32Stride * info->var.yres / 2; 
+			u32BufferSize *= pstPar->stRunInfo.u32BufNum; /** 内存个数 **/
+					
+			s32Ret = hifb_checkandalloc_3dmem(pstPar->stBaseInfo.u32LayerID, u32BufferSize);
+			if (s32Ret < 0)
+			{
+				HIFB_INFO("fail to alloc 3d memory.\n ");
+			}	
+			pstPar->st3DInfo.st3DSurface.u32Pitch = u32Stride;
+	    }
+		pstPar->bSetStereoMode = HI_TRUE;
 	}
 
-	pstPar->st3DInfo.enOutStereoMode = *penStereoMode;
-	s_stDrvOps.HIFB_DRV_SetTriDimMode(*pu32LayerId, *penStereoMode);
+	if (pstPar->st3DInfo.st3DMemInfo.u32StereoMemStart == 0
+		&& (*penStereoMode == HIFB_STEREO_SIDEBYSIDE_HALF
+		|| *penStereoMode == HIFB_STEREO_TOPANDBOTTOM)
+		&& HIFB_LAYER_BUF_STANDARD == pstPar->stExtendInfo.enBufMode)
+		s_stDrvOps.HIFB_DRV_SetTriDimMode(*pu32LayerId, pstPar->st3DInfo.enOutStereoMode, HIFB_STEREO_MONO);
+	else
+		s_stDrvOps.HIFB_DRV_SetTriDimMode(*pu32LayerId, pstPar->st3DInfo.enOutStereoMode, pstPar->st3DInfo.enOutStereoMode);
+
 
 	/**
 	 ** these parameters will take effect after refresh
@@ -4902,8 +4756,8 @@ static HI_VOID hifb_3DMode_callback(HI_VOID * pParaml,HI_VOID * pParamr)
 	pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_STRIDE;
 	pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_INRECT;
 	pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_DISPLAYADDR;
+	pstPar->stRunInfo.u32ParamModifyMask |= HIFB_LAYER_PARAMODIFY_REFRESH;
 	pstPar->stRunInfo.bModifying          = HI_FALSE;
-	
     hifb_assign_dispbuf(pstPar->stBaseInfo.u32LayerID); 
     hifb_clearallstereobuf(info);
 
@@ -4970,13 +4824,8 @@ static HI_S32 hifb_layer_init(HI_U32 u32LayerID)
 	hifb_disp_setantiflickerlevel(par->stBaseInfo.u32LayerID, HIFB_LAYER_ANTIFLICKER_AUTO);    
 
 
-	par->stRunInfo.bModifying = HI_FALSE;
-
-	par->stRunInfo.u32ParamModifyMask = 0;
-
-	info->var.xoffset = 0;
-	info->var.yoffset = 0;        
-
+	par->stRunInfo.bModifying               = HI_FALSE;
+	par->stRunInfo.u32ParamModifyMask       = 0;
 	par->stExtendInfo.stAlpha.bAlphaEnable  = HI_TRUE;
 	par->stExtendInfo.stAlpha.bAlphaChannel = HI_FALSE;
 	par->stExtendInfo.stAlpha.u8Alpha0      = HIFB_ALPHA_TRANSPARENT;
@@ -5019,7 +4868,7 @@ static HI_S32 hifb_layer_init(HI_U32 u32LayerID)
 
 #ifdef CFG_HIFB_STEREO3D_HW_SUPPORT
     mutex_init(&par->st3DInfo.st3DMemInfo.stStereoMemLock);
-	s_stDrvOps.HIFB_DRV_SetTriDimMode(par->stBaseInfo.u32LayerID, HIFB_STEREO_MONO); 
+	s_stDrvOps.HIFB_DRV_SetTriDimMode(par->stBaseInfo.u32LayerID, HIFB_STEREO_MONO, HIFB_STEREO_MONO); 
 #endif
 
 	/**
@@ -5162,169 +5011,6 @@ static HI_S32 hifb_removewbcproc(HIFB_LAYER_ID_E enWbcLayerID)
 }
 #endif
 
-#ifdef CFG_HIFB_LOGO_SUPPORT
-
-/***************************************************************************************
-* func          : hifb_convertbootfmt2fbfmt
-* description   : CNcomment: 将boot的像素格式转成HiFB的像素格式 CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-#define HIFB_BOOT_FMT_1555 5
-#define HIFB_BOOT_FMT_8888 9
-static HIFB_COLOR_FMT_E hifb_convertbootfmt2fbfmt(HI_U32 enBootFmt)
-{
-	switch(enBootFmt)
-	{
-		case HIFB_BOOT_FMT_1555:
-			return HIFB_FMT_ARGB1555;
-		case HIFB_BOOT_FMT_8888:
-			return HIFB_FMT_ARGB8888;
-		default:
-			return HIFB_FMT_BUTT;        
-	}
-}
-/***************************************************************************************
-* func          : hifb_convertlogochn2dispchn
-* description   : CNcomment: 将logo通道转成disp通道 CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-static HI_UNF_DISP_E hifb_convertlogochn2dispchn(HIFB_LOGO_CHANNEL_E enLogoChn)
-{
-	if (enLogoChn >= HIFB_LOGO_CHN_BUTT)
-	{
-		return HI_UNF_DISPLAY_BUTT;
-	}
-	switch(enLogoChn)
-	{
-		case HIFB_LOGO_CHN_HD:
-			return HI_UNF_DISPLAY1;
-		case HIFB_LOGO_CHN_SD:
-			return HI_UNF_DISPLAY0;
-		default:
-			return HI_UNF_DISPLAY_BUTT;        
-	}
-}
-
-/***************************************************************************************
-* func          : hifb_set_logosd
-* description   : CNcomment: 设置logo数据信息 CNend\n
-* param[in]     : HI_VOID
-* retval        : NA
-* others:       : NA
-***************************************************************************************/
-static HI_S32 hifb_set_logosd(HI_U32 u32LayerID)
-{
-	HI_S32 s32Ret;     	
-    HIFB_PAR_S *par;
-	struct fb_info *info;
-	HIFB_LOGO_CHANNEL_E enLogoChn;
-	HIFB_RECT         stInRect;
-	HIFB_COLOR_FMT_E  enHifbFmt;
-	HI_DISP_PARAM_S   stDispParam;
-	PDM_EXPORT_FUNC_S *pstPdmFuncs  = HI_NULL;	
-
-	info   = s_stLayer[u32LayerID].pstInfo;
-	par = (HIFB_PAR_S *)(info->par);	
-
-	if (IS_HD_LAYER(u32LayerID) || IS_MINOR_HD_LAYER(u32LayerID))
-	{
-		enLogoChn = HIFB_LOGO_CHN_HD;
-	}
-	else if(IS_SD_LAYER(u32LayerID) || IS_MINOR_SD_LAYER(u32LayerID))
-	{
-		enLogoChn = HIFB_LOGO_CHN_SD;
-	}
-	else
-	{
-		return HI_SUCCESS;
-	}
-#if 0
-	if (g_sLogo.stLogoInfo[enLogoChn].bTransitted)
-	{
-		return HI_SUCCESS;
-	}
-#endif
-    s32Ret = HI_DRV_MODULE_GetFunction(HI_ID_PDM, (HI_VOID**)&pstPdmFuncs);
-    if(   s32Ret == HI_FAILURE
-		|| NULL == pstPdmFuncs
-		|| NULL == pstPdmFuncs->pfnPDM_GetDispParam)
-    {
-        HIFB_WARNING("get pdm module function failed\r\n");
-		s32Ret = HI_FAILURE;
-		goto FINISHED;
-    }
-	s32Ret = pstPdmFuncs->pfnPDM_GetDispParam(hifb_convertlogochn2dispchn(enLogoChn), &stDispParam);
-	if (s32Ret == HI_FAILURE)
-    {/** 没有开机logo的情况下这里就没有参数了，直接退出 **/
-        HIFB_WARNING("PDM_GetDispParam failed\r\n");
-		goto FINISHED;
-    }
-
-	if (   stDispParam.u32VirtScreenWidth == 0
-		|| stDispParam.u32VirtScreenHeight == 0)
-	{
-		s32Ret = HI_FAILURE;
-		goto FINISHED;
-	}
-	
-	enHifbFmt = hifb_convertbootfmt2fbfmt((HI_U32)stDispParam.enPixelFormat);
-	if (enHifbFmt >= HIFB_FMT_PUYVY)
-	{
-		s32Ret = HI_FAILURE;
-		goto FINISHED;
-	}
-
-	info->var.bits_per_pixel = hifb_getbppbyfmt(enHifbFmt);
-	if (info->var.bits_per_pixel == 0)
-	{
-		HIFB_WARNING("unsupported fmt received from boot!\n");
-		s32Ret = HI_FAILURE;
-		goto FINISHED;
-	}	
-
-	info->var.red    = s_stArgbBitField[enHifbFmt].stRed;
-    info->var.green  = s_stArgbBitField[enHifbFmt].stGreen;
-    info->var.blue   = s_stArgbBitField[enHifbFmt].stBlue;
-    info->var.transp = s_stArgbBitField[enHifbFmt].stTransp;
-
-	info->var.xres = stDispParam.u32VirtScreenWidth;
-	info->var.yres = stDispParam.u32VirtScreenHeight;
-	info->var.xres_virtual = info->var.xres;
-	info->var.yres_virtual = info->var.yres;
-	info->fix.line_length  = ((((info->var.xres_virtual * info->var.bits_per_pixel) >> 3) + 0xf) & 0xfffffff0);
-
-    par->stExtendInfo.enColFmt         = enHifbFmt;
-	par->stExtendInfo.stPos.s32XPos    = 0;
-	par->stExtendInfo.stPos.s32YPos    = 0;
-	par->stExtendInfo.u32DisplayWidth  = info->var.xres;
-	par->stExtendInfo.u32DisplayHeight = info->var.yres;
-
-	stInRect.x = par->stExtendInfo.stPos.s32XPos;
-	stInRect.y = par->stExtendInfo.stPos.s32YPos;
-	stInRect.w = par->stExtendInfo.u32DisplayWidth;
-	stInRect.h = par->stExtendInfo.u32DisplayHeight;
-
-	/**
-	 ** 更新的几个参数
-	 **/
-    s_stDrvOps.HIFB_DRV_SetLayerInRect (u32LayerID, &stInRect);
-	s_stDrvOps.HIFB_DRV_SetLayerStride (u32LayerID, info->fix.line_length);
-	s_stDrvOps.HIFB_DRV_SetLayerDataFmt(u32LayerID, par->stExtendInfo.enColFmt);
-
-	HIFB_INFO("<<<<<<<<<<<<<get logo data width %d, height %d>>>>>>>>>>>>>>>>>\n", info->var.xres, info->var.yres);	
-
-	s32Ret = HI_SUCCESS;
-	
-FINISHED:
-	g_sLogo.stLogoInfo[enLogoChn].bTransitted = HI_TRUE;
-	return s32Ret;
-}
-#endif
-
 
 /***************************************************************************************
 * func          : hifb_sync_init
@@ -5388,55 +5074,62 @@ static HI_S32 hifb_open (struct fb_info *info, HI_S32 user)
 	HI_U32 u32BufSize, u32Pitch; 
 	par = (HIFB_PAR_S *)info->par;
 
-	/** 几个进程同时操作的时候，打开过了就不再调用 **/
 	cnt = atomic_read(&par->stBaseInfo.ref_count);
-
+	/**
+	 ** increase reference count after read
+	 ** 读完就调用，防止多线程的情况
+	 **/
+    atomic_inc(&par->stBaseInfo.ref_count);
+	
 	/**
 	 **初始化的时候对每个fb设备都设置了par->stBaseInfo.u32LayerID
 	 **/
-    if (!g_pstCap[par->stBaseInfo.u32LayerID].bLayerSupported)
-    {
+    if (!g_pstCap[par->stBaseInfo.u32LayerID].bLayerSupported){
         HIFB_ERROR("gfx%d is not supported!\n", par->stBaseInfo.u32LayerID);
         return HI_FAILURE;
     }
 
-	
-    /****************** open the layer first time **************/
-    if (!cnt)
-    {/**
-      **第一次打开设备
-      **/
+    if (!cnt){/** fist time open fb device <每个设备第一次打开 **/
+
 	    /**
 	     **获取TDE导出函数
 	     **/
 		s32Ret = s_stDrvTdeOps.HIFB_DRV_TdeOpen();
-		if (s32Ret != HI_SUCCESS)
-        {
+		if(HI_SUCCESS != s32Ret){
             HIFB_INFO("tde was not avaliable!\n");                            
         }
+
+		
 		/**
       	 **打开图层
          **/
         s32Ret = s_stDrvOps.HIFB_DRV_OpenLayer(par->stBaseInfo.u32LayerID);
-        if (s32Ret != HI_SUCCESS)
-        {
+        if(HI_SUCCESS != s32Ret){
             HIFB_ERROR("failed to open layer%d !\n", par->stBaseInfo.u32LayerID);                
             return s32Ret;
         }
-		
-		/** fence同步 **/
+		/**
+		 ** fence同步
+		 **/
         hifb_sync_init(par->stBaseInfo.u32LayerID);
-		
-		/***********layer parameters initial***************/
-		hifb_layer_init(par->stBaseInfo.u32LayerID);
-		
-#ifdef CFG_HIFB_LOGO_SUPPORT
-		/***********config layer with osd data***************/
-       	/**
-	 	 **base参数配置
-	     **/
-		hifb_set_logosd(par->stBaseInfo.u32LayerID);
-#endif		
+
+		/**
+		 ** layer parameters initial
+		 **/
+		s32Ret = hifb_layer_init(par->stBaseInfo.u32LayerID);
+		if(HI_SUCCESS != s32Ret){
+	        HIFB_ERROR("hifb layer init failed\n");
+	    }
+	
+		#ifdef CFG_HIFB_LOGO_SUPPORT
+	   		/**
+	 	 	 ** base参数配置
+	    	 **/
+			s32Ret = hifb_set_logosd(par->stBaseInfo.u32LayerID);
+			if(HI_SUCCESS != s32Ret){
+		        HIFB_INFO("hifb layer init failed\n");
+		    }
+		#endif
 
 		/***********alloc disp buffer, set disp address******/
 		u32InSize = (info->var.xres_virtual * info->var.bits_per_pixel) >> 3;
@@ -5444,8 +5137,7 @@ static HI_S32 hifb_open (struct fb_info *info, HI_S32 user)
 		
 		u32BufSize  = info->var.yres_virtual * u32Pitch;
 		
-        if(info->fix.smem_len < u32BufSize)
-        {
+        if(info->fix.smem_len < u32BufSize){
 			hifb_realloc_layermem(info, u32BufSize);			
 		}
 
@@ -5461,52 +5153,48 @@ static HI_S32 hifb_open (struct fb_info *info, HI_S32 user)
 		 **/
 		memset(info->screen_base, 0, info->fix.smem_len);
 
+		
 		s_stDrvOps.HIFB_DRV_SetLayerAddr(par->stBaseInfo.u32LayerID, info->fix.smem_start);
 		par->stRunInfo.u32ScreenAddr  = info->fix.smem_start;
 		par->st3DInfo.u32rightEyeAddr = par->stRunInfo.u32ScreenAddr;
 
 		/***********set callback function to hard ware*********/
 		s32Ret = s_stDrvOps.HIFB_DRV_SetIntCallback(HIFB_CALLBACK_TYPE_VO, (IntCallBack)hifb_vo_callback, par->stBaseInfo.u32LayerID);
-		if (s32Ret != HI_SUCCESS)
-		{
+		if(HI_SUCCESS != s32Ret){
 			HIFB_ERROR("failed to set vo callback function, open layer%d failure\n", par->stBaseInfo.u32LayerID);
 			return s32Ret;
 		}
 
 		s32Ret = s_stDrvOps.HIFB_DRV_SetIntCallback(HIFB_CALLBACK_TYPE_3DMode_CHG, (IntCallBack)hifb_3DMode_callback, par->stBaseInfo.u32LayerID);
-		if (s32Ret != HI_SUCCESS)
-		{
+		if(HI_SUCCESS != s32Ret){
 			HIFB_ERROR("failed to set stereo mode change callback function, open layer%d failure\n", par->stBaseInfo.u32LayerID);
 			return s32Ret;
 		}
         
-#ifdef CFG_HIFB_FENCE_SUPPORT  
-        if (par->stBaseInfo.u32LayerID == HIFB_LAYER_HD_0)
-        {
-    		s32Ret = s_stDrvOps.HIFB_DRV_SetIntCallback(HIFB_CALLBACK_TYPE_FRAME_END, (IntCallBack)hifb_frame_end_callback, par->stBaseInfo.u32LayerID);
-    		if (s32Ret != HI_SUCCESS)
-    		{
-    			HIFB_ERROR("failed to set frame end callback function, open layer%d failure\n", par->stBaseInfo.u32LayerID);
-    			return s32Ret;
-    		}
-        }
-#endif	
+		#ifdef CFG_HIFB_FENCE_SUPPORT  
+	        if(HIFB_LAYER_HD_0 == par->stBaseInfo.u32LayerID){
+	    		s32Ret = s_stDrvOps.HIFB_DRV_SetIntCallback(HIFB_CALLBACK_TYPE_FRAME_END, (IntCallBack)hifb_frame_end_callback, par->stBaseInfo.u32LayerID);
+	    		if(HI_SUCCESS != s32Ret){
+	    			HIFB_ERROR("failed to set frame end callback function, open layer%d failure\n", par->stBaseInfo.u32LayerID);
+	    			return s32Ret;
+	    		}
+	        }
+		#endif	
 		
-#ifdef CFG_HIFB_PROC_SUPPORT 
-		if (HI_SUCCESS == hifb_createproc(par->stBaseInfo.u32LayerID))
-		{
-		    hifb_createwbcproc(par);
-		}		
-#endif			
+		#ifdef CFG_HIFB_PROC_SUPPORT
+			if (HI_SUCCESS == hifb_createproc(par->stBaseInfo.u32LayerID))
+			{
+			    hifb_createwbcproc(par);
+			}		
+		#endif			
         
         s_stDrvOps.HIFB_DRV_EnableLayer(par->stBaseInfo.u32LayerID, HI_TRUE);
 
         par->stExtendInfo.bShow = HI_TRUE; 
         par->bVblank            = HI_TRUE;
-    }
 
-    /* increase reference count */
-    atomic_inc(&par->stBaseInfo.ref_count);
+    }
+    
     par->stExtendInfo.bOpen = HI_TRUE;
 
     return HI_SUCCESS;
@@ -5578,7 +5266,7 @@ static HI_S32 hifb_release (struct fb_info *info, HI_S32 user)
 			par->st3DInfo.enOutStereoMode = HIFB_STEREO_MONO;
             par->bSetStereoMode           = HI_FALSE;
 
-			s_stDrvOps.HIFB_DRV_SetTriDimMode(par->stBaseInfo.u32LayerID, HIFB_STEREO_MONO);
+			s_stDrvOps.HIFB_DRV_SetTriDimMode(par->stBaseInfo.u32LayerID, HIFB_STEREO_MONO, HIFB_STEREO_MONO);
 			s_stDrvOps.HIFB_DRV_SetTriDimAddr(par->stBaseInfo.u32LayerID, HI_NULL);
 			s_stDrvOps.HIFB_DRV_SetLayerAddr (par->stBaseInfo.u32LayerID, HI_NULL);
 #endif
@@ -5817,51 +5505,45 @@ static HI_VOID hifb_overlay_cleanup(HI_U32 u32LayerId, HI_BOOL bUnregister)
 
     /* get framebuffer info structure pointer */
     info = s_stLayer[u32LayerId].pstInfo;
-    if (info != NULL)
-    {
+    if (info != NULL){
         cmap = &info->cmap;
 
-        if (cmap->len != 0)
-        {
+        if (cmap->len != 0){
             /* free color map */
             fb_dealloc_cmap(cmap);
         }
 
-        if (info->screen_base != HI_NULL)
-        {
+        if (info->screen_base != HI_NULL){
             hifb_buf_ummap(info->screen_base);
         }
 
-        if (info->fix.smem_start != 0)
-        {
+        if (info->fix.smem_start != 0){
             hifb_buf_freemem(info->fix.smem_start);
         }
         
-        if (bUnregister)
-        {
+        if (bUnregister){
             unregister_framebuffer(info);
         }
+
+		/** free framebuffer mem **/
+        framebuffer_release(info);
         
         s_stLayer[u32LayerId].pstInfo = NULL;
         
-#ifdef CFG_HIFB_SCROLLTEXT_SUPPORT
-		if (s_stTextLayer[u32LayerId].bAvailable)
-		{
-		    HI_U32 i;
-			for (i = 0; i < SCROLLTEXT_NUM; i++)
-			{
-			    if (s_stTextLayer[u32LayerId].stScrollText[i].bAvailable)
-			    {
-			        hifb_freescrolltext_cachebuf(&(s_stTextLayer[u32LayerId].stScrollText[i]));
-					memset(&s_stTextLayer[u32LayerId].stScrollText[i],0,sizeof(HIFB_SCROLLTEXT_S));
-			    }
+		#ifdef CFG_HIFB_SCROLLTEXT_SUPPORT
+			if (s_stTextLayer[u32LayerId].bAvailable){
+			    HI_U32 i = 0;
+				for (i = 0; i < SCROLLTEXT_NUM; i++){
+				    if (s_stTextLayer[u32LayerId].stScrollText[i].bAvailable){
+				        hifb_freescrolltext_cachebuf(&(s_stTextLayer[u32LayerId].stScrollText[i]));
+						memset(&s_stTextLayer[u32LayerId].stScrollText[i],0,sizeof(HIFB_SCROLLTEXT_S));
+				    }
+				}
+				s_stTextLayer[u32LayerId].bAvailable = HI_FALSE;
+				s_stTextLayer[u32LayerId].u32textnum = 0;
+				s_stTextLayer[u32LayerId].u32ScrollTextId = 0;
 			}
-
-			s_stTextLayer[u32LayerId].bAvailable = HI_FALSE;
-			s_stTextLayer[u32LayerId].u32textnum = 0;
-			s_stTextLayer[u32LayerId].u32ScrollTextId = 0;
-		}
-#endif        
+		#endif        
     }
 }
 
@@ -5888,8 +5570,7 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
      ** PAR + 调色板
      **/
     info = framebuffer_alloc((sizeof(HIFB_PAR_S)+sizeof(u32) * 256), NULL);
-    if (!info)
-    {
+    if(!info){
         HIFB_ERROR("failed to malloc the fb_info!\n");
         return -ENOMEM;
     }
@@ -5900,10 +5581,7 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
      ** info will be lost in cleanup if the following code has error
      **/
     s_stLayer[u32LayerId].pstInfo = info;
-    
-	snprintf(info->fix.id,sizeof(info->fix.id),"ovl%d", u32LayerId);
-	info->fix.id[sizeof(info->fix.id) - 1] = '\0';
-
+   
 	info->flags = FBINFO_FLAG_DEFAULT | FBINFO_HWACCEL_YPAN | FBINFO_HWACCEL_XPAN;
     
     /**
@@ -5918,33 +5596,23 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
     pstPar->stBaseInfo.u32LayerID  = u32LayerId;
     pstPar->stDispInfo.stCanvasSur.u32PhyAddr = 0;
 
-    if (IS_HD_LAYER(u32LayerId))
-    {
+    if (IS_HD_LAYER(u32LayerId)){
         info->fix = s_stDefFix[HIFB_LAYER_TYPE_HD];
-        info->var = s_stDefVar[HIFB_LAYER_TYPE_HD];
-    }
-    else if (IS_SD_LAYER(u32LayerId))
-    {
+    }else if (IS_SD_LAYER(u32LayerId)){
         info->fix = s_stDefFix[HIFB_LAYER_TYPE_SD];
-        info->var = s_stDefVar[HIFB_LAYER_TYPE_SD];
-    }
-    else if(  IS_AD_LAYER(u32LayerId) 
+    }else if(  IS_AD_LAYER(u32LayerId) 
 		    || IS_MINOR_HD_LAYER(u32LayerId)
-			|| IS_MINOR_SD_LAYER(u32LayerId))
-    {/** 做字幕用的图层 **/
+			|| IS_MINOR_SD_LAYER(u32LayerId)){
+    /** 做字幕用的图层 **/
         info->fix = s_stDefFix[HIFB_LAYER_TYPE_AD];
-        info->var = s_stDefVar[HIFB_LAYER_TYPE_AD];
-    }
-    else
-    {
+    }else{
 		return HI_FAILURE;
     } 
     
     /**
      ** it's not need to alloc mem for cursor layer
      **/
-    if (u32VramSize != 0)
-    {
+    if(u32VramSize != 0){
         /**
          ** Modify 16 to 32, preventing out of bound.
          **/
@@ -5957,13 +5625,10 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
 		name[sizeof(name) -1] = '\0';
 		
         info->fix.smem_start = hifb_buf_allocmem(name, (u32VramSize)* 1024);
-        if (0 == info->fix.smem_start)
-        {
+        if (0 == info->fix.smem_start){
             HIFB_ERROR("%s:failed to malloc the video memory, size: %d KBtyes!\n", name, (u32VramSize));
             goto ERR;
-        }
-        else
-        {
+        }else{
         	/**
         	 **M大小
         	 **/
@@ -5973,14 +5638,11 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
              ** initialize the virtual address and clear memory 
              **/
             info->screen_base = hifb_buf_map(info->fix.smem_start);
-            if (HI_NULL == info->screen_base)
-            {
+            if (HI_NULL == info->screen_base){
                 HIFB_WARNING("Failed to call map video memory, "
                          "size:0x%x, start: 0x%lx\n",
                          info->fix.smem_len, info->fix.smem_start);
-            }
-            else
-            {
+            }else{
                 memset(info->screen_base, 0x00, info->fix.smem_len);
             }
         }
@@ -5988,14 +5650,10 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
         /**
          ** alloc color map，调色板结构体
          **/
-        if (g_pstCap[u32LayerId].bCmap)
-        {
-            if (fb_alloc_cmap(&info->cmap, 256, 1) < 0)
-            {
+        if (g_pstCap[u32LayerId].bCmap){
+            if (fb_alloc_cmap(&info->cmap, 256, 1) < 0){
                 HIFB_WARNING("fb_alloc_cmap failed!\n");
-            }
-            else
-            {
+            }else{
                 info->cmap.len = 256;
             }
         }
@@ -6004,16 +5662,14 @@ static HI_S32 hifb_overlay_probe(HI_U32 u32LayerId, HI_U32 u32VramSize)
 	 /**
      ** 向标准fb中注册
      **/
-    if ((s32Ret = register_framebuffer(info)) < 0)
-    {
+    if ((s32Ret = register_framebuffer(info)) < 0){
         HIFB_ERROR("failed to register_framebuffer!\n");
         s32Ret = -EINVAL;
         goto ERR;
     }
 
 
-    HIFB_INFO("succeed in registering the fb%d: %s frame buffer device\n",
-              info->node, info->fix.id);
+    HIFB_INFO("succeed in registering the fb%d: %s frame buffer device\n",info->node, info->fix.id);
 
     return HI_SUCCESS;
     
@@ -6082,15 +5738,11 @@ static unsigned long hifb_get_vram_size(char* pstr)
 static HI_S32 hifb_parse_cfg(HI_VOID)
 {
 
-    HI_CHAR *pscstr = NULL;
-    HI_CHAR number[4] = {0};
-    HI_U32 i = 0;
-    HI_U32 u32LayerId;
-    HI_U32 u32LayerSize;
-
-    /**
-     ** find the first 'varm' position in \arg video 
-     **/
+    HI_CHAR *pscstr      = NULL;
+    HI_CHAR number[4]    = {0};
+    HI_U32 i             = 0;
+    HI_U32 u32LayerId    = 0;
+    HI_U32 u32LayerSize  = 0;
 
     /**
      ** get the string before next varm 
@@ -6099,8 +5751,7 @@ static HI_S32 hifb_parse_cfg(HI_VOID)
         
     HIFB_INFO("video:%s\n", video);
 
-    while (pscstr != NULL)
-    {
+    while (pscstr != NULL){
         /**
          ** parse the layer id and save it in a string 
          **/
@@ -6110,15 +5761,12 @@ static HI_S32 hifb_parse_cfg(HI_VOID)
          ** skip "vram"
          **/
         pscstr += 4;
-        while (*pscstr != '_')
-        {
+        while (*pscstr != '_'){
             /* i>1 means layer id is bigger than 100, it's obviously out of range!*/
-            if (i > 1)
-            {
+            if (i > 1){
                 HIFB_ERROR("layer id is out of range!\n");
-                return -1;
+                return HI_FAILURE;
             }
-
             number[i] = *pscstr;
             i++;
             pscstr++;
@@ -6130,15 +5778,13 @@ static HI_S32 hifb_parse_cfg(HI_VOID)
          ** change the layer id string into digital and assure it's legal
          **/
         u32LayerId = simple_strtoul(number, (char **)NULL, 10);
-        if (u32LayerId > HIFB_MAX_LAYER_ID)
-        {
+        if (u32LayerId > HIFB_MAX_LAYER_ID){
             HIFB_ERROR("layer id is out of range!\n");
             return HI_FAILURE;
         }
 
         if ((!g_pstCap[u32LayerId].bLayerSupported)
-            &&(u32LayerId != HIFB_LAYER_CURSOR))
-        {
+            &&(u32LayerId != HIFB_LAYER_CURSOR)){
             HIFB_ERROR("chip doesn't support layer %d!\n", u32LayerId);
             return HI_FAILURE;
         }
@@ -6146,9 +5792,9 @@ static HI_S32 hifb_parse_cfg(HI_VOID)
         /* get the layer size string and change it to digital */
         pscstr += sizeof("size") + i;
         u32LayerSize = hifb_get_vram_size(pscstr);
-        if ((u32LayerSize < s_stLayer[u32LayerId].u32LayerSize / 2) && (u32LayerId != HIFB_LAYER_CURSOR)
-            && (u32LayerSize > 0))
-        {
+        if (   (u32LayerSize < s_stLayer[u32LayerId].u32LayerSize / 2) \
+        	&& (u32LayerId != HIFB_LAYER_CURSOR)                       \
+            && (u32LayerSize > 0)){
             u32LayerSize = s_stLayer[u32LayerId].u32LayerSize / 2;
         }
 		/**
@@ -6160,7 +5806,7 @@ static HI_S32 hifb_parse_cfg(HI_VOID)
 		
     }
 
-    return 0;
+    return HI_SUCCESS;
 }
 
 
@@ -6486,7 +6132,7 @@ static HI_VOID hifb_parse_proccmd(struct seq_file* p, HI_U32 u32LayerId, HI_CHAR
     }    
 	else if (strncmp("alpha", pCmd, 5) == 0)
 	{
-		HI_U32  u32Alpha;
+		HI_U32  u32Alpha = 0;
 		HI_CHAR TmpCmd[HIFB_FILE_NAME_MAX_LEN]={0};
 		HI_BOOL bIsStrValid = HI_FALSE;
 		HI_CHAR *pStr = HI_NULL;
@@ -6512,20 +6158,18 @@ static HI_VOID hifb_parse_proccmd(struct seq_file* p, HI_U32 u32LayerId, HI_CHAR
 
 		while(pStr != '\0')
 		{
-			if (HI_FALSE == bIsStrValid)
-			{
+			if (HI_FALSE == bIsStrValid){
 				if (isdigit(*pStr) || ('X' == *pStr) || ('x' == *pStr)
-					|| (*pStr >= 'a' && *pStr <= 'f') || (*pStr >= 'A' && *pStr <= 'F'))
-				{
+					|| (*pStr >= 'a' && *pStr <= 'f') || (*pStr >= 'A' && *pStr <= 'F')){
 					bIsStrValid = HI_TRUE;
 					pStrTmp = pStr;
+				}else{
+					HIFB_ERROR("cmd is invalid\n");
+					return;
 				}
-			}
-			else
-			{
+			}else{
 				if ((!isdigit(*pStr)) && ('X' != *pStr) && ('x' != *pStr)
-						&& (!(*pStr >= 'a' && *pStr <= 'f') && !(*pStr >= 'A' && *pStr <= 'F')))
-				{
+						&& (!(*pStr >= 'a' && *pStr <= 'f') && !(*pStr >= 'A' && *pStr <= 'F'))){
 					*pStr = '\0';
 					break;
 				}
@@ -6534,16 +6178,10 @@ static HI_VOID hifb_parse_proccmd(struct seq_file* p, HI_U32 u32LayerId, HI_CHAR
 			pStr++;
 		}
 
-		if (!bIsStrValid)
-		{
-			HIFB_ERROR("cmd is invalid\n");
-			return;
+		if(NULL != pStrTmp){
+			u32Alpha = simple_strtoul(pStrTmp, (char **)NULL, 0);
 		}
-
-		u32Alpha = simple_strtoul(pStrTmp, (char **)NULL, 0);
-
-		if (u32Alpha > 255)
-		{
+		if(u32Alpha > 255){
 			u32Alpha = 255;
 		}
 
@@ -6656,10 +6294,7 @@ HI_VOID HIFB_DRV_ModExit(HI_VOID)
 HI_S32 HIFB_DRV_ModInit(HI_VOID)
 {
 
-    HI_U32 i = 0;    
-#ifdef CFG_HIFB_LOGO_SUPPORT
-    HI_S32 s32Ret = 0;   
-#endif
+    HI_U32 i = 0;
     memset(&s_stLayer, 0x00, sizeof(s_stLayer));
 
 	/**
@@ -6671,8 +6306,7 @@ HI_S32 HIFB_DRV_ModInit(HI_VOID)
     /** 
      ** inital adoption layer
      **/
-    if (HI_SUCCESS != s_stDrvOps.HIFB_DRV_GfxInit())
-    {
+    if (HI_SUCCESS != s_stDrvOps.HIFB_DRV_GfxInit()){
         HIFB_ERROR("drv init failed\n");
         goto ERR;
     }
@@ -6681,35 +6315,26 @@ HI_S32 HIFB_DRV_ModInit(HI_VOID)
     /**
      **这个函数里面只做一件事情，设置掩码信息和标记图层已经打开在有logo的情况下
      **/
-    s32Ret = hifb_logo_init();
-    if (s32Ret != HI_SUCCESS)
-    {
-        HIFB_ERROR("hifb logo init failed\n");
-    }
+    hifb_logo_init();
 #endif
 
 	/** 
      ** 获取图层属性，这个保存在全局变量里optm_hifb.c中
      **/
-	if (s_stDrvOps.HIFB_DRV_GetGFXCap(&g_pstCap) < 0)
-	{
-		HIFB_ERROR("Gfx get device capability failed!\n");
-		return HI_FAILURE;
-	}
+	s_stDrvOps.HIFB_DRV_GetGFXCap(&g_pstCap);
+
 
 	 /**
      ** 在KO里设置要是支持TC回写则设置标记为true
      **/
-	if (!strncmp("on", tc_wbc, 2))
-	{
+	if (!strncmp("on", tc_wbc, 2)){
 		s_stDrvOps.HIFB_DRV_SetTCFlag(HI_TRUE);
 	}
 
     /**
      ** parse the \arg video string 
      **/
-    if (hifb_parse_cfg() < 0)
-    {
+    if (hifb_parse_cfg() < 0){
         /* hint info */
         HIFB_INFO("Usage:insmod hifb.ko video=\"hifb:vrami_size:xxx,vramj_size:xxx,...\"\n");
         HIFB_INFO("i,j means layer id, xxx means layer size in kbytes!\n");
@@ -6720,26 +6345,23 @@ HI_S32 HIFB_DRV_ModInit(HI_VOID)
     /**
      ** inital fb file according the config
 	 **/
-	for(i = 0; i <= HIFB_LAYER_SD_1; i++)
-    {
-        /**
-         ** if hw not support, we modify memory to 0, so in the path 
-         ** of /dev/ there is only one device name 
-         **/
-		if (!strcmp("", video))
-		{/** 要是没有带参数，则使用宏开关 **/
+	for(i = 0; i <= HIFB_LAYER_SD_1; i++){
+		if (!strcmp("", video)){
+		/**
+		 **use make menuconfig para
+		 **要是没有带参数，则使用宏开关
+		 **/
 			s_stLayer[i].u32LayerSize = g_u32LayerSize[i];
 		}	
         /**
          ** register the layer 
          **/
-        if (hifb_overlay_probe(i, s_stLayer[i].u32LayerSize) != HI_SUCCESS)
-        {
+        if (hifb_overlay_probe(i, s_stLayer[i].u32LayerSize) != HI_SUCCESS){
         	return HI_FAILURE;
         }
-#ifdef CFG_HIFB_SCROLLTEXT_SUPPORT
-		memset(&s_stTextLayer[i], 0, sizeof(HIFB_SCROLLTEXT_INFO_S));
-#endif
+		#ifdef CFG_HIFB_SCROLLTEXT_SUPPORT
+			memset(&s_stTextLayer[i], 0, sizeof(HIFB_SCROLLTEXT_INFO_S));
+		#endif
     }
  
     HIFB_INFO("layersize hifb0:%d, hifb1:%d, hifb2:%d, hifb3:%d, hifb4:%d, hifb5:%d, hifb_cursor:%d\n",
@@ -6747,9 +6369,6 @@ HI_S32 HIFB_DRV_ModInit(HI_VOID)
         s_stLayer[HIFB_LAYER_HD_2].u32LayerSize, s_stLayer[HIFB_LAYER_HD_3].u32LayerSize,
         s_stLayer[HIFB_LAYER_SD_0].u32LayerSize, s_stLayer[HIFB_LAYER_SD_1].u32LayerSize,
         s_stLayer[HIFB_LAYER_CURSOR].u32LayerSize);
-
-	/** 这句是废代码 **/
-    s_stDrvTdeOps.HIFB_DRV_SetTdeCallBack(hifb_tde_callback);
 
 #ifndef HI_MCE_SUPPORT	
     hifb_init_module_k();
@@ -6773,6 +6392,22 @@ ERR:
     return HI_FAILURE;
 	
 }
+
+HI_BOOL HIFB_DRV_IsFrameHit(HI_VOID)
+{
+    HIFB_PAR_S *pstPar = s_stLayer[HIFB_LAYER_HD_0].pstInfo->par;
+
+    if (NULL == pstPar)
+	return HI_FALSE;
+
+#ifdef CFG_HIFB_FENCE_SUPPORT
+    if (pstPar->bHwcRefresh)
+    	return s_SyncInfo.bFrameHit;
+#endif
+
+    return pstPar->stFrameInfo.bFrameHit;  
+}
+EXPORT_SYMBOL(HIFB_DRV_IsFrameHit);
 
 /***************************************************************************************
 		这两个函数要按此命名

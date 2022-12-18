@@ -65,7 +65,12 @@ extern "C"{
 #define CA_V300_TEST_RESULT            (CA_V300_BASE_ADDR + 0xA0)//测试结果寄存器
 #define CA_V300_KEY_DOUT               (CA_V300_BASE_ADDR + 0xB0)//中间运算结果寄存器
 #define CA_V300_MISC_CTRL              (CA_V300_BASE_ADDR + 0xC0)//misc控制寄存器
+#define CA_V300_GDRM_FLAG              (CA_V300_BASE_ADDR + 0xc4)//Google DRM flag 寄存器
 #define CA_V300_CFG_CMAC_CTRL          (CA_V300_BASE_ADDR + 0xCC)//irdeto MSR2.2 OTP Configuration CMAC control
+#define CA_V300_GDRM_ENC_REST0         (CA_V300_BASE_ADDR + 0xD0)//Google DRM的device key的加密结果寄存器0。
+#define CA_V300_GDRM_ENC_REST1         (CA_V300_BASE_ADDR + 0xD4)//Google DRM的device key的加密结果寄存器1。
+#define CA_V300_GDRM_ENC_REST2         (CA_V300_BASE_ADDR + 0xD8)//Google DRM的device key的加密结果寄存器2。
+#define CA_V300_GDRM_ENC_REST3         (CA_V300_BASE_ADDR + 0xDC)//Google DRM的device key的加密结果寄存器3。
 #define CA_V300_CFG_CMAC_OUT           (CA_V300_BASE_ADDR + 0xF0)//irdeto MSR2.2 OTP Configuration CMAC output
 #define CA_V300_TA_KL_CTRL             (CA_V300_BASE_ADDR + 0x100)//irdeto MSR2.2 TA keyladder control register
 #define CA_V300_IVRK_CTRL              (CA_V300_BASE_ADDR + 0x10C)//irdeto MSR2.2 tweaked CSA3 IV/RK control register

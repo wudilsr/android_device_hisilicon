@@ -157,6 +157,11 @@ HI_S32 HI_UNF_DMX_CreateChannel(HI_U32 u32DmxId, const HI_UNF_DMX_CHAN_ATTR_S *p
     return HI_MPI_DMX_CreateChannel(u32DmxId, pstChAttr, phChannel);
 }
 
+HI_S32 HI_UNF_DMX_CreateChannelWithPID(HI_U32 u32DmxId, HI_U32 u32Pid, const HI_UNF_DMX_CHAN_ATTR_S *pstChAttr, HI_HANDLE *phChannel)
+{
+    return HI_ERR_DMX_NOT_SUPPORT;
+}
+
 HI_S32 HI_UNF_DMX_DestroyChannel(HI_HANDLE hChannel)
 {
     return HI_MPI_DMX_DestroyChannel(hChannel);

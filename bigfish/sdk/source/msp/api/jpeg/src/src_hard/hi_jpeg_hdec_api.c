@@ -37,8 +37,7 @@ Date				Author        		Modification
 
 #define JPEG_CHECK_FD() \
     do {                                 \
-        if(-1 == gs_s32JpegFd)           \
-        {                                \
+        if(-1 == gs_s32JpegFd){          \
             return HI_FAILURE;          \
         }                                \
     } while (0)
@@ -82,13 +81,11 @@ HI_S32  HI_JPEG_SetOutDesc(const struct jpeg_decompress_struct *cinfo,
 	HI_S32 s32Cnt = 0;
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-	if (NULL == pstSurfaceDesc)
-	{
+	if (NULL == pstSurfaceDesc){
 		return HI_FAILURE;
 	}
 
-	for (s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++)
-	{
+	for (s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++){
 		pJpegHandle->stOutDesc.stOutSurface.pOutPhy[s32Cnt] = pstSurfaceDesc->stOutSurface.pOutPhy[s32Cnt];
 		pJpegHandle->stOutDesc.stOutSurface.pOutVir[s32Cnt] = pstSurfaceDesc->stOutSurface.pOutVir[s32Cnt];
 		pJpegHandle->stOutDesc.stOutSurface.u32OutStride[s32Cnt] = pstSurfaceDesc->stOutSurface.u32OutStride[s32Cnt];
@@ -96,10 +93,8 @@ HI_S32  HI_JPEG_SetOutDesc(const struct jpeg_decompress_struct *cinfo,
 
 	pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem = pstSurfaceDesc->stOutSurface.bUserPhyMem;
 
-	if (HI_TRUE == pstSurfaceDesc->bCrop)
-	{
-		if( (pstSurfaceDesc->stCropRect.w <= 0)||(pstSurfaceDesc->stCropRect.h <= 0))
-		{
+	if (HI_TRUE == pstSurfaceDesc->bCrop){
+		if( (pstSurfaceDesc->stCropRect.w <= 0)||(pstSurfaceDesc->stCropRect.h <= 0)){
 			return HI_FAILURE;
 		}
 		pJpegHandle->stOutDesc.stCropRect.x = pstSurfaceDesc->stCropRect.x;
@@ -138,13 +133,11 @@ HI_S32  HI_JPEG_GetJpegInfo(j_decompress_ptr cinfo, HI_JPEG_INFO_S *pJpegInfo)
 {
 		JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-		if (NULL == pJpegInfo)
-		{
+		if (NULL == pJpegInfo){
 			return HI_FAILURE;
 		}
 
-		if (HI_FALSE == pJpegInfo->bOutInfo)
-		{
+		if (HI_FALSE == pJpegInfo->bOutInfo){
 			memset(pJpegInfo, 0, sizeof(HI_JPEG_INFO_S));
 			pJpegInfo->u32Width[0]  = cinfo->image_width;
 			pJpegInfo->u32Height[0] = cinfo->image_height;
@@ -158,8 +151,7 @@ HI_S32  HI_JPEG_GetJpegInfo(j_decompress_ptr cinfo, HI_JPEG_INFO_S *pJpegInfo)
 		** output message,the output stride should 16byte align by tde request
 		** CNcomment: Êä³öÐÅÏ¢ CNend\n
 		**/
-		switch (cinfo->out_color_space)
-		{
+		switch (cinfo->out_color_space){
 			case JCS_YUV400_SP:
 			case JCS_YUV444_SP:
 			case JCS_YUV420_SP:
@@ -255,8 +247,7 @@ HI_S32 HI_JPEG_GetInflexion(const struct jpeg_decompress_struct *cinfo, HI_U32 *
 {
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-	if (NULL == pu32flexionSize)
-	{
+	if (NULL == pu32flexionSize){
 		return HI_FAILURE;
 	}
 
@@ -291,8 +282,7 @@ HI_S32 HI_JPEG_SetDecCoef(const struct jpeg_decompress_struct *cinfo, const HI_J
 	
     JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-    if (NULL == pstDecCoef)
-    {
+    if (NULL == pstDecCoef){
         return HI_FAILURE;
     }
 
@@ -302,24 +292,18 @@ HI_S32 HI_JPEG_SetDecCoef(const struct jpeg_decompress_struct *cinfo, const HI_J
     pJpegHandle->stDecCoef.bSetVerSampleCoef = pstDecCoef->bSetVerSampleCoef;
     pJpegHandle->stDecCoef.bSetCSCCoef = pstDecCoef->bSetCSCCoef;
 
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_HORCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_HORCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_HORCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_HORCOEF_COL; s32Cnt2++){
            pJpegHandle->stDecCoef.s16HorCoef[s32Cnt1][s32Cnt2] = pstDecCoef->s16HorCoef[s32Cnt1][s32Cnt2];
 		}
 	}
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_VERCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_VERCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_VERCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_VERCOEF_COL; s32Cnt2++){
            pJpegHandle->stDecCoef.s16VerCoef[s32Cnt1][s32Cnt2] = pstDecCoef->s16VerCoef[s32Cnt1][s32Cnt2];
 		}
 	}
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_CSCCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_CSCCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_CSCCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_CSCCOEF_COL; s32Cnt2++){
            pJpegHandle->stDecCoef.s16CSCCoef[s32Cnt1][s32Cnt2] = pstDecCoef->s16CSCCoef[s32Cnt1][s32Cnt2];
 		}
 	}
@@ -358,8 +342,7 @@ HI_S32 HI_JPEG_GetDecCoef(const struct jpeg_decompress_struct *cinfo, HI_JPEG_DE
 	
     JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-    if (NULL == pstOutDecCoef)
-    {
+    if (NULL == pstOutDecCoef){
         return HI_FAILURE;
     }
 
@@ -369,24 +352,18 @@ HI_S32 HI_JPEG_GetDecCoef(const struct jpeg_decompress_struct *cinfo, HI_JPEG_DE
     pstOutDecCoef->bSetVerSampleCoef = pJpegHandle->stDecCoef.bSetVerSampleCoef;
     pstOutDecCoef->bSetCSCCoef = pJpegHandle->stDecCoef.bSetCSCCoef;
 
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_HORCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_HORCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_HORCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_HORCOEF_COL; s32Cnt2++){
 		   pstOutDecCoef->s16HorCoef[s32Cnt1][s32Cnt2] = pJpegHandle->stDecCoef.s16HorCoef[s32Cnt1][s32Cnt2];
 		}
 	}
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_VERCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_VERCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_VERCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_VERCOEF_COL; s32Cnt2++){
 		   pstOutDecCoef->s16VerCoef[s32Cnt1][s32Cnt2] = pJpegHandle->stDecCoef.s16VerCoef[s32Cnt1][s32Cnt2];
 		}
 	}
-	for(s32Cnt1 = 0; s32Cnt1 < MAX_CSCCOEF_ROW; s32Cnt1++)
-	{
-		for(s32Cnt2 = 0; s32Cnt2 < MAX_CSCCOEF_COL; s32Cnt2++)
-		{
+	for(s32Cnt1 = 0; s32Cnt1 < MAX_CSCCOEF_ROW; s32Cnt1++){
+		for(s32Cnt2 = 0; s32Cnt2 < MAX_CSCCOEF_COL; s32Cnt2++){
 		   pstOutDecCoef->s16CSCCoef[s32Cnt1][s32Cnt2] = pJpegHandle->stDecCoef.s16CSCCoef[s32Cnt1][s32Cnt2];
 		}
 	}
@@ -396,8 +373,7 @@ HI_S32 HI_JPEG_GetDecCoef(const struct jpeg_decompress_struct *cinfo, HI_JPEG_DE
 #else
 HI_S32 HI_JPEG_GetDecCoef(const struct jpeg_decompress_struct *cinfo, HI_JPEG_DEC_COEF_S *pstOutDecCoef)
 {
-	if (NULL != pstOutDecCoef && NULL != cinfo)/** deal with warning **/
-	{
+	if (NULL != pstOutDecCoef && NULL != cinfo){/** deal with warning **/
 		memset(pstOutDecCoef,0,sizeof(HI_JPEG_DEC_COEF_S));
 	}
 	return HI_FAILURE;
@@ -450,8 +426,7 @@ HI_S32 HI_JPEG_SetStreamPhyMem(const struct jpeg_decompress_struct *cinfo, HI_CH
 {
     JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-    if (NULL == pStreamPhyAddr)
-    {
+    if (NULL == pStreamPhyAddr){
         return HI_FAILURE;
     }
 
@@ -485,14 +460,13 @@ HI_S32 HI_JPEG_SetBufInfo(const struct jpeg_decompress_struct *cinfo,HI_CHAR* pP
 {
 
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-	if(NULL == pPhyStremBuf)
-	{/** Òª´¦ÀíÂëÁ÷»ØÈÆ±ØÐëÂëÁ÷À´Ô´ÓÚÎïÀíµØÖ· **/
+	if(NULL == pPhyStremBuf){
+		/** Òª´¦ÀíÂëÁ÷»ØÈÆ±ØÐëÂëÁ÷À´Ô´ÓÚÎïÀíµØÖ· **/
 		return HI_FAILURE;
 	}
 
 #ifdef CONFIG_JPEG_STREAMBUF_4ALIGN
-	if(0 != (HI_S32)pPhyStremBuf % 4)
-	{/**²»ÊÇ°´ÕÕ4×Ö½Ú¶ÔÆë£¬Ôò²»Ö§³Ö **/
+	if(0 != (HI_S32)pPhyStremBuf % 4){/**²»ÊÇ°´ÕÕ4×Ö½Ú¶ÔÆë£¬Ôò²»Ö§³Ö **/
 		return HI_FAILURE;
 	}
 #endif
@@ -587,15 +561,13 @@ CNcomment:ÒªÊÇÏëµÃµ½ÁÁ¶ÈÖµ£¬¿ÉÒÔµ÷ÓÃ¸Ãº¯Êý£¬µ«±ØÐëÔÚjpeg_start_decompressÖ®ºóµ÷Ó
 HI_S32 HI_JPEG_GetLuPixSum(const struct jpeg_decompress_struct *cinfo, HI_U64 *u64LuPixSum)
 
 {
-	if (NULL == u64LuPixSum)
-	{
+	if (NULL == u64LuPixSum){
 		return HI_FAILURE;
 	}
 
 #ifdef CONFIG_JPEG_OUTPUT_LUPIXSUM
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-	if(HI_TRUE == pJpegHandle->bLuPixSum)
-	{
+	if(HI_TRUE == pJpegHandle->bLuPixSum){
 		*u64LuPixSum = pJpegHandle->u64LuPixValue;
 	}
 	return HI_SUCCESS;
@@ -628,8 +600,7 @@ HI_S32 HI_JPEG_GetDecTime(const struct jpeg_decompress_struct *cinfo, HI_U32 *pu
 #ifdef CONFIG_JPEG_GETDECTIME
 
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-	if (NULL == pu32DecTime)
-	{
+	if (NULL == pu32DecTime){
 		return HI_FAILURE;
 	}
 
@@ -665,13 +636,11 @@ HI_S32 HI_JPEG_SetLeaveMemSize(const struct jpeg_decompress_struct *cinfo, HI_JP
 
 	HI_U32 u32MemSize = 0;
 	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-	if(NULL == pJpegHandle)
-	{
+	if(NULL == pJpegHandle){
 		return HI_FAILURE;
 	}
 
-	switch(sMemSizeInfo.eCheckType)
-	{
+	switch(sMemSizeInfo.eCheckType){
 		case JPEG_MEMCHECK_MEMSIZE:
 			u32MemSize = sMemSizeInfo.u32MemSize;
 			break;
@@ -687,6 +656,35 @@ HI_S32 HI_JPEG_SetLeaveMemSize(const struct jpeg_decompress_struct *cinfo, HI_JP
 	return HI_SUCCESS;
 	
 }
+
+
+ /** 
+\brief set the mem type. CNcomment:ÉèÖÃÄÚ´æÀàÐÍ CNend
+\attention \n
+HI_JPEG_SetMemType should have called before start decompress.\n
+CNcomment:ÔÚµ÷ÓÃHI_JPEG_SetMemTypeÖ®Ç°±ØÐëÒÑ¾­´´½¨ºÃÁË½âÂëÆ÷ CNend\n
+
+\param[in]	cinfo. CNcomment:½âÂë¶ÔÏó CNend
+\param[in]	u32MemTypeMask. CNcomment:ÄÚ´æÊ¹ÓÃÀàÐÍ CNend
+
+\retval ::HI_SUCCESS 
+\retval ::HI_FAILURE
+
+\see \n
+::HI_JPEG_SetMemType
+*/
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+HI_S32 HI_JPEG_SetMemType(const struct jpeg_decompress_struct *cinfo,const HI_U32 u32MemTypeMask)
+{
+	JPEG_HDEC_HANDLE_S_PTR pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
+	if(NULL == pJpegHandle){
+		return HI_FAILURE;
+	}
+	pJpegHandle->u32MemTypeMask |= u32MemTypeMask;
+
+	return HI_SUCCESS;
+}
+#endif
 
 
 /** 
@@ -707,15 +705,13 @@ HI_S32 HI_JPEG_Open(HI_VOID)
 {
 #ifdef CONFIG_JPEG_OMX_FUNCTION
 
-    if (-1 != gs_s32JpegFd)
-    {
+    if (-1 != gs_s32JpegFd){
         gs_s32JpegRef++;
         return HI_SUCCESS;
     }
 
     gs_s32JpegFd = open(JPG_DEV, O_RDWR | O_SYNC);
-    if (gs_s32JpegFd < 0)
-    {
+    if (gs_s32JpegFd < 0){
         return HI_FAILURE;
     }
     gs_s32JpegRef++;
@@ -743,18 +739,14 @@ CNcomment:CNend\n
 HI_VOID HI_JPEG_Close(HI_VOID)
 {
 #ifdef CONFIG_JPEG_OMX_FUNCTION
-   if (-1 == gs_s32JpegFd)
-    {
+   if (-1 == gs_s32JpegFd){
         return;
     }
     gs_s32JpegRef--;
     
-    if(gs_s32JpegRef > 0)
-    {
+    if(gs_s32JpegRef > 0){
         return ;
-    }
-    else
-    {
+    }else{
         gs_s32JpegRef = 0;
     }
     
@@ -772,7 +764,7 @@ HI_VOID HI_JPEG_Close(HI_VOID)
 NA.\n
 CNcomment:CNend\n
 
-\param[in]  *ps32Handle.  CNcomment:·µ»Ø½âÂëÆ÷¾ä±ú CNend
+\param[in]  *pu32Handle.  CNcomment:·µ»Ø½âÂëÆ÷¾ä±ú CNend
 
 \retval ::HI_SUCCESS 
 \retval ::HI_FAILURE
@@ -780,22 +772,21 @@ CNcomment:CNend\n
 \see \n
 ::HI_JPEG_CreateDec
 */
-HI_S32 HI_JPEG_CreateDec(HI_S32 *ps32Handle)
+HI_S32 HI_JPEG_CreateDec(HI_U32 *pu32Handle)
 {
 #ifdef CONFIG_JPEG_OMX_FUNCTION
 
-    HI_S32 s32DecHandle = 0;
+    HI_S32 u32DecHandle = 0;
     HI_S32 s32Ret = HI_SUCCESS;
 
     JPEG_CHECK_FD();
     
-    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_CREATEDEC, &s32DecHandle);
-    if(HI_SUCCESS != s32Ret)
-    {
+    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_CREATEDEC, &u32DecHandle);
+    if(HI_SUCCESS != s32Ret){
         return HI_FAILURE;
     }
     
-    *ps32Handle = s32DecHandle;
+    *pu32Handle = u32DecHandle;
 
     return HI_SUCCESS;
 
@@ -806,12 +797,49 @@ HI_S32 HI_JPEG_CreateDec(HI_S32 *ps32Handle)
 }
 
 /** 
+\brief set dec memory type. CNcomment: ÉèÖÃ½âÂëÐèÒªµÄÄÚ´æÀàÐÍ CNend
+\attention \n
+NA.\n
+CNcomment:CNend\n
+
+\param[in]  u32Handle.         CNcomment:½âÂëÆ÷¾ä±ú CNend
+\param[in]  u32MemTypeMask.    CNcomment:ÄÚ´æÀàÐÍ   CNend
+
+\retval ::HI_SUCCESS 
+\retval ::HI_FAILURE
+
+\see \n
+::HI_JPEG_SetDecMemType
+*/
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+HI_S32 HI_JPEG_SetDecMemType(HI_U32 u32Handle,HI_U32 u32MemTypeMask)
+{
+	HI_DRV_JPEG_INMSG_S stImgInfo;
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    JPEG_CHECK_FD();
+
+    memset(&stImgInfo,0,sizeof(HI_JPEG_INMSG_S));
+
+    stImgInfo.u32MemMask     = u32MemTypeMask;
+    stImgInfo.u32DecHandle   = u32Handle;
+
+	s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_SETMEMTYPE, &stImgInfo);
+    if(HI_SUCCESS != s32Ret){
+        return HI_FAILURE;
+    }
+
+	return HI_SUCCESS;
+}
+#endif
+
+/** 
 \brief get jpeg input information. CNcomment:»ñÈ¡Í¼Æ¬ÊäÈëÐÅÏ¢ CNend
 \attention \n
 NA.\n
 CNcomment:CNend\n
 
-\param[in]  s32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
+\param[in]  u32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
 \param[in]  stInMsg.    CNcomment:ÊäÈëÐÅÏ¢   CNend
 
 \retval ::HI_SUCCESS 
@@ -820,7 +848,7 @@ CNcomment:CNend\n
 \see \n
 ::HI_JPEG_DecInfo
 */
-HI_S32 HI_JPEG_DecInfo(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg)
+HI_S32 HI_JPEG_DecInfo(HI_U32 u32Handle,HI_JPEG_INMSG_S *stInMsg)
 {
 
 #ifdef CONFIG_JPEG_OMX_FUNCTION
@@ -830,8 +858,7 @@ HI_S32 HI_JPEG_DecInfo(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg)
     
     JPEG_CHECK_FD();
     
-    if(NULL == stInMsg)
-    {
+    if(NULL == stInMsg){
         return HI_FAILURE;
     }
 
@@ -849,11 +876,10 @@ HI_S32 HI_JPEG_DecInfo(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg)
     stImgInfo.s32InHeight    = stInMsg->s32InHeight;
     stImgInfo.bUserPhyMem    = stInMsg->bUserPhyMem;
     stImgInfo.enInFmt        = stInMsg->enInFmt;
-    stImgInfo.s32DecHandle   = s32Handle;
+    stImgInfo.u32DecHandle   = u32Handle;
         
     s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_DECINFO, &stImgInfo);
-    if(HI_SUCCESS != s32Ret)
-    {
+    if(HI_SUCCESS != s32Ret){
         return HI_FAILURE;
     }
     stInMsg->s32InWidth  = stImgInfo.s32InWidth;
@@ -871,7 +897,7 @@ HI_S32 HI_JPEG_DecInfo(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg)
 NA.\n
 CNcomment:CNend\n
 
-\param[in]  s32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
+\param[in]  u32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
 \param[in]  stOutMsg.   CNcomment:ÊäÈëÐÅÏ¢   CNend
 
 \retval ::HI_SUCCESS 
@@ -880,7 +906,7 @@ CNcomment:CNend\n
 \see \n
 ::HI_JPEG_DecOutInfo
 */
-HI_S32 HI_JPEG_DecOutInfo(HI_S32 s32Handle,HI_JPEG_OUTMSG_S *stOutMsg)
+HI_S32 HI_JPEG_DecOutInfo(HI_U32 u32Handle,HI_JPEG_OUTMSG_S *stOutMsg)
 {
 
 #ifdef CONFIG_JPEG_OMX_FUNCTION
@@ -891,37 +917,35 @@ HI_S32 HI_JPEG_DecOutInfo(HI_S32 s32Handle,HI_JPEG_OUTMSG_S *stOutMsg)
     
     JPEG_CHECK_FD();
     
-    if(NULL == stOutMsg)
-    {
+    if(NULL == stOutMsg){
         return HI_FAILURE;
     }
     
     memset(&stOutInfo,0,sizeof(HI_JPEG_OUTMSG_S));
 
     /** ¸ù¾ÝÊÇ·ñËõ·ÅºÍÊÇ·ñÍ³Ò»Êä³öyuv420À´¼ÆËãÊä³ö¿í¸ßÒÔ¼°stride **/
-    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++)
-    {
+    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++){
         stOutInfo.pOutPhy[s32Cnt]       = stOutMsg->pOutPhy[s32Cnt];
         stOutInfo.u32OutWidth[s32Cnt]   = stOutMsg->u32OutWidth[s32Cnt];
         stOutInfo.u32OutHeight[s32Cnt]  = stOutMsg->u32OutHeight[s32Cnt];
         stOutInfo.u32OutStride[s32Cnt]  = stOutMsg->u32OutStride[s32Cnt];
+        stOutInfo.u32OutSize[s32Cnt]    = stOutMsg->u32OutSize[s32Cnt];
     }
     stOutInfo.s32Scale      = stOutMsg->s32Scale;
     stOutInfo.bOutYuvSp420  = stOutMsg->bOutYuvSp420;
     stOutInfo.bLuPixSum     = stOutMsg->bLuPixSum;
     stOutInfo.enOutFmt      = stOutMsg->enOutFmt;
-    stOutInfo.s32DecHandle  = s32Handle;
+    stOutInfo.u32DecHandle  = u32Handle;
      
     s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_DECOUTINFO, &stOutInfo);
-    if(HI_SUCCESS != s32Ret)
-    {
+    if(HI_SUCCESS != s32Ret){
         return HI_FAILURE;
     }
-    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++)
-    {
+    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++){
         stOutMsg->u32OutWidth[s32Cnt]  = stOutInfo.u32OutWidth[s32Cnt];
         stOutMsg->u32OutHeight[s32Cnt] = stOutInfo.u32OutHeight[s32Cnt];
         stOutMsg->u32OutStride[s32Cnt] = stOutInfo.u32OutStride[s32Cnt];
+        stOutMsg->u32OutSize[s32Cnt]   = stOutInfo.u32OutSize[s32Cnt];
     }
     stOutMsg->enOutFmt = stOutInfo.enOutFmt;
     
@@ -938,7 +962,7 @@ HI_S32 HI_JPEG_DecOutInfo(HI_S32 s32Handle,HI_JPEG_OUTMSG_S *stOutMsg)
 NA.\n
 CNcomment:CNend\n
 
-\param[in]  s32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
+\param[in]  u32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
 \param[in]  stInMsg.    CNcomment:ÊäÈëÐÅÏ¢   CNend
 \param[in]  stOutMsg.   CNcomment:Êä³öÐÅÏ¢   CNend
 
@@ -948,18 +972,18 @@ CNcomment:CNend\n
 \see \n
 ::HI_JPEG_Decode
 */
-HI_S32 HI_JPEG_Decode(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S *stOutMsg)
+HI_S32 HI_JPEG_Decode(HI_U32 u32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S *stOutMsg)
 {
 
 #ifdef CONFIG_JPEG_OMX_FUNCTION
 
     HI_JPEG_DECINFO_S stDecInfo;
     HI_S32 s32Cnt = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
     
     JPEG_CHECK_FD();
     
-    if ((NULL == stInMsg) || (NULL == stOutMsg))
-    {
+    if ((NULL == stInMsg) || (NULL == stOutMsg)){
         return HI_FAILURE;
     }
 
@@ -976,25 +1000,29 @@ HI_S32 HI_JPEG_Decode(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S
     stDecInfo.stInMsg.s32InHeight    = stInMsg->s32InHeight;
     stDecInfo.stInMsg.bUserPhyMem    = stInMsg->bUserPhyMem;
     stDecInfo.stInMsg.enInFmt        = stInMsg->enInFmt;
-    stDecInfo.stInMsg.s32DecHandle   = s32Handle;
+    stDecInfo.stInMsg.u32DecHandle   = u32Handle;
     
 
 
-    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++)
-    {
+    for(s32Cnt = 0; s32Cnt < MAX_PIXEL_COMPONENT_NUM; s32Cnt++){
         stDecInfo.stOutMsg.pOutPhy[s32Cnt]       = stOutMsg->pOutPhy[s32Cnt];
         stDecInfo.stOutMsg.u32OutWidth[s32Cnt]   = stOutMsg->u32OutWidth[s32Cnt];
         stDecInfo.stOutMsg.u32OutHeight[s32Cnt]  = stOutMsg->u32OutHeight[s32Cnt];
         stDecInfo.stOutMsg.u32OutStride[s32Cnt]  = stOutMsg->u32OutStride[s32Cnt];
+        stDecInfo.stOutMsg.u32OutSize[s32Cnt]    = stOutMsg->u32OutSize[s32Cnt];
     }
     stDecInfo.stOutMsg.s32Scale      = stOutMsg->s32Scale;
     stDecInfo.stOutMsg.bOutYuvSp420  = stOutMsg->bOutYuvSp420;
     stDecInfo.stOutMsg.bLuPixSum     = stOutMsg->bLuPixSum;
     stDecInfo.stOutMsg.enOutFmt      = stOutMsg->enOutFmt;
-    stDecInfo.stOutMsg.s32DecHandle  = s32Handle;
+    stDecInfo.stOutMsg.u32DecHandle  = u32Handle;
 
-    return ioctl(gs_s32JpegFd, CMD_JPG_DECODE, &stDecInfo);
-
+    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_DECODE, &stDecInfo);
+    if(HI_SUCCESS != s32Ret){
+        return HI_FAILURE;
+    }
+    
+	return HI_SUCCESS;
 #else
     return HI_FAILURE;
 #endif
@@ -1002,12 +1030,55 @@ HI_S32 HI_JPEG_Decode(HI_S32 s32Handle,HI_JPEG_INMSG_S *stInMsg,HI_JPEG_OUTMSG_S
 }
 
 /** 
+\brief get lu pixle sum value from omx decode. CNcomment:Çý¶¯½âÂë»ñÈ¡ÁÁ¶ÈÖµ CNend
+\attention \n
+If you want to get the luminance value, you can call this function, \n
+but you should call it after HI_JPEG_Decode.\n
+CNcomment:ÒªÊÇÏëµÃµ½ÁÁ¶ÈÖµ£¬¿ÉÒÔµ÷ÓÃ¸Ãº¯Êý£¬µ«±ØÐëÔÚHI_JPEG_DecodeÖ®ºóµ÷ÓÃ¶øÇÒ½âÂë CNend\n
+
+\param[in]	u32Handle. CNcomment:½âÂë¾ä±ú CNend
+\param[out]	u64LuPixSum. CNcomment:Êä³öÁÁ¶ÈÖµ CNend
+
+\retval ::HI_SUCCESS 
+\retval ::HI_FAILURE
+
+\see \n
+::HI_JPEG_GetOmxLuPixSum
+*/
+HI_S32 HI_JPEG_GetOmxLuPixSum(HI_U32 u32Handle,HI_U64 *u64LuPixSum)
+{
+
+#ifdef CONFIG_JPEG_OMX_FUNCTION
+
+    HI_DRV_JPEG_OUTMSG_S stOutInfo;
+    HI_S32 s32Ret = HI_SUCCESS;
+    
+    JPEG_CHECK_FD();
+ 	
+    memset(&stOutInfo,0,sizeof(HI_DRV_JPEG_OUTMSG_S));
+
+    stOutInfo.u32DecHandle = u32Handle;
+    
+    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_GETLUPIXSUM, &stOutInfo);
+    if(HI_SUCCESS != s32Ret){
+        return HI_FAILURE;
+    }
+    *u64LuPixSum  = stOutInfo.u64LuPixValue;
+
+    return HI_SUCCESS;
+#else
+    return HI_FAILURE;
+#endif
+}
+
+
+/** 
 \brief destory all decode. CNcomment:Ïú»ÙËùÓÐ½âÂëÆ÷ CNend
 \attention \n
 NA.\n
 CNcomment:CNend\n
 
-\param[in]  s32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
+\param[in]  u32Handle.  CNcomment:½âÂëÆ÷¾ä±ú CNend
 
 \retval ::HI_SUCCESS 
 \retval ::HI_FAILURE
@@ -1015,7 +1086,7 @@ CNcomment:CNend\n
 \see \n
 ::HI_JPEG_DestoryDec
 */
-HI_S32 HI_JPEG_DestoryDec(HI_S32 s32Handle)
+HI_S32 HI_JPEG_DestoryDec(HI_U32 u32Handle)
 {
 #ifdef CONFIG_JPEG_OMX_FUNCTION
 
@@ -1023,9 +1094,8 @@ HI_S32 HI_JPEG_DestoryDec(HI_S32 s32Handle)
 
     JPEG_CHECK_FD();
     
-    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_DESTORYDEC,&s32Handle);
-    if(HI_SUCCESS != s32Ret)
-    {
+    s32Ret = ioctl(gs_s32JpegFd, CMD_JPG_DESTORYDEC,&u32Handle);
+    if(HI_SUCCESS != s32Ret){
         return HI_FAILURE;
     }
     return HI_SUCCESS;

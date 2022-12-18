@@ -48,9 +48,9 @@ Date				Author        		Modification
 static HI_S32 jpeg_set_continuebuf(HI_DRV_JPEG_INMSG_S *pstInMsg)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
     
-    s32Ret = jpeg_mem_alloc(pstInMsg->s32DecHandle);
+    s32Ret = jpeg_mem_alloc(pstInMsg->u32DecHandle);
     if(HI_SUCCESS != s32Ret)
     {
         return HI_FAILURE;
@@ -79,7 +79,7 @@ static HI_S32 jpeg_set_streambuf(HI_DRV_JPEG_INMSG_S *pstInMsg)
 	HI_CHAR *pEndBufPhy     = NULL;
 	HI_CHAR *pStartDataPhy  = NULL;
 	HI_CHAR *pEndDataPhy    = NULL;
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
     
     /** 码流buffer **/
     if(0 == pstInMsg->u32SaveLen[1])
@@ -142,7 +142,7 @@ static HI_VOID jpeg_set_outbuf(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 static HI_VOID jpeg_set_factor(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 {
     HI_U8 u8YFac = 0,u8UFac = 0,u8VFac = 0;
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
     
     u8YFac = (HI_U8)(((pstImgInfo->u8Fac[0][0] << 4) | pstImgInfo->u8Fac[0][1]) & 0xff);
     u8UFac = (HI_U8)(((pstImgInfo->u8Fac[1][0] << 4) | pstImgInfo->u8Fac[1][1]) & 0xff);
@@ -186,19 +186,36 @@ static HI_VOID  jpeg_set_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 {
     
     HI_S32 s32Scale      = 0;
+    HI_S32 s32TmpScale   = 0;
     HI_S32 s32Stride     = 0;
     HI_S32 s32YInWidth   = 0;
     HI_S32 s32YInHeight  = 0;
     HI_S32 s32PicSize    = 0;
     HI_S32 s32DefaultScale  = 0;
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
+
+    switch(pstOutMsg->s32Scale)
+    {
+		case 1:
+			s32TmpScale = 0;
+			break;
+		case 2:
+			s32TmpScale = 1;
+			break;
+		case 4:
+			s32TmpScale = 2;
+			break;
+		default:
+			s32TmpScale = 3;
+			break;
+    }
     
     s32DefaultScale = (HI_S32)0x34;
     s32YInWidth     = (1 == pstImgInfo->u8Fac[0][0]) ? ((pstImgInfo->s32InWidth  + JPEG_DRV_MCU_8ALIGN - 1)>>3) : ((pstImgInfo->s32InWidth  + JPEG_DRV_MCU_16ALIGN - 1)>>4);
     s32YInHeight    = (1 == pstImgInfo->u8Fac[0][1]) ? ((pstImgInfo->s32InHeight + JPEG_DRV_MCU_8ALIGN - 1)>>3) : ((pstImgInfo->s32InHeight + JPEG_DRV_MCU_16ALIGN - 1)>>4);
     s32PicSize      = (s32YInWidth| (s32YInHeight << 16));
     s32Stride       = (HI_S32)((pstOutMsg->u32OutStride[1] << 16 ) | pstOutMsg->u32OutStride[0]);
-    s32Scale        =  ((HI_U32)s32DefaultScale & 0xfffffffc) | pstOutMsg->s32Scale | 0x8;
+    s32Scale        =  ((HI_U32)s32DefaultScale & 0xfffffffc) | s32TmpScale | 0x8;
     
     jpeg_reg_write(JPGD_REG_PICTYPE,  (unsigned long)pstImgInfo->eImgFmt);
     jpeg_reg_write(JPGD_REG_SCALE,    (unsigned long)s32Scale);
@@ -216,9 +233,67 @@ static HI_VOID  jpeg_set_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 *****************************************************************************/
 HI_VOID	jpeg_set_dri(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 {
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->s32DecHandle);
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
     jpeg_reg_write(JPGD_REG_DRI,  (unsigned long)pstImgInfo->s32RestartInterval);
 }
+
+/*****************************************************************************
+* func			: jpeg_set_memmask
+* description	: set the memory mask
+                  CNcomment:  设置mem信息         CNend\n
+* param[in] 	:
+* retval		: NA
+* others:		: NA
+*****************************************************************************/
+static HI_VOID jpeg_set_memmask(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
+{
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
+#endif
+
+	HI_U32 u32Mask =   JPEG_DRV_STREAM_MEM_MMU_TYPE            \
+		             | JPEG_DRV_YOUTPUT_MEM_MMU_TYPE           \
+		             | JPEG_DRV_UVOUTPUT_MEM_MMU_TYPE          \
+		             | JPEG_DRV_XRGBSAMPLE0_READ_MEM_MMU_TYPE  \
+		             | JPEG_DRV_XRGBSAMPLE1_READ_MEM_MMU_TYPE  \
+		             | JPEG_DRV_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE \
+		             | JPEG_DRV_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE \
+					 | JPEG_DRV_XRGBOUTPUT_MEM_MMU_TYPE;
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_STREAM_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_STREAM_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_YOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_YOUTPUT_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_UVOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_UVOUTPUT_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_XRGBSAMPLE0_READ_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_XRGBSAMPLE0_READ_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_XRGBSAMPLE1_READ_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_XRGBSAMPLE1_READ_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_XRGBSAMPLE0_WRITE_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_XRGBSAMPLE1_WRITE_MEM_MMU_TYPE;
+    }
+	if(pstImgInfo->u32MemTypeMask & JPEG_DRV_XRGBOUTPUT_MEM_MMU_TYPE){
+       u32Mask &= ~JPEG_DRV_XRGBOUTPUT_MEM_MMU_TYPE;
+    }
+	jpeg_reg_write(JPGD_REG_MMU_BYPASS,(unsigned long)u32Mask);
+#else
+	/** 非mmu，都bypass **/
+	jpeg_reg_write(JPGD_REG_MMU_BYPASS,(unsigned long)u32Mask);
+#endif
+
+}
+
 
 /***************************************************************************************
 * func			: jpg_dec_setpara
@@ -245,7 +320,9 @@ HI_S32 jpg_dec_setpara(HI_JPEG_DECINFO_S *pstDecInfo)
 
      /**set dri value **/
 	jpeg_set_dri(&(pstDecInfo->stOutMsg));
-     
+
+    jpeg_set_memmask(&(pstDecInfo->stOutMsg));
+    
 #ifdef CONIFG_SETPARA_DEBUG
     JPEG_TRACE("end jpeg_set_dqt\n");
     JPEG_TRACE("===============================================%s %d\n",__func__,__LINE__);
@@ -294,6 +371,10 @@ HI_S32 jpg_dec_setpara(HI_JPEG_DECINFO_S *pstDecInfo)
 
     if(HI_TRUE == pstDecInfo->stOutMsg.bOutYuvSp420)
 	{
+	   if(8 == pstDecInfo->stOutMsg.s32Scale)
+	   {/** 缩放8倍不支持 **/
+	   	   return HI_ERR_JPEG_SERPARA;
+	   }
 	   jpeg_set_yuv420sp();
 	}
 
@@ -353,17 +434,17 @@ HI_S32 jpg_dec_setpara(HI_JPEG_DECINFO_S *pstDecInfo)
 * func          : jpeg_send_stream
 * description   : send the continue stream.
                  CNcomment: 送续码流 CNend\n
-* param[in]     : s32DecHandle
+* param[in]     : u32DecHandle
 * param[in] 	: ps32Offset
 * param[in] 	: pbReachEOF
 * retval        : HI_SUCCESS 成功
 * retval        : HI_FAILURE 失败
 * others:       : NA
 ****************************************************************************/
-HI_S32 jpeg_send_stream(HI_S32 s32DecHandle,HI_S32 *ps32Offset,HI_BOOL *pbReachEOF)
+HI_S32 jpeg_send_stream(HI_U32 u32DecHandle,HI_S32 *ps32Offset,HI_BOOL *pbReachEOF)
 {/** 暂不支持输出内存为虚拟内存 **/
 
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
+    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)u32DecHandle;
     HI_S32 s32CpyLen    = 0;
     HI_S32 s32LeaveLen0 = 0;
     HI_S32 s32LeaveLen1 = 0;

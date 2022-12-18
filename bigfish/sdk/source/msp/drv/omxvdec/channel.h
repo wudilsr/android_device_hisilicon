@@ -20,11 +20,15 @@
 
 
 #define  LAST_FRAME_FLAG_NULL        (0)
-#define  VFMW_REPORT_LAST_FRAME      (1)
-#define  VPSS_GOT_LAST_FRAME         (2)
+#define  DECODER_REPORT_LAST_FRAME   (1)
+#define  PROCESSOR_GOT_LAST_FRAME    (2)
 #define  REPORT_LAST_FRAME_SUCCESS   (0)
 #define  REPORT_LAST_FRAME_FAIL      (1)
 #define  REPORT_LAST_FRAME_WITH_ID   (2)
+
+#ifdef HI_TVP_SUPPORT
+#define OMXVDEC_SEC_ZONE                "SEC-MMZ"
+#endif
 
 typedef enum {
 	CHAN_STATE_INVALID = 0,
@@ -44,6 +48,10 @@ typedef enum {
 typedef enum {
 	DFS_INIT = 0,
 	DFS_WAIT_ALLOC,
+	DFS_WAIT_INSERT,
+	DFS_WAIT_BIND,
+	DFS_WAIT_FILL,
+	DFS_WAIT_ACTIVATE,
 	DFS_ALREADY_ALLOC,
 }eDFS_STATE;
 
@@ -64,6 +72,7 @@ typedef struct {
 	HI_VOID           *user_vaddr;
 	HI_VOID           *kern_vaddr;
 	HI_VOID           *client_data;
+
 }OMXVDEC_BUF_S;
   
 typedef struct {
@@ -72,13 +81,12 @@ typedef struct {
 	HI_S32             decoder_id;
 	HI_S32             processor_id;
 	HI_S32             port_id;
-    HI_BOOL            is_tvp;
-    HI_U32             file_dec;
+    HI_BOOL            m_use_native_buf;    
 	HI_U32             out_width;
 	HI_U32             out_height;
 	HI_U32             out_stride;
 	HI_U32             protocol;
-	HI_U32             color_format;
+    HI_U32             bReversed;
     HI_U32             ref_frame_num;
     HI_U32             ref_frame_size;
     HI_U32             dfs_delay_time;
@@ -99,18 +107,25 @@ typedef struct {
 		               reset_pending:         1,           // reset flag
 		               seek_pending:          1,          
 		               progress:              1; 
+    
+    HI_U64             file_dec;   
 
-    HI_U8              last_frame_vpss_got;
+    HI_BOOL            is_tvp;
+    HI_U8              last_frame_processor_got;
     HI_U8              last_frame_image_id;
                        /* 0 (0/1)  : vfmw 是否上报; 
                           1 (0/1/2): vfmw 上报的类型 
                                      0 success, 
                                      1 fail,  
                                      2+ report last frame image id */
-    HI_U8              last_frame_info[2];     
-
+    HI_U8              last_frame_info[2];  
+    HI_S32             bLowdelay;                       
+    OMX_PIX_FORMAT_E   color_format;
 	eCHAN_STATE        state;
 	eDFS_STATE         dfs_alloc_flag;
+    eMEM_ALLOC         eSCDMemAlloc;
+    eMEM_ALLOC         eVDHMemAlloc;
+    eMEM_ALLOC         eEXTRAMemAlloc;    
     
 	HI_VOID           *in_buf_table;
 	HI_VOID           *out_buf_table;
@@ -135,6 +150,14 @@ typedef struct {
     MMZ_BUFFER_S       decoder_vdh_buf;
 }OMXVDEC_CHAN_CTX;
 
+typedef struct tagVDEC_PREMMZ_NODE_S
+{
+    HI_U32  u32StartVirAddr;
+    HI_U32  u32StartPhyAddr;
+    HI_U32  u32Size;
+    HI_U32  u32NodeState;/*0:have MMZ not used,1:have MMZ but used 2:invalid*/
+}VDEC_PREMMZ_NODE_S;
+
 
 HI_S32 channel_init(HI_VOID);
 
@@ -153,7 +176,7 @@ HI_S32 channel_reset_inst(OMXVDEC_CHAN_CTX *pchan);
 HI_S32 channel_pause_inst(OMXVDEC_CHAN_CTX *pchan);
 
 HI_S32 channel_resume_inst(OMXVDEC_CHAN_CTX *pchan);
-
+ 
 HI_S32 channel_bind_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
 
 HI_S32 channel_unbind_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
@@ -176,9 +199,24 @@ OMXVDEC_CHAN_CTX* channel_find_inst_by_decoder_id(OMXVDEC_ENTRY *vdec, HI_S32 ha
 
 OMXVDEC_CHAN_CTX* channel_find_inst_by_processor_id(OMXVDEC_ENTRY *vdec, HI_S32 handle);
 
-OMXVDEC_CHAN_CTX* channel_find_inst_wait_alloc(OMXVDEC_ENTRY *vdec);
+OMXVDEC_CHAN_CTX* channel_find_inst_need_wake_up(OMXVDEC_ENTRY *vdec);
 
 HI_VOID channel_proc_entry(struct seq_file *p, OMXVDEC_CHAN_CTX *pchan);
 
+#if (1 == BPP_MODE_ENABLE)
+
+HI_S32 channel_alloc_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
+
+HI_S32 channel_free_user_buffer(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
+
+#endif
+
+
+/*================ EXTERN FUNCTION ================*/
+
+#if (1 == PRE_ALLOC_VDEC_VDH_MMZ)
+HI_S32 VDEC_Chan_FindPreMMZ(MMZ_BUFFER_S *pstMMZBuffer);
+HI_S32 VDEC_Chan_ReleasePreMMZ(MMZ_BUFFER_S *pstMMZBuffer);
+#endif
 
 #endif

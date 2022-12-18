@@ -775,11 +775,11 @@ HI_S32 DispProduceDisplayInfo(DISP_S* pstDisp, HI_DISP_DISPLAY_INFO_S* pstInfo)
 
         if (pstDisp->enDisp == HI_DRV_DISPLAY_1)
         {
-            DRV_PQ_GetHDPictureSetting(&stPictureSetting);
+            DRV_PQ_GetHDVideoSetting(&stPictureSetting);
         }
         else
         {
-            DRV_PQ_GetSDPictureSetting(&stPictureSetting);
+            DRV_PQ_GetSDVideoSetting(&stPictureSetting);
         }
 
         pstInfo->u32Bright = stPictureSetting.u16Brightness;
@@ -843,11 +843,11 @@ HI_S32 DispProduceDisplayInfo(DISP_S* pstDisp, HI_DISP_DISPLAY_INFO_S* pstInfo)
 #ifndef __DISP_PLATFORM_BOOT__
         if (pstDisp->enDisp == HI_DRV_DISPLAY_1)
         {
-            DRV_PQ_GetHDPictureSetting(&stPictureSetting);
+            DRV_PQ_GetHDVideoSetting(&stPictureSetting);
         }
         else
         {
-            DRV_PQ_GetSDPictureSetting(&stPictureSetting);
+            DRV_PQ_GetSDVideoSetting(&stPictureSetting);
         }
 
 
@@ -1480,18 +1480,51 @@ HI_S32 DISP_Init(HI_VOID)
             HI_DRV_HDMI_Init();
 #if defined (HI_HDMI_SUPPORT_2_0)
             HI_DRV_HDMI_ATTR_S stAttr;
+            HI_DRV_DISP_TIMING_S  stTiming;
 
+            
             if (HI_SUCCESS != HI_DRV_HDMI_Open(HI_UNF_HDMI_ID_0))
             {
                 DISP_PRINT("HI_UNF_HDMI_Open Err \n");
             }
-            
+
             stAttr.bEnableHdmi  = HI_TRUE;
-            stAttr.enVidInMode  = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
-            stAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
+
+            if ((HI_DRV_CS_BT601_RGB_LIMITED == pstDisp->stSetting.stColor.enOutCS)
+                || (HI_DRV_CS_BT601_RGB_FULL == pstDisp->stSetting.stColor.enOutCS)
+                || (HI_DRV_CS_BT709_RGB_LIMITED == pstDisp->stSetting.stColor.enOutCS)
+                || (HI_DRV_CS_BT709_RGB_FULL == pstDisp->stSetting.stColor.enOutCS)
+                )
+            {
+                stAttr.enVidInMode  = HI_UNF_HDMI_VIDEO_MODE_RGB444;
+                stAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_RGB444;
+            }
+            else
+            {
+                stAttr.enVidInMode  = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
+                stAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
+            }
+           
             stAttr.u32DispFmt   = enEncFmt;
+
+            DispGetFmtTiming(enEncFmt,&stTiming);
+            if ((HI_DRV_DISP_FMT_1080P_24_FP == enEncFmt )
+			||(HI_DRV_DISP_FMT_720P_60_FP == enEncFmt )
+			||(HI_DRV_DISP_FMT_720P_50_FP == enEncFmt ))
+    		{
+    			stAttr.u32ClkFs = stTiming.u32PixFreq*2;
+    		}
+    		else
+    		{
+    			stAttr.u32ClkFs = stTiming.u32PixFreq;
+    		}
+            
+            printf("stAttr.u32ClkFs=%d\n",stAttr.u32ClkFs);
             HI_DRV_HDMI_SetAttr(HI_UNF_HDMI_ID_0, &stAttr);
             HI_DRV_HDMI_Start(HI_UNF_HDMI_ID_0);
+
+            
+            
 #else
             if (HI_SUCCESS != HI_DRV_HDMI_Open(enEncFmt))
             {
@@ -2386,7 +2419,7 @@ HI_DRV_DISPLAY_E  DISPGetIntfChannel(HI_DRV_DISP_INTF_ID_E enIntfID)
     }
     return enDisp;
 }
-#ifndef __DISP_PLATFORM_BOOT__
+
 
 HI_S32 DispGetFmtTiming(HI_DRV_DISP_FMT_E eFmt,HI_DRV_DISP_TIMING_S *pstTiming)
 {
@@ -2411,7 +2444,7 @@ HI_S32 DispGetFmtTiming(HI_DRV_DISP_FMT_E eFmt,HI_DRV_DISP_TIMING_S *pstTiming)
 	DISP_WARN("Get fmt %d err !(%d)\n",eFmt,nRet);
 	return  nRet;
 }
-
+#ifndef __DISP_PLATFORM_BOOT__
 HI_S32 DispSetHDMI420(HI_DRV_DISPLAY_E enDisp,HI_BOOL bEnable)
 {
 
@@ -2475,7 +2508,17 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 			else
 				pstVideoAttr->enHvSyncPol = DRV_HDMI_HV_SYNC_POL_HPVP;
 		}
-		pstVideoAttr->u32ClkFs = stTiming.u32PixFreq;
+		if ((HI_DRV_DISP_FMT_1080P_24_FP == pstVideoAttr->enVideoFmt )
+			||(HI_DRV_DISP_FMT_720P_60_FP == pstVideoAttr->enVideoFmt )
+			||(HI_DRV_DISP_FMT_720P_50_FP == pstVideoAttr->enVideoFmt )
+			)
+		{
+			pstVideoAttr->u32ClkFs = stTiming.u32PixFreq*2;
+		}
+		else
+		{
+			pstVideoAttr->u32ClkFs = stTiming.u32PixFreq;
+		}
 	}
 	
 	/*need to do  start--->*/

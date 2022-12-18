@@ -7,10 +7,11 @@ SDK_DIR ?= $(CURDIR)/../../../..
 include $(SDK_DIR)/base.mak
 endif
 
-TARGET := png
 #===============================================================================
 # local variable
 #===============================================================================
+TARGET := png
+
 CFLAGS  +=  $(CFG_HI_CFLAGS)
 
 CFLAGS  +=  -I$(COMMON_UNF_INCLUDE)                 \
@@ -21,27 +22,27 @@ CFLAGS  +=  -I$(COMMON_UNF_INCLUDE)                 \
             -I$(MSP_DRV_INCLUDE)                    \
             -I$(MSP_DIR)/api/$(TARGET)/include      \
             -I$(MSP_DIR)/drv/$(TARGET)/include      \
-            -I$(MSP_DIR)/api/jpeg/grc_cmm_inc
+            -I$(MSP_DIR)/api/jpeg/grc_cmm_inc 
 
 CFLAGS += -DCONFIG_GFX_STB_SDK
 
 LIBS := libhi_$(TARGET)
 
-
 INSTALL_DIR = $(MSP_DIR)/api/$(TARGET)/release
-FLAGS_TMP=$(subst -c , ,$(CFLAGS))
+FLAGS_TMP=$(subst -c , ,$(CFLAGS)) 
 
 ifdef CFG_HI_STATIC_LIB_ONLY
-ENABLE_LIB_MODE = --enable-shared=no
-#CFLAGS += -fPIC
+#directfb needed
+#ENABLE_LIB_MODE = --enable-shared=no
+CFLAGS += -fPIC
 endif
 
+ifeq ($(CFG_LIB_PNG_VERSION_1_4_0),y)
+PNG_VER := 1.4.0
+else ifeq ($(CFG_LIB_PNG_VERSION_1_6_16),y)
+PNG_VER := 1.6.16
 
-LIB_VER = 1.4.0
-
-ifeq ($(CFG_HI_LIB_PNG_VERSION),libpng-1.6.16)
-LIB_VER = 1.6.16
-PNG_LIBS        :=  -lhi_common -lrt -lpthread -lm
+PNG_LIBS     = -lhi_common -lrt -lpthread -lm
 PNG_LDFLAGS     :=  -L$(STATIC_LIB_DIR)
 
 PNG_CPPFLAGS    :=  -I$(COMPONENT_DIR)/zlib/release/include     \
@@ -49,7 +50,7 @@ PNG_CPPFLAGS    :=  -I$(COMPONENT_DIR)/zlib/release/include     \
                     -I$(MSP_DIR)/drv/$(TARGET)/include          \
                     -I$(MSP_DIR)/drv/include
 
-FLAGS_TMP += -DHIPNG_ACCELERATE -DHIPNG_MMZ -DPNG_NO_STRING -DHIGFX_COMMON
+FLAGS_TMP += -DHIPNG_ACCELERATE -DHIPNG_MMZ -DHIGFX_COMMON
 endif
 
 #===============================================================================
@@ -57,13 +58,13 @@ endif
 #===============================================================================
 .PHONY: all clean install mod_install uninstall
 
-all:
+all: 
 	mkdir -p release
-ifeq ($(CFG_HI_LIB_PNG_VERSION),libpng-1.4.0)
-	cd libpng-$(LIB_VER);sh ./configure --host=$(CFG_HI_TOOLCHAINS_NAME) $(ENABLE_LIB_MODE) CFLAGS="$(FLAGS_TMP)" CPPFLAGS="$(PNG_CPPFLAGS)" LIBS="$(PNG_LIBS)" LDFLAGS="$(PNG_LDFLAGS)" prefix=$(INSTALL_DIR);make install
-else
-	make -C libpng-$(LIB_VER) install
-	cd $(INSTALL_DIR)/lib;rm libpng16.so.16;ln -s libpng16.so  libpng16.so.16
+ifeq ($(CFG_LIB_PNG_VERSION_1_4_0),y)
+	cd libpng-${PNG_VER};sh ./configure --host=$(CFG_HI_TOOLCHAINS_NAME) $(ENABLE_LIB_MODE) CFLAGS="$(FLAGS_TMP)" CPPFLAGS="$(PNG_CPPFLAGS)" LIBS="$(PNG_LIBS)" LDFLAGS="$(PNG_LDFLAGS)" prefix=$(INSTALL_DIR);make install
+else ifeq ($(CFG_LIB_PNG_VERSION_1_6_16),y)
+	make -C libpng-${PNG_VER} install
+	cd $(INSTALL_DIR)/lib;rm -rf libpng16.so.16;ln -s libpng16.so  libpng16.so.16
 endif
 	rm -rf $(INSTALL_DIR)/man
 	rm -rf $(INSTALL_DIR)/share
@@ -72,26 +73,26 @@ endif
 	$(AT)cp -ralf   $(MSP_DIR)/api/$(TARGET)/include/hi_png_config.h $(INSTALL_DIR)/include/
 
 clean:
-ifeq ($(CFG_HI_LIB_PNG_VERSION),libpng-1.4.0)
-	cd libpng-$(LIB_VER);sh ./configure --host=$(CFG_HI_TOOLCHAINS_NAME) $(ENABLE_LIB_MODE) CFLAGS="$(FLAGS_TMP)" CPPFLAGS="$(PNG_CPPFLAGS)" LIBS="$(PNG_LIBS)" LDFLAGS="$(PNG_LDFLAGS)" prefix=$(INSTALL_DIR);make clean
-	rm -rf libpng-$(LIB_VER)/Makefile
-else
-	make -C libpng-$(LIB_VER) clean
-endif
+ifeq ($(CFG_LIB_PNG_VERSION_1_4_0),y)
+	cd libpng-${PNG_VER};sh ./configure --host=$(CFG_HI_TOOLCHAINS_NAME) $(ENABLE_LIB_MODE) CFLAGS="$(FLAGS_TMP)" CPPFLAGS="$(PNG_CPPFLAGS)" LIBS="$(PNG_LIBS)" LDFLAGS="$(PNG_LDFLAGS)" prefix=$(INSTALL_DIR);make clean
+	rm -rf libpng-${PNG_VER}/Makefile
+else ifeq ($(CFG_LIB_PNG_VERSION_1_6_16),y)
+	make -C libpng-${PNG_VER} clean
+endif 
 	rm -rf release
-	rm -rf libpng-$(LIB_VER)/.deps
-	rm -rf libpng-$(LIB_VER)/config.log
-	rm -rf libpng-$(LIB_VER)/config.status
-	rm -rf libpng-$(LIB_VER)/libpng.pc
-	rm -rf libpng-$(LIB_VER)/libpng-config
-	rm -rf libpng-$(LIB_VER)/libtool
+	rm -rf libpng-${PNG_VER}/.deps 
+	rm -rf libpng-${PNG_VER}/config.log
+	rm -rf libpng-${PNG_VER}/config.status
+	rm -rf libpng-${PNG_VER}/libpng.pc
+	rm -rf libpng-${PNG_VER}/libpng-config
+	rm -rf libpng-${PNG_VER}/libtool
 
 install: all
-	$(AT)cp -ralf 	$(INSTALL_DIR)/lib/libpng*.a  	$(STATIC_LIB_DIR)/
-	$(AT)cp -ralf 	$(INSTALL_DIR)/lib/pkgconfig  	$(STATIC_LIB_DIR)/
+	$(AT)cp -ralf   $(INSTALL_DIR)/lib/libpng*.a    $(STATIC_LIB_DIR)/
+	$(AT)cp -ralf   $(INSTALL_DIR)/lib/pkgconfig    $(STATIC_LIB_DIR)/
 ifndef CFG_HI_STATIC_LIB_ONLY
-	$(AT)cp -ralf  	$(INSTALL_DIR)/lib/libpng*.so* 	$(SHARED_LIB_DIR)/
-	$(AT)cp -ralf 	$(INSTALL_DIR)/lib/pkgconfig  	$(SHARED_LIB_DIR)/
+	$(AT)cp -ralf   $(INSTALL_DIR)/lib/libpng*.so*  $(SHARED_LIB_DIR)/
+	$(AT)cp -ralf   $(INSTALL_DIR)/lib/pkgconfig    $(SHARED_LIB_DIR)/
 endif
 	$(AT)cp -rf  $(INSTALL_DIR)/include/*     $(INCLUDE_DIR)/
 
@@ -102,5 +103,5 @@ uninstall:
 	$(AT)rm -rf $(STATIC_LIB_DIR)/pkgconfig
 	$(AT)rm -rf $(SHARED_LIB_DIR)/*png*.so*
 	$(AT)rm -rf $(SHARED_LIB_DIR)/pkgconfig
-	rm -rf $(INCLUDE_DIR)/*png*
+	rm -rf $(INCLUDE_DIR)/*png* 
 

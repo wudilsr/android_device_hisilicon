@@ -22,13 +22,16 @@ extern "C" {
 #endif
 #endif
 
-HI_S32  DMX_OsiInit(HI_U32 PoolBufSize, HI_U32 BlockSize);
+HI_S32  DMX_OsiInit(HI_VOID);
 HI_S32  DMX_OsiDeInit(HI_VOID);
+HI_S32  DMX_StartAllDmx(HI_VOID);
+HI_S32  DMX_StopAllDmx(HI_VOID);
 HI_S32  DMX_OsiGetPoolBufAddr(HI_U32 *VirAddr,HI_U32 *PhyAddr, HI_U32 *BufSize);
 HI_VOID DMX_OsiSetNoPusiEn(HI_BOOL bNoPusiEn);
 HI_VOID DMX_OsiSetTei(HI_U32 u32DmxId,HI_BOOL bTei);
 HI_VOID DMX_OsiTSIAttashTSO(HI_U32 TunerPortID,HI_UNF_DMX_TSO_PORT_E TSO);
 HI_BOOL DMX_OsiIsTSIAttachTSO(HI_U32 PortId, HI_UNF_DMX_TSO_PORT_E* TSO);
+HI_S32   DMX_OsiGetResumeCount(HI_U32 *pCount);
 
 /* Port */
 HI_S32 DMX_OsiTSOPortGetAttr(const HI_U32 PortId, HI_UNF_DMX_TSO_PORT_ATTR_S *PortAttr);
@@ -225,7 +228,7 @@ HI_S32  DMX_OsiSaveDmxTs_Stop(HI_U32 u32RecDmx);
 
 #endif
 
-HI_S32  DMX_OsiDeviceInit(HI_U32 PoolBufSize, HI_U32 BlockSize);
+HI_S32  DMX_OsiDeviceInit(HI_VOID);
 HI_VOID DMX_OsiDeviceDeInit(HI_VOID);
 HI_U32  DMX_OsiGetChType(HI_U32 u32ChId);
 

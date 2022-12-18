@@ -218,6 +218,11 @@ do { \
 #define DEMUX_BUFFER_MAX_SIZE             (10*1024*1024) /* 10MB */
 #define DEMUX_BUFFER_SIZE_LIMIT           (2*1024*1024)
 
+#define FILEINFO_UPDATE_DOING               (1)
+#define FILEINFO_UPDATE_DONE                (2)
+#define FILEINFO_UPDATE_NONE                (0)
+#define FILEINFO_UPDATE_WAIT_MAX            (50) //unit:ms
+
 typedef struct tagADTSHeader
 {
     /* fixed */
@@ -530,6 +535,18 @@ static void _getADTSHeader(int32_t sampleRateidx,             /*!< aacPlus sampl
     return;
 }
 
+static HI_U32 getCurrentTime()
+{
+    struct timeval tv;
+
+    if (0 == gettimeofday(&tv, NULL))
+    {
+        return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    }
+
+    return -1;
+}
+
 namespace android {
 
 SVRExtratorAdp::SVRExtratorAdp()
@@ -589,20 +606,66 @@ void SVRExtratorAdp::checkDrmStatus(const sp<DataSource>& dataSource)
 status_t SVRExtratorAdp::createDataSource(const char *uri,
     const KeyedVector<String8, String8> *headers)
 {
-    String8 newURI;
+    String8 newURI(uri);
 
     EX_PRINTF("[%s:%d] Enter SVRExtratorAdp::createDataSource\n", __FUNCTION__, __LINE__);
     misWidevineStreaming = false;
 
-    if (!strncasecmp("widevine://", uri, 11))
+    if (!strncasecmp("widevine://", uri, 11) || strstr(uri, ".wvm"))
     {
         misWidevineStreaming = true;
-        newURI = String8("http://");
-        newURI.append(uri + 11);
-        EX_PRINTF("[%s:%d] newURI =  %s\n", __FUNCTION__, __LINE__, newURI.string());
+
+        if (!strncasecmp("widevine://", uri, 11)) {
+            newURI = String8("http://");
+            newURI.append(uri + 11);
+            EX_PRINTF("[%s:%d] newURI =  %s\n", __FUNCTION__, __LINE__, newURI.string());
+        }
     }
 
-    if (false == misWidevineStreaming)
+    //local file url
+    if (strncasecmp("http", uri, 4)
+            && strncasecmp("widevine://", uri, 11)
+            && (strstr(uri, ".wvm") || strstr(uri, ".pyv") || strstr(uri, ".pya"))) {
+        const char* localUri = strstr(uri, "::offset=");
+        int fd = -1;
+        uint64_t offset = -1;
+        uint64_t length = -1;
+        if (3 == sscanf(localUri, "::offset=%lld::length=%lld::fd=%d", &offset, &length, &fd))
+        {
+            mSource = new FileSource(fd, offset, length);
+        } else {
+            localUri = strdup(uri);
+            char* tmp = strstr(localUri, "::offset=");
+            if (tmp) {
+                *tmp = 0;
+            }
+            mSource = new FileSource(localUri);
+            ALOGE("open local wvm file:%s", localUri);
+            free((void*)localUri);
+        }
+        if (mSource == NULL) {
+            ALOGE("create wvm source failed");
+            return ERROR_UNSUPPORTED;
+        }
+        mExtractor = MediaExtractor::Create(mSource);
+
+        if (mExtractor == NULL)
+        {
+            EX_PRINTF("[%s:%d] Unable to instantiate an extractor for '%s'.\n", __FUNCTION__, __LINE__, uri);
+            mSource.clear();
+            return ERROR_UNSUPPORTED;
+        }
+        else
+        {
+            EX_PRINTF("[%s:%d] Create extractor success \n", __FUNCTION__, __LINE__);
+        }
+        if (mExtractor->getDrmFlag())
+        {
+            EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
+            checkDrmStatus(mSource);
+        }
+    }
+    else if (false == misWidevineStreaming)
     {
         mSource = DataSource::CreateFromURI(uri, headers);
 
@@ -667,9 +730,7 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
             EX_PRINTF("[%s:%d] demux buffer set fail\n", __FUNCTION__, __LINE__);
         }
 #endif
-    }
-    else
-    {
+    } else {
         EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
 
         mConnectingDataSource = HTTPBase::Create(0);
@@ -740,7 +801,7 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
             EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
             checkDrmStatus(mSource);
         }
-
+        mFileInfo.eSourceType = HI_FORMAT_SOURCE_NET_VOD;//default set to VOD type
         EX_PRINTF("[%s:%d] Widevine extractor create success \n", __FUNCTION__, __LINE__);
     }
 
@@ -1447,6 +1508,57 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
         return UNKNOWN_ERROR;
     }
 
+#ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
+        HI_S32 handle;
+        HI_FORMAT_FILE_INFO_S *pstFileInfo = NULL;
+        sp<MetaData> FileMeta = mExtractor->getMetaData();
+        if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
+        {
+            // check the stream is changed or not
+            DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+            HI_U32 u32StartTime = getCurrentTime();
+
+            while (FILEINFO_UPDATE_DOING == pstDemuxBufInfo->u32FileUpdateFlag)// while file info is updating, wait it
+            {
+                //if exceed the max wait time, return fail,let player read again
+                if ((getCurrentTime() - u32StartTime) > FILEINFO_UPDATE_WAIT_MAX)
+                {
+                    return HI_FAILURE;
+                }
+                usleep(100);
+            }
+
+            // when stream is changed, flush it and reset the read state
+            if (FILEINFO_UPDATE_DONE == pstDemuxBufInfo->u32FileUpdateFlag)
+            {
+                mParseFileInfo = false;
+                EXTRATOR_FREE_ALL_PROGRAMS(mFileInfo);
+                (void)openFile(&pstFileInfo);
+
+                mVideoReadTimes  = 0;
+                mAudioReadTimes  = 0;
+                mbVideoEndOfStream = true;
+                mbAudioEndOfStream =  true;
+                if (NULL != mVideoTrack.get())
+                {
+                    mbVideoEndOfStream   = false;
+                }
+
+                if (NULL != mAudioTrack.get())
+                {
+                    mbAudioEndOfStream   = false;
+                }
+
+                mLastVideoFramePts = -1;
+                mLastAudioFramePts = -1;
+
+                pthread_mutex_lock(&pstDemuxBufInfo->stMutex);
+                pstDemuxBufInfo->u32FileUpdateFlag = FILEINFO_UPDATE_NONE;
+                pthread_mutex_unlock(&pstDemuxBufInfo->stMutex);
+            }
+        }
+#endif
+
     if (true == mbAudioEndOfStream && true == mbVideoEndOfStream)
     {
         EX_PRINTF("File is end of stream");
@@ -2141,7 +2253,7 @@ extern "C" HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI
         EX_PRINTF("[%s:%d] uri size is large than MAX_URL_LEN, err", __FUNCTION__, __LINE__);
         goto err;
     }
-
+#if 0
     pszFileOffset = strstr(uri, SEPARATE_SYMBOL_OFFSET);
 
     if (NULL != pszFileOffset)
@@ -2155,7 +2267,7 @@ extern "C" HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI
         memcpy(aszTmpFileUrl, uri, pszFileOffset - uri);
         pszFileUrl = aszTmpFileUrl;
     }
-
+#endif
     EX_PRINTF("[%s:%d] New url = %s ", __FUNCTION__, __LINE__, pszFileUrl);
 
     // TODO: send headers by createDataSource function

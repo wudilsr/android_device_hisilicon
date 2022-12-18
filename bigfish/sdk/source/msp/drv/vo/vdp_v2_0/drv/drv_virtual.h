@@ -74,6 +74,7 @@ typedef struct tagVIRTUAL_S
     HI_DRV_PIX_FORMAT_E ePixFormat;
     HI_U32 u32Height;
     HI_U32 u32Width;
+    HI_U32 u32FrmRate;
     
     HI_DRV_ROT_ANGLE_E enRotation;
     HI_BOOL bHoriFlip;
@@ -110,6 +111,7 @@ HI_S32 WIN_VIR_AddUlsFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm);
 
 HI_S32 WIN_VIR_SendAttrToSource(VIRTUAL_S *pstVirWin);
 HI_S32 WIN_VIR_SetSize(VIRTUAL_S *pstVirWin,HI_U32 u32Width,HI_U32 u32Height);
+HI_S32 WIN_VIR_SetFrmRate(VIRTUAL_S *pstVirWin,HI_U32 u32FrmRate);
 HI_S32 WIN_VIR_SetAttr(VIRTUAL_S *pstVirWin,HI_DRV_WIN_ATTR_S *pWinAttr);
 
 HI_S32 WIN_VIR_AttachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink);

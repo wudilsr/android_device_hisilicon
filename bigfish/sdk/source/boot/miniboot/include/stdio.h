@@ -59,6 +59,6 @@ char *u64tohstr(const uint64 size, char *unit);
 char *u32tohstr(const uint32 size, char *unit);
 char *u32tohhstr(uint32 size);
 char *u64tohhstr(uint64 size);
-
+char *ultohstr(unsigned long long size);
 /******************************************************************************/
 #endif /* STDIOH */

@@ -332,8 +332,8 @@ static struct resource hisfc400_resources[] = {
 	},
 
 	[3] = {
-		.start = 115,
-		.end   = 115,
+		.start = 89,
+		.end   = 89,
 		.flags = IORESOURCE_IRQ,
 		.name  = "irq"
 	},

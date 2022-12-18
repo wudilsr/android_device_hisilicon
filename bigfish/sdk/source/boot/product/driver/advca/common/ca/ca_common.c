@@ -42,7 +42,7 @@ HI_U32 DRV_ADVCA_ReadReg(HI_U32 addr)
 
 HI_VOID DRV_ADVCA_Wait(HI_U32 us)
 {
-	udelay(us);
+	return;
 }
 
 static HI_S32 HAL_ADVCA_V300_WaitStat(HI_VOID)

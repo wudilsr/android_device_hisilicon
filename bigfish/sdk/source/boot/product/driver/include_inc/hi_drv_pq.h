@@ -104,6 +104,12 @@ HI_S32 HI_PQ_GetBrightness(HI_U32 enChan, HI_U32 *pu32Brightness);
 HI_S32 HI_PQ_GetContrast(HI_U32 enChan, HI_U32 *pu32Contrast);
 HI_S32 HI_PQ_GetHue(HI_U32 enChan, HI_U32 *pu32Hue);
 HI_S32 HI_PQ_GetSaturation(HI_U32 enChan, HI_U32 *pu32Saturation);
+#if 0
+HI_S32 HI_PQ_SetBrightness(HI_U32 enChan, HI_U32 u32Brightness);
+HI_S32 HI_PQ_SetContrast(HI_U32 enChan, HI_U32 u32Contrast);
+HI_S32 HI_PQ_SetHue(HI_U32 enChan, HI_U32 u32Hue);
+HI_S32 HI_PQ_SetSaturation(HI_U32 enChan, HI_U32 u32Saturation);
+#endif
 
 #ifdef __cplusplus
 }

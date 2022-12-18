@@ -42,7 +42,7 @@ HI_VOID DmxHalDvbPortSetAttr(
         HI_U32                  BitSelector
     );
 
-HI_U32  DmxHalGetClk(HI_VOID);
+HI_U32  DmxHalGetDmxClk(HI_VOID);
 HI_VOID DmxHalTSOPortSetAttr(HI_U32 PortId,HI_UNF_DMX_TSO_PORT_ATTR_S *PortAttr);
 
 HI_VOID DmxHalDvbPortSetClkInPol(HI_U32 PortId, HI_BOOL bClkInPol);
@@ -179,7 +179,11 @@ HI_VOID DmxHalIPPortSetIntCnt(HI_U32 PortId, HI_U32 DescNum);
 HI_VOID DmxHalGetTSOClkCfg(HI_U32 PortId,HI_BOOL *ClkReverse,HI_U32 *enClk,HI_U32 *ClkDiv);
 HI_VOID DmxHalCfgTSOClk(HI_U32 PortId,HI_BOOL ClkReverse,HI_U32 enClk,HI_U32 ClkDiv);
 
-
+#ifdef DMX_SUPPORT_DMX_CLK_DYNAMIC_TUNE
+HI_VOID DmxHalDynamicTuneDmxClk(HI_U32 Reduce);
+#else
+static inline HI_VOID DmxHalDynamicTuneDmxClk(HI_U32 Reduce) { }
+#endif
 
 HI_VOID DmxHalEnableOQOutDInt(HI_U32 u32OQId);
 HI_VOID DmxHalDisableOQOutDInt(HI_U32 u32OQId);
@@ -260,7 +264,7 @@ HI_VOID DmxHalSetAllRecExcludePid(HI_U32 RecCfgID, HI_U32 DmxID, HI_U32 PID);
 #endif
 
 
-#ifdef DMX_REC_TIME_STAMP_SUPPORT    /*only hi3719 support this */
+#ifdef DMX_REC_TIME_STAMP_SUPPORT  
 HI_VOID DmxHalConfigRecTsTimeStamp(HI_U32 DmxID, DMX_REC_TIMESTAMP_MODE_E enRecTimeStamp);
 #endif
 

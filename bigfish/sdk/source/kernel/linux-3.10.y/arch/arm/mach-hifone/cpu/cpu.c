@@ -16,13 +16,10 @@
 #include <mach/cpu.h>
 
 /*****************************************************************************/
-
-extern struct cpu_info hi3798mv100_a_cpu_info;
-extern struct cpu_info hi3798mv100_cpu_info;
+extern struct cpu_info hi3798cv200_a_cpu_info;
 
 static struct cpu_info *support_cpu_info[] = {
-	&hi3798mv100_a_cpu_info,
-	&hi3798mv100_cpu_info,
+	&hi3798cv200_a_cpu_info,
 	NULL,
 };
 

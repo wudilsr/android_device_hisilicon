@@ -15,5 +15,4 @@ obj-$(CONFIG_HOTPLUG_CPU)		+= hotplug.o
 obj-$(CONFIG_SUPPORT_SRAM_MANAGER)	+= sram.o
 obj-$(CONFIG_PM_HIBERNATE)		+= snapshot.o
 obj-y					+= cpu/
-obj-y					+= hiuapi.o
 

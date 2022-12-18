@@ -29,6 +29,7 @@
 #define HIRTP_MAX_PKT_SIZE    (1472)//(600*188)
 #define HIRTP_DEFAULT_PKT_SIZE 1472
 #define HIRTP_SEQ_MOD (1<<16)
+#define HIRTP_READ_TIME_OUT (5000000) // 5 second
 
 typedef struct HiRTPContext {
     URLContext *parent;
@@ -163,7 +164,7 @@ static void *_rtp_stream_thread_process(void *arg)
     uint8_t *rcv_buf = NULL;
     DataPacket rtppkt = {0}, emptypkt = {0};
     int len, ret, fd_max, bufsize = 0, rcv_max_pkt_size = 0;
-    int fd[2], i;
+    int fd[2], i, fd_num;
     fd_set rfds;
     struct timeval tv;
 
@@ -172,10 +173,20 @@ static void *_rtp_stream_thread_process(void *arg)
     //_rtp_test_max_pkt_size(s);
     s->max_pkt_size = HIRTP_MAX_PKT_SIZE;
     fd[0] = s->rtp_fd;
-    fd[1] = s->rtcp_fd;
     fd_max = fd[0];
-    if (fd[1] > fd_max)
-        fd_max = fd[1];
+    fd[1] = s->rtcp_fd;
+
+    if (s->rtcp_fd >= 0)
+    {
+        fd_num = 2;
+
+        if (fd[1] > fd_max)
+            fd_max = fd[1];
+    }
+    else
+    {
+        fd_num = 1;
+    }
 
     while(s->is_exit == 0)
     {
@@ -187,12 +198,15 @@ static void *_rtp_stream_thread_process(void *arg)
 
         FD_ZERO(&rfds);
         FD_SET(fd[0], &rfds);
-        FD_SET(fd[1], &rfds);
+
+        if (fd[1] >= 0)
+            FD_SET(fd[1], &rfds);
+
         tv.tv_sec = 0;
         tv.tv_usec = 50 * 1000;
         ret = select(fd_max + 1, &rfds, NULL, NULL, &tv);
         if (ret > 0) {
-            for (i = 0; i < 2; i++)
+            for (i = 0; i < fd_num; i++)
             {
                 if (FD_ISSET(fd[i], &rfds)) {
                     //get buffer
@@ -259,6 +273,9 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
     char path[1024];
     const char *p;
     int ret;
+    int payload_type;
+    uint8_t recvbuf[HIRTP_MAX_PKT_SIZE] = {0};
+    int64_t start_time;
 
     av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] hirtp_open(%s, %d)\n", __FUNCTION__, __LINE__, uri, flags);
 
@@ -308,6 +325,42 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
         goto fail;
     }
 
+   start_time = av_gettime();
+
+   while (1) {
+       if (llabs(av_gettime() - start_time) > HIRTP_READ_TIME_OUT) {
+           av_log(NULL, AV_LOG_ERROR, "Func:%s, Line:%d, HiRtp read header data timeout !\n", __FUNCTION__, __LINE__);
+           goto fail;
+       }
+       if (ff_check_interrupt(&(h->interrupt_callback)) > 0)
+       {
+           av_log(NULL, AV_LOG_ERROR, "[%s:%d] interrupt exit \n", __FILE__, __LINE__);
+           goto fail;
+       }
+
+       ret = ffurl_read(s->rtp_hd, recvbuf, sizeof(recvbuf));
+       if (ret == AVERROR(EAGAIN))
+           continue;
+       if (ret < 0)
+           goto fail;
+
+       start_time = av_gettime();
+
+       if (ret < 12) {
+           av_log(s, AV_LOG_WARNING, "Received too short packet\n");
+           continue;
+       }
+
+       if ((recvbuf[0] & 0xc0) != 0x80) {
+           av_log(s, AV_LOG_WARNING, "Unsupported HiRTP version packet received\n");
+           continue;
+       }
+
+       payload_type = recvbuf[1] & 0x7f;
+       break;
+   }
+
+
    // if (local_rtp_port>=0 && local_rtcp_port<0)
    //     local_rtcp_port = ff_udp_get_local_port(s->rtp_hd) + 1;
 
@@ -316,15 +369,22 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
                   connect);
 
     av_log(NULL, AV_LOG_INFO, "[%s:%d][HIRTP] build rtcp url(%s, %d)\n", __FUNCTION__, __LINE__, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_WRITE));
+
     if (ffurl_open(&s->rtcp_hd, buf, (flags | AVIO_FLAG_NONBLOCK | AVIO_FLAG_READ_WRITE), &h->interrupt_callback, NULL) < 0) {
         av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ffurl_open return error!\n", __FUNCTION__, __LINE__);
-        goto fail;
     }
 
     /* just to ease handle access. XXX: need to suppress direct handle
        access */
     s->rtp_fd = ffurl_get_file_handle(s->rtp_hd);
-    s->rtcp_fd = ffurl_get_file_handle(s->rtcp_hd);
+    if (s->rtcp_hd)
+    {
+        s->rtcp_fd = ffurl_get_file_handle(s->rtcp_hd);
+    }
+    else
+    {
+        s->rtcp_fd = -1;
+    }
     s->ts_queue = NULL;
     if (pktq_create(&s->ts_queue, HIRTP_TSQUE_BUF_MAX_SIZE, HIRTP_TSQUE_BUF_FORBIDDEN_SIZE) < 0) {
         av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] create ts queue return error!\n", __FUNCTION__, __LINE__);
@@ -476,7 +536,7 @@ static int hirtp_read(URLContext *h, uint8_t *buf, int size)
 static int hirtp_write(URLContext *h, const uint8_t *buf, int size)
 {
     HiRTPContext *s = h->priv_data;
-    int ret;
+    int ret = -1;
     URLContext *hd;
 
     if (buf[1] >= RTCP_SR && buf[1] <= RTCP_APP) {
@@ -487,7 +547,11 @@ static int hirtp_write(URLContext *h, const uint8_t *buf, int size)
         hd = s->rtp_hd;
     }
 
-    ret = ffurl_write(hd, buf, size);
+    if (hd)
+    {
+        ret = ffurl_write(hd, buf, size);
+    }
+
     return ret;
 }
 

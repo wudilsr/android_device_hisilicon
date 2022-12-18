@@ -180,6 +180,14 @@ typedef struct hiDRV_MEM_S
     MEM_RECORD_S  stSystemReg;      /* 系统寄存器，比如复位FOD,VDM,SCD等 */
 } DRV_MEM_S;
 
+typedef struct hiDRV_IRQ_RECORD_S
+{
+    SINT32 VdhIrq[MAX_VDH_NUM];
+    SINT32 ScdIrq[MAX_SCD_NUM];
+    SINT32 DnrIrq;
+    SINT32 BtlIrq;
+}DRV_IRQ_RECORD_S;
+
 /* 解码器控制数据集 */
 typedef struct hiVFMW_CTRL_DATA_S
 {
@@ -197,6 +205,7 @@ typedef struct hiVFMW_CTRL_DATA_S
     DRV_MEM_S     stDrvMem;
     SINT32        (*event_report_vdec)(SINT32 ChanID, SINT32 type, VOID* p_args );
     SINT32        (*event_report_omxvdec)(SINT32 ChanID, SINT32 type, VOID* p_args );
+    DRV_IRQ_RECORD_S stIrqRecord;  
 } VFMW_CTRL_DATA_S;
 
 typedef struct hiVFMW_CHAN_FRM_BUF_S
@@ -213,6 +222,7 @@ typedef struct hiVFMW_CHAN_MEM_S
     MEM_RECORD_S   stChanMem_vdh;       /* 该通道的帧存存储资源 */
     MEM_RECORD_S   stChanMem_scd;       /* 该通道的SCD存储资源 */
     MEM_RECORD_S   stChanMem_ctx;       /* 该通道的上下文存储资源 */ 
+    MEM_RECORD_S   stChanMem_dsp;       /* 该通道的DSP上下文存储资源 */
     
     SINT32         s32SelfAllocChanMem_vdh;  /* 标识通道 vdh 是否是自己分配的，1: 自己分配, 0: 外部分配 */
     SINT32         s32SelfAllocChanMem_scd;  /* 标识通道 scd 是否是自己分配的，1: 自己分配, 0: 外部分配 */
@@ -293,7 +303,9 @@ typedef struct hiVFMW_CHAN_S
     SINT32         s32Vp8SegIdChanMemAddr;
     SINT32         s32Vp8SegIdChanMemSize;    /* SegId通道所占据的存储空间大小 */	
 	
-	IMAGE          stRecentImg;     /* 最新IMAGE结构体 */
+	//IMAGE          stRecentImg;     /* 最新IMAGE结构体 */
+    UINT32         stRecentImgformat;
+    FRAME_PACKING_TYPE_E  stRecentImgPackingType;
 
     SINT32         s32NoStreamFlag; /* 由于该通道没有足够码流导致未能生成解码参数decparam */
     SINT32         s32LastFrameIdPlus2;  /* 最后一帧输出时，用于记录最后一帧的image_id + 2 ，1D 转2D时，后面BTL/DNR会用到*/
@@ -328,7 +340,14 @@ typedef struct hiVFMW_CHAN_S
     VFMW_MEM_ARRANGE_INFO_S stMemArrangeInfo;
     VFMW_DYNAMIC_FS_TIMESTAMP_S stDynamicFSTimestamp;
     //l00273086 end
+    UINT32 u32DynamicFrameStoreAllocEn;
     UINT32 u32CurSavePicBitDepth;
+	SINT32 s32H264Score;
+	SINT32 s32Mpeg2Score;
+	SINT32 s32FindStartCodeCnt;
+	SINT32 s32LastTwoStartCode;
+	SINT32 s32LastOneStartCode;
+	SINT32 s32CurrentStartCode;
     SYNTAX_CTX_S   stSynCtx;//此成员必须放在最后一个定义,创建通道时即使mvc support，但是配置的能力集不是mvc相关的，该结构体内存也只分配次大的CTX所需，以达到内存裁剪目的。 l00225186
 
 } VFMW_CHAN_S;

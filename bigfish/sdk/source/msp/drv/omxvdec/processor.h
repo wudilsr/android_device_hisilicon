@@ -23,7 +23,7 @@ HI_S32 processor_init(HI_VOID);
 
 HI_S32 processor_exit(HI_VOID);
 
-HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, HI_U32 color_format);
+HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, OMX_PIX_FORMAT_E color_format);
 
 HI_S32 processor_release_inst(OMXVDEC_CHAN_CTX *pchan);
 

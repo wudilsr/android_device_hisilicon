@@ -228,6 +228,7 @@ void*   AbstractChunk::DownloadInternalConnection   (void *abstractchunk)
     int isRunning = 0;
     long httpCode = 0;
     uint64_t start, end, download_start, download_consume;
+    uint64_t will_download_bytes = 0;
     int timeoutCount = 0;
     bool doReconnect = false;
     bool followlocation = true;
@@ -266,8 +267,21 @@ retry:
     {
         curl_easy_setopt(chunk->curl, CURLOPT_RANGE, chunk->Range().c_str());
         chunk->bytesDownloaded = chunk->StartByte();
+        //-1 means there is no end range.such as "0-"
+        if (chunk->EndByte() != (size_t)-1)
+        {
+            will_download_bytes = chunk->EndByte() - chunk->StartByte();
+        }
     }
-    dash_log(DASH_LOG_INFO, "[%p]download start, offset= %lld, url = %s\n", chunk, chunk->bytesDownloaded, download_url);
+
+    if (will_download_bytes > 0)
+    {
+        dash_log(DASH_LOG_INFO, "[%p]download start, offset= %llu(to %llu), url = %s\n", chunk, chunk->bytesDownloaded, (will_download_bytes + chunk->bytesDownloaded),download_url);
+    }
+    else
+    {
+        dash_log(DASH_LOG_INFO, "[%p]download start, offset= %llu(to end), url = %s\n", chunk, chunk->bytesDownloaded,download_url);
+    }
 
     curl_multi_add_handle(chunk->curlMulti, chunk->curl);
 
@@ -299,6 +313,9 @@ retry:
             chunk->bytesDownloadedThisTime = 0;
         }
         chunk->responseCallBackTotalTime = 0;
+
+        if (isRunning == 0)
+            break;
 
         struct timeval tv;
         tv.tv_sec = 0;
@@ -412,14 +429,15 @@ size_t  AbstractChunk::CurlHeaderCallback(void * headerData,size_t size,size_t n
     //dash_log("\n%s\n", (char *)headerData);
     AbstractChunk *chunk = (AbstractChunk *)userdata;
     long httpCode = 0;
+
     curl_easy_getinfo(chunk->curl, CURLINFO_RESPONSE_CODE ,&httpCode);
 
     if (404 == httpCode)
         chunk->NotifyErrorHappened();
     if (httpCode == 0 || httpCode >= 400)
     {
-        dash_log(DASH_LOG_ERROR, "[%s,%d] chunk [%p] download return http error code %ld\n",
-             __FUNCTION__, __LINE__, chunk, httpCode);
+        dash_log(DASH_LOG_ERROR, "[%s,%d] chunk [%p] url='%s', download return http error code=%ld\n",
+             __FUNCTION__, __LINE__, chunk, chunk->AbsoluteURI().c_str(), httpCode);
     }
 
     return realsize;
@@ -444,7 +462,8 @@ size_t  AbstractChunk::CurlResponseCallback         (void *contents, size_t size
     }
 
     curl_easy_getinfo(chunk->curl, CURLINFO_RESPONSE_CODE ,&httpCode);
-    if (httpCode == 416 || realsize <= 0)
+    //refer to rfc2616, httpCode Successful 2xx, Redirection 3xx ,Client Error 4xx, Server Error 5xx
+    if (realsize <= 0 || (httpCode < 200 || httpCode >= 300) )
     {
         end = dash_gettime();
         chunk->responseCallBackTotalTime = (end - start);

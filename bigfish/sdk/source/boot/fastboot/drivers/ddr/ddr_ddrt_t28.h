@@ -44,7 +44,8 @@
 
 /* register value */
 #define DDRT_CFG_START		0x1
-#define DDRT_CFG_BURST_CFG	0x4f
+#define DDRT_CFG_BURST_CFG_DATAEYE	0x4f
+#define DDRT_CFG_BURST_CFG_GATE	0x43
 #define DDRT_CFG_BURST_NUM	0x7f
 #define DDRT_CFG_SEED		0x6d6d6d6d
 #define DDRT_CFG_REVERSED	0x55aa55aa

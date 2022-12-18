@@ -34,6 +34,7 @@ LOCAL_CFLAGS += -DHI_TVP_SUPPORT
 
 LOCAL_SHARED_LIBRARIES := libdl libutils liblog
 LOCAL_SHARED_LIBRARIES += libteec
+LOCAL_SHARED_LIBRARIES += libhi_common
 
 ifeq ($(strip $(BUILDIN_HISI_GPU_MIDGARD)),true)
 HISI_GPU_DIR := midgard
@@ -53,6 +54,7 @@ LOCAL_C_INCLUDES += frameworks/native/include/media/hardware
 LOCAL_C_INCLUDES += device/hisilicon/bigfish/hardware/gpu/android/gralloc
 LOCAL_C_INCLUDES += device/hisilicon/bigfish/hardware/gpu/$(HISI_GPU_DIR)/android/gralloc
 LOCAL_C_INCLUDES += $(TVP_DIR)/libteec/inc
+LOCAL_C_INCLUDES += $(TVP_DIR)/libteec/sec_mmz/inc
 
 LOCAL_SRC_FILES := $(sort $(call all-c-files-under, ./))
 

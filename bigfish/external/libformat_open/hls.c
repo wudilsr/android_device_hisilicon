@@ -41,6 +41,7 @@
 #include "libclientadp.h"
 #endif
 
+#include <sys/time.h>
 #include "hls_key_decrypt.h"
 
 #define DISCONTINUE_MAX_TIME    (90000*3)
@@ -57,11 +58,15 @@
 #ifndef HI_ADVCA_FUNCTION_RELEASE
 const AVOption ff_hls_options[] = {
     { "download_speed_collect_freq_ms",  "download speed collect freq", OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, DEC|ENC},
+    {"headers", "",  OFFSET(headers), AV_OPT_TYPE_STRING, { 0 }, 0, 0, DEC|ENC},
+    {"uuid", "",  OFFSET(uuid), AV_OPT_TYPE_STRING, { 0 }, 0, 0, DEC|ENC},
     { NULL },
 };
 #else
 const AVOption ff_hls_options[] = {
     { "download_speed_collect_freq_ms", "",  OFFSET(download_speed_collect_freq_ms), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, DEC|ENC},
+    {"headers", "",  OFFSET(headers), AV_OPT_TYPE_STRING, { 0 }, 0, 0, DEC|ENC},
+    {"uuid", "",  OFFSET(uuid), AV_OPT_TYPE_STRING, { 0 }, 0, 0, DEC|ENC},
     { NULL },
 };
 #endif
@@ -98,6 +103,37 @@ typedef enum HLS_START_MODE
 /*******************************************************************************
  * Local protofunctions
  ******************************************************************************/
+
+static int hlsGetPtsScale(int64_t *discontinue_pts, int num, int idx, int64_t *scale_val)
+{
+    int i = 0;
+    int64_t pts_min = AV_NOPTS_VALUE;
+
+    for (i = 0; i < num; i++)
+    {
+        //av_log(NULL, AV_LOG_ERROR, "discontinue_pts[%d]=%lld \n", i, discontinue_pts[i]);
+        if (discontinue_pts[i] != AV_NOPTS_VALUE
+            && (discontinue_pts[i] < pts_min
+            || pts_min == AV_NOPTS_VALUE))
+        {
+            pts_min = discontinue_pts[i];
+        }
+    }
+
+    if (discontinue_pts[idx] > pts_min
+        && discontinue_pts[idx] != AV_NOPTS_VALUE
+        && pts_min != AV_NOPTS_VALUE)
+    {
+        *scale_val = discontinue_pts[idx] - pts_min;
+    }
+    else
+    {
+        *scale_val = 0;
+    }
+
+    return 0;
+}
+
 static int hlsGetLine(ByteIOContext *s, char *buf, int maxlen, AVIOInterruptCB *interrupt_callback)
 {
     char c;
@@ -273,6 +309,8 @@ static void hlsFreeHlsList(HLSContext *c)
         hlsFreeSegmentList(hls);
 
         av_free(hls->seg_demux.last_time);
+        av_free(hls->seg_demux.last_org_pts);
+        av_free(hls->seg_demux.discontinue_pts);
         av_free_packet(&hls->seg_demux.pkt);
         av_free(hls->seg_stream.IO_pb.buffer);
 
@@ -378,7 +416,7 @@ static int hlsParseM3U8(HLSContext *c, char *url,
     AVDictionary *opts = NULL;
     int  hls_finished = 0;
     time_t  timeSec = 0;
-
+    int save_hls=0;
     /**make resolution change available from 3716c-0.6.3 r41002 changed by duanqingpeng**/
     /*HLSContext *hls_c = NULL;
 
@@ -414,7 +452,35 @@ static int hlsParseM3U8(HLSContext *c, char *url,
         }
     }
 
+    if ( c->ready_to_record_ts == 1)
+    {
+        save_hls =1;
+    }
+
+    if (save_hls)
+    {
+        uint32_t time = 0;
+        char buf[INITIAL_URL_SIZE];
+
+        memset(buf, 0, sizeof(buf));
+        time = av_getsystemtime();
+        snprintf(buf, sizeof(buf)-1, "download m3u8 at time[%u ms]\n\n", time);
+
+        if (c->mufp)
+        {
+            fwrite(buf, 1, strlen(buf), c->mufp);
+            fflush(c->mufp);
+        }
+    }
+
     hlsReadLine(in, line, sizeof(line), &c->interrupt_callback);
+
+    if (save_hls && c->mufp)
+    {
+        fwrite(line, 1, strlen(line), c->mufp);
+        fwrite("\n", 1, 1, c->mufp);
+        fflush(c->mufp);
+    }
 
     if (av_strcmp(line, "#EXTM3U")) {
         ret = AVERROR_INVALIDDATA;
@@ -428,6 +494,12 @@ static int hlsParseM3U8(HLSContext *c, char *url,
 
     while (!url_feof(in)) {
         hlsReadLine(in, line, sizeof(line), &c->interrupt_callback);
+        if (save_hls && c->mufp)
+        {
+            fwrite(line, 1, strlen(line), c->mufp);
+            fwrite("\n", 1, 1, c->mufp);
+            fflush(c->mufp);
+        }
 
         if (ff_check_interrupt(&c->interrupt_callback)) {
             ret = AVERROR_EOF;
@@ -830,6 +902,39 @@ static int hlsGetIndex(HLSContext *c)
     return target_index;
 }
 
+static int hlsUpdateUrlInfo(HLSContext *c, URLContext *uc)
+{
+    if (NULL == c)
+    {
+        av_log(NULL,AV_LOG_ERROR,"#[%s:%d] hlsUpdateUrlInfo invalid param#\n",__FUNCTION__,__LINE__);
+        return -1;
+    }
+    memset(&c->stHlsUrlInfo, 0, sizeof(HLS_URL_INFO_S));
+    if (NULL == uc)
+    {
+        if (c->cur_seg)
+        {
+            av_strlcpy(c->stHlsUrlInfo.url, c->cur_seg->url, sizeof(c->stHlsUrlInfo.url));
+            c->stHlsUrlInfo.enable = 1;
+        }
+    }
+    else
+    {
+        if (uc->moved_url)
+        {
+            av_strlcpy(c->stHlsUrlInfo.url, uc->moved_url, sizeof(c->stHlsUrlInfo.url));
+        }
+        else
+        {
+            av_strlcpy(c->stHlsUrlInfo.url, c->cur_seg->url, sizeof(c->stHlsUrlInfo.url));
+        }
+        c->stHlsUrlInfo.port = uc->port;
+        av_strlcpy(c->stHlsUrlInfo.ipaddr, uc->ipaddr, sizeof(c->stHlsUrlInfo.ipaddr));
+        c->stHlsUrlInfo.enable = 1;
+    }
+    return 0;
+}
+
 static int hlsOpenSegment(hls_stream_info_t *hls)
 {
     int pos;
@@ -838,7 +943,13 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
     HLSContext *c = hls->seg_demux.parent->priv_data;
     int ret = 0;
     AVDictionary *opts = NULL;
+    int save_hls =0;
 
+    if (cur == 0) {
+        c->seg_position = 0;
+        c->ts_first_btime = 0;
+        c->seg_count = 1000;
+    }
     pos = cur - start;
     //hls_segment_t *seg = hls->seg_list.segments[pos];
     hls_segment_t *seg=c->cur_seg;
@@ -854,6 +965,28 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
 
     if (c->headers && strlen(c->headers) > 0)
         av_dict_set(&opts, "headers", c->headers, 0);
+
+    av_log(NULL, AV_LOG_ERROR, "[%s %d] c->uuid:%xh, seg_position=%d cur=%d",__FUNCTION__, __LINE__, c->uuid,c->seg_position,cur);
+    if(c->uuid && c->seg_position != cur){
+        if (NULL != c->uuid) {
+            c->ts_send_time = av_gettime();
+        }
+        c->ts_first_btime = 0;
+        c->seg_count++;
+        if (c->seg_count > 9000) {
+            c->seg_count = 1001;
+        }
+    }
+    if (c->uuid && strlen(c->uuid) > 0){
+        struct timeval tv;
+
+        if (0 == gettimeofday(&tv, NULL)) {
+            snprintf(c->ts_traceid, sizeof(c->ts_traceid),"%s%013u%04d",c->uuid, tv.tv_sec*1000 + tv.tv_usec/1000, c->seg_count);
+        }
+
+        av_dict_set(&opts, "traceId", c->ts_traceid, 0);
+        av_log(NULL, AV_LOG_ERROR, "[%s %d] time=[%013u] c->uuid=[%s] ts_traceid:%s",__FUNCTION__, __LINE__,tv.tv_sec*1000 + tv.tv_usec/1000,c->uuid, c->ts_traceid);
+    }
 
     if (seg->key_type == KEY_NONE) {
         av_log(NULL, AV_LOG_ERROR, "[%s:%d] open segment noKey url=%s pos=%d hls->bandwidth=%d \n",
@@ -884,6 +1017,12 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
 
             ret = hls_open_h(&hls->seg_stream.input, c->file_name, URL_RDONLY,
                 &(c->interrupt_callback), &options);
+            if (0 == ret) {
+                hlsUpdateUrlInfo(c, hls->seg_stream.input);
+            } else {
+                hlsUpdateUrlInfo(c, NULL);
+            }
+
             hls->seg_stream.offset = 0;
             av_dict_free(&options);
             av_dict_free(&opts);
@@ -893,6 +1032,14 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
         av_log(NULL, AV_LOG_ERROR, "nocache open:%s", seg->url);//TODO:remove on release
 
         ret = hls_open_h(&hls->seg_stream.input, seg->url, URL_RDONLY, &(c->interrupt_callback), &opts);
+        if (0 == ret)
+        {
+            hlsUpdateUrlInfo(c, hls->seg_stream.input);
+        }
+        else
+        {
+            hlsUpdateUrlInfo(c, NULL);
+        }
         hls->seg_stream.offset = 0;
         av_dict_free(&opts);
     } else if (seg->key_type == KEY_AES_128) {
@@ -940,6 +1087,14 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
                 /* Open key url to get key context */
                 ret = hls_open_h(&uc, seg->key, URL_RDONLY, &(c->interrupt_callback), &opts);
                 offset = 0;
+                if (0 == ret)
+                {
+                    hlsUpdateUrlInfo(c, uc);
+                }
+                else
+                {
+                    hlsUpdateUrlInfo(c, NULL);
+                }
 
                 if (ret == 0) {
                     ret = hls_read_complete(uc, offset, hls->seg_key.key, sizeof(hls->seg_key.key));
@@ -989,6 +1144,36 @@ static int hlsOpenSegment(hls_stream_info_t *hls)
     {
         /* If reached here, invalid type */
         return AVERROR(EINVAL);
+    }
+
+    if (0 == ret)
+    {
+        if (c->ready_to_record_ts == 1)
+        {
+            save_hls =1;
+        }
+
+        /* close last segment's logfile handle */
+        if (c->tsfp)
+        {
+            fclose(c->tsfp);
+            c->tsfp = NULL;
+        }
+
+        if (save_hls)
+        {
+            char name[INITIAL_URL_SIZE];
+
+            memset(name, 0, sizeof(name));
+            snprintf(name, sizeof(name) - 1, "%s/%d_%d.ts", c->save_hls_path, start, pos);
+            av_log(NULL,AV_LOG_ERROR,"#[%s:%d] save ts:%s#\n",__FUNCTION__,__LINE__,name);
+
+            c->tsfp = fopen(name, "w+b");
+            if (NULL == c->tsfp)
+            {
+                av_log(NULL,AV_LOG_ERROR,"#[%s:%d] fopen %s failed#\n",__FUNCTION__,__LINE__,name);
+            }
+        }
     }
 
     return ret;
@@ -1126,7 +1311,7 @@ reload:
          * the last playlist reload, reload the variant playlists now. */
         if (!v->seg_list.hls_finished && ((llabs(time_diff) >= time_wait) || need_reload)) {
 reparse:
-            ret = hlsFreshUrl(v);
+            //ret = hlsFreshUrl(v); //only for yueme version
             ret = hlsParseM3U8(c, v->url, v, NULL);
             if (ret < 0) {
                 if (ff_check_interrupt(&c->interrupt_callback))
@@ -1209,7 +1394,7 @@ reparse:
         if (!v->seg_list.hls_finished) {
             if (has_reload && (c->cur_stream_seq != v->seg_list.hls_index)) {
 reparse2:
-                ret = hlsFreshUrl(c->cur_hls);
+                //ret = hlsFreshUrl(c->cur_hls); //only for yueme version
                 ret = hlsParseM3U8(c, c->cur_hls->url, c->cur_hls, NULL);
                 if (ret < 0) {
                     if (ff_check_interrupt(&c->interrupt_callback))
@@ -1336,6 +1521,8 @@ reopen:
             }
         } else {
             AVFormatContext *s = c->parent;
+            for (i = 0; i < v->seg_demux.parent->nb_streams; i++)
+                v->seg_demux.discontinue_pts[i] = AV_NOPTS_VALUE;
             if (v->seg_stream.input) {
                 v->seg_stream.input->parent = s->pb;
                 if (open_fail && !strncmp(v->seg_stream.input->filename, "http://", strlen("http://"))) {
@@ -1362,15 +1549,32 @@ reopen:
         ret = hls_decrypt_read(v->seg_key.IO_decrypt, buf, buf_size);
     } else {  // Normal stream
         ret = hls_read(v->seg_stream.input, v->seg_stream.offset, buf, buf_size);
-        if(ret > 0)
+        if(ret > 0) {
             v->seg_stream.offset += ret;
+            URLContext *uc = (URLContext *) v->seg_stream.input;
+            if(NULL != c->uuid) {
+                if(0 == c->ts_first_btime && v->seg_list.hls_seg_cur != c->seg_position)
+                {
+                    c->ts_first_btime = av_gettime();
+                }
+                c->seg_position = v->seg_list.hls_seg_cur;
+                c->ts_length = ffurl_size(uc);
+                c->ts_last_btime = av_gettime();
+                c->http_res = uc->http_res;
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d]  c->http_res=%xh ,uc->http_res=%xh\n",__FUNCTION__,__LINE__, c->http_res, uc->http_res);
+            }
+        }
     }
-
     int64_t  end = av_gettime();
     if (ret > 0) {
         unsigned int read_size = ret;
         unsigned int read_time = end - start;
         hlsSetDownLoadSpeed(c, read_size, read_time, start, end);
+        if (c->tsfp)
+        {
+            fwrite(buf, 1, ret, c->tsfp);
+            fflush(c->mufp);
+        }
 
         return ret;
     }
@@ -1397,6 +1601,12 @@ load_next:
     }
 
     v->seg_list.hls_seg_cur++;
+    if (NULL != c->uuid) {
+        c->ts_last_btime = av_gettime();
+        av_log(NULL, AV_LOG_ERROR, "[%s:%d] NETWORK_TS_SEGMENT_COMPLETE load_next urlcontext=%xh, hls_seg_cur=%d,ts_send_time=%lld,ts_first_btime=%lld,ts_last_btime=%lld, ts_length=%d \n",__FUNCTION__,__LINE__,
+                    v->seg_stream.input, v->seg_list.hls_seg_cur,c->ts_send_time,c->ts_first_btime, c->ts_last_btime,c->ts_length);
+        url_errorcode_cb(c->interrupt_callback.opaque, NETWORK_TS_SEGMENT_COMPLETE, "http");
+    }
     int pos=0;
     int stream_num = 0;
     hls_stream_info_t *hls = c->hls_stream[0];
@@ -1452,9 +1662,37 @@ load_next:
                 return ret;
             }
 
+            int64_t* last_org_pts = (int64_t*)av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+            if (NULL == last_org_pts)
+            {
+                av_free(lasttime);
+                ret = AVERROR(ENOMEM);
+                return ret;
+            }
+
+            int64_t* discontinue_pts = (int64_t*)av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+            if (NULL == discontinue_pts)
+            {
+                av_free(lasttime);
+                av_free(last_org_pts);
+                ret = AVERROR(ENOMEM);
+                return ret;
+            }
+
             memcpy(lasttime, hls->seg_demux.last_time, sizeof(int64_t) * v->seg_demux.parent->nb_streams);
+            memcpy(last_org_pts, hls->seg_demux.last_org_pts,sizeof(int64_t) * v->seg_demux.parent->nb_streams);
+
+            for (j = 0; j < v->seg_demux.parent->nb_streams; j++)
+                discontinue_pts[j] = AV_NOPTS_VALUE;
+
+            av_free(hls->seg_demux.last_org_pts);
+            av_free(hls->seg_demux.discontinue_pts);
             av_free(hls->seg_demux.last_time);
             hls->seg_demux.last_time  = lasttime;
+            hls->seg_demux.last_org_pts = last_org_pts;
+            hls->seg_demux.discontinue_pts = discontinue_pts;
 
             for (j = v->seg_demux.parent->nb_streams; j < hls->seg_demux.ctx->nb_streams; j++) {
                 AVStream *st = av_new_stream(v->seg_demux.parent, 0);
@@ -1605,6 +1843,21 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
 
     c->tsfp = NULL;
     c->mufp = NULL;
+    c->stHlsUrlInfo.enable = 0;
+
+    char name[INITIAL_URL_SIZE];
+
+    memset(name, 0, sizeof(name));
+    memset(c->save_hls_path,0,sizeof(c->save_hls_path));
+    char tmpdest[] ="/sdcard/hiplayer";
+    strncpy(c->save_hls_path,tmpdest,strlen(tmpdest));
+    snprintf(name, sizeof(name)-1, "%s/log.m3u8", c->save_hls_path);
+
+    c->mufp = fopen(name, "w+b");
+    if (NULL == c->mufp)
+    {
+        av_log(NULL,AV_LOG_ERROR,"[%s:%d] fopen fail \n",__FUNCTION__,__LINE__);
+    }
 
     /* Get host name string */
     if (uc && uc->moved_url)
@@ -1951,6 +2204,8 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
                 }
             }
 
+            //disable wrap dts and pts
+            hls->seg_demux.ctx->correct_ts_overflow = 0;
             break;
         }
 
@@ -1964,6 +2219,11 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
         snprintf(bitrate_str, sizeof(bitrate_str), "%d", hls->bandwidth);
         /* Create new AVStreams for each stream in this variant */
         for (j = 0; j < hls->seg_demux.ctx->nb_streams; j++) {
+            if (NULL != hls->seg_demux.ctx->streams[j]->codec
+                && AVMEDIA_TYPE_UNKNOWN == hls->seg_demux.ctx->streams[j]->codec->codec_type) {
+                av_log(NULL, AV_LOG_ERROR, "%s(%d),invalid stream, codec[%d],name:%s, type:%d", __FILE_NAME__, __LINE__,
+                j, hls->seg_demux.ctx->streams[j]->codec->av_class->class_name, hls->seg_demux.ctx->streams[j]->codec->codec_type);
+            }
             AVStream *st = av_new_stream(s, i);
             if (!st) {
                 ret = AVERROR(ENOMEM);
@@ -1985,6 +2245,31 @@ static int HLS_read_header(AVFormatContext *s, AVFormatParameters *ap)
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
+        }
+
+        if (NULL == hls->seg_demux.last_org_pts)
+        {
+            hls->seg_demux.last_org_pts = av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+            if (NULL == hls->seg_demux.last_org_pts)
+            {
+                ret = AVERROR(ENOMEM);
+                goto fail;
+            }
+        }
+
+        if (NULL == hls->seg_demux.discontinue_pts)
+        {
+            hls->seg_demux.discontinue_pts = av_mallocz(sizeof(int64_t) * hls->seg_demux.ctx->nb_streams);
+
+            if (NULL == hls->seg_demux.discontinue_pts)
+            {
+                ret = AVERROR(ENOMEM);
+                goto fail;
+            }
+
+            for (i = 0; i < hls->seg_demux.ctx->nb_streams; i++)
+                hls->seg_demux.discontinue_pts[i] = AV_NOPTS_VALUE;
         }
         stream_offset += hls->seg_demux.ctx->nb_streams;
     }
@@ -2098,6 +2383,8 @@ static int HLS_read_packet(AVFormatContext *s, AVPacket *pkt)
         if (ret < 0)
             return ret;
 
+        //disable wrap dts and pts
+        c->hls_stream[0]->seg_demux.ctx->correct_ts_overflow = 0;
         c->reset_appoint_id = 0;
     }
 
@@ -2193,8 +2480,10 @@ start:
         }
 
         /* Cacaulate pts offset to make pts continuously */
+        AVStream *st_cur = hls->seg_demux.ctx->streams[hls->seg_demux.pkt.stream_index];
         if (hls->seg_demux.pkt.dts != AV_NOPTS_VALUE &&
             hls->seg_demux.pkt.stream_index < s->nb_streams &&
+            AVMEDIA_TYPE_UNKNOWN != st_cur->codec->codec_type &&
             hls->seg_demux.last_time[hls->seg_demux.pkt.stream_index] != AV_NOPTS_VALUE) {
             int64_t diff;
             diff =
@@ -2203,20 +2492,32 @@ start:
 
             if (llabs(diff) >= DISCONTINUE_MAX_TIME) {
                 hls->seg_demux.set_offset = 0;
-                av_log(NULL, AV_LOG_ERROR, "[%s:%d] DISCONTINUOUSLY last_time(%lld) new_time(%lld)\n",
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d] DISCONTINUOUSLY last_time(%lld) new_time(%lld), stream_index(%d)\n",
                         __FILE_NAME__,__LINE__,
                         hls->seg_demux.last_time[hls->seg_demux.pkt.stream_index],
-                        hls->seg_demux.pkt.dts);
+                        hls->seg_demux.pkt.dts, hls->seg_demux.pkt.stream_index);
             }
 
             if (!hls->seg_demux.set_offset) {
-                hls->seg_demux.pts_offset
-                    = hls->seg_demux.last_time[hls->seg_demux.pkt.stream_index] - hls->seg_demux.pkt.dts;
                 hls->seg_demux.set_offset = 1;
-                av_log(NULL, AV_LOG_ERROR, "[%s:%d] stream idx[%d] NEW PTS OFFSET(%lld)\n",
+                if (AV_NOPTS_VALUE != hls->seg_demux.pkt.dts
+                  && AV_NOPTS_VALUE != hls->seg_demux.last_org_pts[hls->seg_demux.pkt.stream_index]
+                  && llabs(hls->seg_demux.pkt.dts - hls->seg_demux.last_org_pts[hls->seg_demux.pkt.stream_index]) >= DISCONTINUE_MAX_TIME) {
+                    hls->seg_demux.discontinue_pts[hls->seg_demux.pkt.stream_index] = hls->seg_demux.pkt.dts;
+                    hls->seg_demux.pts_offset = hls->seg_demux.last_time[hls->seg_demux.pkt.stream_index] - hls->seg_demux.pkt.dts;
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] renew pts_offset(%lld), last_time(%lld), cur dts(%lld) \n",
+                        __FILE_NAME__,__LINE__, hls->seg_demux.pts_offset,
+                    hls->seg_demux.last_time[hls->seg_demux.pkt.stream_index], hls->seg_demux.pkt.dts);
+
+                } else {
+                    av_log(NULL, AV_LOG_ERROR, "[%s:%d] pts is continue, last_org_pts[%d](%lld), cur dts(%lld) \n",
+                        __FILE_NAME__,__LINE__, hls->seg_demux.pkt.stream_index,
+                    hls->seg_demux.last_org_pts[hls->seg_demux.pkt.stream_index], hls->seg_demux.pkt.dts);
+                }
+                av_log(NULL, AV_LOG_ERROR, "[%s:%d] NEW PTS OFFSET(%lld), discontinue_pts(%lld)0x%x\n",
                         __FILE_NAME__,__LINE__,
-                        hls->seg_demux.pkt.stream_index,
-                        hls->seg_demux.pts_offset);
+                        hls->seg_demux.pts_offset,hls->seg_demux.discontinue_pts[hls->seg_demux.pkt.stream_index],
+                        hls->seg_demux.pts_offset,hls->seg_demux.discontinue_pts[hls->seg_demux.pkt.stream_index]);
             }
         }
     }
@@ -2228,6 +2529,9 @@ start:
     if (minvariant >= 0) {
         *pkt = c->hls_stream[minvariant]->seg_demux.pkt;
         pkt->stream_index += c->hls_stream[minvariant]->seg_list.hls_stream_offset;
+
+        if (pkt->pts != AV_NOPTS_VALUE)
+            c->hls_stream[minvariant]->seg_demux.last_org_pts[pkt->stream_index] = pkt->pts;
 
         if (c->hls_stream[minvariant]->seg_demux.set_offset) {
             AVStream *stream_tmp = NULL;
@@ -2252,7 +2556,9 @@ start:
 
                 if ((pkt->pts > c->hls_stream[minvariant]->seg_demux.last_time[c->hls_stream[minvariant]->seg_demux.pkt.stream_index])
                     || c->hls_stream[minvariant]->seg_list.hls_finished)
+                {
                     c->hls_stream[minvariant]->seg_demux.last_time[c->hls_stream[minvariant]->seg_demux.pkt.stream_index] = pkt->pts;
+                }
 
                 pkt->pts += c->hls_stream[minvariant]->seg_demux.seek_offset;
             }
@@ -2343,6 +2649,18 @@ static int HLS_close(AVFormatContext *s)
         }
         downspeed->head = NULL;
         downspeed->tail = NULL;
+    }
+
+    if (c->mufp)
+    {
+        fclose(c->mufp);
+        c->mufp = NULL;
+    }
+
+    if (c->tsfp)
+    {
+        fclose(c->tsfp);
+        c->tsfp = NULL;
     }
 
     return 0;
@@ -2464,9 +2782,12 @@ static int HLS_read_seek(AVFormatContext *s, int stream_index,
                 c->cur_seg = NULL;
                 c->cur_seq_num = j;
                 ff_read_frame_flush(hls->seg_demux.ctx);
+                memset(hls->seg_demux.last_org_pts, 0, sizeof(int64_t) * hls->seg_demux.parent->nb_streams);
                 return 0;
             }
         }
+
+        memset(hls->seg_demux.last_org_pts, 0, sizeof(int64_t) * hls->seg_demux.parent->nb_streams);
         ff_read_frame_flush(hls->seg_demux.ctx);
     }
     /*

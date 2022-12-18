@@ -52,6 +52,8 @@ namespace android
 {
     typedef int (*complete_cb)(android::status_t status, void *cookie, bool cancelled);
     class HiMediaLogger;
+    class HiMediaLooper;
+    class LooperHandler;
     class AvPlayInfo
     {
         public:
@@ -305,6 +307,7 @@ private:
 
     class HiMediaPlayer : public HiMediaPlayerBase
     {
+        friend class LooperHandler;
 public:
         /*Do keep these values identical with MediaPlayer::*/
         enum MediaError
@@ -347,6 +350,46 @@ public:
             MEDIA_INFO_DOWNLOAD_START = 10086,
             MEDIA_INFO_DOWNLOAD_END = 10087,
             MEDIA_INFO_DOWNLOAD_ERROR = 10088,
+        };
+
+        enum MediaLogLevel
+        {
+            MEDIA_LOG_LEVEL_FATAL = 0,
+            MEDIA_LOG_LEVEL_ERROR,
+            MEDIA_LOG_LEVEL_INFO,
+            MEDIA_LOG_LEVEL_DEBUG,
+        };
+
+        enum MediaLogType
+        {
+            MEDIA_LOG_SEGMENT_DOWNLOAD_START = 0,
+            MEDIA_LOG_SEGMENT_DOWNLOAD_END,
+            MEDIA_LOG_LIVE_MODE,
+            MEDIA_LOG_IPTV_MODE,
+            MEDIA_LOG_BUFFER_START,
+            MEDIA_LOG_BUFFER_END,
+            MEDIA_LOG_SET_DATA_SOURCE,
+            MEDIA_LOG_CREATE_NEW_PLAYER,
+            MEDIA_LOG_SET_VIDEO_SURFACE_TEXTURE,
+            MEDIA_LOG_PREPARE_ASYNC,
+            MEDIA_LOG_STREAM_INFO,                      /* 10 */
+            MEDIA_LOG_VIDEO_SIZE,
+            MEDIA_LOG_STREAM_CODEC,
+            MEDIA_LOG_PREPARED,
+            MEDIA_LOG_START,
+            MEDIA_LOG_FIRST_FRAME,
+            MEDIA_LOG_PAUSE,
+            MEDIA_LOG_SEEK_TO,
+            MEDIA_LOG_SEEK_COMPLETE,
+            MEDIA_LOG_STOP,
+            MEDIA_LOG_RESET,                            /* 20 */
+            MEDIA_LOG_DESTROY,
+            MEDIA_LOG_CONNECTED,
+            MEDIA_LOG_CONNECT_CODE,
+            MEDIA_LOG_CONNECT_REDIRECT,
+            MEDIA_LOG_CURRENT_PLAY_TIME,
+            MEDIA_LOG_ERROR,
+            MEDIA_LOG_PLAY_COMPLETE,
         };
 		
         class CommandQueue : public RefBase
@@ -637,7 +680,13 @@ private:
         static int diagnose_thread(void* cookie);
         int diagnose_run();
         sp <HiMediaLogger> mLogger;
-        status_t writeLog(const char *url, unsigned play_time,  int  msgCode);
+        status_t writeLog(MediaLogType log_type, MediaLogLevel log_level, HI_VOID * pArg);
+        Mutex mWriteLogLock;
+        HI_S64 s64BufferingSystemTime;
+        HI_U32 u32PrepareAsyncSystemTime;
+        bool bUnderrunOutside;
+        sp <HiMediaLooper> mLooper;
+        sp <LooperHandler> mLooperHandle;
         status_t storeTimedTextData(const char * data, int size, int timeMs, Parcel * parcel);
         status_t getAudioCodecFormat(HI_S32 s32AudioFormat, HI_CHAR * pszAudioCodec);
         status_t getVideoCodecFormat(HI_S32 s32VideoFormat, HI_CHAR * pszVideoCodec);
@@ -678,6 +727,12 @@ private:
         static int TimedTextOndraw(int u32UserData, const HI_UNF_SO_SUBTITLE_INFO_S *pstInfo, void *pArg);
         static int TimedTextOnclear(int u32UserData, void *pArg);
         static AvPlayInstances mAVPlayInstances;
+    };
+    enum ANDROID_ERROR_EXTRA_Mobaihe
+    {
+        /* for adapting mobaihe event info  */
+        MEDIA_INFO_EXTEND_BUFFER_LENGTH = 5000,
+        MEDIA_INFO_EXTEND_FIRST_FRAME_TIME = 5001,
     };
 }; // namespace
 #endif

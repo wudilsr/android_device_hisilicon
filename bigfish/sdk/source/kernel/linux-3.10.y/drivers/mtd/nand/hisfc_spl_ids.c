@@ -355,20 +355,20 @@ static struct nand_flash_special_dev nand_flash_special_dev[] = {
 		.oobsize   = 64,
 		.badblock_pos    = BBP_FIRST_PAGE,
 		.read      = {
-			&READ_STD(1, INFINITE, 120),
-			&READ_DUAL(1, INFINITE, 120),
-			&READ_DUAL_ADDR(1, INFINITE, 120),
-			&READ_QUAD(1, INFINITE, 120),
-			&READ_QUAD_ADDR(1, INFINITE, 120),
+			&READ_STD(1, INFINITE, 24),
+		//	&READ_DUAL(1, INFINITE, 120),
+		//	&READ_DUAL_ADDR(1, INFINITE, 120),
+		//	&READ_QUAD(1, INFINITE, 120),
+		//	&READ_QUAD_ADDR(1, INFINITE, 120),
 			0
 		},
 		.write     = {
-			&WRITE_STD(0, 256, 120),
-			&WRITE_QUAD(0, 256, 120),
+			&WRITE_STD(0, 256, 24),
+		//	&WRITE_QUAD(0, 256, 120),
 			0
 		},
 		.erase     = {
-			&ERASE_SECTOR_128K(0, SZ_128K, 120),
+			&ERASE_SECTOR_128K(0, SZ_128K, 24),
 			0
 		},
 		.driver    = &spi_nand_driver_giga,
@@ -500,20 +500,20 @@ static struct nand_flash_special_dev nand_flash_special_dev[] = {
 		.oobsize   = 256,
 		.badblock_pos    = BBP_FIRST_PAGE,
 		.read      = {
-			&READ_STD(1, INFINITE, 120),
-			&READ_DUAL(1, INFINITE, 120),
-			&READ_DUAL_ADDR(1, INFINITE, 120),
-			&READ_QUAD(1, INFINITE, 120),
-			&READ_QUAD_ADDR(1, INFINITE, 120),
+			&READ_STD(1, INFINITE, 24),
+//			&READ_DUAL(1, INFINITE, 24),
+//			&READ_DUAL_ADDR(1, INFINITE, 24),
+//			&READ_QUAD(1, INFINITE, 24),
+//			&READ_QUAD_ADDR(1, INFINITE, 24),
 			0
 		},
 		.write     = {
-			&WRITE_STD(0, 256, 120),
-			&WRITE_QUAD(0, 256, 120),
+			&WRITE_STD(0, 256, 24),
+//			&WRITE_QUAD(0, 256, 24),
 			0
 		},
 		.erase     = {
-			&ERASE_SECTOR_256K(0, SZ_256K, 120),
+			&ERASE_SECTOR_256K(0, SZ_256K, 75),
 			0
 		},
 		.driver    = &spi_nand_driver_giga,

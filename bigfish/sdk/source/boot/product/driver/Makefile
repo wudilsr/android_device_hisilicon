@@ -93,7 +93,6 @@ $(LIBS): $(objects)
 prepare:
 	make -C higo prepare
 	make -C disp prepare
-	make -C pq prepare
 
 $(objects): | prepare
 	make -C $@ all

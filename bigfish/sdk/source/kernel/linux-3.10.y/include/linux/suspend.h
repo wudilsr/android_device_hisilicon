@@ -322,6 +322,12 @@ extern void swsusp_unset_page_free(struct page *);
 extern unsigned long get_safe_page(gfp_t gfp_mask);
 
 extern void hibernation_set_ops(const struct platform_hibernation_ops *ops);
+
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+asmlinkage int swsusp_save(void);
+extern struct pbe *restore_pblist;
+#endif
+
 extern int hibernate(void);
 extern bool system_entering_hibernation(void);
 #else /* CONFIG_HIBERNATION */
@@ -344,6 +350,21 @@ static inline bool system_entering_hibernation(void) { return false; }
 #define PM_RESTORE_PREPARE	0x0005 /* Going to restore a saved image */
 #define PM_POST_RESTORE		0x0006 /* Restore failed */
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+/* Hibernation and suspend events */
+#define PM_HIBERNATION_PREPARE	0x0001 /* Going to hibernate */
+#define PM_POST_HIBERNATION	0x0002 /* Hibernation finished */
+#define PM_SUSPEND_PREPARE	0x0003 /* Going to suspend the system */
+#define PM_POST_SUSPEND		0x0004 /* Suspend finished */
+#define PM_RESTORE_PREPARE	0x0005 /* Going to restore a saved image */
+#define PM_POST_RESTORE		0x0006 /* Restore failed */
+
+/*snapshot boot add*/
+#define PM_POST_FREEZE_PROCESS   0x0101
+#define PM_THAW_PROCESS_PREPARE  0x0102
+#define PM_POST_DEVICE_SUSPEND   0x0103
+#define PM_RESUME_DEVICE_PREPARE 0x0104
+#endif
 extern struct mutex pm_mutex;
 
 #ifdef CONFIG_PM_SLEEP

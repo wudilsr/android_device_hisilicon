@@ -20,6 +20,9 @@
 #include "hal_ci.h"
 
 /************************** Macro Definition ******************************/
+#if defined(CHIP_TYPE_hi3751v100)     \
+    || defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100)  
 #define CI_PHY_BASE_ADDR        (0xF9850000L)
 #define PERI_CTRL_BASE_ADDR     (0xF8A20000L)
 #define PERI_CRG_BASE_ADDR      (0xF8A22000L)
@@ -29,18 +32,23 @@
 #define PVR_TSI4_CKSEL_QAMC     (0x01) 
 #define PVR_TSI4_CKSEL_QAMT     (0x02) 
 #define PVR_TSI4_CKSEL_TSOUT0   (0x03) 
+#define PERI_CRG_CI_ADDR        (PERI_CRG_BASE_ADDR + 0x0188)
 #define PERI_QOS_CFG00_ADDR     (PERI_CRG_BASE_ADDR + 0x0200)
 #define PERI_QAMC_QAMT_SEL_BIT  (10)
 #define PERI_QAMC_QAMT_SEL_QAMT (0x00)
 #define PERI_QAMC_QAMT_SEL_QAMC (0x01)
-#define PERI_CRG98_ADDR         (PERI_CRG_BASE_ADDR + 0x0188)
 #define PERI_IO_OEN             (PERI_CTRL_BASE_ADDR + 0x08AC)
+#elif defined(CHIP_TYPE_hi3798cv200_a)
+#define CI_PHY_BASE_ADDR        (0xF9C60000L)
+#define PERI_CTRL_BASE_ADDR     (0xF8A20000L)
+#define PERI_CRG_BASE_ADDR      (0xF8A22000L)
+#define PVR_BASE_ADDR           (0xF9C00000L)
+#define PERI_CRG_CI_ADDR        (PERI_CRG_BASE_ADDR + 0x0328)
+#define PVR_TSOUT0_BYPASS       (PVR_BASE_ADDR + 0x0FF0)
+#endif
 
 #define PERI_IO_OEN_TSO_ENABLE  (0x00)
 #define PERI_IO_OEN_TSO_DISABLE (0x01)
-
-#define HI_CIV100_ATRMODE  0
-#define HI_CIV100_IOMODE  1
 
 #define HI_CIV100_DIRMODE  1
 #define HI_CIV100_INDIRMODE  0
@@ -49,20 +57,37 @@
 
 #ifndef BIT
 #define BIT(bit) (0x01 << (bit))
-#endif
-#define HICI_SET_BIT(var,bit,value)   (((var)&(~(BIT(bit))))|((value) << (bit)))//位赋值
-#define HICI_GET_BIT(var,bit)         ((((var)&BIT(bit)) >> (bit)))             //位取值
-#define HICI_XOR_BIT(var,bit)         ((var)^=BIT(bit))                         //位取反
-#define HICI_CHECK_BIT(var,bit)       ((var)& BIT(bit))                         //位检测
+#endif                       
 
-#define CIV100_WRITE_REG(base, offset, value) \
-    (*(volatile HI_U32   *)((HI_U32)(base) + (offset)) = (value))
-#define CIV100_READ_REG(base, offset) \
-    (*(volatile HI_U32   *)((HI_U32)(base) + (offset)))
+#define CIV100_WRITE_REG(offset, value) \
+    (*(volatile HI_U32*)(s_u32CIRegBase + (offset)) = (value))
+#define CIV100_READ_REG(offset) \
+    (*(volatile HI_U32*)(s_u32CIRegBase + (offset)))
+
+#if defined(CHIP_TYPE_hi3751v100) || defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)  
+#define HI_CI_CHECK_PCCD_VALID(enCardId) \
+    { \
+        if (HI_UNF_CI_PCCD_A != enCardId) \
+        { \
+            HI_ERR_CI("Invalid Card Id:%d.\n", enCardId); \
+            return HI_ERR_CI_INVALID_PARA; \
+        } \
+    }
+#elif defined(CHIP_TYPE_hi3798cv200_a)
+#define HI_CI_CHECK_PCCD_VALID(enCardId) \
+    { \
+        if (HI_UNF_CI_PCCD_BUTT<= enCardId) \
+        { \
+            HI_ERR_CI("Invalid Card Id:%d.\n", enCardId); \
+            return HI_ERR_CI_INVALID_PARA; \
+        } \
+    }
+#endif
     
 /*CI register offset*/
+#define SLAVE_MODE_REG_OFFSET       (0x008)   /*slave mode select register*/
 #define CI_INF_CMD_MODE_REG_OFFSET  (0x00C)   /*interface operation config register*/
-#define CI_INF_SET_REG_OFFSET       (0x010)   /*slave mode select register*/
+#define CI_INF_SET_REG_OFFSET       (0x010)   /*ci info set register*/
 #define CI_CMD_CFG_REG_OFFSET       (0x114)   /*operation config register*/
 #define CI_RAW_CARD_REG_OFFSET      (0x200)   /*interrupt original status register*/
 #define CI_EN_CARD_REG_OFFSET       (0x204)   /*interrupt enable register*/
@@ -79,11 +104,11 @@ typedef struct hiHICI_PARAMETER_S
     HI_U32 u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_BUTT];
     HI_BOOL bTSByPass[HI_UNF_CI_PCCD_BUTT];
     HI_CI_PCCD_RUN_STEP enRunStep[HI_UNF_CI_PCCD_BUTT];
+    HI_UNF_CI_PCCD_ACCESSMODE_E enAccessMode[HI_UNF_CI_PCCD_BUTT];
+    HI_U32 u32Slavemode;
 } HICI_PARAMETER_S;
 /********************GLOBAL STATIC DECLARATIONS************************/
 static HI_U32 s_u32CIRegBase;
-static HI_U32 civ100_mode = HI_CIV100_ATRMODE;
-static HI_U32 civ100_slavemode = HI_CIV100_INDIRMODE;
 static GPIO_EXT_FUNC_S* s_pGpioFunc = HI_NULL;
 static HICI_PARAMETER_S s_astHiciParam[HI_UNF_CI_PORT_BUTT];
 
@@ -115,7 +140,7 @@ HI_U32 ci_rdone(HI_VOID)
 
     while(((u32Tmp & 0x100) != 0x100) && (u32TimeOut > 0))
     {	
-        u32Tmp=CIV100_READ_REG(s_u32CIRegBase,CI_CMD0_RDATA_REG_OFFSET);	
+        u32Tmp = CIV100_READ_REG(CI_CMD0_RDATA_REG_OFFSET);	
         u32TimeOut--;
     }
     return(u32Tmp & 0xff);		
@@ -128,9 +153,27 @@ void ci_wdone(HI_VOID)
 
     while(((u32Tmp & 0x100) != 0x100) && (u32TimeOut > 0))
     {		
-        u32Tmp=CIV100_READ_REG(s_u32CIRegBase,CI_CMD0_RDATA_REG_OFFSET);
+        u32Tmp = CIV100_READ_REG(CI_CMD0_RDATA_REG_OFFSET);
         u32TimeOut--;
     }
+}
+
+static HI_VOID HICI_SET_REG_BIT(HI_U32 u32RegOffset, HI_U32 u32Idx, HI_BOOL bVal)
+{
+    HI_U32 u32Value = 0;
+    
+    u32Value = CIV100_READ_REG(u32RegOffset);
+
+    if (bVal)
+    {
+        u32Value |= 0x01 << u32Idx;
+    }
+    else
+    {
+        u32Value &= ~(0x01 << u32Idx);
+    }
+
+    CIV100_WRITE_REG(u32RegOffset, u32Value);
 }
 
 HI_S32 HICI_Init(HI_UNF_CI_PORT_E enCIPort)
@@ -141,38 +184,68 @@ HI_S32 HICI_Init(HI_UNF_CI_PORT_E enCIPort)
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
+#if defined(CHIP_TYPE_hi3751v100)     \
+    || defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100)  
         /*Open CI clock and reset*/
-        u32Ret = HI_SYS_ReadRegister(PERI_CRG98_ADDR, &u32Value);
+        u32Ret = HI_SYS_ReadRegister(PERI_CRG_CI_ADDR, &u32Value);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG98_ADDR);
+            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG_CI_ADDR);
             return u32Ret;
         }
         u32Value |= 0x12;
-        u32Ret = HI_SYS_WriteRegister(PERI_CRG98_ADDR, u32Value);
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG98_ADDR, u32Value);
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
             return u32Ret;
         }
         msleep(50);
         u32Value &= ~0x02;
-        u32Ret = HI_SYS_WriteRegister(PERI_CRG98_ADDR, u32Value);
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG98_ADDR, u32Value);
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
             return u32Ret;
         }
         msleep(50);
-        
+#elif defined(CHIP_TYPE_hi3798cv200_a)
+        /*Open CI clock and reset*/
+        u32Ret = HI_SYS_ReadRegister(PERI_CRG_CI_ADDR, &u32Value);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG_CI_ADDR);
+            return u32Ret;
+        }
+        u32Value |= 0x11;
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
+            return u32Ret;
+        }
+        msleep(50);
+        u32Value &= ~0x10;
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
+            return u32Ret;
+        }
+        msleep(50);
+#endif
         s_u32CIRegBase = (HI_U32)ioremap_nocache(CI_PHY_BASE_ADDR, 0x10000);
-
-        u32Value = CIV100_READ_REG(s_u32CIRegBase, CI_INF_SET_REG_OFFSET);
-        u32Value &= ~(0x00011000);
-        CIV100_WRITE_REG(s_u32CIRegBase,CI_INF_SET_REG_OFFSET, u32Value);
-        u32Value = CIV100_READ_REG(s_u32CIRegBase, CI_CMD_CFG_REG_OFFSET);
+        
+        /*reset等输出信号可以输出*/
+        u32Value = CIV100_READ_REG( CI_INF_SET_REG_OFFSET);
+        u32Value &= ~(0x00033000);
+        CIV100_WRITE_REG(CI_INF_SET_REG_OFFSET, u32Value);
+        
+        /*操作时不检查inpackn信号*/
+        u32Value = CIV100_READ_REG( CI_CMD_CFG_REG_OFFSET);
         u32Value &= ~(0x01);
-        CIV100_WRITE_REG(s_u32CIRegBase,CI_CMD_CFG_REG_OFFSET, u32Value);
+        CIV100_WRITE_REG(CI_CMD_CFG_REG_OFFSET, u32Value);
     }
     else
     {
@@ -190,22 +263,41 @@ HI_S32 HICI_DeInit(HI_UNF_CI_PORT_E enCIPort)
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
+#if defined(CHIP_TYPE_hi3751v100)     \
+    || defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100)  
         /*Close CI clock*/
-        u32Ret = HI_SYS_ReadRegister(PERI_CRG98_ADDR, &u32Value);
+        u32Ret = HI_SYS_ReadRegister(PERI_CRG_CI_ADDR, &u32Value);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG98_ADDR);
+            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG_CI_ADDR);
             return HI_FAILURE;
         }
         u32Value |= 0x02;
         u32Value &= ~0x10;
-        u32Ret = HI_SYS_WriteRegister(PERI_CRG98_ADDR, u32Value);
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG98_ADDR, u32Value);
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
             return HI_FAILURE;
         }
-
+#elif defined(CHIP_TYPE_hi3798cv200_a)
+        /*Close CI clock*/
+        u32Ret = HI_SYS_ReadRegister(PERI_CRG_CI_ADDR, &u32Value);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG_CI_ADDR);
+            return HI_FAILURE;
+        }
+        u32Value |= 0x10;
+        u32Value &= ~0x01;
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG_CI_ADDR, u32Value);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG_CI_ADDR, u32Value);
+            return HI_FAILURE;
+        }
+#endif
         iounmap((HI_VOID*)s_u32CIRegBase);
     }
     else
@@ -221,17 +313,21 @@ HI_S32 HICI_DeInit(HI_UNF_CI_PORT_E enCIPort)
 HI_S32 HICI_Open(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_ATTR_S stAttr)
 {
     HI_S32 s32Ret = HI_SUCCESS;
+    HI_U32 i;
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {      
         memset(&s_astHiciParam, 0x00, sizeof(s_astHiciParam));
         s_astHiciParam[enCIPort].bIsPowerCtrlGpioUsed = stAttr.unDevAttr.stCIHICI.bIsPowerCtrlGpioUsed;
-        s_astHiciParam[enCIPort].u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_A]
-            = stAttr.unDevAttr.stCIHICI.u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_A];
-        s_astHiciParam[enCIPort].u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_B]
-            = stAttr.unDevAttr.stCIHICI.u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_B];
-        s_astHiciParam[enCIPort].enRunStep[HI_UNF_CI_PCCD_A] = HI_CI_PCCD_RUN_STEP_RUNNING;
-        s_astHiciParam[enCIPort].enRunStep[HI_UNF_CI_PCCD_B] = HI_CI_PCCD_RUN_STEP_RUNNING;
+        s_astHiciParam[enCIPort].u32Slavemode = HI_CIV100_INDIRMODE;
+        for(i=0; i<HI_UNF_CI_PCCD_BUTT; i++)
+        {
+            s_astHiciParam[enCIPort].u32PowerCtrlGpioNo[i]
+                = stAttr.unDevAttr.stCIHICI.u32PowerCtrlGpioNo[HI_UNF_CI_PCCD_A];
+            s_astHiciParam[enCIPort].enRunStep[i] = HI_CI_PCCD_RUN_STEP_RUNNING;
+            s_astHiciParam[enCIPort].bTSByPass[i] = HI_TRUE;
+            s_astHiciParam[enCIPort].enAccessMode[i] = HI_UNF_CI_PCCD_ACCESS_ATTR;
+        }
         s_pGpioFunc = HI_NULL;
         
         s32Ret = HI_DRV_MODULE_GetFunction(HI_ID_GPIO, (HI_VOID**)&s_pGpioFunc);
@@ -246,6 +342,7 @@ HI_S32 HICI_Open(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_ATTR_S stAttr)
             HI_ERR_CI("HICI init fail.\n");
             return s32Ret;
         }
+        HICI_SET_REG_BIT(SLAVE_MODE_REG_OFFSET, 0, s_astHiciParam[enCIPort].u32Slavemode);
     }
     else
     {
@@ -265,11 +362,7 @@ HI_S32 HICI_PCCD_Open(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId)
 {
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-            HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
     }
     else
     {
@@ -285,6 +378,15 @@ HI_VOID HICI_PCCD_Close(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId)
 
 }
 
+static HI_VOID HICI_PCCD_SEL(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId)
+{
+    HI_BOOL bValue = 0;
+    
+    bValue = (enCardId == HI_UNF_CI_PCCD_A ? 0 : 1);   
+
+    HICI_SET_REG_BIT(CI_INF_SET_REG_OFFSET, 31, bValue);
+}
+
 /* Read data, IO or ATTR, offset automatically */
 HI_S32 HICI_PCCD_ReadByte(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
                             HI_U32 u32Address, HI_U8 *pu8Value)
@@ -294,41 +396,44 @@ HI_S32 HICI_PCCD_ReadByte(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-			HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-			return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
+        HICI_PCCD_SEL(enCIPort, enCardId);
         
-        if((civ100_mode == HI_CIV100_ATRMODE) && (civ100_slavemode == HI_CIV100_INDIRMODE))
+        if(s_astHiciParam[enCIPort].u32Slavemode == HI_CIV100_INDIRMODE) 
         {
-			u32Tmp = 0x00000300 + (u32Address<<16);
-			CIV100_WRITE_REG(s_u32CIRegBase, CI_CMD0_SET_REG_OFFSET, u32Tmp);
-        	ci_wdone();
-    	    u32Tmp = ci_rdone();
-    		*pu8Value = u32Tmp;
+            if(s_astHiciParam[enCIPort].enAccessMode[enCardId] == HI_UNF_CI_PCCD_ACCESS_ATTR)
+            {
+    			u32Tmp = 0x00000300 + (u32Address<<16);
+    			CIV100_WRITE_REG( CI_CMD0_SET_REG_OFFSET, u32Tmp);
+            	ci_wdone();
+        	    u32Tmp = ci_rdone();
+        		*pu8Value = u32Tmp;
+            } 
+        	else
+        	{
+        		u32Tmp = 0x00000100 + (u32Address<<16);
+                CIV100_WRITE_REG( CI_CMD0_SET_REG_OFFSET, u32Tmp);
+        	    ci_wdone();
+        	    u32Tmp = ci_rdone();
+        		*pu8Value = u32Tmp;
+        	}
         }
-    	else if((civ100_mode == HI_CIV100_IOMODE) && (civ100_slavemode == HI_CIV100_INDIRMODE))
-    	{
-    		u32Tmp = 0x00000100 + (u32Address<<16);
-            CIV100_WRITE_REG(s_u32CIRegBase, CI_CMD0_SET_REG_OFFSET, u32Tmp);
-    	    ci_wdone();
-    	    u32Tmp = ci_rdone();
-    		*pu8Value = u32Tmp;
-    	}
-    	else if((civ100_mode == HI_CIV100_ATRMODE) && (civ100_slavemode == HI_CIV100_DIRMODE))
+    	else //HI_CIV100_DIRMODE
         {	
-            CIV100_WRITE_REG(s_u32CIRegBase, 0x508, (u32Address >> 8) & 0xFF);
-    		u32addr = ((u32Address & 0xFF) <<2) + 0x1000;
-            u32Tmp = CIV100_READ_REG(s_u32CIRegBase, u32addr);
-    		*pu8Value = u32Tmp;
+            if(s_astHiciParam[enCIPort].enAccessMode[enCardId] == HI_UNF_CI_PCCD_ACCESS_ATTR)
+            {
+                CIV100_WRITE_REG( 0x508, (u32Address >> 8) & 0xFF);
+        		u32addr = ((u32Address & 0xFF) <<2) + 0x1000;
+                u32Tmp = CIV100_READ_REG( u32addr);
+        		*pu8Value = u32Tmp;
+            }
+        	else
+        	{
+        		u32addr = CI_CMD1_IO0_REG_OFFSET + (u32Address*4);
+                u32Tmp = CIV100_READ_REG( u32addr);
+        		*pu8Value = u32Tmp;
+        	}
         }
-    	else if((civ100_mode == HI_CIV100_IOMODE) && (civ100_slavemode == HI_CIV100_DIRMODE))
-    	{
-    		u32addr = CI_CMD1_IO0_REG_OFFSET + (u32Address*4);
-            u32Tmp = CIV100_READ_REG(s_u32CIRegBase, u32addr);
-    		*pu8Value = u32Tmp;
-    	}
     }
     else
     {
@@ -344,49 +449,52 @@ HI_S32 HICI_PCCD_ReadByte(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
 HI_S32 HICI_PCCD_WriteByte(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
                              HI_U32 u32Address, HI_U8 u8Value)
 {
-	HI_S32 s32Ret = HI_SUCCESS;
-	HI_U32 u32Tmp = 0;	
-	HI_U32 u32addr = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_U32 u32Tmp = 0;	
+    HI_U32 u32addr = 0;
 
-  if (HI_UNF_CI_PORT_0 == enCIPort)
-  {
-      if (HI_UNF_CI_PCCD_A != enCardId)
-      {
-        HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-        return HI_ERR_CI_UNSUPPORT;  
-      }
+    if (HI_UNF_CI_PORT_0 == enCIPort)
+    {
+        HI_CI_CHECK_PCCD_VALID(enCardId);
+        HICI_PCCD_SEL(enCIPort, enCardId);
 
-      if((civ100_mode == HI_CIV100_ATRMODE) && (civ100_slavemode == HI_CIV100_INDIRMODE))
-      {
-      	u32Tmp = 0x00000200 + (u32Address<<16) + (u8Value);
-        CIV100_WRITE_REG(s_u32CIRegBase, CI_CMD0_SET_REG_OFFSET, u32Tmp);
-        ci_wdone();
-      }
-      else if((civ100_mode == HI_CIV100_IOMODE) && (civ100_slavemode == HI_CIV100_INDIRMODE))
-      {
-      	u32Tmp = 0x00000000 + (u32Address<<16) + (u8Value);
-        CIV100_WRITE_REG(s_u32CIRegBase, CI_CMD0_SET_REG_OFFSET, u32Tmp);
-        ci_wdone();
-      }
-      else if((civ100_mode == HI_CIV100_ATRMODE) && (civ100_slavemode == HI_CIV100_DIRMODE))
-      {
-        CIV100_WRITE_REG(s_u32CIRegBase, 0x508, (u32Address >> 8) & 0xFF);
-      	u32addr = ((u32Address & 0xFF) <<2) + 0x1000;
-        CIV100_WRITE_REG(s_u32CIRegBase, u32addr, u8Value);
-      }
-      else if((civ100_mode == HI_CIV100_IOMODE) && (civ100_slavemode == HI_CIV100_DIRMODE))
-      {
-      	u32addr = CI_CMD1_IO0_REG_OFFSET + (u32Address*4);
-        CIV100_WRITE_REG(s_u32CIRegBase, u32addr, u8Value);		
-      }
-  }
-  else
-  {
-      HI_ERR_CI("Only support HI_UNF_CI_PORT_0 now.\n");
-      return HI_ERR_CI_UNSUPPORT;
-  }
-    
-	return s32Ret;
+        if(s_astHiciParam[enCIPort].u32Slavemode == HI_CIV100_INDIRMODE) 
+        {
+            if(s_astHiciParam[enCIPort].enAccessMode[enCardId] == HI_UNF_CI_PCCD_ACCESS_ATTR)
+            {
+                u32Tmp = 0x00000200 + (u32Address<<16) + (u8Value);
+                CIV100_WRITE_REG( CI_CMD0_SET_REG_OFFSET, u32Tmp);
+                ci_wdone();
+            }
+            else
+            {
+                u32Tmp = 0x00000000 + (u32Address<<16) + (u8Value);
+                CIV100_WRITE_REG( CI_CMD0_SET_REG_OFFSET, u32Tmp);
+                ci_wdone();
+            }
+        }
+        else
+        {
+            if(s_astHiciParam[enCIPort].enAccessMode[enCardId] == HI_UNF_CI_PCCD_ACCESS_ATTR)
+            {            
+                CIV100_WRITE_REG( 0x508, (u32Address >> 8) & 0xFF);
+                u32addr = ((u32Address & 0xFF) <<2) + 0x1000;
+                CIV100_WRITE_REG( u32addr, u8Value);
+            }
+            else 
+            {
+                u32addr = CI_CMD1_IO0_REG_OFFSET + (u32Address*4);
+                CIV100_WRITE_REG( u32addr, u8Value);		
+            }
+        }
+    }
+    else
+    {
+        HI_ERR_CI("Only support HI_UNF_CI_PORT_0 now.\n");
+        return HI_ERR_CI_UNSUPPORT;
+    }
+
+    return s32Ret;
 
 }
 
@@ -400,11 +508,7 @@ HI_S32 HICI_PCCD_Detect(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-            HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
 
         if (s_astHiciParam[enCIPort].enRunStep[enCardId] == HI_CI_PCCD_RUN_STEP_RESUME)
         {
@@ -415,23 +519,45 @@ HI_S32 HICI_PCCD_Detect(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
         {
             for(u32TryCount=0; u32TryCount<5; u32TryCount++)
             {
-                u32CmdMode = CIV100_READ_REG(s_u32CIRegBase,CI_INF_CMD_MODE_REG_OFFSET);
-                u32SignalStatus = CIV100_READ_REG(s_u32CIRegBase,CI_DBG_IN_SIG_REG_OFFSET);
-                if((u32CmdMode >> 4) & 0x1)
+                u32CmdMode = CIV100_READ_REG(CI_INF_CMD_MODE_REG_OFFSET);
+                if (enCardId == HI_UNF_CI_PCCD_A)
                 {
-                    if(((u32SignalStatus >>1) & 0x01) == 0x00)
+                    u32SignalStatus = CIV100_READ_REG(CI_DBG_IN_SIG_REG_OFFSET);
+                    if((u32CmdMode >> 4) & 0x1)
                     {
-                        u32PresentCount++;
+                        if(((u32SignalStatus >>1) & 0x01) == 0x00)
+                        {
+                            u32PresentCount++;
+                        }
                     }
+                    else
+                    {
+                        if((u32SignalStatus & 0x03) == 0x00)
+                        {
+                            *penCardIdStatus = HI_UNF_CI_PCCD_STATUS_PRESENT;
+                            u32PresentCount++;
+                        }
+                    } 
                 }
                 else
                 {
-                    if((u32SignalStatus & 0x03) == 0x00)
+                    u32SignalStatus = CIV100_READ_REG(CI_INF_SET_REG_OFFSET);
+                    if((u32CmdMode >> 4) & 0x1)
                     {
-                        *penCardIdStatus = HI_UNF_CI_PCCD_STATUS_PRESENT;
-                        u32PresentCount++;
+                        if(((u32SignalStatus >>29) & 0x01) == 0x00)
+                        {
+                            u32PresentCount++;
+                        }
                     }
-                } 
+                    else
+                    {
+                        if(((u32SignalStatus >> 28) & 0x03) == 0x00)
+                        {
+                            *penCardIdStatus = HI_UNF_CI_PCCD_STATUS_PRESENT;
+                            u32PresentCount++;
+                        }
+                    } 
+                }
                 msleep(CI_TIME_10MS);
             }
             if (u32PresentCount >= 3)
@@ -460,7 +586,7 @@ HI_S32 HICI_PCCD_ReadyOrBusy(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardI
 	HI_U32 civ100_rdy_check = 0;
     HI_U32 u32ElapsedTime = 0;
     
-	u32Tmp=CIV100_READ_REG(s_u32CIRegBase,CI_CMD_CFG_REG_OFFSET);
+	u32Tmp=CIV100_READ_REG(CI_CMD_CFG_REG_OFFSET);
     if((u32Tmp & 0x2) == 0x2)
     {   
         civ100_rdy_check = 0x1;
@@ -472,11 +598,8 @@ HI_S32 HICI_PCCD_ReadyOrBusy(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardI
     *penCardReady = HI_UNF_CI_PCCD_BUSY;
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-           HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
+
         if(civ100_rdy_check == 0x1)
         {
     	    /*The Host shall explicitly check for the READY signal until it is set by the
@@ -484,11 +607,22 @@ HI_S32 HICI_PCCD_ReadyOrBusy(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardI
     	              */
     		for(u32ElapsedTime=0; u32ElapsedTime<CI_PCCD_READY_COUNT;u32ElapsedTime++)
     		{
-    			u32Tmp = CIV100_READ_REG(s_u32CIRegBase,CI_DBG_IN_SIG_REG_OFFSET);
-                if ((u32Tmp & 0x4) == 0x4)
+    			u32Tmp = CIV100_READ_REG(CI_DBG_IN_SIG_REG_OFFSET);
+                if (enCardId == HI_UNF_CI_PCCD_A)
                 {
-                    *penCardReady = HI_UNF_CI_PCCD_READY;
-                    break;
+                    if ((u32Tmp & 0x4) == 0x4)
+                    {
+                        *penCardReady = HI_UNF_CI_PCCD_READY;
+                        break;
+                    }
+                }
+                else
+                {
+                    if ((u32Tmp & 0x80) == 0x80)
+                    {
+                        *penCardReady = HI_UNF_CI_PCCD_READY;
+                        break;
+                    } 
                 }
     			msleep(10);
     		}		  
@@ -509,18 +643,28 @@ HI_S32 HICI_PCCD_Reset(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId)
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
+        HI_CI_CHECK_PCCD_VALID(enCardId);
+
+        if (enCardId == HI_UNF_CI_PCCD_A)
         {
-           HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
+        	u32Tmp = CIV100_READ_REG( CI_INF_SET_REG_OFFSET);
+            u32Tmp |= 0x1100;
+        	CIV100_WRITE_REG( CI_INF_SET_REG_OFFSET, u32Tmp);
+        	msleep(CI_TIME_10MS);
+        	u32Tmp &= ~0x1100;
+        	CIV100_WRITE_REG( CI_INF_SET_REG_OFFSET, u32Tmp);
+            msleep(CI_TIME_10MS * 5);
         }
-    	u32Tmp = CIV100_READ_REG(s_u32CIRegBase, CI_INF_SET_REG_OFFSET);
-        u32Tmp |= 0x1100;
-    	CIV100_WRITE_REG(s_u32CIRegBase, CI_INF_SET_REG_OFFSET, u32Tmp);
-    	msleep(CI_TIME_10MS);
-    	u32Tmp &= ~0x1100;
-    	CIV100_WRITE_REG(s_u32CIRegBase, CI_INF_SET_REG_OFFSET, u32Tmp);
-        msleep(CI_TIME_10MS * 5);
+        else
+        {
+        	u32Tmp = CIV100_READ_REG( CI_INF_SET_REG_OFFSET);
+            u32Tmp |= 0x2200;
+        	CIV100_WRITE_REG( CI_INF_SET_REG_OFFSET, u32Tmp);
+        	msleep(CI_TIME_10MS);
+        	u32Tmp &= ~0x2200;
+        	CIV100_WRITE_REG( CI_INF_SET_REG_OFFSET, u32Tmp);
+            msleep(CI_TIME_10MS * 50);
+        }
     	HI_INFO_CI("Reset CAM OK!\n");
     }
     else
@@ -537,20 +681,9 @@ HI_S32 HICI_PCCD_SetAccessMode(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCar
 {
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-           HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
-        
-        if(enAccessMode == HI_UNF_CI_PCCD_ACCESS_ATTR)
-        {
-    		civ100_mode = HI_CIV100_ATRMODE ;
-        }
-    	else if(enAccessMode == HI_UNF_CI_PCCD_ACCESS_IO)
-        {
-    		civ100_mode = HI_CIV100_IOMODE ;
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
+
+        s_astHiciParam[enCIPort].enAccessMode[enCardId] = enAccessMode;
     }
     else
     {
@@ -566,20 +699,9 @@ HI_S32 HICI_PCCD_GetAccessMode(HI_UNF_CI_PORT_E enCIPort,
 {
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-			HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
         
-        if(civ100_mode == HI_CIV100_ATRMODE)
-        {
-			*penAccessMode = HI_UNF_CI_PCCD_ACCESS_ATTR;
-        }
-		else if(civ100_mode == HI_CIV100_IOMODE)
-        {
-			*penAccessMode = HI_UNF_CI_PCCD_ACCESS_IO ;
-        }
+	    *penAccessMode = s_astHiciParam[enCIPort].enAccessMode[enCardId];
     }
     else
     {
@@ -597,11 +719,7 @@ HI_S32 HICI_PCCD_GetRWStatus(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardI
 	
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-           HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
             
         u32Ret = HICI_PCCD_SetAccessMode(enCIPort, enCardId, HI_UNF_CI_PCCD_ACCESS_IO);
         if (u32Ret == HI_SUCCESS)
@@ -632,11 +750,7 @@ HI_S32 HICI_PCCD_CtrlPower(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
 
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
-        if (HI_UNF_CI_PCCD_A != enCardId)
-        {
-            HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
-            return HI_ERR_CI_UNSUPPORT;  
-        }
+        HI_CI_CHECK_PCCD_VALID(enCardId);
 
         if (s_astHiciParam[enCIPort].bIsPowerCtrlGpioUsed)
         {
@@ -674,19 +788,22 @@ HI_S32 HICI_PCCD_CtrlPower(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId,
 HI_S32 HICI_PCCD_TSByPass(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId, HI_BOOL bByPass)
 {    
     HI_U32 u32Ret;
-    HI_U32 u32Crg63;
-    HI_U32 u32IoOen;
-    HI_U32 u32Channal = PVR_TSI4_CKSEL_TSIN;
-    HI_U32 u32TsoEnable = PERI_IO_OEN_TSO_ENABLE;
+    HI_U32 u32Val;
     
     if (HI_UNF_CI_PORT_0 == enCIPort)
     {
+#if defined(CHIP_TYPE_hi3751v100)     \
+    || defined(CHIP_TYPE_hi3796cv100) \
+    || defined(CHIP_TYPE_hi3798cv100)  
+        HI_U32 u32Channal = PVR_TSI4_CKSEL_TSIN;
+        HI_U32 u32TsoEnable = PERI_IO_OEN_TSO_ENABLE;
+
         if (HI_UNF_CI_PCCD_A != enCardId)
         {
            HI_ERR_CI("Only support HI_UNF_CI_PCCD_A now.\n");
            return HI_ERR_CI_UNSUPPORT;  
         }
-            
+          
         if(bByPass)
         {
              u32Channal = PVR_TSI4_CKSEL_TSOUT0;
@@ -694,37 +811,59 @@ HI_S32 HICI_PCCD_TSByPass(HI_UNF_CI_PORT_E enCIPort, HI_UNF_CI_PCCD_E enCardId, 
         }
         /*set pvr_tsi4_cksel */
         HI_INFO_CI("Channal=%d.\n", PERI_CRG63_ADDR, u32Channal);
-        u32Ret = HI_SYS_ReadRegister(PERI_CRG63_ADDR, &u32Crg63);
+        u32Ret = HI_SYS_ReadRegister(PERI_CRG63_ADDR, &u32Val);
         if(u32Ret != HI_SUCCESS)
         {
             HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_CRG63_ADDR);
             return u32Ret;
         }
-        HI_INFO_CI("Read PERI_CRG63 success, addr=0x%x,value=0x%x.\n", PERI_CRG63_ADDR, u32Crg63);
-        u32Crg63 &= ~(0x03 << PVR_TSI4_CKSEL_BIT);/*clean PVR_TSI4_CKSEL_BIT*/
-        u32Crg63 |= u32Channal << PVR_TSI4_CKSEL_BIT;
-        u32Ret = HI_SYS_WriteRegister(PERI_CRG63_ADDR, u32Crg63);
+        HI_INFO_CI("Read PERI_CRG63 success, addr=0x%x,value=0x%x.\n", PERI_CRG63_ADDR, u32Val);
+        u32Val &= ~(0x03 << PVR_TSI4_CKSEL_BIT);/*clean PVR_TSI4_CKSEL_BIT*/
+        u32Val |= u32Channal << PVR_TSI4_CKSEL_BIT;
+        u32Ret = HI_SYS_WriteRegister(PERI_CRG63_ADDR, u32Val);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG63_ADDR, u32Crg63);
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_CRG63_ADDR, u32Val);
             return u32Ret;
         }
         /*set peri_tso0_oen */
-        u32Ret = HI_SYS_ReadRegister(PERI_IO_OEN, &u32IoOen);
+        u32Ret = HI_SYS_ReadRegister(PERI_IO_OEN, &u32Val);
         if(u32Ret != HI_SUCCESS)
         {
             HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PERI_IO_OEN);
             return u32Ret;
         }
-        HI_INFO_CI("Read PERI_IO_OEN success, addr=0x%x,value=0x%x.\n", PERI_IO_OEN, u32IoOen);
-        u32IoOen &= ~(0x01);
-        u32IoOen |= u32TsoEnable;
-        u32Ret = HI_SYS_WriteRegister(PERI_IO_OEN, u32IoOen);
+        HI_INFO_CI("Read PERI_IO_OEN success, addr=0x%x,value=0x%x.\n", PERI_IO_OEN, u32Val);
+        u32Val &= ~(0x01);
+        u32Val |= u32TsoEnable;
+        u32Ret = HI_SYS_WriteRegister(PERI_IO_OEN, u32Val);
         if(u32Ret != HI_SUCCESS)
         {
-            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_IO_OEN, u32IoOen);
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PERI_IO_OEN, u32Val);
             return u32Ret;
         }
+#elif defined(CHIP_TYPE_hi3798cv200_a)
+        u32Ret = HI_SYS_ReadRegister(PVR_TSOUT0_BYPASS, &u32Val);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_ReadRegister(%d) falied.\n", PVR_TSOUT0_BYPASS);
+            return u32Ret;
+        }
+        if (bByPass)
+        {
+            u32Val |= 0x02;     //DVB1送入DMX的流选TSOUT0来的流
+        }
+        else
+        {
+            u32Val &= ~(0x02); //DVB1送入DMX的流选TSI0来的流
+        }
+        u32Ret = HI_SYS_WriteRegister(PVR_TSOUT0_BYPASS, u32Val);
+        if(u32Ret != HI_SUCCESS)
+        {
+            HI_ERR_CI("HI_SYS_WriteRegister(%d, %d) falied.\n", PVR_TSOUT0_BYPASS, u32Val);
+            return u32Ret;
+        }
+#endif
         s_astHiciParam[enCIPort].bTSByPass[enCardId] = bByPass;
     }
     else

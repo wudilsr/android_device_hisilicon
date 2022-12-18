@@ -135,6 +135,17 @@ For open Wi-Fi, please follow bellow steps:
         hostapd /etc/Wireless/hostapd.conf &
         ifconfig wlan0 192.168.49.1
         udhcpd -fS /etc/udhcpd.conf
+12. MT7632U
+    1) for STA
+        insmod /kmod/cfg80211.ko
+        insmod /kmod/mt76x2u_sta.ko
+        wpa_supplicant -iwlan0 -Dnl80211 -c/etc/Wireless/wpa_supplicant.conf &
+    2) for SoftAP
+        insmod /kmod/cfg80211.ko
+        insmod /kmod/mt76x2u_sta.ko
+        hostapd /etc/Wireless/hostapd.conf &
+        ifconfig wlan0 192.168.49.1
+        udhcpd -fS /etc/udhcpd.conf
 
 
 Notes:

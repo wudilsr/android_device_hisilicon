@@ -194,8 +194,10 @@ void SI_PoweDownHdmiDevice(void)
     g_pstRegCrg->PERI_CRG67.u32 = PeriCrg67.u32;
 
 
-#elif defined(CHIP_TYPE_hi3798mv100)	\
-	|| defined(CHIP_TYPE_hi3796mv100) 	\
+#elif  defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 
     PeriCrg67.u32 = g_pstRegCrg->PERI_CRG67.u32;
 

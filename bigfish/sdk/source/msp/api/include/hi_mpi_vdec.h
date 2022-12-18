@@ -120,7 +120,7 @@ typedef struct hiVDEC_EVENT_S
     HI_UNF_VIDEO_FRAME_PACKING_TYPE_E enFramePackingType;
 
     HI_BOOL  bIFrameErr;
-    HI_BOOL  bUnSupportStream;
+    HI_U32  u32UnSupportStream; 
 	HI_BOOL  bDecErr; 
     HI_U32   u32ErrRatio;
 	VDEC_PROBE_STREAM_INFO_S stProbeStreamInfo;
@@ -204,6 +204,7 @@ typedef struct hiUNF_VDEC_BUFF_ATTR_S
 	HI_U32 u32BufSize;
 	HI_U32 u32MetaBufSize;	
     HI_U32 u32Stride;                          /**<Stride of external frame buffer *//**<CNcomment:外部帧存的stride*/
+	HI_U32 bTvp;
 } VDEC_BUFFER_ATTR_S;
 typedef enum hiVDEC_FRAMEBUFFER_MODE_E{
 	VDEC_BUF_VPSS_ALLOC_MANAGE = 0,/**vpss buffer should alloc and manage by vpss*//**<CNcomment:vpss的buffer的分配和管理有vpss模块自己管理*/
@@ -234,6 +235,16 @@ typedef struct tagVDEC_RESOLUTION_ATTR_S
     HI_S32                   s32Width;
 	HI_S32                   s32Height;
 }VDEC_RESOLUTION_ATTR_S;
+
+typedef enum hiVDEC_PRE_CAP
+{
+    VDEC_PRE_CAP_1080P,
+    VDEC_PRE_CAP_MVC,
+    VDEC_PRE_CAP_2160P,
+    VDEC_PRE_CAP_4K,
+    VDEC_PRE_CAP_BUTT
+}VDEC_PRE_CAP_E;
+
 /****************************** API Declaration ******************************/
 
 HI_S32 HI_MPI_VDEC_Init(HI_VOID);
@@ -244,7 +255,11 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
 HI_S32 HI_MPI_VDEC_FreeChan(HI_HANDLE hVdec);
 HI_S32 HI_MPI_VDEC_SetChanAttr(HI_HANDLE hVdec, const HI_UNF_VCODEC_ATTR_S *pstAttr);
 HI_S32 HI_MPI_VDEC_GetChanAttr(HI_HANDLE hVdec, HI_UNF_VCODEC_ATTR_S *pstAttr);
+#ifndef HI_TVP_SUPPORT
 HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_U32 u32BufSize, HI_HANDLE hDmxVidChn);
+#else
+HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BUFFER_ATTR_S *pstBufAttr);
+#endif
 HI_S32 HI_MPI_VDEC_ChanBufferDeInit(HI_HANDLE hVdec);
 HI_S32 HI_MPI_VDEC_ResetChan(HI_HANDLE hVdec);
 HI_S32 HI_MPI_VDEC_ChanStart(HI_HANDLE hVdec);
@@ -296,6 +311,7 @@ HI_S32 HI_MPI_VDEC_SetChanBufferMode(HI_HANDLE hVdec,VDEC_FRAMEBUFFER_MODE_E enF
 HI_S32 HI_MPI_VDEC_CheckAndDeleteExtBuffer(HI_HANDLE hVdec,HI_U32 u32PhyAddr,VDEC_FRAMEBUFFER_STATE_E* penBufState);
 HI_S32 HI_MPI_VDEC_SetExternBufferState(HI_HANDLE hVdec, VDEC_EXTBUFFER_STATE_E enExtBufferState);
 HI_S32 HI_MPI_VDEC_SetResolution(HI_HANDLE hVdec,VDEC_RESOLUTION_ATTR_S* pstResolution);
+HI_S32 HI_MPI_VDEC_GetPreCap(VDEC_PRE_CAP_E* peCapType);
 #ifdef __cplusplus
 #if __cplusplus
 }

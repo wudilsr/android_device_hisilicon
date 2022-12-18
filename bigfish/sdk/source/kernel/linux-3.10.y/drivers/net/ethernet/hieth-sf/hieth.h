@@ -25,6 +25,11 @@
 
 #define HIETH_MAX_FRAME_SIZE	(1600)
 
+#define HIETH_MAX_MAC_FILTER_NUM	8
+#define HIETH_MAX_UNICAST_ADDRESSES	2
+#define HIETH_MAX_MULTICAST_ADDRESSES	(HIETH_MAX_MAC_FILTER_NUM - \
+		HIETH_MAX_UNICAST_ADDRESSES)
+
 #define hieth_trace(level, msg...) do { \
 	if((level) >= CONFIG_HIETH_TRACE_LEVEL) { \
 		printk(KERN_INFO "hieth_trace:%s:%d: ", __FUNCTION__, __LINE__); \
@@ -102,6 +107,7 @@ struct hieth_netdev_local {
 	char phy_name[MII_BUS_ID_SIZE];
 	struct phy_device *phy;
 	int link_stat;
+	int (*eee_init)(struct phy_device *phy_dev);
 
 	spinlock_t lock;
 	unsigned long lockflags;
@@ -181,6 +187,13 @@ struct hisf_gpio {
 #define UD_REG_NAME(name)       ((ld->port==UP_PORT)? U_##name : D_##name)
 #define UD_BIT_NAME(name)       ((ld->port==UP_PORT)? name##_U : name##_D)
 #define UD_PHY_NAME(name)       ((ld->port==UP_PORT)? name##_U : name##_D)
+
+#define UD_BIT(port, name)	(((port) == UP_PORT) ? name##_U : name##_D)
+
+#define GLB_MAC_H16(port, reg)	((((port) == UP_PORT) ? GLB_MAC_H16_BASE \
+					: GLB_MAC_H16_BASE_D) + (reg * 0x8))
+#define GLB_MAC_L32(port, reg)	((((port) == UP_PORT) ? GLB_MAC_L32_BASE \
+					: GLB_MAC_L32_BASE_D) + (reg * 0x8))
 
 #endif
 

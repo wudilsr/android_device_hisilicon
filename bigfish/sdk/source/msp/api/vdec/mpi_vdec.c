@@ -123,6 +123,11 @@ typedef struct tagVDEC_INST_S
 
     FN_VPSS_Control             pfnVpssControl;
     HI_HANDLE                   hVpss;
+#ifdef HI_TVP_SUPPORT
+    HI_BOOL                     bStreamBufAttach;
+	HI_BOOL                     bIsTVP;         /*Whether the chan is Trust Video Past*/
+	HI_U32                      u32SetTvpAttrCount;
+#endif
     struct list_head            stVdecNode;     /* List node */
 } VDEC_INST_S;
 
@@ -319,15 +324,36 @@ HI_S32 HI_MPI_VDEC_DeInit(HI_VOID)
     if (1 == s_stVdecParam.u8InitCount)
     {
         s32Ret = HI_CODEC_UnRegister(VDEC_VFMW_Codec());
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("HI_CODEC_UnRegister failed:%d.\n",s32Ret);
+        }	
 #if (1 == HI_VDEC_MJPEG_SUPPORT)
         s32Ret = HI_CODEC_UnRegister(VDEC_MJPEG_Codec());
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("HI_CODEC_UnRegister failed:%d.\n",s32Ret);
+        }
 #endif
 #if (1 == HI_VDEC_VPU_SUPPORT)
         s32Ret |= HI_CODEC_UnRegister(VDEC_VPU_Codec());
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("HI_CODEC_UnRegister failed:%d.\n",s32Ret);
+        }
         s32Ret |= VDEC_CloseVPU();
+	    if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("VDEC_CloseVPU failed:%d.\n",s32Ret);
+        }
+
 #endif
 
         s32Ret |= HI_CODEC_DeInit();
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("HI_CODEC_DeInit failed:%d.\n",s32Ret);
+        }
         s32Ret |= VDEC_CloseDevFile();
         s_stVdecParam.stVdecHead.next = &s_stVdecParam.stVdecHead;
         s_stVdecParam.stVdecHead.prev = &s_stVdecParam.stVdecHead;
@@ -422,7 +448,12 @@ static HI_S32 VDEC_CreateCodec(VDEC_INST_S* pstVdec, HI_CODEC_ID_E enID)
         pstVdec->bIsVFMW = HI_TRUE;
 
         /* If it's VFMW and stream buffer had been created, need attach to instance */
-        if ((HI_INVALID_HANDLE != pstVdec->hDmxVidChn) || (HI_INVALID_HANDLE != pstVdec->hStreamBuf))
+	#ifndef HI_TVP_SUPPORT
+		if ((HI_INVALID_HANDLE != pstVdec->hDmxVidChn) || (HI_INVALID_HANDLE != pstVdec->hStreamBuf))
+	#else
+        if (((HI_INVALID_HANDLE != pstVdec->hDmxVidChn) || (HI_INVALID_HANDLE != pstVdec->hStreamBuf))
+            &&(HI_FALSE == pstVdec->bStreamBufAttach))
+	#endif
         {
             stStrmBuf.u32BufSize = pstVdec->u32StrmBufSize;
             stStrmBuf.hDmxVidChn = pstVdec->hDmxVidChn;
@@ -431,8 +462,15 @@ static HI_S32 VDEC_CreateCodec(VDEC_INST_S* pstVdec, HI_CODEC_ID_E enID)
             if (HI_SUCCESS != s32Ret)
             {
                 s32Ret = HI_CODEC_Destory(pstVdec->hCodecInst);
+			    if(HI_SUCCESS!=s32Ret)
+			    {
+			        HI_ERR_VDEC("HI_CODEC_Destory Err!\n");
+			    }
                 return HI_ERR_VDEC_SETATTR_FAILED;
             }
+		#ifdef HI_TVP_SUPPORT
+            pstVdec->bStreamBufAttach = HI_TRUE;
+		#endif
         }
     }
     return HI_SUCCESS;
@@ -701,6 +739,11 @@ static HI_VOID* VDEC_SoftCodec(HI_VOID* phVdec)
             if(pstCodec->RegFrameBuffer)
             {
                 s32Ret= pstCodec->RegFrameBuffer(HI_CODEC_INST_HANDLE(pstVdec->hCodecInst),HI_NULL);
+				if(HI_SUCCESS!=s32Ret)
+			    {
+			        HI_ERR_VDEC("RegFrameBuffer Err! s32Ret:%d\n",s32Ret);
+			    }
+
             }
         }
 
@@ -971,6 +1014,7 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
         return HI_ERR_VDEC_INVALID_PARA;
     }
 
+    VDEC_LOCK(s_stVdecParam.stMutex);
     if (HI_SUCCESS != VDEC_AllocHandle(phHandle))
     {
         HI_ERR_VDEC("Alloc handle fail.\n");
@@ -987,7 +1031,7 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     }
 
     /* Init parameter */
-    VDEC_LOCK(s_stVdecParam.stMutex);
+
     pstVdec->hVdec = *phHandle;
     pstVdec->hStreamBuf = HI_INVALID_HANDLE;
     pstVdec->hFrameBuf  = HI_INVALID_HANDLE;
@@ -998,6 +1042,11 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     pstVdec->hDmxVidChn = HI_INVALID_HANDLE;
     pstVdec->pfnVpssControl = HI_NULL;
     pstVdec->hVpss = HI_INVALID_HANDLE;
+#ifdef HI_TVP_SUPPORT
+	pstVdec->bIsTVP = HI_FALSE;
+	pstVdec->u32SetTvpAttrCount = 0;
+    pstVdec->bStreamBufAttach = HI_FALSE;
+#endif
     /*create vpss*/
     if(HI_INVALID_HANDLE == pstVdec->hVpss)
     {
@@ -1077,8 +1126,9 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     }
 
     list_add_tail(&pstVdec->stVdecNode, &s_stVdecParam.stVdecHead);
-    VDEC_UNLOCK(s_stVdecParam.stMutex);
     *phHandle = pstVdec->hVdec;
+    VDEC_UNLOCK(s_stVdecParam.stMutex);
+
 
     HI_INFO_VDEC("Alloc handle = %d\n", *phHandle);
     return HI_SUCCESS;
@@ -1094,24 +1144,27 @@ HI_S32 HI_MPI_VDEC_FreeChan(HI_HANDLE hVdec)
     {
         return HI_ERR_VDEC_INVALID_PARA;
     }
-     /*Destroy vpss*/
-    if(HI_INVALID_HANDLE != pstVdec->hVpss)
+
+    VDEC_LOCK(s_stVdecParam.stMutex);
+
+    /*Destroy vpss*/
+    if (HI_INVALID_HANDLE != pstVdec->hVpss)
     {
-        (HI_VOID)VPSS_Control(pstVdec->hVdec,VPSS_CMD_DESTORYVPSS,&(pstVdec->hVpss));
+        (HI_VOID)VPSS_Control(pstVdec->hVdec, VPSS_CMD_DESTORYVPSS, &(pstVdec->hVpss));
 
     }
+
     (HI_VOID)VDEC_DestroyCodec(pstVdec);
 
 
     (HI_VOID)VDEC_FreeHandle(pstVdec->hVdec);
 
     /* Delete node from list */
-    VDEC_LOCK(s_stVdecParam.stMutex);
-    list_del(&pstVdec->stVdecNode);
-    VDEC_UNLOCK(s_stVdecParam.stMutex);
 
+    list_del(&pstVdec->stVdecNode);
     /* Free memory resource */
     HI_FREE_VDEC(pstVdec);
+    VDEC_UNLOCK(s_stVdecParam.stMutex);
 
     return HI_SUCCESS;
 }
@@ -1397,7 +1450,15 @@ HI_S32 HI_MPI_VDEC_GetChanStatusInfo(HI_HANDLE hVdec, VDEC_STATUSINFO_S *pstStat
             if (0 == strncmp("VPU", pstVdec->pstCodec->pszName, 3))
             {
                 s32Ret = VDEC_GetStreamBufStatus(pstVdec->hStreamBuf, &stStrmStatus);
+				if(HI_SUCCESS!=s32Ret)
+			    {
+			        HI_ERR_VDEC("VDEC_GetStreamBufStatus Err! s32Ret:%d\n",s32Ret);
+			    }
                 s32Ret = pstVdec->pstCodec->Control(HI_CODEC_INST_HANDLE(pstVdec->hCodecInst), VPU_CMD_GETCHANSTATUSINFO, (HI_VOID*)(&stFrmStatus));
+				if(HI_SUCCESS!=s32Ret)
+			    {
+			        HI_ERR_VDEC("VPU_CMD_GETCHANSTATUSINFO Err! s32Ret:%d\n",s32Ret);
+			    }
             }
             else
             {
@@ -1957,6 +2018,81 @@ HI_S32 HI_MPI_VDEC_SetLowDelay(HI_HANDLE hVdec, HI_UNF_AVPLAY_LOW_DELAY_ATTR_S *
     return s32Ret;
 }
 
+#ifdef HI_TVP_SUPPORT
+HI_S32 HI_MPI_VDEC_SetTVP(HI_HANDLE hVdec, HI_UNF_AVPLAY_TVP_ATTR_S *pstAttr)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    VDEC_INST_S* pstVdec = HI_NULL;
+    HI_CODEC_ID_E enID;
+    HI_CODEC_ATTR_S stAttr;
+    VDEC_CHECK_INIT;
+    VDEC_FIND_INST(hVdec, pstVdec);
+    if (HI_NULL == pstVdec)
+    {
+        return HI_ERR_VDEC_INVALID_PARA;
+    }
+#if 0
+    pstVdec->u32SetTvpAttrCount++;
+    if(pstVdec->u32SetTvpAttrCount==1)
+    {
+        s32Ret = VDEC_SetTVP(hVdec,pstAttr);
+        if(HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("%s %d VDEC_SetTVP err0!\n", __func__, __LINE__);
+            return HI_FAILURE;
+        }
+        pstVdec->bIsTVP = pstAttr->bEnable;
+    }
+    else if(pstVdec->bIsTVP != pstAttr->bEnable)
+    {
+        pstVdec->bIsTVP = pstAttr->bEnable;
+        if(HI_NULL != pstVdec->pstCodec)
+        {
+            s32Ret = VDEC_ChanStop(pstVdec);
+            s32Ret |= VDEC_DestroyCodec(pstVdec);
+            if (HI_SUCCESS != s32Ret)
+            {
+                HI_ERR_VDEC("%s VDEC_ChanStop or VDEC_DestroyCodec fail.\n",__FUNCTION__);
+            }
+        }
+        s32Ret = VDEC_SetTVP(hVdec,pstAttr);
+        if(HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("%s %d VDEC_SetTVP err1!\n", __func__, __LINE__);
+            return HI_FAILURE;
+        }
+        /* Convert UNF to HI_CODEC_ID_E */
+        enID = VDEC_UNF2CodecId(pstVdec->stCurAttr.enType);
+
+        s32Ret = VDEC_CreateCodec(pstVdec, enID);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_VDEC("Create Codec fail.\n");
+            return HI_FAILURE;
+        }
+        stAttr.enID = enID;
+        stAttr.unAttr.stVdec.pPlatformPriv = (HI_VOID*)(&pstVdec->stCurAttr);
+        //TODO find pCodecContext
+
+        /* Set instance attribute */
+        if (HI_NULL != pstVdec->pstCodec->SetAttr)
+        {
+            s32Ret = pstVdec->pstCodec->SetAttr(HI_CODEC_INST_HANDLE(pstVdec->hCodecInst), &stAttr);
+            return VDEC_ConvertError(s32Ret);
+        }
+    }
+#else
+    s32Ret = VDEC_SetTVP(hVdec,pstAttr);
+    if(HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_VDEC("%s %d VDEC_SetTVP err0!\n", __func__, __LINE__);
+        return HI_FAILURE;
+    }
+    pstVdec->bIsTVP = pstAttr->bEnable;
+#endif
+    return s32Ret;
+}
+#endif
 HI_S32 HI_MPI_VDEC_ChanDropStream(HI_HANDLE hVdec, HI_U32 *pSeekPts, HI_U32 u32Gap)
 {
     HI_S32 s32Ret = HI_FAILURE;
@@ -2231,12 +2367,17 @@ HI_S32 HI_MPI_VDEC_RlsUserData(HI_HANDLE hVdec, HI_UNF_VIDEO_USERDATA_S* pstUser
     return HI_FAILURE;
 }
 
-
+#ifndef HI_TVP_SUPPORT
 HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_U32 u32BufSize, HI_HANDLE hDmxVidChn)
+#else
+HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BUFFER_ATTR_S *pstBufAttr)
+#endif
 {
     VDEC_INST_S* pstVdec = HI_NULL;
     VFMW_STREAMBUF_S stStrmBuf;
-
+#ifdef HI_TVP_SUPPORT
+    HI_S32 s32Ret;
+#endif
     VDEC_CHECK_INIT;
 
     VDEC_FIND_INST(hVdec, pstVdec);
@@ -2249,7 +2390,11 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_U32 u32BufSize, HI_HANDLE 
     if (HI_INVALID_HANDLE == hDmxVidChn)
     {
         /* Create stream buffer */
-        if (HI_SUCCESS != VDEC_CreateStreamBuf(&pstVdec->hStreamBuf, u32BufSize))
+	#ifndef HI_TVP_SUPPORT
+		if (HI_SUCCESS != VDEC_CreateStreamBuf(&pstVdec->hStreamBuf, u32BufSize))
+	#else
+        if (HI_SUCCESS != VDEC_CreateStreamBuf(&pstVdec->hStreamBuf, pstBufAttr))
+	#endif
         {
             return HI_ERR_VDEC_BUFFER_ATTACHED;
         }
@@ -2261,18 +2406,34 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_U32 u32BufSize, HI_HANDLE 
         pstVdec->hStreamBuf = HI_INVALID_HANDLE;
         pstVdec->hDmxVidChn = hDmxVidChn;
     }
-
-    pstVdec->u32StrmBufSize = u32BufSize;
-
-    /* If codec instance had been created and it's VFMW, attach buffer to it */
+	
+#ifndef HI_TVP_SUPPORT
+	pstVdec->u32StrmBufSize = u32BufSize;
+	/* If codec instance had been created and it's VFMW, attach buffer to it */
     if (pstVdec->bIsVFMW)
+#else
+    pstVdec->u32StrmBufSize = pstBufAttr->u32BufSize;
+	/* If codec instance had been created and it's VFMW, attach buffer to it */
+    if (pstVdec->bIsVFMW && HI_FALSE == pstVdec->bStreamBufAttach)
+#endif
     {
         stStrmBuf.u32BufSize = pstVdec->u32StrmBufSize;
         stStrmBuf.hDmxVidChn = pstVdec->hDmxVidChn;
         stStrmBuf.hStrmBuf = pstVdec->hStreamBuf;
-        return VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_ATTACHBUF, (HI_VOID*)&stStrmBuf);
+	#ifndef HI_TVP_SUPPORT
+		return VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_ATTACHBUF, (HI_VOID*)&stStrmBuf);
+	#else
+        s32Ret = VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_ATTACHBUF, (HI_VOID*)&stStrmBuf);
+        if(HI_SUCCESS == s32Ret)
+        {
+            pstVdec->bStreamBufAttach = HI_TRUE;
+    	}
+        else
+        {
+            return s32Ret;
+        }
+	#endif
     }
-
     return HI_SUCCESS;
 }
 
@@ -2293,12 +2454,21 @@ HI_S32 HI_MPI_VDEC_ChanBufferDeInit(HI_HANDLE hVdec)
     if (pstVdec->bIsVFMW)
     {
         s32Ret |= VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_DETACHBUF, HI_NULL);
+	#ifdef HI_TVP_SUPPORT
+        if(HI_SUCCESS == s32Ret)
+        {
+           pstVdec->bStreamBufAttach = HI_FALSE;
+        }
+	#endif
     }
 
     /* Destroy stream buffer */
     if (HI_INVALID_HANDLE != pstVdec->hStreamBuf)
     {
         s32Ret |= VDEC_DestroyStreamBuf(pstVdec->hStreamBuf);
+	#ifdef HI_TVP_SUPPORT
+	    pstVdec->hStreamBuf = HI_INVALID_HANDLE;
+	#endif
     }
 
     return s32Ret;
@@ -2350,6 +2520,136 @@ HI_S32 HI_MPI_VDEC_GetChanOpenParam(HI_HANDLE hVdec, HI_UNF_AVPLAY_OPEN_OPT_S *p
 
     return HI_SUCCESS;
 }
+
+HI_S32 HI_MPI_VDEC_GetPreCap(VDEC_PRE_CAP_E* peCapType)
+{
+
+    HI_SYS_MEM_CONFIG_S MemConfig;
+    HI_S32 Ret;
+    
+    if(HI_NULL == peCapType)
+    {
+        return HI_ERR_VDEC_INVALID_PARA;
+    }
+    else
+    {
+        Ret = HI_SYS_GetMemConfig(&MemConfig);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_ERR_VDEC("Get Mem Config Fail!, Ret: %#x\n", Ret);
+            MemConfig.u32TotalSize = 1024; // if get memory config failed, we use 1G config
+        }
+
+        switch(MemConfig.u32TotalSize)
+        {
+            case 512:
+            {
+                if (1 == HI_VIDEO_PRE_CAP_1080P_IN_512)
+                {
+                    *peCapType = VDEC_PRE_CAP_1080P; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_MVC_IN_512)
+                {
+                    *peCapType = VDEC_PRE_CAP_MVC; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_2160P_IN_512)
+                {
+                    *peCapType = VDEC_PRE_CAP_2160P;
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_4K_IN_512)
+                {
+                    *peCapType = VDEC_PRE_CAP_4K;
+                }
+                else
+                {
+                    *peCapType = VDEC_PRE_CAP_BUTT;
+                    return HI_FAILURE;
+                }
+            }
+                break;
+            case 768:
+            {
+                if (1 == HI_VIDEO_PRE_CAP_1080P_IN_768)
+                {
+                    *peCapType = VDEC_PRE_CAP_1080P; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_MVC_IN_768)
+                {
+                    *peCapType = VDEC_PRE_CAP_MVC; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_2160P_IN_768)
+                {
+                    *peCapType = VDEC_PRE_CAP_2160P;
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_4K_IN_768)
+                {
+                    *peCapType = VDEC_PRE_CAP_4K;
+                }
+                else
+                {
+                    *peCapType = VDEC_PRE_CAP_BUTT;
+                    return HI_FAILURE;
+                }
+            }  
+                break;
+            case 2048:
+            {
+                if (1 == HI_VIDEO_PRE_CAP_1080P_IN_2048)
+                {
+                    *peCapType = VDEC_PRE_CAP_1080P; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_MVC_IN_2048)
+                {
+                    *peCapType = VDEC_PRE_CAP_MVC; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_2160P_IN_2048)
+                {
+                    *peCapType = VDEC_PRE_CAP_2160P;
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_4K_IN_2048)
+                {
+                    *peCapType = VDEC_PRE_CAP_4K;
+                }
+                else
+                {
+                    *peCapType = VDEC_PRE_CAP_BUTT;
+                    return HI_FAILURE;
+                }
+            }
+                break;
+            case 1024:          
+            default:
+            {
+                if (1 == HI_VIDEO_PRE_CAP_1080P_IN_1024)
+                {
+                    *peCapType = VDEC_PRE_CAP_1080P; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_MVC_IN_1024)
+                {
+                    *peCapType = VDEC_PRE_CAP_MVC; 
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_2160P_IN_1024)
+                {
+                    *peCapType = VDEC_PRE_CAP_2160P;
+                }
+                else if(1 == HI_VIDEO_PRE_CAP_4K_IN_1024)
+                {
+                    *peCapType = VDEC_PRE_CAP_4K;
+                }
+                else
+                {
+                    *peCapType = VDEC_PRE_CAP_BUTT;
+                    return HI_FAILURE;
+                }
+            }
+                break;
+        }
+       
+    }
+
+    return HI_SUCCESS;   
+}
+
 
 #ifdef __cplusplus
  #if __cplusplus

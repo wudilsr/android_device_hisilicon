@@ -63,14 +63,14 @@ extern "C" {
 /**<Minimum output bit rate*/	
 /**<CNcomment: 最小输出码率*/
 #define HI_VENC_MIN_bps         (32*1024)	
-#if 0
+
 /**<Maximum split size (in bytes)*/	
 /**<CNcomment: 最大Split字节*/
 #define HI_VENC_MAX_SPLIT_BYTE_SIZE  (0xFFFF)	
 /**<Minimum split size (in bytes)*/	
 /**<CNcomment: 最小Split字节*/
 #define HI_VENC_MIN_SPLIT_BYTE_SIZE  (512)	
-
+#if 0
 /**<Maximum split size (in bytes)*/	
 /**<CNcomment: 最大Split字节*/
 #define HI_VENC_MAX_SPLIT_MB_LINE  (511)	

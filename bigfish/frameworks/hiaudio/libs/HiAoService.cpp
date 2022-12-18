@@ -341,6 +341,7 @@ namespace android
           ALOGE("Get Default Cast Attr Failed \n");
       }
       stCastAttr.u32PcmSamplesPerFrame = 512;
+	  stCastAttr.bAddMute = HI_FALSE;
 	  if(NULL == g_hCast)
       {
           ALOGI("AoService CreateCast");

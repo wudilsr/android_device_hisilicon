@@ -9,7 +9,30 @@
 #define SPI_IDSH
 /*****************************************************************************/
 
-#define INFINITE                  (0xFFFFFFFF)
+#define _1K             (0x400)
+#define _2K             (0x800)
+
+#define _4K             (0x1000)
+#define _8K             (0x2000)
+#define _16K            (0x4000)
+#define _32K            (0x8000)
+
+#define _64K            (0x10000)
+#define _128K           (0x20000)
+#define _256K           (0x40000)
+#define _512K           (0x80000)
+
+#define _1M             (0x100000)
+#define _2M             (0x200000)
+#define _4M             (0x400000)
+#define _8M             (0x800000)
+
+#define _16M            (0x1000000)
+#define _32M            (0x2000000)
+#define _64M            (0x4000000)
+
+#define INFINITE        (0xFFFFFFFF)
+/*****************************************************************************/
 
 #define SPI_IF_READ_STD           (0x01)
 #define SPI_IF_READ_FAST          (0x02)
@@ -24,31 +47,45 @@
 #define SPI_IF_WRITE_QUAD         (0x08)
 #define SPI_IF_WRITE_QUAD_ADDR    (0x10)
 
-/*macro for v350*/
+#define SPI_IF_ERASE_SECTOR       (0x01)  /* sector erase, 64K */
+#define SPI_IF_ERASE_CHIP         (0x02)  /* chip erase */
+#define SPI_IF_ERASE_4K           (0x04)  /* 4K */
+#define SPI_IF_ERASE_8K           (0x08)  /* 8K */
+
 #define SPI_IF_ERASE_SECTOR_4K    (0x01)  /* 4K */
 /*macro for v350*/
 #define SPI_IF_ERASE_SECTOR_32K   (0x02)  /* 32K */
-/*macro for v300*/
-#define SPI_IF_ERASE_CHIP         (0x02) /*chip erase*/
 /*macro for v350*/
 #define SPI_IF_ERASE_SECTOR_64K   (0x04)  /* 64K */
 /*macro for v300*/
-#define SPI_IF_ERASE_SECTOR       (0x04)  /* sector erase, 64K */
+#define SPI_IF_ERASE_SECTOR_128K	(0x08)  /* 128K */
 /*macro for v350*/
-#define SPI_IF_ERASE_SECTOR_256K  (0x08)  /* 256K */
+#define SPI_IF_ERASE_SECTOR_256K	(0x10)  /* 256K */
+/*****************************************************************************/
+#define SPI_CMD_BRWR          (0x17)  /*write value to BAR*/
+#define SPI_EN4B_VALUE        (0x80)  /*the enable 4Byte addr len value*/
+#define SPI_EX4B_VALUE        (0x00)  /*the disable 4Byte addr len value*/
+#define SPI_4BYTE_ADDR_LEN    (4)     /*address len 4Byte*/
 /*****************************************************************************/
 
 #define SPI_CMD_WREN                   0x06   /* Write Enable */
-//-----------------------------------------------------------------------------
+#define SPI_CMD_WRDI                   0x04   /* Write Disable */
 #define SPI_CMD_SE_4K                  0x20   /* 4KB sector Erase */
 #define SPI_CMD_SE_32K                 0x52   /* 32KB sector Erase */
 #define SPI_CMD_SE_64K                 0xD8   /* 64KB sector Erase */
+#define SPI_CMD_SE_128K                0xD8   /* 128KB sector Erase */
 #define SPI_CMD_SE_256K                0xD8   /* 256KB sector Erase */
 
 #define SPI_CMD_SE                     0xD8   /* 64KB Sector Erase */
 #define SPI_CMD_BE                     0xC7   /* chip erase */
 //-----------------------------------------------------------------------------
+#define SPI_CMD_WRSR                   0x01   /* Write Status Register */
+#define SPI_CMD_WRSR2                  0x31   /* Write Status Register-2 */
+#define SPI_CMD_WRSR3                  0x11   /* Write Status Register-3 */
 #define SPI_CMD_RDSR                   0x05   /* Read Status Register */
+#define SPI_CMD_RDSR2                  0x35   /* Read Status Register-2 */
+#define SPI_CMD_RDSR3                  0x15   /* Read Status Register-3 */
+#define SPI_CMD_RDCR                   0x15   /* Read Config Register */
 #define SPI_CMD_RDID                   0x9F   /* Read Identification */
 //-----------------------------------------------------------------------------
 #define SPI_CMD_PP                     0x02   /* Page Programming */
@@ -66,7 +103,8 @@
 //-----------------------------------------------------------------------------
 #define SPI_CMD_SR_WIP                 1      /* Write in Progress */
 #define SPI_CMD_SR_WEL                 2      /* Write Enable Latch */
-//-----------------------------------------------------------------------------
+#define SPI_CMD_SR_QE                  (1 << 9) /* quad enable */
+#define SPI_CMD_SR_XQE                 (0 << 9) /* quad disable */
 #define SPI_CMD_EN4B                   0xB7  /* enter to 4 bytes mode and set 4 byte bit as '1' */
 #define SPI_CMD_EX4B                   0xE9  /* exit 4 bytes mode and clear 4 byte bit as '0' */
 
@@ -95,7 +133,18 @@ struct spi_info {
 	struct spi_operation *write[8];
 	struct spi_operation *erase[8];
 	struct spi_driver *driver;
+
+#define SPI_NOR_ADDR_3B     0x01 /* spi nor support 3B addr mode only. */
+#define SPI_NOR_ADDR_4B     0x02 /* spi nor support 4B addr mode only. */
+#define SPI_NOR_ADDR_3B_4B  0x04 /* spi nor support 3B/4B addr mode, default 3B */
+	unsigned int   flags;
+
 };
+
+#define IS_SPI_NOR_3B(_dev)     (_dev->flags & SPI_NOR_ADDR_3B)
+#define IS_SPI_NOR_4B(_dev)     (_dev->flags & SPI_NOR_ADDR_4B)
+#define IS_SPI_NOR_3B_4B(_dev)  (_dev->flags & SPI_NOR_ADDR_3B_4B)
+
 /*****************************************************************************/
 
 struct spi_info *spi_serach_ids(struct spi_info *spi_info_table,

@@ -181,7 +181,11 @@ png_write_complete_chunk(png_structrp png_ptr, png_uint_32 chunk_name,
 
    /* On 64 bit architectures 'length' may not fit in a png_uint_32. */
    if (length > PNG_UINT_31_MAX)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "length exceeds PNG maximum");
+#endif
 
    png_write_chunk_header(png_ptr, chunk_name, (png_uint_32)length);
    png_write_chunk_data(png_ptr, data, length);
@@ -306,7 +310,11 @@ png_deflate_claim(png_structrp png_ptr, png_uint_32 owner,
        * internal error, but is very useful for debugging.  i18n requirements
        * are minimal.
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      (void)png_safecat(msg, (sizeof msg), 10, " ");
+#else
       (void)png_safecat(msg, (sizeof msg), 10, " using zstream");
+#endif
 #endif
 #if PNG_LIBPNG_BUILD_BASE_TYPE >= PNG_LIBPNG_BUILD_RC
          png_warning(png_ptr, msg);
@@ -314,7 +322,11 @@ png_deflate_claim(png_structrp png_ptr, png_uint_32 owner,
          /* Attempt sane error recovery */
          if (png_ptr->zowner == png_IDAT) /* don't steal from IDAT */
          {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
             png_ptr->zstream.msg = PNGZ_MSG_CAST("in use by IDAT");
+#endif
             return Z_STREAM_ERROR;
          }
 
@@ -394,7 +406,11 @@ png_deflate_claim(png_structrp png_ptr, png_uint_32 owner,
          png_ptr->zlib_set_strategy != strategy))
       {
          if (deflateEnd(&png_ptr->zstream) != Z_OK)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "deflateEnd failed (ignored)");
+#endif
 
          png_ptr->flags &= ~PNG_FLAG_ZSTREAM_INITIALIZED;
       }
@@ -602,7 +618,11 @@ png_text_compress(png_structrp png_ptr, png_uint_32 chunk_name,
        */
       if (output_len + prefix_len >= PNG_UINT_31_MAX)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
          png_ptr->zstream.msg = PNGZ_MSG_CAST("compressed data too long");
+#endif
          ret = Z_MEM_ERROR;
       }
 
@@ -661,7 +681,11 @@ png_write_compressed_data_out(png_structrp png_ptr, compression_state *comp)
 
    /* This is an internal error; 'next' must have been NULL! */
    if (output_len > 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "error writing ancillary chunked compressed data");
+#endif
 }
 #endif /* WRITE_COMPRESSED_TEXT */
 
@@ -732,7 +756,11 @@ png_check_keyword(png_structrp png_ptr, png_const_charp key, png_bytep new_key)
 #ifdef PNG_WARNINGS_SUPPORTED
    /* Try to only output one warning per keyword: */
    if (*key != 0) /* keyword too long */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "keyword truncated");
+#endif
 
    else if (bad_character != 0)
    {
@@ -740,8 +768,11 @@ png_check_keyword(png_structrp png_ptr, png_const_charp key, png_bytep new_key)
 
       png_warning_parameter(p, 1, orig_key);
       png_warning_parameter_signed(p, 2, PNG_NUMBER_FORMAT_02x, bad_character);
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_formatted_warning(png_ptr, p, "");
+#else
       png_formatted_warning(png_ptr, p, "keyword \"@1\": bad character '0x@2'");
+#endif
    }
 #endif /* WARNINGS */
 
@@ -778,8 +809,12 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
                png_ptr->channels = 1; break;
 
             default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr,
                    "Invalid bit depth for grayscale image");
+#endif
          }
          break;
 
@@ -789,7 +824,11 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
 #else
          if (bit_depth != 8)
 #endif
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Invalid bit depth for RGB image");
+#endif
 
          png_ptr->channels = 3;
          break;
@@ -805,13 +844,21 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
                break;
 
             default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "Invalid bit depth for paletted image");
+#endif
          }
          break;
 
       case PNG_COLOR_TYPE_GRAY_ALPHA:
          if (bit_depth != 8 && bit_depth != 16)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Invalid bit depth for grayscale+alpha image");
+#endif
 
          png_ptr->channels = 2;
          break;
@@ -822,18 +869,30 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
 #else
          if (bit_depth != 8)
 #endif
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Invalid bit depth for RGBA image");
+#endif
 
          png_ptr->channels = 4;
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Invalid image color type specified");
+#endif
    }
 
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid compression type specified");
+#endif
       compression_type = PNG_COMPRESSION_TYPE_BASE;
    }
 
@@ -856,7 +915,11 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
 #endif
        filter_type != PNG_FILTER_TYPE_BASE)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid filter type specified");
+#endif
       filter_type = PNG_FILTER_TYPE_BASE;
    }
 
@@ -864,7 +927,11 @@ png_write_IHDR(png_structrp png_ptr, png_uint_32 width, png_uint_32 height,
    if (interlace_type != PNG_INTERLACE_NONE &&
        interlace_type != PNG_INTERLACE_ADAM7)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid interlace type specified");
+#endif
       interlace_type = PNG_INTERLACE_ADAM7;
    }
 #else
@@ -936,21 +1003,32 @@ png_write_PLTE(png_structrp png_ptr, png_const_colorp palette,
    {
       if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Invalid number of colors in palette");
+#endif
       }
 
       else
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid number of colors in palette");
+#endif
          return;
       }
    }
 
    if ((png_ptr->color_type & PNG_COLOR_MASK_COLOR) == 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr,
           "Ignoring request to write a PLTE chunk in grayscale PNG");
-
+#endif
       return;
    }
 
@@ -1105,7 +1183,11 @@ png_compress_IDAT(png_structrp png_ptr, png_const_bytep input,
          if (input_len == 0)
          {
             if (flush == Z_FINISH)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "Z_OK on Z_FINISH with output space");
+#endif
 
             return;
          }
@@ -1178,8 +1260,12 @@ png_write_sRGB(png_structrp png_ptr, int srgb_intent)
    png_debug(1, "in png_write_sRGB");
 
    if (srgb_intent >= PNG_sRGB_INTENT_LAST)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr,
           "Invalid sRGB rendering intent specified");
+#endif
 
    buf[0]=(png_byte)srgb_intent;
    png_write_complete_chunk(png_ptr, png_sRGB, buf, (png_size_t)1);
@@ -1204,28 +1290,47 @@ png_write_iCCP(png_structrp png_ptr, png_const_charp name,
     * before when it was stored.
     */
    if (profile == NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, ""); /* internal error */
+#else
       png_error(png_ptr, "No profile for iCCP chunk"); /* internal error */
+#endif
 
    profile_len = png_get_uint_32(profile);
 
    if (profile_len < 132)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "ICC profile too short");
+#endif
 
    temp = (png_uint_32) (*(profile+8));
    if (temp > 3 && (profile_len & 0x03))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "ICC profile length invalid (not a multiple of 4)");
-
+#endif
    {
       png_uint_32 embedded_profile_len = png_get_uint_32(profile);
 
       if (profile_len != embedded_profile_len)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Profile length does not match profile");
+#endif
    }
 
    name_len = png_check_keyword(png_ptr, name, new_name);
 
    if (name_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "iCCP: invalid keyword");
+#endif
 
    new_name[++name_len] = PNG_COMPRESSION_TYPE_BASE;
 
@@ -1268,7 +1373,11 @@ png_write_sPLT(png_structrp png_ptr, png_const_sPLT_tp spalette)
    name_len = png_check_keyword(png_ptr, spalette->name, new_name);
 
    if (name_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "sPLT: invalid keyword");
+#endif
 
    /* Make sure we include the NULL after the name */
    png_write_chunk_header(png_ptr, png_sPLT,
@@ -1355,7 +1464,11 @@ png_write_sBIT(png_structrp png_ptr, png_const_color_8p sbit, int color_type)
           sbit->green == 0 || sbit->green > maxbits ||
           sbit->blue == 0 || sbit->blue > maxbits)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid sBIT depth specified");
+#endif
          return;
       }
 
@@ -1369,7 +1482,11 @@ png_write_sBIT(png_structrp png_ptr, png_const_color_8p sbit, int color_type)
    {
       if (sbit->gray == 0 || sbit->gray > png_ptr->usr_bit_depth)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid sBIT depth specified");
+#endif
          return;
       }
 
@@ -1381,7 +1498,11 @@ png_write_sBIT(png_structrp png_ptr, png_const_color_8p sbit, int color_type)
    {
       if (sbit->alpha == 0 || sbit->alpha > png_ptr->usr_bit_depth)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid sBIT depth specified");
+#endif
          return;
       }
 
@@ -1432,8 +1553,12 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
    {
       if (num_trans <= 0 || num_trans > (int)png_ptr->num_palette)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_warning(png_ptr, "");
+#else
          png_app_warning(png_ptr,
              "Invalid number of transparent colors specified");
+#endif
          return;
       }
 
@@ -1447,9 +1572,12 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
       /* One 16 bit value */
       if (tran->gray >= (1 << png_ptr->bit_depth))
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_warning(png_ptr, "");
+#else
          png_app_warning(png_ptr,
              "Ignoring attempt to write tRNS chunk out-of-range for bit_depth");
-
+#endif
          return;
       }
 
@@ -1469,8 +1597,12 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
       if ((buf[0] | buf[2] | buf[4]) != 0)
 #endif
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_warning(png_ptr, "");
+#else
          png_app_warning(png_ptr,
            "Ignoring attempt to write 16-bit tRNS chunk when bit_depth is 8");
+#endif
          return;
       }
 
@@ -1479,7 +1611,11 @@ png_write_tRNS(png_structrp png_ptr, png_const_bytep trans_alpha,
 
    else
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_warning(png_ptr, "");
+#else
       png_app_warning(png_ptr, "Can't write tRNS with an alpha channel");
+#endif
    }
 }
 #endif
@@ -1502,7 +1638,11 @@ png_write_bKGD(png_structrp png_ptr, png_const_color_16p back, int color_type)
 #endif
          back->index >= png_ptr->num_palette)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Invalid background palette index");
+#endif
          return;
       }
 
@@ -1521,9 +1661,12 @@ png_write_bKGD(png_structrp png_ptr, png_const_color_16p back, int color_type)
       if ((buf[0] | buf[2] | buf[4]) != 0)
 #endif
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr,
              "Ignoring attempt to write 16-bit bKGD chunk when bit_depth is 8");
-
+#endif
          return;
       }
 
@@ -1534,9 +1677,12 @@ png_write_bKGD(png_structrp png_ptr, png_const_color_16p back, int color_type)
    {
       if (back->gray >= (1 << png_ptr->bit_depth))
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr,
              "Ignoring attempt to write bKGD chunk out-of-range for bit_depth");
-
+#endif
          return;
       }
 
@@ -1560,8 +1706,11 @@ png_write_hIST(png_structrp png_ptr, png_const_uint_16p hist, int num_hist)
    {
       png_debug2(3, "num_hist = %d, num_palette = %d", num_hist,
           png_ptr->num_palette);
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid number of histogram entries specified");
+#endif
       return;
    }
 
@@ -1591,7 +1740,11 @@ png_write_tEXt(png_structrp png_ptr, png_const_charp key, png_const_charp text,
    key_len = png_check_keyword(png_ptr, key, new_key);
 
    if (key_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "tEXt: invalid keyword");
+#endif
 
    if (text == NULL || *text == '\0')
       text_len = 0;
@@ -1600,7 +1753,11 @@ png_write_tEXt(png_structrp png_ptr, png_const_charp key, png_const_charp text,
       text_len = strlen(text);
 
    if (text_len > PNG_UINT_31_MAX - (key_len+1))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "tEXt: text too long");
+#endif
 
    /* Make sure we include the 0 after the key */
    png_write_chunk_header(png_ptr, png_tEXt,
@@ -1639,12 +1796,20 @@ png_write_zTXt(png_structrp png_ptr, png_const_charp key, png_const_charp text,
    }
 
    if (compression != PNG_TEXT_COMPRESSION_zTXt)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "zTXt: invalid compression type");
+#endif
 
    key_len = png_check_keyword(png_ptr, key, new_key);
 
    if (key_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "zTXt: invalid keyword");
+#endif
 
    /* Add the compression method and 1 for the keyword separator. */
    new_key[++key_len] = PNG_COMPRESSION_TYPE_BASE;
@@ -1687,7 +1852,11 @@ png_write_iTXt(png_structrp png_ptr, int compression, png_const_charp key,
    key_len = png_check_keyword(png_ptr, key, new_key);
 
    if (key_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "iTXt: invalid keyword");
+#endif
 
    /* Set the compression flag */
    switch (compression)
@@ -1703,7 +1872,11 @@ png_write_iTXt(png_structrp png_ptr, int compression, png_const_charp key,
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "iTXt: invalid compression");
+#endif
    }
 
    new_key[++key_len] = PNG_COMPRESSION_TYPE_BASE;
@@ -1747,7 +1920,11 @@ png_write_iTXt(png_structrp png_ptr, int compression, png_const_charp key,
    else
    {
       if (comp.input_len > PNG_UINT_31_MAX-prefix_len)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "iTXt: uncompressed text too long");
+#endif
 
       /* So the string will fit in a chunk: */
       comp.output_len = (png_uint_32)/*SAFE*/comp.input_len;
@@ -1782,7 +1959,11 @@ png_write_oFFs(png_structrp png_ptr, png_int_32 x_offset, png_int_32 y_offset,
    png_debug(1, "in png_write_oFFs");
 
    if (unit_type >= PNG_OFFSET_LAST)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unrecognized unit type for oFFs chunk");
+#endif
 
    png_save_int_32(buf, x_offset);
    png_save_int_32(buf + 4, y_offset);
@@ -1808,12 +1989,20 @@ png_write_pCAL(png_structrp png_ptr, png_charp purpose, png_int_32 X0,
    png_debug1(1, "in png_write_pCAL (%d parameters)", nparams);
 
    if (type >= PNG_EQUATION_LAST)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Unrecognized equation type for pCAL chunk");
+#endif
 
    purpose_len = png_check_keyword(png_ptr, purpose, new_purpose);
 
    if (purpose_len == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "pCAL: invalid keyword");
+#endif
 
    ++purpose_len; /* terminator */
 
@@ -1873,7 +2062,11 @@ png_write_sCAL_s(png_structrp png_ptr, int unit, png_const_charp width,
 
    if (total_len > 64)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Can't write sCAL (buffer too small)");
+#endif
       return;
    }
 
@@ -1898,7 +2091,11 @@ png_write_pHYs(png_structrp png_ptr, png_uint_32 x_pixels_per_unit,
    png_debug(1, "in png_write_pHYs");
 
    if (unit_type >= PNG_RESOLUTION_LAST)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Unrecognized unit type for pHYs chunk");
+#endif
 
    png_save_uint_32(buf, x_pixels_per_unit);
    png_save_uint_32(buf + 4, y_pixels_per_unit);
@@ -1923,7 +2120,11 @@ png_write_tIME(png_structrp png_ptr, png_const_timep mod_time)
        mod_time->day    > 31 || mod_time->day    < 1 ||
        mod_time->hour   > 23 || mod_time->second > 60)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Invalid time specified for tIME chunk");
+#endif
       return;
    }
 

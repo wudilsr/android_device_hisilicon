@@ -78,6 +78,7 @@ static int parse_subpart(struct cmdline_parts *parts,
 		DBG_MSG("Fail to malloc for new subpart\n");
 		return -ENOMEM;
 	}
+	memset(new_subpart, 0, sizeof(struct cmdline_subpart));
 
 	if (*cmdline == '-') {
 		new_subpart->size = (__u64)(~0ULL);

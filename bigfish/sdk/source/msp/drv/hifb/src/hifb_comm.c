@@ -22,20 +22,15 @@
 static HI_VOID HI_GFX_ShowVersionK(HIGFX_MODE_ID_E ModID)
 {
 	#if !defined(CONFIG_GFX_COMM_VERSION_DISABLE) && !defined(CONFIG_GFX_COMM_DEBUG_DISABLE)
-	
     	HI_CHAR MouleName[7][10] = {"tde","jpegdec","jpegenc","fb","png", "higo", "gfx2d"};
         HI_CHAR Version[160] ="SDK_VERSION:["MKMARCOTOSTR(SDK_VERSION)"] Build Time:["\
 		__DATE__", "__TIME__"]";
 
     	if (ModID >= HIGFX_BUTT_ID)
     		return;
-	
-	if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	
 		GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
-	else
-		GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);		
-
-	return;
+		
+		return;
 		
 	#endif
 }

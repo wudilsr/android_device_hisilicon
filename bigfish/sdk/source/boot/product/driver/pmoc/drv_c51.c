@@ -37,6 +37,110 @@ static HI_U8 *ltvVirAddr = NULL;
 
 #define START_PMOC_ENABLE
 
+#define SC_GEN6 (CFG_BASE_ADDR + 0x98)
+#define SC_GEN17 (CFG_BASE_ADDR + 0xc4)
+#define REG_PERI_SOC_FUSE (PERI_BASE_ADDR + 0x840)
+void set_core_voltage_ca(void)
+{
+#if defined (CHIP_TYPE_hi3798mv100) || defined (CHIP_TYPE_hi3796mv100)
+    unsigned int regval, hpm_code, hpm_code_average, delay_count, core_volt_reg_val, corner_type;
+    unsigned int max_threshold;
+    unsigned int min_threshold;
+    unsigned int max_core_volt;
+    unsigned int mid_core_volt;
+    unsigned int min_core_volt;
+
+    HI_REG_READ32(REG_PERI_SOC_FUSE, regval);
+    
+    regval = (regval >> 16) & 0x1f;
+    if (0x7 != regval) 
+    {
+        return;
+    }
+
+    HI_REG_READ32(SC_GEN6, regval);
+    max_threshold = regval >> 16;
+    min_threshold = regval & 0xffff;
+
+    HI_REG_READ32(SC_GEN17, regval);
+    max_core_volt = (regval >> 16) & 0xff;
+    mid_core_volt = (regval >> 8) & 0xff;
+    min_core_volt = regval & 0xff;
+
+    /* set core volt to 1150mv */
+    HI_REG_WRITE32(0xf8a23018, 0x4300a7);
+	udelay (5 * 1000);
+
+    /* hpm 0             */
+    /* clock is 200M, set time division to (200/50 - 1) */
+    HI_REG_READ32(0xf8a23058, regval);
+    regval &= 0xffffffc0;
+    regval |= 3;
+    HI_REG_WRITE32(0xf8a23058, regval);
+
+    HI_REG_READ32(0xf8a23064, regval);
+    regval &= 0x00ffffff;
+    regval |= (1 << 24);
+    HI_REG_WRITE32(0xf8a23064, regval);
+
+    /* hpm enable */
+    HI_REG_READ32(0xf8a23058, regval);
+    regval |= (1 << 24);
+    HI_REG_WRITE32(0xf8a23058, regval);
+
+    /* hpm monitor enable */
+    HI_REG_READ32(0xf8a23058, regval);
+    regval |= (1 << 26);
+    HI_REG_WRITE32(0xf8a23058, regval);
+
+    udelay (10 * 1000);
+
+    HI_REG_READ32(0xf8a2305c, regval);
+    hpm_code = (regval & 0x3ff);
+    hpm_code_average = hpm_code;
+    hpm_code = ((regval >> 12) & 0x3ff);
+    hpm_code_average += hpm_code;
+
+    HI_REG_READ32(0xf8a23060, regval);
+    hpm_code = (regval & 0x3ff);
+    hpm_code_average += hpm_code;
+    hpm_code = ((regval >> 12) & 0x3ff);
+    hpm_code_average += hpm_code;
+
+    hpm_code_average = (hpm_code_average >> 2);
+
+    printf("\n hpm_code_average = 0x%x   \n", hpm_code_average);
+
+    HI_REG_READ32(0xf8a23018, core_volt_reg_val);
+    core_volt_reg_val &= 0xffff;
+    if (hpm_code_average >= max_threshold)
+    {
+        core_volt_reg_val |= mid_core_volt << 16; /* ff chip */
+        corner_type = 1;
+    }
+    else if (hpm_code_average < min_threshold)
+    {
+        core_volt_reg_val |= min_core_volt << 16; /* ss chip */
+        corner_type = 3;
+    }
+    else
+    {
+        core_volt_reg_val |= mid_core_volt << 16; /* tt chip */
+        corner_type = 2;
+    }
+
+    HI_REG_WRITE32(0xf8a23018, core_volt_reg_val);
+
+    HI_REG_READ32(SC_GEN17, regval);
+    regval &= 0xffffff;
+    regval |= (corner_type << 24);
+    HI_REG_WRITE32(SC_GEN17, regval);
+
+    udelay (10 * 1000);
+#endif
+    return;
+}
+
 HI_S32  c51_loadCode(void)
 {
     HI_S32 ret;
@@ -245,7 +349,10 @@ void boot_suspend(void)
                 HI_REG_WRITE32(C51_BASE + C51_START, 0x1);
 
                 /* wait for enter standby */
-                while(1);
+                while (1)
+                {
+                    ;
+                }
             }
 
             HI_PRINT("\nBoot suspend: continue to boot.\n");

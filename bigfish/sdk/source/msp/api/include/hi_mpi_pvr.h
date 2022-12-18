@@ -133,6 +133,12 @@ HI_S32 HI_PVR_RegisterExtraCallback(HI_U32 u32ChnID, HI_UNF_PVR_EXTRA_CALLBACK_E
 
 HI_S32 HI_PVR_UnRegisterExtraCallBack(HI_U32 u32ChnID, HI_UNF_PVR_EXTRA_CALLBACK_E eExtraCallbackType);
 
+HI_S32 HI_PVR_RecAddPid(HI_U32 u32ChnID, HI_U32 u32Pid);
+
+HI_S32 HI_PVR_RecDelPid(HI_U32 u32ChnID, HI_U32 u32Pid);
+
+HI_S32 HI_PVR_RecDelAllPid(HI_U32 u32ChnID);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

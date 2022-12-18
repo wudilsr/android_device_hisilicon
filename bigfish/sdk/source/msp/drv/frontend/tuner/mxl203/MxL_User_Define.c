@@ -53,14 +53,18 @@ static HI_U32 g_MxlI2cChnNum;
 UINT32 MxL_I2C_Write(UINT8 DeviceAddr, UINT8* pArray, UINT32 count)
 {
     TUNER_I2C_DATA_S stI2cData;
+    HI_S32  s32Ret = HI_SUCCESS;
 
     qam_config_i2c_out(g_MxlTunerPort,1);
     stI2cData.pu8ReceiveBuf = NULL;
     stI2cData.u32ReceiveLength = 0;
     stI2cData.pu8SendBuf = pArray;
     stI2cData.u32SendLength = count;
-    tuner_i2c_send_data(g_MxlI2cChnNum,DeviceAddr,&stI2cData);
-
+    s32Ret = tuner_i2c_send_data(g_MxlI2cChnNum,DeviceAddr,&stI2cData);
+    if(HI_SUCCESS != s32Ret)
+    {
+        return MxL_ERR_OTHERS;
+    }
 	return MxL_OK;	
 }
 
@@ -89,6 +93,7 @@ UINT32 MxL_I2C_Read(UINT8 DeviceAddr, UINT8 Addr, UINT8* mData)
     /* first step */
     TUNER_I2C_DATA_S stI2cData;
     UINT8 Array[2];
+    HI_S32  s32Ret = HI_SUCCESS;
 
 #if 0
     config_i2c_out(g_MxlTunerPort,1);
@@ -119,7 +124,11 @@ UINT32 MxL_I2C_Read(UINT8 DeviceAddr, UINT8 Addr, UINT8* mData)
     stI2cData.pu8SendBuf = Array;
     stI2cData.u32SendLength = 2;
 
-    tuner_i2c_receive_data(g_MxlI2cChnNum,DeviceAddr,&stI2cData);
+    s32Ret = tuner_i2c_receive_data(g_MxlI2cChnNum,DeviceAddr,&stI2cData);
+    if(HI_SUCCESS != s32Ret)
+    {
+        return MxL_ERR_OTHERS;
+    }
 #endif    
 	return MxL_OK;    
 }

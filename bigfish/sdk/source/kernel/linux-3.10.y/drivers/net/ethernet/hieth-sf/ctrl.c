@@ -42,11 +42,20 @@ int hieth_hw_set_macaddress(struct hieth_netdev_local *ld, int ena,
 
 	local_lock(ld);
 
+	if (ld->port == DOWN_PORT)
+		hieth_writel_bits(ld, 1, GLB_DN_HOSTMAC_ENA, BITS_DN_HOST_ENA);
+
 	reg = mac[1] | (mac[0] << 8);
-	hieth_writel(ld, reg, GLB_HOSTMAC_H16);
+	if (ld->port == UP_PORT)
+		hieth_writel(ld, reg, GLB_HOSTMAC_H16);
+	else
+		hieth_writel(ld, reg, GLB_DN_HOSTMAC_H16);
 
 	reg = mac[5] | (mac[4] << 8) | (mac[3] << 16) | (mac[2] << 24);
-	hieth_writel(ld, reg, GLB_HOSTMAC_L32);
+	if (ld->port == UP_PORT)
+		hieth_writel(ld, reg, GLB_HOSTMAC_L32);
+	else
+		hieth_writel(ld, reg, GLB_DN_HOSTMAC_L32);
 
 	local_unlock(ld);
 
@@ -59,11 +68,17 @@ int hieth_hw_get_macaddress(struct hieth_netdev_local *ld, unsigned char *mac)
 
 	local_lock(ld);
 
-	reg = hieth_readl(ld, GLB_HOSTMAC_H16);
+	if (ld->port == UP_PORT)
+		reg = hieth_readl(ld, GLB_HOSTMAC_H16);
+	else
+		reg = hieth_readl(ld, GLB_DN_HOSTMAC_H16);
 	mac[0] = (reg >> 8) & 0xff;
 	mac[1] = reg & 0xff;
 
-	reg = hieth_readl(ld, GLB_HOSTMAC_L32);
+	if (ld->port == UP_PORT)
+		reg = hieth_readl(ld, GLB_HOSTMAC_L32);
+	else
+		reg = hieth_readl(ld, GLB_DN_HOSTMAC_L32);
 	mac[2] = (reg >> 24) & 0xff;
 	mac[3] = (reg >> 16) & 0xff;
 	mac[4] = (reg >> 8) & 0xff;

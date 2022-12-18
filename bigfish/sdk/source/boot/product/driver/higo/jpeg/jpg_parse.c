@@ -134,7 +134,9 @@ typedef enum hiJPG_MARKER_E   /* JPEG marker codes */
 #define JPG_PARSED_SOS      0x00000010        
 #define JPG_PARSED_APP0     0x00000020 
 #define JPG_PARSED_APP1     0x00000040  
-#define JPG_PARSED_EOI      0x00000080  
+#define JPG_PARSED_EOI      0x00000080
+#define JPG_PARSED_DRI      0x00000100 
+
 
 #define JPG_SYNTAX_ALL      0x0000001F       
 #define JPG_PARSED_ERR      0x00000100  
@@ -181,6 +183,11 @@ do {\
     if (RealLen < ReqLen) \
         return HI_FAILURE; \
 }while(0)    
+
+
+#ifdef CONFIG_JPEG_DRI_SUPPORT
+extern HI_S32 g_s32Dri;
+#endif
 
 /*****************************************************************************/
 /*****************************************************************************/
@@ -279,7 +286,7 @@ static HI_S32 JPGParsingSOS (HI_VOID *pBuf, HI_U32 BufLen,
                                JPG_PICPARSEINFO_S *pImage)
 {
     HI_U32 Cnt;
-    HI_U8 Num, Id, CompNum;
+    HI_U8 Num, CompNum;
     JPG_COMPONENT_INFO * pCompnent; 
     HI_U8 *pTmp = (HI_U8*)pBuf;
     
@@ -301,7 +308,7 @@ static HI_S32 JPGParsingSOS (HI_VOID *pBuf, HI_U32 BufLen,
     pCompnent = pImage->ComponentInfo;
     for (Cnt = 0; Cnt < CompNum; Cnt++)
     {
-        Id = *pTmp++;
+        //Id = *pTmp++;
 
         if (HI_TRUE != pCompnent[Cnt].Used)
         {
@@ -324,6 +331,23 @@ static HI_S32 JPGParsingSOS (HI_VOID *pBuf, HI_U32 BufLen,
     pImage->SyntaxState |= JPG_PARSED_SOS;
     return HI_SUCCESS;
 }
+
+
+#ifdef CONFIG_JPEG_DRI_SUPPORT
+static HI_S32 JPGParsingDRI(HI_VOID *pBuf,HI_U32 BufLen,JPG_PICPARSEINFO_S *pImage)
+{
+    HI_U8 *pTmp = (HI_U8*)pBuf;
+    
+	if(BufLen != 4){
+       return HI_FAILURE;
+    }
+	g_s32Dri  = *pTmp++ << 8;
+	g_s32Dri += *pTmp++;
+		
+    return HI_SUCCESS;
+}
+#endif
+
 
 /******************************************************************************
 * Function:      JPGParsingDHT
@@ -662,6 +686,12 @@ STATIC_FUNC HI_S32 JPGPARSEParseMarker (HI_U8 Marker, HI_VOID *pBuf, HI_U32 BufL
         {
             return JPGParsingDHT(pBuf, BufLen, pImage);
         }
+        #ifdef CONFIG_JPEG_DRI_SUPPORT
+        case DRI:
+        {
+            return JPGParsingDRI(pBuf, BufLen, pImage);
+        }
+        #endif
         case SOF0:
         case SOF1:
         case SOF2:
@@ -931,7 +961,6 @@ STATIC_FUNC HI_S32 JPGPARSEMarkDispose(JPGPARSE_CTX_S *pParseCtx,
     {
         pCurrNode->SyntaxState |= JPG_PARSED_ERR;
         JPGBUF_SetRdHead(pParseBuf,  2);
-        //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "DQT~SOS MarkLen error!\n");
         return HI_ERR_JPG_PARSE_FAIL;
     }
     
@@ -941,7 +970,6 @@ STATIC_FUNC HI_S32 JPGPARSEMarkDispose(JPGPARSE_CTX_S *pParseCtx,
 
         pParseCtx->pCurrPic = &pParseCtx->MainPic;
         pParseCtx->bMainState = HI_FALSE;
-        //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "DQT~SOS error!\n");
         return  HI_ERR_JPG_PARSE_FAIL;
     }
 
@@ -1080,18 +1108,15 @@ static HI_S32 JPGPARSEMainParse(JPGPARSE_CTX_S *pParseCtx,
             }
 
             Ret = JPGPARSEMarkDispose(pParseCtx, pParseBuf, Marker, Index);
-            //if(HI_ERR_JPG_WANT_STREAM == Ret)  HI_TRACE(HI_LOG_LEVEL_NOTICE, JPEG, "Mark section is not enough!\n");
         
             if(HI_ERR_JPG_PARSE_FAIL == Ret)
             {
                 if(0 == pCurrNode->Index)  
                 {
-                    //HI_TRACE(HI_LOG_LEVEL_NOTICE, JPEG, "Main pic DQT~SOS error!\n");
                     return HI_ERR_JPG_PARSE_FAIL;
                 }
                 else            
                 {
-                     //HI_TRACE(HI_LOG_LEVEL_NOTICE, JPEG, "Thumb pic DQT~SOS error!\n");
                     return HI_ERR_JPG_DEC_PARSING;
                 }
             }
@@ -1262,9 +1287,6 @@ static HI_S32 JPGPARSEAppParse(JPGPARSE_CTX_S *pParseCtx,
 
                 if(pstAPP1->APP1MarkLen > (pstAPP1->APP1Offset + 6))
                 {
-                    /*HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, 
-                                    "found invalid App mark %#x in App1\n", Marker);*/
-
                     JPGBUF_SetRdHead(pParseBuf, 2);
                     break;
                 }
@@ -1305,16 +1327,11 @@ static HI_S32 JPGPARSEAppParse(JPGPARSE_CTX_S *pParseCtx,
 
                 if(pstAPP1->APP1MarkLen > (pstAPP1->APP1Offset + 6))
                 {
-                    /*HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, 
-                                    "found invalid DQT~SOS mark 0x%#x in App1\n", Marker);*/
-
                     JPGBUF_SetRdHead(pParseBuf, 2);
                     break;
                 }
                 else
                 {
-                    /*HI_TRACE(HI_LOG_LEVEL_INFO, JPEG, 
-                                    "found DQT~SOS mark after App1\n");*/
                      pstAPP1->bActive = HI_FALSE;
                 }
            }
@@ -1386,8 +1403,7 @@ HI_S32 JPGPARSE_Parse(JPG_HANDLE Handle, JPG_CYCLEBUF_S *pParseBuf, HI_U32 Index
             
         if(!JPG_CHECK_SOI(stData.pAddr[0]))
         {
-            //HI_TRACE(HI_LOG_LEVEL_ERROR, JPEG, "%s\n",  "Invalid Stream.");
-            JPGPARSE_STATE_UPDATE(pParseCtx->ParseState, pParseState);
+        	JPGPARSE_STATE_UPDATE(pParseCtx->ParseState, pParseState);
             return HI_ERR_JPG_PARSE_FAIL;
         }
     }
@@ -1459,7 +1475,6 @@ HI_S32 JPGPARSE_Parse(JPG_HANDLE Handle, JPG_CYCLEBUF_S *pParseBuf, HI_U32 Index
         (HI_VOID)JPGBUF_GetDataBtwWhRh(pParseBuf, &stData);
         if(stData.u32Len[0] == 0)
         {
-            HaveBuf = HI_FALSE;
             JPGPARSE_STATE_UPDATE(pParseCtx->ParseState, pParseState);
             return HI_ERR_JPG_WANT_STREAM;
         }
@@ -1543,8 +1558,6 @@ HI_S32 JPGPARSE_Parse(JPG_HANDLE Handle, JPG_CYCLEBUF_S *pParseBuf, HI_U32 Index
         {
             pParseCtx->ParseState.State = JPGPARSE_STATE_PARSEERR;
             JPGPARSE_STATE_UPDATE(pParseCtx->ParseState, pParseState);
-
-            //HI_TRACE(HI_LOG_LEVEL_WARNING, JPEG, "Parse Failed!\n");
             return HI_ERR_JPG_PARSE_FAIL;
         }
             

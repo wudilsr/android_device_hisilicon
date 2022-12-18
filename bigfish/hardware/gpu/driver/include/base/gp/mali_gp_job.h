@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2013, 2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -388,6 +388,39 @@ MALI_STATIC_FORCE_INLINE mali_err_code _mali_gp_job_add_plbu_cmds(mali_gp_job_ha
 		MALI_ERROR(MALI_ERR_OUT_OF_MEMORY);
 	}
 }
+
+MALI_STATIC_FORCE_INLINE void _mali_gp_job_modify_plbu_cmd(mali_gp_job_handle job_handle, u64 cmd, u32 index);
+MALI_STATIC_FORCE_INLINE void _mali_gp_job_modify_plbu_cmd(mali_gp_job_handle job_handle, u64 cmd, u32 index)
+{
+	mali_gp_job *job = (mali_gp_job *)job_handle;
+	u64 *plbu_cmds;
+
+	MALI_DEBUG_ASSERT_POINTER(job);
+
+	plbu_cmds = job->plbu_cmd_list.mapping_start;
+	MALI_DEBUG_ASSERT_POINTER(plbu_cmds);
+
+	if (plbu_cmds[index] != cmd)
+	{
+		plbu_cmds[index] = cmd;
+	}
+}
+
+MALI_STATIC_FORCE_INLINE u64 _mali_gp_job_get_plbu_cmd(mali_gp_job_handle job_handle,  u32 index);
+MALI_STATIC_FORCE_INLINE u64 _mali_gp_job_get_plbu_cmd(mali_gp_job_handle job_handle,  u32 index)
+{
+	mali_gp_job *job = (mali_gp_job *)job_handle;
+	u64 *plbu_cmds;
+
+	MALI_DEBUG_ASSERT_POINTER(job);
+
+	plbu_cmds = job->plbu_cmd_list.mapping_start;
+	MALI_DEBUG_ASSERT_POINTER(plbu_cmds);
+
+	return plbu_cmds[index];
+}
+
+
 
 /**
  * Free the VS and PLBU command lists of this job without reseting it.

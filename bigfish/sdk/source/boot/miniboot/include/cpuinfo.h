@@ -37,8 +37,9 @@ struct cpu_info_t *get_cpuinfo(void);
 #define BOOT_MEDIA_DDR                         (1)
 #define BOOT_MEDIA_NAND                        (2)
 #define BOOT_MEDIA_SPIFLASH                    (3)
-#define BOOT_MEDIA_EMMC                        (4)
-#define BOOT_MEDIA_SD                          (5)
+#define BOOT_MEDIA_SPI_NAND                    (4)
+#define BOOT_MEDIA_EMMC                        (5)
+#define BOOT_MEDIA_SD                          (6)
 int get_bootmedia(char **media, void *arg);
 
 int get_boot_media(void);

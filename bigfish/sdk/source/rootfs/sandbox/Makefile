@@ -1,7 +1,14 @@
 ################################################################################
-#    ./dosfstools/Makefile
-#    Create By CaiZhiYong 
-#    2011.09.05
+#
+#  Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+#
+#  This program is confidential and proprietary to Hisilicon Technologies Co., Ltd.
+#  (Hisilicon), and may not be copied, reproduced, modified, disclosed to
+#  others, published or used, in whole or in part, without the express prior
+#  written permission of Hisilicon.
+#
+#  Create By CaiZhiyong 2014.09.13
+#
 ################################################################################
 PREFIX         ?= $(shell pwd)/rootfs
 CROSS_COMPILE  ?= arm-hisiv200-linux-
@@ -10,38 +17,43 @@ CROSS_COMPILE  ?= arm-hisiv200-linux-
 BUILD_DIR      := $(shell pwd)/tmp
 HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
+ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
+COREUTILS      := coreutils-8.18
+else
 COREUTILS      := coreutils-8.5
+endif
 TARGETS        := bin/sandbox
 
 ################################################################################
-
 all: $(addprefix $(PREFIX)/,$(TARGETS))
 
 $(PREFIX)/%: $(BUILD_DIR)/%
 	test -d $(@D) || mkdir -p $(@D)
-	cp -fv $(BUILD_DIR)/bin/chroot $(PREFIX)/$(TARGETS)
+	cp -fv $(BUILD_DIR)/bin/chroot $@
 
+################################################################################
 $(addprefix $(BUILD_DIR)/,$(TARGETS)): \
+    $(BUILD_DIR)/$(COREUTILS)/build_finish
+	@
+
+$(BUILD_DIR)/$(COREUTILS)/build_finish: \
     $(BUILD_DIR)/$(COREUTILS)/tar
-	cd $(BUILD_DIR)/$(COREUTILS) && \
-		./configure --prefix=$(BUILD_DIR) --host=$(HOST) && \
-		make LDFLAGS=-static -j 16 && \
-		make install && \
-	cd -
+	cd $(<D) && ./configure --prefix=$(BUILD_DIR) --host=$(HOST) --enable-no-install-program=stdbuf LDFLAGS="-static -pthread"
+	make -C $(<D) -j
+	make -C $(<D) install
+	@touch $@
+
+################################################################################
 
 $(BUILD_DIR)/%/tar:
 	test -d $(@D) || mkdir -p $(@D)
-	tar -xjf $(notdir $(@:/tar=)).tar.bz2 -C $(BUILD_DIR)
+	tar -xf $(notdir $(@:/tar=)).tar.* -C $(@D)/../
 	@touch $@
 
 ################################################################################
 
 clean:
-	@test ! -d $(BUILD_DIR) || rm -rf $(BUILD_DIR)
-	@(for ix in $(TARGETS); do \
-		test ! -e $(PREFIX)/$$ix || rm -rf $(PREFIX)/$$ix; \
-	done)
-	
+	@rm -rf $(BUILD_DIR)
 
 menuconfig:
 	@echo "not support"

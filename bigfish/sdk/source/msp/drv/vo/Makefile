@@ -117,13 +117,17 @@ VO_DIR := $(shell cd $(MSP_DIR)/drv/vo && pwd)
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716cv200 hi3716mv400 hi3718cv100 hi3719cv100 hi3718mv100 hi3719mv100),)
 HAL_DIR := cv200
-
 VO_VER := vdp_v1_0
+endif
+
+
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3716mv410 hi3716mv420),)
+HAL_DIR := mv410
+VO_VER := vdp_v3_0
 endif
 
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3796cv100 hi3798cv100),)
 HAL_DIR := s5v100
-
 VO_VER := vdp_v2_0
 endif
 
@@ -134,11 +138,13 @@ EXTRA_CFLAGS += -DCHIP_HIFONEB02
 #EXTRA_CFLAGS += -DFPGA_HIFONEB02
 VO_VER := vdp_v2_0
 endif
+
 ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
 HAL_DIR := 3798m
-
 VO_VER := vdp_v2_0
+endif
 
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100 hi3798cv200_a hi3716mv420),)
 ifeq ($(CFG_ANDROID_PRODUCT),y)
 ifneq ($(CFG_HI_LOADER_SUPPORT),y)
 EXTRA_CFLAGS += -I$(LINUX_DIR)/drivers/staging/android

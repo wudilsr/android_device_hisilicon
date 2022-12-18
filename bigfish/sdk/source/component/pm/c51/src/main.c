@@ -4,7 +4,7 @@
 #include "ir.h"
 #include "timer.h"
 
-static HI_U8 g_u8ChipType;
+HI_U8 g_u8ChipType = 0;
 static HI_U8 g_u8HighWakeUp;
 
 static HI_U8 g_u8GpioPort = 0xff;
@@ -156,6 +156,63 @@ HI_VOID InitUart1(HI_VOID)
     write_regVal();
 }
 
+HI_VOID PrintInitParams(HI_VOID)
+{    
+#ifndef HI_ADVCA_RELEASE
+	HI_U8 i;
+
+    printf_str("======== [MCU PARAM] ======== \r\n");
+    printf_str("Chip Type:");
+    printf_hex(g_u8ChipType);
+    printf_str("Suspend Type:");
+    printf_hex(g_u8HighWakeUp);
+    printf_str("Reboot Enable:");
+    printf_hex(wdgon);
+    printf_str("Debug Mask:");
+    printf_hex(dbgmask);
+    printf_str("Power Gpio No:");
+    printf_hex(GpioValArray[0]);
+    printf_str("Power Gpio Value:");
+    printf_hex(GpioValArray[1]);
+    printf_str("Display Mode:");
+    printf_hex(time_type);
+    printf_str("Display Time Hour:");
+    printf_hex(time_hour);
+    printf_str("Display Time Minute:");
+    printf_hex(time_minute);
+    printf_str("Display Time Second:");
+    printf_hex(time_second);
+    printf_str("WakeUp Time:");
+    printf_hex(waittime.val32);
+    printf_str("WakeUp Key:");
+    printf_hex(klPmocVal);
+    printf_str("IR Type:");
+    printf_hex(ir_type);
+    printf_str("IR No:");
+    printf_hex(ir_pmocnum);
+
+    for (i = 0; i < ir_pmocnum; i++)
+    {
+        printf_str("IR KeyLow:");
+        printf_hex(irPmocLval[i].val32);
+        printf_str("IR KeyHigh:");
+        printf_hex(irPmocHval[i].val32);
+    }
+
+#ifdef HI_ADVCA_SUPPORT
+    printf_str("Ca Vender ID:");
+    printf_hex(g_u8CaVendorId);
+#endif
+
+    printf_str("WakeUpGpioNo:");
+    printf_hex(g_u8GpioPort);
+
+    printf_str("======== [MCU Init Ready] ======== \r\n");
+#endif
+
+    return;
+}
+
 
 HI_VOID GetInitParams(HI_VOID)
 {
@@ -166,18 +223,18 @@ HI_VOID GetInitParams(HI_VOID)
     read_regVal();
     g_u8ChipType = regData.val8[3];
     g_u8HighWakeUp = regData.val8[2];
-
+	
     /* Init uart1 if in 3719M chip */
     if (HI_CHIP_TYPE_HI3719M == g_u8ChipType)
     {
         InitUart1();
     }
-
-    /* Get the debug param */
-    regAddr.val32 = DATA_WDGON;
+	
+	regAddr.val32 = DATA_WDGON;
     read_regVal();
     wdgon = regData.val8[3] & 0x1;
-
+	
+	 /* Get the debug param */
     regAddr.val32 = DATA_DBGMASK;
     read_regVal();
     dbgmask = regData.val8[3] & 0x7;
@@ -192,12 +249,21 @@ HI_VOID GetInitParams(HI_VOID)
     read_regVal();
     GpioValArray[1] = regData.val8[3];
 
-    /* Get timer param */
+	 /* Get timer param */
+#ifdef  HI_ADVCA_SUPPORT
+	regAddr.val32 = CFG_BASE_ADDR + SC_GEN12;
+#else
     regAddr.val32 = DATA_DISPMODE;
+#endif
     read_regVal();
     time_type = regData.val8[3];
+	
 
-    regAddr.val32 = DATA_DISPVAL;
+#ifdef  HI_ADVCA_SUPPORT
+    regAddr.val32 = CFG_BASE_ADDR + SC_GEN13;
+#else
+	regAddr.val32 = DATA_DISPVAL;
+#endif	
     read_regVal();
     if (time_type == TIME_DISPLAY)
     {
@@ -225,7 +291,11 @@ HI_VOID GetInitParams(HI_VOID)
     }
 
     /* Get the time out of wake up */
-    regAddr.val32 = DATA_TIMEVAL;
+#ifdef  HI_ADVCA_SUPPORT
+	regAddr.val32 = CFG_BASE_ADDR + SC_GEN14;
+#else
+	regAddr.val32 = DATA_TIMEVAL;
+#endif
     read_regVal();
     waittime.val32 = regData.val32;
 
@@ -236,6 +306,7 @@ HI_VOID GetInitParams(HI_VOID)
     kltype = regData.val8[3];
 #endif
 
+	
     regAddr.val32 = DATA_KEYVAL;
     read_regVal();
     klPmocVal = regData.val8[3];
@@ -248,7 +319,7 @@ HI_VOID GetInitParams(HI_VOID)
     regAddr.val32 = DATA_IRNUM;
     read_regVal();
     ir_pmocnum = regData.val8[3];
-
+	
     regAddr.val32 = DATA_IRVAL;
     for (i = 0; i < ir_pmocnum; i++)
     {
@@ -261,7 +332,7 @@ HI_VOID GetInitParams(HI_VOID)
     }
 
 #ifdef HI_ADVCA_SUPPORT
-    regAddr.val32 = DATA_IRVAL + 0x8 * ir_pmocnum;
+	regAddr.val32 = DATA_IRVAL + 0x8 * ir_pmocnum;
     read_regVal();
     g_u8CaVendorId = regData.val8[3];
 #endif
@@ -274,6 +345,8 @@ HI_VOID GetInitParams(HI_VOID)
         g_u8GpioPort = regData.val8[3];
     }
 
+    PrintInitParams();
+    
     return;
 }
 
@@ -282,7 +355,9 @@ void DDRPHYRegSave(void)
 {
     HI_U8 i, j;
 
-    if ((HI_CHIP_TYPE_HI3796C == g_u8ChipType) || (HI_CHIP_TYPE_HI3798C == g_u8ChipType))
+    if ((HI_CHIP_TYPE_HI3796C == g_u8ChipType) 
+        || (HI_CHIP_TYPE_HI3798C == g_u8ChipType)
+        || (HI_CHIP_TYPE_HI3798C_A == g_u8ChipType))
     {
  #ifdef HI_ADVCA_SUPPORT
         HI_U32 u32TmpAddr, u32DDRBaseAddr, u32DataBaseAddr;
@@ -389,26 +464,41 @@ void DDRPHYRegSave(void)
         regData.val32 = DATA_PHY_BASE_ADDR;
         write_regVal();
  #else
-        /* Save DDRPHY0 Regs(20) to 0xf840E100*/
+        HI_U32 u32DDRPHYCount, u32DDRPHY0BaseAddr, u32DDRPHY1BaseAddr;
+
+        if (HI_CHIP_TYPE_HI3798C_A == g_u8ChipType)
+        {
+            u32DDRPHYCount = 13;
+            u32DDRPHY0BaseAddr = DDRPHY0_BASE_ADDR_98CV200_A;
+            u32DDRPHY1BaseAddr = DDRPHY1_BASE_ADDR_98CV200_A;
+        }
+        else
+        {
+            u32DDRPHYCount = 20;
+            u32DDRPHY0BaseAddr = DDRPHY0_BASE_ADDR;
+            u32DDRPHY1BaseAddr = DDRPHY1_BASE_ADDR;
+        }
+        
+        /* Save DDRPHY0 Regs to 0xf840E100*/
         for (i = 0; i < DDRPHY_ARRAY_COUNT; i++)
         {
-            for (j = 0; j < DDRPHY_REG_COUNT; j++)
+            for (j = 0; j < u32DDRPHYCount; j++)
             {
-                regAddr.val32 = DDRPHY0_BASE_ADDR + 0x210 + i * 0x80 + j * 0x4;
+                regAddr.val32 = u32DDRPHY0BaseAddr + 0x210 + i * 0x80 + j * 0x4;
                 read_regVal();
-                regAddr.val32 = DATA_PHY0_BASE_ADDR + i * DDRPHY_REG_COUNT * 0x4 + j * 0x4;
+                regAddr.val32 = DATA_PHY0_BASE_ADDR + i * u32DDRPHYCount * 0x4 + j * 0x4;
                 write_regVal();
             }
         }
 
-        /* Save DDRPHY1 Regs(20) to 0xf840E300*/
+        /* Save DDRPHY1 Regs to 0xf840E300*/
         for (i = 0; i < DDRPHY_ARRAY_COUNT; i++)
         {
-            for (j = 0; j < DDRPHY_REG_COUNT; j++)
+            for (j = 0; j < u32DDRPHYCount; j++)
             {
-                regAddr.val32 = DDRPHY1_BASE_ADDR + 0x210 + i * 0x80 + j * 0x4;
+                regAddr.val32 = u32DDRPHY1BaseAddr + 0x210 + i * 0x80 + j * 0x4;
                 read_regVal();
-                regAddr.val32 = DATA_PHY1_BASE_ADDR + i * DDRPHY_REG_COUNT * 0x4 + j * 0x4;
+                regAddr.val32 = DATA_PHY1_BASE_ADDR + i * u32DDRPHYCount * 0x4 + j * 0x4;
                 write_regVal();
             }
         }
@@ -423,10 +513,11 @@ void DDRPHYRegSave(void)
 
         for (i = 0; i < DDRPHY_ARRAY_COUNT; i++)
         {
-            regAddr.val32 = DATA_PHY_BASE_ADDR + i * (DDRPHY_REG_COUNT + 2) * 0x4;
+            regAddr.val32 = DATA_PHY_BASE_ADDR + i * (DDRPHY_REG_COUNT + 2) * 0x4;	
             regData.val32 = DDRPHY_REG_COUNT;
             write_regVal();
-
+			
+			
             regAddr.val32 = DATA_PHY_BASE_ADDR + i * (DDRPHY_REG_COUNT + 2 ) * 0x4 + 0x4;
             regData.val32 = DDRPHY_BASE_ADDR + 0x210 + i * 0x80;
             write_regVal();
@@ -441,7 +532,7 @@ void DDRPHYRegSave(void)
         }
 
         u32TmpAddr = DATA_PHY_BASE_ADDR + DDRPHY_ARRAY_COUNT * (DDRPHY_REG_COUNT + 2) * 0x4;
-
+		
         /* set 0xf8a38070 bit 20 to 1 */
         regAddr.val32 = u32TmpAddr;
         regData.val32 = 1;
@@ -526,23 +617,42 @@ void DDRPHYRegSave(void)
 
 void DDREnterSelf(void)
 {
-    if ((HI_CHIP_TYPE_HI3796C == g_u8ChipType) || (HI_CHIP_TYPE_HI3798C == g_u8ChipType))
+    if ((HI_CHIP_TYPE_HI3796C == g_u8ChipType) 
+        || (HI_CHIP_TYPE_HI3798C == g_u8ChipType)
+        || (HI_CHIP_TYPE_HI3798C_A == g_u8ChipType))
     {
+        HI_U32 u32DDRC0BaseAddr, u32DDRC1BaseAddr, u32DDRPHY0BaseAddr, u32DDRPHY1BaseAddr;
+
+        if (HI_CHIP_TYPE_HI3798C_A == g_u8ChipType)
+        {
+            u32DDRC0BaseAddr = DDRC0_BASE_ADDR_98CV200_A;
+            u32DDRC1BaseAddr = DDRC1_BASE_ADDR_98CV200_A;
+            u32DDRPHY0BaseAddr = DDRPHY0_BASE_ADDR_98CV200_A;
+            u32DDRPHY1BaseAddr = DDRPHY1_BASE_ADDR_98CV200_A;
+        }
+        else
+        {
+            u32DDRC0BaseAddr = DDRC0_BASE_ADDR;
+            u32DDRC1BaseAddr = DDRC1_BASE_ADDR;
+            u32DDRPHY0BaseAddr = DDRPHY0_BASE_ADDR;
+            u32DDRPHY1BaseAddr = DDRPHY1_BASE_ADDR;
+        }
+        
         /* Config DDR to self-refresh state */
-        regAddr.val32 = DDRC0_BASE_ADDR + DDR_SREF;
+        regAddr.val32 = u32DDRC0BaseAddr + DDR_SREF;
         read_regVal();
-        regData.val8[3] |= 0x01;
+        regData.val8[3] = 0x01;
         write_regVal();
 
-        regAddr.val32 = DDRC1_BASE_ADDR + DDR_SREF;
+        regAddr.val32 = u32DDRC1BaseAddr + DDR_SREF;
         read_regVal();
-        regData.val8[3] |= 0x01;//bit0=1
+        regData.val8[3] = 0x01;
         write_regVal();
 
         /* Whether DDR change to self-refresh state */
         while (1)
         {
-            regAddr.val32 = DDRC0_BASE_ADDR + DDR_STATUS;
+            regAddr.val32 = u32DDRC0BaseAddr + DDR_STATUS;
             read_regVal();
             if ((regData.val8[3] & 0x1) == 0x1) //bit0
             {
@@ -553,7 +663,7 @@ void DDREnterSelf(void)
         while (1)
         {
             dbg_val(0x11,0x3);
-            regAddr.val32 = DDRC1_BASE_ADDR + DDR_STATUS;
+            regAddr.val32 = u32DDRC1BaseAddr + DDR_STATUS;
             read_regVal();
             if ((regData.val8[3] & 0x1) == 0x1) //bit0
             {
@@ -561,16 +671,12 @@ void DDREnterSelf(void)
             }
         }
 
-        regAddr.val32 = DDRPHY0_BASE_ADDR + DDR_PHYCTRL0;
-        read_regVal();
-        regData.val8[2] &= 0xe8; //set bit 12 to 0;bit10:8 to 0
-        regData.val8[3] &= 0x7f; //set bit 7 to 0;
+        regAddr.val32 = u32DDRPHY0BaseAddr + DDR_PHYCTRL0;
+        regData.val32 = 0x2800;
         write_regVal();
 
-        regAddr.val32 = DDRPHY1_BASE_ADDR + DDR_PHYCTRL0;
-        read_regVal();
-        regData.val8[2] &= 0xe8; //set bit 12 to 0;bit10:8 to 0
-        regData.val8[3] &= 0x7f; //set bit 7 to 0;
+        regAddr.val32 = u32DDRPHY1BaseAddr + DDR_PHYCTRL0;
+        regData.val32 = 0x2800;
         write_regVal();
 
         /* enable DDRPHY ISO */
@@ -619,8 +725,11 @@ void DDREnterSelf(void)
 void GetTimePeriod(void)
 {
     HI_U32 u32TimePeriod = 0;
-
+#ifdef  HI_ADVCA_SUPPORT
+	regAddr.val32 = CFG_BASE_ADDR + SC_GEN14;
+#else
     regAddr.val32 = DATA_TIMEVAL;
+#endif
     read_regVal();
     u32TimePeriod = regData.val32 - waittime.val32;
 
@@ -628,6 +737,11 @@ void GetTimePeriod(void)
     regAddr.val32 = DATA_PERIOD;
     regData.val32 = u32TimePeriod;
     write_regVal();
+
+#ifndef HI_ADVCA_RELEASE
+    printf_str("Suspend Period:");
+    printf_hex(u32TimePeriod);
+#endif
 
     return;
 }
@@ -696,10 +810,13 @@ void SystemSuspend(void)
     }
 
     /* CPU Reset*/
-    regAddr.val32 = PMC_BASE_ADDR + PERI_PMC47;
-    read_regVal();
-    regData.val8[2] |= 0x02; //bit9
-    write_regVal();
+    if (HI_CHIP_TYPE_HI3798C_A != g_u8ChipType)
+    {
+        regAddr.val32 = PMC_BASE_ADDR + PERI_PMC47;
+        read_regVal();
+        regData.val8[2] |= 0x02; //bit9
+        write_regVal();
+    }
 
 #ifdef HI_ADVCA_SUPPORT
     if(g_u8CaVendorId != CA_VENDOR_ID_NAGRA)
@@ -708,17 +825,11 @@ void SystemSuspend(void)
         DDREnterSelf();
     }
 
-    printf_char('f');
-
     /* change MCU bus clock to 24M / 8 */
     regAddr.val32 = CFG_BASE_ADDR + MCU_CTRL;
     read_regVal();
     regData.val8[3] &= 0xfc; //bit [1:0] = 0x0
-    //regData.val8[2] |= 0x07;
     write_regVal();
-
-    //dbg_val(0x1f, 0x4);
-    printf_char('g');
 
     if (NORMAL_WAKEUP != g_u8HighWakeUp)
     {
@@ -763,7 +874,9 @@ void SystemSuspend(void)
         }
         else
         {
-            if ((HI_CHIP_TYPE_HI3798M != g_u8ChipType) && (HI_CHIP_TYPE_HI3796M != g_u8ChipType))
+            if ((HI_CHIP_TYPE_HI3798M != g_u8ChipType) 
+                && (HI_CHIP_TYPE_HI3796M != g_u8ChipType)
+                && (HI_CHIP_TYPE_HI3798C_A != g_u8ChipType))
             {
                 //VPLL  power down
                 regAddr.val32 = CRG_BASE_ADDR + 0x24;
@@ -772,6 +885,7 @@ void SystemSuspend(void)
                 write_regVal();
             }
         }
+        
         //HPLL  power down
         regAddr.val32 = CRG_BASE_ADDR + 0x2c;
         read_regVal();
@@ -945,7 +1059,9 @@ void WaitforEnterFlag(void)
         wait_minute_2(10, 10);
 
         /* read kernel flag to break; */
-        regAddr.val32 = 0xf840e520;
+		
+        regAddr.val32 = DATA_ENTER_FLAG;
+		
         read_regVal();
         if (0x12345678 == regData.val32)
         {
@@ -964,8 +1080,8 @@ void WaitforEnterStandbyFlag(void)
 {
     HI_U8 u8Data = 0xff;
     HI_U32 u32Count = 0;
-
-    regAddr.val32 = 0xf840E51C;
+	
+	regAddr.val32 = DATA_SUSPEND_FLAG;
     read_regVal();
 
     /* first power, jump wait */
@@ -979,7 +1095,7 @@ void WaitforEnterStandbyFlag(void)
         wait_minute_2(10, 10);
 
         /* read kernel flag to break; */
-        regAddr.val32 = 0xf840e520;
+		regAddr.val32 = DATA_ENTER_FLAG;
         read_regVal();
         if (0x12345678 == regData.val32)
         {
@@ -1104,7 +1220,7 @@ void main()
 #endif
     {
         MCUInit();
-
+		
 #ifdef HI_ADVCA_SUPPORT
         ADVCA_RUN_CHECK();
 #endif
@@ -1114,7 +1230,6 @@ void main()
         WaitforEnterFlag();
 #endif
 #endif
-
         GetInitParams();
 
 #ifdef POWER_UP_STANDBY_MODE1
@@ -1197,9 +1312,8 @@ void main()
 #endif
 
         TIMER_Disable();
-        GetTimePeriod();
-
-        regAddr.val32 = 0xf840E51C;
+		
+		regAddr.val32 = DATA_SUSPEND_FLAG;
         read_regVal();
         if ((regData.val32 != MCU_LOAD_CODE)
             && (0x0 == wdgon)
@@ -1225,9 +1339,13 @@ void main()
         SystemResume();
 
 #ifndef HI_ADVCA_RELEASE
-        printf_str("Resume from MCU \r\n");
+        printf_str("Resume from MCU \r\n");        
+        printf_str("Resume Type:");
+        printf_hex(pmocType);
 #endif
-        regAddr.val32 = 0xf840e520;
+		 GetTimePeriod();
+		 
+		regAddr.val32 = DATA_ENTER_FLAG;
         regData.val32 = 0x0;
         write_regVal();
 

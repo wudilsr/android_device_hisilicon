@@ -19,6 +19,7 @@ File 1,1,<.\src\keyled_ct1642_inner.c><keyled_ct1642_inner.c> 0x0
 File 1,1,<.\src\sha1.c><sha1.c> 0x0 
 File 1,1,<.\src\advca.c><advca.c> 0x0 
 File 1,1,<.\src\keyled_fd650.c><keyled_fd650.c> 0x0 
+File 1,2,<.\src\STARTUP.A51><STARTUP.A51> 0x0 
 File 1,1,<.\src\keyled_ANSG08.c><keyled_ANSG08.c> 0x0 
 
 
@@ -69,7 +70,7 @@ Options 1,0,0  // Target 'Target 1'
  RCB51 { 0,0,0,0,0,255,255,0,0 }
  RXB51 { 0,0,0,0,0,0,0,0,0 }
  OCM51 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
- OCR51 { 0,0,234,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ OCR51 { 0,0,96,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
  IRO51 { 1,0,0,0,0,0,32,0,0 }
  IRA51 { 0,0,0,0,0,0,1,0,0 }
  XRA51 { 0,0,0,0,0,0,0,0,0 }
@@ -107,7 +108,7 @@ Options 1,0,0  // Target 'Target 1'
  LX51CSC ()
  LX51UCS ()
  LX51COB ()
- LX51XDB (0XEA00-0XEDFF)
+ LX51XDB (0X6000-0X63FF)
  LX51PDB ()
  LX51BIB ()
  LX51DAB ()

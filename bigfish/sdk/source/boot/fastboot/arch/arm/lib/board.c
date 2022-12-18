@@ -231,7 +231,7 @@ static void show_boot_env(void)
 #endif /* CONFIG_GENERIC_SF */
 
 #if defined(CONFIG_GENERIC_NAND)
-	if ((env_media == BOOT_MEDIA_NAND) &&
+	if (((env_media == BOOT_MEDIA_NAND) || (env_media == BOOT_MEDIA_SPI_NAND)) &&
 	    ((get_nand_info()->erasesize - 1) & CONFIG_ENV_OFFSET))
 		printf("*** Warning - Env offset is NOT aligned to NAND Flash "
 		       "block size, environment value is read only.\n\n");

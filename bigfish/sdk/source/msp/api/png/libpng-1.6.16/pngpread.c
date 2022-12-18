@@ -13,6 +13,11 @@
 
 #include "pngpriv.h"
 
+#ifdef HIPNG_ACCELERATE
+#include "hipng_accelerate.h"
+#endif
+
+
 #ifdef PNG_PROGRESSIVE_READ_SUPPORTED
 
 /* Push model modes */
@@ -45,6 +50,9 @@ png_process_data(png_structrp png_ptr, png_inforp info_ptr,
    while (png_ptr->buffer_size)
    {
       png_process_some_data(png_ptr, info_ptr);
+#ifdef HIPNG_ACCELERATE
+	  hipng_push_switch_process(png_ptr);
+#endif
    }
 }
 
@@ -87,8 +95,12 @@ png_process_data_skip(png_structrp png_ptr)
        * above) so we can detect a broken call here:
        */
       if (png_ptr->buffer_size != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr,
             "png_process_data_skip called inside png_process_data");
+#endif
 
       /* If is impossible for there to be a saved buffer at this point -
        * otherwise we could not be in SKIP mode.  This will also happen if
@@ -96,7 +108,11 @@ png_process_data_skip(png_structrp png_ptr)
        * rarely.)
        */
       if (png_ptr->save_buffer_size != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "png_process_data_skip called with saved data");
+#endif
 
       remaining = png_ptr->skip_length;
       png_ptr->skip_length = 0;
@@ -174,10 +190,18 @@ png_push_read_sig(png_structrp png_ptr, png_inforp info_ptr)
    {
       if (num_checked < 4 &&
           png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Not a PNG file");
+#endif
 
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "PNG file corrupted by ASCII conversion");
+#endif
    }
    else
    {
@@ -219,6 +243,8 @@ png_push_read_chunk(png_structrp png_ptr, png_inforp info_ptr)
 
    chunk_name = png_ptr->chunk_name;
 
+   HIPNG_TRACE("chunk name:0x%x\n", chunk_name);
+   
    if (chunk_name == png_IDAT)
    {
       if ((png_ptr->mode & PNG_AFTER_IDAT) != 0)
@@ -229,11 +255,19 @@ png_push_read_chunk(png_structrp png_ptr, png_inforp info_ptr)
        * is called after the image has been read - we have an error).
        */
       if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Missing IHDR before IDAT");
+#endif
 
       else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
           (png_ptr->mode & PNG_HAVE_PLTE) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Missing PLTE before IDAT");
+#endif
 
       png_ptr->mode |= PNG_HAVE_IDAT;
       png_ptr->process_mode = PNG_READ_IDAT_MODE;
@@ -243,13 +277,21 @@ png_push_read_chunk(png_structrp png_ptr, png_inforp info_ptr)
             return;
 
       if ((png_ptr->mode & PNG_AFTER_IDAT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_benign_error(png_ptr, "");
+#else
          png_benign_error(png_ptr, "Too many IDATs found");
+#endif
    }
 
    if (chunk_name == png_IHDR)
    {
       if (png_ptr->push_length != 13)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Invalid IHDR length");
+#endif
 
       PNG_PUSH_SAVE_BUFFER_IF_FULL
       png_handle_IHDR(png_ptr, info_ptr, png_ptr->push_length);
@@ -262,6 +304,7 @@ png_push_read_chunk(png_structrp png_ptr, png_inforp info_ptr)
 
       png_ptr->process_mode = PNG_READ_DONE_MODE;
       png_push_have_end(png_ptr, info_ptr);
+      HIPNG_TRACE("read png_IEND\n");
    }
 
 #ifdef PNG_HANDLE_AS_UNKNOWN_SUPPORTED
@@ -573,7 +616,11 @@ png_push_save_buffer(png_structrp png_ptr)
       if (png_ptr->save_buffer_size > PNG_SIZE_MAX -
           (png_ptr->current_buffer_size + 256))
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Potential overflow of save_buffer");
+#endif
       }
 
       new_max = png_ptr->save_buffer_size + png_ptr->current_buffer_size + 256;
@@ -585,7 +632,11 @@ png_push_save_buffer(png_structrp png_ptr)
       {
          png_free(png_ptr, old_buffer);
          old_buffer = NULL;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Insufficient memory for save_buffer");
+#endif
       }
 
       memcpy(png_ptr->save_buffer, old_buffer, png_ptr->save_buffer_size);
@@ -635,8 +686,24 @@ png_push_read_IDAT(png_structrp png_ptr)
       {
          png_ptr->process_mode = PNG_READ_CHUNK_MODE;
 
+#ifdef HIPNG_ACCELERATE
+		{
+			int s32Ret;
+			
+		 	s32Ret = hipng_push_decode(png_ptr);
+			if (s32Ret < 0)
+			{
+				/*todo:???????¡ì¡ã??????????¨ª??????*/
+				return;
+			}
+		}
+#endif
          if ((png_ptr->flags & PNG_FLAG_ZSTREAM_ENDED) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Not enough compressed data");
+#endif
 
          return;
       }
@@ -644,8 +711,20 @@ png_push_read_IDAT(png_structrp png_ptr)
       png_ptr->idat_size = png_ptr->push_length;
    }
 
+#ifdef HIPNG_ACCELERATE
+	{
+		int s32Ret;
+		s32Ret = hipng_push_stream(png_ptr);
+		if (0 == s32Ret)
+		{
+			return;
+		}
+	}
+#endif
+	
    if (png_ptr->idat_size != 0 && png_ptr->save_buffer_size != 0)
    {
+   	
       png_size_t save_size = png_ptr->save_buffer_size;
       png_uint_32 idat_size = png_ptr->idat_size;
 
@@ -706,13 +785,28 @@ png_push_read_IDAT(png_structrp png_ptr)
    }
 }
 
+void PNGAPI png_push_set_exception_mode(png_structp png_ptr, png_byte u8Mode)
+{
+	hipng_struct_hwctl_s *pstHwStruct = (hipng_struct_hwctl_s *)(png_ptr->private_ptr);
+
+	if (pstHwStruct)
+		pstHwStruct->u8ExceptionMode = u8Mode;
+
+	return;
+}
+
+
 void /* PRIVATE */
 png_process_IDAT_data(png_structrp png_ptr, png_bytep buffer,
    png_size_t buffer_length)
 {
    /* The caller checks for a non-zero buffer length. */
    if (!(buffer_length > 0) || buffer == NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "No IDAT data (internal error)");
+#endif
 
    /* This routine must process all the data it has been given
     * before returning, calling the row callback as required to
@@ -765,10 +859,18 @@ png_process_IDAT_data(png_structrp png_ptr, png_bytep buffer,
           */
          if (png_ptr->row_number >= png_ptr->num_rows ||
              png_ptr->pass > 6)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "Truncated compressed data in IDAT");
+#endif
 
          else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "Decompression error in IDAT");
+#endif
 
          /* Skip the check on unprocessed input */
          return;
@@ -785,7 +887,11 @@ png_process_IDAT_data(png_structrp png_ptr, png_bytep buffer,
              png_ptr->pass > 6)
          {
             /* Extra data. */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_warning(png_ptr, "");
+#else
             png_warning(png_ptr, "Extra compressed data in IDAT");
+#endif
             png_ptr->flags |= PNG_FLAG_ZSTREAM_ENDED;
             png_ptr->zowner = 0;
 
@@ -810,7 +916,11 @@ png_process_IDAT_data(png_structrp png_ptr, png_bytep buffer,
     * after the zlib end code.
     */
    if (png_ptr->zstream.avail_in > 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Extra compression data in IDAT");
+#endif
 }
 
 void /* PRIVATE */
@@ -832,7 +942,11 @@ png_push_process_row(png_structrp png_ptr)
          png_read_filter_row(png_ptr, &row_info, png_ptr->row_buf + 1,
             png_ptr->prev_row + 1, png_ptr->row_buf[0]);
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad adaptive filter value");
+#endif
    }
 
    /* libpng 1.5.6: the following line was copying png_ptr->rowbytes before
@@ -852,12 +966,19 @@ png_push_process_row(png_structrp png_ptr)
    {
       png_ptr->transformed_pixel_depth = row_info.pixel_depth;
       if (row_info.pixel_depth > png_ptr->maximum_pixel_depth)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "progressive row overflow");
+#endif
    }
 
    else if (png_ptr->transformed_pixel_depth != row_info.pixel_depth)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal progressive row size calculation error");
-
+#endif
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    /* Expand interlaced rows to full size */

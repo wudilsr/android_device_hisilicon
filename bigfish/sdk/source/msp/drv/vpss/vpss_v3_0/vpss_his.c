@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlo+M850KpHPOFhhSeUX482eg9sR1d+VWYFWCe9
-s1gR//yjeQJI+pW6xOhVWbi3IQw8CktGpT2z0B+iqomFnFtejzuzsQDWArEQwsIrtslVRj9v
-2OIBQR/MD+HCmxpTZLnFa6f/kB+OR1ipp4wuI8rKLzBK4gUnh61GhMKwk3I2Vw==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxWnnubvVhyqr01SonXBElmlASzvbAyIze45tFEnH4jpBnHtGWg+s5D0Ga4SyTQc8qUmI
+hYNGNSiQLpFy6CvqWB0EJQA6DuI79pB1fNrF9AXU01IDGnXXc/1/Gq1n+Gbw/A==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -25,14 +39,15 @@ extern "C"{
 #define HIS_MAD_MAX_WIDTH 1920
 #define HIS_MAD_MAX_HEIGHT 1088
 
-HI_S32 VPSS_HIS_FLUSHDATA(MMZ_BUFFER_S* pstMBuf, HI_U32 u32Data)
+
+HI_S32 VPSS_HIS_FLUSHDATA(VPSS_MEM_S* pstMemBuf, HI_U32 u32Data)
 {
     HI_U32 u32Numb;
     HI_U32 u32Count;
     HI_U32* pu32Pos;
-    u32Numb = (pstMBuf->u32Size + 3) / 4;
+    u32Numb = (pstMemBuf->u32Size + 3) / 4;
 
-    pu32Pos = (HI_U32*)pstMBuf->u32StartVirAddr;
+    pu32Pos = (HI_U32*)pstMemBuf->u32StartVirAddr;
 
     for (u32Count = 0; u32Count < u32Numb; u32Count ++)
     {
@@ -43,9 +58,9 @@ HI_S32 VPSS_HIS_FLUSHDATA(MMZ_BUFFER_S* pstMBuf, HI_U32 u32Data)
     return HI_SUCCESS;
 
 }
-HI_S32 VPSS_HIS_Init(VPSS_HIS_INFO_S *pstHisInfo)
+HI_S32 VPSS_HIS_Init(VPSS_HIS_INFO_S *pstHisInfo,HI_BOOL bSecure)
 {
-    MMZ_BUFFER_S *pstMBuf;
+    VPSS_MEM_S *pstMemBuf;
     HI_S32 nRet;
     HI_U32 ii;
     HI_U32 u32InfoSize;
@@ -54,20 +69,39 @@ HI_S32 VPSS_HIS_Init(VPSS_HIS_INFO_S *pstHisInfo)
     u32InfoSize = (((HIS_MAD_MAX_WIDTH + 31) & 0xffffffe0L) /2) * HIS_MAD_MAX_HEIGHT / 2;
 
     //apply memory for MAD motion-infomation, and get the address.
-    pstMBuf = &(pstHisInfo->stMadHisInfo.stMBuf);
-    nRet = HI_DRV_MMZ_AllocAndMap("VPSS_MADMotionInfoBuf", HI_NULL, u32InfoSize * 3, 0, pstMBuf);
+    pstMemBuf = &(pstHisInfo->stMadHisInfo.stMemBuf);
+	
+	if (!bSecure)
+	{
+		nRet = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_NORMAL,
+				u32InfoSize*3,
+				"VPSS",
+				"VPSS_MADMotionInfoBuf",
+				pstMemBuf);
+	}
+	else
+	{
+		nRet = VPSS_OSAL_AllocateMem(VPSS_MEM_FLAG_SECURE,
+				u32InfoSize*3,
+				"VPSS",
+				"VPSS_MADMotionInfoBuf",
+				pstMemBuf);
+	}
     if (nRet != HI_SUCCESS)
     {
 		VPSS_FATAL("Get VPSS_MADMotionInfoBuf failed.\n");
 		return HI_FAILURE;
     }
 
-    VPSS_HIS_FLUSHDATA(pstMBuf, 0x007f007f);
+	if (!bSecure)
+	{
+    	VPSS_HIS_FLUSHDATA(pstMemBuf, 0x007f007f);
+	}
 
     for (ii = 0; ii < 3; ii++)
     {
         pstHisInfo->stMadHisInfo.u32MadMvAddr[ii] 
-                    = pstMBuf->u32StartPhyAddr + (u32InfoSize * ii);
+                    = pstMemBuf->u32StartPhyAddr + (u32InfoSize * ii);
     }
 
     return HI_SUCCESS;
@@ -80,11 +114,11 @@ HI_S32 VPSS_HIS_DeInit(VPSS_HIS_INFO_S *pstHisInfo)
     pstMadMem = &(pstHisInfo->stMadHisInfo);
     
     //release MAD motion-infomation memory 
-    if (pstMadMem->stMBuf.u32StartVirAddr != 0) 
+    if (pstMadMem->stMemBuf.u32StartVirAddr != 0) 
     {
-        HI_DRV_MMZ_UnmapAndRelease(&(pstMadMem->stMBuf));
-        pstMadMem->stMBuf.u32StartVirAddr = 0;
-        pstMadMem->stMBuf.u32Size = 0;
+		VPSS_OSAL_FreeMem(&(pstMadMem->stMemBuf));
+        pstMadMem->stMemBuf.u32StartVirAddr = 0;
+        pstMadMem->stMemBuf.u32Size = 0;
     }
     else
     {

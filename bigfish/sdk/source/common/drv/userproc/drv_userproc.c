@@ -68,7 +68,7 @@ extern "C"{
 typedef struct tagUMP_ENTRY_S
 {
     HI_U32                  entry_name_hash;
-    struct rb_node       node;  
+    struct rb_node       node;
     struct proc_dir_entry *parent;
     HI_DRV_USRMODEPROC_ENTRY_S stInfo;
     HI_CHAR                entry_name[MAX_PROC_NAME_LEN+1];
@@ -77,7 +77,7 @@ typedef struct tagUMP_ENTRY_S
 typedef struct tagUMP_DIR_S
 {
     HI_U32                  dir_name_hash;
-    struct rb_node	      node;
+    struct rb_node        node;
     struct rb_root        entry_root;
     struct file *           pstFile;
     struct proc_dir_entry *entry;
@@ -93,7 +93,7 @@ typedef struct tagUMP_PARAM_S
     wait_queue_head_t wq_for_write;
     int busy;
     HI_DRV_USRMODEPROC_CMD_S current_cmd;
-    atomic_t atmOpenCnt;  
+    atomic_t atmOpenCnt;
 }UMP_PARAM_S;
 
 /***************************** Global Definition *****************************/
@@ -103,7 +103,7 @@ extern struct proc_dir_entry *g_pCMPI_proc;
 
 /***************************** Static Definition *****************************/
 
-static UMP_PARAM_S g_stUProcParam = 
+static UMP_PARAM_S g_stUProcParam =
 {
     .root           = RB_ROOT,
     .atmOpenCnt = ATOMIC_INIT(0),
@@ -119,8 +119,8 @@ extern unsigned int full_name_hash(const unsigned char *name, unsigned int len);
 
 static UMP_DIR_S * RBTree_Find_Dirent(UMP_DIR_S * pszParent, const HI_CHAR * pszName)
 {
-    HI_U32 hash = full_name_hash(pszName, strlen(pszName))  & 0x7fffffffU;  
-    struct rb_node *node = g_stUProcParam.root.rb_node; 
+    HI_U32 hash = full_name_hash(pszName, strlen(pszName))  & 0x7fffffffU;
+    struct rb_node *node = g_stUProcParam.root.rb_node;
 
     while(node)
     {
@@ -187,7 +187,7 @@ static HI_S32 RBTree_Insert_Dirent(UMP_DIR_S * pszParent, UMP_DIR_S*pszDirent)
             return HI_FAILURE;
         }
     }
-    
+
     rb_link_node(&pszDirent->node, parent, new);
     rb_insert_color(&pszDirent->node, root);
 
@@ -197,14 +197,14 @@ static HI_S32 RBTree_Insert_Dirent(UMP_DIR_S * pszParent, UMP_DIR_S*pszDirent)
 static void RBTree_Erase_Dirent(UMP_DIR_S * pszParent, UMP_DIR_S*pszDirent)
 {
     struct rb_root *root = &g_stUProcParam.root;
-    
+
     rb_erase(&(pszDirent->node), root);
 }
 
 static UMP_ENTRY_S * RBTree_Find_Entry(UMP_DIR_S * pstDir, const HI_CHAR * pszName)
 {
-    HI_U32 hash = full_name_hash(pszName, strlen(pszName))  & 0x7fffffffU;  
-    struct rb_node *node = pstDir->entry_root.rb_node; 
+    HI_U32 hash = full_name_hash(pszName, strlen(pszName))  & 0x7fffffffU;
+    struct rb_node *node = pstDir->entry_root.rb_node;
 
     while(node)
     {
@@ -271,7 +271,7 @@ static HI_S32 RBTree_Insert_Entry(UMP_DIR_S * pstDir, UMP_ENTRY_S*pszEntry)
             return HI_FAILURE;
         }
     }
-    
+
     rb_link_node(&pszEntry->node, parent, new);
     rb_insert_color(&pszEntry->node, root);
 
@@ -281,7 +281,7 @@ static HI_S32 RBTree_Insert_Entry(UMP_DIR_S * pstDir, UMP_ENTRY_S*pszEntry)
 static void RBTree_Erase_Entry(UMP_DIR_S * pstDir, UMP_ENTRY_S*pszEntry)
 {
     struct rb_root *root = &(pstDir->entry_root);
-    
+
     rb_erase(&(pszEntry->node), root);
 }
 
@@ -295,7 +295,7 @@ static UMP_ENTRY_S * RBTree_Find_Proc_Entry(struct proc_dir_entry* pstPde)
         HI_ERR_UPROC("invalid proc entry.");
         goto out;
     }
-    
+
     pstDir = RBTree_Find_Dirent(HI_NULL, pstPde->parent->name);
     if (!pstDir)
     {
@@ -311,7 +311,7 @@ static UMP_ENTRY_S * RBTree_Find_Proc_Entry(struct proc_dir_entry* pstPde)
     }
 
     return pstEntry;
-    
+
 out:
     return HI_NULL;
 }
@@ -329,18 +329,18 @@ static int hi_usrmodeproc_open(struct inode *inode, struct file *file)
         HI_INIT_MUTEX(&g_stUProcParam.stSem);
     }
 
-    file->private_data = &g_stUProcParam;    
+    file->private_data = &g_stUProcParam;
     return 0;
 }
 
 static int hi_usrmodeproc_close(struct inode *inode, struct file *file)
 {
-    struct rb_node *node; 
+    struct rb_node *node;
 
     if (atomic_dec_return(&g_stUProcParam.atmOpenCnt) >= 0)
     {
         UPROC_K_LOCK(g_stUProcParam.stSem);
-        
+
 scratch_dirent:
         for(node = rb_first(&(g_stUProcParam.root));node; node = rb_next(node))
         {
@@ -354,7 +354,7 @@ scratch_dirent:
             else if (HI_NULL == dirent->pstFile) /* for files /proc/msp/xxx or /proc/hisi/xxx */
             {
                 struct rb_node * entry_node;
-                
+
 scratch_entry:
                 for(entry_node = rb_first(&(dirent->entry_root));entry_node;entry_node = rb_next(entry_node))
                 {
@@ -367,7 +367,7 @@ scratch_entry:
                 }
             }
         }
-        
+
         UPROC_K_UNLOCK(g_stUProcParam.stSem);
     }
 
@@ -377,7 +377,6 @@ scratch_entry:
 
 static int ump_seq_show(struct seq_file *m, void *unused)
 {
-
     struct proc_dir_entry* pstPde = (struct proc_dir_entry *)(m->private);
     UMP_PARAM_S *proc = ((struct proc_dir_entry *)(m->private))->data;
     UMP_ENTRY_S *pstEntry;
@@ -385,7 +384,7 @@ static int ump_seq_show(struct seq_file *m, void *unused)
     DEFINE_WAIT(wait);
 
     UPROC_K_LOCK(g_stUProcParam.stSem);
-    
+
     pstEntry = RBTree_Find_Proc_Entry(pstPde);
     if(!pstEntry)
     {
@@ -393,46 +392,53 @@ static int ump_seq_show(struct seq_file *m, void *unused)
         ret = -1;
         goto out;
     }
-	else if (!pstEntry->stInfo.pfnShowFunc)
-	{
-		HI_ERR_UPROC("Entry don't support read.\n");
-		ret = -1;
-		goto out;
-	}
+    else if (!pstEntry->stInfo.pfnShowFunc)
+    {
+        HI_ERR_UPROC("Entry don't support read.\n");
+        ret = -1;
+        goto out;
+    }
 
     proc->current_cmd.pEntry = &(pstEntry->stInfo);
     HI_OSAL_Strncpy(proc->current_cmd.aszCmd, HI_UPROC_READ_CMD, sizeof(proc->current_cmd.aszCmd) - 1);
-    
+
     UPROC_K_UNLOCK(g_stUProcParam.stSem);
 
     /* Wait write data over */
     prepare_to_wait(&proc->wq_for_read, &wait, TASK_INTERRUPTIBLE);
     schedule();
-    finish_wait(&proc->wq_for_read, &wait);	
+    finish_wait(&proc->wq_for_read, &wait);
 
     /* Find it again, pstEntry may be removed when wait event */
     UPROC_K_LOCK(g_stUProcParam.stSem);
 
     pstEntry = RBTree_Find_Proc_Entry(pstPde);
-    if(!pstEntry)
+    if (!pstEntry)
     {
         HI_ERR_UPROC("Can't find entry:%p\n", pstPde->name);
         ret = -1;
         goto out;
     }
-    else if (HI_NULL != pstEntry->stInfo.pfnShowFunc)
+
+    if (HI_NULL != pstEntry->stInfo.pfnShowFunc)
     {
         HI_INFO_UPROC("User Mode Proc Show entry=0x%p, proc=0x%p\n", pstPde, proc);
-        PROC_PRINT(m, "%s", (HI_CHAR*)pstEntry->stInfo.stBuf.u32StartVirAddr);
+
+        if (pstEntry->stInfo.Read)
+        {
+            PROC_PRINT(m, "%s", (HI_CHAR*)pstEntry->stInfo.Read);
+
+            HI_VFREE(HI_ID_PROC, pstEntry->stInfo.Read);
+            pstEntry->stInfo.Read = HI_NULL;
+        }
     }
-    
+
     ret = 0;
-    
+
  out:
     UPROC_K_UNLOCK(g_stUProcParam.stSem);
 
     return ret;
-        
 }
 
 static int ump_seq_open(struct inode *inode, struct file *file)
@@ -441,7 +447,7 @@ static int ump_seq_open(struct inode *inode, struct file *file)
     int res;
 
     HI_INFO_UPROC("ump_seq_open 0x%p,%d\n", proc, proc->busy );
-    
+
     if (proc->busy)
         return -EAGAIN;
 
@@ -469,10 +475,10 @@ static HI_S32 StripString(HI_CHAR *string, HI_U32 size)
 {
     HI_CHAR * p = string;
     HI_U32      index = 0;
-    
+
     if (!string ||  0 ==  size)
         return HI_FAILURE;
-    
+
     /* strip '\n' as string end character */
     for (; index < size; index++)
     {
@@ -494,7 +500,7 @@ static ssize_t ump_seq_write (struct file *file, const char __user *buf, size_t 
     UMP_PARAM_S *proc = pstPde->data;
     UMP_ENTRY_S *pstEntry ;
     HI_S32 ret;
-    
+
     DEFINE_WAIT(wait);
 
     UPROC_K_LOCK(g_stUProcParam.stSem);
@@ -529,33 +535,40 @@ static ssize_t ump_seq_write (struct file *file, const char __user *buf, size_t 
         ret =  -EINVAL;
         goto out;
     }
-    
+
     proc->current_cmd.pEntry = &(pstEntry->stInfo);
 
     UPROC_K_UNLOCK(g_stUProcParam.stSem);
-    
+
     /* Wait write data over */
     prepare_to_wait(&proc->wq_for_write, &wait, TASK_INTERRUPTIBLE);
     schedule();
-    finish_wait(&proc->wq_for_write, &wait);	
+    finish_wait(&proc->wq_for_write, &wait);
 
     UPROC_K_LOCK(g_stUProcParam.stSem);
 
     /* if buffer not empty , try echo to current terminal */
     pstEntry = RBTree_Find_Proc_Entry(pstPde);
-    if ( HI_NULL != pstEntry && pstEntry->stInfo.pfnCmdFunc )
-    {   
-        HI_INFO_UPROC( "ump_seq_write: proc=%p, entry=%p %d bytes\n", proc, pstPde, size);
-        if (strlen( (HI_CHAR*)pstEntry->stInfo.stBuf.u32StartVirAddr))
+    if (HI_NULL != pstEntry && pstEntry->stInfo.pfnCmdFunc)
+    {
+        HI_INFO_UPROC("ump_seq_write: proc=%p, entry=%p %d bytes\n", proc, pstPde, size);
+
+        if (pstEntry->stInfo.Write)
         {
-            HI_DRV_PROC_EchoHelper((HI_CHAR*)pstEntry->stInfo.stBuf.u32StartVirAddr);
+            if (strlen((HI_CHAR*)pstEntry->stInfo.Write))
+            {
+                HI_DRV_PROC_EchoHelper((HI_CHAR*)pstEntry->stInfo.Write);
+            }
+
+            HI_VFREE(HI_ID_PROC, pstEntry->stInfo.Write);
+            pstEntry->stInfo.Write = HI_NULL;
         }
     }
 
     UPROC_K_UNLOCK(g_stUProcParam.stSem);
-     
+
     return size;
-    
+
 out:
     UPROC_K_UNLOCK(g_stUProcParam.stSem);
 
@@ -581,7 +594,7 @@ UMP_DIR_S * PROC_AddDir(const HI_CHAR* pszName, const HI_CHAR* pszParent, struct
         HI_INFO_UPROC("Dir %s exist\n", pszName);
         return pstDir;
     }
-    
+
     /* Alloc directory resource */
     pstDir = HI_KMALLOC(HI_ID_PROC, sizeof(UMP_DIR_S), GFP_KERNEL);
     if (HI_NULL == pstDir)
@@ -592,7 +605,7 @@ UMP_DIR_S * PROC_AddDir(const HI_CHAR* pszName, const HI_CHAR* pszParent, struct
 
     /* Init directory parameter */
     HI_OSAL_Snprintf(pstDir->dir_name, sizeof(pstDir->dir_name), "%s", pszName);
-    pstDir->dir_name_hash = full_name_hash(pszName, strlen(pszName)) & 0x7fffffffU; 
+    pstDir->dir_name_hash = full_name_hash(pszName, strlen(pszName)) & 0x7fffffffU;
     pstDir->entry_root = RB_ROOT;
     pstDir->parent = HI_NULL;
     pstDir->pstFile = pstFile;
@@ -604,7 +617,7 @@ UMP_DIR_S * PROC_AddDir(const HI_CHAR* pszName, const HI_CHAR* pszParent, struct
         HI_ERR_UPROC("proc_mkdir fail\n");
         goto out1;
     }
-    
+
     HI_INFO_UPROC("Proc add dir %s, file=%p, entry=0x%p\n", pstDir->dir_name, pstFile, pstDir->entry);
 
     /* Add directory to rbtree */
@@ -615,13 +628,13 @@ UMP_DIR_S * PROC_AddDir(const HI_CHAR* pszName, const HI_CHAR* pszParent, struct
     }
 
     return pstDir;
-    
+
  out2:
     remove_proc_entry(pstDir->dir_name, g_pHisi_proc);
-    
+
  out1:
     HI_KFREE(HI_ID_PROC, pstDir);
-    
+
     return HI_NULL;
 }
 
@@ -633,7 +646,7 @@ HI_S32 PROC_RemoveDir(UMP_DIR_S * pstDir)
         HI_ERR_UPROC("Invalid name\n");
         return HI_FAILURE;
     }
-    
+
     /* If there are entries in this directory, remove fail */
     if (pstDir->entry_root.rb_node)
     {
@@ -643,7 +656,7 @@ HI_S32 PROC_RemoveDir(UMP_DIR_S * pstDir)
 
     /* Remove proc directory */
     remove_proc_entry(pstDir->dir_name, g_pHisi_proc);
-    
+
     HI_INFO_UPROC("Proc remove dir %s\n", pstDir->dir_name);
 
     /* Remove directory from rbtree */
@@ -666,7 +679,7 @@ HI_S32 PROC_RemoveDirByName(const HI_CHAR* pszName)
         HI_ERR_UPROC("Invalid name\n");
         return HI_FAILURE;
     }
-    
+
     /* Make directory name */
     HI_OSAL_Snprintf(aszDir, sizeof(aszDir), "%s", pszName);
 
@@ -701,7 +714,7 @@ UMP_DIR_S * PROC_AddPrivateDir(const HI_CHAR* pszName, struct proc_dir_entry *ps
 
     /* Init other parameter */
     HI_OSAL_Strncpy(pstDir->dir_name, pszName, sizeof(pstDir->dir_name)-1);
-    pstDir->dir_name_hash = full_name_hash(pszName, strlen(pszName)) & 0x7fffffffU; 
+    pstDir->dir_name_hash = full_name_hash(pszName, strlen(pszName)) & 0x7fffffffU;
     pstDir->entry_root = RB_ROOT;
     pstDir->entry = pstEntry;
     pstDir->parent = HI_NULL;
@@ -717,11 +730,11 @@ UMP_DIR_S * PROC_AddPrivateDir(const HI_CHAR* pszName, struct proc_dir_entry *ps
     return pstDir;
 
 out1:
-    
+
     HI_KFREE(HI_ID_PROC, pstDir);
-    
+
 out:
-    
+
     return HI_NULL;
 }
 
@@ -748,7 +761,7 @@ HI_S32 PROC_RemovePrivateDir(const HI_CHAR* pszName)
 
     /* Free directory resource */
     HI_KFREE(HI_ID_PROC, pstDir);
-    
+
     return HI_SUCCESS;
 }
 
@@ -756,19 +769,17 @@ static struct file_operations ump_seq_fops;
 
  UMP_ENTRY_S* PROC_AddEntry(const HI_DRV_USRMODEPROC_ENTRY_S* pstParam, HI_BOOL bUsrMode)
 {
-    HI_S32 ret;
     UMP_ENTRY_S * pstEntry = HI_NULL;
     UMP_DIR_S * pstDir = HI_NULL;
     HI_CHAR aszDir[MAX_PROC_NAME_LEN+12];
-    HI_CHAR aszMMZName[32];
     HI_U32 u32EntryLen;
-    
+
     /* Check parameter */
     if (HI_NULL == pstParam)
     {
         return HI_NULL;
     }
-    
+
     u32EntryLen = strlen(pstParam->aszName);
     if ((0 == u32EntryLen) || (u32EntryLen > MAX_PROC_NAME_LEN))
     {
@@ -823,35 +834,16 @@ static struct file_operations ump_seq_fops;
 
     /* Init other parameter */
     HI_OSAL_Strncpy(pstEntry->entry_name, pstParam->aszName, sizeof(pstEntry->entry_name)-1);
-    pstEntry->entry_name_hash = full_name_hash(pstParam->aszName, strlen(pstParam->aszName)) & 0x7fffffffU; 
+    pstEntry->entry_name_hash = full_name_hash(pstParam->aszName, strlen(pstParam->aszName)) & 0x7fffffffU;
     pstEntry->parent = pstDir->entry;
-    pstEntry->stInfo.pFile = pstParam->pFile;
-    pstEntry->stInfo.pfnShowFunc = pstParam->pfnShowFunc;
-    pstEntry->stInfo.pfnCmdFunc = pstParam->pfnCmdFunc;
-    pstEntry->stInfo.pPrivData   = pstParam->pPrivData;
 
-    /* pfnShowFunc need mmz */
-    if ( bUsrMode )
-    {
-        /* Alloc Mmemory */
-        HI_OSAL_Snprintf(aszMMZName, sizeof(aszMMZName), "CMN_Uproc_%s", pstEntry->entry_name);
+    pstEntry->stInfo.pFile          = pstParam->pFile;
+    pstEntry->stInfo.pfnShowFunc    = pstParam->pfnShowFunc;
+    pstEntry->stInfo.pfnCmdFunc     = pstParam->pfnCmdFunc;
+    pstEntry->stInfo.pPrivData      = pstParam->pPrivData;
+    pstEntry->stInfo.Read           = HI_NULL;
+    pstEntry->stInfo.Write          = HI_NULL;
 
-        ret = HI_DRV_MMZ_AllocAndMap(aszMMZName, NULL, HI_PROC_BUFFER_SIZE, 0, &(pstEntry->stInfo.stBuf));
-        if (HI_SUCCESS != ret)
-        {
-            HI_FATAL_UPROC("Alloc MMZ fail:%#x\n", ret);
-            goto out2;
-        }
-
-        memset((HI_VOID*)pstEntry->stInfo.stBuf.u32StartVirAddr, 0, pstEntry->stInfo.stBuf.u32Size);
-    }
-    else
-    {
-        pstEntry->stInfo.stBuf.u32Size = 0;
-        pstEntry->stInfo.stBuf.u32StartPhyAddr = 0;
-        pstEntry->stInfo.stBuf.u32StartVirAddr = 0;
-    }
-    
     /* Add entry to rbtree */
     if (HI_SUCCESS != RBTree_Insert_Entry(pstDir, pstEntry))
     {
@@ -866,7 +858,6 @@ out2:
 out1:
     HI_KFREE(HI_ID_PROC, pstEntry);
 out:
-    
     return HI_NULL;
 }
 
@@ -880,15 +871,21 @@ HI_VOID PROC_RemoveEntry(UMP_DIR_S *pstDir, UMP_ENTRY_S * pstEntry)
 
     /* Remove proc entry */
     remove_proc_entry(pstEntry->entry_name, pstEntry->parent);
-    
+
     HI_INFO_UPROC("Proc remove entry %s\n", pstEntry->entry_name);
 
-    /* Free MMZ */
-    if (0 != pstEntry->stInfo.stBuf.u32Size)
+    if (HI_NULL != pstEntry->stInfo.Read)
     {
-        HI_DRV_MMZ_UnmapAndRelease(&(pstEntry->stInfo.stBuf));
+        HI_VFREE(HI_ID_PROC, pstEntry->stInfo.Read);
+        pstEntry->stInfo.Read = HI_NULL;
     }
-    
+
+    if (HI_NULL != pstEntry->stInfo.Write)
+    {
+        HI_VFREE(HI_ID_PROC, pstEntry->stInfo.Write);
+        pstEntry->stInfo.Write = HI_NULL;
+    }
+
     /* Remove entry from rbtree */
     RBTree_Erase_Entry(pstDir, pstEntry);
 
@@ -957,16 +954,16 @@ HI_S32 PROC_RemoveEntryByName(const HI_CHAR* pszName, const HI_CHAR* pszParent)
 
 HI_VOID PROC_RemoveDirForcibly(UMP_DIR_S *pstDir)
 {
-    struct rb_node *node;  
+    struct rb_node *node;
     UMP_ENTRY_S * this;
-    
+
     /* Check parameter */
     if (HI_NULL == pstDir)
     {
         return;
     }
-    
-    HI_INFO_UPROC("Proc remove dir: %s\n", pstDir->dir_name); 
+
+    HI_INFO_UPROC("Proc remove dir: %s\n", pstDir->dir_name);
 
     while (pstDir->entry_root.rb_node)
     {
@@ -987,7 +984,7 @@ static struct file_operations ump_seq_fops = {
 };
 
 long hi_usrmodeproc_ioctl(struct file *file,
-				unsigned int cmd, unsigned long arg)
+                unsigned int cmd, unsigned long arg)
 {
     HI_S32 ret = HI_SUCCESS;
     UMP_PARAM_S *proc = file->private_data;
@@ -997,7 +994,7 @@ long hi_usrmodeproc_ioctl(struct file *file,
     UMP_ENTRY_S* pstEntry;
     HI_DRV_USRMODEPROC_CMDINFO_S *pstCmdInfo;
 
-    switch(cmd)
+    switch (cmd)
     {
         case UMPIOC_ADD_ENTRY:
         {
@@ -1009,7 +1006,7 @@ long hi_usrmodeproc_ioctl(struct file *file,
             ump_entry.aszName[sizeof(ump_entry.aszName)-1] = 0;
             ump_entry.aszParent[sizeof(ump_entry.aszParent)-1] = 0;
             ump_entry.pFile = (HI_VOID*)file;
-            
+
             UPROC_K_LOCK(g_stUProcParam.stSem);
             pstEntry = PROC_AddEntry(&ump_entry, HI_TRUE);
             UPROC_K_UNLOCK(g_stUProcParam.stSem);
@@ -1020,7 +1017,7 @@ long hi_usrmodeproc_ioctl(struct file *file,
             }
 
             ((struct proc_dir_entry *)pstEntry->stInfo.pEntry)->data = proc;
-            
+
             break;
         }
 
@@ -1082,19 +1079,19 @@ long hi_usrmodeproc_ioctl(struct file *file,
 
             UPROC_K_LOCK(g_stUProcParam.stSem);
                 /* If there is a command */
-            if ((strlen(proc->current_cmd.aszCmd) > 0) && 
+            if ((strlen(proc->current_cmd.aszCmd) > 0) &&
                 /* and it must belong to a entry */
-                (HI_NULL != proc->current_cmd.pEntry) && 
+                (HI_NULL != proc->current_cmd.pEntry) &&
                 /* and the entry must belong to this file(this process). */
                 ((HI_VOID*)file == ((HI_DRV_USRMODEPROC_ENTRY_S*)proc->current_cmd.pEntry)->pFile))
             {
-                if (copy_to_user((void __user *)&(pstCmdInfo->stCmd), 
+                if (copy_to_user((void __user *)&(pstCmdInfo->stCmd),
                     &(proc->current_cmd), sizeof(HI_DRV_USRMODEPROC_CMD_S)))
                 {
                     UPROC_K_UNLOCK(g_stUProcParam.stSem);
                     return -EFAULT;
                 }
-                if (copy_to_user((void __user *)&(pstCmdInfo->stEntry), 
+                if (copy_to_user((void __user *)&(pstCmdInfo->stEntry),
                     proc->current_cmd.pEntry, sizeof(HI_DRV_USRMODEPROC_ENTRY_S)))
                 {
                     UPROC_K_UNLOCK(g_stUProcParam.stSem);
@@ -1108,18 +1105,68 @@ long hi_usrmodeproc_ioctl(struct file *file,
         }
 
         case UMPIOC_WAKE_READ_TASK:
+        {
+            HI_PROC_SHOW_BUFFER_S       ShowBuf;
+            HI_DRV_USRMODEPROC_ENTRY_S *ProcEntry = (HI_DRV_USRMODEPROC_ENTRY_S*)proc->current_cmd.pEntry;
+
+            if (0 == copy_from_user(&ShowBuf, (void __user *)arg, sizeof(ShowBuf)))
+            {
+                if (ShowBuf.u32Size <= HI_PROC_BUFFER_SIZE)
+                {
+                    UPROC_K_LOCK(g_stUProcParam.stSem);
+
+                    ProcEntry->Read = HI_VMALLOC(HI_ID_PROC, ShowBuf.u32Size);
+                    if (ProcEntry->Read)
+                    {
+                        if (copy_from_user(ProcEntry->Read, (void __user *)ShowBuf.pu8Buf, ShowBuf.u32Size))
+                        {
+                            HI_VFREE(HI_ID_PROC, ProcEntry->Read);
+                            ProcEntry->Read = HI_NULL;
+                        }
+                    }
+
+                    UPROC_K_UNLOCK(g_stUProcParam.stSem);
+                }
+            }
+
             wake_up_interruptible(&(proc->wq_for_read));
             break;
-            
-         case UMPIOC_WAKE_WRITE_TASK:
+        }
+
+        case UMPIOC_WAKE_WRITE_TASK:
+        {
+            HI_PROC_SHOW_BUFFER_S       ShowBuf;
+            HI_DRV_USRMODEPROC_ENTRY_S *ProcEntry = (HI_DRV_USRMODEPROC_ENTRY_S*)proc->current_cmd.pEntry;
+
+            if (0 == copy_from_user(&ShowBuf, (void __user *)arg, sizeof(ShowBuf)))
+            {
+                if (ShowBuf.u32Size <= HI_PROC_BUFFER_SIZE)
+                {
+                    UPROC_K_LOCK(g_stUProcParam.stSem);
+
+                    ProcEntry->Write = HI_VMALLOC(HI_ID_PROC, ShowBuf.u32Size);
+                    if (ProcEntry->Write)
+                    {
+                        if (copy_from_user(ProcEntry->Write, (void __user *)ShowBuf.pu8Buf, ShowBuf.u32Size))
+                        {
+                            HI_VFREE(HI_ID_PROC, ProcEntry->Write);
+                            ProcEntry->Write = HI_NULL;
+                        }
+                    }
+
+                    UPROC_K_UNLOCK(g_stUProcParam.stSem);
+                }
+            }
+
             wake_up_interruptible(&(proc->wq_for_write));
             break;
-            
+        }
+
         default:
             ret = HI_FAILURE;
             break;
     }
-    
+
     return ret;
 }
 
@@ -1155,7 +1202,7 @@ HI_S32 USRPROC_DRV_ModInit(HI_VOID)
         ret = -1;
         goto out;
     }
-    
+
     g_pstMspDirent = PROC_AddPrivateDir("msp", g_pCMPI_proc);
     if (!g_pstMspDirent)
     {
@@ -1163,7 +1210,7 @@ HI_S32 USRPROC_DRV_ModInit(HI_VOID)
         ret = -1;
         goto out;
     }
-    
+
 out:
     return ret;
 }
@@ -1175,13 +1222,13 @@ HI_VOID USRPROC_DRV_ModExit(HI_VOID)
         PROC_RemovePrivateDir(g_pstMspDirent->dir_name);
         g_pstMspDirent = HI_NULL;
     }
-    
+
     if (g_pstHisiDirent)
     {
         PROC_RemovePrivateDir(g_pstHisiDirent->dir_name);
         g_pstHisiDirent = HI_NULL;
     }
-    
+
     misc_deregister(&hi_usrmodeproc_dev);
 }
 

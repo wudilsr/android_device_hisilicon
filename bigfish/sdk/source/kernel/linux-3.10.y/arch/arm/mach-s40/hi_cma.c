@@ -29,6 +29,18 @@ static char __initdata default_cmd[MMZ_SETUP_CMDLINE_LEN] = "ddr,0,0,160M";
 #endif
 static int use_bootargs;
 
+unsigned int get_cma_size(void)
+{
+	int i;
+	u64 total = 0;
+
+	for (i = 0; i < num_zones; i++)
+		total += hisi_zone[i].nbytes;
+
+	/* unit is M */
+	return (unsigned int)(total >> 20);
+}
+
 static int __init hisi_mmz_parse_cmdline(char *s)
 {
 	char *line, *tmp;

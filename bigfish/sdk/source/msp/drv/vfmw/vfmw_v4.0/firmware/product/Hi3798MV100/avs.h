@@ -289,6 +289,7 @@ typedef struct
     AVS_SDEXT syn_sdext;
     AVS_PIC   syn_pic;
     AVS_PDEXT syn_pdext;
+	UINT8     bAvsPlus;
 } AVS_SYNTAX;
 
 

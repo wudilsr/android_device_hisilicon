@@ -78,10 +78,17 @@ static struct kobj_attribute _name##_attr = {	\
 extern unsigned long image_size;
 /* Size of memory reserved for drivers (default SPARE_PAGES x PAGE_SIZE) */
 extern unsigned long reserved_size;
-extern int in_suspend;
+extern int in_suspend __nosavedata;
 extern dev_t swsusp_resume_device;
 extern sector_t swsusp_resume_block;
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+extern char hb_bdev_file[64];
+extern char compress_method[16];
+extern void *saved_processor_context;
+extern int noshrink;
+extern int swsusp_check_storage_all(void);
+#endif
 extern asmlinkage int swsusp_arch_suspend(void);
 extern asmlinkage int swsusp_arch_resume(void);
 
@@ -141,7 +148,7 @@ extern atomic_t snapshot_device_available;
 extern sector_t alloc_swapdev_block(int swap);
 extern void free_all_swap_pages(int swap);
 extern int swsusp_swap_in_use(void);
-
+extern int swsusp_save(void);
 /*
  * Flags that can be passed from the hibernatig hernel to the "boot" kernel in
  * the image header.
@@ -242,11 +249,17 @@ static inline int suspend_freeze_processes(void)
 	if (error)
 		return error;
 
+#ifndef	CONFIG_HISI_SNAPSHOT_BOOT
 	error = freeze_kernel_threads();
 	/*
 	 * freeze_kernel_threads() thaws only kernel threads upon freezing
 	 * failure. So we have to thaw the userspace tasks ourselves.
 	 */
+	if (error)
+		thaw_processes();
+#else
+	error = pm_notifier_call_chain(PM_POST_FREEZE_PROCESS);
+#endif
 	if (error)
 		thaw_processes();
 
@@ -255,6 +268,9 @@ static inline int suspend_freeze_processes(void)
 
 static inline void suspend_thaw_processes(void)
 {
+#ifdef	CONFIG_HISI_SNAPSHOT_BOOT
+	pm_notifier_call_chain(PM_THAW_PROCESS_PREPARE);
+#endif
 	thaw_processes();
 }
 #else

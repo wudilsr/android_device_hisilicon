@@ -400,6 +400,17 @@ namespace android
         return  ret;
     }
 
+    Rect DisplayService::getVirtScreenSize()
+    {
+        Rect rect(0, 0, 0, 0);
+        if(mDevice == 0)
+        {
+            return rect;
+        }
+        mDevice->get_virtual_screen_size(&rect.right, &rect.bottom);
+        return  rect;
+    }
+
     int DisplayService::reset()
     {
         int ret = -1;

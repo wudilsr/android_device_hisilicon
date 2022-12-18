@@ -11,7 +11,6 @@
 #include "so_queue.h"
 #include "hi_unf_so.h"
 
-
 #define SO_NORMAL_MAX_DISPLAY_TIME        (10 * 1000)  /**< 10s */
 #define SO_NORMAL_MIN_DISPLAY_TIME        (2 * 1000)  /**< ss */
 #define SO_PLAY_TIME_JUMP_JUDGE           (5 * 1000)  /**< 5s */
@@ -20,10 +19,38 @@
 #define SO_QUEUE_RESET_CHECK_TIME     (100)
 #define SO_QUEUE_MAX_CLEAR_NODE_NUM   (512)
 #define SO_SEND_OFFSET                (20)  /**< 20ms */
-#define SO_CALLBACK_LOCK()            pthread_mutex_lock(&pstMember->stMutex);
-#define SO_CALLBACK_UNLOCK()          pthread_mutex_unlock(&pstMember->stMutex);
-#define SO_QUEUE_RESET_LOCK()         pthread_mutex_lock(&pstMember->stQueueResetMutex);
-#define SO_QUEUE_RESET_UNLOCK()       pthread_mutex_unlock(&pstMember->stQueueResetMutex);
+
+#define SO_CALLBACK_LOCK()    \
+    do{\
+        int ret = pthread_mutex_lock(&pstMember->stMutex);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_lock(stMutex) failure,ret = 0x%x\n",ret);\
+        }\
+    }while(0)
+
+#define SO_CALLBACK_UNLOCK()   \
+    do{\
+        int ret = pthread_mutex_unlock(&pstMember->stMutex);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_unlock(stMutex) failure, ret = 0x%x\n",ret);\
+        }\
+    }while(0)
+
+#define SO_QUEUE_RESET_LOCK()  \
+    do{\
+        int ret = pthread_mutex_lock(&pstMember->stQueueResetMutex);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_lock(stQueueResetMutex) failure,ret = 0x%x\n",ret);\
+        }\
+    }while(0)
+
+#define SO_QUEUE_RESET_UNLOCK()  \
+    do{\
+        int ret = pthread_mutex_unlock(&pstMember->stQueueResetMutex);\
+        if(ret != 0){\
+            printf("SO call pthread_mutex_unlock(stQueueResetMutex) failure, ret = 0x%x\n",ret);\
+        }\
+    }while(0)
 
 static HI_BOOL s_bSoInit = HI_FALSE;
 
@@ -59,6 +86,7 @@ typedef struct tagSO_MEMBER_S
     HI_U32 u32ReadIndx;                /**< read pos of node list */
     HI_U32 u32WriteIndx;               /**< write pos of node list */
     HI_S64 s64LastPts;                 /**< Last subt frame pts */
+    HI_U32 u32IntervalMs;           /**< subtitle max interval time*/
     SO_CLEAR_NODE_S astClearNodeList[SO_QUEUE_MAX_CLEAR_NODE_NUM];
 } SO_MEMBER_S;
 
@@ -158,7 +186,6 @@ static HI_S32 SO_InsertToClearList(SO_MEMBER_S *pstMember, const SO_INFO_S *pstS
         pstMember->astClearNodeList[pstMember->u32WriteIndx].u32Duration = u32Duration;
         (HI_VOID)SO_GetNodeClearInfo(pstSoInfo, &pstMember->astClearNodeList[pstMember->u32WriteIndx].stClearParam);
         pstMember->u32WriteIndx++;
-        
     }
 
     return HI_SUCCESS;
@@ -209,7 +236,11 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
 {
     HI_S32  s32Ret = 0;
     HI_S64  s64CurPts = 0, s64NodePts = 0, s64CurNodePts = 0;
+    HI_S64  s64MaxPts = 0, s64MinPts = 0;
     HI_U32  u32Duration = 0, u32NodeDuration = 0;
+
+    HI_BOOL bDirectOut = HI_FALSE;
+    HI_BOOL bClearSub = HI_TRUE;
 
     SO_INFO_S stNextSubInfo;
 
@@ -242,6 +273,19 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
             SO_SLEEP(SO_TIME_OFFSET);
             continue;
         }
+        /*the subtitle display pts and video pts interval is too large,direct output*/
+        /*app set interval time*/
+        if(0 != pstMember->u32IntervalMs)
+        {
+            s64MaxPts = s64CurNodePts + pstMember->u32IntervalMs;
+            s64MinPts = s64CurNodePts - pstMember->u32IntervalMs;
+
+            if((s64CurPts <= s64MinPts) || (s64CurPts >= s64MaxPts))
+            {
+                bDirectOut = HI_TRUE;
+                break;
+            }
+        }
 
         if ((s64CurPts < s64CurNodePts) && (s64CurNodePts - s64CurPts > SO_SEND_OFFSET))
         {
@@ -257,26 +301,27 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
     }
 
     /* pts of subtitle is less than or equal to local time */
-
+    //bClearSub = HI_TRUE;
     if (0 != u32NodeDuration)
     {
         /* local time is larger than (pts + duration), skip this subtitle */
+        if(bDirectOut == HI_FALSE)
+        {
+            SO_RETURN((s64CurPts > s64CurNodePts + u32NodeDuration), HI_SUCCESS, NULL);
+        }
 
-        SO_RETURN((s64CurPts > s64CurNodePts + u32NodeDuration), HI_SUCCESS, NULL);
         u32Duration = (HI_U32)((s64CurNodePts + u32NodeDuration) - s64CurPts);
         u32Duration = u32Duration > u32NodeDuration ? u32NodeDuration : u32Duration;
     }
     else
     {
         /* this subtitle has no duration, get pts of next subtitle in queue */
-
         SO_MEMSET(&stNextSubInfo, 0, sizeof(stNextSubInfo));
         s32Ret = SO_QueueGetNodeInfoNotDel(pstMember->queuehdl, &stNextSubInfo);
 
         if (HI_SUCCESS != s32Ret)
         {
             /* dufault duration */
-
             u32Duration = SO_NORMAL_MIN_DISPLAY_TIME;
         }
         else
@@ -285,10 +330,16 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
             s64NodePts += pstMember->s64PtsOffset;
 
             /* local time is larger than this subtitle, skip last subtitle */
-
-            SO_RETURN((s64CurPts + SO_TIME_OFFSET >= s64NodePts), HI_SUCCESS, NULL);
+            if(bDirectOut == HI_FALSE)
+            {
+                SO_RETURN((s64CurPts + SO_TIME_OFFSET >= s64NodePts), HI_SUCCESS, NULL);
+            }
             u32Duration = (HI_U32)(s64NodePts - s64CurPts - SO_TIME_OFFSET);
             u32Duration = u32Duration > SO_NORMAL_MAX_DISPLAY_TIME ? SO_NORMAL_MAX_DISPLAY_TIME : u32Duration;
+            if (HI_UNF_SUBTITLE_BITMAP == pstSoInfo->eType && u32Duration < SO_NORMAL_MAX_DISPLAY_TIME)
+            {
+                bClearSub = HI_FALSE;
+            }
         }
     }
 
@@ -351,7 +402,10 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
 
     /* insert node into clear list */
 
-    SO_InsertToClearList(pstMember, pstSoInfo, /*s64CurNodePts*/s64CurPts, u32Duration);
+    if (bClearSub)
+    {
+        SO_InsertToClearList(pstMember, pstSoInfo, /*s64CurNodePts*/s64CurPts, u32Duration);
+    }
 
 #if 0
     /* clear node from list */
@@ -442,12 +496,12 @@ static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
         {
             if (pstMember->s64ResetPts)
             {
-                s32Ret = SO_QueueReset_ByPts(pstMember->queuehdl, pstMember->s64ResetPts);
+                (HI_VOID)SO_QueueReset_ByPts(pstMember->queuehdl, pstMember->s64ResetPts);
                 pstMember->s64ResetPts = 0;
             }
             else
             {
-                s32Ret = SO_QueueReset(pstMember->queuehdl);
+                (HI_VOID)SO_QueueReset(pstMember->queuehdl);
             }
             pstMember->bQueueReset = HI_FALSE;
             pstMember->u32ReadIndx = 0;
@@ -488,7 +542,7 @@ static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
         }
 
         SO_QUEUE_RESET_LOCK();
-        s32Ret = SO_SyncOutput(pstMember, pfnGetPts, pfnOnDraw, pfnOnClear, &stSubInfo);
+        (HI_VOID)SO_SyncOutput(pstMember, pfnGetPts, pfnOnDraw, pfnOnClear, &stSubInfo);
         (HI_VOID)SO_QueueFree(pstMember->queuehdl, &stSubInfo);
         SO_QUEUE_RESET_UNLOCK();
     }
@@ -544,6 +598,8 @@ HI_S32 HI_UNF_SO_Create(HI_HANDLE *phdl)
     pstMember->s64PtsOffset = 0;
     pstMember->u32ReadIndx  = 0;
     pstMember->u32WriteIndx = 0;
+    pstMember->u32IntervalMs = 0;
+
     (HI_VOID)pthread_mutex_init(&pstMember->stQueueResetMutex, NULL);
     (HI_VOID)pthread_mutex_init(&pstMember->stMutex, NULL);
     (HI_VOID)pthread_attr_init(&pstMember->struAttr);
@@ -731,5 +787,16 @@ HI_S32 HI_UNF_SO_SendData(HI_HANDLE handle, const HI_UNF_SO_SUBTITLE_INFO_S *pst
     SO_RETURN((NULL == pstMember || NULL == pstSubInfo), HI_FAILURE, "");
 
     return SO_QueuePut(pstMember->queuehdl, (const SO_INFO_S*)pstSubInfo);
+}
+
+HI_S32 HI_UNF_SO_SetMaxInterval(HI_HANDLE handle, HI_U32 u32IntervalMs )
+{
+    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+
+    SO_RETURN(NULL == pstMember, HI_FAILURE, "");
+
+    pstMember->u32IntervalMs = u32IntervalMs;
+
+    return HI_SUCCESS;
 }
 

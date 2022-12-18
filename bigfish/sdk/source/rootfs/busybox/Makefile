@@ -99,9 +99,8 @@ $(PREFIX)/bin/busybox: \
 	cp -fv $(call compile_busybox, $(BUSYBOX_CONFIG)/$(CONFIG_BUSYBOX_NAME)) \
 		$(BUILD_DIR)/$(BUSYBOX)/.config
 	cd $(BUILD_DIR)/$(BUSYBOX)/ && \
-	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) -j 16 && \
+	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) && \
 	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) install
-
  
    
 ###############################################################################

@@ -18,6 +18,9 @@
  * License along with FFmpeg; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+#if defined (ANDROID_VERSION)
+#include "cutils/properties.h"
+#endif
 #include "avformat.h"
 #include "libavutil/parseutils.h"
 #include <unistd.h>
@@ -46,6 +49,7 @@
 typedef struct TCPContext {
     int fd;
     int quit_flag;  //z00180556 quit immediately, while seeking
+    int tcp_read_timeout;
 } TCPContext;
 
 typedef struct TCPThread_DATA_S {
@@ -245,6 +249,7 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
     int is_thread;
     int retry_in_progress = 0;
     char errbuf[128];
+    char *tcp_read_timeout = NULL;
 
     //h00186041, add thread to get AddrInfo to avoid ANR
     memset(&stThread, 0, sizeof(TCPThread_S));
@@ -359,6 +364,13 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
         if (ret_getinfo <= 0)
         {
             ret = (ret_getinfo == 0)? stThread.errcode : AVERROR(EIO);
+
+            /* http will call tcp_close to close fd0 without open fd if return 0. */
+            if (0 == ret)
+            {
+                ret = (0 == ff_neterrno()) ? AVERROR(EIO) : ff_neterrno();
+            }
+
             return ret;
         }
     }
@@ -495,6 +507,19 @@ static int tcp_open(URLContext *h, const char *uri, int flags)
     s->fd = fd;
     s->quit_flag = 0;
 
+    #if defined (ANDROID_VERSION)
+    char value[PROPERTY_VALUE_MAX];
+    property_get("tcp.timeout", value, NULL);
+    tcp_read_timeout = (char*)value;
+    #else
+    tcp_read_timeout = getenv("tcp_timeout");
+    #endif
+
+    if (NULL != tcp_read_timeout)
+    {
+        s->tcp_read_timeout = atoi(tcp_read_timeout);
+    }
+
     /* Get ip address */
     soketaddr = (struct sockaddr_in *)cur_ai->ai_addr;
     av_strlcpy(&h->ipaddr, inet_ntoa(soketaddr->sin_addr), sizeof(h->ipaddr));
@@ -525,6 +550,12 @@ static int tcp_read(URLContext *h, uint8_t *buf, int size)
     fd_set rfds;
     struct timeval tv;
     int64_t start_time = 0;
+    int tcp_read_timeout_times = 300;
+
+    if (s->tcp_read_timeout > 0)
+    {
+        tcp_read_timeout_times = s->tcp_read_timeout;
+    }
 
     while(1)
     {
@@ -583,8 +614,8 @@ static int tcp_read(URLContext *h, uint8_t *buf, int size)
         else
         {
             //modify for cts, chunked, skyplay time out too short cause quit play bug.
-            if(count_timeout++ >= 300)   // 15s for experience
-            //if (count_timeout++ >= 30)
+           // if(count_timeout++ >= 150)
+            if (count_timeout++ >= tcp_read_timeout_times)
             {
                 av_log(NULL, AV_LOG_ERROR, "[%s:%d] Tcp_read timeout, ret:%d, count = %d\n",
                     __FILE_NAME__, __LINE__, ret, count_timeout);

@@ -39,11 +39,6 @@ config HI_LOG_UDISK_SUPPORT
 	---help---
 		This option control the u-disk log. Default disable.
 		If enble, the log will be written into u-disk.
-
-###############################################################################
-config  HI_MMZ_V2_SUPPORT
-	bool "MMZ V2 Support"
-	default n
 	
 ###############################################################################	
 config HI_MEMMGR_SUPPORT

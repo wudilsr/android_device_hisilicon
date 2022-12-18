@@ -253,10 +253,11 @@ HI_S32 DrawString(HI_U32 u32TimeType, HI_CHAR *szText)
 
 HI_VOID * StatuThread(HI_VOID *args)
 {
+    HI_U32 u32RecChn = (HI_U32)args;
     HI_S32 Ret;
-    HI_UNF_PVR_REC_STATUS_S RecstStatus;
-    HI_UNF_PVR_PLAY_STATUS_S PlaystStatus;
-    HI_UNF_PVR_FILE_ATTR_S PlayFileStatus;
+    HI_UNF_PVR_REC_STATUS_S stRecstStatus;
+    HI_UNF_PVR_PLAY_STATUS_S stPlaystStatus;
+    HI_UNF_PVR_FILE_ATTR_S stPlayFileStatus;
     HI_CHAR Rectimestr[20];
     HI_CHAR Playtimestr[20];
     HI_CHAR Filetimestr[20];
@@ -267,26 +268,26 @@ HI_VOID * StatuThread(HI_VOID *args)
 #ifdef ANDROID
         printf("----------------------------------\n");
 #endif
-        Ret = HI_UNF_PVR_RecGetStatus(g_RecChn, &RecstStatus);
+        Ret = HI_UNF_PVR_RecGetStatus(u32RecChn, &stRecstStatus);
         if (HI_SUCCESS == Ret)
         {
-            snprintf(Rectimestr, sizeof(Rectimestr),"Rec time:%d", RecstStatus.u32CurTimeInMs/1000);
+            snprintf(Rectimestr, sizeof(Rectimestr),"Rec time:%d", stRecstStatus.u32CurTimeInMs/1000);
             DrawString(1, Rectimestr);
         }
 
         if (0xffffffff != g_PlayChn)
         {
-            Ret = HI_UNF_PVR_PlayGetFileAttr(g_PlayChn, &PlayFileStatus);
+            Ret = HI_UNF_PVR_PlayGetFileAttr(g_PlayChn, &stPlayFileStatus);
             if (HI_SUCCESS == Ret)
             {
-                snprintf(Filetimestr, sizeof(Filetimestr),"File end time:%d", PlayFileStatus.u32EndTimeInMs/1000);
+                snprintf(Filetimestr, sizeof(Filetimestr),"File end time:%d", stPlayFileStatus.u32EndTimeInMs/1000);
                 DrawString(2, Filetimestr);
             }
 
-            Ret = HI_UNF_PVR_PlayGetStatus(g_PlayChn, &PlaystStatus);
+            Ret = HI_UNF_PVR_PlayGetStatus(g_PlayChn, &stPlaystStatus);
             if (HI_SUCCESS == Ret)
             {
-                snprintf(Playtimestr, sizeof(Playtimestr),"Play time:%d", PlaystStatus.u32CurPlayTimeInMs/1000);
+                snprintf(Playtimestr, sizeof(Playtimestr),"Play time:%d", stPlaystStatus.u32CurPlayTimeInMs/1000);
                 DrawString(3, Playtimestr);
             }
         }
@@ -300,17 +301,19 @@ HI_VOID * StatuThread(HI_VOID *args)
 
 HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
 {
+    HI_U32                  i;
+    HI_U32                  u32ProgCount = 0;
+    HI_U32                  aProgNum[8] = {0};        //one demux can support  creating 8 record channel
+    HI_U32                  aRecChn[8];
     HI_S32                  Ret;
-    HI_HANDLE               hWin;
     HI_CHAR                 InputCmd[32];
-    HI_U32                  u32ProgNum;
-
-    HI_HANDLE               hAvplay;
-    HI_HANDLE               hSoundTrack;
-    HI_UNF_PVR_REC_ATTR_S   RecAttr;
-    PMT_COMPACT_PROG        *pstCurrentProgInfo;
     HI_BOOL                 bLive = HI_TRUE;
     HI_BOOL                 bPause = HI_FALSE;
+    HI_HANDLE               hAvplay;
+    HI_HANDLE               hSoundTrack;
+    HI_HANDLE               hWin;
+    HI_UNF_PVR_REC_ATTR_S   stRecAttr;
+    PMT_COMPACT_PROG        *pstCurrentProgInfo;
 
     HI_ERR_PRINT(HI_ID_PVR, "%s... enter and argc is %d\n", __func__, argc);
 
@@ -414,43 +417,53 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
         return Ret;
     }
 
-    printf("please input the number of program to timeshift:\n");
-    u32ProgNum = 0;
+    printf("please input the number of program to record, the first program num can timeshift:\n");
 
-    while (0 == u32ProgNum)
+    do
     {
-#ifndef ANDROID
-        if (!SAMPLE_GET_INPUTCMD(InputCmd))
+        sleep(1);
+        SAMPLE_GET_INPUTCMD(InputCmd);
+        HI_U32 u32Strlen = strlen(InputCmd);
+        HI_CHAR *pTmp = InputCmd;
+        for (i = 0; i < u32Strlen; i++)
         {
-            sleep(1);
+            if (*pTmp >= '0' && *pTmp <= '7')
+            {
+                aProgNum[u32ProgCount] = atoi(pTmp);
+                u32ProgCount++;
+            }
+            else if (*pTmp == 'q')
+            {
+                return 0;
+            }
+            pTmp++;
+        }
+
+        if (u32ProgCount == 0)
+        {
+            sample_common_printf("input invalid! pleasd input again\n");
             continue;
         }
-#else
-        SAMPLE_GET_INPUTCMD(InputCmd);
-#endif        
-        if ('q' == InputCmd[0])
-        {
-            return 0;
-        }
-        //printf("get:%s\n", InputCmd);
-        u32ProgNum = atoi(InputCmd);
+    }while(0);
+
+    for (i = 0; i < u32ProgCount; i++)
+    {
+        pstCurrentProgInfo = g_pProgTbl->proginfo + (aProgNum[i]%g_pProgTbl->prog_num);
+        PVR_RecStart(argv[1], pstCurrentProgInfo, PVR_DMX_ID_REC, 1,0, MAX_TIMESHIFT_REC_FILE_SIZE, &aRecChn[i]);
     }
 
-    pstCurrentProgInfo = g_pProgTbl->proginfo
-                         + ((u32ProgNum-1)% g_pProgTbl->prog_num);
-
-    PVR_RecStart(argv[1], pstCurrentProgInfo,PVR_DMX_ID_REC, 1,0, MAX_TIMESHIFT_REC_FILE_SIZE, &g_RecChn);
-
-    pthread_create(&g_StatusThread, HI_NULL, StatuThread, HI_NULL);
+    pthread_create(&g_StatusThread, HI_NULL, StatuThread, (HI_VOID *)aRecChn[0]);
 
     bLive = HI_TRUE;
     bPause = HI_FALSE;
+    pstCurrentProgInfo = g_pProgTbl->proginfo + aProgNum[0]%g_pProgTbl->prog_num;
     Ret = PVR_StartLivePlay(hAvplay, pstCurrentProgInfo);
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call SwitchProg failed.\n");
         return Ret;
     }
+
     OsdInit();
     DrawString(0, "Live");
 
@@ -493,8 +506,8 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 if (bLive)  /*when live, switch to shift play */
                 {
                     printf("switch to timeshift...\n");
-                    HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                    SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                    HI_UNF_PVR_RecGetChn(g_RecChn,&stRecAttr);
+                    SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                     bLive = HI_FALSE;
                 }
                 else  /* when shift, just to resume*/
@@ -581,8 +594,8 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
                 }
 
                 /*rewind from pause position */
-                HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                HI_UNF_PVR_RecGetChn(g_RecChn,&stRecAttr);
+                SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 bLive = HI_FALSE;
                 u32RTimes = u32RTimes%6;
                 stTrickMode.enSpeed = -(0x1 << (u32RTimes+1)) * HI_UNF_PVR_PLAY_SPEED_NORMAL;
@@ -621,9 +634,9 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
             printf("PVR normal play now.\n");
             if (g_PlayChn == 0xffffffff)
             {
-                HI_UNF_PVR_RecGetChn(g_RecChn,&RecAttr);
-                printf("switch to timeshift:%s\n", RecAttr.szFileName);
-                SwitchToShiftPlay(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                HI_UNF_PVR_RecGetChn(g_RecChn,&stRecAttr);
+                printf("switch to timeshift:%s\n", stRecAttr.szFileName);
+                SwitchToShiftPlay(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 printf("PlayChn ============= %d\n", g_PlayChn);
                 bLive = HI_FALSE;
             }
@@ -812,7 +825,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
             {
                 PVR_StopPlayBack(g_PlayChn);
 
-                Ret = PVR_StartPlayBack(RecAttr.szFileName, &g_PlayChn, hAvplay);
+                Ret = PVR_StartPlayBack(stRecAttr.szFileName, &g_PlayChn, hAvplay);
                 if (Ret != HI_SUCCESS)
                 {
                     sample_common_printf("call PVR_StartPlayBack failed.\n");
@@ -846,7 +859,10 @@ HI_S32 main(HI_S32 argc,HI_CHAR *argv[])
     pthread_join(g_SocketThd, HI_NULL);
     pthread_join(g_StatusThread, HI_NULL);
 
-    PVR_RecStop(g_RecChn);
+    for (i = 0; i < u32ProgCount; i++)
+    {
+        PVR_RecStop(aRecChn[i]);
+    }
 
     if (0xffffffff != g_PlayChn)
     {

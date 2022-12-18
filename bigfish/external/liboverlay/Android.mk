@@ -2,7 +2,11 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 #LOCAL_MODULE                  := overlay.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE                  := liboverlay
+ifeq (4.4,$(findstring 4.4,$(PLATFORM_VERSION)))
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+else
+LOCAL_32_BIT_ONLY := true
+endif
 #LOCAL_MODULE_PATH             := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE_TAGS             := optional
 LOCAL_C_INCLUDES              := hardware/libhardware/include \

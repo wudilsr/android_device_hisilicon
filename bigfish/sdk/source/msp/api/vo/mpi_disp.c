@@ -274,6 +274,13 @@ HI_S32 HI_MPI_DISP_SetIsogenyAttr(const HI_DRV_DISP_ISOGENY_ATTR_S *pstIsogeny,
 	HI_S32 Ret = HI_SUCCESS;
 	HI_DRV_DISP_ISOGENY_ATTR_S stIsogeny_tmp[HI_DRV_DISPLAY_BUTT];
 
+	if (u32Num > HI_DRV_DISPLAY_BUTT)
+	{
+		HI_ERR_DISP("Invalid Para u32Num %d!\n",u32Num);
+		Ret = HI_ERR_VO_INVALID_PARA;	
+        goto __RETURN_POINT;
+	}
+
 	memset((HI_VOID*)stIsogeny_tmp, 0, sizeof(HI_DRV_DISP_ISOGENY_ATTR_S)*u32Num);
 
     for (i = 0; i < u32Num; i++)

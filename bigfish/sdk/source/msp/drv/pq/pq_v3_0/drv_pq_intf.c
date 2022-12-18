@@ -28,8 +28,8 @@ extern "C" {
 
 DEFINE_SEMAPHORE(g_stPQSemaphore);
 
-extern HI_S32  DRV_PQ_Suspend(PM_BASEDEV_S *pdev, pm_message_t state);
-extern HI_S32  DRV_PQ_Resume(PM_BASEDEV_S *pdev);
+extern HI_S32  DRV_PQ_Suspend(PM_BASEDEV_S* pdev, pm_message_t state);
+extern HI_S32  DRV_PQ_Resume(PM_BASEDEV_S* pdev);
 
 static HI_S32 PQ_Open(struct inode* node, struct file* filp)
 {
@@ -54,36 +54,6 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
 
     switch (cmd)
     {
-        case HIIOC_PQ_S_PQ_PATH:
-        {
-            HI_PQ_PATE_S* pstAttr;
-            pstAttr = (HI_PQ_PATE_S*)arg;
-
-            s32Ret = DRV_PQ_Comsumer_DeInit();
-            s32Ret |= DRV_PQ_Comsumer_Init(pstAttr->cPqPath);
-
-            break;
-        }
-
-        case HIIOC_PQ_S_COLORTEMP:
-        {
-            HI_PQ_COLOR_TEMP_S* pstAttr;
-            pstAttr = (HI_PQ_COLOR_TEMP_S*)arg;
-
-            s32Ret = DRV_PQ_SetColorTemp(pstAttr);
-
-            break;
-        }
-        case HIIOC_PQ_G_COLORTEMP:
-        {
-            HI_PQ_COLOR_TEMP_S* pstAttr;
-
-            pstAttr = (HI_PQ_COLOR_TEMP_S*)arg;
-            s32Ret = DRV_PQ_GetColorTemp(pstAttr);
-
-            break;
-        }
-
         case HIIOC_PQ_S_REGISTER:
         {
             HI_PQ_REGISTER_S* pstReg;
@@ -350,22 +320,22 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
             break;
         }
 
-        case HIIOC_PQ_S_NR:
+        case HIIOC_PQ_S_TNR:
         {
             HI_U32 u32Level;
 
             u32Level = *(HI_U32*)arg;
-            //s32Ret = DRV_PQ_SetNRLevel(u32Level);
+            s32Ret = DRV_PQ_SetTnrLevel(u32Level);
 
             break;
         }
 
-        case HIIOC_PQ_G_NR:
+        case HIIOC_PQ_G_TNR:
         {
             HI_U32* pu32Level;
 
             pu32Level = (HI_U32*)arg;
-            //s32Ret = DRV_PQ_GetNRLevel(pu32Level);
+            s32Ret = DRV_PQ_GetTnrLevel(pu32Level);
 
             break;
         }
@@ -391,39 +361,19 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
 
         case HIIOC_PQ_S_DB:
         {
-            HI_U32 u32Level;
-
-            u32Level = *(HI_U32*)arg;
-            //s32Ret = DRV_PQ_SetDeBlocking(u32Level);
-
             break;
         }
         case HIIOC_PQ_G_DB:
         {
-            HI_U32* pu32Level;
-
-            pu32Level = (HI_U32*)arg;
-            //s32Ret = DRV_PQ_GetDeBlocking(pu32Level);
-
             break;
         }
 
         case HIIOC_PQ_S_DR:
         {
-            HI_U32 u32Level;
-
-            u32Level = *(HI_U32*)arg;
-            //s32Ret = DRV_PQ_SetDeRinging(u32Level);
-
             break;
         }
         case HIIOC_PQ_G_DR:
         {
-            HI_U32* pu32Level;
-
-            pu32Level = (HI_U32*)arg;
-            //s32Ret = DRV_PQ_GetDeRinging(pu32Level);
-
             break;
         }
 
@@ -554,14 +504,251 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
             break;
         }
 
-
-
         case HIIOC_PQ_G_BIN_ADDR:
         {
             HI_U32* pu32Addr;
 
             pu32Addr = (HI_U32*)arg;
             s32Ret = DRV_PQ_GetBinPhyAddr(pu32Addr);
+
+            break;
+        }
+		
+		        case HIIOC_PQ_S_GRAPH_SD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_SetSDPictureSetting(pstAttr);
+
+            break;
+        }
+        case HIIOC_PQ_G_GRAPH_SD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_GetSDPictureSetting(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_GRAPH_HD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_SetHDPictureSetting(pstAttr);
+
+            break;
+        }
+        case HIIOC_PQ_G_GRAPH_HD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_GetHDPictureSetting(pstAttr);
+
+            break;
+        }
+        case HIIOC_PQ_S_VIDEO_SD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_SetSDVideoSetting(pstAttr);
+
+            break;
+        }
+        case HIIOC_PQ_G_VIDEO_SD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_GetSDVideoSetting(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_VIDEO_HD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_SetHDVideoSetting(pstAttr);
+
+            break;
+        }
+        case HIIOC_PQ_G_VIDEO_HD_PARAM:
+        {
+            HI_PQ_PICTURE_SETTING_S* pstAttr;
+            pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
+
+            s32Ret = DRV_PQ_GetHDVideoSetting(pstAttr);
+
+            break;
+        }
+
+#if defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+        case HIIOC_PQ_S_TNR_Y_PIXMEAN_2_RATIO:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrYMotionPixMeanRatio(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_Y_PIXMEAN_2_RATIO:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrYMotionPixMeanRatio(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_TNR_C_PIXMEAN_2_RATIO:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrCMotionPixMeanRatio(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_C_PIXMEAN_2_RATIO:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrCMotionPixMeanRatio(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_TNR_Y_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrYMotionMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_Y_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrYMotionMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_TNR_C_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrCMotionMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_C_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrCMotionMapping(pstAttr);
+
+            break;
+        }
+
+
+        case HIIOC_PQ_S_TNR_Y_FINAL_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrFnlMotionYMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_Y_FINAL_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrFnlMotionYMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_TNR_C_FINAL_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+            pstAttr = (TNR_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrFnlMotionCMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_C_FINAL_MOTION_MAPPING:
+        {
+            TNR_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrFnlMotionCMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_S_TNR_FMOTION_MAPPING:
+        {
+            TNR_FMOTION_MAPPING_S* pstAttr;
+            pstAttr = (TNR_FMOTION_MAPPING_S*)arg;
+
+            s32Ret = PQ_MNG_SetTnrFmotionMapping(pstAttr);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_TNR_FMOTION_MAPPING:
+        {
+            TNR_FMOTION_MAPPING_S* pstAttr;
+
+            pstAttr = (TNR_FMOTION_MAPPING_S*)arg;
+            s32Ret = PQ_MNG_GetTnrFmotionMapping(pstAttr);
+
+            break;
+        }
+        
+#endif
+
+        case HIIOC_PQ_S_DEMO_MODE:
+        {
+            HI_U32 u32Level;
+
+            u32Level = *(HI_U32*)arg;
+            s32Ret = DRV_PQ_SetDemoDispMode(u32Level);
+
+            break;
+        }
+
+        case HIIOC_PQ_G_DEMO_MODE:
+        {
+            HI_U32* pu32Level;
+
+            pu32Level = (HI_U32*)arg;
+            s32Ret = DRV_PQ_GetDemoDispMode(pu32Level);
 
             break;
         }
@@ -645,8 +832,8 @@ HI_S32 PQ_DRV_ModInit(HI_VOID)
 
         return s32Ret;
     }
-    pstPqProc->read = DRV_PQ_ProcRead;
-    pstPqProc->write = NULL;
+    pstPqProc->read  = DRV_PQ_ProcRead;
+    pstPqProc->write = DRV_PQ_ProcWrite;
     pstPqProc->ioctl = NULL;
 
 #ifndef HI_MCE_SUPPORT

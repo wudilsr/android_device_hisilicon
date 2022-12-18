@@ -118,14 +118,26 @@ png_read_info(png_structrp png_ptr, png_inforp info_ptr)
       if (chunk_name == png_IDAT)
       {
          if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_chunk_error(png_ptr, "");
+#else
             png_chunk_error(png_ptr, "Missing IHDR before IDAT");
+#endif
 
          else if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
              (png_ptr->mode & PNG_HAVE_PLTE) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_chunk_error(png_ptr, "");
+#else
             png_chunk_error(png_ptr, "Missing PLTE before IDAT");
+#endif
 
          else if ((png_ptr->mode & PNG_AFTER_IDAT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_chunk_benign_error(png_ptr, "");
+#else
             png_chunk_benign_error(png_ptr, "Too many IDATs found");
+#endif
 
          png_ptr->mode |= PNG_HAVE_IDAT;
       }
@@ -279,8 +291,12 @@ png_read_update_info(png_structrp png_ptr, png_inforp info_ptr)
 
       /* New in 1.6.0 this avoids the bug of doing the initializations twice */
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr,
             "png_read_update_info/png_start_read_image: duplicate call");
+#endif
    }
 }
 
@@ -302,8 +318,12 @@ png_start_read_image(png_structrp png_ptr)
 
       /* New in 1.6.0 this avoids the bug of doing the initializations twice */
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_app_error(png_ptr, "");
+#else
          png_app_error(png_ptr,
             "png_start_read_image/png_read_update_info: duplicate call");
+#endif
    }
 }
 #endif /* SEQUENTIAL_READ */
@@ -406,38 +426,66 @@ png_read_row(png_structrp png_ptr, png_bytep row, png_bytep dsp_row)
    /* Check for transforms that have been set but were defined out */
 #if defined(PNG_WRITE_INVERT_SUPPORTED) && !defined(PNG_READ_INVERT_SUPPORTED)
    if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_INVERT_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_FILLER_SUPPORTED) && !defined(PNG_READ_FILLER_SUPPORTED)
    if ((png_ptr->transformations & PNG_FILLER) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_FILLER_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_PACKSWAP_SUPPORTED) && \
     !defined(PNG_READ_PACKSWAP_SUPPORTED)
    if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_PACKSWAP_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_PACK_SUPPORTED) && !defined(PNG_READ_PACK_SUPPORTED)
    if ((png_ptr->transformations & PNG_PACK) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_PACK_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_SHIFT_SUPPORTED) && !defined(PNG_READ_SHIFT_SUPPORTED)
    if ((png_ptr->transformations & PNG_SHIFT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_SHIFT_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_BGR_SUPPORTED) && !defined(PNG_READ_BGR_SUPPORTED)
    if ((png_ptr->transformations & PNG_BGR) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_BGR_SUPPORTED is not defined");
+#endif
 #endif
 
 #if defined(PNG_WRITE_SWAP_SUPPORTED) && !defined(PNG_READ_SWAP_SUPPORTED)
    if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG_READ_SWAP_SUPPORTED is not defined");
+#endif
 #endif
    }
 #endif /* WARNINGS */
@@ -532,7 +580,11 @@ png_read_row(png_structrp png_ptr, png_bytep row, png_bytep dsp_row)
 #endif
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Invalid attempt to read row data");
+#endif
 
    /* Fill the row with IDAT data: */
    png_read_IDAT_data(png_ptr, png_ptr->row_buf, row_info.rowbytes + 1);
@@ -543,7 +595,11 @@ png_read_row(png_structrp png_ptr, png_bytep row, png_bytep dsp_row)
          png_read_filter_row(png_ptr, &row_info, png_ptr->row_buf + 1,
             png_ptr->prev_row + 1, png_ptr->row_buf[0]);
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad adaptive filter value");
+#endif
    }
 
    /* libpng 1.5.6: the following line was copying png_ptr->rowbytes before
@@ -572,11 +628,19 @@ png_read_row(png_structrp png_ptr, png_bytep row, png_bytep dsp_row)
    {
       png_ptr->transformed_pixel_depth = row_info.pixel_depth;
       if (row_info.pixel_depth > png_ptr->maximum_pixel_depth)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "sequential row overflow");
+#endif
    }
 
    else if (png_ptr->transformed_pixel_depth != row_info.pixel_depth)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal sequential row size calculation error");
+#endif
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    /* Expand interlaced rows to full size */
@@ -742,8 +806,12 @@ png_read_image(png_structrp png_ptr, png_bytepp image)
           * first turning on the PNG_INTERLACE transform.  We can fix this here,
           * but the caller should do it!
           */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "Interlace handling should be turned on when "
             "using png_read_image");
+#endif
          /* Make sure this is set correctly */
          png_ptr->num_rows = png_ptr->height;
       }
@@ -755,8 +823,12 @@ png_read_image(png_structrp png_ptr, png_bytepp image)
    }
 #else
    if (png_ptr->interlaced)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr,
           "Cannot read interlaced image -- interlace handler disabled");
+#endif
 
    pass = 1;
 #endif
@@ -820,7 +892,11 @@ png_read_end(png_structrp png_ptr, png_inforp info_ptr)
    /* Report invalid palette index; added at libng-1.5.10 */
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
       png_ptr->num_palette_max > png_ptr->num_palette)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+     png_benign_error(png_ptr, "");
+#else
      png_benign_error(png_ptr, "Read palette index exceeding num_palette");
+#endif
 #endif
 
    do
@@ -852,7 +928,11 @@ ACCELERATE:
          {
             if ((length > 0) ||
                 (png_ptr->mode & PNG_HAVE_CHUNK_AFTER_IDAT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_benign_error(png_ptr, "");
+#else
                png_benign_error(png_ptr, "Too many IDATs found");
+#endif
          }
          png_handle_unknown(png_ptr, info_ptr, length, keep);
          if (chunk_name == png_PLTE)
@@ -867,7 +947,11 @@ ACCELERATE:
           */
          if ((length > 0) ||
              (png_ptr->mode & PNG_HAVE_CHUNK_AFTER_IDAT) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_benign_error(png_ptr, "");
+#else
             png_benign_error(png_ptr, "Too many IDATs found");
+#endif
 
          png_crc_finish(png_ptr, length);
       }
@@ -1083,7 +1167,11 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
     */
    png_read_info(png_ptr, info_ptr);
    if (info_ptr->height > PNG_UINT_32_MAX/(sizeof (png_bytep)))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Image is too high to process with png_read_png()");
+#endif
 
    /* -------------- image transformations start here ------------------- */
    /* libpng 1.6.10: add code to cause a png_app_error if a selected TRANSFORM
@@ -1101,7 +1189,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
       png_set_scale_16(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_SCALE_16 not supported");
+#endif
+
 #endif
 
    /* If both SCALE and STRIP are required pngrtran will effectively cancel the
@@ -1112,7 +1205,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_STRIP_16_TO_8_SUPPORTED
       png_set_strip_16(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_STRIP_16 not supported");
+#endif
+
 #endif
 
    /* Strip alpha bytes from the input data without combining with
@@ -1122,7 +1220,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
       png_set_strip_alpha(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_STRIP_ALPHA not supported");
+#endif
+
 #endif
 
    /* Extract multiple pixels with bit depths of 1, 2, or 4 from a single
@@ -1132,7 +1235,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_PACK_SUPPORTED
       png_set_packing(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_PACKING not supported");
+#endif
+
 #endif
 
    /* Change the order of packed pixels to least significant bit first
@@ -1142,7 +1250,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_PACKSWAP_SUPPORTED
       png_set_packswap(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_PACKSWAP not supported");
+#endif
+
 #endif
 
    /* Expand paletted colors into true RGB triplets
@@ -1154,7 +1267,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_EXPAND_SUPPORTED
       png_set_expand(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_EXPAND not supported");
+#endif
+
 #endif
 
    /* We don't handle background color or gamma transformation or quantizing.
@@ -1166,7 +1284,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_INVERT_SUPPORTED
       png_set_invert_mono(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_INVERT_MONO not supported");
+#endif
+
 #endif
 
    /* If you want to shift the pixel values from the range [0,255] or
@@ -1178,7 +1301,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
       if ((info_ptr->valid & PNG_INFO_sBIT) != 0)
          png_set_shift(png_ptr, &info_ptr->sig_bit);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_SHIFT not supported");
+#endif
+
 #endif
 
    /* Flip the RGB pixels to BGR (or RGBA to BGRA) */
@@ -1186,7 +1314,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_BGR_SUPPORTED
       png_set_bgr(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_BGR not supported");
+#endif
+
 #endif
 
    /* Swap the RGBA or GA data to ARGB or AG (or BGRA to ABGR) */
@@ -1194,7 +1327,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_SWAP_ALPHA_SUPPORTED
       png_set_swap_alpha(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_SWAP_ALPHA not supported");
+#endif
+
 #endif
 
    /* Swap bytes of 16-bit files to least significant byte first */
@@ -1202,7 +1340,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_SWAP_SUPPORTED
       png_set_swap(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_SWAP_ENDIAN not supported");
+#endif
+
 #endif
 
 /* Added at libpng-1.2.41 */
@@ -1211,7 +1354,11 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_INVERT_ALPHA_SUPPORTED
       png_set_invert_alpha(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_INVERT_ALPHA not supported");
+#endif
 #endif
 
 /* Added at libpng-1.2.41 */
@@ -1220,7 +1367,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
       png_set_gray_to_rgb(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_GRAY_TO_RGB not supported");
+#endif
+
 #endif
 
 /* Added at libpng-1.5.4 */
@@ -1228,7 +1380,12 @@ png_read_png(png_structrp png_ptr, png_inforp info_ptr,
 #ifdef PNG_READ_EXPAND_16_SUPPORTED
       png_set_expand_16(png_ptr);
 #else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_app_error(png_ptr, "");
+#else
       png_app_error(png_ptr, "PNG_TRANSFORM_EXPAND_16 not supported");
+#endif
+
 #endif
 
    /* We don't handle adding filler bytes */
@@ -1416,11 +1573,17 @@ png_image_read_init(png_imagep image)
 
          png_destroy_read_struct(&png_ptr, NULL, NULL);
       }
-
-      return png_image_error_ex(image, "png_image_read: out of memory");
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image, "png_image_read: out of memory");
+#endif
    }
-
-   return png_image_error_ex(image, "png_image_read: opaque pointer not NULL");
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+   return png_image_error(image, "");
+#else
+   return png_image_error(image, "png_image_read: opaque pointer not NULL");
+#endif
 }
 
 /* Utility to find the base format of a PNG file from a png_struct. */
@@ -1558,14 +1721,21 @@ png_image_begin_read_from_stdio(png_imagep image, FILE* file)
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_image_error(image, "");
+#else
+         return png_image_error(image,
             "png_image_begin_read_from_stdio: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_begin_read_from_stdio: incorrect PNG_IMAGE_VERSION");
-
+#endif
    return 0;
 }
 
@@ -1592,18 +1762,29 @@ png_image_begin_read_from_file(png_imagep image, const char *file_name)
          }
 
          else
-            return png_image_error_ex(image, strerror(errno));
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            return png_image_error(image, "");
+#else
+            return png_image_error(image, strerror(errno));
+#endif
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_image_error(image, "");
+#else
+         return png_image_error(image,
             "png_image_begin_read_from_file: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_begin_read_from_file: incorrect PNG_IMAGE_VERSION");
-
+#endif
    return 0;
 }
 #endif /* STDIO */
@@ -1629,12 +1810,18 @@ png_image_memory_read(png_structp png_ptr, png_bytep out, png_size_t need)
                cp->size = size - need;
                return;
             }
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "read beyond end of data");
+#endif
          }
       }
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "invalid memory read");
+#endif
    }
 }
 
@@ -1661,14 +1848,21 @@ int PNGAPI png_image_begin_read_from_memory(png_imagep image,
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_image_error(image, "");
+#else
+         return png_image_error(image,
             "png_image_begin_read_from_memory: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_begin_read_from_memory: incorrect PNG_IMAGE_VERSION");
-
+#endif
    return 0;
 }
 
@@ -1783,8 +1977,12 @@ decode_gamma(png_image_read_control *display, png_uint_32 value, int encoding)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(display->image->opaque->png_ptr, "");
+#else
          png_error(display->image->opaque->png_ptr,
             "unexpected encoding (internal error)");
+#endif
          break;
    }
 
@@ -1840,7 +2038,11 @@ png_create_colormap_entry(png_image_read_control *display,
       (red != green || green != blue);
 
    if (ip > 255)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(image->opaque->png_ptr, "");
+#else
       png_error(image->opaque->png_ptr, "color-map index out of range");
+#endif
 
    /* Update the cache with whether the file gamma is significantly different
     * from sRGB.
@@ -1939,7 +2141,11 @@ png_create_colormap_entry(png_image_read_control *display,
    }
 
    if (encoding != output_encoding)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(image->opaque->png_ptr, "");
+#else
       png_error(image->opaque->png_ptr, "bad encoding (internal error)");
+#endif
 
    /* Store the value. */
    {
@@ -2191,8 +2397,12 @@ png_image_read_colormap(png_voidp argument)
          back_b = back_g = back_r = 0;
 
       else if (display->background == NULL /* no way to remove it */)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr,
             "a background color must be supplied to remove alpha/transparency");
+#endif
 
       /* Get a copy of the background color (this avoids repeating the checks
        * below.)  The encoding is 8-bit sRGB or 16-bit linear, depending on the
@@ -2256,7 +2466,11 @@ png_image_read_colormap(png_voidp argument)
 
             cmap_entries = 1U << png_ptr->bit_depth;
             if (cmap_entries > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "gray[8] color-map: too few entries");
+#endif
 
             step = 255 / (cmap_entries - 1);
             output_processing = PNG_CMAP_NONE;
@@ -2335,7 +2549,11 @@ png_image_read_colormap(png_voidp argument)
             data_encoding = P_sRGB;
 
             if (PNG_GRAY_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "gray[16] color-map: too few entries");
+#endif
 
             cmap_entries = make_gray_colormap(display);
 
@@ -2427,7 +2645,11 @@ png_image_read_colormap(png_voidp argument)
          if ((output_format & PNG_FORMAT_FLAG_ALPHA) != 0)
          {
             if (PNG_GA_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "gray+alpha color-map: too few entries");
+#endif
 
             cmap_entries = make_ga_colormap(display);
 
@@ -2461,7 +2683,11 @@ png_image_read_colormap(png_voidp argument)
                png_uint_32 gray = back_g;
 
                if (PNG_GRAY_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "gray-alpha color-map: too few entries");
+#endif
 
                cmap_entries = make_gray_colormap(display);
 
@@ -2495,7 +2721,11 @@ png_image_read_colormap(png_voidp argument)
                 * the entries are all opaque.
                 */
                if (PNG_GA_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "ga-alpha color-map: too few entries");
+#endif
 
                i = 0;
                while (i < 231)
@@ -2593,7 +2823,11 @@ png_image_read_colormap(png_voidp argument)
                expand_tRNS = 1;
 
                if (PNG_GA_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "rgb[ga] color-map: too few entries");
+#endif
 
                cmap_entries = make_ga_colormap(display);
                background_index = PNG_CMAP_GA_BACKGROUND;
@@ -2607,7 +2841,11 @@ png_image_read_colormap(png_voidp argument)
                 * grayscale.
                 */
                if (PNG_GRAY_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "rgb[gray] color-map: too few entries");
+#endif
 
                /* Ideally this code would use libpng to do the gamma correction,
                 * but if an input alpha channel is to be removed we will hit the
@@ -2712,7 +2950,11 @@ png_image_read_colormap(png_voidp argument)
                   png_uint_32 r;
 
                   if (PNG_RGB_COLORMAP_ENTRIES+1+27 > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                     png_error(png_ptr, "");
+#else
                      png_error(png_ptr, "rgb+alpha color-map: too few entries");
+#endif
 
                   cmap_entries = make_rgb_colormap(display);
 
@@ -2761,7 +3003,11 @@ png_image_read_colormap(png_voidp argument)
                   png_uint_32 r, g, b; /* sRGB background */
 
                   if (PNG_RGB_COLORMAP_ENTRIES+1+27 > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                     png_error(png_ptr, "");
+#else
                      png_error(png_ptr, "rgb-alpha color-map: too few entries");
+#endif
 
                   cmap_entries = make_rgb_colormap(display);
 
@@ -2846,7 +3092,11 @@ png_image_read_colormap(png_voidp argument)
                 * pixels to the 6x6x6 color-map.
                 */
                if (PNG_RGB_COLORMAP_ENTRIES > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                  png_error(png_ptr, "");
+#else
                   png_error(png_ptr, "rgb color-map: too few entries");
+#endif
 
                cmap_entries = make_rgb_colormap(display);
                output_processing = PNG_CMAP_RGB;
@@ -2877,7 +3127,11 @@ png_image_read_colormap(png_voidp argument)
                cmap_entries = 256;
 
             if (cmap_entries > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "palette color-map: too few entries");
+#endif
 
             for (i=0; i < cmap_entries; ++i)
             {
@@ -2920,7 +3174,11 @@ png_image_read_colormap(png_voidp argument)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "invalid PNG color type");
+#endif
          /*NOT REACHED*/
          break;
    }
@@ -2933,7 +3191,11 @@ png_image_read_colormap(png_voidp argument)
    switch (data_encoding)
    {
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad data option (internal error)");
+#endif
          break;
 
       case P_sRGB:
@@ -2948,7 +3210,11 @@ png_image_read_colormap(png_voidp argument)
    }
 
    if (cmap_entries > 256 || cmap_entries > image->colormap_entries)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "color map overflow (BAD internal error)");
+#endif
 
    image->colormap_entries = cmap_entries;
 
@@ -2982,10 +3248,18 @@ png_image_read_colormap(png_voidp argument)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad processing option (internal error)");
+#endif
 
       bad_background:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad background index (internal error)");
+#endif
    }
 
    display->colormap_processing = output_processing;
@@ -3018,7 +3292,11 @@ png_image_read_and_map(png_voidp argument)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "unknown interlace type");
+#endif
    }
 
    {
@@ -3257,7 +3535,11 @@ png_image_read_colormapped(png_voidp argument)
 
       default:
       bad_output:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "bad color-map processing (internal error)");
+#endif
    }
 
    /* Now read the rows.  Do this here if it is possible to read directly into
@@ -3336,7 +3618,11 @@ png_image_read_composite(png_voidp argument)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "unknown interlace type");
+#endif
    }
 
    {
@@ -3461,18 +3747,34 @@ png_image_read_background(png_voidp argument)
     * might be 8 or 16-bit but should always have two channels; gray plus alpha.
     */
    if ((png_ptr->transformations & PNG_RGB_TO_GRAY) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "lost rgb to gray");
+#endif
 
    if ((png_ptr->transformations & PNG_COMPOSE) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "unexpected compose");
+#endif
 
    if (png_get_channels(png_ptr, info_ptr) != 2)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "lost/gained channels");
+#endif
 
    /* Expect the 8-bit case to always remove the alpha channel */
    if ((image->format & PNG_FORMAT_FLAG_LINEAR) == 0 &&
       (image->format & PNG_FORMAT_FLAG_ALPHA) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "unexpected 8-bit transformation");
+#endif
 
    switch (png_ptr->interlaced)
    {
@@ -3485,7 +3787,11 @@ png_image_read_background(png_voidp argument)
          break;
 
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "unknown interlace type");
+#endif
    }
 
    /* Use direct access to info_ptr here because otherwise the simplified API
@@ -3496,7 +3802,11 @@ png_image_read_background(png_voidp argument)
    switch (info_ptr->bit_depth)
    {
       default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "unexpected bit depth");
+#endif
          break;
 
       case 8:
@@ -4008,7 +4318,11 @@ png_image_read_direct(png_voidp argument)
 
       /* If change is not now 0 some transformation is missing - error out. */
       if (change != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "png_read_image: unsupported transformation");
+#endif
    }
 
    PNG_SKIP_CHUNKS(png_ptr);
@@ -4043,7 +4357,11 @@ png_image_read_direct(png_voidp argument)
       }
 
       else if (do_local_compose != 0) /* internal error */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "png_image_read: alpha channel lost");
+#endif
 
       if (info_ptr->bit_depth == 16)
          info_format |= PNG_FORMAT_FLAG_LINEAR;
@@ -4065,7 +4383,11 @@ png_image_read_direct(png_voidp argument)
             (png_ptr->flags & PNG_FLAG_FILLER_AFTER) == 0))
          {
             if (do_local_background == 2)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "unexpected alpha swap transformation");
+#endif
 
             info_format |= PNG_FORMAT_FLAG_AFIRST;
          }
@@ -4073,7 +4395,11 @@ png_image_read_direct(png_voidp argument)
 
       /* This is actually an internal error. */
       if (info_format != format)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "png_read_image: invalid transformations");
+#endif
    }
 
    /* Now read the rows.  If do_local_compose is set then it is necessary to use
@@ -4199,18 +4525,30 @@ png_image_finish_read(png_imagep image, png_const_colorp background,
          }
 
          else
-            return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            return png_image_error(image, "");
+#else
+            return png_image_error(image,
                "png_image_finish_read[color-map]: no color-map");
+#endif
       }
 
       else
-         return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         return png_image_error(image, "");
+#else
+         return png_image_error(image,
             "png_image_finish_read: invalid argument");
+#endif
    }
 
    else if (image != NULL)
-      return png_image_error_ex(image,
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      return png_image_error(image, "");
+#else
+      return png_image_error(image,
          "png_image_finish_read: damaged PNG_IMAGE_VERSION");
+#endif
 
    return 0;
 }

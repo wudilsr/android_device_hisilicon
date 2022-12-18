@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mTdGsGkXZynEuuEIdTLRYBoakebAIgmaPm4aCTywMDeGVRRjCSUfqlvj5bgDwZpDxhSQ
-Y8S7uSnjtk6fGo4cYwwJyV6/TRRNHvD7Ftio7kbJR3CD66p8kylk7vohA3Ip1g==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxdZe16GQWhcZ60NONAQrxsKA3AXQxIZmjfUjxNFXNgMpToq9DtDzPa+uj7WGuX50biwm
+9lThNCPrSqKO2moZfp27gQlljALK+34HOSNqavVXMq0PYKCEAbhv+2/JbwAFDA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -607,24 +621,24 @@ HI_S32 VPSS_HAL_SetAllAlgCfgAddr(HI_U32 u32AppVir, HI_U32 u32AppPhy)
 
 HI_S32 VPSS_HAL_SetRwzbCfg(HI_U32 u32AppAddr,VPSS_RWZB_INFO_S *pstRwzbInfo)
 {
-    HI_U32 u32Count;
+	HI_U32 u32Count;
 
-    if( pstRwzbInfo->u32EnRwzb == 0x1)
-    {
-        for(u32Count = 0; u32Count < 6; u32Count++)
-        {
-            VPSS_REG_SetDetBlk(u32AppAddr,u32Count,&(pstRwzbInfo->u32Addr[u32Count][0]));
-                #if 1
-                VPSS_INFO("adddr X %d Y %d\n",pstRwzbInfo->u32Addr[u32Count][0],
-                                pstRwzbInfo->u32Addr[u32Count][1]);
-                                #endif
-        }
-        
-    }
-    VPSS_REG_SetDetEn(u32AppAddr,pstRwzbInfo->u32EnRwzb);
-    VPSS_REG_SetDetMode(u32AppAddr,pstRwzbInfo->u32Mode);
+	if( pstRwzbInfo->u32EnRwzb == 0x1)
+	{
+		for(u32Count = 0; u32Count < 6; u32Count++)
+		{
+			VPSS_REG_SetDetBlk(u32AppAddr,u32Count,&(pstRwzbInfo->u32Addr[u32Count][0]));
+#if 1
+			VPSS_INFO("adddr X %d Y %d\n",pstRwzbInfo->u32Addr[u32Count][0],
+					pstRwzbInfo->u32Addr[u32Count][1]);
+#endif
+		}
 
-    return HI_SUCCESS;
+	}
+	VPSS_REG_SetDetEn(u32AppAddr,pstRwzbInfo->u32EnRwzb);
+	VPSS_REG_SetDetMode(u32AppAddr,pstRwzbInfo->u32Mode);
+
+	return HI_SUCCESS;
 }
 
 
@@ -736,7 +750,7 @@ HI_S32 VPSS_HAL_SetDeiCfg(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     }
 
     VPSS_REG_SetImgAddr(u32AppVir, NEXT2_FIELD, pstNxt2->u32PhyAddr_Y,
-    							pstNxt2->u32PhyAddr_C, pstNxt2->u32PhyAddr_Cr);
+								pstNxt2->u32PhyAddr_C, pstNxt2->u32PhyAddr_Cr);
     VPSS_REG_SetImgStride(u32AppVir, NEXT2_FIELD, pstNxt2->u32Stride_Y, pstNxt2->u32Stride_C);	
 
     return HI_SUCCESS;
@@ -774,7 +788,7 @@ HI_S32 VPSS_HAL_SetFrameNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
         VPSS_REG_SetCurTunlEn(u32AppVir, HI_FALSE);
     }
     
-    #if 0
+    #if 1
 	/*rwzb*/
     VPSS_HAL_SetRwzbCfg(u32AppVir, &(pstHalInfo->stRwzbInfo));
     #endif
@@ -796,8 +810,8 @@ HI_S32 VPSS_HAL_SetFrameNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     /* 输入帧信息 */
     pstCur = &pstHalInfo->stInInfo.stAddr;
     VPSS_REG_SetImgSize(u32AppVir, 
-        		pstHalInfo->stInInfo.u32Width, pstHalInfo->stInInfo.u32Height,
-        		pstHalInfo->stInInfo.bProgressive);
+				pstHalInfo->stInInfo.u32Width, pstHalInfo->stInInfo.u32Height,
+				pstHalInfo->stInInfo.bProgressive);
     VPSS_REG_SetImgAddr(u32AppVir,CUR_FIELD,pstCur->u32PhyAddr_Y,pstCur->u32PhyAddr_C,0);
     VPSS_REG_SetImgStride(u32AppVir,CUR_FIELD, pstCur->u32Stride_Y, pstCur->u32Stride_C);
 	
@@ -879,7 +893,7 @@ HI_S32 VPSS_HAL_Set5FieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
 	VPSS_REG_SetRfrStride(u32AppVir, pstRfr->u32Stride_Y, pstRfr->u32Stride_C);
 
 	/* 运动信息  DEI*/
-	pstDeiSt = &pstHalInfo->stDieInfo.stDieStCfg; 	
+	pstDeiSt = &pstHalInfo->stDieInfo.stDieStCfg;	
 	VPSS_REG_SetStRdAddr(u32AppVir, pstDeiSt->u32PPreAddr);
 	VPSS_REG_SetStWrAddr(u32AppVir, pstDeiSt->u32PreAddr);
 	VPSS_REG_SetStStride(u32AppVir, pstDeiSt->u32Stride);
@@ -900,7 +914,7 @@ HI_S32 VPSS_HAL_Set5FieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
 	VPSS_REG_SetIfmdEn(u32AppVir,HI_TRUE);
 
     /*RWZB*/
-	#if 0
+	#if 1
     VPSS_HAL_SetRwzbCfg(u32AppVir, &(pstHalInfo->stRwzbInfo));
 	#endif
                                  
@@ -1365,15 +1379,8 @@ HI_S32 VPSS_HAL_GetSCDInfo(HI_U32 u32AppAddr,HI_S32 s32SCDInfo[32])
 	return HI_SUCCESS;
 }
 
-HI_VOID VPSS_HAL_GetDetPixel(VPSS_IP_E enIP,HI_U32 BlkNum, HI_U8* pstData)
+HI_VOID VPSS_HAL_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData)
 {
-    VPSS_HAL_CTX_S *pstHalCtx = HI_NULL;
-    HI_U32 u32AppAddr;
-    
-    pstHalCtx = &stHalCtx[enIP];
-
-    u32AppAddr = pstHalCtx->u32BaseRegVir;
-    
     VPSS_REG_GetDetPixel(u32AppAddr,BlkNum,pstData);
 }
 

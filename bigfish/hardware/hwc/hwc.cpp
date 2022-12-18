@@ -30,9 +30,18 @@
 #include "HwcDebug.h"
 #include "hifb.h"
 #include "overlay.h"
+#include "hi_tde_type.h"
+#include "hi_tde_api.h"
+#include "tdeCompose.h"
+#include <cutils/properties.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
 /*****************************************************************************/
 #define OVERLAY 1
 #define OV_TAG "Overlay"
+static bool mTdeCompose = false;
 struct hwc_context_t {
     hwc_composer_device_1_t device;
     /* our private state goes below here */
@@ -50,35 +59,37 @@ hwc_module_t HAL_MODULE_INFO_SYM = {
     common: {
         tag: HARDWARE_MODULE_TAG,
         version_major: 1,
-        version_minor: 0,
+        version_minor: 2,
         id: HWC_HARDWARE_MODULE_ID,
         name: "Sample hwcomposer module",
         author: "The Android Open Source Project",
         methods: &hwc_module_methods,
-		dso: NULL,
-		reserved: {0},
-	}
+        dso: NULL,
+        reserved: {0},
+            }
 };
-static int getBpp(int format)
+
+int getBpp(int format)
 {
-	switch(format) {
-		case HAL_PIXEL_FORMAT_RGBA_8888:
-		case HAL_PIXEL_FORMAT_RGBX_8888:
-		case HAL_PIXEL_FORMAT_BGRA_8888:
-		return 4;
-		case HAL_PIXEL_FORMAT_RGB_888:
-		return 3;
-		case HAL_PIXEL_FORMAT_RGB_565:
+    switch(format) {
+        case HAL_PIXEL_FORMAT_RGBA_8888:
+        case HAL_PIXEL_FORMAT_RGBX_8888:
+        case HAL_PIXEL_FORMAT_BGRA_8888:
+            return 4;
+        case HAL_PIXEL_FORMAT_RGB_888:
+            return 3;
+        case HAL_PIXEL_FORMAT_RGB_565:
 #if PLATFORM_SDK_VERSION < 18
-		case HAL_PIXEL_FORMAT_RGBA_5551:
-		case HAL_PIXEL_FORMAT_RGBA_4444:
+        case HAL_PIXEL_FORMAT_RGBA_5551:
+        case HAL_PIXEL_FORMAT_RGBA_4444:
 #endif
-		return 2;
-		default:
-		printf("getBpp fail format is %d\n",format);
-		return -1;
-	}
+            return 2;
+        default:
+            printf("getBpp fail format is %d\n",format);
+            return -1;
+    }
 }
+
 static struct overlay_device_t *mOdev = NULL;
 int loadOverLayModule()
 {
@@ -98,15 +109,15 @@ static int bVisible(hwc_region_t* region)
 }
 
 static void dump_layer(hwc_layer_1_t const* l, int i) {
-	struct private_handle_t* pHandle = (struct private_handle_t *) (l->handle);
+    struct private_handle_t* pHandle = (struct private_handle_t *) (l->handle);
 #ifdef HWC_DEBUG
-	int scale = (((l->displayFrame.right - l->displayFrame.left) == (l->sourceCrop.right - l->sourceCrop.left)) &&
-		(((l->displayFrame.bottom - l->displayFrame.top) == (l->sourceCrop.bottom - l->sourceCrop.top)))) ? \
-		0 : 1;
+    int scale = (((l->displayFrame.right - l->displayFrame.left) == (l->sourceCrop.right - l->sourceCrop.left)) &&
+            (((l->displayFrame.bottom - l->displayFrame.top) == (l->sourceCrop.bottom - l->sourceCrop.top)))) ? \
+        0 : 1;
 
     ALOGD("\ttype=%d, flags=%08x, handle=%p, scale=%d, tr=%02x, blend=%04x, alpha=%d, fence=%d, release fence:%d, {%d,%d,%d,%d}, {%d,%d,%d,%d}",
-		l->compositionType, l->flags, l->handle, scale, l->transform, l->blending, l->planeAlpha,
-		l->acquireFenceFd, l->releaseFenceFd,
+            l->compositionType, l->flags, l->handle, scale, l->transform, l->blending, l->planeAlpha,
+            l->acquireFenceFd, l->releaseFenceFd,
             l->sourceCrop.left,
             l->sourceCrop.top,
             l->sourceCrop.right,
@@ -115,23 +126,23 @@ static void dump_layer(hwc_layer_1_t const* l, int i) {
             l->displayFrame.top,
             l->displayFrame.right,
             l->displayFrame.bottom);
-	if (pHandle){
-		int bpp = getBpp(pHandle->format);
-	//#define	DUMP_LAYE_IMAGE
+    if (pHandle){
+        int bpp = getBpp(pHandle->format);
+        //#define	DUMP_LAYE_IMAGE
 #ifdef DUMP_LAYE_IMAGE
-		#define TEST_DIR   "/data/hwctest/"
-		char outputimgpatch[256];
+#define TEST_DIR   "/data/hwctest/"
+        char outputimgpatch[256];
 
-		snprintf(outputimgpatch, sizeof(outputimgpatch), "%s/layer%d_%x_[%d,%d,%d,%d].bmp",
-		 TEST_DIR, i, pHandle->ion_phy_addr,
-		            l->sourceCrop.left,l->sourceCrop.top,l->sourceCrop.right,l->sourceCrop.bottom);
-		if (0 == access(outputimgpatch, 0))return;
-		_WriteBitmap(outputimgpatch, (void*)pHandle->base,  pHandle->width, pHandle->height, pHandle->stride*bpp, format2dumpformat(pHandle->format));
+        snprintf(outputimgpatch, sizeof(outputimgpatch), "%s/layer%d_%x_[%d,%d,%d,%d].bmp",
+                TEST_DIR, i, pHandle->ion_phy_addr,
+                l->sourceCrop.left,l->sourceCrop.top,l->sourceCrop.right,l->sourceCrop.bottom);
+        if (0 == access(outputimgpatch, 0))return;
+        _WriteBitmap(outputimgpatch, (void*)pHandle->base,  pHandle->width, pHandle->height, pHandle->stride*bpp, format2dumpformat(pHandle->format));
 #endif
-		ALOGD("Handle:base=0x%x,ion_phy_addr=0x%x,offset=%d,fmt=%d,stride=%d,w=%d,h=%d,usage:%#x\n",
-		        pHandle->base,pHandle->ion_phy_addr,pHandle->offset,pHandle->format,
-		        pHandle->stride*bpp,pHandle->width, pHandle->height, pHandle->usage);
-	}
+        ALOGD("Handle:base=0x%x,ion_phy_addr=0x%x,offset=%d,fmt=%d,stride=%d,w=%d,h=%d,usage:%#x\n",
+                pHandle->base,pHandle->ion_phy_addr,pHandle->offset,pHandle->format,
+                pHandle->stride*bpp,pHandle->width, pHandle->height, pHandle->usage);
+    }
 #endif
 }
 
@@ -141,18 +152,17 @@ static int hwc_prepare(hwc_composer_device_1_t *dev,
     int ovNum = 0;
     overlay_layer_t layers[OVERLAY_MAX_CHANNEL];
     if (displays /*&& (displays[0]->flags & HWC_GEOMETRY_CHANGED)*/) {
-	 #ifdef HWC_DEBUG
-		ALOGD("================================================");
-		ALOGD("Layer Number:%d",displays[0]->numHwLayers);
-	 #endif
-		memset(layers, 0, sizeof(layers));
+#ifdef HWC_DEBUG
+        ALOGD("================================================");
+        ALOGD("Layer Number:%d",displays[0]->numHwLayers);
+#endif
+        memset(layers, 0, sizeof(layers));
 
         for (size_t i=0 ; i<displays[0]->numHwLayers - 1; i++) {
-//            dump_layer(&displays[0]->hwLayers[i], i);
             private_handle_t *hnd  = (private_handle_t*)displays[0]->hwLayers[i].handle;
 
             if (ovNum < OVERLAY_MAX_CHANNEL &&
-                    hnd && (hnd->usage & GRALLOC_USAGE_HISI_MASK)) {
+                    hnd && (hnd->usage & GRALLOC_USAGE_HISI_VDP)) {
                 displays[0]->hwLayers[i].compositionType = HWC_OVERLAY;
                 displays[0]->hwLayers[i].hints |= HWC_HINT_CLEAR_FB;
                 layers[ovNum].handle = hnd;
@@ -161,35 +171,24 @@ static int hwc_prepare(hwc_composer_device_1_t *dev,
             } else {
                 displays[0]->hwLayers[i].compositionType = HWC_FRAMEBUFFER;
             }
-
         }
 
         if (mOdev->prepareOverlayLayers(mOdev, ovNum, layers)) {
             ALOG(LOG_ERROR, OV_TAG, "prepare overlay buffers failed");
         }
-	 #ifdef HWC_DEBUG
-		ALOGD("================================================");
-	 #endif
+#ifdef HWC_DEBUG
+        ALOGD("================================================");
+#endif
     }
-
     return 0;
 }
 
 static int hwc_set(hwc_composer_device_1_t *dev,
         size_t numDisplays, hwc_display_contents_1_t** displays)
 {
-	struct hwc_context_t* ctx = (struct hwc_context_t*)dev;
-	private_module_t *m = (private_module_t*)ctx->fb_device->common.module;
-	HIFB_HWC_LAYERINFO_S LayerInfos;
-
-#if 0
-	ALOGD("HWC eglSwapBuffers");
-    EGLBoolean sucess = eglSwapBuffers((EGLDisplay)displays[0]->dpy,
-            (EGLSurface)displays[0]->sur);
-    if (!sucess) {
-        return HWC_EGL_ERROR;
-    }
-#else
+    struct hwc_context_t* ctx = (struct hwc_context_t*)dev;
+    private_module_t *m = (private_module_t*)ctx->fb_device->common.module;
+    HIFB_HWC_LAYERINFO_S LayerInfos;
 
 #ifdef OVERLAY
     hwc_display_contents_1_t* list = displays[0];
@@ -220,49 +219,50 @@ static int hwc_set(hwc_composer_device_1_t *dev,
     }
 #endif
 
-	if (displays && m){
+    if(mTdeCompose && supportByHardware(list)) {
+        //ALOGE("TDE finishi the compose!");
+        tde_compose(dev,numDisplays,displays);
+    } else {
+        setFbFormat(HIFB_FMT_ARGB8888);
+        //ALOGE("GPUfinishi the compose!");
+    }
 
-		hwc_layer_1_t* TargetFramebuffer = /*(displays[0]->numHwLayers == 2) ? \
-		&displays[0]->hwLayers[0] : \*/
-		&displays[0]->hwLayers[displays[0]->numHwLayers - 1];
-		struct private_handle_t* pHandle = (struct private_handle_t *) (TargetFramebuffer->handle);
+    if (displays && m){
 
-		if (pHandle && TargetFramebuffer){
-		LayerInfos.bPreMul = (TargetFramebuffer->blending == HWC_BLENDING_PREMULT) ? HI_TRUE : HI_FALSE;
-		LayerInfos.u32Alpha = TargetFramebuffer->planeAlpha;
-		int bpp = getBpp(pHandle->format);
-		LayerInfos.u32Stride = pHandle->stride * bpp;
-		LayerInfos.u32LayerAddr = pHandle->ion_phy_addr + TargetFramebuffer->sourceCrop.left * bpp \
-		  + TargetFramebuffer->sourceCrop.top * LayerInfos.u32Stride;
-	//			ALOGD("LAYER ADDR:%p,stride:%d,bpp:%d,",LayerInfos.u32LayerAddr,pHandle->stride,bpp);
-		LayerInfos.eFmt = HIFB_FMT_ARGB8888;
-		LayerInfos.stInRect.x = TargetFramebuffer->displayFrame.left;
-		LayerInfos.stInRect.y = TargetFramebuffer->displayFrame.top;
-		LayerInfos.stInRect.w = pHandle->width;
-		LayerInfos.stInRect.h = pHandle->height;
-		//ALOGD("inrect[%d,%d,%d,%d]",LayerInfos.stInRect.x,LayerInfos.stInRect.y,LayerInfos.stInRect.w,LayerInfos.stInRect.h);
-		LayerInfos.s32AcquireFenceFd = TargetFramebuffer->acquireFenceFd;
+        hwc_layer_1_t* TargetFramebuffer = /*(displays[0]->numHwLayers == 2) ? \
+                                             &displays[0]->hwLayers[0] : \*/
+            &displays[0]->hwLayers[displays[0]->numHwLayers - 1];
+        struct private_handle_t* pHandle = (struct private_handle_t *) (TargetFramebuffer->handle);
+        if (pHandle && TargetFramebuffer){
+            LayerInfos.bPreMul = (TargetFramebuffer->blending == HWC_BLENDING_PREMULT) ? HI_TRUE : HI_FALSE;
+            LayerInfos.u32Alpha = TargetFramebuffer->planeAlpha;
+            int bpp = getBpp(pHandle->format);
+            LayerInfos.u32Stride = pHandle->stride * bpp;
+            LayerInfos.u32LayerAddr = pHandle->ion_phy_addr + TargetFramebuffer->sourceCrop.left * bpp \
+                                      + TargetFramebuffer->sourceCrop.top * LayerInfos.u32Stride;
+            //ALOGD("LAYER ADDR:%p,stride:%d,bpp:%d,",LayerInfos.u32LayerAddr,pHandle->stride,bpp);
+            LayerInfos.eFmt = getFbFormat();
+            LayerInfos.stInRect.x = TargetFramebuffer->displayFrame.left;
+            LayerInfos.stInRect.y = TargetFramebuffer->displayFrame.top;
+            LayerInfos.stInRect.w = pHandle->width;
+            LayerInfos.stInRect.h = pHandle->height;
+            LayerInfos.s32AcquireFenceFd = TargetFramebuffer->acquireFenceFd;
+            if (ioctl(m->framebuffer->fd, FBIO_HWC_REFRESH, &LayerInfos) != 0)
+            {
+                ALOGE("fail to play UI");
+            }
 
-		if (ioctl(m->framebuffer->fd, FBIO_HWC_REFRESH, &LayerInfos) != 0)
-		{
-		ALOGE("fail to play UI");
-		}
-
-		        if (TargetFramebuffer->acquireFenceFd != -1)
-		{
-		            close(TargetFramebuffer->acquireFenceFd);
-		            TargetFramebuffer->acquireFenceFd = -1;
-		}
-
-		//ALOGD("LayerInfos.s32ReleaseFenceFd=%d",LayerInfos.s32ReleaseFenceFd);
-		        if (LayerInfos.s32ReleaseFenceFd != -1){
-		//if (displays[0]->numHwLayers > 2)
-		            TargetFramebuffer->releaseFenceFd = dup(LayerInfos.s32ReleaseFenceFd);
-		close(LayerInfos.s32ReleaseFenceFd);
-		        }
-		}
-	    }
-#endif
+            if (TargetFramebuffer->acquireFenceFd != -1)
+            {
+                close(TargetFramebuffer->acquireFenceFd);
+                TargetFramebuffer->acquireFenceFd = -1;
+            }
+            if (LayerInfos.s32ReleaseFenceFd != -1){
+                TargetFramebuffer->releaseFenceFd = dup(LayerInfos.s32ReleaseFenceFd);
+                close(LayerInfos.s32ReleaseFenceFd);
+            }
+        }
+    }
     return 0;
 }
 
@@ -408,6 +408,22 @@ static int hwc_device_open(const struct hw_module_t* module, const char* name,
         *device = &dev->device.common;
         status = 0;
         loadOverLayModule();
+    }
+
+    char value[PROPERTY_VALUE_MAX];
+    //add by hisi
+    property_get("ro.config.tde_compose", value, "true");
+    if (0 == strcmp(value, "true")) {
+        mTdeCompose = true;
+    } else {
+        mTdeCompose = false;
+    }
+
+    property_get("ro.config.low_ram", value, "false");
+    if (0 == strcmp(value, "false")) {
+        ;//mTdeCompose = true;
+    } else {
+        mTdeCompose = false;
     }
     return status;
 }

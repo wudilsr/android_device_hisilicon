@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2006-2014 ARM Limited
+ * (C) COPYRIGHT 2006-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -265,6 +265,39 @@ MALI_STATIC_INLINE void _mali_mem_dec_read_counter(mali_mem_handle memh)
 	MALI_DEBUG_ASSERT_POINTER(memh);
 	MALI_DEBUG_ASSERT(_mali_mem_get_read_counter(memh) > 0, ("Inconsistent refcount, must be > 0, is %d", _mali_mem_get_read_counter(memh)));
 	_mali_sys_atomic_dec(&((mali_mem *)memh)->read_counter);
+}
+
+/**
+ * Get current read pending number of memory. It will be held until gpu read is done.
+ * @param memh Handle to the memory.
+ * @return GPU Read pending number of memory.
+ */
+MALI_STATIC_INLINE int _mali_mem_get_gpu_read_pending(mali_mem_handle memh)
+{
+	MALI_DEBUG_ASSERT_POINTER(memh);
+	return _mali_sys_atomic_get(&((mali_mem *)memh)->gpu_read_pending);
+}
+
+/**
+ * Add a gpu read pending to mali memory.  It will be held until gpu read is done.
+ * @param memh Handle to the memory to reference.
+ */
+MALI_STATIC_INLINE void _mali_mem_add_gpu_read_pending(mali_mem_handle memh)
+{
+	MALI_DEBUG_ASSERT_POINTER(memh);
+	MALI_DEBUG_ASSERT(_mali_mem_get_gpu_read_pending(memh) >= 0, ("Inconsistent refcount, must be >= 0, is %d", _mali_mem_get_gpu_read_pending(memh)));
+	_mali_sys_atomic_inc(&((mali_mem *)memh)->gpu_read_pending);
+}
+
+/**
+ * Remove a gpu read pending to mali memory.  It will be held until gpu read is done.
+ * @param memh Handle to the memory to reference.
+ */
+MALI_STATIC_INLINE void _mali_mem_dec_gpu_read_pending(mali_mem_handle memh)
+{
+	MALI_DEBUG_ASSERT_POINTER(memh);
+	MALI_DEBUG_ASSERT(_mali_mem_get_gpu_read_pending(memh) > 0, ("Inconsistent refcount, must be > 0, is %d", _mali_mem_get_gpu_read_pending(memh)));
+	_mali_sys_atomic_dec(&((mali_mem *)memh)->gpu_read_pending);
 }
 
 /**

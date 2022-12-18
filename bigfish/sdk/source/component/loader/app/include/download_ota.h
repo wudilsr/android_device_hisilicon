@@ -49,21 +49,22 @@ typedef struct DBTunerSwitch4_S
 
 typedef struct hiDOWNLOAD_OTA_PARAMETER_S
 {
-    HI_U32              u32SignalType; /* signal type*/
-    HI_U32              u32Frequency; /* frequency range: 45000KHz ~ 900000KHz */
-    HI_U32              u32SymbolRate; /* symbol rate, unit:  KS/s */
-    CABLE_MOD_E         enModulation; /* qam size */
-    HI_U32              u32Polar; /* Polarization type*/
-    HI_U32              u32LowLO; /**< Low Local Oscillator Frequency, MHz */
-    HI_U32              u32HighLO;/**< High Local Oscillator Frequency, MHz*/
-    HI_U32              u32Switch22K;     /** 22KHz switch */
-    HI_U32              u32Switch0_12V;   /** 0/12V switch */
-    HI_U32              u32ToneBurst;     /* Tone burst switch*/
-    DB_TUNER_SWITCH16_S stSwitch16;
-    DB_TUNER_SWITCH4_S  stSwitch4;
-    HI_U16              u16TsPID; /* download ts pid  */
-    HI_U8               u8TableID;/* download talbe id */
-    HI_U8               ota_type; /* download type */
+    HI_U16              u16TsPID; /* download ts pid, general*/
+    HI_U8               u8TableID;/* download talbe id, general */
+    HI_U8               ota_type; /* download type, general */
+    HI_U32              u32SignalType; /*signal type, general*/
+	HI_U32              u32SymbolRate; /* symbol rate, unit:  KS/s,general*/
+    CABLE_MOD_E         enModulation; /* qam size, general */
+    HI_U32              u32Frequency; /* frequency range: 45000KHz ~ 900000KHz, general except Terrestrial*/ 
+	HI_U32              u32BandWidth; /* BandWidth range: 6000KHz ~ 9000KHz, special for Terrestrial*/
+    HI_U32              u32Polar; /* Polarization type, special for Satellite*/
+    HI_U32              u32LowLO; /**< Low Local Oscillator Frequency, MHz, special for Satellite*/
+    HI_U32              u32HighLO;/**< High Local Oscillator Frequency, MHz, special for Satellite*/
+    HI_U32              u32Switch22K;     /** 22KHz switch , special for Satellite*/
+    HI_U32              u32Switch0_12V;   /** 0/12V switch , special for Satellite*/
+    HI_U32              u32ToneBurst;     /* Tone burst switch, special for Satellite*/
+    DB_TUNER_SWITCH16_S stSwitch16; /*, special for Satellite*/
+    DB_TUNER_SWITCH4_S  stSwitch4; /*, special for Satellite*/
     HI_U16              u16Reserved; /* reserved for future use */
     HI_VOID*            pReserved;  /*  reserved for future use  */
 } DOWNLOAD_OTA_PARAMETER_S;

@@ -145,5 +145,7 @@ struct nand_manufacturers nand_manuf_ids[] = {
 	{NAND_MFR_EON, "EON"},
 	{NAND_MFR_GIGA, "GIGA"},
 	{NAND_MFR_WINBOND, "WINBOND"},
+	{NAND_MFR_GD, "GD"},
+	{NAND_MFR_ESMT, "ESMT"},
 	{0x0, "Unknown"}
 };

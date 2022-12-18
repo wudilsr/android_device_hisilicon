@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mYc5Wwoe4Rmiqg1pKwxQ6/dHrV5ASHcLNYUfe6Kh91RJ3DmPebwoPJCHy9H8IZRuRRAk
-ILMOrkiJuv+f849OLaXMMjadnH3Y8Ojc0yaHFt3H+JJB+nvnF2xb9UNNKVelJg==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxf9DxPImaE4c7kA0GuzeoblmV4eTsN3DbJgHkcN/KYK6CZCSJ6ehUpJongwWbEFCqJOf
+UL8nLKT1z4AmXjmtThag8/QLi5zVs03DFACdwuEOiXQM6WwW/9EQanM//vyEIA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -420,6 +434,13 @@ HI_S32 VPSS_HAL_SetZmeCfg(VPSS_IP_E enIP,HI_U32 u32AppVir,
         default:
             break;
     }
+
+	if ( enPqPort == HI_PQ_VPSS_LAYER_ZME_BUTT)
+	{
+		VPSS_ERROR("func=%s,enPqPort is %d\n",__func__,enPqPort);
+		return HI_FAILURE;
+	}
+	
     DRV_PQ_SetVpssZme(enPqPort,
                       (VPSS_REG_S*)u32AppVir,
                       pstZmeDrvPara,
@@ -483,73 +504,26 @@ HI_S32 VPSS_HAL_SetPortCmpCfg(HI_U32 u32AppVir,VPSS_REG_PORT_E ePort, VPSS_HAL_P
         return HI_FAILURE;
     }
 
-    u32CmpRatioY = (enBitWidth == 1) ? 140 : 130;
-    u32CmpRatioC = (enBitWidth == 1) ? 140 : 130;
-    u32YMaxQp  = (enBitWidth == 1) ? 4 : 2;
-    u32CMaxQp  = (enBitWidth == 1) ? 4 : 2;
+    u32CmpRatioY = ( HI_DRV_PIXEL_BITWIDTH_10BIT == enBitWidth) ? 140 : 130;
+    u32CmpRatioC = (HI_DRV_PIXEL_BITWIDTH_10BIT == enBitWidth) ? 140 : 130;
+    u32YMaxQp  = ( HI_DRV_PIXEL_BITWIDTH_10BIT == enBitWidth) ? 4 : 2;
+    u32CMaxQp  = ( HI_DRV_PIXEL_BITWIDTH_10BIT == enBitWidth) ? 4 : 2;
 
-    if(0 == enBitWidth)
+    if(HI_DRV_PIXEL_BITWIDTH_8BIT == enBitWidth)
     {
-        if(u32CmpRatioY < 135)
-        {
-            u32YMaxQp = 2;
-        }
-        else if((u32CmpRatioY >= 135) && (u32CmpRatioY < 160))
-        {
-            u32YMaxQp = 3;
-        }
-        else
-        {
-            u32YMaxQp = 4;
-        }
-
-        if(u32CmpRatioC < 135)
-        {
-            u32CMaxQp = 2;
-        }
-        else if((u32CmpRatioC >= 135) && (u32CmpRatioC < 160))
-        {
-            u32CMaxQp = 3;
-        }
-        else
-        {
-            u32CMaxQp = 4;
-        }
-
+        u32YMaxQp = 2;
+		u32CMaxQp = 2;
     }
     else
     {
-        if(u32CmpRatioY < 135)
-        {
-            u32YMaxQp = 3;
-        }
-        else if((u32CmpRatioY >= 135) && (u32CmpRatioY < 160))
-        {
-            u32YMaxQp = 4;
-        }
-        else
-        {
-            u32YMaxQp = 5;
-        }
-
-        if(u32CmpRatioC < 135)
-        {
-            u32CMaxQp = 3;
-        }
-        else if((u32CmpRatioC >= 135) && (u32CmpRatioC < 160))
-        {
-            u32CMaxQp = 4;
-        }
-        else
-        {
-            u32CMaxQp = 5;
-        }
+    	u32YMaxQp = 4;
+		u32CMaxQp = 4;
     }
 
     bIs_lossless = !(pstHalPort->bCmpLoss);//vdp will control
 
     bCmp_Mode = HI_FALSE;//cmp mode
-    u32Dw_Mode = (enBitWidth == 1) ? 0 : 1;
+    u32Dw_Mode = (HI_DRV_PIXEL_BITWIDTH_10BIT == enBitWidth) ? 0 : 1;
 
     if(pstOutFrm->u32Width < 128)
     {
@@ -952,19 +926,6 @@ HI_S32 VPSS_HAL_SetFieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     HI_DRV_VID_FRAME_ADDR_S *pstCur = HI_NULL;
     VPSS_REG_ResetAppReg(u32AppVir, pstHalInfo->pstPqCfg);
 
-    /*tunnel*/
-    if (pstHalInfo->stInInfo.u32TunnelAddr)
-    {
-        VPSS_REG_SetCurTunlEn(u32AppVir, HI_TRUE);
-        VPSS_REG_SetCurTunlAddr(u32AppVir,
-                                CUR_FRAME,
-                                pstHalInfo->stInInfo.u32TunnelAddr);
-    }
-    else
-    {
-        VPSS_REG_SetCurTunlEn(u32AppVir, HI_FALSE);
-    }
-
     #if 1
 	/*rwzb*/
     VPSS_HAL_SetRwzbCfg(u32AppVir, &(pstHalInfo->stRwzbInfo));
@@ -1069,12 +1030,12 @@ HI_S32 VPSS_HAL_SetFrameNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     /*tunnel*/
     if (pstHalInfo->stInInfo.u32TunnelAddr)
     {
-        VPSS_REG_SetCurTunlEn(u32AppVir, HI_TRUE);
+        VPSS_REG_SetCurTunlEn(u32AppVir, CUR_CHANEL, HI_TRUE);
         VPSS_REG_SetCurTunlAddr(u32AppVir, CUR_FRAME, pstHalInfo->stInInfo.u32TunnelAddr);
     }
     else
     {
-        VPSS_REG_SetCurTunlEn(u32AppVir, HI_FALSE);
+        VPSS_REG_SetCurTunlEn(u32AppVir, CUR_CHANEL, HI_FALSE);
     }
 
 #if 0
@@ -1162,6 +1123,17 @@ HI_S32 VPSS_HAL_Set5FieldNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
 	HI_U32 u32CurFieldYaddr;
 	HI_U32 u32CurFieldCaddr;
     VPSS_REG_ResetAppReg(u32AppVir, pstHalInfo->pstPqCfg);
+
+    /*tunnel*/
+    if (pstHalInfo->stInInfo.u32TunnelAddr)
+    {
+        VPSS_REG_SetCurTunlEn(u32AppVir, NEXT2_CHANEL, HI_TRUE);
+        VPSS_REG_SetCurTunlAddr(u32AppVir, NEXT2_CHANEL, pstHalInfo->stInInfo.u32TunnelAddr);
+    }
+    else
+    {
+        VPSS_REG_SetCurTunlEn(u32AppVir, NEXT2_CHANEL, HI_FALSE);
+    }
 
 #if 1
 	/*rwzb*/
@@ -1296,7 +1268,7 @@ HI_S32 VPSS_HAL_SetUHDNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     VPSS_REG_ResetAppReg(u32AppVir, pstHalInfo->pstPqCfg);
 
     /*tunnel*/
-    VPSS_REG_SetCurTunlEn(u32AppVir, HI_FALSE);
+    VPSS_REG_SetCurTunlEn(u32AppVir, CUR_CHANEL, HI_FALSE);
 
     /* 输入源信息 */
     VPSS_REG_SetInCropEn(u32AppVir, HI_FALSE);
@@ -1361,7 +1333,7 @@ HI_S32 VPSS_HAL_SetUHDHighSpeedNode(VPSS_IP_E enIP, VPSS_HAL_INFO_S *pstHalInfo,
     VPSS_REG_ResetAppReg(u32AppVir, pstHalInfo->pstPqCfg);
 
     /*tunnel*/
-    VPSS_REG_SetCurTunlEn(u32AppVir, HI_FALSE);
+    VPSS_REG_SetCurTunlEn(u32AppVir, CUR_CHANEL, HI_FALSE);
 
     /* 输入源信息 */
     VPSS_REG_SetInCropEn(u32AppVir, HI_FALSE);
@@ -1968,11 +1940,8 @@ HI_S32 VPSS_HAL_GetSCDInfo(HI_U32 u32AppAddr,HI_S32 s32SCDInfo[32])
 }
 
 
-HI_VOID VPSS_HAL_GetDetPixel(VPSS_HAL_INFO_S stVpssHalInfo,HI_U32 BlkNum, HI_U8* pstData)
+HI_VOID VPSS_HAL_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData)
 {
-    HI_U32 u32AppAddr;
-    u32AppAddr = (S_STT_REGS_TYPE*)(stVpssHalInfo.u32stt_w_vir_addr);
-
     VPSS_REG_GetDetPixel(u32AppAddr,BlkNum,pstData);
 }
 

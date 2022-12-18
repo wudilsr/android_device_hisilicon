@@ -319,8 +319,11 @@ dash::mpd::SegmentList*                     Node::ToSegmentList         ()  cons
 
         if (subNodes.at(i)->GetName() == "Initialization" || subNodes.at(i)->GetName() == "Initialisation")
         {
-            if (subNodes.at(i)->GetAttributeValue("sourceURL") != "")
+            if (subNodes.at(i)->HasAttribute("sourceURL")  &&
+                subNodes.at(i)->GetAttributeValue("sourceURL") != "")
+            {
                 segmentList->SetInitialization(subNodes.at(i)->GetAttributeValue("sourceURL"));
+            }
         }
     }
 

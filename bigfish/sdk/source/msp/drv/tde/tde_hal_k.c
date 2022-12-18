@@ -528,12 +528,12 @@ HI_S32 TdeHalInit(HI_U32 u32BaseAddr)
         goto TDE_INIT_ERR;
     }
 #endif
-    TdeHalSetClock(HI_TRUE);
-		
+    TdeHalSetClock(HI_FALSE);
+#if 0		
     TdeHalCtlReset();
 
     TdeHalInitQueue(); /* init SQ/AQ *//*CNcomment: ≥ı ºªØSQ/AQ */
-    
+ #endif   
     return HI_SUCCESS;
 
 TDE_INIT_ERR:
@@ -559,6 +559,20 @@ HI_VOID TdeHalSuspend(HI_VOID)
 	return;
 }
 #endif
+/*****************************************************************************
+* Function:      TdeHalClose
+* Description:   close the tde
+* Input:         none
+* Output:        none
+* Return:        none
+* Others:        none
+*****************************************************************************/
+HI_S32 TdeHalClose(HI_VOID)
+{
+    /* do sth ... */
+    TdeHalSetClock(HI_FALSE); 
+    return HI_SUCCESS;
+}
 /*****************************************************************************
 * Function:      TdeHalOpen
 * Description:   open the tde
@@ -733,14 +747,16 @@ HI_VOID TdeHalSetClock(HI_BOOL bEnable)
 
 	if (bEnable)
 	{
-	    /*cancel reset*/
-	    unTempValue.bits.tde_srst_req = 0x0;
-
 	    /*enable clock*/
 	    unTempValue.bits.tde_cken = 0x1;
+	    /*cancel reset*/
+	    unTempValue.bits.tde_srst_req = 0x0;
 	}
 	else
 	{
+	     /*reset*/    
+        unTempValue.bits.tde_srst_req = 0x1;  
+
 	    /*disable clock*/
 	    unTempValue.bits.tde_cken = 0x0;
 	}

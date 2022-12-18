@@ -240,6 +240,11 @@ static HI_S32 SVR_DEMUXER_FindStream(HI_HANDLE fmtHandle, HI_VOID *pArg)
         SVR_PRINTF("this is widevine");
         bUseThisDMX = HI_TRUE;
     }
+    else if (strstr(pstDemuxer->uri, ".wvm"))
+    {
+        SVR_PRINTF("this is widevine");
+        bUseThisDMX = HI_TRUE;
+    }
 
     if (bUseThisDMX == HI_FALSE)
     {

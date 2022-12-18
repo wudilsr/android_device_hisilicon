@@ -141,6 +141,9 @@ typedef struct tagVFMW_GLOBAL_S
 typedef struct tagSTREAM_BUF_INST_S
 {
     HI_HANDLE     hBuf;                 /* BM buffer handle */
+#ifdef HI_TVP_SUPPORT
+    HI_BOOL       bTvp;                 /* Secure mem flag */
+#endif
     HI_U32        u32Size;              /* Size */
     HI_U8*        pu8MMZVirAddr;        /* MMZ virtual address */
     HI_BOOL       bGetPutFlag;          /* Gut/Put flag */
@@ -949,7 +952,7 @@ static HI_S32 VFMW_Create(HI_HANDLE* phInst, const HI_CODEC_OPENPARAM_S * pstPar
         HI_ERR_VDEC("No memory!\n");
         goto err;
     }
-
+    pstVFMWInst->hInst = VFMW_INST_HANDLE(*phInst);
 #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
     pstVFMWInst->pu8UserDataVirAddr = (HI_U8*)stUserAddr.u32UserAddr;
 #endif
@@ -1208,7 +1211,11 @@ static HI_S32 VFMW_CheckEvt(HI_HANDLE hInst, VDEC_EVENT_S *pstNewEvent)
         HI_ERR_VDEC("Chan %d CheckEvt err:%x!\n", stParam.hHandle, s32Ret);
         return HI_ERR_CODEC_OPERATEFAIL;
     }
-
+    
+    if(2 == stParam.stEvent.u32UnSupportStream) //非零值代表不支持事件，1:不支持流，2:超过了menuconfig配置的解码能力范围  
+    {
+        HI_ERR_VDEC("Over Capability of Reserve Memory!!!\n");
+    }   
     *pstNewEvent = stParam.stEvent;
     HI_INFO_VDEC("Chan %d CheckEvt OK\n", stParam.hHandle);
     return HI_SUCCESS;
@@ -1801,6 +1808,28 @@ HI_S32 VDEC_SetColorSpace(HI_HANDLE hInst,HI_UNF_COLOR_SPACE_E*pParam)
     return HI_SUCCESS;
 }
 
+#ifdef HI_TVP_SUPPORT
+HI_S32 VDEC_SetTVP(HI_HANDLE hInst, HI_UNF_AVPLAY_TVP_ATTR_S* pParam)
+{
+    HI_S32 s32Ret;
+    VDEC_CMD_SET_TVP_S stParam;
+    if (HI_NULL == pParam)
+    {
+        return HI_ERR_CODEC_INVALIDPARAM;
+    }
+    stParam.hHandle = VFMW_INST_HANDLE(hInst);
+	stParam.bTVP    = pParam->bEnable;
+    s32Ret = ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_CHAN_TVP, &stParam);
+    if (HI_SUCCESS != s32Ret)
+    {
+        HI_ERR_VDEC("Chan %d SetTvp err:%x!\n", stParam.hHandle, s32Ret);
+        return HI_ERR_CODEC_OPERATEFAIL;
+    }	
+    HI_INFO_VDEC("Chan %d SetTvp OK\n", stParam.hHandle);
+    return HI_SUCCESS;
+}
+#endif
+
 static HI_S32 VFMW_Control(HI_HANDLE hInst, HI_U32 u32CMD, HI_VOID * pParam)
 {
     switch (u32CMD)
@@ -1916,7 +1945,6 @@ HI_S32 VPSS_CreateVpss(HI_HANDLE hVdec,HI_HANDLE* phVpss)
 {
    	HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phVpss)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -1938,7 +1966,6 @@ HI_S32 VPSS_DestoryVpss(HI_HANDLE hVdec,HI_HANDLE* phVpss)
 {
    	HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phVpss)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -1959,7 +1986,6 @@ HI_S32 VPSS_CreatePort(HI_HANDLE hVpss, VDEC_PORT_CFG_S* psVdecPortCfg)
 {
 	HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == psVdecPortCfg)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -1983,7 +2009,6 @@ HI_S32 VPSS_DestoryPort(HI_HANDLE hVpss, HI_HANDLE* phPort)
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phPort)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2008,7 +2033,6 @@ HI_S32 VPSS_EnablePort(HI_HANDLE hVpss, HI_HANDLE* phPort)
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phPort)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2033,7 +2057,6 @@ HI_S32 VPSS_DisablePort(HI_HANDLE hVpss, HI_HANDLE* phPort)
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phPort)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2057,7 +2080,6 @@ HI_S32 VPSS_SetPortType(HI_HANDLE hVpss, VDEC_PORT_TYPE_WITHPORT_S* pstPortTypeW
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == pstPortTypeWithPortHandle)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2080,7 +2102,6 @@ HI_S32 VPSS_CancleMainPort(HI_HANDLE hVpss, HI_HANDLE* phPort)
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == phPort)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2102,7 +2123,6 @@ HI_S32 VPSS_GetPortParam(HI_HANDLE hVpss,VDEC_PORT_PARAM_WITHPORT_S *pstParam)
 {
 	HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == pstParam)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2124,7 +2144,6 @@ HI_S32 VPSS_SetChanFrmPackType(HI_HANDLE hVpss,HI_UNF_VIDEO_FRAME_PACKING_TYPE_E
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == pParam)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2145,7 +2164,6 @@ HI_S32 VPSS_GetChanFrmPackType(HI_HANDLE hVpss,HI_UNF_VIDEO_FRAME_PACKING_TYPE_E
 {
     HI_S32 s32Ret;
 	VDEC_CMD_VPSS_FRAME_S stParam;
-	s32Ret = HI_SUCCESS;
 	if (HI_NULL == pParam)
     {
         HI_ERR_VDEC("Bad param.\n");
@@ -2419,14 +2437,21 @@ HI_S32 VDEC_FreeHandle(HI_HANDLE hHandle)
     return ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_FREEHANDLE, &hHandle);
 }
 
+#ifndef HI_TVP_SUPPORT
 HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize)
+#else
+HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
+#endif
 {
     HI_S32 s32Ret;
     VDEC_CMD_CREATEBUF_S stBuf;
     VDEC_CMD_BUF_USERADDR_S stUserAddr;
     STREAM_BUF_INST_S* pstBufInst = HI_NULL;
-
+#ifndef HI_TVP_SUPPORT
     if ((HI_NULL == phBuf) || (0 == u32BufSize))
+#else
+    if ((HI_NULL == phBuf) || (0 == pstBufAttr->u32BufSize))
+#endif
     {
         return HI_ERR_VDEC_INVALID_PARA;
     }
@@ -2438,14 +2463,28 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize)
         return HI_ERR_VDEC_MALLOC_FAILED;
     }
     memset(pstBufInst, 0, sizeof(STREAM_BUF_INST_S));
+#ifdef HI_TVP_SUPPORT
+    memset(&stUserAddr, 0, sizeof(VDEC_CMD_BUF_USERADDR_S));
+    pstBufInst->u32Size = pstBufAttr->u32BufSize;
+#else
     pstBufInst->u32Size = u32BufSize;
+#endif
     pstBufInst->bGetPutFlag = HI_FALSE;
 #if (HI_VDEC_REG_CODEC_SUPPORT == 1) || (HI_VDEC_MJPEG_SUPPORT == 1) || (HI_VDEC_VPU_SUPPORT == 1)
     pstBufInst->bRecvRlsFlag = HI_FALSE;
 #endif
 
+#ifndef HI_TVP_SUPPORT
     /* Create buffer manager */
     stBuf.u32Size = u32BufSize;
+#else
+    pstBufInst->bTvp = pstBufAttr->bTvp;
+
+    /* Create buffer manager */
+    stBuf.u32Size = pstBufAttr->u32BufSize;
+    stBuf.bTvp = pstBufAttr->bTvp;
+#endif
+
     s32Ret = ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_CREATE_ESBUF, &stBuf);
     if (s32Ret != HI_SUCCESS)
     {
@@ -2455,7 +2494,18 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize)
     }
 
     /* Map MMZ */
+#ifndef HI_TVP_SUPPORT
     stUserAddr.u32UserAddr = (HI_U32)HI_MEM_Map(stBuf.u32PhyAddr, u32BufSize);
+#else
+    if(HI_TRUE == pstBufAttr->bTvp)
+    {
+        stUserAddr.u32UserAddr = stBuf.u32PhyAddr; /*前提是安全内存物理地址和虚拟地址一致，否则有极大风险*/
+    }
+    else
+    {
+        stUserAddr.u32UserAddr = (HI_U32)HI_MEM_Map(stBuf.u32PhyAddr, pstBufAttr->u32BufSize);
+    }        
+#endif
     if (HI_NULL == stUserAddr.u32UserAddr)
     {
         HI_ERR_VDEC("HI_MMZ_Map fail.\n");
@@ -2471,7 +2521,17 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize)
     if (s32Ret != HI_SUCCESS)
     {
         HI_ERR_VDEC("UMAPC_VDEC_SETUSERADDR fail.\n");
+	#ifndef HI_TVP_SUPPORT
         (HI_VOID)HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
+	#else
+        if(HI_TRUE == pstBufAttr->bTvp)
+        {
+        }
+        else
+        {
+            (HI_VOID)HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
+        } 
+	#endif 
         (HI_VOID)ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_DESTROY_ESBUF, &stBuf.hHandle);
         HI_FREE_VDEC(pstBufInst);
         return s32Ret;
@@ -2502,7 +2562,17 @@ HI_S32 VDEC_DestroyStreamBuf(HI_HANDLE hBuf)
     /* Free buffer memory */
     if (HI_NULL != pstBufInst->pu8MMZVirAddr)
     {
+	#ifndef HI_TVP_SUPPORT
         s32Ret = HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
+	#else
+	    if (HI_TRUE == pstBufInst->bTvp)
+	    {
+	    }
+	    else
+	    {
+	    	s32Ret = HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
+	    }
+	#endif
     }
     s32Ret |= ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_DESTROY_ESBUF, &hBuf);
     if (HI_SUCCESS != s32Ret)

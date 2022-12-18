@@ -510,7 +510,9 @@ typedef union
         unsigned int    ena_profile           : 1   ; /* [8]  */
         unsigned int    Reserved_25           : 3  ;  /* [11..9]  */
         unsigned int    ena_aef_bypass        : 1   ; /* [12]  */
-        unsigned int    Reserved_24           : 19  ; /* [31..13]  */
+        unsigned int    Reserved_24           : 8  ; /* [13..20]  */
+        unsigned int    ena_add_mute        : 1   ; /* [21]  */
+        unsigned int    Reserved_23           : 10  ; /* [31..22]  */
     } bits;
 
     /* Define an unsigned member */

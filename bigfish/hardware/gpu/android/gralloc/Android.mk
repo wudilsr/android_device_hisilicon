@@ -42,16 +42,13 @@ LOCAL_C_INCLUDES := system/core/include/ $(MALI_DDK_PATH)/include \
 	$(HISI_PLATFORM_PATH)/external/liboverlay \
 	$(COMMON_DIR)/include
 
-# Include the UMP header files
-#LOCAL_C_INCLUDES += $(MALI_DDK_PATH)/src/ump/include
-
 LOCAL_CFLAGS := -DLOG_TAG=\"gralloc\" -DGRALLOC_32_BITS -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION) 
-LOCAL_CFLAGS += -DCHIP_TYPE_${CFG_HI_CHIP_TYPE}
+LOCAL_CFLAGS += -DCHIP_TYPE_${CFG_HI_CHIP_TYPE} -DOVERLAY -DSUPPORT_LEGACY_FORMAT
 
 LOCAL_SRC_FILES := \
 	gralloc_module.cpp \
 	alloc_device.cpp \
-	framebuffer_device.cpp
+	framebuffer_device.cpp \
+	gralloc_hisilicon_adp.cpp
 
-#LOCAL_CFLAGS+= -DMALI_VSYNC_EVENT_REPORT_ENABLE
 include $(BUILD_SHARED_LIBRARY)

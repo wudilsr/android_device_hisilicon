@@ -780,7 +780,10 @@ HI_U32 DRV_HDMI_Init(HI_U32 FromUserSpace)
         COM_INFO("come to SI_HW_ResetHDMITX\n");
         SI_HW_ResetHDMITX();
         SI_SW_ResetHDMITX();
-    #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if        defined(CHIP_TYPE_hi3798mv100) \
+        || defined(CHIP_TYPE_hi3796mv100) \
+        || defined(CHIP_TYPE_hi3716mv420) \
+        || defined(CHIP_TYPE_hi3716mv410)
         SI_TX_PHY_PowerDown(HI_TRUE);
     #endif
     }
@@ -1323,6 +1326,8 @@ HI_U32 DRV_HDMI_SetAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_ATTR_S *pstAttr)
     }
     COM_INFO("ForceUpdateFlag %d, PartUpdateFlag %d \n",ForceUpdateFlag,PartUpdateFlag);
 
+    DRV_Set_ForceUpdateFlag(enHdmi,HI_FALSE);
+    DRV_Set_PartUpdateFlag(enHdmi,HI_FALSE);
     if(DRV_Get_IsOpenedInBoot())
     {
         COM_INFO("Green Channel First Time \n");
@@ -1345,8 +1350,6 @@ HI_U32 DRV_HDMI_SetAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_ATTR_S *pstAttr)
     hdmi_AdjustVSDBInfoFrame(enHdmi);
     hdmi_AdjustAUDInfoFrame(enHdmi);
 
-    DRV_Set_ForceUpdateFlag(enHdmi,HI_FALSE);
-    DRV_Set_PartUpdateFlag(enHdmi,HI_FALSE);
 
     COM_INFO("Leave DRV_HDMI_SetAttr\n");
     return Ret;
@@ -2679,7 +2682,7 @@ HI_U32 DRV_HDMI_Stop(HI_UNF_HDMI_ID_E enHdmi)
 
     //only in (init num == 1) case ,we can close output hdmi
     COM_INFO("Enter DRV_HDMI_Stop\n");
-    if(DRV_HDMI_GetInitNum(enHdmi) != 1)
+    if(DRV_HDMI_GetUserInitNum(enHdmi) != 1)
     {
         COM_INFO("DRV_HDMI_GetInitNum != 1 return \n");
         return HI_SUCCESS;
@@ -3044,10 +3047,9 @@ HI_U32 DRV_HDMI_SetFormat(HI_UNF_HDMI_ID_E enHdmi, HI_DRV_DISP_FMT_E enFmt, HI_D
 
         return HI_SUCCESS;
     }
-
-    //power up,and need 1ms for clk stable
-    if (HI_TRUE == SI_HPD_Status())
+    else  //power up,and need 1ms for clk stable
     {
+        DRV_Set_ForceUpdateFlag(enHdmi,HI_FALSE);
         SI_TX_PHY_PowerDown(HI_FALSE);
         DelayMS(1);
     }
@@ -3201,6 +3203,43 @@ HI_U32 DRV_HDMI_Force_GetEDID(HDMI_EDID_S *pEDID)
     EDID_INFO("Leave DRV_HDMI_Extern_GetEDID\n");
     return 0;
 }
+
+HI_U32 DRV_HDMI_Read_EDID(HDMI_EDID_S *pEDID)
+{
+    HI_U32 u32EdidLength;
+    HI_U8  u32EdidBlock[512];
+    HI_U32 u32Ret = HI_FAILURE;
+    
+    EDID_INFO("Enter DRV_HDMI_Read_EDID\n");  
+    
+    u32Ret = SI_Proc_ReadEDIDBlock(u32EdidBlock, &u32EdidLength);
+    if (u32Ret == HI_SUCCESS)
+    {          
+        pEDID->u8EdidValid   = HI_TRUE;            
+        pEDID->u32Edidlength = u32EdidLength;
+        memcpy(pEDID->u8Edid, u32EdidBlock, u32EdidLength);        
+        EDID_INFO("DRV_HDMI_Read_EDID success!!! len = %d\n", pEDID->u32Edidlength);
+    }        
+    else
+    {        
+        EDID_ERR("DRV_HDMI_Read_EDID error:length = %d\n", u32EdidLength);
+        goto EDID_FAIL;            
+    }
+    
+    EDID_INFO("Leave DRV_HDMI_Read_EDID\n");
+    
+    return u32Ret;
+    
+EDID_FAIL:
+    
+    pEDID->u8EdidValid   = HI_FALSE;
+    pEDID->u32Edidlength = 0;
+    memset(pEDID->u8Edid, 0, 512);      
+    EDID_INFO("Leave DRV_HDMI_Read_EDID\n");
+    
+    return HI_FAILURE;
+}
+
 
 HI_U32 DRV_HDMI_GetPlayStatus(HI_UNF_HDMI_ID_E enHdmi, HI_U32 *pu32Stutus)
 {
@@ -3737,6 +3776,11 @@ HI_S32 DRV_HDMI_GetInitNum(HI_UNF_HDMI_ID_E enHdmi)
     return (g_HDMIKernelInitNum + g_HDMIUserInitNum);
 }
 
+HI_S32 DRV_HDMI_GetUserInitNum(HI_UNF_HDMI_ID_E enHdmi)
+{
+    return (g_HDMIUserInitNum);
+}
+
 HI_S32 DRV_HDMI_GetProcNum(HI_UNF_HDMI_ID_E enHdmi)
 {
     HI_S32 u32ProcCount = 0;
@@ -3824,7 +3868,10 @@ HI_S32 DRV_HDMI_SetAPPAttr(HI_UNF_HDMI_ID_E enHdmi,HDMI_APP_ATTR_S *pstHDMIAppAt
     return HI_SUCCESS;
 }
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
 HI_VOID DRV_HDMI_SetPhyAudioClk(HDMI_AUDIOINTERFACE_E  enSoundIntf,\
                                                 HI_DRV_DISP_FMT_E eDispFmt,\
                                                 HI_UNF_HDMI_DEEP_COLOR_E eDeepColor)
@@ -4051,7 +4098,10 @@ HI_S32 DRV_HDMI_SetAOAttr(HI_UNF_HDMI_ID_E enHdmi,HDMI_AUDIO_ATTR_S *pstHDMIAOAt
     HDMI_AUDIO_ATTR_S *pstAudAttr = DRV_Get_AudioAttr(enHdmi);
     HDMI_APP_ATTR_S *pstAppAttr = DRV_Get_AppAttr(enHdmi);
 	
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
     HDMI_VIDEO_ATTR_S   *pstHDMIVOAttr = DRV_Get_VideoAttr(enHdmi);
 #endif
 
@@ -4251,7 +4301,10 @@ HI_S32 DRV_HDMI_SetAOAttr(HI_UNF_HDMI_ID_E enHdmi,HDMI_AUDIO_ATTR_S *pstHDMIAOAt
         COM_INFO("set audio path: 0x%02x,0x%02x,0x%02x,0x%02x\n", u8AudioPath[0], u8AudioPath[1], u8AudioPath[2], u8AudioPath[3]);
         SI_SetAudioPath(u8AudioPath);  /* hdmi/audio.c */
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if    defined(CHIP_TYPE_hi3798mv100) \
+    || defined(CHIP_TYPE_hi3796mv100) \
+    || defined(CHIP_TYPE_hi3716mv420) \
+    || defined(CHIP_TYPE_hi3716mv410)
         DRV_HDMI_SetPhyAudioClk(pstAudAttr->enSoundIntf,
                                     pstHDMIVOAttr->enVideoFmt,
                                     pstAppAttr->enDeepColorMode);

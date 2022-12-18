@@ -54,6 +54,19 @@
 #define I2C_QAMT_PHY_ADDR   (0xF8B1c000)//I2C QAM-T
 #define I2C7_PHY_ADDR       (0xF8B1d000)
 
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+#define I2C_DFT_CLK       (100000000)
+#define I2C_DFT_RATE      (400000)
+
+#define I2C0_PHY_ADDR     (0xF8B10000)
+#define I2C1_PHY_ADDR     (0xF8B11000)
+#define I2C2_PHY_ADDR     (0xF8B12000)
+#define I2C3_PHY_ADDR     (0xF8B13000)
+#define I2C4_PHY_ADDR     (0xF8B14000)
+#define ADCI2C_PHY_ADDR   (0xF8B16000)//I2C_ADC
+#define QAMI2C_PHY_ADDR   (0xF8B17000)//I2C QAM
+
 #elif  defined(CHIP_TYPE_hi3798cv200_a)
 
 #define I2C_DFT_CLK       (100000000)
@@ -426,6 +439,121 @@ HI_S32 HI_DRV_I2C_Read(HI_U32 I2cNum, HI_U8 I2cDevAddr, HI_U32 I2cRegAddr, HI_U3
     return HI_SUCCESS;
 }
 
+
+HI_S32 HI_DRV_I2C_Read_si(HI_U32 I2cNum, HI_U8 I2cDevAddr, HI_U32 I2cRegAddr, HI_U32 I2cRegAddrByteNum, HI_U8 *pData, HI_U32 DataLen)
+{
+    HI_U32          dataTmp = 0xff;
+    HI_U32          i;
+    HI_U32          RegAddr;
+
+    if (I2cNum >= HI_STD_I2C_NUM)
+    {
+        I2C_DEGUB("%s I2cNum[%d] Error! Max:%d\n ", __FUNCTION__, I2cNum, HI_STD_I2C_NUM);
+        return HI_ERR_I2C_INVALID_PARA;
+    }
+
+       /* clear interrupt flag*/
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_ICR_REG), I2C_CLEAR_ALL);
+	
+    /* send register address which will need to read */
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_TXR_REG), (I2cDevAddr | READ_OPERATION));
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), I2C_WRITE | I2C_START);
+
+    if (DRV_WaitWriteEnd(I2cNum))
+    {
+        //local_irq_restore(IntFlag);
+        return HI_ERR_I2C_WRITE_TIMEOUT;
+    }
+
+    /* repetitivily read data */
+    for (i = 0; i < 1; i++)
+    {
+        /*  the last byte don't need send ACK*/
+        if (i == (DataLen - 1))
+        {
+            I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), (I2C_READ | (~I2C_SEND_ACK)));
+        }
+        /*  if i2c master receive data will send ACK*/
+        else
+        {
+            I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), I2C_READ);
+        }
+
+        if (I2C_DRV_WaitRead(I2cNum))
+        {
+            //local_irq_restore(IntFlag);
+            //HI_ERR_I2C("wait read data timeout!\n");
+            return HI_ERR_I2C_READ_TIMEOUT;
+        }
+
+        dataTmp = I2C_READ_REG((g_I2cKernelAddr[I2cNum] + I2C_RXR_REG));
+        *(pData + i) = dataTmp & 0xff;
+
+        if (DRV_WaitWriteEnd(I2cNum))
+        {
+            //local_irq_restore(IntFlag);
+            //HI_ERR_I2C("wait write data timeout!\n");
+            return HI_ERR_I2C_WRITE_TIMEOUT;
+        }
+    }
+
+
+
+    /* send register address which will need to read */
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_TXR_REG), (I2cDevAddr | READ_OPERATION));
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), I2C_WRITE | I2C_START);
+
+    if (DRV_WaitWriteEnd(I2cNum))
+    {
+        //local_irq_restore(IntFlag);
+        return HI_ERR_I2C_WRITE_TIMEOUT;
+    }
+
+    /* repetitivily read data */
+    for (i = 0; i < DataLen; i++)
+    {
+        /*  the last byte don't need send ACK*/
+        if (i == (DataLen - 1))
+        {
+            I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), (I2C_READ | (~I2C_SEND_ACK)));
+        }
+        /*  if i2c master receive data will send ACK*/
+        else
+        {
+            I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), I2C_READ);
+        }
+
+        if (I2C_DRV_WaitRead(I2cNum))
+        {
+            //local_irq_restore(IntFlag);
+            //HI_ERR_I2C("wait read data timeout!\n");
+            return HI_ERR_I2C_READ_TIMEOUT;
+        }
+
+        dataTmp = I2C_READ_REG((g_I2cKernelAddr[I2cNum] + I2C_RXR_REG));
+        *(pData + i) = dataTmp & 0xff;
+
+        if (DRV_WaitWriteEnd(I2cNum))
+        {
+            //local_irq_restore(IntFlag);
+            //HI_ERR_I2C("wait write data timeout!\n");
+            return HI_ERR_I2C_WRITE_TIMEOUT;
+        }
+    }
+
+    /* send stop flag bit*/
+    I2C_WRITE_REG((g_I2cKernelAddr[I2cNum] + I2C_COM_REB), I2C_STOP);
+    if (DRV_WaitWriteEnd(I2cNum))
+    {
+        //local_irq_restore(IntFlag);
+        //HI_ERR_I2C("wait write data timeout!\n");
+        return HI_ERR_I2C_WRITE_TIMEOUT;
+    }
+
+    return HI_SUCCESS;
+}
+
+
 HI_S32 HI_DRV_I2C_Init(HI_VOID)
 {
     HI_U32  i;
@@ -463,6 +591,20 @@ HI_S32 HI_DRV_I2C_Init(HI_VOID)
     u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
     u32RegVal  &= ~0x222222;
     u32RegVal  |= 0x111111;
+    g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
+
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	g_I2cKernelAddr[0] = (I2C0_PHY_ADDR);
+    g_I2cKernelAddr[1] = (I2C1_PHY_ADDR);
+    g_I2cKernelAddr[2] = (I2C2_PHY_ADDR);
+    g_I2cKernelAddr[3] = (I2C3_PHY_ADDR);
+    g_I2cKernelAddr[4] = (I2C4_PHY_ADDR);
+	g_I2cKernelAddr[5] = (ADCI2C_PHY_ADDR);
+    g_I2cKernelAddr[6] = (QAMI2C_PHY_ADDR);
+
+    u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
+    u32RegVal  &= ~0x2222222;
+    u32RegVal  |= 0x1111111;
     g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
 
 #elif defined(CHIP_TYPE_hi3796cv100) || defined(CHIP_TYPE_hi3798cv100)
@@ -535,6 +677,10 @@ HI_VOID HI_DRV_I2C_Exit(HI_VOID)
     u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
     u32RegVal  |= 0x222222;
     g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
+#elif defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
+	u32RegVal  |= 0x2222222;
+	g_pstRegCrg->PERI_CRG27.u32 = u32RegVal;
 #elif defined(CHIP_TYPE_hi3798cv200_a)
 	u32RegVal  = g_pstRegCrg->PERI_CRG27.u32;
     u32RegVal  |= 0x22222222;

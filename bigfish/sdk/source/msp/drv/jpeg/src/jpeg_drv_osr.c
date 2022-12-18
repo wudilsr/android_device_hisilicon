@@ -670,11 +670,8 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 	 if (ModID >= HIGFX_BUTT_ID)
 		 return;
 	 
-	 if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	 
-		 GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
-	 else
-		 GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);		 
- 
+	 GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
+	
 	 return;
  
 #endif
@@ -1065,6 +1062,27 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 
 #endif
 
+
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+/***************************************************************************************
+* func			: jpg_osr_setmemtype
+* description	: set memory type.
+				  CNcomment: 设置内存类型 CNend\n
+* param[in] 	: s32Handle
+* param[in] 	: u32MemMask
+* retval		: HI_SUCCESS 成功
+* retval		: HI_FAILURE 失败
+* others:		: NA
+***************************************************************************************/
+HI_VOID jpg_osr_setmemtype(HI_S32 s32Handle,HI_U32 u32MemMask)
+{
+	IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32Handle;
+	pstImgInfo->u32MemTypeMask = u32MemMask;
+	return;
+}
+#endif
+
  /***************************************************************************************
  * func          : jpg_osr_dec
  * description   : jpeg hard decode
@@ -1078,6 +1096,12 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 {
 #ifdef CONFIG_JPEG_OMX_FUNCTION
     HI_S32 s32Ret = HI_FAILURE;
+	#ifdef CONFIG_JPEG_OUTPUT_LUPIXSUM
+		HI_U32 u32RegistLuaPixSum0 = 0;
+		HI_U64 u64RegistLuaPixSum1 = 0;
+		IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(stDecInfo->stInMsg.u32DecHandle);
+	#endif
+	
     if(NULL == stDecInfo)
     {
         JPEG_TRACE("the dec info is null\n");
@@ -1089,7 +1113,7 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
         return HI_ERR_JPEG_PARA_NULL;
     }
     if(NULL == stDecInfo->stOutMsg.pOutPhy[0])
-    {/** 不支持输出内存为虚拟内存 **/
+    {/** 不支持输出内存为虚拟?诖? **/
         JPEG_TRACE("the output ddr is null\n");
         return HI_ERR_JPEG_PARA_NULL;
     }
@@ -1106,18 +1130,49 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
     }
     else
     {
-        s32Ret = jpg_dec_continue(stDecInfo->stInMsg.s32DecHandle);
+        s32Ret = jpg_dec_continue(stDecInfo->stInMsg.u32DecHandle);
     }
     if(HI_SUCCESS != s32Ret)
     {
         return s32Ret;
     }
+
+	#ifdef CONFIG_JPEG_OUTPUT_LUPIXSUM
+		/**
+		 ** get the lu pixle value
+		 ** CNcomment: 获取亮度值大小,这个解码之后信息值可以直接获取 CNend\n
+		 **/
+		if(HI_TRUE == stDecInfo->stOutMsg.bLuPixSum)
+		{
+		   	u32RegistLuaPixSum0  = (HI_U32)jpeg_reg_read(JPGD_REG_LPIXSUM0);
+			u64RegistLuaPixSum1  = (HI_U64)(jpeg_reg_read(JPGD_REG_LPIXSUM1) & 0xf);
+			pstImgInfo->u64LuPixValue = (HI_U64)((u64RegistLuaPixSum1 << 32) | u32RegistLuaPixSum0);
+			stDecInfo->stOutMsg.u64LuPixValue = pstImgInfo->u64LuPixValue;
+		}
+	#endif
     
     return HI_SUCCESS;
 #else
     return HI_FAILURE;
 #endif
 
+}
+/***************************************************************************************
+* func			: jpg_osr_getlupixsum
+* description	: get lu pix sum
+				  CNcomment: 获取亮度值和 CNend\n
+* param[in] 	: s32Handle
+* retval		: HI_SUCCESS
+* retval		: HI_FAILURE
+* others:		: NA
+***************************************************************************************/
+HI_VOID jpg_osr_getlupixsum(HI_S32 s32Handle,HI_U64* pu64LuPixValue)
+{
+#ifdef CONFIG_JPEG_OMX_FUNCTION
+	IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(s32Handle);
+	*pu64LuPixValue = pstImgInfo->u64LuPixValue;
+#endif
+	return;
 }
 
  /***************************************************************************************
@@ -1302,7 +1357,7 @@ HI_VOID JPEG_DRV_ModExit(HI_VOID)
 * retval		: HI_FAILURE
 * others:		: NA
 ***************************************************************************************/
-static HI_S32 JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
+static HI_VOID JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
 {
 		
         HI_GFX_INIT_MUTEX(&s_JpegMutex);
@@ -1310,6 +1365,10 @@ static HI_S32 JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
         /** request halt  */
 		/** CNcomment:   */
          Jpg_Request_irq();
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+		HI_GFX_RegisterSmmuIrq(JPGD_MMU_IRQ_MMU_NUM, "hi_jpeg_mmu",  JPGD_MMU_REG_BASEADDR);
+		HI_GFX_RegisterSmmuIrq(JPGD_MMU_IRQ_SMMU_NUM, "hi_jpeg_smmu", JPGD_MMU_REG_BASEADDR);
+#endif
 
         /** use to initial waitqueue head and mutex */
 		/** CNcomment:   */
@@ -1330,10 +1389,6 @@ static HI_S32 JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
 		init_waitqueue_head(&pOsrDev->QWaitMutex);
 		HI_GFX_INIT_MUTEX(&pOsrDev->SemGetDev);
 #endif
-
-        return HI_SUCCESS;
-
-    
 }
 /***************************************************************************************
 * func			: JPEG_DRV_K_ModInit
@@ -1385,13 +1440,8 @@ HI_S32 JPEG_DRV_K_ModInit(HI_VOID)
        /** call JpgOsrInit to initial OSR modual, if failure should release the
         ** resource and return failure
         **/
-        Ret = JpgOsrInit(s_pstruJpgOsrDev);
-        if (HI_SUCCESS != Ret)
-        {
-		   HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)s_pstruJpgOsrDev);
-           s_pstruJpgOsrDev = HI_NULL;
-           return Ret;
-        }
+        JpgOsrInit(s_pstruJpgOsrDev);
+
 #ifndef CONFIG_GFX_BVT_SDK
 		 Ret = HI_GFX_MODULE_Register(HIGFX_JPGDEC_ID, JPEGDEVNAME, &s_JpegExportFuncs);
 #endif
@@ -1568,6 +1618,10 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
            
 			 
              up(&s_pstruJpgOsrDev->SemGetDev);
+
+#ifdef CONFIG_JPEG_MMU_SUPPORT
+			 HI_GFX_InitSmmu(JPGD_MMU_REG_BASEADDR);
+#endif
              /**
               **开始解码任务
               **/
@@ -1712,17 +1766,36 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 #ifdef CONFIG_JPEG_OMX_FUNCTION
         case CMD_JPG_CREATEDEC:
         {
-             HI_S32 s32DecHandle = 0;
-             s32DecHandle = (HI_S32)HI_GFX_KMALLOC(HIGFX_JPGDEC_ID,sizeof(IMAG_INFO_S),GFP_KERNEL);
-             if(0 == s32DecHandle )
+             HI_U32 u32DecHandle = 0;
+             u32DecHandle = (HI_U32)HI_GFX_KMALLOC(HIGFX_JPGDEC_ID,sizeof(IMAG_INFO_S),GFP_KERNEL);
+             if(0 == u32DecHandle )
              {
                 return HI_FAILURE;
              }
-             memset((HI_VOID*)s32DecHandle,0,sizeof(IMAG_INFO_S));
-             if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&s32DecHandle,sizeof(HI_S32)))
+             memset((HI_VOID*)u32DecHandle,0,sizeof(IMAG_INFO_S));
+             if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&u32DecHandle,sizeof(HI_S32)))
 		     {
                 return -EFAULT;
            	 }
+             break;
+        }
+        case CMD_JPG_SETMEMTYPE:
+        {
+        #ifdef CONFIG_JPEG_MMU_SUPPORT
+             HI_DRV_JPEG_INMSG_S stInMsg;
+             if (0 == Arg)
+                return HI_FAILURE;
+             
+             memset(&stInMsg,0,sizeof(HI_DRV_JPEG_INMSG_S));
+             if(copy_from_user((HI_VOID *)&stInMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_INMSG_S))){
+                return -EFAULT;
+           	 }
+             if(0 == stInMsg.u32DecHandle){
+                JPEG_TRACE("the dec handle has been destoryed\n");
+                return HI_FAILURE;
+             }
+             jpg_osr_setmemtype(stInMsg.u32DecHandle,stInMsg.u32MemMask);
+        #endif
              break;
         }
         case CMD_JPG_DECINFO:
@@ -1737,7 +1810,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		     {
                 return -EFAULT;
            	 }
-             if(0 == stInMsg.s32DecHandle)
+             if(0 == stInMsg.u32DecHandle)
              {
                 JPEG_TRACE("the dec handle has been destoryed\n");
                 return HI_FAILURE;
@@ -1769,7 +1842,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		     {
                 return -EFAULT;
            	 }
-             if(0 == stOutMsg.s32DecHandle)
+             if(0 == stOutMsg.u32DecHandle)
              {
                 JPEG_TRACE("the dec handle has been destoryed\n");
                 return HI_FAILURE;
@@ -1803,7 +1876,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		     {
                 return -EFAULT;
            	 }
-             if(0 == stDecInfo.stOutMsg.s32DecHandle || 0 == stDecInfo.stInMsg.s32DecHandle)
+             if(0 == stDecInfo.stOutMsg.u32DecHandle || 0 == stDecInfo.stInMsg.u32DecHandle)
              {
                 JPEG_TRACE("the dec handle has been destoryed\n");
                 return HI_FAILURE;
@@ -1842,6 +1915,35 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              
              break;
              
+        }
+        case CMD_JPG_GETLUPIXSUM:
+        {
+			 HI_U64 u64LuPixValue = 0;
+             HI_DRV_JPEG_OUTMSG_S stOutMsg;
+             if (0 == Arg)
+                return HI_FAILURE;
+
+             memset(&stOutMsg,0,sizeof(HI_DRV_JPEG_OUTMSG_S));
+             if(copy_from_user((HI_VOID *)&stOutMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_OUTMSG_S)))
+		     {
+                return -EFAULT;
+           	 }
+
+             if(0 == stOutMsg.u32DecHandle)
+             {
+                JPEG_TRACE("the dec handle has been destoryed\n");
+                return HI_FAILURE;
+             }
+
+             jpg_osr_getlupixsum(stOutMsg.u32DecHandle,&u64LuPixValue);
+
+             stOutMsg.u64LuPixValue = u64LuPixValue;
+             
+             if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&stOutMsg,sizeof(HI_DRV_JPEG_OUTMSG_S)))
+		     {
+                return -EFAULT;
+           	 }
+             break;
         }
         case CMD_JPG_DESTORYDEC:
         {

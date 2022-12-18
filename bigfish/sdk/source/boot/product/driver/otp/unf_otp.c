@@ -188,8 +188,22 @@ HI_S32 HI_UNF_OTP_BurnToSecureChipset(HI_VOID)
 {
     HI_S32 ret = HI_SUCCESS;
     HI_U32 u32Value = 0;
+    HI_BOOL bIsIDWordLocked = HI_FALSE;
 
     (HI_VOID)HI_UNF_OTP_Init();
+
+    ret = HI_UNF_OTP_GetIDWordLockFlag(&bIsIDWordLocked);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_OTP("Get IDWord Lock Flag error!\n");
+        return HI_FAILURE;     
+    }
+
+    if (HI_TRUE == bIsIDWordLocked)
+    {
+        HI_ERR_OTP("IDWord has already been locked!\n");
+        return HI_FAILURE;
+    }
 
     u32Value = HI_OTP_Read(OTP_ADVCA_ID_WORD_ADDR);
     if(u32Value == ADVCA_ID_WORD)

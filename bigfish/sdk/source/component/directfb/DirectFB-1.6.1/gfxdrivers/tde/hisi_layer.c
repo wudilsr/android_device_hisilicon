@@ -1,3 +1,5 @@
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
+
 #include <config.h>
 
 #include <asm/types.h>
@@ -206,3 +208,5 @@ DisplayLayerFuncs hisi_layer_funcs = {
 
     .SetColorAdjustment = hisi_set_color_adjustment,
 };
+
+#endif

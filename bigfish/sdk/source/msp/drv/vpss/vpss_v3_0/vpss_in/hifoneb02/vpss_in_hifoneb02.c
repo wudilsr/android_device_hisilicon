@@ -1,10 +1,24 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mYiIPWsn27Fs69UaMO301CJCdkh51TA7kLJ+tEiAfzn5SQFceOD+V7bckX4O+FipbTAR
-cU8JUQl2FECOH1wwRSpktaErhzIsCjnBNM1Hjq2LIJgluAUUCncveNgf7Is7ww==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NK2S/IwjF+iSiPjVxhOtL63o3qH0IrWNAv2hEYV
+49TcBQj7qp2Nw7loSBOyIcU4Bm3edujZPKxQobAqXPvnIKspdRZ874/e9mTxRQpyFGrj6oRm
+nLL/4MnRNMDxYqJDVpzchX0mIoLDkPpCMgODd0+ALFOUs5rEsiwV1ZbbRTU4QA==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,13 +85,13 @@ HI_S32 VPSS_IN_VMALLOC_V1(VPSS_IN_ENTITY_S *pstEntity)
         goto V1_VMALLOC_ERROR;
     }
 
-    s32Ret = VPSS_HIS_Init(pstEntity->pstHisInfo);
+    s32Ret = VPSS_HIS_Init(pstEntity->pstHisInfo,pstEntity->bSecure);
     if (HI_SUCCESS != s32Ret)
     {
         goto V1_VMALLOC_ERROR;
     }
         
-    pstEntity->pstSttWbc[0] = (VPSS_STTWBC_S*)VPSS_VMALLOC(sizeof(VPSS_STTWBC_S)*2);
+    pstEntity->pstSttWbc[0] = (VPSS_STTWBC_S*)VPSS_VMALLOC(sizeof(VPSS_STTWBC_S)*1);
     if (HI_NULL == pstEntity->pstSttWbc[0])
     {
         VPSS_ERROR("malloc VPSS_STTWBC_S failed\n");
@@ -461,9 +475,20 @@ HI_S32 VPSS_IN_ReviseImage(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S *pIm
     return HI_SUCCESS;
 }
 
-HI_S32 VPSS_IN_ChangeInRate(VPSS_IN_ENTITY_S *pstEntity,HI_U32 u32InRate)
+HI_S32 VPSS_IN_ChangeInRate(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S *pstSrcImage)
 {
     HI_U32 u32HzRate; /*0 -- 100*/
+	HI_U32 u32InRate;
+
+    if (pstSrcImage->bProgressive == HI_FALSE 
+			&& pstSrcImage->enFieldMode == HI_DRV_FIELD_ALL)
+    {
+		u32InRate = pstSrcImage->u32FrameRate*2;
+	}
+	else
+	{
+		u32InRate = pstSrcImage->u32FrameRate;
+	}
     
     u32HzRate = u32InRate / 1000;
 
@@ -603,7 +628,7 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
         pstVdecPriv = (HI_VDEC_PRIV_FRAMEINFO_S *)&(pstPriv->u32Reserve[0]);
         
 
-        HI_PRINT("Image Info:Index %d Type %d Format %d W %d H %d Prog %d FieldMode %d PTS %d Rate %d LastFlag %#x Delta %d CodeType %d,SourceType %d,BitWidth %d\n"
+        HI_PRINT("Image Info:Index %d Type %d Format %d W %d H %d Prog %d FieldMode %d PTS %d Rate %d LastFlag %#x Delta %d CodeType %d,SourceType %d,BitWidth %d,u32TunnelPhyAddr %x\n"
                  "           L:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n"
                  "           R:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n",
                 pstFrm->u32FrameIndex,
@@ -620,6 +645,7 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
                 pstVdecPriv->entype,
                 pstPriv->stVideoOriginalInfo.enSource,
                 pstFrm->enBitWidth,
+                pstFrm->u32TunnelPhyAddr,
                 pstFrm->stBufAddr[0].u32PhyAddr_Y,
                 pstFrm->stBufAddr[0].u32PhyAddr_C,
                 pstFrm->stBufAddr[0].u32PhyAddr_YHead,
@@ -634,6 +660,19 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
                 pstFrm->stBufAddr[1].u32Stride_C);
     }
 
+	if (pstImage->bSecure != pstEntity->bSecure)
+	{
+		pstEntity->bSecure = pstImage->bSecure;
+		pstEntity->bSecure = HI_FALSE;
+		s32Ret |= VPSS_HIS_DeInit(pstEntity->pstHisInfo);
+
+		VPSS_VFREE(pstEntity->pstHisInfo);
+
+		pstEntity->pstHisInfo = 
+			VPSS_VMALLOC(sizeof(VPSS_HIS_INFO_S));
+
+		(HI_VOID)VPSS_HIS_Init(pstEntity->pstHisInfo,pstEntity->bSecure);
+	}
     bSupport = VPSS_IN_CheckImage_V1(pstImage);
     if (HI_TRUE != bSupport)
     {
@@ -706,7 +745,7 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
         
         (HI_VOID)VPSS_IN_ReviseImage(pstEntity, pstImage);
         
-        (HI_VOID)VPSS_IN_ChangeInRate(pstEntity, pstImage->u32FrameRate);
+        (HI_VOID)VPSS_IN_ChangeInRate(pstEntity, pstImage);
         
         (HI_VOID)VPSS_IN_CorrectFieldOrder(pstEntity, pstImage);
 
@@ -736,7 +775,9 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
             else
             {
                 s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc);
-                s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc + 1);
+				psttWbc = (VPSS_STTWBC_S*)pstEntity->pstSttWbc[1];
+				VPSS_CHECK_NULL(psttWbc);
+                s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc);
             }
 
             pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstImage->u32Priv[0]);
@@ -1004,7 +1045,7 @@ HI_S32 VPSS_IN_CompleteImage_V1(VPSS_IN_ENTITY_S *pstEntity)
     VPSS_STTINFO_SttWbcComplete(psttWbc);
     if(pstEntity->stStreamInfo.eStreamFrmType != HI_DRV_FT_NOT_STEREO)
     {
-        VPSS_STTINFO_SttWbcComplete(psttWbc + 1);
+        VPSS_STTINFO_SttWbcComplete(pstEntity->pstSttWbc[1]);
     }
 
     VPSS_IMG_Complete(pstEntity->pstSrcImagesList);
@@ -1024,10 +1065,12 @@ HI_S32 VPSS_IN_Reset_V1(VPSS_IN_ENTITY_S *pstEntity)
     VPSS_STTINFO_SttWbcDeInit(psttWbc);
     if(pstEntity->stStreamInfo.eStreamFrmType != HI_DRV_FT_NOT_STEREO)
     {
-        VPSS_STTINFO_SttWbcDeInit(psttWbc + 1);
+        VPSS_STTINFO_SttWbcDeInit(pstEntity->pstSttWbc[1]);
     }
 
-	memset(&(pstEntity->stStreamInfo), 0, sizeof(VPSS_IN_STREAM_INFO_S));
+//	memset(&(pstEntity->stStreamInfo), 0, sizeof(VPSS_IN_STREAM_INFO_S));
+	pstEntity->stStreamInfo.u32StreamH = 0;
+	pstEntity->stStreamInfo.u32StreamW = 0;
 
     VPSS_IMG_Reset(pstEntity->pstSrcImagesList);
 	
@@ -1065,7 +1108,10 @@ HI_S32 VPSS_IN_Init(VPSS_IN_ENTITY_S *pstEntity,VPSS_IN_ENV_S stEnv)
     VPSS_CHECK_NULL(pstEntity);
 
     pstEntity->stStreamInfo.u32RealTopFirst = DEF_TOPFIRST_BUTT;
-    
+
+	pstEntity->bSecure = stEnv.bSecure;
+    pstEntity->bSecure = HI_FALSE;
+	
     if (stEnv.enVersion == VPSS_VERSION_V1_0)
     {
         pstEntity->enVersion = VPSS_VERSION_V1_0;		

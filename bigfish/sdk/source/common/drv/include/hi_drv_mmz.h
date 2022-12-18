@@ -57,6 +57,7 @@ typedef struct hiMMZ_BUFFER_S
     HI_U32 u32StartVirAddr;
     HI_U32 u32StartPhyAddr;
     HI_U32 u32Size;
+    HI_BOOL bSecureMem;
 }MMZ_BUFFER_S;
 
 

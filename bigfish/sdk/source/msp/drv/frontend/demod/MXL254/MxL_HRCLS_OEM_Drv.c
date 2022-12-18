@@ -303,6 +303,65 @@ MXL_STATUS_E MxLWare_HRCLS_OEM_ReadBlockExt(UINT8 devId, UINT16 cmdId, UINT16 of
   // |SLAVE |         |A|DATA1| |DATA2| |       |DATAn|   |
   // +------+---------+-+-----+-+-----+-+-----+-+-----+---+
   // Legends: SADDR (I2c slave address), S (Start condition), A (Acknowledgement), N(NACK), P(Stop condition)
+  //MXL_STATUS_E status = MXL_SUCCESS;
+	HI_S32 s32Ret = HI_SUCCESS;
+	HI_U32 readAddr = 0;
+	HI_U32 regAddr = 0;
+	HI_U8  u8data[2] = {0};
+	oem_data_t * user_data = (oem_data_t *) MxL_HRCLS_OEM_DataPtr[devId];
+	
+	if (user_data)
+	{
+		UINT8 i2cIndex = user_data->i2cIndex; // get device i2c address
+		UINT8 i2cAddress = user_data->i2cAddress;
+		//ret = bufSize % 10;
+		
+		regAddr = (0xff << 24) | (0xfd << 16) | cmdId;
+		u8data[0]= ( offset >> 8 )& 0xff;
+		u8data[1]= ( offset ) & 0xff;
+		if(HI_STD_I2C_NUM >i2cIndex)
+		{
+		   // s32Ret = HI_DRV_I2C_Write(i2cIndex, i2cAddress, regAddr,2, bufPtr, bufSize);
+		   s32Ret = s_tuner_pI2cFunc->pfnI2cWrite(i2cIndex, i2cAddress, regAddr,4, u8data, 2);
+		   
+			if(HI_SUCCESS != s32Ret)
+			{
+				return MXL_FAILURE;
+			}
+		}
+		else
+		{
+			//s32Ret = HI_DRV_GPIOI2C_WriteExt(i2cIndex,i2cAddress, regAddr, 2, bufPtr, bufSize);
+			s32Ret = s_tuner_pGpioI2cFunc->pfnGpioI2cWriteExt(i2cIndex, i2cAddress, regAddr,4, u8data, 2);
+			if(HI_SUCCESS != s32Ret)
+			{
+				return MXL_FAILURE;
+			}
+		}
+		
+		//read
+		  readAddr = (0xff << 24) | (0xfd << 16) | regAddr;
+			  
+		  if(HI_STD_I2C_NUM > i2cIndex)
+		  {
+		  
+			  s32Ret = s_tuner_pI2cFunc->pfnI2cReadDirectly(i2cIndex, i2cAddress, readAddr, 0, bufPtr, readSize);
+			  if(HI_SUCCESS != s32Ret)
+			  {
+				  return MXL_FAILURE;
+			  }
+		  }
+		  else
+		  {
+		   
+			  s32Ret = s_tuner_pGpioI2cFunc->pfnGpioI2cReadExtDiRectly(i2cIndex, i2cAddress,readAddr, 0, bufPtr, readSize);
+			  if(HI_SUCCESS != s32Ret)
+			  {
+				  return MXL_FAILURE;
+			  }
+		  }   
+		
+	}
 
   return status;
 }

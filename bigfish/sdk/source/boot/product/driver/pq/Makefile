@@ -15,10 +15,10 @@ else
 BOOT_DIR  := $(SDK_DIR)/source/boot/fastboot
 endif
 
-ifeq ($(O),)
-PRODUCT_DIR  := $(BOOT_DIR)/../product
+ifneq ($(O),)
+PRODUCT_DIR := $(O)/product
 else
-PRODUCT_DIR  := $(O)/product
+PRODUCT_DIR := $(BOOT_DIR)/../product
 endif
 
 PQ_DIR := $(PRODUCT_DIR)/driver/pq
@@ -46,22 +46,15 @@ CFLAGS  += -D__PQ_PLATFORM_BOOT__
 
 ifeq ($(CFG_HI_PQ_V1_0), y)
 CFLAGS  += -DHI_PQ_VERSION_V1
-OBJS    := $(PQ_DIR)/drv_pq.o
+
 else ifeq ($(CFG_HI_PQ_V2_0), y)
 CFLAGS  += -DHI_PQ_VERSION_V2
-OBJS    := $(PQ_DIR)/pq_hal_comm.o $(PQ_DIR)/pq_hal_csc.o $(PQ_DIR)/pq_mng_csc.o $(PQ_DIR)/drv_pq.o
 else ifeq ($(CFG_HI_PQ_V3_0), y)
 CFLAGS  += -DHI_PQ_VERSION_V3
-OBJS    := $(PQ_DIR)/pq_hal_comm.o $(PQ_DIR)/pq_hal_csc.o $(PQ_DIR)/pq_mng_csc.o $(PQ_DIR)/drv_pq.o
 endif
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
-PQ_HAL_DIR := hi3798mv100
-endif
+OBJS    := $(PQ_DIR)/drv_pq.o
 
-ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798cv200_a),)
-PQ_HAL_DIR := hifone
-endif
 
 LIBS    := $(PQ_DIR)/libpq.a
 
@@ -71,23 +64,6 @@ LIBS    := $(PQ_DIR)/libpq.a
 .PHONY: all clean install uninstall $(LIBS)
 
 all: $(LIBS)
-
-prepare:
-ifeq ($(CFG_HI_PQ_V2_0), y)
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/mng/pq_mng_csc.c $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/mng/pq_mng_csc.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/hal/pq_hal_csc.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/hal/pq_hal_csc.c $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/hal/pq_hal_comm.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v2_0/hal/pq_hal_comm.c $(PQ_DIR)/
-else ifeq ($(CFG_HI_PQ_V3_0), y)
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/mng/pq_mng_csc.c $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/mng/pq_mng_csc.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/hal/$(PQ_HAL_DIR)/pq_hal_csc.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/hal/$(PQ_HAL_DIR)/pq_hal_csc.c $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/hal/common/pq_hal_comm.h $(PQ_DIR)/
-	$(AT)cp -rf $(MSP_DIR)/drv/pq/pq_v3_0/hal/common/pq_hal_comm.c $(PQ_DIR)/
-endif
 
 clean:
 	$(AT)rm -rf $(OBJS)

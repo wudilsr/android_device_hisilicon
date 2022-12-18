@@ -27,11 +27,22 @@
 
 #define PVR_MAX_PLAY_CHN (3)
 #define PVR_MAX_REC_CHN (4)
+
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+#define PVR_WIN_WIDTH (320)
+#define PVR_WIN_HEIGHT (180)
+
+#define PVR_ZOOM_HEIGHT_STEP (32)
+#define PVR_ZOOM_WIDTH_STEP (60)
+#define PVR_ZOOM_X_STEP (26)
+#else
 #define PVR_WIN_WIDTH (480)
 #define PVR_WIN_HEIGHT (270)
+
 #define PVR_ZOOM_HEIGHT_STEP (48)
 #define PVR_ZOOM_WIDTH_STEP (90)
 #define PVR_ZOOM_X_STEP (40)
+#endif
 
 #define DEMUX_ID_0 (0)
 #define DEMUX_ID_1 (1)
@@ -264,6 +275,12 @@ typedef enum pvrTEST_MODE
     PVR_TEST_MODE_RECORDING
 }PVR_TEST_MODE;
 
+typedef enum pvrUI_DEFINITION
+{
+	PVR_UI_DEFINITION_720P = 0,
+	PVR_UI_DEFINITION_1080P
+}PVR_UI_DEFINITION;
+
 extern HI_VOID PVR_MarkerEventTime();
 static HI_U32 g_PlayChn = 0;
 static HI_U32 g_TimeshiftChn = 0;
@@ -428,7 +445,11 @@ HI_S32 PVR_Disp_Init(HI_UNF_ENC_FMT_E enFormat)
     }
 
 #ifndef ANDROID
-    Ret = HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISPLAY1, 1920, 1080);
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    Ret = HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISPLAY1, 1280, 720);
+#else
+	Ret = HI_UNF_DISP_SetVirtualScreen(HI_UNF_DISPLAY1, 1920, 1080);
+#endif
     if (Ret != HI_SUCCESS)
     {
         sample_common_printf("call HI_UNF_DISP_SetVirtualScreen failed, Ret=%#x.\n", Ret);
@@ -538,187 +559,308 @@ HI_S32 PVR_Disp_Init(HI_UNF_ENC_FMT_E enFormat)
     return HI_SUCCESS;
 }
 
-HI_VOID PVR_InitInfoRect(void)
+HI_VOID PVR_InitInfoRect(PVR_UI_DEFINITION enPvrUiDefinition)
 {
     HI_U32 i = 0;
-    HI_U32 u32InitX = 100;
-    HI_U32 u32InitY = 100;
-    HI_U32 u32YDistence = 40;
-    HI_U32 u32ChnDistenc = 210;
+    HI_U32 u32InitX = 0;
+    HI_U32 u32InitY = 0;
+    HI_U32 u32YDistence = 0;
+    HI_U32 u32ChnDistenc = 0;
+
+	HI_U32 u32RectHeight = 0;
+	HI_U32 u32WidthCnt = 0;
+	HI_U32 u32DefinitionSelect = 0;
+	HI_U32 aPlayRectWidth[2][12] = {	
+									{153, 400, 67, 120, 200,
+									 120, 120, 133,
+									 267, 267,
+									 267, 267},
+									{230, 600, 100, 180, 300,
+ 								 	 180, 180, 200, 
+ 								 	 400, 400,
+ 								 	 400, 400}
+								   };
+	HI_U32 aPlayRectDeltaX[2][12] = {	
+									{0, 153, 33, 153, 300,
+									 33, 153, 300,
+									 33, 300,
+									 33, 300},
+									{0, 230, 50, 230, 450,
+ 								 	 50, 230, 450, 
+ 								 	 50, 450,
+ 								 	 50, 450}
+								    };
+
+	HI_U32 aRecRectWidth[2][11] = {	
+									{133, 400, 100, 100, 100, 87, 100,
+									 333, 200,
+									 333, 200},
+									{200, 600, 150, 150, 150, 130, 150, 
+									 500, 300,
+									 500, 300}
+								  };
+	HI_U32 aRecRectDeltaX[2][11] = {	
+									{0, 133, 33, 133, 267, 367, 453,
+									 33, 367,
+									 33, 367},
+									{0, 200, 50, 200, 400, 550, 680,
+									 50, 550,
+									 50, 550}
+								    };
+	HI_U32 aRecYDistenc[2] = {23, 35};
 
     HI_RECT stRectTmp;
+
+	switch(enPvrUiDefinition)
+	{
+		case PVR_UI_DEFINITION_720P:
+			u32InitX = 30;
+			u32InitY = 30;
+			u32YDistence = 27;
+			u32ChnDistenc = 140;
+
+			
+
+			u32RectHeight = 27;
+			u32DefinitionSelect = 0;
+			break;
+		case PVR_UI_DEFINITION_1080P:
+			u32InitX = 100;
+			u32InitY = 100;
+			u32YDistence = 40;
+			u32ChnDistenc = 210;
+
+			u32RectHeight = 40;
+			u32DefinitionSelect = 1;
+			break;
+		default:
+			sample_common_printf("Unknown UI definition %d.\n", enPvrUiDefinition);
+			return;
+	};
+
+	
 
     /*播放坐标初始化*/
     for(i = 0; i < PVR_MAX_PLAY_CHN; i++)
     {
-        u32YDistence = 40;
+        u32YDistence = u32RectHeight;
+		
+		u32WidthCnt = 0;
 
-        stRectTmp.x = u32InitX;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc;
-        stRectTmp.w = 230;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlayChnName, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX + 230;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc;
-        stRectTmp.w = 600;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stStreamInfoRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+50;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 100;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlaySpeedRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+230;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 180;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlayFps, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+450;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 300;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlayTimeProgress, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        u32YDistence += 40;
+        u32YDistence += u32RectHeight;
 
 
-        stRectTmp.x = u32InitX+50;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 180;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stReadSpeedRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+230;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 180;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stFilePosRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+450;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 200;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stFrmPosRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        u32YDistence += 40;
+        u32YDistence += u32RectHeight;
 
 
-        stRectTmp.x = u32InitX+50;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence+10;
-        stRectTmp.w = 400;
-        stRectTmp.h = 20;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence+10;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight/2;
         memcpy(&g_stPlayInfoRect[i].stPlayProgressBarRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+450;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 400;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlayFileNameRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        u32YDistence += 40;
+        u32YDistence += u32RectHeight;
 
 
-        stRectTmp.x = u32InitX+50;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence+10;
-        stRectTmp.w = 400;
-        stRectTmp.h = 20;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence+10;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight/2;
         memcpy(&g_stPlayInfoRect[i].stPlayDmxBuffBarRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+450;
-        stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 400;
-        stRectTmp.h = 40;
+        stRectTmp.x = u32InitX + aPlayRectDeltaX[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.y = u32InitY + i*u32ChnDistenc+u32YDistence;
+        stRectTmp.w = aPlayRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stPlayInfoRect[i].stPlayDmxNameRect, &stRectTmp, sizeof(HI_RECT));
 
     }
 
-    u32InitX = 960;
-    u32InitY = 100;
-    u32ChnDistenc = 160;
+	
+	u32WidthCnt = 0;
+
+	switch(enPvrUiDefinition)
+	{
+		case PVR_UI_DEFINITION_720P:
+			u32InitX = 640;
+			u32InitY = 30;
+			u32YDistence = 23;
+			u32ChnDistenc = 107;
+
+			
+
+			u32RectHeight = 27;
+			u32DefinitionSelect = 0;
+			break;
+		case PVR_UI_DEFINITION_1080P:
+			u32InitX = 960;
+			u32InitY = 100;
+			u32YDistence = 35;
+			u32ChnDistenc = 160;
+
+			u32RectHeight = 40;
+			u32DefinitionSelect = 1;
+			break;
+		default:
+			sample_common_printf("Unknown UI definition %d.\n", enPvrUiDefinition);
+			return;
+	};
 
     for(i = 0; i < PVR_MAX_REC_CHN; i++)
     {
-        u32YDistence = 35;
+        u32YDistence = aRecYDistenc[u32DefinitionSelect];
+		u32WidthCnt = 0;
 
-        stRectTmp.x = u32InitX;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc;
-        stRectTmp.w = 200;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stRecChnName, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX + 200;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc;
-        stRectTmp.w = 600;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stValidInfoRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+50;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 150;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stWriteSpeedRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+200;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 150;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stSizePosRect, &stRectTmp, sizeof(HI_RECT));
         memcpy(&g_stRecInfoRect[i].stTimePosRect, &stRectTmp, sizeof(HI_RECT));
         memcpy(&g_stRecInfoRect[i].stRecFileSizeRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+400;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 150;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stReWindType, &stRectTmp, sizeof(HI_RECT));
         memcpy(&g_stRecInfoRect[i].stRecFileTimeRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
 
-        stRectTmp.x = u32InitX+550;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 130;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stRecType, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
 
-        stRectTmp.x = u32InitX+680;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 150;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stEncryptRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        u32YDistence += 35;
+        u32YDistence += aRecYDistenc[u32DefinitionSelect];
 
 
-        stRectTmp.x = u32InitX+50;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence+10;
-        stRectTmp.w = 500;
-        stRectTmp.h = 20;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight/2;
         memcpy(&g_stRecInfoRect[i].stRecProgressBarRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+550;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 300;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stRecFileNameRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        u32YDistence += 35;
+        u32YDistence += aRecYDistenc[u32DefinitionSelect];
 
 
-        stRectTmp.x = u32InitX+50;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence+10;
-        stRectTmp.w = 500;
-        stRectTmp.h = 20;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight/2;
         memcpy(&g_stRecInfoRect[i].stRecTsBufBarRect, &stRectTmp, sizeof(HI_RECT));
+		u32WidthCnt++;
 
-        stRectTmp.x = u32InitX+550;
+        stRectTmp.x = u32InitX + aRecRectDeltaX[u32DefinitionSelect][u32WidthCnt];
         stRectTmp.y = u32InitY+i*u32ChnDistenc+u32YDistence;
-        stRectTmp.w = 300;
-        stRectTmp.h = 40;
+        stRectTmp.w = aRecRectWidth[u32DefinitionSelect][u32WidthCnt];
+        stRectTmp.h = u32RectHeight;
         memcpy(&g_stRecInfoRect[i].stDmxFileNameRect, &stRectTmp, sizeof(HI_RECT));
     }
 }
@@ -1043,13 +1185,21 @@ HI_S32 PVR_InitOsd(HI_VOID)
     }
 
     HI_GO_GetLayerDefaultParam(HIGO_LAYER_HD_0, &stLayerInfo);
-    stLayerInfo.PixelFormat  = HIGO_PF_1555;
+	stLayerInfo.PixelFormat  = HIGO_PF_1555;
     stLayerInfo.ScreenWidth  = 1920;
     stLayerInfo.ScreenHeight = 1080;
-    stLayerInfo.CanvasWidth = 1920;
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    stLayerInfo.CanvasWidth = 1280;
+    stLayerInfo.CanvasHeight = 720;
+    stLayerInfo.DisplayWidth  = 1280;
+    stLayerInfo.DisplayHeight = 720;
+#else
+	stLayerInfo.CanvasWidth = 1920;
     stLayerInfo.CanvasHeight = 1080;
     stLayerInfo.DisplayWidth  = 1920;
     stLayerInfo.DisplayHeight = 1080;
+#endif
+    stLayerInfo.LayerFlushType = HIGO_LAYER_FLUSH_OVER;
 
     s32Ret = HI_GO_CreateLayer(&stLayerInfo, &hLayer_pvr);
     if (HI_SUCCESS != s32Ret)
@@ -1066,10 +1216,14 @@ HI_S32 PVR_InitOsd(HI_VOID)
     }
 
     HI_GO_FillRect(hLayerSurface_pvr, NULL, 0x00000000, HIGO_COMPOPT_NONE);
-
+	
     stTextInfo.pMbcFontFile = NULL;
     stTextInfo.pSbcFontFile = "./res/DroidSansFallbackLegacy.ttf";
-    stTextInfo.u32Size = 25;
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    stTextInfo.u32Size = 17;
+#else
+	stTextInfo.u32Size = 25;
+#endif
 
     s32Ret = HI_GO_CreateTextEx(&stTextInfo,  &hFont_pvr);
     if (HI_SUCCESS != s32Ret)
@@ -1080,7 +1234,11 @@ HI_S32 PVR_InitOsd(HI_VOID)
     HI_GO_RefreshLayer(hLayer_pvr, NULL);
 
     /*初始化屏幕坐标*/
-    PVR_InitInfoRect();
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    PVR_InitInfoRect(PVR_UI_DEFINITION_720P);
+#else
+    PVR_InitInfoRect(PVR_UI_DEFINITION_1080P);
+#endif
 
     PVR_DrawInitInfoRect();
 #endif
@@ -2096,10 +2254,17 @@ HI_VOID *PVR_IRReceiveThread(HI_VOID *args)
                                 {
                                     HI_RECT stMuteRect;
                                     
+                                    #if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+									stMuteRect.x = 50;
+                                    stMuteRect.y = 10;
+                                    stMuteRect.w = 40;
+                                    stMuteRect.h = 25;
+									#else
                                     stMuteRect.x = 50;
                                     stMuteRect.y = 50;
                                     stMuteRect.w = 60;
                                     stMuteRect.h = 40;
+									#endif
 
                                     PVR_DrawMuteText(&stMuteRect, g_stTimeShiftChnAttr[u32ChanNum].bMuteSeted);
                                 }
@@ -3070,11 +3235,18 @@ HI_VOID *PVR_IRReceiveThread(HI_VOID *args)
                                 if (HI_TRUE == g_stPlayChnAttr[u32ChanNum].bFullScreen)
                                 {
                                     HI_RECT stMuteRect;
-                                    
+									
+                                    #if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+									stMuteRect.x = 50;
+                                    stMuteRect.y = 10;
+                                    stMuteRect.w = 40;
+                                    stMuteRect.h = 25;
+									#else
                                     stMuteRect.x = 50;
                                     stMuteRect.y = 50;
                                     stMuteRect.w = 60;
                                     stMuteRect.h = 40;
+									#endif
 
                                     PVR_DrawMuteText(&stMuteRect, g_stPlayChnAttr[u32ChanNum].bMuteSeted);
                                 }
@@ -3315,11 +3487,10 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
 {
     HI_S32 ret;
     HI_U32 playChn;
-    PVR_PROG_INFO_S        fileInfo;
-    HI_UNF_PVR_PLAY_ATTR_S attr;
+    PVR_PROG_INFO_S        stFileInfo;
+    HI_UNF_PVR_PLAY_ATTR_S stAttr;
     PMT_COMPACT_TBL        *pPmttal;
     HI_U32 pid = 0;
-    HI_U32                  u32DispOptimizeFlag;
     HI_UNF_AVPLAY_MEDIA_CHAN_E enMediaType = 0;
     SAMPLE_CheckNullPTR(pszFileName);
     HI_UNF_AVPLAY_FRMRATE_PARAM_S stFrmRateAttr = {0};
@@ -3328,9 +3499,7 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
     HI_CODEC_VIDEO_CMD_S  stVdecCmdPara = {0};
     PMT_COMPACT_PROG stProgInfoTmp;
 
-    //*pu32DmxId = DEMUX_ID_0 + u32ChnNum;
-
-    SAMPLE_RUN(PVR_GetPorgInfo(&fileInfo, pszFileName), ret);
+    SAMPLE_RUN(PVR_GetPorgInfo(&stFileInfo, pszFileName), ret);
     if (HI_SUCCESS != ret)
     {
         PRINT_SMP("Can NOT get prog INFO, can't play.\n");
@@ -3342,52 +3511,52 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
         
         PVR_SetAvplayPidAndCodecType(hAvplay, &(pPmttal->proginfo[0]));
 
-        memcpy(attr.szFileName, pszFileName, strlen(pszFileName) + 1);
-        attr.u32FileNameLen = strlen(pszFileName);
-        attr.enStreamType = HI_UNF_PVR_STREAM_TYPE_TS;
-        attr.bIsClearStream = HI_TRUE;
+        memcpy(stAttr.szFileName, pszFileName, strlen(pszFileName) + 1);
+        stAttr.u32FileNameLen = strlen(pszFileName);
+        stAttr.enStreamType = HI_UNF_PVR_STREAM_TYPE_TS;
+        stAttr.bIsClearStream = HI_TRUE;
     }
     else
     {
-        stProgInfoTmp.ProgID = fileInfo.ProgID;
-        stProgInfoTmp.PmtPid = fileInfo.PmtPid;
-        stProgInfoTmp.PcrPid = fileInfo.PcrPid;
-        stProgInfoTmp.VideoType = fileInfo.VideoType;
-        stProgInfoTmp.VElementNum = fileInfo.VElementNum;
-        stProgInfoTmp.VElementPid = fileInfo.VElementPid;
-        stProgInfoTmp.AudioType = fileInfo.AudioType;
-        stProgInfoTmp.AElementNum = fileInfo.AElementNum;
-        stProgInfoTmp.AElementPid = fileInfo.AElementPid;
-        memcpy(stProgInfoTmp.Audioinfo, fileInfo.Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
-        stProgInfoTmp.SubtType = fileInfo.SubtType;
-        stProgInfoTmp.u16SubtitlingNum = fileInfo.u16SubtitlingNum;
-        memcpy(stProgInfoTmp.SubtitingInfo, fileInfo.SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
-        memcpy(&(stProgInfoTmp.stSCTESubtInfo), &(fileInfo.stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
-        stProgInfoTmp.u16ClosedCaptionNum = fileInfo.u16ClosedCaptionNum;
-        memcpy(stProgInfoTmp.stClosedCaption, fileInfo.stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
-        stProgInfoTmp.u16ARIBCCPid = fileInfo.u16ARIBCCPid;
-        stProgInfoTmp.u16TtxNum = fileInfo.u16TtxNum;
-        memcpy(stProgInfoTmp.stTtxInfo, fileInfo.stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
+        stProgInfoTmp.ProgID = stFileInfo.ProgID;
+        stProgInfoTmp.PmtPid = stFileInfo.PmtPid;
+        stProgInfoTmp.PcrPid = stFileInfo.PcrPid;
+        stProgInfoTmp.VideoType = stFileInfo.VideoType;
+        stProgInfoTmp.VElementNum = stFileInfo.VElementNum;
+        stProgInfoTmp.VElementPid = stFileInfo.VElementPid;
+        stProgInfoTmp.AudioType = stFileInfo.AudioType;
+        stProgInfoTmp.AElementNum = stFileInfo.AElementNum;
+        stProgInfoTmp.AElementPid = stFileInfo.AElementPid;
+        memcpy(stProgInfoTmp.Audioinfo, stFileInfo.Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
+        stProgInfoTmp.SubtType = stFileInfo.SubtType;
+        stProgInfoTmp.u16SubtitlingNum = stFileInfo.u16SubtitlingNum;
+        memcpy(stProgInfoTmp.SubtitingInfo, stFileInfo.SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
+        memcpy(&(stProgInfoTmp.stSCTESubtInfo), &(stFileInfo.stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
+        stProgInfoTmp.u16ClosedCaptionNum = stFileInfo.u16ClosedCaptionNum;
+        memcpy(stProgInfoTmp.stClosedCaption, stFileInfo.stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
+        stProgInfoTmp.u16ARIBCCPid = stFileInfo.u16ARIBCCPid;
+        stProgInfoTmp.u16TtxNum = stFileInfo.u16TtxNum;
+        memcpy(stProgInfoTmp.stTtxInfo, stFileInfo.stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
 
         PVR_SetAvplayPidAndCodecType(hAvplay, &(stProgInfoTmp));
 
-        memcpy(attr.szFileName, pszFileName, strlen(pszFileName) + 1);
-        attr.u32FileNameLen = strlen(pszFileName);
-        attr.enStreamType = fileInfo.stRecAttr.enStreamType;
-        attr.bIsClearStream = fileInfo.stRecAttr.bIsClearStream;
+        memcpy(stAttr.szFileName, pszFileName, strlen(pszFileName) + 1);
+        stAttr.u32FileNameLen = strlen(pszFileName);
+        stAttr.enStreamType = stFileInfo.stRecAttr.enStreamType;
+        stAttr.bIsClearStream = stFileInfo.stRecAttr.bIsClearStream;
     }
 
-    if ((1 == fileInfo.stRecAttr.stEncryptCfg.bDoCipher) && (ret == HI_SUCCESS))
+    if ((1 == stFileInfo.stRecAttr.stEncryptCfg.bDoCipher) && (ret == HI_SUCCESS))
     {
-        memcpy(&(attr.stDecryptCfg), &(fileInfo.stRecAttr.stEncryptCfg), sizeof(HI_UNF_PVR_CIPHER_S));
+        memcpy(&(stAttr.stDecryptCfg), &(stFileInfo.stRecAttr.stEncryptCfg), sizeof(HI_UNF_PVR_CIPHER_S));
 
         sample_common_printf("cipher info:\n");
-        sample_common_printf("  enType:%d\n", attr.stDecryptCfg.enType);
+        sample_common_printf("  enType:%d\n", stAttr.stDecryptCfg.enType);
     }
     else
     {
         sample_common_printf("cipher info: not encrypt\n");
-        attr.stDecryptCfg.bDoCipher = HI_FALSE;
+        stAttr.stDecryptCfg.bDoCipher = HI_FALSE;
     }
 
     ret = HI_UNF_DMX_AttachTSPort(u32DmxId, (HI_UNF_DMX_PORT_RAM_0 + u32ChnNum));
@@ -3409,7 +3578,7 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
         return ret;
     }
     /*create new play channel*//*CNcomment:申请新的播放通道*/
-    SAMPLE_RUN(HI_UNF_PVR_PlayCreateChn(&playChn, &attr, hAvplay, *phPlaybackTsbuff), ret);
+    SAMPLE_RUN(HI_UNF_PVR_PlayCreateChn(&playChn, &stAttr, hAvplay, *phPlaybackTsbuff), ret);
     if (HI_SUCCESS != ret)
     {
         return ret;
@@ -3455,17 +3624,6 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
         return HI_FAILURE;
     }
 
-    u32DispOptimizeFlag = 1;
-    /*if you wanna get better figure display performance in pvr fast backward playing,
-      pls check the extra_disp in bootargs is large enough, and then enable the following codes*/
-    /*ret = HI_UNF_AVPLAY_Invoke(hAvplay, HI_UNF_AVPLAY_INVOKE_SET_DISP_OPTIMIZE_FLAG, &u32DispOptimizeFlag);
-    if (HI_SUCCESS != ret)
-    {
-        sample_common_printf("call HI_UNF_AVPLAY_Invoke failed.\n");
-        HI_UNF_PVR_PlayDestroyChn(playChn);
-        return ret;
-    }*/
-
     SAMPLE_RUN(HI_UNF_PVR_PlayStartChn(playChn), ret);
     if (HI_SUCCESS != ret)
     {
@@ -3505,17 +3663,16 @@ HI_S32 PVR_StartPlay(const HI_CHAR *pszFileName,
 
 HI_VOID PVR_StopPlay(HI_U32 playChn, HI_U32 u32DmxId, HI_HANDLE hDmxTsBuf)
 {
-    HI_S32 ret;
     HI_UNF_AVPLAY_STOP_OPT_S stopOpt;
 
     stopOpt.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
     stopOpt.u32TimeoutMs = 0;
     HI_UNF_PVR_PlayStopChn(playChn, &stopOpt);
     HI_UNF_PVR_PlayDestroyChn(playChn);
-    SAMPLE_RUN(HI_UNF_DMX_DestroyTSBuffer(hDmxTsBuf), ret);
-    SAMPLE_RUN(HI_UNF_DMX_DetachTSPort(u32DmxId), ret);
-}
 
+    HI_UNF_DMX_DestroyTSBuffer(hDmxTsBuf);
+    HI_UNF_DMX_DetachTSPort(u32DmxId);
+}
 
 HI_S32 PVR_StartLive(HI_U32 u32ProgramNum, HI_U32 u32DmxId, HI_HANDLE hAvplay, HI_BOOL *pbVideoExist, HI_U32 u32DmxPort)
 {
@@ -3626,15 +3783,15 @@ HI_S32 PVR_StartLive(HI_U32 u32ProgramNum, HI_U32 u32DmxId, HI_HANDLE hAvplay, H
 
 HI_S32 PVR_StopLive(HI_HANDLE hAvplay)
 {
-    HI_UNF_AVPLAY_STOP_OPT_S option;
+    HI_UNF_AVPLAY_STOP_OPT_S stStopOption;
 
-    option.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
-    option.u32TimeoutMs = 0;
+    stStopOption.enMode = HI_UNF_AVPLAY_STOP_MODE_STILL;
+    stStopOption.u32TimeoutMs = 0;
 
     sample_common_printf("stop live play ...\n");
 
     /*stop playing audio and video*//*CNcomment:停止音视频设备*/
-    return HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &option);
+    return HI_UNF_AVPLAY_Stop(hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID | HI_UNF_AVPLAY_MEDIA_CHAN_AUD, &stStopOption);
 }
 
 
@@ -3643,110 +3800,112 @@ HI_S32 PVR_StartRec(const HI_CHAR *path,
                            HI_U32 u32DemuxID,
                            HI_BOOL bRewind, 
                            HI_BOOL bDoCipher, 
-                           HI_U64 maxSize, 
-                           HI_U64 maxTimeMs,
-                           HI_U32 *pRecChn)
+                           HI_U64 u64MaxSize, 
+                           HI_U64 u64MaxTimeMs,
+                           HI_U32 *pu32RecChn)
 {
-    HI_U32 recChn;
+    HI_U32 u32RecChn;
     HI_S32 ret = HI_SUCCESS;
-    HI_UNF_PVR_REC_ATTR_S   attr;
-    HI_U32                  VidPid;
-    HI_U32                  AudPid = 0;
-    PVR_PROG_INFO_S         fileInfo;
-    PVR_PROG_INFO_S         *pfileInfo;
-    HI_CHAR                 szFileName[PVR_MAX_FILENAME_LEN];
-    attr.u32DemuxID    = u32DemuxID;
+    HI_U32                u32VidPid;
+    HI_U32                u32AudPid = 0;
+    HI_UNF_PVR_REC_ATTR_S stAttr;
+    PVR_PROG_INFO_S       stFileInfo;
+    HI_CHAR               szFileName[PVR_MAX_FILENAME_LEN];
+    
+    stAttr.u32DemuxID    = u32DemuxID;
 
-    PVR_RecAddPid(attr.u32DemuxID, 0, HI_UNF_DMX_CHAN_TYPE_SEC);
-    PVR_RecAddPid(attr.u32DemuxID, pstProgInfo->PmtPid, HI_UNF_DMX_CHAN_TYPE_SEC);
-
-    if (pstProgInfo->AElementNum > 0)
+    if (pstProgInfo->VElementNum > 0)
     {
-        AudPid  = pstProgInfo->AElementPid;
-        PVR_RecAddPid(attr.u32DemuxID, AudPid, HI_UNF_DMX_CHAN_TYPE_AUD);
-    }
-
-    if (pstProgInfo->VElementNum > 0 )
-    {
-        VidPid = pstProgInfo->VElementPid;
-        PVR_RecAddPid(attr.u32DemuxID, VidPid, HI_UNF_DMX_CHAN_TYPE_VID);
-        attr.u32IndexPid   = VidPid;
-        attr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_VIDEO;
-        attr.enIndexVidType = pstProgInfo->VideoType;
+        stAttr.u32IndexPid   = pstProgInfo->VElementPid;
+        stAttr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_VIDEO;
+        stAttr.enIndexVidType = pstProgInfo->VideoType;
     }
     else
     {
-        attr.u32IndexPid   = AudPid;
-        attr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_AUDIO;
-        attr.enIndexVidType = HI_UNF_VCODEC_TYPE_BUTT;
+        stAttr.u32IndexPid   = pstProgInfo->AElementPid;
+        stAttr.enIndexType   = HI_UNF_PVR_REC_INDEX_TYPE_AUDIO;
+        stAttr.enIndexVidType = HI_UNF_VCODEC_TYPE_BUTT;
     }
 
     sprintf(szFileName, "rec_v%d_a%d.ts",
                         pstProgInfo->VElementPid,
                         pstProgInfo->AElementPid);
 
-    sprintf(attr.szFileName, "%s/", path);
+    sprintf(stAttr.szFileName, "%s/", path);
 
-    strcat(attr.szFileName, szFileName);
+    strcat(stAttr.szFileName, szFileName);
 
-    attr.u32FileNameLen = strlen(attr.szFileName);
-    attr.u32ScdBufSize = PVR_STUB_SC_BUF_SZIE;
-    attr.u32DavBufSize = PVR_STUB_TSDATA_SIZE;
-    attr.enStreamType  = HI_UNF_PVR_STREAM_TYPE_TS;
-    attr.bRewind = bRewind;
-    attr.u64MaxFileSize= maxSize;//source;
-    attr.u64MaxTimeInMs= maxTimeMs;
-    attr.bIsClearStream = HI_TRUE;
-    attr.u32UsrDataInfoSize = sizeof(PVR_PROG_INFO_S) + 100;/*the one in index file is a multipleit of 40 bytes*//*CNcomment:索引文件里是40个字节对齐的*/
+    stAttr.u32FileNameLen = strlen(stAttr.szFileName);
+    stAttr.u32ScdBufSize = PVR_STUB_SC_BUF_SZIE;
+    stAttr.u32DavBufSize = PVR_STUB_TSDATA_SIZE;
+    stAttr.enStreamType  = HI_UNF_PVR_STREAM_TYPE_TS;
+    stAttr.bRewind = bRewind;
+    stAttr.u64MaxFileSize= u64MaxSize;//source;
+    stAttr.u64MaxTimeInMs= u64MaxTimeMs;
+    stAttr.bIsClearStream = HI_TRUE;
+    stAttr.u32UsrDataInfoSize = sizeof(PVR_PROG_INFO_S) + 100;/*the one in index file is a multipleit of 40 bytes*//*CNcomment:索引文件里是40个字节对齐的*/
 
-    attr.stEncryptCfg.bDoCipher = bDoCipher;
-    attr.stEncryptCfg.enType = HI_UNF_CIPHER_ALG_AES;
-    attr.stEncryptCfg.u32KeyLen = 16;          /*strlen(PVR_CIPHER_KEY)*/
-    SAMPLE_RUN(HI_UNF_PVR_RecCreateChn(&recChn, &attr), ret);
+    stAttr.stEncryptCfg.bDoCipher = bDoCipher;
+    stAttr.stEncryptCfg.enType = HI_UNF_CIPHER_ALG_AES;
+    stAttr.stEncryptCfg.u32KeyLen = 16;          /*strlen(PVR_CIPHER_KEY)*/
+    SAMPLE_RUN(HI_UNF_PVR_RecCreateChn(&u32RecChn, &stAttr), ret);
     if (HI_SUCCESS != ret)
     {
         return ret;
     }
 
-    SAMPLE_RUN(HI_UNF_PVR_RecStartChn(recChn), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, 0), ret);
+    SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, pstProgInfo->PmtPid), ret);
+    if (pstProgInfo->AElementNum > 0)
+    {
+        u32AudPid = pstProgInfo->AElementPid;
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, u32AudPid), ret);
+    }
+
+    if (pstProgInfo->VElementNum > 0)
+    {
+        u32VidPid = pstProgInfo->VElementPid;
+        SAMPLE_RUN(HI_UNF_PVR_RecAddPID(u32RecChn, u32VidPid), ret);
+    }
+
+    SAMPLE_RUN(HI_UNF_PVR_RecStartChn(u32RecChn), ret);
     if (HI_SUCCESS != ret)
     {
-        HI_UNF_PVR_RecDestroyChn(recChn);
+        HI_UNF_PVR_RecDestroyChn(u32RecChn);
         return ret;
     }
 
-    fileInfo.ProgID = pstProgInfo->ProgID;
-    fileInfo.PmtPid = pstProgInfo->PmtPid;
-    fileInfo.PcrPid = pstProgInfo->PcrPid;
-    fileInfo.VideoType = pstProgInfo->VideoType;
-    fileInfo.VElementNum = pstProgInfo->VElementNum;
-    fileInfo.VElementPid = pstProgInfo->VElementPid;
-    fileInfo.AudioType = pstProgInfo->AudioType;
-    fileInfo.AElementNum = pstProgInfo->AElementNum;
-    fileInfo.AElementPid = pstProgInfo->AElementPid;
-    memcpy(fileInfo.Audioinfo, pstProgInfo->Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
-    fileInfo.SubtType = pstProgInfo->SubtType;
-    fileInfo.u16SubtitlingNum = pstProgInfo->u16SubtitlingNum;
-    memcpy(fileInfo.SubtitingInfo, pstProgInfo->SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
-    memcpy(&(fileInfo.stSCTESubtInfo), &(pstProgInfo->stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
-    fileInfo.u16ClosedCaptionNum = pstProgInfo->u16ClosedCaptionNum;
-    memcpy(fileInfo.stClosedCaption, pstProgInfo->stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
-    fileInfo.u16ARIBCCPid = pstProgInfo->u16ARIBCCPid;
-    fileInfo.u16TtxNum = pstProgInfo->u16TtxNum;
-    memcpy(fileInfo.stTtxInfo, pstProgInfo->stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
+    stFileInfo.ProgID = pstProgInfo->ProgID;
+    stFileInfo.PmtPid = pstProgInfo->PmtPid;
+    stFileInfo.PcrPid = pstProgInfo->PcrPid;
+    stFileInfo.VideoType = pstProgInfo->VideoType;
+    stFileInfo.VElementNum = pstProgInfo->VElementNum;
+    stFileInfo.VElementPid = pstProgInfo->VElementPid;
+    stFileInfo.AudioType = pstProgInfo->AudioType;
+    stFileInfo.AElementNum = pstProgInfo->AElementNum;
+    stFileInfo.AElementPid = pstProgInfo->AElementPid;
+    memcpy(stFileInfo.Audioinfo, pstProgInfo->Audioinfo, PROG_MAX_AUDIO*sizeof(PMT_AUDIO));
+    stFileInfo.SubtType = pstProgInfo->SubtType;
+    stFileInfo.u16SubtitlingNum = pstProgInfo->u16SubtitlingNum;
+    memcpy(stFileInfo.SubtitingInfo, pstProgInfo->SubtitingInfo, SUBTITLING_MAX*sizeof(PMT_SUBTITLE));
+    memcpy(&(stFileInfo.stSCTESubtInfo), &(pstProgInfo->stSCTESubtInfo), sizeof(PMT_SCTE_SUBTITLE_S));
+    stFileInfo.u16ClosedCaptionNum = pstProgInfo->u16ClosedCaptionNum;
+    memcpy(stFileInfo.stClosedCaption, pstProgInfo->stClosedCaption, CAPTION_SERVICE_MAX*sizeof(PMT_CLOSED_CAPTION_S));
+    stFileInfo.u16ARIBCCPid = pstProgInfo->u16ARIBCCPid;
+    stFileInfo.u16TtxNum = pstProgInfo->u16TtxNum;
+    memcpy(stFileInfo.stTtxInfo, pstProgInfo->stTtxInfo, TTX_MAX*sizeof(PMT_TTX_S));
 
-    memcpy(&(fileInfo.stRecAttr), &attr, sizeof(fileInfo.stRecAttr));
-    pfileInfo = &fileInfo;
+    memcpy(&(stFileInfo.stRecAttr), &stAttr, sizeof(stFileInfo.stRecAttr));
 
-    SAMPLE_RUN(PVR_SavePorgInfo(&fileInfo, attr.szFileName), ret);
+    SAMPLE_RUN(PVR_SavePorgInfo(&stFileInfo, stAttr.szFileName), ret);
     if (HI_SUCCESS != ret)
     {
-        HI_UNF_PVR_RecStopChn(recChn);
-        HI_UNF_PVR_RecDestroyChn(recChn);
+        HI_UNF_PVR_RecStopChn(u32RecChn);
+        HI_UNF_PVR_RecDestroyChn(u32RecChn);
         return ret;
     }
 
-    *pRecChn = recChn;
+    *pu32RecChn = u32RecChn;
 
     return HI_SUCCESS;
 }
@@ -3754,12 +3913,12 @@ HI_S32 PVR_StartRec(const HI_CHAR *path,
 HI_S32 PVR_StopRec(HI_U32 u32RecChn, HI_U32 u32DmxId)
 {
     HI_S32 s32Ret = 0;
-    HI_UNF_PVR_REC_ATTR_S recAttr;
+    HI_UNF_PVR_REC_ATTR_S stRecAttr;
 
-    s32Ret = HI_UNF_PVR_RecGetChn(u32RecChn, &recAttr);
+    s32Ret = HI_UNF_PVR_RecGetChn(u32RecChn, &stRecAttr);
     if (HI_SUCCESS != s32Ret)
     {
-        sample_common_printf("Get rec chn attr fail! ret=%#x\n", s32Ret);
+        sample_common_printf("Get rec chn stAttr fail! ret=%#x\n", s32Ret);
     }
     
     s32Ret = HI_UNF_PVR_RecStopChn(u32RecChn);
@@ -3768,13 +3927,13 @@ HI_S32 PVR_StopRec(HI_U32 u32RecChn, HI_U32 u32DmxId)
         sample_common_printf("Stop chan %d recording fail! ret=%#x\n", u32RecChn, s32Ret);
     }
 
+    (HI_VOID)HI_UNF_PVR_RecDelAllPID(u32RecChn);
+
     s32Ret = HI_UNF_PVR_RecDestroyChn(u32RecChn);
     if (HI_SUCCESS != s32Ret)
     {
         sample_common_printf("Destroy chn %d fail! ret=%#x\n", u32RecChn, s32Ret);
     }
-
-    (HI_VOID)PVR_RecDelAllPid(u32DmxId);
 
     return s32Ret;
 }
@@ -4090,10 +4249,17 @@ HI_S32 PVR_ProcZoominScreen(HI_HANDLE hWindow)
     HI_S32 i = 0;
     HI_RECT stMuteRect;
 
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	stMuteRect.x = 50;
+	stMuteRect.y = 10;
+	stMuteRect.w = 40;
+	stMuteRect.h = 25;
+#else
     stMuteRect.x = 50;
     stMuteRect.y = 50;
     stMuteRect.w = 60;
     stMuteRect.h = 40;
+#endif
 
     for(i = 0; i < PVR_MAX_PLAY_CHN; i++)
     {
@@ -4137,11 +4303,17 @@ HI_S32 PVR_ProcZoomoutScreen(HI_HANDLE hWindow)
 {
     HI_S32 i = 0;
     HI_RECT stMuteRect;
-
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+	stMuteRect.x = 50;
+	stMuteRect.y = 10;
+	stMuteRect.w = 40;
+	stMuteRect.h = 25;
+#else
     stMuteRect.x = 50;
     stMuteRect.y = 50;
     stMuteRect.w = 60;
     stMuteRect.h = 40;
+#endif
 
     PVR_DrawMuteText(&stMuteRect, HI_FALSE);
 
@@ -4202,10 +4374,11 @@ HI_S32 PVR_ZoomInDispToFullScreen(HI_HANDLE hWindow, HI_RECT_S *pstOrgRect)
         stWinAttr.stOutputRect.s32Y -= PVR_ZOOM_HEIGHT_STEP;
         stWinAttr.stOutputRect.s32Width += PVR_ZOOM_WIDTH_STEP;
         stWinAttr.stOutputRect.s32Height += PVR_ZOOM_HEIGHT_STEP;
+
         s32Ret = HI_UNF_VO_SetWindowAttr(hWindow, &stWinAttr);
         if(HI_SUCCESS != s32Ret)
         {
-            sample_common_printf("Set window attr fail! window handle=%d i=%d\n",hWindow, i);
+            sample_common_printf("Set window attr fail! window handle=%d i=%d ret=%#x\n",hWindow, i, s32Ret);
             return -1;
         }
 
@@ -4213,8 +4386,13 @@ HI_S32 PVR_ZoomInDispToFullScreen(HI_HANDLE hWindow, HI_RECT_S *pstOrgRect)
     
     stWinAttr.stOutputRect.s32X = 0;
     stWinAttr.stOutputRect.s32Y = 0;
+#if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    stWinAttr.stOutputRect.s32Width = 1280;
+    stWinAttr.stOutputRect.s32Height = 720;
+#else
     stWinAttr.stOutputRect.s32Width = 1920;
-    stWinAttr.stOutputRect.s32Height = 1080;        
+    stWinAttr.stOutputRect.s32Height = 1080;
+#endif
     s32Ret = HI_UNF_VO_SetWindowAttr(hWindow, &stWinAttr);
     if(HI_SUCCESS != s32Ret)
     {
@@ -4343,17 +4521,16 @@ HI_VOID PVR_ProccessStreamEndEvent(HI_U32 u32ChnID, HI_UNF_PVR_EVENT_E EventType
         {
             sample_common_printf("======Time Cost:%dms=======\n",TimeCost);
         }
-        
-
     }
 
     return;
 }
+
 HI_VOID PVR_ProccessReachEvent(HI_U32 u32ChnID, HI_UNF_PVR_EVENT_E EventType, HI_S32 s32EventValue, HI_VOID *args)
 {
-    HI_U32 i = 0;
-    HI_U32 u32ChanNum = 0;
-    HI_S32 s32Ret = 0;
+    HI_U32  i = 0;
+    HI_U32  u32ChanNum = 0;
+    HI_S32  Ret = 0;
 
     for(i = 0; i < sizeof(g_stTimeShiftChnAttr)/sizeof(PVR_TIMESHIFT_CHN_ATTR); i++)
     {
@@ -4387,13 +4564,22 @@ HI_VOID PVR_ProccessReachEvent(HI_U32 u32ChnID, HI_UNF_PVR_EVENT_E EventType, HI
                   g_stTimeShiftChnAttr[u32ChanNum].u32PlayDemuxId,
                   g_stTimeShiftChnAttr[u32ChanNum].hTsBufForPlayback);
 
-    s32Ret = HI_UNF_DMX_AttachTSPort(g_stTimeShiftChnAttr[u32ChanNum].u32PlayDemuxId, g_stTimeShiftChnAttr[u32ChanNum].u32DmxPort);
+    Ret = HI_UNF_DMX_AttachTSPort(g_stTimeShiftChnAttr[u32ChanNum].u32PlayDemuxId, g_stTimeShiftChnAttr[u32ChanNum].u32DmxPort);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("[%s] HI_UNF_DMX_AttachTSPort failed 0x%x\n",
+            __FUNCTION__, Ret);
+    }
 
-    s32Ret = PVR_StartLive(g_stTimeShiftChnAttr[u32ChanNum].u32ProgNum, 
+    Ret = PVR_StartLive(g_stTimeShiftChnAttr[u32ChanNum].u32ProgNum, 
                             g_stTimeShiftChnAttr[u32ChanNum].u32PlayDemuxId,
                             g_stTimeShiftChnAttr[u32ChanNum].hAvplay,
                             &g_stTimeShiftChnAttr[u32ChanNum].bVideoExist,
                             g_stTimeShiftChnAttr[u32ChanNum].u32DmxPort);
+    if (HI_SUCCESS != Ret)
+    {
+        sample_common_printf("[%s] PVR_StartLive failed\n", __FUNCTION__);
+    }
 
     PVR_DrawPlayChnInitRect(g_stTimeShiftChnAttr[u32ChanNum].hPlayChn);
 
@@ -4728,11 +4914,18 @@ HI_VOID PVR_PlayBackCmdProcess(const HI_CHAR *pcInputCmd)
             if (HI_TRUE == g_stPlayChnAttr[u32ChanNum].bFullScreen)
             {
                 HI_RECT stMuteRect;
-                
+				
+                #if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+				stMuteRect.x = 50;
+                stMuteRect.y = 10;
+                stMuteRect.w = 40;
+                stMuteRect.h = 25;
+				#else
                 stMuteRect.x = 50;
                 stMuteRect.y = 50;
                 stMuteRect.w = 60;
                 stMuteRect.h = 40;
+				#endif
 
                 PVR_DrawMuteText(&stMuteRect, g_stPlayChnAttr[u32ChanNum].bMuteSeted);
             }
@@ -5027,11 +5220,18 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
             if (HI_TRUE == g_stTimeShiftChnAttr[u32ChanNum].bFullScreen)
             {
                 HI_RECT stMuteRect;
-                
+				
+                #if defined(CHIP_TYPE_hi3716mv310) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+				stMuteRect.x = 50;
+                stMuteRect.y = 10;
+                stMuteRect.w = 40;
+                stMuteRect.h = 25;
+				#else
                 stMuteRect.x = 50;
                 stMuteRect.y = 50;
                 stMuteRect.w = 60;
                 stMuteRect.h = 40;
+				#endif
 
                 PVR_DrawMuteText(&stMuteRect, g_stTimeShiftChnAttr[u32ChanNum].bMuteSeted);
             }
@@ -5155,7 +5355,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
             {
                 sample_common_printf("Start pvr play fail! playchn=%d filename=%s\n", g_stTimeShiftChnAttr[u32ChanNum].hPlayChn, stPvrRecAttr.szFileName);
                 return;
-            }           
+            }
         }
 
         if(HI_TRUE == g_stTimeShiftChnAttr[u32ChanNum].bPlayChnInited)
@@ -5204,7 +5404,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
             {
                 g_stTimeShiftChnAttr[u32ChanNum].u32FBSpeedTimes = 0;
                 g_stTimeShiftChnAttr[u32ChanNum].u32SFSpeedTimes = 0;
-                
+
                 g_stTimeShiftChnAttr[u32ChanNum].u32FFSpeedTimes %= 6;
                 stPlayTrickMode.enSpeed = (0x1 << (g_stTimeShiftChnAttr[u32ChanNum].u32FFSpeedTimes + 1)) * HI_UNF_PVR_PLAY_SPEED_NORMAL;
                 
@@ -5222,7 +5422,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
             {                
                 g_stTimeShiftChnAttr[u32ChanNum].u32FFSpeedTimes = 0;
                 g_stTimeShiftChnAttr[u32ChanNum].u32SFSpeedTimes = 0;
-                
+
                 g_stTimeShiftChnAttr[u32ChanNum].u32FBSpeedTimes %= 6;
                 stPlayTrickMode.enSpeed = -(0x1 << (g_stTimeShiftChnAttr[u32ChanNum].u32FBSpeedTimes + 1)) * HI_UNF_PVR_PLAY_SPEED_NORMAL;
                 
@@ -5243,7 +5443,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
                 
                 g_stTimeShiftChnAttr[u32ChanNum].u32SFSpeedTimes %= 6;
                 stPlayTrickMode.enSpeed = HI_UNF_PVR_PLAY_SPEED_NORMAL / (0x1 << (g_stTimeShiftChnAttr[u32ChanNum].u32SFSpeedTimes + 1));
-                
+
                 s32Ret = HI_UNF_PVR_PlayTPlay(g_stTimeShiftChnAttr[u32ChanNum].u32PvrPlayChn, &stPlayTrickMode);
                 if (s32Ret != HI_SUCCESS)
                 {
@@ -5259,7 +5459,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
                 g_stTimeShiftChnAttr[u32ChanNum].u32FFSpeedTimes = 0;
                 g_stTimeShiftChnAttr[u32ChanNum].u32FBSpeedTimes = 0;
                 g_stTimeShiftChnAttr[u32ChanNum].u32SFSpeedTimes = 0;
-                
+
                 if('+' == pcInputCmd[7])
                 {
                     u32PlaySeekTime = strtol(&pcInputCmd[8],NULL,0);
@@ -5303,7 +5503,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
             {
                 g_stTimeShiftChnAttr[u32ChanNum].bPlayChnInited = HI_FALSE;
                 g_stTimeShiftChnAttr[u32ChanNum].bLiveStoped = HI_FALSE;
-                
+
                 PVR_StopPlay(g_stTimeShiftChnAttr[u32ChanNum].hPlayChn, 
                               g_stTimeShiftChnAttr[u32ChanNum].u32PlayDemuxId,
                               g_stTimeShiftChnAttr[u32ChanNum].hTsBufForPlayback);
@@ -5321,6 +5521,7 @@ HI_VOID PVR_TimeShiftCmdProcess(const HI_CHAR *pcInputCmd, const HI_CHAR *pcRecP
         }
     }
 }
+
 HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
 {
     HI_S32 i = 0;

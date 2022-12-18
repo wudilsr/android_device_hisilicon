@@ -206,7 +206,13 @@ typedef struct hiVDEC_CMD_SET_LOWDELAY_S
     HI_HANDLE  hHandle;
 	HI_BOOL    bLowdelay;           
 }VDEC_CMD_SET_LOWDELAY_S;
-
+#ifdef HI_TVP_SUPPORT
+typedef struct hiVDEC_CMD_SET_TVP_S
+{
+    HI_HANDLE  hHandle;
+	HI_BOOL    bTVP;           
+}VDEC_CMD_SET_TVP_S;
+#endif
 //add by l00225186
 typedef struct tagVDEC_VPSS_PARAM_S
 {
@@ -421,6 +427,9 @@ typedef struct hiVDEC_CMD_VPU_PROC_STATUS_S
 #define UMAPC_VDEC_CHAN_SETEXTBUFFERSTATE     _IOWR(HI_ID_VDEC, 0xd3, VDEC_CMD_SETEXTBUFFERTATE_S)
 #define UMAPC_VDEC_CHAN_SETRESOLUTION     _IOWR(HI_ID_VDEC, 0xd4, VDEC_CMD_SETRESOLUTION_S)
 
+#ifdef HI_TVP_SUPPORT
+#define UMAPC_VDEC_CHAN_TVP           _IOW (HI_ID_VDEC, 0xb6, VDEC_CMD_SET_TVP_S)
+#endif
 #ifdef __cplusplus
 #if __cplusplus
 }

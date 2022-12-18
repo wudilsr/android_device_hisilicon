@@ -12,10 +12,8 @@ rvOvFThv1p2DIQ7/+F2T7N8KBVM1/AvHYeKyxL0EfWyFDfdebldw0wDLB8Rz1f3CCf0vOy+5
 
 #include "vpss_in_common.h"
 
-#if 0
-#if defined(CHIP_TYPE_hi3716mv410)
+#if defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420) 
 #include "vpss_in_3716mv410.h"
-#endif
 #endif
 
 #if defined(CHIP_TYPE_hi3798cv200_a)

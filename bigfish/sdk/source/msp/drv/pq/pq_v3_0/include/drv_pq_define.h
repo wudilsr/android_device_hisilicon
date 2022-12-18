@@ -10,7 +10,7 @@
 File Name   : drv_pq_define.h
 Author      : p00203646
 Version     : v0.1
-Abstract    : header of HI3798MV100 pq define
+Abstract    :
 *****************************************************************************/
 
 #ifndef _DRV_PQ_DEFINE_V3_H_
@@ -30,6 +30,8 @@ PQ Software Define
 #define PQ_CHIP_NAME    "3798MV100"
 #elif defined(CHIP_TYPE_hi3798cv200_a)
 #define PQ_CHIP_NAME    "HiFoneB2"
+#elif defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
+#define PQ_CHIP_NAME    "3716MV410"
 #endif
 
 
@@ -42,7 +44,7 @@ PQ Head File Define
 #define STR_LEN_80               80
 #define STR_LEN_256              256
 #define STR_LEN_1024             1024
-#if defined(CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410)||defined(CHIP_TYPE_hi3716mv420)
 #define ACM_Y_NUM                9
 #define ACM_S_NUM                13
 #define ACM_H_NUM                29
@@ -80,8 +82,6 @@ PQ Tools Virtual Command
 #define PQ_CMD_VIRTUAL_ACM_6BCOLOR_LUT                            0xffff0105
 
 #define PQ_CMD_VIRTUAL_DCI_LUT                                    0xffff0200
-
-#define PQ_CMD_SPECIAL_IP_DETECT                                  0xfffe0001
 
 
 

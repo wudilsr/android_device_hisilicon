@@ -18,7 +18,6 @@ public:
     DECLARE_META_INTERFACE(HiSysManagerService);
     virtual int upgrade(String8 path) = 0;
     virtual int reset() = 0;
-    virtual int updateCAFile(String8 path1,String8 path2) = 0;
     virtual int enterSmartStandby() = 0;
     virtual int quitSmartStandby() = 0;
     virtual int setFlashInfo(String8 warpflag,int offset,int offlen,String8 info) = 0;

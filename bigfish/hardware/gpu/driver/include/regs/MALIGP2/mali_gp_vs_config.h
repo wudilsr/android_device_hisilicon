@@ -1,7 +1,7 @@
 /*
  * This confidential and proprietary software may be used only as
  * authorised by a licensing agreement from ARM Limited
- * (C) COPYRIGHT 2007-2010, 2013-2014 ARM Limited
+ * (C) COPYRIGHT 2007-2010, 2013-2015 ARM Limited
  * ALL RIGHTS RESERVED
  * The entire notice above must be reproduced on all authorised
  * copies and copies may only be made to the extent permitted
@@ -43,17 +43,17 @@
 
 #define GP_VS_CONF_REG_INP_STREAM_SET(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_INP_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_INP_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 #define GP_VS_CONF_REG_INP_STREAM_GET(stream, x) \
 	( \
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_INP_ADDR(x)]) \
+	  _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_INP_ADDR(x)]) \
 	)
 
 #define GP_VS_CONF_REG_INP_STREAM_ADD(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_INP_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_INP_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 #if MALI_BIG_ENDIAN
@@ -63,18 +63,18 @@
 
 #define GP_VS_CONF_REG_INP_SPEC_SET(stream, x, spec) \
 	( \
-		(stream)[GP_VS_CONF_REG_INP_SPEC(x)] = \
-		_SWAP_ENDIAN_U32_U8( \
-			(spec) | \
-			(((u32)GP_VS_CMD_BMASK(1, 1)) << GP_VS_REG_BIGENDIAN_SHIFT) \
-		) \
+	  (stream)[GP_VS_CONF_REG_INP_SPEC(x)] = \
+	          _SWAP_ENDIAN_U32_U8( \
+	                               (spec) | \
+	                               (((u32)GP_VS_CMD_BMASK(1, 1)) << GP_VS_REG_BIGENDIAN_SHIFT) \
+	                             ) \
 	)
 
 #else
 
 #define GP_VS_CONF_REG_INP_SPEC_SET(stream, x, spec) \
 	( \
-		(stream)[GP_VS_CONF_REG_INP_SPEC(x)] = spec \
+	  (stream)[GP_VS_CONF_REG_INP_SPEC(x)] = spec \
 	)
 
 #endif
@@ -82,7 +82,7 @@
 
 #define GP_VS_CONF_REG_INP_SPEC_GET(stream, x) \
 	( \
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_INP_SPEC(x)]) \
+	  _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_INP_SPEC(x)]) \
 	)
 
 
@@ -98,30 +98,30 @@
 
 #define GP_VS_CONF_REG_OUTP_STREAM_SET(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_OUTP_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_OUTP_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 #define GP_VS_CONF_REG_OUTP_STREAM_GET(stream, x) \
 	( \
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_OUTP_ADDR(x)]) \
+	  _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_OUTP_ADDR(x)]) \
 	)
 
 #define GP_VS_CONF_REG_OUTP_STREAM_ADD(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_OUTP_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_OUTP_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 
 
 #define GP_VS_CONF_REG_OUTP_SPEC_SET(stream, x, spec) \
 	( \
-		(stream)[GP_VS_CONF_REG_OUTP_SPEC(x)] = _SWAP_ENDIAN_U32_U8(spec) \
+	  (stream)[GP_VS_CONF_REG_OUTP_SPEC(x)] = _SWAP_ENDIAN_U32_U8(spec) \
 	)
 
 
 #define GP_VS_CONF_REG_OUTP_SPEC_GET(stream, x) \
 	(\
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_OUTP_SPEC(x)]) \
+	 _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_OUTP_SPEC(x)]) \
 	)
 
 
@@ -130,28 +130,28 @@
 
 #define GP_VS_CONF_REG_STREAM_SET(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_STREAM_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_STREAM_ADDR(x)] = _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 #define GP_VS_CONF_REG_STREAM_GET(stream, x) \
 	( \
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_STREAM_ADDR(x)]) \
+	  _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_STREAM_ADDR(x)]) \
 	)
 
 #define GP_VS_CONF_REG_STREAM_ADD(stream, x, addr) \
 	( \
-		(stream)[GP_VS_CONF_REG_STREAM_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
+	  (stream)[GP_VS_CONF_REG_STREAM_ADDR(x)] += _SWAP_ENDIAN_U32_U8(addr) \
 	)
 
 
 #define GP_VS_CONF_REG_SPEC_SET(stream, x, spec) \
 	( \
-		(stream)[GP_VS_CONF_REG_STREAM_SPEC(x)] = _SWAP_ENDIAN_U32_U8(spec) \
+	  (stream)[GP_VS_CONF_REG_STREAM_SPEC(x)] = _SWAP_ENDIAN_U32_U8(spec) \
 	)
 
 #define GP_VS_CONF_REG_SPEC_GET(stream, x) \
 	(\
-		_SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_STREAM_SPEC(x)]) \
+	 _SWAP_ENDIAN_U32_U8((stream)[GP_VS_CONF_REG_STREAM_SPEC(x)]) \
 	)
 
 /* Parameterized versions of the variants below that support 1-4 components */

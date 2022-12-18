@@ -16,8 +16,8 @@ extern void uart_early_putc(int chr);
 
 /* ddr training cmd result */
 static struct ddr_training_result_st ddrt_result_sram;
-static int ddr_training_addr_start;
-static int ddr_training_addr_end;
+static unsigned int ddr_training_addr_start;
+static unsigned int ddr_training_addr_end;
 static int ddr_print_level = DDR_LOG_ERROR;
 
 #ifdef DDR_TRAINING_LOG_CONFIG
@@ -84,6 +84,77 @@ void ddr_training_log(const char *func, int level, const char *fmt, ...)
 	va_end(args);
 	uart_early_puts("\r\n");
 }
+
+/**
+ * ddr_training_error
+ * @mask
+ * @phy
+ * @byte
+ * @dq
+ *
+ * Nothing to do in DDR command when defined DDR_TRAINING_LOG_CONFIG.
+ */
+void ddr_training_error(unsigned int mask, unsigned int phy, int byte, int dq)
+{
+	return;
+}
+#else
+/**
+ * ddr_training_error
+ * @mask
+ * @phy
+ * @byte
+ * @dq
+ *
+ * Display DDR training error.
+ */
+void ddr_training_error(unsigned int mask, unsigned int phy, int byte, int dq)
+{
+	switch (mask) {
+	case DDR_ERR_WL:
+		uart_early_puts("WL");
+		break;
+	case DDR_ERR_HW_GATING:
+		uart_early_puts("HW Gate");
+		break;
+	case DDR_ERR_GATING:
+		uart_early_puts("Gate");
+		break;
+	case DDR_ERR_DDRT_TIME_OUT:
+		uart_early_puts("DDRT");
+		break;
+	case DDR_ERR_HW_RD_DATAEYE:
+		uart_early_puts("HW Dataeye");
+		break;
+	case DDR_ERR_MPR:
+		uart_early_puts("MPR");
+		break;
+	case DDR_ERR_DATAEYE:
+		uart_early_puts("Dataeye");
+		break;
+	default:
+		break;
+	}
+
+	uart_early_puts(" Err:");
+
+	if (0 != phy) {
+		uart_early_puts(" Phy:");
+		uart_early_put_hex(phy);
+	}
+
+	if (-1 != byte) {
+		uart_early_puts(" Byte:");
+		uart_early_put_hex(byte);
+	}
+
+	if (-1 != dq) {
+		uart_early_puts(" DQ:");
+		uart_early_put_hex(dq);
+	}
+
+	uart_early_puts("\r\n");
+}
 #endif
 
 /**
@@ -94,16 +165,16 @@ void ddr_training_log(const char *func, int level, const char *fmt, ...)
  */
 static void ddr_training_result_init(void)
 {
-	ddrt_result_sram.ddrtr_data[0].base_dmc = DDR_REG_BASE_DMC0;
-	ddrt_result_sram.ddrtr_data[0].base_phy = DDR_REG_BASE_PHY0;
-	ddrt_result_sram.ddrtr_data[0].byte_num
-		= ddr_phy_get_byte_num(DDR_REG_BASE_DMC0);
-#if DDR_PHY_NUM == 2
-	ddrt_result_sram.ddrtr_data[1].base_dmc = DDR_REG_BASE_DMC1;
-	ddrt_result_sram.ddrtr_data[1].base_phy = DDR_REG_BASE_PHY1;
-	ddrt_result_sram.ddrtr_data[1].byte_num
-		= ddr_phy_get_byte_num(DDR_REG_BASE_DMC1);
-#endif
+	int i = 0;
+	unsigned int base_dmc, base_phy;
+
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		ddrt_result_sram.ddrtr_data[i].base_dmc = base_dmc;
+		ddrt_result_sram.ddrtr_data[i].base_phy = base_phy;
+		ddrt_result_sram.ddrtr_data[i].byte_num
+			= ddr_phy_get_byte_num(base_dmc);
+	}
 }
 
 /**
@@ -169,6 +240,22 @@ int ddr_ddrt_get_test_addr(void)
 }
 
 /**
+ * ddr_training_suc
+ * @void
+ *
+ * Nothing to do in DDR command.
+ */
+void ddr_training_suc(void) { return; }
+
+/**
+ * ddr_training_start
+ * @void
+ *
+ * Nothing to do in DDR command.
+ */
+void ddr_training_start(void) { return; }
+
+/**
  * ddr_sw_training_without_wl
  * @ddrtr_result
  *
@@ -177,24 +264,393 @@ int ddr_ddrt_get_test_addr(void)
  */
 static int ddr_sw_training_without_wl(void *ddrtr_result)
 {
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	struct tr_relate_reg relate_reg_timing;
+	struct tr_relate_reg relate_reg_ac;
 	int result = 0;
+	int i;
 
-	result += ddr_dataeye_training_if(ddrtr_result);
+#ifdef DDR_TRAINING_STAT_CONFIG
+	/* clear stat register */
+	REG_WRITE(0x0, DDR_REG_BASE_SYSCTRL + SYSCTRL_DDR_TRAINING_STAT);
+#endif
 
-	if (result && !ddr_training_check_bypass(DDR_BYPASS_HW_MASK)) {
-		result  = ddr_hw_training_if();
-		result += ddr_dataeye_training_if(ddrtr_result);
+	ddr_training_save_reg(&relate_reg, 0);
+
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+
+		/* check hardware gating */
+		if (REG_READ(base_phy + DDR_PHY_PHYINITSTATUS)
+			& PHY_INITSTATUS_GT_MASK) {
+			DDR_FATAL("PHY[%x] hw gating fail.", base_phy);
+			ddr_training_stat(DDR_ERR_HW_GATING,
+				base_phy, -1, -1);
+		}
+
+		/* dataeye/gate/vref need switch axi */
+		ddr_training_switch_axi(i, &relate_reg);
+
+		/* dataeye */
+		if (!ddr_training_check_bypass(DDR_BYPASS_DATAEYE_MASK)) {
+			ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_NORMAL_ADJUST);
+		}
+
+#ifdef DDR_HW_TRAINING_CONFIG
+		/* hardware read */
+		if (result && !ddr_training_check_bypass(DDR_BYPASS_HW_MASK)) {
+			ddr_training_save_reg(&relate_reg_ac,
+				DDR_BYPASS_HW_MASK);
+			result = ddr_hw_training(base_dmc, base_phy);
+			ddr_training_restore_reg(&relate_reg_ac);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_ABNORMAL_ADJUST);
+		}
+#endif
+
+#ifdef DDR_MPR_TRAINING_CONFIG
+		/* mpr */
+		if (result && !ddr_training_check_bypass(DDR_BYPASS_MPR_MASK)) {
+			result = ddr_mpr_training(base_dmc, base_phy);
+			result += ddr_dataeye_training(base_dmc, base_phy,
+				ddrtr_result, DDR_DATAEYE_ABNORMAL_ADJUST);
+		}
+#endif
+
+#ifdef DDR_GATE_TRAINING_CONFIG
+		/* gate */
+		if (!ddr_training_check_bypass(DDR_BYPASS_GATE_MASK)) {
+			ddr_training_save_reg(&relate_reg_timing,
+				DDR_BYPASS_GATE_MASK);
+			ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_GATE);
+			result += ddr_gate_training(base_dmc, base_phy);
+			ddr_training_restore_reg(&relate_reg_timing);
+		}
+#endif
+
+#ifdef DDR_VREF_TRAINING_CONFIG
+		ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_HOST_MASK)) {
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_READ);
+		}
+
+#ifdef DDR_PHY_T28_CONFIG
+		/* dram vref training enable && DDR4 */
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_DRAM_MASK)
+			&& DMC_CFG_DRAM_TYPE_DDR4 ==
+				(REG_READ(base_dmc + DDR_DMC_CFG_DDRMODE)
+					& DMC_CFG_DRAM_TYPE_MASK)) {
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_WRITE);
+		}
+#endif /* DDR_PHY_T28_CONFIG */
+#endif /* DDR_VREF_TRAINING_CONFIG */
 	}
 
-	if (result && !ddr_training_check_bypass(DDR_BYPASS_MPR_MASK)) {
-		result  = ddr_mpr_training_if();
-		result += ddr_dataeye_training_if(ddrtr_result);
-	}
+	ddr_training_restore_reg(&relate_reg);
 
-	result += ddr_gating_if();
-	result += ddr_vref_training_if(ddrtr_result);
+	if (!result)
+		ddr_training_suc();
 	return result;
 }
+
+#ifdef DDR_HW_TRAINING_CONFIG
+/**
+ * ddr_hw_training_func
+ * @void
+ *
+ *
+ */
+static int ddr_hw_training_func(void)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	/* hardware training disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_HW_MASK))
+		return 0;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_HW_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		result += ddr_hw_training(base_dmc, base_phy);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_hw_training_func(void)
+{
+	DDR_WARNING("Not support DDR HW training.");
+	return 0;
+}
+#endif /* DDR_HW_TRAINING_CONFIG */
+
+#ifdef DDR_MPR_TRAINING_CONFIG
+/**
+ * ddr_mpr_training_func
+ * @void
+ *
+ *
+ */
+static int ddr_mpr_training_func(void)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	/* MPR training disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_MPR_MASK))
+		return 0;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_MPR_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		result += ddr_mpr_training(base_dmc, base_phy);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_mpr_training_func(void)
+{
+	DDR_WARNING("Not support DDR MPR training.");
+	return 0;
+}
+#endif /* DDR_MPR_TRAINING_CONFIG */
+
+#ifdef DDR_WL_TRAINING_CONFIG
+/**
+ * ddr_wl_func
+ * @void
+ *
+ *
+ */
+static int ddr_wl_func(void)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	/* write leveling disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_WL_MASK))
+		return 0;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_WL_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		result += ddr_write_leveling(base_dmc, base_phy);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_wl_func()
+{
+	DDR_WARNING("Not support DDR WL training.");
+	return 0;
+}
+#endif /* DDR_WL_TRAINING_CONFIG */
+
+#ifdef DDR_GATE_TRAINING_CONFIG
+/**
+ * ddr_gating_func
+ * @void
+ *
+ *
+ */
+static int ddr_gating_func(void)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	/* gate training disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_GATE_MASK)) {
+		for (i = 0; i < DDR_PHY_NUM; i++) {
+			if (ddr_training_phy_disable(i))
+				continue;
+
+			ddr_training_get_base(i, &base_dmc, &base_phy);
+			/* check hardware gating */
+			if (REG_READ(base_phy + DDR_PHY_PHYINITSTATUS)
+				& PHY_INITSTATUS_GT_MASK) {
+				DDR_FATAL("PHY[%x] hw gating fail.", base_phy);
+				ddr_training_stat(DDR_ERR_HW_GATING,
+					base_phy, -1, -1);
+				return -1;
+			}
+		}
+		return 0;
+	}
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_GATE_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_GATE);
+		ddr_training_switch_axi(i, &relate_reg);
+		result += ddr_gate_training(base_dmc, base_phy);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_gating_func(void)
+{
+	DDR_WARNING("Not support DDR gate training.");
+	return 0;
+}
+#endif /* DDR_GATE_TRAINING_CONFIG */
+
+/**
+ * ddr_dataeye_training_func
+ * @ddrtr_result
+ *
+ *
+ */
+static int ddr_dataeye_training_func(void *ddrtr_result)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	/* dataeye training disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_DATAEYE_MASK))
+		return 0;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_DATAEYE_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+		ddr_training_switch_axi(i, &relate_reg);
+		result += ddr_dataeye_training(base_dmc, base_phy,
+			ddrtr_result, DDR_DATAEYE_NORMAL_ADJUST);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+
+#ifdef DDR_VREF_TRAINING_CONFIG
+/**
+ * ddr_vref_training_func
+ * @void
+ *
+ *
+ */
+static int ddr_vref_training_func(void *ddrtr_result)
+{
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+	int result = 0;
+	int i;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_VREF_HOST_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		ddr_ddrt_init(base_dmc, DDR_DDRT_MODE_DATAEYE);
+		ddr_training_switch_axi(i, &relate_reg);
+
+		/* host vref training disable */
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_HOST_MASK))
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_READ);
+
+#ifdef DDR_PHY_T28_CONFIG
+		/* dram vref training enable && DDR4 */
+		if (!ddr_training_check_bypass(DDR_BYPASS_VREF_DRAM_MASK)
+			&& DMC_CFG_DRAM_TYPE_DDR4 ==
+				(REG_READ(base_dmc + DDR_DMC_CFG_DDRMODE)
+					& DMC_CFG_DRAM_TYPE_MASK)) {
+			result += ddr_vref_training(base_dmc, base_phy,
+				ddrtr_result, DDR_MODE_WRITE);
+		}
+#endif /* DDR_PHY_T28_CONFIG */
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_vref_training_func(void *ddrtr_result)
+{
+	DDR_WARNING("Not support DDR vref training.");
+	return 0;
+}
+#endif /* DDR_VREF_TRAINING_CONFIG */
+
+#ifdef DDR_AC_TRAINING_CONFIG
+/**
+ * ddr_ac_training_func
+ * @void
+ *
+ *
+ */
+static int ddr_ac_training_func(void)
+{
+	int result = 0;
+	int i;
+	unsigned int base_dmc, base_phy;
+	struct tr_relate_reg relate_reg;
+
+	/* AC training disable */
+	if (ddr_training_check_bypass(DDR_BYPASS_AC_MASK))
+		return 0;
+
+	ddr_training_save_reg(&relate_reg, DDR_BYPASS_AC_MASK);
+	for (i = 0; i < DDR_PHY_NUM; i++) {
+		if (ddr_training_phy_disable(i))
+			continue;
+
+		ddr_training_get_base(i, &base_dmc, &base_phy);
+		result += ddr_ac_training(base_dmc, base_phy);
+	}
+	ddr_training_restore_reg(&relate_reg);
+
+	return result;
+}
+#else
+static int ddr_ac_training_func(void)
+{
+	DDR_WARNING("Not support DDR AC training.");
+	return 0;
+}
+#endif /* DDR_AC_TRAINING_CONFIG */
 
 /**
  * ddr_training_cmd_entry
@@ -222,25 +678,25 @@ struct ddr_training_result_st *ddr_training_cmd_entry(
 		result = ddr_sw_training_if((void *)&ddrt_result_sram);
 		break;
 	case DDR_TRAINING_CMD_DATAEYE:
-		result = ddr_dataeye_training_if((void *)&ddrt_result_sram);
+		result = ddr_dataeye_training_func((void *)&ddrt_result_sram);
 		break;
 	case DDR_TRAINING_CMD_HW:
-		result = ddr_hw_training_if();
+		result = ddr_hw_training_func();
 		break;
 	case DDR_TRAINING_CMD_MPR:
-		result = ddr_mpr_training_if();
+		result = ddr_mpr_training_func();
 		break;
 	case DDR_TRAINING_CMD_WL:
-		result = ddr_wl_if();
+		result = ddr_wl_func();
 		break;
 	case DDR_TRAINING_CMD_GATE:
-		result = ddr_gating_if();
+		result = ddr_gating_func();
 		break;
 	case DDR_TRAINING_CMD_VREF:
-		result = ddr_vref_training_if((void *)&ddrt_result_sram);
+		result = ddr_vref_training_func((void *)&ddrt_result_sram);
 		break;
 	case DDR_TRAINING_CMD_AC:
-		result = ddr_ac_training_if();
+		result = ddr_ac_training_func();
 		break;
 	case DDR_TRAINING_CMD_SW_NO_WL:
 		result = ddr_sw_training_without_wl((void *)&ddrt_result_sram);
@@ -249,6 +705,8 @@ struct ddr_training_result_st *ddr_training_cmd_entry(
 		result = -1;
 		break;
 	}
+
+	DDR_DEBUG("DDR training result[%x]", result);
 
 	if (!result)
 		return &ddrt_result_sram;

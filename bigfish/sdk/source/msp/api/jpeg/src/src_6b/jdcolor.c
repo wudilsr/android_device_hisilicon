@@ -1564,7 +1564,7 @@ gray_argb_8888_convert (j_decompress_ptr cinfo,
 				#endif
 				{
 						outptr[r] = outptr[g] = outptr[b] = inptr[col];
-						outptr[RGB_RED] = 0xff;
+						outptr[RGB_ALPHA] = 0xff;
 						outptr += 4;
 		  		 }
 		  }

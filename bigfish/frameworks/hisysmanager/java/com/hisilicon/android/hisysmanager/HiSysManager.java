@@ -52,18 +52,6 @@ public class HiSysManager{
      * @return result 0: sucess,-1: failed
      */
     public native int reboot();
-
-    /**
-     *  HiDebugKit network upgrade.
-     * <p>
-     *  HiDebugKit network upgrade.<br>
-     * <br>
-     * @param path1 the updata.zip path.
-     * @param path2 the updata.zip path.
-     * @return result 0: sucess,-1: failed.
-     */
-    public native int updateCAFile(String path1, String path2);
-
     /**
      * Iptv to private recovery.
      * <p>

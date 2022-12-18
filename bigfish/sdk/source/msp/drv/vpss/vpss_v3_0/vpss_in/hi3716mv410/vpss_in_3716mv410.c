@@ -1,14 +1,10 @@
 /*-----------------------------------------------------------------------*/
 /*!!Warning: Huawei key information asset. No spread without permission. */
-/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCDadN5jJKSuVyxmmaCmKFU6eJEbB2fyHF9weu4/jer/hxLHb+S1e
-E0zVg4C3NiZh4b+GnwjAHj8JYHgZh/mRmQlUl/yvyRM2bdt8FEOq9KEDxoWAhM+suFVQjq7m
-HyK2mUSjX2FnU0E2RIYi9tn4bZN/b5k9FB56Tr93vtpV/AyLEAp3Y+UxOPYusX43x/dlBgT0
-h/P2GAP7POp6EpuoiRVoMd/mPlt7DDvrAIoYXuDQsFjbTQhqiP06qm25NdPq8w==#*/
+/*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
+HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
+3bRFxaqHrSpbA+FGtMg7Gj28Rcov16PfJVHYCfQJ7LlJbRKYiZruMs8iB1PGXAs2Yte5EwEY
+7qaZsmTYPWlZufc13jcbJj+OM2VGslSDSaLcCOzjeZzLtVTEJCcQf0litddh4w==#*/
 /*--!!Warning: Deleting or modifying the preceding information is prohibited.--*/
-
-
-
-
 
 
 
@@ -79,7 +75,7 @@ HI_S32 VPSS_IN_VMALLOC_V3(VPSS_IN_ENTITY_S *pstEntity)
     }
     memset(pstEntity->pstWbcInfo[1],0,sizeof(VPSS_WBC_S));
     
-    pstEntity->pstSttWbc[0] = (VPSS_STTWBC_S*)VPSS_VMALLOC(sizeof(VPSS_STTWBC_S)*2);
+    pstEntity->pstSttWbc[0] = (VPSS_STTWBC_S*)VPSS_VMALLOC(sizeof(VPSS_STTWBC_S));
     if (HI_NULL == pstEntity->pstSttWbc[0])
     {
         VPSS_ERROR("malloc VPSS_STTWBC_S failed\n");
@@ -128,13 +124,13 @@ HI_S32 VPSS_IN_VMALLOC_V3(VPSS_IN_ENTITY_S *pstEntity)
     }
     memset(pstEntity->pstCcclCntInfo[1],0,sizeof(VPSS_CCCLCNTINFO_S));
     
-    pstEntity->pstNrMadInfo[0] = (VPSS_NRMADINFO_S*)VPSS_VMALLOC(sizeof(VPSS_NRMADINFO_S)*2);
+    pstEntity->pstNrMadInfo[0] = (VPSS_NRMADINFO_S*)VPSS_VMALLOC(sizeof(VPSS_NRMADINFO_S));
     if (HI_NULL == pstEntity->pstNrMadInfo[0])
     {
         VPSS_ERROR("malloc VPSS_NRMADINFO_S failed\n");
         goto V3_VMALLOC_ERROR;
     }
-    memset(pstEntity->pstNrMadInfo[0],0,sizeof(VPSS_NRMADINFO_S)*2);
+    memset(pstEntity->pstNrMadInfo[0],0,sizeof(VPSS_NRMADINFO_S));
 
     pstEntity->pstNrMadInfo[1] = (VPSS_NRMADINFO_S*)VPSS_VMALLOC(sizeof(VPSS_NRMADINFO_S));
     if (HI_NULL == pstEntity->pstNrMadInfo[1])
@@ -157,9 +153,10 @@ HI_BOOL VPSS_IN_CheckImage_V3(HI_DRV_VIDEO_FRAME_S *pstImage)
     HI_BOOL bSupported = HI_TRUE;
     pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstImage->u32Priv[0]);
 
-    if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_ERROR_FLAG)
+    if (pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_ERROR_FLAG
+		|| pstPriv->u32LastFlag == DEF_HI_DRV_VPSS_LAST_FRAME_FLAG)
     {
-        return HI_TRUE;
+        return HI_FALSE;
     }    
     if (pstImage->ePixFormat != HI_DRV_PIX_FMT_NV12
         && pstImage->ePixFormat != HI_DRV_PIX_FMT_NV21
@@ -508,13 +505,25 @@ HI_S32 VPSS_IN_ReviseImage(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S *pIm
     if (pImage->enFieldMode != HI_DRV_FIELD_ALL)
     {
         pImage->bProgressive = HI_TRUE;
+        pImage->enFieldMode = HI_DRV_FIELD_ALL;
     }
     return HI_SUCCESS;
 }
 
-HI_S32 VPSS_IN_ChangeInRate(VPSS_IN_ENTITY_S *pstEntity,HI_U32 u32InRate)
+HI_S32 VPSS_IN_ChangeInRate(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S *pstSrcImage)
 {
     HI_U32 u32HzRate; /*0 -- 100*/
+	HI_U32 u32InRate;
+
+    if (pstSrcImage->bProgressive == HI_FALSE 
+			&& pstSrcImage->enFieldMode == HI_DRV_FIELD_ALL)
+    {
+		u32InRate = pstSrcImage->u32FrameRate*2;
+	}
+	else
+	{
+		u32InRate = pstSrcImage->u32FrameRate;
+	}
     
     u32HzRate = u32InRate / 1000;
 
@@ -732,14 +741,21 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
     {
         return HI_FAILURE;
     }
+
     bSupport = VPSS_IN_CheckImage_V3(pstImage);
     if (HI_TRUE != bSupport)
-    {
-    	pstEntity->stListState.u32RelUsrTotal++;
-        pstEntity->pfnRlsCallback(pstEntity->hSource,pstImage);
+	{
+		HI_DRV_VIDEO_PRIVATE_S *pstLastPriv;
+		pstLastPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstImage->u32Priv[0]);
+
+		if (pstLastPriv->u32LastFlag != DEF_HI_DRV_VPSS_LAST_ERROR_FLAG)
+		{
+			pstEntity->pfnRlsCallback(pstEntity->hSource,pstImage);
+		}
+		pstEntity->stListState.u32RelUsrTotal++;
 		pstEntity->stListState.u32RelUsrSuccess++;
-        return HI_FAILURE;
-    }
+		return HI_FAILURE;
+	}
 
 	if( HI_TRUE == pstEntity->stDbginfo.frameEn )
 	{
@@ -752,13 +768,57 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
         VPSS_OSAL_WRITEYUV(pstImage, chFile);
     }
 
+    if (0)
+    {
+        HI_DRV_VIDEO_FRAME_S *pstFrm;
+        HI_DRV_VIDEO_PRIVATE_S *pstPriv;
+        HI_VDEC_PRIV_FRAMEINFO_S *pstVdecPriv;
+
+        pstFrm = pstImage;
+        
+        pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstFrm->u32Priv[0]);
+        pstVdecPriv = (HI_VDEC_PRIV_FRAMEINFO_S *)&(pstPriv->u32Reserve[0]);
+        
+
+        HI_PRINT("Image Info:Index %d Type %d Format %d W %d H %d Prog %d topfirst %d FieldMode %d PTS %d Rate %d LastFlag %#x Delta %d CodeType %d,SourceType %d,BitWidth %d\n"
+                 "           L:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n"
+                 "           R:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n",
+                pstFrm->u32FrameIndex,
+                pstFrm->eFrmType,
+                pstFrm->ePixFormat,
+                pstFrm->u32Width,
+                pstFrm->u32Height,
+                pstFrm->bProgressive,
+				pstFrm->bTopFieldFirst,
+                pstFrm->enFieldMode,
+                pstFrm->u32Pts,
+                pstFrm->u32FrameRate,
+                pstPriv->u32LastFlag,
+                pstVdecPriv->s32InterPtsDelta,
+                pstVdecPriv->entype,
+                pstPriv->stVideoOriginalInfo.enSource,
+                pstFrm->enBitWidth,
+                pstFrm->stBufAddr[0].u32PhyAddr_Y,
+                pstFrm->stBufAddr[0].u32PhyAddr_C,
+                pstFrm->stBufAddr[0].u32PhyAddr_YHead,
+                pstFrm->stBufAddr[0].u32PhyAddr_CHead,
+                pstFrm->stBufAddr[0].u32Stride_Y,
+                pstFrm->stBufAddr[0].u32Stride_C,
+                pstFrm->stBufAddr[1].u32PhyAddr_Y,
+                pstFrm->stBufAddr[1].u32PhyAddr_C,
+                pstFrm->stBufAddr[1].u32PhyAddr_YHead,
+                pstFrm->stBufAddr[1].u32PhyAddr_CHead,
+                pstFrm->stBufAddr[1].u32Stride_Y,
+                pstFrm->stBufAddr[1].u32Stride_C);
+    }
+
 	if(VPSS_TRANS_FB_NeedTrans(&(pstEntity->stTransFbInfo),pstImage))
 	{
-	    if (0)
-    	{
-        	HI_U8 chFile[256] = "vpss_trans_frm_in.yuv";
-        	VPSS_OSAL_WRITEYUV(pstImage, chFile);
-    	}
+		if (0)
+		{
+			HI_U8 chFile[256] = "vpss_trans_frm_in.yuv";
+			VPSS_OSAL_WRITEYUV(pstImage, chFile);
+		}
 		if(HI_SUCCESS == VPSS_TRANS_FB_PutImage(&(pstEntity->stTransFbInfo),pstImage))
 		{
 			VPSS_INFO("\n-------%d------Trans Image success,frameindex=%d", 
@@ -773,12 +833,14 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
 		//return failuer,because vpss logic can't work
 		return HI_FAILURE;
 	}
-	pstEntity->stListState.u32GetUsrSuccess++;
 
+	pstEntity->stListState.u32GetUsrSuccess++;
 	
     (HI_VOID)VPSS_IN_CorrectProgInfo(pstEntity, pstImage);
+
     (HI_VOID)VPSS_IN_ReviseImage(pstEntity, pstImage);
-    (HI_VOID)VPSS_IN_ChangeInRate(pstEntity, pstImage->u32FrameRate);
+        
+    (HI_VOID)VPSS_IN_ChangeInRate(pstEntity, pstImage);
 
 	if (HI_TRUE == pstEntity->stDbginfo.bDeiDisable)
 	{
@@ -843,8 +905,8 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
         stWbcAttr.ePixFormat = HI_DRV_PIX_FMT_NV21;
         stWbcAttr.u32Height = pstImage->u32Height;
         stWbcAttr.u32Width = pstImage->u32Width;
-    	stWbcAttr.u32FrameIndex = pstImage->u32FrameIndex;
-    	stWbcAttr.u32Pts = pstImage->u32Pts;
+		stWbcAttr.u32FrameIndex = pstImage->u32FrameIndex;
+		stWbcAttr.u32Pts = pstImage->u32Pts;
         stNrAttr.u32Height = pstImage->u32Height;
         stNrAttr.u32Width = pstImage->u32Width;
         
@@ -859,7 +921,7 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
         {              
         //    stWbcAttr.enMode = VPSS_WBC_MODE_5FIELD;
         //    stNrAttr.enMode = NR_MODE_5FIELD;
-        	stWbcAttr.enMode = VPSS_WBC_MODE_4FIELD;//for mv410
+			stWbcAttr.enMode = VPSS_WBC_MODE_4FIELD;//for mv410
             stNrAttr.enMode = NR_MODE_3FIELD; //for mv410
         }
         
@@ -892,15 +954,20 @@ HI_S32 VPSS_IN_Refresh_V3(VPSS_IN_ENTITY_S *pstEntity)
                 VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
                 
                 s32InitListRet |= VPSS_WBC_Init(pstWbcInfo, &stWbcAttr);
-                s32InitListRet |= VPSS_WBC_Init(pstWbcInfo + 1, &stWbcAttr);
+				pstWbcInfo = (VPSS_WBC_S*)pstEntity->pstWbcInfo[1];
+                s32InitListRet |= VPSS_WBC_Init(pstWbcInfo, &stWbcAttr);
                 s32InitListRet |= VPSS_STTINFO_DieInit(pstDieStInfo, stWbcAttr.u32Width, stWbcAttr.u32Height);
-                s32InitListRet |= VPSS_STTINFO_DieInit(pstDieStInfo + 1, stWbcAttr.u32Width, stWbcAttr.u32Height);
+				pstDieStInfo = (VPSS_DIESTINFO_S*)pstEntity->pstDieStInfo[1];
+                s32InitListRet |= VPSS_STTINFO_DieInit(pstDieStInfo, stWbcAttr.u32Width, stWbcAttr.u32Height);
                 s32InitListRet |= VPSS_STTINFO_CcclInit(pstCcclCntInfo, stWbcAttr.u32Width, stWbcAttr.u32Height);
-                s32InitListRet |= VPSS_STTINFO_CcclInit(pstCcclCntInfo + 1, stWbcAttr.u32Width, stWbcAttr.u32Height);
+				pstCcclCntInfo = (VPSS_CCCLCNTINFO_S*)pstEntity->pstCcclCntInfo[1];
+                s32InitListRet |= VPSS_STTINFO_CcclInit(pstCcclCntInfo , stWbcAttr.u32Width, stWbcAttr.u32Height);
                 s32InitListRet |= VPSS_STTINFO_NrInit(pstNrMadInfo, &stNrAttr);
-                s32InitListRet |= VPSS_STTINFO_NrInit(pstNrMadInfo + 1, &stNrAttr);
+				pstNrMadInfo = (VPSS_NRMADINFO_S*)pstEntity->pstNrMadInfo[1];
+                s32InitListRet |= VPSS_STTINFO_NrInit(pstNrMadInfo , &stNrAttr);
                 s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc);
-                s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc + 1);
+				psttWbc = (VPSS_STTWBC_S*)pstEntity->pstSttWbc[1];
+                s32InitListRet |= VPSS_STTINFO_SttWbcInit(psttWbc );
             }
         }
         
@@ -945,7 +1012,6 @@ HI_S32 VPSS_IN_GetProcessImage_V3(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME
 
     pstSrc = (VPSS_SRC_S *)pstEntity->pstSrc;
 
-    
     VPSS_OSAL_DownSpin(&(pstEntity->stSrcSpin),&flags);
     s32Ret = VPSS_SRC_GetProcessImage(pstSrc,ppstFrame);
     VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
@@ -1187,14 +1253,14 @@ HI_S32 VPSS_IN_GetInfo_V3(VPSS_IN_ENTITY_S *pstEntity,VPSS_IN_INFO_TYPE_E enType
                 if(bTopFirst == pstEntity->stStreamInfo.u32RealTopFirst)
                 {
                     s32Ret = HI_SUCCESS;
-				    return s32Ret;
+					return s32Ret;
                 }
                  
                 if(pstEntity->stStreamInfo.u32RealTopFirst == DEF_TOPFIRST_BUTT)
                 {
                     pstEntity->stStreamInfo.u32RealTopFirst = bTopFirst;
                     s32Ret = HI_SUCCESS;
-				    return s32Ret;
+					return s32Ret;
                 }
 
                 s32Ret = VPSS_SRC_CorrectListOrder(pstEntity->pstSrc, bTopFirst);
@@ -1212,7 +1278,7 @@ HI_S32 VPSS_IN_GetInfo_V3(VPSS_IN_ENTITY_S *pstEntity,VPSS_IN_INFO_TYPE_E enType
 			{
 				HI_BOOL bTopFirst;
 				HI_DRV_VIDEO_FRAME_S *pstCur;
-    			unsigned long flags; 
+				unsigned long flags; 
 	
 				bTopFirst = *(HI_BOOL *)pstInfo;
 				if(bTopFirst == pstEntity->stStreamInfo.u32RealTopFirst)
@@ -1230,29 +1296,29 @@ HI_S32 VPSS_IN_GetInfo_V3(VPSS_IN_ENTITY_S *pstEntity,VPSS_IN_INFO_TYPE_E enType
 			
 				//s32Ret = VPSS_SRC_CorrectListOrder(pstEntity->pstSrc, bTopFirst);
 				VPSS_OSAL_DownSpin(&(pstEntity->stSrcSpin),&flags);
-			    s32Ret = VPSS_SRC_GetProcessImage(pstEntity->pstSrc, &pstCur);
-			    if (HI_FAILURE == s32Ret)
-			    {
-			        VPSS_FATAL("VPSS_SRC_GetProcessImage failed!\n");
-			        VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
-			        return HI_FAILURE;
-			    }
+				s32Ret = VPSS_SRC_GetProcessImage(pstEntity->pstSrc, &pstCur);
+				if (HI_FAILURE == s32Ret)
+				{
+					VPSS_FATAL("VPSS_SRC_GetProcessImage failed!\n");
+					VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
+					return HI_FAILURE;
+				}
 
-			    if(HI_FALSE == pstEntity->stStreamInfo.u32StreamProg)
-			    {   //the stream order changed,we drop one field
-			        if(pstCur->enFieldMode == pstEntity->stStreamInfo.enCurFieldMode)
-			        {
-			            s32Ret = VPSS_SRC_MoveNext(pstEntity->pstSrc, 1);
-			            s32Ret |= VPSS_SRC_GetProcessImage(pstEntity->pstSrc, &pstCur);
-			            if (HI_SUCCESS != s32Ret)
-			            {
-			                VPSS_INFO("VPSS_SRC_GetProcessImage failed!\n");
-			            }
-			        }
-			    }
+				if(HI_FALSE == pstEntity->stStreamInfo.u32StreamProg)
+				{   //the stream order changed,we drop one field
+					if(pstCur->enFieldMode == pstEntity->stStreamInfo.enCurFieldMode)
+					{
+						s32Ret = VPSS_SRC_MoveNext(pstEntity->pstSrc, 1);
+						s32Ret |= VPSS_SRC_GetProcessImage(pstEntity->pstSrc, &pstCur);
+						if (HI_SUCCESS != s32Ret)
+						{
+							VPSS_INFO("VPSS_SRC_GetProcessImage failed!\n");
+						}
+					}
+				}
 
-			    pstEntity->stStreamInfo.enCurFieldMode = pstCur->enFieldMode;
-			    VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
+				pstEntity->stStreamInfo.enCurFieldMode = pstCur->enFieldMode;
+				VPSS_OSAL_UpSpin(&(pstEntity->stSrcSpin),&flags);
 			
 				pstEntity->stStreamInfo.u32RealTopFirst = bTopFirst;
 				
@@ -1287,109 +1353,109 @@ HI_S32 VPSS_IN_SetInfo_V3 ( VPSS_IN_ENTITY_S *pstEntity,
     {
     case VPSS_SET_INFO_INPUT_CFG:
 		{		
-		    HI_S32 i;
-		    HI_U32 u32RefCount;    
+			HI_S32 i;
+			HI_U32 u32RefCount;    
 			VPSS_HAL_INFO_S *pstHalInfo;	
-		    HI_DRV_VIDEO_FRAME_S *pstCur;
-		    HI_DRV_VIDEO_FRAME_S *pstRef[4] = {HI_NULL,HI_NULL,HI_NULL,HI_NULL};
-		    HI_DRV_VIDEO_FRAME_S *pstWbc;
+			HI_DRV_VIDEO_FRAME_S *pstCur;
+			HI_DRV_VIDEO_FRAME_S *pstRef[4] = {HI_NULL,HI_NULL,HI_NULL,HI_NULL};
+			HI_DRV_VIDEO_FRAME_S *pstWbc;
 
-		    VPSS_IN_INTF_S stInIntf;
-		    s32Ret = VPSS_IN_GetIntf(pstEntity, &stInIntf);
-		    if (HI_SUCCESS != s32Ret)
-		    {
-		        VPSS_ERROR("Get Interface Failed\n");
-		        return HI_FAILURE;
-		    }
+			VPSS_IN_INTF_S stInIntf;
+			s32Ret = VPSS_IN_GetIntf(pstEntity, &stInIntf);
+			if (HI_SUCCESS != s32Ret)
+			{
+				VPSS_ERROR("Get Interface Failed\n");
+				return HI_FAILURE;
+			}
 
 			pstHalInfo = (VPSS_HAL_INFO_S *)pstInfo;
 			VPSS_CHECK_NULL(stInIntf.pfnGetInfo);
-		    stInIntf.pfnGetInfo(pstEntity, VPSS_IN_INFO_WBCREG_PA, enLR, &pstHalInfo->u32stt_w_phy_addr);
-		    stInIntf.pfnGetInfo(pstEntity, VPSS_IN_INFO_WBCREG_VA, enLR, &pstHalInfo->u32stt_w_vir_addr);
+			stInIntf.pfnGetInfo(pstEntity, VPSS_IN_INFO_WBCREG_PA, enLR, &pstHalInfo->u32stt_w_phy_addr);
+			stInIntf.pfnGetInfo(pstEntity, VPSS_IN_INFO_WBCREG_VA, enLR, &pstHalInfo->u32stt_w_vir_addr);
 
-		    s32Ret = stInIntf.pfnGetProcessImage(pstEntity, &pstCur);
-		    if (HI_SUCCESS != s32Ret)
-		    {
-		        VPSS_FATAL("VPSS_SRC_GetProcessImage failed!\n");
-		        return HI_FAILURE;
-		    }
+			s32Ret = stInIntf.pfnGetProcessImage(pstEntity, &pstCur);
+			if (HI_SUCCESS != s32Ret)
+			{
+				VPSS_FATAL("VPSS_SRC_GetProcessImage failed!\n");
+				return HI_FAILURE;
+			}
 
-		    switch(pstHalInfo->enNodeType)
-		    {
-		        case VPSS_HAL_NODE_2D_FRAME:
+			switch(pstHalInfo->enNodeType)
+			{
+				case VPSS_HAL_NODE_2D_FRAME:
 				case VPSS_HAL_NODE_2D_Field:
-		        case VPSS_HAL_NODE_3D_FRAME_R:
+				case VPSS_HAL_NODE_3D_FRAME_R:
 					pstHalInfo->stNrInfo.bNrEn = HI_TRUE;
 					stInIntf.pfnGetInfo( pstEntity,
-		                                    VPSS_IN_INFO_NR, 
-		                                    enLR,
-		                                     (HI_VOID*)&(pstHalInfo->stNrInfo.stNrMadCfg));
-		            break;
-		        case VPSS_HAL_NODE_2D_5Field:
+											VPSS_IN_INFO_NR, 
+											enLR,
+											 (HI_VOID*)&(pstHalInfo->stNrInfo.stNrMadCfg));
+					break;
+				case VPSS_HAL_NODE_2D_5Field:
 					pstHalInfo->stDieInfo.bBottom_first = pstEntity->stStreamInfo.u32RealTopFirst;
-		            stInIntf.pfnGetInfo(pstEntity,
-		                                    VPSS_IN_INFO_DIE, 
-		                                    enLR,
-		                                     (HI_VOID*)&(pstHalInfo->stDieInfo));
+					stInIntf.pfnGetInfo(pstEntity,
+											VPSS_IN_INFO_DIE, 
+											enLR,
+											 (HI_VOID*)&(pstHalInfo->stDieInfo));
 			
 					pstHalInfo->stNrInfo.bNrEn = HI_TRUE;
 					stInIntf.pfnGetInfo( pstEntity,
-		                                    VPSS_IN_INFO_NR, 
-		                                    enLR,
-		                                     (HI_VOID*)&(pstHalInfo->stNrInfo.stNrMadCfg));
-		            break;
-		        case VPSS_HAL_NODE_UHD:
-		        case VPSS_HAL_NODE_UHD_SPLIT_L:
-		        case VPSS_HAL_NODE_UHD_SPLIT_R:
-		            /* Do Nothing */
-		            break;
-		        default:
-		            VPSS_FATAL("Node Type(%x) is Not Surport,\n", pstHalInfo->enNodeType);
-		            return HI_FAILURE;
-		    }
+											VPSS_IN_INFO_NR, 
+											enLR,
+											 (HI_VOID*)&(pstHalInfo->stNrInfo.stNrMadCfg));
+					break;
+				case VPSS_HAL_NODE_UHD:
+				case VPSS_HAL_NODE_UHD_SPLIT_L:
+				case VPSS_HAL_NODE_UHD_SPLIT_R:
+					/* Do Nothing */
+					break;
+				default:
+					VPSS_FATAL("Node Type(%x) is Not Surport,\n", pstHalInfo->enNodeType);
+					return HI_FAILURE;
+			}
 
 			if(VPSS_IN_CheckNeedNr(pstEntity))
 			{
 				stInIntf.pfnGetInfo( pstEntity,
-		                        	VPSS_IN_INFO_WBC, 
-		                        	enLR,
-		                         	(HI_VOID*)&pstWbc);
+									VPSS_IN_INFO_WBC, 
+									enLR,
+									(HI_VOID*)&pstWbc);
 
-			    /*keep ref frame pts equal cur pts*/
+				/*keep ref frame pts equal cur pts*/
 				pstWbc->u32FrameIndex = pstCur->u32FrameIndex;
 				pstWbc->u32Pts = pstCur->u32Pts;
 				VPSS_IN_CopyHalFrameInfo(pstWbc, &pstHalInfo->stInWbcInfo, enLR);
 
 				stInIntf.pfnGetInfo( pstEntity,
-		                        	VPSS_IN_INFO_REF, 
-		                        	enLR,
-		                         	(HI_VOID*)pstRef);
+									VPSS_IN_INFO_REF, 
+									enLR,
+									(HI_VOID*)pstRef);
 
-			    u32RefCount = pstEntity->pstWbcInfo[enLR]->stWbcAttr.enMode - 2;
+				u32RefCount = pstEntity->pstWbcInfo[enLR]->stWbcAttr.enMode - 2;
         
 				if(pstRef[u32RefCount] != HI_NULL)
 				{
-				    VPSS_IN_CopyHalFrameInfo(pstRef[u32RefCount], &pstHalInfo->stInRefInfo[u32RefCount], enLR);
+					VPSS_IN_CopyHalFrameInfo(pstRef[u32RefCount], &pstHalInfo->stInRefInfo[u32RefCount], enLR);
 
-				    for(i = (u32RefCount-1); i >= 0; i--)
-				    {   
-				        if(pstRef[i] != HI_NULL)
-				        { 
-				            VPSS_IN_CopyHalFrameInfo(pstRef[i], &pstHalInfo->stInRefInfo[i], enLR);
-				        }
-				        else
-				        {   
-				            pstRef[i] = pstRef[i+1];
-				            VPSS_IN_CopyHalFrameInfo(pstRef[i], &pstHalInfo->stInRefInfo[i], enLR);
-				        }
-				    }
+					for(i = (u32RefCount-1); i >= 0; i--)
+					{   
+						if(pstRef[i] != HI_NULL)
+						{ 
+							VPSS_IN_CopyHalFrameInfo(pstRef[i], &pstHalInfo->stInRefInfo[i], enLR);
+						}
+						else
+						{   
+							pstRef[i] = pstRef[i+1];
+							VPSS_IN_CopyHalFrameInfo(pstRef[i], &pstHalInfo->stInRefInfo[i], enLR);
+						}
+					}
 				}
 				else
 				{
-				    for(i = 0; i <= u32RefCount; i++)
-				    {
-				        VPSS_IN_CopyHalFrameInfo(pstCur, &pstHalInfo->stInRefInfo[i], enLR);
-				    }
+					for(i = 0; i <= u32RefCount; i++)
+					{
+						VPSS_IN_CopyHalFrameInfo(pstCur, &pstHalInfo->stInRefInfo[i], enLR);
+					}
 				} 
 			}
 		}
@@ -1398,40 +1464,40 @@ HI_S32 VPSS_IN_SetInfo_V3 ( VPSS_IN_ENTITY_S *pstEntity,
 		{
 			HI_DRV_VIDEO_FRAME_S *pstFrm ;
 			HI_DRV_VIDEO_FRAME_S *pstRef[3] = {HI_NULL,HI_NULL,HI_NULL};    
-		    VPSS_IN_INTF_S stInIntf;
-		    s32Ret = VPSS_IN_GetIntf(pstEntity, &stInIntf);
-		    if (HI_SUCCESS != s32Ret)
-		    {
-		        VPSS_ERROR("Get Interface Failed\n");
-		        return HI_FAILURE;
-		    }
+			VPSS_IN_INTF_S stInIntf;
+			s32Ret = VPSS_IN_GetIntf(pstEntity, &stInIntf);
+			if (HI_SUCCESS != s32Ret)
+			{
+				VPSS_ERROR("Get Interface Failed\n");
+				return HI_FAILURE;
+			}
 
 			pstFrm = (HI_DRV_VIDEO_FRAME_S *)pstInfo;
 			/* keep pts equal src frame*/
-		    if(HI_FALSE == pstEntity->stStreamInfo.u32StreamProg)
-		    {
+			if(HI_FALSE == pstEntity->stStreamInfo.u32StreamProg)
+			{
 				s32Ret = stInIntf.pfnGetInfo( pstEntity,
-		                                     VPSS_IN_INFO_REF, 
-		                                     enLR,
-		                                    (HI_VOID*)pstRef);
+											 VPSS_IN_INFO_REF, 
+											 enLR,
+											(HI_VOID*)pstRef);
 						
-		        if (HI_FAILURE == s32Ret)
-		        {
-		            VPSS_FATAL("VPSS_WBC_GetWbcInfo failed!\n");
-		            return HI_FAILURE;
-		        }
+				if (HI_FAILURE == s32Ret)
+				{
+					VPSS_FATAL("VPSS_WBC_GetWbcInfo failed!\n");
+					return HI_FAILURE;
+				}
 
-		        if(HI_NULL == pstRef[1])
-		        {
-		            pstFrm->u32FrameIndex = pstEntity->stStreamInfo.u32FrameIndex;
-		            pstFrm->u32Pts = pstEntity->stStreamInfo.u32Pts;
-		        }
-		        else
-		        {
-		            pstFrm->u32FrameIndex = pstRef[1]->u32FrameIndex;
-		            pstFrm->u32Pts = pstRef[1]->u32Pts;
-		        }
-		    }
+				if(HI_NULL == pstRef[1])
+				{
+					pstFrm->u32FrameIndex = pstEntity->stStreamInfo.u32FrameIndex;
+					pstFrm->u32Pts = pstEntity->stStreamInfo.u32Pts;
+				}
+				else
+				{
+					pstFrm->u32FrameIndex = pstRef[1]->u32FrameIndex;
+					pstFrm->u32Pts = pstRef[1]->u32Pts;
+				}
+			}
 		}
 		break;
     default:
@@ -1484,17 +1550,17 @@ HI_S32 VPSS_IN_CompleteImage_V3(VPSS_IN_ENTITY_S *pstEntity)
         
         if(pstEntity->stStreamInfo.eStreamFrmType != HI_DRV_FT_NOT_STEREO)
         {
-            VPSS_WBC_Complete(pstWbcInfo + 1);
-            VPSS_STTINFO_DieComplete(pstDieStInfo + 1);
-            VPSS_STTINFO_CcclComplete(pstCcclCntInfo + 1);
-            VPSS_STTINFO_NrComplete(pstNrMadInfo + 1);
-            VPSS_STTINFO_SttWbcComplete(psttWbc + 1);
+            VPSS_WBC_Complete(pstEntity->pstWbcInfo[1]);
+            VPSS_STTINFO_DieComplete(pstEntity->pstDieStInfo[1]);
+            VPSS_STTINFO_CcclComplete(pstEntity->pstCcclCntInfo[1]);
+            VPSS_STTINFO_NrComplete(pstEntity->pstNrMadInfo[1]);
+            VPSS_STTINFO_SttWbcComplete(pstEntity->pstSttWbc[1]);
         }
     }
     else
     {
         VPSS_STTINFO_SttWbcComplete(psttWbc);
-        VPSS_STTINFO_SttWbcComplete(psttWbc+1);
+        VPSS_STTINFO_SttWbcComplete(pstEntity->pstSttWbc[1]);
     }
 
     return HI_SUCCESS;
@@ -1544,11 +1610,11 @@ HI_S32 VPSS_IN_Reset_V3(VPSS_IN_ENTITY_S *pstEntity)
         
         if(pstEntity->stStreamInfo.eStreamFrmType != HI_DRV_FT_NOT_STEREO)
         {
-            VPSS_WBC_Reset(pstWbcInfo+1);
-            VPSS_STTINFO_DieReset(pstDieStInfo+1);
-            VPSS_STTINFO_CcclReset(pstCcclCntInfo+1);
-            VPSS_STTINFO_NrReset(pstNrMadInfo+1);
-            VPSS_STTINFO_SttWbcReset(psttWbc+1);
+            VPSS_WBC_Reset(pstEntity->pstWbcInfo[1]);
+            VPSS_STTINFO_DieReset(pstEntity->pstDieStInfo[1]);
+            VPSS_STTINFO_CcclReset(pstEntity->pstCcclCntInfo[1]);
+            VPSS_STTINFO_NrReset(pstEntity->pstNrMadInfo[1]);
+            VPSS_STTINFO_SttWbcReset(pstEntity->pstSttWbc[1]);
         }
     }
     else
@@ -1588,6 +1654,9 @@ HI_S32 VPSS_IN_Reset_V3(VPSS_IN_ENTITY_S *pstEntity)
 	}
 
 	memset(&(pstEntity->stStreamInfo),0,sizeof(VPSS_IN_STREAM_INFO_S));
+	
+	pstEntity->stStreamInfo.u32RealTopFirst = DEF_TOPFIRST_BUTT;
+
 	memset(&(pstEntity->stListState),0,sizeof(VPSS_IN_IMAGELIST_STATE_S));
 
     

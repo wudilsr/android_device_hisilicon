@@ -22,7 +22,7 @@
 #define MxL_HRCLS_PRINT  //printk /** To be replaced by customer's own log function */
 
 #define not_MXL_HRCLS_WAKE_ON_WAN_ENABLED_
-#define not_MXL_HRCLS_LITTLE_ENDIAN_
+#define _MXL_HRCLS_LITTLE_ENDIAN_
 
 #define	MXL254_I2C_INDEX	1
 

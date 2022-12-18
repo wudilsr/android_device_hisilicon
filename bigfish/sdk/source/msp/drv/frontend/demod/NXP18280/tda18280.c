@@ -228,48 +228,26 @@ tmErrorCode_t     I2CWrite(UInt8 Addr, UInt32 AddrSize, UInt8* pAddr, UInt32 Wri
 
        // errI2C = i2c_tuner.write((int)Addr, (const char*)&WriteBuffer[0], (int)(WriteLen+AddrSize));
 
-	   
-#if defined (CHIP_TYPE_hi3716cv200es) || defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
-		   if(HI_STD_I2C_NUM >u32I2cNo)
+	   if(HI_STD_I2C_NUM >u32I2cNo)
+	   {
+		   //s32Ret = HI_DRV_I2C_Write(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pData, u32DataLen);
+		   s32Ret = s_tuner_pI2cFunc->pfnI2cWrite(u32I2cNo,Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
+   
+		   if(HI_SUCCESS != s32Ret)
 		   {
-			   //s32Ret = HI_DRV_I2C_Write(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pData, u32DataLen);
-			   s32Ret = s_tuner_pI2cFunc->pfnI2cWrite(u32I2cNo, Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
-	   
-			   if(HI_SUCCESS != s32Ret)
-			   {
-				   return s32Ret;
-			   }
+			   return s32Ret;
 		   }
-		   else
+	   }
+	   else
+	   {
+		   //s32Ret = HI_DRV_GPIOI2C_WriteExt(u32I2cNo,(HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pData, u32DataLen);
+		   s32Ret = s_tuner_pGpioI2cFunc->pfnGpioI2cWriteExt(u32I2cNo,Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
+		   if(HI_SUCCESS != s32Ret)
 		   {
-			   //s32Ret = HI_DRV_GPIOI2C_WriteExt(u32I2cNo,(HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pData, u32DataLen);
-			   s32Ret = s_tuner_pGpioI2cFunc->pfnGpioI2cWriteExt(u32I2cNo,Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
-			   if(HI_SUCCESS != s32Ret)
-			   {
-				   return s32Ret;
-			   }
+			   return s32Ret;
 		   }
-#else
-		   if(HI_STD_I2C_NUM >u32I2cNo)
-		   {
-			   //s32Ret = HI_DRV_I2C_Write(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pData, u32DataLen);
-			   s32Ret = s_tuner_pI2cFunc->pfnI2cWrite(u32I2cNo,Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
-	   
-			   if(HI_SUCCESS != s32Ret)
-			   {
-				   return s32Ret;
-			   }
-		   }
-		   else
-		   {
-			   //s32Ret = HI_DRV_GPIOI2C_WriteExt(u32I2cNo,(HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pData, u32DataLen);
-			   s32Ret = s_tuner_pGpioI2cFunc->pfnGpioI2cWriteExt(u32I2cNo,Addr, uSubAddress16, AddrSize, WriteBuffer, WriteLen);
-			   if(HI_SUCCESS != s32Ret)
-			   {
-				   return s32Ret;
-			   }
-		   }
-   #endif
+	   }
+
 
         if (s32Ret != TM_OK) 
         {
@@ -327,46 +305,25 @@ tmErrorCode_t     I2CRead(UInt8 Addr, UInt32 AddrSize, UInt8* pAddr,UInt32 ReadL
     }
 #endif
 
-#if defined (CHIP_TYPE_hi3716cv200es) || defined (CHIP_TYPE_hi3716cv200) || defined (CHIP_TYPE_hi3716mv400)
-		if(HI_STD_I2C_NUM > u32I2cNo)
+	if(HI_STD_I2C_NUM > u32I2cNo)
+	{
+		//s32Ret = HI_DRV_I2C_Read(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
+		s32Ret = s_tuner_pI2cFunc->pfnI2cRead(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
+		if(HI_SUCCESS != s32Ret)
 		{
-			//s32Ret = HI_DRV_I2C_Read(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-			s32Ret = s_tuner_pI2cFunc->pfnI2cRead(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
-	
-			if(HI_SUCCESS != s32Ret)
-			{
-				return s32Ret;
-			}
+			return s32Ret;
 		}
-		else
+	}
+	else
+	{
+		//s32Ret = HI_DRV_GPIOI2C_ReadExt(u32I2cNo, (HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pu8Data, u32DataLen);
+		s32Ret =  s_tuner_pGpioI2cFunc->pfnGpioI2cReadExt(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
+		if(HI_SUCCESS != s32Ret)
 		{
-			//s32Ret = HI_DRV_GPIOI2C_ReadExt(u32I2cNo, (HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-			s32Ret =  s_tuner_pGpioI2cFunc->pfnGpioI2cReadExt(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
-			if(HI_SUCCESS != s32Ret)
-			{
-				return s32Ret;
-			}
+			return s32Ret;
 		}
-#else
-		if(HI_STD_I2C_NUM > u32I2cNo)
-		{
-			//s32Ret = HI_DRV_I2C_Read(u32I2cNo, (HI_U8)u32DevAddr, u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-			s32Ret = s_tuner_pI2cFunc->pfnI2cRead(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
-			if(HI_SUCCESS != s32Ret)
-			{
-				return s32Ret;
-			}
-		}
-		else
-		{
-			//s32Ret = HI_DRV_GPIOI2C_ReadExt(u32I2cNo, (HI_U8)u32DevAddr, (HI_U8)u32RegAddr, u32RegNum, pu8Data, u32DataLen);
-			s32Ret =  s_tuner_pGpioI2cFunc->pfnGpioI2cReadExt(u32I2cNo, (HI_U8)Addr, uSubAddress16, AddrSize, &uBytesBuffer[0], ReadLen);
-			if(HI_SUCCESS != s32Ret)
-			{
-				return s32Ret;
-			}
-		}
-#endif
+	}
+
 
     if (s32Ret == TM_OK) 
     {

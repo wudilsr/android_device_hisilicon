@@ -139,7 +139,7 @@ HI_S32 WIN_AcquireFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo);
 HI_S32 WIN_ReleaseFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo);
 HI_S32 WIN_AttachSink(HI_HANDLE hWin, HI_HANDLE hSink);
 HI_S32 WIN_DetachSink(HI_HANDLE hWin, HI_HANDLE hSink);
-HI_S32 WIN_SetVirtualAttr(HI_HANDLE hWin, HI_U32 u32Width,HI_U32 u32Height);
+HI_S32 WIN_SetVirtualAttr(HI_HANDLE hWin, HI_U32 u32Width,HI_U32 u32Height,HI_U32 u32FrmRate);
 
 HI_S32 WIN_SetQuick(HI_HANDLE hWin, HI_BOOL bEnable);
 HI_S32 WIN_GetQuick(HI_HANDLE hWin, HI_BOOL *pbEnable);

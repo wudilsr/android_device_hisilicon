@@ -23,7 +23,7 @@
 #include "sha1.h"
 #include <intrins.h>
 
-#define RAM_STORE_ADDR   0xF840E800
+#define RAM_STORE_ADDR   (DATA_BASE_ADDR+0x800)
 
 /*
  *  以下是为 SHA1 向左环形移位宏 之定义
@@ -78,12 +78,15 @@ void SHA1PreProcess()
     	regData.val8[1] = g_stSha1Info.Message_Block[4 * t + 1] ;
     	regData.val8[2] = g_stSha1Info.Message_Block[4 * t + 2] ;
     	regData.val8[3] = g_stSha1Info.Message_Block[4 * t + 3] ;
-    	regAddr.val32 = RAM_STORE_ADDR + t * 4 ;
 
+		
+		regAddr.val32 = RAM_STORE_ADDR + t * 4 ;
+			
     	*((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4)) =  g_stSha1Info.Message_Block[4 * t + 3] ;
     	*((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4+1)) =  g_stSha1Info.Message_Block[4 * t + 2] ;	
     	*((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4+2)) =  g_stSha1Info.Message_Block[4 * t + 1] ;
     	*((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4 +3)) =  g_stSha1Info.Message_Block[4 * t + 0] ;
+		
     }
 	
     for (t = 16; t < 80; t++)
@@ -110,21 +113,23 @@ void SHA1PreProcess()
 
         tmp = SHA1CircularShift(tmp,1);
 
-        regAddr.val32 = RAM_STORE_ADDR + t * 4;  
+        regAddr.val32 = g_u32DateBaseAddr + RAM_STORE_ADDR + t * 4;  
         regData.val32 = tmp ;	   
 
         *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4)) =  regData.val8[3];
         *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4+1)) =  regData.val8[2];	
         *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4+2)) =   regData.val8[1];
-        *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4 +3)) =   regData.val8[0];		
+        *((unsigned char volatile xdata *)(RAM_STORE_ADDR + t * 4 +3)) =   regData.val8[0];	
+		
     }
 }
 
 void SHA1ProcessMessageWord(int t)
 {
     idata HI_U32 temp;
-
-    regAddr.val32 = RAM_STORE_ADDR + t * 4 ;    
+	
+    regAddr.val32 = RAM_STORE_ADDR + t * 4 ; 
+	
     read_regVal(); 
     input[3] = regData.val32;		
 	

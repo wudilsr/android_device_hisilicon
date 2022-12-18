@@ -38,6 +38,8 @@
 #define DDR_HW_TRAINING_CONFIG
 #define DDR_TRAINING_ADJUST_CONFIG
 #define DDR_TRAINING_LOG_CONFIG
+#define DDR_TRAINING_UART_CONFIG
+#define DDR_TRAINING_STAT_CONFIG
 
 /* defined in ddr_training_custom.h to disable this item */
 #ifdef DDR_VREF_TRAINING_DISABLE
@@ -66,6 +68,14 @@
 
 #ifdef DDR_TRAINING_LOG_DISABLE
 #undef DDR_TRAINING_LOG_CONFIG
+#endif
+
+#ifdef DDR_TRAINING_UART_DISABLE
+#undef DDR_TRAINING_UART_CONFIG
+#endif
+
+#ifdef DDR_TRAINING_STAT_DISABLE
+#undef DDR_TRAINING_STAT_CONFIG
 #endif
 
 /* for training cmd */
@@ -100,11 +110,21 @@
     #endif
 #endif /* DDR_TRAINING_CMD */
 
+/* check config */
+#if defined(DDR_TRAINING_ADJUST_DISABLE) && !defined(DDR_HW_READ_ADJ_CONFIG)
+#error when defined DDR_TRAINING_ADJUST_DISABLE, \
+	MUST define DDR_HW_READ_ADJ_CONFIG.
+#endif
+
 /* reserve config */
 /* DDR_WL_DATAEYE_ADJUST_CONFIG: Adjust WDQ phase/bdl after WL training. */
 /* DDR_VREF_TRAINING_CONFIG    : DDR Vref training. */
 /* DDR_MPR_TRAINING_CONFIG     : DDR MPR training. */
 /* DDR_AC_TRAINING_CONFIG      : DDR AC training. */
 /* DDR_DDRT_SPECIAL_CONFIG     : DDRT read and write special operate. */
-/* DDR_DDRT_SPECIAL_CONFIG     : DDRT read and write special operate. */
 /* DDR_DDR4_CONFIG             : DDR4 special operate. */
+/* DDR_TRAINING_CUT_CODE_CONFIG: Cut code for small SRAM. */
+/* DDR_TRAINING_MINI_LOG_CONFIG: Less code to log */
+/* DDR_HW_READ_ADJ_CONFIG      : Adjust read dataeye after hw read training */
+/* DDR_VREF_WITHOUT_BDL_CONFIG : Vref not modify DQ bdl */
+/* DDR_DATAEYE_NORMAL_NOT_ADJ_CONFIG : Do not adjust window on normal case */

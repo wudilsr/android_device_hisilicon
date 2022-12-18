@@ -36,7 +36,6 @@ LOCAL_SHARED_LIBRARIES := \
     libbinder \
     libutils\
     libcutils\
-    libandroid_runtime \
 	libpqhal
 
 LOCAL_C_INCLUDES := \

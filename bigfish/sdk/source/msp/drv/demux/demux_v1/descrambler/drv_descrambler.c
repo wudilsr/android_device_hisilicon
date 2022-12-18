@@ -52,6 +52,7 @@ typedef struct
 } DMX_DEV_DSCR_S;
 
 static DMX_DEV_DSCR_S   s_DmxDscrFile;
+extern DMX_DEV_OSI_S *g_pDmxDevOsi;
 
 HI_S32 DMXKeyIoctl(struct file *file, HI_U32 cmd, HI_VOID *arg)
 {
@@ -194,6 +195,12 @@ HI_S32 DMXKeyProcRead(struct seq_file *p, HI_VOID *v)
 {
     HI_U32 KeyId;
 
+    if (DMX_DEV_INACTIVED == g_pDmxDevOsi->State)
+    {
+        HI_WARN_DEMUX("Demux has not started.\n");
+        goto out;
+    }
+
     PROC_PRINT(p, "Id ChanCnt AttachCnt DetachCnt SetEvenKeyCnt SetOddKeyCnt EvenKey                             OddKey\n");
 
     for (KeyId = 0; KeyId < DMX_KEY_CNT; KeyId++)
@@ -224,6 +231,7 @@ HI_S32 DMXKeyProcRead(struct seq_file *p, HI_VOID *v)
             );
     }
 
+out:
     return HI_SUCCESS;
 }
 #endif

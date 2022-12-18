@@ -107,6 +107,7 @@ HI_VOID  VDP_DRIVER_Initial()
     U_CBM_ATTR CBM_ATTR;
     U_CBM_MIX1 CBM_MIX1;
     U_CBM_MIX2 CBM_MIX2;
+	U_VOCTRL VOCTRL;
 
     /* initail layer link */
     CBM_ATTR.u32 = pVdpReg->CBM_ATTR.u32;
@@ -146,6 +147,10 @@ HI_VOID  VDP_DRIVER_Initial()
     VDP_CBM_SetMixerPrio(VDP_CBM_MIX1, VDP_CBM_VID3, 0);
     VDP_CBM_SetMixerPrio(VDP_CBM_MIX1, VDP_CBM_VID4, 1);
     VDP_CBM_SetMixerPrio(VDP_CBM_MIX1, VDP_CBM_GP1, 2);
+
+	VOCTRL.u32 = pVdpReg->VOCTRL.u32;
+	VOCTRL.bits.vo_ck_gt_en = 1;
+	pVdpReg->VOCTRL.u32 = VOCTRL.u32;
 
 
     //VDP_INTF_DEFAULT();

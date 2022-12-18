@@ -40,14 +40,22 @@ static __attribute__((unused)) char dev_name[CONFIG_SYS_MAX_NAND_DEVICE][8];
 
 static void nand_init_chip(struct mtd_info *mtd, struct nand_chip *nand)
 {
-	int maxchips = CONFIG_SYS_NAND_MAX_CHIPS;
+	int maxchips;
 	int __attribute__((unused)) i = 0;
 
-	if (maxchips < 1)
-		maxchips = 1;
 	mtd->priv = nand;
 
 	if (board_nand_init(nand) == 0) {
+#ifdef CONFIG_HIFMC100_SPI_NAND_SUPPORT
+		if (nand->is_spi_nand)
+			maxchips = CONFIG_SYS_SPI_NAND_MAX_CHIPS;
+		else
+#endif
+			maxchips = CONFIG_SYS_NAND_MAX_CHIPS;
+
+		if (maxchips < 1)
+			maxchips = 1;
+
 		if (nand_scan(mtd, maxchips) == 0) {
 			if (!mtd->name)
 				mtd->name = (char *)default_nand_name;

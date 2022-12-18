@@ -88,6 +88,9 @@ jsimd_idct_ifast (j_decompress_ptr cinfo, jpeg_component_info * compptr,
                 JCOEFPTR coef_block, JSAMPARRAY output_buf,
                 JDIMENSION output_col)
 {
+    /** deal warning **/
+    int offset = cinfo->output_width;
+    cinfo->output_width = offset;
     jsimd_idct_ifast_neon(compptr->dct_table, coef_block, output_buf, output_col);
 }
 
@@ -97,6 +100,9 @@ jsimd_idct_2x2 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
                 JCOEFPTR coef_block, JSAMPARRAY output_buf,
                 JDIMENSION output_col)
 {
+    /** deal warning **/
+    int offset = cinfo->output_width;
+    cinfo->output_width = offset;
     jsimd_idct_2x2_neon(compptr->dct_table, coef_block, output_buf, output_col);
 }
 
@@ -105,6 +111,9 @@ jsimd_idct_4x4 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
                 JCOEFPTR coef_block, JSAMPARRAY output_buf,
                 JDIMENSION output_col)
 {
+    /** deal warning **/
+    int offset = cinfo->output_width;
+    cinfo->output_width = offset;
     jsimd_idct_4x4_neon(compptr->dct_table, coef_block, output_buf, output_col);
 }
 

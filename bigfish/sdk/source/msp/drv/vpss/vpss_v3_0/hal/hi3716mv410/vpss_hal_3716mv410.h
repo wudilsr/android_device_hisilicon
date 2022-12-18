@@ -86,7 +86,9 @@ typedef enum hiVPSS_HAL_TASK_NODE_E
     VPSS_HAL_TASK_NODE_2D_FIELD = 0,
     VPSS_HAL_TASK_NODE_2D_FIELD_VIRTUAL,
     VPSS_HAL_TASK_NODE_2D,
-    VPSS_HAL_TASK_NODE_2D_VIRTUAL,
+	VPSS_HAL_TASK_NODE_SPLIT_L,
+	VPSS_HAL_TASK_NODE_SPLIT_R,
+	VPSS_HAL_TASK_NODE_2D_VIRTUAL,
     VPSS_HAL_TASK_NODE_3D_R,
     VPSS_HAL_TASK_NODE_3D_R_VIRTUAL,
     VPSS_HAL_TASK_NODE_P0_ZME_L2,
@@ -138,6 +140,7 @@ typedef struct hiVPSS_HAL_FRAME_S{
     HI_DRV_FIELD_MODE_E         enFieldMode;
     HI_DRV_VID_FRAME_ADDR_S     stAddr;
     HI_DRV_PIXEL_BITWIDTH_E     enBitWidth;
+	HI_BOOL  bSecure;
 }VPSS_HAL_FRAME_S;
 
 
@@ -150,7 +153,8 @@ typedef struct hiVPSS_HAL_PORT_INFO_S
     HI_BOOL     bNeedMirror;
 
     HI_RECT_S   stInCropRect; /* PORT CROP信息 */
-    HI_RECT_S   stVideoRect; /* 真实显示区域 */
+    HI_RECT_S  stVideoRect; /* 真实显示区域 */
+    HI_RECT_S   stOutCropRect;
     HI_DRV_VPSS_ROTATION_E  enRotation; /* 旋转信息 */
     VPSS_HAL_FRAME_S        stOutInfo; /* PORT输出信息 */
 } VPSS_HAL_PORT_INFO_S;
@@ -238,7 +242,7 @@ HI_S32 VPSS_HAL_StartLogic(VPSS_IP_E enIP,
 
 HI_S32 VPSS_HAL_GetSCDInfo(HI_U32 u32AppAddr,HI_S32 s32SCDInfo[32]);
 
-HI_VOID VPSS_HAL_GetDetPixel(VPSS_IP_E enIP,HI_U32 BlkNum, HI_U8* pstData);
+HI_VOID VPSS_HAL_GetDetPixel(HI_U32 u32AppAddr,HI_U32 BlkNum, HI_U8* pstData);
 
 HI_S32 VPSS_HAL_GetBaseRegAddr(VPSS_IP_E enIP,
         HI_U32 *pu32PhyAddr,

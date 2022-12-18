@@ -70,6 +70,8 @@ typedef struct hiDMX_BUF_STATUS_S
     HI_U32 u32BufRptr;  /*buffer read pointer */
     HI_U32 u32BufWptr;/*buffer written pointer */
 } HI_DRV_DMX_BUF_STATUS_S;
+
+HI_S32  HI_DRV_DMX_BasicInit(HI_VOID);
 HI_S32  HI_DRV_DMX_Init(HI_VOID);
 HI_VOID HI_DRV_DMX_DeInit(HI_VOID);
 
@@ -82,6 +84,7 @@ HI_S32 HI_DRV_DMX_SetPusi(HI_BOOL bCheckPusi);
 HI_S32 HI_DRV_DMX_SetTei(HI_UNF_DMX_TEI_SET_S *pstTei);
 HI_S32 HI_DRV_DMX_TSIAttachTSO(HI_UNF_DMX_TSI_ATTACH_TSO_S *pstTSIAttachTSO);
 HI_BOOL HI_DRV_DMX_IsTSIAttachTSO(HI_U32 PortId, HI_UNF_DMX_TSO_PORT_E* TSO);
+HI_S32  HI_DRV_DMX_GetResumeCount(HI_U32 *pCount);
 
 HI_S32  HI_DRV_DMX_TSOPortGetAttr(const HI_U32 PortId, HI_UNF_DMX_TSO_PORT_ATTR_S *PortAttr);
 HI_S32  HI_DRV_DMX_TSOPortSetAttr(const HI_U32 PortId, const HI_UNF_DMX_TSO_PORT_ATTR_S *PortAttr);
@@ -118,6 +121,8 @@ HI_S32  HI_DRV_DMX_GetTSBufferStatus(const HI_U32 PortId, HI_UNF_DMX_TSBUF_STATU
 
 HI_S32  HI_DRV_DMX_CreateChannel(HI_U32 u32DmxId, HI_UNF_DMX_CHAN_ATTR_S *pstChAttr,
                            HI_HANDLE *phChannel, DMX_MMZ_BUF_S *pstChBuf, HI_U32 file);
+HI_S32  HI_DRV_DMX_CreateChannelWithPID(HI_U32 u32DmxId, HI_U32 Pid, HI_UNF_DMX_CHAN_ATTR_S *pstChAttr,
+                           HI_HANDLE *phChannel, DMX_MMZ_BUF_S *pstChBuf, HI_U32 file);
 HI_S32  HI_DRV_DMX_DestroyChannel(HI_HANDLE hChannel);
 HI_S32  HI_DRV_DMX_GetChannelAttr(HI_HANDLE hChannel, HI_UNF_DMX_CHAN_ATTR_S *pstChAttr);
 HI_S32  HI_DRV_DMX_SetChannelAttr(HI_HANDLE hChannel, HI_UNF_DMX_CHAN_ATTR_S *pstChAttr);
@@ -144,7 +149,7 @@ HI_S32  HI_DRV_DMX_DetachFilter(HI_HANDLE Filter, HI_HANDLE Channel);
 HI_S32  HI_DRV_DMX_GetFilterChannelHandle(HI_HANDLE Filter, HI_HANDLE *Channel);
 HI_S32  HI_DRV_DMX_GetFreeFilterCount(HI_U32 DmxId, HI_U32 *FreeCount);
 
-#if defined(CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 HI_S32  HI_DRV_DMX_GetDataHandle(HI_U32 *pu32ValidChannel, HI_U32 *pu32ValidNum, HI_U32 u32TimeOutMs);
 HI_S32  HI_DRV_DMX_SelectDataHandle(HI_U32 *pu32WatchChannel, HI_U32 u32WatchNum, HI_U32 *pu32ValidChannel, HI_U32 *pu32ValidNum, HI_U32 u32TimeOutMs);
 #else

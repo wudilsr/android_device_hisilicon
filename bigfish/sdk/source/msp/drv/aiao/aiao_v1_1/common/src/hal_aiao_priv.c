@@ -587,7 +587,10 @@ HI_S32 AIAO_HW_PowerOn(HI_VOID)
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
-    || defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
 #if defined (AIAO_PLL_492MHZ)
     uTmpVal.bits.aiao_mclk_sel = 0;
 #elif defined (AIAO_PLL_600MHZ)
@@ -600,13 +603,30 @@ HI_S32 AIAO_HW_PowerOn(HI_VOID)
 
     g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3798cv200_a)
+#if    defined(CHIP_TYPE_hi3798mv100)    \
+    || defined(CHIP_TYPE_hi3796mv100)    \
+    || defined(CHIP_TYPE_hi3798cv200_a)
+
     uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
     uTmpVal.bits.aiaoclk_loaden = 0;
     g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
 
     uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
-    uTmpVal.bits.aiaoclk_skipcfg = 0x10;
+    uTmpVal.bits.aiaoclk_skipcfg = 0x10;    //aiaoclk = 100M
+    g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
+
+    uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
+    uTmpVal.bits.aiaoclk_loaden = 1;
+    g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
+#elif  defined(CHIP_TYPE_hi3716mv410)  \
+    || defined(CHIP_TYPE_hi3716mv420)
+ 
+    uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
+    uTmpVal.bits.aiaoclk_loaden = 0;
+    g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
+
+    uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
+    uTmpVal.bits.aiaoclk_skipcfg = 0x18;    //aiaoclk = 50M
     g_pstRegCrg->PERI_CRG70.u32 = uTmpVal.u32;
 
     uTmpVal.u32 = g_pstRegCrg->PERI_CRG70.u32;
@@ -892,7 +912,10 @@ HI_S32 AIAO_HW_SetStart(AIAO_PORT_ID_E enPortID, HI_S32 bEn)
     || defined(CHIP_TYPE_hi3751v100)    \
     || defined(CHIP_TYPE_hi3798mv100)   \
     || defined(CHIP_TYPE_hi3796mv100)   \
-	|| defined(CHIP_TYPE_hi3798cv200_a)
+    || defined(CHIP_TYPE_hi3798cv200_a) \
+    || defined(CHIP_TYPE_hi3716mv410)   \
+    || defined(CHIP_TYPE_hi3716mv420)
+
         for (loop = 0; loop < 100; loop++)
         {
             udelay(10);
@@ -1596,49 +1619,58 @@ static HI_VOID  AIAO_LOW_SetTimerConfig(HI_U32 u32ChnId,HI_U32 u32Config)
 {
    g_pAIAOComReg->TIMER_CONFIG[u32ChnId].TIMER_CONFIG.bits.timer_config = u32Config;
 }
+
 static HI_VOID  AIAO_LOW_SetTimerMasterClk(HI_U32 u32ChnId,const AIAO_IfTimerAttr_S *pstIfAttr)
 {
     HI_U32 mclk, bclk, fclk;
     HI_U32 ben;
     HI_U32 u32cfg1;
+    
     mclk = GetMclkCrg((HI_U32)(pstIfAttr->enRate), pstIfAttr->u32BCLK_DIV, pstIfAttr->u32FCLK_DIV);
     bclk = GetBclkDiv(pstIfAttr->u32BCLK_DIV);
-    fclk = GetFslkDiv(pstIfAttr->u32FCLK_DIV);
+    fclk = GetFslkDiv(pstIfAttr->u32FCLK_DIV); 
     ben = 1;
     u32cfg1 = bclk + (fclk << 4) + (ben << 8);
+    
     g_pAIAOComReg->TIMER_CRG[u32ChnId].TIMER_CRG_CFG0.bits.aiao_mclk_div = mclk;
     g_pAIAOComReg->TIMER_CRG[u32ChnId].TIMER_CRG_CFG1.u32 = u32cfg1;
 }
-HI_VOID  AIAO_TIMER_SetAttr(AIAO_PORT_ID_E enPortID,const AIAO_IfTimerAttr_S *pstIfAttr,HI_U32 u32Config)
+
+HI_VOID  AIAO_TIMER_SetAttr(AIAO_TIMER_ID_E enTimerID,const AIAO_IfTimerAttr_S *pstIfAttr,HI_U32 u32Config)
 {
-    HI_U32 ChnId = PORT2CHID(enPortID);
+    HI_U32 ChnId = TIMER2CHID(enTimerID);
+    
     AIAO_LOW_SetTimerConfig(ChnId,u32Config);
-    AIAO_LOW_SetTimerMasterClk(ChnId, pstIfAttr);
+    AIAO_LOW_SetTimerMasterClk(ChnId, pstIfAttr);    
 }
-HI_VOID  AIAO_TIMER_SetEnable(AIAO_PORT_ID_E enPortID,HI_S32 bEn)
+
+HI_VOID  AIAO_TIMER_SetEnable(AIAO_TIMER_ID_E enTimerID,HI_S32 bEn)
 {
-    HI_U32 ChnId = PORT2CHID(enPortID);
+    HI_U32 ChnId = TIMER2CHID(enTimerID);
+    
     switch (ChnId)
     {
-        case AIAO_TIMER_0:
+        case 0:
             g_pAIAOComReg->AIAO_INT_ENA.bits.timer_ch0_int_ena = bEn;
             break;
-        case AIAO_TIMER_1:
+        case 1:
             g_pAIAOComReg->AIAO_INT_ENA.bits.timer_ch1_int_ena = bEn;
             break;
         default:
             break;
     }
 }
-HI_VOID AIAO_TIMER_ClearTimer(AIAO_PORT_ID_E enPortID)
+
+HI_VOID AIAO_TIMER_ClearTimer(AIAO_TIMER_ID_E enTimerID)
 {
-    HI_U32 ChnId = PORT2CHID(enPortID);
+    HI_U32 ChnId = TIMER2CHID(enTimerID);
+    
     switch (ChnId)
     {
-        case AIAO_TIMER_0:
+        case 0:
             g_pAIAOComReg->TIMER_CLEAR.TIMER_INT_CLEAR.bits.timer_ch0_clr = 1;
             break;
-        case AIAO_TIMER_1:
+        case 1:
             g_pAIAOComReg->TIMER_CLEAR.TIMER_INT_CLEAR.bits.timer_ch1_clr = 1;
             break;
         default:

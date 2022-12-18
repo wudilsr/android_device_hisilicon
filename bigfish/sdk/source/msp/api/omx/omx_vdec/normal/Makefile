@@ -49,3 +49,6 @@ ifndef CFG_HI_STATIC_LIB_ONLY
 	$(AT)rm -rf $(EXTERN_LIB_DIR)/$(LIBS).so
 endif
 
+%.o : %.c
+	$(AT)$(CC) $(CFLAGS) -c -o $@ $^
+

@@ -806,7 +806,7 @@ HI_S32 CA_GetExternRsaKey(cmd_tbl_t *cmdtp, HI_S32 flag, HI_S32 argc, char *argv
     if (argc != 2)
     {
        HI_ERR_CA("Error Input\n");
-       HI_ERR_CA("usage: get_extern_rsa_key  fastboot_partition_name\n");
+       HI_ERR_CA("usage: ca_get_extern_rsa_key  fastboot_partition_name\n");
        return HI_FAILURE;
     }
 
@@ -885,7 +885,9 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
         }
 
         recoveryAuthMode = HI_CA_GetAuthMode("recovery");
-        if (recoveryAuthMode == SPECIAL_MODE)
+        kernelAuthMode = HI_CA_GetAuthMode("kernel");
+
+        if (recoveryAuthMode == SPECIAL_MODE && kernelAuthMode == SPECIAL_MODE)
         {
             ret = run_command("ca_special_verify recovery", 0);
             if (ret == -1)
@@ -893,16 +895,6 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
                 HI_ERR_CA("Special verify recovery failed!\n");
                 return -1;
             }
-        }
-        else
-        {
-            HI_ERR_CA(" Recovery signature should be special mode!\n");
-            return -1;
-        }
-
-        kernelAuthMode = HI_CA_GetAuthMode("kernel");
-        if (kernelAuthMode == SPECIAL_MODE)
-        {
             ret = run_command("ca_special_verify kernel", 0);
             if (ret == -1)
             {
@@ -910,9 +902,18 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
                 return -1;
             }
         }
+        else if (recoveryAuthMode == COMMON_MODE && kernelAuthMode == COMMON_MODE)
+        {
+            ret = run_command("ca_common_verify_signature_check", 0);
+            if (ret == -1)
+            {
+                HI_ERR_CA("Common verify recovery or kernel failed!\n");
+                return -1;
+            }
+        }
         else
         {
-            HI_ERR_CA(" Kernel signature should be special mode!\n");
+            HI_ERR_CA("AuthMode Not support!\n");
             return -1;
         }
     }
@@ -938,28 +939,28 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
 
     if (CAFlag == HI_TRUE)
     {
-        ret = run_command("get_extern_rsa_key fastboot", 0);
+        ret = run_command("ca_get_extern_rsa_key fastboot", 0);
         if (ret == -1)
         {
             HI_ERR_CA("Get extern rsa key failed!\n");
             return -1;
         }
 
-        ret = run_command("common_verify_bootargs_partition bootargs", 0);
+        ret = run_command("ca_common_verify_bootargs_partition bootargs", 0);
         if (ret == -1)
         {
             HI_ERR_CA("Verify bootargs failed!\n");
             return -1;
         }
 
-        ret = run_command("common_verify_image_signature recovery", 0);
+        ret = run_command("ca_common_verify_image_signature recovery", 0);
         if (ret == -1)
         {
             HI_ERR_CA("Verify recovery failed!\n");
             return -1;
         }
 
-        ret = run_command("common_verify_image_signature kernel", 0);
+        ret = run_command("ca_common_verify_image_signature kernel", 0);
         if (ret == -1)
         {
             HI_ERR_CA("Verify kernel failed!\n");
@@ -968,7 +969,7 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
 
         if (EnvFlashType == HI_FLASH_TYPE_EMMC_0)
         {
-            ret = run_command("common_verify_image_signature systemsign systemsign 0x3E8000", 0);
+            ret = run_command("ca_common_verify_image_signature systemsign systemsign 0x3E8000", 0);
         }
         else
         {
@@ -985,7 +986,7 @@ HI_S32 HI_Android_Authenticate(HI_VOID)
             return -1;
         }
 
-        ret = run_command("common_verify_system_signature system systemsign 0x0", 0);
+        ret = run_command("ca_common_verify_system_signature system systemsign 0x0", 0);
         if (ret == -1)
         {
             HI_ERR_CA("Verify system failed!\n");

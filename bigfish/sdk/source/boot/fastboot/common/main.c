@@ -404,6 +404,10 @@ void main_loop (void)
 		hibernate_boot(-1);
 #endif
 
+#ifdef CONFIG_HISI_SNAPSHOT_BOOT
+	if (bootdelay >= 0 && !tstc())
+		checkout_qbboot();
+#endif
 	debug ("### main_loop: bootcmd=\"%s\"\n", s ? s : "<UNDEFINED>");
 
 	if (bootdelay >= 0 && s && !abortboot (bootdelay)) {

@@ -8,17 +8,6 @@ extern "C" {
 #endif
 
 #define TUNER_USE    HI_TUNER0_ID
-#define GET_TUNER_CONFIG(stTunerAttr) \
-{ \
-    stTunerAttr.enSigType      = HI_TUNER_SIGNAL_TYPE; \
-    stTunerAttr.enTunerDevType = HI_TUNER_TYPE; \
-    stTunerAttr.u32TunerAddr   = HI_TUNER_DEV_ADDR; \
-    stTunerAttr.enDemodDevType = HI_DEMOD_TYPE; \
-    stTunerAttr.u32DemodAddr   = HI_DEMOD_DEV_ADDR; \
-    stTunerAttr.enOutputMode   = HI_DEMOD_TS_MODE; \
-    stTunerAttr.enI2cChannel   = HI_DEMOD_I2C_CHANNEL; \
-    stTunerAttr.u32ResetGpioNo = HI_DEMOD_RESET_GPIO; \
-}
 
 #if (HI_TUNER_SIGNAL_TYPE == 2)
 #define GET_SAT_TUNER_CONFIG(stSatTunerAttr) \

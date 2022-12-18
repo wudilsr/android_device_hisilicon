@@ -302,7 +302,16 @@ static HI_S32 MpiVencChechConfig(const HI_UNF_VENC_CHN_ATTR_S* pstAttr)
         }
     }
 
-#if 0
+#if 1
+    if (pstAttr->bSlcSplitEn)
+    {
+        if ((pstAttr->u32SplitSize > HI_VENC_MAX_SPLIT_BYTE_SIZE) || (pstAttr->u32SplitSize < HI_VENC_MIN_SPLIT_BYTE_SIZE))
+        {
+            HI_ERR_VENC("u32SplitSize(%u) is invalid.Should < %u && > %u .\n", pstAttr->u32SplitSize, HI_VENC_MAX_SPLIT_BYTE_SIZE,HI_VENC_MIN_SPLIT_BYTE_SIZE);
+            return HI_ERR_VENC_INVALID_PARA;
+        }
+    }
+#else
     if (pstAttr->bSlcSplitEn)
     {
         if (pstAttr->u32SplitSize > HI_VENC_MAX_SPLIT_MB_LINE)
@@ -310,7 +319,7 @@ static HI_S32 MpiVencChechConfig(const HI_UNF_VENC_CHN_ATTR_S* pstAttr)
             HI_ERR_VENC("u32SplitSize(%u) is invalid.Should small than %u.\n", pstAttr->u32SplitSize, HI_VENC_MAX_SPLIT_MB_LINE);
             return HI_ERR_VENC_INVALID_PARA;
         }
-    }
+    }	
 #endif
     return HI_SUCCESS;
 }

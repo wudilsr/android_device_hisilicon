@@ -18,6 +18,10 @@
 #  include "sys-hi3798mx.c"
 #endif
 
+#ifdef CONFIG_ARCH_HI3716MV410
+#  include "sys-hi3716mv410.c"
+#endif
+
 /**************************************************/
 void hieth_sys_startup(void)
 {

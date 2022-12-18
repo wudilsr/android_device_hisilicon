@@ -14,6 +14,8 @@
 #include <linux/mtd/nand.h>
 #include <linux/mtd/mtd.h>
 #include <hinfc_gen.h>
+#include <hifmcv100_reg.h>
+#include "hifmc100_nand_gen.h"
 #include "hinfc504_gen.h"
 #include "hinfc610_gen.h"
 #include "hisfc400/hisfc400_gen.h"
@@ -92,6 +94,15 @@ static unsigned int hisfc400_support_yaffs2[] = {
 	SET_HINFC_VER(HINFC_VER_COMMON, _4K, hisfc400_ecc_none),
 	0,
 };
+
+static unsigned int hifmc100_support_yaffs2[] = {
+	SET_HINFC_VER(HINFC_VER_COMMON, _2K, hifmc100_nand_ecc_none),
+	SET_HINFC_VER(HINFC_VER_COMMON, _4K, hifmc100_nand_ecc_none),
+	SET_HINFC_VER(HINFC_VER_COMMON, _8K, hifmc100_nand_ecc_none),
+	SET_HINFC_VER(HINFC_VER_COMMON, _16K, hifmc100_nand_ecc_none),
+	0,
+};
+
 /*****************************************************************************/
 
 static unsigned int *get_support_yaffs2(unsigned int nandip)
@@ -108,6 +119,8 @@ static unsigned int *get_support_yaffs2(unsigned int nandip)
 			return hinfc610_support_yaffs2;
 		case HISFC_VER_400:
 			return hisfc400_support_yaffs2;
+		case HIFMC_VER_100:
+			return hifmc100_support_yaffs2;
 
 	}
 }
@@ -217,6 +230,15 @@ int yaffs_check(unsigned char *buffer, unsigned int writesize,
 	} else
 
 #endif
+#ifdef CONFIG_HIFMC100_NAND_SUPPORT || CONFIG_HIFMC100_SPI_NAND_SUPPORT
+	if (host_info->hostver == HIFMC_VER_100) {/*
+		extern int hifmc100_nand_ecc_reg2type(enum hifmc100_nand_ecc_reg reg);
+		host_eccreg = hifmc100_nand_ecc_none;
+		yaffs2_tag_ecctype = hifmc100_nand_ecc_reg2type(yaffs2_tags->eccreg);*/
+		yaffs2_tag_ecctype = NAND_ECC_NONE;
+	} else
+#endif /* CONFIG_HIFMC100_NAND_SUPPORT */
+
 	{
 		printf("!!!Can't find a valid NAND controller.\n");
 		return -1;

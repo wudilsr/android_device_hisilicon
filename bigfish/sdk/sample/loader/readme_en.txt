@@ -56,6 +56,24 @@ Guide£º
 	Modulation              : 64QAM
 	=================================
 	
+	Trigger OTA DVB-T2 upgrade:
+	# ./sample_loader -t
+	> Select upgrade type(0-OTA, 1-IP, 2-USB) ? 0
+	> Select signal type(0-CAB, 1-SAT, 2-DVB_T, 3-DVB_T2) ? 3
+	> Input PID[7000] ? 7000
+	> Input Frequency(KHz)[177500] ? 177500
+	> Input BandWidth(MHz)[7] ? 7
+	> Input Modulation(0-16,1-32,2-64,3-128,4-256Qam)[2] ? 2
+
+	=================================
+	Upgrade Parameters 
+	Download Type    : OTA
+	Tuner Type       : DVB_T2
+	PID              : 7000
+	Frequency        : 177.5(MHZ)
+	BandWidth       : 7(MHZ)
+	Modulation       : 64QAM
+	=================================
 	Trigger OTA Satellite upgrade:
 	# sample_loader -t
 	> Select upgrade type(0-OTA, 2-USB) ? 0
@@ -90,19 +108,19 @@ Guide£º
 	Trigger IP upgrade£º
 	# ./sample_loader -t
 	> Select upgrade type(0-OTA, 1-IP, 2-USB) ? 1
-	> Select protocol type(0-TFTP, 1-FTP, 2-HTTP) ? 0
+	> Select protocol type(0-TFTP, 1-FTP, 2-HTTP) ? 2
 	> Select IP type(0-static, 1-dynamic) ? 1
 	> Input server IP address[0.0.0.0] ? 10.157.187.10
-	> Input server port(default:69) ?
+	> Input server port(default:80) ?
 	> Input upgrade file name[] ? ip_update.bin
 	
 	=================================
 	Upgrade Parameters
 	Download Type           : IP
-	Protocol Type           : TFTP
+	Protocol Type           : HTTP
 	IP Type                 : dynamic
 	server ip               : 10.157.187.10
-	server port             : 69
+	server port             : 80
 	Upgrade file name       : ip_update.bin
 	=================================
 	

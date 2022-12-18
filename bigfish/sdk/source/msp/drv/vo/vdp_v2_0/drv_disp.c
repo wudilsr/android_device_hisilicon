@@ -1750,7 +1750,10 @@ HI_S32 HI_DRV_DISP_ExternlAttach(HI_HANDLE hCast, HI_HANDLE hSink)
     return Ret ;
 }
 
-HI_S32 HI_DRV_DISP_SetCastAttr(HI_HANDLE hCast, HI_U32 u32Width,HI_U32 u32Height)
+HI_S32 HI_DRV_DISP_SetCastAttr(HI_HANDLE hCast, 
+                                HI_U32 u32Width,
+                                HI_U32 u32Height,
+                                HI_U32 u32FrmRate)
 {
     HI_S32 Ret;
     DISP_CAST_EXT_ATTR_S disp_cast_attr;

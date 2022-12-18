@@ -489,6 +489,7 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     HDMI_INT_Err_Conut            HDMI_INTErrCount = {0};
     HI_U32                        u32Nvalue, u32CTSvalue;
     HI_CHAR                       u8Buf[21] = {0};
+    HI_U32 w,h;
     HI_S32 s32Temp, Ret = HI_SUCCESS;
 
     p += PROC_PRINT(p, "--------------------------------- Hisi HDMI Dev Stat --------------------------------\n");
@@ -582,6 +583,29 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     {
         p += PROC_PRINT(p, "%-20s| ", "Stop");
     }
+    p += PROC_PRINT(p, "%-20s: ","HDCP KEY CRC");
+    s32Temp = DRV_ReadByte_8BA(0, TX_SLV0, 0xF9);
+    
+    if(pstAppAttr->bHDCPEnable)
+    {
+        p += PROC_PRINT(p, "%s",((s32Temp&0x03) == 0x01) ? "OK" : "Error");
+    }
+    else
+    {
+        p += PROC_PRINT(p, "%s", " - ");
+    }
+    p += PROC_PRINT(p, "\n");
+
+    p += PROC_PRINT(p, "%-20s: ","EDID Status");
+    if(DRV_Get_IsValidSinkCap(HI_UNF_HDMI_ID_0))
+    {
+        p += PROC_PRINT(p, "%-20s| ", "Valid");
+    }
+    else
+    {
+        p += PROC_PRINT(p, "%-20s| ", "Unvalid");   
+    }
+        
     p += PROC_PRINT(p, "%-20s: ","CEC Status");
     memset(&CECStatus, 0, sizeof(HI_UNF_HDMI_CEC_STATUS_S));
 #ifdef CEC_SUPPORT
@@ -596,15 +620,17 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
         p += PROC_PRINT(p, "%s\n", "Disable");
     }
 
-    p += PROC_PRINT(p, "%-20s: ","EDID Status");
-    if(DRV_Get_IsValidSinkCap(HI_UNF_HDMI_ID_0))
+    p += PROC_PRINT(p, "%-20s: ","Output Mode");
+    u32Reg = ReadByteHDMITXP1(0x2F);
+    if(u32Reg & 0x01)
     {
-        p += PROC_PRINT(p, "%-20s| ", "Valid");
+        p += PROC_PRINT(p, "%-20s| ", "HDMI");
     }
     else
     {
-        p += PROC_PRINT(p, "%-20s| ", "Unvalid");
+        p += PROC_PRINT(p, "%-20s| ", "DVI");
     }
+
     p += PROC_PRINT(p, "%-20s: ","CEC Phy Addr");
 
     p += PROC_PRINT(p, "%02d.%02d.%02d.%02d\n", CECStatus.u8PhysicalAddr[0],
@@ -618,15 +644,14 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     p += PROC_PRINT(p, "%d\n", CECStatus.u8LogicalAddr);
 
 
-    p += PROC_PRINT(p, "%-20s: ","Output Mode");
-    u32Reg = ReadByteHDMITXP1(0x2F);
-    if(u32Reg & 0x01)
+    p += PROC_PRINT(p, "%-20s: ","Force SetFmt Delay");
+    if(IsForceFmtDelay())
     {
-        p += PROC_PRINT(p, "%-20s| ", "HDMI");
+        p += PROC_PRINT(p, "%-20s| ", "Force");
     }
     else
     {
-        p += PROC_PRINT(p, "%-20s| ", "DVI");
+        p += PROC_PRINT(p, "%-20s| ", "Default");
     }
 
     p += PROC_PRINT(p, "%-20s: ","AVMUTE");
@@ -646,16 +671,17 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     p += PROC_PRINT(p, "\n");
 
 
-    p += PROC_PRINT(p, "%-20s: ","Force SetFmt Delay");
-    if(IsForceFmtDelay())
+    p += PROC_PRINT(p, "%-20s: ","Rsen Detect Mode");
+    if (DRV_Get_ForcePowerState())
     {
-        p += PROC_PRINT(p, "%-20s| ", "Force");
+        p += PROC_PRINT(p, "%-20s| ", "Force do not detect Rsen");
     }
     else
     {
         p += PROC_PRINT(p, "%-20s| ", "Default");
     }
-
+    
+    
     p += PROC_PRINT(p, "%-20s: ","Force Mute Delay");
     if (IsForceMuteDelay())
     {
@@ -667,15 +693,22 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     }
     p += PROC_PRINT(p, "\n");
     
-    p += PROC_PRINT(p, "%-20s: ","Rsen Detect Mode");
-    if (DRV_Get_ForcePowerState())
+    
+    w = DRV_ReadByte_8BA(0, TX_SLV0, HRES_L);  
+    w += (DRV_ReadByte_8BA(0, TX_SLV0, HRES_H)&0x1F)<<8; 
+    h = DRV_ReadByte_8BA(0, TX_SLV0, VRES_L);  
+    h += (DRV_ReadByte_8BA(0, TX_SLV0, VRES_H)&0x07)<<8; 
+    
+    u32Reg = DRV_ReadByte_8BA(0, TX_SLV0, INTERLACE_POL_DETECT);  
+    
+    p += PROC_PRINT(p, "%-20s: ","Out Timing");
+    
+    p += PROC_PRINT(p, "%dx%d",w,h);
+    if (w|h)
     {
-        p += PROC_PRINT(p, "%s ", "Force do not detect Rsen");
+        p += PROC_PRINT(p, " %c H:%c V:%c ", (u32Reg&0x04)?'i':'p',(u32Reg&0x02)?'-':'+',(u32Reg&0x01)?'-':'+');
     }
-    else
-    {
-        p += PROC_PRINT(p, "%s ", "Default");
-    }
+    
     p += PROC_PRINT(p, "\n");
 
 
@@ -1062,6 +1095,9 @@ static HI_S32 HDMI0_Sink_Proc(struct seq_file *p, HI_VOID *v)
     p += PROC_PRINT(p, "%-20s: ","CEC Phy Add");
     p += PROC_PRINT(p, "%02x.%02x.%02x.%02x\n", pSinkCap->stCECAddr.u8PhyAddrA,
         pSinkCap->stCECAddr.u8PhyAddrB, pSinkCap->stCECAddr.u8PhyAddrC, pSinkCap->stCECAddr.u8PhyAddrD);
+    
+    p += PROC_PRINT(p, "%-20s: %s\n","SinkName", pSinkCap->stMfrsInfo.u8pSinkName);
+    
     p += PROC_PRINT(p, "-------------------------------------- Video ----------------------------------------\n");
     p += PROC_PRINT(p, "%-20s: ","Video Timing");
     for(i = 0,j = 0; i < HI_UNF_ENC_FMT_BUTT; i++)
@@ -1343,17 +1379,11 @@ static HI_S32 HDMI0_Sink_Proc(struct seq_file *p, HI_VOID *v)
         HI_U8  Data[512];
 
         memset(Data, 0, 512);
-        u32EdidLegth = 128*(pSinkCap->u8ExtBlockNum + 1);
 
-        if(u32EdidLegth > 512)
-        {
-            u32EdidLegth = 512;
-        }
-
-        SI_Proc_ReadEDIDBlock(Data, u32EdidLegth);
+        SI_Proc_ReadEDIDBlock(Data, &u32EdidLegth);
         for (index = 0; index < u32EdidLegth; index ++)
         {
-            p += PROC_PRINT(p, "%02x ", Data[index]);
+            p += PROC_PRINT(p, "  %02x", Data[index]);
             if (0 == ((index + 1) % 16))
             {
                 p += PROC_PRINT(p, "\n");
@@ -2347,7 +2377,7 @@ HI_S32 DRV_HDMI_UnRegister(HI_VOID)
 int HDMI_DRV_ModInit(void)
 {
     HI_S32 ret;
-#if 0//defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if 0//defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     HI_U32 i = 0;
     HI_DISP_PARAM_S   stDispParam = {0};
     PDM_EXPORT_FUNC_S *pstPdmFuncs  = HI_NULL;
@@ -2388,7 +2418,7 @@ int HDMI_DRV_ModInit(void)
     }
 #endif
 
-#if 0//defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
+#if 0//defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     ret = HI_DRV_MODULE_GetFunction(HI_ID_PDM, (HI_VOID**)&pstPdmFuncs);
     if (ret == HI_FAILURE || NULL == pstPdmFuncs)
     {

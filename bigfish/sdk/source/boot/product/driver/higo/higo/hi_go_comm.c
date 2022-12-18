@@ -41,33 +41,28 @@ extern HI_S32 HIGO_DeinitDecoder(HI_VOID);
 
 HI_S32 HI_GO_Init()
 {
-    HI_S32 ret;
+    HI_S32 s32Ret = HI_SUCCESS;
 
-    ret = HIGO_InitSurface();
-    if (ret != HI_SUCCESS)
-    {
-        HIGO_ERROR(ret);
-        return ret;
-    }
+    HIGO_InitSurface();
 
-    ret = HIGO_InitBliter();
-    if (ret != HI_SUCCESS)
+    s32Ret = HIGO_InitBliter();
+    if (s32Ret != HI_SUCCESS)
     {
-        HIGO_ERROR(ret);
+        HIGO_ERROR(s32Ret);
         goto fail0;
     }
 
-    ret = HIGO_InitDecoder();
-    if (ret != HI_SUCCESS)
+    s32Ret = HIGO_InitDecoder();
+    if (s32Ret != HI_SUCCESS)
     {
-        HIGO_ERROR(ret);
+        HIGO_ERROR(s32Ret);
         goto fail4;
     }
     
-    ret = HIGO_InitDisplay();
-    if (ret != HI_SUCCESS)
+    s32Ret = HIGO_InitDisplay();
+    if (s32Ret != HI_SUCCESS)
     {
-        HIGO_ERROR(ret);
+        HIGO_ERROR(s32Ret);
         goto fail4;
     }
     
@@ -76,8 +71,9 @@ fail4:
     (HI_VOID)HIGO_DeinitBliter();
 fail0:
     (HI_VOID)HIGO_DeinitSurface();
-    return ret;
+    return s32Ret;
 }
+
 
 HI_S32 HI_GO_Deinit()
 {
@@ -93,7 +89,7 @@ HI_S32 HI_GO_Deinit()
     }
     return ret;
 }
-#ifndef TEST_IN_ROOTBOX
+
 HI_S32 HIGO_GetRealRect(const HI_RECT* pSrcRect, const HI_RECT* pRect, HI_RECT* pRealRect)
 {
     HI_REGION Src1Region, Src2Region, RealRegion;
@@ -128,4 +124,3 @@ HI_S32 HIGO_GetRealRect(const HI_RECT* pSrcRect, const HI_RECT* pRect, HI_RECT* 
     REGION2RECT (*pRealRect, RealRegion);
     return HI_SUCCESS;
 }
-#endif

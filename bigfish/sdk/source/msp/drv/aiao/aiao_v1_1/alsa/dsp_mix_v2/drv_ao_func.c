@@ -6,7 +6,7 @@
  *
  * History:
  * Version   Date         Author     DefectNum    Description
- * main\1    
+ * main\1
  ********************************************************************************/
 #include "drv_ao_func.h"
 #include "hi_drv_ao.h"
@@ -20,6 +20,8 @@
 /************************ interface with aiao *******************************/
 //DRV Interface
 extern HI_S32 AO_SND_SetVolume(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_GAIN_ATTR_S stGain);
+extern HI_S32 AO_SND_SetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute);
+extern HI_S32 AO_SND_GetMute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL* pbMute);
 
 void I2SDma_Enable(HI_BOOL bEnable)
 {
@@ -38,6 +40,16 @@ void I2SDma_Clear(void)
 
 int aoe_set_volume(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_UNF_SND_GAIN_ATTR_S stGain)
 {
-	return AO_SND_SetVolume(enSound, enOutPort, stGain);
+    return AO_SND_SetVolume(enSound, enOutPort, stGain);
+}
+
+int aoe_set_mute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL bMute)
+{
+    return AO_SND_SetMute(enSound, enOutPort, bMute);
+}
+
+int aoe_get_mute(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E enOutPort, HI_BOOL* bMute)
+{
+    return AO_SND_GetMute(enSound, enOutPort, bMute);
 }
 

@@ -1246,8 +1246,6 @@ HI_VOID SCI_Init(HI_VOID)
 {
     HI_U32 i;
     SCI_PORT_ATTR_S     stPortAttr;
-    HI_CHIP_TYPE_E      enChipType;
-    HI_CHIP_VERSION_E   enChipVersion;
 
     for (i = HI_UNF_SCI_PORT0; i < HI_SCI_PORT_NUM; i++)
     {
@@ -1256,29 +1254,21 @@ HI_VOID SCI_Init(HI_VOID)
         g_SciPara[i].SciAttr.Frequency = 1000;
         g_SciPara[i].SciAttr.RxTimeout = 1000;
         g_SciPara[i].SciAttr.TxTimeout = 1000;
-        g_SciPara[i].SciAttr.enSciVcc = HI_UNF_SCI_LEVEL_HIGH;
+#if    defined(CHIP_TYPE_hi3716mv410)   \
+		|| defined(CHIP_TYPE_hi3716mv420)
+        g_SciPara[i].SciAttr.enSciVcc = HI_UNF_SCI_LEVEL_LOW;
+#else
+		g_SciPara[i].SciAttr.enSciVcc = HI_UNF_SCI_LEVEL_HIGH;
+#endif
         g_SciPara[i].SciAttr.enSciDetect = HI_UNF_SCI_LEVEL_HIGH;
         g_SciPara[i].SciAttr.enClkMode = HI_UNF_SCI_MODE_OD;
         g_SciPara[i].SciAttr.enResetMode = HI_UNF_SCI_MODE_OD;
         g_SciPara[i].SciAttr.enVccEnMode = HI_UNF_SCI_MODE_OD;
 
         g_SciPara[i].ErrType = 0;
-
-        HI_DRV_SYS_GetChipVersion(&enChipType, &enChipVersion);
-        if ((HI_CHIP_TYPE_HI3716M == enChipType) && (HI_CHIP_VERSION_V300 == enChipVersion))
-        {
-            g_SciPara[i].u32SysClk = SCI_DFT_REF_CLOCK2;        // v300 sci system clk
-        }
-        else if (  ((HI_CHIP_TYPE_HI3716C == enChipType) && (HI_CHIP_VERSION_V200 == enChipVersion))
-                || ((HI_CHIP_TYPE_HI3716M == enChipType) && (HI_CHIP_VERSION_V400 == enChipVersion)) )
-        {
-            g_SciPara[i].u32SysClk = SCI_DFT_REF_CLOCK2;
-        }
-        else
-        {
-            g_SciPara[i].u32SysClk = SCI_DFT_REF_CLOCK1;
-        }
-
+       
+		g_SciPara[i].u32SysClk = SCI_DFT_REF_CLOCK; 
+		
         HI_INIT_MUTEX(&g_SciPara[i].SciSem);
 
         init_waitqueue_head(&g_SciPara[i].SciRecWaitQueue);
@@ -1706,7 +1696,9 @@ HI_S32 SCI_ConfResetMode(HI_UNF_SCI_PORT_E enSciPort, HI_UNF_SCI_MODE_E enResetM
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)	\
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)
     HI_S32 Ret;
 
     Ret = down_interruptible(&g_SciPara[enSciPort].SciSem);
@@ -1745,7 +1737,9 @@ HI_S32 SCI_ConfVccEnMode(HI_UNF_SCI_PORT_E enSciPort, HI_UNF_SCI_MODE_E enVccEnM
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)	\
-    || defined(CHIP_TYPE_hi3796mv100)
+    || defined(CHIP_TYPE_hi3796mv100)	\
+    || defined(CHIP_TYPE_hi3716mv410)	\
+    || defined(CHIP_TYPE_hi3716mv420)
     HI_S32 Ret;
 
     Ret = down_interruptible(&g_SciPara[enSciPort].SciSem);

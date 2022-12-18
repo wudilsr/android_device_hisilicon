@@ -1292,6 +1292,8 @@ typedef enum
     HLS_EVENT_SEGMENT_DOWNLOAD_START,
     HLS_EVENT_SEGMENT_DOWNLOAD_END,
     HLS_EVENT_SEGMENT_DOWNLOAD_ERROR,
+    HLS_EVENT_TS_SEGMENT_DOWNLOAD_START,  /* parameter:hls_segment_t */
+    HLS_EVENT_TS_SEGMENT_DOWNLOAD_END,
     HLS_EVENT_ERROR_MALFORMED
 }HLSEvent;
 
@@ -1332,6 +1334,7 @@ typedef struct hls_segment_s {
     char    key[INITIAL_URL_SIZE];      /* Segment key */
     int     key_type;
     uint8_t iv[16];
+    int64_t filesize;
 } hls_segment_t;
 
 typedef struct hls_stream_info_s {

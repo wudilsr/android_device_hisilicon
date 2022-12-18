@@ -29,9 +29,67 @@ config WAKELOCK
 config HIBERNATE_CALLBACKS
 	bool
 
+config HISI_SNAPSHOT_BOOT
+	bool "snapshot fastboot Support"
+	select HIBERNATION
+	---help---
+	Enable the suspend to disk (STD) functionality, which is usually
+	called "hibernation" in user interfaces.  STD checkpoints the
+	system and powers it off; and restores that checkpoint on
+	reboot.
+
+choice
+	prompt "image store type"
+	depends on HISI_SNAPSHOT_BOOT
+	default DEFAULT_DDR
+	help
+	  Select the I/O scheduler which will be used by default for all
+	  block devices.
+
+	config DEFAULT_MTD
+		bool "use MTD partition"
+
+	config DEFAULT_DDR
+		bool "use ddr memory"
+
+endchoice
+
+
+if DEFAULT_DDR
+config SNAPSHOT_BUF_START
+	hex "snapshot buffer start addr"
+	default "0x88000000"
+
+config SNAPSHOT_BUF_SIZE
+	hex "snapshot buffer size"
+	default "0x4000000"
+endif
+
+config PM_STD_PARTITION
+	string "Default resume partition"
+	depends on HIBERNATION
+	default "/dev/block/mmcblk0p16"
+	---help---
+	  The default resume partition is the partition that the suspend-
+	  to-disk implementation will look for a suspended disk image.
+
+	  The partition specified here will be different for almost every user.
+	  It should be a valid swap partition (at least for now) that is turned
+	  on before suspending.
+
+	  The partition specified can be overridden by specifying:
+
+		hbcomp=/dev/<other device>
+
+	  which will set the resume partition to the device specified.
+
+	  Note there is currently not a way to specify which device to save the
+	  suspended image to. It will simply pick the first available swap
+	  device.
+
 config HIBERNATION
 	bool "Hibernation (aka 'suspend to disk')"
-	depends on SWAP && ARCH_HIBERNATION_POSSIBLE || PM_HIBERNATE
+	depends on SWAP && ARCH_HIBERNATION_POSSIBLE || PM_HIBERNATE || HISI_SNAPSHOT_BOOT
 	select HIBERNATE_CALLBACKS
 	select LZO_COMPRESS if !PM_HIBERNATE
 	select LZO_DECOMPRESS if !PM_HIBERNATE

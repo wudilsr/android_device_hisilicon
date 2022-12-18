@@ -75,8 +75,10 @@ typedef struct hiVPSS_PORT_S{
 	 *[0]:Level
 	 *[1]:OriW/H
 	 *[2]:ReviseW/H
+	 *[3]:OriARW/H
+	 *[4]:ReviseARW/H
 	 */	
-	HI_RECT_S stLevelOutRect[3][3];
+	HI_RECT_S stLevelOutRect[3][5];
     
     HI_DRV_ASPECT_RATIO_S stDispPixAR;
     HI_DRV_ASP_RAT_MODE_E eAspMode;
@@ -109,6 +111,9 @@ typedef struct hiVPSS_PORT_S{
     HI_BOOL bHoriFlip;
     HI_BOOL bVertFlip;
 	HI_BOOL bUVInver;
+	HI_U32  u32cmpflag; // default 0, cmp on 1, cmp off 2
+	HI_BOOL bCurDropped;
+	HI_BOOL bPassThrough;
 	
 #ifdef ZME_2L_TEST
 	HI_BOOL bNeedZME2L;
@@ -155,21 +160,21 @@ typedef struct hiVPSS_INSTANCE_S
     HI_PQ_VPSS_MODULE_S stPQModule;
     HI_PQ_IFMD_PLAYBACK_S stIfmdRls;    //IFMD数据
     HI_PQ_PFMD_PLAYBACK_S stPfmdRls;    //PFMD数据
-    HI_PQ_MOTION_INFO_S stGlbMotionRls;	//GlobalMotion数据
-    HI_PQ_DB_WEIGHT_S stDBRls;          //DB数据
-    SCDRls   stSCDRls;                  //SCD数据
     VPSS_LBX_DET_S stLbxDet;
 	HI_BOOL bStorePrivData;
                                     
     HI_DRV_VIDEO_FRAME_S stSrcImage;
     /*用户接口配置*/
     HI_BOOL bCfgNew;           //用户配置更新
+	HI_BOOL bTvpFirstCfg;
     HI_DRV_VPSS_CFG_S stUsrInstCfg;    //用户配置数据
     HI_DRV_VPSS_PORT_CFG_S  stUsrPortCfg[DEF_HI_DRV_VPSS_PORT_MAX_NUMBER];
     HI_DRV_VPSS_PROCESS_S stProcCtrl; //看是否保留
     
     /*低延时总处理最新一帧*/
     HI_BOOL bAlwaysFlushSrc;
+
+    HI_BOOL bSecure;
 
     VPSS_SRCIN_S stSrcIn;
     
@@ -239,7 +244,7 @@ HI_S32 VPSS_INST_CheckFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE  hPort,
 
 HI_S32 VPSS_INST_RelFrmBuffer(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE  hPort,
                                 HI_DRV_VPSS_BUFLIST_CFG_S   *pstBufCfg,
-                                MMZ_BUFFER_S *pstMMZBuf);
+                                VPSS_MEM_S *pstMemBuf);
 HI_S32 VPSS_INST_ReportNewFrm(VPSS_INSTANCE_S* pstInstance,
                                 VPSS_HANDLE  hPort,HI_DRV_VIDEO_FRAME_S *pstFrm);
 HI_BOOL VPSS_INST_CheckIsDropped(VPSS_INSTANCE_S *pstInstance,HI_U32 u32OutRate,HI_U32 u32OutCount);
@@ -254,7 +259,11 @@ HI_VOID VPSS_INST_SetRotationOutFrameInfo(VPSS_INSTANCE_S* pstInst, HI_U32 PortI
                                   HI_DRV_VIDEO_FRAME_S* pstFrm, HI_DRV_BUF_ADDR_E enBufLR);
 
 HI_VOID VPSS_INST_GetInCrop(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_S *pstInCropRect);
-HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_S *pstInCropRect, HI_RECT_S *pstVideoRect);
+HI_VOID VPSS_INST_GetVideoRect(VPSS_INSTANCE_S* pstInst, 
+								HI_U32 PortId, 
+								HI_RECT_S *pstInCropRect, 
+								HI_RECT_S *pstVideoRect,
+								HI_RECT_S *pstOutCropRect);
 HI_VOID VPSS_INST_GetLbxInfo(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, HI_RECT_S *pstLbx);
 HI_S32 VPSS_INST_GetPortPrc(VPSS_INSTANCE_S* pstInstance,VPSS_HANDLE hPort,VPSS_PORT_PRC_S *pstPortPrc);
 HI_VOID VPSS_INST_GetRotate(VPSS_INSTANCE_S* pstInst, HI_U32 PortId, VPSS_HAL_PORT_INFO_S *pstHalPortInfo, HI_DRV_VIDEO_FRAME_S *pstFrm);
@@ -292,24 +301,37 @@ HI_S32 VPSS_INST_GetSrcListState(VPSS_INSTANCE_S* pstInstance,VPSS_IN_IMAGELIST_
 
 HI_S32 VPSS_INST_SetUhdLevel(VPSS_INSTANCE_S* pstInstance,HI_U32 u32WidthLevel,HI_U32 u32HeightLevel);
 
-HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][3]);
+HI_S32 VPSS_INST_LevelRectInit(HI_RECT_S pMatrixRect[][5]);
 
-HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][3],HI_S32 s32OriWidth,HI_S32 s32OriHeight);
+HI_S32 VPSS_INST_LevelRectSetOriRect(HI_RECT_S pMatrixRect[][5],
+									HI_S32 s32OriWidth,
+									HI_S32 s32OriHeight,
+									HI_S32 s32OriARw,
+									HI_S32 s32OriARh);
 
-HI_S32 VPSS_INST_LevelRectSetReviseRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectSetReviseRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 s32ReviseWidth,
-									HI_S32 s32ReviseHeight);
+									HI_S32 s32ReviseHeight,
+									HI_S32 s32ReviseARw,
+									HI_S32 s32ReviseARh);
 
-HI_S32 VPSS_INST_LevelRectGetReviseRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectGetReviseRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 *ps32ReviseWidth,
-									HI_S32 *ps32ReviseHeight);
+									HI_S32 *ps32ReviseHeight,
+									HI_S32 *ps32ReviseARw,
+									HI_S32 *ps32ReviseARh);
 
-HI_S32 VPSS_INST_LevelRectGetOriRect(HI_RECT_S pMatrixRect[][3],
+HI_S32 VPSS_INST_LevelRectGetOriRect(HI_RECT_S pMatrixRect[][5],
 									HI_RECT_S stLevelRect,
 									HI_S32 *ps32OriWidth,
-									HI_S32 *ps32OriHeight);
+									HI_S32 *ps32OriHeight,
+									HI_S32 *ps32OriARw,
+									HI_S32 *ps32OriARh);
 
 HI_S32 VPSS_INST_EnableStorePriv(VPSS_INSTANCE_S* pstInstance,HI_BOOL bStore);
+HI_S32 VPSS_INST_SyncTvpCfg(VPSS_INSTANCE_S *pstInstance);
+
+HI_BOOL VPSS_INST_CheckPassThrough(VPSS_INSTANCE_S *pstInstance,HI_DRV_VIDEO_FRAME_S *pstInImage);
 #endif

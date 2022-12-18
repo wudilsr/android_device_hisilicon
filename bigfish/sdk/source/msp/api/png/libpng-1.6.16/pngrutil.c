@@ -24,7 +24,11 @@ png_get_uint_31(png_const_structrp png_ptr, png_const_bytep buf)
    png_uint_32 uval = png_get_uint_32(buf);
 
    if (uval > PNG_UINT_31_MAX)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "PNG unsigned integer out of range");
+#endif
 
    return (uval);
 }
@@ -47,7 +51,11 @@ png_get_fixed_point(png_structrp png_ptr, png_const_bytep buf)
 
    /* The caller can turn off the warning by passing NULL. */
    if (png_ptr != NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "PNG fixed point integer out of range");
+#endif
 
    return PNG_FIXED_ERROR;
 }
@@ -135,9 +143,17 @@ png_read_sig(png_structrp png_ptr, png_inforp info_ptr)
    {
       if (num_checked < 4 &&
           png_sig_cmp(info_ptr->signature, num_checked, num_to_check - 4))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Not a PNG file");
+#endif
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "PNG file corrupted by ASCII conversion");
+#endif
    }
    if (num_checked < 3)
       png_ptr->mode |= PNG_HAVE_PNG_SIGNATURE;
@@ -223,11 +239,19 @@ png_crc_finish(png_structrp png_ptr, png_uint_32 skip)
           (png_ptr->flags & PNG_FLAG_CRC_ANCILLARY_NOWARN) == 0 :
           (png_ptr->flags & PNG_FLAG_CRC_CRITICAL_USE) != 0)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_warning(png_ptr, "");
+#else
          png_chunk_warning(png_ptr, "CRC error");
+#endif
       }
 
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_error(png_ptr, "");
+#else
          png_chunk_error(png_ptr, "CRC error");
+#endif
 
       return (1);
    }
@@ -312,10 +336,18 @@ png_read_buffer(png_structrp png_ptr, png_alloc_size_t new_size, int warn)
       else if (warn < 2) /* else silent */
       {
          if (warn != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+             png_chunk_warning(png_ptr, "");
+#else
              png_chunk_warning(png_ptr, "insufficient memory to read chunk");
+#endif
 
          else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+             png_chunk_error(png_ptr, "");
+#else
              png_chunk_error(png_ptr, "insufficient memory to read chunk");
+#endif
       }
    }
 
@@ -340,7 +372,7 @@ png_inflate_claim(png_structrp png_ptr, png_uint_32 owner)
        * internal error, but is very useful for debugging.  i18n requirements
        * are minimal.
        */
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       (void)png_safecat(msg, (sizeof msg), 4, " using zstream");
 #else
 	  (void)png_safecat(msg, (sizeof msg), 4, ""); 
@@ -552,7 +584,11 @@ png_inflate(png_structrp png_ptr, png_uint_32 owner, int finish,
        * pointer, which is not owned by the caller, but this is safe; it's only
        * used on errors!
        */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
       png_ptr->zstream.msg = PNGZ_MSG_CAST("zstream unclaimed");
+#endif
       return Z_STREAM_ERROR;
    }
 }
@@ -681,7 +717,11 @@ png_decompress_chunk(png_structrp png_ptr,
                    */
                   if (ret == Z_STREAM_END &&
                      chunklength - prefix_size != lzsize)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                     png_chunk_benign_error(png_ptr, "");
+#else
                      png_chunk_benign_error(png_ptr, "extra compressed data");
+#endif
                }
 
                else
@@ -785,7 +825,11 @@ png_inflate_read(png_structrp png_ptr, png_bytep read_buffer, uInt read_size,
 
    else
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_ptr->zstream.msg = PNGZ_MSG_CAST("");
+#else
       png_ptr->zstream.msg = PNGZ_MSG_CAST("zstream unclaimed");
+#endif
       return Z_STREAM_ERROR;
    }
 }
@@ -804,11 +848,19 @@ png_handle_IHDR(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_IHDR");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "out of place");
+#endif
 
    /* Check the length */
    if (length != 13)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "invalid");
+#endif
 
    png_ptr->mode |= PNG_HAVE_IHDR;
 
@@ -879,7 +931,11 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_PLTE");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    /* Moved to before the 'after IDAT' check below because otherwise duplicate
     * PLTE chunks are potentially ignored (the spec says there shall not be more
@@ -887,7 +943,11 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
     * the requirement that PLTE appears before IDAT.)
     */
    else if ((png_ptr->mode & PNG_HAVE_PLTE) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "duplicate");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
@@ -895,7 +955,11 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
        * IDAT was encountered in a color-mapped image with no PLTE.
        */
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
       return;
    }
 
@@ -904,7 +968,11 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if ((png_ptr->color_type & PNG_COLOR_MASK_COLOR) == 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "ignored in grayscale PNG");
+#endif
       return;
    }
 
@@ -921,10 +989,18 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
 
       if (png_ptr->color_type != PNG_COLOR_TYPE_PALETTE)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "invalid");
+#endif
 
       else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_error(png_ptr, "");
+#else
          png_chunk_error(png_ptr, "invalid");
+#endif
 
       return;
    }
@@ -985,12 +1061,20 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
             return;
 
          else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_chunk_error(png_ptr, "");
+#else
             png_chunk_error(png_ptr, "CRC error");
+#endif
       }
 
       /* Otherwise, we (optionally) emit a warning and use the chunk. */
       else if ((png_ptr->flags & PNG_FLAG_CRC_ANCILLARY_NOWARN) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_warning(png_ptr, "");
+#else
          png_chunk_warning(png_ptr, "CRC error");
+#endif
    }
 #endif
 
@@ -1025,19 +1109,30 @@ png_handle_PLTE(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
       if (info_ptr != NULL)
          info_ptr->num_trans = 0;
-
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "tRNS must be after");
+#endif
    }
 #endif
 
 #ifdef PNG_READ_hIST_SUPPORTED
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_hIST) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "hIST must be after");
+#endif
 #endif
 
 #ifdef PNG_READ_bKGD_SUPPORTED
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_bKGD) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "bKGD must be after");
+#endif
 #endif
 }
 
@@ -1048,14 +1143,22 @@ png_handle_IEND(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0 ||
        (png_ptr->mode & PNG_HAVE_IDAT) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "out of place");
+#endif
 
    png_ptr->mode |= (PNG_AFTER_IDAT | PNG_HAVE_IEND);
 
    png_crc_finish(png_ptr, length);
 
    if (length != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
 
    PNG_UNUSED(info_ptr)
 }
@@ -1070,19 +1173,31 @@ png_handle_gAMA(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_gAMA");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & (PNG_HAVE_IDAT|PNG_HAVE_PLTE)) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
       return;
    }
 
    if (length != 4)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
       return;
    }
 
@@ -1109,19 +1224,32 @@ png_handle_sBIT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_sBIT");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & (PNG_HAVE_IDAT|PNG_HAVE_PLTE)) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
       return;
    }
 
    if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sBIT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -1139,7 +1267,11 @@ png_handle_sBIT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (length != truelen || length > 4)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
       png_crc_finish(png_ptr, length);
       return;
    }
@@ -1153,7 +1285,11 @@ png_handle_sBIT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    for (i=0; i<truelen; ++i)
       if (buf[i] == 0 || buf[i] > sample_depth)
       {
-         png_chunk_benign_error(png_ptr, "invalid");
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_chunk_benign_error(png_ptr, "");
+#else
+      	 png_chunk_benign_error(png_ptr, "invalid");
+#endif
          return;
       }
 
@@ -1188,19 +1324,32 @@ png_handle_cHRM(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_cHRM");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & (PNG_HAVE_IDAT|PNG_HAVE_PLTE)) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
       return;
    }
 
    if (length != 32)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -1227,7 +1376,12 @@ png_handle_cHRM(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
        xy.bluex  == PNG_FIXED_ERROR ||
        xy.bluey  == PNG_FIXED_ERROR)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid values");
+#endif
+
       return;
    }
 
@@ -1239,7 +1393,12 @@ png_handle_cHRM(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    {
       png_ptr->colorspace.flags |= PNG_COLORSPACE_INVALID;
       png_colorspace_sync(png_ptr, info_ptr);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -1259,19 +1418,33 @@ png_handle_sRGB(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_sRGB");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & (PNG_HAVE_IDAT|PNG_HAVE_PLTE)) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    if (length != 1)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -1291,7 +1464,12 @@ png_handle_sRGB(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    {
       png_ptr->colorspace.flags |= PNG_COLORSPACE_INVALID;
       png_colorspace_sync(png_ptr, info_ptr);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "too many profiles");
+#endif
+
       return;
    }
 
@@ -1311,12 +1489,21 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_iCCP");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & (PNG_HAVE_IDAT|PNG_HAVE_PLTE)) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
@@ -1331,7 +1518,12 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (length < 9)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "too short");
+#endif
+
       return;
    }
 
@@ -1448,7 +1640,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
                                  if (length > 0 && !(png_ptr->flags &
                                        PNG_FLAG_BENIGN_ERRORS_WARN))
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                                     errmsg = "extra compressed data";
 #else
 									errmsg = "";
@@ -1462,8 +1654,12 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
                                        /* This can be handled completely, so
                                         * keep going.
                                         */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                                       png_chunk_warning(png_ptr, "");
+#else
                                        png_chunk_warning(png_ptr,
                                           "extra compressed data");
+#endif
                                     }
 
                                     png_crc_finish(png_ptr, length);
@@ -1501,7 +1697,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
                                        {
                                           png_ptr->colorspace.flags |=
                                              PNG_COLORSPACE_INVALID;
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                                           errmsg = "out of memory";
 #else
 										  errmsg = "";
@@ -1525,7 +1721,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
                                  }
 
                                  else if (size > 0)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                                     errmsg = "truncated";
 #else
 									errmsg = "";
@@ -1543,7 +1739,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
                         }
 
                         else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
                            errmsg = "out of memory";
 #else
 						   errmsg = "";
@@ -1568,7 +1764,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          }
 
          else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
             errmsg = "bad compression method"; /* or missing */
 #else
 						   errmsg = "";
@@ -1576,7 +1772,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       }
 
       else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          errmsg = "bad keyword";
 #else
 						   errmsg = "";
@@ -1584,7 +1780,7 @@ png_handle_iCCP(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    }
 
    else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "too many profiles";
 #else
 	  errmsg = "";
@@ -1628,7 +1824,11 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
       if (--png_ptr->user_chunk_cache_max == 1)
       {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_warning(png_ptr, "");
+#else
          png_warning(png_ptr, "No space in chunk cache for sPLT");
+#endif
          png_crc_finish(png_ptr, length);
          return;
       }
@@ -1636,12 +1836,21 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 #endif
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
@@ -1649,7 +1858,12 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (length > 65535U)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "too large to fit in memory");
+#endif
+
       return;
    }
 #endif
@@ -1658,7 +1872,12 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (buffer == NULL)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
       return;
    }
 
@@ -1682,7 +1901,11 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    /* A sample depth should follow the separator, and we should be on it  */
    if (entry_start > buffer + length - 2)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "malformed sPLT chunk");
+#endif
       return;
    }
 
@@ -1696,7 +1919,11 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    /* Integrity-check the data length */
    if ((data_length % entry_size) != 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "sPLT chunk has bad length");
+#endif
       return;
    }
 
@@ -1705,7 +1932,11 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (dl > max_dl)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+       png_warning(png_ptr, "");
+#else
        png_warning(png_ptr, "sPLT chunk too long");
+#endif
        return;
    }
 
@@ -1716,7 +1947,11 @@ png_handle_sPLT(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (new_palette.entries == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+       png_warning(png_ptr, "");
+#else
        png_warning(png_ptr, "sPLT chunk requires too much memory");
+#endif
        return;
    }
 
@@ -1787,19 +2022,33 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_tRNS");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tRNS) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -1810,7 +2059,12 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (length != 2)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
          return;
       }
 
@@ -1826,7 +2080,11 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (length != 6)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "invalid");
+#endif
          return;
       }
 
@@ -1843,7 +2101,12 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       {
          /* TODO: is this actually an error in the ISO spec? */
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
          return;
       }
 
@@ -1851,7 +2114,12 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          length == 0)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
          return;
       }
 
@@ -1862,7 +2130,12 @@ png_handle_tRNS(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    else
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid with alpha channel");
+#endif
+
       return;
    }
 
@@ -1892,21 +2165,35 @@ png_handle_bKGD(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_bKGD");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0 ||
        (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE &&
        (png_ptr->mode & PNG_HAVE_PLTE) == 0))
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_bKGD) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -1922,7 +2209,12 @@ png_handle_bKGD(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (length != truelen)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -1944,7 +2236,12 @@ png_handle_bKGD(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       {
          if (buf[0] >= info_ptr->num_palette)
          {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      		png_chunk_benign_error(png_ptr, "");
+#else
             png_chunk_benign_error(png_ptr, "invalid index");
+#endif
+
             return;
          }
 
@@ -1991,20 +2288,34 @@ png_handle_hIST(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_hIST");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0 ||
        (png_ptr->mode & PNG_HAVE_PLTE) == 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_hIST) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -2013,7 +2324,12 @@ png_handle_hIST(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (num != png_ptr->num_palette || num > PNG_MAX_PALETTE_LENGTH)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2043,26 +2359,45 @@ png_handle_pHYs(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_pHYs");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
    if (length != 9)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2089,26 +2424,45 @@ png_handle_oFFs(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_oFFs");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
    if (length != 9)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2138,19 +2492,33 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_pCAL");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pCAL) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -2162,7 +2530,12 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (buffer == NULL)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
       return;
    }
 
@@ -2184,7 +2557,12 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
     */
    if (endptr <= buf + 12)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2204,13 +2582,23 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
        (type == PNG_EQUATION_ARBITRARY && nparams != 3) ||
        (type == PNG_EQUATION_HYPERBOLIC && nparams != 4))
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid parameter count");
+#endif
+
       return;
    }
 
    else if (type >= PNG_EQUATION_LAST)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "unrecognized equation type");
+#endif
+
    }
 
    for (buf = units; *buf; buf++)
@@ -2223,7 +2611,12 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (params == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
       return;
    }
 
@@ -2241,7 +2634,12 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (buf > endptr)
       {
          png_free(png_ptr, params);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "invalid data");
+#endif
+
          return;
       }
    }
@@ -2265,19 +2663,33 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_sCAL");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of place");
+#endif
+
       return;
    }
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sCAL) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -2285,7 +2697,12 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    else if (length < 4)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2296,7 +2713,12 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (buffer == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
       png_crc_finish(png_ptr, length);
       return;
    }
@@ -2310,7 +2732,12 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    /* Validate the unit. */
    if (buffer[0] != 1 && buffer[0] != 2)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid unit");
+#endif
+
       return;
    }
 
@@ -2322,10 +2749,19 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (png_check_fp_number((png_const_charp)buffer, length, &state, &i) == 0 ||
        i >= length || buffer[i++] != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "bad width format");
+#endif
 
    else if (PNG_FP_IS_POSITIVE(state) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "non-positive width");
+#endif
+
 
    else
    {
@@ -2334,10 +2770,18 @@ png_handle_sCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       state = 0;
       if (png_check_fp_number((png_const_charp)buffer, length,
           &state, &i) == 0 || i != length)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "bad height format");
+#endif
 
       else if (PNG_FP_IS_POSITIVE(state) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "non-positive height");
+#endif
 
       else
          /* This is the (only) success case. */
@@ -2357,12 +2801,21 @@ png_handle_tIME(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    png_debug(1, "in png_handle_tIME");
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tIME) != 0)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "duplicate");
+#endif
+
       return;
    }
 
@@ -2372,7 +2825,12 @@ png_handle_tIME(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (length != 7)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "invalid");
+#endif
+
       return;
    }
 
@@ -2417,14 +2875,23 @@ png_handle_tEXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (--png_ptr->user_chunk_cache_max == 1)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "no space in chunk cache");
+#endif
+
          return;
       }
    }
 #endif
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2433,7 +2900,12 @@ png_handle_tEXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (length > 65535U)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "too large to fit in memory");
+#endif
+
       return;
    }
 #endif
@@ -2442,7 +2914,12 @@ png_handle_tEXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    if (buffer == NULL)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
      png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
      return;
    }
 
@@ -2469,7 +2946,11 @@ png_handle_tEXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    text_info.text_length = strlen(text);
 
    if (png_set_text_2(png_ptr, info_ptr, &text_info, 1) != 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_warning(png_ptr, "");
+#else
       png_warning(png_ptr, "Insufficient memory to process text chunk");
+#endif
 }
 #endif
 
@@ -2496,14 +2977,23 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (--png_ptr->user_chunk_cache_max == 1)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "no space in chunk cache");
+#endif
+
          return;
       }
    }
 #endif
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2513,7 +3003,11 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (buffer == NULL)
    {
       png_crc_finish(png_ptr, length);
-      png_chunk_benign_error(png_ptr, "out of memory");
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
+  	  png_chunk_benign_error(png_ptr, "out of memory");
+#endif
       return;
    }
 
@@ -2529,7 +3023,7 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       /* Empty loop to find end of name */ ;
 
    if (keyword_length > 79 || keyword_length < 1)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "bad keyword";
 #else
 	  errmsg = "";
@@ -2540,14 +3034,14 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
     * then the LZ data:
     */
    else if (keyword_length + 3 > length)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "truncated";
 #else
 	  errmsg = "";
 #endif
 
    else if (buffer[keyword_length+1] != PNG_COMPRESSION_TYPE_BASE)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "unknown compression type";
 #else
 	  errmsg = "";
@@ -2582,7 +3076,7 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          text.lang_key = NULL;
 
          if (png_set_text_2(png_ptr, info_ptr, &text, 1) != 0)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
             errmsg = "insufficient memory";
 #else
 	  errmsg = "";
@@ -2594,7 +3088,12 @@ png_handle_zTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    }
 
    if (errmsg != NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, errmsg);
+#endif
+
 }
 #endif
 
@@ -2621,14 +3120,23 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       if (--png_ptr->user_chunk_cache_max == 1)
       {
          png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  	 png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "no space in chunk cache");
+#endif
+
          return;
       }
    }
 #endif
 
    if ((png_ptr->mode & PNG_HAVE_IHDR) == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "missing IHDR");
+#endif
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) != 0)
       png_ptr->mode |= PNG_AFTER_IDAT;
@@ -2638,7 +3146,12 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    if (buffer == NULL)
    {
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "out of memory");
+#endif
+
       return;
    }
 
@@ -2655,7 +3168,7 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
 
    /* Perform a basic check on the keyword length here. */
    if (prefix_length > 79 || prefix_length < 1)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "bad keyword";
 #else
 	  errmsg = "";
@@ -2666,7 +3179,7 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
     * be empty.
     */
    else if (prefix_length + 5 > length)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "truncated";
 #else
 	  errmsg = "";
@@ -2722,7 +3235,7 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
       }
 
       else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
          errmsg = "truncated";
 #else
 	     errmsg = "";
@@ -2748,7 +3261,7 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
          text.itxt_length = uncompressed_length;
 
          if (png_set_text_2(png_ptr, info_ptr, &text, 1) != 0)
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
             errmsg = "insufficient memory";
 #else
 	        errmsg = "";
@@ -2757,7 +3270,7 @@ png_handle_iTXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length)
    }
 
    else
-#ifdef PNG_WARNINGS_SUPPORTED
+#ifndef HI_ADVCA_FUNCTION_RELEASE
       errmsg = "bad compression info";
 #else
 	  errmsg = "";
@@ -2814,7 +3327,12 @@ png_cache_unknown_chunk(png_structrp png_ptr, png_uint_32 length)
    {
       /* This is benign because we clean up correctly */
       png_crc_finish(png_ptr, length);
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  png_chunk_benign_error(png_ptr, "");
+#else
       png_chunk_benign_error(png_ptr, "unknown chunk exceeds memory limits");
+#endif
+
       return 0;
    }
 
@@ -2881,7 +3399,11 @@ png_handle_unknown(png_structrp png_ptr, png_inforp info_ptr,
              * positive: The chunk was handled, libpng will ignore/discard it.
              */
             if (ret < 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_chunk_error(png_ptr, "");
+#else
                png_chunk_error(png_ptr, "error in user chunk");
+#endif
 
             else if (ret == 0)
             {
@@ -2901,10 +3423,15 @@ png_handle_unknown(png_structrp png_ptr, png_inforp info_ptr,
 #                 ifdef PNG_SET_UNKNOWN_CHUNKS_SUPPORTED
                      if (png_ptr->unknown_default < PNG_HANDLE_CHUNK_IF_SAFE)
                      {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+                        png_chunk_warning(png_ptr, "");
+                        png_app_warning(png_ptr, "");
+#else
                         png_chunk_warning(png_ptr, "Saving unknown chunk:");
                         png_app_warning(png_ptr,
                            "forcing save of an unhandled chunk;"
                            " please call png_set_keep_unknown_chunks");
+#endif
                            /* with keep = PNG_HANDLE_CHUNK_IF_SAFE */
                      }
 #                 endif
@@ -2962,7 +3489,11 @@ png_handle_unknown(png_structrp png_ptr, png_inforp info_ptr,
           * is no support.
           */
          if (keep > PNG_HANDLE_CHUNK_NEVER)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      		png_app_error(png_ptr, "");
+#else
             png_app_error(png_ptr, "no unknown chunk support available");
+#endif
 
          png_crc_finish(png_ptr, length);
       }
@@ -2981,7 +3512,12 @@ png_handle_unknown(png_structrp png_ptr, png_inforp info_ptr,
          {
             case 2:
                png_ptr->user_chunk_cache_max = 1;
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  		   png_chunk_benign_error(png_ptr, "");
+#else
                png_chunk_benign_error(png_ptr, "no space in chunk cache");
+#endif
+
                /* FALL THROUGH */
             case 1:
                /* NOTE: prior to 1.6.0 this case resulted in an unknown critical
@@ -3026,7 +3562,11 @@ png_handle_unknown(png_structrp png_ptr, png_inforp info_ptr,
 
    /* Check for unhandled critical chunks */
    if (handled == 0 && PNG_CHUNK_CRITICAL(png_ptr->chunk_name))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_chunk_error(png_ptr, "");
+#else
       png_chunk_error(png_ptr, "unhandled critical chunk");
+#endif
 }
 
 /* This function is called to verify that a chunk name is valid.
@@ -3053,7 +3593,11 @@ png_check_chunk_name(png_structrp png_ptr, png_uint_32 chunk_name)
       int c = chunk_name & 0xff;
 
       if (c < 65 || c > 122 || (c > 90 && c < 97))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_error(png_ptr, "");
+#else
          png_chunk_error(png_ptr, "invalid chunk type");
+#endif
 
       chunk_name >>= 8;
    }
@@ -3083,7 +3627,11 @@ png_combine_row(png_const_structrp png_ptr, png_bytep dp, int display)
     * least one row has been read from the PNG data and transformed.
     */
    if (pixel_depth == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal row logic error");
+#endif
 
    /* Added in 1.5.4: the pixel depth should match the information returned by
     * any call to png_read_update_info at this point.  Do not continue if we got
@@ -3091,11 +3639,19 @@ png_combine_row(png_const_structrp png_ptr, png_bytep dp, int display)
     */
    if (png_ptr->info_rowbytes != 0 && png_ptr->info_rowbytes !=
           PNG_ROWBYTES(pixel_depth, row_width))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal row size calculation error");
+#endif
 
    /* Don't expect this to ever happen: */
    if (row_width == 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "internal row width error");
+#endif
 
    /* Preserve the last byte in cases where only part of it will be overwritten,
     * the multiply below may overflow, we don't care because ANSI-C guarantees
@@ -3318,7 +3874,11 @@ png_combine_row(png_const_structrp png_ptr, png_bytep dp, int display)
 
          /* Validate the depth - it must be a multiple of 8 */
          if (pixel_depth & 7)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+            png_error(png_ptr, "");
+#else
             png_error(png_ptr, "invalid user transform pixel depth");
+#endif
 
          pixel_depth >>= 3; /* now in bytes */
          row_width *= pixel_depth;
@@ -4036,7 +4596,11 @@ png_read_IDAT_data(png_structrp png_ptr, png_bytep output,
              * consumed a non-IDAT header.
              */
             if (png_ptr->chunk_name != png_IDAT)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+               png_error(png_ptr, "");
+#else
                png_error(png_ptr, "Not enough image data");
+#endif
          }
 
          avail_in = png_ptr->IDAT_read_size;
@@ -4103,7 +4667,11 @@ png_read_IDAT_data(png_structrp png_ptr, png_bytep output,
          png_ptr->flags |= PNG_FLAG_ZSTREAM_ENDED;
 
          if (png_ptr->zstream.avail_in > 0 || png_ptr->idat_size > 0)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  		png_chunk_benign_error(png_ptr, "");
+#else
             png_chunk_benign_error(png_ptr, "Extra compressed data");
+#endif
          break;
       }
 
@@ -4116,7 +4684,12 @@ png_read_IDAT_data(png_structrp png_ptr, png_bytep output,
 
          else /* checking */
          {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	  		png_chunk_benign_error(png_ptr, "");
+#else
             png_chunk_benign_error(png_ptr, png_ptr->zstream.msg);
+#endif
+
             return;
          }
       }
@@ -4128,10 +4701,18 @@ png_read_IDAT_data(png_structrp png_ptr, png_bytep output,
        * should be handled the same way.
        */
       if (output != NULL)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_error(png_ptr, "");
+#else
          png_error(png_ptr, "Not enough image data");
+#endif
 
       else /* the deflate stream contained extra data */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+         png_chunk_benign_error(png_ptr, "");
+#else
          png_chunk_benign_error(png_ptr, "Too much image data");
+#endif
    }
 }
 
@@ -4455,7 +5036,11 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
 
 #ifdef PNG_MAX_MALLOC_64K
    if (row_bytes > (png_uint_32)65536L)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "This image requires a row greater than 64KB");
+#endif
 #endif
 
    if (row_bytes + 48 > png_ptr->old_big_row_buf_size)
@@ -4500,11 +5085,19 @@ defined(PNG_USER_TRANSFORM_PTR_SUPPORTED)
 
 #ifdef PNG_MAX_MALLOC_64K
    if (png_ptr->rowbytes > 65535)
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "This image requires a row greater than 64KB");
+#endif
 
 #endif
    if (png_ptr->rowbytes > (PNG_SIZE_MAX - 1))
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      png_error(png_ptr, "");
+#else
       png_error(png_ptr, "Row has too many bytes to allocate in memory");
+#endif
 
    memset(png_ptr->prev_row, 0, png_ptr->rowbytes + 1);
 

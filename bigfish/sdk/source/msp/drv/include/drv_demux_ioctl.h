@@ -21,7 +21,7 @@ History       :
 #include "drv_demux_config.h"
 #include "hi_drv_demux.h"
 
-#if !defined(CHIP_TYPE_hi3798cv200_a)
+#if !defined(CHIP_TYPE_hi3798cv200_a) && !defined(CHIP_TYPE_hi3716mv410) && !defined(CHIP_TYPE_hi3716mv420)
 /***************************** Macro Definition ******************************/
 #define DMX_CHANID(ChanHandle)      ((ChanHandle) & 0xff)
 
@@ -138,6 +138,7 @@ typedef struct hiDMX_TsBufStaGet_S
 typedef struct hiDMX_ChanNew_S
 {
     HI_U32 u32DemuxId;
+    HI_U32 u32Pid;
     HI_UNF_DMX_CHAN_ATTR_S stChAttr;
     HI_HANDLE hChannel;
     DMX_MMZ_BUF_S stChBuf;
@@ -219,7 +220,7 @@ typedef struct
     HI_U32  FreeCount;
 } DMX_FreeFilterGet_S;
 
-#if defined(CHIP_TYPE_hi3798cv200_a)
+#if defined(CHIP_TYPE_hi3798cv200_a) || defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
 typedef struct hiDMX_GetDataFlag_S
 {
     HI_HANDLE *ValidChannel;     /* channel has data ready */
@@ -442,6 +443,7 @@ typedef struct hiDMX_SetChan_ExtAttr_S
 #define CMD_DEMUX_SET_PUSI              _IOW (HI_ID_DEMUX, 0x02, HI_UNF_DMX_PUSI_SET_S)
 #define CMD_DEMUX_SET_TEI                    _IOW (HI_ID_DEMUX, 0x03, HI_UNF_DMX_TEI_SET_S)
 #define CMD_DEMUX_TSI_ATTACH_TSO         _IOW (HI_ID_DEMUX, 0x04, HI_UNF_DMX_TSI_ATTACH_TSO_S)
+#define CMD_DEMUX_GET_RESUME_COUNT     _IOWR (HI_ID_DEMUX, 0x05, HI_U32)
 
 
 /* TS PORT */
@@ -468,19 +470,20 @@ typedef struct hiDMX_SetChan_ExtAttr_S
 
 /* Channel */
 #define CMD_DEMUX_CHAN_NEW                  _IOWR(HI_ID_DEMUX, 0x30, DMX_ChanNew_S)             /* apply for a free channel */
-#define CMD_DEMUX_CHAN_DEL                  _IOW (HI_ID_DEMUX, 0x31, HI_HANDLE)                 /* delete an allocated channel */
-#define CMD_DEMUX_CHAN_OPEN                 _IOW (HI_ID_DEMUX, 0x32, HI_HANDLE)                 /* open channel */
-#define CMD_DEMUX_CHAN_CLOSE                _IOW (HI_ID_DEMUX, 0x33, HI_HANDLE)                 /* close channel */
-#define CMD_DEMUX_CHAN_ATTR_GET             _IOWR(HI_ID_DEMUX, 0x34, DMX_GetChan_Attr_S)
-#define CMD_DEMUX_CHAN_ATTR_SET             _IOW (HI_ID_DEMUX, 0x35, DMX_SetChan_Attr_S)
-#define CMD_DEMUX_GET_CHAN_STATUS           _IOWR(HI_ID_DEMUX, 0x36, DMX_ChanStatusGet_S)       /* get channel open/close status */
-#define CMD_DEMUX_PID_SET                   _IOW (HI_ID_DEMUX, 0x37, DMX_ChanPIDSet_S)          /* set pid of channel */
-#define CMD_DEMUX_PID_GET                   _IOWR(HI_ID_DEMUX, 0x38, DMX_ChanPIDGet_S)          /* get pid of channel */
-#define CMD_DEMUX_CHANID_GET                _IOWR(HI_ID_DEMUX, 0x39, DMX_ChannelIdGet_S)        /* get channel id with the designated pid */
-#define CMD_DEMUX_FREECHAN_GET              _IOWR(HI_ID_DEMUX, 0x3A, DMX_FreeChanGet_S)         /* get free channel counter */
-#define CMD_DEMUX_SCRAMBLEFLAG_GET          _IOWR(HI_ID_DEMUX, 0x3B, DMX_ScrambledFlagGet_S)    /* get scrambed flag of audio channel */
-#define CMD_DEMUX_CHAN_SET_EOS_FLAG         _IOWR(HI_ID_DEMUX, 0x3C, HI_HANDLE)
-#define CMD_DEMUX_CHAN_CC_REPEAT_SET        _IOW (HI_ID_DEMUX, 0x3D, DMX_SetChan_CC_REPEAT_S)   /* set channel CC repeat attr*/
+#define CMD_DEMUX_CHAN_NEW2                  _IOWR(HI_ID_DEMUX, 0x31, DMX_ChanNew_S)             /* apply for a free channel */
+#define CMD_DEMUX_CHAN_DEL                  _IOW (HI_ID_DEMUX, 0x32, HI_HANDLE)                 /* delete an allocated channel */
+#define CMD_DEMUX_CHAN_OPEN                 _IOW (HI_ID_DEMUX, 0x33, HI_HANDLE)                 /* open channel */
+#define CMD_DEMUX_CHAN_CLOSE                _IOW (HI_ID_DEMUX, 0x34, HI_HANDLE)                 /* close channel */
+#define CMD_DEMUX_CHAN_ATTR_GET             _IOWR(HI_ID_DEMUX, 0x35, DMX_GetChan_Attr_S)
+#define CMD_DEMUX_CHAN_ATTR_SET             _IOW (HI_ID_DEMUX, 0x36, DMX_SetChan_Attr_S)
+#define CMD_DEMUX_GET_CHAN_STATUS           _IOWR(HI_ID_DEMUX, 0x37, DMX_ChanStatusGet_S)       /* get channel open/close status */
+#define CMD_DEMUX_PID_SET                   _IOW (HI_ID_DEMUX, 0x38, DMX_ChanPIDSet_S)          /* set pid of channel */
+#define CMD_DEMUX_PID_GET                   _IOWR(HI_ID_DEMUX, 0x39, DMX_ChanPIDGet_S)          /* get pid of channel */
+#define CMD_DEMUX_CHANID_GET                _IOWR(HI_ID_DEMUX, 0x3A, DMX_ChannelIdGet_S)        /* get channel id with the designated pid */
+#define CMD_DEMUX_FREECHAN_GET              _IOWR(HI_ID_DEMUX, 0x3B, DMX_FreeChanGet_S)         /* get free channel counter */
+#define CMD_DEMUX_SCRAMBLEFLAG_GET          _IOWR(HI_ID_DEMUX, 0x3C, DMX_ScrambledFlagGet_S)    /* get scrambed flag of audio channel */
+#define CMD_DEMUX_CHAN_SET_EOS_FLAG         _IOWR(HI_ID_DEMUX, 0x3D, HI_HANDLE)
+#define CMD_DEMUX_CHAN_CC_REPEAT_SET        _IOW (HI_ID_DEMUX, 0x3E, DMX_SetChan_CC_REPEAT_S)   /* set channel CC repeat attr*/
 
 
 #ifdef DMX_USE_ECM

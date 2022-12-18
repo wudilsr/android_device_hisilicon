@@ -70,9 +70,11 @@ extern HI_S32 AOE_SwEngineCreate(HI_VOID);
 extern HI_S32 AOE_SwEngineDestory(HI_VOID);
 #endif
 
+#ifdef HI_SND_AFLT_SUPPORT
 #if defined (HI_SND_AFLT_SWSIMULATE_SUPPORT)
 extern HI_S32 AFLT_SwEngineCreate(HI_VOID);
 extern HI_S32 AFLT_SwEngineDestory(HI_VOID);
+#endif
 #endif
 
 #define ADSP_NAME "HI_ADSP"
@@ -109,6 +111,7 @@ static HI_U32 g_u32AoeRegAddr = 0;
 static HI_U32 g_u32AfltRegAddr = 0;
 #endif
 
+static HI_BOOL g_bIsAdspInit = HI_FALSE;
 /***************************** Global Definition *****************************/
 
 /***************************** Static Definition *****************************/
@@ -167,6 +170,7 @@ static HI_S32 ADSP_AOE_SetCmd(ADSP_AOESYS_CMD_E newcmd)
     return HI_SUCCESS;
 }
 
+#ifdef HI_SND_AFLT_SUPPORT
 static ADSP_AFLTSYS_CMD_RET_E  ADSP_AFLT_Ack(HI_VOID)
 {
     volatile HI_U32 loop = 0;
@@ -220,6 +224,7 @@ static HI_S32 ADSP_AFLT_SetCmd(ADSP_AFLTSYS_CMD_E newcmd)
 
     return HI_SUCCESS;
 }
+#endif
 
 static ADSP_SYSCOM_CMD_RET_E  ADSP_SYS_Ack(HI_VOID)
 {
@@ -294,6 +299,7 @@ static HI_S32 ADSP_LoadFirmware(ADSP_CODEID_E u32DspCodeId)
 #endif
         break;
 
+#ifdef HI_SND_AFLT_SUPPORT
     case ADSP_CODE_AFLT:
 #if defined (HI_SND_AFLT_SWSIMULATE_SUPPORT)
         sRet = AFLT_SwEngineCreate();
@@ -301,10 +307,14 @@ static HI_S32 ADSP_LoadFirmware(ADSP_CODEID_E u32DspCodeId)
         sRet = ADSP_AFLT_SetCmd(ADSP_AFLT_CMD_START);
 #endif
         break;
-
+#endif
     default:
         HI_ERR_ADSP("dont support DspCode(%d)\n", u32DspCodeId);
         break;
+    }
+    if (HI_SUCCESS == sRet)
+    {
+        g_bIsAdspInit = HI_TRUE;
     }
 
     return sRet;
@@ -324,6 +334,7 @@ static HI_S32 ADSP_UnLoadFirmware(ADSP_CODEID_E u32DspCodeId)
 #endif
         break;
 
+#ifdef HI_SND_AFLT_SUPPORT
      case ADSP_CODE_AFLT:
 #if defined (HI_SND_AOE_SWSIMULATE_SUPPORT)
         sRet = AFLT_SwEngineDestory();
@@ -331,10 +342,14 @@ static HI_S32 ADSP_UnLoadFirmware(ADSP_CODEID_E u32DspCodeId)
         sRet = ADSP_AFLT_SetCmd(ADSP_AFLT_CMD_STOP);
 #endif
         break;
-
+#endif
     default:
         HI_WARN_ADSP("dont support DspCode(%d)\n", u32DspCodeId);
         break;
+    }
+    if (HI_SUCCESS == sRet)
+    {
+        g_bIsAdspInit = HI_FALSE;
     }
 
     return sRet;
@@ -759,6 +774,7 @@ const HI_CHAR *  ADSP_AOE_StatusName(HI_U32 u32Cmd, HI_U32 u32Done)
     return apcName[u32Cmd];
 }
 
+#ifdef HI_SND_AFLT_SUPPORT
 const HI_CHAR *ADSP_AFLT_CmdName(AFLT_CMD_E enCmd)
 {
     const HI_CHAR *apcName[AFLT_CMD_BUTT] =
@@ -810,6 +826,7 @@ const HI_CHAR *ADSP_AFLT_CompName(AFLT_COMPONENT_ID_E enComp)
 
     return "UnknownComp";
 }
+#endif
 
 const HI_U32 ADSP_BufUsedSizeProc(HI_U32 u32Size, HI_U32 u32ReadPtr, HI_U32 u32WritePtr)
 {
@@ -1222,6 +1239,11 @@ static HI_VOID ADSP_COM_Proc(struct seq_file *p, HI_VOID *v)
 }
 HI_S32 ADSP_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
 {
+    if (g_bIsAdspInit == HI_FALSE)
+    {
+        PROC_PRINT( p, "\n-------------  ADSP NOT OPEN  -------------\n");
+        return HI_SUCCESS;
+    }
     ADSP_AOE_Proc(p, v);
 #if defined(CHIP_TYPE_hi3751v100)
     ADSP_AFLT_Proc(p, v);

@@ -11,7 +11,6 @@ namespace android {
 enum {
 	UPGRADE = IBinder::FIRST_CALL_TRANSACTION + 0,
 	RESET,
-	CAUPDATEFILE,
 	ENTERSMARTSTANDBY,
 	QUITSMARTSTANDBY,
 	SETFLASHINFO,
@@ -80,24 +79,6 @@ public:
 		Parcel data, reply;
 		data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
 		remote()->transact(RESET, data, &reply);
-		int32_t ret = reply.readInt32();
-		if(ret == 0)
-		{
-			ret = reply.readInt32();
-		}
-		else
-		{
-			ret = -1;
-		}
-		return ret;
-	}
-	virtual int updateCAFile(String8 path1,String8 path2)
-	{
-		Parcel data, reply;
-		data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
-		data.writeString8(path1);
-		data.writeString8(path2);
-		remote()->transact(CAUPDATEFILE, data, &reply);
 		int32_t ret = reply.readInt32();
 		if(ret == 0)
 		{
@@ -785,13 +766,6 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
 	case RESET:
 		CHECK_INTERFACE(IHiSysManagerService, data, reply);
 		ret = reset();
-		reply->writeInt32(ret);
-		return NO_ERROR;
-	case CAUPDATEFILE:
-		CHECK_INTERFACE(IHiSysManagerService, data, reply);
-		path = data.readString8();
-		dst = data.readString8();
-		ret = updateCAFile(path,dst);
 		reply->writeInt32(ret);
 		return NO_ERROR;
 	case ENTERSMARTSTANDBY:

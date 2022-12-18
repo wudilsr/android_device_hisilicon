@@ -140,7 +140,11 @@ png_set_filler(png_structrp png_ptr, png_uint_32 filler, int filler_loc)
           */
          png_ptr->filler = (png_uint_16)filler;
 #     else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 png_app_error(png_ptr, "");
+#else	
          png_app_error(png_ptr, "png_set_filler not supported on read");
+#endif
          PNG_UNUSED(filler) /* not used in the write case */
          return;
 #     endif
@@ -171,18 +175,33 @@ png_set_filler(png_structrp png_ptr, png_uint_32 filler, int filler_loc)
                    * from bytes when the components are less than a byte in
                    * size!
                    */
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+      	 		  png_app_error(png_ptr, "");
+#else	
                   png_app_error(png_ptr,
                      "png_set_filler is invalid for low bit depth gray output");
-                  return;
+#endif
+
+                 return;
                }
 
             default:
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+  	 		   png_app_error(png_ptr, "");
+#else	
                png_app_error(png_ptr,
                   "png_set_filler: inappropriate color type");
+#endif
+
                return;
          }
 #     else
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	     png_app_error(png_ptr, "");
+#else	
          png_app_error(png_ptr, "png_set_filler not supported on write");
+#endif
+
          return;
 #     endif
    }
@@ -796,8 +815,12 @@ png_set_user_transform_info(png_structrp png_ptr, png_voidp
    if ((png_ptr->mode & PNG_IS_READ_STRUCT) != 0 &&
       (png_ptr->flags & PNG_FLAG_ROW_INIT) != 0)
    {
+#ifdef HI_ADVCA_FUNCTION_RELEASE
+	  png_app_error(png_ptr, "");
+#else	
       png_app_error(png_ptr,
             "info change after png_start_read_image or png_read_update_info");
+#endif
       return;
    }
 #endif

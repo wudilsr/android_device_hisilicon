@@ -8,10 +8,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <com.hisilicon.android.mediaplayer.HiVideoView
+        <SurfaceView
             android:id="@+id/VideoView01"
             android:layout_width="700dp"
-            android:layout_height="520dp"
+            android:layout_height="460dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
             android:focusable="false" />
@@ -36,8 +36,13 @@
 
             <TextView
                 android:id="@+id/version"
-                style="@style/LeftTextInfo"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="230dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textIsSelectable="true"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -262,7 +267,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
         android:text="@string/change_output" />
 
     <ScrollView
