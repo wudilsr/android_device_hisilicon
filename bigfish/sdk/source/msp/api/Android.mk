@@ -1,0 +1,69 @@
+MSP_MODULE := hdmi gpio vo pdm cipher advca pwm i2c frontend ir demux tde pq
+API_MODULE := jpeg
+MSP_MODULE += jpge
+API_MODULE += png higo
+MSP_MODULE += otp pm avplay sync ao adec vdec wdg
+MSP_MODULE += pvr
+MSP_MODULE += vpu
+MSP_MODULE += hdmirx
+MSP_MODULE += spi
+
+API_MODULE += omx
+MSP_MODULE += mce
+#API_MODULE += gpu
+MSP_MODULE += ai keyled aenc
+MSP_MODULE += ci
+MSP_MODULE += hdcp sci vi venc
+API_MODULE += gfx2d
+
+MSP_MODULE_MAKEFILES := $(call all-named-subdir-makefiles, $(MSP_MODULE))
+API_MODULE_MAKEFILES := $(call all-named-subdir-makefiles, $(API_MODULE))
+
+LOCAL_PATH := $(call my-dir)
+include $(SDK_DIR)/Android.def
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libhi_msp
+LOCAL_MODULE_TAGS := optional
+LOCAL_C_INCLUDES := $(COMMON_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
+LOCAL_CFLAGS := $(CFG_HI_CFLAGS)
+LOCAL_CFLAGS += -DLOG_TAG=\"$(LOCAL_MODULE)\"
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_SHARED_LIBRARIES := libdl libhi_common libcutils libutils libjpeg libcrypto
+ifeq ($(CFG_HI_HAEFFECT_BASE_SUPPORT),y)
+LOCAL_SHARED_LIBRARIES += libhi_aef_base
+endif
+ifeq ($(CFG_HI_HAEFFECT_SRS_SUPPORT),y)
+LOCAL_SHARED_LIBRARIES += libhi_aef_srs
+endif
+ifeq ($(CFG_HI_VDEC_MJPEG_SUPPORT),y)
+LOCAL_STATIC_LIBRARIES += libhigo_jpeg
+endif
+include $(MSP_MODULE_MAKEFILES)
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := libhi_msp
+LOCAL_MODULE_TAGS := optional
+LOCAL_C_INCLUDES := $(COMMON_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
+LOCAL_CFLAGS := $(CFG_HI_CFLAGS)
+LOCAL_CFLAGS += -DLOG_TAG=\"$(LOCAL_MODULE)\"
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_STATIC_LIBRARIES := libhi_common
+ifeq ($(CFG_HI_VDEC_MJPEG_SUPPORT),y)
+LOCAL_STATIC_LIBRARIES += libhigo_jpeg
+endif
+include $(MSP_MODULE_MAKEFILES)
+include $(BUILD_STATIC_LIBRARY)
+
+include $(API_MODULE_MAKEFILES)

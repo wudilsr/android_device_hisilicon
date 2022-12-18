@@ -1,0 +1,89 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "HACODEC Config"
+#--------------------------------
+config HI_HACODEC_MP3DECODE_SUPPORT
+	bool "HACODEC MP3 Decode Support"
+	default n
+
+config HI_HACODEC_AACDECODE_SUPPORT
+	bool "HACODEC AAC Decode Support"
+	default n
+
+config HI_HACODEC_AACENCODE_SUPPORT
+	bool "HACODEC AAC Encode Support"
+	default n
+
+config HI_HACODEC_AC3PASSTHROUGH_SUPPORT
+	bool "HACODEC AC3 Passthrough Support"
+	default n
+
+config HI_HACODEC_AMRNBCODEC_SUPPORT
+	bool "HACODEC AMRNB Codec Support"
+	default n
+
+config HI_HACODEC_AMRWBCODEC_SUPPORT
+	bool "HACODEC AMRWB Codec Support"
+	default n
+
+config HI_HACODEC_BLURAYLPCMDECODE_SUPPORT
+	bool "HACODEC BLURAYLPCM Decode Support"
+	default n
+
+config HI_HACODEC_COOKDECODE_SUPPORT
+	bool "HACODEC COOK Decode Support"
+	default n
+
+config HI_HACODEC_DRADECODE_SUPPORT
+	bool "HACODEC DRA Decode Support"
+	default n
+
+config HI_HACODEC_DTSPASSTHROUGH_SUPPORT
+	bool "HACODEC DTS Passthrough Support"
+	default n
+
+config HI_HACODEC_G711CODEC_SUPPORT
+	bool "HACODEC G711 Codec Support"
+	default n
+
+config HI_HACODEC_G722CODEC_SUPPORT
+	bool "HACODEC G722 Codec Support"
+	default n
+
+config HI_HACODEC_MP2DECODE_SUPPORT
+	bool "HACODEC MP2 Decode Support"
+	default n
+
+config HI_HACODEC_PCMDECODE_SUPPORT
+	bool "HACODEC PCM Decode Support"
+	default n
+
+config HI_HACODEC_TRUEHDPASSTHROUGH_SUPPORT
+	bool "HACODEC TRUEHD Passthrough Support"
+	default n
+
+config HI_HACODEC_WMADECODE_SUPPORT
+	bool "HACODEC WMA Decode Support"
+	default n
+
+config HI_HACODEC_PCMDECODE_HW_SUPPORT
+	bool "HACODEC PCM Hardware Decode Support"
+	default n
+
+config HI_HACODEC_MP3DECODE_HW_SUPPORT
+	depends on !HI_SND_AOE_HW_SUPPORT
+	bool "HACODEC MP3 Hardware Decode Support"
+	default n
+
+config HI_HACODEC_DTSHDDECODE_XA_HW_SUPPORT
+	depends on HI_SND_AOE_HW_SUPPORT
+	bool "HACODEC DTSHDXA Hardware Decode Support"
+	default n
+
+config HI_HACODEC_DTSM6DECODE_SUPPORT
+	bool "HACODEC DTSM6 Decode Support"
+	default n
+	depends on ANDROID_PRODUCT
+#--------------------------------
+endmenu
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+

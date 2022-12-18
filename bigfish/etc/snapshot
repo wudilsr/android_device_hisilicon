@@ -1,0 +1,176 @@
+#!/system/bin/sh
+#
+#
+
+do_snapshot=1
+
+echo 0 > /proc/hibernate/canceled
+saveno_sav=`cat /proc/hibernate/saveno`
+loadno_sav=`cat /proc/hibernate/loadno`
+compress_sav=`cat /proc/hibernate/compress`
+shrink_sav=`cat /proc/hibernate/shrink`
+separate_sav=`cat /proc/hibernate/separate`
+oneshot_sav=`cat /proc/hibernate/oneshot`
+halt_sav=`cat /proc/hibernate/halt`
+silent_sav=`cat /proc/hibernate/silent`
+
+separate_delay=10
+separate_command=""
+
+for arg in $*
+do
+  case $arg in
+  -s0)
+    echo 0 > /proc/hibernate/saveno
+    ;;
+  -s1)
+    echo 1 > /proc/hibernate/saveno
+    ;;
+  -s2)
+    echo 2 > /proc/hibernate/saveno
+    ;;
+  -s3)
+    echo 3 > /proc/hibernate/saveno
+    ;;
+  -l0)
+    echo 0 > /proc/hibernate/loadno
+    ;;
+  -l1)
+    echo 1 > /proc/hibernate/loadno
+    ;;
+  -l2)
+    echo 2 > /proc/hibernate/loadno
+    ;;
+  -l3)
+    echo 3 > /proc/hibernate/loadno
+    ;;
+  -w0)
+    echo 0 > /proc/hibernate/switch
+    ;;
+  -w1|-w)
+    echo 1 > /proc/hibernate/switch
+    ;;
+  -w2)
+    echo 2 > /proc/hibernate/switch
+    ;;
+  -c0)
+    echo 0 > /proc/hibernate/compress
+    ;;
+  -c1|-c)
+    echo 1 > /proc/hibernate/compress
+    ;;
+  -c2)
+    echo 2 > /proc/hibernate/compress
+    ;;
+  -r0)
+    echo 0 > /proc/hibernate/shrink
+    ;;
+  -r1|-r)
+    echo 1 > /proc/hibernate/shrink
+    ;;
+  -r2)
+    echo 2 > /proc/hibernate/shrink
+    ;;
+  -r3)
+    echo 3 > /proc/hibernate/shrink
+    ;;
+  -p0)
+    echo 0 > /proc/hibernate/separate
+    ;;
+  -p1|-p)
+    echo 1 > /proc/hibernate/separate
+    ;;
+  -p2)
+    echo 2 > /proc/hibernate/separate
+    ;;
+  -o0)
+    echo 0 > /proc/hibernate/oneshot
+    ;;
+  -o1|-o)
+    echo 1 > /proc/hibernate/oneshot
+    ;;
+  -a0)
+    echo 0 > /proc/hibernate/halt
+    ;;
+  -a1|-a)
+    echo 1 > /proc/hibernate/halt
+    ;;
+  -i0)
+    echo 0 > /proc/hibernate/silent
+    ;;
+  -i1)
+    echo 1 > /proc/hibernate/silent
+    ;;
+  -i2)
+    echo 2 > /proc/hibernate/silent
+    ;;
+  -i3|-i)
+    echo 3 > /proc/hibernate/silent
+    ;;
+  -b0)
+    echo 0 > /proc/hibernate/switch
+    ;;
+  -b1|-b)
+    echo 1 > /proc/hibernate/switch
+    ;;
+  -h)
+    echo "Lineo hibernate!! Snapshot save"
+    echo "snapshot [<options>]"
+    echo " -sN   : snapshot save to no N (N=0-)"
+    echo " -lN   : snapshot load from no N (N=0-)"
+    echo " -w[N] : snapshot switch (N=0/1/2)"
+    echo " -c[N] : compress (N=0/1/2)"
+    echo " -r[N] : shrink (N=0/1/2/3)"
+    echo " -p[N] : separate (N=0/1/2)"
+    echo " -o[N] : oneshot (N=0/1)"
+    echo " -a[N] : halt (N=0/1)"
+    echo " -i[N] : silent (N=0-3)"
+    echo " -h    : print help"
+    do_snapshot=0
+    ;;
+  *)
+    echo "parameter error '$arg'"
+    do_snapshot=0
+    ;;
+  esac
+  case $? in
+  0)
+    ;;
+  *)
+    echo "parameter write error '$arg'"
+    do_snapshot=0
+    ;;
+  esac
+done
+
+case $do_snapshot in
+1)
+  case `cat /proc/hibernate/separate` in
+  2)
+    echo disk > /sys/power/state
+    case `cat /proc/hibernate/canceled` in
+    0)
+        sleep $separate_delay
+        ;;
+    esac
+    ;;
+  esac
+  case `cat /proc/hibernate/canceled` in
+  0)
+    echo disk > /sys/power/state
+    ;;
+  esac
+  ;;
+esac
+
+echo $saveno_sav > /proc/hibernate/saveno
+echo $loadno_sav > /proc/hibernate/loadno
+echo $compress_sav > /proc/hibernate/compress
+echo $shrink_sav > /proc/hibernate/shrink
+echo $separate_sav > /proc/hibernate/separate
+echo $oneshot_sav > /proc/hibernate/oneshot
+echo $halt_sav > /proc/hibernate/halt
+echo $silent_sav > /proc/hibernate/silent
+echo 0 > /proc/hibernate/switch
+
+exit `cat /proc/hibernate/stat`

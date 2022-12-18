@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >     
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="standard"
+            android:dialogTitle="@string/standard"
+            android:title="@string/standard" />
+    	<com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="vivid"
+            android:dialogTitle="@string/vivid"
+            android:title="@string/vivid" />
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="film"
+            android:dialogTitle="@string/film"
+            android:title="@string/film" />
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="innervation"
+            android:dialogTitle="@string/innervation"
+            android:title="@string/innervation" />
+        <com.hisilicon.android.pqsetting.ScreenPreference
+            android:key="user_defined"
+            android:dialogTitle="@string/user_defined"
+            android:title="@string/user_defined" />
+
+</PreferenceScreen>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- UPNP-DMR -->
+     <string-array name="dmr_start_status">
+        <item>启动</item>
+        <item>关闭</item>
+    </string-array>
+
+     <string-array name="dmr_status_vaule">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <!-- UPNP-DMS -->
+     <string-array name="dms_start_status">
+        <item>启动</item>
+        <item>关闭</item>
+    </string-array>
+
+     <string-array name="dms_status_vaule">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,39 @@
+2003-05-29  Chris Boot  <bootc@mac.com>
+    * Cleaned up the code some more
+    * Made more things const
+    * Changed a few references to u_int32_t to uint32_t
+    * Prepared for 0.0.4 release
+
+2003-05-16  Chris Boot  <bootc@mac.com>
+    * Fixed a load of compatibility / portability problems
+    * Moved to using uintN_t rather than u_intN_t
+    * Moved to using memcpy() rather than assignments in places
+      This killed two birds with one stone, fixing an obscure Alpha problem
+      and making libdaap work on Sun systems (Linux and Solaris).
+
+2003-05-15  Chris Boot  <bootc@mac.com>
+    * Made the implementation more efficent memory wise
+    * Cleaned up chunk building code
+    * Added chunk-build test
+
+2003-05-15  William Cahill  <wcc2987@sf.net>
+    * Added chunk building code
+
+2003-05-13  Chris Boot  <bootc@mac.com>
+    * Moved to using C++ namespaces
+
+2003-05-09  Chris Boot  <bootc@mac.com>
+    * Fixed compilation problems on gcc-2.95.*
+    * libdaap is now endian safe! (checked on ppc, x86 and alpha)
+    * Added a simple test suite (make check)
+
+2003-05-07  Chris boot  <bootc@mac.com>
+    * Changed DAAP_ChunkInfo from a stucture to a class
+    * Changes for the above in the DAAP_ContentCodes class
+    * Added documentation for DAAP_ContentCodes
+    * Added documentation for DAAP_ChunkInfo
+    * Added documentation for DAAP_Chunk
+    * Included Project Builder project in distribution (in "macosx" folder)
+
+2003-05-06  Chris Boot  <bootc@mac.com>
+    * Initial release

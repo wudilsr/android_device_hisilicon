@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<frontPanel_xml>
+    <hisi-key>
+        <key value="0x3" name="KEY_UP"         />      <!--key up-->
+        <key value="0x4" name="KEY_DOWN"       />      <!--key down-->
+        <key value="0x2" name="KEY_LEFT"       />      <!--key left -->
+        <key value="0x5" name="KEY_RIGHT"      />      <!--key right-->
+        <key value="0x1" name="KEY_ENTER"      />      <!--key ok -->
+        <key value="0x6" name="KEY_BACK"       />      <!--Back -->
+        <key value="0x0" name="KEY_SETUP"      />      <!--Setup-->
+        <key value="0x8" name="KEY_HOME"       />      <!--Home-->
+    </hisi-key>
+</frontPanel_xml>

@@ -1,0 +1,75 @@
+#
+# Automatically generated make config: don't edit
+# SDK version: KERNELVERSION
+# Fri Aug  9 09:29:53 2013
+#
+
+#
+# base
+#
+# CFG_HI_ANDROID_V5 is not set
+# CFG_HI_ANDROID_ICS is not set
+CFG_HI_LINUX_PRODUCT=y
+CFG_SDK_VERSION=Hi3712V100R001C00SPC020
+#CFG_SDK_VERSION=Hi3716XV100R001C00SPC0A1
+CFG_VERSION=debug
+
+#
+# common
+#
+CFG_HI_COMMON_SUPPORT=y
+
+#
+# dtvstack
+#
+CFG_HI_DTVSTACK_SUPPORT=y
+
+#
+# higv
+#
+CFG_HI_HIGV_SUPPORT=y
+
+#
+# dtvappfrm
+#
+
+#
+# browser
+#
+
+#
+# hidlna
+#
+
+#
+# himultiscreen
+#
+
+#
+# hitranscoder
+#
+
+#
+# miracast
+#
+
+#
+# skyplay
+#
+
+#
+# charset
+#
+
+#
+# drmengine
+#
+
+#
+# player
+#
+CFG_HI_PLAYER_SUPPORT=y
+
+#
+# external
+#

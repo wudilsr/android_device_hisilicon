@@ -1,0 +1,13 @@
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES:= write_raw.c
+LOCAL_C_INCLUDES := $(LOCAL_PATH)
+#LOCAL_STATIC_LIBRARIES :=libcutils libutils libmtdutils
+LOCAL_STATIC_LIBRARIES :=libmtdutils
+LOCAL_SHARED_LIBRARIES := libcutils libdl libutils
+LOCAL_MODULE:= write_raw
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+#LOCAL_MODULE_PATH:= $(LOCAL_PATH)
+include $(BUILD_EXECUTABLE)
+

@@ -1,0 +1,57 @@
+
+
+
+[CVE-2014-8086]: Fixed
+    https://bugzilla.redhat.com/show_bug.cgi?id=1151353
+    Race condition in the ext4_file_write_iter function in fs/ext4/file.c in the Linux kernel through 3.17 allows local users to cause a denial of service (file unavailability) via a combination of a write action and an F_SETFL fcntl operation for the O_DIRECT flag. 
+
+[CVE-2014-8989]: Fixed
+    https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2014-8989
+    The Linux kernel through 3.17.4 does not properly restrict dropping of supplemental group memberships in certain namespace scenarios, which allows local users to bypass intended file permissions by leveraging a POSIX ACL containing an entry for the group category that is more restrictive than the entry for the other category, aka a "negative groups" issue, related to kernel/groups.c, kernel/uid16.c, and kernel/user_namespace.c.
+
+[CVE-2014-8559]: Fixed
+    https://bugzilla.redhat.com/show_bug.cgi?id=1159313
+
+[CVE-2014-7975]: Fixed
+    5346ddc97be99f6df357ba4a8be02b4b2d93ed20
+    The do_umount function in fs/namespace.c in the Linux kernel through 3.17 does not require the CAP_SYS_ADMIN capability for do_remount_sb calls that change the root filesystem to read-only, which allows local users to cause a denial of service (loss of writability) by making certain unshare system calls, clearing the / MNT_LOCKED flag, and making an MNT_FORCE umount system call.
+
+[CVE-2014-7970]: Fixed
+    e1dfa09af3200cdb2017620cd78e127e0479dcb2
+    The pivot_root implementation in fs/namespace.c in the Linux kernel through 3.17 does not properly interact with certain locations of a chroot directory, which allows local users to cause a denial of service (mount-tree loop) via . (dot) values in both arguments to the pivot_root system call. 
+
+[CVE-2014-2851]: Fixed
+    Integer overflow in the ping_init_sock function in net/ipv4/ping.c in the Linux kernel through 3.14.1 allows local users to cause a denial of service (use-after-free and system crash) or possibly gain privileges via a crafted application that leverages an improperly managed reference counter.
+    
+[CVE-2014-3153]: Fixed
+    The futex_requeue function in kernel/futex.c in the Linux kernel through 3.14.5 does not ensure that calls have two different futex addresses, which allows local users to gain privileges via a crafted FUTEX_REQUEUE command that facilitates unsafe waiter modification.
+
+[CVE-2014-1874]: Fixed
+    The security_context_to_sid_core function in security/selinux/ss/services.c in the Linux kernel before 3.13.4 allows local users to cause a denial of service (system crash) by leveraging the CAP_MAC_ADMIN capability to set a zero-length security context.
+
+[CVE-2014-0196]: Fixed
+    4291086b1f081b869c6d79e5b7441633dc3ace00
+    The n_tty_write function in drivers/tty/n_tty.c in the Linux kernel through 3.14.3 does not properly manage tty driver access in the "LECHO & !OPOST" case, which allows local users to cause a denial of service (memory corruption and system crash) or gain privileges by triggering a race condition involving read and write operations with long strings.
+
+[CVE-2014-2851]: Fixed
+    b04c46190219a4f845e46a459e3102137b7f6cac
+    Integer overflow in the ping_init_sock function in net/ipv4/ping.c in the Linux kernel through 3.14.1 allows local users to cause a denial of service (use-after-free and system crash) or possibly gain privileges via a crafted application that leverages an improperly managed reference counter.
+
+[CVE-2014-3153]: Fixed
+    e9c243a5a6de0be8e584c604d353412584b592f8
+    If uaddr == uaddr2, then we have broken the rule of only requeueing from a non-pi futex to a pi futex with this call.  If we attempt this, then dangling pointers may be left for rt_waiter resulting in an exploitable condition.
+
+[CVE-2014-4943]: Fixed
+    3cf521f7dc87c031617fd47e4b7aa2593c2f3daf
+    The l2tp [get|set]sockopt() code has fallen back to the UDP functions for socket option levels != SOL_PPPOL2TP since day one, but that has never actually worked, since the l2tp socket isn't an inet socket.
+
+
+[CVE-2013-4348]: Fixed
+    6f092343855a71e03b8d209815d8c45bf3a27fcd
+    We don't validate iph->ihl which may lead a dead loop if we meet a IPIP skb whose iph->ihl is zero. Fix this by failing immediately when iph->ihl is evil (less than 5).
+
+[ANDROID-11355082]: Fixed
+    3fac2c119f537d4d8fea3f0b9063d72f44857b82
+    Overlapping binder objects can cause an invalid memory access.
+
+

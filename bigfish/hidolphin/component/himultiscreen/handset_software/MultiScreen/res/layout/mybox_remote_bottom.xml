@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/remote_bottom"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="20dp"
+    android:gravity="center_horizontal" >
+
+    <!--
+         <Button
+        android:id="@+id/remote_bottom_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/remote_mode"
+        android:layout_marginLeft="10.0dp"
+        android:layout_weight="1"
+        />
+    -->
+
+    <Button
+        android:id="@+id/remote_bottom_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.0dp"
+        android:layout_marginRight="10.0dp"
+        android:layout_weight="1"
+        android:background="@drawable/remote_voice" />
+
+    <Button
+        android:id="@+id/remote_bottom_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10.0dp"
+        android:layout_weight="1"
+        android:background="@drawable/remote_back" />
+
+</LinearLayout>

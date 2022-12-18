@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:stretchColumns="1">
+  <TableRow android:gravity="center_vertical"
+       android:layout_marginTop="5dip"
+       android:layout_marginBottom="5dip">
+         <ImageView android:id="@+id/img_listmode_symbol"
+               android:layout_width="30dip"
+               android:layout_height="30dip"
+               android:src="@drawable/listmode_symbol"/>
+         <TextView android:id="@+id/tv_listmode_info"
+               style="@style/wrap_wrap_30dip"
+               android:layout_marginLeft="20dip"
+               android:gravity="left"
+               android:singleLine="true"
+               android:ellipsize="marquee"
+               android:marqueeRepeatLimit="marquee_forever"/>
+         <TextView android:id="@+id/tv_listmode_size"
+               android:layout_width="150dip"
+               android:layout_height="wrap_content"
+               android:textSize="30dip"
+               android:layout_marginLeft="20dip"/>
+
+         <TextView android:id="@+id/tv_listmode_duration"
+               android:layout_width="150dip"
+               android:layout_height="wrap_content"
+               android:textSize="30dip"
+               android:layout_marginLeft="20dip"/>
+
+  </TableRow>
+</TableLayout>

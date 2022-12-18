@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/home/x54178/ahPlayer_r14467_mt_software_noopendemux_FMO/ahplayer-jni/jni/libffmpeg
+
+Name: libavdevice
+Description: Libav device handling library
+Version: 53.0.0
+Requires: libavformat = 53.0.3
+Conflicts:
+Libs: ${libdir}/libavdevice.a -ldl -lm -pthread -lbz2 -lz
+Cflags: -I${includedir}

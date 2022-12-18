@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="ime_name">VirtualIME</string>
+    <string name="label_tips_inputing">Inputting</string>
+    <string name="vime_start_tip">VIme start</string>
+    <string name="vime_stop_tip">VIme stop</string>
+    <string name="abnormal_start_vime_tip">please open vime from your client</string>
+</resources>

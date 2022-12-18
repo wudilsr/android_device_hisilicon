@@ -1,0 +1,22 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+     <style name= "CustomProgressStyle" parent ="@android:style/Widget.ProgressBar.Large">
+        <item name="android:minWidth">55dp</item>
+        <item name="android:maxWidth">55dp</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="android:maxHeight">55dp</item>
+     </style>
+
+     <style name="SpeechWaveProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_vertical</item>
+     </style>
+
+     <style name="SpeechDialogStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+     </style>
+
+ </resources>

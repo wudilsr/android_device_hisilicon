@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/color_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/color_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intelligent_color"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/color_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/color_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/color_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/red_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/red_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/red_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/red_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/red_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/green_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/green_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/green_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/green_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/green_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/blue_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/blue_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blue_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/blue_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/blue_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/cyan_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/cyan_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cyan_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/cyan_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/cyan_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/violet_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/violet_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violet_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/violet_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/violet_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/yellow_enhance_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/yellow_enhance_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/yellow_enhance"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/yellow_enhance_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/yellow_enhance_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

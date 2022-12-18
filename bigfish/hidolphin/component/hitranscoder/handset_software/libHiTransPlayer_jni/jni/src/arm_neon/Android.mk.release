@@ -1,0 +1,31 @@
+
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+ifeq ($(BUILD_WITH_NEON),1)
+LOCAL_ARM_NEON := true
+endif
+
+LOCAL_MODULE := yuv2rgb_neon
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+
+LOCAL_CFLAGS += \
+    -std=c99 \
+    -DHAVE_CONFIG_H \
+    -fasm \
+    -DMODULE_STRING=\"yuv2rgb\" \
+    -DMODULE_NAME=yuv2rgb
+
+
+LOCAL_SRC_FILES := \
+    yuv2rgb16tab.c \
+    yuv420rgb565.S \
+    yuv422rgb565.S \
+    yuv444rgb565.S
+
+ifeq ($(BUILD_WITH_NEON),1)
+LOCAL_CFLAGS += -DHAVE_NEON=1
+LOCAL_SRC_FILES += yuv2rgb.444565.S yuv2rgb.422565.S yuv2rgb.420565.c memcpy_neon.S memset_neon.S yuv2rgba.neon.S
+endif
+
+include $(BUILD_STATIC_LIBRARY)

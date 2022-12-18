@@ -1,0 +1,50 @@
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_MODULE := libhiesproto1
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_SRC_FILES := libhiesproto.a
+include $(PREBUILT_STATIC_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_CFLAGS := -D__STDC_CONSTANT_MACROS
+
+WITH_ANDROID_VECTOR := true
+include $(LOCAL_PATH)/../utils.mk
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/../libffmpeg \
+    $(LOCAL_PATH)/../arm_neon \
+    $(LOCAL_PATH)/../include \
+    $(LOCAL_PATH)/../libsoundtouch/include \
+    $(LOCAL_PATH)/../include/android  \
+    $(LOCAL_PATH)/rtsp
+
+
+LOCAL_SRC_FILES := \
+    mediaplayer.cpp \
+    thread.cpp \
+    ClientLog.cpp \
+    nativeWindow.cpp \
+    Hies_client.c
+
+ifeq ($(WITH_ANDROID_VECTOR),true)
+LOCAL_SRC_FILES += \
+    android/atomic.c \
+    android/atomic-android-arm.S \
+    android/SharedBuffer.cpp \
+    android/VectorImpl.cpp
+endif
+
+LOCAL_PRELINK_MODULE := false
+
+
+
+#LOCAL_LDLIBS := -L$(LOCAL_PATH)/../../libs/armeabi-v7a -lhiesproto
+
+LOCAL_LDLIBS := -llog
+
+LOCAL_STATIC_LIBRARIES :=libHWAHStreaming libavformat libavcodec libavutil libpostproc libswscale libavfilter libyuv2rgb_neon libhiesproto1
+
+LOCAL_MODULE := libahplayer
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+include $(BUILD_STATIC_LIBRARY)

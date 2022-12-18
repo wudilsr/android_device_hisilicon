@@ -1,0 +1,12 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_PRELIBS := libhi_karaoke
+
+LOCAL_MODULES_NAME := $(LOCAL_SRC_PRELIBS)
+LOCAL_PREBUILT_LIBS := lib/libhi_karaoke.so
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULES_NAME)
+
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_MULTI_PREBUILT)

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >     
+        <ListPreference
+            android:key="split_screen"
+            android:dialogTitle="@string/split_screen"
+            android:entries="@array/onoff_array"
+            android:entryValues="@array/onoff_value_array"
+            android:title="@string/split_screen"
+            android:defaultValue="0" />
+    	<PreferenceScreen
+            android:key="intelligent_color"
+            android:title="@string/intelligent_color"
+            android:fragment="com.hisilicon.android.pqsetting.ColorSettings" />
+    	<!--<MultiSelectListPreference
+            android:key="intelligent_color"
+            android:dialogTitle="@string/intelligent_color"
+            android:entries="@array/intelligent_color_array"
+            android:entryValues="@array/intelligent_color_value_array"
+            android:title="@string/intelligent_color" />-->
+        <ListPreference
+            android:key="dynamic_contrast"
+            android:dialogTitle="@string/dynamic_contrast"
+            android:entries="@array/dynamic_contrast_array"
+            android:entryValues="@array/dynamic_contrast_value_array"
+            android:title="@string/dynamic_contrast" />
+        <com.hisilicon.android.pqsetting.SeekBarDialogPreference
+            android:key="definition"
+            android:dialogTitle="@string/definition"
+            android:title="@string/definition" />
+        <ListPreference
+            android:key="oversubscription"
+            android:dialogTitle="@string/oversubscription"
+            android:entries="@array/onoff_array"
+            android:entryValues="@array/onoff_value_array"
+            android:title="@string/oversubscription"
+            android:defaultValue="0" />
+
+</PreferenceScreen>

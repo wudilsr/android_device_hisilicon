@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="yellow">#ffffff00</color>
+    <color name="transparent">#00ffffff</color>
+    <!-- 天蓝色 -->
+    <color name="azure">#ccf0ffff</color>
+    <!-- 亮灰色 -->
+    <color name="lightgray">#ccd3d3d3</color>
+    <color name="secondprogress_bg_color">#00555555</color>
+    <color name="list_mode_text_color_bg">#ff76787c</color>
+</resources>

@@ -1,0 +1,5 @@
+config HI_CURL_SUPPORT
+	bool "Curl Support"
+	default n
+	help
+	  If you wan't to support curl, say y here.

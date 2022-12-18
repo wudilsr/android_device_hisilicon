@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    <LinearLayout android:id="@+id/searchProgress" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <TextView android:text="@string/muapSearching" android:textSize="23px"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:paddingLeft="20px" android:paddingTop="0px" />
+        <TextView android:text="@string/muapSearchWait" android:textSize="23px"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:paddingLeft="30px" android:paddingTop="10px" />
+        <LinearLayout android:orientation="horizontal"
+            android:paddingTop="20px" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_centerInParent="true">
+            <TextView android:text="@+string/app_loading" android:textSize="18px"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:paddingLeft="20px" android:paddingTop="10px" />
+            <ProgressBar android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/searchResult"
+        android:visibility="visible"
+        android:orientation="vertical"
+        android:paddingTop="20px" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:layout_centerInParent="true">
+        <TextView android:id="@+id/ipListName" android:text="@+string/deviceTips"
+            android:textSize="25px" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:paddingTop="0px" />
+        <ListView android:id="@+id/ipList" android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:layout_below="@+id/ipListName"
+            android:layout_centerInParent="true" android:layout_gravity="center"/>
+    </LinearLayout>
+</RelativeLayout>

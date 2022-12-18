@@ -1,0 +1,204 @@
+#===============================================================================
+# export variable
+#===============================================================================
+
+
+HIDOLPHIN_DIR := $(shell pwd)
+CFG_SDK_PATH  := $(HIDOLPHIN_DIR)/$(SDK_PATH)
+#CFG_SDK_PATH := $(HIDOLPHIN_DIR)/../$(CFG_SDK_VERSION)
+
+SDK_DIR := $(CFG_SDK_PATH)
+include $(CFG_SDK_PATH)/cfg.mak
+
+ifeq (${CFG_CHIP_TYPE},hi3712)
+include $(CFG_SDK_PATH)/base.mak
+endif
+
+ifeq (${CFG_HI_CHIP_TYPE},hi3716cv200)
+include $(CFG_SDK_PATH)/base.mak
+endif
+
+CFG_HI_PLAYER_SUPPORT=n
+
+include cfg.mak
+include base.mak
+
+SDK_DIR := $(CFG_SDK_PATH)
+VERSION := $(CFG_VERSION)
+COMMON_DIR := $(HIDOLPHIN_DIR)/component/common
+
+export HIDOLPHIN_DIR SDK_DIR VERSION COMMON_DIR
+
+OUT_DIR     := $(HIDOLPHIN_DIR)/out/$(VERSION)
+OUT_LIB_DIR := $(OUT_DIR)/lib
+OUT_INC_DIR := $(OUT_DIR)/include
+OUT_BIN_DIR := $(OUT_DIR)/bin
+export OUT_DIR OUT_LIB_DIR OUT_INC_DIR OUT_BIN_DIR
+
+PUB_DIR        = $(HIDOLPHIN_DIR)/pub
+PUB_TOOL_DIR   = $(PUB_DIR)/tool
+PUB_THIRDPARTY = $(PUB_DIR)/thirdparty
+
+export PUB_DIR PUB_INC_DIR PUB_LIB_DIR PUB_SRC_DIR PUB_SAMPLE_DIR PUB_TOOL_DIR PUB_THIRDPARTY
+
+ifeq (${CFG_VERSION},debug)
+    CFG_HI_CFLAGS += -g
+    CFG_HI_CFLAGS += -O0
+else
+    CFG_HI_CFLAGS += -O2
+endif
+
+ifeq ($(CFG_HI_LINUX_PRODUCT),y)
+CFG_HI_CFLAGS += -DLINUX_VERSION
+CFG_HI_CXXFLAGS += -DLINUX_VERSION
+endif
+
+ifeq ($(CFG_SAMPLE_STACK),y)
+CFG_HI_CFLAGS += -DSAMPLE_STACK
+CFG_HI_CXXFLAGS += -DSAMPLE_STACK
+endif
+
+#CFG_HI_CFLAGS += -DHI_ADVCA_FUNCTION_RELEASE
+#===============================================================================
+# project 'build' for HiDolphin building
+#===============================================================================
+build:objects
+
+ifeq ($(CFG_HI_COMMON_SUPPORT),y)
+objects += component/common
+endif
+
+ifeq ($(CFG_HI_DTVSTACK_SUPPORT),y)
+objects += component/dtvstack
+endif
+
+ifeq ($(CFG_HI_HIGV_SUPPORT),y)
+objects += component/higv
+endif
+
+#ifeq ($(CFG_HI_PLAYER_SUPPORT),y)
+#objects += component/player
+#endif
+
+ifeq ($(CFG_HI_BASE_SUPPORT),y)
+objects += component/base
+endif
+
+ifeq ($(CFG_HI_DLNA_SUPPORT),y)
+objects += component/hidlna
+endif
+
+ifeq ($(CFG_HI_MULTIROOM_SUPPORT),y)
+objects += component/multiroom
+endif
+
+ifeq ($(CFG_HI_TRANSCODER_SUPPORT),y)
+objects += component/hitranscoder
+endif
+
+objects_clean:=${addsuffix _clean,${objects}}
+objects_publish:=${addsuffix _publish,${objects}}
+
+ifeq (${obj},)
+depends:=${objects}
+else
+depends:=${obj}
+endif
+depends_clean:=$(addsuffix _clean,${depends})
+
+.PHONY: prepare unprepare objects clean instobjects uninstobjects ${objects} ${objects_clean} test publish
+
+objects: ${depends}
+
+clean:${depends_clean} unprepare
+
+${objects}:
+	make -C $@
+
+${objects_clean}:
+	make -C ${patsubst %_clean,%,$@} clean
+
+publish:prepare pub_prepare ${objects_publish}
+
+prepare:
+	-mkdir -p $(PUB_DIR)
+
+unprepare:
+	-rm -rf $(OUT_DIR)
+
+pub_prepare:
+	-cp base.mak $(PUB_DIR)/
+	-cp cfg.mak $(PUB_DIR)/cfg.mak
+	-cp Makefile.rel $(PUB_DIR)/Makefile
+
+${objects_publish}:
+	make -C ${patsubst %_publish,%,$@} publish_target
+
+#====================================================================================
+# project 'tools' for Kconfig building
+#====================================================================================
+.EXPORT_ALL_VARIABLES:
+HIDOLPHIN_CFGFILE := cfg.mak
+TOOLS_SRC_DIR     := $(HIDOLPHIN_DIR)/build/tools
+TOOLS_BUILD_DIR   := $(HIDOLPHIN_DIR)/out/tools
+KCONFIG_DIR       := $(TOOLS_BUILD_DIR)/kconfig
+
+AT=@
+CFG_HI_EXPORT_FLAG=y
+
+.PHONY:  tools  tools_clean  tools_install  tools_uninstall
+
+tools: tools_prepare
+	make -C $(KCONFIG_DIR) all
+tools_prepare:
+	-mkdir -p $(TOOLS_BUILD_DIR)
+	cp -rf $(TOOLS_SRC_DIR)/kconfig $(TOOLS_BUILD_DIR)/
+tools_clean:
+	make -C $(KCONFIG_DIR) clean
+	rm -rf $(KCONFIG_DIR)
+tools_install:
+	make -C $(KCONFIG_DIR) install
+tools_uninstall:
+	make -C $(KCONFIG_DIR) uninstall
+
+#====================================================================================
+#	tools' cfg ops
+#====================================================================================
+.PHONY: defconfig menuconfig
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+KCONFIG_EXE = $(KCONFIG_DIR)/himconf
+KCONFIG_CFG = build/scripts/kconfig/mainKconfig
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+cfgfile_update:
+ifneq ($(CFILE), )
+	$(if $(wildcard $(CFILE)), \
+		cp -f $(CFILE) $(HIDOLPHIN_CFGFILE), \
+		$(AT)echo "$(CFILE) not exist."; exit 1 \
+	)
+endif
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+cfgfile_menu:
+	$(if $(wildcard $(KCONFIG_EXE)), \
+		$(KCONFIG_EXE) $(KCONFIG_CFG), \
+		$(AT)echo "Please make tools_install first." \
+	)
+
+menuconfig: cfgfile_update cfgfile_menu FORCE
+	$(AT)echo "make $@ over"
+
+defconfig: cfgfile_update
+	$(AT)echo "make $@ over"
+
+#====================================================================================
+# tools' help
+#====================================================================================
+.PHONY:  help
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+GREEN="\e[32;1m"
+NORMAL="\e[39m"
+RED="\e[31m"
+
+help:
+	$(AT)echo -e ${GREEN}
+	$(AT)cat build/release/Readme|less
+	$(AT)echo -e ${NORMAL}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:background="#e0000000">
+  <RelativeLayout
+    android:layout_width="677dp"
+    android:layout_height="372dp"
+    android:background="@drawable/alertwindows">
+    <ImageView
+        android:id="@+id/common_dialog_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="50dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_alert"/>
+    <TextView
+        android:id="@+id/common_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@+id/common_dialog_image"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:text="@string/dialog_hint"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/common_dialog_text"
+        android:layout_width="400dp"
+        android:layout_height="70dp"
+        android:layout_below="@id/common_dialog_title"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="50dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/common_dialog_text"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+        <Button
+            android:id="@+id/common_dialog_negative_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="@string/dialog_cancel"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+        <Button
+            android:id="@+id/common_dialog_mid_btn"
+            android:layout_width="150dp"
+            android:layout_marginLeft="50dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:textSize="24sp" />
+        <Button
+            android:id="@+id/common_dialog_positive_btn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/button_background"
+            android:text="@string/dialog_OK"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
+</RelativeLayout>
+</LinearLayout>

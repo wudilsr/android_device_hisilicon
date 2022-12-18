@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/karaoke_mode_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/karaoke_mode_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/Karaoke_mode"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/karaoke_mode_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/karaoke_mode_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/karaoke_mode_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/micphone_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/micphone_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/definition"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/micphone_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/micphone_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/soundEffects_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/soundEffects_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/soundEffects_selects"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/soundEffects_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/soundEffects_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/soundEffects_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</LinearLayout>

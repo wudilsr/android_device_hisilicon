@@ -1,0 +1,29 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <com.HiMediaSample.ChannelVideoView
+            android:id="@+id/videoView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ListView android:id="@+id/channellist_view"
+            android:layout_width="fill_parent"
+			android:layout_height="600dp">
+			</ListView>
+			<TextView android:id="@+id/dynamicinfo_view"
+			android:layout_width="fill_parent"
+			android:layout_height="200dp"/>
+		</LinearLayout>
+    </RelativeLayout>
+
+</FrameLayout>

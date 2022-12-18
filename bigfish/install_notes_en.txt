@@ -1,0 +1,431 @@
+***************************************************************************************************************
+                                            Contents
+                                 1. Setting Environment Variables
+                                 2. Compiling the System
+                                 3. Burning Images
+                                 4. Setting Environment Variables for the bootargs Partition
+                                 5. Using Mass Production Tools
+
+
+            Note: Configure the compilation server before compiling the version. For details, see the Android Solution Development Guide.
+***************************************************************************************************************/
+
+/***************************************************************************************************************
+                                            1. Setting Environment Variables
+        Note
+            1. Run all compilation commands described in this section in the code root directory.
+            2. Set the environment variables each time after you log in to the compilation server and switch the shell.
+            3. The current version supports compilation in eng&user mode.
+            4. The following takes Hi3798MV100 as an example.
+***************************************************************************************************************/
+This version supports compilation in eng and user mode. To set the environment variables, run the following commands:
+source build/envsetup.sh
+lunch Hi3798MV100-eng  or lunch Hi3798MV100-user
+
+Note
+     1. Descriptions of the Hi3716CV200-eng parameter in the lunch command are as follows:
+             Hi3798MV100: Indicates the product name. The out directory is generated in the out/target/product/product name/ format, for example:
+             out/target/product/Hi3798MV100/
+             The corresponding code directory is generated in the device/hisilicon/product name/ format, for example:
+             device/hisilicon/Hi3798MV100/
+             eng: Indicates the default mode for compilation. It also supports user mode version.
+     2. The parameters vary according to products. This section takes Hi3798MV100 as an example. The environment configuration of other products is similar.
+     3. In the code compilation file (Android.mk), the default value of LOCAL_MODULE_TAGS is optional. This setting is not automatically copied to the generated directory during compilation.
+       To copy the setting to the generated directory during compilation by default and generate dynamic libraries, JAR files, executable files, or pre-compiled files, add the following code to the Android.mk file:
+              ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+       To generate the .apk files, add the following code to the Android.mk file:
+              ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_PACKAGE_NAME)
+     4. If you want to compile security chip version, you should set HISILICON_SECURITY_L2 true in the file device/hisilicon/Hi3798MV100/device.mk:
+              HISILICON_SECURITY_L2 := true
+        Otherwise, the default version is non-security chip version.
+        If you burn the non-security chip version to the board, the board will be lock as a non-security chip board and you can't burn a security chip version anymore.
+        For more details please refer to the document "Security L2 user guide".
+/***************************************************************************************************************
+                                            2. Compiling the System
+        Note
+            1. Environment variables must be set before you run the compilation commands. For details, see section 1.
+            2. All compilation commands described in this section must be executed in the code root directory, except the commands for modifying the SDK configuration file.
+            3. All commands described in this section can be executed independently.
+            4. After you run any compilation or image burning command described in this section, the images are copied to the out/target/product/Hi3798MV100/ directory when the compilation is complete.
+            5. The tee command is used to record compilation logs. The compilation logs are stored in the code root directory. The log file is named after the parameter contained in the tee command.
+***************************************************************************************************************/
+#################################################################################################################
+1. Update the APIs.
+        Note: If an external interface or variable is added, run the make update-api command to update the frameworks/base/api/current.txt file.
+             Otherwise, the compilation fails.
+#################################################################################################################
+Run the following command in the code root directory:
+make update-api
+
+#################################################################################################################
+2. Compile all images.
+#################################################################################################################
+Run the following command in the code root directory:
+make bigfish -j32 2>&1 | tee bigfish.log
+
+
+Compilation results:
+There are two directories (Nand and Emmc) in the out directory. You are advised to burn the images in the Nand directory to the NAND board, and to burn the images in the Emmc directory to the eMMC board.
+
+The Nand directory contains the following images:
+    kernel.img
+    recovery.img
+    system_[x]_[x].ubi userdata_[x]_[x].ubi cache_[x]_[x].ubi sdcard_[x]_[x].ubi
+    bootargs_.bin
+    Hi3798MV100-nand.xml
+    update.zip
+    fastboot.bin
+    baseparam.img
+    logo.img
+    fastplay.img
+    pq_param.bin
+
+The Emmc directory contains the following images:
+    kernel.img
+    recovery.img
+    system.ext4,userdata.ext4,cache.ext4,sdcard.ext4
+    bootargs.bin
+    Hi3798MV100-emmc.xml
+    update.zip
+    fastboot.bin
+    baseparam.img
+    logo.img
+    fastplay.img
+    pq_param.bin
+
+The images are described as follows:
+    kernel.img                      Android system kernel image
+    recovery.img                    Recovery small system image
+    system_[x]_[x].ubi              UBI file system image, for NAND flash
+    system.ext4                     EXT4 file system image, for eMMC
+    bootargs.bin                    Bootargs partition image
+    Hi3798MV100-*.xml               Partition table
+    update.zip                      Upgrade package
+    fastboot.bin                    Fastboot image
+    baseparam.img                   Base parameter image
+    logo.img                        Logo image
+    fastplay.img                    fastplay image
+    pq_param.bin                    pq_param image
+
+
+#################################################################################################################
+3. Compile the Android system kernel.
+        Note
+            1. This command can be directly executed, not necessarily after all images are compiled.
+            2. Temporary files generated by this command are stored in the out/target/product/Hi3798MV100/obj/KERNEL_OBJ/ directory.
+#################################################################################################################
+Run the following command in the code root directory:
+make kernel -j32 2>&1 | tee kernel.log
+
+The kernel.img file is generated in both the Nand and Emmc directories of the out directory. The two kernel.img files are the same.
+
+To clear the compilation results, delete the out/target/product/Hi3798MV100/obj/KERNEL_OBJ/ directory by running the following command:
+rm -rf out/target/product/Hi3798MV100/obj/KERNEL_OBJ/
+
+#################################################################################################################
+4. Modify Android kernel configurations.
+        Note
+            1. The default kernel configuration file of the Android system is configured by setting the ANDROID_KERNEL_CONFIG variable in device/hisilicon/Hi3798MV100/BoardConfig.mk.
+              The corresponding kernel configuration file is stored in device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            2. This command can be directly executed, not necessarily after all images are compiled. After the command is executed, the configuration screen is displayed, allowing you to modify the kernel configuration file.
+            3. After the modification is complete, save the settings and exit. The modified file is saved to the out/target/product/Hi3798MV100/obj/KERNEL_OBJ/.config directory as a temporary file.
+              After modification, store the kernel configuration file in the corresponding file of device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            4. If you want to change the default name of the Android kernel configuration file, change the value of the ANDROID_KERNEL_CONFIG variable in device/hisilicon/Hi3798MV100/BoardConfig.mk and the value of the CFG_HI_KERNEL_CFG variable in the corresponding SDK configuration file in device/hisilicon/bigfish/sdk/configs/.
+             The name of the corresponding SDK configuration file is defined in the HISI_SDK_ANDROID_CFG variable in device/hisilicon/Hi3798MV100/BoardConfig.mk.
+             You need to store the new kernel configuration file to device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            5. The kernel configuration file must end with _defconfig.
+            6. After the modification is complete, compile the Android system kernel image by running the command mentioned in section 3.
+            7. You are advised to delete the kernel temporary file storage directory out/target/product/Hi3798MV100/obj/KERNEL_OBJ/ before running the preceding command.
+#################################################################################################################
+Run the following command in the code root directory:
+make kernel_menuconfig
+
+#################################################################################################################
+5. Compile and debug the kernel drive module.
+        Note
+            1. This script can be directly executed, not necessarily after all images are compiled.
+	    2. This script modifies the original source code and generates a large amount of process files in the SDK_DIR directory.
+	    3. This script is used only for the drive module debugging.
+	    4. After this script is executed, you need to recompress the images (such as update.zip).
+#################################################################################################################
+Run the following command in the code root directory:
+./device/hisilicon/Hi3798MV100/kernel_module.sh
+
+After the script is executed, drive module files and load scripts are generated in system/lib/modules of the out directory, and the following directories and files are modified:
+device/hisilicon/Hi3798MV100/build/kernel.mk
+device/hisilicon/Hi3798MV100/etc/init.Hi3798MV100.sh
+device/hisilicon/bigfish/sdk
+
+#################################################################################################################
+6. Compile partition images.
+        Note
+            This command can be directly executed, not necessarily after all images are compiled.
+#################################################################################################################
+Run the following command in the code root directory:
+make ubifs -j32 2>&1 | tee ubifs.log
+
+After the compilation is complete, the following files are generated in the out\Nand directory:
+system_4K_1M.ubi
+data_4K_1M.ubi
+cache_4K_1M.ubi
+sdcard_4K_1M.ubi
+
+In the .ubi images, for example,
+4K indicates the page size (4 KB).
+1M indicates the block size (1 KB).
+
+Run the following command in the code root directory:
+make ext4fs -j32 2>&1 | tee ext4fs.log
+
+After the compilation is complete, the following files are generated in the out\Emmc directory:
+system.ext4
+userdata.ext4
+cache.ext4
+sdcard.ext4
+
+
+#################################################################################################################
+7 Compile the recovery small system.
+        Note
+            1. This command can be directly executed, not necessarily after all images are compiled.
+            2. Temporary files generated by this command are stored in the out/target/product/Hi3798MV100/obj/RECOVERY_OBJ/ directory.
+#################################################################################################################
+Run the following command in the code root directory:
+make recoveryimg -j32 2>&1 | tee recovery.log
+
+The recovery.img file is generated in both the Nand and Emmc directories of the out directory. The two recovery.img files are the same.
+
+To clear the compilation results, delete the out/target/product/Hi3798MV100/obj/RECOVERY_OBJ/ directory by running the following command:
+rm -rf out/target/product/Hi3798MV100/obj/RECOVERY_OBJ/
+
+#################################################################################################################
+8. Modify the kernel configuration for the Android recovery small system.
+        Note
+            1. The default kernel configuration file of the Android recovery small system is configured by the RECOVERY_KERNEL_CONFIG variable in device/hisilicon/Hi3798MV100/BoardConfig.mk.
+             The corresponding kernel configuration file is stored in device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            2. This command can be directly executed, not necessarily after all images are compiled. After the command is executed, the configuration screen is displayed, allowing you to modify the kernel configuration file.
+            3. After the modification is complete, save the settings and exit. The modified file is saved to the out/target/product/Hi3798MV100/obj/RECOVERY_OBJ/.config directory as a temporary file.
+              After modification, store the kernel configuration file in the corresponding file of device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            If you want to change the default name of the kernel configuration file for the Android recovery small system, change the value of the RECOVERY_KERNEL_CONFIG variable in device/hisilicon/Hi3716CV200/BoardConfig.mk.
+             You need to store the new kernel configuration file to device/hisilicon/bigfish/sdk/source/kernel/linux-3.x.y/arch/arm/configs/.
+            5. The kernel configuration file must end with _defconfig.
+            6. After the modification is complete, compile the Android recovery small system image by running the command mentioned in section 6.
+            7. You are advised to delete the kernel temporary file storage directory out/target/product/Hi3798MV100/obj/RECOVERY_OBJ/ before running the preceding command.
+#################################################################################################################
+Run the following command in the code root directory:
+make recovery_menuconfig
+
+#################################################################################################################
+9. Compile the recovery update.zip package.
+        Note
+            1. This command can be directly executed, not necessarily after all images are compiled.
+            2. If the recovery upgrade package is not required, you do not need to run this command.
+#################################################################################################################
+Run the following command in the code root directory:
+make updatezip -j32 2>&1 | tee updatezip.log
+
+#################################################################################################################
+10. Delete the compilation results.
+        Note
+            1. All the process files generated during compilation are stored in the out directory. Running this command deletes all compilation results.
+            2. If you want to separately delete the temporary files for the Android system kernel, Android recovery small system kernel, or fastboot, you can directly delete the corresponding directory for storing those temporary files.
+#################################################################################################################
+Run the following command in the code root directory:
+make clean
+
+#################################################################################################################
+11. Modify the SDK configuration file.
+        Note
+            1. This command must be executed in the device/hisilicon/bigfish/sdk directory.
+            2. The SDK configuration file is stored in device/hisilicon/bigfish/sdk/configs/.
+            3. The name of the SDK configuration file is defined by the HISI_SDK_ANDROID_CFG variable in BoardConfig.mk, for example:
+              device/hisilicon/Hi3798MV100/BoardConfig.mk
+              HISI_SDK_ANDROID_CFG := hi3798mdmo1a_hi3798mv100_android_cfg.mak
+            4. After you run this command, the configuration screen is displayed, allowing you to modify the SDK configuration file. After you save the modification and exit, the modified configuration file is saved to the corresponding SDK configuration directory.
+              The original configuration file is saved as file name.old in the same directory.
+            5. You can also manually modify the corresponding configuration file in the directory for storing SDK configuration files.
+            6. Verify the name of the SDK configuration file before modification.
+#################################################################################################################
+Go to the SDK directory by running the following command:
+cd device/hisilicon/bigfish/sdk
+
+Run make menuconfig SDK_CFGFILE=configs/name of the configuration file to be modified. The modification screen is displayed. For example:
+make menuconfig SDK_CFGFILE=configs/hi3798mdmo1a_hi3798mv100_android_cfg.mak
+
+#################################################################################################################
+12. Separately compile the Wi-Fi driver.
+        Note
+            1. This command can be directly executed, not necessarily after all images are compiled. After the compilation is complete, the Wi-Fi driver in the out/system/lib/modules directory is updated.
+            2. No temporary file is generated after you run this command.
+            3. The Wi-Fi driver is compiled by default when you run the make bigfish, make updatezip, or make ubifs command. Therefore, skip this operation if the Wi-Fi driver does not need to be updated independently.
+#################################################################################################################
+Run the following command in the code root directory:
+make wifi -j32 2>&1 | tee wifi.log
+
+#################################################################################################################
+13. Compile the fastboot image.
+        Note
+            1. The default fastboot image (fastboot-burn-*.bin) is stored in the device/hisilicon/Hi3798MV100/prebuilts/ directory.
+            2. During complete compilation, fastboot-burn-*.bin in this directory is copied to the out directory, and the fastboot is not compiled.
+            3. The compilation of the fastboot is based on the fastboot configuration defined in the SDK configuration file device/hisilicon/Hi3798MV100/BoardConfig.mk.
+                  HISI_SDK_ANDROID_CFG: hi3798mdmo1a_hi3798mv100_android_cfg.mak
+              Modify the corresponding configuration file, and then run this command.
+            4. Temporary files generated by this command are stored in the out/target/product/Hi3798MV100/obj/NAND_HIBOOT_OBJ/ or out/target/product/Hi3798MV100/obj/EMMC_HIBOOT_OBJ/ directory.
+            5. The fastboot image is related to the partition table and the bootargs partition image. If one of the three images is updated, the other two images also need to be updated.
+            6. You do not need to run this command if you do not want to update the fastboot image.
+#################################################################################################################
+Run the following command in the code root directory:
+make hiboot -j32 2>&1 | tee hiboot.log
+
+fastboot.bin are generated in the Nand and Emmc directories of the out directory respectively.
+
+make hiboot-nand -j32     Generate the fastboot-burn-nand.bin file in the Nand directory.
+make hiboot-emmc -j32    Generate the fastboot-burn-emmc.bin in the Emmc directory.
+
+To change the .reg files used by the fastboot or the storage position of bootargs, modify device/hisilicon/Hi3798MV100/BoardConfig.mk.
+
+# for emmc fastboot // For the eMMC board: fastboot.bin
+EMMC_BOOT_REG_NAME :=hi3798mdmo1c_hi3798mv100_ddr3_1gbyte_16bitx2_2layers_emmc.reg
+EMMC_BOOT_ENV_STARTADDR :=0x100000
+EMMC_BOOT_ENV_SIZE=0x10000
+EMMC_BOOT_ENV_RANGE=0x10000
+
+# for nand fastboot // For the NAND board: fastboot.bin
+NAND_BOOT_REG_NAME :=hi3798mdmo1a_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_nand.reg
+NAND_BOOT_ENV_STARTADDR :=0x800000
+NAND_BOOT_ENV_SIZE=0x10000
+NAND_BOOT_ENV_RANGE=0x10000
+
+To clear the compilation results, delete the out/target/product/Hi3798MV100/obj/NAND_HIBOOT_OBJ/ or out/target/product/Hi3798MV100/obj/NAND_HIBOOT_OBJ/ directory by running the following command:
+rm -rf out/target/product/Hi3798MV100/obj/NAND_HIBOOT_OBJ/
+rm -rf out/target/product/Hi3798MV100/obj/EMMC_HIBOOT_OBJ/
+
+#################################################################################################################
+14 compile the bluetooth version
+    The system support bluetooth such as:
+        realtek8723BU、realtek8761AU、bcm20705、csr8510
+    The system build only one bluetooth each and the default build is realtek8723BU
+    The value of the BOARD_BLUETOOTH_DEVICE_REALTEK indevice/hisilicon/Hi3798MV100/Hi3798MV100.mk such as:
+    BOARD_BLUETOOTH_DEVICE_REALTEK := y
+    Values in the device/hisilicon/Hi3798MV100/BoardConfig.mk:
+        BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
+        BOARD_BLUETOOTH_DEVICE_RTL8761 := n
+        BOARD_BLUETOOTH_DEVICE_BCM20705 := n
+        BORD_BLUETOOTH_DEVICE_CSR8510 := n
+#################################################################################################################
+
+
+    compile the realtek8723BU version:
+        1. modify the value in the device/hisilicon/Hi3798MV100/BoardConfig.mk:
+            BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
+            BOARD_BLUETOOTH_DEVICE_RTL8761 := n
+            BOARD_BLUETOOTH_DEVICE_BCM20705 := n
+            BOARD_BLUETOOTH_DEVICE_CSR8510 := n
+            modify the BOARD_BLUETOOTH_DEVICE_REALTEK in the device/hisilicon/Hi3798MV100/Hi3798MV100.mk:
+            BOARD_BLUETOOTH_DEVICE_REALTEK := y
+        2. build
+            make clean
+            source build/envsetup.sh
+            lunch Hi3798MV100-eng
+            make bigfish -j 2>&1 | tee log.txt
+
+    compile the realtek8761AU version:
+        1. modify the value in the device/hisilicon/Hi3798MV100/BoardConfig.mk:
+            BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := n
+            BOARD_BLUETOOTH_DEVICE_RTL8761 := y
+            BOARD_BLUETOOTH_DEVICE_BCM20705 := n
+            BOARD_BLUETOOTH_DEVICE_CSR8510 := n
+            modify the BOARD_BLUETOOTH_DEVICE_REALTEK in the device/hisilicon/Hi3798MV100/Hi3798MV100.mk:
+            BOARD_BLUETOOTH_DEVICE_REALTEK := y
+        2. build
+            make clean
+            source build/envsetup.sh
+            lunch Hi3798MV100-eng
+            make bigfish -j 2>&1 | tee log.txt
+
+    compile the bcm20705 version:
+        1. modify the value in the device/hisilicon/Hi3798MV100/BoardConfig.mk:
+            BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := n
+            BOARD_BLUETOOTH_DEVICE_RTL8761 := n
+            BOARD_BLUETOOTH_DEVICE_BCM20705 := y
+            BOARD_BLUETOOTH_DEVICE_CSR8510 := n
+            modify the BOARD_BLUETOOTH_DEVICE_REALTEK in the device/hisilicon/Hi3798MV100/Hi3798MV100.mk:
+            BOARD_BLUETOOTH_DEVICE_REALTEK := n
+        2. build
+            make clean
+            source build/envsetup.sh
+            lunch Hi3798MV100-eng
+            make bigfish -j 2>&1 | tee log.txt
+
+    compile the csr8510 version:
+        1. modify the value in the device/hisilicon/Hi3798MV100/BoardConfig.mk:
+            BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := n
+            BOARD_BLUETOOTH_DEVICE_RTL8761 := n
+            BOARD_BLUETOOTH_DEVICE_BCM20705 := n
+            BOARD_BLUETOOTH_DEVICE_CSR8510 := y
+            modify the BOARD_BLUETOOTH_DEVICE_REALTEK in the device/hisilicon/Hi3798MV100/Hi3798MV100.mk:
+            BOARD_BLUETOOTH_DEVICE_REALTEK := n
+        2. build
+             make clean
+            source build/envsetup.sh
+            lunch Hi3798MV100-eng
+            make bigfish -j 2>&1 | tee log.txt
+#################################################################################################################
+
+/***************************************************************************************************************
+                                            3. Burning Images
+        Note
+            1. After you run any compilation or image burning command described in section 2, the images are copied to the out/target/product/Hi3716CV200/ directory when the compilation is complete.
+            2. All images and burning tools are stored in the out/target/product/Hi3798MV100/ directory.
+            3. The system, data, cache, and sdcard partition images must be burnt.
+***************************************************************************************************************/
+
+After the command for complete compilation is executed, the Nand and Emmc directories are generated in the out directory.
+You are advised to burn the images in the Nand directory to the NAND board, and to burn the images in the Emmc directory to the eMMC board.
+
+Burning tool: HiTool
+
+Directory for storing the burning tool:
+device/hisilicon/bigfish/sdk/tools/windows/HiTool/
+
+/***************************************************************************************************************
+                                            4. Setting Environment Variables for the bootargs Partition
+***************************************************************************************************************/
+1. Creating bootargs.bin
+
+   bootargs corresponding to NAND:
+   device/hisilicon/Hi3798MV100/etc/bootargs_Hi3798MV100-nand.txt
+
+   bootargs corresponding to eMMC:
+   device/hisilicon/Hi3798MV100/etc/bootargs_Hi3798MV100-emmc.txt
+
+   After the corresponding .txt bootargs files are modified and the system is compiled by running make bigfish, bootargs.bin are generated in the Nand and Emmc directories of the out/target/product/Hi3798MV100/ directory respectively.
+
+2. To set the environment variables for the bootargs partition during debugging, perform the following steps:
+   Step 1 Connect the serial port of the board to the PC, run the serial port tool on the PC, and select the correct serial port.
+   Step 2 Power on the board and press Ctrl+C to enter the fastboot command-line interface (CLI).
+   Step 3 Set the related environment variables. For details, see the examples and description.
+   Step 4 Save the environment variables and restart the board.
+
+Example:
+   Modify the bootargs:
+   setenv bootargs 'console=ttyAMA0,115200 blkdevparts=mmcblk0:1M(fastboot),1M(bootargs),10M(recovery),2M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel),20M(misc),8M(userapi),8M(hibdrv),8M(qbflag),300M(qbdata),800M(system),1024M(userdata),100M(cache),-(sdcard)'
+   Modify the bootcmd:
+   setenv bootcmd 'mmc read 0 0x1FFBFC0 0x4B000 0x5000; bootm 0x1FFBFC0'
+   Save the modifications:
+   saveenv
+
+3. fastboot command description
+         setenv, saveenv, printenv, reset
+         The setenv command is used to set an environment variable. The variable name and parameters are required in the command.
+         The saveenv (sa for short) command is used to save an environment variable. No parameter is required in the command.
+         The printenv (pri for short) command is used to display all the current environment variables. No parameter is required in the command.
+         The reset (re for short) command is used to restart the fastboot. No parameter is required in the command.
+
+
+/***************************************************************************************************************
+                                            5. Using Mass Production Tools ( MAC Address Burning Tool HiProInfo)
+***************************************************************************************************************/
+1. MAC address burning tool (HiProInfo)
+device/hisilicon/bigfish/sdk/tools/windows/HiProInfo/
+

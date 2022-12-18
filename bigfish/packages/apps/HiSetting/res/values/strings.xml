@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BoxSettings</string>
+    <!-- main -->
+    <string name="main_net_text">Network Set</string>
+    <string name="main_display_text">Display</string>
+    <string name="main_secure_text">Security</string>
+    <string name="main_normal_text">Normal</string>
+    <string name="main_play_text">Play set</string>
+    <string name="main_updata_text">System</string>
+    <!-- net set -->
+    <string name="net_set_title">Network</string>
+    <string name="net_set_title_hint">Network Set</string>
+    <string name="net_set_ethenet">Ethernet</string>
+    <string name="net_set_wifi">Wi-Fi</string>
+    <string name="net_set_hot">Hotpot</string>
+    <!-- ethernet set -->
+    <string name="ethernet_title">Ethernet</string>
+    <string name="ethernet_title_hint">Ethernet Set</string>
+    <string name="ethernet_auto">Auto</string>
+    <string name="ethernet_auto_open">ON</string>
+    <string name="ethernet_auto_close">OFF</string>
+    <string name="ethernet_address">Ip</string>
+    <string name="ethernet_netmask">Netmask</string>
+    <string name="ethernet_gateway">Gateway</string>
+    <string name="ethernet_dns">DNS</string>
+    <string name="ethernet_commit">Commit</string>
+    <string name="ethernet_commit_ok">Set Ok</string>
+    <string name="ethernet_commit_faile">Set faile</string>
+    <string name="ethernet_ip_error">Ip error</string>
+    <string name="ethernet_mask_error"> Netmask error</string>
+    <string name="ethernet_gateway_error">Gateway error</string>
+    <string name="ethernet_dns_error">DNS error</string>
+
+    <!-- wifi set -->
+    <string name="wifi_title">Wi-Fi</string>
+    <string name="wifi_title_hint">Wi-Fi Set</string>
+    <string name="wifi_connect">Connect</string>
+    <string name="wifi_connecting">(Connectting)</string>
+    <string name="wifi_connected">(Connected)</string>
+    <string name="wifi_connect_fail">(Connect faile)</string>
+     <string name="wifi_password">Password</string>
+     <string name="wifi_unenable">No available Wi-Fi</string>
+     <string name="wifi_progress">Scanning available Wi-Fi···</string>
+     <string name="wifi_add">Add SSID</string>
+    <string name="wifi_add_ssid">SSID</string>
+    <string name="wifi_add_secure">Encryption</string>
+    <string name="wifi_add_password">Password</string>
+    <string name="wifi_forget_text">Please select operate</string>
+    <string name="wifi_forget_ok">forget</string>
+    <string name="wifi_forget_cancel">cancel</string>
+    <!-- secure set -->
+    <string name="secure_title">Security</string>
+    <string name="secure_title_hint">Box system security set</string>
+    <string name="secure_install">Unknown sources</string>
+    <string name="secure_install_hint">Allow installation of apps from unknown sources</string>
+    <string name="secure_refuse">Refuse</string>
+    <string name="secure_allow">Allow</string>
+    <string name="secure_adb">ADB debugging</string>
+    <string name="secure_adb_hint">Allow ADB debugging</string>
+    <!-- display set -->
+    <string name="display_title">Display</string>
+    <string name="display_title_hint">Display set</string>
+    <string name="display_scale">Scale and Move</string>
+    <string name="display_set_hint">Whether to set selected resolution</string>
+    <string name="scale_title">Scale</string>
+    <string name="scale_title_hint">Adjust percentage</string>
+    <string name="scale_introduce_one">Due to processing differences on video signals by different televisions, the picture may be displayed incompletely.</string>
+    <string name="scale_introduce_two">Please scale the picture until the yellow borders around the picture are not displayed on the screen.</string>
+    <string name="scale_OK">Click OK to apply the settings and start configuring position</string>
+    <string name="scale_move_back">Click Back to save and exit</string>
+    <string name="move_title">Move</string>
+    <string name="move_title_hint">Please adjust the position of the picture on the screen.</string>
+    <string name="move_introduce_two">Please adjust the position of the picture so that its main content is displayed within the television</string>
+    <string name="move_OK">Click OK to apply the settings and start configuring scaling</string>
+    <!-- dialog set -->
+    <string name="dialog_OK">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_hint">Hint</string>
+    <!-- normal set -->
+    <string name="normal_title">Normal</string>
+    <string name="normal_title_hint">Normal set</string>
+    <string name="normal_input">InputMethod</string>
+    <string name="normal_language_EN">English</string>
+    <string name="normal_language_CN">Chinese</string>
+    <string name="normal_language">Language</string>
+    <string name="normal_samba">Samba service</string>
+    <string name="normal_samba_off">OFF</string>
+    <string name="normal_samba_on">ON</string>
+    <string name="normal_samba_start">Open samba service</string>
+    <string name="normal_samba_stop">Stop samba service</string>
+    <string name="normal_recovery">Factory reset</string>
+    <string name="normal_recovery_hint">Whether to reset factory</string>
+    <string name="normal_clear_data">Whether to clear app data</string>
+    <string name="normal_reset">Reset</string>
+    <string name="normal_recovery_msg_1">Clear</string>
+    <string name="normal_recovery_msg_2">App data</string>
+    <string name="normal_recovery_msg_3">Contain  data and cache for all installed app</string>
+    <string name="normal_recovery_msg_4">Selectable clear</string>
+    <string name="normal_recovery_msg_5">Delete app</string>
+    <string name="normal_recovery_msg_6">Clear installed app</string>
+    <string name="normal_recovery_msg_7">Clearing data&#8230;</string>
+    <string name="normal_set">Super set</string>
+    <string name="normal_devices">Device name</string>
+
+    <!-- play set -->
+    <string name="play_title">Play set</string>
+    <string name="play_title_hint">Audio and Video set</string>
+    <string name="play_audio_HDMI">HDMI Output</string>
+    <string name="play_audio_SDPIF">SPDIF Output</string>
+    <string name="play_audio_HBR">HBR Output</string>
+    <string name="play_video_ratio">VIdeo aspect ratio</string>
+    <string name="play_video_ratio_transform">Maintain aspect ratio</string>
+
+    <string name="upgrade_title">System upgrade</string>
+    <string name="upgrade_title_hint">Upgrade box system</string>
+    <string name="upgrade_local_title">Local Upgrade</string>
+    <string name="upgrade_local_hint">Local Upgrade box system</string>
+    <string name="upgrade_online_title">Upgrade Online</string>
+    <string name="upgrade_online_hint">Upgrade system Online</string>
+    <string name="upgrade_current_version">Current Version：</string>
+    <string name="upgrade_latest_version">New Version：</string>
+    <string name="upgrade_btn_download">Upgrade Now</string>
+    <string name="upgrade_btn_reboot">Reboot Now</string>
+    <string name="upgrade_btn_confirm">OK</string>
+    <string name="upgrade_change">change partitions</string>
+    <string name="upgrade_no_usb">You need to download the update package to a USB flash drive to change partitions. Please insert.</string>
+    <string name="upgrade_sd_no_space">The available space of the SD card is insufficient. Please make sure that the available space be at least:</string>
+    <string name="upgrade_usb_no_space">The available space of the USB flash drive is insufficient. Please make sure that the available space be at least:</string>
+    <string name="upgrade_message1">Great! You have got the latest box.</string>
+    <string name="upgrade_message2">Please download the update package after clearing the space.</string>
+    <string name="upgrade_message3">Download Faile！</string>
+    <string name="upgrade_message4">Please confirm normal network connection, and insert the U disk。</string>
+    <string name="upgrade_message5">Downloading&#8230;</string>
+    <string name="upgrade_message6">This may take a while. You can watch a movie or listen to some music.</string>
+    <string name="upgrade_message7">Restart the box to experience the box of the new version. This may take a while.</string>
+    <string name="upgrade_message8">Box Upgrade Success</string>
+    <string name="upgrade_message9">Please Check Network.</string>
+    <string name="local_title">Please Choose Drive:</string>
+    <string name="local_no_update">No Upgrade File</string>
+    <string name="local_title_hint">Upgrade System</string>
+    <string name="local_title_confirm">Do you want to spgrade system</string>
+    <string name="file_check">CA Check</string>
+    <string name="file_checking">CA Checking</string>
+    <string name="file_check_success">CA Check Success</string>
+    <string name="file_check_failed">CA Check Failed</string>
+</resources>

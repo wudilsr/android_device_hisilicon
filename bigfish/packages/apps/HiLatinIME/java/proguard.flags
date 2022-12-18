@@ -1,0 +1,40 @@
+-keep class com.hisilicon.android.inputmethod.latin.BinaryDictionary {
+  int mDictLength;
+  <init>(...);
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.Suggest {
+  <init>(...);
+  com.hisilicon.android.inputmethod.latin.SuggestedWords getSuggestions(...);
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.UserBigramDictionary {
+  void setDatabaseMax(int);
+  void setDatabaseDelete(int);
+  void waitUntilUpdateDBDone();
+  void waitForDictionaryLoading();
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.AutoCorrection {
+  java.lang.CharSequence getAutoCorrectionWord();
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.Utils {
+  boolean equalsIgnoreCase(...);
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.spellcheck.SpellChecker {
+  *;
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.spellcheck.SpellCheckerSettingsFragment {
+  *;
+}
+
+-keep class com.hisilicon.android.inputmethod.latin.SettingsActivity {
+  *;
+}
+
+-keep class com.hisilicon.android.inputmethod.keyboard.internal.MiniKeyboardBuilder$MiniKeyboardParams {
+  <init>(...);
+}

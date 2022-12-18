@@ -1,0 +1,15 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "HAEFFECT Config"
+#--------------------------------
+config HI_HAEFFECT_SRS_SUPPORT
+	depends on HI_SND_AOE_HW_SUPPORT
+	bool "HAEFFECT SRS Support"
+	default n
+	
+config HI_HAEFFECT_BASE_SUPPORT
+	bool "HAEFFECT BASE Support"
+	default n
+#--------------------------------
+endmenu
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+

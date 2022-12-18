@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gray_transparent"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <com.hisilicon.multiscreen.mybox.GuideGallery
+            android:id="@+id/rc_image_thumbs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:spacing="6.0dip"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rc_imagebottom_controlview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rc_image_footer_control_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <ImageView
+            android:id="@+id/rc_push"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onPushClick"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/rc_push_up" />
+
+        <ImageView
+            android:id="@+id/rc_playorpause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/rc_quick_pause" />
+
+        <ImageView
+            android:id="@+id/rc_thumbnail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/rc_media_thumbnail" />
+    </LinearLayout>
+
+</LinearLayout>

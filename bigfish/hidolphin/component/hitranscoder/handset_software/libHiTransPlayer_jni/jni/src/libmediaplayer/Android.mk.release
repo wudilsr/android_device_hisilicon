@@ -1,0 +1,65 @@
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../libffmpeg  \
+	$(LOCAL_PATH)/hardCodec \
+    $(LOCAL_PATH)/rtsp
+LOCAL_MODULE := libhiesproto
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_SRC_FILES += Hies_proto.c \
+    rtsp/rtsp_client.c \
+    rtsp/rtsp_parse.c
+include $(BUILD_STATIC_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_CFLAGS := -D__STDC_CONSTANT_MACROS
+
+WITH_ANDROID_VECTOR := true
+include $(LOCAL_PATH)/../utils.mk
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/../libffmpeg \
+    $(LOCAL_PATH)/../arm_neon \
+    $(LOCAL_PATH)/../../include \
+    $(LOCAL_PATH)/../../include/android  \
+    $(LOCAL_PATH)/../../include/openmax \
+    $(LOCAL_PATH) \
+    $(LOCAL_PATH)/rtsp \
+    $(LOCAL_PATH)/hardCodec \
+    $(LOCAL_PATH)/hardCodec/protocol \
+    $(LOCAL_PATH)/hardCodec/OmxCodec \
+    $(LOCAL_PATH)/hardCodec/ffmpeg
+
+LOCAL_SRC_FILES := \
+    mediaplayer.cpp \
+    thread.cpp \
+    ClientLog.cpp \
+    nativeWindow.cpp \
+    hardCodec/HiRtspVideoSource.cpp \
+    hardCodec/ffmpeg/HiffmpegDecoder.cpp \
+    hardCodec/ffmpeg/HiffmpegHandlr.cpp \
+    hardCodec/OmxAL/HiOmxALDecoder.cpp \
+    hardCodec/OmxCodec/HiOmxCodecDecoder.cpp \
+    hardCodec/OmxCodec/HiOmxCodecHandlr.cpp \
+    hardCodec/OmxCodec/HisiVideoSource.cpp \
+    hardCodec/protocol/HiRtspClient.cpp
+    
+    
+
+ifeq ($(WITH_ANDROID_VECTOR),true)
+LOCAL_SRC_FILES += \
+    android/atomic.c \
+    android/atomic-android-arm.S \
+    android/SharedBuffer.cpp \
+    android/VectorImpl.cpp
+endif
+
+LOCAL_PRELINK_MODULE := false
+
+
+LOCAL_LDLIBS := -llog
+
+LOCAL_STATIC_LIBRARIES :=libHWAHStreaming libavformat libavcodec libavutil libpostproc libswscale libavfilter libyuv2rgb_neon libhiesproto
+
+LOCAL_MODULE := libahplayer
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+include $(BUILD_STATIC_LIBRARY)

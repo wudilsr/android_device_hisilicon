@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="version">MyBox 1.1</string>
+    <string name="copyright">Copyright @ huawei</string>
+    <string name="app_name">MoreSee</string>
+    <string name="exit_guide">Start My Box</string>
+    <string name="remote">Romote Control</string>
+    <string name="app">Applications</string>
+    <string name="screen">Screen Delivery</string>
+    <string name="dlna">DLNA</string>
+    <string name="share">Internet Sharing</string>
+    <string name="local">Local Sharing</string>
+    <string name="muapSearchWait">please wait....</string>
+    <string name="muapSearching">it is searching devices!</string>
+    <string name="search_device">The devices List</string>
+    <string name="networkConnectTitle">Device Connect</string>
+    <string name="networkConnectTips">Connect to </string>
+    <string name="OK">OK</string>
+    <string name="multiclient">MultiScreen Client</string>
+    <string name="app_loading">Loading....</string>
+    <string name="deviceDiscovery">Search</string>
+    <string name="getServicebyIP">Visit IP</string>
+    <string name="demo_leftRightTips">Please slide left view the demo!</string>
+    <string name="input_end">Finish</string>
+    <string name="func_add">To be added</string>
+    <string name="remote_up">up</string>
+    <string name="remote_left">left</string>
+    <string name="remote_right">right</string>
+    <string name="remote_down">down</string>
+    <string name="device_refuse_access">It can not access the IP host!</string>
+    <string name="access_address_invalid">Please input valid ip address!</string>
+    <string name="network_title">network</string>
+    <string name="network_status">Sorry,network is abnormal!</string>
+    <string name="speech_record_hint">Release button, end speech</string>
+
+    <!-- dialog -->
+    <string name="dialogTitleLoading">Loading</string>
+    <string name="dialogMessageLoading">Please wait</string>
+    <string name="syncStbMessageLoading">Sync info with stb</string>
+    <string name="dialogCancel">No</string>
+    <string name="dialogOK">OK</string>
+    <string name="quitDialogTitle">Notice</string>
+    <string name="quitDialogContent">are you sure to quit?</string>
+    <string name="AccessControlService_toast_STBLeave_tip">Sorry, the STB terminal services has been closed,
+         and we will return to the search activity!</string>
+    <string name="AccessControlService_toast_remove_tip">Sorry, the connection has been reaved
+        and we will return to the search activity!</string>
+    <string name="AccessControlService_toast_STBSuspend_tip">Sorry, the STB has been suspend
+        and we will return to the search activity!</string>
+    <string name="remoteAppDialogTitle">Notice</string>
+    <string name="remoteAppDialogContent">Failed to get the application list, try again please.</string>
+    <string name="Access_Quit__Title">Access Control</string>
+    <string name="DeviceConnect_service_empty">Service list is null, try again please.</string>
+    <string name="DeviceConnect_box">Please connect STB</string>
+
+    <!-- setting Switch -->
+    <string name="SettingSwitch_VIME_Title">VIME</string>
+    <string name="SettingSwitch_VIME_status_on">ON</string>
+    <string name="SettingSwitch_VIME_status_off">OFF</string>
+    <string name="SettingSwitch_Sensor_Title">Sensor</string>
+    <string name="SettingSwitch_Sensor_status_on">ON</string>
+    <string name="SettingSwitch_Sensor_status_off">OFF</string>
+    <string name="SettingSwitch_Video_Title">Video</string>
+    <string name="SettingSwitch_Video_status_on">ON</string>
+    <string name="SettingSwitch_Video_status_off">OFF</string>
+    <string name="SettingSwitch_Audio_Title">Audio</string>
+    <string name="SettingSwitch_Audio_status_on">ON</string>
+    <string name="SettingSwitch_Audio_status_off">OFF</string>
+    <string name="SettingSwitch_Vibrator_Title">Vibrator</string>
+    <!-- toast -->
+    <string name="toast_KeepAlive_packet_loss">network is not well!</string>
+    <string name="toast_VIME_close">VIME closed！</string>
+    <string name="AccessController_refuse_access_tips">Sorry,server refused the device to access!</string>
+    <string name="toast_network_error">WiFi closed, check network please!</string>
+    <string name="one_more_exit">Press again to exit</string>
+
+    <!-- 设置界面 -->
+    <string name="setting_title">Settings</string>
+    <string name="help_info">Help</string>
+    <string name="about_info">About</string>
+    <string name="about_name">Connect perfect life</string>
+    <string name="about_version_info">More see    Android version V</string>
+    <string name="about_version">2.1.3</string>
+    <string name="about_copyright">Copyright © 2005-2013</string>
+    <string name="about_company">Hisilicon Technologies Co., Ltd. All rights reserved</string>
+
+    <!-- 首页 -->
+    <string name="device_select_no_connect">No STB connected</string>
+    <string name="device_select_be_reaved">STB is reaved</string>
+    <string name="device_no_descovery_title">No STB connected, please click to connect.</string>
+    <string name="device_open_info_title">Needs set-top box turned on, and in the same Wi-Fi network with the phone.</string>
+    <string name="device_descovery_title">HISILICON  TV.COM</string>
+
+    <!-- 遥控器界面 -->
+    <string name="remote_stay">Stand-by</string>
+    <string name="remote_device_not_found">No device found in the Wi-Fi network</string>
+    <string name="remote_mouse_name">Mouse</string>
+    <string name="remote_game_name">Game</string>
+    <string name="remote_keyboard_name">Keys</string>
+    <string name="remote_mouse_infos">Shake to open AirMouse, swipe left to close</string>
+    <string name="remote_mouse_not_supported">Sorry, AirMouse is not supported without GYR sensor.</string>
+    <string name="remote_game_handles">Joypad</string>
+    <string name="remote_game_bodys">Sensor</string>
+
+    <!-- 镜像界面 -->
+    <string name="image_error_title">Mirroring failed</string>
+    <string name="image_error_info">Click try again to get the TV screen</string>
+
+    <!-- 广电直播 -->
+    <string name="home_live_tile">Live TV</string>
+    <string name="please_install_vplayer">Choose a player</string>
+    <string name="start_connect_onlivetv">Obtaining live TV content</string>
+    <string name="start_search_livetv_channel">Searching live channels</string>
+    <string name="livetv_not_found">Not detected broadcasting live！</string>
+
+    <!-- 媒体分享 -->
+    <string name="image">Photo</string>
+    <string name="video">Video</string>
+    <string name="music">Music</string>
+    <string name="folder">Folder</string>
+    <string name="playlist">Playlist</string>
+    <string name="allimage">All Photos</string>
+    <string name="allvideo">All Videos</string>
+    <string name="allmusic">All Musics</string>
+    <string name="camera">Camera</string>
+    <string name="device_not_found">No STB found. Failed to push!</string>
+    <string name="friendly_name">Hi</string>
+    <string name="manufacturer">Hisi</string>
+    <string name="dlna_creater">Hi Sharing</string>
+    <string name="slash">/</string>
+    <string name="channel">Channel</string>
+    <string name="myphone">My Phone</string>
+    <string name="shuffle_play">Shuffle</string>
+    <string name="nowpushing_left">“ </string>
+    <string name="nowpushing_right">” Playing</string>
+    <string name="device_online">already on-line</string>
+    <string name="cancel">CANCEL</string>
+    <string name="dis_cancel">CANCEL </string>
+    <string name="sdcard_not_found">No SD card</string>
+    <string name="file_pick_error">The media format not support</string>
+    <string name="photoPickerNotFound">No photos found</string>
+    <string name="minute">min</string>
+    <string name="music_num"></string>
+    <string name="dms_picture_other">Other Albums</string>
+    <string name="dms_video_other">Other</string>
+    <string name="dms_music_playlist">Playlist</string>
+    <string name="dms_no_findcontent">No related content found</string>
+    <string name="image_loading_error">No camera photos</string>
+    <string name="an_error_occurs_try_again_later">Operation No response, please try again later</string>
+    <string name="load_more_result">Loading more</string>
+    <string name="no_network_found">Wi-Fi not connected</string>
+
+</resources>

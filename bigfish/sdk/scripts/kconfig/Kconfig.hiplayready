@@ -1,0 +1,4 @@
+config HI_PLAYREADY_SUPPORT
+	bool "PlayReady Support"
+	depends on LINUX_PRODUCT
+	default n

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- focus状态 -->
+    <item android:state_focused="true"
+        android:drawable="@drawable/music_progress_thumb_focus" />
+
+    <!-- 普通无焦点状态 -->
+    <item android:drawable="@drawable/music_progress_thumb" />
+</selector>

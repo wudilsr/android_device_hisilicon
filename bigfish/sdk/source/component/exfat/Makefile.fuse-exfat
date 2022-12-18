@@ -1,0 +1,43 @@
+################################################################################
+#  Copyright (C) 2014 Hisilicon STB Development Dept
+#  All rights reserved.
+#  Create by czyong
+#
+#  https://code.google.com/p/exfat/
+#
+################################################################################
+
+CROSS_COMPILE ?= arm-hisiv200-linux-
+
+CC      := $(CROSS_COMPILE)gcc
+AR      := $(CROSS_COMPILE)ar
+STRIP   := $(CROSS_COMPILE)strip
+CFLAGS  += -D_FILE_OFFSET_BITS=64 -Wall -O2 -I. -I./libexfat/ \
+	-I$(FUSE_PATH)/include -DFUSE_USE_VERSION=29
+LDFLAGS += -L./ -lexfat -L$(FUSE_PATH)/lib -lfuse -static -lpthread -ldl -lrt
+
+all: mount.exfat-fuse
+
+install: mount.exfat-fuse
+	mkdir -p $(PREFIX)/usr/sbin
+	install -v -t $(PREFIX)/usr/sbin $^
+
+fuse_objs := fuse/main.o
+TMP += mount.exfat-fuse fuse/*.o
+mount.exfat-fuse: $(fuse_objs) libexfat.a
+	$(CC) -o $@ $(fuse_objs) $(LDFLAGS)
+
+libexfat_objs = cluster.o io.o log.o lookup.o time.o mount.o node.o utf.o utils.o
+libexfat_objs := $(addprefix libexfat/,$(libexfat_objs))
+TMP += libexfat.a libexfat/*.o
+libexfat.a: $(libexfat_objs)
+	$(AR) rc $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $< -I$(@D)
+
+PHONYS += clean distclean
+distclean clean:
+	@rm -rf $(TMP)
+
+.PHONY: $(PHONYS)

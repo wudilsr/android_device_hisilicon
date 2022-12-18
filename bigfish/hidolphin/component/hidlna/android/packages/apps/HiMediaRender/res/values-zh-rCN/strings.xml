@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HiMediaRender</string>
+    <string name="activity_name">HiDLNA 设置</string>
+
+
+    <!-- host name -->
+    <string name="set_net_host_label">主机名称</string>
+    <string name="hostname">localhost</string>
+    <!-- UPNP -->
+    <!--  <string name="set_upnp">UPNP服务</string>-->
+    <string name="set_upnp">服务</string>
+    <string name="dlna_title">DLNA 设置</string>
+    <string name="dmr_start">媒体播放服务</string>
+    <string name="dms_name">媒体共享服务</string>
+    <string name="dms_direcory">共享目录</string>
+    <string name="dms_directory_name">媒体共享目录设置</string>
+    <string name="dircory_name">目录</string>
+
+    <string name="dms_item">DMS</string>
+    <string name="dms_start">媒体共享服务</string>
+    <string name ="deviceStart">已开启</string>
+    <string name ="deviceStop">已停止</string>
+    <string name="dirAdd">增加目录</string>
+    <string name="dig_title">选择目录</string>
+    <string name="dirOK">确定</string>
+    <string name="dirCancel">取消</string>
+    <string name="Current_dir">当前目录</string>
+    <string name="alreadyExist">已经存在</string>
+
+    <string name="dmsManagerSummary">媒体共享服务正在处理中，请等待...</string>
+    <string name="exitDigTitle">退出</string>
+    <string name="exitDmsMsg">正在退出媒体共享服务...</string>
+    <string name="exitDmrMsg">正在退出媒体播放服务...</string>
+    <string name="quit_desc">正在添加共享目录，退出会导致添加不全.\n确认退出吗？</string>
+    <string name="mediaSync">媒体同步中</string>
+    <string name="mediaReady">媒体同步完成</string>
+    <string name="dmsSync">媒体服务正在同步数据，请等待.</string>
+    <string name="dmsReady">媒体数据已完成同步.</string>
+    <string name="dmsStartSucess">DMS启动成功</string>
+    <string name="dmsStartFail">DMS 启动失败，请重新启动!</string>
+    <string name="clicknotify">打开DLNA设置</string>
+    <string name="netDisconnected">没有有效的IP地址，请检查网络连接</string>
+    <string name="noPermissionAccess">您无权访问此目录</string>
+    <string name="ruleOfHostName">主机名只支持字母、数字和下划线(_)，且长度不能大于</string>
+    <string name="error">错误!</string>
+    <string name="warning">提示</string>
+    <string name="add">增加 </string>
+    <string name="remove">移除 </string>
+    <string name="restartDMS">重启DMS</string>
+    <string name="restartDMR">重启DMR</string>
+    <string name="inputNothing">输入不能为空</string>
+    <string name="dmr_start_suc">DMR启动成功</string>
+    <string name="dmr_start_fail">DMR启动失败</string>
+    <string name="readd_dir">监测到挂载硬盘事件，重新扫描媒体...</string>
+    <string name="dlnasetting_title">DLNA设置</string>
+    <string name="dlnasetting_is_running">DLNA设置正在运行</string>
+</resources>

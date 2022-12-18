@@ -1,0 +1,5 @@
+config HI_BLUETOOTH_SUPPORT
+	bool "Bluetooth Support"
+	default n
+	help
+	  ALSA will support too when support Bluetooth

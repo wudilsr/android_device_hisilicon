@@ -1,0 +1,15 @@
+menu "Hisilicon driver support"
+
+config APP_CAPABLE
+	tristate "Application Capable"
+	default n
+	help
+	  Support application have root authority.
+
+config APP_SEMAPHORE_API
+	tristate "Semaphore API"
+	default y
+	help
+	  Export semaphore API for SDK driver.
+
+endmenu

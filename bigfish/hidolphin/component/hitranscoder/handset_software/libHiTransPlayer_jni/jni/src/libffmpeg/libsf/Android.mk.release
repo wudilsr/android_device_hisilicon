@@ -1,0 +1,20 @@
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+
+include $(LOCAL_PATH)/../../utils.mk
+LOCAL_C_INCLUDES += \
+    $(LOCAL_PATH)/../../libffmpeg \
+    $(LOCAL_PATH)/../libavcodec \
+    $(LOCAL_PATH)/../../include/android \
+    $(LOCAL_PATH)/../../libmediaplayer \
+    $(LOCAL_PATH)/../../include/openmax
+
+LOCAL_SRC_FILES := \
+    libsf.cpp \
+    QCOM_ColorCvt.cpp
+#LOCAL_SHARED_LIBRARIES := libstagefright libmedia libutils libbinder
+LOCAL_MODULE := libsf
+
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+
+include $(BUILD_STATIC_LIBRARY)

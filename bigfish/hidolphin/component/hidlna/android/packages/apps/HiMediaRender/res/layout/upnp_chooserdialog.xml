@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:orientation="vertical" android:padding="20dp">
+     <TextView
+        android:id="@+id/textView1"
+        android:text="@string/dlna_title"
+        android:layout_width="wrap_content"
+        android:textSize="26dip"
+        android:layout_height="wrap_content" android:focusable="false" android:layout_gravity="center_vertical|center_horizontal" android:gravity="center_vertical|center_horizontal">
+     </TextView>
+    <TextView android:text="@string/Current_dir" android:id="@+id/Cur_dir" android:layout_width="fill_parent" android:gravity="center" android:layout_height="30dp"></TextView>
+    <ListView android:id="@+id/list_dir" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingLeft="5dp" android:paddingRight="15dp" android:minHeight="120dp" android:layout_weight="1"></ListView>
+    <LinearLayout android:orientation="horizontal" android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent" android:paddingTop="5dp" android:gravity="bottom">
+        <Button android:layout_height="wrap_content" android:id="@+id/ok_button" android:text="@string/dirOK" android:textColor="@color/white" android:layout_width="wrap_content" android:layout_weight="1" android:height="50dp" android:maxHeight="50dp" android:minWidth="50dp" android:fitsSystemWindows="true" android:hapticFeedbackEnabled="false" android:background="@drawable/upnp_button_status"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/cancel_button" android:text="@string/dirCancel" android:textColor="@color/white" android:layout_width="wrap_content" android:layout_weight="1" android:height="50dp" android:maxHeight="50dp" android:minWidth="50dp" android:hapticFeedbackEnabled="false" android:background="@drawable/upnp_button_status"></Button>
+    </LinearLayout>
+</LinearLayout>

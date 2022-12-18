@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<animation-list android:oneshot="false"
+xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_popup_sync_1" android:duration="200" />
+    <item android:drawable="@drawable/ic_popup_sync_2" android:duration="200" />
+    <item android:drawable="@drawable/ic_popup_sync_3" android:duration="200" />
+    <item android:drawable="@drawable/ic_popup_sync_4" android:duration="200" />
+    <item android:drawable="@drawable/ic_popup_sync_5" android:duration="200" />
+    <item android:drawable="@drawable/ic_popup_sync_6" android:duration="200" />
+</animation-list>

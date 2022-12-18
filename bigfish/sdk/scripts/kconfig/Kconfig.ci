@@ -1,0 +1,38 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "CI/CI+ Config"
+#--------------------------------
+menuconfig HI_CIPLUS_SUPPORT
+	bool "CI/CI+ Support"
+	default n
+	
+choice
+prompt "Device type"
+	depends on HI_CIPLUS_SUPPORT
+	default HI_CI_DEV_HICI
+config HI_CI_DEV_CIMAX
+	bool "CIMAX"
+config HI_CI_DEV_CIMAXPLUS
+	bool "CIMAXPLUS"
+config HI_CI_DEV_HICI
+	bool "HICI"
+endchoice
+
+menuconfig HI_CIMAXPLUS_MODE_CONFIG
+	bool "CIMAXPLUS mode config"
+	depends on HI_CIPLUS_SUPPORT && HI_CI_DEV_CIMAXPLUS
+	default y
+
+config HI_CIMAXPLUS_MODE_USB
+	bool "USB"
+	depends on HI_CIPLUS_SUPPORT && HI_CI_DEV_CIMAXPLUS && HI_CIMAXPLUS_MODE_CONFIG
+	default y
+	
+config HI_CIMAXPLUS_MODE_SPI
+	bool "SPI"
+	depends on HI_CIPLUS_SUPPORT && HI_CI_DEV_CIMAXPLUS && HI_CIMAXPLUS_MODE_CONFIG
+	default n
+
+#--------------------------------
+endmenu
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+

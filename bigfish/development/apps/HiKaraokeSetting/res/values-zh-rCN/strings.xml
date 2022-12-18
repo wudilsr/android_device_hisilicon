@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">卡拉Ok设置</string>
+    <string name="zero">0</string>
+    <string name="soundEffects_selects">卡拉OK音效</string>
+    <string name="Karaoke_mode">卡拉OK模式</string>
+    <string name="engine_mode">卡拉OK设置</string>
+    <string name="definition">麦克风音量</string>
+    <string name="app_name_notfullscreen">卡拉OK设置</string>
+        <string name="action_settings">设置</string>
+</resources>

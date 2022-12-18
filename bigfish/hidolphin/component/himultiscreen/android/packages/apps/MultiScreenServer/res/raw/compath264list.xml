@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <deviceList>
+      <device>
+          <buildModel>HUAWEI MT1-U06</buildModel>
+          <sdkVersion>4.1.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>GT-I9500</buildModel>
+          <sdkVersion>4.2.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>H60-L01</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>H60-L11</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>H60-L02</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>H60-L12</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
+    </deviceList>

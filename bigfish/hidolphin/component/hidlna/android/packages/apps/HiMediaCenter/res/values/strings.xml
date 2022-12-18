@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, MediaCenterActivity!</string>
+    <string name="app_name">HiMediaCenter</string>
+    <string name="notSupportedFormat">Unsupported file</string>
+    <string name="projectType">Project Type</string>
+    <string name="radioNum">0/0</string>
+    <string name="sourcePath">Path</string>
+    <string name="displayPattern">Display Pattern</string>
+    <string name="mediaType">Media Type</string>
+    <string name="sortType">Sorting Type</string>
+    <string name="search">Search</string>
+    <string name="mediaInfo">Information</string>
+    <string name="mediaName">Name: </string>
+    <string name="mediaSize">Size: </string>
+    <string name="mediaMime">MIME</string>
+    <string name="imageResolution">Resolution: </string>
+    <string name="more">More</string>
+    <string name="musicAlbum">Album: </string>
+    <string name="musicArtist">Artist: </string>
+    <string name="musicDate">Date: </string>
+    <string name="musicGenre">Genre: </string>
+    <string name="unknown">Unknown</string>
+    <string name="network">Network</string>
+    <string name="upnp">UPnP</string>
+    <string name="nfs">NFS</string>
+    <string name="local">Local</string>
+    <string name="video">Video: </string>
+    <string name="audio">Audio: </string>
+    <string name="error_device_down">Device no response</string>
+    <string name="NoDMS">No DMS Found</string>
+    <string name="tryLater">Please try again later</string>
+    <string name="quit">Quit</string>
+    <string name="networkDisable">Network is unavailable</string>
+    <string name="connectNetwork">Please connect the network or wifi</string>
+    <string name="timeout">timeout when get list</string>
+    <string name="dms_down">this media server is shutdown</string>
+    <string name="subdir_is_null">Subdir is empty</string>
+    <string name="already_loading">Loading, try again later</string>
+    <string name="network_interruption">Network Interruption</string>
+    <string name="surface_released">Get file timeout</string>
+    <string name="net_reconect">Network changed, Please search DMS</string>
+    <string name="network_speed_kbps">0Kbps</string>
+
+</resources>

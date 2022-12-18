@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/transparent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:orientation="horizontal"
+        android:paddingBottom="0dip"
+        android:paddingLeft="80px"
+        android:paddingRight="80px"
+        android:paddingTop="0dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dip"
+            android:layout_marginTop="1dip"
+            android:layout_weight="0.3"
+            android:gravity="left"
+            android:orientation="horizontal" >
+
+            <!--
+                <TextView
+                android:id="@+id/currenttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingLeft="20dip"
+                android:shadowColor="#ff000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="3"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            -->
+
+            <ImageButton
+                android:id="@+id/shuffle"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dip"
+                android:background="@drawable/buttonbarbackground" />
+
+            <ImageButton
+                android:id="@+id/repeat"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:background="@drawable/buttonbarbackground" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dip"
+            android:layout_marginTop="1dip"
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/prev"
+		android:clickable="true"
+                android:focusable="true"
+                android:layout_centerVertical="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+                android:src="@drawable/btn_prev"
+                android:background="@drawable/buttonbarbackground" />
+
+            <ImageButton
+                android:id="@+id/pause"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_centerVertical="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+                android:background="@drawable/buttonbarbackground" />
+
+            <ImageButton
+                android:id="@+id/next"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_centerVertical="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+                android:src="@drawable/btn_next"
+                android:background="@drawable/buttonbarbackground" />
+        </LinearLayout>
+        <!--
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="50dip"
+            android:paddingRight="100dip" >
+
+            <ImageButton
+                android:id="@+id/shuffle"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_marginRight="8dip" />
+
+            <ImageButton
+                android:id="@+id/repeat"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_marginRight="8dip" />
+
+            <ImageButton
+                android:id="@+id/curplaylist"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_marginRight="8dip"
+                android:nextFocusLeft="@id/curplaylist"
+                android:src="@drawable/ic_mp_current_playlist_btn" />
+        </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dip"
+            android:layout_marginTop="1dip"
+            android:layout_weight="0.3"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/curplaylist"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:background="@drawable/buttonbarbackground"
+                android:gravity="right"
+                android:src="@drawable/ic_mp_current_playlist_btn" />
+
+            <ImageButton
+                android:id="@+id/curimagelist"
+                android:layout_width="82dip"
+                android:layout_height="45dip"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dip"
+                android:background="@drawable/buttonbarbackground"
+                android:gravity="right"
+                android:src="@drawable/view_photos" />
+            <!--
+               <TextView
+                android:id="@+id/totaltime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingRight="20dip"
+                android:shadowColor="#ff000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="3"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            -->
+        </LinearLayout>
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@android:id/progress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
+        android:background="@drawable/btn_nowplaying_background_small"
+        android:clickable="false"
+        android:max="100"
+        android:maxHeight="10px"
+        android:minHeight="10px"
+        android:paddingLeft="80px"
+        android:paddingRight="80px"
+        android:progressDrawable="@drawable/media_controller_progress_bar_selector"
+        android:thumb="@drawable/seek_thumb" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="80px"
+        android:paddingRight="80px" >
+
+        <TextView
+            android:id="@+id/currenttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:paddingLeft="20dip"
+            android:shadowColor="#ff000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="3"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ccffebcd"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/totaltime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:paddingRight="20dip"
+            android:shadowColor="#ff000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="3"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</merge>

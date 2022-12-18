@@ -1,0 +1,104 @@
+###########################################################
+choice
+	prompt "Product Type"
+	default LINUX_PRODUCT
+
+config  LINUX_PRODUCT
+	bool "linux"
+config  ANDROID_PRODUCT
+	bool "android"
+endchoice
+
+config  PRODUCT_TYPE
+	string
+	default linux            if LINUX_PRODUCT
+	default android          if ANDROID_PRODUCT
+
+###########################################################
+choice
+	prompt "Chip Type"
+	default hi3716cv200
+
+config  HI3716CV200
+	bool "hi3716cv200"
+config  HI3716MV400
+	bool "hi3716mv400"
+config  HI3718CV100
+	bool "hi3718cv100"
+config  HI3718MV100
+	bool "hi3718mv100"
+config  HI3719CV100
+	bool "hi3719cv100"
+config  HI3719MV100
+	bool "hi3719mv100"
+config  HI3796CV100
+	bool "hi3796cv100"
+config  HI3798CV100
+	bool "hi3798cv100"
+config  HI3798MV100
+	bool "hi3798mv100"
+config  HI3796MV100
+	bool "hi3796mv100"
+config  HI3798CV200_A
+	bool "hi3798cv200_a"
+endchoice
+
+config  HI_CHIP_TYPE
+	string
+	default hi3716cv200     if HI3716CV200
+	default hi3716mv400     if HI3716MV400
+	default hi3718cv100     if HI3718CV100
+	default hi3718mv100     if HI3718MV100
+	default hi3719cv100     if HI3719CV100
+	default hi3719mv100     if HI3719MV100
+	default hi3796cv100     if HI3796CV100
+	default hi3798cv100     if HI3798CV100
+	default hi3798mv100     if HI3798MV100
+	default hi3796mv100     if HI3796MV100
+	default hi3798cv200_a   if HI3798CV200_A
+
+###########################################################
+choice
+	prompt "Toolchains Type"
+	default ARM_HISIV200_LINUX
+
+config  ARM_HISIV200_LINUX
+	bool "arm-hisiv200-linux"
+	
+config  ARM_HISTBV300_LINUX
+	bool "arm-histbv300-linux"
+endchoice
+
+config  HI_TOOLCHAINS_NAME
+	string
+	default arm-hisiv200-linux 	if ARM_HISIV200_LINUX
+	default arm-histbv300-linux if ARM_HISTBV300_LINUX
+
+###########################################################
+menuconfig  HI_LOADER_SUPPORT
+	bool "HiLoader Support"
+	default n
+
+choice
+	prompt "Support Loader Type"
+	default HI_APPLOADER_SUPPORT    if LINUX_PRODUCT
+	default HI_LOADER_RECOVERY      if ANDROID_PRODUCT
+	depends on HI_LOADER_SUPPORT
+
+config  HI_BOOTLOADER_SUPPORT
+	bool "BootLoader"
+	select HI_BUILD_WITH_PRODUCT
+
+config  HI_APPLOADER_SUPPORT
+	bool "AppLoader"
+
+config  HI_LOADER_RECOVERY
+	bool "Recovery"
+	depends on ANDROID_PRODUCT
+
+endchoice
+
+###########################################################
+config HI_OPTM_SIZE_SUPPORT
+	bool "Optimize For Size"
+	default n

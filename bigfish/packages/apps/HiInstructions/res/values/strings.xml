@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">操作指南</string>
+    <string name="button_ok">确认</string>
+    <string name="button_set_network">网络设置</string>
+    <string name="button_set_display">显示设置</string>
+    <string name="text_input">工号 :</string>
+    <string name="edit_text_hint">请输入8位工号</string>
+    <string name="toast_msg1">提交失败，请重新提交！</string>
+
+</resources>

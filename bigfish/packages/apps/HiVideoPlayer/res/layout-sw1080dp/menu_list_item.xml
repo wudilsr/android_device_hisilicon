@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/styleMatchWrap"
+    android:paddingBottom="10px"
+    android:paddingLeft="60px"
+    android:paddingRight="30px"
+    android:paddingTop="10px" >
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/menu_item"
+        style="@style/styleMediaText"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@+id/menu_icon"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:textSize="30sp" />
+
+</RelativeLayout>

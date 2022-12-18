@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".USBActivity" >
+
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp" >
+
+        <TextView
+            android:id="@+id/usb_text_view_1"
+            style="@style/TextViewStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/usb_text_view_1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usb_text_view_1"
+            android:layout_margin="20dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/usb_btn_1"
+                style="@style/ButtonStyle2"
+                android:text="@string/usb_btn_1" />
+
+            <Button
+                android:id="@+id/usb_btn_2"
+                style="@style/ButtonStyle2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/usb_btn_2" />
+
+            <Button
+                android:id="@+id/usb_btn_3"
+                style="@style/ButtonStyle2"
+                android:text="@string/usb_btn_3" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout1"
+        android:layout_marginTop="80dp" >
+
+        <TextView
+            android:id="@+id/usb_text_view_2"
+            style="@style/TextViewStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/usb_text_view_2" />
+
+        <LinearLayout
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usb_text_view_2"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/usb_btn_4"
+                style="@style/ButtonStyle2"
+                android:text="@string/usb_btn_4" />
+
+            <Button
+                android:id="@+id/usb_btn_5"
+                style="@style/ButtonStyle2"
+                android:layout_marginLeft="10dp"
+                android:text="@string/usb_btn_5" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout2"
+        android:layout_marginTop="80dp" >
+
+        <TextView
+            android:id="@+id/usb_text_view_3"
+            style="@style/TextViewStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/usb_text_view_3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usb_text_view_3"
+            android:layout_margin="20dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/usb_btn_6"
+                style="@style/ButtonStyle2"
+                android:text="@string/usb_btn_6" />
+
+            <Button
+                android:id="@+id/usb_btn_7"
+                style="@style/ButtonStyle2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/usb_btn_7" />
+
+            <Button
+                android:id="@+id/usb_btn_8"
+                style="@style/ButtonStyle2"
+                android:text="@string/usb_btn_8" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

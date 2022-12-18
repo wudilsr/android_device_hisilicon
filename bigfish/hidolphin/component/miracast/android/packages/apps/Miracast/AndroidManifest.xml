@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hisilicon.miracast"
+    android:versionCode="1000"
+    android:sharedUserId="android.uid.system"
+    android:versionName="V5" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="17" />
+
+    <uses-permission
+        android:name="android.permission.RECEIVE_BOOT_COMPLETED"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_NETWORK_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.SYSTEM_ALERT_WINDOW"
+        android:required="true" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/AppName"
+        android:theme="@style/AppTheme" >
+        <activity android:name=".activity.base.BaseActivity" />
+        <activity
+            android:name=".activity.WelcomeActivity"
+            android:launchMode="singleInstance" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.GuideActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:launchMode="singleInstance" >
+        </activity>
+        <activity
+            android:name=".activity.DisplayActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".activity.HelpActivity"
+            android:launchMode="singleInstance" >
+        </activity>
+        <activity
+            android:name=".activity.SupportedDevicesActivity"
+            android:launchMode="singleInstance" >
+        </activity>
+
+        <service android:name=".service.WfdService" />
+    </application>
+
+</manifest>

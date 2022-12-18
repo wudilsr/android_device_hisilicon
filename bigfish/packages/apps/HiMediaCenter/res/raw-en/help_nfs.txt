@@ -1,0 +1,17 @@
+﻿1: Enter the system by clicking on the shortcut to the list.
+2: Have three pictures button：
+       	The first is the document to browse a way, including list, thumbnails.
+       	The second is file filtering way, including all documents, all pictures, all audio, video all.
+       	The third is the document sort order, including file name, file size, modification time.
+       	Above icon per click a switch a way.
+3: Open the menu bar, it will appear as follows the menu option: the hidden labels, new mount, 
+  		the operation, the new, search, add filter conditions, delete filter conditions, help：
+       	HideLabel: hidden web page to the top of the tag hidden or display.
+       	New mount: new address of hanging load. 
+       	Operation: not in the list, function for set up automatic mount, unloading; After entering includes copying,
+        cut, paste, delete and rename five options. Can on the document as above five kinds of operations. 
+       	New: the user can new folder. 
+		Search: can the current directory to the file search query. 
+		Add filter conditions: the user can for audio, video, images add except the system default outside of the filter types.
+       	Delete filter conditions: the user can delete the audio, video, images of the filter types. 
+      	Help: the user can see help manual.

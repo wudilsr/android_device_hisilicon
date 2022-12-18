@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:gravity="right"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/layout_bj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/request_messagedetail_row_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_horizontal"
+            android:minHeight="40dp"
+            android:textColor="#FFFFFFFF"
+            android:text="@string/app_name"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@drawable/msgbox_send"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+</LinearLayout>

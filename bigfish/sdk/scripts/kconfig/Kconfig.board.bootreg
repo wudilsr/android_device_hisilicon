@@ -1,0 +1,8 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "Boot Regfile Config"
+config  HI_BOOT_REG_NAME
+	prompt "Fastboot Reg File"
+	string
+	default hi3716mdmo3avera_hi3716mv300_ddr3_256mbyte_16bit_2layers.reg
+endmenu
+#+++++++++++++++++++++++++++++++++++++++++++++++++++

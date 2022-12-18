@@ -1,0 +1,102 @@
+#===============================================================================
+# local variable
+#===============================================================================
+COMMON_DIR        =$(shell pwd)
+COMMON_INCLUDE     =$(COMMON_DIR)/include
+COMMON_SOURCE_DIR = $(CURDIR)/src
+
+TARGET         := component_common
+OUT_OBJ_DIR    := $(OUT_DIR)/obj/$(TARGET)
+OUT_OBJ_DIR_FOR_SO := $(OUT_DIR)/obj/component_common_for_so
+PUB_INC_DIR    := $(PUB_DIR)/$(TARGET)/include
+PUB_LIB_DIR    := $(PUB_DIR)/$(TARGET)/lib/${CFG_HI_TOOLCHAINS_NAME}-$(VERSION)
+PUB_SRC_DIR    := $(PUB_DIR)/$(TARGET)/src
+PUB_SAMPLE_DIR := $(PUB_DIR)/$(TARGET)/sample
+
+CFG_HI_CFLAGS += -I$(COMMON_INCLUDE)
+CFG_HI_CFLAGS += -I$(COMMON_SOURCE_DIR)/include
+
+CFLAGS += $(CFG_HI_CFLAGS)
+CFLAGS += -fno-strict-aliasing
+CFLAGS += -c -Wall  -D_GNU_SOURCE
+#CFLAGS += -fPIC
+CFLAGS += -DHI_ADVCA_FUNCTION_RELEASE
+CFLAGS += -DDISCARD_DEBUG_INFO
+
+#FIXME:for platform check, add by dingsongxing
+ifeq ($(CFG_UNF_VERSION), 3.1)
+CFLAGS += -DCFG_UNF_VERSION31
+endif
+
+LIBS := lib$(TARGET)
+# Commented by dhl, OUT_OBJ_DIR := $(COMMON_DIR)/obj
+
+# just add you source_dir here.
+VPATH += $(COMMON_SOURCE_DIR)/charset
+VPATH += $(COMMON_SOURCE_DIR)/log
+VPATH += $(COMMON_SOURCE_DIR)/lzma
+VPATH += $(COMMON_SOURCE_DIR)/mod
+VPATH += $(COMMON_SOURCE_DIR)/msg
+VPATH += $(COMMON_SOURCE_DIR)/osad
+VPATH += $(COMMON_SOURCE_DIR)/time
+VPATH += $(COMMON_SOURCE_DIR)/timer
+VPATH += $(COMMON_SOURCE_DIR)/udisk
+VPATH += $(COMMON_SOURCE_DIR)/util
+VPATH += $(COMMON_SOURCE_DIR)/xmem
+VPATH += $(COMMON_SOURCE_DIR)/proc
+
+#FIXME:for platform check, add by dingsongxing
+VPATH += $(COMMON_SOURCE_DIR)/platformcheck
+
+SRC := $(notdir $(shell find $(VPATH) -maxdepth 1 -name "*.c"))
+objs := $(SRC:%.c=$(OUT_OBJ_DIR)/%.o)
+objs_for_so := $(SRC:%.c=$(OUT_OBJ_DIR_FOR_SO)/%.o)
+
+#===============================================================================
+# rules
+#===============================================================================
+.PHONY: all clean install uninstall release publish
+
+all:$(OUT_OBJ_DIR) $(OUT_OBJ_DIR_FOR_SO) $(LIBS).so $(LIBS).a
+
+clean:
+	$(AT)rm -rf $(OUT_OBJ_DIR)
+	$(AT)rm -rf $(OUT_OBJ_DIR_FOR_SO)
+# Commented by dhl, 	$(AT)rm -rf $(COMMON_LIB_DIR)
+
+$(OUT_OBJ_DIR):
+	@mkdir -p $(OUT_OBJ_DIR)
+	@mkdir -p $(OUT_OBJ_DIR_FOR_SO)
+	@mkdir -p $(OUT_LIB_DIR)
+# Commented by dhl, 	@mkdir -p $(COMMON_LIB_DIR)
+
+$(LIBS).a: $(objs)
+	$(AR) -rc -o $(OUT_LIB_DIR)/$@ $^
+
+$(LIBS).so: $(objs_for_so)
+	$(CC) -shared -o $(OUT_LIB_DIR)/$@ $^
+
+$(OUT_OBJ_DIR)/%.o: %.c
+	@echo cc: $^
+	$(AT)$(CC) $(CFLAGS) -c $^ -o "$(OUT_OBJ_DIR)/$(*F).o"
+
+$(OUT_OBJ_DIR_FOR_SO)/%.o: %.c
+	@echo cc: $^
+	$(AT)$(CC) $(CFLAGS) -fPIC -c $^ -o "$(OUT_OBJ_DIR_FOR_SO)/$(*F).o"
+
+#release:all common_delete
+#common_delete:
+#	ls | grep -v include |grep -v lib | xargs rm -rf
+
+publish_target: publish_target_prepare publish_target_include publish_target_lib
+
+publish_target_prepare:
+	mkdir -p $(PUB_INC_DIR)
+	mkdir -p $(PUB_LIB_DIR)
+
+publish_target_include: 
+	cp -rf $(COMMON_INCLUDE)/* $(PUB_INC_DIR)
+
+publish_target_lib:
+	cp $(OUT_LIB_DIR)/$(LIBS).a $(PUB_LIB_DIR)
+	cp $(OUT_LIB_DIR)/$(LIBS).so $(PUB_LIB_DIR)

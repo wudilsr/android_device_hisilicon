@@ -1,0 +1,50 @@
+ifndef COMPONENT_DIR
+export CHARSET_DIR := $(PWD)
+endif
+
+ifndef CHARSET_DIR
+ifndef HIDOL_DIR
+	error "hidolphin dir must be specified"
+endif
+export CHARSET_DIR := $(HIDOL_DIR)/component/charset
+PLAYER_DIR := $(HIDOL_DIR)/component/player
+endif
+
+export CHARSET_SRC_DIR      = $(CHARSET_DIR)/src
+export CHARSET_PLUGIN_DIR   = $(CHARSET_DIR)/plugins
+export CHARSET_LIB_DIR      = $(CHARSET_DIR)/lib
+
+CFG_INC += -I$(CHARSET_DIR)/include -I$(PLAYER_DIR)/include
+
+export LFLAGS += -Wl,--start-group -Wl,--end-group
+
+CFLAGS += $(CFG_INC) $(USER_CFLAGS) $(CFG_CFLAGS)
+CFLAGS += -DPLATEFORM_LINUX -L$(PLAYER_DIR)/lib/ -lhiplayer_utils
+#CFLAGS += -g
+ifdef CFG_HI_ADVCA_FUNCTION
+CFLAGS += -DHI_ADVCA_FUNCTION_RELEASE
+endif
+
+export CFLAGS CFG_INC CFG_LIB
+
+.PHONY: all plugin charset plugin_clean charset_clean install uninstall
+
+install: all
+	cp lib/lib* $(HIPLAYER_LIB_DIR)/ -vf
+	cp include/hi_svr_*.h $(HIPLAYER_INC_DIR)/ -vf
+uninstall:
+
+all: plugin charset
+clean: plugin_clean charset_clean
+charset:
+	make -C $(CHARSET_SRC_DIR)
+
+charset_clean:
+	make -C $(CHARSET_SRC_DIR) clean
+	rm -f lib/libcharset.so
+
+plugin:
+	make -C $(CHARSET_PLUGIN_DIR)
+
+plugin_clean:
+	make -C $(CHARSET_PLUGIN_DIR) clean

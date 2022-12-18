@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	
+	
+	<RelativeLayout 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			>
+			<ImageButton 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:id="@+id/sortBut"
+				android:layout_alignParentRight="true"
+				android:background="@drawable/sort_by_name"
+				android:layout_marginTop="2dip"
+			/>
+			<ImageButton 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:id="@+id/filterBut"
+				android:layout_toLeftOf="@id/sortBut"
+				android:layout_alignTop="@id/sortBut"
+				android:background="@drawable/filter_by_file"
+			/>
+			<ImageButton 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:id="@+id/showBut"
+				android:layout_toLeftOf="@id/filterBut"
+				android:layout_alignTop="@id/filterBut"
+				android:background="@drawable/show_by_list"
+			/> 
+			<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="28sp"
+			android:text="@string/ftp"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true" android:id="@+id/title"
+			/>
+			<TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/title_path"
+			android:textSize="28sp" android:scrollHorizontally="true"
+			android:singleLine="true" 
+		    android:layout_toLeftOf="@id/showBut"
+		    android:layout_toRightOf="@id/title"
+		    android:layout_centerVertical="true"/>
+		</RelativeLayout>
+	<include layout="@layout/main_right" android:layout_height="fill_parent"
+		android:layout_width="fill_parent" />
+</LinearLayout>

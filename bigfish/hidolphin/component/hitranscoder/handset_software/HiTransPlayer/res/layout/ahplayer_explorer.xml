@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView
+         android:id="@+id/input_ind"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/url_input"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/input_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_ind"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <EditText
+            android:id="@+id/input_url"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/input_ind"
+            android:hint="@string/url_input"
+            android:text="@string/hies_url"
+            android:imeOptions="actionDone"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/start_play"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/input_layout"
+        android:layout_marginTop="20dp"
+        android:text="@string/play"
+        android:textSize="20dp"/>
+
+</RelativeLayout>

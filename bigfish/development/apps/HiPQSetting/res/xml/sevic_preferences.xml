@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" > 
+        <ListPreference
+            android:key="displaymode"
+            android:dialogTitle="@string/display_mode"
+            android:entries="@array/display_mode_array"
+            android:entryValues="@array/display_mode_value_array"
+            android:title="@string/display_mode" />
+
+        <!--<com.hisilicon.android.pqsetting.SeekBarDialogPreference
+            android:dialogTitle="@string/brightness"
+            android:key="brightness"
+            android:title="@string/brightness" />
+        <ListPreference
+            android:key="colortemp"
+            android:dialogTitle="@string/color_temp"
+            android:entries="@array/color_temp_array"
+            android:entryValues="@array/color_temp_value_array"
+            android:title="@string/color_temp" />
+        <ListPreference
+            android:key="hdr"
+            android:dialogTitle="@string/hdr"
+            android:entries="@array/hdr_array"
+            android:entryValues="@array/hdr_value_array"
+            android:title="@string/hdr" />
+        <ListPreference
+            android:key="smartcolor"
+            android:dialogTitle="@string/smart_color"
+            android:entries="@array/smart_color_array"
+            android:entryValues="@array/smart_color_value_array"
+            android:title="@string/smart_color" />
+
+        <com.hisilicon.android.pqsetting.SeekBarDialogPreference
+            android:dialogTitle="@string/sharpen"
+            android:key="sharpness"
+            android:title="@string/sharpen" />
+
+        <ListPreference
+            android:key="noisereduction"
+            android:dialogTitle="@string/noise_reduction"
+            android:entries="@array/onoff_array"
+            android:entryValues="@array/onoff_value_array"
+            android:title="@string/noise_reduction" />-->
+    
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="reset"
+            android:dialogTitle="@string/reset"
+            android:title="@string/reset" />
+    
+
+</PreferenceScreen>

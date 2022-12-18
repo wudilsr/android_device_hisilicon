@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/wifi_item_lock"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/setting_wifi_lock_normal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/wifi_item_title"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"/>
+    <TextView
+        android:id="@+id/wifi_item_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/wifi_item_signal"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:background="@drawable/icon_settings_wifi_normal_0"/>
+</LinearLayout>

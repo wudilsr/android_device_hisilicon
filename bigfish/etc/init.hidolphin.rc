@@ -1,0 +1,9 @@
+service hidns-sd /system/bin/hidns-sd
+    class main
+    user system
+    group system inet
+
+service usb-driver /system/bin/usb-driver
+    class main
+    user root
+    group root system input

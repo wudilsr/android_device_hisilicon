@@ -1,0 +1,71 @@
+
+ifndef HIDOL_DIR
+HIDOL_DIR := $(COMPONENT_DIR)/..
+endif
+
+ifndef HISUB_DIR
+#export HISUB_DIR := $(PWD)
+export HISUB_DIR := $(HIDOL_DIR)/component/hisub
+endif
+
+#SUB_TRANSCODE_SUPPORT = 1
+
+CXX	= ${CFG_HI_TOOLCHAINS_NAME}-g++
+CC	= ${CFG_HI_TOOLCHAINS_NAME}-gcc
+
+INCS += -I$(HISUB_DIR)/include
+INCS += -I$(HISUB_DIR)/tinyxml
+INCS += -I$(HISUB_DIR)/src
+INCS += -I$(PUB_DIR)/include
+
+SRCS  :=  $(HISUB_DIR)/tinyxml/tinyxml.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinyxmlparser.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinyxmlerror.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinystr.cpp
+SRCS  +=  $(HISUB_DIR)/src/hi_svr_subparse.c
+SRCS  +=  $(HISUB_DIR)/src/subparse.c
+SRCS  +=  $(HISUB_DIR)/src/ttml_parse.cpp
+
+ifdef SUB_TRANSCODE_SUPPORT
+CFLAGS += -DSUB_TRANSCODE_SUPPORT
+SRCS   += $(HISUB_DIR)/src/sub_transcode.c
+endif
+
+OBJS := $(addsuffix .o,$(basename ${SRCS}))
+
+LIBNAME = libhi_subparse
+SLIB := $(addprefix $(HISUB_DIR)/lib/,${LIBNAME}.a)
+DLIB := $(addprefix $(HISUB_DIR)/lib/,${LIBNAME}.so)
+
+all:$(SLIB) $(DLIB)
+	echo $(HISUB_DIR)
+	echo $(OBJS)
+
+$(SLIB): $(OBJS)
+	$(AR) -rc -o $@ $^
+
+$(DLIB): ${OBJS}
+	$(CC) -shared -o $@ $^
+
+
+#****************************************************************************
+# common rules
+#****************************************************************************
+
+# Rules for compiling source files to object files
+%.o : %.cpp
+	${CXX} -c ${CXXFLAGS} ${INCS} $< -o $@
+
+%.o : %.c
+	${CC} -c ${CFLAGS} ${INCS} $< -o $@
+
+clean:
+	-rm -f ${OBJS}
+	-rm -f ${SLIB}
+	-rm -f ${DLIB}
+
+install:all
+	$(AT)cp -rvf  $(DLIB)                                $(HIPLAYER_LIB_DIR)/
+	$(AT)cp -rvf  $(HISUB_DIR)/include/hi_svr_*.h        $(HIPLAYER_INC_DIR)/
+uninstall:
+

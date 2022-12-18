@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background" >
+    </ImageView>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <!-- 左侧部 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="640dp"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/miracast_help_title"
+                style="@style/styleShadowText"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="50dp"
+                android:text="@string/TextMiracastHelpTitle4"
+                android:textSize="50sp"
+                android:textColor="#00ff00"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/miracast_help_content"
+                style="@style/styleShadowText"
+                android:singleLine="false"
+                android:lineSpacingMultiplier="1.5"
+                android:layout_marginTop="80dp"
+                android:layout_marginLeft="100dp"
+                android:text="@string/TextMiracastHelpStep4"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <!-- 右侧部 -->
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="640dp"
+            android:layout_height="match_parent" >
+            <ImageView
+                android:layout_width="346dp"
+                android:layout_height="576dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/step4" >
+            </ImageView>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

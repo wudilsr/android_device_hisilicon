@@ -1,0 +1,92 @@
+ifndef BASE_DIR
+export BASE_DIR := $(PWD)/../../../..
+endif
+
+ifndef SRC_ROOT
+export SRC_ROOT := $(BASE_DIR)/source
+endif
+
+ifndef ROOTFS_DIR
+export ROOTFS_DIR = $(BASE_DIR)/rootfs_full
+endif
+ROOTFS_LIB_DIR = $(ROOTFS_DIR)/usr/lib
+
+export KMSP_DIR := $(SRC_ROOT)/msp_base
+export MSP_DIR  := $(SRC_ROOT)/msp
+export COMPONENT_DIR := $(MSP_DIR)/component
+
+ifndef HISUB_DIR
+#export PLAYER_DIR := $(PWD)
+export HISUB_DIR := $(COMPONENT_DIR)/hisub
+endif
+
+HIPLAYER_LIB_DIR := $(HIPLAYER_DIR)/lib/$(CFG_HI_TOOLCHAINS_NAME)
+HIPLAYER_INC_DIR := $(HIPLAYER_DIR)/include
+
+HISUB_DST_LIB_DIR        := $(BASE_DIR)/pub/lib
+HISUB_DST_ROOTFS_LIB_DIR := $(ROOTFS_DIR)/usr/lib
+HISUB_DST_INC_DIR        := $(BASE_DIR)/pub/include
+
+#SUB_TRANSCODE_SUPPORT = 1
+CXX	= arm-hisiv200-linux-g++
+
+ifndef CC
+CC	= arm-hisiv200-linux-gcc
+endif
+
+INCS += -I$(HISUB_DIR)/include
+INCS += -I$(HISUB_DIR)/tinyxml
+INCS += -I$(HISUB_DIR)/src
+INCS += -I$(PUB_DIR)/include
+
+SRCS  :=  $(HISUB_DIR)/tinyxml/tinyxml.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinyxmlparser.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinyxmlerror.cpp
+SRCS  +=  $(HISUB_DIR)/tinyxml/tinystr.cpp
+SRCS  +=  $(HISUB_DIR)/src/hi_svr_subparse.c
+SRCS  +=  $(HISUB_DIR)/src/subparse.c
+SRCS  +=  $(HISUB_DIR)/src/ttml_parse.cpp
+
+ifdef SUB_TRANSCODE_SUPPORT
+CFLAGS += -DSUB_TRANSCODE_SUPPORT
+SRCS   += $(HISUB_DIR)/src/sub_transcode.c
+endif
+
+OBJS := $(addsuffix .o,$(basename ${SRCS}))
+
+LIBNAME = libhi_subparse
+SLIB := $(addprefix $(HISUB_DIR)/lib/,${LIBNAME}.a)
+DLIB := $(addprefix $(HISUB_DIR)/lib/,${LIBNAME}.so)
+
+all:$(SLIB) $(DLIB)
+	echo $(HISUB_DIR)
+	echo $(OBJS)
+
+$(SLIB): $(OBJS)
+	$(AR) -rc -o $@ $^
+
+$(DLIB): ${OBJS}
+	$(CC) -shared -fPIC -o $@ $^
+
+
+#****************************************************************************
+# common rules
+#****************************************************************************
+
+# Rules for compiling source files to object files
+%.o : %.cpp
+	${CXX} -c ${CXXFLAGS} ${INCS} $< -o $@
+
+%.o : %.c
+	${CC} -c ${CFLAGS} ${INCS} $< -o $@
+
+clean:
+	-rm -f ${OBJS}
+	-rm -f ${SLIB}
+	-rm -f ${DLIB}
+
+install:all
+	$(AT)cp -rvf  $(DLIB) $(SLIB)                        $(HISUB_DST_LIB_DIR)/
+	$(AT)cp -rvf  $(HISUB_DIR)/include/hi_svr_*.h        $(HISUB_DST_INC_DIR)/
+uninstall:
+

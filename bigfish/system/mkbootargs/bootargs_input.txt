@@ -1,0 +1,18 @@
+baudrate=115200
+ipaddr=192.168.1.10
+serverip=192.168.1.1
+netmask=255.255.255.0
+bootfile="uImage"
+phy_intf=mii,rgmii
+use_mdio=0,1
+phy_addr=2,1
+gmac_debug=0
+bootargs=mem=1G console=ttyAMA0,115200 mtdparts=hinand:1M(fastboot),1M(bootargs),5M(recovery),1M(deviceinfo),2M(baseparam),10M(logo),10M(logobak),30M(fastplay),30M(fastplaybak),30M(kernel),10M(misc),500M(system),1024M(userdata),100M(cache),2350M(sdcard) ubi.mtd=10 ubi.mtd=11 ubi.mtd=12 ubi.mtd=13
+stdin=serial
+stdout=serial
+stderr=serial
+ethaddr=82:ED:72:1E:90:44
+ver=Fastboot 3.3.0 (Jun 23 2013 - 15:11:05)
+bootdelay=0
+verify=n
+bootcmd=nand read 0x1FFFFC0 0x5200000 0xa00000;bootm 0x1FFFFC0

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="AppName">Miracast</string>
+    <string name="TextWifiDisplayTitle">Miracast</string>
+    <string name="TextDeviceNameTitle">设备名称</string>
+    <string name="TextWifiP2pConnecting">Wi-Fi Direct正在连接中</string>
+    <string name="TextWifiP2pConnected">Wi-Fi Direct已连接</string>
+    <string name="TextWifiP2pDisconnected">等待设备连接</string>
+    <string name="TextWifiP2pExit">正在退出Miracast</string>
+    <string name="TextNotAvailable">不可用</string>
+    <string name="TextYes">是</string>
+    <string name="TextNo">否</string>
+    <string name="ToastSorryForNetwork">十分抱歉，网络状况不太给力</string>
+    <string name="ToastNoAudioLib">找不到音频解码库</string>
+    <string name="ToastTurnoffConnectedAp">断开单板Wi-Fi与AP的连接</string>
+    <string name="ToastPlatformNoSupport">平台不支持</string>
+    <string name="TextUserGuide">用户指导</string>
+    <string name="TextSupportedDevices">支持设备</string>
+    <string name="TextMiracastHelpTitle1">第1步：</string>
+    <string name="TextMiracastHelpTitle2">第2步：</string>
+    <string name="TextMiracastHelpTitle3">第3步：</string>
+    <string name="TextMiracastHelpTitle4">第4步：</string>
+    <string name="TextMiracastHelpStep1">打开Wi-Fi，进入显示菜单。</string>
+    <string name="TextMiracastHelpStep2">进入无线显示菜单。</string>
+    <string name="TextMiracastHelpStep3">打开无线显示开关。</string>
+    <string name="TextMiracastHelpStep4">搜索设备并选择可用的设备进行连接。</string>
+    <string name="TextMiracastSupportedDevicesTitle">支持的设备：</string>
+    <string name="TextMiracastSupportedDevices">华为系列：华为G700，华为G730，华为mate2，\n小米系列：小米2/2s，小米3，\n谷歌系列：Nexus4, Nexus5，\n其他系列：华硕平板等等。</string>
+    <string name="TextMiracastSupportedWifiTitle"></string>
+    <string name="TextMiracastSupportedWifi"></string>
+    <!-- Dialog -->
+    <string name="DialogTitleAboutMiracast">关于Miracast</string>
+    <string name="DialogTitleApConnected">AP已连接</string>
+    <string name="DialogTitleWifiP2pOn">正在打开Wi-Fi Direct</string>
+    <string name="DialogTitleWifiP2pOff">正在关闭Wi-Fi Direct</string>
+    <string name="DialogTitleWifiNotAvailable">Wi-Fi不可用</string>
+    <string name="DialogTitleConfirmExit">确认退出</string>
+    <string name="DialogMessageApConnected">Miracast连接可能会受影响，是否断开AP？</string>
+    <string name="DialogMessageWaiting">请稍后</string>
+    <string name="DialogMessageWifiNotAvailable">请先插上Wi-Fi dongle</string>
+    <string name="DialogMessageConfirmExit">你确定要退出吗？</string>
+    <string name="DialogMessageKeepAliveFailed">网络环境非常差，Sink端保活失败，请重新连接</string>
+
+</resources>

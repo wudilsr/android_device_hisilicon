@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center" >
+
+    <com.explorer.common.AnimationButton
+        android:id="@+id/button_1"
+        style="@style/NormalButton"
+        android:layout_marginLeft="88dp"
+        android:layout_marginTop="130dp" />
+
+    <com.explorer.common.AnimationButton
+        android:id="@+id/button_2"
+        style="@style/NormalButton"
+        android:layout_marginLeft="-10dp"
+        android:layout_marginTop="130dp"
+        android:layout_toRightOf="@id/button_1" />
+
+    <com.explorer.common.AnimationButton
+        android:id="@+id/button_3"
+        style="@style/NormalButton"
+        android:layout_alignRight="@id/button_1"
+        android:layout_below="@id/button_1"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-10dp" />
+
+    <com.explorer.common.AnimationButton
+        android:id="@+id/button_4"
+        style="@style/NormalButton2"
+        android:layout_alignLeft="@id/button_2"
+        android:layout_alignTop="@id/button_3"
+        android:layout_marginRight="-0dp" />
+
+    <com.explorer.common.AnimationButton
+        android:id="@+id/button_5"
+        style="@style/NormalButton2"
+        android:layout_alignRight="@id/button_2"
+        android:layout_alignTop="@id/button_3"
+        android:layout_below="@id/button_2"
+        android:layout_marginLeft="-0dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/button_3"
+        android:layout_alignRight="@id/button_5"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/button_3" >
+
+        <ImageView
+            android:id="@+id/hot_reflected_img_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp" />
+
+        <ImageView
+            android:id="@+id/hot_reflected_img_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="281dip" />
+
+        <ImageView
+            android:id="@+id/hot_reflected_img_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="416dip" />
+    </RelativeLayout>
+
+</RelativeLayout>

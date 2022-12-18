@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HiDualNetDemo</string>
+    <string name="action_settings">Settings</string>
+    <string name="click1">enable</string>
+    <string name="click2">disable</string>
+    <string name="click3">addRoute</string>
+    <string name="click4">removeRoute</string>
+    <string name="click5">setDefaultRoute</string>
+    <string name="click6">removeDefaultRoute</string>
+    <string name="click7">setDnses</string>
+    <string name="click8">removeDnses</string>
+    <string name="click9">ShowIpInfo</string>
+    <string name="click10">ResolveUrl</string>
+    <string name="Destination">Destination</string>
+    <string name="gateway">gateway</string>
+    <string name="netmask">netmask</string>
+    <string name="URL">URL</string>
+    <string name="http">http://</string>
+
+</resources>

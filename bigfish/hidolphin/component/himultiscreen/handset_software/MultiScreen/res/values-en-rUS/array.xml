@@ -1,0 +1,10 @@
+<resources>
+    <string-array name="guide_message_array">
+        <!--
+        <item>Enjoy live broadcast in phone</item>
+        <item>Share phone\'s media content to TV screen</item>-->
+        <item>More easy remote controller</item>
+        <item>Sync TV screen into phone for better control experience</item>
+    </string-array>
+
+</resources>

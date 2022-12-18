@@ -1,0 +1,30 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <SurfaceView
+        android:id="@+id/sv_display"
+        style="@style/styleMatchMatch"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_lost_packet"
+        style="@style/styleBasicText"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/iv_network_state"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_network_name"
+        style="@style/styleBasicText" />
+
+</merge>

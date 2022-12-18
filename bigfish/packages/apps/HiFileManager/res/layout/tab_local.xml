@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/all_bg" >
+
+    <RelativeLayout
+        android:id="@+id/layout_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-55dp"
+        android:layout_marginTop="160dp" >
+
+        <FrameLayout
+            android:id="@+id/frameLayout_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/button1_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="305dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="-7dp"
+                android:src="@drawable/main_border" />
+
+            <ImageView
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="318dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusRight="@id/button2"
+                android:src="@drawable/main_local" />
+
+            <TextView
+                android:id="@+id/main_text_1"
+                android:layout_width="200dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="220dp"
+                android:gravity="center"
+                android:text="@string/local_tab_title"
+                android:textSize="40sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-180dp"
+        android:layout_marginTop="160dp"
+        android:layout_toRightOf="@id/layout_1" >
+
+        <FrameLayout
+            android:id="@+id/frameLayout_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/button2_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="305dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="-7dp"
+                android:src="@drawable/main_border" />
+
+            <ImageView
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="318dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/main_smb" />
+
+            <TextView
+                android:id="@+id/main_text_2"
+                android:layout_width="200dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="220dp"
+                android:gravity="center"
+                android:text="@string/lan_tab_title"
+                android:textSize="40sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-180dp"
+        android:layout_marginTop="160dp"
+        android:layout_toRightOf="@id/layout_2" >
+
+        <FrameLayout
+            android:id="@+id/frameLayout_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/button3_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="305dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="-7dp"
+                android:src="@drawable/main_border" />
+
+            <ImageView
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="318dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/main_smb" />
+
+            <TextView
+                android:id="@+id/main_text_3"
+                android:layout_width="200dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="220dp"
+                android:gravity="center"
+                android:text="@string/nfs_tab_title"
+                android:textSize="40sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-180dp"
+        android:layout_marginTop="160dp"
+        android:layout_toRightOf="@id/layout_3" >
+
+        <FrameLayout
+            android:id="@+id/frameLayout_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/button4_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="305dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="-7dp"
+                android:src="@drawable/main_border" />
+
+            <ImageView
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="318dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/main_smb" />
+
+            <TextView
+                android:id="@+id/main_text_4"
+                android:layout_width="200dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="220dp"
+                android:gravity="center"
+                android:text="@string/upnp_tab_title"
+                android:textSize="40sp" />
+        </FrameLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/layout_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-140dp"
+        android:layout_marginTop="160dp"
+        android:layout_toRightOf="@id/layout_4" >
+
+        <FrameLayout
+            android:id="@+id/frameLayout_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/button5_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="305dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="-7dp"
+                android:src="@drawable/main_border" />
+
+            <ImageView
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="318dp"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/main_smb" />
+
+            <TextView
+                android:id="@+id/main_text_5"
+                android:layout_width="200dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="65dp"
+                android:layout_marginTop="220dp"
+                android:gravity="center"
+                android:text="@string/baidu_pcs"
+                android:textSize="40sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

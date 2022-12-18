@@ -1,0 +1,49 @@
+#!/bin/sh
+
+#hme voip test stub
+#rmmod hme_drv_stub
+
+#audio adapter
+rmmod hi_aud_adp
+
+#voip
+rmmod voip_hme
+
+#mpi
+rmmod hi_svdec
+rmmod hifb
+rmmod hi_mpi
+
+#net adapter
+rmmod hi_ndpt
+
+#tlv320 driver
+rmmod tlv320
+rmmod hi_e2prom
+rmmod hi_tuner
+rmmod hi_i2c
+rmmod hi_gpioi2c
+
+#tlv320 driver
+insmod /kmod/hi_gpioi2c.ko gpioidclock=1 clockbit=1 gpioiddata=1 databit=2
+insmod /kmod/hi_i2c.ko
+insmod /kmod/hi_tuner.ko
+insmod /kmod/hi_e2prom.ko
+insmod /kmod/tlv320.ko
+
+#net adapter
+insmod /kmod/hi_ndpt.ko
+
+#mpi
+insmod /kmod/hi_mpi.ko
+insmod /kmod/hifb.ko
+insmod /kmod/hi_svdec.ko
+
+#voip
+insmod /kmod/voip_hme.ko
+
+#audio adapter
+insmod /kmod/hi_aud_adp.ko
+
+
+

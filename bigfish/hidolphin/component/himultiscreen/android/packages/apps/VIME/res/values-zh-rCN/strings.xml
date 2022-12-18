@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="ime_name">虚拟输入法</string>
+    <string name="label_tips_inputing">正在输入</string>
+    <string name="vime_start_tip">虚拟输入法开启</string>
+    <string name="vime_stop_tip">虚拟输入法关闭</string>
+    <string name="abnormal_start_vime_tip">请从客户端打开虚拟输入法</string>
+</resources>

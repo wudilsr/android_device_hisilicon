@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue="@string/FriendlyName"
+        android:dialogTitle="@string/set_net_host_label"
+        android:key="FriendlyName"
+        android:summary="@string/FriendlyName"
+        android:title="@string/set_net_host_label" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="mutiserver"
+        android:summaryOff="@string/close_status"
+        android:summaryOn="@string/open_status"
+        android:title="@string/app_name" />
+
+</PreferenceScreen>

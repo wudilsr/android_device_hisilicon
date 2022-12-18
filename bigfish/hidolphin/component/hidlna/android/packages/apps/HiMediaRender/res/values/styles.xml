@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <!--    <style name="PreferenceDialog" parent="android:style/Theme.Dialog">
+            <style name="PreferenceDialog" parent="android:Theme.Light">
+
+        -->
+    <style name="PreferenceActivity" parent="@android:style/Theme.Translucent">
+    <!--    <item name="android:windowNoTitle">true</item>  -->
+        <item name="android:windowBackground">@drawable/backpic</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:listViewStyle">@style/customListView</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorSecondary">#ffffff</item>
+        <item name="android:windowFrame">@drawable/layoutbackpic</item>
+        <!--   <item name="android:windowNoTitle">true</item>
+                <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+        <item name="android:windowTitleSize">46dip</item>
+
+
+                <item name="android:windowTitleSize">38dip</item>
+                <item name="android:windowContentOverlay">@android:color/transparent</item>
+                <item name="android:windowFrame">@drawable/upnp_windowframe</item>
+        <item name="android:windowBackground">@drawable/backpic</item>
+                <item name="android:windowBackground">@color/full_transparent_background</item>
+                <item name="android:windowNoTitle">true</item>
+                    <item name="android:layout_margin">30px</item>
+                    <item name="android:windowBackground">@drawable/layoutbackpic</item>
+                    <item name="android:windowFrame">@drawable/upnp_windowframe</item>
+        -->
+        <!--    <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFrame">@drawable/window_border</item>
+        <item name="android:windowBackground">@drawable/star</item> -->
+    </style>
+    <style name="customListView" parent="@android:style/Widget.ListView">
+            <item name="android:listSelector">@drawable/upnp_selector_list</item>
+            <item name="android:cacheColorHint">#00000000</item>
+      <!--
+        <item name="android:scrollbarSize">10.0dip</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_handle_vertical</item>
+
+         -->
+    </style>
+    <style name="WindowTitleBackground">
+    <!--parent="*android:WindowTitleBackground">    -->
+        <item name="android:windowContentOverlay">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+    <!-- <item name="android:windowTitleBackgroundStyle">@style/WindowTitleBackground</item>
+             -->
+<!--
+    <style name="GuangyuScreen" parent="android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/translucent_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+
+    <style name="transDialog" parent="android:Theme.Dialog">
+        <item name="android:windowBackground">
+            @color/dialog_back
+        </item>
+    </style>
+
+    <style name="MainScreen" parent="android:Theme.Wallpaper">
+      <item name="android:windowNoTitle">true</item>
+
+       -->
+       <!--   <item name="android:windowBackground">@drawable/list_bg</item>
+        <item name="android:windowNoTitle">true</item>-->
+<!--
+    </style>
+
+    <style name="transActivity" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowBackground">
+            @color/dialog_back
+        </item>
+    </style>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+     -->
+    <!--<style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    -->
+    <!--
+    <style name="mediaDialog" parent="@android:style/Theme.Dialog">
+
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/media_filled_box</item>
+        <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
+
+    <style name="recommendDialog" parent="@android:style/Theme.Dialog">
+
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:backgroundDimEnabled">true</item>
+
+
+    </style>
+    <style name="myProgressBar" parent="@android:style/Theme.Dialog">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateDrawable">
+            @drawable/progress_drawable
+            </item>
+        <item name="android:indeterminateBehavior">repeat</item>
+    </style>
+
+    <style name="RadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:background">@drawable/radiobg</item>
+    </style>
+    <style name="cuteButton">
+        <item name="android:background">@drawable/buttonbg</item>
+    </style>
+    <style name="TextStyle">
+        <item name="android:background">@drawable/transparent</item>
+        <item name="android:textColor">@drawable/white</item>
+    </style>
+    <style name="settingSeekBar">
+        <item name="android:focusable">true</item>
+        <item name="android:progressDrawable">@drawable/settingseekbar</item>
+        <item name="android:progress">30</item>
+        <item name="android:max">100</item>
+        <item name="android:thumbOffset">0dip</item>
+        <item name="android:paddingTop">2dip</item>
+        <item name="android:paddingBottom">1dip</item>
+    </style>
+     -->
+
+</resources>

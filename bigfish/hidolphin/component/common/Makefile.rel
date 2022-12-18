@@ -1,0 +1,75 @@
+include $(SDK_DIR)/cfg.mak
+#===============================================================================
+# local variable
+#===============================================================================
+COMMON_DIR        =$(shell pwd)
+COMMON_INCLUDE     =$(COMMON_DIR)/include
+COMMON_SOURCE_DIR = $(CURDIR)/src
+
+TARGET         := component_common
+OUT_OBJ_DIR    := $(COMMON_DIR)/obj/$(TARGET)
+PUB_INC_DIR    := $(PUB_DIR)/$(TARGET)/include
+PUB_LIB_DIR    := $(PUB_DIR)/$(TARGET)/lib/${CFG_HI_TOOLCHAINS_NAME}-$(VERSION)
+OUT_LIB_DIR    := $(COMMON_DIR)/lib/${CFG_HI_TOOLCHAINS_NAME}-$(VERSION)
+PUB_SRC_DIR    := $(PUB_DIR)/$(TARGET)/src
+PUB_SAMPLE_DIR := $(PUB_DIR)/$(TARGET)/sample
+
+CFG_HI_CFLAGS += -I$(COMMON_INCLUDE)
+CFG_HI_CFLAGS += -I$(COMMON_SOURCE_DIR)/include
+
+CFLAGS += $(CFG_HI_CFLAGS)
+CFLAGS += -fno-strict-aliasing
+CFLAGS += -c -Wall -fPIC -D_GNU_SOURCE
+
+#FIXME:for platform check, add by dingsongxing
+ifeq ($(CFG_UNF_VERSION), 3.1)
+CFLAGS += -DCFG_UNF_VERSION31
+endif
+
+LIBS := lib$(TARGET)
+# Commented by dhl, OUT_OBJ_DIR := $(COMMON_DIR)/obj
+
+# just add you source_dir here.
+VPATH += $(COMMON_SOURCE_DIR)/charset
+VPATH += $(COMMON_SOURCE_DIR)/log
+VPATH += $(COMMON_SOURCE_DIR)/lzma
+VPATH += $(COMMON_SOURCE_DIR)/mod
+VPATH += $(COMMON_SOURCE_DIR)/msg
+VPATH += $(COMMON_SOURCE_DIR)/osad
+VPATH += $(COMMON_SOURCE_DIR)/time
+VPATH += $(COMMON_SOURCE_DIR)/timer
+VPATH += $(COMMON_SOURCE_DIR)/util
+VPATH += $(COMMON_SOURCE_DIR)/xmem
+VPATH += $(COMMON_SOURCE_DIR)/proc
+
+#FIXME:for platform check, add by dingsongxing
+VPATH += $(COMMON_SOURCE_DIR)/platformcheck
+
+SRC := $(notdir $(shell find $(VPATH) -maxdepth 1 -name "*.c"))
+objs := $(SRC:%.c=$(OUT_OBJ_DIR)/%.o)
+
+#===============================================================================
+# rules
+#===============================================================================
+.PHONY: all clean install uninstall release publish
+
+all:$(OUT_OBJ_DIR) $(LIBS).so $(LIBS).a
+
+clean:
+	$(AT)rm -rf $(OUT_OBJ_DIR)
+# Commented by dhl, 	$(AT)rm -rf $(COMMON_LIB_DIR)
+
+$(OUT_OBJ_DIR):
+	mkdir -p $(OUT_OBJ_DIR)
+	mkdir -p $(OUT_LIB_DIR)
+
+$(LIBS).a: $(objs)
+	$(AR) -rc -o $(OUT_LIB_DIR)/$@ $^
+
+$(LIBS).so: $(objs)
+	$(CC) -shared -o $(OUT_LIB_DIR)/$@ $^
+
+$(OUT_OBJ_DIR)/%.o: %.c
+	@echo cc: $^
+	$(AT)$(CC) $(CFLAGS) -c $^ -o "$(OUT_OBJ_DIR)/$(*F).o"
+

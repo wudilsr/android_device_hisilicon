@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    >
+
+
+<Button android:id="@+id/btnMediaStart"
+android:layout_width="wrap_content" android:layout_height="wrap_content"
+android:layout_marginBottom="30px"
+android:background="@drawable/icon_off_selector"></Button>
+<Button android:id="@+id/btnMediaUpdate"
+android:layout_width="wrap_content" android:layout_height="wrap_content"
+android:layout_marginBottom="30px"
+android:background="@drawable/update_on_selector"></Button>
+<Button android:id="@+id/btnMediaSetting"
+android:layout_width="wrap_content" android:layout_height="wrap_content"
+android:layout_marginBottom="30px"
+android:background="@drawable/settings_on_selector"></Button>
+
+<LinearLayout
+        android:gravity="center_horizontal"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100px"
+        >
+        <TextView
+            android:textSize="18.0px"
+            android:textColor="#FFFFFFFF"
+            android:padding="20.0px"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="bottom"
+            >
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

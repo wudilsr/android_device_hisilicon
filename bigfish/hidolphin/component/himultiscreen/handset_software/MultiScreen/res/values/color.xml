@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="transparent">#0000</color>
+    <color name="blue">#0000FF</color>
+    <color name="footer_gray_color">#111111</color>
+    <color name="gray_transparent">#55333333</color>
+    <color name="gray_transparent_more">#22333333</color>
+    <color name="bg_gray">#ff333333</color>
+    <color name="blue_transparent">#5533B5E5</color>
+    <color name="blue_transparent_more">#2233B5E5</color>
+    <color name="green">#00aa2d</color>
+    <color name="green_subtext">#50b863</color>
+    <color name="custom_menu_background">#ff222222</color>
+    <color name="common_background">#000</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="bg_dms">#f5f5f5</color>
+    <color name="dms_text_color">#333333</color>
+    <color name="dms_subtext_color">#ababab</color>
+    <color name="warn_text_color">#ffcc00</color>
+    <color name="dms_item_even">#ebebeb</color>
+    <color name="dms_item_odd">#f5f5f5</color>
+    <color name="alf">#b0000000</color>
+    <color name="blue_text">#45125250</color>
+
+</resources>

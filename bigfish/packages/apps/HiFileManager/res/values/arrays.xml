@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Used in contact edit menus -->
+	<string-array name="menu_task_operation">
+		<item>Cancle</item>
+		<item>Copy</item>
+		<item>Cut</item>
+		<item>Paste</item>
+		<item>Delete</item>
+		<item>Rename</item>
+		<item>Upload</item>
+	</string-array>
+	<string-array name="filter_method">
+		<item>File</item>
+		<item>Picture</item>
+		<item>Audio</item>
+		<item>Video</item>
+	</string-array>
+	<string-array name="spinner_operation02">
+		<item>sdcard</item>
+		<item>hard disk</item>
+		<item>CD-ROM</item>
+	</string-array>
+	<string-array name="show_method">
+		<item>List</item>
+		<item>Thumbnails</item>
+	</string-array>
+	<string-array name="sort_method">
+		<item>Name</item>
+		<item>Size</item>
+		<item>ModifyTime</item>
+	</string-array>
+	<string-array name="nfs_opts">
+		<item>set auto-mounted</item>
+		<item>uninstall mounted</item>
+	</string-array>
+	<string-array name="mountType">
+		<item>USB2.0</item>
+		<item>USB3.0</item>
+		<item>SATA</item>
+		<item>CARD</item>
+		<item>UNKOWN</item>
+		<item>CD-ROM</item>
+	</string-array>
+	<!-- nfs options menu -->
+	<string-array name="menu_nfs_operation">
+		<item>Copy</item>
+		<item>Cut</item>
+		<item>Paste</item>
+		<item>Delete</item>
+		<item>Rename</item>
+	</string-array>
+</resources>

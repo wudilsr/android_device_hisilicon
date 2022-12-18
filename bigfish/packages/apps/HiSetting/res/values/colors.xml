@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="MM_COLOR_NORMAL_TEXT">#FF717171</color>
+    <color name="MM_COLOR_FOCUS_TEXT">#FFFF0000</color>
+    <color name="MM_COLOR_BROWSER_MODULE_NAME">#FF31A5B4</color>
+    <color name="MM_COLOR_BROWSER_FULL_NAME">#FF717171</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#ff781e</color><!-- 橙色 -->
+
+    <color name="black_overlay">#66000000</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="translucent">#e0000000</color>
+    <color name="light_blue">#84d6fc</color>
+    <color name="white">#ffffff</color>
+    <color name="dialog_blue">#d7d6d6</color>
+    <color name="blue">#1964ab</color>
+    <color name="yello">#f9cc52</color>
+    <color name="text_green">#9dff1e</color>
+    <color name="lightgreen">#89d536</color>
+    <color name="black_grey">#282828</color>
+    <color name="ligth_grey">#2f2f2f</color>
+    <color name="music_text_color">#aeaeae</color>
+
+</resources>

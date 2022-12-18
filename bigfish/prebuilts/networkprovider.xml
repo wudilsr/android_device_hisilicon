@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NetworkProdiver Country="china" apn="3gnet" phone="*99#" user="" passwd="" pin="" puk="" provider="CHN-UNICOM" />
+<NetworkProdiver Country="china" apn="3gnet" phone="*99#" user="" passwd="" pin="" puk="" provider="China Unicom" />
+<NetworkProdiver Country="china" apn="3gnet" phone="*99#" user="" passwd="" pin="" puk="" provider="CHN-CUGSM" />
+<NetworkProdiver Country="china" apn="3gnet" phone="*99#" user="" passwd="" pin="" puk="" provider="CU-GSM" />
+<NetworkProdiver Country="china" apn="3gnet" phone="*99#" user="" passwd="" pin="" puk="" provider="46001" />
+<NetworkProdiver Country="china" apn="cmnet" phone="*98*1#" user="" passwd="" pin="" puk="" provider="CHINA  MOBILE" />
+<NetworkProdiver Country="china" apn="cmnet" phone="*98*1#" user="" passwd="" pin="" puk="" provider="CMCC" />
+<NetworkProdiver Country="china" apn="cmnet" phone="*98*1#" user="" passwd="" pin="" puk="" provider="46000" />
+
+<NetworkProdiver Country="Armenia" apn="internet.beeline.am" phone="*99#" user="internet" passwd="internet" pin="" puk="" provider="Beeline" />
+<NetworkProdiver Country="Armenia" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Orange" />
+<NetworkProdiver Country="Armenia" apn="internet.orange" phone="*99#" user="" passwd="" pin="" puk="" provider="Orange Inet" />
+<NetworkProdiver Country="Armenia" apn="inet.vivacell.am" phone="*99#" user="" passwd="" pin="" puk="" provider="MTS Armenia" />
+<NetworkProdiver Country="Armenia" apn="connect.vivacell.am" phone="*99#" user="" passwd="" pin="" puk="" provider="MTS Connect" />
+
+<NetworkProdiver Country="Australia" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Optus" />
+<NetworkProdiver Country="Australia" apn="telstra.internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Telstra" />
+<NetworkProdiver Country="Australia" apn="3netaccess" phone="*99#" user="" passwd="" pin="" puk="" provider="Three" />
+<NetworkProdiver Country="Australia" apn="vfinternet.au" phone="*99#" user="" passwd="" pin="" puk="" provider="Vodafone" />
+
+<NetworkProdiver Country="Azerbaijan" apn="nar" phone="*99#" user="nar" passwd="nar" pin="" puk="" provider="NAR Mobiles" />
+<NetworkProdiver Country="Azerbaijan" apn="internet.bakcell.com" phone="*99#" user="internet.bakcell.com" passwd="internet.bakcell.com" pin="" puk="" provider="Bakcell" />
+<NetworkProdiver Country="Azerbaijan" apn="internet" phone="*99#" user="internet" passwd="internet" pin="" puk="" provider="Azercell" />
+
+<NetworkProdiver Country="Belarus" apn="web.velcom.by" phone="*99#" user="web" passwd="web" pin="" puk="" provider="Velcom" />
+<NetworkProdiver Country="Belarus" apn="web1.velcom.by" phone="*99#" user="web1" passwd="web1" pin="" puk="" provider="Velcom-Bazovi" />
+<NetworkProdiver Country="Belarus" apn="web2.velcom.by" phone="*99#" user="web2" passwd="web2" pin="" puk="" provider="Velcom-25,250" />
+<NetworkProdiver Country="Belarus" apn="web3.velcom.by" phone="*99#" user="web3" passwd="web3" pin="" puk="" provider="Velcom-250(arch.)" />
+<NetworkProdiver Country="Belarus" apn="lite.velcom.by" phone="*99#" user="lite" passwd="lite" pin="" puk="" provider="Velcom-Lyohkiy" />
+<NetworkProdiver Country="Belarus" apn="vmi.velcom.by" phone="*99#" user="vmi" passwd="vmi" pin="" puk="" provider="Velcom-350,500,750,1500,3000" />
+<NetworkProdiver Country="Belarus" apn="wap.privet.by" phone="*99#" user="privet" passwd="privet" pin="" puk="" provider="Velcom-Svaji vej avyajatelstva,privet" />
+<NetworkProdiver Country="Belarus" apn="plus.velcom.by" phone="*99#" user="plus" passwd="plus" pin="" puk="" provider="Velcom-WEB PLUS" />
+<NetworkProdiver Country="Belarus" apn="web.velcom.by" phone="*99#" user="web" passwd="web" pin="" puk="" provider="46000" />
+<NetworkProdiver Country="Belarus" apn="internet.life.com.by" phone="*99#" user="" passwd="" pin="" puk="" provider="Life" />
+<NetworkProdiver Country="Belarus" apn="internet.mts.by" phone="*99#" user="mts" passwd="mts" pin="" puk="" provider="MTS" />
+
+<NetworkProdiver Country="Dubai U A E" apn="Etisalat.ae" phone="*99#" user="" passwd="" pin="" puk="" provider="ETISALAT" />
+<NetworkProdiver Country="Dubai U A E" apn="du" phone="*99#" user="" passwd="" pin="" puk="" provider="DU" />
+
+<NetworkProdiver Country="Egypt" apn="internet.vodafone.net" phone="*99#" user="internet" passwd="internet" pin="" puk="" provider="Vodafone" />
+<NetworkProdiver Country="Egypt" apn="internet.itsalat.net" phone="*99#" user="" passwd="" pin="" puk="" provider="Etisalat" />
+<NetworkProdiver Country="Egypt" apn="mobinilweb" phone="*99#" user="" passwd="" pin="" puk="" provider="Mobinil" />
+
+<NetworkProdiver Country="Finland" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="TeliaSonera" />
+<NetworkProdiver Country="Finland" apn="internet" phone="*99#" user="rlnet" passwd="internet" pin="" puk="" provider="Elisa" />
+<NetworkProdiver Country="Finland" apn="internet" phone="*99#" user="dna" passwd="internet" pin="" puk="" provider="DNA" />
+<NetworkProdiver Country="Finland" apn="internet.saunalahti" phone="*99#" user="" passwd="" pin="" puk="" provider="Saunalahti" />
+<NetworkProdiver Country="Finland" apn="internet.welho.fi" phone="*99#" user="" passwd="" pin="" puk="" provider="Welho" />
+<NetworkProdiver Country="Finland" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="TeleFinland" />
+
+<NetworkProdiver Country="India" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="IDEA" />
+<NetworkProdiver Country="India" apn="RCOMNET" phone="*99#" user="" passwd="" pin="" puk="" provider="RELIANCE" />
+<NetworkProdiver Country="India" apn="airtelgprs.com" phone="*99#" user="" passwd="" pin="" puk="" provider="AIRTEL" />
+<NetworkProdiver Country="India" apn="tata.docomo.internet" phone="*99#" user="" passwd="" pin="" puk="" provider="TATA Docomo 2G" />
+<NetworkProdiver Country="India" apn="tatadocomo 3g" phone="*99#" user="" passwd="" pin="" puk="" provider="TATA DOCOMO 3G" />
+<NetworkProdiver Country="India" apn="www" phone="*99#" user="" passwd="" pin="" puk="" provider="VODAFONE" />
+<NetworkProdiver Country="India" apn="aircelgprs" phone="*99#" user="" passwd="" pin="" puk="" provider="AIRCEL" />
+<NetworkProdiver Country="India" apn="vinternet" phone="*99#" user="" passwd="" pin="" puk="" provider="Videocon" />
+
+<NetworkProdiver Country="Iran" apn="mtnirancell" phone="*98#" user="" passwd="" pin="" puk="" provider="IRAN CELL" />
+
+<NetworkProdiver Country="Iraq" apn="net.asiacell.com" phone="*99#" user="" passwd="" pin="" puk="" provider="Asiacell" />
+<NetworkProdiver Country="Iraq" apn="net.mobitel.com" phone="*99#" user="" passwd="" pin="" puk="" provider="Mobitel" />
+<NetworkProdiver Country="Iraq" apn="net.korek.com" phone="*99#" user="korek" passwd="korek" pin="" puk="" provider="Korek" />
+<NetworkProdiver Country="Iraq" apn="reber" phone="*777" user="reber" passwd="reber" pin="" puk="" provider="NEWROZ Telecom" />
+
+<NetworkProdiver Country="Israel" apn="internetg" phone="*99#" user="" passwd="" pin="" puk="" provider="CellCom" />
+<NetworkProdiver Country="Israel" apn="apn01" phone="*99#" user="" passwd="" pin="" puk="" provider="MTC-Vodafone" />
+<NetworkProdiver Country="Israel" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Orange" />\
+
+<NetworkProdiver Country="Jordan" apn="net.orange.jo" phone="*99#" user="net" passwd="net" pin="" puk="" provider="Orange" />
+<NetworkProdiver Country="Jordan" apn="zain" phone="*99#" user="" passwd="" pin="" puk="" provider="Zain" />
+<NetworkProdiver Country="Jordan" apn="Umniah internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Umniah" />
+
+<NetworkProdiver Country="Lebanon" apn="internet.ftml.com.lb" phone="*99#" user="plugged" passwd="plugged" pin="" puk="" provider="Cellis FTML" />
+
+<NetworkProdiver Country="Lithuania" apn="banga" phone="*99#" user="" passwd="" pin="" puk="" provider="Bite GSM" />
+<NetworkProdiver Country="Lithuania" apn="gprs.omnitel.net" phone="*99#" user="" passwd="" pin="" puk="" provider="Omnitel(contract)" />
+<NetworkProdiver Country="Lithuania" apn="gprs.startas.lt" phone="*99#" user="omni" passwd="omni" pin="" puk="" provider="Omnitel(no contract)" />
+
+<NetworkProdiver Country="Morocco" apn="www.iamgprs2.ma" phone="*99#" user="internet" passwd="internet" pin="" puk="" provider="Maroc Telecom" />
+<NetworkProdiver Country="Morocco" apn="www.wana.ma" phone="*777" user="inwi" passwd="inwi" pin="" puk="" provider="inwi" />
+<NetworkProdiver Country="Morocco" apn="internet1.meditel.ma" phone="*99#" user="MEDINET" passwd="MEDINET" pin="" puk="" provider="meditel" />
+
+<NetworkProdiver Country="Oman" apn="taif" phone="*99#" user="taif" passwd="taif" pin="" puk="" provider="Oman Mobile" />
+<NetworkProdiver Country="Oman" apn="isp.nawras.com.om" phone="*99#" user="" passwd="" pin="" puk="" provider="NAWRAS" />
+<NetworkProdiver Country="Oman" apn="friendi-gprs" phone="*99#" user="" passwd="" pin="" puk="" provider="FRiENDi" />
+
+<NetworkProdiver Country="Russia" apn="internet.beeline.kz" phone="*99***1#" user="  @internet.beeline" passwd="beeline" pin="" puk="" provider="BeeLine" />
+<NetworkProdiver Country="Russia" apn="internet" phone="*99#" user="kcell" passwd="kcell" pin="" puk="" provider="KCELL" />
+<NetworkProdiver Country="Russia" apn="internet.dv" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(dv)" />
+<NetworkProdiver Country="Russia" apn="internet.kvk" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(kvk)" />
+<NetworkProdiver Country="Russia" apn="internet.itmsk" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(ltmsk)" />
+<NetworkProdiver Country="Russia" apn="internet.mc" phone="*99#" user="" passwd="" pin="" puk="" provider="Mgeafon(mc)" />
+<NetworkProdiver Country="Russia" apn="internet.nw" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(NWGSM)" />
+<NetworkProdiver Country="Russia" apn="internet.sib" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(Siberia)" />
+<NetworkProdiver Country="Russia" apn="internet.ugsm" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(UGSM)" />
+<NetworkProdiver Country="Russia" apn="internet.usi.ru" phone="*99#" user="beeline" passwd="beeline" pin="" puk="" provider="Megafon(usi)" />
+<NetworkProdiver Country="Russia" apn="internet.volga" phone="*99#" user="" passwd="" pin="" puk="" provider="Megafon(Volga)" />
+<NetworkProdiver Country="Russia" apn="internet.beeline.ru" phone="*99#" user="" passwd="" pin="" puk="" provider="Motiv(uses BeeLine)" />
+<NetworkProdiver Country="Russia" apn="internet.mts.ru" phone="*99#" user="mts" passwd="mts" pin="" puk="" provider="MTS" />
+<NetworkProdiver Country="Russia" apn="internet" phone="*99#" user="ncc" passwd="" pin="" puk="" provider="NCC" />
+<NetworkProdiver Country="Russia" apn="internet.ntc" phone="*99#" user="" passwd="" pin="" puk="" provider="NTC" />
+<NetworkProdiver Country="Russia" apn="internet.primtel.ru" phone="*99#" user="" passwd="" pin="" puk="" provider="PrimTel" />
+
+<NetworkProdiver Country="Spain" apn="ac.vodafone.es" phone="*99#" user="vodafone" passwd="vodafone" pin="" puk="" provider="Vodafone" />
+<NetworkProdiver Country="Spain" apn="movistar.es" phone="*99#" user="MOVISTAR" passwd="MOVISTAR" pin="" puk="" provider="Movistar" />
+<NetworkProdiver Country="Spain" apn="internet" phone="*99#" user="orange" passwd="orange" pin="" puk="" provider="Orange" />
+<NetworkProdiver Country="Spain" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Yoigo" />
+
+<NetworkProdiver Country="Syria" apn="net.syriatel.com" phone="*99#" user="" passwd="" pin="" puk="" provider="Syriatel" />
+<NetworkProdiver Country="Syria" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="MTN" />
+
+<NetworkProdiver Country="Turkmenistan" apn="gprs.tmcell" phone="*99#" user="" passwd="" pin="" puk="" provider="TM_Cell(43802)" />
+
+<NetworkProdiver Country="Ukraine" apn="www.djuice.com.ua" phone="*99#" user="igprs" passwd="igprs" pin="" puk="" provider="Djuice" />
+<NetworkProdiver Country="Ukraine" apn="www.jeans.ua" phone="*99#" user="" passwd="" pin="" puk="" provider="Jeans" />
+<NetworkProdiver Country="Ukraine" apn="www.kyivstar.ua" phone="*99#" user="igprs" passwd="internet" pin="" puk="" provider="Kyivstar" />
+<NetworkProdiver Country="Ukraine" apn="internet.urs" phone="*99#" user="" passwd="" pin="" puk="" provider="Mobi-GSM" />
+
+<NetworkProdiver Country="Uzbekistan" apn="inet.mts.uz" phone="*99#" user="" passwd="" pin="" puk="" provider="MTS" />
+<NetworkProdiver Country="Uzbekistan" apn="internet.beeline.uz" phone="*99#" user="beeline" passwd="beeline" pin="" puk="" provider="Beeline" />
+<NetworkProdiver Country="Uzbekistan" apn="internet" phone="*99#" user="" passwd="" pin="" puk="" provider="Ucell Internet" />

@@ -1,0 +1,906 @@
+!_TAG_FILE_FORMAT    2    /extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED    1    /0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR    Darren Hiebert    /dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME    Exuberant Ctags    //
+!_TAG_PROGRAM_URL    http://ctags.sourceforge.net    /official site/
+!_TAG_PROGRAM_VERSION    5.8    //
+ACLOCAL    Makefile    /^ACLOCAL = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run aclocal-1.7$/;"    m
+ACLOCAL    include/Makefile    /^ACLOCAL = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run aclocal-1.7$/;"    m
+ACLOCAL    lib/Makefile    /^ACLOCAL = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run aclocal-1.7$/;"    m
+ACLOCAL    macosx/Makefile    /^ACLOCAL = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run aclocal-1.7$/;"    m
+ACLOCAL    tests/Makefile    /^ACLOCAL = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run aclocal-1.7$/;"    m
+ACLOCAL_M4    Makefile    /^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"    m
+ACLOCAL_M4    include/Makefile    /^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"    m
+ACLOCAL_M4    lib/Makefile    /^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"    m
+ACLOCAL_M4    macosx/Makefile    /^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"    m
+ACLOCAL_M4    tests/Makefile    /^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"    m
+AMDEP_FALSE    Makefile    /^AMDEP_FALSE = #$/;"    m
+AMDEP_FALSE    include/Makefile    /^AMDEP_FALSE = #$/;"    m
+AMDEP_FALSE    lib/Makefile    /^AMDEP_FALSE = #$/;"    m
+AMDEP_FALSE    macosx/Makefile    /^AMDEP_FALSE = #$/;"    m
+AMDEP_FALSE    tests/Makefile    /^AMDEP_FALSE = #$/;"    m
+AMDEP_TRUE    Makefile    /^AMDEP_TRUE = $/;"    m
+AMDEP_TRUE    include/Makefile    /^AMDEP_TRUE = $/;"    m
+AMDEP_TRUE    lib/Makefile    /^AMDEP_TRUE = $/;"    m
+AMDEP_TRUE    macosx/Makefile    /^AMDEP_TRUE = $/;"    m
+AMDEP_TRUE    tests/Makefile    /^AMDEP_TRUE = $/;"    m
+AMTAR    Makefile    /^AMTAR = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run tar$/;"    m
+AMTAR    include/Makefile    /^AMTAR = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run tar$/;"    m
+AMTAR    lib/Makefile    /^AMTAR = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run tar$/;"    m
+AMTAR    macosx/Makefile    /^AMTAR = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run tar$/;"    m
+AMTAR    tests/Makefile    /^AMTAR = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run tar$/;"    m
+APP_STL    Android.mk    /^APP_STL := stlport_static$/;"    m
+AR    Makefile    /^AR = ar$/;"    m
+AR    include/Makefile    /^AR = ar$/;"    m
+AR    lib/Makefile    /^AR = ar$/;"    m
+AR    macosx/Makefile    /^AR = ar$/;"    m
+AR    tests/Makefile    /^AR = ar$/;"    m
+AUTOCONF    Makefile    /^AUTOCONF = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoconf$/;"    m
+AUTOCONF    include/Makefile    /^AUTOCONF = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoconf$/;"    m
+AUTOCONF    lib/Makefile    /^AUTOCONF = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoconf$/;"    m
+AUTOCONF    macosx/Makefile    /^AUTOCONF = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoconf$/;"    m
+AUTOCONF    tests/Makefile    /^AUTOCONF = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoconf$/;"    m
+AUTOHEADER    Makefile    /^AUTOHEADER = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoheader$/;"    m
+AUTOHEADER    include/Makefile    /^AUTOHEADER = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoheader$/;"    m
+AUTOHEADER    lib/Makefile    /^AUTOHEADER = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoheader$/;"    m
+AUTOHEADER    macosx/Makefile    /^AUTOHEADER = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoheader$/;"    m
+AUTOHEADER    tests/Makefile    /^AUTOHEADER = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run autoheader$/;"    m
+AUTOMAKE    Makefile    /^AUTOMAKE = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run automake-1.7$/;"    m
+AUTOMAKE    include/Makefile    /^AUTOMAKE = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run automake-1.7$/;"    m
+AUTOMAKE    lib/Makefile    /^AUTOMAKE = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run automake-1.7$/;"    m
+AUTOMAKE    macosx/Makefile    /^AUTOMAKE = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run automake-1.7$/;"    m
+AUTOMAKE    tests/Makefile    /^AUTOMAKE = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run automake-1.7$/;"    m
+AWK    Makefile    /^AWK = gawk$/;"    m
+AWK    include/Makefile    /^AWK = gawk$/;"    m
+AWK    lib/Makefile    /^AWK = gawk$/;"    m
+AWK    macosx/Makefile    /^AWK = gawk$/;"    m
+AWK    tests/Makefile    /^AWK = gawk$/;"    m
+AddChild    lib/container-chunk.cpp    /^ContainerChunk::AddChild(Chunk *inChild)$/;"    f    class:DAAP::ContainerChunk
+BasicTypeInfo    lib/content-codes.cpp    /^struct BasicTypeInfo$/;"    s    namespace:DAAP    file:
+BuildData    lib/chunk.cpp    /^Chunk::BuildData($/;"    f    class:DAAP::Chunk
+CC    Makefile    /^CC = gcc$/;"    m
+CC    include/Makefile    /^CC = gcc$/;"    m
+CC    lib/Makefile    /^CC = gcc$/;"    m
+CC    macosx/Makefile    /^CC = gcc$/;"    m
+CC    tests/Makefile    /^CC = gcc$/;"    m
+CCDEPMODE    Makefile    /^CCDEPMODE = depmode=gcc3$/;"    m
+CCDEPMODE    include/Makefile    /^CCDEPMODE = depmode=gcc3$/;"    m
+CCDEPMODE    lib/Makefile    /^CCDEPMODE = depmode=gcc3$/;"    m
+CCDEPMODE    macosx/Makefile    /^CCDEPMODE = depmode=gcc3$/;"    m
+CCDEPMODE    tests/Makefile    /^CCDEPMODE = depmode=gcc3$/;"    m
+CCLD    lib/Makefile    /^CCLD = $(CC)$/;"    m
+CFLAGS    Makefile    /^CFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CFLAGS    include/Makefile    /^CFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CFLAGS    lib/Makefile    /^CFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CFLAGS    macosx/Makefile    /^CFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CFLAGS    tests/Makefile    /^CFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+COMPILE    lib/Makefile    /^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"    m
+CONFIG_CLEAN_FILES    Makefile    /^CONFIG_CLEAN_FILES =$/;"    m
+CONFIG_CLEAN_FILES    include/Makefile    /^CONFIG_CLEAN_FILES =$/;"    m
+CONFIG_CLEAN_FILES    lib/Makefile    /^CONFIG_CLEAN_FILES =$/;"    m
+CONFIG_CLEAN_FILES    macosx/Makefile    /^CONFIG_CLEAN_FILES =$/;"    m
+CONFIG_CLEAN_FILES    tests/Makefile    /^CONFIG_CLEAN_FILES =$/;"    m
+CONFIG_HEADER    Makefile    /^CONFIG_HEADER = config.h$/;"    m
+CONFIG_HEADER    include/Makefile    /^CONFIG_HEADER = $(top_builddir)\/config.h$/;"    m
+CONFIG_HEADER    lib/Makefile    /^CONFIG_HEADER = $(top_builddir)\/config.h$/;"    m
+CONFIG_HEADER    macosx/Makefile    /^CONFIG_HEADER = $(top_builddir)\/config.h$/;"    m
+CONFIG_HEADER    tests/Makefile    /^CONFIG_HEADER = $(top_builddir)\/config.h$/;"    m
+CPP    Makefile    /^CPP = gcc -E$/;"    m
+CPP    include/Makefile    /^CPP = gcc -E$/;"    m
+CPP    lib/Makefile    /^CPP = gcc -E$/;"    m
+CPP    macosx/Makefile    /^CPP = gcc -E$/;"    m
+CPP    tests/Makefile    /^CPP = gcc -E$/;"    m
+CPPFLAGS    Makefile    /^CPPFLAGS = $/;"    m
+CPPFLAGS    include/Makefile    /^CPPFLAGS = $/;"    m
+CPPFLAGS    lib/Makefile    /^CPPFLAGS = $/;"    m
+CPPFLAGS    macosx/Makefile    /^CPPFLAGS = $/;"    m
+CPPFLAGS    tests/Makefile    /^CPPFLAGS = $/;"    m
+CTAGS    Makefile    /^CTAGS = ctags$/;"    m
+CTAGS    include/Makefile    /^CTAGS = ctags$/;"    m
+CTAGS    lib/Makefile    /^CTAGS = ctags$/;"    m
+CTAGS    tests/Makefile    /^CTAGS = ctags$/;"    m
+CTAGSFLAGS    Makefile    /^CTAGSFLAGS =$/;"    m
+CTAGSFLAGS    include/Makefile    /^CTAGSFLAGS =$/;"    m
+CTAGSFLAGS    lib/Makefile    /^CTAGSFLAGS =$/;"    m
+CTAGSFLAGS    tests/Makefile    /^CTAGSFLAGS =$/;"    m
+CXX    Makefile    /^CXX = g++$/;"    m
+CXX    include/Makefile    /^CXX = g++$/;"    m
+CXX    lib/Makefile    /^CXX = g++$/;"    m
+CXX    macosx/Makefile    /^CXX = g++$/;"    m
+CXX    tests/Makefile    /^CXX = g++$/;"    m
+CXXCOMPILE    lib/Makefile    /^CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \\$/;"    m
+CXXCOMPILE    tests/Makefile    /^CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \\$/;"    m
+CXXCPP    Makefile    /^CXXCPP = g++ -E$/;"    m
+CXXCPP    include/Makefile    /^CXXCPP = g++ -E$/;"    m
+CXXCPP    lib/Makefile    /^CXXCPP = g++ -E$/;"    m
+CXXCPP    macosx/Makefile    /^CXXCPP = g++ -E$/;"    m
+CXXCPP    tests/Makefile    /^CXXCPP = g++ -E$/;"    m
+CXXDEPMODE    Makefile    /^CXXDEPMODE = depmode=gcc3$/;"    m
+CXXDEPMODE    include/Makefile    /^CXXDEPMODE = depmode=gcc3$/;"    m
+CXXDEPMODE    lib/Makefile    /^CXXDEPMODE = depmode=gcc3$/;"    m
+CXXDEPMODE    macosx/Makefile    /^CXXDEPMODE = depmode=gcc3$/;"    m
+CXXDEPMODE    tests/Makefile    /^CXXDEPMODE = depmode=gcc3$/;"    m
+CXXFLAGS    Makefile    /^CXXFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CXXFLAGS    include/Makefile    /^CXXFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CXXFLAGS    lib/Makefile    /^CXXFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CXXFLAGS    macosx/Makefile    /^CXXFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CXXFLAGS    tests/Makefile    /^CXXFLAGS =  -O2 -Wall -Wno-unknown-pragmas$/;"    m
+CXXLD    lib/Makefile    /^CXXLD = $(CXX)$/;"    m
+CXXLD    tests/Makefile    /^CXXLD = $(CXX)$/;"    m
+CXXLINK    lib/Makefile    /^CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \\$/;"    m
+CXXLINK    tests/Makefile    /^CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \\$/;"    m
+CYGPATH_W    Makefile    /^CYGPATH_W = echo$/;"    m
+CYGPATH_W    include/Makefile    /^CYGPATH_W = echo$/;"    m
+CYGPATH_W    lib/Makefile    /^CYGPATH_W = echo$/;"    m
+CYGPATH_W    macosx/Makefile    /^CYGPATH_W = echo$/;"    m
+CYGPATH_W    tests/Makefile    /^CYGPATH_W = echo$/;"    m
+ChildNamed    lib/container-chunk.cpp    /^ContainerChunk::ChildNamed(const char *inName) const$/;"    f    class:DAAP::ContainerChunk
+ChildNamed    lib/container-chunk.cpp    /^ContainerChunk::ChildNamed(const char *inName)$/;"    f    class:DAAP::ContainerChunk
+Chunk    include/libdaap/chunk.h    /^class Chunk$/;"    c    namespace:DAAP
+Chunk    lib/chunk.cpp    /^Chunk::Chunk($/;"    f    class:DAAP::Chunk
+ChunkCreatorFunc    lib/content-codes.cpp    /^typedef Chunk *(*ChunkCreatorFunc)($/;"    t    namespace:DAAP    file:
+ChunkInfo    include/libdaap/chunk-info.h    /^class ChunkInfo$/;"    c    namespace:DAAP
+ChunkInfo    lib/chunk-info.cpp    /^ChunkInfo::ChunkInfo($/;"    f    class:DAAP::ChunkInfo
+ChunkType    include/libdaap/content-codes.h    /^typedef uint32_t ChunkType;$/;"    t    namespace:DAAP
+ContainerChunk    include/libdaap/container-chunk.h    /^class ContainerChunk : public Chunk$/;"    c    namespace:DAAP
+ContainerChunk    lib/container-chunk.cpp    /^ContainerChunk::ContainerChunk($/;"    f    class:DAAP::ContainerChunk
+ContentCodes    include/libdaap/content-codes.h    /^class ContentCodes$/;"    c    namespace:DAAP
+ContentCodes    lib/content-codes.cpp    /^ContentCodes::ContentCodes()$/;"    f    class:DAAP::ContentCodes
+ContentCodes    lib/content-codes.cpp    /^ContentCodes::ContentCodes(const ContainerChunk &inContainer)$/;"    f    class:DAAP::ContentCodes
+Count    lib/content-codes.cpp    /^ContentCodes::Count() const$/;"    f    class:DAAP::ContentCodes
+CountChildren    lib/container-chunk.cpp    /^ContainerChunk::CountChildren() const$/;"    f    class:DAAP::ContainerChunk
+CreateChunk    lib/content-codes.cpp    /^ContentCodes::CreateChunk($/;"    f    class:DAAP::ContentCodes
+CreateChunk    lib/content-codes.cpp    /^CreateChunk($/;"    f    namespace:DAAP
+DAAP    include/libdaap/chunk-info.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/chunk.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/container-chunk.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/content-codes.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/integer-chunk.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/string-chunk.h    /^namespace DAAP {$/;"    n
+DAAP    include/libdaap/version-chunk.h    /^namespace DAAP {$/;"    n
+DAAP    lib/chunk-info.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/chunk.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/container-chunk.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/content-codes.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/integer-chunk.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/string-chunk.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP    lib/version-chunk.cpp    /^namespace DAAP {$/;"    n    file:
+DAAP_VERSION_INFO    Makefile    /^DAAP_VERSION_INFO = 0:3:0$/;"    m
+DAAP_VERSION_INFO    include/Makefile    /^DAAP_VERSION_INFO = 0:3:0$/;"    m
+DAAP_VERSION_INFO    lib/Makefile    /^DAAP_VERSION_INFO = 0:3:0$/;"    m
+DAAP_VERSION_INFO    macosx/Makefile    /^DAAP_VERSION_INFO = 0:3:0$/;"    m
+DAAP_VERSION_INFO    tests/Makefile    /^DAAP_VERSION_INFO = 0:3:0$/;"    m
+DEFAULT_INCLUDES    lib/Makefile    /^DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)$/;"    m
+DEFAULT_INCLUDES    tests/Makefile    /^DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)$/;"    m
+DEFS    Makefile    /^DEFS = -DHAVE_CONFIG_H$/;"    m
+DEFS    include/Makefile    /^DEFS = -DHAVE_CONFIG_H$/;"    m
+DEFS    lib/Makefile    /^DEFS = -DHAVE_CONFIG_H$/;"    m
+DEFS    macosx/Makefile    /^DEFS = -DHAVE_CONFIG_H$/;"    m
+DEFS    tests/Makefile    /^DEFS = -DHAVE_CONFIG_H$/;"    m
+DEPDIR    Makefile    /^DEPDIR = .deps$/;"    m
+DEPDIR    include/Makefile    /^DEPDIR = .deps$/;"    m
+DEPDIR    lib/Makefile    /^DEPDIR = .deps$/;"    m
+DEPDIR    macosx/Makefile    /^DEPDIR = .deps$/;"    m
+DEPDIR    tests/Makefile    /^DEPDIR = .deps$/;"    m
+DEP_FILES    lib/Makefile    /^DEP_FILES = .\/$(DEPDIR)\/chunk-info.Plo .\/$(DEPDIR)\/chunk.Plo \\$/;"    m
+DEP_FILES    tests/Makefile    /^DEP_FILES = .\/$(DEPDIR)\/chunk-build.Po \\$/;"    m
+DISTFILES    Makefile    /^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"    m
+DISTFILES    include/Makefile    /^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"    m
+DISTFILES    lib/Makefile    /^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"    m
+DISTFILES    macosx/Makefile    /^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"    m
+DISTFILES    tests/Makefile    /^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"    m
+DIST_COMMON    Makefile    /^DIST_COMMON = README AUTHORS COPYING ChangeLog INSTALL Makefile.am \\$/;"    m
+DIST_COMMON    include/Makefile    /^DIST_COMMON = $(nobase_include_HEADERS) Makefile.am Makefile.in$/;"    m
+DIST_COMMON    lib/Makefile    /^DIST_COMMON = Makefile.am Makefile.in$/;"    m
+DIST_COMMON    macosx/Makefile    /^DIST_COMMON = Makefile.am Makefile.in$/;"    m
+DIST_COMMON    tests/Makefile    /^DIST_COMMON = Makefile.am Makefile.in$/;"    m
+DIST_SOURCES    Makefile    /^DIST_SOURCES =$/;"    m
+DIST_SOURCES    include/Makefile    /^DIST_SOURCES =$/;"    m
+DIST_SOURCES    lib/Makefile    /^DIST_SOURCES = $(libdaap_la_SOURCES)$/;"    m
+DIST_SOURCES    macosx/Makefile    /^DIST_SOURCES =$/;"    m
+DIST_SOURCES    tests/Makefile    /^DIST_SOURCES = $(chunk_build_SOURCES) $(chunk_read_SOURCES)$/;"    m
+DIST_SUBDIRS    Makefile    /^DIST_SUBDIRS = $(SUBDIRS) macosx$/;"    m
+DefaultContentCodes    lib/content-codes.cpp    /^ContentCodes::DefaultContentCodes()$/;"    f    class:DAAP::ContentCodes
+Display    lib/chunk.cpp    /^Chunk::Display($/;"    f    class:DAAP::Chunk
+Display    lib/container-chunk.cpp    /^ContainerChunk::Display($/;"    f    class:DAAP::ContainerChunk
+Display    lib/integer-chunk.cpp    /^Integer16Chunk::Display($/;"    f    class:DAAP::Integer16Chunk
+Display    lib/integer-chunk.cpp    /^Integer32Chunk::Display($/;"    f    class:DAAP::Integer32Chunk
+Display    lib/integer-chunk.cpp    /^Integer64Chunk::Display($/;"    f    class:DAAP::Integer64Chunk
+Display    lib/integer-chunk.cpp    /^Integer8Chunk::Display($/;"    f    class:DAAP::Integer8Chunk
+Display    lib/string-chunk.cpp    /^StringChunk::Display($/;"    f    class:DAAP::StringChunk
+Display    lib/version-chunk.cpp    /^VersionChunk::Display($/;"    f    class:DAAP::VersionChunk
+ECHO    Makefile    /^ECHO = echo$/;"    m
+ECHO    include/Makefile    /^ECHO = echo$/;"    m
+ECHO    lib/Makefile    /^ECHO = echo$/;"    m
+ECHO    macosx/Makefile    /^ECHO = echo$/;"    m
+ECHO    tests/Makefile    /^ECHO = echo$/;"    m
+ECHO_C    Makefile    /^ECHO_C = $/;"    m
+ECHO_C    include/Makefile    /^ECHO_C = $/;"    m
+ECHO_C    lib/Makefile    /^ECHO_C = $/;"    m
+ECHO_C    macosx/Makefile    /^ECHO_C = $/;"    m
+ECHO_C    tests/Makefile    /^ECHO_C = $/;"    m
+ECHO_N    Makefile    /^ECHO_N = -n$/;"    m
+ECHO_N    include/Makefile    /^ECHO_N = -n$/;"    m
+ECHO_N    lib/Makefile    /^ECHO_N = -n$/;"    m
+ECHO_N    macosx/Makefile    /^ECHO_N = -n$/;"    m
+ECHO_N    tests/Makefile    /^ECHO_N = -n$/;"    m
+ECHO_T    Makefile    /^ECHO_T = $/;"    m
+ECHO_T    include/Makefile    /^ECHO_T = $/;"    m
+ECHO_T    lib/Makefile    /^ECHO_T = $/;"    m
+ECHO_T    macosx/Makefile    /^ECHO_T = $/;"    m
+ECHO_T    tests/Makefile    /^ECHO_T = $/;"    m
+EGREP    Makefile    /^EGREP = grep -E$/;"    m
+EGREP    include/Makefile    /^EGREP = grep -E$/;"    m
+EGREP    lib/Makefile    /^EGREP = grep -E$/;"    m
+EGREP    macosx/Makefile    /^EGREP = grep -E$/;"    m
+EGREP    tests/Makefile    /^EGREP = grep -E$/;"    m
+ETAGS    Makefile    /^ETAGS = etags$/;"    m
+ETAGS    include/Makefile    /^ETAGS = etags$/;"    m
+ETAGS    lib/Makefile    /^ETAGS = etags$/;"    m
+ETAGS    tests/Makefile    /^ETAGS = etags$/;"    m
+ETAGSFLAGS    Makefile    /^ETAGSFLAGS =$/;"    m
+ETAGSFLAGS    include/Makefile    /^ETAGSFLAGS =$/;"    m
+ETAGSFLAGS    lib/Makefile    /^ETAGSFLAGS =$/;"    m
+ETAGSFLAGS    tests/Makefile    /^ETAGSFLAGS =$/;"    m
+EXEEXT    Makefile    /^EXEEXT = $/;"    m
+EXEEXT    include/Makefile    /^EXEEXT = $/;"    m
+EXEEXT    lib/Makefile    /^EXEEXT = $/;"    m
+EXEEXT    macosx/Makefile    /^EXEEXT = $/;"    m
+EXEEXT    tests/Makefile    /^EXEEXT = $/;"    m
+EXTRA_DIST    Makefile    /^EXTRA_DIST = bootstrap$/;"    m
+EXTRA_DIST    macosx/Makefile    /^EXTRA_DIST = libdaap.pbproj\/project.pbxproj$/;"    m
+EXTRA_DIST    tests/Makefile    /^EXTRA_DIST = server-info content-codes$/;"    m
+F77    Makefile    /^F77 = $/;"    m
+F77    include/Makefile    /^F77 = $/;"    m
+F77    lib/Makefile    /^F77 = $/;"    m
+F77    macosx/Makefile    /^F77 = $/;"    m
+F77    tests/Makefile    /^F77 = $/;"    m
+FFLAGS    Makefile    /^FFLAGS = $/;"    m
+FFLAGS    include/Makefile    /^FFLAGS = $/;"    m
+FFLAGS    lib/Makefile    /^FFLAGS = $/;"    m
+FFLAGS    macosx/Makefile    /^FFLAGS = $/;"    m
+FFLAGS    tests/Makefile    /^FFLAGS = $/;"    m
+FOUR_CHAR_CODE    lib/macros.h    70;"    d
+FOUR_CHAR_CODE    lib/macros.h    98;"    d
+GZIP_ENV    Makefile    /^GZIP_ENV = --best$/;"    m
+GetBasicType    lib/chunk-info.cpp    /^ChunkInfo::GetBasicType() const$/;"    f    class:DAAP::ChunkInfo
+GetChunkInfo    lib/content-codes.cpp    /^ContentCodes::GetChunkInfo(ChunkType inType) const$/;"    f    class:DAAP::ContentCodes
+GetChunkInfo    lib/content-codes.cpp    /^ContentCodes::GetChunkInfo(ChunkType inType)$/;"    f    class:DAAP::ContentCodes
+GetChunkName    lib/content-codes.cpp    /^ContentCodes::GetChunkName(ChunkType inType) const$/;"    f    class:DAAP::ContentCodes
+GetChunkType    lib/content-codes.cpp    /^ContentCodes::GetChunkType(const char *inName) const$/;"    f    class:DAAP::ContentCodes
+GetContentCodes    lib/chunk.cpp    /^Chunk::GetContentCodes() const$/;"    f    class:DAAP::Chunk
+GetData    lib/container-chunk.cpp    /^ContainerChunk::GetData($/;"    f    class:DAAP::ContainerChunk
+GetData    lib/integer-chunk.cpp    /^Integer16Chunk::GetData($/;"    f    class:DAAP::Integer16Chunk
+GetData    lib/integer-chunk.cpp    /^Integer32Chunk::GetData($/;"    f    class:DAAP::Integer32Chunk
+GetData    lib/integer-chunk.cpp    /^Integer64Chunk::GetData($/;"    f    class:DAAP::Integer64Chunk
+GetData    lib/integer-chunk.cpp    /^Integer8Chunk::GetData($/;"    f    class:DAAP::Integer8Chunk
+GetData    lib/string-chunk.cpp    /^StringChunk::GetData($/;"    f    class:DAAP::StringChunk
+GetData    lib/version-chunk.cpp    /^VersionChunk::GetData($/;"    f    class:DAAP::VersionChunk
+GetLength    lib/container-chunk.cpp    /^ContainerChunk::GetLength() const$/;"    f    class:DAAP::ContainerChunk
+GetLength    lib/integer-chunk.cpp    /^Integer16Chunk::GetLength() const$/;"    f    class:DAAP::Integer16Chunk
+GetLength    lib/integer-chunk.cpp    /^Integer32Chunk::GetLength() const$/;"    f    class:DAAP::Integer32Chunk
+GetLength    lib/integer-chunk.cpp    /^Integer64Chunk::GetLength() const$/;"    f    class:DAAP::Integer64Chunk
+GetLength    lib/integer-chunk.cpp    /^Integer8Chunk::GetLength() const$/;"    f    class:DAAP::Integer8Chunk
+GetLength    lib/string-chunk.cpp    /^StringChunk::GetLength() const$/;"    f    class:DAAP::StringChunk
+GetLength    lib/version-chunk.cpp    /^VersionChunk::GetLength() const$/;"    f    class:DAAP::VersionChunk
+GetName    lib/chunk-info.cpp    /^ChunkInfo::GetName() const$/;"    f    class:DAAP::ChunkInfo
+GetName    lib/chunk.cpp    /^Chunk::GetName() const$/;"    f    class:DAAP::Chunk
+GetType    lib/chunk-info.cpp    /^ChunkInfo::GetType() const$/;"    f    class:DAAP::ChunkInfo
+GetType    lib/chunk.cpp    /^Chunk::GetType() const$/;"    f    class:DAAP::Chunk
+GetValue    lib/integer-chunk.cpp    /^Integer16Chunk::GetValue() const$/;"    f    class:DAAP::Integer16Chunk
+GetValue    lib/integer-chunk.cpp    /^Integer32Chunk::GetValue() const$/;"    f    class:DAAP::Integer32Chunk
+GetValue    lib/integer-chunk.cpp    /^Integer64Chunk::GetValue() const$/;"    f    class:DAAP::Integer64Chunk
+GetValue    lib/integer-chunk.cpp    /^Integer8Chunk::GetValue() const$/;"    f    class:DAAP::Integer8Chunk
+GetValue    lib/string-chunk.cpp    /^StringChunk::GetValue() const$/;"    f    class:DAAP::StringChunk
+GetValue    lib/version-chunk.cpp    /^VersionChunk::GetValue() const$/;"    f    class:DAAP::VersionChunk
+GetVersion    lib/version-chunk.cpp    /^VersionChunk::GetVersion() const$/;"    f    class:DAAP::VersionChunk
+HAVE_DLFCN_H    config.h    5;"    d
+HAVE_INTTYPES_H    config.h    8;"    d
+HAVE_MEMORY_H    config.h    11;"    d
+HAVE_STDBOOL_H    config.h    14;"    d
+HAVE_STDINT_H    config.h    17;"    d
+HAVE_STDLIB_H    config.h    20;"    d
+HAVE_STRINGS_H    config.h    23;"    d
+HAVE_STRING_H    config.h    26;"    d
+HAVE_SYS_STAT_H    config.h    29;"    d
+HAVE_SYS_TYPES_H    config.h    32;"    d
+HAVE_UNISTD_H    config.h    35;"    d
+HAVE__BOOL    config.h    38;"    d
+HEADERS    include/Makefile    /^HEADERS = $(nobase_include_HEADERS)$/;"    m
+INCLUDES    lib/Makefile    /^INCLUDES = -I$(top_srcdir)\/include$/;"    m
+INCLUDES    tests/Makefile    /^INCLUDES = -I$(top_srcdir)\/include$/;"    m
+INSTALL    Makefile    /^INSTALL = \/usr\/bin\/install -c$/;"    m
+INSTALL    include/Makefile    /^INSTALL = \/usr\/bin\/install -c$/;"    m
+INSTALL    lib/Makefile    /^INSTALL = \/usr\/bin\/install -c$/;"    m
+INSTALL    macosx/Makefile    /^INSTALL = \/usr\/bin\/install -c$/;"    m
+INSTALL    tests/Makefile    /^INSTALL = \/usr\/bin\/install -c$/;"    m
+INSTALL_DATA    Makefile    /^INSTALL_DATA = ${INSTALL} -m 644$/;"    m
+INSTALL_DATA    include/Makefile    /^INSTALL_DATA = ${INSTALL} -m 644$/;"    m
+INSTALL_DATA    lib/Makefile    /^INSTALL_DATA = ${INSTALL} -m 644$/;"    m
+INSTALL_DATA    macosx/Makefile    /^INSTALL_DATA = ${INSTALL} -m 644$/;"    m
+INSTALL_DATA    tests/Makefile    /^INSTALL_DATA = ${INSTALL} -m 644$/;"    m
+INSTALL_HEADER    Makefile    /^INSTALL_HEADER = $(INSTALL_DATA)$/;"    m
+INSTALL_HEADER    include/Makefile    /^INSTALL_HEADER = $(INSTALL_DATA)$/;"    m
+INSTALL_HEADER    lib/Makefile    /^INSTALL_HEADER = $(INSTALL_DATA)$/;"    m
+INSTALL_HEADER    macosx/Makefile    /^INSTALL_HEADER = $(INSTALL_DATA)$/;"    m
+INSTALL_HEADER    tests/Makefile    /^INSTALL_HEADER = $(INSTALL_DATA)$/;"    m
+INSTALL_PROGRAM    Makefile    /^INSTALL_PROGRAM = ${INSTALL}$/;"    m
+INSTALL_PROGRAM    include/Makefile    /^INSTALL_PROGRAM = ${INSTALL}$/;"    m
+INSTALL_PROGRAM    lib/Makefile    /^INSTALL_PROGRAM = ${INSTALL}$/;"    m
+INSTALL_PROGRAM    macosx/Makefile    /^INSTALL_PROGRAM = ${INSTALL}$/;"    m
+INSTALL_PROGRAM    tests/Makefile    /^INSTALL_PROGRAM = ${INSTALL}$/;"    m
+INSTALL_SCRIPT    Makefile    /^INSTALL_SCRIPT = ${INSTALL}$/;"    m
+INSTALL_SCRIPT    include/Makefile    /^INSTALL_SCRIPT = ${INSTALL}$/;"    m
+INSTALL_SCRIPT    lib/Makefile    /^INSTALL_SCRIPT = ${INSTALL}$/;"    m
+INSTALL_SCRIPT    macosx/Makefile    /^INSTALL_SCRIPT = ${INSTALL}$/;"    m
+INSTALL_SCRIPT    tests/Makefile    /^INSTALL_SCRIPT = ${INSTALL}$/;"    m
+INSTALL_STRIP_PROGRAM    Makefile    /^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"    m
+INSTALL_STRIP_PROGRAM    include/Makefile    /^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"    m
+INSTALL_STRIP_PROGRAM    lib/Makefile    /^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"    m
+INSTALL_STRIP_PROGRAM    macosx/Makefile    /^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"    m
+INSTALL_STRIP_PROGRAM    tests/Makefile    /^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"    m
+Integer16Chunk    include/libdaap/integer-chunk.h    /^class Integer16Chunk : public Chunk$/;"    c    namespace:DAAP
+Integer16Chunk    lib/integer-chunk.cpp    /^Integer16Chunk::Integer16Chunk($/;"    f    class:DAAP::Integer16Chunk
+Integer32Chunk    include/libdaap/integer-chunk.h    /^class Integer32Chunk : public Chunk$/;"    c    namespace:DAAP
+Integer32Chunk    lib/integer-chunk.cpp    /^Integer32Chunk::Integer32Chunk($/;"    f    class:DAAP::Integer32Chunk
+Integer64Chunk    include/libdaap/integer-chunk.h    /^class Integer64Chunk : public Chunk$/;"    c    namespace:DAAP
+Integer64Chunk    lib/integer-chunk.cpp    /^Integer64Chunk::Integer64Chunk($/;"    f    class:DAAP::Integer64Chunk
+Integer8Chunk    include/libdaap/integer-chunk.h    /^class Integer8Chunk : public Chunk$/;"    c    namespace:DAAP
+Integer8Chunk    lib/integer-chunk.cpp    /^Integer8Chunk::Integer8Chunk($/;"    f    class:DAAP::Integer8Chunk
+LDFLAGS    Makefile    /^LDFLAGS = $/;"    m
+LDFLAGS    include/Makefile    /^LDFLAGS = $/;"    m
+LDFLAGS    lib/Makefile    /^LDFLAGS = $/;"    m
+LDFLAGS    macosx/Makefile    /^LDFLAGS = $/;"    m
+LDFLAGS    tests/Makefile    /^LDFLAGS = $/;"    m
+LIBOBJS    Makefile    /^LIBOBJS = $/;"    m
+LIBOBJS    include/Makefile    /^LIBOBJS = $/;"    m
+LIBOBJS    lib/Makefile    /^LIBOBJS = $/;"    m
+LIBOBJS    macosx/Makefile    /^LIBOBJS = $/;"    m
+LIBOBJS    tests/Makefile    /^LIBOBJS = $/;"    m
+LIBS    Makefile    /^LIBS = $/;"    m
+LIBS    include/Makefile    /^LIBS = $/;"    m
+LIBS    lib/Makefile    /^LIBS = $/;"    m
+LIBS    macosx/Makefile    /^LIBS = $/;"    m
+LIBS    tests/Makefile    /^LIBS = $/;"    m
+LIBTOOL    Makefile    /^LIBTOOL = $(SHELL) $(top_builddir)\/libtool$/;"    m
+LIBTOOL    include/Makefile    /^LIBTOOL = $(SHELL) $(top_builddir)\/libtool$/;"    m
+LIBTOOL    lib/Makefile    /^LIBTOOL = $(SHELL) $(top_builddir)\/libtool$/;"    m
+LIBTOOL    macosx/Makefile    /^LIBTOOL = $(SHELL) $(top_builddir)\/libtool$/;"    m
+LIBTOOL    tests/Makefile    /^LIBTOOL = $(SHELL) $(top_builddir)\/libtool$/;"    m
+LINK    lib/Makefile    /^LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \\$/;"    m
+LN_S    Makefile    /^LN_S = ln -s$/;"    m
+LN_S    include/Makefile    /^LN_S = ln -s$/;"    m
+LN_S    lib/Makefile    /^LN_S = ln -s$/;"    m
+LN_S    macosx/Makefile    /^LN_S = ln -s$/;"    m
+LN_S    tests/Makefile    /^LN_S = ln -s$/;"    m
+LOCAL_CFLAGS    Android.mk    /^LOCAL_CFLAGS := -g$/;"    m
+LOCAL_MODULE    Android.mk    /^LOCAL_MODULE := libdaap$/;"    m
+LOCAL_MODULE_TAGS    Android.mk    /^LOCAL_MODULE_TAGS := optional$/;"    m
+LOCAL_PATH    Android.mk    /^LOCAL_PATH := $(call my-dir)$/;"    m
+LOCAL_PRELINK_MODULE    Android.mk    /^LOCAL_PRELINK_MODULE := false$/;"    m
+LOCAL_SHARED_LIBRARIES    Android.mk    /^LOCAL_SHARED_LIBRARIES := libstlport$/;"    m
+LOCAL_SRC_FILES    Android.mk    /^LOCAL_SRC_FILES := \\$/;"    m
+LTCOMPILE    lib/Makefile    /^LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) \\$/;"    m
+LTCXXCOMPILE    lib/Makefile    /^LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \\$/;"    m
+LTCXXCOMPILE    tests/Makefile    /^LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \\$/;"    m
+LTLIBOBJS    Makefile    /^LTLIBOBJS = $/;"    m
+LTLIBOBJS    include/Makefile    /^LTLIBOBJS = $/;"    m
+LTLIBOBJS    lib/Makefile    /^LTLIBOBJS = $/;"    m
+LTLIBOBJS    macosx/Makefile    /^LTLIBOBJS = $/;"    m
+LTLIBOBJS    tests/Makefile    /^LTLIBOBJS = $/;"    m
+LTLIBRARIES    lib/Makefile    /^LTLIBRARIES = $(lib_LTLIBRARIES)$/;"    m
+MAINT    Makefile    /^MAINT = #$/;"    m
+MAINT    include/Makefile    /^MAINT = #$/;"    m
+MAINT    lib/Makefile    /^MAINT = #$/;"    m
+MAINT    macosx/Makefile    /^MAINT = #$/;"    m
+MAINT    tests/Makefile    /^MAINT = #$/;"    m
+MAINTAINER_MODE_FALSE    Makefile    /^MAINTAINER_MODE_FALSE = $/;"    m
+MAINTAINER_MODE_FALSE    include/Makefile    /^MAINTAINER_MODE_FALSE = $/;"    m
+MAINTAINER_MODE_FALSE    lib/Makefile    /^MAINTAINER_MODE_FALSE = $/;"    m
+MAINTAINER_MODE_FALSE    macosx/Makefile    /^MAINTAINER_MODE_FALSE = $/;"    m
+MAINTAINER_MODE_FALSE    tests/Makefile    /^MAINTAINER_MODE_FALSE = $/;"    m
+MAINTAINER_MODE_TRUE    Makefile    /^MAINTAINER_MODE_TRUE = #$/;"    m
+MAINTAINER_MODE_TRUE    include/Makefile    /^MAINTAINER_MODE_TRUE = #$/;"    m
+MAINTAINER_MODE_TRUE    lib/Makefile    /^MAINTAINER_MODE_TRUE = #$/;"    m
+MAINTAINER_MODE_TRUE    macosx/Makefile    /^MAINTAINER_MODE_TRUE = #$/;"    m
+MAINTAINER_MODE_TRUE    tests/Makefile    /^MAINTAINER_MODE_TRUE = #$/;"    m
+MAKEINFO    Makefile    /^MAKEINFO = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run makeinfo$/;"    m
+MAKEINFO    include/Makefile    /^MAKEINFO = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run makeinfo$/;"    m
+MAKEINFO    lib/Makefile    /^MAKEINFO = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run makeinfo$/;"    m
+MAKEINFO    macosx/Makefile    /^MAKEINFO = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run makeinfo$/;"    m
+MAKEINFO    tests/Makefile    /^MAKEINFO = ${SHELL} \/home\/chenxie\/libdaap-0.0.4\/missing --run makeinfo$/;"    m
+NORMAL_INSTALL    Makefile    /^NORMAL_INSTALL = :$/;"    m
+NORMAL_INSTALL    include/Makefile    /^NORMAL_INSTALL = :$/;"    m
+NORMAL_INSTALL    lib/Makefile    /^NORMAL_INSTALL = :$/;"    m
+NORMAL_INSTALL    macosx/Makefile    /^NORMAL_INSTALL = :$/;"    m
+NORMAL_INSTALL    tests/Makefile    /^NORMAL_INSTALL = :$/;"    m
+NORMAL_UNINSTALL    Makefile    /^NORMAL_UNINSTALL = :$/;"    m
+NORMAL_UNINSTALL    include/Makefile    /^NORMAL_UNINSTALL = :$/;"    m
+NORMAL_UNINSTALL    lib/Makefile    /^NORMAL_UNINSTALL = :$/;"    m
+NORMAL_UNINSTALL    macosx/Makefile    /^NORMAL_UNINSTALL = :$/;"    m
+NORMAL_UNINSTALL    tests/Makefile    /^NORMAL_UNINSTALL = :$/;"    m
+OBJEXT    Makefile    /^OBJEXT = o$/;"    m
+OBJEXT    include/Makefile    /^OBJEXT = o$/;"    m
+OBJEXT    lib/Makefile    /^OBJEXT = o$/;"    m
+OBJEXT    macosx/Makefile    /^OBJEXT = o$/;"    m
+OBJEXT    tests/Makefile    /^OBJEXT = o$/;"    m
+PACKAGE    Makefile    /^PACKAGE = libdaap$/;"    m
+PACKAGE    config.h    41;"    d
+PACKAGE    include/Makefile    /^PACKAGE = libdaap$/;"    m
+PACKAGE    lib/Makefile    /^PACKAGE = libdaap$/;"    m
+PACKAGE    macosx/Makefile    /^PACKAGE = libdaap$/;"    m
+PACKAGE    tests/Makefile    /^PACKAGE = libdaap$/;"    m
+PACKAGE_BUGREPORT    Makefile    /^PACKAGE_BUGREPORT = bootc@mac.com$/;"    m
+PACKAGE_BUGREPORT    config.h    44;"    d
+PACKAGE_BUGREPORT    include/Makefile    /^PACKAGE_BUGREPORT = bootc@mac.com$/;"    m
+PACKAGE_BUGREPORT    lib/Makefile    /^PACKAGE_BUGREPORT = bootc@mac.com$/;"    m
+PACKAGE_BUGREPORT    macosx/Makefile    /^PACKAGE_BUGREPORT = bootc@mac.com$/;"    m
+PACKAGE_BUGREPORT    tests/Makefile    /^PACKAGE_BUGREPORT = bootc@mac.com$/;"    m
+PACKAGE_NAME    Makefile    /^PACKAGE_NAME = libdaap$/;"    m
+PACKAGE_NAME    config.h    47;"    d
+PACKAGE_NAME    include/Makefile    /^PACKAGE_NAME = libdaap$/;"    m
+PACKAGE_NAME    lib/Makefile    /^PACKAGE_NAME = libdaap$/;"    m
+PACKAGE_NAME    macosx/Makefile    /^PACKAGE_NAME = libdaap$/;"    m
+PACKAGE_NAME    tests/Makefile    /^PACKAGE_NAME = libdaap$/;"    m
+PACKAGE_STRING    Makefile    /^PACKAGE_STRING = libdaap 0.0.4$/;"    m
+PACKAGE_STRING    config.h    50;"    d
+PACKAGE_STRING    include/Makefile    /^PACKAGE_STRING = libdaap 0.0.4$/;"    m
+PACKAGE_STRING    lib/Makefile    /^PACKAGE_STRING = libdaap 0.0.4$/;"    m
+PACKAGE_STRING    macosx/Makefile    /^PACKAGE_STRING = libdaap 0.0.4$/;"    m
+PACKAGE_STRING    tests/Makefile    /^PACKAGE_STRING = libdaap 0.0.4$/;"    m
+PACKAGE_TARNAME    Makefile    /^PACKAGE_TARNAME = libdaap$/;"    m
+PACKAGE_TARNAME    config.h    53;"    d
+PACKAGE_TARNAME    include/Makefile    /^PACKAGE_TARNAME = libdaap$/;"    m
+PACKAGE_TARNAME    lib/Makefile    /^PACKAGE_TARNAME = libdaap$/;"    m
+PACKAGE_TARNAME    macosx/Makefile    /^PACKAGE_TARNAME = libdaap$/;"    m
+PACKAGE_TARNAME    tests/Makefile    /^PACKAGE_TARNAME = libdaap$/;"    m
+PACKAGE_VERSION    Makefile    /^PACKAGE_VERSION = 0.0.4$/;"    m
+PACKAGE_VERSION    config.h    56;"    d
+PACKAGE_VERSION    include/Makefile    /^PACKAGE_VERSION = 0.0.4$/;"    m
+PACKAGE_VERSION    lib/Makefile    /^PACKAGE_VERSION = 0.0.4$/;"    m
+PACKAGE_VERSION    macosx/Makefile    /^PACKAGE_VERSION = 0.0.4$/;"    m
+PACKAGE_VERSION    tests/Makefile    /^PACKAGE_VERSION = 0.0.4$/;"    m
+PATH_SEPARATOR    Makefile    /^PATH_SEPARATOR = :$/;"    m
+PATH_SEPARATOR    include/Makefile    /^PATH_SEPARATOR = :$/;"    m
+PATH_SEPARATOR    lib/Makefile    /^PATH_SEPARATOR = :$/;"    m
+PATH_SEPARATOR    macosx/Makefile    /^PATH_SEPARATOR = :$/;"    m
+PATH_SEPARATOR    tests/Makefile    /^PATH_SEPARATOR = :$/;"    m
+POST_INSTALL    Makefile    /^POST_INSTALL = :$/;"    m
+POST_INSTALL    include/Makefile    /^POST_INSTALL = :$/;"    m
+POST_INSTALL    lib/Makefile    /^POST_INSTALL = :$/;"    m
+POST_INSTALL    macosx/Makefile    /^POST_INSTALL = :$/;"    m
+POST_INSTALL    tests/Makefile    /^POST_INSTALL = :$/;"    m
+POST_UNINSTALL    Makefile    /^POST_UNINSTALL = :$/;"    m
+POST_UNINSTALL    include/Makefile    /^POST_UNINSTALL = :$/;"    m
+POST_UNINSTALL    lib/Makefile    /^POST_UNINSTALL = :$/;"    m
+POST_UNINSTALL    macosx/Makefile    /^POST_UNINSTALL = :$/;"    m
+POST_UNINSTALL    tests/Makefile    /^POST_UNINSTALL = :$/;"    m
+PRE_INSTALL    Makefile    /^PRE_INSTALL = :$/;"    m
+PRE_INSTALL    include/Makefile    /^PRE_INSTALL = :$/;"    m
+PRE_INSTALL    lib/Makefile    /^PRE_INSTALL = :$/;"    m
+PRE_INSTALL    macosx/Makefile    /^PRE_INSTALL = :$/;"    m
+PRE_INSTALL    tests/Makefile    /^PRE_INSTALL = :$/;"    m
+PRE_UNINSTALL    Makefile    /^PRE_UNINSTALL = :$/;"    m
+PRE_UNINSTALL    include/Makefile    /^PRE_UNINSTALL = :$/;"    m
+PRE_UNINSTALL    lib/Makefile    /^PRE_UNINSTALL = :$/;"    m
+PRE_UNINSTALL    macosx/Makefile    /^PRE_UNINSTALL = :$/;"    m
+PRE_UNINSTALL    tests/Makefile    /^PRE_UNINSTALL = :$/;"    m
+RANLIB    Makefile    /^RANLIB = ranlib$/;"    m
+RANLIB    include/Makefile    /^RANLIB = ranlib$/;"    m
+RANLIB    lib/Makefile    /^RANLIB = ranlib$/;"    m
+RANLIB    macosx/Makefile    /^RANLIB = ranlib$/;"    m
+RANLIB    tests/Makefile    /^RANLIB = ranlib$/;"    m
+RECURSIVE_TARGETS    Makefile    /^RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \\$/;"    m
+ReadChunk    lib/chunk.cpp    /^Chunk::ReadChunk($/;"    f    class:DAAP::Chunk
+SET_MAKE    Makefile    /^SET_MAKE = $/;"    m
+SET_MAKE    include/Makefile    /^SET_MAKE = $/;"    m
+SET_MAKE    lib/Makefile    /^SET_MAKE = $/;"    m
+SET_MAKE    macosx/Makefile    /^SET_MAKE = $/;"    m
+SET_MAKE    tests/Makefile    /^SET_MAKE = $/;"    m
+SHELL    Makefile    /^SHELL = \/bin\/bash$/;"    m
+SHELL    include/Makefile    /^SHELL = \/bin\/bash$/;"    m
+SHELL    lib/Makefile    /^SHELL = \/bin\/bash$/;"    m
+SHELL    macosx/Makefile    /^SHELL = \/bin\/bash$/;"    m
+SHELL    tests/Makefile    /^SHELL = \/bin\/bash$/;"    m
+SOURCES    lib/Makefile    /^SOURCES = $(libdaap_la_SOURCES)$/;"    m
+SOURCES    tests/Makefile    /^SOURCES = $(chunk_build_SOURCES) $(chunk_read_SOURCES)$/;"    m
+STDC_HEADERS    config.h    59;"    d
+STRIP    Makefile    /^STRIP = strip$/;"    m
+STRIP    include/Makefile    /^STRIP = strip$/;"    m
+STRIP    lib/Makefile    /^STRIP = strip$/;"    m
+STRIP    macosx/Makefile    /^STRIP = strip$/;"    m
+STRIP    tests/Makefile    /^STRIP = strip$/;"    m
+SUBDIRS    Makefile    /^SUBDIRS = lib include tests$/;"    m
+SetChunkInfo    lib/content-codes.cpp    /^ContentCodes::SetChunkInfo($/;"    f    class:DAAP::ContentCodes
+SetValue    lib/integer-chunk.cpp    /^Integer16Chunk::SetValue(uint16_t inValue)$/;"    f    class:DAAP::Integer16Chunk
+SetValue    lib/integer-chunk.cpp    /^Integer32Chunk::SetValue(uint32_t inValue)$/;"    f    class:DAAP::Integer32Chunk
+SetValue    lib/integer-chunk.cpp    /^Integer64Chunk::SetValue(uint64_t inValue)$/;"    f    class:DAAP::Integer64Chunk
+SetValue    lib/integer-chunk.cpp    /^Integer8Chunk::SetValue(uint8_t inValue)$/;"    f    class:DAAP::Integer8Chunk
+SetValue    lib/string-chunk.cpp    /^StringChunk::SetValue($/;"    f    class:DAAP::StringChunk
+StringChunk    include/libdaap/string-chunk.h    /^class StringChunk : public Chunk$/;"    c    namespace:DAAP
+StringChunk    lib/string-chunk.cpp    /^StringChunk::StringChunk($/;"    f    class:DAAP::StringChunk
+TESTS    tests/Makefile    /^TESTS = $(check_PROGRAMS)$/;"    m
+UINT16_SWAB    lib/macros.h    39;"    d
+UINT16_SWAB    lib/macros.h    78;"    d
+UINT32_SWAB    lib/macros.h    49;"    d
+UINT32_SWAB    lib/macros.h    82;"    d
+UINT64_SWAB    lib/macros.h    59;"    d
+UINT64_SWAB    lib/macros.h    88;"    d
+VERSION    Makefile    /^VERSION = 0.0.4$/;"    m
+VERSION    config.h    62;"    d
+VERSION    include/Makefile    /^VERSION = 0.0.4$/;"    m
+VERSION    lib/Makefile    /^VERSION = 0.0.4$/;"    m
+VERSION    macosx/Makefile    /^VERSION = 0.0.4$/;"    m
+VERSION    tests/Makefile    /^VERSION = 0.0.4$/;"    m
+VERS_MAX_SIZE    lib/version-chunk.cpp    30;"    d    file:
+VersionChunk    include/libdaap/version-chunk.h    /^class VersionChunk : public Chunk$/;"    c    namespace:DAAP
+VersionChunk    lib/version-chunk.cpp    /^VersionChunk::VersionChunk($/;"    f    class:DAAP::VersionChunk
+VersionInfo    include/libdaap/version-chunk.h    /^struct VersionInfo$/;"    s    namespace:DAAP
+__DAAP_CHUNK_H__    include/libdaap/chunk.h    24;"    d
+__DAAP_CHUNK_INFO_H__    include/libdaap/chunk-info.h    24;"    d
+__DAAP_CONTAINER_CHUNK_H__    include/libdaap/container-chunk.h    24;"    d
+__DAAP_CONTENT_CODES_H__    include/libdaap/content-codes.h    24;"    d
+__DAAP_INTEGER_CHUNK_H__    include/libdaap/integer-chunk.h    24;"    d
+__DAAP_MACROS_H__    lib/macros.h    24;"    d
+__DAAP_STRING_CHUNK_H__    include/libdaap/string-chunk.h    24;"    d
+__DAAP_VERSION_CHUNK_H__    include/libdaap/version-chunk.h    24;"    d
+_ascii    configure    /^ _ascii (); _ebcdic ();$/;"    f
+ac_ct_AR    Makefile    /^ac_ct_AR = ar$/;"    m
+ac_ct_AR    include/Makefile    /^ac_ct_AR = ar$/;"    m
+ac_ct_AR    lib/Makefile    /^ac_ct_AR = ar$/;"    m
+ac_ct_AR    macosx/Makefile    /^ac_ct_AR = ar$/;"    m
+ac_ct_AR    tests/Makefile    /^ac_ct_AR = ar$/;"    m
+ac_ct_CC    Makefile    /^ac_ct_CC = gcc$/;"    m
+ac_ct_CC    include/Makefile    /^ac_ct_CC = gcc$/;"    m
+ac_ct_CC    lib/Makefile    /^ac_ct_CC = gcc$/;"    m
+ac_ct_CC    macosx/Makefile    /^ac_ct_CC = gcc$/;"    m
+ac_ct_CC    tests/Makefile    /^ac_ct_CC = gcc$/;"    m
+ac_ct_CXX    Makefile    /^ac_ct_CXX = g++$/;"    m
+ac_ct_CXX    include/Makefile    /^ac_ct_CXX = g++$/;"    m
+ac_ct_CXX    lib/Makefile    /^ac_ct_CXX = g++$/;"    m
+ac_ct_CXX    macosx/Makefile    /^ac_ct_CXX = g++$/;"    m
+ac_ct_CXX    tests/Makefile    /^ac_ct_CXX = g++$/;"    m
+ac_ct_F77    Makefile    /^ac_ct_F77 = $/;"    m
+ac_ct_F77    include/Makefile    /^ac_ct_F77 = $/;"    m
+ac_ct_F77    lib/Makefile    /^ac_ct_F77 = $/;"    m
+ac_ct_F77    macosx/Makefile    /^ac_ct_F77 = $/;"    m
+ac_ct_F77    tests/Makefile    /^ac_ct_F77 = $/;"    m
+ac_ct_RANLIB    Makefile    /^ac_ct_RANLIB = ranlib$/;"    m
+ac_ct_RANLIB    include/Makefile    /^ac_ct_RANLIB = ranlib$/;"    m
+ac_ct_RANLIB    lib/Makefile    /^ac_ct_RANLIB = ranlib$/;"    m
+ac_ct_RANLIB    macosx/Makefile    /^ac_ct_RANLIB = ranlib$/;"    m
+ac_ct_RANLIB    tests/Makefile    /^ac_ct_RANLIB = ranlib$/;"    m
+ac_ct_STRIP    Makefile    /^ac_ct_STRIP = strip$/;"    m
+ac_ct_STRIP    include/Makefile    /^ac_ct_STRIP = strip$/;"    m
+ac_ct_STRIP    lib/Makefile    /^ac_ct_STRIP = strip$/;"    m
+ac_ct_STRIP    macosx/Makefile    /^ac_ct_STRIP = strip$/;"    m
+ac_ct_STRIP    tests/Makefile    /^ac_ct_STRIP = strip$/;"    m
+am__CONFIG_DISTCLEAN_FILES    Makefile    /^am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \\$/;"    m
+am__cd    Makefile    /^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"    m
+am__cd    include/Makefile    /^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"    m
+am__cd    lib/Makefile    /^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"    m
+am__cd    macosx/Makefile    /^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"    m
+am__cd    tests/Makefile    /^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"    m
+am__depfiles_maybe    lib/Makefile    /^am__depfiles_maybe = depfiles$/;"    m
+am__depfiles_maybe    tests/Makefile    /^am__depfiles_maybe = depfiles$/;"    m
+am__fastdepCC_FALSE    Makefile    /^am__fastdepCC_FALSE = #$/;"    m
+am__fastdepCC_FALSE    include/Makefile    /^am__fastdepCC_FALSE = #$/;"    m
+am__fastdepCC_FALSE    lib/Makefile    /^am__fastdepCC_FALSE = #$/;"    m
+am__fastdepCC_FALSE    macosx/Makefile    /^am__fastdepCC_FALSE = #$/;"    m
+am__fastdepCC_FALSE    tests/Makefile    /^am__fastdepCC_FALSE = #$/;"    m
+am__fastdepCC_TRUE    Makefile    /^am__fastdepCC_TRUE = $/;"    m
+am__fastdepCC_TRUE    include/Makefile    /^am__fastdepCC_TRUE = $/;"    m
+am__fastdepCC_TRUE    lib/Makefile    /^am__fastdepCC_TRUE = $/;"    m
+am__fastdepCC_TRUE    macosx/Makefile    /^am__fastdepCC_TRUE = $/;"    m
+am__fastdepCC_TRUE    tests/Makefile    /^am__fastdepCC_TRUE = $/;"    m
+am__fastdepCXX_FALSE    Makefile    /^am__fastdepCXX_FALSE = #$/;"    m
+am__fastdepCXX_FALSE    include/Makefile    /^am__fastdepCXX_FALSE = #$/;"    m
+am__fastdepCXX_FALSE    lib/Makefile    /^am__fastdepCXX_FALSE = #$/;"    m
+am__fastdepCXX_FALSE    macosx/Makefile    /^am__fastdepCXX_FALSE = #$/;"    m
+am__fastdepCXX_FALSE    tests/Makefile    /^am__fastdepCXX_FALSE = #$/;"    m
+am__fastdepCXX_TRUE    Makefile    /^am__fastdepCXX_TRUE = $/;"    m
+am__fastdepCXX_TRUE    include/Makefile    /^am__fastdepCXX_TRUE = $/;"    m
+am__fastdepCXX_TRUE    lib/Makefile    /^am__fastdepCXX_TRUE = $/;"    m
+am__fastdepCXX_TRUE    macosx/Makefile    /^am__fastdepCXX_TRUE = $/;"    m
+am__fastdepCXX_TRUE    tests/Makefile    /^am__fastdepCXX_TRUE = $/;"    m
+am__include    Makefile    /^am__include = include$/;"    m
+am__include    include/Makefile    /^am__include = include$/;"    m
+am__include    lib/Makefile    /^am__include = include$/;"    m
+am__include    macosx/Makefile    /^am__include = include$/;"    m
+am__include    tests/Makefile    /^am__include = include$/;"    m
+am__leading_dot    Makefile    /^am__leading_dot = .$/;"    m
+am__leading_dot    include/Makefile    /^am__leading_dot = .$/;"    m
+am__leading_dot    lib/Makefile    /^am__leading_dot = .$/;"    m
+am__leading_dot    macosx/Makefile    /^am__leading_dot = .$/;"    m
+am__leading_dot    tests/Makefile    /^am__leading_dot = .$/;"    m
+am__quote    Makefile    /^am__quote = $/;"    m
+am__quote    include/Makefile    /^am__quote = $/;"    m
+am__quote    lib/Makefile    /^am__quote = $/;"    m
+am__quote    macosx/Makefile    /^am__quote = $/;"    m
+am__quote    tests/Makefile    /^am__quote = $/;"    m
+am__remove_distdir    Makefile    /^am__remove_distdir = \\$/;"    m
+am_chunk_build_OBJECTS    tests/Makefile    /^am_chunk_build_OBJECTS = chunk-build.$(OBJEXT)$/;"    m
+am_chunk_read_OBJECTS    tests/Makefile    /^am_chunk_read_OBJECTS = chunk-read.$(OBJEXT)$/;"    m
+am_libdaap_la_OBJECTS    lib/Makefile    /^am_libdaap_la_OBJECTS = content-codes.lo chunk-info.lo chunk.lo \\$/;"    m
+basic_type    lib/content-codes.cpp    /^    uint16_t           basic_type;$/;"    m    struct:DAAP::BasicTypeInfo    file:
+bindir    Makefile    /^bindir = ${exec_prefix}\/bin$/;"    m
+bindir    include/Makefile    /^bindir = ${exec_prefix}\/bin$/;"    m
+bindir    lib/Makefile    /^bindir = ${exec_prefix}\/bin$/;"    m
+bindir    macosx/Makefile    /^bindir = ${exec_prefix}\/bin$/;"    m
+bindir    tests/Makefile    /^bindir = ${exec_prefix}\/bin$/;"    m
+build    Makefile    /^build = i686-pc-linux-gnu$/;"    m
+build    include/Makefile    /^build = i686-pc-linux-gnu$/;"    m
+build    lib/Makefile    /^build = i686-pc-linux-gnu$/;"    m
+build    macosx/Makefile    /^build = i686-pc-linux-gnu$/;"    m
+build    tests/Makefile    /^build = i686-pc-linux-gnu$/;"    m
+build_alias    Makefile    /^build_alias = $/;"    m
+build_alias    include/Makefile    /^build_alias = $/;"    m
+build_alias    lib/Makefile    /^build_alias = $/;"    m
+build_alias    macosx/Makefile    /^build_alias = $/;"    m
+build_alias    tests/Makefile    /^build_alias = $/;"    m
+build_cpu    Makefile    /^build_cpu = i686$/;"    m
+build_cpu    include/Makefile    /^build_cpu = i686$/;"    m
+build_cpu    lib/Makefile    /^build_cpu = i686$/;"    m
+build_cpu    macosx/Makefile    /^build_cpu = i686$/;"    m
+build_cpu    tests/Makefile    /^build_cpu = i686$/;"    m
+build_os    Makefile    /^build_os = linux-gnu$/;"    m
+build_os    include/Makefile    /^build_os = linux-gnu$/;"    m
+build_os    lib/Makefile    /^build_os = linux-gnu$/;"    m
+build_os    macosx/Makefile    /^build_os = linux-gnu$/;"    m
+build_os    tests/Makefile    /^build_os = linux-gnu$/;"    m
+build_vendor    Makefile    /^build_vendor = pc$/;"    m
+build_vendor    include/Makefile    /^build_vendor = pc$/;"    m
+build_vendor    lib/Makefile    /^build_vendor = pc$/;"    m
+build_vendor    macosx/Makefile    /^build_vendor = pc$/;"    m
+build_vendor    tests/Makefile    /^build_vendor = pc$/;"    m
+check_PROGRAMS    tests/Makefile    /^check_PROGRAMS = chunk-read chunk-build$/;"    m
+check_PROGRAMS    tests/Makefile    /^check_PROGRAMS = chunk-read$(EXEEXT) chunk-build$(EXEEXT)$/;"    m
+chunk_build_DEPENDENCIES    tests/Makefile    /^chunk_build_DEPENDENCIES = $(top_srcdir)\/lib\/libdaap.la$/;"    m
+chunk_build_LDADD    tests/Makefile    /^chunk_build_LDADD = $(top_srcdir)\/lib\/libdaap.la$/;"    m
+chunk_build_LDFLAGS    tests/Makefile    /^chunk_build_LDFLAGS =$/;"    m
+chunk_build_OBJECTS    tests/Makefile    /^chunk_build_OBJECTS = $(am_chunk_build_OBJECTS)$/;"    m
+chunk_build_SOURCES    tests/Makefile    /^chunk_build_SOURCES = chunk-build.cpp$/;"    m
+chunk_read_DEPENDENCIES    tests/Makefile    /^chunk_read_DEPENDENCIES = $(top_srcdir)\/lib\/libdaap.la$/;"    m
+chunk_read_LDADD    tests/Makefile    /^chunk_read_LDADD = $(top_srcdir)\/lib\/libdaap.la$/;"    m
+chunk_read_LDFLAGS    tests/Makefile    /^chunk_read_LDFLAGS =$/;"    m
+chunk_read_OBJECTS    tests/Makefile    /^chunk_read_OBJECTS = $(am_chunk_read_OBJECTS)$/;"    m
+chunk_read_SOURCES    tests/Makefile    /^chunk_read_SOURCES = chunk-read.cpp$/;"    m
+creator    lib/content-codes.cpp    /^    ChunkCreatorFunc   creator;$/;"    m    struct:DAAP::BasicTypeInfo    file:
+datadir    Makefile    /^datadir = ${prefix}\/share$/;"    m
+datadir    include/Makefile    /^datadir = ${prefix}\/share$/;"    m
+datadir    lib/Makefile    /^datadir = ${prefix}\/share$/;"    m
+datadir    macosx/Makefile    /^datadir = ${prefix}\/share$/;"    m
+datadir    tests/Makefile    /^datadir = ${prefix}\/share$/;"    m
+dc_install_base    Makefile    /^    dc_install_base=`$(am__cd) $(distdir)\/_inst && pwd | sed -e 's,^[^:\\\\\/]:[\\\\\/],\/,'` \\$/;"    m
+depcomp    lib/Makefile    /^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"    m
+depcomp    tests/Makefile    /^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"    m
+distcleancheck_listfiles    Makefile    /^distcleancheck_listfiles = find . -type f -print$/;"    m
+distdir    Makefile    /^distdir = $(PACKAGE)-$(VERSION)$/;"    m
+distdir    include/Makefile    /^distdir = $(top_distdir)\/$(PACKAGE)-$(VERSION)$/;"    m
+distdir    lib/Makefile    /^distdir = $(top_distdir)\/$(PACKAGE)-$(VERSION)$/;"    m
+distdir    macosx/Makefile    /^distdir = $(top_distdir)\/$(PACKAGE)-$(VERSION)$/;"    m
+distdir    tests/Makefile    /^distdir = $(top_distdir)\/$(PACKAGE)-$(VERSION)$/;"    m
+distuninstallcheck_listfiles    Makefile    /^distuninstallcheck_listfiles = find . -type f -print$/;"    m
+dld_link    configure    /^dld_link ();$/;"    f
+dlopen    configure    /^dlopen ();$/;"    f
+exec_prefix    Makefile    /^exec_prefix = ${prefix}$/;"    m
+exec_prefix    include/Makefile    /^exec_prefix = ${prefix}$/;"    m
+exec_prefix    lib/Makefile    /^exec_prefix = ${prefix}$/;"    m
+exec_prefix    macosx/Makefile    /^exec_prefix = ${prefix}$/;"    m
+exec_prefix    tests/Makefile    /^exec_prefix = ${prefix}$/;"    m
+host    Makefile    /^host = i686-pc-linux-gnu$/;"    m
+host    include/Makefile    /^host = i686-pc-linux-gnu$/;"    m
+host    lib/Makefile    /^host = i686-pc-linux-gnu$/;"    m
+host    macosx/Makefile    /^host = i686-pc-linux-gnu$/;"    m
+host    tests/Makefile    /^host = i686-pc-linux-gnu$/;"    m
+host_alias    Makefile    /^host_alias = $/;"    m
+host_alias    include/Makefile    /^host_alias = $/;"    m
+host_alias    lib/Makefile    /^host_alias = $/;"    m
+host_alias    macosx/Makefile    /^host_alias = $/;"    m
+host_alias    tests/Makefile    /^host_alias = $/;"    m
+host_cpu    Makefile    /^host_cpu = i686$/;"    m
+host_cpu    include/Makefile    /^host_cpu = i686$/;"    m
+host_cpu    lib/Makefile    /^host_cpu = i686$/;"    m
+host_cpu    macosx/Makefile    /^host_cpu = i686$/;"    m
+host_cpu    tests/Makefile    /^host_cpu = i686$/;"    m
+host_os    Makefile    /^host_os = linux-gnu$/;"    m
+host_os    include/Makefile    /^host_os = linux-gnu$/;"    m
+host_os    lib/Makefile    /^host_os = linux-gnu$/;"    m
+host_os    macosx/Makefile    /^host_os = linux-gnu$/;"    m
+host_os    tests/Makefile    /^host_os = linux-gnu$/;"    m
+host_triplet    Makefile    /^host_triplet = i686-pc-linux-gnu$/;"    m
+host_triplet    include/Makefile    /^host_triplet = i686-pc-linux-gnu$/;"    m
+host_triplet    lib/Makefile    /^host_triplet = i686-pc-linux-gnu$/;"    m
+host_triplet    macosx/Makefile    /^host_triplet = i686-pc-linux-gnu$/;"    m
+host_triplet    tests/Makefile    /^host_triplet = i686-pc-linux-gnu$/;"    m
+host_vendor    Makefile    /^host_vendor = pc$/;"    m
+host_vendor    include/Makefile    /^host_vendor = pc$/;"    m
+host_vendor    lib/Makefile    /^host_vendor = pc$/;"    m
+host_vendor    macosx/Makefile    /^host_vendor = pc$/;"    m
+host_vendor    tests/Makefile    /^host_vendor = pc$/;"    m
+includedir    Makefile    /^includedir = ${prefix}\/include$/;"    m
+includedir    include/Makefile    /^includedir = ${prefix}\/include$/;"    m
+includedir    lib/Makefile    /^includedir = ${prefix}\/include$/;"    m
+includedir    macosx/Makefile    /^includedir = ${prefix}\/include$/;"    m
+includedir    tests/Makefile    /^includedir = ${prefix}\/include$/;"    m
+infodir    Makefile    /^infodir = ${prefix}\/info$/;"    m
+infodir    include/Makefile    /^infodir = ${prefix}\/info$/;"    m
+infodir    lib/Makefile    /^infodir = ${prefix}\/info$/;"    m
+infodir    macosx/Makefile    /^infodir = ${prefix}\/info$/;"    m
+infodir    tests/Makefile    /^infodir = ${prefix}\/info$/;"    m
+install_sh    Makefile    /^install_sh = \/home\/chenxie\/libdaap-0.0.4\/install-sh$/;"    m
+install_sh    include/Makefile    /^install_sh = \/home\/chenxie\/libdaap-0.0.4\/install-sh$/;"    m
+install_sh    lib/Makefile    /^install_sh = \/home\/chenxie\/libdaap-0.0.4\/install-sh$/;"    m
+install_sh    macosx/Makefile    /^install_sh = \/home\/chenxie\/libdaap-0.0.4\/install-sh$/;"    m
+install_sh    tests/Makefile    /^install_sh = \/home\/chenxie\/libdaap-0.0.4\/install-sh$/;"    m
+install_sh_DATA    Makefile    /^install_sh_DATA = $(install_sh) -c -m 644$/;"    m
+install_sh_DATA    include/Makefile    /^install_sh_DATA = $(install_sh) -c -m 644$/;"    m
+install_sh_DATA    lib/Makefile    /^install_sh_DATA = $(install_sh) -c -m 644$/;"    m
+install_sh_DATA    macosx/Makefile    /^install_sh_DATA = $(install_sh) -c -m 644$/;"    m
+install_sh_DATA    tests/Makefile    /^install_sh_DATA = $(install_sh) -c -m 644$/;"    m
+install_sh_PROGRAM    Makefile    /^install_sh_PROGRAM = $(install_sh) -c$/;"    m
+install_sh_PROGRAM    include/Makefile    /^install_sh_PROGRAM = $(install_sh) -c$/;"    m
+install_sh_PROGRAM    lib/Makefile    /^install_sh_PROGRAM = $(install_sh) -c$/;"    m
+install_sh_PROGRAM    macosx/Makefile    /^install_sh_PROGRAM = $(install_sh) -c$/;"    m
+install_sh_PROGRAM    tests/Makefile    /^install_sh_PROGRAM = $(install_sh) -c$/;"    m
+install_sh_SCRIPT    Makefile    /^install_sh_SCRIPT = $(install_sh) -c$/;"    m
+install_sh_SCRIPT    include/Makefile    /^install_sh_SCRIPT = $(install_sh) -c$/;"    m
+install_sh_SCRIPT    lib/Makefile    /^install_sh_SCRIPT = $(install_sh) -c$/;"    m
+install_sh_SCRIPT    macosx/Makefile    /^install_sh_SCRIPT = $(install_sh) -c$/;"    m
+install_sh_SCRIPT    tests/Makefile    /^install_sh_SCRIPT = $(install_sh) -c$/;"    m
+kBasicTypes    lib/content-codes.cpp    /^const BasicTypeInfo kBasicTypes[] =$/;"    m    namespace:DAAP    file:
+kTestFile    tests/chunk-build.cpp    /^static const char *kTestFile = "content-codes";$/;"    v    file:
+kTestFile    tests/chunk-read.cpp    /^static const char *kTestFile = "server-info";$/;"    v    file:
+libLTLIBRARIES_INSTALL    lib/Makefile    /^libLTLIBRARIES_INSTALL = $(INSTALL)$/;"    m
+lib_LTLIBRARIES    lib/Makefile    /^lib_LTLIBRARIES = libdaap.la$/;"    m
+libdaap_la_LDFLAGS    lib/Makefile    /^libdaap_la_LDFLAGS = -version-info $(DAAP_VERSION_INFO)$/;"    m
+libdaap_la_LIBADD    lib/Makefile    /^libdaap_la_LIBADD =$/;"    m
+libdaap_la_OBJECTS    lib/Makefile    /^libdaap_la_OBJECTS = $(am_libdaap_la_OBJECTS)$/;"    m
+libdaap_la_SOURCES    lib/Makefile    /^libdaap_la_SOURCES = \\$/;"    m
+libdir    Makefile    /^libdir = ${exec_prefix}\/lib$/;"    m
+libdir    include/Makefile    /^libdir = ${exec_prefix}\/lib$/;"    m
+libdir    lib/Makefile    /^libdir = ${exec_prefix}\/lib$/;"    m
+libdir    macosx/Makefile    /^libdir = ${exec_prefix}\/lib$/;"    m
+libdir    tests/Makefile    /^libdir = ${exec_prefix}\/lib$/;"    m
+libexecdir    Makefile    /^libexecdir = ${exec_prefix}\/libexec$/;"    m
+libexecdir    include/Makefile    /^libexecdir = ${exec_prefix}\/libexec$/;"    m
+libexecdir    lib/Makefile    /^libexecdir = ${exec_prefix}\/libexec$/;"    m
+libexecdir    macosx/Makefile    /^libexecdir = ${exec_prefix}\/libexec$/;"    m
+libexecdir    tests/Makefile    /^libexecdir = ${exec_prefix}\/libexec$/;"    m
+list    Makefile    /^    list='$(DIST_SUBDIRS)'; for subdir in $$list; do \\$/;"    m
+localstatedir    Makefile    /^localstatedir = ${prefix}\/var$/;"    m
+localstatedir    include/Makefile    /^localstatedir = ${prefix}\/var$/;"    m
+localstatedir    lib/Makefile    /^localstatedir = ${prefix}\/var$/;"    m
+localstatedir    macosx/Makefile    /^localstatedir = ${prefix}\/var$/;"    m
+localstatedir    tests/Makefile    /^localstatedir = ${prefix}\/var$/;"    m
+mBasicType    include/libdaap/chunk-info.h    /^        uint16_t       mBasicType;$/;"    m    class:DAAP::ChunkInfo
+mChildren    include/libdaap/container-chunk.h    /^        std::vector<Chunk *>   mChildren;$/;"    m    class:DAAP::ContainerChunk
+mContentCodes    include/libdaap/chunk.h    /^        const ContentCodes *   mContentCodes;$/;"    m    class:DAAP::Chunk
+mInfo    include/libdaap/version-chunk.h    /^        VersionInfo   mInfo;$/;"    m    class:DAAP::VersionChunk
+mLength    include/libdaap/string-chunk.h    /^        uint32_t   mLength;$/;"    m    class:DAAP::StringChunk
+mName    include/libdaap/chunk-info.h    /^        const char *   mName;$/;"    m    class:DAAP::ChunkInfo
+mType    include/libdaap/chunk-info.h    /^        ChunkType      mType;$/;"    m    class:DAAP::ChunkInfo
+mType    include/libdaap/chunk.h    /^        ChunkType              mType;$/;"    m    class:DAAP::Chunk
+mTypesMap    include/libdaap/content-codes.h    /^        std::map<ChunkType, ChunkInfo>   mTypesMap;$/;"    m    class:DAAP::ContentCodes
+mValue    include/libdaap/integer-chunk.h    /^        uint16_t   mValue;$/;"    m    class:DAAP::Integer16Chunk
+mValue    include/libdaap/integer-chunk.h    /^        uint32_t   mValue;$/;"    m    class:DAAP::Integer32Chunk
+mValue    include/libdaap/integer-chunk.h    /^        uint64_t   mValue;$/;"    m    class:DAAP::Integer64Chunk
+mValue    include/libdaap/integer-chunk.h    /^        uint8_t   mValue;$/;"    m    class:DAAP::Integer8Chunk
+mValue    include/libdaap/string-chunk.h    /^        char *     mValue;$/;"    m    class:DAAP::StringChunk
+mVersion    include/libdaap/version-chunk.h    /^        char *        mVersion;$/;"    m    class:DAAP::VersionChunk
+main    config.guess    /^        main()$/;"    f
+main    config.guess    /^    main ()$/;"    f
+main    config.guess    /^main ()$/;"    f
+main    tests/chunk-build.cpp    /^int main(int argc, char *argv[])$/;"    f
+main    tests/chunk-read.cpp    /^int main(int argc, char *argv[])$/;"    f
+major    include/libdaap/version-chunk.h    /^    uint16_t   major;$/;"    m    struct:DAAP::VersionInfo
+mandir    Makefile    /^mandir = ${prefix}\/man$/;"    m
+mandir    include/Makefile    /^mandir = ${prefix}\/man$/;"    m
+mandir    lib/Makefile    /^mandir = ${prefix}\/man$/;"    m
+mandir    macosx/Makefile    /^mandir = ${prefix}\/man$/;"    m
+mandir    tests/Makefile    /^mandir = ${prefix}\/man$/;"    m
+micro    include/libdaap/version-chunk.h    /^    uint8_t    micro;$/;"    m    struct:DAAP::VersionInfo
+minor    include/libdaap/version-chunk.h    /^    uint8_t    minor;$/;"    m    struct:DAAP::VersionInfo
+mkinstalldirs    Makefile    /^mkinstalldirs = $(SHELL) $(top_srcdir)\/mkinstalldirs$/;"    m
+mkinstalldirs    include/Makefile    /^mkinstalldirs = $(SHELL) $(top_srcdir)\/mkinstalldirs$/;"    m
+mkinstalldirs    lib/Makefile    /^mkinstalldirs = $(SHELL) $(top_srcdir)\/mkinstalldirs$/;"    m
+mkinstalldirs    macosx/Makefile    /^mkinstalldirs = $(SHELL) $(top_srcdir)\/mkinstalldirs$/;"    m
+mkinstalldirs    tests/Makefile    /^mkinstalldirs = $(SHELL) $(top_srcdir)\/mkinstalldirs$/;"    m
+nobase_includeHEADERS_INSTALL    include/Makefile    /^nobase_includeHEADERS_INSTALL = $(install_sh_DATA)$/;"    m
+nobase_include_HEADERS    include/Makefile    /^nobase_include_HEADERS = \\$/;"    m
+oldincludedir    Makefile    /^oldincludedir = \/usr\/include$/;"    m
+oldincludedir    include/Makefile    /^oldincludedir = \/usr\/include$/;"    m
+oldincludedir    lib/Makefile    /^oldincludedir = \/usr\/include$/;"    m
+oldincludedir    macosx/Makefile    /^oldincludedir = \/usr\/include$/;"    m
+oldincludedir    tests/Makefile    /^oldincludedir = \/usr\/include$/;"    m
+operator <<    lib/chunk.cpp    /^operator << ($/;"    f    namespace:DAAP
+operator []    lib/container-chunk.cpp    /^ContainerChunk::operator[](size_t inIndex) const$/;"    f    class:DAAP::ContainerChunk
+operator []    lib/container-chunk.cpp    /^ContainerChunk::operator[](size_t inIndex)$/;"    f    class:DAAP::ContainerChunk
+operator []    lib/content-codes.cpp    /^ContentCodes::operator[](const uint32_t &inIndex) const$/;"    f    class:DAAP::ContentCodes
+operator []    lib/content-codes.cpp    /^ContentCodes::operator[](const uint32_t &inIndex)$/;"    f    class:DAAP::ContentCodes
+pkgdatadir    Makefile    /^pkgdatadir = $(datadir)\/libdaap$/;"    m
+pkgdatadir    include/Makefile    /^pkgdatadir = $(datadir)\/libdaap$/;"    m
+pkgdatadir    lib/Makefile    /^pkgdatadir = $(datadir)\/libdaap$/;"    m
+pkgdatadir    macosx/Makefile    /^pkgdatadir = $(datadir)\/libdaap$/;"    m
+pkgdatadir    tests/Makefile    /^pkgdatadir = $(datadir)\/libdaap$/;"    m
+pkgincludedir    Makefile    /^pkgincludedir = $(includedir)\/libdaap$/;"    m
+pkgincludedir    include/Makefile    /^pkgincludedir = $(includedir)\/libdaap$/;"    m
+pkgincludedir    lib/Makefile    /^pkgincludedir = $(includedir)\/libdaap$/;"    m
+pkgincludedir    macosx/Makefile    /^pkgincludedir = $(includedir)\/libdaap$/;"    m
+pkgincludedir    tests/Makefile    /^pkgincludedir = $(includedir)\/libdaap$/;"    m
+pkglibdir    Makefile    /^pkglibdir = $(libdir)\/libdaap$/;"    m
+pkglibdir    include/Makefile    /^pkglibdir = $(libdir)\/libdaap$/;"    m
+pkglibdir    lib/Makefile    /^pkglibdir = $(libdir)\/libdaap$/;"    m
+pkglibdir    macosx/Makefile    /^pkglibdir = $(libdir)\/libdaap$/;"    m
+pkglibdir    tests/Makefile    /^pkglibdir = $(libdir)\/libdaap$/;"    m
+prefix    Makefile    /^prefix = \/usr\/local$/;"    m
+prefix    include/Makefile    /^prefix = \/usr\/local$/;"    m
+prefix    lib/Makefile    /^prefix = \/usr\/local$/;"    m
+prefix    macosx/Makefile    /^prefix = \/usr\/local$/;"    m
+prefix    tests/Makefile    /^prefix = \/usr\/local$/;"    m
+program_transform_name    Makefile    /^program_transform_name = s,x,x,$/;"    m
+program_transform_name    include/Makefile    /^program_transform_name = s,x,x,$/;"    m
+program_transform_name    lib/Makefile    /^program_transform_name = s,x,x,$/;"    m
+program_transform_name    macosx/Makefile    /^program_transform_name = s,x,x,$/;"    m
+program_transform_name    tests/Makefile    /^program_transform_name = s,x,x,$/;"    m
+sDefaultCodes    include/libdaap/content-codes.h    /^        static ContentCodes *   sDefaultCodes;$/;"    m    class:DAAP::ContentCodes
+sDefaultCodes    lib/content-codes.cpp    /^ContentCodes *ContentCodes::sDefaultCodes = NULL;$/;"    m    class:DAAP::ContentCodes    file:
+sbindir    Makefile    /^sbindir = ${exec_prefix}\/sbin$/;"    m
+sbindir    include/Makefile    /^sbindir = ${exec_prefix}\/sbin$/;"    m
+sbindir    lib/Makefile    /^sbindir = ${exec_prefix}\/sbin$/;"    m
+sbindir    macosx/Makefile    /^sbindir = ${exec_prefix}\/sbin$/;"    m
+sbindir    tests/Makefile    /^sbindir = ${exec_prefix}\/sbin$/;"    m
+sharedstatedir    Makefile    /^sharedstatedir = ${prefix}\/com$/;"    m
+sharedstatedir    include/Makefile    /^sharedstatedir = ${prefix}\/com$/;"    m
+sharedstatedir    lib/Makefile    /^sharedstatedir = ${prefix}\/com$/;"    m
+sharedstatedir    macosx/Makefile    /^sharedstatedir = ${prefix}\/com$/;"    m
+sharedstatedir    tests/Makefile    /^sharedstatedir = ${prefix}\/com$/;"    m
+shl_load    configure    /^shl_load ();$/;"    f
+srcdir    Makefile    /^srcdir = .$/;"    m
+srcdir    include/Makefile    /^srcdir = .$/;"    m
+srcdir    lib/Makefile    /^srcdir = .$/;"    m
+srcdir    macosx/Makefile    /^srcdir = .$/;"    m
+srcdir    tests/Makefile    /^srcdir = .$/;"    m
+subdir    Makefile    /^subdir = .$/;"    m
+subdir    include/Makefile    /^subdir = include$/;"    m
+subdir    lib/Makefile    /^subdir = lib$/;"    m
+subdir    macosx/Makefile    /^subdir = macosx$/;"    m
+subdir    tests/Makefile    /^subdir = tests$/;"    m
+sysconfdir    Makefile    /^sysconfdir = ${prefix}\/etc$/;"    m
+sysconfdir    include/Makefile    /^sysconfdir = ${prefix}\/etc$/;"    m
+sysconfdir    lib/Makefile    /^sysconfdir = ${prefix}\/etc$/;"    m
+sysconfdir    macosx/Makefile    /^sysconfdir = ${prefix}\/etc$/;"    m
+sysconfdir    tests/Makefile    /^sysconfdir = ${prefix}\/etc$/;"    m
+target_alias    Makefile    /^target_alias = $/;"    m
+target_alias    include/Makefile    /^target_alias = $/;"    m
+target_alias    lib/Makefile    /^target_alias = $/;"    m
+target_alias    macosx/Makefile    /^target_alias = $/;"    m
+target_alias    tests/Makefile    /^target_alias = $/;"    m
+top_builddir    Makefile    /^top_builddir = .$/;"    m
+top_builddir    include/Makefile    /^top_builddir = ..$/;"    m
+top_builddir    lib/Makefile    /^top_builddir = ..$/;"    m
+top_builddir    macosx/Makefile    /^top_builddir = ..$/;"    m
+top_builddir    tests/Makefile    /^top_builddir = ..$/;"    m
+top_distdir    Makefile    /^top_distdir = .$/;"    m
+top_distdir    include/Makefile    /^top_distdir = ..$/;"    m
+top_distdir    lib/Makefile    /^top_distdir = ..$/;"    m
+top_distdir    macosx/Makefile    /^top_distdir = ..$/;"    m
+top_distdir    tests/Makefile    /^top_distdir = ..$/;"    m
+top_srcdir    Makefile    /^top_srcdir = .$/;"    m
+top_srcdir    include/Makefile    /^top_srcdir = ..$/;"    m
+top_srcdir    lib/Makefile    /^top_srcdir = ..$/;"    m
+top_srcdir    macosx/Makefile    /^top_srcdir = ..$/;"    m
+top_srcdir    tests/Makefile    /^top_srcdir = ..$/;"    m
+transform    Makefile    /^transform = $(program_transform_name)$/;"    m
+transform    include/Makefile    /^transform = $(program_transform_name)$/;"    m
+transform    lib/Makefile    /^transform = $(program_transform_name)$/;"    m
+transform    macosx/Makefile    /^transform = $(program_transform_name)$/;"    m
+transform    tests/Makefile    /^transform = $(program_transform_name)$/;"    m
+win32_libid    libtool    /^win32_libid () {$/;"    f
+win32_libid    ltmain.sh    /^win32_libid () {$/;"    f
+~Chunk    lib/chunk.cpp    /^Chunk::~Chunk()$/;"    f    class:DAAP::Chunk
+~ChunkInfo    lib/chunk-info.cpp    /^ChunkInfo::~ChunkInfo()$/;"    f    class:DAAP::ChunkInfo
+~ContainerChunk    lib/container-chunk.cpp    /^ContainerChunk::~ContainerChunk()$/;"    f    class:DAAP::ContainerChunk
+~ContentCodes    lib/content-codes.cpp    /^ContentCodes::~ContentCodes()$/;"    f    class:DAAP::ContentCodes
+~StringChunk    lib/string-chunk.cpp    /^StringChunk::~StringChunk()$/;"    f    class:DAAP::StringChunk
+~VersionChunk    lib/version-chunk.cpp    /^VersionChunk::~VersionChunk()$/;"    f    class:DAAP::VersionChunk

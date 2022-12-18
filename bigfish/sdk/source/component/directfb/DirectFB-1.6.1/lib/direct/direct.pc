@@ -1,0 +1,13 @@
+prefix=/home/p203646/CV200/Code/source/component/directfb/directfb
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+moduledir=${exec_prefix}/lib/directfb-1.6-0
+moduledirname=directfb-1.6-0
+includedir=${prefix}/include
+
+Name: Direct
+Description: DirectFB base development library
+Version: 1.6.1
+Libs: -L${libdir} -ldirect -lpthread
+Libs.private: -L${libdir} -ldl
+Cflags: -D_REENTRANT -I${prefix}/include/directfb

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="400px" android:layout_height="wrap_content"
+	android:orientation="vertical" android:gravity="center">
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="400px" android:layout_height="wrap_content"
+		android:stretchColumns="1">
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:id="@+id/textView"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/server" />
+			<EditText android:id="@+id/editServer" android:layout_width="100px"
+				android:layout_height="wrap_content" android:singleLine="true"
+				 android:maxLength="20" />
+		</TableRow>
+
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/folder_position" />
+			<EditText android:id="@+id/position" android:layout_width="100px"
+				android:layout_height="wrap_content" android:singleLine="true"
+				android:maxLength="100"  />
+		</TableRow>
+
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:id="@+id/textEx"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/str_Ex" />
+			<TextView android:textSize="20px" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/str_Exam" />
+		</TableRow>
+
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:id="@+id/textName"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/str_name" />
+			<EditText android:id="@+id/editName" android:layout_width="100px"
+				android:layout_height="wrap_content" android:singleLine="true"
+				 android:maxLength="20" />
+		</TableRow>
+
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:id="@+id/textpass"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:text="@string/str_pass" />
+			<EditText android:id="@+id/editpass" android:layout_width="100px"
+				android:layout_height="wrap_content" android:password="true"
+				android:singleLine="true" 
+				android:maxLength="20" />
+		</TableRow>
+		<TableRow android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+			<CheckBox android:id="@+id/checkBox" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/str_anonymous" />
+		</TableRow>
+
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+			<TextView android:textSize="20px" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/dispaly" />
+			<EditText android:id="@+id/editdisplay"
+				android:layout_width="100px" android:layout_height="wrap_content"
+				android:singleLine="true" 
+				android:maxLength="20" />
+		</TableRow>
+	</TableLayout>
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:gravity="center">
+		<Button android:id="@+id/okBtn" android:layout_width="100px"
+			android:layout_height="wrap_content" android:text="@string/ok" />
+		<Button android:id="@+id/cancelBtn" android:layout_width="100px"
+			android:layout_height="wrap_content" android:text="@string/cancel" />
+	</LinearLayout>
+</LinearLayout>

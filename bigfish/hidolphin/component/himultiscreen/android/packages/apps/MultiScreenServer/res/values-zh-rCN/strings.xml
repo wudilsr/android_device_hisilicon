@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">多屏互动服务</string>
+    <string name="start_service">开启多屏互动服务！</string>
+    <string name="stop_service">关闭多屏互动服务！</string>
+    <string name="dialogTitleLoading">载入中</string>
+    <string name="dialogMessageLoading">请等待</string>
+    <string name="friendly_name_too_long">设备名超长，请重新输入！</string>
+    <string name="friendly_name_blank">设备名不能为空，请重新输入！</string>
+    <string name="friendly_name_invalid_characters">输入无效字符（换行、首尾空格），设备名未修改！</string>
+    <string name="set_net_host_label">设备名</string>
+    <string name="FriendlyName"></string>
+    <string name="himultiscreen_is_running">多屏服务正在运行</string>
+    <string name="toast_network_error">抱歉，网络异常！</string>
+    <string name="open_status">开启状态</string>
+    <string name="close_status">关闭状态</string>
+    <string name="default_device_name">客厅 1</string>
+    <string name="fuction_not_support">暂不支持该功能</string>
+    <string name="recongize_error_response">对不起,请重说一遍</string>
+    <string name="tv_cat_not_installed">未安装电视猫</string>
+    <string name="app_not_installed">没安装此应用程序</string>
+    <string name="browser_not_installed">未安装浏览器</string>
+    <string name="city_not_supported">暂不支持该城市</string>
+    <string name="weather_prase_failed">天气解析失败</string>
+    <string name="obtain_weather_failed">获取天气信息失败</string>
+    <string name="obtain_weather_net_failed">获取天气信息失败，网络异常</string>
+
+</resources>

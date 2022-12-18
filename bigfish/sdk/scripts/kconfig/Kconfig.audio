@@ -1,0 +1,83 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "Audio Config"
+#--------------------------------
+config	HI_SND_ALSA_AO_SUPPORT
+	bool "AO ALSA Support"
+	default n
+
+config HI_AI_SUPPORT
+	bool "AI Support"
+	default n
+
+config	HI_SND_ALSA_AI_SUPPORT
+	depends on HI_AI_SUPPORT
+	bool "AI ALSA Support"
+	default n
+
+config	HI_SND_ALSA_I2S_ONLY_SUPPORT
+	depends on HI_SND_ALSA_AI_SUPPORT
+	bool "ALSA I2S only Card Support"
+	default n
+
+config	HI_SND_ALSA_HDMI_ONLY_SUPPORT
+	depends on HI_SND_ALSA_AI_SUPPORT
+	bool "ALSA HDMI only Card Support"
+	default n
+
+config HI_ADEC_MAX_INSTANCE
+	int "ADEC Max Instance Number(1~8)"
+	range 1 8
+	default 8
+
+config HI_ADEC_AUDSPECTRUM_SUPPORT
+	bool "ADEC Audio Spectrum Support"
+	default n
+
+config HI_SND_SMARTVOLUME_SUPPORT
+	bool "SND Smart Volume Support"
+	default n
+
+config HI_SND_VIRTUALCHN_SUPPORT
+	bool "SND Virtual Channel Support"
+	default n
+
+config HI_SND_AOE_HW_SUPPORT
+	bool "SND Hardware Aoe Support"
+	depends on HI3716CV200 || HI3716MV400 || HI3718CV100 || HI3719CV100 || HI3718MV100 || HI3719MV100
+	default n
+
+config HI_RESAMPLER_QUALITY_LINEAR
+	bool "Linear Resampler"
+	default n
+
+config HI_AENC_SUPPORT
+	bool "AENC Support"
+	default y
+
+config HI_SND_SIF_SUPPORT
+	bool "SIF Support"
+	default n
+
+menuconfig  HI_ADAC_SUPPORT
+	bool "ADAC Support"
+	default n
+
+choice
+	prompt "Codec Support"
+	depends on HI_ADAC_SUPPORT
+
+config  HI_ADAC_SLIC_SUPPORT
+	bool "slic"
+
+config  HI_ADAC_TVL320AIC31_SUPPORT
+	bool "tlv320"
+
+endchoice
+
+config HI_ALSA_TVL320_KERNEL_SUPPORT
+	bool "KERNEL Tlv320 Support"
+	default n
+
+#--------------------------------
+endmenu
+#++++++++++++++++++++++++++++++++++++++++++++++++++++

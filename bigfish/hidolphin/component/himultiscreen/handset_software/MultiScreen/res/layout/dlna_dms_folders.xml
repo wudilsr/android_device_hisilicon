@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dms"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rc_otherbrowse_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_green_toolbar" >
+
+        <ImageView
+            android:id="@+id/rc_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rc_back"
+            android:onClick="onBackClick" />
+
+        <TextView
+            android:id="@+id/rc_dms_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="@string/dms_picture_other"
+            android:textColor="#fff"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/other_folders_browsing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rc_otherbrowse_layout"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/bg_dms_item_press"
+        android:layout_marginTop="3dp"
+        android:numColumns="1"
+        android:visibility="visible" />
+
+</RelativeLayout>

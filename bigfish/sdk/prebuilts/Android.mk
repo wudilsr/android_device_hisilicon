@@ -1,0 +1,80 @@
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+include $(SDK_DIR)/Android.def
+
+define hisdk_check_file_print
+$(foreach var,$(1),\
+  $(shell test ! -f $(LOCAL_PATH)/$(var).so || echo $(var)) \
+)
+endef
+
+define addsuffix_so_list
+$(addsuffix .so, $(1))
+endef
+
+LOCAL_SRC_PRELIBS :=
+ifeq (y,$(CFG_HI_HACODEC_MP3DECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.MP3.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_AACDECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.AAC.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_AACENCODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.AAC.encode
+endif
+ifeq (y,$(CFG_HI_HACODEC_AC3PASSTHROUGH_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.AC3PASSTHROUGH.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_AMRNBCODEC_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.AMRNB.codec
+endif
+ifeq (y,$(CFG_HI_HACODEC_AMRWBCODEC_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.AMRWB.codec
+endif
+ifeq (y,$(CFG_HI_HACODEC_BLURAYLPCMDECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.BLURAYLPCM.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_COOKDECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.COOK.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_DRADECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.DRA.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_DTSPASSTHROUGH_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.DTSPASSTHROUGH.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_G711CODEC_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.G711.codec
+endif
+ifeq (y,$(CFG_HI_HACODEC_G722CODEC_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.G722.codec
+endif
+ifeq (y,$(CFG_HI_HACODEC_MP2DECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.MP2.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_PCMDECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.PCM.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_TRUEHDPASSTHROUGH_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.TRUEHDPASSTHROUGH.decode
+endif
+ifeq (y,$(CFG_HI_HACODEC_WMADECODE_SUPPORT))
+LOCAL_SRC_PRELIBS += libHA.AUDIO.WMA.decode
+endif
+ifeq (y,$(CFG_HI_CAPTION_TTX_SUPPORT))
+LOCAL_SRC_PRELIBS += libhi_ttx
+endif
+ifeq (y,$(CFG_HI_CAPTION_CC_SUPPORT))
+LOCAL_SRC_PRELIBS += libhi_cc
+endif
+ifeq (y,$(CFG_HI_3G_SUPPORT))
+LOCAL_SRC_PRELIBS += libhi_3g
+endif
+
+LOCAL_MODULES_NAME := $(call hisdk_check_file_print, $(LOCAL_SRC_PRELIBS))
+LOCAL_PREBUILT_LIBS := $(call addsuffix_so_list, $(LOCAL_MODULES_NAME))
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULES_NAME)
+
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_MULTI_PREBUILT)

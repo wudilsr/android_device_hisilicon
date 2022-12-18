@@ -1,0 +1,36 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "Video DAC Config"
+
+config HI_DAC_CVBS
+	int "CVBS"
+	range 0 5
+	help 
+	    DAC number used as CVBS.
+	default 3
+	
+config HI_DAC_YPBPR_Y
+	depends on !HI3718CV100 && !HI3718MV100
+	int "YPBPR_Y"
+	range 0 5
+	help 
+	    DAC number used as YPBPR_Y.
+	default 1
+	
+config HI_DAC_YPBPR_PB
+	depends on !HI3718CV100 && !HI3718MV100
+	int "YPBPR_PB"
+	range 0 5
+	help 
+	    DAC number used as YPBPR_PB.
+	default 2
+	
+config HI_DAC_YPBPR_PR
+	depends on !HI3718CV100 && !HI3718MV100
+	int "YPBPR_PR"
+	range 0 5
+	help 
+	    DAC number used as YPBPR_PR.
+	default 0
+
+endmenu	
+#+++++++++++++++++++++++++++++++++++++++++++++++++++

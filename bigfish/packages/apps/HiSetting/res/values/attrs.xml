@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="set_video_tv_list">
+        <item>2160P 24Hz</item>
+        <item>2160P 25Hz</item>
+        <item>2160P 30Hz</item>
+        <item>1080P 60Hz</item>
+        <item>1080P 50Hz</item>
+        <item>1080i 60Hz</item>
+        <item>1080i 50Hz</item>
+        <item>720P 60Hz</item>
+        <item>720P 50Hz</item>
+        <item>PAL</item>
+        <item>NTSC</item>
+    </string-array>
+
+    <integer-array name="set_video_tv_value">
+        <item>256</item>
+        <item>257</item>
+        <item>258</item>
+        <item>0</item>
+        <item>1</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>11</item>
+        <item>14</item>
+    </integer-array>
+<!-- Video PC -->
+    <string-array name="set_video_pc_list">
+        <item>1024x768 60Hz</item>
+        <item>1280x720 60Hz</item>
+        <item>1280x800 60Hz</item>
+        <item>1280x1024 60Hz</item>
+        <item>1440x900 60Hz</item>
+        <item>1600x1200 60Hz</item>
+        <item>1920x1080 60Hz</item>
+        <item>1920x1200 60Hz</item>
+        <item>1920x1440 60Hz</item>
+        <item>2560x1440 60Hz RB</item>
+        <item>2560x1600 60Hz RB</item>
+    </string-array>
+    <integer-array name="set_video_pc_list_value">
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>31</item>
+        <item>34</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>41</item>
+        <item>42</item>
+    </integer-array>
+    <string-array name="hdmi_output_show">
+        <item>Close</item>
+        <item>Auto</item>
+        <item>LPCM</item>
+        <item>RAW</item>
+    </string-array>
+    <!-- sdpif output -->
+    <string-array name="sdpif_output_show">
+        <item>Close</item>
+        <item>LPCM</item>
+        <item>RAW</item>
+    </string-array>
+    <string-array name="bluelight_output_show">
+        <item>Auto</item>
+        <item>RAW5.1</item>
+        <item>RAW7.1</item>
+    </string-array>
+    <!-- Ratio -->
+    <string-array name="set_video_ratio">
+        <item>Auto</item>
+        <item>4:3</item>
+        <item>16:9</item>
+    </string-array>
+    <string-array name="set_video_cvrs">
+        <item>Extrude</item>
+        <item>Add black side</item>
+    </string-array>
+    <string-array name="device_name_entries_value">
+        <item>Living Room 1</item>
+        <item>Living Room 2</item>
+        <item>Bedroom 1</item>
+        <item>Bedroom 2</item>
+    </string-array>
+    <string-array name="wifi_add_secure_value">
+        <item>无密码</item>
+        <item>WEP</item>
+        <item>PSK</item>
+    </string-array>
+</resources>

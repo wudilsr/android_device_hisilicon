@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:id="@+id/mainExplorerLayout01"
+	android:orientation="vertical" android:gravity="center_vertical"
+	android:background="@drawable/app_bg"
+	>
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/layout1"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+		android:layout_alignParentTop="true">
+		<ImageButton android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:id="@+id/filterBut"
+		android:layout_alignParentRight="true" android:layout_marginTop="2dip"
+		android:visibility="gone"
+		android:background="@drawable/filter_by_file" />
+		<ImageButton android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:id="@+id/showBut"
+		android:layout_toLeftOf="@id/filterBut" android:layout_alignTop="@id/filterBut"
+		android:visibility="gone"
+		android:background="@drawable/show_by_list" />
+		<include layout="@layout/title_layout" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true" android:layout_toLeftOf="@id/showBut" />
+	</RelativeLayout>
+
+<!--
+
+		android:paddingTop="100dp"
+		android:paddingLeft="150dp"   android:paddingRight="150dp"
+	<TextView android:id="@+id/pageInfo"
+		android:layout_alignParentBottom="true" android:layout_width="fill_parent"
+		android:layout_height="65dp" android:gravity="center"
+		android:textSize="40sp" android:visibility="gone" android:textColor="@color/white"/>
+-->
+	<LinearLayout
+	    android:id="@+id/layout2"
+        android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:orientation="horizontal"
+		android:layout_marginBottom="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/listview_bg"
+		android:layout_below="@id/layout1">
+		<include layout="@layout/main_right" android:layout_height="fill_parent"
+		android:layout_width="fill_parent" />
+	</LinearLayout>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,3 @@
+remote: warning: File bigfish/sdk/tools/windows/HiTool/HiTool-STB-3.0.30.zip is 99.62 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+remote: error: Trace: 3359c6d76afc32f306de7359fff8c14255de0e05d464a5c1f72bda463c99fe7e
+

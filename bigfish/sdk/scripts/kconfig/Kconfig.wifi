@@ -1,0 +1,49 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+#--------------------------------
+menuconfig HI_WIFI_SUPPORT
+	bool "WiFi Support"
+	default n
+	depends on LINUX_PRODUCT
+	help
+	  This section contains all the supported 802.11 wireless device drivers.
+	  Set to 'y' to support this device, 'n' not support.
+
+menu    "WiFi Device Type"
+	depends on HI_WIFI_SUPPORT
+
+config  HI_WIFI_DEVICE_RTL8188CUS
+	bool "Realtek RTL8188CUS (11n 1x1 2.4G USB)"
+config  HI_WIFI_DEVICE_RTL8192CU
+	bool "Realtek RTL8192CU (11n 2x2 2.4G USB)"
+config  HI_WIFI_DEVICE_RTL8188EUS
+	bool "Realtek RTL8188ETV and RTL8188EUS (11n 1x1 2.4G USB)"
+config  HI_WIFI_DEVICE_RTL8192EU
+	bool "Realtek RTL8192EU (11n 2x2 2.4G USB)"
+config  HI_WIFI_DEVICE_RTL8192DU
+	bool "Realtek RTL8192DU (11n 2x2 2.4G+5G USB)"
+config  HI_WIFI_DEVICE_RT5370
+	bool "Mediatek RT3070 and RT5370 (11n 1x1 2.4G USB)"
+config  HI_WIFI_DEVICE_MT7601U
+	bool "Mediatek MT7601U (11n 1x1 2.4G USB)"
+config  HI_WIFI_DEVICE_RT5572
+	bool "Mediatek RT5572 (11n 2x2 2.4G+5G USB)"
+config  HI_WIFI_DEVICE_AR9271
+	bool "Atheros AR9271 (11n 1x1 2.4G USB)"
+config  HI_WIFI_DEVICE_AR9374
+	bool "Atheros AR9374 (11n 2x2 2.4G+5G USB)"
+config  HI_WIFI_DEVICE_QCA1021G
+	bool "Atheros QCA1021G (11n 2x2 2.4G USB)"
+config  HI_WIFI_DEVICE_QCA1021X
+	bool "Atheros QCA1021X (11n 2x2 2.4G+5G USB)"
+config  HI_WIFI_DEVICE_BCM43236
+	bool "Broadcom BCM43236 (11n 2x2 2.4G+5G USB)"
+endmenu
+
+menu	"WiFi Working Mode"
+	depends on HI_WIFI_SUPPORT
+
+config  HI_WIFI_MODE_STA
+	bool "STA Mode"
+config  HI_WIFI_MODE_AP
+	bool "SoftAP Mode"
+endmenu

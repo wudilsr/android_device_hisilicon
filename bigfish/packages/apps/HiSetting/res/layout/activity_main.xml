@@ -1,0 +1,168 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/background" >
+    <RelativeLayout
+       android:id="@+id/main_net_set"
+       android:layout_width="426dp"
+       android:layout_height="360dp"
+       android:gravity="center"
+       android:focusable="true"
+       android:clickable="true"
+       android:background="@drawable/button_selector">
+       <ImageView
+           android:id="@+id/main_net_image"
+           android:layout_width="120dp"
+           android:layout_height="100dp"
+           android:layout_centerHorizontal="true"
+           android:background="@drawable/icon_settings_wifi_normal_4"/>
+       <TextView
+           android:id="@+id/main_net_text"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="60dp"
+           android:layout_below="@+id/main_net_image"
+           android:gravity="center"
+           android:text="@string/main_net_text"
+           android:layout_centerHorizontal="true"
+           android:textColor="@android:color/white"
+           android:textSize="36sp" />
+    </RelativeLayout>
+
+     <RelativeLayout
+         android:id="@+id/main_display_set"
+         android:layout_toRightOf="@+id/main_net_set"
+         android:gravity="center"
+         android:layout_width="426dp"
+         android:layout_height="360dp"
+         android:focusable="true"
+         android:background="@drawable/button_selector" >
+         <ImageView
+             android:id="@+id/main_display_image"
+             android:layout_width="120dp"
+           android:layout_height="100dp"
+             android:layout_centerHorizontal="true"
+             android:background="@drawable/icon_settings_image_and_sound_normal" />
+         <TextView
+             android:id="@+id/main_display_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="60dp"
+             android:layout_below="@+id/main_display_image"
+             android:layout_centerHorizontal="true"
+             android:gravity="center"
+             android:text="@string/main_display_text"
+             android:textColor="@android:color/white"
+             android:textSize="36sp" />
+     </RelativeLayout>
+
+     <RelativeLayout
+         android:id="@+id/main_secure_set"
+         android:layout_toRightOf="@+id/main_display_set"
+         android:layout_width="426dp"
+         android:layout_height="360dp"
+         android:gravity="center"
+         android:focusable="true"
+         android:background="@drawable/button_selector" >
+         <ImageView
+             android:id="@+id/main_secure_image"
+             android:layout_width="120dp"
+           android:layout_height="100dp"
+             android:layout_centerHorizontal="true"
+             android:background="@drawable/icon_settings_safe_normal" />
+         <TextView
+             android:id="@+id/main_secure_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="60dp"
+             android:layout_below="@+id/main_secure_image"
+             android:layout_centerHorizontal="true"
+             android:gravity="center"
+             android:text="@string/main_secure_text"
+             android:textColor="@android:color/white"
+             android:textSize="36sp" />
+     </RelativeLayout>
+     <RelativeLayout
+         android:id="@+id/main_normal_set"
+         android:layout_below="@+id/main_net_set"
+         android:layout_width="426dp"
+         android:layout_height="360dp"
+         android:gravity="center"
+         android:focusable="true"
+         android:background="@drawable/button_selector" >
+         <ImageView
+             android:id="@+id/main_normal_image"
+             android:layout_width="120dp"
+           android:layout_height="100dp"
+             android:layout_centerHorizontal="true"
+             android:background="@drawable/icon_settings_setting_normal" />
+         <TextView
+             android:id="@+id/main_normal_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="60dp"
+             android:layout_below="@+id/main_normal_image"
+             android:layout_centerHorizontal="true"
+             android:gravity="center"
+             android:text="@string/main_normal_text"
+             android:textColor="@android:color/white"
+             android:textSize="36sp" />
+     </RelativeLayout>
+     <RelativeLayout
+         android:id="@+id/main_play_set"
+         android:layout_below="@+id/main_display_set"
+         android:layout_toRightOf="@+id/main_normal_set"
+         android:layout_width="426dp"
+         android:layout_height="360dp"
+         android:gravity="center"
+         android:focusable="true"
+         android:background="@drawable/button_selector" >
+         <ImageView
+             android:id="@+id/main_play_image"
+             android:layout_width="120dp"
+           android:layout_height="100dp"
+             android:layout_centerHorizontal="true"
+             android:scaleType="fitXY"
+             android:background="@drawable/content_setting_play" />
+         <TextView
+             android:id="@+id/main_play_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="60dp"
+             android:layout_below="@+id/main_play_image"
+             android:layout_centerHorizontal="true"
+             android:gravity="center"
+             android:text="@string/main_play_text"
+             android:textColor="@android:color/white"
+             android:textSize="36sp" />
+     </RelativeLayout>
+     <RelativeLayout
+         android:id="@+id/main_updata_set"
+         android:layout_below="@+id/main_secure_set"
+         android:layout_toRightOf="@+id/main_play_set"
+         android:layout_width="426dp"
+         android:layout_height="360dp"
+         android:gravity="center"
+         android:focusable="true"
+         android:background="@drawable/button_selector" >
+         <ImageView
+             android:id="@+id/main_updata_image"
+             android:layout_width="120dp"
+           android:layout_height="100dp"
+             android:layout_centerHorizontal="true"
+             android:background="@drawable/icon_settings_update_normal" />
+         <TextView
+             android:id="@+id/main_updata_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="60dp"
+             android:layout_below="@+id/main_updata_image"
+             android:layout_centerHorizontal="true"
+             android:gravity="center"
+             android:text="@string/main_updata_text"
+             android:textColor="@android:color/white"
+             android:textSize="36sp" />
+     </RelativeLayout>
+</RelativeLayout>

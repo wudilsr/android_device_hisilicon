@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">盒子设置</string>
+    <!-- main -->
+    <string name="main_net_text">网络设置</string>
+    <string name="main_display_text">画面设置</string>
+    <string name="main_secure_text">账户与安全</string>
+    <string name="main_normal_text">通用设置</string>
+    <string name="main_play_text">播放设置</string>
+    <string name="main_updata_text">系统升级</string>
+    <!-- net set -->
+    <string name="net_set_title">网络</string>
+    <string name="net_set_title_hint">网络相关设置</string>
+    <string name="net_set_ethenet">有线设置</string>
+    <string name="net_set_wifi">无线网络</string>
+    <string name="net_set_hot">热点</string>
+    <!-- ethernet set -->
+    <string name="ethernet_title">有线网络</string>
+    <string name="ethernet_title_hint">有线网络相关设置</string>
+    <string name="ethernet_auto">自动配置</string>
+    <string name="ethernet_auto_open">开</string>
+    <string name="ethernet_auto_close">关</string>
+    <string name="ethernet_address">地址</string>
+    <string name="ethernet_netmask">掩码</string>
+    <string name="ethernet_gateway">网关</string>
+    <string name="ethernet_dns">DNS</string>
+    <string name="ethernet_commit">提交</string>
+    <string name="ethernet_commit_ok">设置成功</string>
+    <string name="ethernet_commit_faile">设置失败</string>
+    <string name="ethernet_ip_error">ip地址错误</string>
+    <string name="ethernet_mask_error">子网掩码错误</string>
+    <string name="ethernet_gateway_error">网关错误</string>
+    <string name="ethernet_dns_error">dns错误</string>
+
+    <!-- wifi set -->
+    <string name="wifi_title">无线网络</string>
+    <string name="wifi_title_hint">无线网络相关设置</string>
+    <string name="wifi_connect">连接</string>
+    <string name="wifi_connecting">(正在连接···)</string>
+    <string name="wifi_connected">(已连接)</string>
+    <string name="wifi_connect_fail">(连接失败)</string>
+    <string name="wifi_password">密码</string>
+    <string name="wifi_unenable">没有可用的网络</string>
+    <string name="wifi_progress">正在扫描可用网络···</string>
+    <string name="wifi_add">手动添加网络</string>
+    <string name="wifi_add_ssid">SSID</string>
+    <string name="wifi_add_secure">加密方式</string>
+    <string name="wifi_add_password">密码</string>
+    <string name="wifi_forget_text">请选择操作</string>
+    <string name="wifi_forget_ok">取消保存</string>
+    <string name="wifi_forget_cancel">取消</string>
+    <!-- secure set -->
+    <string name="secure_title">账户与安全</string>
+    <string name="secure_title_hint">盒子系统的账户与安全设置</string>
+    <string name="secure_install">安装未知来源的应用</string>
+    <string name="secure_install_hint">是否允许安装未知来源的应用</string>
+    <string name="secure_refuse">拒绝</string>
+    <string name="secure_allow">允许</string>
+    <string name="secure_adb">ADB调试</string>
+    <string name="secure_adb_hint">是否允许ADB调试</string>
+    <!-- display set -->
+    <string name="display_title">画面设置</string>
+    <string name="display_title_hint">设置盒子的画面分辨率和位置</string>
+    <string name="display_scale">缩放和位移</string>
+    <string name="display_set_hint">是否设置为所选的分辨率</string>
+    <string name="scale_title">画面缩放</string>
+    <string name="scale_title_hint">调整画面缩放的百分比</string>
+    <string name="scale_introduce_one">因为不同的电视对于视频信号处理的差异，可能导致画面有不完整的现象。</string>
+    <string name="scale_introduce_two">请调节缩放比例，直至屏幕的四边的警示色区域移出屏幕外。</string>
+    <string name="scale_OK">按“确定”键应用设置并进入位移设置</string>
+    <string name="scale_move_back">按“返回”键退出并生效当前设置</string>
+    <string name="move_title">画面位移</string>
+    <string name="move_title_hint">调整画面在屏幕中的位置</string>
+    <string name="move_introduce_two">调整画面位置，使主要内容在电视屏幕以内</string>
+    <string name="move_OK">按“确定”键应用设置并进入缩放设置</string>
+    <!-- dialog set -->
+    <string name="dialog_OK">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_hint">提示</string>
+    <!-- normal set -->
+    <string name="normal_title">通用设置</string>
+    <string name="normal_title_hint">盒子系统相关设置</string>
+    <string name="normal_input">输入法</string>
+    <string name="normal_language_EN">英文</string>
+    <string name="normal_language_CN">中文简体</string>
+    <string name="normal_language">语言</string>
+    <string name="normal_samba">samba服务</string>
+    <string name="normal_samba_off">关闭</string>
+    <string name="normal_samba_on">开启</string>
+    <string name="normal_samba_start">开启samba服务</string>
+    <string name="normal_samba_stop">停止samba服务</string>
+    <string name="normal_recovery">恢复出厂设置</string>
+    <string name="normal_recovery_hint">是否确定恢复出厂设置</string>
+    <string name="normal_clear_data">是否确定清除所有应用的数据和缓存</string>
+    <string name="normal_reset">重置</string>
+    <string name="normal_recovery_msg_1">一定清除</string>
+    <string name="normal_recovery_msg_2">应用数据</string>
+    <string name="normal_recovery_msg_3">包括所有安装应用的数据、缓存。</string>
+    <string name="normal_recovery_msg_4">可选清除</string>
+    <string name="normal_recovery_msg_5">删除应用程序</string>
+    <string name="normal_recovery_msg_6">清除安装的应用程序</string>
+    <string name="normal_recovery_msg_7">清理数据中&#8230;</string>
+    <string name="normal_set">高级设置</string>
+    <string name="normal_devices">设备名称</string>
+
+    <!-- play set -->
+    <string name="play_title">播放设置</string>
+    <string name="play_title_hint">盒子播放相关设置</string>
+    <string name="play_audio_HDMI">音频HDMI输出</string>
+    <string name="play_audio_SDPIF">S/PDIF</string>
+    <string name="play_audio_HBR">HBR输出</string>
+    <string name="play_video_ratio">视屏宽高比</string>
+    <string name="play_video_ratio_transform">宽高转换方式</string>
+    <string name="upgrade_title">系统升级</string>
+    <string name="upgrade_title_hint">升级宝盒系统</string>
+    <string name="upgrade_local_title">本地升级</string>
+    <string name="upgrade_local_hint">本地升级宝盒系统</string>
+    <string name="upgrade_online_title">在线升级</string>
+    <string name="upgrade_online_hint">在线升级宝盒系统</string>
+    <string name="upgrade_current_version">当前版本：</string>
+    <string name="upgrade_latest_version">发现新版本：</string>
+    <string name="upgrade_btn_download">立即升级</string>
+    <string name="upgrade_btn_reboot">立即重启</string>
+    <string name="upgrade_btn_confirm">确定</string>
+    <string name="upgrade_no_usb">变分区升级需要下载更新包到U盘，请插入。</string>
+    <string name="upgrade_sd_no_space">SD卡剩余空间不足，请确保剩余空间至少为：</string>
+    <string name="upgrade_usb_no_space">U盘剩余空间不足，请确保剩余空间至少为：</string>
+    <string name="upgrade_message1">赞哦，您的宝盒已经是最新版本了。</string>
+    <string name="upgrade_message2">清理空间后，再重新下载更新包。</string>
+    <string name="upgrade_message3">下载失败！</string>
+    <string name="upgrade_message4">请确认网络正常连接。</string>
+    <string name="upgrade_message5">正在下载&#8230;</string>
+    <string name="upgrade_message6">这需要花一点时间，您可以返回，看看电影，听听歌。</string>
+    <string name="upgrade_message7">体验新版宝盒，需要重新启动，这可能要花费您一点时间。</string>
+    <string name="upgrade_message8">宝盒更新成功。</string>
+    <string name="upgrade_message9">网络异常，请重新检测网络连接。</string>
+    <string name="local_title">选择升级包分区:</string>
+    <string name="local_no_update">没有升级包</string>
+    <string name="local_title_hint">升级系统</string>
+    <string name="local_title_confirm">您确定升级系统</string>
+    <string name="file_check">安全校验</string>
+    <string name="file_checking">安全校验中</string>
+    <string name="file_check_success">安全校验成功</string>
+    <string name="file_check_failed">安全校验失败</string>
+
+</resources>

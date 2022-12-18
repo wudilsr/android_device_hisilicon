@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">MultiScreenServer</string>
+    <string name="start_service">Start MultiScreen Server!</string>
+    <string name="stop_service">Stop MultiScreen Server!</string>
+    <string name="dialogTitleLoading">Loading</string>
+    <string name="dialogMessageLoading">Please wait</string>
+    <string name="friendly_name_too_long">Exceeding the length limit, please input again!</string>
+    <string name="friendly_name_blank">Friendly name cannot be blank, please input again!</string>
+    <string name="friendly_name_invalid_characters">Including invalid characters(Newlines, Leading and trailing spaces), nothing changes.</string>
+    <string name="set_net_host_label">Device name</string>
+    <string name="FriendlyName"></string>
+    <string name="himultiscreen_is_running">MultiScreen server is running</string>
+    <string name="toast_network_error">Sorry，network is not well!</string>
+    <string name="open_status">ON</string>
+    <string name="close_status">OFF</string>
+    <string name="default_device_name">living room 1</string>
+    <string name="fuction_not_support">the function is not supported</string>
+    <string name="recongize_error_response">Sorry,please say again</string>
+    <string name="tv_cat_not_installed">App named tv cat not installed</string>
+    <string name="app_not_installed">App not installed</string>
+    <string name="browser_not_installed">Browser not installed</string>
+    <string name="city_not_supported">the city not supported</string>
+    <string name="weather_prase_failed">weather prased failed</string>
+    <string name="obtain_weather_failed">obtain weather message failed</string>
+    <string name="obtain_weather_net_failed">obtain weather message failed,network exception</string>
+
+</resources>

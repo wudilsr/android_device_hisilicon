@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/remote_keyboard_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/remote_keyboard_bg" >
+
+        <Button
+            android:id="@+id/remote_keyboard_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/remote_keyboard_left" />
+
+        <Button
+            android:id="@+id/remote_keyboard_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/remote_keyboard_right" />
+
+        <Button
+            android:id="@+id/remote_keyboard_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/remote_keyboard_up" />
+
+        <Button
+            android:id="@+id/remote_keyboard_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/remote_keyboard_ok" />
+
+        <Button
+            android:id="@+id/remote_keyboard_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/remote_keyboard_down" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/remote_keyboard_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/remote_keyboard_layout"
+        android:layout_alignLeft="@+id/remote_keyboard_layout"
+        android:layout_alignRight="@+id/remote_keyboard_layout"
+        android:layout_alignTop="@+id/remote_keyboard_layout"
+        android:background="@null" />
+
+</RelativeLayout>

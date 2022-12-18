@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:layout_marginTop="4dip">
+		<TextView android:layout_width="100dip"
+			android:layout_height="wrap_content" android:text="@string/server"
+			android:gravity="right" />
+		<EditText android:layout_width="160dip"
+			android:layout_height="wrap_content" android:id="@+id/serverAddress"
+			android:layout_marginRight="20dip" android:singleLine="true"
+			android:focusable="true" android:hint="@string/server1"
+			android:maxLength="15" />
+		<TextView android:layout_width="50dip" android:layout_height="wrap_content"
+			android:text="@string/portID" android:gravity="right" />
+		<EditText android:layout_width="50dip" android:layout_height="wrap_content"
+			android:id="@+id/serverport" android:layout_marginRight="20dip"
+			android:singleLine="true" android:text="@string/num"
+			android:scrollHorizontally="true" android:maxLength="20" />
+	</LinearLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="100dip"
+			android:layout_height="wrap_content" android:text="@string/user_name"
+			android:gravity="right" />
+		<EditText android:layout_width="280dip"
+			android:layout_height="wrap_content" android:id="@+id/userName"
+			android:layout_marginRight="20dip" android:singleLine="true"
+			android:hint="@string/user_name1" android:maxLength="10" />
+	</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="100dip"
+			android:layout_height="wrap_content" android:text="@string/user_pass"
+			android:gravity="right" />
+		<EditText android:layout_width="280dip"
+			android:layout_height="wrap_content" android:id="@+id/userPass"
+			android:password="true" android:layout_marginRight="20dip"
+			android:singleLine="true" android:hint="@string/user_pass1"
+			android:maxLength="10" />
+	</LinearLayout>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center_horizontal">
+		<CheckBox android:id="@+id/loginCheck" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/anonymity" />
+	</LinearLayout>
+
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="100dip"
+			android:layout_height="wrap_content" android:text="@string/nick_name"
+			android:gravity="right" />
+		<EditText android:layout_width="280dip"
+			android:layout_height="wrap_content" android:id="@+id/nickName"
+			android:layout_marginRight="20dip" android:singleLine="true"
+			android:hint="@string/nick_name1" android:maxLength="20" />
+	</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center">
+		<Button android:layout_width="100dip" android:layout_height="wrap_content"
+			android:text="@string/ok" android:id="@+id/myOkBut" />
+		<Button android:layout_width="100dip" android:layout_height="wrap_content"
+			android:id="@+id/myCancelBut" android:text="@string/cancel" />
+	</LinearLayout>
+</LinearLayout>

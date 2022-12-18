@@ -1,0 +1,10 @@
+ifeq ($(CFG_HI_HDMI_SUPPORT_1_4),y)
+TARGET := hdmi_1_4
+else ifeq ($(CFG_HI_HDMI_SUPPORT_2_0),y)
+TARGET := hdmi_2_0
+endif
+HDMI_DIR := hdmi/$(TARGET)
+LOCAL_SRC_FILES += $(HDMI_DIR)/mpi_hdmi.c
+LOCAL_SRC_FILES += $(HDMI_DIR)/unf_hdmi.c
+LOCAL_CFLAGS += -DCONFIG_HDMI_STB_SDK
+LOCAL_C_INCLUDES += $(MSP_DIR)/drv/$(HDMI_DIR)

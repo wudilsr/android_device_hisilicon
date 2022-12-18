@@ -1,0 +1,73 @@
+LOCAL_PATH := $(call my-dir)
+AVCODEC_NEON_SRC := \
+    arm/dsputil_init_neon.c \
+    arm/dsputil_neon.S \
+    arm/fmtconvert_neon.S \
+    arm/int_neon.S \
+    arm/mpegvideo_neon.S \
+    arm/simple_idct_neon.S \
+    arm/fft_neon.S \
+    arm/fft_fixed_neon.S \
+    arm/mdct_neon.S \
+    arm/mdct_fixed_neon.S \
+    arm/rdft_neon.S \
+    arm/h264dsp_neon.S \
+    arm/h264idct_neon.S \
+    arm/h264pred_neon.S \
+    arm/ac3dsp_neon.S \
+    arm/dcadsp_neon.S \
+    arm/synth_filter_neon.S \
+    arm/vp3dsp_neon.S \
+    arm/vp56dsp_neon.S \
+    arm/vp8dsp_neon.S \
+    arm/ac3dsp_arm.S \
+    arm/ac3dsp_armv6.S \
+    arm/ac3dsp_init_arm.c \
+    arm/dcadsp_init_arm.c \
+    arm/dsputil_arm.S \
+    arm/dsputil_armv6.S \
+    arm/dsputil_init_arm.c \
+    arm/dsputil_init_armv5te.c \
+    arm/dsputil_init_armv6.c \
+    arm/fft_fixed_init_arm.c \
+    arm/fft_init_arm.c \
+    arm/fmtconvert_init_arm.c \
+    arm/h264dsp_init_arm.c \
+    arm/h264pred_init_arm.c \
+    arm/jrevdct_arm.S \
+    arm/mpegvideo_arm.c \
+    arm/mpegvideo_armv5te.c \
+    arm/mpegvideo_armv5te_s.S \
+    arm/simple_idct_arm.S \
+    arm/simple_idct_armv5te.S \
+    arm/simple_idct_armv6.S \
+    arm/vp56dsp_init_arm.c \
+    arm/vp8_armv6.S \
+    arm/vp8dsp_init_arm.c \
+    arm/dsputil_init_vfp.c \
+    arm/fmtconvert_vfp.S \
+    arm/dsputil_vfp.S
+include $(CLEAR_VARS)
+
+include $(LOCAL_PATH)/../av.mk
+ifeq ($(BUILD_FOR_EMULATOR),1)
+LOCAL_SRC_FILES := $(FFFILES)
+else
+LOCAL_ARM_MODE := arm
+LOCAL_ARM_NEON := true
+LOCAL_SRC_FILES := $(FFFILES)
+LOCAL_SRC_FILES += $(AVCODEC_NEON_SRC)
+endif
+
+LOCAL_C_INCLUDES :=        \
+    $(LOCAL_PATH)        \
+    $(LOCAL_PATH)/..
+
+LOCAL_CFLAGS += $(FFCFLAGS)
+LOCAL_LDLIBS := -lz
+LOCAL_STATIC_LIBRARIES := $(FFLIBS)
+
+LOCAL_MODULE := $(FFNAME)
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+
+include $(BUILD_STATIC_LIBRARY)

@@ -1,0 +1,79 @@
+ifndef BASE_DIR
+export BASE_DIR := $(PWD)/../../../..
+endif
+
+ifndef SRC_ROOT
+export SRC_ROOT := $(BASE_DIR)/source
+endif
+
+ifndef ROOTFS_DIR
+export ROOTFS_DIR = $(BASE_DIR)/rootfs_full
+endif
+ROOTFS_LIB_DIR = $(ROOTFS_DIR)/usr/lib
+
+export KMSP_DIR := $(SRC_ROOT)/msp_base
+export MSP_DIR  := $(SRC_ROOT)/msp
+export COMPONENT_DIR := $(MSP_DIR)/component
+
+ifndef CHARSET_DIR
+#export CHARSET_DIR := $(PWD)
+export CHARSET_DIR := $(COMPONENT_DIR)/charset
+endif
+
+export CHARSET_SRC_DIR      = $(CHARSET_DIR)/src
+export CHARSET_PLUGIN_DIR   = $(CHARSET_DIR)/plugins
+export CHARSET_LIB_DIR      = $(CHARSET_DIR)/lib
+
+CFG_INC += -I$(CHARSET_DIR)/include
+
+export LFLAGS += -Wl,--start-group -Wl,--end-group
+
+CFLAGS += $(CFG_INC) $(USER_CFLAGS) $(CFG_CFLAGS)
+CFLAGS += -DPLATEFORM_LINUX
+#CFLAGS += -g
+ifdef CFG_HI_ADVCA_FUNCTION
+CFLAGS += -DHI_ADVCA_FUNCTION_RELEASE
+endif
+
+HEADER_FILES = $(wildcard include/hi_svr_*.h)
+
+CHARSET_LIBS        := libhi_charsetMgr.a libhi_charsetMgr.so
+CHARSET_ROOTFS_LIBS := libhi_charset.so
+
+CHARSET_DST_LIB_DIR        := $(BASE_DIR)/pub/lib
+CHARSET_DST_ROOTFS_LIB_DIR := $(ROOTFS_DIR)/usr/lib
+CHARSET_DST_INC_DIR        := $(BASE_DIR)/pub/include
+
+CHARSET_SRC_LIBS := $(addprefix $(CHARSET_DIR)/lib/,$(CHARSET_LIBS))
+CHARSET_DST_LIBS := $(addprefix $(CHARSET_DST_LIB_DIR)/,$(CHARSET_LIBS))
+CHARSET_SRC_ROOTFS_LIBS := $(addprefix $(CHARSET_DIR)/lib/,$(CHARSET_ROOTFS_LIBS))
+CHARSET_DST_ROOTFS_LIBS := $(addprefix $(ROOTFS_LIB_DIR)/,$(CHARSET_ROOTFS_LIBS))
+
+export CFLAGS CFG_INC CFG_LIB
+
+.PHONY: all plugin charset plugin_clean charset_clean install uninstall
+
+
+all: plugin charset
+clean: plugin_clean charset_clean
+charset:
+	make -C $(CHARSET_SRC_DIR)
+
+charset_clean:
+	make -C $(CHARSET_SRC_DIR) clean
+	rm -f lib/libcharset.so
+
+plugin:
+	make -C $(CHARSET_PLUGIN_DIR)
+
+plugin_clean:
+	make -C $(CHARSET_PLUGIN_DIR) clean
+
+install: all
+	$(AT)cp -rvf  $(CHARSET_SRC_LIBS)           $(CHARSET_DST_LIB_DIR)/
+	$(AT)cp -rvf  $(CHARSET_SRC_ROOTFS_LIBS)    $(CHARSET_DST_ROOTFS_LIB_DIR)/
+	$(AT)cp -rvf  $(CHARSET_DIR)/include/hi_svr_*.h        $(CHARSET_DST_INC_DIR)/
+
+uninstall:
+	$(AT)rm -rvf $(CHARSET_DST_LIBS)
+	$(foreach file, $(HEADER_FILES), $(AT)rm -rf $(CHARSET_DST_INC_DIR)/$(notdir $(file)))

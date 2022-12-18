@@ -1,0 +1,9 @@
+#!/system/bin/sh
+echo $DEVICE > /dev/kmsg
+
+if [[ "$DEVICE" == mmcblk0p* ]]
+then
+	echo "error !! remount ro-olny,so enter wipe_data" > /dev/kmsg
+	/system/bin/write_raw misc wipe_data
+fi
+

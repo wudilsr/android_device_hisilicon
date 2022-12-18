@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mybox_remote_background"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/input_box_select"
+        android:text="@string/input_end"
+        android:textColor="@color/white" />
+
+    <com.hisilicon.multiscreen.vime.VIMEEditText
+        android:id="@+id/et_input_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/input_box"
+        android:gravity="left|top"
+        android:inputType="textMultiLine"
+        android:lines="9"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+</RelativeLayout>

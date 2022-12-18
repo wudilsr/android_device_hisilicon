@@ -1,0 +1,7 @@
+#Android.def
+
+ANDROID_BUILD=y
+
+#SDK_DIR is defined in godbox.mk
+include $(SDK_DIR)/base.mak
+

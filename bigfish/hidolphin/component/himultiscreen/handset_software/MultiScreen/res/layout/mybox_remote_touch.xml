@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/remote_touch_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/remote_touch_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_mouse_infos" />
+    </LinearLayout>
+
+    <com.hisilicon.multiscreen.widget.RemoteTouchShowView
+        android:id="@+id/remote_touch_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/remote_touch_airmouse"
+        android:layout_width="fill_parent"
+        android:layout_height="255dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/remote_touch_airmouse_open"
+        android:contentDescription="@string/app" />
+
+</RelativeLayout>

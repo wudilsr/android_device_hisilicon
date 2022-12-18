@@ -1,0 +1,62 @@
+# LSOpen Module - Local Semantic Open Configuration File
+## Copyright (C) 2011 iFLYTEK.
+## Use ';' and '#' character for notation
+## Note: Commands in this cfg file is case sensitive
+
+
+[logger]
+file			= 
+title			= LSOpen Module Runtime Information
+level			= 15 
+output			= 1
+flush			= 
+maxsize			= 
+overwrite		= 0
+#日志信息的过滤器，其中include是“仅包含”，exclude是“不包含”
+#过滤字符串不支持通配符，字串之间以逗号“,”分割。
+include			=
+exclude			=
+
+[fuzzy]
+pinyin_path		= ./libvitvpinyin.so
+phone_cost_path		= ./libvitvphonecost.so 
+word_len1_threshold	= 0.95
+word_len2_threshold	= 0.7
+word_unlen2_threshold	= 0.95
+word_morelen3_threshold	= 0.6
+
+[nlp]
+main_dic		= ./libvitvmaindict.so
+basicphrase		= ./libvitvbasicphrasegrm.so
+system_common		= ./libvitvsystemcommongrm.so
+nlp_path		= ./nlp.dll
+
+[lable]
+FOCUS			= focus
+PHRASE			= phrase
+LIST			= list
+SCORE			= score
+INFO			= info
+
+[rule]
+VARINFO_THRESHOLD	= 0.6
+FOCUS_THRESHOLD_GLOBAL	= 0.75
+FOCUS_THRESHOLD_SCENE	= 0.6
+PHRASE_WEIGHT		= 0.6
+LIST_WEIGHT		= 0.4
+
+[post_process]
+digit			= _num;
+percent			= _percent;
+
+[encoding]
+encode			= utf8 
+
+[output]
+format			= json
+
+[filter]
+trim_gb			=· ，。？！《》（）“”
+
+[equal_word]
+word			= 两#二;

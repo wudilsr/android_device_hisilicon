@@ -1,0 +1,62 @@
+<resources>
+
+    <!-- Used in View/Spinner1.java -->
+    <string-array name="mtags">
+        <!--  
+        <item>广电直播</item>
+        <item>媒体分享</item>-->
+        <item>遥控器</item>
+        <item>镜像控制</item>
+    </string-array>
+    <string-array name="mtags_info">
+        <!--
+        <item>Live TV</item>
+        <item>Media Sharing</item>-->
+        <item>Remote Controller</item>
+        <item>Mirror Controller</item>
+    </string-array>
+    <string-array name="dms_image_array">
+        <item>图片</item>
+        <item>Image</item>
+        <item>Images</item>
+        <item>Photo</item>
+        <item>Photos</item>
+        <item>Picture</item>
+        <item>Pictures</item>
+    </string-array>
+    <string-array name="dms_video_array">
+        <item>视频</item>
+        <item>Video</item>
+        <item>Videos</item>
+    </string-array>
+    <string-array name="dms_music_array">
+        <item>音乐</item>
+        <item>Music</item>
+        <item>Musics</item>
+        <item>Audio</item>
+        <item>Audios</item>
+    </string-array>
+    <string-array name="dms_allimage_array">
+        <item>所有图片</item>
+        <item>All Images</item>
+        <item>All Photos</item>
+        <item>All Pictures</item>
+    </string-array>
+    <string-array name="dms_allvideo_array">
+        <item>所有视频</item>
+        <item>All Videos</item>
+    </string-array>
+    <string-array name="dms_allmusic_array">
+        <item>所有音乐</item>
+        <item>All Musics</item>
+        <item>All Audios</item>
+    </string-array>
+    <string-array name="guide_message_array">
+        <!-- 
+        <item>机顶盒开启时，手机直接看直播节目</item>
+        <item>手机的内容推送到电视观看</item>-->
+        <item>触手可及的遥控器</item>
+        <item>手机同步电视画面，方便的控制电视</item>
+    </string-array>
+
+</resources>

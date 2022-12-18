@@ -1,0 +1,6 @@
+ifeq ($(CFG_HI_HDMI_RX_SUPPORT),y)
+HDMIRX_DIR := hdmirx
+LOCAL_CFLAGS  += -DHI_HDMI_RX_INSIDE
+LOCAL_SRC_FILES += $(HDMIRX_DIR)/mpi_hdmirx.c
+LOCAL_SRC_FILES += $(HDMIRX_DIR)/unf_hdmirx.c
+endif

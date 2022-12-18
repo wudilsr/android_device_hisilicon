@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- application theme -->
+    <style name="AppTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- basic view style -->
+    <style name="styleMatchMatch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="styleMatchWrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="styleWrapMatch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="styleWrapWrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- default text style -->
+    <style name="styleBasicText" parent="styleWrapWrap">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/azure</item>
+    </style>
+
+    <style name="styleShadowText" parent="styleBasicText">
+        <item name="android:shadowColor">#130c0e</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">5</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <!-- default progress bar style -->
+    <style name="styleDefaultProgressBar" parent="styleWrapWrap"></style>
+
+</resources>

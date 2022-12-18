@@ -1,0 +1,41 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "HDMI Config"
+
+config  HI_HDMI_SUPPORT_1_4
+    bool
+    depends on HI3716CV200 || HI3716MV400 || HI3718CV100 || HI3719CV100 || HI3718MV100 || HI3719MV100 || HI3796CV100 || HI3798CV100 || HI3798MV100 || HI3796MV100
+    default y
+
+config  HI_HDMI_SUPPORT_2_0
+    bool
+    depends on HI3798CV200 || HI3798CV200_A
+    default y
+
+config  HI_HDMI_SUPPORT_HDCP
+    bool "HDCP Support"
+    help
+      If you want to enable HDCP, say y.
+    default n
+
+config  HI_HDMI_SUPPORT_CEC
+    bool "CEC Support"
+    help
+      If you want to enable CEC, say y.
+    default n
+
+config  HI_HDMI_SUPPORT_DEBUG
+    bool "DEBUG Support"
+    help
+        If you want to enable debug, say y.
+    default n
+
+config  HI_HDMI_DEBUG_MEM_SIZE
+    hex "DEBUG Memory Size (BYTE)"
+    help
+      If you want to enable debug, say y.
+    default 0x80000
+
+
+endmenu
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+

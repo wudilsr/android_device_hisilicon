@@ -1,0 +1,1106 @@
+/******************************************************************************
+*
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
+*  and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+*****************************************************************************
+
+  File Name     : hi_unf_pq.c
+  Version       : Initial Draft
+  Author        : p00203646
+  Created       : 2014/04/01
+  Description   : UNF层封装函数
+
+******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "hi_type.h"
+#include "hi_unf_pq.h"
+#include "hi_mpi_pq.h"
+
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif /* __cplusplus */
+
+/**
+ \brief 初始化PQ
+ \attention \n
+无
+
+ \param[in] pszPath:PQ配置文件路径
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_Init(HI_VOID)
+{
+    HI_CHAR* pszPath = HI_NULL;
+    return HI_MPI_PQ_Init(pszPath);
+}
+
+
+/**
+ \brief 去初始化PQ
+ \attention \n
+无
+
+ \param[in] none
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_DeInit(HI_VOID)
+{
+    return HI_MPI_PQ_DeInit();
+}
+
+
+/**
+ \brief Set PQ mode . CNcomment: 设置图像模式 CNend
+ \attention \n
+ \param[in] enChan Destination DISP channel CNcomment: 目标通道号 CNend
+ \param[in] enImageMode Destination DISP channel PQ mode CNcomment: 目标通道图像模式 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+HI_S32 HI_UNF_PQ_SetImageMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_MODE_E enImageMode)
+{
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Get PQ mode . CNcomment: 获取图像模式 CNend
+ \attention \n
+ \param[in] enChan Destination DISP channel CNcomment: 目标通道号 CNend
+ \param[out] penImageMode  pointer of image mode CNcomment: 指针类型，指向图像模式 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+HI_S32 HI_UNF_PQ_GetImageMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_MODE_E* penImageMode)
+{
+    if (NULL == penImageMode )
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Init PQ mode . CNcomment: 初始化图像模式 CNend
+ \attention \n
+ \param[in] enChan Destination DISP channel CNcomment: 目标通道号 CNend
+ \param[out] penImageMode  pointer of image mode CNcomment: 指针类型，指向图像模式 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+
+HI_S32 HI_UNF_PQ_InitImageMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_MODE_E enImageMode)
+{
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Set channel option. CNcomment: 设置通道option值 CNend
+ \attention \n
+ \param[in] pstChanOption pointer of channel option CNcomment: 指针类型，指向通道option值 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+
+HI_S32 HI_UNF_PQ_SetChanOption(const HI_UNF_PQ_OPT_CHANS_S* pstChanOption)
+{
+    HI_UNF_DISP_E enChan;
+
+    if (NULL == pstChanOption )
+    {
+        return HI_FAILURE;
+    }
+
+    enChan = pstChanOption->enChan;
+
+    HI_MPI_PQ_SetBrightness((HI_DRV_DISPLAY_E)enChan, pstChanOption->stChanOpt.u32Brightness );
+    HI_MPI_PQ_SetContrast((HI_DRV_DISPLAY_E)enChan, pstChanOption->stChanOpt.u32Contrast );
+    HI_MPI_PQ_SetHue((HI_DRV_DISPLAY_E)enChan, pstChanOption->stChanOpt.u32Hue);
+    HI_MPI_PQ_SetSaturation((HI_DRV_DISPLAY_E)enChan, pstChanOption->stChanOpt.u32Saturation);
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Set channel option. CNcomment: 获取通道option值 CNend
+ \attention \n
+ \param[out] pstChanOption pointer of channel option CNcomment: 指针类型，指向通道option值 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+
+HI_S32 HI_UNF_PQ_GetChanOption(HI_UNF_PQ_OPT_CHANS_S* pstChanOption)
+{
+    HI_UNF_DISP_E enChan;
+    HI_U32 u32Brightness = 0;
+    HI_U32 u32Contrast = 0;
+    HI_U32 u32Hue = 0;
+    HI_U32 u32Saturation = 0;
+
+    if (NULL == pstChanOption )
+    {
+        return HI_FAILURE;
+    }
+
+    enChan = pstChanOption->enChan;
+
+    HI_MPI_PQ_GetBrightness((HI_DRV_DISPLAY_E)enChan, &u32Brightness);
+    HI_MPI_PQ_GetContrast((HI_DRV_DISPLAY_E)enChan, &u32Contrast);
+    HI_MPI_PQ_GetHue((HI_DRV_DISPLAY_E)enChan, &u32Hue);
+    HI_MPI_PQ_GetSaturation((HI_DRV_DISPLAY_E)enChan, &u32Saturation);
+
+    pstChanOption->stChanOpt.u32Brightness = u32Brightness;
+    pstChanOption->stChanOpt.u32Contrast = u32Contrast;
+    pstChanOption->stChanOpt.u32Hue = u32Hue;
+    pstChanOption->stChanOpt.u32Saturation = u32Saturation;
+    pstChanOption->stChanOpt.u32Colortemperature = 0;
+    pstChanOption->stChanOpt.u32GammaMode = 0;
+    pstChanOption->stChanOpt.u32DynamicContrast = 0;
+    pstChanOption->stChanOpt.u32IntelligentColor = 0;
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Set channel common option. CNcomment: 设置通道 common option值 CNend
+ \attention \n
+ \param[in] pstCommOption pointer of channel common option CNcomment: 指针类型，指向通道common option值 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+
+HI_S32 HI_UNF_PQ_SetCommOption(const HI_UNF_PQ_OPT_COMMON_S* pstCommOption)
+{
+
+    if (NULL == pstCommOption )
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetSharpness(pstCommOption->u32Sharpeness);
+}
+
+
+/**
+ \brief Set channel option. CNcomment: 获取通道common option值 CNend
+ \attention \n
+ \param[out] pstChanOption pointer of channel option CNcomment: 指针类型，指向通道common option值 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+N/A CNcomment: 无 CNend
+ */
+
+HI_S32 HI_UNF_PQ_GetCommOption(HI_UNF_PQ_OPT_COMMON_S* pstCommOption)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Sharpness = 0;
+
+
+    if ( NULL == pstCommOption)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetSharpness(&u32Sharpness);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    pstCommOption->u32Sharpeness = u32Sharpness;
+    pstCommOption->u32Denoise = 0;
+    pstCommOption->u32FilmMode = 0;
+
+    return s32Ret;
+}
+
+
+
+/**
+ \brief Modifies the basic configuration information.  CNcomment:更新PQ配置区信息 CNend
+ \attention \n
+ \param[in] N/A CNcomment: 无 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+ N/A CNcomment: 无 CNend
+	*/
+
+HI_S32 HI_UNF_PQ_UpdatePqParam(HI_VOID)
+{
+
+    return HI_SUCCESS;
+}
+
+
+/**
+ \brief Set the default PQ configuration for video parameter test.  CNcomment: 为入网指标测试设置PQ 的默认值CNend
+ \attention \n
+ \param[in] N/A CNcomment: 无 CNend
+ \retval ::HI_SUCCESS Success CNcomment: 成功 CNend
+ \see \n
+ N/A CNcomment: 无 CNend
+	*/
+
+HI_S32 HI_UNF_PQ_SetDefaultParam(HI_VOID)
+{
+    HI_S32 s32Ret;
+    HI_U32 u32OnOff = 0;
+
+    s32Ret = HI_MPI_PQ_SetBrightness(HI_DRV_DISPLAY_0, 50);
+    s32Ret |= HI_MPI_PQ_SetBrightness(HI_DRV_DISPLAY_1, 50);
+    s32Ret |= HI_MPI_PQ_SetContrast(HI_DRV_DISPLAY_0, 50);
+    s32Ret |= HI_MPI_PQ_SetContrast(HI_DRV_DISPLAY_1, 50);
+    s32Ret |= HI_MPI_PQ_SetSaturation(HI_DRV_DISPLAY_0, 50);
+    s32Ret |= HI_MPI_PQ_SetSaturation(HI_DRV_DISPLAY_1, 50);
+    s32Ret |= HI_MPI_PQ_SetHue(HI_DRV_DISPLAY_0, 50);
+    s32Ret |= HI_MPI_PQ_SetHue(HI_DRV_DISPLAY_1, 50);
+
+    s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_SHARPNESS, u32OnOff);
+    s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_DCI, u32OnOff);
+    s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_COLOR, u32OnOff);
+    s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_SR, u32OnOff);
+
+    return s32Ret;
+}
+
+
+/**
+ \brief 获取亮度
+ \attention \n
+无
+
+ \param[in] pu32Brightness 亮度值,有效范围: 0~100;
+ \param[out]
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetBrightness(HI_UNF_DISP_E enChan, HI_U32* pu32Brightness)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Brightness = 0;
+
+    if ( NULL == pu32Brightness)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetBrightness((HI_DRV_DISPLAY_E)enChan, &u32Brightness);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Brightness = u32Brightness;
+    return s32Ret;
+}
+
+/**
+ \brief 设置亮度
+ \attention \n
+无
+
+ \param[in] u32Brightness, 亮度值,有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetBrightness(HI_UNF_DISP_E enChan, HI_U32 u32Brightness)
+{
+    if ( u32Brightness > 100)
+    {
+        printf("The brightness is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetBrightness((HI_DRV_DISPLAY_E)enChan, u32Brightness);
+}
+
+
+/**
+ \brief 获取对比度
+ \attention \n
+无
+
+ \param[in]
+ \param[out] pu32Contrast 对比度, 有效范围: 0~255;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetContrast(HI_UNF_DISP_E enChan, HI_U32* pu32Contrast)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Contrast = 0;
+
+    if ( NULL == pu32Contrast)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetContrast((HI_DRV_DISPLAY_E)enChan, &u32Contrast);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Contrast = u32Contrast;
+    return s32Ret;
+}
+
+/**
+ \brief 设置对比度
+ \attention \n
+无
+
+ \param[in] u32Contrast, 对比度, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetContrast(HI_UNF_DISP_E enChan, HI_U32 u32Contrast)
+{
+    if ( u32Contrast > 100)
+    {
+        printf("The Contrast is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetContrast((HI_DRV_DISPLAY_E)enChan, u32Contrast);
+}
+
+/**
+ \brief 获取色调
+ \attention \n
+无
+
+ \param[in]
+ \param[out] pu32Hue：色调, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetHue(HI_UNF_DISP_E enChan, HI_U32* pu32Hue)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Hue = 0;
+
+    if ( NULL == pu32Hue)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetHue((HI_DRV_DISPLAY_E)enChan, &u32Hue);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Hue = u32Hue;
+    return s32Ret;
+}
+
+/**
+ \brief 设置色调
+ \attention \n
+无
+
+ \param[in] u32Hue：色调, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetHue(HI_UNF_DISP_E enChan, HI_U32 u32Hue)
+{
+    if ( u32Hue > 100)
+    {
+        printf("The Hue level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetHue((HI_DRV_DISPLAY_E)enChan, u32Hue);
+}
+
+/**
+ \brief 获取饱和度
+ \attention \n
+无
+
+ \param[out] pu32Saturation：饱和度, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetSaturation(HI_UNF_DISP_E enChan, HI_U32* pu32Saturation)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Saturation = 0;
+
+
+    if ( NULL == pu32Saturation)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetSaturation((HI_DRV_DISPLAY_E)enChan, &u32Saturation);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Saturation = u32Saturation;
+    return s32Ret;
+}
+
+/**
+ \brief 设置饱和度
+ \attention \n
+无
+
+ \param[in] u32Saturation：饱和度,有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetSaturation(HI_UNF_DISP_E enChan, HI_U32 u32Saturation)
+{
+    if ( u32Saturation > 100)
+    {
+        printf("The Saturation level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetSaturation((HI_DRV_DISPLAY_E)enChan, u32Saturation);
+}
+
+/**
+ \brief 获取降噪强度
+ \attention \n
+无
+
+ \param[out] pu32NRLevel: 降噪等级, 有效范围: 0~255
+
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetNR(HI_UNF_DISP_E enChan, HI_U32* pu32NRLevel)
+{
+    if ( NULL == pu32NRLevel)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetNR(pu32NRLevel);
+}
+
+/**
+ \brief 设置降噪强度
+ \attention \n
+无
+
+ \param[in] u32NRLevel: 降噪等级, 有效范围: 0~255
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetNR(HI_UNF_DISP_E enChan, HI_U32 u32NRLevel)
+{
+    if ( u32NRLevel > 255)
+    {
+        printf("The NR level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetNR(u32NRLevel);
+}
+
+/**
+ \brief 获取自动降噪开关状态
+ \attention \n
+无
+
+ \param[out] pu32OnOff
+
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetNRAutoMode(HI_UNF_DISP_E enChan, HI_U32* pu32OnOff)
+{
+    if ( NULL == pu32OnOff)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetNRAutoMode(pu32OnOff);
+}
+
+/**
+ \brief 设置降噪自动模式开关
+ \attention \n
+无
+
+ \param[in] u32OnOff
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetNRAutoMode(HI_UNF_DISP_E enChan, HI_U32 u32OnOff)
+{
+    return HI_MPI_PQ_SetNRAutoMode(u32OnOff);
+}
+
+/**
+ \brief 获取SR演示类型
+ \attention \n
+无
+
+ \param[out] *penType
+
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetSRMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_SR_DEMO_E* penType)
+{
+    if ( NULL == penType)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetSRMode((HI_PQ_SR_DEMO_E*)penType);
+}
+
+/**
+ \brief 设置SR演示类型
+ \attention \n
+无
+
+ \param[in] enType
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetSRMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_SR_DEMO_E enType)
+{
+    return HI_MPI_PQ_SetSRMode((HI_PQ_SR_DEMO_E)enType);
+}
+
+/**
+ \brief 获取清晰度
+ \attention \n
+无
+
+ \param[out] pu32Sharpness：清晰度, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetSharpness(HI_UNF_DISP_E enChan, HI_U32* pu32Sharpness)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32Sharpness = 0;
+
+
+    if ( NULL == pu32Sharpness)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetSharpness(&u32Sharpness);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32Sharpness = u32Sharpness;
+    return s32Ret;
+}
+
+/**
+ \brief 设置清晰度
+ \attention \n
+无
+
+ \param[in] u32Sharpness：清晰度, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetSharpness(HI_UNF_DISP_E enChan, HI_U32 u32Sharpness)
+{
+    if ( u32Sharpness > 100)
+    {
+        printf("The Sharpness level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetSharpness(u32Sharpness);
+}
+
+/**
+ \brief 获取块降噪De-blocking强度
+ \attention \n
+无
+
+ \param[out] pu32DBlevel：降噪等级, 有效范围: 0~255;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetDeBlocking(HI_UNF_DISP_E enChan, HI_U32* pu32DBlevel)
+{
+    if ( NULL == pu32DBlevel)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetDeBlocking(pu32DBlevel);
+}
+
+/**
+ \brief 设置块降噪De-blocking强度
+ \attention \n
+无
+
+ \param[in] u32DBlevel:降噪等级, 有效范围: 0~255;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetDeBlocking(HI_UNF_DISP_E enChan, HI_U32 u32DBlevel)
+{
+    if ( u32DBlevel > 255)
+    {
+        printf("The DB level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetDeBlocking(u32DBlevel);
+}
+
+/**
+ \brief 获取去除蚊虫噪声de-ringing强度
+ \attention \n
+无
+
+ \param[out] pu32DRlevel:降噪等级, 有效范围: 0~255;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetDeRinging(HI_UNF_DISP_E enChan, HI_U32* pu32DRlevel)
+{
+    if ( NULL == pu32DRlevel)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetDeRinging(pu32DRlevel);
+}
+
+
+/**
+ \brief 设置去除蚊虫噪声de-ringing强度
+ \attention \n
+无
+
+ \param[in] u32DRlevel:降噪等级, 有效范围: 0~255;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetDeRinging(HI_UNF_DISP_E enChan, HI_U32 u32DRlevel)
+{
+    if ( u32DRlevel > 255)
+    {
+        printf("The DR level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetDeRinging(u32DRlevel);
+}
+
+
+/**
+ \brief 获取颜色增强
+ \attention \n
+无
+
+ \param[out] pu32ColorGainLevel
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetColorGain(HI_UNF_DISP_E enChan, HI_U32* pu32ColorGainLevel)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_U32 u32ColorGainLevel = 0;
+
+    if ( NULL == pu32ColorGainLevel)
+    {
+        return HI_FAILURE;
+    }
+
+    s32Ret = HI_MPI_PQ_GetColorGain(&u32ColorGainLevel);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu32ColorGainLevel = u32ColorGainLevel;
+    return s32Ret;
+}
+
+/**
+ \brief 设置颜色增强
+ \attention \n
+无
+
+ \param[in] enColorGainLevel
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetColorGain(HI_UNF_DISP_E enChan, HI_U32 u32ColorGainLevel)
+{
+    if ( u32ColorGainLevel > 100)
+    {
+        printf("The ColorGain level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetColorGain(u32ColorGainLevel);
+}
+
+/**
+ \brief 获取肤色增强
+ \attention \n
+  无
+
+ \param[out] pu32FleshToneLevel
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E* pu32FleshToneLevel)
+{
+    if ( NULL == pu32FleshToneLevel)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetFleshTone(pu32FleshToneLevel);
+}
+
+/**
+ \brief 设置肤色增强
+ \attention \n
+  无
+
+ \param[in] enFleshToneLevel，参考HI_COLOR_GAIN_E
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E enFleshToneLevel)
+{
+    if ( enFleshToneLevel >= HI_UNF_PQ_FLESHTONE_GAIN_BUTT)
+    {
+        printf("The FleshTone level is out of range!");
+
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetFleshTone(enFleshToneLevel);
+}
+
+/**
+ \brief 获取PQ模块开关
+ \attention \n
+  无
+
+ \param[in] enFlags
+ \param[in] pu32OnOff
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
+{
+    if ((NULL == pu32OnOff ) || (enFlags >= HI_UNF_PQ_MODULE_BUTT))
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetPQModule(enFlags, pu32OnOff);
+}
+
+/**
+ \brief 设置PQ模块开关
+ \attention \n
+  无
+
+ \param[in] enFlags
+ \param[in] u32OnOff
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32 u32OnOff)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+
+    if (HI_UNF_PQ_MODULE_BUTT <= enFlags)
+    {
+        return HI_FAILURE;
+    }
+
+    if (HI_UNF_PQ_MODULE_ALL == enFlags)
+    {
+        s32Ret  = HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_SHARPNESS, u32OnOff);
+        s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_DCI, u32OnOff);
+        s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_COLOR, u32OnOff);
+        s32Ret |= HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_SR, u32OnOff);
+    }
+    else
+    {
+        s32Ret  = HI_MPI_PQ_SetPQModule(enFlags, u32OnOff);
+    }
+
+    return s32Ret;
+}
+
+/**
+ \brief 设置卖场模式开关
+ \attention \n
+无
+
+ \param[in] enFlags
+ \param[in] u32OnOff
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff)
+{
+    if (HI_UNF_PQ_DEMO_BUTT <= enFlags)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetDemo(enFlags, u32OnOff);
+}
+
+/**
+ \brief 获取颜色增强的类型和强度
+ \attention \n
+无
+
+ \param[out] pstColorEnhanceParam:颜色增强的类型和强度;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetColorEnhanceParam(HI_UNF_PQ_COLOR_ENHANCE_S* pstColorEnhanceParam)
+{
+    HI_S32 s32Ret = HI_FAILURE;
+    HI_UNF_PQ_COLOR_ENHANCE_E 	 enType;
+    HI_UNF_PQ_FLESHTONE_E enFleshToneLevel = HI_UNF_PQ_FLESHTONE_GAIN_OFF;
+    HI_UNF_PQ_SIX_BASE_S stSixBase = {0};
+    HI_UNF_PQ_COLOR_SPEC_MODE_E enColorMode = HI_UNF_PQ_COLOR_MODE_RECOMMEND;
+
+    if (NULL == pstColorEnhanceParam )
+    {
+        return HI_FAILURE;
+    }
+
+    enType = pstColorEnhanceParam->enColorEnhanceType;
+
+    if (HI_UNF_PQ_COLOR_ENHANCE_FLESHTONE == enType)
+    {
+        s32Ret = HI_MPI_PQ_GetFleshTone(&enFleshToneLevel);
+        if (HI_FAILURE == s32Ret )
+        {
+            return HI_FAILURE;
+        }
+        pstColorEnhanceParam->unColorGain.enFleshtone = enFleshToneLevel;
+    }
+    else if (HI_UNF_PQ_COLOR_ENHANCE_SIX_BASE == enType)
+    {
+        s32Ret = HI_MPI_PQ_GetSixBaseColor(&stSixBase);
+        if (HI_FAILURE == s32Ret )
+        {
+            return HI_FAILURE;
+        }
+
+        pstColorEnhanceParam->unColorGain.stSixBase = stSixBase;
+    }
+    else if (HI_UNF_PQ_COLOR_ENHANCE_SPEC_COLOR_MODE == enType)
+    {
+        s32Ret = HI_MPI_PQ_GetColorEnhanceMode(&enColorMode);
+        if (HI_FAILURE == s32Ret )
+        {
+            return HI_FAILURE;
+        }
+
+        pstColorEnhanceParam->unColorGain.enColorMode = enColorMode;
+    }
+
+    return s32Ret;
+}
+
+
+/**
+ \brief 设置颜色增强的类型和强度
+ \attention \n
+无
+
+ \param[out] enColorEnhanceType:颜色增强的类型和强度;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetColorEnhanceParam(HI_UNF_PQ_COLOR_ENHANCE_S stColorEnhanceParam)
+{
+    HI_UNF_PQ_COLOR_ENHANCE_E    enType;
+    enType = stColorEnhanceParam.enColorEnhanceType;
+    HI_UNF_PQ_SIX_BASE_S stSixBaseColor;
+    HI_UNF_PQ_COLOR_SPEC_MODE_E enColorSpecMode;
+
+    if (HI_UNF_PQ_COLOR_ENHANCE_FLESHTONE == enType)
+    {
+        return HI_MPI_PQ_SetFleshTone(stColorEnhanceParam.unColorGain.enFleshtone);
+    }
+    else if (HI_UNF_PQ_COLOR_ENHANCE_SIX_BASE == enType)
+    {
+        stSixBaseColor = stColorEnhanceParam.unColorGain.stSixBase;
+        return HI_MPI_PQ_SetSixBaseColor((HI_PQ_SIX_BASE_COLOR_S*)&stSixBaseColor);
+    }
+    else if (HI_UNF_PQ_COLOR_ENHANCE_SPEC_COLOR_MODE == enType)
+    {
+        enColorSpecMode = stColorEnhanceParam.unColorGain.enColorMode;
+        return HI_MPI_PQ_SetColorEnhanceMode((HI_PQ_COLOR_SPEC_MODE_E)enColorSpecMode);
+    }
+
+    return HI_FAILURE;
+}
+
+
+/**
+ \brief 获取DCI（动态对比度增强）的强度范围
+ \attention \n
+无
+
+ \param[out] pu32DCIlevel:动态对比度等级, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_GetDynamicContrast(HI_U32* pu32DCIlevel)
+{
+    if (NULL == pu32DCIlevel )
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_GetDciLevel(pu32DCIlevel);
+}
+
+
+/**
+ \brief 设置DCI（动态对比度增强）的强度范围
+ \attention \n
+无
+
+ \param[in] u32DCIlevel:动态对比度等级, 有效范围: 0~100;
+
+ \retval ::HI_SUCCESS
+
+ */
+
+HI_S32 HI_UNF_PQ_SetDynamicContrast(HI_U32 u32DCIlevel)
+{
+    if (u32DCIlevel > 100)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_MPI_PQ_SetDciLevel(u32DCIlevel);
+}
+
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif
+#endif /* __cplusplus */
+

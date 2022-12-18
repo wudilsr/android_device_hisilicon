@@ -1,0 +1,59 @@
+menu "DVB-T/T2 Demod Config"
+    depends on HI_DVBT_SUPPORT
+
+config  HI_DEMOD_TYPE_HI3137
+    bool "HI3137 Support"
+    default y
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_CXD2837
+    bool "CXD2837 Support"
+    default y
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_MXL101
+    bool "MXL101 Support"
+    default y
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_MN88472
+    bool "MN88472 Support"
+    default y
+    select HI_GPIOI2C_SUPPORT
+
+config  HI_DEMOD_TYPE_IT9170
+    bool "IT9170 Support"
+    default y
+    select HI_GPIOI2C_SUPPORT
+endmenu
+
+menu "DVB-T/T2 Tuner Config"
+    depends on HI_DVBT_SUPPORT
+
+config  HI_TUNER_TYPE_CXD2861
+    bool "CXD2861 Support"
+    default y
+
+config  HI_TUNER_TYPE_RAFAEL836
+    bool "Rafael836 Support"
+    default y
+
+config  HI_TUNER_TYPE_MXL603
+    bool "MXL603 Support"
+    default y
+
+config  HI_TUNER_TYPE_MXL608
+    bool "MXL608 Support"
+    default y
+    
+config  HI_TUNER_TYPE_SI2147
+        bool "Si2147 Support"
+        default y
+config  HI_TUNER_TYPE_TDA182I5A
+        bool "TDA182I5A Support"
+        default y
+config  HI_TUNER_TYPE_SI2144
+        bool "SI2144 Support"
+        default y
+endmenu
+

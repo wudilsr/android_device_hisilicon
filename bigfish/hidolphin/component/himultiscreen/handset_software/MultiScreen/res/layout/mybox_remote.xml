@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/mybox_remote_background" >
+
+    <include layout="@layout/mybox_remote_head" />
+
+    <ImageView
+        android:id="@+id/mybox_remote_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/remote_head"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app"
+        android:src="@drawable/remote_light"
+        android:visibility="invisible" />
+
+    <com.hisilicon.multiscreen.mybox.RemoteTouchView
+        android:id="@+id/mybox_remote_touchs"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/remote_bottom"
+        android:layout_below="@+id/mybox_remote_light"
+        android:layout_marginTop="60dp"
+        android:gravity="center_vertical"
+        android:visibility="gone" />
+
+    <com.hisilicon.multiscreen.mybox.RemoteKeyboardView
+        android:id="@+id/mybox_remote_keyboards"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/remote_bottom"
+        android:layout_below="@+id/mybox_remote_light"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:visibility="visible" />
+<!--
+    <com.hisilicon.multiscreen.mybox.SpeechRecordView
+        android:id="@+id/mybox_speech_record"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/remote_bottom"
+        android:layout_below="@+id/mybox_remote_light"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:visibility="invisible"
+        />
+ -->
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="60dp" >
+
+        <include layout="@layout/mybox_remote_child" />
+    </FrameLayout>
+
+    <include layout="@layout/mybox_remote_bottom" />
+
+    <include
+        android:layout_alignParentTop="true"
+        layout="@layout/mybox_remote_device_not_found" />
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="show_method">
+        <item>列表</item>
+        <item>缩略图</item>
+    </string-array>
+    <string-array name="operation">
+        <item>打开</item>
+        <item>移动</item>
+        <item>删除</item>
+        <item>下载</item>
+    </string-array>
+    <string-array name="menu">
+        <item>新建</item>
+        <item>搜索</item>
+        <item>切换显示方式</item>
+        <item>空间配额信息</item>
+        <item>注销</item>
+    </string-array>
+
+</resources>

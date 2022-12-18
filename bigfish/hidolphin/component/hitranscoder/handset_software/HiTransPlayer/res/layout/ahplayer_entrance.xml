@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView android:id="@+id/TextView01"
+    android:text="@string/label_access"
+    android:textSize="45px"
+    android:textStyle="italic"
+    android:gravity="center"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/TextView02"
+    android:text="@string/label_content"
+    android:textSize="25px"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/TextView01"/>
+
+    <ImageButton android:id="@+id/ibInternetContent"
+    android:background="@drawable/internet"
+    android:layout_gravity="center"
+    android:layout_width="60dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="60dp"
+    android:layout_alignTop="@+id/TextView02"
+    />
+    <TextView android:id="@+id/TextView03"
+    android:text="@string/label_localcontent"
+    android:textSize="25px"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/ibInternetContent"
+    android:layout_marginTop="20dip"
+    />
+    <ImageButton android:id="@+id/ibLocalContent"
+    android:background="@drawable/local"
+    android:layout_gravity="center"
+    android:layout_width="60dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="60dp"
+    android:layout_marginTop="10dip"
+    android:layout_alignTop="@+id/TextView03"
+    />
+    <TextView android:id="@+id/TextView04"
+    android:text="@string/setting"
+    android:textSize="25px"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/ibLocalContent"
+    android:layout_marginTop="20dip"
+    />
+    <ImageButton android:id="@+id/ibSetting"
+    android:background="@drawable/setting"
+    android:layout_gravity="center"
+    android:layout_width="60dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="60dp"
+    android:layout_alignTop="@+id/TextView04"
+    />
+
+</RelativeLayout>

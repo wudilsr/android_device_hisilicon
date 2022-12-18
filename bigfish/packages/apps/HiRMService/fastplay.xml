@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<HiSTBAndroidUpgrade>
+    <!--完整升级包-->
+    <FastplayUpgrade>
+        <!--下载路径-->
+        <FilePath>
+        http://10.67.212.148/v5/hcb/fastplay_old.img
+        </FilePath>
+        <!--发布时间-->
+        <ReleaseTime>
+        2014-04-13
+        </ReleaseTime>
+        <!--该包的大小-->
+        <FileSize>
+        32MB
+        </FileSize>
+    </FastplayUpgrade>
+    <FastplayUpgrade>
+        <!--下载路径-->
+        <FilePath>
+        http://10.67.212.148/v5/hcb/fastplay_new.img
+        </FilePath>
+        <!--发布时间-->
+        <ReleaseTime>
+        2014-04-16
+        </ReleaseTime>
+        <!--该包的大小-->
+        <FileSize>
+        12MB
+        </FileSize>
+    </FastplayUpgrade>
+</HiSTBAndroidUpgrade>

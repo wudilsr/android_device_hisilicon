@@ -1,0 +1,24 @@
+#!/system/bin/sh
+if [  -f "/data/ppp/pppd.pid" ] ; then
+	echo "pppd-disconnect: pppd is being stop!"
+	PPPD_PID=`cat /data/ppp/pppd.pid`> /dev/null 2>&1
+	kill $PPPD_PID > /dev/null 2>&1
+
+fi
+if [  -f "/data/ppp/pppoe.pid" ] ; then
+	echo "pppoe-disconnect:pppoe is being stop!"
+	PPPOE_PID=`cat /data/ppp/pppoe.pid`> /dev/null 2>&1
+	kill $PPPOE_PID > /dev/null 2>&1
+fi
+
+# Kill pppd again, in case it's still hanging around
+PPPD_PID=`cat /data/ppp/pppd.pid` > /dev/null 2>&1
+kill $PPPD_PID 2&1>/dev/null
+
+
+# Kill pppoe again, in case it's still hanging around
+PPPOE_PID=`cat /data/ppp/pppoe.pid` > /dev/null 2>&1
+kill $PPPOE_PID 2&1>/dev/null
+
+rm /data/ppp/pppd.pid
+rm /data/ppp/pppoe.pid

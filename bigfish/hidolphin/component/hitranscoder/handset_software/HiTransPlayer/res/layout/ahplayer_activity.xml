@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <com.media.ahplayer.ahplayerMovieView android:id="@+id/MovieView01"
+    android:background="@android:color/transparent"
+    android:keepScreenOn="true"
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    />
+    <com.media.ahplayer.XYView android:id="@+id/XYView01"
+    android:visibility="gone"
+    android:background="@android:color/transparent"
+    android:keepScreenOn="true"
+    android:layout_gravity="center"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    />
+    <LinearLayout
+        android:id="@+id/endprog"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pls wait"/>
+    </LinearLayout>
+</FrameLayout>

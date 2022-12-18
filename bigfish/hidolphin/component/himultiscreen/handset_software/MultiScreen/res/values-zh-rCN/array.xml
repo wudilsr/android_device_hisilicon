@@ -1,0 +1,11 @@
+<resources>
+
+    <string-array name="guide_message_array">
+        <!--  
+        <item>机顶盒开启时，手机直接看直播节目</item>
+        <item>手机的内容推送到电视观看</item>-->
+        <item>触手可及的遥控器</item>
+        <item>手机同步电视画面，方便的控制电视</item>
+    </string-array>
+
+</resources>

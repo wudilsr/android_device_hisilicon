@@ -1,0 +1,15 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "Pvr Config"
+#--------------------------------
+config HI_PVR_SUPPORT
+	bool "PVR Support"
+	default y
+
+config HI_PVR_L2_CACHE_SUPPORT
+	depends on HI_PVR_SUPPORT
+	bool "L2 Cache Support"
+	default n
+
+#--------------------------------
+endmenu
+#++++++++++++++++++++++++++++++++++++++++++++++++++++

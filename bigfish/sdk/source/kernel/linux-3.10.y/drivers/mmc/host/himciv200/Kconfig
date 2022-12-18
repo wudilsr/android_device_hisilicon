@@ -1,0 +1,73 @@
+#
+# himci v200 device configuration
+#
+
+menuconfig HIMCIV200_SDIO_SYNOPSYS 
+	tristate "Himciv200 SDIO/MMC device support"
+	depends on (ARCH_GODBOX || ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+	default n if (ARCH_GODBOX || ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+	select MMC_UNSAFE_RESUME
+	select MMC_EMBEDDED_SDIO
+	select MMC_BLOCK
+	select MMC_BLOCK_BOUNCE
+	help
+	  This selects the mmc family device.
+
+if HIMCIV200_SDIO_SYNOPSYS 
+
+menuconfig HIMCIV200_SDIO0
+	bool "Himciv200 SDIO0 config"
+	default y
+
+config HIMCIV200_SDIO0_IOBASE
+	hex "Himciv200 SDIO0 controller base address"
+	depends on HIMCIV200_SDIO0
+	default "0x601C0000" if ARCH_GODBOX
+	default "0xF9820000" if (ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+
+config HIMCIV200_SDIO0_INTR
+	int "Himciv200 SDIO0 irq number"
+	depends on HIMCIV200_SDIO0
+	default "98" if ARCH_GODBOX
+	default "66" if (ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+
+config HIMCIV200_SDIO0_BUS_WIDTH_8
+	bool "Himciv200 SDIO0 8bits bus support"
+	depends on HIMCIV200_SDIO0
+	depends on ARCH_GODBOX
+	default n if ARCH_GODBOX
+
+menuconfig HIMCIV200_SDIO1
+	bool "Himciv200 SDIO1 config"
+	default y
+
+config HIMCIV200_SDIO1_IOBASE
+	hex "Himciv200 SDIO1 controller base address"
+	depends on HIMCIV200_SDIO1
+	default "0xF9830000" if (ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+
+config HIMCIV200_SDIO1_INTR
+	int "Himciv200 SDIO1 irq number"
+	depends on HIMCIV200_SDIO1
+	default "67" if (ARCH_S40 || ARCH_HI3798MX || ARCH_HIFONE)
+
+menuconfig HIMCIV200_SDIO2
+	bool "Himciv200 SDIO2 config"
+	default n
+
+config HIMCIV200_SDIO2_IOBASE
+	hex "Himciv200 SDIO2 controller base address"
+	depends on HIMCIV200_SDIO2
+	default "0xF9C40000" if (ARCH_HIFONE)
+
+config HIMCIV200_SDIO2_INTR
+	int "Himciv200 SDIO2 controller irq number"
+	depends on HIMCIV200_SDIO2
+	default "118" if (ARCH_HIFONE)
+
+config VOLTAGE_SWITCH
+	bool "Himciv200 SDIO 1.8V voltage switch support"
+	default n
+
+endif
+

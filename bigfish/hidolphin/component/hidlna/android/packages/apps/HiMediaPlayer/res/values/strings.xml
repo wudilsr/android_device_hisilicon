@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, DMCMediaCenter!</string>
+    <string name="app_name">HiMediaPlayer</string>
+    <string name="please_wait">Please wait</string>
+    <string name="load">Loading...</string>
+    <string name="no_network">Connection timeout!</string>
+    <string name="str_play_time">00:00:00</string>
+    <string name="str_play_sum_time">00:00:00</string>
+    <string name="PlayList">Play List</string>
+    <string name="unsupport_file">Unsupported file!</string>
+    <string name="filename">Filename</string>
+    <string name="artist">Artist:</string>
+    <string name="genre">Genre:</string>
+    <string name="album">Album:</string>
+    <string name="size">Size:</string>
+    <string name="sumlist">0/0</string>
+    <string name="music">Music</string>
+    <string name="unknown">Unknown</string>
+    <string name="media_error_unknow">Unknown play error</string>
+    <string name="photo">Photo</string>
+    <string name="normal">Normal</string>
+    <string name="fast">Fast</string>
+    <string name="slow">Slow</string>
+    <string name="resolution">Resolution</string>
+    <string name="date">Date</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="video_info">Video Info</string>
+    <string name="fail_get_playlist">Fail to get playlist</string>
+    <string name="imageIsNull">Loading image is null</string>
+    <string name="speed_normal">Normal</string>
+    <string name="speed_fast">Fast</string>
+    <string name="speed_slow">Slow</string>
+    <string name="network_interruption">Network interruption</string>
+    <string name="outofmemory">Unsupported file!</string>
+    <string name="dmr_not_allow_pre">Media pushed by dmr not allowed to jump previous resource</string>
+    <string name="dmr_not_allow_next">Media pushed by dmr not allowed to jump next resource</string>
+    <string name="timeout">Time out</string>
+    <string name="network_shutdown">Network is shutdown</string>
+    <string name="connect_timeout">Connect Timeout</string>
+    <string name="file_type_unsupport">File type is unsupported</string>
+    <string name="failed_get_file">Failed To Get File</string>
+    <string name="network_connect_failed">Network connect failed</string>
+    <string name="network_timeout">Network timeout</string>
+    <string name="network_disconnect">Network disconnect</string>
+    <string name="network_not_found">Resource not found</string>
+    <string name="buffering_progress">0%</string>
+    <string name="network_speed_kbps">KBps</string>
+
+</resources>

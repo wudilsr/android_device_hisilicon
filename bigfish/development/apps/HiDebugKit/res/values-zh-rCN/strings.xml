@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="network_upgrade_title">Debug Kit</string>
+    <string name="network_system_upgrade">系统升级</string>
+    <string name="network_sdk_upgrade">SDK升级</string>
+    <string name="network_upgrade_url_title">提示</string>
+    <string name="network_upgrade_url_prompt">请输入下载地址</string>
+    <string name="network_upgrade_default_url">http://10.67.212.148/v5/update.zip</string>
+    <string name="network_upgrade_default_sdk_url">http://10.67.212.148/v5/update.zip</string>
+    <string name="network_upgrade_begin_download">开始升级...</string>
+    <string name="network_upgrade_prompt_okay">确定</string>
+    <string name="network_upgrade_prompt_cancel">取消</string>
+    <string name="network_upgrade_no_sdcard">请插入存储介质</string>
+    <string name="network_upgrade_storage_tiltle">提示</string>
+    <string name="network_upgrade_storage_prompt">请选择下载路径</string>
+    <string name="network_upgrade_download_failed">下载失败!</string>
+    <string name="network_upgrade_download_err_okay">确定</string>
+    <string name="network_upgrade_download_success">下载成功！准备重启升级！</string>
+    <string name="network_upgrade_download_success_okay">确定</string>
+    <string name="network_upgrade_download_success_cancel">取消</string>
+    <string name="network_upgrade_download_logo_prompt">开始下载开机画面  </string>
+    <string name="network_upgrade_download_logo_success">开机画面下载完成  </string>
+    <string name="network_upgrade_download_start_failed">请指定默认存储设备 </string>
+    <string name="application_terminal">DDR 压力测试 v1.1 beta1</string>
+    <string name="case_ddr_name">DDR压力测试</string>
+    <string name="case_ddr_memory_size">内存大小(MB):</string>
+    <string name="case_ddr_loops">循环次数:</string>
+    <string name="case_ddr_command_output">命令行输出</string>
+    <string name="case_ddr_result_output">结果输出</string>
+    <string name="case_ddr_config_memory_size">内存大小(MB):</string>
+    <string name="case_ddr_config_loops">循环次数:</string>
+    <string name="case_ddr_config_restart">重新测试</string>
+    <string name="case_ddr_config_prefix">内存大小:%1$s mb,循环次数:%2$s</string>
+    <string name="case_ddr_exit">退出</string>
+    <string name="bootargs_info">Bootargs信息</string>
+    <string name="logcat">logcat</string>
+    <string name="logcat_start">启动Logcat</string>
+    <string name="logcat_stop">停止Logcat</string>
+    <string name="logcat_info">Log将记录在/sdcard/logcat文件中</string>
+    <string name="dmesg_start">启动Dmesg</string>
+    <string name="dmesg_info">Dmesg将记录在/sdcard/dmesg文件中</string>
+    <string name="hdmi">HDMI EDID</string>
+    <string name="memleak">memleak</string>
+    <string name="media_mem">media_mem</string>
+    <string name="meminfo">meminfo</string>
+    <string name="dmesg">dmesg</string>
+    <string name="build_number">Build Number</string>
+    <string name="gpu">ION（GPU）</string>
+    <string name="android_version">Android版本</string>
+    <string name="kernel_version">Kernel版本</string>
+    <string name="sdk_version">SDK版本</string>
+    <string name="gpu_version">GPU版本</string>
+    <string name="system_version">System版本</string>
+    <string name="file_check_failed">安全校验失败</string>
+</resources>

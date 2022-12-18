@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<TextView android:id="@+id/rename_text"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="10dip" android:layout_marginRight="10dip"
+			android:text="@string/help_title" android:gravity="center"
+			android:textSize="18sp" android:padding="2px"
+			android:drawablePadding="1dip" android:drawableLeft="@drawable/help">
+		</TextView>
+		<TextView android:id="@+id/help_text" android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:textSize="15sp" android:layout_marginLeft="16dp">
+		</TextView>
+	</LinearLayout>
+</ScrollView>

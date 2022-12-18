@@ -1,0 +1,446 @@
+// !$*UTF8*$!
+{
+    archiveVersion = 1;
+    classes = {
+    };
+    objectVersion = 38;
+    objects = {
+        510265730468850300FEA58C = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "chunk-info.cpp";
+            refType = 4;
+        };
+        510265750468850300FEA58C = {
+            fileRef = 510265730468850300FEA58C;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        511D355F0465DA8900206587 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "version-chunk.h";
+            refType = 4;
+        };
+        511D35600465DA8900206587 = {
+            fileRef = 511D355F0465DA8900206587;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        511D35620465DAED00206587 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "version-chunk.cpp";
+            refType = 4;
+        };
+        511D35640465DAED00206587 = {
+            fileRef = 511D35620465DAED00206587;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        511D35650465E1F800206587 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "container-chunk.h";
+            refType = 4;
+        };
+        511D35660465E1F800206587 = {
+            fileRef = 511D35650465E1F800206587;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        511D35680465E40C00206587 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "container-chunk.cpp";
+            refType = 4;
+        };
+        511D356A0465E40C00206587 = {
+            fileRef = 511D35680465E40C00206587;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        518D688C0465C86B00CAF821 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "integer-chunk.h";
+            refType = 4;
+        };
+        518D688D0465C86B00CAF821 = {
+            fileRef = 518D688C0465C86B00CAF821;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        518D68900465CEB700CAF821 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "string-chunk.h";
+            refType = 4;
+        };
+        518D68910465CEB700CAF821 = {
+            fileRef = 518D68900465CEB700CAF821;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        518D68930465CFB000CAF821 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "string-chunk.cpp";
+            refType = 4;
+        };
+        518D68950465CFB000CAF821 = {
+            fileRef = 518D68930465CFB000CAF821;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        51973E20046596430099D810 = {
+            children = (
+                51973E250465965C0099D810,
+                51973E540465A4560099D810,
+            );
+            isa = PBXGroup;
+            refType = 4;
+        };
+        51973E22046596430099D810 = {
+            buildRules = (
+            );
+            buildSettings = {
+                COPY_PHASE_STRIP = NO;
+                OPTIMIZATION_CFLAGS = "-O0";
+            };
+            isa = PBXBuildStyle;
+            name = Development;
+        };
+        51973E23046596430099D810 = {
+            buildRules = (
+            );
+            buildSettings = {
+                COPY_PHASE_STRIP = YES;
+                DEBUGGING_SYMBOLS = NO;
+            };
+            isa = PBXBuildStyle;
+            name = Deployment;
+        };
+        51973E24046596430099D810 = {
+            buildStyles = (
+                51973E22046596430099D810,
+                51973E23046596430099D810,
+            );
+            hasScannedForEncodings = 1;
+            isa = PBXProject;
+            mainGroup = 51973E20046596430099D810;
+            productRefGroup = 51973E540465A4560099D810;
+            projectDirPath = "";
+            targets = (
+                51973E520465A4560099D810,
+            );
+        };
+        51973E250465965C0099D810 = {
+            children = (
+                51F20117046B2046001C4BDC,
+                51973E320465965C0099D810,
+                51973E3A0465965C0099D810,
+            );
+            isa = PBXGroup;
+            name = libdaap;
+            path = ..;
+            refType = 2;
+        };
+        51973E320465965C0099D810 = {
+            children = (
+                51973E340465965C0099D810,
+            );
+            isa = PBXGroup;
+            path = include;
+            refType = 4;
+        };
+        51973E340465965C0099D810 = {
+            children = (
+                51973E470465969F0099D810,
+                51973E5C0465AD110099D810,
+                51BE910C04687E3100D9F661,
+                51973E4C04659E850099D810,
+                518D688C0465C86B00CAF821,
+                518D68900465CEB700CAF821,
+                511D355F0465DA8900206587,
+                511D35650465E1F800206587,
+            );
+            isa = PBXGroup;
+            path = libdaap;
+            refType = 4;
+        };
+        51973E3A0465965C0099D810 = {
+            children = (
+                51F20112046B0CAA001C4BDC,
+                51973E5A0465ACFE0099D810,
+                510265730468850300FEA58C,
+                51973E4B04659E5E0099D810,
+                51F20114046B1506001C4BDC,
+                518D68930465CFB000CAF821,
+                511D35620465DAED00206587,
+                511D35680465E40C00206587,
+            );
+            isa = PBXGroup;
+            path = lib;
+            refType = 4;
+        };
+        51973E470465969F0099D810 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = libdaap.h;
+            refType = 4;
+        };
+        51973E4B04659E5E0099D810 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = chunk.cpp;
+            refType = 4;
+        };
+        51973E4C04659E850099D810 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = chunk.h;
+            refType = 4;
+        };
+        51973E4D0465A4560099D810 = {
+            buildActionMask = 2147483647;
+            files = (
+                51F20118046B2046001C4BDC,
+                51F20113046B0CAA001C4BDC,
+                51973E550465A4690099D810,
+                51973E5D0465AD110099D810,
+                51BE910D04687E3100D9F661,
+                51973E560465A46A0099D810,
+                518D688D0465C86B00CAF821,
+                518D68910465CEB700CAF821,
+                511D35600465DA8900206587,
+                511D35660465E1F800206587,
+            );
+            isa = PBXHeadersBuildPhase;
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        51973E4E0465A4560099D810 = {
+            buildActionMask = 2147483647;
+            files = (
+            );
+            isa = PBXResourcesBuildPhase;
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        51973E4F0465A4560099D810 = {
+            buildActionMask = 2147483647;
+            files = (
+                51973E5B0465ACFE0099D810,
+                510265750468850300FEA58C,
+                51973E580465A46B0099D810,
+                51F20115046B1506001C4BDC,
+                518D68950465CFB000CAF821,
+                511D35640465DAED00206587,
+                511D356A0465E40C00206587,
+            );
+            isa = PBXSourcesBuildPhase;
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        51973E500465A4560099D810 = {
+            buildActionMask = 2147483647;
+            files = (
+            );
+            isa = PBXFrameworksBuildPhase;
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        51973E510465A4560099D810 = {
+            buildActionMask = 2147483647;
+            files = (
+            );
+            isa = PBXRezBuildPhase;
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        51973E520465A4560099D810 = {
+            buildPhases = (
+                51973E4D0465A4560099D810,
+                51973E4E0465A4560099D810,
+                51973E4F0465A4560099D810,
+                51973E500465A4560099D810,
+                51973E510465A4560099D810,
+            );
+            buildSettings = {
+                DYLIB_COMPATIBILITY_VERSION = 1;
+                DYLIB_CURRENT_VERSION = 1;
+                FRAMEWORK_VERSION = A;
+                INSTALL_PATH = "@executable_path/../Frameworks";
+                OTHER_CFLAGS = "-DHAVE_CONFIG_H";
+                OTHER_LDFLAGS = "-seg1addr 0x13300000 -fno-undefined";
+                OTHER_LIBTOOL_FLAGS = "";
+                OTHER_REZFLAGS = "";
+                PRINCIPAL_CLASS = "";
+                PRODUCT_NAME = libdaap;
+                SECTORDER_FLAGS = "";
+                WARNING_CFLAGS = "-Wall -Wno-four-char-constants -Wno-unknown-pragmas";
+                WRAPPER_EXTENSION = framework;
+            };
+            dependencies = (
+            );
+            isa = PBXFrameworkTarget;
+            name = libdaap;
+            productInstallPath = "@executable_path/../Frameworks";
+            productName = daap;
+            productReference = 51973E530465A4560099D810;
+            productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleExecutable</key>
+    <string>libdaap</string>
+    <key>CFBundleIdentifier</key>
+    <string>net.sf.daap.libdaap</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundlePackageType</key>
+    <string>FMWK</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+</dict>
+</plist>
+";
+        };
+        51973E530465A4560099D810 = {
+            isa = PBXFrameworkReference;
+            path = libdaap.framework;
+            refType = 3;
+        };
+        51973E540465A4560099D810 = {
+            children = (
+                51973E530465A4560099D810,
+            );
+            isa = PBXGroup;
+            name = Products;
+            refType = 4;
+        };
+        51973E550465A4690099D810 = {
+            fileRef = 51973E470465969F0099D810;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        51973E560465A46A0099D810 = {
+            fileRef = 51973E4C04659E850099D810;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        51973E580465A46B0099D810 = {
+            fileRef = 51973E4B04659E5E0099D810;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        51973E5A0465ACFE0099D810 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "content-codes.cpp";
+            refType = 4;
+        };
+        51973E5B0465ACFE0099D810 = {
+            fileRef = 51973E5A0465ACFE0099D810;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        51973E5C0465AD110099D810 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "content-codes.h";
+            refType = 4;
+        };
+        51973E5D0465AD110099D810 = {
+            fileRef = 51973E5C0465AD110099D810;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        51BE910C04687E3100D9F661 = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "chunk-info.h";
+            refType = 4;
+        };
+        51BE910D04687E3100D9F661 = {
+            fileRef = 51BE910C04687E3100D9F661;
+            isa = PBXBuildFile;
+            settings = {
+                ATTRIBUTES = (
+                    Public,
+                );
+            };
+        };
+        51F20112046B0CAA001C4BDC = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = macros.h;
+            refType = 4;
+        };
+        51F20113046B0CAA001C4BDC = {
+            fileRef = 51F20112046B0CAA001C4BDC;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        51F20114046B1506001C4BDC = {
+            fileEncoding = 4;
+            isa = PBXFileReference;
+            path = "integer-chunk.cpp";
+            refType = 4;
+        };
+        51F20115046B1506001C4BDC = {
+            fileRef = 51F20114046B1506001C4BDC;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+        51F20117046B2046001C4BDC = {
+            fileEncoding = 30;
+            isa = PBXFileReference;
+            path = config.h;
+            refType = 4;
+        };
+        51F20118046B2046001C4BDC = {
+            fileRef = 51F20117046B2046001C4BDC;
+            isa = PBXBuildFile;
+            settings = {
+            };
+        };
+    };
+    rootObject = 51973E24046596430099D810;
+}

@@ -1,0 +1,16 @@
+LOCAL_PATH := $(call my-dir)
+
+ifneq ($(BOARD_HAVE_BLUETOOTH_RTK_SOURCECODE),true)
+
+include $(CLEAR_VARS) 
+include $(CLEAR_VARS)
+LOCAL_MODULE    := rtlbtmp 
+LOCAL_SRC_FILES := rtlbtmp
+LOCAL_MODULE_PATH := $(TARGET_OUT_EXECUTABLES)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := EXECUTABLE
+LOCAL_REQUIRED_MODULES := bluetoothmp.default
+include $(BUILD_PREBUILT)
+
+endif
+

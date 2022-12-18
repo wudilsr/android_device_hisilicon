@@ -1,0 +1,60 @@
+################################################################################
+#  Copyright (C) 2014 Hisilicon STB Development Dept
+#  All rights reserved.
+#  Create by czyong
+#
+#  https://code.google.com/p/exfat/
+#
+################################################################################
+
+CROSS_COMPILE ?= arm-hisiv200-linux-
+
+CC      := $(CROSS_COMPILE)gcc
+AR      := $(CROSS_COMPILE)ar
+STRIP   := $(CROSS_COMPILE)strip
+CFLAGS  += -D_FILE_OFFSET_BITS=64 -static -Wall -O2 -I. -I./libexfat/
+LDFLAGS += -L./ -lexfat  -static
+
+all: dumpexfat exfatfsck exfatlabel mkexfatfs
+
+install: dumpexfat exfatfsck exfatlabel mkexfatfs
+	$(STRIP) $^
+	mkdir -p $(PREFIX)/usr/sbin
+	install -v -t $(PREFIX)/usr/sbin $^
+
+exfatfsck_objs := fsck/main.o
+TMP += exfatfsck fsck/*.o
+exfatfsck: $(exfatfsck_objs) libexfat.a
+	$(CC) -o $@ $(exfatfsck_objs) $(LDFLAGS)
+
+dumpexfat_objs := dump/main.o
+TMP += dumpexfat dump/*.o
+dumpexfat: $(dumpexfat_objs) libexfat.a
+	$(CC) -o $@ $(dumpexfat_objs) $(LDFLAGS)
+
+exfatlabel_objs += label/main.o
+TMP += exfatlabel label/*.o
+exfatlabel: $(exfatlabel_objs) libexfat.a
+	$(CC) -o $@ $(exfatlabel_objs) $(LDFLAGS)
+
+# mkexfat.o uctc.o
+mkexfatfs_objs = main.o cbm.o fat.o rootdir.o vbr.o uct.o
+mkexfatfs_objs := $(addprefix mkfs/,$(mkexfatfs_objs))
+TMP += mkexfatfs mkfs/*.o
+mkexfatfs: $(mkexfatfs_objs) libexfat.a
+	$(CC) -o $@ $(mkexfatfs_objs) $(LDFLAGS)
+
+libexfat_objs = cluster.o io.o log.o lookup.o time.o mount.o node.o utf.o utils.o
+libexfat_objs := $(addprefix libexfat/,$(libexfat_objs))
+TMP += libexfat.a libexfat/*.o
+libexfat.a: $(libexfat_objs)
+	$(AR) rc $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $< -I$(@D)
+
+PHONYS += clean distclean
+distclean clean:
+	@rm -rf $(TMP)
+
+.PHONY: $(PHONYS)

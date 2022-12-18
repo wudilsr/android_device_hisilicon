@@ -1,0 +1,34 @@
+#Android.def
+#LOCAL_PATH is libdash/libdash or libdash/libdashadp
+
+RELEASE:=false
+
+HIDOLPHIN_DIR := $(HISI_PLATFORM_PATH)/hidolphin
+
+LIBDASH_DIR := $(LOCAL_PATH)/../
+CURL_DIR    := $(LOCAL_PATH)/../../curl
+LIBXML2_DIR := $(LOCAL_PATH)/../../libxml2
+HISUB_DIR   := $(HIDOLPHIN_DIR)/component/hisub
+
+LIBCURL_INCLUDE  := $(CURL_DIR)/include
+LIBXML2_INCLUDE  := $(LIBXML2_DIR)/include
+LIBZ_INCLUDE     := $(LIBDASH_DIR)/zlib/include
+LIBDASH_INCLUDE  := $(LIBDASH_DIR)/libdash/include
+HISUB_INCLUDE    := $(HISUB_DIR)/include
+
+ifeq ($(RELEASE),true)
+FFMPEG_DIR       := $(LOCAL_PATH)/../libav
+FFMPEG_INCLUDE   := $(FFMPEG_DIR) \
+                    $(FFMPEG_DIR)/include
+else
+FFMPEG_DIR       := $(LOCAL_PATH)/../../ffmpeg
+FFMPEG_INCLUDE   := $(FFMPEG_DIR) \
+                    $(FFMPEG_DIR)/libffmpegadp/platform/include \
+                    $(FFMPEG_DIR)/libffmpegadp/platform/include/ver_v100r002
+CPPFLAGS         := -g
+endif
+
+CPPFLAGS += -O2
+CPPFLAGS += -fPIC
+CPPFLAGS += -Wall -Wno-unknown-pragmas
+CPPFLAGS += -DANDROID_VERSION

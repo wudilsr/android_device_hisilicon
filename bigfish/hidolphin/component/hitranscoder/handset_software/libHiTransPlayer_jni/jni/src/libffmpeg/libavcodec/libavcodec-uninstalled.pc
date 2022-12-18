@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/cygdrive/e/EATAPlayer/ahPlayer_r14467_mt_software_noopendemux_FMO_Neon_Wudi/ahplayer-jni/jni/libffmpeg
+
+Name: libavcodec
+Description: Libav codec library
+Version: 53.3.0
+Requires: libavutil = 51.1.0
+Conflicts:
+Libs: ${libdir}/libavcodec.a -lm
+Cflags: -I${includedir}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Applications>
+	<!--	<key>
+		<keyName>HisiVideoPlayer</keyName>
+		<keyValue>1180</keyValue>
+		<packageName>com.huawei.activity</packageName>
+		<activityName>com.huawei.activity.Main</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>-->
+
+	<key>
+		<keyName>Settings</keyName>
+		<keyValue>176</keyValue>
+		<packageName>com.android.settings</packageName>
+		<activityName>com.android.settings.Settings</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>
+
+	<key>
+		<keyName>HiPQSetting</keyName>
+		<keyValue>1185</keyValue>
+		<packageName>com.hisilicon.android.pqsetting</packageName>
+		<serviceName>com.hisilicon.android.pqsetting.MainService</serviceName>
+		<action>android.intent.action.MAIN</action>
+	</key>
+
+	<!--<key>
+		<keyName>Gallary3D</keyName>
+		<keyValue>8</keyValue>
+		<packageName>com.android.gallery3d</packageName>
+		<activityName>com.android.gallery3d.app.Gallery</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>
+
+	<key>
+		<keyName>Browser</keyName>
+		<keyValue>9</keyValue>
+		<packageName>com.android.browser</packageName>
+		<activityName>com.android.browser.BrowserActivity</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>n>
+
+	<key>
+		<keyName>Search</keyName>
+		<keyValue>84</keyValue>
+		<packageName>com.android.quicksearchbox</packageName>
+		<activityName>com.android.quicksearchbox.SearchActivity</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>
+
+	<key>
+		<keyName>FileM</keyName>
+		<keyValue>10</keyValue>
+		<packageName>com.explorer</packageName>
+		<activityName>com.explorer..activity.TabBarExample</activityName>
+		<action>android.intent.action.MAIN</action>
+	</key>-->
+
+</Applications>

@@ -1,0 +1,9 @@
+#!/bin/sh
+cp ./jni/src/jni/Android_omxcodec.mk.release ./jni/src/jni/Android.mk
+cp ./jni/src/libmediaplayer/Android_omxcodec.mk.release ./jni/src/libmediaplayer/Android.mk
+ndk-build
+cp libs/armeabi-v7a/libtest1_jni.so .
+cp ./jni/src/jni/Android_ffmpeg.mk.release ./jni/src/jni/Android.mk
+cp ./jni/src/libmediaplayer/Android_ffmpeg.mk.release ./jni/src/libmediaplayer/Android.mk
+ndk-build
+mv libtest1_jni.so libs/armeabi-v7a/

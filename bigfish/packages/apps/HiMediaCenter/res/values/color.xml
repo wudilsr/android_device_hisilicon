@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="white">#ffffff</color>
+	<color name="black">#000000</color>
+	<color name="widget_title">#b22222</color>
+	<color name="x_black">#292421</color>
+	<color name="blue">#3d59ab</color>
+	<color name="hui_black">#808a87</color>
+</resources>

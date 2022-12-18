@@ -1,0 +1,62 @@
+
+Digital Audio Access Protocol Library
+http://daap.sourceforge.net/
+
+
+*** ABOUT ***
+
+libdaap is a C++ library with C and Objective-C/Cocoa wrappers that will, in
+time, implement a full DAAP client and server. It is licensed under the GNU
+Lesser Public License, which allows developers to use the library even in
+non-free software as long as a few restrictions are followed.
+
+At the moment only the C++ interface is available, and it only understands
+the basic format of the data. It does not yet perform any network operations
+and thus also doesn't have a higher level interface for listing music and
+playlists. It also can only act as a client for the moment.
+
+
+*** BUILDING ***
+
+libdaap should build and run without any problems on most platforms.  Should
+you find this not to be the case, plase contact us and we'll try to get the
+problems fixed.  The following commands should get you started:
+
+./configure
+make
+make check
+make install
+
+Running 'make check' gets the build system to run a few tests to make sure
+things are running smoothly and that the library is likely to work.
+
+Note also that despite libtool's best efforts to generate shared libraries,
+this doesn't work very well on certain platforms.  If a build fails, you
+could try configuring libdaap with --disable-shared.
+
+
+*** DOCUMENTATION ***
+
+Very little documentation is available for the library at the moment, but
+hopefully this shall soon be remedied. Most of the documentation is to be
+found in the source code, and hopefully that is enough to get certain people
+going. We are hoping to post some proper documentation and sample code soon.
+
+
+*** CONTRIBUTING ***
+
+Contributions to the library are more than welcome. This library is
+essentially developed in the authors' free time, so does not get as much
+attention as it may need. Contributions can vary from  writing code or
+documentation to promoting it (telling your favorite digital audio player's
+author about what they could do with this, for example).
+
+
+*** PEOPLE ***
+
+Written by:
+ - Chris Boot <bootc@mac.com> (MAINTAINER)
+
+Contributors:
+ - Tim Dorr <timdorr@timdorr.com>
+ - William Cahill <wcc2987@sf.net>

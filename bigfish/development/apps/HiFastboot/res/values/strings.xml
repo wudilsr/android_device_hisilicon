@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Quick Boot</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title">Title</string>
+    <string name="sendemail">Redo The Fastboot Mirror</string>
+    <string name="inputtitle">Error Log Report!</string>
+    <string name="content">Error Description</string>
+    <string name="inputcontent">Please Input Content!</string>
+    <string name="collect">Setting!</string>
+    <string name="send">Sending Email!</string>
+    <string name="sendsuccess">Send Email Success!</string>
+    <string name="openqb">Open Quick Boot</string>
+    <string name="closeqb">Close Quick Boot</string>
+    <string name="open">QuickBoot Mode</string>
+    <string name="close">Normal Mode</string>
+    <string name="nulltitle">Please Input Title!</string>
+    <string name="current">Current Status:</string>
+</resources>

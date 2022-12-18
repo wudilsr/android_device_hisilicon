@@ -1,0 +1,20 @@
+bootdelay=0
+verify=n
+baudrate=115200
+ipaddr=192.168.1.10
+serverip=192.168.1.1
+netmask=255.255.255.0
+bootfile="uImage"
+phy_intf=mii,rgmii
+use_mdio=0,1
+phy_addr=2,1
+gmac_debug=0
+bootcmd=nand read 0x1FFBFC0 0xA800000 0xa00000;bootm 0x1FFBFC0
+bootargs=console=ttyAMA0,115200 mtdparts=hinand:8M(fastboot)ro,8M(bootargs)ro,8M(recovery)ro,8M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel)ro,20M(misc),800M(system),1024M(userdata),500M(cache),-(sdcard) ubi.mtd=system ubi.mtd=userdata ubi.mtd=cache ubi.mtd=sdcard
+recoverybootargs=console=ttyAMA0,115200 mtdparts=hinand:8M(fastboot),8M(bootargs),8M(recovery),8M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel),20M(misc),800M(system),1024M(userdata),500M(cache),-(sdcard) ubi.mtd=system ubi.mtd=userdata ubi.mtd=cache ubi.mtd=sdcard
+bootargs_512M=mem=512M mmz=ddr,0,0,235M
+bootargs_1G=mem=1G mmz=ddr,0,0,435M
+bootargs_2G=mem=2G mmz=ddr,0,0,620M
+stdin=serial
+stdout=serial
+stderr=serial

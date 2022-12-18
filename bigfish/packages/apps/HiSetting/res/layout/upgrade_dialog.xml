@@ -1,0 +1,170 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+
+    <TextView
+        android:id="@+id/systemVersion"
+        style="@style/TextViewStyle_MIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:focusable="false"
+        android:textIsSelectable="true" />
+
+    <TextView
+        style="@style/TextViewStyle_MIN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/systemVersion"
+        android:layout_toLeftOf="@id/systemVersion"
+        android:focusable="false"
+        android:text="@string/upgrade_current_version" />
+
+    <RelativeLayout
+        android:id="@+id/show_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/systemVersion"
+        android:padding="30dp" >
+
+        <TextView
+            android:id="@+id/text_view_1"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/upgrade_latest_version" />
+
+        <TextView
+            android:id="@+id/latestVersion"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/text_view_1"
+            android:focusable="false"
+            android:textIsSelectable="true" />
+
+        <Button
+            android:id="@+id/button_download"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/normal_button_selector"
+            android:text="@string/upgrade_btn_download" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/button_download"
+            android:layout_below="@id/text_view_1"
+            android:layout_margin="50dp" >
+
+            <TextView
+                android:id="@+id/versionInfo"
+                style="@style/TextViewStyle_MAX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textIsSelectable="true" />
+        </ScrollView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/show_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/systemVersion"
+        android:gravity="center"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp" >
+
+        <TextView
+            android:id="@+id/text_view_2"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upgrade_message5" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_2"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/progress_text_view"
+                style="@style/TextViewStyle_MAX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear_layout_1"
+            android:text="@string/upgrade_message6" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/show_reboot_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/systemVersion"
+        android:paddingBottom="30dp"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:paddingTop="100dp" >
+
+        <TextView
+            android:id="@+id/text_view_3"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center_horizontal"
+            android:text="@string/upgrade_message8" />
+
+        <TextView
+            android:id="@+id/text_view_4"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_3"
+            android:layout_marginTop="50dp"
+            android:focusable="false"
+            android:gravity="center_horizontal"
+            android:text="@string/upgrade_message7" />
+
+        <Button
+            android:id="@+id/button_reboot"
+            style="@style/TextViewStyle_MAX"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/normal_button_selector"
+            android:text="@string/upgrade_btn_reboot" />
+    </RelativeLayout>
+
+</RelativeLayout>

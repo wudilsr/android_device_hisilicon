@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:gravity="center">
+	<ImageView android:id="@+id/image_Icon" android:layout_width="50dip"
+		android:layout_height="50dip" android:src="@drawable/icon"
+		android:layout_marginLeft="4dip" android:layout_marginTop="10dip">
+	</ImageView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:textColor="@color/white"
+		android:textSize="30sp" android:layout_below="@id/image_Icon"
+		android:gravity="center" android:id="@+id/text">
+	</TextView>
+</RelativeLayout>

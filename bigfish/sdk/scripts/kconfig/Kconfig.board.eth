@@ -1,0 +1,13 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "Ethernet Config"
+config  HI_ETH_SUPPORT
+        bool "Ethernet Support"
+        default y
+        depends on HI_UBOOT_SUPPORT #TODO: XXX
+        help
+          Support ethernet function enables you to use ethernet.
+          You should say y here, unless you really know what are
+          you doing. Say no here can get a smaller fastboot.
+
+endmenu
+#+++++++++++++++++++++++++++++++++++++++++++++++++++

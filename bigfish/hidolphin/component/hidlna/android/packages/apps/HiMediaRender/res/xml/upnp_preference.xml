@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+ <!-- <PreferenceCategory
+
+        >
+   Host Name -->
+        <EditTextPreference
+            android:key="curHostName"
+            android:title="@string/set_net_host_label"
+            android:dialogTitle="@string/set_net_host_label"
+            android:summary="@string/hostname"/>
+
+
+<!--    DMR start
+    <ListPreference
+        android:key="dmr"
+        android:title="@string/dmr_start"
+        android:dialogTitle="@string/dmr_start"
+        android:entries="@array/dmr_start_status"
+        android:entryValues="@array/dmr_status_vaule"
+        android:defaultValue="0"
+        android:summary="@string/deviceStop"
+        >
+    </ListPreference>-->
+    <CheckBoxPreference android:title="@string/dmr_start" android:key="dmr_key"/>
+<!-- DMS start -->
+<!-- keyboard
+    <PreferenceScreen
+    android:title="@string/dms_name">-->
+    <CheckBoxPreference android:title="@string/dms_start" android:key="dms_key"/>
+        <PreferenceScreen android:key="dms_direcory" android:title="@string/dms_directory_name" android:dependency="dms_key"></PreferenceScreen>
+<!--    </PreferenceScreen>
+</PreferenceCategory>-->
+</PreferenceScreen>

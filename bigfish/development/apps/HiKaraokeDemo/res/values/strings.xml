@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MediaPlayerTester</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_stream">StreamActivity</string>
+    <string name="str_txtview">TextView</string>
+    <string name="str_recordpath">Record Path:/sdcard/out.adts</string>
+    <string name="str_play">Play</string>
+    <string name="str_pause">Pause</string>
+    <string name="str_stop">Stop</string>
+    <string name="str_switch">Channel Switch</string>
+    <string name="str_volup">MIC VOL+</string>
+    <string name="str_voldown">MIC VOL-</string>
+</resources>

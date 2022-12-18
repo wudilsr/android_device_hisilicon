@@ -1,0 +1,253 @@
+Conax高安SDK环境使用说明：
+
+一.编译环境准备
+
+1.因高安文件系统权限原因，编译前服务器需要准备如下环境：
+   1)以root用户权限为chmod和chown增加suid权限：
+      chmod +s /bin/chmod
+      chmod +s /bin/chown
+
+      可以用ls -l /bin/ch* 命令查看这两个命令的属性中是否增加s标记。
+
+   2)安装msgfmt软件(GNU gettext-tools)：
+      ubuntu下的安装命令：apt-get install gettext
+      redhat下需要先下载gettext安装包，然后执行 rpm -ivh xxx.rpm
+      
+      可先在服务器上执行msgfmt -V命令，看看是否有安装。
+
+2.高安芯片SDK编译选项说明
+  高安配置选项分为3类：
+  1)CFG_HI_ADVCA_SUPPORT=y
+    表示SDK支持高安芯片。
+  2)CFG_HI_ADVCA_TYPE=XXX 
+    XXX表示当前或即将支持CA类型，比如：CONAX, NOVEL, SUMA, NAGRA, OTHER(其他CA选择OHTER)
+  3)CFG_HI_ADVCA_FUNCTION=YYY
+    默认关闭CFG_HI_ADVCA_FUNCTION选择项。
+    这个选择项是SDK按照特定CA厂商要求进行了整改，打开该编译选项会导致SDK部分功能无法正常使用。
+    请在了解其功能后再打开。
+    该选项下有3个子选择项目：
+      CFG_HI_ADVCA_FUNCTION=DEBUG
+      该选项下编译SDK：
+         boot没有自举功能,仅提供有限的测试功能。
+         kernel和文件系统已裁减部分功能。
+      CFG_HI_ADVCA_FUNCTION=RELEASE
+      该模式下编译SDK
+         boot没有自举功能，boot串口无输出。
+         kernel和文件系统已裁减大部分功能。
+      CFG_HI_ADVCA_FUNCTION=FINAL
+      该模式下编译SDK
+         boot没有自举功能，boot串口无输出。
+         kernel和文件系统已最大限度裁减功能。
+      
+    注意：在关闭CFG_HI_ADVCA_FUNCTION下编译的boot才包含自举功能。
+
+3. 高安芯片SDK编译选项设置
+   请在非高安的配置(例如hi3716cdmo2b_hi3716cv200_cfg.mak)的基础上。
+   在根目录执行make menuconfig，按照如下方式配置高安环境：
+
+   1)打开高安特性支持.
+     进入Component  ---> 选中[*] Advance CA Support  
+          --->  选中所需的CA类型，如Advance CA Type (Conax)  --->保存。
+      注意：选项 [ ]   Advance CA Function 是特定CA的需求下对SDK进行的限制.请联系海思后，再打开。
+
+   2)选择kernel配置(默认应设置hi3716cv200-common-ca_defconfig，客户应根据自己需要设置)。
+     进入Kernel  ---> (hi3716cv200-XXXX_defconfig) Kernel Config File。    
+     SDK提供经过裁剪的Kernel配置文件,请设置对应的kernel配置，例如：
+           hi3716cv200-common-ca_defconfig   //最基本的高安CA内核配置
+           hi3716cv200-ca-debug_defconfig    //提供裁剪少部分功能后的高安CA内核配置
+           hi3716cv200-ca-release_defconfig  //提供裁剪大部分功能后的高安CA内核配置
+           hi3716cv200-ca-final_defconfig    //可以作为最终参考的高安CA内核配置
+
+     如果客户手动设置，在SDK的Kernel目录下，执行：
+       make ARCH=arm cross_compile=arm-hisiv200- menuconfig
+      设置：
+      System Type --->  S40 board feature  ---> [ ] Support CA  ---> Select
+        [*]   Support CA runtime check 
+        [*]   Support CA wakeup ddr check
+        [ ]   Support advca 
+     结果为：
+       CONFIG_SUPPORT_CA=y       //Kernel支持CA，选择高安芯片时必须打开，否则影响待机。
+       CONFIG_CA_RUNTIME_CHECK=y //Kernel支持Runtime-Check,选择高安芯片时必须打开，否则影响待机。
+       CONFIG_CA_WARKUP_CHECK=y  //Kernel支持WAKEUP-CHECK,选择高安芯片时必须打开，否则影响待机。
+
+      备注：Kernel配置文件请参考目录：$(SDK)/source/kernel/linux-x.x.x.hica/system_configs/arch/arm/configs/.
+
+   3)选择busybox配置(默认设置可以用于高安芯片开发调试，客户应根据自己需要设置).
+     进入Rootfs  ---> Busybox Config  ---> (xxxx_ca_root_xxxx.config)Busybox Config File For Root 
+     如果配置了CFG_HI_ADVCA_FUNCTION并且没有配置CFG_HI_LOADER_APPLOADER,可以配置
+     (xxxx_ca_user_xxxx.config)Busybox Config File For User
+     请设置对应的busybox的配置，例如：
+          glibc_ca_root_debug.config      //root用户，提供裁剪少部分功能后的高安CA的Busybox配置
+          glibc_ca_root_release.config    //root用户，提供裁剪大部分功能后的高安CA的Busybox配置
+          glibc_ca_root_final.config      //root用户，提供最终参考后的高安CA的Busybox配置
+          glibc_ca_user.config            //非root用户，提供的参考高安CA的Busybox配置
+      备注：Busybox配置文件请参考目录：$(SDK)/Code/source/rootfs/busybox/gcc4.4/busybox-1.16.1.config/。
+
+   4)屏蔽VOIP支持选项。进入Component，取消选中[ ] VOIP Support。
+   
+   保存配置后，重新编译即可。
+
+4.高安Loader编译选项设置
+   请在非高安的配置(例如hi3716cdmo2b_hi3716cv200_apploader_cfg.mak)的基础上，执行make menuconfig按照如下方式配置环境：
+   
+   1) 打开高安特性支持.
+     进入Component  ---> 选中[*] Advance CA Support  
+          --->  选中所需的CA类型，如Advance CA Type (Conax)  --->保存.
+      注意：选项 [ ]   Advance CA Function 是特定CA的需求下对SDK进行的限制.请联系海思后，再打开.
+
+   2)选择kernel配置(默认设置可以用于高安芯片开发调试，客户应根据自己需要设置)。
+     进入Kernel  ---> (hi3716cv200_loader_defconfig) Kernel Config File，选择对应的kernel配置，例如：
+          hi3716cv200_loader_usb_ca_debug_defconfig
+          hi3716cv200_loader_usb_ca_release_defconfig 
+      备注：Loader版本的Kernel配置文件请参考目录：$(SDK)/source/kernel/linux-x.x.x.hica/loader_configs/arch/arm/configs/。
+      
+   3)选择busybox配置(默认设置可以用于高安芯片开发调试，客户应根据自己需要设置).
+     进入Rootfs  ---> Busybox Config  ---> (xxxx_ca_loader_xxx.config)Busybox Config File For Root
+     请设置对应的busybox配置.例如：
+          glibc_ca_loader_debug.config
+          glibc_ca_loader_release.config
+      备注：Busybox配置文件请参考目录：$(SDK)/Code/source/rootfs/busybox/gcc4.4/busybox-1.16.1.config/。
+   
+   4）屏蔽VOIP支持选项。进入Component，取消选中[ ] VOIP Support。
+
+   保存配置后，然后make rebuild即可。
+
+5.高安Boot的调试说明
+   1)SDK高安编译已经提供专用的自举烧写程序，使用make advca_programmer 编译，会在pub/image/下编译出来advca_programmer.bin。
+   advca_programmer.bin须要使用CASignTool签名制作为FinalBoot后才能使用。
+
+   2)打开CFG_HI_ADVCA_FUNCTION编译的Boot无法正常自举下载。
+     因此，如果需要在高安下有个全功能的boot调试环境，需要需要将cfg.mak中屏蔽上述设置。
+     也就是在SDK下，使用make menuconfig，按照如下方式配置：
+   进入Component  ---> 选中[*] Advance CA Support  --->  选中所需的CA，如Advance CA Type (Conax)  ---> 
+   不要选择 [ ]   Advance CA Function  保存后，退出。
+   然后重新编译： 
+   	make hiboot_clean;make hiboot_install。
+   生成的boot就是带有完整调试功能的boot。
+
+6.文件系统和bootargs参数设置：
+
+   1) Release版本必须使用squashfs内存文件系统； 开发调试阶段可以用yaffs文件系统模拟。
+      注意内存文件系统会占用mem区域空间，请合理分配mem大小。
+
+   2) 内存分配如下：
+      总内存大小 = mem(包括mmz) + runtimecheck
+
+      其中runtimecheck保留内存区为6M
+
+   3) yaffs文件系统参考bootargs参数设置：
+      setenv bootcmd 'nand read 0x1000000 0x800000 0x400000;bootm 0x1000000';
+      setenv bootargs 'mem=1018M console=ttyAMA0,115200 root=/dev/mtdblock4 rootfstype=yaffs2 mtdparts=hi_sfc:1M(boot),1M(bootargs);hinand:8M(loader),4M(kernel),80M(rootfs),1M(cadata),1M(loaderdb),1M(stbid),2M(db),1M(baseparam),1M(pqparam),1M(logo),1M(loaderdbbak),-(others) mmz=ddr,0,0,300M';
+
+   4) squashfs内存文件系统参考bootargs参数设置：
+      setenv bootcmd 'nand read 0x1000000 0x800000 0x400000; nand read 0x1400000 0xC00000 0x2800000; bootm 0x1000000'
+      setenv bootargs 'mem=1018M console=ttyAMA0,115200 initrd=0x1400000,0x1800000 root=/dev/ram rootfstype=squashfs mtdparts=hi_sfc:1M(boot),1M(bootargs);hinand:8M(loader),4M(kernel),44M(rootfs),1M(cadata),1M(loaderdb),1M(stbid),2M(db),1M(baseparam),1M(pqparam),1M(logo),1M(loaderdbbak) mmz=ddr,0,0,300M';
+
+   注： nand read 0x1400000 0xC00000 0x2800000  ----> 把文件系统读取到DDR
+        initrd=0x1400000,0x1800000 root=/dev/ram rootfstype=squashfs  ----> 定义内存文件系统在DDR的位置，长度，以及类型；取代flash文件系统定义 root=/dev/mtdblock4 rootfstype=yaffs2  
+
+   5) 带签名校验功能的文件系统参数设置：
+      setenv bootcmd 'verify system;bootm 1002000'
+      setenv bootargs 'mem=1018M console=ttyAMA0,115200 initrd=0x1400000,0x1800000 root=/dev/ram rootfstype=squashfs mtdparts=hi_sfc:1M(boot),1M(bootargs);hinand:8M(loader),48M(system),1M(cadata),1M(loaderdb),1M(stbid),2M(db),1M(baseparam),1M(pqparam),1M(logo),1M(loaderdbbak) mmz=ddr,0,0,300M';
+
+
+二.测试sample准备
+    以下以sample_dvbplay为例，说明在release版本下(不支持NFS)如何进行测试前准备工作。
+
+1.squashfs文件系统 (Release版本推荐文件系统)
+   1) 编译sample用例。
+   2) 拷贝sample_dvbplay到SDK包的pub/rootfs/home/stb目录下。
+   3) 在SDK顶层rootbox.mk的rootbox_chmod:的最后，为sample_dvbplay添加需要的能力.具体请参考对应Makefile中的示例。
+      -$(AT)$(FILECAP) $(ROOTBOX_DIR)/home/stb/sample_dvbplay sys_rawio;
+   4) 执行make rootbox和make fs，编译文件系统，并将生成的rootfs.squashfs镜像烧写到Flash中。
+   5) 启动单板，在boot下配置好对应内存文件系统的bootargs。
+
+2.yaffs文件系统 (仅用于开发调试)
+   1) 编译测试用例
+   2) 拷贝sample_dvbplay到SDK包的rootfs_full/home/stb目录下。
+   3) 执行make fs,编译文件系统，并将生成的rootfs.yaffs镜像烧写到Flash中。
+   4) 启动单板，用root用户登录
+      用户:root 
+      密码:root
+   5)执行mount -o remount,rw /，将rootfs恢复为可读写文件系统。
+   6)为测试用例增加所需的能力
+     filecap /home/stb/sample_dvbplay sys_rawio
+
+
+三.机顶盒安全启动以及安全校验：
+   机顶盒安全启动基本书算法为RSA2048_Hash256, 分为3类：
+   1. Boot的安全校验
+      高安芯片片内BootRom在安全启动标志位打开之后，自动执行Boot的安全校验。
+      一旦打开安全启动，该操作不可逆；
+   2. 非Boot镜像的安全校验
+      在Boot下，我们提供若干校验非Boot镜像的命令,比如：
+         "common_verify_image_signature"
+         "common_verify_bootargs"
+         "common_verify_signature_check"
+      请参考“高安全CA 开发指南.pdf"和”CASignTool使用说明.pdf".
+   3. Loader升级镜像的安全校验
+      Loader中提供了校验下载数据的接口.定义位于：loader\api\src\ca_ssd.h
+      
+四.测试方法：
+   1、测试前准备工作完成后，重启单板。
+      以root用户登录：
+      用户: root
+      密码: root
+      以stb用户登录:
+      用户: stb
+      密码: stb
+
+   2、执行测试用例
+      cd /home/stb
+      ./sample_dvbplay 618
+
+   3、以sandbox环境(chroot到/home/stb目录)执行测试用例
+      sandbox /home/stb /sample_dvbplay 618
+
+   4、可移动存储设备挂载方法：
+        
+        Release版本SDK，可在普通用户下直接将可移动存储设备挂载到/mnt目录：
+        mount -o rw,nosuid,noexec,nodev -t vfat /dev/sda1 /mnt
+
+        Debug版本SDK，普通用户无法直接挂载可移动存储设备，需要在root用户下挂载.普通用户可以访问的挂载方法有以下两种：
+        方法1：挂载到指定用户
+        mount -o uid=1000,gid=1000 -t vfat /dev/sda1 /mnt
+
+        方法2：设置挂载权限
+        mount -o umask=000 -t vfat /dev/sda1 /mnt
+        或
+        mount -o umask=022 -t vfat /dev/sda1 /mnt
+
+        umask的位设置为1，对应的权限就没有.
+        umask=000 表示所有用户的rwx权限都有；
+        umask=022表示其它用户有r-x权限，没有w权限。
+
+ 
+五.查看芯片信息的方法：
+      以Hi3716CV200为例：
+      
+      在Kernel和Rootfs下，执行himd.l 0xF8AB0000和himd.l 0xF8AB0100命令；
+      或者SCS签名的programmer的Boot控制台下，执行md.l 0xF8AB0000和md.l 0xF8AB0100命令，查看以下内存信息：
+ 
+      fastboot# md.l 0xF8AB0000
+      fastboot# md.l 0xF8AB0100
+
+      a) 地址 ： 0xF8AB0000 + 0x00E8
+         数据 ： 0x23c36eae
+         说明 ： NUID，芯片ChipID
+
+      b) 地址 ： 0xF8AB0000 + 0x0120
+         数据 ： 0x0000347e
+         说明 ： MSID，市场区域码
+
+      c) 地址 ： 0xF8AB0000 + 0x124
+         数据 ： 0x01020304
+         说明 ： VersionID
+
+      d) 地址 ： 0xF8AB0000 + 0x012C
+         数据 ： 0x00000003
+         说明 ： ca_vendor_id，CA厂商信息, 0--非高安, 3--Conax
+
+六. 参考文档：
+  《高安全CA 开发指南.pdf》
+  《CASignTool使用说明.pdf》

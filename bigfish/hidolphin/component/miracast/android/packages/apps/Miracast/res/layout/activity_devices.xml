@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background" >
+    </ImageView>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <!-- 左侧部 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="768dp"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/miracast_supported_devices_title"
+                style="@style/styleShadowText"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="50dp"
+                android:text="@string/TextMiracastSupportedDevicesTitle"
+                android:textSize="40sp"
+                android:textColor="#00ff00"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/miracast_supported_devices"
+                style="@style/styleShadowText"
+                android:singleLine="false"
+                android:lineSpacingMultiplier="1.5"
+                android:layout_marginTop="80dp"
+                android:layout_marginLeft="80dp"
+                android:text="@string/TextMiracastSupportedDevices"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <!-- 右侧部 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="512dp"
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/miracast_supported_wifi_title"
+                style="@style/styleShadowText"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="50dp"
+                android:text="@string/TextMiracastSupportedWifiTitle"
+                android:textSize="40sp"
+                android:textColor="#00ff00"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/miracast_supported_wifi"
+                style="@style/styleShadowText"
+                android:singleLine="false"
+                android:lineSpacingMultiplier="1.5"
+                android:layout_marginTop="80dp"
+                android:layout_marginLeft="80dp"
+                android:text="@string/TextMiracastSupportedWifi"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="network_upgrade_title">Debug Kit</string>
+    <string name="network_system_upgrade">System Upgrade</string>
+    <string name="network_sdk_upgrade">SDK Upgrade</string>
+    <string name="network_upgrade_url_title">Prompt</string>
+    <string name="network_upgrade_url_prompt">Please enter the URL</string>
+    <string name="network_upgrade_default_url">http://10.67.212.148/v5/update.zip</string>
+    <string name="network_upgrade_default_sdk_url">http://10.67.212.148/v5/update.zip</string>
+    <string name="network_upgrade_begin_download">Begin To Upgrade...</string>
+    <string name="network_upgrade_prompt_okay">OK</string>
+    <string name="network_upgrade_prompt_cancel">Cancel</string>
+    <string name="network_upgrade_no_sdcard">Please insert the storage medium</string>
+    <string name="network_upgrade_storage_tiltle">Prompt</string>
+    <string name="network_upgrade_storage_prompt">Please select download path</string>
+    <string name="network_upgrade_download_failed">Download Failed!</string>
+    <string name="network_upgrade_download_err_okay">OK</string>
+    <string name="network_upgrade_download_success">Download Success!Begin To Reboot and Upgrade!</string>
+    <string name="network_upgrade_download_success_okay">OK</string>
+    <string name="network_upgrade_download_success_cancel">Cancel</string>
+    <string name="network_upgrade_download_logo_prompt">Start download logo ...</string>
+    <string name="network_upgrade_download_logo_success">the logo download success!</string>
+    <string name="network_upgrade_download_start_failed">Please specify the default storage device </string>
+    <string name="application_terminal">DDR Tester v1.1 beta1</string>
+    <string name="case_ddr_name">DDR pressure test</string>
+    <string name="case_ddr_memory_size">Memory Size(mb):</string>
+    <string name="case_ddr_loops">Loops Number:</string>
+    <string name="case_ddr_command_output">Command Output:</string>
+    <string name="case_ddr_result_output">Result Output:</string>
+    <string name="case_ddr_config_memory_size">Memory Size:</string>
+    <string name="case_ddr_config_loops">Loops Number:</string>
+    <string name="case_ddr_config_restart">restart</string>
+    <string name="case_ddr_config_prefix">MemSize:%1$s mb,Loops:%2$s</string>
+    <string name="case_ddr_exit">Exit</string>
+    <string name="bootargs_info">Bootargs Info</string>
+    <string name="logcat">logcat</string>
+    <string name="logcat_start">Logcat start</string>
+    <string name="logcat_stop">Logcat stop</string>
+    <string name="logcat_info">Log records in the /sdcard/logcat file</string>
+    <string name="dmesg_start">Dmesg start</string>
+    <string name="dmesg_info">Dmesg records in the /sdcard/dmesg file</string>
+    <string name="hdmi">HDMI EDID</string>
+    <string name="memleak">memleak</string>
+    <string name="media_mem">media_mem</string>
+    <string name="meminfo">meminfo</string>
+    <string name="dmesg">dmesg</string>
+    <string name="build_number">Build Number</string>
+    <string name="gpu">ION（GPU）</string>
+    <string name="android_version">Android Version</string>
+    <string name="kernel_version">Kernel Version</string>
+    <string name="sdk_version">SDK Version</string>
+    <string name="gpu_version">GPU Version</string>
+    <string name="system_version">System Version</string>
+    <string name="file_check_failed">CA File Check Failed</string>
+</resources>

@@ -1,0 +1,13 @@
+-keep class com.android.qb.QbAndroidManagerService {
+  public int getQbState();
+  public void setQbState();
+  public boolean entryWait(int type, String className, String entryName);
+  public boolean raiseHandWaikUp(String className, String name);
+  public boolean checkFlag();
+  public boolean checkBoot();
+  public void setFlag(boolean flag);
+  public void setBoot(boolean flag);
+  public void doQb();
+  public void doBoot();
+  public void doReload(boolean flag);
+}

@@ -1,0 +1,27 @@
+diff -Nur curl-7.27.0/lib/tftp.c curl-7.27.0.1/lib/tftp.c
+--- curl-7.27.0/lib/tftp.c	2012-06-11 06:12:39.000000000 +0800
++++ curl-7.27.0.1/lib/tftp.c	2013-06-20 09:51:53.639553385 +0800
+@@ -1337,8 +1337,13 @@
+       Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+   }
+   else {
+-    /* no timeouts to handle, check our socket */
+-    rc = Curl_socket_ready(state->sockfd, CURL_SOCKET_BAD, 0);
++    rc = Curl_socket_ready(state->sockfd, CURL_SOCKET_BAD, 10*1000);
++
++	/* if rc == 0, then select() 10s timed out */
++    if (rc == 0) {  
++    	failf(data, "TFTP(select) response timeout");
++    	return CURLE_OPERATION_TIMEDOUT;
++    }
+ 
+     if(rc == -1) {
+       /* bail out */
+@@ -1358,7 +1363,6 @@
+         /* Tell curl we're done */
+         Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+     }
+-    /* if rc == 0, then select() timed out */
+   }
+ 
+   return result;

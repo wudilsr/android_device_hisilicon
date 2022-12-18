@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EATA播放器</string>
+    <string name="processing">转换中 . . .</string>
+    <string name="type_file">输入文件</string>
+    <string name="input_file_info">文件信息:</string>
+    <string name="convert">转换</string>
+    <string name="delete_src_movie">删除源文件</string>
+    <string name="label_bitrate">选择波特率:</string>
+    <string name="label_input">无视频选中</string>
+    <string name="label_frames">帧率:</string>
+
+    <string name="label_no_data">无数据</string>
+
+    <string name="bitrate_128">视频比特率 128kb/s</string>
+    <string name="bitrate_512">视频比特率 512kb/s</string>
+    <string name="bitrate_1024">视频比特率 1024kb/s</string>
+
+    <string name="label_audio_rate">音频采样率:</string>
+    <string name="audiorate_16">音频采样率 16kb/s</string>
+    <string name="audiorate_32">音频采样率 32kb/s</string>
+
+    <string name="label_audio_chanels">声道数:</string>
+    <string name="audio_channels_1">单声道</string>
+    <string name="audio_channels_2">双声道</string>
+    <string name="hisi_string">海思</string>
+    <string name="label_access">请选择播放 ...</string>
+    <string name="label_content">网络播放:</string>
+    <string name="label_localcontent">URL播放:</string>
+    <string name="setting">设置:</string>
+    <string name="ibsetting">设置</string>
+    <string name="url_input">请输入URL</string>
+    <string name="hies_url">http://10.161.179.233:4098/hisi</string>
+    <string name="play">播放</string>
+    <string name="hwflag">使用硬件解码</string>
+    <string name="monitor">打开AHS监视器</string>
+    <string name="framerate">13</string>
+    <string name="setfps">设置视频FPS(默认: 0):</string>
+    <string name="urlflag">用于网络播放的URL:</string>
+    <string name="epgflag">http://192.168.1.18/epg.html</string>
+    <string name="speed">设置播放速度(默认:100)</string>
+    <string name="zero">0</string>
+    <string name="hundrund">100</string>
+    <string name="ok">确认</string>
+    <!-- used between activities to pass input video path -->
+    <string name="input_file">文件输入</string>
+
+    <string name="player_menu_about">关于</string>
+
+       <string name="player_menu_decode_audio">音频解码</string>
+       <string name="ETA_SAY">请选择</string>
+    <string name="seeYou">要退出么?</string>
+    <string name="NO">不</string>
+    <string name="YES">是</string>
+    <string name="muapSearching">搜索中</string>
+    <string name="muapSearchWait">请等待</string>
+    <string name="deviceTips">设备列表</string>
+    <string name="app_loading">加载中</string>
+</resources>

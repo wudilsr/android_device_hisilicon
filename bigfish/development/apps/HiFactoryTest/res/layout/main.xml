@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="850dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <com.hisilicon.android.mediaplayer.HiVideoView
+            android:id="@+id/VideoView01"
+            android:layout_width="700dp"
+            android:layout_height="520dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:focusable="false" />
+
+        <RelativeLayout style="@style/LeftRelative" >
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:text="@string/play_time" />
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="170dp" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/LeftRelative" >
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:text="@string/str_systemversio" />
+
+            <TextView
+                android:id="@+id/version"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="230dp"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <!-- 有线 -->
+
+        <RelativeLayout style="@style/LeftRelative" >
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:layout_marginLeft="80dp"
+                android:text="@string/str_mac" />
+
+            <TextView
+                android:id="@+id/netmacid"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="230dp" />
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:layout_marginLeft="460dp"
+                android:text="@string/str_netip" />
+
+            <TextView
+                android:id="@+id/netip"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="580dp" />
+        </RelativeLayout>
+
+        <!-- wifi -->
+
+        <RelativeLayout style="@style/LeftRelative" >
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:text="@string/str_wifimac" />
+
+            <TextView
+                android:id="@+id/wifimac"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="230dp" />
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:layout_marginLeft="460dp"
+                android:text="@string/str_wifiip" />
+
+            <TextView
+                android:id="@+id/wifiip"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="580dp" />
+        </RelativeLayout>
+
+        <!-- 烧录 -->
+
+        <RelativeLayout style="@style/LeftRelative" >
+
+            <TextView
+                style="@style/LeftTextTitle"
+                android:text="@string/set_mac_address" />
+
+            <TextView
+                android:id="@+id/set_mac_text"
+                style="@style/LeftTextInfo"
+                android:layout_marginLeft="250dp"
+                android:text="@string/set_mac_address_hint" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 右边 界面     XXXXXXXXX############################################## -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="850dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical" >
+
+        <!-- 测试结果 -->
+        <!-- usb sd sata ############################## -->
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_usb1" />
+
+            <TextView
+                android:id="@+id/rst_usb1"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_usb2" />
+
+            <TextView
+                android:id="@+id/rst_usb2"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_usb3" />
+
+            <TextView
+                android:id="@+id/rst_usb3"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_usb4" />
+
+            <TextView
+                android:id="@+id/rst_usb4"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_sd" />
+
+            <TextView
+                android:id="@+id/rst_sd"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/str_sata" />
+
+            <TextView
+                android:id="@+id/rst_sata"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/str_youxian" />
+
+            <TextView
+                android:id="@+id/rst_youxian"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                android:id="@+id/tx_wifi"
+                style="@style/RightTextTitle"
+                android:text="@string/str_wifi" />
+
+            <TextView
+                android:id="@+id/rst_wifi"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                android:id="@+id/tx_setMac"
+                style="@style/RightTextTitle"
+                android:text="@string/str_setMac" />
+
+            <TextView
+                android:id="@+id/rst_setMac"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <!-- hdmi  cvbs    ############################## -->
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/str_hdmiV" />
+
+            <TextView
+                android:id="@+id/rst_hdmi_output"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+
+        <RelativeLayout style="@style/RightRelative" >
+
+            <TextView
+                style="@style/RightTextTitle"
+                android:text="@string/srt_cvbsV" />
+
+            <TextView
+                android:id="@+id/rst_av_output"
+                style="@style/RightTextPass"
+                android:text="@string/str_pass" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/change_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:text="@string/change_output" />
+
+    <ScrollView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginLeft="780dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#FF000000"
+        android:padding="20dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_intrudution"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </ScrollView>
+
+</RelativeLayout>

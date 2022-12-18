@@ -1,0 +1,10 @@
+ifeq ($(CFG_HI_FRONTEND_SUPPORT),y)
+FRONTEND_DIR := frontend
+LOCAL_SRC_FILES += $(FRONTEND_DIR)/unf_tuner.c
+
+ifeq ($(CFG_HI_DISEQC_SUPPORT),y)
+LOCAL_SRC_FILES += $(FRONTEND_DIR)/unf_diseqc.c
+LOCAL_SRC_FILES += $(FRONTEND_DIR)/unf_unicable.c
+LOCAL_CFLAGS += -DDISEQC_SUPPORT
+endif
+endif

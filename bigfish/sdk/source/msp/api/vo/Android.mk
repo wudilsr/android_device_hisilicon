@@ -1,0 +1,9 @@
+VO_DIR := vo
+LOCAL_SRC_FILES += $(VO_DIR)/mpi_disp.c
+LOCAL_SRC_FILES += $(VO_DIR)/mpi_disp_tran.c
+LOCAL_SRC_FILES += $(VO_DIR)/mpi_win.c
+LOCAL_SRC_FILES += $(VO_DIR)/unf_display.c
+LOCAL_SRC_FILES += $(VO_DIR)/unf_vo.c
+LOCAL_SRC_FILES += $(VO_DIR)/mpi_edid.c
+LOCAL_SRC_FILES += $(VO_DIR)/unf_edid.c
+LOCAL_SRC_FILES += $(VO_DIR)/win_ratio.c

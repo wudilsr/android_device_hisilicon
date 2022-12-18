@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >     
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="blue"
+            android:dialogTitle="@string/blue"
+            android:title="@string/blue" />
+    	<com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="green"
+            android:dialogTitle="@string/green"
+            android:title="@string/green" />
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="cyan"
+            android:dialogTitle="@string/cyan"
+            android:title="@string/cyan" />
+        <com.hisilicon.android.pqsetting.AskDialogPreference
+            android:key="skin"
+            android:dialogTitle="@string/skin"
+            android:title="@string/skin" />
+        <!--<com.hisilicon.android.pqsetting.ScreenPreference
+            android:key="user_defined"
+            android:dialogTitle="@string/user_defined"
+            android:title="@string/user_defined" />-->
+	<com.hisilicon.android.pqsetting.ColorScreenPreference
+            android:key="user_defined"
+            android:dialogTitle="@string/user_defined"
+            android:entries="@array/intelligent_color_array"
+            android:entryValues="@array/intelligent_color_value_array"
+            android:title="@string/user_defined" />
+</PreferenceScreen>

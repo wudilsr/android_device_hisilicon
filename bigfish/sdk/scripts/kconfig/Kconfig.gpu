@@ -1,0 +1,76 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menu "GPU Config"
+
+config HI_GPU
+	tristate "Mali-300/400/450 support"
+	---help---
+	  This enables support for the ARM Mali-300, Mali-400, and Mali-450
+	  GPUs.
+
+	  To compile this driver as a module, choose M here: the module will be
+	  called mali.
+
+config HI_GPU_MALI400_SUPPORT
+	bool
+	depends on HI_GPU && (HI3716CV200 || HI3716MV400 || HI3718CV100 || HI3718MV100 || HI3719CV100 || HI3719MV100)
+	default y
+
+config HI_GPU_MALI450_SUPPORT
+	bool
+	depends on HI_GPU && (HI3796CV100 || HI3798CV100 || HI3751V100 || HI3798MV100 || HI3796MV100)
+	default y
+
+config HI_GPU_MALI700_SUPPORT
+	bool
+	depends on HI_GPU && (HI3798CV200 || HI3798CV200_A)
+	default y
+
+config HI_GPU_DEBUG
+	bool "Enable debug in Mali driver"
+	depends on HI_GPU
+	---help---
+	  This enabled extra debug checks and messages in the Mali driver.
+
+config HI_GPU_PROFILING
+	bool "Enable Mali profiling"
+	depends on HI_GPU
+	default y
+	---help---
+	  This enables gator profiling of Mali GPU events.
+
+config HI_GPU_INTERNAL_PROFILING
+	bool "Enable internal Mali profiling API"
+	depends on HI_GPU_PROFILING
+	default n
+	---help---
+	  This enables the internal legacy Mali profiling API.
+
+
+config HI_GPU_MAX_SHARE_MEM_SIZE
+	hex "Mali400 and OS maximal shared memory size"
+	depends on HI_GPU
+	default "0x10000000"
+	---help---
+	  This constricts the maximal memory GPU could get from os memory.
+
+choice
+	prompt "EGL Native Window System Config"
+	depends on HI_GPU
+	default EGL_FB
+config  EGL_HIGO
+	bool "Higo"
+config  EGL_FB
+	bool "FB"
+config  EGL_DFB
+	bool "DirectFB"
+endchoice
+
+config  HI_EGL_TYPE
+	depends on HI_GPU
+	string
+	default higo 	 if EGL_HIGO
+	default fb	 if EGL_FB
+	default directfb if EGL_DFB
+
+endmenu
+#+++++++++++++++++++++++++++++++++++++++++++++++++++

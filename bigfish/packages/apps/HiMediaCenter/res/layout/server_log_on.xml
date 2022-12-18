@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:gravity="center">
+
+	<TextView android:id="@+id/tvAccountHint"
+		android:layout_width="100dp" android:layout_height="wrap_content"
+		android:text="@string/user_name" android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_marginTop="10dp" android:layout_marginLeft="5dp" 
+		android:gravity="center_vertical|right"/>
+
+	<EditText android:id="@+id/edtServerAccount"
+		android:layout_width="300dp" android:layout_height="wrap_content"
+		android:singleLine="true" android:hint="@string/user_name1"
+		android:layout_marginTop="5dp" android:layout_marginLeft="2dp"
+		android:layout_toRightOf="@id/tvAccountHint" />
+
+	<TextView android:id="@+id/tvPasswordHint"
+		android:layout_width="100dp" android:layout_height="wrap_content"
+		android:text="@string/user_pass" android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_below="@id/edtServerAccount" android:layout_alignLeft="@id/tvAccountHint"
+		android:layout_marginTop="10dp" android:gravity="center_vertical|right"/>
+
+	<EditText android:id="@+id/edtServerPassword"
+		android:layout_width="300dp" android:layout_height="wrap_content"
+		android:singleLine="true" android:password="true" android:hint="@string/user_pass1"
+		android:layout_marginLeft="2dp" android:layout_marginTop="3dp"
+		android:layout_below="@id/edtServerAccount" android:layout_toRightOf="@id/tvPasswordHint"
+		android:layout_alignLeft="@id/edtServerAccount" android:nextFocusDown="@android:id/button1"/>
+</RelativeLayout>

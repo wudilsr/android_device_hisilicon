@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <attr name="switchStyle" format="reference" />
+    <attr name="textColorSecondary" format="reference|color" />
+    <attr name="textColorPrimary" format="reference|color" />
+    <attr name="textColorHighlight" format="reference|color" />
+    <attr name="TextAppearance" format="reference" />
+    <attr name="TextAppearance_textSize" />
+    <attr name="textColorHint" format="reference|color" />
+    <attr name="textColorLink" format="reference|color" />
+    <attr name="textColor" format="reference|color" />
+    <attr name="state_checked" format="boolean" />
+
+</resources>

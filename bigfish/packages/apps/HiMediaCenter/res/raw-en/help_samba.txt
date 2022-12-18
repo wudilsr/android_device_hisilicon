@@ -1,0 +1,18 @@
+﻿1: Enter the system by clicking on the shortcut after into specific directory or full web server list into.
+2: Have three pictures button：
+       	The first is the document to browse a way, including list, thumbnails.
+       	The second is file filtering way, including all documents, all pictures, all audio, video all.
+       	The third is the document sort order, including file name, file size, modification time.
+       	Above icon per click a switch a way.
+3: Open the menu bar, it will appear as follows the menu option: the hidden labels, operation, 
+   		new construction, search, edit, add shortcut, add filter conditions, delete filter conditions, help：
+       	HideLabel: hidden web page to the top of the tag hidden or display.
+        Operation: not into specific folders before, function delete mount, enter for function after includes copying,
+        cut, paste, delete and rename five options. Can on the document as above five kinds of operations. 
+        New: not into specific folders before, the function for increased mount, into the new folder after.
+      	Search: can the current directory to the file search query.
+      	Editorial: for the parameters of the Shared directory editor.
+      	Add shortcuts: add to start interface, easy to click next time.
+      	Add filter conditions: the user can for audio, video, images add except the system default outside of the filter types.
+       	Delete filter conditions: the user can delete the audio, video, images of the filter types. 
+      	Help: the user can see help manual.

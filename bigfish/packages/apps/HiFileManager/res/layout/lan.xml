@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:id="@+id/sambaActivityLayout01"
+	android:background="@drawable/app_bg"
+	>
+
+
+	<RelativeLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+		>
+
+		<ImageButton android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:id="@+id/filterBut"
+		android:layout_alignParentRight="true" android:layout_marginTop="2dip"
+		android:visibility="gone"
+		android:background="@drawable/filter_by_file" />
+		<ImageButton android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:id="@+id/showBut"
+		android:layout_toLeftOf="@id/filterBut" android:layout_alignTop="@id/filterBut"
+		android:visibility="gone"
+		android:background="@drawable/show_by_list" />
+		<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:textSize="28sp"
+		android:layout_centerVertical="true" android:id="@+id/title"
+		android:layout_alignParentRight="true" />
+		<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/textPath"
+		android:textSize="28sp" android:scrollHorizontally="true"
+		android:singleLine="true" android:layout_toLeftOf="@id/title"
+		android:layout_centerVertical="true" android:ellipsize="start"
+		android:layout_alignParentLeft="true" />
+	</RelativeLayout>
+
+	<include layout="@layout/samba_blew" android:layout_height="fill_parent"
+		android:layout_width="fill_parent" 		android:layout_marginBottom="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+		/>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+        <color name="white">#FFFFFF</color>
+        <color name="black">#000000</color>
+        <color name="yellow">#FEF693</color>
+        <color name="blue">#0000FF</color>
+        <color name="red">#FF0000</color>
+        <color name="deep_yellow">#FF9900</color>
+        <color name="weak_yellow">#FE9B21</color>
+        <color name="tollbar_text_color">#B1B1B1</color>
+        <color name="full_transparent_background">#00000000</color>
+</resources>

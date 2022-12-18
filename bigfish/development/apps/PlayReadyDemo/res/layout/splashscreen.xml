@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" >
+	<ImageView android:id="@+id/ivPoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/splash" />
+	<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="100px"
+            android:layout_marginRight="100px"
+            android:orientation="horizontal" >
+			<com.discretix.drmassist.ButtonNavigation
+					android:id="@+id/localPlay"
+					android:layout_width="170px"
+					android:layout_height="40px"
+					android:layout_gravity="center_vertical"
+					android:textColor="#ccf0ffff"
+					android:textSize="20sp"
+					android:clickable="false"
+					android:background="@drawable/item_background_selector"
+					android:nextFocusDown="@+id/urlPlay"
+					android:nextFocusLeft="@+id/urlPlay"
+					android:nextFocusUp="@+id/urlPlay"
+					android:text="@string/localPlay" />
+
+			<com.discretix.drmassist.ButtonNavigation
+					android:id="@+id/urlPlay"
+					android:layout_width="170px"
+					android:layout_height="40px"
+					android:layout_gravity="center_vertical"
+					android:textColor="#ccf0ffff"
+					android:textSize="20sp"
+					android:clickable="false"
+					android:background="@drawable/item_background_selector"
+					android:layout_marginLeft="40px"
+					android:nextFocusDown="@+id/localPlay"
+					android:nextFocusRight="@+id/localPlay"
+					android:nextFocusUp="@+id/localPlay"
+					android:text="@string/urlPlay" />
+		</LinearLayout>
+</FrameLayout>

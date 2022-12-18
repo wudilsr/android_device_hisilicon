@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HiCustomizeSettings</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="check_mode">please check mode :</string>
+    <string name="set_dual_net">Set Dual Net</string>
+    <string name="set_suspend_mode">Set Suspend Mode</string>
+    <string name="set_start_mode">Set Start Mode</string>
+    <string name="deep_suspend">deep suspend</string>
+    <string name="smart_suspend">smart suspend</string>
+    <string name="quick_start">quick start</string>
+    <string name="normal_start">normal start</string>
+    <string name="click1">enable</string>
+    <string name="click2">disable</string>
+    <string name="click3">addRoute</string>
+    <string name="click4">removeRoute</string>
+    <string name="click5">setDefaultRoute</string>
+    <string name="click6">removeDefaultRoute</string>
+    <string name="click7">setDnses</string>
+    <string name="click8">removeDnses</string>
+    <string name="click9">ShowIpInfo</string>
+    <string name="click10">ResolveUrl</string>
+    <string name="Destination">Destination</string>
+    <string name="gateway">gateway</string>
+    <string name="netmask">netmask</string>
+    <string name="URL">URL</string>
+    <string name="http">http://</string>
+
+</resources>

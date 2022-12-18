@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:stretchColumns="0,1">
+  <TableRow>
+       <Button android:id="@+id/btn_dialog_ok"
+               style="@style/wrap_wrap_25dip"
+               android:text="@string/playlist_dialog_detail_ok"/>
+       <Button android:id="@+id/btn_dialog_cancel"
+               style="@style/wrap_wrap_25dip"
+               android:text="@string/cancle"/>
+  </TableRow>
+</TableLayout>

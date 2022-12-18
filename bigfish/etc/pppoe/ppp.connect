@@ -1,0 +1,28 @@
+#!/system/bin/sh
+if [ ! -r "/system/etc/ppp" ] ; then
+	echo "please chmod u+r /system/etc/ppp"
+	exit 1
+fi
+
+if [ ! -r "/system/etc/ppp/ppp.conf" ] ; then
+	echo "couldn't find it here or chmod u+r /system/etc/ppp/ppp.conf"
+	exit 1
+fi
+
+. /system/etc/ppp/ppp.conf
+busybox ifconfig $IFACE up
+
+if [  -f "/data/ppp/pppd.pid" ] ; then
+	echo "pppd-status: pppd is running!
+		I will stop it frist"
+	. /system/etc/ppp/ppp.disconnect
+fi
+if [  -f "/data/ppp/pppoe.pid" ] ; then
+	echo "pppoe-status: pppoe is running!
+		I will stop it frist"
+	. /system/etc/ppp/ppp.disconnect
+fi
+
+busybox setsid pppd pty "pppoe -p /data/ppp/pppoe.pid -I $IFACE -T 80 -U -m 1412" debug logfd 1 noipdefault noauth default-asyncmap show-password nodetach mtu 1492 mru 1492 noaccomp nodeflate nopcomp novj usepeerdns novjccomp lcp-echo-interval 20 lcp-echo-failure 3 user "$USER" password "$PASSWORD" &
+
+echo "$!" > /data/ppp/pppd.pid

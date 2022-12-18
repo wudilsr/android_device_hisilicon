@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <CheckBox android:id="@+id/HWDecoder"
+    android:text="@string/hwflag"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"/>
+    <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/monitor" android:id="@+id/CBOpenMonitor"></CheckBox>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewVideoFPS" android:text="@string/setfps"></TextView>
+    <EditText android:layout_height="wrap_content" android:id="@+id/EditTextVideoFPS" android:text="@string/zero" android:singleLine="true" android:password="false" android:layout_width="fill_parent"></EditText>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewWebServerIP" android:text="@string/urlflag"></TextView>
+    <EditText android:layout_height="wrap_content" android:id="@+id/EditTextWebServerIP" android:layout_width="fill_parent" android:text="@string/epgflag"></EditText>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speed" android:id="@+id/PlayingSpeedTV"></TextView>
+    <EditText android:layout_height="wrap_content" android:id="@+id/PlayingSpeedET" android:text="@string/hundrund" android:layout_width="match_parent"></EditText>
+
+    <Button android:id="@+id/OK"
+    android:layout_width="100dip"
+    android:layout_height="wrap_content"
+    android:text="@string/ok"/>
+
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menuconfig HI_SND_AMP_SUPPORT
+	bool "Snd Amp Support"
+	default n
+
+choice
+        prompt "Snd Amp Type"
+        depends on HI_SND_AMP_SUPPORT
+        help
+            The amp type on your board.
+        default HI_AMP_TYPE_TDA18250
+
+config  HI_SND_AMP_TYPE_TAS5707
+        bool "HI_SND_AMP_TYPE_TAS5707"
+	
+config  HI_SND_AMP_TYPE_TAS5711
+        bool "HI_SND_AMP_TYPE_TAS5711"
+endchoice
+
+config 	HI_SND_AMP_I2C
+	hex  "Snd Amp I2c"
+	depends on HI_SND_AMP_SUPPORT
+	default 0x44
+	help
+	  amp i2c
+		        board_type            level	i2c_pin (i2c_pin = i2c_group * 8 + i2c_num)
+		 BOARD_TYPE_hi3751		0	0x44(I2C8_4)
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++	

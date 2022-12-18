@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="AppName">Miracast</string>
+    <string name="TextWifiDisplayTitle">Miracast</string>
+    <string name="TextDeviceNameTitle">Device Name</string>
+    <string name="TextWifiP2pConnecting">Wi-Fi Direct Connecting</string>
+    <string name="TextWifiP2pConnected">Wi-Fi Direct Connected</string>
+    <string name="TextWifiP2pDisconnected">Waiting for connection</string>
+    <string name="TextWifiP2pExit">Exiting from Miracast</string>
+    <string name="TextNotAvailable">Not Available</string>
+    <string name="TextYes">Yes</string>
+    <string name="TextNo">No</string>
+    <string name="ToastSorryForNetwork">Sorry, network condition is poor</string>
+    <string name="ToastNoAudioLib">Can not find audio decode library</string>
+    <string name="ToastTurnoffConnectedAp">Turn Off Connected Ap</string>
+    <string name="ToastPlatformNoSupport">Platform No Supported</string>
+    <string name="TextUserGuide">User Guide</string>
+    <string name="TextSupportedDevices">Devices</string>
+    <string name="TextMiracastHelpTitle1">Step 1:</string>
+    <string name="TextMiracastHelpTitle2">Step 2:</string>
+    <string name="TextMiracastHelpTitle3">Step 3:</string>
+    <string name="TextMiracastHelpTitle4">Step 4:</string>
+    <string name="TextMiracastHelpStep1">Turn on Wi-Fi and enter Display.</string>
+    <string name="TextMiracastHelpStep2">Enter Wireless display.</string>
+    <string name="TextMiracastHelpStep3">Turn on Wireless display.</string>
+    <string name="TextMiracastHelpStep4">Search for devices and choose the available device to connect. </string>
+    <string name="TextMiracastSupportedDevicesTitle">Supported Devices:</string>
+    <string name="TextMiracastSupportedDevices">Huawei:  Huawei G700, Huawei G730,\nXiaomi:  Xiaomi2/2s, Xiaomi3,\nGoogle:  Nexus4, Nexus5,\nElse:  Asus Pad etc.</string>
+    <string name="TextMiracastSupportedWifiTitle"></string>
+    <string name="TextMiracastSupportedWifi"></string>
+    <!-- Dialog -->
+    <string name="DialogTitleAboutMiracast">About Miracast</string>
+    <string name="DialogTitleApConnected">AP Connected</string>
+    <string name="DialogTitleWifiP2pOn">Turning Wi-Fi Direct On</string>
+    <string name="DialogTitleWifiP2pOff">Turning Wi-Fi Direct Off</string>
+    <string name="DialogTitleWifiNotAvailable">Wi-Fi Not Available</string>
+    <string name="DialogTitleConfirmExit">Confirm Exit</string>
+    <string name="DialogMessageApConnected">Miracast connection may be affected, disconnect AP?</string>
+    <string name="DialogMessageWaiting">Please waiting</string>
+    <string name="DialogMessageWifiNotAvailable">Please plug Wi-Fi dongle first</string>
+    <string name="DialogMessageConfirmExit">Are you sure to exit?</string>
+    <string name="DialogMessageKeepAliveFailed">Network is very poor, sink keep alive fail, please try to connect again</string>
+
+</resources>

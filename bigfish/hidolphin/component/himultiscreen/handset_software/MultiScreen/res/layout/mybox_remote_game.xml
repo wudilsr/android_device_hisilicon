@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/mybox_remote_background" >
+
+    <RelativeLayout
+        android:id="@+id/remote_game_head"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/remote_head_bg" >
+
+        <Button
+            android:id="@+id/remote_game_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/remote_status_back" />
+
+        <LinearLayout
+            android:id="@+id/remote_game_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/remote_game_mode_change" >
+
+            <TextView
+                android:id="@+id/remote_game_handle_select"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/remote_game_mode_change_foucs"
+                android:gravity="center"
+                android:text="@string/remote_game_handles" />
+
+            <TextView
+                android:id="@+id/remote_game_body_select"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/remote_game_bodys" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/remote_game_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/remote_head_switch_game" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/remote_game_control"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/remote_game_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/remote_game_handle_normal" />
+
+        <Button
+            android:id="@+id/remote_game_key_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/remote_game_key_layout"
+            android:layout_toLeftOf="@+id/remote_game_key_layout"
+            android:background="@drawable/remote_game_btn_back" />
+
+        <RelativeLayout
+            android:id="@+id/remote_game_key_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp" >
+
+            <Button
+                android:id="@+id/remote_game_key_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/remote_game_key"
+                android:layout_toRightOf="@+id/remote_game_key"
+                android:background="@drawable/remote_game_btn_select" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/remote_game_key_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/remote_game_key_layout"
+            android:layout_toRightOf="@+id/remote_game_key_layout"
+            android:background="@drawable/remote_game_start" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:paddingTop="20dp" >
+
+            <Button
+                android:id="@+id/remote_game_key_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/remote_game_key_y"
+                android:background="@drawable/remote_game_x" />
+
+            <Button
+                android:id="@+id/remote_game_key_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/remote_game_key_x"
+                android:background="@drawable/remote_game_y" />
+
+            <Button
+                android:id="@+id/remote_game_key_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/remote_game_key_x"
+                android:layout_toRightOf="@+id/remote_game_key_x"
+                android:background="@drawable/remote_game_a" />
+
+            <Button
+                android:id="@+id/remote_game_key_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/remote_game_key_x"
+                android:layout_below="@+id/remote_game_key_y"
+                android:background="@drawable/remote_game_b" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/remote_game_sensor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/remote_game_head"
+        android:background="@drawable/remote_game_somatosensory"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/remote_game_sensor_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/remote_sensor_back" />
+    </RelativeLayout>
+
+</RelativeLayout>

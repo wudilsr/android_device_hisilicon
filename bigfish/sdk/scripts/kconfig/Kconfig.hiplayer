@@ -1,0 +1,20 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+menuconfig HI_PLAYER_SUPPORT
+	depends on HI_CAPTION_SO_SUPPORT && LINUX_PRODUCT
+	bool "HiPlayer Support"
+	default y
+
+#------------------------------------------------
+choice
+	prompt "HiPlayer Version"
+	depends on HI_PLAYER_SUPPORT
+	default HI_PLAYER_FULL_SUPPORT
+
+config  HI_PLAYER_FULL_SUPPORT
+	bool "HiPlayer Full Support"
+
+config  HI_PLAYER_HBBTV_SUPPORT
+	bool "HiPlayer HBBTV Support"
+
+endchoice
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HiSuspendMode</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Select suspend mode!</string>
+    <string name="deep_suspend">deep suspend</string>
+    <string name="smart_suspend">smart suspend</string>
+
+</resources>

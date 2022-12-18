@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/dms_video_browsing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rc_dms_video_bottom_layout"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/bg_dms_item_press"
+        android:numColumns="1"
+        android:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/rc_dms_video_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rc_dms_bottom_bg"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:singleLine="true"
+            android:text="@string/dms_video_other"
+            android:textColor="#000"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/rc_dms_bottom_arrow"
+            android:paddingRight="20dp" />
+    </FrameLayout>
+
+</RelativeLayout>

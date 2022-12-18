@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="version">MyBox 1.1</string>
+    <string name="copyright">Copyright @ huawei</string>
+    <string name="app_name">魔视</string>
+    <string name="exit_guide">进入我的盒子</string>
+    <string name="remote">模拟遥控器</string>
+    <string name="app">STB 程序</string>
+    <string name="screen">屏幕滑动</string>
+    <string name="dlna">DLNA</string>
+    <string name="share">网络分享</string>
+    <string name="local">本地分享</string>
+    <string name="muapSearchWait">请稍后....</string>
+    <string name="muapSearching">正在搜索设备！</string>
+    <string name="search_device">设备列表</string>
+    <string name="networkConnectTitle">设备连接</string>
+    <string name="networkConnectTips">连接到 </string>
+    <string name="OK">确定</string>
+    <string name="app_loading">加载中....</string>
+    <string name="multiclient">多屏客户端</string>
+    <string name="deviceDiscovery">搜索设备</string>
+    <string name="getServicebyIP">访问IP</string>
+    <string name="demo_leftRightTips">左右滑动 查看操作演示</string>
+    <string name="input_end">完成</string>
+    <string name="func_add">待扩展</string>
+
+    <!-- Remote Control function's button text,so it doesn't translate to chinese -->
+    <string name="remote_up">up</string>
+    <string name="remote_left">left</string>
+    <string name="remote_right">right</string>
+    <string name="remote_down">down</string>
+    <string name="device_refuse_access">无法访问该IP 或 此IP没有安装服务端</string>
+    <string name="access_address_invalid">请输入有效IP地址！</string>
+    <string name="network_title">网络问题</string>
+    <string name="network_status">对不起，网络异常！</string>
+    <string name="speech_record_hint">松开按钮，结束说话</string>
+
+    <!-- dialog -->
+    <string name="dialogTitleLoading">请稍等</string>
+    <string name="dialogMessageLoading">配置中</string>
+    <string name="syncStbMessageLoading">与机顶盒同步中</string>
+    <string name="dialogCancel">取消</string>
+    <string name="dialogOK">确定</string>
+    <string name="quitDialogTitle">提示</string>
+    <string name="quitDialogContent">确定要退出镜像？</string>
+    <string name="AccessControlService_toast_STBLeave_tip">抱歉，机顶盒端服务已关闭，即将返回到搜索界面！</string>
+    <string name="AccessControlService_toast_remove_tip">抱歉，连接被抢占，即将返回到首页界面！</string>
+    <string name="AccessControlService_toast_STBSuspend_tip">抱歉，机顶盒已待机，即将返回搜索界面</string>
+    <string name="remoteAppDialogTitle">提示</string>
+    <string name="remoteAppDialogContent">获取应用列表失败，请重试</string>
+    <string name="Access_Quit__Title">接入控制</string>
+    <string name="DeviceConnect_service_empty">服务列表获取失败，请重试。</string>
+    <string name="DeviceConnect_box">请连接机顶盒</string>
+
+    <!-- setting Switch -->
+    <string name="SettingSwitch_VIME_Title">虚拟输入法</string>
+    <string name="SettingSwitch_VIME_status_on">开启状态</string>
+    <string name="SettingSwitch_VIME_status_off">关闭状态</string>
+    <string name="SettingSwitch_Sensor_Title">体感</string>
+    <string name="SettingSwitch_Sensor_status_on">开启状态</string>
+    <string name="SettingSwitch_Sensor_status_off">关闭状态</string>
+    <string name="SettingSwitch_Video_Title">视频</string>
+    <string name="SettingSwitch_Video_status_on">开启状态</string>
+    <string name="SettingSwitch_Video_status_off">关闭状态</string>
+    <string name="SettingSwitch_Audio_Title">音频</string>
+    <string name="SettingSwitch_Audio_status_on">开启状态</string>
+    <string name="SettingSwitch_Audio_status_off">关闭状态</string>
+    <string name="SettingSwitch_Vibrator_Title">震动</string>
+
+    <!-- toast -->
+    <string name="toast_KeepAlive_packet_loss">网络异常！</string>
+    <string name="toast_VIME_close">虚拟输入法关闭！</string>
+    <string name="AccessController_refuse_access_tips">抱歉，无法接入！</string>
+    <string name="toast_network_error">WiFi已断开，请检查网络!</string>
+    <string name="one_more_exit">再按一次退出</string>
+
+    <!-- 设置界面 -->
+    <string name="setting_title">设置</string>
+    <string name="help_info">帮助</string>
+    <string name="about_info">关于</string>
+    <string name="about_name">连接美好生活</string>
+    <string name="about_version_info">魔视    Android版本V</string>
+    <string name="about_version">2.1.3</string>
+    <string name="about_copyright">版权所有© 2005-2013</string>
+    <string name="about_company">深圳市海思半导体有限公司保留所有版权</string>
+
+    <!-- 首页 -->
+    <string name="device_select_no_connect">未连接机顶盒</string>
+    <string name="device_select_be_reaved">机顶盒被抢占</string>
+    <string name="device_no_descovery_title">未连接机顶盒，点击将连接</string>
+    <string name="device_open_info_title">需要机顶盒是开启状态，并与手机同一Wi-Fi网络</string>
+    <string name="device_descovery_title">HISILICON  TV.COM</string>
+
+    <!-- 遥控器界面 -->
+    <string name="remote_stay">待用</string>
+    <string name="remote_device_not_found">未检测到WIFI机顶盒！</string>
+    <string name="remote_mouse_name">鼠标模式</string>
+    <string name="remote_game_name">游戏模式</string>
+    <string name="remote_keyboard_name">按键模式</string>
+    <string name="remote_mouse_infos">摇一摇开启空鼠，左滑关闭</string>
+    <string name="remote_mouse_not_supported">抱歉，不支持空鼠，缺少陀螺仪传感器</string>
+    <string name="remote_game_handles">手柄</string>
+    <string name="remote_game_bodys">体感</string>
+
+    <!-- 镜像界面 -->
+    <string name="image_error_title">镜像失败</string>
+    <string name="image_error_info">点击再次尝试获取电视画面</string>
+
+    <!-- 广电直播 -->
+    <string name="home_live_tile">广电直播</string>
+    <string name="please_install_vplayer">请先安装VPlayer播放器</string>
+    <string name="start_connect_onlivetv">连接广电直播中</string>
+    <string name="start_search_livetv_channel">正在搜索直播频道</string>
+    <string name="livetv_not_found">未检测到广电直播！</string>
+
+    <!-- 媒体分享 -->
+    <string name="image">图片</string>
+    <string name="video">视频</string>
+    <string name="music">音乐</string>
+    <string name="folder">文件夹</string>
+    <string name="playlist">播放列表</string>
+    <string name="allimage">所有图片</string>
+    <string name="allvideo">所有视频</string>
+    <string name="allmusic">所有音乐</string>
+    <string name="camera">Camera</string>
+    <string name="device_not_found">推送失败，未发现机顶盒.</string>
+    <string name="friendly_name">Hi</string>
+    <string name="manufacturer">Hisi</string>
+    <string name="dlna_creater">Hi Sharing</string>
+    <string name="slash">/</string>
+    <string name="channel">频道</string>
+    <string name="myphone">我的手机</string>
+    <string name="shuffle_play">随机播放</string>
+    <string name="nowpushing_left">正在“ </string>
+    <string name="nowpushing_right">” 播放</string>
+    <string name="device_online">已上线</string>
+    <string name="cancel">取消</string>
+    <string name="dis_cancel">取		消</string>
+    <string name="sdcard_not_found">没有SD卡</string>
+    <string name="file_pick_error">选择文件不正确</string>
+    <string name="photoPickerNotFound">没有找到照片</string>
+    <string name="minute">分钟</string>
+    <string name="music_num">首</string>
+    <string name="dms_picture_other">其他相册</string>
+    <string name="dms_video_other">其他</string>
+    <string name="dms_music_playlist">播放列表</string>
+    <string name="dms_no_findcontent">没有找到相关内容</string>
+    <string name="image_loading_error">图片未加载到</string>
+    <string name="an_error_occurs_try_again_later">操作无响应, 请稍后重试</string>
+    <string name="load_more_result">加载更多</string>
+    <string name="no_network_found">没有网络</string>
+
+</resources>

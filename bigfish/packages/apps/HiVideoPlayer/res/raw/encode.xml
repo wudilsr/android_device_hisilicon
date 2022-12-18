@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<encodes id="1">
+       <default>
+				<encode name="NONE" value="0"/>
+				<encode name="BIG5" value="1"/>
+				<encode name="UTF8" value="2"/>
+				<encode name="ISO8859_1" value="3"/>
+				<encode name="ISO8859_2" value="4"/>
+				<encode name="ISO8859_3" value="5"/>
+				<encode name="ISO8859_4" value="6"/>
+				<encode name="ISO8859_5" value="7"/>
+				<encode name="ISO8859_6" value="8"/>
+				<encode name="ISO8859_7" value="9"/>
+				<encode name="ISO8859_8" value="10"/>
+				<encode name="ISO8859_9" value="11"/>
+				<encode name="ISO8859_10" value="12"/>
+				<encode name="ISO8859_11" value="13"/>
+				<encode name="ISO8859_13" value="14"/>
+				<encode name="ISO8859_14" value="15"/>
+				<encode name="ISO8859_15" value="16"/>
+				<encode name="ISO8859_16" value="17"/>
+				<encode name="UNICODE_16LE" value="18"/>
+				<encode name="UNICODE_16BE" value="19"/>
+				<encode name="GBK" value="20"/>
+				<encode name="CP1250" value="21"/>
+				<encode name="CP1251" value="22"/>
+				<encode name="CP1252" value="23"/>
+				<encode name="CP1253" value="24"/>
+				<encode name="CP1254" value="25"/>
+				<encode name="CP1255" value="26"/>
+				<encode name="CP1256" value="27"/>
+				<encode name="CP1257" value="28"/>
+				<encode name="CP1258" value="29"/>
+				<encode name="CP874" value="30"/>
+				<encode name="UNICODE_32LE" value="31"/>
+				<encode name="UNICODE_32BE" value="32"/>
+       </default>
+       <chinese>
+               <encode name="UTF8" value="2"/>
+               <encode name="UTF16BE" value="19"/>
+               <encode name="UTF16LE" value="20"/>
+               <encode name="GBK" value="21"/>
+       </chinese>
+       <!-- <english>
+               <encode name="UTF-8" value="7"/>
+               <encode name="UTF-8" value="8"/>
+       </english> -->
+       <spanish>
+               <encode name="UTF8" value="2"/>
+               <encode name="UTF16BE" value="19"/>
+               <encode name="UTF16LE" value="20"/>
+               <encode name="ISOLAT_1" value="3"/>
+       </spanish>
+       <europe>
+               <encode name="UTF8" value="2"/>
+               <encode name="UTF16BE" value="19"/>
+               <encode name="UTF16LE" value="20"/>
+               <encode name="ISO8859_2" value="4"/>
+       </europe>
+
+</encodes>
+
+<!--
+hi_charset_common.h
+
+typedef enum {
+    HI_CHARSET_CODETYPE_NONE = 0,
+    HI_CHARSET_CODETYPE_BIG5=1,       /**繁体中文*/
+    HI_CHARSET_CODETYPE_UTF8=2,       /**UTF8*/
+    HI_CHARSET_CODETYPE_ISO8859_1,  /** 西欧语系 ，拉丁文1*/
+    HI_CHARSET_CODETYPE_ISO8859_2,  /**中欧和东欧语系，拉丁文2*/
+    HI_CHARSET_CODETYPE_ISO8859_3,  /** 欧洲东南部语系，拉丁文3*/
+    HI_CHARSET_CODETYPE_ISO8859_4,  /**斯堪的那维亚和波罗的海语系，拉丁文4*/
+    HI_CHARSET_CODETYPE_ISO8859_5,  /**拉丁文和斯拉夫文*/
+    HI_CHARSET_CODETYPE_ISO8859_6,  /**拉丁文和阿拉伯文*/
+    HI_CHARSET_CODETYPE_ISO8859_7,  /**拉丁文和希腊文*/
+    HI_CHARSET_CODETYPE_ISO8859_8=10,  /**拉丁文和希伯来文*/
+    HI_CHARSET_CODETYPE_ISO8859_9,  /**为土耳其文修正的拉丁文，拉丁文5*/
+    HI_CHARSET_CODETYPE_ISO8859_10, /**拉普人、北欧和爱斯基摩人的文字，拉丁文6*/
+    HI_CHARSET_CODETYPE_ISO8859_11, /**拉丁文与泰文*/
+    HI_CHARSET_CODETYPE_ISO8859_13, /**波罗的海周边语系，拉丁文7*/
+    HI_CHARSET_CODETYPE_ISO8859_14=15, /**凯尔特文，拉丁文8*/
+    HI_CHARSET_CODETYPE_ISO8859_15, /**改进的拉丁文1，拉丁文9*/
+    HI_CHARSET_CODETYPE_ISO8859_16, /**罗马尼亚文，拉丁文10*/
+    HI_CHARSET_CODETYPE_UNICODE_16LE, /**16位小端的UNICODE*/
+    HI_CHARSET_CODETYPE_UNICODE_16BE, /**16位大端的UNICODE*/
+    HI_CHARSET_CODETYPE_GBK=20,     /**简体中文GBK*/
+    HI_CHARSET_CODETYPE_CP1250,     /**中欧*/
+    HI_CHARSET_CODETYPE_CP1251,     /**西里尔文*/
+    HI_CHARSET_CODETYPE_CP1252,     /**拉丁文I*/
+    HI_CHARSET_CODETYPE_CP1253,     /**希腊文*/
+    HI_CHARSET_CODETYPE_CP1254,     /**土耳其文*/
+    HI_CHARSET_CODETYPE_CP1255,     /**希伯来文*/
+    HI_CHARSET_CODETYPE_CP1256,     /**阿拉伯文*/
+    HI_CHARSET_CODETYPE_CP1257,     /**波罗的海文*/
+    HI_CHARSET_CODETYPE_CP1258,     /**越南*/
+    HI_CHARSET_CODETYPE_CP874,      /**泰文*/
+    HI_CHARSET_CODETYPE_UNICODE_32LE=31, /**32位小端的UNICODE*/
+    HI_CHARSET_CODETYPE_UNICODE_32BE=32, /**32位大端的UNICODE*/
+} HI_CHARSET_CODETYPE_ENUM; -->

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MediaShare</string>
+    <!-- key-value -->
+    <string name="upnp">upnp</string>
+
+
+    <!-- U update -->
+    <string name="n_update_f">No upgrade package</string>
+    <string name="set_other_update_label">Update</string>
+    <string name="n_url">Invalid URL</string>
+    <string name="n_storage_m">Please insert the storage medium</string>
+
+    <string name="input_url">Please enter the URL</string>
+    <string name="defaultUrl">http://</string>
+    <string name="downtask">Task start download do not power off</string>
+    <string name="fail">Download failed</string>
+    <string name="restart">Restart</string>
+    <string name="restart_later">Restart later</string>
+    <string name="toast">Prompt</string>
+    <string name="finished_restart">Mission completed if reboot the machine upgrade</string>
+    <string name="select_package">please select update package</string>
+    <string name="select_mount">please select path</string>
+    <string name="dhcp_is_running">the device is getting dhcp,please try later</string>
+
+    <!-- net_preference.xml -->
+    <string name="setting_net_label">NetWork Setting</string>
+    <string name="set_net_host_label">HostName</string>
+    <string name="hostname">localhost</string>
+    <!-- UPNP -->
+    <!--  <string name="set_upnp">UPNP Service</string>-->
+    <string name="dlna_title">DLNA Settings</string>
+    <string name="set_upnp">Service</string>
+    <string name="dmr_start">Media Renderer Service</string>
+    <string name="dms_name">HisiMediaShare</string>
+    <string name="dms_direcory">DMS Directory</string>
+    <string name="dms_directory_name">Media Shared Directory Setting</string>
+    <string name="dircory_name">Name</string>
+
+    <string name="dms_item">HisiMediaShare</string>
+    <string name="dms_start">Media Share Service</string>
+    <string name ="deviceStart">It has been started</string>
+    <string name ="deviceStop">It has been stopped</string>
+    <string name="dirAdd">Add a directory</string>
+    <string name="dig_title">Select a directory</string>
+    <string name="dirOK">OK</string>
+    <string name="dirCancel">Cancel</string>
+    <string name="Current_dir">Current</string>
+    <string name="alreadyExist">Already exist</string>
+
+    <string name="dmsManagerSummary">Media Share Service is in progress， please wait...</string>
+    <string name="exitDigTitle">Exiting Dialog</string>
+    <string name="exitDmsMsg">Exiting Media share Server...</string>
+    <string name="exitDmrMsg">Exiting Media Renderer Server...</string>
+    <string name="quit_desc">Add shared directory is ongoing. Exit may break this action.\nDo you want to break and exit?</string>
+    <string name="mediaSync">Media Synchronizing</string>
+    <string name="mediaReady">Media Ready</string>
+    <string name="dmsSync">The Media Server is currently synchronizing. Please wait a moment.</string>
+    <string name="dmsReady">The Media Server is ready. you can use it normally.</string>
+    <string name="dmsStartSucess">DMS Launched Sucessfully</string>
+    <string name="dmsStartFail">DMS Launched Failed, please restart it again!</string>
+    <string name="clicknotify">Open DLNA Setting</string>
+    <string name="netDisconnected">Please check your Net Connection！</string>
+    <string name="noPermissionAccess">You have no permission to access this directory</string>
+    <string name="ruleOfHostName">The host name supports only letters, numbers and underscore (_), and the length can not be longer than</string>
+    <string name="error">Error!</string>
+    <string name="warning">Warning!</string>
+    <string name="add">Add </string>
+    <string name="remove">Remove </string>
+    <string name="restartDMS">Restart DMS</string>
+    <string name="restartDMR">Restart DMR</string>
+    <string name="inputNothing">Input can not be empty</string>
+    <string name="dmr_start_suc">DMR start sucessfully</string>
+    <string name="dmr_start_fail">DMR start failed</string>
+    <string name="readd_dir">Disk is mounted, rescanning media files ...</string>
+    <string name="dlnasetting_title">DLNA Setting</string>
+    <string name="dlnasetting_is_running">DLNA Setting is running</string>
+        <string name="dmrdescription">
+        <![CDATA[
+<?xml version=\"1.0\"?>
+<root xmlns=\"urn:schemas-upnp-org:device-1-0\" xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\">
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+    <device>
+        <UDN>uuid:</UDN>
+        <friendlyName>HiMediaRenderer</friendlyName>
+        <deviceType>urn:schemas-upnp-org:device:MediaRenderer:1</deviceType>
+        <manufacturer>Hisilicon Technologies Co.,Ltd</manufacturer>
+        <manufacturerURL>http://www.Hisilicon.com</manufacturerURL>
+        <modelName>Hisilicon MediaRenderer</modelName>
+        <modelNumber>1.1</modelNumber>
+        <modelURL>http://www.Hisilicon.com</modelURL>
+        <serialNumber/>
+        <dlna:X_DLNADOC xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\">DMR-1.50</dlna:X_DLNADOC>
+        <dlna:X_DLNACAP xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\"></dlna:X_DLNACAP>
+        <serviceList>
+            <service>
+                <serviceType>urn:schemas-upnp-org:service:ConnectionManager:1</serviceType>
+                <serviceId>urn:upnp-org:serviceId:ConnectionManager</serviceId>
+                <controlURL>/upnp/service/ConnectionManager/Control</controlURL>
+                <eventSubURL>/upnp/service/ConnectionManager/Event</eventSubURL>
+                <SCPDURL>/upnp/service/cms.xml</SCPDURL>
+            </service>
+            <service>
+                <serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType>
+                <serviceId>urn:upnp-org:serviceId:AVTransport</serviceId>
+                <controlURL>/upnp/service/AVTransport/Control</controlURL>
+                <eventSubURL>/upnp/service/AVTransport/Event</eventSubURL>
+                <SCPDURL>/upnp/service/avt.xml</SCPDURL>
+            </service>
+            <service>
+                <serviceType>urn:schemas-upnp-org:service:RenderingControl:1</serviceType>
+                <serviceId>urn:upnp-org:serviceId:RenderingControl</serviceId>
+                <controlURL>/upnp/service/RenderingControl/Control</controlURL>
+                <eventSubURL>/upnp/service/RenderingControl/Event</eventSubURL>
+                <SCPDURL>/upnp/service/rcs.xml</SCPDURL>
+            </service>
+        </serviceList>
+    </device>
+</root>]]>
+    </string>
+
+    <string name="dmsdescription">
+        <![CDATA[
+<?xml version=\"1.0\"?>
+<root xmlns=\"urn:schemas-upnp-org:device-1-0\">
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+    <device>
+        <UDN>uuid:</UDN>
+        <friendlyName>HiMediaServer</friendlyName>
+        <deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>
+        <manufacturer>Hisilicon Technologies Co.,Ltd</manufacturer>
+        <manufacturerURL>http://www.Hisilicon.com</manufacturerURL>
+        <modelName>Hisilicon MediaServer</modelName>
+        <modelNumber>1.1</modelNumber>
+        <modelURL>http://www.Hisilicon.com</modelURL>
+        <serialNumber />
+        <dlna:X_DLNADOC xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\">DMS-1.50</dlna:X_DLNADOC>
+        <dlna:X_DLNACAP xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\">av-upload,image-upload,audio-upload</dlna:X_DLNACAP>
+        <serviceList>
+            <service>
+                <serviceType>urn:schemas-upnp-org:service:ConnectionManager:1</serviceType>
+                <serviceId>urn:upnp-org:serviceId:ConnectionManager</serviceId>
+                <controlURL>/upnp/service/ConnectionManager/Control</controlURL>
+                <eventSubURL>/upnp/service/ConnectionManager/Event</eventSubURL>
+                <SCPDURL>/upnp/service/cms.xml</SCPDURL>
+            </service>
+            <service>
+                <serviceType>urn:schemas-upnp-org:service:ContentDirectory:1</serviceType>
+                <serviceId>urn:upnp-org:serviceId:ContentDirectory</serviceId>
+                <controlURL>/upnp/service/ContentDirectory/cds_control</controlURL>
+                <eventSubURL>/upnp/service/ContentDirectory/cds_event</eventSubURL>
+                <SCPDURL>/upnp/service/cds.xml</SCPDURL>
+            </service>
+        </serviceList>
+    </device>
+</root>]]>
+    </string>
+
+</resources>

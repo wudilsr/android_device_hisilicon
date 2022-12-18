@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:orientation="vertical"
+	android:layout_height="fill_parent">
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<Button android:id="@+id/serverBtn" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/serverBtn" />
+		<Button android:id="@+id/backBtn" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/parent_directory" />
+	</LinearLayout>
+	<GridView android:id="@+id/gridView02" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:numColumns="10" />
+</LinearLayout>

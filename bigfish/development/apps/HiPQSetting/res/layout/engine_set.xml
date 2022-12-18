@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/engine_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/engine_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/split_screen"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/engine_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/engine_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/engine_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/smart_color_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/smart_color_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/smart_color"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/smart_color_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/smart_color_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/smart_color_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/dynamic_contrast_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/dynamic_contrast_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/dynamic_contrast"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/dynamic_contrast_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/dynamic_contrast_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/dynamic_contrast_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sharpness_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/sharpness_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/definition"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <SeekBar
+                android:id="@+id/sharpness_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/sharpness_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/zero"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/super_resolution_layout"
+        style="@style/RelativeLayoutStyle"
+        android:background="@drawable/input_wide_selector" >
+
+        <LinearLayout style="@style/LeftStyle" >
+
+            <TextView
+                android:id="@+id/super_resolution_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/oversubscription"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/RightStyle" >
+
+            <ImageView
+                android:id="@+id/super_resolution_left"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/left_normal"
+                android:focusable="false" />
+
+            <LinearLayout style="@style/LayoutInfoStyle" >
+
+                <TextView
+                    android:id="@+id/super_resolution_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/super_resolution_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/right_normal"
+                android:focusable="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

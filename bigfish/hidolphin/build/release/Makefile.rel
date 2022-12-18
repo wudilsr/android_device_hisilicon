@@ -1,0 +1,57 @@
+#===============================================================================
+# export variable
+#===============================================================================
+include cfg.mak
+HIDOLPHIN_DIR := $(shell pwd)
+CFG_SDK_PATH := $(HIDOLPHIN_DIR)/../$(CFG_SDK_VERSION)
+
+include $(CFG_SDK_PATH)/cfg.mak
+include base.mak
+
+TOOLCHAINS_NAME = $(CFG_HI_TOOLCHAINS_NAME)
+
+SDK_DIR := $(CFG_SDK_PATH)
+VERSION := $(CFG_VERSION)
+COMMON_DIR := $(HIDOLPHIN_DIR)/component_common
+
+export HIDOLPHIN_DIR SDK_DIR TOOLCHAINS_NAME VERSION COMMON_DIR
+
+CFG_HI_CFLAGS += -O2
+
+ifeq (${CFG_VERSION},debug)
+    CFG_HI_CFLAGS+= -g
+endif
+
+#===============================================================================
+# local variable
+#===============================================================================
+all:objects
+
+ifeq ($(CFG_HI_DTVSTACK_SUPPORT),y)
+objects += dtvstack
+endif
+
+objects_clean:=${addsuffix _clean,${objects}}
+
+ifeq (${obj},)
+depends:=${objects}
+else
+depends:=${obj}
+endif
+depends_clean:=$(addsuffix _clean,${depends})
+
+#===============================================================================
+# rules
+#===============================================================================
+.PHONY: objects clean instobjects uninstobjects ${objects} ${objects_clean} test
+
+objects: ${depends}
+
+clean:${depends_clean}
+
+${objects}:
+	echo "$(CFG_SDK_PATH)"
+	make -C $@
+
+${objects_clean}:
+	make -C ${patsubst %_clean,%,$@} clean

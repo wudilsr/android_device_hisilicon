@@ -1,0 +1,40 @@
+---------------------  make help ----------------------
+input 'q' to exit .
+
+This document list the command you can use.
+
+mk-hidolphin.sh:
+	Setting cfg.mk, build and compile Linux version.
+	usage for example:
+
+	./mk-hidolphin.sh ../SDK_PATH
+
+	*** please enter your choise:(1-4) ***
+	(1) Configuration
+	(2) Build
+	(3) Publish
+	(4) Exit
+
+make help:
+	Show this list.
+
+make tools:
+	Make menuconfig tool, you need this command when you make the HiDolphin first time.
+
+make tools_clean:
+	Clean menuconfig tool.
+
+make tools_install:
+	Install menuconfig tool. Need run make tools first.
+	Recommend to use "./mk-hidolphin ../SDK_PATH" when configurate hidolphin linux version.
+
+make tools_uninstall:
+	Uninstall menuconfig tool.
+
+make defconfig:
+	Create the default SDK config file(cfg.mak).
+	You can indicate your config file by CFILE parameter:
+	make defconfig CFILE=$(YOUR_CONFIG_FILE)
+
+make menuconfig:
+	Configurate the HiDolphin, the results will be saved to cfg.mak.

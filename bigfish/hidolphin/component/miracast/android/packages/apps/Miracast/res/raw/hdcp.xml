@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    non hdcp mode:        set hdcp = 1
+    dx hdcp mode:          set hdcp = 2
+    hisilicon hdcp mode: set hdcp = 3-->
+
+<miracast>
+        <name>none hdcp</name>
+        <mode>1</mode>
+</miracast>

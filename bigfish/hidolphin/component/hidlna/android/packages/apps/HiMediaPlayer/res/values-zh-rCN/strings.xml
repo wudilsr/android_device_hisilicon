@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, DMCMediaCenter!</string>
+    <string name="app_name">HiMediaPlayer</string>
+    <string name="please_wait">请等待</string>
+    <string name="load">载入...</string>
+    <string name="no_network">连接超时!</string>
+    <string name="str_play_time">00:00:00</string>
+    <string name="str_play_sum_time">00:00:00</string>
+    <string name="PlayList">播放列表</string>
+    <string name="unsupport_file">不支持的文件!</string>
+    <string name="filename">文件名</string>
+    <string name="artist">艺术家:</string>
+    <string name="genre">流派:</string>
+    <string name="album">专辑:</string>
+    <string name="size">大小:</string>
+    <string name="sumlist">0/0</string>
+    <string name="music">音乐</string>
+    <string name="media_error_unknow">未知播放错误</string>
+    <string name="unknown">未知</string>
+    <string name="photo">图片</string>
+    <string name="normal">普通</string>
+    <string name="fast">快</string>
+    <string name="slow">慢</string>
+    <string name="resolution">分辨率</string>
+    <string name="date">日期</string>
+    <string name="error">错误</string>
+    <string name="ok">确定</string>
+    <string name="video_info">视频信息</string>
+    <string name="fail_get_playlist">获取播放列表失败</string>
+    <string name="imageIsNull">图片加载失败</string>
+    <string name="speed_normal">正常</string>
+    <string name="speed_fast">快</string>
+    <string name="speed_slow">慢</string>
+    <string name="network_interruption">网络中断</string>
+    <string name="outofmemory">不支持的文件</string>
+    <string name="dmr_not_allow_pre">DMR推送的资源不允许进行上一首操作</string>
+    <string name="dmr_not_allow_next">DMR推送的资源不允许进行下一首操作</string>
+    <string name="timeout">超时</string>
+    <string name="network_shutdown">网络中断</string>
+    <string name="connect_timeout">连接超时</string>
+    <string name="file_type_unsupport">文件类型不支持</string>
+    <string name="failed_get_file">文件获取失败</string>
+    <string name="network_connect_failed">连接失败</string>
+    <string name="network_timeout">读取超时</string>
+    <string name="network_disconnect">网络中断</string>
+    <string name="network_not_found">网络资源不可用</string>
+    <string name="buffering_progress">0%</string>
+    <string name="network_speed_kbps">千字节/秒</string>
+
+</resources>

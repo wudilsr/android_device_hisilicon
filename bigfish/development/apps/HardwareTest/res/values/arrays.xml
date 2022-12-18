@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="title_array">
+        <item>HI_UNF_SND_Mode</item>
+        <item>hdmi_video_timing</item>
+        <item>hdmi_color_mode</item>
+        <item>hdmi_apectrate</item>
+        <item>hdmi_reversecolor</item>
+        <item>hdmi_rgbfullrange</item>
+        <item>hdmi_mode</item>
+        <item>hdmi_deepcolor</item>
+        <item>hdmi_xvycc</item>
+        <item>hdmi_ycbcrfullrange</item>
+        <item>hdmi_hdcp</item>
+        <item>hdmi_set_disp_3d</item>
+        <item>hdmi_display_edit</item>
+    </string-array>
+    <string-array name="hi_unf_snd_mode_array">
+        <item>PCM</item>
+        <item>RAW</item>
+    </string-array>
+    <string-array name="hi_unf_snd_mode_value_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="video_timing_array">
+        <item>(1)640X480_60</item>
+        <item>(2,3)480P60</item>
+        <item>(4)720P60</item>
+        <item>(5)1080i60</item>
+        <item>(6,7)NTSC</item>
+        <item>(16)1080P60</item>
+        <item>(17,18)576P50</item>
+        <item>(19)720P50</item>
+        <item>(20)1080i50</item>
+        <item>(21,22)PAL</item>
+        <item>(31)1080P50</item>
+        <item>(32)1080P24</item>
+        <item>(33)1080P25</item>
+        <item>(34)1080P30</item>
+        <item>(93)3840X2160_24</item>
+        <item>(94)3840X2160_25</item>
+        <item>(95)3840X2160_30</item>
+        <item>(98)4096X2160_24</item>
+    </string-array>
+    <string-array name="video_timing_value_array">
+        <item>13</item>
+        <item>10</item>
+        <item>7</item>
+        <item>5</item>
+        <item>12</item>
+        <item>0</item>
+        <item>9</item>
+        <item>8</item>
+        <item>6</item>
+        <item>11</item>
+        <item>1</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+    </string-array>
+    <string-array name="color_mode_array">
+        <item>RGB444</item>
+        <item>YCbCr444</item>
+    </string-array>
+    <string-array name="color_mode_value_array">
+        <item>0</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="apectrate_array">
+        <item>4:3</item>
+        <item>16:9</item>
+    </string-array>
+    <string-array name="apectrate_value_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="reverse_color_array">
+        <item>Normal Range</item>
+        <item>Reverse Range</item>
+    </string-array>
+    <string-array name="reverse_color_value_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="rgb_fullrange_array">
+        <item>Normal Range</item>
+        <item>Limitation Range</item>
+        <item>Full Range</item>
+    </string-array>
+    <string-array name="rgb_fullrange_value_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="hdmi_mode_array">
+        <item>DVI</item>
+        <item>HDMI</item>
+    </string-array>
+    <string-array name="hdmi_mode_value_array">
+        <item>hdmi_dvi_force</item>
+        <item>hdmi_hdmi_force</item>
+    </string-array>
+    <string-array name="deepcolor_array">
+        <item>24bit</item>
+        <item>30bit</item>
+        <item>36bit</item>
+    </string-array>
+    <string-array name="deepcolor_value_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="xvycc_array">
+        <item>Disable</item>
+        <item>Enable</item>
+    </string-array>
+    <string-array name="xvycc_value_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="ycbcrfullrange_array">
+        <item>Limitation Range</item>
+        <item>Full Range</item>
+    </string-array>
+    <string-array name="ycbcrfullrange_value_array">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="hdcp_array">
+        <item>OFF</item>
+        <item>ON</item>
+    </string-array>
+    <string-array name="hdcp_value_array">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="set_disp_3d_array">
+        <item>2D</item>
+        <item>FPK</item>
+        <item>SBS HALF</item>
+        <item>TAB</item>
+    </string-array>
+    <string-array name="set_disp_3d_value_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="display_mode_array">
+        <item>PAL</item>
+        <item>NTSC</item>
+    </string-array>
+
+</resources>

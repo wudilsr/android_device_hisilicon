@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="wrap_content"
+	android:layout_height="wrap_content" android:gravity="center_vertical">
+	<TextView android:id="@+id/text" android:layout_width="wrap_content"
+		android:layout_height="42dip" android:textColor="@color/white"
+		android:textSize="@dimen/text_size" android:layout_toRightOf="@id/image_Icon"
+		android:layout_marginLeft="10dip" android:gravity="center_vertical">
+	</TextView>
+	<CheckBox android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_alignParentRight="true"
+		android:focusable="false" android:id="@+id/mycheck" />
+</RelativeLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+<TextView
+	android:id="@+id/network_upgrade_storage_prompt"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="@string/network_upgrade_storage_prompt"
+	/>
+
+<ListView
+	android:id="@+id/network_upgrade_storage_list"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:choiceMode="singleChoice"
+	/>
+
+</LinearLayout>

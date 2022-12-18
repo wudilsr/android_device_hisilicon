@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout1" android:layout_height="match_parent" android:orientation="vertical" android:padding="20dp">
+         <TextView
+            android:id="@+id/textView1"
+            android:text="@string/dlna_title"
+            android:layout_width="wrap_content"
+            android:textSize="26dip"
+            android:layout_height="wrap_content" android:focusable="false" android:layout_gravity="center_vertical|center_horizontal" android:gravity="center_vertical|center_horizontal">
+         </TextView>
+        <ListView android:layout_width="match_parent" android:id="@+id/list_view" android:layout_height="wrap_content" android:layout_weight="3"></ListView>
+        <Button android:id="@+id/addButton" android:text="@string/dirAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/upnp_button_status" android:textColor="@color/white"></Button>
+    </LinearLayout>
+</LinearLayout>
