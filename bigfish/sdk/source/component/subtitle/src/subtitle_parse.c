@@ -24,6 +24,7 @@
 #define SUBT_REGN_IN_PAGE_NUM       10
 #define SUBT_OBJ_NUM_IN_REGN_MAX    50
 #define SUBT_CLUT_IN_PAGE_MAX       (SUBT_REGN_IN_PAGE_NUM)
+#define SUBT_REGION_MAX_AREA        (0xFFE001) //4095 * 4095
 
 
 /* Ref[Subtitling system.pdf], section 7.2 table 2, for segment type*/
@@ -48,7 +49,7 @@ typedef struct tagSUBT_COLOR_S
     HI_U8 u8Green;
     HI_U8 u8Red;
     HI_U8 u8Alpha;
-}SUBT_COLOR_S;
+} SUBT_COLOR_S;
 
 
 /* Subtitle object,  Object info in Region */
@@ -60,7 +61,7 @@ typedef struct tagSUBT_OBJECT_INFO_IN_REGION_S
     HI_U16          u16ObjectTop;  /* relative to the associated region */
     HI_U8           u8FrontClr;
     HI_U8           u8BackClr;
-}SUBT_OBJECT_INFO_IN_REGION_S;
+} SUBT_OBJECT_INFO_IN_REGION_S;
 
 
 typedef struct tagSUBT_SHOW_REGION_S
@@ -84,8 +85,8 @@ typedef struct tagSUBT_SHOW_REGION_S
     HI_U8  u8FrontClr;
     HI_U8  u8BackClr;
 
-    struct tagSUBT_SHOW_REGION_S *pstNextRegion;
-}SUBT_SHOW_REGION_S;
+    struct tagSUBT_SHOW_REGION_S* pstNextRegion;
+} SUBT_SHOW_REGION_S;
 
 
 /* Regin info in page */
@@ -95,7 +96,7 @@ typedef struct tagSUBT_REGION_INFO_IN_PAGE_S
     HI_U16  u16RegionLeft;
     HI_U16  u16RegionTop;
     HI_U8   u8InPageVer;
-}SUBT_REGION_INFO_IN_PAGE_S;
+} SUBT_REGION_INFO_IN_PAGE_S;
 
 /* all info in region */
 typedef struct tagSUBT_ALL_INFO_IN_REGION_S
@@ -110,7 +111,7 @@ typedef struct tagSUBT_ALL_INFO_IN_REGION_S
     HI_U8  u8BackClr;            /* background colour */
     HI_U8  u8ObjectNum;
     SUBT_OBJECT_INFO_IN_REGION_S stObjectInfo[SUBT_OBJ_NUM_IN_REGN_MAX];
-}SUBT_ALL_INFO_IN_REGION_S;
+} SUBT_ALL_INFO_IN_REGION_S;
 
 
 typedef struct tagSUBT_REFERING_REGION_S
@@ -118,11 +119,11 @@ typedef struct tagSUBT_REFERING_REGION_S
     HI_U8     u8RegionDepth;
     HI_U16    u16RegionWidth;
     HI_U16    u16RegionHeight;
-    HI_U8    *pu8RegionPixel;
+    HI_U8*    pu8RegionPixel;
     HI_U16    u16ObjVerPos;
     HI_U16    u16ObjHorPos;
-    HI_U8    *pu8ObjPixelWrite;
-}SUBT_REFERING_REGION_S;
+    HI_U8*    pu8ObjPixelWrite;
+} SUBT_REFERING_REGION_S;
 
 typedef struct tagSUBT_DISPLAY_DEFINITION_S
 {
@@ -136,13 +137,13 @@ typedef struct tagSUBT_DISPLAY_DEFINITION_S
     HI_U16 u16DisplayWindowVerticalPositionMaximum;
     HI_U16 u16PageID;
 
-}SUBT_DISPLAY_DEFINITION_S;
+} SUBT_DISPLAY_DEFINITION_S;
 
 typedef struct tagSUBT_DISPARITY_SHIFT_DATA_S
 {
     HI_U8 u8IntervalCount;
     HI_U8 u8DisparityShiftUpdateIntegerPart;
-}SUBT_DISPARITY_SHIFT_DATA_S;
+} SUBT_DISPARITY_SHIFT_DATA_S;
 
 typedef struct tagSUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S
 {
@@ -151,7 +152,7 @@ typedef struct tagSUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S
     HI_U32 u32IntervalDuration;
     SUBT_DISPARITY_SHIFT_DATA_S stDisparityShiftData[SUBT_SHIFT_NUM];
 
-}SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S;
+} SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S;
 
 typedef struct tagSUBT_DISPARITY_SUBREGION_DATA_S
 {
@@ -160,7 +161,7 @@ typedef struct tagSUBT_DISPARITY_SUBREGION_DATA_S
     HI_U8  u8SubregionDisparityShiftIntegerPart;
     HI_U8  u8SubregionDisparityShiftFractionalPart;
     SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S stDisparityShiftUpdateSequence;
-}SUBT_DISPARITY_SUBREGION_DATA_S;
+} SUBT_DISPARITY_SUBREGION_DATA_S;
 
 typedef struct tagSUBT_DISPARITY_S
 {
@@ -168,7 +169,7 @@ typedef struct tagSUBT_DISPARITY_S
     HI_U8 u8DisparityShiftUpdateSequenceRegionFlag;
     HI_U8 u8NumberOfSubregionsMinus1;
     SUBT_DISPARITY_SUBREGION_DATA_S stDisparitySubregionData[SUBT_SUBREGIONDATA_NUM];
-}SUBT_DISPARITY_S;
+} SUBT_DISPARITY_S;
 
 typedef struct tagSUBT_DISPARITY_SIGNALLING_SEGMENT_S
 {
@@ -177,7 +178,7 @@ typedef struct tagSUBT_DISPARITY_SIGNALLING_SEGMENT_S
     HI_U8 u8page_default_disparity_shift;
     SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S stDisparityShiftUpdateSequence;
     SUBT_DISPARITY_S stDisparity[SUBT_DISPARITY_NUM];
-}SUBT_DISPARITY_SIGNALLING_SEGMENT_S;
+} SUBT_DISPARITY_SIGNALLING_SEGMENT_S;
 
 /* subtitle segment*/
 typedef struct tagSUBT_SEGMENT_S
@@ -187,7 +188,7 @@ typedef struct tagSUBT_SEGMENT_S
     HI_U8*   pu8SegmentData;
 
     struct tagSUBT_SEGMENT_S* pstNext;
-}SUBT_SEGMENT_S;
+} SUBT_SEGMENT_S;
 
 typedef struct tagSUBT_CLUT_S
 {
@@ -211,13 +212,13 @@ typedef struct tagSUBT_PAGE_PARAM_S
     SUBT_SHOW_REGION_S*         pstShowRegion;
     SUBT_DISPLAY_DEFINITION_S   stDisplayDef;
     SUBT_DISPARITY_SIGNALLING_SEGMENT_S stSignallingSegment;
-}SUBT_PAGE_PARAM_S;
+} SUBT_PAGE_PARAM_S;
 
 typedef struct tagSUBT_PARSE_INFO_S
 {
     SUBT_PAGE_PARAM_S stPageParam;
 
-    HI_U8 *pu8RegionBuffer;
+    HI_U8* pu8RegionBuffer;
     HI_U32 u32RegionBufferLen;
 
     HI_U8* pu8RegionShowBuf;
@@ -225,27 +226,39 @@ typedef struct tagSUBT_PARSE_INFO_S
 
     SUBT_DATAPARSE_CALLBACK_FN pfnCallback;
     HI_U32 u32UserData;
-}SUBT_PARSE_INFO_S;
+} SUBT_PARSE_INFO_S;
 
 
-static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S *pstParseInfo);
-static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S *pstParseInfo, SUBT_SEGMENT_S *pstSegment,SUBT_REGION_INFO_IN_PAGE_S *pstRegion,HI_U8 *pu8RegionNum);
-static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S *pstParseInfo, SUBT_SEGMENT_S *pstSegment, SUBT_ALL_INFO_IN_REGION_S *pstRegionInfo);
-static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S *pstParseInfo, SUBT_ALL_INFO_IN_REGION_S *pstRegion,SUBT_SEGMENT_S *pstSegment,SUBT_OBJECT_INFO_IN_REGION_S *pstObjectInfoInRegion);
-static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo);
+typedef struct tagSUBT_PIXELBLOCK_INFO_S
+{
+    HI_U8* pu8SegmentData;
+    SUBT_REFERING_REGION_S* pstReferingRegion;
+
+    HI_U16 u16BlockLen;
+    HI_U16 u16ProcessLen;
+    HI_U16 u16NumLine;
+} SUBT_PIXELBLOCK_INFO_S;
+
+
+
+static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S* pstParseInfo);
+static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment, SUBT_REGION_INFO_IN_PAGE_S* pstRegion, HI_U8* pu8RegionNum);
+static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment);
+static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_ALL_INFO_IN_REGION_S* pstRegion, SUBT_SEGMENT_S* pstSegment, SUBT_OBJECT_INFO_IN_REGION_S* pstObjectInfoInRegion);
+static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S* pstParseInfo);
 
 
 static  const SUBT_COLOR_S s_2BitDefaultCLUT[] =
 {
-    {0x00,0x00,0x00,0xff},
-    {0xff,0xff,0xff,0x00},
-    {0x00,0x00,0x00,0x00},
-    {0x80,0x80,0x80,0x00}
+    {0x00, 0x00, 0x00, 0xff},
+    {0xff, 0xff, 0xff, 0x00},
+    {0x00, 0x00, 0x00, 0x00},
+    {0x80, 0x80, 0x80, 0x00}
 };
 
 static  const SUBT_COLOR_S s_4BitDefaultCLUT[] =
 {
-    {0x0, 0x0, 0x00, 0xff}, {0xff, 0x0, 0x00, 0x0}, {0x0, 0xff, 0x00, 0x0}, {0xff, 0xff, 0x00, 0x0},
+    {0x0, 0x0, 0x00, 0x0 }, {0xff, 0x0, 0x00, 0x0}, {0x0, 0xff, 0x00, 0x0}, {0xff, 0xff, 0x00, 0x0},
     {0x0, 0x0, 0xff, 0x0 }, {0xff, 0x0, 0xff, 0x0}, {0x0, 0xff, 0xff, 0x0}, {0xff, 0xff, 0xff, 0x0},
     {0x0, 0x0, 0x00, 0x0 }, {0x80, 0x0, 0x00, 0x0}, {0x0, 0x80, 0x00, 0x0}, {0x80, 0x80, 0x00, 0x0},
     {0x0, 0x0, 0x80, 0x0 }, {0x80, 0x0, 0x80, 0x0}, {0x0, 0x80, 0x80, 0x0}, {0x80, 0x80, 0x80, 0x0},
@@ -322,8 +335,13 @@ static  const SUBT_COLOR_S s_8BitDefaultCLUT[] =
 
 static HI_U32 YUV2RGB(HI_U8 Y, HI_U8 Cr, HI_U8 Cb)
 {
-    HI_S16 R, G, B;
-    HI_S16 C, D, E;
+    HI_S16 R = 0;
+    HI_S16 G = 0;
+    HI_S16 B = 0;
+
+    HI_S16 C = 0;
+    HI_S16 D = 0;
+    HI_S16 E = 0;
 
     C = Y - 16;   //Y
     D = Cr - 128; //U
@@ -370,15 +388,15 @@ static HI_U32 YUV2RGB(HI_U8 Y, HI_U8 Cr, HI_U8 Cb)
 /*
  * Just only copy subtitling segment data from PES
  */
-static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *pu8SegmentDataSrc , HI_U32 u32DataLen, HI_U16 u16PageID, HI_U16 u16AncillaryID)
+static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8* pu8SegmentDataSrc , HI_U32 u32DataLen, HI_U16 u16PageID, HI_U16 u16AncillaryID)
 {
-    HI_U8 *pu8SegtData = pu8SegmentDataSrc;
+    HI_U8* pu8SegtData = pu8SegmentDataSrc;
     HI_U32 u32ProcessedLen = 0;
     HI_U16 u16ParsedPageId = 0;
-    SUBT_SEGMENT_S *pstSegment = NULL;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    SUBT_SEGMENT_S* pstSegment = NULL;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
-    pstSegment = pstCurPage->astSegment;    
+    pstSegment = pstCurPage->astSegment;
 
     if (pstSegment == NULL)
     {
@@ -386,6 +404,7 @@ static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *p
 
         return HI_FAILURE;
     }
+
     pstSegment->u16DataLength = 0;
 
     /* PES_data_field() {
@@ -399,7 +418,7 @@ static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *p
      */
     while ( pstSegment && ((u32ProcessedLen + 6) < u32DataLen) )
     {
-        if(*pu8SegtData == 0x0f)//sync_byte
+        if (*pu8SegtData == 0x0f) //sync_byte
         {
             /*
                     * subtitle_segment()
@@ -416,14 +435,15 @@ static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *p
 
             pstSegment->u8SegmentType = *pu8SegtData; /* segment_type */
 
-            u16ParsedPageId = (pu8SegtData[1]<<8)|pu8SegtData[2]; /* page id */
+            u16ParsedPageId = (pu8SegtData[1] << 8) | pu8SegtData[2]; /* page id */
 
             pu8SegtData += 3; /*skip segment type and page id, in total, 3 bytes */
 
-            pstSegment->u16DataLength = (pu8SegtData[0]<<8)|pu8SegtData[1];
+            pstSegment->u16DataLength = (pu8SegtData[0] << 8) | pu8SegtData[1];
 
             u32ProcessedLen += pstSegment->u16DataLength + 6;
-            if(u32ProcessedLen > u32DataLen)
+
+            if (u32ProcessedLen > u32DataLen)
             {
                 HI_ERR_SUBT("Subtitle segment is wrong, throw it!!!\n");
                 pstSegment->u16DataLength = 0;
@@ -446,10 +466,10 @@ static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *p
                      * All other values reserved for future use
                      */
             /*just only deal with requesting data, and the type should be in th pointed range */
-            if( (u16ParsedPageId == u16PageID || u16AncillaryID == u16ParsedPageId)
-                && ( ( (pstSegment->u8SegmentType >= SUBT_PAGE_SEGMENT) && (pstSegment->u8SegmentType <= SUBT_DISPARITY_SIGNALLING_SEGMENT) )
-                || (pstSegment->u8SegmentType == SUBT_END_SEGMENT)
-                || (pstSegment->u8SegmentType == SUBT_STUFFING_SEGMENT) ) )
+            if ( (u16ParsedPageId == u16PageID || u16AncillaryID == u16ParsedPageId)
+                 && ( ( (pstSegment->u8SegmentType >= SUBT_PAGE_SEGMENT) && (pstSegment->u8SegmentType <= SUBT_DISPARITY_SIGNALLING_SEGMENT) )
+                      || (pstSegment->u8SegmentType == SUBT_END_SEGMENT)
+                      || (pstSegment->u8SegmentType == SUBT_STUFFING_SEGMENT) ) )
             {
                 pstSegment->pu8SegmentData = pu8SegtData;
 
@@ -487,8 +507,8 @@ static HI_S32 SUBT_Parse_CreateSegment(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8 *p
 /* Iterate to the last valid region data */
 static SUBT_SHOW_REGION_S* SUBT_Parse_GetCurPageLastRegion(SUBT_PARSE_INFO_S* pstParseInfo)
 {
-    SUBT_SHOW_REGION_S * pstLastRegion = NULL;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    SUBT_SHOW_REGION_S* pstLastRegion = NULL;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
     pstLastRegion = pstCurPage->pstShowRegion;
 
@@ -500,12 +520,13 @@ static SUBT_SHOW_REGION_S* SUBT_Parse_GetCurPageLastRegion(SUBT_PARSE_INFO_S* ps
     return pstLastRegion;
 }
 
-static HI_S32 SUBT_Parse_CreateShowRegion(SUBT_PARSE_INFO_S* pstParseInfo, HI_U16 u16Left, HI_U16 u16Top, SUBT_ALL_INFO_IN_REGION_S *pRegion, HI_U8 u8Index)
+static HI_S32 SUBT_Parse_CreateShowRegion(SUBT_PARSE_INFO_S* pstParseInfo, HI_U16 u16Left, HI_U16 u16Top, SUBT_ALL_INFO_IN_REGION_S* pRegion)
 {
     HI_U32 u32Len = 0;
-    SUBT_SHOW_REGION_S * pstLastRegion = NULL;
+    SUBT_SHOW_REGION_S* pstLastRegion = NULL;
+    HI_U32 u32Area = 0;
 
-    if(pstParseInfo == NULL || pRegion == NULL)
+    if (pstParseInfo == NULL || pRegion == NULL)
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
@@ -525,36 +546,50 @@ static HI_S32 SUBT_Parse_CreateShowRegion(SUBT_PARSE_INFO_S* pstParseInfo, HI_U1
 
         pstLastRegion->u8ClutId = pRegion->u8ClutId;
         pstLastRegion->u8RegionDepth = pRegion->u8RegionDepth;
-        switch(pRegion->u8RegionDepth)
+
+        switch (pRegion->u8RegionDepth)
         {
             case 2:
                 pstLastRegion->pvRegionClut = pstParseInfo->stPageParam.stDefaultClut._2BitCLUT;
                 pstLastRegion->u16RegionClutLen = CLUT_BIT_4;
                 break;
+
             case 4:
                 pstLastRegion->pvRegionClut = pstParseInfo->stPageParam.stDefaultClut._4BitCLUT;
                 pstLastRegion->u16RegionClutLen = CLUT_BIT_16;
                 break;
+
             default:
                 pstLastRegion->pvRegionClut = pstParseInfo->stPageParam.stDefaultClut._8BitCLUT;
                 pstLastRegion->u16RegionClutLen = CLUT_BIT_256;
                 break;
         }
 
-        u32Len = (sizeof(SUBT_SHOW_REGION_S) +3 ) & (~3);
+        u32Len = (sizeof(SUBT_SHOW_REGION_S) + 3 ) & (~3);
         pstLastRegion->pu8ShowData = (HI_U8*)pstLastRegion + u32Len;
-        u32Len = (pstLastRegion->u16Width * pstLastRegion->u16Heigth * sizeof(HI_U8) + 3) & (~3);
 
-        if((HI_U32)(pstLastRegion->pu8ShowData + u32Len - pstParseInfo->pu8RegionBuffer) <= pstParseInfo->u32RegionBufferLen)
+        u32Area = pstLastRegion->u16Width * pstLastRegion->u16Heigth;
+
+        if (u32Area > SUBT_REGION_MAX_AREA)
         {
-            if(pRegion->u8RegionFillFlag)
+            HI_ERR_SUBT("Region error: w:h = [ %d, %d]!!\n", pstLastRegion->u16Width, pstLastRegion->u16Heigth);
+
+            return HI_FAILURE;
+        }
+
+        u32Len = (u32Area * sizeof(HI_U8) + 3) & (~3);
+
+        if ((HI_U32)(pstLastRegion->pu8ShowData + u32Len - pstParseInfo->pu8RegionBuffer) <= pstParseInfo->u32RegionBufferLen)
+        {
+            if (pRegion->u8RegionFillFlag)
             {
-                memset(pstLastRegion->pu8ShowData,pRegion->u8BackClr, u32Len);
+                memset(pstLastRegion->pu8ShowData, pRegion->u8BackClr, u32Len);
             }
             else
             {
                 memset(pstLastRegion->pu8ShowData, 0, u32Len);
             }
+
             pstLastRegion->pstNextRegion = NULL;
             pstLastRegion->u16CharacterNum = 0;
         }
@@ -570,22 +605,23 @@ static HI_S32 SUBT_Parse_CreateShowRegion(SUBT_PARSE_INFO_S* pstParseInfo, HI_U1
     return HI_SUCCESS;
 }
 
-static HI_S32 SUBT_Parse_SetNextRegionAddr(SUBT_PARSE_INFO_S * pstParseInfo)
+static HI_S32 SUBT_Parse_SetNextRegionAddr(SUBT_PARSE_INFO_S* pstParseInfo)
 {
-    SUBT_SHOW_REGION_S *pstLastRegion = NULL;
+    SUBT_SHOW_REGION_S* pstLastRegion = NULL;
     HI_U32 u32Len = 0;
-    
+
     pstLastRegion = SUBT_Parse_GetCurPageLastRegion(pstParseInfo);
+
     if (NULL == pstLastRegion)
     {
         return HI_FAILURE;
     }
-    
-    u32Len = (pstLastRegion->u16Width * pstLastRegion->u16Heigth *sizeof(HI_U8) + 3) & (~3);
 
-    pstLastRegion->pstNextRegion = (SUBT_SHOW_REGION_S *)((HI_U32)pstLastRegion->pu8ShowData + u32Len);
+    u32Len = (pstLastRegion->u16Width * pstLastRegion->u16Heigth * sizeof(HI_U8) + 3) & (~3);
 
-    if((HI_U32)(pstLastRegion->pstNextRegion)-(HI_U32)pstParseInfo->pu8RegionBuffer <= pstParseInfo->u32RegionBufferLen)
+    pstLastRegion->pstNextRegion = (SUBT_SHOW_REGION_S*)((size_t)pstLastRegion->pu8ShowData + u32Len);
+
+    if ((size_t)(pstLastRegion->pstNextRegion) - (size_t)pstParseInfo->pu8RegionBuffer <= pstParseInfo->u32RegionBufferLen)
     {
         /* clear the show region */
         memset(pstLastRegion->pstNextRegion, 0, sizeof(SUBT_SHOW_REGION_S));
@@ -596,7 +632,7 @@ static HI_S32 SUBT_Parse_SetNextRegionAddr(SUBT_PARSE_INFO_S * pstParseInfo)
         pstLastRegion->pstNextRegion = NULL;
 
         HI_WARN_SUBT("Region buffer is not enough, Used size is = %d, Max size is %d!!!!!\n"
-                        ,(HI_U32)(pstLastRegion->pstNextRegion)-(HI_U32)pstParseInfo->pu8RegionBuffer, pstParseInfo->u32RegionBufferLen);
+                     , (size_t)(pstLastRegion->pstNextRegion) - (size_t)pstParseInfo->pu8RegionBuffer, pstParseInfo->u32RegionBufferLen);
 
         return HI_FAILURE;
     }
@@ -604,7 +640,7 @@ static HI_S32 SUBT_Parse_SetNextRegionAddr(SUBT_PARSE_INFO_S * pstParseInfo)
     return HI_SUCCESS;
 }
 
-static HI_U8 ReadNext2BitPixel(HI_U8 **ppu8SegmentDataSrc, HI_U16 *pu16ProcessedLen, HI_U8 u8ResetFlag)
+static HI_U8 ReadNext2BitPixel(HI_U8** ppu8SegmentDataSrc, HI_U16* pu16ProcessedLen, HI_U8 u8ResetFlag)
 {
     static HI_U8 u8Get2BitNum = 0;
     static HI_U8 u8Temp = 0;
@@ -612,7 +648,7 @@ static HI_U8 ReadNext2BitPixel(HI_U8 **ppu8SegmentDataSrc, HI_U16 *pu16Processed
 
     if (u8ResetFlag)
     {
-        if(u8Get2BitNum)
+        if (u8Get2BitNum)
         {
             u8Get2BitNum = 0;
         }
@@ -622,35 +658,39 @@ static HI_U8 ReadNext2BitPixel(HI_U8 **ppu8SegmentDataSrc, HI_U16 *pu16Processed
 
     switch (u8Get2BitNum)
     {
-    case  0:
-        u8Temp = **ppu8SegmentDataSrc; /* get the first byte */
-        *ppu8SegmentDataSrc += 1;
-        *pu16ProcessedLen += 1;
-        u8Result  = u8Temp >> 6; /* Just only 2-bit */
-        u8Get2BitNum = 1;
-        break;
-    case 1:
-        u8Result  = ((u8Temp & 0x30) >> 4);
-        u8Get2BitNum = 2;
-        break;
-    case 2:
-        u8Result  = ((u8Temp & 0x0c) >> 2);
-        u8Get2BitNum = 3;
-        break;
-    case 3:
-        u8Result  = (u8Temp & 0x03);
-        u8Get2BitNum = 0;
-        break;
-    default:
-        break;
+        case  0:
+            u8Temp = **ppu8SegmentDataSrc; /* get the first byte */
+            *ppu8SegmentDataSrc += 1;
+            *pu16ProcessedLen += 1;
+            u8Result  = u8Temp >> 6; /* Just only 2-bit */
+            u8Get2BitNum = 1;
+            break;
+
+        case 1:
+            u8Result  = ((u8Temp & 0x30) >> 4);
+            u8Get2BitNum = 2;
+            break;
+
+        case 2:
+            u8Result  = ((u8Temp & 0x0c) >> 2);
+            u8Get2BitNum = 3;
+            break;
+
+        case 3:
+            u8Result  = (u8Temp & 0x03);
+            u8Get2BitNum = 0;
+            break;
+
+        default:
+            break;
     }
 
     return (u8Result);
 }
 
-static HI_U8 ReadNext4BitPixel (HI_U8 **ppDataSrc,
-                     HI_U16 *      pProcessedLen,
-                     HI_U8         chResetFlag)
+static HI_U8 ReadNext4BitPixel (HI_U8** ppDataSrc,
+                                HI_U16*       pProcessedLen,
+                                HI_U8         chResetFlag)
 {
     static HI_U8 chGet4BitNum = 0;
     static HI_U8 chTemp = 0;
@@ -658,10 +698,11 @@ static HI_U8 ReadNext4BitPixel (HI_U8 **ppDataSrc,
 
     if (chResetFlag)
     {
-        if(chGet4BitNum)
+        if (chGet4BitNum)
         {
             chGet4BitNum = 0;
         }
+
         return (0);
     }
 
@@ -683,7 +724,7 @@ static HI_U8 ReadNext4BitPixel (HI_U8 **ppDataSrc,
 }
 
 /* ref[Subtitling system.pdf] page28, section 7.2.4.2 */
-static HI_VOID Decode2Pixel (HI_U8 **ppu8SegmentDataSrc, HI_U8 *pu8ColorEntry, HI_U16 *pu16NumPixel, HI_U16 *pu16ProcessedLen)
+static HI_VOID Decode2Pixel (HI_U8** ppu8SegmentDataSrc, HI_U8* pu8ColorEntry, HI_U16* pu16NumPixel, HI_U16* pu16ProcessedLen)
 {
     HI_U8 u82BitCode = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);
 
@@ -696,61 +737,70 @@ static HI_VOID Decode2Pixel (HI_U8 **ppu8SegmentDataSrc, HI_U8 *pu8ColorEntry, H
     else
     {
         u82BitCode = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);
-        switch(u82BitCode)
+
+        switch (u82BitCode)
         {
             case 1://switch_1 == '0',switch_2 == '1',it signals that one pixel shall be set to pseudo-colour (entry) '00'.
                 /*  00 01  */
                 *pu16NumPixel   = 1;
                 *pu8ColorEntry = 0x00;
                 break;
+
             case 2://switch_1 == '1'
             case 3:
                 /*  00 1L LL CC  */
                 *pu16NumPixel = ((u82BitCode & 1) << 2) +
-                            ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 3;
+                                ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 3;
                 *pu8ColorEntry = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);
                 break;
+
             default://switch_1 == '0',switch_2 == '0'
                 u82BitCode = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);//switch 3
-                switch(u82BitCode)
+
+                switch (u82BitCode)
                 {
                     case 1://switch_3 == '01'
                         /*  00 00 01  */
                         *pu16NumPixel   = 2;
                         *pu8ColorEntry = 0;
                         break;
+
                     case 2://switch_3 == '10'
                         /*  00 00 10 LL LL CC  */
                         *pu16NumPixel = (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 2) +
-                                    ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 12;
+                                        ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 12;
                         *pu8ColorEntry = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);
                         break;
+
                     case 3://switch_3 == '11'
                         /*  00 00 11 LL LL LL LL CC  */
                         *pu16NumPixel = (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 6) +
-                                    (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 4) +
-                                    (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 2) +
-                                    ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 29;
+                                        (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 4) +
+                                        (ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) << 2) +
+                                        ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0) + 29;
                         *pu8ColorEntry = ReadNext2BitPixel(ppu8SegmentDataSrc, pu16ProcessedLen, 0);
                         break;
+
                     default://end of 2-bit/pixel_code_string
                         /*  00 00 00 case */
                         *pu16NumPixel   = 0;
                         *pu8ColorEntry = 0;
                         break;
                 }
+
                 break;
         }
     }
 }
 
-static HI_VOID Decode4Pixel (HI_U8 **ppDataSrc,
-                               HI_U8 *ColorEntry, HI_U16 *NumPixel,
-                               HI_U16 *pProcessedLen)
+static HI_VOID Decode4Pixel (HI_U8** ppDataSrc,
+                             HI_U8* ColorEntry, HI_U16* NumPixel,
+                             HI_U16* pProcessedLen)
 {
     HI_U8 ch4BitCode = 0;
 
     ch4BitCode = ReadNext4BitPixel(ppDataSrc, pProcessedLen, 0);
+
     if (ch4BitCode > 0x00)
     {
         *NumPixel   = 1;
@@ -801,9 +851,9 @@ static HI_VOID Decode4Pixel (HI_U8 **ppDataSrc,
     }
 }
 
-static HI_VOID Decode8Pixel (HI_U8 **ppu8SegmentDataSrc,
-                               HI_U8 *pu8ColorEntry, HI_U16 *pu16NumPixel,
-                               HI_U16 *pu16ProcessedLen)
+static HI_VOID Decode8Pixel (HI_U8** ppu8SegmentDataSrc,
+                             HI_U8* pu8ColorEntry, HI_U16* pu16NumPixel,
+                             HI_U16* pu16ProcessedLen)
 {
     HI_U8 u8BitCode = 0;
 
@@ -839,28 +889,307 @@ static HI_VOID Decode8Pixel (HI_U8 **ppu8SegmentDataSrc,
             *pu8ColorEntry = **ppu8SegmentDataSrc;
             *ppu8SegmentDataSrc += 1;
             *pu16ProcessedLen += 1;
-         }
+        }
     }
 }
 
-/* ref[Subtitling system.pdf] page27 section 7.2.4.1 */
-static HI_VOID SUBT_Parse_PixelBlockDecode(HI_U8 *pu8SegmentDataSrc, SUBT_REFERING_REGION_S *pstReferingRegion, HI_U16 u16BlockLen)
+
+static HI_VOID SUBT_Parse_2BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo,
+        HI_U8* au8TwoToFourBitsMapTable,
+        HI_U8* au8TwoToEightBitsMapTable)
 {
-    HI_U8    u8Temp = 0;
-    HI_U8    cont = 0;
-
-    HI_U8    u8DataType = 0;
-
-    HI_U8    ColorEntry = 0;
-    HI_U8    u8LastColorEntry = 0;
+    HI_U8    u8ColorEntry = 0;
     HI_U16   u16NumPixel = 0;
-    HI_U16   wNumLine = 0;
+    size_t   nEndAddLine = 0;
+    HI_U8    u8LastColorEntry = 0;
     HI_U16   u16PixelAdjustNum = 0;
 
-    HI_U16   u16ProcessLen = 0;
-    HI_U32   nEndAddLine = 0;
 
-    HI_U8  *pu8SegmentData = pu8SegmentDataSrc;
+    HI_U16 u16BlockLen = pstPixelBlockInfo->u16BlockLen;
+    HI_U16 u16NumLine = pstPixelBlockInfo->u16NumLine;
+    HI_U16 u16ProcessLen = pstPixelBlockInfo->u16ProcessLen;
+    SUBT_REFERING_REGION_S* pstReferingRegion = pstPixelBlockInfo->pstReferingRegion;
+
+    do
+    {
+        Decode2Pixel(&pstPixelBlockInfo->pu8SegmentData, &u8ColorEntry, &u16NumPixel, &u16ProcessLen);
+
+        if (u16NumPixel != 0)
+        {
+            switch (pstReferingRegion->u8RegionDepth)
+            {
+                case 4 :
+                    u8ColorEntry = au8TwoToFourBitsMapTable[u8ColorEntry];
+                    break;
+
+                case 8 :
+                    u8ColorEntry = au8TwoToEightBitsMapTable[u8ColorEntry];
+                    break;
+
+                default :
+                    break;
+            }
+
+
+            nEndAddLine = (size_t)pstReferingRegion->pu8RegionPixel + (pstReferingRegion->u16RegionWidth * (pstReferingRegion->u16ObjVerPos + u16NumLine + 1));
+
+            if ((size_t)pstReferingRegion->pu8ObjPixelWrite + u16NumPixel > nEndAddLine) //protect when object is over region
+            {
+                u16NumPixel = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+                HI_WARN_SUBT("\nobject width is over range\n");
+                memset((HI_U8*)(nEndAddLine - pstReferingRegion->u16RegionWidth), 0, pstReferingRegion->u16RegionWidth); //\2  TODO: when data wrong,clear data buffer
+            }
+
+            if (u16NumPixel > 0)
+            {
+                memset(pstReferingRegion->pu8ObjPixelWrite, u8ColorEntry, u16NumPixel);
+
+                (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
+
+                u8LastColorEntry = u8ColorEntry;
+            }
+        }
+
+    }
+    while ((u16NumPixel != 0) && (u16ProcessLen < u16BlockLen));
+
+    u16PixelAdjustNum = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+
+    if (u16PixelAdjustNum > SUBT_REGION_LINE_PIXEL_ADJUST_NUM)
+    {
+        u16PixelAdjustNum = SUBT_REGION_LINE_PIXEL_ADJUST_NUM;
+    }
+
+    memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
+
+    (HI_VOID)ReadNext2BitPixel(&pstPixelBlockInfo->pu8SegmentData, &u16ProcessLen, 1);//reset not get data
+
+    pstPixelBlockInfo->u16ProcessLen = u16ProcessLen;
+
+    return;
+}
+
+
+
+static HI_VOID SUBT_Parse_4BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo, HI_U8* au8FourToEightBitsMapTable)
+{
+    HI_U8    u8ColorEntry = 0;
+    HI_U16   u16NumPixel = 0;
+    size_t   nEndAddLine = 0;
+    HI_U8    u8LastColorEntry = 0;
+    HI_U16   u16PixelAdjustNum = 0;
+
+
+    HI_U16 u16BlockLen = pstPixelBlockInfo->u16BlockLen;
+    HI_U16 u16NumLine = pstPixelBlockInfo->u16NumLine;
+    HI_U16 u16ProcessLen = pstPixelBlockInfo->u16ProcessLen;
+    SUBT_REFERING_REGION_S* pstReferingRegion = pstPixelBlockInfo->pstReferingRegion;
+
+    do
+    {
+        Decode4Pixel(&pstPixelBlockInfo->pu8SegmentData, &u8ColorEntry, &u16NumPixel, &u16ProcessLen);
+
+        if (u16NumPixel != 0)
+        {
+            switch (pstReferingRegion->u8RegionDepth)
+            {
+                case 2 :
+                    u8ColorEntry = ((u8ColorEntry & 0x80) >> 6) |
+                                   ((u8ColorEntry & 0x70) ? 1 : 0) ;
+                    break;
+
+                case 8 :
+                    u8ColorEntry = au8FourToEightBitsMapTable[u8ColorEntry];
+                    break;
+
+                default :
+                    break;
+            }
+
+            nEndAddLine = (size_t)pstReferingRegion->pu8RegionPixel + (pstReferingRegion->u16RegionWidth * (pstReferingRegion->u16ObjVerPos + u16NumLine + 1));
+
+            if ((size_t)pstReferingRegion->pu8ObjPixelWrite + u16NumPixel > nEndAddLine) //protect when object is over region
+            {
+                u16NumPixel = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+                HI_WARN_SUBT("\nobject width is over range\n");
+            }
+
+            if (u16NumPixel > 0)
+            {
+                memset(pstReferingRegion->pu8ObjPixelWrite, u8ColorEntry, u16NumPixel);
+
+                (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
+
+                u8LastColorEntry = u8ColorEntry;
+            }
+        }
+    }
+    while ((u16NumPixel != 0) && (u16ProcessLen < u16BlockLen));
+
+    u16PixelAdjustNum = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+
+    if (u16PixelAdjustNum > SUBT_REGION_LINE_PIXEL_ADJUST_NUM)
+    {
+        u16PixelAdjustNum = SUBT_REGION_LINE_PIXEL_ADJUST_NUM;
+    }
+
+    memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
+    (HI_VOID)ReadNext4BitPixel(&pstPixelBlockInfo->pu8SegmentData, &u16ProcessLen, 1);
+
+    pstPixelBlockInfo->u16ProcessLen = u16ProcessLen;
+
+    return;
+}
+
+
+static HI_VOID SUBT_Parse_8BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo)
+{
+    HI_U8    u8ColorEntry = 0;
+    HI_U16   u16NumPixel = 0;
+    size_t   nEndAddLine = 0;
+    HI_U8    u8LastColorEntry = 0;
+    HI_U16   u16PixelAdjustNum = 0;
+
+
+    HI_U16 u16BlockLen = pstPixelBlockInfo->u16BlockLen;
+    HI_U16 u16NumLine = pstPixelBlockInfo->u16NumLine;
+    HI_U16 u16ProcessLen = pstPixelBlockInfo->u16ProcessLen;
+    SUBT_REFERING_REGION_S* pstReferingRegion = pstPixelBlockInfo->pstReferingRegion;
+
+    do
+    {
+        Decode8Pixel(&pstPixelBlockInfo->pu8SegmentData, &u8ColorEntry, &u16NumPixel, &u16ProcessLen);
+
+        if (u16NumPixel != 0)
+        {
+            switch (pstReferingRegion->u8RegionDepth)
+            {
+                case 2 :
+                    u8ColorEntry = ((u8ColorEntry & 0x80) >> 6) |
+                                   ((u8ColorEntry & 0x70) ? 1 : 0) ;
+                    break;
+
+                case 4 :
+                    u8ColorEntry = ((u8ColorEntry & 0xf0) >> 4);
+                    break;
+
+                default :
+                    break;
+            }
+
+            nEndAddLine = (size_t)pstReferingRegion->pu8RegionPixel + (pstReferingRegion->u16RegionWidth * (pstReferingRegion->u16ObjVerPos + u16NumLine + 1));
+
+            if ((size_t)pstReferingRegion->pu8ObjPixelWrite + u16NumPixel > nEndAddLine) //protect when object is over region
+            {
+                u16NumPixel = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+                HI_WARN_SUBT("\nobject width is over range\n");
+            }
+
+            if (u16NumPixel > 0)
+            {
+
+                memset(pstReferingRegion->pu8ObjPixelWrite, u8ColorEntry, u16NumPixel);
+
+                (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
+
+                u8LastColorEntry = u8ColorEntry;
+            }
+        }
+    }
+    while ((u16NumPixel != 0) && (u16ProcessLen < u16BlockLen));
+
+    u16PixelAdjustNum = nEndAddLine - (size_t)pstReferingRegion->pu8ObjPixelWrite;
+
+    if (u16PixelAdjustNum > SUBT_REGION_LINE_PIXEL_ADJUST_NUM)
+    {
+        u16PixelAdjustNum = SUBT_REGION_LINE_PIXEL_ADJUST_NUM;
+    }
+
+    memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
+
+
+    pstPixelBlockInfo->u16ProcessLen = u16ProcessLen;
+
+    return;
+}
+
+
+static HI_VOID SUBT_Parse_2To4BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo, HI_U8* au8TwoToFourBitsMapTable)
+{
+    HI_U8 u8Count = 0;
+    HI_U16* pu16ProcessLen = &(pstPixelBlockInfo->u16ProcessLen);
+
+
+    for (u8Count = 0; u8Count < 4; u8Count++)
+    {
+        au8TwoToFourBitsMapTable[u8Count] = ReadNext4BitPixel(&pstPixelBlockInfo->pu8SegmentData, pu16ProcessLen, 0);
+    }
+
+    (HI_VOID)ReadNext4BitPixel(&pstPixelBlockInfo->pu8SegmentData, pu16ProcessLen, 1);
+
+}
+
+
+static HI_VOID SUBT_Parse_2To8BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo, HI_U8* au8TwoToEightBitsMapTable)
+{
+    HI_U8 u8Count = 0;
+    HI_U8* pu8SegmentData = pstPixelBlockInfo->pu8SegmentData;
+    HI_U16* pu16ProcessLen = &(pstPixelBlockInfo->u16ProcessLen);
+
+    for (u8Count = 0; u8Count < 4; u8Count++)
+    {
+        au8TwoToEightBitsMapTable[u8Count] = *pu8SegmentData;
+        pu8SegmentData++;
+        *pu16ProcessLen += 1;
+    }
+}
+
+
+static HI_VOID SUBT_Parse_4To8BitPixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo, HI_U8* au8FourToEightBitsMapTable)
+{
+    HI_U8 u8Count = 0;
+    HI_U8* pu8SegmentData = pstPixelBlockInfo->pu8SegmentData;
+    HI_U16* pu16ProcessLen = &(pstPixelBlockInfo->u16ProcessLen);
+
+    for (u8Count = 0; u8Count < 16; u8Count++)
+    {
+        au8FourToEightBitsMapTable[u8Count] = *pu8SegmentData;
+        pu8SegmentData++;
+        *pu16ProcessLen += 1;
+    }
+
+}
+
+static HI_VOID SUBT_Parse_EndLinePixelBlockDecode(SUBT_PIXELBLOCK_INFO_S* pstPixelBlockInfo)
+{
+    HI_U16 u16NumLine = pstPixelBlockInfo->u16NumLine;
+    SUBT_REFERING_REGION_S* pstReferingRegion = pstPixelBlockInfo->pstReferingRegion;
+
+    u16NumLine += 2;
+
+    if (u16NumLine > pstReferingRegion->u16RegionHeight)
+    {
+        u16NumLine -= 2;
+        HI_WARN_SUBT("\nobject height is over range!!\n");
+    }
+
+    pstReferingRegion->pu8ObjPixelWrite = pstReferingRegion->pu8RegionPixel +
+                                          ((pstReferingRegion->u16RegionWidth *
+                                            (pstReferingRegion->u16ObjVerPos + u16NumLine)) +
+                                           pstReferingRegion->u16ObjHorPos) ;
+
+
+    pstPixelBlockInfo->u16NumLine = u16NumLine;
+
+    return;
+}
+
+/* ref[Subtitling system.pdf] page27 section 7.2.4.1 */
+static HI_VOID SUBT_Parse_PixelBlockDecode(HI_U8* pu8SegmentDataSrc, SUBT_REFERING_REGION_S* pstReferingRegion, HI_U16 u16BlockLen)
+{
+    HI_U8  u8DataType = 0;
+    HI_U8* pu8SegmentData = pu8SegmentDataSrc;
+    SUBT_PIXELBLOCK_INFO_S stPixelBlockInfo;
 
     /* Default data from ref[Subtitling system.pdf] page36 setcion 10.4
      *
@@ -877,14 +1206,17 @@ static HI_VOID SUBT_Parse_PixelBlockDecode(HI_U8 *pu8SegmentDataSrc, SUBT_REFERI
      |        11         |        1111        |
       ----------------------------------------
      */
-    HI_U8  u8szTwoToFourBitsMapTable[4] = {0x0, 0x7, 0x8, 0xf};
+    HI_U8  au8TwoToFourBitsMapTable[4] = {0x0, 0x7, 0x8, 0xf};
 
     /* Default data from ref[Subtitling system.pdf] page36 setcion 10.5 */
-    HI_U8  u8szTwoToEightBitsMapTable[4] = {0x00, 0x77, 0x88, 0xff};
+    HI_U8  au8TwoToEightBitsMapTable[4] = {0x00, 0x77, 0x88, 0xff};
 
     /* Default data from ref[Subtitling system.pdf] page37 setcion 10.6 */
-    HI_U8  u8szFourToEightBitsMapTable[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-                                                0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff};
+    HI_U8  au8FourToEightBitsMapTable[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                                            0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+                                            };
+
+
 
     if (HI_NULL == pstReferingRegion || HI_NULL == pu8SegmentDataSrc)
     {
@@ -892,213 +1224,69 @@ static HI_VOID SUBT_Parse_PixelBlockDecode(HI_U8 *pu8SegmentDataSrc, SUBT_REFERI
         return;
     }
 
-    while(u16ProcessLen < u16BlockLen)
-    {
-        u8Temp = *pu8SegmentData; /* The first data should be data type */
-        pu8SegmentData++;
 
-        u16ProcessLen += 1;
-        u8DataType = u8Temp;
+
+    memset(&stPixelBlockInfo, 0x0, sizeof(SUBT_PIXELBLOCK_INFO_S));
+
+    stPixelBlockInfo.pu8SegmentData = pu8SegmentData;
+    stPixelBlockInfo.u16BlockLen = u16BlockLen;
+    stPixelBlockInfo.u16NumLine = 0;
+    stPixelBlockInfo.u16ProcessLen = 0;
+    stPixelBlockInfo.pstReferingRegion = pstReferingRegion;
+
+    while (stPixelBlockInfo.u16ProcessLen < u16BlockLen)
+    {
+        u8DataType = *stPixelBlockInfo.pu8SegmentData; /* The first data should be data type */
+
+        stPixelBlockInfo.pu8SegmentData++;
+        stPixelBlockInfo.u16ProcessLen += 1;
 
         switch (u8DataType)
         {
             case 0x10 : /* 2-bit/pixel code string */
             {
-                do
-                {
-                    Decode2Pixel(&pu8SegmentData, &ColorEntry,&u16NumPixel,&u16ProcessLen);
-
-                    if (u16NumPixel != 0)
-                    {
-                        switch (pstReferingRegion->u8RegionDepth)
-                        {
-                            case 4 :
-                                ColorEntry = u8szTwoToFourBitsMapTable[ColorEntry];
-                                break;
-
-                            case 8 :
-                                ColorEntry = u8szTwoToEightBitsMapTable[ColorEntry];
-                                break;
-
-                            default :
-                                break;
-                        }
-
-
-                        nEndAddLine = (HI_U32)pstReferingRegion->pu8RegionPixel + (pstReferingRegion->u16RegionWidth *(pstReferingRegion->u16ObjVerPos + wNumLine+1));
-                        if((HI_U32)pstReferingRegion->pu8ObjPixelWrite + u16NumPixel > nEndAddLine)//protect when object is over region
-                        {
-                            u16NumPixel = nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite;
-                            HI_WARN_SUBT("\nobject width is over range\n");
-                            memset((HI_U8 *)(nEndAddLine-pstReferingRegion->u16RegionWidth),0,pstReferingRegion->u16RegionWidth);//\2  TODO: when data wrong,clear data buffer
-                        }
-
-                        if (u16NumPixel > 0)
-                        {
-                            memset(pstReferingRegion->pu8ObjPixelWrite, ColorEntry, u16NumPixel);
-
-                            (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
-
-                            u8LastColorEntry = ColorEntry;
-                        }
-                    }
-
-                } while(u16NumPixel != 0 && u16ProcessLen < u16BlockLen);
-
-                u16PixelAdjustNum = ((nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite) > SUBT_REGION_LINE_PIXEL_ADJUST_NUM) ? SUBT_REGION_LINE_PIXEL_ADJUST_NUM : (nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite);
-
-                memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
-
-                u8Temp = ReadNext2BitPixel(&pu8SegmentData, &u16ProcessLen, 1);//reset not get data
-
+                SUBT_Parse_2BitPixelBlockDecode(&stPixelBlockInfo, au8TwoToFourBitsMapTable, au8TwoToEightBitsMapTable);
                 break;
             }
 
             case 0x11 : /* 4-bit/pixel code string */
             {
-                do
-                {
-                    Decode4Pixel(&pu8SegmentData, &ColorEntry,&u16NumPixel,&u16ProcessLen);
-
-                    if (u16NumPixel != 0)
-                    {
-                        switch (pstReferingRegion->u8RegionDepth)
-                        {
-                            case 2 :
-                                ColorEntry = ((ColorEntry & 0x80) >>6) |
-                                            ((ColorEntry & 0x70) ? 1 : 0) ;
-                                break;
-
-                            case 8 :
-                                ColorEntry = u8szFourToEightBitsMapTable[ColorEntry];
-                                break;
-
-                            default :
-                                break;
-                        }
-                        nEndAddLine = (HI_U32)pstReferingRegion->pu8RegionPixel+(pstReferingRegion->u16RegionWidth *(pstReferingRegion->u16ObjVerPos + wNumLine+1));
-                        if((HI_U32)pstReferingRegion->pu8ObjPixelWrite+u16NumPixel > nEndAddLine)//protect when object is over region
-                        {
-                            u16NumPixel = nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite;
-                            HI_WARN_SUBT("\nobject width is over range\n");
-                            ////TODOmemset(nEndAddLine-TmpRefReg->u16RegionWidth,0,TmpRefReg->u16RegionWidth);//2  TODO: when data wrong,clear data buffer
-                        }
-                        if (u16NumPixel > 0)
-                        {
-                            memset(pstReferingRegion->pu8ObjPixelWrite, ColorEntry, u16NumPixel);
-
-                            (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
-
-                            u8LastColorEntry = ColorEntry;
-                        }
-                    }
-                } while(u16NumPixel != 0 && u16ProcessLen < u16BlockLen);
-
-                u16PixelAdjustNum = ((nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite) > SUBT_REGION_LINE_PIXEL_ADJUST_NUM) ? SUBT_REGION_LINE_PIXEL_ADJUST_NUM : (nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite);
-
-                memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
-                u8Temp = ReadNext4BitPixel(&pu8SegmentData, &u16ProcessLen,1);
+                SUBT_Parse_4BitPixelBlockDecode(&stPixelBlockInfo, au8FourToEightBitsMapTable);
 
                 break;
             }
 
             case 0x12 : /* 8-bit/pixel code string */
             {
-                do
-                {
-                    Decode8Pixel(&pu8SegmentData, &ColorEntry,
-                                             &u16NumPixel,&u16ProcessLen);
 
-                    if (u16NumPixel != 0)
-                    {
-                        switch (pstReferingRegion->u8RegionDepth)
-                        {
-                            case 2 :
-                                ColorEntry=((ColorEntry & 0x80) >>6) |
-                                          ((ColorEntry & 0x70) ? 1 : 0) ;
-                                break;
-
-                            case 4 :
-                                ColorEntry=((ColorEntry & 0xf0) >> 4);
-                                break;
-
-                            default :
-                                break;
-                        }
-                        nEndAddLine = (HI_U32)pstReferingRegion->pu8RegionPixel+(pstReferingRegion->u16RegionWidth *(pstReferingRegion->u16ObjVerPos + wNumLine+1));
-                        if((HI_U32)pstReferingRegion->pu8ObjPixelWrite+u16NumPixel > nEndAddLine)//protect when object is over region
-                        {
-                            u16NumPixel = nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite;
-                            HI_WARN_SUBT("\nobject width is over range\n");
-                            ////TODO memset(nEndAddLine-TmpRefReg->u16RegionWidth,0,TmpRefReg->u16RegionWidth);//2  TODO: when data wrong,clear data buffer
-                        }
-                        if (u16NumPixel > 0)
-                        {
-
-                            memset(pstReferingRegion->pu8ObjPixelWrite, ColorEntry, u16NumPixel);
-
-                            (pstReferingRegion->pu8ObjPixelWrite) += u16NumPixel;
-
-                            u8LastColorEntry = ColorEntry;
-                        }
-                    }
-                } while (u16NumPixel != 0 && u16ProcessLen<u16BlockLen);
-
-                u16PixelAdjustNum = ((nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite) > SUBT_REGION_LINE_PIXEL_ADJUST_NUM) ? SUBT_REGION_LINE_PIXEL_ADJUST_NUM : (nEndAddLine - (HI_U32)pstReferingRegion->pu8ObjPixelWrite);
-
-                memset(pstReferingRegion->pu8ObjPixelWrite, u8LastColorEntry, u16PixelAdjustNum);
-
+                SUBT_Parse_8BitPixelBlockDecode(&stPixelBlockInfo);
                 break;
             }
 
             case 0x20 : /* 2_to_4-bit_map-table data */
             {
-                for (cont = 0; cont < 4; cont++)
-                {
-                    u8szTwoToFourBitsMapTable[cont] = ReadNext4BitPixel(&pu8SegmentData, &u16ProcessLen,0);
-                }
-
-                u8Temp = ReadNext4BitPixel(&pu8SegmentData, &u16ProcessLen,1);
+                SUBT_Parse_2To4BitPixelBlockDecode(&stPixelBlockInfo, au8TwoToFourBitsMapTable);
                 break;
             }
 
             case 0x21 : /* 2_to_8-bit_map-table data */
             {
-                for (cont = 0; cont < 4; cont++)
-                {
-                    u8szTwoToEightBitsMapTable[cont] = *pu8SegmentData;
-                    pu8SegmentData++;
-                    u16ProcessLen += 1;
-                }
+                SUBT_Parse_2To8BitPixelBlockDecode(&stPixelBlockInfo, au8TwoToEightBitsMapTable);
                 break;
             }
 
             case 0x22 :/* 4_to_8-bit_map-table data */
             {
-                for (cont = 0; cont < 16; cont++)
-                {
-                    u8szFourToEightBitsMapTable[cont] = *pu8SegmentData;
-                    pu8SegmentData++;
-                    u16ProcessLen += 1;
-                }
+                SUBT_Parse_4To8BitPixelBlockDecode(&stPixelBlockInfo, au8FourToEightBitsMapTable);
                 break;
             }
 
             case 0xf0 :/* End of object line code */
             {
-                wNumLine += 2;
-                if (wNumLine > pstReferingRegion->u16RegionHeight)
-                {
-                    wNumLine -= 2;
-                    HI_WARN_SUBT("\nobject height is over range!!\n");
-                }
-
-                pstReferingRegion->pu8ObjPixelWrite = pstReferingRegion->pu8RegionPixel +
-                                          ((pstReferingRegion->u16RegionWidth *
-                                           (pstReferingRegion->u16ObjVerPos + wNumLine)) +
-                                           pstReferingRegion->u16ObjHorPos) ;
+                SUBT_Parse_EndLinePixelBlockDecode(&stPixelBlockInfo);
                 break;
             }
+
             default :
             {
                 break;
@@ -1108,13 +1296,13 @@ static HI_VOID SUBT_Parse_PixelBlockDecode(HI_U8 *pu8SegmentDataSrc, SUBT_REFERI
 }
 
 /* ref[Subtitling system.pdf] page25 section 7.2.4 */
-static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_ALL_INFO_IN_REGION_S *pstRegn, HI_U16 u16ObjHorPos, HI_U16 u16ObjVerPos, HI_U8 *pu8SegmentDataSrc , HI_S32 u32SegLen )
+static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_ALL_INFO_IN_REGION_S* pstRegn, HI_U16 u16ObjHorPos, HI_U16 u16ObjVerPos, HI_U8* pu8SegmentDataSrc , HI_S32 u32SegLen )
 {
-    HI_U8   *pu8SegmentData = pu8SegmentDataSrc;
-    HI_U32   nOffset = 0;
-    HI_U8   *pTopFieldObjStart = NULL;
-    HI_U8   *pBottomFieldObjStart = NULL;
-    HI_U8   *pu8RegionPixels = NULL;
+    HI_U8*   pu8SegmentData = pu8SegmentDataSrc;
+    size_t   nOffset = 0;
+    HI_U8*   pTopFieldObjStart = NULL;
+    HI_U8*   pBottomFieldObjStart = NULL;
+    HI_U8*   pu8RegionPixels = NULL;
 
     HI_U16   u16TopFieldObjVerPos = 0;
     HI_U16   u16BottomFieldObjVerPos = 0;
@@ -1123,17 +1311,20 @@ static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_A
     HI_U16   u16BottomFieldLen = 0;
     HI_U16   i = 0;
 
-    SUBT_SHOW_REGION_S * pstLastRegion = NULL;
+    SUBT_SHOW_REGION_S* pstLastRegion = NULL;
 
-    SUBT_REFERING_REGION_S  TopReferingRegion ;
-    SUBT_REFERING_REGION_S  BottomReferingRegion ;
+    SUBT_REFERING_REGION_S  TopReferingRegion;
+    SUBT_REFERING_REGION_S  BottomReferingRegion;
 
-    if(pu8SegmentDataSrc == NULL || pstRegn == NULL || pstParseInfo == NULL)
+    if (pu8SegmentDataSrc == NULL || pstRegn == NULL || pstParseInfo == NULL || (u32SegLen < 2))
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
         return HI_FAILURE;
     }
+
+    memset(&TopReferingRegion, 0x0, sizeof(SUBT_REFERING_REGION_S));
+    memset(&BottomReferingRegion, 0x0, sizeof(SUBT_REFERING_REGION_S));
 
     /* top_field_data_block_length */
     u16TopFieldLen = (pu8SegmentData[0] << 8) | pu8SegmentData[1];
@@ -1151,27 +1342,29 @@ static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_A
         return HI_FAILURE;
     }
 
-    pstLastRegion->pu8ShowData = (HI_U8 *)(((HI_U32)pstLastRegion + sizeof(SUBT_SHOW_REGION_S) +3 )&(~3));
+    nOffset = (sizeof(SUBT_SHOW_REGION_S) + 3) & (~3);
+    pstLastRegion->pu8ShowData = (HI_U8*)((size_t)pstLastRegion + nOffset);
 
     pu8RegionPixels = pstLastRegion->pu8ShowData;
 
     u16TopFieldObjVerPos = u16ObjVerPos + ((((u16ObjVerPos + 1) % 2) == 0) ? 1 : 0);
 
-    u16BottomFieldObjVerPos = u16TopFieldObjVerPos +1;
+    u16BottomFieldObjVerPos = u16TopFieldObjVerPos + 1;
 
     nOffset = pstRegn->u16RegionWidth * u16TopFieldObjVerPos + u16ObjHorPos ;//per pixel hold one byte
-    #if 0 /* avoid start field of object offset */
-    pTopFieldObjStart = (HI_U8 *)(((HI_U32)pu8RegionPixels + nOffset+3)&(~3));
-    #else
-    pTopFieldObjStart = (HI_U8 *)((HI_U32)pu8RegionPixels + nOffset);
-    #endif
 
-    nOffset= pstRegn->u16RegionWidth * u16BottomFieldObjVerPos + u16ObjHorPos ;
-    #if 0 /* avoid object width is over range */
-    pBottomFieldObjStart = (HI_U8 *)(((HI_U32)pu8RegionPixels + nOffset+3)&(~3));
-    #else
-    pBottomFieldObjStart = (HI_U8 *)((HI_U32)pu8RegionPixels + nOffset);
-    #endif
+#if 0 /* avoid start field of object offset */
+    pTopFieldObjStart = (HI_U8*)(((HI_U32)pu8RegionPixels + nOffset + 3) & (~3));
+#else
+    pTopFieldObjStart = (HI_U8*)((size_t)pu8RegionPixels + nOffset);
+#endif
+
+    nOffset = pstRegn->u16RegionWidth * u16BottomFieldObjVerPos + u16ObjHorPos ;
+#if 0 /* avoid object width is over range */
+    pBottomFieldObjStart = (HI_U8*)(((size_t)pu8RegionPixels + nOffset + 3) & (~3));
+#else
+    pBottomFieldObjStart = (HI_U8*)((size_t)pu8RegionPixels + nOffset);
+#endif
 
     TopReferingRegion.pu8RegionPixel = pu8RegionPixels;
 
@@ -1193,16 +1386,16 @@ static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_A
     if (u16BottomFieldLen != 0)
     {
         SUBT_Parse_PixelBlockDecode (pu8SegmentData, &BottomReferingRegion,
-                            u16BottomFieldLen);
+                                     u16BottomFieldLen);
 
     }
     else
     {
-        for(i=2;i<((pstRegn->u16RegionHeight+1)&(~1));)
+        for (i = 2; i < ((pstRegn->u16RegionHeight + 1) & (~1));)
         {
-            pTopFieldObjStart = TopReferingRegion.pu8RegionPixel+(i-2)*pstRegn->u16RegionWidth;
-            pBottomFieldObjStart = TopReferingRegion.pu8RegionPixel+(i-1)*pstRegn->u16RegionWidth;
-            memcpy(pBottomFieldObjStart,pTopFieldObjStart,pstRegn->u16RegionWidth);
+            pTopFieldObjStart = TopReferingRegion.pu8RegionPixel + (i - 2) * pstRegn->u16RegionWidth;
+            pBottomFieldObjStart = TopReferingRegion.pu8RegionPixel + (i - 1) * pstRegn->u16RegionWidth;
+            memcpy(pBottomFieldObjStart, pTopFieldObjStart, pstRegn->u16RegionWidth);
             i += 2;
         }
     }
@@ -1210,13 +1403,14 @@ static HI_S32 SUBT_Parse_DecodingPixels(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_A
     return HI_SUCCESS;
 }
 
-static HI_S32 SUBT_Parse_DecodingCharacter(SUBT_PARSE_INFO_S * pstParseInfo, HI_U8 *pu8SegmentDataSrc , HI_U32 nSegLen,HI_U8 chFrontCol,HI_U8 chBackCol)
+static HI_S32 SUBT_Parse_DecodingCharacter(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8* pu8SegmentDataSrc , HI_U32 nSegLen, HI_U8 chFrontCol, HI_U8 chBackCol)
 {
-    SUBT_SHOW_REGION_S * pstLastRegion = NULL;
-    HI_U8 *pu8SegmentData = pu8SegmentDataSrc;
+    SUBT_SHOW_REGION_S* pstLastRegion = NULL;
+    HI_U8* pu8SegmentData = pu8SegmentDataSrc;
     HI_U8 u8Len = 0;
+    size_t nOffset = 0;
 
-    if(pu8SegmentDataSrc == NULL || pstParseInfo == NULL)
+    if (pu8SegmentDataSrc == NULL || pstParseInfo == NULL || (0 == nSegLen))
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
@@ -1232,13 +1426,15 @@ static HI_S32 SUBT_Parse_DecodingCharacter(SUBT_PARSE_INFO_S * pstParseInfo, HI_
         return HI_FAILURE;
     }
 
-    pstLastRegion->pu8ShowData = (HI_U8 *)(((HI_U32)pstLastRegion + sizeof(SUBT_SHOW_REGION_S)+3+pstLastRegion->u16CharacterNum)&(~3));
+    nOffset = (sizeof(SUBT_SHOW_REGION_S) + 3 + pstLastRegion->u16CharacterNum) & (~3);
+
+    pstLastRegion->pu8ShowData = (HI_U8*)((size_t)pstLastRegion + nOffset);
 
     u8Len = *pu8SegmentData; /* number of codes 8bits */
 
     pu8SegmentData++;
 
-    if((HI_U32)(pstLastRegion->pu8ShowData)+u8Len>(HI_U32)pstParseInfo->pu8RegionBuffer + pstParseInfo->u32RegionBufferLen)
+    if ((size_t)(pstLastRegion->pu8ShowData) + u8Len > (size_t)pstParseInfo->pu8RegionBuffer + pstParseInfo->u32RegionBufferLen)
     {
         HI_ERR_SUBT("\ncharacter object buffer is full!!!\n");
 
@@ -1256,7 +1452,7 @@ static HI_S32 SUBT_Parse_DecodingCharacter(SUBT_PARSE_INFO_S * pstParseInfo, HI_
 /*
  *Find the display definition segment. return HI_SUCCESS, otherwise failed to find it
  */
-static HI_U8 SUBT_Parse_FindDisplayDefinitionSegment(SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindDisplayDefinitionSegment(SUBT_SEGMENT_S** ppstSeg)
 {
     while (*ppstSeg)
     {
@@ -1274,7 +1470,7 @@ static HI_U8 SUBT_Parse_FindDisplayDefinitionSegment(SUBT_SEGMENT_S **ppstSeg)
 /*
  *Find the page segment. return HI_SUCCESS, otherwise failed to find it
  */
-static HI_U8 SUBT_Parse_FindPageSegment(SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindPageSegment(SUBT_SEGMENT_S** ppstSeg)
 {
     while (*ppstSeg)
     {
@@ -1293,7 +1489,7 @@ static HI_U8 SUBT_Parse_FindPageSegment(SUBT_SEGMENT_S **ppstSeg)
 /*
  *Find the disparity signalling segment. return HI_SUCCESS, otherwise failed to find it
  */
-static HI_U8 SUBT_Parse_FindDisparitySignallingSegment(SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindDisparitySignallingSegment(SUBT_SEGMENT_S** ppstSeg)
 {
     while (*ppstSeg)
     {
@@ -1310,7 +1506,7 @@ static HI_U8 SUBT_Parse_FindDisparitySignallingSegment(SUBT_SEGMENT_S **ppstSeg)
 #endif
 
 #if 0
-static HI_U8 SUBT_Parse_FindEndSegment(SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindEndSegment(SUBT_SEGMENT_S** ppstSeg)
 {
     while (*ppstSeg)
     {
@@ -1326,14 +1522,15 @@ static HI_U8 SUBT_Parse_FindEndSegment(SUBT_SEGMENT_S **ppstSeg)
 }
 #endif
 
-static HI_U8 SUBT_Parse_FindClutSegment(HI_U8 u8ClutId,SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindClutSegment(HI_U8 u8ClutId, SUBT_SEGMENT_S** ppstSeg)
 {
     HI_U8 u8ClutIdInStream = 0;
 
-    while((*ppstSeg) && (*ppstSeg)->pu8SegmentData )
+    while ((*ppstSeg) && (*ppstSeg)->pu8SegmentData )
     {
         u8ClutIdInStream = *((*ppstSeg)->pu8SegmentData);
-        if((SUBT_CLUT_SEGMENT == (*ppstSeg)->u8SegmentType)&&(u8ClutIdInStream == u8ClutId)&&((*ppstSeg)->u16DataLength))
+
+        if ((SUBT_CLUT_SEGMENT == (*ppstSeg)->u8SegmentType) && (u8ClutIdInStream == u8ClutId) && ((*ppstSeg)->u16DataLength))
         {
             return (HI_U8)HI_SUCCESS;
         }
@@ -1345,11 +1542,11 @@ static HI_U8 SUBT_Parse_FindClutSegment(HI_U8 u8ClutId,SUBT_SEGMENT_S **ppstSeg)
     return (HI_U8)HI_FAILURE;
 }
 
-static HI_U8 SUBT_Parse_FindRegionSegment(HI_U8 u8RegionId,SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindRegionSegment(HI_U8 u8RegionId, SUBT_SEGMENT_S** ppstSeg)
 {
-    while((*ppstSeg) && (*ppstSeg)->pu8SegmentData )
+    while ((*ppstSeg) && (*ppstSeg)->pu8SegmentData )
     {
-        if((SUBT_REGION_SEGMENT == (*ppstSeg)->u8SegmentType)&&(*((*ppstSeg)->pu8SegmentData) == u8RegionId)&&(*ppstSeg)->u16DataLength)
+        if ((SUBT_REGION_SEGMENT == (*ppstSeg)->u8SegmentType) && (*((*ppstSeg)->pu8SegmentData) == u8RegionId) && (*ppstSeg)->u16DataLength)
         {
             return (HI_U8)HI_SUCCESS;
         }
@@ -1360,17 +1557,18 @@ static HI_U8 SUBT_Parse_FindRegionSegment(HI_U8 u8RegionId,SUBT_SEGMENT_S **ppst
     return (HI_U8)HI_FAILURE;
 }
 
-static HI_U8 SUBT_Parse_FindObjectSegment(HI_U16 u16ObjectId,SUBT_SEGMENT_S **ppstSeg)
+static HI_U8 SUBT_Parse_FindObjectSegment(HI_U16 u16ObjectId, SUBT_SEGMENT_S** ppstSeg)
 {
     HI_U16 u16ObjectIdTem = 0;
 
-    while(*ppstSeg && (*ppstSeg)->pu8SegmentData )
+    while (*ppstSeg && (*ppstSeg)->pu8SegmentData )
     {
-        if((SUBT_OBJECT_SEGMENT == (*ppstSeg)->u8SegmentType)&&(*ppstSeg)->u16DataLength)
+        if ((SUBT_OBJECT_SEGMENT == (*ppstSeg)->u8SegmentType) && (*ppstSeg)->u16DataLength)
         {
             u16ObjectIdTem = *((*ppstSeg)->pu8SegmentData);
-            u16ObjectIdTem = (u16ObjectIdTem<<8) + (*((*ppstSeg)->pu8SegmentData+1));
-            if(u16ObjectIdTem == u16ObjectId)
+            u16ObjectIdTem = (u16ObjectIdTem << 8) + (*((*ppstSeg)->pu8SegmentData + 1));
+
+            if (u16ObjectIdTem == u16ObjectId)
             {
                 return (HI_U8)HI_SUCCESS;
             }
@@ -1382,7 +1580,7 @@ static HI_U8 SUBT_Parse_FindObjectSegment(HI_U16 u16ObjectId,SUBT_SEGMENT_S **pp
     return (HI_U8)HI_FAILURE;
 }
 
-static HI_S32 _RegionBuffer_ReAlloc(SUBT_PARSE_INFO_S *pstParseInfo, HI_U32 u32Len)
+static HI_S32 _RegionBuffer_ReAlloc(SUBT_PARSE_INFO_S* pstParseInfo, HI_U32 u32Len)
 {
     HI_U32 u32RegionBufferLen = 0;
 
@@ -1404,10 +1602,12 @@ static HI_S32 _RegionBuffer_ReAlloc(SUBT_PARSE_INFO_S *pstParseInfo, HI_U32 u32L
     if (pstParseInfo->pu8RegionBuffer)
     {
         free(pstParseInfo->pu8RegionBuffer);
+        pstParseInfo->pu8RegionBuffer = HI_NULL;
     }
 
     pstParseInfo->u32RegionBufferLen = u32RegionBufferLen;
     pstParseInfo->pu8RegionBuffer =  (HI_U8*)malloc(pstParseInfo->u32RegionBufferLen);
+
     if (pstParseInfo->pu8RegionBuffer == HI_NULL)
     {
         pstParseInfo->u32RegionBufferLen = 0;
@@ -1416,6 +1616,7 @@ static HI_S32 _RegionBuffer_ReAlloc(SUBT_PARSE_INFO_S *pstParseInfo, HI_U32 u32L
 
         return HI_FAILURE;
     }
+
     memset(pstParseInfo->pu8RegionBuffer, 0, pstParseInfo->u32RegionBufferLen);
     pstParseInfo->stPageParam.pstShowRegion = (SUBT_SHOW_REGION_S*)pstParseInfo->pu8RegionBuffer;
 
@@ -1423,11 +1624,11 @@ static HI_S32 _RegionBuffer_ReAlloc(SUBT_PARSE_INFO_S *pstParseInfo, HI_U32 u32L
 }
 
 /* ref[en_300743v010401o.pdf] page22 section 7.2.1 */
-static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S *pstParseInfo, SUBT_SEGMENT_S *pstSegment)
+static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment)
 {
-    HI_U8   *pu8SegmentData = pstSegment->pu8SegmentData;
+    HI_U8*   pu8SegmentData = pstSegment->pu8SegmentData;
     HI_U32  u32SegLen = pstSegment->u16DataLength;
-    SUBT_DISPLAY_DEFINITION_S *pstDisplayDef = &pstParseInfo->stPageParam.stDisplayDef;
+    SUBT_DISPLAY_DEFINITION_S* pstDisplayDef = &pstParseInfo->stPageParam.stDisplayDef;
     HI_U8 u8Version = 0;
     HI_U8 u8DisplayFlag = 0;
 
@@ -1438,12 +1639,13 @@ static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S *pstParseInfo,
         return HI_FAILURE;
     }
 
-    u8Version = (pu8SegmentData[0]>>4)&0x0f;
+    u8Version = (pu8SegmentData[0] >> 4) & 0x0f;
 
 
     pstDisplayDef->u8DdsVersionNumber = u8Version;
 
-    u8DisplayFlag = pu8SegmentData[0]&0x08;
+    u8DisplayFlag = pu8SegmentData[0] & 0x08;
+
     if (u8DisplayFlag > 0)
     {
         pstDisplayDef->u8DisplayWindowFlag = 1;
@@ -1453,8 +1655,8 @@ static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S *pstParseInfo,
         pstDisplayDef->u8DisplayWindowFlag = 0;
     }
 
-    pstDisplayDef->u16DisplayWidth = (pu8SegmentData[1]<<8) | pu8SegmentData[2];
-    pstDisplayDef->u16DisplayHeight = (pu8SegmentData[3]<<8) | pu8SegmentData[4];
+    pstDisplayDef->u16DisplayWidth = (pu8SegmentData[1] << 8) | pu8SegmentData[2];
+    pstDisplayDef->u16DisplayHeight = (pu8SegmentData[3] << 8) | pu8SegmentData[4];
 
     if (pstDisplayDef->u16DisplayWidth > 720)
     {
@@ -1479,17 +1681,17 @@ static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S *pstParseInfo,
 
     if (pstDisplayDef->u8DisplayWindowFlag)
     {
-        pstDisplayDef->u16DisplayWindowHorizontalPositionMinimum = (pu8SegmentData[5]<<8) | pu8SegmentData[6];
-        pstDisplayDef->u16DisplayWindowHorizontalPositionMaximum = (pu8SegmentData[7]<<8) | pu8SegmentData[8];
-        pstDisplayDef->u16DisplayWindowVerticalPositionMinimum   = (pu8SegmentData[9]<<8) | pu8SegmentData[10];
-        pstDisplayDef->u16DisplayWindowVerticalPositionMaximum   = (pu8SegmentData[11]<<8) | pu8SegmentData[12];
+        pstDisplayDef->u16DisplayWindowHorizontalPositionMinimum = (pu8SegmentData[5] << 8) | pu8SegmentData[6];
+        pstDisplayDef->u16DisplayWindowHorizontalPositionMaximum = (pu8SegmentData[7] << 8) | pu8SegmentData[8];
+        pstDisplayDef->u16DisplayWindowVerticalPositionMinimum   = (pu8SegmentData[9] << 8) | pu8SegmentData[10];
+        pstDisplayDef->u16DisplayWindowVerticalPositionMaximum   = (pu8SegmentData[11] << 8) | pu8SegmentData[12];
     }
     else
     {
         pstDisplayDef->u16DisplayWindowHorizontalPositionMinimum = 0;
         pstDisplayDef->u16DisplayWindowHorizontalPositionMaximum = pstDisplayDef->u16DisplayWidth - 1;
         pstDisplayDef->u16DisplayWindowVerticalPositionMinimum   = 0;
-        pstDisplayDef->u16DisplayWindowVerticalPositionMaximum   = pstDisplayDef->u16DisplayHeight- 1;
+        pstDisplayDef->u16DisplayWindowVerticalPositionMaximum   = pstDisplayDef->u16DisplayHeight - 1;
     }
 
     return HI_SUCCESS;
@@ -1497,8 +1699,8 @@ static HI_S32 SUBT_Parse_ParseDisplayDefinition(SUBT_PARSE_INFO_S *pstParseInfo,
 
 #ifdef SUBT_USED_3D_SUBTITLE
 
-static HI_S32 SUBT_Parse_ParseShiftUpdateSequence(SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S *pstUpdateSequence,
-        HI_U32 *pu32ProcessedLength, HI_U8 *pu8SegmentData)
+static HI_S32 SUBT_Parse_ParseShiftUpdateSequence(SUBT_DISPARITY_SHIFT_UPDATE_SEQUENCE_S* pstUpdateSequence,
+        HI_U32* pu32ProcessedLength, HI_U8* pu8SegmentData)
 {
     HI_U32 i = 0;
     HI_U32 u32ProcessedLength = *pu32ProcessedLength;
@@ -1517,9 +1719,9 @@ static HI_S32 SUBT_Parse_ParseShiftUpdateSequence(SUBT_DISPARITY_SHIFT_UPDATE_SE
     */
 
     pstUpdateSequence->u8DisparityShiftUpdateSequenceLength = pu8SegmentData[u32ProcessedLength];
-    pstUpdateSequence->u32IntervalDuration = (pu8SegmentData[u32ProcessedLength + 1]<<16)
-                        | (pu8SegmentData[u32ProcessedLength + 2]<<8)
-                        | (pu8SegmentData[u32ProcessedLength + 3]);
+    pstUpdateSequence->u32IntervalDuration = (pu8SegmentData[u32ProcessedLength + 1] << 16)
+            | (pu8SegmentData[u32ProcessedLength + 2] << 8)
+            | (pu8SegmentData[u32ProcessedLength + 3]);
     pstUpdateSequence->u8DivisionPeriodCount = pu8SegmentData[u32ProcessedLength + 4];
 
     u32ProcessedLength += 5;
@@ -1536,7 +1738,7 @@ static HI_S32 SUBT_Parse_ParseShiftUpdateSequence(SUBT_DISPARITY_SHIFT_UPDATE_SE
         {
             pstUpdateSequence->stDisparityShiftData[i].u8IntervalCount = pu8SegmentData[u32ProcessedLength];
             pstUpdateSequence->stDisparityShiftData[i].u8DisparityShiftUpdateIntegerPart
-                                                = pu8SegmentData[u32ProcessedLength + 1];
+                = pu8SegmentData[u32ProcessedLength + 1];
             u32ProcessedLength += 2;
         }
     }
@@ -1547,15 +1749,15 @@ static HI_S32 SUBT_Parse_ParseShiftUpdateSequence(SUBT_DISPARITY_SHIFT_UPDATE_SE
 }
 
 /* ref[en_300743v010401o.pdf] page34 section 7.2.7 */
-static HI_S32 SUBT_Parse_ParseDisparitySignallingSegment(SUBT_PARSE_INFO_S *pstParseInfo, SUBT_SEGMENT_S *pstSegment)
+static HI_S32 SUBT_Parse_ParseDisparitySignallingSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment)
 {
-    HI_U8   *pu8SegmentData = pstSegment->pu8SegmentData;
+    HI_U8*   pu8SegmentData = pstSegment->pu8SegmentData;
     HI_U32  u32SegLen = pstSegment->u16DataLength;
     HI_U16  u16VersionNumber = 0;
     HI_U32  u32ProcessedLength = 0;
     HI_U8   u8DisparityShiftUpdateSequencePageFlag = 0;
-    HI_U32  i = 0,j = 0;
-    SUBT_DISPARITY_SIGNALLING_SEGMENT_S *pstSignallingSegment = &pstParseInfo->stPageParam.stSignallingSegment;
+    HI_U32  i = 0, j = 0;
+    SUBT_DISPARITY_SIGNALLING_SEGMENT_S* pstSignallingSegment = &pstParseInfo->stPageParam.stSignallingSegment;
 
 
     /*
@@ -1568,7 +1770,8 @@ static HI_S32 SUBT_Parse_ParseDisparitySignallingSegment(SUBT_PARSE_INFO_S *pstP
     *   disparity_shift_update_sequence()
     * }
     */
-    u16VersionNumber = (pu8SegmentData[u32ProcessedLength]>>4)&0x0f;
+    u16VersionNumber = (pu8SegmentData[u32ProcessedLength] >> 4) & 0x0f;
+
     if (u16VersionNumber == pstSignallingSegment->u8dss_version_number)
     {
         return HI_SUCCESS;
@@ -1578,21 +1781,23 @@ static HI_S32 SUBT_Parse_ParseDisparitySignallingSegment(SUBT_PARSE_INFO_S *pstP
         pstSignallingSegment->u8dss_version_number = u16VersionNumber;
     }
 
-    u8DisparityShiftUpdateSequencePageFlag = (pu8SegmentData[u32ProcessedLength]>>5)&0x04;
+    u8DisparityShiftUpdateSequencePageFlag = (pu8SegmentData[u32ProcessedLength] >> 5) & 0x04;
 
     u32ProcessedLength += 1;
     pstSignallingSegment->u8page_default_disparity_shift = pu8SegmentData[u32ProcessedLength];
 
     u32ProcessedLength += 1;
+
     if (u8DisparityShiftUpdateSequencePageFlag == 1)
     {
-        if (HI_SUCCESS != SUBT_Parse_ParseShiftUpdateSequence(&pstSignallingSegment->stDisparityShiftUpdateSequence,&u32ProcessedLength,pu8SegmentData))
+        if (HI_SUCCESS != SUBT_Parse_ParseShiftUpdateSequence(&pstSignallingSegment->stDisparityShiftUpdateSequence, &u32ProcessedLength, pu8SegmentData))
         {
             HI_WARN_SUBT("failed to SUBT_Parse_ParseShiftUpdateSequence\n");
 
             return HI_FAILURE;
         }
     }
+
     /*
     * while (processed_length<segment_length)
     * {
@@ -1620,29 +1825,30 @@ static HI_S32 SUBT_Parse_ParseDisparitySignallingSegment(SUBT_PARSE_INFO_S *pstP
     while (u32ProcessedLength < u32SegLen)
     {
         pstSignallingSegment->stDisparity[i].u8RegionID = pu8SegmentData[u32ProcessedLength];
-        u8DisparityShiftUpdateSequencePageFlag = pu8SegmentData[u32ProcessedLength + 1]&0x01;
-        pstSignallingSegment->stDisparity[i].u8NumberOfSubregionsMinus1 = (pu8SegmentData[u32ProcessedLength + 1]>>6) & 0x03;
+        u8DisparityShiftUpdateSequencePageFlag = pu8SegmentData[u32ProcessedLength + 1] & 0x01;
+        pstSignallingSegment->stDisparity[i].u8NumberOfSubregionsMinus1 = (pu8SegmentData[u32ProcessedLength + 1] >> 6) & 0x03;
 
         u32ProcessedLength += 2;
+
         for (j = 0; j < pstSignallingSegment->stDisparity[i].u8NumberOfSubregionsMinus1; j++)
         {
             if (pstSignallingSegment->stDisparity[i].u8NumberOfSubregionsMinus1 > 0)
             {
                 pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u16SubregionHorizontalPosition
-                                    = (pu8SegmentData[u32ProcessedLength]<<8) | (pu8SegmentData[u32ProcessedLength + 1]);
+                    = (pu8SegmentData[u32ProcessedLength] << 8) | (pu8SegmentData[u32ProcessedLength + 1]);
                 pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u16SubregionWidth
-                                    = (pu8SegmentData[u32ProcessedLength + 2]<<8) | (pu8SegmentData[u32ProcessedLength + 3]);
+                    = (pu8SegmentData[u32ProcessedLength + 2] << 8) | (pu8SegmentData[u32ProcessedLength + 3]);
                 u32ProcessedLength += 4;
             }
 
-            pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u8SubregionDisparityShiftIntegerPart= pu8SegmentData[u32ProcessedLength];
-            pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u8SubregionDisparityShiftFractionalPart = (pu8SegmentData[u32ProcessedLength + 1]>>4)&0x0F;
+            pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u8SubregionDisparityShiftIntegerPart = pu8SegmentData[u32ProcessedLength];
+            pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].u8SubregionDisparityShiftFractionalPart = (pu8SegmentData[u32ProcessedLength + 1] >> 4) & 0x0F;
 
             u32ProcessedLength += 2;
 
             if (u8DisparityShiftUpdateSequencePageFlag == 1)
             {
-                if (HI_SUCCESS != SUBT_Parse_ParseShiftUpdateSequence(&pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].stDisparityShiftUpdateSequence,&u32ProcessedLength,pu8SegmentData))
+                if (HI_SUCCESS != SUBT_Parse_ParseShiftUpdateSequence(&pstSignallingSegment->stDisparity[i].stDisparitySubregionData[j].stDisparityShiftUpdateSequence, &u32ProcessedLength, pu8SegmentData))
                 {
                     HI_WARN_SUBT("failed to SUBT_Parse_ParseShiftUpdateSequence\n");
 
@@ -1682,19 +1888,20 @@ static SUBT_CLUT_S* SUBT_Parse_FindClutId(SUBT_PARSE_INFO_S* pstParseInfo, HI_U8
 }
 
 /* ref[Subtitling system.pdf] page24 section 7.2.3 */
-static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S *pstSegment, SUBT_ALL_INFO_IN_REGION_S *pstRegionInfo)
+static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment)
 {
     HI_U8   u8ClutVersion = 0;
     HI_U8   u8ClutEntryId = 0;
     HI_U8   U8EntryClutFlag = 0;
-    HI_U8   Y = 0,Cr = 0,Cb = 0, T = 0;
+    HI_U8   Y = 0, Cr = 0, Cb = 0, T = 0;
     HI_U32  u32RGB = 0;
     HI_U8   u8FullRange = 0;
-    HI_U8   *pu8SegmentData = pstSegment->pu8SegmentData;
+    HI_U8*   pu8SegmentData = pstSegment->pu8SegmentData;
     HI_S32  s32SegLen = (HI_S32)pstSegment->u16DataLength;
-    SUBT_CLUT_S *pstClut = HI_NULL;
+    SUBT_CLUT_S* pstClut = HI_NULL;
 
     pstClut = SUBT_Parse_FindClutId(pstParseInfo, pu8SegmentData[0]);
+
     if (HI_NULL == pstClut)
     {
         HI_WARN_SUBT("failed to SUBT_Parse_FindClutId...\n");
@@ -1710,6 +1917,7 @@ static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT
 
     /* CLUT_version_number */
     u8ClutVersion = ((pu8SegmentData[0] & 0xf0) >> 4); /* 4-bit */
+
     if (u8ClutVersion == pstClut->u8ClutVersion)
     {
         /* Nothing to do */
@@ -1748,6 +1956,7 @@ static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT
             {
                 break;
             }
+
             Y  = pu8SegmentData[0];
             Cr = pu8SegmentData[1];
             Cb = pu8SegmentData[2];
@@ -1780,20 +1989,22 @@ static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT
         u32RGB = YUV2RGB(Y, Cr, Cb);
 
         /* bit7--2bit entry flag, bit6--4bit entry flag, bit5--8bit entry flag bit4~bit1--reserved */
-        if (( U8EntryClutFlag & 0x80 )&&(u8ClutEntryId < CLUT_BIT_4 ))
+        if (( U8EntryClutFlag & 0x80 ) && (u8ClutEntryId < CLUT_BIT_4 ))
         {
             pstClut->_2BitCLUT[ u8ClutEntryId ].u8Red   = (u32RGB >> 16) & 0xff;
             pstClut->_2BitCLUT[ u8ClutEntryId ].u8Green = (u32RGB >>  8) & 0xff;
             pstClut->_2BitCLUT[ u8ClutEntryId ].u8Blue  = u32RGB & 0xff;
             pstClut->_2BitCLUT[ u8ClutEntryId ].u8Alpha = 0xff - T; // app requests 0 is transparent;
         }
-        if (( U8EntryClutFlag & 0x40 )&&( u8ClutEntryId < CLUT_BIT_16 ))
+
+        if (( U8EntryClutFlag & 0x40 ) && ( u8ClutEntryId < CLUT_BIT_16 ))
         {
             pstClut->_4BitCLUT[ u8ClutEntryId ].u8Red   = (u32RGB >> 16) & 0xff;
             pstClut->_4BitCLUT[ u8ClutEntryId ].u8Green = (u32RGB >>  8) & 0xff;
             pstClut->_4BitCLUT[ u8ClutEntryId ].u8Blue  = u32RGB & 0xff;
             pstClut->_4BitCLUT[ u8ClutEntryId ].u8Alpha = 0xff - T; // app requests 0 is transparent;
         }
+
         if (U8EntryClutFlag & 0x20)
         {
             pstClut->_8BitCLUT[ u8ClutEntryId ].u8Red   = (u32RGB >> 16) & 0xff;
@@ -1805,15 +2016,15 @@ static HI_VOID SUBT_Parse_ParseClutSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT
 }
 
 /* ref[Subtitling system.pdf] page20 section 7.2.1 */
-static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_SEGMENT_S *pstSegment,SUBT_REGION_INFO_IN_PAGE_S *pstRegion,HI_U8 *pu8RegionNum)
+static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_SEGMENT_S* pstSegment, SUBT_REGION_INFO_IN_PAGE_S* pstRegion, HI_U8* pu8RegionNum)
 {
     HI_S32 s32RegnNum = 0;
     HI_S32 i = 0;
-    HI_U8  *pu8SegmentDataSrc = pstSegment->pu8SegmentData;
+    HI_U8*  pu8SegmentDataSrc = pstSegment->pu8SegmentData;
     HI_U32 u32Len = pstSegment->u16DataLength;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
-    if(pstRegion == NULL || pu8RegionNum == NULL)
+    if (pstRegion == NULL || pu8RegionNum == NULL)
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
@@ -1822,6 +2033,7 @@ static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S * pstParseInfo, SUBT
 
     /* page_time_out */
     pstCurPage->u8ShowTime = pu8SegmentDataSrc[0];
+
     if (0 == pstCurPage->u8ShowTime)
     {
         pstCurPage->u8ShowTime = 5;
@@ -1848,13 +2060,15 @@ static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S * pstParseInfo, SUBT
     {
         s32RegnNum = (u32Len - 2) / 6;
     }
+
     HI_INFO_SUBT("Data length is %d, which should have %d region in that page, page state is %d, page version %d.\n", u32Len, s32RegnNum, pstCurPage->enPageState, pstRegion[0].u8InPageVer);
-    if( s32RegnNum >  SUBT_REGN_IN_PAGE_NUM )
+
+    if ( s32RegnNum >  SUBT_REGN_IN_PAGE_NUM )
     {
         s32RegnNum = SUBT_REGN_IN_PAGE_NUM ;
     }
 
-    for( i = 0; i < s32RegnNum; i++)
+    for ( i = 0; i < s32RegnNum; i++)
     {
         pstRegion[i].u8RegionId =  *pu8SegmentDataSrc;
         pu8SegmentDataSrc += 2;
@@ -1872,15 +2086,15 @@ static HI_S32 SUBT_Parse_ParsePageSegment(SUBT_PARSE_INFO_S * pstParseInfo, SUBT
 }
 
 /* Ref[Subtitling system.pdf] page21 section 7.2.2 */
-static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL_INFO_IN_REGION_S *pstRegion, SUBT_REGION_INFO_IN_PAGE_S *pRegion,SUBT_PAGE_STATE_E enPageState)
+static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S* pstSegment, SUBT_ALL_INFO_IN_REGION_S* pstRegion, SUBT_REGION_INFO_IN_PAGE_S* pRegion, SUBT_PAGE_STATE_E enPageState)
 {
-    HI_U8 *pu8SegmentDataSrc = pstSegment->pu8SegmentData;
+    HI_U8* pu8SegmentDataSrc = pstSegment->pu8SegmentData;
     HI_S32 s32DataLen = (HI_S32)pstSegment->u16DataLength;
-    SUBT_OBJECT_INFO_IN_REGION_S    *pstObjInfoTem = NULL;
+    SUBT_OBJECT_INFO_IN_REGION_S* pstObjInfoTem = NULL;
     HI_U32 u32SkipLen = 0;
     HI_U32 u32ObjectLeftOffset = 0;
 
-    if(pstRegion == NULL || pRegion == NULL)
+    if (pstRegion == NULL || pRegion == NULL)
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
@@ -1900,6 +2114,7 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
     /* region_width, range 1 to 720
     if define  DDS ,the range 1 to 4095*/
     pstRegion->u16RegionWidth =  (pu8SegmentDataSrc[0] << 8) | pu8SegmentDataSrc[1];
+
     if (pstRegion->u16RegionWidth > MAX_REGION_WIDTH)
     {
         pstRegion->u16RegionWidth = MAX_REGION_WIDTH;
@@ -1911,6 +2126,7 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
     /* region_height, range 1 to 576
       if define  DDS ,the range 1 to 4095*/
     pstRegion->u16RegionHeight =  (pu8SegmentDataSrc[0] << 8) | pu8SegmentDataSrc[1];
+
     if (pstRegion->u16RegionHeight > MAX_REGION_HEIGTH)
     {
         pstRegion->u16RegionHeight = MAX_REGION_HEIGTH;
@@ -1930,17 +2146,21 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
         * 0x04 - 0x07 reserved
         */
     pstRegion->u8RegionDepth = (HI_U8)(((*pu8SegmentDataSrc) & 0x1c) >> 2);
+
     switch (pstRegion->u8RegionDepth)
     {
         case 1:
             pstRegion->u8RegionDepth = 2;
             break;
+
         case 2:
             pstRegion->u8RegionDepth = 4;
             break;
+
         case 3:
             pstRegion->u8RegionDepth = 8;
             break;
+
         default:
             pstRegion->u8RegionDepth = 0;
             break;
@@ -1950,24 +2170,28 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
     u32SkipLen += 1;
 
     /* CLUT_id */
-    pstRegion->u8ClutId= *pu8SegmentDataSrc;
+    pstRegion->u8ClutId = *pu8SegmentDataSrc;
     pu8SegmentDataSrc++;
     u32SkipLen += 1;
 
-    switch(pstRegion->u8RegionDepth)
+    switch (pstRegion->u8RegionDepth)
     {
         case 2:
             pstRegion->u8BackClr = (pu8SegmentDataSrc[1] & 0x0c) >> 2; /* region_2-bit_pixel-code */
             break;
+
         case 4:
             pstRegion->u8BackClr = (pu8SegmentDataSrc[1] & 0xf0) >> 4; /* region_4-bit_pixel-code */
             break;
+
         case 8:
             pstRegion->u8BackClr = pu8SegmentDataSrc[0]; /* region_8-bit_pixel_code */
             break;
+
         default:
             break;
     }
+
     pu8SegmentDataSrc += 2;
     u32SkipLen += 2;
 
@@ -1982,7 +2206,7 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
          *The min length should be 6 bytes. object_id(2bytes) + object_type/object_horizontal_position(2bytes) + object_vertical_position(2bytes)
          * options field:foreground_pixel_code(1byte) + background_pixel_code(1byte)
          */
-    while( s32DataLen >= 6 )
+    while ( s32DataLen >= 6 )
     {
         pstObjInfoTem = &pstRegion->stObjectInfo[pstRegion->u8ObjectNum];
 
@@ -2025,8 +2249,8 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
         s32DataLen -= u32SkipLen;
         u32SkipLen = 0;
 
-        if( (SUBT_OBJ_TYPE_CHARACTER == pstObjInfoTem->enObjectType)
-            || (SUBT_OBJ_TYPE_STRING == pstObjInfoTem->enObjectType) )
+        if ( (SUBT_OBJ_TYPE_CHARACTER == pstObjInfoTem->enObjectType)
+             || (SUBT_OBJ_TYPE_STRING == pstObjInfoTem->enObjectType) )
         {
             /* foreground_pixel_code */
             pstObjInfoTem->u8FrontClr = pu8SegmentDataSrc[0];
@@ -2040,7 +2264,7 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
 
         pstRegion->u8ObjectNum++;
 
-        if( pstRegion->u8ObjectNum >= SUBT_OBJ_NUM_IN_REGN_MAX )
+        if ( pstRegion->u8ObjectNum >= SUBT_OBJ_NUM_IN_REGN_MAX )
         {
             HI_WARN_SUBT("SUBT_object_is_over the SUBT_OBJ_NUM_IN_REGN_MAX!!\n");
             break;
@@ -2053,15 +2277,15 @@ static HI_S32 SUBT_Parse_ParseRegionSegment(SUBT_SEGMENT_S *pstSegment, SUBT_ALL
 }
 
 /* ref[Subtitling system.pdf] page25 section 7.2.4 */
-static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S * pstParseInfo, SUBT_ALL_INFO_IN_REGION_S *pstRegion, SUBT_SEGMENT_S *pstSegment, SUBT_OBJECT_INFO_IN_REGION_S *pstObjectInfoInRegion)
+static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S* pstParseInfo, SUBT_ALL_INFO_IN_REGION_S* pstRegion, SUBT_SEGMENT_S* pstSegment, SUBT_OBJECT_INFO_IN_REGION_S* pstObjectInfoInRegion)
 {
     HI_S32 s32Ret = HI_FAILURE;
     SUBT_OBJ_TYPE_E eObjCodeMethod = SUBT_OBJ_TYPE_BITMAP;
     HI_U32 u32SegLen = pstSegment->u16DataLength;
-    HI_U8 *pu8Src = pstSegment->pu8SegmentData;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    HI_U8* pu8Src = pstSegment->pu8SegmentData;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
-    if(pstRegion == NULL || pstObjectInfoInRegion == NULL)
+    if (pstRegion == NULL || pstObjectInfoInRegion == NULL)
     {
         HI_ERR_SUBT("parameter is invalid...\n");
 
@@ -2090,9 +2314,11 @@ static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S * pstParseInfo, SU
         case SUBT_OBJ_TYPE_BITMAP://coding of pixels
             s32Ret = SUBT_Parse_DecodingPixels(pstParseInfo, pstRegion, pstObjectInfoInRegion->u16ObjectLeft, pstObjectInfoInRegion->u16ObjectTop, pu8Src, u32SegLen) ;
             break;
+
         case SUBT_OBJ_TYPE_CHARACTER:
             s32Ret = SUBT_Parse_DecodingCharacter(pstParseInfo, pu8Src, u32SegLen, pstObjectInfoInRegion->u8FrontClr, pstObjectInfoInRegion->u8BackClr);
             break;
+
         default:
             break;
     }
@@ -2100,20 +2326,17 @@ static HI_S32 SUBT_Parse_ParseObjectSegment(SUBT_PARSE_INFO_S * pstParseInfo, SU
     return s32Ret;
 }
 
-static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
+static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S* pstParseInfo)
 {
     HI_S32 s32Ret = HI_FAILURE;
-    SUBT_SEGMENT_S *pstSegment = NULL;
-    SUBT_REGION_INFO_IN_PAGE_S astSubtRegionInfoInPage[SUBT_REGN_IN_PAGE_NUM] = {{0}};
-    SUBT_ALL_INFO_IN_REGION_S stSubtAllRegionInfo = {0};
     HI_U8 u8RegionIndex = 0;
     HI_U8 u8ObjectIndex = 0;
     HI_U8 u8RegionNum = 0;
-    //HI_U8 i = 0;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
-
-    SUBT_SEGMENT_S *pstSegmentEnter = NULL; /* signals the page segment enter point */
-
+    SUBT_SEGMENT_S* pstSegment = NULL;
+    SUBT_REGION_INFO_IN_PAGE_S astSubtRegionInfoInPage[SUBT_REGN_IN_PAGE_NUM];
+    SUBT_ALL_INFO_IN_REGION_S stSubtAllRegionInfo;
+    SUBT_PAGE_PARAM_S* pstCurPage = NULL;
+    SUBT_SEGMENT_S* pstSegmentEnter = NULL; /* signals the page segment enter point */
 
     if (NULL == pstParseInfo)
     {
@@ -2122,7 +2345,14 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
         return HI_FAILURE;
     }
 
+
+    memset(astSubtRegionInfoInPage, 0, sizeof(astSubtRegionInfoInPage));
+    memset(&stSubtAllRegionInfo, 0, sizeof(SUBT_ALL_INFO_IN_REGION_S));
+
+    pstCurPage = &pstParseInfo->stPageParam;
+
     pstSegmentEnter = pstCurPage->astSegment;
+
     if (pstSegmentEnter->u16DataLength == 0)
     {
         HI_INFO_SUBT("no segment...\n");
@@ -2132,10 +2362,12 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
 
     pstSegment = pstSegmentEnter;
     memset(&pstParseInfo->stPageParam.stDisplayDef, 0, sizeof(SUBT_DISPLAY_DEFINITION_S));
+
     if (HI_SUCCESS == SUBT_Parse_FindDisplayDefinitionSegment(&pstSegment))
     {
         /*to parse Display definition segment*/
         s32Ret = SUBT_Parse_ParseDisplayDefinition(pstParseInfo, pstSegment);
+
         if (s32Ret != HI_SUCCESS)
         {
             HI_ERR_SUBT("failed to SUBT_Parse_ParseDisplayDefinition...\n");
@@ -2154,6 +2386,7 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
     }
 
     pstSegment = pstSegmentEnter;
+
     if (SUBT_Parse_FindPageSegment(&pstSegment) == HI_SUCCESS)
     {
         pstSegmentEnter = pstSegment;
@@ -2166,7 +2399,7 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
     }
 
     /* to parse page segment*/
-    if(pstSegment->u8SegmentType == SUBT_PAGE_SEGMENT)
+    if (pstSegment->u8SegmentType == SUBT_PAGE_SEGMENT)
     {
 
         memset(astSubtRegionInfoInPage, 0, sizeof(astSubtRegionInfoInPage));
@@ -2174,7 +2407,7 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
 
         if (s32Ret == HI_SUCCESS)
         {
-            if (pstCurPage->enPageState== SUBTITLE_PAGE_NORMAL_CASE)
+            if (pstCurPage->enPageState == SUBTITLE_PAGE_NORMAL_CASE)
             {
                 /* The display set contains only the subtitle elements that are changed from the previous page instance. */
                 if (astSubtRegionInfoInPage[0].u8InPageVer == pstCurPage->u8PageVersion)
@@ -2195,7 +2428,7 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
 
             pstCurPage->pstShowRegion->pstNextRegion = NULL;
             pstCurPage->u8PageVersion = astSubtRegionInfoInPage[0].u8InPageVer;
-            HI_INFO_SUBT("have %d region in page\n",u8RegionNum);
+            HI_INFO_SUBT("have %d region in page\n", u8RegionNum);
         }
         else
         {
@@ -2204,32 +2437,22 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
             return HI_FAILURE;
         }
     }
-#if 0
-    /* reset region clut */
-    memcpy(pstParseInfo->stPageParam.stDefaultClut._2BitCLUT, s_2BitDefaultCLUT, sizeof(s_2BitDefaultCLUT));
-    memcpy(pstParseInfo->stPageParam.stDefaultClut._4BitCLUT, s_4BitDefaultCLUT, sizeof(s_4BitDefaultCLUT));
-    memcpy(pstParseInfo->stPageParam.stDefaultClut._8BitCLUT, s_8BitDefaultCLUT, sizeof(s_8BitDefaultCLUT));
-    //memset(pstParseInfo->stPageParam.astClut, 0, sizeof(pstParseInfo->stPageParam.astClut));
-    for (i = 0; i < SUBT_CLUT_IN_PAGE_MAX; i++)
-    {
-        pstParseInfo->stPageParam.astClut[i].u8ClutVersion = 0xff;
-    }
- #endif
+
 
     /* to parse region segment */
     for (u8RegionIndex = 0; u8RegionIndex < u8RegionNum; u8RegionIndex++)
     {
-        SUBT_REGION_INFO_IN_PAGE_S *pstRegionInfoInPage = &astSubtRegionInfoInPage[u8RegionIndex];
+        SUBT_REGION_INFO_IN_PAGE_S* pstRegionInfoInPage = &astSubtRegionInfoInPage[u8RegionIndex];
 
         pstSegment = pstSegmentEnter;
 
-        if (HI_SUCCESS == SUBT_Parse_FindRegionSegment(pstRegionInfoInPage->u8RegionId,&pstSegment))
+        if (HI_SUCCESS == SUBT_Parse_FindRegionSegment(pstRegionInfoInPage->u8RegionId, &pstSegment))
         {
-            s32Ret = SUBT_Parse_ParseRegionSegment(pstSegment,&stSubtAllRegionInfo,
-                                pstRegionInfoInPage, pstCurPage->enPageState);
+            s32Ret = SUBT_Parse_ParseRegionSegment(pstSegment, &stSubtAllRegionInfo,
+                                                   pstRegionInfoInPage, pstCurPage->enPageState);
 
             HI_INFO_SUBT("region info: [%d] [%d %d %d %d]\n", stSubtAllRegionInfo.u8RegionID, pstRegionInfoInPage->u16RegionLeft,
-                            pstRegionInfoInPage->u16RegionTop,stSubtAllRegionInfo.u16RegionWidth,stSubtAllRegionInfo.u16RegionHeight);
+                         pstRegionInfoInPage->u16RegionTop, stSubtAllRegionInfo.u16RegionWidth, stSubtAllRegionInfo.u16RegionHeight);
 
             if (0 == stSubtAllRegionInfo.u8ObjectNum)
             {
@@ -2238,7 +2461,8 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
             }
 
             s32Ret |= SUBT_Parse_CreateShowRegion(pstParseInfo, pstRegionInfoInPage->u16RegionLeft,
-                                    pstRegionInfoInPage->u16RegionTop, &stSubtAllRegionInfo, 0);
+                                                  pstRegionInfoInPage->u16RegionTop, &stSubtAllRegionInfo);
+
             if (s32Ret != HI_SUCCESS)
             {
                 HI_ERR_SUBT("failed to parse region segment or create show region\n");
@@ -2247,21 +2471,23 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
             }
 
             /* to parse Clut segment */
-            if(HI_SUCCESS == SUBT_Parse_FindClutSegment(stSubtAllRegionInfo.u8ClutId,&pstSegment))
+            if (HI_SUCCESS == SUBT_Parse_FindClutSegment(stSubtAllRegionInfo.u8ClutId, &pstSegment))
             {
-                SUBT_Parse_ParseClutSegment(pstParseInfo, pstSegment, &stSubtAllRegionInfo);
+                SUBT_Parse_ParseClutSegment(pstParseInfo, pstSegment);
             }
 
             /* to parse object segment */
 
             pstSegment = pstSegmentEnter;
+
             for (u8ObjectIndex = 0; u8ObjectIndex < stSubtAllRegionInfo.u8ObjectNum; u8ObjectIndex++)
             {
-                SUBT_OBJECT_INFO_IN_REGION_S *pstObjectInfoInRegion = &stSubtAllRegionInfo.stObjectInfo[u8ObjectIndex];
+                SUBT_OBJECT_INFO_IN_REGION_S* pstObjectInfoInRegion = &stSubtAllRegionInfo.stObjectInfo[u8ObjectIndex];
 
-                if(HI_SUCCESS == SUBT_Parse_FindObjectSegment(pstObjectInfoInRegion->u16ObjectId, &pstSegment))
+                if (HI_SUCCESS == SUBT_Parse_FindObjectSegment(pstObjectInfoInRegion->u16ObjectId, &pstSegment))
                 {
                     s32Ret = SUBT_Parse_ParseObjectSegment(pstParseInfo, &stSubtAllRegionInfo, pstSegment, pstObjectInfoInRegion);
+
                     if (s32Ret != HI_SUCCESS)
                     {
                         HI_ERR_SUBT("failed to SUBT_Parse_ParseObjectSegment...\n");
@@ -2272,6 +2498,7 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
             }
 
             s32Ret = SUBT_Parse_SetNextRegionAddr(pstParseInfo);
+
             if (s32Ret != HI_SUCCESS)
             {
                 HI_ERR_SUBT("failed to SUBT_Parse_SetNextRegionAddr...\n");
@@ -2289,16 +2516,19 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
 
 #ifdef SUBT_USED_3D_SUBTITLE
     pstSegment = pstSegmentEnter;
+
     if (HI_SUCCESS == SUBT_Parse_FindDisparitySignallingSegment(&pstSegment))
     {
-        s32Ret = SUBT_Parse_ParseDisparitySignallingSegment(pstParseInfo,pstSegment);
+        s32Ret = SUBT_Parse_ParseDisparitySignallingSegment(pstParseInfo, pstSegment);
         /* TODO: do something for 3D subtitle */
     }
+
 #endif
 
     if (pstParseInfo->pfnCallback)
     {
         s32Ret = SUBT_DataParse_Display(pstParseInfo);
+
         if (s32Ret != HI_SUCCESS)
         {
             HI_WARN_SUBT("failed to SUBT_DataParse_Display...\n");
@@ -2308,11 +2538,11 @@ static HI_S32 SUBT_Parse_ParseSegment(SUBT_PARSE_INFO_S * pstParseInfo)
     return HI_SUCCESS;
 }
 
-static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
+static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S* pstParseInfo)
 {
-    SUBT_SHOW_REGION_S *pstRegion = HI_NULL;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
-    SUBT_CLUT_S *pstClut = HI_NULL, *pstDefaultClut = HI_NULL;
+    SUBT_SHOW_REGION_S* pstRegion = HI_NULL;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
+    SUBT_CLUT_S* pstClut = HI_NULL, *pstDefaultClut = HI_NULL;
     HI_S32 s32ClutCmp = 0;
     HI_S32 count = 0;
     HI_U32 i = 0;
@@ -2323,6 +2553,7 @@ static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
     {
         /* used first region clut to default clut */
         pstClut = SUBT_Parse_FindClutId(pstParseInfo, pstRegion->u8ClutId);
+
         if (pstClut)
         {
             switch (pstRegion->u8RegionDepth)
@@ -2330,14 +2561,17 @@ static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
                 case 2:
                     pstRegion->pvRegionClut = pstClut->_2BitCLUT;
                     break;
+
                 case 4:
                     pstRegion->pvRegionClut = pstClut->_4BitCLUT;
                     break;
+
                 case 8:
                 default:
                     pstRegion->pvRegionClut = pstClut->_8BitCLUT;
                     break;
             }
+
             pstDefaultClut = pstClut;
             break;
         }
@@ -2348,6 +2582,7 @@ static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
     while (pstRegion->pstNextRegion)
     {
         pstClut = SUBT_Parse_FindClutId(pstParseInfo, pstRegion->u8ClutId);
+
         if (pstClut)
         {
             switch (pstRegion->u8RegionDepth)
@@ -2357,51 +2592,66 @@ static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
                     {
                         s32ClutCmp = memcmp(pstDefaultClut->_2BitCLUT, pstClut->_2BitCLUT, sizeof(pstClut->_2BitCLUT));
                     }
+
                     break;
+
                 case 4:
                     if (pstDefaultClut)
                     {
                         s32ClutCmp = memcmp(pstDefaultClut->_4BitCLUT, pstClut->_4BitCLUT, sizeof(pstClut->_4BitCLUT));
                     }
+
                     break;
+
                 case 8:
                 default:
                     s32ClutCmp = 0;
                     break;
             }
+
             if (s32ClutCmp)
             {
                 HI_U32 u32DataSize = pstRegion->u16Width * pstRegion->u16Heigth;
 
-                /* have different clut in a page, commix clut */
-                switch (pstRegion->u8RegionDepth)
+
+                if (u32DataSize <= pstParseInfo->u32RegionBufferLen)
                 {
-                    case 2:
-                        if (0 == count && pstDefaultClut)
-                        {
-                            memcpy(pstCurPage->stDefaultClut._8BitCLUT, pstDefaultClut->_2BitCLUT, sizeof(pstDefaultClut->_2BitCLUT));
-                        }
-                        memcpy(&pstCurPage->stDefaultClut._8BitCLUT[CLUT_BIT_4 * (count + 1)], pstClut->_2BitCLUT, sizeof(pstClut->_2BitCLUT));
+                    /* have different clut in a page, commix clut */
+                    switch (pstRegion->u8RegionDepth)
+                    {
+                        case 2:
+                            if (0 == count && pstDefaultClut)
+                            {
+                                memcpy(pstCurPage->stDefaultClut._8BitCLUT, pstDefaultClut->_2BitCLUT, sizeof(pstDefaultClut->_2BitCLUT));
+                            }
 
-                        for (i = 0; i < u32DataSize; i++)
-                        {
-                            pstRegion->pu8ShowData[i] += 4 * (count + 1);
-                        }
-                        break;
-                    case 4:
-                        if (0 == count && pstDefaultClut)
-                        {
-                            memcpy(pstCurPage->stDefaultClut._8BitCLUT, pstDefaultClut->_4BitCLUT, sizeof(pstDefaultClut->_4BitCLUT));
-                        }
-                        memcpy(&pstCurPage->stDefaultClut._8BitCLUT[CLUT_BIT_16 * (count + 1)], pstClut->_4BitCLUT, sizeof(pstClut->_4BitCLUT));
+                            memcpy(&pstCurPage->stDefaultClut._8BitCLUT[CLUT_BIT_4 * (count + 1)], pstClut->_2BitCLUT, sizeof(pstClut->_2BitCLUT));
 
-                        for (i = 0; i < u32DataSize; i++)
-                        {
-                            pstRegion->pu8ShowData[i] += 16 * (count + 1);
-                        }
-                        break;
-                    default:
-                        break;
+                            for (i = 0; i < u32DataSize; i++)
+                            {
+                                pstRegion->pu8ShowData[i] += 4 * (count + 1);
+                            }
+
+                            break;
+
+                        case 4:
+                            if (0 == count && pstDefaultClut)
+                            {
+                                memcpy(pstCurPage->stDefaultClut._8BitCLUT, pstDefaultClut->_4BitCLUT, sizeof(pstDefaultClut->_4BitCLUT));
+                            }
+
+                            memcpy(&pstCurPage->stDefaultClut._8BitCLUT[CLUT_BIT_16 * (count + 1)], pstClut->_4BitCLUT, sizeof(pstClut->_4BitCLUT));
+
+                            for (i = 0; i < u32DataSize; i++)
+                            {
+                                pstRegion->pu8ShowData[i] += 16 * (count + 1);
+                            }
+
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
 
                 count++;
@@ -2414,13 +2664,16 @@ static HI_S32 SUBT_DataParse_AdjustClut(SUBT_PARSE_INFO_S *pstParseInfo)
     return count;
 }
 
-static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S *pstParseInfo, HI_U32 *pu32AllRegionSize,
-                                             HI_U16 *pu16X, HI_U16 *pu16W, HI_U16 *pu16H)
+static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S* pstParseInfo, HI_U32* pu32AllRegionSize,
+        HI_U16* pu16X, HI_U16* pu16W, HI_U16* pu16H)
 {
-    SUBT_SHOW_REGION_S *pstRegion = HI_NULL;
-    HI_U16 u16RegionX = 0, u16RegionW = 0, u16RegionH = 0;
-    HI_U16 u16PrevRegionY = 0, u16PrevRegionH = 0;
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    HI_U16 u16RegionX = 0;
+    HI_U16 u16RegionW = 0;
+    HI_U16 u16RegionH = 0;
+    HI_U16 u16PrevRegionY = 0;
+    HI_U16 u16PrevRegionH = 0;
+    SUBT_SHOW_REGION_S* pstRegion = HI_NULL;
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
     if (HI_NULL == pstParseInfo || HI_NULL == pu32AllRegionSize
         || HI_NULL == pu16X || HI_NULL == pu16W || HI_NULL == pu16H)
@@ -2440,13 +2693,14 @@ static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S *pstParseInfo, HI
     u16PrevRegionH = pstRegion->u16Heigth;
     pstRegion = pstRegion->pstNextRegion;
 
-    while(pstRegion->pstNextRegion)
+    while (pstRegion->pstNextRegion)
     {
         if (pstRegion->u16XPos < u16RegionX)
         {
             u16RegionW += u16RegionX - pstRegion->u16XPos;
             u16RegionX = pstRegion->u16XPos;
         }
+
         if (pstRegion->u16Width > u16RegionW)
         {
             u16RegionW = pstRegion->u16Width;
@@ -2460,12 +2714,13 @@ static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S *pstParseInfo, HI
         {
             u16RegionH += pstRegion->u16Heigth;
         }
-        
+
         if (pstRegion->u16YPos < u16PrevRegionY)
         {
             HI_ERR_SUBT("the region y isn't ascending!!!\n");
             return HI_FAILURE;
         }
+
         u16PrevRegionY = pstRegion->u16YPos;
         u16PrevRegionH = pstRegion->u16Heigth;
 
@@ -2477,7 +2732,7 @@ static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S *pstParseInfo, HI
     *pu16W = u16RegionW;
     *pu16H = u16RegionH;
 
-    HI_INFO_SUBT("resize region : %d %d\n",u16RegionW,u16RegionH);
+    HI_INFO_SUBT("resize region : %d %d\n", u16RegionW, u16RegionH);
 
     //*pu32AllRegionSize = (HI_U32)((*pu16W) * (*pu16H) + 3) & (~3);
     *pu32AllRegionSize = (HI_U32)((*pu16W) * (*pu16H));
@@ -2485,16 +2740,17 @@ static HI_S32 SUBT_DataParse_CountRegionSize(SUBT_PARSE_INFO_S *pstParseInfo, HI
     return HI_SUCCESS;
 }
 
-static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
+static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S* pstParseInfo)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    SUBT_SHOW_REGION_S *pstRegion = NULL;
     HI_U32 u32DataSize = 0;
     HI_U32 u32CopyLen = 0;
-    SUBT_PAGE_PARAM_S *pstCurPage = NULL;
-    SUBT_Display_ITEM_S stDisplayItem;
     HI_U16 u16NextRegionY = 0;
-    HI_U16 u16AllRegionW = 0, u16AllRegionH = 0;
+    HI_U16 u16AllRegionW = 0;
+    HI_U16 u16AllRegionH = 0;
+    SUBT_SHOW_REGION_S* pstRegion = NULL;
+    SUBT_PAGE_PARAM_S* pstCurPage = NULL;
+    SUBT_Display_ITEM_S stDisplayItem;
 
     if (pstParseInfo == NULL)
     {
@@ -2509,9 +2765,9 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
     pstCurPage = &pstParseInfo->stPageParam;
     pstRegion = pstCurPage->pstShowRegion;
 
-    if(pstRegion->pstNextRegion)
+    if (pstRegion->pstNextRegion)
     {
-        stDisplayItem.u8DataType   = pstRegion->enObjType;
+        stDisplayItem.u8DataType = pstRegion->enObjType;
 
         stDisplayItem.u16YPos = pstRegion->u16YPos;
 
@@ -2526,16 +2782,18 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
             stDisplayItem.pvRegionClut = pstRegion->pvRegionClut;
         }
 
-        stDisplayItem.u8BitDepth   = 8;
-        stDisplayItem.u32PTS       = pstCurPage->u32PTS;
-        stDisplayItem.u32Timeout   = pstCurPage->u8ShowTime*1000;
+        stDisplayItem.u8BitDepth = 8;
+        stDisplayItem.u32PTS     = pstCurPage->u32PTS;
+        stDisplayItem.u32Timeout = pstCurPage->u8ShowTime * 1000;
 
         s32Ret = SUBT_DataParse_CountRegionSize(pstParseInfo, &u32DataSize, &stDisplayItem.u16XPos, &u16AllRegionW, &u16AllRegionH);
+
         if (HI_SUCCESS != s32Ret)
         {
             HI_ERR_SUBT("failed to SUBT_DataParse_CountRegionSize!!!\n");
             return HI_FAILURE;
         }
+
         if (u32DataSize > MAX_DATA_LENGTH)
         {
             HI_ERR_SUBT("over the max size:%d\n", MAX_DATA_LENGTH);
@@ -2550,13 +2808,16 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
                 free((HI_VOID*)pstParseInfo->pu8RegionShowBuf);
                 pstParseInfo->pu8RegionShowBuf = NULL;
             }
+
             pstParseInfo->pu8RegionShowBuf = (HI_U8*)malloc(u32DataSize);
+
             if (NULL == pstParseInfo->pu8RegionShowBuf)
             {
-                HI_ERR_SUBT("Malloc size:%u failure!!!\n",MAX_DATA_LENGTH);
+                HI_ERR_SUBT("Malloc size:%u failure!!!\n", MAX_DATA_LENGTH);
 
                 return HI_FAILURE;
             }
+
             pstParseInfo->u32RegionShowBufLen = u32DataSize;
             memset(pstParseInfo->pu8RegionShowBuf, 0, u32DataSize);
         }
@@ -2566,7 +2827,8 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
         u16NextRegionY = pstRegion->u16YPos + pstRegion->u16Heigth;
         u32CopyLen = 0;
         u32DataSize = 0;
-        while(pstRegion->pstNextRegion)
+
+        while (pstRegion->pstNextRegion)
         {
             HI_U16 u16OffsetX = pstRegion->u16XPos - stDisplayItem.u16XPos;
 
@@ -2580,25 +2842,27 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
                 memcpy(&pstParseInfo->pu8RegionShowBuf[u32CopyLen], pstRegion->pu8ShowData, u32DataSize);
                 u32CopyLen += u32DataSize;
 
-                HI_INFO_SUBT("layout region : %d %d\n",pstRegion->u16Width,pstRegion->u16Heigth);
+                HI_INFO_SUBT("layout region : %d %d\n", pstRegion->u16Width, pstRegion->u16Heigth);
             }
             else if (u16AllRegionW >= (pstRegion->u16Width + u16OffsetX)) /* the left size */
             {
                 HI_U16 i = 0;
 
                 memset(&pstParseInfo->pu8RegionShowBuf[u32CopyLen], 0, u16AllRegionW * pstRegion->u16Heigth);
+
                 for (i = 0; i < pstRegion->u16Heigth; i++)
                 {
                     memcpy(&pstParseInfo->pu8RegionShowBuf[u32CopyLen + u16OffsetX], &pstRegion->pu8ShowData[i * pstRegion->u16Width], pstRegion->u16Width);
                     u32CopyLen += u16AllRegionW;
                 }
+
                 stDisplayItem.u32RegionDataSize += u16AllRegionW * pstRegion->u16Heigth;
 
-                HI_INFO_SUBT("layout region : %d %d\n",pstRegion->u16Width,pstRegion->u16Heigth);
+                HI_INFO_SUBT("layout region : %d %d\n", pstRegion->u16Width, pstRegion->u16Heigth);
             }
             else
             {
-                HI_ERR_SUBT("region width size(%d)(%d) error!!!\n",pstRegion->u16Width, u16AllRegionW);
+                HI_ERR_SUBT("region width size(%d)(%d) error!!!\n", pstRegion->u16Width, u16AllRegionW);
 
                 return HI_FAILURE;
             }
@@ -2612,10 +2876,12 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
                 stDisplayItem.u32RegionDataSize += u32DataSize;
                 u32CopyLen += u32DataSize;
             }
+
             u16NextRegionY = pstRegion->u16YPos + pstRegion->u16Heigth;
 
             pstRegion = pstRegion->pstNextRegion;
         }
+
         /* end layout */
         HI_INFO_SUBT("layout end\n");
 
@@ -2639,13 +2905,14 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
         if (stDisplayItem.u16Width * stDisplayItem.u16Heigth != stDisplayItem.u32RegionDataSize)
         {
             HI_ERR_SUBT("length not match, [%d][%d] != [%d]\n", stDisplayItem.u16Width,
-                    stDisplayItem.u16Heigth, stDisplayItem.u32RegionDataSize);
+                        stDisplayItem.u16Heigth, stDisplayItem.u32RegionDataSize);
             return HI_FAILURE;
         }
 
         if (pstParseInfo->pfnCallback)
         {
-            s32Ret = pstParseInfo->pfnCallback(pstParseInfo->u32UserData, (HI_VOID *)&stDisplayItem);
+            s32Ret = pstParseInfo->pfnCallback(pstParseInfo->u32UserData, (HI_VOID*)&stDisplayItem);
+
             if (HI_SUCCESS != s32Ret)
             {
                 HI_WARN_SUBT("failed to callback function\n");
@@ -2664,7 +2931,7 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
             || pstCurPage->enPageState == SUBTITLE_PAGE_ACQUISITION_POINT)
         {
             /* Just need to clear osd, no region to show */
-            stDisplayItem.u8DataType= SUBT_OBJ_TYPE_BITMAP;
+            stDisplayItem.u8DataType = SUBT_OBJ_TYPE_BITMAP;
 
             stDisplayItem.u16XPos   = 0; /* This indicates no data of the region to display */
             stDisplayItem.u16YPos   = 0;
@@ -2674,7 +2941,7 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
             stDisplayItem.pvRegionClut = pstParseInfo->stPageParam.stDefaultClut._8BitCLUT;
             stDisplayItem.u8BitDepth   = 8;
             stDisplayItem.u32PTS       = pstCurPage->u32PTS;
-            stDisplayItem.u32Timeout   = pstCurPage->u8ShowTime*1000;
+            stDisplayItem.u32Timeout   = pstCurPage->u8ShowTime * 1000;
 
             stDisplayItem.u32RegionDataSize = (pstParseInfo->u32RegionShowBufLen > 8) ? 8 : pstParseInfo->u32RegionShowBufLen;
             stDisplayItem.pu8ShowData = pstParseInfo->pu8RegionShowBuf;
@@ -2683,12 +2950,14 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
 
             if (pstParseInfo->pfnCallback)
             {
-                s32Ret = pstParseInfo->pfnCallback(pstParseInfo->u32UserData, (HI_VOID *)&stDisplayItem);
+                s32Ret = pstParseInfo->pfnCallback(pstParseInfo->u32UserData, (HI_VOID*)&stDisplayItem);
+
                 if (HI_SUCCESS != s32Ret)
                 {
                     HI_WARN_SUBT("failed to callback function\n");
                 }
             }
+
             s32Ret = HI_SUCCESS;
         }
     }
@@ -2699,20 +2968,17 @@ static HI_S32 SUBT_DataParse_Display(SUBT_PARSE_INFO_S *pstParseInfo)
 /* Parse PES packet, delete the packet header and get the subtitling segment data
  *
  */
-HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , HI_U32 u32Len, HI_U16 u16PageID, HI_U16 u16AncillaryID)
+HI_S32 SUBT_DataParse_ParsePESPacket(HI_VOID* hDataParse, HI_U8* pu8DataSrc , HI_U32 u32Len, HI_U16 u16PageID, HI_U16 u16AncillaryID)
 
 {
     HI_S32  s32Ret = HI_FAILURE;
     HI_U8   u8PtsExistFlag = 0;
     HI_U8   u8PesHeadLength = 0;
     HI_U8   u8PesStuffingLength = 0;
-    HI_U32  u32PTSVal =  0;
-    HI_U8  *pu8Data = pu8DataSrc;
+    HI_U8*  pu8Data = pu8DataSrc;
     HI_U32  u32DataLen = u32Len;
 
-    SUBT_PARSE_INFO_S * pstParseInfo = (SUBT_PARSE_INFO_S *)hDataParse;
-
-    SUBT_PAGE_PARAM_S *pstCurPage = &pstParseInfo->stPageParam;
+    SUBT_PARSE_INFO_S* pstParseInfo = (SUBT_PARSE_INFO_S*)hDataParse;
 
     if (NULL == pstParseInfo)
     {
@@ -2720,6 +2986,8 @@ HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , H
 
         return HI_FAILURE;
     }
+
+    SUBT_PAGE_PARAM_S* pstCurPage = &pstParseInfo->stPageParam;
 
     /* skip pes start code: 00 00 01 BD */
     pu8Data += 4;
@@ -2741,15 +3009,15 @@ HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , H
     u8PesHeadLength += 1;
 
     /* get the PTS */
-    u32PTSVal = 0 ;
-    if( u8PtsExistFlag )
+    if ( u8PtsExistFlag )
     {
         /* '0010 PTS[32..30] 0 PTS[29..15] 0 PTS[14..0] 0' */
-        u32PTSVal = ((pu8Data[0] & 0x0e) << 29) | ((pu8Data[1] & 0xff) << 22 )
-                | ((pu8Data[2] & 0xfe) << 14 )  | ((pu8Data[3] & 0xff) << 7 )
-                | ((pu8Data[4] & 0xfe) >> 1 ) ;
+        HI_U32 u32PTSVal = ((pu8Data[0] & 0x0e) << 29) | ((pu8Data[1] & 0xff) << 22 )
+                           | ((pu8Data[2] & 0xfe) << 14 )  | ((pu8Data[3] & 0xff) << 7 )
+                           | ((pu8Data[4] & 0xfe) >> 1 ) ;
 
-        pstCurPage->u32PTS = u32PTSVal/90;//2\TODO:it up to how to save PTS
+        pstCurPage->u32PTS = u32PTSVal / 90; //2\TODO:it up to how to save PTS
+
         if (pu8Data[0] & 0x08)
         {
             pstCurPage->u32PTS += 0x2D82D82;//(1 << 32) / 90;
@@ -2766,28 +3034,31 @@ HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , H
 
     u8PesHeadLength += 2; /* 2 = 1(data_identifier) + 1(subtitle_stream_id)  */
 
-    if( u32DataLen >= u8PesHeadLength)
+    if ( u32DataLen >= u8PesHeadLength)
     {
         /* recv the whole pes head */
-        if( (0x20 == pu8Data[0])  && (0x00 == pu8Data[1] ) ) /* 0x20--subtitle stream data_identifier, 0x00--subtitle stream_id */
+        if ( (0x20 == pu8Data[0])  && (0x00 == pu8Data[1] ) ) /* 0x20--subtitle stream data_identifier, 0x00--subtitle stream_id */
         {
             pu8Data += 2;
+
             if ( (pu8Data != (&pu8DataSrc[u8PesHeadLength])) )
             {
                 HI_ERR_SUBT("\nerror, pu8Data addr:%p, 0x%02x, &pDataSrc[u8PesHeadLength] addr:%p, 0x%02x\n",
-                        pu8Data, pu8Data[0], &pu8DataSrc[u8PesHeadLength], pu8DataSrc[u8PesHeadLength]);
+                            pu8Data, pu8Data[0], &pu8DataSrc[u8PesHeadLength], pu8DataSrc[u8PesHeadLength]);
 
                 return HI_FAILURE;
             }
 
             /* 6 is the startcode(4 bytes) plus PES_packet_length field(2 bytes), because u8PesHeadLength included that field */
-            s32Ret = SUBT_Parse_CreateSegment(pstParseInfo, &pu8DataSrc[u8PesHeadLength],u32DataLen + 6 - u8PesHeadLength, u16PageID, u16AncillaryID);
+            s32Ret = SUBT_Parse_CreateSegment(pstParseInfo, &pu8DataSrc[u8PesHeadLength], u32DataLen + 6 - u8PesHeadLength, u16PageID, u16AncillaryID);
+
             if (s32Ret != HI_SUCCESS)
             {
                 HI_ERR_SUBT("failed to SUBT_Parse_CreateSegment...\n");
             }
 
             s32Ret |= SUBT_Parse_ParseSegment(pstParseInfo);
+
             if (s32Ret != HI_SUCCESS)
             {
                 HI_ERR_SUBT("failed to SUBT_Parse_ParseSegment....\n");
@@ -2818,17 +3089,18 @@ HI_S32 SUBT_DataParse_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataParse_Create(HI_HANDLE* phDataParse)
+HI_S32 SUBT_DataParse_Create(HI_VOID** pphDataParse)
 {
     HI_S32 s32Ret = HI_FAILURE;
 
-    SUBT_PARSE_INFO_S * pstParseInfo = NULL;
+    SUBT_PARSE_INFO_S* pstParseInfo = NULL;
 
-    SUBT_SEGMENT_S *pstSegment = NULL;
+    SUBT_SEGMENT_S* pstSegment = NULL;
 
     HI_U16 u16Index = 0;
 
     pstParseInfo = (SUBT_PARSE_INFO_S*)malloc(sizeof(SUBT_PARSE_INFO_S));
+
     if (NULL == pstParseInfo)
     {
         HI_ERR_SUBT("malloc failure....\n");
@@ -2839,16 +3111,19 @@ HI_S32 SUBT_DataParse_Create(HI_HANDLE* phDataParse)
     memset(pstParseInfo, 0, sizeof(SUBT_PARSE_INFO_S));
 
     pstSegment = pstParseInfo->stPageParam.astSegment;
-    for (u16Index = 0; u16Index < (SUBT_SEGMENT_IN_PES_MAX-1); u16Index++)
+
+    for (u16Index = 0; u16Index < (SUBT_SEGMENT_IN_PES_MAX - 1); u16Index++)
     {
-        pstSegment[u16Index].pstNext = &pstSegment[u16Index+1];
+        pstSegment[u16Index].pstNext = &pstSegment[u16Index + 1];
     }
-    pstSegment[SUBT_SEGMENT_IN_PES_MAX-1].pstNext = NULL;
+
+    pstSegment[SUBT_SEGMENT_IN_PES_MAX - 1].pstNext = NULL;
 
     pstParseInfo->stPageParam.stDisplayDef.u8DdsVersionNumber = 0xFF;
 
     pstParseInfo->u32RegionBufferLen = SUBT_REGION_SHOW_SD_LEN;
     pstParseInfo->pu8RegionBuffer = (HI_U8*)malloc(pstParseInfo->u32RegionBufferLen);
+
     if (pstParseInfo->pu8RegionBuffer == HI_NULL)
     {
         free(pstParseInfo);
@@ -2858,19 +3133,20 @@ HI_S32 SUBT_DataParse_Create(HI_HANDLE* phDataParse)
 
         return HI_FAILURE;
     }
+
     memset(pstParseInfo->pu8RegionBuffer, 0, pstParseInfo->u32RegionBufferLen);
     pstParseInfo->stPageParam.pstShowRegion = (SUBT_SHOW_REGION_S*)pstParseInfo->pu8RegionBuffer;
 
-    *phDataParse = (HI_HANDLE)pstParseInfo;
+    *pphDataParse = pstParseInfo;
 
-    HI_INFO_SUBT("success with handle:0x%08x!\n",*phDataParse);
+    HI_INFO_SUBT("success with handle:0x%08x!\n", *pphDataParse);
 
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataParse_Destroy(HI_HANDLE hDataParse)
+HI_S32 SUBT_DataParse_Destroy(HI_VOID* hDataParse)
 {
-    SUBT_PARSE_INFO_S * pstParseInfo = (SUBT_PARSE_INFO_S *)hDataParse;
+    SUBT_PARSE_INFO_S* pstParseInfo = (SUBT_PARSE_INFO_S*)hDataParse;
 
     if (NULL == pstParseInfo)
     {
@@ -2885,28 +3161,29 @@ HI_S32 SUBT_DataParse_Destroy(HI_HANDLE hDataParse)
     if (pstParseInfo->pu8RegionShowBuf)
     {
         free((HI_VOID*)pstParseInfo->pu8RegionShowBuf);
+        pstParseInfo->pu8RegionShowBuf = HI_NULL;
     }
 
     if (pstParseInfo->pu8RegionBuffer)
     {
-        free((HI_VOID *)pstParseInfo->pu8RegionBuffer);
+        free((HI_VOID*)pstParseInfo->pu8RegionBuffer);
+        pstParseInfo->pu8RegionBuffer = HI_NULL;
     }
 
     free((HI_VOID*)pstParseInfo);
+    pstParseInfo = HI_NULL;
 
     HI_INFO_SUBT("success!\n");
 
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataParse_Reset(HI_HANDLE hDataParse, HI_BOOL bParseFlag)
+HI_S32 SUBT_DataParse_Reset(HI_VOID* hDataParse, HI_BOOL bParseFlag)
 {
-    SUBT_SEGMENT_S *pstSegment = NULL;
-    HI_U32 i;
-
+    HI_U32 i = 0;
     HI_U16 u16Index = 0;
-
-    SUBT_PARSE_INFO_S * pstParseInfo = (SUBT_PARSE_INFO_S *)hDataParse;
+    SUBT_SEGMENT_S* pstSegment = NULL;
+    SUBT_PARSE_INFO_S* pstParseInfo = (SUBT_PARSE_INFO_S*)hDataParse;
 
     if (NULL == pstParseInfo)
     {
@@ -2915,38 +3192,48 @@ HI_S32 SUBT_DataParse_Reset(HI_HANDLE hDataParse, HI_BOOL bParseFlag)
         return HI_FAILURE;
     }
 
+    if (HI_FALSE == bParseFlag)
+    {
+        return HI_SUCCESS;
+    }
+
     memset(&pstParseInfo->stPageParam, 0, sizeof(pstParseInfo->stPageParam));
 
     /* reset region clut */
     memcpy(pstParseInfo->stPageParam.stDefaultClut._2BitCLUT, s_2BitDefaultCLUT, sizeof(s_2BitDefaultCLUT));
     memcpy(pstParseInfo->stPageParam.stDefaultClut._4BitCLUT, s_4BitDefaultCLUT, sizeof(s_4BitDefaultCLUT));
     memcpy(pstParseInfo->stPageParam.stDefaultClut._8BitCLUT, s_8BitDefaultCLUT, sizeof(s_8BitDefaultCLUT));
+
     for (i = 0; i < SUBT_CLUT_IN_PAGE_MAX; i++)
     {
         pstParseInfo->stPageParam.astClut[i].u8ClutVersion = 0xff;
         pstParseInfo->stPageParam.astClut[i].u8ClutId = 0xff;
-           
         memcpy(pstParseInfo->stPageParam.astClut[i]._2BitCLUT, s_2BitDefaultCLUT, sizeof(s_2BitDefaultCLUT));
         memcpy(pstParseInfo->stPageParam.astClut[i]._4BitCLUT, s_4BitDefaultCLUT, sizeof(s_4BitDefaultCLUT));
         memcpy(pstParseInfo->stPageParam.astClut[i]._8BitCLUT, s_8BitDefaultCLUT, sizeof(s_8BitDefaultCLUT));
     }
-    
-    memset(pstParseInfo->pu8RegionBuffer, 0, pstParseInfo->u32RegionBufferLen);
-    pstParseInfo->stPageParam.pstShowRegion = (SUBT_SHOW_REGION_S*)pstParseInfo->pu8RegionBuffer;
+
+    if (HI_NULL != pstParseInfo->pu8RegionBuffer)
+    {
+        memset(pstParseInfo->pu8RegionBuffer, 0, pstParseInfo->u32RegionBufferLen);
+        pstParseInfo->stPageParam.pstShowRegion = (SUBT_SHOW_REGION_S*)pstParseInfo->pu8RegionBuffer;
+    }
 
     pstSegment = pstParseInfo->stPageParam.astSegment;
-    for (u16Index = 0; u16Index < (SUBT_SEGMENT_IN_PES_MAX-1); u16Index++)
+
+    for (u16Index = 0; u16Index < (SUBT_SEGMENT_IN_PES_MAX - 1); u16Index++)
     {
-        pstSegment[u16Index].pstNext = &pstSegment[u16Index+1];
+        pstSegment[u16Index].pstNext = &pstSegment[u16Index + 1];
     }
-    pstSegment[SUBT_SEGMENT_IN_PES_MAX-1].pstNext = NULL;
+
+    pstSegment[SUBT_SEGMENT_IN_PES_MAX - 1].pstNext = NULL;
 
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataParse_Update(HI_HANDLE hDataParse, SUBT_DATAPARSE_CALLBACK_FN pfnCallback, HI_U32 u32UserData)
+HI_S32 SUBT_DataParse_Update(HI_VOID* hDataParse, SUBT_DATAPARSE_CALLBACK_FN pfnCallback, HI_U32 u32UserData)
 {
-    SUBT_PARSE_INFO_S * pstParseInfo = (SUBT_PARSE_INFO_S *)hDataParse;
+    SUBT_PARSE_INFO_S* pstParseInfo = (SUBT_PARSE_INFO_S*)hDataParse;
 
     if (NULL == pstParseInfo)
     {

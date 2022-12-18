@@ -16,10 +16,12 @@ else
 INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules
 endif
 
+MODULE_SRC = cfg80211
 ifeq ($(CFG_HI_KERNEL_VERSION),linux-3.10.y)
 MODULE_SRC = cfg80211_3.10.y
-else
-MODULE_SRC = cfg80211
+endif
+ifeq ($(CFG_HI_KERNEL_VERSION),linux-3.18.y)
+MODULE_SRC = cfg80211_3.18.y
 endif
 MODULE = cfg80211.ko
 MODULE_PATH = $(BUILD_DIR)/$(MODULE_SRC)/cfg80211.ko

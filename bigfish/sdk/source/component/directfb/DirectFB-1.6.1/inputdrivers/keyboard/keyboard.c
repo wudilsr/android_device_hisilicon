@@ -77,17 +77,17 @@ DFB_INPUT_DRIVER( HI_KEYBOARD )
 
 typedef enum hiHI_KEYBOARDCODE_E
 {
-    HI_KEY_1 = 1,    
-    HI_KEY_2,            
-    HI_KEY_3,            
-    HI_KEY_4,            
-    HI_KEY_5,            
-    HI_KEY_6,            
-    HI_KEY_7,            
-    HI_KEY_8,            
-    HI_KEY_9,            
-    HI_KEY_0, 
-    
+    HI_KEY_1 = 1,
+    HI_KEY_2,
+    HI_KEY_3,
+    HI_KEY_4,
+    HI_KEY_5,
+    HI_KEY_6,
+    HI_KEY_7,
+    HI_KEY_8,
+    HI_KEY_9,
+    HI_KEY_0,
+
 /*ÔÚÒ£¿ØÆ÷ÖÐÒÔÏÂ¿ªÊ¼°´¼ü¸´ÓÃÊý×Ö°´¼ü*/
     HI_KEY_A = 11,
     HI_KEY_B,
@@ -98,7 +98,7 @@ typedef enum hiHI_KEYBOARDCODE_E
     HI_KEY_G,
     HI_KEY_H,
     HI_KEY_I,
-    HI_KEY_J, 
+    HI_KEY_J,
     HI_KEY_K,
     HI_KEY_L,
     HI_KEY_M,
@@ -125,7 +125,7 @@ typedef enum hiHI_KEYBOARDCODE_E
     HI_KEY_g,
     HI_KEY_h,
     HI_KEY_i,
-    HI_KEY_j, 
+    HI_KEY_j,
     HI_KEY_k,
     HI_KEY_l,
     HI_KEY_m,
@@ -146,15 +146,15 @@ typedef enum hiHI_KEYBOARDCODE_E
     HI_KEY_DOT = 64,
     HI_KEY_COLON = 65,
 /*½áÊø°´¼ü¸´ÓÃÊý×Ö°´¼ü*/
-    
-    HI_KEY_ESC  = 66,    
-    HI_KEY_CAPS,    
-    
-    HI_KEY_DEL  = 70,    
-    HI_KEY_IME,    
-    HI_KEY_FAV,   
-    HI_KEY_MORE,   
-    HI_KEY_PREV,   
+
+    HI_KEY_ESC  = 66,
+    HI_KEY_CAPS,
+
+    HI_KEY_DEL  = 70,
+    HI_KEY_IME,
+    HI_KEY_FAV,
+    HI_KEY_MORE,
+    HI_KEY_PREV,
     HI_KEY_REC,
     HI_KEY_NEXT,
     HI_KEY_SLOW,
@@ -200,11 +200,11 @@ typedef enum hiHI_KEYBOARDCODE_E
     HI_KEY_F2,
     HI_KEY_F3,
     HI_KEY_F4,
-    
+
     HI_KEY_RED,
     HI_KEY_YELLOW,
     HI_KEY_BLUE,
-    HI_KEY_GREEN,   
+    HI_KEY_GREEN,
 
     HI_KEY_SET     = 116,
     HI_KEY_SUB,
@@ -219,13 +219,13 @@ typedef enum hiHI_KEYBOARDCODE_E
     HI_KEY_VOLUP
 }HI_KEYBOARD_CODE_E;
 
-typedef struct 
+typedef struct
 {
      HI_S32                         s32Code;                  /* hardware key code */
      HI_S32			      s32VirKey;		  /*º£Ë¼¼üÖµ*/
 } HI_KEYBOARD_MAP;
 
-HI_KEYBOARD_MAP g_KeyBoardMap[HI_KEY_NUM] = 
+HI_KEYBOARD_MAP g_KeyBoardMap[HI_KEY_NUM] =
 {
 	/*{s32Code,s32VirKey}   ÓÃ»§¸ü»»Ò£¿ØÆ÷Ê±ºòÖ»ÐèÒª¸Ä±äcode Óò*/
 	{0x6d92ff00, HI_KEY_1},
@@ -355,16 +355,16 @@ HI_KEYBOARD_MAP g_KeyBoardMap[HI_KEY_NUM] =
 	{},
 	{},
 	{}
-};	
+};
 
-typedef struct 
+typedef struct
 {
      HI_S32                         s32Code;                  /* hardware key code */
      DFBInputDeviceKeyIdentifier enIdentifier;            /* basic mapping */
      DFBInputDeviceKeySymbol     enSymbols; 		/* advanced key*/
 } HI_KEYBOARDMAP_ENTRY;
 
-typedef struct 
+typedef struct
 {
 	CoreInputDevice *device;
 	DirectThread    *thread;
@@ -515,15 +515,15 @@ keytable_map( HI_S32 code, DFBInputDeviceKeyIdentifier *penIdentifier, DFBInputD
 		if(code == g_stKeyBoardArray[i].s32Code)
 		{
 			*penIdentifier = g_stKeyBoardArray[i].enIdentifier;
-			*penSymbol =  g_stKeyBoardArray[i].enSymbols;	
+			*penSymbol =  g_stKeyBoardArray[i].enSymbols;
 			return 0;
 		}
 	}
-	
+
 	return -1;
 }
 
- 
+
 
 static void* keyboardEventThread( DirectThread *thread, void *driver_data )
 {
@@ -588,7 +588,7 @@ static void driver_get_info( InputDriverInfo *info )
 {
      snprintf( info->name, DFB_INPUT_DRIVER_INFO_NAME_LENGTH, "HI_IR Driver" );
      snprintf( info->vendor,DFB_INPUT_DRIVER_INFO_VENDOR_LENGTH, "directfb.org" );
-	 
+
      info->version.major = 0;
      info->version.minor = 3;
 }
@@ -600,7 +600,7 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 	HI_KEYBOARD_DATA   *pstData;
 
        HI_SYS_Init();
-	   
+
 	nRet = HI_UNF_KEYLED_Init();
 	if(nRet)
 	{
@@ -608,21 +608,28 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		HI_SYS_DeInit();
 		return DFB_INIT;
 	}
-	
+
+    nRet = HI_UNF_KEYLED_SelectType(HI_UNF_KEYLED_TYPE_CT1642);
+    if(HI_SUCCESS != nRet)
+    {
+        D_PERROR( "DirectFB/KEYLED: HI_UNF_KEYLED_SelectType FAILD!\n" );
+        goto ERR1;
+    }
+
 	nRet = HI_UNF_LED_Open();
 	if (HI_SUCCESS != nRet)
 	{
 		D_PERROR( "DirectFB/KEYLED: HI_UNF_KEYLED_Open FAILD!\n" );
 		goto ERR1;
 	}
-	
+
 	nRet = HI_UNF_KEY_Open();
 	if(nRet)
 	{
 		D_PERROR( "DirectFB/KEYBOAD: Could not open() !\n" );
 		goto ERR2;
 	}
-	
+
 	/*ÉèÖÃ²»ÉÏ±¨°´¼üµ¯Æð×´Ì¬*/
 	nRet = HI_UNF_KEY_IsKeyUp(0);
 	if(nRet)
@@ -630,7 +637,7 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		D_PERROR( "DirectFB/HI_IR: Could not SET EnableKeyUp() !\n" );
 		goto ERR2;
 	}
-
+#if 0
 	/*ÉèÖÃÖØ¸´°´¼üÉÏ±¨¼ä¸ôÊ±¼ä*/
 	nRet =  HI_UNF_KEY_RepKeyTimeoutVal(2048);
 	if(nRet)
@@ -638,9 +645,9 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		D_PERROR( "DirectFB/HI_IR: SetRepKeyTimeoutAttr FAILT !\n" );
 		goto ERR2;
 	}
-
+#endif
 	pstData = D_CALLOC( 1, sizeof(HI_KEYBOARD_DATA) );
-	if (!pstData) 
+	if (!pstData)
 	{
 		goto ERR2;
 	}
@@ -661,15 +668,15 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 
 	return DFB_OK;
 
-	ERR2:	
+	ERR2:
 	HI_UNF_KEY_Close();
 	ERR1:
 	HI_UNF_LED_Close();
 	HI_UNF_KEYLED_DeInit();
 	HI_SYS_DeInit();
-		
+
 	return DFB_INIT;
-	
+
 }
 
 static DFBResult  driver_get_keymap_entry( CoreInputDevice               *device,
@@ -701,7 +708,7 @@ static DFBResult  driver_get_keymap_entry( CoreInputDevice               *device
 static void driver_close_device( void *driver_data )
 {
 	HI_KEYBOARD_DATA *pstData = (HI_KEYBOARD_DATA*) driver_data;
- 
+
 	direct_thread_cancel( pstData->thread );
 	direct_thread_join( pstData->thread );
 	direct_thread_destroy( pstData->thread );

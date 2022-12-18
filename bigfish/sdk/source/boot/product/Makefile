@@ -23,6 +23,10 @@ ifeq ($(CFG_HI_LOADER_SUPPORT),y)
 objects += loader
 endif
 
+ifeq ($(CFG_HI_BUILD_WITH_ANDROID),y)
+objects += android
+endif
+
 objects_clean       := $(addsuffix _clean,$(objects))
 objects_install     := $(addsuffix _install,$(objects))
 objects_uninstall   := $(addsuffix _uninstall,$(objects))
@@ -53,6 +57,10 @@ CFLAGS  :=  -g -Os -D__KERNEL__ -fno-strict-aliasing -fno-common -ffixed-r8 \
             -Wall -Wstrict-prototypes -fno-stack-protector
 
 CFLAGS  +=  -I$(BOOT_DIR)/fastboot/include
+
+ifneq ($(CFG_HI_BOOT_LOG_DISABLE), y)
+	CFLAGS  += -DCONFIG_PRINT
+endif
 endif
 
 CFLAGS  +=  $(CFG_HI_CFLAGS)
@@ -88,11 +96,11 @@ CFLAGS += -DHI_HDMI_CEC_SUPPORT
 endif
 
 ifeq ($(CFG_HI_BUILD_WITH_ANDROID),y)
-objects += android
 CFLAGS  += -DHI_ANDROID_BOOT_SUPPORT
 
 ifeq ($(CFG_HI_BUILD_WITH_IR), y)
-CFLAGS  += -DHI_BOOT_IR_SUPPORT
+#CFLAGS  += -DHI_BOOT_IR_SUPPORT
+CFLAGS  += -DHI_REMOTE_RECOVERY
 endif
 
 ifeq ($(CFG_HI_ADVCA_SUPPORT), y)

@@ -615,7 +615,7 @@ static int cpufreq_interactive_speedchange_task(void *data)
 	return 0;
 }
 
-void cpufreq_interactive_boost(void)
+static void cpufreq_interactive_boost(void)
 {
 	int i;
 	int anyboost = 0;
@@ -651,7 +651,6 @@ void cpufreq_interactive_boost(void)
 	if (anyboost)
 		wake_up_process(speedchange_task);
 }
-EXPORT_SYMBOL(cpufreq_interactive_boost);
 
 static int cpufreq_interactive_notifier(
 	struct notifier_block *nb, unsigned long val, void *data)
@@ -1378,6 +1377,26 @@ static void __exit cpufreq_interactive_exit(void)
 }
 
 module_exit(cpufreq_interactive_exit);
+
+int cpufreq_interactive_boostpulse(void)
+{
+	int ret;
+	struct cpufreq_interactive_tunables *tunables;
+	struct cpufreq_policy cur_policy;
+
+	ret = cpufreq_get_policy(&cur_policy, 0);
+	if (ret)
+		return ret;
+
+	tunables = (struct cpufreq_interactive_tunables *)cur_policy.governor_data;
+	tunables->boostpulse_endtime = ktime_to_us(ktime_get()) +
+					tunables->boostpulse_duration_val;
+
+	cpufreq_interactive_boost();
+
+	return 0;
+}
+EXPORT_SYMBOL(cpufreq_interactive_boostpulse);
 
 MODULE_AUTHOR("Mike Chan <mike@android.com>");
 MODULE_DESCRIPTION("'cpufreq_interactive' - A cpufreq governor for "

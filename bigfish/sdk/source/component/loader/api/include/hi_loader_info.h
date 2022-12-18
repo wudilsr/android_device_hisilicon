@@ -52,6 +52,8 @@ typedef enum tagLOADER_TYPE_E
     HI_LOADER_TYPE_OTA = 0, /**< Cable upgrade *//**<CNcomment: CABLE 升级 */
     HI_LOADER_TYPE_IP, /**< IP upgrade *//**<CNcomment: IP升级 */
     HI_LOADER_TYPE_USB, /**< USB upgrade *//**<CNcomment: USB升级 */
+    HI_LOADER_TYPE_FS, /**< FS upgrade *//**<CNcomment: 从文件系统读升级包进行升级 */
+    HI_LOADER_TPYE_FACT_RESET, /**<Factory Reset *//**<CNcomment: 恢复出厂设置 */
     HI_LOADER_TYPE_BUTT, /**< Do not upgrade *//**<CNcomment: 不升级 */
 } HI_LOADER_TYPE_E;
 

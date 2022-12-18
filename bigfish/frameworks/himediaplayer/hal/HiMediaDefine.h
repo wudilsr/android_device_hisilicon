@@ -166,12 +166,20 @@ namespace android
         // The Fist frame time
         MEDIA_INFO_FIRST_FRAME_TIME = 1010,
         // stream 3D mode
-        MEDIA_INFO_STREM_3D_MODE = 1011,
+        MEDIA_INFO_STREAM_3D_MODE = 1011,
         // I frame error
-        MEDIA_INFO_STREM_IFRAME_ERROR = 1012,
+        MEDIA_INFO_STREAM_IFRAME_ERROR = 1012,
         // stream norm switch
-        MEDIA_INFO_STREM_NORM_SWITCH = 1013,
-
+        MEDIA_INFO_STREAM_NORM_SWITCH = 1013,
+        // first frame after seek
+        MEDIA_INFO_FIRST_FRAME_AFTER_SEEK = 1014,
+        MEDIA_INFO_AUDIO_DISCARD_FRAME,
+        MEDIA_INFO_VIDEO_DISCARD_FRAME,
+        MEDIA_INFO_AUDIO_PTS_ERROR,
+        MEDIA_INFO_VIDEO_PTS_ERROR,
+        MEDIA_INFO_ADEC_UNDERFLOW,
+        MEDIA_INFO_VDEC_UNDERFLOW,
+        MEDIA_INFO_AUDIO_FRAME_ERROR,
         //hiplayer Video INFO string,set only
         KEY_PARAMETER_VIDEO_POSITION_INFO = 6009,
     };

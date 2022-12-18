@@ -23,6 +23,7 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.KeyboardView;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -594,6 +595,12 @@ public class VirtualIME extends InputMethodService
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting)
     {
+        if(attribute.inputType == InputType.TYPE_NULL &&
+                attribute.imeOptions == attribute.IME_NULL)
+        {
+            requestHideSelf(0);
+            return ;
+        }
         super.onStartInput(attribute, restarting);
 
         LogTool.d("onStartInput");
@@ -623,6 +630,13 @@ public class VirtualIME extends InputMethodService
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting)
     {
+        if(attribute.inputType == InputType.TYPE_NULL &&
+                attribute.imeOptions == attribute.IME_NULL)
+        {
+            requestHideSelf(0);
+            return ;
+        }
+
         super.onStartInputView(attribute, restarting);
         // Apply the selected keyboard to the input view.
         LogTool.d("onStartInputView");

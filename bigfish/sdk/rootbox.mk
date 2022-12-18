@@ -31,11 +31,19 @@ ifeq ($(CFG_HI_ROOTFS_INSTALL_SHARED_LIBS),y)
 endif
 ifeq ($(CFG_HI_LOADER_APPLOADER),y)
 	-$(AT)cp -rf $(COMPONENT_DIR)/loader/app/release/*   $(ROOTBOX_DIR)/home
+ifeq ($(CFG_HI_LOADER_LOG_DISABLE),y)
+	$(AT)if [ -f $(ROOTBOX_DIR)/etc/profile ]; then \
+		echo "sleep 3" >> $(ROOTBOX_DIR)/etc/profile; \
+		echo "cd /home && ./loader 1>/dev/null 2>&1" >> $(ROOTBOX_DIR)/etc/profile; \
+		echo "reboot 1>/dev/null 2>&1" >> $(ROOTBOX_DIR)/etc/profile; \
+	fi
+else
 	$(AT)if [ -f $(ROOTBOX_DIR)/etc/profile ]; then \
 		echo "sleep 3" >> $(ROOTBOX_DIR)/etc/profile; \
 		echo "cd /home && ./loader" >> $(ROOTBOX_DIR)/etc/profile; \
-		echo "reboot" >> $(ROOTBOX_DIR)/etc/profile; \
+		echo "reboot 1>/dev/null 2>&1" >> $(ROOTBOX_DIR)/etc/profile; \
 	fi
+endif	
 endif
 	-$(AT)mknod $(ROOTBOX_DIR)/dev/console c 5 1
 	-$(AT)mknod $(ROOTBOX_DIR)/dev/ttyAMA0 c 204 64

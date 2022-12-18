@@ -201,11 +201,20 @@ ifeq ($(CFG_HI_CI_DEV_CIMAXPLUS),y)
 	$(AT)echo "insmod hi_cimaxplus.ko" >> load
 endif
 
+ifeq ($(CFG_HI_KERNEL_VERSION),linux-3.10.y)
 	$(AT)echo "insmod ./usb/ehci-hcd.ko"        >> load
 	$(AT)echo "insmod ./usb/ohci-hcd.ko"        >> load
 
-ifeq ($(USB3_SUPPORT),y)
-	$(AT)echo "insmod ./usb/xhci-hcd.ko"        >> load
+    ifeq ($(USB3_SUPPORT),y)
+		$(AT)echo "insmod ./usb/xhci-hcd.ko" >> load
+    endif
+else ifeq ($(CFG_HI_KERNEL_VERSION),linux-3.18.y)
+	$(AT)echo "insmod ./usb/ehci-platform.ko" >> load
+	$(AT)echo "insmod ./usb/ohci-platform.ko" >> load
+
+    ifeq ($(USB3_SUPPORT),y)
+		$(AT)echo "insmod ./usb/xhci-plat-hcd.ko" >> load
+    endif
 endif
 
 ifeq ($(SATA_SUPPORT),y)

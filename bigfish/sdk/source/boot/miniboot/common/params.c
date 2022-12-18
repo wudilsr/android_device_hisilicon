@@ -278,6 +278,56 @@ void bootargs_prepare(void)
 }
 /******************************************************************************/
 
+static char *bootargs_adjust_mmz_offset(unsigned int ddrsize, char *name)
+{
+	int i;
+	char *param[4];
+	char *args, *comma_pos;
+	char *mmz_param, *mmz_pos;
+	unsigned long long size, offset;
+	char *tmp_args = NULL;
+
+	args = env_get(name);
+	if (!args) {
+		return NULL;
+	}
+
+	mmz_pos = mmz_param = strstr(args, "mmz=");
+	if (!mmz_param) {
+		return NULL;
+	}
+
+	tmp_args = (char *)malloc(100);
+	if (!tmp_args) {
+		printf("params: Out of memory.\n");
+		return NULL;
+	}
+	memcpy(tmp_args, args, mmz_pos - args);
+	mmz_pos = mmz_pos - args + tmp_args;
+
+	/* eg: mmz=ddr,0,0,256M,  0-mmz=ddr, 1-0, 2-0, 3-256M */
+	for (i = 0; *mmz_param && (i <= 4); i++) {
+		param[i] = mmz_param;
+		comma_pos = strchr(mmz_param, ',');
+		*comma_pos = '\0';
+		mmz_param = comma_pos+1;
+	}
+	size = memparse(param[3], NULL);
+
+	if (ddrsize == (_512M + _256M))
+		ddrsize = _512M;
+	else if(ddrsize == (_1G + _512M))
+		ddrsize = _1G;
+	offset = ddrsize - size;
+
+	snprintf(mmz_pos, 50, "%s,%s,%s,%s", param[0], param[1],
+			ultohstr((unsigned long long)offset), param[3]);
+
+	env_set(name, tmp_args);
+	return tmp_args;
+}
+/******************************************************************************/
+
 char *bootargs_merge(void)
 {
 	char *args_merge;
@@ -287,7 +337,10 @@ char *bootargs_merge(void)
 	snprintf(args_merge_name, sizeof(args_merge_name), "bootargs_%s",
 		 ultohstr((unsigned long long)ddrsize));
 
-	args_merge = env_get(args_merge_name);
+	if((ddrsize == (_512M + _256M)) || (ddrsize == (_1G + _512M)))
+		args_merge = bootargs_adjust_mmz_offset(ddrsize, args_merge_name);
+	else
+		args_merge = env_get(args_merge_name);
 
 	return merge_args(env_get("bootargs"), args_merge, "booargs",
 			  args_merge_name);

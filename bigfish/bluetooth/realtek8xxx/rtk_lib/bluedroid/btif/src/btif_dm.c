@@ -64,7 +64,7 @@
 #define BTIF_DM_DEFAULT_INQ_MAX_DURATION    10
 #define BTIF_DM_MAX_SDP_ATTEMPTS_AFTER_PAIRING 2
 #ifdef BLUETOOTH_RTK
-#define BOND_RETRY_MAXIMUM_RETRY_TIMES      3 //add by realtek, For retry device bond
+#define BOND_RETRY_MAXIMUM_RETRY_TIMES      0 //add by realtek, For retry device bond
 #endif
 #define PROPERTY_PRODUCT_MODEL "ro.product.model"
 #define DEFAULT_LOCAL_NAME_MAX  31
@@ -92,6 +92,9 @@ typedef struct
 #if (defined(BLE_INCLUDED) && (BLE_INCLUDED == TRUE))
     BOOLEAN          is_le_only;
     btif_dm_ble_cb_t ble;
+#endif
+#ifdef BLUETOOTH_RTK
+    UINT8   bondstate;
 #endif
 } btif_dm_pairing_cb_t;
 
@@ -367,6 +370,9 @@ static void bond_state_changed(bt_status_t status, bt_bdaddr_t *bd_addr, bt_bond
         if (state == BT_BOND_STATE_BONDING)
         {
             pairing_cb.state = state;
+#ifdef BLUETOOTH_RTK
+            pairing_cb.bondstate = state;
+#endif
             bdcpy(pairing_cb.bd_addr, bd_addr->address);
         }
         else
@@ -448,6 +454,16 @@ static void btif_update_remote_properties(BD_ADDR bd_addr, BD_NAME bd_name,
 
     BTIF_STORAGE_FILL_PROPERTY(&properties[num_properties],
                         BT_PROPERTY_CLASS_OF_DEVICE, sizeof(cod), &cod);
+#ifdef BLUETOOTH_RTK
+    if(cod == COD_UNCLASSIFIED){
+        if (btif_storage_get_remote_device_property(&bdaddr, &properties[num_properties]) == BT_STATUS_SUCCESS)
+        {
+            BTIF_TRACE_DEBUG1("remote_cod = 0x%x", cod);
+        }
+        else
+           cod = COD_UNCLASSIFIED;
+    }
+#endif
     status = btif_storage_set_remote_device_property(&bdaddr, &properties[num_properties]);
     ASSERTC(status == BT_STATUS_SUCCESS, "failed to save remote device class", status);
     num_properties++;
@@ -523,7 +539,7 @@ static void btif_dm_cb_create_bond(bt_bdaddr_t *bd_addr)
 {
     BOOLEAN is_hid = check_cod(bd_addr, COD_HID_POINTING);
 #ifdef BLUETOOTH_RTK
-    BOOLEAN is_hid_major = check_cod(bd_addr, COD_HID_MAJOR);
+    BOOLEAN is_hid_major = check_cod_hid(bd_addr, COD_HID_MAJOR);
     BTIF_TRACE_DEBUG2("is_hid(%d), is_hid_major(%d)", is_hid, is_hid_major);
 #endif
 
@@ -1061,6 +1077,18 @@ static void btif_dm_search_devices_evt (UINT16 event, char *p_param)
                 cod = COD_UNCLASSIFIED;
             }
 
+#ifdef BLUETOOTH_RTK
+            if(cod == COD_UNCLASSIFIED){
+                bt_property_t properties;
+                if (btif_storage_get_remote_device_property(&bdaddr, &properties) == BT_STATUS_SUCCESS)
+                {
+                    BTIF_TRACE_DEBUG1("remote_cod = 0x%x", cod);
+                }
+                else
+                    cod = COD_UNCLASSIFIED;
+            }
+#endif
+
             if (!check_eir_remote_name(p_search_data, bdname.name, &remote_name_len))
                 check_cached_remote_name(p_search_data, bdname.name, &remote_name_len);
 
@@ -1221,7 +1249,7 @@ static void btif_dm_search_services_evt(UINT16 event, char *p_param)
                 btif_dm_get_remote_services(&bd_addr);
                 return;
             }
-#ifdef BLUETOOTH_RTK_VR
+#ifdef BLUETOOTH_RTK
             else if ((p_data->disc_res.result != BTA_SUCCESS) &&
                  (pairing_cb.state == BT_BOND_STATE_BONDING ))
             {
@@ -1244,7 +1272,15 @@ static void btif_dm_search_services_evt(UINT16 event, char *p_param)
                       BTIF_TRACE_ERROR2("Index: %d uuid:%s", i, temp);
                  }
             }
+#ifdef BLUETOOTH_RTK
+            if ((p_data->disc_res.result == BTA_SUCCESS) &&(p_data->disc_res.p_raw_data != NULL))
+            {
+                GKI_freebuf(p_data->disc_res.p_raw_data);
+                p_data->disc_res.p_raw_data = NULL;
+                p_data->disc_res.raw_data_size = 0;
 
+            }
+#endif
             /* onUuidChanged requires getBondedDevices to be populated.
             ** bond_state_changed needs to be sent prior to remote_device_property
             */
@@ -1785,7 +1821,8 @@ static void btif_dm_generic_evt(UINT16 event, char* p_param)
                     return;
                 }
 
-                bond_state_changed(BT_STATUS_RMT_DEV_DOWN, (bt_bdaddr_t *)p_param, BT_BOND_STATE_NONE);
+                btif_dm_cb_remove_bond((bt_bdaddr_t *)p_param);
+                //bond_state_changed(BT_STATUS_RMT_DEV_DOWN, (bt_bdaddr_t *)p_param, BT_BOND_STATE_NONE);
             }
             break;
         case BTIF_DM_CB_HID_BOND_SUCCESS:
@@ -2010,9 +2047,23 @@ bt_status_t btif_dm_create_bond(const bt_bdaddr_t *bd_addr)
 
     memcpy(&tempAddr, bd_addr, sizeof(bt_bdaddr_t));
     BTIF_TRACE_EVENT2("%s: bd_addr=%s", __FUNCTION__, bd2str((bt_bdaddr_t *) bd_addr, &bdstr));
-    if (pairing_cb.state != BT_BOND_STATE_NONE)
+#ifdef BLUETOOTH_RTK
+    GKI_disable();
+    if(pairing_cb.bondstate != BT_BOND_STATE_NONE)
+    {
+        GKI_enable();
         return BT_STATUS_BUSY;
-
+    }
+    pairing_cb.bondstate = BT_BOND_STATE_BONDING;
+    GKI_enable();
+#endif
+    if (pairing_cb.state != BT_BOND_STATE_NONE)
+    {
+#ifdef BLUETOOTH_RTK
+        pairing_cb.bondstate = BT_BOND_STATE_NONE;
+#endif
+        return BT_STATUS_BUSY;
+    }
     btif_transfer_context(btif_dm_generic_evt, BTIF_DM_CB_CREATE_BOND,
                           (char *)bd_addr, sizeof(bt_bdaddr_t), NULL);
 
@@ -2496,12 +2547,11 @@ static void btif_dm_ble_auth_cmpl_evt (tBTA_DM_AUTH_CMPL *p_auth_cmpl)
 
         btif_dm_save_ble_bonding_keys();
 #ifdef BLUETOOTH_RTK
-
-#else
-        BTA_GATTC_Refresh(bd_addr.address);
+        if(!check_cod_hid(&bd_addr,COD_HID_MAJOR))
 #endif
+        BTA_GATTC_Refresh(bd_addr.address);
 #ifdef BLUETOOTH_RTK
-        if(!bdcmp(pairing_cb.bd_addr,bd_addr.address))
+        if((!bdcmp(pairing_cb.bd_addr,bd_addr.address)) &&(!check_cod_hid(&bd_addr,COD_HID_MAJOR)))
 #endif
             btif_dm_get_remote_services(&bd_addr);
     }
@@ -2517,11 +2567,12 @@ static void btif_dm_ble_auth_cmpl_evt (tBTA_DM_AUTH_CMPL *p_auth_cmpl)
         }
     }
 #ifdef BLUETOOTH_RTK
-    if(!bdcmp(pairing_cb.bd_addr,bd_addr.address)) {
+	if((!bdcmp(pairing_cb.bd_addr,bd_addr.address)) &&(check_cod_hid(&bd_addr,COD_HID_MAJOR))){
         BTIF_TRACE_DEBUG1("%s to call bond_state_changed", __FUNCTION__);
         if(state != BT_BOND_STATE_BONDED)
             bond_state_changed(status, &bd_addr, state);
-    }
+    }else
+    	bond_state_changed(status, &bd_addr, state);
 #else
     bond_state_changed(status, &bd_addr, state);
 #endif

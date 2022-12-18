@@ -437,8 +437,8 @@ HI_VOID VENC_DRV_EflSceChaDetect(VeduEfl_Rc_S *pRc, HI_S32 w, HI_S32 h, HI_S32 I
 
 HI_VOID VENC_DRV_EflRcCalIFrmQp(VeduEfl_Rc_S *pRc, HI_S32 w, HI_S32 h, HI_S32 times, HI_S32 GopLength, int FrameIMBRatio)
 {
-      HI_S32 AveImbRatioSeq, TimesDelta = 0;
-      AveImbRatioSeq = pRc->ImbRatioSeq / D_VENC_RC_MAX(pRc->FrmNumSeq - 1, 1);
+      HI_S32 TimesDelta = 0;
+      
       if(pRc->StillFrameNum >= 30)
       {
            TimesDelta = 4;
@@ -2395,7 +2395,7 @@ static HI_U32 Convert_PIX_Format(HI_DRV_PIX_FORMAT_E oldFormat,HI_U32 flag)
    return Ret;
 }
 
-static HI_S32 QuickEncode_Process(VeduEfl_EncPara_S* EncHandle, HI_HANDLE GetImgHhd, HI_BOOL bEvenGetImg)         //成功取帧返回 HI_SUCCESS,连一次都取不成功返回HI_FAILURE
+static HI_S32 QuickEncode_Process(VeduEfl_EncPara_S* EncHandle, HI_HANDLE GetImgHhd)         //成功取帧返回 HI_SUCCESS,连一次都取不成功返回HI_FAILURE
 {
     HI_BOOL bLastFrame = HI_FALSE;
     HI_DRV_VIDEO_FRAME_S stImage_temp;
@@ -2405,78 +2405,56 @@ static HI_S32 QuickEncode_Process(VeduEfl_EncPara_S* EncHandle, HI_HANDLE GetImg
 	
     D_VENC_GET_CHN(u32VeChn, EncHandle);
 	D_VENC_CHECK_CHN(u32VeChn);
-	if (!bEvenGetImg)        /*never get Img before */
-	{
-	    pEncPara->stStat.GetFrameNumTry++;
-	    if( HI_SUCCESS == (pEncPara->stSrcInfo.pfGetImage)(GetImgHhd, &pEncPara->stImage))
-	    {
-	        pEncPara->stStat.GetFrameNumOK++;
-			if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
-			{
-			    pEncPara->stStat.VpssImgBufNum++;
-			}
-	        while(!bLastFrame)
-	        {
-	           pEncPara->stStat.GetFrameNumTry++;
-	           if( HI_SUCCESS == (pEncPara->stSrcInfo.pfGetImage)(GetImgHhd, &stImage_temp))
-	           {
-	                pEncPara->stStat.GetFrameNumOK++; 
-					if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
-					{
-					    pEncPara->stStat.VpssImgBufNum++;
-					}	
-	                pEncPara->stStat.PutFrameNumTry++; 
-	                (*pEncPara->stSrcInfo.pfPutImage)(pEncPara->stSrcInfo.handle, &pEncPara->stImage);
-					pEncPara->stStat.PutFrameNumOK++;
-					if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
-					{
-					    pEncPara->stStat.VpssImgBufNum--;
-						
-					}
-                    pEncPara->stStat.QuickEncodeSkip++;
-	                pEncPara->stImage = stImage_temp;
-	           }
-	           else
-	           {
-	               bLastFrame = HI_TRUE;
-	           }
-			}	
-	     }
-	     else
-	     {
-	        return HI_FAILURE;
-	     }
-	 }
-	 else                /* already get one Img before*/      
-     {
-		 while(!bLastFrame)
-	     {
-	         pEncPara->stStat.GetFrameNumTry++;
-			 if( HI_SUCCESS == (pEncPara->stSrcInfo.pfGetImage)(GetImgHhd, &stImage_temp))
-	         {
-	              pEncPara->stStat.GetFrameNumOK++; 
-				  if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)
-  				  {
-  				      pEncPara->stStat.VpssImgBufNum++;
-  				  }
-								  
-	              pEncPara->stStat.PutFrameNumTry++; 
-	              (*pEncPara->stSrcInfo.pfPutImage)(pEncPara->stSrcInfo.handle, &pEncPara->stImage);
-	              pEncPara->stStat.PutFrameNumOK++;
-				  if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
-   				  {
-   				      pEncPara->stStat.VpssImgBufNum--;
-   				  }
-				  pEncPara->stStat.QuickEncodeSkip++;
-	              pEncPara->stImage = stImage_temp;
-	         }
-	         else
-	         {
-	             bLastFrame = HI_TRUE;
-	         }
-		 }
-     }
-     return HI_SUCCESS;
+
+    pEncPara->stStat.GetFrameNumTry++;
+
+    if ( HI_SUCCESS == (pEncPara->stSrcInfo.pfGetImage)(GetImgHhd, &pEncPara->stImage))
+    {
+        pEncPara->stStat.GetFrameNumOK++;
+
+        if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
+        {
+            pEncPara->stStat.VpssImgBufNum++;
+        }
+
+        while (!bLastFrame)
+        {
+            pEncPara->stStat.GetFrameNumTry++;
+
+            if ( HI_SUCCESS == (pEncPara->stSrcInfo.pfGetImage)(GetImgHhd, &stImage_temp))
+            {
+                pEncPara->stStat.GetFrameNumOK++;
+
+                if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
+                {
+                    pEncPara->stStat.VpssImgBufNum++;
+                }
+
+                pEncPara->stStat.PutFrameNumTry++;
+                (*pEncPara->stSrcInfo.pfPutImage)(pEncPara->stSrcInfo.handle, &pEncPara->stImage);
+                pEncPara->stStat.PutFrameNumOK++;
+
+                if (g_stVencChn[u32VeChn].enSrcModId >= HI_ID_BUTT)   /* venc don't attach src*/
+                {
+                    pEncPara->stStat.VpssImgBufNum--;
+
+                }
+
+                pEncPara->stStat.QuickEncodeSkip++;
+                pEncPara->stImage = stImage_temp;
+            }
+            else
+            {
+                bLastFrame = HI_TRUE;
+            }
+        }
+    }
+    else
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
 }
 
 HI_S32 VENC_DRV_EflToVPSSGetImge(VPSS_HANDLE hVPSS,HI_DRV_VIDEO_FRAME_S *pstImageInfo)   //给VPSS的回调,主动取帧
@@ -2546,6 +2524,11 @@ HI_BOOL VENC_DRV_EflJudgeVPSS( VeduEfl_EncPara_S* EncHandle, HI_DRV_VIDEO_FRAME_
     pEncPara->stSrcInfo.pfGetImage   = pVpssFunc->pfnVpssGetPortFrame;
     pEncPara->stSrcInfo.pfPutImage   = pVpssFunc->pfnVpssRelPortFrame;
     Ret = (pVpssFunc->pfnVpssSetSourceMode)(g_stVencChn[u32ChnID].hVPSS,VPSS_SOURCE_MODE_USERACTIVE, HI_NULL);
+    if (Ret != HI_SUCCESS)
+    {
+        HI_ERR_VENC("pfnVpssSetSourceMode VPSS_SOURCE_MODE_USERACTIVE ERROR!\n");
+    }
+
     (pVpssFunc->pfnVpssEnablePort)(g_stVencChn[u32ChnID].hPort[0], HI_TRUE);
 #endif
     pEncPara->bNeverEnc = HI_FALSE;
@@ -2585,7 +2568,7 @@ HI_S32 VENC_DRV_EflSortPriority_2(HI_S8 priority)
    HI_U32 cnt = 0;
    HI_U32 id  = MAX_VEDU_CHN-1;
    HI_BOOL bFind = 0;
-   HI_U32 chnID_temp = 0,chnPriority_temp = 0;
+
    for (i = 0; i < MAX_VEDU_CHN; i++)
    {
       if ((priority == PriorityTab[1][i]) && (INVAILD_CHN_FLAG != PriorityTab[0][i]))
@@ -2610,9 +2593,6 @@ HI_S32 VENC_DRV_EflSortPriority_2(HI_S8 priority)
       return HI_SUCCESS;
    }
 
-   chnID_temp       = PriorityTab[0][id];
-   chnPriority_temp = PriorityTab[1][id];
-   
    for(i = 0; (i<(cnt-1)) && (id<(MAX_VEDU_CHN-1)); i++,id++)
    {
        HI_U32 temp0 = PriorityTab[0][id];
@@ -4140,7 +4120,7 @@ HI_S32 VENC_DRV_EflRcOpenOneFrm( VeduEfl_EncPara_S* EncHandle)
 {
    
     HI_S32 IMBRatio = 0;//ratio of IMB in previous six frames
-    HI_S32 AveImbRatioSeq;//average ratio of IMB in sequence
+    //HI_S32 AveImbRatioSeq;//average ratio of IMB in sequence
     HI_S32 FrameIMBRatio = 0;
     HI_S32 TimeOfPFrame;
 	//HI_S32 TimeOfPFrameDelta = 0;
@@ -4339,7 +4319,7 @@ HI_S32 VENC_DRV_EflRcOpenOneFrm( VeduEfl_EncPara_S* EncHandle)
                pEncPara->stRc.StillFrameNum = D_VENC_RC_MAX(pEncPara->stRc.StillFrameNum, 0);
         }
 
-        AveImbRatioSeq = pEncPara->stRc.ImbRatioSeq / D_VENC_RC_MAX(pEncPara->stRc.FrmNumSeq, 1);
+        //AveImbRatioSeq = pEncPara->stRc.ImbRatioSeq / D_VENC_RC_MAX(pEncPara->stRc.FrmNumSeq, 1);
         if(pEncPara->stRc.FrmNumSeq == 1000)
         {
                pEncPara->stRc.ImbRatioSeq = 0;
@@ -4645,9 +4625,10 @@ HI_S32 VENC_DRV_EflStartVenc( VeduEfl_EncPara_S* EncHandle )
             break;
         }
     }
-    if (i >= VENC_MAX_CHN_NUM)
+    if ((i >= VENC_MAX_CHN_NUM) || (pEncPara == NULL))
 	{  
 	    VENC_DRV_OsalUnlock( VeduIpCtx.pChnLock, &flag );
+
         return HI_ERR_VENC_CHN_NOT_EXIST;
     }  
     for (j = 0;j < MAX_VEDU_CHN; j++)
@@ -4767,7 +4748,7 @@ HI_S32 VENC_DRV_EflStopVenc( VeduEfl_EncPara_S* EncHandle )
 	else   //jpeg
 	{
 	    VeduEfl_NaluHdr_S *pNaluHdr;
-		HI_U32    u32NewWrHead = pEncPara->stCycBuf.u32RdHead;
+        HI_U32    u32NewWrHead;
 		VALG_CRCL_BUF_S stCycBuf_1;
 		memcpy(&stCycBuf_1,&pEncPara->stCycBuf,sizeof(VALG_CRCL_BUF_S));
 
@@ -4881,7 +4862,7 @@ static HI_S32 VENC_DRV_EflQueryChn_X(HI_U32 u32ChnID, VeduEfl_EncIn_S *pEncIn ) 
 	
     if(pEncPara->QuickEncode)
     {
-        if ( HI_FAILURE == QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd,HI_FALSE))
+        if ( HI_FAILURE == QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd))
         { return HI_FAILURE; }
     }
     else
@@ -4918,7 +4899,7 @@ static HI_S32 VENC_DRV_EflQueryChn_X(HI_U32 u32ChnID, VeduEfl_EncIn_S *pEncIn ) 
 #if ((defined __VENC_3716CV200_CONFIG__)|(defined __VENC_S5V100_CONFIG__)|(defined __VENC_98M_CONFIG__))             //for lowdelay 
    if (pEncPara->stImage.u32TunnelPhyAddr)      //待明确!!
    {
-        //QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd,HI_TRUE);    
+        //QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd);    
 		//if (pEncPara->stImage.u32Priv[2]) 
 	    //{
 	         pEncPara->LowDlyMod = HI_TRUE; 
@@ -5268,7 +5249,7 @@ static HI_S32 VENC_DRV_EflQueryChn_Y2(HI_U32 u32ChnID, VeduEfl_EncIn_S *pEncIn )
 #if ((defined __VENC_3716CV200_CONFIG__)|(defined __VENC_S5V100_CONFIG__)|(defined __VENC_98M_CONFIG__))            //for lowdelay 
    if (pEncPara->stImage.u32TunnelPhyAddr)      //待明确!!
    {
-        //QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd,HI_TRUE);    
+        //QuickEncode_Process(g_stVencChn[u32ChnID].hVEncHandle,hHd);    
 		//if (pEncPara->stImage.u32Priv[2]) 
 	    //{
 	         pEncPara->LowDlyMod = HI_TRUE; 
@@ -6139,7 +6120,12 @@ static HI_VOID VENC_DRV_EflTask( HI_VOID )
 						JpgeEncIn.RotationAngle = pEncPara->RotationAngle;
 						
                         s32Ret = pJpgeFunc->pfnJpgeEncodeFrame(g_stVencChn[u32ChnID].hJPGE, &JpgeEncIn, &bJpgeBufFull);
-						if (bJpgeBufFull)
+                        if (s32Ret != HI_SUCCESS)
+                        {
+                            JPGE_RemoveJFIF(pEncPara);
+                            pEncPara->stStat.ErrCfgSkip++;
+                        }
+                        else if (bJpgeBufFull)
 						{
 	 						/*remove the heard of JFIF before*/
 	 						JPGE_RemoveJFIF(EncHandle);	   
@@ -6496,12 +6482,20 @@ HI_S32 VENC_DRV_EflOpenVedu( HI_VOID )
     return HI_SUCCESS;
 }
 
-HI_S32 VENC_DRV_EflCloseVedu( HI_VOID )
+HI_VOID VENC_DRV_EflCloseVedu( HI_VOID )
 {
+    HI_U32 RecycleCnt = 0;
+
     VeduIpCtx.StopTask = 1;
-    while (VeduIpCtx.TaskRunning)
+    while ((VeduIpCtx.TaskRunning) && (RecycleCnt < 50))
     {
+        RecycleCnt++;
         msleep(1);
+    }
+
+    if (RecycleCnt == 50)
+    {
+        HI_INFO_VENC("Vedu close timeout! force to close Vedu\n");
     }
 
     VENC_DRV_OsalDeleteTask(VeduIpCtx.pTask_Frame);
@@ -6518,10 +6512,10 @@ HI_S32 VENC_DRV_EflCloseVedu( HI_VOID )
 	
     VENC_DRV_OsalLockDestroy( VeduIpCtx.pChnLock );
 
-    return HI_SUCCESS;
+    return;
 }
 
-HI_S32 VENC_DRV_EflSuspendVedu( HI_VOID )
+HI_VOID VENC_DRV_EflSuspendVedu( HI_VOID )
 {
     VeduIpCtx.StopTask = 1;
     while (VeduIpCtx.TaskRunning)
@@ -6540,7 +6534,7 @@ HI_S32 VENC_DRV_EflSuspendVedu( HI_VOID )
 
     //VENC_DRV_OsalLockDestroy( VeduIpCtx.pChnLock );
 
-    return HI_SUCCESS;
+    return;
 }
 
 /*****************************************************************************
@@ -6785,7 +6779,7 @@ Others     :
 ******************************************************************************/
 HI_S32 VENC_DRV_EflQueueFrame( VeduEfl_EncPara_S* EncHandle, HI_DRV_VIDEO_FRAME_S*  pstFrame)
 {
-    VeduEfl_EncPara_S  *pEncPara ; 
+    VeduEfl_EncPara_S  *pEncPara = NULL; 
     HI_S32 s32Ret;
 	queue_data_s  Queue_data; 
     HI_U32 i;
@@ -6797,7 +6791,7 @@ HI_S32 VENC_DRV_EflQueueFrame( VeduEfl_EncPara_S* EncHandle, HI_DRV_VIDEO_FRAME_
             break;
         }
     }
-    if( i == MAX_VEDU_CHN )
+    if ((i == MAX_VEDU_CHN) || (pEncPara == NULL))
     {
         HI_ERR_VENC(" bad handle!!\n");
         return HI_ERR_VENC_CHN_NOT_EXIST;
@@ -6856,7 +6850,7 @@ Others     :
 ******************************************************************************/
 HI_S32  VENC_DRV_EflDequeueFrame( VeduEfl_EncPara_S* EncHandle, HI_DRV_VIDEO_FRAME_S* pstFrame)
 {
-    VeduEfl_EncPara_S  *pEncPara ;
+    VeduEfl_EncPara_S  *pEncPara = NULL;
     HI_S32 s32Ret;
     HI_U32 i;
 
@@ -6869,7 +6863,8 @@ HI_S32  VENC_DRV_EflDequeueFrame( VeduEfl_EncPara_S* EncHandle, HI_DRV_VIDEO_FRA
             break;
         }
     }
-    if( i == MAX_VEDU_CHN )
+
+    if (i == MAX_VEDU_CHN || pEncPara == NULL)
     {
         HI_ERR_VENC(" bad handle!!\n");
         return HI_ERR_VENC_CHN_NOT_EXIST;
@@ -6894,7 +6889,7 @@ HI_S32 VENC_DRV_EflRlsAllFrame( VeduEfl_EncPara_S* EncHandle)
 {
     VEDU_LOCK_FLAG flag;
     //HI_DRV_VIDEO_FRAME_S stFrame ;
-    VeduEfl_EncPara_S  *pEncPara ;
+    VeduEfl_EncPara_S  *pEncPara = NULL;
     HI_S32 s32Ret = 0;
     HI_U32 i;
 	queue_data_s  Queue_data;
@@ -6907,7 +6902,7 @@ HI_S32 VENC_DRV_EflRlsAllFrame( VeduEfl_EncPara_S* EncHandle)
             break;
         }
     }
-    if( i == MAX_VEDU_CHN )
+    if ((i == MAX_VEDU_CHN) || (pEncPara == NULL))
     {
         HI_ERR_VENC(" bad handle!!\n");
         return HI_ERR_VENC_CHN_NOT_EXIST;
@@ -6958,6 +6953,10 @@ HI_S32 VENC_DRV_Refresh_FromVPSS( VeduEfl_EncPara_S* EncHandle )
         msleep(5);
 
         s32Ret = pVpssFunc->pfnVpssSendCommand(g_stVencChn[u32ChnID].hVPSS, HI_DRV_VPSS_USER_COMMAND_CHECKALLDONE, &bVPSSAllDone);
+        if (s32Ret != HI_SUCCESS)
+        {
+            HI_ERR_VENC("%s, %d, pfnVpssSendCommand HI_DRV_VPSS_USER_COMMAND_CHECKALLDONE error\n", __func__, __LINE__);
+        }
 
         u32Count++;
         if (u32Count == 50)

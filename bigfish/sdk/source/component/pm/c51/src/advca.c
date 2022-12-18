@@ -1,8 +1,6 @@
 #include "base.h"
 #include "sha1.h"
 
-#ifdef HI_ADVCA_SUPPORT
-
 /*******************************************
   Advca runtime check & standby  macro & variables
 ********************************************/
@@ -54,8 +52,8 @@ HI_VOID do_runtimecheck()
     HI_U32 u32TempVal = 0;	
     HI_U32 u32SegParamAddr = 0;
     HI_U32 u32HashParaAddr = 0;
-	
-	//check whether the runtime_check_en is enabled
+
+     //check whether the runtime_check_en is enabled
     regAddr.val32 = 0xF8AB0084; //OTP:runtime_check_en indicator :0xF8AB0084[20],0x6[4]
     read_regVal();
     u32TempVal = regData.val32;
@@ -74,9 +72,7 @@ HI_VOID do_runtimecheck()
 #ifndef HI_ADVCA_RELEASE
     printf_str("u8SegNum: ");printf_hex(u8SegNum);
 #endif
-	
     u32SegParamAddr = CHECK_VECTOR_BASE_ADDR + 0x54;
-	
     for(i = 0; i < u8SegNum; i++)
     {
     	regAddr.val32 = u32SegParamAddr + (i * 8 + 0);
@@ -97,9 +93,7 @@ HI_VOID do_runtimecheck()
 #ifndef HI_ADVCA_RELEASE
         printf_str("\r\n------------------Runtime check is enabled, start runtime check------------------\r\n");	
 #endif
-		
-		u32HashParaAddr = CHECK_VECTOR_BASE_ADDR + 0x14;
-		
+        u32HashParaAddr = CHECK_VECTOR_BASE_ADDR + 0x14;
         for(i = 0; i < u8SegNum; i++)
         {
             //get the original hash value
@@ -247,13 +241,12 @@ HI_VOID SetDDRWakeUpParams(HI_VOID)
 
 HI_VOID ADVCA_RUN_CHECK(HI_VOID)
 {
-    SetDDRWakeUpParams(); //Add for advanced CA to support DDR wakeup check
-    do_runtimecheck(); //Add for advanced CA to support runtime check
-    while(1) //Add for advanced CA to check if suspend happen
+    SetDDRWakeUpParams(); //for A9 calculate HASH
+    while(1)
     {
         regAddr.val32 = (CFG_BASE_ADDR + SC_GEN15);
         read_regVal();
-        if(PMOC_CHECK_TO_SUSPEND == regData.val32)
+        if(PMOC_CHECK_TO_SUSPEND == regData.val32) //check pmoc flag
         {
             regAddr.val32 = (CFG_BASE_ADDR + SC_GEN15);
             regData.val32 = 0;
@@ -263,16 +256,21 @@ HI_VOID ADVCA_RUN_CHECK(HI_VOID)
 		
 	    regAddr.val32 = DATA_ENTER_FLAG;
         read_regVal();
-        if(TEMP_CHECK_TO_SUSPEND == regData.val32)
+        if(TEMP_CHECK_TO_SUSPEND == regData.val32) //check temp control to pm
         {
             g_u8KeyEnterPmoc = 0x1;
             return;
         }
         
+		regAddr.val32 = (CFG_BASE_ADDR + SC_GEN27);
+        read_regVal();
+        if(PMOC_RUNTIME_CHECK_OK == regData.val32)
+        { 
+            do_runtimecheck(); //Add for advanced CA to support runtime check
+        }
         wait_minute_2(100,100);
     }
+
     GetDDRWakeUpParams();
 }
-
-#endif
 

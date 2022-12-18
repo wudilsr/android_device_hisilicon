@@ -564,25 +564,11 @@ HI_S32 HAL_ADVCA_V300_DecryptCw(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,HI_U32 *pu3
     }
     else if (HI_SUCCESS != Ret)
     {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
         return HI_FAILURE;
     }
-    DRV_ADVCA_Wait(100);
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
-    {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
-
-    //Just to store it for /proc message
     if(enLevel < 16)
     {
         struct timeval tv = {0};
@@ -650,7 +636,7 @@ HI_S32 HAL_ADVCA_V300_DecryptCsa3(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,HI_U32 *p
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -699,25 +685,11 @@ HI_S32 HAL_ADVCA_V300_DecryptCsa3(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,HI_U32 *p
     }
     else if (HI_SUCCESS != Ret)
     {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);        
         return HI_FAILURE;
     }
-    DRV_ADVCA_Wait(100);
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
-    {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
-
-    //Just to store it for /proc message
     if(enLevel < 16)
     {
         struct timeval tv = {0};
@@ -776,7 +748,7 @@ HI_S32 HAL_ADVCA_V300_CryptR2R(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,HI_U32 *pu32
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -811,23 +783,13 @@ HI_S32 HAL_ADVCA_V300_CryptR2R(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,HI_U32 *pu32
     }
     else if (HI_SUCCESS != Ret)
     {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
         return HI_FAILURE;
     }
-    DRV_ADVCA_Wait(100);
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
-    {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
+
 
     //Just to store it for /proc message
     if(enLevel < 16)
@@ -853,7 +815,6 @@ HI_S32 HAL_ADVCA_V300_DecryptSP(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     HI_S32 Ret = HI_SUCCESS;
     CA_V300_CONFIG_STATE_U unConfigStatus;
     CA_V300_SP_CTRL_U unSPCtrl;
-    HI_U32 u32KlStatus = 0;
     CA_OTP_VENDOR_TYPE_E enCaVendorType = CA_OTP_VENDOR_NONE;   
     HI_UNF_ADVCA_KEYLADDER_LEV_E enKeyladderLev;
 
@@ -888,10 +849,9 @@ HI_S32 HAL_ADVCA_V300_DecryptSP(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
-        u32KlStatus = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
-        HI_ERR_CA("Keyladder is busy now! Keyladder status: 0x%08x\n", u32KlStatus);
+        HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
     }
 
@@ -964,25 +924,13 @@ HI_S32 HAL_ADVCA_V300_DecryptSP(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     }
     else if (HI_SUCCESS != Ret)
     {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
         return HI_FAILURE;
     }
-    DRV_ADVCA_Wait(100);
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
-    {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
 
-    //Just to store it for /proc message
     if(enLevel < 16)
     {
         struct timeval tv = {0};
@@ -1007,7 +955,6 @@ HI_S32 HAL_ADVCA_V300_DecryptSP(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
             }
         }
     }
-   
     return HI_SUCCESS;
 }
 
@@ -1043,7 +990,7 @@ HI_S32 HAL_ADVCA_V300_DecryptLpk(HI_U32 *pEncryptLpk)
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1064,25 +1011,20 @@ HI_S32 HAL_ADVCA_V300_DecryptLpk(HI_U32 *pEncryptLpk)
     
     //Now Wait until CAStatus.bits.klad_busy == 0
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (Ret > 0)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("key ladder timeout\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
     }
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
+    else if (HI_SUCCESS != Ret)
     {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
+        return HI_FAILURE;
+    }
+
     return HI_SUCCESS;
 }
 
@@ -1132,7 +1074,7 @@ HI_S32 HAL_ADVCA_V300_DecryptLPKProtectData(HI_U32 *pEncryptData,HI_U32 *pClearD
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1152,10 +1094,17 @@ HI_S32 HAL_ADVCA_V300_DecryptLPKProtectData(HI_U32 *pEncryptData,HI_U32 *pClearD
     
     //Now Wait until CAStatus.bits.klad_busy == 0    
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (Ret > 0)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("key ladder timeout\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
+    }
+    else if (HI_SUCCESS != Ret)
+    {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        return HI_FAILURE;
     }
   
     for(index = 0; index < 8; index +=4)//Data Result is 128bit(16Bytes) data
@@ -1163,85 +1112,6 @@ HI_S32 HAL_ADVCA_V300_DecryptLPKProtectData(HI_U32 *pEncryptData,HI_U32 *pClearD
         pClearData[(index / 4)] = DRV_ADVCA_ReadReg(CA_V300_LP_PARAMETER_BASE + index);
     }
     
-#if 0
-    //计算的结果查看中间结果寄存器CA_V300_LP_PARAMETER_BASE 0x50~0x5C
-    {
-        HI_U32 Temp;
-        printk("Debug DecryptLPKPrtotectData LP_PARAMETER out\n");
-        for(index = 0; index < 8; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_LP_PARAMETER_BASE + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }
-#endif
-    return HI_SUCCESS;
-}
-
-HI_S32 HAL_DAVCA_V300_EncryptDevicekey(HI_U32 *pDeviceKey, HI_U32 *pEncryptDeviceKey)
-{
-    HI_S32 Ret = HI_SUCCESS;
-    CA_V300_GDRM_CTRL_U unGDRMCtrl;
-    CA_V300_CONFIG_STATE_U unConfigStatus;
-
-
-    if (HI_NULL == pDeviceKey || HI_NULL == pEncryptDeviceKey)
-    {
-       HI_ERR_CA("HI_NULL == pDataIn || HI_NULL == pEncryptDeviceKey\n");
-       return HI_ERR_CA_INVALID_PARA;
-    }
-
-    unConfigStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CONFIG_STATE);
-    if(unConfigStatus.bits.st_vld != 1)
-    {
-        HI_ERR_CA("Error: ConfigStatus.bits.st_vld != 1\n");
-        return HI_FAILURE;
-    }
-    Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
-    {
-        HI_ERR_CA("Keyladder is busy now!\n");
-        return HI_ERR_CA_WAIT_TIMEOUT;
-    }
-
-    /* Config the input data for crypto : CA_DIN0, CA_DIN1, CA_DIN2, CA_DIN3 */
-    
-    DRV_ADVCA_WriteReg(CA_V300_CA_DIN0, pDeviceKey[0]);
-    DRV_ADVCA_WriteReg(CA_V300_CA_DIN1, pDeviceKey[1]);
-    DRV_ADVCA_WriteReg(CA_V300_CA_DIN2, pDeviceKey[2]);
-    DRV_ADVCA_WriteReg(CA_V300_CA_DIN3, pDeviceKey[3]);
-
-    unGDRMCtrl.u32 = 0;
-    unGDRMCtrl.bits.level_sel = 0x0;
-    unGDRMCtrl.bits.decryption = 0;
-
-    DRV_ADVCA_WriteReg(CA_V300_GDRM_CTRL, unGDRMCtrl.u32); /* CAStatus.bits.klad_busy will be set to 1 */
-
-    /* Now Wait, until CAStatus.bits.klad_busy == 0 */
-    Ret = HAL_ADVCA_V300_WaitStat();
-    if(HI_SUCCESS != Ret)
-    {
-        HI_ERR_CA("Key ladder timeout\n");
-        return HI_ERR_CA_WAIT_TIMEOUT;
-    }
-
-    pEncryptDeviceKey[0] = DRV_ADVCA_ReadReg(CA_V300_GDRM_ENC_REST0);
-    pEncryptDeviceKey[1] = DRV_ADVCA_ReadReg(CA_V300_GDRM_ENC_REST1);
-    pEncryptDeviceKey[2] = DRV_ADVCA_ReadReg(CA_V300_GDRM_ENC_REST2);
-    pEncryptDeviceKey[3] = DRV_ADVCA_ReadReg(CA_V300_GDRM_ENC_REST3);
-
-    //Just to store it for /proc message
-    {
-        struct timeval tv = {0};
-        do_gettimeofday(&tv);
-
-        memcpy(g_GDRMInfo.SessionKey[0], (HI_U8 *)pDeviceKey, 16);
-        memcpy(g_GDRMInfo.SessionKey[1], (HI_U8 *)pEncryptDeviceKey, 16);
-        g_GDRMInfo.SessionKey_sec[0] = tv.tv_sec;
-        g_GDRMInfo.Keyladder_Ready = DRV_ADVCA_ReadReg(CA_V300_GDRM_CTRL);  
-    }
-
     return HI_SUCCESS;
 }
 
@@ -1270,7 +1140,7 @@ HI_S32 HAL_ADVCA_V300_EncryptSwpk(HI_U32 *pClearSwpk,HI_U32 *pEncryptSwpk)
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1287,40 +1157,47 @@ HI_S32 HAL_ADVCA_V300_EncryptSwpk(HI_U32 *pClearSwpk,HI_U32 *pEncryptSwpk)
     DRV_ADVCA_WriteReg(CA_V300_BL_CTRL_ENC, 0x01);//0x1c Set Register
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (Ret > 0)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("key ladder timeout\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
+    }
+    else if (HI_SUCCESS != Ret)
+    {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
+        return HI_FAILURE;
     }
 
     for(index = 0; index < 16; index += 4) //Data Result is 128bit(16Bytes) data
     {
         pEncryptSwpk[(index / 4)] = DRV_ADVCA_ReadReg(CA_V300_BLK_ENC_RSLT + index);
     }
-#if 0
-    {
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = DRV_ADVCA_ReadReg(CA_V300_BLK_ENC_RSLT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }    
-#endif
     return HI_SUCCESS;
 }
 
 HI_S32 HAL_ADVCA_V300_DCASOpen(HI_UNF_CIPHER_ALG_E enAlg)
 {
+    switch(enAlg)
+    {
+        case HI_UNF_CIPHER_ALG_3DES:
+            g_DCASInfo.Alg = HI_UNF_ADVCA_ALG_TYPE_TDES;
+            break;
+        case HI_UNF_CIPHER_ALG_AES:
+            g_DCASInfo.Alg = HI_UNF_ADVCA_ALG_TYPE_AES;
+            break;
+        default:
+            HI_ERR_CA("not support alg: %d\n", enAlg);
+            return HI_FAILURE;
+    }
+
     if(g_DCASInfo.OpenFlag == HI_TRUE)
     {
-        g_DCASInfo.Alg = (HI_UNF_ADVCA_ALG_TYPE_E)enAlg;     //History reason!
         return HI_SUCCESS;
     }
     g_DCASInfo.OpenFlag = HI_TRUE;
-    g_DCASInfo.Alg      = (HI_UNF_ADVCA_ALG_TYPE_E)enAlg;  //History reason!
     
     return HI_SUCCESS;
 }
@@ -1364,7 +1241,7 @@ HI_S32 HAL_ADVCA_V300_DecryptDCAS(HI_U32 enLevel, HI_U32 *pu32DataIn, HI_U32 Add
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1410,7 +1287,7 @@ HI_S32 HAL_ADVCA_V300_DecryptDCAS(HI_U32 enLevel, HI_U32 *pu32DataIn, HI_U32 Add
         DCASCtrl.bits.key_addr = (AddrID >> 1) & 0xFF;  
     }
 
-    if(g_DCASInfo.Alg == (HI_UNF_ADVCA_ALG_TYPE_E)HI_UNF_CIPHER_ALG_3DES)  //History reason!
+    if(g_DCASInfo.Alg == HI_UNF_ADVCA_ALG_TYPE_TDES)  //History reason!
     {
         DCASCtrl.bits.tdes_aes_sel = 0;//0:tdes, 1:aes
     }
@@ -1434,8 +1311,11 @@ HI_S32 HAL_ADVCA_V300_DecryptDCAS(HI_U32 enLevel, HI_U32 *pu32DataIn, HI_U32 Add
         return HI_FAILURE;
     }
     else if (HI_SUCCESS != Ret)
-    {    
-        unConfigStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CONFIG_STATE);
+    {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
         return HI_FAILURE;
     }
     
@@ -1519,7 +1399,7 @@ HI_S32 HAL_ADVCA_V300_DecryptSWPK(HI_U32 *pu32DataIn,HI_U32 AddrID)
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1536,10 +1416,18 @@ HI_S32 HAL_ADVCA_V300_DecryptSWPK(HI_U32 *pu32DataIn,HI_U32 AddrID)
 /*    DRV_ADVCA_WriteReg(CA_V300_BL_CTRL_DEC, 0x01);*/  //0x1c Set Register
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (Ret > 0)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("key ladder timeout\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
+    }
+    else if (HI_SUCCESS != Ret)
+    {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+        
+        return HI_FAILURE;
     }
 
     return HI_SUCCESS;
@@ -1555,7 +1443,7 @@ HI_S32 HAL_ADVCA_V300_CryptGDRM(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     CA_V300_CONFIG_STATE_U unConfigStatus;
     CA_V300_GDRM_CTRL_U unGDRMCtrl;
 
-    HI_U32 looptime = 0;
+    HI_U32 looptime;
 
     if (HI_NULL == pu32DataIn)
     {
@@ -1584,7 +1472,6 @@ HI_S32 HAL_ADVCA_V300_CryptGDRM(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
    }
    else
    {
-     looptime = 0;
      return HI_FAILURE;
    }
 
@@ -1756,7 +1643,7 @@ HI_S32 HAL_ADVCA_V300_DecryptMisc(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -1809,26 +1696,12 @@ HI_S32 HAL_ADVCA_V300_DecryptMisc(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     }
     else if (HI_SUCCESS != Ret)
     {
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+
         return HI_FAILURE;
     }
-
-    DRV_ADVCA_Wait(100);
-#if 0
-    //计算的结果查看中间结果寄存器KEY_DOUT
-    {
-        HI_U32 index;
-        HI_U32 Temp;
-        printk("Debug temporay Key out\n");
-        for(index = 0; index < 16; index +=4)//Data Result is 128bit(16Bytes) data
-        {
-            Temp = ca_read_reg(CA_V300_KEY_DOUT + index);
-            printk("%08x " , Temp);
-        }
-        printk("\n");
-    }
-#endif
-
-    //Just to store it for /proc message
     if(enLevel < 16)
     {
         struct timeval tv = {0};
@@ -1905,6 +1778,7 @@ HI_S32 HAL_ADVCA_V300_ResetOTP(HI_VOID)
 	return HI_SUCCESS;
 }
 
+/******* proc function begin ********/
 
 static HI_S32 HAL_ADVCA_ProcGetRegInfo2(HI_U32 *pu32Debug)
 {
@@ -2031,6 +1905,7 @@ HI_S32 HAL_ADVCA_ProcGetReginfo(HI_U32 au32RegInfo[3])
 
     return HI_SUCCESS;
 }
+/******* proc function end   ********/
 
 HI_S32 HAL_ADVCA_V300_CryptHCA(HI_U32 AddrID)
 {
@@ -2048,7 +1923,7 @@ HI_S32 HAL_ADVCA_V300_CryptHCA(HI_U32 AddrID)
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -2067,10 +1942,13 @@ HI_S32 HAL_ADVCA_V300_CryptHCA(HI_U32 AddrID)
         return HI_ERR_CA_WAIT_TIMEOUT;
     }
     else if (HI_SUCCESS != Ret)
-    {
+    {                
+        CA_V300_CA_STATE_U CAStatus;
+        CAStatus.u32 = DRV_ADVCA_ReadReg(CA_V300_CA_STATE);
+        HI_ERR_CA("key ladder error state: %x\n", CAStatus.bits.err_state);
+
         return HI_FAILURE;
     }
-    DRV_ADVCA_Wait(100);
 
     return HI_SUCCESS;
 }
@@ -2098,7 +1976,7 @@ HI_S32 HAL_ADVCA_V300_DecTAKeyLadder(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel, HI_U3
     }
 
     Ret = HAL_ADVCA_V300_WaitStat();
-    if (HI_SUCCESS != Ret)
+    if (HI_FAILURE == Ret)
     {
         HI_ERR_CA("Keyladder is busy now!\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
@@ -2142,8 +2020,6 @@ HI_S32 HAL_ADVCA_V300_DecTAKeyLadder(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel, HI_U3
             HI_ERR_CA("Key ladder timeout\n");
             return HI_ERR_CA_WAIT_TIMEOUT;
         }
-
-        DRV_ADVCA_Wait(100);
     }
 
     return HI_SUCCESS;
@@ -2160,6 +2036,71 @@ HI_S32 HAL_ADVCA_V300_SetTaAlgorithm(HI_UNF_ADVCA_ALG_TYPE_E enType)
     
     return HI_SUCCESS;
 }
+static HI_U32 VMX_ADVCA_Swith(CA_KEYLADDER_ATTR_S *pDeststKeyladderAttr, CA_KEYLADDER_ATTR_S *pSrcstKeyladderAttr)
+{
+	HI_INFO_CA("enter VMX_ADVCA_Swith\n");
+    memset(pDeststKeyladderAttr, 0, sizeof(CA_KEYLADDER_ATTR_S));
+    
+    switch(pSrcstKeyladderAttr->enKeyLadderType)
+    {
+    case HI_UNF_ADVCA_KEYLADDER_MISC:
+        pDeststKeyladderAttr->enKeyLadderType = HI_UNF_ADVCA_KEYLADDER_SP;
+        
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enSPKlAttr = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enMiscKlAttr;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.bEnable      = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.bEnable;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enAlgType    = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enAlgType;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode    = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enDscMode;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enStage      = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage;
+        memcpy(pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.u8SessionKey, pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, 16);
+        break;
+    case HI_UNF_ADVCA_KEYLADDER_SP:
+        pDeststKeyladderAttr->enKeyLadderType = HI_UNF_ADVCA_KEYLADDER_MISC;
+        
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enMiscKlAttr   = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enSPKlAttr;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.bEnable      = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.bEnable;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enAlgType    = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enAlgType;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enDscMode    = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode;
+        pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage      = pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enStage;
+        memcpy(pDeststKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, pSrcstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.u8SessionKey, 16);
+        break;
+    default:
+        ;
+    }
+    
+	HI_INFO_CA("quit VMX_ADVCA_Swith\n");
+    return HI_SUCCESS;
+}
+static HI_S32 checkVMXAdvanced(HI_BOOL *pbVMXAdvanced)
+{
+    HI_S32 ret = 0;
+    CA_OTP_VENDOR_TYPE_E enCaVendorType = CA_OTP_VENDOR_NONE;
+	HI_UNF_ADVCA_KEYLADDER_LEV_E enValue = HI_UNF_ADVCA_KEYLADDER_BUTT;
+
+    ret = DRV_CA_OTP_V200_GetVendorId(&enCaVendorType);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("Failed to get the CA vendor ID.\n");
+        return HI_FAILURE;
+    }
+
+    ret = HAL_ADVCA_V300_GetMiscKlLevel(&enValue);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("Failed to get Misck Level, ret=%d\n", ret);
+        return HI_FAILURE;
+    }
+
+    if ((CA_OTP_VENDOR_VERIMATRIX == enCaVendorType) && (HI_UNF_ADVCA_KEYLADDER_LEV5 == enValue))
+    {
+        *pbVMXAdvanced = HI_TRUE;
+    }
+    else
+    {
+        *pbVMXAdvanced = HI_FALSE;
+    }
+
+    return HI_SUCCESS;
+}
 HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 {
     HI_UNF_ADVCA_KEYLADDER_TYPE_E            enKeyladderType;
@@ -2170,15 +2111,18 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
     HI_UNF_ADVCA_KEYLADDER_SP_ATTR_E         enSPKeyladderAttr;
     HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_E       enMiscKeyladderAttr;
     HI_UNF_ADVCA_KEYLADDER_TA_ATTR_E         enTaKeyladderAttr;
-    HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_E       enGDRMKeyladderAttr;
+
     HI_UNF_ADVCA_ALG_TYPE_E                  enKeyladderAlg;
     HI_UNF_ADVCA_SP_DSC_MODE_E               enSPDscMode;
     HI_UNF_ADVCA_KEYLADDER_LEV_E             enKeyladderLevel;
-    CA_CRYPTPM_S stCryptParam;
-    CA_LOADLPK_S stLoadLpk;
+    CA_CRYPTPM_S stCryptParam = {0};
+    CA_LOADLPK_S stLoadLpk = {0};
     HI_S32 Ret = HI_SUCCESS;
     HI_U8 *pu8TmpBuf = NULL;
     HI_U32 u32TmpBufLen;
+    HI_BOOL bVMXAdvanced = HI_FALSE;
+
+    CA_KEYLADDER_ATTR_S TempstKeyladderAttr = {0};
 
     if(pstKeyladderAttr == NULL)
     {
@@ -2186,21 +2130,38 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    enKeyladderType = pstKeyladderAttr->enKeyLadderType;
+    Ret = checkVMXAdvanced(&bVMXAdvanced);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_CA("checkVMXAdvanced error\n");
+        return HI_FAILURE;
+    }
+    
+    if(HI_TRUE == bVMXAdvanced)
+    {
+        VMX_ADVCA_Swith(&TempstKeyladderAttr, pstKeyladderAttr);
+    }
+    else
+    {
+        memcpy(&TempstKeyladderAttr, pstKeyladderAttr, sizeof(CA_KEYLADDER_ATTR_S));
+    }
+
+    enKeyladderType = TempstKeyladderAttr.enKeyLadderType;    
     switch(enKeyladderType)
     {
     case HI_UNF_ADVCA_KEYLADDER_CSA2:
 
-        enCsa2KeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA2KlAttr.enCsa2KlAttr;
+        enCsa2KeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA2KlAttr.enCsa2KlAttr;
         if(enCsa2KeyladderAttr == HI_UNF_ADVCA_KEYLADDER_CSA2_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA2KlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA2KlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetCWAlgorithm(enKeyladderAlg);
         }
         else if(enCsa2KeyladderAttr == HI_UNF_ADVCA_KEYLADDER_CSA2_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA2KlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA2KlAttr.u8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA2KlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA2KlAttr.u8SessionKey, 16);
             Ret = HAL_ADVCA_V300_DecryptCw(stCryptParam.ladder, stCryptParam.pDin, 0, 0);            
         }
         else
@@ -2212,16 +2173,17 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 
     case HI_UNF_ADVCA_KEYLADDER_CSA3:
 
-        enCsa3KeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA3KlAttr.enCsa3KlAttr;
+        enCsa3KeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA3KlAttr.enCsa3KlAttr;
         if(enCsa3KeyladderAttr == HI_UNF_ADVCA_KEYLADDER_CSA3_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA3KlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA3KlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetCSA3Algorithm(enKeyladderAlg);
         }
         else if(enCsa3KeyladderAttr == HI_UNF_ADVCA_KEYLADDER_CSA3_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA3KlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stCSA3KlAttr.u8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA3KlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stCSA3KlAttr.u8SessionKey, 16);
             Ret = HAL_ADVCA_V300_DecryptCsa3(stCryptParam.ladder, stCryptParam.pDin, 0, 0);            
         }
         else
@@ -2233,16 +2195,17 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 
     case HI_UNF_ADVCA_KEYLADDER_R2R:
 
-        enR2RKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stR2RKlAttr.enR2RKlAttr;
+        enR2RKeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stR2RKlAttr.enR2RKlAttr;
         if(enR2RKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_R2R_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stR2RKlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stR2RKlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetR2RAlgorithm(enKeyladderAlg);
         }
         else if(enR2RKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_R2R_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stR2RKlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stR2RKlAttr.u8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stR2RKlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stR2RKlAttr.u8SessionKey, 16);
             Ret = HAL_ADVCA_V300_CryptR2R(stCryptParam.ladder, stCryptParam.pDin, 0, 1);         
         }
         else
@@ -2254,26 +2217,27 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 
     case HI_UNF_ADVCA_KEYLADDER_SP:
 
-        enSPKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enSPKlAttr;
+        enSPKeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.enSPKlAttr;
         if(enSPKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_SP_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetSPAlgorithm(enKeyladderAlg);
         }
         else if(enSPKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_SP_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.u8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.u8SessionKey, 16);
             Ret = HAL_ADVCA_V300_DecryptSP(stCryptParam.ladder, stCryptParam.pDin, 0, 0, 0);
         }
         else if(enSPKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_SP_ATTR_DSC_MODE)
         {
-            enSPDscMode =  pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode;
+            enSPDscMode =  TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode;
             Ret = HAL_ADVCA_V300_SetSPDscMode(enSPDscMode);            
         }
         else if(enSPKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_SP_ATTR_ENABLE)
         {
-            g_SPInfo.OpenFlag = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.bEnable;
+            g_SPInfo.OpenFlag = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.bEnable;
         }
         else
         {
@@ -2284,26 +2248,27 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 
     case HI_UNF_ADVCA_KEYLADDER_MISC:
 
-        enMiscKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enMiscKlAttr;
+        enMiscKeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stMiscKlAttr.enMiscKlAttr;
         if(enMiscKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stMiscKlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetMiscAlgorithm(enKeyladderAlg);
         }
         else if(enMiscKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, 16);
             Ret = HAL_ADVCA_V300_DecryptMisc(stCryptParam.ladder, stCryptParam.pDin, 0, 0, 0);
         }
         else if(enMiscKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_DSC_MODE)
         {
-            enSPDscMode =  pstKeyladderAttr->stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode;
+            enSPDscMode =  TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stSPKlAttr.enDscMode;
             Ret = HAL_ADVCA_V300_SetMiscDscMode(enSPDscMode);            
         }
         else if(enMiscKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_ENABLE)
         {
-            g_MiscInfo.OpenFlag = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stMiscKlAttr.bEnable;
+            g_MiscInfo.OpenFlag = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stMiscKlAttr.bEnable;
         }
         else
         {
@@ -2314,10 +2279,11 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
 
     case HI_UNF_ADVCA_KEYLADDER_LP:
 
-        enLPKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stLpKlAttr.enLPKlAttr;
+        enLPKeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stLpKlAttr.enLPKlAttr;
          if(enLPKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_LP_ATTR_LOAD_LPK)
          {
-             memcpy(stLoadLpk.EncryptLpk, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stLpKlAttr.u8Lpk, 16);
+             memset(&stLoadLpk, 0x00, sizeof(CA_LOADLPK_S));
+             memcpy(stLoadLpk.EncryptLpk, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stLpKlAttr.u8Lpk, 16);
              /* Decrypt LPK */
              Ret = HAL_ADVCA_V300_DecryptLpk(stLoadLpk.EncryptLpk);
          }
@@ -2329,27 +2295,28 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
          break;
 
     case HI_UNF_ADVCA_KEYLADDER_TA:
-        enTaKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.enTAKlAttr;
+        enTaKeyladderAttr = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.enTAKlAttr;
         if (enTaKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_TA_ATTR_ENABLE)
         {
-            g_TAInfo.OpenFlag = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.bEnable;
+            g_TAInfo.OpenFlag = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.bEnable;
         }
         else if (enTaKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_TA_ATTR_ALG)
         {
-            enKeyladderAlg = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.enAlgType;
+            enKeyladderAlg = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.enAlgType;
             Ret = HAL_ADVCA_V300_SetTaAlgorithm(enKeyladderAlg);
         }
         else if (enTaKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_TA_ATTR_SESSION_KEY)
         {
-            stCryptParam.ladder = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.enStage;
-            memcpy(stCryptParam.pDin, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.au8SessionKey, 16);
+            memset(&stCryptParam, 0x00, sizeof(CA_CRYPTPM_S));
+            stCryptParam.ladder = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.enStage;
+            memcpy(stCryptParam.pDin, TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.au8SessionKey, 16);
             Ret = HAL_ADVCA_V300_DecTAKeyLadder(stCryptParam.ladder, stCryptParam.pDin, 16);
         }
         else if (enTaKeyladderAttr == HI_UNF_ADVCA_KEYLADDER_TA_ATTR_LOAD_TRANDATA)
         {
-            enKeyladderLevel = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.enStage;
-            pu8TmpBuf = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.pu8TranData;
-            u32TmpBufLen = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stTAKlAttr.u32TranDataLen;
+            enKeyladderLevel = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.enStage;
+            pu8TmpBuf = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.pu8TranData;
+            u32TmpBufLen = TempstKeyladderAttr.stKeyladderAttr.unKlAttr.stTAKlAttr.u32TranDataLen;
             Ret = HAL_ADVCA_V300_DecTAKeyLadder(enKeyladderLevel, (HI_U32*)pu8TmpBuf, u32TmpBufLen);
         }
         else
@@ -2358,49 +2325,7 @@ HI_S32 HAL_ADVCA_V300_SetKeyladderAttr(CA_KEYLADDER_ATTR_S *pstKeyladderAttr)
             Ret = HI_ERR_CA_INVALID_PARA;
         }
         break;
-        case HI_UNF_ADVCA_KEYLADDER_GDRM:
-        {
-            HI_U32 u32SessionKey[8] = {0};
-            HI_U32 u32Output[4]     = {0};
-            HI_U32 u32KeyAddr       = 0;
-            
-            enGDRMKeyladderAttr = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.enGDRMKlAttr;
-            if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENABLE == enGDRMKeyladderAttr)
-            {
-                g_GDRMInfo.OpenFlag = pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.bEnable;
-            }
-            else if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT == enGDRMKeyladderAttr)
-            {
-                memcpy(u32SessionKey, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.au8SessionKey, 16);
-                Ret = HAL_DAVCA_V300_EncryptDevicekey(u32SessionKey,
-                                                      u32Output);
-                memcpy(pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.au8Output, u32Output, 16);
-            }
-            else if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_SESSION_KEY == enGDRMKeyladderAttr)
-            {
-                if (HI_UNF_ADVCA_KEYLADDER_LEV3 == pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.enStage)
-                {
-                    memcpy(u32SessionKey, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.au8SessionKey, 32);
-                    u32KeyAddr = HI_HANDLE_GET_CHNID(pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.hCipherHandle);
-                }
-                else
-                {
-                    memcpy(u32SessionKey, pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.au8SessionKey, 16);
-                    u32KeyAddr = 0;
-                }
-                Ret = HAL_ADVCA_V300_CryptGDRM(pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.enStage, u32SessionKey, u32KeyAddr, 1, 1);
-            }
-            else if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_GETFLAG == enGDRMKeyladderAttr)
-            {
-                Ret = HAL_ADVCA_V300_GetGDRMFlag(u32Output);
-                memcpy(pstKeyladderAttr->stKeyladderAttr.unKlAttr.stGDRMAttr.au8Output, u32Output, 4);
-            }
-            else
-            {
-                HI_ERR_CA("Invalid keyladder attribute, enGDRMKeyladderAttr = %d\n", enGDRMKeyladderAttr);                
-            }
-        }
-        break;
+
     default:
         
         HI_ERR_CA("Invalid keyladder type, enKeyladderType = %d\n", enKeyladderType);
@@ -2443,7 +2368,6 @@ HI_S32 HAL_ADVCA_V300_GenChipConfCmac(HI_U8 *pu8ChipConfBitm, HI_U8 *pu8ChipConf
         HI_ERR_CA("key ladder timeout\n");
         return HI_ERR_CA_WAIT_TIMEOUT;
     }
-    DRV_ADVCA_Wait(100);
 
     *(HI_U32*)pu8ChipConfCmac = DRV_ADVCA_ReadReg(CA_V300_CFG_CMAC_OUT);
     *(HI_U32*)(pu8ChipConfCmac + 0x04) = DRV_ADVCA_ReadReg(CA_V300_CFG_CMAC_OUT  + 0x04);
@@ -2486,7 +2410,6 @@ HI_S32 HAL_ADVCA_V300_SetIrdetoCsa3ActCode(HI_U8 *pu8Csa3ActCode)
         return HI_ERR_CA_WAIT_TIMEOUT;
     }
 
-    DRV_ADVCA_Wait(100);
     return Ret;
 }
 

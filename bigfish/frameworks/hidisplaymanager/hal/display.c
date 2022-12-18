@@ -106,6 +106,8 @@ extern HI_U32 set_HDMI_Suspend_Time(int iTime);
 extern HI_U32 get_HDMI_Suspend_Time();
 extern HI_U32 set_HDMI_Suspend_Enable(int iEnable);
 extern HI_U32 get_HDMI_Suspend_Enable();
+extern HI_U32 get_HDMI_CEC_Suspend_Enable();
+extern HI_U32 set_HDMI_CEC_Suspend_Enable();
 extern void setTVproperty();
 
 static int baseparam_disp_set(void *data, baseparam_option_e flag, int enDisp)
@@ -1794,6 +1796,21 @@ int get_hdmi_suspend_enable()
 {
     return get_HDMI_Suspend_Enable();
 }
+int set_hdmi_cec_suspend(){
+    ALOGE("--->set_hdmi_cec_suspend");
+    int ret = 0 ;
+    ret = HDMI_CEC_Standy();
+    return ret ;
+}
+int get_hdmi_cec_suspend_enable(){
+    return get_HDMI_CEC_Suspend_Enable();
+}
+int set_hdmi_cec_suspend_enable(int enable){
+    ALOGE("--->set_hdmi_cec_suspend_enable");
+    int ret = 0 ;
+    ret = set_HDMI_CEC_Suspend_Enable(enable);
+    return ret ;
+}
 
 void parseIntToString(char* str,int nValue)
 {
@@ -2136,6 +2153,9 @@ static int open_display(const struct hw_module_t* module, const char* name,
     ctx->device.reload = reload;
     ctx->device.set_output_enable = set_output_enable;
     ctx->device.get_output_enable = get_output_enable;
+    ctx->device.set_hdmi_cec_suspend = set_hdmi_cec_suspend;
+    ctx->device.get_hdmi_cec_suspend_enable = get_hdmi_cec_suspend_enable;
+    ctx->device.set_hdmi_cec_suspend_enable = set_hdmi_cec_suspend_enable;
 
     *device = &ctx->device.common;
     module_display = (display_device_t *)&ctx->device.common;;

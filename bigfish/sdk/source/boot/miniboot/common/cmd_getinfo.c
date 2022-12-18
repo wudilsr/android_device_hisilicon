@@ -39,10 +39,6 @@ static int do_get_bootmode(struct cmd_t *cmd)
 			pr_tool("spi\n");
 			break;
 
-		case BOOT_MEDIA_SPI_NAND:
-			pr_tool("spi-nand\n");
-			break;
-
 		case BOOT_MEDIA_EMMC:
 			pr_tool("emmc\n");
 			break;

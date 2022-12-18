@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<Partition_Info>
+<Part Sel="1" PartitionName="fastboot" FlashType="emmc" FileSystem="none" Start="0" Length="1M" SelectFile="fastboot.bin"/>
+<Part Sel="1" PartitionName="bootargs" FlashType="emmc" FileSystem="none" Start="1M" Length="1M" SelectFile="bootargs.bin"/>
+<Part Sel="1" PartitionName="recovery" FlashType="emmc" FileSystem="none" Start="2M" Length="10M" SelectFile="recovery.img"/>
+<Part Sel="0" PartitionName="deviceinfo" FlashType="emmc" FileSystem="none" Start="12M" Length="2M" SelectFile=""/>
+<Part Sel="1" PartitionName="baseparam" FlashType="emmc" FileSystem="none" Start="14M" Length="8M" SelectFile="baseparam.img"/>
+<Part Sel="1" PartitionName="pqparam" FlashType="emmc" FileSystem="none" Start="22M" Length="8M" SelectFile="pq_param.bin"/>
+<Part Sel="1" PartitionName="logo" FlashType="emmc" FileSystem="none" Start="30M" Length="20M" SelectFile="logo.img"/>
+<Part Sel="0" PartitionName="logobak" FlashType="emmc" FileSystem="none" Start="50M" Length="20M" SelectFile=""/>
+<Part Sel="0" PartitionName="fastplay" FlashType="emmc" FileSystem="none" Start="70M" Length="40M" SelectFile=""/>
+<Part Sel="0" PartitionName="fastplaybak" FlashType="emmc" FileSystem="none" Start="110M" Length="40M" SelectFile=""/>
+<Part Sel="1" PartitionName="kernel" FlashType="emmc" FileSystem="none" Start="150M" Length="40M" SelectFile="kernel.img"/>
+<Part Sel="0" PartitionName="misc" FlashType="emmc" FileSystem="none" Start="190M" Length="20M" SelectFile=""/>
+<Part Sel="1" PartitionName="userapi" FlashType="emmc" FileSystem="none" Start="210M" Length="8M" SelectFile="userapi.bin"/>
+<Part Sel="1" PartitionName="hibdrv" FlashType="emmc" FileSystem="none" Start="218M" Length="8M" SelectFile="hibdrv.bin"/>
+<Part Sel="1" PartitionName="qbflag" FlashType="emmc" FileSystem="none" Start="226M" Length="8M" SelectFile=""/>
+<Part Sel="1" PartitionName="qbdata" FlashType="emmc" FileSystem="none" Start="234M" Length="300M" SelectFile=""/>
+<Part Sel="1" PartitionName="system" FlashType="emmc" FileSystem="ext3/4" Start="534M" Length="800M" SelectFile="system.ext4"/>
+<Part Sel="1" PartitionName="cache" FlashType="emmc" FileSystem="ext3/4" Start="1334M" Length="500M" SelectFile="cache.ext4"/>
+<Part Sel="1" PartitionName="private" FlashType="emmc" FileSystem="ext3/4" Start="1834M" Length="50M" SelectFile="private.ext4"/>
+<Part Sel="1" PartitionName="userdata" FlashType="emmc" FileSystem="ext3/4" Start="1884M" Length="-" SelectFile="userdata.ext4"/>
+</Partition_Info>

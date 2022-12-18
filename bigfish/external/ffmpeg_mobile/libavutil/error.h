@@ -44,6 +44,8 @@
 #define AVUNERROR(e) (e)
 #endif
 
+#define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
+
 #define AVERROR_BSF_NOT_FOUND      (-MKTAG(0xF8,'B','S','F')) ///< Bitstream filter not found
 #define AVERROR_BUG                (-MKTAG( 'B','U','G','!')) ///< Internal bug, also see AVERROR_BUG2
 #define AVERROR_DECODER_NOT_FOUND  (-MKTAG(0xF8,'D','E','C')) ///< Decoder not found
@@ -66,6 +68,14 @@
  */
 #define AVERROR_BUG2               (-MKTAG( 'B','U','G',' '))
 #define AVERROR_UNKNOWN            (-MKTAG( 'U','N','K','N')) ///< Unknown error, typically from an external library
+
+/* HTTP & RTSP errors */
+#define AVERROR_HTTP_BAD_REQUEST   FFERRTAG(0xF8,'4','0','0')
+#define AVERROR_HTTP_UNAUTHORIZED  FFERRTAG(0xF8,'4','0','1')
+#define AVERROR_HTTP_FORBIDDEN     FFERRTAG(0xF8,'4','0','3')
+#define AVERROR_HTTP_NOT_FOUND     FFERRTAG(0xF8,'4','0','4')
+#define AVERROR_HTTP_OTHER_4XX     FFERRTAG(0xF8,'4','X','X')
+#define AVERROR_HTTP_SERVER_ERROR  FFERRTAG(0xF8,'5','X','X')
 
 /**
  * Put a description of the AVERROR code errnum in errbuf.

@@ -15,6 +15,7 @@ LOCAL_SRC_FILES:= \
     hinetutils.c
 LOCAL_MODULE_TAGS := optional
 LOCAL_SHARED_LIBRARIES := \
+    libsysmanager_chipio    \
     libbinder \
     libutils\
     libcutils\
@@ -22,7 +23,9 @@ LOCAL_SHARED_LIBRARIES := \
     libnetutils \
     libhi_common \
     libhi_msp \
-    libskia
+    libskia \
+    libhi_sample_common
+
 LOCAL_C_INCLUDES := \
     $(TOP)/framework/native/services/surfaceflinger \
     $(TOP)/hardware/libhardware/include \
@@ -34,7 +37,15 @@ LOCAL_C_INCLUDES := \
     $(TOP)/device/hisilicon/bigfish/sdk/source/msp/include\
     $(TOP)/device/hisilicon/bigfish/sdk/source/msp/api/higo/include \
     $(TOP)/external/skia/include/core
-LOCAL_C_INCLUDES += $(TOP)/device/hisilicon/bigfish/sdk/source/msp/drv/hifb/include
+ifeq ($(VMX_ADVANCED_SUPPORT),true)
+LOCAL_CFLAGS += -DVMX_ADVANCED_SUPPORT
+LOCAL_SHARED_LIBRARIES += \
+    libhiloader
+LOCAL_C_INCLUDES += $(TOP)/device/hisilicon/bigfish/sdk/source/component/loader/api/include
+endif
+
+LOCAL_C_INCLUDES += $(TOP)/device/hisilicon/bigfish/sdk/source/msp/drv/hifb/include \
+                    $(TOP)/device/hisilicon/bigfish/sdk/sample/common
 
 include $(BUILD_SHARED_LIBRARY)
 

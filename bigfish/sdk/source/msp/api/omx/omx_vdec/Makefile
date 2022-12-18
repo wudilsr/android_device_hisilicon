@@ -1,10 +1,18 @@
+#===============================================================================
+# export variable
+#===============================================================================
+ifeq ($(CFG_HI_EXPORT_FLAG),)
+SDK_DIR ?= $(CURDIR)/../../../../..
+
+include $(SDK_DIR)/base.mak
+endif
 
 #=======================================
 #	local varibale
 #=======================================
 objects := normal
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
 objects += secure 
 endif
 

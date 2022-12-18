@@ -1527,7 +1527,7 @@ repaint_stack( CoreWindowStack     *stack,
 
           case DLBM_BACKVIDEO:
                /* Flip the whole region. */
-               dfb_layer_region_flip_update( region, NULL, flags | DSFLIP_WAITFORSYNC );
+               dfb_layer_region_flip_update( region, NULL, flags);
 
                /* Copy back the updated region. */
 
@@ -4367,41 +4367,42 @@ wm_update_cursor( CoreWindowStack       *stack,
      if (updates_count) {
           fusion_skirmish_prevail( &data->update_skirmish );
 
-          switch (primary->config.buffermode) {
-               case DLBM_TRIPLE:
-                    /* Add the updated region .*/
-                    for (i=0; i<updates_count; i++) {
-                         const DFBRegion *update = &updates[i];
+		  if (stack->cursor.enabled){
+	          switch (primary->config.buffermode) {
+	               case DLBM_TRIPLE:
+	                    /* Add the updated region .*/
+	                    for (i=0; i<updates_count; i++) {
+	                         const DFBRegion *update = &updates[i];
 
-                         DFB_REGION_ASSERT( update );
+	                         DFB_REGION_ASSERT( update );
 
-                         dfb_updates_add( &data->updating, update );
-                    }
+	                         dfb_updates_add( &data->updating, update );
+	                    }
 
-                    if (!data->updated.num_regions)
-                         flush_updating( data );
-                    break;
+	                    if (!data->updated.num_regions)
+	                         flush_updating( data );
+	                    break;
 
-               case DLBM_BACKVIDEO:
-                    /* Flip the whole region. */
-                    dfb_layer_region_flip_update( primary, NULL, DSFLIP_WAITFORSYNC );
+	               case DLBM_BACKVIDEO:
+	                    /* Flip the whole region. */
+	                    dfb_layer_region_flip_update( primary, NULL, DSFLIP_NONE );
 
-                    /* Copy back the updated region. */
-                    dfb_gfx_copy_regions( surface, CSBR_FRONT, surface, CSBR_BACK, updates, updates_count, 0, 0 );
-                    break;
+	                    /* Copy back the updated region. */
+	                    dfb_gfx_copy_regions( surface, CSBR_FRONT, surface, CSBR_BACK, updates, updates_count, 0, 0 );
+	                    break;
 
-               default:
-                    /* Flip the updated region .*/
-                    for (i=0; i<updates_count; i++) {
-                         const DFBRegion *update = &updates[i];
+	               default:
+	                    /* Flip the updated region .*/
+	                    for (i=0; i<updates_count; i++) {
+	                         const DFBRegion *update = &updates[i];
 
-                         DFB_REGION_ASSERT( update );
+	                         DFB_REGION_ASSERT( update );
 
-                         dfb_layer_region_flip_update( primary, update, DSFLIP_NONE );
-                    }
-                    break;
-          }
-
+	                         dfb_layer_region_flip_update( primary, update, DSFLIP_NONE );
+	                    }
+	                    break;
+	          }
+		  }
           fusion_skirmish_dismiss( &data->update_skirmish );
      }
 

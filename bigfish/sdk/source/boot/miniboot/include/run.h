@@ -22,6 +22,18 @@
 
 #include <stddef.h>
 
+#ifdef CONFIG_TEE_SUPPORT
+
+#define HI_ADVCA_MAGIC          "Hisilicon_ADVCA_ImgHead_MagicNum"
+#define HI_ADVCA_MAGIC_SIZE     32
+#define HI_ADVCA_HEADER_SIZE    0x2000
+
+extern int is_trustedcore_img(char *buf);
+extern int do_load_secure_os(unsigned long addr, unsigned long org_offset, unsigned long img_dst, int run, uint32_t *rtos_load_addr);
+
+
+#endif /* CONFIG_TEE_SUPPORT */
+
 int kern_load(const char *addr);
 
 uint32 get_kern_tags(uint32 kernel);

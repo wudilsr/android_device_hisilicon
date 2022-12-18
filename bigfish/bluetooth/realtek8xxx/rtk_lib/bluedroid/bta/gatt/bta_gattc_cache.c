@@ -182,6 +182,9 @@ tBTA_GATT_STATUS bta_gattc_init_cache(tBTA_GATTC_SERV *p_srvc_cb)
     }
     else
     {
+#ifdef BLUETOOTH_RTK
+        memset(p_srvc_cb->p_srvc_list, 0, GKI_get_buf_size(p_srvc_cb->p_srvc_list));
+#endif
         p_srvc_cb->total_srvc = 0;
         p_srvc_cb->cur_srvc_idx =
         p_srvc_cb->cur_char_idx =

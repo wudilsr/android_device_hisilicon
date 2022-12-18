@@ -27,7 +27,7 @@
 #include "drv_i2c_ext.h"
 #include "drv_gpio_ext.h"
 #include "drv_vpss_ext.h"
-#include <mach/clock.h>
+#include "clock.h"
 #include <linux/cpu.h>
 #include <asm/io.h>
 #include <linux/platform_device.h>

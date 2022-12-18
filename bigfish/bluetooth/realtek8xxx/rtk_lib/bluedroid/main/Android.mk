@@ -99,9 +99,13 @@ LOCAL_C_INCLUDES+= . \
 	external/tinyxml2
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
 LOCAL_C_INCLUDES+= . \
-    $(LOCAL_PATH)/../realtek/include
+    $(LOCAL_PATH)/../realtek/include \
+    $(LOCAL_PATH)/../bta/hh
 endif
-
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_COEX),true)
+LOCAL_C_INCLUDES+= . \
+    $(LOCAL_PATH)/../hci/include
+endif
 LOCAL_CFLAGS += -DBUILDCFG $(bdroid_CFLAGS) -Werror -Wno-error=maybe-uninitialized -Wno-error=uninitialized -Wno-error=unused-parameter
 
 ifeq ($(TARGET_PRODUCT), full_crespo)
@@ -138,7 +142,7 @@ endif
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_AUTOPAIR),true)
 local_STATIC_LIBRARIES += libbt-rtk_autopair
 endif
-ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_POWERON),true)
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
 local_STATIC_LIBRARIES += libbt-rtk_virtual_hid
 endif
 LOCAL_STATIC_LIBRARIES := libbt-brcm_gki libbt-brcm_bta libbt-brcm_stack libtinyxml2 $(local_STATIC_LIBRARIES)

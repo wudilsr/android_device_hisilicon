@@ -21,7 +21,12 @@ History       :
 #else
 #include "hi_common.h"
 #endif
+
+#ifdef HI_MINIBOOT_SUPPORT
+#include "app.h"
+#else
 #include "malloc.h"
+#endif
 
 #define CI_BUF_LIST_SetIVFlag(u32Flags)
 #define CI_BUF_LIST_SetEndFlag(u32Flags)
@@ -753,6 +758,11 @@ HI_S32 DRV_Cipher_Init(HI_VOID)
     /* allocate 7 channels size */
     cipherListBuf.u32Size = bufSizeTotal;
     cipherListBuf.u32StartPhyAddr = (HI_U32)malloc(cipherListBuf.u32Size);
+	if(0 == cipherListBuf.u32StartPhyAddr)
+	{
+		HI_ERR_CIPHER("malloc cipherListBuf.u32StartPhyAddr failed.\n");
+		return HI_FAILURE;
+	}
     cipherListBuf.u32StartVirAddr = cipherListBuf.u32StartPhyAddr;
 
     memset((void*)(cipherListBuf.u32StartVirAddr), 0, cipherListBuf.u32Size);
@@ -846,6 +856,11 @@ HI_VOID DRV_Cipher_DeInit(HI_VOID)
     }
 
     HAL_Cipher_DeInit();
+    if (HI_NULL != g_stCipherComm.stPhyBuf.u32StartPhyAddr)
+    {
+        free(g_stCipherComm.stPhyBuf.u32StartPhyAddr);
+        g_stCipherComm.stPhyBuf.u32StartPhyAddr = 0;
+    }
 
     return;
 }

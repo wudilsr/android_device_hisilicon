@@ -1,13 +1,13 @@
 #ifndef __TVP_ADAPTER_H__
 #define __TVP_ADAPTER_H__
 
-#define SEC_VFMW_VERSION      "2015060900s" 
+#define SEC_VFMW_VERSION      "2016091800s"
 
 #define DEBUG_SAVE_SUPPORT    (0)
 
 #define MAX_RAW_NUM           (1024) 
-#define MAX_EVENT_NUM         (128) 
-#define MAX_PARA_SIZE         (1024)
+#define MAX_EVENT_NUM         (1024)
+#define MAX_PARA_SIZE         (64)
 
 #define MAX_PROC_SIZE         (100*1024)
 
@@ -31,6 +31,7 @@ typedef struct
     HI_S32      IsValid;
     HI_S32      ChanID;
     HI_S32      Type;
+    VDEC_ADAPTER_TYPE_E eAdapterType;          /* channel type vdec/omxvdec */
     HI_U8       para[MAX_PARA_SIZE];
 } MSG_DATA_S;
 
@@ -45,7 +46,11 @@ typedef struct
 #if defined(ENV_ARMLINUX_KERNEL)
 
 // Definition for Linux Kernel VFMW
-typedef HI_S32 (*VDEC_CALLBACK)( HI_S32 ChanID, HI_S32 eEventID, HI_VOID *pArgs );
+typedef struct hiVFMW_CALLBACK_S
+{
+    SINT32        (*event_report_vdec)(SINT32 ChanID, SINT32 type, VOID *p_args );
+    SINT32        (*event_report_omxvdec)(SINT32 ChanID, SINT32 type, VOID *p_args );
+}VFMW_CALLBACK_S;
 
 HI_VOID TVP_VDEC_OpenModule(HI_VOID);
 HI_VOID TVP_VDEC_ExitModule(HI_VOID);

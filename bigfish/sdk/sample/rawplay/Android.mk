@@ -11,7 +11,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS := $(CFG_HI_CFLAGS) $(CFG_HI_BOARD_CONFIGS)
 LOCAL_CFLAGS += -DLOG_TAG=\"$(LOCAL_MODULE)\"
 
-LOCAL_SRC_FILES := rawplay.c
+LOCAL_SRC_FILES := sample_rawplay.c
 
 LOCAL_C_INCLUDES := $(COMMON_UNF_INCLUDE)
 LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
@@ -25,9 +25,10 @@ LOCAL_C_INCLUDES += $(COMPONENT_DIR)/ha_codec/include
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl libm \
                           libhi_common libhi_msp libhi_sample_common
 
-ifeq ($(CFG_HI_TVP_SUPPORT), y)
-LOCAL_CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT), y)
+LOCAL_CFLAGS += -DHI_TEE_SUPPORT
 LOCAL_C_INCLUDES += $(TVP_DIR)/libteec/inc/
+LOCAL_C_INCLUDES += $(COMMON_DIR)/api/mmz
 LOCAL_SHARED_LIBRARIES += libteec
 endif
 

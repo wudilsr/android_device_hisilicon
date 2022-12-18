@@ -129,30 +129,7 @@ void set_core_voltage(void)
 	return;
 }
 #endif
-/******************************************************************************/
 
-long long get_chipid_reg(void)
-{
-	long long chipid = 0;
-	long long val = 0;
-
-	chipid = (long long)readl(REG_BASE_SCTL + REG_SC_SYSID0);
-	val = (long long)readl(REG_BASE_PERI_CTRL + REG_PERI_SOC_FUSE);
-	chipid = ((val & (0x1F << 16)) << 16) | (chipid & 0xFFFFFFFF);
-
-	return chipid;
-}
-
-/******************************************************************************/
-
-unsigned int get_ca_vendor_reg(void)
-{
-	unsigned long ca_vendor = 0;
-
-	// TODO: XXXX
-
-	return ca_vendor;
-}
 
 /******************************************************************************/
 
@@ -210,5 +187,6 @@ void check_bootfromsd(void)
 		reg_read_write((volatile unsigned int *)REG_IOSHARE_EBI_DQ4, 0x0, 0x1);		
 	}
 }
+
 /******************************************************************************/
 

@@ -10,7 +10,7 @@
 
 #define LOG_TAG "SVR_EXTRATOR"
 #include <utils/Log.h>
-#include <cutils/properties.h>
+//#include <cutils/properties.h>
 #include "hi_svr_format.h"
 #include "svr_extrator_intf.h"
 
@@ -25,6 +25,9 @@ typedef struct tagDEMUXER_MEMBER_S
 {
     HI_HANDLE hExtractor;
     HI_CHAR uri[MAX_URI_NAME_LEN];
+    HI_CHAR *aszHeaders;
+    HI_FORMAT_BUFFER_CONFIG_S stBufConfig;
+    HI_S64 s64BufferMaxSize;
 } DEMUXER_MEMBER_S;
 
 /* demuxer, url function */
@@ -164,7 +167,38 @@ HI_S32 dumpFileInfo(HI_FORMAT_FILE_INFO_S *pstFileInfo)
 
 static HI_S32 SVR_DEMUXER_Find(const HI_CHAR *pszFileName, const HI_FORMAT_PROTOCOL_FUN_S *pstProtocol)
 {
- /*basic version use ffmpeg file protocol.*/
+    HI_BOOL bUseThisDMX = HI_FALSE;
+    HI_S32 len = strlen(pszFileName);
+
+    /*check format for the extractor,if not SS ASF playready or widevine,exit*/
+
+    if (len>=4 && (strstr(pszFileName, ".pyv")
+                 || strstr(pszFileName, ".pya")))
+    {
+        SVR_PRINTF("this is playready");
+        bUseThisDMX = HI_TRUE;
+    }
+    else if (len >= 9 && !strcasecmp("/Manifest", &pszFileName[len - 9]))
+    {
+        SVR_PRINTF("this is smooth streaming");
+        bUseThisDMX = HI_TRUE;
+    }
+    else if (len >= 11 && !strncasecmp("widevine://", pszFileName, 11))
+    {
+        SVR_PRINTF("this is widevine");
+        bUseThisDMX = HI_TRUE;
+    }
+    else if (strstr(pszFileName, ".wvm"))
+    {
+        SVR_PRINTF("this is widevine");
+        bUseThisDMX = HI_TRUE;
+    }
+
+    if (bUseThisDMX == HI_FALSE)
+    {
+        return HI_FAILURE;
+    }
+
     return HI_SUCCESS;
 }
 
@@ -216,40 +250,9 @@ static HI_S32 SVR_DEMUXER_FindStream(HI_HANDLE fmtHandle, HI_VOID *pArg)
     DEMUXER_MEMBER_S *pstDemuxer = (DEMUXER_MEMBER_S*)fmtHandle;
     HI_HANDLE extractor;
     HI_FORMAT_FILE_INFO_S *pstFileInfo = NULL;
-    HI_BOOL bUseThisDMX = HI_FALSE;
 
     if (NULL == pstDemuxer)
         return HI_FAILURE;
-
-    /*check format for the extractor,if not SS ASF playready or widevine,exit*/
-    HI_S32 len = strlen(pstDemuxer->uri);
-
-    if (len>=4 && (strstr(pstDemuxer->uri, ".pyv")
-                 || strstr(pstDemuxer->uri, ".pya")))
-    {
-        SVR_PRINTF("this is playready");
-        bUseThisDMX = HI_TRUE;
-    }
-    else if (len >= 9 && !strcasecmp("/Manifest", &pstDemuxer->uri[len - 9]))
-    {
-        SVR_PRINTF("this is smooth streaming");
-        bUseThisDMX = HI_TRUE;
-    }
-    else if (len >= 11 && !strncasecmp("widevine://", pstDemuxer->uri, 11))
-    {
-        SVR_PRINTF("this is widevine");
-        bUseThisDMX = HI_TRUE;
-    }
-    else if (strstr(pstDemuxer->uri, ".wvm"))
-    {
-        SVR_PRINTF("this is widevine");
-        bUseThisDMX = HI_TRUE;
-    }
-
-    if (bUseThisDMX == HI_FALSE)
-    {
-        return HI_FAILURE;
-    }
 
     s32Ret = SVR_EXTRACTOR_Create(&extractor);
 
@@ -259,7 +262,10 @@ static HI_S32 SVR_DEMUXER_FindStream(HI_HANDLE fmtHandle, HI_VOID *pArg)
         return HI_FAILURE;
     }
 
-    s32Ret = SVR_EXTRACTOR_SetDataSource(extractor, pstDemuxer->uri, NULL);
+    (void)SVR_EXTRACTOR_Invoke(extractor, HI_FORMAT_INVOKE_SET_BUFFER_CONFIG, (void *)&pstDemuxer->stBufConfig);
+    (void)SVR_EXTRACTOR_Invoke(extractor, HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE, (void *)&pstDemuxer->s64BufferMaxSize);
+    SVR_PRINTF("[%s:%d] SVR_EXTRACTOR_SetDataSource with  aszHeaders:%s", __FUNCTION__, __LINE__, pstDemuxer->aszHeaders);
+    s32Ret = SVR_EXTRACTOR_SetDataSource(extractor, pstDemuxer->uri, pstDemuxer->aszHeaders, pArg);
 
     if (HI_SUCCESS != s32Ret)
     {
@@ -342,6 +348,35 @@ static HI_S32 SVR_DEMUXER_Invoke(HI_HANDLE fmtHandle, HI_U32 u32InvokeId, HI_VOI
 
     if (NULL == pstDemuxer)
         return HI_FAILURE;
+
+    if (HI_FORMAT_INVOKE_SET_COOKIE == u32InvokeId)
+    {
+        if (NULL == pArg)
+        {
+            return HI_FAILURE;
+        }
+        SVR_PRINTF("Set cookie data = 0x%x", pArg);
+        pstDemuxer->aszHeaders = (HI_CHAR*)(*((HI_U32 *) pArg));
+        SVR_PRINTF("pstDemuxer->aszHeaders: %s", pstDemuxer->aszHeaders);
+        return HI_SUCCESS;
+    }
+    else if (HI_FORMAT_INVOKE_SET_BUFFER_CONFIG == u32InvokeId)
+    {
+        if (NULL == pArg)
+        {
+            return HI_FAILURE;
+        }
+        //for the para check has being down in hiplayer,this place use the value directly
+        memcpy(&pstDemuxer->stBufConfig, pArg, sizeof(HI_FORMAT_BUFFER_CONFIG_S));
+    }
+    else if (HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE == u32InvokeId)
+    {
+        if (NULL == pArg)
+        {
+            return HI_FAILURE;
+        }
+        pstDemuxer->s64BufferMaxSize = *(HI_S64*)pArg;
+    }
 
     s32Ret = SVR_EXTRACTOR_Invoke(pstDemuxer->hExtractor, u32InvokeId, pArg);
 

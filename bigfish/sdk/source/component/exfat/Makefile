@@ -16,7 +16,7 @@ BUILD_DIR       := $(shell pwd)/tmp
 STRIP           := $(CROSS_COMPILE)strip
 EXFAT_UTILS     := exfat-utils-0.9.7
 FUSE_EXFAT      := fuse-exfat-0.9.7
-LIBFUSE         := fuse-2.9.3
+LIBFUSE         := fuse-2.9.4
 
 exFAT-utils-tgt :=  usr/sbin/dumpexfat  \
                     usr/sbin/exfatfsck  \

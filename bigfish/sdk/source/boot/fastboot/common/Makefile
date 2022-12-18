@@ -27,7 +27,7 @@ LIB	= $(obj)libcommon.a
 
 COBJS-$(CONFIG_BOOTROM_SUPPORT) += bootstrap.o
 
-ifdef CONFIG_SECURE_BOOT_SUPPORT
+ifdef CONFIG_TEE_SUPPORT
 COBJS-y += loadsecureimg.o
 endif
 

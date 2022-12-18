@@ -463,7 +463,8 @@ static HI_S32 ADEC_DRV_Proc(struct seq_file *p, HI_U32  u32ChNum)
                     "PtsLostNum                             :%d\n"
                     "*DecodeThreadExecTimeOutCnt            :%u\n"
                     "*DecodeThreadScheTimeOutCnt            :%u\n"
-                    "*DecodeThreadSleepTimeMS               :%d\n\n",
+                    "*DecodeThreadSleepTimeMS               :%d\n"
+                    "Bit Per Second                         :%d\n\n",
                     (tmp->bAdecWorkEnable == HI_TRUE) ? "start" : "stop",
                     tmp->u32CodecID,
                     tmp->szCodecType, 
@@ -500,7 +501,8 @@ static HI_S32 ADEC_DRV_Proc(struct seq_file *p, HI_U32  u32ChNum)
                     tmp->u32PtsLost,
                     tmp->ThreadExeTimeOutCnt,
                     tmp->ThreadScheTimeOutCnt,
-                    tmp->u32AdecSystemSleepTime);  
+                    tmp->u32AdecSystemSleepTime,
+                    tmp->u32bps);  
 
     return HI_SUCCESS;
 }

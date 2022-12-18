@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <malloc.h>
 #include <flash.h>
-#include <net/net.h>
 #include <malloc.h>
 #include <run.h>
 #else
@@ -26,6 +25,13 @@
 #include "hi_flash.h"
 #include "recovery.h"
 /* #include "hi_keyled.h" */
+
+#ifdef HI_REMOTE_RECOVERY
+#include "hi_unf_ir.h"
+#define REMOTE_BTN_RECOVER 0x639cff00
+int gpio_recovery = 0 ;
+#endif
+
 
 #define KEY_PRESS             (0x0)	/* press */
 #define KEY_HOLD              (0x01)	/* hold */
@@ -72,28 +78,20 @@ static int check_gpio_recovery(void)
 		}
 		break;
 #endif
-	case _HI3798M_V100:
-	case _HI3798M_V100_A:
-		printf("get chipType (HI3798MV100)\n");
-		/* get gpio2_0 buttom */
-		/* fix    0xF8A21064 [2:0] = 101 */
-		/* input: 0xF8B22400 [0] = 0 */
-		/* read : 0xF8B22004 [0] = 1: release , 0 :button */
-		while (((REG_VAL(0xF8B22004)) == 0) && (count > 0)) {
-			udelay(1000 * 1000);
-			count--;
-		}
-		break;
-	case _HIFONE_B02:
-		printf("get chipType (Hi3798CV200)\n");
-		/* get gpio14_2 buttom */
-		while (((REG_VAL(0xF8B2E010)) == 0) && (count > 0)) {
-			udelay(1000 * 1000);
-			count--;
-		}
-		break;
-	}
-	printf("count=%x\n", count);
+        case _HI3798M_V100:
+        case _HI3798M_V100_A:
+            printf("get chipType (HI3798MV100)\n");
+            /* get gpio2_0 buttom */
+            /* fix    0xF8A21064 [2:0] = 101 */
+            /* input: 0xF8B22400 [0] = 0*/
+            /* read : 0xF8B22004 [0] = 1: release , 0 :button*/
+            while(((REG_VAL(0xF8B22004)) == 0) && (count > 0)){
+                udelay(1000*1000);
+                count--;
+            }
+            break;
+    }
+    printf("count=%x\n",count);
 	if (count > 0)
 		return HI_FAILURE;
 	else
@@ -101,6 +99,7 @@ static int check_gpio_recovery(void)
 }
 static int check_buttom_recovery(HI_S32 *keyvalue)
 {
+
 	HI_S32 Ret = -1;
 	HI_U32 u32PressStatus = KEY_RELEASE;
 	HI_U32 u32KeyValue = 0;
@@ -239,6 +238,69 @@ static int check_buttom_recovery(HI_S32 *keyvalue)
 	return HI_SUCCESS;
 
 }
+#ifdef HI_REMOTE_RECOVERY
+#define MAX_KEY_COUNT 30
+int check_remote_recovery(void)
+{
+    HI_S32 ret = HI_FAILURE;
+	HI_U32 cnt = 0;
+    enum KEY_STATUS PressStatus = KEY_STAT_BUTT;
+    HI_U64 KeyId = 0;
+
+    printf("check remote recovery button begin\n");
+
+    ret = HI_UNF_IR_Init();
+    if (HI_SUCCESS != ret)
+    {
+        printf("HI_UNF_IR_Init failed\n");
+        return ret;
+    }
+
+    ret = HI_UNF_IR_Enable(HI_TRUE);
+    if (HI_SUCCESS != ret)
+    {
+        printf("HI_UNF_IR_Enable failed\n");
+        ret = HI_FAILURE;
+        goto OUT;
+    }
+	ret = HI_UNF_IR_GetValue(&PressStatus, &KeyId, 400);
+    if (HI_SUCCESS != ret)
+    {
+		printf("HI_UNF_IR_GetValue failed\n");
+		ret = HI_FAILURE;
+		goto OUT;
+    }
+	printf("remote button KeyId is %lld,status:%d\n", KeyId,PressStatus);
+
+	while( KeyId  == REMOTE_BTN_RECOVER ){
+		KeyId = 0;
+        ret = HI_UNF_IR_GetValue(&PressStatus, &KeyId, 400);
+        if (HI_SUCCESS != ret)
+        {
+			printf("HI_UNF_IR_GetValue failed\n");
+            break;
+        }
+		cnt++;
+		if(cnt > MAX_KEY_COUNT)
+		{
+			printf("remote button to recovery success!\n");
+			ret = HI_SUCCESS;
+			goto OUT;
+		}
+		printf("remote button KeyId is %lld,status:%d\n", KeyId,PressStatus);
+		udelay(2000);
+	}
+    ret = HI_FAILURE;
+OUT:
+
+    if (HI_SUCCESS != HI_UNF_IR_DeInit())
+    {
+        printf("HI_UNF_IR_DeInit failed\n");
+    }
+
+    return ret;
+}
+#endif
 
 const char *boot_select(void)
 {
@@ -255,7 +317,13 @@ const char *boot_select(void)
 
 	unsigned int pagesize;
 	unsigned int erasesize;
-
+#ifdef HI_REMOTE_RECOVERY
+	if(HI_SUCCESS == check_remote_recovery())
+	{
+		printf("enter the remote button recovery\n");
+		gpio_recovery = 1;
+	}
+#endif
 	flashhandle = HI_Flash_OpenByName(FASTBOOT_MISC_NAME);
 	if ((0 == flashhandle) || (HI_INVALID_HANDLE == flashhandle)) {
 		printf("HI_Flash_Open partion %s error\n", FASTBOOT_MISC_NAME);
@@ -331,7 +399,34 @@ const char *boot_select(void)
 				buf1 = NULL;
 				HI_Flash_Close(flashhandle);
 				return "recovery";
-			} else {
+			}
+#ifdef HI_REMOTE_RECOVERY
+			else if (gpio_recovery){
+                memcpy(&buf[len], "boot-recovery", 14);
+				memcpy(&buf[len+64],"recovery\n--send_intent=update_ui\n",33);
+				ret = HI_Flash_Erase(flashhandle,FASTBOOT_MISC_OFFSET,len);
+			    if (ret == HI_FAILURE) {
+				    free(buf);
+				    free(buf1);
+				    buf = NULL;
+				    buf1 = NULL;
+				    HI_Flash_Close(flashhandle);
+				    break;
+                }
+				ret = HI_Flash_Write(flashhandle, FASTBOOT_MISC_OFFSET,
+					  buf, len, HI_FLASH_RW_FLAG_RAW);
+		        if (ret == HI_FAILURE) {
+				    free(buf);
+				    free(buf1);
+				    buf = NULL;
+				    buf1 = NULL;
+				    HI_Flash_Close(flashhandle);
+				    break;
+                }
+				return "recovery";
+			}
+#endif
+			else{
 				free(buf);
 				free(buf1);
 				buf = NULL;
@@ -370,7 +465,35 @@ const char *boot_select(void)
 				buf = NULL;
 				HI_Flash_Close(flashhandle);
 				return "recovery";
-			} else {
+			}
+#ifdef HI_REMOTE_RECOVERY
+			else if (gpio_recovery){
+                memcpy(&buf[len1], "boot-recovery", 14);
+				memcpy(&buf[len1+64],"recovery\n--send_intent=update_ui\n",33);
+				ret = HI_Flash_Erase(flashhandle,FASTBOOT_MISC_OFFSET,len);
+			    if (ret == HI_FAILURE) {
+				    free(buf);
+				    free(buf1);
+				    buf = NULL;
+				    buf1 = NULL;
+				    HI_Flash_Close(flashhandle);
+				    break;
+                }
+				ret = HI_Flash_Write(flashhandle, FASTBOOT_MISC_OFFSET,
+					  buf, len, HI_FLASH_RW_FLAG_RAW);
+		        if (ret == HI_FAILURE) {
+				    free(buf);
+				    free(buf1);
+				    buf = NULL;
+				    buf1 = NULL;
+				    HI_Flash_Close(flashhandle);
+				    break;
+                }
+				printf("bigfish __recovery__ok");
+				return "recovery";
+			}
+#endif
+			 else {
 				free(buf);
 				buf = NULL;
 				HI_Flash_Close(flashhandle);
@@ -383,14 +506,17 @@ const char *boot_select(void)
 		}
 	}
 
-	ret = check_buttom_recovery(&keycode);
-	if (keycode == RECOVERY_KEY && ret == HI_SUCCESS) {
-		printf("enter the keypress revocery,keycode=%d\n", keycode);
-		return "recovery";
-	}
+
+
+
 	if (check_gpio_recovery() == HI_SUCCESS) {
 		printf("enter the gpio press revocery\n");
 		return "recovery";
+	}
+    ret = check_buttom_recovery(&keycode);
+	if (keycode == RECOVERY_KEY && ret == HI_SUCCESS) {
+		printf("enter the keypress revocery,keycode=%d\n", keycode);
+	    return "recovery";
 	}
 	return "kernel";
 }

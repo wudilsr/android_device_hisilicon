@@ -416,7 +416,7 @@ dfb_core_destroy( CoreDFB *core, bool emergency )
 
      if (core->signal_handler)
           direct_signal_handler_remove( core->signal_handler );
-     
+
      if (core->cleanup_handler)
           direct_cleanup_handler_remove( core->cleanup_handler );
 
@@ -502,7 +502,7 @@ CoreLayerRegion *
 dfb_core_create_layer_region( CoreDFB *core )
 {
      CoreDFBShared *shared;
-     
+
      (void)shared;
 
      D_ASSUME( core != NULL );
@@ -1537,12 +1537,15 @@ dfb_core_initialize( CoreDFB *core )
      shared->surface_client_pool = dfb_surface_client_pool_create( core->world );
      shared->window_pool         = dfb_window_pool_create( core->world );
 
+     //printf("===%s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
      for (i=0; i<D_ARRAY_SIZE(core_parts); i++) {
+          //printf("===i = %d\n",i);
           if ((ret = dfb_core_part_initialize( core, core_parts[i] ))) {
                dfb_core_shutdown( core, true );
                return ret;
           }
      }
+     //printf("===%s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
 
      if (dfb_config->resource_manager) {
           DirectInterfaceFuncs *funcs;

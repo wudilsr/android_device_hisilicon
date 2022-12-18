@@ -355,8 +355,6 @@ static enum flash_type_t get_env_media(void)
 	FT_SPIFLASH;
 #elif defined(CONFIG_ENV_NAND)
 	FT_NAND;
-#elif defined(CONFIG_ENV_SPI_NAND)
-	FT_SNAND;
 #else
 	FT_NONE;
 #endif
@@ -368,7 +366,6 @@ static enum flash_type_t get_env_media(void)
 	default:
 	case BOOT_MEDIA_UNKNOWN:  flashtype = FT_NONE;     break;
 	case BOOT_MEDIA_NAND:     flashtype = FT_NAND;     break;
-	case BOOT_MEDIA_SPI_NAND: flashtype = FT_SNAND;    break;
 	case BOOT_MEDIA_SPIFLASH: flashtype = FT_SPIFLASH; break;
 	case BOOT_MEDIA_EMMC:     flashtype = FT_EMMC;     break;
 	}
@@ -528,11 +525,11 @@ static int load_default(struct env_t *env)
 
 /*****************************************************************************/
 
-int __load_direct_env(void *env, unsigned int size)
+int __load_direct_env(void *env, unsigned int offset, unsigned int size)
 {
 	return 1;
 }
-int load_direct_env(void *env, unsigned int size) __attribute__((weak, alias("__load_direct_env")));
+int load_direct_env(void *env, unsigned int offset, unsigned int size) __attribute__((weak, alias("__load_direct_env")));
 
 /*****************************************************************************/
 
@@ -556,9 +553,16 @@ static void env_init(void *ptr)
 	env = &global->env;
 
 	memset(env, 0, CONFIG_ENV_SIZE);
-	if (!load_direct_env(env, CONFIG_ENV_SIZE)) {
+	if (!load_direct_env(env, CONFIG_ENV_FROM, CONFIG_ENV_SIZE)) {
 		global->env_tail = find_env_tail(env->data, sizeof(env->data));
+	} 
+#ifdef CONFIG_ENV_BACKUP_FROM
+	else {
+		if (!load_direct_env(env, CONFIG_ENV_BACKUP_FROM, CONFIG_ENV_SIZE)) {	
+			global->env_tail = find_env_tail(env->data, sizeof(env->data));
+		}
 	}
+#endif
 
 	if (verify_env(env)) {
 		pr_info("Found Env in DDR address:0x%08x\n", (uint32)env);

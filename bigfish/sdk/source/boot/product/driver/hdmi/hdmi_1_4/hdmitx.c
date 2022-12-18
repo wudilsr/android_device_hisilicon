@@ -7,6 +7,8 @@
 /***********************************************************************************/
 #ifndef HI_MINIBOOT_SUPPORT
 #include "linux/string.h"
+#else
+#include "delay.h"
 #endif
 #include "globdefs.h"
 //#include "cpldefs.h"
@@ -14,7 +16,6 @@
 #include "hdmitx.h"
 #include "defstx.h"
 #include "hlviic.h"
-//#include "delay.h"
 //#include "de.h"
 //#include "eeprom.h"
 #include "txvidp.h"
@@ -63,7 +64,7 @@ void Encoder_Adjust(void)
     TX_CTRL_DVIEncoder(HI_FALSE);
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -120,7 +121,7 @@ HI_VOID HW_ResetCtrl(int iEnable)
     }
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)
 
@@ -257,7 +258,7 @@ void ReleaseHDMITX_SWReset( HI_U8 SoftReset )
 //-------------------------------------------------------------------
 void SW_ResetHDMITX(void)
 {
-    HI_U8 TimeOut = 20;
+    HI_U8 TimeOut = 100;
     HI_U8 RegVal;
 
     HDMIPrint("--> SW_ResetHDMITX.\n");
@@ -269,13 +270,13 @@ void SW_ResetHDMITX(void)
 
     AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
     //DelayMS(1);
-    DelayMS(10);
+    DelayMS(5);
     ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
     DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
     
     while ( !siiIsTClockStable() && --TimeOut )
     {
-        DelayMS(5);         // wait for input pixel clock to stabilze
+        DelayMS(1);         // wait for input pixel clock to stabilze
     }
 
     if (TimeOut == 0)
@@ -284,8 +285,8 @@ void SW_ResetHDMITX(void)
         AssertHDMITX_SWReset(BIT_TX_SW_RST);
         DelayMS(10);
         ReleaseHDMITX_SWReset(BIT_TX_SW_RST);
-        DelayMS(10);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
-        HDMIPrint("TClock UnStable:%d before sw reset <--\n", siiIsTClockStable());
+        DelayMS(1);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
+        HDMIPrint("TClock UnStable before sw reset <--\n");
     }
     //DelayMS(5);     // allow TCLK (sent to Rx across the HDMS link) to stabilize
 
@@ -331,7 +332,7 @@ void TX_SetHDMIMode(HI_U8 Enabled)
 HI_S32 TX_CTRL_DVIEncoder(HI_BOOL bEnable)
 {
 #if    defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)

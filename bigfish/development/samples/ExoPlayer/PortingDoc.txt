@@ -1,0 +1,7 @@
+ExoPlayer:
+lib: from ExoPlayer/library/src/main/java/com/google/android/exoplayer
+res: from ExoPlayer/demo/src/main/res
+src: from ExoPlayer/demo/src/main/java
+AndroidManifest.xml: from ExoPlayer/demo/src/main/AndroidManifest.xml
+README.md: from ExoPlayer/README.md
+RELEASENOTES.md: from ExoPlayer/RELEASENOTES.md

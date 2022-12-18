@@ -166,9 +166,6 @@ ifeq ($(CFG_HI_PLAYREADY_SUPPORT),y)
 objects += playready
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-objects += tee
-endif
 
 objects_clean := $(addsuffix _clean, $(objects))
 

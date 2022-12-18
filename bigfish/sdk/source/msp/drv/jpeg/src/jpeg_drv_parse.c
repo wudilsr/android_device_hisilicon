@@ -1,23 +1,23 @@
 /******************************************************************************
 *
-* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 * and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
 ******************************************************************************
 File Name	    : jpeg_drv_parse.c
 Version		    : Initial Draft
-Author		    : 
+Author		    :
 Created		    : 2015/01/25
 Description	    :
-Function List 	: 
+Function List 	:
 
-			  		  
+
 History       	:
 Date				Author        		Modification
-2015/01/25		    y00181162  		    Created file      	
+2015/01/25		    y00181162  		    Created file
 ******************************************************************************/
 
 /*********************************add include here******************************/
@@ -93,24 +93,24 @@ typedef enum tagJPEGMARKE{
   M_JPEG_SOF1  = 0xc1,
   M_JPEG_SOF2  = 0xc2,
   M_JPEG_SOF3  = 0xc3,
-  
+
   M_JPEG_SOF5  = 0xc5,
   M_JPEG_SOF6  = 0xc6,
   M_JPEG_SOF7  = 0xc7,
-  
+
   M_JPEG_JPG   = 0xc8,
   M_JPEG_SOF9  = 0xc9,
   M_JPEG_SOF10 = 0xca,
   M_JPEG_SOF11 = 0xcb,
-  
+
   M_JPEG_SOF13 = 0xcd,
   M_JPEG_SOF14 = 0xce,
   M_JPEG_SOF15 = 0xcf,
-  
+
   M_JPEG_DHT   = 0xc4,
-  
+
   M_JPEG_DAC   = 0xcc,
-  
+
   M_JPEG_RST0  = 0xd0,
   M_JPEG_RST1  = 0xd1,
   M_JPEG_RST2  = 0xd2,
@@ -119,7 +119,7 @@ typedef enum tagJPEGMARKE{
   M_JPEG_RST5  = 0xd5,
   M_JPEG_RST6  = 0xd6,
   M_JPEG_RST7  = 0xd7,
-  
+
   M_JPEG_SOI   = 0xd8,
   M_JPEG_EOI   = 0xd9,
   M_JPEG_SOS   = 0xda,
@@ -128,7 +128,7 @@ typedef enum tagJPEGMARKE{
   M_JPEG_DRI   = 0xdd,
   M_JPEG_DHP   = 0xde,
   M_JPEG_EXP   = 0xdf,
-  
+
   M_JPEG_APP0  = 0xe0,
   M_JPEG_APP1  = 0xe1,
   M_JPEG_APP2  = 0xe2,
@@ -145,13 +145,13 @@ typedef enum tagJPEGMARKE{
   M_JPEG_APP13 = 0xed,
   M_JPEG_APP14 = 0xee,
   M_JPEG_APP15 = 0xef,
-  
+
   M_JPEG_JPG0  = 0xf0,
   M_JPEG_JPG13 = 0xfd,
   M_JPEG_COM   = 0xfe,
-  
+
   M_JPEG_TEM   = 0x01,
-  
+
   M_JPEG_ERROR = 0x100
 } JPEG_MARK_E;
 
@@ -212,9 +212,9 @@ static HI_BOOL parse_fist_marker(HI_S32 s32DecHandle)
     {
         return HI_TRUE;
     }
-    
+
     return HI_FALSE;
-    
+
 }
 
 /***************************************************************************************
@@ -236,7 +236,7 @@ static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 	    while(pstImgInfo->u32CurPos[0] < pstImgInfo->u32DataLen[0])
 	    {
 	        INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-	        while(s32Code != 0xFF) 
+	        while(s32Code != 0xFF)
 	        {
 	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
 	        }
@@ -244,7 +244,7 @@ static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 	        {
 	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
 	        } while (s32Code == 0xFF);
-	        
+
 	        if (s32Code != 0)
 	        {
 	           break;
@@ -260,7 +260,7 @@ static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 		while(pstImgInfo->u32CurPos[0] <= pstImgInfo->u32DataLen[0] && pstImgInfo->u32CurPos[1] < pstImgInfo->u32DataLen[1])
 	    {
 	        INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-	        while(s32Code != 0xFF) 
+	        while(s32Code != 0xFF)
 	        {
 	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
 	        }
@@ -268,7 +268,7 @@ static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 	        {
 	          INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
 	        } while (s32Code == 0xFF);
-	        
+
 	        if (s32Code != 0)
 	        {
 	           break;
@@ -279,7 +279,7 @@ static HI_S32 parse_next_marker(HI_S32 s32DecHandle,HI_S32 *ps32Mark)
 			return HI_ERR_JPEG_DATA_SUPPORT;
 	    }
     }
-    
+
     *ps32Mark = s32Code;
 
     return HI_SUCCESS;
@@ -298,9 +298,9 @@ static HI_BOOL parse_dri_marker(HI_S32 s32DecHandle)
       HI_S32 s32Len  = 0;
       HI_S32 s32Code = 0;
       IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
-      
+
       INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
-      
+
       if(s32Len != 4)
       {
          JPEG_TRACE("the dri len is bad\n");
@@ -310,7 +310,7 @@ static HI_BOOL parse_dri_marker(HI_S32 s32DecHandle)
       INPUT_BYTE_DATA(s32DecHandle,s32Code,2);
 
       pstImgInfo->s32RestartInterval = s32Code;
-        
+
       return HI_TRUE;
 }
 
@@ -398,8 +398,8 @@ static HI_BOOL parse_sofn_marker(HI_S32 s32DecHandle)
         JPEG_TRACE("the image w and h is to large\n");
         return HI_FALSE;
     }
-    
-    for (s32Cnt = 0; s32Cnt < pstImgInfo->s32NumComponent; s32Cnt++) 
+
+    for (s32Cnt = 0; s32Cnt < pstImgInfo->s32NumComponent; s32Cnt++)
     {
 
         pstImgInfo->stComponentInfo[s32Cnt].s32ComponentIndex = s32Cnt;
@@ -438,7 +438,7 @@ static HI_BOOL parse_sofn_marker(HI_S32 s32DecHandle)
     		 {
     			  pstImgInfo->eImgFmt = IMG_FMT_YUV422_21;
     		 }
-    		 
+
     	 }
     	 else if(pstImgInfo->stComponentInfo[0].u8HorSampleFac == pstImgInfo->stComponentInfo[1].u8HorSampleFac)
     	 {
@@ -493,7 +493,7 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
 #endif
 
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
-    
+
     if(HI_FALSE == pstImgInfo->bSofMark)
     {
         JPEG_TRACE("not has sof befor sos\n");
@@ -505,7 +505,7 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
     INPUT_BYTE_DATA(s32DecHandle,s32NumComponent,1);
 
     if (s32Len != (s32NumComponent * 2 + 6) || s32NumComponent < 1 || s32NumComponent > NUM_COMPS_IN_SCAN)
-    {   
+    {
         JPEG_TRACE("the len is larger\n");
         return HI_FALSE;
     }
@@ -517,25 +517,25 @@ static HI_BOOL parse_sos_marker(HI_S32 s32DecHandle)
         JPEG_TRACE("the component num is larger\n");
         return HI_FALSE;
     }
-    
-    for (s32Cnt = 0; s32Cnt < s32NumComponent; s32Cnt++) 
+
+    for (s32Cnt = 0; s32Cnt < s32NumComponent; s32Cnt++)
     {
 
         INPUT_BYTE_DATA(s32DecHandle,s32Code1,1);
         INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-        
-        for (s32Cnt1 = 0; s32Cnt1 < pstImgInfo->s32NumComponent; s32Cnt1++) 
+
+        for (s32Cnt1 = 0; s32Cnt1 < pstImgInfo->s32NumComponent; s32Cnt1++)
         {
           if (s32Code1 == pstImgInfo->stComponentInfo[s32Cnt1].s32ComponentId)
                 goto id_found;
         }
         JPEG_TRACE("can not find component id\n");
         return HI_FALSE;
-        
+
         id_found:
             pstImgInfo->stComponentInfo[s32Cnt1].s32DcTblNo = (s32Code >> 4) & 15;
             pstImgInfo->stComponentInfo[s32Cnt1].s32AcTblNo = (s32Code     ) & 15;
-            
+
     }
     INPUT_BYTE_DATA(s32DecHandle,pstImgInfo->s32Ss,1);
     INPUT_BYTE_DATA(s32DecHandle,pstImgInfo->s32Se,1);
@@ -594,14 +594,14 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
       INPUT_BYTE_DATA(s32DecHandle,s32Len,2);
 
       s32Len -= 2;
-      
-      while (s32Len > 16) 
+
+      while (s32Len > 16)
       {
 
             INPUT_BYTE_DATA(s32DecHandle,s32HTIndex,1);
             bits[0]  = 0;
             s32Count = 0;
-            for(s32Cnt = 1; s32Cnt <= 16; s32Cnt++) 
+            for(s32Cnt = 1; s32Cnt <= 16; s32Cnt++)
             {
                   INPUT_BYTE_DATA(s32DecHandle,bits[s32Cnt],1);
                   s32Count += bits[s32Cnt];
@@ -616,18 +616,18 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
                  bits[9], bits[10], bits[11], bits[12],
                  bits[13], bits[14], bits[15], bits[16]);
             #endif
-            
+
             if(s32Count > 256 || s32Count > s32Len)
             {
                JPEG_TRACE("the dht is bad\n");
                return HI_FALSE;
             }
-        
+
             for(s32Cnt = 0; s32Cnt < s32Count; s32Cnt++)
             {
                 INPUT_BYTE_DATA(s32DecHandle,huffval[s32Cnt],1);
             }
-        
+
             s32Len -= s32Count;
 
             if(s32HTIndex & 0x10)
@@ -640,7 +640,7 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
   	              }
                   htblptr = &pstImgInfo->AcHuffTbl[s32HTIndex];
                   pstImgInfo->AcHuffTbl[s32HTIndex].bHasHuffTbl = HI_TRUE;
-            } 
+            }
             else
             {/** DC table definition **/
                   if(s32HTIndex < 0 || s32HTIndex >= MAX_NUM_HUFF_TBLS)
@@ -662,7 +662,7 @@ static HI_BOOL parse_dht_marker(HI_S32 s32DecHandle)
             }
             memcpy(htblptr->bits, bits, sizeof(htblptr->bits));
             memcpy(htblptr->huffval, huffval, sizeof(htblptr->huffval));
-            
+
       }
 
       if (s32Len != 0)
@@ -722,11 +722,11 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
 
       s32Len -= 2;
 
-      while (s32Len > 0) 
+      while (s32Len > 0)
       {
 
             INPUT_BYTE_DATA(s32DecHandle,s32Code,1);
-            
+
             s32Precision = s32Code >> 4;
             s32Code &= 0x0F;
             if(s32Code >= MAX_NUM_QUANT_TBLS)
@@ -735,9 +735,9 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
                 return HI_FALSE;
             }
             pstImgInfo->QuantTbl[s32Code].bHasQuantTbl = HI_TRUE;
-            
+
             quantptr = &pstImgInfo->QuantTbl[s32Code];
-                        
+
             for (s32Cnt = 0; s32Cnt < MAX_DCT_SIZE; s32Cnt++)
             {
                   if(s32Precision)
@@ -753,7 +753,7 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
             }
 
             #ifdef CONIFG_PARSE_DEBUG
-                for (s32Cnt = 0; s32Cnt < MAX_DCT_SIZE; s32Cnt += 8) 
+                for (s32Cnt = 0; s32Cnt < MAX_DCT_SIZE; s32Cnt += 8)
                 {
                      JPEG_TRACE("quantable[%d %d %d %d %d %d %d %d]\n",
                      quantptr->quantval[s32Cnt],   quantptr->quantval[s32Cnt+1],
@@ -791,18 +791,20 @@ static HI_BOOL parse_dqt_marker(HI_S32 s32DecHandle)
 * others:		: NA
 ***************************************************************************************/
 HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
-{    
+{
 
     HI_S32 s32Mark = 0;
-
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
-    /** 这个值要初始化为－1 **/
-    pstImgInfo->s32RestartInterval = -1;
+    IMAG_INFO_S *pstImgInfo = NULL;
 
     if(NULL == pstInMsg)
     {
         return HI_ERR_JPEG_PARA_NULL;
     }
+
+    pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
+
+    /** 这个值要初始化为－1 **/
+    pstImgInfo->s32RestartInterval = -1;
 
     /** 输入码流信息 **/
     pstImgInfo->pDataVir[0]   = pstInMsg->pSaveVir[0];
@@ -820,7 +822,7 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
 
     while(pstImgInfo->u32CurPos[0] <= pstImgInfo->u32DataLen[0] && pstImgInfo->u32CurPos[1] <= pstImgInfo->u32DataLen[1])
     {
-    
+
         if(HI_SUCCESS != parse_next_marker(pstInMsg->u32DecHandle,&s32Mark))
         {
     	     return HI_ERR_JPEG_DATA_SUPPORT;
@@ -876,7 +878,7 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             	     return HI_ERR_JPEG_SOFN_EXIT;
                   }
                   break;
-            
+
             case M_JPEG_SOS:
                   if(! parse_sos_marker(pstInMsg->u32DecHandle))
                   {
@@ -884,14 +886,14 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
                   }
                   /** ok,parse the dec stream,should not continue parse file **/
                   return HI_SUCCESS;
-                  
+
             case M_JPEG_DHT:
                   if(! parse_dht_marker(pstInMsg->u32DecHandle))
                   {
             	     return HI_ERR_JPEG_PARSE_DHT;
                   }
                   break;
-              
+
             case M_JPEG_DQT:
                   if(! parse_dqt_marker(pstInMsg->u32DecHandle))
                   {
@@ -926,9 +928,9 @@ HI_S32 jpg_dec_parse(HI_DRV_JPEG_INMSG_S *pstInMsg)
             	return HI_ERR_JPEG_DATA_SUPPORT;
          }
     }
-    
+
     return HI_ERR_JPEG_DATA_SUPPORT;
-    
+
 }
 /***************************************************************************************
 * func			: jpeg_get_sofn
@@ -951,7 +953,7 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
     HI_S32 s32OutUVHeight       = 0;
     HI_S32 s32OutUVStride       = 0;
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstOutMsg->u32DecHandle);
-    
+
     if(1 != pstOutMsg->s32Scale && 2 != pstOutMsg->s32Scale && 4 != pstOutMsg->s32Scale && 8 != pstOutMsg->s32Scale)
     {
         JPEG_TRACE("the dec scale is not support\n");
@@ -969,7 +971,7 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
     }
     if(s32OutYWidth  <= 1) s32OutYWidth  = 2;
     if(s32OutYHeight <= 1) s32OutYHeight = 2;
-    
+
 	s32OutTmpYHeight = (1 == pstImgInfo->u8Fac[0][1]) ? ((s32OutYHeight + JPEG_DRV_MCU_8ALIGN - 1) & (~(JPEG_DRV_MCU_8ALIGN - 1)))  : ((s32OutYHeight + JPEG_DRV_MCU_16ALIGN - 1) & (~(JPEG_DRV_MCU_16ALIGN - 1)));
 
     jpeg_para_getstride(s32OutYWidth,&s32OutYStride,64);
@@ -1032,7 +1034,7 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
             {
                 s32OutUVStride    = s32OutYStride << 1;
                 s32OutTmpUVHeight = s32OutTmpYHeight;
-                
+
             }
             s32OutUVWidth       = s32OutYWidth;
             s32OutUVHeight      = s32OutYHeight;
@@ -1049,7 +1051,7 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 		s32OutUVWidth	= s32OutYWidth  >> 1;
 		s32OutUVHeight  = s32OutYHeight >> 1;
 	}
-   
+
     pstOutMsg->u32OutWidth[0]  = s32OutYWidth;
     pstOutMsg->u32OutHeight[0] = s32OutYHeight;
     pstOutMsg->u32OutStride[0] = s32OutYStride;
@@ -1064,9 +1066,9 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
     {
         pstOutMsg->enOutFmt = JPG_FMT_YUV420;
     }
-    
+
     return HI_SUCCESS;
-    
+
 }
 
 /***************************************************************************************
@@ -1079,10 +1081,12 @@ HI_S32 jpeg_get_sofn(HI_DRV_JPEG_OUTMSG_S *pstOutMsg)
 HI_VOID jpeg_get_imginfo(HI_DRV_JPEG_INMSG_S *pstInMsg)
 {
 
-    IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
-    
+    IMAG_INFO_S *pstImgInfo = NULL;
+
     if(NULL == pstInMsg)
         return;
+
+    pstImgInfo = (IMAG_INFO_S*)(pstInMsg->u32DecHandle);
 
     pstInMsg->s32InWidth  = pstImgInfo->s32InWidth;
     pstInMsg->s32InHeight = pstImgInfo->s32InHeight;

@@ -63,7 +63,9 @@ loglevel 3
     mkdir /data 0771 system system
     mkdir /cache 0770 system cache
     mkdir /private 0751 system sdcard_r
+    mkdir /shatable 0751 system sdcard_r
     mkdir /config 0500 root root
+    mkdir /securestore 0771 system system
 
     # See storage config details at http://source.android.com/tech/storage/
     mkdir /mnt/shell 0700 shell shell
@@ -156,10 +158,18 @@ on fs
     mount ubifs ubi@cache /cache nosuid nodev
 
 on emmc-fs
+#    mount squashfs squashfs@system /system
+    mount squashfs loop@/hisi.initfile0 /shatable ro
+    mount squashfs squashfs@verify_system /system ro
     mount ext4 ext4@system /system ro
     mount ext4 ext4@userdata /data nosuid nodev
     mount ext4 ext4@cache /cache nosuid nodev
     mount ext4 ext4@private /private nosuid nodev
+    mount ext4 ext4@securestore /securestore nosuid nodev
+on sdcardfs-export-para
+# mount /data/media to /mnt/shell/emulated by sdcardfs
+    export EXTERNAL_STORAGE /mnt/sdcard
+    mkdir /mnt/sdcard 0771 root sdcard_r
 
 on fuse-sdcard
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
@@ -167,14 +177,14 @@ on fuse-sdcard
     rmdir /storage/emulated/0
     symlink /mnt/shell/emulated/0 /storage/emulated/0
 
-on post-fs
-
+on export-para
 # defaultStorage function ,please change EXTERNAL_STORAGE to /mnt/sdcard
     export EXTERNAL_STORAGE /storage/emulated/0
+
+on post-fs
     export EXTERNAL_STORAGE_VOLD /storage/emulated/0
     export EXTERNAL_STORAGE_VOLD_PATH /data/data/com.android.settings/shared_prefs/com.android.settings_preferences.xml
     symlink /mnt/sdcard /sdcard
-
 
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
@@ -428,6 +438,14 @@ on boot
     class_start core
     class_start main
 
+#system check
+    system_check
+
+on sdcard-fs
+    mkdir /data/media 0770 media_rw media_rw
+    wait /data/media/0
+    mount sdcardfs /data/media /storage/emulated nosuid nodev derive=legacy,reserved_mb=100
+
 on nonencrypted
     class_start late_start
 
@@ -573,7 +591,7 @@ service drm /system/bin/drmserver
 service media /system/bin/mediaserver
     class main
     user media
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm sdcard_r
     ioprio rt 4
 
 service bootanim /system/bin/bootanimation
@@ -643,3 +661,8 @@ service mdnsd /system/bin/mdnsd
     socket mdnsd stream 0660 mdnsr inet
     disabled
     oneshot
+
+service teecd /system/bin/teecd
+    class main
+    user  root
+    group root

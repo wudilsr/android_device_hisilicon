@@ -303,6 +303,7 @@ static HI_U32 getCurrentTime()
     return -1;
 }
 
+
 /* for command queue Async callback start */
 static int prepareAsyncComplete(status_t status, void *cookie, bool cancelled)
 {
@@ -327,6 +328,24 @@ static int prepareAsyncComplete(status_t status, void *cookie, bool cancelled)
 
     return NO_ERROR;
 }
+
+HI_S32 HiMediaPlayer::SetMediaWithLock(HI_HANDLE mHandle, HI_SVR_PLAYER_MEDIA_PARAM_E ePlayerParam, HI_SVR_PLAYER_MEDIA_S *pstMediaParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    {
+        Mutex::Autolock Hiplayerlock(mLockPreparing);
+        mPreparing = true;
+    }
+    LOGV("Seek lock test: call HI_SVR_PLAYER_SetMedia, mPreparing = %d", mPreparing);
+    s32Ret = HI_SVR_PLAYER_SetMedia(mHandle, ePlayerParam, pstMediaParam);
+    {
+        Mutex::Autolock Hiplayerlock(mLockPreparing);
+        mPreparing = false;
+    }
+    LOGV("Seek lock test: call HI_SVR_PLAYER_SetMedia return, mPreparing = %d", mPreparing);
+    return s32Ret;
+}
+
 
 int   HiMediaPlayer::getDiagnose(void)
 {
@@ -1432,6 +1451,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 HI_SVR_PLAYER_Play(hPlayer);
                 LOGV("Send event MEDIA_FAST_BACKWORD_COMPLETE");
                 pHiPlayer->sendEvent(android::MEDIA_FAST_BACKWORD_COMPLETE);
+                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_FAST_BACKWORD_COMPLETE, 0);
             }
         }
         break;
@@ -1504,6 +1524,7 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
         {
             LOGV("NOT LOOPING, send event MEDIA_SEEK_COMPLETE");
 
+            pHiPlayer->mNeedSendFirstFrameAfterSeekEvent = 1;
             pHiPlayer->writeLog(MEDIA_LOG_SEEK_COMPLETE, MEDIA_LOG_LEVEL_INFO, NULL);
 
             HI_FORMAT_FILE_INFO_S *pstruInfo = NULL;
@@ -1560,6 +1581,14 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 return HI_SUCCESS;
             }
 
+            if (true == pHiPlayer->mSendFirstFrameCnt)
+            {
+                LOGV("Already send MEDIA_INFO_FIRST_FRAME_TIME event!");
+                return HI_SUCCESS;
+            }
+
+            pHiPlayer->mSwitchTimeMs = getCurrentTime() - pHiPlayer->mSwitchTimeMs;
+            HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, HI_FORMAT_INVOKE_SET_SWITCH_TIME, (HI_VOID *)&pHiPlayer->mSwitchTimeMs);
             u32Time = *(HI_U32*)pstruEvent->pu8Data;
 
             LOGV("[%s] Send MEDIA_INFO_FIRST_FRAME_TIME event, time:%d ",
@@ -1574,7 +1603,11 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                 HI_S64 bandwidth = 0;
                 if (HI_SUCCESS ==  HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, HI_FORMAT_INVOKE_GET_HLS_STREAM_NUM, (HI_VOID *)&streamNum)){
                     if (1 == streamNum) {
-                        s32Ret = HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, CMD_GET_HLS_BANDWIDTH, (HI_VOID *)&bandwidth);
+                        HI_FORMAT_HLS_SEGMENT_INFO_S segment_info;
+                        memset(&segment_info, 0, sizeof(HI_FORMAT_HLS_SEGMENT_INFO_S));
+                        s32Ret = HI_SVR_PLAYER_Invoke(pHiPlayer->mHandle, HI_FORMAT_INVOKE_GET_HLS_SEGMENT_INFO, (HI_VOID *)&segment_info);
+                        bandwidth = segment_info.bandwidth;
+                        LOGV("\n +++ [%d]BANDWIDTH = %d +++ \n", __LINE__, bandwidth);
                     } else {
                         bandwidth = -1;
                     }
@@ -1582,6 +1615,16 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                     bandwidth = pHiPlayer->mpFileInfo->u32Bitrate;
                 }
                 pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_EXTEND_FIRST_FRAME_TIME, bandwidth);
+                pHiPlayer->mSendFirstFrameCnt = true;
+            }
+        }
+        break;
+        case HI_SVR_PLAYER_EVENT_FIRST_FRAME_AFTER_SEEK:
+        {
+            if (pHiPlayer->mNeedSendFirstFrameAfterSeekEvent) {
+                LOGV("Send MEDIA_INFO_FIRST_FRAME_AFTER_SEEK event");
+                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_FIRST_FRAME_AFTER_SEEK, 0);
+                pHiPlayer->mNeedSendFirstFrameAfterSeekEvent = 0;
             }
         }
         break;
@@ -1601,6 +1644,11 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                             pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                             pHiPlayer->setBuffering(BUFFERING_ENOUGH);
                             pHiPlayer->writeLog(MEDIA_LOG_BUFFER_END, MEDIA_LOG_LEVEL_INFO, NULL);
+                        }
+                        else
+                        {
+                            const Message msg_remove_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
+                            pHiPlayer->mLooper->postMessage(pHiPlayer->mLooperHandle, msg_remove_buffer_start, 0);
                         }
                     }
                     else
@@ -1635,9 +1683,9 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                         {
                             if (BUFFERING_ENOUGH == pHiPlayer->getBuffering())
                             {
-                                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_START, 0);
-                                pHiPlayer->setBuffering(BUFFERING_NOT_ENOUGH);
-                                pHiPlayer->writeLog(MEDIA_LOG_BUFFER_START, MEDIA_LOG_LEVEL_INFO, NULL);
+                                const Message msg((int)(LooperHandler::MSG_SEND_BUFFERING_START));
+                                LOGV("post message 701 pHiPlayer:%p",pHiPlayer);
+                                pHiPlayer->mLooper->postMessage(pHiPlayer->mLooperHandle, msg, 2*1000*1000*1000);
                             }
                         }
                         else
@@ -1659,9 +1707,9 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                         {
                             if (BUFFERING_ENOUGH == pHiPlayer->getBuffering())
                             {
-                                pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_START, 0);
-                                pHiPlayer->setBuffering(BUFFERING_NOT_ENOUGH);
-                                pHiPlayer->writeLog(MEDIA_LOG_BUFFER_START, MEDIA_LOG_LEVEL_INFO, NULL);
+                                const Message msg((int)(LooperHandler::MSG_SEND_BUFFERING_START));
+                                LOGV("post message 701 pHiPlayer:%p",pHiPlayer);
+                                pHiPlayer->mLooper->postMessage(pHiPlayer->mLooperHandle, msg, 2*1000*1000*1000);
                             }
                         }
                         else
@@ -1687,6 +1735,11 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                                 pHiPlayer->setBuffering(BUFFERING_ENOUGH);
                                 pHiPlayer->writeLog(MEDIA_LOG_BUFFER_END, MEDIA_LOG_LEVEL_INFO, NULL);
                             }
+                            else
+                            {
+                                const Message msg_remove_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
+                                pHiPlayer->mLooper->postMessage(pHiPlayer->mLooperHandle, msg_remove_buffer_start, 0);
+                            }
                         }
                         else
                             LOGV("get buffer enough event,but current state do not allow send buffering end");
@@ -1710,6 +1763,11 @@ int HiMediaPlayer::hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_
                                                             pHiPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                                 pHiPlayer->setBuffering(BUFFERING_ENOUGH);
                                 pHiPlayer->writeLog(MEDIA_LOG_BUFFER_END, MEDIA_LOG_LEVEL_INFO, NULL);
+                            }
+                            else
+                            {
+                                const Message msg_remove_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
+                                pHiPlayer->mLooper->postMessage(pHiPlayer->mLooperHandle, msg_remove_buffer_start, 0);
                             }
                         }
                         else
@@ -1981,13 +2039,18 @@ HiMediaPlayer::HiMediaPlayer():
             mNonVSink(false),
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
+            mPreparing(false),
             mPrepareResult(NO_ERROR),
             mUnderrun(true),
             bUnderrunOutside(false),
             mLooper(NULL),
-            mLooperHandle(NULL)
+            mLooperHandle(NULL),
+            mNeedSendFirstFrameAfterSeekEvent(0),
+            mSendFirstFrameCnt(false),
+            mSwitchTimeMs(0)
 {
     LOGV("[%s] HiMediaPlayer construct", STR_SWITCH_PG);
+    mSwitchTimeMs = getCurrentTime();
 
     mUseExtAVPlay = true;
     mstrReferer = NULL;
@@ -2007,6 +2070,11 @@ HiMediaPlayer::HiMediaPlayer():
         mVSink = new HiVSink(0);
     }
 
+    if (property_get("service.media.hiplayer.nostatic", value, "false") && !strcasecmp("true", value))
+    {
+        mNdkMode = true;
+        LOGV("set nostatic avplay resource mode");
+    }
 }
 
 HiMediaPlayer::HiMediaPlayer(void* userData):
@@ -2042,13 +2110,18 @@ HiMediaPlayer::HiMediaPlayer(void* userData):
             mNonVSink(true),
             mSetdatasourcePrepare(false),
             mHasPrepared(false),
+            mPreparing(false),
             mPrepareResult(NO_ERROR),
             mUnderrun(true),
             bUnderrunOutside(false),
             mLooper(NULL),
-            mLooperHandle(NULL)
+            mLooperHandle(NULL),
+            mNeedSendFirstFrameAfterSeekEvent(0),
+            mSendFirstFrameCnt(false),
+            mSwitchTimeMs(0)
 {
     LOGV("[%s] HiMediaPlayer construct userData", STR_SWITCH_PG);
+    mSwitchTimeMs = getCurrentTime();
 
     mUseExtAVPlay = true;
     mstrReferer = NULL;
@@ -3157,15 +3230,25 @@ status_t HiMediaPlayer::prepare_l(status_t status, bool cancelled)
     if (true == mUseExtAVPlay)
     {
         HI_S32 s32Ret;
+        HI_BOOL bEnabled = HI_FALSE;
 
+        LOGV("HI_UNF_VO_SetWindowEnable check enable start");
+        s32Ret = HI_UNF_VO_GetWindowEnable(mWindow, &bEnabled);
         if (true == bHaveVideo)
         {
-            s32Ret = HI_UNF_VO_SetWindowEnable(mWindow, HI_TRUE);
+            if (HI_TRUE != bEnabled)
+            {
+                s32Ret = HI_UNF_VO_SetWindowEnable(mWindow, HI_TRUE);
+            }
         }
         else
         {
-            s32Ret = HI_UNF_VO_SetWindowEnable(mWindow, HI_FALSE);
+            if (HI_TRUE == bEnabled || HI_SUCCESS != s32Ret)
+            {
+                s32Ret = HI_UNF_VO_SetWindowEnable(mWindow, HI_FALSE);
+            }
         }
+        LOGV("HI_UNF_VO_SetWindowEnable check enable return %#x", s32Ret);
 
         if (HI_SUCCESS != s32Ret)
         {
@@ -3878,6 +3961,7 @@ status_t HiMediaPlayer::start()
         {
             if (!strstr(mMediaParam.aszUrl, "diagnose=deep"))
             {
+                mSendBufEventLock.lock();
                 if (BUFFERING_NOT_ENOUGH == getBuffering())
                 {
                     LOGV("append one more MEDIA_INFO_BUFFERING_END log when user exit the playback.");
@@ -3885,6 +3969,12 @@ status_t HiMediaPlayer::start()
                     sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                     writeLog(MEDIA_LOG_BUFFER_END, MEDIA_LOG_LEVEL_INFO, NULL);
                 }
+                else
+                {
+                    const Message msg_remove_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
+                    mLooper->postMessage(mLooperHandle, msg_remove_buffer_start, 0);
+                }
+                mSendBufEventLock.unlock();
             }
 
             sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_PREPARE_PROGRESS, 100);
@@ -4594,8 +4684,8 @@ int HiMediaPlayer::AddExtTimedTextStream(const char *pTimedTextFilePath)
 
         if (mHandle != NULL)
         {
-            HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_SUBTITLE, &stMedia);
-            LOGV("TIMEDTEXT in HiMediaPlayer::AddExtTimedTextStream, HI_SVR_PLAYER_SetMedia done");
+            SetMediaWithLock(mHandle, HI_SVR_PLAYER_MEDIA_SUBTITLE, &stMedia);
+            LOGV("TIMEDTEXT in HiMediaPlayer::AddExtTimedTextStream, SetMediaWithLock done");
         }
 
         LOGV("[TIMEDTEXT AddExtTimedTextStream]subpath:%s,hPlayer : %x",stMedia.aszExtSubUrl[0], mHandle);
@@ -5236,9 +5326,14 @@ status_t HiMediaPlayer::DealPreInvokeSetting(const Parcel& request, Parcel *repl
     {
         if (CMD_GET_MEDIA_URL == cmd_type)
         {
+            HasDeal = 1;
             if (NULL != reply)
             {
-                reply->writeString16(String16(mMediaParam.aszUrl));
+                if (mCmdQueue != NULL) {
+                    reply->writeString16(String16(mCmdQueue->mediaParam_t.aszUrl));
+                } else {
+                    reply->writeString16(String16(mMediaParam.aszUrl));
+                }
             }
         }
     }
@@ -5282,7 +5377,8 @@ status_t HiMediaPlayer::setNativeWindow_l(const sp<ANativeWindow> &native) {
 
         if (1 == FromSurfaceFlinger)
         {
-            pushBlankBuffersToNativeWindow(native);
+            /* no use for shcmcc version, comment it for performance of start play */
+            //pushBlankBuffersToNativeWindow(native);
             setSubSurface(native.get(), 0);
         }
     }
@@ -5796,7 +5892,24 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
     HI_CHAR szHlsSecondLevUrl[HI_FORMAT_MAX_URL_LEN] = {0};
     HI_SVR_PLAYER_Invoke(mPlayerHandle, HI_FORMAT_INVOKE_GET_HLS_SECOND_LEVEL_URL, (HI_VOID*)szHlsSecondLevUrl);
     LOGV("hls second url is %s", szHlsSecondLevUrl);
-    time_t lt = time(0) - labs(mCurSeekPoint) / 1000 - 20;
+    int nTimeSeekOffset = 0;
+    const int MIN_INTERVAL_TO_LIVE = 40;
+    if (labs(mCurSeekPoint) < MIN_INTERVAL_TO_LIVE * 1000)
+    {
+        // when you seek to live,segment can not be produced in time,always have '500 internal http error'
+        // or 'http time out error',so we must seek far from live to reserve enough buffer,
+        // or buffer underrun occurs frequently
+        nTimeSeekOffset = MIN_INTERVAL_TO_LIVE - labs(mCurSeekPoint) / 1000;
+        LOGV("seek position is close to live,add to MIN_INTERVAL_TO_LIVE %d",MIN_INTERVAL_TO_LIVE);
+    }
+    else
+    {
+        nTimeSeekOffset = 20;
+        LOGV("seek position is larger than MIN_INTERVAL_TO_LIVE %d, make offset to 20",
+            MIN_INTERVAL_TO_LIVE);
+    }
+
+    time_t lt = time(0) - labs(mCurSeekPoint) / 1000 - nTimeSeekOffset;
     struct tm ptr = {0};
     localtime_r(&lt, &ptr);
 
@@ -5843,7 +5956,7 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
     const HI_S32 RETRY_TIMES = 2;
     HI_SVR_PLAYER_INFO_S struInfo;
     int RetryTimes = 0;
-    while (RetryTimes < RETRY_TIMES)
+    while (1)
     {
         if (true == mHuashuSeekQuit)
         {
@@ -5865,14 +5978,13 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
         }
 
         start_time = getCurrentTime();
-        s32Ret = HI_SVR_PLAYER_SetMedia(mPlayerHandle,
-            HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam_t);
+        s32Ret = mPlayer->SetMediaWithLock(mPlayerHandle, HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam_t);
 
         LOGW("Try Open file is %s \n", mediaParam_t.aszUrl);
 
         if (HI_SUCCESS != s32Ret)
         {
-            LOGW("doSeek HI_SVR_PLAYER_SetMedia fail, redo it!");
+            LOGW("doSeek SetMediaWithLock fail, redo it!");
             usleep(100 * WAITE_TIME);
             p = strstr(mediaParam_t.aszUrl, "livemode=");
 
@@ -5888,7 +6000,8 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
             continue;
         }
 
-        LOGE("doSeek HI_SVR_PLAYER_SetMedia use time = %d ", getCurrentTime() - start_time);
+        LOGE("doSeek SetMediaWithLock use time = %d ", getCurrentTime() - start_time);
+        mPlayer->mNeedSendFirstFrameAfterSeekEvent = 1;
 
         s32Ret = HI_SVR_PLAYER_Play(mPlayerHandle);
         LOGW("doSeek resume play, s32Ret = %d ", s32Ret);
@@ -5940,8 +6053,18 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
             mIsIPTVTimeSeeking = false;
             mIPTVTimeSeekError = false;
         }
-        LOGV("doSeek send event MEDIA_SEEK_COMPLETE");
 
+        LOGV("doSeek send event MEDIA_SEEK_COMPLETE");
+        if (mPlayer->mLooper != NULL)
+        {
+            const Message msg_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
+            LOGV("remove message 701 pHiPlayer:%p",mPlayer);
+            mPlayer->mLooper->postMessage(mPlayer->mLooperHandle, msg_buffer_start, 0);
+
+            const Message msg_buffer_end((int)(LooperHandler::MSG_SEND_BUFFERING_END));
+            LOGV("post message 702 pHiPlayer:%p",mPlayer);
+            mPlayer->mLooper->postMessage(mPlayer->mLooperHandle, msg_buffer_end, 0);
+        }
     }
     else
     {
@@ -5951,17 +6074,6 @@ int HiMediaPlayer::CommandQueue::iptv_seek()
             mIPTVTimeSeekError = true;
         }
         LOGE("iptv seek fail");
-    }
-
-    if (mPlayer->mLooper != NULL)
-    {
-        const Message msg_buffer_start((int)(LooperHandler::MSG_REMOVE_BUFFERING_START));
-        LOGV("remove message 701 pHiPlayer:%p",mPlayer);
-        mPlayer->mLooper->postMessage(mPlayer->mLooperHandle, msg_buffer_start, 0);
-
-        const Message msg_buffer_end((int)(LooperHandler::MSG_SEND_BUFFERING_END));
-        LOGV("post message 702 pHiPlayer:%p",mPlayer);
-        mPlayer->mLooper->postMessage(mPlayer->mLooperHandle, msg_buffer_end, 0);
     }
 
     mPlayer->sendEvent(android::MEDIA_SEEK_COMPLETE);
@@ -6016,6 +6128,7 @@ int HiMediaPlayer::CommandQueue::run()
         }
         status_t ret = UNKNOWN_ERROR;
         HI_S32 CmdType = mCurCmd->getType();
+        LOGV("start execute Cmd %d", CmdType);
         switch(CmdType)
         {
         case Command::CMD_PREPARE:          ret = doPrepare(mCurCmd);           break;
@@ -6034,7 +6147,7 @@ int HiMediaPlayer::CommandQueue::run()
         }
         mCurCmd->setRet(ret);
         completeCommand(mCurCmd);
-        LOGV("Complete execute Cmd");
+        LOGV("Complete execute Cmd %d", CmdType);
         /* notice: free the cmd there! */
         delete mCurCmd;
         mCurCmd= NULL;
@@ -6213,8 +6326,9 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     s32Ret = HI_SVR_PLAYER_Invoke(mHandle, HI_FORMAT_INVOKE_GET_BUFFER_CONFIG, &stBufConfig);
 
     stBufConfig.eType = HI_FORMAT_BUFFER_CONFIG_TIME;
-    stBufConfig.s64EventStart  = 300;
-    stBufConfig.s64EventEnough = 5000;
+    stBufConfig.s64EventStart  = 200;
+    /* shcmcc need 5s buffer to play */
+    stBufConfig.s64EventEnough = stBufConfig.s64EventStart + 5000;
     stBufConfig.s64Total       = 100000;
     if (strstr(mediaParam.aszUrl, "udp://") || strstr(mediaParam.aszUrl, "rtp://"))
     {
@@ -6256,10 +6370,10 @@ int HiMediaPlayer::CommandQueue::doPrepare(Command* cmd)
     LOGV("s64TimeOut:%lld\n", stBufConfig.s64TimeOut);
     LOGV("mUnderrun:%d\n", mPlayer->mUnderrun);
 
-    s32Ret = HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam);
+    s32Ret= mPlayer->SetMediaWithLock(mHandle, HI_SVR_PLAYER_MEDIA_STREAMFILE, &mediaParam);
 
     memcpy(&mediaParam_t, &mediaParam, sizeof(mediaParam));
-    LOGE("HI_SVR_PLAYER_SetMedia use time = %d ", getCurrentTime() - start_time);
+    LOGE("SetMediaWithLock use time = %d ", getCurrentTime() - start_time);
 
     /* add for china mobile iptv */
     if (APP_TYPE_WASU == mAppType)
@@ -6903,6 +7017,8 @@ int HiMediaPlayer::CommandQueue::doSeek(Command* cmd)
             if (abs((time(0) - mnPauseTime)*1000 - (mCurSeekPoint - mnLastPositionWhenPause)) < 2000)
             {
                 mPlayer->sendEvent(android::MEDIA_SEEK_COMPLETE);
+                LOGV("Send MEDIA_INFO_FIRST_FRAME_AFTER_SEEK event");
+                mPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_FIRST_FRAME_AFTER_SEEK, 0);
                 mnPauseTime = -1;
                 mnLastPositionWhenPause = -1;
                 LOGV("pause-->resume oper,do not need timeseek");
@@ -6935,12 +7051,14 @@ int HiMediaPlayer::CommandQueue::doSeek(Command* cmd)
         #if NET_CACHE_UNDERRUN
         if (mPlayer->getDiagnose())
         {
+            mPlayer->mSendBufEventLock.lock();
             if (BUFFERING_NOT_ENOUGH == mPlayer->getBuffering())
             {
                 LOGV("begin seek,clear 701 message");
                 mPlayer->sendEvent(android::MEDIA_INFO, android::MEDIA_INFO_BUFFERING_END, 0);
                 mPlayer->setBuffering(BUFFERING_ENOUGH);
             }
+            mPlayer->mSendBufEventLock.unlock();
         }
         #endif
 
@@ -7066,15 +7184,27 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
     HI_FORMAT_FILE_INFO_S *pstFileInfo = NULL;
     HI_U32 i = 0, j = 0;
 
-    CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
-
     LOGV("HiMediaPlayer::invoke cmd [%d]", cmd_type);
+
+    Mutex::Autolock Hiplayerlock(mPlayer->mLockPreparing);
+    if (mPlayer->mPreparing)
+    {
+        s32Ret = -1;
+        if (NULL != reply)
+        {
+            reply->writeInt32(s32Ret);
+        }
+        LOGV("HiMediaPlayer::invoke leave, cmd [%d], return s32Ret = %d", cmd_type, s32Ret);
+        return OK;
+    }
+
     switch(cmd_type)
     {
         case CMD_SET_VIDEO_FRAME_MODE:  // cmd request construct: cmdtype | frame_mode_e
         {
             arg = request->readInt32();
 
+            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
             CHECK_FUNC_RET(HI_UNF_AVPLAY_GetAttr(hAVPlayer, HI_UNF_AVPLAY_ATTR_ID_VDEC, &VidAttr));
 
             VidAttr.enMode = (HI_UNF_VCODEC_MODE_E)arg;
@@ -7088,6 +7218,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         break;
         case CMD_GET_VIDEO_FRAME_MODE:
         {
+            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
             CHECK_FUNC_RET(HI_UNF_AVPLAY_GetAttr(hAVPlayer, HI_UNF_AVPLAY_ATTR_ID_VDEC, &VidAttr));
 
             arg = (int)VidAttr.enMode;
@@ -7126,19 +7257,17 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         break;
         case CMD_SET_AUDIO_MUTE_STATUS:      // cmd request construct: cmdtype | mute_status_e
         {
-            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AUDTRACK_HDL, &hTrack));
+            HI_BOOL bMute = HI_FALSE;
 
             arg = request->readInt32();
 
             if (arg == 1)
             {
-                CHECK_FUNC_RET(HI_UNF_SND_SetTrackMute(hTrack, HI_TRUE));
+                bMute = HI_TRUE;
             }
-            else
-            {
-                CHECK_FUNC_RET(HI_UNF_SND_SetTrackMute(hTrack, HI_FALSE));
-            }
-
+            /* hiplayer will mute a moment internally after seek, so here call hiplayer api instead */
+            s32Ret = HI_SVR_PLAYER_SetParam(mHandle, HI_SVR_PLAYER_ATTR_MUTE, &bMute);
+            LOGV("user set mute=%d return %d", bMute, s32Ret);
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
@@ -7211,6 +7340,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             stFramerate.enFrmRateType = HI_UNF_AVPLAY_FRMRATE_TYPE_USER;
             stFramerate.stSetFrmRate.u32fpsInteger = (HI_U32)arg;
             stFramerate.stSetFrmRate.u32fpsDecimal = (HI_U32)arg2;
+            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
             CHECK_FUNC_RET(HI_UNF_AVPLAY_SetAttr(hAVPlayer, HI_UNF_AVPLAY_ATTR_ID_FRMRATE_PARAM, (HI_VOID*)&stFramerate));
             if(NULL !=reply)
             {
@@ -7278,6 +7408,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         break;
         case CMD_SET_AV_SYNC_MODE:     // cmd request construct: cmdtype | av_sync_mode_e
         {
+            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
             CHECK_FUNC_RET(HI_UNF_AVPLAY_GetAttr(hAVPlayer, HI_UNF_AVPLAY_ATTR_ID_SYNC, (HI_VOID*)&stSyncAttr));
 
             arg = request->readInt32();
@@ -7293,6 +7424,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         break;
         case CMD_GET_AV_SYNC_MODE:
         {
+            CHECK_FUNC_RET(HI_SVR_PLAYER_GetParam(mHandle, HI_SVR_PLAYER_ATTR_AVPLAYER_HDL, &hAVPlayer));
             CHECK_FUNC_RET(HI_UNF_AVPLAY_GetAttr(hAVPlayer, HI_UNF_AVPLAY_ATTR_ID_SYNC, (HI_VOID*)&stSyncAttr));
 
             arg = (int)stSyncAttr.enSyncRef;
@@ -7482,6 +7614,9 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
+                String16 str16DemuxerName(pstFileInfo->aszFileFormat, strlen(pstFileInfo->aszFileFormat));
+                reply->writeString16(str16DemuxerName);
+                LOGD("demuxer name:%s", pstFileInfo->aszFileFormat);
                 reply->writeInt32(u32VideoFormat);
                 reply->writeInt32(u32AudioFormat);
                 reply->writeInt64(pstFileInfo->s64FileSize);
@@ -7800,6 +7935,8 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
                 reply->writeInt32(pstVidInfo.u32Format);
                 reply->writeInt32(pstVidInfo.u16FpsInteger);
                 reply->writeInt32(pstVidInfo.u16FpsDecimal);
+                reply->writeInt32(pstVidInfo.u16Width);
+                reply->writeInt32(pstVidInfo.u16Height);
             }
         }
         break;
@@ -8192,7 +8329,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             sprintf(stMedia.aszExtSubUrl[0], "%s", hichars);
             stMedia.u32ExtSubNum = 1;
 
-            CHECK_FUNC_RET( HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_SUBTITLE, &stMedia));
+            CHECK_FUNC_RET(HI_SVR_PLAYER_SetMedia(mHandle, HI_SVR_PLAYER_MEDIA_SUBTITLE, &stMedia));
 
             LOGV("[CMD_SET_SUB_EXTRA_SUBNAME] subname: %s %d hPlayer : %x",  stMedia.aszExtSubUrl[0], __LINE__, mHandle);
             CHECK_FUNC_RET(HI_SVR_PLAYER_GetFileInfo(mHandle, &pstFileInfo));
@@ -8717,8 +8854,8 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
             if (NULL != reply)
             {
                 reply->writeInt32(s32Ret);
-                reply->writeInt32(stStatus.s64BufferSize/1024);
-                reply->writeInt32(stStatus.s64Duration);
+                reply->writeInt64(stStatus.s64BufferSize/1024);
+                reply->writeInt64(stStatus.s64Duration);
             }
         }
         break;
@@ -9081,7 +9218,7 @@ int HiMediaPlayer::CommandQueue::doInvoke(Command* cmd)
         }
         break;
         default:
-            LOGE("HiMediaPlayer::invoke fail: unkonw cmd type %d", (int)cmd);
+            LOGE("HiMediaPlayer::invoke fail: unkonw cmd type %d", cmd_type);
             //if cmd is unknown, write HI_FAILURE to reply
             s32Ret = HI_FAILURE;
 

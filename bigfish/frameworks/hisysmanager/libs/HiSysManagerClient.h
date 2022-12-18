@@ -62,6 +62,8 @@ public:
     int getDRMKey(String8 tdname,int offset,String8 filename,int datasize);
     int userDataRestoreIptv();
     int setUIAsyncCompose(int mode);
+    int snapshot(String8 path); /* screen snapshot */
+    int setDynamicPolicy(String8 state, String8 activity, String8 process);
     static sp<IHiSysManagerService> & getSysManagerService();
 private:
     static sp<IHiSysManagerService> mSysManagerService;

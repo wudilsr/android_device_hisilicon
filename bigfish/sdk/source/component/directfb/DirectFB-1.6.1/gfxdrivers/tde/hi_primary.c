@@ -1,22 +1,24 @@
 /******************************************************************************
+*
+* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : hi_primary.c
+Version             : Initial Draft
+Author              :
+Created             : 2016/08/10
+Description         :
+Function List       :
+History             :
+Date                       Author                   Modification
+2016/08/10                y00181162                Created file
+******************************************************************************/
 
-  Copyright (C), 2001-2013, Huawei Tech. Co., Ltd.
-
- ******************************************************************************
- File Name     : hi_primary.c
-Version       : Initial Draft
-Author        : p00203646
-Created       : 2013/08/12
-Last Modified :
-Description   : Hisi Primary Layer Funcs
-Function List :
-History       :
-1.Date        : 2013/08/12
-Author      : p00203646
-Modification: Created file
-
- ******************************************************************************/
-
+/*********************************add include here******************************/
 #include <config.h>
 
 #include <string.h>

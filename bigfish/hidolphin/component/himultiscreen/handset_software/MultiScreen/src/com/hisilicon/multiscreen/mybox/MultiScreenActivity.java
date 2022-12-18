@@ -26,11 +26,11 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.hisilicon.dlna.dmc.utility.LogUtil;
 import com.hisilicon.multiscreen.controller.IAccessListener;
 import com.hisilicon.multiscreen.controller.IAccessListener.Caller;
 import com.hisilicon.multiscreen.gsensor.SensorService;
@@ -46,6 +46,8 @@ import com.hisilicon.multiscreen.protocol.remote.RemoteTouch;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
 import com.hisilicon.multiscreen.protocol.utils.MultiScreenIntentAction;
 import com.hisilicon.multiscreen.protocol.utils.ServiceUtil;
+import com.hisilicon.multiscreen.scene.ISceneListener;
+import com.hisilicon.multiscreen.scene.SceneType;
 import com.hisilicon.multiscreen.vime.VImeClientControlService;
 
 /**
@@ -71,6 +73,8 @@ public class MultiScreenActivity extends Activity implements OnClickListener
      * CN:用于传屏的MirrorView。
      */
     public MirrorView mMirrorView = null;
+
+    public LinearLayout mLayout = null;
 
     /**
      * Handle message for showing packet loss toast.<br>
@@ -230,6 +234,12 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     private IAccessListener mAccessListener = null;
 
     /**
+     * Recognize scene listener.<br>
+     * CN:场景识别监听。
+     */
+    private ISceneListener mSceneListener = null;
+
+    /**
      * Detector of orientation.<br>
      * CN:方向检测者。
      */
@@ -344,6 +354,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     {
         LogTool.d("onPause");
         super.onPause();
+        clearSceneListener();
         disableOrientationDetector();
         stopMirror();
         stopGsensor();
@@ -404,7 +415,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
             case R.id.control_more:
             {
                 mMorePop.showAtLocation(this.findViewById(R.id.control_more),
-                    Gravity.CENTER_HORIZONTAL, 0, 0);
+                        Gravity.CENTER_HORIZONTAL, 0, 0);
                 if (remote_game_flag == true)
                 {
                     mControl_pop_game.setBackgroundResource(R.drawable.image_control_game_focus);
@@ -497,14 +508,14 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     private void exitImageControl()
     {
         DialogUtils.showCancelDialog(mContext, R.string.quitDialogTitle,
-            R.string.quitDialogContent, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                R.string.quitDialogContent, new DialogInterface.OnClickListener()
                 {
-                    gotoDeviceDiscovery();
-                }
-            }, null);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        gotoDeviceDiscovery();
+                    }
+                }, null);
     }
 
     private void resumeActivity()
@@ -512,6 +523,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         mMultiScreenControlService.setTopActivity(TopActivity.mirror);
         enableOrientationDetector();
         resetAccessListener();
+        resetSceneListener();
         checkState();
     }
 
@@ -613,6 +625,54 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         mMultiScreenControlService.setAllAccessListener(null);
     }
 
+    private void resetSceneListener()
+    {
+        if (mSceneListener == null)
+        {
+            mSceneListener = new ISceneListener()
+            {
+                @Override
+                public void sceneChanged(SceneType sceneType)
+                {
+                    dealSceneChanged(sceneType);
+                }
+            };
+        }
+        mMultiScreenControlService.setSceneListener(mSceneListener);
+    }
+
+    private void clearSceneListener()
+    {
+        mMultiScreenControlService.setSceneListener(null);
+    }
+
+    private void dealSceneChanged(SceneType sceneType)
+    {
+        switch (sceneType)
+        {
+            case REMOTE_TOUCH:
+            {
+                gotoRemoteTouch();
+            }
+                break;
+            case REMOTE_AIRMOUSE:
+            {
+                gotoAirMouse();
+            }
+                break;
+            case MIRROR_SENSOR:
+            {
+                gotoMirrorSensor();
+            }
+                break;
+            default:
+            {
+                gotoRemoteTouch();
+            }
+                break;
+        }
+    }
+
     /**
      * Close current activity.<br>
      * CN:结束活动。
@@ -650,6 +710,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         if (isOK == false)
         {
             LogTool.e("Start mirror failed.");
+            mAccessEventHandler.sendEmptyMessage(KEEP_ALIVE_FAILED);
         }
         return isOK;
     }
@@ -664,7 +725,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         boolean isOK = false;
 
         if (mMultiScreenControlService.isRunning()
-            || (mMultiScreenControlService.getState() == ClientState.NETWORK_LOST))
+                || (mMultiScreenControlService.getState() == ClientState.NETWORK_LOST))
         {
             isOK = mMultiScreenControlService.stopMirror(1);
             if (isOK == false)
@@ -687,7 +748,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     private void dealPacketLoss()
     {
         Toast.makeText(this, getResources().getString(R.string.toast_KeepAlive_packet_loss),
-            Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -700,14 +761,14 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         // CN:从设备列表中删除失效的设备。
         removeInvalidDevice();
         DialogUtils.showDialogNoCancelable(mContext, R.string.network_title,
-            R.string.network_status, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                R.string.network_status, new DialogInterface.OnClickListener()
                 {
-                    gotoDeviceDiscovery();
-                }
-            });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        gotoDeviceDiscovery();
+                    }
+                });
     }
 
     /**
@@ -719,14 +780,15 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         finishCurActivity(caller, ClientState.REAVED);
         clearCurrentDevice();
         DialogUtils.showDialogNoCancelable(mContext, R.string.Access_Quit__Title,
-            R.string.AccessControlService_toast_remove_tip, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                R.string.AccessControlService_toast_remove_tip,
+                new DialogInterface.OnClickListener()
                 {
-                    gotoDeviceDiscovery();
-                }
-            });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        gotoDeviceDiscovery();
+                    }
+                });
     }
 
     /**
@@ -740,16 +802,16 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         removeInvalidDevice();
 
         DialogUtils.showDialogNoCancelable(mContext,
-            getResources().getString(R.string.Access_Quit__Title),
-            getResources().getString(R.string.AccessControlService_toast_STBLeave_tip),
-            new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                getResources().getString(R.string.Access_Quit__Title),
+                getResources().getString(R.string.AccessControlService_toast_STBLeave_tip),
+                new DialogInterface.OnClickListener()
                 {
-                    gotoDeviceDiscovery();
-                }
-            });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        gotoDeviceDiscovery();
+                    }
+                });
     }
 
     /**
@@ -762,15 +824,15 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         finishCurActivity(caller, ClientState.STB_SUSPEND);
         clearCurrentDevice();
         DialogUtils.showDialogNoCancelable(mContext, R.string.Access_Quit__Title,
-            R.string.AccessControlService_toast_STBSuspend_tip,
-            new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                R.string.AccessControlService_toast_STBSuspend_tip,
+                new DialogInterface.OnClickListener()
                 {
-                    gotoDeviceDiscovery();
-                }
-            });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        gotoDeviceDiscovery();
+                    }
+                });
     }
 
     /**
@@ -780,7 +842,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     private void removeInvalidDevice()
     {
         mMultiScreenControlService.getControlPoint().removeCannotAccessDevice(
-            mMultiScreenControlService.getControlPoint().getCurrentDevice());
+                mMultiScreenControlService.getControlPoint().getCurrentDevice());
         clearCurrentDevice();
     }
 
@@ -813,15 +875,20 @@ public class MultiScreenActivity extends Activity implements OnClickListener
                 LogTool.d("load libmirror23_jni.so");
                 System.loadLibrary("mirror23_jni");
             }
-            else if (Integer.valueOf(osVersion) >= 19)
+            else if (Integer.valueOf(osVersion) < 19)
+            {
+                LogTool.d("load libmirror40_jni.so");
+                System.loadLibrary("mirror40_jni");
+            }
+            else if (Integer.valueOf(osVersion) < 21)
             {
                 LogTool.d("load libmirror44_jni.so");
                 System.loadLibrary("mirror44_jni");
             }
             else
             {
-                LogTool.d("load libmirror40_jni.so");
-                System.loadLibrary("mirror40_jni");
+                LogTool.d("load libmirror50_jni.so");
+                System.loadLibrary("mirror50_jni");
             }
         }
         catch (UnsatisfiedLinkError e)
@@ -1192,9 +1259,9 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         // CN:详见StrictMode文档
         // or .detectAll() for all detectable problems
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
-            .detectDiskWrites().detectNetwork().penaltyLog().build());
+                .detectDiskWrites().detectNetwork().penaltyLog().build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-            .penaltyLog().penaltyDeath().build());
+                .penaltyLog().penaltyDeath().build());
         // FIXME delete detectLeakedClosableObjects() for 4.2
     }
 
@@ -1389,6 +1456,11 @@ public class MultiScreenActivity extends Activity implements OnClickListener
         // TODO load when init.
         loadMirrorLibs();
         mMirrorView = (MirrorView) findViewById(R.id.MirrorView);
+        // y00273148 modify for hme begin
+        mLayout = (LinearLayout) findViewById(R.id.VideoView);
+        mMirrorView.setViewLayout(mLayout);
+        // y00273148 end
+
         // mMirrorfpsControl = new MirrorfpsControl();
     }
 
@@ -1424,8 +1496,8 @@ public class MultiScreenActivity extends Activity implements OnClickListener
      */
     private boolean readStatusPreference(String statusKey, boolean defValue)
     {
-        SharedPreferences prefrence =
-            getSharedPreferences(MultiSettingActivity.SETTING_STATUS_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences prefrence = getSharedPreferences(
+                MultiSettingActivity.SETTING_STATUS_FILE_NAME, MODE_PRIVATE);
         return prefrence.getBoolean(statusKey, defValue);
     }
 
@@ -1437,9 +1509,8 @@ public class MultiScreenActivity extends Activity implements OnClickListener
      */
     private void writeStatusPreference(String statusKey, boolean isOpened)
     {
-        SharedPreferences.Editor editor =
-            getSharedPreferences(MultiSettingActivity.SETTING_STATUS_FILE_NAME, MODE_PRIVATE)
-                .edit();
+        SharedPreferences.Editor editor = getSharedPreferences(
+                MultiSettingActivity.SETTING_STATUS_FILE_NAME, MODE_PRIVATE).edit();
         editor.putBoolean(statusKey, isOpened);
         editor.commit();
     }
@@ -1552,8 +1623,7 @@ public class MultiScreenActivity extends Activity implements OnClickListener
     private void handleIntent()
     {
         LogTool.d("");
-        int mirrorStatus =
-            getIntent().getIntExtra(MessageDef.INTENT_MIRROR_STATUS,
+        int mirrorStatus = getIntent().getIntExtra(MessageDef.INTENT_MIRROR_STATUS,
                 MessageDef.MIRROR_STATUS_DEFAULT);
         if (mirrorStatus == MessageDef.MIRROR_STATUS_SENSOR)
         {

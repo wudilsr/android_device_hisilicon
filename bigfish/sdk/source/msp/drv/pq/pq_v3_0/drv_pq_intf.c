@@ -513,8 +513,8 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
 
             break;
         }
-		
-		        case HIIOC_PQ_S_GRAPH_SD_PARAM:
+
+        case HIIOC_PQ_S_GRAPH_SD_PARAM:
         {
             HI_PQ_PICTURE_SETTING_S* pstAttr;
             pstAttr = (HI_PQ_PICTURE_SETTING_S*)arg;
@@ -730,7 +730,7 @@ static HI_S32 PQIoctl(struct inode* inode, struct file* filp, unsigned int cmd, 
 
             break;
         }
-        
+
 #endif
 
         case HIIOC_PQ_S_DEMO_MODE:

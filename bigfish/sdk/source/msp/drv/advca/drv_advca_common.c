@@ -62,14 +62,12 @@ HI_VOID DRV_ADVCA_RegisterMap(void)
     
     if (ptr == NULL)
     {
-        //printk("ca_ioremap_nocache err! \n");
+        HI_ERR_CA("ca_ioremap_nocache err!\n");        
         return;
     }
     
     g_CaVirAddr = (HI_U32)ptr;
     g_pCaReg = (volatile HI_U32*)ptr;
-    
-//    printk("CA Register Map to:0x%x\n", g_CaVirAddr);
     
     return;
 }
@@ -152,11 +150,11 @@ HI_S32 DRV_ADVCA_GetRevision(HI_U8 u8Revision[25])
     
     if (0x01 == u32VendorId)
     {
-        ca_snprintf((HI_CHAR *)u8Revision, strlen(NAGRA_REVISION) + 1, "%s", NAGRA_REVISION);
+        snprintf((HI_CHAR *)u8Revision, strlen(NAGRA_REVISION) + 1, "%s", NAGRA_REVISION);
     }
     else
     {
-        ca_snprintf((HI_CHAR *)u8Revision, strlen(ADVCA_REVISION) + 1, "%s", ADVCA_REVISION);
+        snprintf((HI_CHAR *)u8Revision, strlen(ADVCA_REVISION) + 1, "%s", ADVCA_REVISION);
     }
 
     return ret;

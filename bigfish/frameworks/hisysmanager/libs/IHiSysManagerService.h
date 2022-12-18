@@ -60,6 +60,8 @@ public:
     virtual int getDRMKey(String8 tdname,int offset,String8 filename,int datasize) = 0;
     virtual int userDataRestoreIptv() = 0;
     virtual int setUIAsyncCompose(int mode) = 0;
+    virtual int snapshot(String8 path) = 0;
+    virtual int setDynamicPolicy(String8 state, String8 activity, String8 process) = 0;
 };
 class BnHiSysManagerService : public BnInterface<IHiSysManagerService>
 {

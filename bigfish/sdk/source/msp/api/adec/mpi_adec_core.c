@@ -1887,6 +1887,13 @@ static HI_S32 ADECSwDecode( ADEC_CHAN_S* pstAdecChan)
             pstAdecInfo->u32OutChannels= sOut.u32OutChannels;
             pstAdecInfo->u32PcmSamplesPerFrame = (sOut.u32PcmOutSamplesPerFrame & 0xffff);
 
+            pstAdecChan->u32TotalFrameByte += pstAdecInfo->u32PcmSamplesPerFrame;
+
+            if (pstAdecChan->u32TotalFrameByte)
+            {
+                pstAdecChan->pstAdecInfo->u32bps =(pstAdecChan->s32BsConsumeBytes*8*pstAdecInfo->enSampleRate)/pstAdecChan->u32TotalFrameByte;
+            }
+
             ADEC_UpdateFrameInfo(pstAdecChan);
         }
         else     /* Failure */
@@ -2535,8 +2542,8 @@ HI_VOID* ADEC_DecThread(HI_VOID* arg)
             {
                 pstAdecChan->pstAdecInfo->u32AdecSystemSleepTime = ADEC_SYS_SLEEP_TIME;
             }
-            (HI_VOID)usleep(pstAdecChan->pstAdecInfo->u32AdecSystemSleepTime * 1000);
-            
+            (HI_VOID)usleep(pstAdecChan->pstAdecInfo->u32AdecSystemSleepTime * 1000);            
+           
         }
         else
         {
@@ -2549,6 +2556,7 @@ HI_VOID* ADEC_DecThread(HI_VOID* arg)
             }
             (HI_VOID)usleep(ADEC_SYS_SLEEP_TIME * 1000);
         }
+        
     }
 
     return HI_NULL;

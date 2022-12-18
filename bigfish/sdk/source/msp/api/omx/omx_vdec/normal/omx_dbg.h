@@ -21,7 +21,7 @@ Date:    16, 03, 2013.
 #undef  LOG_TAG
 #define LOG_TAG				      "HISI_OMXVDEC"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 //#define DEBUG_SAVE_YUV            0
 #else
 #define DEBUG_SAVE_YUV            1
@@ -32,7 +32,7 @@ Date:    16, 03, 2013.
 #define DEBUG_STREAM              0  
 #else     
 // ENABLE PRINT IN LINUX 
-#define PRN_ENABLE                1
+#define PRN_ENABLE                0
 #define DEBUG_WARN                PRN_ENABLE
 #define DEBUG_STREAM              PRN_ENABLE
 #endif
@@ -41,13 +41,13 @@ Date:    16, 03, 2013.
 #if (1 == DEBUG_WARN)
 #define DEBUG_PRINT_WARN          ALOGD
 #else
-#define DEBUG_PRINT_WARN          
+#define DEBUG_PRINT_WARN(format...)
 #endif
 
 #if (1 == DEBUG_STREAM)
 #define DEBUG_PRINT_STREAM        ALOGD
 #else
-#define DEBUG_PRINT_STREAM       
+#define DEBUG_PRINT_STREAM(format...)
 #endif
 
 #if (1 == DEBUG_STATE)

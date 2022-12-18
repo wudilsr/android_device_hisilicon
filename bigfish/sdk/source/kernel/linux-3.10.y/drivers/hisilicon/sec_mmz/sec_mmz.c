@@ -21,31 +21,56 @@
 
 static const TEEC_UUID COMMON_uuid =
 {
-	0x79b77788, 0x9789, 0x4a7a,
-	{ 0xa2, 0xbe, 0xb6, 0x01, 0x55, 0xee, 0xf5, 0xf5 }
+	0x0C0C0C0C, 0x0C0C, 0x0C0C,
+	{ 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C }
 };
 
-TEEC_Context context;
-TEEC_Session session;
-unsigned int dev_id;
+static TEEC_Context context;
+static TEEC_Session session;
+static __maybe_unused unsigned int dev_id;
+static int sec_mmz_init = 0;
+extern void sec_mmz_test_main(void);
+extern void dump_stack(void);
 
 int HI_SEC_MMZ_Init(void)
 {
 	TEEC_Result result;
+	TEEC_Operation operation;
+	u8 package_name[] = "hisi_secmmz";
+	u32 root_id = 0;
 
+	if (sec_mmz_init) {
+		printk(KERN_WARNING "Sec mmz has already been initialized!\n");
+		dump_stack();
+		return -1;
+	}
+
+	printk(KERN_INFO "Sec mmz start to init\n");
 	result = TEEC_InitializeContext(NULL, &context, &dev_id);
 	if(result != TEEC_SUCCESS) {
 		TEEC_Error("TEEC_InitializeContext failed, ret=0x%x.", result);
 		goto cleanup_1;
 	}
-	result = TEEC_OpenSession(&context, &session, &COMMON_uuid, TEEC_LOGIN_PUBLIC, NULL, NULL, NULL, dev_id);
+	memset(&operation, 0x0, sizeof(TEEC_Operation));
+	operation.started = 1;
+	operation.cancel_flag = 0;
+	operation.paramTypes = TEEC_PARAM_TYPES(
+			TEEC_NONE,
+			TEEC_NONE,
+			TEEC_MEMREF_TEMP_INPUT,
+			TEEC_MEMREF_TEMP_INPUT);
+	operation.params[2].tmpref.buffer = (void *)(&root_id);
+	operation.params[2].tmpref.size = sizeof(root_id);
+	operation.params[3].tmpref.buffer = (void *)(package_name);
+	operation.params[3].tmpref.size = strlen(package_name) + 1;
+	result = TEEC_OpenSession(&context, &session, &COMMON_uuid, TEEC_LOGIN_IDENTIFY, NULL, &operation, NULL, dev_id);
 	if(result != TEEC_SUCCESS) {
 		TEEC_Error("TEEC_OpenSession failed, ret=0x%x.", result);
 		goto cleanup_2;
 	}
 
-	TEEC_Debug("TZ sec mmz initialized.\n");
-
+	printk(KERN_INFO "Sec mmz initialized.\n");
+	sec_mmz_init++;
 	return 0;
 
 cleanup_2:
@@ -54,12 +79,53 @@ cleanup_1:
 	return -1;
 }
 
+int secmmz_enabled = 1;
+static int __init secmmz_disable(char *str)
+{
+	secmmz_enabled = 0;
+	return 1;
+}
+__setup("no_secmmz", secmmz_disable);
+
+int SecMMZ_Init(void)
+{
+
+	if (!secmmz_enabled) {
+		printk(KERN_INFO "Secure MMZ Disabled!\n");
+		return 0;
+	}
+
+#ifdef CONFIG_SEC_MMZ_TEST
+	sec_mmz_test_main();
+#endif
+	if (0 != HI_SEC_MMZ_Init()) {
+		printk(KERN_ERR "Sec mmz init fail!\n");
+		return -1;
+	}
+
+	return 0;
+}
+
 void HI_SEC_MMZ_DeInit(void)
 {
+	if (sec_mmz_init <= 0) {
+		printk(KERN_WARNING "Sec mmz has NOT been initialized!\n");
+		dump_stack();
+		return;
+	}
+
 	TEEC_CloseSession(&session,dev_id);
 	TEEC_FinalizeContext(&context,dev_id);
 
-	TEEC_Debug("TZ sec mmz removed.\n");
+	if (sec_mmz_init > 0)
+		sec_mmz_init--;
+
+	printk(KERN_INFO "Sec mmz deinit.\n");
+}
+
+void SecMMZ_DeInit(void)
+{
+	HI_SEC_MMZ_DeInit();
 }
 
 void *HI_SEC_MMZ_New(unsigned long size , char *mmz_name, char *mmb_name)
@@ -177,8 +243,6 @@ int HI_SEC_MMZ_TA2CA(unsigned long TAphyaddr, unsigned long CAphyaddr, unsigned 
 {
 	TEEC_Result result;
 	TEEC_Operation operation;
-	uint32_t cmd = 0;
-	uint32_t origin;
 
 	operation.started = 1;
 	operation.params[0].value.a = TAphyaddr;
@@ -247,8 +311,8 @@ EXPORT_SYMBOL(HI_SEC_MMZ_TA2CA);
 EXPORT_SYMBOL(HI_SEC_MMZ_TA2TA);
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("TrustZone Driver");
+MODULE_DESCRIPTION("Hisilicon Secure MMZ Driver");
 
-module_init(HI_SEC_MMZ_Init);
-module_exit(HI_SEC_MMZ_DeInit);
+module_init(SecMMZ_Init);
+module_exit(SecMMZ_DeInit);
 

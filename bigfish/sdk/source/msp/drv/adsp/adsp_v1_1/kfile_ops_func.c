@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------------------------------*/
-/*!!Warning: This is a key information asset of Huawei Tech Co.,Ltd                                                         */
+/*!!Warning: This is a key information asset of Hisilicon Tech Co.,Ltd                                                         */
 /*CODEMARK:kOyQZYzjDpyGdBAEC2GaWinjiDDUykL9e8pckESWBbMVmSWkBuyJO01cTiy3TdzKxGk0oBQa
 mSMf7J4FkTpfv2bO4a86Ra1cP5w/R608AW9MyvBFsCSDo8GzQMC4Jhtu/zShyENpjFzntvB+
 qu9VLVDaDMuS6PPqlo/q4C86qlJ4Ce7RYbMClRRlhckoADodW/5taKKoOMM9DMu+LRQgxNJz
@@ -25,7 +25,9 @@ qdKdbJ+LZ9l4R4sV6hc0IN4G2XbJ871vdjivGyc+oJcqv/6X6xTK1rkQB8tc/g==*/
 #endif
 #include <linux/wait.h>
 #include <asm/uaccess.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <asm/io.h>
 
 struct file *kfile_open(const char *filename, int flags, int mode)

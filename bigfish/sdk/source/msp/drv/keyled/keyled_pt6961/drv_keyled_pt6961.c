@@ -26,7 +26,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>

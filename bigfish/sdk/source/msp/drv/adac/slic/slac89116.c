@@ -1,4 +1,4 @@
-/*****************Copyright (c) 2010 HuaWei Tech Co., Ltd.********************** 
+/*****************Copyright (c) 2010 Hisilicon Tech Co., Ltd.********************** 
     project: wish
     subprj:  device driver
     module:  audio codec

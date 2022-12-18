@@ -1,6 +1,5 @@
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_SOURCECODE),true)
 
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_VR),true)
 # audio.vohog.default.so
@@ -46,4 +45,3 @@ LOCAL_CFLAGS += $(rtk_local_CFLAGS) -Wno-unused-parameter
 include $(BUILD_SHARED_LIBRARY)
 endif
 
-endif

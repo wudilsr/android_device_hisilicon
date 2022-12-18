@@ -22,7 +22,11 @@ STRIP          := $(CROSS_COMPILE)strip
 TARGETS        := udevd udevadm
 ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
 UDEV           := udev-167
-else
+endif
+ifeq (${CROSS_COMPILE},arm-histbv310-linux-)
+UDEV           := udev-167
+endif
+ifeq (${CROSS_COMPILE},arm-hisiv200-linux-)
 UDEV           := udev-164
 endif
 

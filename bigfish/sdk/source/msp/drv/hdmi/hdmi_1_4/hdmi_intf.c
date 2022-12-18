@@ -753,7 +753,14 @@ static HI_S32 HDMI0_Proc(struct seq_file *p, HI_VOID *v)
     p += PROC_PRINT(p, "%dHz\n", pstAudioAttr->enSampleRate);
 
     p += PROC_PRINT(p, "%-20s: ","DeepColor");
-    p += PROC_PRINT(p, "%-20s| ", g_pDeepColor[pstAppAttr->enDeepColorMode]);
+    if (HI_UNF_HDMI_DEEP_COLOR_OFF <= pstAppAttr->enDeepColorMode)
+    {
+        p += PROC_PRINT(p, "%-20s| ", "OFF");
+    }
+    else
+    {
+        p += PROC_PRINT(p, "%-20s| ", g_pDeepColor[pstAppAttr->enDeepColorMode]);
+    }
     p += PROC_PRINT(p, "%-20s: ","Bit Depth");
     p += PROC_PRINT(p, "%dbit\n", pstAudioAttr->enBitDepth);
 

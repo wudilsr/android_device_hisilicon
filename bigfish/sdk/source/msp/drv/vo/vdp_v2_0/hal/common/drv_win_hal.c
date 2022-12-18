@@ -46,7 +46,7 @@ HI_S32 GetCapability(HI_U32 eLayer, VIDEO_LAYER_CAPABILITY_S *pstSurf)
     if ( (eLayer < DEF_VIDEO_LAYER_MAX_NUMBER) && pstSurf)
     {
         *pstSurf = s_stVideoLayerCap[eLayer];
-		
+
         return HI_SUCCESS;
     }
     else
@@ -60,7 +60,7 @@ HI_S32 GetLayerAttr(HI_U32 eLayer, VIDEO_LAYER_STATUS_S *pstSurf)
     if ( (eLayer < DEF_VIDEO_LAYER_MAX_NUMBER) && pstSurf)
     {
         *pstSurf = s_stVideoLayerStatus[eLayer];
-		
+
         return HI_SUCCESS;
     }
     else
@@ -389,7 +389,7 @@ HI_S32 WinHalSetPixFmt_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
     /*since dcmp treated as pixel fmt, so dcmp set here.
       closed first,because compressed stream and non-compressed will switch sometimes.*/
     VDP_VID_SetDcmpEnable(u32LayerId, 0);
-	
+
 #if defined (CHIP_HIFONEB02)
     VDP_VID_SetDataWidth(u32LayerId, pstPara->pstFrame->enBitWidth);
 #endif
@@ -444,7 +444,7 @@ HI_S32 WinHalSetPixFmt_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
 #if defined (CHIP_HIFONEB02)
         /*turn on lossless dcmp.*/
         VDP_VID_SetDcmpCtrl(u32LayerId,1,1);
-#endif		
+#endif
         /*turn on dcmp.*/
         VDP_VID_SetDcmpEnable(u32LayerId, 1);
     }
@@ -456,7 +456,7 @@ HI_S32 WinHalSetPixFmt_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
 #if defined (CHIP_HIFONEB02)
         /*turn on lossless dcmp.*/
         VDP_VID_SetDcmpCtrl(u32LayerId,1,1);
-#endif		
+#endif
         /*turn on dcmp.*/
         VDP_VID_SetDcmpEnable(u32LayerId, 1);
     }
@@ -518,9 +518,11 @@ HI_BOOL GetLayerRevisedPixelFmt(HI_U32 u32LayerId,
 										 HI_DISP_DISPLAY_INFO_S *pstDispInfo)
 {
 	VIDEO_LAYER_CAPABILITY_S stSurfCapbility;
+
+    memset(&stSurfCapbility, 0x0, sizeof(VIDEO_LAYER_CAPABILITY_S));
 	
 	GetCapability(u32LayerId, &stSurfCapbility);
-	
+
 	return Chip_Specific_WinGetRevisedPixelFmt(stSurfCapbility.bZme, pstOutRect, penFmt,pstDispInfo);
 }
 
@@ -767,12 +769,12 @@ HI_S32 WinHalSetFrame_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
         pstPara->stIn.s32Height = pstPara->stVideo.s32Height;
         pstPara->stIn.s32X = 0;
         pstPara->stIn.s32Y = 0;
-		
+
 		pstPara->stInOrigin.s32Width = pstPara->stVideo.s32Width;
         pstPara->stInOrigin.s32Height = pstPara->stVideo.s32Height;
         pstPara->stInOrigin.s32X = 0;
         pstPara->stInOrigin.s32Y = 0;
-		
+
         pstPara->stOriRect.s32Width = pstPara->stVideo.s32Width;
         pstPara->stOriRect.s32Height = pstPara->stVideo.s32Height;
         pstPara->stOriRect.s32X = 0;
@@ -795,7 +797,7 @@ HI_S32 WinHalSetFrame_MPW(HI_U32 u32LayerId, WIN_HAL_PARA_S *pstPara)
 	{
         return HI_FAILURE;
 	}
-	
+
     if( WinHalSetPixFmt_MPW(u32LayerId, pstPara) )
     {
         return HI_FAILURE;
@@ -1159,9 +1161,9 @@ HI_S32 VideoLayer_CreateBlackFrame(HI_VOID)
     HI_U8  *pY;
     HI_U8  *pUV;
     HI_S32 s32Ret = HI_SUCCESS;
-	
+
     u32Size = DEF_BLACK_H*DEF_BLACK_W*2;
-	
+
     s32Ret = HI_DRV_MMZ_AllocAndMap("VDP_BlackFrm_HAL", "VO", u32Size, 0, &g_stBlackMMZ_HAL);
     if (s32Ret != HI_SUCCESS)
     {
@@ -1173,12 +1175,12 @@ HI_S32 VideoLayer_CreateBlackFrame(HI_VOID)
     g_stBlackFrame_HAL.ePixFormat = HI_DRV_PIX_FMT_NV61_2X1;
     g_stBlackFrame_HAL.u32Height = DEF_BLACK_H;
     g_stBlackFrame_HAL.u32Width = DEF_BLACK_W;
-	
+
     g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_Y = g_stBlackMMZ_HAL.u32StartPhyAddr;
     g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_C = g_stBlackFrame_HAL.stBufAddr[0].u32PhyAddr_Y
                                                 + g_stBlackFrame_HAL.u32Width*g_stBlackFrame_HAL.u32Height;
     g_stBlackFrame_HAL.stBufAddr[0].u32Stride_Y = 0;
-    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_C = 0;	
+    g_stBlackFrame_HAL.stBufAddr[0].u32Stride_C = 0;
     pY  = (HI_U8 *)(g_stBlackMMZ_HAL.u32StartVirAddr);
     DISP_MEMSET(pY, 0x10, u32Size/2);
     pUV = (HI_U8 *)(g_stBlackMMZ_HAL.u32StartVirAddr + DEF_BLACK_H*DEF_BLACK_W);

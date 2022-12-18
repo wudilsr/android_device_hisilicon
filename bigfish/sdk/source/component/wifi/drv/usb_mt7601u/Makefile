@@ -20,7 +20,7 @@ STA_CFG_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/Wireless/RT2870STA
 PREALLOC_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules/mtprealloc7601Usta.ko
 endif
 
-STA_SRC := JEDI.MP1.mt7601u.v1.4.3
+STA_SRC := JEDI.MP1.mt7601u.v1.4.9
 STA_MODULE := mt7601Usta.ko mtprealloc.ko
 STA_MODULE_PATH := $(BUILD_DIR)/$(STA_SRC)/os/linux/mt7601Usta.ko 
 PREALLOC_MODULE_PATH :=  $(BUILD_DIR)/$(STA_SRC)/os/linux/mtprealloc.ko

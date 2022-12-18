@@ -56,7 +56,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "sample_tidx.h"
 
-#define MAX_INST_NUM 10
+#define MAX_INST_NUM 20
 
 //#define CalcFrameRate 
 
@@ -227,7 +227,9 @@ static int open_video_file (OmxTestInfo_S *);
 static void loop_function(void);
 static void exit_loop(OmxTestInfo_S *);
 static void Init_OmxInst(void);
+#ifdef CalcFrameRate
 static int GetTimeInMs(void);
+#endif
 
 static OMX_ERRORTYPE Allocate_Buffers(OmxTestInfo_S * pOmxTestInfo,
 	    OMX_COMPONENTTYPE *dec_handle,

@@ -19,6 +19,8 @@ History       :
 #include <common.h>
 #endif
 
+#include "ca_authdefine.h"
+
 #ifndef HI_ADVCA_FUNCTION_RELEASE
 
 #ifdef CIPHER_CMD_TEST
@@ -28,15 +30,15 @@ static HI_S32 Cipher_printBuffer(const HI_CHAR *string, const HI_U8 *pu8Input, H
     
     if ( NULL != string )
     {
-        printf("%s\n", string);
+        HI_SIMPLEINFO_CA("%s\n", string);
     }
 
     for ( i = 0 ; i < u32Length; i++ )
     {
-        if( (i % 16 == 0) && (i != 0)) printf("\n");
-        printf("0x%02x ", pu8Input[i]);
+        if( (i % 16 == 0) && (i != 0)) HI_SIMPLEINFO_CA("\n");
+        HI_SIMPLEINFO_CA("0x%02x ", pu8Input[i]);
     }
-    printf("\n");
+    HI_SIMPLEINFO_CA("\n");
 
     return HI_SUCCESS;
 }
@@ -420,7 +422,7 @@ static HI_S32 Hash_SHA1_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 
 	if(NULL == pu8Buffer || 0 == u32Len)
 	{
-		printf("Invalid parameters!\n");
+		HI_SIMPLEINFO_CA("Invalid parameters!\n");
 		return HI_FAILURE;
 	}
 
@@ -431,7 +433,7 @@ static HI_S32 Hash_SHA1_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
     ret = HI_UNF_CIPHER_HashInit(&stHashAttr, &hHandle);
 	if(HI_SUCCESS != ret)
 	{
-		printf("HI_UNF_CIPHER_HashInit failed, ret: 0x%x!\n", ret);
+		HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashInit failed, ret: 0x%x!\n", ret);
 		return HI_FAILURE;
 	}
 
@@ -441,7 +443,7 @@ static HI_S32 Hash_SHA1_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	    ret = HI_UNF_CIPHER_HashUpdate(hHandle, pu8Buffer + index, u32BlockSize);
 		if(HI_SUCCESS != ret)
 		{
-			printf("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
+			HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
 			return HI_FAILURE;
 		}
 	}
@@ -453,7 +455,7 @@ static HI_S32 Hash_SHA1_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	    ret = HI_UNF_CIPHER_HashUpdate(hHandle, pu8Buffer + index, tail);
 		if(HI_SUCCESS != ret)
 		{
-			printf("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
+			HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
 			return HI_FAILURE;
 		}
 	}
@@ -461,7 +463,7 @@ static HI_S32 Hash_SHA1_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	ret = HI_UNF_CIPHER_HashFinal(hHandle, au8Hash);
 	if(HI_SUCCESS != ret)
 	{
-		printf("HI_UNF_CIPHER_HashFinal failed, ret: 0x%x!\n", ret);
+		HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashFinal failed, ret: 0x%x!\n", ret);
 		return HI_FAILURE;
 	}
 
@@ -483,7 +485,7 @@ static HI_S32 Hash_SHA2_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 
 	if(NULL == pu8Buffer || 0 == u32Len)
 	{
-		printf("Invalid parameters!\n");
+		HI_SIMPLEINFO_CA("Invalid parameters!\n");
 		return HI_FAILURE;
 	}
 
@@ -494,7 +496,7 @@ static HI_S32 Hash_SHA2_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
     ret = HI_UNF_CIPHER_HashInit(&stHashAttr, &hHandle);
 	if(HI_SUCCESS != ret)
 	{
-		printf("HI_UNF_CIPHER_HashInit failed, ret: 0x%x!\n", ret);
+		HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashInit failed, ret: 0x%x!\n", ret);
 		return HI_FAILURE;
 	}
 
@@ -504,7 +506,7 @@ static HI_S32 Hash_SHA2_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	    ret = HI_UNF_CIPHER_HashUpdate(hHandle, pu8Buffer + index, u32BlockSize);
 		if(HI_SUCCESS != ret)
 		{
-			printf("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
+			HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
 			return HI_FAILURE;
 		}
 	}
@@ -516,7 +518,7 @@ static HI_S32 Hash_SHA2_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	    ret = HI_UNF_CIPHER_HashUpdate(hHandle, pu8Buffer + index, tail);
 		if(HI_SUCCESS != ret)
 		{
-			printf("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
+			HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashUpdate failed, ret: 0x%x!\n", ret);
 			return HI_FAILURE;
 		}
 	}
@@ -524,7 +526,7 @@ static HI_S32 Hash_SHA2_Calc(HI_U8 *pu8Buffer, HI_U32 u32Len)
 	ret = HI_UNF_CIPHER_HashFinal(hHandle, au8Hash);
 	if(HI_SUCCESS != ret)
 	{
-		printf("HI_UNF_CIPHER_HashFinal failed, ret: 0x%x!\n", ret);
+		HI_SIMPLEINFO_CA("HI_UNF_CIPHER_HashFinal failed, ret: 0x%x!\n", ret);
 		return HI_FAILURE;
 	}
 
@@ -555,7 +557,7 @@ static int Hash_Calc(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	u32Addr = (HI_U32)simple_strtoul(argv[2], NULL, 0);
 	u32Len = (HI_U32)simple_strtoul(argv[3], NULL, 0);
 
-	printf("u32HashType: 0x%x, Address: 0x%x, Length: 0x%x\n", u32HashType, u32Addr, u32Len);
+	HI_SIMPLEINFO_CA("u32HashType: 0x%x, Address: 0x%x, Length: 0x%x\n", u32HashType, u32Addr, u32Len);
 
 	HI_UNF_CIPHER_Init();
 
@@ -569,7 +571,7 @@ static int Hash_Calc(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
     }
     else
     {
-		printf("Failed, Hash type not supported: 0x%x!\n", u32HashType);
+		HI_SIMPLEINFO_CA("Failed, Hash type not supported: 0x%x!\n", u32HashType);
     }
 
     return ret;

@@ -142,7 +142,10 @@
                     android:id="@+id/remote_number_ok"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/remote_number_ok" />
+                    android:background="@drawable/remote_number_ok"
+                    android:text="@string/remote_number_done"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"  />
 
                 <Button
                     android:id="@+id/remote_number_zeros"

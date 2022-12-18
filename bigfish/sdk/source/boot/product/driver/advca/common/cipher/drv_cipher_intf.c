@@ -14,9 +14,16 @@ History       :
 #include "hi_type.h"
 #include "drv_cipher_intf.h"
 #include "drv_cipher.h"
+#include "drv_rsa.h"
 #include "drv_cipher_define.h"
 #include "hi_unf_cipher.h"
+
+#ifdef HI_MINIBOOT_SUPPORT
+#include "app.h"
+#else
 #include "malloc.h"
+#define devmemalign(a, b) malloc(b) 
+#endif
 
 #ifndef HI_MINIBOOT_SUPPORT
 #include "linux/mtd/compat.h"
@@ -45,6 +52,7 @@ static HI_HANDLE  g_cipherChn = 0;          /* cipher handle */
 static HI_U32 g_softChnId = 0;                  /* soft channel ID */
 
 static HI_S32 g_HashDevFd = -1;
+static HI_S32 g_CipherDevFd = -1;
 CIPHER_HASH_DATA_S g_stCipherHashData;
 
 static HI_U8 g_u8CbcMac[16];
@@ -110,6 +118,12 @@ HI_S32 Cipher_Init(HI_VOID)
 {
     HI_U32 i;
     HI_S32 ret;
+    
+    if (g_CipherDevFd >= 0)
+    {
+        g_CipherDevFd++;
+        return HI_SUCCESS;
+    }
 
     ret = DRV_Cipher_Init();
     if (HI_SUCCESS != ret)
@@ -124,6 +138,8 @@ HI_S32 Cipher_Init(HI_VOID)
         g_stCipherOsrChn[i].pstDataPkg = NULL;
     }
 
+    g_CipherDevFd = 0;
+    
     return HI_SUCCESS;
 }
 
@@ -132,6 +148,19 @@ HI_VOID Cipher_Exit(HI_VOID)
 {
     HI_U32 i;
 
+    
+    if (g_CipherDevFd > 0)
+    {
+        g_CipherDevFd--;
+        return HI_SUCCESS;
+    }
+	
+	if (g_CipherDevFd < 0)
+    {
+        g_CipherDevFd = -1;
+        return HI_SUCCESS;
+    }
+    
     for (i = 0; i < CIPHER_SOFT_CHAN_NUM; i++)
     {
         DRV_Cipher_CloseChn(i);
@@ -144,6 +173,8 @@ HI_VOID Cipher_Exit(HI_VOID)
     }
     
     DRV_Cipher_DeInit();
+    g_CipherDevFd = -1;
+
     return ;
 }
 
@@ -390,6 +421,11 @@ HI_S32 Cipher_Decrypt(HI_HANDLE hCipher, HI_U32 u32SrcPhyAddr, HI_U32 u32DestPhy
     return Ret;
 }
 
+HI_S32 Cipher_GetRandomNumber(HI_U32 *pu32RandomNumber)
+{
+    return HAL_Cipher_GetRandomNumber(pu32RandomNumber);
+}
+
 //#ifndef HI_MINIBOOT_SUPPORT
 /* New unf interface: HI_UNF_CIHPER_HashInit */
 HI_S32 Cipher_HashInit(HI_UNF_CIPHER_HASH_ATTS_S *pstHashAttr, HI_HANDLE *pHashHandle)
@@ -481,12 +517,21 @@ HI_S32 Cipher_HashUpdate(HI_HANDLE hHashHandle, HI_U8 *pu8InputData, HI_U32 u32I
     {
 	    if(!bIsDstMmzInit)
 	    {
+	        #if 0
 	        Ret = HI_MEM_Alloc(&u32MmzPhyAddr, MAX_DATA_LEN);
 	        if (Ret != HI_SUCCESS)
 	        {
 	            HI_ERR_CIPHER("malloc input memory failed!\n");
 	            return HI_FAILURE;
 	        }
+            #else
+            u32MmzPhyAddr = (HI_U32)devmemalign(16, MAX_DATA_LEN);
+            if (u32MmzPhyAddr == 0)
+	        {
+	            HI_ERR_CIPHER("malloc input memory failed!\n");
+	            return HI_FAILURE;
+	        }
+            #endif
 		    memset((void *)u32MmzPhyAddr, 0, MAX_DATA_LEN);
 
 	        bIsDstMmzInit = HI_TRUE;
@@ -548,6 +593,13 @@ HI_S32 Cipher_HashFinal(HI_HANDLE hHashHandle, HI_U8 *pu8OutputHash)
 HI_S32 Cipher_AuthCbcMac(HI_U8 *pu8RefCbcMac, HI_U32 u32AppLen)
 {
 	return DRV_Cipher_AuthCbcMac(pu8RefCbcMac, u32AppLen);	
+}
+
+
+HI_S32 Cipher_CalcRsa(CIPHER_RSA_DATA_S *pCipherRsaData)
+{
+
+    return DRV_CIPHER_CalcRsa_SW(pCipherRsaData);
 }
 
 //#endif

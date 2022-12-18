@@ -171,6 +171,8 @@ HI_VOID SYNC_ResetStatInfo(SYNC_S *pSync, SYNC_CHAN_E enChn)
         pSync->CrtStatus = SYNC_STATUS_STOP;
         pSync->PreSyncStartSysTime = HI_INVALID_TIME;
         pSync->PreSyncEndSysTime = HI_INVALID_TIME;
+        pSync->PreSyncPauseEndSysTime = HI_INVALID_TIME;
+        pSync->PreSyncPauseStartSysTime = HI_INVALID_TIME;
         pSync->PreSyncFinish = HI_FALSE;
         pSync->BufFundEndSysTime = HI_INVALID_TIME;
         pSync->BufFundFinish = HI_FALSE;

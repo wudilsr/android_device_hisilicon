@@ -236,16 +236,17 @@ static HI_S32 PVRPlayShowProc(HI_PROC_SHOW_BUFFER_S * pstBuf, HI_VOID *pPrivData
 {    
     HI_U32 i=0;
     HI_U32 u32VidType=0;
+	HI_U32 u32StatIndex = 0;
     PVR_PLAY_CHN_S *pChnAttr = NULL;
     PVR_INDEX_INFO_S* pstIdxInfo = NULL;
     
-    HI_S8 pStreamType[][32] = {"MPEG2", "MPEG4 DIVX4 DIVX5", "AVS", "H263", "H264",
+    HI_S8 pStreamType[PVR_VIDEO_TYPE_TOTAL_NUM][32] = {"MPEG2", "MPEG4 DIVX4 DIVX5", "AVS", "H263", "H264",
                              "REAL8", "REAL9", "VC-1", "VP6", "VP6F", "VP6A", "MJPEG",
                              "SORENSON SPARK", "DIVX3", "RAW", "JPEG", "VP8", "MSMPEG4V1",
                              "MSMPEG4V2", "MSVIDEO1", "WMV1", "WMV2", "RV10", "RV20",
                              "SVQ1", "SVQ3", "H261", "VP3", "VP5", "CINEPAK", "INDEO2",
                              "INDEO3", "INDEO4", "INDEO5", "MJPEGB", "MVC", "HEVC", "DV", "INVALID"};
-    HI_S8 pPlayStats[][16] = { "INVALID", "INIT", "PLAY", "PAUSE", "FF", "FB", "SF", "STEPF",
+    HI_S8 pPlayStats[PVR_PLAY_MAX_STATUS_NUM][16] = { "INVALID", "INIT", "PLAY", "PAUSE", "FF", "FB", "SF", "STEPF",
                              "STEPB", "STOP", "BUTT"};
     
     HI_PROC_Printf(pstBuf, "\n---------Hisilicon PVR Playing channel Info---------\n");
@@ -268,8 +269,9 @@ static HI_S32 PVRPlayShowProc(HI_PROC_SHOW_BUFFER_S * pstBuf, HI_VOID *pPrivData
         {
 
             u32VidType = PVR_Index_GetVtype(pChnAttr->IndexHandle)-100;
-            u32VidType = (u32VidType > HI_UNF_VCODEC_TYPE_BUTT) ? HI_UNF_VCODEC_TYPE_BUTT : u32VidType;
-        
+            u32VidType = (u32VidType > PVR_VIDEO_TYPE_TOTAL_NUM - 1) ? PVR_VIDEO_TYPE_TOTAL_NUM - 1 : u32VidType;
+			u32StatIndex = pChnAttr->enState;
+            u32StatIndex = (u32StatIndex > (PVR_PLAY_MAX_STATUS_NUM - 1)) ? (PVR_PLAY_MAX_STATUS_NUM - 1) :u32StatIndex;
             HI_PROC_Printf(pstBuf, "chan %d infomation\n", i);
             HI_PROC_Printf(pstBuf, "\tPlay filename     \t:%s\n", pChnAttr->stUserCfg.szFileName);
             HI_PROC_Printf(pstBuf, "\tStream type       \t:%s\n", pStreamType[u32VidType]);
@@ -277,7 +279,7 @@ static HI_S32 PVRPlayShowProc(HI_PROC_SHOW_BUFFER_S * pstBuf, HI_VOID *pPrivData
             HI_PROC_Printf(pstBuf, "\tTsBuffer handle   \t:%#x\n", pChnAttr->hTsBuffer);
             HI_PROC_Printf(pstBuf, "\tAvplay handle     \t:%#x\n", pChnAttr->hAvplay);
             HI_PROC_Printf(pstBuf, "\tCipher handle     \t:%#x\n", pChnAttr->hCipher);
-            HI_PROC_Printf(pstBuf, "\tPlay State        \t:%s\n", pPlayStats[pChnAttr->enState]);
+            HI_PROC_Printf(pstBuf, "\tPlay State        \t:%s\n", pPlayStats[u32StatIndex]);
             HI_PROC_Printf(pstBuf, "\tPlay Speed        \t:%d\n", pChnAttr->enSpeed);
             HI_PROC_Printf(pstBuf, "\tStream Read Pos   \t:%#llx\n", pChnAttr->u64CurReadPos);
             HI_PROC_Printf(pstBuf, "\tIndex Start       \t:%d\n", pChnAttr->IndexHandle->stCycMgr.u32StartFrame);
@@ -3086,6 +3088,9 @@ HI_S32 PVRPlayProcDecodeAbility(PVR_PLAY_CHN_S* pChnAttr)
         if ((stStreamInfo.stVidStreamInfo.u32Height != 0) &&
             (stStreamInfo.stVidStreamInfo.u32Width != 0))
         {
+            pChnAttr->stFBAttr.u32Width = stStreamInfo.stVidStreamInfo.u32Width;
+            pChnAttr->stFBAttr.u32Heigth = stStreamInfo.stVidStreamInfo.u32Height;
+            pChnAttr->stFBAttr.enVcodeType = stStreamInfo.stVidStreamInfo.enVCodecType;
             u32AcqDeAbility = stStreamInfo.stVidStreamInfo.u32fpsInteger *
                               stStreamInfo.stVidStreamInfo.u32Height * 
                               stStreamInfo.stVidStreamInfo.u32Width;

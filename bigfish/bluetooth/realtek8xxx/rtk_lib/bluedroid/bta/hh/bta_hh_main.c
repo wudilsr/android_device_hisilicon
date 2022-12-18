@@ -418,7 +418,7 @@ BOOLEAN bta_hh_hdl_event(BT_HDR *p_msg)
 {
     UINT8           index = BTA_HH_IDX_INVALID;
     tBTA_HH_DEV_CB *p_cb = NULL;
-	APPL_TRACE_DEBUG1("RTKDBG:p_msg->event:(%d)", p_msg->event)
+	APPL_TRACE_DEBUG1("RTKDBG:p_msg->event:(%d)", p_msg->event);
     switch (p_msg->event)
     {
         case BTA_HH_API_ENABLE_EVT:

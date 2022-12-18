@@ -240,6 +240,7 @@ HI_VOID DmxHalSetCWWord1(
             break;
 
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CI :
+        case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC :
             type = 0x22;
             break;
 
@@ -273,10 +274,6 @@ HI_VOID DmxHalSetCWWord1(
 
         case HI_UNF_DMX_DESCRAMBLER_TYPE_SMS4_CBC :
             type = 0x53;
-            break;
-
-        case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC :
-            type = 0x63;
             break;
 
         case HI_UNF_DMX_DESCRAMBLER_TYPE_TDES_IPTV :

@@ -1,6 +1,19 @@
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_SOURCECODE),true)
+# libbt-rtk_virtual_hid.a
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := virtual_hid/rtkbt_virtual_hid.c
+
+LOCAL_C_INCLUDES := $(rtk_local_C_INCLUDES)
+
+LOCAL_CFLAGS += $(rtk_local_CFLAGS)
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_SHARED_LIBRARIES := libcutils libc
+LOCAL_MODULE := libbt-rtk_virtual_hid
+
+include $(BUILD_STATIC_LIBRARY)
 
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_VR),true)
 include $(CLEAR_VARS)
@@ -8,6 +21,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= \
         rtk_adpcm_voice.c \
         rtk_msbc_voice.c \
+        rtkbt_ifly_voice.c \
         ../codecs/msbc/sbc.c \
         ../adpcm/libadpcm.c \
         ../adpcm/dvi_adpcm.c
@@ -66,21 +80,3 @@ LOCAL_MODULE := libbt-rtk_autopair
 include $(BUILD_STATIC_LIBRARY)
 endif
 
-ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_POWERON),true)
-# libbt-rtk_virtual_hid.a
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := virtual_hid/rtkbt_virtual_hid.c
-
-LOCAL_C_INCLUDES := $(rtk_local_C_INCLUDES)
-
-LOCAL_CFLAGS += $(rtk_local_CFLAGS)
-
-LOCAL_MODULE_TAGS := optional
-LOCAL_SHARED_LIBRARIES := libcutils libc
-LOCAL_MODULE := libbt-rtk_virtual_hid
-
-include $(BUILD_STATIC_LIBRARY)
-endif
-
-endif

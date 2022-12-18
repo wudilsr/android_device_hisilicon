@@ -46,24 +46,24 @@
 #define NAND_ECC_4BIT                        2
 #define NAND_ECC_4BIT_512                    3
 #define NAND_ECC_4BYTE                       4
-#define NAND_ECC_8BIT                        3 /* need to be equal with NAND_ECC_4BIT_512 */
-#define NAND_ECC_8BIT_512                    5
-#define NAND_ECC_8BYTE                       6
-#define NAND_ECC_13BIT                       7
-#define NAND_ECC_16BIT                       5 /* need to be equal with NAND_ECC_8BIT_512 */
-#define NAND_ECC_18BIT                       8
-#define NAND_ECC_24BIT                       9
-#define NAND_ECC_27BIT                       10
-#define NAND_ECC_28BIT                       11
-#define NAND_ECC_32BIT                       12
-#define NAND_ECC_40BIT                       13
-#define NAND_ECC_41BIT                       14
-#define NAND_ECC_42BIT                       15
-#define NAND_ECC_48BIT                       16
-#define NAND_ECC_60BIT                       17
-#define NAND_ECC_64BIT                       18
-#define NAND_ECC_72BIT                       19
-#define NAND_ECC_80BIT                       20
+#define NAND_ECC_8BIT                        5
+#define NAND_ECC_8BIT_512                    6
+#define NAND_ECC_8BYTE                       7
+#define NAND_ECC_13BIT                       8
+#define NAND_ECC_16BIT                       9
+#define NAND_ECC_18BIT                       10
+#define NAND_ECC_24BIT                       11
+#define NAND_ECC_27BIT                       12
+#define NAND_ECC_28BIT                       13
+#define NAND_ECC_32BIT                       14
+#define NAND_ECC_40BIT                       15
+#define NAND_ECC_41BIT                       16
+#define NAND_ECC_42BIT                       17
+#define NAND_ECC_48BIT                       18
+#define NAND_ECC_60BIT                       19
+#define NAND_ECC_64BIT                       20
+#define NAND_ECC_72BIT                       21
+#define NAND_ECC_80BIT                       22
 
 const char *nand_ecc_name(int type);
 

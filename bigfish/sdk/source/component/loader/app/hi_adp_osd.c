@@ -61,9 +61,9 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         return;
     }
 
-    
+
     HI_UNF_HDMI_GetAttr(hHdmi, &stHdmiAttr);
-    ret = HI_UNF_HDMI_GetSinkCapability(hHdmi, &stSinkCap); 
+    ret = HI_UNF_HDMI_GetSinkCapability(hHdmi, &stSinkCap);
 
 
     if(ret == HI_SUCCESS)
@@ -86,10 +86,10 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     }
     else
     {
-        //when get capability fail,use default mode 
+        //when get capability fail,use default mode
         if(g_enDefaultMode == HI_UNF_HDMI_DEFAULT_ACTION_HDMI)
             stHdmiAttr.bEnableHdmi = HI_TRUE;
-        else 
+        else
             stHdmiAttr.bEnableHdmi = HI_FALSE;
     }
 
@@ -127,7 +127,7 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         //HDCP Enable use default setting!!
     }
 #endif
-	
+
 	HI_UNF_HDMI_SetAttr(hHdmi, &stHdmiAttr);
 
 	/* HI_UNF_HDMI_SetAttr must before HI_UNF_HDMI_Start! */
@@ -280,7 +280,7 @@ HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
 {
     HI_S32 Ret = HI_FAILURE;
     HI_UNF_HDMI_OPEN_PARA_S stOpenParam;
-    
+
     g_stHdmiArgs.enHdmi       = enHDMIId;
 
     Ret = HI_UNF_HDMI_Init();
@@ -394,7 +394,7 @@ static HI_VOID GetDefDispParam(HI_UNF_PDM_DISP_PARAM_S *pstDispParam)
     pstDispParam->enPixelFormat    = HIGO_PF_8888;
     pstDispParam->u32VirtScreenWidth  = 1280;
     pstDispParam->u32VirtScreenHeight = 720;
-    memset(&(pstDispParam->stDispOffset), 0, sizeof(pstDispParam->stDispOffset)); 
+    memset(&(pstDispParam->stDispOffset), 0, sizeof(pstDispParam->stDispOffset));
 
     return;
 }
@@ -696,7 +696,7 @@ HI_S32 HI_ADP_GrcCreate(HI_UNF_PDM_DISP_PARAM_S *pstGrcParam, HI_HANDLE *phLayer
 	}
 
 	Ret = HI_GO_GetLayerDefaultParam(eLayerID, &stLayerInfo);
-  
+
     /* to self-adapt the base virtualScreen and loader display */
     stLayerInfo.ScreenHeight = pstGrcParam->u32VirtScreenHeight;
     stLayerInfo.ScreenWidth = pstGrcParam->u32VirtScreenWidth;

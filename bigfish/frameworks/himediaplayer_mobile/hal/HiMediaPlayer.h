@@ -389,7 +389,7 @@ public:
             MEDIA_LOG_ERROR,
             MEDIA_LOG_PLAY_COMPLETE,
         };
-		
+
         class CommandQueue : public RefBase
         {
 public:
@@ -432,6 +432,8 @@ public:
             int mHuashuRequestSeekPoint;
             int mHuashuSeekQuit;
             char mszOriHuaShuUrl[HI_FORMAT_MAX_URL_LEN];
+            /* add for iptv */
+            HI_SVR_PLAYER_MEDIA_S mediaParam_t;
 private:
             Vector <Command*>  mQueue;
             Command*      mCurCmd;
@@ -453,8 +455,6 @@ private:
             bool mIsHuashuIptvLiveMod;
             status_t mSyncStatus;
             int mSuspendState;
-            /* add for iptv */
-            HI_SVR_PLAYER_MEDIA_S mediaParam_t;
 
             HI_S64 ms64StartTime;
             HI_S32 ms32LastPosition;
@@ -588,6 +588,8 @@ private:
         bool mReset;
 
         bool mIsTimedTextTrackEnable;
+        bool mPreparing;
+        Mutex mLockPreparing;
         int mPrepareResult;
         virtual status_t  AddTimedTextSource(const Parcel& request);
         virtual status_t  selectTrack(int trackIndex, bool select);
@@ -637,6 +639,8 @@ private:
         HI_UNF_WINDOW_FREEZE_MODE_E mWndFreezeMode;
         int mPreOutputFormat;
         bool mUseStaticResource;
+        bool mNeedSendFirstFrameAfterSeekEvent;
+        bool mSendFirstFrameCnt;
 
         /* subtitle type, SUB_DEFAULT_FRAME_PACK:auto recognise,  0:normal 2d subtitle, 1:sbs subtitle, 2:tab subtitle */
         int mSubFramePackType;
@@ -648,6 +652,7 @@ private:
                * DP_STRATEGY_24FPS_MASK : 0x0008
                */
         int mDisplayStrategy;
+        HI_U32 mSwitchTimeMs;
         sp<ANativeWindow> mNativeWindow;
         sp<ANativeWindow> mSubTitleNativeWindow;
         int setSubtitleNativeWindow(const Parcel& subSurface);
@@ -693,6 +698,7 @@ private:
 
         int   mBufEventControl;
         int   mDiagnose;
+        HI_S32 SetMediaWithLock(HI_HANDLE mHandle, HI_SVR_PLAYER_MEDIA_PARAM_E ePlayerParam, HI_SVR_PLAYER_MEDIA_S *pstMediaParam);
         int   getDiagnose(void);
         static int diagnose_thread(void* cookie);
         int diagnose_run();
@@ -750,6 +756,7 @@ private:
         /* for adapting mobaihe event info  */
         MEDIA_INFO_EXTEND_BUFFER_LENGTH = 5000,
         MEDIA_INFO_EXTEND_FIRST_FRAME_TIME = 5001,
+        MEDIA_INFO_EXTEND_NETWORK_ADJUST_BITRATE = 5002,
     };
 }; // namespace
 #endif

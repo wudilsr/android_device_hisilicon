@@ -159,7 +159,7 @@ HI_S32 VENC_DRV_MngQueueFull(queue_info_s *queue)
     return list_empty(&queue->free);
 }
 
-static HI_U32 VENC_DRV_MngQueuePending(queue_info_s *queue)
+static HI_S32 VENC_DRV_MngQueuePending(queue_info_s *queue)
 {
 	HI_U32 has_msg = 0;
 	HI_U32 stopped = 0;

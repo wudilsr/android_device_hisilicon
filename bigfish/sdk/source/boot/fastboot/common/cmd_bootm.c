@@ -99,9 +99,9 @@ static void *boot_get_kernel (cmd_tbl_t *cmdtp, int flag,int argc, char *argv[],
 extern int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
 extern void show_bootimg_header(void *buf);
 
-#ifdef CONFIG_SECURE_BOOT_SUPPORT
+#ifdef CONFIG_TEE_SUPPORT
 extern int is_trustedcore_img(char *buf);
-extern int do_load_secure_os(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
+extern int do_load_secure_os(ulong addr, ulong org_offset, ulong img_dst, int run, uint32_t *rtos_load_addr);
 #endif
 
 /*
@@ -616,15 +616,15 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	int		ret;
 	boot_os_fn	*boot_fn;
 
-#ifdef CONFIG_SECURE_BOOT_SUPPORT
-	/* Load Trustedcore OS */
 	if (2 == argc) {
 		char *buf = (char *)simple_strtoul(argv[1], NULL, 16);
+		__attribute__((__unused__)) unsigned int kernel_buf = (unsigned int)buf;
+#ifdef CONFIG_TEE_SUPPORT
 		if (is_trustedcore_img(buf)) {
-			return do_load_secure_os(cmdtp, flag, argc, argv);
+			return do_load_secure_os((ulong)buf, 0, 0, 0, NULL);
 		}
-	}
 #endif
+	}
 
 #ifndef CONFIG_RELOC_FIXUP_WORKS
 	static int relocated = 0;

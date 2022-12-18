@@ -23,7 +23,7 @@
 #include "hi_type.h"
 #include "hi_error_mpi.h"
 #include "hi_drv_video.h"
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 #include "sec_mmz.h"
 #endif
 #ifdef __cplusplus
@@ -56,7 +56,7 @@ extern "C"{
 #define BUFMNG_NOT_END_FRAME_BIT     (0x00000001)
 #define BUFMNG_END_OF_STREAM_BIT    (0x00000002)
 #define BUFMNG_DISCONTINUOUS_BIT    (0x00000004)
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 #define BUFMNG_SEC_ZONE             "SEC-MMZ"
 #endif
 /*************************** Structure Definition ****************************/
@@ -76,7 +76,7 @@ typedef struct tagBUFMNG_INST_CONFIG_S
     HI_U8* pu8KnlVirAddr;   /* Start kernel virtual address. */
     HI_U32 u32Size;         /* Size */
     HI_CHAR aszName[16];    /* Buffer name */
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_BOOL bTvp;
 #endif
 }BUFMNG_INST_CONFIG_S;

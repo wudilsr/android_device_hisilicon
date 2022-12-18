@@ -1674,6 +1674,42 @@ void btm_ble_process_adv_pkt (UINT8 *p_data)
     UINT8               evt_type = 0, *p = p_data;
     UINT8               addr_type = 0;
 
+#ifdef BLUETOOTH_RTK
+    UINT8               num_report = 0;
+    UINT8               length = 0;
+    UINT8               i;
+    num_report = *p++;
+    for(i = 0; i < num_report; i++) {
+    length = *(p + 8);
+    BTM_TRACE_DEBUG2("btm_ble_process_adv_pkt num = %d,length = %d",i,length);
+    /* Extract inquiry results */
+    STREAM_TO_UINT8    (evt_type, p);
+    STREAM_TO_UINT8    (addr_type, p);
+    STREAM_TO_BDADDR   (bda, p);
+
+#ifdef BTM_BLE_PC_ADV_TEST_MODE /* For general stack code (e.g. BTInsight testing), we simply do not define it to exclude or set it to TRUE to include */
+    if (BTM_BLE_PC_ADV_TEST_MODE)   /* For stack component, it is always defined and maps to a global variable g_bDraculaAdvertisingMode */
+    {
+        if (btm_cb.ble_ctr_cb.p_scan_req_cback)
+            (*btm_cb.ble_ctr_cb.p_scan_req_cback)(bda, addr_type, evt_type);
+    }
+#endif
+
+
+
+    /* Only process the results if the inquiry is still active */
+    if ((btm_cb.btm_inq_vars.inq_active & BTM_LE_SCAN_ACTIVE_MASK) == 0 &&
+        (btm_cb.ble_ctr_cb.bg_conn_type != BTM_BLE_CONN_SELECTIVE ||
+         /* or selective auto connection is active */
+         btm_cb.ble_ctr_cb.p_select_cback == NULL))
+        return;
+
+    btm_ble_process_adv_pkt_cont(bda, addr_type, evt_type, p);
+    if(length > BTM_BLE_ADV_DATA_LEN_MAX)
+        break;
+    p = p + 2 + length;
+   }
+#else
     /* always get one device at a time */
     p ++;
 
@@ -1700,6 +1736,7 @@ void btm_ble_process_adv_pkt (UINT8 *p_data)
         return;
 
     btm_ble_process_adv_pkt_cont(bda, addr_type, evt_type, p);
+#endif
 }
 
 #ifdef BLUETOOTH_RTK
@@ -1763,23 +1800,16 @@ int btm_ble_check_cod(UINT8* data, UINT8* flag,int *cod)
 
             break;
 
-/*BOARD_HAVE_BLUETOOTH_RTK_VR_RCU_IFLYTEK Begin*/
-#ifdef BLUETOOTH_RTK_VR
             case BTM_BLE_AD_TYPE_APPEARANCE:
-                if(remote_controller_id == RTKBT_RCUID_IFLYTEK)
+                service = 0;
+                p = data;
+                service = p[0] | p[1] <<8;
+                if(service == 0x03c1)
                 {
-                    service = 0;
-                    p = data;
-                    service = p[0] | p[1] <<8;
-                    if(service == 0x03c1)
-                    {
-                        isServiceExist = TRUE;
-                        break;
-                    }
+                    isServiceExist = TRUE;
+                    break;
                 }
-             break;
-#endif
-/*BOARD_HAVE_BLUETOOTH_RTK_VR_RCU_IFLYTEK end*/
+            break;
         }
         data += len -1;
     }
@@ -1948,9 +1978,6 @@ static void btm_ble_process_adv_pkt_cont(BD_ADDR bda, UINT8 addr_type, UINT8 evt
         BTM_TRACE_DEBUG0("ip_inq_result_cb is not NULL ,call it ");
         (p_inq_results_cb)((tBTM_INQ_RESULTS *) &p_i->inq_info.results, p_le_inq_cb->adv_data_cache);
     }
-#ifdef BLUETOOTH_RTK
-    (p_inq_results_cb)((tBTM_INQ_RESULTS *) &p_i->inq_info.results, p_le_inq_cb->adv_data_cache);
-#endif
 }
 
 /*******************************************************************************

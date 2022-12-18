@@ -56,22 +56,16 @@
 
     <!-- setting Switch -->
     <string name="SettingSwitch_VIME_Title">VIME</string>
-    <string name="SettingSwitch_VIME_status_on">ON</string>
-    <string name="SettingSwitch_VIME_status_off">OFF</string>
     <string name="SettingSwitch_Sensor_Title">Sensor</string>
-    <string name="SettingSwitch_Sensor_status_on">ON</string>
-    <string name="SettingSwitch_Sensor_status_off">OFF</string>
     <string name="SettingSwitch_Video_Title">Video</string>
-    <string name="SettingSwitch_Video_status_on">ON</string>
-    <string name="SettingSwitch_Video_status_off">OFF</string>
     <string name="SettingSwitch_Audio_Title">Audio</string>
-    <string name="SettingSwitch_Audio_status_on">ON</string>
-    <string name="SettingSwitch_Audio_status_off">OFF</string>
     <string name="SettingSwitch_Vibrator_Title">Vibrator</string>
+    <string name="SettingSwitch_HomePage_Title">Remote as home page</string>
+    <string name="SettingSwitch_iScene_Title">iScene</string>
     <!-- toast -->
     <string name="toast_KeepAlive_packet_loss">network is not well!</string>
     <string name="toast_VIME_close">VIME closed！</string>
-    <string name="AccessController_refuse_access_tips">Sorry,server refused the device to access!</string>
+    <string name="AccessController_refuse_access_tips">Sorry, may be in poor network, please reconnect!</string>
     <string name="toast_network_error">WiFi closed, check network please!</string>
     <string name="one_more_exit">Press again to exit</string>
 
@@ -94,6 +88,7 @@
 
     <!-- 遥控器界面 -->
     <string name="remote_stay">Stand-by</string>
+    <string name="remote_number_done">Done</string>
     <string name="remote_device_not_found">No device found in the Wi-Fi network</string>
     <string name="remote_mouse_name">Mouse</string>
     <string name="remote_game_name">Game</string>

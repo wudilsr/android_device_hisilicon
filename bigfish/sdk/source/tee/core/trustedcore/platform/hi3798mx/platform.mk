@@ -1,0 +1,106 @@
+
+#ADD PLATFORM MACRO HERE
+WITH_HI3798MX_PLATFORM=true
+
+CFG_HI_TVP_MEM_LAYOUT ?= 1G
+CONFIG_MEM_LAYOUT := $(CFG_HI_TVP_MEM_LAYOUT)
+$(info ------ CONFIG_MEM_LAYOUT=$(CONFIG_MEM_LAYOUT) ------)
+
+ifeq ($(CONFIG_MEM_LAYOUT),2G)
+TRUSTEDCORE_TEXT_BASE = 0x6B008000
+TRUSTEDCORE_TASK_BASE = 0x6B700000
+endif
+
+ifeq ($(CONFIG_MEM_LAYOUT),1G)
+TRUSTEDCORE_TEXT_BASE = 0x2B008000
+TRUSTEDCORE_TASK_BASE = 0x2B700000
+endif
+
+ifeq ($(CONFIG_MEM_LAYOUT),512M)
+TRUSTEDCORE_TEXT_BASE = 0x1D008000
+TRUSTEDCORE_TASK_BASE = 0x1D700000
+endif
+
+ifeq ($(CONFIG_MEM_LAYOUT),512M)
+LOCAL_CFLAGS  += -DCONFIG_SYS_MEM_512M
+LOCAL_ASFLAGS += -DCONFIG_SYS_MEM_512M
+endif
+
+ifeq ($(CONFIG_MEM_LAYOUT),1G)
+LOCAL_CFLAGS  += -DCONFIG_SYS_MEM_1G
+LOCAL_ASFLAGS += -DCONFIG_SYS_MEM_1G
+endif
+
+ifeq ($(CONFIG_MEM_LAYOUT),2G)
+LOCAL_CFLAGS  += -DCONFIG_SYS_MEM_2G
+LOCAL_ASFLAGS += -DCONFIG_SYS_MEM_2G
+endif
+
+#################### Memory Layout(512M) ###########################################
+#                  offset      pa           va          
+#----------------- 0x02000000  0x20000000   0xC2000000  
+# TA run mem(25M)                           
+#----------------- 0x00700000  0x1E700000   0xC0700000(TRUSTEDCORE_TASK_LOAD_BASE)  
+# share mem(2M)                             
+#----------------- 0x00500000  0x1E500000   0xC0500000  
+# kernel mem(5M)                           
+#----------------- 0x00000000  0x1E000000   0xC0000000(TRUSTEDCORE_TASK_MEM_BASE)  
+####################################################################################
+TRUSTEDCORE_MEM_SIZE = 32
+TRUSTEDCORE_TA_RUN_MEM_SIZE = 25
+TRUSTEDCORE_TA_SHARE_MEM_SIZE = 2
+TRUSTEDCORE_KERNEL_MEM_SIZE = 5
+####################################################################################
+
+#added by fangjian:for support 4k
+TRUSTEDCORE_VIRT_BASE = 0xC0008000
+TRUSTEDCORE_TASK_MEM_BASE = 0xC0000000
+TRUSTEDCORE_TASK_LOAD_BASE = 0xC0700000
+
+TRUSTEDCORE_SEC_MMZ_MEM_SIZE = 16
+TRUSTEDCORE_SEC_SMMU_PAGETABLE_SIZE = 4
+TRUSTEDCORE_RAM_TOTAL_AMOUNT = 32
+TRUSTEDCORE_RAM_ORDER = 6
+
+#add modules here & you will edit platform_flags.mk too
+#WITH_ARM_TRUSTED_FIRMWARE = true
+WITH_CLEAR_BOOT = true
+WITH_NEON_SUPPORT = true
+
+HI_TEE_SEC_MMZ_SUPPORT := y
+HI_TEE_CIPHER_SUPPORT := y
+HI_TEE_OTP_SUPPORT := y
+HI_TEE_STB_PLATFORM_SUPPORT :=y
+#HI_TEE_SEC_TIMER_SUPPORT := y
+#HI_TEE_SMMU_SUPPORT := y
+HI_TEE_VFMW_SUPPORT := y
+HI_TEE_ADVCA_SUPPORT ?= n
+HI_TEE_PVR_SUPPORT ?= n
+HI_TEE_DEMUX_SUPPORT ?= n
+HI_TEE_HDMI_SUPPORT ?= n
+HI_TEE_DEMO_SUPPORT ?= n
+HI_TEE_VDP_SUPPORT ?= n
+HI_TEE_BEIDOU_SUPPORT ?= n
+HI_TEE_I2C_SUPPORT ?= n
+HI_TEE_WIDEVINE_SUPPORT ?= n
+HI_TEE_PLAYREADY_SUPPORT ?= n
+HI_TEE_VMX_ULTRA_SUPPORT ?= n
+HI_TEE_VMXTAC_TEST_SUPPORT ?= n
+HI_TEE_ITAC_TEST_SUPPORT ?= n
+HI_TEE_TEST_SUPPORT ?= n
+HI_TEE_TEST_TA_SUPPORT ?=n
+
+TRUSTEDCORE_LINK_FILE := ./platform/hi3798mx/trustedcore_hi3798mx_DDR.ld
+
+TRUSTEDCORE_THIRDPARTY_LIBS :=
+
+
+#Config:api/drv/ta code dir
+HI_SDK_DIR ?= $(shell cd $(CURDIR)/../../../.. && /bin/pwd)
+export HI_TEE_OS_DIR   := $(HI_SDK_DIR)/source/tee/core
+export HI_TEE_API_DIR  := $(HI_SDK_DIR)/source/tee/api
+export HI_TEE_DRV_DIR  := $(HI_SDK_DIR)/source/tee/drv
+export HI_TEE_TA_DIR   := $(HI_SDK_DIR)/source/tee/ta
+
+$(info HI_TEE_DRV_DIR: $(HI_TEE_DRV_DIR))
+

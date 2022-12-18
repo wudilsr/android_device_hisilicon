@@ -177,7 +177,7 @@ HI_S32 VO_ConvertWinAttrToUNF(HI_DRV_WIN_ATTR_S* pstMpiAttr, HI_UNF_WINDOW_ATTR_
 HI_S32 HI_UNF_VO_CreateWindow(const HI_UNF_WINDOW_ATTR_S* pWinAttr, HI_HANDLE* phWindow)
 {
     HI_DRV_WIN_ATTR_S stMpiAttr;
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
 
     if (!pWinAttr)
     {
@@ -190,6 +190,7 @@ HI_S32 HI_UNF_VO_CreateWindow(const HI_UNF_WINDOW_ATTR_S* pWinAttr, HI_HANDLE* p
         HI_ERR_WIN("para phWindow is null.\n");
         return HI_ERR_VO_NULL_PTR;
     }
+    memset((HI_VOID*)&stMpiAttr, 0, sizeof(HI_DRV_WIN_ATTR_S));
 
     s32Ret = VO_ConvertWinAttrToMPI((HI_UNF_WINDOW_ATTR_S*)pWinAttr, &stMpiAttr);
     if (HI_SUCCESS != s32Ret)
@@ -207,7 +208,7 @@ HI_S32 HI_UNF_VO_CreateWindowExt(const HI_UNF_WINDOW_ATTR_S* pWinAttr,
                                   HI_BOOL bVirtScreen)
 {
     HI_DRV_WIN_ATTR_S stMpiAttr;
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
 
     if (!pWinAttr)
     {
@@ -221,6 +222,7 @@ HI_S32 HI_UNF_VO_CreateWindowExt(const HI_UNF_WINDOW_ATTR_S* pWinAttr,
         return HI_ERR_VO_NULL_PTR;
     }
 
+    memset((HI_VOID*)&stMpiAttr, 0, sizeof(HI_DRV_WIN_ATTR_S));
     s32Ret = VO_ConvertWinAttrToMPI((HI_UNF_WINDOW_ATTR_S*)pWinAttr, &stMpiAttr);
     if (HI_SUCCESS != s32Ret)
     {
@@ -264,13 +266,14 @@ HI_S32 HI_UNF_VO_GetWindowEnable(HI_HANDLE hWindow, HI_BOOL* pbEnable)
 HI_S32 HI_UNF_VO_SetWindowAttr(HI_HANDLE hWindow, const HI_UNF_WINDOW_ATTR_S* pWinAttr)
 {
     HI_DRV_WIN_ATTR_S stMpiAttr;
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
 
     if (!pWinAttr)
     {
         HI_ERR_WIN("para pWinAttr is null.\n");
         return HI_ERR_VO_NULL_PTR;
     }
+    memset((HI_VOID*)&stMpiAttr, 0, sizeof(HI_DRV_WIN_ATTR_S));
     s32Ret = VO_ConvertWinAttrToMPI((HI_UNF_WINDOW_ATTR_S*)pWinAttr, &stMpiAttr);
     if (HI_SUCCESS != s32Ret)
     {
@@ -286,7 +289,7 @@ HI_S32 HI_UNF_VO_SetWindowAttr(HI_HANDLE hWindow, const HI_UNF_WINDOW_ATTR_S* pW
 HI_S32 HI_UNF_VO_GetWindowAttr(HI_HANDLE hWindow, HI_UNF_WINDOW_ATTR_S* pWinAttr)
 {
     HI_DRV_WIN_ATTR_S stMpiAttr;
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_SUCCESS;
 
     if (!pWinAttr)
     {
@@ -294,6 +297,7 @@ HI_S32 HI_UNF_VO_GetWindowAttr(HI_HANDLE hWindow, HI_UNF_WINDOW_ATTR_S* pWinAttr
         return HI_ERR_VO_NULL_PTR;
     }
 
+    memset((HI_VOID*)&stMpiAttr, 0, sizeof(HI_DRV_WIN_ATTR_S));
     s32Ret = HI_MPI_WIN_GetAttr(hWindow, &stMpiAttr);
     if (!s32Ret)
     {
@@ -307,11 +311,9 @@ HI_S32 HI_UNF_VO_GetWindowAttr(HI_HANDLE hWindow, HI_UNF_WINDOW_ATTR_S* pWinAttr
 HI_S32 HI_UNF_VO_AcquireFrame(HI_HANDLE hWindow, HI_UNF_VIDEO_FRAME_INFO_S* pstFrameinfo, HI_U32 u32TimeoutMs)
 {
     HI_DRV_VIDEO_FRAME_S stMpi;
-    HI_S32 s32TimeRet;
-    HI_S32 s32Ret;
-    HI_U32 u32OriTime = 0;
-    HI_U32 u32Time = 0;
-    HI_U32 u32Delta;
+    HI_S32  s32Ret = HI_FAILURE;
+    HI_U32  u32StartTime = 0;
+    HI_U32  u32EndTime = 0;
 
     if (!pstFrameinfo)
     {
@@ -319,38 +321,32 @@ HI_S32 HI_UNF_VO_AcquireFrame(HI_HANDLE hWindow, HI_UNF_VIDEO_FRAME_INFO_S* pstF
         return HI_ERR_VO_NULL_PTR;
     }
 
-    s32TimeRet = HI_SYS_GetTimeStampMs(&u32OriTime);
-    if (s32TimeRet != HI_SUCCESS)
+    if (HI_SUCCESS != HI_SYS_GetTimeStampMs(&u32StartTime))
     {
         HI_ERR_WIN("GetTimeStampMs Failed\n");
         return HI_ERR_VO_OPERATION_DENIED;
     }
-
-    do{
+    
+    memset((HI_VOID*)&stMpi, 0, sizeof(HI_DRV_VIDEO_FRAME_S));
+    
+    do
+    {
         s32Ret = HI_MPI_WIN_AcquireFrame(hWindow, &stMpi);
-        if (!s32Ret)
+        if (HI_SUCCESS == s32Ret)
         {
             Transfer_Frame(pstFrameinfo, &stMpi, HI_FALSE);
+            return HI_SUCCESS;
         }
 
-        s32TimeRet = HI_SYS_GetTimeStampMs(&u32Time);
-        if (s32TimeRet != HI_SUCCESS)
+        (HI_VOID)usleep(1 * 1000);
+        
+        if (HI_SUCCESS != HI_SYS_GetTimeStampMs(&u32EndTime))
         {
             HI_ERR_WIN("GetTimeStampMs Failed\n");
-            if (!s32Ret)
-            {
-                return s32Ret;
-            }
-            else
-            {
-                return HI_ERR_VO_OPERATION_DENIED;
-            }
+            return s32Ret;
         }
+    } while ((u32EndTime - u32StartTime) <= u32TimeoutMs);
 
-        u32Delta = u32Time - u32OriTime;
-		(HI_VOID)usleep(1 * 1000);
-
-    }while(s32Ret == HI_FAILURE && u32Delta <= u32TimeoutMs);
 
     return s32Ret;
 
@@ -483,6 +479,11 @@ HI_S32 HI_UNF_VO_GetWindowFreezeStatus(HI_HANDLE hWindow, HI_BOOL *pbEnable, HI_
 {
     HI_DRV_WIN_SWITCH_E eFrzMode;
     HI_S32 s32Ret;
+    if ((HI_NULL == pbEnable) || (HI_NULL == penWinFreezeMode))
+    {
+        HI_ERR_WIN("para is null.\n");
+        return HI_ERR_VO_NULL_PTR;
+    }
 
     s32Ret = HI_MPI_WIN_GetFreezeStat(hWindow, pbEnable, &eFrzMode);
     if (s32Ret == HI_SUCCESS)
@@ -508,6 +509,12 @@ HI_S32 HI_UNF_VO_ResetWindow(HI_HANDLE hWindow, HI_UNF_WINDOW_FREEZE_MODE_E enWi
 {
     HI_DRV_WIN_SWITCH_E eRstMode;
     HI_S32 s32Ret;
+
+    if (enWinFreezeMode >= HI_UNF_WINDOW_FREEZE_MODE_BUTT)
+    {
+        HI_ERR_WIN("para enWinFreezeMode is invalid.\n");
+        return HI_ERR_VO_INVALID_PARA;
+    }
 
     Transfe_SwitchMode(&enWinFreezeMode, &eRstMode, HI_TRUE);
     s32Ret = HI_MPI_WIN_Reset(hWindow, eRstMode);

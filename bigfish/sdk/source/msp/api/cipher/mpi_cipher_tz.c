@@ -831,7 +831,7 @@ static HI_S32 AES_Encrypt(HI_HANDLE hCipherHandle, HI_U8 *input, HI_U32 datalen,
         return HI_FAILURE;
     }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_U32 u32SecOutAddrPhy = 0;
 
     (HI_VOID)HI_SEC_MMZ_Init();
@@ -886,13 +886,13 @@ static HI_S32 AES_Encrypt(HI_HANDLE hCipherHandle, HI_U8 *input, HI_U32 datalen,
         }
     }
     
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
     memcpy(output, pu8OutputAddrVir + u32EncryptDataLen - 16, 16);
 #endif
 
 CIPHER_RELEASE_BUF:
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_SEC_MMZ_Delete(u32SecOutAddrPhy);
    (HI_VOID)HI_SEC_MMZ_DeInit();
 #else

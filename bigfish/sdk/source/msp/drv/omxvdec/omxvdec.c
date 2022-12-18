@@ -14,7 +14,7 @@
 
 #include <linux/platform_device.h>
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #include "sec_mmz.h"
 #endif
 
@@ -95,7 +95,7 @@ HI_VOID omxvdec_release_mem(MMZ_BUFFER_S *pBuffer, eMEM_ALLOC eMemAlloc)
 				    HI_DRV_MMZ_UnmapAndRelease(pBuffer);
 				    break;
 
-    		#ifdef HI_TVP_SUPPORT
+            #ifdef HI_OMX_TEE_SUPPORT
 			    case ALLOC_BY_SEC:
 				    HI_SEC_MMZ_Delete(pBuffer->u32StartPhyAddr);
 				    break;
@@ -388,6 +388,43 @@ static long omxvdec_ioctl(struct file *fd, unsigned int code, unsigned long arg)
             }
             break;
 
+        case VDEC_IOCTL_CHAN_ALLOC_BUF:
+            if (copy_from_user(&user_buf, (VOID *)(HI_SIZE_T)vdec_msg.in, sizeof(OMXVDEC_BUF_DESC)))
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call copy_from_user failed!\n", __func__, __LINE__);
+                return -EFAULT;
+            }
+
+            ret = channel_alloc_buf(pchan, &user_buf);
+            if (ret != HI_SUCCESS)
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call channel_alloc_buf failed!\n", __func__, __LINE__);
+                return -EFAULT;
+            }
+
+            if (copy_to_user((VOID *)(HI_SIZE_T)vdec_msg.out, &user_buf, sizeof(OMXVDEC_BUF_DESC)))
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call copy_to_user failed!\n", __func__, __LINE__);
+                return -EIO;
+            }
+
+            break;
+
+        case VDEC_IOCTL_CHAN_RELEASE_BUF:
+            if (copy_from_user(&user_buf, (VOID *)(HI_SIZE_T)vdec_msg.in, sizeof(OMXVDEC_BUF_DESC)))
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call copy_from_user failed!\n", __func__, __LINE__);
+                return -EFAULT;
+            }
+
+            ret = channel_release_buf(pchan, &user_buf);
+            if (ret != HI_SUCCESS)
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call channel_release_buf failed!\n", __func__, __LINE__);
+                return -EFAULT;
+            }
+            break;
+
         case VDEC_IOCTL_EMPTY_INPUT_STREAM:
             if (copy_from_user(&user_buf, vdec_msg.in, sizeof(OMXVDEC_BUF_DESC)))
             {
@@ -521,6 +558,19 @@ static long omxvdec_ioctl(struct file *fd, unsigned int code, unsigned long arg)
                 return -EFAULT;
             }
             break;
+
+        case VDEC_IOCTL_CHAN_PORT_ENABLE:
+        {
+            HI_BOOL  bPortEnable;
+            if (copy_from_user(&bPortEnable, (VOID *)(HI_SIZE_T)vdec_msg.in, sizeof(HI_BOOL)))
+            {
+                OmxPrint(OMX_FATAL, "%s %d: case call copy_from_user failed!\n", __func__, __LINE__);
+                return -EFAULT;
+            }
+            pchan->port_enable_flag = bPortEnable;
+            OmxPrint(OMX_INFO, "%s %d: set port enble ====> %d!\n", __func__, __LINE__,pchan->port_enable_flag);
+            break;
+        }
 
         default:
             /* could not handle ioctl */
@@ -834,7 +884,7 @@ HI_S32 omxvdec_write_proc(struct file *file, const char __user *buffer, size_t c
             {
                 OmxPrint(OMX_ALWS, "Enable raw save.\n");
                 g_SaveRawEnable = HI_TRUE;
-                g_SaveNum++;                
+                g_SaveNum++;
             }
             else if (!strncmp(str2, DBG_CMD_STOP, DBG_CMD_LEN))
             {
@@ -1128,7 +1178,9 @@ HI_S32 OMXVDEC_DRV_ModInit(HI_VOID)
     if(ret < 0)
     {
         OmxPrint(OMX_FATAL, "%s call platform_driver_register failed!\n", __func__);
-        goto exit;
+        platform_device_unregister(&omxvdec_device);
+
+        return ret;
     }
 
 #ifndef HI_ADVCA_FUNCTION_RELEASE
@@ -1136,22 +1188,18 @@ HI_S32 OMXVDEC_DRV_ModInit(HI_VOID)
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "omxvdec_init_proc failed!\n");
-        goto exit1;
+        platform_driver_unregister(&omxvdec_driver);
+        platform_device_unregister(&omxvdec_device);
+        return ret;
+
     }
 
 #ifdef MODULE
-	HI_PRINT("Load hi_omxvdec.ko success.\t(%s)\n", VERSION_STRING);
+    HI_PRINT("Load hi_omxvdec.ko success.\t(%s)\n", VERSION_STRING);
 #endif
 #endif
 
-	return HI_SUCCESS;
-
-exit1:
-	platform_driver_unregister(&omxvdec_driver);
-exit:
-	platform_device_unregister(&omxvdec_device);
-
-	return ret;
+    return HI_SUCCESS;
 }
 
 HI_VOID OMXVDEC_DRV_ModExit(HI_VOID)

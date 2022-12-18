@@ -54,7 +54,9 @@ DEV_CLASS local_device_default_class = {0x40, 0x02, 0x0C};
 
 #ifdef BLUETOOTH_RTK
 extern UINT32 remote_controller_id;
+extern unsigned int  rtkbt_logfilter;
 int set_remote_controller_id(char *p_conf_name, char *p_conf_value);
+int set_rtkbt_logfilter(char *p_conf_name, char *p_conf_value);
 #endif
 
 /******************************************************************************
@@ -117,6 +119,7 @@ static const conf_entry_t conf_table[] = {
 /*BOARD_HAVE_BLUETOOTH_RTK Begin*/
 #ifdef BLUETOOTH_RTK
     {"RcuId", set_remote_controller_id},
+    {"RtkbtLogFilter", set_rtkbt_logfilter},
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK End*/
 
@@ -189,6 +192,11 @@ int trace_cfg_onoff(char *p_conf_name, char *p_conf_value)
 int set_remote_controller_id(char * p_conf_name,char * p_conf_value)
 {
     remote_controller_id = atoi(p_conf_value);
+    return 0;
+}
+int set_rtkbt_logfilter(char * p_conf_name,char * p_conf_value)
+{
+    rtkbt_logfilter = atoi(p_conf_value);
     return 0;
 }
 #endif

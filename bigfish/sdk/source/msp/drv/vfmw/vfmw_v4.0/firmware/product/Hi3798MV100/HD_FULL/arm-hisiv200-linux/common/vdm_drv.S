@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.vdm_drv.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/vdm_drv.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/vdm_drv.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/vdm_drv.o -O2 -Wall -Wundef
@@ -333,23 +333,23 @@ VDMDRV_AdjustPriorityAfterDec:
 	cmp	r1, r0	@ g_ChanCtx.ChanIdTabByPrior, CurChanId
 	beq	.L54	@,
 	mov	r6, #0	@ i.448,
-	add	r8, r8, #68	@ D.38627, tmp162,
+	add	r8, r8, #68	@ D.38641, tmp162,
 	mov	r4, r6	@ i, i.448
 	b	.L53	@
 .L52:
-	ldr	ip, [r2, r1]	@ D.38628,* ivtmp.656
+	ldr	ip, [r2, r1]	@ D.38642,* ivtmp.656
 	add	r1, r5, #4	@ ivtmp.656, tmp192,
-	cmp	ip, #0	@ D.38628,
+	cmp	ip, #0	@ D.38642,
 	blt	.L54	@,
 	ldr	r7, [r2, r0, asl #2]	@ temp.658,
 	ldr	sl, [r3, ip, asl #2]	@,
 	ldr	r9, [r3, r7, asl #2]	@,
 	cmp	sl, r9	@,
-	strge	ip, [r2, r0, asl #2]	@ D.38628,
+	strge	ip, [r2, r0, asl #2]	@ D.38642,
 	ldrge	sl, [fp, #-48]	@, %sfp
 	strge	r7, [sl, #0]	@ temp.658,
-	ldr	ip, [r2, r5]	@ D.38628,
-	cmp	ip, #0	@ D.38628,
+	ldr	ip, [r2, r5]	@ D.38642,
+	cmp	ip, #0	@ D.38642,
 	blt	.L54	@,
 .L50:
 	ldr	r7, [r2, r6, asl #2]	@ temp.658,
@@ -361,11 +361,11 @@ VDMDRV_AdjustPriorityAfterDec:
 	ldr	r9, [r3, r7, asl #2]	@,
 	add	r5, r1, #4	@ tmp192, ivtmp.656,
 	cmp	sl, r9	@,
-	strge	ip, [r2, r6, asl #2]	@ D.38628,
-	strge	r7, [r8, #0]	@ temp.658,* D.38627
+	strge	ip, [r2, r6, asl #2]	@ D.38642,
+	strge	r7, [r8, #0]	@ temp.658,* D.38641
 	cmp	r0, #14	@ tmp193,
 	mov	r6, r4	@ i.448, i
-	add	r8, r2, r5	@ D.38627, tmp188, tmp192
+	add	r8, r2, r5	@ D.38641, tmp188, tmp192
 	ble	.L52	@,
 .L54:
 	sub	sp, fp, #40
@@ -376,31 +376,31 @@ VDMDRV_AdjustPriorityAfterDec:
 .L34:
 	add	r8, r6, #1	@ pretmp.639, i.448,
 	ldr	ip, .L64	@ tmp199,
-	add	r8, ip, r8, asl #2	@, D.38627, tmp199, pretmp.639,
+	add	r8, ip, r8, asl #2	@, D.38641, tmp199, pretmp.639,
 .L53:
-	ldr	ip, [r8, #0]	@ D.38628,* D.38627
-	cmp	ip, #0	@ D.38628,
+	ldr	ip, [r8, #0]	@ D.38642,* D.38641
+	cmp	ip, #0	@ D.38642,
 	blt	.L54	@,
 	add	r0, r6, #2	@ tmp175, i.448,
 	tst	r4, #1	@ i,
 	ldr	r2, .L64	@ tmp188,
 	mov	r1, r0, asl #2	@ ivtmp.656, tmp175,
 	beq	.L50	@,
-	add	r6, r2, r6, asl #2	@, D.38620, tmp188, i.448,
+	add	r6, r2, r6, asl #2	@, D.38634, tmp188, i.448,
 	ldr	r7, [r3, ip, asl #2]	@ tmp203,
 	add	r4, r4, #1	@ i, i,
-	ldr	r0, [r6, #0]	@ temp.658,* D.38620
+	ldr	r0, [r6, #0]	@ temp.658,* D.38634
 	ldr	r5, [r3, r0, asl #2]	@ tmp204,
 	cmp	r7, r5	@ tmp203, tmp204
-	strge	ip, [r6, #0]	@ D.38628,* D.38620
-	strge	r0, [r8, #0]	@ temp.658,* D.38627
+	strge	ip, [r6, #0]	@ D.38642,* D.38634
+	strge	r0, [r8, #0]	@ temp.658,* D.38641
 	cmp	r4, #14	@ i,
 	bgt	.L54	@,
-	add	r8, r2, r1	@ D.38627, tmp188, ivtmp.656
+	add	r8, r2, r1	@ D.38641, tmp188, ivtmp.656
 	mov	r6, r4	@ i.448, i
 	add	r1, r1, #4	@ ivtmp.656, ivtmp.656,
-	ldr	ip, [r8, #0]	@ D.38628,* D.38627
-	cmp	ip, #0	@ D.38628,
+	ldr	ip, [r8, #0]	@ D.38642,* D.38641
+	cmp	ip, #0	@ D.38642,
 	bge	.L50	@,
 	b	.L54	@
 .L65:
@@ -625,8 +625,8 @@ VDMDRV_ParamInit:
 	cmp	r2, #0	@ temp.824,
 	movne	r1, #1	@ tmp178,
 	strne	r1, [r2, #20]	@ tmp178, <variable>.s32IsInit
-	ldr	r3, [r0, #60]	@ D.38722, s_pstVfmwChan
-	cmp	r3, #0	@ D.38722,
+	ldr	r3, [r0, #60]	@ D.38736, s_pstVfmwChan
+	cmp	r3, #0	@ D.38736,
 	movne	r2, #1	@ tmp180,
 	strne	r2, [r3, #20]	@ tmp180, <variable>.s32IsInit
 	ldmfd	sp, {fp, sp, pc}	@
@@ -751,11 +751,11 @@ VDMDRV_WaitVdmReadyIfNoIsr:
 	mov	r3, #0	@ cnt_wait,
 	b	.L108	@
 .L106:
-	ldr	r2, [r4, #96]	@ D.39437, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmReady
+	ldr	r2, [r4, #96]	@ D.39451, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmReady
 	mov	r0, r5	@, VdhId
-	cmp	r2, #0	@ D.39437,
+	cmp	r2, #0	@ D.39451,
 	beq	.L111	@,
-	blx	r2	@ D.39437
+	blx	r2	@ D.39451
 	cmp	r0, #0	@,
 	bne	.L114	@,
 .L111:
@@ -763,19 +763,19 @@ VDMDRV_WaitVdmReadyIfNoIsr:
 	cmp	r3, #400	@ cnt_wait,
 	beq	.L116	@,
 .L108:
-	ldr	r2, [r4, #96]	@ D.39437, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmReady
+	ldr	r2, [r4, #96]	@ D.39451, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmReady
 	mov	r0, r5	@, VdhId
 	add	r6, r3, #1	@ tmp142, cnt_wait,
-	cmp	r2, #0	@ D.39437,
+	cmp	r2, #0	@ D.39451,
 	beq	.L106	@,
-	blx	r2	@ D.39437
+	blx	r2	@ D.39451
 	cmp	r0, #0	@,
 	beq	.L106	@,
 .L114:
-	mov	r0, #0	@ D.39444,
+	mov	r0, #0	@ D.39458,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L116:
-	mov	r0, #1	@ D.39444,
+	mov	r0, #1	@ D.39458,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VDMDRV_WaitVdmReadyIfNoIsr, .-VDMDRV_WaitVdmReadyIfNoIsr
@@ -866,7 +866,7 @@ VDMDRV_AvsFirstFldNeedRepair:
 	cmp	r0, #6	@ VidStd,
 	beq	.L129	@,
 .L126:
-	mov	r0, #0	@ D.39502,
+	mov	r0, #0	@ D.39516,
 	ldmfd	sp, {fp, sp, pc}	@
 .L129:
 	ldrb	r3, [r1, #8]	@ zero_extendqisi2	@ <variable>.PicStruct, <variable>.PicStruct
@@ -877,8 +877,8 @@ VDMDRV_AvsFirstFldNeedRepair:
 	mla	r2, r1, r2, ip	@ tmp143, tmp142, VdhId, tmp140
 	ldr	r0, [r2, #840]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	cmp	r0, #0	@ <variable>.ValidGroupNum,
-	movle	r0, #0	@, D.39502
-	movgt	r0, #1	@, D.39502
+	movle	r0, #0	@, D.39516
+	movgt	r0, #1	@, D.39516
 	ldmfd	sp, {fp, sp, pc}	@
 .L131:
 	.align	2
@@ -906,7 +906,7 @@ VDMDRV_AvsSecondFldNeedRepair:
 	cmp	r0, #6	@ VidStd,
 	beq	.L136	@,
 .L133:
-	mov	r0, #0	@ D.39520,
+	mov	r0, #0	@ D.39534,
 	ldmfd	sp, {fp, sp, pc}	@
 .L136:
 	ldrb	r3, [r1, #8]	@ zero_extendqisi2	@ <variable>.PicStruct, <variable>.PicStruct
@@ -917,8 +917,8 @@ VDMDRV_AvsSecondFldNeedRepair:
 	mla	r2, r1, r2, ip	@ tmp144, tmp143, VdhId, tmp140
 	ldr	r0, [r2, #1712]	@ <variable>.ValidGroupNum, <variable>.ValidGroupNum
 	cmp	r0, #0	@ <variable>.ValidGroupNum,
-	movle	r0, #0	@, D.39520
-	movgt	r0, #1	@, D.39520
+	movle	r0, #0	@, D.39534
+	movgt	r0, #1	@, D.39534
 	ldmfd	sp, {fp, sp, pc}	@
 .L138:
 	.align	2
@@ -1052,14 +1052,14 @@ VDMDRV_ResetVDH:
 	ldmnefd	sp, {fp, sp, pc}	@
 	movw	r0, #:lower16:g_vdm_hal_fun_ptr	@ tmp137,
 	movt	r0, #:upper16:g_vdm_hal_fun_ptr	@ tmp137,
-	ldr	r3, [r0, #56]	@ D.39575, g_vdm_hal_fun_ptr.pfun_VDMHAL_ResetVdm
-	cmp	r3, #0	@ D.39575,
+	ldr	r3, [r0, #56]	@ D.39589, g_vdm_hal_fun_ptr.pfun_VDMHAL_ResetVdm
+	cmp	r3, #0	@ D.39589,
 	beq	.L150	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.39575
+	blx	r3	@ D.39589
 	ldmfd	sp, {fp, sp, pc}	@
 .L150:
-	mov	r0, r3	@, D.39575
+	mov	r0, r3	@, D.39589
 	movw	r1, #:lower16:.LC2	@,
 	mov	r2, #1936	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -1093,24 +1093,24 @@ VDMDRV_IsVp6NvopCopy:
 	bne	.L158	@,
 	ldrb	r0, [r4, #1]	@ zero_extendqisi2	@ <variable>.IsNvopCopy, <variable>.IsNvopCopy
 	cmp	r0, #1	@ <variable>.IsNvopCopy,
-	movne	r0, #0	@, D.39555
-	moveq	r0, #1	@, D.39555
+	movne	r0, #0	@, D.39569
+	moveq	r0, #1	@, D.39569
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L158:
 	cmp	r0, #11	@ VidStd,
-	movne	r0, r3	@ D.39555, tmp144
+	movne	r0, r3	@ D.39569, tmp144
 	ldmnefd	sp, {r3, r4, fp, sp, pc}	@
 	ldrb	r0, [r4, #1]	@ zero_extendqisi2	@ <variable>.IsNvopCopy, <variable>.IsNvopCopy
 	cmp	r0, #1	@ <variable>.IsNvopCopy,
-	movne	r0, #0	@, D.39555
-	moveq	r0, #1	@, D.39555
+	movne	r0, #0	@, D.39569
+	moveq	r0, #1	@, D.39569
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L157:
 	mov	r0, r4	@, pDecParam
 	movw	r1, #:lower16:.LC3	@,
 	movt	r1, #:upper16:.LC3	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39555, pDecParam
+	mov	r0, r4	@ D.39569, pDecParam
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	VDMDRV_IsVp6NvopCopy, .-VDMDRV_IsVp6NvopCopy
@@ -1134,19 +1134,19 @@ VDMDRV_IsVc1SkpicCopy:
 	subs	r4, r1, #0	@ pDecParam, pDecParam
 	beq	.L164	@,
 	cmp	r0, #1	@ VidStd,
-	movne	r0, #0	@ D.39542,
+	movne	r0, #0	@ D.39556,
 	ldmnefd	sp, {r3, r4, fp, sp, pc}	@
 	ldrb	r0, [r4, #1]	@ zero_extendqisi2	@ <variable>.IsSkpicCopy, <variable>.IsSkpicCopy
 	cmp	r0, #1	@ <variable>.IsSkpicCopy,
-	movne	r0, #0	@, D.39542
-	moveq	r0, #1	@, D.39542
+	movne	r0, #0	@, D.39556
+	moveq	r0, #1	@, D.39556
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L164:
 	mov	r0, r4	@, pDecParam
 	movw	r1, #:lower16:.LC4	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39542, pDecParam
+	mov	r0, r4	@ D.39556, pDecParam
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	VDMDRV_IsVc1SkpicCopy, .-VDMDRV_IsVc1SkpicCopy
@@ -1170,19 +1170,19 @@ VDMDRV_IsMpeg4NvopCopy:
 	subs	r4, r1, #0	@ pDecParam, pDecParam
 	beq	.L170	@,
 	cmp	r0, #2	@ VidStd,
-	movne	r0, #0	@ D.39529,
+	movne	r0, #0	@ D.39543,
 	ldmnefd	sp, {r3, r4, fp, sp, pc}	@
 	ldrb	r0, [r4, #158]	@ zero_extendqisi2	@ <variable>.IsNvopCopy, <variable>.IsNvopCopy
 	cmp	r0, #1	@ <variable>.IsNvopCopy,
-	movne	r0, #0	@, D.39529
-	moveq	r0, #1	@, D.39529
+	movne	r0, #0	@, D.39543
+	moveq	r0, #1	@, D.39543
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L170:
 	mov	r0, r4	@, pDecParam
 	movw	r1, #:lower16:.LC5	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.39529, pDecParam
+	mov	r0, r4	@ D.39543, pDecParam
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	VDMDRV_IsMpeg4NvopCopy, .-VDMDRV_IsMpeg4NvopCopy
@@ -1221,8 +1221,8 @@ VDMDRV_CheckAttachMode:
 	ldr	r2, [r3, r0]	@ <variable>.FspInst.stInstCfg.s32DispFsWidth, <variable>.FspInst.stInstCfg.s32DispFsWidth
 	cmp	r9, #2160	@ <variable>.FspInst.stInstCfg.s32DispFsHeight,
 	cmpcs	r2, #3840	@, <variable>.FspInst.stInstCfg.s32DispFsWidth,
-	movcc	r9, #0	@, D.38751
-	movcs	r9, #1	@, D.38751
+	movcc	r9, #0	@, D.38765
+	movcs	r9, #1	@, D.38765
 	bcs	.L187	@,
 	movw	r8, #:lower16:.LANCHOR0	@ tmp226,
 	mov	sl, r4, asl #2	@ tmp223, ChanID,
@@ -1245,7 +1245,7 @@ VDMDRV_CheckAttachMode:
 	movle	r0, #0	@ tmp213,
 	strle	r0, [r3, #1484]	@ tmp213, <variable>.stSynExtraData.s32Is4k60fps
 	ble	.L186	@,
-	cmp	r9, #0	@ D.38751,
+	cmp	r9, #0	@ D.38765,
 	beq	.L186	@,
 	mov	r1, #1	@ tmp205,
 	str	r1, [r3, #1484]	@ tmp205, <variable>.stSynExtraData.s32Is4k60fps
@@ -1278,16 +1278,16 @@ VDMDRV_CheckAttachMode:
 	movt	r7, #:upper16:g_FrameRate	@ tmp224,
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC6	@,
-	ldr	lr, [r3, #2000]	@ D.38757, g_LastFPS
+	ldr	lr, [r3, #2000]	@ D.38771, g_LastFPS
 	movt	r1, #:upper16:.LC6	@,
-	ldr	ip, [r7, r4, asl #2]	@ D.38755, g_FrameRate
+	ldr	ip, [r7, r4, asl #2]	@ D.38769, g_FrameRate
 	mov	r3, #512	@,
 	ldr	r2, .L188	@,
-	cmp	ip, lr	@ D.38755, D.38757
-	str	lr, [sp, #4]	@ D.38757,
-	rsbhi	r6, lr, ip	@ diff, D.38757, D.38755
-	rsbls	r6, ip, lr	@ diff, D.38755, D.38757
-	str	ip, [sp, #0]	@ D.38755,
+	cmp	ip, lr	@ D.38769, D.38771
+	str	lr, [sp, #4]	@ D.38771,
+	rsbhi	r6, lr, ip	@ diff, D.38771, D.38769
+	rsbls	r6, ip, lr	@ diff, D.38769, D.38771
+	str	ip, [sp, #0]	@ D.38769,
 	bl	dprint_vfmw	@
 	cmp	r6, #2	@ diff,
 	bgt	.L176	@,
@@ -1350,10 +1350,10 @@ VDMDRV_StartDec:
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp135,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp135,
 	mov	r4, r0	@ VdhId, VdhId
-	ldr	r3, [r3, #88]	@ D.38689, g_vdm_hal_fun_ptr.pfun_VDMHAL_StartHwDecode
-	cmp	r3, #0	@ D.38689,
+	ldr	r3, [r3, #88]	@ D.38703, g_vdm_hal_fun_ptr.pfun_VDMHAL_StartHwDecode
+	cmp	r3, #0	@ D.38703,
 	beq	.L191	@,
-	blx	r3	@ D.38689
+	blx	r3	@ D.38703
 .L192:
 	rsb	r4, r4, r4, asl #3	@, tmp141, VdhId, VdhId,
 	movw	r1, #:lower16:.LANCHOR0	@ tmp137,
@@ -1363,7 +1363,7 @@ VDMDRV_StartDec:
 	str	r2, [r0, #196]	@ tmp145, <variable>.VdmStateMachine
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L191:
-	mov	r0, r3	@, D.38689
+	mov	r0, r3	@, D.38703
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #297	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -1392,19 +1392,19 @@ VDMDRV_StartRepair:
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp136,
 	mov	r5, r0	@ StateAfterRepair, StateAfterRepair
 	mov	r4, r1	@ VdhId, VdhId
-	ldr	r3, [r3, #84]	@ D.38680, g_vdm_hal_fun_ptr.pfun_VDMHAL_StartHwRepair
-	cmp	r3, #0	@ D.38680,
+	ldr	r3, [r3, #84]	@ D.38694, g_vdm_hal_fun_ptr.pfun_VDMHAL_StartHwRepair
+	cmp	r3, #0	@ D.38694,
 	beq	.L195	@,
 	mov	r0, r1	@, VdhId
 	rsb	r4, r4, r4, asl #3	@, tmp142, VdhId, VdhId,
-	blx	r3	@ D.38680
+	blx	r3	@ D.38694
 	movw	r1, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp138,
 	add	r0, r1, r4, asl #3	@, tmp144, tmp138, tmp142,
 	str	r5, [r0, #196]	@ StateAfterRepair, <variable>.VdmStateMachine
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L195:
-	mov	r0, r3	@, D.38680
+	mov	r0, r3	@, D.38694
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #289	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -1437,10 +1437,10 @@ VDMDRV_ExitSleep:
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp135,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp135,
 	mov	r4, r0	@ VdhId, VdhId
-	ldr	r3, [r3, #0]	@ D.38670, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
-	cmp	r3, #0	@ D.38670,
+	ldr	r3, [r3, #0]	@ D.38684, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
+	cmp	r3, #0	@ D.38684,
 	beq	.L199	@,
-	blx	r3	@ D.38670
+	blx	r3	@ D.38684
 	movw	r1, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp137,
 	mov	r0, #0	@ tmp142,
@@ -1448,7 +1448,7 @@ VDMDRV_ExitSleep:
 	str	r0, [r4, #192]	@ tmp142, s_eVdmDrvSleepState
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L199:
-	mov	r0, r3	@, D.38670
+	mov	r0, r3	@, D.38684
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #281	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -1594,22 +1594,22 @@ VDMDRV_ChnDecReady:
 	movw	r1, #:lower16:.LC11	@,
 	movt	r1, #:upper16:.LC11	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.38792,
+	mov	r0, #1	@ D.38806,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L214:
 	str	r5, [r6, #0]	@ tmp144,* ppDecParam
 	mov	r0, r4	@, ChanID
 	bl	VCTRL_GetDecParam	@
-	cmp	r0, #0	@ D.38797,
-	str	r0, [r6, #0]	@ D.38797,* ppDecParam
-	movne	r0, r5	@ D.38792, tmp144
+	cmp	r0, #0	@ D.38811,
+	str	r0, [r6, #0]	@ D.38811,* ppDecParam
+	movne	r0, r5	@ D.38806, tmp144
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r2, r4	@, ChanID
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC12	@,
 	movt	r1, #:upper16:.LC12	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.38792,
+	mov	r0, #1	@ D.38806,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L217:
 	mov	r3, r4	@, ChanID
@@ -1618,7 +1618,7 @@ VDMDRV_ChnDecReady:
 	ldr	r2, .L218	@,
 	movt	r1, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.38792,
+	mov	r0, #1	@ D.38806,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L219:
 	.align	2
@@ -1672,7 +1672,7 @@ VDMDRV_DoBeforeDec:
 	str	r6, [fp, #-56]	@ ChanID, DecparamInfo.ChanID
 	str	ip, [fp, #-48]	@ tmp170, DecparamInfo.pDecParam
 	blx	r3	@ AcceleratorCharacter.462
-	cmp	r0, #1	@ D.38829,
+	cmp	r0, #1	@ D.38843,
 	beq	.L222	@,
 	ldr	r2, [sl, #200]	@ prephitmp.1387, <variable>.VidStd
 .L223:
@@ -1699,14 +1699,14 @@ VDMDRV_DoBeforeDec:
 	beq	.L235	@,
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp293,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp293,
-	ldr	r3, [r3, #92]	@ D.38891, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareDec
-	cmp	r3, #0	@ D.38891,
+	ldr	r3, [r3, #92]	@ D.38905, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareDec
+	cmp	r3, #0	@ D.38905,
 	beq	.L229	@,
 	ldr	r1, [r7, #0]	@,* ppDecParam
 	mov	r2, r4	@, VdhId
 	ldr	r0, [sl, #200]	@, <variable>.VidStd
-	blx	r3	@ D.38891
-	subs	r7, r0, #0	@ D.38893,
+	blx	r3	@ D.38905
+	subs	r7, r0, #0	@ D.38907,
 	beq	.L230	@,
 .L229:
 	rsb	r8, r4, r8	@ tmp310, VdhId, tmp361
@@ -1728,7 +1728,7 @@ VDMDRV_DoBeforeDec:
 	bl	VCTRL_VdmPostProc	@
 	mov	r0, r4	@, VdhId
 	bl	VDMDRV_Reset	@
-	mov	r0, r7	@ D.38823, tmp314
+	mov	r0, r7	@ D.38837, tmp314
 	str	r7, [r5, r6, asl #2]	@ tmp314, g_ChanCtx.ChanDecByVdhPlusOne
 .L222:
 	sub	sp, fp, #40
@@ -1737,10 +1737,10 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, [r7, #0]	@,* ppDecParam
 	mov	r1, r4	@, VdhId
 	bl	PostPro_CopyYuv	@
-	subs	r7, r0, #0	@ D.38839,
+	subs	r7, r0, #0	@ D.38853,
 	beq	.L236	@,
 .L226:
-	mov	r0, #0	@ D.38823,
+	mov	r0, #0	@ D.38837,
 	b	.L222	@
 .L234:
 	mov	r0, #22	@,
@@ -1750,13 +1750,13 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, [r7, #0]	@,* ppDecParam
 	mov	r1, r4	@, VdhId
 	bl	PostPro_CopyYuv_Vc1	@
-	subs	r7, r0, #0	@ D.38864,
+	subs	r7, r0, #0	@ D.38878,
 	bne	.L226	@,
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r0, #2	@,
 	mov	r1, r4	@, VdhId
 	add	ip, r9, r2, asl #3	@, tmp230, tmp211,,
-	str	r7, [ip, #200]	@ D.38864, <variable>.ErrRatio
+	str	r7, [ip, #200]	@ D.38878, <variable>.ErrRatio
 	bl	VDMDRV_StartRepair	@
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, VdhId
@@ -1769,7 +1769,7 @@ VDMDRV_DoBeforeDec:
 	add	r9, r9, r6, asl #2	@, tmp236, tmp211, ChanID,
 	movw	r2, #:lower16:g_TraceFramePeriod	@ tmp240,
 	movt	r2, #:upper16:g_TraceFramePeriod	@ tmp240,
-	ldr	ip, [r9, #2132]	@ tmp239, last_rec_pos_time
+	ldr	ip, [r9, #2136]	@ tmp239, last_rec_pos_time
 	mov	r3, r0	@ currtime.1403,
 	ldr	r0, [r2, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	rsb	r1, ip, r3	@ tmp238, tmp239, currtime.1403
@@ -1779,9 +1779,9 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, .L237	@,
 	add	r2, lr, r6, asl #24	@,, tmp249, ChanID,
 	movw	r1, #643	@,
-	str	r3, [r9, #2132]	@ currtime.1403, last_rec_pos_time
+	str	r3, [r9, #2136]	@ currtime.1403, last_rec_pos_time
 	bl	DBG_AddTrace	@
-	mov	r0, r7	@ D.38823, D.38864
+	mov	r0, r7	@ D.38837, D.38878
 	b	.L222	@
 .L230:
 	bl	OSAL_GetTimeInMs	@
@@ -1789,19 +1789,19 @@ VDMDRV_DoBeforeDec:
 	movw	ip, #:lower16:g_VfmwGlobalStat	@ tmp335,
 	movt	ip, #:upper16:g_VfmwGlobalStat	@ tmp335,
 	add	r1, r9, r2, asl #3	@, tmp333, tmp211,,
-	mov	r3, r0	@ D.38897,
+	mov	r3, r0	@ D.38911,
 	mov	r0, #84	@ tmp338,
 	mla	r2, r0, r4, ip	@ tmp339, tmp338, VdhId, tmp335
-	str	r3, [r1, #216]	@ D.38897, <variable>.StartTime
+	str	r3, [r1, #216]	@ D.38911, <variable>.StartTime
 	mov	r0, r4	@, VdhId
-	str	r3, [r2, #4]	@ D.38897, <variable>.u32VaLastStartTime
+	str	r3, [r2, #4]	@ D.38911, <variable>.u32VaLastStartTime
 	bl	VDMDRV_StartDec	@
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, VdhId
 	bl	VDMDRV_SetChanIsDec	@
 	mov	r0, r6	@, ChanID
 	mov	r1, #5	@,
-	mov	r2, r7	@, D.38893
+	mov	r2, r7	@, D.38907
 	bl	DBG_CountTimeInfo	@
 	mov	r0, #5	@,
 	bl	CHECK_REC_POS_ENABLE	@
@@ -1813,7 +1813,7 @@ VDMDRV_DoBeforeDec:
 	movt	r2, #:upper16:g_TraceFramePeriod	@ tmp348,
 	ldr	ip, [r2, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	mov	r3, r0	@ currtime.1427,
-	ldr	r0, [r9, #2132]	@ tmp347, last_rec_pos_time
+	ldr	r0, [r9, #2136]	@ tmp347, last_rec_pos_time
 	rsb	r1, r0, r3	@ tmp346, tmp347, currtime.1427
 	cmp	r1, ip	@ tmp346, g_TraceFramePeriod
 	bls	.L226	@,
@@ -1821,9 +1821,9 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, .L237	@,
 	add	r2, lr, r6, asl #24	@,, tmp357, ChanID,
 	movw	r1, #698	@,
-	str	r3, [r9, #2132]	@ currtime.1427, last_rec_pos_time
+	str	r3, [r9, #2136]	@ currtime.1427, last_rec_pos_time
 	bl	DBG_AddTrace	@
-	mov	r0, r7	@ D.38823, D.38893
+	mov	r0, r7	@ D.38837, D.38907
 	b	.L222	@
 .L236:
 	rsb	r8, r4, r8	@ tmp187, VdhId, tmp361
@@ -1832,7 +1832,7 @@ VDMDRV_DoBeforeDec:
 	movw	sl, #:lower16:.LANCHOR0	@ tmp183,
 	add	r5, r5, r8, asl #3	@, tmp189, tmp362, tmp187,
 	movt	sl, #:upper16:.LANCHOR0	@ tmp183,
-	str	r7, [r5, #200]	@ D.38839, <variable>.ErrRatio
+	str	r7, [r5, #200]	@ D.38853, <variable>.ErrRatio
 	bl	VDMDRV_StartRepair	@
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, VdhId
@@ -1843,7 +1843,7 @@ VDMDRV_DoBeforeDec:
 	beq	.L226	@,
 	bl	OSAL_GetTimeInMs	@
 	add	r3, sl, r6, asl #2	@, tmp195, tmp183, ChanID,
-	ldr	r1, [r3, #2132]	@ tmp198, last_rec_pos_time
+	ldr	r1, [r3, #2136]	@ tmp198, last_rec_pos_time
 	mov	ip, r0	@ currtime,
 	movw	r0, #:lower16:g_TraceFramePeriod	@ tmp199,
 	movt	r0, #:upper16:g_TraceFramePeriod	@ tmp199,
@@ -1855,9 +1855,9 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, .L237	@,
 	add	r2, lr, r6, asl #24	@,, tmp208, ChanID,
 	movw	r1, #621	@,
-	str	ip, [r3, #2132]	@ currtime, last_rec_pos_time
+	str	ip, [r3, #2136]	@ currtime, last_rec_pos_time
 	bl	DBG_AddTrace	@
-	mov	r0, r7	@ D.38823, D.38839
+	mov	r0, r7	@ D.38837, D.38853
 	b	.L222	@
 .L232:
 	mov	r2, r1	@, ChanID
@@ -1865,7 +1865,7 @@ VDMDRV_DoBeforeDec:
 	movw	r1, #:lower16:.LC13	@,
 	movt	r1, #:upper16:.LC13	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.38823,
+	mov	r0, #1	@ D.38837,
 	b	.L222	@
 .L235:
 	mov	r0, #22	@,
@@ -1875,13 +1875,13 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, [r7, #0]	@,* ppDecParam
 	mov	r1, r4	@, VdhId
 	bl	PostPro_CopyYuv_Vp6	@
-	subs	r7, r0, #0	@ D.38878,
+	subs	r7, r0, #0	@ D.38892,
 	bne	.L226	@,
 	ldr	r1, [fp, #-64]	@, %sfp
 	mov	r0, #2	@,
 	add	r3, r9, r1, asl #3	@, tmp271, tmp211,,
 	mov	r1, r4	@, VdhId
-	str	r7, [r3, #200]	@ D.38878, <variable>.ErrRatio
+	str	r7, [r3, #200]	@ D.38892, <variable>.ErrRatio
 	bl	VDMDRV_StartRepair	@
 	mov	r0, r6	@, ChanID
 	mov	r1, r4	@, VdhId
@@ -1894,7 +1894,7 @@ VDMDRV_DoBeforeDec:
 	add	r9, r9, r6, asl #2	@, tmp277, tmp211, ChanID,
 	movw	r2, #:lower16:g_TraceFramePeriod	@ tmp281,
 	movt	r2, #:upper16:g_TraceFramePeriod	@ tmp281,
-	ldr	r1, [r9, #2132]	@ tmp280, last_rec_pos_time
+	ldr	r1, [r9, #2136]	@ tmp280, last_rec_pos_time
 	ldr	ip, [r2, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	mov	r3, r0	@ currtime.1416,
 	rsb	r0, r1, r0	@ tmp279, tmp280, currtime.1416
@@ -1904,9 +1904,9 @@ VDMDRV_DoBeforeDec:
 	ldr	r0, .L237	@,
 	add	r2, lr, r6, asl #24	@,, tmp290, ChanID,
 	movw	r1, #665	@,
-	str	r3, [r9, #2132]	@ currtime.1416, last_rec_pos_time
+	str	r3, [r9, #2136]	@ currtime.1416, last_rec_pos_time
 	bl	DBG_AddTrace	@
-	mov	r0, r7	@ D.38823, D.38878
+	mov	r0, r7	@ D.38837, D.38892
 	b	.L222	@
 .L238:
 	.align	2
@@ -2163,17 +2163,17 @@ VDMDRV_ActivateVDH:
 	cmp	r0, #0	@,
 	beq	.L272	@,
 .L255:
-	ldr	r2, [r4, #124]	@ D.38922, g_ChanCtx.ChanIdTabByPrior
+	ldr	r2, [r4, #124]	@ D.38936, g_ChanCtx.ChanIdTabByPrior
 	movw	r3, #:lower16:.LANCHOR0	@ tmp491,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp491,
-	cmp	r2, #0	@ D.38922,
+	cmp	r2, #0	@ D.38936,
 	blt	.L240	@,
 	rsb	ip, r5, r7	@ tmp495, VdhId, tmp514
-	mov	r0, r2	@, D.38922
+	mov	r0, r2	@, D.38936
 	add	r4, ip, #1	@ tmp496, tmp495,
 	mov	r1, r6	@, ppDecParam
 	add	r4, r3, r4, asl #3	@, tmp499, tmp491, tmp496,
-	str	r2, [r4, #196]	@ D.38922, <variable>.ChanId
+	str	r2, [r4, #196]	@ D.38936, <variable>.ChanId
 	bl	VDMDRV_ChnDecReady	@
 	cmp	r0, #0	@,
 	beq	.L273	@,
@@ -2343,9 +2343,9 @@ VDMDRV_AfterDec:
 	mov	r6, #180	@ tmp206,
 	ldr	r9, [sl, #204]	@ <variable>.ChanId, <variable>.ChanId
 	sub	r0, fp, #196	@,,
-	ldr	sl, [r7, r9, asl #2]	@ D.38963, s_pstVfmwChan
-	cmp	sl, #0	@ D.38963,
-	streq	sl, [fp, #-208]	@ D.38963, %sfp
+	ldr	sl, [r7, r9, asl #2]	@ D.38977, s_pstVfmwChan
+	cmp	sl, #0	@ D.38977,
+	streq	sl, [fp, #-208]	@ D.38977, %sfp
 	ldrne	r1, [sl, #1264]	@, <variable>.stSynExtraData.s32ModuleLowlyEnable
 	strne	r1, [fp, #-208]	@, %sfp
 	mov	r1, #136	@,
@@ -2355,14 +2355,14 @@ VDMDRV_AfterDec:
 	movw	ip, #:lower16:.LANCHOR0	@ tmp226,
 	movt	ip, #:upper16:.LANCHOR0	@ tmp226,
 	add	r6, r4, r2, asl #3	@, tmp232, tmp1584,,
-	ldr	r1, [r3, #2196]	@ <variable>.BasicCfg1, <variable>.BasicCfg1
+	ldr	r1, [r3, #2200]	@ <variable>.BasicCfg1, <variable>.BasicCfg1
 	and	r0, r1, #15	@ tmp209, <variable>.BasicCfg1,
 	movw	r1, #:lower16:.LC16	@,
 	cmp	r0, #5	@ tmp209,
 	movt	r1, #:upper16:.LC16	@,
 	mov	r0, #2	@,
-	ldreq	r3, [r3, #2208]	@ <variable>.SwitchRounding, <variable>.SwitchRounding
-	ldrne	r3, [r3, #2204]	@ <variable>.Mb0QpInCurrPic, <variable>.Mb0QpInCurrPic
+	ldreq	r3, [r3, #2212]	@ <variable>.SwitchRounding, <variable>.SwitchRounding
+	ldrne	r3, [r3, #2208]	@ <variable>.Mb0QpInCurrPic, <variable>.Mb0QpInCurrPic
 	andeq	r3, r3, #1	@, <variable>.SwitchRounding,
 	str	r2, [fp, #-200]	@, %sfp
 	andne	r3, r3, #31	@, <variable>.Mb0QpInCurrPic,
@@ -2443,15 +2443,15 @@ VDMDRV_AfterDec:
 	bl	PostPro_GetErrRatio	@
 	movw	r1, #:lower16:.LC18	@,
 	movt	r1, #:upper16:.LC18	@,
-	mov	ip, r0	@ D.38998,
+	mov	ip, r0	@ D.39012,
 	mov	r0, r9	@, temp.1557
-	mov	r2, ip	@, D.38998
-	str	ip, [r6, #200]	@ D.38998, <variable>.ErrRatio
+	mov	r2, ip	@, D.39012
+	str	ip, [r6, #200]	@ D.39012, <variable>.ErrRatio
 	bl	dprint_vfmw	@
 	ldr	ip, [fp, #-212]	@,
-	ldr	r3, [ip, #200]	@ D.39000, <variable>.VidStd
-	sub	r1, r3, #8	@ tmp347, D.39000,
-	cmp	r3, #5	@ D.39000,
+	ldr	r3, [ip, #200]	@ D.39014, <variable>.VidStd
+	sub	r1, r3, #8	@ tmp347, D.39014,
+	cmp	r3, #5	@ D.39014,
 	cmpne	r1, #1	@, tmp347,
 	movls	r3, #0	@ tmp363,
 	strls	r3, [r6, #200]	@ tmp363, <variable>.ErrRatio
@@ -2720,7 +2720,7 @@ VDMDRV_AfterDec:
 	add	r6, r6, r1, asl #2	@, tmp1243, tmp1162, temp.1639,
 	ldr	r2, [ip, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	mov	r3, r0	@ currtime.1638,
-	ldr	r0, [r6, #2376]	@ tmp1246, last_rec_pos_time
+	ldr	r0, [r6, #2380]	@ tmp1246, last_rec_pos_time
 	rsb	ip, r0, r3	@ tmp1245, tmp1246, currtime.1638
 	cmp	ip, r2	@ tmp1245, g_TraceFramePeriod
 	bls	.L311	@,
@@ -2728,7 +2728,7 @@ VDMDRV_AfterDec:
 	ldr	r0, .L331	@,
 	add	r2, lr, #458752	@, tmp1257,
 	movw	r1, #1227	@,
-	str	r3, [r6, #2376]	@ currtime.1638, last_rec_pos_time
+	str	r3, [r6, #2380]	@ currtime.1638, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L311	@
 .L320:
@@ -2768,7 +2768,7 @@ VDMDRV_AfterDec:
 	add	r6, r6, r1, asl #2	@, tmp1095, tmp1575, temp.1620,
 	ldr	ip, [r2, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	mov	r3, r0	@ currtime.1619,
-	ldr	r0, [r6, #2376]	@ tmp1098, last_rec_pos_time
+	ldr	r0, [r6, #2380]	@ tmp1098, last_rec_pos_time
 	rsb	r0, r0, r3	@ tmp1097, tmp1098, currtime.1619
 	cmp	r0, ip	@ tmp1097, g_TraceFramePeriod
 	bls	.L311	@,
@@ -2776,7 +2776,7 @@ VDMDRV_AfterDec:
 	ldr	r0, .L331	@,
 	add	r2, lr, #458752	@, tmp1109,
 	movw	r1, #1191	@,
-	str	r3, [r6, #2376]	@ currtime.1619, last_rec_pos_time
+	str	r3, [r6, #2380]	@ currtime.1619, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L311	@
 .L327:
@@ -2793,15 +2793,15 @@ VDMDRV_AfterDec:
 	bl	OSAL_GetTimeInMs	@
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp848,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp848,
-	ldr	ip, [r3, #104]	@ D.39063, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
-	cmp	ip, #0	@ D.39063,
+	ldr	ip, [r3, #104]	@ D.39077, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareRepair
+	cmp	ip, #0	@ D.39077,
 	str	r0, [r6, #216]	@, <variable>.StartTime
 	ldr	r2, [fp, #-212]	@,
 	beq	.L303	@,
 	ldr	r0, [r9, #200]	@, <variable>.VidStd
 	mov	r3, r5	@, VdhId
 	ldr	r1, [r6, #212]	@, <variable>.pDecParam
-	blx	ip	@ D.39063
+	blx	ip	@ D.39077
 	cmp	r0, #0	@,
 	bne	.L303	@,
 	movw	lr, #:lower16:g_VfmwGlobalStat	@ tmp868,
@@ -2825,7 +2825,7 @@ VDMDRV_AfterDec:
 	mov	r3, r0	@ currtime,
 	mov	r0, r1, asl #2	@ tmp1588, temp.1596,
 	add	sl, r0, sl	@ tmp895, tmp1588, tmp491
-	ldr	ip, [sl, #2376]	@ tmp898, last_rec_pos_time
+	ldr	ip, [sl, #2380]	@ tmp898, last_rec_pos_time
 	rsb	ip, ip, r3	@ tmp897, tmp898, currtime
 	cmp	ip, r2	@ tmp897, g_TraceFramePeriod
 	bls	.L311	@,
@@ -2834,20 +2834,20 @@ VDMDRV_AfterDec:
 	add	r2, r0, #458752	@, tmp909,
 	mov	r1, #1136	@,
 	ldr	r0, .L331	@,
-	str	r3, [r4, #2376]	@ currtime, last_rec_pos_time
+	str	r3, [r4, #2380]	@ currtime, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L311	@
 .L324:
-	ldr	r2, [r6, #248]	@ D.39041, <variable>.ChanIntState
+	ldr	r2, [r6, #248]	@ D.39055, <variable>.ChanIntState
 	cmp	r3, #100	@ temp.1575,
 	movge	r3, #100	@ iftmp.477,
 	bic	r1, r3, r3, asr #31	@ iftmp.1670, iftmp.477
 	str	r1, [r6, #200]	@ iftmp.1670, <variable>.ErrRatio
-	cmp	r2, #1	@ D.39041,
+	cmp	r2, #1	@ D.39055,
 	beq	.L329	@,
-	cmp	r2, #2	@ D.39041,
+	cmp	r2, #2	@ D.39055,
 	beq	.L330	@,
-	cmp	r2, #3	@ D.39041,
+	cmp	r2, #3	@ D.39055,
 	bne	.L311	@,
 	add	lr, r9, #1	@ tmp709, tmp495,
 	ldr	r2, [fp, #-204]	@, %sfp
@@ -2857,15 +2857,15 @@ VDMDRV_AfterDec:
 	ldr	r0, [r4, #196]	@ <variable>.ChanId, <variable>.ChanId
 	bl	VCTRL_VdmPostProc	@
 	ldr	r2, [r4, #196]	@ <variable>.ChanId, <variable>.ChanId
-	movw	r1, #:lower16:251960	@ tmp737,
-	movt	r1, #:upper16:251960	@ tmp737,
+	movw	r1, #:lower16:253496	@ tmp737,
+	movt	r1, #:upper16:253496	@ tmp737,
 	mov	r3, #0	@ tmp724,
 	str	r3, [r6, #196]	@ tmp724, <variable>.VdmStateMachine
 	ldr	ip, [r7, r2, asl #2]	@ tmp736, s_pstVfmwChan
-	movw	r2, #:lower16:2211792	@ tmp751,
+	movw	r2, #:lower16:2213328	@ tmp751,
 .L314:
 	str	r3, [ip, r1]	@ tmp724, <variable>.stSynCtx.unSyntax.stH264Ctx.pH264DecParam
-	movt	r2, #:upper16:2211792	@ tmp751,
+	movt	r2, #:upper16:2213328	@ tmp751,
 	ldr	r1, [r4, #196]	@ <variable>.ChanId, <variable>.ChanId
 	mov	r0, r5	@, VdhId
 	ldr	lr, [r7, r1, asl #2]	@ tmp750, s_pstVfmwChan
@@ -2977,7 +2977,7 @@ VDMDRV_AfterDec:
 	ldr	r2, [ip, #204]	@ temp.1604, <variable>.ChanId
 	add	r4, r4, r2, asl #2	@, tmp1000, tmp1584, temp.1604,
 	mov	r3, r0	@ currtime.1603,
-	ldr	r0, [r4, #2376]	@ tmp1003, last_rec_pos_time
+	ldr	r0, [r4, #2380]	@ tmp1003, last_rec_pos_time
 	rsb	ip, r0, r3	@ tmp1002, tmp1003, currtime.1603
 	cmp	ip, r1	@ tmp1002, g_TraceFramePeriod
 	bls	.L311	@,
@@ -2985,7 +2985,7 @@ VDMDRV_AfterDec:
 	ldr	r0, .L331	@,
 	add	r2, lr, #458752	@, tmp1014,
 	movw	r1, #1164	@,
-	str	r3, [r4, #2376]	@ currtime.1603, last_rec_pos_time
+	str	r3, [r4, #2380]	@ currtime.1603, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L311	@
 .L329:
@@ -2997,10 +2997,10 @@ VDMDRV_AfterDec:
 	ldr	r0, [r4, #196]	@ <variable>.ChanId, <variable>.ChanId
 	bl	VCTRL_VdmPostProc	@
 	ldr	r0, [r4, #196]	@ <variable>.ChanId, <variable>.ChanId
-	movw	r1, #:lower16:251960	@ tmp665,
+	movw	r1, #:lower16:253496	@ tmp665,
 	mov	r3, #0	@ tmp666,
-	movt	r1, #:upper16:251960	@ tmp665,
-	movw	r2, #:lower16:2211792	@ tmp679,
+	movt	r1, #:upper16:253496	@ tmp665,
+	movw	r2, #:lower16:2213328	@ tmp679,
 	ldr	ip, [r7, r0, asl #2]	@ tmp664, s_pstVfmwChan
 	b	.L314	@
 .L330:
@@ -3051,19 +3051,19 @@ VDMDRV_VdmIntServProc:
 	movw	r8, #:lower16:g_vdm_hal_fun_ptr	@ tmp671,
 	movt	r8, #:upper16:g_vdm_hal_fun_ptr	@ tmp671,
 	ldr	r2, [r1, #204]	@ <variable>.ChanId, <variable>.ChanId
-	ldr	r7, [r0, r2, asl #2]	@ D.39288, s_pstVfmwChan
+	ldr	r7, [r0, r2, asl #2]	@ D.39302, s_pstVfmwChan
 	movw	r0, #:lower16:g_TaskLock	@,
 	movt	r0, #:upper16:g_TaskLock	@,
-	cmp	r7, #0	@ D.39288,
+	cmp	r7, #0	@ D.39302,
 	ldrne	r7, [r7, #1264]	@ ModuleLowlyEnable, <variable>.stSynExtraData.s32ModuleLowlyEnable
 	bl	OSAL_SpinLockIRQ	@
-	ldr	r3, [r8, #80]	@ D.39293, g_vdm_hal_fun_ptr.pfun_VDMHAL_CheckReg
-	cmp	r3, #0	@ D.39293,
-	moveq	r0, r3	@ dat, D.39293
+	ldr	r3, [r8, #80]	@ D.39307, g_vdm_hal_fun_ptr.pfun_VDMHAL_CheckReg
+	cmp	r3, #0	@ D.39307,
+	moveq	r0, r3	@ dat, D.39307
 	beq	.L339	@,
 	mov	r0, #2	@,
 	mov	r1, r4	@, VdhId
-	blx	r3	@ D.39293
+	blx	r3	@ D.39307
 .L339:
 	cmp	r7, #1	@ ModuleLowlyEnable,
 	beq	.L363	@,
@@ -3078,20 +3078,20 @@ VDMDRV_VdmIntServProc:
 	mov	r0, sl	@, tmp247
 	str	lr, [r3, #252]	@ tmp246, s_VdmIsInISR
 	bl	__memzero	@
-	ldr	r3, [r8, #112]	@ D.39332, g_vdm_hal_fun_ptr.pfun_VDMHAL_BackupInfo
+	ldr	r3, [r8, #112]	@ D.39346, g_vdm_hal_fun_ptr.pfun_VDMHAL_BackupInfo
 	sub	ip, fp, #48	@ tmp248,,
 	str	r4, [fp, #-52]	@ VdhId, BackUpInfo.VdhId
-	cmp	r3, #0	@ D.39332,
+	cmp	r3, #0	@ D.39346,
 	str	ip, [fp, #-56]	@ tmp248, BackUpInfo.pMb0QpInCurrPic
 	beq	.L346	@,
 	mov	r0, sl	@, tmp247
-	blx	r3	@ D.39332
+	blx	r3	@ D.39346
 .L347:
-	ldr	r3, [r8, #68]	@ D.39337, g_vdm_hal_fun_ptr.pfun_VDMHAL_ClearIntState
-	cmp	r3, #0	@ D.39337,
+	ldr	r3, [r8, #68]	@ D.39351, g_vdm_hal_fun_ptr.pfun_VDMHAL_ClearIntState
+	cmp	r3, #0	@ D.39351,
 	beq	.L348	@,
 	mov	r0, r4	@, VdhId
-	blx	r3	@ D.39337
+	blx	r3	@ D.39351
 .L349:
 	rsb	r8, r4, r6	@ tmp257, VdhId, tmp676
 	mov	r1, #6	@,
@@ -3123,19 +3123,19 @@ VDMDRV_VdmIntServProc:
 	add	r8, sl, r1	@ tmp355, tmp353, tmp672
 	add	r3, r7, r3	@ tmp335, tmp675, tmp292
 	ldr	ip, [r8, #4]	@ <variable>.u32VaLastStartTime, <variable>.u32VaLastStartTime
-	ldr	r0, [r3, #2504]	@ tmp348, cycle
-	ldr	r2, [lr, #2220]	@ <variable>.DecCyclePerPic, <variable>.DecCyclePerPic
+	ldr	r0, [r3, #2508]	@ tmp348, cycle
+	ldr	r2, [lr, #2224]	@ <variable>.DecCyclePerPic, <variable>.DecCyclePerPic
 	cmp	ip, #0	@ <variable>.u32VaLastStartTime,
 	add	r9, r0, r2	@ tmp350, tmp348, <variable>.DecCyclePerPic
-	str	r9, [r3, #2504]	@ tmp350, cycle
+	str	r9, [r3, #2508]	@ tmp350, cycle
 	bne	.L367	@,
 .L353:
 	rsb	sl, r4, r6	@ tmp511, VdhId, tmp676
 	movw	r8, #:lower16:.LANCHOR0	@ tmp507,
 	movt	r8, #:upper16:.LANCHOR0	@ tmp507,
 	add	r3, r5, sl, asl #3	@, tmp513, tmp674, tmp511,
-	ldr	r2, [r3, #196]	@ D.39382, <variable>.VdmStateMachine
-	cmp	r2, #0	@ D.39382,
+	ldr	r2, [r3, #196]	@ D.39396, <variable>.VdmStateMachine
+	cmp	r2, #0	@ D.39396,
 	beq	.L356	@,
 	ldr	r9, [r3, #212]	@ <variable>.pDecParam, <variable>.pDecParam
 	cmp	r9, #0	@ <variable>.pDecParam,
@@ -3152,7 +3152,7 @@ VDMDRV_VdmIntServProc:
 	bne	.L369	@,
 	ldr	r0, [sl, #196]	@, <variable>.ChanId
 	bl	VCTRL_GetDecParam	@
-	subs	ip, r0, #0	@ D.39397,
+	subs	ip, r0, #0	@ D.39411,
 	beq	.L370	@,
 	mov	r0, r4	@, VdhId
 	bl	VDMDRV_AfterDec	@
@@ -3190,12 +3190,12 @@ VDMDRV_VdmIntServProc:
 	mov	r0, r7	@, ModuleLowlyEnable
 	mov	r1, r4	@, VdhId
 	blx	r3	@ temp.1697
-	and	r0, r0, #655360	@ D.39314,,
-	cmp	r0, #655360	@ D.39314,
+	and	r0, r0, #655360	@ D.39328,,
+	cmp	r0, #655360	@ D.39328,
 	beq	.L372	@,
-	cmp	r0, #524288	@ D.39314,
+	cmp	r0, #524288	@ D.39328,
 	beq	.L373	@,
-	cmp	r0, #131072	@ D.39314,
+	cmp	r0, #131072	@ D.39328,
 	bne	.L342	@,
 	rsb	sl, r4, r6	@ tmp218, VdhId, tmp676
 	add	r0, r5, sl, asl #3	@, tmp220, tmp674, tmp218,
@@ -3227,7 +3227,7 @@ VDMDRV_VdmIntServProc:
 	add	r8, r8, r2, asl #2	@, tmp276, tmp254, temp.1701,
 	ldr	r1, [ip, #0]	@ g_TraceFramePeriod, g_TraceFramePeriod
 	mov	r3, r0	@ currtime,
-	ldr	r0, [r8, #2440]	@ tmp279, last_rec_pos_time
+	ldr	r0, [r8, #2444]	@ tmp279, last_rec_pos_time
 	rsb	ip, r0, r3	@ tmp278, tmp279, currtime
 	cmp	ip, r1	@ tmp278, g_TraceFramePeriod
 	bls	.L350	@,
@@ -3235,7 +3235,7 @@ VDMDRV_VdmIntServProc:
 	ldr	r0, .L374	@,
 	add	r2, r2, #393216	@, tmp290,
 	movw	r1, #1580	@,
-	str	r3, [r8, #2440]	@ currtime, last_rec_pos_time
+	str	r3, [r8, #2444]	@ currtime, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L350	@
 .L366:
@@ -3268,7 +3268,7 @@ VDMDRV_VdmIntServProc:
 	add	r8, r9, r1	@ tmp398, tmp396, tmp672
 	movw	sl, #:lower16:g_VfmwGlobalStat	@ tmp394,
 	movt	sl, #:upper16:g_VfmwGlobalStat	@ tmp394,
-	ldr	lr, [lr, #2220]	@ <variable>.DecCyclePerPic, <variable>.DecCyclePerPic
+	ldr	lr, [lr, #2224]	@ <variable>.DecCyclePerPic, <variable>.DecCyclePerPic
 	add	r3, ip, r0	@ tmp400, prephitmp.1716, CurTime
 	rsb	ip, r2, r3	@ tmp401, prephitmp.1686, tmp400
 	ldr	r2, [r9, r1]	@ <variable>.u32VaBeginTime, <variable>.u32VaBeginTime
@@ -3311,14 +3311,14 @@ VDMDRV_VdmIntServProc:
 	str	r7, [r5, #196]	@ tmp184, <variable>.VdmStateMachine
 	b	.L361	@
 .L346:
-	mov	r0, r3	@, D.39332
+	mov	r0, r3	@, D.39346
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #1567	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
 	b	.L347	@
 .L348:
-	mov	r0, r3	@, D.39337
+	mov	r0, r3	@, D.39351
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #1569	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -3354,8 +3354,8 @@ VDMDRV_VdmIntServProc:
 	add	r9, r8, r9, asl #3	@, tmp651, tmp568, tmp571,
 	ldr	ip, [fp, #-68]	@,
 	add	r3, r1, #32	@ tmp642, <variable>.ChanId,
-	str	ip, [r8, r3, asl #2]	@ D.39397, g_ChanCtx.ChanDecByVdhPlusOne
-	str	ip, [r9, #196]	@ D.39397, <variable>.VdmStateMachine
+	str	ip, [r8, r3, asl #2]	@ D.39411, g_ChanCtx.ChanDecByVdhPlusOne
+	str	ip, [r9, #196]	@ D.39411, <variable>.VdmStateMachine
 	b	.L359	@
 .L368:
 	add	sl, sl, #1	@ tmp529, tmp511,
@@ -3436,30 +3436,30 @@ VDMDRV_CheckDevice:
 	cmp	r0, #1	@ <variable>.H264NeedMoreStart,
 	beq	.L400	@,
 	add	r5, r3, r5, asl #2	@, tmp550, tmp329, VdhId,
-	ldr	r0, [r5, #192]	@ D.39256, s_eVdmDrvSleepState
-	cmp	r0, #0	@ D.39256,
+	ldr	r0, [r5, #192]	@ D.39270, s_eVdmDrvSleepState
+	cmp	r0, #0	@ D.39270,
 	beq	.L383	@,
-	cmp	r0, #1	@ D.39256,
+	cmp	r0, #1	@ D.39270,
 	moveq	r3, #2	@ tmp557,
 	streq	r3, [r5, #192]	@ tmp557, s_eVdmDrvSleepState
 	beq	.L383	@,
 .L384:
-	mov	r0, #1	@ D.39221,
+	mov	r0, #1	@ D.39235,
 .L383:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L399:
 	bl	OSAL_GetTimeInMs	@
-	ldr	r1, [sl, #216]	@ D.39199, <variable>.StartTime
-	cmp	r0, r1	@ D.39197, D.39199
-	mov	r3, r0	@ D.39197,
-	str	r0, [sl, #220]	@ D.39197, <variable>.CurrTime
-	strcc	r0, [sl, #216]	@ D.39197, <variable>.StartTime
-	movcc	r0, #1	@ D.39221,
+	ldr	r1, [sl, #216]	@ D.39213, <variable>.StartTime
+	cmp	r0, r1	@ D.39211, D.39213
+	mov	r3, r0	@ D.39211,
+	str	r0, [sl, #220]	@ D.39211, <variable>.CurrTime
+	strcc	r0, [sl, #216]	@ D.39211, <variable>.StartTime
+	movcc	r0, #1	@ D.39235,
 	bcc	.L383	@,
-	subs	r2, r3, r1	@ TimeElapse, D.39197, D.39199
+	subs	r2, r3, r1	@ TimeElapse, D.39211, D.39213
 	bmi	.L381	@,
-	cmp	r1, #0	@ D.39199,
+	cmp	r1, #0	@ D.39213,
 	beq	.L381	@,
 	cmp	r2, #500	@ TimeElapse,
 	bls	.L384	@,
@@ -3481,11 +3481,11 @@ VDMDRV_CheckDevice:
 .L385:
 	movw	r0, #:lower16:g_vdm_hal_fun_ptr	@ tmp269,
 	movt	r0, #:upper16:g_vdm_hal_fun_ptr	@ tmp269,
-	ldr	r3, [r0, #56]	@ D.39213, g_vdm_hal_fun_ptr.pfun_VDMHAL_ResetVdm
-	cmp	r3, #0	@ D.39213,
+	ldr	r3, [r0, #56]	@ D.39227, g_vdm_hal_fun_ptr.pfun_VDMHAL_ResetVdm
+	cmp	r3, #0	@ D.39227,
 	beq	.L386	@,
 	mov	r0, r5	@, VdhId
-	blx	r3	@ D.39213
+	blx	r3	@ D.39227
 .L387:
 	rsb	r6, r5, r6	@ tmp275, VdhId, tmp559
 	mov	r7, #1	@ tmp279,
@@ -3498,7 +3498,7 @@ VDMDRV_CheckDevice:
 	bne	.L388	@,
 	add	r6, r3, r6, asl #3	@, tmp324, tmp271, tmp275,
 	mov	r2, #0	@ tmp297,
-	mov	r0, r2	@ D.39221, tmp297
+	mov	r0, r2	@ D.39235, tmp297
 	str	r2, [r4, #232]	@ tmp297, <variable>.VdmTimeOut
 	ldr	lr, [r6, #204]	@ <variable>.ChanId, <variable>.ChanId
 	str	r2, [r4, #240]	@ tmp297, <variable>.ChanResetFlag
@@ -3519,21 +3519,21 @@ VDMDRV_CheckDevice:
 	str	sl, [r7, #212]	@ tmp363, <variable>.pDecParam
 	ldr	r0, [r8, #196]	@, <variable>.ChanId
 	bl	VCTRL_GetDecParam	@
-	cmp	r0, sl	@ D.39229,
-	str	r0, [r7, #212]	@ D.39229, <variable>.pDecParam
+	cmp	r0, sl	@ D.39243,
+	str	r0, [r7, #212]	@ D.39243, <variable>.pDecParam
 	beq	.L391	@,
 	ldr	r0, [r8, #196]	@, <variable>.ChanId
 	str	sl, [r7, #236]	@ tmp363, <variable>.LastWaitMoreStartTime
 	bl	VCTRL_GetVidStd	@
 	movw	r2, #:lower16:g_vdm_hal_fun_ptr	@ tmp410,
 	movt	r2, #:upper16:g_vdm_hal_fun_ptr	@ tmp410,
-	ldr	r3, [r2, #92]	@ D.39237, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareDec
-	cmp	r3, sl	@ D.39237,
+	ldr	r3, [r2, #92]	@ D.39251, g_vdm_hal_fun_ptr.pfun_VDMHAL_PrepareDec
+	cmp	r3, sl	@ D.39251,
 	str	r0, [r8, #200]	@, <variable>.VidStd
 	beq	.L392	@,
 	ldr	r1, [r7, #212]	@, <variable>.pDecParam
 	mov	r2, r5	@, VdhId
-	blx	r3	@ D.39237
+	blx	r3	@ D.39251
 	cmp	r0, sl	@,
 	beq	.L393	@,
 .L392:
@@ -3555,7 +3555,7 @@ VDMDRV_CheckDevice:
 	str	r7, [r6, #196]	@ tmp429, <variable>.VdmStateMachine
 	bl	VCTRL_VdmPostProc	@
 	ldr	r1, [r8, #196]	@ <variable>.ChanId, <variable>.ChanId
-	mov	r0, #1	@ D.39221,
+	mov	r0, #1	@ D.39235,
 	add	r3, r1, #32	@ tmp459, <variable>.ChanId,
 	str	r7, [r4, r3, asl #2]	@ tmp429, g_ChanCtx.ChanDecByVdhPlusOne
 	b	.L383	@
@@ -3566,11 +3566,11 @@ VDMDRV_CheckDevice:
 	beq	.L378	@,
 	movw	r1, #:lower16:g_vdm_hal_fun_ptr	@ tmp173,
 	movt	r1, #:upper16:g_vdm_hal_fun_ptr	@ tmp173,
-	ldr	r3, [r1, #100]	@ D.39189, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmRun
-	cmp	r3, #0	@ D.39189,
+	ldr	r3, [r1, #100]	@ D.39203, g_vdm_hal_fun_ptr.pfun_VDMHAL_IsVdmRun
+	cmp	r3, #0	@ D.39203,
 	beq	.L379	@,
 	mov	r0, r5	@, VdhId
-	blx	r3	@ D.39189
+	blx	r3	@ D.39203
 	cmp	r0, #0	@,
 	movne	r3, #1	@ tmp182,
 	strne	r3, [r7, #240]	@ tmp182, <variable>.ChanResetFlag
@@ -3593,14 +3593,14 @@ VDMDRV_CheckDevice:
 	b	.L377	@
 .L381:
 	rsb	r5, r5, r6	@ tmp245, VdhId, tmp559
-	mov	r0, #1	@ D.39221,
+	mov	r0, #1	@ D.39235,
 	add	r4, r4, r5, asl #3	@, tmp247, tmp560, tmp245,
-	str	r3, [r4, #216]	@ D.39197, <variable>.StartTime
+	str	r3, [r4, #216]	@ D.39211, <variable>.StartTime
 	b	.L383	@
 .L388:
 	mov	r0, r5	@, VdhId
 	bl	VDMDRV_AfterDec	@
-	mov	r0, r7	@ D.39221, tmp279
+	mov	r0, r7	@ D.39235, tmp279
 	b	.L383	@
 .L401:
 	bl	OSAL_GetTimeInMs	@
@@ -3612,15 +3612,15 @@ VDMDRV_CheckDevice:
 	movt	r3, #:upper16:g_VfmwGlobalStat	@ tmp470,
 	mov	r1, #84	@ tmp473,
 	mla	r2, r1, r5, r3	@ tmp474, tmp473, VdhId, tmp470
-	mov	ip, r0	@ D.39244,
+	mov	ip, r0	@ D.39258,
 	mov	r0, r5	@, VdhId
-	str	ip, [r7, #216]	@ D.39244, <variable>.StartTime
-	str	ip, [r2, #4]	@ D.39244, <variable>.u32VaLastStartTime
+	str	ip, [r7, #216]	@ D.39258, <variable>.StartTime
+	str	ip, [r2, #4]	@ D.39258, <variable>.u32VaLastStartTime
 	bl	VDMDRV_StartDec	@
 	ldr	r0, [r8, #196]	@, <variable>.ChanId
 	mov	r1, r5	@, VdhId
 	bl	VDMDRV_SetChanIsDec	@
-	mov	r0, #1	@ D.39221,
+	mov	r0, #1	@ D.39235,
 	b	.L383	@
 .L391:
 	movw	r1, #:lower16:.LC27	@,
@@ -3654,12 +3654,12 @@ VDMDRV_CheckDevice:
 	str	r7, [ip, #196]	@ tmp505, <variable>.VdmStateMachine
 	bl	VCTRL_VdmPostProc	@
 	ldr	r3, [r6, #196]	@ <variable>.ChanId, <variable>.ChanId
-	mov	r0, #1	@ D.39221,
+	mov	r0, #1	@ D.39235,
 	add	r2, r3, #32	@ tmp544, <variable>.ChanId,
 	str	r7, [r4, r2, asl #2]	@ tmp505, g_ChanCtx.ChanDecByVdhPlusOne
 	b	.L383	@
 .L386:
-	mov	r0, r3	@, D.39213
+	mov	r0, r3	@, D.39227
 	movw	r1, #:lower16:.LC2	@,
 	movw	r2, #1378	@,
 	movt	r1, #:upper16:.LC2	@,
@@ -3710,43 +3710,43 @@ VDMDRV_WakeUpVdm:
 	.section	.rodata
 	.align	2
 .LANCHOR1 = . + 0
-	.type	__func__.39606, %object
-	.size	__func__.39606, 23
-__func__.39606:
+	.type	__func__.39620, %object
+	.size	__func__.39620, 23
+__func__.39620:
 	.ascii	"VDMDRV_UpdateMatchMode\000"
 	.space	1
-	.type	__func__.39585, %object
-	.size	__func__.39585, 21
-__func__.39585:
+	.type	__func__.39599, %object
+	.size	__func__.39599, 21
+__func__.39599:
 	.ascii	"VDMDRV_MarkReloadDsp\000"
 	.space	3
-	.type	__func__.38737, %object
-	.size	__func__.38737, 23
-__func__.38737:
+	.type	__func__.38751, %object
+	.size	__func__.38751, 23
+__func__.38751:
 	.ascii	"VDMDRV_CheckAttachMode\000"
 	.space	1
-	.type	__func__.38787, %object
-	.size	__func__.38787, 19
-__func__.38787:
+	.type	__func__.38801, %object
+	.size	__func__.38801, 19
+__func__.38801:
 	.ascii	"VDMDRV_ChnDecReady\000"
 	.space	1
-	.type	__func__.38817, %object
-	.size	__func__.38817, 19
-__func__.38817:
+	.type	__func__.38831, %object
+	.size	__func__.38831, 19
+__func__.38831:
 	.ascii	"VDMDRV_DoBeforeDec\000"
 	.space	1
-	.type	__func__.38960, %object
-	.size	__func__.38960, 16
-__func__.38960:
+	.type	__func__.38974, %object
+	.size	__func__.38974, 16
+__func__.38974:
 	.ascii	"VDMDRV_AfterDec\000"
-	.type	__func__.39275, %object
-	.size	__func__.39275, 22
-__func__.39275:
+	.type	__func__.39289, %object
+	.size	__func__.39289, 22
+__func__.39289:
 	.ascii	"VDMDRV_VdmIntServProc\000"
 	.space	2
-	.type	__func__.39178, %object
-	.size	__func__.39178, 19
-__func__.39178:
+	.type	__func__.39192, %object
+	.size	__func__.39192, 19
+__func__.39192:
 	.ascii	"VDMDRV_CheckDevice\000"
 	.section	__ksymtab_strings,"a",%progbits
 	.type	__kstrtab_CapItem, %object
@@ -4103,37 +4103,37 @@ s_VdmIsInISR:
 	.size	g_RepairParam, 1744
 g_RepairParam:
 	.space	1744
-	.type	g_LastFPS.38734, %object
-	.size	g_LastFPS.38734, 64
-g_LastFPS.38734:
+	.type	g_LastFPS.38748, %object
+	.size	g_LastFPS.38748, 64
+g_LastFPS.38748:
 	.space	64
-	.type	DiffFrameCnt.38733, %object
-	.size	DiffFrameCnt.38733, 64
-DiffFrameCnt.38733:
+	.type	DiffFrameCnt.38747, %object
+	.size	DiffFrameCnt.38747, 64
+DiffFrameCnt.38747:
 	.space	64
 	.type	g_DspDrvState, %object
-	.size	g_DspDrvState, 4
+	.size	g_DspDrvState, 8
 g_DspDrvState:
-	.space	4
-	.type	last_rec_pos_time.38815, %object
-	.size	last_rec_pos_time.38815, 64
-last_rec_pos_time.38815:
+	.space	8
+	.type	last_rec_pos_time.38829, %object
+	.size	last_rec_pos_time.38829, 64
+last_rec_pos_time.38829:
 	.space	64
 	.type	g_BackUp, %object
 	.size	g_BackUp, 180
 g_BackUp:
 	.space	180
-	.type	last_rec_pos_time.38948, %object
-	.size	last_rec_pos_time.38948, 64
-last_rec_pos_time.38948:
+	.type	last_rec_pos_time.38962, %object
+	.size	last_rec_pos_time.38962, 64
+last_rec_pos_time.38962:
 	.space	64
-	.type	last_rec_pos_time.39271, %object
-	.size	last_rec_pos_time.39271, 64
-last_rec_pos_time.39271:
+	.type	last_rec_pos_time.39285, %object
+	.size	last_rec_pos_time.39285, 64
+last_rec_pos_time.39285:
 	.space	64
-	.type	cycle.39270, %object
-	.size	cycle.39270, 8
-cycle.39270:
+	.type	cycle.39284, %object
+	.size	cycle.39284, 8
+cycle.39284:
 	.space	8
 	.type	g_HwMem, %object
 	.size	g_HwMem, 1208

@@ -60,7 +60,7 @@ typedef struct hiSO_NODE_S
         }\
     }while(0)
 
-static HI_S32 _SO_GetBufLen(const SO_INFO_S *pstInfo)
+static HI_S32 _SO_GetBufLen(const SO_INFO_S* pstInfo)
 {
     HI_S32 s32Len = 0;
 
@@ -84,7 +84,7 @@ static HI_S32 _SO_GetBufLen(const SO_INFO_S *pstInfo)
     return s32Len;
 }
 
-static HI_S32 _SO_InitNode(const SO_INFO_S *pstInfo, SO_NODE_S *pstNode)
+static HI_S32 _SO_InitNode(const SO_INFO_S* pstInfo, SO_NODE_S* pstNode)
 {
     if (HI_UNF_SUBTITLE_BITMAP == pstInfo->eType)
     {
@@ -115,10 +115,10 @@ static HI_S32 _SO_InitNode(const SO_INFO_S *pstInfo, SO_NODE_S *pstNode)
     return HI_SUCCESS;
 }
 
-HI_S32 SO_QueueInit( HI_U32 bufsize, HI_U32 maxNodeNum, SO_QUEUE_HANDLE *handle )
+HI_S32 SO_QueueInit( HI_U32 bufsize, HI_U32 maxNodeNum, SO_QUEUE_HANDLE* handle )
 {
     HI_S32 ret = HI_SUCCESS;
-    SO_QUEUE_S *pSoQueue = NULL;
+    SO_QUEUE_S* pSoQueue = NULL;
 
     SO_RETURN(bufsize < SO_NORMAL_BUFF_SIZE, HI_FAILURE, "### Queue size is less than 1024!\n");
 
@@ -138,7 +138,7 @@ HI_S32 SO_QueueInit( HI_U32 bufsize, HI_U32 maxNodeNum, SO_QUEUE_HANDLE *handle 
 
 HI_S32 SO_QueueDeinit( SO_QUEUE_HANDLE handle )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
 
     SO_RETURN(NULL == pSoQueue, HI_FAILURE, "");
 
@@ -151,10 +151,10 @@ HI_S32 SO_QueueDeinit( SO_QUEUE_HANDLE handle )
 }
 
 /*lint -e429*/
-HI_S32 SO_QueuePut( SO_QUEUE_HANDLE handle, const SO_INFO_S *pstInfo )
+HI_S32 SO_QueuePut( SO_QUEUE_HANDLE handle, const SO_INFO_S* pstInfo )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    SO_NODE_S * pNode;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    SO_NODE_S* pNode = NULL;
     HI_S32 s32Len = 0;
 
     SO_RETURN(NULL == pSoQueue, HI_FAILURE, "");
@@ -164,10 +164,10 @@ HI_S32 SO_QueuePut( SO_QUEUE_HANDLE handle, const SO_INFO_S *pstInfo )
     SO_RETURN(0 > s32Len, HI_FAILURE, "");
 
     SO_QUEUE_LOCK();
-    SO_CALL_RETURN(pSoQueue->u32MaxBufferSize <= pSoQueue->s32BufferSize && pSoQueue->num >= pSoQueue->u32MaxNodeNum,
-        SO_QUEUE_UNLOCK(), HI_FAILURE);
+    SO_CALL_RETURN(pSoQueue->u32MaxBufferSize <= (HI_U32)pSoQueue->s32BufferSize && (HI_U32)pSoQueue->num >= pSoQueue->u32MaxNodeNum,
+                   SO_QUEUE_UNLOCK(), HI_FAILURE);
 
-    pNode = (SO_NODE_S *)SO_MALLOC(SO_NODE_SIZE + (HI_U32)s32Len + SO_ADD_EXT_BYTE_NUM);
+    pNode = (SO_NODE_S*)SO_MALLOC(SO_NODE_SIZE + (HI_U32)s32Len + SO_ADD_EXT_BYTE_NUM);
     SO_CALL_RETURN(NULL == pNode, SO_QUEUE_UNLOCK(), HI_FAILURE);
 
     SO_MEMSET(&pNode->stInfo, 0, sizeof(pNode->stInfo));
@@ -187,10 +187,10 @@ HI_S32 SO_QueuePut( SO_QUEUE_HANDLE handle, const SO_INFO_S *pstInfo )
 }
 /*lint +e429*/
 
-HI_S32 SO_QueueGet( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
+HI_S32 SO_QueueGet( SO_QUEUE_HANDLE handle, SO_INFO_S* pstInfo )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    SO_NODE_S  *pNode = NULL;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    SO_NODE_S*  pNode = NULL;
     HI_S32 s32Len = 0;
 
     SO_RETURN(NULL == pSoQueue, HI_FAILURE, "");
@@ -232,10 +232,10 @@ HI_S32 SO_QueueGet( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
     return HI_FAILURE;
 }
 
-HI_S32 SO_QueueGetNodeInfoNotDel( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
+HI_S32 SO_QueueGetNodeInfoNotDel( SO_QUEUE_HANDLE handle, SO_INFO_S* pstInfo )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    SO_NODE_S  *pNode = NULL;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    SO_NODE_S*  pNode = NULL;
 
     SO_RETURN(NULL == pSoQueue, HI_FAILURE, "");
     SO_RETURN(NULL == pstInfo, HI_FAILURE, "");
@@ -271,10 +271,10 @@ HI_S32 SO_QueueGetNodeInfoNotDel( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
     return HI_FAILURE;
 }
 
-HI_S32 SO_QueueFree( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
+HI_S32 SO_QueueFree( SO_QUEUE_HANDLE handle, SO_INFO_S* pstInfo )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    HI_U8 *pu8Data = NULL;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    HI_U8* pu8Data = NULL;
 
     SO_RETURN(NULL == pSoQueue || NULL == pstInfo, HI_FAILURE, "");
 
@@ -303,9 +303,9 @@ HI_S32 SO_QueueFree( SO_QUEUE_HANDLE handle, SO_INFO_S *pstInfo )
 
 HI_S32 SO_QueueRemove( SO_QUEUE_HANDLE handle )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    SO_NODE_S  *pNode;
-    SO_NODE_S  *n;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    SO_NODE_S*  pNode = NULL;
+    SO_NODE_S*  n = NULL;
 
     SO_RETURN(pSoQueue == NULL, HI_FAILURE, "");
 
@@ -332,9 +332,9 @@ HI_S32 SO_QueueReset( SO_QUEUE_HANDLE handle )
 
 HI_S32 SO_QueueReset_ByPts( SO_QUEUE_HANDLE handle, HI_S64 s64Pts )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
-    SO_NODE_S  *pNode;
-    SO_NODE_S  *n;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
+    SO_NODE_S*  pNode = NULL;
+    SO_NODE_S*  n = NULL;
 
     SO_RETURN(pSoQueue == NULL, HI_FAILURE, "");
 
@@ -347,6 +347,7 @@ HI_S32 SO_QueueReset_ByPts( SO_QUEUE_HANDLE handle, HI_S64 s64Pts )
             || (HI_UNF_SUBTITLE_ASS == pNode->stInfo.eType && pNode->stInfo.unSubtitleParam.stAss.s64Pts < s64Pts))
         {
             pSoQueue->num --;
+
             if (HI_UNF_SUBTITLE_BITMAP == pNode->stInfo.eType && pNode->stInfo.unSubtitleParam.stGfx.s64Pts < s64Pts)
             {
                 pSoQueue->s32BufferSize -= pNode->stInfo.unSubtitleParam.stGfx.u32Len;
@@ -372,7 +373,7 @@ HI_S32 SO_QueueReset_ByPts( SO_QUEUE_HANDLE handle, HI_S64 s64Pts )
 
 HI_S32 SO_QueueNum( SO_QUEUE_HANDLE handle )
 {
-    SO_QUEUE_S *pSoQueue = (SO_QUEUE_S*)handle;
+    SO_QUEUE_S* pSoQueue = (SO_QUEUE_S*)handle;
     HI_U32 num = 0;
 
     SO_RETURN(NULL == pSoQueue, HI_FAILURE, "");

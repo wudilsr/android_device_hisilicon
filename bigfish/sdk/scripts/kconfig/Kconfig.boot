@@ -5,6 +5,7 @@ choice
 
 config  HI_UBOOT_SUPPORT
 	bool "uboot"
+	depends on (ANDROID_PRODUCT || !HI_ADVCA_SUPPORT)
 config  HI_MINIBOOT_SUPPORT
 	bool "miniboot"
 endchoice

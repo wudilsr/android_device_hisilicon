@@ -119,7 +119,9 @@ public class HiRMService extends Service {
     private static final int WIFI_DISABLED = 0;
     private static final int WIFI_ENABLED = 1;
 
-	private static final int EVENT_PARAM_CHANGED = 0;
+    private static final int BLUETOOTH_DISABLED = 0;
+    private static final int BLUETOOTH_ENABLED = 1;
+    private static final int EVENT_PARAM_CHANGED = 0;
     static final int PHY_LINK_DOWN = 0;
     static final int PHY_LINK_UP = 1;
 
@@ -152,9 +154,16 @@ public class HiRMService extends Service {
             home.addCategory(Intent.CATEGORY_HOME);
             String message;
             String suspend_mode = SystemProperties.get("persist.suspend.mode", "deep_restart");
+            boolean cec_suspend  = SystemProperties.getBoolean("persist.sys.hdmi.cec", false);
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 if(DEBUG) {
                     Log.w(TAG, "ACTION_SCREEN_OFF");
+                }
+
+                //CEC suspend
+                if(cec_suspend){
+                    Log.i("HiRMService","CEC suspend start");
+                    mDisplay.setCECSuspend();
                 }
                 if("smart_suspend".equals(suspend_mode)) {
                     return;
@@ -217,6 +226,12 @@ public class HiRMService extends Service {
                 //startActivity(home);
                 if (smartSuspendFlag !=SMARTFLAG_SUSPEND) {
                     smartSuspendFlag = SMARTFLAG_SUSPEND;
+                     //CEC suspend
+                    if(cec_suspend){
+                         Log.i("HiRMService","CEC suspend start");
+                         mDisplay.setCECSuspend();
+                         SystemClock.sleep(SMARTSUSPEND_DELAY);
+                    }
                     //killApp();
                     int audiotype = mAudioManager.getMode();
                     mAudioManager.setStreamMute(audiotype, true);
@@ -330,6 +345,9 @@ public class HiRMService extends Service {
                         BluetoothAdapter.ERROR);
                 if (mBluetoothMode.getEnableFlag() && state == BluetoothAdapter.STATE_OFF) {
                     mBluetoothMode.setLockFlag(false);
+                    final ContentResolver cr = getContentResolver();
+                        Settings.Global.putInt(cr, Settings.Global.BLUETOOTH_ON,
+                                BLUETOOTH_ENABLED);
                         releaseLock();
                 }
             }
@@ -476,8 +494,15 @@ public class HiRMService extends Service {
 
         registerReceiver(mUpdateReceiver, new IntentFilter(
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        Log.i(TAG,"doInith will execute after 15 sec!");
+        Handler handler = new Handler();
+	handler.postDelayed(new Runnable(){
+		public void run(){
 		doInitSh();
-		adapter = new DBAdapter(this);
+		Log.i(TAG,"doInith finished");
+		}
+	}, 15000);
+	adapter = new DBAdapter(this);
 
         mUsageStatsService = IUsageStats.Stub.asInterface(ServiceManager.getService("usagestats"));
         HiSdkinvoke sdkInvoke = new HiSdkinvoke();
@@ -794,6 +819,10 @@ public class HiRMService extends Service {
                         && !PACKAGE_SUYINGAIDL.equals(actRSI.processName)
                         && !PACKAGE_SUYINGAPK.equals(actRSI.processName)
                         && !isLiveWallPaper(actRSI.processName)) {
+                    if(actRSI.processName.equals("com.android.bluetooth")){
+                        Log.i(TAG,"no need to kill com.android.bluetooth");
+                        continue;
+                    }
                     if(DEBUG) {
                         Log.d(TAG, "apk:  " + actRSI.processName);
                     }
@@ -819,6 +848,10 @@ public class HiRMService extends Service {
                         && actRSI.flags != ActivityManager.RunningAppProcessInfo.FLAG_HAS_ACTIVITIES
                         && !PACKAGE_SKYPLAY.equals(actRSI.processName)
                         && !isLiveWallPaper(actRSI.processName)) {
+                    if(actRSI.processName.equals("com.android.bluetooth")){
+                        Log.i(TAG,"no need to kill com.android.bluetooth");
+                        continue;
+                    }
                     if(DEBUG) {
                         Log.d(TAG, "apk:  " + actRSI.processName);
                     }

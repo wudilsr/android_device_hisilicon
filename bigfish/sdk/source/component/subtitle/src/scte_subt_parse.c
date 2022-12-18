@@ -10,6 +10,7 @@
 
 #define SUBT_COLOR_RGB888_SIZE (32)
 #define SCTE_SUBT_BPP 4
+#define SCTE_SUBT_MAX_AREA  (0xFFE001) //4095 * 4095
 #define PTS_UNITS 90   /*see Ref.P15*/
 #define PTS_OFFSET (0x80000000/45) /*(0x100000000/PTS_UNITS)*//*see Ref.P15*/
 
@@ -20,17 +21,17 @@
 
 typedef struct tagSCTE_SUBT_PARSE_INFO_S
 {
-    HI_HANDLE          hDisplay;
+    HI_VOID*          hDisplay;
     HI_UNF_SUBT_GETPTS_FN pfnGetPts;
-    HI_U32 u32UserData;
+    HI_VOID* pUserData;
     SCTE_SUBT_OUTPUT_S stOutputData;
 } SCTE_SUBT_PARSE_INFO_S;
 
-static HI_U32 YUV2RGB(HI_U8  *pu8Data)
+static HI_U32 YUV2RGB(HI_U8*  pu8Data)
 {
     HI_U8 Y   = 0, Cr = 0, Cb = 0, Alpha = 0;
     HI_U16 R, G, B, C, D, E;
-    HI_U32 Clr=0;
+    HI_U32 Clr = 0;
 
     Y  = (pu8Data[0] >> 3) & 0x1f;
     Cr = (pu8Data[0] << 3 | pu8Data[1] >> 5) & 0x1f;
@@ -62,6 +63,7 @@ static HI_U32 YUV2RGB(HI_U8  *pu8Data)
     }
 
     Clr = (HI_U32)((R << 16) | (G << 8) | B);
+
     if (Alpha == 1)
     {
         Clr |= 0xFF000000;   //opacity
@@ -70,14 +72,17 @@ static HI_U32 YUV2RGB(HI_U8  *pu8Data)
     {
         Clr |= 0x7F000000;   //half transparent
     }
+
     return Clr;
 }
 
-static HI_VOID FillSubtClr(HI_U32 u32LineNumber, HI_U32 u32RowNumber, HI_U32 u32Width, HI_U8 u8PixOn, SCTE_SUBT_PARSE_INFO_S *pstParseInfo )
+static HI_VOID FillSubtClr(HI_U32 u32LineNumber, HI_U32 u32RowNumber, HI_U32 u32Width, HI_U8 u8PixOn, SCTE_SUBT_PARSE_INFO_S* pstParseInfo )
 {
-    HI_U32 i=0, u32CLr = 0;
+    HI_U32 i = 0;
+    HI_U32 u32CLr = 0;
 
     u32CLr = pstParseInfo->stOutputData.u32SubtColor;
+
     for (i = SCTE_SUBT_BPP * (u32LineNumber * u32Width + u32RowNumber);
          i < SCTE_SUBT_BPP * (u32LineNumber * u32Width + u32RowNumber + u8PixOn); i++)
     {
@@ -89,27 +94,29 @@ static HI_VOID FillSubtClr(HI_U32 u32LineNumber, HI_U32 u32RowNumber, HI_U32 u32
 
         if (0 == i % SCTE_SUBT_BPP)
         {
-            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)(u32CLr>> 24);
+            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)((u32CLr >> 24) & 0xFF);
         }
         else if (1 == i % SCTE_SUBT_BPP)
         {
-            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)(u32CLr>> 16);
+            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)((u32CLr >> 16) & 0xFF);
         }
         else if (2 == i % SCTE_SUBT_BPP)
         {
-            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)(u32CLr>> 8);
+            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)((u32CLr >> 8) & 0xFF);
         }
         else
         {
-            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)u32CLr;
+            pstParseInfo->stOutputData.pu8SCTESubtData[i] = (HI_U8)(u32CLr & 0xFF);
         }
-     }
-   return;
+    }
+
+    return;
 }
 
-static HI_BOOL GetNextUChar(HI_U8 * pu8Data, HI_U16 * u16CurData, HI_U32 *u32Index, HI_U8 *u8Curlen, HI_U32 u32DataLen)
+static HI_BOOL GetNextUChar(HI_U8* pu8Data, HI_U16* u16CurData, HI_U32* u32Index, HI_U8* u8Curlen, HI_U32 u32DataLen)
 {
     (*u32Index)++;
+
     if (*u32Index == u32DataLen)
     {
         return HI_TRUE;
@@ -121,17 +128,23 @@ static HI_BOOL GetNextUChar(HI_U8 * pu8Data, HI_U16 * u16CurData, HI_U32 *u32Ind
     return HI_FALSE;
 }
 
-static HI_S32 DecompressBitmap(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8DataSrc, HI_U32 u32DataLen)
+static HI_S32 DecompressBitmap(SCTE_SUBT_PARSE_INFO_S* pstParseInfo, HI_U8* pu8DataSrc, HI_U32 u32DataLen)
 {
     HI_S32 s32Ret   = HI_SUCCESS;
-    HI_U8 * pu8Data = pu8DataSrc;
+    HI_U8* pu8Data = pu8DataSrc;
 
-    HI_U8 u8PixOn     = 0, u8PixOff = 0, u8Curlen = 8;
-    HI_U16 u16Temp    = 0, u16Result = 0, u16CurData = 0;
-    HI_U32 u32Index   = 0;
+    HI_U8 u8PixOn = 0;
+    HI_U8 u8PixOff = 0;
+    HI_U8 u8Curlen = 8;
+    HI_U16 u16Temp = 0;
+    HI_U16 u16Result = 0;
+    HI_U16 u16CurData = 0;
+    HI_U32 u32Index = 0;
     HI_U16 pow[] = {0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191};
 
-    HI_U32 u32LineNumber = 0, u32RowNumber = 0, u32Width = 0;
+    HI_U32 u32LineNumber = 0;
+    HI_U32 u32RowNumber = 0;
+    HI_U32 u32Width = 0;
 
     if ((HI_NULL == pstParseInfo) || (HI_NULL == pu8DataSrc) || (0 == u32DataLen))
     {
@@ -166,128 +179,144 @@ static HI_S32 DecompressBitmap(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8D
         u16Temp <<= (u8Curlen - 3);
         u16Temp &= u16CurData;
         u16Temp >>= (u8Curlen - 3);
+
         switch (u16Temp)
         {
-        case 0:         //      token size is 5
-            if (u8Curlen < 5)
-            {
-                if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+            case 0:         //      token size is 5
+                if (u8Curlen < 5)
                 {
-                    break;
+                    if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                    {
+                        break;
+                    }
                 }
-            }
 
-            u8Curlen -= 5;
-            u16Result = u16CurData >> (u8Curlen);
-            switch (u16Result)
-            {
-            case 0:
+                u8Curlen -= 5;
+                u16Result = u16CurData >> (u8Curlen);
+
+                switch (u16Result)
+                {
+                    case 0:
+                        break;
+
+                    case 1:                //00001
+                        u32LineNumber++;
+
+                        if (u32RowNumber > u32Width)
+                        {
+                            HI_ERR_SUBT("Write subt data error!\n");
+                        }
+
+                        u32RowNumber = (pstParseInfo->stOutputData.enBackgroundStyle
+                                        == SCTE_SUBT_BACKGROUD_FRAMED) ? (pstParseInfo->stOutputData.u32TopXPos
+                                                - pstParseInfo->stOutputData.stFramed.u32TopXPos) : 0;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                CheckIndex(u8Curlen);
+                u16CurData &= pow[u8Curlen];
                 break;
-            case 1:                //00001
-                u32LineNumber++;
-                if (u32RowNumber > u32Width)
+
+            case 1:         //      token size is 7(001XXXX)
+                if (u8Curlen < 7)
                 {
-                    HI_ERR_SUBT("Write subt data error!\n");
+                    if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                    {
+                        break;
+                    }
                 }
 
-                u32RowNumber = (pstParseInfo->stOutputData.enBackgroundStyle
-                                == SCTE_SUBT_BACKGROUD_FRAMED) ? (pstParseInfo->stOutputData.u32TopXPos
-                                                                  - pstParseInfo->stOutputData.stFramed.u32TopXPos) : 0;
+                u8Curlen -= 7;
+                u16Result = u16CurData >> (u8Curlen);
+                u8PixOn = u16Result & 15;
+
+                if (0 == u8PixOn)
+                {
+                    u8PixOn = 16;
+                }
+
+                CheckIndex(u8Curlen);
+                u16CurData &= pow[u8Curlen];
+                FillSubtClr(u32LineNumber, u32RowNumber, u32Width, u8PixOn, pstParseInfo );
+                u32RowNumber += (HI_U32) u8PixOn;
                 break;
-            default:
+
+            case 2:
+            case 3:         //      token size is 8(01XXXXXX)
+                if (u8Curlen < 8)
+                {
+                    if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                    {
+                        break;
+                    }
+                }
+
+                u8Curlen -= 8;
+                u16Result = u16CurData >> (u8Curlen);
+                u8PixOff = u16Result & 63;
+
+                if (0 == u8PixOff)
+                {
+                    u8PixOff = 64;
+                }
+
+                CheckIndex(u8Curlen);
+                u16CurData   &= pow[u8Curlen];
+                u32RowNumber += (HI_U32) u8PixOff;
                 break;
-            }
-            CheckIndex(u8Curlen);
-            u16CurData &= pow[u8Curlen];
-            break;
 
-        case 1:         //      token size is 7(001XXXX)
-            if (u8Curlen < 7)
-            {
-                if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+            default:        //      token size is 9(1XXXYYYYY )
+                if (u8Curlen < 9)
                 {
-                    break;
+                    if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                    {
+                        break;
+                    }
                 }
-            }
 
-            u8Curlen -= 7;
-            u16Result = u16CurData >> (u8Curlen);
-            u8PixOn = u16Result & 15;
-            if (0 == u8PixOn)
-            {
-                u8PixOn = 16;
-            }
+                u8Curlen -= 9;
+                u16Result = u16CurData >> (u8Curlen);
+                u8PixOff = (HI_U8) (u16Result & 31);
+                u8PixOn = (HI_U8)((u16Result & 224) >> 5);
 
-            CheckIndex(u8Curlen);
-            u16CurData &= pow[u8Curlen];
-            FillSubtClr(u32LineNumber, u32RowNumber, u32Width, u8PixOn, pstParseInfo );
-            u32RowNumber += (HI_U32) u8PixOn;
-            break;
-        case 2:
-        case 3:         //      token size is 8(01XXXXXX)
-            if (u8Curlen < 8)
-            {
-                if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                if (0 == u8PixOff)
                 {
-                    break;
+                    u8PixOff = 32;
                 }
-            }
 
-            u8Curlen -= 8;
-            u16Result = u16CurData >> (u8Curlen);
-            u8PixOff = u16Result & 63;
-            if (0 == u8PixOff)
-            {
-                u8PixOff = 64;
-            }
-
-            CheckIndex(u8Curlen);
-            u16CurData   &= pow[u8Curlen];
-            u32RowNumber += (HI_U32) u8PixOff;
-            break;
-        default:        //      token size is 9(1XXXYYYYY )
-            if (u8Curlen < 9)
-            {
-                if (HI_TRUE == GetNextUChar(pu8Data, &u16CurData, &u32Index, &u8Curlen, u32DataLen))
+                if (0 == u8PixOn)
                 {
-                    break;
+                    u8PixOn = 8;
                 }
-            }
 
-            u8Curlen -= 9;
-            u16Result = u16CurData >> (u8Curlen);
-            u8PixOff = (HI_U8) (u16Result & 31);
-            u8PixOn = (HI_U8)((u16Result & 224) >> 5);
-
-            if (0 == u8PixOff)
-            {
-                u8PixOff = 32;
-            }
-            if (0 == u8PixOn)
-            {
-                u8PixOn = 8;
-            }
-
-            CheckIndex(u8Curlen);
-            u16CurData &= pow[u8Curlen];
-            FillSubtClr(u32LineNumber, u32RowNumber, u32Width, u8PixOn, pstParseInfo );
-            u32RowNumber += (HI_U32) u8PixOn;
-            u32RowNumber += (HI_U32) u8PixOff;
-            break;
+                CheckIndex(u8Curlen);
+                u16CurData &= pow[u8Curlen];
+                FillSubtClr(u32LineNumber, u32RowNumber, u32Width, u8PixOn, pstParseInfo );
+                u32RowNumber += (HI_U32) u8PixOn;
+                u32RowNumber += (HI_U32) u8PixOff;
+                break;
         }
     }
 
     return s32Ret;
 }
 
-static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8DataSrc, HI_U32 u32DataSize)
+static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S* pstParseInfo, HI_U8* pu8DataSrc, HI_U32 u32DataSize)
 {
+    HI_U32 i = 0;
     HI_S32 s32Ret  = HI_SUCCESS;
-    HI_U8 *pu8Data = pu8DataSrc;
-    HI_U16 u16BitmapHeadLen = 0, u16BitmapLen   = 0;
-    HI_U32 u32SubtDataLen = 0, u32SubtArea = 0, i  = 0;
+    HI_U8* pu8Data = pu8DataSrc;
+    HI_U16 u16BitmapHeadLen = 0;
+    HI_U16 u16BitmapLen   = 0;
+    HI_U32 u32SubtDataLen = 0;
+    HI_U32 u32SubtArea = 0;
+    HI_U16 u16Width = 0;
+    HI_U16 u16Height = 0;
 
-    if((HI_NULL == pstParseInfo) || (HI_NULL == pu8DataSrc) || (0 == u32DataSize))
+    if ((HI_NULL == pstParseInfo) || (HI_NULL == pu8DataSrc) || (0 == u32DataSize))
     {
         HI_ERR_SUBT("param invalid...\n");
         return HI_FAILURE;
@@ -305,7 +334,7 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     {
         pstParseInfo->stOutputData.enOutlineStyle = SCTE_SUBT_OUTLINE_OUTLINED;
     }
-    else if(pu8Data[0] & 0x02) //dropshadow
+    else if (pu8Data[0] & 0x02) //dropshadow
     {
         pstParseInfo->stOutputData.enOutlineStyle = SCTE_SUBT_OUTLINE_DROPSHADOW;
     }
@@ -325,7 +354,7 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     u16BitmapHeadLen += 6;
 
     /*before malloc pu8SCTESubtData,free it*/
-    if(pstParseInfo->stOutputData.pu8SCTESubtData)
+    if (pstParseInfo->stOutputData.pu8SCTESubtData)
     {
         free((void*)pstParseInfo->stOutputData.pu8SCTESubtData);
         pstParseInfo->stOutputData.pu8SCTESubtData = NULL;
@@ -341,14 +370,25 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
         u16BitmapHeadLen += 6;
         pstParseInfo->stOutputData.stFramed.u32FrameColor = YUV2RGB(pu8Data);
 
-        u32SubtArea = (pstParseInfo->stOutputData.stFramed.u32BottomXPos
-                       - pstParseInfo->stOutputData.stFramed.u32TopXPos + 1)
-                      * (pstParseInfo->stOutputData.stFramed.u32BottomYPos
-                         - pstParseInfo->stOutputData.stFramed.u32TopYPos + 1);
+        u16Width = (HI_U16)(pstParseInfo->stOutputData.stFramed.u32BottomXPos
+                            - pstParseInfo->stOutputData.stFramed.u32TopXPos + 1);
+
+        u16Height = (HI_U16)(pstParseInfo->stOutputData.stFramed.u32BottomYPos
+                             - pstParseInfo->stOutputData.stFramed.u32TopYPos + 1);
+
+        u32SubtArea = u16Width * u16Height;
+
+        if (u32SubtArea > SCTE_SUBT_MAX_AREA)
+        {
+            HI_ERR_SUBT("area error, w:h = [%d, %d]...\n", u16Width, u16Height);
+            return HI_FAILURE;
+        }
+
         u32SubtDataLen = SCTE_SUBT_BPP * u32SubtArea;
 
         pstParseInfo->stOutputData.u32BitmapDataLen = u32SubtDataLen;
-        pstParseInfo->stOutputData.pu8SCTESubtData = (HI_U8 *)malloc(u32SubtDataLen);
+        pstParseInfo->stOutputData.pu8SCTESubtData = (HI_U8*)malloc(u32SubtDataLen);
+
         if (HI_NULL == pstParseInfo->stOutputData.pu8SCTESubtData)
         {
             HI_ERR_SUBT("malloc SCTESubtData datastructure error...\n");
@@ -360,22 +400,22 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
             if (0 == i % SCTE_SUBT_BPP)
             {
                 pstParseInfo->stOutputData.pu8SCTESubtData[i] =
-                    (HI_U8)(pstParseInfo->stOutputData.stFramed.u32FrameColor >> 24);
+                    (HI_U8)((pstParseInfo->stOutputData.stFramed.u32FrameColor >> 24) & 0xFF);
             }
             else if (1 == i % SCTE_SUBT_BPP)
             {
                 pstParseInfo->stOutputData.pu8SCTESubtData[i] =
-                    (HI_U8)(pstParseInfo->stOutputData.stFramed.u32FrameColor >> 16);
+                    (HI_U8)((pstParseInfo->stOutputData.stFramed.u32FrameColor >> 16) & 0xFF);
             }
             else if (2 == i % SCTE_SUBT_BPP)
             {
                 pstParseInfo->stOutputData.pu8SCTESubtData[i] =
-                    (HI_U8)(pstParseInfo->stOutputData.stFramed.u32FrameColor >> 8);
+                    (HI_U8)((pstParseInfo->stOutputData.stFramed.u32FrameColor >> 8) & 0xFF);
             }
             else
             {
                 pstParseInfo->stOutputData.pu8SCTESubtData[i] =
-                    (HI_U8)pstParseInfo->stOutputData.stFramed.u32FrameColor;
+                    (HI_U8)(pstParseInfo->stOutputData.stFramed.u32FrameColor & 0xFF);
             }
         }
 
@@ -385,14 +425,26 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     }
     else
     {
-         /*Allocate the memery of subtData*/
-        u32SubtArea = (pstParseInfo->stOutputData.u32BottomXPos
-                        - pstParseInfo->stOutputData.u32TopXPos + 1)
-                      * (pstParseInfo->stOutputData.u32BottomYPos
-                        - pstParseInfo->stOutputData.u32TopYPos + 1);
 
+
+        u16Width = (HI_U16)(pstParseInfo->stOutputData.u32BottomXPos
+                            - pstParseInfo->stOutputData.u32TopXPos + 1);
+
+        u16Height = (HI_U16)(pstParseInfo->stOutputData.u32BottomYPos
+                             - pstParseInfo->stOutputData.u32TopYPos + 1);
+
+        u32SubtArea = u16Width * u16Height;
+
+        if (u32SubtArea > SCTE_SUBT_MAX_AREA)
+        {
+            HI_ERR_SUBT("area error, w:h = [%d, %d]...\n", u16Width, u16Height);
+            return HI_FAILURE;
+        }
+
+        /*Allocate the memery of subtData*/
         u32SubtDataLen = SCTE_SUBT_BPP * u32SubtArea;
-        pstParseInfo->stOutputData.pu8SCTESubtData = (HI_U8 *)malloc(u32SubtDataLen);
+        pstParseInfo->stOutputData.pu8SCTESubtData = (HI_U8*)malloc(u32SubtDataLen);
+
         if (HI_NULL == pstParseInfo->stOutputData.pu8SCTESubtData)
         {
             HI_ERR_SUBT("malloc SCTESubtData datastructure error...\n");
@@ -434,15 +486,17 @@ static HI_S32 ParseBitmapHead(SCTE_SUBT_PARSE_INFO_S *pstParseInfo, HI_U8 *pu8Da
     u16BitmapLen = pu8Data[0] << 8 | pu8Data[1];
     pu8Data += 2;
     u16BitmapHeadLen += 2;
+
     if ((pu8Data != (&pu8DataSrc[u16BitmapHeadLen])))
     {
         HI_ERR_SUBT("\nerror, pu8Data addr:%p, 0x%02x, &pDataSrc[u8PesHeadLength] addr:%p, 0x%02x\n",
-                 pu8Data, pu8Data[0], &pu8DataSrc[u16BitmapHeadLen], pu8DataSrc[u16BitmapHeadLen]);
+                    pu8Data, pu8Data[0], &pu8DataSrc[u16BitmapHeadLen], pu8DataSrc[u16BitmapHeadLen]);
 
         return HI_FAILURE;
     }
 
     s32Ret = DecompressBitmap( pstParseInfo, &pu8DataSrc[u16BitmapHeadLen], (HI_U32)u16BitmapLen);
+
     if (s32Ret != HI_SUCCESS)
     {
         HI_ERR_SUBT("failed to DecompressBitmap  ...\n");
@@ -464,12 +518,13 @@ HI_S32 SCTE_SUBT_Parse_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Parse_Create(HI_HANDLE hDisplay, HI_HANDLE *phParse)
+HI_S32 SCTE_SUBT_Parse_Create(HI_VOID* hDisplay, HI_VOID** pphParse)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    SCTE_SUBT_PARSE_INFO_S *pstParseInfo = HI_NULL;
+    SCTE_SUBT_PARSE_INFO_S* pstParseInfo = HI_NULL;
 
-    pstParseInfo = (SCTE_SUBT_PARSE_INFO_S *)malloc(sizeof(SCTE_SUBT_PARSE_INFO_S));
+    pstParseInfo = (SCTE_SUBT_PARSE_INFO_S*)malloc(sizeof(SCTE_SUBT_PARSE_INFO_S));
+
     if (HI_NULL == pstParseInfo)
     {
         HI_ERR_SUBT("malloc parse datastructure error...\n");
@@ -478,31 +533,33 @@ HI_S32 SCTE_SUBT_Parse_Create(HI_HANDLE hDisplay, HI_HANDLE *phParse)
 
     memset(pstParseInfo, 0, sizeof(SCTE_SUBT_PARSE_INFO_S));
     pstParseInfo->hDisplay = hDisplay;
-    *phParse = (HI_HANDLE)pstParseInfo;
+    *pphParse = pstParseInfo;
 
-    HI_INFO_SUBT("SCTE_SUBT_Parse_Create success, with handle:0x%08x!\n", *phParse);
+    HI_INFO_SUBT("SCTE_SUBT_Parse_Create success, with handle:0x%08x!\n", *pphParse);
 
     return s32Ret;
 }
 
-HI_S32 SCTE_SUBT_Parse_RegGetPtsCb(HI_HANDLE hParse, HI_UNF_SUBT_GETPTS_FN pfnGetPts, HI_U32 u32UserData)
+HI_S32 SCTE_SUBT_Parse_RegGetPtsCb(HI_VOID* hParse, HI_UNF_SUBT_GETPTS_FN pfnGetPts, HI_VOID* pUserData)
 {
-    SCTE_SUBT_PARSE_INFO_S *pstParseInfo = (SCTE_SUBT_PARSE_INFO_S *)hParse;
+    SCTE_SUBT_PARSE_INFO_S* pstParseInfo = (SCTE_SUBT_PARSE_INFO_S*)hParse;
+
     if (HI_NULL == pstParseInfo)
     {
         HI_ERR_SUBT("param is HI_NULL...\n");
         return HI_FAILURE;
     }
+
     pstParseInfo->pfnGetPts = pfnGetPts;
-    pstParseInfo->u32UserData = u32UserData;
+    pstParseInfo->pUserData = pUserData;
 
     return HI_SUCCESS;
 
 }
 
-HI_S32 SCTE_SUBT_Parse_Destroy(HI_HANDLE hParse)
+HI_S32 SCTE_SUBT_Parse_Destroy(HI_VOID* hParse)
 {
-    SCTE_SUBT_PARSE_INFO_S *pstParseInfo = (SCTE_SUBT_PARSE_INFO_S *)hParse;
+    SCTE_SUBT_PARSE_INFO_S* pstParseInfo = (SCTE_SUBT_PARSE_INFO_S*)hParse;
 
     if (HI_NULL == pstParseInfo)
     {
@@ -525,17 +582,20 @@ HI_S32 SCTE_SUBT_Parse_Destroy(HI_HANDLE hParse)
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 u32DataLen)
+HI_S32 SCTE_SUBT_Parse_ParseSection(HI_VOID* hParse, HI_U8* pu8DataSrc, HI_U32 u32DataLen)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_U8  *pu8Data = pu8DataSrc;
+    HI_U8*  pu8Data = pu8DataSrc;
     HI_S64 s64CurPts = 0;
     HI_U32 u32PTSValue = 0;
     HI_U32 u32Duration = 0;
-    HI_U8  u8ImmediateFlag = 0, u8PreClearFlag = 0, u8HeadLength = 0, u8Dis_standard = 0;
-    HI_U8  u8FrameRate = 0;
+    HI_U8 u8ImmediateFlag = 0;
+    HI_U8 u8PreClearFlag = 0;
+    HI_U8 u8HeadLength = 0;
+    HI_U8 u8Dis_standard = 0;
+    HI_U8 u8FrameRate = 0;
 
-    SCTE_SUBT_PARSE_INFO_S *pstParseInfo = (SCTE_SUBT_PARSE_INFO_S *)hParse;
+    SCTE_SUBT_PARSE_INFO_S* pstParseInfo = (SCTE_SUBT_PARSE_INFO_S*)hParse;
 
     if (HI_NULL == pstParseInfo)
     {
@@ -562,24 +622,28 @@ HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 
     u8ImmediateFlag = pu8Data[0] & 0x40;
     u8Dis_standard = pu8Data[0] & 0x1f;
 
-    switch(u8Dis_standard)
+    switch (u8Dis_standard)
     {
         case 0x00:
             u8FrameRate = 30;
             pstParseInfo->stOutputData.enDispStandard = STANDARD_720_480_30;
             break;
+
         case 0x01:
             u8FrameRate = 25;
             pstParseInfo->stOutputData.enDispStandard = STANDARD_720_576_25;
             break;
+
         case 0x02:
             u8FrameRate = 60;
             pstParseInfo->stOutputData.enDispStandard = STANDARD_1280_720_60;
             break;
+
         case 0x03:
             u8FrameRate = 60;
             pstParseInfo->stOutputData.enDispStandard = STANDARD_1920_1080_60;
             break;
+
         default:
             u8FrameRate = 25;
             pstParseInfo->stOutputData.enDispStandard = STANDARD_720_576_25;
@@ -590,10 +654,12 @@ HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 
     u8HeadLength += 1;
     u32PTSValue = (pu8Data[0] << 24) | (pu8Data[1] << 16) | (pu8Data[2] << 8) | pu8Data[3];
     u32PTSValue /= PTS_UNITS;/*in units of 90Khz*/
-    if(pstParseInfo->pfnGetPts)
+
+    if (pstParseInfo->pfnGetPts)
     {
-        (HI_VOID)pstParseInfo->pfnGetPts(pstParseInfo->u32UserData,&s64CurPts);
-        if(u32PTSValue < (HI_U32)s64CurPts )
+        (HI_VOID)pstParseInfo->pfnGetPts((HI_U32)(intptr_t)pstParseInfo->pUserData, &s64CurPts);
+
+        if (u32PTSValue < (HI_U32)s64CurPts )
         {
             u32PTSValue += (HI_U32)PTS_OFFSET;
         }
@@ -622,7 +688,7 @@ HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 
     pu8Data += 4;
     u8HeadLength += 4;
 
-    u32Duration = (pu8Data[0]| pu8Data[1]) & 0x07ff;
+    u32Duration = (pu8Data[0] | pu8Data[1]) & 0x07ff;
     /*unit:ms*/
     u32Duration = (u32Duration * 1000) / u8FrameRate;
     pstParseInfo->stOutputData.u32Duration = u32Duration;
@@ -636,12 +702,13 @@ HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 
     if ((pu8Data != (&pu8DataSrc[u8HeadLength])))
     {
         HI_ERR_SUBT("\nerror, pu8Data addr:%p, 0x%02x, &pDataSrc[u8PesHeadLength] addr:%p, 0x%02x\n",
-                 pu8Data, pu8Data[0], &pu8DataSrc[u8HeadLength], pu8DataSrc[u8HeadLength]);
+                    pu8Data, pu8Data[0], &pu8DataSrc[u8HeadLength], pu8DataSrc[u8HeadLength]);
 
         return HI_FAILURE;
     }
 
     s32Ret = ParseBitmapHead(pstParseInfo, &pu8DataSrc[u8HeadLength], u32DataLen - (HI_U32)u8HeadLength);
+
     if (s32Ret != HI_SUCCESS)
     {
         HI_ERR_SUBT("failed in SCTE_SUBT_Parse_ParseBitmap !!!\n");
@@ -651,6 +718,7 @@ HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 
 
     /*Display*/
     s32Ret = SCTE_SUBT_Display_DisplaySubt(pstParseInfo->hDisplay, &pstParseInfo->stOutputData);
+
     if (s32Ret != HI_SUCCESS)
     {
         HI_ERR_SUBT("failed in SCTE_SUBT_Display_DisplaySubt !!!\n");

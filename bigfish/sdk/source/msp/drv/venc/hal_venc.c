@@ -786,49 +786,6 @@ HI_VOID VENC_HAL_CfgReg( VeduEfl_EncPara_S* EncHandle )
         D32.bits.region7Keep   = 0;//pEncPara->RoiCfg.Keep[7];
 #endif        
         pAllReg->VEDU_ROICFG.u32 = D32.u32;
-   //****************************************************************************//     
-
-        if(D32.u32 & 0xFF)
-        {
-            {   
-                U_VEDU_ROIQP0 D32;
-                
-                D32.bits.ROIQp0 = pEncPara->RoiCfg.Qp[0];
-                D32.bits.ROIQp1 = pEncPara->RoiCfg.Qp[1];
-                D32.bits.ROIQp2 = pEncPara->RoiCfg.Qp[2];
-                D32.bits.ROIQp3 = pEncPara->RoiCfg.Qp[3];
-                
-                pAllReg->VEDU_ROIQP0.u32 = D32.u32;
-            }
-            {   
-                U_VEDU_ROIQP1 D32;
-                
-                D32.bits.ROIQp4 = pEncPara->RoiCfg.Qp[4];
-                D32.bits.ROIQp5 = pEncPara->RoiCfg.Qp[5];
-                D32.bits.ROIQp6 = pEncPara->RoiCfg.Qp[6];
-                D32.bits.ROIQp7 = pEncPara->RoiCfg.Qp[7];
-                
-                pAllReg->VEDU_ROIQP1.u32 = D32.u32;
-            }
-            for(i = 0; i < 8; i++)
-            {   
-                U_VEDU_ROISIZE D32;
-                
-                D32.bits.ROIWidth  = pEncPara->RoiCfg.Width [i];
-                D32.bits.ROIHeight = pEncPara->RoiCfg.Height[i];
-                
-                pAllReg->VEDU_ROISIZE[i].u32 = D32.u32;
-            }
-            for(i = 0; i < 8; i++)
-            {   
-                U_VEDU_ROIPOS D32;
-                
-                D32.bits.ROIstartX = pEncPara->RoiCfg.StartX[i];
-                D32.bits.ROIstartY = pEncPara->RoiCfg.StartY[i];
-                
-                pAllReg->VEDU_ROIPOS[i].u32 = D32.u32;
-            }
-        }
     }
     /* OSD */
     {   

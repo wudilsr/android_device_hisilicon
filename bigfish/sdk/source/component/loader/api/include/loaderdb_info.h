@@ -38,6 +38,10 @@ extern "C" {
 #define FASTPLAY "fastplay"
 #define LOADER_BASEPARAM "baseparam"
 
+#define CACHE  "cache"
+#define SDCARD "sdcard"
+#define USERDATA "userdata"
+
 typedef struct tagParaHead
 {
     HI_U32 u32MagicNumber;     /**<  magic number name */

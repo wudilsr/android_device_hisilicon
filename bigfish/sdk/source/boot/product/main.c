@@ -281,9 +281,10 @@ HI_S32 product_init(HI_VOID)
 {
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
     HI_OTP_LockIdWord();
-
+#if 0
 #ifdef HI_BOOT_IR_SUPPORT
     register_hibernate_cancel(Android_Qb_CheckRemote);
+#endif
 #endif
 #endif
 
@@ -503,6 +504,9 @@ int fastapp_entry(int argc, char *argv[])
     HI_DRV_PDM_SetTagData();
 
 #ifdef HI_ADVCA_TYPE_VERIMATRIX
+#ifdef HI_ANDROID_BOOT_SUPPORT
+    set_default_ethaddr();  
+#endif
     HI_CA_AuthenticateEntry_VMX();
 #else
 #ifdef  HI_ADVCA_FUNCTION_RELEASE
@@ -522,7 +526,7 @@ int fastapp_entry(int argc, char *argv[])
 #endif
 #endif
 
-#ifdef HI_ANDROID_BOOT_SUPPORT
+#if defined (HI_ANDROID_BOOT_SUPPORT) && (!HI_ADVCA_TYPE_VERIMATRIX)
     Android_Main();
 #endif
 

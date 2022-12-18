@@ -63,6 +63,7 @@ typedef enum hiSVR_PLAYER_ATTR_E
     HI_SVR_PLAYER_ATTR_AUDTRACK_HDL,          /**< Obtain the audio track handle. The parameter is the HI_HANDLE variable. *//**< CNcomment:获取音频track句柄，参数为HI_HANDLE变量 */
     HI_SVR_PLAYER_ATTR_SYNC,                          /**< Set the sync attribute. The parameter is ::HI_SVR_PLAYER_SYNC_ATTR_S. *//**< CNcomment:设置音视频、字幕时间戳偏移，参数为::HI_SVR_PLAYER_SYNC_ATTR_S */
     HI_SVR_PLAYER_ATTR_VSINK_HDL,              /**< set the vsink handle. The parameter is HI_SVR_VSINK_S* */
+    HI_SVR_PLAYER_ATTR_MUTE,                   /**< set/get the audio track mute/unmute. The parameter is HI_BOOL * */
     HI_SVR_PLAYER_ATTR_BUTT
 } HI_SVR_PLAYER_ATTR_E;
 
@@ -133,6 +134,7 @@ typedef enum hiSVR_PLAYER_EVENT_E
     HI_SVR_PLAYER_EVENT_DOWNLOAD_PROGRESS,   /**< Current download progress of the player. The event is reported every 300 ms. The parameter is ::HI_SVR_PLAYER_PROGRESS_S. *//**< CNcomment:播放器当前下载进度，每隔300ms上报一次该事件，参数值为::HI_SVR_PLAYER_PROGRESS_S */
     HI_SVR_PLAYER_EVENT_BUFFER_STATE,        /**< Reporting buffer status. The parameter type is ::HI_SVR_PLAYER_BUFFER_S. *//**< CNcomment:缓冲状态上报,参数类型为::HI_SVR_PLAYER_BUFFER_S */
     HI_SVR_PLAYER_EVENT_FIRST_FRAME_TIME,    /**< The display time of the first frame from setting the setMedia. The parameter is ::HI_U32, in the unit of ms. Not supported now*//**< CNcomment:从设置媒体setMedia开始第一帧显示时间,参数为::HI_U32,单位为ms .目前不支持*/
+    HI_SVR_PLAYER_EVENT_FIRST_FRAME_AFTER_SEEK, /**< The event of getting first frame after seek. *//**< CNcomment: seek之后获取到第一帧视频 */
 
     HI_SVR_PLAYER_EVENT_ERROR,               /**< Event of indicating that an error occurs in the player. The parameter is ::HI_SVR_PLAYER_ERROR_E.*//**< CNcomment:播放器错误信息事件，参数为::HI_SVR_PLAYER_ERROR_E */
     HI_SVR_PLAYER_EVENT_NETWORK_INFO,       /**< Report the network status. The parameter is ::HI_FORMAT_NET_STATUS_S. *//**< CNcomment:网络状态上报, 参数为::HI_FORMAT_NET_STATUS_S */

@@ -90,9 +90,9 @@ static HI_VOID HI_GFX_ShowVersionK(HIGFX_MODE_ID_E ModID)
     	if (ModID >= HIGFX_BUTT_ID)
     		return;
 	
-	if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	
-		GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
-	else
+	//if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	
+		//GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
+	//else
 		GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);		
 
 	return;
@@ -357,7 +357,7 @@ static long png_ioctl(struct file  *ffile,unsigned int  cmd,unsigned long arg)
 
             //PNG_ERROR("kernel sizeof(PNG_DECODE_CMD_S):%d\n", sizeof(PNG_DECODE_CMD_S));
 
-            if (copy_from_user(&stCmd, argp, sizeof(PNG_DECODE_CMD_S)))
+            if (copy_from_user(&stCmd, argp, sizeof(PNG_DECRESULT_CMD_S)))
             {
     	        return -EFAULT;
             }

@@ -28,53 +28,7 @@ ENTRY(hi3798mx_secondary_startup)
 	msr	cpsr, r0
 
 	bl flash_cache_all
-#ifdef CONFIG_SECURE_EXTENSION
-	/* add for set NSACR*/
-	ldr	r0,=0x00060c00           @Bit 10:unsecure access cp10       Bit 11:unsecure access cp11
-	mcr	p15, 0, r0, c1, c1, 2    @Bit 17:non_secure can access L2ECTLR   Bit 18:non_secure can access actlr smp bit
-	/* end */
 
-	/* Set GIC */
-	/* Get the address of the GIC */
-	ldr	r0, =0xF8A01000         @ GICD_BASE
-
-	/*enable the gic*/
-	ldr	r1,[r0]
-	orr	r1,r1,#0x03
-	str	r1,[r0]
-
-	/*Enable interrupt source 0->15 */
-	ldr	r1,=0x0000FFFF
-	str	r1,[r0,#0x100]
-
-	/*set all SGI PPI unsecure*/
-	ldr	r1,=0xfffff7ff
-	str	r1,[r0,#0x80]
-
-	/* Set priority of interrupt source 0->16 to 0x0 (highest priority) */
-	mov	r1, #0xa0
-	str	r1, [r0, #0x400]        @ Sources 00-03
-	str	r1, [r0, #0x404]        @ Sources 04-07
-	str	r1, [r0, #0x408]        @ Sources 08-11
-	str	r1, [r0, #0x40C]        @ Sources 12-15
-
-	ldr	r0, =0xF8A02000         @ GICC_BASE
-	ldr	r1,[r0]
-	orr	r1,r1,#0xB              @ Bit4:SBPR 0 bit3:FIQEn 1 bit2:AckCtl 0  bit1:EnableNS 1 bit0:EnableS 1
-	str	r1,[r0]
-
-	/* Set the Processor's Priority	Mask */
-	mov	r1, #0xFF
-	str	r1, [r0, #0x4]	        @ Write	the Priority Mask register
-
-	ldr	r1, =0x3E701000         @ SEC_MONITOR_ADDR
-	mcr	p15, 0, r1, c12, c0, 1
-
-	cps	#0x16
-	mov	r1, #0x31
-	mcr	p15, 0, r1, c1, c1, 0                   @ Write Secure Configuration Register
-	cps	#0x13
-#endif
 	mrc	p15, 0, r0, c0, c0, 5
 	and	r0, r0, #15
 	adr	r4, 1f

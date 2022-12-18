@@ -141,7 +141,7 @@ typedef struct tagVFMW_GLOBAL_S
 typedef struct tagSTREAM_BUF_INST_S
 {
     HI_HANDLE     hBuf;                 /* BM buffer handle */
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_BOOL       bTvp;                 /* Secure mem flag */
 #endif
     HI_U32        u32Size;              /* Size */
@@ -1808,7 +1808,7 @@ HI_S32 VDEC_SetColorSpace(HI_HANDLE hInst,HI_UNF_COLOR_SPACE_E*pParam)
     return HI_SUCCESS;
 }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 HI_S32 VDEC_SetTVP(HI_HANDLE hInst, HI_UNF_AVPLAY_TVP_ATTR_S* pParam)
 {
     HI_S32 s32Ret;
@@ -2437,17 +2437,17 @@ HI_S32 VDEC_FreeHandle(HI_HANDLE hHandle)
     return ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_FREEHANDLE, &hHandle);
 }
 
-#ifndef HI_TVP_SUPPORT
-HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, HI_U32 u32BufSize)
+#ifndef HI_TEE_SUPPORT
+HI_S32 VDEC_CreateStreamBuf(HI_HANDLE hVdec, HI_HANDLE* phBuf, HI_U32 u32BufSize)
 #else
-HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
+HI_S32 VDEC_CreateStreamBuf(HI_HANDLE hVdec, HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
 #endif
 {
     HI_S32 s32Ret;
     VDEC_CMD_CREATEBUF_S stBuf;
     VDEC_CMD_BUF_USERADDR_S stUserAddr;
     STREAM_BUF_INST_S* pstBufInst = HI_NULL;
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
     if ((HI_NULL == phBuf) || (0 == u32BufSize))
 #else
     if ((HI_NULL == phBuf) || (0 == pstBufAttr->u32BufSize))
@@ -2463,7 +2463,7 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
         return HI_ERR_VDEC_MALLOC_FAILED;
     }
     memset(pstBufInst, 0, sizeof(STREAM_BUF_INST_S));
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     memset(&stUserAddr, 0, sizeof(VDEC_CMD_BUF_USERADDR_S));
     pstBufInst->u32Size = pstBufAttr->u32BufSize;
 #else
@@ -2474,7 +2474,7 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
     pstBufInst->bRecvRlsFlag = HI_FALSE;
 #endif
 
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
     /* Create buffer manager */
     stBuf.u32Size = u32BufSize;
 #else
@@ -2485,6 +2485,8 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
     stBuf.bTvp = pstBufAttr->bTvp;
 #endif
 
+    stBuf.hVdec = hVdec;
+
     s32Ret = ioctl(s_stVdecAdpParam.s32DevFd, UMAPC_VDEC_CREATE_ESBUF, &stBuf);
     if (s32Ret != HI_SUCCESS)
     {
@@ -2494,7 +2496,7 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
     }
 
     /* Map MMZ */
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
     stUserAddr.u32UserAddr = (HI_U32)HI_MEM_Map(stBuf.u32PhyAddr, u32BufSize);
 #else
     if(HI_TRUE == pstBufAttr->bTvp)
@@ -2521,7 +2523,7 @@ HI_S32 VDEC_CreateStreamBuf(HI_HANDLE* phBuf, VDEC_BUFFER_ATTR_S *pstBufAttr)
     if (s32Ret != HI_SUCCESS)
     {
         HI_ERR_VDEC("UMAPC_VDEC_SETUSERADDR fail.\n");
-	#ifndef HI_TVP_SUPPORT
+	#ifndef HI_TEE_SUPPORT
         (HI_VOID)HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
 	#else
         if(HI_TRUE == pstBufAttr->bTvp)
@@ -2562,7 +2564,7 @@ HI_S32 VDEC_DestroyStreamBuf(HI_HANDLE hBuf)
     /* Free buffer memory */
     if (HI_NULL != pstBufInst->pu8MMZVirAddr)
     {
-	#ifndef HI_TVP_SUPPORT
+	#ifndef HI_TEE_SUPPORT
         s32Ret = HI_MEM_Unmap(pstBufInst->pu8MMZVirAddr);
 	#else
 	    if (HI_TRUE == pstBufInst->bTvp)

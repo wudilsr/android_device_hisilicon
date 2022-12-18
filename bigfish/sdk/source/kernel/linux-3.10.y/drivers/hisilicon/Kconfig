@@ -18,6 +18,9 @@ config  TEE_DRIVER
 	default y if SECURE_EXTENSION
 	depends on SECURE_EXTENSION
 	help
-	 Provides a communication interface between userspace and
-	 TrustZone Operating Environment.
+	  Provides a communication interface between userspace and
+	  TrustZone Operating Environment.
+
+source "drivers/hisilicon/tee/Kconfig"
+
 endmenu

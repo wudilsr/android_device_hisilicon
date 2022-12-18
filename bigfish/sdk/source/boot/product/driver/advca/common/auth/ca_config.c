@@ -21,8 +21,11 @@ History       :
 HI_U32 g_MaxBlockSize =  0x00100000;//(1M)
 
 /*Address of bootenv parameters in flash*/
+#if defined(HI_ANDROID_BOOT_SUPPORT) && defined(HI_ADVCA_TYPE_VERIMATRIX)
+HI_U32 g_EnvFlashAddr =  0x00100000;
+#else
 HI_U32 g_EnvFlashAddr =  0x00080000;
-//HI_U32 g_EnvFlashAddr =  0x00100000;  		//1MB
+#endif
 
 /*Size of bootenv parameters in flash*/
 HI_U32 g_EnvFlashPartionSize =  0x00080000;   	//512KB

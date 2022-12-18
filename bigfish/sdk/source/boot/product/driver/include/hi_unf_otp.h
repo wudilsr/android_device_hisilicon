@@ -32,13 +32,20 @@ HI_S32 HI_UNF_OTP_LockIDWord(HI_VOID);
 
 HI_S32 HI_UNF_OTP_BurnToSecureChipset(HI_VOID);
 
-/* The following interfaces are not considered as UNF */
+HI_U32 HI_UNF_OTP_Read(HI_U32 addr);
 
+HI_U8  HI_UNF_OTP_ReadByte(HI_U32 addr);
+
+HI_S32 HI_UNF_OTP_Write(HI_U32 addr, HI_U32 u32Data);
+
+HI_S32 HI_UNF_OTP_WriteByte(HI_U32 addr, HI_U8 u8data);
+
+/* The following interfaces are not considered as UNF */
 HI_S32 HI_OTP_WriteByte(HI_U32 addr, HI_U8 u8data);
 
 HI_U32 HI_OTP_Read(HI_U32 addr);
 
-HI_U8 HI_OTP_ReadByte(HI_U32 addr);
+HI_U8  HI_OTP_ReadByte(HI_U32 addr);
 
 #endif
 

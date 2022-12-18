@@ -1210,7 +1210,7 @@ void bta_dm_search_start (tBTA_DM_MSG *p_data)
         return;
     }
 
-#ifdef BLUETOOTH_RTK
+#ifdef BLUETOOTH_RTK_SHUTOFF
 
 #else
     BTM_ClearInqDb(NULL);
@@ -1283,11 +1283,25 @@ void bta_dm_search_cancel (tBTA_DM_MSG *p_data)
     else if (!bta_dm_search_cb.name_discover_done)
     {
         BTM_CancelRemoteDeviceName();
+        if ((p_msg = (tBTA_DM_MSG *) GKI_getbuf(sizeof(tBTA_DM_MSG))) != NULL)
+        {
+            p_msg->hdr.event = BTA_DM_SEARCH_CMPL_EVT;
+            p_msg->hdr.layer_specific = BTA_DM_API_DISCOVER_EVT;
+            bta_sys_sendmsg(p_msg);
+
+        }
     }
 #if BLE_INCLUDED == TRUE && BTA_GATT_INCLUDED == TRUE
     if (bta_dm_search_cb.gatt_disc_active)
     {
         bta_dm_cancel_gatt_discovery(bta_dm_search_cb.peer_bdaddr);
+        if ((p_msg = (tBTA_DM_MSG *) GKI_getbuf(sizeof(tBTA_DM_MSG))) != NULL)
+        {
+            p_msg->hdr.event = BTA_DM_SEARCH_CMPL_EVT;
+            p_msg->hdr.layer_specific = BTA_DM_API_DISCOVER_EVT;
+            bta_sys_sendmsg(p_msg);
+
+        }
     }
 #endif
 }
@@ -4938,6 +4952,35 @@ void bta_dm_add_ble_device (tBTA_DM_MSG *p_data)
     }
 }
 
+#ifdef BLUETOOTH_RTK
+/*******************************************************************************
+**
+** Function         bta_dm_add_ble_device_extra_info
+**
+** Description      This function adds an BLE device to an security database entry.
+**                  It is normally called during host startup to restore all required information
+**                  stored in the NVRAM.
+**
+** Parameters:
+**
+*******************************************************************************/
+void bta_dm_add_ble_device_extra_info (tBTA_DM_MSG *p_data)
+{
+    APPL_TRACE_DEBUG0("bta_dm_add_ble_device_extra_info");
+    if(!BTM_SecAddBleDeviceExtraInfo (p_data->add_ble_device_extra_info.bd_addr,
+                                      p_data->add_ble_device_extra_info.bd_name,
+                                      p_data->add_ble_device_extra_info.dev_class))
+    {
+        APPL_TRACE_ERROR2 ("BTA_DM: Error adding BLE Device Extra Info for device %08x%04x",
+                           (p_data->add_ble_device_extra_info.bd_addr[0]<<24)+(p_data->add_ble_device_extra_info.bd_addr[1]<<16)+ \
+                           (p_data->add_ble_device_extra_info.bd_addr[2]<<8)+p_data->add_ble_device_extra_info.bd_addr[3],
+                           (p_data->add_ble_device_extra_info.bd_addr[4]<<8)+p_data->add_ble_device_extra_info.bd_addr[5]);
+    }
+}
+
+#endif
+
+
 /*******************************************************************************
 **
 ** Function         bta_dm_add_ble_device
@@ -5241,7 +5284,11 @@ static void bta_dm_gatt_disc_complete(UINT16 conn_id, tBTA_GATT_STATUS status)
             p_msg->disc_result.result.disc_res.bd_name[BD_NAME_LEN-1] = 0;
 
             p_msg->disc_result.result.disc_res.device_type = BT_DEVICE_TYPE_BLE;
+#ifdef BLUETOOTH_RTK
+            if ((bta_dm_search_cb.ble_raw_used > 0)&&(conn_id != BTA_GATT_INVALID_CONN_ID))
+#else
             if ( bta_dm_search_cb.ble_raw_used > 0 )
+#endif
             {
                 p_msg->disc_result.result.disc_res.p_raw_data = GKI_getbuf(bta_dm_search_cb.ble_raw_used);
 

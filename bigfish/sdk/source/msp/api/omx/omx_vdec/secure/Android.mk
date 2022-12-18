@@ -30,7 +30,8 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS := $(CFG_HI_CFLAGS)
 LOCAL_CFLAGS += -DLOG_TAG=\"$(LOCAL_MODULE)\"
 LOCAL_CFLAGS += -pthread
-LOCAL_CFLAGS += -DHI_TVP_SUPPORT
+LOCAL_CFLAGS += -DHI_OMX_TEE_SUPPORT
+
 
 LOCAL_SHARED_LIBRARIES := libdl libutils liblog
 LOCAL_SHARED_LIBRARIES += libteec
@@ -53,8 +54,8 @@ LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
 LOCAL_C_INCLUDES += frameworks/native/include/media/hardware
 LOCAL_C_INCLUDES += device/hisilicon/bigfish/hardware/gpu/android/gralloc
 LOCAL_C_INCLUDES += device/hisilicon/bigfish/hardware/gpu/$(HISI_GPU_DIR)/android/gralloc
-LOCAL_C_INCLUDES += $(TVP_DIR)/libteec/inc
-LOCAL_C_INCLUDES += $(TVP_DIR)/libteec/sec_mmz/inc
+LOCAL_C_INCLUDES += $(HI_TEE_OS_DIR)/libteec/sec_mmz/inc
+LOCAL_C_INCLUDES += $(TEE_API_INCLUDE)
 
 LOCAL_SRC_FILES := $(sort $(call all-c-files-under, ./))
 

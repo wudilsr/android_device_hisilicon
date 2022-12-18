@@ -48,4 +48,7 @@ interface IHiDisplayManager
     int reload();
     int setOutputEnable(int port, int enable);
     int getOutputEnable(int port);
+    int setCECSuspend();
+    int getHDMICECSuspendEnable();
+    int setHDMICECSuspendEnable(int enable);
 }

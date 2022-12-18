@@ -57,6 +57,9 @@ namespace android {
             virtual int reload() = 0;
             virtual int setOutputEnable(int port, int enable) = 0;
             virtual int getOutputEnable(int port) = 0;
+            virtual int setCECSuspend() = 0;
+            virtual int getHDMICECSuspendEnable() = 0 ;
+            virtual int setHDMICECSuspendEnable(int enable) = 0 ;
 
     };
 

@@ -18,18 +18,8 @@
 
 CFLAGS += -I$(SRCDIR)../
 
-SRCS-y := nand_ids.c nand_init.c nand_ctrl.c nfc_if.c drv_if.c \
+SRCS-y := nand_spl_ids.c nand_ids.c nand_ctrl.c nand_init.c nfc_if.c drv_if.c \
 	nfc_unif.c
-
 SRCS-$(CONFIG_CMDLINE) += cmd_nand.c
-
-ifeq ($(CONFIG_GENERIC_NAND),y)
-SRCS-y += nand_spl_ids.c
 SRCS-$(CONFIG_NAND_HINFC504) += hinfc504/
 SRCS-$(CONFIG_NAND_HINFC610) += hinfc610/
-endif
-
-ifeq ($(CONFIG_GENERIC_SPI_NAND),y)
-SRCS-$(CONFIG_GENERIC_SPI_NAND) += spi_nand_spl_ids.c
-SRCS-$(CONFIG_NAND_HISNFC400) += hisnfc400/
-endif

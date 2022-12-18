@@ -23,6 +23,19 @@
 #include <asm/io.h>
 
 /******************************************************************************/
+
+long long get_chipid_reg(void)
+{
+	long long chipid = 0;
+	long long val = 0;
+
+	chipid = (long long)readl(REG_BASE_SCTL + REG_SC_SYSID0);
+	val = (long long)readl(REG_BASE_PERI_CTRL + REG_PERI_SOC_FUSE);
+	chipid = ((val & (0x1F << 16)) << 16) | (chipid & 0xFFFFFFFF);
+
+	return chipid;
+}
+/******************************************************************************/
 static int hi3798mx_boot_media(char **media)
 {
 	int boot_media;

@@ -82,7 +82,8 @@ HI_S32 VI_UtilsLockCreate(HI_VOID**phLock)
 
 HI_VOID VI_UtilsLockDestroy(HI_VOID* hLock)
 {
-    HI_KFREE(HI_ID_VI, hLock);
+    if(hLock)
+        HI_KFREE(HI_ID_VI, hLock);
 }
 
 HI_VOID VI_UtilsLock(HI_VOID* hLock, unsigned long *pFlag)
@@ -97,22 +98,30 @@ HI_VOID VI_UtilsUnlock(HI_VOID* hLock, unsigned long *pFlag)
 
 HI_VOID VI_UtilsInitEvent(VI_EVENT_S *pEvent, HI_S32 InitVal)
 {
-    pEvent->flag = InitVal;
-    init_waitqueue_head(&(pEvent->queue_head));
+    if(pEvent)
+    {
+        pEvent->flag = InitVal;
+        init_waitqueue_head(&(pEvent->queue_head));
+    }
 }
 
 HI_VOID VI_UtilsGiveEvent(VI_EVENT_S *pEvent)
 {
-    pEvent->flag = 1;
-
-    //wake_up_interruptible (&(pEvent->queue_head));
-    wake_up(&(pEvent->queue_head));
+    if(pEvent)
+    {
+        pEvent->flag = 1;
+        //wake_up_interruptible (&(pEvent->queue_head));
+        wake_up(&(pEvent->queue_head));
+    }
 }
 
 HI_S32 VI_UtilsWaitEvent(VI_EVENT_S *pEvent, HI_U32 msWaitTime)
 {
     HI_S32 l_ret = 0;
-
+    
+    if(pEvent == HI_NULL)
+        return HI_FAILURE;
+    
     if (msWaitTime != 0xffffffff)
     {
         l_ret = wait_event_interruptible_timeout(pEvent->queue_head, (pEvent->flag != 0), msecs_to_jiffies(msWaitTime));

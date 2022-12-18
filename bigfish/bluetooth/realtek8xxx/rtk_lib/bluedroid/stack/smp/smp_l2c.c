@@ -32,6 +32,9 @@
 
 #include "smp_int.h"
 
+#ifdef BLUETOOTH_RTK
+#include "btm_int.h"
+#endif
 
 
 static void smp_connect_cback (BD_ADDR bd_addr, BOOLEAN connected, UINT16 reason);
@@ -136,6 +139,22 @@ static void smp_data_ind (BD_ADDR bd_addr, BT_HDR *p_buf)
     /* reject the pairing request if there is an on-going SMP pairing */
     if (SMP_OPCODE_PAIRING_REQ == cmd || SMP_OPCODE_SEC_REQ == cmd)
     {
+#ifdef BLUETOOTH_RTK
+        tBTM_SEC_DEV_REC *p_dev_rec = btm_find_dev(bd_addr);
+        if(p_dev_rec) {
+            SMP_TRACE_WARNING3( "smp_data_ind dev_class[0] = %d, dev_class[1] = %d, dev_class[2] = %d", p_dev_rec->dev_class[0],
+                        p_dev_rec->dev_class[1],p_dev_rec->dev_class[2]);
+            if((p_dev_rec->dev_class[1] & 0x07) == 0x05){
+                if(SMP_OPCODE_SEC_REQ == cmd) {
+                    GKI_freebuf (p_buf);
+                    if(p_cb->state == SMP_ST_IDLE) {
+                        L2CA_RemoveFixedChnl (L2CAP_SMP_CID, bd_addr);
+                    }
+                    return;
+                }
+            }
+        }
+#endif
         if (p_cb->state == SMP_ST_IDLE)
         {
             p_cb->role = L2CA_GetBleConnRole(bd_addr);

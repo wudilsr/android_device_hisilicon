@@ -34,26 +34,10 @@ static struct flash_info_t nand_info = {0,};
 
 int set_nand_info(struct nand_dev_t *nand_dev)
 {
-	struct nand_chip_info_t *nand_chip_info = nand_dev->nand_info;
-	struct spi_nand_chip_info_t *spi_nand_chip_info = nand_dev->spi_nand_info;
+	struct nand_chip_info_t *info = nand_dev->nand_info;
 
-	if (nand_chip_info) {
-		nand_info.type = FT_NAND;
-		strncpy(nand_info.name, nand_chip_info->name, 
-			sizeof(nand_info.name));
-		nand_info.nr_ids = min(nand_chip_info->length, 
-				       sizeof(nand_info.ids));
-		memcpy(nand_info.ids, nand_chip_info->id, nand_info.nr_ids);
-
-	} else if (spi_nand_chip_info) {
-		nand_info.type = FT_SNAND;
-		strncpy(nand_info.name, spi_nand_chip_info->name, 
-			sizeof(nand_info.name));
-		nand_info.nr_ids = min(spi_nand_chip_info->length, 
-				       sizeof(nand_info.ids));
-		memcpy(nand_info.ids, spi_nand_chip_info->id, nand_info.nr_ids);
-	}
-
+	nand_info.type = FT_NAND;
+	strncpy(nand_info.name, info->name, sizeof(nand_info.name));
 	nand_info.name[sizeof(nand_info.name) - 1] = '\0';
 	nand_info.pagesize = nand_dev->pagesize;
 	nand_info.blocksize = nand_dev->blocksize;
@@ -61,6 +45,8 @@ int set_nand_info(struct nand_dev_t *nand_dev)
 	nand_info.oobsize = nand_dev->oobsize;
 	nand_info.oobused = nand_dev->oobused;
 	nand_info.nr_chips = nand_dev->nr_chip;
+	nand_info.nr_ids = min(info->length, sizeof(nand_info.ids));
+	memcpy(nand_info.ids, info->id, nand_info.nr_ids);
 
 	return 0;
 }
@@ -455,8 +441,7 @@ int64 nand_erase_block(const uint64 *address, const uint64 *size, int force)
 
 struct flash_info_t *get_nand_info(void)
 {
-	if ((nand_info.type != FT_NAND) 
-	    && (nand_info.type != FT_SNAND))
+	if (nand_info.type != FT_NAND)
 		get_nand_dev();
 	return &nand_info;
 }

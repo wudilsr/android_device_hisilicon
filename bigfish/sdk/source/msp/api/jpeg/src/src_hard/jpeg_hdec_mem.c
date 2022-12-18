@@ -201,7 +201,7 @@ HI_VOID JPEG_HDEC_FreeStreamMem(JPEG_HDEC_HANDLE_S_PTR pJpegHandle)
 	  s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf, bMemMMUType);
 	#else
   	  s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
-	  s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
+	  s32Ret |= HI_GFX_FreeMem((unsigned long)pJpegHandle->stHDecDataBuf.pSaveStreamPhyBuf);
 	#endif
 #endif
 	  if(HI_SUCCESS != s32Ret){
@@ -707,7 +707,7 @@ HI_VOID JPEG_HDEC_FreeOutMem(JPEG_HDEC_HANDLE_S_PTR	 pJpegHandle)
 		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy, bMemMMUType);
 	#else
 		s32Ret = HI_GFX_Unmap((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy );
-		s32Ret = HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy);
+		s32Ret |= HI_GFX_FreeMem((unsigned long)pJpegHandle->stMiddleSurface.pOutPhy);
 	#endif
 #endif
 		if(HI_SUCCESS != s32Ret){

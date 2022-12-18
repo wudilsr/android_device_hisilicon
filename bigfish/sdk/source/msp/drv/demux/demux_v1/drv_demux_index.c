@@ -1,7 +1,7 @@
 
 /*!*********************************************************************
 *
-* Copyright (c) 2006 HUAWEI - All Rights Reserved
+* Copyright (c) 2006 Hisilicon - All Rights Reserved
 *
 * @file  pvr_index.c
 * @Date  2009/4/3

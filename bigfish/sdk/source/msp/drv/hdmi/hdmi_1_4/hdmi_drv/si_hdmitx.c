@@ -286,7 +286,6 @@ HI_BOOL SI_IsHDMIResetting(void)
 void SI_SW_ResetHDMITX(void)
 {
     HI_U8 TimeOut = 20;
-    HI_U8 RegVal;
     COM_INFO("--> SI_SW_ResetHDMITX\n");
 
     SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
@@ -314,24 +313,14 @@ void SI_SW_ResetHDMITX(void)
 //-------------------------------------------------------------------
 void SI_CheckClockStable(void)
 {
-    HI_U8 TimeOut = 20;
-    HI_U8 RegVal;
+    HI_U8 TimeOut = 100;
 
     COM_INFO("--> SI_CheckClockStable.\n");
-    if(siiIsTClockStable())
-    {
-        COM_INFO("TClock Stable:%d <--\n", siiIsTClockStable());
-        return;
-    }
 
-    SI_AssertHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-    DelayMS(10);
-    SI_ReleaseHDMITX_SWReset(BIT_TX_SW_RST | BIT_TX_FIFO_RST);
-    DelayMS(5);          // allow TCLK (sent to Rx across the HDMS link) to stabilize
     
     while ( !siiIsTClockStable() && --TimeOut )
     {
-        DelayMS(5);         // wait for input pixel clock to stabilze
+        DelayMS(1);         // wait for input pixel clock to stabilze
     }
 
     if (TimeOut == 0)

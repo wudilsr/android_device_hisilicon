@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,10 +61,10 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/.vdm_hal_avs.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_avs.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_avs.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_avs.o
@@ -152,15 +152,15 @@ AVSHAL_V300R001_WirteSlicMsg:
 	str	r1, [fp, #-64]	@ stream_base_addr, %sfp
 	mov	r5, r0	@ pAvsDecParam, pAvsDecParam
 	mla	r6, r2, ip, r4	@ tmp229, tmp228,, tmp225
-	ldr	r4, [r6, #48]	@ D.39400, <variable>.MsgSlotAddr
-	add	r0, r4, #320	@, D.39400,
+	ldr	r4, [r6, #48]	@ D.39413, <variable>.MsgSlotAddr
+	add	r0, r4, #320	@, D.39413,
 	str	r0, [fp, #-84]	@, %sfp
-	mov	r0, r4	@, D.39400
+	mov	r0, r4	@, D.39413
 	bl	MEM_Phy2Vir	@
 	ldr	r3, [r5, #104]	@ <variable>.slice_start_mbn, <variable>.slice_start_mbn
 	cmp	r3, #0	@ <variable>.slice_start_mbn,
 	streq	r3, [fp, #-80]	@ <variable>.slice_start_mbn, %sfp
-	add	r6, r0, #320	@ pMsgBase.562, D.39403,
+	add	r6, r0, #320	@ pMsgBase.562, D.39416,
 	beq	.L5	@,
 	ldr	ip, [r5, #88]	@ <variable>.stream_phy_addr, <variable>.stream_phy_addr
 	mov	r1, #1	@,
@@ -168,11 +168,11 @@ AVSHAL_V300R001_WirteSlicMsg:
 	mov	r2, #0	@ tmp238,
 	add	lr, ip, #4	@ tmp232, <variable>.stream_phy_addr,
 	str	r1, [fp, #-80]	@, %sfp
-	rsb	r1, r3, lr	@ D.39415,, tmp232
-	add	r4, r4, #576	@ D32.568, D.39400,
-	bic	sl, r1, #-16777216	@ D32.564, D.39415,
+	rsb	r1, r3, lr	@ D.39428,, tmp232
+	add	r4, r4, #576	@ D32.568, D.39413,
+	bic	sl, r1, #-16777216	@ D32.564, D.39428,
 	bic	r3, sl, #15	@ D32.564, D32.564,
-	mov	ip, r1, asl #28	@ D32, D.39415,
+	mov	ip, r1, asl #28	@ D32, D.39428,
 	str	ip, [r0, #320]	@ D32,
 	str	r3, [r0, #324]	@ D32.564,
 	str	r2, [r0, #328]	@ tmp238,
@@ -219,7 +219,7 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r2, [r3, #88]	@ temp.570, <variable>.stream_phy_addr
 	add	ip, r2, #3	@ tmp278, temp.570,
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	lr, ip, #-2130706432	@ t, tmp278,
 	.pushsection .pv_table,"a"
@@ -242,9 +242,9 @@ AVSHAL_V300R001_WirteSlicMsg:
 .L13:
 	rsb	lr, r4, r8	@ tmp347, i, tmp439
 	add	r3, r5, lr, asl #2	@, tmp349, pAvsDecParam, tmp347,
-	ldr	r2, [r3, #92]	@ D.39508, <variable>.stream_phy_addr
+	ldr	r2, [r3, #92]	@ D.39521, <variable>.stream_phy_addr
 	ldr	r1, [r3, #96]	@ <variable>.stream_lenInByte, <variable>.stream_lenInByte
-	cmp	r2, #0	@ D.39508,
+	cmp	r2, #0	@ D.39521,
 	mov	r0, r1, asl #3	@ bit_len_0, <variable>.stream_lenInByte,
 	beq	.L16	@,
 	ldr	r3, [r3, #100]	@ <variable>.stream_lenInByte, <variable>.stream_lenInByte
@@ -253,10 +253,10 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r9, [fp, #-64]	@, %sfp
 	cmp	r0, #0	@ bit_len_0,
 	mov	ip, r3, asl #3	@ bit_len_1, <variable>.stream_lenInByte,
-	rsb	lr, r9, r2	@ D.39513,, D.39508
+	rsb	lr, r9, r2	@ D.39526,, D.39521
 	bicne	ip, ip, #-33554432	@ pretmp.573, bit_len_1,
-	and	r1, lr, #15	@ tmp367, D.39513,
-	bic	r2, lr, #15	@ bit_stream_addr_1, D.39513,
+	and	r1, lr, #15	@ tmp367, D.39526,
+	bic	r2, lr, #15	@ bit_stream_addr_1, D.39526,
 	bicne	r3, r2, #-16777216	@ prephitmp.539, bit_stream_addr_1,
 	moveq	r0, ip	@ bit_len_0, bit_len_1
 	mov	r9, r1, asl #3	@ bit_offset_1, tmp367,
@@ -268,10 +268,10 @@ AVSHAL_V300R001_WirteSlicMsg:
 	strne	r9, [fp, #-60]	@, %sfp
 .L18:
 	mov	ip, r4, asl #5	@ tmp382, i,
-	mov	r9, r4, asl #8	@ D.39425, i,
+	mov	r9, r4, asl #8	@ D.39438, i,
 	add	r1, ip, #1	@, tmp382,
 	ldr	ip, [fp, #-48]	@, %sfp
-	add	lr, r9, #12	@, D.39425,
+	add	lr, r9, #12	@, D.39438,
 	mov	r2, r4, asl #6	@ tmp379, i,
 	str	lr, [fp, #-56]	@, %sfp
 	bic	lr, ip, #-16777216	@ D32.595,,
@@ -306,22 +306,22 @@ AVSHAL_V300R001_WirteSlicMsg:
 	add	r0, r3, #88	@ tmp413, tmp398,
 	add	r3, r5, r0	@ ivtmp.560, pAvsDecParam, tmp413
 	beq	.L38	@,
-	ldr	r0, [r3, #72]	@ D.39522, <variable>.slice_start_mbn
+	ldr	r0, [r3, #72]	@ D.39535, <variable>.slice_start_mbn
 	add	r2, r2, #1	@ k, k,
 	add	r3, r3, #28	@ ivtmp.560, ivtmp.560,
-	cmp	r1, r0	@ prephitmp.541, D.39522
+	cmp	r1, r0	@ prephitmp.541, D.39535
 	bcc	.L20	@,
 .L38:
 	mov	r8, r6	@ pMsgBase.562, pMsgBase.562
 	b	.L21	@
 .L22:
-	ldr	r6, [r3, #72]	@ D.39522, <variable>.slice_start_mbn
+	ldr	r6, [r3, #72]	@ D.39535, <variable>.slice_start_mbn
 	add	r3, r3, #56	@ ivtmp.560, ivtmp.560,
-	cmp	r1, r6	@ prephitmp.541, D.39522
+	cmp	r1, r6	@ prephitmp.541, D.39535
 	bcc	.L39	@,
-	ldr	r6, [r0, #72]	@ D.39522, <variable>.slice_start_mbn
+	ldr	r6, [r0, #72]	@ D.39535, <variable>.slice_start_mbn
 	add	r2, r2, #1	@ k, k,
-	cmp	r1, r6	@ prephitmp.541, D.39522
+	cmp	r1, r6	@ prephitmp.541, D.39535
 	bcc	.L39	@,
 .L21:
 	add	r2, r2, #1	@ k, k,
@@ -343,7 +343,7 @@ AVSHAL_V300R001_WirteSlicMsg:
 	sub	r0, lr, #1	@ slice_end_mbn, <variable>.slice_start_mbn,
 .L24:
 	mov	lr, r4, asl #4	@ tmp432, i,
-	add	r9, r9, #252	@ tmp435, D.39425,
+	add	r9, r9, #252	@ tmp435, D.39438,
 	add	r4, lr, #1	@ tmp433, tmp432,
 	add	r7, r7, #1	@ j, j,
 	uxth	ip, r1	@ tmp430, prephitmp.541
@@ -375,7 +375,7 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r0, [fp, #-68]	@, %sfp
 	add	ip, r2, #2	@ tmp281, temp.570,
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	r2, ip, #-2130706432	@ t, tmp281,
 	.pushsection .pv_table,"a"
@@ -387,7 +387,7 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r1, [r3, #88]	@ <variable>.stream_phy_addr, <variable>.stream_phy_addr
 	add	lr, r1, #4	@ tmp291, <variable>.stream_phy_addr,
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	ip, lr, #-2130706432	@ t, tmp291,
 	.pushsection .pv_table,"a"
@@ -400,7 +400,7 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r2, [r3, #88]	@ <variable>.stream_phy_addr, <variable>.stream_phy_addr
 	add	r1, r2, #5	@ tmp302, <variable>.stream_phy_addr,
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	ip, r1, #-2130706432	@ t, tmp302,
 	.pushsection .pv_table,"a"
@@ -416,10 +416,10 @@ AVSHAL_V300R001_WirteSlicMsg:
 	ldr	r1, [r2, #88]	@ <variable>.stream_phy_addr, <variable>.stream_phy_addr
 	ldr	r2, [fp, #-68]	@, %sfp
 	add	r0, r1, #2	@ tmp313, <variable>.stream_phy_addr,
-	rsb	ip, r3, r0	@ D.39493,, tmp313
+	rsb	ip, r3, r0	@ D.39506,, tmp313
 	cmp	r2, #0	@,
-	and	r0, ip, #15	@ tmp315, D.39493,
-	bic	r1, ip, #15	@, D.39493,
+	and	r0, ip, #15	@ tmp315, D.39506,
+	bic	r1, ip, #15	@, D.39506,
 	str	r1, [fp, #-48]	@, %sfp
 	mov	r3, r0, asl #3	@, tmp315,
 	str	r3, [fp, #-52]	@, %sfp
@@ -531,7 +531,7 @@ AVSHAL_V300R001_StartDec:
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38949,
+	mvn	r0, #0	@ D.38963,
 .L48:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -544,11 +544,11 @@ AVSHAL_V300R001_StartDec:
 	beq	.L114	@,
 .L53:
 	movw	r2, #14424	@ tmp293,
-	ldr	r0, [r5, r2]	@ D.38974, <variable>.SlcNum
-	cmp	r0, #0	@ D.38974,
+	ldr	r0, [r5, r2]	@ D.38988, <variable>.SlcNum
+	cmp	r0, #0	@ D.38988,
 	ble	.L55	@,
 	ldr	r3, [r5, #88]	@ temp.876, <variable>.stream_phy_addr
-	sub	r4, r0, #1	@ tmp765, D.38974,
+	sub	r4, r0, #1	@ tmp765, D.38988,
 	and	r1, r4, #1	@ tmp767, tmp765,
 	mvn	r4, #0	@ stream_base_addr,
 	cmp	r3, #0	@ temp.876,
@@ -560,12 +560,12 @@ AVSHAL_V300R001_StartDec:
 	cmp	r4, r3	@ stream_base_addr, tmp868
 	movcs	r4, r3	@ stream_base_addr, tmp868
 .L83:
-	ldr	r3, [r5, #92]	@ D.38968, <variable>.stream_phy_addr
-	cmp	r3, #0	@ D.38968,
+	ldr	r3, [r5, #92]	@ D.38982, <variable>.stream_phy_addr
+	cmp	r3, #0	@ D.38982,
 	bne	.L115	@,
 .L85:
 	mov	r2, #1	@ i,
-	cmp	r2, r0	@ i, D.38974
+	cmp	r2, r0	@ i, D.38988
 	add	r3, r5, #28	@ ivtmp.711, pAvsDecParam,
 	beq	.L82	@,
 	cmp	r1, #0	@ tmp767,
@@ -574,20 +574,20 @@ AVSHAL_V300R001_StartDec:
 	cmp	r1, #0	@ temp.876,
 	bne	.L96	@,
 .L90:
-	ldr	r1, [r3, #92]	@ D.38968, <variable>.stream_phy_addr
-	cmp	r1, #0	@ D.38968,
+	ldr	r1, [r3, #92]	@ D.38982, <variable>.stream_phy_addr
+	cmp	r1, #0	@ D.38982,
 	beq	.L92	@,
 .L116:
 	ldr	lr, [r3, #100]	@ tmp881, <variable>.stream_lenInByte
 	cmp	lr, #0	@ tmp881,
 	ble	.L92	@,
-	bic	ip, r1, #15	@ tmp882, D.38968,
+	bic	ip, r1, #15	@ tmp882, D.38982,
 	cmp	r4, ip	@ stream_base_addr, tmp882
 	movcs	r4, ip	@ stream_base_addr, tmp882
 .L92:
 	add	r2, r2, #1	@ i, tmp768,
 	add	r3, r3, #28	@ ivtmp.711, tmp769,
-	cmp	r2, r0	@ i, D.38974
+	cmp	r2, r0	@ i, D.38988
 	beq	.L82	@,
 .L56:
 	ldr	r1, [r3, #88]	@ temp.876, <variable>.stream_phy_addr
@@ -600,13 +600,13 @@ AVSHAL_V300R001_StartDec:
 	cmp	r4, r1	@ stream_base_addr, tmp298
 	movcs	r4, r1	@ stream_base_addr, tmp298
 .L59:
-	ldr	r1, [r3, #92]	@ D.38968, <variable>.stream_phy_addr
-	cmp	r1, #0	@ D.38968,
+	ldr	r1, [r3, #92]	@ D.38982, <variable>.stream_phy_addr
+	cmp	r1, #0	@ D.38982,
 	beq	.L57	@,
 	ldr	lr, [r3, #100]	@ tmp295, <variable>.stream_lenInByte
 	cmp	lr, #0	@ tmp295,
 	ble	.L57	@,
-	bic	ip, r1, #15	@ tmp296, D.38968,
+	bic	ip, r1, #15	@ tmp296, D.38982,
 	cmp	r4, ip	@ stream_base_addr, tmp296
 	movcs	r4, ip	@ stream_base_addr, tmp296
 .L57:
@@ -622,12 +622,12 @@ AVSHAL_V300R001_StartDec:
 	bic	r1, r1, #15	@ tmp879, temp.876,
 	cmp	r4, r1	@ stream_base_addr, tmp879
 	movcs	r4, r1	@ stream_base_addr, tmp879
-	ldr	r1, [r3, #92]	@ D.38968, <variable>.stream_phy_addr
-	cmp	r1, #0	@ D.38968,
+	ldr	r1, [r3, #92]	@ D.38982, <variable>.stream_phy_addr
+	cmp	r1, #0	@ D.38982,
 	bne	.L116	@,
 	add	r2, r2, #1	@ i, tmp768,
 	add	r3, r3, #28	@ ivtmp.711, tmp769,
-	cmp	r2, r0	@ i, D.38974
+	cmp	r2, r0	@ i, D.38988
 	bne	.L56	@,
 .L82:
 	cmn	r4, #1	@ stream_base_addr,
@@ -763,8 +763,8 @@ AVSHAL_V300R001_StartDec:
 	bl	dprint_vfmw	@
 	ldrh	r9, [r5, #48]	@ <variable>.PicWidthInMb, <variable>.PicWidthInMb
 	movw	r3, #2047	@ tmp411,
-	mov	r2, r9, asl #4	@ D.39093, <variable>.PicWidthInMb,
-	sub	r8, r2, #1	@ tmp410, D.39093,
+	mov	r2, r9, asl #4	@ D.39107, <variable>.PicWidthInMb,
+	sub	r8, r2, #1	@ tmp410, D.39107,
 	cmp	r8, r3	@ tmp410, tmp411
 	bhi	.L117	@,
 .L64:
@@ -779,7 +779,7 @@ AVSHAL_V300R001_StartDec:
 	mov	r7, r0, lsr #1	@ tmp427, tmp426,
 	ldr	r2, [r6, #0]	@ <variable>.pVdmRegVirAddr, <variable>.pVdmRegVirAddr
 	mov	r0, #3	@,
-	mul	r8, r9, r3	@ D.39116, tmp423, level
+	mul	r8, r9, r3	@ D.39130, tmp423, level
 	movw	r1, #:lower16:.LC13	@,
 	mul	r3, sl, r7	@ tmp429, <variable>.VahbStride, tmp427
 	movt	r1, #:upper16:.LC13	@,
@@ -787,14 +787,14 @@ AVSHAL_V300R001_StartDec:
 	mvn	r9, #0	@ tmp458,
 	movw	sl, #:lower16:g_HwMem	@ tmp433,
 	movt	sl, #:upper16:g_HwMem	@ tmp433,
-	add	r3, r3, r8, asl #4	@, tmp431, tmp429, D.39116,
+	add	r3, r3, r8, asl #4	@, tmp431, tmp429, D.39130,
 	mov	lr, r3, asl #1	@ tmp432, tmp431,
 	str	lr, [fp, #-48]	@ tmp432, <variable>.uvoffset_1d
 	str	lr, [r2, #104]	@ tmp432,
 	ldr	r2, [fp, #-48]	@, D32
 	bl	dprint_vfmw	@
 	ldr	ip, [r6, #0]	@ <variable>.pVdmRegVirAddr, <variable>.pVdmRegVirAddr
-	mov	r2, r8, asl #5	@ D32.455, D.39116,
+	mov	r2, r8, asl #5	@ D32.455, D.39130,
 	mov	r0, #3	@,
 	movw	r1, #:lower16:.LC14	@,
 	movt	r1, #:upper16:.LC14	@,
@@ -1097,7 +1097,7 @@ AVSHAL_V300R001_StartDec:
 	add	r2, r5, #14400	@ ivtmp.702, pAvsDecParam,
 	add	r0, r2, #60	@ ivtmp.702, ivtmp.702,
 	add	r3, r8, #68	@ ivtmp.705, pMsgBase,
-	add	lr, r8, #196	@ D.39817, pMsgBase,
+	add	lr, r8, #196	@ D.39830, pMsgBase,
 .L69:
 	mov	r1, r0	@ tmp763, ivtmp.702
 	mov	r2, r3	@ tmp764, ivtmp.705
@@ -1109,7 +1109,7 @@ AVSHAL_V300R001_StartDec:
 	str	ip, [fp, #-48]	@ D32.475, D32
 	str	ip, [r3, #4]	@ D32.475,
 	add	r3, r2, #4	@ ivtmp.705, tmp764,
-	cmp	r3, lr	@ ivtmp.705, D.39817
+	cmp	r3, lr	@ ivtmp.705, D.39830
 	bne	.L69	@,
 	movw	r1, #14444	@ tmp692,
 	mov	r0, #4	@,
@@ -1156,20 +1156,20 @@ AVSHAL_V300R001_StartDec:
 	mov	r1, r4	@, stream_base_addr
 	mov	r2, #0	@,
 	bl	AVSHAL_V300R001_WirteSlicMsg	@
-	mov	r0, #0	@ D.38949,
+	mov	r0, #0	@ D.38963,
 	b	.L48	@
 .L117:
-	sub	r0, r2, #2048	@ tmp412, D.39093,
+	sub	r0, r2, #2048	@ tmp412, D.39107,
 	sub	r1, r0, #1	@ tmp412, tmp412,
 	cmp	r1, r3	@ tmp412, tmp411
 	movls	r3, #32	@ level,
 	bls	.L66	@,
-	sub	r9, r2, #4096	@ tmp415, D.39093,
+	sub	r9, r2, #4096	@ tmp415, D.39107,
 	sub	sl, r9, #1	@ tmp415, tmp415,
 	cmp	sl, r3	@ tmp415, tmp411
 	movls	r3, #48	@ level,
 	bls	.L66	@,
-	sub	r8, r2, #6144	@ tmp418, D.39093,
+	sub	r8, r2, #6144	@ tmp418, D.39107,
 	sub	r2, r8, #1	@ tmp418, tmp418,
 	cmp	r2, r3	@ tmp418, tmp411
 	movls	r3, #64	@ level,
@@ -1179,7 +1179,7 @@ AVSHAL_V300R001_StartDec:
 	ldr	ip, [r5, #100]	@ tmp870, <variable>.stream_lenInByte
 	cmp	ip, #0	@ tmp870,
 	ble	.L85	@,
-	bic	lr, r3, #15	@ tmp871, D.38968,
+	bic	lr, r3, #15	@ tmp871, D.38982,
 	cmp	r4, lr	@ stream_base_addr, tmp871
 	movcs	r4, lr	@ stream_base_addr, tmp871
 	b	.L85	@
@@ -1190,9 +1190,9 @@ AVSHAL_V300R001_StartDec:
 	mov	r1, r8	@ p32.786, p32.786
 	b	.L73	@
 .L120:
-	add	r7, r5, r2	@ D.39786, pAvsDecParam, ivtmp.678
-	add	r0, r7, #14592	@ tmp718, D.39786,
-	add	ip, r7, #14528	@ tmp729, D.39786,
+	add	r7, r5, r2	@ D.39799, pAvsDecParam, ivtmp.678
+	add	r0, r7, #14592	@ tmp718, D.39799,
+	add	ip, r7, #14528	@ tmp729, D.39799,
 	ldrb	r6, [r0, #12]	@ zero_extendqisi2	@ tmp724, <variable>.cur_wq_matrix
 	ldrb	r7, [r0, #20]	@ zero_extendqisi2	@ tmp719, <variable>.cur_wq_matrix
 	ldrb	lr, [ip, #60]	@ zero_extendqisi2	@ tmp730, <variable>.cur_wq_matrix
@@ -1211,9 +1211,9 @@ AVSHAL_V300R001_StartDec:
 	tst	r3, #1	@ tmp760,
 	add	r1, r1, #4	@ tmp762, p32.786,
 	bne	.L77	@,
-	add	lr, r5, r2	@ D.39786, pAvsDecParam, tmp761
-	add	r0, lr, #14592	@ tmp804, D.39786,
-	add	ip, lr, #14528	@ tmp814, D.39786,
+	add	lr, r5, r2	@ D.39799, pAvsDecParam, tmp761
+	add	r0, lr, #14592	@ tmp804, D.39799,
+	add	ip, lr, #14528	@ tmp814, D.39799,
 	ldrb	r6, [r0, #12]	@ zero_extendqisi2	@ tmp811, <variable>.cur_wq_matrix
 	ldrb	r7, [r0, #20]	@ zero_extendqisi2	@ tmp807, <variable>.cur_wq_matrix
 	ldrb	lr, [ip, #60]	@ zero_extendqisi2	@ tmp817, <variable>.cur_wq_matrix
@@ -1227,9 +1227,9 @@ AVSHAL_V300R001_StartDec:
 	str	r0, [r1, #0]	@ prephitmp.643,
 	add	r0, r2, #16	@ ivtmp.678, tmp761,
 	bne	.L99	@,
-	add	r6, r5, r0	@ D.39794, pAvsDecParam, ivtmp.678
-	add	lr, r6, #14592	@ tmp828, D.39794,
-	add	ip, r6, #14528	@ tmp837, D.39794,
+	add	r6, r5, r0	@ D.39807, pAvsDecParam, ivtmp.678
+	add	lr, r6, #14592	@ tmp828, D.39807,
+	add	ip, r6, #14528	@ tmp837, D.39807,
 	ldrb	r0, [lr, #0]	@ zero_extendqisi2	@ tmp834, <variable>.cur_wq_matrix
 	ldrb	r7, [lr, #8]	@ zero_extendqisi2	@ tmp831, <variable>.cur_wq_matrix
 	ldrb	lr, [ip, #56]	@ zero_extendqisi2	@ tmp844, <variable>.cur_wq_matrix
@@ -1246,9 +1246,9 @@ AVSHAL_V300R001_StartDec:
 .L73:
 	tst	r3, #1	@ ivtmp.658,
 	beq	.L120	@,
-	add	r7, r5, r2	@ D.39794, pAvsDecParam, ivtmp.678
-	add	lr, r7, #14592	@ tmp739, D.39794,
-	add	ip, r7, #14528	@ tmp749, D.39794,
+	add	r7, r5, r2	@ D.39807, pAvsDecParam, ivtmp.678
+	add	lr, r7, #14592	@ tmp739, D.39807,
+	add	ip, r7, #14528	@ tmp749, D.39807,
 	ldrb	r6, [lr, #0]	@ zero_extendqisi2	@ tmp744, <variable>.cur_wq_matrix
 	ldrb	r7, [lr, #8]	@ zero_extendqisi2	@ tmp740, <variable>.cur_wq_matrix
 	ldrb	r0, [ip, #48]	@ zero_extendqisi2	@ tmp750, <variable>.cur_wq_matrix
@@ -1260,9 +1260,9 @@ AVSHAL_V300R001_StartDec:
 	str	r0, [fp, #-48]	@ prephitmp.643, D32
 	b	.L72	@
 .L99:
-	add	lr, r5, r0	@ D.39786, pAvsDecParam, ivtmp.678
-	add	r0, lr, #14592	@ tmp848, D.39786,
-	add	ip, lr, #14528	@ tmp858, D.39786,
+	add	lr, r5, r0	@ D.39799, pAvsDecParam, ivtmp.678
+	add	r0, lr, #14592	@ tmp848, D.39799,
+	add	ip, lr, #14528	@ tmp858, D.39799,
 	ldrb	r6, [r0, #12]	@ zero_extendqisi2	@ tmp855, <variable>.cur_wq_matrix
 	ldrb	r7, [r0, #20]	@ zero_extendqisi2	@ tmp851, <variable>.cur_wq_matrix
 	ldrb	lr, [ip, #60]	@ zero_extendqisi2	@ tmp861, <variable>.cur_wq_matrix
@@ -1273,9 +1273,9 @@ AVSHAL_V300R001_StartDec:
 	orr	r0, r7, ip, asl #8	@, prephitmp.643, tmp862, tmp865,
 	b	.L100	@
 .L77:
-	add	r0, r5, r2	@ D.39794, pAvsDecParam, tmp761
-	add	lr, r0, #14592	@ tmp784, D.39794,
-	add	ip, r0, #14528	@ tmp793, D.39794,
+	add	r0, r5, r2	@ D.39807, pAvsDecParam, tmp761
+	add	lr, r0, #14592	@ tmp784, D.39807,
+	add	ip, r0, #14528	@ tmp793, D.39807,
 	ldrb	r6, [lr, #0]	@ zero_extendqisi2	@ tmp790, <variable>.cur_wq_matrix
 	ldrb	r7, [lr, #8]	@ zero_extendqisi2	@ tmp787, <variable>.cur_wq_matrix
 	ldrb	r0, [ip, #48]	@ zero_extendqisi2	@ tmp796, <variable>.cur_wq_matrix
@@ -1294,7 +1294,7 @@ AVSHAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38949,
+	mvn	r0, #0	@ D.38963,
 	b	.L48	@
 .L113:
 	mov	ip, #0	@ tmp288,
@@ -1306,20 +1306,20 @@ AVSHAL_V300R001_StartDec:
 	movt	r2, #:upper16:.LANCHOR0	@,
 	str	ip, [sp, #0]	@ tmp288,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38949,
+	mvn	r0, #0	@ D.38963,
 	b	.L48	@
 .L114:
 	movw	r0, #:lower16:-121438208	@,
 	movt	r0, #:upper16:-121438208	@,
 	bl	MEM_Phy2Vir	@
-	subs	r3, r0, #0	@ D.38961,
-	strne	r3, [r6, #0]	@ D.38961, <variable>.pVdmRegVirAddr
+	subs	r3, r0, #0	@ D.38975,
+	strne	r3, [r6, #0]	@ D.38975, <variable>.pVdmRegVirAddr
 	bne	.L53	@
 .L54:
 	movw	r1, #:lower16:.LC4	@,
 	movt	r1, #:upper16:.LC4	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38949,
+	mvn	r0, #0	@ D.38963,
 	b	.L48	@
 .L118:
 	movw	r1, #:lower16:.LC0	@,
@@ -1329,7 +1329,7 @@ AVSHAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC17	@,
 	movt	r3, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mov	r0, r9	@ D.38949, tmp458
+	mov	r0, r9	@ D.38963, tmp458
 	b	.L48	@
 .L55:
 	mov	r0, #0	@,
@@ -1337,16 +1337,16 @@ AVSHAL_V300R001_StartDec:
 	mvn	r2, #0	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.38949,
+	mvn	r0, #0	@ D.38963,
 	b	.L48	@
 	.fnend
 	.size	AVSHAL_V300R001_StartDec, .-AVSHAL_V300R001_StartDec
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.38928, %object
-	.size	__func__.38928, 25
-__func__.38928:
+	.type	__func__.38942, %object
+	.size	__func__.38942, 25
+__func__.38942:
 	.ascii	"AVSHAL_V300R001_StartDec\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

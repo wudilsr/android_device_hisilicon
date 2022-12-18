@@ -123,7 +123,7 @@ typedef struct tagVDEC_INST_S
 
     FN_VPSS_Control             pfnVpssControl;
     HI_HANDLE                   hVpss;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_BOOL                     bStreamBufAttach;
 	HI_BOOL                     bIsTVP;         /*Whether the chan is Trust Video Past*/
 	HI_U32                      u32SetTvpAttrCount;
@@ -448,7 +448,7 @@ static HI_S32 VDEC_CreateCodec(VDEC_INST_S* pstVdec, HI_CODEC_ID_E enID)
         pstVdec->bIsVFMW = HI_TRUE;
 
         /* If it's VFMW and stream buffer had been created, need attach to instance */
-	#ifndef HI_TVP_SUPPORT
+	#ifndef HI_TEE_SUPPORT
 		if ((HI_INVALID_HANDLE != pstVdec->hDmxVidChn) || (HI_INVALID_HANDLE != pstVdec->hStreamBuf))
 	#else
         if (((HI_INVALID_HANDLE != pstVdec->hDmxVidChn) || (HI_INVALID_HANDLE != pstVdec->hStreamBuf))
@@ -468,7 +468,7 @@ static HI_S32 VDEC_CreateCodec(VDEC_INST_S* pstVdec, HI_CODEC_ID_E enID)
 			    }
                 return HI_ERR_VDEC_SETATTR_FAILED;
             }
-		#ifdef HI_TVP_SUPPORT
+		#ifdef HI_TEE_SUPPORT
             pstVdec->bStreamBufAttach = HI_TRUE;
 		#endif
         }
@@ -1018,6 +1018,7 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     if (HI_SUCCESS != VDEC_AllocHandle(phHandle))
     {
         HI_ERR_VDEC("Alloc handle fail.\n");
+        VDEC_UNLOCK(s_stVdecParam.stMutex);
         return HI_ERR_VDEC_CREATECH_FAILED;
     }
 
@@ -1027,6 +1028,7 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     {
         VDEC_FreeHandle(*phHandle);
         HI_ERR_VDEC("Malloc fail.\n");
+        VDEC_UNLOCK(s_stVdecParam.stMutex);
         return HI_ERR_VDEC_MALLOC_FAILED;
     }
 
@@ -1042,7 +1044,7 @@ HI_S32 HI_MPI_VDEC_AllocChan(HI_HANDLE *phHandle, const HI_UNF_AVPLAY_OPEN_OPT_S
     pstVdec->hDmxVidChn = HI_INVALID_HANDLE;
     pstVdec->pfnVpssControl = HI_NULL;
     pstVdec->hVpss = HI_INVALID_HANDLE;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 	pstVdec->bIsTVP = HI_FALSE;
 	pstVdec->u32SetTvpAttrCount = 0;
     pstVdec->bStreamBufAttach = HI_FALSE;
@@ -2018,7 +2020,7 @@ HI_S32 HI_MPI_VDEC_SetLowDelay(HI_HANDLE hVdec, HI_UNF_AVPLAY_LOW_DELAY_ATTR_S *
     return s32Ret;
 }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 HI_S32 HI_MPI_VDEC_SetTVP(HI_HANDLE hVdec, HI_UNF_AVPLAY_TVP_ATTR_S *pstAttr)
 {
     HI_S32 s32Ret = HI_FAILURE;
@@ -2367,7 +2369,7 @@ HI_S32 HI_MPI_VDEC_RlsUserData(HI_HANDLE hVdec, HI_UNF_VIDEO_USERDATA_S* pstUser
     return HI_FAILURE;
 }
 
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_U32 u32BufSize, HI_HANDLE hDmxVidChn)
 #else
 HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BUFFER_ATTR_S *pstBufAttr)
@@ -2375,7 +2377,7 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BU
 {
     VDEC_INST_S* pstVdec = HI_NULL;
     VFMW_STREAMBUF_S stStrmBuf;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_S32 s32Ret;
 #endif
     VDEC_CHECK_INIT;
@@ -2390,10 +2392,10 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BU
     if (HI_INVALID_HANDLE == hDmxVidChn)
     {
         /* Create stream buffer */
-	#ifndef HI_TVP_SUPPORT
-		if (HI_SUCCESS != VDEC_CreateStreamBuf(&pstVdec->hStreamBuf, u32BufSize))
+	#ifndef HI_TEE_SUPPORT
+		if (HI_SUCCESS != VDEC_CreateStreamBuf(hVdec, &pstVdec->hStreamBuf, u32BufSize))
 	#else
-        if (HI_SUCCESS != VDEC_CreateStreamBuf(&pstVdec->hStreamBuf, pstBufAttr))
+        if (HI_SUCCESS != VDEC_CreateStreamBuf(hVdec, &pstVdec->hStreamBuf, pstBufAttr))
 	#endif
         {
             return HI_ERR_VDEC_BUFFER_ATTACHED;
@@ -2407,7 +2409,7 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BU
         pstVdec->hDmxVidChn = hDmxVidChn;
     }
 	
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 	pstVdec->u32StrmBufSize = u32BufSize;
 	/* If codec instance had been created and it's VFMW, attach buffer to it */
     if (pstVdec->bIsVFMW)
@@ -2420,7 +2422,7 @@ HI_S32 HI_MPI_VDEC_ChanBufferInit(HI_HANDLE hVdec, HI_HANDLE hDmxVidChn, VDEC_BU
         stStrmBuf.u32BufSize = pstVdec->u32StrmBufSize;
         stStrmBuf.hDmxVidChn = pstVdec->hDmxVidChn;
         stStrmBuf.hStrmBuf = pstVdec->hStreamBuf;
-	#ifndef HI_TVP_SUPPORT
+	#ifndef HI_TEE_SUPPORT
 		return VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_ATTACHBUF, (HI_VOID*)&stStrmBuf);
 	#else
         s32Ret = VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_ATTACHBUF, (HI_VOID*)&stStrmBuf);
@@ -2454,7 +2456,7 @@ HI_S32 HI_MPI_VDEC_ChanBufferDeInit(HI_HANDLE hVdec)
     if (pstVdec->bIsVFMW)
     {
         s32Ret |= VDEC_VFMWSpecCMD(hVdec, VFMW_CMD_DETACHBUF, HI_NULL);
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
         if(HI_SUCCESS == s32Ret)
         {
            pstVdec->bStreamBufAttach = HI_FALSE;
@@ -2466,7 +2468,7 @@ HI_S32 HI_MPI_VDEC_ChanBufferDeInit(HI_HANDLE hVdec)
     if (HI_INVALID_HANDLE != pstVdec->hStreamBuf)
     {
         s32Ret |= VDEC_DestroyStreamBuf(pstVdec->hStreamBuf);
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
 	    pstVdec->hStreamBuf = HI_INVALID_HANDLE;
 	#endif
     }

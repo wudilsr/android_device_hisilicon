@@ -308,6 +308,7 @@ public class AccessUpnpController
         {
             while (mIsPingRunning)
             {
+                int sleepTime = 10;
                 mTimeCost = accessPing(mRemoteID);
                 mPingTime.setPingTimeCost(mTimeCost);
 
@@ -318,9 +319,13 @@ public class AccessUpnpController
                     mPingFailCount = 0;
                 }
 
-                if (mIsPingRunning)
+                while( sleepTime > 0 )
                 {
-                    ThreadSleep(PING_PERIOD);
+                    sleepTime = sleepTime-1;
+                    if(mIsPingRunning)
+                        ThreadSleep(PING_PERIOD/10);
+                    else
+                        break;
                 }
             }
         }
@@ -347,6 +352,7 @@ public class AccessUpnpController
         {
             while (mIsReAccessRunning)
             {
+                int sleepTime = 10;
                 if (isKeepAliveStateOK() == false)
                 {
                     // CN:保活状态异常，进行重连。
@@ -364,9 +370,13 @@ public class AccessUpnpController
                     }
                 }
 
-                if (mIsReAccessRunning)
+                while( sleepTime > 0 )
                 {
-                    ThreadSleep(REACCESS_PERIOD);
+                    sleepTime = sleepTime-1;
+                    if(mIsReAccessRunning)
+                        ThreadSleep(REACCESS_PERIOD/10);
+                    else
+                        break;
                 }
             }
         }
@@ -390,6 +400,7 @@ public class AccessUpnpController
         {
             while (mIsKeepAliveRunning)
             {
+                int sleepTime = 10;
                 mTempPingTimeCost = mPingTime.getPingTimeCost();
 
                 if (isPingException(mTempPingTimeCost))
@@ -421,9 +432,13 @@ public class AccessUpnpController
                     break;
                 }
 
-                if (mIsKeepAliveRunning)
+                while( sleepTime > 0 )
                 {
-                    ThreadSleep(KEEP_ALIVE_PERIOD);
+                    sleepTime = sleepTime-1;
+                    if(mIsKeepAliveRunning)
+                        ThreadSleep(KEEP_ALIVE_PERIOD/10);
+                    else
+                        break;
                 }
             }
         }

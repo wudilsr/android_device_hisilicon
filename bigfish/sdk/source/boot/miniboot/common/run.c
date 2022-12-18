@@ -184,6 +184,7 @@ int kern_load(const char *addr)
 	int ret;
 	uint32 params;
 	kernel_fn kernel = NULL;
+	unsigned long r2;
 
 	ret = check_image(addr, &kernel);
 	if (ret)
@@ -194,15 +195,26 @@ int kern_load(const char *addr)
 
 	printf ("Starting kernel ...\n\n");
 
-#ifdef CONFIG_NET
 	setup_eth_param();
-#endif
 
 	params = get_kern_tags((uint32)kernel);
 
 	mmu_cache_disable();
 	cache_flush_all();
 
+	r2 = params;
+
+#ifdef CONFIG_TEE_SUPPORT
+	{
+		extern u32 secure_entry_addr;
+		extern u32 _text_end;
+		if (secure_entry_addr) {
+			void (*secure_entry)(int, int, int, int, int, int) = (void(*)(int, int, int, int, int, int))(secure_entry_addr);
+			unsigned int text_end = roundup(_text_end, 0x10); /* align for secure os clean boot */
+			secure_entry(0, (int)CONFIG_MACHINE_ID, (int)r2, (int)kernel, TEXT_BASE, text_end);
+		}
+	}
+#endif
 	kernel(0, CONFIG_MACHINE_ID, params);
 
 	return 0;

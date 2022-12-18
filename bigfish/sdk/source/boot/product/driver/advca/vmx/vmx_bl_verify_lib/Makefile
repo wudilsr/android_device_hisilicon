@@ -30,7 +30,7 @@ CC := $(CROSS_COMPILE)gcc
 
 gccincdir := $(shell $(CC) -print-file-name=include)
 
-CFLAGS := -g -Os -D__KERNEL__ -D__ARM__ -fno-strict-aliasing -fno-common -ffixed-r8 \
+CFLAGS := -g -Os -D__ARM__ -fno-strict-aliasing -fno-common -ffixed-r8 \
 	  -nostdinc -isystem $(gccincdir) $(MKFLAGS) -I$(PRODUCT_DIR) \
 	  -fno-builtin -ffreestanding  -pipe -marm  -mabi=aapcs-linux  \
 	  -mno-thumb-interwork -march=armv7-a \

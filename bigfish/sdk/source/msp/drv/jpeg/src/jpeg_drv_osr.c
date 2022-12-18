@@ -1,23 +1,23 @@
 /******************************************************************************
 *
-* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2015 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 * and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
 ******************************************************************************
 File Name	    : jpeg_drv_osr.c
 Version		    : Initial Draft
-Author		    : 
+Author		    :
 Created		    : 2015/03/01
-Description	    : 
-Function List 	: 
+Description	    :
+Function List 	:
 
-			  		  
+
 History       	:
 Date				Author        		Modification
-2015/03/01		    y00181162  		    Created file      	
+2015/03/01		    y00181162  		    Created file
 ******************************************************************************/
 
 
@@ -150,17 +150,12 @@ HI_VOID jpg_do_cancel_reset(HI_VOID)
 		1: startup dec : 启动JPEG进行解码，解码启动后，此寄存器会自动清0。
 		++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-		/** when reset,should cancle reset */
-		/** CNcomment:如果已经复位了则撤消复位,这样就能进行下一帧解码了 */
-		while (*pBusyAddr & 0x2)
-		{	
-			/*nothing to do!*/
-        }
+		(HI_VOID)schedule_timeout(HZ / 50);
 		/** the 4 bit write 0 */
 		/** CNcomment:第4bit写0不复位,0x10是第4bit，哪个bit就是在那个地方为1 */
 		unTempValue.u32 = g_pstRegCrg->PERI_CRG31.u32;
 		unTempValue.bits.jpgd_srst_req  = 0x0;
-		g_pstRegCrg->PERI_CRG31.u32 = unTempValue.u32;	
+		g_pstRegCrg->PERI_CRG31.u32 = unTempValue.u32;
 #else
 		volatile HI_U32* pResetAddr = NULL;
 		volatile HI_U32* pBusyAddr = NULL;
@@ -175,7 +170,7 @@ HI_VOID jpg_do_cancel_reset(HI_VOID)
 		JPEG_TRACE("begin reset\n");
 		#endif
 		while (*pBusyAddr & 0x2)
-		{	
+		{
 			/*nothing to do!*/
 		}
 		#if defined(CONFIG_JPEG_FPGA_TEST_ENABLE) && defined(CONFIG_JPEG_TEST_CHIP_RANDOM_RESET)
@@ -207,7 +202,7 @@ HI_VOID jpg_do_reset(HI_VOID)
 		volatile HI_U32* pResetAddr = NULL;
 
 		pResetAddr   = s_pJpegCRG;
-		
+
 		*pResetAddr |= JPGD_RESET_REG_VALUE;
 #endif
 }
@@ -301,20 +296,26 @@ HI_VOID jpg_select_clock_frep(HI_VOID)
  ***************************************************************************************/
 HI_S32 jpg_osr_mmap(struct file * filp, struct vm_area_struct *vma)
 {
-      
+
 		/** if api call mmap,will call this function */
 		/** CNcomment: 上层map jpeg设备的时候调用 */
         HI_U32 Phys;
         HI_U64 u64BaseAddr = JPGD_REG_BASEADDR;
 		HI_U32 u32Length   = 0;
-		
+
         /**
-         ** set map parameter 
+         ** set map parameter
          **/
         /**
          **页按照4096对齐
          **/
         u32Length = (JPGD_REG_LENGTH + 4096 - 1) & (~(4096 - 1));
+
+        if (NULL == vma)
+        {
+            return -EINVAL;
+        }
+
         if((vma->vm_end - vma->vm_start) > u32Length)
         {/**
           **安全问题：【新增】长整型溢出导致本地提权拿ROOT
@@ -322,7 +323,7 @@ HI_S32 jpg_osr_mmap(struct file * filp, struct vm_area_struct *vma)
           **/
 			return -EINVAL;
  		}
-		
+
 		Phys = (u64BaseAddr >> PAGE_SHIFT);
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
         vma->vm_flags |= VM_RESERVED | VM_LOCKED | VM_IO;
@@ -333,7 +334,7 @@ HI_S32 jpg_osr_mmap(struct file * filp, struct vm_area_struct *vma)
         /** cancel map **/
         vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
 
-        if (remap_pfn_range(vma, vma->vm_start, Phys, vma->vm_end - vma->vm_start, 
+        if (remap_pfn_range(vma, vma->vm_start, Phys, vma->vm_end - vma->vm_start,
                             vma->vm_page_prot))
         {
             return -EAGAIN;
@@ -341,11 +342,11 @@ HI_S32 jpg_osr_mmap(struct file * filp, struct vm_area_struct *vma)
 
         return HI_SUCCESS;
 
-    
+
 }
 /***************************************************************************************
 * func 		 : jpg_osr_getintstatus
-* description: 
+* description:
 			   CNcomment: 获取中断状态 CNend\n
 * param[in]	 : *pdev
 * retval	 : HI_SUCCESS 成功
@@ -369,19 +370,24 @@ static HI_S32 jpg_osr_getintstatus(DRV_JPEG_EXT_GETINTTYPE_S *pstIntType)
 		return HI_FAILURE;
 	}
 
+    if (0 == pstIntType->TimeOut || pstIntType->TimeOut > 10000)
+    {
+        return HI_FAILURE;
+    }
+
 	IntInfo.IntType = pstIntType->IntType;
 	IntInfo.TimeOut = pstIntType->TimeOut;
 
-	
+
 	disable_irq(IRQ_NUM);
 
    /**
-	** get the halt type 
+	** get the halt type
 	**/
 	if((JPG_INTTYPE_NONE != s_pstruJpgOsrDev->IntType) || (0 == IntInfo.TimeOut))
 	{
 
-		
+
 		IntInfo.IntType = s_pstruJpgOsrDev->IntType;
 		s_pstruJpgOsrDev->IntType = JPG_INTTYPE_NONE;
 		enable_irq(IRQ_NUM);
@@ -393,11 +399,11 @@ static HI_S32 jpg_osr_getintstatus(DRV_JPEG_EXT_GETINTTYPE_S *pstIntType)
 	enable_irq(IRQ_NUM);
 
 	do
-	{			
-		Ret = wait_event_interruptible_timeout(s_pstruJpgOsrDev->QWaitInt, 
-					  JPG_INTTYPE_NONE != s_pstruJpgOsrDev->IntType, 
+	{
+		Ret = wait_event_interruptible_timeout(s_pstruJpgOsrDev->QWaitInt,
+					  JPG_INTTYPE_NONE != s_pstruJpgOsrDev->IntType,
 					  IntInfo.TimeOut * HZ/1000);
-		 
+
 		loop = 0;
 
 		if(Ret > 0 || (JPG_INTTYPE_NONE != s_pstruJpgOsrDev->IntType))
@@ -408,7 +414,7 @@ static HI_S32 jpg_osr_getintstatus(DRV_JPEG_EXT_GETINTTYPE_S *pstIntType)
 			s_pstruJpgOsrDev->IntType = JPG_INTTYPE_NONE;
 			enable_irq(IRQ_NUM);
 			break;
-		} 
+		}
 		else if( -ERESTARTSYS == Ret)
 		{
 
@@ -417,25 +423,25 @@ static HI_S32 jpg_osr_getintstatus(DRV_JPEG_EXT_GETINTTYPE_S *pstIntType)
 				HI_GFX_GetTimeStamp(&u32StartTimeMs,NULL);
 				FirstCount = 0;
 				loop = 1;
-			} 
+			}
 			else
 			{
 				HI_GFX_GetTimeStamp(&u32EndTimeMs,NULL);
 				/** avoid dead lock **/
-				loop = ((u32EndTimeMs - u32StartTimeMs) <  IntInfo.TimeOut)?1:0; 
+				loop = ((u32EndTimeMs - u32StartTimeMs) <  IntInfo.TimeOut)?1:0;
 				/** check timeout **/
 				if(!loop)
 				{
 					 return HI_FAILURE;
 				}
 			}
-			
-		} 
-		else /** == 0(wait timeout) and others **/ 
+
+		}
+		else /** == 0(wait timeout) and others **/
 		{
 			return HI_FAILURE;
 		}
-		
+
 	}while(loop);
 
 	pstIntType->IntType = IntInfo.IntType;
@@ -465,12 +471,13 @@ HI_S32 jpg_osr_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 #endif
 
 #ifdef CONFIG_JPEG_SUSPEND
- 
+
 	 HI_S32 Ret  = 0;
- 
+
 	 /** if you continue suspend and resume,this can be protected */
 	 /** CNcomment:如果不停的待机唤醒，这里会起保护作用，始终使待机与唤醒配对操作 */
-	 Ret  = down_interruptible(&s_SuspendMutex);
+	 Ret = down_interruptible(&s_SuspendMutex);
+  UNUSED(Ret);
 	 if(HI_TRUE == s_pstruJpgOsrDev->bDecTask)
 	 {
 		 JPG_WaitDecTaskDone();
@@ -507,12 +514,12 @@ HI_S32 jpg_osr_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 
      jpg_do_reset();
      jpg_do_clock_off();
-	 
+
 	 return HI_SUCCESS;
-	 
-	 
+
+
 }
- 
+
 /***************************************************************************************
 * func 		 : jpg_osr_resume
 * description: get the resume signale.
@@ -523,10 +530,10 @@ HI_S32 jpg_osr_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 * others:	 : NA
 ***************************************************************************************/
 HI_S32 jpg_osr_resume(PM_BASEDEV_S *pdev)
-{	 
- 
+{
+
 #ifdef CONFIG_JPEG_SUSPEND
- 
+
 	 /** tell the api received resume signal */
 	 /** CNcomment:通知应用层有待机唤醒信号了 */
 	 if(HI_TRUE == s_pstruJpgOsrDev->bDecTask)
@@ -555,12 +562,12 @@ HI_S32 jpg_osr_resume(PM_BASEDEV_S *pdev)
 		 }
      }
 	 return HI_SUCCESS;
-	 
+
 }
 
 /***************************************************************************************
 * func 		 : jpg_osr_getdev
-* description: 
+* description:
 			   CNcomment: 获取设备 CNend\n
 * param[in]	 : *pdev
 * retval	 : HI_SUCCESS 成功
@@ -580,29 +587,29 @@ static HI_S32 jpg_osr_getdev(HI_VOID)
 	/** select clock frequence  **/
 	/** CNcomment: 选择时钟频率 **/
 	jpg_select_clock_frep();
-	
+
 	/** reset register                        **/
 	/** CNcomment: 复位寄存器使之能够重新工作 **/
 	jpg_do_reset();
 	/** cancle the reset,now can work   **/
 	/** CNcomment: 撤消复位使之能够工作 **/
 	jpg_do_cancel_reset();
-	
+
 	/** trun the halt status  **/
 	/** CNcomment:            **/
 	JpgHalSetIntMask(0x0);
 
 	s_pstruJpgOsrDev->bMceUse = HI_TRUE;
-		
+
 #endif
-	
+
  	return HI_SUCCESS;
-	
+
 }
 
 /***************************************************************************************
 * func 		 : jpg_osr_releasedev
-* description: 
+* description:
 			   CNcomment: 释放设备 CNend\n
 * param[in]	 : *pdev
 * retval	 : HI_SUCCESS 成功
@@ -622,7 +629,7 @@ static HI_S32 jpg_osr_releasedev(HI_VOID)
 
 /***************************************************************************************
 * func 		 : jpg_osr_reset
-* description: 
+* description:
 			   CNcomment: 复位 CNend\n
 * param[in]	 : *pdev
 * retval	 : HI_SUCCESS 成功
@@ -638,7 +645,7 @@ static HI_VOID jpg_osr_reset(HI_VOID)
 }
 
 static JPEG_EXPORT_FUNC_S s_JpegExportFuncs =
-{ 
+{
 	.pfnJpegGetIntStatus = jpg_osr_getintstatus,
 	.pfnJpegGetDev		 = jpg_osr_getdev,
 	.pfnJpegReleaseDev	 = jpg_osr_releasedev,
@@ -653,7 +660,7 @@ static JPEG_EXPORT_FUNC_S s_JpegExportFuncs =
 
 /***************************************************************************************
 * func 		 : jpg_osr_showversion
-* description: 
+* description:
 			   CNcomment: 打印版本号 CNend\n
 * param[in]	 : *pdev
 * retval	 : HI_SUCCESS 成功
@@ -662,18 +669,18 @@ static JPEG_EXPORT_FUNC_S s_JpegExportFuncs =
 ***************************************************************************************/
 static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 {
-#if !defined(CONFIG_GFX_COMM_VERSION_DISABLE) && !defined(CONFIG_GFX_COMM_DEBUG_DISABLE) && defined(MODULE)	
- 
+#if !defined(CONFIG_GFX_COMM_VERSION_DISABLE) && !defined(CONFIG_GFX_COMM_DEBUG_DISABLE) && defined(MODULE)
+
 	 HI_CHAR MouleName[7][10] = {"tde","jpegdec","jpegenc","fb","png", "higo", "gfx2d"};
 	 HI_CHAR Version[160]	  = "SDK_VERSION:["MKMARCOTOSTR(SDK_VERSION)"] Build Time:["__DATE__", "__TIME__"]";
- 
+
 	 if (ModID >= HIGFX_BUTT_ID)
 		 return;
-	 
+
 	 GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
-	
+
 	 return;
- 
+
 #endif
 }
 
@@ -707,11 +714,11 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 		 return HI_FAILURE;
 	 }
 #endif
-		 
+
 	 return HI_SUCCESS;
- 
+
  }
- 
+
   /***************************************************************************************
   * func		  : jpg_osr_close
   * description   : close jpeg device
@@ -730,15 +737,15 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 	  s_pstruJpgOsrDev->bDecTask	   = HI_FALSE;
 	  s_pstruJpgOsrDev->bSuspendSignal = HI_FALSE;
 	  s_pstruJpgOsrDev->bResumeSignal  = HI_FALSE;
-	  
+
 	 /**
 	  **关闭设备之后复位并关闭时钟，低带宽使用
 	  **/
 	  jpg_do_reset();
 	  jpg_do_clock_off();
- 
+
 	  return HI_SUCCESS;
- 
+
  }
 
 #else
@@ -754,20 +761,24 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
  * others:		 : NA
  ***************************************************************************************/
  HI_S32 jpg_osr_open(struct inode *inode, struct file *file)
- {	 
- 
-	 
+ {
+
+
 		 JPG_DISPOSE_CLOSE_S *sDisposeClose = NULL;
 		 HI_S32 s32Ret = HI_SUCCESS;
-		 
+		 if ((HI_TRUE == s_pstruJpgOsrDev->bLock) && (s_pstruJpgOsrDev->SystemAnomalCnt <= 20)){
+		 	 s_pstruJpgOsrDev->SystemAnomalCnt++;
+             return HI_FAILURE;
+		 }
+		 s_pstruJpgOsrDev->SystemAnomalCnt = 0;
+
 		 sDisposeClose = (JPG_DISPOSE_CLOSE_S *)HI_GFX_KMALLOC(HIGFX_JPGDEC_ID, 		  \
 																sizeof(JPG_DISPOSE_CLOSE_S),\
 																GFP_KERNEL);
-		 if ( HI_NULL == sDisposeClose )
-		 {	  
+		 if (HI_NULL == sDisposeClose){
 			 return -ENOMEM;
 		 }
-		 
+
 		 memset(sDisposeClose, 0x0, sizeof(JPG_DISPOSE_CLOSE_S));
 		 file->private_data 			= sDisposeClose;
 		 sDisposeClose->s32DecClose 	= HI_SUCCESS;
@@ -775,22 +786,21 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 		 sDisposeClose->bOpenUp 		= HI_FALSE;
 		 sDisposeClose->bSuspendUp		= HI_FALSE;
 		 sDisposeClose->bRealse 		= HI_FALSE;
-		 
-		 s32Ret = wait_event_interruptible_timeout(s_pstruJpgOsrDev->QWaitMutex, 
-												   HI_FALSE == s_pstruJpgOsrDev->bLock, 
-												   5000 * HZ/1000);/** waite 5s **/
+
+		 s32Ret = wait_event_interruptible_timeout(s_pstruJpgOsrDev->QWaitMutex,
+												   HI_FALSE == s_pstruJpgOsrDev->bLock,
+												   2000 * HZ/1000);/** waite 2s **/
 		 if(s32Ret <= 0)
 		 {
-			 JPEG_TRACE("open dev failure %d\n",__LINE__);
 			 up(&s_JpegMutex);
 			 s_pstruJpgOsrDev->bLock = HI_FALSE;/** 锁释放了 **/
 			 return HI_FAILURE;
 		 }
- 
+
 		 return HI_SUCCESS;
-	 
+
  }
- 
+
   /***************************************************************************************
   * func		  : jpg_osr_close
   * description   : close jpeg device
@@ -803,33 +813,35 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
   ***************************************************************************************/
  HI_S32 jpg_osr_close( struct inode *inode, struct file *file)
  {
-		  
- 
+
+
 		 JPG_DISPOSE_CLOSE_S *sDisposeClose = NULL;
- 
+
+         jpeg_mem_destory((HI_S32)s_pstruJpgOsrDev->OmxDecHandle);
+
 		 sDisposeClose = file->private_data;
 		 if(NULL == sDisposeClose)
-		 {	
+		 {
 			return HI_FAILURE;
 		 }
- 
+
 		 /**
 		  **if device has not initial, return failure
 		  **/
 		 if (HI_NULL == s_pstruJpgOsrDev)
-		 {	  
+		 {
 			 up(&s_JpegMutex);
 			 wake_up_interruptible(&s_pstruJpgOsrDev->QWaitMutex);/** 唤醒，否则等超时 **/
 			 return HI_FAILURE;
 		 }
- 
+
 		 /**
 		  **解码任务完成
 		  **/
 		  s_pstruJpgOsrDev->bDecTask	   = HI_FALSE;
 		  s_pstruJpgOsrDev->bSuspendSignal = HI_FALSE;
 		  s_pstruJpgOsrDev->bResumeSignal  = HI_FALSE;
-		 
+
 		 /** if suspend dispose */
 		 /** CNcomment: 如果是待机则将待机需要的设备关回掉即可 */
 		 if(HI_SUCCESS==sDisposeClose->s32SuspendClose)
@@ -843,7 +855,7 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 			  HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)sDisposeClose);
 			  return HI_SUCCESS;
 		 }
- 
+
 		 if(HI_SUCCESS==sDisposeClose->s32DecClose)
 		 {
 			  if(HI_TRUE == sDisposeClose->bOpenUp)
@@ -855,18 +867,18 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 			  HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)sDisposeClose);
 			  return HI_SUCCESS;
 		 }
- 
- 
+
+
 		 /**
 		  **  if call realse, should not call this
 		  **/
 		 if(HI_FALSE == sDisposeClose->bRealse)
 		 {
 			 /**
-			  ** set file private data to HI_NULL 
+			  ** set file private data to HI_NULL
 			  **/
 			 HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)sDisposeClose);
- 
+
 			 /**
 			  ** if the file occupy the device, set this device to not occupied,
 			  ** wake up waiting halt waiting queue
@@ -875,12 +887,12 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 			 {
 			   /*nothing to do!*/
 			 }
- 
+
 			 if ((HI_TRUE == s_pstruJpgOsrDev->bEngageFlag) && (file == s_pstruJpgOsrDev->pFile))
 			 {
-			 
+
 				 s_pstruJpgOsrDev->bEngageFlag = HI_FALSE;
-				 (HI_VOID)wake_up_interruptible(&s_pstruJpgOsrDev->QWaitInt);				 
+				 (HI_VOID)wake_up_interruptible(&s_pstruJpgOsrDev->QWaitInt);
 			 }
 			 /**
 			  ** to JPG reset operation, open the clock
@@ -905,7 +917,7 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 				 wake_up_interruptible(&s_pstruJpgOsrDev->QWaitMutex);/** 唤醒，否则等超时 **/
 				 return HI_FAILURE;
 			 }
-					   
+
 			 jpg_do_reset();
 			 jpg_do_clock_off();
 #if 0
@@ -925,23 +937,23 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 			 up(&s_JpegMutex);
 			 s_pstruJpgOsrDev->bLock = HI_FALSE;/** 锁释放了 **/
 			 wake_up_interruptible(&s_pstruJpgOsrDev->QWaitMutex);/** 唤醒，否则等超时 **/
-			 
+
 			 up(&s_pstruJpgOsrDev->SemGetDev);
-			 
+
 			 return HI_SUCCESS;
-			 
-			 
+
+
 		 }
 		 jpg_do_reset();
 		 jpg_do_clock_off();
 		 /**
-		  ** set file private data to HI_NULL 
+		  ** set file private data to HI_NULL
 		  **/
 		 HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)sDisposeClose);
- 
+
 		 return HI_SUCCESS;
- 
-		 
+
+
  }
 #endif
 
@@ -989,7 +1001,7 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
          JPEG_TRACE("dec failure\n");
          return HI_FAILURE;
      }
-     
+
  }
 /*****************************************************************************
  * func            : jpg_dec_continue
@@ -1009,19 +1021,19 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
      IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
 
      IntInfo.TimeOut = 10000;/** 10s **/
-     
-     do 
+
+     do
      {
-         s32Ret = jpeg_send_stream(s32DecHandle,&s32Offset,&bReachEOF);
-         if(HI_SUCCESS != s32Ret)
-         {
-            return HI_FAILURE;
-         }
+         (HI_VOID)jpeg_send_stream(s32DecHandle,&s32Offset,&bReachEOF);
+         //if(HI_SUCCESS != s32Ret)
+         //{
+            //return HI_FAILURE;
+         //}
          /** 数据buffer结束地址 **/
          jpeg_reg_write(JPGD_REG_ENDADD,(HI_S32)(pstImgInfo->pStreamPhy + s32Offset));
-         
+
          if(HI_FALSE == bStartDec)
-	     { 
+	     {
 			jpeg_reg_write(JPGD_REG_RESUME,(bReachEOF ? 0x02 : 0x0));
 #ifdef CONFIG_JPEG_4KDDR_DISABLE
 			jpeg_reg_write(JPGD_REG_START, 0x5);
@@ -1034,7 +1046,7 @@ static HI_VOID jpg_osr_showversion(HIGFX_MODE_ID_E ModID)
 		 {
 			jpeg_reg_write(JPGD_REG_RESUME,(bReachEOF ? (0x02|0x01) : 0x01));
 		 }
-            
+
          IntInfo.IntType = JPG_INTTYPE_NONE;
          s32Ret = jpg_osr_getintstatus((DRV_JPEG_EXT_GETINTTYPE_S*)&IntInfo);
          if(HI_FAILURE == s32Ret)
@@ -1099,14 +1111,19 @@ HI_VOID jpg_osr_setmemtype(HI_S32 s32Handle,HI_U32 u32MemMask)
 	#ifdef CONFIG_JPEG_OUTPUT_LUPIXSUM
 		HI_U32 u32RegistLuaPixSum0 = 0;
 		HI_U64 u64RegistLuaPixSum1 = 0;
-		IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)(stDecInfo->stInMsg.u32DecHandle);
+		IMAG_INFO_S *pstImgInfo = NULL;
 	#endif
-	
+
     if(NULL == stDecInfo)
     {
         JPEG_TRACE("the dec info is null\n");
         return HI_ERR_JPEG_PARA_NULL;
     }
+
+    #ifdef CONFIG_JPEG_OUTPUT_LUPIXSUM
+	pstImgInfo = (IMAG_INFO_S*)(stDecInfo->stInMsg.u32DecHandle);
+	#endif
+
     if(NULL == stDecInfo->stInMsg.pSavePhy)
     {
         JPEG_TRACE("the input ddr is null\n");
@@ -1117,7 +1134,7 @@ HI_VOID jpg_osr_setmemtype(HI_S32 s32Handle,HI_U32 u32MemMask)
         JPEG_TRACE("the output ddr is null\n");
         return HI_ERR_JPEG_PARA_NULL;
     }
-    
+
     s32Ret = jpg_dec_setpara(stDecInfo);
     if(HI_SUCCESS != s32Ret)
     {
@@ -1150,7 +1167,7 @@ HI_VOID jpg_osr_setmemtype(HI_S32 s32Handle,HI_U32 u32MemMask)
 			stDecInfo->stOutMsg.u64LuPixValue = pstImgInfo->u64LuPixValue;
 		}
 	#endif
-    
+
     return HI_SUCCESS;
 #else
     return HI_FAILURE;
@@ -1200,7 +1217,7 @@ static HI_S32 JpgOsrISR(HI_S32 irq, HI_VOID * devId, struct pt_regs * ptrReg)
 
 	if (IntType & 0x1)
 	{
-	    s_pstruJpgOsrDev->IntType = JPG_INTTYPE_FINISH;	  
+	    s_pstruJpgOsrDev->IntType = JPG_INTTYPE_FINISH;
 	}
 	else if (IntType & 0x2)
 	{
@@ -1216,8 +1233,8 @@ static HI_S32 JpgOsrISR(HI_S32 irq, HI_VOID * devId, struct pt_regs * ptrReg)
 	wake_up_interruptible(&s_pstruJpgOsrDev->QWaitInt);
 
 	return IRQ_HANDLED;
-        
-    
+
+
 }
 
 /***************************************************************************************
@@ -1234,7 +1251,7 @@ static HI_VOID Jpg_Request_irq(HI_VOID)
 	HI_S32 s32Ret = HI_SUCCESS;
 	s32Ret = request_irq(JPGD_IRQ_NUM, (irq_handler_t)JpgOsrISR, IRQF_SHARED, JPEGNAME, s_pstruJpgOsrDev);
 	if(HI_SUCCESS != s32Ret )
-	{   
+	{
 		HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)s_pstruJpgOsrDev);
 	    s_pstruJpgOsrDev = HI_NULL;
 	}
@@ -1262,7 +1279,7 @@ static HI_VOID Jpg_Free_irq(HI_VOID)
 * others:		: NA
 ***************************************************************************************/
 static HI_VOID JpgOsrDeinit(JPG_OSRDEV_S *pOsrDev)
-{    
+{
 
 
 	    /** use to initial waitqueue head and mutex */
@@ -1287,11 +1304,11 @@ static HI_VOID JpgOsrDeinit(JPG_OSRDEV_S *pOsrDev)
         #ifdef CONFIG_JPEG_PROC_ENABLE
 	    JPEG_Proc_Cleanup();
         #endif
-		
+
 	    /** unmap the register address and set s_u32JpgRegAddr with zero */
 		/** CNcomment: */
 	    JpgHalExit();
-		
+
 }
 
 
@@ -1340,11 +1357,11 @@ HI_VOID JPEG_DRV_ModExit(HI_VOID)
 #ifndef CONFIG_JPEG_USE_SDK_CRG_ENABLE
 	HI_GFX_REG_UNMAP((HI_VOID*)s_pJpegCRG);
 	s_pJpegCRG      = NULL;
-#endif    
+#endif
 
 	return;
 
-    
+
 }
 
 
@@ -1359,7 +1376,7 @@ HI_VOID JPEG_DRV_ModExit(HI_VOID)
 ***************************************************************************************/
 static HI_VOID JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
 {
-		
+
         HI_GFX_INIT_MUTEX(&s_JpegMutex);
 
         /** request halt  */
@@ -1377,7 +1394,7 @@ static HI_VOID JpgOsrInit(JPG_OSRDEV_S *pOsrDev)
         /** initial the waiting halt waiting queue */
 		/** CNcomment:   */
         init_waitqueue_head(&pOsrDev->QWaitInt);
-		
+
         /** initial device occupy operation singnal  */
 		/** CNcomment:   */
 	    HI_GFX_INIT_MUTEX(&s_SuspendMutex);
@@ -1410,24 +1427,24 @@ HI_S32 JPEG_DRV_K_ModInit(HI_VOID)
         HIGFX_CHIP_TYPE_E enChipType = HIGFX_CHIP_TYPE_BUTT;
 
         if (HI_NULL != s_pstruJpgOsrDev)
-        {   
+        {
             return -EBUSY;
         }
-		
+
 		 HI_GFX_SYS_GetChipVersion(&enChipType);
-		
+
 		 s_pJpegRegBase = (volatile HI_U32*)HI_GFX_REG_MAP(u64BaseAddr, JPGD_REG_LENGTH);
 
  #ifndef CONFIG_JPEG_USE_SDK_CRG_ENABLE
 		 s_pJpegCRG 	= (volatile HI_U32*)HI_GFX_REG_MAP(u64CRGAddr, JPGD_CRG_REG_LENGTH);
  #endif
- 
-		
+
+
         /** malloc and initial the struct that drive needed to s_pstruJpgOsrDev,if malloc failure, return -NOMEM  */
 		/** CNcomment:  */
         s_pstruJpgOsrDev = (JPG_OSRDEV_S *)HI_GFX_KMALLOC(HIGFX_JPGDEC_ID,sizeof(JPG_OSRDEV_S),GFP_KERNEL);
         if ( HI_NULL == s_pstruJpgOsrDev )
-        {   
+        {
             return -ENOMEM;
         }
         memset(s_pstruJpgOsrDev, 0x0, sizeof(JPG_OSRDEV_S));
@@ -1436,7 +1453,7 @@ HI_S32 JPEG_DRV_K_ModInit(HI_VOID)
         JpgHalInit(s_pJpegRegBase);
 
         jpg_do_reset();
-        
+
        /** call JpgOsrInit to initial OSR modual, if failure should release the
         ** resource and return failure
         **/
@@ -1458,9 +1475,9 @@ HI_S32 JPEG_DRV_K_ModInit(HI_VOID)
 			 JPEG_DRV_ModExit();
 			 return HI_FAILURE;
 		 }
-#endif	 
+#endif
 		 return HI_SUCCESS;
-		 
+
 }
 
 /***************************************************************************************
@@ -1480,7 +1497,7 @@ HI_S32 JPEG_DRV_ModInit(HI_VOID)
 #ifndef HI_MCE_SUPPORT
 		Ret = JPEG_DRV_K_ModInit();
 		if (HI_SUCCESS != Ret)
-        { 
+        {
         	if(NULL != s_pstruJpgOsrDev)
         	{
 				HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)s_pstruJpgOsrDev);
@@ -1492,7 +1509,7 @@ HI_S32 JPEG_DRV_ModInit(HI_VOID)
 
         Ret = HI_GFX_PM_Register();
         if (HI_SUCCESS != Ret)
-        { 
+        {
         	if(NULL != s_pstruJpgOsrDev)
         	{
 				HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)s_pstruJpgOsrDev);
@@ -1507,18 +1524,18 @@ HI_S32 JPEG_DRV_ModInit(HI_VOID)
 		/** display the version message  */
 		/** CNcomment: 显示版本号  */
 		jpg_osr_showversion(HIGFX_JPGDEC_ID);
-    	   
+
         return HI_SUCCESS;
 
-    
-} 
+
+}
  /*****************************************************************************
 * func            : jpg_osr_ioctl
 * description     : jpeg device control interface
-* param[in]       : inode  
+* param[in]       : inode
 * param[in]       : flip    device file message
-* param[in]       : Cmd  
-* param[in]       : Arg    
+* param[in]       : Cmd
+* param[in]       : Arg
 * output          : none
 * retval          : HI_SUCCESS
 * retval          : HI_ERR_JPG_DEC_BUSY
@@ -1534,9 +1551,13 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		case CMD_JPG_GETSIGNAL_ID:
 		{
 			#ifdef CONFIG_JPEG_USE_KERNEL_SIGNAL
+      if (0 == Arg)
+      {
+         return -EFAULT;
+      }
 			if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&s_pstruJpgOsrDev->s32SignalId, sizeof(int)))
-		        { 
-                return -EFAULT;  
+		        {
+                return -EFAULT;
        	    }
 			#endif
 			break;
@@ -1549,18 +1570,18 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 			/** select clock frequence  **/
 			/** CNcomment: 选择时钟频率 **/
 			jpg_select_clock_frep();
-			
+
 			/** reset register                        **/
 			/** CNcomment: 复位寄存器使之能够重新工作 **/
 			jpg_do_reset();
 			/** cancle the reset,now can work   **/
 			/** CNcomment: 撤消复位使之能够工作 **/
 			jpg_do_cancel_reset();
-			
+
 			/** trun the halt status  **/
 			/** CNcomment:            **/
 			JpgHalSetIntMask(0x0);
-			
+
 			s_pstruJpgOsrDev->IntType    = JPG_INTTYPE_NONE;
 			s_pstruJpgOsrDev->bDecTask   = HI_TRUE; /** 开始解码任务 **/
 			break;
@@ -1569,21 +1590,27 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
         {
 
             JPG_DISPOSE_CLOSE_S *sDisposeClose = NULL;
+
+            if (NULL == file)
+            {
+              return HI_FAILURE;
+            }
+
             sDisposeClose = file->private_data;
-			
+
         	if(down_interruptible(&s_JpegMutex)){
         	      sDisposeClose->bOpenUp = HI_FALSE;
 				  return HI_FAILURE;
-            }	
+            }
             /**
              ** if has not initial device, return failure
              **/
             if (HI_NULL == s_pstruJpgOsrDev)
-            {   
+            {
                 return HI_FAILURE;
             }
             /**
-             ** locked the occupied device 
+             ** locked the occupied device
              **/
             if(down_interruptible(&s_pstruJpgOsrDev->SemGetDev))
             {
@@ -1594,7 +1621,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
             s_pstruJpgOsrDev->IntType    = JPG_INTTYPE_NONE;
             s_pstruJpgOsrDev->pFile      = file;
             s_pstruJpgOsrDev->bLock      = HI_TRUE;/** 已经被锁住了 **/
-			
+
             sDisposeClose->s32DecClose   = HI_FAILURE;
             sDisposeClose->bOpenUp       = HI_TRUE;
             sDisposeClose->bRealse       = HI_FALSE;
@@ -1615,8 +1642,8 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              /** trun the halt status  */
 	         /** CNcomment:   */
              JpgHalSetIntMask(0x0);
-           
-			 
+
+
              up(&s_pstruJpgOsrDev->SemGetDev);
 
 #ifdef CONFIG_JPEG_MMU_SUPPORT
@@ -1626,29 +1653,22 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
               **开始解码任务
               **/
 			 s_pstruJpgOsrDev->bDecTask = HI_TRUE;
-			 
+
              break;
-             
+
         }
         case CMD_JPG_SUSPEND:
-        {    
-			 #ifdef CONFIG_JPEG_SUSPEND
-            	pm_message_t state = {0};
-			 	jpg_osr_suspend(NULL,state);
-			 #endif
+        {
              break;
         }
         case CMD_JPG_RESUME:
-        {    
-			 #ifdef CONFIG_JPEG_SUSPEND
-             	jpg_osr_resume(NULL);
-			 #endif
+        {
              break;
         }
         case CMD_JPG_GETINTSTATUS:
         {
 
-			
+
             JPG_GETINTTYPE_S IntInfo;
             HI_S32 s32Ret = HI_SUCCESS;
             /**
@@ -1662,27 +1682,27 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              ** copy input parameter
              **/
            if(copy_from_user((HI_VOID *)&IntInfo, (HI_VOID *)Arg, sizeof(JPG_GETINTTYPE_S)))
-		   {   
-                return -EFAULT;  
+		   {
+                return -EFAULT;
            	}
 			s32Ret = jpg_osr_getintstatus((DRV_JPEG_EXT_GETINTTYPE_S*)&IntInfo);
 			if(HI_FAILURE == s32Ret)
 			{
 				return HI_FAILURE;
 			}
-            /** 
+            /**
              ** get halt status and return
              **/
             if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&IntInfo,sizeof(JPG_GETINTTYPE_S)))
 		    {
-                return -EFAULT;  
+                return -EFAULT;
            	}
             break;
         }
         case CMD_JPG_READPROC:
-        {   
+        {
 
-             #ifdef CONFIG_JPEG_PROC_ENABLE 
+             #ifdef CONFIG_JPEG_PROC_ENABLE
 	            HI_BOOL bIsProcOn = HI_FALSE;
 				JPEG_Get_Proc_Status(&bIsProcOn);
 	            if(HI_TRUE == bIsProcOn)
@@ -1691,17 +1711,17 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		            {
 		                return HI_FAILURE;
 		            }
-		                        
+
 		            if(copy_from_user((HI_VOID *)&s_stJpeg6bProcInfo, (HI_VOID *)Arg, sizeof(HI_JPEG_PROC_INFO_S)))
-				    {  
-		                return -EFAULT;  
+				    {
+		                return -EFAULT;
 		           	}
 	            }
 			#endif
-			
+
             break;
-			
-        }   	
+
+        }
         case CMD_JPG_GETRESUMEVALUE:
         {/** 获取待机唤醒信息 **/
 			#ifdef CONFIG_JPEG_SUSPEND
@@ -1719,39 +1739,39 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
     			s_pstruJpgOsrDev->bResumeSignal  = HI_FALSE;
 			#endif
             break;
-			
+
         }
         case CMD_JPG_GETSUSPEND:
         { /** 获取待机信息 **/
-			
+
             #ifdef CONFIG_JPEG_SUSPEND
 	            if (0 == Arg)
 	            {
 	                return HI_FAILURE;
 	            }
 	            if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&s_pstruJpgOsrDev->bSuspendSignal,sizeof(s_pstruJpgOsrDev->bSuspendSignal)))
-			    {  
+			    {
 	                return -EFAULT;
 	           	}
 			#endif
             break;
-			
+
         }
         case CMD_JPG_GETRESUME:
-        {/** 获取待机唤醒信息 **/  
+        {/** 获取待机唤醒信息 **/
 			#ifdef CONFIG_JPEG_SUSPEND
 	            if (0 == Arg)
 	            {
 	                return HI_FAILURE;
 	            }
-	                        
+
 	            if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&s_pstruJpgOsrDev->bResumeSignal,sizeof(s_pstruJpgOsrDev->bResumeSignal)))
 			    {
 	                return -EFAULT;
 	           	}
 			#endif
             break;
-			
+
         }
         case CMD_JPG_CANCEL_RESET:
 		{
@@ -1767,16 +1787,31 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
         case CMD_JPG_CREATEDEC:
         {
              HI_U32 u32DecHandle = 0;
+
+             if (0 != s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_SUCCESS;
+             }
+
              u32DecHandle = (HI_U32)HI_GFX_KMALLOC(HIGFX_JPGDEC_ID,sizeof(IMAG_INFO_S),GFP_KERNEL);
              if(0 == u32DecHandle )
              {
                 return HI_FAILURE;
              }
+             if (0 == Arg)
+             {
+                HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)u32DecHandle);
+                return -EFAULT;
+             }
              memset((HI_VOID*)u32DecHandle,0,sizeof(IMAG_INFO_S));
              if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&u32DecHandle,sizeof(HI_S32)))
 		     {
+                HI_GFX_KFREE(HIGFX_JPGDEC_ID, (HI_VOID *)u32DecHandle);
                 return -EFAULT;
            	 }
+
+             s_pstruJpgOsrDev->OmxDecHandle = u32DecHandle;
+
              break;
         }
         case CMD_JPG_SETMEMTYPE:
@@ -1785,7 +1820,11 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              HI_DRV_JPEG_INMSG_S stInMsg;
              if (0 == Arg)
                 return HI_FAILURE;
-             
+             if (0 == s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_FAILURE;
+             }
+
              memset(&stInMsg,0,sizeof(HI_DRV_JPEG_INMSG_S));
              if(copy_from_user((HI_VOID *)&stInMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_INMSG_S))){
                 return -EFAULT;
@@ -1804,6 +1843,11 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              HI_DRV_JPEG_INMSG_S stInMsg;
              if (0 == Arg)
                 return HI_FAILURE;
+
+             if (0 == s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_FAILURE;
+             }
 
              memset(&stInMsg,0,sizeof(HI_DRV_JPEG_INMSG_S));
              if(copy_from_user((HI_VOID *)&stInMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_INMSG_S)))
@@ -1827,7 +1871,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 		     {
                 return -EFAULT;
            	 }
-             
+
              break;
         }
         case CMD_JPG_DECOUTINFO:
@@ -1836,6 +1880,11 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              HI_DRV_JPEG_OUTMSG_S stOutMsg;
              if (0 == Arg)
                 return HI_FAILURE;
+
+             if (0 == s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_FAILURE;
+             }
 
              memset(&stOutMsg,0,sizeof(HI_DRV_JPEG_OUTMSG_S));
              if(copy_from_user((HI_VOID *)&stOutMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_OUTMSG_S)))
@@ -1847,7 +1896,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
                 JPEG_TRACE("the dec handle has been destoryed\n");
                 return HI_FAILURE;
              }
-             
+
              s32Ret = jpeg_get_sofn(&stOutMsg);
              if(HI_SUCCESS != s32Ret)
              {
@@ -1867,10 +1916,15 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              HI_JPEG_DECINFO_S stDecInfo;
              JPG_DISPOSE_CLOSE_S *sDisposeClose = NULL;
              sDisposeClose = file->private_data;
-             
+
              if (0 == Arg)
                 return HI_FAILURE;
-             
+
+             if (0 == s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_FAILURE;
+             }
+
              memset(&stDecInfo,0,sizeof(HI_JPEG_DECINFO_S));
              if(copy_from_user((HI_VOID *)&stDecInfo, (HI_VOID *)Arg, sizeof(HI_JPEG_DECINFO_S)))
 		     {
@@ -1881,26 +1935,26 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
                 JPEG_TRACE("the dec handle has been destoryed\n");
                 return HI_FAILURE;
              }
-             
+
              if(down_interruptible(&s_JpegMutex))
              {
 				return HI_FAILURE;
              }
-             
+
              s_pstruJpgOsrDev->bEngageFlag = HI_TRUE;
              s_pstruJpgOsrDev->IntType     = JPG_INTTYPE_NONE;
              s_pstruJpgOsrDev->pFile       = file;
              sDisposeClose->s32DecClose    = HI_FAILURE;
              sDisposeClose->bOpenUp        = HI_TRUE;
              sDisposeClose->bRealse        = HI_TRUE;
-            
+
              /** set clock and reset **/
 	         jpg_select_clock_frep();
              jpg_do_clock_on();
              jpg_do_reset();
 	         jpg_do_cancel_reset();
              JpgHalSetIntMask(0x0);
-             
+
              s32Ret = jpg_osr_dec(&stDecInfo);
              if(HI_SUCCESS != s32Ret)
              {
@@ -1909,12 +1963,12 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
                 wake_up_interruptible(&s_pstruJpgOsrDev->QWaitMutex);
                 return HI_FAILURE;
              }
-             
+
              up(&s_JpegMutex);
              wake_up_interruptible(&s_pstruJpgOsrDev->QWaitMutex);
-             
+
              break;
-             
+
         }
         case CMD_JPG_GETLUPIXSUM:
         {
@@ -1922,6 +1976,11 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              HI_DRV_JPEG_OUTMSG_S stOutMsg;
              if (0 == Arg)
                 return HI_FAILURE;
+
+             if (0 == s_pstruJpgOsrDev->OmxDecHandle)
+             {
+                 return HI_FAILURE;
+             }
 
              memset(&stOutMsg,0,sizeof(HI_DRV_JPEG_OUTMSG_S));
              if(copy_from_user((HI_VOID *)&stOutMsg, (HI_VOID *)Arg, sizeof(HI_DRV_JPEG_OUTMSG_S)))
@@ -1938,7 +1997,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
              jpg_osr_getlupixsum(stOutMsg.u32DecHandle,&u64LuPixValue);
 
              stOutMsg.u64LuPixValue = u64LuPixValue;
-             
+
              if(copy_to_user((HI_VOID *)Arg, (HI_VOID *)&stOutMsg,sizeof(HI_DRV_JPEG_OUTMSG_S)))
 		     {
                 return -EFAULT;
@@ -1954,11 +2013,19 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
             }
             if(copy_from_user((HI_VOID *)&s32Handle, (HI_VOID *)Arg, sizeof(HI_S32)))
 		    {
+                s_pstruJpgOsrDev->OmxDecHandle = 0;
                 return -EFAULT;
            	}
-            
+
+            if (s32Handle != s_pstruJpgOsrDev->OmxDecHandle)
+            {
+               return HI_FAILURE;
+            }
+
             jpeg_mem_destory(s32Handle);
-            
+
+            s_pstruJpgOsrDev->OmxDecHandle = 0;
+
             break;
         }
 #endif
@@ -1966,9 +2033,9 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
         {
             return -EINVAL;
         }
-        
+
     }
-	
+
     return HI_SUCCESS;
 
 
@@ -1978,7 +2045,7 @@ static long jpg_osr_ioctl(struct file *file, HI_U32 Cmd, unsigned long Arg)
 
 /** 这两个函数要按此命名 **/
 #ifdef MODULE
-/** 
+/**
  ** this two function is defined at msp/drv/include/drv_jpeg_ext.h
  **/
 module_init(JPEG_DRV_ModInit);

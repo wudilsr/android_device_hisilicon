@@ -62,6 +62,7 @@ LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
 LOCAL_C_INCLUDES += $(MSP_DIR)/api/higo/include
 LOCAL_C_INCLUDES += $(SAMPLE_DIR)/common
 LOCAL_C_INCLUDES += $(COMPONENT_DIR)/ha_codec/include
+LOCAL_C_INCLUDES += $(SDK_DIR)/pub/include
 
 LOCAL_C_INCLUDES += $(TOP)/external/skia/include/core
 LOCAL_C_INCLUDES += $(TOP)/external/skia/include/images

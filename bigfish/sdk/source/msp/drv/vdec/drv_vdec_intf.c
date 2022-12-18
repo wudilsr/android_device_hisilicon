@@ -31,20 +31,10 @@ extern "C" {
  #endif
 #endif /* End of #ifdef __cplusplus */
 
-static HI_S32   VDEC_DRV_CtrlWriteProc(struct file * file,
-                                   const char __user * buf, size_t count, loff_t *ppos);
+static HI_S32   VDEC_DRV_CtrlWriteProc(struct file * file, const char __user * buf, size_t count, loff_t *ppos);
 static HI_S32   VDEC_DRV_CtrlReadProc(struct seq_file *p, HI_VOID *v);
-
-static HI_S32   VDEC_DRV_WriteProc(struct file * file,
-                                   const char __user * buf, size_t count, loff_t *ppos);
+static HI_S32   VDEC_DRV_WriteProc(struct file * file, const char __user * buf, size_t count, loff_t *ppos);
 static HI_S32   VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v);
-
-static HI_S32 VDEC_DRV_VPUReadProc(struct seq_file *p, HI_VOID *v);
-static HI_S32 VDEC_DRV_VPUWriteProc(struct file * file, const char __user * buffer, size_t count, loff_t *ppos);
-
-void VPU_DecodeStat2Str(HI_U32 eDecStat, char *strVidStd);
-void VPU_InstMode2Str(HI_U32 eInstMode, char *strVidStd);
-void VPU_DecodeMode2Str(HI_U32 eDecMode, char *strVidStd);
 static long     VDEC_DRV_Ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
 
 static HI_CHAR *s_aszVdecType[HI_UNF_VCODEC_TYPE_BUTT + 1] =
@@ -113,8 +103,6 @@ static VDEC_REGISTER_PARAM_S s_stProcParam = {
     .pfnCtrlWriteProc = VDEC_DRV_CtrlWriteProc,
     .pfnReadProc      = VDEC_DRV_ReadProc,
     .pfnWriteProc     = VDEC_DRV_WriteProc,
-    .pfnVpuReadProc   = VDEC_DRV_VPUReadProc,
-    .pfnVpuWriteProc  = VDEC_DRV_VPUWriteProc,
 };
 
 /* save raw/yuv param */
@@ -272,10 +260,10 @@ static HI_S32 VDEC_DRV_GetProcArg(HI_CHAR*  chCmd,HI_CHAR*  chArg,HI_U32 u32ArgI
 static HI_S32 VDEC_DRV_CtrlWriteProc(struct file * file,
                                  const char __user * buffer, size_t count, loff_t *ppos)
 {
-    HI_CHAR dat1[VDEC_MAX_PROC_ARGS_SIZE];
-    HI_CHAR dat2[VDEC_MAX_PROC_ARGS_SIZE];
-    HI_CHAR dat3[VDEC_MAX_PROC_ARGS_SIZE*8];
-    HI_CHAR buf[256];
+    HI_CHAR dat1[VDEC_MAX_PROC_ARGS_SIZE] = {0};
+    HI_CHAR dat2[VDEC_MAX_PROC_ARGS_SIZE] = {0};
+    HI_CHAR dat3[VDEC_MAX_PROC_ARGS_SIZE * 8] = {0};
+    HI_CHAR buf[256] = {0};
     HI_HANDLE handle = 0;
     if(count >= sizeof(buf))
     {
@@ -887,15 +875,6 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
                         );
         if (HI_UNF_VCODEC_TYPE_HEVC == pstChan->stCurCfg.enType)
         {
-          #if (1 == HI_VDEC_VPU_SUPPORT)
-            PROC_PRINT(p,
-                            "LumaBitdepth                        : %d\n"
-                            "ChromaBitdepth                      : %d\n",
-
-                            pstChan->stVdecVpuStatus.u32LumaBitdepth,
-                            pstChan->stVdecVpuStatus.u32ChromaBitdepth
-                            );
-          #else
             PROC_PRINT(p,
                             "LumaBitdepth                        : %d\n"
                             "ChromaBitdepth                      : %d\n",
@@ -903,7 +882,6 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
                             pstChan->u32LastLumaBitdepth,
                             pstChan->u32LastChromaBitdepth
                             );
-          #endif
         }
         else if (HI_UNF_VCODEC_TYPE_H264 == pstChan->stCurCfg.enType)
         {
@@ -1028,206 +1006,7 @@ static HI_S32 VDEC_DRV_ReadProc(struct seq_file *p, HI_VOID *v)
     return 0;
 }
 
-// add by w00278582
-static HI_S32 VDEC_DRV_VPUReadProc(struct seq_file *p, HI_VOID *v)
-{
-    HI_S32 i, j;
-    HI_S32 s32Ret;
-    VDEC_CHANNEL_S *pstChan;
-    DRV_PROC_ITEM_S *pstProcItem;
-    char putArr[32];
-    char *pStr = putArr;
-    char strDecStat[MAX_VID_PROTOCOL_NAME];
-    char strInstMode[MAX_VID_PROTOCOL_NAME];
-    char strDecMode[MAX_VID_PROTOCOL_NAME];
-
-    pstProcItem = p->private;
-
-    if (0 == strncmp(pstProcItem->entry_name, "vdec_ctrl",9))
-    {
-        return 0;
-    }
-
-    s32Ret = sscanf(pstProcItem->entry_name, "vdec_vpu%02d", &i);
-    if(s32Ret <=0)
-    {
-        PROC_PRINT(p, "Invalid VDEC ID.\n");
-        return 0;
-    }
-    if (i >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        PROC_PRINT(p, "Invalid VDEC ID:%d.\n", i);
-        return 0;
-    }
-
-    pstChan = VDEC_DRV_GetChan(i);
-
-    if(HI_NULL == pstChan)
-    {
-        HI_ERR_VDEC("ERR: chan %d is not init!\n",i);
-        return 0;
-    }
-
-    for (j = 0; j < pstChan->stVdecVpuStatus.u32ActualFrmBufNum; j++)
-    {
-        snprintf(pStr, 3, "%2d",  pstChan->stVdecVpuStatus.stFrmStatus[j].u32IsPutVdecQueue);
-        pStr++;
-        pStr++;
-    }
-    VPU_DecodeStat2Str(pstChan->stVdecVpuStatus.u32DecodeStatus, strDecStat);
-    VPU_InstMode2Str(pstChan->stVdecVpuStatus.u32InstanceMode, strInstMode);
-    VPU_DecodeMode2Str(pstChan->stVdecVpuStatus.u32DecodeMode,strDecMode);
-
-    if (pstChan)
-    {
-        PROC_PRINT(p, "|--------------------------------------------------------------------|\n");
-        PROC_PRINT(p, "|            VPU%02d                 |VERSION         : %-10d     |\n", i, pstChan->stVdecVpuStatus.u32Version);
-        PROC_PRINT(p, "|----------------------------------|---------------------------------|\n");
-        PROC_PRINT(p, "|        VPU DECODER STATUS        |      BITSTREAM BUF INFO         |\n");
-        PROC_PRINT(p, "|----------------------------------|---------------------------------|\n");
-        PROC_PRINT(p, "|DecodeStatus    : %-7s         |PhyAddr         : 0x%-10x   |\n", strDecStat, pstChan->stVdecVpuStatus.u32PhyAddr);
-        PROC_PRINT(p, "|DecodeMode      : %-7s         |BsBufSize       : %-9d      |\n", strDecMode, pstChan->stVdecVpuStatus.u32BsBufSize);
-        PROC_PRINT(p, "|InstanceMode    : %-7s         |BsBufUsedSize   : %-9d      |\n", strInstMode, pstChan->stVdecVpuStatus.u32BsBuFUsedSize);
-        PROC_PRINT(p, "|----------------------------------|BsBufPercent    : %-3d%%           |\n", pstChan->stVdecVpuStatus.u32BsBufPercent);
-        PROC_PRINT(p, "|        BITSTREAM INFO            |BsBufReadPtr    : 0x%-10x   |\n", pstChan->stVdecVpuStatus.u32BsBufReadPtr);
-        PROC_PRINT(p, "|----------------------------------|BsBufWritePtr   : 0x%-10x   |\n", pstChan->stVdecVpuStatus.u32BsBufWritePtr);
-        PROC_PRINT(p, "|VedioStandard   : %-7s         |---------------------------------|\n", "HEVC");
-        PROC_PRINT(p, "|DecWidth        : %-7d         |      VPU FRAME BUF INFO         |\n", pstChan->stVdecVpuStatus.u32DecWidth);
-        PROC_PRINT(p, "|DecHeight       : %-7d         |---------------------------------|\n", pstChan->stVdecVpuStatus.u32DecHeight);
-        PROC_PRINT(p, "|DispWidth       : %-7d         |ActualFrmBufNum : %-5d          |\n", pstChan->stVdecVpuStatus.u32DispWidth, pstChan->stVdecVpuStatus.u32ActualFrmBufNum);
-        PROC_PRINT(p, "|DispHeight      : %-7d         |%-31s  |\n", pstChan->stVdecVpuStatus.u32DispHeight, putArr);
-
-        //PROC_PRINT(p, "|ErrRatio        : %-7d         |OldFrmBufNum    : %-5d          |\n", pstChan->stVdecVpuStatus.u32ErrRatio, pstChan->stVdecVpuStatus.u32OldFrmBufNum);
-        PROC_PRINT(p, "|ErrRatio        : %-7d         |---------------------------------|\n", pstChan->stVdecVpuStatus.u32ErrRatio);
-        PROC_PRINT(p, "|NumOfErrMBs     : %-7d         |\n", pstChan->stVdecVpuStatus.u32NumOfErrMBs);
-        PROC_PRINT(p, "|SeqChangeCount  : %-7d         |\n", pstChan->stVdecVpuStatus.u32SeqChangeCount);
-        PROC_PRINT(p, "|MainProfile     : %-7d         |\n", pstChan->stVdecVpuStatus.u32Profile);
-        PROC_PRINT(p, "|LumaBitDepth    : %-7d         |\n", pstChan->stVdecVpuStatus.u32LumaBitdepth);
-        PROC_PRINT(p, "|ChromaBitDepth  : %-7d         |\n", pstChan->stVdecVpuStatus.u32ChromaBitdepth);
-        PROC_PRINT(p, "|DecodIndex      : %-7d         |\n", pstChan->stVdecVpuStatus.s32indexFrameDecoded);
-        PROC_PRINT(p, "|DisplayIndex    : %-7d         |\n", pstChan->stVdecVpuStatus.s32indexFrameDisplay);
-        PROC_PRINT(p, "|BsRate          : %-7dkbps     |\n", pstChan->stVdecVpuStatus.u32BsRate);
-        PROC_PRINT(p, "|----------------------------------|\n");
-
-    }
-    else
-    {
-        PROC_PRINT(p, "vpu init!\n" );
-    }
-
-    return 0;
-}
-
-// add by w00278582
-static HI_S32 VDEC_DRV_VPUWriteProc(struct file * file, const char __user * buffer, size_t count, loff_t *ppos)
-{
-    // do something
-    return 0;
-}
-
-// w00278582
-void VPU_DecodeStat2Str(HI_U32 eDecStat, char *strVidStd)
-{
-    char *pStrOpen         = "OPEN";
-    char *pStrRun          = "OPEN";
-    char *pStrStop         = "STOP";
-    char *pStrClose        = "CLOSE";
-    char *pStrButt         = "BUTT";
-
-    switch (eDecStat)
-    {
-        case 0:
-            strncpy(strVidStd, pStrOpen, strlen(pStrOpen));
-            strVidStd[strlen(pStrOpen)] = '\0';
-            break;
-        case 1:
-            strncpy(strVidStd, pStrRun, strlen(pStrRun));
-            strVidStd[strlen(pStrRun)] = '\0';
-            break;
-        case 2:
-            strncpy(strVidStd, pStrStop, strlen(pStrStop));
-            strVidStd[strlen(pStrStop)] = '\0';
-            break;
-        case 3:
-            strncpy(strVidStd, pStrClose, strlen(pStrClose));
-            strVidStd[strlen(pStrClose)] = '\0';
-            break;
-        case 4:
-            strncpy(strVidStd, pStrButt, strlen(pStrButt));
-            strVidStd[strlen(pStrButt)] = '\0';
-            break;
-
-        default:
-            *strVidStd = '\0';
-            break;
-    }
-}
-
-void VPU_InstMode2Str(HI_U32 eInstMode, char *strVidStd)
-{
-    char *pStrNormal       = "NORMAL";
-    char *pStrISingle      = "ISINGLE";
-    char *pStrButt         = "BUTT";
-
-    switch (eInstMode)
-    {
-        case 0:
-            strncpy(strVidStd, pStrNormal, strlen(pStrNormal));
-            strVidStd[strlen(pStrNormal)] = '\0';
-            break;
-        case 1:
-            strncpy(strVidStd, pStrISingle, strlen(pStrISingle));
-            strVidStd[strlen(pStrISingle)] = '\0';
-            break;
-        case 2:
-            strncpy(strVidStd, pStrButt, strlen(pStrButt));
-            strVidStd[strlen(pStrButt)] = '\0';
-            break;
-
-        default:
-            *strVidStd = '\0';
-            break;
-    }
-}
-
-void VPU_DecodeMode2Str(HI_U32 eDecMode, char *strVidStd)
-{
-    char *pStrIPB          = "IPB";
-    char *pStrIP           = "IP";
-    char *pStrI            = "I";
-    char *pStrDISCARD      = "DISCARD";
-    char *pStrBUTT         = "BUTT";
-
-    switch (eDecMode)
-    {
-        case 0:
-            strncpy(strVidStd, pStrIPB, strlen(pStrIPB));
-            strVidStd[strlen(pStrIPB)] = '\0';
-            break;
-        case 1:
-            strncpy(strVidStd, pStrIP, strlen(pStrIP));
-            strVidStd[strlen(pStrIP)] = '\0';
-            break;
-        case 2:
-            strncpy(strVidStd, pStrI, strlen(pStrI));
-            strVidStd[strlen(pStrI)] = '\0';
-            break;
-        case 3:
-            strncpy(strVidStd, pStrDISCARD, strlen(pStrDISCARD));
-            strVidStd[strlen(pStrDISCARD)] = '\0';
-            break;
-        case 4:
-            strncpy(strVidStd, pStrBUTT, strlen(pStrBUTT));
-            strVidStd[strlen(pStrBUTT)] = '\0';
-            break;
-
-        default:
-            *strVidStd = '\0';
-            break;
-    }
-}
-
-static UMAP_DEVICE_S    VdecDev;
+static UMAP_DEVICE_S VdecDev;
 
 HI_S32 VDEC_DRV_ModInit(HI_VOID)
 {

@@ -28,12 +28,12 @@ HI_S32 SUBT_DataRecv_Init(HI_VOID);
  *
  *@param[in] u16PageID - page ID
  *@param[in] u16AncillaryID - ancillary page ID
- *@param[out] phDataRecv - this module handle.
+ *@param[out] pphDataRecv - this module handle.
  *
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed.
  */
-HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_HANDLE *phDataRecv);
+HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_VOID** pphDataRecv);
 
 /*
  *@brief:Destroy data receiving moudle.
@@ -44,7 +44,7 @@ HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_HANDLE *
  *@retval ::HI_SUCCESS - upon successful
  *@retval ::HI_FAILURE - failed.
  */
-HI_S32 SUBT_DataRecv_Destroy(HI_HANDLE hDataRecv);
+HI_S32 SUBT_DataRecv_Destroy(HI_VOID* hDataRecv);
 
 /*
  *@brief:Reset data receiving moudle.
@@ -56,7 +56,7 @@ HI_S32 SUBT_DataRecv_Destroy(HI_HANDLE hDataRecv);
  *@retval ::HI_SUCCESS - upon successful
  *@retval ::HI_FAILURE - failed to reset.
  */
-HI_S32 SUBT_DataRecv_Reset(HI_HANDLE hDataRecv, HI_BOOL bRecvFlag);
+HI_S32 SUBT_DataRecv_Reset(HI_VOID* hDataRecv, HI_BOOL bRecvFlag);
 
 /*
  *@brief:updata page id and ancillary id.
@@ -69,7 +69,7 @@ HI_S32 SUBT_DataRecv_Reset(HI_HANDLE hDataRecv, HI_BOOL bRecvFlag);
  *@retval ::HI_SUCCESS - upon successful
  *@retval ::HI_FAILURE - failed to updata page id.
  */
-HI_S32 SUBT_DataRecv_Updata(HI_HANDLE hDataRecv, HI_U16 u16PageID, HI_U16 u16AncillaryID);
+HI_S32 SUBT_DataRecv_Updata(HI_VOID* hDataRecv, HI_U16 u16PageID, HI_U16 u16AncillaryID);
 
 /*
  *@brief:bind parsing module.
@@ -81,7 +81,7 @@ HI_S32 SUBT_DataRecv_Updata(HI_HANDLE hDataRecv, HI_U16 u16PageID, HI_U16 u16Anc
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to bind parsing module.
  */
-HI_S32 SUBT_DataRecv_BindParsing(HI_HANDLE hDataRecv, HI_HANDLE hDataParse);
+HI_S32 SUBT_DataRecv_BindParsing(HI_VOID* hDataRecv, HI_VOID* hDataParse);
 
 /*
  *@brief:unbind parsing module.
@@ -92,7 +92,7 @@ HI_S32 SUBT_DataRecv_BindParsing(HI_HANDLE hDataRecv, HI_HANDLE hDataParse);
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to unbind.
  */
-HI_S32 SUBT_DataRecv_UnbindParsing(HI_HANDLE hDataRecv);
+HI_S32 SUBT_DataRecv_UnbindParsing(HI_VOID* hDataRecv);
 
 /*
  *@brief:redo the operation with cache data.
@@ -103,7 +103,7 @@ HI_S32 SUBT_DataRecv_UnbindParsing(HI_HANDLE hDataRecv);
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to redo.
  */
-HI_S32 SUBT_DataRecv_Redo(HI_HANDLE hDataRecv);
+HI_S32 SUBT_DataRecv_Redo(HI_VOID* hDataRecv);
 
 /*
  *@brief:inject data.
@@ -116,7 +116,7 @@ HI_S32 SUBT_DataRecv_Redo(HI_HANDLE hDataRecv);
  *@retval ::HI_SUCCESS - upon successful, have finished parsing pes data.
  *@retval ::HI_FAILURE - cannot finish pes data parsing.
  */
-HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataSize);
+HI_S32 SUBT_DataRecv_Inject(HI_VOID* hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataSize);
 
 
 #ifdef __cplusplus

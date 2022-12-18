@@ -1160,7 +1160,7 @@ STATIC INLINE HI_S32 PVRIndexGetHeaderInfo(HI_S32 s32Fd, PVR_IDX_HEADER_INFO_S* 
     }
 
     s64IndexFileSize = (HI_S64)pvr_lseek(s32Fd, 0, SEEK_END);
-    pvr_lseek(s32Fd, s32TmpOffset, SEEK_SET);
+    (HI_VOID)pvr_lseek(s32Fd, s32TmpOffset, SEEK_SET);
 
     u32IndexEntryNum = (HI_U32)(((HI_U64)s64IndexFileSize - (HI_U64)pstHeadInfo->u32HeaderLen)/(HI_U64)sizeof(PVR_INDEX_ENTRY_S));
 
@@ -3172,7 +3172,7 @@ HI_S32 PVR_Index_Destroy(PVR_INDEX_HANDLE handle, HI_U32 u32PlayOrRec)
     }
 
     /* release index handle */
-    if (handle->u32RecPicParser != 0xffffffff)
+    if ((handle->u32RecPicParser != 0xffffffff) && (PVR_REC_MAX_CHN_NUM > handle->u32RecPicParser))
     {
         g_u32RecChnStat[handle->u32RecPicParser] = PVR_INDEX_REC_CHN_UNUSED;
         handle->u32RecPicParser = 0xffffffff;

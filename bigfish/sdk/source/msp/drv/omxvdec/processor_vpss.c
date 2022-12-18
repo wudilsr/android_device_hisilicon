@@ -214,6 +214,7 @@ static HI_S32 processor_release_frame(OMXVDEC_CHAN_CTX *pchan, HI_U32 phyaddr)
         user_buf.timestamp = 0;
 
         message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_S_SUCCESS, (HI_VOID *)&user_buf);
+        pchan->omx_chan_statinfo.FBD++;
 
         if (0 == pchan->yuv_use_cnt)
         {
@@ -344,7 +345,8 @@ static HI_S32 processor_report_frame(OMXVDEC_CHAN_CTX *pchan, HI_DRV_VIDEO_FRAME
        }
     }
 
-	message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_S_SUCCESS, &user_buf);
+    message_queue(pchan->msg_queue, VDEC_MSG_RESP_OUTPUT_DONE, VDEC_S_SUCCESS, &user_buf);
+    pchan->omx_chan_statinfo.FBD++;
 
 	pchan->yuv_use_cnt = (pchan->yuv_use_cnt > 0) ? (pchan->yuv_use_cnt-1) : 0;
 
@@ -386,6 +388,12 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
         return HI_FAILURE;
     }
 
+    if (pchan->port_enable_flag != 1)
+    {
+        OmxPrint(OMX_FATAL, "%s state err! port_enable_flag = %d\n", __func__,pchan->port_enable_flag);
+        return HI_FAILURE;
+    }
+
     // 检测输出宽高变化，进行上报
     if (pVpssFrm->u32FrmW != pchan->out_width || pVpssFrm->u32FrmH != pchan->out_height)
     {
@@ -403,6 +411,8 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
             pchan->out_stride = ImgSize.frame_stride = HI_OMX_GET_STRIDE(pchan->out_width);
         }
         pchan->recfg_flag = 1;
+        pchan->port_enable_flag = 0;
+
         channel_report_message(pchan, VDEC_EVT_REPORT_IMG_SIZE_CHG, (HI_VOID *)&ImgSize);
 
 
@@ -429,7 +439,7 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
         return HI_FAILURE;
     }
 
-    if (OutFrame.PhyAddr != 0 && OutFrame.VirAddr != 0)
+    if (OutFrame.PhyAddr != 0)
     {
         pVpssFrm->u32StartPhyAddr = (HI_U32)OutFrame.PhyAddr;
         pVpssFrm->u32StartVirAddr = (HI_U32)OutFrame.VirAddr;
@@ -437,6 +447,11 @@ static HI_S32 processor_get_frame_buffer(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pstAr
         //PrivatePhyAddr = -1 表示未分配metadata，此时也传递给VPSS，给VPSS作判断用
         pVpssFrm->u32PrivDataPhyAddr = (HI_U32)OutFrame.PrivatePhyAddr;
         pVpssFrm->u32PrivDataSize    = (HI_U32)OutFrame.PrivateLength;
+    }
+    else
+    {
+        OmxPrint(OMX_FATAL, "%s phy address is invalid\n", __func__);
+        return HI_FAILURE;
     }
 
     OmxPrint(OMX_VPSS, "VPSS get frame buffer success!\n");
@@ -659,6 +674,7 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     HI_S32 ret = HI_FAILURE;
     OMXVDEC_CHAN_CTX *pchan = HI_NULL;
     IMAGE stImage;
+    HI_U32 remainder = 0;
     HI_U32 u32fpsInteger = 0;
 	HI_U32 u32fpsDecimal = 0;
     HI_DRV_VIDEO_PRIVATE_S *pstPrivInfo = HI_NULL;
@@ -688,6 +704,19 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     ret = pchan->image_ops.read_image(pchan->decoder_id, &stImage);
 	if(ret != HI_SUCCESS)
     {
+        if (pchan->end_frame_flag == DECODER_REPORT_FAKE_FRAME)
+        {
+            memset(pstFrame, 0 ,sizeof(HI_DRV_VIDEO_FRAME_S));
+            pstPrivInfo = (HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv);
+            OmxPrint(OMX_INFO, "VPSS got no frame to handle, report a fake one!\n");
+            pstFrame->bProgressive = HI_FALSE;
+            pstFrame->enFieldMode = HI_DRV_FIELD_ALL;
+            pstPrivInfo->u32LastFlag = DEF_HI_DRV_VPSS_LAST_ERROR_FLAG;
+            pchan->end_frame_flag = 0;
+
+            return HI_SUCCESS;
+        }
+
         if (DECODER_REPORT_LAST_FRAME == pchan->last_frame_info[0])
         {
             /* 最后一帧已经被拿走 / 最后一帧上报失败的情况处理 */
@@ -865,7 +894,7 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
         }
     }
 
-    HI_U32 remainder = do_div(stImage.SrcPts, 1000);
+    remainder = do_div(stImage.SrcPts, 1000);
     stImage.SrcPts = (remainder >= 500)? (stImage.SrcPts + 1):stImage.SrcPts;
 
     /* Calculate PTS */
@@ -935,7 +964,7 @@ static HI_S32 processor_get_image(HI_S32 VpssId, HI_DRV_VIDEO_FRAME_S *pstFrame)
     pchan->last_frame_processor_got = REALID(stImage.image_id);
     OmxPrint(OMX_VPSS, "VPSS read image success!\n");
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     /* Check if is secure frame */
     if (1 == stImage.is_SecureFrame)
     {
@@ -1078,7 +1107,7 @@ HI_S32 processor_create_inst(OMXVDEC_CHAN_CTX *pchan, OMX_PIX_FORMAT_E color_for
         return HI_FAILURE;
     }
 
-#ifdef HI_TVP_SUPPORT	
+#ifdef HI_OMX_TEE_SUPPORT
 	stVpssCfg.bSecure = pchan->is_tvp;
 #endif
 

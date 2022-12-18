@@ -32,11 +32,11 @@
 
 #include "timer.h"
 
-static HI_BOOL g_bHDMIResetFlag = HI_FALSE;
+//static HI_BOOL g_bHDMIResetFlag = HI_FALSE;
 static HI_U32 g_HDMICnt = 0;
+#if 0
 #ifdef HI_HDMI_EDID_SUPPORT
 #include "si_edid.h"
-
 
 HI_VOID Print_EDID(HI_UNF_EDID_BASE_INFO_S *pSinkCap)
 {
@@ -49,10 +49,10 @@ HI_VOID Print_EDID(HI_UNF_EDID_BASE_INFO_S *pSinkCap)
     {
         if(pSinkCap->bSupportFormat[Index])
         {
-           // printk("%d,",Index);
+           // HDMIPrint("%d,",Index);
         }
     }
-   // printk("\n");
+   // HDMIPrint("\n");
     HDMIPrint("3D Support:%d\n",pSinkCap->st3DInfo.bSupport3D);
     /*......*/
 }
@@ -141,6 +141,7 @@ HI_S32 HI_UNF_HDMI_GetSinkCapability(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_EDID_BASE_IN
     return s32Ret;
 }
 #endif
+#endif
 #ifdef HI_HDMI_CEC_SUPPORT
 HI_S32 HDMI_SendCECCommand(HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
 {
@@ -196,8 +197,10 @@ HI_U32 HDMI_Display(HI_UNF_ENC_FMT_E enHdFmt, HI_UNF_HDMI_VIDEO_MODE_E einput, H
     HI_U32 u32PixelRepetition;
     HI_UNF_HDMI_COLORSPACE_E enColorimetry;
     HI_UNF_HDMI_ASPECT_RATIO_E enAspectRate;
+    
+	HDMIPrint(">>> HDMI_Display in... \n");
 
-    U_PERI_CRG70    crg70;
+    //U_PERI_CRG70    crg70;
 #ifdef HI_HDMI_EDID_SUPPORT
     HI_UNF_EDID_BASE_INFO_S SinkCap;
     HI_S32 s32Ret  = HI_SUCCESS;
@@ -324,29 +327,45 @@ HI_U32 HDMI_Display(HI_UNF_ENC_FMT_E enHdFmt, HI_UNF_HDMI_VIDEO_MODE_E einput, H
     {
         HDMIPrint("Set 640X480P_60000 enTimingMode\n");
         enColorimetry      = HDMI_COLORIMETRY_ITU601;
-        enAspectRate       = HI_UNF_DISP_ASPECT_RATIO_4TO3;
+        enAspectRate       = HI_UNF_HDMI_ASPECT_RATIO_4TO3;
         u32PixelRepetition = HI_FALSE;
         VidCode = 0x01;
 
     }
+#ifdef HI_HDMI_4K_SUPPORT
+    else if (Is4KFmt(enHdFmt))
+    {
+        HDMIPrint("Set 4K enTimingMode\n");
+        VidCode = 0;
+        bVideoMode = 0;
+    }
+#endif
     else if ((HI_UNF_ENC_FMT_VESA_800X600_60 <= enHdFmt) && (HI_UNF_ENC_FMT_BUTT > enHdFmt))
     {
         //hdmi_dvi_mode = 0;
         HDMIPrint("DVI timing mode enTimingMode\n");
         enColorimetry      = HDMI_COLORIMETRY_ITU601;
-        enAspectRate       = HI_UNF_DISP_ASPECT_RATIO_4TO3;
+        enAspectRate       = HI_UNF_HDMI_ASPECT_RATIO_4TO3;
         u32PixelRepetition = HI_FALSE;
     }
     //OpenHdmiDevice();
 
     //WriteDefaultConfigToEEPROM(); /* eeprom.c */
-#if !(defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420))
+#if !(defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420))
+#if 0
     if(!g_bHDMIResetFlag)
     {
         HW_ResetHDMITX();
         SW_ResetHDMITX();
     }
+    HDMIPrint("g_bHDMIResetFlag:%d\n",g_bHDMIResetFlag);
+#else
+    HW_ResetHDMITX();
+    SW_ResetHDMITX();
 #endif
+#endif
+    
+
     UpdateTX_656(bVideoMode);
     //SetIClk( ReadByteEEPROM(EE_TX_ICLK_ADDR) );
     SetIClk(0);
@@ -560,7 +579,6 @@ HI_U32 HDMI_Display(HI_UNF_ENC_FMT_E enHdFmt, HI_UNF_HDMI_VIDEO_MODE_E einput, H
     */
     switch (enAspectRate)
     {
-
         case HI_UNF_HDMI_ASPECT_RATIO_4TO3 :
              u8AviInfoFrameByte |= (HI_U8) 0x10;
              break;
@@ -797,14 +815,21 @@ HI_U32 HDMI_Display(HI_UNF_ENC_FMT_E enHdFmt, HI_UNF_HDMI_VIDEO_MODE_E einput, H
     GetTimer();
 #endif
 
+    HDMIPrint(">>> HDMI_Display out... \n");
+
     return retval;
 }
 
 HI_S32 HI_UNF_HDMI_Init()
 {
+    HDMIPrint(">>> HI_UNF_HDMI_Init in... \n");
+
     HW_ResetHDMITX();
     SW_ResetHDMITX();
     TX_PHY_PowerDown(HI_TRUE);
+
+    HDMIPrint("<<< HI_UNF_HDMI_Init out... \n");
+
     return HI_SUCCESS;
 }
 
@@ -813,9 +838,12 @@ HI_S32 HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_ENC_FMT_E enFormat)
     HI_S32  Ret;
     HI_BOOL Support4K = HI_FALSE;
 
-#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    HDMIPrint(">>> HI_UNF_HDMI_Open in... \n");
+
+#if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)|| defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     if (!TX_RSEN_Status() || g_HDMICnt)
     {
+        HDMIPrint("Rsen: %d, g_HDMICnt: %d\n", TX_RSEN_Status(), g_HDMICnt);
         return HI_FAILURE;
     }
     g_HDMICnt++;
@@ -835,21 +863,34 @@ HI_S32 HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_ENC_FMT_E enFormat)
         Ret = HDMI_Display(enFormat, HI_UNF_HDMI_VIDEO_MODE_RGB444, HI_UNF_HDMI_VIDEO_MODE_RGB444);
     }
 
+    HDMIPrint("<<< HI_UNF_HDMI_Open out... \n");
+
     return Ret;
 }
 
 HI_S32 HI_UNF_HDMI_Start(HI_UNF_HDMI_ID_E enHdmi)
 {
+    HDMIPrint(">>> HI_UNF_HDMI_Start in... \n");
+
+    HDMIPrint("<<< HI_UNF_HDMI_Start out... \n");
     return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_HDMI_Close(HI_UNF_HDMI_ID_E enHdmi)
 {
+    HDMIPrint(">>> HI_UNF_HDMI_Close in... \n");
+
+    HDMIPrint("<<< HI_UNF_HDMI_Close out... \n");
+
     return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_HDMI_DeInit(void)
 {
+    HDMIPrint(">>> HI_UNF_HDMI_DeInit in... \n");
+
+    HDMIPrint("<<< HI_UNF_HDMI_DeInit out... \n");
+
     return HI_SUCCESS;
 }
 
@@ -857,7 +898,7 @@ HI_UNF_ENC_FMT_E hdmi_Disp2EncFmt(HI_DRV_DISP_FMT_E SrcFmt)
 {
     HI_UNF_ENC_FMT_E dstFmt = HI_UNF_ENC_FMT_BUTT;
 
-    HDMIPrint(" disp fmt:%d \n",SrcFmt);
+    HDMIPrint(">>> hdmi_Disp2EncFmt in... \n");
 
     switch(SrcFmt)
     {
@@ -1001,40 +1042,85 @@ HI_UNF_ENC_FMT_E hdmi_Disp2EncFmt(HI_DRV_DISP_FMT_E SrcFmt)
             break;
     }
 
+    HDMIPrint("<<< hdmi_Disp2EncFmt out... \n");
+
     return dstFmt;
 }
 
 
 HI_S32 HI_DRV_HDMI_Init(void)
 {
-    //return HI_UNF_HDMI_Init();
+    HDMIPrint(">>> HI_DRV_HDMI_Init in... \n");
+
+    HDMIPrint("<<< HI_DRV_HDMI_Init out... \n");
+    
     return HI_SUCCESS;
 }
 
 HI_S32 HI_DRV_HDMI_Open(HI_DRV_DISP_FMT_E enFormat)
 {
-    return HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_0,hdmi_Disp2EncFmt(enFormat));
+    HI_S32 s32RetVal = HI_SUCCESS;
+
+    HDMIPrint(">>> HI_DRV_HDMI_Open in... \n");
+
+    s32RetVal = HI_UNF_HDMI_Open(HI_UNF_HDMI_ID_0,hdmi_Disp2EncFmt(enFormat));
+ 
+    HDMIPrint("<<< HI_DRV_HDMI_Open out... \n");
+
+    return s32RetVal;
 }
 
 HI_S32 HI_DRV_HDMI_Start(void)
 {
-    return HI_UNF_HDMI_Start(HI_UNF_HDMI_ID_0);
+    HI_S32 s32RetVal = HI_SUCCESS;
+
+    HDMIPrint(">>> HI_DRV_HDMI_Start in... \n");
+
+    s32RetVal = HI_UNF_HDMI_Start(HI_UNF_HDMI_ID_0);
+
+    HDMIPrint("<<< HI_DRV_HDMI_Start out... \n");
+
+    return s32RetVal ;
 }
 
 HI_S32 HI_DRV_HDMI_DeInit(void)
 {
-    return HI_UNF_HDMI_DeInit();
+    HI_S32 s32RetVal = HI_SUCCESS;
+
+    HDMIPrint(">>> HI_DRV_HDMI_DeInit in... \n");
+
+    s32RetVal = HI_UNF_HDMI_DeInit();
+
+    HDMIPrint("<<< HI_DRV_HDMI_DeInit out... \n");
+
+    return s32RetVal ;
 }
 
 HI_S32 HI_DRV_HDMI_Close(void)
 {
-    return HI_UNF_HDMI_Close(HI_UNF_HDMI_ID_0);
-}
+    HI_S32 s32RetVal = HI_SUCCESS;
+
+    HDMIPrint(">>> HI_DRV_HDMI_Close in... \n");
+
+    s32RetVal = HI_UNF_HDMI_Close(HI_UNF_HDMI_ID_0);
+
+    HDMIPrint("<<< HI_DRV_HDMI_Close out... \n");
+
+    return s32RetVal ;
+ }
 
 #ifdef HI_HDMI_EDID_SUPPORT
 HI_S32 HI_DRV_HDMI_GetSinkCapability(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_EDID_BASE_INFO_S *pSinkCap)
 {
-    return HI_UNF_HDMI_GetSinkCapability(enHdmi, pSinkCap);
-}
+    HI_S32 s32RetVal = HI_SUCCESS;
+
+    HDMIPrint(">>> HI_DRV_HDMI_GetSinkCapability in... \n");
+
+    s32RetVal = HI_UNF_HDMI_GetSinkCapability(enHdmi, pSinkCap);
+
+    HDMIPrint("<<< HI_DRV_HDMI_GetSinkCapability out... \n");
+
+    return s32RetVal ;
+ }
 #endif
 

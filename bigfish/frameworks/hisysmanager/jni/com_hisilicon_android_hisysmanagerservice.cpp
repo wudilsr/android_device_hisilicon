@@ -308,6 +308,28 @@ static jint com_hisilicon_android_hisysmanager_HiSysManager_getDRMKey(JNIEnv *en
     (env)->ReleaseStringUTFChars(filename, c_filename);
     return HiSysManagerClient().getDRMKey(m_tdname,offset,m_filename,datasize);
 }
+/*
+ *  screen snapshot
+ */
+static jint com_hisilicon_android_hisysmanager_HiSysManager_snapshot(JNIEnv *env, jobject clazz, jstring path){
+    const char* c_pathname = (env)->GetStringUTFChars(path, 0 );
+    String8 m_name = String8(c_pathname);
+    (env)->ReleaseStringUTFChars(path, c_pathname);
+    return HiSysManagerClient().snapshot(m_name);
+}
+static jint com_hisilicon_android_hisysmanager_HiSysManager_setDynamicPolicy(JNIEnv *env, jobject clazz, jstring state, jstring activity, jstring process)
+{
+    const char* c_state = (env)->GetStringUTFChars(state, 0 );
+    const char* c_activity = (env)->GetStringUTFChars(activity, 0 );
+    const char* c_process = (env)->GetStringUTFChars(process, 0 );
+    String8 m_state = String8(c_state);
+    String8 m_activity = String8(c_activity);
+    String8 m_process = String8(c_process);
+    (env)->ReleaseStringUTFChars(state, c_state);
+    (env)->ReleaseStringUTFChars(activity, c_activity);
+    (env)->ReleaseStringUTFChars(process, c_process);
+    return HiSysManagerClient().setDynamicPolicy(m_state,m_activity,m_process);
+}
 static JNINativeMethod gMethods[] = {
         {"upgrade", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_upgrade},
         {"reset", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_reset},
@@ -352,6 +374,8 @@ static JNINativeMethod gMethods[] = {
         {"userDataRestoreIptv", "()I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_userDataRestoreIptv},
         {"setDRMKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setDRMKey},
         {"getDRMKey", "(Ljava/lang/String;ILjava/lang/String;I)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_getDRMKey},
+        {"snapshot", "(Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_snapshot},
+        {"setDynamicPolicy", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I", (void *)com_hisilicon_android_hisysmanager_HiSysManager_setDynamicPolicy},
 };
 
 static int register_com_hisilicon_android_hisysmanagerservice(JNIEnv *env)

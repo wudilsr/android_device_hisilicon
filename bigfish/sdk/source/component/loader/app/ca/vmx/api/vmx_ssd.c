@@ -13,46 +13,25 @@ History       :
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "vmx_ssd.h"
 #include "hi_flash.h"
+#include "hi_debug.h"
+#include "burn.h"
+#include "hi_loader_info.h"
 
-static HI_HANDLE VMX_flash_open_addr(HI_FLASH_TYPE_E enFlashType, HI_U64 u64addr, HI_U64 u64Len, HI_U32 *block_size)
-{
-    HI_HANDLE hFlashHandle;
-    HI_Flash_InterInfo_S stFlashInfo;
-    HI_S32 ret = HI_SUCCESS;
-    HI_U64 u64OpenSize;
-    
-    u64Len = (u64Len + 0x200000 -1)& (~(0x200000 -1) );//¿é¶ÔÆë
-    hFlashHandle = HI_Flash_OpenByTypeAndAddr(enFlashType, u64addr, u64Len);
-    if(HI_INVALID_HANDLE == hFlashHandle)
-    {
-    	HI_SIMPLEINFO_CA("HI_Flash_OpenByTypeAndAddr failed\n");
-		return HI_INVALID_HANDLE;
-    }
-      
-	ret = HI_Flash_GetInfo(hFlashHandle, &stFlashInfo);
-	if(HI_SUCCESS != ret)
-	{
-		HI_SIMPLEINFO_CA("HI_Flash_GetInfo() error, result %x!\n",ret);
-		(HI_VOID)HI_Flash_Close(hFlashHandle);
-		return HI_INVALID_HANDLE;
-	}
-	(HI_VOID)HI_Flash_Close(hFlashHandle);
+HI_VMX_SSD_S g_stVMXSSD[VMX_SSD_MAX_PARTITIONS];
 
-	*block_size = stFlashInfo.BlockSize;
-	u64OpenSize = (HI_U64)stFlashInfo.TotalSize - u64addr;
+extern FLASH_DATA_INFO_S *g_pstFlashDataInfo;
+extern HI_S32 ClearUpgradeParam(HI_VOID);
+extern HI_VOID LOADER_UpgrdeDone(HI_S32 s32Ret, HI_LOADER_TYPE_E enType);
+extern int verifySignature( unsigned char* signature, 
+                                        unsigned char   * src, 
+                                        unsigned char* tmp, 
+                                        unsigned int len, 
+                                        unsigned int maxLen, 
+                                        unsigned char mode, 
+                                        unsigned char *errorCode );
 
-    hFlashHandle = HI_Flash_OpenByTypeAndAddr(enFlashType, u64addr,u64OpenSize);
-    if(HI_INVALID_HANDLE == hFlashHandle)
-    {
-    	HI_SIMPLEINFO_CA("HI_Flash_OpenByTypeAndAddr() failed!\n");
-		return HI_INVALID_HANDLE;
-    }
-	
-	return hFlashHandle;    
-}
 extern HI_VOID GenerateMagicNum(HI_VOID);
 
 HI_S32 VMX_printBuffer(const HI_CHAR *string, HI_U8 *pu8Input, HI_U32 u32Length)
@@ -74,8 +53,106 @@ HI_S32 VMX_printBuffer(const HI_CHAR *string, HI_U8 *pu8Input, HI_U32 u32Length)
     return HI_SUCCESS;
 }
 
-#define VMX_SSD_HEADER_LEN (16)
-#define VMX_SSD_SIG_LEN (256)
+static HI_S32 VMX_SetBurnParams(HI_U32 u32FlashAddress, HI_BOOL bNeedToBurn)
+{
+	HI_S32 index = 0;
+
+	for(index = 0; index < VMX_SSD_MAX_PARTITIONS; index++)
+	{
+		if(HI_TRUE == g_stVMXSSD[index].bIsValid)
+		{
+			continue;
+		}
+
+		g_stVMXSSD[index].bBurnFlag = bNeedToBurn;
+		g_stVMXSSD[index].u64FlashAddress = (HI_U64)u32FlashAddress;
+		g_stVMXSSD[index].bIsValid = HI_TRUE;
+		HI_SIMPLEINFO_CA("set burn params: index:%d, addr:0x%llx\n", index, g_stVMXSSD[index].u64FlashAddress);
+
+		return HI_SUCCESS;
+	}
+
+	HI_SIMPLEINFO_CA("failed, no valid resources, index:%d.\n", index);
+	return HI_FAILURE;
+}
+
+HI_S32 VMX_GetBurnParams(HI_U64 u64FlashAddress, HI_BOOL *pbNeedToBurn)
+{
+	HI_S32 index = 0;
+
+	if(NULL == pbNeedToBurn)
+	{
+		HI_SIMPLEINFO_CA("failed, invalid params input!\n");
+		return HI_FAILURE;
+	}
+
+	HI_SIMPLEINFO_CA("begin to search flash address, u64FlashAddress:0x%llx.\n", u64FlashAddress);
+
+	for(index = 0; index < VMX_SSD_MAX_PARTITIONS; index++)
+	{
+		if(u64FlashAddress == g_stVMXSSD[index].u64FlashAddress)
+		{
+			HI_SIMPLEINFO_CA("burn flag: %d\n", g_stVMXSSD[index].bBurnFlag);
+			*pbNeedToBurn = g_stVMXSSD[index].bBurnFlag;
+			return HI_SUCCESS;
+		}
+	}
+
+	*pbNeedToBurn = HI_TRUE;
+	return HI_SUCCESS;
+}
+
+extern HI_U32 g_u32PartitionNum;
+static HI_S32 VMX_SetEraseParamByFlashAddr(HI_U32 flash_addr)
+{
+    HI_U8 index = 0;
+	HI_S32 ret = 0;
+	HI_HANDLE hFlash = HI_INVALID_HANDLE;
+	HI_Flash_InterInfo_S stFlashInfo;
+
+	HI_SIMPLEINFO_CA("g_u32PartitionNum:%d\n", g_u32PartitionNum);
+
+    for (index = 0; index < g_u32PartitionNum; index++)
+    {
+#if 1
+        if(HI_INVALID_HANDLE != g_pstFlashDataInfo[index].hFlashHandle)
+        {
+        	memset(&stFlashInfo, 0, sizeof(HI_Flash_InterInfo_S));
+        	hFlash = g_pstFlashDataInfo[index].hFlashHandle;
+        	ret = HI_Flash_GetInfo(hFlash, &stFlashInfo);
+			if(ret != HI_SUCCESS)
+			{
+				HI_SIMPLEINFO_CA("HI_Flash_GetInfo failed, hFlash:0x%x!\n", hFlash);
+				return HI_FAILURE;
+			}
+			HI_SIMPLEINFO_CA("HI_Flash_GetInfo success, hFlash:0x%x!\n", hFlash);
+
+			if(stFlashInfo.OpenAddr == flash_addr)
+			{
+				g_pstFlashDataInfo[index].bErased = HI_TRUE;
+				HI_SIMPLEINFO_CA("Set bErased flag success, flash_addr:0x%x\n", flash_addr);
+				return HI_SUCCESS;
+			}
+			HI_SIMPLEINFO_CA("stFlashInfo.OpenAddr:0x%x != flash_addr:0x%x!\n", stFlashInfo.OpenAddr, flash_addr);
+        }
+#else
+		HI_SIMPLEINFO_CA("index:%d, g_pstFlashDataInfo[index].hFlashHandle:0x%x\n", index, g_pstFlashDataInfo[index].hFlashHandle);
+		HI_SIMPLEINFO_CA("g_pstFlashDataInfo[index].u64FlashAddr:0x%llx\n", g_pstFlashDataInfo[index].u64FlashAddr);
+
+		if(flash_addr == (HI_U32)(g_pstFlashDataInfo[index].u64FlashAddr))
+		{
+			g_pstFlashDataInfo[index].bErased = HI_TRUE;
+			HI_SIMPLEINFO_CA("Set bErased flag success!\n");
+			return HI_SUCCESS;
+		}
+#endif
+    }
+	
+	HI_SIMPLEINFO_CA("Set bErased flag failed, index:%d!\n", index);
+    return HI_FAILURE;
+}
+
+
 HI_S32 VMX_Verify_Authenticate(HI_U8* pu8StartVirAddr, HI_U32 u32Addrlength, HI_U32 u32FlashStartAddr, HI_U32 u32FlashType)
 {
 	HI_S32 ret = HI_SUCCESS;
@@ -97,7 +174,7 @@ HI_S32 VMX_Verify_Authenticate(HI_U8* pu8StartVirAddr, HI_U32 u32Addrlength, HI_
 	tmp = (HI_U8 *)malloc(image_len);
 	if(NULL == tmp)
 	{
-		HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: malloc for tmp failed!\n");
+		HI_SIMPLEINFO_CA("malloc for tmp failed: 0x%x!\n", image_len);
 		return HI_FAILURE;
 	}
 
@@ -110,65 +187,49 @@ HI_S32 VMX_Verify_Authenticate(HI_U8* pu8StartVirAddr, HI_U32 u32Addrlength, HI_
 							&errorCode);
 	if(1 == ret)
 	{
-		HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: verifySignature() success! ret:0x%x, Continue ...\n", ret);
+		HI_SIMPLEINFO_CA("verifySignature() success! do not burn to flash ret:0x%x, u32FlashStartAddr:0x%x\n", ret, u32FlashStartAddr);
 		free(tmp);
+		tmp = NULL;
+
+		ret = VMX_SetBurnParams(u32FlashStartAddr, HI_FALSE);
+		if(HI_SUCCESS != ret)
+		{
+			HI_SIMPLEINFO_CA("VMX_SetBurnParams failed\n");
+			LOADER_UpgrdeDone(0, 0);	//reboot
+		}
+
+		ret = VMX_SetEraseParamByFlashAddr(u32FlashStartAddr);
+		if(HI_SUCCESS != ret)
+		{
+			HI_SIMPLEINFO_CA("VMX_SetEraseParamByFlashAddr failed\n");
+			LOADER_UpgrdeDone(0, 0);	//reboot
+		}
 		return HI_SUCCESS;
 	}
-	else if((1 == errorCode) && (0 == ret))			/* Invalid signature, maybe */
+	else if((1 == errorCode) && (0 == ret))			/* Invalid signature, reboot */
 	{
-		HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: verifySignature() failed, do not start the application, reset! errorCode: 0x%x, ret: 0x%x, Resetting ...\n", errorCode, ret);
+		HI_SIMPLEINFO_CA("verifySignature() failed, Invalid signature, reboot! errorCode: 0x%x, ret: 0x%x, u32FlashStartAddr:0x%x\n", errorCode, ret, u32FlashStartAddr);
 		free(tmp);
-		system("reboot");
+		tmp = NULL;
+		LOADER_UpgrdeDone(0, 0);		//reboot
 	}
 	else if((2 == errorCode) && (0 == ret)) 		/* Src is re-encrypted inside BL library, burn to flash */
 	{
-		HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: verifySignature() success! burn src to flash, errorCode:0x%x\n", errorCode);
-
-		HI_U32 BlockSize = 0;
-		HI_U32 write_length = 0;
-		HI_HANDLE hFlash = HI_INVALID_HANDLE;
-
-		hFlash = VMX_flash_open_addr(HI_FLASH_TYPE_NAND_0, u32FlashStartAddr, u32Addrlength, &BlockSize);
-		if(HI_INVALID_HANDLE == hFlash)
+		HI_SIMPLEINFO_CA("verifySignature() success! burn src to flash, errorCode:0x%x, u32FlashStartAddr:0x%x\n", errorCode, u32FlashStartAddr);
+		free(tmp);
+		tmp = NULL;
+		ret = VMX_SetBurnParams(u32FlashStartAddr, HI_TRUE);
+		if(HI_SUCCESS != ret)
 		{
-			HI_SIMPLEINFO_CA("VMX_flash_open_addr failed, u32FlashStartAddr:0x%x, u32Addrlength:0x%x\n", u32FlashStartAddr, u32Addrlength);
-			return HI_FAILURE;
+			LOADER_UpgrdeDone(0, 0);	//reboot
 		}
-
-		if(0 == (u32Addrlength % BlockSize))
-		{
-		    write_length = u32Addrlength;
-		}
-		else
-		{
-		    write_length = (u32Addrlength + BlockSize - 1) & (~(BlockSize -1));
-		}
-
-	    HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: BlockSize: 0x%x, write addr: 0x%x, write_length:0x%x\n", BlockSize, u32FlashStartAddr, write_length);
-
-		ret = HI_Flash_Write(hFlash, 0, pu8StartVirAddr, write_length, HI_FLASH_RW_FLAG_ERASE_FIRST);
-		if(write_length != ret)
-		{
-			HI_SIMPLEINFO_CA("VMX_Verify_Authenticate: Burn image to flash failed! ret:0x%x, Resetting ...\n", ret);
-			free(tmp);
-			HI_Flash_Close(hFlash);
-			system("reboot");
-		}
-		else
-		{
-			HI_SIMPLEINFO_CA("\nVMX_Verify_Authenticate: Burn image to flash success, ret:0x%x! Resetting ...\n", ret);
-			HI_Flash_Close(hFlash);
-			//system("reboot");
-		}
-	}
-	else
-	{
-		//not supported;
+		return HI_SUCCESS;
 	}
 
 	if(NULL != tmp)
 	{
 		free(tmp);
+		tmp = NULL;
 	}
 	return HI_SUCCESS;
 }

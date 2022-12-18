@@ -23,8 +23,7 @@ SRCS-y += env_set.c run.c kern_tags.c reboot.c dump_hex.c xmodem.c bootstrap.c \
 	init.c  kern_param.c mem_init.c
 
 SRCS-$(CONFIG_BOOTARGS_MERGE) += params.c
+SRCS-$(CONFIG_TEE_SUPPORT) += loadsecureimg.c
 
 SRCS-$(CONFIG_ARCH_S40) += board_s40.c
 SRCS-$(CONFIG_ARCH_HI3798MX) += board_hi3798mx.c
-SRCS-$(CONFIG_ARCH_GODBOX) += board_godbox.c
-SRCS-$(CONFIG_ARCH_HI3716MV310) += board_hi3716mv310.c

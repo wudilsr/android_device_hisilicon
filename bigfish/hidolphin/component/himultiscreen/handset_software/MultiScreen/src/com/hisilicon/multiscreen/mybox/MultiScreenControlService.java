@@ -35,6 +35,8 @@ import com.hisilicon.multiscreen.protocol.HiDeviceInfo;
 import com.hisilicon.multiscreen.protocol.remote.RemoteControlCenter;
 import com.hisilicon.multiscreen.protocol.utils.HostNetInterface;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
+import com.hisilicon.multiscreen.scene.ISceneListener;
+import com.hisilicon.multiscreen.scene.SceneType;
 import com.hisilicon.multiscreen.upnputils.IUpnpControlPointListener;
 import com.hisilicon.multiscreen.upnputils.MultiScreenUpnpControlPoint;
 import com.hisilicon.multiscreen.upnputils.UpnpMultiScreenDeviceInfo;
@@ -569,9 +571,44 @@ public class MultiScreenControlService extends Service
         mIOriginalDeviceListListener = listener;
     }
 
+    public void setSceneListener(ISceneListener sceneListener)
+    {
+        if (mControlPoint != null)
+        {
+            mControlPoint.setSceneListener(sceneListener);
+        }
+    }
+
+    /**
+     * Get type of scene.<br>
+     * CN:获取当前场景。
+     * @return scene
+     */
+    public static SceneType getScene()
+    {
+        return MultiScreenUpnpControlPoint.getScene();
+    }
+
+    /**
+     * Switch iScene status.<br>
+     * CN:设置智能切换状态。
+     * @param isOpen
+     */
+    public static void switchScene(boolean isOpen)
+    {
+        MultiScreenUpnpControlPoint.switchScene(isOpen);
+    }
+
+    public static boolean isSceneOpen()
+    {
+        return MultiScreenUpnpControlPoint.isSceneOpen();
+    }
+
     /**
      * Subscribe access service.<br>
-     * CN:订阅接入控制服务。
+     * CN:订阅接入控制服务。<br>
+     * iScene depends on.<br>
+     * CN:智能场景切换依赖改订阅。
      * @return result
      */
     public boolean subscribeAccessService()
@@ -785,6 +822,7 @@ public class MultiScreenControlService extends Service
     {
         mContext = this;
         readSaveUuid();
+        //initSceneStatus();
         initMirrorSetting();
     }
 
@@ -848,6 +886,12 @@ public class MultiScreenControlService extends Service
     {
         mAirMouse.deinit();
     }
+
+    //private void initSceneStatus()
+    //{
+    //    boolean isOpen = readStatusPreference(MultiSettingActivity.SCENE_KEY, true);
+    //    switchScene(isOpen);
+    //}
 
     /**
      * CN:初始化传屏开启关闭状态。

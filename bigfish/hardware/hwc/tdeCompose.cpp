@@ -6,7 +6,7 @@
  *
  *        Version:  1.0
  *        Created:  03/14/2015 05:20:07 PM
- *         Author:      [zhoutongwei@huawei.com]
+ *         Author:      [zhoutongwei@hisilicon.com]
  *
  *       Revision:  initial draft;
  **************************************************************************************
@@ -152,8 +152,23 @@ TDE2_COLOR_FMT_E getTdeFormat(int format)
 
 bool supportByHardware(hwc_display_contents_1_t* list) {
 
+    int32_t srcRectWidth = 0;
+    int32_t srcRectHeight = 0;
+    int32_t dstRectWidth = 0;
+    int32_t dstRectHeight = 0;
+
     for (int i=0; i< list->numHwLayers; i++){
         hwc_layer_1_t* layer = &list->hwLayers[i];
+        hwc_rect_t srcCropRect  = layer->sourceCrop;
+        srcRectWidth = srcCropRect.right - srcCropRect.left;
+        srcRectHeight = srcCropRect.bottom - srcCropRect.top;
+        hwc_rect_t dstDisplayRect = layer->displayFrame;
+        dstRectWidth = dstDisplayRect.right - dstDisplayRect.left;
+        dstRectHeight = dstDisplayRect.bottom - dstDisplayRect.top;
+        if((srcRectWidth > (0xff*dstRectWidth))||(srcRectHeight > (0xff*dstRectHeight))){
+           /*check tde support range*/
+           return false;
+        }
         int layerType = getLayerType(layer);
         switch (layerType){
             case SKIP_LAYER:

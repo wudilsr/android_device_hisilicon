@@ -183,6 +183,15 @@ typedef enum
     CMD_GET_MEDIA_URL = CMD_INVOKE_BASE + 500,
     CMD_CONNECT_ID = CMD_INVOKE_BASE + 501,
 
+    CMD_GET_VIDEO_ASPECT,              //the width and height of video.
+    CMD_GET_VIDEO_RATIO,               //the aspect ratio of video. 0 = 4:3 , 1 = 16:9
+    CMD_GET_VIDEO_SAMPLE_TYPE,         //0 = interleaved, 1 = progressive
+    CMD_GET_AV_DIFF,                   //audio time subtract video time
+    CMD_GET_VIDEO_BUFFER_SIZE,
+    CMD_GET_VIDEO_BUFFER_SIZE_USED,
+    CMD_GET_AUDIO_BUFFER_SIZE,
+    CMD_GET_AUDIO_BUFFER_SIZE_USED,
+
     CMD_TYPE_BUTT = CMD_INVOKE_BASE + 1000,                     //unsurport ID
     CMD_YUNOS_SOURCE                   = 0x1f000000,
     CMD_YUNOS_TS_INFO                  = 0x1f000001,

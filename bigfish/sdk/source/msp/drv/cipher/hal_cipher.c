@@ -1007,7 +1007,7 @@ HI_S32 HAL_Cipher_EnableInt(HI_U32 chnId, int intType)
     (HI_VOID)HAL_CIPHER_ReadReg(regAddr, &regValue);
 
     regValue |= (1 << 31); /* sum switch int_en */
-#if defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)|| defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a) || defined (CHIP_TYPE_hi3716mv410) || defined (CHIP_TYPE_hi3716mv420)
+#if defined(CHIP_TYPE_hi3719mv100) || defined(CHIP_TYPE_hi3718mv100)|| defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100) || defined (CHIP_TYPE_hi3798cv200_a)
     regValue |= (1 << 30); /* sec_int_en */
 #endif
 
@@ -1865,6 +1865,7 @@ HI_VOID HAL_Cipher_DeInit(void)
     return;
 }
 
+/******* proc function begin ********/
 HI_S32 HAL_CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus)
 {
     HI_U32 u32RegAddr = 0;
@@ -2125,6 +2126,7 @@ HI_S32 HAL_CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus)
 
 	return HI_SUCCESS;
 }
+/******* proc function end ********/
 
 HI_S32 HAL_Cipher_CbcMacAuth(CIPHER_CBCMAC_DATA_S *pstParam)
 {
@@ -2132,7 +2134,7 @@ HI_S32 HAL_Cipher_CbcMacAuth(CIPHER_CBCMAC_DATA_S *pstParam)
     HI_U32 i;
     HI_U32 u32Value;
 
-    pu32TmpBuf = (HI_U8*)pstParam->pu8RefCbcMac;
+    pu32TmpBuf = (HI_U8*)pstParam->u8RefCbcMac;
 
     (HI_VOID)HAL_CIPHER_WriteReg(CIPHER_REG_HL_APP_LEN, pstParam->u32AppLen);
 

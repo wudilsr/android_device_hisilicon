@@ -42,6 +42,10 @@ ifeq ($(CFG_HI_LOADER_TYPE),OS)
 else
 	@test -d $(PREFIX) || mkdir -p $(PREFIX)
 	@tar -xjf ./rootfs.tar.bz2 -C $(PREFIX)/../
+ifeq ($(CFG_HI_LOADER_LOG_DISABLE),y)
+	sed -i 's/^#::respawn:-\/bin\/sh/::respawn:-\/bin\/sh/g' $(PREFIX)/../rootfs/etc/inittab
+	sed -i '/^::respawn:\/sbin\/getty -L ttyS000 115200 vt100 -n root/,1d'  $(PREFIX)/../rootfs/etc/inittab
+endif
 	@tar -xjf ./rootfs_scripts.tar.bz2 -C $(PREFIX)/../
 #TODO: XXX
 ifeq ($(findstring fpga,$(CFG_HI_BOOT_REG_NAME)), fpga)
@@ -61,22 +65,22 @@ ifeq ($(CONFIG_BUSYBOX_MDEV),y)
 endif
 endif
 
-ifneq ($(CONFIG_ETH_SUPPORT),y)
-	@rm -rf $(PREFIX)/etc/protocols
-	@rm -rf $(PREFIX)/etc/services
-	@rm -rf $(PREFIX)/etc/init.d/S80network
-	@rm -rf $(PREFIX)/usr/share/udhcpc
-endif
+#ifneq ($(CONFIG_ETH_SUPPORT),y)
+#	@rm -rf $(PREFIX)/etc/protocols
+#	@rm -rf $(PREFIX)/etc/services
+#	@rm -rf $(PREFIX)/etc/init.d/S80network
+#	@rm -rf $(PREFIX)/usr/share/udhcpc
+#endif
 endif
 
 $(PREFIX)/$(INIT_SCRIPT):
 	@test -d $(@D) || mkdir -p $(@D)
 	@(echo '#!/bin/sh'; \
 		echo -e '# This file auto create by makefile\n'; \
-		echo -e "echo \"Compile file system used $(CROSS_COMPILE)\""; \
-		echo "echo \"`date +"%F %X"` (`echo ${USER}`@`uname -n`)\""; \
-		echo 'mkdir -p /lib/modules/`uname -r`'; \
-		echo -e ${CONFIG_ROOTFS_CMD}; \
+		echo -e "echo \"Compile file system used $(CROSS_COMPILE)\"  1>/dev/null 2>&1"; \
+		echo "echo \"`date +"%F %X"` (`echo ${USER}`@`uname -n`)\"  1>/dev/null 2>&1 "; \
+		echo 'mkdir -p /lib/modules/`uname -r`  1>/dev/null 2>&1'; \
+		echo -e ${CONFIG_ROOTFS_CMD}  1>/dev/null 2>&1 ; \
 	) > $@
 	@chmod +xr $@
 

@@ -16,16 +16,25 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-
-SDK_DIR                         := $(LOCAL_PATH)/../..
+include $(SDK_DIR)/Android.def
 
 LOCAL_MODULE_TAGS		:= eng
 LOCAL_MODULE			:= sample_omxvdec
 LOCAL_CFLAGS			:= -pthread -ldl
 LOCAL_C_INCLUDES		:= $(SDK_DIR)/source/msp/api/omx/include
 LOCAL_C_INCLUDES		+= $(SDK_DIR)/source/common/include 
-LOCAL_SHARED_LIBRARIES		:= libutils libOMX_Core libOMX.hisi.video.decoder libbinder libhi_common
+LOCAL_SHARED_LIBRARIES	:= libutils libOMX_Core libOMX.hisi.video.decoder libbinder libhi_common
 
-LOCAL_SRC_FILES                 := sample_omxvdec.c sample_queue.c sample_tidx.c
+LOCAL_SRC_FILES         := sample_omxvdec.c sample_queue.c sample_tidx.c
+
+ifeq ($(CFG_HI_TEE_SUPPORT), y)
+LOCAL_CFLAGS += -DHI_OMX_TEE_SUPPORT
+LOCAL_CFLAGS += -DHI_TEE_SUPPORT
+
+LOCAL_C_INCLUDES += $(HI_TEE_OS_DIR)/libteec/inc/
+LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)/
+LOCAL_C_INCLUDES += $(COMMON_DIR)/api/mmz/
+LOCAL_SHARED_LIBRARIES += libteec
+endif
 
 include $(BUILD_EXECUTABLE)

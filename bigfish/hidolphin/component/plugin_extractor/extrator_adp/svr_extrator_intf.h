@@ -13,7 +13,7 @@ extern "C" {
 #define MAX_URI_NAME_LEN    (1024)
 
 HI_S32 SVR_EXTRACTOR_Create(HI_HANDLE *phandle);
-HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI_CHAR *headers);
+HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI_CHAR *headers, HI_VOID *pArg);
 HI_S32 SVR_EXTRACTOR_GetFileInfo(HI_HANDLE handle, HI_FORMAT_FILE_INFO_S **pstFileInfo);
 HI_S32 SVR_EXTRACTOR_ReadFrame(HI_HANDLE handle, HI_FORMAT_FRAME_S *frame);
 HI_S32 SVR_EXTRACTOR_Invoke(HI_HANDLE handle, HI_U32 u32InvokeId, void *pArg);

@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,10 +61,10 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/.vdm_hal_vp6.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_vp6.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_vp6.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001/vdm_hal_vp6.o
@@ -148,11 +148,11 @@ VP6HAL_V300R001_CfgDnMsg:
 	ldr	r0, [r1, #48]	@, <variable>.MsgSlotAddr
 	mov	r6, r1	@ pHwMem, pHwMem
 	bl	MEM_Phy2Vir	@
-	subs	sl, r0, #0	@ D.33137,
+	subs	sl, r0, #0	@ D.33144,
 	beq	.L18	@,
 	ldr	r0, [r4, #60]	@ <variable>.FrameType, <variable>.FrameType
 	mov	r5, #0	@ tmp243,
-	mov	r8, sl	@ p32, D.33137
+	mov	r8, sl	@ p32, D.33144
 	mov	r7, r5	@ tmp246, tmp243
 	bfi	r7, r0, #0, #1	@ tmp246, <variable>.FrameType,,
 	str	r7, [fp, #-48]	@ tmp246,
@@ -172,7 +172,7 @@ VP6HAL_V300R001_CfgDnMsg:
 	movt	r1, #:upper16:.LC3	@,
 	mov	r3, r9, asl #23	@ tmp257, tmp252,
 	add	ip, r7, r0	@ p32.538, p32.534,
-	add	r9, sl, #36	@ p32.550, D.33137,
+	add	r9, sl, #36	@ p32.550, D.33144,
 	mov	r3, r3, lsr #23	@ tmp257, tmp257,
 	bfi	r3, r2, #16, #9	@ tmp257, tmp256,,
 	bic	r2, r3, #-33554432	@ tmp259, tmp257,
@@ -259,16 +259,16 @@ VP6HAL_V300R001_CfgDnMsg:
 	ldr	r2, [fp, #-48]	@, D32
 	bl	dprint_vfmw	@
 	ldr	r3, [r4, #168]	@ <variable>.count, <variable>.count
-	ldr	sl, [r4, #116]	@ D.33210, <variable>.bit0_offset_0
+	ldr	sl, [r4, #116]	@ D.33217, <variable>.bit0_offset_0
 	movw	r1, #:lower16:.LC9	@,
 	add	r0, r3, #8	@ Vp6_br_cnt, <variable>.count,
-	ldr	r2, [r4, #112]	@ D.33209, <variable>.bit0_len_0
-	cmp	r0, sl	@ Vp6_br_cnt, D.33210
+	ldr	r2, [r4, #112]	@ D.33216, <variable>.bit0_len_0
+	cmp	r0, sl	@ Vp6_br_cnt, D.33217
 	movt	r1, #:upper16:.LC9	@,
-	addhi	sl, sl, #128	@ tmp324, D.33210,
-	add	ip, r0, r2	@ tmp326, Vp6_br_cnt, D.33209
+	addhi	sl, sl, #128	@ tmp324, D.33217,
+	add	ip, r0, r2	@ tmp326, Vp6_br_cnt, D.33216
 	ldrhi	r7, [r4, #120]	@ <variable>.bit0_stream_addr_0, <variable>.bit0_stream_addr_0
-	rsbls	sl, r0, sl	@ D16_bit_offset_0, Vp6_br_cnt, D.33210
+	rsbls	sl, r0, sl	@ D16_bit_offset_0, Vp6_br_cnt, D.33217
 	rsbhi	sl, r0, sl	@ D16_bit_offset_0, Vp6_br_cnt, tmp324
 	bic	r8, ip, #-33554432	@ tmp328, tmp326,
 	ldrls	r7, [r4, #120]	@ D17_bit_byte_offset_0, <variable>.bit0_stream_addr_0
@@ -440,25 +440,25 @@ VP6HAL_V300R001_CfgDnMsg:
 	bl	dprint_vfmw	@
 	ldr	r0, [fp, #-48]	@, D32.tab_addr
 	bl	MEM_Phy2Vir	@
-	mov	r5, r0	@ D.33298,
+	mov	r5, r0	@ D.33305,
 	ldr	r0, [r6, #1176]	@, <variable>.Vp6TabAddr
 	bl	MEM_Phy2Vir	@
-	cmp	r0, r7	@ D.33299,
-	cmpne	r5, r7	@, D.33298,
-	mov	r3, r0	@ D.33299,
+	cmp	r0, r7	@ D.33306,
+	cmpne	r5, r7	@, D.33305,
+	mov	r3, r0	@ D.33306,
 	beq	.L20	@,
 	mov	r1, #4096	@,
-	mov	r0, r5	@, D.33298
+	mov	r0, r5	@, D.33305
 	bl	__memzero	@
 	ldr	r1, [r4, #4]	@, <variable>.TblProbModeSame
 	mov	r2, #64	@,
-	mov	r0, r5	@, D.33298
+	mov	r0, r5	@, D.33305
 	bl	memcpy	@
 	ldr	r1, [r4, #8]	@, <variable>.TblProbMode
 	mov	r2, #640	@,
-	add	r0, r5, #64	@, D.33298,
+	add	r0, r5, #64	@, D.33305,
 	bl	memcpy	@
-	add	r0, r5, #704	@, D.33298,
+	add	r0, r5, #704	@, D.33305,
 	ldr	r1, [r4, #12]	@, <variable>.TblProbMv
 	mov	r2, #64	@,
 	bl	memcpy	@
@@ -467,36 +467,36 @@ VP6HAL_V300R001_CfgDnMsg:
 	beq	.L21	@,
 	ldr	r0, [fp, #-48]	@, D32.tab_addr
 	bl	MEM_Phy2Vir	@
-	mov	r5, r0	@ D.33325,
-	adds	r0, r0, #768	@ TabBaseAddr.628, D.33325,
+	mov	r5, r0	@ D.33332,
+	adds	r0, r0, #768	@ TabBaseAddr.628, D.33332,
 	beq	.L22	@,
 	ldr	r1, [r4, #44]	@, <variable>.TblAcHuffLUT
 	mov	r2, #1536	@,
 	bl	memcpy	@
 	ldr	r1, [r4, #40]	@, <variable>.TblDcHuffLUT
 	mov	r2, #128	@,
-	add	r0, r5, #2304	@, D.33325,
+	add	r0, r5, #2304	@, D.33332,
 	bl	memcpy	@
-	add	r0, r5, #2432	@, D.33325,
+	add	r0, r5, #2432	@, D.33332,
 	ldr	r1, [r4, #48]	@, <variable>.TblZeroHuffLUT
 	mov	r2, #128	@,
 	bl	memcpy	@
 .L12:
 	ldr	r0, [fp, #-48]	@, D32.tab_addr
 	bl	MEM_Phy2Vir	@
-	mov	r5, r0	@ D.33332,
-	adds	r0, r0, #2560	@ TabBaseAddr.634, D.33332,
+	mov	r5, r0	@ D.33339,
+	adds	r0, r0, #2560	@ TabBaseAddr.634, D.33339,
 	beq	.L23	@,
 	ldr	r1, [r4, #16]	@, <variable>.TblModifiedScanOrder
 	mov	r2, #64	@,
 	bl	memcpy	@
 	ldr	r1, [r4, #20]	@, <variable>.TblEobOffsetTable
 	mov	r2, #64	@,
-	add	r0, r5, #2624	@, D.33332,
+	add	r0, r5, #2624	@, D.33339,
 	bl	memcpy	@
 	ldr	r1, [r4, #24]	@, <variable>.TblHuffTree
 	mov	r2, #960	@,
-	add	r0, r5, #2688	@, D.33332,
+	add	r0, r5, #2688	@, D.33339,
 	bl	memcpy	@
 	ldr	r0, [fp, #-48]	@, D32.tab_addr
 	bl	MEM_Phy2Vir	@
@@ -505,24 +505,24 @@ VP6HAL_V300R001_CfgDnMsg:
 	ldr	r1, [r4, #24]	@, <variable>.TblHuffTree
 	mov	r2, #960	@,
 	bl	memcpy	@
-	mov	r0, #0	@ D.33141,
+	mov	r0, #0	@ D.33148,
 .L5:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L21:
 	ldr	r0, [fp, #-48]	@, D32.tab_addr
 	bl	MEM_Phy2Vir	@
-	mov	r5, r0	@ D.33316,
-	adds	r0, r0, #768	@ TabBaseAddr.623, D.33316,
+	mov	r5, r0	@ D.33323,
+	adds	r0, r0, #768	@ TabBaseAddr.623, D.33323,
 	beq	.L25	@,
 	ldr	r1, [r4, #28]	@, <variable>.TblDcNodeContexts
 	mov	r2, #96	@,
 	bl	memcpy	@
 	ldr	r1, [r4, #36]	@, <variable>.TblZeroProbs
-	add	r0, r5, #864	@, D.33316,
+	add	r0, r5, #864	@, D.33323,
 	mov	r2, #32	@,
 	bl	memcpy	@
-	add	r0, r5, #896	@, D.33316,
+	add	r0, r5, #896	@, D.33323,
 	ldr	r1, [r4, #32]	@, <variable>.TblACProbs
 	mov	r2, #576	@,
 	bl	memcpy	@
@@ -540,9 +540,9 @@ VP6HAL_V300R001_CfgDnMsg:
 	movw	r2, #:lower16:.LANCHOR0	@,
 	movt	r1, #:upper16:.LC25	@,
 	movt	r2, #:upper16:.LANCHOR0	@,
-	str	r5, [sp, #0]	@ D.33298,
+	str	r5, [sp, #0]	@ D.33305,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 .L18:
 	movw	r1, #:lower16:.LC0	@,
@@ -552,35 +552,35 @@ VP6HAL_V300R001_CfgDnMsg:
 	movw	r3, #:lower16:.LC1	@,
 	movt	r3, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 .L24:
 	movw	r1, #:lower16:.LC26	@,
 	movw	r2, #670	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 .L23:
 	movw	r1, #:lower16:.LC26	@,
 	mov	r2, #656	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 .L22:
 	movw	r1, #:lower16:.LC26	@,
 	mov	r2, #640	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 .L25:
 	movw	r1, #:lower16:.LC26	@,
 	movw	r2, #622	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.33141,
+	mvn	r0, #0	@ D.33148,
 	b	.L5	@
 	.fnend
 	.size	VP6HAL_V300R001_CfgDnMsg, .-VP6HAL_V300R001_CfgDnMsg
@@ -611,7 +611,7 @@ VP6HAL_V300R001_CfgReg:
 	movw	r1, #:lower16:.LC27	@,
 	movt	r1, #:upper16:.LC27	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32915,
+	mvn	r0, #0	@ D.32922,
 .L29:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
@@ -762,8 +762,8 @@ VP6HAL_V300R001_CfgReg:
 	bl	dprint_vfmw	@
 	ldrh	r2, [r5, #52]	@ <variable>.PicWidthInMb, <variable>.PicWidthInMb
 	movw	r3, #2047	@ tmp302,
-	mov	r2, r2, asl #4	@ D.33065, <variable>.PicWidthInMb,
-	sub	r0, r2, #1	@ tmp301, D.33065,
+	mov	r2, r2, asl #4	@ D.33072, <variable>.PicWidthInMb,
+	sub	r0, r2, #1	@ tmp301, D.33072,
 	cmp	r0, r3	@ tmp301, tmp302
 	bhi	.L43	@,
 .L35:
@@ -807,21 +807,21 @@ VP6HAL_V300R001_CfgReg:
 	bl	dprint_vfmw	@
 	ldr	r3, [r4, #0]	@ <variable>.pVdmRegVirAddr, <variable>.pVdmRegVirAddr
 	mvn	ip, #0	@ tmp343,
-	mov	r0, r6	@ D.32915, tmp335
+	mov	r0, r6	@ D.32922, tmp335
 	str	ip, [r3, #32]	@ tmp343,
 	b	.L29	@
 .L43:
-	sub	r6, r2, #2048	@ tmp303, D.33065,
+	sub	r6, r2, #2048	@ tmp303, D.33072,
 	sub	r0, r6, #1	@ tmp303, tmp303,
 	cmp	r0, r3	@ tmp303, tmp302
 	movls	r7, #32	@ level,
 	bls	.L37	@,
-	sub	lr, r2, #4096	@ tmp306, D.33065,
+	sub	lr, r2, #4096	@ tmp306, D.33072,
 	sub	r1, lr, #1	@ tmp306, tmp306,
 	cmp	r1, r3	@ tmp306, tmp302
 	movls	r7, #48	@ level,
 	bls	.L37	@,
-	sub	r8, r2, #6144	@ tmp309, D.33065,
+	sub	r8, r2, #6144	@ tmp309, D.33072,
 	sub	r2, r8, #1	@ tmp309, tmp309,
 	cmp	r2, r3	@ tmp309, tmp302
 	movls	r7, #64	@ level,
@@ -831,13 +831,13 @@ VP6HAL_V300R001_CfgReg:
 	movw	r0, #:lower16:-121438208	@,
 	movt	r0, #:upper16:-121438208	@,
 	bl	MEM_Phy2Vir	@
-	subs	r1, r0, #0	@ D.32922,
-	strne	r1, [r6, #0]	@ D.32922, <variable>.pVdmRegVirAddr
+	subs	r1, r0, #0	@ D.32929,
+	strne	r1, [r6, #0]	@ D.32929, <variable>.pVdmRegVirAddr
 	bne	.L31	@,
 	movw	r1, #:lower16:.LC29	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32915,
+	mvn	r0, #0	@ D.32922,
 	b	.L29	@
 .L41:
 	mov	ip, #0	@ tmp188,
@@ -848,7 +848,7 @@ VP6HAL_V300R001_CfgReg:
 	movt	r1, #:upper16:.LC28	@,
 	str	ip, [sp, #0]	@ tmp188,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32915,
+	mvn	r0, #0	@ D.32922,
 	b	.L29	@
 .L45:
 	.align	2
@@ -882,7 +882,7 @@ VP6HAL_V300R001_StartDec:
 	movw	r1, #:lower16:.LC41	@,
 	movt	r1, #:upper16:.LC41	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32878,
+	mvn	r0, #0	@ D.32885,
 .L49:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
@@ -915,19 +915,19 @@ VP6HAL_V300R001_StartDec:
 	mov	r2, #0	@,
 	movt	r1, #:upper16:g_HwMem	@,
 	bl	VP6HAL_V300R001_CfgDnMsg	@
-	mov	r0, #0	@ D.32878,
+	mov	r0, #0	@ D.32885,
 	b	.L49	@
 .L60:
 	movw	r0, #:lower16:-121438208	@,
 	movt	r0, #:upper16:-121438208	@,
 	bl	MEM_Phy2Vir	@
-	subs	r1, r0, #0	@ D.32894,
-	strne	r1, [r5, #0]	@ D.32894, <variable>.pVdmRegVirAddr
+	subs	r1, r0, #0	@ D.32901,
+	strne	r1, [r5, #0]	@ D.32901, <variable>.pVdmRegVirAddr
 	bne	.L53	@,
 	movw	r1, #:lower16:.LC29	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32878,
+	mvn	r0, #0	@ D.32885,
 	b	.L49	@
 .L57:
 	mov	ip, #0	@ tmp144,
@@ -938,7 +938,7 @@ VP6HAL_V300R001_StartDec:
 	movt	r1, #:upper16:.LC28	@,
 	str	ip, [sp, #0]	@ tmp144,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32878,
+	mvn	r0, #0	@ D.32885,
 	b	.L49	@
 .L58:
 	mov	r0, #0	@,
@@ -948,7 +948,7 @@ VP6HAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC42	@,
 	movt	r3, #:upper16:.LC42	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32878,
+	mvn	r0, #0	@ D.32885,
 	b	.L49	@
 .L59:
 	mov	r0, #0	@,
@@ -958,7 +958,7 @@ VP6HAL_V300R001_StartDec:
 	movw	r3, #:lower16:.LC43	@,
 	movt	r3, #:upper16:.LC43	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.32878,
+	mvn	r0, #0	@ D.32885,
 	b	.L49	@
 .L62:
 	.align	2
@@ -969,19 +969,19 @@ VP6HAL_V300R001_StartDec:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	__func__.33132, %object
-	.size	__func__.33132, 25
-__func__.33132:
+	.type	__func__.33139, %object
+	.size	__func__.33139, 25
+__func__.33139:
 	.ascii	"VP6HAL_V300R001_CfgDnMsg\000"
 	.space	3
-	.type	__func__.32913, %object
-	.size	__func__.32913, 23
-__func__.32913:
+	.type	__func__.32920, %object
+	.size	__func__.32920, 23
+__func__.32920:
 	.ascii	"VP6HAL_V300R001_CfgReg\000"
 	.space	1
-	.type	__func__.32874, %object
-	.size	__func__.32874, 25
-__func__.32874:
+	.type	__func__.32881, %object
+	.size	__func__.32881, 25
+__func__.32881:
 	.ascii	"VP6HAL_V300R001_StartDec\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

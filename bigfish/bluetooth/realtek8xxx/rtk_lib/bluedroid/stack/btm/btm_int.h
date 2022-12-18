@@ -28,6 +28,11 @@
 #include "bt_target.h"
 #include "gki.h"
 #include "hcidefs.h"
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#include "rtk_parse.h"
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
 #if RFCOMM_INCLUDED == TRUE
 #include "rfcdefs.h"
@@ -521,6 +526,11 @@ typedef struct
     BD_ADDR              bd_addr;           /* BD_ADDR of the device              */
     DEV_CLASS            dev_class;         /* DEV_CLASS of the device            */
     LINK_KEY             link_key;          /* Device link key                    */
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    UINT8                profile_map;
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
 #define BTM_SEC_AUTHORIZED      BTM_SEC_FLAG_AUTHORIZED     /* 0x01 */
 #define BTM_SEC_AUTHENTICATED   BTM_SEC_FLAG_AUTHENTICATED  /* 0x02 */

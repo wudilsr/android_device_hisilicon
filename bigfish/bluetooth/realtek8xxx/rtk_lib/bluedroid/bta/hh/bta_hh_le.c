@@ -31,15 +31,24 @@
 #include "btm_int.h"
 
 /*BOARD_HAVE_BLUETOOTH_RTK_VR begin*/
-#ifdef BLUETOOTH_RTK_VR
+#ifdef BLUETOOTH_RTK
 #include "rtk_msbc.h"
+#include "rtkbt_ifly_voice.h"
 extern UINT32 remote_controller_id;
 extern UINT8 rtk_voice_input_data;
 extern UINT8 rtk_voice_output_rpt_id;
 #endif
-
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
 
+#ifdef BLUETOOTH_RTK
+#include "rtkbt_virtual_hid.h"
+#endif
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#include "rtk_parse.h"
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
 #ifndef BTA_HH_LE_RECONN
 #define BTA_HH_LE_RECONN    TRUE
@@ -118,7 +127,10 @@ static void bta_hh_le_add_dev_bg_conn(tBTA_HH_DEV_CB *p_cb, BOOLEAN check_bond);
 static void bta_hh_le_search_dis(tBTA_HH_DEV_CB *p_cb);
 static void bta_hh_le_search_dis_chars(tBTA_HH_DEV_CB *p_cb);
 
-const int F5_value[8] = {0x00, 0x00, 0x3e, 0x00, 0x00, 0x00, 0x00, 0x00};
+const int voice_value = 0xea;
+const int F5_value = 0x3e;
+const int F11_value = 0x44;
+UINT8 last_value[9] = {0x01,0x00,0x64,0x00,0x00,0x00,0x00,0x00,0x00};
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK end*/
 
@@ -1531,6 +1543,13 @@ void bta_hh_le_close(tBTA_GATTC_CLOSE * p_data)
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
 
+#ifdef BLUETOOTH_RTK
+    if(p_dev_cb)
+        p_dev_cb->num_report = 0xFA;
+    if(RTKBT_send_rcu_data(RCU_VENDOR_ID,RCU_PRODUCT_ID,last_value,9) == TRUE)
+        APPL_TRACE_DEBUG1("jason_yuan%s", __FUNCTION__);
+#endif
+
     if (p_dev_cb != NULL &&
         (p_buf = (tBTA_HH_LE_CLOSE *)GKI_getbuf(sizeof(tBTA_HH_LE_CLOSE))) != NULL)
     {
@@ -1697,8 +1716,7 @@ void bta_hh_le_srvc_search_cmpl(tBTA_GATTC_SEARCH_CMPL *p_data)
         {
             p_dev_cb->disc_active  &= ~BTA_HH_LE_DISC_SCPS;
             bta_hh_le_open_cmpl(p_dev_cb);
-        }
-        else /* discover HID service */
+        }else /* discover HID service */
         {
             p_dev_cb->cur_srvc_index = 0;
             bta_hh_le_srvc_expl_srvc(p_dev_cb);
@@ -2410,6 +2428,12 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
 
     APPL_TRACE_DEBUG1("%s", __FUNCTION__);
 
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    UINT8   data_type = 0;
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
     if (p_dev_cb == NULL)
     {
         APPL_TRACE_ERROR0("notification received from Unknown device");
@@ -2436,46 +2460,59 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
 /*BOARD_HAVE_BLUETOOTH_RTK_VR Begin*/
 #ifdef BLUETOOTH_RTK_VR
     if((p_rpt->rpt_id == 1) && (p_data->len == 8) && (remote_controller_id != 0)){
-        int i =0;
+        int i = 2;
         while(i < p_data->len)
         {
-            if(F5_value[i] == p_data->value[i]){
+            if((voice_value == p_data->value[i]) || (F5_value == p_data->value[i])){
                 APPL_TRACE_DEBUG1("pdata is 0x%x", p_data->value[i]);
-                i++;
+                p_data->value[i] = F5_value;
+                break;
             }
             else
-                break;
+                i++;
         }
-        if(i == 8)
+        if((i < 8) && (i > 1))
         {
-            UINT16 len;
-            BT_HDR  *p_buf_voice;
-            tBTA_HH_LE_RPT  *voice_output_p_rpt;
-            tBTA_HH_RPT_TYPE voice_output_r_type;
-            tBTA_HH_CONN voice_conn;
-
-            APPL_TRACE_DEBUG0("cheng_@receive voice key value!");
-            if(p_dev_cb->state != BTA_HH_CONN_ST)
+            switch(rtkbt_getRealRcuID(remote_controller_id))
             {
-                APPL_TRACE_DEBUG0("cheng_@ HH is not connected!");
-                return;
-            }
-            voice_output_r_type = RTKBT_OUTPUT_REPORT_TYPE;
-            len = 0x02;
-            voice_output_p_rpt = bta_hh_le_find_rpt_by_idtype(p_dev_cb->hid_srvc[BTA_HH_LE_SRVC_DEF].report,
-                                     BTA_HH_PROTO_RPT_MODE, voice_output_r_type, rtk_voice_output_rpt_id);
-            if(voice_output_p_rpt != NULL){
-                //start rec_start_res,if it is recording, ignore this request
-                if(RTKBT_VR_start_msbc_voice_rec(p_dev_cb,p_data->conn_id) == FALSE){
-                    APPL_TRACE_DEBUG0("cheng_@record is busy!");
-                    return;
+                case RTKBT_RCUID_IFLYTEK:
+                {
+                    RTKBT_Iflytek_set_dev_cb(p_dev_cb);
+                    break;
                 }
-                //call the layer to start service
-                voice_conn.handle = p_dev_cb->hid_handle;
-                voice_conn.status = BTA_HH_RTKBT_VR_OK;
-                voice_conn.le_hid = TRUE;
-                memcpy(voice_conn.bda, p_dev_cb->addr, BD_ADDR_LEN);
-                (* bta_hh_cb.p_cback)(BTA_HH_OPEN_EVT, (tBTA_HH *)&voice_conn);
+                default:
+                {
+                    UINT16 len;
+                    BT_HDR  *p_buf_voice;
+                    tBTA_HH_LE_RPT  *voice_output_p_rpt;
+                    tBTA_HH_RPT_TYPE voice_output_r_type;
+                    tBTA_HH_CONN voice_conn;
+
+                    APPL_TRACE_DEBUG0("cheng_@receive voice key value!");
+                    if(p_dev_cb->state != BTA_HH_CONN_ST)
+                    {
+                        APPL_TRACE_DEBUG0("cheng_@ HH is not connected!");
+                        return;
+                    }
+                    voice_output_r_type = RTKBT_OUTPUT_REPORT_TYPE;
+                    len = 0x02;
+                    voice_output_p_rpt = bta_hh_le_find_rpt_by_idtype(p_dev_cb->hid_srvc[BTA_HH_LE_SRVC_DEF].report,
+                                             BTA_HH_PROTO_RPT_MODE, voice_output_r_type, rtk_voice_output_rpt_id);
+                    if(voice_output_p_rpt != NULL){
+                        //start rec_start_res,if it is recording, ignore this request
+                        if(RTKBT_VR_start_msbc_voice_rec(p_dev_cb,p_data->conn_id) == FALSE){
+                            APPL_TRACE_DEBUG0("cheng_@record is busy!");
+                            return;
+                        }
+                        //call the layer to start service
+                        voice_conn.handle = p_dev_cb->hid_handle;
+                        voice_conn.status = BTA_HH_RTKBT_VR_OK;
+                        voice_conn.le_hid = TRUE;
+                        memcpy(voice_conn.bda, p_dev_cb->addr, BD_ADDR_LEN);
+                        (* bta_hh_cb.p_cback)(BTA_HH_OPEN_EVT, (tBTA_HH *)&voice_conn);
+                    }
+                    break;
+                }
             }
         }
     }
@@ -2542,6 +2579,14 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
         if(p_rpt->rpt_id == rtk_voice_input_data && p_rpt->rpt_type == RTKBT_INPUT_DATA_TYPE){
             tVOICE_HSDATA   *p_buf_data;
             APPL_TRACE_DEBUG1("cheng_@p_data->len = %d",p_data->len);
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+            data_type = 3;
+            rtk_add_le_data_count(data_type);
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
             if ((p_buf_data= (tVOICE_HSDATA *)GKI_getbuf((UINT16)(sizeof(tVOICE_HSDATA) + p_data->len))) == NULL)
             {
                 APPL_TRACE_ERROR0("No resources to send decode data");
@@ -2563,6 +2608,7 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
             }
 
             else if(rtkbt_getRealRcuID(remote_controller_id) == RTKBT_RCUID_IFLYTEK){
+#if 0
                 if(RTKBT_VR_msbc_voice_decode_iflytek(p_buf_data))
                 {
                     APPL_TRACE_DEBUG0("cheng_@ msbc voice decode sucess!");
@@ -2571,6 +2617,17 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
                     APPL_TRACE_DEBUG0("cheng_@ msbc voice decode unsucess!");
                 }
             }
+#else
+                if(RTKBT_Iflytek_send_data(p_buf_data))
+                {
+                    APPL_TRACE_DEBUG0("send data to iflytek sucess!");
+                }
+                else
+                {
+                    APPL_TRACE_DEBUG0("send data to iflytek  unsucess!");
+                }
+            }
+#endif
             GKI_freebuf(p_buf_data);
         }
         else{
@@ -2584,19 +2641,79 @@ void bta_hh_le_input_rpt_notify(tBTA_GATTC_NOTIFY *p_data)
     /* need to append report ID to the head of data */
     if (p_rpt->rpt_id != 0)
     {
-        if ((p_buf = (UINT8 *)GKI_getbuf((UINT16)(p_data->len + 1))) == NULL)
+#ifdef BLUETOOTH_RTK_VR
+        if(rtkbt_getRealRcuID(remote_controller_id) == RTKBT_RCUID_IFLYTEK
+            && (p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_ACK ||p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_DATA ))
         {
-            APPL_TRACE_ERROR0("No resources to send report data");
-            return;
+            APPL_TRACE_ERROR1("receive data from RCU, data len = %d", p_data->len);
+            //RTKBT_Iflytek_process_data_from_RCU(p_rpt->rpt_id, p_data->value, p_data->len);
+            //return;
         }
+#endif
 
-        APPL_TRACE_DEBUG1("Notification received on report ID: %d", p_rpt->rpt_id);
-        p_buf[0] = p_rpt->rpt_id;
-        memcpy(&p_buf[1], p_data->value, p_data->len);
-        ++p_data->len;
-    } else {
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+        data_type = p_rpt->rpt_id;
+        rtk_add_le_data_count(data_type);
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
+        //cannot send data to hidraw with  report_id=0xF8,so change the report_id to 0x01
+        if(p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_ACK || p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_DATA) {
+            if ((p_buf = (UINT8 *)GKI_getbuf((UINT16)(p_data->len + 1))) == NULL)
+            {
+                APPL_TRACE_ERROR0("No resources to send report data");
+                return;
+            }
+
+            APPL_TRACE_DEBUG1("Notification received on report ID: %d", p_rpt->rpt_id);
+            p_buf[0] = p_rpt->rpt_id;
+            memcpy(&p_buf[1], p_data->value, p_data->len);
+            p_data->len += 1;
+            if(RTKBT_send_rcu_data(p_dev_cb->dscp_info.vendor_id, p_dev_cb->dscp_info.product_id, p_buf, p_data->len) == TRUE)
+            {
+                if (p_buf != p_data->value)
+                    GKI_freebuf(p_buf);
+                return;
+            }
+        } else {
+            if ((p_buf = (UINT8 *)GKI_getbuf((UINT16)(p_data->len + 1))) == NULL)
+            {
+                APPL_TRACE_ERROR0("No resources to send report data");
+                return;
+            }
+
+            APPL_TRACE_DEBUG1("Notification received on report ID: %d", p_rpt->rpt_id);
+            p_buf[0] = p_rpt->rpt_id;
+            memcpy(&p_buf[1], p_data->value, p_data->len);
+            ++p_data->len;
+        }
+    }else{
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+        data_type = 1;
+        rtk_add_le_data_count(data_type);
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
         p_buf = p_data->value;
     }
+
+#ifdef BLUETOOTH_RTK
+    if(!(p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_ACK || p_rpt->rpt_id == RTKBT_IFLYTEK_INPUT_DATA) ){
+        if((p_dev_cb->dscp_info.vendor_id== RCU_VENDOR_ID) && (p_dev_cb->dscp_info.product_id == RCU_PRODUCT_ID)) {
+        APPL_TRACE_DEBUG1("Notification received p_dev_cb->num_report: %d", p_dev_cb->num_report);
+           // if(p_dev_cb->num_report >= 0xFA){
+           //     p_dev_cb->num_report++;
+                if(RTKBT_send_rcu_data(p_dev_cb->dscp_info.vendor_id, p_dev_cb->dscp_info.product_id, p_buf, p_data->len) == TRUE){
+                    if (p_buf != p_data->value)
+                        GKI_freebuf(p_buf);
+                    return;
+                }
+            }
+        }
+#endif
 
     bta_hh_co_data((UINT8)p_dev_cb->hid_handle,
                     p_buf,
@@ -3396,14 +3513,65 @@ static void bta_hh_le_search_dis_chars(tBTA_HH_DEV_CB *p_cb)
     else
     {
         APPL_TRACE_DEBUG1("%s, the device there is no PNP ID characters", __FUNCTION__);
+        p_cb->disc_active  &= ~BTA_HH_LE_DISC_DIS;
         bta_hh_le_search_scps(p_cb);
+    }
+}
+
+void bta_hh_le_deregister_input_notif(tBTA_HH_DEV_CB *p_dev_cb, UINT8 srvc_inst,
+                                    UINT8 proto_mode, BOOLEAN register_ba)
+{
+    tBTA_HH_LE_RPT  *p_rpt = &p_dev_cb->hid_srvc[srvc_inst].report[0];
+    tBTA_GATTC_CHAR_ID  char_id;
+    UINT8   i;
+    UINT16  srvc_uuid;
+
+#if BTA_HH_DEBUG == TRUE
+    APPL_TRACE_DEBUG1("bta_hh_le_deregister_input_notif mode: %d", proto_mode);
+#endif
+
+    for (i = 0; i < BTA_HH_LE_RPT_MAX; i ++, p_rpt ++)
+    {
+        if (p_rpt->rpt_type == BTA_HH_RPTT_INPUT)
+        {
+            APPL_TRACE_DEBUG1("bta_hh_le_deregister_input_notify, rpt type: 0x%04x", p_rpt->uuid);
+
+            if (p_rpt->uuid == GATT_UUID_BATTERY_LEVEL)
+                srvc_uuid = UUID_SERVCLASS_BATTERY;
+            else
+                srvc_uuid = UUID_SERVCLASS_LE_HID;
+
+            bta_hh_le_fill_16bits_srvc_id(TRUE, BTA_HH_LE_RPT_GET_SRVC_INST_ID(p_rpt->inst_id), srvc_uuid, &char_id.srvc_id);
+            bta_hh_le_fill_16bits_char_id(BTA_HH_LE_RPT_GET_RPT_INST_ID(p_rpt->inst_id), p_rpt->uuid, &char_id.char_id);
+
+            if (proto_mode == BTA_HH_PROTO_RPT_MODE)
+            {
+                APPL_TRACE_DEBUG0("...dereg");
+                if ((p_rpt->uuid == GATT_UUID_HID_BT_KB_INPUT ||
+                    p_rpt->uuid == GATT_UUID_HID_BT_MOUSE_INPUT) &&
+                    p_rpt->client_cfg_value == BTA_GATT_CLT_CONFIG_NOTIFICATION)
+                {
+
+                    APPL_TRACE_DEBUG1("---> Deregister Boot Report ID: %d", p_rpt->rpt_id);
+                    BTA_GATTC_DeregisterForNotifications(bta_hh_cb.gatt_if,
+                                                       p_dev_cb->addr,
+                                                       &char_id);
+                }
+                else if (p_rpt->uuid == GATT_UUID_HID_REPORT &&
+                         p_rpt->client_cfg_value == BTA_GATT_CLT_CONFIG_NOTIFICATION)
+                {
+                    APPL_TRACE_DEBUG1("<--- Register Report ID: %d", p_rpt->rpt_id);
+                    BTA_GATTC_DeregisterForNotifications(bta_hh_cb.gatt_if,
+                                                       p_dev_cb->addr,
+                                                       &char_id);
+                }
+            }
+            /*
+            else unknow protocol mode */
+        }
     }
 }
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK end*/
 
 #endif
-
-
-
-

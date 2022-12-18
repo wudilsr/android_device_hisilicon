@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2014 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/overlay"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/overlay"
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/tunneled_playback"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/tunneled_playback"/>
+
+        <CheckBox
+            android:id="@+id/secure_playback"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/secure_playback"/>
+
+        <CheckBox
+            android:id="@+id/software_codec"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/software_codec"/>
+
+        <CheckBox
+            android:id="@+id/disable_audio"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/disable_audio"/>
+
+        <CheckBox
+            android:id="@+id/resize_window"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/resize_window"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/debugLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/browser"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/browser"/>
+
+        <CheckBox
+            android:id="@+id/mediacodec_logcat"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/mediacodec_logcat"/>
+
+        <CheckBox
+            android:id="@+id/acodec_logcat"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/acodec_logcat"/>
+
+        <CheckBox
+            android:id="@+id/audiotrack_logcat"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:visibility="gone"
+            android:text="@string/audiotrack_logcat"/>
+
+        <CheckBox
+            android:id="@+id/android_extractor"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/android_extractor"/>
+
+        <CheckBox
+            android:id="@+id/time_stats"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/time_stats"/>
+
+        <CheckBox
+            android:id="@+id/savees"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/debugLayout2"
+            android:text="@string/savees"/>
+    </LinearLayout>
+    <include layout="@layout/sample_chooser_inline_header"
+        android:id="@+id/currentpath"
+        android:visibility="gone"/>
+  <ListView android:id="@+id/browser_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone"/>
+  <ExpandableListView android:id="@+id/sample_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+</LinearLayout>

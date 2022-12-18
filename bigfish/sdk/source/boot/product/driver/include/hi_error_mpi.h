@@ -511,6 +511,7 @@ extern "C"
 #define  HI_ERR_CIPHER_FAILED_ENCRYPT               (HI_S32)(0x804D000A)
 #define  HI_ERR_CIPHER_FAILED_DECRYPT               (HI_S32)(0x804D000B)
 #define  HI_ERR_CIPHER_BUSY                         (HI_S32)(0x804D000C)
+#define  HI_ERR_CIPHER_NO_AVAILABLE_RNG             (HI_S32)(0x804D000D)
 
 
 #define  HI_ERR_CA_OPEN_ERR                         (HI_S32)(0x804E0001)

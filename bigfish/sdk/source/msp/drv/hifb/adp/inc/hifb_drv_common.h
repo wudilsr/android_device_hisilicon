@@ -1,26 +1,26 @@
  /******************************************************************************
  *
- * Copyright (C) 2014 Hisilicon Technologies Co., Ltd.	All rights reserved. 
+ * Copyright (C) 2014 Hisilicon Technologies Co., Ltd.	All rights reserved.
  *
- * This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+ * This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
  * and may not be copied, reproduced, modified, disclosed to others, published or used, in
  * whole or in part, without the express prior written permission of Hisilicon.
  *
  ******************************************************************************
  File Name			 : hifb_common.h
  Version			 : Initial Draft
- Author 			 : 
+ Author 			 :
  Created			 : 2014/09/09
  Description		 : 所有信息的变化都在这一个文件中体现，其它的保持不动
- Function List		 : 
+ Function List		 :
  History			 :
  Date						Author					 Modification
- 2014/09/09 				y00181162				 Created file		 
+ 2014/09/09 				y00181162				 Created file
  ******************************************************************************/
- 
+
 #ifndef __HIFB_DRV_COMMON_H__
 #define __HIFB_DRV_COMMON_H__
- 
+
 
 /*********************************add include here******************************/
 #include "hifb.h"
@@ -56,14 +56,14 @@
 #define CFG_HIFB_PROC_SUPPORT
 #endif
 
-//#define GFX_TEST_LOG	
+//#define GFX_TEST_LOG
 #ifdef GFX_TEST_LOG
 #define PRINT_IN  printk("func %s in!\n", __FUNCTION__)
 #define PRINT_OUT printk("func %s out!\n",__FUNCTION__)
 #else
-#define PRINT_IN 
+#define PRINT_IN
 #define PRINT_OUT
-#endif 
+#endif
 
 /*the point of callback function*/
 /*CNcomment:回调函数指针*/
@@ -84,6 +84,33 @@ if (pStr == HI_NULL){\
 }while(0)
 
 
+#define HIFB_CHECK_WHETHER_PONITER_IS_NULL(pStr) do{\
+if (pStr == HI_NULL){\
+      HIFB_ERROR("unable to process null pointer!\n");\
+      return;}\
+}while(0)
+
+#define HIFB_CHECK_RET_WHETHER_PONITER_IS_NULL(pStr,Ret) do{\
+if (pStr == HI_NULL){\
+      HIFB_ERROR("unable to process null pointer!\n");\
+      return Ret;}\
+}while(0)
+
+
+#define HIFB_CHECK_LAYERID_SUPPORT(LayerId) do{\
+if (LayerId >= HIFB_LAYER_SD_1){\
+      HIFB_ERROR("this %d layer id is not support\n",LayerId);\
+      return HI_FAILURE;}\
+}while(0)
+
+
+#define HIFB_CHECK_GPID_SUPPORT(GpId) do{\
+if (GpId >= OPTM_GFX_GP_BUTT){\
+      HIFB_ERROR("this %d gp id is not support\n",GpId);\
+      return;}\
+}while(0)
+
+
 /*************************** Structure Definition ****************************/
 
 typedef struct
@@ -94,7 +121,7 @@ typedef struct
     HI_U8 u8RedMask;           /** red mask   **/
     HI_U8 u8GreenMask;         /** green mask **/
     HI_U8 u8BlueMask;          /** blue mask  **/
-    HI_U8 u8Reserved;           
+    HI_U8 u8Reserved;
     HI_U32 u32KeyMode;	 /*0:In region; 1:Out region*/
 
     /*Max colorkey value of red component*/
@@ -103,24 +130,24 @@ typedef struct
 
     /*Max colorkey value of Green component*/
     /*CNcomment:colorkey绿色分量最大值*/
-    HI_U8 u8GreenMax; 
+    HI_U8 u8GreenMax;
 
     /*Max colorkey value of blue component*/
     /*CNcomment:colorkey蓝色分量最大值*/
-    HI_U8 u8BlueMax;           
+    HI_U8 u8BlueMax;
     HI_U8 u8Reserved1;
 
     /*Min colorkey value of red component*/
     /*CNcomment:colorkey红色分量最小值*/
-    HI_U8 u8RedMin;            
+    HI_U8 u8RedMin;
 
     /*Min colorkey value of Green component*/
     /*CNcomment:colorkey绿色分量最小值*/
-    HI_U8 u8GreenMin;         
+    HI_U8 u8GreenMin;
 
     /*Min colorkey value of blue component*/
     /*CNcomment:colorkey蓝色分量最小值*/
-    HI_U8 u8BlueMin;            
+    HI_U8 u8BlueMin;
     HI_U8 u8Reserved2;
 }HIFB_COLORKEYEX_S;
 
@@ -128,7 +155,7 @@ typedef enum
 {
     /*VO vertical timing interrupt */
     /*CNcomment:垂直时序中断*/
-    HIFB_CALLBACK_TYPE_VO = 0x1, 
+    HIFB_CALLBACK_TYPE_VO = 0x1,
 
 	/*3D Mode changed interrupt*/
     /*CNcomment:3D模式改变中断*/
@@ -136,16 +163,16 @@ typedef enum
 
 	/*VO Register update completed interrupt */
     /*CNcomment:寄存器更新完成中断*/
-    HIFB_CALLBACK_TYPE_REGUP = 0x4, 
-    
+    HIFB_CALLBACK_TYPE_REGUP = 0x4,
+
 	/*Frame start interrupt */
-    /*CNcomment:帧开始中断*/    
-    HIFB_CALLBACK_TYPE_FRAME_START = 0x8, 
-    
+    /*CNcomment:帧开始中断*/
+    HIFB_CALLBACK_TYPE_FRAME_START = 0x8,
+
 	/*Frame end interrupt */
-    /*CNcomment:帧结束中断*/     
-    HIFB_CALLBACK_TYPE_FRAME_END = 0x10,  
-    
+    /*CNcomment:帧结束中断*/
+    HIFB_CALLBACK_TYPE_FRAME_END = 0x10,
+
     HIFB_CALLBACK_TYPE_BUTT,
 }HIFB_CALLBACK_TPYE_E;
 
@@ -158,12 +185,12 @@ typedef enum
 }HIFB_SCAN_MODE_E;
 
 /*layer state*/
-typedef enum 
+typedef enum
 {
     HIFB_LAYER_STATE_ENABLE = 0x0,  /*Layer enable*/ /*CNcomment:层使能*/
     HIFB_LAYER_STATE_DISABLE,          /*Layer disable*/ /*CNcomment:层未使能*/
     HIFB_LAYER_STATE_INVALID,          /*Layer invalid*/ /*CNcomment:层无效,不存在*/
-    HIFB_LAYER_STATE_BUTT 
+    HIFB_LAYER_STATE_BUTT
 } HIFB_LAYER_STATE_E;
 
 
@@ -185,20 +212,20 @@ typedef struct
     /*CNcomment:图层工作模式，同源或非同源*/
     HIFB_GFX_MODE_EN  eGfxWorkMode;
 	HI_BOOL bPreMul;
-    HI_U32  u32RegPhyAddr; 
+    HI_U32  u32RegPhyAddr;
     HI_U32  u32Stride;
 	/*Screen width in current format*/
     /*CNcomment:当前制式下屏幕宽*/
-    HI_U32 u32ScreenWidth;  
+    HI_U32 u32ScreenWidth;
     /*Screen height in current format*/
     /*CNcomment:当前制式下屏幕高度*/
-    HI_U32 u32ScreenHeight; 
+    HI_U32 u32ScreenHeight;
     /**outRect size*/
 	HIFB_RECT stOutRect;
 	HIFB_RECT stInRect;
     HIFB_COLOR_FMT_E eFmt;
     HIFB_ALPHA_S stAlpha;
-    HIFB_COLORKEYEX_S stColorKey; 
+    HIFB_COLORKEYEX_S stColorKey;
 	HIFB_SCAN_MODE_E eScanMode;
 	HIFB_LAYER_ID_E  enSlaveryLayerID;
 }HIFB_OSD_DATA_S;
@@ -224,7 +251,7 @@ typedef struct
 	HIFB_RECT stMaxWbcBufRect;
 	/*display region of write back*/
     HIFB_RECT stScreenRect;
-	
+
     HIFB_COLOR_FMT_E eFmt;
 	HIFB_SCAN_MODE_E eScanMode;
 	HIFB_LAYER_ID_E  enLayerID;

@@ -111,6 +111,11 @@ const tBTA_DM_ACTION bta_dm_action[] =
     bta_dm_disable_test_mode,   /*  BTA_DM_API_DISABLE_TEST_MODE_EVT    */
     bta_dm_execute_callback,     /*  BTA_DM_API_EXECUTE_CBACK_EVT        */
     bta_dm_set_afh_channel_assesment      /* BTA_DM_API_SET_AFH_CHANNEL_ASSESMENT_EVT */
+
+#ifdef BLUETOOTH_RTK
+    ,bta_dm_add_ble_device_extra_info   /*BTA_DM_API_ADD_BLEDEVICEEXTRAINFO_EVT*/
+#endif
+
 };
 
 

@@ -402,8 +402,8 @@ else
 CFLAGS += -DHI_VDEC_DFS_SUPPORT=0
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+CFLAGS += -DHI_TEE_SUPPORT
 endif
 
 MSP_OBJS += vdec/hi_codec.o         \

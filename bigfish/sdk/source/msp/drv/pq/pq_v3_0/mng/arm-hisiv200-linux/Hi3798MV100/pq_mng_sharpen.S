@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_sharpen.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_sharpen.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_sharpen.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_sharpen.o -O2 -Wall -Wundef
@@ -280,7 +280,7 @@ PQ_MNG_EnableSharpenDemo:
 	movt	ip, #:upper16:.LC2	@ tmp142,
 	str	ip, [sp, #0]	@ tmp142,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26706,
+	mvn	r0, #0	@ D.26691,
 	b	.L18	@
 .L22:
 	.align	2
@@ -335,7 +335,7 @@ PQ_MNG_EnableSharpen:
 	movt	ip, #:upper16:.LC4	@ tmp142,
 	str	ip, [sp, #0]	@ tmp142,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26693,
+	mvn	r0, #0	@ D.26678,
 	b	.L25	@
 .L29:
 	.align	2
@@ -368,7 +368,7 @@ PQ_MNG_InitSharpen:
 	ldr	r3, [r4, #0]	@ g_bShpInitFlag, g_bShpInitFlag
 	str	r0, [r4, #12]	@ pstPqParam, g_pstPqParam
 	cmp	r3, #1	@ g_bShpInitFlag,
-	moveq	r0, #0	@ D.26659,
+	moveq	r0, #0	@ D.26644,
 	beq	.L32	@,
 	mov	r0, #0	@ tmp141,
 	mov	ip, #4	@ tmp142,
@@ -402,7 +402,7 @@ PQ_MNG_InitSharpen:
 	movt	ip, #:upper16:.LC6	@ tmp148,
 	str	ip, [sp, #0]	@ tmp148,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26659,
+	mvn	r0, #0	@ D.26644,
 	b	.L32	@
 .L37:
 	.align	2
@@ -461,7 +461,7 @@ T.326:
 	movw	r1, #:lower16:.LC7	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, #0	@ D.26781,
+	mov	r0, #0	@ D.26766,
 .L40:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -489,7 +489,7 @@ T.326:
 	add	ip, r4, #16	@ ivtmp.539, tmp216,
 	cmp	r7, #2048	@ i,
 	bne	.L42	@,
-	mvn	r0, #0	@ D.26781,
+	mvn	r0, #0	@ D.26766,
 	b	.L40	@
 .L50:
 	mov	r1, #41	@,
@@ -500,7 +500,7 @@ T.326:
 	movt	lr, #:upper16:.LC0	@ tmp210,
 	str	lr, [sp, #0]	@ tmp210,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26781,
+	mvn	r0, #0	@ D.26766,
 	b	.L40	@
 .L52:
 	.align	2
@@ -533,16 +533,16 @@ PQ_MNG_SetSharpenStr:
 	str	r3, [fp, #-36]	@ tmp142, u32Data2
 	str	r3, [fp, #-32]	@ tmp142, u32Data1
 	bhi	.L58	@,
-	uxtb	r5, r1	@ D.26674, u32SourceMode
-	uxtb	r7, r2	@ D.26675, u32OutputMode
+	uxtb	r5, r1	@ D.26659, u32SourceMode
+	uxtb	r7, r2	@ D.26660, u32OutputMode
 	sub	r0, fp, #32	@,,
 	movw	r1, #:lower16:-120913536	@,
-	mov	r2, r5	@, D.26674
+	mov	r2, r5	@, D.26659
 	movt	r1, #:upper16:-120913536	@,
-	mov	r3, r7	@, D.26675
+	mov	r3, r7	@, D.26660
 	bl	T.326	@
-	mov	r2, r5	@, D.26674
-	mov	r3, r7	@, D.26675
+	mov	r2, r5	@, D.26659
+	mov	r3, r7	@, D.26660
 	movw	r1, #:lower16:-120913516	@,
 	movt	r1, #:upper16:-120913516	@,
 	mov	r6, r0	@ s32Ret,
@@ -561,7 +561,7 @@ PQ_MNG_SetSharpenStr:
 	bl	PQ_HAL_SetSharpStrReg	@
 	movw	r1, #:lower16:.LANCHOR1	@ tmp160,
 	movt	r1, #:upper16:.LANCHOR1	@ tmp160,
-	mov	r0, #0	@ D.26673,
+	mov	r0, #0	@ D.26658,
 	str	r4, [r1, #0]	@ s32ShpStr, sg_s32SharpStr
 .L55:
 	sub	sp, fp, #28
@@ -589,7 +589,7 @@ PQ_MNG_SetSharpenStr:
 	movt	ip, #:upper16:.LC8	@ tmp146,
 	str	ip, [sp, #0]	@ tmp146,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26673,
+	mvn	r0, #0	@ D.26658,
 	b	.L55	@
 .L61:
 	.align	2
@@ -600,48 +600,48 @@ PQ_MNG_SetSharpenStr:
 	.section	.rodata
 	.align	2
 .LANCHOR2 = . + 0
-	.type	__func__.26632, %object
-	.size	__func__.26632, 18
-__func__.26632:
+	.type	__func__.26617, %object
+	.size	__func__.26617, 18
+__func__.26617:
 	.ascii	"PQ_MNG_GetSharpEn\000"
 	.space	2
-	.type	__func__.26641, %object
-	.size	__func__.26641, 19
-__func__.26641:
+	.type	__func__.26626, %object
+	.size	__func__.26626, 19
+__func__.26626:
 	.ascii	"PQ_MNG_SharpDemoEn\000"
 	.space	1
-	.type	__func__.26702, %object
-	.size	__func__.26702, 25
-__func__.26702:
+	.type	__func__.26687, %object
+	.size	__func__.26687, 25
+__func__.26687:
 	.ascii	"PQ_MNG_EnableSharpenDemo\000"
 	.space	3
-	.type	__func__.26624, %object
-	.size	__func__.26624, 15
-__func__.26624:
+	.type	__func__.26609, %object
+	.size	__func__.26609, 15
+__func__.26609:
 	.ascii	"PQ_MNG_SharpEn\000"
 	.space	1
-	.type	__func__.26689, %object
-	.size	__func__.26689, 21
-__func__.26689:
+	.type	__func__.26674, %object
+	.size	__func__.26674, 21
+__func__.26674:
 	.ascii	"PQ_MNG_EnableSharpen\000"
 	.space	3
-	.type	__func__.26600, %object
-	.size	__func__.26600, 17
-__func__.26600:
+	.type	__func__.26585, %object
+	.size	__func__.26585, 17
+__func__.26585:
 	.ascii	"PQ_MNG_SharpInit\000"
 	.space	3
-	.type	__func__.26655, %object
-	.size	__func__.26655, 19
-__func__.26655:
+	.type	__func__.26640, %object
+	.size	__func__.26640, 19
+__func__.26640:
 	.ascii	"PQ_MNG_InitSharpen\000"
 	.space	1
-	.type	__func__.26556, %object
-	.size	__func__.26556, 28
-__func__.26556:
+	.type	__func__.26541, %object
+	.size	__func__.26541, 28
+__func__.26541:
 	.ascii	"PQ_MNG_FindSharpenGainRatio\000"
-	.type	__func__.26669, %object
-	.size	__func__.26669, 21
-__func__.26669:
+	.type	__func__.26654, %object
+	.size	__func__.26654, 21
+__func__.26654:
 	.ascii	"PQ_MNG_SetSharpenStr\000"
 	.data
 	.align	2

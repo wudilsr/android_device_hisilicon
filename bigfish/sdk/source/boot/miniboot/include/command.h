@@ -125,13 +125,18 @@ inline int param_count(struct cmd_t *cmd);
 #define __ppcmd_name(line) __ppcmd_entry_##line
 #define _ppcmd_name(line) __ppcmd_name(line)
 
-#ifdef CONFIG_PRINT
+#ifdef CONFIG_CMDLINE
 #define CMD(...) \
 	static struct cmd_entry_t _pcmd_name(__LINE__) [] = { __VA_ARGS__, {0,0}}; \
 	const static __attribute__ ((section("._cmd"),used)) \
 		struct cmd_entry_t *_ppcmd_name(__LINE__) = _pcmd_name(__LINE__);
 
+#ifdef CONFIG_PRINT
 #define CONFIG_PROMPT  "miniboot# "
+#else
+#define CONFIG_PROMPT ""
+#endif
+
 #else
 #define CMD(...)
 #define CONFIG_PROMPT ""

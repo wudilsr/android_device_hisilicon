@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NLyvOiSU1QzVRVJIFvNgTjVMj35/rFDkpkV7Zl2
 1aXTAMdtl6g7XAm/SLexrns3veytH3eB0MU64m364rwq8z81a5eCxjhJ81FCkAv2EN9ILCBO
@@ -30,7 +30,7 @@ r4sRNkK2UfuBpXNWxt7/jTmV3VYmPA+elqj2WrTpS09yZoXCAvoeIJPVisn1hA==#*/
 
 
 /**************************************************************************************************************
-Copyright (C), 2009-2012, Huawei Tech. Co., Ltd.
+Copyright (C), 2009-2012, Hisilicon Tech. Co., Ltd.
 File name: imedia_midprocessor.c
 Author & ID: ¹ùæ©+00101841
 Version: 1.00

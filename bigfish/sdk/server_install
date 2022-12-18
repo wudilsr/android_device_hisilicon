@@ -14,8 +14,8 @@ if [ -d ./tools/linux/toolchains/arm-hisiv200-linux ] ; then
     cd -
 fi
 
-if [ -d ./tools/linux/toolchains/arm-histbv300-linux ] ; then
-    cd ./tools/linux/toolchains/arm-histbv300-linux
+if [ -d ./tools/linux/toolchains/arm-histbv310-linux ] ; then
+    cd ./tools/linux/toolchains/arm-histbv310-linux
     chmod 777 cross.install
     ./cross.install
     cd -

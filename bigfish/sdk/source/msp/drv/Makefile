@@ -63,10 +63,6 @@ endif
 endif
 endif
 
-ifeq ($(CFG_HI_ANDROID_SECURITY_L2_SYSTEM_CHECK),y)
-objects += security
-endif
-
 ifeq ($(CFG_HI_FRONTEND_SUPPORT),y)
 objects += frontend
 endif

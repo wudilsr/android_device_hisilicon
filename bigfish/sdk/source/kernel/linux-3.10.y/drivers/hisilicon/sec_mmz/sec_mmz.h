@@ -5,6 +5,8 @@ typedef enum {
        HI_MMZ_CP_CA2TA,
        HI_MMZ_CP_TA2CA,
        HI_MMZ_CP_TA2TA,
+	HI_MMZ_TEST,
+	HI_MMZ_DEBUG
 } E_HI_MMZ_CommandId;
 
 /**

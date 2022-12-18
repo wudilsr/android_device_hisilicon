@@ -1,9 +1,9 @@
 /******************************************************************************
 
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 *  and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
@@ -29,6 +29,7 @@ Modification            :   Created file
 
 #include "hi_unf_ttx.h"
 #include "teletext_def.h"
+#include "teletext_utils.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -99,7 +100,7 @@ typedef struct tagTTX_DISP_ATTR
     HI_BOOL bSeparated : 1;
     HI_BOOL bDWidth    : 1;
     HI_BOOL bChanged   : 1; /* attributes changed by adaptive objects */
-    
+
     HI_U8 u8ForeColor;
     HI_U8 u8BackColor;
 }TTX_DISP_ATTR;
@@ -175,6 +176,7 @@ typedef  struct tagTTX_PAGE_CONTEXT_S
     HI_BOOL                bConceal;   /** reveal  conceal or not */
     HI_BOOL                bFlash;
     HI_BOOL                bNavigation; /** navigation bar */
+    HI_BOOL                bSubpageMode; /** if <subpage> key(remote controller) pressed */
     HI_BOOL                bSubtitle;                /**Subtile or teletext  */
     HI_BOOL                bHasP24;
     HI_BOOL                bShowP24;
@@ -187,26 +189,27 @@ typedef  struct tagTTX_PAGE_CONTEXT_S
 
     HI_U32                 u32aPageText[TTX_ROW_NUM][TTX_CMB_MAX_COL_NUM]; /** Displayed   text*/
     TTX_PAGE_S_PTR   	   pstCurPage;
-    HI_U8                  u8szInputNum[4];                  /** Input  number key */
+    TTX_INPUT_NUM_S        stInputNum;          /* Input Number: page number or page subcode */
     HI_U8                  u8Language[4];
     TTX_CHARSET_S          stCharSet;
     TTX_FLAAREA_S *        pFlaAreaHead; /**The head of flash area */
 
     TTX_P28_0_M29_0_INFO_S stP28_0_Info;
     TTX_P28_1_M29_1_INFO_S stP28_1_Info;
-    TTX_P28_4_M29_4_INFO_S stP28_4_Info;   
-    
+    TTX_P28_4_M29_4_INFO_S stP28_4_Info;
+
     TTX_MOT_INFO_S    stMOTInfo;
 
     HI_U8            u8BandStart[3];
     HI_U8            u8BandEnd[3];
     HI_U8            u8BandLeft[3];
     HI_U32          u32ColumnNum;
-        
+
     HI_BOOL        bUpdateTime;                    /** Update time */
     HI_BOOL        bInvalidReq;                       /**  Invalid  Request page */
     HI_BOOL        bProcessed;                          /** The  page be processed or not */
     HI_BOOL        bAutoPlay;                          /**  Auto play subpage */
+    HI_BOOL        bHold;                          /**  hold */
     HI_BOOL        bStart;                                 /** Main thread  start */
     HI_BOOL        bShowTaskStart;             /** Thread  of showpage start */
     HI_BOOL        bTTXSearching;               /**is searching ttx*/
@@ -218,11 +221,12 @@ typedef  struct tagTTX_PAGE_CONTEXT_S
     HI_UNF_TTX_CB_FN pfnCallBackFunction; /**Callback function  */
 
     HI_U8  *                pu8PgQueueMemory; /** Page data queue */
-    TTX_SEGMENT_QUEUE_S     PAGEQueue;
-    TTX_SEGMENT_QUEUE_S_PTR pPAGEQueue;
+    TTX_SEGMENT_QUEUE_S     stPAGEQueue;
+    TTX_SEGMENT_QUEUE_S_PTR pstPAGEQueue;
     HI_U32                  u32QueueSize;
     HI_U32  u32MaxIntervalMs; /**<max interval of teletext*/
-    
+    HI_U32  u32ZoomFlag;    /* 0:normal, 1:display half top, 2:display bottom half */
+
 } TTX_PAGE_CONTEXT_S, *TTX_PAGE_CONTEXT_S_PTR;
 
 /*
@@ -259,7 +263,6 @@ HI_VOID                        TTX_ShowPromptMsg(TTX_PAGE_CONTEXT_S * pstContext
 HI_VOID                        TTX_ShowPromptTimeOutMsg(TTX_PAGE_CONTEXT_S * pstContextHead);
 
 HI_VOID TTX_Show_GetLOPG0G2AndNationSet(TTX_PAGE_CONTEXT_S*  pstContextHead, HI_BOOL bUseDefaultCharSet, HI_UNF_TTX_G0SET_E* penG0Set, HI_UNF_TTX_G2SET_E* penG2Set, HI_UNF_TTX_NATION_SET_E* penNationSet);
-
 HI_VOID TTX_Show_GetModifiedG0G2(HI_U8 u8ModifiedValue, HI_UNF_TTX_G0SET_E* penG0Set, HI_UNF_TTX_G2SET_E* penG2Set);
 
 /*
@@ -273,6 +276,9 @@ HI_VOID TTX_Show_GetModifiedG0G2(HI_U8 u8ModifiedValue, HI_UNF_TTX_G0SET_E* penG
  */
 HI_S32                         TTX_Show_CallBack(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_CB_E enCBType,
                                                  HI_VOID *pvParam);
+
+HI_VOID TTX_Show_DrawNavigation(TTX_PAGE_CONTEXT_S * pstCurrentPoint, HI_U32 u32MaxColNum);
+HI_VOID TTX_Show_DrawNavigationSubpageMode(TTX_PAGE_CONTEXT_S * pstCurrentPoint, HI_U32 u32MaxColNum);
 
 #ifdef __cplusplus
 }

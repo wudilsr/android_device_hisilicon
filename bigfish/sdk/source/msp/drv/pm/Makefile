@@ -25,7 +25,8 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_DIR)/drv/adsp/adsp_v1_1/include \
                 -I$(MSP_DIR)/api/jpge/include           \
                 -I$(MSP_DIR)/api/tde/include            \
-                -I$(MSP_DIR)/drv/pm
+                -I$(MSP_DIR)/drv/pm			\
+                -I$(COMPONENT_DIR)/pm/c51
 
 EXTRA_CFLAGS += $(CFG_HI_KMOD_CFLAGS)
 
@@ -46,6 +47,7 @@ $(MOD_NAME)-y   +=  clock_mpu.o     \
                     hi_opp_data.o   \
                     opp.o           \
                     hi_dvfs.o       \
+                    clock.o         \
                     hi_cpufreq.o
 endif
 

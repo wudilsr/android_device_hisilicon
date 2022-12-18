@@ -1,32 +1,58 @@
+/******************************************************************************
 
+  Copyright (C), 2014-2024, Hisilicon Tech. Co., Ltd.
+
+ ******************************************************************************
+  File Name     : si_edid.c
+  Version       : v1.0
+  Author        : Hisilicon multimedia software group
+  Created       : 2016/06/08 
+  Author        : l232354
+  Description   :
+  History       :
+  UpDate        : 
+  Author        : 
+  Modification  :
+*******************************************************************************/
 #include <linux/string.h>
 #include <linux/delay.h>
 #include "si_edid.h"
 #include "si_mddc.h"
-//#include "drv_sys_ext.h"
 #include "si_vmode.h"
 #include "drv_gpio_ext.h"
 #include "si_timer.h"
 #include "drv_hdmi.h"
-
-
 #include "hi_unf_edid.h"
-
 #include "si_delay.h"
 #include "hi_reg_common.h"
-
 #include "drv_global.h"
 #include "hi_drv_module.h"
 
-//#include "test_edid.h"
 
+/******************************************************************************/
+/* Macro defined                                                              */
+/******************************************************************************/
+#define EDID_NULL_CHECK(p)  \
+do { \
+    if (HI_NULL == p){ \
+        EDID_ERR("fun: %s, line: %d, The para p is null\n", __FUNCTION__, __LINE__); \
+        return HI_FAILURE; \
+    } \
+}while(0);    
+        
+
+/******************************************************************************/
+/* Global variable                                                            */
+/******************************************************************************/
 static HI_U8 g_EdidMen[EDID_SIZE];
-//static HI_UNF_EDID_SINK_CAPABILITY_S g_stEdidInfo;
+static HI_BOOL g_bErrList[EDID_MAX_ERR_NUM] = {0};
+static HI_BOOL g_bDefHDMIMode = HI_TRUE;
 int g_s32VmodeOfUNFFormat[HI_UNF_ENC_FMT_BUTT] = {0};
 
-static HI_BOOL g_bErrList[EDID_MAX_ERR_NUM] = {0};
 
-
+/******************************************************************************/
+/* Private interfaces                                                         */
+/******************************************************************************/
 static HI_S32 BlockCheckSum(HI_U8 *pEDID)
 {
     HI_U8 u8Index;
@@ -465,8 +491,9 @@ static HI_S32 CheckHeader(HI_U8 *pData)
 static HI_S32 ParseSinkName(HI_U8 *pData, HI_U8 **u8pName)
 {
     HI_U32 u32Index;
-    *u8pName = NULL;
     const HI_U8 monitor_name_header[] = {0x00, 0x00, 0x00};
+
+    *u8pName = NULL;
 
     for (u32Index = FIRST_DETAILED_TIMING_ADDR; u32Index < 512; u32Index ++)
     {
@@ -562,6 +589,29 @@ HI_S32 ParseVersion(HI_U8 *pData1,HI_U8 *pData2)
     EDID_INFO("ver:%02d,rever:%02d\n",pSinkCap->u8Version,pSinkCap->u8Revision);
     return HI_SUCCESS;
 }
+
+
+static HI_S32 ParseBaseDisplayPara(EDID_FIRST_BLOCK_INFO *pData)
+{
+    HI_UNF_EDID_BASE_INFO_S      *pSinkCap        = HI_NULL; 
+    HI_UNF_EDID_BASE_DISP_PARA_S *pstBaseDispPara = HI_NULL;
+
+    EDID_NULL_CHECK(pData);
+
+    pSinkCap        = DRV_Get_SinkCap(HI_UNF_HDMI_ID_0);
+    EDID_NULL_CHECK(pSinkCap);
+    pstBaseDispPara = &(pSinkCap->stBaseDispPara);
+    EDID_NULL_CHECK(pstBaseDispPara);
+
+    pstBaseDispPara->u8MaxImageWidth  = pData->width_cm;
+    pstBaseDispPara->u8MaxImageHeight = pData->height_cm;
+
+	EDID_INFO("u8MaxImageWidth:  %d cm\n", pstBaseDispPara->u8MaxImageWidth);
+	EDID_INFO("u8MaxImageHeight: %d cm\n", pstBaseDispPara->u8MaxImageHeight);
+
+    return HI_SUCCESS;
+}
+
 
 HI_S32 ParseStandardTiming(HI_U8 *pData)
 {
@@ -961,6 +1011,7 @@ HI_S32 ParseFirstBlock(HI_U8 *pData)
     CheckHeader(pData);
     ParseVendorInfo(pEdidInfo);
     ParseVersion(&pEdidInfo->version,&pEdidInfo->revision);
+    ParseBaseDisplayPara(pEdidInfo);
     ParseEstablishTiming(pEdidInfo->est_timing);
     ParseStandardTiming(pEdidInfo->std_timing);
     ParsePreferredTiming(&pData[FIRST_DETAILED_TIMING_ADDR]);
@@ -1579,7 +1630,9 @@ HI_S32 ParseDTVBlock(HI_U8 *pData)
 
 }
 
-static HI_BOOL g_bDefHDMIMode = HI_TRUE;
+/******************************************************************************/
+/* Public  interfaces                                                         */
+/******************************************************************************/
 HI_U8 SI_SetDefaultOutputMode(HI_BOOL bDefHDMIMode)
 {
     g_bDefHDMIMode = bDefHDMIMode;

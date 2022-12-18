@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2014 HUAWEI - All Rights Reserved
+* Copyright (c) 2014 Hisilicon - All Rights Reserved
 *
 * File     : $hevc_vfmw.h$
 * Date     : $2014/07/01$
@@ -52,7 +52,9 @@ extern "C" {
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/ioctl.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #endif
 
 #include "basedef.h"
@@ -507,7 +509,6 @@ typedef struct
 {
     UINT8  is_refresh;
     UINT8  valid;
-    UINT8  dpbsize_changed;
     UINT8  sps_temporal_id_nesting_flag;
     UINT8  sps_sub_layer_ordering_info_present_flag;
     UINT8  restricted_ref_pic_lists_flag;
@@ -948,7 +949,9 @@ typedef struct
     UINT32  is_short_term; // 0: not short term ref, 1: short term ref. BUT one pic cann't long and short.   
     SINT32  long_term_pic_num;
     SINT32  pic_num; 
-    
+
+    SINT32 AvgQp;
+
     struct  HEVC_FRAMESTORE_S *frame_store;
 } HEVC_STORABLEPIC_S;
 
@@ -998,7 +1001,10 @@ typedef struct
     UINT32  stream_base_addr;
     UINT32  pmv_address_idc; 
 	UINT32  err_level;
-    
+
+    UINT32  FrameStreamSize;
+    UINT32  CurrentNalSize;
+
     HEVC_FRAMESTORE_S *frame_store; 
     IMAGE   fs_image; 
 } HEVC_CURRPIC_S;
@@ -1323,7 +1329,7 @@ SINT32 HEVC_StorePicInDPB(HEVC_CTX_S *pHevcCtx, LUMA_INFO_S *pLumaInfo);
 SINT32 HEVC_DecList(HEVC_CTX_S *pHevcCtx);
 SINT32 HEVC_ArrangeVahbMem(HEVC_CTX_S *pHevcCtx,UINT32 ImgWidth, UINT32 ImgHeight, UINT32 ImgWidthInCtb, UINT32 ImgHeightInCtb, UINT32 ImgNum, UINT32 PmvBlkNum);
 SINT32 HEVC_AllocFrameStore(HEVC_CTX_S *pHevcCtx);
-SINT32 HEVC_GetReRangeFlag(HEVC_CTX_S *pHevcCtx,SINT32 OldWidth, SINT32 OldHeight, SINT32 OldLog2CtbSizeY);
+SINT32 HEVC_GetReRangeFlag(HEVC_CTX_S *pHevcCtx,SINT32 OldWidth, SINT32 OldHeight, SINT32 OldLog2CtbSizeY, SINT32 DpbSizeChanged);
 VOID   HEVC_WaitVo(HEVC_CTX_S *pHevcCtx);
 VOID   HEVC_GetBackPicFromVOQueue(HEVC_CTX_S *pHevcCtx);
 VOID HEVC_RemoveDummyFrame(HEVC_CTX_S *pHevcCtx);

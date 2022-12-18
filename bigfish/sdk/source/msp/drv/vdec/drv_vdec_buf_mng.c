@@ -228,7 +228,7 @@ typedef struct tagBUFMNG_INST_S
     HI_U32      u32Index;           /* Index */
 #endif
     BUFMNG_ALLOC_TYPE_E enAllocType;/* MMZ alloc type */
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     HI_BOOL     bTvp;
 	#endif
     HI_BOOL bMMZMap;                /* Need unmap when destroy */
@@ -349,7 +349,7 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
         else
 #endif
         {
-         #ifdef HI_TVP_SUPPORT
+         #ifdef HI_TEE_SUPPORT
             if(HI_TRUE == pstConfig->bTvp)
             {      
                 HI_U32 u32PhyBufAddr = 0;
@@ -391,7 +391,7 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
         HI_FATAL_BUFMNG("No memory.\n");
         if (BUFMNG_ALLOC_INNER == pstConfig->enAllocType)
         {
-         #ifdef HI_TVP_SUPPORT
+         #ifdef HI_TEE_SUPPORT
             if(HI_TRUE == pstConfig->bTvp)
             {
                 HI_SEC_MMZ_Delete(pstConfig->u32PhyAddr); 
@@ -412,7 +412,7 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
 
     /* Init instance parameter */
     pstInst->hBuf = *phBuf;
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     pstInst->bTvp = pstConfig->bTvp;
 	#endif
     pstInst->u32PhyAddr = pstConfig->u32PhyAddr;
@@ -436,7 +436,7 @@ HI_S32 BUFMNG_Create(HI_HANDLE *phBuf, BUFMNG_INST_CONFIG_S* pstConfig)
                 else
 #endif
                 {
-                 #ifdef HI_TVP_SUPPORT
+                 #ifdef HI_TEE_SUPPORT
                     if(HI_TRUE == pstConfig->bTvp)
                     {
                         HI_SEC_MMZ_Delete(pstConfig->u32PhyAddr);
@@ -558,7 +558,7 @@ HI_S32 BUFMNG_Destroy(HI_HANDLE hBuf)
         stMMZBuf.u32StartVirAddr = (HI_U32)pstInst->pu8KnlVirAddr;
         stMMZBuf.u32Size = pstInst->u32Size;
 	    BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
-     #ifdef HI_TVP_SUPPORT
+     #ifdef HI_TEE_SUPPORT
         if(HI_TRUE == pstInst->bTvp)
         {
         }
@@ -585,7 +585,7 @@ HI_S32 BUFMNG_Destroy(HI_HANDLE hBuf)
             stMMZBuf.u32StartVirAddr = (HI_U32)pstInst->pu8KnlVirAddr;
             stMMZBuf.u32Size = pstInst->u32Size;
 	        BUFMNG_SPIN_UNLOCK(pstInst->stSpinLock);
-         #ifdef HI_TVP_SUPPORT
+         #ifdef HI_TEE_SUPPORT
             if(HI_TRUE == pstInst->bTvp)
             {
                 HI_SEC_MMZ_Delete(pstInst->u32PhyAddr); 
@@ -1290,7 +1290,7 @@ HI_VOID BUFMNG_SaveInit(HI_VOID)
 
 HI_BOOL BUFMNG_CheckFile(HI_S32 Handle, HI_S8 Flag)
 {
-    HI_S32 ret = HI_FALSE;
+    HI_BOOL ret = HI_FALSE;
     struct semaphore *p_stSem;
 
     switch(Flag)

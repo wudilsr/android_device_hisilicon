@@ -26,8 +26,8 @@ include $(TOPDIR)/config.mk
 LIB	:= $(obj)libmmc.a
 
 COBJS-$(CONFIG_GENERIC_MMC) += mmc.o
-COBJS-$(CONFIG_HIMCI_V100) += himciv200.o himciv200_dbg_boot_read.o
-COBJS-$(CONFIG_HIMCI_V200) += himciv200.o himciv200_dbg_boot_read.o
+COBJS-$(CONFIG_HIMCI_V100) += himciv200.o himciv200_dbg_boot_read.o himci_mmc_test.o
+COBJS-$(CONFIG_HIMCI_V200) += himciv200.o himciv200_dbg_boot_read.o himci_mmc_test.o
 COBJS-$(CONFIG_ATMEL_MCI) += atmel_mci.o
 COBJS-$(CONFIG_BFIN_SDH) += bfin_sdh.o
 COBJS-$(CONFIG_OMAP3_MMC) += omap3_mmc.o

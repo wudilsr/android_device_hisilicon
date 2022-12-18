@@ -10,6 +10,7 @@
 
 #ifdef CONFIG_DMA_SHARED_BUFFER
 
+#include <linux/version.h>
 #include <linux/dma-buf.h>
 #include <linux/highmem.h>
 #include <linux/memblock.h>
@@ -145,9 +146,11 @@ struct dma_buf *hifb_memblock_export(phys_addr_t base, size_t size, int flags)
 	}
 	
 	pdata->base = base;
-	
-	buf = dma_buf_export(pdata, &hifb_memblock_ops, size, flags);
-	
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
+        buf = dma_buf_export(pdata, &hifb_memblock_ops, size, flags);
+#else
+        buf = dma_buf_export(pdata, &hifb_memblock_ops, size, flags, NULL);
+#endif
 	if( IS_ERR(buf) )
 		kfree(pdata);
 

@@ -26,7 +26,7 @@
 #include "hi_drv_stat.h"
 #include "hi_mpi_stat.h"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #include "sec_mmz.h"
 #endif
 
@@ -161,7 +161,7 @@ static OMX_ERRORTYPE fill_buffer_done(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_BUFF
 
 	ret = pcom_priv->m_cb.FillBufferDone(pcom_priv->m_pcomp, pcom_priv->m_app_data, buffer);
 
-    //DEBUG_PRINT_STREAM("[FBD] success <<< useraddr = %p, data_len: %ld\n", buffer->pBuffer, buffer->nFilledLen);
+    DEBUG_PRINT_STREAM("[FBD] success <<< useraddr = %p, data_len: %ld pts:    %lld\n", buffer->pBuffer, buffer->nFilledLen, buffer->nTimeStamp);
 
 	return ret;
 }
@@ -184,7 +184,7 @@ static OMX_ERRORTYPE empty_buffer_done(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_BUF
 
 	ret = pcom_priv->m_cb.EmptyBufferDone(pcom_priv->m_pcomp, pcom_priv->m_app_data, buffer);
 
-    //DEBUG_PRINT_STREAM("[EBD] success <<< useraddr = %p\n", buffer->pBuffer);
+    DEBUG_PRINT_STREAM("[EBD] success <<< useraddr = %p\n", buffer->pBuffer);
 
 	return ret;
 }
@@ -221,7 +221,7 @@ static OMX_ERRORTYPE use_android_native_buffer_internal(
 
 	if (bytes != port_priv->port_pro.buffer_size)
 	{
-		DEBUG_PRINT_ERROR("[UNB] Error: buf size invalid, bytes = %ld, buf_size = %ld\n", bytes, buf_size);
+        DEBUG_PRINT_ERROR("[UNB] Error: buf size invalid, bytes = %ld, buf_size = %ld\n", bytes, port_priv->port_pro.buffer_size);
 		return OMX_ErrorBadParameter;
 	}
 
@@ -242,6 +242,7 @@ static OMX_ERRORTYPE use_android_native_buffer_internal(
 	}
     i = port_priv->m_cur_buf_num;
 
+#ifndef HI_OMX_TEE_SUPPORT
 	UserVirAddr = p_private_handle->base;
 
 	if(NULL ==  UserVirAddr)
@@ -249,6 +250,7 @@ static OMX_ERRORTYPE use_android_native_buffer_internal(
         DEBUG_PRINT_ERROR("%s() get user vir addr failed!\n", __func__);
         return OMX_ErrorUndefined;
 	}
+#endif
 
 	pomx_buf = (OMX_BUFFERHEADERTYPE*)malloc(sizeof(OMX_BUFFERHEADERTYPE));
 	if (!pomx_buf)
@@ -357,12 +359,15 @@ static OMX_ERRORTYPE use_buffer_internal(
        OMX_IN OMX_U8 *buffer)
 {
 	OMX_U32 i = 0;
-	OMX_S32 ret = -1;
 	OMX_U32 buf_size = 0, buf_cnt = 0;
 	OMX_ERRORTYPE error = OMX_ErrorNone;
 	OMX_PORT_PRIVATE *port_priv = NULL;
 	OMX_BUFFERHEADERTYPE *pomx_buf = NULL;
-    HI_U32 Phyaddr, BufSize;
+    HI_U32 Phyaddr;
+#ifndef HI_OMX_TEE_SUPPORT
+    OMX_S32 ret = -1;
+    HI_U32 BufSize;
+#endif
 
 	OMXVDEC_BUF_DESC* pvdec_buf = NULL;
 
@@ -387,7 +392,7 @@ static OMX_ERRORTYPE use_buffer_internal(
 	}
     i = port_priv->m_cur_buf_num;
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     Phyaddr = (HI_U32)buffer;
 #else
     ret = HI_MMZ_GetPhyaddr(buffer, &Phyaddr, &BufSize);
@@ -421,8 +426,11 @@ static OMX_ERRORTYPE use_buffer_internal(
     pvdec_buf->phyaddr     = Phyaddr;
 	pvdec_buf->buffer_len  = bytes;
 	pvdec_buf->client_data = (OMX_PTR)pomx_buf;
-    pvdec_buf->buffer_type = OMX_USE_OTHER;
-
+#ifdef HI_OMX_TEE_SUPPORT
+    pvdec_buf->buffer_type = OMX_USE_SECURE;
+#else
+    pvdec_buf->buffer_type = OMX_USE_NOSECURE;
+#endif
 	if (channel_bind_buffer(&pcom_priv->drv_ctx, pvdec_buf) < 0)
 	{
 		DEBUG_PRINT_ERROR("[UB] Error: vdec bind user buf failed\n");
@@ -527,78 +535,102 @@ static OMX_ERRORTYPE allocate_buffer_internal(
 	pvdec_buf->client_data      = (OMX_PTR)pomx_buf;
     pvdec_buf->out_frame.stride = pcom_priv->pic_info.stride;
 
-#ifdef HI_TVP_SUPPORT
+    pvdec_buf->buffer_len       = buf_size;
+    pvdec_buf->align            = port_priv->port_pro.alignment;
+
+#ifdef HI_OMX_TEE_SUPPORT
     pvdec_buf->buffer_type    = OMX_ALLOCATE_SECURE;
-	if (alloc_contigous_buffer_secure(port_priv->m_cur_buf_num, buf_size, port_priv->port_pro.alignment, pvdec_buf) < 0)
-	{
-		DEBUG_PRINT_ERROR("[AB] Error: alloc_contigous_buffer failed\n");
-		error =  OMX_ErrorUndefined;
-		goto error_exit1;
-	}
+    pvdec_buf->is_sec         = OMX_TRUE;
 #else
-    pvdec_buf->buffer_type    = OMX_ALLOCATE_USR;
-	if (alloc_contigous_buffer(port_priv->m_cur_buf_num, buf_size, port_priv->port_pro.alignment, pvdec_buf) < 0)
-	{
-		DEBUG_PRINT_ERROR("[AB] Error: alloc_contigous_buffer failed\n");
-		error =  OMX_ErrorUndefined;
-		goto error_exit1;
-	}
+    pvdec_buf->buffer_type    = OMX_ALLOCATE_NONSECURE;
+    pvdec_buf->is_sec         = OMX_FALSE;
 #endif
 
-	/* bind this buffer to vdec driver */
-	if (channel_bind_buffer(&pcom_priv->drv_ctx, pvdec_buf) < 0)
-	{
-		DEBUG_PRINT_ERROR("[AB] Error: Bind buffer failed\n");
-		error =  OMX_ErrorUndefined;
-		goto error_exit2;
-	}
+    if (channel_alloc_buffer(&pcom_priv->drv_ctx, pvdec_buf) < 0)
+    {
+        DEBUG_PRINT_ERROR("[AB] Error: alloc_contigous_buffer failed\n");
+        error =  OMX_ErrorUndefined;
+        goto error_exit1;
+    }
 
-	/* init buffer head */
-	pomx_buf->nSize             = sizeof(OMX_BUFFERHEADERTYPE);
-	pomx_buf->nVersion.nVersion = OMX_VERSION;
-	pomx_buf->pBuffer           = pvdec_buf->bufferaddr;
-	pomx_buf->nAllocLen         = pvdec_buf->buffer_len;
-	pomx_buf->nOffset           = 0;
-	pomx_buf->pAppPrivate       = app_data;
+#ifdef HI_OMX_TEE_SUPPORT
+    //sec mode:do not map usespace vir
+#else
+    pvdec_buf->bufferaddr = HI_MEM_Map(pvdec_buf->phyaddr, pvdec_buf->buffer_len);
+    if (pvdec_buf->bufferaddr == HI_NULL)
+    {
+        DEBUG_PRINT_ERROR("[AB] Error: map buffer failed\n");
+        error =  OMX_ErrorUndefined;
+        goto error_exit2;
+    }
+#endif
 
-	if (port == INPUT_PORT_INDEX)
-	{
-		pomx_buf->pInputPortPrivate  = (OMX_PTR )pvdec_buf;
-		pomx_buf->nInputPortIndex    = INPUT_PORT_INDEX;
-		pomx_buf->pOutputPortPrivate = NULL;
-	}
-	else
-	{
-		pomx_buf->pInputPortPrivate  = NULL;
-		pomx_buf->pOutputPortPrivate = (OMX_PTR )pvdec_buf;
-		pomx_buf->nOutputPortIndex   = OUTPUT_PORT_INDEX;
-	}
+    /* bind this buffer to vdec driver */
+    if (channel_bind_buffer(&pcom_priv->drv_ctx, pvdec_buf) < 0)
+    {
+        DEBUG_PRINT_ERROR("[AB] Error: Bind buffer failed\n");
+        error =  OMX_ErrorUndefined;
+        goto error_exit3;
+    }
 
-	*omx_bufhdr = pomx_buf;
+    /* init buffer head */
+    pomx_buf->nSize             = sizeof(OMX_BUFFERHEADERTYPE);
+    pomx_buf->nVersion.nVersion = OMX_VERSION;
+    pomx_buf->nAllocLen         = pvdec_buf->buffer_len;
+    pomx_buf->nOffset           = 0;
+    pomx_buf->pAppPrivate       = app_data;
 
-	port_priv->m_omx_bufhead[i] = pomx_buf;
+#ifdef HI_OMX_TEE_SUPPORT
+    if (pvdec_buf->dir == 0)
+    {
+        pomx_buf->pBuffer = (OMX_U8*)pvdec_buf->phyaddr;
+    }
+    else
+    {
+        pomx_buf->pBuffer = (OMX_U8*)pvdec_buf->bufferaddr;
+    }
+#else
+    pomx_buf->pBuffer = (OMX_U8*)pvdec_buf->bufferaddr;
+#endif
+
+    if (port == INPUT_PORT_INDEX)
+    {
+        pomx_buf->pInputPortPrivate  = (OMX_PTR )pvdec_buf;
+        pomx_buf->nInputPortIndex    = INPUT_PORT_INDEX;
+        pomx_buf->pOutputPortPrivate = NULL;
+    }
+    else
+    {
+        pomx_buf->pInputPortPrivate  = NULL;
+        pomx_buf->pOutputPortPrivate = (OMX_PTR )pvdec_buf;
+        pomx_buf->nOutputPortIndex   = OUTPUT_PORT_INDEX;
+    }
+
+    *omx_bufhdr = pomx_buf;
+
+    port_priv->m_omx_bufhead[i] = pomx_buf;
     port_priv->m_cur_buf_num++;
 
-	/*DEBUG_PRINT_STREAM("[AB] Alloc %s buffer %d success: phyaddr = %x, useraddr = %p, size = %d, pomx_buf=%p\n",
+    /*DEBUG_PRINT_STREAM("[AB] Alloc %s buffer %d success: phyaddr = %x, useraddr = %p, size = %d, pomx_buf=%p\n",
                        (port == INPUT_PORT_INDEX) ? "in" : "out", (int)i,
                        pvdec_buf->phyaddr, pvdec_buf->bufferaddr, pvdec_buf->buffer_len, pomx_buf);*/
 
-	return OMX_ErrorNone;
+    return OMX_ErrorNone;
 
+error_exit3:
+#ifndef HI_OMX_TEE_SUPPORT
+    HI_MEM_Unmap(pvdec_buf->bufferaddr);
 error_exit2:
-#ifdef HI_TVP_SUPPORT
-    free_contigous_buffer_secure(pvdec_buf);
-#else
-	free_contigous_buffer(pvdec_buf);
 #endif
+    channel_release_buffer(&pcom_priv->drv_ctx, pvdec_buf);
 error_exit1:
-	free(pvdec_buf);
+    free(pvdec_buf);
 error_exit0:
-	free(pomx_buf);
+    free(pomx_buf);
 
-	DEBUG_PRINT_ERROR("[AB] Alloc %s buffer %d failed\n",(port == OUTPUT_PORT_INDEX) ? "out" : "in", (int)i);
+    DEBUG_PRINT_ERROR("[AB] Alloc %s buffer %d failed\n",(port == OUTPUT_PORT_INDEX) ? "out" : "in", (int)i);
 
-	return error;
+    return error;
 }
 
 
@@ -649,17 +681,15 @@ static OMX_ERRORTYPE free_buffer_internal(
 		DEBUG_PRINT_ERROR("[FB] unbind buffer failed\n");
 	}
 
-#ifdef HI_TVP_SUPPORT
-	if (OMX_ALLOCATE_SECURE == puser_buf->buffer_type)
+    if (OMX_ALLOCATE_NONSECURE == puser_buf->buffer_type || OMX_ALLOCATE_SECURE == puser_buf->buffer_type)
     {
-		free_contigous_buffer_secure(puser_buf);
+    #ifdef HI_OMX_TEE_SUPPORT
+        //sec mode:do not unmap usespace vir
+    #else
+        HI_MEM_Unmap(puser_buf->bufferaddr);
+    #endif
+        channel_release_buffer(&pcom_priv->drv_ctx, puser_buf);
     }
-#else
-	if (OMX_ALLOCATE_USR == puser_buf->buffer_type)
-	{
-		free_contigous_buffer(puser_buf);
-	}
-#endif
 
 	free(puser_buf);
 	if(omx_bufhdr->pPlatformPrivate)
@@ -745,6 +775,100 @@ static void return_inbuffers(OMX_COMPONENT_PRIVATE *pcom_priv)
 }
 
 
+static OMX_ERRORTYPE update_port_definitions(OMX_COMPONENT_PRIVATE *pcomp_priv,
+                                             OMX_BOOL update_crop,
+                                             OMX_BOOL update_input_size)
+{
+    OMX_PORT_PRIVATE *port_priv = NULL;
+    OMX_U32 output_buf_size = 0;
+    OMX_U32 min_compression_ratio = 0;
+    OMX_U32 protocol = 0;
+
+    OMX_CHECK_ARG_RETURN(pcomp_priv == NULL);
+
+    protocol = (OMX_U32)(pcomp_priv->drv_ctx.drv_cfg.chan_cfg.eVidStd);
+
+    /* CodecType Relative */
+    switch (protocol)
+    {
+        case STD_HEVC:
+        {
+            min_compression_ratio = 4;
+
+            /*if not set the max w&h, use defualt: HEVC\H264:4K other:1080P*/
+            pcomp_priv->pic_info.max_frame_width = \
+                 (pcomp_priv->pic_info.max_frame_width == 0)? UHD_FRAME_WIDTH:pcomp_priv->pic_info.max_frame_width;
+
+            pcomp_priv->pic_info.max_frame_height = \
+                 (pcomp_priv->pic_info.max_frame_height == 0)? UHD_FRAME_HEIGHT:pcomp_priv->pic_info.max_frame_height;
+
+            break;
+        }
+
+        case STD_H264:
+        case STD_MVC:
+        case STD_AVS:
+        {
+            min_compression_ratio = 3;
+
+            pcomp_priv->pic_info.max_frame_width = \
+                 (pcomp_priv->pic_info.max_frame_width == 0)? UHD_FRAME_WIDTH : pcomp_priv->pic_info.max_frame_width;
+
+            pcomp_priv->pic_info.max_frame_height = \
+                 (pcomp_priv->pic_info.max_frame_height == 0)? UHD_FRAME_HEIGHT : pcomp_priv->pic_info.max_frame_height;
+
+            break;
+        }
+
+        case STD_MPEG4:
+        case STD_MPEG2:
+        case STD_VC1:
+        case STD_H263:
+        case STD_DIVX3:
+        case STD_REAL8:
+        case STD_REAL9:
+        case STD_VP6:
+        case STD_VP6F:
+        case STD_VP6A:
+        case STD_VP8:
+        case STD_SORENSON:
+        {
+            min_compression_ratio = 2;
+
+            pcomp_priv->pic_info.max_frame_width = \
+                 (pcomp_priv->pic_info.max_frame_width == 0)? HD_FRAME_WIDTH : pcomp_priv->pic_info.max_frame_width;
+
+            pcomp_priv->pic_info.max_frame_height = \
+                 (pcomp_priv->pic_info.max_frame_height == 0)? HD_FRAME_HEIGHT : pcomp_priv->pic_info.max_frame_height;
+
+            break;
+        }
+        default:
+            DEBUG_PRINT_ERROR("%s: unkown standard type = %lu\n", __func__, protocol);
+            return OMX_ErrorBadParameter;
+    }
+
+    /*if is adaptive, use the max w&h to calculate the input buf size*/
+    if (pcomp_priv->is_adaptive)
+    {
+        output_buf_size = (pcomp_priv->pic_info.max_frame_width*pcomp_priv->pic_info.max_frame_height*3)/2;
+    }
+    else
+    {
+        output_buf_size = (pcomp_priv->pic_info.frame_width*pcomp_priv->pic_info.frame_height*3)/2;
+    }
+
+    if (update_input_size)
+    {
+        port_priv = &pcomp_priv->m_port[INPUT_PORT_INDEX];
+        port_priv->port_pro.buffer_size = MAX(output_buf_size/min_compression_ratio,
+                                              port_priv->port_pro.buffer_size);
+    }
+
+    return OMX_ErrorNone;
+}
+
+
 static OMX_ERRORTYPE update_picture_info(
        OMX_COMPONENT_PRIVATE *pcomp_priv,
        OMX_U32 width, OMX_U32 height, OMX_U32 stride)
@@ -787,77 +911,77 @@ static OMX_ERRORTYPE get_supported_profile_level(OMX_COMPONENT_PRIVATE *pcomp_pr
 
     /* CodecType Relative */
 	/* FIXME : profile & level may not correct! */
-	if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_AVC, OMX_MAX_STRINGNAME_SIZE))
+    if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_AVC, sizeof(OMX_ROLE_VIDEO_DECODER_AVC)))
 	{
 		pinfo = avc_profile_level_list;
 		max_num = COUNTOF(avc_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VC1, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VC1, sizeof(OMX_ROLE_VIDEO_DECODER_VC1)))
 	{
 		pinfo = vc1_profile_level_list;
 		max_num = COUNTOF(vc1_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG4, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG4, sizeof(OMX_ROLE_VIDEO_DECODER_MPEG4)))
 	{
 		pinfo = mpeg4_profile_level_list;
 		max_num = COUNTOF(mpeg4_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG1, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG1, sizeof(OMX_ROLE_VIDEO_DECODER_MPEG1)))
 	{
 		pinfo = mpeg1_profile_level_list;
 		max_num = COUNTOF(mpeg1_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG2, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MPEG2, sizeof(OMX_ROLE_VIDEO_DECODER_MPEG2)))
 	{
 		pinfo = mpeg2_profile_level_list;
 		max_num = COUNTOF(mpeg2_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_H263, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_H263, sizeof(OMX_ROLE_VIDEO_DECODER_H263)))
 	{
 		pinfo = h263_profile_level_list;
 		max_num = COUNTOF(h263_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_DIVX3, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_DIVX3, sizeof(OMX_ROLE_VIDEO_DECODER_DIVX3)))
 	{
 		pinfo = divx3_profile_level_list;
 		max_num = COUNTOF(divx3_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VP8, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VP8, sizeof(OMX_ROLE_VIDEO_DECODER_VP8)))
 	{
 		pinfo = vp8_profile_level_list;
 		max_num = COUNTOF(vp8_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VP6, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_VP6, sizeof(OMX_ROLE_VIDEO_DECODER_VP6)))
 	{
 		pinfo = vp6_profile_level_list;
 		max_num = COUNTOF(vp6_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_WMV, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_WMV, sizeof(OMX_ROLE_VIDEO_DECODER_WMV)))
 	{
 		pinfo = wmv_profile_level_list;
 		max_num = COUNTOF(wmv_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_AVS, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_AVS, sizeof(OMX_ROLE_VIDEO_DECODER_AVS)))
 	{
 		pinfo = avs_profile_level_list;
 		max_num = COUNTOF(avs_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_SORENSON, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_SORENSON, sizeof(OMX_ROLE_VIDEO_DECODER_SORENSON)))
 	{
 		pinfo = sorenson_profile_level_list;
 		max_num = COUNTOF(sorenson_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_RV, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_RV, sizeof(OMX_ROLE_VIDEO_DECODER_RV)))
 	{
 		pinfo = rv_profile_level_list;
 		max_num = COUNTOF(rv_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_HEVC, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_HEVC, sizeof(OMX_ROLE_VIDEO_DECODER_HEVC)))
 	{
 		pinfo = hevc_profile_level_list;
 		max_num = COUNTOF(hevc_profile_level_list);
 	}
-	else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MVC, OMX_MAX_STRINGNAME_SIZE))
+    else if (!strncmp((OMX_STRING)pcomp_priv->m_role, OMX_ROLE_VIDEO_DECODER_MVC, sizeof(OMX_ROLE_VIDEO_DECODER_MVC)))
 	{
 		pinfo = mvc_profile_level_list;
 		max_num = COUNTOF(mvc_profile_level_list);
@@ -870,7 +994,7 @@ static OMX_ERRORTYPE get_supported_profile_level(OMX_COMPONENT_PRIVATE *pcomp_pr
 
 	if (profileLevelType->nIndex >= max_num)
     {
-        DEBUG_PRINT_ERROR("%s: ProfileIndex(%ld) exceed!\n", __func__, profileLevelType->nIndex);
+        DEBUG_PRINT_ERROR("%s: ProfileIndex(%ld) exceed! max_num:%d\n", __func__, profileLevelType->nIndex, max_num);
         return OMX_ErrorNoMore;
     }
 
@@ -990,7 +1114,7 @@ fill_error:
 	return ret;
 }
 
-
+#if (1 == DEBUG_SAVE_YUV)
 static OMX_S8 save_this_frame(OMX_COMPONENT_PRIVATE *pcom_priv, OMXVDEC_BUF_DESC *puser_buf)
 {
     OMX_U8  *Yaddress;
@@ -1001,7 +1125,7 @@ static OMX_S8 save_this_frame(OMX_COMPONENT_PRIVATE *pcom_priv, OMXVDEC_BUF_DESC
     OMX_U32* pChromlSize        = NULL;
     OMXVDEC_FRAME_S* pstFrame  = NULL;
     SaveYuvOption stOption;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #ifdef DEBUG_SAVE_YUV
 	HI_MMZ_BUF_S stExchangeBuffer;
 #endif
@@ -1065,7 +1189,7 @@ static OMX_S8 save_this_frame(OMX_COMPONENT_PRIVATE *pcom_priv, OMXVDEC_BUF_DESC
             *ppstChroml = (OMX_U8 *)malloc(pstFrame->width*pstFrame->height);
             if (!(*ppstChroml))
             {
-                DEBUG_PRINT_ERROR("%s remalloc Chroml(%d) failed\n", __func__, pstFrame->width*pstFrame->height);
+                DEBUG_PRINT_ERROR("%s malloc Chroml(%d) failed\n", __func__, pstFrame->width*pstFrame->height);
                 goto error1;
             }
             *pChromlSize = pstFrame->width*pstFrame->height;
@@ -1073,7 +1197,7 @@ static OMX_S8 save_this_frame(OMX_COMPONENT_PRIVATE *pcom_priv, OMXVDEC_BUF_DESC
     }
 
     /* start to save this frame */
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #ifdef DEBUG_SAVE_YUV
     memset(&stExchangeBuffer, 0, sizeof(HI_MMZ_BUF_S));
     stExchangeBuffer.bufsize = puser_buf->data_len;
@@ -1103,7 +1227,7 @@ static OMX_S8 save_this_frame(OMX_COMPONENT_PRIVATE *pcom_priv, OMXVDEC_BUF_DESC
 
     ret = channel_save_yuv(*ppstYuvFp, &stOption);
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #ifdef DEBUG_SAVE_YUV
     yuv_exchange_mem_free(&stExchangeBuffer);
 #endif
@@ -1131,7 +1255,7 @@ error1:
 error:
     return -1;
 }
-
+#endif
 
 static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message)
 {
@@ -1144,7 +1268,7 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message
 
 	OMX_PORT_PRIVATE *port_priv = NULL;
 	OMX_BUFFERHEADERTYPE *pomx_buf = NULL;
-    HI_LD_Event_S LdEvent;
+    //HI_LD_Event_S LdEvent;
 
 	if (!pcom_priv || !message)
 	{
@@ -1255,7 +1379,7 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message
 			pomx_buf->nFilledLen = puser_buf->data_len;
 			pomx_buf->nFlags	 = puser_buf->flags;
 
-			OMX_S64 interval = (OMX_S64)(1e6 / pcom_priv->m_frame_rate);
+            OMX_S64 interval = (OMX_S64)(1e9 / pcom_priv->m_frame_rate);
 			if (puser_buf->timestamp < 0)
 			{
 				pomx_buf->nTimeStamp = pcom_priv->m_pre_timestamp + interval;
@@ -1287,12 +1411,15 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE  *pcom_priv, void* message
 
             //DEBUG_PRINT_STREAM("[FBD] post ||| phyaddr = %x, useraddr = %p, data_len = %ld\n", puser_buf->phyaddr, pomx_buf->pBuffer, pomx_buf->nFilledLen);
 
+            /* //for low delay time proc
             LdEvent.evt_id = EVENT_AVPLAY_FRM_IN;
             LdEvent.frame = puser_buf->u32FrameIndex;
             LdEvent.handle = puser_buf->hTunnelSrc;
             (HI_VOID)HI_SYS_GetTimeStampMs(&(LdEvent.time));
             (HI_VOID)HI_MPI_STAT_NotifyLowDelayEvent(&LdEvent);
-			post_event(pcom_priv, (OMX_U32)pomx_buf, VDEC_S_SUCCESS, OMX_GENERATE_FBD);
+            */
+
+            post_event(pcom_priv, (OMX_U32)pomx_buf, VDEC_S_SUCCESS, OMX_GENERATE_FBD);
 
             if (pomx_buf->nFlags & OMX_BUFFERFLAG_EOS)
             {
@@ -1435,7 +1562,7 @@ static OMX_ERRORTYPE handle_command_state_set(
     			}
             }
 
-            if (0 == pcom_priv->msg_thread_id)
+            if (OMX_FALSE == pcom_priv->msg_thread_id)
             {
     			if (pthread_create(&pcom_priv->msg_thread_id, 0, message_thread, pcom_priv) < 0)
     			{
@@ -1510,6 +1637,12 @@ static OMX_ERRORTYPE handle_command_state_set(
 		else if (state == OMX_StateExecuting)
 		{
 			DEBUG_PRINT_STATE("[OmxState] Idle --> Executing_Pending\n");
+            if (channel_port_enable(&pcom_priv->drv_ctx, pcom_priv->m_port[OUTPUT_PORT_INDEX].m_port_enabled) < 0)
+            {
+                DEBUG_PRINT_ERROR("[OmxState] ERROR: channel_port_enable failed\n");
+                ret = OMX_ErrorHardware;
+                goto event_post;
+            }
 			if (channel_start(&pcom_priv->drv_ctx) < 0)
 			{
 				DEBUG_PRINT_ERROR("[OmxState] ERROR: Channel start failed\n");
@@ -1858,6 +1991,7 @@ static OMX_ERRORTYPE handle_command_port_enable(
        OMX_U32 port)
 {
 	OMX_U32 flag = 1;
+    OMX_S32 ret = -1;
 	OMX_PORT_PRIVATE *port_priv = NULL;
 
 	if ((port == INPUT_PORT_INDEX) || (port == OMX_ALL))
@@ -1907,11 +2041,19 @@ static OMX_ERRORTYPE handle_command_port_enable(
 
 		if(flag)
 		{
-			post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
-		}
-	}
+            ret = channel_port_enable(&pcom_priv->drv_ctx, port_priv->m_port_enabled);
+            if (ret != OMX_ErrorNone)
+            {
+               DEBUG_PRINT_ERROR("call channel_port_enable return failed!\n");
+            }
+            else
+            {
+               post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
+            }
+        }
+    }
 
-	return OMX_ErrorNone;
+    return OMX_ErrorNone;
 }
 
 
@@ -2443,12 +2585,11 @@ static OMX_ERRORTYPE  send_command(
 static OMX_COLOR_FORMATTYPE convert_omx_to_hal_pixel_fmt(OMX_COMPONENT_PRIVATE *pcomp_priv, OMX_U32 color_format)
 {
 
-	OMX_BOOL is_use_native_buf = pcomp_priv->m_use_native_buf;
 
     OMX_COLOR_FORMATTYPE hal_format;
-#ifdef ANDROID
 
-    if (is_use_native_buf)
+#ifdef ANDROID
+    if (pcomp_priv->m_use_native_buf)
     {
         switch (color_format)
         {
@@ -2668,7 +2809,6 @@ static OMX_ERRORTYPE  get_parameter(
 			break;
 		}
 
-#ifdef ANDROID
 		//extern non-standard index support
 		case OMX_HisiIndexChannelAttributes:
 		{
@@ -2687,6 +2827,7 @@ static OMX_ERRORTYPE  get_parameter(
             break;
 		}
 
+#ifdef ANDROID
 		case OMX_GoogleIndexGetAndroidNativeBufferUsage:
 		{
             struct GetAndroidNativeBufferUsageParams  *pusage = (struct GetAndroidNativeBufferUsageParams *)param_data;
@@ -2701,15 +2842,11 @@ static OMX_ERRORTYPE  get_parameter(
             }
             else
             {
-            #ifdef HI_TVP_SUPPORT
                 pusage->nUsage = GRALLOC_USAGE_HW_RENDER | GRALLOC_USAGE_HISI_VDP;
-            #else
-                pusage->nUsage = GRALLOC_USAGE_HW_RENDER | GRALLOC_USAGE_HISI_VDP;
-            #endif
             }
 
-		    break;
-		}
+            break;
+        }
 #endif
         /* CodecType Relative */
         case OMX_IndexParamVideoAvc:
@@ -2834,6 +2971,16 @@ static OMX_ERRORTYPE  set_parameter(
 				DEBUG_PRINT_ERROR("set_parameter: setted buf cnt too small! min: %ld\n", port_priv->port_pro.min_count);
 				return OMX_ErrorUndefined;
 			}
+
+             if (portDefn->format.video.nFrameWidth != pcomp_priv->pic_info.frame_width
+             || portDefn->format.video.nFrameHeight != pcomp_priv->pic_info.frame_height)
+             {
+                pcomp_priv->pic_info.frame_width = portDefn->format.video.nFrameWidth;
+                pcomp_priv->pic_info.frame_height = portDefn->format.video.nFrameHeight;
+
+                update_port_definitions(pcomp_priv, OMX_TRUE, OMX_TRUE);
+            }
+
 	        if (portDefn->format.video.nFrameWidth != 0)
 			{
 			    if (pcomp_priv->m_use_native_buf)
@@ -2853,7 +3000,8 @@ static OMX_ERRORTYPE  set_parameter(
 				return ret;
 			}
 
-			if (portDefn->nPortIndex == INPUT_PORT_INDEX)
+            if (portDefn->nPortIndex == INPUT_PORT_INDEX
+                && portDefn->nBufferSize > port_priv->port_pro.buffer_size)
 			{
 				port_priv->port_pro.buffer_size = portDefn->nBufferSize;
 			}
@@ -2964,7 +3112,6 @@ static OMX_ERRORTYPE  set_parameter(
 			break;
 		}
 
-#ifdef ANDROID
 		//extern non standard index
 		case OMX_HisiIndexChannelAttributes:
 		{
@@ -2979,6 +3126,7 @@ static OMX_ERRORTYPE  set_parameter(
 			break;
 		}
 
+#ifdef ANDROID
 		case OMX_GoogleIndexEnableAndroidNativeBuffers:
 		{
 			struct EnableAndroidNativeBuffersParams  *penable = (struct EnableAndroidNativeBuffersParams *)param_data;
@@ -2989,27 +3137,65 @@ static OMX_ERRORTYPE  set_parameter(
 				return OMX_ErrorBadPortIndex;
 			}
 			pcomp_priv->m_use_native_buf = penable->bEnable;
-			if (pcomp_priv->m_use_native_buf)
-			{
-				pcomp_priv->drv_ctx.drv_cfg.cfg_color_format = OMX_PIX_FMT_NV21;
-			}
+            pcomp_priv->drv_ctx.drv_cfg.m_use_native_buf = penable->bEnable;
+
+            if (pcomp_priv->pic_info.frame_width != 0)
+            {
+                OMX_PORT_PRIVATE *port_priv = NULL;
+
+                if (pcomp_priv->m_use_native_buf)
+                {
+                    pcomp_priv->drv_ctx.drv_cfg.m_use_native_buf = OMX_TRUE;
+                    pcomp_priv->pic_info.stride = HI_SYS_GET_STRIDE(pcomp_priv->pic_info.frame_width);
+				    pcomp_priv->drv_ctx.drv_cfg.cfg_color_format = OMX_PIX_FMT_NV21;
+                }
+                else
+                {
+                    pcomp_priv->drv_ctx.drv_cfg.m_use_native_buf = OMX_FALSE;
+                    pcomp_priv->pic_info.stride = HI_OMX_GET_STRIDE(pcomp_priv->pic_info.frame_width);
+                }
+
+                    port_priv = &pcomp_priv->m_port[OUTPUT_PORT_INDEX];
+                    port_priv->port_pro.buffer_size      = DEFAULT_FRAME_SIZE(pcomp_priv->pic_info.stride, pcomp_priv->pic_info.frame_height);
+                    DEBUG_PRINT_ALWS("use_native_buf:%d stride:%d buffer size:%d\n", \
+                             pcomp_priv->m_use_native_buf, pcomp_priv->pic_info.stride, port_priv->port_pro.buffer_size);
+            }
+
 			break;
 		}
 
         case OMX_HISIIndexParamVideoAdaptivePlaybackMode:
         {
             PrepareForAdaptivePlaybackParams* pParams = (PrepareForAdaptivePlaybackParams *) param_data;
+
             if (pParams->nPortIndex == OUTPUT_PORT_INDEX)
             {
+                pcomp_priv->is_adaptive = pParams->bEnable;
+
                 if (!pParams->bEnable)
                 {
                     return OMX_ErrorNone;
                 }
-                //TODO :right now the decodeer has the adaptive Attr already,so not implement.
+                else
+                {
+                    if (pParams->nMaxFrameWidth > MAX_SUPPORT_WIDTH || pParams->nMaxFrameHeight > MAX_SUPPORT_HEIGHT)
+                    {
+                        DEBUG_PRINT_ERROR("exceed max suport resolution:(%d&%d)>(%d&%d)\n", \
+                            pParams->nMaxFrameWidth, pParams->nMaxFrameHeight, MAX_SUPPORT_WIDTH, MAX_SUPPORT_HEIGHT);
+                    }
+                    else
+                    {
+                        pcomp_priv->pic_info.max_frame_width  = pParams->nMaxFrameWidth;
+                        pcomp_priv->pic_info.max_frame_height = pParams->nMaxFrameHeight;
+                    }
+
+                }
+
+                update_port_definitions(pcomp_priv, OMX_TRUE, OMX_TRUE);
             }
             else
             {
-                DEBUG_PRINT_ERROR("Prepare for adaptive playback supported only on output port");
+                DEBUG_PRINT_ERROR("Prepare for adaptive playback supported only on output port\n");
                 ret = OMX_ErrorBadParameter;
             }
 
@@ -3257,8 +3443,8 @@ static OMX_ERRORTYPE  get_config(
 	OMX_CONFIG_RECTTYPE *prect = NULL;
 	OMX_COMPONENTTYPE   *pcomp = NULL;
 	OMX_COMPONENT_PRIVATE *pcomp_priv = NULL;
+    VDEC_CHAN_CFG_S *pchan_cfg;
 
-    VDEC_CHAN_CFG_S  *pchan_cfg = NULL;
 	OMX_CHECK_ARG_RETURN(phandle == NULL);
 	OMX_CHECK_ARG_RETURN(config_data == NULL);
 
@@ -3585,13 +3771,21 @@ static OMX_ERRORTYPE  allocate_buffer(
             port_priv->m_port_populated = OMX_TRUE;
         }
 
-		if (bit_present(&pcom_priv->m_flags, OMX_STATE_OUTPUT_ENABLE_PENDING))
-		{
-			DEBUG_PRINT_STATE("[OmxState] Enable_Pending --> Enable\n");
-			bit_clear(&pcom_priv->m_flags, OMX_STATE_OUTPUT_ENABLE_PENDING);
-			post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
-		}
-	}
+        if (bit_present(&pcom_priv->m_flags, OMX_STATE_OUTPUT_ENABLE_PENDING))
+        {
+            DEBUG_PRINT_STATE("[OmxState] Enable_Pending --> Enable\n");
+            bit_clear(&pcom_priv->m_flags, OMX_STATE_OUTPUT_ENABLE_PENDING);
+            ret = channel_port_enable(&pcom_priv->drv_ctx, port_priv->m_port_enabled);
+            if (ret != OMX_ErrorNone)
+            {
+               DEBUG_PRINT_ERROR("call channel_port_enable return failed! ret = %d\n",ret);
+            }
+            else
+            {
+			    post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
+		    }
+	    }
+    }
 
 	if (ports_all_full(pcom_priv))
 	{
@@ -3814,9 +4008,17 @@ static OMX_ERRORTYPE use_buffer(
 		{
 			DEBUG_PRINT_STATE("[OmxState] Enable_Pending --> Enable\n");
 			bit_clear(&pcom_priv->m_flags, OMX_STATE_OUTPUT_ENABLE_PENDING);
-			post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
-		}
-	}
+            ret = channel_port_enable(&pcom_priv->drv_ctx, port_priv->m_port_enabled);
+            if (ret != OMX_ErrorNone)
+            {
+               DEBUG_PRINT_ERROR("call channel_port_enable return failed! ret = %d\n",ret);
+            }
+            else
+            {
+			    post_event(pcom_priv, OMX_CommandPortEnable, OUTPUT_PORT_INDEX, OMX_GENERATE_COMMAND_DONE);
+		    }
+	    }
+    }
 
 	if (ports_all_full(pcom_priv))
 	{
@@ -3896,8 +4098,13 @@ static OMX_ERRORTYPE  empty_this_buffer(
 		return OMX_ErrorBadPortIndex;
 	}
 
-	//DEBUG_PRINT_STREAM("[ETB]bufhdr = %p, bufhdr->pbuffer = %p", buffer, buffer->pBuffer);
-	//DEBUG_PRINT_STREAM(" timestamp=%lld, data_len =%lu\n", buffer->nTimeStamp, buffer->nFilledLen);
+    if (buffer->nFlags & 0x1)
+    {
+        DEBUG_PRINT_ALWS("[ETB] receive the EOS, nFlags:%x \n", (unsigned int)buffer->nFlags);
+    }
+
+    //DEBUG_PRINT_STREAM("[ETB]bufhdr = %p, bufhdr->pbuffer = %p", buffer, buffer->pBuffer);
+	DEBUG_PRINT_STREAM(" [ETB] timestamp=       %lld          data_len =%lu\n", buffer->nTimeStamp, buffer->nFilledLen);
 
 	post_event(pcom_priv, (OMX_U32 )buffer, 0, OMX_GENERATE_ETB);
 	return OMX_ErrorNone;
@@ -3969,7 +4176,7 @@ static OMX_ERRORTYPE  fill_this_buffer(
 		return OMX_ErrorBadParameter;
 	}
 
-	//DEBUG_PRINT_STREAM("[FTB] bufhdr = %p, bufhdr->pBuffer = %p", buffer, buffer->pBuffer);
+    DEBUG_PRINT_STREAM("[FTB] bufhdr = %p, bufhdr->pBuffer = %p\n", buffer, buffer->pBuffer);
 
 	post_event(pcom_priv, (OMX_U32 )buffer, 0, OMX_GENERATE_FTB);
 
@@ -4138,7 +4345,7 @@ OMX_ERRORTYPE  component_deinit(OMX_IN OMX_HANDLETYPE phandle)
 
 	ports_deinit(pcom_priv);
 
-	if (!pcom_priv->msg_thread_exit)
+    if (!pcom_priv->msg_thread_exit && pcom_priv->msg_thread_id != OMX_FALSE)
 	{
 		pcom_priv->msg_thread_exit = OMX_TRUE;
 		pthread_join(pcom_priv->msg_thread_id, NULL);
@@ -4152,7 +4359,7 @@ OMX_ERRORTYPE  component_deinit(OMX_IN OMX_HANDLETYPE phandle)
 		DEBUG_PRINT_WARN("%s: no msg in pipe.\n", __func__);
     }
 
-	if (!pcom_priv->event_thread_exit)
+    if (!pcom_priv->event_thread_exit && pcom_priv->event_thread_id != OMX_FALSE)
 	{
 		pcom_priv->event_thread_exit = OMX_TRUE;
 		pthread_join(pcom_priv->event_thread_id, NULL);
@@ -4168,7 +4375,7 @@ OMX_ERRORTYPE  component_deinit(OMX_IN OMX_HANDLETYPE phandle)
 	free(pcom_priv);
 	pcomp->pComponentPrivate = NULL;
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     HI_SEC_MMZ_DeInit();
 #endif
 
@@ -4196,12 +4403,11 @@ OMX_ERRORTYPE component_init(OMX_HANDLETYPE phandle, OMX_STRING comp_name)
     OMX_S8 msg                       = 0;
     OMX_ERRORTYPE error              = OMX_ErrorNone;
     OMX_COMPONENTTYPE *pcomp         = NULL;
-    OMX_PORT_PRIVATE *port_priv      = NULL;
     OMX_COMPONENT_PRIVATE *pcom_priv = NULL;
 
 	OMX_CHECK_ARG_RETURN(phandle == NULL);
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 	if (strncmp(comp_name, OMX_VDEC_SECURE_COMPONENT_NAME, OMX_MAX_STRINGNAME_SIZE) != 0)
 	{
 		DEBUG_PRINT_ERROR("component_init(): secure compname %s not match \n", comp_name);
@@ -4271,12 +4477,20 @@ OMX_ERRORTYPE component_init(OMX_HANDLETYPE phandle, OMX_STRING comp_name)
 	pcom_priv->m_pipe_out	= fds[1];
 
     /* create event theard */
-    result = pthread_create(&pcom_priv->event_thread_id, 0, event_thread, pcom_priv);
-    if (result < 0)
+    if (pcom_priv->event_thread_id == OMX_FALSE)
     {
-        DEBUG_PRINT_ERROR("component_init() ERROR: failed to create event thread\n");
-        error = OMX_ErrorInsufficientResources;
-        goto error_exit0;
+        result = pthread_create(&pcom_priv->event_thread_id, 0, event_thread, pcom_priv);
+        if (result < 0)
+        {
+            DEBUG_PRINT_ERROR("component_init() ERROR: failed to create event thread\n");
+            error = OMX_ErrorInsufficientResources;
+            goto error_exit0;
+        }
+    }
+    else
+    {
+        DEBUG_PRINT_ERROR("%s: event thread has been create.\n", __func__);
+        //goto error_exit0;
     }
 
     if (read(pcom_priv->m_async_pipe[0],&msg,1) < 0)
@@ -4334,8 +4548,10 @@ error_exit2:
 	close(pcom_priv->m_pipe_out);
 
 error_exit1:
-	pthread_join(pcom_priv->event_thread_id, NULL);
-
+    if (pcom_priv->event_thread_id != OMX_FALSE)
+    {
+        pthread_join(pcom_priv->event_thread_id, NULL);
+    }
 error_exit0:
 	pthread_mutex_destroy(&pcom_priv->m_lock);
 	sem_destroy(&pcom_priv->m_cmd_lock);
@@ -4343,7 +4559,7 @@ error_exit0:
 	pcomp->pComponentPrivate = NULL;
 
 error_exit:
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     HI_SEC_MMZ_DeInit();
 #endif
 

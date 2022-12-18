@@ -172,13 +172,7 @@ static struct flash_ops_t nfc_ops = {
 
 static void nfc_unif_module_init(void *ptr)
 {
-#ifdef CONFIG_GENERIC_SPI_NAND
-	flash_register(FT_SNAND, &nfc_ops);
-#endif
-
-#ifdef CONFIG_GENERIC_NAND
 	flash_register(FT_NAND, &nfc_ops);
-#endif
 }
 
 static struct module_t module_nfc_unif = {

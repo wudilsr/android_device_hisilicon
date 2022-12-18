@@ -16,6 +16,14 @@
 ******************************************************************************/
 
 #include "OsdManager.h"
+#include <utils/Log.h>
+
+#include "hi_type.h"
+#include "hi_jpge_api.h"
+#include "hi_jpge_type.h"
+#include "hi_jpge_errcode.h"
+#include "hi_common.h"
+//#include "jpeg_enc.h"
 
 namespace android {
 
@@ -689,6 +697,284 @@ EncodeType = 1: JPEG
 EncodeType = 2: PNG
 EncodeType = other: JPEG
 */
+#define LOG_TAG "OsdManager"
+#define JPGE_COMPONENT_NUM             3
+#define JPGE_INPUT_FMT_YUV420          0
+#define JPGE_INPUT_SAMPLE_SEMIPLANNAR  0
+
+typedef struct tagJPGE_INPUT_S
+{
+    HI_U32  u32YuvSampleType;
+    HI_U32  u32YuvFmtType;
+    HI_U32  u32Qlevel;
+
+    HI_U32  u32Width[JPGE_COMPONENT_NUM];
+    HI_U32  u32Height[JPGE_COMPONENT_NUM];
+    HI_U32  u32Stride[JPGE_COMPONENT_NUM];
+    HI_U32  u32Size[JPGE_COMPONENT_NUM];
+    HI_U32  u32PhyBuf[JPGE_COMPONENT_NUM];
+    HI_CHAR *pVirBuf[JPGE_COMPONENT_NUM];
+
+    HI_U32  u32OutSize;
+    HI_U32  u32OutPhyBuf;
+    HI_CHAR *pOutVirBuf;
+
+}JPGE_INPUT_S;
+
+
+#define printf ALOGE
+
+/*****************************************************************************
+* func         :  TEST_JPEG_Enc
+: description  :  编码
+* param[in]    :
+* retval       :
+* others:      :
+*****************************************************************************/
+static HI_S32 JPEG_EncToFile(HI_CHAR *pEncFileName,JPGE_INPUT_S *pstInputInfo)
+{
+
+    FILE* pOutFile     = NULL;
+    HI_S32 s32Ret      = HI_SUCCESS;
+    HI_S32 s32NeedSize = 0;
+    Jpge_EncCfg_S EncCfg;
+    Jpge_EncIn_S  EncIn;
+    Jpge_EncOut_S EncOut;
+    HI_U32 u32EncHandle = 0;
+
+    s32Ret = HI_JPGE_Open();
+    if(HI_SUCCESS != s32Ret){
+        printf("\nHI_JPGE_Open FAILURE\n");
+        return HI_FAILURE;
+    }
+
+    /** 源jpeg数据 **/
+    EncCfg.FrameWidth    = pstInputInfo->u32Width[0];
+    EncCfg.FrameHeight   = pstInputInfo->u32Height[0];
+    EncCfg.YuvSampleType = pstInputInfo->u32YuvFmtType;
+    EncCfg.YuvStoreType  = pstInputInfo->u32YuvSampleType;
+    EncCfg.Qlevel        = pstInputInfo->u32Qlevel;
+    EncCfg.RotationAngle = 0;
+    EncCfg.SlcSplitEn    = 0;
+    EncCfg.SplitSize     = 0;
+
+    s32Ret = HI_JPGE_Create(&u32EncHandle,&EncCfg);
+    if( HI_SUCCESS != s32Ret ){
+        printf("\nHI_JPGE_Create FAILURE, s32Ret=0x%x\n", s32Ret);
+        goto ERROR1;
+    }
+
+    /**
+    ** 这几个是输入参数，要根据EncCfg来配置
+    **/
+    memset(&EncIn,0,sizeof(Jpge_EncIn_S));
+
+    EncIn.BusViY     = pstInputInfo->u32PhyBuf[0];
+    EncIn.BusViC     = pstInputInfo->u32PhyBuf[1];
+    EncIn.BusViV     = pstInputInfo->u32PhyBuf[2];
+    EncIn.ViYStride  = pstInputInfo->u32Stride[0];
+    EncIn.ViCStride  = pstInputInfo->u32Stride[1];
+
+    EncIn.BusOutBuf  = pstInputInfo->u32OutPhyBuf;
+    EncIn.pOutBuf    = (HI_U8*)pstInputInfo->pOutVirBuf;
+    EncIn.OutBufSize = pstInputInfo->u32OutSize;
+
+    memset(&EncOut,0,sizeof(Jpge_EncOut_S));
+
+#if 0
+    printf("\n=======================================================\n");
+    printf("EncCfg.FrameWidth          = %d\n",EncCfg.FrameWidth);
+    printf("EncCfg.FrameHeight         = %d\n",EncCfg.FrameHeight);
+    printf("EncCfg.YuvSampleType       = %d\n",EncCfg.YuvSampleType);
+    printf("EncCfg.YuvStoreType        = %d\n",EncCfg.YuvStoreType);
+    printf("EncCfg.Qlevel              = %d\n",EncCfg.Qlevel);
+    printf("EncIn.ViYStride            = %d\n",EncIn.ViYStride);
+    printf("EncIn.ViCStride            = %d\n",EncIn.ViCStride);
+    printf("=======================================================\n");
+#endif
+
+
+    s32Ret = HI_JPGE_Encode(u32EncHandle, &EncIn, &EncOut);
+    if (HI_SUCCESS != s32Ret){
+        printf("\nHI_JPGE_Encode failure \n");
+        goto ERROR0;
+    }
+
+    s32NeedSize = (HI_S32)((HI_U32)EncOut.pStream - (HI_U32)pstInputInfo->pOutVirBuf) + EncOut.StrmSize;
+    if(s32NeedSize > pstInputInfo->u32OutSize){
+        printf("\nthe output memory size is too small\n");
+        goto ERROR0;
+    }else{
+        #if 0
+        printf("\n=======================================================\n");
+        printf("should need buffer size  = %d\n", s32NeedSize);
+        printf("alloc out buffer size    = %d\n",pstInputInfo->u32OutSize);
+        printf("=======================================================\n");
+        #endif
+    }
+
+    /**====================================================================
+          保存编码文件
+       ====================================================================**/
+    if ((pOutFile = fopen(pEncFileName, "wb+")) == NULL) {
+         printf("\ncan't open write to jpeg file\n");
+         goto ERROR0;
+    }
+    fwrite(EncOut.pStream,1,EncOut.StrmSize,pOutFile);
+    if(NULL != pOutFile){
+        fclose(pOutFile);
+        pOutFile = NULL;
+    }
+
+#if 0
+    printf("\n=======================================================\n");
+    printf("EncOut.pStream   = 0x%x\n", EncOut.pStream);
+    printf("EncOut.StrmSize  = %d\n",EncOut.StrmSize);
+    printf("=======================================================\n");
+#endif
+
+    s32Ret = HI_JPGE_Destroy(u32EncHandle);
+    if (HI_SUCCESS != s32Ret){
+        printf("\nHI_JPGE_Destroy FAILURE\n");
+        goto ERROR1;
+    }
+
+
+    HI_JPGE_Close();
+
+    return HI_SUCCESS;
+
+
+ERROR0:
+    HI_JPGE_Destroy(u32EncHandle);
+
+ERROR1:
+
+    HI_JPGE_Close();
+
+    if(NULL != pOutFile){
+        fclose(pOutFile);
+        pOutFile = NULL;
+    }
+
+    return HI_FAILURE;
+
+}
+
+static int EncodeFrame_HI_JPEG(HI_UNF_VIDEO_FRAME_INFO_S *pstFrame, HI_CHAR *DstFile)
+{
+    printf("\n[%d] [%s] IN\n",__LINE__,__FUNCTION__);
+    HI_S32 s32Ret              = HI_SUCCESS;
+    HI_CHAR strModuleNameIn[]  = "JpegEnc_IN";
+    HI_CHAR strModuleNameOut[] = "JpegEnc_OUT";
+    HI_U32  u32PhyBuf_Reserved = 0;
+    JPGE_INPUT_S   stJpgeInput;
+    memset(&stJpgeInput,0,sizeof(JPGE_INPUT_S));
+
+    stJpgeInput.u32Width[0]  = pstFrame->u32Width; //picture width
+    stJpgeInput.u32Height[0] = pstFrame->u32Height; //picture height
+    stJpgeInput.u32Stride[0] = stJpgeInput.u32Width[0]; //stright height
+    stJpgeInput.u32Size[0]   = stJpgeInput.u32Stride[0] * stJpgeInput.u32Height[0]; //Y length
+
+    stJpgeInput.u32Width[1]  = stJpgeInput.u32Width[0]  >> 1; //UV
+    stJpgeInput.u32Height[1] = stJpgeInput.u32Height[0] >> 1; //UV
+    stJpgeInput.u32Stride[1] = stJpgeInput.u32Stride[0];
+    stJpgeInput.u32Size[1]   = stJpgeInput.u32Stride[1] * stJpgeInput.u32Height[1]; //UV length
+
+    // get yuv420sp data
+    stJpgeInput.u32PhyBuf[0] = (HI_U32)HI_MMZ_New(stJpgeInput.u32Size[0] + stJpgeInput.u32Size[1], 64, NULL, strModuleNameIn);
+    u32PhyBuf_Reserved = stJpgeInput.u32PhyBuf[0];
+    if (0 == stJpgeInput.u32PhyBuf[0]) {
+        printf("HI_MMZ_New failure! size(%zu), block(%s) \n", \
+            (stJpgeInput.u32Size[0] + stJpgeInput.u32Size[1]), strModuleNameIn);
+        goto FINISHED;
+    }
+    stJpgeInput.pVirBuf[0] = (HI_CHAR*)HI_MMZ_Map(stJpgeInput.u32PhyBuf[0], HI_FALSE);
+    if (NULL == stJpgeInput.pVirBuf[0]) {
+        printf("HI_MMZ_Map failure! u32PhyBuf(%zu),", stJpgeInput.u32PhyBuf[0]);
+        goto FINISHED;
+    }
+
+    u32PhyBuf_Reserved = stJpgeInput.u32PhyBuf[0];
+    stJpgeInput.u32PhyBuf[1] = stJpgeInput.u32PhyBuf[0] + stJpgeInput.u32Size[0];
+    stJpgeInput.pVirBuf[1]   = stJpgeInput.pVirBuf[0]   + stJpgeInput.u32Size[0];
+
+    stJpgeInput.u32PhyBuf[0] = pstFrame->stVideoFrameAddr[0].u32YAddr;
+    stJpgeInput.u32PhyBuf[1] = pstFrame->stVideoFrameAddr[0].u32CAddr;
+
+    // alloc output buffer, equal y size
+    stJpgeInput.u32OutSize   = stJpgeInput.u32Size[0];
+
+    stJpgeInput.u32OutPhyBuf = (HI_U32)HI_MMZ_New(stJpgeInput.u32OutSize, 64, NULL, strModuleNameOut);
+    if(0 == stJpgeInput.u32OutPhyBuf){
+        printf("HI_MMZ_New failure! size(%zu), block(%s) \n", \
+            (stJpgeInput.u32OutSize), strModuleNameOut);
+        goto FINISHED;
+    }
+    stJpgeInput.pOutVirBuf = (HI_CHAR*)HI_MMZ_Map(stJpgeInput.u32OutPhyBuf, HI_FALSE);
+    if(NULL == stJpgeInput.pOutVirBuf){
+        printf("HI_MMZ_Map failure! u32PhyBuf(%zu) \n", stJpgeInput.u32OutPhyBuf);
+        goto FINISHED;
+    }
+
+    stJpgeInput.u32YuvFmtType    = JPGE_INPUT_FMT_YUV420;
+    stJpgeInput.u32YuvSampleType = JPGE_INPUT_SAMPLE_SEMIPLANNAR;
+    stJpgeInput.u32Qlevel        = 80;
+
+
+    printf("\n[%d] JPEG_EncToFile start\n",__LINE__);
+
+    s32Ret = JPEG_EncToFile(DstFile, &stJpgeInput);
+    if(HI_SUCCESS != s32Ret){
+        printf("JPEG_EncToFile failure\n");
+    }else{
+        printf("JPEG_EncToFile success\n");
+    }
+    printf("\n[%d] JPEG_EncToFile finished\n",__LINE__);
+
+    // free stream buffer
+    HI_MMZ_Unmap(stJpgeInput.u32OutPhyBuf);
+    HI_MMZ_Delete(stJpgeInput.u32OutPhyBuf);
+    stJpgeInput.u32OutPhyBuf = 0;
+    stJpgeInput.pOutVirBuf   = NULL;
+
+    // stJpgeInput.u32PhyBuf[0] has been changed after encoding
+    //HI_MMZ_Unmap(stJpgeInput.u32PhyBuf[0]);
+    HI_MMZ_Unmap(u32PhyBuf_Reserved);
+    //HI_MMZ_Delete(stJpgeInput.u32PhyBuf[0]);
+    HI_MMZ_Delete(u32PhyBuf_Reserved);
+    stJpgeInput.u32PhyBuf[0] = 0;
+    stJpgeInput.pVirBuf[0]   = NULL;
+
+    printf("\n[%d] [%s] OUT\n",__LINE__,__FUNCTION__);
+    return HI_SUCCESS;
+
+FINISHED:
+    if(NULL != stJpgeInput.pOutVirBuf){
+        HI_MMZ_Unmap(stJpgeInput.u32OutPhyBuf);
+        stJpgeInput.pOutVirBuf   = NULL;
+    }
+
+    if(0 != stJpgeInput.u32OutPhyBuf){
+        HI_MMZ_Delete(stJpgeInput.u32OutPhyBuf);
+        stJpgeInput.u32OutPhyBuf = 0;
+    }
+
+    if(NULL != stJpgeInput.pVirBuf[0]){
+        HI_MMZ_Unmap(stJpgeInput.u32PhyBuf[0]);
+        stJpgeInput.pVirBuf[0]   = NULL;
+    }
+
+    if(0 != stJpgeInput.u32PhyBuf[0]){
+        HI_MMZ_Delete(stJpgeInput.u32PhyBuf[0]);
+        stJpgeInput.u32PhyBuf[0] = 0;
+    }
+
+    printf("\n[%d] [%s] OUT\n",__LINE__,__FUNCTION__);
+    return HI_FAILURE;
+
+}
+
 HI_S32 OsdManager::EncodeFrame(HI_UNF_VIDEO_FRAME_INFO_S *pstFrame, HI_S32 EncodeType, HI_CHAR *DstFile)
 {
 #ifdef ANDROID44
@@ -697,6 +983,17 @@ HI_S32 OsdManager::EncodeFrame(HI_UNF_VIDEO_FRAME_INFO_S *pstFrame, HI_S32 Encod
     SURFACE_ATTR_S          stAttr;
     SkBitmap                *bitmap;
     HI_VOID                 *pBitmapAddr;
+
+    if (EncodeType == 1) //hardware jpeg encoder
+    {
+        int s32Ret =EncodeFrame_HI_JPEG(pstFrame, DstFile);
+        if(HI_SUCCESS != s32Ret){
+            printf("EncodeFrame_HI_JPEG failure\n");
+        }else{
+            printf("EncodeFrame_HI_JPEG success\n");
+        }
+        return 0;
+    }
 
     stAttr.Width = pstFrame->u32Width;
     stAttr.Height = pstFrame->u32Height;
@@ -720,11 +1017,11 @@ HI_S32 OsdManager::EncodeFrame(HI_UNF_VIDEO_FRAME_INFO_S *pstFrame, HI_S32 Encod
 
     DestroySurface(hTmpSurface);
 
-    if (EncodeType == 2)
+    if (EncodeType == 2)  //soft png encoder
     {
         SkImageEncoder::EncodeFile(DstFile, *bitmap, SkImageEncoder::kPNG_Type, 80);
     }
-    else
+    else  //soft jpeg encoder
     {
         SkImageEncoder::EncodeFile(DstFile, *bitmap, SkImageEncoder::kJPEG_Type, 80);
     }

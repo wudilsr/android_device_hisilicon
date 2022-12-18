@@ -56,8 +56,10 @@
 #include "drv_cipher.h"
 #include "drv_cipher_sha1.h"
 #include "drv_cipher_sha2.h"
+#include "drv_rsa.h"
 
 HI_DECLARE_MUTEX(g_CipherMutexKernel);
+DEFINE_SEMAPHORE(g_RsaMutexKernel);
 HI_DECLARE_MUTEX(g_HashMutexKernel);
 
 extern HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E *penChipID);
@@ -72,6 +74,7 @@ HI_BOOL g_bHDCPKeyLoadFlag = HI_FALSE;
 #define CI_BUF_LIST_SetIVFlag(u32Flags)
 #define CI_BUF_LIST_SetEndFlag(u32Flags)
 #define HDCP_KEY_RAM_LONG_SIZE    (512)
+#define CIPHER_MAX_DATA_LEN       (0x100000 - 16)
 
 CIPHER_EXPORT_FUNC_S s_CipherExportFuncs =
 {
@@ -299,18 +302,16 @@ static HI_S32 s_DRV_CIPHER_CreateHandleForHDCPKeyInternal(HI_HANDLE *phHandle)
 
     if (i >= CIPHER_SOFT_CHAN_NUM)
     {
-        ret = HI_ERR_CIPHER_FAILED_GETHANDLE;
         HI_ERR_CIPHER("No more cipher chan left.\n");
-        return HI_FAILURE;
+        return HI_ERR_CIPHER_FAILED_GETHANDLE;
     }
     else
     {
-        g_stCipherOsrChn[i].pstDataPkg = HI_VMALLOC(HI_ID_CIPHER, sizeof(HI_UNF_CIPHER_DATA_S) * CIPHER_MAX_LIST_NUM);
+        g_stCipherOsrChn[i].pstDataPkg = HI_KMALLOC(HI_ID_CIPHER, sizeof(HI_UNF_CIPHER_DATA_S) * CIPHER_MAX_LIST_NUM, GFP_KERNEL);
         if (NULL == g_stCipherOsrChn[i].pstDataPkg)
         {
-            ret = HI_ERR_CIPHER_FAILED_GETHANDLE;
             HI_ERR_CIPHER("can NOT malloc memory for cipher.\n");
-            return HI_FAILURE;
+            return HI_ERR_CIPHER_FAILED_GETHANDLE;
         }
 
         softChnId = i;
@@ -320,7 +321,7 @@ static HI_S32 s_DRV_CIPHER_CreateHandleForHDCPKeyInternal(HI_HANDLE *phHandle)
     ret = DRV_CIPHER_OpenChn(softChnId);
     if (HI_SUCCESS != ret)
     {
-        HI_VFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
+        HI_KFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
         g_stCipherOsrChn[i].pstDataPkg = NULL;
         return HI_FAILURE;
     }
@@ -877,6 +878,11 @@ HI_S32 DRV_CIPHER_CreatMultiPkgTask(HI_U32 softChnId, HI_DRV_CIPHER_DATA_INFO_S 
 
     ret = HAL_Cipher_Config(hardWareChn, pTmpDataPkg->bDecrypt,
                             pSoftChan->bIVChange, &(pSoftChan->stCtrl));
+    if (HI_SUCCESS != ret)
+    {
+        return ret;
+    }
+    
     pSoftChan->bIVChange = HI_FALSE;
 
     HAL_Cipher_SetIntThreshold(pChan->chnId, CIPHER_INT_TYPE_OUT_BUF, pkgNum);
@@ -1141,7 +1147,7 @@ HI_S32 DRV_CIPHER_Init(HI_VOID)
     bufSizeChn = (databufSizeChn * 2) + ivbufSizeChn;/* inBuf + outBuf + keyBuf */
     bufSizeTotal = bufSizeChn * (CIPHER_PKGxN_CHAN_MAX - CIPHER_PKGxN_CHAN_MIN + 1) ; /* only 7 channels need buf */
 
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
     HAL_Cipher_Init();
 #endif
     HAL_Cipher_DisableAllInt();
@@ -1251,7 +1257,7 @@ startPhyAddr
         return HI_FAILURE;
     }
 
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 #if    defined(CHIP_TYPE_hi3719mv100)    \
     || defined(CHIP_TYPE_hi3718mv100)    \
     || defined(CHIP_TYPE_hi3751v100)     \
@@ -1423,7 +1429,7 @@ HI_S32 HI_DRV_CIPHER_Resume(HI_VOID)
         }
     }
 
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 #if    defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3718mv100)   \
     || defined(CHIP_TYPE_hi3751v100)    \
@@ -1546,18 +1552,16 @@ HI_S32 DRV_CIPHER_CreateHandle(CIPHER_HANDLE_S *pstCIHandle)
 
 	if (i >= CIPHER_SOFT_CHAN_NUM)
 	{
-	    ret = HI_ERR_CIPHER_FAILED_GETHANDLE;
 	    HI_ERR_CIPHER("No more cipher chan left.\n");
-	    return HI_FAILURE;
+	    return HI_ERR_CIPHER_FAILED_GETHANDLE;
 	}
 	else
 	{
-	    g_stCipherOsrChn[i].pstDataPkg = HI_VMALLOC(HI_ID_CIPHER, sizeof(HI_UNF_CIPHER_DATA_S) * CIPHER_MAX_LIST_NUM);
+	    g_stCipherOsrChn[i].pstDataPkg = HI_KMALLOC(HI_ID_CIPHER, sizeof(HI_UNF_CIPHER_DATA_S) * CIPHER_MAX_LIST_NUM, GFP_KERNEL);
 	    if (NULL == g_stCipherOsrChn[i].pstDataPkg)
 	    {
-	        ret = HI_ERR_CIPHER_FAILED_GETHANDLE;
 	        HI_ERR_CIPHER("can NOT malloc memory for cipher.\n");
-	        return HI_FAILURE;
+	        return HI_ERR_CIPHER_FAILED_GETHANDLE;
 	    }
 
 	    softChnId = i;
@@ -1569,7 +1573,7 @@ HI_S32 DRV_CIPHER_CreateHandle(CIPHER_HANDLE_S *pstCIHandle)
 	ret = DRV_CIPHER_OpenChn(softChnId);
 	if (HI_SUCCESS != ret)
 	{
-	    HI_VFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
+	    HI_KFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
 	    g_stCipherOsrChn[i].pstDataPkg = NULL;
 	    return HI_FAILURE;
 	}
@@ -1602,6 +1606,7 @@ HI_S32 DRV_CIPHER_DestroyHandle(HI_HANDLE hCipherchn)
     HI_U32 softChnId = 0;
 
     softChnId = HI_HANDLE_GET_CHNID(hCipherchn);
+    CIPHER_CheckHandle(softChnId);
     if (HI_FALSE == g_stCipherOsrChn[softChnId].g_bSoftChnOpen)
     {
         return HI_SUCCESS;
@@ -1609,7 +1614,7 @@ HI_S32 DRV_CIPHER_DestroyHandle(HI_HANDLE hCipherchn)
 
     if (g_stCipherOsrChn[softChnId].pstDataPkg)
     {
-        HI_VFREE(HI_ID_CIPHER, g_stCipherOsrChn[softChnId].pstDataPkg);
+        HI_KFREE(HI_ID_CIPHER, g_stCipherOsrChn[softChnId].pstDataPkg);
         g_stCipherOsrChn[softChnId].pstDataPkg = NULL;
     }
 
@@ -1645,7 +1650,13 @@ HI_S32 DRV_CIPHER_Encrypt(CIPHER_DATA_S *pstCIData)
     memset(&stCITask, 0, sizeof(stCITask));
     softChnId = HI_HANDLE_GET_CHNID(pstCIData->CIHandle);
     CIPHER_CheckHandle(softChnId);
-
+    
+    if (pstCIData->u32DataLength > CIPHER_MAX_DATA_LEN)
+    {
+        HI_ERR_CIPHER("Invalid data length \n", pstCIData->u32DataLength);
+        return HI_FAILURE;
+    } 
+    
     if ( 0 != softChnId )
     {
         stCITask.stData2Process.u32src = pstCIData->ScrPhyAddr;
@@ -1782,7 +1793,13 @@ HI_S32 DRV_CIPHER_Decrypt(CIPHER_DATA_S *pstCIData)
 
     softChnId = HI_HANDLE_GET_CHNID(pstCIData->CIHandle);
     CIPHER_CheckHandle(softChnId);
-
+    
+    if (pstCIData->u32DataLength > CIPHER_MAX_DATA_LEN)
+    {
+        HI_ERR_CIPHER("Invalid data length \n", pstCIData->u32DataLength);
+        return HI_FAILURE;
+    } 
+    
     if ( 0 != softChnId)
     {
         pCITask.stData2Process.u32src = pstCIData->ScrPhyAddr;
@@ -1953,6 +1970,11 @@ HI_S32 HI_DRV_CIPHER_EncryptMulti(CIPHER_DATA_S *pstCIData)
         tmpData[i].u32src = pTmp->u32SrcPhyAddr;
         tmpData[i].u32dest = pTmp->u32DestPhyAddr;
         tmpData[i].u32length = pTmp->u32ByteLength;
+        if (pTmp->u32ByteLength > CIPHER_MAX_DATA_LEN)
+        {
+            HI_ERR_CIPHER("Invalid data length \n", pTmp->u32ByteLength);
+            return HI_FAILURE;
+        }        
     }
 
     HI_INFO_CIPHER("Start to DecryptMultiPkg, chnNum = %#x, pkgNum=%d!\n", softChnId, pkgNum);
@@ -2027,6 +2049,11 @@ HI_S32 HI_DRV_CIPHER_DecryptMulti(CIPHER_DATA_S *pstCIData)
         tmpData[i].u32src = pTmp->u32SrcPhyAddr;
         tmpData[i].u32dest = pTmp->u32DestPhyAddr;
         tmpData[i].u32length = pTmp->u32ByteLength;
+        if (pTmp->u32ByteLength > CIPHER_MAX_DATA_LEN)
+        {
+            HI_ERR_CIPHER("Invalid data length \n", pTmp->u32ByteLength);
+            return HI_FAILURE;
+        }         
     }
 
     HI_INFO_CIPHER("Start to DecryptMultiPkg, chnNum = %#x, pkgNum=%d!\n", softChnId, pkgNum);
@@ -2103,7 +2130,7 @@ HI_S32 DRV_CIPHER_Release(struct inode * inode, struct file * file)
             g_stCipherOsrChn[i].pWichFile = NULL;
             if (g_stCipherOsrChn[i].pstDataPkg)
             {
-                HI_VFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
+                HI_KFREE(HI_ID_CIPHER, g_stCipherOsrChn[i].pstDataPkg);
                 g_stCipherOsrChn[i].pstDataPkg = NULL;
         }
     }
@@ -2735,6 +2762,10 @@ static HI_VOID s_DRV_CIPHER_FormatHDCPKey(HI_UNF_HDCP_DECRYPT_S *pSrcKey, HI_U8 
     u8DstKey[6] = CheckSum & 0xff;
     u8DstKey[7] = (CheckSum >> 8) & 0xff;
 
+#if defined (CHIP_TYPE_hi3798cv200_a)
+    u8DstKey[HDCP_KEY_RAM_SIZE - 2] = 0x00; //AV Content Protection
+    u8DstKey[HDCP_KEY_RAM_SIZE - 1] = 0xFF; //OTP Locked
+#endif
     
     return;
 }
@@ -2995,7 +3026,7 @@ HI_S32 DRV_CIPHER_EncryptHDCPKey(CIPHER_HDCP_KEY_TRANSFER_S *pstHdcpKeyTransfer)
     HI_U32 u32CRC_0 = 0;
     HI_U32 u32CRC_1 = 0;
     HI_UNF_HDCP_DECRYPT_S stDstKey;
-    HI_DRV_HDCPKEY_TYPE_E enHDCPKeyType = CIPHER_HDCP_KEY_TYPE_HISI_DEFINED;
+    HI_DRV_CIPHER_HDCP_ROOT_KEY_TYPE_E enHDCPRootKeyType = CIPHER_HDCP_KEY_TYPE_HISI_DEFINED;
 
     if ( NULL == pstHdcpKeyTransfer)
     {
@@ -3064,11 +3095,11 @@ HI_S32 DRV_CIPHER_EncryptHDCPKey(CIPHER_HDCP_KEY_TRANSFER_S *pstHdcpKeyTransfer)
     /* encrypt formated text*/
     if (pstHdcpKeyTransfer->bIsUseOTPRootKey)
     {
-        enHDCPKeyType = CIPHER_HDCP_KEY_TYPE_OTP_ROOT_KEY;
+        enHDCPRootKeyType = CIPHER_HDCP_KEY_TYPE_OTP_ROOT_KEY;
     }
     ret = s_DRV_CIPHER_CryptoFormattedHDCPKey(&pu8OutKey[u32KeyLen],
                                             HDCP_KEY_RAM_SIZE,
-                                            enHDCPKeyType,
+                                            enHDCPRootKeyType,
                                             &pu8OutKey[u32KeyLen]);
     if ( HI_SUCCESS != ret)
     {
@@ -3087,11 +3118,11 @@ HI_S32 DRV_CIPHER_EncryptHDCPKey(CIPHER_HDCP_KEY_TRANSFER_S *pstHdcpKeyTransfer)
         return HI_FAILURE;
     }
     memcpy(&pu8OutKey[u32KeyLen], &u32CRC_1, 4);
-    u32KeyLen+=4;
 
     return HI_SUCCESS;
 }
 
+/******* proc function begin ********/
 HI_S32 DRV_CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus)
 {
     HI_U32 i = 0;
@@ -3109,6 +3140,7 @@ HI_S32 DRV_CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus)
     }
     return HAL_CIPHER_ProcGetStatus(pstCipherStatus);
 }
+/******* proc function end ********/
 
 HI_S32 DRV_CIPHER_CbcMacAuth(CIPHER_CBCMAC_DATA_S *pstParam)
 {
@@ -3130,6 +3162,184 @@ HI_S32 HI_DRV_CIPHER_CbcMacAuth(CIPHER_CBCMAC_DATA_S *pstParam)
     return ret;
 }
 
+HI_S32 DRV_CIPHER_CheckRsaData(HI_U8 *N, HI_U8 *E, HI_U8 *MC, HI_U32 u32Len)
+{
+    HI_U32 i;
+
+    /*MC > 0*/
+    for(i=0; i<u32Len; i++)
+    {
+        if(MC[i] > 0)
+        {
+            break;
+        }
+    }
+    if(i>=u32Len)
+    {
+        HI_ERR_CIPHER("RSA M/C is zero, error!\n");
+        return HI_ERR_CIPHER_INVALID_PARA; 
+    }
+
+    /*MC < N*/
+    for(i=0; i<u32Len; i++)
+    {
+        if(MC[i] < N[i])
+        {
+            break;
+        }
+    }
+    if(i>=u32Len)
+    {
+        HI_ERR_CIPHER("RSA M/C is larger than N, error!\n");
+        return HI_ERR_CIPHER_INVALID_PARA; 
+    }
+
+    /*E > 1*/
+    for(i=0; i<u32Len; i++)
+    {
+        if(E[i] > 0)
+        {
+            break;
+        }
+    }
+    if(i>=u32Len)
+    {
+        HI_ERR_CIPHER("RSA D/E is zero, error!\n");
+        return HI_ERR_CIPHER_INVALID_PARA; 
+    }
+
+//    HI_PRINT_HEX("N", N, u32Len);
+//    HI_PRINT_HEX("K", E, u32Len);
+    
+    return HI_SUCCESS;
+}
+
+HI_S32 DRV_CIPHER_CalcRsa(CIPHER_RSA_DATA_S *pCipherRsaData)
+{
+    static HI_U8  N[CIPHER_MAX_RSA_KEY_LEN];
+    static HI_U8  K[CIPHER_MAX_RSA_KEY_LEN];
+    static HI_U8  M[CIPHER_MAX_RSA_KEY_LEN];
+    HI_S32 ret = HI_SUCCESS;
+    HI_U32 u32KeyLen;
+    CIPHER_RSA_DATA_S stCipherRsaData;
+    HI_U8 *p;
+
+    if(pCipherRsaData == HI_NULL)
+    {
+        HI_ERR_CIPHER("Invalid params!\n");
+        return HI_ERR_CIPHER_INVALID_PARA;
+    }
+
+    if ((pCipherRsaData->pu8Input == HI_NULL) ||(pCipherRsaData->pu8Output== HI_NULL)
+        || (pCipherRsaData->pu8N == HI_NULL) || (pCipherRsaData->pu8K == HI_NULL)) 
+    {
+        HI_ERR_CIPHER("para is null.\n");
+        HI_ERR_CIPHER("pu8Input:0x%p, pu8Output:0x%p, pu8N:0x%p, pu8K:0x%p\n", pCipherRsaData->pu8Input, pCipherRsaData->pu8Output, pCipherRsaData->pu8N,pCipherRsaData->pu8K);
+        return HI_ERR_CIPHER_INVALID_POINT;
+    }
+
+    if(pCipherRsaData->u32DataLen != pCipherRsaData->u16NLen)
+    {
+        HI_ERR_CIPHER("Error, DataLen != u16NLen!\n");
+        return HI_ERR_CIPHER_INVALID_PARA; 
+    }
+
+    if(pCipherRsaData->u16KLen > pCipherRsaData->u16NLen)
+    {
+        HI_ERR_CIPHER("Error, KLen > u16NLen!\n");
+        return HI_ERR_CIPHER_INVALID_PARA; 
+    }
+
+    memset(N, 0, sizeof(N));
+    memset(K, 0, sizeof(K));
+    memset(M, 0, sizeof(M));
+
+    /*Only support the key width of 1024,2048 and 4096*/
+    if (pCipherRsaData->u16NLen <= 128)
+    {
+        u32KeyLen = 128;
+    }
+    else if (pCipherRsaData->u16NLen <= 256)
+    {
+        u32KeyLen = 256;
+    }
+    else if (pCipherRsaData->u16NLen <= 512)
+    {
+        u32KeyLen = 512;
+    }
+    else 
+    {
+        HI_ERR_CIPHER("u16NLen(0x%x) is invalid\n", pCipherRsaData->u16NLen);
+        return HI_ERR_CIPHER_INVALID_POINT;
+    }
+
+    /*if dataLen < u32KeyLen, padding 0 before data*/
+    p = N + (u32KeyLen - pCipherRsaData->u16NLen);
+    if (copy_from_user(p, pCipherRsaData->pu8N, pCipherRsaData->u16NLen))
+    {
+        HI_ERR_CIPHER("copy data from user fail!\n");
+        return HI_FAILURE;
+    }
+    p = K + (u32KeyLen - pCipherRsaData->u16KLen);
+    if (copy_from_user(p, pCipherRsaData->pu8K, pCipherRsaData->u16KLen))
+    {
+        HI_ERR_CIPHER("copy data from user fail!\n");
+        return HI_FAILURE;
+    }
+    p = M + (u32KeyLen - pCipherRsaData->u32DataLen);
+    if (copy_from_user(p, pCipherRsaData->pu8Input, pCipherRsaData->u32DataLen))
+    {
+        HI_ERR_CIPHER("copy data from user fail!\n");
+        return HI_FAILURE;
+    }
+
+    stCipherRsaData.pu8N = N;
+    stCipherRsaData.pu8K = K;
+    stCipherRsaData.pu8Input = M;
+    stCipherRsaData.u16NLen = u32KeyLen;
+    stCipherRsaData.u16KLen = u32KeyLen;
+    stCipherRsaData.u32DataLen = u32KeyLen;
+    stCipherRsaData.pu8Output = M;
+    
+	ret = DRV_CIPHER_CalcRsa_SW(&stCipherRsaData);
+    if( HI_SUCCESS != ret )
+    {
+        return HI_FAILURE;
+    }
+
+    if (copy_to_user(pCipherRsaData->pu8Output, M+(u32KeyLen - pCipherRsaData->u16NLen), 
+            pCipherRsaData->u16NLen))
+    {
+        HI_ERR_CIPHER("copy data to user fail!\n");
+        return HI_FAILURE;
+    }
+
+	return ret;  
+}
+
+HI_S32 HI_DRV_CIPHER_CalcRsa(CIPHER_RSA_DATA_S *pCipherRsaData)
+{
+    HI_S32 ret = HI_SUCCESS;
+
+    if(pCipherRsaData == HI_NULL)
+    {
+        HI_ERR_CIPHER("Invalid params!\n");
+        return HI_ERR_CIPHER_INVALID_PARA;
+    }
+
+	if(down_interruptible(&g_RsaMutexKernel))
+	{
+		HI_ERR_CIPHER("down_interruptible failed!\n");
+		return HI_FAILURE;
+	}
+       
+	ret = DRV_CIPHER_CalcRsa(pCipherRsaData);
+
+	up(&g_RsaMutexKernel);
+
+	return ret;  
+}
+
 EXPORT_SYMBOL(HI_DRV_CIPHER_CreateHandle);
 EXPORT_SYMBOL(HI_DRV_CIPHER_ConfigChn);
 EXPORT_SYMBOL(HI_DRV_CIPHER_DestroyHandle);
@@ -3146,4 +3356,7 @@ EXPORT_SYMBOL(HI_DRV_CIPHER_CalcHashFinal);
 EXPORT_SYMBOL(HI_DRV_CIPHER_LoadHdcpKey);
 EXPORT_SYMBOL(HI_DRV_CIPHER_Resume);
 EXPORT_SYMBOL(HI_DRV_CIPHER_Suspend);
+#ifdef CONFIG_RSA_HARDWARE_SUPPORT
+EXPORT_SYMBOL(HI_DRV_CIPHER_CalcRsa);
+#endif
 

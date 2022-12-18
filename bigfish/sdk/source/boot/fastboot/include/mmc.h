@@ -55,8 +55,9 @@
 #define MMC_MODE_SPI			(1 << 4)
 #define MMC_MODE_HC			(1 << 5)
 #define MMC_MODE_DDR_52MHz		(1 << 6)
-#define MMC_MODE_HS200		(1 << 7)
-#define MMC_MODE_HS400		(1 << 8)
+#define MMC_MODE_HS200			(1 << 7)
+#define MMC_MODE_HS400			(1 << 8)
+#define MMC_MODE_CMD23			(1 << 9)
 
 #define SD_DATA_4BIT	0x00040000
 
@@ -87,6 +88,7 @@
 #define MMC_CMD_READ_SINGLE_BLOCK	17
 #define MMC_CMD_READ_MULTIPLE_BLOCK	18
 #define MMC_CMD_SEND_TUNING_BLOCK_HS200	21
+#define MMC_CMD_SET_BLOCK_COUNT		23
 #define MMC_CMD_WRITE_SINGLE_BLOCK	24
 #define MMC_CMD_WRITE_MULTIPLE_BLOCK	25
 #define MMC_CMD_ERASE_GROUP_START	35

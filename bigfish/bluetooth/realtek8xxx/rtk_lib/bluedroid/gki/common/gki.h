@@ -85,6 +85,8 @@
 
 #define EVENT_MASK(evt)       ((UINT16)(0x0001 << (evt)))
 
+//#define BLUETOOTH_RTK_DBG_MEM
+
 /************************************************************************
 **  Max Time Queue
 **/
@@ -406,9 +408,22 @@ GKI_API extern UINT8   GKI_create_pool (UINT16, UINT16, UINT8, void *);
 GKI_API extern void    GKI_delete_pool (UINT8);
 GKI_API extern void   *GKI_find_buf_start (void *);
 GKI_API extern void    GKI_freebuf (void *);
+#ifdef BLUETOOTH_RTK_DBG_MEM
+GKI_API extern void   *RTKBT_GKI_getbuf (UINT16, const char*, int);
+#define GKI_getbuf(x)  RTKBT_GKI_getbuf((x), __FUNCTION__, __LINE__)
+#else
 GKI_API extern void   *GKI_getbuf (UINT16);
+#endif
 GKI_API extern UINT16  GKI_get_buf_size (void *);
+#ifdef BLUETOOTH_RTK_DBG_MEM
+GKI_API extern void   *RTKBT_GKI_getpoolbuf (UINT8, const char*, int);
+#define GKI_getpoolbuf(x)  RTKBT_GKI_getpoolbuf((x), __FUNCTION__, __LINE__)
+#else
 GKI_API extern void   *GKI_getpoolbuf (UINT8);
+#endif
+#ifdef BLUETOOTH_RTK_DBG_MEM
+GKI_API extern void RTKBT_GKI_Init();
+#endif
 GKI_API extern UINT16  GKI_poolcount (UINT8);
 GKI_API extern UINT16  GKI_poolfreecount (UINT8);
 GKI_API extern UINT16  GKI_poolutilization (UINT8);
@@ -484,7 +499,9 @@ GKI_API extern void    GKI_print_task(void);
 #undef GKI_PrintBufferUsage
 #define GKI_PrintBuffer() NULL
 #endif
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+GKI_API void RTKBT_GKI_DumpMemStatus(unsigned int mask);
+#endif
 #ifdef __cplusplus
 }
 #endif

@@ -32,16 +32,12 @@ static irqreturn_t VENC_DRV_OsalVencISR(HI_S32 Irq, HI_VOID* DevID)
 
 HI_S32 VENC_DRV_OsalIrqInit( HI_U32 Irq, HI_VOID (*ptrCallBack)(HI_VOID))
 {
-    HI_S32 ret;
+    HI_S32 ret = -1;
 
     if (Irq == VEDU_IRQ_ID)
     {
         ptrVencCallBack = ptrCallBack;
         ret = request_irq(Irq, VENC_DRV_OsalVencISR, IRQF_DISABLED, "hi_venc_irq", NULL);
-    }
-    else
-    {
-        ret = HI_FAILURE;
     }
 
     if (ret == 0)

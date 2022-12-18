@@ -9,22 +9,26 @@ choice
 	default ADVCA_OTHER
 config  ADVCA_CONAX
 	bool "Conax"
+	depends on (!HI3798MV100 && !HI3796MV100)
 config  ADVCA_NOVEL
 	bool "Novel"
 config  ADVCA_NAGRA
 	bool "Nagra"
+	depends on (!HI3798MV100 && !HI3796MV100)
 config  ADVCA_SUMA
 	bool "Suma"
 config  ADVCA_CTI
 	bool "Cti"
 config  ADVCA_VERIMATRIX
 	bool "Verimatrix"
+	depends on (HI3798MV100 ||HI3796MV100)
 config  ADVCA_IRDETO
 	bool "Irdeto"
 config  ADVCA_PANACCESS
 	bool "Panaccess"
 config  ADVCA_DCAS
 	bool "Dcas"
+	depends on (!HI3798MV100 && !HI3796MV100)
 config  ADVCA_OTHER
 	bool "Other"
 endchoice
@@ -75,8 +79,9 @@ config HI_STATIC_LIB_ONLY
 	default y
 	depends on ADVCA_FUNCTION
 
-config HI_ANDROID_SECURITY_L2_SYSTEM_CHECK
-	bool "Android Security L2 System Check"
+config HI_ADVCA_VMX_3RD_SIGN
+    bool "Verimatrix Third-Party Sign Solution"
+    depends on (HI_ADVCA_SUPPORT && ADVCA_VERIMATRIX)
 	default n
-	depends on (HI_ADVCA_SUPPORT && ANDROID_PRODUCT) && (HI3798MV100 || HI3796MV100)
-
+    help
+      If you want to enable verimatrix third-party signing solution, say y.

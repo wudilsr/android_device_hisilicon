@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2006 HUAWEI - All Rights Reserved
+* Copyright (c) 2006 Hisilicon - All Rights Reserved
 *
 * File: $ahs_stream_target.h$
 * Date: $2011/6/27$

@@ -35,6 +35,11 @@ typedef unsigned int                  u_int;
 typedef unsigned short                u_short;
 typedef unsigned long                 u_long;
 
+typedef unsigned char                 u8;
+typedef unsigned int                  u32;
+typedef unsigned short                u16;
+typedef unsigned long long            u64;
+
 typedef uint32                        size_t;
 typedef uint32                        ssize_t;
 typedef uint32                        uintmax_t;
@@ -43,6 +48,11 @@ typedef int32                         ptrdiff_t;
 typedef uint32                        uintptr_t;
 typedef int64                         quad_t;
 typedef uint64                        u_quad_t;
+
+typedef uint32                        uint32_t;
+typedef uint64                        uint64_t;
+typedef unsigned char                 uint8_t;
+typedef unsigned short                uint16_t;
 
 /******************************************************************************/
 #endif /* SYS_TYPESH */

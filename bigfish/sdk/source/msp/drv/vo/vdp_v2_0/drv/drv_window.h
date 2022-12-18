@@ -157,7 +157,7 @@ HI_S32 WIN_GetUnload(HI_HANDLE hWin, HI_U32 *pu32Times);
 
 HI_S32 WIN_SendFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo);
 HI_S32 WIN_DestroyStillFrame(HI_DRV_VIDEO_FRAME_S *pStillFrameinfo);
-HI_U32 WinGetIndex(HI_HANDLE hWin, HI_DRV_DISPLAY_E *enDisp, HI_U32 *u32WinIndex);
+HI_S32 WinGetIndex(HI_HANDLE hWin, HI_DRV_DISPLAY_E *penDisp, HI_U32 *pu32WinIndex);
 HI_S32 WinForceClearCapture(HI_HANDLE hWin);
 HI_S32 WIN_Test(HI_HANDLE hWin);
 typedef struct tagWIN_HANDLE_ARRAY_S
@@ -328,7 +328,7 @@ typedef struct tagWIN_PROC_INFO_S
     WINBUF_STATE_S stBufState;
 
     HI_DRV_LOWDELAY_STAT_INFO_S stLowdelayStat;
-    
+
     /*only for developer or mainteiner.*/
     HI_WIN_RROC_FOR_DEVELOPER_S stWinInfoForDeveloper;
 }WIN_PROC_INFO_S;

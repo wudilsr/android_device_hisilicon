@@ -17,6 +17,7 @@
 ******************************************************************************/
 
 #include <stddef.h>
+#include <asm/io.h>
 #include <platform.h>
 
 #define TO_UINT32(_p)   (*(volatile unsigned int *)(_p))
@@ -29,9 +30,20 @@ unsigned int get_ddr_size(void)
 	volatile unsigned char *membase = (unsigned char *)MEM_BASE_DDR;
 	unsigned int orgin = TO_UINT32(membase);
 	unsigned int rd_origin = 0, rd_verify = 0;
+	unsigned int tmp;
+	unsigned int mem_mode;
+	unsigned int mem_comb;
 
 	if (ddr_size)
 		return ddr_size;
+
+	tmp = readl(REG_MEM_COMB);
+	mem_mode = (tmp & (MEM_MODE_MASK << MEM_MODE_SHIFT));
+	if (mem_mode) {
+		mem_comb = (tmp >> MEM_COMB_SHIFT) & MEM_COMB_MASK;
+		ddr_size = (_256M << mem_comb) + (_128M << mem_comb);
+		return ddr_size;
+	}
 
 	for (memskip = membase + _16M; memskip <= (unsigned char *)_3G;
 	     memskip += _16M) {

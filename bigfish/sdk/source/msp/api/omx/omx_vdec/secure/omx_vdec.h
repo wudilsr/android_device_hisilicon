@@ -19,7 +19,6 @@
 #include "OMX_RoleNames.h"
 
 #include "drv_omxvdec.h"
-#include "omx_allocator.h"
 #include "omx_event_queue.h"
 #include "omx_drv_ctx.h"
 
@@ -36,10 +35,10 @@
    IN_BUF_CNT & OUT_BUF_CNT should be no more than MIN(MAX_BUFF_NUM,32),
    MAX_BUFF_NUM is defined in channel.h 
 ***********************************************************************/
-#define DEF_MAX_IN_BUF_CNT                 (3)
-#define DEF_MIN_IN_BUF_CNT                 (1)
-#define DEF_MAX_OUT_BUF_CNT                (6)
-#define DEF_MIN_OUT_BUF_CNT                (4)
+#define DEF_MAX_IN_BUF_CNT                 (5)
+#define DEF_MIN_IN_BUF_CNT                 (3)
+#define DEF_MAX_OUT_BUF_CNT                (8)
+#define DEF_MIN_OUT_BUF_CNT                (3)
 
 #define MAX_IN_BUF_SLOT_NUM                (3)
 
@@ -142,6 +141,8 @@ struct frame_info {
     
 	OMX_U32 frame_width;
 	OMX_U32 frame_height;
+    OMX_U32 max_frame_width;
+    OMX_U32 max_frame_height;
 	OMX_U32 stride;
 	OMX_U32 scan_lines;
 };
@@ -202,6 +203,7 @@ typedef struct OMX_COMPONENT_PRIVATE {
 
 	OMX_PORT_PRIVATE m_port[MAX_PORT_NUM];
 	OMX_BOOL m_use_native_buf;
+    OMX_BOOL is_adaptive;
 
 	pthread_t msg_thread_id;
 	pthread_t event_thread_id;

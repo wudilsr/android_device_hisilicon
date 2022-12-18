@@ -57,6 +57,7 @@ class CTC_MediaControl : public CTsPlayer{
         virtual bool IsSoftFit();
         virtual void SetEPGSize(int w, int h);
         //  virtual void SetSurface(Surface* pSurface);
+
     public: // member functions
         TsPlayerAdapter* GetTsPlayerAdapter()
         {

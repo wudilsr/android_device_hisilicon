@@ -38,7 +38,7 @@ typedef struct {
 #define V_TOLERANCE 150  // +- 1.5 Hz
 
 void SI_GetVModeData(HI_U8, HI_U8 *);
-HI_U8 SI_VideoModeDetection(HI_U8 *);
+//HI_U8 SI_VideoModeDetection(HI_U8 *);
 void VMode_Handler(void);
 HI_U16 GetPixelClock( HI_U8 );
 

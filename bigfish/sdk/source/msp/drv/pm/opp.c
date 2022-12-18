@@ -14,6 +14,7 @@
 #include <linux/list.h>
 #include <linux/rculist.h>
 #include <linux/rcupdate.h>
+#include <linux/version.h>
 #include "opp.h"
 
 #include "hi_opp_data.h"
@@ -688,14 +689,18 @@ int opp_init_cpufreq_table(struct device *                  dev,
     {
         if (opp->available)
         {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
             freq_table[i].index = i;
+#endif
             freq_table[i].frequency = opp->rate;
             i++;
         }
     }
     mutex_unlock(&dev_opp_list_lock);
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
     freq_table[i].index = i;
+#endif
     freq_table[i].frequency = CPUFREQ_TABLE_END;
 
     *table = &freq_table[0];

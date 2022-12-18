@@ -109,7 +109,14 @@ static HI_S32 decoder_event_handler(HI_S32 chan_id, HI_S32 event_type, HI_VOID *
 	        wake_up(&g_OmxVdec->task.task_wait);
             break;
         }
-		
+
+        /* Fake frame for vpss to release all frame to vfmw */
+        case EVNT_FAKE_FRAME:
+            OmxPrint(OMX_INFO, "Get Fake Frame Report!\n");
+            pchan->end_frame_flag = DECODER_REPORT_FAKE_FRAME;
+
+            break;
+
 #if (1 == BPP_MODE_ENABLE)
         case EVNT_NEED_ARRANGE_L:
 		{
@@ -125,7 +132,7 @@ static HI_S32 decoder_event_handler(HI_S32 chan_id, HI_S32 event_type, HI_VOID *
 	        wake_up(&g_OmxVdec->task.task_wait);
             break;
         }
-		
+
         case EVNT_NEW_IMAGE:
 		{
 			ret = processor_ctrl_inst(pchan, BPP_NEW_IMAGE_WAKE, HI_NULL);
@@ -188,7 +195,7 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
         OmxPrint(OMX_FATAL, "%s param invalid!\n", __func__);
         return HI_FAILURE;
     }
-    
+
     if (STD_VC1 == pchan_cfg->eVidStd
      && 0 == pchan_cfg->StdExt.Vc1Ext.IsAdvProfile)
     {
@@ -218,7 +225,7 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
     if (pchan->out_width*pchan->out_height > HD_FRAME_WIDTH*HD_FRAME_HEIGHT)
     {
         ConfigCap = CFG_CAP_UHD;
-        pstOption->s32MaxWidth   = MAX(UHD_FRAME_WIDTH,  pchan->out_width); 
+        pstOption->s32MaxWidth   = MAX(UHD_FRAME_WIDTH,  pchan->out_width);
         pstOption->s32MaxHeight  = MAX(UHD_FRAME_HEIGHT, pchan->out_height);
         pstOption->s32SCDBufSize = 4*g_SegSize*1024*1024;
         pstOption->s32MaxRefFrameNum = 4;
@@ -226,7 +233,7 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
     else if(pchan->out_width*pchan->out_height > SD_FRAME_WIDTH*SD_FRAME_HEIGHT)
     {
         ConfigCap = CFG_CAP_HD;
-        pstOption->s32MaxWidth   = MAX(HD_FRAME_WIDTH,  pchan->out_width); 
+        pstOption->s32MaxWidth   = MAX(HD_FRAME_WIDTH,  pchan->out_width);
         pstOption->s32MaxHeight  = MAX(HD_FRAME_HEIGHT, pchan->out_height);
         pstOption->s32SCDBufSize = g_SegSize*1024*1024;
         pstOption->s32MaxRefFrameNum = 10;
@@ -234,12 +241,12 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
     else
     {
         ConfigCap = CFG_CAP_SD;
-        pstOption->s32MaxWidth   = MAX(SD_FRAME_WIDTH,  pchan->out_width); 
+        pstOption->s32MaxWidth   = MAX(SD_FRAME_WIDTH,  pchan->out_width);
         pstOption->s32MaxHeight  = MAX(SD_FRAME_HEIGHT, pchan->out_height);
         pstOption->s32SCDBufSize = g_SegSize*1024*1024;
         pstOption->s32MaxRefFrameNum = 12;
     }
-    
+
     if (STD_HEVC == pchan_cfg->eVidStd)
     {
         switch (ConfigCap)
@@ -255,7 +262,7 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
     	        *pFmwCap = CAP_LEVEL_HEVC_UHD;
                 break;
         }
-        
+
         pstOption->s32SupportH264    = 1;
         pstOption->s32MaxSliceNum    = 136;
         pstOption->s32MaxSpsNum      = 32;
@@ -283,7 +290,7 @@ static HI_S32 decoder_init_option(OMXVDEC_CHAN_CTX *pchan, VDEC_CHAN_CFG_S *pcha
                     break;
             }
         }
-        
+
         pstOption->s32SupportH264    = 1;
         pstOption->s32MaxSliceNum    = 136;
         pstOption->s32MaxSpsNum      = 32;
@@ -442,7 +449,6 @@ static HI_S32 decoder_get_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 
             memcpy((UINT8 *)(stream_data->VirAddr + stream_data->Length), au8EndFlag, 16);
 
-            UINT8* pEndAddr = stream_data->VirAddr + stream_data->Length;
             stream_data->Length += 16;
 
             OmxPrint(OMX_INFO, "%s add end of stream at each frame\n", __func__);
@@ -463,12 +469,12 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 {
 	unsigned long flags;
 	HI_S32        is_find = 0;
-	OMXVDEC_BUF_S    *pbuf  = HI_NULL; 
+	OMXVDEC_BUF_S    *pbuf  = HI_NULL;
     OMXVDEC_BUF_S    *ptmp  = HI_NULL;
 	OMXVDEC_CHAN_CTX *pchan = HI_NULL;
-    
+
 	OMXVDEC_BUF_DESC  user_buf;
-    
+
 	if (HI_NULL == stream_data)
     {
         OmxPrint(OMX_FATAL, "%s stream_data = NULL.\n", __func__);
@@ -490,7 +496,7 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
         OmxPrint(OMX_ERR, "%s: list is empty\n", __func__);
         return 0;
     }
-    
+
 	list_for_each_entry_safe(pbuf, ptmp, &pchan->raw_queue, list)
     {
 		if (stream_data->PhyAddr == (pbuf->phy_addr + pbuf->offset))
@@ -529,6 +535,7 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
         pbuf->act_len        = user_buf.data_len;
 
         message_queue(pchan->msg_queue, VDEC_MSG_RESP_INPUT_DONE, VDEC_S_SUCCESS, (HI_VOID *)&user_buf);
+        pchan->omx_chan_statinfo.EBD++;
     }
 	else
 	{
@@ -549,7 +556,7 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
     {
         channel_add_lowdelay_tag_time(pchan, stream_data->UserTag, OMX_LOWDELAY_REC_VFMW_RLS_STRM_TIME, OMX_GetTimeInMs());
     }
-	
+
 	spin_unlock_irqrestore(&pchan->raw_lock, flags);
 
     OmxPrint(OMX_INBUF, "VFMW release stream: PhyAddr = 0x%08x, VirAddr = %p, Len = %d\n",
@@ -565,16 +572,16 @@ static HI_S32 decoder_release_stream(HI_S32 chan_id, STREAM_DATA_S *stream_data)
 static inline HI_S32 decoder_set_intf(FSP_OMX_INTF_S *pIntf)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
 	ret = (pVfmwFunc->pfnVfmwControl)(-1, VDEC_CID_SET_OMX_INTF, pIntf);
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "%s set intf failed\n", __func__);
         return ret;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return HI_SUCCESS;
@@ -583,16 +590,16 @@ static inline HI_S32 decoder_set_intf(FSP_OMX_INTF_S *pIntf)
 static inline HI_S32 decoder_bind_mem(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pFsParam)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
     ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_BIND_MEM_TO_CHANNEL, pFsParam);
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "%s bind mem to channel failed\n", __func__);
         return ret;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return HI_SUCCESS;
@@ -601,16 +608,16 @@ static inline HI_S32 decoder_bind_mem(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pFsParam
 static inline HI_S32 decoder_activate_inst(OMXVDEC_CHAN_CTX *pchan)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
     ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_ACTIVATE_CHANNEL, HI_NULL);
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "%s activate channel failed\n", __func__);
         return ret;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return HI_SUCCESS;
@@ -661,16 +668,16 @@ HI_S32 decoder_is_buffer_filled(HI_S32 chan_id, HI_U32 phy_addr)
 static inline HI_S32 decoder_clear_stream(OMXVDEC_CHAN_CTX *pchan)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
 	ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_RELEASE_STREAM, HI_NULL);
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "%s release stream failed\n", __func__);
         return ret;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return HI_SUCCESS;
@@ -679,9 +686,9 @@ static inline HI_S32 decoder_clear_stream(OMXVDEC_CHAN_CTX *pchan)
 static inline HI_S32 decoder_alloc_mem(OMXVDEC_CHAN_CTX *pchan, HI_VOID *pFsParam)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
     ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_ALLOC_MEM_TO_CHANNEL, pFsParam);
     if (ret != HI_SUCCESS)
     {
@@ -700,15 +707,15 @@ HI_S32 decoder_init(HI_VOID)
 {
     HI_S32 ret = HI_FAILURE;
     VDEC_OPERATION_S stInitParam;
-	
+
 #if (1 == BPP_MODE_ENABLE)
     FSP_OMX_INTF_S FspOmxIntf;
 #endif
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
     pVfmwFunc = HI_NULL;
-    
+
     ret = HI_DRV_MODULE_GetFunction(HI_ID_VFMW, (HI_VOID**)&g_stOmxFunc.pDecoderFunc);
     if (HI_SUCCESS != ret || HI_NULL == g_stOmxFunc.pDecoderFunc)
     {
@@ -719,7 +726,7 @@ HI_S32 decoder_init(HI_VOID)
     pVfmwFunc = (VFMW_EXPORT_FUNC_S *)(g_stOmxFunc.pDecoderFunc);
 
     memset(&stInitParam, 0, sizeof(VDEC_OPERATION_S));
-    
+
     stInitParam.eAdapterType = ADAPTER_TYPE_OMXVDEC;
     stInitParam.mem_malloc   = HI_NULL;
     stInitParam.mem_free     = HI_NULL;
@@ -731,7 +738,7 @@ HI_S32 decoder_init(HI_VOID)
         OmxPrint(OMX_FATAL, "%s init vfmw failed!\n", __func__);
         return HI_FAILURE;
     }
-    
+
 #if (1 == BPP_MODE_ENABLE)
     FspOmxIntf.IsBufferFilled = decoder_is_buffer_filled;
     ret = decoder_set_intf(&FspOmxIntf);
@@ -742,7 +749,7 @@ HI_S32 decoder_init(HI_VOID)
         return HI_FAILURE;
     }
 #endif
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
     return HI_SUCCESS;
@@ -751,7 +758,7 @@ HI_S32 decoder_init(HI_VOID)
 HI_S32 decoder_exit(HI_VOID)
 {
     HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
     ret = (pVfmwFunc->pfnVfmwExit)();
@@ -766,27 +773,27 @@ HI_S32 decoder_exit(HI_VOID)
     return HI_SUCCESS;
 }
 
-#ifdef HI_TVP_SUPPORT 
+#ifdef HI_OMX_TEE_SUPPORT
 HI_S32 decoder_init_trusted(HI_VOID)
 {
     HI_S32 ret = HI_FAILURE;
     VDEC_OPERATION_S stInitParam;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
     memset(&stInitParam, 0, sizeof(VDEC_OPERATION_S));
-    
+
     stInitParam.eAdapterType = ADAPTER_TYPE_OMXVDEC;
     stInitParam.VdecCallback = decoder_event_handler;
     stInitParam.mem_malloc   = HI_NULL;
-    stInitParam.mem_free     = HI_NULL; 
+    stInitParam.mem_free     = HI_NULL;
     ret = (pVfmwFunc->pfnVfmwTrustDecoderInit)(&stInitParam);
     if (ret != HI_SUCCESS)
     {
         OmxPrint(OMX_FATAL, "Init trusted decoder failed!n");
         return ret;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
     return HI_SUCCESS;
@@ -795,7 +802,7 @@ HI_S32 decoder_init_trusted(HI_VOID)
 HI_S32 decoder_exit_trusted(HI_VOID)
 {
     HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
     ret = (pVfmwFunc->pfnVfmwTrustDecoderExit)();
@@ -820,13 +827,13 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
     VDEC_CHAN_OPTION_S    stOption;
     DETAIL_MEM_SIZE       stMemSize;
     VDEC_CHAN_CFG_S      *pchan_cfg = HI_NULL;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
     memset(&stOption,  0, sizeof(VDEC_CHAN_OPTION_S));
     memset(&stMemSize, 0, sizeof(DETAIL_MEM_SIZE));
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (HI_TRUE == pchan->is_tvp)
     {
         ret = decoder_init_trusted();
@@ -857,8 +864,8 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
     }
 
     stMemSize = *(DETAIL_MEM_SIZE *)as8TmpBuf;
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (HI_TRUE == pchan->is_tvp)
     {
         stOption.s32IsSecMode = 1;
@@ -873,11 +880,11 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
         stOption.MemDetail.ChanMemScd.PhyAddr = 0;
         stOption.MemDetail.ChanMemScd.VirAddr = HI_NULL;
     }
-    else 
+    else
 #endif
     {
 	    stOption.s32IsSecMode = 0;
-		
+
         /* Allocate frame buffer memory(VDH) */
         if (STD_H263 == pchan->protocol || STD_SORENSON == pchan->protocol)  // 内核态软解所需帧存大小指定
         {
@@ -894,7 +901,7 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
         {
             u32VDHSize = stMemSize.VdhDetailMem;
         }
-    
+
         if (1 == stOption.u32DynamicFrameStoreAllocEn
          && STD_H263     != pchan->protocol
          && STD_SORENSON != pchan->protocol)
@@ -920,47 +927,47 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
             {
                 pchan->eVDHMemAlloc = ALLOC_BY_PRE;
             }
-            
+
         #else
 
             ret = HI_DRV_MMZ_AllocAndMap("OMXVDEC_VDH", "OMXVDEC", u32VDHSize, 0, &pchan->decoder_vdh_buf);
-            pchan->eVDHMemAlloc = ALLOC_BY_MMZ;        
+            pchan->eVDHMemAlloc = ALLOC_BY_MMZ;
         #endif
-        
+
             if (ret != HI_SUCCESS)
             {
                 OmxPrint(OMX_FATAL, "%s alloc mem for VDH failed\n", __func__);
                 goto error0;
-            }      
-        
+            }
+
 
             stOption.MemDetail.ChanMemVdh.Length  = pchan->decoder_vdh_buf.u32Size;
             stOption.MemDetail.ChanMemVdh.PhyAddr = pchan->decoder_vdh_buf.u32StartPhyAddr;
             stOption.MemDetail.ChanMemVdh.VirAddr = (HI_VOID*)pchan->decoder_vdh_buf.u32StartVirAddr;
         }
         else
-        {   
+        {
             ret = HI_DRV_MMZ_Alloc("OMXVDEC_SOFTVDH", "OMXVDEC", u32VDHSize, 0, &pchan->decoder_vdh_buf);
             if (ret != HI_SUCCESS)
             {
                 OmxPrint(OMX_FATAL, "%s alloc mem for VDH failed\n", __func__);
                 goto error0;
-            }      
-            
-            pchan->eVDHMemAlloc = ALLOC_BY_MMZ;  
-            
+            }
+
+            pchan->eVDHMemAlloc = ALLOC_BY_MMZ;
+
             ret = HI_DRV_MMZ_MapCache(&pchan->decoder_vdh_buf);
             if (ret != HI_SUCCESS)
             {
                 OmxPrint(OMX_FATAL, "%s alloc mem for soft VDH failed\n", __func__);
                 goto error1;
-            }      
-        
+            }
+
             stOption.MemDetail.ChanMemVdh.Length  = pchan->decoder_vdh_buf.u32Size;
             stOption.MemDetail.ChanMemVdh.PhyAddr = pchan->decoder_vdh_buf.u32StartPhyAddr;
             stOption.MemDetail.ChanMemVdh.VirAddr = (HI_VOID*)pchan->decoder_vdh_buf.u32StartVirAddr;
         }
-    
+
         /* Alloc SCD buffer */
         if (stMemSize.ScdDetailMem > 0)
         {
@@ -975,7 +982,7 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
                 }
 
                 pchan->eSCDMemAlloc = ALLOC_BY_MMZ;
-                
+
                 /*pstChan->stSCDMMZBuf.u32SizeD的大小就是从vfmw获取的大小:pstChan->stMemSize.ScdDetailMem*/
                 stOption.MemDetail.ChanMemScd.Length  = pchan->decoder_scd_buf.u32Size;
                 stOption.MemDetail.ChanMemScd.PhyAddr = pchan->decoder_scd_buf.u32StartPhyAddr;
@@ -990,14 +997,14 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
                     goto error1;
                 }
                 pchan->eSCDMemAlloc = ALLOC_BY_MMZ;
-                
+
                 ret = HI_DRV_MMZ_MapCache(&pchan->decoder_scd_buf);
                 if (ret != HI_SUCCESS)
                 {
                     OmxPrint(OMX_FATAL, "%s alloc mem for soft SCD failed\n", __func__);
                     goto error2;
                 }
-                 
+
                 /*pstChan->stSCDMMZBuf.u32SizeD的大小就是从vfmw获取的大小:pstChan->stMemSize.ScdDetailMem*/
                 stOption.MemDetail.ChanMemScd.Length  = pchan->decoder_scd_buf.u32Size;
                 stOption.MemDetail.ChanMemScd.PhyAddr = pchan->decoder_scd_buf.u32StartPhyAddr;
@@ -1033,7 +1040,7 @@ HI_S32 decoder_create_inst(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_DRV_CFG *pdrv_cfg)
 
     /* 在云游戏的场景，视频为H264，只有IP帧，如果使能快速输出模式，
        设置IP_MODE,SIMPLE_DPB,SCD lowdly
-    */   
+    */
     if ( HI_TRUE == pchan->bLowdelay || HI_TRUE == g_FastOutputMode)
     {
     	pchan_cfg->s32DecMode         = IP_MODE;
@@ -1105,7 +1112,7 @@ error2:
 error1:
     omxvdec_release_mem(&pchan->decoder_vdh_buf, pchan->eVDHMemAlloc);
 error0:
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     if (HI_TRUE == pchan->is_tvp)
     {
         ret = decoder_exit_trusted();
@@ -1131,8 +1138,8 @@ HI_S32 decoder_release_inst(OMXVDEC_CHAN_CTX *pchan)
        OmxPrint(OMX_FATAL, "%s destroy vfmw failed\n", __func__);
        //return ret;  /* 不退出，强制释放资源 */
     }
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (HI_TRUE == pchan->is_tvp)
     {
         ret = decoder_exit_trusted();
@@ -1163,7 +1170,7 @@ HI_S32 decoder_start_inst(OMXVDEC_CHAN_CTX *pchan)
 	HI_S32 ret = HI_FAILURE;
 
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
-    
+
 	ret = (pVfmwFunc->pfnVfmwControl)(pchan->decoder_id, VDEC_CID_START_CHAN, HI_NULL);
     if (ret != HI_SUCCESS)
     {
@@ -1236,7 +1243,7 @@ HI_S32 decoder_reset_inst_with_option(OMXVDEC_CHAN_CTX *pchan)
 HI_S32 decoder_command_handler(OMXVDEC_CHAN_CTX *pchan, DECODER_CMD_E eCmd, HI_VOID* pArgs)
 {
 	HI_S32 ret = HI_FAILURE;
-    
+
     OmxPrint(OMX_TRACE, "%s enter!\n", __func__);
 
     switch(eCmd)
@@ -1244,26 +1251,26 @@ HI_S32 decoder_command_handler(OMXVDEC_CHAN_CTX *pchan, DECODER_CMD_E eCmd, HI_V
         case DEC_CMD_CLEAR_STREAM:
             ret = decoder_clear_stream(pchan);
             break;
-            
+
         case DEC_CMD_ALLOC_MEM:
             ret = decoder_alloc_mem(pchan, pArgs);
             break;
-			
-#if (1 == BPP_MODE_ENABLE)          
+
+#if (1 == BPP_MODE_ENABLE)
         case DEC_CMD_BIND_MEM:
             ret = decoder_bind_mem(pchan, pArgs);
             break;
-            
+
         case DEC_CMD_ACTIVATE_INST:
             ret = decoder_activate_inst(pchan);
             break;
 #endif
-            
+
         default:
             OmxPrint(OMX_FATAL, "%s unkown command %d\n", __func__, eCmd);
             break;
     }
-    
+
     OmxPrint(OMX_TRACE, "%s exit normally!\n", __func__);
 
 	return ret;

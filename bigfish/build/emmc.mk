@@ -1,9 +1,32 @@
 include $(CLEAR_VARS)
-
+ifeq ($(SUPPORT_SDCARDFS),true)
+	ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
+	CHIP_TABLE := $(CHIPNAME)-sdcardfs-emmc-loader.xml
+	else
+	CHIP_TABLE := $(CHIPNAME)-sdcardfs-emmc.xml
+	endif
+else
 ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+ifeq ($(strip $(HISILICON_TEE)),true)
+CHIP_TABLE := $(CHIPNAME)-emmc-tee-vmx.xml
+else
+CHIP_TABLE := $(CHIPNAME)-emmc-vmx.xml
+endif
+else
 CHIP_TABLE := $(CHIPNAME)-emmc-loader.xml
+endif
+else
+ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
+CHIP_TABLE := $(CHIPNAME)-emmc-recovery.xml
+else
+ifeq ($(strip $(HISILICON_TEE)),true)
+CHIP_TABLE := $(CHIPNAME)-emmc-tee.xml
 else
 CHIP_TABLE := $(CHIPNAME)-emmc.xml
+endif
+endif
+endif
 endif
 CHIP_TABLE_PATH         := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
 
@@ -114,10 +137,22 @@ include $(CLEAR_VARS)
 
 EMMC_HIBOOT_IMG := fastboot-burn-emmc.bin
 EMMC_HIBOOT_OBJ := $(TARGET_OUT_INTERMEDIATES)/EMMC_HIBOOT_OBJ
+ifeq ($(strip $(HISILICON_TEE)),true)
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_TEE_VMX_CFG)
+else
+EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_TEE_CFG)
+endif
+else
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
 EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_SECURE_CFG)
 else
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_VMX_CFG)
+else
 EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_CFG)
+endif
+endif
 endif
 
 emmc_fastboot_prepare:
@@ -132,6 +167,10 @@ endif
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
+	if [ "$(SUPPORT_REMOTE_RECOVERY)" = "true" ]; then \
+	sed -i -e '/# CFG_HI_BUILD_WITH_IR /a\CFG_HI_BUILD_WITH_IR = y' -e '/# CFG_HI_BUILD_WITH_IR/d' \
+	$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
+	fi
 	if [ "$(TARGET_HAVE_APPLOADER)" = "true" ]; then \
 	sed -i '/Ethernet/i\\CFG_HI_LOADER_SUPPORT=y\
 CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
@@ -150,7 +189,17 @@ CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
 	fi
 	cd $(SDK_DIR);$(MAKE) hiboot O=$(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ) \
 	SDK_CFGFILE=../../../../$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG);\
-	cp -avf $(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/fastboot-burn.bin $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/fastboot.bin
+	if [ -f "$(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/miniboot.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/miniboot.bin $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/fastboot.bin ;\
+	elif [ -f "$(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/fastboot-burn.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/fastboot-burn.bin $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/fastboot.bin ; \
+	else \
+	exit; \
+	fi
+	if [ -f "$(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/advca_programmer.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(EMMC_HIBOOT_OBJ)/advca_programmer.bin $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/advca_programmer.bin;\
+	fi
+
 
 
 .PHONY: hiboot-emmc
@@ -181,6 +230,10 @@ endif
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ_2);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
+	if [ "$(SUPPORT_REMOTE_RECOVERY)" = "true" ]; then \
+	sed -i -e '/# CFG_HI_BUILD_WITH_IR /a\CFG_HI_BUILD_WITH_IR = y' -e '/# CFG_HI_BUILD_WITH_IR/d' \
+	$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
+	fi
 	if [ "$(TARGET_HAVE_APPLOADER)" = "true" ]; then \
 	sed -i '/Ethernet/i\\CFG_HI_LOADER_SUPPORT=y\
 CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
@@ -228,7 +281,11 @@ endif
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file/META
+ifeq ($(strip $(SUPPROT_REMOTE_RECOVERY)),true)
+	$(hide) cp -af $(call include-path-for, recovery)/etc/recovery.emmc.fstab.update $(EMMC_PRODUCT_OUT)/update/file/META/recovery.fstab
+else
 	$(hide) cp -af $(call include-path-for, recovery)/etc/recovery.emmc.fstab $(EMMC_PRODUCT_OUT)/update/file/META/recovery.fstab
+endif
 	$(hide) cp -a $(PRODUCT_OUT)/bootargs_emmc.txt $(EMMC_PRODUCT_OUT)/update/file/META/bootargs.txt
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/fastboot.bin $(EMMC_PRODUCT_OUT)/update/file/fastboot.img
 ifneq ($(EMMC_BOOT_REG_NAME_2),)
@@ -242,6 +299,9 @@ ifneq ($(strip $(BOARD_QBSUPPORT)),true)
 endif
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/bootargs.bin $(EMMC_PRODUCT_OUT)/update/file/bootargs.img
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/kernel.img $(EMMC_PRODUCT_OUT)/update/file/boot.img
+ifeq ($(strip $(HISILICON_TEE)),true)
+	$(hide) cp -a $(EMMC_PRODUCT_OUT)/trustedcore.img $(EMMC_PRODUCT_OUT)/update/file/trustedcore.img
+endif
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/pq_param.bin $(EMMC_PRODUCT_OUT)/update/file/pq_param.img
 ifeq ($(strip $(BOARD_QBSUPPORT)),true)
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/userapi.bin $(EMMC_PRODUCT_OUT)/update/file/userapi.img

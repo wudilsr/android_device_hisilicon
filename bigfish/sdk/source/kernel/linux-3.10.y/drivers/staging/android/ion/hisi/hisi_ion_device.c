@@ -44,7 +44,15 @@ static struct ion_platform_heap hi_ion_heaps[] __initdata = {
 		.id	= ION_HEAP_ID_CMA,
 		.type	= ION_HEAP_TYPE_DMA,
 		.name	= "cma",
-	}, [cma_heap_start + cma_heap_num - 1] = {
+	},
+#ifdef CONFIG_TEE_DRIVER
+	[cma_heap_start + 1] = {
+		.id	= ION_HEAP_ID_TEE_SEC_MEM, /* secure mem in TEE */
+		.type	= ION_HEAP_TYPE_TEE_SEC_MEM,
+		.name	= "SEC-MMZ",
+	},
+#endif
+	[cma_heap_start + cma_heap_num - 1] = {
 		.id	= ION_HEAP_ID_CMA,
 		.type	= ION_HEAP_TYPE_DMA,
 	}

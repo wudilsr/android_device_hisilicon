@@ -29,6 +29,7 @@ so time costed : 93857 similar to 938570us similar to 940ms
 */
 void GetTimer()
 {
+#ifndef HI_MINIBOOT_SUPPORT
     int newtime = 0;
     newtime = get_timer(0);
     
@@ -40,6 +41,7 @@ void GetTimer()
     HI_INFO_PRINT(HI_ID_HDMI,"time costed : %d0 us \n",newtime - OldTime);
     //OldTime = newtime;
     return ;
+#endif
 }
 
 void ResetTimer()

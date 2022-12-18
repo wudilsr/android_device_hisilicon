@@ -197,7 +197,7 @@ static HI_S32 VI_CheckAttr(HI_UNF_VI_E enPort,  HI_UNF_VI_ATTR_S *pstAttr)
         }
 #else
         if ((HI_UNF_VI_MODE_BT601_576I == pstAttr->enInputMode)
-            && (HI_UNF_VI_MODE_BT601_480I == pstAttr->enInputMode))
+            || (HI_UNF_VI_MODE_BT601_480I == pstAttr->enInputMode))
         {
             HI_ERR_VI("not support BT601 mode %d\n", pstAttr->enInputMode);
             return HI_ERR_VI_INVALID_PARA;
@@ -464,8 +464,16 @@ HI_S32 HI_MPI_VI_Init(HI_VOID)
         HI_VI_UNLOCK();
         return HI_SUCCESS;
     }
+    
+    g_ViDevFd = open(g_ViDevName, O_RDWR | O_NONBLOCK, 0);
+    if (g_ViDevFd < 0)
+    {
+        HI_FATAL_VI("open VI err.\n");
+        HI_VI_UNLOCK();
+        return HI_FAILURE;
+    }
 
-    if (HI_FAILURE == stat(g_ViDevName, &st))
+    if (HI_FAILURE == fstat(g_ViDevFd, &st))
     {
         HI_FATAL_VI("VI is not exist.\n");
         HI_VI_UNLOCK();
@@ -477,14 +485,6 @@ HI_S32 HI_MPI_VI_Init(HI_VOID)
         HI_FATAL_VI("VI is not device.\n");
         HI_VI_UNLOCK();
         return HI_ERR_VI_NOT_DEV_FILE;
-    }
-
-    g_ViDevFd = open(g_ViDevName, O_RDWR | O_NONBLOCK, 0);
-    if (g_ViDevFd < 0)
-    {
-        HI_FATAL_VI("open VI err.\n");
-        HI_VI_UNLOCK();
-        return HI_FAILURE;
     }
 
     for (iPort = 0; iPort < MAX_VI_PORT; iPort++)
@@ -892,15 +892,6 @@ HI_S32 HI_MPI_VI_SetExternBuffer(HI_HANDLE hVi, HI_UNF_VI_BUFFER_ATTR_S* pstBufA
         HI_ERR_VI("invalid buffer number %d.\n", pstBufAttr->u32BufNum);
         return HI_ERR_VI_INVALID_PARA;
     }
-
-#if 0
-    if (pstBufAttr->u32Stride)
-    {
-        HI_ERR_VI("invalid stride 0.\n");
-        return HI_ERR_VI_INVALID_PARA;
-    }
-#endif
-
 
     for (i = 0; i < pstBufAttr->u32BufNum; i++)
     {

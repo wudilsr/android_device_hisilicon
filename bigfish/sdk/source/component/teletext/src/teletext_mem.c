@@ -10,22 +10,22 @@
 
 typedef struct tagTTX_MEM_ITEM_S
 {
-    HI_U8 *pu8ItemAddr;
+    HI_U8* pu8ItemAddr;
     HI_U32 u32ItemSize;
-    struct tagTTX_MEM_ITEM_S *pstNext;
+    struct tagTTX_MEM_ITEM_S* pstNext;
 } TTX_MEM_ITEM_S, *TTX_MEM_ITEM_S_PTR;
 
 typedef struct tagTTX_MEM_DATA_S
 {
-    HI_U8 *            pu8MemAddr;
+    HI_U8*             pu8MemAddr;
     HI_U32             u32MemSize;
-    HI_U32             u32MaxMalloc;
+    size_t             u32MaxMalloc;
     TTX_MEM_ITEM_S_PTR pstItemHead;
 } TTX_MEM_DATA_S, *TTX_MEM_DATA_S_PTR;
 
 static TTX_MEM_DATA_S_PTR s_pstMemData = {0};
 static HI_BOOL s_bInMalloc = HI_TRUE;
-static HI_U8 * s_pu8InMemAddr = HI_NULL;
+static HI_U8* s_pu8InMemAddr = HI_NULL;
 
 #define TTX_MEM_CHECK(param) \
     do                                      \
@@ -40,9 +40,10 @@ static HI_S32 TTX_Mem_IsFull(HI_U32 u32MemSize, TTX_MEM_ITEM_S** pstItem);
 
 static HI_S32 TTX_Mem_IsFull(HI_U32 u32MemSize, TTX_MEM_ITEM_S** pstItem)
 {
-    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL, pstNextItem = HI_NULL;
+    size_t nOffset = 0;
     HI_U16 u16StructSize = 0;
-    HI_U32 u32Offset = 0;
+    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL;
+    TTX_MEM_ITEM_S_PTR pstNextItem = HI_NULL;
 
     TTX_MEM_CHECK(s_pstMemData);
 
@@ -52,10 +53,11 @@ static HI_S32 TTX_Mem_IsFull(HI_U32 u32MemSize, TTX_MEM_ITEM_S** pstItem)
     while (pstThisItem != HI_NULL)
     {
         pstNextItem = pstThisItem->pstNext;
-        u32Offset = (HI_U32)pstThisItem + pstThisItem->u32ItemSize + u16StructSize;
+        nOffset = (size_t)pstThisItem + pstThisItem->u32ItemSize + u16StructSize;
+
         if (pstNextItem != HI_NULL)
         {
-            if (((HI_U32)pstNextItem - u32Offset) < (u32MemSize + u16StructSize))
+            if (((size_t)pstNextItem - nOffset) < (u32MemSize + u16StructSize))
             {
                 pstThisItem = pstThisItem->pstNext;
                 continue;
@@ -68,7 +70,7 @@ static HI_S32 TTX_Mem_IsFull(HI_U32 u32MemSize, TTX_MEM_ITEM_S** pstItem)
         }
         else
         {
-            if ((s_pstMemData->u32MaxMalloc - u32Offset) < (u32MemSize + u16StructSize))
+            if ((s_pstMemData->u32MaxMalloc - nOffset) < (u32MemSize + u16StructSize))
             {
                 return HI_FAILURE;
             }
@@ -84,7 +86,7 @@ static HI_S32 TTX_Mem_IsFull(HI_U32 u32MemSize, TTX_MEM_ITEM_S** pstItem)
     return HI_FAILURE;
 }
 
-HI_S32 TTX_Mem_Init(HI_U8 *pu8MemAddr, HI_U32 u32MemSize)
+HI_S32 TTX_Mem_Init(HI_U8* pu8MemAddr, HI_U32 u32MemSize)
 {
     if ((HI_NULL == pu8MemAddr) || (0 == u32MemSize))
     {
@@ -96,7 +98,7 @@ HI_S32 TTX_Mem_Init(HI_U8 *pu8MemAddr, HI_U32 u32MemSize)
         s_pstMemData = (TTX_MEM_DATA_S_PTR)s_pu8InMemAddr;
         s_pstMemData->pu8MemAddr   = s_pu8InMemAddr;
         s_pstMemData->u32MemSize   = TTX_MAX_MALLOCSIZE;
-        s_pstMemData->u32MaxMalloc = (HI_U32)s_pu8InMemAddr + TTX_MAX_MALLOCSIZE;
+        s_pstMemData->u32MaxMalloc = (size_t)s_pu8InMemAddr + TTX_MAX_MALLOCSIZE;
         s_pstMemData->pstItemHead  = (TTX_MEM_ITEM_S_PTR)(s_pu8InMemAddr + sizeof(TTX_MEM_DATA_S));
         s_pstMemData->pstItemHead->pstNext = HI_NULL;
         s_pstMemData->pstItemHead->u32ItemSize = 0;
@@ -112,7 +114,7 @@ HI_S32 TTX_Mem_Init(HI_U8 *pu8MemAddr, HI_U32 u32MemSize)
             s_pstMemData = (TTX_MEM_DATA_S_PTR)pu8MemAddr;
             s_pstMemData->pu8MemAddr   = pu8MemAddr;
             s_pstMemData->u32MemSize   = u32MemSize;
-            s_pstMemData->u32MaxMalloc = (HI_U32)pu8MemAddr + u32MemSize;
+            s_pstMemData->u32MaxMalloc = (size_t)pu8MemAddr + u32MemSize;
             s_pstMemData->pstItemHead  = (TTX_MEM_ITEM_S_PTR)(pu8MemAddr + sizeof(TTX_MEM_DATA_S));
             s_pstMemData->pstItemHead->pstNext = HI_NULL;
             s_pstMemData->pstItemHead->u32ItemSize = 0;
@@ -141,19 +143,20 @@ HI_S32 TTX_Mem_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_VOID * TTX_Mem_Malloc(HI_U32 u32MemSize)
+HI_VOID* TTX_Mem_Malloc(HI_U32 u32MemSize)
 {
-    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL, pstTmpItem = HI_NULL;
     HI_S32 s32Ret = 0;
+    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL;
+    TTX_MEM_ITEM_S_PTR pstTmpItem = HI_NULL;
 
     s32Ret = TTX_Mem_IsFull(u32MemSize, &pstThisItem);
 
     if (HI_SUCCESS == s32Ret)
     {
-        pstTmpItem = (TTX_MEM_ITEM_S_PTR)((HI_U32)pstThisItem + pstThisItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S));
+        pstTmpItem = (TTX_MEM_ITEM_S_PTR)((size_t)pstThisItem + pstThisItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S));
 
         pstTmpItem->u32ItemSize = u32MemSize;
-        pstTmpItem->pu8ItemAddr = (HI_U8*)((HI_U32)pstTmpItem + sizeof(TTX_MEM_ITEM_S));
+        pstTmpItem->pu8ItemAddr = (HI_U8*)((size_t)pstTmpItem + sizeof(TTX_MEM_ITEM_S));
 
         if (pstThisItem->pstNext != HI_NULL)
         {
@@ -166,7 +169,7 @@ HI_VOID * TTX_Mem_Malloc(HI_U32 u32MemSize)
             pstTmpItem->pstNext = HI_NULL;
         }
 
-        return (HI_VOID *)(pstTmpItem->pu8ItemAddr);
+        return (HI_VOID*)(pstTmpItem->pu8ItemAddr);
     }
     else
     {
@@ -174,9 +177,10 @@ HI_VOID * TTX_Mem_Malloc(HI_U32 u32MemSize)
     }
 }
 
-HI_VOID TTX_Mem_Free(const HI_VOID *pvMemStart)
+HI_VOID TTX_Mem_Free(const HI_VOID* pvMemStart)
 {
-    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL, pstPrevItem = HI_NULL;
+    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL;
+    TTX_MEM_ITEM_S_PTR pstPrevItem = HI_NULL;
 
     if (s_pstMemData != HI_NULL)
     {
@@ -196,7 +200,7 @@ HI_VOID TTX_Mem_Free(const HI_VOID *pvMemStart)
         }
     }
 
-    if (HI_NULL == pstThisItem)
+    if ((HI_NULL == pstThisItem) || (HI_NULL == pstPrevItem))
     {
         return;
     }
@@ -211,26 +215,31 @@ HI_VOID TTX_Mem_Free(const HI_VOID *pvMemStart)
             pstPrevItem->pstNext = HI_NULL;
         }
 
-        memset(pstThisItem, 0, pstThisItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S));
+        if (pstThisItem->u32ItemSize <= TTX_MAX_MALLOCSIZE)
+        {
+            memset(pstThisItem, 0, pstThisItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S));
+        }
     }
 
     return;
 }
 
-HI_VOID TTX_Mem_Memset(HI_VOID *pvMemStart, HI_S32 s32InitNum, HI_U32 u32MemSize)
+HI_VOID TTX_Mem_Memset(HI_VOID* pvMemStart, HI_S32 s32InitNum, HI_U32 u32MemSize)
 {
     memset(pvMemStart, s32InitNum, u32MemSize);
 }
 
-HI_S32 TTX_Mem_GetSpareSize(HI_U32 * u32SpareSize)
+HI_S32 TTX_Mem_GetSpareSize(HI_U32* u32SpareSize)
 {
-    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL, pstPrevItem = HI_NULL;
+    size_t nItemLength = 0;
     HI_U32 u32SpareLength = 0;
-    HI_U32 u32ItemLength = 0;
+    TTX_MEM_ITEM_S_PTR pstThisItem = HI_NULL;
+    TTX_MEM_ITEM_S_PTR pstPrevItem = HI_NULL;
 
     TTX_MEM_CHECK(s_pstMemData);
 
     pstThisItem = s_pstMemData->pstItemHead;
+
     while (pstThisItem != HI_NULL)
     {
         pstPrevItem = pstThisItem;
@@ -239,14 +248,14 @@ HI_S32 TTX_Mem_GetSpareSize(HI_U32 * u32SpareSize)
 
     if (pstPrevItem != HI_NULL)
     {
-        u32ItemLength = (HI_U32)pstPrevItem + pstPrevItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S);
+        nItemLength = (size_t)pstPrevItem + pstPrevItem->u32ItemSize + sizeof(TTX_MEM_ITEM_S);
     }
     else
     {
         return HI_FAILURE;
     }
 
-    u32SpareLength = ((HI_U32)s_pstMemData + s_pstMemData->u32MemSize) - u32ItemLength;
+    u32SpareLength = ((size_t)s_pstMemData + s_pstMemData->u32MemSize) - nItemLength;
 
     (*u32SpareSize) = u32SpareLength;
 

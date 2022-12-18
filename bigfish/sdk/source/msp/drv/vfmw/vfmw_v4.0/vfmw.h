@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2006 HUAWEI - All Rights Reserved
+* Copyright (c) 2006 Hisilicon - All Rights Reserved
 *
 * File: $vfmw.h$
 * Date: $2006/11/30$
@@ -659,6 +659,14 @@ typedef struct
     UINT32      seq_cnt;
     UINT32      seq_img_cnt;
     VDEC_USRDAT_S*     p_usrdat[4];
+
+    UINT32      AvgQp;
+    UINT32      FrameStreamSize;
+
+    UINT32      MaxMV;
+    UINT32      MinMV;
+    UINT32      AvgMV;
+    UINT32      SkipRatio;
 
     UINT32      chroma_idc;
     UINT32      bit_depth_luma;

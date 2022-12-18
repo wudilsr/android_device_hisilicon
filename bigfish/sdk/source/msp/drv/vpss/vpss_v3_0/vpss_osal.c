@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
 3bRFxR/3w5P2RVFyzsCwmn6APtjnPh81b7i5TzYMCvw9ZXvKFXRkeiLthT6M1OTJzcHtgd6E
@@ -13,7 +13,7 @@ HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
 #include "vpss_osal.h"
 #include <linux/wait.h>
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 #include "sec_mmz.h"
 #endif
 
@@ -1378,7 +1378,7 @@ HI_S32 VPSS_OSAL_AllocateMem(HI_U8 u8flag,
 	}
 	else if (u8flag == VPSS_MEM_FLAG_SECURE)
 	{
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 		HI_U32 u32SecAddr;
 		
 		u32SecAddr = (HI_U32)HI_SEC_MMZ_New(u32Size,"SEC-MMZ",pu8MemName);
@@ -1426,7 +1426,7 @@ HI_S32 VPSS_OSAL_FreeMem(VPSS_MEM_S *pstMem)
 	}
 	else if (pstMem->u8flag == VPSS_MEM_FLAG_SECURE)
 	{
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 		(HI_VOID)HI_SEC_MMZ_Delete(pstMem->u32StartPhyAddr);
 #else
 		stMMZ.u32StartPhyAddr = pstMem->u32StartPhyAddr;

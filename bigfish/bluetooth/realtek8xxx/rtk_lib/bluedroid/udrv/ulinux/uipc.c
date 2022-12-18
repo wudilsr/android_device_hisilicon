@@ -65,6 +65,7 @@
 ******************************************************************************/
 
 #define PCM_FILENAME "/data/test.pcm"
+#define DATA_PATH "/tmp/1BCF957F-D945-38B4-DAEA-02A270F98F31"
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
@@ -700,6 +701,10 @@ UDRV_API BOOLEAN UIPC_Open(tUIPC_CH_ID ch_id, tUIPC_RCV_CBACK *p_cback)
         case UIPC_CH_ID_RTKBT_VR_AUDIO:
             uipc_setup_server_locked(ch_id, VOHOG_DATA_IN_PATH, p_cback);
             break;
+
+	case UIPC_CH_ID_RTKBT_DATA:
+	    uipc_setup_server_locked(ch_id, DATA_PATH, p_cback);
+            break;
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
 #ifdef BLUETOOTH_RTK_SCO
@@ -937,7 +942,7 @@ UDRV_API UINT32 UIPC_Read(tUIPC_CH_ID ch_id, UINT16 *p_msg_evt, UINT8 *p_buf, UI
     return n_read;
 }
 
-#ifdef BLUETOOTH_RTK_SCO
+#ifdef BLUETOOTH_RTK
 UDRV_API INT32 UIPC_Read_noblock(tUIPC_CH_ID ch_id, UINT16 *p_msg_evt, UINT8 *p_buf, UINT32 len)
 {
     int n;

@@ -397,7 +397,7 @@ static int hi_mci_exec_cmd(struct himci_host *host, struct mmc_cmd *cmd,
 		return -1;
 	}
 
-	HIMCI_DEBUG_INFO("Send cmd of card is CMD %d", cmd->cmdidx);
+	HIMCI_DEBUG_INFO("Send cmd of card is CMD %d(0x%X)\n", cmd->cmdidx, cmd->cmdarg);
 
 	if (cmd->cmdidx == MMC_CMD_GO_IDLE_STATE)
 		cmd_reg.bits.send_initialization = 1;
@@ -551,7 +551,7 @@ static int hi_mci_wait_data_complete(struct himci_host *host)
 
 	if(host->tunning)
 		retry_num = 1500;
-	
+
 	do {
 		reg_data = himci_readl(host->base + MCI_RINTSTS);
 		if (reg_data & DTO_INT_STATUS) {
@@ -713,7 +713,7 @@ static void hi_mci_set_ios(struct mmc *mmc)
 
 	/* set ddr reg */
 	tmp_reg = himci_readl(host->base + MCI_DDR_REG);
-	if (mmc->timing == MMC_TIMING_MMC_HS400) 
+	if (mmc->timing == MMC_TIMING_MMC_HS400)
 		tmp_reg |= ENABLE_HS400_MODE;
 	else
 		tmp_reg &= ~ENABLE_HS400_MODE;
@@ -734,11 +734,11 @@ static void hi_mci_set_ios(struct mmc *mmc)
 static int hi_mci_prepare_tuning(struct mmc *mmc, unsigned int timing)
 {
 	struct himci_host *host = mmc->priv;
-	
+
 	himci_set_timing(timing);
-	
+
 	return 0;
-	
+
 }
 
 static int hi_mci_execute_tuning(struct mmc *mmc, unsigned int datastrobe)
@@ -751,26 +751,26 @@ static int hi_mci_execute_tuning(struct mmc *mmc, unsigned int datastrobe)
 	struct himci_host *host = mmc->priv;
 
 	himci_get_tuning_param(datastrobe,&min,&max,&mask,&offset,&reg_addr);
-		
+
 	host->tunning = 1;
 	for (index = min; index < max; index++) {
 		if (datastrobe)
 			value = (index < 8) ? (8-index) : index;
 		else
 			value = index;
-		
+
 		/* set phase shift */
 		tmp_reg = himci_readl(reg_addr);
 		tmp_reg &= ~mask;
 		tmp_reg |= (value << offset);
 		himci_writel(tmp_reg, reg_addr);
-		
+
 		himci_writel(ALL_INT_CLR, host->base + MCI_RINTSTS);
 
 		err = mmc_send_tuning(mmc);
 		if (err) {
 			/* find the end point */
-			if (found) 
+			if (found)
 				break;
 		} else if (!found) {
 			/* find the first point */
@@ -785,12 +785,12 @@ static int hi_mci_execute_tuning(struct mmc *mmc, unsigned int datastrobe)
 
 		if (datastrobe)
 			value = (value < 8) ? (8-value) : value;
-		
+
 		tmp_reg = himci_readl(reg_addr);
 		tmp_reg &= ~mask;
 		tmp_reg |= (value << offset);
 		himci_writel(tmp_reg,reg_addr);
-		
+
 		printf("Tuning %s[%d,%d],set[%d]\n",
 			datastrobe?"datastrobe":"clk_sample",
 			startpoint, endpoint, value);

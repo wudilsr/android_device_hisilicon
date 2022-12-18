@@ -31,13 +31,19 @@
 
 #define __FILE_NAME__     av_filename(__FILE__)
 
-int hls_decrypt_open(Hls_CryptoContext *h, const char *url,  AVDictionary **options,
+int hls_decrypt_open(Hls_CryptoContext *h, const char *url,  int64_t size, AVDictionary **options,
         const uint8_t *key, int keylen, const uint8_t *iv, int ivlen)
 {
     int ret;
 
     h->keylen = keylen;
     h->ivlen  = ivlen;
+    h->offset = 0;
+    if (size <= 0) {
+        h->size = -1;
+    } else {
+        h->size = size;
+    }
 
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] %s IN\n", __FILE_NAME__, __LINE__, __FUNCTION__);
 
@@ -90,16 +96,19 @@ retry:
     // since we'll remove PKCS7 padding at the end. So make
     // sure we've got at least 2 blocks, so we can decrypt
     // at least one.
-    while (h->indata - h->indata_used < 2*HLS_DECRYPT_BLOCKSIZE) {
+    while (!h->eof && (h->indata - h->indata_used < 2*HLS_DECRYPT_BLOCKSIZE)) {
         int n = hls_read(h->hd, h->offset, h->inbuffer + h->indata,
                          sizeof(h->inbuffer) - h->indata);
         if (n <= 0) {
             h->eof = 1;
             break;
         }
-
         h->offset += n;
         h->indata += n;
+        if (h->size > 0 && h->offset >= h->size) {
+            h->eof = 1;
+            break;
+        }
     }
 
     blocks = (h->indata - h->indata_used) / HLS_DECRYPT_BLOCKSIZE;

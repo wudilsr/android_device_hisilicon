@@ -1027,7 +1027,8 @@ HI_S32 VENC_DRV_AttachInput(VeduEfl_EncPara_S* hVencChn, HI_HANDLE hSrc, HI_MOD_
         if (ret != HI_SUCCESS)
         {
             HI_ERR_VENC("stSrcInfo.pfChangeInfo failed!\n");
-            ret = HI_FAILURE;
+            
+            return HI_FAILURE;
         }
 
         ret = VENC_DRV_EflAttachInput(hVencChn, &stSrcInfo);
@@ -1446,6 +1447,8 @@ HI_S32 VENC_DRV_ReleaseStream(VeduEfl_EncPara_S* hVencChn, VENC_INFO_ACQUIRE_STR
     D_VENC_GET_CHN(u32VeChn, hVencChn);
     D_VENC_CHECK_CHN(u32VeChn);
 
+    memset(&stVeduPacket, 0, sizeof(VeduEfl_NALU_S));
+
     pstEncChnPara = (VeduEfl_EncPara_S*)hVencChn;
 
     if (g_stVencChn[u32VeChn].hJPGE != HI_INVALID_HANDLE)
@@ -1511,6 +1514,8 @@ HI_S32 VENC_DRV_ReleaseStreamIntar(VeduEfl_EncPara_S* hVencChn, VENC_STREAM_S* p
 
     D_VENC_GET_CHN(u32VeChn, hVencChn);
     D_VENC_CHECK_CHN(u32VeChn);
+
+    memset(&stVeduPacket, 0, sizeof(VeduEfl_NALU_S));
 
     pstEncChnPara = (VeduEfl_EncPara_S*)hVencChn;
 
@@ -1837,7 +1842,8 @@ HI_S32 VENC_DRV_SetAttr(VeduEfl_EncPara_S* EncHandle, HI_UNF_VENC_CHN_ATTR_S* ps
             {
                 HI_ERR_VENC("VENC_DRV_EflAllocBuf2Jpge Failed!\n");
                 pJpgeFunc->pfnJpgeDestroyChn(pstVenc->hJPGE);
-                s32Ret = HI_FAILURE;
+
+                return s32Ret;
             }
 
             pstEncChnPara->Protocol          = VEDU_JPGE;
@@ -2015,7 +2021,7 @@ HI_S32 VENC_DRV_RequestIFrame(VeduEfl_EncPara_S* EncHandle)
         return HI_FAILURE;
     }
 
-    return HI_SUCCESS;
+    return s32Ret;
 }
 
 HI_S32 VENC_DRV_QueueFrame(VeduEfl_EncPara_S* hVencChn, HI_UNF_VIDEO_FRAME_INFO_S* pstFrameInfo )
@@ -2051,6 +2057,12 @@ HI_S32 VENC_DRV_QueueFrame(VeduEfl_EncPara_S* hVencChn, HI_UNF_VIDEO_FRAME_INFO_
         }
     }
     s32Ret = Convert_FrameStructure(pstFrameInfo, &stFrame);
+    if (s32Ret != HI_SUCCESS)
+    {
+        HI_ERR_VENC("Convert_FrameStructure error! \n");
+
+        return HI_ERR_VENC_CHN_INVALID_STAT;
+    }    
 
     if (HI_TRUE == pstEncChnPara->bNeverEnc)
     {
@@ -2252,12 +2264,7 @@ HI_S32 HI_DRV_VENC_DeInit(HI_VOID)
         }
     }
 
-    s32Ret = VENC_DRV_EflCloseVedu();
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_FATAL_VENC("VeduEfl_CloseVedu failed, ret=%d\n", s32Ret);
-        return HI_FAILURE;
-    }
+    VENC_DRV_EflCloseVedu();
 
     /*close the venc lock*/
     VENC_DRV_BoardDeinit();
@@ -2313,6 +2320,10 @@ HI_S32 HI_DRV_VENC_Create(HI_HANDLE* phVencChn, HI_UNF_VENC_CHN_ATTR_S* pstAttr,
     memcpy(&stVencCfg.VencUnfAttr, pstAttr, sizeof(HI_UNF_VENC_CHN_ATTR_S));
 
     Ret = down_interruptible(&g_VencDrvMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
 
     Ret = VENC_DRV_CreateChn(&hKernVencChn, &stVencCfg, &stVeInfo, bOMXChn, pfile);
     D_VENC_GET_CHN(u32Index, hKernVencChn);
@@ -2384,6 +2395,11 @@ HI_S32 HI_DRV_VENC_Destroy(HI_HANDLE hVenc)
 
     // VENC
     Ret = down_interruptible(&g_VencDrvMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32Index, hVenc);
     if (u32Index >= VENC_MAX_CHN_NUM)
     {
@@ -2422,6 +2438,11 @@ HI_S32 HI_DRV_VENC_AttachInput(HI_HANDLE hVenc, HI_HANDLE hSrc)
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
     s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     s32Ret = VENC_DRV_AttachInput(hVencChn, hSrc, ((hSrc & 0xff0000) >> 16));
     up(&g_VencDrvMutex);
     return s32Ret;
@@ -2435,7 +2456,12 @@ HI_S32 HI_DRV_VENC_DetachInput(HI_HANDLE hVenc)
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 
-	s32Ret = down_interruptible(&g_VencDrvMutex);
+    s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2451,7 +2477,12 @@ HI_S32 HI_DRV_VENC_Start(HI_HANDLE hVenc)
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
-	s32Ret = down_interruptible(&g_VencDrvMutex);
+    s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2465,7 +2496,12 @@ HI_S32 HI_DRV_VENC_Stop(HI_HANDLE hVenc)
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
-	s32Ret = down_interruptible(&g_VencDrvMutex);
+    s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2491,6 +2527,11 @@ HI_S32 HI_DRV_VENC_ReleaseStream(HI_HANDLE hVenc, VENC_STREAM_S *pstStream)
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2505,6 +2546,11 @@ HI_S32 HI_DRV_VENC_SetSrcInfo(HI_HANDLE hVenc, HI_DRV_VENC_SRC_INFO_S *pstSrcInf
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2519,6 +2565,11 @@ HI_S32 HI_DRV_VENC_SetAttr(HI_HANDLE hVenc,HI_UNF_VENC_CHN_ATTR_S *pstAttr)
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2533,6 +2584,11 @@ HI_S32 HI_DRV_VENC_GetAttr(HI_HANDLE hVenc, HI_UNF_VENC_CHN_ATTR_S *pstAttr)
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2547,6 +2603,11 @@ HI_S32 HI_DRV_VENC_RequestIFrame(HI_HANDLE hVenc)
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2561,6 +2622,11 @@ HI_S32 HI_DRV_VENC_QueueFrame(HI_HANDLE hVenc, HI_UNF_VIDEO_FRAME_INFO_S *pstFra
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2575,6 +2641,11 @@ HI_S32 HI_DRV_VENC_DequeueFrame(HI_HANDLE hVenc, HI_UNF_VIDEO_FRAME_INFO_S *pstF
     HI_U32 u32ChnID;
     VeduEfl_EncPara_S* hVencChn;
 	s32Ret = down_interruptible(&g_VencDrvMutex);
+    if (s32Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     D_VENC_GET_CHN_BY_UHND(u32ChnID, hVenc);
     D_VENC_CHECK_CHN(u32ChnID);
     hVencChn = g_stVencChn[u32ChnID].hVEncHandle;
@@ -2591,6 +2662,10 @@ HI_S32 HI_DRV_VENC_Open_By_OPENTV(HI_VOID)
     //DRV_PROC_ITEM_S  *pProcItem;
 
     Ret = down_interruptible(&g_VencDrvMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
 
     if (1 == atomic_inc_return(&g_VencCount))
     {
@@ -2638,6 +2713,12 @@ HI_S32 HI_DRV_VENC_Open_By_OPENTV(HI_VOID)
 
 #ifdef __VENC_SUPPORT_JPGE__
     Ret = HI_DRV_MODULE_GetFunction(HI_ID_JPGENC, (HI_VOID**)&pJpgeFunc);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_VENC("HI_DRV_MODULE_GetFunction failed, ret=%d\n", Ret);
+
+        return HI_FAILURE;
+    }
 #endif
 
 
@@ -2653,6 +2734,10 @@ HI_S32 HI_DRV_VENC_Close_By_OPENTV(struct file*  ffile)
     // HI_CHAR ProcName[12];
 
     Ret = down_interruptible(&g_VencDrvMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
 
     del_timer_sync(&vencTimer);
 
@@ -2685,14 +2770,7 @@ HI_S32 HI_DRV_VENC_Close_By_OPENTV(struct file*  ffile)
 
     if (atomic_dec_and_test(&g_VencCount))
     {
-        Ret = VENC_DRV_EflCloseVedu();
-        if (HI_SUCCESS != Ret)
-        {
-            HI_FATAL_VENC("VeduEfl_CloseVedu failed, ret=%d\n", Ret);
-            up(&g_VencDrvMutex);
-            return HI_FAILURE;
-        }
-
+        VENC_DRV_EflCloseVedu();
         VENC_DRV_BoardDeinit();
     }
 

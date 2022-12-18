@@ -27,7 +27,6 @@ EXTRA_CFLAGS += -I$(MSP_UNF_INCLUDE)            \
                 -I$(COMMON_UNF_INCLUDE)         \
                 -I$(COMMON_DRV_INCLUDE)         \
                 -I$(MSP_DIR)/drv/otp            \
-                -I$(MSP_DIR)/drv/otp/otpv100    \
                 -I$(MSP_DIR)/drv/otp/otpv200
 
 ifeq ($(SDK_OTP_ARCH_VERSION), SDK_OTP_ARCH_VERSION_V3)
@@ -43,7 +42,6 @@ obj-$(CFG_MSP_BUILDTYPE) := $(MOD_NAME).o
 
 $(MOD_NAME)-y := ./drv_otp.o ./drv_otp_intf.o ./drv_otp_common.o ./otpv200/hal_otp_v200.o
 $(MOD_NAME)-y += ./otpv200/drv_otp_v200.o
-$(MOD_NAME)-y += ./otpv100/drv_otp_v100.o ./otpv100/hal_otp_v100.o
 
 REMOVED_FILES := "*.o" "*.ko" "*.order" "*.symvers" "*.mod" "*.mod.*" "*.cmd" ".tmp_versions" "modules.builtin"
 

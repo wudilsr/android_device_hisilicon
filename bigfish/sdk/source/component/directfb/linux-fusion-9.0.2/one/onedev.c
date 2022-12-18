@@ -505,6 +505,10 @@ static struct file_operations one_fops = {
 #else
      .ioctl = one_ioctl,
 #endif
+#ifdef CONFIG_COMPAT
+     .compat_ioctl = one_ioctl,
+#endif
+
 };
 
 /******************************************************************************/

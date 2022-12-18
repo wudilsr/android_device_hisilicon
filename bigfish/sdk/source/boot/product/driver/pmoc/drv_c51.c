@@ -200,6 +200,9 @@ HI_S32  c51_loadCode(void)
     
     HI_REG_WRITE32(SC_GEN15, C51_CODE_LOAD_FLAG); //indicate the C51 code is loaded
 
+    /* start MCU */
+    HI_REG_WRITE32(C51_BASE + C51_START, 0x1);
+
     return HI_SUCCESS;
 }
 

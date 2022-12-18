@@ -195,6 +195,7 @@ public class RemoteGameActivity extends BaseActivity implements OnClickListener,
     private void resumeActivity()
     {
         resetAccessListener();
+        resetSceneListener();
         initModules();
     }
 

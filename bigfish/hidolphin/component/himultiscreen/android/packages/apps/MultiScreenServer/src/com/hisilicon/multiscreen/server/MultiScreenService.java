@@ -45,6 +45,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.net.ethernet.EthernetManager;
@@ -59,9 +60,11 @@ import com.hisilicon.multiscreen.protocol.message.DefaultResponseMessage;
 import com.hisilicon.multiscreen.protocol.message.PlayMediaMessage;
 import com.hisilicon.multiscreen.protocol.message.PushMessage;
 import com.hisilicon.multiscreen.protocol.message.PushMessageHead;
+import com.hisilicon.multiscreen.protocol.scene.IServerSceneListener;
+import com.hisilicon.multiscreen.protocol.scene.SceneObserver;
+import com.hisilicon.multiscreen.protocol.scene.SceneType;
 import com.hisilicon.multiscreen.protocol.server.IPushMessageHandler;
 import com.hisilicon.multiscreen.protocol.server.PushServer;
-import com.hisilicon.multiscreen.protocol.server.ServerControl;
 import com.hisilicon.multiscreen.protocol.utils.AppListTransmitter;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
 import com.hisilicon.multiscreen.protocol.utils.MultiScreenIntentAction;
@@ -69,7 +72,6 @@ import com.hisilicon.multiscreen.protocol.utils.PronounceCoverter;
 import com.hisilicon.multiscreen.protocol.utils.SaxXmlUtil;
 import com.hisilicon.multiscreen.server.speech.DialogUtil;
 import com.hisilicon.multiscreen.server.speech.SpeechDialog;
-import com.hisilicon.multiscreen.server.speech.SpeechRecognitionHelper;
 import com.hisilicon.multiscreen.server.speech.responsemessage.SpeechResponseMessage;
 
 /**
@@ -122,9 +124,7 @@ public class MultiScreenService extends Service implements IPushMessageHandler
      */
     private static final String NIC_DEFAULT_NAME = "unknow";
 
-
-    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "wlan";
-
+    private final static String DEFAULT_USE_ADAPTER_WIFI_ETHERNET = "eth";
 
     /**
      * Message id of start all server.<br>
@@ -281,11 +281,19 @@ public class MultiScreenService extends Service implements IPushMessageHandler
      */
     private String mPrevAppPackageName = null;
 
+    private String hostName = null;
+
     /**
      * VIme control class.<br>
      * CN:VIme 控制类。
      */
     private VImeControl mVImeControl = null;
+
+    /**
+     * Scene observer.<br>
+     * CN:智能场景监控。
+     */
+    private SceneObserver mSceneObserver = null;
 
     /**
      * xml解析工具类.<br>
@@ -303,6 +311,12 @@ public class MultiScreenService extends Service implements IPushMessageHandler
      * CN: 语音dialog.
      */
     private SpeechDialog mSpeechDialog = null;
+
+    /**
+     * CST flag.<br>
+     * CN: CTS标记位.
+     */
+    private String ctsEnable = null;
 
     /**
      * Callback class.<br>
@@ -409,6 +423,17 @@ public class MultiScreenService extends Service implements IPushMessageHandler
         LogTool.d("onCreate.");
 
         mContext = this;
+        ctsEnable = SystemProperties.get("persist.sys.cts.enable");
+        if(null == ctsEnable)
+        {
+            ctsEnable = "false";
+        }
+
+        if(ctsEnable.equals("true"))
+        {
+            LogTool.d("do nothing in service");
+            return ;
+        }
         initModules();
         registerReceivers();
         setServiceForeground();
@@ -422,16 +447,17 @@ public class MultiScreenService extends Service implements IPushMessageHandler
     {
         super.onDestroy();
         LogTool.d("onDestroy.");
-
-        unregisterReceivers();
-        deinitModules();
-        stopUpnpStack();
-    }
-
-    private void deinitModules()
-    {
-        deinitMessageHandler();
-        deinitSwitchStateManager();
+        if(ctsEnable.equals("true"))
+        {
+            LogTool.d("do nothing in service");
+            return ;
+        }
+        else
+        {
+            unregisterReceivers();
+            deinitModules();
+            stopUpnpStack();
+        }
     }
 
     /**
@@ -462,7 +488,16 @@ public class MultiScreenService extends Service implements IPushMessageHandler
 
         initSpeechModule();
 
-        initServerControlModule();
+        // close scene because no one use it
+        //initSceneObserver();
+    }
+
+    private void deinitModules()
+    {
+        // close scene because no one use it
+        //deinitSceneObserver();
+        deinitMessageHandler();
+        deinitSwitchStateManager();
     }
 
     /**
@@ -536,10 +571,35 @@ public class MultiScreenService extends Service implements IPushMessageHandler
 
     }
 
-    private void initServerControlModule()
+    /**
+     * FIXME CN:场景识别。
+     */
+    private void initSceneObserver()
     {
-        ServerControl sc = new ServerControl(this);
-        sc.init();
+        // CN:用于客户端UI自动切换。
+        IServerSceneListener listener = new IServerSceneListener()
+        {
+            @Override
+            public void notifyScene(String type)
+            {
+                mMultiScreenNative.native_MultiScreenNotifySceneRecognition(type);
+            }
+        };
+
+        if (mSceneObserver == null)
+        {
+            mSceneObserver = new SceneObserver(mContext, listener);
+        }
+        else
+        {
+            mSceneObserver.setParameters(mContext, listener);
+        }
+        mSceneObserver.start();
+    }
+
+    private void deinitSceneObserver()
+    {
+        mSceneObserver.stop();
     }
 
     private String readFriendlyName()
@@ -552,8 +612,12 @@ public class MultiScreenService extends Service implements IPushMessageHandler
         // prefrence.getString(MultiScreenServerActivity.MULTISCREEN_FRIENDLY_KEY_NAME,
         // MultiScreenServerActivity.DEFAULT_FRIENDLY_NAME);
 
-        String devicename =
-            Settings.Global.getString(getContentResolver(), getSystemSettingDeviceNameKey());
+        SharedPreferences prefrence =
+                        getSharedPreferences("MultiScreenSetting",
+                            Context.MODE_WORLD_READABLE|Context.MODE_MULTI_PROCESS);
+        String devicename = prefrence.getString(MultiScreenServerActivity.MULTISCREEN_FRIENDLY_KEY_NAME,
+            Settings.Global.getString(getContentResolver(), getSystemSettingDeviceNameKey()));
+
         if (null == devicename)
         {
             devicename = getString(R.string.default_device_name);
@@ -1192,6 +1256,8 @@ public class MultiScreenService extends Service implements IPushMessageHandler
     private void registerSwitchReceiver()
     {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(MultiScreenIntentAction.HISILICON_CHANGE_NAME);
+        filter.addAction(MultiScreenIntentAction.MULITSCREEN_CHANGE_NAME);
         filter.addAction(MultiScreenIntentAction.MULITSCREEN_SWITCH_OPEN);
         filter.addAction(MultiScreenIntentAction.MULITSCREEN_SWITCH_CLOSE);
         if (mSwitchChangeReceiver == null)
@@ -1215,6 +1281,13 @@ public class MultiScreenService extends Service implements IPushMessageHandler
                         unregisterNetworkBroadcastReceiver();
                         stopMultiScreenAll(SENDER_MANUAL_SWITCH);
                         broadcastSwitchState(false);
+                    }
+                    else if(MultiScreenIntentAction.HISILICON_CHANGE_NAME.equalsIgnoreCase(action)
+                        || MultiScreenIntentAction.MULITSCREEN_CHANGE_NAME.equalsIgnoreCase(action))
+                    {
+                        hostName = intent.getStringExtra("host_name");
+                        registerNetworkBroadcastReceiver();
+                        broadcastSwitchState(true);
                     }
                 }
             };
@@ -1389,10 +1462,22 @@ public class MultiScreenService extends Service implements IPushMessageHandler
             LogTool.d("startUpnpStack.");
             isUpnpStackOpen = true;
             LogTool.i("start with net type " + mActiveNetType);
+            String mHostName = null;
+            if(hostName == null)
+                mHostName = readFriendlyName();
+            else
+                mHostName = hostName;
+
             retValue =
                 mMultiScreenNative.MultiScreenDeviceStart(
-                    UpnpMultiScreenDeviceInfo.defaultServiceList(), readFriendlyName(),
+                    UpnpMultiScreenDeviceInfo.defaultServiceList(), mHostName,
                     mActiveNetType);
+            writeMultiScreenStatusPreference("1");
+            /*
+             *  close scene because no one use it
+             *  if open scene and not call this fun, will cause memory error
+             */
+            //initSceneObserver();
         }
 
         return retValue;
@@ -1406,7 +1491,13 @@ public class MultiScreenService extends Service implements IPushMessageHandler
     {
         LogTool.d("stopUpnpStack.");
         isUpnpStackOpen = false;
+        /*
+         *  close scene because no one use it
+         *  if open scene and not call this fun, will cause memory error
+         */
+        //deinitSceneObserver();
         int retValue = mMultiScreenNative.MultiScreenDeviceStop();
+        writeMultiScreenStatusPreference("0");
         return retValue;
     }
 
@@ -1562,10 +1653,6 @@ public class MultiScreenService extends Service implements IPushMessageHandler
         {
             LogTool.i("AP is open");
             mActiveNetType = WIFI_NIC_NAME;
-
-            if(DEFAULT_USE_ADAPTER_WIFI_ETHERNET.contains("wlan"))
-                return true;
-
         }
 
         if (networkManager.getActiveDefaultNetwork() == ConnectivityManager.TYPE_WIFI)
@@ -1673,6 +1760,14 @@ public class MultiScreenService extends Service implements IPushMessageHandler
             msg.what = MSG_RESTART_MULTISCREEN;
             myHandler.sendMessageDelayed(msg, DELAY_MILLIS_HANDLE);
         }
+    }
+
+    private void writeMultiScreenStatusPreference(String mStatus)
+    {
+        SharedPreferences.Editor editor =
+            getSharedPreferences("MultiScreenSetting", Context.MODE_WORLD_READABLE|Context.MODE_MULTI_PROCESS).edit();
+        editor.putString("MultiScreenStatus", mStatus);
+        editor.commit();
     }
 
     private void stopMultiScreenAll(int senderId)

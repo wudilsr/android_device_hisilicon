@@ -401,6 +401,11 @@ typedef struct AVFormatParameters {
                                            increasing timestamps, but they must
                                            still be monotonic */
 
+typedef enum AVFormatInvokeID {
+    AVFORMAT_INVOKE_GET_TPLAY_SUPPORT = 0, /* parameter is int * */
+    AVFORMAT_INVOKE_SET_PLAY_SPEED,        /* parameter is float * */
+} AVFormatInvokeID;
+
 /**
  * @addtogroup lavf_encoding
  * @{
@@ -590,6 +595,12 @@ typedef struct AVInputFormat {
      * Active streams are all streams that have AVStream.discard < AVDISCARD_ALL.
      */
     int (*read_seek2)(struct AVFormatContext *s, int stream_index, int64_t min_ts, int64_t ts, int64_t max_ts, int flags);
+
+    /**
+    *  add by hisi
+    *  @invoke_id: see AVFormatInvokeID
+    */
+    int (*invoke)(struct AVFormatContext *s, enum AVFormatInvokeID invoke_id, void *arg);
 
 #if FF_API_OLD_METADATA2
     const AVMetadataConv *metadata_conv;
@@ -1370,6 +1381,7 @@ typedef enum AVEvent {
 typedef struct Hls_CryptoContext_s {
     URLContext      *hd;
     int64_t         offset;
+    int64_t         size;
 
     uint8_t         inbuffer [HLS_DECRYPT_BLOCKSIZE * HLS_DECRYPT_MAX_BUFFER_BLOCKS],
                     outbuffer[HLS_DECRYPT_BLOCKSIZE * HLS_DECRYPT_MAX_BUFFER_BLOCKS];
@@ -1563,6 +1575,10 @@ typedef struct HLSContext_s {
 } HLSContext;
 #else
 
+#define MAX_FIELD_LEN 64
+
+typedef struct hls_stream_info_s;
+
 typedef struct hls_iframe_s {
     int duration;
     int offset_time;
@@ -1572,21 +1588,54 @@ typedef struct hls_iframe_s {
 
 typedef struct hls_segment_s {
     int64_t start_time;                 /* segment start time (ms) */
+    int64_t url_offset;
+    int64_t size;
     int     total_time;                 /* segment duration (ms) */
     char    url[INITIAL_URL_SIZE];      /* segment URL*/
     char    key[INITIAL_URL_SIZE];      /* Segment key */
     int     key_type;
     uint8_t iv[16];
     time_t  program_time;
-    hls_iframe_t **iframes;
-    int iframe_nb;
-    int iframe_cur_index;
 } hls_segment_t;
+
+typedef enum hls_media_type
+{
+    HLSMEDIA_AUDIO = 0,
+    HLSMEDIA_VIDEO,
+    HLSMEDIA_SUBTITLE,
+    HLSMEDIA_CLOSED_CAPTIONS,
+    HLSMEDIA_BUTT
+};
+
+typedef struct hls_redition_attr_s {
+    enum hls_media_type  type;
+    char    group_id[MAX_FIELD_LEN];
+    char    language[MAX_FIELD_LEN];
+    char    name[MAX_FIELD_LEN];
+    int     defaulti;         /* 1:YES, 0:NO */
+    int     autoselect;      /* 1:YES, 0:NO */
+    int     forced;          /* 1:YES, 0:NO */
+} hls_redition_attr_s;
+
+typedef struct hls_variant_attr_s {
+    char audio_group[MAX_FIELD_LEN];
+    char video_group[MAX_FIELD_LEN];
+    char subtitles_group[MAX_FIELD_LEN];
+    struct hls_stream_info_s **reditions;
+    int  nb_reditions;
+} hls_variant_attr_t;
+
+typedef union hls_stream_attr_u {
+    hls_redition_attr_s r;
+    hls_variant_attr_t  v;
+} hls_stream_attr_u;
 
 typedef struct hls_stream_info_s {
     int     bandwidth;                  /* bandwidth usage of segments (bits per second) */
     char    url[INITIAL_URL_SIZE];      /* M3U8 URL */
+    char    org_url[INITIAL_URL_SIZE];
     int iframe_only;
+    int     sof;
 
     /* Segments list */
     struct segment_list_s
@@ -1621,12 +1670,7 @@ typedef struct hls_stream_info_s {
         AVFormatContext *parent;        /* pointer to applehttp_read_header AVFormatContext */
         AVFormatContext *ctx;           /* pointer to segments AVFormatContext */
 
-        int             set_offset;     /* set pts offset flags*/
-        int64_t         *last_time;      /* last sending packet pts */
-        int64_t         pts_offset;     /* pts offset */
-        int64_t         seek_offset;
-        int64_t         *last_org_pts;     /* last_time = last_org_pts + pts_offset */
-        int64_t         *discontinue_pts;  /* discontinue pts of one stream, is org pts */
+        int             nb_streams;     /* backup nb_streams of @*ctx here, for judge if it is changed */
     } seg_demux;
 
     /*Segments key */
@@ -1641,24 +1685,27 @@ typedef struct hls_stream_info_s {
     int video_codec;
     int audio_codec;
     int is_parsed;
+    int is_redition_stream;
+    hls_stream_attr_u attr;
 } hls_stream_info_t;
-    /** The information of the URL info */
-    /** CNcomment:URL的详细信息 */
-    typedef struct HLS_URL_INFO_S
-    {
-        char url[INITIAL_URL_SIZE]; /**< output parameter, the url of the connection *//**< CNcomment:当前连接的URL */
-        int port; /**< output parameter, port number *//**< CNcomment:端口号*/
-        char ipaddr[16]; /**< output parameter, internet address *//**< CNcomment:IP地址*/
-        int enable;
-    } HLS_URL_INFO_S;
+
+/** The information of the URL info */
+/** CNcomment:URL的详细信息 */
+typedef struct HLS_URL_INFO_S
+{
+    char url[INITIAL_URL_SIZE]; /**< output parameter, the url of the connection *//**< CNcomment:当前连接的URL */
+    int port; /**< output parameter, port number *//**< CNcomment:端口号*/
+    char ipaddr[16]; /**< output parameter, internet address *//**< CNcomment:IP地址*/
+    int enable;
+} HLS_URL_INFO_S;
 
 typedef struct HLSContext_s {
     const AVClass           *class_option;             /**< Class for private options. */
     int                     hls_stream_nb;       /* total number of hls_stream */
     int                     hls_stream_cur;      /* current hls_stream */
     hls_stream_info_t       **hls_stream;        /* bandwidth adaptation */
-    int                     hls_iframe_nb;
-    hls_stream_info_t       **hls_iframe_stream;
+    int                     nb_reditions;
+    hls_stream_info_t       **reditions;         /* stream signed with #EXT-X-MEDIA */
 
     int                     first_packet;        /* first packet (default 1) */
     int                     segment_stream_eof;  /* segment reached EOF */
@@ -1704,6 +1751,13 @@ typedef struct HLSContext_s {
     int64_t                 ts_length; // file length of segment
     char                    ts_traceid[INITIAL_URL_SIZE];
     HLS_URL_INFO_S          stHlsUrlInfo;
+    float                   cur_play_speed;
+    /* next items for pts discontinuity */
+    int             offset_stream_index; /* use which stream to compute pts discontinuity, the stream index of @timestamp_offset */
+    int             nb_no_timetamp_pkts; /* the number of pkts whose dts && pts are AV_NOPTS_VALUE during two pkts. */
+    int64_t         last_timestamp;
+    int64_t         timestamp_offset;
+    int64_t         seek_offset_us;      /* in us */
 } HLSContext;
 #endif
 

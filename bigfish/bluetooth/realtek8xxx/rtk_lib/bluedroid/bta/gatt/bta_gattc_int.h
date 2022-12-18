@@ -343,13 +343,12 @@ typedef struct
 } tBTA_GATTC_SERV;
 
 #ifndef BTA_GATTC_NOTIF_REG_MAX
-/*BOARD_HAVE_BLUETOOTH_RTK_VR Begin*/
-#ifdef BLUETOOTH_RTK_VR
-#define BTA_GATTC_NOTIF_REG_MAX     10
+
+#ifdef BLUETOOTH_RTK
+#define BTA_GATTC_NOTIF_REG_MAX     28
 #else
-/*BOARD_HAVE_BLUETOOTH_RTK_VR End*/
 #define BTA_GATTC_NOTIF_REG_MAX     7
-#endif  /*BOARD_HAVE_BLUETOOTH_RTK_VR*/
+#endif
 #endif
 
 typedef struct

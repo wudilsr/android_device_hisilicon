@@ -11,6 +11,14 @@
         android:keepScreenOn="true"
         android:visibility="visible" />
 
+    <LinearLayout
+        android:id="@+id/VideoView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/control_error"
         android:layout_width="wrap_content"

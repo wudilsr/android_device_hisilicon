@@ -805,6 +805,30 @@ ERR0:
     return HI_FAILURE;
 }
 
+HI_S32 VI_Check_Attr(HI_UNF_VI_ATTR_S *attr)
+{
+    HI_BOOL  bVirtual = HI_FALSE;
+
+    VI_CHECK_NULL_PTR(attr);
+    bVirtual = attr->bVirtual;
+#if    defined(CHIP_TYPE_hi3716cv200)   \
+    || defined(CHIP_TYPE_hi3716mv400)   \
+    || defined(CHIP_TYPE_hi3718cv100)   \
+    || defined(CHIP_TYPE_hi3719cv100)
+    return HI_SUCCESS;
+#else
+    if(bVirtual == HI_TRUE)
+    {
+        return HI_SUCCESS;
+    }
+    else
+    {
+        HI_ERR_VI("not support real vi:%d \n",bVirtual);
+        return HI_ERR_VI_NOT_SUPPORT;
+    }
+#endif
+}
+
 HI_S32 VI_Vpss_Destroy(HI_HANDLE hVi, VPSS_HANDLE hVpss)
 {
     VPSS_EXPORT_FUNC_S *pVpssFunc = HI_NULL;
@@ -1050,7 +1074,8 @@ irqreturn_t VI_PHY_InterruptHandler(int irq, void *dev_id)
     HI_U32 i;
     static HI_BOOL bflag = HI_FALSE;
     HI_U32 u32Stride;
-
+    
+    memset(&stFb, 0, sizeof(VI_FB_S));
     //find channel for real vi
     for (i = 0; i < MAX_VI_CHN; i++)
     {
@@ -1060,7 +1085,7 @@ irqreturn_t VI_PHY_InterruptHandler(int irq, void *dev_id)
             break;
         }
     }
-
+    
     if (MAX_VI_CHN == i)
     {
         HI_ERR_VI("vi phy int failed, max channel number reached!\n");
@@ -1358,13 +1383,13 @@ HI_S32 VI_DRV_AcquireFrame(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S *pstFrame)
     VI_CHECK_NULL_PTR(pstFrame);
     VI_PARSE_VPSS(hVpss, enPort, u32Chn);
     memset(&stFrameUnf, 0, sizeof(HI_UNF_VIDEO_FRAME_INFO_S));
-
+    memset(&stFbAttr, 0, sizeof(VI_FB_S));
+    
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].bStarted)
     {
         HI_WARN_VI("VI is not started.\n");
         return HI_ERR_VI_CHN_INVALID_STAT;
     }
-
     g_ViDrv[enPort][u32Chn].stStat.AcquireTry++;
 
 #ifdef HI_HDMI_RX_SUPPORT
@@ -1661,10 +1686,21 @@ HI_S32 HI_DRV_VI_Create(VI_CREATE_S *pstCreate, HI_VOID *file)
     VI_CHECK_NULL_PTR(pstCreate);
     VI_CHECK_NULL_PTR(file);
 
+    Ret = VI_Check_Attr(&pstCreate->stViAttr);
+    if (Ret != HI_SUCCESS)
+    {
+        return Ret;
+    }
     if ((HI_FALSE == pstCreate->stViAttr.bVirtual) && (HI_TRUE == bRealViOpened))
     {
         HI_ERR_VI("REAL VI only support ONE instance!\n");
         return HI_ERR_VI_NOT_SUPPORT;
+    }
+
+    if(pstCreate->enPort >= HI_UNF_VI_BUTT)
+    {
+        HI_ERR_VI("Invalid port %d.\n",pstCreate->enPort);
+        return HI_ERR_VI_INVALID_PARA;
     }
 
     for (i = 0; i < MAX_VI_CHN; i++)
@@ -1795,7 +1831,11 @@ HI_S32 HI_DRV_VI_Destroy(HI_HANDLE hVi)
     VI_FB_ATTR_S stFbAttr;
 
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
     {
 
@@ -1876,7 +1916,11 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
 
     VI_CHECK_NULL_PTR(pstAttr);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     /* rebuild VI buffer */
     memset(&stBufAttr, 0, sizeof(VI_FB_ATTR_S));
     if (HI_TRUE == pstAttr->bVirtual)
@@ -2068,7 +2112,16 @@ HI_S32 HI_DRV_VI_SetAttr(HI_HANDLE hVi, HI_UNF_VI_ATTR_S *pstAttr)
 
     VI_CHECK_NULL_PTR(pstAttr);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-    
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
+    Ret = VI_Check_Attr(pstAttr);
+    if (Ret != HI_SUCCESS)
+    {
+        return Ret;
+    }
     if ((HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
         && (pstAttr->bVirtual == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
         && (pstAttr->enBufMgmtMode ==  g_ViDrv[enPort][u32Chn].stAttr.enBufMgmtMode)
@@ -2234,7 +2287,11 @@ HI_S32 HI_DRV_VI_SetExtBuf(HI_HANDLE hVi, HI_UNF_VI_BUFFER_ATTR_S *pstBufAttr)
 
     VI_CHECK_NULL_PTR(pstBufAttr);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     memset(&stBufAttr, 0, sizeof(VI_FB_ATTR_S));
     stBufAttr.enBufMode = VI_FB_MODE_MMAP;
     stBufAttr.u32BufNum = pstBufAttr->u32BufNum;
@@ -2273,7 +2330,11 @@ HI_S32 HI_DRV_VI_CreateVpssPort(HI_HANDLE hVi, VI_VPSS_PORT_S *pstVpssPort)
     //    unsigned long flag;
     VI_CHECK_NULL_PTR(pstVpssPort);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     pVpssFunc = g_ViDrv[enPort][u32Chn].pVpssFunc;
 
     for (i = 0; i < VI_MAX_VPSS_PORT; i++)
@@ -2354,7 +2415,11 @@ HI_S32 HI_DRV_VI_DestroyVpssPort(HI_HANDLE hVi, VI_VPSS_PORT_S *pstVpssPort)
     //    unsigned long flag;
     VI_CHECK_NULL_PTR(pstVpssPort);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     pVpssFunc = g_ViDrv[enPort][u32Chn].pVpssFunc;
 
     for (i = 0; i < VI_MAX_VPSS_PORT; i++)
@@ -2492,7 +2557,11 @@ HI_S32 HI_DRV_VI_Start(HI_HANDLE hVi)
     HI_U32 u32Chn = 0;
 
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
     {
 #ifdef HI_HDMI_RX_SUPPORT
@@ -2541,7 +2610,11 @@ HI_S32 HI_DRV_VI_Stop(HI_HANDLE hVi)
     memset(&stFbAttr, 0, sizeof(VI_FB_ATTR_S));
 
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_FALSE == g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
     {
 #ifdef HI_HDMI_RX_SUPPORT
@@ -2647,7 +2720,11 @@ HI_S32 HI_DRV_VI_DequeueFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFrame
 
     VI_CHECK_NULL_PTR(pstFrame);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].bStarted)
     {
         HI_WARN_VI("VI is not started.\n");
@@ -2655,7 +2732,7 @@ HI_S32 HI_DRV_VI_DequeueFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFrame
     }
 
     g_ViDrv[enPort][u32Chn].stStat.DequeueTry++;
-
+    memset(&stFbAttr, 0, sizeof(VI_FB_S));
     Ret = VI_DRV_BufGet(&g_ViDrv[enPort][u32Chn].stFrameBuf, &stFbAttr, HI_TRUE);
     if (HI_SUCCESS != Ret)
     {
@@ -2696,7 +2773,11 @@ HI_S32 HI_DRV_VI_QueueFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFrame)
 
     VI_CHECK_NULL_PTR(pstFrame);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].bStarted)
     {
         HI_WARN_VI("VI is not started.\n");
@@ -2768,7 +2849,11 @@ HI_S32 HI_DRV_VI_UsrAcquireFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFr
 
     VI_CHECK_NULL_PTR(pstFrame);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].bStarted)
     {
         HI_WARN_VI("VI is not started.\n");
@@ -2776,6 +2861,7 @@ HI_S32 HI_DRV_VI_UsrAcquireFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFr
     }
 
     g_ViDrv[enPort][u32Chn].stStat.UsrAcqTry++;
+    memset(&stFbAttr, 0, sizeof(VI_FB_S));
 
 #ifdef HI_HDMI_RX_SUPPORT
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].stAttr.bVirtual)
@@ -2852,7 +2938,11 @@ HI_S32 HI_DRV_VI_UsrReleaseFrame(HI_HANDLE hVi, HI_UNF_VIDEO_FRAME_INFO_S *pstFr
 
     VI_CHECK_NULL_PTR(pstFrame);
     GET_PORT_CHN(hVi, enPort, u32Chn);
-
+    if (HI_INVALID_HANDLE == g_ViDrv[enPort][u32Chn].hVi) 
+    {
+        HI_ERR_VI("invalid handle = 0x%08x\n", hVi); 
+        return HI_ERR_VI_INVALID_PARA;
+    }
     if (HI_TRUE != g_ViDrv[enPort][u32Chn].bStarted)
     {
         HI_WARN_VI("VI is not started.\n");

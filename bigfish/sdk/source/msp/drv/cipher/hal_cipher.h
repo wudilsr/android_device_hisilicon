@@ -48,7 +48,7 @@ extern "C" {
 #define  CIPHER_IRQ_NUMBER                      (53 + 32)
 #elif defined (CHIP_TYPE_hi3719mv100)   \
    || defined (CHIP_TYPE_hi3718mv100)   \
-   || (defined (CHIP_TYPE_hi3798mv100) && !defined (HI_TVP_SUPPORT)) \
+   || (defined (CHIP_TYPE_hi3798mv100) && !defined (HI_TEE_SUPPORT)) \
    || defined (CHIP_TYPE_hi3796mv100)   \
    || defined (CHIP_TYPE_hi3798cv200_a) \
    || defined (CHIP_TYPE_hi3716mv410)   \
@@ -71,7 +71,7 @@ extern "C" {
 #define  CIPHER_CHAN_NUM                        (8)
 #define  CIPHER_PKGx1_CHAN                      (0)
 #define  CIPHER_PKGxN_CHAN_MIN                  (1)
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 #define  CIPHER_PKGxN_CHAN_MAX                  (3)
 #else
 #define  CIPHER_PKGxN_CHAN_MAX                  (7)
@@ -163,7 +163,9 @@ HI_VOID HAL_Cipher_DeInit(void);
 HI_VOID HAL_CIPHER_ReadReg(HI_U32 addr, HI_U32 *pu32Val);
 HI_VOID HAL_CIPHER_WriteReg(HI_U32 addr, HI_U32 u32Val);
 
+/******* proc function begin ********/
 HI_S32 HAL_CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus);
+/******* proc function end ********/
 
 #ifdef __cplusplus
 }

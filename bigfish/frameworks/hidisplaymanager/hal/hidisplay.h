@@ -186,6 +186,9 @@ typedef struct display_device_t
     int (*reload)();
     int (*set_output_enable)(int port, int enable);
     int (*get_output_enable)(int port);
+    int (*set_hdmi_cec_suspend)();
+    int (*get_hdmi_cec_suspend_enable)();
+    int (*set_hdmi_cec_suspend_enable)(int enable);
 
 } display_device_t;
 

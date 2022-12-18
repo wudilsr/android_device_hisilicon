@@ -24,5 +24,6 @@ int do_setHDCPKey(const char* tdname,int offset,const char* filename,int datasiz
 int do_getHDCPKey(const char* tdname,int offset,const char* filename,int datasize);
 int do_setDRMKey(const char* tdname,int offset,const char* filename,int datasize);
 int do_getDRMKey(const char* tdname,int offset,const char* filename,int datasize);
+int do_snapshot(const char* interfacename);
 __END_DECLS
 #endif

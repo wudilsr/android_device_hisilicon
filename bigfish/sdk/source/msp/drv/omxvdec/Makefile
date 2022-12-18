@@ -30,11 +30,10 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                    \
                 -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0/scene/stb  \
                 -I$(MSP_DIR)/drv/vdec
  
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-EXTRA_CFLAGS += -DHI_TVP_SUPPORT
-EXTRA_CFLAGS += -I$(TEE_INCLUDE)                           \
-                -I$(TVP_DIR)/libteec/inc                   \
-                -I$(TVP_DIR)/libteec/sec_mmz/inc
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_OMX_TEE_SUPPORT
+EXTRA_CFLAGS += -I$(TEE_DRV_INCLUDE)
+EXTRA_CFLAGS += -I$(KERNEL_SRC_DIR)/drivers/hisilicon/sec_mmz
 endif
 
 ifeq (y,$(CFG_HI_VDEC_PRE_ALLOC_VDHMMZ_SUPPORT))

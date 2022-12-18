@@ -45,6 +45,9 @@ HI_S32 LOADER_BURN_WriteData_CA(FLASH_DATA_INFO_S *pstFlashDataInfo, HI_U8 * puc
     HI_S64 s64Ret = HI_SUCCESS;
     HI_HANDLE hHandle = HI_INVALID_HANDLE;
     HI_U32 u32DataLen = 0;
+    HI_U32 i = 0;
+    HI_U32 u32Times = 0;
+    HI_U64 u64WriteOffset = 0;
     HI_U8 *pu8DataBuf = NULL;
     HI_FLASH_TYPE_E enFlashType = HI_FLASH_TYPE_BUTT;
 
@@ -80,22 +83,50 @@ HI_S32 LOADER_BURN_WriteData_CA(FLASH_DATA_INFO_S *pstFlashDataInfo, HI_U8 * puc
         return (HI_S32)HI_UPGRD_CA_SSD_CRYPT_FAIL;
     }
 
-    ret = CA_SSD_BurnImageToFlash(hHandle, 
-                                    pstFlashDataInfo->u64WriteOffset, 
-                                    pu8DataBuf, u32DataLen, 
-                                    pstFlashDataInfo->u32WriteFlags,
-                                    enFlashType,
-                                    HI_Flash_Write);
+    u32Times = u32DataLen / LOADER_BURN_SIZE_PERTIME;
+    u64WriteOffset = pstFlashDataInfo->u64WriteOffset;
+    for (i = 1; i < u32Times; i++)
+    {
+        ret = CA_SSD_BurnImageToFlash(hHandle,
+                                      u64WriteOffset,
+                                      pu8DataBuf,
+                                      LOADER_BURN_SIZE_PERTIME,
+                                      pstFlashDataInfo->u32WriteFlags,
+                                      enFlashType,
+                                      HI_Flash_Write);
+        if (0 > ret)
+        {
+            HI_ERR_LOADER("Write flash error!\n");
+            return (HI_S32)HI_UPGRD_UPGRDPRO_WRFLASH;
+        }
+
+        u64WriteOffset += LOADER_BURN_SIZE_PERTIME;
+        pu8DataBuf += LOADER_BURN_SIZE_PERTIME;
+
+        if (g_pfnOSDCallback)
+        {
+            IncCurWriteLen(LOADER_BURN_SIZE_PERTIME);
+            g_pfnOSDCallback(OSD_EVENT_TYPE_BURN, GetCurWriteLen(), GetTotalWriteLen());
+        }
+    }
+
+    ret = CA_SSD_BurnImageToFlash(hHandle,
+                                  u64WriteOffset,
+                                  pu8DataBuf,
+                                  (0 == u32Times)?u32DataLen:LOADER_BURN_SIZE_PERTIME + u32DataLen % LOADER_BURN_SIZE_PERTIME,
+                                  pstFlashDataInfo->u32WriteFlags,
+                                  enFlashType,
+                                  HI_Flash_Write);
     if (0 > ret)
     {
         HI_ERR_LOADER("Write flash error!\n");
         return (HI_S32)HI_UPGRD_UPGRDPRO_WRFLASH;
     }
-
-    IncCurWriteLen(u32DataLen);
+    u64WriteOffset += ((0 == u32Times)?u32DataLen:LOADER_BURN_SIZE_PERTIME + u32DataLen % LOADER_BURN_SIZE_PERTIME);
 
     if (g_pfnOSDCallback)
     {
+        IncCurWriteLen(LOADER_BURN_SIZE_PERTIME);
         g_pfnOSDCallback(OSD_EVENT_TYPE_BURN, GetCurWriteLen(), GetTotalWriteLen());
     }
 

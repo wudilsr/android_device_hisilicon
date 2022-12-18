@@ -360,19 +360,19 @@ HI_VOID JPEG_HDEC_GetImagInfo(j_decompress_ptr cinfo)
 
 	        case JPEG_FMT_YUV400:
 	        {
-	            CHeightTmp  = 0;
-				u32UVStride = 0;
-				#ifdef CONFIG_JPEG_OUTPUT_YUV420SP
-				if(HI_TRUE == pJpegHandle->bOutYUV420SP)
-				{
-					CHeightTmp  = 0;
-					u32UVStride = 0;
-				}
-				#endif
-				u32UVWidth   = 0;
-				u32UVHeight  = 0;
+	            //CHeightTmp  = 0;
+				//u32UVStride = 0;
+				//#ifdef CONFIG_JPEG_OUTPUT_YUV420SP
+				//if(HI_TRUE == pJpegHandle->bOutYUV420SP)
+				//{
+					//CHeightTmp  = 0;
+					//u32UVStride = 0;
+				//}
+				//#endif
+				//u32UVWidth   = 0;
+				//u32UVHeight  = 0;
                 break;
-				
+
 			}
 	        case JPEG_FMT_YUV420:
 	        {

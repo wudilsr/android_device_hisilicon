@@ -52,6 +52,9 @@
 // that play will continue after 30s or 60s occurs.
 #define DIAGNOSE_RECONNECT_TIMEOUT  (5000000)
 #define DIAGNOSE_TAG                "diagnose=deep"
+#define LIVE_RECONNECT_TIMEOUT      (10000000)
+#define LIVE_TAG                    "livemode=1"
+#define TIME_SHIFT_TAG              "livemode=2"
 #define __FILE_NAME__           av_filename(__FILE__)
 
 #define ISDIGIT(x)  (isdigit((int)  ((unsigned char)x)))
@@ -317,7 +320,11 @@ static int http_open_cnx(URLContext *h)
         if (err < 0)
         {
             av_log(NULL, AV_LOG_WARNING,"[%s:%d]: url_open_h ret='%d',errno:%d\n",__FILE_NAME__, __LINE__, err, ff_neterrno());
-            if (!av_stristr(s->location, DIAGNOSE_TAG) && err == AVERROR(ENETUNREACH) && !ff_check_interrupt(&(h->interrupt_callback)))
+            if (!av_stristr(s->location, DIAGNOSE_TAG) &&
+                err == AVERROR(ENETUNREACH) &&
+                !ff_check_interrupt(&(h->interrupt_callback)) &&
+                !av_stristr(s->location, LIVE_TAG) &&
+                !av_stristr(s->location, TIME_SHIFT_TAG))
             {
                 usleep(50*1000);
                 goto redo;
@@ -479,6 +486,23 @@ int ff_http_do_new_request(URLContext *h, const char *uri)
     return http_open_cnx(h);
 }
 
+int ff_http_averror(int status_code, int default_averror)
+{
+    switch (status_code) {
+        case 400: return AVERROR_HTTP_BAD_REQUEST;
+        case 401: return AVERROR_HTTP_UNAUTHORIZED;
+        case 403: return AVERROR_HTTP_FORBIDDEN;
+        case 404: return AVERROR_HTTP_NOT_FOUND;
+        default: break;
+    }
+    if (status_code >= 400 && status_code <= 499)
+        return AVERROR_HTTP_OTHER_4XX;
+    else if (status_code >= 500)
+        return AVERROR_HTTP_SERVER_ERROR;
+    else
+        return default_averror;
+}
+
 static int http_open(URLContext *h, const char *uri, int flags)
 {
     HTTPContext *s = h->priv_data;
@@ -531,6 +555,15 @@ static int http_open(URLContext *h, const char *uri, int flags)
             av_log(NULL, AV_LOG_ERROR, "[%s:%d] DIAGNOSE, network timeout\n", __FILE_NAME__, __LINE__);
             url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_TIMEOUT, "http");
             break;
+        }
+
+        if (av_stristr(s->location, LIVE_TAG)
+            && av_stristr(s->location, TIME_SHIFT_TAG)
+            && FFABS(av_gettime() - start_time) > LIVE_RECONNECT_TIMEOUT)
+        {
+            av_log(NULL, AV_LOG_ERROR,"live/timeshift stream reconnect timeout %d",ret);
+            url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_TIMEOUT, "http");
+            return AVERROR_EOF;
         }
 
         if (ff_check_interrupt(&(h->interrupt_callback)) > 0)
@@ -637,12 +670,28 @@ static int http_get_line(URLContext *h, char *line, int line_size)
     }
 }
 
+static int check_http_code(URLContext *h, int http_code, const char *end)
+{
+    HTTPContext *s = h->priv_data;
+    /* error codes are 4xx and 5xx, but regard 401 as a success, so we
+     * don't abort until all headers have been parsed. */
+    if (http_code >= 400 && http_code < 600 &&
+        (http_code != 401 || s->auth_state.auth_type != HTTP_AUTH_NONE) &&
+        (http_code != 407 || s->proxy_auth_state.auth_type != HTTP_AUTH_NONE)) {
+        end += strspn(end, SPACE_CHARS);
+        av_log(h, AV_LOG_WARNING, "HTTP error %d %s\n", http_code, end);
+        return ff_http_averror(http_code, AVERROR(EIO));
+    }
+    return 0;
+}
+
 static int process_line(URLContext *h, char *line, int line_count, int new_connection,
                         int *new_location, int *new_cookies)
 {
     HTTPContext *s = h->priv_data;
     char *tag, *p, *end;
     char redirected_location[MAX_URL_SIZE];
+    int ret = 0;
 
     /* end of header */
     if (line[0] == '\0')
@@ -658,15 +707,8 @@ static int process_line(URLContext *h, char *line, int line_count, int new_conne
 
         av_dlog(NULL, "http_code=%d\n", s->http_code);
 
-        /* error codes are 4xx and 5xx, but regard 401 as a success, so we
-         * don't abort until all headers have been parsed. */
-        if (s->http_code >= 400 && s->http_code < 600
-            && (s->http_code != 401 || s->auth_state.auth_type != HTTP_AUTH_NONE)
-            && (s->http_code != 407 || s->proxy_auth_state.auth_type != HTTP_AUTH_NONE)) {
-            end += strspn(end, SPACE_CHARS);
-            av_log(h, AV_LOG_ERROR, "HTTP error %d %s\n", s->http_code, end);
-            return -1;
-        }
+        if ((ret = check_http_code(h, s->http_code, end)) < 0)
+            return ret;
     } else {
         while (*p != '\0' && *p != ':')
             p++;
@@ -1385,7 +1427,7 @@ HTTP_READ_AGAIN:
                 __FILE_NAME__,__LINE__, http_code, s->http_code, report_event);
 
             end = av_gettime();
-            if (abs(end - start) > DIAGNOSE_RECONNECT_TIMEOUT
+            if (FFABS(end - start) > DIAGNOSE_RECONNECT_TIMEOUT
                 && av_stristr(s->location, DIAGNOSE_TAG))
             {
                 av_log(NULL, AV_LOG_ERROR,"diagnose reconnect timeout %d",ret);
@@ -1393,6 +1435,17 @@ HTTP_READ_AGAIN:
                 s->buf_end = s->buffer;
                 h->priv_data = s;
                 return ret;
+            }
+
+            if (av_stristr(s->location, LIVE_TAG)
+                && av_stristr(s->location, TIME_SHIFT_TAG)
+                && FFABS(end - start) > LIVE_RECONNECT_TIMEOUT)
+            {
+                av_log(NULL, AV_LOG_ERROR,"live/timeshift stream reconnect timeout %d",ret);
+                s->buf_ptr = s->buffer;
+                s->buf_end = s->buffer;
+                h->priv_data = s;
+                return AVERROR_EOF;
             }
 
             if (report_event == 0 || (http_code != s->http_code && s->http_code != 0))
@@ -1557,6 +1610,7 @@ static int64_t http_seek(URLContext *h, int64_t off, int whence)
     int old_buf_size;
     int old_seek_flag = s->seek_flag;
     int64_t old_filesize = s->filesize;
+    int64_t start = 0, end = 0;
     int ret = 0;
 
     if (whence == AVSEEK_SIZE)
@@ -1597,20 +1651,31 @@ static int64_t http_seek(URLContext *h, int64_t off, int whence)
     s->off = off;
     av_log(NULL, AV_LOG_ERROR, "[%s:%d] seek off=%lld,seek_flag=%d, filesize:%lld\n",
         __FILE_NAME__,__LINE__,off,s->seek_flag, s->filesize);
-    if (off < 0 || (off > s->filesize && s->filesize > 0))
+    if (off < 0 || (s->filesize > 0 && off >= (s->filesize - 1)))
     {
-        s->off = s->filesize;
-        off = s->filesize;
+        av_log(h, AV_LOG_ERROR, "[%s,%d] seek off=%lld is out of range(filesize=%lld)\n",
+            __FUNCTION__, __LINE__, off, s->filesize);
+        return -1;
     }
     s->seek_flag = 1;
     s->change_seek_flag = 0;
 
-    /* if it fails, continue on old connection */
+    /* changed: reconnect if failed */
+    start = av_gettime();
     ret = http_open_cnx(h);
-
-    if (AVERROR(EAGAIN) == ret) {
-        av_log(h, AV_LOG_ERROR, "eagain returned, we should try to connect again\n");
+    while (ret == AVERROR(ENETUNREACH) || ret == AVERROR(EAGAIN)) {
+        if (ff_check_interrupt(&h->interrupt_callback)) {
+            break;
+        }
+        end = av_gettime();
+        if (FFABS(end - start) > HTTP_CONNECT_TIMEOUT) {
+            break;
+        }
+        av_log(h, AV_LOG_ERROR, "[%s:%d] http_seek failed ret:%d, reconnect\n", __FUNCTION__, __LINE__, ret);
+        ret = http_open_cnx(h);
+        usleep(10*1000);
     }
+    /* changed end */
     if (ret < 0 || s->off < 0 || (s->off >= s->filesize && s->filesize > 0))
     {
         if (ret < 0 )

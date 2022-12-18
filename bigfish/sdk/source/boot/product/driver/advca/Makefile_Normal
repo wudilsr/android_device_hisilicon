@@ -47,6 +47,10 @@ CFLAGS   += -I$(BOOT_DIR)/arch/arm/include
 CFLAGS   += -I$(BOOT_DIR)/arch/arm/include/asm/
 endif
 
+ifeq ($(CFG_HI_ADVCA_VMX_3RD_SIGN),y)
+CFLAGS += -DHI_ADVCA_VMX_3RD_SIGN
+endif
+
 CFLAGS   += -I$(BOOT_DIR)/include
 CFLAGS	 += -I$(PRODUCT_DIR)/driver/advca/common/cipher
 CFLAGS	 += -I$(PRODUCT_DIR)/driver/advca/common/ca
@@ -57,6 +61,7 @@ CFLAGS	 += -I$(PRODUCT_DIR)/driver/advca/common/include
 CFLAGS	 += -I$(PRODUCT_DIR)/driver/include_inc
 CFLAGS   += -I$(PRODUCT_DIR)/driver/advca/vmx/vmx_bl_verify_lib
 CFLAGS   += -I$(COMPONENT_DIR)/loader/api/include
+CFLAGS   += -I$(PRODUCT_DIR)/driver/advca/vmx/3rd
 
 CFLAGS   += -DCA_CMD_SIGN_TYPE_COMMON_TEST
 CFLAGS   += -DCA_CMD_SIGN_TYPE_SPECIAL_TEST
@@ -71,6 +76,7 @@ ALG_DIR = $(ADVCA_COMMON_DIR)/alg
 AUTH_DIR = $(ADVCA_COMMON_DIR)/auth
 CA_DIR = $(ADVCA_COMMON_DIR)/ca
 VMX_BL_VERIFY_LIB_DIR = $(ADVCA_COMMON_DIR)/../vmx/vmx_bl_verify_lib
+VMX_3RD_DIR = $(PRODUCT_DIR)/driver/advca/vmx/3rd
 
 ifeq (${CFG_HI_ADVCA_TYPE},VERIMATRIX)
 OBJS += $(patsubst %.c,%.o,$(wildcard $(CA_DIR)/*.c))
@@ -78,6 +84,10 @@ OBJS += $(CIPHER_DIR)/drv_cipher.o
 OBJS += $(CIPHER_DIR)/drv_cipher_intf.o
 OBJS += $(CIPHER_DIR)/hal_cipher.o
 OBJS += $(CIPHER_DIR)/unf_cipher.o
+ifeq ($(CFG_HI_ADVCA_VMX_3RD_SIGN),y)
+OBJS += $(CIPHER_DIR)/drv_rsa_bignum.o
+OBJS += $(CIPHER_DIR)/drv_rsa.o
+endif
 else
 OBJS += $(patsubst %.c,%.o,$(wildcard $(ALG_DIR)/*.c))
 OBJS += $(patsubst %.c,%.o,$(wildcard $(CA_DIR)/*.c))
@@ -89,6 +99,11 @@ ifeq (${CFG_HI_ADVCA_TYPE},VERIMATRIX)
 OBJS += $(AUTH_DIR)/ca_config.o
 OBJS += $(AUTH_DIR)/ca_authenticate.o
 OBJS += $(AUTH_DIR)/ca_flash.o
+ifeq ($(CFG_HI_ADVCA_VMX_3RD_SIGN),y)
+OBJS += $(VMX_3RD_DIR)/vmx_3rd_adp.o
+OBJS += $(VMX_3RD_DIR)/vmx_3rd_auth.o
+OBJS += $(VMX_3RD_DIR)/vmx_3rd_test.o
+endif
 else
 OBJS += $(patsubst %.c,%.o,$(wildcard $(AUTH_DIR)/*.c))
 endif

@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2007 HUAWEI - All Rights Reserved
+* Copyright (c) 2007 Hisilicon - All Rights Reserved
 *
 * File     : $h264.h$
 * Date     : $2007/11/05$
@@ -52,7 +52,9 @@ extern "C" {
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/ioctl.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #endif
 
 #include "basedef.h"
@@ -551,6 +553,8 @@ typedef struct
     /* BEGIN: Added by y62639, 2010/9/27 */
     SINT32  MaxQp;
     SINT32  MinQp;
+    SINT32  AvgQp;
+
     /* END:   Added by y62639, 2010/9/27 */
 } H264_STORABLEPIC_S;
 
@@ -581,7 +585,10 @@ typedef struct H264_FRAMESTORE_S
     SINT32  frame_num_wrap;
     UINT32  long_term_frame_idx;
     SINT32  poc;
-    FO_STATE_E  eFoState;  // 处理第一帧快速输出时使用    
+    FO_STATE_E  eFoState;  // 处理第一帧快速输出时使用
+
+    SINT32  AvgQp;
+
     UINT32  is_displayed;    // VO 是否显示，0: not display; 1: displayed
     UINT32  MbaffFrameFlag;
     UINT32  pic_type;
@@ -625,6 +632,9 @@ typedef struct
     UINT32  pic_mbs;    
     UINT32  stream_base_addr;
     UINT32  pmv_address_idc; 
+
+    UINT32  FrameStreamSize;
+    UINT32  CurrentNalSize;
 } H264_CURRPIC_S;
 
 typedef struct

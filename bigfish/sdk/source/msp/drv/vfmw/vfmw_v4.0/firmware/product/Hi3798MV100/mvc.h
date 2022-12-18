@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2007 HUAWEI - All Rights Reserved
+* Copyright (c) 2007 Hisilicon - All Rights Reserved
 *
 * File     : $MVC.h$
 * Date     : $2007/11/05$
@@ -51,8 +51,9 @@ extern "C" {
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
-#include <asm/ioctl.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #endif
 
 #include "basedef.h"

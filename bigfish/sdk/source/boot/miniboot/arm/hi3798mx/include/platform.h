@@ -121,6 +121,13 @@
 #define REG_SC_GEN30                    0x00F8
 #define REG_SC_GEN31                    0x00FC
 
+/* MEM MODE */
+#define REG_MEM_COMB                    0xF8A35000
+#define MEM_MODE_SHIFT                  (0)
+#define MEM_MODE_MASK                   (0x1)
+#define MEM_COMB_SHIFT                  (1)
+#define MEM_COMB_MASK                   (0x3)
+
 /* WDG CRG REG */
 #define REG_PERI_CRG94                  0x178
 
@@ -213,7 +220,7 @@
 
 #define HI3798MX_OSC_FREQ                24000000
 #define MEM_BASE_DDR                             0x00000000
-#define CONFIG_TAG_OFFSET                        MEM_BASE_DDR + 0x1000
+#define CONFIG_TAG_OFFSET                        MEM_BASE_DDR + 0x100
 
 #define DEFAULT_UART_CLK                54000000
 

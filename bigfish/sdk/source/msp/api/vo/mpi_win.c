@@ -71,31 +71,23 @@ do{\
     HI_VO_UNLOCK();\
 }while(0)
 
+#define CHECK_VO_NULL_PTR(a)\
+    do{\
+        if (HI_NULL == (a))\
+        {\
+            HI_ERR_WIN("para %s is null.\n", #a);\
+            return HI_ERR_VO_NULL_PTR;\
+        }\
+    }while(0)
 
 HI_S32 HI_MPI_WIN_Init(HI_VOID)
 {
-    struct stat st;
-
     HI_VO_LOCK();
 
     if (g_VoDevFd > 0)
     {
         HI_VO_UNLOCK();
         return HI_SUCCESS;
-    }
-    
-    if (HI_FAILURE == stat(g_VoDevName, &st))
-    {
-        HI_FATAL_WIN("VO is not exist.\n");
-        HI_VO_UNLOCK();
-        return HI_ERR_VO_DEV_NOT_EXIST;
-    }
-
-    if (!S_ISCHR (st.st_mode))
-    {
-        HI_FATAL_WIN("VO is not device.\n");
-        HI_VO_UNLOCK();
-        return HI_ERR_VO_NOT_DEV_FILE;
     }
 
     g_VoDevFd = open(g_VoDevName, O_RDWR|O_NONBLOCK, 0);
@@ -143,7 +135,7 @@ HI_S32 HI_MPI_WIN_DeInit(HI_VOID)
 
 HI_S32 HI_MPI_WIN_Create(const HI_DRV_WIN_ATTR_S *pWinAttr, HI_HANDLE *phWindow)
 {
-    HI_S32           Ret;
+    HI_S32          Ret = HI_SUCCESS;
     WIN_CREATE_S  VoWinCreate;
 
     if (!pWinAttr)
@@ -190,7 +182,7 @@ HI_S32 HI_MPI_WIN_Create(const HI_DRV_WIN_ATTR_S *pWinAttr, HI_HANDLE *phWindow)
 
 HI_S32 HI_MPI_WIN_Create_Ext(const HI_DRV_WIN_ATTR_S *pWinAttr, HI_HANDLE *phWindow, HI_BOOL bVirtScreen)
 {
-    HI_S32           Ret;
+    HI_S32           Ret = HI_SUCCESS;;
     WIN_CREATE_S  VoWinCreate;
 
     if (!pWinAttr)
@@ -263,12 +255,13 @@ HI_S32 HI_MPI_WIN_GetInfo(HI_HANDLE hWin, HI_DRV_WIN_INFO_S * pstInfo)
         HI_ERR_WIN("para hWindow is invalid.\n");
         return HI_ERR_VO_INVALID_PARA; 
     }
+    CHECK_VO_NULL_PTR(pstInfo);
     CHECK_VO_INIT();
 	
     WinPriv.hWindow = hWin;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_INFO, &WinPriv);
-	if (!Ret)
+	if (HI_SUCCESS == Ret)
 	{
 		*pstInfo = WinPriv.stPrivInfo;
 	}
@@ -278,7 +271,7 @@ HI_S32 HI_MPI_WIN_GetInfo(HI_HANDLE hWin, HI_DRV_WIN_INFO_S * pstInfo)
 
 HI_S32 HI_MPI_WIN_GetPlayInfo(HI_HANDLE hWin, HI_DRV_WIN_PLAY_INFO_S * pstInfo)
 {
-    HI_S32 Ret; 
+    HI_S32 Ret = HI_SUCCESS;
     WIN_PLAY_INFO_S WinPlay;
 
     if (HI_INVALID_HANDLE == hWin)
@@ -286,12 +279,13 @@ HI_S32 HI_MPI_WIN_GetPlayInfo(HI_HANDLE hWin, HI_DRV_WIN_PLAY_INFO_S * pstInfo)
         HI_ERR_WIN("para hWindow is invalid.\n");
         return HI_ERR_VO_INVALID_PARA; 
     }
+    CHECK_VO_NULL_PTR(pstInfo);
     CHECK_VO_INIT();
 	
     WinPlay.hWindow = hWin;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_PLAY_INFO, &WinPlay);
-	if (!Ret)
+	if (HI_SUCCESS == Ret)
 	{
 		*pstInfo = WinPlay.stPlayInfo;
 	}
@@ -310,6 +304,7 @@ HI_S32 HI_MPI_WIN_SetSource(HI_HANDLE hWin, HI_DRV_WIN_SRC_INFO_S *pstSrc)
         HI_ERR_WIN("para hWindow is invalid.\n");
         return HI_ERR_VO_INVALID_PARA; 
     }
+    CHECK_VO_NULL_PTR(pstSrc);
     CHECK_VO_INIT();
 	
     VoWinAttach.hWindow = hWin;
@@ -369,7 +364,7 @@ HI_S32 HI_MPI_VO_SetMainWindowEnable(HI_HANDLE hWindow, HI_BOOL bEnable)
 
 HI_S32 HI_MPI_WIN_GetEnable(HI_HANDLE hWindow, HI_BOOL *pbEnable)
 {
-    HI_S32            Ret;
+    HI_S32          Ret = HI_SUCCESS;
     WIN_ENABLE_S   VoWinEnable;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -377,15 +372,11 @@ HI_S32 HI_MPI_WIN_GetEnable(HI_HANDLE hWindow, HI_BOOL *pbEnable)
         HI_ERR_WIN("para hWindow is invalid.\n");
         return HI_ERR_VO_INVALID_PARA; 
     }
-
-    if (!pbEnable)
-    {
-        HI_ERR_WIN("para pbEnable is null.\n");
-        return HI_ERR_VO_NULL_PTR;
-    }
-
+    
+    CHECK_VO_NULL_PTR(pbEnable);
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinEnable, 0, sizeof(WIN_ENABLE_S));
     VoWinEnable.hWindow = hWindow;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_ENABLE, &VoWinEnable);
@@ -416,23 +407,19 @@ HI_S32 HI_MPI_VO_GetWindowsVirtual(HI_HANDLE hWindow, HI_BOOL *pbVirutal)
 
 HI_S32 HI_MPI_WIN_AcquireFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 {
-    HI_S32              Ret;
+    HI_S32           Ret = HI_SUCCESS;
     WIN_FRAME_S      VoWinFrame;
 
     if (HI_INVALID_HANDLE == hWindow)
     {
         HI_ERR_WIN("para hWindow is invalid.\n");
-        return HI_ERR_VO_INVALID_PARA; 
-    }
-
-    if (!pFrameinfo)
-    {
-        HI_ERR_WIN("para pFrameinfo is null.\n");
-        return HI_ERR_VO_NULL_PTR;
+        return HI_ERR_VO_INVALID_PARA;
     }
     
+    CHECK_VO_NULL_PTR(pFrameinfo);
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinFrame, 0, sizeof(WIN_FRAME_S));    
     VoWinFrame.hWindow = hWindow;
     
     Ret = ioctl(g_VoDevFd, CMD_WIN_VIR_ACQUIRE, &VoWinFrame);
@@ -449,16 +436,19 @@ HI_S32 HI_MPI_WIN_AcquireFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFramein
 
 HI_S32 HI_MPI_WIN_ReleaseFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 {
-    HI_S32              Ret;
+    HI_S32           Ret = HI_SUCCESS;
     WIN_FRAME_S      VoWinFrame;
 
     if (HI_INVALID_HANDLE == hWindow)
     {
         HI_ERR_WIN("para hWindow is invalid.\n");
-        return HI_ERR_VO_INVALID_PARA; 
+        return HI_ERR_VO_INVALID_PARA;
     }
-    
+
+    CHECK_VO_NULL_PTR(pFrameinfo);
     CHECK_VO_INIT();
+
+    memset((HI_VOID*)&VoWinFrame, 0, sizeof(WIN_FRAME_S)); 
     
     VoWinFrame.hWindow = hWindow;
 	VoWinFrame.stFrame = *pFrameinfo;
@@ -474,7 +464,7 @@ HI_S32 HI_MPI_WIN_ReleaseFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFramein
 
 HI_S32 HI_MPI_WIN_SetAttr(HI_HANDLE hWindow, const HI_DRV_WIN_ATTR_S *pWinAttr)
 {
-    HI_S32           Ret;
+    HI_S32           Ret = HI_SUCCESS;
     WIN_CREATE_S  VoWinCreate;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -483,12 +473,8 @@ HI_S32 HI_MPI_WIN_SetAttr(HI_HANDLE hWindow, const HI_DRV_WIN_ATTR_S *pWinAttr)
         return HI_ERR_VO_INVALID_PARA; 
     }
 
-    if (!pWinAttr)
-    {
-        HI_ERR_WIN("para pWinAttr is null.\n");
-        return HI_ERR_VO_NULL_PTR;
-    }
-
+    CHECK_VO_NULL_PTR(pWinAttr);
+    
 
     if (pWinAttr->enARCvrs >= HI_DRV_ASP_RAT_MODE_BUTT)
     {
@@ -498,6 +484,7 @@ HI_S32 HI_MPI_WIN_SetAttr(HI_HANDLE hWindow, const HI_DRV_WIN_ATTR_S *pWinAttr)
 
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinCreate, 0, sizeof(WIN_CREATE_S));
     VoWinCreate.hWindow = hWindow;
     memcpy(&VoWinCreate.WinAttr, pWinAttr, sizeof(HI_DRV_WIN_ATTR_S));
 
@@ -508,7 +495,7 @@ HI_S32 HI_MPI_WIN_SetAttr(HI_HANDLE hWindow, const HI_DRV_WIN_ATTR_S *pWinAttr)
 
 HI_S32 HI_MPI_WIN_GetAttr(HI_HANDLE hWindow, HI_DRV_WIN_ATTR_S *pWinAttr)
 {
-    HI_S32           Ret;
+    HI_S32           Ret = HI_SUCCESS;
     WIN_CREATE_S  VoWinCreate;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -517,14 +504,10 @@ HI_S32 HI_MPI_WIN_GetAttr(HI_HANDLE hWindow, HI_DRV_WIN_ATTR_S *pWinAttr)
         return HI_ERR_VO_INVALID_PARA; 
     }
 
-    if (!pWinAttr)
-    {
-        HI_ERR_WIN("para pWinAttr is null.\n");
-        return HI_ERR_VO_NULL_PTR;
-    }
-
+    CHECK_VO_NULL_PTR(pWinAttr);
     CHECK_VO_INIT();
-
+    
+    memset((HI_VOID*)&VoWinCreate, 0, sizeof(WIN_CREATE_S));
     VoWinCreate.hWindow = hWindow;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_ATTR, &VoWinCreate);
@@ -567,7 +550,7 @@ HI_S32 HI_MPI_WIN_SetZorder(HI_HANDLE hWindow, HI_DRV_DISP_ZORDER_E enZFlag)
 
 HI_S32 HI_MPI_WIN_GetZorder(HI_HANDLE hWindow, HI_U32 *pu32Zorder)
 {
-    HI_S32            Ret;
+    HI_S32            Ret = HI_SUCCESS;
     WIN_ORDER_S   VoWinOrder;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -584,6 +567,7 @@ HI_S32 HI_MPI_WIN_GetZorder(HI_HANDLE hWindow, HI_U32 *pu32Zorder)
 
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinOrder, 0, sizeof(WIN_ORDER_S));
     VoWinOrder.hWindow = hWindow;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_ORDER, &VoWinOrder);
@@ -750,7 +734,7 @@ HI_S32 HI_MPI_WIN_GetFreezeStat(HI_HANDLE hWindow, HI_BOOL *bEnable, HI_DRV_WIN_
     stWinFreeze.hWindow = hWindow;
     
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_FREEZE_STATUS, &stWinFreeze);
-    if (Ret == HI_SUCCESS)
+    if (HI_SUCCESS == Ret)
     {    
         *bEnable = stWinFreeze.bEnable;
         *enWinFreezeMode = stWinFreeze.eMode;
@@ -767,7 +751,7 @@ HI_S32 HI_MPI_WIN_SetFieldMode(HI_HANDLE hWindow, HI_BOOL bEnable)
 
 HI_S32 HI_MPI_WIN_SendFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 {
-    HI_S32             Ret;
+    HI_S32             Ret = HI_SUCCESS;
     WIN_FRAME_S     VoWinFrame;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -784,6 +768,7 @@ HI_S32 HI_MPI_WIN_SendFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinFrame, 0, sizeof(WIN_FRAME_S));
     VoWinFrame.hWindow  = hWindow;
 	VoWinFrame.stFrame = *pFrame;
 
@@ -794,7 +779,7 @@ HI_S32 HI_MPI_WIN_SendFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 
 HI_S32 HI_MPI_WIN_DequeueFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 {
-    HI_S32  Ret;
+    HI_S32             Ret = HI_SUCCESS;
     WIN_FRAME_S VoWinFrame;
 
     if (HI_INVALID_HANDLE == hWindow)
@@ -811,10 +796,11 @@ HI_S32 HI_MPI_WIN_DequeueFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 
     CHECK_VO_INIT();
 
+    memset((HI_VOID*)&VoWinFrame, 0, sizeof(WIN_FRAME_S));
     VoWinFrame.hWindow = hWindow;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_DQ_FRAME, &VoWinFrame);
-    if (!Ret)
+    if (HI_SUCCESS == Ret)
     {
 		*pFrame = VoWinFrame.stFrame;
     }
@@ -852,7 +838,7 @@ HI_S32 HI_MPI_WIN_QueueSyncFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame
 	VoWinFrame.u32FenceFd = 0xffffffff;
 
 	Ret = ioctl(g_VoDevFd, CMD_WIN_QUSYNC_FRAME, &VoWinFrame);
-	if (!Ret)
+	if ((HI_SUCCESS == Ret) && (pu32FenceFd != HI_NULL))
 	{
 		*pu32FenceFd = VoWinFrame.u32FenceFd;
 	}
@@ -994,7 +980,7 @@ HI_S32 HI_MPI_VO_GetWindowDelay(HI_HANDLE hWindow, HI_DRV_WIN_PLAY_INFO_S *pDela
     VoWinDelay.hWindow = hWindow;
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_PLAY_INFO, &VoWinDelay);
-    if (!Ret)
+    if (HI_SUCCESS == Ret)
     {
         *pDelay = VoWinDelay.stPlayInfo;
     }
@@ -1057,6 +1043,7 @@ HI_S32 HI_MPI_WIN_SetExtBuffer(HI_HANDLE hWindow, HI_DRV_VIDEO_BUFFER_POOL_S* ps
         return HI_ERR_VO_INVALID_PARA; 
     }
 
+    CHECK_VO_NULL_PTR(pstBufAttr);
     CHECK_VO_INIT();
 
     bufferAttr.hwin = hWindow;
@@ -1098,7 +1085,7 @@ HI_S32 HI_MPI_WIN_GetQuickOutputStatus(HI_HANDLE hWindow, HI_BOOL *bQuickOutputE
         HI_ERR_WIN("para hWindow is invalid.\n");
         return HI_ERR_VO_INVALID_PARA; 
     }
-
+    CHECK_VO_NULL_PTR(bQuickOutputEnable);
     CHECK_VO_INIT();    
     stQuickOutputAttr.hWindow = hWindow;
     
@@ -1374,6 +1361,7 @@ HI_S32 HI_MPI_WIN_GetHandle(WIN_GET_HANDLE_S *pstWinHandle)
 {
     HI_S32 Ret;
 
+    CHECK_VO_NULL_PTR(pstWinHandle);
     CHECK_VO_INIT();
 
     Ret = ioctl(g_VoDevFd, CMD_WIN_GET_HANDLE, pstWinHandle);
@@ -1479,6 +1467,7 @@ HI_S32 HI_MPI_WIN_GetLatestFrameInfo(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S  *fram
         return HI_ERR_VO_INVALID_PARA; 
     }
 
+    CHECK_VO_NULL_PTR(frame_info);
     CHECK_VO_INIT();
 
     frame_struct.hWindow = hWin;
@@ -1505,6 +1494,7 @@ HI_S32 HI_MPI_WIN_GetUnloadTimes(HI_HANDLE hWin, HI_U32 *pu32Time)
         return HI_ERR_VO_INVALID_PARA; 
     }
 
+    CHECK_VO_NULL_PTR(pu32Time);
     CHECK_VO_INIT();
 
     stWinUnload.hWindow = hWin;
@@ -1550,6 +1540,7 @@ HI_S32 HI_MPI_WIN_CalMediaRect(HI_CHIP_TYPE_E enChipType,
     HI_U32 u32OriW = 0,u32OriH = 0;
     HI_U32 u32DstW = 0,u32DstH = 0;
     HI_U32 u32WidthLevel = 0, u32HeightLevel = 0;
+    CHECK_VO_NULL_PTR(pstMediaRect);
 
     u32OriW = (HI_U32)stStreamRect.s32Width;
     u32OriH = (HI_U32)stStreamRect.s32Height;
@@ -1615,6 +1606,7 @@ HI_S32 HI_MPI_WIN_CalAspectRegion(HI_MPI_WIN_RATIO_PARA_S stInPara,HI_RECT_S *ps
 	ALG_RATIO_OUT_PARA_S stOutPara;
 	ALG_RATIO_IN_PARA_S stInRatioPara;
 
+    CHECK_VO_NULL_PTR(pstRevisedRect);
 	stInRatioPara.SrcImgH = stInPara.SrcImgH;
 	stInRatioPara.SrcImgW = stInPara.SrcImgW;
 	stInRatioPara.DeviceWidth = stInPara.DeviceWidth;

@@ -71,14 +71,15 @@ choice
 config  ARM_HISIV200_LINUX
     bool "arm-hisiv200-linux"
 
-config  ARM_HISTBV300_LINUX
-    bool "arm-histbv300-linux"
+config  ARM_HISTBV310_LINUX
+	bool "arm-histbv310-linux"
+	depends on LINUX_PRODUCT
 endchoice
 
 config  HI_TOOLCHAINS_NAME
     string
     default arm-hisiv200-linux  if ARM_HISIV200_LINUX
-    default arm-histbv300-linux if ARM_HISTBV300_LINUX
+	default arm-histbv310-linux if ARM_HISTBV310_LINUX
 
 ###########################################################
 menuconfig  HI_LOADER_SUPPORT

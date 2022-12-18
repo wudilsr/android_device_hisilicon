@@ -504,6 +504,23 @@ int ff_http_do_new_request(URLContext *h, const char *uri)
     return http_open_cnx(h);
 }
 
+int ff_http_averror(int status_code, int default_averror)
+{
+    switch (status_code) {
+        case 400: return AVERROR_HTTP_BAD_REQUEST;
+        case 401: return AVERROR_HTTP_UNAUTHORIZED;
+        case 403: return AVERROR_HTTP_FORBIDDEN;
+        case 404: return AVERROR_HTTP_NOT_FOUND;
+        default: break;
+    }
+    if (status_code >= 400 && status_code <= 499)
+        return AVERROR_HTTP_OTHER_4XX;
+    else if (status_code >= 500)
+        return AVERROR_HTTP_SERVER_ERROR;
+    else
+        return default_averror;
+}
+
 static int http_open(URLContext *h, const char *uri, int flags)
 {
     HTTPContext *s = h->priv_data;
@@ -679,12 +696,28 @@ static int http_get_line(URLContext *h, char *line, int line_size)
     }
 }
 
+static int check_http_code(URLContext *h, int http_code, const char *end)
+{
+    HTTPContext *s = h->priv_data;
+    /* error codes are 4xx and 5xx, but regard 401 as a success, so we
+     * don't abort until all headers have been parsed. */
+    if (http_code >= 400 && http_code < 600 &&
+        (http_code != 401 || s->auth_state.auth_type != HTTP_AUTH_NONE) &&
+        (http_code != 407 || s->proxy_auth_state.auth_type != HTTP_AUTH_NONE)) {
+        end += strspn(end, SPACE_CHARS);
+        av_log(h, AV_LOG_WARNING, "HTTP error %d %s\n", http_code, end);
+        return ff_http_averror(http_code, AVERROR(EIO));
+    }
+    return 0;
+}
+
 static int process_line(URLContext *h, char *line, int line_count, int new_connection,
                         int *new_location, int *new_cookies)
 {
     HTTPContext *s = h->priv_data;
     char *tag, *p, *end;
     char redirected_location[MAX_URL_SIZE];
+    int ret = 0;
 
     /* end of header */
     if (line[0] == '\0')
@@ -700,15 +733,8 @@ static int process_line(URLContext *h, char *line, int line_count, int new_conne
 
         av_dlog(NULL, "http_code=%d\n", s->http_code);
 
-        /* error codes are 4xx and 5xx, but regard 401 as a success, so we
-         * don't abort until all headers have been parsed. */
-        if (s->http_code >= 400 && s->http_code < 600
-            && (s->http_code != 401 || s->auth_state.auth_type != HTTP_AUTH_NONE)
-            && (s->http_code != 407 || s->proxy_auth_state.auth_type != HTTP_AUTH_NONE)) {
-            end += strspn(end, SPACE_CHARS);
-            av_log(h, AV_LOG_ERROR, "[%s:%d] HTTP error %d %s\n", __FILE_NAME__, __LINE__, s->http_code, end);
-            return -1;
-        }
+        if ((ret = check_http_code(h, s->http_code, end)) < 0)
+            return ret;
     } else {
         while (*p != '\0' && *p != ':')
             p++;
@@ -825,9 +851,13 @@ static int process_line(URLContext *h, char *line, int line_count, int new_conne
         } else if (!av_strcasecmp(tag,"Content-Type") && NULL != strstr(p,"text/html")) {
             // h00186041, record html type
             s->willtry = 1;
+#if 0
             //YLL: ffmpeg2.0 used this, av_free(s->mime_type); s->mime_type = av_strdup(p);
         } else if (!av_strcasecmp (tag, "Server") && !av_strcasecmp (p, "AkamaiGHost")) {
             //YLL: ffmpeg2.0 used this,  s->is_akamai = 1;
+#endif
+        } else if (!av_strcasecmp (tag, "Server")) {
+            snprintf(s->server, sizeof(s->server), "%s", p);
         } else if (!av_strcasecmp (tag, "Icy-MetaInt")) {
             //YLL: ffmpeg2.0 used this, s->icy_metaint = strtoll(p, NULL, 10);
         } else if (!av_strncasecmp(tag, "Icy-", 4)) {
@@ -1213,6 +1243,14 @@ static int http_connect(URLContext *h, const char *path, const char *local_path,
 
     if (s->reconnect == 1 && (s->http_code == 200 || s->http_code == 206)) {
         av_log(NULL, AV_LOG_ERROR, "[%s,%d] http_connect Transfer-Encoding connect return 0\n",
+            __FILE_NAME__,__LINE__);
+        return 0;
+    }
+
+    if ((s->off != off && s->off == 0) &&
+        (s->http_code == 200 || s->http_code == 206) &&
+        !av_strcasecmp(s->server, "ZTE OTT Server")) {
+        av_log(NULL, AV_LOG_WARNING, "[%s,%d] offset not match but this is zte server, just treat is as ok.\n",
             __FILE_NAME__,__LINE__);
         return 0;
     }

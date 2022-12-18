@@ -106,13 +106,13 @@ static HI_U32 RTCP_EnableNonblock(HI_S32 fd)
 
     if (-1 == old_flags)
     {
-        return -errno;
+        return (HI_U32)-errno;
     }
 
-    s32Ret = fcntl(fd, F_SETFL, old_flags | O_NONBLOCK);
+    s32Ret = fcntl(fd, F_SETFL, (HI_U32)old_flags | O_NONBLOCK);
     if (-1 == s32Ret)
     {
-        return -errno;
+        return (HI_U32)-errno;
     }
 
     return HI_SUCCESS;
@@ -195,7 +195,7 @@ static HI_S32 RTCP_Create(HI_U32 u32Chn)
     }
 
     g_stRtpAttr[u32Chn].stRtcp.bStop = HI_FALSE;
-    if (pthread_create(&g_stRtpAttr[u32Chn].stRtcp.pThreadRecv, HI_NULL, RTP_ScheduleRtcpRecv, (HI_VOID*)u32Chn))
+    if (pthread_create(&g_stRtpAttr[u32Chn].stRtcp.pThreadRecv, HI_NULL, RTP_ScheduleRtcpRecv, (HI_VOID*)(HI_SIZE_T)u32Chn))
     {
         HI_ERR_RTP("pthread_create RTP_ScheduleRtcpRecv failed\n");
         shutdown(g_stRtpAttr[u32Chn].stRtcp.s32Socket, 2);
@@ -209,7 +209,7 @@ static HI_S32 RTCP_Create(HI_U32 u32Chn)
         return HI_FAILURE;
     }
 
-    if (pthread_create(&g_stRtpAttr[u32Chn].stRtcp.pThreadSend, HI_NULL, RTP_ScheduleRtcpSend, (HI_VOID*)u32Chn))
+    if (pthread_create(&g_stRtpAttr[u32Chn].stRtcp.pThreadSend, HI_NULL, RTP_ScheduleRtcpSend, (HI_VOID*)(HI_SIZE_T)u32Chn))
     {
         HI_ERR_RTP("pthread_create RTP_ScheduleRtcpSend failed\n");
         shutdown(g_stRtpAttr[u32Chn].stRtcp.s32Socket, 2);
@@ -260,12 +260,12 @@ static HI_VOID RTCP_Destroy(HI_U32 u32Chn)
 static HI_VOID* RTP_ScheduleRtcpSend(HI_VOID* args)
 {
     HI_S32 s32Ret;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     HI_U32 u32SendLen;
     HI_U8 *pu8SendAddr = HI_NULL;
     VP_PACKET_STRU *pRtcpPack = HI_NULL;
     VP_PACKET_STRU *pRtcpPackAddrBak = HI_NULL;
-    socklen_t sktLen;
+    //socklen_t sktLen;
     struct sockaddr_in stIpv4Remote  = {0};
     struct sockaddr_in6 stIpv6Remote = {0};
 
@@ -283,13 +283,13 @@ static HI_VOID* RTP_ScheduleRtcpSend(HI_VOID* args)
     {
         memcpy(&stIpv4Remote, &g_stRtpAttr[u32Chn].stRtpAttr.stRemoteNet.stIpv4Attr, sizeof(struct sockaddr_in));
         stIpv4Remote.sin_port =  htons(ntohs(stIpv4Remote.sin_port)+1);
-        sktLen = sizeof(struct sockaddr_in);
+        //sktLen = sizeof(struct sockaddr_in);
     }
     else
     {
         memcpy(&stIpv6Remote, &g_stRtpAttr[u32Chn].stRtpAttr.stRemoteNet.stIpv6Attr, sizeof(struct sockaddr_in6));
         stIpv6Remote.sin6_port = htons(ntohs(stIpv6Remote.sin6_port)+1);
-        sktLen = sizeof(struct sockaddr_in6);
+        //sktLen = sizeof(struct sockaddr_in6);
     }
 
     while (HI_FALSE == g_stRtpAttr[u32Chn].stRtcp.bStop)
@@ -330,7 +330,7 @@ static HI_VOID* RTP_ScheduleRtcpSend(HI_VOID* args)
 static HI_VOID* RTP_ScheduleRtcpRecv(HI_VOID* args)
 {
     HI_S32 s32Ret;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     RTP_RTCP_REPORT_S *pstReport  = HI_NULL;
     VP_RTCP_SESSION   *pstSession = HI_NULL;
     VP_RTPPACKET_STRU stPacket;
@@ -509,10 +509,10 @@ static HI_VOID RTP_HeaderPacket(HI_U8* pPackAddr, HI_U32 u32TimeStamp, HI_U32 u3
     RTP_SET_PADDING(pRtpHdr, 0);
     RTP_SET_HDREXT(pRtpHdr, 0);
     RTP_SET_CSRCCNT(pRtpHdr, 0);
-    RTP_SET_MARKER(pRtpHdr, u32Marker);
+    RTP_SET_MARKER((RTP_HDR_S*)pRtpHdr, u32Marker);
     RTP_SET_PAYLOAD(pRtpHdr, enPayload);
-    RTP_SET_SEQNUM(pRtpHdr, htons(u16LastSn));
-    RTP_SET_PTS(pRtpHdr, htonl(u32TimeStamp));
+    RTP_SET_SEQNUM((RTP_HDR_S*)pRtpHdr, htons(u16LastSn));
+    RTP_SET_PTS((RTP_HDR_S*)pRtpHdr, htonl(u32TimeStamp));
     RTP_SET_SSRC(pRtpHdr, htonl(u32Ssrc));
 
     return;
@@ -685,7 +685,7 @@ static HI_S32 RTP_RecvBufQueueES(HI_U32 u32Chn, HI_U32 u32SeqNum, RTP_RECV_BUF_N
 static HI_VOID* RTP_ScheduleRecv(HI_VOID* args)
 {
     HI_S32 s32Ret = HI_FAILURE;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     HI_S32 s32RecvBytes = 0;
     HI_U32 u32RecvBytes = 0;
     HI_U8  *pu8StartAddr;
@@ -706,6 +706,10 @@ static HI_VOID* RTP_ScheduleRecv(HI_VOID* args)
     RTP_RECV_BUF_S *pstRecvBuf = HI_NULL;
     RTP_RECV_BUF_NODE_S  *pstTmpBufNode = HI_NULL;
     HI_U8 *u8RecvBuf = HI_NULL;
+    if(u32Chn >= RTP_MAX_SESSION_NUM)
+    {
+        return HI_NULL;
+    }
     if (g_stRtpAttr[u32Chn].pstRecvBuf)
     {
         pstRecvBuf = g_stRtpAttr[u32Chn].pstRecvBuf;
@@ -848,24 +852,26 @@ static HI_VOID* RTP_ScheduleRecv(HI_VOID* args)
             FUA_BuffLen += 4;
         }
 
-        
-        pstTmpBufNode->u32Pts = u32PtsMs;
-        pstTmpBufNode->u32BlockSize = FUA_BuffLen;
-        pstTmpBufNode->u32Offset = pu8StartAddr - pstTmpBufNode->pBlockAddr;
-
-        pstSession = (VP_RTCP_SESSION*)g_stRtpAttr[u32Chn].stRtcp.hRTCP;
-        if (pstTmpBufNode->u32BlockSize)
+        if(pstTmpBufNode != HI_NULL)
         {
-            s32Ret = RTP_RecvBufQueueES(u32Chn, u16SeqNum, pstTmpBufNode);
-            if (HI_SUCCESS != s32Ret)
+            pstTmpBufNode->u32Pts = u32PtsMs;
+            pstTmpBufNode->u32BlockSize = FUA_BuffLen;
+            pstTmpBufNode->u32Offset = pu8StartAddr - pstTmpBufNode->pBlockAddr;
+
+            pstSession = (VP_RTCP_SESSION*)g_stRtpAttr[u32Chn].stRtcp.hRTCP;
+            if (pstTmpBufNode->u32BlockSize)
             {
-                HI_WARN_RTP("RTP_RecvBufQueueES failed\n");
+                s32Ret = RTP_RecvBufQueueES(u32Chn, u16SeqNum, pstTmpBufNode);
+                if (HI_SUCCESS != s32Ret)
+                {
+                    HI_WARN_RTP("RTP_RecvBufQueueES failed\n");
+                }
+                else
+                {
+                    u8RecvBuf = HI_NULL;
+                }
+                
             }
-            else
-            {
-                u8RecvBuf = HI_NULL;
-            }
-            
         }
         
         if((0 ==(g_stRtpAttr[u32Chn].stReport.u32RecvPacketNum % HI_RTP_STAT_DELAY_INTERVAL))\
@@ -903,7 +909,7 @@ static HI_S32 RTP_Recv_Enable(HI_U32 u32Chn)
     }
     
     g_stRtpAttr[i].bRecvStop = HI_FALSE;
-    if (pthread_create(&g_stRtpAttr[i].threadRecv, HI_NULL, RTP_ScheduleRecv, (HI_VOID*)i))
+    if (pthread_create(&g_stRtpAttr[i].threadRecv, HI_NULL, RTP_ScheduleRecv, (HI_VOID*)(HI_SIZE_T)i))
     {
         HI_ERR_RTP("pthread_create RTP_ScheduleRecv failed\n");
         g_stRtpAttr[i].bRecvStop = HI_TRUE;
@@ -1216,6 +1222,7 @@ HI_S32 RTP_Send(HI_HANDLE hRTP, HI_U8 *pu8BufAddr, HI_U32 u32Len, HI_U32 u32PtsM
     HI_U32 u32SendLen;
     HI_U32 u32PtsSend = RTP_PTS_MS_TO_90MS(u32PtsMs);
     VP_RTCP_SESSION *pstSession = HI_NULL;
+    RTP_HDR_S* pRtpHdrtmp = NULL;
 
     CHECK_RTP_NULL_PTR(pu8BufAddr);
     CHECK_RTP_HANDLE(hRTP);
@@ -1257,9 +1264,11 @@ HI_S32 RTP_Send(HI_HANDLE hRTP, HI_U8 *pu8BufAddr, HI_U32 u32Len, HI_U32 u32PtsM
             u32Marker = 0;
         }
 
-        RTP_SET_MARKER((RTP_HDR_S*)u8RtpHdr, u32Marker);
-        RTP_SET_SEQNUM((RTP_HDR_S*)u8RtpHdr, htons(g_stRtpAttr[i].u32SeqNum));
-        RTP_SET_PTS((RTP_HDR_S*)u8RtpHdr, htonl(u32PtsSend));
+        pRtpHdrtmp = (RTP_HDR_S*)u8RtpHdr;
+
+        RTP_SET_MARKER(pRtpHdrtmp, u32Marker);
+        RTP_SET_SEQNUM(pRtpHdrtmp, htons(g_stRtpAttr[i].u32SeqNum));
+        RTP_SET_PTS(pRtpHdrtmp, htonl(u32PtsSend));
 
         if (!u32IsFuaddr)
         {
@@ -1344,7 +1353,7 @@ HI_S32 RTP_Send(HI_HANDLE hRTP, HI_U8 *pu8BufAddr, HI_U32 u32Len, HI_U32 u32PtsM
     return HI_SUCCESS;
 }
 
-HI_S32 RTP_AcquireES(HI_HANDLE hRTP, HI_U32 *u32BufAddr, HI_U32 *u32Len, HI_U32 *u32PtsMs)
+HI_S32 RTP_AcquireES(HI_HANDLE hRTP, size_t *u32BufAddr, HI_U32 *u32Len, HI_U32 *u32PtsMs)
 {
     HI_S32 s32Ret;
     HI_U32 i;
@@ -1401,7 +1410,7 @@ HI_S32 RTP_AcquireES(HI_HANDLE hRTP, HI_U32 *u32BufAddr, HI_U32 *u32Len, HI_U32 
         }
 
         g_stRtpAttr[i].u32CurNum = pstTmpBufNode->u32SeqNumber;
-        *u32BufAddr = (HI_U32)(pstTmpBufNode->pBlockAddr + pstTmpBufNode->u32Offset);
+        *u32BufAddr = (HI_SIZE_T)(pstTmpBufNode->pBlockAddr + pstTmpBufNode->u32Offset);
         *u32Len   = pstTmpBufNode->u32BlockSize;
         *u32PtsMs = pstTmpBufNode->u32Pts;
     }
@@ -1452,7 +1461,7 @@ HI_S32 RTP_ReleaseES(HI_HANDLE hRTP)
         }
     }
     HI_RTP_UNLOCK();
-    if (HI_TRUE == bFindNode)
+    if (HI_TRUE == bFindNode && HI_NULL != pstTmpBufNode)
     {
         pstRecvBuf->u32LastOutSeq   = g_stRtpAttr[i].u32CurNum;
         pstTmpBufNode->u32BlockSize = g_stRtpAttr[i].stRtpAttr.u32RecvBufSize;

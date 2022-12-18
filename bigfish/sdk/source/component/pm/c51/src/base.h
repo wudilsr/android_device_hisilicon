@@ -3,10 +3,7 @@
 
 #include "hi_type.h"
 
-//#define HI_ADVCA_SUPPORT
 //#define HI_ADVCA_RELEASE
-
-//#define DEBUG_PRINT_ON
 
 //#define POWER_UP_STANDBY_MODE1
 
@@ -116,7 +113,7 @@
 #define DATA_IRVAL     (DATA_BASE_ADDR + 0x30)
 #define DATA_PHY0_BASE_ADDR    (DATA_BASE_ADDR + 0x100)
 #define DATA_PHY1_BASE_ADDR    (DATA_BASE_ADDR + 0x300)
-#define DATA_ENTER_FLAG  	(DATA_BASE_ADDR + 0x520)
+#define DATA_ENTER_FLAG  	(CFG_BASE_ADDR + SC_GEN13)
 #define DATA_SUSPEND_FLAG   (DATA_BASE_ADDR + 0x51c)
 #define DATA_WAKEUPTYPE 	(DATA_BASE_ADDR + 0xff8)
 #define DATA_PERIOD    		(DATA_BASE_ADDR + 0xffc)
@@ -161,6 +158,7 @@ extern HI_U8 g_u8KeyEnterPmoc;
 
 //Add for advanced CA to check if suspend happen
 #define PMOC_CHECK_TO_SUSPEND     0x80510001
+#define PMOC_RUNTIME_CHECK_OK     0x80510003
 #define TEMP_CHECK_TO_SUSPEND     0x11111111
 #define CHECK_PMOC_STATUS() regAddr.val32 = (CFG_BASE_ADDR + SC_GEN15);\
     read_regVal(); \
@@ -168,7 +166,7 @@ extern HI_U8 g_u8KeyEnterPmoc;
     {\
         return; \
     }\
-    regAddr.val32 = (DATA_BASE_ADDR + 0x520);\
+    regAddr.val32 = DATA_ENTER_FLAG;\
     read_regVal(); \
     if(TEMP_CHECK_TO_SUSPEND == regData.val32) \
     {\

@@ -39,6 +39,8 @@ extern "C" {
 /**A maximum of 3 arrays are supported for data structure UsbManuInfo.*/
 #define USB_MANU_MAX_NUM 3
 
+#define MAX_FILE_HEAD_LENGHT  (8 * 1024)
+
 typedef struct tagUsbImgMap
 {
     HI_U32 u32FileLength;    /**< File length*/

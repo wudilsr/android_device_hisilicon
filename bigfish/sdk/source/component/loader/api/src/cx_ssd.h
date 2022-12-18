@@ -91,9 +91,9 @@ typedef enum hiCA_KEY_GROUP_E
 #define HI_INFO_CA_INTEGRATION(format, arg...)   
 #define HI_SIMPLEINFO_CA(format, arg...)         HI_PRINT(format, ## arg)
 #else
-#define HI_ERR_CA_INTEGRATION(format, arg...)    printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
-#define HI_INFO_CA_INTEGRATION(format, arg...)   printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
-#define HI_SIMPLEINFO_CA(format, arg...)printf(format, ## arg)
+#define HI_ERR_CA_INTEGRATION(format, arg...)    HI_PRINT( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
+#define HI_INFO_CA_INTEGRATION(format, arg...)   HI_PRINT( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
+#define HI_SIMPLEINFO_CA(format, arg...)		 HI_PRINT(format, ## arg)
 #endif
 #endif
 #define CA_CheckPointer(p) \

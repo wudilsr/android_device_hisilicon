@@ -19,6 +19,7 @@
 #include "hi_unf_keyled.h"
 #include "hi_unf_frontend.h"
 #include "hi_adp_boardcfg.h"
+#include "upgrd_osd.h"
 
 #ifdef __cplusplus
  #if __cplusplus
@@ -32,6 +33,9 @@ extern "C" {
 *Function converse press key (Huawei remote control)
 *Return definition of button enumerate types for infrared response
 *--------------------------------*/
+
+extern HI_VOID LOADER_ShowUpgradeResult(HI_S32 s32Ret);
+
 eKeyPress LOADER_IR_Key_Convert(HI_U32 RawKey)
 {
     switch (RawKey)
@@ -368,17 +372,48 @@ eKeyPress LOADER_KEYLED_Key_Convert(HI_U32 RawKey)
  */
 HI_LOADER_UI_LANG_E LOADER_GetLanguage(HI_VOID)
 {
-#ifdef HI_APPLOADER_OSD_LANG_CN   
+#ifdef HI_APPLOADER_OSD_LANG_CN
     return HI_LOADER_UI_LANG_CN;
 #else
     return HI_LOADER_UI_LANG_EN;
 #endif
 }
 
+static HI_S32 ShowFatalErrInfo(HI_VOID)
+{
+    NOTIFY_INFO_S astInfo[4];
+
+    astInfo[0].s32StartX = 120;
+    astInfo[0].s32StartY = 40;
+
+    HI_OSAL_Snprintf(astInfo[0].acInfo, sizeof(astInfo[0].acInfo), "%s", LoaderOSDGetText(LOADER_CONTENT_WARNING));
+
+	astInfo[1].s32StartX = 80;
+    astInfo[1].s32StartY = 80;
+    HI_OSAL_Snprintf(astInfo[1].acInfo, sizeof(astInfo[1].acInfo), "%s", LoaderOSDGetText(LOADER_CONTENT_PROMPT_NOT_OP1));
+
+    astInfo[2].s32StartX = 80;
+    astInfo[2].s32StartY = 110;
+    HI_OSAL_Snprintf(astInfo[2].acInfo, sizeof(astInfo[2].acInfo), "%s", LoaderOSDGetText(LOADER_CONTENT_PROMPT_NOT_OP2));
+
+    astInfo[3].s32StartX = 80;
+    astInfo[3].s32StartY = 140;
+    HI_OSAL_Snprintf(astInfo[3].acInfo, sizeof(astInfo[3].acInfo), "%s", LoaderOSDGetText(LOADER_CONTENT_PROMPT_NOT_OP3));
+
+    LOADER_NotifyInfo(HI_NULL, 4, astInfo);
+
+    while(1)
+    {
+        LOADER_Delayms(3000);
+    }
+
+    return HI_SUCCESS;
+}
+
 static HI_BOOL isEnforceUpgrd(UPGRD_LOADER_INFO_S *pstLoaderDBInfo)
-{	
+{
 	HI_BOOL bMandatory = HI_FALSE;
-	
+
 	if (HI_NULL == pstLoaderDBInfo)
 		return HI_FALSE;
 
@@ -502,65 +537,91 @@ HI_S32 LOADER_CheckUpgradeTypePolicy(UPGRD_LOADER_INFO_S *pstLoaderDBInfo, HI_LO
 		if (HI_SUCCESS == s32Ret)
 		{
 			HI_DBG_LOADER("enter usb manual force upgrd procedure.\n");
-			
+
 			*penType = HI_LOADER_TYPE_USB;
+            return HI_SUCCESS;
 		}
-		else
+
+        HI_ERR_LOADER("LOADER_DOWNLOAD_USB_Init failed.\n");
 #endif
-		{
-			HI_DBG_LOADER("enter OTA manual force upgrd procedure.\n");
-			
-			s32Ret = LOADER_ManulUpgradeConfigParameter(pstLoaderDBInfo, penType, &pOutParameter);
-			if (HI_SUCCESS == s32Ret)
-			{
-				DOWNLOAD_OTA_PARAMETER_S *pstDLOtaParam = (DOWNLOAD_OTA_PARAMETER_S *)pOutParameter;
-				HI_LOADER_OTA_PARA_S *pstParam = &(pstLoaderDBInfo->stLoaderParam.stPara.stOTAPara);
+		s32Ret = LOADER_ManulUpgradeConfigParameter(pstLoaderDBInfo, penType, &pOutParameter);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_LOADER("LOADER_ManulUpgradeConfigParameter failed.\n");
 
-				if (HI_NULL == pstDLOtaParam)
-					return HI_FAILURE;
-
-				pstParam->eSigType = (HI_UNF_TUNER_SIG_TYPE_E)pstDLOtaParam->u32SignalType;
-				if (HI_UNF_TUNER_SIG_TYPE_CAB == pstParam->eSigType)
-				{
-					pstParam->unConnPara.stCab.u32OtaPid  = pstDLOtaParam->u16TsPID;
-					pstParam->unConnPara.stCab.u32OtaFreq = pstDLOtaParam->u32Frequency;
-					pstParam->unConnPara.stCab.u32OtaSymbRate   = pstDLOtaParam->u32SymbolRate;
-					pstParam->unConnPara.stCab.u32OtaModulation = pstDLOtaParam->enModulation;
-				}
-                else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstParam->eSigType)
+            if (HI_TRUE == pstLoaderDBInfo->stLoaderPrivate.bTagDestroy)
+            {
+                ShowFatalErrInfo();
+            }
+            else
+            {
+                if (pstLoaderDBInfo->stLoaderPrivate.u32FailedCnt >= LOADER_RETRY_TIMES)
                 {
-                    pstParam->unConnPara.stTer.u32OtaPid  = pstDLOtaParam->u16TsPID;
-                    pstParam->unConnPara.stTer.u32OtaFreq = pstDLOtaParam->u32Frequency;
-                    pstParam->unConnPara.stTer.u32OtaBandWidth = pstDLOtaParam->u32BandWidth;
-                    pstParam->unConnPara.stTer.u32OtaModulation = pstDLOtaParam->enModulation;
-				}
-				else if (HI_UNF_TUNER_SIG_TYPE_SAT == pstParam->eSigType)
-				{
-					pstParam->unConnPara.stSat.u32OtaPid  = pstDLOtaParam->u16TsPID;
-					pstParam->unConnPara.stSat.u32OtaFreq = pstDLOtaParam->u32Frequency;
-					pstParam->unConnPara.stSat.u32OtaSymbRate = pstDLOtaParam->u32SymbolRate;
-					pstParam->unConnPara.stSat.u32Polar  = pstDLOtaParam->u32Polar;
-					pstParam->unConnPara.stSat.u32HighLO = pstDLOtaParam->u32HighLO;
-					pstParam->unConnPara.stSat.u32LowLO = pstDLOtaParam->u32LowLO;
+                    Upgrd_ClearRequest(pstLoaderDBInfo);
+                }
+                else
+                {
+                    pstLoaderDBInfo->stLoaderPrivate.u32FailedCnt++;
 
-					pstParam->unConnPara.stSat.st16Port.u32Level = pstDLOtaParam->stSwitch16.u32Level;
-					pstParam->unConnPara.stSat.st16Port.u32Port = pstDLOtaParam->stSwitch16.u32Port;
+                    Upgrd_WriteLoaderDBInfo(pstLoaderDBInfo);
+                    LOADER_ShowUpgradeResult(UPGRD_L_CN_IP_NOT_FIND_FILE);
+                }
+            }
 
-					pstParam->unConnPara.stSat.st4Port.u32Level = pstDLOtaParam->stSwitch4.u32Level;
-					pstParam->unConnPara.stSat.st4Port.u32Port   = pstDLOtaParam->stSwitch4.u32Port;
-					pstParam->unConnPara.stSat.st4Port.u32Polar  = pstDLOtaParam->stSwitch4.u32Polar;
-					pstParam->unConnPara.stSat.st4Port.u32LNB22K = pstDLOtaParam->stSwitch4.u32LNB22K;
+            return s32Ret;
+        }
 
-					pstParam->unConnPara.stSat.u32Switch22K   = pstDLOtaParam->u32Switch22K;
-					//pstParam->unConnPara.stSat.u32Switch0_12V = pstDLOtaParam->u32Switch0_12V;
-					//pstParam->unConnPara.stSat.u32ToneBurst = pstDLOtaParam->u32ToneBurst;
-				}
-			}		
+		DOWNLOAD_OTA_PARAMETER_S *pstDLOtaParam = (DOWNLOAD_OTA_PARAMETER_S *)pOutParameter;
+		HI_LOADER_OTA_PARA_S *pstParam = &(pstLoaderDBInfo->stLoaderParam.stPara.stOTAPara);
+
+		if (HI_NULL == pstDLOtaParam)
+			return HI_FAILURE;
+
+		pstParam->eSigType = (HI_UNF_TUNER_SIG_TYPE_E)pstDLOtaParam->u32SignalType;
+		if (HI_UNF_TUNER_SIG_TYPE_CAB == pstParam->eSigType)
+		{
+			pstParam->unConnPara.stCab.u32OtaPid  = pstDLOtaParam->u16TsPID;
+			pstParam->unConnPara.stCab.u32OtaFreq = pstDLOtaParam->u32Frequency;
+			pstParam->unConnPara.stCab.u32OtaSymbRate   = pstDLOtaParam->u32SymbolRate;
+			pstParam->unConnPara.stCab.u32OtaModulation = pstDLOtaParam->enModulation;
+		}
+        else if (HI_UNF_TUNER_SIG_TYPE_DVB_T == pstParam->eSigType || HI_UNF_TUNER_SIG_TYPE_DVB_T2 == pstParam->eSigType)
+        {
+            pstParam->unConnPara.stTer.u32OtaPid  = pstDLOtaParam->u16TsPID;
+            pstParam->unConnPara.stTer.u32OtaFreq = pstDLOtaParam->u32Frequency;
+            pstParam->unConnPara.stTer.u32OtaBandWidth = pstDLOtaParam->u32BandWidth;
+            pstParam->unConnPara.stTer.u32OtaModulation = pstDLOtaParam->enModulation;
+		}
+		else if (HI_UNF_TUNER_SIG_TYPE_SAT == pstParam->eSigType)
+		{
+			pstParam->unConnPara.stSat.u32OtaPid  = pstDLOtaParam->u16TsPID;
+			pstParam->unConnPara.stSat.u32OtaFreq = pstDLOtaParam->u32Frequency;
+			pstParam->unConnPara.stSat.u32OtaSymbRate = pstDLOtaParam->u32SymbolRate;
+			pstParam->unConnPara.stSat.u32Polar  = pstDLOtaParam->u32Polar;
+			pstParam->unConnPara.stSat.u32HighLO = pstDLOtaParam->u32HighLO;
+			pstParam->unConnPara.stSat.u32LowLO = pstDLOtaParam->u32LowLO;
+
+			pstParam->unConnPara.stSat.st16Port.u32Level = pstDLOtaParam->stSwitch16.u32Level;
+			pstParam->unConnPara.stSat.st16Port.u32Port = pstDLOtaParam->stSwitch16.u32Port;
+
+			pstParam->unConnPara.stSat.st4Port.u32Level = pstDLOtaParam->stSwitch4.u32Level;
+			pstParam->unConnPara.stSat.st4Port.u32Port   = pstDLOtaParam->stSwitch4.u32Port;
+			pstParam->unConnPara.stSat.st4Port.u32Polar  = pstDLOtaParam->stSwitch4.u32Polar;
+			pstParam->unConnPara.stSat.st4Port.u32LNB22K = pstDLOtaParam->stSwitch4.u32LNB22K;
+
+			pstParam->unConnPara.stSat.u32Switch22K   = pstDLOtaParam->u32Switch22K;
+			//pstParam->unConnPara.stSat.u32Switch0_12V = pstDLOtaParam->u32Switch0_12V;
+			//pstParam->unConnPara.stSat.u32ToneBurst = pstDLOtaParam->u32ToneBurst;
 		}
 	}
 	else
 	{
 		s32Ret = LOADER_CheckNormalUpgradeType(pstLoaderDBInfo, penType);
+        if (HI_SUCCESS != s32Ret)
+        {
+            HI_ERR_LOADER("LOADER_CheckNormalUpgradeType failed.\n");
+            return s32Ret;
+        }
 	}
 
 	return s32Ret;
@@ -568,7 +629,7 @@ HI_S32 LOADER_CheckUpgradeTypePolicy(UPGRD_LOADER_INFO_S *pstLoaderDBInfo, HI_LO
 
 #endif
 
-/* 
+/*
  * compare upgrade stream version info with local stb version info.
  * return HI_SUCCESS if meet condition and continue upgrade procedure
  * otherwise return HI_FAILURE and loader will quit upgrade.
@@ -591,7 +652,7 @@ HI_S32 LOADER_CheckVersionMatch(UPGRD_LOADER_INFO_S *pstLoaderDBInfo, LOADER_VER
 	HI_DBG_LOADER("hardware_serial_num              : 0x%x\n", stbInfo.u32HWSerialNum);
 	HI_DBG_LOADER("software_version             : 0x%x\n", pstLoaderDBInfo->stLoaderParam.u32CurSoftware);
 	HI_DBG_LOADER("************************** end *********************\n");
-	
+
 	HI_DBG_LOADER("******************upgrd stream info *******************\n");
 	HI_DBG_LOADER("vendor_ID                    : 0x%x\n", pstUpgradeInfo->u32FactoryId);
 	HI_DBG_LOADER("hardware_version             : 0x%x\n", pstUpgradeInfo->u32HardwareVer);
@@ -615,7 +676,7 @@ HI_S32 LOADER_CheckVersionMatch(UPGRD_LOADER_INFO_S *pstLoaderDBInfo, LOADER_VER
 	}
 
 	/* HW serial number */
-	if (stbInfo.u32HWSerialNum < pstUpgradeInfo->u32StartSn 
+	if (stbInfo.u32HWSerialNum < pstUpgradeInfo->u32StartSn
             || stbInfo.u32HWSerialNum > pstUpgradeInfo->u32EndSn)
 	{
 		HI_ERR_LOADER("local HW serial number is not match with the upgrade stream.\n");
@@ -652,7 +713,7 @@ HI_VOID LOADER_UpgrdeDone(HI_S32 s32Ret, HI_LOADER_TYPE_E enType)
 {
 	/* waitting to reboot */
 #if defined(HI_LOADER_BOOTLOADER)
-	setenv("bootcmd", "reset"); 
+	setenv("bootcmd", "reset");
 #elif defined(HI_LOADER_APPLOADER)
 	sync();
 	reboot(RB_AUTOBOOT);

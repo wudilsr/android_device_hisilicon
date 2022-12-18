@@ -138,7 +138,7 @@ enum {
 #endif
 
 /* Middle quality quality setting @ 44.1 khz */
-#define DEFAULT_SBC_BITRATE 328
+#define DEFAULT_SBC_BITRATE 229
 
 #ifndef BTIF_A2DP_NON_EDR_MAX_RATE
 #define BTIF_A2DP_NON_EDR_MAX_RATE 229
@@ -2153,7 +2153,14 @@ static void btif_media_aa_prep_sbc_2_send(UINT8 nb_frame)
 
                 /* break read loop if timer was stopped (media task stopped) */
                 if ( btif_media_cb.is_tx_timer == FALSE )
+#ifdef BLUETOOTH_RTK
+                {
+                    GKI_freebuf(p_buf);
                     return;
+                }
+#else
+                    return;
+#endif
             }
 
         } while (((p_buf->len + btif_media_cb.encoder.u16PacketLength) < btif_media_cb.TxAaMtuSize)

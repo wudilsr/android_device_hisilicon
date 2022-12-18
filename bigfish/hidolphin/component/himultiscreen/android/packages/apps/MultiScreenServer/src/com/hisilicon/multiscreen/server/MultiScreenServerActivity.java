@@ -404,7 +404,7 @@ public class MultiScreenServerActivity extends PreferenceActivity
     {
         SharedPreferences prefrence =
             getSharedPreferences(MultiScreenServerActivity.MULTISCREEN_SETTING_FILE_NAME,
-                Context.MODE_PRIVATE);
+                Context.MODE_WORLD_READABLE|Context.MODE_MULTI_PROCESS);
         return prefrence.getString(MultiScreenServerActivity.MULTISCREEN_FRIENDLY_KEY_NAME,
             DEFAULT_FRIENDLY_NAME);
     }
@@ -412,7 +412,7 @@ public class MultiScreenServerActivity extends PreferenceActivity
     private void writeFriendlyNamePreference(String friendlyName)
     {
         SharedPreferences.Editor editor =
-            getSharedPreferences(MULTISCREEN_SETTING_FILE_NAME, MODE_PRIVATE).edit();
+            getSharedPreferences(MULTISCREEN_SETTING_FILE_NAME, Context.MODE_WORLD_READABLE|Context.MODE_MULTI_PROCESS).edit();
         editor.putString(MULTISCREEN_FRIENDLY_KEY_NAME, friendlyName);
         editor.commit();
     }

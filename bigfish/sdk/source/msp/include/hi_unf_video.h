@@ -550,6 +550,18 @@ typedef struct hiUNF_VIDEO_FRAME_INFO_S
     HI_U32                              u32Private[64];
 }HI_UNF_VIDEO_FRAME_INFO_S;
 
+typedef struct hiUNF_VIDEO_FRM_STATUS_INFO_S
+{
+    HI_UNF_VIDEO_FRAME_TYPE_E enVidFrmType; //视频帧类型
+    HI_U32 u32VidFrmSize; //视频帧大小
+    HI_U32 u32VidFrmQP; // 视频帧QP
+    HI_U32 u32VidFrmPTS; //视频帧PTS
+    HI_U32 u32MaxMV; //最大MV
+    HI_U32 u32MinMV; //最小MV
+    HI_U32 u32AvgMV; //平均MV
+    HI_U32 u32SkipRatio; // MV=0的MB比例
+}HI_UNF_VIDEO_FRM_STATUS_INFO_S;
+
 /** @} */  /** <!-- ==== Structure Definition End ==== */
 
 #ifdef __cplusplus

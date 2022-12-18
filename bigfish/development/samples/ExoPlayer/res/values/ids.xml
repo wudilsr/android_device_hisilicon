@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="mainTopLayout">false</item>
+    <item type="id" name="textTitle">false</item>
+    <item type="id" name="scrollView">false</item>
+    <item type="id" name="button">false</item>
+    <item type="id" name="button_play_qcif">false</item>
+    <item type="id" name="button_play_d1">false</item>
+    <item type="id" name="button_play_720p">false</item>
+    <item type="id" name="button_play_1080p">false</item>
+    <item type="id" name="scrollLayout">false</item>
+    <item type="id" name="layoutDeviceInfo">false</item>
+    <item type="id" name="textDeviceInfo">false</item>
+    <item type="id" name="tableLayout">false</item>
+    <item type="id" name="textResult">false</item>
+    <item type="id" name="textQcif">false</item>
+    <item type="id" name="textD1">false</item>
+    <item type="id" name="text720p">false</item>
+    <item type="id" name="text1080p">false</item>
+    <item type="id" name="textPrompt">false</item>
+    <item type="id" name="textCodecName">false</item>
+</resources>

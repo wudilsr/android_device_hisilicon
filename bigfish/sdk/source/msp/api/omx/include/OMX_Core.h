@@ -43,6 +43,18 @@ extern "C" {
 
 #include <OMX_Index.h>
 
+
+#ifdef ANDROID
+#include<utils/Log.h>
+#else
+#define ALOGD printf
+#define ALOGE printf
+#endif
+
+#define MAX(a, b)                       (((a) > (b)) ?  (a) : (b))
+#define MIN(a, b)                       (((a) > (b)) ?  (b) : (a))
+
+
 typedef enum OMX_COMMANDTYPE
 {
     OMX_CommandStateSet,

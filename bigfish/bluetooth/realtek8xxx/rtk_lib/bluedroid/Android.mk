@@ -28,6 +28,10 @@ ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_HEARTBEAT),true)
 rtkbt_bdroid_CFLAGS += -DBLUETOOTH_RTK_HEARTBEAT
 endif
 
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_COEX),true)
+rtkbt_bdroid_CFLAGS += -DBLUETOOTH_RTK_COEX
+endif
+
 ifeq ($(PLATFORM_VERSION), 4.3)
 rtkbt_bdroid_CFLAGS += -DANDROID_43
 endif

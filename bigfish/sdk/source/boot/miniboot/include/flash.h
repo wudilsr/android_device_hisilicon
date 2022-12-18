@@ -24,9 +24,8 @@
 enum flash_type_t {
 	FT_SPIFLASH = 0,
 	FT_NAND     = 1,
-	FT_SNAND    = 2,
-	FT_EMMC     = 3,
-	FT_NONE     = 4,
+	FT_EMMC     = 2,
+	FT_NONE     = 3,
 } ;
 
 struct flash_info_t {

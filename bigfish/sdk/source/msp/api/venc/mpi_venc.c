@@ -341,7 +341,16 @@ HI_S32 HI_MPI_VENC_Init(HI_VOID)
         return HI_SUCCESS;
     }
 
-    if (HI_FAILURE == stat(g_VEncDevName, &st))
+    g_VEncDevFd = open(g_VEncDevName, O_RDWR | O_NONBLOCK, 0);
+
+    if (g_VEncDevFd < 0)
+    {
+        HI_FATAL_VENC("open VEDU err.\n");
+        HI_VENC_UNLOCK();
+        return HI_FAILURE;
+    }
+
+    if (HI_FAILURE == fstat(g_VEncDevFd, &st))
     {
         HI_FATAL_VENC("VEDU is not exist.\n");
         HI_VENC_UNLOCK();
@@ -353,15 +362,6 @@ HI_S32 HI_MPI_VENC_Init(HI_VOID)
         HI_FATAL_VENC("VEDU is not device.\n");
         HI_VENC_UNLOCK();
         return HI_ERR_VENC_NOT_DEV_FILE;
-    }
-
-    g_VEncDevFd = open(g_VEncDevName, O_RDWR | O_NONBLOCK, 0);
-
-    if (g_VEncDevFd < 0)
-    {
-        HI_FATAL_VENC("open VEDU err.\n");
-        HI_VENC_UNLOCK();
-        return HI_FAILURE;
     }
 
     for (i = 0; i < VENC_MAX_CHN_NUM; i++)
@@ -687,10 +687,15 @@ HI_S32 HI_MPI_VENC_AttachInput(HI_HANDLE hVencChn, HI_HANDLE hSrc)
             HI_DRV_VENC_SRC_INFO_S* pstVencSrcInfo;
 
             HI_MPI_WIN_GetWinParam(hSrc, &stWinIntf);
-            s32Ret = HI_MPI_WIN_AttachWinSink(hSrc, hVencChn);
-            if (HI_SUCCESS != s32Ret)
+            
+            if (HI_SUCCESS != HI_MPI_WIN_AttachWinSink(hSrc, hVencChn))
             {
-                ioctl(g_VEncDevFd, CMD_VENC_DETACH_INPUT, &stVencAttachInfo);
+                s32Ret = ioctl(g_VEncDevFd, CMD_VENC_DETACH_INPUT, &stVencAttachInfo);
+                if (s32Ret != HI_SUCCESS)
+                {
+                    HI_WARN_VENC("set VENC_DETACH_INPUT return failed!\n");
+                }
+                
                 return HI_FAILURE;
             }
 
@@ -744,8 +749,15 @@ HI_S32 HI_MPI_VENC_AttachInput(HI_HANDLE hVencChn, HI_HANDLE hSrc)
         {
             HI_WARN_VENC("Mode(%d) detach func return failed!", enModID);
         }
-        ioctl(g_VEncDevFd, CMD_VENC_DETACH_INPUT, &stVencAttachInfo);
+
+        s32Ret = ioctl(g_VEncDevFd, CMD_VENC_DETACH_INPUT, &stVencAttachInfo);
+        if (s32Ret != HI_SUCCESS)
+        {
+            HI_WARN_VENC("set VENC_DETACH_INPUT return failed!\n");
+            return HI_FAILURE;
+        }
     }
+
     return s32Ret;
 }
 

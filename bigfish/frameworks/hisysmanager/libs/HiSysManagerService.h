@@ -68,6 +68,8 @@ public:
     virtual int getDRMKey(String8 tdname,int offset,String8 filename,int datasize);
     virtual int userDataRestoreIptv();
     virtual int setUIAsyncCompose(int mode);
+    virtual int snapshot(String8 path);
+    virtual int setDynamicPolicy(String8 state, String8 activity, String8 process);
 };
 };
 #endif /*SysManagerService_H*/

@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_acm.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_acm.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_acm.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_acm.o -O2 -Wall -Wundef
@@ -92,11 +92,11 @@
 
 	.text
 	.align	2
-	.global	PQ_MNG_GetColorGainLevel
-	.type	PQ_MNG_GetColorGainLevel, %function
-PQ_MNG_GetColorGainLevel:
+	.global	PQ_MNG_GetACMDemoMode
+	.type	PQ_MNG_GetACMDemoMode, %function
+PQ_MNG_GetACMDemoMode:
 	.fnstart
-.LFB1396:
+.LFB1411:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -106,76 +106,34 @@ PQ_MNG_GetColorGainLevel:
 	.save {fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
+	.pad #8
+	sub	sp, sp, #8	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:.LANCHOR0	@ tmp135,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp135,
-	ldr	r3, [r1, #0]	@ sg_u32ColorLevel, sg_u32ColorLevel
-	str	r3, [r0, #0]	@ sg_u32ColorLevel,* pu32ColorLevel
-	mov	r0, #0	@,
-	ldmfd	sp, {fp, sp, pc}	@
+	subs	r2, r0, #0	@ penMode, penMode
+	beq	.L6	@,
+	movw	r1, #:lower16:.LANCHOR1	@ tmp138,
+	movt	r1, #:upper16:.LANCHOR1	@ tmp138,
+	mov	r0, #0	@ D.36281,
+	ldr	r3, [r1, #0]	@ sg_enMode, sg_enMode
+	str	r3, [r2, #0]	@ sg_enMode,* penMode
+.L3:
+	sub	sp, fp, #12
+	ldmfd	sp, {fp, sp, pc}
+.L6:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	movw	r2, #:lower16:.LANCHOR0	@,
+	movw	r3, #643	@,
+	movt	r2, #:upper16:.LANCHOR0	@,
+	movw	ip, #:lower16:.LC0	@ tmp137,
+	movt	ip, #:upper16:.LC0	@ tmp137,
+	str	ip, [sp, #0]	@ tmp137,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.36281,
+	b	.L3	@
 	.fnend
-	.size	PQ_MNG_GetColorGainLevel, .-PQ_MNG_GetColorGainLevel
-	.align	2
-	.global	PQ_MNG_GetFleshToneLevel
-	.type	PQ_MNG_GetFleshToneLevel, %function
-PQ_MNG_GetFleshToneLevel:
-	.fnstart
-.LFB1398:
-	@ args = 0, pretend = 0, frame = 0
-	@ frame_needed = 1, uses_anonymous_args = 0
-	.movsp ip
-	mov	ip, sp	@,
-	stmfd	sp!, {fp, ip, lr, pc}	@,
-	.pad #4
-	.save {fp, ip, lr}
-	.setfp fp, ip, #-4
-	sub	fp, ip, #4	@,,
-	push	{lr}
-	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:.LANCHOR0	@ tmp135,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp135,
-	ldr	r3, [r1, #4]	@ sg_enFleshLevel, sg_enFleshLevel
-	str	r3, [r0, #0]	@ sg_enFleshLevel,* pu32FleshToneLevel
-	mov	r0, #0	@,
-	ldmfd	sp, {fp, sp, pc}	@
-	.fnend
-	.size	PQ_MNG_GetFleshToneLevel, .-PQ_MNG_GetFleshToneLevel
-	.align	2
-	.global	PQ_MNG_GetSixBaseColorLevel
-	.type	PQ_MNG_GetSixBaseColorLevel, %function
-PQ_MNG_GetSixBaseColorLevel:
-	.fnstart
-.LFB1404:
-	@ args = 0, pretend = 0, frame = 0
-	@ frame_needed = 1, uses_anonymous_args = 0
-	.movsp ip
-	mov	ip, sp	@,
-	stmfd	sp!, {r3, r4, r5, r6, fp, ip, lr, pc}	@,
-	.pad #4
-	.save {r3, r4, r5, r6, fp, ip, lr}
-	.setfp fp, ip, #-4
-	sub	fp, ip, #4	@,,
-	push	{lr}
-	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:.LANCHOR0	@ tmp135,
-	movt	r3, #:upper16:.LANCHOR0	@ tmp135,
-	mov	r2, r0	@ pstSixBaseColorOffset, pstSixBaseColorOffset
-	mov	r0, #0	@,
-	ldr	r6, [r3, #28]	@ sg_stSixbaseColorOffset.u32YellowOffset, sg_stSixbaseColorOffset.u32YellowOffset
-	ldr	r5, [r3, #8]	@ sg_stSixbaseColorOffset.u32RedOffset, sg_stSixbaseColorOffset.u32RedOffset
-	ldr	r4, [r3, #12]	@ sg_stSixbaseColorOffset.u32GreenOffset, sg_stSixbaseColorOffset.u32GreenOffset
-	ldr	ip, [r3, #16]	@ sg_stSixbaseColorOffset.u32BlueOffset, sg_stSixbaseColorOffset.u32BlueOffset
-	ldr	r1, [r3, #20]	@ sg_stSixbaseColorOffset.u32CyanOffset, sg_stSixbaseColorOffset.u32CyanOffset
-	ldr	r3, [r3, #24]	@ sg_stSixbaseColorOffset.u32MagentaOffset, sg_stSixbaseColorOffset.u32MagentaOffset
-	str	r6, [r2, #20]	@ sg_stSixbaseColorOffset.u32YellowOffset, <variable>.u32YellowOffset
-	str	r5, [r2, #0]	@ sg_stSixbaseColorOffset.u32RedOffset, <variable>.u32RedOffset
-	stmib	r2, {r4, ip}	@ phole stm
-	str	r1, [r2, #12]	@ sg_stSixbaseColorOffset.u32CyanOffset, <variable>.u32CyanOffset
-	str	r3, [r2, #16]	@ sg_stSixbaseColorOffset.u32MagentaOffset, <variable>.u32MagentaOffset
-	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	.fnend
-	.size	PQ_MNG_GetSixBaseColorLevel, .-PQ_MNG_GetSixBaseColorLevel
+	.size	PQ_MNG_GetACMDemoMode, .-PQ_MNG_GetACMDemoMode
 	.align	2
 	.global	PQ_MNG_GetColorEnhanceMode
 	.type	PQ_MNG_GetColorEnhanceMode, %function
@@ -191,22 +149,247 @@ PQ_MNG_GetColorEnhanceMode:
 	.save {fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
+	.pad #8
+	sub	sp, sp, #8	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:.LANCHOR1	@ tmp135,
-	movt	r1, #:upper16:.LANCHOR1	@ tmp135,
-	ldr	r3, [r1, #0]	@ sg_enColorSpecModeType, sg_enColorSpecModeType
-	str	r3, [r0, #0]	@ sg_enColorSpecModeType,* pu32ColorEnhanceMode
-	mov	r0, #0	@,
-	ldmfd	sp, {fp, sp, pc}	@
+	subs	r2, r0, #0	@ pu32ColorEnhanceMode, pu32ColorEnhanceMode
+	beq	.L11	@,
+	movw	r1, #:lower16:.LANCHOR1	@ tmp139,
+	movt	r1, #:upper16:.LANCHOR1	@ tmp139,
+	mov	r0, #0	@ D.36217,
+	ldr	r3, [r1, #4]	@ sg_enColorSpecModeType, sg_enColorSpecModeType
+	str	r3, [r2, #0]	@ sg_enColorSpecModeType,* pu32ColorEnhanceMode
+.L9:
+	sub	sp, fp, #12
+	ldmfd	sp, {fp, sp, pc}
+.L11:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L12	@,
+	mov	r3, #528	@,
+	movw	ip, #:lower16:.LC0	@ tmp138,
+	movt	ip, #:upper16:.LC0	@ tmp138,
+	str	ip, [sp, #0]	@ tmp138,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.36217,
+	b	.L9	@
+.L13:
+	.align	2
+.L12:
+	.word	.LANCHOR0+24
 	.fnend
 	.size	PQ_MNG_GetColorEnhanceMode, .-PQ_MNG_GetColorEnhanceMode
 	.align	2
-	.global	PQ_MNG_GetACMDemoMode
-	.type	PQ_MNG_GetACMDemoMode, %function
-PQ_MNG_GetACMDemoMode:
+	.global	PQ_MNG_GetSixBaseColorLevel
+	.type	PQ_MNG_GetSixBaseColorLevel, %function
+PQ_MNG_GetSixBaseColorLevel:
 	.fnstart
-.LFB1411:
+.LFB1404:
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 1, uses_anonymous_args = 0
+	.movsp ip
+	mov	ip, sp	@,
+	stmfd	sp!, {r4, r5, r6, fp, ip, lr, pc}	@,
+	.pad #4
+	.save {r4, r5, r6, fp, ip, lr}
+	.setfp fp, ip, #-4
+	sub	fp, ip, #4	@,,
+	.pad #12
+	sub	sp, sp, #12	@,,
+	push	{lr}
+	bl	__gnu_mcount_nc
+	subs	r2, r0, #0	@ pstSixBaseColorOffset, pstSixBaseColorOffset
+	beq	.L18	@,
+	movw	r3, #:lower16:.LANCHOR2	@ tmp139,
+	movt	r3, #:upper16:.LANCHOR2	@ tmp139,
+	mov	r0, #0	@ D.36124,
+	ldr	r6, [r3, #20]	@ sg_stSixbaseColorOffset.u32YellowOffset, sg_stSixbaseColorOffset.u32YellowOffset
+	ldr	r5, [r3, #0]	@ sg_stSixbaseColorOffset.u32RedOffset, sg_stSixbaseColorOffset.u32RedOffset
+	ldmib	r3, {r4, ip}	@ phole ldm
+	ldr	r1, [r3, #12]	@ sg_stSixbaseColorOffset.u32CyanOffset, sg_stSixbaseColorOffset.u32CyanOffset
+	ldr	r3, [r3, #16]	@ sg_stSixbaseColorOffset.u32MagentaOffset, sg_stSixbaseColorOffset.u32MagentaOffset
+	str	r6, [r2, #20]	@ sg_stSixbaseColorOffset.u32YellowOffset, <variable>.u32YellowOffset
+	str	r5, [r2, #0]	@ sg_stSixbaseColorOffset.u32RedOffset, <variable>.u32RedOffset
+	stmib	r2, {r4, ip}	@ phole stm
+	str	r1, [r2, #12]	@ sg_stSixbaseColorOffset.u32CyanOffset, <variable>.u32CyanOffset
+	str	r3, [r2, #16]	@ sg_stSixbaseColorOffset.u32MagentaOffset, <variable>.u32MagentaOffset
+.L16:
+	sub	sp, fp, #24
+	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
+.L18:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L19	@,
+	movw	r3, #442	@,
+	movw	ip, #:lower16:.LC0	@ tmp138,
+	movt	ip, #:upper16:.LC0	@ tmp138,
+	str	ip, [sp, #0]	@ tmp138,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.36124,
+	b	.L16	@
+.L20:
+	.align	2
+.L19:
+	.word	.LANCHOR0+52
+	.fnend
+	.size	PQ_MNG_GetSixBaseColorLevel, .-PQ_MNG_GetSixBaseColorLevel
+	.align	2
+	.global	PQ_MNG_SetColorSatGain
+	.type	PQ_MNG_SetColorSatGain, %function
+PQ_MNG_SetColorSatGain:
+	.fnstart
+.LFB1403:
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	.movsp ip
+	mov	ip, sp	@,
+	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}	@,
+	.pad #4
+	.save {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
+	.setfp fp, ip, #-4
+	sub	fp, ip, #4	@,,
+	.pad #36
+	sub	sp, sp, #36	@,,
+	push	{lr}
+	bl	__gnu_mcount_nc
+	cmp	r0, #0	@
+	str	r0, [fp, #-48]	@, %sfp
+	beq	.L22	@,
+	movw	r5, #:lower16:1374389535	@ tmp223,
+	sub	r6, r3, #50	@ tmp222, s32Sat,
+	movt	r5, #:upper16:1374389535	@ tmp223,
+	mov	r0, #0	@,
+	str	r0, [fp, #-52]	@, %sfp
+.L23:
+	ldr	r4, [fp, #-52]	@, %sfp
+	movw	r8, #406	@,
+	mov	r7, #0	@ j,
+	mul	r9, r8, r4	@ tmp214,,
+	mov	r8, r7	@ k, j
+.L29:
+	mov	r0, #58	@,
+	cmp	r8, r2	@ k, s32HueEnd
+	movgt	sl, #0	@, tmp247
+	movle	sl, #1	@, tmp247
+	mla	r3, r0, r7, r9	@ tmp205,, j, tmp214
+	cmp	r8, r1	@ k, s32HueStart
+	ldr	ip, [fp, #-48]	@, %sfp
+	movlt	sl, #0	@, tmp247,
+	cmp	sl, #0	@ tmp247,
+	add	r4, r3, #4048	@ tmp206, tmp205,
+	add	r0, r4, #8	@ tmp206, tmp206,
+	add	r3, ip, r0	@ tmp208,, tmp206
+	add	ip, r3, #4	@ ivtmp.569, tmp208,
+	beq	.L32	@,
+	ldrsh	sl, [r3, #4]	@ tmp249, <variable>.as16Sat
+	mul	r0, sl, r6	@ tmp250, tmp249, tmp222
+	smull	sl, r4, r5, r0	@, tmp252, tmp223, tmp250
+	mov	r0, r0, asr #31	@ tmp254, tmp250,
+	rsb	sl, r0, r4, asr #4	@, tmp255, tmp254, tmp252,
+	strh	sl, [r3, #4]	@ movhi	@ tmp255, <variable>.as16Sat
+.L32:
+	mov	r3, #0	@ tmp231,
+	cmp	r3, r3	@ tmp231,
+	add	r0, ip, #2	@ ivtmp.569, ivtmp.569,
+	mov	r3, #1	@ k,
+	beq	.L44	@,
+	cmp	r3, r2	@ k, s32HueEnd
+	movgt	r4, #0	@, tmp260
+	movle	r4, #1	@, tmp260
+	cmp	r3, r1	@ k, s32HueStart
+	movlt	r4, #0	@, tmp260,
+	cmp	r4, #0	@ tmp260,
+	beq	.L34	@,
+	ldrsh	sl, [ip, #2]	@ tmp262, <variable>.as16Sat
+	mul	r4, sl, r6	@, tmp262, tmp222
+	str	r4, [fp, #-64]	@, %sfp
+	smull	sl, r4, r5, r4	@,, tmp223,
+	ldr	sl, [fp, #-64]	@, %sfp
+	str	r4, [fp, #-56]	@, %sfp
+	mov	r4, sl, asr #31	@ tmp267,,
+	ldr	sl, [fp, #-56]	@, %sfp
+	rsb	r4, r4, sl, asr #4	@, tmp268, tmp267,,
+	strh	r4, [ip, #2]	@ movhi	@ tmp268, <variable>.as16Sat
+.L34:
+	add	r3, r3, #1	@ k, k,
+	add	r0, r0, #2	@ ivtmp.569, ivtmp.569,
+	cmp	r3, #29	@ k,
+	beq	.L42	@,
+.L44:
+	str	r7, [fp, #-56]	@ j, %sfp
+.L26:
+	cmp	r3, r2	@ k, s32HueEnd
+	movgt	r4, #0	@,
+	movle	r4, #1	@,
+	cmp	r3, r1	@ k, s32HueStart
+	add	ip, r3, #1	@ tmp232, k,
+	movlt	r4, #0	@,,
+	cmp	r4, #0	@ tmp192,
+	add	r4, r0, #2	@ tmp233, ivtmp.569,
+	beq	.L25	@,
+	ldrsh	sl, [r0, #0]	@ tmp194, <variable>.as16Sat
+	mul	r3, sl, r6	@ tmp195, tmp194, tmp222
+	smull	sl, r7, r5, r3	@, tmp197, tmp223, tmp195
+	mov	r3, r3, asr #31	@ tmp200, tmp195,
+	rsb	sl, r3, r7, asr #4	@, tmp196, tmp200, tmp197,
+	strh	sl, [r0, #0]	@ movhi	@ tmp196, <variable>.as16Sat
+.L25:
+	cmp	ip, r2	@ tmp232, s32HueEnd
+	movgt	r7, #0	@, tmp240
+	movle	r7, #1	@, tmp240
+	cmp	ip, r1	@ tmp232, s32HueStart
+	movlt	r7, #0	@, tmp240,
+	cmp	r7, #0	@ tmp240,
+	beq	.L37	@,
+	ldrsh	sl, [r0, #2]	@ tmp270, <variable>.as16Sat
+	mul	r3, sl, r6	@ tmp271, tmp270, tmp222
+	smull	sl, r7, r5, r3	@, tmp273, tmp223, tmp271
+	mov	sl, r3, asr #31	@ tmp275, tmp271,
+	rsb	r3, sl, r7, asr #4	@, tmp276, tmp275, tmp273,
+	strh	r3, [r0, #2]	@ movhi	@ tmp276, <variable>.as16Sat
+.L37:
+	add	r3, ip, #1	@ k, tmp232,
+	add	r0, r4, #2	@ ivtmp.569, tmp233,
+	cmp	r3, #29	@ k,
+	bne	.L26	@,
+	ldr	r7, [fp, #-56]	@ j, %sfp
+.L42:
+	add	r7, r7, #1	@ j, j,
+	cmp	r7, #7	@ j,
+	bne	.L29	@,
+	ldr	ip, [fp, #-52]	@, %sfp
+	add	sl, ip, #1	@,,
+	str	sl, [fp, #-52]	@, %sfp
+	cmp	sl, #5	@,
+	bne	.L23	@,
+	mov	r0, #0	@ D.36103,
+.L24:
+	sub	sp, fp, #40
+	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
+.L22:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L45	@,
+	mov	r3, #416	@,
+	movw	ip, #:lower16:.LC1	@ tmp185,
+	movt	ip, #:upper16:.LC1	@ tmp185,
+	str	ip, [sp, #0]	@ tmp185,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.36103,
+	b	.L24	@
+.L46:
+	.align	2
+.L45:
+	.word	.LANCHOR0+80
+	.fnend
+	.size	PQ_MNG_SetColorSatGain, .-PQ_MNG_SetColorSatGain
+	.align	2
+	.global	PQ_MNG_GetFleshToneLevel
+	.type	PQ_MNG_GetFleshToneLevel, %function
+PQ_MNG_GetFleshToneLevel:
+	.fnstart
+.LFB1398:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -216,16 +399,83 @@ PQ_MNG_GetACMDemoMode:
 	.save {fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
+	.pad #8
+	sub	sp, sp, #8	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:.LANCHOR1	@ tmp135,
-	movt	r1, #:upper16:.LANCHOR1	@ tmp135,
-	ldr	r3, [r1, #4]	@ sg_enMode, sg_enMode
-	str	r3, [r0, #0]	@ sg_enMode,* enMode
-	mov	r0, #0	@,
-	ldmfd	sp, {fp, sp, pc}	@
+	subs	r2, r0, #0	@ pu32FleshToneLevel, pu32FleshToneLevel
+	beq	.L51	@,
+	movw	r1, #:lower16:.LANCHOR2	@ tmp139,
+	movt	r1, #:upper16:.LANCHOR2	@ tmp139,
+	mov	r0, #0	@ D.35961,
+	ldr	r3, [r1, #24]	@ sg_enFleshLevel, sg_enFleshLevel
+	str	r3, [r2, #0]	@ sg_enFleshLevel,* pu32FleshToneLevel
+.L49:
+	sub	sp, fp, #12
+	ldmfd	sp, {fp, sp, pc}
+.L51:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L52	@,
+	mov	r3, #225	@,
+	movw	ip, #:lower16:.LC0	@ tmp138,
+	movt	ip, #:upper16:.LC0	@ tmp138,
+	str	ip, [sp, #0]	@ tmp138,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.35961,
+	b	.L49	@
+.L53:
+	.align	2
+.L52:
+	.word	.LANCHOR0+104
 	.fnend
-	.size	PQ_MNG_GetACMDemoMode, .-PQ_MNG_GetACMDemoMode
+	.size	PQ_MNG_GetFleshToneLevel, .-PQ_MNG_GetFleshToneLevel
+	.align	2
+	.global	PQ_MNG_GetColorGainLevel
+	.type	PQ_MNG_GetColorGainLevel, %function
+PQ_MNG_GetColorGainLevel:
+	.fnstart
+.LFB1396:
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 1, uses_anonymous_args = 0
+	.movsp ip
+	mov	ip, sp	@,
+	stmfd	sp!, {fp, ip, lr, pc}	@,
+	.pad #4
+	.save {fp, ip, lr}
+	.setfp fp, ip, #-4
+	sub	fp, ip, #4	@,,
+	.pad #8
+	sub	sp, sp, #8	@,,
+	push	{lr}
+	bl	__gnu_mcount_nc
+	subs	r2, r0, #0	@ pu32ColorLevel, pu32ColorLevel
+	beq	.L58	@,
+	movw	r1, #:lower16:.LANCHOR2	@ tmp139,
+	movt	r1, #:upper16:.LANCHOR2	@ tmp139,
+	mov	r0, #0	@ D.35941,
+	ldr	r3, [r1, #28]	@ sg_u32ColorLevel, sg_u32ColorLevel
+	str	r3, [r2, #0]	@ sg_u32ColorLevel,* pu32ColorLevel
+.L56:
+	sub	sp, fp, #12
+	ldmfd	sp, {fp, sp, pc}
+.L58:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L59	@,
+	mov	r3, #190	@,
+	movw	ip, #:lower16:.LC0	@ tmp138,
+	movt	ip, #:upper16:.LC0	@ tmp138,
+	str	ip, [sp, #0]	@ tmp138,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.35941,
+	b	.L56	@
+.L60:
+	.align	2
+.L59:
+	.word	.LANCHOR0+132
+	.fnend
+	.size	PQ_MNG_GetColorGainLevel, .-PQ_MNG_GetColorGainLevel
 	.align	2
 	.global	PQ_MNG_SetACMDemoMode
 	.type	PQ_MNG_SetACMDemoMode, %function
@@ -250,7 +500,7 @@ PQ_MNG_SetACMDemoMode:
 	movw	r3, #:lower16:.LANCHOR1	@ tmp135,
 	movt	r3, #:upper16:.LANCHOR1	@ tmp135,
 	mov	r0, #0	@,
-	str	r4, [r3, #4]	@ enMode, sg_enMode
+	str	r4, [r3, #0]	@ enMode, sg_enMode
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	PQ_MNG_SetACMDemoMode, .-PQ_MNG_SetACMDemoMode
@@ -303,153 +553,6 @@ PQ_MNG_EnableACMDemo:
 	.fnend
 	.size	PQ_MNG_EnableACMDemo, .-PQ_MNG_EnableACMDemo
 	.align	2
-	.global	PQ_MNG_SetColorSatGain
-	.type	PQ_MNG_SetColorSatGain, %function
-PQ_MNG_SetColorSatGain:
-	.fnstart
-.LFB1403:
-	@ args = 0, pretend = 0, frame = 24
-	@ frame_needed = 1, uses_anonymous_args = 0
-	.movsp ip
-	mov	ip, sp	@,
-	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}	@,
-	.pad #4
-	.save {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
-	.setfp fp, ip, #-4
-	sub	fp, ip, #4	@,,
-	.pad #36
-	sub	sp, sp, #36	@,,
-	push	{lr}
-	bl	__gnu_mcount_nc
-	cmp	r0, #0	@
-	str	r0, [fp, #-48]	@, %sfp
-	beq	.L18	@,
-	movw	r5, #:lower16:1374389535	@ tmp222,
-	sub	r6, r3, #50	@ tmp221, s32Sat,
-	movt	r5, #:upper16:1374389535	@ tmp222,
-	mov	r0, #0	@,
-	str	r0, [fp, #-52]	@, %sfp
-.L19:
-	ldr	r4, [fp, #-52]	@, %sfp
-	movw	r8, #406	@,
-	mov	r7, #0	@ j,
-	mul	r9, r8, r4	@ tmp213,,
-	mov	r8, r7	@ k, j
-.L25:
-	mov	r0, #58	@,
-	cmp	r8, r2	@ k, s32HueEnd
-	movgt	sl, #0	@, tmp246
-	movle	sl, #1	@, tmp246
-	mla	r3, r0, r7, r9	@ tmp204,, j, tmp213
-	cmp	r8, r1	@ k, s32HueStart
-	ldr	ip, [fp, #-48]	@, %sfp
-	movlt	sl, #0	@, tmp246,
-	cmp	sl, #0	@ tmp246,
-	add	r4, r3, #4048	@ tmp205, tmp204,
-	add	r0, r4, #8	@ tmp205, tmp205,
-	add	r3, ip, r0	@ tmp207,, tmp205
-	add	ip, r3, #4	@ ivtmp.681, tmp207,
-	beq	.L28	@,
-	ldrsh	sl, [r3, #4]	@ tmp248, <variable>.as16Sat
-	mul	r0, sl, r6	@ tmp249, tmp248, tmp221
-	smull	sl, r4, r5, r0	@, tmp251, tmp222, tmp249
-	mov	r0, r0, asr #31	@ tmp253, tmp249,
-	rsb	sl, r0, r4, asr #4	@, tmp254, tmp253, tmp251,
-	strh	sl, [r3, #4]	@ movhi	@ tmp254, <variable>.as16Sat
-.L28:
-	mov	r3, #0	@ tmp230,
-	cmp	r3, r3	@ tmp230,
-	add	r0, ip, #2	@ ivtmp.681, ivtmp.681,
-	mov	r3, #1	@ k,
-	beq	.L40	@,
-	cmp	r3, r2	@ k, s32HueEnd
-	movgt	r4, #0	@, tmp259
-	movle	r4, #1	@, tmp259
-	cmp	r3, r1	@ k, s32HueStart
-	movlt	r4, #0	@, tmp259,
-	cmp	r4, #0	@ tmp259,
-	beq	.L30	@,
-	ldrsh	sl, [ip, #2]	@ tmp261, <variable>.as16Sat
-	mul	r4, sl, r6	@, tmp261, tmp221
-	str	r4, [fp, #-64]	@, %sfp
-	smull	sl, r4, r5, r4	@,, tmp222,
-	ldr	sl, [fp, #-64]	@, %sfp
-	str	r4, [fp, #-56]	@, %sfp
-	mov	r4, sl, asr #31	@ tmp266,,
-	ldr	sl, [fp, #-56]	@, %sfp
-	rsb	r4, r4, sl, asr #4	@, tmp267, tmp266,,
-	strh	r4, [ip, #2]	@ movhi	@ tmp267, <variable>.as16Sat
-.L30:
-	add	r3, r3, #1	@ k, k,
-	add	r0, r0, #2	@ ivtmp.681, ivtmp.681,
-	cmp	r3, #29	@ k,
-	beq	.L38	@,
-.L40:
-	str	r7, [fp, #-56]	@ j, %sfp
-.L22:
-	cmp	r3, r2	@ k, s32HueEnd
-	movgt	r4, #0	@,
-	movle	r4, #1	@,
-	cmp	r3, r1	@ k, s32HueStart
-	add	ip, r3, #1	@ tmp231, k,
-	movlt	r4, #0	@,,
-	cmp	r4, #0	@ tmp191,
-	add	r4, r0, #2	@ tmp232, ivtmp.681,
-	beq	.L21	@,
-	ldrsh	sl, [r0, #0]	@ tmp193, <variable>.as16Sat
-	mul	r3, sl, r6	@ tmp194, tmp193, tmp221
-	smull	sl, r7, r5, r3	@, tmp196, tmp222, tmp194
-	mov	r3, r3, asr #31	@ tmp199, tmp194,
-	rsb	sl, r3, r7, asr #4	@, tmp195, tmp199, tmp196,
-	strh	sl, [r0, #0]	@ movhi	@ tmp195, <variable>.as16Sat
-.L21:
-	cmp	ip, r2	@ tmp231, s32HueEnd
-	movgt	r7, #0	@, tmp239
-	movle	r7, #1	@, tmp239
-	cmp	ip, r1	@ tmp231, s32HueStart
-	movlt	r7, #0	@, tmp239,
-	cmp	r7, #0	@ tmp239,
-	beq	.L33	@,
-	ldrsh	sl, [r0, #2]	@ tmp269, <variable>.as16Sat
-	mul	r3, sl, r6	@ tmp270, tmp269, tmp221
-	smull	sl, r7, r5, r3	@, tmp272, tmp222, tmp270
-	mov	sl, r3, asr #31	@ tmp274, tmp270,
-	rsb	r3, sl, r7, asr #4	@, tmp275, tmp274, tmp272,
-	strh	r3, [r0, #2]	@ movhi	@ tmp275, <variable>.as16Sat
-.L33:
-	add	r3, ip, #1	@ k, tmp231,
-	add	r0, r4, #2	@ ivtmp.681, tmp232,
-	cmp	r3, #29	@ k,
-	bne	.L22	@,
-	ldr	r7, [fp, #-56]	@ j, %sfp
-.L38:
-	add	r7, r7, #1	@ j, j,
-	cmp	r7, #7	@ j,
-	bne	.L25	@,
-	ldr	ip, [fp, #-52]	@, %sfp
-	add	sl, ip, #1	@,,
-	str	sl, [fp, #-52]	@, %sfp
-	cmp	sl, #5	@,
-	bne	.L19	@,
-	mov	r0, #0	@ D.36112,
-.L20:
-	sub	sp, fp, #40
-	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L18:
-	mov	r0, #1	@,
-	mov	r1, #41	@,
-	movw	r2, #:lower16:.LANCHOR2	@,
-	mov	r3, #412	@,
-	movt	r2, #:upper16:.LANCHOR2	@,
-	movw	ip, #:lower16:.LC0	@ tmp184,
-	movt	ip, #:upper16:.LC0	@ tmp184,
-	str	ip, [sp, #0]	@ tmp184,
-	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36112,
-	b	.L20	@
-	.fnend
-	.size	PQ_MNG_SetColorSatGain, .-PQ_MNG_SetColorSatGain
-	.align	2
 	.type	PQ_MNG_FindAcmGain, %function
 PQ_MNG_FindAcmGain:
 	.fnstart
@@ -471,13 +574,13 @@ PQ_MNG_FindAcmGain:
 	movt	ip, #:upper16:.LANCHOR1	@ tmp205,
 	ldr	ip, [ip, #8]	@ sg_pstPqParam.435, sg_pstPqParam
 	cmp	ip, #0	@ sg_pstPqParam.435,
-	beq	.L54	@,
+	beq	.L79	@,
 	add	r5, ip, #37888	@ ivtmp.727, sg_pstPqParam.435,
 	movw	r4, #:lower16:-120831580	@ tmp215,
 	add	ip, r5, #244	@ ivtmp.727, ivtmp.727,
 	movt	r4, #:upper16:-120831580	@ tmp215,
 	mov	r9, #0	@ i,
-.L46:
+.L71:
 	ldr	r7, [ip, #-12]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	add	r6, ip, #16	@ tmp217, ivtmp.727,
 	add	r9, r9, #1	@ tmp216, i,
@@ -486,60 +589,60 @@ PQ_MNG_FindAcmGain:
 	ldrb	r8, [ip, #-7]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r7, [ip, #-8]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldrb	sl, [ip, #-6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L45	@,
+	bne	.L70	@,
 	cmp	r7, r1	@ u8Lsb, u8GainLsb
-	bne	.L45	@,
+	bne	.L70	@,
 	cmp	r8, r2	@ u8Msb, uGain8Msb
-	bne	.L45	@,
+	bne	.L70	@,
 	cmp	sl, r3	@ u8SourceMode, u32InMode
-	bne	.L45	@,
-.L52:
+	bne	.L70	@,
+.L77:
 	str	r5, [r0, #0]	@ u32Value,* pu32Value
 	mov	r2, r5	@, u32Value
 	mov	r0, #16384	@,
 	movw	r1, #:lower16:.LC2	@,
 	movt	r1, #:upper16:.LC2	@,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, #0	@ D.35992,
-.L44:
+	mov	r0, #0	@ D.35983,
+.L69:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L45:
+.L70:
 	ldr	r8, [r6, #-12]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	ldr	r5, [ip, #16]	@ u32Value, <variable>.u32Value
 	cmp	r8, r4	@ <variable>.u32RegAddr, tmp215
 	ldrb	ip, [r6, #-8]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldrb	r7, [r6, #-7]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r8, [r6, #-6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L49	@,
+	bne	.L74	@,
 	cmp	ip, r1	@ u8Lsb, u8GainLsb
-	bne	.L49	@,
+	bne	.L74	@,
 	cmp	r7, r2	@ u8Msb, uGain8Msb
-	bne	.L49	@,
+	bne	.L74	@,
 	cmp	r8, r3	@ u8SourceMode, u32InMode
-	beq	.L52	@,
-.L49:
+	beq	.L77	@,
+.L74:
 	add	r9, r9, #1	@ i, tmp216,
 	add	ip, r6, #16	@ ivtmp.727, tmp217,
 	cmp	r9, #2048	@ i,
-	bne	.L46	@,
-	mvn	r0, #0	@ D.35992,
-	b	.L44	@
-.L54:
+	bne	.L71	@,
+	mvn	r0, #0	@ D.35983,
+	b	.L69	@
+.L79:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L55	@,
-	mov	r3, #234	@,
-	movw	lr, #:lower16:.LC1	@ tmp208,
-	movt	lr, #:upper16:.LC1	@ tmp208,
+	ldr	r2, .L80	@,
+	mov	r3, #238	@,
+	movw	lr, #:lower16:.LC0	@ tmp208,
+	movt	lr, #:upper16:.LC0	@ tmp208,
 	str	lr, [sp, #0]	@ tmp208,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.35992,
-	b	.L44	@
-.L56:
+	mvn	r0, #0	@ D.35983,
+	b	.L69	@
+.L81:
 	.align	2
-.L55:
-	.word	.LANCHOR2+24
+.L80:
+	.word	.LANCHOR0+160
 	.fnend
 	.size	PQ_MNG_FindAcmGain, .-PQ_MNG_FindAcmGain
 	.align	2
@@ -564,11 +667,11 @@ PQ_MNG_GetAcmGain:
 	mov	r4, r1	@ pu32Hue, pu32Hue
 	mov	r5, r2	@ pu32Sat, pu32Sat
 	mov	r7, r3	@ u32InMode, u32InMode
-	beq	.L64	@,
+	beq	.L89	@,
 	cmp	r1, #0	@ pu32Hue,
-	beq	.L65	@,
+	beq	.L90	@,
 	cmp	r2, #0	@ pu32Sat,
-	beq	.L66	@,
+	beq	.L91	@,
 	mov	r1, #20	@,
 	mov	r2, #29	@,
 	bl	PQ_MNG_FindAcmGain	@
@@ -585,37 +688,37 @@ PQ_MNG_GetAcmGain:
 	mov	r0, r5	@, pu32Sat
 	bl	PQ_MNG_FindAcmGain	@
 	orr	r0, r6, r0	@ s32Ret, s32Ret.755,
-.L59:
+.L84:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
-.L66:
-	ldr	r2, .L67	@,
+.L91:
+	ldr	r2, .L92	@,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	mov	r3, #276	@,
-.L63:
-	movw	ip, #:lower16:.LC1	@ tmp148,
-	movt	ip, #:upper16:.LC1	@ tmp148,
+	mov	r3, #280	@,
+.L88:
+	movw	ip, #:lower16:.LC0	@ tmp148,
+	movt	ip, #:upper16:.LC0	@ tmp148,
 	str	ip, [sp, #0]	@ tmp148,
 	bl	HI_LogOut	@
 	mvn	r0, #0	@ s32Ret,
-	b	.L59	@
-.L65:
+	b	.L84	@
+.L90:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L67	@,
-	movw	r3, #275	@,
-	b	.L63	@
-.L64:
+	ldr	r2, .L92	@,
+	movw	r3, #279	@,
+	b	.L88	@
+.L89:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L67	@,
-	movw	r3, #274	@,
-	b	.L63	@
-.L68:
+	ldr	r2, .L92	@,
+	movw	r3, #278	@,
+	b	.L88	@
+.L93:
 	.align	2
-.L67:
-	.word	.LANCHOR2+44
+.L92:
+	.word	.LANCHOR0+180
 	.fnend
 	.size	PQ_MNG_GetAcmGain, .-PQ_MNG_GetAcmGain
 	.align	2
@@ -644,12 +747,12 @@ PQ_MNG_SetColorEnhanceMode:
 	str	r3, [fp, #-48]	@ tmp142, u32BinSat
 	str	r3, [fp, #-40]	@ tmp142, u32BinLuma
 	str	r3, [fp, #-44]	@ tmp142, u32BinHue
-	bhi	.L82	@,
+	bhi	.L107	@,
 	movw	r4, #:lower16:.LANCHOR1	@ tmp248,
 	movt	r4, #:upper16:.LANCHOR1	@ tmp248,
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	cmp	r0, #0	@ sg_pstAcmCoef,
-	beq	.L83	@,
+	beq	.L108	@,
 	movw	r7, #:lower16:kmalloc_caches	@ tmp153,
 	movt	r7, #:upper16:kmalloc_caches	@ tmp153,
 	mov	r1, #32	@,
@@ -657,32 +760,32 @@ PQ_MNG_SetColorEnhanceMode:
 	ldr	r0, [r7, #52]	@, kmalloc_caches
 	bl	kmem_cache_alloc_trace	@
 	subs	r7, r0, #0	@ pstColorParam,
-	beq	.L84	@,
+	beq	.L109	@,
 	cmp	r5, #2	@ enColorSpecMode,
-	beq	.L76	@,
+	beq	.L101	@,
 	cmp	r5, #3	@ enColorSpecMode,
-	beq	.L77	@,
+	beq	.L102	@,
 	ldr	r1, [r4, #12]	@, sg_pstAcmCoef
 	cmp	r5, #1	@ enColorSpecMode,
 	movw	r2, #6090	@,
 	addeq	r1, r1, #6080	@, sg_pstAcmCoef,
 	addeq	r1, r1, #10	@,,
 	bl	memcpy	@
-.L78:
+.L103:
 	sub	r0, fp, #40	@,,
 	sub	r1, fp, #44	@,,
 	sub	r2, fp, #48	@,,
 	mov	r3, r6	@, u32SourceMode
 	bl	PQ_MNG_GetAcmGain	@
 	cmn	r0, #1	@,
-	beq	.L85	@,
-.L79:
+	beq	.L110	@,
+.L104:
 	add	r2, r6, r6, asl #1	@, tmp203, u32SourceMode, u32SourceMode,
 	ldr	lr, [fp, #-40]	@ u32BinLuma, u32BinLuma
 	ldr	ip, [fp, #-48]	@ u32BinSat.463, u32BinSat
-	movw	r0, #:lower16:.LANCHOR0	@ tmp199,
+	movw	r0, #:lower16:.LANCHOR2	@ tmp199,
 	ldr	r8, [fp, #-44]	@ u32BinHue, u32BinHue
-	movt	r0, #:upper16:.LANCHOR0	@ tmp199,
+	movt	r0, #:upper16:.LANCHOR2	@ tmp199,
 	add	r6, r0, r2, asl #4	@, tmp205, tmp199, tmp203,
 	mov	r1, lr	@, u32BinLuma
 	mov	r0, #0	@,
@@ -696,15 +799,15 @@ PQ_MNG_SetColorEnhanceMode:
 	bl	PQ_HAL_SetACMParam	@
 	cmn	r0, #1	@ s32Ret.783,
 	mov	r6, r0	@ s32Ret.783,
-	beq	.L86	@,
+	beq	.L111	@,
 	mov	r0, r7	@, pstColorParam
 	bl	kfree	@
-	mov	r0, #0	@ D.36241,
-	str	r5, [r4, #0]	@ enColorSpecMode, sg_enColorSpecModeType
-.L71:
+	mov	r0, #0	@ D.36240,
+	str	r5, [r4, #4]	@ enColorSpecMode, sg_enColorSpecModeType
+.L96:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
-.L77:
+.L102:
 	ldr	lr, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	movw	r2, #6090	@,
 	add	r3, lr, #18176	@, sg_pstAcmCoef,
@@ -716,12 +819,12 @@ PQ_MNG_SetColorEnhanceMode:
 	mov	r3, r6	@, u32SourceMode
 	bl	PQ_MNG_GetAcmGain	@
 	cmn	r0, #1	@,
-	bne	.L79	@,
-.L85:
+	bne	.L104	@,
+.L110:
 	mov	r0, #4	@,
 	mov	r1, #41	@,
-	ldr	r2, .L87	@,
-	movw	r3, #579	@,
+	ldr	r2, .L112	@,
+	mov	r3, #588	@,
 	mov	r8, #96	@ tmp193,
 	movw	ip, #:lower16:.LC5	@ tmp198,
 	str	r8, [fp, #-48]	@ tmp193, u32BinSat
@@ -730,66 +833,66 @@ PQ_MNG_SetColorEnhanceMode:
 	str	r8, [fp, #-44]	@ tmp193, u32BinHue
 	str	ip, [sp, #0]	@ tmp198,
 	bl	HI_LogOut	@
-	b	.L79	@
-.L76:
+	b	.L104	@
+.L101:
 	ldr	r8, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	movw	r2, #6090	@,
 	add	r1, r8, #12160	@, sg_pstAcmCoef,
 	add	r1, r1, #20	@,,
 	bl	memcpy	@
-	b	.L78	@
-.L82:
+	b	.L103	@
+.L107:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L87	@,
-	mov	r3, #540	@,
+	ldr	r2, .L112	@,
+	movw	r3, #549	@,
 	str	r5, [sp, #4]	@ enColorSpecMode,
 	movw	ip, #:lower16:.LC3	@ tmp147,
 	movt	ip, #:upper16:.LC3	@ tmp147,
 	str	ip, [sp, #0]	@ tmp147,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36241,
-	b	.L71	@
-.L86:
+	mvn	r0, #0	@ D.36240,
+	b	.L96	@
+.L111:
 	mov	r0, r7	@, pstColorParam
 	bl	kfree	@
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L87	@,
-	movw	r3, #595	@,
+	ldr	r2, .L112	@,
+	mov	r3, #604	@,
 	movw	ip, #:lower16:.LC6	@ tmp245,
 	movt	ip, #:upper16:.LC6	@ tmp245,
 	str	ip, [sp, #0]	@ tmp245,
 	bl	HI_LogOut	@
-	mov	r0, r6	@ D.36241, s32Ret.783
-	b	.L71	@
-.L83:
+	mov	r0, r6	@ D.36240, s32Ret.783
+	b	.L96	@
+.L108:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L87	@,
-	mov	r3, #544	@,
-	movw	lr, #:lower16:.LC1	@ tmp152,
-	movt	lr, #:upper16:.LC1	@ tmp152,
+	ldr	r2, .L112	@,
+	movw	r3, #553	@,
+	movw	lr, #:lower16:.LC0	@ tmp152,
+	movt	lr, #:upper16:.LC0	@ tmp152,
 	str	lr, [sp, #0]	@ tmp152,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36241,
-	b	.L71	@
-.L84:
-	ldr	lr, .L87	@ tmp156,
+	mvn	r0, #0	@ D.36240,
+	b	.L96	@
+.L109:
+	ldr	lr, .L112	@ tmp156,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	movw	r3, #549	@,
+	movw	r3, #558	@,
 	movw	ip, #:lower16:.LC4	@ tmp157,
 	movt	ip, #:upper16:.LC4	@ tmp157,
 	mov	r2, lr	@, tmp156
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36241,
-	b	.L71	@
-.L88:
+	mvn	r0, #0	@ D.36240,
+	b	.L96	@
+.L113:
 	.align	2
-.L87:
-	.word	.LANCHOR2+64
+.L112:
+	.word	.LANCHOR0+200
 	.fnend
 	.size	PQ_MNG_SetColorEnhanceMode, .-PQ_MNG_SetColorEnhanceMode
 	.align	2
@@ -802,101 +905,103 @@ PQ_MNG_SetSixBaseColorLevel:
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
 	mov	ip, sp	@,
-	stmfd	sp!, {r4, r5, r6, r7, r8, fp, ip, lr, pc}	@,
+	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}	@,
 	.pad #4
-	.save {r4, r5, r6, r7, r8, fp, ip, lr}
+	.save {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
 	.pad #28
 	sub	sp, sp, #28	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r8, #:lower16:.LANCHOR1	@ tmp158,
-	movt	r8, #:upper16:.LANCHOR1	@ tmp158,
-	ldr	r3, [r0, #20]	@ <variable>.u32YellowOffset, <variable>.u32YellowOffset
-	ldr	r5, [r0, #0]	@ <variable>.u32RedOffset, <variable>.u32RedOffset
-	mov	r7, r1	@ u32SourceMode, u32SourceMode
-	ldr	r6, [r8, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	movw	r4, #:lower16:.LANCHOR0	@ tmp249,
-	ldr	lr, [r0, #4]	@ <variable>.u32GreenOffset, <variable>.u32GreenOffset
-	movt	r4, #:upper16:.LANCHOR0	@ tmp249,
-	ldr	ip, [r0, #8]	@ <variable>.u32BlueOffset, <variable>.u32BlueOffset
-	cmp	r6, #0	@ sg_pstAcmCoef,
-	ldr	r1, [r0, #12]	@ <variable>.u32CyanOffset, <variable>.u32CyanOffset
+	movw	r8, #:lower16:.LANCHOR1	@ tmp146,
+	movt	r8, #:upper16:.LANCHOR1	@ tmp146,
 	mov	r6, #0	@ tmp143,
-	ldr	r2, [r0, #16]	@ <variable>.u32MagentaOffset, <variable>.u32MagentaOffset
-	str	r5, [r4, #8]	@ <variable>.u32RedOffset, sg_stSixbaseColorOffset.u32RedOffset
-	str	lr, [r4, #12]	@ <variable>.u32GreenOffset, sg_stSixbaseColorOffset.u32GreenOffset
-	str	ip, [r4, #16]	@ <variable>.u32BlueOffset, sg_stSixbaseColorOffset.u32BlueOffset
-	str	r1, [r4, #20]	@ <variable>.u32CyanOffset, sg_stSixbaseColorOffset.u32CyanOffset
-	str	r2, [r4, #24]	@ <variable>.u32MagentaOffset, sg_stSixbaseColorOffset.u32MagentaOffset
-	str	r3, [r4, #28]	@ <variable>.u32YellowOffset, sg_stSixbaseColorOffset.u32YellowOffset
-	str	r6, [fp, #-40]	@ tmp143, u32BinLuma
-	str	r6, [fp, #-44]	@ tmp143, u32BinHue
-	str	r6, [fp, #-48]	@ tmp143, u32BinSat
-	beq	.L96	@,
-	movw	r5, #:lower16:kmalloc_caches	@ tmp163,
-	movt	r5, #:upper16:kmalloc_caches	@ tmp163,
+	mov	r7, r1	@ u32SourceMode, u32SourceMode
+	str	r6, [fp, #-48]	@ tmp143, u32BinLuma
+	ldr	r3, [r8, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
+	str	r6, [fp, #-52]	@ tmp143, u32BinHue
+	cmp	r3, r6	@ sg_pstAcmCoef,
+	str	r6, [fp, #-56]	@ tmp143, u32BinSat
+	beq	.L123	@,
+	cmp	r0, #0	@ pstSixBaseColorOffset,
+	beq	.L124	@,
+	ldr	r5, [r0, #20]	@ <variable>.u32YellowOffset, <variable>.u32YellowOffset
+	movw	sl, #:lower16:kmalloc_caches	@ tmp166,
+	ldr	lr, [r0, #0]	@ <variable>.u32RedOffset, <variable>.u32RedOffset
+	movt	sl, #:upper16:kmalloc_caches	@ tmp166,
+	ldr	ip, [r0, #4]	@ <variable>.u32GreenOffset, <variable>.u32GreenOffset
+	movw	r4, #:lower16:.LANCHOR2	@ tmp252,
+	ldr	r3, [r0, #8]	@ <variable>.u32BlueOffset, <variable>.u32BlueOffset
+	movt	r4, #:upper16:.LANCHOR2	@ tmp252,
+	ldr	r9, [r0, #12]	@ <variable>.u32CyanOffset, <variable>.u32CyanOffset
 	mov	r1, #32	@,
+	ldr	r0, [r0, #16]	@, <variable>.u32MagentaOffset
 	movw	r2, #6090	@,
-	ldr	r0, [r5, #52]	@, kmalloc_caches
+	str	r5, [r4, #20]	@ <variable>.u32YellowOffset, sg_stSixbaseColorOffset.u32YellowOffset
+	str	lr, [r4, #0]	@ <variable>.u32RedOffset, sg_stSixbaseColorOffset.u32RedOffset
+	str	r0, [r4, #16]	@, sg_stSixbaseColorOffset.u32MagentaOffset
+	str	ip, [r4, #4]	@ <variable>.u32GreenOffset, sg_stSixbaseColorOffset.u32GreenOffset
+	ldr	r0, [sl, #52]	@, kmalloc_caches
+	str	r3, [r4, #8]	@ <variable>.u32BlueOffset, sg_stSixbaseColorOffset.u32BlueOffset
+	str	r9, [r4, #12]	@ <variable>.u32CyanOffset, sg_stSixbaseColorOffset.u32CyanOffset
 	bl	kmem_cache_alloc_trace	@
 	subs	r5, r0, #0	@ pstColorParam,
-	beq	.L97	@,
-	ldr	r1, [r8, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
+	beq	.L125	@,
+	ldr	r3, [r8, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	movw	r2, #6090	@,
-	add	r3, r1, #30208	@, sg_pstAcmCoef,
-	add	r1, r3, #242	@,,
+	add	r1, r3, #30208	@, sg_pstAcmCoef,
+	add	r1, r1, #242	@,,
 	bl	memcpy	@
 	mov	r1, #3	@,
 	mov	r2, #11	@,
-	ldr	r3, [r4, #8]	@, sg_stSixbaseColorOffset.u32RedOffset
+	ldr	r3, [r4, #0]	@, sg_stSixbaseColorOffset.u32RedOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r2, #23	@,
-	ldr	r3, [r4, #12]	@, sg_stSixbaseColorOffset.u32GreenOffset
+	ldr	r3, [r4, #4]	@, sg_stSixbaseColorOffset.u32GreenOffset
 	mov	r1, #21	@,
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r1, r6	@, tmp143
 	mov	r2, #1	@,
-	ldr	r3, [r4, #16]	@, sg_stSixbaseColorOffset.u32BlueOffset
+	ldr	r3, [r4, #8]	@, sg_stSixbaseColorOffset.u32BlueOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r1, #26	@,
 	mov	r2, #28	@,
-	ldr	r3, [r4, #16]	@, sg_stSixbaseColorOffset.u32BlueOffset
+	ldr	r3, [r4, #8]	@, sg_stSixbaseColorOffset.u32BlueOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r1, #24	@,
 	mov	r2, #26	@,
-	ldr	r3, [r4, #20]	@, sg_stSixbaseColorOffset.u32CyanOffset
+	ldr	r3, [r4, #12]	@, sg_stSixbaseColorOffset.u32CyanOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r1, #2	@,
 	mov	r2, #3	@,
-	ldr	r3, [r4, #24]	@, sg_stSixbaseColorOffset.u32MagentaOffset
+	ldr	r3, [r4, #16]	@, sg_stSixbaseColorOffset.u32MagentaOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
 	mov	r1, #14	@,
 	mov	r2, #20	@,
-	ldr	r3, [r4, #28]	@, sg_stSixbaseColorOffset.u32YellowOffset
+	ldr	r3, [r4, #20]	@, sg_stSixbaseColorOffset.u32YellowOffset
 	mov	r0, r5	@, pstColorParam
 	bl	PQ_MNG_SetColorSatGain	@
-	sub	r0, fp, #40	@,,
-	sub	r1, fp, #44	@,,
-	sub	r2, fp, #48	@,,
+	sub	r0, fp, #48	@,,
+	sub	r1, fp, #52	@,,
+	sub	r2, fp, #56	@,,
 	mov	r3, r7	@, u32SourceMode
 	bl	PQ_MNG_GetAcmGain	@
 	cmn	r0, #1	@,
-	beq	.L98	@,
-.L93:
-	add	r7, r7, r7, asl #1	@, tmp205, u32SourceMode, u32SourceMode,
-	ldr	r3, [fp, #-40]	@ u32BinLuma, u32BinLuma
-	ldr	ip, [fp, #-44]	@ u32BinHue, u32BinHue
+	beq	.L126	@,
+.L119:
+	add	r7, r7, r7, asl #1	@, tmp208, u32SourceMode, u32SourceMode,
+	ldr	r3, [fp, #-48]	@ u32BinLuma, u32BinLuma
+	ldr	ip, [fp, #-52]	@ u32BinHue, u32BinHue
 	mov	r0, #0	@,
-	ldr	lr, [fp, #-48]	@ u32BinSat.455, u32BinSat
-	add	r4, r4, r7, asl #4	@, tmp207, tmp249, tmp205,
+	ldr	lr, [fp, #-56]	@ u32BinSat.455, u32BinSat
+	add	r4, r4, r7, asl #4	@, tmp210, tmp252, tmp208,
 	mov	r1, r3	@, u32BinLuma
 	str	r3, [r4, #56]	@ u32BinLuma, sg_u32ColorGain
 	mov	r2, ip	@, u32BinHue
@@ -908,67 +1013,74 @@ PQ_MNG_SetSixBaseColorLevel:
 	bl	PQ_HAL_SetACMParam	@
 	cmn	r0, #1	@ s32Ret.810,
 	mov	r4, r0	@ s32Ret.810,
-	beq	.L99	@,
+	beq	.L127	@,
 	mov	r0, r5	@, pstColorParam
 	bl	kfree	@
-	mov	r0, #0	@ D.36159,
-.L91:
-	sub	sp, fp, #32
-	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
-.L98:
+	mov	r0, #0	@ D.36147,
+.L116:
+	sub	sp, fp, #40
+	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
+.L126:
 	mov	r0, #4	@,
 	mov	r1, #41	@,
-	ldr	r2, .L100	@,
-	movw	r3, #493	@,
-	mov	lr, #96	@ tmp195,
-	movw	ip, #:lower16:.LC5	@ tmp200,
-	str	lr, [fp, #-48]	@ tmp195, u32BinSat
-	movt	ip, #:upper16:.LC5	@ tmp200,
-	str	lr, [fp, #-40]	@ tmp195, u32BinLuma
-	str	lr, [fp, #-44]	@ tmp195, u32BinHue
-	str	ip, [sp, #0]	@ tmp200,
+	ldr	r2, .L128	@,
+	mov	r3, #500	@,
+	mov	lr, #96	@ tmp198,
+	movw	ip, #:lower16:.LC5	@ tmp203,
+	str	lr, [fp, #-56]	@ tmp198, u32BinSat
+	movt	ip, #:upper16:.LC5	@ tmp203,
+	str	lr, [fp, #-48]	@ tmp198, u32BinLuma
+	str	lr, [fp, #-52]	@ tmp198, u32BinHue
+	str	ip, [sp, #0]	@ tmp203,
 	bl	HI_LogOut	@
-	b	.L93	@
-.L99:
+	b	.L119	@
+.L127:
 	mov	r0, r5	@, pstColorParam
 	bl	kfree	@
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L100	@,
-	movw	r3, #509	@,
-	movw	ip, #:lower16:.LC7	@ tmp247,
-	movt	ip, #:upper16:.LC7	@ tmp247,
-	str	ip, [sp, #0]	@ tmp247,
+	ldr	r2, .L128	@,
+	mov	r3, #516	@,
+	movw	ip, #:lower16:.LC7	@ tmp250,
+	movt	ip, #:upper16:.LC7	@ tmp250,
+	str	ip, [sp, #0]	@ tmp250,
 	bl	HI_LogOut	@
-	mov	r0, r4	@ D.36159, s32Ret.810
-	b	.L91	@
-.L96:
+	mov	r0, r4	@ D.36147, s32Ret.810
+	b	.L116	@
+.L124:
+	ldr	r2, .L128	@,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L100	@,
 	movw	r3, #467	@,
-	movw	ip, #:lower16:.LC1	@ tmp162,
-	movt	ip, #:upper16:.LC1	@ tmp162,
-	str	ip, [sp, #0]	@ tmp162,
+.L122:
+	movw	ip, #:lower16:.LC0	@ tmp153,
+	movt	ip, #:upper16:.LC0	@ tmp153,
+	str	ip, [sp, #0]	@ tmp153,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36159,
-	b	.L91	@
-.L97:
-	ldr	lr, .L100	@ tmp166,
+	mvn	r0, #0	@ D.36147,
+	b	.L116	@
+.L125:
+	ldr	lr, .L128	@ tmp169,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	mov	r3, #472	@,
-	movw	ip, #:lower16:.LC4	@ tmp167,
-	movt	ip, #:upper16:.LC4	@ tmp167,
-	mov	r2, lr	@, tmp166
+	movw	r3, #479	@,
+	movw	ip, #:lower16:.LC4	@ tmp170,
+	movt	ip, #:upper16:.LC4	@ tmp170,
+	mov	r2, lr	@, tmp169
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36159,
-	b	.L91	@
-.L101:
+	mvn	r0, #0	@ D.36147,
+	b	.L116	@
+.L123:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	ldr	r2, .L128	@,
+	movw	r3, #466	@,
+	b	.L122	@
+.L129:
 	.align	2
-.L100:
-	.word	.LANCHOR2+92
+.L128:
+	.word	.LANCHOR0+228
 	.fnend
 	.size	PQ_MNG_SetSixBaseColorLevel, .-PQ_MNG_SetSixBaseColorLevel
 	.align	2
@@ -997,15 +1109,15 @@ PQ_MNG_SetFleshToneLevel:
 	str	r4, [fp, #-32]	@ tmp144, u32BinLuma
 	str	r4, [fp, #-36]	@ tmp144, u32BinHue
 	str	r4, [fp, #-40]	@ tmp144, u32BinSat
-	bhi	.L121	@,
+	bhi	.L149	@,
 	cmp	r1, #3	@ u32SourceMode,
-	bhi	.L122	@,
-.L105:
+	bhi	.L150	@,
+.L133:
 	movw	r4, #:lower16:.LANCHOR1	@ tmp153,
 	movt	r4, #:upper16:.LANCHOR1	@ tmp153,
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	cmp	r3, #0	@ sg_pstAcmCoef,
-	beq	.L123	@,
+	beq	.L151	@,
 	movw	r7, #:lower16:kmalloc_caches	@ tmp158,
 	movt	r7, #:upper16:kmalloc_caches	@ tmp158,
 	mov	r1, #32	@,
@@ -1013,7 +1125,7 @@ PQ_MNG_SetFleshToneLevel:
 	ldr	r0, [r7, #52]	@, kmalloc_caches
 	bl	kmem_cache_alloc_trace	@
 	subs	r7, r0, #0	@ pstColorParam,
-	beq	.L124	@,
+	beq	.L152	@,
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
 	movw	r2, #6090	@,
 	add	r1, r3, #24320	@, sg_pstAcmCoef,
@@ -1025,12 +1137,12 @@ PQ_MNG_SetFleshToneLevel:
 	mov	r3, r5	@, u32SourceMode
 	bl	PQ_MNG_GetAcmGain	@
 	cmn	r0, #1	@,
-	beq	.L125	@,
-.L108:
+	beq	.L153	@,
+.L136:
 	mov	r2, r5, asl #1	@ tmp348, u32SourceMode,
-	movw	r4, #:lower16:.LANCHOR0	@ tmp347,
+	movw	r4, #:lower16:.LANCHOR2	@ tmp347,
 	add	r3, r2, r5	@ tmp186, tmp348, u32SourceMode
-	movt	r4, #:upper16:.LANCHOR0	@ tmp347,
+	movt	r4, #:upper16:.LANCHOR2	@ tmp347,
 	ldr	lr, [fp, #-32]	@ u32BinLuma, u32BinLuma
 	cmp	r5, #2	@ u32SourceMode,
 	ldr	r1, [fp, #-36]	@ u32BinHue, u32BinHue
@@ -1039,23 +1151,23 @@ PQ_MNG_SetFleshToneLevel:
 	str	lr, [ip, #56]	@ u32BinLuma, sg_u32ColorGain
 	str	r1, [ip, #60]	@ u32BinHue, sg_u32ColorGain
 	str	r0, [ip, #64]	@ u32BinSat, sg_u32ColorGain
-	beq	.L111	@,
+	beq	.L139	@,
 	cmp	r5, #3	@ u32SourceMode,
-	beq	.L112	@,
+	beq	.L140	@,
 	cmp	r5, #1	@ u32SourceMode,
-	beq	.L110	@,
+	beq	.L138	@,
 	ldr	r1, [r4, #56]	@ sg_u32ColorGain, sg_u32ColorGain
 	ldr	ip, [r4, #64]	@ sg_u32ColorGain, sg_u32ColorGain
 	sub	r1, r1, #20	@ tmp212, sg_u32ColorGain,
 	str	r1, [r4, #44]	@ tmp212, sg_u32ColorGain
 	add	r0, ip, #20	@ tmp216, sg_u32ColorGain,
 	str	r0, [r4, #76]	@ tmp216, sg_u32ColorGain
-.L113:
+.L141:
 	cmp	r6, #2	@ enGainLevel,
-	beq	.L116	@,
-.L127:
+	beq	.L144	@,
+.L155:
 	cmp	r6, #3	@ enGainLevel,
-	beq	.L117	@,
+	beq	.L145	@,
 	add	r5, r2, r5	@ tmp245, tmp348, u32SourceMode
 	cmp	r6, #1	@ enGainLevel,
 	add	r3, r4, r5, asl #4	@, tmp266, tmp347, tmp245,
@@ -1068,34 +1180,34 @@ PQ_MNG_SetFleshToneLevel:
 	ldrne	r3, [r3, #40]	@ u32GainSat, sg_u32ColorGain
 	ldreq	r3, [r5, #52]	@ u32GainSat, sg_u32ColorGain
 	ldreq	r1, [r5, #44]	@ u32GainLuma, sg_u32ColorGain
-.L118:
+.L146:
 	mov	r0, #0	@,
 	bl	PQ_HAL_SetACMGain	@
 	mov	r0, r7	@, pstColorParam
 	bl	PQ_HAL_SetACMParam	@
 	cmn	r0, #1	@ s32Ret.835,
 	mov	r5, r0	@ s32Ret.835,
-	beq	.L126	@,
+	beq	.L154	@,
 	mov	r0, r7	@, pstColorParam
 	bl	kfree	@
-	mov	r0, #0	@ D.36070,
-	str	r6, [r4, #4]	@ enGainLevel, sg_enFleshLevel
-.L104:
+	mov	r0, #0	@ D.36061,
+	str	r6, [r4, #24]	@ enGainLevel, sg_enFleshLevel
+.L132:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
-.L122:
+.L150:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L128	@,
-	movw	r3, #331	@,
+	ldr	r2, .L156	@,
+	movw	r3, #335	@,
 	str	r5, [sp, #4]	@ u32SourceMode,
 	movw	r5, #:lower16:.LC9	@ tmp152,
 	movt	r5, #:upper16:.LC9	@ tmp152,
 	str	r5, [sp, #0]	@ tmp152,
 	bl	HI_LogOut	@
 	mov	r5, r4	@ u32SourceMode, tmp144
-	b	.L105	@
-.L112:
+	b	.L133	@
+.L140:
 	ldr	ip, [r4, #200]	@ sg_u32ColorGain, sg_u32ColorGain
 	cmp	r6, #2	@ enGainLevel,
 	ldr	r0, [r4, #208]	@ sg_u32ColorGain, sg_u32ColorGain
@@ -1103,40 +1215,40 @@ PQ_MNG_SetFleshToneLevel:
 	str	r1, [r4, #188]	@ tmp236, sg_u32ColorGain
 	add	r3, r0, #30	@ tmp240, sg_u32ColorGain,
 	str	r3, [r4, #220]	@ tmp240, sg_u32ColorGain
-	bne	.L127	@,
-.L116:
+	bne	.L155	@,
+.L144:
 	add	lr, r2, r5	@ tmp298, tmp348, u32SourceMode
 	add	r2, r4, lr, asl #4	@, tmp300, tmp347, tmp298,
 	add	r1, r2, #56
 	ldmia	r1, {r1, r2, r3}	@ phole ldm
-	b	.L118	@
-.L117:
+	b	.L146	@
+.L145:
 	add	r1, r2, r5	@ tmp322, tmp348, u32SourceMode
 	add	r0, r4, r1, asl #4	@, tmp324, tmp347, tmp322,
 	add	r1, r0, #68
 	ldmia	r1, {r1, r2, r3}	@ phole ldm
-	b	.L118	@
-.L110:
+	b	.L146	@
+.L138:
 	ldr	r0, [r4, #104]	@ sg_u32ColorGain, sg_u32ColorGain
 	ldr	r3, [r4, #112]	@ sg_u32ColorGain, sg_u32ColorGain
 	sub	r1, r0, #16	@ tmp220, sg_u32ColorGain,
 	str	r1, [r4, #92]	@ tmp220, sg_u32ColorGain
 	add	lr, r3, #16	@ tmp224, sg_u32ColorGain,
 	str	lr, [r4, #124]	@ tmp224, sg_u32ColorGain
-	b	.L113	@
-.L111:
+	b	.L141	@
+.L139:
 	ldr	r1, [r4, #152]	@ sg_u32ColorGain, sg_u32ColorGain
 	ldr	lr, [r4, #160]	@ sg_u32ColorGain, sg_u32ColorGain
 	sub	r1, r1, #20	@ tmp228, sg_u32ColorGain,
 	str	r1, [r4, #140]	@ tmp228, sg_u32ColorGain
 	add	ip, lr, #20	@ tmp232, sg_u32ColorGain,
 	str	ip, [r4, #172]	@ tmp232, sg_u32ColorGain
-	b	.L113	@
-.L125:
+	b	.L141	@
+.L153:
 	mov	r0, #4	@,
 	mov	r1, #41	@,
-	ldr	r2, .L128	@,
-	movw	r3, #350	@,
+	ldr	r2, .L156	@,
+	movw	r3, #354	@,
 	mov	lr, #96	@ tmp176,
 	movw	r4, #:lower16:.LC5	@ tmp181,
 	str	lr, [fp, #-40]	@ tmp176, u32BinSat
@@ -1145,59 +1257,59 @@ PQ_MNG_SetFleshToneLevel:
 	str	lr, [fp, #-36]	@ tmp176, u32BinHue
 	str	r4, [sp, #0]	@ tmp181,
 	bl	HI_LogOut	@
-	b	.L108	@
-.L121:
+	b	.L136	@
+.L149:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L128	@,
-	movw	r3, #326	@,
+	ldr	r2, .L156	@,
+	movw	r3, #330	@,
 	str	r6, [sp, #4]	@ enGainLevel,
 	movw	ip, #:lower16:.LC8	@ tmp149,
 	movt	ip, #:upper16:.LC8	@ tmp149,
 	str	ip, [sp, #0]	@ tmp149,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36070,
-	b	.L104	@
-.L126:
+	mvn	r0, #0	@ D.36061,
+	b	.L132	@
+.L154:
 	mov	r0, r7	@, pstColorParam
 	bl	kfree	@
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L128	@,
-	movw	r3, #393	@,
+	ldr	r2, .L156	@,
+	movw	r3, #397	@,
 	movw	ip, #:lower16:.LC10	@ tmp344,
 	movt	ip, #:upper16:.LC10	@ tmp344,
 	str	ip, [sp, #0]	@ tmp344,
 	bl	HI_LogOut	@
-	mov	r0, r5	@ D.36070, s32Ret.835
-	b	.L104	@
-.L123:
+	mov	r0, r5	@ D.36061, s32Ret.835
+	b	.L132	@
+.L151:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L128	@,
-	movw	r3, #335	@,
-	movw	lr, #:lower16:.LC1	@ tmp157,
-	movt	lr, #:upper16:.LC1	@ tmp157,
+	ldr	r2, .L156	@,
+	movw	r3, #339	@,
+	movw	lr, #:lower16:.LC0	@ tmp157,
+	movt	lr, #:upper16:.LC0	@ tmp157,
 	str	lr, [sp, #0]	@ tmp157,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36070,
-	b	.L104	@
-.L124:
-	ldr	lr, .L128	@ tmp161,
+	mvn	r0, #0	@ D.36061,
+	b	.L132	@
+.L152:
+	ldr	lr, .L156	@ tmp161,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	movw	r3, #339	@,
+	movw	r3, #343	@,
 	movw	ip, #:lower16:.LC4	@ tmp162,
 	movt	ip, #:upper16:.LC4	@ tmp162,
 	mov	r2, lr	@, tmp161
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.36070,
-	b	.L104	@
-.L129:
+	mvn	r0, #0	@ D.36061,
+	b	.L132	@
+.L157:
 	.align	2
-.L128:
-	.word	.LANCHOR2+120
+.L156:
+	.word	.LANCHOR0+256
 	.fnend
 	.size	PQ_MNG_SetFleshToneLevel, .-PQ_MNG_SetFleshToneLevel
 	.align	2
@@ -1225,7 +1337,7 @@ PQ_MNG_SetColorGainLevel:
 	str	r4, [fp, #-24]	@ tmp136, u32Gainluma
 	str	r4, [fp, #-28]	@ tmp136, u32Gainhue
 	str	r4, [fp, #-32]	@ tmp136, u32GainSat
-	bhi	.L134	@,
+	bhi	.L162	@,
 	mov	r1, #1	@,
 	mov	r0, r4	@, tmp136
 	bl	PQ_HAL_SetACMStretch	@
@@ -1248,29 +1360,29 @@ PQ_MNG_SetColorGainLevel:
 	mov	r0, r4	@, tmp136
 	mov	r1, #1	@,
 	bl	PQ_HAL_EnableACM	@
-	movw	r3, #:lower16:.LANCHOR0	@ tmp147,
-	movt	r3, #:upper16:.LANCHOR0	@ tmp147,
-	mov	r0, r4	@ D.35964, tmp136
-	str	r5, [r3, #0]	@ u32GainLevel, sg_u32ColorLevel
-.L132:
+	movw	r3, #:lower16:.LANCHOR2	@ tmp147,
+	movt	r3, #:upper16:.LANCHOR2	@ tmp147,
+	mov	r0, r4	@ D.35952, tmp136
+	str	r5, [r3, #28]	@ u32GainLevel, sg_u32ColorLevel
+.L160:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
-.L134:
+.L162:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L135	@,
-	mov	r3, #204	@,
+	ldr	r2, .L163	@,
+	mov	r3, #206	@,
 	str	r5, [sp, #4]	@ u32GainLevel,
 	movw	ip, #:lower16:.LC11	@ tmp141,
 	movt	ip, #:upper16:.LC11	@ tmp141,
 	str	ip, [sp, #0]	@ tmp141,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.35964,
-	b	.L132	@
-.L136:
+	mvn	r0, #0	@ D.35952,
+	b	.L160	@
+.L164:
 	.align	2
-.L135:
-	.word	.LANCHOR2+148
+.L163:
+	.word	.LANCHOR0+284
 	.fnend
 	.size	PQ_MNG_SetColorGainLevel, .-PQ_MNG_SetColorGainLevel
 	.align	2
@@ -1292,44 +1404,44 @@ PQ_MNG_InitColor:
 	sub	sp, sp, #12	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:.LANCHOR1	@ tmp364,
-	movt	r4, #:upper16:.LANCHOR1	@ tmp364,
+	movw	r4, #:lower16:.LANCHOR1	@ tmp365,
+	movt	r4, #:upper16:.LANCHOR1	@ tmp365,
 	mov	r5, r0	@ pstPqParam, pstPqParam
 	mov	r6, r1	@ bDefault, bDefault
 	ldr	r3, [r4, #16]	@ sg_bColorInitial, sg_bColorInitial
 	cmp	r3, #1	@ sg_bColorInitial,
-	moveq	r0, #0	@ D.35937,
-	beq	.L139	@,
+	moveq	r0, #0	@ D.35922,
+	beq	.L167	@,
 	bl	PQ_HAL_InitACM	@
 	cmp	r0, #0	@,
-	bne	.L150	@,
+	bne	.L178	@,
 	cmp	r5, #0	@ pstPqParam,
-	beq	.L151	@,
+	beq	.L179	@,
 	cmp	r6, #1	@ bDefault,
 	add	r0, r5, #1568	@ tmp152, pstPqParam,
 	add	r0, r0, #12	@ tmp152, tmp152,
 	str	r5, [r4, #8]	@ pstPqParam, sg_pstPqParam
 	str	r0, [r4, #12]	@ tmp152, sg_pstAcmCoef
-	beq	.L152	@,
-.L143:
+	beq	.L180	@,
+.L171:
 	movw	lr, #:lower16:kmalloc_caches	@ tmp338,
 	movt	lr, #:upper16:kmalloc_caches	@ tmp338,
 	mov	r1, #208	@,
 	movw	r2, #6090	@,
 	ldr	r0, [lr, #52]	@, kmalloc_caches
 	bl	kmem_cache_alloc_trace	@
-	subs	r5, r0, #0	@ D.37304,
-	beq	.L153	@,
+	subs	r5, r0, #0	@ D.37306,
+	beq	.L181	@,
 	ldr	r1, [r4, #12]	@, sg_pstAcmCoef
 	movw	r2, #6090	@,
 	bl	memcpy	@
-	mov	r0, r5	@, D.37304
+	mov	r0, r5	@, D.37306
 	bl	PQ_HAL_SetACMParam	@
 	movw	r4, #:lower16:.LANCHOR1	@ tmp345,
 	movt	r4, #:upper16:.LANCHOR1	@ tmp345,
 	cmn	r0, #1	@,
-	beq	.L154	@,
-	mov	r0, r5	@, D.37304
+	beq	.L182	@,
+	mov	r0, r5	@, D.37306
 	bl	kfree	@
 	mov	r0, #0	@,
 	mov	r2, #2	@,
@@ -1341,163 +1453,163 @@ PQ_MNG_InitColor:
 	cmp	r0, #0	@ s32Ret.881
 	moveq	r3, #1	@ tmp362,
 	streq	r3, [r4, #16]	@ tmp362, sg_bColorInitial
-	bne	.L155	@,
-.L139:
+	bne	.L183	@,
+.L167:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
-.L152:
-	ldr	r1, .L156	@,
+.L180:
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #2016	@, sg_pstAcmCoef,
 	add	r0, r5, #14	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #4048	@, sg_pstAcmCoef,
 	add	r0, ip, #12	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156	@,
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #6080	@, sg_pstAcmCoef,
 	add	r0, r5, #10	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #8064	@, sg_pstAcmCoef,
 	add	r0, ip, #56	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #10112	@, sg_pstAcmCoef,
 	add	r0, r5, #38	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156	@,
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #12160	@, sg_pstAcmCoef,
 	add	r0, ip, #20	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #14208	@, sg_pstAcmCoef,
 	add	r0, r5, #2	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #16192	@, sg_pstAcmCoef,
 	add	r0, ip, #48	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156	@,
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #18176	@, sg_pstAcmCoef,
 	add	r0, r5, #94	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #20224	@, sg_pstAcmCoef,
 	add	r0, ip, #76	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #22272	@, sg_pstAcmCoef,
 	add	r0, r5, #58	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156	@,
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #24320	@, sg_pstAcmCoef,
 	add	r0, ip, #40	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #26368	@, sg_pstAcmCoef,
 	add	r0, r5, #22	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #28416	@, sg_pstAcmCoef,
 	add	r0, ip, #4	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156	@,
+	ldr	r1, .L184	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #30208	@, sg_pstAcmCoef,
 	add	r0, r5, #242	@,,
 	bl	memcpy	@
 	ldr	r0, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+4	@,
+	ldr	r1, .L184+4	@,
 	movw	r2, #2030	@,
 	add	ip, r0, #32256	@, sg_pstAcmCoef,
 	add	r0, ip, #224	@,,
 	bl	memcpy	@
 	ldr	r3, [r4, #12]	@ sg_pstAcmCoef, sg_pstAcmCoef
-	ldr	r1, .L156+8	@,
+	ldr	r1, .L184+8	@,
 	movw	r2, #2030	@,
 	add	r5, r3, #34304	@, sg_pstAcmCoef,
 	add	r0, r5, #206	@,,
 	bl	memcpy	@
-	b	.L143	@
-.L150:
+	b	.L171	@
+.L178:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L156+12	@,
+	ldr	r2, .L184+12	@,
 	mov	r3, #157	@,
 	movw	ip, #:lower16:.LC12	@ tmp146,
 	movt	ip, #:upper16:.LC12	@ tmp146,
 	str	ip, [sp, #0]	@ tmp146,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.35937,
-	b	.L139	@
-.L155:
+	mvn	r0, #0	@ D.35922,
+	b	.L167	@
+.L183:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L156+12	@,
+	ldr	r2, .L184+12	@,
 	mov	r3, #178	@,
 	movw	ip, #:lower16:.LC15	@ tmp360,
 	movt	ip, #:upper16:.LC15	@ tmp360,
 	str	ip, [sp, #0]	@ tmp360,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.35937,
-	b	.L139	@
-.L154:
-	mov	r0, r5	@, D.37304
+	mvn	r0, #0	@ D.35922,
+	b	.L167	@
+.L182:
+	mov	r0, r5	@, D.37306
 	bl	kfree	@
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L156+16	@,
+	ldr	r2, .L184+16	@,
 	mov	r3, #134	@,
 	movw	ip, #:lower16:.LC7	@ tmp353,
 	movt	ip, #:upper16:.LC7	@ tmp353,
 	str	ip, [sp, #0]	@ tmp353,
 	bl	HI_LogOut	@
-.L142:
+.L170:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L156+12	@,
+	ldr	r2, .L184+12	@,
 	mov	r3, #171	@,
 	movw	lr, #:lower16:.LC14	@ tmp357,
 	movt	lr, #:upper16:.LC14	@ tmp357,
 	str	lr, [sp, #0]	@ tmp357,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.35937,
-	b	.L139	@
-.L153:
-	ldr	lr, .L156+16	@ tmp341,
+	mvn	r0, #0	@ D.35922,
+	b	.L167	@
+.L181:
+	ldr	lr, .L184+16	@ tmp341,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	mov	r3, #125	@,
@@ -1506,25 +1618,25 @@ PQ_MNG_InitColor:
 	mov	r2, lr	@, tmp341
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	HI_LogOut	@
-	b	.L142	@
-.L151:
+	b	.L170	@
+.L179:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L156+16	@,
+	ldr	r2, .L184+16	@,
 	mov	r3, #91	@,
-	movw	lr, #:lower16:.LC1	@ tmp149,
-	movt	lr, #:upper16:.LC1	@ tmp149,
+	movw	lr, #:lower16:.LC0	@ tmp149,
+	movt	lr, #:upper16:.LC0	@ tmp149,
 	str	lr, [sp, #0]	@ tmp149,
 	bl	HI_LogOut	@
-	b	.L142	@
-.L157:
+	b	.L170	@
+.L185:
 	.align	2
-.L156:
-	.word	.LANCHOR0+224
-	.word	.LANCHOR0+2256
+.L184:
+	.word	.LANCHOR2+224
+	.word	.LANCHOR2+2256
 	.word	.LANCHOR3-3896
-	.word	.LANCHOR2+176
-	.word	.LANCHOR2+196
+	.word	.LANCHOR0+312
+	.word	.LANCHOR0+332
 	.fnend
 	.size	PQ_MNG_InitColor, .-PQ_MNG_InitColor
 	.align	2
@@ -1548,12 +1660,12 @@ PQ_MNG_DeInitColor:
 	movt	r4, #:upper16:.LANCHOR1	@ tmp134,
 	ldr	r3, [r4, #16]	@ sg_bColorInitial, sg_bColorInitial
 	cmp	r3, #0	@ sg_bColorInitial,
-	beq	.L159	@,
+	beq	.L187	@,
 	bl	PQ_HAL_DeInitACM	@
 	mov	r0, #0	@ tmp137,
 	str	r0, [r4, #16]	@ tmp137, sg_bColorInitial
 	str	r0, [r4, #12]	@ tmp137, sg_pstAcmCoef
-.L159:
+.L187:
 	mov	r0, #0	@,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
@@ -1563,62 +1675,78 @@ PQ_MNG_DeInitColor:
 	.global	s16LumaLut
 	.section	.rodata
 	.align	2
-.LANCHOR2 = . + 0
-	.type	__func__.36100, %object
-	.size	__func__.36100, 23
-__func__.36100:
+.LANCHOR0 = . + 0
+	.type	__func__.36278, %object
+	.size	__func__.36278, 22
+__func__.36278:
+	.ascii	"PQ_MNG_GetACMDemoMode\000"
+	.space	2
+	.type	__func__.36214, %object
+	.size	__func__.36214, 27
+__func__.36214:
+	.ascii	"PQ_MNG_GetColorEnhanceMode\000"
+	.space	1
+	.type	__func__.36121, %object
+	.size	__func__.36121, 28
+__func__.36121:
+	.ascii	"PQ_MNG_GetSixBaseColorLevel\000"
+	.type	__func__.36091, %object
+	.size	__func__.36091, 23
+__func__.36091:
 	.ascii	"PQ_MNG_SetColorSatGain\000"
 	.space	1
-	.type	__func__.35984, %object
-	.size	__func__.35984, 19
-__func__.35984:
+	.type	__func__.35958, %object
+	.size	__func__.35958, 25
+__func__.35958:
+	.ascii	"PQ_MNG_GetFleshToneLevel\000"
+	.space	3
+	.type	__func__.35938, %object
+	.size	__func__.35938, 25
+__func__.35938:
+	.ascii	"PQ_MNG_GetColorGainLevel\000"
+	.space	3
+	.type	__func__.35975, %object
+	.size	__func__.35975, 19
+__func__.35975:
 	.ascii	"PQ_MNG_FindAcmGain\000"
 	.space	1
-	.type	__func__.36012, %object
-	.size	__func__.36012, 18
-__func__.36012:
+	.type	__func__.36003, %object
+	.size	__func__.36003, 18
+__func__.36003:
 	.ascii	"PQ_MNG_GetAcmGain\000"
 	.space	2
-	.type	__func__.36232, %object
-	.size	__func__.36232, 27
-__func__.36232:
+	.type	__func__.36231, %object
+	.size	__func__.36231, 27
+__func__.36231:
 	.ascii	"PQ_MNG_SetColorEnhanceMode\000"
 	.space	1
-	.type	__func__.36149, %object
-	.size	__func__.36149, 28
-__func__.36149:
+	.type	__func__.36143, %object
+	.size	__func__.36143, 28
+__func__.36143:
 	.ascii	"PQ_MNG_SetSixBaseColorLevel\000"
-	.type	__func__.36061, %object
-	.size	__func__.36061, 25
-__func__.36061:
+	.type	__func__.36052, %object
+	.size	__func__.36052, 25
+__func__.36052:
 	.ascii	"PQ_MNG_SetFleshToneLevel\000"
 	.space	3
-	.type	__func__.35961, %object
-	.size	__func__.35961, 25
-__func__.35961:
+	.type	__func__.35949, %object
+	.size	__func__.35949, 25
+__func__.35949:
 	.ascii	"PQ_MNG_SetColorGainLevel\000"
 	.space	3
-	.type	__func__.35933, %object
-	.size	__func__.35933, 17
-__func__.35933:
+	.type	__func__.35918, %object
+	.size	__func__.35918, 17
+__func__.35918:
 	.ascii	"PQ_MNG_InitColor\000"
 	.space	3
-	.type	__func__.35893, %object
-	.size	__func__.35893, 18
-__func__.35893:
+	.type	__func__.35878, %object
+	.size	__func__.35878, 18
+__func__.35878:
 	.ascii	"PQ_MNG_ACMLUTInit\000"
 	.data
 	.align	2
-.LANCHOR0 = . + 0
+.LANCHOR2 = . + 0
 .LANCHOR3 = . + 8184
-	.type	sg_u32ColorLevel, %object
-	.size	sg_u32ColorLevel, 4
-sg_u32ColorLevel:
-	.word	128
-	.type	sg_enFleshLevel, %object
-	.size	sg_enFleshLevel, 4
-sg_enFleshLevel:
-	.word	2
 	.type	sg_stSixbaseColorOffset, %object
 	.size	sg_stSixbaseColorOffset, 24
 sg_stSixbaseColorOffset:
@@ -1634,6 +1762,14 @@ sg_stSixbaseColorOffset:
 	.word	50
 @ u32YellowOffset:
 	.word	50
+	.type	sg_enFleshLevel, %object
+	.size	sg_enFleshLevel, 4
+sg_enFleshLevel:
+	.word	2
+	.type	sg_u32ColorLevel, %object
+	.size	sg_u32ColorLevel, 4
+sg_u32ColorLevel:
+	.word	128
 	.type	sg_u32ColorGain, %object
 	.size	sg_u32ColorGain, 192
 sg_u32ColorGain:
@@ -4744,10 +4880,10 @@ s16SatLut:
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
 .LC0:
-	.ascii	"pstColorParam is NULL!\012\000"
-.LC1:
 	.ascii	"pointer is NULL!\012\000"
 	.space	2
+.LC1:
+	.ascii	"pstColorParam is NULL!\012\000"
 .LC2:
 	.ascii	"GetAcmGain:%d\012\000"
 	.space	1
@@ -4790,13 +4926,13 @@ s16SatLut:
 	.bss
 	.align	2
 .LANCHOR1 = . + 0
-	.type	sg_enColorSpecModeType, %object
-	.size	sg_enColorSpecModeType, 4
-sg_enColorSpecModeType:
-	.space	4
 	.type	sg_enMode, %object
 	.size	sg_enMode, 4
 sg_enMode:
+	.space	4
+	.type	sg_enColorSpecModeType, %object
+	.size	sg_enColorSpecModeType, 4
+sg_enColorSpecModeType:
 	.space	4
 	.type	sg_pstPqParam, %object
 	.size	sg_pstPqParam, 4

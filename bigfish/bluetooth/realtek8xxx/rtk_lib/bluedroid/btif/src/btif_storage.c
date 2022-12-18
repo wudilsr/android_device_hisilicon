@@ -348,7 +348,7 @@ static int prop2cfg(bt_bdaddr_t *remote_bd_addr, bt_property_t *prop)
                 strncpy(value, rtk_classic_addr, sizeof(bdstr_t));
                 value[sizeof(bdstr_t)] = '\0';
                 btif_config_set_str("Remote", bdstr, BTIF_STORAGE_PATH_REMOTE_RTKBT_AUTOPAIR_CLASSIC_ADDR, value);
-                btif_config_save();
+                btif_config_flush();
             }
          }
             break;
@@ -356,14 +356,14 @@ static int prop2cfg(bt_bdaddr_t *remote_bd_addr, bt_property_t *prop)
         {
             btif_config_set_int("Remote", bdstr,
                                 BTIF_STORAGE_PATH_REMOTE_RTKBT_AUTOPAIR_CLASSIC_SUPPORT, *(char*)prop->val);
-            btif_config_save();
+            btif_config_flush();
         }
             break;
         case BT_PROPERTY_RTKBT_AUTOPAIR_RCUID:
         {
             btif_config_set_int("Remote", bdstr,
                                 BTIF_STORAGE_PATH_REMOTE_RTKBT_AUTOPAIR_RCUID, *(int*)prop->val);
-            btif_config_save();
+            btif_config_flush();
         }
             break;
         case BT_PROPERTY_RTKBT_AUTOPAIR_TXPOWER:
@@ -1092,7 +1092,11 @@ bt_status_t btif_storage_add_ble_bonding_key(bt_bdaddr_t *remote_bd_addr,
             return BT_STATUS_FAIL;
     }
     int ret = btif_config_set("Remote", bdstr, name, (const char*)key, (int)key_length, BTIF_CFG_TYPE_BIN);
+#ifdef BLUETOOTH_RTK
+    btif_config_flush();
+#else
     btif_config_save();
+#endif
     return ret ? BT_STATUS_SUCCESS : BT_STATUS_FAIL;
 }
 
@@ -1166,7 +1170,12 @@ bt_status_t btif_storage_remove_ble_bonding_keys(bt_bdaddr_t *remote_bd_addr)
         ret &= btif_config_remove("Remote", bdstr, "LE_KEY_LENC");
     if(btif_config_exist("Remote", bdstr, "LE_KEY_LCSRK"))
         ret &= btif_config_remove("Remote", bdstr, "LE_KEY_LCSRK");
+#ifdef BLUETOOTH_RTK
+    /* remove bonded info immediately */
+    btif_config_flush();
+#else
     btif_config_save();
+#endif
     return ret ? BT_STATUS_SUCCESS : BT_STATUS_FAIL;
 }
 
@@ -1418,6 +1427,22 @@ bt_status_t btif_in_fetch_bonded_ble_device(char *remote_bd_addr,int add, btif_b
             /* Fill in the bonded devices */
             if (is_device_added)
             {
+#ifdef BLUETOOTH_RTK
+                int cod = 0;
+                BD_NAME bd_name;
+                int name_len = 0;
+                DEV_CLASS dev_class = {0,0,0};
+
+                if(btif_config_get_int("Remote", remote_bd_addr, "DevClass", &cod)) {
+                    uint2devclass((UINT32)cod, dev_class);
+                }
+                if(!btif_config_get_str("Remote", remote_bd_addr, "Name", (char *)bd_name, &name_len)) {
+                    memset(bd_name, 0 , sizeof(bd_name));
+                }
+                BTIF_TRACE_DEBUG2("%s %s add class of device and bd_name", __FUNCTION__,remote_bd_addr);
+                BTA_DmAddBleDeviceExtraInfo(bta_bd_addr, dev_class, bd_name);
+#endif
+
                 memcpy(&p_bonded_devices->devices[p_bonded_devices->num_devices++], &bd_addr, sizeof(bt_bdaddr_t));
                 btif_gatts_add_bonded_dev_from_nv(bta_bd_addr);
             }
@@ -1486,7 +1511,11 @@ bt_status_t btif_storage_add_hid_device_info(bt_bdaddr_t *remote_bd_addr,
     if(dl_len > 0)
         btif_config_set("Remote", bdstr, "HidDescriptor", (const char*)dsc_list, dl_len,
                         BTIF_CFG_TYPE_BIN);
+#ifdef BLUETOOTH_RTK
+    btif_config_flush();
+#else
     btif_config_save();
+#endif
     return BT_STATUS_SUCCESS;
 }
 
@@ -1522,7 +1551,12 @@ bt_status_t btif_storage_load_bonded_hid_info(void)
         BTIF_TRACE_DEBUG2("Remote device:%s, size:%d", kname, kname_size);
         int value;
         int linkkey_type;
+#ifdef BLUETOOTH_RTK
+        if(btif_config_get_int("Remote", kname, "HidAttrMask", &value) && (btif_config_exist("Remote", kname, "LE_KEY_PENC")
+            || btif_config_exist("Remote", kname, "LinkKey")))
+#else
         if(btif_config_get_int("Remote", kname, "HidAttrMask", &value))
+#endif
         {
             attr_mask = (uint16_t)value;
 
@@ -1555,7 +1589,10 @@ bt_status_t btif_storage_load_bonded_hid_info(void)
             }
             str2bd(kname, &bd_addr);
             // add extracted information to BTA HH
-#ifndef BLUETOOTH_RTK
+#ifdef BLUETOOTH_RTK
+            if(btif_config_get_int("Remote", kname,"DevType", &value) && (value == BT_DEVICE_TYPE_BREDR))
+                btif_hh_add_added_dev(bd_addr,attr_mask);
+#else
             if (btif_hh_add_added_dev(bd_addr,attr_mask))
 #endif
             {
@@ -1593,7 +1630,12 @@ bt_status_t btif_storage_remove_hid_info(bt_bdaddr_t *remote_bd_addr)
     btif_config_remove("Remote", bdstr, "HidVersion");
     btif_config_remove("Remote", bdstr, "HidCountryCode");
     btif_config_remove("Remote", bdstr, "HidDescriptor");
+#ifdef BLUETOOTH_RTK
+    /* remove HID info immediately */
+    btif_config_flush();
+#else
     btif_config_save();
+#endif
     return BT_STATUS_SUCCESS;
 }
 

@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:title="@string/SettingSwitch_VIME_Title"
-        android:summaryOn="@string/SettingSwitch_VIME_status_on"
-        android:summaryOff="@string/SettingSwitch_VIME_status_off"
-        android:defaultValue="true"
-        android:key="vimeclient"/>
-
-    <CheckBoxPreference
-        android:title="@string/SettingSwitch_Sensor_Title"
-        android:summaryOn="@string/SettingSwitch_Sensor_status_on"
-        android:summaryOff="@string/SettingSwitch_Sensor_status_off"
-        android:defaultValue="false"
-        android:key="Gsensorclient"/>
     <PreferenceCategory
         android:summary="Open Source Liscence"
         android:title="Open Source Liscence" >
@@ -25,4 +12,5 @@
                 android:data="http://4thline.org/projects/cling/" />
         </PreferenceScreen>
     </PreferenceCategory>
+
 </PreferenceScreen>

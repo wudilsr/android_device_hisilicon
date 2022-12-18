@@ -2168,8 +2168,6 @@ HI_S32 MCE_DeInit(HI_VOID)
 }
 
 #ifndef MODULE
-core_initcall(MCE_Init);
-//early_initcall(MCE_Init);
-#else
+    subsys_initcall_sync(MCE_Init);
 #endif
 

@@ -55,7 +55,10 @@ namespace android {
         GETHDMISUSPENDENABLE,
         RELOAD,
         SETOUTPUTENABLE,
-        GETOUTPUTENABLE
+        GETOUTPUTENABLE,
+        SETCECSUSPEND,
+        GETCECSUSPENDENABLE,
+        SETCECSUSPENDENABLE
     };
 
     class BpDisplayService : public BpInterface<IDisplayService>
@@ -821,6 +824,52 @@ namespace android {
                 }
                 return ret;
             }
+            virtual int setCECSuspend(){
+                Parcel data, reply;
+                data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
+                remote()->transact(SETCECSUSPEND, data, &reply);
+                int32_t ret = reply.readInt32();
+                if(ret == 0)
+                {
+                    ret = reply.readInt32();
+                }
+                else
+                {
+                    ret = -1;
+                }
+                return ret;
+            }
+            virtual int getHDMICECSuspendEnable(){
+                Parcel data, reply;
+                data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
+                remote()->transact(GETHDMISUSPENDENABLE, data, &reply);
+                int32_t ret = reply.readInt32();
+                if(ret == 0)
+                {
+                    ret = reply.readInt32();
+                }
+                else
+                {
+                    ret = -1;
+                }
+                return ret;
+            }
+            virtual int setHDMICECSuspendEnable(int enable){
+                Parcel data, reply;
+                data.writeInterfaceToken(IDisplayService::getInterfaceDescriptor());
+                data.writeInt32(enable);
+                remote()->transact(SETHDMISUSPENDENABLE, data, &reply);
+                int32_t ret = reply.readInt32();
+                if(ret == 0)
+                {
+                    ret = reply.readInt32();
+                }
+                else
+                {
+                    ret = -1;
+                }
+                return ret;
+            }
     };
 
     IMPLEMENT_META_INTERFACE(DisplayService, "com.hisilicon.android.IHiDisplayManager");
@@ -1133,7 +1182,25 @@ namespace android {
                 reply->writeInt32(0);
                 reply->writeInt32(ret);
                 return NO_ERROR;
-
+            case SETCECSUSPEND:
+                CHECK_INTERFACE(IDisplayService, data, reply);
+                ret = setCECSuspend();
+                reply->writeInt32(0);
+                reply->writeInt32(ret);
+                return NO_ERROR;
+            case GETCECSUSPENDENABLE:
+                CHECK_INTERFACE(IDisplayService, data, reply);
+                ret = getHDMICECSuspendEnable();
+                reply->writeInt32(0);
+                reply->writeInt32(ret);
+                return NO_ERROR;
+            case SETCECSUSPENDENABLE:
+                CHECK_INTERFACE(IDisplayService, data, reply);
+                value = data.readInt32();
+                ret = setHDMICECSuspendEnable(value);
+                reply->writeInt32(0);
+                reply->writeInt32(ret);
+                return NO_ERROR;
             default:
                 return BBinder::onTransact(code, data, reply, flags);
         }

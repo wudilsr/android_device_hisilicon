@@ -24,6 +24,11 @@ import com.hisilicon.android.mediaplayer.HiMediaPlayerDefine;
 import com.hisilicon.android.videoplayer.R;
 import com.hisilicon.android.videoplayer.util.Common;
 import com.hisilicon.android.videoplayer.util.Constants;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.app.Dialog;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -380,10 +385,12 @@ public class HisiVideoView extends SurfaceView implements MediaPlayerControl
             }
             catch (IOException ex) {
                 Log.w(TAG, "Unable to open content: " + mUri, ex);
+                 notSupportDialog(com.android.internal.R.string.VideoView_error_text_unknown);
                 return;
             }
             catch (IllegalArgumentException ex) {
                 Log.w(TAG, "Unable to open content: " + mUri, ex);
+                 notSupportDialog(com.android.internal.R.string.VideoView_error_text_unknown);
                 return;
             }
             return;
@@ -468,9 +475,11 @@ public class HisiVideoView extends SurfaceView implements MediaPlayerControl
             mMediaPlayer.prepareAsync();
         } catch (IOException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
+            notSupportDialog(com.android.internal.R.string.VideoView_error_text_unknown);
             return;
         } catch (IllegalArgumentException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
+            notSupportDialog(com.android.internal.R.string.VideoView_error_text_unknown);
             return;
         }
     }
@@ -1472,5 +1481,21 @@ public class HisiVideoView extends SurfaceView implements MediaPlayerControl
     }
     public int getAudioSessionId() {
         return 0;
+    }
+    private void notSupportDialog(int msg)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(com.android.internal.R.string.VideoView_error_title);
+        builder.setMessage(msg);
+        builder.setPositiveButton(R.string.confirm, null);
+        Dialog notSptDialog = builder.create();
+        notSptDialog.setOnDismissListener(new OnDismissListener()
+                                          {
+                                              public void onDismiss(DialogInterface dialog)
+                                              {
+                                                  System.exit(0);
+                                              }
+                                          });
+        notSptDialog.show();
     }
 }

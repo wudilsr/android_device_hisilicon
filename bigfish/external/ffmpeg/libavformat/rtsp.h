@@ -32,7 +32,7 @@
 #include "libavutil/opt.h"
 
 #if CONFIG_RTPDEC
-#define HAVE_UDP_RCV_THREAD   1
+#define HAVE_UDP_RCV_THREAD   0
 #if (HAVE_UDP_RCV_THREAD)
 #include <pthread.h>
 #endif
@@ -59,6 +59,7 @@ enum RTSPLowerTransport {
 enum RTSPTransport {
     RTSP_TRANSPORT_RTP, /**< Standards-compliant RTP */
     RTSP_TRANSPORT_RDT, /**< Realmedia Data Transport */
+    RTSP_TRANSPORT_RAW, /**< Raw data (over UDP) */
     RTSP_TRANSPORT_NB
 };
 
@@ -204,6 +205,32 @@ enum RTSPServerType {
     RTSP_SERVER_NB
 };
 
+enum RTSPClockType {
+    RTSP_CLOCK_NONE = 0,
+    RTSP_CLOCK_NPT,
+    RTSP_CLOCK_UTC,
+    RTSP_CLOCK_SMPTE
+};
+
+typedef struct RTSPUTCTime
+{
+    int year;
+    int mon;
+    int day;
+    int hour;
+    int min;
+    int second;
+} RTSPUTCTime;
+
+typedef struct RTSPTimeStamp
+{
+    enum RTSPClockType type;
+    union RTSPTime {
+        RTSPUTCTime utc;
+        double      npt;
+    } time;
+} RTSPTimeStamp;
+
 /**
  * Private data for the RTSP demuxer.
  *
@@ -230,7 +257,9 @@ typedef struct RTSPState {
      * called instantly. If we are currently paused, this command is called
      * whenever we resume playback. Either way, the value is only used once,
      * see rtsp_read_play() and rtsp_read_seek(). */
-    int64_t seek_timestamp;
+    //int64_t seek_timestamp;
+    RTSPTimeStamp seek_timestamp;
+    RTSPTimeStamp seek_end_timestamp;
 
     int seq;                          /**< RTSP command sequence number */
 
@@ -310,6 +339,13 @@ typedef struct RTSPState {
      * other cases, this is a copy of AVFormatContext->filename. */
     char control_uri[1024];
 
+    /** The following are used for parsing raw mpegts in udp */
+    //@{
+    struct MpegTSContext *ts;
+    int recvbuf_pos;
+    int recvbuf_len;
+    //@}
+
     /** Additional output handle, used when input and output are done
      * separately, eg for HTTP tunneling. */
     URLContext *rtsp_hd_out;
@@ -329,6 +365,9 @@ typedef struct RTSPState {
      * A mask with all requested transport methods
      */
     int lower_transport_mask;
+
+    /* backup for reconnecting */
+    int lower_transport_mask_bak;
 
     /**
      * The number of returned packets
@@ -383,6 +422,7 @@ typedef struct RTSPState {
  //   int thread_pos;
 #endif
     char *headers;
+    int  reconnecting;
     int64_t last_get_speed_time;
 } RTSPState;
 

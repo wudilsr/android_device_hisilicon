@@ -4061,6 +4061,12 @@ HI_S32 DMX_OsiTsBufferGet(const HI_U32 PortId, const HI_U32 ReqLen, DMX_DATA_BUF
         return HI_ERR_DMX_INVALID_PARA;
     }
 
+    if (unlikely(Timeout > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }
+
     ++PortInfo->GetCount;
 /**
 call GetIpFreeDescAndBufLen
@@ -5828,6 +5834,12 @@ HI_S32  DMX_OsiReadDataRequset(HI_U32         u32ChId,
         return HI_ERR_DMX_INVALID_PARA;
     }
 
+    if (unlikely(u32TimeOutMs > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }  
+
     pChanInfo = &pDmxDevOsi->DmxChanInfo[u32ChId];
 #ifdef DMX_USE_ECM
     if (!pChanInfo->u32SwFlag)
@@ -6795,6 +6807,12 @@ HI_S32 DMX_OsiSelectDataFlag(HI_U32 *pu32WatchCh, HI_U32 u32WatchNum, HI_U32 *pu
 
     /* mark enabled OQ EOP interrupt and finally disable it */
     HI_U32 u32EnOQIntMark[DMX_OQ_CNT] = {0}; 
+
+    if (unlikely(u32TimeOutMs > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }
 
     IsDmxDevInit();
 
@@ -7959,6 +7977,12 @@ HI_S32 DMX_DRV_REC_AcquireRecData(HI_U32 RecId, HI_U32 *PhyAddr, HI_U32 *KerAddr
 
     CHECKDMXID(RecInfo->DmxId);
 
+    if (unlikely(Timeout > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }
+
     if (DMX_REC_STATUS_START != RecInfo->RecStatus)
     {
         return HI_ERR_DMX_NOT_START_REC_CHAN;
@@ -8819,6 +8843,12 @@ HI_S32 DMX_DRV_REC_AcquireRecIndex(HI_U32 RecId, HI_UNF_DMX_REC_INDEX_S *RecInde
 #endif
 
     CHECKDMXID(RecInfo->DmxId);
+
+    if (unlikely(Timeout > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }
 
     if (DMX_REC_STATUS_START != RecInfo->RecStatus)
     {

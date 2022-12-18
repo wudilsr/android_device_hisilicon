@@ -2048,6 +2048,7 @@ static int hlsOpenSegment(HLSContext *c, hls_stream_info_t *hls)
         hls->seg_key.IO_decrypt->cur_segment = cur;
         ret = hls_decrypt_open(hls->seg_key.IO_decrypt,
                                seg->url,
+                               -1,
                                &opts,
                                hls->seg_key.key,
                                sizeof(hls->seg_key.key),

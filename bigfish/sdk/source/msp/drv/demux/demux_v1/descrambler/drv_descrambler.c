@@ -190,6 +190,7 @@ HI_VOID DmxDestroyAllDescrambler(HI_U32 file)
     }
 }
 
+/******* proc function begin ********/
 #ifdef HI_DEMUX_PROC_SUPPORT
 HI_S32 DMXKeyProcRead(struct seq_file *p, HI_VOID *v)
 {
@@ -235,6 +236,7 @@ out:
     return HI_SUCCESS;
 }
 #endif
+/******* proc function end ********/
 
 HI_S32 HI_DRV_DMX_CreateDescrambler(HI_U32 DmxId, HI_UNF_DMX_DESCRAMBLER_ATTR_S *DescAttr, HI_HANDLE *KeyHandle, HI_U32 file)
 {

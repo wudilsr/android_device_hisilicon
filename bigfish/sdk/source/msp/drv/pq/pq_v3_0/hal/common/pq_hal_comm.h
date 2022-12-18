@@ -65,6 +65,14 @@ extern "C" {
         }\
     }while(0)
 
+#define PQ_CHECK_OVER_RANGE(ID, MaxID) \
+    do{\
+        if (ID >= MaxID){\
+            HI_ERR_PQ("[%d] over range!\n",ID);\
+            return HI_FAILURE;\
+        }\
+    }while(0)
+
 #define PQ_DBG() \
     do{\
         HI_PRINT("<-PQ DBG->%s %d\n",__func__,__LINE__);\
@@ -383,10 +391,6 @@ HI_U32  PQ_REG_RegRead(volatile HI_U32* a);
 HI_U32  PQ_HAL_CalCRC32(HI_U32 crc, HI_U8* buf, HI_U32 size);
 HI_S32  PQ_HAL_PrintMsg(HI_U32 type, const HI_S8* format, ...);
 HI_S32  PQ_HAL_SetPrintType(HI_U32 type);
-HI_S32  PQ_HAL_GetVpssDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff);
-HI_S32  PQ_HAL_GetDnrDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff);
-HI_S32  PQ_HAL_GetVdpDitherEn(HI_BOOL* bOnOff);
-
 
 
 #ifdef __cplusplus

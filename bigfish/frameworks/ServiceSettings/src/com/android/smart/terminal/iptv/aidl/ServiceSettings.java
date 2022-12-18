@@ -37,6 +37,8 @@ public class ServiceSettings extends Service {
     private static final String ETH_CONN_MODE_MANUAL = "manual";
     private static final String ETH_CONN_MODE_DHCPPLUS = "dhcp+";
     private static final String ETH_CONN_MODE_PPPOE = "pppoe";
+    private static final String ETH_CONN_MODE_IPOE_SAVE = "ipoe_save";
+    private static final String ETH_CONN_MODE_PPPOE_SAVE = "pppoe_save";
 
     private static final String IPMODE_V4 = "ipv4";
     private static final String IPMODE_V6 = "ipv6";
@@ -386,10 +388,43 @@ public class ServiceSettings extends Service {
 
                 if (ETH_CONN_MODE_DHCPPLUS.equals(eth.mode)) {
                     //do nothing,just reboot ethernet
-                    //mEthManager.setDhcpOption60(true, eth.username, eth.password);
+                    mEthManager.setDhcpOption60(true, eth.username, eth.password);
+                    if (eth.dev_name != null && !("".equals(eth.dev_name)))
+                        mEthManager.setDhcpOption125(true, eth.dev_name);
+
                     mEthManager.setEthernetEnabled(false);
                     mEthManager.setEthernetMode(ETH_CONN_MODE_DHCP,null);
                     mEthManager.setEthernetEnabled(true);
+                    return true;
+                } else {
+                    mEthManager.setDhcpOption60(false, null, null);
+                    mEthManager.setDhcpOption125(false, null);
+                }
+
+                if (ETH_CONN_MODE_IPOE_SAVE.equals(eth.mode)) {
+                    if (eth.username != null && !("".equals(eth.username)))
+                        mEthManager.setDhcpOption60(true, eth.username, eth.password);
+                    else
+                        mEthManager.setDhcpOption60(false, null, null);
+
+                    if (eth.dev_name != null && !("".equals(eth.dev_name)))
+                        mEthManager.setDhcpOption125(true, eth.dev_name);
+                    else
+                        mEthManager.setDhcpOption125(false, null);
+
+                    return true;
+                }
+
+                if (ETH_CONN_MODE_PPPOE_SAVE.equals(eth.mode)) {
+                    if ((eth.username != null && !("".equals(eth.username)))
+                        && (eth.password != null && !("".equals(eth.password)))) {
+                        mPppoeManager.setPppoeUsername(eth.username);
+                        mPppoeManager.setPppoePassword(eth.password);
+                    } else {
+                        mPppoeManager.setPppoeUsername(null);
+                        mPppoeManager.setPppoePassword(null);
+                    }
+
                     return true;
                 }
 

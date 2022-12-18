@@ -14,7 +14,11 @@ HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
 ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
 PPPSRC         := ppp-2.4.7
-else
+endif
+ifeq (${CROSS_COMPILE},arm-histbv310-linux-)
+PPPSRC         := ppp-2.4.7
+endif
+ifeq (${CROSS_COMPILE},arm-hisiv200-linux-)
 PPPSRC         := ppp-2.4.5
 endif
 TARGETS        := usr/local/sbin/chat usr/local/sbin/pppd \

@@ -48,6 +48,16 @@ public class MultiSettingActivity extends Activity implements OnClickListener
     public static final String VIBRATOR_STATUS_KEY = "vibrator";
 
     /**
+     * Preference key records HomePage Remote status.<br>
+     */
+    public static final String HOMEPAGE_REMOTE_KEY = "homepage_remote";
+
+    /**
+     * Preference key records iScene status.<br>
+     */
+    //public static final String SCENE_KEY = "iscene";
+
+    /**
      * CN：返回按钮。
      */
     private Button mTitle_logo_img;
@@ -93,6 +103,18 @@ public class MultiSettingActivity extends Activity implements OnClickListener
     private Button mSet_Vibrator;
 
     /**
+     * Button of setting remote as home page.<br>
+     * CN:设置首页为遥控器。
+     */
+    private Button mBtnSetHomePage;
+
+    /**
+     * Button of setting iScene.<br>
+     * CN:智能切换开关按钮。
+     */
+    //private Button mBtnSetScene;
+
+    /**
      * CN：虚拟输入法开启或者关闭状态。
      */
     private boolean vime_status = false;
@@ -116,6 +138,16 @@ public class MultiSettingActivity extends Activity implements OnClickListener
      * CN：震动开启或者关闭状态。
      */
     private boolean vibrator_status = false;
+
+    /**
+     * CN:首页是否设为遥控器。
+     */
+    private boolean mHomePage_remote_status = false;
+
+    /**
+     * CN:智能切换开启或关闭状态。
+     */
+    //private boolean mScene_status = false;
 
     private MultiScreenControlService mMultiScreenControlService = null;
 
@@ -185,6 +217,13 @@ public class MultiSettingActivity extends Activity implements OnClickListener
         mSet_Vibrator = (Button) findViewById(R.id.set_vibrator);
         mSet_Vibrator.setOnClickListener(this);
 
+        mBtnSetHomePage = (Button) findViewById(R.id.set_homepage_remote);
+        mBtnSetHomePage.setOnClickListener(this);
+
+        // hide iScene
+        //mBtnSetScene = (Button) findViewById(R.id.set_iScene);
+        //mBtnSetScene.setOnClickListener(this);
+
         initStatusPreference();
     }
 
@@ -204,6 +243,12 @@ public class MultiSettingActivity extends Activity implements OnClickListener
 
         vibrator_status = readStatusPreference(VIBRATOR_STATUS_KEY, true);
         updateStatus(vibrator_status, mSet_Vibrator);
+
+        mHomePage_remote_status = readStatusPreference(HOMEPAGE_REMOTE_KEY, false);
+        updateStatus(mHomePage_remote_status, mBtnSetHomePage);
+
+        //mScene_status = readStatusPreference(SCENE_KEY, false);
+        //updateStatus(mScene_status, mBtnSetScene);
     }
 
     private void handleClick(View v)
@@ -255,6 +300,18 @@ public class MultiSettingActivity extends Activity implements OnClickListener
                 updateStatus(vibrator_status, mSet_Vibrator);
             }
                 break;
+            case R.id.set_homepage_remote:
+            {
+                mHomePage_remote_status = !mHomePage_remote_status;
+                updateStatus(mHomePage_remote_status, mBtnSetHomePage);
+            }
+                break;
+            //case R.id.set_iScene:
+            //{
+            //    mScene_status = !mScene_status;
+            //    updateStatus(mScene_status, mBtnSetScene);
+            //}
+            //    break;
             default:
                 break;
         }
@@ -296,6 +353,15 @@ public class MultiSettingActivity extends Activity implements OnClickListener
         {
             writeStatusPreference(VIBRATOR_STATUS_KEY, status);
         }
+        else if (btn == mBtnSetHomePage)
+        {
+            writeStatusPreference(HOMEPAGE_REMOTE_KEY, status);
+        }
+        //else if (btn == mBtnSetScene)
+        //{
+        //    writeStatusPreference(SCENE_KEY, status);
+        //    switchScene(status);
+        //}
         else
         {
             LogTool.d("Unkown button.");
@@ -324,6 +390,16 @@ public class MultiSettingActivity extends Activity implements OnClickListener
         {
             mMultiScreenControlService.setVideoPlay(status);
         }
+    }
+
+    /**
+     * Switch iScene status.<br>
+     * CN:设置智能切换状态。
+     * @param isOpen
+     */
+    private void switchScene(boolean isOpen)
+    {
+        MultiScreenControlService.switchScene(isOpen);
     }
 
     /**

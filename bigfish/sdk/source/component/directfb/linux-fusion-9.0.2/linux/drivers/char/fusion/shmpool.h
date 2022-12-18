@@ -34,7 +34,7 @@
 #endif
 #define FUSION_SHM_SIZE_32	0x20000000	/* size of virtual address space */
 
-#define FUSION_SHM_BASE_64	0x523000000000LL	/* virtual base address */
+#define FUSION_SHM_BASE_64	0x6f00000000//0x523000000000LL	/* virtual base address */
 #define FUSION_SHM_SIZE_64	0x001000000000LL	/* size of virtual address space */
 
 #ifndef FUSION_SHM_BASE_DEFAULT

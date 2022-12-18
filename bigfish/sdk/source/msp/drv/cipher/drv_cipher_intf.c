@@ -23,12 +23,12 @@
 #include <linux/init.h>
 #include <linux/pci.h>
 #include <linux/seq_file.h>
+#include <linux/version.h>
 //#include <linux/himedia.h>
 
 #include <asm/atomic.h>
 #include <asm/cacheflush.h>
 #include <asm/io.h>
-#include <asm/system.h>
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
 #include <asm/traps.h>
@@ -63,6 +63,7 @@ extern CIPHER_EXPORT_FUNC_S s_CipherExportFuncs;
 extern HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E *penChipID);
 extern HI_VOID DRV_CIPHER_UserCommCallBack(HI_U32 arg);
 
+/******* proc function begin ********/
 static HI_S32 CIPHER_ProcGetStatus(CIPHER_CHN_STATUS_S *pstCipherStatus)
 {
 	return DRV_CIPHER_ProcGetStatus(pstCipherStatus);
@@ -117,21 +118,26 @@ HI_S32 CIPHER_ProcRead(struct seq_file *p, HI_VOID *v)
     return HI_SUCCESS;
 }
 
-HI_S32 CIPHER_ProcWrite(struct file * file, const char __user * buf, size_t count, loff_t *ppos)
+static HI_VOID CIPHER_DRV_ProcInit(HI_VOID)
 {
-    HI_CHAR ProcPara[64];
+    DRV_PROC_EX_S stProc = {0};
 
-    if (copy_from_user(ProcPara, buf, count))
-    {
-        return -EFAULT;
-    }
-
-    return count;
+    stProc.fnRead = CIPHER_ProcRead;
+     
+    HI_DRV_PROC_AddModule(HI_MOD_CIPHER, &stProc, NULL);
 }
+
+static HI_VOID CIPHER_DRV_ProcDeInit(HI_VOID)
+{
+    HI_DRV_PROC_RemoveModule(HI_MOD_CIPHER);
+}
+/******* proc function end ********/
 
 HI_S32 CIPHER_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VOID *argp)
 {
     HI_S32 ret = HI_SUCCESS;
+    
+//    HI_PRINT("\nMOD_ID=0x%02X, NR=0x%02x, SIZE=0x%02x!\n", _IOC_TYPE (cmd), _IOC_NR (cmd), _IOC_SIZE(cmd));
 
     switch(cmd)
     {
@@ -230,6 +236,12 @@ HI_S32 CIPHER_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI
 			ret = HI_DRV_CIPHER_CbcMacAuth(pstParam);
 			break;
 		}
+        case CMD_CIPHER_CALCRSA:
+        {
+	        CIPHER_RSA_DATA_S *pCipherRsaData = (CIPHER_RSA_DATA_S*)argp;
+	        ret = HI_DRV_CIPHER_CalcRsa(pCipherRsaData);
+	        break;
+	    } 
 	    default:
 	    {
             HI_ERR_CIPHER("Unknow cmd, MOD_ID=0x%02X, NR=0x%02x, SIZE=0x%02x!\n", _IOC_TYPE (cmd), _IOC_NR (cmd), _IOC_SIZE(cmd));
@@ -296,7 +308,6 @@ static PM_BASEOPS_S cipher_drvops = {
 HI_S32 CIPHER_DRV_ModInit(HI_VOID)
 {
     HI_S32 ret = HI_SUCCESS;
-    DRV_PROC_EX_S stProc = {0};
 
     snprintf(g_CipherDevice.devfs_name, sizeof(UMAP_DEVNAME_CIPHER), UMAP_DEVNAME_CIPHER);
     g_CipherDevice.fops = &DRV_CIPHER_Fops;
@@ -323,10 +334,9 @@ HI_S32 CIPHER_DRV_ModInit(HI_VOID)
         return ret;
     }
 
-    stProc.fnRead   = CIPHER_ProcRead;
-    stProc.fnWrite  = CIPHER_ProcWrite;
-     
-    HI_DRV_PROC_AddModule(HI_MOD_CIPHER, &stProc, NULL);
+/******* proc function begin ********/
+	CIPHER_DRV_ProcInit();
+/******* proc function end ********/
 
 #ifdef MODULE
     HI_PRINT("Load hi_cipher.ko success.\t(%s)\n", VERSION_STRING);
@@ -337,13 +347,16 @@ HI_S32 CIPHER_DRV_ModInit(HI_VOID)
 
 HI_VOID CIPHER_DRV_ModExit(HI_VOID)
 {
-    HI_DRV_PROC_RemoveModule(HI_MOD_CIPHER);
+/******* proc function begin ********/
+    CIPHER_DRV_ProcDeInit();
+/******* proc function end ********/
+
     HI_DRV_DEV_UnRegister(&g_CipherDevice);
 
     (HI_VOID)DRV_CIPHER_DeInit();
 
-    HI_DRV_MODULE_UnRegister(HI_ID_CIPHER);
-
+	HI_DRV_MODULE_UnRegister(HI_ID_CIPHER);
+	
     return ;
 }
 

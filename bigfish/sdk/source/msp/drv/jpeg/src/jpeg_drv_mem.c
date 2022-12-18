@@ -103,7 +103,7 @@ HI_VOID jpeg_mem_destory(HI_S32 s32DecHandle)
 {
     IMAG_INFO_S *pstImgInfo = (IMAG_INFO_S*)s32DecHandle;
 
-    if(0 == s32DecHandle)
+    if (0 == s32DecHandle || NULL == pstImgInfo)
     {
         return;
     }

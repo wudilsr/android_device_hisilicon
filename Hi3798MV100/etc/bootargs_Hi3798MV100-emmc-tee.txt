@@ -1,0 +1,21 @@
+bootdelay=0
+verify=n
+baudrate=115200
+ipaddr=192.168.1.10
+serverip=192.168.1.1
+netmask=255.255.255.0
+bootfile="uImage"
+phy_intf=mii,rgmii
+use_mdio=0,1
+phy_addr=2,1
+gmac_debug=0
+bootcmd=mmc read 0 0x6B700000 0xF3000 0x4000;bootm 0x6B700000;mmc read 0 0x1FFBFC0 0x4B000 0x5000; bootm 0x1FFBFC0
+bootargs=console=ttyAMA0,115200 blkdevparts=mmcblk0:1M(fastboot),1M(bootargs),10M(recovery),2M(deviceinfo),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel),20M(misc),8M(userapi),8M(hibdrv),8M(qbflag),252M(qbdata),40M(trustedcore),8M(securestore),800M(system),1024M(userdata),500M(cache),50M(private),-(sdcard)
+bootargs_512M=mem=512M mmz=ddr,0,0,112M
+bootargs_768M=mem=768M mmz=ddr,0,0,300M
+bootargs_1G=mem=688G mmz=ddr,0,0,435M
+bootargs_2G=mem=1712M mmz=ddr,0,0,620M
+stdin=serial
+stdout=serial
+stderr=serial
+signature_check=sign:recovery,recovery,0x200000 sign:kernel,kernel,0x700000

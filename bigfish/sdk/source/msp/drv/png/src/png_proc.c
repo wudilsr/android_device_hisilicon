@@ -1,8 +1,8 @@
 /******************************************************************************
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 * and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
@@ -12,11 +12,11 @@ Version		: Initial Draft
 Author		: z00141204
 Created		: 2010/10/14
 Description	: png proc infomation
-Function List 	: 
-			  		  
+Function List 	:
+
 History       	:
 Date				Author        		Modification
-2010/10/14		z00141204		Created file      	
+2010/10/14		z00141204		Created file
 ******************************************************************************/
 #include <linux/module.h>
 #include <linux/fs.h>		/* everything... */
@@ -35,8 +35,8 @@ PNG_PROC_INFO_S s_stPngProcInfo = {0};
 
 static HI_BOOL s_bPngProcOn = HI_FALSE;
 
-    
-static char *s_decstate[HI_PNG_STATE_BUTT + 1] = 
+
+static char *s_decstate[HI_PNG_STATE_BUTT + 1] =
 {
     "Nostart",
     "Decoding",
@@ -47,12 +47,26 @@ static char *s_decstate[HI_PNG_STATE_BUTT + 1] =
 
 HI_S32 PNG_Read_Proc(struct seq_file *p, HI_VOID *v)
 {
-    DRV_PROC_ITEM_S *item;
-    PNG_PROC_INFO_S *procinfo;
-    char fmtname[8];
+    DRV_PROC_ITEM_S *item = NULL;
+    PNG_PROC_INFO_S *procinfo = NULL;
+    char fmtname[8] = {'\0'};
+
+    if (NULL == p)
+    {
+        return HI_FAILURE;
+    }
 
     item = (DRV_PROC_ITEM_S *)(p->private);
+    if (NULL == item)
+    {
+        return HI_FAILURE;
+    }
+
     procinfo = (PNG_PROC_INFO_S *)(item->data);
+    if (NULL == procinfo)
+    {
+        return HI_FAILURE;
+    }
 
     switch(procinfo->eColorFmt)
     {
@@ -81,7 +95,7 @@ HI_S32 PNG_Read_Proc(struct seq_file *p, HI_VOID *v)
         fmtname[strlen("Unknown")] = '\0';
             break;
     }
-    
+
     PROC_PRINT(p, "width\t\t:%u\n", procinfo->u32Width);
     PROC_PRINT(p, "height\t\t:%u\n", procinfo->u32Height);
     PROC_PRINT(p, "fmt\t\t:%s\n", fmtname);
@@ -103,10 +117,15 @@ HI_S32 PNG_Read_Proc(struct seq_file *p, HI_VOID *v)
 }
 
 HI_S32 PNG_Write_Proc(struct file * file,
-    const char __user * pBuf, size_t count, loff_t *ppos) 
+    const char __user * pBuf, size_t count, loff_t *ppos)
 {
-    HI_CHAR buf[128];
-    
+    HI_CHAR buf[128] = {'\0'};
+
+    if (NULL == pBuf)
+    {
+       return 0;
+    }
+
     if (count > sizeof(buf))
     {
         return 0;

@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  Copyright (C), 2001-2011, Huawei Tech. Co., Ltd.
+  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
 
 ******************************************************************************
   File Name     : hifb_snapshot.c
@@ -203,7 +203,7 @@ HI_VOID hifb_captureimage_fromdevice(HI_U32 u32LayerID, HI_BOOL bAlphaEnable)
     sBmpInfoHeader.u32SizeImage = 0;
     sBmpInfoHeader.u32XPelsPerMeter = stDstBuffer.stCanvas.u32Width;
     sBmpInfoHeader.u32YPelsPerMeter = stDstBuffer.stCanvas.u32Height;
-    sBmpInfoHeader.u32ClrUsed = 256;
+    sBmpInfoHeader.u32ClrUsed = 0;
     sBmpInfoHeader.u32ClrImportant = 0;
 
 	HI_DRV_FILE_GetStorePath(filepath, HIFB_FILE_PATH_MAX_LEN-HIFB_FILE_NAME_MAX_LEN);

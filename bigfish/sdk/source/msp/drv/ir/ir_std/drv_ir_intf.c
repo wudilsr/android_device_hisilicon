@@ -66,11 +66,12 @@
 
 #define  IR_DELAY_TIME 200
 #define  IR_MAX_BUF 100
+#define  DEF_BLOCK_TIME 200
 
 #define  IR_BUF_HEAD g_IrAttr.IrKeyBuf[g_IrAttr.Head]
 #define  IR_BUF_TAIL g_IrAttr.IrKeyBuf[g_IrAttr.Tail]
 #define  IR_BUF_LAST g_IrAttr.IrKeyBuf[(g_IrAttr.Head == 0) ? (g_IrAttr.IrKeyBufLen - 1) : (g_IrAttr.Head - 1)]
-#define  INC_BUF(x, len) ((++(x)) % (len))
+#define  INC_BUF(x, len) (((x)+1) % (len))
 
 typedef struct
 {
@@ -423,7 +424,7 @@ static long Ir_Ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     case IR_IOC_SET_FREQ:
         if ((arg <= 0) || (arg > 128))
         {
-            printk(KERN_DEBUG HIIR_PFX "Error: IR_IOC_SET_FREQ -> invalid args=%lu\n", arg);
+            HI_ERR_IR("Error: IR_IOC_SET_FREQ -> invalid args=%lu\n", arg);
             return -EFAULT;
         }
 
@@ -507,6 +508,12 @@ static ssize_t IR_Read(struct file *filp, char __user *buf, size_t count, loff_t
     IR_KEY_S ReadIrKey;
     HI_U32 ReadLen = 0;
     HI_S32 Ret = 0;
+
+	if( atomic_read(&g_IrCount) == 0)
+	{
+		HI_FATAL_IR("not open!\n");
+		return -1;
+	}
 
     Ret = down_interruptible(&g_IrMutex);
     if (Ret)
@@ -626,7 +633,7 @@ HI_S32 IR_Open(struct inode *inode, struct file *filp)
         g_IrAttr.bKeyUp	 = HI_TRUE;
         g_IrAttr.bRepkey = HI_TRUE;
         g_IrAttr.RepkeyDelayTime = IR_DELAY_TIME;
-        g_IrAttr.IrBlockTime = 0xffffffff;
+        g_IrAttr.IrBlockTime = DEF_BLOCK_TIME;
 
         g_IrAttr.bCheckRepkey = HI_FALSE;
         g_IrAttr.bReleseInt = HI_TRUE;
@@ -676,11 +683,6 @@ HI_S32 IR_Close(struct inode *inode, struct file *filp)
     return 0;
 }
 
-static int IR_Write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
-{
-    return 0;
-}
-
 static struct file_operations IR_FOPS =
 {
     owner   : THIS_MODULE,
@@ -688,7 +690,6 @@ static struct file_operations IR_FOPS =
     unlocked_ioctl   : Ir_Ioctl,
     poll    : IR_Select,
     read    : IR_Read,
-    write   : IR_Write,
     release : IR_Close,
 };
 
@@ -791,7 +792,6 @@ HI_S32 IR_DRV_ModInit(HI_VOID)
     }
 
     pProcItem->read	 = IR_ProcRead;
-    pProcItem->write = IR_ProcWrite;
 
 #ifdef MODULE
     HI_PRINT("Load hi_ir.ko success.  \t(%s)\n", VERSION_STRING);

@@ -77,17 +77,17 @@ DFB_INPUT_DRIVER( HI_IR )
 
 typedef enum hiHI_IRCODE_E
 {
-    HI_KEY_1 = 1,    
-    HI_KEY_2,            
-    HI_KEY_3,            
-    HI_KEY_4,            
-    HI_KEY_5,            
-    HI_KEY_6,            
-    HI_KEY_7,            
-    HI_KEY_8,            
-    HI_KEY_9,            
-    HI_KEY_0, 
-    
+    HI_KEY_1 = 1,
+    HI_KEY_2,
+    HI_KEY_3,
+    HI_KEY_4,
+    HI_KEY_5,
+    HI_KEY_6,
+    HI_KEY_7,
+    HI_KEY_8,
+    HI_KEY_9,
+    HI_KEY_0,
+
 /*ÔÚÒ£¿ØÆ÷ÖÐÒÔÏÂ¿ªÊ¼°´¼ü¸´ÓÃÊý×Ö°´¼ü*/
     HI_KEY_A = 11,
     HI_KEY_B,
@@ -98,7 +98,7 @@ typedef enum hiHI_IRCODE_E
     HI_KEY_G,
     HI_KEY_H,
     HI_KEY_I,
-    HI_KEY_J, 
+    HI_KEY_J,
     HI_KEY_K,
     HI_KEY_L,
     HI_KEY_M,
@@ -125,7 +125,7 @@ typedef enum hiHI_IRCODE_E
     HI_KEY_g,
     HI_KEY_h,
     HI_KEY_i,
-    HI_KEY_j, 
+    HI_KEY_j,
     HI_KEY_k,
     HI_KEY_l,
     HI_KEY_m,
@@ -146,15 +146,15 @@ typedef enum hiHI_IRCODE_E
     HI_KEY_DOT = 64,
     HI_KEY_COLON = 65,
 /*½áÊø°´¼ü¸´ÓÃÊý×Ö°´¼ü*/
-    
-    HI_KEY_ESC  = 66,    
-    HI_KEY_CAPS,    
-    
-    HI_KEY_DEL  = 70,    
-    HI_KEY_IME,    
-    HI_KEY_FAV,   
-    HI_KEY_MORE,   
-    HI_KEY_PREV,   
+
+    HI_KEY_ESC  = 66,
+    HI_KEY_CAPS,
+
+    HI_KEY_DEL  = 70,
+    HI_KEY_IME,
+    HI_KEY_FAV,
+    HI_KEY_MORE,
+    HI_KEY_PREV,
     HI_KEY_REC,
     HI_KEY_NEXT,
     HI_KEY_SLOW,
@@ -200,11 +200,11 @@ typedef enum hiHI_IRCODE_E
     HI_KEY_F2,
     HI_KEY_F3,
     HI_KEY_F4,
-    
+
     HI_KEY_RED,
     HI_KEY_YELLOW,
     HI_KEY_BLUE,
-    HI_KEY_GREEN,   
+    HI_KEY_GREEN,
 
     HI_KEY_SET     = 116,
     HI_KEY_SUB,
@@ -219,13 +219,13 @@ typedef enum hiHI_IRCODE_E
     HI_KEY_VOLUP
 }HI_IRCODE_E;
 
-typedef struct 
+typedef struct
 {
      HI_S32                         s32Code;                  /* hardware key code */
      HI_S32			      s32VirKey;		  /*º£Ë¼¼üÖµ*/
 } HI_IR_MAP;
 
-HI_IR_MAP g_stIrMap[HI_KEY_NUM] = 
+HI_IR_MAP g_stIrMap[HI_KEY_NUM] =
 {
 	/*{s32Code,s32VirKey}   ÓÃ»§¸ü»»Ò£¿ØÆ÷Ê±ºòÖ»ÐèÒª¸Ä±äcode Óò*/
 	{0x6d92ff00, HI_KEY_1},
@@ -355,16 +355,16 @@ HI_IR_MAP g_stIrMap[HI_KEY_NUM] =
 	{},
 	{},
 	{}
-};	
+};
 
-typedef struct 
+typedef struct
 {
      HI_S32                         s32Code;                  /* hardware key code */
      DFBInputDeviceKeyIdentifier enIdentifier;            /* basic mapping */
      DFBInputDeviceKeySymbol     enSymbols; 		/* advanced key*/
 } HI_IR_MAPENTRY;
 
-typedef struct 
+typedef struct
 {
 	CoreInputDevice *device;
 	DirectThread    *thread;
@@ -393,22 +393,22 @@ HI_IR_MAPENTRY g_stIrArray[HI_KEY_NUM] =
 	{HI_KEY_EPG, DIKI_HOME, DIKS_EPG},//epg
 	{HI_KEY_PGUP, DIKI_PAGE_UP, DIKS_PAGE_UP},
 	{HI_KEY_PGDOWN, DIKI_PAGE_DOWN, DIKS_PAGE_DOWN},
-	{HI_KEY_BACK, DIKI_BACKSPACE, DIKS_BACKSPACE},//back
+	{HI_KEY_BACK, DIKI_BACKSPACE, DIKS_BACK},//back
 	{HI_KEY_BTV, 0, DIKS_TV},//btv
-	{HI_KEY_VOD, 0, 0},//vod
-	{HI_KEY_NVOD, 0, 0},//nvod
+	{HI_KEY_VOD, 0, DIKS_CUSTOM4},//vod
+	{HI_KEY_NVOD, 0, DIKS_CUSTOM3},//nvod
 	{HI_KEY_NPVR, 0, DIKS_PVR},//npvr
 	{HI_KEY_PLAY, DIKI_PAUSE, DIKS_PLAYPAUSE},//play/pause
-	{HI_KEY_REW, DIKI_SUPER_L, DIKS_REWIND},//¿ìÍË
-	{HI_KEY_FF, DIKI_SUPER_R, DIKS_SHUFFLE},//¿ì½ø
+	{HI_KEY_REW, DIKI_SUPER_L, DIKS_SLOW},//¿ìÍË
+	{HI_KEY_FF, DIKI_SUPER_R, DIKS_FAST},//¿ì½ø
 	{HI_KEY_STOP, DIKI_END, DIKS_STOP},//stop
 	{HI_KEY_F1, DIKI_F1, DIKS_F1},
 	{HI_KEY_F2, DIKI_F2, DIKS_F2},
 	{HI_KEY_F3, DIKI_F3, DIKS_F3},
 	{HI_KEY_F4, DIKI_F4, DIKS_F4},
-	{HI_KEY_SET, DIKI_INSERT, DIKS_SETUP},//set
+	{HI_KEY_SET, DIKI_INSERT, DIKS_CUSTOM2},//set
 	{HI_KEY_SUB, 0, DIKS_SUBTITLE},//sub
-	{HI_KEY_SEEK, 0, 0},//seek
+	{HI_KEY_SEEK, 0, DIKS_CUSTOM1},//seek
 	{HI_KEY_INFO, 0, DIKS_INFO},//info
 	{HI_KEY_POWER, DIKI_ESCAPE, DIKS_POWER},//power
 	{HI_KEY_AUDIO, 0, DIKS_AUDIO},//audio
@@ -417,10 +417,10 @@ HI_IR_MAPENTRY g_stIrArray[HI_KEY_NUM] =
 	{HI_KEY_CHNUP, DIKI_SHIFT_R, DIKS_CHANNEL_UP},//ch +
 	{HI_KEY_VOLDOWN, DIKI_CONTROL_L, DIKS_VOLUME_DOWN},//vol -
 	{HI_KEY_VOLUP, DIKI_CONTROL_R, DIKS_VOLUME_UP},//vol+
-	{HI_KEY_IME, DIKI_ALT_L, DIKS_INSERT},//ime
+	{HI_KEY_IME, DIKI_ALT_L, DIKS_KEYBOARD},//ime
 	{HI_KEY_FAV, DIKI_ALT_R, DIKS_FAVORITES},//fav
 	{HI_KEY_MORE, DIKI_META_L, DIKS_OPTION},//more
-	{HI_KEY_SEARCH, DIKI_META_R, DIKS_GOTO},//seatch
+	{HI_KEY_SEARCH, DIKI_META_R, DIKS_CUSTOM0},//seatch
 	{HI_KEY_DEL, DIKI_DELETE, DIKS_DELETE},//del
 	{HI_KEY_COLON, DIKI_TAB, DIKS_COLON},//-/--
 	{},
@@ -516,12 +516,12 @@ irtable_map( HI_S32 code, DFBInputDeviceKeyIdentifier *penIdentifier, DFBInputDe
 		{
 		    //printf("code == g_stIrArray[i].s32Code is %d\n",code);
 			*penIdentifier = g_stIrArray[i].enIdentifier;
-			*penSymbol =  g_stIrArray[i].enSymbols;	
+			*penSymbol =  g_stIrArray[i].enSymbols;
 			return 0;
 		}
         //printf("code is %d\t s32Code is %d\n",code,g_stIrArray[i].s32Code);
 	}
-	
+
 	return -1;
 }
 static void* keyboardEventThread( DirectThread *thread, void *driver_data )
@@ -554,7 +554,7 @@ static void* keyboardEventThread( DirectThread *thread, void *driver_data )
 		}
 		else
 		{
-			stEvt.type     =DIET_AXISMOTION;
+			stEvt.type     =DIET_KEYPRESS;
 		}
 
 		stEvt.flags    =  DIEF_KEYCODE;
@@ -585,7 +585,7 @@ static void driver_get_info( InputDriverInfo *info )
 {
      snprintf( info->name, DFB_INPUT_DRIVER_INFO_NAME_LENGTH, "HI_IR Driver" );
      snprintf( info->vendor,DFB_INPUT_DRIVER_INFO_VENDOR_LENGTH, "directfb.org" );
-	 
+
      info->version.major = 0;
      info->version.minor = 3;
 }
@@ -604,7 +604,7 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		D_PERROR( "DirectFB/HI_IR: Could not open() !\n" );
 		return DFB_INIT;
 	}
-	
+
 	nRet = HI_UNF_IR_SetCodeType(ircode);
 	if (HI_SUCCESS != nRet)
 	{
@@ -612,7 +612,7 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		HI_UNF_IR_Close();
 		return DFB_INIT;
 	}
-	
+#if 0
 	/*ÉèÖÃ²»ÉÏ±¨°´¼üµ¯Æð×´Ì¬*/
 	nRet = HI_UNF_IR_EnableKeyUp(1);
 	if(nRet)
@@ -621,16 +621,16 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		D_PERROR( "DirectFB/HI_IR: Could not SET EnableKeyUp() !\n" );
 		return DFB_INIT;
 	}
-
+#endif
 	/*ÉèÖÃÖØ¸´°´¼üÉÏ±¨¼ä¸ôÊ±¼ä*/
-	nRet =  HI_UNF_IR_SetRepKeyTimeoutAttr(2048);
+	nRet =  HI_UNF_IR_SetRepKeyTimeoutAttr(270);
 	if(nRet)
 	{
 		HI_UNF_IR_Close();
 		D_PERROR( "DirectFB/HI_IR: SetRepKeyTimeoutAttr FAILT !\n" );
 		return DFB_INIT;
 	}
-	
+
 	nRet = HI_UNF_IR_Enable(1);
 	if (HI_SUCCESS != nRet)
 	{
@@ -638,9 +638,9 @@ static DFBResult driver_open_device( CoreInputDevice  *device, unsigned int     
 		HI_UNF_IR_Close();
 		return nRet;
 	}
-	
+
 	pstData = D_CALLOC( 1, sizeof(HI_IR_DATA) );
-	if (!pstData) 
+	if (!pstData)
 	{
 		HI_UNF_IR_Close();
 		return D_OOM();
@@ -668,10 +668,11 @@ static DFBResult  driver_get_keymap_entry( CoreInputDevice               *device
                          void                      *driver_data,
                          DFBInputDeviceKeymapEntry *entry )
 {
-	HI_S32 s32Ret;
+	HI_S32 s32Ret, i;
 	DFBInputDeviceKeyIdentifier enIdentifier;
 	DFBInputDeviceKeySymbol enSymbol;
 	HI_S32 s32Code = entry->code;
+
 
 	s32Ret = irtable_map(s32Code,&enIdentifier,&enSymbol);
 	if(s32Ret)
@@ -687,13 +688,25 @@ static DFBResult  driver_get_keymap_entry( CoreInputDevice               *device
 	entry->identifier = enIdentifier;
 	entry->symbols[DIKSI_BASE] =enSymbol;
 
+    HI_S32 s32PhyKey;
+    for(i = 0; i < HI_KEY_NUM; i++)
+    {
+        if(g_stIrMap[i].s32VirKey == s32Code )
+        {
+            s32PhyKey = g_stIrMap[i].s32Code;
+            break;
+        }
+    }
+
+	entry->symbols[DIKSI_BASE_SHIFT] = s32PhyKey;
+
 	return DFB_OK;
 }
 
 static void driver_close_device( void *driver_data )
 {
 	HI_IR_DATA *pstData = (HI_IR_DATA*) driver_data;
-	
+
 	direct_thread_cancel( pstData->thread );
 	direct_thread_join( pstData->thread );
 	direct_thread_destroy( pstData->thread );

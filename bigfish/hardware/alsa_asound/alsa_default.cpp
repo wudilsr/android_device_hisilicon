@@ -144,8 +144,8 @@ static const device_suffix_t deviceSuffix[] = {
         {AudioSystem::DEVICE_OUT_BLUETOOTH_A2DP, "_Bluetooth-A2DP"},
         //add output device
         {AudioSystem::DEVICE_OUT_WIRED_HEADPHONE, "_Headphone"},
-        {AudioSystem::DEVICE_IN_WIRED_HEADSET, "_Headset"},
-        {AudioSystem::DEVICE_IN_USB_MIC, "_UsbMic"},
+        {AudioSystem::DEVICE_IN_WIRED_HEADSET, "_Headset"}, //2,0
+        {AudioSystem::DEVICE_IN_USB_MIC, "_UsbMic"}, //3,0
         {AudioSystem::DEVICE_IN_BUILTIN_MIC, "_Ai0"},
 };
 
@@ -511,22 +511,116 @@ static status_t s_init(alsa_device_t *module, ALSAHandleList &list)
     return NO_ERROR;
 }
 
+void stringUp(char* s8Str, int s32Length)
+{
+    int i = 0;
+
+    for (i = 0; i < s32Length; i++)
+    {
+        if (s8Str[i] >= 'a' && s8Str[i] <= 'z')
+        {
+            s8Str[i] -= 32;
+        }
+    }
+
+    return;
+}
+
+static int getUsbMicId()
+{
+    FILE* fp = NULL;
+    const char* pUsbTag = "USB";
+    const char* pCapture = "capture";
+    const char* pCameraTag = "CAM";
+    const int DEFAULTID = 0;
+    const int MAX_LINE_SIZE = 256;
+    int usbMicCount = 0;
+
+    char buf[MAX_LINE_SIZE];
+    memset(buf, 0, MAX_LINE_SIZE);
+
+    fp = fopen("/proc/asound/pcm", "r");
+    if (!fp)
+    {
+        return DEFAULTID;
+    }
+
+    while (fgets(buf, MAX_LINE_SIZE, fp) != NULL)
+    {
+        if ((strstr(buf, pUsbTag) != NULL) &&
+            (strstr(buf, pCapture) != NULL))
+        {
+            usbMicCount++;
+        }
+        memset(buf, 0, MAX_LINE_SIZE);
+    }
+    fclose(fp);
+
+    if (usbMicCount > 0)
+    {
+        if (1 == usbMicCount)
+        {
+            return 2;
+        }
+
+        fp = fopen("/proc/asound/cards", "r");
+        if (!fp)
+        {
+            return DEFAULTID;
+        }
+
+        while (fgets(buf, MAX_LINE_SIZE, fp) != NULL)
+        {
+            if (strstr(buf, pUsbTag) != NULL)
+            {
+                stringUp((char* )buf, strlen(buf));
+                if (strstr(buf, pCameraTag) == NULL)
+                {
+                    fclose(fp);
+                    return (buf[1] - '0');
+                }
+            }
+            memset(buf, 0, MAX_LINE_SIZE);
+        }
+        fclose(fp);
+    }
+
+    return DEFAULTID;
+}
+
+
 static status_t s_open(alsa_handle_t *handle, uint32_t devices, int mode)
 {
     // Close off previously opened device.
     // It would be nice to determine if the underlying device actually
     // changes, but we might be recovering from an error or manipulating
     // mixer settings (see asound.conf).
-    //	
+    //
+    uint32_t DstDevices;
+    int CardId;
     s_close(handle);
 
     ALOGD("open called for devices %08x in mode %d...", devices, mode);
 
     const char *stream = streamName(handle);
-    const char *devName = deviceName(handle, devices, mode);
+    DstDevices = devices;
+    if(SND_PCM_STREAM_CAPTURE == direction(handle))
+    {
+        CardId = getUsbMicId();
+        ALOGE("device CardId is %d",CardId);
+        if(CardId == 2)
+        {
+             DstDevices = AudioSystem::DEVICE_IN_WIRED_HEADSET;
+        }
+        else
+        {
+            DstDevices = AudioSystem::DEVICE_IN_USB_MIC;
+        }
+    }
+    const char *devName = deviceName(handle, DstDevices, mode);
 
     int err;
-    ALOGI("device name is %s",devName);
+    ALOGE("device name is %s",devName);
     for (;;) {
         // The PCM stream is opened in blocking mode, per ALSA defaults.  The
         // AudioFlinger seems to assume blocking mode too, so asynchronous mode

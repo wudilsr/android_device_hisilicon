@@ -972,6 +972,12 @@ HI_S32 HI_DRV_DMX_AcquireBuf(HI_HANDLE hChannel, HI_U32 u32AcquireNum,
     ChanId = DMX_CHANID(hChannel);
     *pu32AcquiredNum = 0;
 
+    if (unlikely(u32TimeOutMs > 10000))
+    {
+        HI_ERR_DEMUX("Timeout argument has overtake 10000 ms!");
+        return HI_ERR_DMX_TIMEOUT;
+    }
+
     #ifdef DMX_USE_ECM
     DMX_OsiGetChannelSwFlag(ChanId, &u32SwFlag);
     if (u32SwFlag)

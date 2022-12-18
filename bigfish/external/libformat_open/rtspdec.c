@@ -32,6 +32,8 @@
 #include "rdt.h"
 #include "url.h"
 #include <unistd.h>
+#include <time.h>
+#include <time64.h>
 #if defined (ANDROID_VERSION)
 #include <cutils/properties.h>
 #endif
@@ -167,18 +169,31 @@ static int rtsp_read_play(AVFormatContext *s)
             }
             ff_rtsp_reset_demux(s);
         }
+
         if (rt->state == RTSP_STATE_PAUSED) {
             cmd[0] = 0;
         } else {
-            if (rt->headers && (av_stristart(rt->headers, "Range:", NULL) ||
-                                av_stristr(rt->headers, "Range:"))) {
-                snprintf(cmd, sizeof(cmd), "%s", rt->headers);
+            int len;
+            /* Range: clock=19961108T142300Z-19961108T143520Z */
+            if (rt->seek_timestamp.type == RTSP_CLOCK_UTC) {
+                len = snprintf(cmd, sizeof(cmd), "Range: clock=%04d%02d%02dT%02d%02d%02dZ-",
+                    rt->seek_timestamp.time.utc.year, rt->seek_timestamp.time.utc.mon,
+                    rt->seek_timestamp.time.utc.day, rt->seek_timestamp.time.utc.hour,
+                    rt->seek_timestamp.time.utc.min, rt->seek_timestamp.time.utc.second);
+                if (rt->seek_end_timestamp.type == RTSP_CLOCK_UTC) {
+                    len += snprintf(cmd + len, sizeof(cmd) - len, "%04d%02d%02dT%02d%02d%02dZ",
+                        rt->seek_end_timestamp.time.utc.year, rt->seek_end_timestamp.time.utc.mon,
+                        rt->seek_end_timestamp.time.utc.day, rt->seek_end_timestamp.time.utc.hour,
+                        rt->seek_end_timestamp.time.utc.min, rt->seek_end_timestamp.time.utc.second);
+                }
             } else {
-                snprintf(cmd, sizeof(cmd),
-                         "Range: npt=%"PRId64".%03"PRId64"-\r\n",
-                         rt->seek_timestamp / AV_TIME_BASE,
-                         rt->seek_timestamp / (AV_TIME_BASE / 1000) % 1000);
+                len = snprintf(cmd, sizeof(cmd), "Range: npt=%0.02lf-", rt->seek_timestamp.time.npt);
+                if (rt->seek_end_timestamp.type == RTSP_CLOCK_NPT) {
+                    len += snprintf(cmd + len, sizeof(cmd) - len, "%0.02lf", rt->seek_timestamp.time.npt);
+                }
             }
+            len += snprintf(cmd + len, sizeof(cmd) - len, "\r\n");
+            av_log(s, AV_LOG_INFO, "[%s,%d] seek range='%s'\n", __FUNCTION__, __LINE__, cmd);
         }
         ff_rtsp_send_cmd(s, "PLAY", rt->control_uri, cmd, reply, NULL);
         if (reply->status_code != RTSP_STATUS_OK) {
@@ -226,7 +241,7 @@ int ff_rtsp_setup_input_streams(AVFormatContext *s, RTSPMessageHeader *reply)
     RTSPState *rt = s->priv_data;
     char cmd[1024];
     unsigned char *content = NULL;
-    int ret;
+    int ret = -1;
 
     /* describe the stream */
     snprintf(cmd, sizeof(cmd),
@@ -250,7 +265,11 @@ int ff_rtsp_setup_input_streams(AVFormatContext *s, RTSPMessageHeader *reply)
 
     av_log(s, AV_LOG_VERBOSE, "SDP:\n%s\n", content);
     /* now we got the SDP description, we parse it */
-    ret = ff_sdp_parse(s, (const char *)content);
+    if (!rt->reconnecting) {
+        ret = ff_sdp_parse(s, (const char *)content);
+    } else {
+        ret = 0;
+    }
     av_freep(&content);
     if (ret < 0)
         return ret;
@@ -271,6 +290,77 @@ int create_udp_recv_thread(AVFormatContext *s);
 int destroy_udp_recv_thread(AVFormatContext *s);
 #endif
 
+static inline const char *skip_space(const char *buf)
+{
+    while (*buf == ' ' || *buf == '\t')
+        buf++;
+    return buf;
+}
+
+static int parse_utc_range(const char *headers, RTSPUTCTime *start, RTSPUTCTime *end)
+{
+    const char *p;
+    int ret, n = 0;
+    int year = -1, month = -1, day = -1, hour = -1, min = -1, second = -1;
+    RTSPUTCTime *target = start;
+
+    if (!headers || !start) {
+        return -1;
+    }
+
+    p = strstr(headers, "Range:");
+    if (!p) {
+        return -1;
+    }
+    av_log(NULL, AV_LOG_INFO, "[%s,%d] headers='%s'\n", __FUNCTION__, __LINE__, headers);
+    p += strlen("Range:");
+    p = skip_space(p);
+    if (!av_stristart(p, "clock", &p)) {
+        av_log(NULL, AV_LOG_INFO, "[%s,%d] clock not found!\n", __FUNCTION__, __LINE__);
+        return -1;
+    }
+    p = skip_space(p);
+    if (*p != '=') {
+        av_log(NULL, AV_LOG_INFO, "[%s,%d] '=' not found!\n", __FUNCTION__, __LINE__);
+        return -1;
+    }
+    p ++;
+    p = skip_space(p);
+
+NEXT:
+    year  = -1;
+    month = -1;
+    day   = -1;
+    hour  = -1;
+    min   = -1;
+    second = -1;
+    ret = sscanf(p, "%4d%2d%2dT%2d%2d%2dZ", &year, &month, &day, &hour, &min, &second);
+    av_log(NULL, AV_LOG_INFO, "[%s,%d] ret=%d, year=%d, month=%d, day=%d, hour=%d, min=%d, second=%d\n",
+        __FUNCTION__, __LINE__, ret, year, month, day, hour, min, second);
+    if (ret < 6) {
+        return -1;
+    }
+    n ++;
+    target->year = year;
+    target->mon  = month;
+    target->day  = day;
+    target->hour = hour;
+    target->min  = min;
+    target->second = second;
+    p = strchr(p, '-');
+    if (!p) {
+        return n;
+    }
+    p ++;
+    p = skip_space(p);
+    if (end && target != end && *p != '\r' && *p != '\n') {
+        target = end;
+        goto NEXT;
+    }
+
+    return n;
+}
+
 static int rtsp_read_header(AVFormatContext *s,
                             AVFormatParameters *ap)
 {
@@ -288,6 +378,17 @@ static int rtsp_read_header(AVFormatContext *s,
         }
     }
 #endif
+
+    rt->lower_transport_mask_bak = rt->lower_transport_mask;
+    rt->seek_timestamp.type     = RTSP_CLOCK_NPT;
+    rt->seek_end_timestamp.type = RTSP_CLOCK_NONE;
+    ret = parse_utc_range(rt->headers, &rt->seek_timestamp.time.utc, &rt->seek_end_timestamp.time.utc);
+    if (ret >= 1) {
+        rt->seek_timestamp.type = RTSP_CLOCK_UTC;
+        if (ret >= 2) {
+            rt->seek_end_timestamp.type = RTSP_CLOCK_UTC;
+        }
+    }
 
     ret = ff_rtsp_connect(s);
     if (ret) {
@@ -407,6 +508,163 @@ static int resetup_tcp(AVFormatContext *s)
                                       rt->real_challenge);
 }
 
+static int compute_reconnect_timestamp(RTSPState *rt, int64_t downloaded_duration_us)
+{
+    if (downloaded_duration_us <= 0) {
+        return 0;
+    }
+
+    if (rt->seek_timestamp.type == RTSP_CLOCK_NPT) {
+        double npt = rt->seek_timestamp.time.npt + downloaded_duration_us/(double)AV_TIME_BASE;
+        if (rt->seek_end_timestamp.type == RTSP_CLOCK_NPT &&
+            rt->seek_timestamp.time.npt >= rt->seek_end_timestamp.time.npt) {
+            av_log(NULL, AV_LOG_ERROR, "[%s,%d] current NPT time is beyond of the end of time!\n", __FUNCTION__, __LINE__);
+            return -1;
+        }
+        av_log(NULL, AV_LOG_INFO, "[%s,%d] NPT(%lf) + (%lld us)-> NPT(%lf)!\n",
+            __FUNCTION__, __LINE__, rt->seek_timestamp.time.npt, downloaded_duration_us, npt);
+        rt->seek_timestamp.time.npt = npt;
+        return 0;
+    } else if (rt->seek_timestamp.type == RTSP_CLOCK_UTC) {
+        struct tm tm_time;
+        time64_t time_sec, seek_end_sec;
+
+        if (downloaded_duration_us/AV_TIME_BASE <= 0) {
+            return 0;
+        }
+        memset(&tm_time, 0, sizeof(tm_time));
+        tm_time.tm_year = rt->seek_timestamp.time.utc.year;
+        tm_time.tm_mon  = rt->seek_timestamp.time.utc.mon;
+        tm_time.tm_mday = rt->seek_timestamp.time.utc.day;
+        tm_time.tm_hour = rt->seek_timestamp.time.utc.hour;
+        tm_time.tm_min  = rt->seek_timestamp.time.utc.min;
+        tm_time.tm_sec  = rt->seek_timestamp.time.utc.second;
+
+        time_sec = mktime64(&tm_time);
+        time_sec += downloaded_duration_us/AV_TIME_BASE;
+        if (rt->seek_end_timestamp.type == RTSP_CLOCK_UTC) {
+            memset(&tm_time, 0, sizeof(tm_time));
+            tm_time.tm_year = rt->seek_end_timestamp.time.utc.year;
+            tm_time.tm_mon  = rt->seek_end_timestamp.time.utc.mon;
+            tm_time.tm_mday = rt->seek_end_timestamp.time.utc.day;
+            tm_time.tm_hour = rt->seek_end_timestamp.time.utc.hour;
+            tm_time.tm_min  = rt->seek_end_timestamp.time.utc.min;
+            tm_time.tm_sec  = rt->seek_end_timestamp.time.utc.second;
+            seek_end_sec = mktime64(&tm_time);
+            if (time_sec >= seek_end_sec) {
+                av_log(NULL, AV_LOG_ERROR, "[%s,%d] current UTC time(%lld) is beyond of the end of time(%lld)!\n",
+                    __FUNCTION__, __LINE__, time_sec, seek_end_sec);
+                return -1;
+            }
+        }
+        memset(&tm_time, 0, sizeof(tm_time));
+        if (localtime64_r(&time_sec, &tm_time)) {
+            av_log(NULL, AV_LOG_INFO, "[%s,%d] date(%04d%02d%02dT%02d%02d%02d) + duration(%lld us) -> date(%04d%02d%02dT%02d%02d%02d)\n",
+                __FUNCTION__, __LINE__,
+                rt->seek_timestamp.time.utc.year,
+                rt->seek_timestamp.time.utc.mon,
+                rt->seek_timestamp.time.utc.day,
+                rt->seek_timestamp.time.utc.hour,
+                rt->seek_timestamp.time.utc.min,
+                rt->seek_timestamp.time.utc.second,
+                downloaded_duration_us,
+                tm_time.tm_year, tm_time.tm_mon, tm_time.tm_mday,
+                tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
+
+            rt->seek_timestamp.time.utc.year = tm_time.tm_year;
+            rt->seek_timestamp.time.utc.mon  = tm_time.tm_mon;
+            rt->seek_timestamp.time.utc.day  = tm_time.tm_mday;
+            rt->seek_timestamp.time.utc.hour = tm_time.tm_hour;
+            rt->seek_timestamp.time.utc.min  = tm_time.tm_min;
+            rt->seek_timestamp.time.utc.second = tm_time.tm_sec;
+
+            return 0;
+        } else {
+            av_log(NULL, AV_LOG_ERROR, "[%s,%d] localtime_r(%lld) error!\n", __FUNCTION__, __LINE__, time_sec);
+        }
+    }else {
+        av_log(NULL, AV_LOG_ERROR, "[%s,%d] clock type(%d) temporarily not supported!\n",
+            __FUNCTION__, __LINE__, rt->seek_end_timestamp.type);
+    }
+
+    return -1;
+}
+
+static int rtsp_reconnect(AVFormatContext *s)
+{
+    RTSPState *rt = s->priv_data;
+    int ret, i;
+    unsigned last_reconn_time = 0, cur_time;
+    int64_t dowloaded_duration = 0, st_downloaded_duration;
+
+    av_log(s, AV_LOG_INFO, "[%s,%d] start do reconnecting...\n", __FUNCTION__, __LINE__);
+    url_errorcode_cb(s->interrupt_callback.opaque, NETWORK_DISCONNECT, "rtsp");
+
+    /* compute the duration of data that has been downloaded */
+    for (i = 0; i < s->nb_streams; i ++) {
+        if (s->streams[i]->cur_dts != AV_NOPTS_VALUE &&
+            s->streams[i]->first_dts != AV_NOPTS_VALUE) {
+            st_downloaded_duration = s->streams[i]->cur_dts - s->streams[i]->first_dts;
+            st_downloaded_duration = av_rescale_q(st_downloaded_duration,
+                                       s->streams[i]->time_base, AV_TIME_BASE_Q);
+            if (st_downloaded_duration > dowloaded_duration) {
+                dowloaded_duration = st_downloaded_duration;
+            }
+        } else {
+            st_downloaded_duration = -1;
+        }
+        av_log(s, AV_LOG_INFO, "[%s,%d] stream[%d] first_dts=%lld, cur_dts=%lld, downloaded_duration=%lld\n",
+            __FUNCTION__, __LINE__, i, s->streams[i]->first_dts, s->streams[i]->cur_dts, st_downloaded_duration);
+    }
+
+    /* add the duration to the seek timestamp */
+    if (compute_reconnect_timestamp(rt, dowloaded_duration) < 0) {
+        av_log(s, AV_LOG_ERROR, "[%s,%d] compute timestamp error, exit reconnect!\n", __FUNCTION__, __LINE__);
+        return -1;
+    }
+
+    /* now do reconnecting */
+    rt->reconnecting = 1;
+    rt->state = RTSP_STATE_IDLE;
+    rt->lower_transport_mask = rt->lower_transport_mask_bak;
+    do {
+        if (ff_check_interrupt(&s->interrupt_callback)) {
+            av_log(s, AV_LOG_ERROR, "[%s,%d] reconnect interrupted\n", __FUNCTION__, __LINE__);
+            ret = AVERROR_EXIT;
+            break;
+        }
+        cur_time = av_getsystemtime();
+        if (cur_time - last_reconn_time >= 1000) {
+            last_reconn_time = cur_time;
+            ff_rtsp_undo_setup(s);
+            ff_rtsp_close_connections(s);
+            rt->session_id[0] = '\0';
+            ret = ff_rtsp_connect(s);
+            if (ret == 0) {
+                av_log(s, AV_LOG_INFO, "[%s,%d] ff_rtsp_connect ok, send play\n", __FUNCTION__, __LINE__);
+                ret = rtsp_read_play(s);
+                if (ret != 0) {
+                    av_log(s, AV_LOG_ERROR, "[%s,%d] rtsp_read_play return %d\n", __FUNCTION__, __LINE__, ret);
+                } else {
+                    break;
+                }
+            } else {
+                av_log(s, AV_LOG_ERROR, "[%s,%d] reconnect return error=%d\n",
+                    __FUNCTION__, __LINE__, ret);
+            }
+        }
+        usleep(10000);
+    } while(1);
+
+    rt->reconnecting = 0;
+    if (ret == 0) {
+       url_errorcode_cb(s->interrupt_callback.opaque, NETWORK_NORMAL, "rtsp");
+    }
+    av_log(s, AV_LOG_INFO, "[%s,%d] do reconnecting return %d\n", __FUNCTION__, __LINE__, ret);
+
+    return ret;
+}
+
 static int rtsp_read_packet(AVFormatContext *s, AVPacket *pkt)
 {
     RTSPState *rt = s->priv_data;
@@ -485,6 +743,15 @@ retry:
     ret = ff_rtsp_fetch_packet(s, pkt);
     bandwidth_end = av_gettime();
     if (ret < 0) {
+        av_log(s, AV_LOG_WARNING, "[%s,%d] ff_rtsp_fetch_packet return error=%d, server_type=%d\n",
+            __FUNCTION__, __LINE__, ret, rt->server_type);
+        if (rt->state != RTSP_STATE_IDLE && rt->packets > 0) {
+            if (!rtsp_reconnect(s)) {
+                goto retry;
+            } else {
+                return AVERROR_EOF;
+            }
+        }
         //z00228123 begin add for wms server replay
         if ((rt->server_type == RTSP_SERVER_WMS || rt->server_type == RTSP_SERVER_REAL) && ret == AVERROR_EOF)
         {
@@ -560,10 +827,23 @@ static int rtsp_read_seek(AVFormatContext *s, int stream_index,
 {
     RTSPState *rt = s->priv_data;
     int ret = 0;
+    AVRational seek_ts_r;
+    int64_t seek_ts;
 
-    rt->seek_timestamp = av_rescale_q(timestamp,
-                                      s->streams[stream_index]->time_base,
-                                      AV_TIME_BASE_Q);
+    if (rt->seek_timestamp.type != RTSP_CLOCK_NONE &&
+        rt->seek_timestamp.type != RTSP_CLOCK_NPT) {
+        av_log(s, AV_LOG_ERROR, "[%s,%d] clock type(%d) not support seek!\n",
+            __FUNCTION__, __LINE__, rt->seek_timestamp.type);
+        return -1;
+    }
+    seek_ts = av_rescale_q(timestamp,
+                s->streams[stream_index]->time_base, AV_TIME_BASE_Q);
+    rt->seek_timestamp.type     = RTSP_CLOCK_NPT;
+    rt->seek_timestamp.time.npt = seek_ts/(double)AV_TIME_BASE;
+    rt->seek_end_timestamp.type = RTSP_CLOCK_NONE;
+    av_log(s, AV_LOG_INFO, "[%s,%d] seek timestamp(%lld) to npt is %lf\n",
+        __FUNCTION__, __LINE__, seek_ts, rt->seek_timestamp.time.npt);
+
     switch(rt->state) {
     default:
     case RTSP_STATE_IDLE:

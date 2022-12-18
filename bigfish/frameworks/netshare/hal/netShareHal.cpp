@@ -158,7 +158,7 @@ static int UI_mount(const char *pMount)
 			pclose(fd);
 			return -6;
 		}
-		if(retValue == 1 || retValue == 130 || retValue == 255)
+		if(retValue == 1 || retValue == 130 || retValue == 255||retValue==110)
 		{
 			ALOGE("line : %d, Mount Error", __LINE__);
 			pclose(fd);

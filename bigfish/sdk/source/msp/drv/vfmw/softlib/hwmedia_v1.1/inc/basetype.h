@@ -1,6 +1,6 @@
 
 /*******************************************************************************
-Copyright (C), 2009-2012, Huawei Tech. Co., Ltd.
+Copyright (C), 2009-2012, Hisilicon Tech. Co., Ltd.
 File name: basetype.h
 Author & ID: ÀŒ–°∏’+00133955 ’≈¿ˆ∆º+00139017 ≤‹ø°√Ø+00103648
 Version: 1.00

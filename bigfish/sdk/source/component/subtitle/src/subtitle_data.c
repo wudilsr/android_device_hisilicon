@@ -19,44 +19,45 @@
 
 typedef struct tagCache_Buffer_Node_S
 {
-    struct tagCache_Buffer_Node_S *next;
+    struct tagCache_Buffer_Node_S* next;
     HI_U8  au8Data[SUBT_PES_PACKET_LEN];
     HI_U32 u32DataSize;
-}Cache_Buffer_Node_S;
+} Cache_Buffer_Node_S;
 
 
 typedef struct tagSUBT_DATA_RECV_S
 {
-    HI_HANDLE hDataParse;
+    HI_VOID* hDataParse;
 
 #if SUBT_USED_PES_BUFFER
     HI_U32    u32PESWritenLen; /*The data length of recving PES packket, in byte */
-    HI_U8     *pu8WriteDataAddr; /*The data address of includeing start code PES packet */
+    HI_U8*     pu8WriteDataAddr; /*The data address of includeing start code PES packet */
     HI_U8     au8PesBuffer[SUBT_MAX_PES_PACKET_LEN];
 #endif
 
     HI_U16    u16PageID;
     HI_U16    u16AncillaryID;
 
-    Cache_Buffer_Node_S *pstCacheNode;
+    Cache_Buffer_Node_S* pstCacheNode;
     Cache_Buffer_Node_S astCacheNode[CACHE_NODE_NUM_MAX];
 
-}SUBT_DATA_RECV_S;
+} SUBT_DATA_RECV_S;
 
-static HI_VOID Cache_Init(SUBT_DATA_RECV_S *pstDataRecv)
+static HI_VOID Cache_Init(SUBT_DATA_RECV_S* pstDataRecv)
 {
     HI_U8 i = 0;
 
     for (i = 0; i < (CACHE_NODE_NUM_MAX - 1); i++)
     {
-        pstDataRecv->astCacheNode[i].next = &pstDataRecv->astCacheNode[i+1];
+        pstDataRecv->astCacheNode[i].next = &pstDataRecv->astCacheNode[i + 1];
     }
+
     pstDataRecv->astCacheNode[CACHE_NODE_NUM_MAX - 1].next = &pstDataRecv->astCacheNode[0];
 
     pstDataRecv->pstCacheNode = &pstDataRecv->astCacheNode[0];
 }
 
-static HI_S32 Cache_Put(SUBT_DATA_RECV_S *pstDataRecv, HI_U8 *pu8Data, HI_U32 u32DataSize)
+static HI_S32 Cache_Put(SUBT_DATA_RECV_S* pstDataRecv, HI_U8* pu8Data, HI_U32 u32DataSize)
 {
     if (u32DataSize < SUBT_PES_PACKET_MIN || u32DataSize > SUBT_PES_PACKET_LEN)
     {
@@ -72,7 +73,7 @@ static HI_S32 Cache_Put(SUBT_DATA_RECV_S *pstDataRecv, HI_U8 *pu8Data, HI_U32 u3
     return HI_SUCCESS;
 }
 
-static HI_S32 Cache_Get(SUBT_DATA_RECV_S *pstDataRecv, HI_U8 **ppu8Data, HI_U32 *pu32DataSize)
+static HI_S32 Cache_Get(SUBT_DATA_RECV_S* pstDataRecv, HI_U8** ppu8Data, HI_U32* pu32DataSize)
 {
     if (pstDataRecv->pstCacheNode->u32DataSize)
     {
@@ -86,12 +87,13 @@ static HI_S32 Cache_Get(SUBT_DATA_RECV_S *pstDataRecv, HI_U8 **ppu8Data, HI_U32 
         *ppu8Data = NULL;
         *pu32DataSize = 0;
     }
+
     pstDataRecv->pstCacheNode = pstDataRecv->pstCacheNode->next;
 
     return HI_SUCCESS;
 }
 
-static HI_VOID Cache_Reset(SUBT_DATA_RECV_S *pstDataRecv)
+static HI_VOID Cache_Reset(SUBT_DATA_RECV_S* pstDataRecv)
 {
     HI_U8 i = 0;
 
@@ -114,13 +116,13 @@ HI_S32 SUBT_DataRecv_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_HANDLE *phDataRecv)
+HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_VOID** pphDataRecv)
 {
     HI_S32 s32Ret = HI_SUCCESS;
 
-    SUBT_DATA_RECV_S *pstDataRecv = NULL;
+    SUBT_DATA_RECV_S* pstDataRecv = NULL;
 
-    if (NULL == phDataRecv)
+    if (NULL == pphDataRecv)
     {
         HI_ERR_SUBT("param is NULL...\n");
 
@@ -128,6 +130,7 @@ HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_HANDLE *
     }
 
     pstDataRecv = (SUBT_DATA_RECV_S*)malloc(sizeof(SUBT_DATA_RECV_S));
+
     if (NULL == pstDataRecv)
     {
         HI_ERR_SUBT("malloc data struct failure...\n");
@@ -148,16 +151,16 @@ HI_S32 SUBT_DataRecv_Create(HI_U16 u16PageID, HI_U16 u16AncillaryID, HI_HANDLE *
 
     Cache_Init(pstDataRecv);
 
-    *phDataRecv = (HI_HANDLE)pstDataRecv;
+    *pphDataRecv = pstDataRecv;
 
-    HI_INFO_SUBT("success, with handle:0x%08x!\n", *phDataRecv);
+    HI_INFO_SUBT("success, with handle:0x%08x!\n", *pphDataRecv);
 
     return s32Ret;
 }
 
-HI_S32 SUBT_DataRecv_Destroy(HI_HANDLE hDataRecv)
+HI_S32 SUBT_DataRecv_Destroy(HI_VOID* hDataRecv)
 {
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv)
     {
@@ -169,15 +172,16 @@ HI_S32 SUBT_DataRecv_Destroy(HI_HANDLE hDataRecv)
     HI_INFO_SUBT("begin to use handle:0x%08x!\n", pstDataRecv);
 
     free((void*)pstDataRecv);
+    pstDataRecv = HI_NULL;
 
     HI_INFO_SUBT("success!\n");
 
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_Reset(HI_HANDLE hDataRecv, HI_BOOL bRecvFlag)
+HI_S32 SUBT_DataRecv_Reset(HI_VOID* hDataRecv, HI_BOOL bRecvFlag)
 {
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv)
     {
@@ -186,20 +190,24 @@ HI_S32 SUBT_DataRecv_Reset(HI_HANDLE hDataRecv, HI_BOOL bRecvFlag)
         return HI_FAILURE;
     }
 
+    if (HI_TRUE == bRecvFlag)
+    {
+
 #if SUBT_USED_PES_BUFFER
-    memset(pstDataRecv->au8PesBuffer, 0, sizeof(pstDataRecv->au8PesBuffer));
-    pstDataRecv->pu8WriteDataAddr = pstDataRecv->au8PesBuffer;
-    pstDataRecv->u32PESWritenLen = 0;
+        memset(pstDataRecv->au8PesBuffer, 0, sizeof(pstDataRecv->au8PesBuffer));
+        pstDataRecv->pu8WriteDataAddr = pstDataRecv->au8PesBuffer;
+        pstDataRecv->u32PESWritenLen = 0;
 #endif
 
-    Cache_Reset(pstDataRecv);
+        Cache_Reset(pstDataRecv);
+    }
 
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_Updata(HI_HANDLE hDataRecv, HI_U16 u16PageID, HI_U16 u16AncillaryID)
+HI_S32 SUBT_DataRecv_Updata(HI_VOID* hDataRecv, HI_U16 u16PageID, HI_U16 u16AncillaryID)
 {
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv)
     {
@@ -216,9 +224,9 @@ HI_S32 SUBT_DataRecv_Updata(HI_HANDLE hDataRecv, HI_U16 u16PageID, HI_U16 u16Anc
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_BindParsing(HI_HANDLE hDataRecv, HI_HANDLE hDataParse)
+HI_S32 SUBT_DataRecv_BindParsing(HI_VOID* hDataRecv, HI_VOID* hDataParse)
 {
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv)
     {
@@ -232,9 +240,9 @@ HI_S32 SUBT_DataRecv_BindParsing(HI_HANDLE hDataRecv, HI_HANDLE hDataParse)
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_UnbindParsing(HI_HANDLE hDataRecv)
+HI_S32 SUBT_DataRecv_UnbindParsing(HI_VOID* hDataRecv)
 {
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv)
     {
@@ -248,11 +256,11 @@ HI_S32 SUBT_DataRecv_UnbindParsing(HI_HANDLE hDataRecv)
     return HI_SUCCESS;
 }
 
-HI_S32 SUBT_DataRecv_Redo(HI_HANDLE hDataRecv)
+HI_S32 SUBT_DataRecv_Redo(HI_VOID* hDataRecv)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
-    HI_U8 *pu8Data = NULL;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
+    HI_U8* pu8Data = NULL;
     HI_U32 u32DataSize = 0;
 
     if (NULL == pstDataRecv)
@@ -267,26 +275,29 @@ HI_S32 SUBT_DataRecv_Redo(HI_HANDLE hDataRecv)
     do
     {
         s32Ret = Cache_Get(pstDataRecv, &pu8Data, &u32DataSize);
+
         if ((HI_SUCCESS == s32Ret) && u32DataSize && pu8Data)
         {
             if (pstDataRecv->hDataParse)
             {
                 /*6 is the startcode(4 bytes) plus PES_packet_length field(2 bytes), DataSize include this 6 byte,*/
-                s32Ret |= SUBT_DataParse_ParsePESPacket(pstDataRecv->hDataParse, pu8Data, (u32DataSize-6),
-                                            pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+                s32Ret |= SUBT_DataParse_ParsePESPacket(pstDataRecv->hDataParse, pu8Data, (u32DataSize - 6),
+                                                        pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+
                 if (s32Ret != HI_SUCCESS)
                 {
                     HI_ERR_SUBT("failed to SUBT_DataParse_ParsePESPacket...\n");
                 }
             }
         }
-    } while(u32DataSize);
+    }
+    while (u32DataSize);
 
     return HI_SUCCESS;
 }
 
 
-HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataSize)
+HI_S32 SUBT_DataRecv_Inject(HI_VOID* hDataRecv, HI_U8* pu8Data, HI_U32 u32DataSize)
 {
     HI_S32 s32Ret = HI_SUCCESS;
 #if SUBT_USED_PES_BUFFER
@@ -294,7 +305,7 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
 #endif
     HI_U32 u32PESPayloadLength = 0;
 
-    SUBT_DATA_RECV_S *pstDataRecv = (SUBT_DATA_RECV_S *)hDataRecv;
+    SUBT_DATA_RECV_S* pstDataRecv = (SUBT_DATA_RECV_S*)hDataRecv;
 
     if (NULL == pstDataRecv || NULL == pu8Data || 0 == u32DataSize)
     {
@@ -304,6 +315,7 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
     }
 
 #if SUBT_USED_PES_BUFFER
+
     if (pstDataRecv->u32PESWritenLen == 0)
     {
         /*
@@ -313,9 +325,9 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
               * stream_id : 1011 1101[0xbd] standard for subtitle stream.
               */
         if (   (pu8Data[0] == 0x00) && (pu8Data[1] == 0x00)
-            && (pu8Data[2] == 0x01) && (pu8Data[3] == 0xbd))
+               && (pu8Data[2] == 0x01) && (pu8Data[3] == 0xbd))
         {
-            if(u32DataSize <= SUBT_MAX_PES_PACKET_LEN)
+            if (u32DataSize <= SUBT_MAX_PES_PACKET_LEN)
             {
                 pstDataRecv->pu8WriteDataAddr = pstDataRecv->au8PesBuffer;
 
@@ -355,27 +367,28 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
         }
     }
 
-    if(pstDataRecv->u32PESWritenLen >= 6)
+    if (pstDataRecv->u32PESWritenLen >= 6)
     {
         /* PES packet_length(payload size): A 16-bit field after start code(24-bit) and stream_id(8-bit), that is, the fifth and sixth byte */
-        u32PESPayloadLength = (pstDataRecv->au8PesBuffer[4]<<8)|pstDataRecv->au8PesBuffer[5];
+        u32PESPayloadLength = (pstDataRecv->au8PesBuffer[4] << 8) | pstDataRecv->au8PesBuffer[5];
 
         /* The whole pes data received ok */
-        if(pstDataRecv->u32PESWritenLen >= (u32PESPayloadLength+6))
+        if (pstDataRecv->u32PESWritenLen >= (u32PESPayloadLength + 6))
         {
             HI_INFO_SUBT("PayloadLen=0x%x,PageID=%d,AncillaryID=%d\n",
-                            u32PESPayloadLength,pstDataRecv->u16PageID,pstDataRecv->u16AncillaryID);
+                         u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
 
-            if (u32PESPayloadLength+6 <= SUBT_PES_PACKET_LEN )
+            if (u32PESPayloadLength + 6 <= SUBT_PES_PACKET_LEN )
             {
-                s32Ret = Cache_Put(pstDataRecv, pu8Data, u32PESPayloadLength+6);
+                s32Ret = Cache_Put(pstDataRecv, pu8Data, u32PESPayloadLength + 6);
             }
 
             /* started  parsing pes packet data  */
             if (pstDataRecv->hDataParse)
             {
                 s32Ret = SUBT_DataParse_ParsePESPacket(pstDataRecv->hDataParse, pstDataRecv->au8PesBuffer,
-                                    u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+                                                       u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+
                 if (s32Ret != HI_SUCCESS)
                 {
                     HI_ERR_SUBT("failed to SUBT_DataParse_ParsePESPacket...\n");
@@ -389,7 +402,9 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
             return s32Ret;
         }
     }
+
 #else
+
     if (u32DataSize < 6)
     {
         HI_ERR_SUBT("u32DataSize < 6...\n");
@@ -398,24 +413,26 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
     }
 
     if ((pu8Data[0] == 0x00) && (pu8Data[1] == 0x00)
-            && (pu8Data[2] == 0x01) && (pu8Data[3] == 0xbd) )
+        && (pu8Data[2] == 0x01) && (pu8Data[3] == 0xbd) )
     {
-        u32PESPayloadLength = (pu8Data[4]<<8)| pu8Data[5];
-        if (u32DataSize >= (u32PESPayloadLength+6))
+        u32PESPayloadLength = (pu8Data[4] << 8) | pu8Data[5];
+
+        if (u32DataSize >= (u32PESPayloadLength + 6))
         {
             HI_INFO_SUBT("PayloadLen=0x%x,PageID=%d,AncillaryID=%d\n",
-                            u32PESPayloadLength,pstDataRecv->u16PageID,pstDataRecv->u16AncillaryID);
+                         u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
 
-            if (u32PESPayloadLength+6 <= SUBT_PES_PACKET_LEN )
+            if (u32PESPayloadLength + 6 <= SUBT_PES_PACKET_LEN )
             {
-                s32Ret = Cache_Put(pstDataRecv, pu8Data, u32PESPayloadLength+6);
+                s32Ret = Cache_Put(pstDataRecv, pu8Data, u32PESPayloadLength + 6);
             }
 
             /* started  parsing pes packet data  */
             if (pstDataRecv->hDataParse)
             {
                 s32Ret = SUBT_DataParse_ParsePESPacket(pstDataRecv->hDataParse, pu8Data,
-                                    u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+                                                       u32PESPayloadLength, pstDataRecv->u16PageID, pstDataRecv->u16AncillaryID);
+
                 if (s32Ret != HI_SUCCESS)
                 {
                     HI_ERR_SUBT("failed to SUBT_DataParse_ParsePESPacket...\n");
@@ -425,6 +442,7 @@ HI_S32 SUBT_DataRecv_Inject(HI_HANDLE hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataS
             }
         }
     }
+
 #endif
 
     return HI_SUCCESS;

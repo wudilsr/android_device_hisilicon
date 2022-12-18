@@ -50,6 +50,7 @@ private:
     int dispatchSetCrop(va_list args);
     int dispatchGetMinBufNb(va_list args);
     int dispatchCheckFence(va_list args);
+    int dispatchSetUsage(va_list args);
 
     void dumpYUVFrame(ANativeWindowBuffer* buf);
     void writeYUVFrame(ANativeWindowBuffer* buf, HI_U8* src, HI_U32 size);

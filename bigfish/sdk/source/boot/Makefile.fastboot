@@ -42,7 +42,7 @@ else
 CFG_FPGA := 0
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
 CFG_HI_SECURE_BOOT_SUPPORT=y
 endif
 
@@ -234,6 +234,8 @@ $(CONFIG_FILE): $(if $(OBJ_DIR), copy_code,) force
 		"platform hi3716c/h/m" $@
 	@$(CONFIG_EXPORT) "CONFIG_HI3715_PLATFORM=$(CONFIG_HI3715_PLATFORM)" \
 		"platform hi3715" $@
+	@$(CONFIG_EXPORT) "CONFIG_CROSS_COMPILE_HISIV200=$(CFG_ARM_HISIV200_LINUX)" \
+		"cross compile hisiv200" $@
 #TODO: XXX
 	@$(CONFIG_EXPORT) "CFG_$(BOOTCONFIG_UPPER)_FPGA=$(CFG_FPGA)" \
 		"FPGA" $@
@@ -266,7 +268,7 @@ endif
 		"PMU Device config" $@
 	@$(CONFIG_EXPORT) "CONFIG_USB_SUPPORT=$(CFG_HI_BOOT_USB_SUPPORT)" \
 		"USB Driver config" $@
-	@$(CONFIG_EXPORT) "CONFIG_SECURE_BOOT_SUPPORT=$(CFG_HI_SECURE_BOOT_SUPPORT)" \
+	@$(CONFIG_EXPORT) "CONFIG_TEE_SUPPORT=$(CFG_HI_TEE_SUPPORT)" \
 		"Secure boot config" $@
 #+++++++++++++++++++++ADVCA compile options+++++++++++++++++++++++++++++++++++++++++++++
 ifneq ($(BOOT_ADVCA_PROGRAMMER),y)
@@ -275,8 +277,6 @@ ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
 		"CA type" $@
 	@$(CONFIG_EXPORT) "CONFIG_SUPPORT_CA_$(CFG_HI_ADVCA_TYPE)=y" \
 		"CA type" $@
-	@$(CONFIG_EXPORT) "CONFIG_SECURITY_SYSTEM_CHECK=$(CFG_HI_ANDROID_SECURITY_L2_SYSTEM_CHECK)" \
-		"Security System Check" $@
 
 ifeq ($(findstring -DHI_ADVCA_FUNCTION_RELEASE,$(CFG_HI_CFLAGS)),-DHI_ADVCA_FUNCTION_RELEASE)
 	@$(CONFIG_EXPORT) "CONFIG_SUPPORT_CA_RELEASE=y" \

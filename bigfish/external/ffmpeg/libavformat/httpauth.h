@@ -105,6 +105,7 @@ typedef struct {
     int64_t last_get_speed_time;
     char *cdn_error;
     char *traceId;
+    char server[64];
 } HTTPContext;
 
 void ff_http_auth_handle_header(HTTPAuthState *state, const char *key,

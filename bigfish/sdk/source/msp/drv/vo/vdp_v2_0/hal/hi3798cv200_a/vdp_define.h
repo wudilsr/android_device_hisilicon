@@ -1,6 +1,6 @@
 //**********************************************************************
 //
-// Copyright(c)2008,Huawei Technologies Co.,Ltd
+// Copyright(c)2008,Hisilicon Technologies Co.,Ltd
 // All rights reserved.
 //
 // File Name   : vdp_define.h

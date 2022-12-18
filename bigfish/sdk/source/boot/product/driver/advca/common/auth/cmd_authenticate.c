@@ -806,7 +806,7 @@ HI_S32 CA_GetExternRsaKey(cmd_tbl_t *cmdtp, HI_S32 flag, HI_S32 argc, char *argv
     if (argc != 2)
     {
        HI_ERR_CA("Error Input\n");
-       HI_ERR_CA("usage: ca_get_extern_rsa_key  fastboot_partition_name\n");
+       HI_ERR_CA("usage: get_extern_rsa_key  fastboot_partition_name\n");
        return HI_FAILURE;
     }
 
@@ -845,10 +845,10 @@ HI_S32 CA_GetExternRsaKey(cmd_tbl_t *cmdtp, HI_S32 flag, HI_S32 argc, char *argv
     g_customer_rsa_public_key_E = (buffer[508] << 24) + (buffer[509] << 16) + (buffer[510] << 8) + buffer[511];
 
 //z00213260, for test
-    printf("RSA Module:\n");
+    HI_SIMPLEINFO_CA("RSA Module:\n");
     printf_hex(g_customer_rsa_public_key_N, sizeof(g_customer_rsa_public_key_N));
 
-    printf("RSA Exponent:\n");
+    HI_SIMPLEINFO_CA("RSA Exponent:\n");
     printf_hex((HI_U8 *)&g_customer_rsa_public_key_E, sizeof(g_customer_rsa_public_key_E));
 
     HI_SIMPLEINFO_CA("\nget extern rsa key success!\n");
@@ -1344,18 +1344,18 @@ static HI_VOID printbuffer(HI_CHAR *str, HI_U8 *pu8Buf, HI_U32 u32Length)
 
     if(NULL != str)
     {
-        printf("%s\n", str);
+        HI_SIMPLEINFO_CA("%s\n", str);
     }
 
     for(i = 0; i < u32Length; i++)
     {
         if(i % 16 == 0 && i != 0)
         {
-            printf("\n");
+            HI_SIMPLEINFO_CA("\n");
         }
-        printf("0x%02X, ", pu8Buf[i]);
+        HI_SIMPLEINFO_CA("0x%02X, ", pu8Buf[i]);
     }
-    printf("\n");
+    HI_SIMPLEINFO_CA("\n");
 
     return;
 }

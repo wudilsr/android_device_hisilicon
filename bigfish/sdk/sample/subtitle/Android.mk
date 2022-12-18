@@ -47,6 +47,7 @@ LOCAL_C_INCLUDES += $(COMPONENT_DIR)/subtitle/include
 LOCAL_C_INCLUDES += $(COMPONENT_DIR)/subtoutput/include
 LOCAL_C_INCLUDES += $(MSP_DIR)/api/higo/include
 LOCAL_C_INCLUDES += $(COMPONENT_DIR)/ha_codec/include
+LOCAL_C_INCLUDES += $(SDK_DIR)/pub/include
 
 ifeq ($(strip $(BUILDIN_HISI_GPU_MIDGARD)),true)
 HISI_GPU_DIR := midgard

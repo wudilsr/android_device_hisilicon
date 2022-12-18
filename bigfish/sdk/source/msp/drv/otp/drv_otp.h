@@ -26,6 +26,7 @@
 extern "C"{
 #endif /* __cplusplus */
 
+/******* proc function begin ********/
 typedef enum
 {
     DRV_OTP_NO_FAKE_FLAG               = 0X00,
@@ -36,6 +37,7 @@ typedef enum
     DRV_OTP_CLEAR_OTP_FAKE_BUFFER      = 0X30,
     DRV_OTP_FAKE_BUTT    
 }DRV_OTP_FAKE_FLAG_E;
+/******* proc function end   ********/
 
 HI_S32 DRV_OTP_Init(void);
 HI_S32 DRV_OTP_DeInit(void);
@@ -53,6 +55,7 @@ HI_S32 DRV_OTP_Get_DTS_Flag(HI_BOOL *pDTSFlag);
 HI_S32 DRV_OTP_Set_StbPrivData(OTP_STB_PRIV_DATA_S *pStbPrivData);
 HI_S32 DRV_OTP_Get_StbPrivData(OTP_STB_PRIV_DATA_S *pStbPrivData);
 
+/******* proc function begin ********/
 HI_S32 DRV_OTP_Is_FakeOTPBuffer_Flag(HI_VOID);
 HI_S32 DRV_OTP_Is_FakeOTPAccessErr_Flag(HI_VOID);
 HI_S32 DRV_OTP_GetFakeOTPFlag(HI_VOID);
@@ -60,6 +63,7 @@ HI_S32 DRV_OTP_SetFakeOTPFlag(HI_U32 u32Value);
 HI_S32 DRV_OTP_FakeOTP_ReadByte(HI_U32 Addr);
 HI_S32 DRV_OTP_FakeOTP_WriteByte(HI_U32 Addr, HI_U8 value);
 HI_VOID DRV_OTP_ClearFakeOTPBuffer(HI_VOID);
+/******* proc function end   ********/
 HI_S32 DRV_OTP_DieID_Check(HI_VOID);
 
 #ifdef __cplusplus

@@ -139,6 +139,7 @@ HI_S32 HAL_Cipher_HashSoftReset(HI_VOID);
 HI_VOID HAL_Cipher_HashAuth(HI_U8 *pu8RefCbcMac, HI_U32 u32AppLen);
 HI_VOID HAL_Cipher_ClearIAVerifyFlag();
 
+HI_S32 HAL_Cipher_GetRandomNumber(HI_U32 *pu32RandomNumber);
 HI_VOID HAL_Cipher_Init(void);
 HI_VOID HAL_Cipher_DeInit(void);
 

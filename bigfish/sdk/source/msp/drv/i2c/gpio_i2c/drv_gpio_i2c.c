@@ -31,7 +31,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -592,12 +594,20 @@ static HI_S32 DRV_GPIOI2C_ReadData(HI_U32 I2cNum, HI_U8 devaddress, HI_U32 addre
         return HI_FAILURE;
     }
 
-    if ((I2cNum >= HI_I2C_MAX_NUM) || (HI_FALSE == g_stI2cGpio[I2cNum].bUsed))
+    if (I2cNum >= HI_I2C_MAX_NUM)
     {
         HI_ERR_GPIOI2C("the I2cNum haven't requested ,can't read operation.\n");
         up(&gpio_i2_sem);
         return HI_FAILURE;
     }
+
+    if (HI_FALSE == g_stI2cGpio[I2cNum].bUsed)
+    {
+        HI_ERR_GPIOI2C("the I2cNum is not in use,can't read operation.\n");
+        up(&gpio_i2_sem);
+        return HI_FAILURE;
+    }
+
 
     if (bSendRegAddress)
     {
@@ -782,9 +792,16 @@ static HI_S32 DRV_GPIOI2C_WriteData(HI_U32 I2cNum, HI_U8 devaddress, HI_U32 addr
         return HI_FAILURE;
     }
 
-    if ((I2cNum >= HI_I2C_MAX_NUM) || (HI_FALSE == g_stI2cGpio[I2cNum].bUsed))
+    if (I2cNum >= HI_I2C_MAX_NUM) 
     {
         HI_ERR_GPIOI2C("the I2cNum haven't requested ,can't write operation.\n");
+        up(&gpio_i2_sem);
+        return HI_FAILURE;
+    }
+	
+	if (HI_FALSE == g_stI2cGpio[I2cNum].bUsed)
+    {
+        HI_ERR_GPIOI2C("the I2cNum is not in use,can't write operation.\n");
         up(&gpio_i2_sem);
         return HI_FAILURE;
     }
@@ -1155,6 +1172,11 @@ HI_S32 HI_DRV_GPIOI2C_CreateGpioI2c(HI_U32 *pu32I2cNum, HI_U32 u32SCLGpioNo, HI_
 
 HI_S32 HI_DRV_GPIOI2C_DestroyGpioI2c(HI_U32 I2cNum)
 {
+    if (I2cNum >= HI_I2C_MAX_NUM)
+    {
+        return HI_ERR_I2C_MALLOC_ERR;
+    }
+
     if (HI_FALSE == g_stI2cGpio[I2cNum].bUsed)
     {
         HI_ERR_GPIOI2C("u32I2cNum = %d is not used!\n", I2cNum);
@@ -1192,109 +1214,135 @@ long HI_DRV_GPIOI2C_Ioctl(struct file *file, unsigned int cmd, unsigned long arg
 
     switch (cmd)
     {
-    case CMD_I2C_WRITE:
-    {
-        if (copy_from_user(&I2cData, argp, sizeof(I2C_DATA_S)))
+        case CMD_I2C_WRITE:
         {
-            HI_ERR_GPIOI2C("copy data from user fail!\n");
-            Ret = HI_ERR_I2C_COPY_DATA_ERR;
-            break;
-        }
+            if (copy_from_user(&I2cData, argp, sizeof(I2C_DATA_S)))
+            {
+                HI_ERR_GPIOI2C("copy data from user fail!\n");
+                Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                break;
+            }
 
-        pData = HI_KMALLOC(HI_ID_GPIO_I2C, I2cData.DataLen, GFP_KERNEL);
-        if (!pData)
-        {
-            HI_ERR_GPIOI2C("i2c kmalloc fail!\n");
-            Ret = HI_ERR_I2C_MALLOC_ERR;
-            break;
-        }
+            if (I2cData.DataLen > HI_I2C_MAX_LENGTH)
+            {
+                Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
 
-        if (copy_from_user(pData, I2cData.pData, I2cData.DataLen))
-        {
-            HI_ERR_GPIOI2C("copy data from user fail!\n");
+            if(I2cData.I2cRegCount > 4)
+            {
+                HI_ERR_GPIOI2C("invalid regCnt %d\n",I2cData.I2cRegCount);
+		        Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
+
+            pData = HI_KMALLOC(HI_ID_GPIO_I2C, I2cData.DataLen, GFP_KERNEL);
+            if (!pData)
+            {
+                HI_ERR_GPIOI2C("i2c kmalloc fail!\n");
+                Ret = HI_ERR_I2C_MALLOC_ERR;
+                break;
+            }
+    
+            if (copy_from_user(pData, I2cData.pData, I2cData.DataLen))
+            {
+                HI_ERR_GPIOI2C("copy data from user fail!\n");
+                HI_KFREE(HI_ID_GPIO_I2C, pData);
+                Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                break;
+            }
+    
+            Ret = HI_DRV_GPIOI2C_WriteExt(I2cData.I2cNum, I2cData.I2cDevAddr, I2cData.I2cRegAddr, I2cData.I2cRegCount,
+                                          pData, I2cData.DataLen);
             HI_KFREE(HI_ID_GPIO_I2C, pData);
-            Ret = HI_ERR_I2C_COPY_DATA_ERR;
             break;
         }
 
-        Ret = HI_DRV_GPIOI2C_WriteExt(I2cData.I2cNum, I2cData.I2cDevAddr, I2cData.I2cRegAddr, I2cData.I2cRegCount,
-                                      pData, I2cData.DataLen);
-        HI_KFREE(HI_ID_GPIO_I2C, pData);
-        break;
-    }
-
-    case CMD_I2C_READ:
-    {
-        if (copy_from_user(&I2cData, argp, sizeof(I2C_DATA_S)))
+        case CMD_I2C_READ:
         {
-            HI_ERR_GPIOI2C("copy data from user fail!\n");
-            Ret = HI_ERR_I2C_COPY_DATA_ERR;
-            break;
-        }
-
-        pData = HI_KMALLOC(HI_ID_GPIO_I2C, I2cData.DataLen, GFP_KERNEL);
-        if (!pData)
-        {
-            HI_ERR_GPIOI2C("i2c kmalloc fail!\n");
-            Ret = HI_ERR_I2C_MALLOC_ERR;
-            break;
-        }
-
-        Ret = HI_DRV_GPIOI2C_ReadExt(I2cData.I2cNum, I2cData.I2cDevAddr, I2cData.I2cRegAddr, I2cData.I2cRegCount, pData,
-                                     I2cData.DataLen);
-        if (HI_SUCCESS == Ret)
-        {
-            if (copy_to_user(I2cData.pData, pData, I2cData.DataLen))
+            if (copy_from_user(&I2cData, argp, sizeof(I2C_DATA_S)))
             {
-                HI_ERR_GPIOI2C("copy data to user fail!\n");
+                HI_ERR_GPIOI2C("copy data from user fail!\n");
                 Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                break;
             }
-        }
 
-        HI_KFREE(HI_ID_GPIO_I2C, pData);
-        break;
-    }
-
-    case CMD_I2C_CONFIG:
-    {
-        if (copy_from_user(&I2cGpio, argp, sizeof(I2C_GPIO_S)))
-        {
-            HI_ERR_GPIOI2C("copy data from user fail!\n");
-            Ret = HI_FAILURE;
-            break;
-        }
-
-        Ret = HI_DRV_GPIOI2C_CreateGpioI2c(&(I2cGpio.I2cNum), I2cGpio.u32SCLGpioNo, I2cGpio.u32SDAGpioNo);
-        if (HI_SUCCESS == Ret)
-        {
-            if (copy_to_user(argp, (void *)&I2cGpio, sizeof(I2C_GPIO_S)))
+            if (I2cData.DataLen > HI_I2C_MAX_LENGTH)
             {
-                HI_ERR_GPIOI2C("copy data to user fail!\n");
-                Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
             }
-        }
 
-        break;
-    }
-    case CMD_I2C_DESTROY:
-    {
-        if (copy_from_user(&I2cGpio, argp, sizeof(I2C_GPIO_S)))
-        {
-            HI_ERR_GPIOI2C("copy data from user fail!\n");
-            Ret = HI_FAILURE;
+            if(I2cData.I2cRegCount > 4)
+            {
+                HI_ERR_GPIOI2C("invalid regCnt %d\n",I2cData.I2cRegCount);
+		        Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
+
+            pData = HI_KMALLOC(HI_ID_GPIO_I2C, I2cData.DataLen, GFP_KERNEL);
+            if (!pData)
+            {
+                HI_ERR_GPIOI2C("i2c kmalloc fail!\n");
+                Ret = HI_ERR_I2C_MALLOC_ERR;
+                break;
+            }
+    
+            Ret = HI_DRV_GPIOI2C_ReadExt(I2cData.I2cNum, I2cData.I2cDevAddr, I2cData.I2cRegAddr, I2cData.I2cRegCount, pData,
+                                         I2cData.DataLen);
+            if (HI_SUCCESS == Ret)
+            {
+                if (copy_to_user(I2cData.pData, pData, I2cData.DataLen))
+                {
+                    HI_ERR_GPIOI2C("copy data to user fail!\n");
+                    Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                }
+            }
+    
+            HI_KFREE(HI_ID_GPIO_I2C, pData);
             break;
         }
-
-        Ret = HI_DRV_GPIOI2C_DestroyGpioI2c(I2cGpio.I2cNum);
-
-        break;
-    }
-
-    default:
-    {
-        up(&gpioI2c_Mutex);
-        return -ENOIOCTLCMD;
-    }
+    
+        case CMD_I2C_CONFIG:
+        {
+            if (copy_from_user(&I2cGpio, argp, sizeof(I2C_GPIO_S)))
+            {
+                HI_ERR_GPIOI2C("copy data from user fail!\n");
+                Ret = HI_FAILURE;
+                break;
+            }
+    
+            Ret = HI_DRV_GPIOI2C_CreateGpioI2c(&(I2cGpio.I2cNum), I2cGpio.u32SCLGpioNo, I2cGpio.u32SDAGpioNo);
+            if (HI_SUCCESS == Ret)
+            {
+                if (copy_to_user(argp, (void *)&I2cGpio, sizeof(I2C_GPIO_S)))
+                {
+                    HI_ERR_GPIOI2C("copy data to user fail!\n");
+                    Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                }
+            }
+    
+            break;
+        }
+        case CMD_I2C_DESTROY:
+        {
+            if (copy_from_user(&I2cGpio, argp, sizeof(I2C_GPIO_S)))
+            {
+                HI_ERR_GPIOI2C("copy data from user fail!\n");
+                Ret = HI_FAILURE;
+                break;
+            }
+    
+            Ret = HI_DRV_GPIOI2C_DestroyGpioI2c(I2cGpio.I2cNum);
+    
+            break;
+        }
+    
+        default:
+        {
+            up(&gpioI2c_Mutex);
+            return -ENOIOCTLCMD;
+        }
     }
 
     up(&gpioI2c_Mutex);

@@ -34,7 +34,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -446,7 +448,7 @@ HI_S32 DRV_WIN_ProcRead(struct seq_file *p, HI_VOID *v)
 
     PROC_PRINT(p, "%-19s:%-4d                |\n", "bQuickoutMode", pstProcInfo->bQuickMode);
     PROC_PRINT(p, "%-19s:%-4d                |\n", "bVirtualCoordinate", pstProcInfo->bVirtualCoordinate);
-#if defined (CHIP_HIFONEB02)	
+#if defined (CHIP_HIFONEB02)
     PROC_PRINT(p, "%-19s:%-4d                |\n", "bDcmp", pstProcInfo->bDcmpEnable);
     PROC_PRINT(p, "%-19s:%-4d                |\n", "bMute", pstProcInfo->bMute);
 #endif
@@ -551,7 +553,7 @@ HI_S32 DRV_WIN_ProcRead(struct seq_file *p, HI_VOID *v)
         PROC_PRINT(p, "%-19s:%-4d                |\n", "Layer BitWidth Cap", pstProcInfo->stWinInfoForDeveloper.u32BitWidthSupportbyLayer);
         PROC_PRINT(p, "%-19s:%-4d                |\n", "Win Expect BitWidth", pstProcInfo->stWinInfoForDeveloper.u32ExpectBitWidthFromVpss);
         PROC_PRINT(p, "%-19s:%-4d                |\n", "Vpss Frame BitWidth", pstProcInfo->stWinInfoForDeveloper.u32BitWidthVpssGive);
-#endif    
+#endif
 	}
 
     if (pstProcInfo->stAttr.bVirtual)
@@ -659,7 +661,7 @@ BufferQueue[state, FrameID]
                 pstProcInfo->stLowdelayStat.u32WinGetFrameTime,
                 pstProcInfo->stLowdelayStat.u32WinConfigTime,
                 pstProcInfo->stLowdelayStat.u32WinConfigTime - pstProcInfo->stLowdelayStat.u32OmxReportDoneTime);
-    
+
 
     PROC_PRINT(p, "\n");
 
@@ -780,7 +782,7 @@ HI_S32 WinProcCmdProcee(HI_HANDLE hWin, HI_CHAR *pArg1,HI_CHAR *pArg2)
         {
             nRet = WIN_Reset(hWin, HI_DRV_WIN_SWITCH_BLACK);
         }
-        if (0 == HI_OSAL_Strncmp(pArg2, "still", strlen("still")))
+        else if (0 == HI_OSAL_Strncmp(pArg2, "still", strlen("still")))
         {
             nRet = WIN_Reset(hWin, HI_DRV_WIN_SWITCH_LAST);
         }
@@ -1228,13 +1230,13 @@ HI_S32 WIN_CreateExt(WIN_CREATE_S *pVoWinCreate, WIN_STATE_S *pst2WinState)
     return HI_SUCCESS;
 
 __ERR_EXIT_REM_PORC__:
-    Ret = WIN_RemFromProc(pVoWinCreate->hWindow);
+    (HI_VOID)WIN_RemFromProc(pVoWinCreate->hWindow);
 
 __ERR_EXIT_DESTROY__:
-    Ret = WIN_Destroy(pVoWinCreate->hWindow);
+    (HI_VOID)WIN_Destroy(pVoWinCreate->hWindow);
 
 __ERR_EXIT__:
-    return Ret;
+    return HI_FAILURE;
 }
 
 HI_S32 WIN_DestroyExt(HI_HANDLE hWindow, WIN_STATE_S *pstWinState)
@@ -1304,6 +1306,11 @@ HI_S32 WIN_CheckHanlde(HI_HANDLE hWindow, WIN_STATE_S *pstWinState)
 HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
 {
     HI_S32 Ret = HI_SUCCESS;
+    if ((HI_NULL == arg) || (HI_NULL == pstWinState))
+    {
+        HI_FATAL_WIN("pass null ptr.\n");
+        return HI_ERR_DISP_NULL_PTR;
+    }
 
     switch (cmd)
     {
@@ -1571,7 +1578,7 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
             Ret = WIN_CheckHanlde(pVoWinFrame->hWindow, pstWinState);
             if (HI_SUCCESS == Ret)
             {
-                Ret = WIN_QueueSyncFrame(pVoWinFrame->hWindow, &pVoWinFrame->stFrame,&pVoWinFrame->u32FenceFd); 
+                Ret = WIN_QueueSyncFrame(pVoWinFrame->hWindow, &pVoWinFrame->stFrame,&pVoWinFrame->u32FenceFd);
             }
             break;
         }
@@ -1819,7 +1826,14 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
 
             capture_info = (WIN_CAPTURE_S *)arg;
 
-            (HI_VOID)WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            Ret = WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            if (HI_SUCCESS != Ret)
+            {
+                HI_ERR_WIN("invalid para.\n");
+                pstWinState->hCapture[enDisp][u32WinIndex] = 0;
+                break;
+            }
+
             pstWinState->hCapture[enDisp][u32WinIndex] = capture_info->hWindow;
 
 
@@ -1848,7 +1862,13 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
             HI_U32 u32WinIndex;
 
             capture_info = (WIN_CAPTURE_S *)arg;
-            (HI_VOID)WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            Ret = WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            if (HI_SUCCESS != Ret)
+            {
+                HI_ERR_WIN("invalid para.\n");
+                pstWinState->hCapture[enDisp][u32WinIndex] = 0;
+                break;
+            }
 
             Ret = WinReleaseCaptureFrame(capture_info->hWindow, &capture_info->CapPicture);
             if (HI_SUCCESS != Ret)
@@ -1868,7 +1888,14 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
 
             capture_info = (WIN_CAPTURE_S *)arg;
 
-            (HI_VOID)WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            Ret = WinGetIndex(capture_info->hWindow, &enDisp, &u32WinIndex);
+            if (HI_SUCCESS != Ret)
+            {
+                HI_ERR_WIN("invalid para.\n");
+                pstWinState->hCapture[enDisp][u32WinIndex] = 0;
+                break;
+            }
+
             pstWinState->hCapture[enDisp][u32WinIndex] = 0;
 
             Ret = WinFreeCaptureMMZBuf(capture_info->hWindow, &capture_info->CapPicture);
@@ -1934,9 +1961,8 @@ HI_S32 WIN_ProcessCmd(unsigned int cmd, HI_VOID *arg, WIN_STATE_S *pstWinState)
             break;
         }
         default:
-
-        up(&g_VoMutex);
-        return -ENOIOCTLCMD;
+            //up(&g_VoMutex);
+            return -ENOIOCTLCMD;
     }
 
     return Ret;
@@ -2027,6 +2053,8 @@ HI_S32  HI_DRV_WIN_Create(HI_DRV_WIN_ATTR_S *pWinAttr, HI_HANDLE *phWindow)
     HI_S32 Ret;
     WIN_CREATE_S voWinCreate;
 
+    WinCheckNullPointer(pWinAttr);
+    WinCheckNullPointer(phWindow);
     voWinCreate.hWindow = *phWindow;
     voWinCreate.WinAttr = *pWinAttr;
     Ret = DRV_WIN_Process(CMD_WIN_CREATE, &voWinCreate);
@@ -2059,6 +2087,7 @@ HI_S32 HI_DRV_WIN_GetEnable(HI_HANDLE hWindow, HI_BOOL *pbEnable)
     HI_S32 Ret;
     WIN_ENABLE_S   enVoWinEnable;
 
+    WinCheckNullPointer(pbEnable);
     memset(&enVoWinEnable, 0, sizeof(WIN_ENABLE_S));
    // enVoWinEnable.bEnable = bEnable;
     enVoWinEnable.hWindow = hWindow;
@@ -2077,6 +2106,7 @@ HI_S32 HI_DRV_WIN_SetSource(HI_HANDLE hWindow, HI_DRV_WIN_SRC_INFO_S *pstSrc)
     HI_S32 Ret;
     WIN_SOURCE_S VoWinAttach;
 
+    WinCheckNullPointer(pstSrc);
     VoWinAttach.hWindow = hWindow;
     VoWinAttach.stSrc   = *pstSrc;
 
@@ -2087,17 +2117,7 @@ HI_S32 HI_DRV_WIN_SetSource(HI_HANDLE hWindow, HI_DRV_WIN_SRC_INFO_S *pstSrc)
 
 HI_S32 HI_DRV_WIN_GetSource(HI_HANDLE hWin, HI_DRV_WIN_SRC_INFO_S *pstSrc)
 {
-    HI_S32 Ret;
-    WIN_SOURCE_S   stWinSrc;
-
-    memset(&stWinSrc, 0, sizeof(WIN_SOURCE_S));
-    stWinSrc.hWindow = hWin;
-    Ret = DRV_WIN_Process(CMD_WIN_GET_SOURCE, &stWinSrc);
-    if(!Ret)
-    {
-        *pstSrc = stWinSrc.stSrc;
-    }
-    return Ret;
+    return HI_ERR_VO_WIN_UNSUPPORT;
 }
 
 
@@ -2144,6 +2164,7 @@ HI_S32 HI_DRV_WIN_SetStepPlay(HI_HANDLE hWin)
 HI_S32 HI_DRV_WIN_SetExtBuffer(HI_HANDLE hWin, HI_DRV_VIDEO_BUFFER_POOL_S* pstBuf)
 {
     HI_S32 Ret;
+    WinCheckNullPointer(pstBuf);
 
     Ret = down_interruptible(&g_VoMutex);
 
@@ -2156,6 +2177,7 @@ HI_S32 HI_DRV_WIN_SetExtBuffer(HI_HANDLE hWin, HI_DRV_VIDEO_BUFFER_POOL_S* pstBu
 HI_S32 HI_DRV_WIN_AcquireFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 {
     HI_S32 Ret;
+    WinCheckNullPointer(pFrameinfo);
 
     Ret = down_interruptible(&g_VoMutex);
 
@@ -2168,6 +2190,7 @@ HI_S32 HI_DRV_WIN_AcquireFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 HI_S32 HI_DRV_WIN_ReleaseFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 {
     HI_S32 Ret;
+    WinCheckNullPointer(pFrameinfo);
 
     Ret = down_interruptible(&g_VoMutex);
 
@@ -2308,27 +2331,28 @@ HI_S32 HI_DRV_WIN_CapturePictureRelease(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *ps
 
 HI_S32 HI_DRV_WIN_SetRotation(HI_HANDLE hWin, HI_DRV_ROT_ANGLE_E enRotation)
 {
-    return HI_SUCCESS;
+    return HI_ERR_VO_WIN_UNSUPPORT;
 }
 
 HI_S32 HI_DRV_WIN_GetRotation(HI_HANDLE hWin, HI_DRV_ROT_ANGLE_E *penRotation)
 {
-    return HI_SUCCESS;
+    return HI_ERR_VO_WIN_UNSUPPORT;
 }
 
 HI_S32 HI_DRV_WIN_SetFlip(HI_HANDLE hWin, HI_BOOL bHoriFlip, HI_BOOL bVertFlip)
 {
-    return HI_SUCCESS;
+    return HI_ERR_VO_WIN_UNSUPPORT;
 }
 
 HI_S32 HI_DRV_WIN_GetFlip(HI_HANDLE hWin, HI_BOOL *pbHoriFlip, HI_BOOL *pbVertFlip)
 {
-    return HI_SUCCESS;
+    return HI_ERR_VO_WIN_UNSUPPORT;
 }
 
 HI_S32 HI_DRV_WIN_SendFrame(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *pFrameinfo)
 {
     HI_S32 Ret;
+    WinCheckNullPointer(pFrameinfo);
     Ret = WIN_SendFrame(hWin,pFrameinfo);
     return Ret;
 }
@@ -2338,6 +2362,7 @@ HI_S32 HI_DRV_WIN_SetAttr(HI_HANDLE hWin, HI_DRV_WIN_ATTR_S *pWinAttr)
 {
     HI_S32 Ret;
     WIN_CREATE_S   stWinAttr;
+    WinCheckNullPointer(pWinAttr);
 
     stWinAttr.hWindow = hWin;
     stWinAttr.WinAttr = *pWinAttr;
@@ -2349,6 +2374,7 @@ HI_S32 HI_DRV_WIN_GetAttr(HI_HANDLE hWin, HI_DRV_WIN_ATTR_S *pWinAttr)
 {
     HI_S32 Ret;
     WIN_CREATE_S   stWinAttr;
+    WinCheckNullPointer(pWinAttr);
 
     memset(&stWinAttr, 0, sizeof(WIN_CREATE_S));
     stWinAttr.hWindow = hWin;
@@ -2366,6 +2392,7 @@ HI_S32 HI_DRV_WIN_GetPlayInfo(HI_HANDLE hWindow, HI_DRV_WIN_PLAY_INFO_S *pInfo)
     HI_S32 Ret;
     WIN_PLAY_INFO_S WinPlayInfo;
 
+    WinCheckNullPointer(pInfo);
     memset(&WinPlayInfo, 0, sizeof(WIN_PLAY_INFO_S));
     WinPlayInfo.hWindow = hWindow;
 
@@ -2379,6 +2406,7 @@ HI_S32 HI_DRV_WIN_GetInfo(HI_HANDLE hWindow, HI_DRV_WIN_INFO_S *pInfo)
     HI_S32 Ret;
     WIN_PRIV_INFO_S WinPrivInfo;
 
+    WinCheckNullPointer(pInfo);
     memset(&WinPrivInfo, 0, sizeof(WIN_PRIV_INFO_S));
     WinPrivInfo.hWindow = hWindow;
 
@@ -2411,6 +2439,7 @@ HI_S32 HI_DRV_WIN_QFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 {
     HI_S32     Ret;
     WIN_FRAME_S stWinFrame;
+    WinCheckNullPointer(pFrame);
 
     stWinFrame.hWindow = hWindow;
     stWinFrame.stFrame = *pFrame;
@@ -2424,6 +2453,7 @@ HI_S32 HI_DRV_WIN_QULSFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 {
     HI_S32     Ret;
     WIN_FRAME_S stWinFrame;
+    WinCheckNullPointer(pFrame);
 
     stWinFrame.hWindow = hWindow;
     stWinFrame.stFrame = *pFrame;
@@ -2437,6 +2467,7 @@ HI_S32 HI_DRV_WIN_DQFrame(HI_HANDLE hWindow, HI_DRV_VIDEO_FRAME_S *pFrame)
 {
     HI_S32     Ret;
     WIN_FRAME_S stWinFrame;
+    WinCheckNullPointer(pFrame);
 
     stWinFrame.hWindow = hWindow;
 
@@ -2496,6 +2527,7 @@ HI_S32 HI_DRV_WIN_GetZorder(HI_HANDLE hWin, HI_U32 *pu32Zorder)
 {
     HI_S32     Ret;
     WIN_ORDER_S stWinOrder;
+    WinCheckNullPointer(pu32Zorder);
 
     memset(&stWinOrder, 0, sizeof(WIN_ORDER_S));
     stWinOrder.hWindow = hWin;
@@ -2527,6 +2559,7 @@ HI_S32 HI_DRV_WIN_GetLatestFrameInfo(HI_HANDLE hWin, HI_DRV_VIDEO_FRAME_S *frame
     HI_S32     Ret;
     WIN_FRAME_S  frame_info_ioctl;
 
+    WinCheckNullPointer(frame_info);
     memset(&frame_info_ioctl, 0, sizeof(WIN_FRAME_S));
     frame_info_ioctl.hWindow = hWin;
     Ret = DRV_WIN_Process(CMD_WIN_GET_LATESTFRAME_INFO, &frame_info_ioctl);

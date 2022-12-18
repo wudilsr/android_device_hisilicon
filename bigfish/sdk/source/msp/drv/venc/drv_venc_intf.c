@@ -178,6 +178,10 @@ static HI_S32 VENC_DRV_Open(struct inode *finode, struct file  *ffile)
     //DRV_PROC_ITEM_S  *pProcItem;
 
     Ret = down_interruptible(&g_VencMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
 
     if (1 == atomic_inc_return(&g_VencCount))
     {
@@ -236,14 +240,16 @@ static HI_S32 VENC_DRV_Open(struct inode *finode, struct file  *ffile)
     return HI_SUCCESS;
 }
 
-static HI_S32 VENC_DRV_Close(struct inode *finode, struct file  *ffile)
+static HI_S32 VENC_DRV_Close(struct inode *finode, struct file *ffile)
 {
     HI_U32 i = 0;
     HI_S32 Ret = 0;
 
-   // HI_CHAR ProcName[12];
-
     Ret = down_interruptible(&g_VencMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
     
     for (i = 0; i < VENC_MAX_CHN_NUM; i++)
     {
@@ -271,17 +277,13 @@ static HI_S32 VENC_DRV_Close(struct inode *finode, struct file  *ffile)
     if (atomic_dec_and_test(&g_VencCount))
     {
         Ret = pVpssFunc->pfnVpssGlobalDeInit();
-        if(HI_SUCCESS != Ret)
-        { HI_ERR_VENC("VPSS_GlobalInit failed, ret=%d\n", Ret); }
-	
-        del_timer(&vencTimer);
-        Ret = VENC_DRV_EflCloseVedu();
-        if (HI_SUCCESS != Ret)
+        if (Ret != HI_SUCCESS)
         {
-            HI_FATAL_VENC("VeduEfl_CloseVedu failed, ret=%d\n", Ret);
-            up(&g_VencMutex);
-            return HI_FAILURE;
+            HI_ERR_VENC("VPSS_GlobalInit failed, ret=%d\n", Ret);
         }
+
+        del_timer(&vencTimer);
+        VENC_DRV_EflCloseVedu();
 
 #ifdef __VENC_SUPPORT_JPGE__	
        pJpgeFunc->pfnJpgeDeInit();
@@ -292,7 +294,6 @@ static HI_S32 VENC_DRV_Close(struct inode *finode, struct file  *ffile)
     g_u32VencOpenFlag = 0;
     up(&g_VencMutex);
 
-    
     return HI_SUCCESS;
 }
 
@@ -308,14 +309,22 @@ HI_S32 VENC_DRV_Suspend(HI_VOID)
     }
 
     Ret = down_interruptible(&g_VencMutex);
+
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     for (i = 0; i < VENC_MAX_CHN_NUM; i++)
     {
         HI_INFO_VENC("suspend venc channel %d handle %p, invalid = %x\n", i, g_stVencChn[i].hVEncHandle,
-                      HI_INVALID_HANDLE );
+                     HI_INVALID_HANDLE );
+
         if (g_stVencChn[i].hVEncHandle != NULL && g_stVencChn[i].bEnable == 1)
         {
-       
+
             Ret = VENC_DRV_StopReceivePic(g_stVencChn[i].hVEncHandle);
+
             if (HI_SUCCESS != Ret)
             {
                 HI_WARN_VENC("VENC_StopReceivePic %d failed, Ret=%#x.\n", i, Ret);
@@ -331,19 +340,14 @@ HI_S32 VENC_DRV_Suspend(HI_VOID)
 
     if (atomic_dec_and_test(&g_VencCount))
     {
-        Ret = VENC_DRV_EflSuspendVedu();
-        if (HI_SUCCESS != Ret)
-        {
-            HI_FATAL_VENC("VeduEfl_CloseVedu failed, ret=%d\n", Ret);
-            up(&g_VencMutex);
-            return HI_FAILURE;
-        }
+        VENC_DRV_EflSuspendVedu();
 
         //VENC_DRV_BoardDeinit();  //change to destroy channel
     }
-	
+
     HI_PRINT("VENC suspend OK\n");
     up(&g_VencMutex);
+
     return HI_SUCCESS;
 }
 
@@ -359,6 +363,11 @@ HI_S32 VENC_DRV_Resume(HI_VOID)
     }
 
     Ret = down_interruptible(&g_VencMutex);
+    if (Ret != 0)
+    {
+        HI_WARN_VENC("call down_interruptible err!\n");
+    }
+
     if (1 == atomic_inc_return(&g_VencCount))
     {
         //VENC_DRV_BoardInit();   ==>rmove to the 
@@ -416,10 +425,23 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         VeduEfl_EncPara_S* hKernVencChn = NULL;
             
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         Ret = VENC_DRV_CreateChn((VeduEfl_EncPara_S**)&hKernVencChn, (venc_chan_cfg *)&(pstCreateInfo->stAttr),
                                      (VENC_CHN_INFO_S *)&(pstCreateInfo->stVeInfo), pstCreateInfo->bOMXChn, file);
-        D_VENC_CHECK_PTR(hKernVencChn);
+        if (hKernVencChn == HI_NULL)
+        {    
+            up(&g_VencMutex);
+            HI_ERR_VENC("PTR hKernVencChn is NULL.\n"); 
+
+            return HI_ERR_VENC_NULL_PTR;
+        }
+		
         D_VENC_GET_CHN(u32Index, hKernVencChn);
+		
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
 		   up(&g_VencMutex);
@@ -470,6 +492,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         // VENC
         HI_HANDLE *phVencChn = (HI_HANDLE *)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, *phVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -494,6 +521,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_ATTACH_S *pAttachInfo = (VENC_INFO_ATTACH_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pAttachInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -508,6 +540,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_ATTACH_S *pAttachInfo = (VENC_INFO_ATTACH_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pAttachInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -523,6 +560,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_SET_SRC_INFO_S *pSetSrcInfo = (VENC_SET_SRC_INFO_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pSetSrcInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -538,6 +580,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         VENC_INFO_ACQUIRE_STREAM_S *pstAcqStrm = (VENC_INFO_ACQUIRE_STREAM_S*)arg;
         VeduEfl_EncPara_S* tempHandle;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstAcqStrm->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -558,6 +605,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_ACQUIRE_STREAM_S *pstAcqStrm = (VENC_INFO_ACQUIRE_STREAM_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstAcqStrm->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -572,6 +624,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         HI_HANDLE *pHandle = (HI_HANDLE*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, *pHandle);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -586,6 +643,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         HI_HANDLE *pHandle = (HI_HANDLE*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, *pHandle);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -600,6 +662,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_CREATE_S *pstCreateInfo = (VENC_INFO_CREATE_S *)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstCreateInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -614,6 +681,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_CREATE_S *pstCreateInfo = (VENC_INFO_CREATE_S *)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstCreateInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -628,6 +700,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         HI_HANDLE *pHandle = (HI_HANDLE*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, *pHandle);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -645,6 +722,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {   
         VENC_INFO_QUEUE_FRAME_S *pQueueFrameInfo = (VENC_INFO_QUEUE_FRAME_S*)arg;
         Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pQueueFrameInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -668,6 +750,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_QUEUE_FRAME_S *pQueueFrameInfo = (VENC_INFO_QUEUE_FRAME_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pQueueFrameInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -683,6 +770,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         VENC_INFO_GET_MSG_S *pMessageInfo   = (VENC_INFO_GET_MSG_S *)arg;
         VeduEfl_EncPara_S* tempHandle;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pMessageInfo->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -706,6 +798,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         D_VENC_CHECK_CHN(u32Index);
         tempHandle = g_stVencChn[u32Index].hVEncHandle;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         Ret = VENC_DRV_MMZ_Map_OMX(&(pMMBInfo.stVencBuf) );
 		up(&g_VencMutex);
         if (HI_SUCCESS == Ret)
@@ -721,6 +818,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
         pMMBInfo.stVencBuf.phyaddr = pMMZPhyInfo->phyaddr;
         pMMBInfo.stVencBuf.bufsize = pMMZPhyInfo->bufsize;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         Ret = VENC_DRV_MMZ_UMMap_OMX(&(pMMBInfo.stVencBuf) );
 		up(&g_VencMutex);
     }
@@ -730,6 +832,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
 
         VENC_INFO_QUEUE_FRAME_S *pstQueStrm = (VENC_INFO_QUEUE_FRAME_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstQueStrm->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{
@@ -744,6 +851,11 @@ HI_S32 VENC_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_V
     {
         VENC_INFO_FLUSH_PORT_S *pstFlushPort = (VENC_INFO_FLUSH_PORT_S*)arg;
 		Ret = down_interruptible(&g_VencMutex);
+        if (Ret != 0)
+        {
+            HI_WARN_VENC("call down_interruptible err!\n");
+        }
+
         D_VENC_GET_CHN_BY_UHND(u32Index, pstFlushPort->hVencChn);
 		if (u32Index >= VENC_MAX_CHN_NUM)
 		{

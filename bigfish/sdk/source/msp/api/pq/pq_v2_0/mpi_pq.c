@@ -110,6 +110,8 @@ HI_S32 HI_MPI_PQ_GetBrightness(HI_DRV_DISPLAY_E enChan, HI_U32* pu32Brightness)
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32RetNum = 0;
 
+    MPI_PQ_CHECK_NULL_PTR(pu32Brightness);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -179,6 +181,9 @@ HI_S32 HI_MPI_PQ_GetContrast(HI_DRV_DISPLAY_E enChan, HI_U32* pu32Contrast)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32RetNum = 0;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32Contrast);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -246,6 +251,9 @@ HI_S32 HI_MPI_PQ_GetSaturation(HI_DRV_DISPLAY_E enChan, HI_U32* pu32Saturation)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32RetNum = 0;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32Saturation);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -314,6 +322,9 @@ HI_S32 HI_MPI_PQ_GetHue(HI_DRV_DISPLAY_E enChan, HI_U32* pu32Hue)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32RetNum = 0;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32Hue);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -412,10 +423,7 @@ HI_S32 HI_MPI_PQ_GetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLA
         return HI_FAILURE;
     }
 
-    if (pstParam == HI_NULL)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstParam);
 
     if (HI_MPI_PQ_IMAGE_GRAPH == enType)
     {
@@ -458,6 +466,9 @@ HI_S32 HI_MPI_PQ_GetBasicImageParam(HI_MPI_PQ_IMAGE_TYPE_E enType, HI_DRV_DISPLA
 HI_S32 HI_MPI_PQ_GetTNR(HI_U32* pu32NRLevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32NRLevel);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -507,6 +518,9 @@ HI_S32 HI_MPI_PQ_SetTNR(HI_U32 u32TNRLevel)
 HI_S32 HI_MPI_PQ_GetNRAutoMode(HI_U32* pu32OnOff)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32OnOff);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -556,6 +570,9 @@ HI_S32 HI_MPI_PQ_SetNRAutoMode(HI_U32 u32OnOff)
 HI_S32 HI_MPI_PQ_GetSRMode(HI_PQ_SR_DEMO_E* penType)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(penType);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -605,6 +622,9 @@ HI_S32 HI_MPI_PQ_GetSharpness(HI_U32* pu32Sharpness)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32Num = 0;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32Sharpness);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -655,6 +675,9 @@ HI_S32 HI_MPI_PQ_SetSharpness(HI_U32 u32Sharpness)
 HI_S32 HI_MPI_PQ_GetDeBlocking(HI_U32* pu32DBlevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32DBlevel);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -703,6 +726,9 @@ HI_S32 HI_MPI_PQ_SetDeBlocking(HI_U32 u32DBlevel)
 HI_S32 HI_MPI_PQ_GetDeRinging(HI_U32* pu32DRlevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32DRlevel);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -754,6 +780,9 @@ HI_S32 HI_MPI_PQ_GetColorGain(HI_U32* pu32ColorGainLevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32Num = 0;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32ColorGainLevel);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -804,6 +833,9 @@ HI_S32 HI_MPI_PQ_SetColorGain(HI_U32 u32ColorGainLevel)
 HI_S32 HI_MPI_PQ_GetFleshTone(HI_UNF_PQ_FLESHTONE_E* penFleshToneLevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(penFleshToneLevel);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -879,6 +911,9 @@ HI_S32 HI_MPI_PQ_SetColorEnhanceMode(HI_PQ_COLOR_SPEC_MODE_E enColorMode)
 HI_S32 HI_MPI_PQ_GetColorEnhanceMode(HI_UNF_PQ_COLOR_SPEC_MODE_E* penColorMode)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(penColorMode);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -905,6 +940,9 @@ HI_S32 HI_MPI_PQ_GetColorEnhanceMode(HI_UNF_PQ_COLOR_SPEC_MODE_E* penColorMode)
 HI_S32 HI_MPI_PQ_GetSixBaseColor(HI_UNF_PQ_SIX_BASE_S* pstSixBaseColor)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSixBaseColor);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -929,6 +967,9 @@ HI_S32 HI_MPI_PQ_GetSixBaseColor(HI_UNF_PQ_SIX_BASE_S* pstSixBaseColor)
 HI_S32 HI_MPI_PQ_SetSixBaseColor(HI_PQ_SIX_BASE_COLOR_S* pstSixBaseColor)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSixBaseColor);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -956,6 +997,8 @@ HI_S32 HI_MPI_PQ_GetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_PQ_MODULE_S stPQModule = {HI_PQ_MODULE_SHARPNESS, 0};
+
+    MPI_PQ_CHECK_NULL_PTR(pu32OnOff);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1015,7 +1058,13 @@ HI_S32 HI_MPI_PQ_SetPQModule(HI_UNF_PQ_MODULE_E enFlags, HI_U32 u32OnOff)
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
-        HI_ERR_PQ("PQ not  init!");
+        HI_ERR_PQ("PQ not init!\n");
+        return HI_FAILURE;
+    }
+
+    if (u32OnOff > 1)
+    {
+        HI_ERR_PQ("u32OnOff:%d illegal!\n", u32OnOff);
         return HI_FAILURE;
     }
 
@@ -1079,9 +1128,14 @@ HI_S32 HI_MPI_PQ_SetDemo( HI_UNF_PQ_DEMO_E enFlags, HI_U32 u32OnOff)
     {
         stDemo.bOnOff = HI_TRUE;
     }
-    else
+    else if (0 == u32OnOff)
     {
         stDemo.bOnOff = HI_FALSE;
+    }
+    else
+    {
+        HI_ERR_PQ("u32OnOff:%d illegal!\n", u32OnOff);
+        return HI_FAILURE;
     }
 
     if (HI_UNF_PQ_DEMO_SHARPNESS == enFlags)
@@ -1167,10 +1221,7 @@ HI_S32 HI_MPI_PQ_GetDemoMode( HI_DRV_DISPLAY_E enChan, HI_PQ_DEMO_MODE_E* penMod
 {
     HI_S32 s32Ret = HI_FAILURE;
 
-    if (penMode == HI_NULL)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(penMode);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1228,6 +1279,8 @@ HI_S32 HI_MPI_PQ_ReadPQRegister(HI_U32 u32RegAddr, HI_U32* pu32Value)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_PQ_REGISTER_S stRegister = {0};
+
+    MPI_PQ_CHECK_NULL_PTR(pu32Value);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1313,7 +1366,6 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
     {
         HI_ERR_PQ("PQ not  init!");
         HI_FREE(HI_ID_PQ, pstAcmLut);
-        pstAcmLut = HI_NULL;
         return HI_FAILURE;
     }
 
@@ -1327,7 +1379,6 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
     s32Ret |= ioctl(sg_s32PQFd, HIIOC_PQ_S_ACM_SAT, pstAcmLut);
 
     HI_FREE(HI_ID_PQ, pstAcmLut);
-    pstAcmLut = HI_NULL;
 
     return s32Ret;
 }
@@ -1346,6 +1397,8 @@ HI_S32 HI_MPI_PQ_SetAcmTable(HI_U32 u32RegAddr, MPI_ACM_PARAM_S* pstColorTable)
 HI_S32 HI_MPI_PQ_GetDciTable( HI_PQ_DCI_WGT_S* pstDCITable)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstDCITable);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1373,6 +1426,8 @@ HI_S32 HI_MPI_PQ_SetDciTable( HI_PQ_DCI_WGT_S* pstDCITable)
 {
     HI_S32 s32Ret = HI_FAILURE;
 
+    MPI_PQ_CHECK_NULL_PTR(pstDCITable);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1399,6 +1454,8 @@ HI_S32 HI_MPI_PQ_GetHistgram( HI_PQ_DCI_HISTGRAM_S* pstDCIHistgram)
 {
     HI_S32 s32Ret = HI_FAILURE;
 
+    MPI_PQ_CHECK_NULL_PTR(pstDCIHistgram);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1424,6 +1481,8 @@ HI_S32 HI_MPI_PQ_GetHistgram( HI_PQ_DCI_HISTGRAM_S* pstDCIHistgram)
 HI_S32 HI_MPI_PQ_GetDciLevel(HI_U32* pu32DCIlevel)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pu32DCIlevel);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1476,6 +1535,9 @@ HI_S32 HI_MPI_PQ_SetDciLevel( HI_U32 u32DCIlevel)
 HI_S32 HI_MPI_PQ_GetTNRLumaPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1498,6 +1560,8 @@ HI_S32 HI_MPI_PQ_GetTNRLumaPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_SetTNRLumaPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1523,6 +1587,9 @@ HI_S32 HI_MPI_PQ_SetTNRLumaPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetTNRChromPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1545,6 +1612,8 @@ HI_S32 HI_MPI_PQ_GetTNRChromPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_SetTNRChromPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1570,6 +1639,9 @@ HI_S32 HI_MPI_PQ_SetTNRChromPixMean2Ratio( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetTNRLumaMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1592,6 +1664,8 @@ HI_S32 HI_MPI_PQ_GetTNRLumaMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_SetTNRLumaMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1617,6 +1691,9 @@ HI_S32 HI_MPI_PQ_SetTNRLumaMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetTNRChromMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1640,6 +1717,8 @@ HI_S32 HI_MPI_PQ_SetTNRChromMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
 
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1654,6 +1733,9 @@ HI_S32 HI_MPI_PQ_SetTNRChromMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrFMotion);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1666,6 +1748,8 @@ HI_S32 HI_MPI_PQ_GetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
 HI_S32 HI_MPI_PQ_SetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrFMotion);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1690,6 +1774,9 @@ HI_S32 HI_MPI_PQ_SetTNRFMotionMapping(HI_PQ_TNR_FMOTION_S* pstTnrFMotion)
 HI_S32 HI_MPI_PQ_GetTNRLumaFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1712,6 +1799,8 @@ HI_S32 HI_MPI_PQ_GetTNRLumaFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_SetTNRLumaFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1737,6 +1826,9 @@ HI_S32 HI_MPI_PQ_SetTNRLumaFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1759,6 +1851,8 @@ HI_S32 HI_MPI_PQ_GetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_SetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstTnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1784,6 +1878,9 @@ HI_S32 HI_MPI_PQ_SetTNRChromFinalMotionMapping( HI_PQ_TNR_S* pstTnrData)
 HI_S32 HI_MPI_PQ_GetSNRPixmean2Ratio( HI_PQ_SNR_PIXMEAN_2_RATIO_S* pstSnrData)
 {
     HI_S32 s32Ret = HI_FAILURE;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1805,7 +1902,9 @@ HI_S32 HI_MPI_PQ_GetSNRPixmean2Ratio( HI_PQ_SNR_PIXMEAN_2_RATIO_S* pstSnrData)
 
 HI_S32 HI_MPI_PQ_SetSNRPixmean2Ratio( HI_PQ_SNR_PIXMEAN_2_RATIO_S* pstSnrData)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {
@@ -1830,7 +1929,10 @@ HI_S32 HI_MPI_PQ_SetSNRPixmean2Ratio( HI_PQ_SNR_PIXMEAN_2_RATIO_S* pstSnrData)
  */
 HI_S32 HI_MPI_PQ_GetSNRPixdiff2Edgestr( HI_PQ_SNR_PIXDIFF_2_EDGESTR_S* pstSnrData)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSnrData);
+
     if (sg_bPQInitFlag == HI_FALSE)
     {
         HI_ERR_PQ("PQ not  init!");
@@ -1852,7 +1954,9 @@ HI_S32 HI_MPI_PQ_GetSNRPixdiff2Edgestr( HI_PQ_SNR_PIXDIFF_2_EDGESTR_S* pstSnrDat
 
 HI_S32 HI_MPI_PQ_SetSNRPixdiff2Edgestr( HI_PQ_SNR_PIXDIFF_2_EDGESTR_S* pstSnrData)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
+
+    MPI_PQ_CHECK_NULL_PTR(pstSnrData);
 
     if (sg_bPQInitFlag == HI_FALSE)
     {

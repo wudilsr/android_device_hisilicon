@@ -95,7 +95,11 @@ BOOLEAN btm_add_dev_to_controller (BOOLEAN to_add, BD_ADDR bd_addr, UINT8 attr)
         }
         else
         {
+#ifdef BLUETOOTH_RTK
+            if (p_dev_rec->ble.ble_addr_type == BLE_ADDR_PUBLIC || !BTM_BLE_IS_RESOLVE_BDA(bd_addr))
+#else
             if (!BTM_BLE_IS_RESOLVE_BDA(bd_addr))
+#endif
             {
                     started = btsnd_hcic_ble_remove_from_white_list (p_dev_rec->ble.ble_addr_type, bd_addr);
             }
@@ -219,6 +223,9 @@ void btm_ble_clear_white_list (void)
 {
     BTM_TRACE_EVENT0 ("btm_ble_clear_white_list");
     btsnd_hcic_ble_clear_white_list();
+#ifdef BLUETOOTH_RTK
+    memset(&btm_cb.ble_ctr_cb.bg_dev_list, 0, (sizeof(tBTM_LE_BG_CONN_DEV)*BTM_BLE_MAX_BG_CONN_DEV_NUM));
+#endif
 }
 
 /*******************************************************************************
@@ -324,6 +331,9 @@ BOOLEAN btm_update_bg_conn_list(BOOLEAN to_add, BD_ADDR bd_addr, UINT8 *p_attr_t
                 p_next = p_bg_dev + 1;
                 for (j = i + 1 ;j < BTM_BLE_MAX_BG_CONN_DEV_NUM && p_next->in_use ; j ++, p_cur ++, p_next ++ )
                     memcpy(p_cur, p_next, sizeof(tBTM_LE_BG_CONN_DEV));
+#ifdef BLUETOOTH_RTK
+                    memset(p_next, 0, sizeof(tBTM_LE_BG_CONN_DEV));
+#endif
             }
             ret = TRUE;
             break;
@@ -366,10 +376,19 @@ BOOLEAN btm_ble_start_auto_conn(BOOLEAN start)
 
     if (start)
     {
+#ifdef BLUETOOTH_RTK
+	if ( p_cb->conn_state == BLE_CONN_IDLE )
+        {
+            exec = btm_execute_wl_dev_operation();
+        }
+#endif
         if (p_cb->conn_state == BLE_CONN_IDLE && btm_ble_count_unconn_dev_in_whitelist() > 0)
         {
-            btm_execute_wl_dev_operation();
+#ifdef BLUETOOTH_RTK
 
+#else
+            btm_execute_wl_dev_operation();
+#endif
             scan_int = (p_cb->scan_int == BTM_BLE_CONN_PARAM_UNDEF) ? BTM_BLE_SCAN_SLOW_INT_1 : p_cb->scan_int;
             scan_win = (p_cb->scan_win == BTM_BLE_CONN_PARAM_UNDEF) ? BTM_BLE_SCAN_SLOW_WIN_1 : p_cb->scan_win;
 
@@ -408,8 +427,10 @@ BOOLEAN btm_ble_start_auto_conn(BOOLEAN start)
         if (p_cb->conn_state == BLE_BG_CONN)
         {
             btsnd_hcic_ble_create_conn_cancel();
-            btm_ble_set_conn_st (BLE_CONN_CANCEL); 
-
+            btm_ble_set_conn_st (BLE_CONN_CANCEL);
+#ifdef BLUETOOTH_RTK
+            p_cb->wl_state |= BTM_BLE_WL_INIT;
+#endif
         }
         else
         {
@@ -646,6 +667,13 @@ tBTM_BLE_CONN_ST btm_ble_get_conn_st(void)
 void btm_ble_set_conn_st(tBTM_BLE_CONN_ST new_st)
 {
     btm_cb.ble_ctr_cb.conn_state = new_st;
+#ifdef BLUETOOTH_RTK
+    if (new_st == BLE_BG_CONN || new_st == BLE_DIR_CONN) {
+        btm_cb.ble_ctr_cb.wl_state |= BTM_BLE_WL_INIT;
+    } else {
+        btm_cb.ble_ctr_cb.wl_state &= ~BTM_BLE_WL_INIT;
+    }
+#endif
 }
 
 /*******************************************************************************

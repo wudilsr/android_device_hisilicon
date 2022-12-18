@@ -1,6 +1,6 @@
 
 /*******************************************************************************
-Copyright (C), 2009-2012, Huawei Tech. Co., Ltd.
+Copyright (C), 2009-2012, Hisilicon Tech. Co., Ltd.
 File name: imedia_videnc.h
 Author & ID: ËÎÐ¡¸Õ+00133955
 Version: 1.00

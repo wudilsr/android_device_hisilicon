@@ -23,7 +23,7 @@ extern "C"{
 
 
 /* VDEC VERSION */
-#define VDEC_VERSION                (2015062400)
+#define VDEC_VERSION                (2016102400)
 
 #define VDEC_DBG_MODULE_VDI         (0x0)
 #define VDEC_DEBUG                  (0)
@@ -140,7 +140,7 @@ typedef struct
     HI_BOOL bBufUsed;
     struct list_head node;
     MMZ_BUFFER_S MMZBuf_frm;
-	MMZ_BUFFER_S MMZBuf_meta;	
+	MMZ_BUFFER_S MMZBuf_meta;
     HI_DRV_VDEC_FRAMEBUFFER_STATE_E enFrameBufferState;
 	HI_U32 u32Stride;                          /**<Stride of external frame buffer *//**<CNcomment:Íâ²¿Ö¡´æµÄstride*/
 }BUFMNG_VPSS_NODE_S;
@@ -196,27 +196,6 @@ typedef struct
     HI_U32 u32LastFrameIndex;
 }VDEC_VPSS_PORT_PARAM_S;
 
-typedef struct tagVDEC_VPU_FRAME_LIST_NODE_S
-{
-    HI_DRV_VIDEO_FRAME_S stPortOutFrame;
-    struct list_head node;
-}VDEC_VPU_FRAME_LIST_NODE_S;
-typedef struct tagVDEC_VPU_LIST_S
-{
-    struct list_head stVdecVPUFrameList;
-    BUFMNG_VPSS_IRQ_LOCK_S stVPUFrameListLock;
-}VDEC_VPU_LIST_S;
-typedef struct tagVDEC_VPU_RLS_PARAM_S
-{
-    HI_S32 RlsFrameIDArray[HI_VDEC_MAX_VPU_FRAME_NUM];
-    HI_S32 s32AvailableNum;
-    BUFMNG_VPSS_IRQ_LOCK_S stVPURlsFrameListLock;
-}VDEC_VPU_RLS_PARAM_S;
-typedef struct
-{
-    VDEC_VPU_LIST_S stVPUFrameList;
-    VDEC_VPU_RLS_PARAM_S stVPURlsParam;
-}VDEC_VPU_PARAM_S;
 typedef struct tagVDEC_CHANNEL_S
 {
     /* For configurate */
@@ -331,16 +310,11 @@ typedef struct tagVDEC_CHANNEL_S
 
     HI_BOOL                 bLowdelay;
     HI_BOOL                 bProcRegister;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 	HI_BOOL                 bTvp;
-#endif	
-    HI_BOOL                 bVPUProcRegister;
-    HI_HANDLE               u32VPUhandle;
-    VDEC_VPU_PARAM_S        stVPUParam;
-    HI_BOOL                 bVPU;
+#endif
     HI_U32                  u32FrameCnt;
     HI_U32                  u32ErrRatio;
-    HI_DRV_VDEC_VPU_STATUS_S  stVdecVpuStatus;
     HI_U32                  u32FrameSize;//l00273086
     HI_U32                  u32RefFrameNum; //l00273086
     HI_BOOL                 bNeedAlloc;//l00273086
@@ -377,8 +351,6 @@ typedef struct tagVDEC_REGISTER_PARAM_S{
     DRV_PROC_WRITE_FN pfnCtrlWriteProc;
     DRV_PROC_READ_FN  pfnReadProc;
     DRV_PROC_WRITE_FN pfnWriteProc;
-    DRV_PROC_READ_FN  pfnVpuReadProc;
-    DRV_PROC_WRITE_FN pfnVpuWriteProc;
 }VDEC_REGISTER_PARAM_S;
 
 typedef struct tagVDEC_PREMMZ_NODE_S

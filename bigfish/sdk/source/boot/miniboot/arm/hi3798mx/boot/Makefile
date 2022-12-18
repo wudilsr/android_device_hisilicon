@@ -8,10 +8,9 @@
 
 CFLAGS += -Wall -Wstrict-prototypes -fno-stack-protector
 
-SRCS-y := start.S ddrphy_training_func.S ddrphy_training_print.S
+SRCS-y := start.S early_irq.S slave_bootup.S
 
-SRCS-y += ddrphy_training.c emmc_boot.c lowlevel_init.c \
-	ddr_dataeye_training.c irq.c
+SRCS-y += emmc_boot.c lowlevel_init.c irq.c
 
 SRCS-y += early_uart.S chip.c cpu.c
 

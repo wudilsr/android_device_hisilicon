@@ -370,7 +370,7 @@ libdirectfb_tde_la_SOURCES = \
 libdirectfb_tde_la_LDFLAGS = \
 	-module			\
 	-avoid-version		\
-	$(DFB_LDFLAGS) -lm -lhi_msp -ldl -lhi_msp
+	$(DFB_LDFLAGS) -lm -ljpeg -lhi_msp -lhi_common -ldl
 
 libdirectfb_tde_la_LIBADD = \
 	$(top_builddir)/lib/direct/libdirect.la \

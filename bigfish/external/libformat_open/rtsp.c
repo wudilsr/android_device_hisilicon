@@ -53,6 +53,7 @@
 #include "url.h"
 #include "rtpenc.h"
 #include "svr_utils.h"
+#include "mpegts.h"
 
 //#define DEBUG
 
@@ -427,6 +428,9 @@ static void sdp_parse_line(AVFormatContext *s, SDPParseState *s1,
         rtsp_st->sdp_port = atoi(buf1);
 
         get_word(buf1, sizeof(buf1), &p); /* protocol (ignored) */
+        if (!av_strcasecmp(buf1, "udp")) {
+            rt->transport = RTSP_TRANSPORT_RAW;
+        }
 
         /* XXX: handle list of formats */
         get_word(buf1, sizeof(buf1), &p); /* format list */
@@ -434,6 +438,9 @@ static void sdp_parse_line(AVFormatContext *s, SDPParseState *s1,
 
         if (!av_strcmp(ff_rtp_enc_name(rtsp_st->sdp_payload_type), "MP2T")) {
             /* no corresponding stream */
+            if (rt->transport == RTSP_TRANSPORT_RAW && !rt->ts && CONFIG_RTPDEC) {
+                rt->ts = ff_mpegts_parse_open(s);
+            }
         } else {
             st = avformat_new_stream(s, NULL);
             if (!st)
@@ -619,12 +626,20 @@ void ff_rtsp_undo_setup(AVFormatContext *s)
                     avio_close(rtpctx->pb);
                 }
                 avformat_free_context(rtpctx);
-            } else if (rt->transport == RTSP_TRANSPORT_RDT && CONFIG_RTPDEC)
+                rtsp_st->transport_priv = NULL;
+
+            } else if (rt->transport == RTSP_TRANSPORT_RDT && CONFIG_RTPDEC) {
                 ff_rdt_parse_close(rtsp_st->transport_priv);
-            else if (CONFIG_RTPDEC)
-                ff_rtp_parse_close(rtsp_st->transport_priv);
+                rtsp_st->transport_priv = NULL;
+            } else if (rt->transport != RTSP_TRANSPORT_RAW && CONFIG_RTPDEC) {
+                if (!rt->reconnecting) {
+                    ff_rtp_parse_close(rtsp_st->transport_priv);
+                    rtsp_st->transport_priv = NULL;
+                } else {
+                    av_log(0, AV_LOG_WARNING, "[%s,%d] reconnecting, do not close rtp parser!\n", __FUNCTION__, __LINE__);
+                }
+            }
         }
-        rtsp_st->transport_priv = NULL;
         if (rtsp_st->rtp_handle)
             ffurl_close(rtsp_st->rtp_handle);
         rtsp_st->rtp_handle = NULL;
@@ -652,6 +667,8 @@ void ff_rtsp_close_streams(AVFormatContext *s)
     if (rt->asf_ctx) {
         avformat_close_input(&rt->asf_ctx);
     }
+    if (rt->ts && CONFIG_RTPDEC)
+        ff_mpegts_parse_close(rt->ts);
     av_free(rt->p);
     av_free(rt->recvbuf);
 }
@@ -673,18 +690,25 @@ static int rtsp_open_transport_ctx(AVFormatContext *s, RTSPStream *rtsp_st)
                                       RTSP_TCP_MAX_PACKET_SIZE);
         /* Ownership of rtp_handle is passed to the rtp mux context */
         rtsp_st->rtp_handle = NULL;
+    } else if (rt->transport == RTSP_TRANSPORT_RAW) {
+        return 0; // Don't need to open any parser here
     } else if (rt->transport == RTSP_TRANSPORT_RDT && CONFIG_RTPDEC)
         rtsp_st->transport_priv = ff_rdt_parse_open(s, st->index,
                                             rtsp_st->dynamic_protocol_context,
                                             rtsp_st->dynamic_handler);
-    else if (CONFIG_RTPDEC)
-        rtsp_st->transport_priv = ff_rtp_parse_open(s, st, rtsp_st->rtp_handle,
-                                         rtsp_st->sdp_payload_type,
-            RTP_REORDER_QUEUE_DEFAULT_SIZE, 1);
+    else if (CONFIG_RTPDEC) {
+        if (!rtsp_st->transport_priv) {
+            rtsp_st->transport_priv = ff_rtp_parse_open(s, st, rtsp_st->rtp_handle,
+                                             rtsp_st->sdp_payload_type,
+                RTP_REORDER_QUEUE_DEFAULT_SIZE, 1);
+        } else {
+            ff_rtp_parse_reset(rtsp_st->transport_priv, rtsp_st->rtp_handle);
+        }
+    }
 
     if (!rtsp_st->transport_priv) {
          return AVERROR(ENOMEM);
-    } else if (rt->transport != RTSP_TRANSPORT_RDT && CONFIG_RTPDEC) {
+    } else if (rt->transport == RTSP_TRANSPORT_RTP && CONFIG_RTPDEC) {
         if (rtsp_st->dynamic_handler) {
             ff_rtp_parse_set_dynamic_protocol(rtsp_st->transport_priv,
                                               rtsp_st->dynamic_protocol_context,
@@ -752,6 +776,15 @@ static void rtsp_parse_transport(RTSPMessageHeader *reply, const char *p)
             get_word_sep(lower_transport, sizeof(lower_transport), "/;,", &p);
             profile[0] = '\0';
             th->transport = RTSP_TRANSPORT_RDT;
+        } else if (!av_strcasecmp(transport_protocol, "raw") ||
+                   !av_strcasecmp(transport_protocol, "udp")) {
+            get_word_sep(profile, sizeof(profile), "/;,", &p);
+            lower_transport[0] = '\0';
+            /* raw/raw/<protocol> */
+            if (*p == '/') {
+                get_word_sep(lower_transport, sizeof(lower_transport),";,", &p);
+            }
+            th->transport = RTSP_TRANSPORT_RAW;
         }
         if (!av_strcasecmp(lower_transport, "TCP"))
             th->lower_transport = RTSP_LOWER_TRANSPORT_TCP;
@@ -1192,6 +1225,8 @@ int ff_rtsp_make_setup_request(AVFormatContext *s, const char *host, int port,
 
     if (rt->transport == RTSP_TRANSPORT_RDT)
         trans_pref = "x-pn-tng";
+    else if (rt->transport == RTSP_TRANSPORT_RAW)
+        trans_pref = "RAW/RAW";
     else
         trans_pref = "RTP/AVP";
 
@@ -1720,10 +1755,12 @@ redirect:
     rt->lower_transport_mask = lower_transport_mask;
     av_strlcpy(rt->real_challenge, real_challenge, sizeof(rt->real_challenge));
     rt->state = RTSP_STATE_IDLE;
-    rt->seek_timestamp = 0; /* default is to start stream at position zero */
+  //  rt->seek_timestamp = 0; /* default is to start stream at position zero */
     return 0;
  fail:
-    ff_rtsp_close_streams(s);
+    if (!rt->reconnecting) {
+        ff_rtsp_close_streams(s);
+    }
     ff_rtsp_close_connections(s);
     if (reply->status_code >=300 && reply->status_code < 400 && s->iformat) {
         av_strlcpy(s->filename, reply->location, sizeof(s->filename));
@@ -1937,7 +1974,7 @@ static int udp_read_packet(AVFormatContext *s, DataPacket *rtp_pkt, int64_t wait
 {
     RTSPState *rt = s->priv_data;
     int n, ret, tcp_fd = -1;
-    int64_t timeout_ms = 20;
+    unsigned start_time, cur_time;
     fd_set rfds, rfds1;
     struct timeval tv;
 
@@ -1973,17 +2010,18 @@ static int udp_read_packet(AVFormatContext *s, DataPacket *rtp_pkt, int64_t wait
         }
     }
 
-    if (wait_end != 0) {
-        timeout_ms = wait_end - av_gettime();
-        timeout_ms /= 1000;
-        if (timeout_ms < 0)
-            timeout_ms = 0;
-    }
-
+    start_time = av_getsystemtime();
     rtp_pkt->data = NULL;
     do {
         if (ff_check_interrupt(&s->interrupt_callback)) {
             rt->is_exit = 1;
+            return AVERROR_EOF;
+        }
+
+        cur_time = av_getsystemtime();
+        if (cur_time - start_time >= 10000) {
+            av_log(0, AV_LOG_ERROR, "[%s,%d][RTSP] udp read time out, return eof!\n",
+                        __FUNCTION__, __LINE__);
             return AVERROR_EOF;
         }
 
@@ -2112,8 +2150,15 @@ int ff_rtsp_fetch_packet(AVFormatContext *s, AVPacket *pkt)
     if (rt->cur_transport_priv) {
         if (rt->transport == RTSP_TRANSPORT_RDT) {
             ret = ff_rdt_parse_packet(rt->cur_transport_priv, pkt, NULL, 0);
-        } else
+        } else if (rt->transport == RTSP_TRANSPORT_RTP) {
             ret = ff_rtp_parse_packet(rt->cur_transport_priv, pkt, NULL, 0);
+        } else if (rt->ts && CONFIG_RTPDEC) {
+            ret = ff_mpegts_parse_packet(rt->ts, pkt, rt->recvbuf + rt->recvbuf_pos, rt->recvbuf_len - rt->recvbuf_pos);
+            if (ret >= 0) {
+                rt->recvbuf_pos += ret;
+                ret = rt->recvbuf_pos < rt->recvbuf_len;
+            }
+        }
         if (ret == 0) {
             rt->cur_transport_priv = NULL;
             return 0;
@@ -2213,7 +2258,7 @@ int ff_rtsp_fetch_packet(AVFormatContext *s, AVPacket *pkt)
 #else
         ret = ff_rdt_parse_packet(rtsp_st->transport_priv, pkt, &rt->recvbuf, len);
 #endif
-    } else {
+    } else if (rt->transport == RTSP_TRANSPORT_RTP) {
 #if HAVE_UDP_RCV_THREAD
         if (rt->lower_transport == RTSP_LOWER_TRANSPORT_UDP ||
             rt->lower_transport == RTSP_LOWER_TRANSPORT_UDP_MULTICAST) {
@@ -2271,6 +2316,20 @@ int ff_rtsp_fetch_packet(AVFormatContext *s, AVPacket *pkt)
                     return AVERROR_EOF;
             }
         }
+    } else if (rt->ts && CONFIG_RTPDEC) {
+        ret = ff_mpegts_parse_packet(rt->ts, pkt, rt->recvbuf, len);
+        if (ret >= 0) {
+            if (ret < len) {
+                rt->recvbuf_len = len;
+                rt->recvbuf_pos = ret;
+                rt->cur_transport_priv = rt->ts;
+                return 1;
+            } else {
+                ret = 0;
+            }
+        }
+    } else {
+        return AVERROR_INVALIDDATA;
     }
 end:
     if (ret < 0)

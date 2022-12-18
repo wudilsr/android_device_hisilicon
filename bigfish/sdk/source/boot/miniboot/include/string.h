@@ -34,6 +34,7 @@ extern char const hex2ascii_data[];
 
 void *memcpy(void *dst, const void *src, size_t len);
 void *memset(void *b, int c, size_t len);
+void *memmove(void *dst, const void *src, size_t size);
 int memcmp(const void *b1, const void *b2, size_t len);
 int strncmp(const char *s1, const char *s2, size_t len);
 uint32 strnlen(const char *s, uint32 len);

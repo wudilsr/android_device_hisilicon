@@ -56,6 +56,11 @@ typedef enum hiSVR_VSINK_CMD_E
      *  HI_SVR_PICTURE_S* pic
      */
     HI_SVR_VSINK_CHECK_FENCE,
+
+    /**
+     * set usage, such as secure usage
+     */
+    HI_SVR_VSINK_SET_USAGE,
 } HI_SVR_VSINK_CMD_E;
 
 typedef struct hiSVR_PRIV_DATA_S
@@ -228,6 +233,18 @@ static inline HI_S32 HI_SVR_VSINK_CheckFence(HI_SVR_VSINK_S* vsink,
     if (vsink && vsink->control)
     {
         return vsink->control(vsink, HI_SVR_VSINK_CHECK_FENCE, pic);
+    }
+    return HI_FAILURE;
+}
+
+#define HI_SVR_VSINK_USEAGE_SEC      (0x00000001)/* tvp drm path mask */
+#define HI_SVR_VSINK_USEAGE_BITWIDTH (0x00000002)/* video 10bit bitwidth mask */
+static inline HI_S32 HI_SVR_VSINK_SetUsage(HI_SVR_VSINK_S* vsink,
+        HI_S32 usage)
+{
+    if (vsink && vsink->control)
+    {
+        return vsink->control(vsink, HI_SVR_VSINK_SET_USAGE, usage);
     }
     return HI_FAILURE;
 }

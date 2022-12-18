@@ -68,6 +68,8 @@ void free_contigous_buffer(venc_user_info*puser_buf)
     HI_MMZ_BUF_S stBuf;
     OMX_S32 ret;
 
+    memset(&stBuf, 0, sizeof(HI_MMZ_BUF_S));
+
 	if (!puser_buf)
 	{
 		DEBUG_PRINT_ERROR("%s() invalid param\n", __func__);

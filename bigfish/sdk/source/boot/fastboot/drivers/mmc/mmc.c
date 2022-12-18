@@ -33,7 +33,7 @@
 #include <mmc.h>
 #include <div64.h>
 
-#define MMC_RW_STEP_BLKS 65536
+#define MMC_RW_STEP_BLKS (65536 - 1) /* 0xFFFF is the max blocks of CMD23 */
 
 static struct list_head mmc_devices;
 static int cur_dev_num = -1;
@@ -256,6 +256,7 @@ static ulong
 mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 {
 	struct mmc_cmd cmd;
+	struct mmc_cmd sbc;
 	struct mmc_data data;
 	int err;
 	struct mmc *mmc = find_mmc_device(dev_num);
@@ -263,6 +264,7 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 	int blklen;
 	u32 total;
 	s32 cnt;
+	int timeout = 1000;
 	char *databuf = (char *)src;
 	ulong blkaddr = start;
 
@@ -307,7 +309,26 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 		data.blocks = step;
 		data.blocksize = blklen;
 		data.flags = MMC_DATA_WRITE;
-		
+
+		sbc.cmdidx = 0;
+		/* For all TOSHIBA eMMC, send CMD23 and others not */
+		if ((mmc->cid[0] >> 24) == 0x11) {
+			mmc->host_caps |= MMC_MODE_CMD23;
+		}
+
+		if ((mmc->host_caps & MMC_MODE_CMD23) 
+			&& (MMC_CMD_WRITE_MULTIPLE_BLOCK == cmd.cmdidx)) {
+			sbc.cmdidx = MMC_CMD_SET_BLOCK_COUNT;
+			sbc.cmdarg = data.blocks;
+			sbc.resp_type = MMC_RSP_R1;
+			sbc.flags = 0;
+			err = mmc_send_cmd(mmc, &sbc, NULL);
+			if (err) {
+				printf("mmc set blk count failed\n\r");
+				return err;
+			}
+		}
+
 		err = mmc_send_cmd(mmc, &cmd, &data);
 
 		if (err) {
@@ -315,7 +336,7 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 			return err;
 		}
 
-		if (step > 1) {
+		if (!sbc.cmdidx && step > 1) {
 			cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
 			cmd.cmdarg = 0;
 			cmd.resp_type = MMC_RSP_R1b;
@@ -326,6 +347,10 @@ mmc_bwrite(int dev_num, ulong start, lbaint_t blkcnt, const void*src)
 				return stoperr;
 			}
 		}
+
+		/* Waiting for the ready status */
+		if (mmc_send_status(mmc, timeout)) 
+			return 0;
 
 		databuf  += step * blklen;
 		blkaddr  += step;
@@ -414,11 +439,13 @@ free_buffer:
 static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 {
 	struct mmc_cmd cmd;
+	struct mmc_cmd sbc;
 	struct mmc_data data;
 	int err;
 	int stoperr = 0;
 	u32 total;
 	s32 cnt;
+	int timeout = 1000;
 	char *databuf = dst;
 	ulong blkaddr = start;
 
@@ -464,6 +491,25 @@ static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 		data.blocks = step;
 		data.blocksize = mmc->read_bl_len;
 		data.flags = MMC_DATA_READ;
+
+		/* For all TOSHIBA eMMC, send CMD23 and others not */
+		if ((mmc->cid[0] >> 24) == 0x11)
+			mmc->host_caps |= MMC_MODE_CMD23;
+
+		sbc.cmdidx = 0;
+		if ((mmc->host_caps & MMC_MODE_CMD23) 
+			&& (MMC_CMD_READ_MULTIPLE_BLOCK == cmd.cmdidx)) {
+			sbc.cmdidx = MMC_CMD_SET_BLOCK_COUNT;
+			sbc.cmdarg = data.blocks;
+			sbc.resp_type = MMC_RSP_R1;
+			sbc.flags = 0;
+			err = mmc_send_cmd(mmc, &sbc, NULL);
+			if (err) {
+				printf("mmc set blk count failed\n\r");
+				return err;
+			}
+		}
+
 		err = mmc_send_cmd(mmc, &cmd, &data);
 
 		if (err) {
@@ -471,7 +517,7 @@ static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 			return err;
 		}
 
-		if (step > 1) {
+		if (!sbc.cmdidx && step > 1) {
 			cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
 			cmd.cmdarg = 0;
 			cmd.resp_type = MMC_RSP_R1b;
@@ -483,6 +529,10 @@ static ulong mmc_mbread(int dev_num, ulong start, lbaint_t blkcnt, void *dst)
 			}
 
 		}
+
+		/* Waiting for the ready status */
+		if (mmc_send_status(mmc, timeout)) 
+			return 0;
 
 		databuf  += step * mmc->read_bl_len;
 		blkaddr  += step;

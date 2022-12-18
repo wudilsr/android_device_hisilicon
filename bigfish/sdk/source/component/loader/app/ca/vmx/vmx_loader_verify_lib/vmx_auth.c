@@ -22,12 +22,20 @@ int verifySignature( unsigned char* signature,
                      unsigned char mode, 
                      unsigned char *errorCode )
 {
-	*errorCode = 0;
+	int ret = 0;
+	unsigned char au8MagicNumber[8] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef};
 
 	VMX_printBuffer("verifySignature.signature first 32 bytes:", signature, 32);
-
 	VMX_printBuffer("verifySignature.src first 32 bytes:", src, 32);
-	
-	return 1;
+
+	ret = memcmp(au8MagicNumber, signature, 8);
+	if(0 != ret)
+	{
+		*errorCode = 1;	//means no valid signature found - reboot 
+		return 0;		//indicates do not start the application
+	}
+
+	*errorCode = 2;		//means store src part to flash and reboot after it 
+	return 0;			//indicates do not start the application 
 }
 

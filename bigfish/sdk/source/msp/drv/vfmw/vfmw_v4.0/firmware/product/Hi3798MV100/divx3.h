@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2012 HUAWEI - All Rights Reserved
+* Copyright (c) 2012 Hisilicon - All Rights Reserved
 *
 * File: $divx3_vfmw.h$
 * Date: $2012/01/06$

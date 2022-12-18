@@ -17,6 +17,7 @@
 #define __HI_DRV_CIPHER_H__
 
 #include "hi_type.h"
+#include "hi_debug.h"
 #include "hi_unf_cipher.h"
 #include "hi_unf_hdcp.h"
 
@@ -26,8 +27,13 @@ extern "C" {
 
 #define CIPHER_SOFT_CHAN_NUM      CIPHER_CHAN_NUM
 #define CIPHER_INVALID_CHN        (0xffffffff)
+#define CIPHER_MAX_RSA_KEY_LEN    (512)
 
+#if  defined (CHIP_TYPE_hi3798cv200_a)
+#define  HDCP_KEY_RAM_SIZE                      512
+#else
 #define  HDCP_KEY_RAM_SIZE                      320
+#endif
 #define  HDCP_KEY_PRIME_SIZE                    320
 #define  HDCP_KEY_TOOL_FILE_SIZE                384
 #define  HDCP_KEY_CHIP_FILE_SIZE               (HDCP_KEY_RAM_SIZE + 12)
@@ -175,7 +181,7 @@ typedef struct hiCIPHER_HASH_DATA_S
 
 typedef struct  hiCIPHER_CBCMAC_DATA_S
 {
-    HI_U8 *pu8RefCbcMac;
+    HI_U8 u8RefCbcMac[16];
     HI_U32 u32AppLen;
 }CIPHER_CBCMAC_DATA_S;
 
@@ -184,6 +190,17 @@ typedef struct
     HI_U32 u32TimeOutUs;
 	HI_U32 u32RNG;
 }CIPHER_RNG_S;
+
+typedef struct
+{
+    HI_U8  *pu8Input;
+    HI_U8  *pu8Output;
+    HI_U32  u32DataLen;
+    HI_U8  *pu8N;
+	HI_U8  *pu8K;
+    HI_U16 u16NLen;
+    HI_U16 u16KLen;
+}CIPHER_RSA_DATA_S;
 
 HI_S32 HI_DRV_CIPHER_CreateHandle(CIPHER_HANDLE_S *pstCIHandle);
 HI_S32 HI_DRV_CIPHER_ConfigChn(HI_U32 softChnId, HI_UNF_CIPHER_CTRL_S *pConfig);
@@ -201,6 +218,7 @@ HI_S32 HI_DRV_CIPHER_CalcHashUpdate(CIPHER_HASH_DATA_S *pCipherHashData);
 HI_S32 HI_DRV_CIPHER_CalcHashFinal(CIPHER_HASH_DATA_S *pCipherHashData);
 HI_S32 HI_DRV_CIPHER_EncryptHDCPKey(CIPHER_HDCP_KEY_TRANSFER_S *pstHdcpKeyTransfer);
 HI_S32 HI_DRV_CIPHER_CbcMacAuth(CIPHER_CBCMAC_DATA_S *pstParam);
+HI_S32 HI_DRV_CIPHER_CalcRsa(CIPHER_RSA_DATA_S *pCipherRsaData);
 
 HI_VOID HI_DRV_CIPHER_Suspend(HI_VOID);
 HI_S32 HI_DRV_CIPHER_Resume(HI_VOID);

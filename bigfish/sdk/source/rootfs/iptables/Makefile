@@ -10,9 +10,14 @@ CROSS_COMPILE  ?= arm-hisiv200-linux-
 BUILD_DIR      := $(shell pwd)/tmp
 HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
+
 ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
 IPTABLES       := iptables-1.4.21
-else
+endif
+ifeq (${CROSS_COMPILE},arm-histbv310-linux-)
+IPTABLES       := iptables-1.4.21
+endif
+ifeq (${CROSS_COMPILE},arm-hisiv200-linux-)
 IPTABLES       := iptables-1.4.12
 endif
 

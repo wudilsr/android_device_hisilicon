@@ -60,6 +60,9 @@ namespace android
             virtual int reload();
             virtual int setOutputEnable(int port, int enable);
             virtual int getOutputEnable(int port);
+            virtual int setCECSuspend();
+            virtual int getHDMICECSuspendEnable();
+            virtual int setHDMICECSuspendEnable(int enable);
 
             virtual void binderDied(const wp<IBinder>& who);
             status_t dump(int fd, const Vector<String16>& args);

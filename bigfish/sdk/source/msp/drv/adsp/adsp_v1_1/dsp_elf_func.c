@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------------------------------*/
-/*!!Warning: This is a key information asset of Huawei Tech Co.,Ltd                                                         */
+/*!!Warning: This is a key information asset of Hisilicon Tech Co.,Ltd                                                         */
 /*CODEMARK:kOyQZYzjDpyGdBAEC2GaWinjiDDUykL9e8pckESWBbMVmSWkBuyJO01cTiy3TdzKxGk0oBQa
 mSMf7J4FkTpfv2bO4a86Ra1cP5w/R608AW9MyvBFsCSDo8GzQMC4Jhtu/zShyENpjFzntvB+
 qu9VLSY5NZqsjqDgQuhiYv3zk+yAOkxwt1Nl2Pcwbw1FcFohr1zlBJEiJvJ1sa/uGtifY6mS
@@ -21,7 +21,9 @@ SETy0S2IhtcT7wSV+TeNSkB18TvAodXDDEZ/agbAvYS8gpS96L2/jfN+IA2ivg==*/
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>

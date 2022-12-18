@@ -11,6 +11,14 @@ LOCAL_SRC_FILES := Vendor_0001_Product_0001.kl
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := Vendor_060a_Product_1000.kl
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_OUT)/usr/keylayout
+LOCAL_SRC_FILES := Vendor_060a_Product_1000.kl
+include $(BUILD_PREBUILT)
+include $(CLEAR_VARS)
 LOCAL_MODULE := busybox
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_SRC_FILES := busybox
@@ -60,25 +68,6 @@ LOCAL_MODULE_PATH := $(TARGET_OUT)/etc
 LOCAL_SRC_FILES := networkprovider.xml
 include $(BUILD_PREBUILT)
 
-############################PowerControl#####################################
-include $(CLEAR_VARS)
-LOCAL_MODULE := PowerControl.apk
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/app
-LOCAL_SRC_FILES := PowerControl
-include $(BUILD_PREBUILT)
-
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := libcapable_jni.so
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/lib
-LOCAL_SRC_FILES := libcapable_jni.so
-include $(BUILD_PREBUILT)
 ############################samba#####################################
 include $(CLEAR_VARS)
 LOCAL_MODULE := samba_quick_search

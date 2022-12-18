@@ -37,7 +37,7 @@ endif
 #HiPlayer: video frame counts to be played before underrun while seeked
 ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.vfcnt=200
+    service.media.hiplayer.vfcnt=0
 endif
 
 #HiPlayer: for vo switch channel freeze
@@ -74,6 +74,10 @@ else
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.ethernet.wifidisguise=true
 endif
+
+#ethernet switch
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.ethernet.on=true
 
 # open 2D drawing
 ifeq ($(PRODUCT_TARGET),shcmcc)
@@ -125,6 +129,7 @@ PRODUCT_DEFAULT_DEV_CERTIFICATE := \
     device/hisilicon/${CHIPNAME}/security/releasekey
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hs.security.l1.enable=true
+HISILICON_SECURITY_L2_SYSTEM_CHECK := false
 endif
 
 ifeq ($(strip $(PRODUCT_TARGET)), telecom)
@@ -170,7 +175,7 @@ else
 PRODUCT_PROPERTY_OVERRIDES += drm.service.enabled=false
 endif
 
-PRODUCT_PROPERTY_FOR_DRM_CLIENT := false
+PRODUCT_PROPERTY_FOR_DRM_CLIENT := true
 ifeq ($(strip $(PRODUCT_PROPERTY_FOR_DRM_CLIENT)), true)
 # add drm enable property for PlayReady/Widevine
 PRODUCT_PROPERTY_OVERRIDES += drm.client.enabled=true
@@ -239,9 +244,25 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.toastshow.enable=false
 
-# fuse
+# support sdcardfs
+ifeq ($(SUPPORT_SDCARDFS),true)
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sdcardfs.support=true
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.sdcardfs.support=false
+#fuse
+ifeq ($(SUPPORT_FUSE),true)
+HISI_FUSE_SDCARD := true
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.fuse.support=true
+else
+HISI_FUSE_SDCARD :=false
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.fuse.support=false
+endif
+
+endif
 
 # Dobly DMA Certification
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -257,7 +278,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # add release version
 PRODUCT_PROPERTY_OVERRIDES += \
-    gsm.version.baseband=HiSTBAndroidV600R001C00SPC064
+    gsm.version.baseband=HiSTBAndroidV600R001C00SPC065
 
 PRODUCT_PROPERTY_OVERRIDES += \
     hibrowser.default.fullscreen=true
@@ -288,25 +309,45 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # patch name
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.patch=SPC060+patch13
+    ro.product.patch=SPC060+patch15
 
 PRODUCT_PACKAGES += \
      libandroid_qb
 
 # enable Widevine drm
 PRODUCT_PACKAGES += \
+    libteec \
+    libdrmutil \
+    libHiDrmEngine \
+    libwvcipher \
+    libdrmclientplugin \
+    libwvmcipherplugin \
     com.google.widevine.software.drm.xml \
     com.google.widevine.software.drm \
     libdrmwvmplugin libwvm libdrmdecrypt  \
     libWVStreamControlAPI_L$(BOARD_WIDEVINE_OEMCRYPTO_LEVEL) \
     libwvdrm_L$(BOARD_WIDEVINE_OEMCRYPTO_LEVEL)
 
+ifeq ($(strip $(HISILICON_TEE)),true)
+PRODUCT_PACKAGES += \
+    teecd \
+    liboemcrypto \
+    libemptydrmplugin \
+    test_modularwv_hal \
+    sample_keybox \
+    sample_checkkeybox \
+    upgrade_keybox \
+    oemcrypto_test
+endif
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
-    frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml
+    frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml
+
 
 PRODUCT_COPY_FILES += \
     device/hisilicon/bigfish/etc/init.${UEVENTD_TYPE_NAME}.rc:root/init.rc \

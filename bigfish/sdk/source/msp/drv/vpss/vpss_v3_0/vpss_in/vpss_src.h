@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------------------------------*/
-/*!!Warning: This is a key information asset of Huawei Tech Co.,Ltd                                                         */
+/*!!Warning: This is a key information asset of Hisilicon Tech Co.,Ltd                                                         */
 /*CODEMARK:kOyQZYzjDpyGdBAEC2GaWinjiDDUykL9e8pckESWBbMVmSWkBuyJO01cTiy3TdzKxGk0oBQa
 mSMf7J4FkTpfvy2G1NnyQwzUAGIEtSnc4g6WfcmyrindyKEmSRsJJCf0/FaCG8z2Rdw1dJuN
 tl2RyCbripe1MVgk1TxQOnSpJBGiv1hCbMUZ4etFFTYq5w8XZD03SYHXpKEyn1uyG8nRHxhA

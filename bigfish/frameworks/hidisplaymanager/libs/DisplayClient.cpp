@@ -574,5 +574,16 @@ namespace android
         }
         return ret;
     }
+    int DisplayClient::SetCECSuspend()
+    {
+        int ret = -1;
+        const sp<IDisplayService>& ps = getDisplayService();
+
+        if(ps != 0)
+        {
+            ret = ps->setCECSuspend();
+        }
+        return ret;
+    }
 };
 //end namespace

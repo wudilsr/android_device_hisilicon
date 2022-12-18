@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical" 
+    android:background="#ffefefef">
+	<!--<include layout="@layout/ctrl_main_top"/>-->
+	
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_margin="26.0dip">
+	    <Button
+	        android:id="@id/button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:paddingLeft="20.0dip"
+	        android:paddingRight="20.0dip"
+	        android:layout_marginTop="4.0dip"
+	        android:text="@string/start_test"/>
+		<ScrollView
+		    android:id="@id/scrollView" 
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/button"
+		    android:layout_marginTop="26.0dip"
+		    android:scrollbars="none">
+		    <LinearLayout 
+			    android:id="@id/scrollLayout" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical">
+			</LinearLayout>
+		</ScrollView>
+	</RelativeLayout>
+</LinearLayout>

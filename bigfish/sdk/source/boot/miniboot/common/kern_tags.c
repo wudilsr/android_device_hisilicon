@@ -24,6 +24,7 @@
 #include <kern_param.h>
 #include <malloc.h>
 #include <params.h>
+#include <debug.h>
 
 struct tag_hdr_t {
 	uint32 size;  /* tag size (data + head) 4bytes unit */
@@ -33,6 +34,16 @@ struct tag_hdr_t {
 #ifndef CONFIG_SDKVERSION
 #  define CONFIG_SDKVERSION     "sdk version unknown"
 #endif /* CONFIG_SDKVERSION */
+
+#ifdef CONFIG_NET
+int eth_nums = 0;
+#define MAX_ETH_NUMS 4
+extern char *get_eth_phyaddr_str(void);
+extern char *get_eth_phyintf_str(void);
+extern char *get_eth_phygpio_str(void);
+extern int get_eth_phyaddr(int index, int defval);
+extern int get_eth_phygpio(int index, u32 *gpio_base, u32 *gpio_bit);
+#endif
 
 /*****************************************************************************/
 
@@ -65,6 +76,67 @@ static struct tag_hdr_t *setup_param_tag(struct tag_hdr_t *tag)
 
 	return (struct tag_hdr_t *)((uint32 *)tag + tag->size);
 }
+
+/*****************************************************************************/
+#ifdef CONFIG_NET
+static void strtomac(unsigned char *mac, char* s)
+{
+	int i;
+	char *e;
+
+	for (i = 0; i < 6; ++i) {
+		mac[i] = s ? strtoul(s, &e, 16) : 0;
+		if (s)
+			s = (*e) ? e+1 : e;
+	}
+}
+
+struct tag_hdr_t *setup_eth_tags(struct tag_hdr_t *tag)
+{
+	int i;
+	char *env;
+	char mac[6] = {0};
+	uint32 gpio_base, gpio_bit, data[4];
+	int phyaddr[MAX_ETH_NUMS];
+
+	if (MAX_ETH_NUMS < eth_nums) {
+		pr_error("MAX_ETH_NUMS(%d) less than actual ETH Num %d", MAX_ETH_NUMS, eth_nums);
+		dump_stack();
+	}
+
+	/* Set up phy address tag */
+	for (i = 0; i < eth_nums; i++) {
+		phyaddr[i] = get_eth_phyaddr(i, 2);
+	}
+	tag = fill_tag(tag, 0x726d6d74, (char *)phyaddr, sizeof(phyaddr));
+
+	/* Set up phy interface tag */
+	env = get_eth_phyintf_str();
+	tag = fill_tag(tag, 0x726d6d80, (char *)env, strlen(env)+1+4);
+
+	/* Set up eth address tag */
+	env = env_get("ethaddr");
+	strtomac((unsigned char *)&mac[0], env);
+	tag = fill_tag(tag, 0x726d6d73, mac, sizeof(mac));
+	mac[6] = '\0';
+
+	/* Set up eth GPIO tag */
+	for (i = 0; i < eth_nums; i++) {
+		get_eth_phygpio(i, &gpio_base, &gpio_bit);
+		if (!gpio_base) {
+			data[i*2] = 0;
+			data[i*2 + 1] = 0;
+			continue;
+		}
+
+		data[i*2] = gpio_base;
+		data[i*2 + 1] = gpio_bit;
+	}
+	tag = fill_tag(tag, 0x726d6d81, (char *)data, sizeof(data));
+
+	return tag;
+}
+#endif /* CONFIG_NET */
 /*****************************************************************************/
 
 uint32 get_kern_tags(uint32 kernel)
@@ -107,6 +179,10 @@ uint32 get_kern_tags(uint32 kernel)
 		memcpy(buf + sizeof(int), (char *)_blank_zone_start, tmp);
 	}
 #endif /* CONFIG_BOOTREG */
+
+#ifdef CONFIG_NET
+	tag = setup_eth_tags(tag);
+#endif /* CONFIG_NET */
 
 	tag = setup_param_tag(tag);
 

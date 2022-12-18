@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NLyvOiSU1QzVRVJIFvNgTjVMj35/rFDkpkV7Zl2
 1aXTACojP6mSM4SkMbL800c3ulTrdJni0LFoqgQuZFv0+fejjkFToq5Nm+8mM86U9XTU23xq
@@ -30,7 +30,7 @@ HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NLyvOiSU1QzVRVJIFvNgTjVMj35/rFDkpkV7Zl2
 
 
 /************************************************************************
-* Copyright(C), 2008-2013, Huawei Tech. Co., Ltd. 
+* Copyright(C), 2008-2013, Hisilicon Tech. Co., Ltd. 
 * All rights reserved.    
 * 
 * $Id: hwdec.c,v 1.138 2010/01/12 09:39:22 songxiaogang Exp $     

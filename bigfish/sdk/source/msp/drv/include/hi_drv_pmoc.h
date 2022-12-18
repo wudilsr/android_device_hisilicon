@@ -31,7 +31,7 @@
 #define C51_BASE             0xf8400000
 #define C51_SIZE             0x8000  //32K
 #define C51_DATA             0x7000  //28K
-#define MCU_CODE_MAXSIZE     0x5000  //20K
+#define MCU_CODE_MAXSIZE     0x6000  //24K
 #else
 #error YOU MUST DEFINE  CHIP_TYPE!
 #endif

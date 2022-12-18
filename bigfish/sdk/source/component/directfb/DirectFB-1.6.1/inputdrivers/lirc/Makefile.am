@@ -21,7 +21,7 @@ libdirectfb_lirc_la_SOURCES =	\
 libdirectfb_lirc_la_LDFLAGS = \
 	-module			\
 	-avoid-version		\
-	$(DFB_LDFLAGS)
+	$(DFB_LDFLAGS) -lm -lhi_msp -ljpeg -lhi_common -ldl
 
 libdirectfb_lirc_la_LIBADD = \
 	$(top_builddir)/lib/direct/libdirect.la \

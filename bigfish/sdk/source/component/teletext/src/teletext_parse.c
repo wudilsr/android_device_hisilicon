@@ -28,6 +28,28 @@
         }\
     }while(0)
 
+
+typedef struct tagTTX_PARSE_DRCS_MODE_S
+{
+    TTX_DRCS_MODE_E enDRCSMode;
+    HI_U32* pu32DRCSColorInfo;
+    HI_U8 u8PTUNum;
+    HI_U32 u32PTUReadLen;
+}TTX_PARSE_DRCS_MODE_S;
+
+
+
+typedef struct tagTTX_PARSE_DECMOT_INFO_S
+{
+    HI_U8 u8Object;
+    HI_U8 u8DRCS;
+    HI_BOOL bHasP27;
+    HI_U8* au8Data;
+    HI_U8* pu8Line;
+    TTX_PAGE_S* pstMOPPage;
+}TTX_PARSE_DECMOT_INFO_S;
+
+
 static HI_U8 s_u8szOddParity[256] = {
     0xFF, 0x01, 0x02, 0xFF, 0x04, 0xFF, 0xFF, 0x07,
     0x08, 0xFF, 0xFF, 0x0B, 0xFF, 0x0D, 0x0E, 0xFF,
@@ -149,13 +171,88 @@ HI_U32 g_u32DefaultColorMap[32] =
     0x7ff,/**/
     0xddd /**/
 };
+
 HI_U32 g_u32RedefColorMap[32];
+
+
+
+static HI_VOID TTX_FixHam24_18(HI_U8 u8Result, HI_U8* pu8Address, HI_U8* pu8Mode, HI_U8* pu8Data)
+{
+    switch (u8Result)
+    {
+    case 3:
+        pu8Address[0] ^= 0x01;
+        break;
+    case 5:
+        pu8Address[0] ^= 0x02;
+        break;
+    case 6:
+        pu8Address[0] ^= 0x04;
+        break;
+    case 7:
+        pu8Address[0] ^= 0x08;
+        break;
+    case 9:
+        pu8Address[0] ^= 0x10;
+        break;
+    case 10:
+        pu8Address[0] ^= 0x20;
+        break;
+    
+    case 11:
+        pu8Mode[0] ^= 0x01;
+        break;
+    case 12:
+        pu8Mode[0] ^= 0x02;
+        break;
+    case 13:
+        pu8Mode[0] ^= 0x04;
+        break;
+    case 14:
+        pu8Mode[0] ^= 0x08;
+        break;
+    case 15:
+        pu8Mode[0] ^= 0x10;
+        break;
+    
+    case 17:
+        pu8Data[0] ^= 0x01;
+        break;
+    case 18:
+        pu8Data[0] ^= 0x02;
+        break;
+    case 19:
+        pu8Data[0] ^= 0x04;
+        break;
+    case 20:
+        pu8Data[0] ^= 0x08;
+        break;
+    case 21:
+        pu8Data[0] ^= 0x10;
+        break;
+    case 22:
+        pu8Data[0] ^= 0x20;
+        break;
+    case 23:
+        pu8Data[0] ^= 0x40;
+        break;
+    default:
+        break;
+    }
+
+}
+
 
 /** Decode  Ham24/18  */
 HI_BOOL  TTX_DecodeHam24_18  ( HI_U8 * pu8Triplet, HI_U8 *pu8Address, HI_U8 *pu8Mode,
                                              HI_U8 *pu8Data)
 {
-    HI_BOOL a, b, c, d, e, f;
+    HI_BOOL a = HI_FALSE;
+    HI_BOOL b = HI_FALSE;
+    HI_BOOL c = HI_FALSE; 
+    HI_BOOL d = HI_FALSE; 
+    HI_BOOL e = HI_FALSE; 
+    HI_BOOL f = HI_FALSE;
     HI_U8 u8Result = 0;
 
     if ((HI_NULL == pu8Triplet) || (HI_NULL == pu8Address) || (HI_NULL == pu8Mode))
@@ -225,67 +322,8 @@ HI_BOOL  TTX_DecodeHam24_18  ( HI_U8 * pu8Triplet, HI_U8 *pu8Address, HI_U8 *pu8
     if (!(a && b && c && d && e) && !f)  /** Single error --- Fix bit error  */
     {
         u8Result = (HI_U8) (!a) + 2 * (HI_U8)(!b) + 4 * (HI_U8)(!c) + 8 * (HI_U8)(!d) + 16 * (HI_U8)(!e);
-        switch (u8Result)
-        {
-        case 3:
-            pu8Address[0] ^= 0x01;
-            break;
-        case 5:
-            pu8Address[0] ^= 0x02;
-            break;
-        case 6:
-            pu8Address[0] ^= 0x04;
-            break;
-        case 7:
-            pu8Address[0] ^= 0x08;
-            break;
-        case 9:
-            pu8Address[0] ^= 0x10;
-            break;
-        case 10:
-            pu8Address[0] ^= 0x20;
-            break;
-
-        case 11:
-            pu8Mode[0] ^= 0x01;
-            break;
-        case 12:
-            pu8Mode[0] ^= 0x02;
-            break;
-        case 13:
-            pu8Mode[0] ^= 0x04;
-            break;
-        case 14:
-            pu8Mode[0] ^= 0x08;
-            break;
-        case 15:
-            pu8Mode[0] ^= 0x10;
-            break;
-
-        case 17:
-            pu8Data[0] ^= 0x01;
-            break;
-        case 18:
-            pu8Data[0] ^= 0x02;
-            break;
-        case 19:
-            pu8Data[0] ^= 0x04;
-            break;
-        case 20:
-            pu8Data[0] ^= 0x08;
-            break;
-        case 21:
-            pu8Data[0] ^= 0x10;
-            break;
-        case 22:
-            pu8Data[0] ^= 0x20;
-            break;
-        case 23:
-            pu8Data[0] ^= 0x40;
-            break;
-        default:
-            break;
-        }
+        
+        TTX_FixHam24_18(u8Result, pu8Address, pu8Mode, pu8Data);
 
         return HI_TRUE;
     }
@@ -295,16 +333,18 @@ HI_BOOL  TTX_DecodeHam24_18  ( HI_U8 * pu8Triplet, HI_U8 *pu8Address, HI_U8 *pu8
 
 HI_VOID TTX_Parse_BeginReadHam24_18Bit(HI_U8* gpData)
 {
-    g_pu8HamData         = gpData;
-    g_u8HamBitOffset    = 0;
-    g_u8HamByteOffset   = 0;
-    g_u8HamByteLen      = 6;
+    g_pu8HamData       = gpData;
+    g_u8HamBitOffset   = 0;
+    g_u8HamByteOffset  = 0;
+    g_u8HamByteLen     = 6;
 }
 
 HI_U32 TTX_Parse_ReadHam24_18Bit(HI_U8 u8BitNum)
 {
-    HI_U8 i, u8BitOffset = 0;
+    HI_U8 i = 0;
+    HI_U8 u8BitOffset = 0;
     HI_U32 u32Data = 0;
+    
     while(u8BitNum > 0)
     {
         /* how many bits to get */
@@ -352,8 +392,8 @@ HI_U32 TTX_Parse_ReadHam24_18Bit(HI_U8 u8BitNum)
 /** Decode and record  a directly displayed packet */
 static HI_BOOL  TTX_SaveLine(TTX_PAGE_CONTEXT_S  * pstCurrentPoint, HI_U32 u32Row, const HI_U8 *   pu8Line)
 {
-    HI_U32 i;
-    HI_U8 u8Ch;
+    HI_U32 i = 0;
+    HI_U8 u8Ch = 0;
 
     if ((HI_NULL == pstCurrentPoint) || (HI_NULL == pu8Line) || (u32Row >= TTX_ROW_NUM))
     {
@@ -420,7 +460,7 @@ static HI_U8 TTX_ConvertChar(HI_U8 u8Inchar)
 }
 
 /** Convert  a  line  */
-static HI_VOID TTX_ConvertLine(HI_U8 * pu8Line, HI_U32 u32Length)
+HI_VOID TTX_ConvertLine(HI_U8 * pu8Line, HI_U32 u32Length)
 {
     HI_U32 i = 0;
 
@@ -441,22 +481,311 @@ static HI_VOID TTX_ConvertLine(HI_U8 * pu8Line, HI_U32 u32Length)
     }
 }
 
+HI_BOOL TTX_IsEraseFlagSet(TTX_PAGE_S* pstpage)
+{
+    HI_U8 au8Tmp[TTX_LINE_MEM_SIZE];
+
+    memset(au8Tmp, 0, sizeof(au8Tmp));
+    memcpy(au8Tmp, pstpage->u8szLines[0], TTX_LINE_MEM_SIZE);
+
+    TTX_ConvertLine(au8Tmp, TTX_LINE_MEM_SIZE);
+
+    if (s_u8aUnhamtab[au8Tmp[5]] & 0x08)
+    {
+        return HI_TRUE;
+    }
+
+    return HI_FALSE;
+}
+
+static HI_S32 TTX_DecodeMOTPageGPOP(TTX_MOT_INFO_S* pstMotInfo, TTX_PARSE_DECMOT_INFO_S* pstDecMotInfo)
+{
+    HI_U8  i = 0;
+    HI_U8  u8PacketNum = 0;
+    HI_U32 u32Offset = 0;
+
+
+    if ((HI_NULL == pstMotInfo) || (HI_NULL == pstDecMotInfo))
+    {
+        HI_ERR_TTX("Parse MOT,GPOP: args error\n");
+        return HI_FAILURE;
+    }
+    
+    /*GPOP*/
+    if (pstDecMotInfo->u8Object & 0x8)
+    {
+        u8PacketNum = 22;
+        if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+        {
+            u8PacketNum = 19;
+            if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+            {
+                HI_ERR_TTX("Parse MOT,GPOP packet %d not found\n", u8PacketNum);
+                return HI_FAILURE;
+            }
+        }
+        
+        u32Offset = 2;
+        
+        for(i = 0; i < 10; i++)
+        {
+            if (0xff == (pstDecMotInfo->au8Data[i] = s_u8aUnhamtab[pstDecMotInfo->pu8Line[u32Offset + i]]))
+            {
+                HI_ERR_TTX("ham data error!\n");
+                return HI_FAILURE;
+            }
+        }
+        if (!pstDecMotInfo->bHasP27)
+        {
+            pstMotInfo->stGPOP.u8MagazineNum = pstDecMotInfo->au8Data[0] &0x7;
+            pstMotInfo->stGPOP.u8PageNum = (pstDecMotInfo->au8Data[1] << 4) | (pstDecMotInfo->au8Data[2] & 0xf);
+        }
+
+         /* default objects */
+        if(pstDecMotInfo->au8Data[5] & 0xf)
+        {
+            /* default object 1 */
+            pstMotInfo->stDefaultObject[0].u8ObjectType = pstDecMotInfo->au8Data[5] & 0x3;
+            pstMotInfo->stDefaultObject[0].u8SubPageNum = pstDecMotInfo->au8Data[6] & 0xf;
+            pstMotInfo->stDefaultObject[0].u8PointerPos = pstDecMotInfo->au8Data[7] & 0xf;
+            pstMotInfo->stDefaultObject[0].u8PointerTab = (pstDecMotInfo->au8Data[7] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
+            pstDecMotInfo->au8Data[7] &= 0x6;
+            pstMotInfo->stDefaultObject[0].u8TripletNum = (pstDecMotInfo->au8Data[7] >> 1) *3 + pstMotInfo->stDefaultObject[0].u8ObjectType;
+
+            /* default object 2 */
+            pstMotInfo->stDefaultObject[1].u8ObjectType = (pstDecMotInfo->au8Data[5] >> 2) & 0x3;
+            pstMotInfo->stDefaultObject[1].u8SubPageNum = pstDecMotInfo->au8Data[8] & 0xf;
+            pstMotInfo->stDefaultObject[1].u8PointerPos = pstDecMotInfo->au8Data[9] & 0xf;
+            pstMotInfo->stDefaultObject[1].u8PointerTab = (pstDecMotInfo->au8Data[9] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
+            pstDecMotInfo->au8Data[9] &= 0x6;
+            pstMotInfo->stDefaultObject[1].u8TripletNum = (pstDecMotInfo->au8Data[9] >> 1) *3 + pstMotInfo->stDefaultObject[1].u8ObjectType;
+        }
+    }
+
+    return HI_SUCCESS;
+}
+
+
+
+static HI_S32 TTX_DecodeMOTPagePOP(TTX_MOT_INFO_S* pstMotInfo, TTX_PARSE_DECMOT_INFO_S* pstDecMotInfo)
+{
+    HI_U8  i = 0;
+    HI_U8  u8PacketNum = 0;
+    HI_U32 u32Offset = 0;
+
+    if ((HI_NULL == pstMotInfo) || (HI_NULL == pstDecMotInfo))
+    {
+        HI_ERR_TTX("Parse MOT,POP: args error\n");
+        return HI_FAILURE;
+    }
+
+    /*POP*/
+    pstDecMotInfo->u8Object &= 0x7;
+    
+    if(pstDecMotInfo->u8Object)
+    {
+        u32Offset = 2;
+        
+        if(3 < pstDecMotInfo->u8Object)
+        {
+            u8PacketNum = 23;
+            if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+            {
+                u8PacketNum = 20;
+                if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+                {
+                    HI_ERR_TTX("Parse MOT, NPOP packet %d not found\n", u8PacketNum);
+                    return HI_FAILURE;
+                }
+            }
+            u32Offset += (pstDecMotInfo->u8Object - 4) * 10;
+        }
+        else
+        {
+            u8PacketNum = 22;
+            if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+            {
+                u8PacketNum = 19;
+                if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+                {
+                    HI_ERR_TTX("Parse MOT, NPOP packet %d not found\n", u8PacketNum);
+                    return HI_FAILURE;
+                }
+            }
+            u32Offset += pstDecMotInfo->u8Object * 10;
+        }
+
+        for(i = 0; i < 10; i++)
+        {
+            if (0xff == (pstDecMotInfo->au8Data[i] = s_u8aUnhamtab[pstDecMotInfo->pu8Line[u32Offset + i]]))
+            {
+                HI_ERR_TTX("ham data error!\n");
+                return HI_FAILURE;
+            }
+        }
+
+        if (!pstDecMotInfo->bHasP27)
+        {
+            pstMotInfo->stNPOP.u8MagazineNum = pstDecMotInfo->au8Data[0] &0x7;
+            pstMotInfo->stNPOP.u8PageNum = (pstDecMotInfo->au8Data[1] << 4) | (pstDecMotInfo->au8Data[2] & 0xf);
+        }
+
+         /* default objects */
+        if(pstDecMotInfo->au8Data[5] &0xf)
+        {
+            /* default object 1 */
+            pstMotInfo->stDefaultObject[2].u8ObjectType = pstDecMotInfo->au8Data[5] & 0x3;
+            pstMotInfo->stDefaultObject[2].u8SubPageNum = pstDecMotInfo->au8Data[6] & 0xf;
+            pstMotInfo->stDefaultObject[2].u8PointerPos = pstDecMotInfo->au8Data[7] & 0xf;
+            pstMotInfo->stDefaultObject[2].u8PointerTab = (pstDecMotInfo->au8Data[7] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
+            pstDecMotInfo->au8Data[7] &= 0x6;
+            pstMotInfo->stDefaultObject[2].u8TripletNum = (pstDecMotInfo->au8Data[7] >> 1) *3 + pstMotInfo->stDefaultObject[2].u8ObjectType;
+
+            /* default object 2 */
+            pstMotInfo->stDefaultObject[3].u8ObjectType = (pstDecMotInfo->au8Data[5] >> 2) & 0x3;
+            pstMotInfo->stDefaultObject[3].u8SubPageNum = pstDecMotInfo->au8Data[8] & 0xf;
+            pstMotInfo->stDefaultObject[3].u8PointerPos = pstDecMotInfo->au8Data[9] & 0xf;
+            pstMotInfo->stDefaultObject[3].u8PointerTab = (pstDecMotInfo->au8Data[9] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
+            pstDecMotInfo->au8Data[9] &= 0x6;
+            pstMotInfo->stDefaultObject[3].u8TripletNum = (pstDecMotInfo->au8Data[9] >> 1) *3 + pstMotInfo->stDefaultObject[3].u8ObjectType;
+        }
+        
+        pstMotInfo->bFallback = (pstDecMotInfo->au8Data[4] & 0x1) ? HI_TRUE : HI_FALSE;
+        pstMotInfo->bSidePanelLeft = ((pstDecMotInfo->au8Data[4] >> 1) & 0x1) ? HI_TRUE : HI_FALSE;
+        pstMotInfo->bSidePanelRight= ((pstDecMotInfo->au8Data[4] >> 2) & 0x1) ? HI_TRUE : HI_FALSE;
+        pstMotInfo->bBlackBgSubstitute = ((pstDecMotInfo->au8Data[4] >> 3) & 0x1) ? HI_TRUE : HI_FALSE;
+
+    }
+
+    return HI_SUCCESS;
+}
+
+static HI_S32 TTX_DecodeMOTPageGDRCS(TTX_MOT_INFO_S* pstMotInfo, TTX_PARSE_DECMOT_INFO_S* pstDecMotInfo)
+{
+    HI_U8  i = 0;
+    HI_U8  u8PacketNum = 0;
+    HI_U32 u32Offset = 0;
+
+    if ((HI_NULL == pstMotInfo) || (HI_NULL == pstDecMotInfo))
+    {
+        HI_ERR_TTX("Parse MOT,POP: args error\n");
+        return HI_FAILURE;
+    }
+
+
+    /*GDRCS*/
+    if(pstDecMotInfo->u8DRCS & 0x8)
+    {
+        u8PacketNum = 24;
+        if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+        {
+            u8PacketNum = 21;
+            if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+            {
+                HI_ERR_TTX("Parse MOT, GDRCS packet %d not found\n", u8PacketNum);
+                return HI_FAILURE;
+            }
+        }
+        
+        u32Offset = 2;
+        
+        for (i = 0; i < 4; i++)
+        {
+            if (0xff == (pstDecMotInfo->au8Data[i] = s_u8aUnhamtab[pstDecMotInfo->pu8Line[u32Offset + i]]))
+            {
+                HI_ERR_TTX("ham data error!\n");
+                return HI_FAILURE;
+            }
+        }
+        if (!pstDecMotInfo->bHasP27)
+        {
+            pstMotInfo->stGDRCS.u8MagazineNum = pstDecMotInfo->au8Data[0] & 0x7;
+            pstMotInfo->stGDRCS.u8PageNum = (pstDecMotInfo->au8Data[1] << 4) | (pstDecMotInfo->au8Data[2] & 0xf);
+        }
+
+    }
+
+    return HI_SUCCESS;
+}
+
+
+
+static HI_S32 TTX_DecodeMOTPageDRCS(TTX_MOT_INFO_S* pstMotInfo, TTX_PARSE_DECMOT_INFO_S* pstDecMotInfo)
+
+{
+    HI_U8  i = 0;
+    HI_U8  u8PacketNum = 0;
+    HI_U32 u32Offset = 0;
+
+    if ((HI_NULL == pstMotInfo) || (HI_NULL == pstDecMotInfo))
+    {
+        HI_ERR_TTX("Parse MOT,POP: args error\n");
+        return HI_FAILURE;
+    }
+
+    /* DRCS */
+    pstDecMotInfo->u8DRCS &= 0x7;
+    
+    if(pstDecMotInfo->u8DRCS)
+    {
+        u8PacketNum = 24;
+        if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+        {
+            u8PacketNum = 21;
+            if (!((pstDecMotInfo->pstMOPPage->u32ValidLines >> u8PacketNum) & 0x1))
+            {
+                HI_ERR_TTX("Parse MOT, DRCS packet %d not found\n", u8PacketNum);
+                return HI_FAILURE;
+            }
+        }
+        u32Offset = 2 + (pstDecMotInfo->u8DRCS << 1);
+        for(i = 0; i < 4; i++)
+        {
+            if (0xff == (pstDecMotInfo->au8Data[i] = s_u8aUnhamtab[pstDecMotInfo->pu8Line[u32Offset + i]]))
+            {
+                HI_ERR_TTX("ham data error!\n");
+                return HI_FAILURE;
+            }
+        }
+        if (!pstDecMotInfo->bHasP27)
+        {
+            pstMotInfo->stNDRCS.u8MagazineNum = pstDecMotInfo->au8Data[0] & 0x7;
+            pstMotInfo->stNDRCS.u8PageNum = (pstDecMotInfo->au8Data[1] << 4) | (pstDecMotInfo->au8Data[2] & 0xf);
+        }
+    }
+
+    return HI_SUCCESS;
+}
 
 HI_S32 TTX_DecodeMOTPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_MOT_INFO_S* pstMotInfo, HI_BOOL bHasP27)
 {
-    HI_UNF_TTX_PAGE_ADDR_S stMOP;
+    HI_S32 s32Ret = HI_SUCCESS;
+    
+    HI_U8 u8PacketNum = 0;
+    HI_U8 u8Object = 0;
+    HI_U8 u8DRCS = 0;
+    HI_U8 au8Data[10];
+
+    HI_U32 u32Offset = 0;
+    HI_U32 u32PageNumTen = 0;
+    HI_U32 u32PageNumUnit = 0;
+    
+    HI_U8* pu8Line = HI_NULL;
+    
     TTX_PAGE_S stMOPPage;
-    HI_U8           u8PacketNum = 0;
-    HI_U8           u8Object;
-    HI_U8           u8DRCS;
-    HI_U8           u8Data[10];
+    HI_UNF_TTX_PAGE_ADDR_S stMOP;
+    TTX_PARSE_DECMOT_INFO_S stDecMotInfo;
 
-    HI_U32         u32Offset;
-    HI_U8*         pu8Line = HI_NULL;
+    memset(au8Data, 0x0, sizeof(au8Data));
+    memset(&stMOPPage, 0x0, sizeof(TTX_PAGE_S));
+    memset(&stMOP, 0x0, sizeof(HI_UNF_TTX_PAGE_ADDR_S));
+    memset(&stDecMotInfo, 0x0, sizeof(TTX_PARSE_DECMOT_INFO_S));
 
-    HI_U32          u32PageNumTen;
-    HI_U32          u32PageNumUnit;
-    HI_U32          i;
+    if ((HI_NULL == pstPgAddr) || (HI_NULL == pstMotInfo))
+    {
+        HI_ERR_TTX("Decode MOT, args error \n");
+        return HI_FAILURE;
+    }
 
     stMOP.u8MagazineNum = pstPgAddr->u8MagazineNum;
     stMOP.u8PageNum = 0xfe;
@@ -485,277 +814,136 @@ HI_S32 TTX_DecodeMOTPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_MOT_INFO_S* pstM
     pstMotInfo->bSidePanelRight = HI_FALSE;
     pstMotInfo->bBlackBgSubstitute = HI_FALSE;
 
-    memset(&stMOPPage, 0x0, sizeof(TTX_PAGE_S));
-
     /*find the mot page*/
-    if(HI_SUCCESS == TTX_Data_FindPage(stMOP.u8MagazineNum, stMOP.u8PageNum, stMOP.u16PageSubCode, &stMOPPage))
+    if(HI_SUCCESS != TTX_Data_FindPage(stMOP.u8MagazineNum, stMOP.u8PageNum, stMOP.u16PageSubCode, &stMOPPage))
     {
-        u8PacketNum = 0;
-        while (u8PacketNum < 25)      /**Convert  normal  packet   */
-        {
-            if ((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1)          /** Valid line */
-            {
-                TTX_ConvertLine(stMOPPage.u8szLines[u8PacketNum], TTX_LINE_MEM_SIZE);            /**Convert a  packet  */
-            }
-
-            u8PacketNum++;
-        }
-
-        u32PageNumTen = (pstPgAddr->u8PageNum >> 4) & 0xf;
-        u32PageNumUnit = pstPgAddr->u8PageNum & 0xf;
-
-        /*judge current page defined in which packet*/
-        if(9 >= u32PageNumUnit )
-        {
-            u8PacketNum = (u32PageNumTen >> 1) + 1;
-            u32Offset = u32PageNumUnit << 1;
-            if(u32PageNumTen & 0x1)
-            {
-                u32Offset += 20;
-            }
-        }
-        else if((0xa <= u32PageNumUnit) &&(0xf > u32PageNumUnit))
-        {
-            u8PacketNum = (u32PageNumTen /3) + 9;
-            u32Offset = (u32PageNumTen%3) *12 + (u32PageNumUnit - 0xa) * 2;
-        }
-        else
-        {
-            u8PacketNum = 14;
-            u32Offset = (u32PageNumUnit - 0xa) * 2;
-        }
-
-        pu8Line = stMOPPage.u8szLines[u8PacketNum];
-        u32Offset +=2;
-         /* object page link */
-        u8Object = s_u8aUnhamtab[pu8Line[u32Offset]];
-        if(0xff == u8Object)
-        {
-            u8Object = 0;
-        }
-        u8Object &= 0xf;
-        /* DRCS page link */
-        u8DRCS = s_u8aUnhamtab[pu8Line[u32Offset + 1]];
-        if(0xff == u8DRCS)
-        {
-            u8DRCS = 0;
-        }
-        u8DRCS &= 0xf;
-
-        /*GPOP*/
-        if(u8Object & 0x8)
-        {
-            u8PacketNum = 22;
-            if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-            {
-                u8PacketNum = 19;
-                if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                {
-                    HI_ERR_TTX("Parse MOT,GPOP packet %d not found\n", u8PacketNum);
-                    return HI_FAILURE;
-                }
-            }
-            u32Offset = 2;
-            for(i = 0; i < 10; i++)
-            {
-                if (0xff == ( u8Data[i] = s_u8aUnhamtab[pu8Line[u32Offset + i]]))
-                {
-                    HI_ERR_TTX("ham data error!\n");
-                    return HI_FAILURE;
-                }
-            }
-            if (!bHasP27)
-            {
-                pstMotInfo->stGPOP.u8MagazineNum = u8Data[0] &0x7;
-                pstMotInfo->stGPOP.u8PageNum = (u8Data[1] << 4) | (u8Data[2] & 0xf);
-            }
-
-             /* default objects */
-            if(u8Data[5] & 0xf)
-            {
-                /* default object 1 */
-                pstMotInfo->stDefaultObject[0].u8ObjectType = u8Data[5] & 0x3;
-                pstMotInfo->stDefaultObject[0].u8SubPageNum = u8Data[6] & 0xf;
-                pstMotInfo->stDefaultObject[0].u8PointerPos = u8Data[7] & 0xf;
-                pstMotInfo->stDefaultObject[0].u8PointerTab = (u8Data[7] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
-                u8Data[7] &= 0x6;
-                pstMotInfo->stDefaultObject[0].u8TripletNum = (u8Data[7] >> 1) *3 + pstMotInfo->stDefaultObject[0].u8ObjectType;
-
-                /* default object 2 */
-                pstMotInfo->stDefaultObject[1].u8ObjectType = (u8Data[5] >> 2) & 0x3;
-                pstMotInfo->stDefaultObject[1].u8SubPageNum = u8Data[8] & 0xf;
-                pstMotInfo->stDefaultObject[1].u8PointerPos = u8Data[9] & 0xf;
-                pstMotInfo->stDefaultObject[1].u8PointerTab = (u8Data[9] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
-                u8Data[9] &= 0x6;
-                pstMotInfo->stDefaultObject[1].u8TripletNum = (u8Data[9] >> 1) *3 + pstMotInfo->stDefaultObject[1].u8ObjectType;
-            }
-        }
-
-        /*POP*/
-        u8Object &= 0x7;
-        if(u8Object)
-        {
-            u32Offset = 2;
-            if(3 < u8Object)
-            {
-                u8PacketNum = 23;
-                if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                {
-                    u8PacketNum = 20;
-                    if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                    {
-                        HI_ERR_TTX("Parse MOT, NPOP packet %d not found\n", u8PacketNum);
-                        return HI_FAILURE;
-                    }
-                }
-                u32Offset += (u8Object - 4) * 10;
-            }
-            else
-            {
-                u8PacketNum = 22;
-                if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                {
-                    u8PacketNum = 19;
-                    if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                    {
-                        HI_ERR_TTX("Parse MOT, NPOP packet %d not found\n", u8PacketNum);
-                        return HI_FAILURE;
-                    }
-                }
-                u32Offset += u8Object * 10;
-            }
-
-            for(i = 0; i < 10; i++)
-            {
-                if (0xff == ( u8Data[i] = s_u8aUnhamtab[pu8Line[u32Offset + i]]))
-                {
-                    HI_ERR_TTX("ham data error!\n");
-                    return HI_FAILURE;
-                }
-            }
-
-            if (!bHasP27)
-            {
-                pstMotInfo->stNPOP.u8MagazineNum = u8Data[0] &0x7;
-                pstMotInfo->stNPOP.u8PageNum = (u8Data[1] << 4) | (u8Data[2] & 0xf);
-            }
-
-             /* default objects */
-            if(u8Data[5] &0xf)
-            {
-                /* default object 1 */
-                pstMotInfo->stDefaultObject[2].u8ObjectType = u8Data[5] & 0x3;
-                pstMotInfo->stDefaultObject[2].u8SubPageNum = u8Data[6] & 0xf;
-                pstMotInfo->stDefaultObject[2].u8PointerPos = u8Data[7] & 0xf;
-                pstMotInfo->stDefaultObject[2].u8PointerTab = (u8Data[7] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
-                u8Data[7] &= 0x6;
-                pstMotInfo->stDefaultObject[2].u8TripletNum = (u8Data[7] >> 1) *3 + pstMotInfo->stDefaultObject[2].u8ObjectType;
-
-                /* default object 2 */
-                pstMotInfo->stDefaultObject[3].u8ObjectType = (u8Data[5] >> 2) & 0x3;
-                pstMotInfo->stDefaultObject[3].u8SubPageNum = u8Data[8] & 0xf;
-                pstMotInfo->stDefaultObject[3].u8PointerPos = u8Data[9] & 0xf;
-                pstMotInfo->stDefaultObject[3].u8PointerTab = (u8Data[9] & 0xf) >> 3;/*0:pointer locate in packt 1  1: pointer locate in packt 2*/
-                u8Data[9] &= 0x6;
-                pstMotInfo->stDefaultObject[3].u8TripletNum = (u8Data[9] >> 1) *3 + pstMotInfo->stDefaultObject[3].u8ObjectType;
-            }
-            pstMotInfo ->bFallback = (u8Data[4] & 0x1) ? HI_TRUE : HI_FALSE;
-            pstMotInfo ->bSidePanelLeft = ((u8Data[4] >> 1) & 0x1) ? HI_TRUE : HI_FALSE;
-            pstMotInfo ->bSidePanelRight= ((u8Data[4] >> 2) & 0x1) ? HI_TRUE : HI_FALSE;
-            pstMotInfo ->bBlackBgSubstitute = ((u8Data[4] >> 3) & 0x1) ? HI_TRUE : HI_FALSE;
-
-        }
-
-        /*GDRCS*/
-        if(u8DRCS & 0x8)
-        {
-            u8PacketNum = 24;
-            if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-            {
-                u8PacketNum = 21;
-                if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                {
-                    HI_ERR_TTX("Parse MOT, GDRCS packet %d not found\n", u8PacketNum);
-                    return HI_FAILURE;
-                }
-            }
-            u32Offset = 2;
-            for(i = 0; i < 4; i++)
-            {
-                if (0xff == ( u8Data[i] = s_u8aUnhamtab[pu8Line[u32Offset + i]]))
-                {
-                    HI_ERR_TTX("ham data error!\n");
-                    return HI_FAILURE;
-                }
-            }
-            if (!bHasP27)
-            {
-                pstMotInfo->stGDRCS.u8MagazineNum = u8Data[0] & 0x7;
-                pstMotInfo->stGDRCS.u8PageNum = (u8Data[1] << 4) | (u8Data[2] & 0xf);
-            }
-
-        }
-
-        /* DRCS */
-        u8DRCS &= 0x7;
-        if(u8DRCS)
-        {
-            u8PacketNum = 24;
-            if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-            {
-                u8PacketNum = 21;
-                if (!((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1))
-                {
-                    HI_ERR_TTX("Parse MOT, DRCS packet %d not found\n", u8PacketNum);
-                    return HI_FAILURE;
-                }
-            }
-            u32Offset = 2 + (u8DRCS << 1);
-            for(i = 0; i < 4; i++)
-            {
-                if (0xff == ( u8Data[i] = s_u8aUnhamtab[pu8Line[u32Offset + i]]))
-                {
-                    HI_ERR_TTX("ham data error!\n");
-                    return HI_FAILURE;
-                }
-            }
-            if (!bHasP27)
-            {
-                pstMotInfo->stNDRCS.u8MagazineNum = u8Data[0] & 0x7;
-                pstMotInfo->stNDRCS.u8PageNum = (u8Data[1] << 4) | (u8Data[2] & 0xf);
-            }
-        }
-
-        return HI_SUCCESS;
+        return HI_FAILURE;
     }
-    return HI_FAILURE;
+
+    
+    u8PacketNum = 0;
+    while (u8PacketNum < 25)      /**Convert  normal  packet   */
+    {
+        if ((stMOPPage.u32ValidLines >> u8PacketNum) & 0x1)          /** Valid line */
+        {
+            TTX_ConvertLine(stMOPPage.u8szLines[u8PacketNum], TTX_LINE_MEM_SIZE);            /**Convert a  packet  */
+        }
+
+        u8PacketNum++;
+    }
+
+    u32PageNumTen = (pstPgAddr->u8PageNum >> 4) & 0xf;
+    u32PageNumUnit = pstPgAddr->u8PageNum & 0xf;
+
+    /*judge current page defined in which packet*/
+    if(9 >= u32PageNumUnit )
+    {
+        u8PacketNum = (u32PageNumTen >> 1) + 1;
+        u32Offset = u32PageNumUnit << 1;
+        if(u32PageNumTen & 0x1)
+        {
+            u32Offset += 20;
+        }
+    }
+    else if((0xa <= u32PageNumUnit) &&(0xf > u32PageNumUnit))
+    {
+        u8PacketNum = (u32PageNumTen /3) + 9;
+        u32Offset = (u32PageNumTen%3) *12 + (u32PageNumUnit - 0xa) * 2;
+    }
+    else
+    {
+        u8PacketNum = 14;
+        u32Offset = (u32PageNumUnit - 0xa) * 2;
+    }
+
+    pu8Line = stMOPPage.u8szLines[u8PacketNum];
+    u32Offset +=2;
+    
+     /* object page link */
+    u8Object = s_u8aUnhamtab[pu8Line[u32Offset]];
+    if(0xff == u8Object)
+    {
+        u8Object = 0;
+    }
+    u8Object &= 0xf;
+    /* DRCS page link */
+    u8DRCS = s_u8aUnhamtab[pu8Line[u32Offset + 1]];
+    if(0xff == u8DRCS)
+    {
+        u8DRCS = 0;
+    }
+    
+    u8DRCS &= 0xf;
+
+    /*init DecMot info*/
+    stDecMotInfo.bHasP27 = bHasP27;
+    stDecMotInfo.pstMOPPage = &stMOPPage;
+    stDecMotInfo.pu8Line = pu8Line;
+    stDecMotInfo.au8Data = au8Data;
+    stDecMotInfo.u8Object = u8Object;
+    stDecMotInfo.u8DRCS = u8DRCS;
+
+
+    /*GPOP*/
+    s32Ret = TTX_DecodeMOTPageGPOP(pstMotInfo, &stDecMotInfo);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    /*POP*/
+    s32Ret = TTX_DecodeMOTPagePOP(pstMotInfo, &stDecMotInfo);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    /*GDRCS*/
+    s32Ret = TTX_DecodeMOTPageGDRCS(pstMotInfo, &stDecMotInfo);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    /* DRCS */
+    s32Ret = TTX_DecodeMOTPageDRCS(pstMotInfo, &stDecMotInfo);
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
 }
 
 HI_S32 TTX_DecodePOPPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_OBJECT_POINTER_S* pstObj, HI_U32* pu32TripPos, HI_U8* pu8Line)
 {
     TTX_PAGE_S stPage;
-    HI_U8   u8DataLine[TTX_LINE_MEM_SIZE];
-    HI_U8   u8Data[3];
     HI_U8   u8PacketNum = 0;
     HI_U32  u32ObjDefineTrip = 0;
     HI_U8   u8DesignCode = 0;
+    HI_U8   au8Data[3] = {0, 0, 0};
+    HI_U8   au8DataLine[TTX_LINE_MEM_SIZE];
+
+    memset(&stPage, 0x0, sizeof(TTX_PAGE_S));
+    memset(au8DataLine, 0x0, sizeof(au8DataLine));
+    
     if(HI_SUCCESS == TTX_Data_FindPage(pstPgAddr->u8MagazineNum, pstPgAddr->u8PageNum, pstObj->u8SubPageNum, &stPage))
     {
         u8PacketNum = pstObj->u8PointerTab + 1;
         /*find the packet of pointer table*/
-        if(HI_SUCCESS  == TTX_Data_FindPacket(&stPage, u8PacketNum, 0, u8DataLine))
+        if(HI_SUCCESS  == TTX_Data_FindPacket(&stPage, u8PacketNum, 0, au8DataLine))
         {
-            TTX_ConvertLine(u8DataLine, TTX_LINE_MEM_SIZE);
+            TTX_ConvertLine(au8DataLine, TTX_LINE_MEM_SIZE);
 
-            if(HI_TRUE == TTX_DecodeHam24_18(u8DataLine + 3 + pstObj->u8TripletNum * 3, u8Data, u8Data + 1, u8Data + 2))
+            if(HI_TRUE == TTX_DecodeHam24_18(au8DataLine + 3 + pstObj->u8TripletNum * 3, au8Data, au8Data + 1, au8Data + 2))
             {
                 if(pstObj->u8PointerPos)
                 {
-                    u32ObjDefineTrip = (u8Data[1] >> 3) | (((HI_U32)u8Data[2]) << 2);
+                    u32ObjDefineTrip = (au8Data[1] >> 3) | (((HI_U32)au8Data[2]) << 2);
                 }
                 else
                 {
-                    u32ObjDefineTrip = ((((HI_U32)u8Data[1]) & 0x3) << 6) | (u8Data[0]);
+                    u32ObjDefineTrip = ((((HI_U32)au8Data[1]) & 0x3) << 6) | (au8Data[0]);
                 }
 
                 if(u32ObjDefineTrip < 507)/*507 is the max triplet num, which = 13 * (25 - 2 + 16)*/
@@ -781,39 +969,247 @@ HI_S32 TTX_DecodePOPPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_OBJECT_POINTER_S
     }
     return HI_FAILURE;
 }
-HI_S32 TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, HI_U8 u8PTUNum, TTX_DRCS_MODE_E* penDRCSMode,  HI_U32* pu32DRCSColorInfo )
+
+
+static HI_VOID TTX_DecodeDrcsColor(HI_U32 u32ColorBitPlane, TTX_DCLUT_S* pstDCLUT, TTX_PARSE_DRCS_MODE_S* pstDrcsMode)
 {
-    TTX_PAGE_S stPage;
-    TTX_DRCS_MODE_E enDRCSMode;
-    HI_U8   u8DataLine[TTX_LINE_MEM_SIZE];
-    HI_U8   u8StartBit;
-    HI_U32 u32TripNum;
-    HI_U32 u32PTU;
-    HI_U32 u32PacketNum;
-    HI_U32 u32PTUReadLen;
-    HI_U32 i,j,k;
-    HI_U32 u32Entry;
-    HI_U32 u32ColorBitPlane;
-    HI_U8   u8PTUData[4][20];
-    HI_U8   u8HamData[6];
+    HI_U32 u32Entry = 0;
+    
+    if (TTX_DRCS_MODE_1 == pstDrcsMode->enDRCSMode)
+    {
+
+        /*Normal DRCS*/
+        if(pstDrcsMode->u8PTUNum & 0x40)
+        {
+            u32Entry = pstDCLUT->u8DCLUT4Normal[u32ColorBitPlane];
+        }
+        else/*Global DRCS*/
+        {
+            u32Entry = pstDCLUT->u8DCLUT4Global[u32ColorBitPlane];
+        }
+    }
+    else if (TTX_DRCS_MODE_2 == pstDrcsMode->enDRCSMode)
+    {
+        /*Normal DRCS*/
+        if(pstDrcsMode->u8PTUNum & 0x40)
+        {
+            u32Entry = pstDCLUT->u8DCLUT16Normal[u32ColorBitPlane];
+        }
+        else/*Global DRCS*/
+        {
+            u32Entry = pstDCLUT->u8DCLUT16Global[u32ColorBitPlane];
+        }
+
+    }
+    else if (TTX_DRCS_MODE_3 == pstDrcsMode->enDRCSMode)
+    {
+        /*Normal DRCS*/
+        if(pstDrcsMode->u8PTUNum & 0x40)
+        {
+            u32Entry = pstDCLUT->u8DCLUT16Normal[u32ColorBitPlane];
+        }
+        else/*Global DRCS*/
+        {
+            u32Entry = pstDCLUT->u8DCLUT16Global[u32ColorBitPlane];
+        }
+
+    }
+    
+    u32Entry &= 0x1f;
+    *(pstDrcsMode->pu32DRCSColorInfo) = g_u32RedefColorMap[u32Entry];
+    pstDrcsMode->pu32DRCSColorInfo++;
+
+    return;
+}
+
+
+static HI_S32 TTX_DecodeDRCSMode(TTX_PAGE_CONTEXT_S* pstCurrentPoint, 
+                                          TTX_PARSE_DRCS_MODE_S* pstDrcsMode,
+                                          HI_U8* pu8DataLine)
+{
+    HI_U32 i = 0;
+    HI_U32 j = 0;
+    HI_U32 k = 0;
+    HI_U8  u8PTUNum = 0;
+    HI_U32 u32PTUReadLen = 0;
+    HI_U32 u32PacketNum = 0;
+    HI_U32 u32ColorBitPlane = 0;
+    TTX_DRCS_MODE_E enDRCSMode = 0;
     TTX_DCLUT_S* pstDCLUT = HI_NULL;
-    HI_U32* pu32Color = pu32DRCSColorInfo;
+
+    TTX_PAGE_S stPage;
+    HI_U8  au8PTUData[4][20];
+    
+
+    memset(au8PTUData, 0x0, sizeof(au8PTUData));
+    memset(&stPage, 0x0, sizeof(TTX_PAGE_S));
+
+    u8PTUNum = pstDrcsMode->u8PTUNum;
+    enDRCSMode = pstDrcsMode->enDRCSMode;
+    u32PacketNum = ((u8PTUNum & 0x3f) >> 1) + 1;
+    u32PTUReadLen = pstDrcsMode->u32PTUReadLen > 2 ? 2 : pstDrcsMode->u32PTUReadLen;
+
+
+    for (i = 0; i < u32PTUReadLen; i++)
+    {
+        for (j = 0; j < 20; j++)
+        {
+            au8PTUData[i][j] = s_u8szOddParity[pu8DataLine[2 + i * 20 + j]];
+        }
+    }
+
+    if (u32PTUReadLen > 2)
+    {        
+        if (HI_SUCCESS != TTX_Data_FindPacket(&stPage, u32PacketNum + 1, 0, pu8DataLine))
+        {
+            return HI_FAILURE;
+        }
+        
+        TTX_ConvertLine(pu8DataLine, TTX_LINE_MEM_SIZE);
+
+        for (i = 2; i < 4; i++)
+        {
+            for (j = 0; j < 20; j++)
+            {
+                au8PTUData[i][j] = s_u8szOddParity[pu8DataLine[2 + (i -2)* 20 + j]];
+            }
+        }
+    }
+
+
+    if (TTX_DRCS_MODE_0 == enDRCSMode)
+    {
+        for (i = 0; i < 20; i++)
+        {
+            for (j = 0; j < 6; j++)
+            {
+                if(au8PTUData[0][i] & 0x20)
+                {
+                    *(pstDrcsMode->pu32DRCSColorInfo) = 0; 
+                }
+                else
+                {
+                     *(pstDrcsMode->pu32DRCSColorInfo) = 1;
+                }
+                
+                (pstDrcsMode->pu32DRCSColorInfo)++;
+                
+                au8PTUData[0][i] <<= 1;
+            }
+        }
+    }
+    else
+    {
+        if (pstCurrentPoint->bHasP28_1)
+        {
+            pstDCLUT = &pstCurrentPoint->stP28_1_Info.stDCLUT;
+        }
+        else if (g_bHasM29_1[pstCurrentPoint->stCurPgAddr.u8MagazineNum])
+        {
+            pstDCLUT = &g_stM29_1_Info[pstCurrentPoint->stCurPgAddr.u8MagazineNum].stDCLUT;
+        }
+        else
+        {
+            return HI_FAILURE;
+        }
+
+        if ((TTX_DRCS_MODE_1 == enDRCSMode) || (TTX_DRCS_MODE_2 == enDRCSMode))
+        {
+            u32ColorBitPlane = 0;
+            HI_U32 u32MaxK = 2;
+
+            if (TTX_DRCS_MODE_2 == enDRCSMode)
+            {
+                u32MaxK = 4;
+            }
+            
+            for (i = 0; i < 20; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    for(k = 0; k < u32MaxK; k++)
+                    {
+                        if (au8PTUData[k][i] & 0x20)/*bit5*/
+                        {
+                            u32ColorBitPlane |= 0x1 << k;
+                        }
+                        au8PTUData[k][i] <<= 1;
+                    }
+
+                    TTX_DecodeDrcsColor(u32ColorBitPlane, pstDCLUT, pstDrcsMode);
+                }
+            }
+        }
+        else if (TTX_DRCS_MODE_3 == enDRCSMode)
+        {
+            u32ColorBitPlane = 0;
+            
+            for (i = 0; i < 5; i++)
+            {
+                for (j = 0; j < 6; j++)
+                {
+                    for (k = 0; k < 4; k++)
+                    {
+                        if (au8PTUData[0][i * 4 + k] & 0x20)/*bit5*/
+                        {
+                            u32ColorBitPlane |= 0x1 << k;
+                        }
+                        
+                        au8PTUData[0][i * 4 + k] <<= 1;
+                    }
+                    
+                    TTX_DecodeDrcsColor(u32ColorBitPlane, pstDCLUT, pstDrcsMode);
+                }
+            }
+        }
+    }
+        
+    return HI_SUCCESS;
+}
+
+HI_S32 TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, HI_U8 u8PTUNum, TTX_DRCS_MODE_E* penDRCSMode,  HI_U32* pu32DRCSColorInfo)
+{
+    HI_U8  u8StartBit = 0;
+    HI_U32 u32TripNum = 0;
+    HI_U32 u32PTU = 0;
+    HI_U32 u32PacketNum = 0;
+    HI_U32 u32PTUReadLen = 0;
+    TTX_DRCS_MODE_E enDRCSMode = TTX_DRCS_MODE_BUTT;
+    
+    HI_U8  au8HamData[6];
+    HI_U8  au8DataLine[TTX_LINE_MEM_SIZE];
+    
+    TTX_PAGE_S stPage;
 
     u32PTU = u8PTUNum & 0x3f;
-    if(48 <= u32PTU)
+    
+    if (48 <= u32PTU)
     {
         HI_ERR_TTX("ptu num invalid...\n");
         return HI_FAILURE;
     }
 
+    if ((HI_NULL == pstCurrentPoint) || 
+        (HI_NULL == pstPgAddr) ||
+        (HI_NULL == penDRCSMode) ||
+        (HI_NULL == pu32DRCSColorInfo))
+    {
+        HI_ERR_TTX("Args invalid...\n");
+        return HI_FAILURE;
+    }
+
     memset(&stPage, 0x0, sizeof(TTX_PAGE_S));
+    memset(au8DataLine, 0x0, sizeof(au8DataLine));
+    memset(au8HamData, 0x0, sizeof(au8HamData));
+
+    
     /*find the DRCS page*/
     if(HI_SUCCESS != TTX_Data_FindPage(pstPgAddr->u8MagazineNum, pstPgAddr->u8PageNum, pstPgAddr->u16PageSubCode, &stPage))
     {
         return HI_FAILURE;
     }
 
-    if(HI_SUCCESS != TTX_Data_FindPacket(&stPage, 28, 3, u8DataLine))
+    if(HI_SUCCESS != TTX_Data_FindPacket(&stPage, 28, 3, au8DataLine))
     {
         return HI_FAILURE;
     }
@@ -821,18 +1217,18 @@ HI_S32 TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_UNF_TTX_PA
     u32TripNum = u32PTU * 4 /18 + 1;/*DRCS Downloading Mode Invocation start at the second triplet*/
     u8StartBit = u32PTU * 4 %18;
 
-    TTX_ConvertLine(u8DataLine, TTX_LINE_MEM_SIZE);
-    if (HI_FALSE == TTX_DecodeHam24_18(u8DataLine + 3 + 3 * u32TripNum, u8HamData,  u8HamData + 1,  u8HamData + 2))
+    TTX_ConvertLine(au8DataLine, TTX_LINE_MEM_SIZE);
+    if (HI_FALSE == TTX_DecodeHam24_18(au8DataLine + 3 + 3 * u32TripNum, au8HamData,  au8HamData + 1,  au8HamData + 2))
     {
         return HI_FAILURE;
     }
 
-    if (HI_FALSE == TTX_DecodeHam24_18(u8DataLine + 6 + 3 * u32TripNum, u8HamData + 3,  u8HamData + 4,  u8HamData + 5))
+    if (HI_FALSE == TTX_DecodeHam24_18(au8DataLine + 6 + 3 * u32TripNum, au8HamData + 3,  au8HamData + 4,  au8HamData + 5))
     {
         return HI_FAILURE;
     }
 
-    TTX_Parse_BeginReadHam24_18Bit(u8HamData);
+    TTX_Parse_BeginReadHam24_18Bit(au8HamData);
     TTX_Parse_ReadHam24_18Bit(u8StartBit);
     enDRCSMode = (TTX_DRCS_MODE_E)TTX_Parse_ReadHam24_18Bit(4);
 
@@ -855,185 +1251,38 @@ HI_S32 TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_UNF_TTX_PA
             u32PTUReadLen = 1;
             break;
     }
+    
     *penDRCSMode = enDRCSMode;
-    if(HI_SUCCESS != TTX_Data_FindPacket(&stPage, u32PacketNum, 0, u8DataLine))
+    
+    if (HI_SUCCESS != TTX_Data_FindPacket(&stPage, u32PacketNum, 0, au8DataLine))
     {
         return HI_FAILURE;
     }
 
-    TTX_ConvertLine(u8DataLine, TTX_LINE_MEM_SIZE);
+    TTX_ConvertLine(au8DataLine, TTX_LINE_MEM_SIZE);
 
-    if(2 >= u32PTUReadLen)
-    {
+    TTX_PARSE_DRCS_MODE_S stDrcsMode;
 
-        for(i = 0; i < u32PTUReadLen; i++)
-        {
-            for(j = 0; j < 20; j++)
-            {
-                u8PTUData[i][j] = s_u8szOddParity[u8DataLine[2 + i * 20 + j]];
-            }
-        }
-    }
-    else
-    {
-        for(i = 0; i < 2; i++)
-        {
-            for(j = 0; j < 20; j++)
-            {
-                u8PTUData[i][j] = s_u8szOddParity[u8DataLine[2 + i * 20 + j]];
-            }
-        }
-        if(HI_SUCCESS != TTX_Data_FindPacket(&stPage, u32PacketNum + 1, 0, u8DataLine))
-        {
-            return HI_FAILURE;
-        }
-        TTX_ConvertLine(u8DataLine, TTX_LINE_MEM_SIZE);
-
-        for(i = 2; i < 4; i++)
-        {
-            for(j = 0; j < 20; j++)
-            {
-                u8PTUData[i][j] = s_u8szOddParity[u8DataLine[2 + (i -2)* 20 + j]];
-            }
-        }
-    }
+    stDrcsMode.enDRCSMode = enDRCSMode;
+    stDrcsMode.pu32DRCSColorInfo = pu32DRCSColorInfo;
+    stDrcsMode.u32PTUReadLen = u32PTUReadLen;
+    stDrcsMode.u8PTUNum = u8PTUNum;
 
 
-    if (TTX_DRCS_MODE_0 == enDRCSMode)
-    {
-        for(i = 0; i < 20; i++)
-        {
-            for(j = 0; j < 6; j++)
-            {
-                if(u8PTUData[0][i] & 0x20)
-                {
-                    *pu32Color = 0; /**/
-                }
-                else
-                {
-                     *pu32Color = 1;
-                }
-                pu32Color++;
-                u8PTUData[0][i] <<= 1;
-            }
-        }
-    }
-    else
-    {
-        if(pstCurrentPoint->bHasP28_1)
-        {
-            pstDCLUT = &pstCurrentPoint->stP28_1_Info.stDCLUT;
-        }
-        else if (g_bHasM29_1[pstCurrentPoint->stCurPgAddr.u8MagazineNum])
-        {
-            pstDCLUT = &g_stM29_1_Info[pstCurrentPoint->stCurPgAddr.u8MagazineNum].stDCLUT;
-        }
-        else
-        {
-            return HI_FAILURE;
-        }
-
-        if(TTX_DRCS_MODE_1 == enDRCSMode)
-        {
-            u32ColorBitPlane =0;
-            for(i = 0; i < 20; i++)
-            {
-                for(j = 0; j < 6; j++)
-                {
-                    for(k = 0; k < 2; k++)
-                    {
-                        if(u8PTUData[k][i] & 0x20)/*bit5*/
-                        {
-                            u32ColorBitPlane |= 0x1 << k;
-                        }
-                        u8PTUData[k][i] <<= 1;
-                    }
-                    /*Normal DRCS*/
-                    if(u8PTUNum & 0x40)
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT4Normal[u32ColorBitPlane];
-                    }
-                    else/*Global DRCS*/
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT4Global[u32ColorBitPlane];
-                    }
-                    u32Entry &= 0x1f;
-                    *pu32Color = g_u32RedefColorMap[u32Entry];
-                    pu32Color++;
-                }
-            }
-        }
-        else if(TTX_DRCS_MODE_2 == enDRCSMode)
-        {
-            u32ColorBitPlane =0;
-            for(i = 0; i < 20; i++)
-            {
-                for(j = 0; j < 6; j++)
-                {
-                    for(k = 0; k < 4; k++)
-                    {
-                        if(u8PTUData[k][i] & 0x20)/*bit5*/
-                        {
-                            u32ColorBitPlane |= 0x1 << k;
-                        }
-                        u8PTUData[k][i] <<= 1;
-                    }
-                    /*Normal DRCS*/
-                    if(u8PTUNum & 0x40)
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT16Normal[u32ColorBitPlane];
-                    }
-                    else/*Global DRCS*/
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT16Global[u32ColorBitPlane];
-                    }
-                    u32Entry &= 0x1f;
-                    *pu32Color = g_u32RedefColorMap[u32Entry];
-                    pu32Color++;
-                }
-            }
-        }
-        else if(TTX_DRCS_MODE_3 == enDRCSMode)
-        {
-            u32ColorBitPlane =0;
-            for(i = 0; i < 5; i++)
-            {
-                for(j = 0; j < 6; j++)
-                {
-                    for(k = 0; k < 4; k++)
-                    {
-                        if(u8PTUData[0][i * 4 + k] & 0x20)/*bit5*/
-                        {
-                            u32ColorBitPlane |= 0x1 << k;
-                        }
-                        u8PTUData[0][i * 4 + k] <<= 1;
-                    }
-                    /*Normal DRCS*/
-                    if(u8PTUNum & 0x40)
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT16Normal[u32ColorBitPlane];
-                    }
-                    else/*Global DRCS*/
-                    {
-                        u32Entry = pstDCLUT->u8DCLUT16Global[u32ColorBitPlane];
-                    }
-                    u32Entry &= 0x1f;
-                    *pu32Color = g_u32RedefColorMap[u32Entry];
-                    pu32Color++;
-                }
-            }
-        }
-    }
-    return HI_SUCCESS;
+    return TTX_DecodeDRCSMode(pstCurrentPoint, &stDrcsMode, au8DataLine);
+    
 }
 
-HI_S32 TTX_DecodePacket27CompLink(HI_U8 *pu8Data, TTX_PAGE_CONTEXT_S  *   pstCurrentPoint)
+HI_S32 TTX_DecodePacket27CompLink(HI_U8 *pu8Data, TTX_PAGE_CONTEXT_S*  pstCurrentPoint)
 {
-    HI_U8 u8Address,u8Mode,u8Data,u8LinkFunc;
-    HI_UNF_TTX_PAGE_ADDR_S *pstPageAddr =HI_NULL;
-    HI_U8 u8MagNum =0;
-    HI_U8 u8PgNum =0;
-    HI_U16 u16SubPgNum =0;
+    HI_U8 u8Address = 0;
+    HI_U8 u8Mode = 0;
+    HI_U8 u8Data = 0;
+    HI_U8 u8LinkFunc = 0;
+    HI_U8 u8MagNum = 0;
+    HI_U8 u8PgNum = 0;
+    HI_U16 u16SubPgNum = 0;
+    HI_UNF_TTX_PAGE_ADDR_S *pstPageAddr = HI_NULL;
 
     if (HI_FALSE == TTX_DecodeHam24_18(pu8Data, &u8Address, &u8Mode, &u8Data))
     {
@@ -1067,19 +1316,22 @@ HI_S32 TTX_DecodePacket27CompLink(HI_U8 *pu8Data, TTX_PAGE_CONTEXT_S  *   pstCur
     return HI_FAILURE;
 }
 
-HI_S32 TTX_DecodeP28_0_M29_0(HI_U8* pu8Data, TTX_P28_0_M29_0_INFO_S*   pstInfo)
+HI_S32 TTX_DecodeP28_0_M29_0(HI_U8* pu8Data, TTX_P28_0_M29_0_INFO_S* pstInfo)
 {
-    HI_U32 i;
-    HI_U8 u8Data[39];
+    HI_U32 i = 0;
+    HI_U8  au8Data[39];
+
+    memset(au8Data, 0x0, sizeof(au8Data));
+    
     for(i = 0; i < 13 ; i++)
     {
-        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, u8Data + 3 * i,  u8Data + 1 + 3 * i,  u8Data + 2 + 3 * i))
+        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, au8Data + 3 * i,  au8Data + 1 + 3 * i,  au8Data + 2 + 3 * i))
         {
             return HI_FAILURE;
         }
     }
 
-    TTX_Parse_BeginReadHam24_18Bit(u8Data);
+    TTX_Parse_BeginReadHam24_18Bit(au8Data);
     i = TTX_Parse_ReadHam24_18Bit(4);/*page function bit*/
 
     if (PAGE_FUNC_LOP == i)
@@ -1110,16 +1362,21 @@ HI_S32 TTX_DecodeP28_0_M29_0(HI_U8* pu8Data, TTX_P28_0_M29_0_INFO_S*   pstInfo)
 
 HI_S32 TTX_DecodeP28_1_M29_1(HI_U8* pu8Data, TTX_P28_1_M29_1_INFO_S*   pstInfo)
 {
-    HI_U32 i;
-    HI_U8 u8Data[39];
+    HI_U32 i = 0;
+    HI_U8  au8Data[39];
+
+    memset(au8Data, 0x0, sizeof(au8Data));
+
+    
     for(i = 0; i < 13 ; i++)
     {
-        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, u8Data + 3 * i,  u8Data + 1 + 3 * i,  u8Data + 2 + 3 * i))
+        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, au8Data + 3 * i,  au8Data + 1 + 3 * i,  au8Data + 2 + 3 * i))
         {
             return HI_FAILURE;
         }
     }
-    TTX_Parse_BeginReadHam24_18Bit(u8Data);
+    
+    TTX_Parse_BeginReadHam24_18Bit(au8Data);
     TTX_Parse_ReadHam24_18Bit(2);
     pstInfo->u8G0Set = (HI_U8)TTX_Parse_ReadHam24_18Bit(7);/*Character Set Code for G0 Table*/
     TTX_Parse_ReadHam24_18Bit(1);
@@ -1152,17 +1409,21 @@ HI_S32 TTX_DecodeP28_1_M29_1(HI_U8* pu8Data, TTX_P28_1_M29_1_INFO_S*   pstInfo)
 }
 HI_S32 TTX_DecodeP28_4_M29_4(HI_U8* pu8Data, TTX_P28_4_M29_4_INFO_S*   pstInfo)
 {
-    HI_U32 i;
-    HI_U8 u8Data[39];
+    HI_U32 i = 0;
+    HI_U8  au8Data[39];
+
+    memset(au8Data, 0x0, sizeof(au8Data));
+
+    
     for(i = 0; i < 13 ; i++)
     {
-        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, u8Data + 3 * i,  u8Data + 1 + 3 * i,  u8Data + 2 + 3 * i))
+        if (HI_FALSE == TTX_DecodeHam24_18(pu8Data + 3 * i, au8Data + 3 * i,  au8Data + 1 + 3 * i,  au8Data + 2 + 3 * i))
         {
             return HI_FAILURE;
         }
     }
 
-    TTX_Parse_BeginReadHam24_18Bit(u8Data);
+    TTX_Parse_BeginReadHam24_18Bit(au8Data);
     i = TTX_Parse_ReadHam24_18Bit(4);/*page function bit*/
 
     if (PAGE_FUNC_LOP == i)
@@ -1190,21 +1451,353 @@ HI_S32 TTX_DecodeP28_4_M29_4(HI_U8* pu8Data, TTX_P28_4_M29_4_INFO_S*   pstInfo)
     }
     return HI_SUCCESS;
 }
-
-
-
 /**dongfuahi add end*/
 
 
+static HI_VOID TTX_DecodeControlCode(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
+{
+    pstCurrentPoint->u32Flag = 0;
+    
+    if (s_u8aUnhamtab[pu8Line[ 5]] & 0x08)
+    {
+        pstCurrentPoint->u32Flag |= 0x0001;
+    }                                                                                   /** flag C4  */
+    if (s_u8aUnhamtab[pu8Line[7]] & 0x04)
+    {
+        pstCurrentPoint->u32Flag |= 0x0002;
+    }                                                                                   /** flag C5  */
+    if (s_u8aUnhamtab[pu8Line[7]] & 0x08)
+    {
+        pstCurrentPoint->u32Flag |= 0x0004;
+    }                                                                                   /** flag C6  */
+    if (s_u8aUnhamtab[pu8Line[8]] & 0x01)
+    {
+        pstCurrentPoint->u32Flag |= 0x0008;
+    }                                                                                   /** flag C7  */
+    if (s_u8aUnhamtab[pu8Line[8]] & 0x02)
+    {
+        pstCurrentPoint->u32Flag |= 0x0010;
+    }                                                                                   /** flag C8  */
+    if (s_u8aUnhamtab[pu8Line[8]] & 0x04)
+    {
+        pstCurrentPoint->u32Flag |= 0x0020;
+    }                                                                                 /** flag C9  */
+    if (s_u8aUnhamtab[pu8Line[8]] & 0x08)
+    {
+        pstCurrentPoint->u32Flag |= 0x0040;
+    }                                                                                  /** flag C10  */
+    if (s_u8aUnhamtab[pu8Line[9]] & 0x01)
+    {
+        pstCurrentPoint->u32Flag |= 0x0080;
+    }                                                                                   /** flag C11  */
+    if (s_u8aUnhamtab[pu8Line[9]] & 0x02)
+    {
+        pstCurrentPoint->u32Flag |= 0x0400;
+    }                                                                                 /** flag C12  */
+    if (s_u8aUnhamtab[pu8Line[9]] & 0x04)
+    {
+        pstCurrentPoint->u32Flag |= 0x0200;
+    }                                                                                   /** flag C13  */
+    if (s_u8aUnhamtab[pu8Line[9]] & 0x08)
+    {
+        pstCurrentPoint->u32Flag |= 0x0100;
+    }                                                                                 /** flag C14  */
+
+    return;
+}
+
+static HI_S32 TTX_DecodeLine27(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
+{
+
+    HI_U32 i = 0;
+
+    /**page numbers , magazine numbers  */
+    HI_U32 u32page1 = 0;
+    HI_U32 u32page2 = 0;
+    HI_U32 u32page3 = 0;
+
+
+    /**subcode numbers  */
+    HI_U32 u32Subpg1 = 0;
+    HI_U32 u32Subpg2 = 0;
+    HI_U32 u32Subpg3 = 0;
+    HI_U32 u32Subpg4 = 0;  
+
+    HI_U8 u8PgNum = 0;
+    HI_U8 u8MagNum = 0;
+    HI_U16 u16SubPgNum = 0;
+
+
+    HI_U32 u32DesignCode = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
+    
+    HI_INFO_TTX("Decode X/27/%d  packet\n", u32DesignCode);
+    
+    if (0 == u32DesignCode)
+    {
+        for (i = 1; i <= 6; i++)
+        {
+            u32page1 = s_u8aUnhamtab[pu8Line[6 * i - 3]] & 0x0f;
+            u32page2 = s_u8aUnhamtab[pu8Line[6 * i - 2]] & 0x0f;
+            u32page3 = (((s_u8aUnhamtab[pu8Line[6 * i]] & 0x08) >> 3) |((s_u8aUnhamtab[pu8Line[6 * i + 2]] & 0x0c) >> 1)) & 0x7;
+    
+            u32Subpg1 = s_u8aUnhamtab[pu8Line[6 * i - 1]] & 0x0f;/** subcode s1 (4 bits)  */
+            u32Subpg2 = s_u8aUnhamtab[pu8Line[6 * i]] & 0x07;/** subcode s2 (3 bits)  */
+            u32Subpg3 = s_u8aUnhamtab[pu8Line[6 * i + 1]] & 0x0f;/** subcode s3 (4 bits)  */
+            u32Subpg4 = s_u8aUnhamtab[pu8Line[6 * i + 2]] & 0x03;/** subcode s4 (2 bits)  */
+    
+            if ((u32page1 == 0xF) && (u32page2 == 0xF))
+            {
+                continue;
+            }
+            else
+            {
+                u8MagNum = pstCurrentPoint->stCurPgAddr.u8MagazineNum ^((HI_U8)u32page3);
+                u8PgNum = (HI_U8) (u32page1 + u32page2 * 16);
+                
+                if ((u32Subpg1 == 0x0f) && (u32Subpg2 == 0x07) && (u32Subpg3 == 0x0f) && (u32Subpg4 == 0x03))
+                {
+                    u16SubPgNum = 0;
+                }
+                else
+                {
+                    u16SubPgNum = (HI_U16) ((u32Subpg1 > 9 ? 0 : u32Subpg1) + u32Subpg2 * 10);
+                }
+    
+                s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->astLink27[i - 1]), u8MagNum, u8PgNum, u16SubPgNum);
+            }
+        }
+    
+        pstCurrentPoint->bShowP24 = HI_FALSE;
+    
+        if (( s_u8aUnhamtab[pu8Line[39]] & 0x08) && (HI_TRUE == pstCurrentPoint->bHasP24))
+        {
+            pstCurrentPoint->bShowP24 = HI_TRUE;
+        }
+    }
+    else if (4 == u32DesignCode)
+    {
+        for (i = 0; i < 6; i++)
+        {
+            if (HI_SUCCESS == TTX_DecodePacket27CompLink(pu8Line + 3 + 6 * i, pstCurrentPoint))
+            {
+                pstCurrentPoint->bHasP27_4= HI_TRUE;
+            }
+            else
+            {
+                s32Ret = HI_FAILURE;
+            }
+        }
+    }
+    else if (5 == u32DesignCode)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            if (HI_SUCCESS == TTX_DecodePacket27CompLink(pu8Line + 3 + 6 * i, pstCurrentPoint))
+            {
+                pstCurrentPoint->bHasP27_5 = HI_TRUE;
+            }
+            else
+            {
+                s32Ret = HI_FAILURE;
+            }
+        }
+    }
+    else
+    {
+        HI_INFO_TTX("Packet X/27/* for furture use\n");
+        s32Ret = HI_SUCCESS;
+    }
+
+    return HI_SUCCESS;
+
+}
+
+
+
+static HI_S32 TTX_DecodeLine28(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
+{
+    HI_VOID * pstInfo = HI_NULL;
+    
+    HI_U32 u32DesignCode = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
+
+
+    u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
+    HI_INFO_TTX("Decode X/28/%d  packet\n", u32DesignCode);
+    if (0 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_0_M29_0_INFO_S*)(&pstCurrentPoint->stP28_0_Info);
+        if (HI_SUCCESS == TTX_DecodeP28_0_M29_0(pu8Line + 3, pstInfo))
+        {
+            pstCurrentPoint->bHasP28_0 = HI_TRUE;
+            return HI_SUCCESS;
+        }
+        
+        return HI_FAILURE;
+    }
+    else if (1 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_1_M29_1_INFO_S*)(&pstCurrentPoint->stP28_1_Info);
+        if (HI_SUCCESS == TTX_DecodeP28_1_M29_1(pu8Line + 3, pstInfo))
+        {
+            pstCurrentPoint->bHasP28_1 = HI_TRUE;
+            return HI_SUCCESS;
+        }
+        return HI_FAILURE;
+    }
+    else if(4 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_4_M29_4_INFO_S*)(&pstCurrentPoint->stP28_4_Info);
+        if (HI_SUCCESS == TTX_DecodeP28_4_M29_4(pu8Line + 3, pstInfo))
+        {
+            pstCurrentPoint->bHasP28_4 = HI_TRUE;
+            return HI_SUCCESS;
+        }
+        return HI_FAILURE;
+    }
+    else
+    {
+        HI_INFO_TTX("Packet X/28/* for furture use\n");
+        s32Ret = HI_SUCCESS;
+    }
+
+    
+    return s32Ret;
+}
+
+
+static HI_S32 TTX_DecodeLine29(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
+{
+    HI_VOID * pstInfo = HI_NULL;
+    
+    HI_U32 u32DesignCode = 0;
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_U8 u8MagNum = 0;
+
+    u8MagNum = pstCurrentPoint->stCurPgAddr.u8MagazineNum;
+    u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
+    
+    HI_INFO_TTX("Decode M/29/%d  packet\n", u32DesignCode);
+    
+    if (0 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_0_M29_0_INFO_S*)(g_stM29_0_Info + u8MagNum);
+        if (HI_SUCCESS == TTX_DecodeP28_0_M29_0(pu8Line + 3, pstInfo))
+        {
+            g_bHasM29_0[u8MagNum]= HI_TRUE;
+            return HI_SUCCESS;
+        }
+        return HI_FAILURE;
+    }
+    else if (1 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_1_M29_1_INFO_S*)(g_stM29_1_Info + u8MagNum);
+        if (HI_SUCCESS == TTX_DecodeP28_1_M29_1(pu8Line + 3, pstInfo))
+        {
+            g_bHasM29_1[u8MagNum] = HI_TRUE;
+            return HI_SUCCESS;
+        }
+        return HI_FAILURE;
+    }
+    else if(4 == u32DesignCode)
+    {
+        pstInfo = (TTX_P28_4_M29_4_INFO_S*)(g_stM29_4_Info + u8MagNum);
+        if (HI_SUCCESS == TTX_DecodeP28_4_M29_4(pu8Line + 3, pstInfo))
+        {
+            g_bHasM29_4[u8MagNum] = HI_TRUE;
+            return HI_SUCCESS;
+        }
+        return HI_FAILURE;
+    }
+    else
+    {
+        HI_INFO_TTX("Packet M/29/* for furture use\n");
+        s32Ret = HI_SUCCESS;
+    }
+
+    return s32Ret;
+}
+
+static HI_S32 TTX_DecodeLine30(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
+{
+    /**page numbers , magazine numbers  */
+    HI_U32 u32page1 = 0;
+    HI_U32 u32page2 = 0;
+    HI_U32 u32page3 = 0;
+
+
+    /**subcode numbers  */
+    HI_U32 u32Subpg1 = 0;
+    HI_U32 u32Subpg2 = 0;
+    HI_U32 u32Subpg3 = 0;
+    HI_U32 u32Subpg4 = 0;  
+
+
+    HI_U8 u8PgNum = 0;
+    HI_U8 u8MagNum = 0;
+    HI_U16 u16SubPgNum = 0;
+
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    HI_INFO_TTX("Decode 8/30 packet\n");
+    
+    u32page1 = s_u8aUnhamtab[pu8Line[3]] & 0x0f;
+    u32page2 = s_u8aUnhamtab[pu8Line[4]] & 0x0f;
+    u32page3 = ((s_u8aUnhamtab[pu8Line[6]] & 0x08) >> 3) + ((s_u8aUnhamtab[pu8Line[8]] & 0x0c) >> 1);
+    
+    u32Subpg1 = s_u8aUnhamtab[pu8Line[5]] & 0x0f;/** subcode s1 (4 bits) */
+    u32Subpg2 = s_u8aUnhamtab[pu8Line[6]] & 0x07;/** subcode s2 (3 bits)  */
+    u32Subpg3 = s_u8aUnhamtab[pu8Line[7]] & 0x0f; /** subcode s3 (4 bits)*/
+    u32Subpg4 = s_u8aUnhamtab[pu8Line[8]] & 0x03; /** subcode s4 (2 bits) */
+    
+    if ((u32Subpg1 + (u32Subpg2 << 4) + (u32Subpg3 << 7) + (u32Subpg4 << 11)) == 0x01fff)/** Index page */
+    {
+        s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->stIndexPgAddr), 1, 0, 0);
+    }
+    else
+    {
+        u8MagNum = u32page3 % 8;
+        u8PgNum = (HI_U8) (u32page1 + u32page2 * 16);
+        u16SubPgNum = (HI_U16) ((u32Subpg1 > 9 ? 0 : u32Subpg1) + u32Subpg2 * 10);
+        s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->stIndexPgAddr), u8MagNum, u8PgNum, u16SubPgNum);
+    }
+    
+    if (((s_u8aUnhamtab[pu8Line[2]] & 0x0e) >> 1) == 0x0)
+    {
+        HI_INFO_TTX("Format 1 8/30 packet\n");
+    }
+    
+    if (((s_u8aUnhamtab[pu8Line[2]] & 0x0e) >> 1) == 0x1)
+    {
+        HI_INFO_TTX("Format 2 8/30 packet\n");
+    }
+
+    return s32Ret;
+}
+
 
 /**  Decode  a  packet  and  store  it into  page context */
-static HI_S32 TTX_DecodeLine(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_U8 * pu8Line)
+static HI_S32 TTX_DecodeLine(TTX_PAGE_CONTEXT_S* pstCurrentPoint, HI_U8* pu8Line)
 {
     HI_S32 s32Ret = HI_SUCCESS;
     HI_BOOL bRet = HI_TRUE;
-    HI_U32 u32Row = 0, u32DesignCode = 0, i = 0;
-    HI_U32 u32Subpg1 = 0, u32Subpg2 = 0, u32Subpg3 = 0, u32Subpg4 = 0;  /**subcode numbers  */
-    HI_U32 u32page1 = 0, u32page2 = 0, u32page3 = 0;/**page numbers ,magazine numbers  */
+    HI_U32 u32Row = 0;
+    HI_U32 i = 0;
+    
+    /**page numbers , magazine numbers  */
+    HI_U32 u32page1 = 0;
+    HI_U32 u32page2 = 0;
+
+
+    /**subcode numbers  */
+    HI_U32 u32Subpg1 = 0;
+    HI_U32 u32Subpg2 = 0;
+    HI_U32 u32Subpg3 = 0;
+    HI_U32 u32Subpg4 = 0;  
+
     HI_S32 s32FoundPage = HI_FAILURE;
     HI_U8 u8MagNum = 0, u8PgNum = 0;
     HI_U16 u16SubPgNum = 0;
@@ -1283,51 +1876,9 @@ static HI_S32 TTX_DecodeLine(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_U8 * pu
             return HI_FAILURE;
         }
 
-        pstCurrentPoint->u32Flag = 0;
-        if (s_u8aUnhamtab[pu8Line[ 5]] & 0x08)
-        {
-            pstCurrentPoint->u32Flag |= 0x0001;
-        }                                                                                   /** flag C4  */
-        if (s_u8aUnhamtab[pu8Line[7]] & 0x04)
-        {
-            pstCurrentPoint->u32Flag |= 0x0002;
-        }                                                                                   /** flag C5  */
-        if (s_u8aUnhamtab[pu8Line[7]] & 0x08)
-        {
-            pstCurrentPoint->u32Flag |= 0x0004;
-        }                                                                                   /** flag C6  */
-        if (s_u8aUnhamtab[pu8Line[8]] & 0x01)
-        {
-            pstCurrentPoint->u32Flag |= 0x0008;
-        }                                                                                   /** flag C7  */
-        if (s_u8aUnhamtab[pu8Line[8]] & 0x02)
-        {
-            pstCurrentPoint->u32Flag |= 0x0010;
-        }                                                                                   /** flag C8  */
-        if (s_u8aUnhamtab[pu8Line[8]] & 0x04)
-        {
-            pstCurrentPoint->u32Flag |= 0x0020;
-        }                                                                                 /** flag C9  */
-        if (s_u8aUnhamtab[pu8Line[8]] & 0x08)
-        {
-            pstCurrentPoint->u32Flag |= 0x0040;
-        }                                                                                  /** flag C10  */
-        if (s_u8aUnhamtab[pu8Line[9]] & 0x01)
-        {
-            pstCurrentPoint->u32Flag |= 0x0080;
-        }                                                                                   /** flag C11  */
-        if (s_u8aUnhamtab[pu8Line[9]] & 0x02)
-        {
-            pstCurrentPoint->u32Flag |= 0x0400;
-        }                                                                                 /** flag C12  */
-        if (s_u8aUnhamtab[pu8Line[9]] & 0x04)
-        {
-            pstCurrentPoint->u32Flag |= 0x0200;
-        }                                                                                   /** flag C13  */
-        if (s_u8aUnhamtab[pu8Line[9]] & 0x08)
-        {
-            pstCurrentPoint->u32Flag |= 0x0100;
-        }                                                                                 /** flag C14  */
+
+        TTX_DecodeControlCode(pstCurrentPoint, pu8Line);
+
     }
 
     if ((u32Row < TTX_ROW_NUM))      /** Packet 0-24, directly  displayed packets */
@@ -1346,206 +1897,96 @@ static HI_S32 TTX_DecodeLine(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_U8 * pu
     }
     else if (u32Row == 27)           /** Packet 27 , link  page  */
     {
-        u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
-        HI_INFO_TTX("Decode X/27/%d  packet\n", u32DesignCode);
-        if(0 == u32DesignCode)
-        {
-            for (i = 1; i <= 6; i++)
-            {
-                u32page1 = s_u8aUnhamtab[pu8Line[6 * i - 3]] & 0x0f;
-                u32page2 = s_u8aUnhamtab[pu8Line[6 * i - 2]] & 0x0f;
-                u32page3 = (((s_u8aUnhamtab[pu8Line[6 * i]] & 0x08) >> 3) |((s_u8aUnhamtab[pu8Line[6 * i + 2]] & 0x0c) >> 1)) & 0x7;
-
-                u32Subpg1 = s_u8aUnhamtab[pu8Line[6 * i - 1]] & 0x0f;/** subcode s1 (4 bits)  */
-                u32Subpg2 = s_u8aUnhamtab[pu8Line[6 * i]] & 0x07;/** subcode s2 (3 bits)  */
-                u32Subpg3 = s_u8aUnhamtab[pu8Line[6 * i + 1]] & 0x0f;/** subcode s3 (4 bits)  */
-                u32Subpg4 = s_u8aUnhamtab[pu8Line[6 * i + 2]] & 0x03;/** subcode s4 (2 bits)  */
-
-                if ((u32page1 == 0xF) && (u32page2 == 0xF))
-                {
-                    continue;
-                }
-                else
-                {
-                    u8MagNum = pstCurrentPoint->stCurPgAddr.u8MagazineNum ^((HI_U8)u32page3);
-                    u8PgNum = (HI_U8) (u32page1 + u32page2 * 16);
-                    if ((u32Subpg1 == 0x0f) && (u32Subpg2 == 0x07) && (u32Subpg3 == 0x0f) && (u32Subpg4 == 0x03))
-                    {
-                        u16SubPgNum = 0;
-                    }
-                    else
-                    {
-                        u16SubPgNum = (HI_U16) ((u32Subpg1 > 9 ? 0 : u32Subpg1) + u32Subpg2 * 10);
-                    }
-
-                    s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->astLink27[i - 1]), u8MagNum, u8PgNum, u16SubPgNum);
-                }
-            }
-
-            pstCurrentPoint->bShowP24 = HI_FALSE;
-
-            if(( s_u8aUnhamtab[pu8Line[39]] & 0x08) && (HI_TRUE == pstCurrentPoint->bHasP24))
-            {
-                pstCurrentPoint->bShowP24 = HI_TRUE;
-            }
-        }
-        else if(4 == u32DesignCode)
-        {
-            for(i = 0; i < 6; i++)
-            {
-                if (HI_SUCCESS == TTX_DecodePacket27CompLink(pu8Line + 3 + 6 * i, pstCurrentPoint))
-                {
-                    pstCurrentPoint->bHasP27_4= HI_TRUE;
-                }
-                else
-                {
-                    s32Ret = HI_FAILURE;
-                }
-            }
-        }
-        else if(5 == u32DesignCode)
-        {
-            for(i = 0; i < 2; i++)
-            {
-                if (HI_SUCCESS == TTX_DecodePacket27CompLink(pu8Line + 3 + 6 * i, pstCurrentPoint))
-                {
-                    pstCurrentPoint->bHasP27_5 = HI_TRUE;
-                }
-                else
-                {
-                    s32Ret = HI_FAILURE;
-                }
-            }
-        }
-        else
-        {
-            HI_INFO_TTX("Packet X/27/* for furture use\n");
-            s32Ret  = HI_SUCCESS;
-        }
-
+        s32Ret = TTX_DecodeLine27(pstCurrentPoint, pu8Line);
     }
     else if (u32Row == 28)      /**Packet 28, enhanced  packet   */
-    {
-        HI_VOID * pstInfo = HI_NULL;
-        u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
-        HI_INFO_TTX("Decode X/28/%d  packet\n", u32DesignCode);
-        if (0 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_0_M29_0_INFO_S*)(&pstCurrentPoint->stP28_0_Info);
-            if (HI_SUCCESS == TTX_DecodeP28_0_M29_0(pu8Line + 3, pstInfo))
-            {
-                pstCurrentPoint->bHasP28_0 = HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else if (1 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_1_M29_1_INFO_S*)(&pstCurrentPoint->stP28_1_Info);
-            if (HI_SUCCESS == TTX_DecodeP28_1_M29_1(pu8Line + 3, pstInfo))
-            {
-                pstCurrentPoint->bHasP28_1 = HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else if(4 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_4_M29_4_INFO_S*)(&pstCurrentPoint->stP28_4_Info);
-            if (HI_SUCCESS == TTX_DecodeP28_4_M29_4(pu8Line + 3, pstInfo))
-            {
-                pstCurrentPoint->bHasP28_4 = HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else
-        {
-            HI_INFO_TTX("Packet X/28/* for furture use\n");
-            s32Ret = HI_SUCCESS;
-        }
+    {    
+        s32Ret = TTX_DecodeLine28(pstCurrentPoint, pu8Line); 
     }
     else if (u32Row == 29)     /**Packet 29, enhanced  packet   */
-    {
-        HI_VOID * pstInfo = HI_NULL;
-        u8MagNum = pstCurrentPoint->stCurPgAddr.u8MagazineNum;
-        u32DesignCode = s_u8aUnhamtab[pu8Line[2]] & 0x0f;
-
-        HI_INFO_TTX("Decode M/29/%d  packet\n", u32DesignCode);
-
-        if (0 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_0_M29_0_INFO_S*)(g_stM29_0_Info + u8MagNum);
-            if (HI_SUCCESS == TTX_DecodeP28_0_M29_0(pu8Line + 3, pstInfo))
-            {
-                g_bHasM29_0[u8MagNum]= HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else if (1 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_1_M29_1_INFO_S*)(g_stM29_1_Info + u8MagNum);
-            if (HI_SUCCESS == TTX_DecodeP28_1_M29_1(pu8Line + 3, pstInfo))
-            {
-                g_bHasM29_1[u8MagNum] = HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else if(4 == u32DesignCode)
-        {
-            pstInfo = (TTX_P28_4_M29_4_INFO_S*)(g_stM29_4_Info + u8MagNum);
-            if (HI_SUCCESS == TTX_DecodeP28_4_M29_4(pu8Line + 3, pstInfo))
-            {
-                g_bHasM29_4[u8MagNum] = HI_TRUE;
-                return HI_SUCCESS;
-            }
-            return HI_FAILURE;
-        }
-        else
-        {
-            HI_INFO_TTX("Packet M/29/* for furture use\n");
-            s32Ret = HI_SUCCESS;
-        }
+    {  
+        s32Ret = TTX_DecodeLine29(pstCurrentPoint, pu8Line); 
     }
     else if (u32Row == 30)               /**Packet 30 ,service packet  */
-    {
-        HI_INFO_TTX("Decode 8/30 packet\n");
-        u32page1 = s_u8aUnhamtab[pu8Line[3]] & 0x0f;
-        u32page2 = s_u8aUnhamtab[pu8Line[4]] & 0x0f;
-        u32page3 = ((s_u8aUnhamtab[pu8Line[6]] & 0x08) >> 3) + ((s_u8aUnhamtab[pu8Line[8]] & 0x0c) >> 1);
-
-        u32Subpg1 = s_u8aUnhamtab[pu8Line[5]] & 0x0f;/** subcode s1 (4 bits) */
-        u32Subpg2 = s_u8aUnhamtab[pu8Line[6]] & 0x07;/** subcode s2 (3 bits)  */
-        u32Subpg3 = s_u8aUnhamtab[pu8Line[7]] & 0x0f; /** subcode s3 (4 bits)*/
-        u32Subpg4 = s_u8aUnhamtab[pu8Line[8]] & 0x03; /** subcode s4 (2 bits) */
-
-        if ((u32Subpg1 + (u32Subpg2 << 4) + (u32Subpg3 << 7) + (u32Subpg4 << 11)) == 0x01fff)/** Index page */
-        {
-            s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->stIndexPgAddr), 1, 0, 0);
-        }
-        else
-        {
-            u8MagNum = u32page3 % 8;
-            u8PgNum = (HI_U8) (u32page1 + u32page2 * 16);
-            u16SubPgNum = (HI_U16) ((u32Subpg1 > 9 ? 0 : u32Subpg1) + u32Subpg2 * 10);
-            s32Ret |= TTX_Parse_SetPgAddr(&(pstCurrentPoint->stIndexPgAddr), u8MagNum, u8PgNum, u16SubPgNum);
-        }
-
-        if (((s_u8aUnhamtab[pu8Line[2]] & 0x0e) >> 1) == 0x0)
-        {
-            HI_INFO_TTX("Format 1 8/30 packet\n");
-        }
-
-        if (((s_u8aUnhamtab[pu8Line[2]] & 0x0e) >> 1) == 0x1)
-        {
-            HI_INFO_TTX("Format 2 8/30 packet\n");
-        }
+    {    
+        s32Ret = TTX_DecodeLine30(pstCurrentPoint, pu8Line); 
     }
 
     return s32Ret;
 }
+
+
+static HI_U8 TTX_UpdateSubpage_FindStartPosition(TTX_PAGE_CONTEXT_S*  pstCurrentPoint, HI_U8* au8szSubPage)
+{
+    HI_U8 u8StartPosition = 0;
+    HI_U16 u16SubPage = pstCurrentPoint->stCurPgAddr.u16PageSubCode;
+    
+    for (u8StartPosition = 0; u8StartPosition < TTX_MAX_SUBPAGENO; u8StartPosition += 8)
+    {
+        if (u16SubPage >= au8szSubPage[u8StartPosition % TTX_MAX_SUBPAGENO])
+        {
+            if ((u16SubPage < au8szSubPage[(u8StartPosition + 8) % TTX_MAX_SUBPAGENO])
+                || (au8szSubPage[(u8StartPosition + 8) % TTX_MAX_SUBPAGENO] == 0))
+            {
+                break;
+            }
+        }
+    }
+    
+    return u8StartPosition;
+}
+
+
+static HI_VOID TTX_Update_SubpageNavigation(TTX_PAGE_CONTEXT_S*  pstCurrentPoint, 
+                                                      HI_UNF_TTX_PAGEAREA_S* pstPageArea,
+                                                      HI_U8 u8NumOfSubPg,
+                                                      HI_U8 u8StartPosition)
+                                                      
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    HI_UNF_TTX_CHARATTR_S stCharAttr;
+    HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;   /**  Draw char  param*/
+    HI_U32 u32ColNum = pstCurrentPoint->u32ColumnNum;
+
+    stDrawCharParam.pstCharAttr = &stCharAttr;
+
+    
+    if (pstCurrentPoint->bNavigation)
+    {
+        s32Ret |= TTX_Show_SetArea(pstPageArea, TTX_ROW_NUM + TTX_NAVIGATION_BAR, u32ColNum - 1, 1, 1);
+    }
+    else
+    {
+        s32Ret |= TTX_Show_SetArea(pstPageArea, TTX_ROW_NUM, u32ColNum - 1, 1, 1);
+    }
+    
+    stDrawCharParam.u32Foreground = 0xff00ff00;
+    
+    if (pstCurrentPoint->bTtxMix)
+    {
+        stDrawCharParam.u32Background = 0x00000000;
+    }
+    else
+    {
+        stDrawCharParam.u32Background = 0xff000000;
+    }
+    
+    if (u8StartPosition + 8 < u8NumOfSubPg)    /**  ">>" */
+    {
+        TTX_Show_SetCharAttr(&stCharAttr, 0x3b, HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN, HI_UNF_TTX_CHARSET_G2, 0);
+        s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
+    }
+    
+    if ((u8NumOfSubPg > 8) && (u8StartPosition + 8 > u8NumOfSubPg))    /**  "<<" */
+    {
+        TTX_Show_SetCharAttr(&stCharAttr, 0x2b, HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN, HI_UNF_TTX_CHARSET_G2, 0);
+        s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
+    }
+
+    
+    return;    
+}
+
 
 /** Set the address  of   a  page   */
 HI_S32   TTX_Parse_SetPgAddr(HI_UNF_TTX_PAGE_ADDR_S  * pstPgAddr, HI_U8 u8MagNum, HI_U8 u8PgNum, HI_U16 u16SubPgNum)
@@ -1596,12 +2037,12 @@ HI_S32   TTX_Parse_GetPgAddr(const HI_UNF_TTX_PAGE_ADDR_S pstPgAddr, HI_U8 * pu8
 
 /**    Push  the  data  of  a  page  into the queue */
 
-HI_S32 TTX_Parse_GetPgData(HI_HANDLE hTtx, TTX_SEGMENT_S_PTR pstSegment)
+HI_S32 TTX_Parse_GetPgData(const HI_VOID* hDataParse, TTX_SEGMENT_S_PTR pstSegment)
 {
-    TTX_PAGE_CONTEXT_S *   pstCurrentPoint = HI_NULL;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = HI_NULL;
     HI_S32 s32Ret = HI_FAILURE;
 
-    pstCurrentPoint = (TTX_PAGE_CONTEXT_S *)(HI_VOID *)hTtx;
+    pstCurrentPoint = (TTX_PAGE_CONTEXT_S *)hDataParse;
 
     if ((HI_NULL == pstCurrentPoint) || (HI_NULL == pstSegment))    /** Invalid param, just return */
     {
@@ -1609,7 +2050,7 @@ HI_S32 TTX_Parse_GetPgData(HI_HANDLE hTtx, TTX_SEGMENT_S_PTR pstSegment)
         return HI_FAILURE;
     }
 
-    s32Ret = TTX_PesQueue_En(pstCurrentPoint->pPAGEQueue, pstSegment);
+    s32Ret = TTX_PesQueue_En(pstCurrentPoint->pstPAGEQueue, pstSegment);
 
     if (HI_FAILURE == s32Ret)
     {
@@ -1618,17 +2059,17 @@ HI_S32 TTX_Parse_GetPgData(HI_HANDLE hTtx, TTX_SEGMENT_S_PTR pstSegment)
     return s32Ret;
 }
 
-HI_VOID    TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
+HI_VOID TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
 {
     HI_U8 i = 0;
     HI_S32 s32Ret = HI_SUCCESS;
     TTX_PAGE_CONTEXT_S *  pstCurrentPoint = HI_NULL;
+    HI_U8 u8aTimeCode[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     HI_U32 u32aTimeNum[8] = {0, 0, 0, 0, 0, 0, 0, 0};           /**Time,hh:mm:ss */
     HI_UNF_TTX_CHARATTR_S stCharAttr;
     HI_UNF_TTX_PAGEAREA_S stPageArea;
     HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;   /**  Draw char  param*/
     HI_UNF_TTX_REFRESHLAYER_S stRefrshLayerParam;
-    HI_U8 u8aTimeCode[8] = {0};
     HI_U8 u8Ch = 0xFF;
 
     pstCurrentPoint = pstContextHead;
@@ -1636,6 +2077,12 @@ HI_VOID    TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
     {
         return;
     }
+
+    memset(&stCharAttr, 0x0, sizeof(HI_UNF_TTX_CHARATTR_S));
+    memset(&stPageArea, 0x0, sizeof(HI_UNF_TTX_PAGEAREA_S));
+    memset(&stDrawCharParam, 0x0, sizeof(HI_UNF_TTX_DRAWCAHR_S));
+    memset(&stRefrshLayerParam, 0x0, sizeof(HI_UNF_TTX_REFRESHLAYER_S));
+
 
     if (HI_SUCCESS != TTX_Data_Get_TimeCode(u8aTimeCode))
     {
@@ -1659,6 +2106,13 @@ HI_VOID    TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
 
     TTX_PARSE_LOCK();
 
+    if (pstContextHead->u32ZoomFlag == 2)
+    {
+        TTX_PARSE_UNLOCK();
+        return;
+    }
+
+
     for (i = 0; i < 8; i++)                /**  Draw char */
     {
         TTX_Show_SetCharAttr(&stCharAttr, u32aTimeNum[i], HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
@@ -1676,12 +2130,14 @@ HI_VOID    TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
             stDrawCharParam.u32Background = 0xff000000;
         }
 
-        s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID*)&stDrawCharParam);
+        s32Ret |= TTT_Show_DrawChar(pstCurrentPoint, &stDrawCharParam);
     }
+
 
     s32Ret |= TTX_Show_SetArea(&stPageArea, 0, 32, 1, 8);
     stRefrshLayerParam.pstPageArea = &stPageArea;
-    s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_REFRESH, (HI_VOID*)&stRefrshLayerParam);
+
+    s32Ret |= TTT_Show_Refresh(pstCurrentPoint, &stRefrshLayerParam);
 
     TTX_PARSE_UNLOCK();
 
@@ -1691,22 +2147,28 @@ HI_VOID    TTX_Parse_UpdateTime(TTX_PAGE_CONTEXT_S * pstContextHead)
     }
 }
 
-HI_VOID     TTX_Parse_Flash(TTX_PAGE_CONTEXT_S * pstContextHead)
+HI_VOID TTX_Parse_Flash(TTX_PAGE_CONTEXT_S * pstContextHead)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_U8 u8RowCount = 0, u8ColCount = 0;
+    HI_U8 u8RowCount = 0;
+    HI_U8 u8ColCount = 0;
     static HI_U32 u32FlashSwitch = 0;
-    TTX_PAGE_CONTEXT_S *  pstCurrentPoint = HI_NULL;
+    TTX_FLAAREA_S  *pstFlashArea = HI_NULL;            /** Flash area */
+    TTX_PAGE_CONTEXT_S*  pstCurrentPoint = HI_NULL;
     HI_UNF_TTX_PAGEAREA_S stPageArea;
     HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;   /**  Draw char  param*/
     HI_UNF_TTX_REFRESHLAYER_S stRefrshLayerParam;
-    TTX_FLAAREA_S  *pstFlashArea;            /** Flash area */
 
     pstCurrentPoint = pstContextHead;
     if (HI_NULL == pstCurrentPoint)
     {
         return;
     }
+
+    memset(&stPageArea, 0x0, sizeof(HI_UNF_TTX_PAGEAREA_S));
+    memset(&stDrawCharParam, 0x0, sizeof(HI_UNF_TTX_DRAWCAHR_S));
+    memset(&stRefrshLayerParam, 0x0, sizeof(HI_UNF_TTX_REFRESHLAYER_S));
+
 
     u32FlashSwitch++;
 
@@ -1767,16 +2229,17 @@ HI_VOID     TTX_Parse_Flash(TTX_PAGE_CONTEXT_S * pstContextHead)
     }
 }
 
-HI_VOID      TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead)
+HI_VOID TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead)
 {
     HI_U32 j = 0;
     HI_S32 s32Ret = HI_SUCCESS;
     TTX_PAGE_CONTEXT_S *  pstCurrentPoint = HI_NULL;
     HI_UNF_TTX_PAGEAREA_S stPageArea;
     HI_UNF_TTX_CHARATTR_S stCharAttr;
-    HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;   /**  Draw char  param*/
+    HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;  /**  Draw char  param*/
     HI_UNF_TTX_FILLRECT_S stFillRectParam;
     HI_UNF_TTX_REFRESHLAYER_S stRefrshLayerParam;
+    TTX_INPUT_NUM_S * pstInputNum = HI_NULL;
 
     pstCurrentPoint = pstContextHead;
     if (HI_NULL == pstCurrentPoint)
@@ -1784,12 +2247,58 @@ HI_VOID      TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead)
         return;
     }
 
+    memset(&stCharAttr, 0x0, sizeof(HI_UNF_TTX_CHARATTR_S));
+    memset(&stPageArea, 0x0, sizeof(HI_UNF_TTX_PAGEAREA_S));
+    memset(&stDrawCharParam, 0x0, sizeof(HI_UNF_TTX_DRAWCAHR_S));
+    memset(&stFillRectParam, 0x0, sizeof(HI_UNF_TTX_FILLRECT_S));
+    memset(&stRefrshLayerParam, 0x0, sizeof(HI_UNF_TTX_REFRESHLAYER_S));
+
+
     TTX_PARSE_LOCK();
-    if (pstCurrentPoint->u8szInputNum[0] != '\0')
+
+    pstInputNum = &pstCurrentPoint->stInputNum;
+    if (pstCurrentPoint->bHold)
+    {
+        s32Ret |= TTX_Show_SetArea(&stPageArea, 0, 1, 1, 6);
+        stFillRectParam.pstPageArea = &stPageArea;
+        if (pstCurrentPoint->bTtxMix)
+        {
+            stFillRectParam.u32Color = 0x00000000;
+        }
+        else
+        {
+            stFillRectParam.u32Color = 0xff000000;
+        }
+
+        s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_FILLRECT, (HI_VOID *) &stFillRectParam);
+
+        TTX_Show_SetCharAttr(&stCharAttr, 0x4E, HI_FALSE, HI_UNF_TTX_G0SET_GREEK, HI_UNF_TTX_G2SET_GREEK,
+                                 HI_UNF_TTX_CHARSET_G0, 0);
+        stDrawCharParam.pstCharAttr = &stCharAttr;
+        s32Ret |= TTX_Show_SetArea(&stPageArea, 0, 3, 1, 1);
+        stDrawCharParam.pstPageArea   = &stPageArea;
+        stDrawCharParam.u32Foreground = 0xffffffff;
+        if (pstCurrentPoint->bTtxMix)
+        {
+            stDrawCharParam.u32Background = 0x00000000;
+        }
+        else
+        {
+            stDrawCharParam.u32Background = 0xff000000;
+        }
+
+        s32Ret |= TTT_Show_DrawChar(pstCurrentPoint, &stDrawCharParam);
+
+        s32Ret |= TTX_Show_SetArea(&stPageArea, 0, 1, 1, 6);
+        stRefrshLayerParam.pstPageArea = &stPageArea;
+        s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_REFRESH, (HI_VOID*)&stRefrshLayerParam);
+
+    }
+    else if (TTX_InputNumIsOnGoing(&pstCurrentPoint->stInputNum))
     {
         for (j = 0; j < 3; j++)
         {
-            TTX_Show_SetCharAttr(&stCharAttr, pstCurrentPoint->u8szInputNum[j], HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
+            TTX_Show_SetCharAttr(&stCharAttr, pstInputNum->au8Buf[j], HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
                                  HI_UNF_TTX_CHARSET_G0, 0);
             stDrawCharParam.pstCharAttr = &stCharAttr;
             s32Ret |= TTX_Show_SetArea(&stPageArea, 0, j + 1, 1, 1);
@@ -1804,7 +2313,7 @@ HI_VOID      TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead)
                 stDrawCharParam.u32Background = 0xff000000;
             }
 
-            s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
+            s32Ret |= TTT_Show_DrawChar(pstCurrentPoint, &stDrawCharParam);
         }
 
         s32Ret |= TTX_Show_SetArea(&stPageArea, 0, 4, 1, 3);
@@ -1825,9 +2334,9 @@ HI_VOID      TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead)
         s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_REFRESH, (HI_VOID*)&stRefrshLayerParam);
     }
 
-    if (pstCurrentPoint->u8szInputNum[2] != 0x2d)  /** Input three number */
+    if (TTX_IsLastFigureInputted(pstInputNum, TTX_DIGIT_NUM_OF_PAGE_NUM))  /** Input three number */
     {
-        memset(pstCurrentPoint->u8szInputNum, '\0', 4);
+        TTX_ResetInputNum(pstInputNum);
     }
 
     TTX_PARSE_UNLOCK();
@@ -1849,12 +2358,22 @@ HI_U32 TTX_GetRandValue(HI_VOID)
         HI_INFO_TTX("open /dev/urandom failed\n");
         return u32RandValue;
     }
-    (HI_VOID)read(s32Fd, &u32RandValue, sizeof(u32RandValue));
-    (HI_VOID)close(s32Fd);
+    
+    if (-1 == read(s32Fd, &u32RandValue, sizeof(u32RandValue)))
+    {
+        u32RandValue = 0;
+        HI_INFO_TTX("read /dev/urandom failed\n");
+    }
+    
+    if (-1 == close(s32Fd))
+    {
+        HI_INFO_TTX("close /dev/urandom failed\n");
+    }
+    
     return u32RandValue;
 }
 
-HI_VOID      TTX_Parse_InvalidRequest(TTX_PAGE_CONTEXT_S * pstContextHead)
+HI_VOID TTX_Parse_InvalidRequest(TTX_PAGE_CONTEXT_S * pstContextHead)
 {
     HI_U32 j = 0;
     HI_S32 s32Ret = HI_SUCCESS;
@@ -1866,10 +2385,18 @@ HI_VOID      TTX_Parse_InvalidRequest(TTX_PAGE_CONTEXT_S * pstContextHead)
     HI_UNF_TTX_REFRESHLAYER_S stRefrshLayerParam;
 
     pstCurrentPoint = pstContextHead;
+    
     if (HI_NULL == pstCurrentPoint)
     {
         return;
     }
+
+    memset(&stCharAttr, 0x0, sizeof(HI_UNF_TTX_CHARATTR_S));
+    memset(&stPageArea, 0x0, sizeof(HI_UNF_TTX_PAGEAREA_S));
+    memset(&stDrawCharParam, 0x0, sizeof(HI_UNF_TTX_DRAWCAHR_S));
+    memset(&stRefrshLayerParam, 0x0, sizeof(HI_UNF_TTX_REFRESHLAYER_S));
+
+
 
     TTX_PARSE_LOCK();
     if (pstCurrentPoint->bInvalidReq)
@@ -1911,21 +2438,23 @@ HI_VOID      TTX_Parse_InvalidRequest(TTX_PAGE_CONTEXT_S * pstContextHead)
     }
 }
 
-HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
+HI_VOID TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_U32 u32ColNum;
-    TTX_PAGE_CONTEXT_S *  pstCurrentPoint = HI_NULL;
-    HI_U8 i = 0, j = 0, u8StartPosition = 0;
-    HI_U8 u8szAutoChar[5] = {0x41, 0x55, 0x54, 0x4f, 0};   /** 'A'  'U'  'T'  'O'  */
-    HI_U8 u8szSubPage[TTX_MAX_SUBPAGENO] = {0};
-    HI_U8 u8NumOfSubPg = TTX_MAX_SUBPAGENO;       /** Assume  the most NO  of subpage is 32*/
+    HI_U8 i = 0;
+    HI_U8 j = 0;
+    HI_U32 u32ColNum = 0;
     HI_U16 u16SubPage = 0;
+    HI_U8 u8StartPosition = 0;
+    HI_U8 au8AutoChar[5] = {0x41, 0x55, 0x54, 0x4f, 0};   /** 'A'  'U'  'T'  'O'  */
+    HI_U8 au8SubPage[TTX_MAX_SUBPAGENO] = {0};
+    HI_U8 u8NumOfSubPg = TTX_MAX_SUBPAGENO;       /** Assume  the most NO  of subpage is 32*/
     HI_UNF_TTX_CHARATTR_S stCharAttr;
     HI_UNF_TTX_PAGEAREA_S stPageArea;
     HI_UNF_TTX_DRAWCAHR_S stDrawCharParam;   /**  Draw char  param*/
     HI_UNF_TTX_FILLRECT_S stFillRectParam;
     HI_UNF_TTX_REFRESHLAYER_S stRefrshLayerParam;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = HI_NULL;
 
     pstCurrentPoint = pstContextHead;
     if (HI_NULL == pstCurrentPoint)
@@ -1933,15 +2462,27 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
         return;
     }
 
+    memset(&stCharAttr, 0x0, sizeof(HI_UNF_TTX_CHARATTR_S));
+    memset(&stPageArea, 0x0, sizeof(HI_UNF_TTX_PAGEAREA_S));
+    memset(&stDrawCharParam, 0x0, sizeof(HI_UNF_TTX_DRAWCAHR_S));
+    memset(&stFillRectParam, 0x0, sizeof(HI_UNF_TTX_FILLRECT_S));
+    memset(&stRefrshLayerParam, 0x0, sizeof(HI_UNF_TTX_REFRESHLAYER_S));
+
+
+    memset(au8SubPage, '\0', TTX_MAX_SUBPAGENO);
+
+
     if (HI_TRUE == pstCurrentPoint->bTtxHiden)
     {
         return;
     }
-    u32ColNum = pstCurrentPoint->u32ColumnNum;
+
+    
     u8NumOfSubPg = TTX_MAX_SUBPAGENO;
-    memset(u8szSubPage, '\0', TTX_MAX_SUBPAGENO);
-    s32Ret |= TTX_Data_GetSubpageNum(pstCurrentPoint->stCurPgAddr.u8MagazineNum, pstCurrentPoint->stCurPgAddr.u8PageNum,
-                                     u8szSubPage, &u8NumOfSubPg);
+    u32ColNum = pstCurrentPoint->u32ColumnNum;        
+    
+    s32Ret |= TTX_Data_GetSubpageNum(pstCurrentPoint->stCurPgAddr.u8MagazineNum, 
+                                     pstCurrentPoint->stCurPgAddr.u8PageNum, au8SubPage, &u8NumOfSubPg);
 
     TTX_PARSE_LOCK();
     if (u8NumOfSubPg != 0)    /** Subpage be present*/
@@ -1969,9 +2510,11 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
 
         for (j = 0; j < 4; j++)
         {
-            TTX_Show_SetCharAttr(&stCharAttr, u8szAutoChar[j], HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
+            TTX_Show_SetCharAttr(&stCharAttr, au8AutoChar[j], HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
                                  HI_UNF_TTX_CHARSET_G0, 0);
+                                 
             stDrawCharParam.pstCharAttr = &stCharAttr;
+            
             if (pstCurrentPoint->bNavigation)
             {
                 s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM + TTX_NAVIGATION_BAR, j + 1, 1, 1);
@@ -1982,6 +2525,7 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
             }
 
             stDrawCharParam.pstPageArea = &stPageArea;
+            
             if (pstCurrentPoint->bAutoPlay)
             {
                 stDrawCharParam.u32Foreground = 0xff00ff00;
@@ -2004,27 +2548,19 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
         }
 
         /**  Find start position */
-        u16SubPage = pstCurrentPoint->stCurPgAddr.u16PageSubCode;
-        for (u8StartPosition = 0; u8StartPosition < TTX_MAX_SUBPAGENO; u8StartPosition += 8)
-        {
-            if (u16SubPage >= u8szSubPage[u8StartPosition % TTX_MAX_SUBPAGENO])
-            {
-                if ((u16SubPage < u8szSubPage[(u8StartPosition + 8) % TTX_MAX_SUBPAGENO])
-                    || (u8szSubPage[(u8StartPosition + 8) % TTX_MAX_SUBPAGENO] == 0))
-                {
-                    break;
-                }
-            }
-        }
+        u8StartPosition = TTX_UpdateSubpage_FindStartPosition(pstCurrentPoint, au8SubPage);
 
+        
         for (i = u8StartPosition, j = 0; i < u8StartPosition + 8; i++, j++)
         {
-            if (u8szSubPage[i % TTX_MAX_SUBPAGENO] != 0)    /** Draw subpage */
+            if (au8SubPage[i % TTX_MAX_SUBPAGENO] != 0)    /** Draw subpage */
             {
-                TTX_Show_SetCharAttr(&stCharAttr, u8szSubPage[i % TTX_MAX_SUBPAGENO] / 10 + 0x30, HI_FALSE,
+                TTX_Show_SetCharAttr(&stCharAttr, au8SubPage[i % TTX_MAX_SUBPAGENO] / 10 + 0x30, HI_FALSE,
                                      HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
                                      HI_UNF_TTX_CHARSET_G0, 0);
+                                     
                 stDrawCharParam.pstCharAttr = &stCharAttr;
+                
                 if (pstCurrentPoint->bNavigation)
                 {
                     s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM + TTX_NAVIGATION_BAR, 8 + 4 * j, 1, 1);
@@ -2035,7 +2571,8 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
                 }
 
                 stDrawCharParam.pstPageArea = &stPageArea;
-                if (u8szSubPage[i % TTX_MAX_SUBPAGENO] == u16SubPage)
+                
+                if (au8SubPage[i % TTX_MAX_SUBPAGENO] == u16SubPage)
                 {
                     stDrawCharParam.u32Foreground = 0xff00ff00;
                 }
@@ -2055,45 +2592,17 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
 
                 s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
                 stPageArea.u32Column = 8 + 4 * j + 1;
-                TTX_Show_SetCharAttr(&stCharAttr, u8szSubPage[i % TTX_MAX_SUBPAGENO] % 10 + 0x30, HI_FALSE,
+                TTX_Show_SetCharAttr(&stCharAttr, au8SubPage[i % TTX_MAX_SUBPAGENO] % 10 + 0x30, HI_FALSE,
                                      HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN,
                                      HI_UNF_TTX_CHARSET_G0, 0);
                 s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
             }
         }
 
-        stDrawCharParam.pstCharAttr = &stCharAttr;
-        if (pstCurrentPoint->bNavigation)
-        {
-            s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM + TTX_NAVIGATION_BAR, u32ColNum - 1, 1, 1);
-        }
-        else
-        {
-            s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM, u32ColNum - 1, 1, 1);
-        }
 
-        stDrawCharParam.u32Foreground = 0xff00ff00;
-        if (pstCurrentPoint->bTtxMix)
-        {
-            stDrawCharParam.u32Background = 0x00000000;
-        }
-        else
-        {
-            stDrawCharParam.u32Background = 0xff000000;
-        }
+        TTX_Update_SubpageNavigation(pstCurrentPoint, &stPageArea, u8NumOfSubPg, u8StartPosition);
 
-        if (u8StartPosition + 8 < u8NumOfSubPg)    /**  ">>" */
-        {
-            TTX_Show_SetCharAttr(&stCharAttr, 0x3b, HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN, HI_UNF_TTX_CHARSET_G2, 0);
-            s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
-        }
-
-        if ((u8NumOfSubPg > 8) && (u8StartPosition + 8 > u8NumOfSubPg))    /**  "<<" */
-        {
-            TTX_Show_SetCharAttr(&stCharAttr, 0x2b, HI_FALSE, HI_UNF_TTX_G0SET_LATIN, HI_UNF_TTX_G2SET_LATIN, HI_UNF_TTX_CHARSET_G2, 0);
-            s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)&stDrawCharParam);
-        }
-
+        
         if (pstCurrentPoint->bNavigation)
         {
             s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM + TTX_NAVIGATION_BAR, 0, TTX_SUBPAGE_BAR, u32ColNum);
@@ -2102,7 +2611,7 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
         {
             s32Ret |= TTX_Show_SetArea(&stPageArea, TTX_ROW_NUM, 0, TTX_SUBPAGE_BAR, u32ColNum);
         }
-
+        
         stRefrshLayerParam.pstPageArea = &stPageArea;
         s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_REFRESH, (HI_VOID*)&stRefrshLayerParam);
     }
@@ -2119,12 +2628,20 @@ HI_VOID     TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead)
 
 static HI_S32 TTX_OSD_Output(TTX_PAGE_CONTEXT_S *pstCurrentPoint, TTX_PAGE_S_PTR pstPage)
 {
+    HI_U32 i = 0;
+    HI_U32 j = 0;
+    HI_U32 u32Bit = 0;
     HI_S32 s32Ret = HI_SUCCESS;
-    TTX_MSG_ACTION_E enMsgAction;
-    HI_HANDLE hDispalyHandle;
-    HI_U8 * pu8Line   = HI_NULL;
-    HI_U32 u32LineLen = TTX_LINE_MEM_SIZE, u32PacketNUm = 0, u32Bit = 0, i, j;
-    HI_S64 s64CurrentPts = 0, s64MaxPts = 0, s64MinPts = 0;
+    HI_U8* pu8Line = HI_NULL;
+    HI_U32 u32PacketNUm = 0;
+    HI_U32 u32LineLen = TTX_LINE_MEM_SIZE;
+    
+    HI_S64 s64CurrentPts = 0;
+    HI_S64 s64MaxPts = 0;
+    HI_S64 s64MinPts = 0;
+    
+    HI_HANDLE hDispalyHandle = HI_INVALID_HANDLE;
+    TTX_MSG_ACTION_E enMsgAction = TTX_MSG_ACTION_BUTT;
 
     if ((HI_NULL == pstCurrentPoint) || (HI_NULL == pstPage))
     {
@@ -2135,7 +2652,7 @@ static HI_S32 TTX_OSD_Output(TTX_PAGE_CONTEXT_S *pstCurrentPoint, TTX_PAGE_S_PTR
     {
         while (pstCurrentPoint->bShowTaskStart)
         {
-            if (-2 == TTX_PesQueue_IsMemTensity(pstCurrentPoint->pPAGEQueue))
+            if (-2 == TTX_PesQueue_IsMemTensity(pstCurrentPoint->pstPAGEQueue))
             {
                 break;
             }
@@ -2251,22 +2768,31 @@ static HI_S32 TTX_OSD_Output(TTX_PAGE_CONTEXT_S *pstCurrentPoint, TTX_PAGE_S_PTR
 
 HI_VOID  TTX_Parse_UpdateTask(HI_VOID* pvData)
 {
-    TTX_PAGE_CONTEXT_S *  pstCurrentPoint = HI_NULL;
-    TTX_SEGMENT_S stTtxSegment = {0};
-    TTX_PAGE_S *  pstProPage = NULL;
-    HI_U8 u8szSubPage[TTX_MAX_SUBPAGENO] = {0}, u8NumOfSubPg = TTX_MAX_SUBPAGENO;
-    HI_U32 u32TimeCount = 0;
     HI_S32 s32Ret = HI_SUCCESS;
-    TTX_MSG_ACTION_E enMsgAction;
-    HI_HANDLE hDispalyHandle;
-    HI_BOOL bFirst = HI_TRUE;
+    
+    HI_U32 u32TimeCount = 0;
+    
     HI_U32 u32TTXSearchTime = 0;
+    HI_BOOL bFirst = HI_TRUE;
+    HI_U8 u8NumOfSubPg = TTX_MAX_SUBPAGENO;
+    HI_HANDLE hDispalyHandle = HI_INVALID_HANDLE;    
+    TTX_MSG_ACTION_E enMsgAction = TTX_MSG_ACTION_BUTT;
+    
+    TTX_PAGE_S* pstProPage = NULL;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = HI_NULL;
+    
+    TTX_SEGMENT_S stTtxSegment;
+    HI_U8 au8szSubPage[TTX_MAX_SUBPAGENO];
 
     pstCurrentPoint = (TTX_PAGE_CONTEXT_S  *)pvData;
     if (HI_NULL == pstCurrentPoint)         /** Invalid param , just return  */
     {
         return;
     }
+
+    memset(&stTtxSegment, 0x0, sizeof(TTX_SEGMENT_S));
+    memset(au8szSubPage, 0x0, sizeof(au8szSubPage));
+
 
     while (pstCurrentPoint->bStart)
     {
@@ -2277,7 +2803,7 @@ HI_VOID  TTX_Parse_UpdateTask(HI_VOID* pvData)
                 usleep(30 * 1000);
                 continue;
             }
-            if (HI_SUCCESS == TTX_PesQueue_De(pstCurrentPoint->pPAGEQueue, &stTtxSegment))
+            if (HI_SUCCESS == TTX_PesQueue_De(pstCurrentPoint->pstPAGEQueue, &stTtxSegment))
             {
                 pstProPage = (TTX_PAGE_S * )(HI_VOID *)stTtxSegment.pu8SegmentData;
                 s32Ret |= TTX_OSD_Output(pstCurrentPoint, pstProPage);
@@ -2314,7 +2840,7 @@ HI_VOID  TTX_Parse_UpdateTask(HI_VOID* pvData)
             /**  Update user's input, every 200ms */
             if (0 == (u32TimeCount % 4))
             {
-                if (pstCurrentPoint->u8szInputNum[0] != '\0')
+                if (TTX_InputNumIsOnGoing(&pstCurrentPoint->stInputNum) || pstCurrentPoint->bHold)
                 {
                     enMsgAction = TTX_MSG_ACTION_INPUTNUMBER;
                     hDispalyHandle = 0x7f7f0000 | enMsgAction;
@@ -2329,7 +2855,7 @@ HI_VOID  TTX_Parse_UpdateTask(HI_VOID* pvData)
                 u8NumOfSubPg = TTX_MAX_SUBPAGENO;
                 s32Ret |= TTX_Data_GetSubpageNum(pstCurrentPoint->stCurPgAddr.u8MagazineNum,
                                                  pstCurrentPoint->stCurPgAddr.u8PageNum,
-                                                 u8szSubPage, &u8NumOfSubPg);
+                                                 au8szSubPage, &u8NumOfSubPg);
                 if (u8NumOfSubPg != 0)  /** Subpage be present*/
                 {
                     enMsgAction = TTX_MSG_ACTION_UPDATESUBPAGE;
@@ -2374,3 +2900,60 @@ HI_VOID  TTX_Parse_UpdateTask(HI_VOID* pvData)
         }
     }
 }
+
+HI_S32 TTX_Show_Zoom(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_PAGEAREA_S * pstPageArea)
+{
+    TTX_PAGE_CONTEXT_S * pstCurrentPoint = pstContextHead;
+
+    if (pstCurrentPoint->u32ZoomFlag != 0)
+    {
+        pstPageArea->u32RowCount *= 2;
+    }
+
+    if (pstCurrentPoint->u32ZoomFlag == 1)
+    {
+        pstPageArea->u32Row *= 2;
+    }
+    else if (pstCurrentPoint->u32ZoomFlag == 2)
+    {
+        pstPageArea->u32Row = (pstPageArea->u32Row - (TTX_ROW_NUM >> 1)) * 2;
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_S32 TTT_Show_DrawChar(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_DRAWCAHR_S * pstDrawCharParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = pstContextHead;
+
+    s32Ret = TTX_Show_Zoom(pstContextHead, pstDrawCharParam->pstPageArea);
+
+    s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_DRAWCHAR, (HI_VOID *)pstDrawCharParam);
+
+    return s32Ret;
+}
+
+HI_S32 TTT_Show_FillRect(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_FILLRECT_S * pstFillRectParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = pstContextHead;
+
+    s32Ret = TTX_Show_Zoom(pstContextHead, pstFillRectParam->pstPageArea);
+    s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_FILLRECT, (HI_VOID *)pstFillRectParam);
+
+    return s32Ret;
+}
+
+HI_S32 TTT_Show_Refresh(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_REFRESHLAYER_S* pstRefrshLayerParam)
+{
+    HI_S32 s32Ret = HI_SUCCESS;
+    TTX_PAGE_CONTEXT_S* pstCurrentPoint = pstContextHead;
+
+    s32Ret = TTX_Show_Zoom(pstContextHead, pstRefrshLayerParam->pstPageArea);
+    s32Ret |= TTX_Show_CallBack(pstCurrentPoint, HI_UNF_TTX_CB_APP_REFRESH, (HI_VOID *)pstRefrshLayerParam);
+
+    return s32Ret;
+}
+
+

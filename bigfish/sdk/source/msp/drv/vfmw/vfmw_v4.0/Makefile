@@ -23,8 +23,8 @@ EXTRA_CFLAGS += $(CFG_HI_KMOD_CFLAGS)
 EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)    \
                 -I$(COMMON_DRV_INCLUDE)
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-EXTRA_CFLAGS += -I$(TEE_INCLUDE)
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+EXTRA_CFLAGS += -I$(TEE_DRV_INCLUDE)
 endif
 ################################################################################################
 #    PRODUCT

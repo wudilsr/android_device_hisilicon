@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.real9.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/real9.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/real9.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/real9.o -O2 -Wall
@@ -120,24 +120,24 @@ Real9_CB_SetDimensions:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r3, [r0, #16]	@ D.38764, <variable>.pic_width_in_pixel
-	cmp	r3, #128	@ D.38764,
+	ldr	r3, [r0, #16]	@ D.38778, <variable>.pic_width_in_pixel
+	cmp	r3, #128	@ D.38778,
 	beq	.L21	@,
-	cmp	r3, #176	@ D.38764,
+	cmp	r3, #176	@ D.38778,
 	beq	.L22	@,
-	cmp	r3, #352	@ D.38764,
+	cmp	r3, #352	@ D.38778,
 	bne	.L7	@,
 	ldr	r2, [r0, #12]	@ <variable>.pic_height_in_pixel, <variable>.pic_height_in_pixel
 	cmp	r2, #288	@ <variable>.pic_height_in_pixel,
 	beq	.L23	@,
 .L8:
-	add	ip, r3, #15	@ tmp154, D.38764,
+	add	ip, r3, #15	@ tmp154, D.38778,
 	add	r1, r2, #15	@ tmp155, <variable>.pic_height_in_pixel,
-	mov	r3, ip, lsr #4	@ D.38785, tmp154,
-	mov	r2, r1, lsr #4	@ D.38787, tmp155,
-	str	r3, [r0, #76]	@ D.38785, <variable>.Rv9ParsePicParam.m_nMBs
-	mul	ip, r3, r2	@ tmp157, D.38785, D.38787
-	str	r2, [r0, #72]	@ D.38787, <variable>.Rv9ParsePicParam.m_nGOBs
+	mov	r3, ip, lsr #4	@ D.38799, tmp154,
+	mov	r2, r1, lsr #4	@ D.38801, tmp155,
+	str	r3, [r0, #76]	@ D.38799, <variable>.Rv9ParsePicParam.m_nMBs
+	mul	ip, r3, r2	@ tmp157, D.38799, D.38801
+	str	r2, [r0, #72]	@ D.38801, <variable>.Rv9ParsePicParam.m_nGOBs
 	sub	r3, ip, #1	@ prephitmp.517, tmp157,
 	cmp	r3, #47	@ prephitmp.517,
 	movls	r3, #0	@ i,
@@ -182,7 +182,7 @@ Real9_CB_SetDimensions:
 	str	r1, [r0, #76]	@ tmp140, <variable>.Rv9ParsePicParam.m_nMBs
 	b	.L4	@
 .L7:
-	cmp	r3, #704	@ D.38764,
+	cmp	r3, #704	@ D.38778,
 	bne	.L24	@,
 	ldr	r2, [r0, #12]	@ <variable>.pic_height_in_pixel, <variable>.pic_height_in_pixel
 	cmp	r2, #576	@ <variable>.pic_height_in_pixel,
@@ -201,7 +201,7 @@ Real9_CB_SetDimensions:
 	str	r1, [r0, #76]	@ tmp146, <variable>.Rv9ParsePicParam.m_nMBs
 	b	.L9	@
 .L24:
-	cmp	r3, #1408	@ D.38764,
+	cmp	r3, #1408	@ D.38778,
 	ldr	r2, [r0, #12]	@ <variable>.pic_height_in_pixel, <variable>.pic_height_in_pixel
 	bne	.L8	@,
 	cmp	r2, #1152	@ <variable>.pic_height_in_pixel,
@@ -253,36 +253,36 @@ Real9_WriteSliceMsg:
 	bl	__gnu_mcount_nc
 	mov	r3, #44	@ tmp138,
 	mla	r3, r3, r1, r0	@ tmp139, tmp138, HoldSliceNum, pCtx
-	movw	ip, #44876	@ tmp141,
+	movw	ip, #46412	@ tmp141,
 	ldr	r4, [r0, ip]	@ <variable>.CodecInfo.SliceHeader.bit_stream_addr_0, <variable>.CodecInfo.SliceHeader.bit_stream_addr_0
-	movw	r2, #44868	@ tmp148,
+	movw	r2, #46404	@ tmp148,
 	add	r1, r1, #1	@ tmp206, HoldSliceNum,
 	add	ip, r3, #104	@ tmp182, tmp139,
 	str	r4, [r3, #84]	@ <variable>.CodecInfo.SliceHeader.bit_stream_addr_0, <variable>.StreamPhyAddr
 	ldr	r4, [r0, r2]	@ <variable>.CodecInfo.SliceHeader.bit_offset_0, <variable>.CodecInfo.SliceHeader.bit_offset_0
 	add	r2, r3, #112	@ tmp196, tmp139,
 	str	r4, [r3, #92]	@ <variable>.CodecInfo.SliceHeader.bit_offset_0, <variable>.StreamBitOffset
-	movw	r4, #44872	@ tmp155,
+	movw	r4, #46408	@ tmp155,
 	ldr	r4, [r0, r4]	@ <variable>.CodecInfo.SliceHeader.bit_len_0, <variable>.CodecInfo.SliceHeader.bit_len_0
 	str	r4, [r3, #100]	@ <variable>.CodecInfo.SliceHeader.bit_len_0, <variable>.StreamLength
-	movw	r4, #44888	@ tmp162,
+	movw	r4, #46424	@ tmp162,
 	ldr	r4, [r0, r4]	@ <variable>.CodecInfo.SliceHeader.bit_stream_addr_1, <variable>.CodecInfo.SliceHeader.bit_stream_addr_1
 	str	r4, [r3, #88]	@ <variable>.CodecInfo.SliceHeader.bit_stream_addr_1, <variable>.StreamPhyAddr
-	movw	r4, #44880	@ tmp169,
+	movw	r4, #46416	@ tmp169,
 	ldr	r4, [r0, r4]	@ <variable>.CodecInfo.SliceHeader.bit_offset_1, <variable>.CodecInfo.SliceHeader.bit_offset_1
 	str	r4, [r3, #96]	@ <variable>.CodecInfo.SliceHeader.bit_offset_1, <variable>.StreamBitOffset
-	movw	r4, #44884	@ tmp176,
+	movw	r4, #46420	@ tmp176,
 	ldr	r4, [r0, r4]	@ <variable>.CodecInfo.SliceHeader.bit_len_1, <variable>.CodecInfo.SliceHeader.bit_len_1
 	str	r4, [r3, #104]	@ <variable>.CodecInfo.SliceHeader.bit_len_1, <variable>.StreamLength
-	movw	r3, #44856	@ tmp183,
+	movw	r3, #46392	@ tmp183,
 	ldr	r3, [r0, r3]	@ <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough, <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough
 	str	r3, [ip, #4]	@ <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough, <variable>.dblk_filter_passthrough
-	movw	r3, #44852	@ tmp190,
+	movw	r3, #46388	@ tmp190,
 	ldr	r3, [r0, r3]	@ <variable>.CodecInfo.SliceHeader.osvquant, <variable>.CodecInfo.SliceHeader.osvquant
 	str	r3, [ip, #8]	@ <variable>.CodecInfo.SliceHeader.osvquant, <variable>.osvquant
-	movw	ip, #44848	@ tmp197,
+	movw	ip, #46384	@ tmp197,
 	ldr	r3, [r0, ip]	@ <variable>.CodecInfo.SliceHeader.SliceQP, <variable>.CodecInfo.SliceHeader.SliceQP
-	movw	ip, #44860	@ tmp204,
+	movw	ip, #46396	@ tmp204,
 	str	r3, [r2, #4]	@ <variable>.CodecInfo.SliceHeader.SliceQP, <variable>.sliceqp
 	ldr	r3, [r0, ip]	@ <variable>.CodecInfo.SliceHeader.first_mb_in_slice, <variable>.CodecInfo.SliceHeader.first_mb_in_slice
 	str	r3, [r2, #8]	@ <variable>.CodecInfo.SliceHeader.first_mb_in_slice, <variable>.first_mb_in_slice
@@ -307,14 +307,14 @@ Real9_WritePicMsg:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r8, #44728	@ tmp134,
-	movw	r2, #44892	@ tmp147,
-	movw	r7, #44744	@ tmp137,
-	movw	r6, #44740	@ tmp139,
-	movw	r5, #45988	@ tmp141,
-	movw	ip, #45992	@ tmp143,
-	movw	r4, #44896	@ tmp149,
-	movw	r1, #44768	@ tmp145,
+	movw	r8, #46264	@ tmp134,
+	movw	r2, #46428	@ tmp147,
+	movw	r7, #46280	@ tmp137,
+	movw	r6, #46276	@ tmp139,
+	movw	r5, #47524	@ tmp141,
+	movw	ip, #47528	@ tmp143,
+	movw	r4, #46432	@ tmp149,
+	movw	r1, #46304	@ tmp145,
 	ldr	r3, [r0, r8]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.PictureHeader.PicCodType
 	ldr	r1, [r0, r1]	@ <variable>.CodecInfo.PictureHeader.PQUANT, <variable>.CodecInfo.PictureHeader.PQUANT
 	ldr	r8, [r0, r7]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_mb, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
@@ -375,11 +375,11 @@ Real9_ModifySliceMsg:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	ldr	r3, [r0, #120]	@ <variable>.first_mb_in_slice, <variable>.first_mb_in_slice
-	ldr	r1, [r0, #12]	@ D.39253, <variable>.Rv9DecParam.PicWidthInMb
+	ldr	r1, [r0, #12]	@ D.39267, <variable>.Rv9DecParam.PicWidthInMb
 	cmp	r3, #0	@ <variable>.first_mb_in_slice,
-	ldr	r3, [r0, #16]	@ D.39254, <variable>.Rv9DecParam.PicHeightInMb
+	ldr	r3, [r0, #16]	@ D.39268, <variable>.Rv9DecParam.PicHeightInMb
 	bne	.L35	@,
-	mul	r1, r1, r3	@ tmp199, D.39253, D.39254
+	mul	r1, r1, r3	@ tmp199, D.39267, D.39268
 	ldr	r2, [r0, #40]	@ temp.744, <variable>.Rv9DecParam.TotalSliceNum
 	cmp	r2, #2	@ temp.744,
 	sub	r1, r1, #1	@ TotalMbnMinus1, tmp199,
@@ -396,15 +396,15 @@ Real9_ModifySliceMsg:
 	mov	r3, r0	@ ivtmp.715, pCtx
 	mov	ip, #1	@ i.716,
 	bne	.L39	@,
-	ldr	r3, [r0, #208]	@ D.39267, <variable>.first_mb_in_slice
+	ldr	r3, [r0, #208]	@ D.39281, <variable>.first_mb_in_slice
 	mov	ip, #2	@ i.716,
-	cmp	r3, #0	@ D.39267,
+	cmp	r3, #0	@ D.39281,
 	ble	.L35	@,
-	cmp	r1, r3	@ TotalMbnMinus1, D.39267
+	cmp	r1, r3	@ TotalMbnMinus1, D.39281
 	add	r3, r0, #44	@ ivtmp.715, pCtx,
 	bgt	.L39	@,
 .L35:
-	mov	r0, #0	@ D.39260,
+	mov	r0, #0	@ D.39274,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L36:
 	moveq	r4, #1	@ prephitmp.646,
@@ -418,9 +418,9 @@ Real9_ModifySliceMsg:
 	bls	.L93	@,
 	ldr	r6, [r0, #120]	@ temp.718, <variable>.first_mb_in_slice
 	mov	ip, #1	@ i,
-	ldr	r5, [r0, #164]	@ D.39274, <variable>.first_mb_in_slice
+	ldr	r5, [r0, #164]	@ D.39288, <variable>.first_mb_in_slice
 	add	r3, r0, #44	@ ivtmp.708, pCtx,
-	cmp	r6, r5	@ temp.718, D.39274
+	cmp	r6, r5	@ temp.718, D.39288
 	bge	.L35	@,
 	cmp	r4, ip	@ prephitmp.646, i
 	add	r5, ip, #1	@ tmp255, i,
@@ -429,13 +429,13 @@ Real9_ModifySliceMsg:
 	bls	.L93	@,
 .L45:
 	ldr	r7, [r3, #120]	@ temp.718, <variable>.first_mb_in_slice
-	ldr	r6, [r3, #164]	@ D.39274, <variable>.first_mb_in_slice
+	ldr	r6, [r3, #164]	@ D.39288, <variable>.first_mb_in_slice
 	add	r3, r3, #88	@ ivtmp.708, ivtmp.708,
-	cmp	r7, r6	@ temp.718, D.39274
+	cmp	r7, r6	@ temp.718, D.39288
 	bge	.L35	@,
-	ldr	r6, [r5, #164]	@ D.39274, <variable>.first_mb_in_slice
+	ldr	r6, [r5, #164]	@ D.39288, <variable>.first_mb_in_slice
 	ldr	r5, [r5, #120]	@ temp.718, <variable>.first_mb_in_slice
-	cmp	r5, r6	@ temp.718, D.39274
+	cmp	r5, r6	@ temp.718, D.39288
 	bge	.L35	@,
 .L38:
 	cmp	r4, ip	@ prephitmp.646, i
@@ -446,10 +446,10 @@ Real9_ModifySliceMsg:
 .L93:
 	mov	r3, #44	@ tmp202,
 	mla	r4, r3, r4, r0	@ tmp203, tmp202, prephitmp.646, pCtx
-	ldr	r3, [r4, #120]	@ D.39279, <variable>.first_mb_in_slice
-	cmp	r3, #0	@ D.39279,
+	ldr	r3, [r4, #120]	@ D.39293, <variable>.first_mb_in_slice
+	cmp	r3, #0	@ D.39293,
 	ble	.L35	@,
-	cmp	r1, r3	@ TotalMbnMinus1, D.39279
+	cmp	r1, r3	@ TotalMbnMinus1, D.39293
 	blt	.L35	@,
 .L42:
 	cmp	r2, #0	@ temp.744,
@@ -487,16 +487,16 @@ Real9_ModifySliceMsg:
 	ble	.L97	@,
 	b	.L35	@
 .L40:
-	ldr	r5, [r3, #208]	@ D.39267, <variable>.first_mb_in_slice
+	ldr	r5, [r3, #208]	@ D.39281, <variable>.first_mb_in_slice
 	add	r3, r3, #88	@ ivtmp.715, ivtmp.715,
-	cmp	r5, #0	@ D.39267,
+	cmp	r5, #0	@ D.39281,
 	ble	.L35	@,
-	cmp	r1, r5	@ TotalMbnMinus1, D.39267
+	cmp	r1, r5	@ TotalMbnMinus1, D.39281
 	ble	.L35	@,
-	ldr	r5, [r6, #208]	@ D.39267, <variable>.first_mb_in_slice
-	cmp	r5, #0	@ D.39267,
+	ldr	r5, [r6, #208]	@ D.39281, <variable>.first_mb_in_slice
+	cmp	r5, #0	@ D.39281,
 	ble	.L35	@,
-	cmp	r1, r5	@ TotalMbnMinus1, D.39267
+	cmp	r1, r5	@ TotalMbnMinus1, D.39281
 	ble	.L35	@,
 .L39:
 	add	ip, ip, #1	@ tmp261, i.716,
@@ -691,7 +691,7 @@ Real9_ModifySliceMsg:
 	str	ip, [r3, #96]	@ tmp324, <variable>.StreamBitOffset
 	b	.L91	@
 .L53:
-	mov	r0, #1	@ D.39260,
+	mov	r0, #1	@ D.39274,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L89:
 	ldr	r5, [r0, #92]	@ <variable>.StreamBitOffset, <variable>.StreamBitOffset
@@ -746,23 +746,23 @@ REAL9DEC_GetImageBuffer:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:80280	@ tmp138,
-	movt	r4, #:upper16:80280	@ tmp138,
+	movw	r4, #:lower16:83352	@ tmp138,
+	movt	r4, #:upper16:83352	@ tmp138,
 	mov	r5, r0	@ pCtx, pCtx
 	ldr	r0, [r0, r4]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
-	cmp	r0, #1	@ D.39880,
+	cmp	r0, #1	@ D.39894,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
 	cmn	r0, #1	@,
-	movne	r0, #0	@ D.39883,
+	movne	r0, #0	@ D.39897,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
-	add	r1, r5, #46080	@, pCtx,
+	add	r1, r5, #47616	@, pCtx,
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	add	r1, r1, #40	@,,
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, #0	@ D.39883,
+	mov	r0, #0	@ D.39897,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	REAL9DEC_GetImageBuffer, .-REAL9DEC_GetImageBuffer
@@ -783,7 +783,7 @@ REAL9DEC_Destroy:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #45964	@ tmp135,
+	movw	r3, #47500	@ tmp135,
 	ldr	r2, [r0, r3]	@ <variable>.CodecInfo.FrmCnt, <variable>.CodecInfo.FrmCnt
 	movw	r1, #:lower16:.LC0	@,
 	mov	r0, #2	@,
@@ -811,17 +811,17 @@ REAL9DEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r5, r0, #0	@ pCtx, pCtx
 	mov	r6, r1	@ ImgID, ImgID
-	moveq	r0, r5	@ D.39772, pCtx
+	moveq	r0, r5	@ D.39786, pCtx
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	movw	r4, #:lower16:80280	@ tmp138,
-	movt	r4, #:upper16:80280	@ tmp138,
+	movw	r4, #:lower16:83352	@ tmp138,
+	movt	r4, #:upper16:83352	@ tmp138,
 	mov	r2, #0	@,
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FSP_SetDisplay	@
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	mov	r1, r6	@, ImgID
 	bl	FSP_GetFsImagePtr	@
-	mov	r0, #1	@ D.39772,
+	mov	r0, #1	@ D.39786,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	REAL9DEC_RecycleImage, .-REAL9DEC_RecycleImage
@@ -844,45 +844,45 @@ REAL9DEC_Init:
 	bl	__gnu_mcount_nc
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r5, r1	@ pstExtraData, pstExtraData
-	add	r6, r4, #46080	@, pCtx,
-	movw	r1, #:lower16:80288	@,
-	movt	r1, #:upper16:80288	@,
+	add	r6, r4, #47616	@, pCtx,
+	movw	r1, #:lower16:83360	@,
+	movt	r1, #:upper16:83360	@,
 	bl	__memzero	@
 	add	r0, r6, #40	@,,
 	bl	ResetVoQueue	@
-	movw	r2, #44896	@ tmp143,
-	movw	r0, #44892	@ tmp141,
+	movw	r2, #46432	@ tmp143,
+	movw	r0, #46428	@ tmp141,
 	mov	r3, #15	@ tmp142,
 	str	r5, [r4, #0]	@ pstExtraData, <variable>.pstExtraData
 	movw	ip, #11364	@ tmp145,
 	str	r3, [r4, r0]	@ tmp142, <variable>.CodecInfo.PrevPicQP
 	movw	r1, #11368	@ tmp148,
 	str	r3, [r4, r2]	@ tmp142, <variable>.CodecInfo.PrevPicMb0QP
-	movw	r0, #44752	@ tmp153,
+	movw	r0, #46288	@ tmp153,
 	ldr	r2, [r5, #8]	@ <variable>.s32DecMode, <variable>.s32DecMode
-	movw	r3, #44720	@ tmp155,
+	movw	r3, #46256	@ tmp155,
 	mov	r6, #0	@ tmp149,
 	strb	r6, [r4, r1]	@ tmp149, <variable>.CodecInfo.Imgbuf_allocated
 	mov	r1, #8192	@ tmp154,
 	str	r1, [r4, r0]	@ tmp154, <variable>.CodecInfo.PictureHeader.m_uTRWrap
 	strb	r2, [r4, ip]	@ <variable>.s32DecMode, <variable>.CodecInfo.UsedDecMode
-	movw	r2, #44724	@ tmp151,
+	movw	r2, #46260	@ tmp151,
 	mov	ip, #1	@ tmp152,
 	mov	r0, r4	@, pCtx
 	strb	ip, [r4, r3]	@ tmp152, <variable>.CodecInfo.PictureHeader.pixel_aspect_ratio
 	str	ip, [r4, r2]	@ tmp152, <variable>.CodecInfo.PictureHeader.Fid
 	bl	VCTRL_GetChanIDByCtx	@
-	movw	r3, #:lower16:80280	@ tmp158,
-	movt	r3, #:upper16:80280	@ tmp158,
-	cmn	r0, #1	@ D.39345,
-	str	r0, [r4, r3]	@ D.39345, <variable>.ChanID
-	movne	r0, r6	@ D.39350, tmp149
+	movw	r3, #:lower16:83352	@ tmp158,
+	movt	r3, #:upper16:83352	@ tmp158,
+	cmn	r0, #1	@ D.39359,
+	str	r0, [r4, r3]	@ D.39359, <variable>.ChanID
+	movne	r0, r6	@ D.39364, tmp149
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r0, r6	@, tmp149
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.39350,
+	mvn	r0, #19	@ D.39364,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	REAL9DEC_Init, .-REAL9DEC_Init
@@ -903,27 +903,27 @@ Real9_SetImgFormat:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:80280	@ tmp142,
-	movt	r1, #:upper16:80280	@ tmp142,
+	movw	r1, #:lower16:83352	@ tmp142,
+	movt	r1, #:upper16:83352	@ tmp142,
 	mov	r5, r0	@ pCtx, pCtx
-	movw	r3, #46072	@ tmp144,
+	movw	r3, #47608	@ tmp144,
 	ldr	r0, [r0, r1]	@, <variable>.ChanID
 	ldr	r1, [r5, r3]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_GetFsImagePtr	@
 	subs	r4, r0, #0	@ pImg,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
-	movw	r1, #44728	@ tmp146,
+	movw	r1, #46264	@ tmp146,
 	ldr	r2, [r5, r1]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.PictureHeader.PicCodType
 	mov	r1, #0	@ tmp150,
 	str	r1, [r4, #148]	@ tmp150, <variable>.is_fld_save
-	and	r3, r2, #3	@ D.39139, <variable>.CodecInfo.PictureHeader.PicCodType,
-	movw	r2, #44736	@ tmp151,
-	orr	lr, r3, #7168	@ tmp148, D.39139,
-	str	r3, [r4, #156]	@ D.39139, <variable>.bottom_fld_type
-	str	r3, [r4, #152]	@ D.39139, <variable>.top_fld_type
+	and	r3, r2, #3	@ D.39153, <variable>.CodecInfo.PictureHeader.PicCodType,
+	movw	r2, #46272	@ tmp151,
+	orr	lr, r3, #7168	@ tmp148, D.39153,
+	str	r3, [r4, #156]	@ D.39153, <variable>.bottom_fld_type
+	str	r3, [r4, #152]	@ D.39153, <variable>.top_fld_type
 	orr	ip, lr, #32	@ tmp148, tmp148,
 	str	ip, [r4, #160]	@ tmp148, <variable>.format
-	movw	lr, #44732	@ tmp153,
+	movw	lr, #46268	@ tmp153,
 	ldr	r3, [r5, r2]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_pixel, <variable>.CodecInfo.PictureHeader.pic_width_in_pixel
 	str	r3, [r4, #164]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_pixel, <variable>.image_width
 	ldr	ip, [r5, lr]	@ <variable>.CodecInfo.PictureHeader.pic_height_in_pixel, <variable>.CodecInfo.PictureHeader.pic_height_in_pixel
@@ -938,32 +938,32 @@ Real9_SetImgFormat:
 	mov	r2, #1	@ tmp173,
 	mov	ip, #9	@ tmp170,
 	mov	r1, #0	@ tmp171,
-	str	r3, [r4, #392]	@ tmp175, <variable>.ImageDnr.QP_U
-	str	r3, [r4, #388]	@ tmp175, <variable>.ImageDnr.QP_Y
-	strb	r2, [r4, #377]	@ tmp173, <variable>.ImageDnr.chroma_format_idc
-	str	ip, [r4, #384]	@ tmp170, <variable>.ImageDnr.video_standard
-	strb	r1, [r4, #372]	@ tmp171, <variable>.ImageDnr.pic_structure
-	strb	r2, [r4, #379]	@ tmp173, <variable>.ImageDnr.use_pic_qp_en
-	str	r3, [r4, #396]	@ tmp175, <variable>.ImageDnr.QP_V
+	str	r3, [r4, #416]	@ tmp175, <variable>.ImageDnr.QP_U
+	str	r3, [r4, #412]	@ tmp175, <variable>.ImageDnr.QP_Y
+	strb	r2, [r4, #401]	@ tmp173, <variable>.ImageDnr.chroma_format_idc
+	str	ip, [r4, #408]	@ tmp170, <variable>.ImageDnr.video_standard
+	strb	r1, [r4, #396]	@ tmp171, <variable>.ImageDnr.pic_structure
+	strb	r2, [r4, #403]	@ tmp173, <variable>.ImageDnr.use_pic_qp_en
+	str	r3, [r4, #420]	@ tmp175, <variable>.ImageDnr.QP_V
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L122:
 	ldr	r0, [r4, #168]	@ <variable>.image_height, <variable>.image_height
-	ldr	r2, [r4, #192]	@ D.39147, <variable>.image_stride
+	ldr	r2, [r4, #192]	@ D.39161, <variable>.image_stride
 	add	ip, r0, #15	@ tmp158, <variable>.image_height,
 	ldr	r3, [r4, #104]	@ <variable>.luma_phy_addr, <variable>.luma_phy_addr
 	ldr	r0, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
-	mov	lr, r2, asl #4	@ tmp157, D.39147,
+	mov	lr, r2, asl #4	@ tmp157, D.39161,
 	mov	r1, ip, lsr #4	@ tmp160, tmp158,
 	str	r3, [r4, #120]	@ <variable>.luma_phy_addr, <variable>.luma_2d_phy_addr
-	add	ip, r3, r2	@ tmp165, <variable>.luma_phy_addr, D.39147
-	mul	r1, r1, lr	@ D.39153, tmp160, tmp157
+	add	ip, r3, r2	@ tmp165, <variable>.luma_phy_addr, D.39161
+	mul	r1, r1, lr	@ D.39167, tmp160, tmp157
 	str	ip, [r4, #96]	@ tmp165, <variable>.btm_luma_phy_addr
 	str	r0, [r4, #48]	@ <variable>.luma_vir_addr, <variable>.luma_2d_vir_addr
 	str	r3, [r4, #88]	@ <variable>.luma_phy_addr, <variable>.top_luma_phy_addr
-	add	lr, r1, r3	@ tmp162, D.39153, <variable>.luma_phy_addr
-	add	r1, r0, r1	@ tmp164, <variable>.luma_vir_addr, D.39153
+	add	lr, r1, r3	@ tmp162, D.39167, <variable>.luma_phy_addr
+	add	r1, r0, r1	@ tmp164, <variable>.luma_vir_addr, D.39167
 	str	lr, [r4, #108]	@ tmp162, <variable>.chrom_phy_addr
-	add	r0, lr, r2	@ tmp166, tmp162, D.39147
+	add	r0, lr, r2	@ tmp166, tmp162, D.39161
 	str	r1, [r4, #36]	@ tmp164, <variable>.chrom_vir_addr
 	str	r0, [r4, #100]	@ tmp166, <variable>.btm_chrom_phy_addr
 	mov	r0, lr	@, tmp162
@@ -1005,21 +1005,21 @@ REAL9DEC_VDMPostProc:
 	mov	r0, #9	@,
 	mov	r1, r4	@, pCtx
 	bl	ReleasePacket	@
-	movw	r3, #:lower16:80280	@ tmp146,
-	movt	r3, #:upper16:80280	@ tmp146,
-	movw	r2, #46072	@ tmp148,
+	movw	r3, #:lower16:83352	@ tmp146,
+	movt	r3, #:upper16:83352	@ tmp146,
+	movw	r2, #47608	@ tmp148,
 	ldr	r1, [r4, r2]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	cmp	r0, #0	@ pCurImg
 	beq	.L125	@,
-	movw	lr, #44728	@ tmp151,
+	movw	lr, #46264	@ tmp151,
 	movw	ip, #11366	@ tmp150,
 	ldr	r1, [r4, lr]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.PictureHeader.PicCodType
 	cmp	r1, #2	@ <variable>.CodecInfo.PictureHeader.PicCodType,
 	strb	r1, [r4, ip]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.LastDecPicCodingType
 	andne	r6, r6, #31	@ tmp157, Mb0QpInCurrPic,
-	movwne	r1, #44896	@ tmp156,
+	movwne	r1, #46432	@ tmp156,
 	strne	r6, [r4, r1]	@ tmp157, <variable>.CodecInfo.PrevPicMb0QP
 	cmp	r5, #0	@ ErrRatio,
 	movlt	r5, #0	@ iftmp.500,
@@ -1042,42 +1042,42 @@ REAL9DEC_VDMPostProc:
 	ldr	r2, [ip, #12]	@ <variable>.s32DecOrderOutput, <variable>.s32DecOrderOutput
 	cmp	r2, #1	@ <variable>.s32DecOrderOutput,
 	beq	.L131	@,
-	movw	r0, #44728	@ tmp165,
+	movw	r0, #46264	@ tmp165,
 	ldr	lr, [r4, r0]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.PictureHeader.PicCodType
 	cmp	lr, #2	@ <variable>.CodecInfo.PictureHeader.PicCodType,
 	beq	.L131	@,
 	movw	r2, #11365	@ tmp167,
-	movw	lr, #46076	@ tmp174,
+	movw	lr, #47612	@ tmp174,
 	ldrb	r3, [r4, r2]	@ zero_extendqisi2	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
 	cmp	r3, #1	@ <variable>.CodecInfo.RefNum,
-	movwhi	r3, #46064	@ tmp169,
+	movwhi	r3, #47600	@ tmp169,
 	mvnls	r1, #0	@ prephitmp.906,
 	ldrhi	r1, [r4, r3]	@ prephitmp.906,
 	cmn	r1, #1	@ prephitmp.906,
 	str	r1, [r4, lr]	@ prephitmp.906, <variable>.CodecInfo.ToQueFsID
 	beq	.L135	@,
 .L139:
-	movw	r5, #:lower16:80280	@ tmp175,
-	movt	r5, #:upper16:80280	@ tmp175,
-	movw	r6, #46076	@ tmp177,
+	movw	r5, #:lower16:83352	@ tmp175,
+	movt	r5, #:upper16:83352	@ tmp175,
+	movw	r6, #47612	@ tmp177,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
-	ldr	r8, [r4, r6]	@ D.39862, <variable>.CodecInfo.ToQueFsID
-	mov	r1, r8	@, D.39862
+	ldr	r8, [r4, r6]	@ D.39876, <variable>.CodecInfo.ToQueFsID
+	mov	r1, r8	@, D.39876
 	mov	r7, r0	@ pToQueImg,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetRef	@
-	mov	r2, r8	@, D.39862
+	mov	r2, r8	@, D.39876
 	movw	r1, #:lower16:.LC4	@,
 	movt	r1, #:upper16:.LC4	@,
-	mov	r3, r0	@ D.39867,
+	mov	r3, r0	@ D.39881,
 	mov	r0, #12	@,
 	bl	dprint_vfmw	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	ldr	r1, [r4, r6]	@, <variable>.CodecInfo.ToQueFsID
 	mov	r2, #1	@,
 	bl	FSP_SetDisplay	@
-	add	r3, r4, #46080	@, pCtx,
+	add	r3, r4, #47616	@, pCtx,
 	ldr	r0, [r4, r5]	@ <variable>.ChanID, <variable>.ChanID
 	mov	r1, #9	@,
 	add	r3, r3, #40	@,,
@@ -1087,8 +1087,8 @@ REAL9DEC_VDMPostProc:
 	cmp	r0, #1	@,
 	bne	.L138	@,
 .L135:
-	movw	ip, #45964	@ tmp193,
-	mov	r0, #1	@ D.39830,
+	movw	ip, #47500	@ tmp193,
+	mov	r0, #1	@ D.39844,
 	ldr	r2, [r4, ip]	@ <variable>.CodecInfo.FrmCnt, <variable>.CodecInfo.FrmCnt
 	add	r1, r2, r0	@ tmp196, <variable>.CodecInfo.FrmCnt,
 	str	r1, [r4, ip]	@ tmp196, <variable>.CodecInfo.FrmCnt
@@ -1096,8 +1096,8 @@ REAL9DEC_VDMPostProc:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L131:
-	movw	ip, #46072	@ tmp173,
-	movw	lr, #46076	@ tmp174,
+	movw	ip, #47608	@ tmp173,
+	movw	lr, #47612	@ tmp174,
 	ldr	r1, [r4, ip]	@ prephitmp.906,
 	cmn	r1, #1	@ prephitmp.906,
 	str	r1, [r4, lr]	@ prephitmp.906, <variable>.CodecInfo.ToQueFsID
@@ -1108,7 +1108,7 @@ REAL9DEC_VDMPostProc:
 	mov	r2, #0	@,
 	ldr	r1, [r4, r6]	@, <variable>.CodecInfo.ToQueFsID
 	bl	FSP_SetDisplay	@
-	mov	r0, #0	@ D.39830,
+	mov	r0, #0	@ D.39844,
 	b	.L125	@
 	.fnend
 	.size	REAL9DEC_VDMPostProc, .-REAL9DEC_VDMPostProc
@@ -1136,9 +1136,9 @@ REAL9DEC_GetRemainImg:
 	ldr	r3, [r0, #12]	@ <variable>.s32DecOrderOutput, <variable>.s32DecOrderOutput
 	cmp	r3, #1	@ <variable>.s32DecOrderOutput,
 	beq	.L152	@,
-	movw	r6, #:lower16:80280	@ tmp142,
-	movt	r6, #:upper16:80280	@ tmp142,
-	movw	r7, #46068	@ tmp144,
+	movw	r6, #:lower16:83352	@ tmp142,
+	movt	r6, #:upper16:83352	@ tmp142,
+	movw	r7, #47604	@ tmp144,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.BwdFsID
 	bl	FSP_GetFsImagePtr	@
@@ -1150,21 +1150,21 @@ REAL9DEC_GetRemainImg:
 	cmp	r0, #2	@,
 	beq	.L150	@,
 .L152:
-	add	r5, r4, #46080	@ tmp169, pCtx,
-	add	r5, r5, #40	@ tmp169, tmp169,
+	add	r5, r4, #47616	@ tmp170, pCtx,
+	add	r5, r5, #40	@ tmp170, tmp170,
 .L141:
-	mov	r0, r5	@, tmp169
+	mov	r0, r5	@, tmp170
 	bl	GetVoLastImageID	@
 .L143:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L150:
 	mov	r0, r4	@, pCtx
-	add	r5, r4, #46080	@ tmp169, pCtx,
+	add	r5, r4, #47616	@ tmp170, pCtx,
 	bl	Real9_SetImgFormat	@
-	add	r5, r5, #40	@ tmp169, tmp169,
+	add	r5, r5, #40	@ tmp170, tmp170,
 	mov	r1, #1	@ tmp150,
-	str	r1, [r8, #244]	@ tmp150, <variable>.last_frame
+	str	r1, [r8, #268]	@ tmp150, <variable>.last_frame
 	mov	r2, r1	@, tmp150
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.BwdFsID
@@ -1172,7 +1172,7 @@ REAL9DEC_GetRemainImg:
 	ldr	r0, [r4, r6]	@ <variable>.ChanID, <variable>.ChanID
 	mov	r1, #9	@,
 	mov	r2, r4	@, pCtx
-	mov	r3, r5	@, tmp169
+	mov	r3, r5	@, tmp170
 	str	r8, [sp, #0]	@ pImg,
 	bl	InsertImgToVoQueue	@
 	cmp	r0, #1	@,
@@ -1217,10 +1217,10 @@ Real9_CB_FindNextSliceStartCode:
 	bl	BsToNextByte	@
 	mov	r0, r4	@, pBs
 	bl	BsResidBits	@
-	add	r8, r0, #7	@ tmp142, D.38845,
-	cmp	r0, #0	@ D.38845,
-	movlt	r0, r8	@ D.38845, tmp142
-	mov	r8, r0, asr #3	@ tmp143, D.38845,
+	add	r8, r0, #7	@ tmp142, D.38859,
+	cmp	r0, #0	@ D.38859,
+	movlt	r0, r8	@ D.38859, tmp142
+	mov	r8, r0, asr #3	@ tmp143, D.38859,
 	sub	r7, r8, #2	@ RemainByte, tmp143,
 	cmp	r7, #0	@ RemainByte,
 	ble	.L154	@,
@@ -1276,10 +1276,10 @@ Real9_CB_FindNextSliceStartCode:
 	mov	r0, r4	@, pBs
 	bne	.L155	@,
 .L168:
-	mov	r0, #1	@ D.38850,
+	mov	r0, #1	@ D.38864,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L154:
-	mov	r0, #0	@ D.38850,
+	mov	r0, #0	@ D.38864,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_FindNextSliceStartCode, .-Real9_CB_FindNextSliceStartCode
@@ -1302,11 +1302,11 @@ Real9_CB_GetSSC:
 	bl	__gnu_mcount_nc
 	ldr	r3, [r1, #4]	@ <variable>.Fid, <variable>.Fid
 	cmp	r3, #1	@ <variable>.Fid,
-	moveq	r0, #0	@ D.38891,
+	moveq	r0, #0	@ D.38905,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	bl	Real9_CB_FindNextSliceStartCode	@
-	subs	r0, r0, #0	@ D.38891,,
-	movne	r0, #1	@ D.38891
+	subs	r0, r0, #0	@ D.38905,,
+	movne	r0, #1	@ D.38905
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_GetSSC, .-Real9_CB_GetSSC
@@ -1374,10 +1374,10 @@ Real9_CB_Get1Bit:
 	mov	r5, r0	@ pBs, pBs
 	bl	BsShow	@
 	mov	r1, #1	@,
-	mov	r4, r0	@ D.38585,
+	mov	r4, r0	@ D.38599,
 	mov	r0, r5	@, pBs
 	bl	BsSkip	@
-	mov	r0, r4	@, D.38585
+	mov	r0, r4	@, D.38599
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_Get1Bit, .-Real9_CB_Get1Bit
@@ -1402,10 +1402,10 @@ Real9_CB_GetBits:
 	mov	r5, r1	@ nBits, nBits
 	bl	BsShow	@
 	mov	r1, r5	@, nBits
-	mov	r4, r0	@ D.38579,
+	mov	r4, r0	@ D.38593,
 	mov	r0, r6	@, pBs
 	bl	BsSkip	@
-	mov	r0, r4	@, D.38579
+	mov	r0, r4	@, D.38593
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_GetBits, .-Real9_CB_GetBits
@@ -1450,20 +1450,20 @@ Real9_CB_SearchBits_IgnoreOnly0:
 	bne	.L183	@,
 .L184:
 	mov	r0, r6	@, pBs
-	and	r7, r9, r3, asl #1	@, D.38872, pretmp.1088, w,
+	and	r7, r9, r3, asl #1	@, D.38886, pretmp.1088, w,
 	bl	Real9_CB_Get1Bit	@
 	add	r8, r8, #1	@ n, n,
-	orr	r3, r7, r0	@ w, D.38872,
+	orr	r3, r7, r0	@ w, D.38886,
 	cmp	r4, r3	@ code, w
 	cmpne	r5, r8	@, lookahead, n
 	bhi	.L185	@,
 .L182:
 	cmp	r4, r3	@ code, w
-	movne	r0, #0	@, D.38879
-	moveq	r0, #1	@, D.38879
+	movne	r0, #0	@, D.38893
+	moveq	r0, #1	@, D.38893
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L183:
-	mov	r0, #0	@ D.38879,
+	mov	r0, #0	@ D.38893,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_SearchBits_IgnoreOnly0, .-Real9_CB_SearchBits_IgnoreOnly0
@@ -1630,23 +1630,23 @@ Real9_CB_GetSliceHeader:
 	mov	r2, #0	@ tmp187,
 	str	r2, [r5, #0]	@ tmp187,* iSliceMBA
 	str	r4, [r8, #0]	@ tmp188,* iSQUANT
-	mov	r4, #1	@ D.38919,
+	mov	r4, #1	@ D.38933,
 .L219:
-	mov	r0, r4	@, D.38919
+	mov	r0, r4	@, D.38933
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L230:
 	cmp	r1, #0	@ bFirstSlice,
 	ldrne	r0, [r4, #88]	@ prephitmp.1151, <variable>.Rv9ParsePicParam.mba
 	bne	.L209	@,
-	ldr	sl, [r4, #88]	@ D.38913, <variable>.Rv9ParsePicParam.mba
+	ldr	sl, [r4, #88]	@ D.38927, <variable>.Rv9ParsePicParam.mba
 	bl	Real9_CB_Get1Bit	@
 	cmp	r0, #0	@,
 	bne	.L210	@,
-	cmn	sl, #1	@ D.38913,
-	movne	sl, #0	@, D.40653
-	moveq	sl, #1	@, D.40653
-	cmp	sl, #0	@ D.40653,
+	cmn	sl, #1	@ D.38927,
+	movne	sl, #0	@, D.40667
+	moveq	sl, #1	@, D.40667
+	cmp	sl, #0	@ D.40667,
 	beq	.L211	@,
 	mov	r0, r6	@, pBs
 	mov	r1, #2	@,
@@ -1656,12 +1656,12 @@ Real9_CB_GetSliceHeader:
 	mov	r0, r6	@, pBs
 	mov	r1, #5	@,
 	bl	Real9_CB_GetBits	@
-	uxtb	r0, r0	@ D.38929,
-	strb	r0, [r4, #66]	@ D.38929, <variable>.Rv9ParsePicParam.pquant
-	cmp	r0, #31	@ D.38929,
+	uxtb	r0, r0	@ D.38943,
+	strb	r0, [r4, #66]	@ D.38943, <variable>.Rv9ParsePicParam.pquant
+	cmp	r0, #31	@ D.38943,
 	bls	.L232	@,
 .L210:
-	mov	r4, #0	@ D.38919,
+	mov	r4, #0	@ D.38933,
 	b	.L219	@
 .L231:
 	bl	Real9_CB_Get1Bit	@
@@ -1682,8 +1682,8 @@ Real9_CB_GetSliceHeader:
 	mov	r0, r6	@, pBs
 	mov	r1, #5	@,
 	bl	Real9_CB_GetBits	@
-	cmp	r0, #31	@ D.38986,
-	str	r0, [r8, #0]	@ D.38986,* iSQUANT
+	cmp	r0, #31	@ D.39000,
+	str	r0, [r8, #0]	@ D.39000,* iSQUANT
 	bgt	.L210	@,
 	mov	r1, #2	@,
 	mov	r0, r6	@, pBs
@@ -1691,8 +1691,8 @@ Real9_CB_GetSliceHeader:
 	str	r0, [r4, #52]	@, <variable>.OSVQUANT
 	mov	r0, r6	@, pBs
 	bl	Real9_CB_Get1Bit	@
-	cmp	r0, #1	@ D.38992,
-	mov	r4, r0	@ D.38992,
+	cmp	r0, #1	@ D.39006,
+	mov	r4, r0	@ D.39006,
 	bne	.L210	@,
 	mov	r0, r6	@, pBs
 	mov	r1, #2	@,
@@ -1706,7 +1706,7 @@ Real9_CB_GetSliceHeader:
 	bne	.L210	@,
 	mov	r0, r6	@, pBs
 	bl	Real9_CB_Get1Bit	@
-	subs	r9, r0, #0	@ D.38936,
+	subs	r9, r0, #0	@ D.38950,
 	bne	.L210	@,
 	mov	r1, #2	@,
 	mov	r0, r6	@, pBs
@@ -1719,7 +1719,7 @@ Real9_CB_GetSliceHeader:
 	bl	Real9_CB_GetBits	@
 	subs	r2, r0, #0	@ tmp171,,
 	movne	r2, #1	@ tmp171
-	cmp	sl, #0	@ D.40653,
+	cmp	sl, #0	@ D.40667,
 	strb	r2, [r4, #65]	@ tmp171, <variable>.Rv9ParsePicParam.deblocking_filter_passthrough
 	beq	.L213	@,
 	mov	r0, r6	@, pBs
@@ -1727,8 +1727,8 @@ Real9_CB_GetSliceHeader:
 	bl	Real9_CB_GetBits	@
 	ldr	r3, [r4, #84]	@ <variable>.Rv9ParsePicParam.ptype, <variable>.Rv9ParsePicParam.ptype
 	cmp	r3, #1	@ <variable>.Rv9ParsePicParam.ptype,
-	strls	r9, [r4, #120]	@ D.38936, <variable>.Rv9ParsePicParam.pheight_prev
-	strls	r9, [r4, #116]	@ D.38936, <variable>.Rv9ParsePicParam.pwidth_prev
+	strls	r9, [r4, #120]	@ D.38950, <variable>.Rv9ParsePicParam.pheight_prev
+	strls	r9, [r4, #116]	@ D.38950, <variable>.Rv9ParsePicParam.pwidth_prev
 	str	r0, [r4, #92]	@, <variable>.Rv9ParsePicParam.tr
 	bls	.L214	@,
 	cmp	r3, #2	@ <variable>.Rv9ParsePicParam.ptype,
@@ -1766,7 +1766,7 @@ Real9_CB_GetSliceHeader:
 	str	r0, [r5, #0]	@ prephitmp.1151,* iSliceMBA
 	mov	r3, #0	@ tmp184,
 	ldrb	r1, [r4, #66]	@ zero_extendqisi2	@ <variable>.Rv9ParsePicParam.pquant, <variable>.Rv9ParsePicParam.pquant
-	mov	r4, #1	@ D.38919,
+	mov	r4, #1	@ D.38933,
 	str	r1, [r8, #0]	@ <variable>.Rv9ParsePicParam.pquant,* iSQUANT
 	str	r3, [r7, #0]	@ tmp184,* iSliceGFID
 	b	.L219	@
@@ -1777,7 +1777,7 @@ Real9_CB_GetSliceHeader:
 	ldr	r1, [r4, #84]	@ <variable>.Rv9ParsePicParam.ptype, <variable>.Rv9ParsePicParam.ptype
 	cmp	r0, r1	@, <variable>.Rv9ParsePicParam.ptype
 	beq	.L212	@,
-	mov	r4, #0	@ D.38919,
+	mov	r4, #0	@ D.38933,
 	b	.L219	@
 .L213:
 	mov	r0, r6	@, pBs
@@ -1799,7 +1799,7 @@ Real9_CB_GetSliceHeader:
 	ldr	ip, [fp, #-52]	@ height, height
 	cmp	r2, ip	@ <variable>.Rv9ParsePicParam.pheight, height
 	beq	.L218	@,
-	mov	r4, #0	@ D.38919,
+	mov	r4, #0	@ D.38933,
 	b	.L219	@
 	.fnend
 	.size	Real9_CB_GetSliceHeader, .-Real9_CB_GetSliceHeader
@@ -1833,11 +1833,11 @@ Real9_CB_GetCPFMT:
 	mov	r3, r1, asl #2	@ tmp143, tmp142,
 	str	r3, [r4, #16]	@ tmp143, <variable>.pic_width_in_pixel
 	bl	Real9_CB_Get1Bit	@
-	cmp	r0, #1	@ D.38744,
-	mov	r6, r0	@ D.38744,
-	movne	r6, #0	@ D.38747,
+	cmp	r0, #1	@ D.38758,
+	mov	r6, r0	@ D.38758,
+	movne	r6, #0	@ D.38761,
 	beq	.L237	@,
-	mov	r0, r6	@, D.38747
+	mov	r0, r6	@, D.38761
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L237:
 	mov	r0, r5	@, pBs
@@ -1845,7 +1845,7 @@ Real9_CB_GetCPFMT:
 	bl	Real9_CB_GetBits	@
 	mov	r0, r0, asl #2	@ tmp144,,
 	str	r0, [r4, #12]	@ tmp144, <variable>.pic_height_in_pixel
-	mov	r0, r6	@, D.38747
+	mov	r0, r6	@, D.38761
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	Real9_CB_GetCPFMT, .-Real9_CB_GetCPFMT
@@ -1890,11 +1890,11 @@ Real9_CB_GetPictureHeader:
 	ldr	r3, [r4, #12]	@ <variable>.pic_height_in_pixel, <variable>.pic_height_in_pixel
 	add	r0, ip, #15	@ tmp197, <variable>.pic_width_in_pixel,
 	add	r1, r3, #15	@ tmp199, <variable>.pic_height_in_pixel,
-	mov	r2, r0, lsr #4	@ D.39094, tmp197,
-	str	r2, [r4, #24]	@ D.39094, <variable>.pic_width_in_mb
-	mov	lr, r1, lsr #4	@ D.39096, tmp199,
-	str	lr, [r4, #20]	@ D.39096, <variable>.pic_height_in_mb
-	mul	ip, r2, lr	@ tmp201, D.39094, D.39096
+	mov	r2, r0, lsr #4	@ D.39108, tmp197,
+	str	r2, [r4, #24]	@ D.39108, <variable>.pic_width_in_mb
+	mov	lr, r1, lsr #4	@ D.39110, tmp199,
+	str	lr, [r4, #20]	@ D.39110, <variable>.pic_height_in_mb
+	mul	ip, r2, lr	@ tmp201, D.39108, D.39110
 	str	ip, [r4, #28]	@ tmp201, <variable>.total_mbs
 .L256:
 	mov	r0, r5	@, Status
@@ -1908,8 +1908,8 @@ Real9_CB_GetPictureHeader:
 	mov	r1, #16	@,
 	bl	Real9_CB_GetBits	@
 	movw	r3, #21845	@ tmp171,
-	cmp	r0, r3	@ D.39049, tmp171
-	mov	r5, r0	@ D.39049,
+	cmp	r0, r3	@ D.39063, tmp171
+	mov	r5, r0	@ D.39063,
 	beq	.L259	@,
 .L249:
 	mvn	r5, #1	@ Status,
@@ -1918,7 +1918,7 @@ Real9_CB_GetPictureHeader:
 	mov	r0, r6	@, pBs
 	mov	r1, #16	@,
 	bl	Real9_CB_GetBits	@
-	cmp	r0, r5	@, D.39049
+	cmp	r0, r5	@, D.39063
 	bne	.L249	@,
 	sub	r5, fp, #44	@ tmp203,,
 	mov	r0, r6	@, pBs
@@ -2069,15 +2069,15 @@ Real9_ArrangeVHBMem:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r7, r2	@ pPictureHeader, pPictureHeader
-	ldr	r2, [r2, #24]	@ D.38667, <variable>.pic_width_in_mb
+	ldr	r2, [r2, #24]	@ D.38681, <variable>.pic_width_in_mb
 	mov	r4, r1	@ pCtx, pCtx
-	cmp	r2, #1	@ D.38667,
+	cmp	r2, #1	@ D.38681,
 	ldrls	r3, [r7, #20]	@ prephitmp.1249, <variable>.pic_height_in_mb
 	bls	.L263	@,
 	ldr	r3, [r7, #20]	@ prephitmp.1249, <variable>.pic_height_in_mb
 	cmp	r3, #1	@ prephitmp.1249,
 	bls	.L263	@,
-	ldr	r1, [r1, #0]	@ D.38674, <variable>.pstExtraData
+	ldr	r1, [r1, #0]	@ D.38688, <variable>.pstExtraData
 	ldr	r3, [r1, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r3, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L266	@,
@@ -2104,9 +2104,9 @@ Real9_ArrangeVHBMem:
 	strb	r2, [fp, #-82]	@ tmp177, FspInstCfg.s32RprEnable
 	str	r5, [fp, #-72]	@ PicWidth, FspInstCfg.s32DecFsWidth
 	str	r6, [fp, #-68]	@ PicHeight, FspInstCfg.s32DecFsHeight
-	movw	r6, #:lower16:80280	@ tmp190,
+	movw	r6, #:lower16:83352	@ tmp190,
 	str	r1, [fp, #-52]	@ <variable>.pic_height_in_pixel, FspInstCfg.s32DispFsHeight
-	movt	r6, #:upper16:80280	@ tmp190,
+	movt	r6, #:upper16:83352	@ tmp190,
 	strb	ip, [fp, #-84]	@ <variable>.s32DnrDispOutEnable, FspInstCfg.s32DispLoopEnable
 	mov	r1, r8	@, tmp204
 	str	r0, [fp, #-56]	@ <variable>.pic_width_in_pixel, FspInstCfg.s32DispFsWidth
@@ -2125,8 +2125,8 @@ Real9_ArrangeVHBMem:
 	mov	r7, #0	@ tmp188,
 	strb	r7, [fp, #-80]	@ tmp188, FspInstCfg.s32UserDec
 	bl	FSP_ConfigInstance	@
-	subs	r5, r0, #0	@ D.38725,
-	movne	r0, r7	@ D.38671, tmp188
+	subs	r5, r0, #0	@ D.38739,
+	movne	r0, r7	@ D.38685, tmp188
 	beq	.L289	@,
 .L265:
 	sub	sp, fp, #40
@@ -2136,8 +2136,8 @@ Real9_ArrangeVHBMem:
 	cmp	ip, #25	@ <variable>.eCapLevel,
 	bne	.L267	@,
 	ldr	r2, [r7, #16]	@ temp.1273, <variable>.pic_width_in_pixel
-	ldr	ip, [r1, #744]	@ D.38682, <variable>.stChanOption.s32MaxWidth
-	cmp	r2, ip	@ temp.1273, D.38682
+	ldr	ip, [r1, #744]	@ D.38696, <variable>.stChanOption.s32MaxWidth
+	cmp	r2, ip	@ temp.1273, D.38696
 	bhi	.L290	@,
 	ldr	r3, [r7, #12]	@ prephitmp.1255, <variable>.pic_height_in_pixel
 	ldr	lr, [r1, #748]	@ prephitmp.1253, <variable>.stChanOption.s32MaxHeight
@@ -2164,7 +2164,7 @@ Real9_ArrangeVHBMem:
 	movw	r1, #:lower16:.LC5	@,
 	movt	r1, #:upper16:.LC5	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38671,
+	mov	r0, #0	@ D.38685,
 	b	.L265	@
 .L289:
 	ldr	lr, [r4, #0]	@ temp.1289, <variable>.pstExtraData
@@ -2177,13 +2177,13 @@ Real9_ArrangeVHBMem:
 	bne	.L291	@,
 	mov	r3, #1	@ tmp200,
 	movw	r2, #11368	@ tmp199,
-	mov	r0, r3	@ D.38671, tmp200
+	mov	r0, r3	@ D.38685, tmp200
 	strb	r3, [r4, r2]	@ tmp200, <variable>.CodecInfo.Imgbuf_allocated
 	b	.L265	@
 .L288:
-	ldr	r2, [r7, #16]	@ D.38681, <variable>.pic_width_in_pixel
+	ldr	r2, [r7, #16]	@ D.38695, <variable>.pic_width_in_pixel
 	ldr	r5, [r1, #744]	@ PicWidth, <variable>.stChanOption.s32MaxWidth
-	cmp	r2, r5	@ D.38681, PicWidth
+	cmp	r2, r5	@ D.38695, PicWidth
 	bhi	.L292	@,
 	ldr	r3, [r7, #12]	@ prephitmp.1259, <variable>.pic_height_in_pixel
 	ldr	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
@@ -2194,17 +2194,17 @@ Real9_ArrangeVHBMem:
 	cmp	r0, #1	@ <variable>.CodecInfo.Imgbuf_allocated,
 	beq	.L265	@,
 	ldr	r8, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ D.38692, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	r9, [r1, #768]	@ D.38706, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r8, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	r0, #1	@,
 	streq	r0, [fp, #-88]	@, %sfp
 	beq	.L273	@,
-	add	sl, r9, #1	@ PmvNum.1270, D.38692,
+	add	sl, r9, #1	@ PmvNum.1270, D.38706,
 	cmp	sl, #17	@ PmvNum.1270,
 	movge	sl, #17	@ PmvNum.1270,
 	str	sl, [fp, #-88]	@ PmvNum.1270, %sfp
 .L273:
-	add	r9, r9, #2	@ DecFsNum, D.38692,
+	add	r9, r9, #2	@ DecFsNum, D.38706,
 	ldrb	sl, [r1, #796]	@ zero_extendqisi2	@ prephitmp.1251, <variable>.stChanOption.s32DisplayFrameNum
 	b	.L274	@
 .L290:
@@ -2216,7 +2216,7 @@ Real9_ArrangeVHBMem:
 	movt	r1, #:upper16:.LC6	@,
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38671,
+	mov	r0, #0	@ D.38685,
 	b	.L265	@
 .L292:
 	ldr	r6, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
@@ -2227,14 +2227,14 @@ Real9_ArrangeVHBMem:
 	movt	r1, #:upper16:.LC6	@,
 	stmia	sp, {r5, r6}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38671,
+	mov	r0, #0	@ D.38685,
 	b	.L265	@
 .L291:
-	mov	r0, r5	@, D.38725
+	mov	r0, r5	@, D.38739
 	movw	r1, #:lower16:.LC7	@,
 	movt	r1, #:upper16:.LC7	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.38671, D.38725
+	mov	r0, r5	@ D.38685, D.38739
 	b	.L265	@
 	.fnend
 	.size	Real9_ArrangeVHBMem, .-Real9_ArrangeVHBMem
@@ -2257,16 +2257,16 @@ Real9_GetImageBuffer:
 	sub	sp, sp, #12	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r5, #:lower16:80280	@ tmp142,
-	movt	r5, #:upper16:80280	@ tmp142,
+	movw	r5, #:lower16:83352	@ tmp142,
+	movt	r5, #:upper16:83352	@ tmp142,
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r1, #1	@,
-	movw	r6, #46072	@ tmp144,
+	movw	r6, #47608	@ tmp144,
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
 	bl	FSP_NewLogicFs	@
-	cmp	r0, #0	@ D.38618,
-	mov	r1, r0	@ D.38618,
-	str	r0, [r4, r6]	@ D.38618, <variable>.CodecInfo.CurFsID
+	cmp	r0, #0	@ D.38632,
+	mov	r1, r0	@ D.38632,
+	str	r0, [r4, r6]	@ D.38632, <variable>.CodecInfo.CurFsID
 	blt	.L300	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
@@ -2277,14 +2277,14 @@ Real9_GetImageBuffer:
 	movw	r1, #:lower16:.LC10	@,
 	movt	r1, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	ldr	r2, [r5, #520]	@ D.38633, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.38633,
+	ldr	r2, [r5, #544]	@ D.38647, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.38647,
 	beq	.L297	@,
-	ldr	r3, [r5, #524]	@ D.38636, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.38636,
+	ldr	r3, [r5, #548]	@ D.38650, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.38650,
 	beq	.L297	@,
-	ldr	r0, [r5, #528]	@ D.38639, <variable>.pstTfOutFs
-	cmp	r0, #0	@ D.38639,
+	ldr	r0, [r5, #552]	@ D.38653, <variable>.pstTfOutFs
+	cmp	r0, #0	@ D.38653,
 	beq	.L297	@,
 	ldr	ip, [r0, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	movw	r1, #:lower16:.LC11	@,
@@ -2295,8 +2295,8 @@ Real9_GetImageBuffer:
 	str	ip, [sp, #0]	@ <variable>.PhyAddr,
 	bl	dprint_vfmw	@
 .L297:
-	movw	lr, #46072	@ tmp179,
-	mov	r0, #1	@ D.38627,
+	movw	lr, #47608	@ tmp179,
+	mov	r0, #1	@ D.38641,
 	ldr	r2, [r4, lr]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.CurFsID
 	cmp	r2, #2	@ <variable>.CodecInfo.CurFsID,
 	streq	r2, [r4, lr]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.CurFsID
@@ -2304,12 +2304,12 @@ Real9_GetImageBuffer:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L300:
-	movw	r7, #46068	@ tmp148,
+	movw	r7, #47604	@ tmp148,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC8	@,
 	movt	r1, #:upper16:.LC8	@,
 	bl	dprint_vfmw	@
-	movw	r8, #46064	@ tmp152,
+	movw	r8, #47600	@ tmp152,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r2, #1	@,
 	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.BwdFsID
@@ -2324,14 +2324,14 @@ Real9_GetImageBuffer:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
 	movw	r3, #11365	@ tmp162,
-	add	r1, r4, #46080	@, pCtx,
+	add	r1, r4, #47616	@, pCtx,
 	strb	r6, [r4, r3]	@ tmp155, <variable>.CodecInfo.RefNum
 	add	r1, r1, #40	@,,
-	str	r0, [r4, r8]	@ D.38625, <variable>.CodecInfo.FwdFsID
-	str	r0, [r4, r7]	@ D.38625, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, r8]	@ D.38639, <variable>.CodecInfo.FwdFsID
+	str	r0, [r4, r7]	@ D.38639, <variable>.CodecInfo.BwdFsID
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, r6	@ D.38627, tmp155
+	mov	r0, r6	@ D.38641, tmp155
 	b	.L295	@
 .L301:
 	mov	r0, #22	@,
@@ -2339,7 +2339,7 @@ Real9_GetImageBuffer:
 	movw	r2, #554	@,
 	movt	r1, #:upper16:.LC9	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.38627, pLf
+	mov	r0, r5	@ D.38641, pLf
 	b	.L295	@
 	.fnend
 	.size	Real9_GetImageBuffer, .-Real9_GetImageBuffer
@@ -2369,19 +2369,19 @@ REAL9DEC_Decode:
 	sub	r0, fp, #192	@,,
 	mov	r1, #0	@,
 	bl	memset	@
-	movw	r3, #44832	@ tmp241,
+	movw	r3, #46368	@ tmp241,
 	ldr	r3, [r4, r3]	@ <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pheight, <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pheight
-	movw	ip, #44828	@ tmp238,
+	movw	ip, #46364	@ tmp238,
 	ldr	r2, [r4, ip]	@ <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pwidth, <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pwidth
-	movw	r0, #44840	@ tmp240,
-	movw	ip, #44724	@ tmp251,
+	movw	r0, #46376	@ tmp240,
+	movw	ip, #46260	@ tmp251,
 	cmp	r5, #0	@ pPacket,
-	movw	r1, #44836	@ tmp237,
+	movw	r1, #46372	@ tmp237,
 	str	r3, [r4, r0]	@ <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pheight, <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pheight_prev
-	add	r6, r4, #44544	@ pPictureHeader, pCtx,
+	add	r6, r4, #46080	@ pPictureHeader, pCtx,
 	mov	r0, #1	@ tmp252,
 	str	r0, [r4, ip]	@ tmp252, <variable>.CodecInfo.PictureHeader.Fid
-	movw	ip, #44752	@ tmp253,
+	movw	ip, #46288	@ tmp253,
 	str	r2, [r4, r1]	@ <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pwidth, <variable>.CodecInfo.PictureHeader.Rv9ParsePicParam.pwidth_prev
 	add	r6, r6, #176	@ pPictureHeader, pPictureHeader,
 	mov	r1, #8192	@ tmp254,
@@ -2397,15 +2397,15 @@ REAL9DEC_Decode:
 	movw	r1, #11344	@,
 	str	r0, [fp, #-200]	@, %sfp
 	bl	__memzero	@
-	movw	r0, #45928	@ tmp261,
+	movw	r0, #47464	@ tmp261,
 	mov	r7, #0	@ tmp262,
 	str	r7, [r4, r0]	@ tmp262, <variable>.CodecInfo.BsOffset
-	movw	r2, #45948	@ tmp263,
+	movw	r2, #47484	@ tmp263,
 	ldr	ip, [r5, #16]	@ <variable>.LenInByte, <variable>.LenInByte
-	movw	r3, #45932	@ tmp265,
+	movw	r3, #47468	@ tmp265,
 	movw	r0, #11352	@ tmp267,
 	str	ip, [r4, r2]	@ <variable>.LenInByte, <variable>.CodecInfo.PacketTail
-	movw	ip, #45936	@ tmp269,
+	movw	ip, #47472	@ tmp269,
 	ldr	r1, [r5, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r1, [r4, r3]	@ <variable>.PhyAddr, <variable>.CodecInfo.BsPhyAddr
 	movw	r3, #11356	@ tmp270,
@@ -2419,9 +2419,9 @@ REAL9DEC_Decode:
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	beq	.L305	@,
 	ldr	ip, [r5, #92]	@ <variable>.PhyAddr, <variable>.PhyAddr
-	movw	r3, #45940	@ tmp274,
+	movw	r3, #47476	@ tmp274,
 	movw	r1, #11360	@ tmp276,
-	movw	r0, #45944	@ tmp278,
+	movw	r0, #47480	@ tmp278,
 	str	ip, [r4, r3]	@ <variable>.PhyAddr, <variable>.CodecInfo.BsPhyAddr1
 	movw	r3, #11357	@ tmp280,
 	ldr	lr, [r5, #80]	@ <variable>.VirAddr, <variable>.VirAddr
@@ -2440,27 +2440,27 @@ REAL9DEC_Decode:
 	bhi	.L307	@,
 .L394:
 	movw	lr, #11352	@ tmp301,
-	ldr	r1, [r4, lr]	@ D.39450, <variable>.CodecInfo.BsVirAddr
-	cmp	r1, #0	@ D.39450,
+	ldr	r1, [r4, lr]	@ D.39464, <variable>.CodecInfo.BsVirAddr
+	cmp	r1, #0	@ D.39464,
 	beq	.L307	@,
-	add	r9, r4, #46080	@, pCtx,
+	add	r9, r4, #47616	@, pCtx,
 	str	r9, [fp, #-212]	@, %sfp
 	add	r5, r9, #8	@ pBs,,
-	movw	r9, #44900	@ tmp303,
+	movw	r9, #46436	@ tmp303,
 	mov	r0, r5	@, pBs
 	bl	BsInit	@
 	mov	r0, r5	@, pBs
 	mov	r1, #8	@,
 	bl	Real9_CB_GetBits	@
-	cmp	r0, #255	@ D.39453,
-	add	r0, r0, #1	@ D.39455, D.39453,
-	str	r0, [r4, r9]	@ D.39455, <variable>.CodecInfo.TotalSliceNum
+	cmp	r0, #255	@ D.39467,
+	add	r0, r0, #1	@ D.39469, D.39467,
+	str	r0, [r4, r9]	@ D.39469, <variable>.CodecInfo.TotalSliceNum
 	bhi	.L307	@,
-	cmp	r0, #0	@ D.39455,
-	addeq	r7, r4, #44800	@, pCtx,
+	cmp	r0, #0	@ D.39469,
+	addeq	r7, r4, #46336	@, pCtx,
 	streq	r7, [fp, #-216]	@, %sfp
 	beq	.L309	@,
-	add	r8, r4, #44800	@, pCtx,
+	add	r8, r4, #46336	@, pCtx,
 	movw	sl, #:lower16:3145727	@ tmp748,
 	str	r8, [fp, #-216]	@, %sfp
 	add	r7, r8, #104	@ ivtmp.1398,,
@@ -2468,8 +2468,8 @@ REAL9DEC_Decode:
 	mov	r8, #0	@ i.1409,
 	b	.L310	@
 .L393:
-	ldr	r0, [r4, r9]	@ D.39456, <variable>.CodecInfo.TotalSliceNum
-	cmp	r0, r8	@ D.39456, i.1409
+	ldr	r0, [r4, r9]	@ D.39470, <variable>.CodecInfo.TotalSliceNum
+	cmp	r0, r8	@ D.39470, i.1409
 	bls	.L309	@,
 .L310:
 	mov	r1, #32	@,
@@ -2484,36 +2484,36 @@ REAL9DEC_Decode:
 	orr	r3, r1, r0, lsr #24	@, tmp307, tmp306, SliceByteOffset,
 	and	r1, r0, #16711680	@ tmp311, SliceByteOffset,
 	orr	ip, r3, r2, asl #8	@, tmp310, tmp307, tmp308,
-	orr	r2, ip, r1, lsr #8	@, D.39472, tmp310, tmp311,
-	str	r2, [r7, #0]	@ D.39472, <variable>.CodecInfo.SliceByteOffset
-	cmp	r2, sl	@ D.39472, tmp748
+	orr	r2, ip, r1, lsr #8	@, D.39486, tmp310, tmp311,
+	str	r2, [r7, #0]	@ D.39486, <variable>.CodecInfo.SliceByteOffset
+	cmp	r2, sl	@ D.39486, tmp748
 	add	r7, r7, #4	@ ivtmp.1398, ivtmp.1398,
 	ble	.L393	@,
 .L307:
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 .L304:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L392:
-	movw	r6, #:lower16:80280	@ tmp284,
-	movt	r6, #:upper16:80280	@ tmp284,
+	movw	r6, #:lower16:83352	@ tmp284,
+	movt	r6, #:upper16:83352	@ tmp284,
 	ldr	r1, [r5, #20]	@, <variable>.StreamID
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	SM_ReleaseStreamSeg	@
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r5, #100]	@, <variable>.StreamID
 	bl	SM_ReleaseStreamSeg	@
-	mov	r0, r7	@ D.39414, tmp262
+	mov	r0, r7	@ D.39428, tmp262
 	b	.L304	@
 .L305:
-	movw	r0, #45944	@ tmp294,
+	movw	r0, #47480	@ tmp294,
 	movw	r3, #:lower16:3145717	@ tmp300,
 	str	r7, [r4, r0]	@ tmp262, <variable>.CodecInfo.BsLength1
 	movt	r3, #:upper16:3145717	@ tmp300,
 	sub	r0, r2, #10	@ tmp299, temp.1405,
 	movw	ip, #11357	@ tmp296,
 	cmp	r0, r3	@ tmp299, tmp300
-	movw	r1, #45940	@ tmp290,
+	movw	r1, #47476	@ tmp290,
 	movw	lr, #11360	@ tmp292,
 	strb	r7, [r4, ip]	@ tmp262, <variable>.CodecInfo.IsLastSeg1
 	str	r7, [r4, r1]	@ tmp262, <variable>.CodecInfo.BsPhyAddr1
@@ -2521,16 +2521,16 @@ REAL9DEC_Decode:
 	bls	.L394	@,
 	b	.L307	@
 .L391:
-	movw	lr, #45964	@ tmp259,
+	movw	lr, #47500	@ tmp259,
 	movw	r1, #:lower16:.LC12	@,
 	ldr	r2, [r4, lr]	@, <variable>.CodecInfo.FrmCnt
 	movt	r1, #:upper16:.LC12	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.39414, pPacket
+	mov	r0, r5	@ D.39428, pPacket
 	b	.L304	@
 .L309:
 	ldr	r9, [fp, #-216]	@, %sfp
-	sub	r7, r0, #1	@ pretmp.1361, D.39456,
+	sub	r7, r0, #1	@ pretmp.1361, D.39470,
 	tst	r7, #1	@ pretmp.1361,
 	mov	r2, #0	@ i,
 	add	sl, r9, #108	@ ivtmp.1392,,
@@ -2538,23 +2538,23 @@ REAL9DEC_Decode:
 	beq	.L311	@,
 	cmp	r2, r7	@ i, pretmp.1361
 	bcs	.L382	@,
-	ldr	ip, [sl, #0]	@ D.39478, <variable>.CodecInfo.SliceByteOffset
+	ldr	ip, [sl, #0]	@ D.39492, <variable>.CodecInfo.SliceByteOffset
 	mov	r2, #1	@ i,
-	ldr	lr, [sl, #-4]	@ D.39473, <variable>.CodecInfo.SliceByteOffset
+	ldr	lr, [sl, #-4]	@ D.39487, <variable>.CodecInfo.SliceByteOffset
 	ldr	r1, [fp, #-216]	@, %sfp
-	cmp	ip, lr	@ D.39478, D.39473
+	cmp	ip, lr	@ D.39492, D.39487
 	add	r3, r1, #112	@ ivtmp.1472,,
 	bgt	.L311	@,
 	b	.L307	@
 .L312:
-	ldr	r8, [r3, #0]	@ D.39478, <variable>.CodecInfo.SliceByteOffset
-	ldr	lr, [r3, #-4]	@ D.39473, <variable>.CodecInfo.SliceByteOffset
-	cmp	r8, lr	@ D.39478, D.39473
+	ldr	r8, [r3, #0]	@ D.39492, <variable>.CodecInfo.SliceByteOffset
+	ldr	lr, [r3, #-4]	@ D.39487, <variable>.CodecInfo.SliceByteOffset
+	cmp	r8, lr	@ D.39492, D.39487
 	ble	.L307	@,
-	ldr	ip, [r3, #4]	@ D.39478, <variable>.CodecInfo.SliceByteOffset
+	ldr	ip, [r3, #4]	@ D.39492, <variable>.CodecInfo.SliceByteOffset
 	add	r3, r1, #4	@ ivtmp.1472, tmp753,
-	ldr	lr, [r1, #-4]	@ D.39473, <variable>.CodecInfo.SliceByteOffset
-	cmp	ip, lr	@ D.39478, D.39473
+	ldr	lr, [r1, #-4]	@ D.39487, <variable>.CodecInfo.SliceByteOffset
+	cmp	ip, lr	@ D.39492, D.39487
 	ble	.L307	@,
 .L311:
 	cmp	r2, r7	@ i, pretmp.1361
@@ -2563,8 +2563,8 @@ REAL9DEC_Decode:
 	add	r1, r3, #4	@ tmp753, ivtmp.1472,
 	bcc	.L312	@,
 .L382:
-	movw	r3, #44904	@ tmp317,
-	mov	r0, r0, asl #3	@ tmp316, D.39456,
+	movw	r3, #46440	@ tmp317,
+	mov	r0, r0, asl #3	@ tmp316, D.39470,
 	ldr	ip, [r4, r3]	@ <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
 	add	r7, r0, #1	@, tmp316,
 	str	r7, [fp, #-232]	@, %sfp
@@ -2577,10 +2577,10 @@ REAL9DEC_Decode:
 	bge	.L307	@,
 	cmp	r8, #0	@,
 	ble	.L307	@,
-	movw	r1, #45936	@ tmp328,
+	movw	r1, #47472	@ tmp328,
 	ldr	r2, [r4, r1]	@ <variable>.CodecInfo.BsLength, <variable>.CodecInfo.BsLength
-	rsb	r2, r8, r2	@ D.39493,, <variable>.CodecInfo.BsLength
-	cmp	r2, #0	@ D.39493,
+	rsb	r2, r8, r2	@ D.39507,, <variable>.CodecInfo.BsLength
+	cmp	r2, #0	@ D.39507,
 	ble	.L307	@,
 	movw	ip, #11352	@ tmp330,
 	mov	r0, r5	@, pBs
@@ -2596,7 +2596,7 @@ REAL9DEC_Decode:
 	ldrb	r7, [r4, r0]	@ zero_extendqisi2	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	r7, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
 	beq	.L314	@,
-	movw	r1, #44744	@ tmp337,
+	movw	r1, #46280	@ tmp337,
 	ldr	r2, [fp, #-168]	@ TmpPictureHeader.pic_width_in_mb, TmpPictureHeader.pic_width_in_mb
 	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_mb, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
 	cmp	r2, r3	@ TmpPictureHeader.pic_width_in_mb, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
@@ -2607,12 +2607,12 @@ REAL9DEC_Decode:
 	ldr	ip, [r9, #0]	@ g_event_report, g_event_report
 	cmp	ip, #0	@ g_event_report,
 	beq	.L316	@,
-	movw	r7, #44744	@ tmp345,
-	movw	r1, #44740	@ tmp347,
+	movw	r7, #46280	@ tmp345,
+	movw	r1, #46276	@ tmp347,
 	ldrh	lr, [r4, r7]	@, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
-	movw	r8, #:lower16:80280	@ tmp352,
+	movw	r8, #:lower16:83352	@ tmp352,
 	ldrh	r2, [fp, #-168]	@, TmpPictureHeader.pic_width_in_mb
-	movt	r8, #:upper16:80280	@ tmp352,
+	movt	r8, #:upper16:83352	@ tmp352,
 	ldrh	r0, [fp, #-172]	@, TmpPictureHeader.pic_height_in_mb
 	strh	lr, [fp, #-64]	@ movhi	@, para
 	ldrh	r3, [r4, r1]	@, <variable>.CodecInfo.PictureHeader.pic_height_in_mb
@@ -2625,15 +2625,15 @@ REAL9DEC_Decode:
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	blx	ip	@ g_event_report
 .L316:
-	movw	r7, #:lower16:80280	@ tmp356,
-	movt	r7, #:upper16:80280	@ tmp356,
-	movw	lr, #46068	@ tmp358,
+	movw	r7, #:lower16:83352	@ tmp356,
+	movt	r7, #:upper16:83352	@ tmp356,
+	movw	lr, #47604	@ tmp358,
 	ldr	r3, [fp, #-212]	@, %sfp
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.BwdFsID
-	movw	r8, #46064	@ tmp362,
+	movw	r8, #47600	@ tmp362,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	mov	r2, #1	@,
-	add	r9, r3, #40	@ D.39519,,
+	add	r9, r3, #40	@ D.39533,,
 	str	lr, [fp, #-240]	@,
 	bl	FSP_ClearLogicFs	@
 	mov	r2, #1	@,
@@ -2649,12 +2649,12 @@ REAL9DEC_Decode:
 	str	r1, [fp, #-240]	@,
 	bl	FSP_GetNullLogicFs	@
 	movw	r2, #11365	@ tmp372,
-	mov	r1, r9	@, D.39519
-	str	r0, [r4, r8]	@ D.39518, <variable>.CodecInfo.FwdFsID
+	mov	r1, r9	@, D.39533
+	str	r0, [r4, r8]	@ D.39532, <variable>.CodecInfo.FwdFsID
 	ldr	r3, [fp, #-244]	@,
 	strb	r3, [r4, r2]	@ tmp365, <variable>.CodecInfo.RefNum
 	ldr	ip, [fp, #-240]	@,
-	str	r0, [r4, ip]	@ D.39518, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, ip]	@ D.39532, <variable>.CodecInfo.BwdFsID
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
 	ldr	r2, [fp, #-168]	@ prephitmp.1369, TmpPictureHeader.pic_width_in_mb
@@ -2664,7 +2664,7 @@ REAL9DEC_Decode:
 	ldr	r3, [fp, #-172]	@ prephitmp.1422, TmpPictureHeader.pic_height_in_mb
 	cmp	r3, #512	@ prephitmp.1422,
 	bhi	.L318	@,
-	ldr	r1, [r4, #0]	@ D.39526, <variable>.pstExtraData
+	ldr	r1, [r4, #0]	@ D.39540, <variable>.pstExtraData
 	ldr	r0, [r1, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r0, #0	@ <variable>.stChanOption.s32ReRangeEn,
 	bne	.L320	@,
@@ -2672,8 +2672,8 @@ REAL9DEC_Decode:
 	cmp	r7, #25	@ <variable>.eCapLevel,
 	beq	.L397	@,
 .L320:
-	movw	r2, #:lower16:80280	@ tmp383,
-	movt	r2, #:upper16:80280	@ tmp383,
+	movw	r2, #:lower16:83352	@ tmp383,
+	movt	r2, #:upper16:83352	@ tmp383,
 	ldr	r0, [r4, r2]	@, <variable>.ChanID
 	bl	FSP_GetFspType	@
 	cmp	r0, #0	@,
@@ -2690,7 +2690,7 @@ REAL9DEC_Decode:
 	mov	r1, r4	@, pCtx
 	sub	r2, fp, #192	@,,
 	bl	Real9_ArrangeVHBMem	@
-	subs	r7, r0, #0	@ D.39537,
+	subs	r7, r0, #0	@ D.39551,
 	beq	.L398	@,
 .L315:
 	sub	r1, fp, #192	@,,
@@ -2703,11 +2703,11 @@ REAL9DEC_Decode:
 	ldr	r7, [r1, #8]	@ <variable>.s32DecMode, <variable>.s32DecMode
 	strb	r7, [r4, r3]	@ <variable>.s32DecMode, <variable>.CodecInfo.UsedDecMode
 	bl	Real9_GetImageBuffer	@
-	subs	r7, r0, #0	@ D.39543,
+	subs	r7, r0, #0	@ D.39557,
 	beq	.L399	@,
-	movw	r9, #:lower16:80280	@ tmp398,
-	movt	r9, #:upper16:80280	@ tmp398,
-	movw	ip, #46072	@,
+	movw	r9, #:lower16:83352	@ tmp398,
+	movt	r9, #:upper16:83352	@ tmp398,
+	movw	ip, #47608	@,
 	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r9]	@, <variable>.ChanID
 	str	r9, [fp, #-240]	@,
@@ -2748,12 +2748,12 @@ REAL9DEC_Decode:
 	str	ip, [fp, #-240]	@,
 	strd	r8, [sp]	@,
 	bl	dprint_vfmw	@
-	movw	r0, #44728	@ tmp421,
+	movw	r0, #46264	@ tmp421,
 	ldr	ip, [fp, #-240]	@,
-	ldr	r3, [r4, r0]	@ D.39562, <variable>.CodecInfo.PictureHeader.PicCodType
-	cmp	r3, #2	@ D.39562,
+	ldr	r3, [r4, r0]	@ D.39576, <variable>.CodecInfo.PictureHeader.PicCodType
+	cmp	r3, #2	@ D.39576,
 	beq	.L400	@,
-	cmp	r3, #1	@ D.39562,
+	cmp	r3, #1	@ D.39576,
 	beq	.L401	@,
 	movw	r7, #11365	@ tmp426,
 	ldrb	r3, [r4, r7]	@ zero_extendqisi2	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
@@ -2761,8 +2761,8 @@ REAL9DEC_Decode:
 	addeq	r3, r3, #1	@ iftmp.480, iftmp.480,
 	bne	.L328	@,
 .L329:
-	movw	ip, #46064	@ tmp430,
-	movw	r7, #46068	@ tmp431,
+	movw	ip, #47600	@ tmp430,
+	movw	r7, #47604	@ tmp431,
 	ldr	r2, [r4, ip]	@ prephitmp.1367, <variable>.CodecInfo.FwdFsID
 	movw	r0, #11365	@ tmp428,
 	ldr	lr, [r4, r7]	@ <variable>.CodecInfo.BwdFsID, <variable>.CodecInfo.BwdFsID
@@ -2775,20 +2775,20 @@ REAL9DEC_Decode:
 	str	ip, [fp, #-240]	@,
 	bl	dprint_vfmw	@
 	ldr	ip, [fp, #-240]	@,
-	movw	r3, #:lower16:80280	@ tmp434,
-	movt	r3, #:upper16:80280	@ tmp434,
+	movw	r3, #:lower16:83352	@ tmp434,
+	movt	r3, #:upper16:83352	@ tmp434,
 	mov	r2, #0	@,
 	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.FwdFsID
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	bl	FSP_SetRef	@
 	ldr	r2, [r4, r7]	@ prephitmp.1367, <variable>.CodecInfo.BwdFsID
 .L330:
-	movw	r3, #46072	@ tmp439,
-	movw	r7, #:lower16:80280	@ tmp441,
+	movw	r3, #47608	@ tmp439,
+	movw	r7, #:lower16:83352	@ tmp441,
 	ldr	r0, [r4, r3]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.CurFsID
-	movt	r7, #:upper16:80280	@ tmp441,
-	movw	lr, #46064	@ tmp437,
-	movw	ip, #46068	@ tmp438,
+	movt	r7, #:upper16:83352	@ tmp441,
+	movw	lr, #47600	@ tmp437,
+	movw	ip, #47604	@ tmp438,
 	str	r2, [r4, lr]	@ prephitmp.1367, <variable>.CodecInfo.FwdFsID
 	mov	r2, #1	@,
 	str	r0, [r4, ip]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.BwdFsID
@@ -2812,29 +2812,29 @@ REAL9DEC_Decode:
 	ldrb	r7, [r4, r3]	@ zero_extendqisi2	@ <variable>.CodecInfo.UsedDecMode, <variable>.CodecInfo.UsedDecMode
 	cmp	r7, #4	@ <variable>.CodecInfo.UsedDecMode,
 	bne	.L332	@,
-	movw	r0, #44728	@ tmp453,
+	movw	r0, #46264	@ tmp453,
 	ldr	r3, [r4, r0]	@ prephitmp.1365, <variable>.CodecInfo.PictureHeader.PicCodType
 	cmp	r3, #0	@ prephitmp.1365,
 	bne	.L333	@,
 .L387:
-	mov	r9, #46080	@ tmp461,
+	mov	r9, #47616	@ tmp461,
 	str	r3, [r4, r9]	@ prephitmp.1365, <variable>.CodecInfo.PPicFound
 .L332:
-	movw	r7, #:lower16:80280	@ tmp463,
-	movt	r7, #:upper16:80280	@ tmp463,
-	movw	r0, #46072	@ tmp464,
+	movw	r7, #:lower16:83352	@ tmp463,
+	movt	r7, #:upper16:83352	@ tmp463,
+	movw	r0, #47608	@ tmp464,
 	ldr	r1, [r4, r0]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	str	r7, [fp, #-244]	@,
 	bl	FSP_GetLogicFs	@
 	ldr	r1, [fp, #-244]	@,
-	movw	ip, #46064	@ tmp466,
+	movw	ip, #47600	@ tmp466,
 	mov	r7, r0	@ pCur,
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.FwdFsID
 	bl	FSP_GetLogicFs	@
 	ldr	r3, [fp, #-244]	@,
-	movw	r2, #46068	@ tmp468,
+	movw	r2, #47604	@ tmp468,
 	ldr	r1, [r4, r2]	@, <variable>.CodecInfo.BwdFsID
 	mov	r9, r0	@ pFwd,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
@@ -2845,77 +2845,77 @@ REAL9DEC_Decode:
 	beq	.L335	@,
 	cmp	r0, #0	@ pBwd,
 	beq	.L335	@,
-	ldr	r3, [r7, #520]	@ D.39604, <variable>.pstDecodeFs
-	cmp	r3, #0	@ D.39604,
+	ldr	r3, [r7, #544]	@ D.39618, <variable>.pstDecodeFs
+	cmp	r3, #0	@ D.39618,
 	beq	.L337	@,
-	ldr	lr, [r7, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	lr, [r7, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	cmp	lr, #0	@ <variable>.pstTfOutFs,
 	beq	.L337	@,
-	ldr	r2, [r7, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	r2, [r7, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	cmp	r2, #0	@ <variable>.pstDispOutFs,
 	beq	.L337	@,
-	ldr	r2, [r0, #520]	@ D.39611, <variable>.pstDecodeFs
+	ldr	r2, [r0, #544]	@ D.39625, <variable>.pstDecodeFs
 	movw	r1, #:lower16:.LC23	@,
 	movt	r1, #:upper16:.LC23	@,
-	cmp	r2, #0	@ D.39611,
+	cmp	r2, #0	@ D.39625,
 	ldrne	r8, [r2, #12]	@ iftmp.484, <variable>.PhyAddr
 	ldreq	r8, [r3, #12]	@ iftmp.484, <variable>.PhyAddr
 	str	r8, [r4, #52]	@ iftmp.484, <variable>.Rv9DecParam.BwdRefPhyAddr
-	ldr	r0, [r9, #520]	@ D.39618, <variable>.pstDecodeFs
-	cmp	r0, #0	@ D.39618,
-	ldreq	r0, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	ldr	r0, [r9, #544]	@ D.39632, <variable>.pstDecodeFs
+	cmp	r0, #0	@ D.39632,
+	ldreq	r0, [r7, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	lr, [r0, #12]	@ iftmp.485, <variable>.PhyAddr
 	mov	r0, #13	@,
 	str	lr, [r4, #56]	@ iftmp.485, <variable>.Rv9DecParam.FwdRefPhyAddr
-	ldr	r3, [r7, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
-	ldr	r2, [r3, #12]	@ D.39623, <variable>.PhyAddr
-	str	r2, [r4, #60]	@ D.39623, <variable>.Rv9DecParam.CurPicPhyAddr
-	ldr	r3, [r7, #532]	@, <variable>.PmvAddr
+	ldr	r3, [r7, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	ldr	r2, [r3, #12]	@ D.39637, <variable>.PhyAddr
+	str	r2, [r4, #60]	@ D.39637, <variable>.Rv9DecParam.CurPicPhyAddr
+	ldr	r3, [r7, #556]	@, <variable>.PmvAddr
 	str	r3, [fp, #-224]	@, %sfp
 	str	r3, [r4, #76]	@, <variable>.Rv9DecParam.CurrPmvPhyAddr
-	ldr	r3, [ip, #532]	@, <variable>.PmvAddr
+	ldr	r3, [ip, #556]	@, <variable>.PmvAddr
 	str	r3, [fp, #-220]	@, %sfp
 	str	r3, [r4, #80]	@, <variable>.Rv9DecParam.ColPmvPhyAddr
-	ldr	r3, [r7, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
-	ldr	r3, [r3, #12]	@ D.39629, <variable>.PhyAddr
+	ldr	r3, [r7, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	r3, [r3, #12]	@ D.39643, <variable>.PhyAddr
 	str	lr, [sp, #0]	@ iftmp.485,
 	str	r8, [sp, #4]	@ iftmp.484,
-	str	r3, [r4, #64]	@ D.39629, <variable>.Rv9DecParam.DispFramePhyAddr
+	str	r3, [r4, #64]	@ D.39643, <variable>.Rv9DecParam.DispFramePhyAddr
 	ldr	r8, [fp, #-224]	@, %sfp
 	ldr	lr, [fp, #-220]	@, %sfp
 	str	ip, [fp, #-240]	@,
 	str	r8, [sp, #8]	@,
 	str	lr, [sp, #12]	@,
 	bl	dprint_vfmw	@
-	ldr	r8, [r7, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
-	movw	r1, #44728	@ tmp494,
+	ldr	r8, [r7, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	movw	r1, #46264	@ tmp494,
 	ldr	ip, [r4, r1]	@ <variable>.CodecInfo.PictureHeader.PicCodType, <variable>.CodecInfo.PictureHeader.PicCodType
-	movw	r1, #46036	@ tmp491,
+	movw	r1, #47572	@ tmp491,
 	ldr	r3, [r8, #20]	@ <variable>.Stride, <variable>.Stride
 	cmp	ip, #2	@ <variable>.CodecInfo.PictureHeader.PicCodType,
 	str	r3, [r4, #68]	@ <variable>.Stride, <variable>.Rv9DecParam.DDRStride
-	ldr	r2, [r7, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	r2, [r7, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	ldr	r8, [r2, #20]	@ <variable>.Stride, <variable>.Stride
 	str	r8, [r4, r1]	@ <variable>.Stride, <variable>.CodecInfo.ddr_stride
 	ldr	ip, [fp, #-240]	@,
 	beq	.L402	@,
 .L343:
-	movw	r3, #44756	@ tmp516,
-	movw	ip, #44768	@ tmp518,
+	movw	r3, #46292	@ tmp516,
+	movw	ip, #46304	@ tmp518,
 	ldr	r9, [r4, r3]	@ <variable>.CodecInfo.PictureHeader.TR, <variable>.CodecInfo.PictureHeader.TR
-	movw	r1, #44744	@ tmp521,
+	movw	r1, #46280	@ tmp521,
 	sub	lr, r1, #4	@ tmp523, tmp523,
-	movw	r2, #44728	@ tmp519,
-	str	r9, [r7, #540]	@ <variable>.CodecInfo.PictureHeader.TR, <variable>.TR
-	movw	r7, #45988	@ tmp525,
+	movw	r2, #46264	@ tmp519,
+	str	r9, [r7, #564]	@ <variable>.CodecInfo.PictureHeader.TR, <variable>.TR
+	movw	r7, #47524	@ tmp525,
 	ldr	r0, [r4, ip]	@, <variable>.CodecInfo.PictureHeader.PQUANT
 	add	r8, r7, #4	@ tmp527, tmp527,
-	movw	r9, #44892	@ tmp529,
-	movw	ip, #44896	@ tmp531,
-	ldr	r3, [r4, r2]	@ D.39935, <variable>.CodecInfo.PictureHeader.PicCodType
+	movw	r9, #46428	@ tmp529,
+	movw	ip, #46432	@ tmp531,
+	ldr	r3, [r4, r2]	@ D.39949, <variable>.CodecInfo.PictureHeader.PicCodType
 	str	r0, [fp, #-212]	@, %sfp
 	ldr	r0, [r4, r1]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_mb, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
-	cmp	r3, #2	@ D.39935,
+	cmp	r3, #2	@ D.39949,
 	ldr	r1, [r4, lr]	@ <variable>.CodecInfo.PictureHeader.pic_height_in_mb, <variable>.CodecInfo.PictureHeader.pic_height_in_mb
 	ldr	lr, [r4, r7]	@ <variable>.CodecInfo.Ratio0, <variable>.CodecInfo.Ratio0
 	ldr	r7, [r4, r8]	@ <variable>.CodecInfo.Ratio1, <variable>.CodecInfo.Ratio1
@@ -2925,7 +2925,7 @@ REAL9DEC_Decode:
 	mov	r0, r5	@, pBs
 	str	r7, [r4, #24]	@ <variable>.CodecInfo.Ratio1, <variable>.Rv9DecParam.Ratio1
 	str	ip, [r4, #32]	@ <variable>.CodecInfo.PrevPicQP, <variable>.Rv9DecParam.PrevPicQP
-	strb	r3, [r4, #9]	@ D.39935, <variable>.Rv9DecParam.PicCodingType
+	strb	r3, [r4, #9]	@ D.39949, <variable>.Rv9DecParam.PicCodingType
 	str	r1, [r4, #16]	@ <variable>.CodecInfo.PictureHeader.pic_height_in_mb, <variable>.Rv9DecParam.PicHeightInMb
 	str	lr, [r4, #20]	@ <variable>.CodecInfo.Ratio0, <variable>.Rv9DecParam.Ratio0
 	str	r8, [r4, #36]	@ <variable>.CodecInfo.PrevPicMb0QP, <variable>.Rv9DecParam.PrevPicMb0QP
@@ -2933,7 +2933,7 @@ REAL9DEC_Decode:
 	strne	r2, [r4, r9]	@, <variable>.CodecInfo.PrevPicQP
 	str	r2, [r4, #28]	@, <variable>.Rv9DecParam.PQUANT
 	bl	BsPos	@
-	movw	r3, #44868	@ tmp534,
+	movw	r3, #46404	@ tmp534,
 	add	ip, r3, #32	@ tmp537, tmp537,
 	ldr	r7, [r4, ip]	@ <variable>.CodecInfo.TotalSliceNum, <variable>.CodecInfo.TotalSliceNum
 	ands	r0, r0, #-2147483641	@ tmp535,,
@@ -2944,49 +2944,49 @@ REAL9DEC_Decode:
 	cmp	r7, #1	@ <variable>.CodecInfo.TotalSliceNum,
 	str	r0, [r4, r3]	@ tmp535, <variable>.CodecInfo.SliceHeader.bit_offset_0
 	beq	.L403	@,
-	movw	r2, #44908	@ tmp547,
+	movw	r2, #46444	@ tmp547,
 	sub	ip, r2, #4	@ tmp548, tmp548,
 	ldr	r7, [r4, r2]	@ <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
 	mov	r0, r5	@, pBs
 	ldr	r3, [r4, ip]	@ <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
 .L389:
 	rsb	lr, r3, r7	@ tmp549, <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
-	movw	r7, #44872	@ tmp552,
-	movw	r8, #45932	@,
-	mov	r9, lr, asl #3	@ D.39681, tmp549,
+	movw	r7, #46408	@ tmp552,
+	movw	r8, #47468	@,
+	mov	r9, lr, asl #3	@ D.39695, tmp549,
 	bl	BsPos	@
 	ldr	r3, [r4, r8]	@ <variable>.CodecInfo.BsPhyAddr, <variable>.CodecInfo.BsPhyAddr
-	rsb	r0, r0, r9	@ tmp553,, D.39681
+	rsb	r0, r0, r9	@ tmp553,, D.39695
 	str	r0, [r4, r7]	@ tmp553, <variable>.CodecInfo.SliceHeader.bit_len_0
 	ldr	r9, [fp, #-228]	@, %sfp
 	mov	r0, r5	@, pBs
-	add	r8, r9, r3	@ D.39687,, <variable>.CodecInfo.BsPhyAddr
+	add	r8, r9, r3	@ D.39701,, <variable>.CodecInfo.BsPhyAddr
 	bl	BsPos	@
-	movw	ip, #44772	@ tmp568,
-	movw	r1, #44900	@ tmp583,
+	movw	ip, #46308	@ tmp568,
+	movw	r1, #46436	@ tmp583,
 	ldr	r2, [r4, ip]	@, <variable>.CodecInfo.PictureHeader.OSVQUANT
-	movw	r3, #44868	@ tmp574,
+	movw	r3, #46404	@ tmp574,
 	ldr	r9, [r4, r1]	@ <variable>.CodecInfo.TotalSliceNum, <variable>.CodecInfo.TotalSliceNum
-	movw	r1, #44764	@ tmp570,
+	movw	r1, #46300	@ tmp570,
 	add	ip, r1, #108	@ tmp576, tmp576,
 	str	r2, [r4, #112]	@, <variable>.osvquant
-	add	r7, r0, #7	@ tmp558, D.39688,
-	cmp	r0, #0	@ D.39688,
-	movlt	r0, r7	@ D.39688, tmp558
+	add	r7, r0, #7	@ tmp558, D.39702,
+	cmp	r0, #0	@ D.39702,
+	movlt	r0, r7	@ D.39702, tmp558
 	cmp	r9, #1	@ <variable>.CodecInfo.TotalSliceNum,
 	ldr	r9, [r4, ip]	@, <variable>.CodecInfo.SliceHeader.bit_len_0
-	add	r0, r8, r0, asr #3	@, D.39691, D.39687, D.39688,
-	ldr	r7, [r4, r1]	@ D.39693, <variable>.CodecInfo.PictureHeader.Deblocking_Filter_Passthrough
-	movw	r1, #44848	@ tmp567,
+	add	r0, r8, r0, asr #3	@, D.39705, D.39701, D.39702,
+	ldr	r7, [r4, r1]	@ D.39707, <variable>.CodecInfo.PictureHeader.Deblocking_Filter_Passthrough
+	movw	r1, #46384	@ tmp567,
 	add	ip, r1, #4	@ tmp569, tmp569,
 	str	r9, [r4, #100]	@, <variable>.StreamLength
-	movw	r9, #44876	@ tmp560,
+	movw	r9, #46412	@ tmp560,
 	ldr	r2, [fp, #-212]	@, %sfp
 	str	r2, [r4, r1]	@, <variable>.CodecInfo.SliceHeader.SliceQP
-	movw	r2, #44856	@ tmp571,
+	movw	r2, #46392	@ tmp571,
 	ldr	r8, [r4, #112]	@, <variable>.osvquant
 	add	r1, r2, #24	@ tmp561, tmp561,
-	str	r7, [r4, r2]	@ D.39693, <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough
+	str	r7, [r4, r2]	@ D.39707, <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough
 	add	r2, r1, #4	@ tmp563, tmp563,
 	str	r8, [r4, ip]	@, <variable>.CodecInfo.SliceHeader.osvquant
 	mov	ip, #0	@ tmp562,
@@ -2997,12 +2997,12 @@ REAL9DEC_Decode:
 	str	ip, [r4, r1]	@ tmp562, <variable>.CodecInfo.SliceHeader.bit_stream_addr_1
 	mov	r8, #1	@ tmp582,
 	str	ip, [r4, r2]	@ tmp562, <variable>.CodecInfo.SliceHeader.first_mb_in_slice
-	str	r0, [r4, #84]	@ D.39691, <variable>.StreamPhyAddr
+	str	r0, [r4, #84]	@ D.39705, <variable>.StreamPhyAddr
 	ldr	r1, [r4, r3]	@, <variable>.CodecInfo.SliceHeader.bit_offset_0
-	str	r7, [r4, #108]	@ D.39693, <variable>.dblk_filter_passthrough
+	str	r7, [r4, #108]	@ D.39707, <variable>.dblk_filter_passthrough
 	str	ip, [r4, #120]	@ tmp562, <variable>.first_mb_in_slice
 	str	r1, [r4, #92]	@, <variable>.StreamBitOffset
-	str	r0, [r4, r9]	@ D.39691, <variable>.CodecInfo.SliceHeader.bit_stream_addr_0
+	str	r0, [r4, r9]	@ D.39705, <variable>.CodecInfo.SliceHeader.bit_stream_addr_0
 	str	ip, [r4, #88]	@ tmp562, <variable>.StreamPhyAddr
 	str	ip, [r4, #96]	@ tmp562, <variable>.StreamBitOffset
 	str	ip, [r4, #104]	@ tmp562, <variable>.StreamLength
@@ -3010,7 +3010,7 @@ REAL9DEC_Decode:
 	str	r8, [r4, #40]	@ tmp582, <variable>.Rv9DecParam.TotalSliceNum
 	str	r0, [r4, #116]	@, <variable>.sliceqp
 	bls	.L353	@,
-	movw	r3, #44908	@ tmp585,
+	movw	r3, #46444	@ tmp585,
 	ldr	r2, [fp, #-232]	@, %sfp
 	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
 	movw	ip, #:lower16:3145727	@ tmp587,
@@ -3020,7 +3020,7 @@ REAL9DEC_Decode:
 	bgt	.L355	@,
 	cmp	r7, #0	@ PrevOffsetBytes.1522,
 	ble	.L355	@,
-	movw	r0, #45936	@ tmp588,
+	movw	r0, #47472	@ tmp588,
 	ldr	lr, [r4, r0]	@ <variable>.CodecInfo.BsLength, <variable>.CodecInfo.BsLength
 	rsb	r2, r7, lr	@ temp.1437, PrevOffsetBytes.1522, <variable>.CodecInfo.BsLength
 	cmp	r2, #0	@ temp.1437,
@@ -3029,7 +3029,7 @@ REAL9DEC_Decode:
 	bgt	.L358	@,
 	b	.L355	@
 .L359:
-	movw	ip, #44900	@,
+	movw	ip, #46436	@,
 	add	r8, r8, #1	@ i.1453, i.1453,
 	ldr	lr, [r4, ip]	@ <variable>.CodecInfo.TotalSliceNum, <variable>.CodecInfo.TotalSliceNum
 	cmp	lr, r8	@ <variable>.CodecInfo.TotalSliceNum, i.1453
@@ -3042,7 +3042,7 @@ REAL9DEC_Decode:
 	bgt	.L355	@,
 	cmp	r7, #0	@ PrevOffsetBytes.1522,
 	ble	.L355	@,
-	movw	r1, #45936	@,
+	movw	r1, #47472	@,
 	add	sl, sl, #4	@ ivtmp.1392, ivtmp.1392,
 	ldr	r2, [r4, r1]	@ <variable>.CodecInfo.BsLength, <variable>.CodecInfo.BsLength
 	rsb	r2, r7, r2	@ temp.1437, PrevOffsetBytes.1522, <variable>.CodecInfo.BsLength
@@ -3064,7 +3064,7 @@ REAL9DEC_Decode:
 	bl	Real9_CB_GetSliceHeader	@
 	cmp	r0, #1	@ found_ssc,
 	bne	.L359	@,
-	movw	lr, #44744	@,
+	movw	lr, #46280	@,
 	ldr	r2, [fp, #-48]	@, iSliceMBA
 	ldr	r3, [r4, lr]	@ <variable>.CodecInfo.PictureHeader.pic_width_in_mb, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
 	cmp	r3, #0	@ <variable>.CodecInfo.PictureHeader.pic_width_in_mb,
@@ -3077,14 +3077,14 @@ REAL9DEC_Decode:
 	movge	lr, r3	@, iSQUANT.493
 	str	lr, [fp, #-212]	@, %sfp
 	bl	BsPos	@
-	movw	r1, #44900	@,
+	movw	r1, #46436	@,
 	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.TotalSliceNum, <variable>.CodecInfo.TotalSliceNum
-	movw	lr, #44868	@,
-	sub	ip, r3, #1	@ D.39482, <variable>.CodecInfo.TotalSliceNum,
-	cmp	ip, r8	@ D.39482, i.1453
-	mov	r2, r0, asr #31	@ tmp609, D.39708,
+	movw	lr, #46404	@,
+	sub	ip, r3, #1	@ D.39496, <variable>.CodecInfo.TotalSliceNum,
+	cmp	ip, r8	@ D.39496, i.1453
+	mov	r2, r0, asr #31	@ tmp609, D.39722,
 	mov	r2, r2, lsr #29	@ tmp610, tmp609,
-	add	r1, r0, r2	@ tmp611, D.39708, tmp610
+	add	r1, r0, r2	@ tmp611, D.39722, tmp610
 	and	ip, r1, #7	@ tmp612, tmp611,
 	rsb	r0, r2, ip	@ tmp613, tmp610, tmp612
 	str	r0, [r4, lr]	@ tmp613, <variable>.CodecInfo.SliceHeader.bit_offset_0
@@ -3096,13 +3096,13 @@ REAL9DEC_Decode:
 	ldr	r3, [sl, #0]	@ tmp628, <variable>.CodecInfo.SliceByteOffset
 .L390:
 	rsb	r1, r3, r2	@ tmp626, tmp628, tmp627
-	mov	lr, r1, asl #3	@ D.39723, tmp626,
+	mov	lr, r1, asl #3	@ D.39737, tmp626,
 	str	lr, [fp, #-244]	@,
 	bl	BsPos	@
 	ldr	ip, [fp, #-244]	@,
-	movw	r1, #44872	@ tmp629,
-	rsb	r3, r0, ip	@ tmp630,, D.39723
-	movw	r0, #45932	@,
+	movw	r1, #46408	@ tmp629,
+	rsb	r3, r0, ip	@ tmp630,, D.39737
+	movw	r0, #47468	@,
 	ldr	r2, [r4, r0]	@ <variable>.CodecInfo.BsPhyAddr, <variable>.CodecInfo.BsPhyAddr
 	mov	r0, r5	@, pBs
 	str	r3, [r4, r1]	@ tmp630, <variable>.CodecInfo.SliceHeader.bit_len_0
@@ -3110,57 +3110,57 @@ REAL9DEC_Decode:
 	add	r7, r7, r2	@ temp.1497, PrevOffsetBytes.1522, <variable>.CodecInfo.BsPhyAddr
 	str	ip, [fp, #-240]	@,
 	bl	BsPos	@
-	movw	r2, #44772	@ tmp645,
+	movw	r2, #46308	@ tmp645,
 	ldr	ip, [r4, r2]	@, <variable>.CodecInfo.PictureHeader.OSVQUANT
 	mov	r3, #44	@ tmp652,
 	ldr	r1, [fp, #-216]	@, %sfp
 	str	ip, [fp, #-264]	@, %sfp
 	mla	r3, r3, r1, r4	@ tmp653, tmp652,, pCtx
-	movw	r1, #44764	@ tmp647,
+	movw	r1, #46300	@ tmp647,
 	ldr	r2, [r4, r1]	@, <variable>.CodecInfo.PictureHeader.Deblocking_Filter_Passthrough
-	movw	r1, #44880	@ tmp638,
+	movw	r1, #46416	@ tmp638,
 	str	r2, [fp, #-220]	@, %sfp
-	movw	r2, #44884	@ tmp640,
-	add	ip, r0, #7	@ tmp635, D.39727,
-	cmp	r0, #0	@ D.39727,
-	movlt	r0, ip	@ D.39727, tmp635
+	movw	r2, #46420	@ tmp640,
+	add	ip, r0, #7	@ tmp635, D.39741,
+	cmp	r0, #0	@ D.39741,
+	movlt	r0, ip	@ D.39741, tmp635
 	ldr	ip, [fp, #-240]	@,
 	str	ip, [r4, r1]	@ tmp639, <variable>.CodecInfo.SliceHeader.bit_offset_1
-	add	r1, r7, r0, asr #3	@, D.39730, temp.1497, D.39727,
-	movw	r0, #44888	@ tmp642,
+	add	r1, r7, r0, asr #3	@, D.39744, temp.1497, D.39741,
+	movw	r0, #46424	@ tmp642,
 	str	ip, [r4, r2]	@ tmp639, <variable>.CodecInfo.SliceHeader.bit_len_1
 	str	ip, [r4, r0]	@ tmp639, <variable>.CodecInfo.SliceHeader.bit_stream_addr_1
 	ldr	r7, [fp, #-216]	@, %sfp
 	ldr	r0, [fp, #-212]	@, %sfp
 	add	r2, r7, #1	@,,
-	movw	r7, #44848	@ tmp644,
+	movw	r7, #46384	@ tmp644,
 	str	r2, [fp, #-216]	@, %sfp
 	add	r2, r3, #112	@, tmp653,
 	str	r0, [r4, r7]	@, <variable>.CodecInfo.SliceHeader.SliceQP
-	movw	r7, #44852	@ tmp646,
+	movw	r7, #46388	@ tmp646,
 	ldr	r0, [fp, #-264]	@, %sfp
 	str	r2, [fp, #-228]	@, %sfp
 	str	r0, [r4, r7]	@, <variable>.CodecInfo.SliceHeader.osvquant
-	movw	r7, #44856	@ tmp648,
+	movw	r7, #46392	@ tmp648,
 	ldr	r0, [fp, #-220]	@, %sfp
 	ldr	r2, [fp, #-216]	@, %sfp
 	str	r0, [r4, r7]	@, <variable>.CodecInfo.SliceHeader.dblk_filter_passthrough
 	cmp	r2, #131	@,
 	ldr	r2, [fp, #-224]	@, %sfp
-	movw	r0, #44860	@,
+	movw	r0, #46396	@,
 	add	r7, r3, #104	@ tmp691, tmp653,
 	str	r2, [r4, r0]	@, <variable>.CodecInfo.SliceHeader.first_mb_in_slice
-	movw	r2, #44876	@,
+	movw	r2, #46412	@,
 	add	r0, r3, #84	@, tmp653,
 	str	r0, [fp, #-256]	@, %sfp
-	str	r1, [r4, r2]	@ D.39730, <variable>.CodecInfo.SliceHeader.bit_stream_addr_0
-	movw	r2, #44868	@,
+	str	r1, [r4, r2]	@ D.39744, <variable>.CodecInfo.SliceHeader.bit_stream_addr_0
+	movw	r2, #46404	@,
 	add	r0, r3, #92	@, tmp653,
 	str	r0, [fp, #-232]	@, %sfp
-	str	r1, [r3, #84]	@ D.39730, <variable>.StreamPhyAddr
+	str	r1, [r3, #84]	@ D.39744, <variable>.StreamPhyAddr
 	add	r1, r3, #100	@, tmp653,
 	str	r1, [fp, #-236]	@, %sfp
-	movw	r1, #44872	@ tmp667,
+	movw	r1, #46408	@ tmp667,
 	ldr	r0, [r4, r2]	@ <variable>.CodecInfo.SliceHeader.bit_offset_0, <variable>.CodecInfo.SliceHeader.bit_offset_0
 	str	r0, [r3, #92]	@ <variable>.CodecInfo.SliceHeader.bit_offset_0, <variable>.StreamBitOffset
 	ldr	r0, [fp, #-264]	@, %sfp
@@ -3197,22 +3197,22 @@ REAL9DEC_Decode:
 	movw	r1, #:lower16:.LC13	@,
 	movt	r1, #:upper16:.LC13	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.39414, tmp327
+	mov	r0, r7	@ D.39428, tmp327
 	b	.L304	@
 .L318:
 	mov	r0, #18	@,
 	movw	r1, #:lower16:.LC14	@,
 	movt	r1, #:upper16:.LC14	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L399:
-	movw	lr, #45964	@ tmp397,
+	movw	lr, #47500	@ tmp397,
 	movw	r1, #:lower16:.LC17	@,
 	ldr	r2, [r4, lr]	@, <variable>.CodecInfo.FrmCnt
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.39414, D.39543
+	mov	r0, r7	@ D.39428, D.39557
 	b	.L304	@
 .L397:
 	movw	ip, #11368	@ tmp381,
@@ -3220,11 +3220,11 @@ REAL9DEC_Decode:
 	cmp	r1, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
 	bne	.L321	@,
 .L322:
-	mov	r0, r9	@, D.39519
+	mov	r0, r9	@, D.39533
 	bl	ResetVoQueue	@
 	b	.L386	@
 .L396:
-	movw	r7, #44740	@ tmp340,
+	movw	r7, #46276	@ tmp340,
 	ldr	lr, [fp, #-172]	@ TmpPictureHeader.pic_height_in_mb, TmpPictureHeader.pic_height_in_mb
 	ldr	ip, [r4, r7]	@ <variable>.CodecInfo.PictureHeader.pic_height_in_mb, <variable>.CodecInfo.PictureHeader.pic_height_in_mb
 	cmp	lr, ip	@ TmpPictureHeader.pic_height_in_mb, <variable>.CodecInfo.PictureHeader.pic_height_in_mb
@@ -3235,7 +3235,7 @@ REAL9DEC_Decode:
 	movw	r1, #:lower16:.LC16	@,
 	movt	r1, #:upper16:.LC16	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.39414, D.39537
+	mov	r0, r7	@ D.39428, D.39551
 	b	.L304	@
 .L333:
 	cmp	r3, #2	@ prephitmp.1365,
@@ -3244,14 +3244,14 @@ REAL9DEC_Decode:
 	bne	.L332	@,
 	b	.L387	@
 .L355:
-	movw	r3, #:lower16:80280	@ tmp596,
-	movt	r3, #:upper16:80280	@ tmp596,
-	movw	lr, #46072	@ tmp597,
+	movw	r3, #:lower16:83352	@ tmp596,
+	movt	r3, #:upper16:83352	@ tmp596,
+	movw	lr, #47608	@ tmp597,
 	mov	r2, #1	@,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_ClearLogicFs	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L401:
 	movw	r1, #11365	@ tmp424,
@@ -3266,16 +3266,16 @@ REAL9DEC_Decode:
 	ldrb	r1, [r4, r2]	@ zero_extendqisi2	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
 	cmp	r1, #1	@ <variable>.CodecInfo.RefNum,
 	bhi	.L331	@,
-	movw	lr, #46072	@,
+	movw	lr, #47608	@,
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.CurFsID
 	mov	r2, #1	@,
 	bl	FSP_ClearLogicFs	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L405:
-	add	r1, r3, #11200	@ tmp619, <variable>.CodecInfo.TotalSliceNum,
-	movw	r0, #45936	@,
+	add	r1, r3, #11584	@ tmp619, <variable>.CodecInfo.TotalSliceNum,
+	movw	r0, #47472	@,
 	ldr	r2, [r4, r0]	@ <variable>.CodecInfo.BsLength, <variable>.CodecInfo.BsLength
 	add	ip, r1, #25	@ tmp619, tmp619,
 	mov	r0, r5	@, pBs
@@ -3289,12 +3289,12 @@ REAL9DEC_Decode:
 	movt	r1, #:upper16:.LC21	@,
 	movw	r3, #1893	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L337:
-	movw	r3, #:lower16:80280	@ tmp482,
-	movt	r3, #:upper16:80280	@ tmp482,
-	movw	ip, #46072	@ tmp483,
+	movw	r3, #:lower16:83352	@ tmp482,
+	movt	r3, #:upper16:83352	@ tmp482,
+	movw	ip, #47608	@ tmp483,
 	mov	r2, #1	@,
 	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
@@ -3303,29 +3303,29 @@ REAL9DEC_Decode:
 	movw	r1, #:lower16:.LC22	@,
 	movt	r1, #:upper16:.LC22	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L403:
-	movw	r1, #45936	@ tmp539,
+	movw	r1, #47472	@ tmp539,
 	ldr	lr, [fp, #-232]	@, %sfp
 	ldr	r8, [r4, r1]	@ <variable>.CodecInfo.BsLength, <variable>.CodecInfo.BsLength
-	movw	r7, #44904	@ tmp542,
+	movw	r7, #46440	@ tmp542,
 	ldr	r3, [r4, r7]	@ <variable>.CodecInfo.SliceByteOffset, <variable>.CodecInfo.SliceByteOffset
 	mov	r0, r5	@, pBs
 	rsb	r7, lr, r8	@ tmp540,, <variable>.CodecInfo.BsLength
 	b	.L389	@
 .L402:
-	movw	lr, #44756	@ tmp496,
-	ldr	r1, [r9, #540]	@ D.39644, <variable>.TR
+	movw	lr, #46292	@ tmp496,
+	ldr	r1, [r9, #564]	@ D.39658, <variable>.TR
 	ldr	r8, [r4, lr]	@ <variable>.CodecInfo.PictureHeader.TR, <variable>.CodecInfo.PictureHeader.TR
-	ldr	r9, [ip, #540]	@ <variable>.TR, <variable>.TR
-	subs	r2, r8, r1	@ trb, <variable>.CodecInfo.PictureHeader.TR, D.39644
-	rsb	r3, r1, r9	@ trd, D.39644, <variable>.TR
-	movwmi	r9, #44752	@ tmp499,
+	ldr	r9, [ip, #564]	@ <variable>.TR, <variable>.TR
+	subs	r2, r8, r1	@ trb, <variable>.CodecInfo.PictureHeader.TR, D.39658
+	rsb	r3, r1, r9	@ trd, D.39658, <variable>.TR
+	movwmi	r9, #46288	@ tmp499,
 	ldrmi	r9, [r4, r9]	@ <variable>.CodecInfo.PictureHeader.m_uTRWrap, <variable>.CodecInfo.PictureHeader.m_uTRWrap
 	addmi	r2, r2, r9	@ trb, trb, <variable>.CodecInfo.PictureHeader.m_uTRWrap
 	cmp	r3, #0	@ trd,
-	movwlt	r9, #44752	@ tmp501,
+	movwlt	r9, #46288	@ tmp501,
 	ldrlt	r9, [r4, r9]	@ <variable>.CodecInfo.PictureHeader.m_uTRWrap, <variable>.CodecInfo.PictureHeader.m_uTRWrap
 	addlt	r3, r3, r9	@ trd, trd, <variable>.CodecInfo.PictureHeader.m_uTRWrap
 	cmp	r2, r3	@ trb, trd
@@ -3350,22 +3350,22 @@ REAL9DEC_Decode:
 	sub	r2, fp, #248
 	ldmia	r2, {r2, r3, ip}	@ phole ldm
 .L348:
-	movw	r1, #45988	@ tmp514,
+	movw	r1, #47524	@ tmp514,
 	add	r9, r1, #4	@ tmp515, tmp515,
-	movw	lr, #45980	@ tmp512,
-	movw	r8, #45984	@ tmp513,
+	movw	lr, #47516	@ tmp512,
+	movw	r8, #47520	@ tmp513,
 	str	r2, [r4, lr]	@ trb, <variable>.CodecInfo.trb
 	str	r3, [r4, r8]	@ trd, <variable>.CodecInfo.trd
 	str	ip, [r4, r1]	@ prephitmp.1519, <variable>.CodecInfo.Ratio0
 	str	r0, [r4, r9]	@ prephitmp.1363, <variable>.CodecInfo.Ratio1
 	b	.L343	@
 .L324:
-	movw	r9, #46072	@,
+	movw	r9, #47608	@,
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	ldr	r1, [r4, r9]	@, <variable>.CodecInfo.CurFsID
 	mov	r2, #1	@,
 	bl	FSP_ClearLogicFs	@
-	mov	r0, r7	@ D.39414, pImg
+	mov	r0, r7	@ D.39428, pImg
 	b	.L304	@
 .L353:
 	ldr	r5, [r4, #4]	@ <variable>.pRv9DecParam, <variable>.pRv9DecParam
@@ -3375,41 +3375,41 @@ REAL9DEC_Decode:
 	beq	.L409	@,
 .L367:
 	ldr	r3, [r4, #0]	@ temp.1506, <variable>.pstExtraData
-	ldr	r2, [r3, #896]	@ D.39743, <variable>.stDisParams.s32Mode
-	cmp	r2, #1	@ D.39743,
+	ldr	r2, [r3, #896]	@ D.39757, <variable>.stDisParams.s32Mode
+	cmp	r2, #1	@ D.39757,
 	beq	.L410	@,
-	cmp	r2, #2	@ D.39743,
+	cmp	r2, #2	@ D.39757,
 	beq	.L411	@,
 .L370:
 	ldr	r2, [r3, #684]	@ <variable>.s32Compress_en, <variable>.s32Compress_en
 	movw	r3, #11348	@ tmp726,
-	mov	r0, #1	@ D.39414,
+	mov	r0, #1	@ D.39428,
 	str	r2, [r4, r3]	@ <variable>.s32Compress_en, <variable>.Rv9DecParam.Compress_en
 	b	.L304	@
 .L408:
-	mov	ip, #46080	@ tmp457,
+	mov	ip, #47616	@ tmp457,
 	ldr	r7, [r4, ip]	@ <variable>.CodecInfo.PPicFound, <variable>.CodecInfo.PPicFound
 	cmp	r7, #0	@ <variable>.CodecInfo.PPicFound,
 	bne	.L332	@,
-	movw	lr, #:lower16:80280	@ tmp459,
-	movt	lr, #:upper16:80280	@ tmp459,
-	movw	r1, #46072	@ tmp460,
+	movw	lr, #:lower16:83352	@ tmp459,
+	movt	lr, #:upper16:83352	@ tmp459,
+	movw	r1, #47608	@ tmp460,
 	mov	r2, #1	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	ldr	r1, [r4, r1]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_ClearLogicFs	@
-	mov	r0, r7	@ D.39414, <variable>.CodecInfo.PPicFound
+	mov	r0, r7	@ D.39428, <variable>.CodecInfo.PPicFound
 	b	.L304	@
 .L407:
-	movw	r3, #:lower16:80280	@ tmp707,
-	movt	r3, #:upper16:80280	@ tmp707,
-	movw	r0, #46072	@ tmp708,
+	movw	r3, #:lower16:83352	@ tmp707,
+	movt	r3, #:upper16:83352	@ tmp707,
+	movw	r0, #47608	@ tmp708,
 	mov	r2, #1	@,
 	ldr	r1, [r4, r0]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	bl	FSP_ClearLogicFs	@
 	ldr	r2, [fp, #-240]	@,
-	mov	r0, r2	@ D.39414, tmp639
+	mov	r0, r2	@ D.39428, tmp639
 	b	.L304	@
 .L406:
 	mov	r0, #22	@,
@@ -3417,19 +3417,19 @@ REAL9DEC_Decode:
 	mov	r2, #2096	@,
 	movt	r1, #:upper16:.LC24	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.39414,
+	mov	r0, #0	@ D.39428,
 	b	.L304	@
 .L404:
-	movw	ip, #:lower16:80280	@ tmp606,
-	movt	ip, #:upper16:80280	@ tmp606,
-	movw	r1, #46072	@ tmp607,
+	movw	ip, #:lower16:83352	@ tmp606,
+	movt	ip, #:upper16:83352	@ tmp606,
+	movw	r1, #47608	@ tmp607,
 	mov	r2, r0	@, found_ssc
 	ldr	r1, [r4, r1]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	str	r3, [fp, #-244]	@,
 	bl	FSP_ClearLogicFs	@
 	ldr	r3, [fp, #-244]	@,
-	mov	r0, r3	@ D.39414, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
+	mov	r0, r3	@ D.39428, <variable>.CodecInfo.PictureHeader.pic_width_in_mb
 	b	.L304	@
 .L411:
 	ldr	r0, [r3, #900]	@ <variable>.stDisParams.s32DisNums, <variable>.stDisParams.s32DisNums
@@ -3441,10 +3441,10 @@ REAL9DEC_Decode:
 	ldrb	r1, [r2, #1]	@ zero_extendqisi2	@ <variable>.PicCodingType, <variable>.PicCodingType
 	cmp	r1, #2	@ <variable>.PicCodingType,
 	bne	.L370	@,
-	movw	r1, #:lower16:80280	@ tmp722,
-	movt	r1, #:upper16:80280	@ tmp722,
+	movw	r1, #:lower16:83352	@ tmp722,
+	movt	r1, #:upper16:83352	@ tmp722,
 	mov	r5, #0	@ tmp721,
-	movw	lr, #46072	@ tmp723,
+	movw	lr, #47608	@ tmp723,
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	mov	r2, r5	@, tmp721
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.CurFsID
@@ -3457,7 +3457,7 @@ REAL9DEC_Decode:
 	sub	r2, ip, #1	@ tmp725, <variable>.stDisParams.s32DisNums,
 	str	r2, [r3, #900]	@ tmp725, <variable>.stDisParams.s32DisNums
 	bl	ReleasePacket	@
-	mov	r0, r5	@ D.39414, tmp721
+	mov	r0, r5	@ D.39428, tmp721
 	b	.L304	@
 .L410:
 	ldr	r2, [r4, #4]	@ temp.1507, <variable>.pRv9DecParam
@@ -3466,10 +3466,10 @@ REAL9DEC_Decode:
 	ldrb	r2, [r2, #1]	@ zero_extendqisi2	@ <variable>.PicCodingType, <variable>.PicCodingType
 	cmp	r2, #2	@ <variable>.PicCodingType,
 	bne	.L370	@,
-	movw	ip, #:lower16:80280	@ tmp717,
-	movt	ip, #:upper16:80280	@ tmp717,
+	movw	ip, #:lower16:83352	@ tmp717,
+	movt	ip, #:upper16:83352	@ tmp717,
 	mov	r5, #0	@ tmp716,
-	movw	lr, #46072	@ tmp718,
+	movw	lr, #47608	@ tmp718,
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
 	mov	r2, r5	@, tmp716
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.CurFsID
@@ -3478,7 +3478,7 @@ REAL9DEC_Decode:
 	mov	r0, #9	@,
 	mov	r1, r4	@, pCtx
 	bl	ReleasePacket	@
-	mov	r0, r5	@ D.39414, tmp716
+	mov	r0, r5	@ D.39428, tmp716
 	b	.L304	@
 .L409:
 	mov	r0, r4	@, pCtx
@@ -3487,14 +3487,14 @@ REAL9DEC_Decode:
 	ldreq	r0, [fp, #-200]	@, %sfp
 	streq	r0, [r4, #4]	@, <variable>.pRv9DecParam
 	beq	.L367	@,
-	movw	r3, #:lower16:80280	@ tmp713,
-	movt	r3, #:upper16:80280	@ tmp713,
-	movw	r1, #46072	@ tmp714,
+	movw	r3, #:lower16:83352	@ tmp713,
+	movt	r3, #:upper16:83352	@ tmp713,
+	movw	r1, #47608	@ tmp714,
 	mov	r2, r6	@, tmp711
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	ldr	r1, [r4, r1]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_ClearLogicFs	@
-	mov	r0, r5	@ D.39414, <variable>.pRv9DecParam
+	mov	r0, r5	@ D.39428, <variable>.pRv9DecParam
 	b	.L304	@
 .L413:
 	.align	2
@@ -3801,9 +3801,9 @@ GetBitsMask:
 	.word	4194303
 	.word	8388607
 	.word	16777215
-	.type	C.450.38811, %object
-	.size	C.450.38811, 32
-C.450.38811:
+	.type	C.450.38825, %object
+	.size	C.450.38825, 32
+C.450.38825:
 	.word	160
 	.word	176
 	.word	240
@@ -3812,9 +3812,9 @@ C.450.38811:
 	.word	640
 	.word	704
 	.word	0
-	.type	C.451.38812, %object
-	.size	C.451.38812, 32
-C.451.38812:
+	.type	C.451.38826, %object
+	.size	C.451.38826, 32
+C.451.38826:
 	.word	120
 	.word	132
 	.word	144
@@ -3823,16 +3823,16 @@ C.451.38812:
 	.word	480
 	.word	0
 	.word	0
-	.type	C.452.38813, %object
-	.size	C.452.38813, 16
-C.452.38813:
+	.type	C.452.38827, %object
+	.size	C.452.38827, 16
+C.452.38827:
 	.word	180
 	.word	360
 	.word	576
 	.word	0
-	.type	__func__.39401, %object
-	.size	__func__.39401, 16
-__func__.39401:
+	.type	__func__.39415, %object
+	.size	__func__.39415, 16
+__func__.39415:
 	.ascii	"REAL9DEC_Decode\000"
 	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2

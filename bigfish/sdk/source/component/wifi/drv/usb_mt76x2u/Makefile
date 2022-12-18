@@ -12,22 +12,27 @@ endif
 BUILD_DIR  := $(shell pwd)/tmp
 ifneq ($(ANDROID_BUILD),y)
 INSTALL_DIR := $(MODULE_DIR)
+BIN_INSTALL_DIR := $(ROOTFS_DIR)/lib/firmware
+PREALLOC_INSTALL_DIR := $(MODULE_DIR)/mtprealloc76x2Usta.ko
 CFG_INSTALL_DIR := $(ROOTFS_DIR)/etc/Wireless/RT2870STA
 else
 INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules
-BIN_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/firmware
+#BIN_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/firmware
+BIN_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/firmware
 PREALLOC_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/lib/modules/mtprealloc76x2Usta.ko
 CFG_INSTALL_DIR := $(ANDROID_PRODUCT_OUT)/system/etc/Wireless/RT2870STA
 endif
 
-MODULE_SRC := mt76x2u_MP1.9
+MODULE_SRC := JEDI.MP2.mt76x2u.wifi.v3.2.1
 MODULE := mt7662u_sta.ko mtprealloc.ko
 MODULE_PATH := $(BUILD_DIR)/$(MODULE_SRC)/os/linux/mt7662u_sta.ko
 PREALLOC_MODULE_PATH := $(BUILD_DIR)/$(MODULE_SRC)/os/linux/mtprealloc.ko
-MODULE_CFG := MT76x2STA.dat mt7662_patch_e3_hdr.bin mt7662_firmware_e3_tvbox.bin
+MODULE_CFG := MT76x2STA.dat mt7662t_firmware_e1.bin mt7662t_patch_e1_hdr.bin mt7662_patch_e3_hdr.bin mt7662_firmware_e3_tvbox.bin
 MODULE_CFG_PATH := $(BUILD_DIR)/$(MODULE_SRC)/conf/MT76x2STA.dat
-MODULE_BIN_PATH := $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662_patch_e3_hdr.bin \
-                   $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662_firmware_e3_tvbox.bin
+MODULE_BIN_PATH := $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662t_firmware_e1.bin \
+                   $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662t_patch_e1_hdr.bin \
+                   $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662_firmware_e3_tvbox.bin \
+                   $(BUILD_DIR)/$(MODULE_SRC)/mcu/bin/mt7662_patch_e3_hdr.bin
 
 BUILD_MODULES = $(patsubst %,%_build,${MODULE_SRC})
 UNINSTALL_MODULES = $(patsubst %,%_uninstall,${MODULE})

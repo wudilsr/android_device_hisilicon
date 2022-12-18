@@ -145,6 +145,7 @@ typedef struct hiADEC_CHANNEL_S
     ADEC_PROC_ITEM_S*    pstAdecInfo;
     ADEC_PACKET_QUE_S*   pstPacketQue;
     ADEC_FRAME_INFO_S    stFrameInfo;
+    HI_U32               u32TotalFrameByte;
 } ADEC_CHAN_S;
 
 

@@ -131,7 +131,8 @@
         </activity>
         <activity
             android:name="com.hisilicon.android.music.TransitActivity"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

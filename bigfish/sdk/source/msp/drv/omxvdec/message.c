@@ -237,7 +237,7 @@ HI_VOID message_queue_deinit(msg_queue_s *queue)
  
     while(!queue->quit && slp_cnt<10)
     {
-	    msleep(10);
+        msleep(1);
         slp_cnt++;
     }
       

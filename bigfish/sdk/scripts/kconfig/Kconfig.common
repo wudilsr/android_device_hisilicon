@@ -1,7 +1,7 @@
 ###############################################################################
 config HI_LOG_SUPPORT
 	bool "Log Support"
-	depends on HI_ADVCA_FUNCTION!=FINAL && HI_ADVCA_FUNCTION!=RELEASE
+	depends on HI_ADVCA_FUNCTION!=FINAL && HI_ADVCA_FUNCTION!=RELEASE && HI_LOADER_LOG_DISABLE=n
 	default y
 	---help---
 		If you want to close SDK print, say n.
@@ -55,4 +55,19 @@ config HI_PROC_SUPPORT
 	---help---
 		If you want to get an advance CA release build, say no. Default enable.
 		
+###############################################################################	
+menu "DEBUG CONFIG"
+config  HI_BOOT_LOG_DISABLE
+        bool "miniboot Log Disable"
+        default n
+        help
+          Disable the log under BOOT circumstance.
+
+config  HI_LOADER_LOG_DISABLE
+        bool "Loader Log Disable"
+        default n
+        help
+            Disable the log under LOADER circumstance.
+
+endmenu		
 ###############################################################################	

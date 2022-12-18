@@ -10,7 +10,7 @@
 
 typedef struct tagSCTE_SUBT_DISPALY_INFO_S
 {
-    SCTE_SUBT_DISPALY_PARAM_S *   pstDisplayParam;
+    SCTE_SUBT_DISPALY_PARAM_S*    pstDisplayParam;
     SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback;
     HI_U32                        u32UserData;
 } SCTE_SUBT_DISPALY_INFO_S;
@@ -29,12 +29,13 @@ HI_S32 SCTE_SUBT_Display_DeInit(HI_VOID)
     return s32Ret;
 }
 
-HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U32 u32UserData, HI_HANDLE *phDisplay)
+HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U32 u32UserData, HI_VOID** pphDisplay)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    SCTE_SUBT_DISPALY_INFO_S *pstDisplayInfo = HI_NULL;
+    SCTE_SUBT_DISPALY_INFO_S* pstDisplayInfo = HI_NULL;
 
-    pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S *)malloc(sizeof(SCTE_SUBT_DISPALY_INFO_S));
+    pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S*)malloc(sizeof(SCTE_SUBT_DISPALY_INFO_S));
+
     if (HI_NULL == pstDisplayInfo)
     {
         HI_ERR_SUBT("in SCTE_SUBT_Display_Create ,malloc error!!!\n");
@@ -43,10 +44,12 @@ HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U3
 
     memset(pstDisplayInfo, 0, sizeof(SCTE_SUBT_DISPALY_INFO_S));
 
-    pstDisplayInfo->pstDisplayParam = (SCTE_SUBT_DISPALY_PARAM_S *)malloc(sizeof(SCTE_SUBT_DISPALY_PARAM_S));
+    pstDisplayInfo->pstDisplayParam = (SCTE_SUBT_DISPALY_PARAM_S*)malloc(sizeof(SCTE_SUBT_DISPALY_PARAM_S));
+
     if (HI_NULL == pstDisplayInfo->pstDisplayParam)
     {
         free(pstDisplayInfo);
+        pstDisplayInfo = HI_NULL;
         HI_ERR_SUBT("in SCTE_SUBT_Display_Create,Malloc failed!!!...1\n");
         return HI_FAILURE;
     }
@@ -56,13 +59,13 @@ HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U3
     pstDisplayInfo->pfnCallback = pfnCallback;
     pstDisplayInfo->u32UserData = u32UserData;
 
-    *phDisplay = (HI_HANDLE)pstDisplayInfo;
+    *pphDisplay = pstDisplayInfo;
     return s32Ret;
 }
 
-HI_S32 SCTE_SUBT_Display_Destroy(HI_HANDLE hDisplay)
+HI_S32 SCTE_SUBT_Display_Destroy(HI_VOID* hDisplay)
 {
-    SCTE_SUBT_DISPALY_INFO_S *pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S *)hDisplay;
+    SCTE_SUBT_DISPALY_INFO_S* pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S*)hDisplay;
 
     if (HI_NULL == pstDisplayInfo)
     {
@@ -72,19 +75,22 @@ HI_S32 SCTE_SUBT_Display_Destroy(HI_HANDLE hDisplay)
 
     if (HI_NULL != pstDisplayInfo->pstDisplayParam)
     {
-        free((void *)pstDisplayInfo->pstDisplayParam);
+        free((void*)pstDisplayInfo->pstDisplayParam);
         pstDisplayInfo->pstDisplayParam = HI_NULL;
     }
 
-    free((void *)pstDisplayInfo);
+    free((void*)pstDisplayInfo);
+    pstDisplayInfo = HI_NULL;
+    
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_HANDLE hDisplay, SCTE_SUBT_OUTPUT_S *pstOutData)
+HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_VOID* hDisplay, SCTE_SUBT_OUTPUT_S* pstOutData)
 {
     HI_S32 s32Ret = HI_SUCCESS;
 
-    SCTE_SUBT_DISPALY_INFO_S *pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S *)hDisplay;
+    SCTE_SUBT_DISPALY_INFO_S* pstDisplayInfo = (SCTE_SUBT_DISPALY_INFO_S*)hDisplay;
+
     if (HI_NULL == pstDisplayInfo)
     {
         HI_ERR_SUBT("param is HI_NULL...\n");
@@ -106,24 +112,28 @@ HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_HANDLE hDisplay, SCTE_SUBT_OUTPUT_S *pst
         pstDisplayInfo->pstDisplayParam->u32h = (pstOutData->u32BottomYPos - pstOutData->u32TopYPos) + 1;
     }
 
-    switch(pstOutData->enDispStandard)
+    switch (pstOutData->enDispStandard)
     {
         case STANDARD_720_480_30:
             pstDisplayInfo->pstDisplayParam->u32DisplayWidth = 720;
             pstDisplayInfo->pstDisplayParam->u32DisplayHeight = 480;
             break;
+
         case STANDARD_720_576_25:
             pstDisplayInfo->pstDisplayParam->u32DisplayWidth = 720;
             pstDisplayInfo->pstDisplayParam->u32DisplayHeight = 576;
             break;
+
         case STANDARD_1280_720_60:
             pstDisplayInfo->pstDisplayParam->u32DisplayWidth = 1280;
             pstDisplayInfo->pstDisplayParam->u32DisplayHeight = 720;
             break;
+
         case STANDARD_1920_1080_60:
             pstDisplayInfo->pstDisplayParam->u32DisplayWidth = 1920;
             pstDisplayInfo->pstDisplayParam->u32DisplayHeight = 1080;
             break;
+
         default:
             pstDisplayInfo->pstDisplayParam->u32DisplayWidth = 720;
             pstDisplayInfo->pstDisplayParam->u32DisplayHeight = 576;
@@ -140,7 +150,8 @@ HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_HANDLE hDisplay, SCTE_SUBT_OUTPUT_S *pst
 
     if (pstDisplayInfo->pfnCallback)
     {
-        s32Ret = pstDisplayInfo->pfnCallback(pstDisplayInfo->u32UserData, (HI_VOID *)pstDisplayInfo->pstDisplayParam);
+        s32Ret = pstDisplayInfo->pfnCallback(pstDisplayInfo->u32UserData, (HI_VOID*)pstDisplayInfo->pstDisplayParam);
+
         if (HI_SUCCESS != s32Ret)
         {
             HI_WARN_SUBT("in SCTE_SUBT_Display_DisplaySubt,function callback failed!!!\n");

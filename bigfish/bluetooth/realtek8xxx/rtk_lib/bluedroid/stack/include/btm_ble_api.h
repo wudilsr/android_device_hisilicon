@@ -99,11 +99,11 @@ typedef UINT8   tBTM_BLE_SFP;
 /* default connection parameters if not configured, use GAP recommend value for auto/selective connection */
 /* default scan interval */
 #ifndef BTM_BLE_SCAN_FAST_INT
-#define BTM_BLE_SCAN_FAST_INT    96    /* 30 ~ 60 ms (use 60)  = 96 *0.625 */
+#define BTM_BLE_SCAN_FAST_INT    112    /* 30 ~ 60 ms (use 60)  = 96 *0.625 */
 #endif
 /* default scan window for background connection, applicable for auto connection or selective conenction */
 #ifndef BTM_BLE_SCAN_FAST_WIN
-#define BTM_BLE_SCAN_FAST_WIN   48      /* 30 ms = 48 *0.625 */
+#define BTM_BLE_SCAN_FAST_WIN   40      /* 30 ms = 48 *0.625 */
 #endif
 
 /* default scan paramter used in reduced power cycle (background scanning) */
@@ -133,7 +133,7 @@ typedef UINT8   tBTM_BLE_SFP;
 /* default connectino interval max */
 #ifndef BTM_BLE_CONN_INT_MAX_DEF
 #ifdef BLUETOOTH_RTK
-#define BTM_BLE_CONN_INT_MAX_DEF     0x0C      /* recommended max: 50 ms = 56 * 1.25 */
+#define BTM_BLE_CONN_INT_MAX_DEF     0x06      /* recommended max: 50 ms = 56 * 1.25 */
 #else
 #define BTM_BLE_CONN_INT_MAX_DEF     40      /* recommended max: 50 ms = 56 * 1.25 */
 #endif
@@ -350,6 +350,24 @@ extern "C" {
 *******************************************************************************/
 BTM_API extern BOOLEAN BTM_SecAddBleDevice (BD_ADDR bd_addr, BD_NAME bd_name,
                                            tBT_DEVICE_TYPE dev_type, tBLE_ADDR_TYPE addr_type);
+/*******************************************************************************
+**
+** Function         BTM_SecAddBleDeviceExtraInfo
+**
+** Description      Add/modify device.  This function will be normally called
+**                  during host startup to restore all required information
+**                  for a LE device stored in the NVRAM.
+**
+** Parameters:      bd_addr          - BD address of the peer
+**                  bd_name          - Name of the peer device.  NULL if unknown.
+**                  dev_class         - Remote device's device class.
+**
+** Returns          TRUE if added OK, else FALSE
+**
+*******************************************************************************/
+#ifdef BLUETOOTH_RTK
+BTM_API extern BOOLEAN BTM_SecAddBleDeviceExtraInfo (BD_ADDR bd_addr, BD_NAME bd_name, DEV_CLASS dev_class);
+#endif
 
 /*******************************************************************************
 **

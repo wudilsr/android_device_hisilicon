@@ -49,7 +49,7 @@ HI_S32 GFX2D_CTL_Deinit(HI_VOID);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_Open
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -64,7 +64,7 @@ HI_S32 GFX2D_CTL_Open(HI_VOID);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_Close
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -80,7 +80,7 @@ HI_S32 GFX2D_CTL_Close(HI_VOID);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_ComposeSync
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -92,13 +92,13 @@ HI_S32 GFX2D_CTL_Close(HI_VOID);
 * Others:        in_para1 should be none-zero
 *******************************************************************************/
 HI_S32 GFX2D_CTL_ComposeSync(const HI_GFX2D_DEV_ID_E enDevId,
-                             HI_GFX2D_COMPOSE_LIST_S *pstComposeList, 
+                             HI_GFX2D_COMPOSE_LIST_S *pstComposeList,
                              HI_GFX2D_SURFACE_S *pstDstSurface,
                              const HI_U32 u32Timeout);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_ComposeAsync
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -110,12 +110,12 @@ HI_S32 GFX2D_CTL_ComposeSync(const HI_GFX2D_DEV_ID_E enDevId,
 * Others:        in_para1 should be none-zero
 *******************************************************************************/
 HI_S32 GFX2D_CTL_ComposeAsync(const HI_GFX2D_DEV_ID_E enDevId,
-                              HI_GFX2D_COMPOSE_LIST_S *pstComposeList, 
+                              HI_GFX2D_COMPOSE_LIST_S *pstComposeList,
                               HI_GFX2D_SURFACE_S *pstDstSurface);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_WaitAllDone
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -126,12 +126,12 @@ HI_S32 GFX2D_CTL_ComposeAsync(const HI_GFX2D_DEV_ID_E enDevId,
 *                HI_ERR_SYSM_FILEWRITE:         File write error.
 * Others:        in_para1 should be none-zero
 *******************************************************************************/
-HI_S32 GFX2D_CTL_WaitAllDone(const HI_GFX2D_DEV_ID_E enDevId, 
+HI_S32 GFX2D_CTL_WaitAllDone(const HI_GFX2D_DEV_ID_E enDevId,
                              const HI_U32 u32Timeout);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_ReadProc
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -147,7 +147,7 @@ HI_S32 GFX2D_CTL_ReadProc(struct seq_file *p, HI_VOID *v);
 
 /*******************************************************************************
 * Function:      GFX2D_CTL_WriteProc
-* Description:   
+* Description:
 * Input:         in_para1     parameter description
 *                in_para2     parameter description
 * Output:        out_para1    parameter description
@@ -161,6 +161,7 @@ HI_S32 GFX2D_CTL_ReadProc(struct seq_file *p, HI_VOID *v);
 HI_S32 GFX2D_CTL_WriteProc(struct file * file, const char __user * buf,\
                            size_t count, loff_t *ppos);
 
+HI_BOOL GFX2D_CTL_CheckOpen(HI_VOID);
 
 #ifdef __cplusplus
 #if __cplusplus

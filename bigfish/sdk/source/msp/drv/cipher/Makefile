@@ -24,6 +24,7 @@ EXTRA_CFLAGS += -I$(MSP_UNF_INCLUDE)            \
                 -I$(MSP_DRV_INCLUDE)            \
                 -I$(MSP_DIR)/drv/cipher         \
                 -I$(MSP_DIR)/drv/cipher/sha     \
+                -I$(MSP_DIR)/drv/cipher/rsa     \
                 -I$(COMMON_UNF_INCLUDE)         \
                 -I$(COMMON_DRV_INCLUDE)
 
@@ -33,11 +34,12 @@ MOD_NAME := hi_cipher
 obj-$(CFG_MSP_BUILDTYPE) := $(MOD_NAME).o
 $(MOD_NAME)-y += ./drv_cipher.o ./hal_cipher.o ./drv_cipher_intf.o
 $(MOD_NAME)-y += ./sha/drv_cipher_sha1.o ./sha/drv_cipher_sha2.o
+$(MOD_NAME)-y += ./rsa/drv_rsa.o ./rsa/drv_rsa_bignum.o
 
 REMOVED_FILES := "*.o" "*.ko" "*.order" "*.symvers" "*.mod" "*.mod.*" "*.cmd" ".tmp_versions" "modules.builtin"
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-EXTRA_CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_TEE_SUPPORT
 endif
 #===============================================================================
 #   rules

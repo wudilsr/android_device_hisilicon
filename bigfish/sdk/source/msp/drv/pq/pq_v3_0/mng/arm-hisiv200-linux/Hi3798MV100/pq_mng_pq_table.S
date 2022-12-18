@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_pq_table.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_pq_table.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_pq_table.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_pq_table.o -O2 -Wall -Wundef
@@ -136,11 +136,11 @@ PQ_MNG_CheckSourceMode:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r1, #720	@ u32Height,
-	movcc	r0, #1	@ D.24133,
+	movcc	r0, #1	@ D.24118,
 	ldmccfd	sp, {fp, sp, pc}	@
 	cmp	r1, #1920	@ u32Height,
-	movls	r0, #2	@ D.24133,
-	movhi	r0, #3	@ D.24133,
+	movls	r0, #2	@ D.24118,
+	movhi	r0, #3	@ D.24118,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	PQ_MNG_CheckSourceMode, .-PQ_MNG_CheckSourceMode
@@ -172,7 +172,7 @@ PQ_MNG_CheckOutputMode:
 	.type	PQ_MNG_GetReg, %function
 PQ_MNG_GetReg:
 	.fnstart
-.LFB710:
+.LFB709:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -189,18 +189,18 @@ PQ_MNG_GetReg:
 	movw	r2, #:lower16:.LANCHOR0	@ tmp207,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp207,
 	mov	r3, r0	@ pstAttr, pstAttr
-	ldr	r2, [r2, #4]	@ sg_pstPhyReg.255, sg_pstPhyReg
-	cmp	r2, #0	@ sg_pstPhyReg.255,
+	ldr	r2, [r2, #4]	@ sg_pstPhyReg.250, sg_pstPhyReg
+	cmp	r2, #0	@ sg_pstPhyReg.250,
 	beq	.L30	@,
-	ldr	ip, [r0, #0]	@ pretmp.338, <variable>.u32RegAddr
-	add	r6, r2, #32768	@ D.24758, ivtmp.360,
-	ldrb	r4, [r0, #4]	@ zero_extendqisi2	@ pretmp.340, <variable>.u8Lsb
-	ldrb	r5, [r0, #5]	@ zero_extendqisi2	@ pretmp.367, <variable>.u8Msb
+	ldr	ip, [r0, #0]	@ pretmp.333, <variable>.u32RegAddr
+	add	r6, r2, #32768	@ D.24684, ivtmp.355,
+	ldrb	r4, [r0, #4]	@ zero_extendqisi2	@ pretmp.335, <variable>.u8Lsb
+	ldrb	r5, [r0, #5]	@ zero_extendqisi2	@ pretmp.362, <variable>.u8Msb
 	b	.L20	@
 .L17:
 	ldr	r1, [r2, #16]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
-	add	r2, r2, #16	@ tmp219, ivtmp.360,
-	cmp	r1, ip	@ <variable>.u32RegAddr, pretmp.338
+	add	r2, r2, #16	@ tmp219, ivtmp.355,
+	cmp	r1, ip	@ <variable>.u32RegAddr, pretmp.333
 	ldrb	r0, [r2, #4]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldr	r1, [r2, #12]	@ u32Value, <variable>.u32Value
 	ldrb	r7, [r2, #5]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
@@ -208,21 +208,21 @@ PQ_MNG_GetReg:
 	ldrb	sl, [r2, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
 	beq	.L31	@,
 .L23:
-	add	r2, r2, #16	@ ivtmp.360, tmp219,
-	cmp	r2, r6	@ ivtmp.360, D.24758
+	add	r2, r2, #16	@ ivtmp.355, tmp219,
+	cmp	r2, r6	@ ivtmp.355, D.24684
 	beq	.L32	@,
 .L20:
 	ldr	r0, [r2, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	ldr	r1, [r2, #12]	@ u32Value, <variable>.u32Value
-	cmp	r0, ip	@ <variable>.u32RegAddr, pretmp.338
+	cmp	r0, ip	@ <variable>.u32RegAddr, pretmp.333
 	ldrb	r7, [r2, #5]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r0, [r2, #4]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldrb	r8, [r2, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
 	ldrb	sl, [r2, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
 	bne	.L17	@,
-	cmp	r0, r4	@ u8Lsb, pretmp.340
+	cmp	r0, r4	@ u8Lsb, pretmp.335
 	bne	.L17	@,
-	cmp	r7, r5	@ u8Msb, pretmp.367
+	cmp	r7, r5	@ u8Msb, pretmp.362
 	bne	.L17	@,
 	cmp	r8, #0	@ u8SourceMode,
 	bne	.L33	@,
@@ -234,12 +234,12 @@ PQ_MNG_GetReg:
 	bne	.L17	@,
 .L19:
 	str	r1, [r3, #12]	@ u32Value, <variable>.u32Value
-	mov	r0, #0	@ D.24604,
+	mov	r0, #0	@ D.24531,
 	b	.L16	@
 .L31:
-	cmp	r0, r4	@ u8Lsb, pretmp.340
+	cmp	r0, r4	@ u8Lsb, pretmp.335
 	bne	.L23	@,
-	cmp	r7, r5	@ u8Msb, pretmp.367
+	cmp	r7, r5	@ u8Msb, pretmp.362
 	bne	.L23	@,
 	cmp	r8, #0	@ u8SourceMode,
 	bne	.L27	@,
@@ -249,8 +249,8 @@ PQ_MNG_GetReg:
 	ldrb	r0, [r3, #7]	@ zero_extendqisi2	@ <variable>.u8OutputMode, <variable>.u8OutputMode
 	cmp	r0, sl	@ <variable>.u8OutputMode, u8OutputMode
 	beq	.L19	@,
-	add	r2, r2, #16	@ ivtmp.360, tmp219,
-	cmp	r2, r6	@ ivtmp.360, D.24758
+	add	r2, r2, #16	@ ivtmp.355, tmp219,
+	cmp	r2, r6	@ ivtmp.355, D.24684
 	bne	.L20	@,
 .L32:
 	ldrb	lr, [r3, #7]	@ zero_extendqisi2	@ <variable>.u8OutputMode, <variable>.u8OutputMode
@@ -258,18 +258,18 @@ PQ_MNG_GetReg:
 	ldrb	r6, [r3, #6]	@ zero_extendqisi2	@ <variable>.u8SourceMode, <variable>.u8SourceMode
 	mov	r1, #41	@,
 	movw	r2, #:lower16:.LANCHOR1	@,
-	mov	r3, #640	@,
+	mov	r3, #572	@,
 	movt	r2, #:upper16:.LANCHOR1	@,
-	str	ip, [sp, #4]	@ pretmp.338,
-	str	r4, [sp, #8]	@ pretmp.340,
+	str	ip, [sp, #4]	@ pretmp.333,
+	str	r4, [sp, #8]	@ pretmp.335,
 	movw	ip, #:lower16:.LC1	@ tmp215,
-	str	r5, [sp, #12]	@ pretmp.367,
+	str	r5, [sp, #12]	@ pretmp.362,
 	movt	ip, #:upper16:.LC1	@ tmp215,
 	str	r6, [sp, #16]	@ <variable>.u8SourceMode,
 	str	ip, [sp, #0]	@ tmp215,
 	str	lr, [sp, #20]	@ <variable>.u8OutputMode,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24604,
+	mvn	r0, #0	@ D.24531,
 .L16:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -287,13 +287,13 @@ PQ_MNG_GetReg:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	movw	r2, #:lower16:.LANCHOR1	@,
-	movw	r3, #598	@,
+	movw	r3, #530	@,
 	movt	r2, #:upper16:.LANCHOR1	@,
 	movw	ip, #:lower16:.LC0	@ tmp210,
 	movt	ip, #:upper16:.LC0	@ tmp210,
 	str	ip, [sp, #0]	@ tmp210,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24604,
+	mvn	r0, #0	@ D.24531,
 	b	.L16	@
 	.fnend
 	.size	PQ_MNG_GetReg, .-PQ_MNG_GetReg
@@ -330,7 +330,7 @@ PQ_MNG_SetSoftTable:
 	sub	r6, r5, #-268435455	@ tmp151, sg_u32PhyListNum.242,
 	sub	r7, r4, #1	@ tmp155, i,
 	and	r7, r7, #1	@ tmp156, tmp155,
-	add	ip, ip, r6, asl #4	@, ivtmp.401, sg_pstPhyReg.241, tmp151,
+	add	ip, ip, r6, asl #4	@, ivtmp.396, sg_pstPhyReg.241, tmp151,
 	ldr	r5, [ip, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	ldrb	r6, [ip, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
 	cmp	r5, r0	@ <variable>.u32RegAddr, u32Lut
@@ -344,7 +344,7 @@ PQ_MNG_SetSoftTable:
 	cmp	r5, r2	@ u8OutputMode, enOutputMode
 	bne	.L44	@,
 .L40:
-	mov	r0, #0	@ D.24451,
+	mov	r0, #0	@ D.24436,
 	str	r3, [ip, #12]	@ u32Value, <variable>.u32Value
 .L36:
 	sub	sp, fp, #28
@@ -354,7 +354,7 @@ PQ_MNG_SetSoftTable:
 	beq	.L45	@,
 .L44:
 	sub	r4, r4, #1	@ i, i,
-	sub	ip, ip, #16	@ ivtmp.401, ivtmp.401,
+	sub	ip, ip, #16	@ ivtmp.396, ivtmp.396,
 	cmp	r4, #0	@ i,
 	ble	.L37	@,
 	cmp	r7, #0	@ tmp156,
@@ -375,7 +375,7 @@ PQ_MNG_SetSoftTable:
 	beq	.L40	@,
 .L47:
 	sub	r4, r4, #1	@ i, i,
-	sub	ip, ip, #16	@ ivtmp.401, ivtmp.401,
+	sub	ip, ip, #16	@ ivtmp.396, ivtmp.396,
 	cmp	r4, #0	@ i,
 	ble	.L37	@,
 .L41:
@@ -394,10 +394,10 @@ PQ_MNG_SetSoftTable:
 	cmp	r5, r2	@ u8OutputMode, enOutputMode
 	beq	.L40	@,
 .L38:
-	sub	ip, ip, #16	@ ivtmp.401, ivtmp.401,
+	sub	ip, ip, #16	@ ivtmp.396, ivtmp.396,
 	sub	r4, r4, #1	@ tmp157, i,
 	ldr	r5, [ip, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
-	mov	r7, ip	@ tmp158, ivtmp.401
+	mov	r7, ip	@ tmp158, ivtmp.396
 	ldrb	r6, [ip, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
 	cmp	r5, r0	@ <variable>.u32RegAddr, u32Lut
 	ldrb	r5, [ip, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
@@ -413,11 +413,11 @@ PQ_MNG_SetSoftTable:
 	beq	.L40	@,
 .L51:
 	sub	r4, r4, #1	@ i, tmp157,
-	sub	ip, r7, #16	@ ivtmp.401, tmp158,
+	sub	ip, r7, #16	@ ivtmp.396, tmp158,
 	cmp	r4, #0	@ i,
 	bgt	.L41	@,
 .L37:
-	mvn	r0, #0	@ D.24451,
+	mvn	r0, #0	@ D.24436,
 	b	.L36	@
 .L60:
 	mov	r0, #1	@,
@@ -428,7 +428,7 @@ PQ_MNG_SetSoftTable:
 	movt	lr, #:upper16:.LC0	@ tmp149,
 	str	lr, [sp, #0]	@ tmp149,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24451,
+	mvn	r0, #0	@ D.24436,
 	b	.L36	@
 .L62:
 	.align	2
@@ -469,7 +469,7 @@ PQ_MNG_UpdatePhyList:
 	ldr	r6, [ip, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	sub	sl, r5, #1	@ tmp159, sg_u32PhyListNum.215,
 	and	sl, sl, #1	@ tmp161, tmp159,
-	mov	r4, ip	@ ivtmp.438, sg_pstPhyReg.214
+	mov	r4, ip	@ ivtmp.433, sg_pstPhyReg.214
 	cmp	r6, r0	@ <variable>.u32RegAddr, u32Addr
 	mov	r6, #0	@ i,
 	bne	.L74	@,
@@ -479,29 +479,29 @@ PQ_MNG_UpdatePhyList:
 	ldrb	r8, [ip, #5]	@ zero_extendqisi2	@ <variable>.u8Msb, <variable>.u8Msb
 	cmp	r8, r2	@ <variable>.u8Msb, u8Msb
 	bne	.L74	@,
-	ldrb	r8, [ip, #6]	@ zero_extendqisi2	@ D.24171, <variable>.u8SourceMode
-	cmp	r8, #0	@ D.24171,
+	ldrb	r8, [ip, #6]	@ zero_extendqisi2	@ D.24156, <variable>.u8SourceMode
+	cmp	r8, #0	@ D.24156,
 	bne	.L87	@,
 .L75:
-	ldrb	r8, [ip, #7]	@ zero_extendqisi2	@ D.24176, <variable>.u8OutputMode
-	cmp	r8, #0	@ D.24176,
+	ldrb	r8, [ip, #7]	@ zero_extendqisi2	@ D.24161, <variable>.u8OutputMode
+	cmp	r8, #0	@ D.24161,
 	beq	.L70	@,
-	cmp	r8, r7	@ D.24176, u8OutputMode
+	cmp	r8, r7	@ D.24161, u8OutputMode
 	bne	.L74	@,
 .L70:
 	ldr	r3, [fp, #8]	@ u32Value, u32Value
-	mov	r0, r6	@ D.24159, i
+	mov	r0, r6	@ D.24144, i
 	str	r3, [r4, #12]	@ u32Value, <variable>.u32Value
 .L67:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L87:
-	cmp	r8, r3	@ D.24171, u8SourceMode
+	cmp	r8, r3	@ D.24156, u8SourceMode
 	beq	.L75	@,
 .L74:
 	mov	r6, #1	@ i,
 	cmp	r5, r6	@ sg_u32PhyListNum.215, i
-	add	r4, ip, #16	@ ivtmp.438, sg_pstPhyReg.214,
+	add	r4, ip, #16	@ ivtmp.433, sg_pstPhyReg.214,
 	bls	.L66	@,
 	cmp	sl, #0	@ tmp161,
 	beq	.L71	@,
@@ -514,18 +514,18 @@ PQ_MNG_UpdatePhyList:
 	ldrb	ip, [r4, #5]	@ zero_extendqisi2	@ <variable>.u8Msb, <variable>.u8Msb
 	cmp	ip, r2	@ <variable>.u8Msb, u8Msb
 	bne	.L77	@,
-	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24171, <variable>.u8SourceMode
-	cmp	ip, #0	@ D.24171,
+	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24156, <variable>.u8SourceMode
+	cmp	ip, #0	@ D.24156,
 	bne	.L88	@,
 .L78:
-	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ D.24176, <variable>.u8OutputMode
-	cmp	ip, #0	@ D.24176,
+	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ D.24161, <variable>.u8OutputMode
+	cmp	ip, #0	@ D.24161,
 	beq	.L70	@,
-	cmp	ip, r7	@ D.24176, u8OutputMode
+	cmp	ip, r7	@ D.24161, u8OutputMode
 	beq	.L70	@,
 .L77:
 	add	r6, r6, #1	@ i, i,
-	add	r4, r4, #16	@ ivtmp.438, ivtmp.438,
+	add	r4, r4, #16	@ ivtmp.433, ivtmp.433,
 	cmp	r5, r6	@ sg_u32PhyListNum.215, i
 	bls	.L66	@,
 .L71:
@@ -538,17 +538,17 @@ PQ_MNG_UpdatePhyList:
 	ldrb	ip, [r4, #5]	@ zero_extendqisi2	@ <variable>.u8Msb, <variable>.u8Msb
 	cmp	ip, r2	@ <variable>.u8Msb, u8Msb
 	bne	.L68	@,
-	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24171, <variable>.u8SourceMode
-	cmp	ip, #0	@ D.24171,
+	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24156, <variable>.u8SourceMode
+	cmp	ip, #0	@ D.24156,
 	beq	.L69	@,
-	cmp	ip, r3	@ D.24171, u8SourceMode
+	cmp	ip, r3	@ D.24156, u8SourceMode
 	beq	.L69	@,
 .L68:
-	add	r4, r4, #16	@ ivtmp.438, ivtmp.438,
+	add	r4, r4, #16	@ ivtmp.433, ivtmp.433,
 	add	r6, r6, #1	@ i, i,
 	ldr	ip, [r4, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	mov	sl, r6	@ tmp162, i
-	mov	r8, r4	@ tmp163, ivtmp.438
+	mov	r8, r4	@ tmp163, ivtmp.433
 	cmp	ip, r0	@ <variable>.u32RegAddr, u32Addr
 	bne	.L81	@,
 	ldrb	ip, [r4, #4]	@ zero_extendqisi2	@ <variable>.u8Lsb, <variable>.u8Lsb
@@ -557,34 +557,34 @@ PQ_MNG_UpdatePhyList:
 	ldrb	ip, [r4, #5]	@ zero_extendqisi2	@ <variable>.u8Msb, <variable>.u8Msb
 	cmp	ip, r2	@ <variable>.u8Msb, u8Msb
 	bne	.L81	@,
-	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24171, <variable>.u8SourceMode
-	cmp	ip, #0	@ D.24171,
+	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ D.24156, <variable>.u8SourceMode
+	cmp	ip, #0	@ D.24156,
 	beq	.L82	@,
-	cmp	ip, r3	@ D.24171, u8SourceMode
+	cmp	ip, r3	@ D.24156, u8SourceMode
 	bne	.L81	@,
 .L82:
-	ldrb	ip, [r8, #7]	@ zero_extendqisi2	@ D.24176, <variable>.u8OutputMode
-	cmp	ip, #0	@ D.24176,
+	ldrb	ip, [r8, #7]	@ zero_extendqisi2	@ D.24161, <variable>.u8OutputMode
+	cmp	ip, #0	@ D.24161,
 	beq	.L70	@,
-	cmp	ip, r7	@ D.24176, u8OutputMode
+	cmp	ip, r7	@ D.24161, u8OutputMode
 	beq	.L70	@,
 .L81:
 	add	r6, sl, #1	@ i, tmp162,
-	add	r4, r8, #16	@ ivtmp.438, tmp163,
+	add	r4, r8, #16	@ ivtmp.433, tmp163,
 	cmp	r5, r6	@ sg_u32PhyListNum.215, i
 	bhi	.L71	@,
 .L66:
-	mvn	r0, #0	@ D.24159,
+	mvn	r0, #0	@ D.24144,
 	b	.L67	@
 .L88:
-	cmp	ip, r3	@ D.24171, u8SourceMode
+	cmp	ip, r3	@ D.24156, u8SourceMode
 	beq	.L78	@,
 	b	.L77	@
 .L69:
-	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ D.24176, <variable>.u8OutputMode
-	cmp	ip, #0	@ D.24176,
+	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ D.24161, <variable>.u8OutputMode
+	cmp	ip, #0	@ D.24161,
 	beq	.L70	@,
-	cmp	ip, r7	@ D.24176, u8OutputMode
+	cmp	ip, r7	@ D.24161, u8OutputMode
 	beq	.L70	@,
 	b	.L68	@
 .L64:
@@ -596,7 +596,7 @@ PQ_MNG_UpdatePhyList:
 	movt	lr, #:upper16:.LC0	@ tmp154,
 	str	lr, [sp, #0]	@ tmp154,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24159,
+	mvn	r0, #0	@ D.24144,
 	b	.L67	@
 .L91:
 	.align	2
@@ -628,9 +628,9 @@ PQ_MNG_GetSoftTable:
 	str	r1, [fp, #-56]	@ enSourceMode, %sfp
 	mov	r5, r0	@ u32Lut, u32Lut
 	mov	r6, r2	@ enOutputMode, enOutputMode
-	ldr	r1, [r4, #4]	@ prephitmp.462, sg_pstPhyReg
+	ldr	r1, [r4, #4]	@ prephitmp.457, sg_pstPhyReg
 	str	r3, [fp, #-60]	@ u32DefaultValue, %sfp
-	cmp	r1, #0	@ prephitmp.462,
+	cmp	r1, #0	@ prephitmp.457,
 	beq	.L111	@,
 	movw	r3, #:lower16:.LANCHOR2	@ tmp152,
 	movt	r3, #:upper16:.LANCHOR2	@ tmp152,
@@ -640,10 +640,10 @@ PQ_MNG_GetSoftTable:
 	ble	.L95	@,
 	sub	r7, r7, #-268435455	@ tmp153, sg_u32PhyListNum.239,
 	tst	sl, #1	@ i,
-	mov	r7, r7, asl #4	@ ivtmp.481, tmp153,
+	mov	r7, r7, asl #4	@ ivtmp.476, tmp153,
 	beq	.L106	@,
 .L98:
-	add	lr, r1, r7	@ D.24418, prephitmp.462, ivtmp.481
+	add	lr, r1, r7	@ D.24403, prephitmp.457, ivtmp.476
 	ldr	r8, [r1, r7]	@ u32Addr, <variable>.u32RegAddr
 	ldrb	r2, [lr, #7]	@ zero_extendqisi2	@, <variable>.u8OutputMode
 	mov	r0, r8	@, u32Addr
@@ -658,11 +658,11 @@ PQ_MNG_GetSoftTable:
 	beq	.L112	@,
 .L96:
 	sub	sl, sl, #1	@ tmp159, i,
-	sub	r7, r7, #16	@ tmp160, ivtmp.481,
+	sub	r7, r7, #16	@ tmp160, ivtmp.476,
 	cmp	sl, #0	@ tmp159,
 	ble	.L95	@,
-	ldr	r1, [r4, #4]	@ prephitmp.462, sg_pstPhyReg
-	add	r3, r1, r7	@ D.24418, prephitmp.462, tmp160
+	ldr	r1, [r4, #4]	@ prephitmp.457, sg_pstPhyReg
+	add	r3, r1, r7	@ D.24403, prephitmp.457, tmp160
 	ldr	r8, [r1, r7]	@ u32Addr, <variable>.u32RegAddr
 	ldrb	r9, [r3, #7]	@ zero_extendqisi2	@, <variable>.u8OutputMode
 	mov	r0, r8	@, u32Addr
@@ -677,12 +677,12 @@ PQ_MNG_GetSoftTable:
 	beq	.L113	@,
 .L103:
 	sub	sl, sl, #1	@ i, tmp159,
-	sub	r7, r7, #16	@ ivtmp.481, tmp160,
+	sub	r7, r7, #16	@ ivtmp.476, tmp160,
 .L110:
-	ldr	r1, [r4, #4]	@ prephitmp.462, sg_pstPhyReg
+	ldr	r1, [r4, #4]	@ prephitmp.457, sg_pstPhyReg
 	b	.L98	@
 .L106:
-	add	r2, r1, r7	@ D.24418, prephitmp.462, ivtmp.481
+	add	r2, r1, r7	@ D.24403, prephitmp.457, ivtmp.476
 	ldrb	r0, [r2, #7]	@ zero_extendqisi2	@, <variable>.u8OutputMode
 	ldr	r8, [r2, #0]	@ u32Addr, <variable>.u32RegAddr
 	str	r0, [fp, #-52]	@, %sfp
@@ -697,7 +697,7 @@ PQ_MNG_GetSoftTable:
 	beq	.L114	@,
 .L100:
 	sub	sl, sl, #1	@ i, i,
-	sub	r7, r7, #16	@ ivtmp.481, ivtmp.481,
+	sub	r7, r7, #16	@ ivtmp.476, ivtmp.476,
 	cmp	sl, #0	@ i,
 	bgt	.L110	@,
 .L95:
@@ -770,227 +770,6 @@ PQ_MNG_GetSoftTable:
 	.fnend
 	.size	PQ_MNG_GetSoftTable, .-PQ_MNG_GetSoftTable
 	.align	2
-	.global	PQ_MNG_GetArraySoftTable
-	.type	PQ_MNG_GetArraySoftTable, %function
-PQ_MNG_GetArraySoftTable:
-	.fnstart
-.LFB708:
-	@ args = 8, pretend = 0, frame = 24
-	@ frame_needed = 1, uses_anonymous_args = 0
-	.movsp ip
-	mov	ip, sp	@,
-	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}	@,
-	.pad #4
-	.save {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
-	.setfp fp, ip, #-4
-	sub	fp, ip, #4	@,,
-	.pad #36
-	sub	sp, sp, #36	@,,
-	push	{lr}
-	bl	__gnu_mcount_nc
-	movw	r4, #:lower16:.LANCHOR0	@ tmp171,
-	movt	r4, #:upper16:.LANCHOR0	@ tmp171,
-	str	r1, [fp, #-60]	@ Array, %sfp
-	mov	r5, r0	@ u32Lut, u32Lut
-	str	r2, [fp, #-56]	@ u32Num, %sfp
-	ldr	r1, [r4, #4]	@ prephitmp.506, sg_pstPhyReg
-	str	r3, [fp, #-64]	@ enSourceMode, %sfp
-	cmp	r1, #0	@ prephitmp.506,
-	beq	.L144	@,
-	ldr	r2, [fp, #-56]	@, %sfp
-	cmp	r2, #1	@,
-	mvnhi	r0, #0	@ D.24492,
-	bls	.L145	@,
-.L119:
-	sub	sp, fp, #40
-	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L145:
-	movw	r3, #:lower16:.LANCHOR2	@ tmp158,
-	movt	r3, #:upper16:.LANCHOR2	@ tmp158,
-	ldr	r6, [r3, #0]	@ sg_u32PhyListNum.245, sg_u32PhyListNum
-	sub	r8, r6, #1	@ i, sg_u32PhyListNum.245,
-	cmp	r8, #0	@ i,
-	ble	.L121	@,
-	sub	r6, r6, #-268435455	@ tmp159, sg_u32PhyListNum.245,
-	ldr	r7, [fp, #-56]	@, %sfp
-	tst	r8, #1	@ i,
-	sub	r0, r7, #1	@,,
-	mov	r6, r6, asl #4	@ ivtmp.525, tmp159,
-	str	r0, [fp, #-68]	@, %sfp
-	beq	.L135	@,
-.L125:
-	ldr	r7, [r1, r6]	@ u32Addr, <variable>.u32RegAddr
-	add	r1, r1, r6	@ D.24499, prephitmp.506, ivtmp.525
-	ldr	lr, [r1, #12]	@, <variable>.u32Value
-	ldrb	r9, [r1, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
-	mov	r0, r7	@, u32Addr
-	str	lr, [fp, #-52]	@, %sfp
-	ldrb	sl, [r1, #4]	@ zero_extendqisi2	@, <variable>.u8Lsb
-	str	sl, [fp, #-48]	@, %sfp
-	ldrb	sl, [r1, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bl	PQ_HAL_IsSpecialReg	@
-	cmp	r0, #0	@,
-	beq	.L121	@,
-	cmp	r7, r5	@ u32Addr, u32Lut
-	beq	.L146	@,
-.L122:
-	sub	r8, r8, #1	@ tmp175, i,
-	sub	r6, r6, #16	@ tmp176, ivtmp.525,
-	cmp	r8, #0	@ tmp175,
-	ble	.L121	@,
-	ldr	r9, [r4, #4]	@ prephitmp.506, sg_pstPhyReg
-	add	r3, r9, r6	@ D.24499, prephitmp.506, tmp176
-	ldr	r7, [r9, r6]	@ u32Addr, <variable>.u32RegAddr
-	ldr	r0, [r3, #12]	@, <variable>.u32Value
-	ldrb	r9, [r3, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
-	str	r0, [fp, #-52]	@, %sfp
-	mov	r0, r7	@, u32Addr
-	ldrb	sl, [r3, #4]	@ zero_extendqisi2	@, <variable>.u8Lsb
-	str	sl, [fp, #-48]	@, %sfp
-	ldrb	sl, [r3, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bl	PQ_HAL_IsSpecialReg	@
-	cmp	r0, #0	@,
-	beq	.L121	@,
-	cmp	r7, r5	@ u32Addr, u32Lut
-	beq	.L147	@,
-.L131:
-	sub	r8, r8, #1	@ i, tmp175,
-	sub	r6, r6, #16	@ ivtmp.525, tmp176,
-.L142:
-	ldr	r1, [r4, #4]	@ prephitmp.506, sg_pstPhyReg
-	b	.L125	@
-.L135:
-	add	r1, r1, r6	@ D.24499, prephitmp.506, ivtmp.525
-	ldr	r2, [r1, #12]	@, <variable>.u32Value
-	ldr	r7, [r1, #0]	@ u32Addr, <variable>.u32RegAddr
-	ldrb	r9, [r1, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
-	str	r2, [fp, #-52]	@, %sfp
-	ldrb	ip, [r1, #4]	@ zero_extendqisi2	@, <variable>.u8Lsb
-	mov	r0, r7	@, u32Addr
-	str	ip, [fp, #-48]	@, %sfp
-	ldrb	sl, [r1, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bl	PQ_HAL_IsSpecialReg	@
-	cmp	r0, #0	@,
-	beq	.L121	@,
-	cmp	r7, r5	@ u32Addr, u32Lut
-	beq	.L148	@,
-.L127:
-	sub	r8, r8, #1	@ i, i,
-	sub	r6, r6, #16	@ ivtmp.525, ivtmp.525,
-	cmp	r8, #0	@ i,
-	bgt	.L142	@,
-.L121:
-	ldr	lr, [fp, #-56]	@, %sfp
-	ldr	r0, [fp, #-60]	@, %sfp
-	ldr	r1, [fp, #8]	@, u32DefaultArray
-	mov	r2, lr, asl #2	@,,
-	bl	memcpy	@
-	mov	r0, #0	@ D.24492,
-	b	.L119	@
-.L146:
-	cmp	sl, #0	@ u8SourceMode,
-	beq	.L123	@,
-	ldr	ip, [fp, #-64]	@, %sfp
-	cmp	sl, ip	@ u8SourceMode,
-	bne	.L122	@,
-.L123:
-	cmp	r9, #0	@ u8OutputMode,
-	beq	.L124	@,
-	ldr	r2, [fp, #4]	@, enOutputMode
-	cmp	r9, r2	@ u8OutputMode,
-	bne	.L122	@,
-.L124:
-	ldr	r3, [fp, #-48]	@, %sfp
-	ldr	r0, [fp, #-68]	@, %sfp
-	cmp	r3, r0	@,
-	bhi	.L121	@,
-	ldr	r2, [fp, #-52]	@, %sfp
-	ldr	ip, [fp, #-60]	@, %sfp
-	str	r2, [ip, r3, asl #2]	@,
-	ldr	lr, [r4, #8]	@ u32ArrayNum, u32ArrayNum
-	ldr	r1, [fp, #-56]	@, %sfp
-	add	r3, lr, #1	@ u32ArrayNum.248, u32ArrayNum,
-	str	r3, [r4, #8]	@ u32ArrayNum.248, u32ArrayNum
-	cmp	r1, r3	@, u32ArrayNum.248
-	bne	.L122	@,
-	mov	r0, #0	@ D.24492,
-	b	.L119	@
-.L147:
-	cmp	sl, #0	@ u8SourceMode,
-	beq	.L132	@,
-	ldr	r1, [fp, #-64]	@, %sfp
-	cmp	sl, r1	@ u8SourceMode,
-	bne	.L131	@,
-.L132:
-	cmp	r9, #0	@ u8OutputMode,
-	beq	.L133	@,
-	ldr	lr, [fp, #4]	@, enOutputMode
-	cmp	r9, lr	@ u8OutputMode,
-	bne	.L131	@,
-.L133:
-	ldr	r1, [fp, #-48]	@, %sfp
-	ldr	lr, [fp, #-68]	@, %sfp
-	cmp	r1, lr	@,
-	bhi	.L121	@,
-	ldr	r3, [fp, #-52]	@, %sfp
-	ldr	r0, [fp, #-60]	@, %sfp
-	str	r3, [r0, r1, asl #2]	@,
-	ldr	r2, [r4, #8]	@ u32ArrayNum, u32ArrayNum
-	ldr	r1, [fp, #-56]	@, %sfp
-	add	ip, r2, #1	@ u32ArrayNum.248, u32ArrayNum,
-	str	ip, [r4, #8]	@ u32ArrayNum.248, u32ArrayNum
-	cmp	r1, ip	@, u32ArrayNum.248
-	bne	.L131	@,
-	mov	r0, #0	@ D.24492,
-	b	.L119	@
-.L148:
-	cmp	sl, #0	@ u8SourceMode,
-	beq	.L128	@,
-	ldr	r0, [fp, #-64]	@, %sfp
-	cmp	sl, r0	@ u8SourceMode,
-	bne	.L127	@,
-.L128:
-	cmp	r9, #0	@ u8OutputMode,
-	bne	.L138	@,
-.L129:
-	ldr	r1, [fp, #-48]	@, %sfp
-	ldr	r3, [fp, #-68]	@, %sfp
-	cmp	r1, r3	@,
-	bhi	.L121	@,
-	ldr	r2, [fp, #-52]	@, %sfp
-	ldr	ip, [fp, #-60]	@, %sfp
-	str	r2, [ip, r1, asl #2]	@,
-	ldr	r1, [r4, #8]	@ u32ArrayNum, u32ArrayNum
-	ldr	r0, [fp, #-56]	@, %sfp
-	add	lr, r1, #1	@ u32ArrayNum.248, u32ArrayNum,
-	str	lr, [r4, #8]	@ u32ArrayNum.248, u32ArrayNum
-	cmp	r0, lr	@, u32ArrayNum.248
-	bne	.L127	@,
-	mov	r0, #0	@ D.24492,
-	b	.L119	@
-.L144:
-	mov	r0, #1	@,
-	mov	r1, #41	@,
-	ldr	r2, .L149	@,
-	movw	r3, #475	@,
-	movw	ip, #:lower16:.LC0	@ tmp157,
-	movt	ip, #:upper16:.LC0	@ tmp157,
-	str	ip, [sp, #0]	@ tmp157,
-	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24492,
-	b	.L119	@
-.L138:
-	ldr	r3, [fp, #4]	@, enOutputMode
-	cmp	r9, r3	@ u8OutputMode,
-	bne	.L127	@,
-	b	.L129	@
-.L150:
-	.align	2
-.L149:
-	.word	.LANCHOR1+80
-	.fnend
-	.size	PQ_MNG_GetArraySoftTable, .-PQ_MNG_GetArraySoftTable
-	.align	2
 	.global	PQ_MNG_PrintTable
 	.type	PQ_MNG_PrintTable, %function
 PQ_MNG_PrintTable:
@@ -1015,7 +794,7 @@ PQ_MNG_PrintTable:
 	mov	r9, r1	@ u32PriAddr, u32PriAddr
 	ldr	r3, [r6, #4]	@ sg_pstPhyReg, sg_pstPhyReg
 	cmp	r3, #0	@ sg_pstPhyReg,
-	beq	.L156	@,
+	beq	.L122	@,
 	movw	r0, #:lower16:.LC2	@,
 	movt	r0, #:upper16:.LC2	@,
 	bl	HI_DRV_PROC_EchoHelper	@
@@ -1047,23 +826,23 @@ PQ_MNG_PrintTable:
 	bl	HI_DRV_PROC_EchoHelper	@
 	ldr	r0, [r7, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	cmp	r0, #0	@ sg_u32PhyListNum,
-	beq	.L153	@,
+	beq	.L119	@,
 	subs	r4, r4, #1	@, bIsAll,
 	movne	r4, #1	@
 	str	r9, [fp, #-52]	@ u32PriAddr, %sfp
 	str	r4, [fp, #-48]	@, %sfp
 	mov	r4, #0	@ i,
-	b	.L155	@
-.L154:
+	b	.L121	@
+.L120:
 	ldr	lr, [r7, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	add	r4, r4, #1	@ i, i,
 	cmp	lr, r4	@ sg_u32PhyListNum, i
-	bls	.L153	@,
-.L155:
+	bls	.L119	@,
+.L121:
 	ldr	r9, [r6, #4]	@ sg_pstPhyReg, sg_pstPhyReg
 	ldr	r8, [fp, #-52]	@, %sfp
 	ldr	r2, [fp, #-48]	@ tmp167, %sfp
-	add	r1, r9, r4, asl #4	@, D.24383, sg_pstPhyReg, i,
+	add	r1, r9, r4, asl #4	@, D.24368, sg_pstPhyReg, i,
 	ldr	r5, [r9, r4, asl #4]	@ u32Addr, <variable>.u32RegAddr
 	ldrb	r3, [r1, #7]	@ zero_extendqisi2	@ u8OutputMode, <variable>.u8OutputMode
 	cmp	r8, r5	@, u32Addr
@@ -1075,7 +854,7 @@ PQ_MNG_PrintTable:
 	ldr	r2, [r1, #8]	@ u32Module, <variable>.u32Module
 	ldrb	sl, [r1, #5]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r8, [r1, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L154	@,
+	bne	.L120	@,
 	movw	r0, #:lower16:.LC2	@,
 	movt	r0, #:upper16:.LC2	@,
 	str	r2, [fp, #-60]	@,
@@ -1120,15 +899,15 @@ PQ_MNG_PrintTable:
 	bl	HI_DRV_PROC_EchoHelper	@
 	ldr	lr, [r7, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	cmp	lr, r4	@ sg_u32PhyListNum, i
-	bhi	.L155	@,
-.L153:
+	bhi	.L121	@,
+.L119:
 	movw	r0, #:lower16:.LC2	@,
 	movt	r0, #:upper16:.LC2	@,
 	bl	HI_DRV_PROC_EchoHelper	@
 	movw	r0, #:lower16:.LC2	@,
 	movt	r0, #:upper16:.LC2	@,
 	bl	HI_DRV_PROC_EchoHelper	@
-.L156:
+.L122:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 	.fnend
@@ -1157,41 +936,41 @@ PQ_MNG_InitPhyList:
 	mov	r8, r1	@ enRegType, enRegType
 	mov	r4, #0	@ tmp159,
 	str	ip, [fp, #-56]	@, %sfp
-	ldr	r1, [ip, #4]	@ prephitmp.590, sg_pstPhyReg
+	ldr	r1, [ip, #4]	@ prephitmp.541, sg_pstPhyReg
 	str	r0, [fp, #-84]	@ u32ID, %sfp
-	cmp	r1, r4	@ prephitmp.590,
+	cmp	r1, r4	@ prephitmp.541,
 	str	r2, [fp, #-72]	@ enSourceMode, %sfp
 	str	r3, [fp, #-76]	@ enOutputMode, %sfp
 	str	r4, [fp, #-48]	@ tmp159, u32RegValue
-	beq	.L159	@,
+	beq	.L125	@,
 	movw	r6, #:lower16:.LANCHOR2	@ tmp189,
 	movt	r6, #:upper16:.LANCHOR2	@ tmp189,
 	ldr	r3, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	cmp	r3, r4	@ sg_u32PhyListNum,
-	bne	.L172	@,
-	b	.L161	@
-.L163:
+	bne	.L138	@,
+	b	.L127	@
+.L129:
 	cmp	r8, #1	@ enRegType,
-	beq	.L176	@,
-.L165:
+	beq	.L142	@,
+.L131:
 	ldr	ip, [fp, #4]	@, enModule
 	tst	ip, r5	@, u32Module
-	beq	.L164	@,
+	beq	.L130	@,
 	cmp	sl, #0	@ u8SourceMode,
-	beq	.L166	@,
+	beq	.L132	@,
 	ldr	r3, [fp, #-72]	@, %sfp
 	cmp	sl, r3	@ u8SourceMode,
-	beq	.L166	@,
-.L164:
+	beq	.L132	@,
+.L130:
 	ldr	ip, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	add	r4, r4, #1	@ i, i,
 	cmp	ip, r4	@ sg_u32PhyListNum, i
-	bls	.L161	@,
-.L177:
+	bls	.L127	@,
+.L143:
 	ldr	r5, [fp, #-56]	@, %sfp
-	ldr	r1, [r5, #4]	@ prephitmp.590, sg_pstPhyReg
-.L172:
-	add	r3, r1, r4, asl #4	@, D.24315, prephitmp.590, i,
+	ldr	r1, [r5, #4]	@ prephitmp.541, sg_pstPhyReg
+.L138:
+	add	r3, r1, r4, asl #4	@, D.24300, prephitmp.541, i,
 	ldr	r7, [r1, r4, asl #4]	@ u32Addr, <variable>.u32RegAddr
 	cmp	r8, #0	@ enRegType,
 	ldr	r1, [r3, #12]	@, <variable>.u32Value
@@ -1203,39 +982,39 @@ PQ_MNG_InitPhyList:
 	ldrb	r0, [r3, #5]	@ zero_extendqisi2	@, <variable>.u8Msb
 	str	r0, [fp, #-60]	@, %sfp
 	ldrb	sl, [r3, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L163	@,
+	bne	.L129	@,
 	mov	r0, r7	@, u32Addr
 	bl	PQ_HAL_IsVpssReg	@
 	cmp	r0, #1	@,
-	beq	.L165	@,
+	beq	.L131	@,
 	ldr	ip, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	add	r4, r4, #1	@ i, i,
 	cmp	ip, r4	@ sg_u32PhyListNum, i
-	bhi	.L177	@,
-.L161:
-	mov	r0, #0	@ D.24313,
-.L162:
+	bhi	.L143	@,
+.L127:
+	mov	r0, #0	@ D.24298,
+.L128:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L166:
+.L132:
 	cmp	r9, #0	@ u8OutputMode,
-	beq	.L167	@,
+	beq	.L133	@,
 	ldr	r0, [fp, #-76]	@, %sfp
 	cmp	r9, r0	@ u8OutputMode,
-	bne	.L164	@,
-.L167:
+	bne	.L130	@,
+.L133:
 	mov	r0, r7	@, u32Addr
 	mov	lr, r7, asl #16	@, u32Addr,
 	str	lr, [fp, #-80]	@, %sfp
 	bl	PQ_HAL_IsVpssReg	@
-	cmp	r0, #1	@ D.24339,
-	mov	r3, r0	@ D.24339,
-	beq	.L178	@,
+	cmp	r0, #1	@ D.24324,
+	mov	r3, r0	@ D.24324,
+	beq	.L144	@,
 	mov	r0, r7	@, u32Addr
 	bl	PQ_HAL_IsVdpReg	@
-	cmp	r0, #1	@ D.24350,
-	beq	.L179	@,
-.L170:
+	cmp	r0, #1	@ D.24335,
+	beq	.L145	@,
+.L136:
 	mov	r2, r7	@, u32Addr
 	mov	r3, sl	@, u8SourceMode
 	movw	r1, #:lower16:.LC15	@,
@@ -1244,20 +1023,20 @@ PQ_MNG_InitPhyList:
 	str	r9, [sp, #0]	@ u8OutputMode,
 	str	r5, [sp, #4]	@ u32Module,
 	bl	PQ_HAL_PrintMsg	@
-	b	.L164	@
-.L176:
+	b	.L130	@
+.L142:
 	mov	r0, r7	@, u32Addr
 	bl	PQ_HAL_IsVdpReg	@
 	cmp	r0, #1	@,
-	bne	.L164	@,
-	b	.L165	@
-.L178:
+	bne	.L130	@,
+	b	.L131	@
+.L144:
 	ldr	r0, [fp, #-84]	@, %sfp
 	str	r3, [fp, #-88]	@,
 	bl	PQ_HAL_GetVpssReg	@
 	ldr	r3, [fp, #-88]	@,
 	subs	ip, r0, #0	@ pstVpssVirReg,
-	beq	.L180	@,
+	beq	.L146	@,
 	ldr	r3, [fp, #-80]	@, %sfp
 	sub	r0, fp, #48	@,,
 	ldr	r1, [fp, #-60]	@, %sfp
@@ -1271,13 +1050,13 @@ PQ_MNG_InitPhyList:
 	ldr	ip, [fp, #-88]	@,
 	ldr	r2, [fp, #-80]	@, %sfp
 	str	r1, [ip, r2, lsr #16]	@ u32RegValue,* pstVpssVirReg
-	b	.L170	@
-.L179:
+	b	.L136	@
+.L145:
 	str	r0, [fp, #-88]	@ tmp3,
 	bl	PQ_HAL_GetVdpReg	@
 	ldr	r3, [fp, #-88]	@,
 	subs	ip, r0, #0	@ pVdpVirReg,
-	beq	.L181	@,
+	beq	.L147	@,
 	ldr	r3, [fp, #-80]	@, %sfp
 	sub	r0, fp, #48	@,,
 	ldr	r1, [fp, #-60]	@, %sfp
@@ -1291,35 +1070,35 @@ PQ_MNG_InitPhyList:
 	ldr	r1, [fp, #-88]	@,
 	ldr	r0, [fp, #-80]	@, %sfp
 	str	r2, [r1, r0, lsr #16]	@ u32RegValue,* pVdpVirReg
-	b	.L170	@
-.L180:
-	ldr	r2, .L182	@,
-	mov	r0, r3	@, D.24339
+	b	.L136	@
+.L146:
+	ldr	r2, .L148	@,
+	mov	r0, r3	@, D.24324
 	mov	r1, #41	@,
 	mov	r3, #312	@,
-.L174:
+.L140:
 	movw	ip, #:lower16:.LC0	@ tmp179,
 	movt	ip, #:upper16:.LC0	@ tmp179,
 	str	ip, [sp, #0]	@ tmp179,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24313,
-	b	.L162	@
-.L181:
-	mov	r0, r3	@, D.24350
+	mvn	r0, #0	@ D.24298,
+	b	.L128	@
+.L147:
+	mov	r0, r3	@, D.24335
 	mov	r1, #41	@,
-	ldr	r2, .L182	@,
+	ldr	r2, .L148	@,
 	movw	r3, #321	@,
-	b	.L174	@
-.L159:
+	b	.L140	@
+.L125:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L182	@,
+	ldr	r2, .L148	@,
 	movw	r3, #271	@,
-	b	.L174	@
-.L183:
+	b	.L140	@
+.L149:
 	.align	2
-.L182:
-	.word	.LANCHOR1+108
+.L148:
+	.word	.LANCHOR1+80
 	.fnend
 	.size	PQ_MNG_InitPhyList, .-PQ_MNG_InitPhyList
 	.align	2
@@ -1350,114 +1129,114 @@ PQ_MNG_SetVpssReg:
 	mov	r7, r3	@ u32Value, u32Value
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, r4	@,
-	mvneq	r4, #0	@ s32Ret.637,
-	bne	.L204	@,
-.L186:
+	mvneq	r4, #0	@ s32Ret.588,
+	bne	.L170	@,
+.L152:
 	mov	r0, #1	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L205	@,
-.L188:
+	bne	.L171	@,
+.L154:
 	mov	r0, #2	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L206	@,
-.L189:
+	bne	.L172	@,
+.L155:
 	mov	r0, #3	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L207	@,
-.L190:
+	bne	.L173	@,
+.L156:
 	mov	r0, #4	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L208	@,
-.L191:
+	bne	.L174	@,
+.L157:
 	mov	r0, #5	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L209	@,
-.L192:
+	bne	.L175	@,
+.L158:
 	mov	r0, #6	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L210	@,
-.L193:
+	bne	.L176	@,
+.L159:
 	mov	r0, #7	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L211	@,
-.L194:
+	bne	.L177	@,
+.L160:
 	mov	r0, #8	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L212	@,
-.L195:
+	bne	.L178	@,
+.L161:
 	mov	r0, #9	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L213	@,
-.L196:
+	bne	.L179	@,
+.L162:
 	mov	r0, #10	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L214	@,
-.L197:
+	bne	.L180	@,
+.L163:
 	mov	r0, #11	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L215	@,
-.L198:
+	bne	.L181	@,
+.L164:
 	mov	r0, #12	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L216	@,
-.L199:
+	bne	.L182	@,
+.L165:
 	mov	r0, #13	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L217	@,
-.L200:
+	bne	.L183	@,
+.L166:
 	mov	r0, #14	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L218	@,
-.L201:
+	bne	.L184	@,
+.L167:
 	mov	r0, #15	@,
 	bl	PQ_HAL_CheckVpssValid	@
 	cmp	r0, #0	@,
-	bne	.L219	@,
-.L202:
-	mov	r0, r4	@, s32Ret.637
+	bne	.L185	@,
+.L168:
+	mov	r0, r4	@, s32Ret.588
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
-.L204:
+.L170:
 	sub	sl, fp, #40	@ tmp172,,
 	mov	r0, r4	@, tmp171
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp172
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.635,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.586,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp172
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.635
+	mov	r0, r4	@, s32Ret.586
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L186	@
-.L219:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L152	@
+.L185:
 	sub	sl, fp, #40	@ tmp202,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp202
 	bl	PQ_HAL_ReadRegister	@
 	subs	r4, r0, #0	@ s32Ret,
-	bne	.L187	@,
+	bne	.L153	@,
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r0, sl	@, tmp202
@@ -1467,277 +1246,277 @@ PQ_MNG_SetVpssReg:
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L202	@
-.L218:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L168	@
+.L184:
 	sub	sl, fp, #40	@ tmp200,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp200
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.678,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.629,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp200
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.678
+	mov	r0, r4	@, s32Ret.629
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L201	@
-.L217:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L167	@
+.L183:
 	sub	sl, fp, #40	@ tmp198,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp198
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.675,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.626,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp198
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.675
+	mov	r0, r4	@, s32Ret.626
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L200	@
-.L216:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L166	@
+.L182:
 	sub	sl, fp, #40	@ tmp196,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp196
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.672,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.623,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp196
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.672
+	mov	r0, r4	@, s32Ret.623
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L199	@
-.L215:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L165	@
+.L181:
 	sub	sl, fp, #40	@ tmp194,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp194
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.669,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.620,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp194
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.669
+	mov	r0, r4	@, s32Ret.620
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L198	@
-.L214:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L164	@
+.L180:
 	sub	sl, fp, #40	@ tmp192,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp192
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.666,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.617,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp192
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.666
+	mov	r0, r4	@, s32Ret.617
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L197	@
-.L213:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L163	@
+.L179:
 	sub	sl, fp, #40	@ tmp190,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp190
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.663,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.614,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp190
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.663
+	mov	r0, r4	@, s32Ret.614
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L196	@
-.L212:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L162	@
+.L178:
 	sub	sl, fp, #40	@ tmp188,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp188
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.660,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.611,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp188
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.660
+	mov	r0, r4	@, s32Ret.611
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L195	@
-.L211:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L161	@
+.L177:
 	sub	sl, fp, #40	@ tmp186,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp186
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.657,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.608,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp186
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.657
+	mov	r0, r4	@, s32Ret.608
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L194	@
-.L210:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L160	@
+.L176:
 	sub	sl, fp, #40	@ tmp184,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp184
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.654,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.605,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp184
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.654
+	mov	r0, r4	@, s32Ret.605
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L193	@
-.L209:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L159	@
+.L175:
 	sub	sl, fp, #40	@ tmp182,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp182
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.651,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.602,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp182
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.651
+	mov	r0, r4	@, s32Ret.602
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L192	@
-.L208:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L158	@
+.L174:
 	sub	sl, fp, #40	@ tmp180,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp180
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.648,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.599,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp180
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.648
+	mov	r0, r4	@, s32Ret.599
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L191	@
-.L207:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L157	@
+.L173:
 	sub	sl, fp, #40	@ tmp178,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp178
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.645,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.596,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp178
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.645
+	mov	r0, r4	@, s32Ret.596
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L190	@
-.L206:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L156	@
+.L172:
 	sub	sl, fp, #40	@ tmp176,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp176
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.642,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.593,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp176
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.642
+	mov	r0, r4	@, s32Ret.593
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L189	@
-.L205:
+	mov	r4, r0	@ s32Ret.588,
+	b	.L155	@
+.L171:
 	sub	sl, fp, #40	@ tmp174,,
 	mov	r0, #0	@,
 	mov	r1, r5	@, u32Addr
 	mov	r2, sl	@, tmp174
 	bl	PQ_HAL_ReadRegister	@
-	subs	r4, r0, #0	@ s32Ret.639,
-	bne	.L187	@,
+	subs	r4, r0, #0	@ s32Ret.590,
+	bne	.L153	@,
 	mov	r0, sl	@, tmp174
 	mov	r2, r6	@, u8Lsb
 	mov	r3, r7	@, u32Value
 	mov	r1, r8	@, u8Msb
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r4	@, s32Ret.639
+	mov	r0, r4	@, s32Ret.590
 	mov	r1, r5	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	mov	r4, r0	@ s32Ret.637,
-	b	.L188	@
-.L187:
-	mvn	r4, #0	@ s32Ret.637,
-	b	.L202	@
+	mov	r4, r0	@ s32Ret.588,
+	b	.L154	@
+.L153:
+	mvn	r4, #0	@ s32Ret.588,
+	b	.L168	@
 	.fnend
 	.size	PQ_MNG_SetVpssReg, .-PQ_MNG_SetVpssReg
 	.align	2
@@ -1767,42 +1546,42 @@ PQ_MNG_SetVdpReg:
 	str	r6, [fp, #-40]	@ tmp141, u32RegValue
 	bl	PQ_HAL_CheckVdpValid	@
 	cmp	r0, #1	@,
-	beq	.L226	@,
+	beq	.L192	@,
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L227	@,
+	ldr	r2, .L193	@,
 	mov	r3, #174	@,
 	movw	ip, #:lower16:.LC16	@ tmp147,
 	movt	ip, #:upper16:.LC16	@ tmp147,
 	str	ip, [sp, #0]	@ tmp147,
 	bl	HI_LogOut	@
-.L225:
+.L191:
 	mvn	r0, #0	@ s32Ret,
-.L223:
+.L189:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
-.L226:
+.L192:
 	sub	sl, fp, #40	@ tmp142,,
 	mov	r0, r6	@, tmp141
 	mov	r1, r4	@, u32Addr
 	mov	r2, sl	@, tmp142
 	bl	PQ_HAL_ReadRegister	@
-	subs	r6, r0, #0	@ s32Ret.702,
-	bne	.L225	@,
+	subs	r6, r0, #0	@ s32Ret.653,
+	bne	.L191	@,
 	mov	r2, r5	@, u8Lsb
 	mov	r0, sl	@, tmp142
 	mov	r1, r7	@, u8Msb
 	mov	r3, r8	@, u32Value
 	bl	PQ_HAL_SetU32ByBit	@
-	mov	r0, r6	@, s32Ret.702
+	mov	r0, r6	@, s32Ret.653
 	mov	r1, r4	@, u32Addr
 	ldr	r2, [fp, #-40]	@, u32RegValue
 	bl	PQ_HAL_WriteRegister	@
-	b	.L223	@
-.L228:
+	b	.L189	@
+.L194:
 	.align	2
-.L227:
-	.word	.LANCHOR1+128
+.L193:
+	.word	.LANCHOR1+100
 	.fnend
 	.size	PQ_MNG_SetVdpReg, .-PQ_MNG_SetVdpReg
 	.align	2
@@ -1810,7 +1589,7 @@ PQ_MNG_SetVdpReg:
 	.type	PQ_MNG_SetReg, %function
 PQ_MNG_SetReg:
 	.fnstart
-.LFB709:
+.LFB708:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -1831,7 +1610,7 @@ PQ_MNG_SetReg:
 	mov	r7, r2	@ enOutputMode, enOutputMode
 	ldr	r3, [r5, #4]	@ sg_pstPhyReg, sg_pstPhyReg
 	cmp	r3, #0	@ sg_pstPhyReg,
-	beq	.L239	@,
+	beq	.L205	@,
 	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ <variable>.u8OutputMode, <variable>.u8OutputMode
 	ldr	lr, [r4, #12]	@ <variable>.u32Value, <variable>.u32Value
 	ldr	r0, [r0, #0]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
@@ -1841,85 +1620,85 @@ PQ_MNG_SetReg:
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	PQ_MNG_UpdatePhyList	@
 	cmn	r0, #1	@ s32Num,
-	beq	.L240	@,
+	beq	.L206	@,
 	ldr	r2, [r5, #4]	@ sg_pstPhyReg, sg_pstPhyReg
-	add	r0, r2, r0, asl #4	@, D.24556, sg_pstPhyReg, s32Num,
+	add	r0, r2, r0, asl #4	@, D.24483, sg_pstPhyReg, s32Num,
 	ldrb	r1, [r0, #6]	@ zero_extendqisi2	@ <variable>.u8SourceMode, <variable>.u8SourceMode
 	cmp	r1, #0	@ <variable>.u8SourceMode,
-	beq	.L234	@,
-	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ temp.732, <variable>.u8SourceMode
-	cmp	ip, r6	@ temp.732, enSourceMode
-	bne	.L241	@,
-.L234:
+	beq	.L200	@,
+	ldrb	ip, [r4, #6]	@ zero_extendqisi2	@ temp.683, <variable>.u8SourceMode
+	cmp	ip, r6	@ temp.683, enSourceMode
+	bne	.L207	@,
+.L200:
 	ldrb	r3, [r0, #7]	@ zero_extendqisi2	@ <variable>.u8OutputMode, <variable>.u8OutputMode
 	cmp	r3, #0	@ <variable>.u8OutputMode,
-	beq	.L233	@,
-	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ temp.734, <variable>.u8OutputMode
-	cmp	ip, r7	@ temp.734, enOutputMode
-	bne	.L242	@,
-.L233:
+	beq	.L199	@,
+	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ temp.685, <variable>.u8OutputMode
+	cmp	ip, r7	@ temp.685, enOutputMode
+	bne	.L208	@,
+.L199:
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	bl	PQ_HAL_IsVpssReg	@
 	cmp	r0, #1	@,
-	beq	.L243	@,
-.L235:
+	beq	.L209	@,
+.L201:
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	bl	PQ_HAL_IsVdpReg	@
 	cmp	r0, #1	@,
-	beq	.L244	@,
+	beq	.L210	@,
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	bl	PQ_HAL_IsSpecialReg	@
 	cmp	r0, #1	@,
-	bne	.L237	@,
+	bne	.L203	@,
 	ldr	r3, [r4, #12]	@, <variable>.u32Value
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	ldrb	r1, [r4, #6]	@ zero_extendqisi2	@, <variable>.u8SourceMode
 	ldrb	r2, [r4, #7]	@ zero_extendqisi2	@, <variable>.u8OutputMode
 	bl	PQ_MNG_SetSoftTable	@
-.L231:
+.L197:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
-.L243:
+.L209:
 	ldr	r3, [r4, #12]	@, <variable>.u32Value
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	ldrb	r1, [r4, #4]	@ zero_extendqisi2	@, <variable>.u8Lsb
 	ldrb	r2, [r4, #5]	@ zero_extendqisi2	@, <variable>.u8Msb
 	bl	PQ_MNG_SetVpssReg	@
-	b	.L231	@
-.L241:
+	b	.L197	@
+.L207:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L245	@,
-	movw	r3, #555	@,
+	ldr	r2, .L211	@,
+	movw	r3, #487	@,
 	str	r6, [sp, #4]	@ enSourceMode,
 	movw	lr, #:lower16:.LC18	@ tmp168,
-	str	ip, [sp, #8]	@ temp.732,
+	str	ip, [sp, #8]	@ temp.683,
 	movt	lr, #:upper16:.LC18	@ tmp168,
 	str	lr, [sp, #0]	@ tmp168,
 	bl	HI_LogOut	@
 	mov	r0, #0	@ s32Ret,
-	b	.L231	@
-.L242:
+	b	.L197	@
+.L208:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L245	@,
-	movw	r3, #563	@,
+	ldr	r2, .L211	@,
+	movw	r3, #495	@,
 	str	r7, [sp, #4]	@ enOutputMode,
 	movw	lr, #:lower16:.LC19	@ tmp172,
-	str	ip, [sp, #8]	@ temp.734,
+	str	ip, [sp, #8]	@ temp.685,
 	movt	lr, #:upper16:.LC19	@ tmp172,
 	str	lr, [sp, #0]	@ tmp172,
 	bl	HI_LogOut	@
 	mov	r0, #0	@ s32Ret,
-	b	.L231	@
-.L244:
+	b	.L197	@
+.L210:
 	ldr	r3, [r4, #12]	@, <variable>.u32Value
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	ldrb	r1, [r4, #4]	@ zero_extendqisi2	@, <variable>.u8Lsb
 	ldrb	r2, [r4, #5]	@ zero_extendqisi2	@, <variable>.u8Msb
 	bl	PQ_MNG_SetVdpReg	@
-	b	.L231	@
-.L240:
+	b	.L197	@
+.L206:
 	ldrb	lr, [r4, #6]	@ zero_extendqisi2	@ <variable>.u8SourceMode, <variable>.u8SourceMode
 	movw	r1, #:lower16:.LC17	@,
 	ldrb	ip, [r4, #7]	@ zero_extendqisi2	@ <variable>.u8OutputMode, <variable>.u8OutputMode
@@ -1935,34 +1714,34 @@ PQ_MNG_SetReg:
 	ldr	r0, [r4, #0]	@, <variable>.u32RegAddr
 	bl	PQ_HAL_IsVpssReg	@
 	cmp	r0, #1	@,
-	bne	.L235	@,
-	b	.L243	@
-.L237:
+	bne	.L201	@,
+	b	.L209	@
+.L203:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L245	@,
-	movw	r3, #585	@,
+	ldr	r2, .L211	@,
+	movw	r3, #517	@,
 	movw	ip, #:lower16:.LC20	@ tmp190,
 	movt	ip, #:upper16:.LC20	@ tmp190,
 	str	ip, [sp, #0]	@ tmp190,
 	bl	HI_LogOut	@
 	mvn	r0, #0	@ s32Ret,
-	b	.L231	@
-.L239:
+	b	.L197	@
+.L205:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L245	@,
-	movw	r3, #541	@,
+	ldr	r2, .L211	@,
+	movw	r3, #473	@,
 	movw	ip, #:lower16:.LC0	@ tmp149,
 	movt	ip, #:upper16:.LC0	@ tmp149,
 	str	ip, [sp, #0]	@ tmp149,
 	bl	HI_LogOut	@
 	mvn	r0, #0	@ s32Ret,
-	b	.L231	@
-.L246:
+	b	.L197	@
+.L212:
 	.align	2
-.L245:
-	.word	.LANCHOR1+148
+.L211:
+	.word	.LANCHOR1+120
 	.fnend
 	.size	PQ_MNG_SetReg, .-PQ_MNG_SetReg
 	.align	2
@@ -1989,11 +1768,11 @@ PQ_MNG_LoadPhyList:
 	str	r1, [fp, #-64]	@ enSourceMode, %sfp
 	str	ip, [fp, #-48]	@, %sfp
 	mov	r7, r0	@ enRegType, enRegType
-	ldr	r1, [ip, #4]	@ prephitmp.767, sg_pstPhyReg
+	ldr	r1, [ip, #4]	@ prephitmp.718, sg_pstPhyReg
 	str	r2, [fp, #-72]	@ enOutputMode, %sfp
-	cmp	r1, #0	@ prephitmp.767,
+	cmp	r1, #0	@ prephitmp.718,
 	str	r3, [fp, #-68]	@ enModule, %sfp
-	beq	.L248	@,
+	beq	.L214	@,
 	movw	r6, #:lower16:.LANCHOR2	@ tmp167,
 	movt	r6, #:upper16:.LANCHOR2	@ tmp167,
 	ldr	r3, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
@@ -2001,22 +1780,22 @@ PQ_MNG_LoadPhyList:
 	mvnne	r2, #0	@,
 	movne	r4, #0	@ i,
 	strne	r2, [fp, #-76]	@, %sfp
-	bne	.L259	@,
-	b	.L269	@
-.L265:
+	bne	.L225	@,
+	b	.L235	@
+.L231:
 	ldr	ip, [fp, #-64]	@, %sfp
 	cmp	r5, ip	@ u8SourceMode,
-	beq	.L255	@,
-.L253:
+	beq	.L221	@,
+.L219:
 	ldr	r2, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	add	r4, r4, #1	@ i, i,
 	cmp	r2, r4	@ sg_u32PhyListNum, i
-	bls	.L251	@,
-.L268:
+	bls	.L217	@,
+.L234:
 	ldr	r8, [fp, #-48]	@, %sfp
-	ldr	r1, [r8, #4]	@ prephitmp.767, sg_pstPhyReg
-.L259:
-	add	r3, r1, r4, asl #4	@, D.24249, prephitmp.767, i,
+	ldr	r1, [r8, #4]	@ prephitmp.718, sg_pstPhyReg
+.L225:
+	add	r3, r1, r4, asl #4	@, D.24234, prephitmp.718, i,
 	ldr	sl, [r1, r4, asl #4]	@ u32Addr, <variable>.u32RegAddr
 	cmp	r7, #0	@ enRegType,
 	ldr	r5, [r3, #12]	@, <variable>.u32Value
@@ -2028,31 +1807,31 @@ PQ_MNG_LoadPhyList:
 	ldrb	r2, [r3, #5]	@ zero_extendqisi2	@, <variable>.u8Msb
 	str	r2, [fp, #-52]	@, %sfp
 	ldrb	r5, [r3, #6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	beq	.L263	@,
+	beq	.L229	@,
 	cmp	r7, #1	@ enRegType,
-	beq	.L264	@,
-.L254:
+	beq	.L230	@,
+.L220:
 	cmp	r5, #0	@ u8SourceMode,
-	bne	.L265	@,
-.L255:
+	bne	.L231	@,
+.L221:
 	cmp	r8, #0	@ u8OutputMode,
-	beq	.L256	@,
+	beq	.L222	@,
 	ldr	r0, [fp, #-72]	@, %sfp
 	cmp	r8, r0	@ u8OutputMode,
-	bne	.L253	@,
-.L256:
+	bne	.L219	@,
+.L222:
 	ldr	r3, [fp, #-68]	@, %sfp
 	tst	r3, r9	@, u32Module
-	beq	.L253	@,
+	beq	.L219	@,
 	mov	r0, sl	@, u32Addr
 	bl	PQ_HAL_IsVpssReg	@
 	cmp	r0, #1	@,
-	beq	.L266	@,
+	beq	.L232	@,
 	mov	r0, sl	@, u32Addr
 	bl	PQ_HAL_IsVdpReg	@
 	cmp	r0, #1	@,
-	beq	.L267	@,
-.L258:
+	beq	.L233	@,
+.L224:
 	mov	r2, sl	@, u32Addr
 	mov	r3, r5	@, u8SourceMode
 	movw	r1, #:lower16:.LC21	@,
@@ -2063,47 +1842,47 @@ PQ_MNG_LoadPhyList:
 	ldr	r2, [r6, #0]	@ sg_u32PhyListNum, sg_u32PhyListNum
 	add	r4, r4, #1	@ i, i,
 	cmp	r2, r4	@ sg_u32PhyListNum, i
-	bhi	.L268	@,
-.L251:
+	bhi	.L234	@,
+.L217:
 	ldr	r0, [fp, #-76]	@, %sfp
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L263:
+.L229:
 	mov	r0, sl	@, u32Addr
 	bl	PQ_HAL_IsVpssReg	@
 	cmp	r0, #1	@,
-	bne	.L253	@,
-	b	.L254	@
-.L264:
+	bne	.L219	@,
+	b	.L220	@
+.L230:
 	mov	r0, sl	@, u32Addr
 	bl	PQ_HAL_IsVdpReg	@
 	cmp	r0, #1	@,
-	bne	.L253	@,
-	b	.L254	@
-.L266:
+	bne	.L219	@,
+	b	.L220	@
+.L232:
 	ldr	r1, [fp, #-56]	@, %sfp
 	mov	r0, sl	@, u32Addr
 	ldr	r2, [fp, #-52]	@, %sfp
 	ldr	r3, [fp, #-60]	@, %sfp
 	bl	PQ_MNG_SetVpssReg	@
 	str	r0, [fp, #-76]	@, %sfp
-	b	.L258	@
-.L269:
+	b	.L224	@
+.L235:
 	mvn	r1, #0	@,
 	str	r1, [fp, #-76]	@, %sfp
-	b	.L251	@
-.L267:
+	b	.L217	@
+.L233:
 	ldr	r1, [fp, #-56]	@, %sfp
 	mov	r0, sl	@, u32Addr
 	ldr	r2, [fp, #-52]	@, %sfp
 	ldr	r3, [fp, #-60]	@, %sfp
 	bl	PQ_MNG_SetVdpReg	@
 	str	r0, [fp, #-76]	@, %sfp
-	b	.L258	@
-.L248:
+	b	.L224	@
+.L214:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L270	@,
+	ldr	r2, .L236	@,
 	mov	r3, #209	@,
 	movw	lr, #:lower16:.LC0	@ tmp158,
 	movt	lr, #:upper16:.LC0	@ tmp158,
@@ -2111,11 +1890,11 @@ PQ_MNG_LoadPhyList:
 	bl	HI_LogOut	@
 	mvn	r0, #0	@,
 	str	r0, [fp, #-76]	@, %sfp
-	b	.L251	@
-.L271:
+	b	.L217	@
+.L237:
 	.align	2
-.L270:
-	.word	.LANCHOR1+164
+.L236:
+	.word	.LANCHOR1+136
 	.fnend
 	.size	PQ_MNG_LoadPhyList, .-PQ_MNG_LoadPhyList
 	.align	2
@@ -2141,10 +1920,10 @@ PQ_MNG_InitPQTable:
 	movt	sl, #:upper16:.LANCHOR0	@ tmp188,
 	ldr	r3, [sl, #0]	@ sg_bPqTableInitial, sg_bPqTableInitial
 	cmp	r3, #1	@ sg_bPqTableInitial,
-	moveq	r0, #0	@ D.24109,
-	beq	.L274	@,
+	moveq	r0, #0	@ D.24094,
+	beq	.L240	@,
 	cmp	r0, #0	@ pstPqParam,
-	beq	.L285	@,
+	beq	.L251	@,
 	cmp	r1, #1	@ bDefault,
 	movw	r4, #:lower16:.LANCHOR2	@ tmp176,
 	movt	r4, #:upper16:.LANCHOR2	@ tmp176,
@@ -2153,122 +1932,117 @@ PQ_MNG_InitPQTable:
 	mov	r2, #552	@ tmp177,
 	str	r3, [sl, #4]	@ sg_pstPhyReg.210, sg_pstPhyReg
 	str	r2, [r4, #0]	@ tmp177, sg_u32PhyListNum
-	beq	.L286	@,
-.L276:
-	mov	r0, #0	@ D.24109,
+	beq	.L252	@,
+.L242:
+	mov	r0, #0	@ D.24094,
 	mov	r2, #1	@ tmp186,
 	str	r2, [sl, #0]	@ tmp186, sg_bPqTableInitial
-.L274:
+.L240:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L286:
+.L252:
 	str	r2, [r0, #1240]	@ tmp177, <variable>.stPQFileHeader.u32PhyRegNum
 	mov	r1, #32768	@,
 	mov	r0, r3	@, sg_pstPhyReg.210
 	bl	__memzero	@
 	ldr	r9, [r4, #0]	@ sg_u32PhyListNum.211, sg_u32PhyListNum
 	cmp	r9, #0	@ sg_u32PhyListNum.211,
-	beq	.L276	@,
-	ldr	r5, .L287	@ tmp190,
-	mov	r9, r9, asl #4	@ D.25223, sg_u32PhyListNum.211,
-	ldr	r8, [sl, #4]	@ pretmp.800, sg_pstPhyReg
-	mov	ip, #16	@ ivtmp.816,
-	cmp	ip, r9	@ ivtmp.816, D.25223
-	sub	r4, r9, #16	@ tmp193, D.25223,
+	beq	.L242	@,
+	ldr	r5, .L253	@ tmp190,
+	mov	r9, r9, asl #4	@ D.25100, sg_u32PhyListNum.211,
+	ldr	r8, [sl, #4]	@ pretmp.751, sg_pstPhyReg
+	mov	ip, #16	@ ivtmp.767,
+	cmp	ip, r9	@ ivtmp.767, D.25100
+	sub	r4, r9, #16	@ tmp193, D.25100,
 	ldmia	r5, {r0, r1, r2, r3}	@ tmp190,,,,
 	ubfx	r4, r4, #4, #1	@ tmp194, tmp193,,
-	stmia	r8, {r0, r1, r2, r3}	@ pretmp.800,,,,
-	beq	.L276	@,
+	stmia	r8, {r0, r1, r2, r3}	@ pretmp.751,,,,
+	beq	.L242	@,
 	cmp	r4, #0	@ tmp194,
-	beq	.L277	@,
+	beq	.L243	@,
 	add	lr, r5, #16	@ tmp203, tmp190,
-	add	r4, r8, #16	@ tmp202, pretmp.800,
-	mov	ip, #32	@ ivtmp.816,
-	cmp	ip, r9	@ ivtmp.816, D.25223
+	add	r4, r8, #16	@ tmp202, pretmp.751,
+	mov	ip, #32	@ ivtmp.767,
+	cmp	ip, r9	@ ivtmp.767, D.25100
 	ldmia	lr, {r0, r1, r2, r3}	@ tmp203,,,,
 	stmia	r4, {r0, r1, r2, r3}	@ tmp202,,,,
-	beq	.L276	@,
-.L277:
-	add	r3, r5, ip	@ tmp198, tmp190, ivtmp.816
-	add	lr, ip, #16	@ tmp195, ivtmp.816,
-	add	r6, r8, ip	@ tmp197, pretmp.800, ivtmp.816
+	beq	.L242	@,
+.L243:
+	add	r3, r5, ip	@ tmp198, tmp190, ivtmp.767
+	add	lr, ip, #16	@ tmp195, ivtmp.767,
+	add	r6, r8, ip	@ tmp197, pretmp.751, ivtmp.767
 	add	r7, r5, lr	@ tmp201, tmp190, tmp195
 	ldmia	r3, {r0, r1, r2, r3}	@ tmp198,,,,
-	add	ip, lr, #16	@ ivtmp.816, tmp195,
-	add	r4, r8, lr	@ tmp200, pretmp.800, tmp195
-	cmp	ip, r9	@ ivtmp.816, D.25223
+	add	ip, lr, #16	@ ivtmp.767, tmp195,
+	add	r4, r8, lr	@ tmp200, pretmp.751, tmp195
+	cmp	ip, r9	@ ivtmp.767, D.25100
 	stmia	r6, {r0, r1, r2, r3}	@ tmp197,,,,
 	ldmia	r7, {r0, r1, r2, r3}	@ tmp201,,,,
 	stmia	r4, {r0, r1, r2, r3}	@ tmp200,,,,
-	bne	.L277	@,
-	b	.L276	@
-.L285:
+	bne	.L243	@,
+	b	.L242	@
+.L251:
 	add	r0, r0, #1	@,,
 	mov	r1, #41	@,
-	ldr	r2, .L287+4	@,
+	ldr	r2, .L253+4	@,
 	mov	r3, #66	@,
 	movw	ip, #:lower16:.LC0	@ tmp173,
 	movt	ip, #:upper16:.LC0	@ tmp173,
 	str	ip, [sp, #0]	@ tmp173,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24109,
-	b	.L274	@
-.L288:
+	mvn	r0, #0	@ D.24094,
+	b	.L240	@
+.L254:
 	.align	2
-.L287:
-	.word	.LANCHOR1+204
-	.word	.LANCHOR1+184
+.L253:
+	.word	.LANCHOR1+176
+	.word	.LANCHOR1+156
 	.fnend
 	.size	PQ_MNG_InitPQTable, .-PQ_MNG_InitPQTable
 	.section	.rodata
 	.align	2
 .LANCHOR1 = . + 0
-	.type	__func__.24596, %object
-	.size	__func__.24596, 14
-__func__.24596:
+	.type	__func__.24523, %object
+	.size	__func__.24523, 14
+__func__.24523:
 	.ascii	"PQ_MNG_GetReg\000"
 	.space	2
-	.type	__func__.24443, %object
-	.size	__func__.24443, 20
-__func__.24443:
+	.type	__func__.24428, %object
+	.size	__func__.24428, 20
+__func__.24428:
 	.ascii	"PQ_MNG_SetSoftTable\000"
-	.type	__func__.24151, %object
-	.size	__func__.24151, 21
-__func__.24151:
+	.type	__func__.24136, %object
+	.size	__func__.24136, 21
+__func__.24136:
 	.ascii	"PQ_MNG_UpdatePhyList\000"
 	.space	3
-	.type	__func__.24405, %object
-	.size	__func__.24405, 20
-__func__.24405:
+	.type	__func__.24390, %object
+	.size	__func__.24390, 20
+__func__.24390:
 	.ascii	"PQ_MNG_GetSoftTable\000"
-	.type	__func__.24484, %object
-	.size	__func__.24484, 25
-__func__.24484:
-	.ascii	"PQ_MNG_GetArraySoftTable\000"
-	.space	3
-	.type	__func__.24305, %object
-	.size	__func__.24305, 19
-__func__.24305:
+	.type	__func__.24290, %object
+	.size	__func__.24290, 19
+__func__.24290:
 	.ascii	"PQ_MNG_InitPhyList\000"
 	.space	1
-	.type	__func__.24190, %object
-	.size	__func__.24190, 17
-__func__.24190:
+	.type	__func__.24175, %object
+	.size	__func__.24175, 17
+__func__.24175:
 	.ascii	"PQ_MNG_SetVdpReg\000"
 	.space	3
-	.type	__func__.24534, %object
-	.size	__func__.24534, 14
-__func__.24534:
+	.type	__func__.24461, %object
+	.size	__func__.24461, 14
+__func__.24461:
 	.ascii	"PQ_MNG_SetReg\000"
 	.space	2
-	.type	__func__.24239, %object
-	.size	__func__.24239, 19
-__func__.24239:
+	.type	__func__.24224, %object
+	.size	__func__.24224, 19
+__func__.24224:
 	.ascii	"PQ_MNG_LoadPhyList\000"
 	.space	1
-	.type	__func__.24099, %object
-	.size	__func__.24099, 19
-__func__.24099:
+	.type	__func__.24084, %object
+	.size	__func__.24084, 19
+__func__.24084:
 	.ascii	"PQ_MNG_InitPQTable\000"
 	.space	1
 	.type	sg_stPhyReg, %object
@@ -10086,10 +9860,6 @@ sg_bPqTableInitial:
 	.type	sg_pstPhyReg, %object
 	.size	sg_pstPhyReg, 4
 sg_pstPhyReg:
-	.space	4
-	.type	u32ArrayNum.24483, %object
-	.size	u32ArrayNum.24483, 4
-u32ArrayNum.24483:
 	.space	4
 	.ident	"GCC: (Hisilicon_v200(gcc4.4-290+glibc-2.11+eabi+nptl)) 4.4.1"
 	.section	.note.GNU-stack,"",%progbits

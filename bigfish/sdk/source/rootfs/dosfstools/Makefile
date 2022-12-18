@@ -10,7 +10,7 @@ CROSS_COMPILE  ?= arm-hisiv200-linux-
 BUILD_DIR      := $(shell pwd)/tmp
 HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
-DOSFS          := dosfstools-3.0.25
+DOSFS          := dosfstools-3.0.28
 TARGETS        := sbin/fsck.fat
 OLD_TARGET     := sbin/dosfsck
 
@@ -33,7 +33,7 @@ $(addprefix $(BUILD_DIR)/,$(TARGETS)): \
 
 $(BUILD_DIR)/%/tar:
 	test -d $(@D) || mkdir -p $(@D)
-	tar -xjf $(notdir $(@:/tar=)).tar.bz2 -C $(BUILD_DIR)
+	tar -xf $(notdir $(@:/tar=)).tar.xz -C $(BUILD_DIR)
 	@touch $@
 
 ################################################################################

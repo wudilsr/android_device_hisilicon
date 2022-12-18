@@ -1719,6 +1719,25 @@ BTA_API extern void BTA_DmBlePasskeyReply(BD_ADDR bd_addr, BOOLEAN accept, UINT3
 BTA_API extern void BTA_DmAddBleDevice(BD_ADDR bd_addr, tBLE_ADDR_TYPE addr_type,
                                        tBT_DEVICE_TYPE dev_type);
 
+#ifdef BLUETOOTH_RTK
+/*******************************************************************************
+**
+** Function         BTA_DmAddBleDeviceExtraInfo
+**
+** Description      Add a BLE device.  This function will be normally called
+**                  during host startup to restore all required information
+**                  for a LE device stored in the NVRAM.
+**
+** Parameters:      bd_addr          - BD address of the peer
+**                  dev_class        - Remote device's device class.
+**                  bd_name          - LE device bd_name.
+**
+** Returns          void
+**
+*******************************************************************************/
+BTA_API extern void BTA_DmAddBleDeviceExtraInfo(BD_ADDR bd_addr, DEV_CLASS dev_class, BD_NAME bd_name);
+#endif
+
 
 /*******************************************************************************
 **
@@ -1892,7 +1911,7 @@ BTA_API extern void BTA_DmBleObserve(BOOLEAN start, UINT8 duration,
 *******************************************************************************/
 BTA_API extern void BTA_DmSetAfhChannelAssessment (BOOLEAN enable_or_disable);
 
-#if BLE_INCLUDE == TRUE
+#if BLE_INCLUDED == TRUE
 // btla-specific --
 /*******************************************************************************
 **

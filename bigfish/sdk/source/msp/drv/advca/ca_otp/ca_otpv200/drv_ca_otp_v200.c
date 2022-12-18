@@ -1206,9 +1206,9 @@ HI_S32 DRV_CA_OTP_V200_GetBootMode(CA_OTP_FLASH_TYPE_E *pType)
         case 0x03:
             *pType = CA_OTP_FLASH_TYPE_EMMC;
             break;
-        default:
-            *pType = CA_OTP_FLASH_TYPE_BUTT;
-            break;
+//        default:
+//            *pType = CA_OTP_FLASH_TYPE_BUTT;
+//            break;
     }
     
     return ret;
@@ -8337,7 +8337,7 @@ HI_S32 DRV_CA_OTP_V200_GetITCSA3IMLB(HI_U8 *pu8IMLB)
 
 HI_S32 DRV_CA_OTP_V200_SetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
 {
-    HI_S32    ret = HI_SUCCESS;
+    HI_S32    ret;
     HI_BOOL bEnable;
     CA_OTP_FLASH_TYPE_E enFlashType;
     HI_UNF_ADVCA_KEYLADDER_LEV_E enKeyladderLevel;
@@ -8372,6 +8372,10 @@ HI_S32 DRV_CA_OTP_V200_SetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
                     ret = DRV_CA_OTP_V200_SetBootSelCtrl(1);
                 }
 	        }
+            else
+            {
+                ret = HI_SUCCESS;
+            }
 	        break;
             
         case HI_UNF_ADVCA_OTP_SECURE_BOOT_ACTIVATION_ONLY:
@@ -8380,6 +8384,10 @@ HI_S32 DRV_CA_OTP_V200_SetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
 	        {
 	            ret = DRV_CA_OTP_V200_SetSCSActive();
 	        }
+            else
+            {
+                ret = HI_SUCCESS;
+            }
             break;
             
         case HI_UNF_ADVCA_OTP_BOOT_FLASH_TYPE:
@@ -8392,6 +8400,10 @@ HI_S32 DRV_CA_OTP_V200_SetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
                 {
                     ret = DRV_CA_OTP_V200_SetBootSelCtrl(1);
                 }
+            }
+            else
+            {
+                ret = HI_SUCCESS;
             }
             break;
             
@@ -8481,7 +8493,7 @@ HI_S32 DRV_CA_OTP_V200_SetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
 	        
 	    case HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION:
 
-	        DRV_CA_OTP_V200_SetDcasKLDisable(HI_TRUE);
+	        ret = DRV_CA_OTP_V200_SetDcasKLDisable(HI_TRUE);
 	        break;
 	        
 	    case HI_UNF_ADVCA_OTP_DDR_SCRAMBLE_ACTIVATION: 
@@ -8666,7 +8678,7 @@ HI_S32 DRV_CA_OTP_V200_GetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
     HI_UNF_ADVCA_JTAG_MODE_E enJtagPrtMode;
     HI_U8 *pu8TmBuf = NULL;
     HI_U32 u32ChipId;
-    HI_U8 u8TmpBuf[512];
+    HI_U8 u8TmpBuf[512] = {0};
     CA_OTP_VENDOR_TYPE_E enVendorId;
     HI_U32 u32MaketId;
 
@@ -9003,7 +9015,10 @@ HI_S32 DRV_CA_OTP_V200_GetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
 	        if (CA_OTP_VENDOR_NAGRA == enVendorId)
 	        {           
 	            ret = DRV_CA_OTP_V200_MarketId(&u32MaketId);
-	            pu8TmBuf = (HI_U8*)&u32MaketId;
+                pu8TmBuf[0] = (u32MaketId >> 24) & 0xff;
+                pu8TmBuf[1] = (u32MaketId >> 16) & 0xff;
+                pu8TmBuf[2] = (u32MaketId >> 8) & 0xff;
+                pu8TmBuf[3] = u32MaketId & 0xff;
 	        }
 	        else
 	        {
@@ -9019,7 +9034,7 @@ HI_S32 DRV_CA_OTP_V200_GetOtpFuse(CA_OTP_ATTR_S *pstOtpAttr)
 	   case  HI_UNF_ADVCA_OTP_VERSION_ID:
 
 	        pu8TmBuf = pstOtpAttr->stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId;
-	        memset(u8TmpBuf, 0, sizeof(u8TmpBuf));
+	        memset(u8TmpBuf, 0x0, sizeof(u8TmpBuf));
 	        ret = DRV_CA_OTP_V200_Get_UniqueVersionId(u8TmpBuf);
 	        if(ret == HI_SUCCESS)
 	        {

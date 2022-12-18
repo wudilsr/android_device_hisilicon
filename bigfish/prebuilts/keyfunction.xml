@@ -3,8 +3,8 @@
 	<!--	<key>
 		<keyName>HisiVideoPlayer</keyName>
 		<keyValue>1180</keyValue>
-		<packageName>com.huawei.activity</packageName>
-		<activityName>com.huawei.activity.Main</activityName>
+		<packageName>com.hisilicon.activity</packageName>
+		<activityName>com.hisilicon.activity.Main</activityName>
 		<action>android.intent.action.MAIN</action>
 	</key>-->
 

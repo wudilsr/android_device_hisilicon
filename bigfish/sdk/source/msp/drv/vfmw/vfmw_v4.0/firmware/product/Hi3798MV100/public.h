@@ -2,20 +2,20 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2006 HUAWEI - All Rights Reserved
+* Copyright (c) 2006 Hisilicon - All Rights Reserved
 *
 * File: $public.h$
 * Date: $2006/11/30$
 * Revision: $v1.0$
-* Purpose: header file for interface & interface & storage management 
-*          module. this file only define internal information. the 
+* Purpose: header file for interface & interface & storage management
+*          module. this file only define internal information. the
 *          interface related data is defined in 'vfmw.h'
 *
 *
 * Change History:
 *
 * Date             Author            Change
-* ====             ======            ====== 
+* ====             ======            ======
 * 2006/11/30       z56361            Original
 *
 *
@@ -40,10 +40,10 @@
 /***********************************************************************
       VFMW的版本号
  ***********************************************************************/
-#define  VFMW_VERSION_NUM       (2015071093)
+#define  VFMW_VERSION_NUM       (2016112900)
 
 /***********************************************************************
-      constants 
+      constants
  ***********************************************************************/
 #ifdef VFMW_BVT_SUPPORT
 #define  SCD_SEG_BLANK_LEN      (4*1024)
@@ -71,7 +71,7 @@
 
 #define  MAX_USERDATA_NUM       (4)            // 最多支持4个，需保持与IMAGE结构体对应
 /***********************************************************************
-      enum  
+      enum
  ***********************************************************************/
 typedef enum
 {
@@ -109,7 +109,7 @@ typedef enum
     PRN_SLICE,           // 19. slice级重要语法信息：仅H264有意义
 
     PRN_SEI,             // 20. SEI信息，仅H264有意义
-    PRN_SE,              // 21. H264语法信息,仅H264有意义 
+    PRN_SE,              // 21. H264语法信息,仅H264有意义
     PRN_DBG,             // 22. 调试信息
     PRN_BLOCK,           // 23. 解码线程阻塞信息
 
@@ -117,7 +117,7 @@ typedef enum
     PRN_SCD_STREAM,      // 25.
     PRN_SCD_INFO,        // 26. 打印SCD一些运行状态的信息
     PRN_INT_TIME,        // 27. VDH中断响应时间
-    
+
 	PRN_DNR,             // 28. 打印DNR及其驱动程序相关信息
 	PRN_PTS,             // 29. 打印与PTS处理相关的信息
     PRN_DEC_MODE,        // 30. 解码模式切换信息
@@ -150,7 +150,7 @@ typedef enum
 
 //#define    SAVE_PIC_YUV       0x1
 /***********************************************************************
-      structures    
+      structures
  ***********************************************************************/
 
 /* MPEG2, MPEG4 and DIVX311 dedode interface need code stream info from control module.
@@ -164,8 +164,8 @@ typedef struct
 
 
 /* 内存打印数据结构  */
-typedef struct 
-{      
+typedef struct
+{
     SINT8*    buf_addr;
     SINT8*    cur_addr_offset;
     UINT32    buf_len;
@@ -210,7 +210,7 @@ typedef struct
 }LOWDLY_INFO_S;
 
 /***********************************************************************
-      global vars   
+      global vars
  ***********************************************************************/
 //extern  VFMW_STATE        g_VfmwState[2];
 //extern  VFMW_STATE        *g_pVfmwState;
@@ -255,7 +255,7 @@ extern  LOWDLY_INFO_S     g_stLowdlyInfo[MAX_CHAN_NUM];
 #define    DSTATE_WAIT_VDMPROPERTY        (1<<4)
 
 /***********************************************************************
-      macro 
+      macro
  ***********************************************************************/
 //注意:有很多函数前面对空指针的判断就可以去掉了
 //add for check null point parament
@@ -310,7 +310,7 @@ extern  LOWDLY_INFO_S     g_stLowdlyInfo[MAX_CHAN_NUM];
     }while(0)
 #endif
 //end
- 
+
 
 /*********************** 调用外挂函数对调试状态进行处理的宏封装 *************************/
 /* state=1	VFMW开始等待码流(读码流失败)	无参数   */
@@ -476,7 +476,7 @@ do{                                                         \
         g_event_report( chan_id, EVNT_CAPTURE_BTL_OVER, (IMAGE*)para, sizeof(IMAGE));  \
     }                                                       \
 }while(0)
- 
+
 /*--------------------------------------------------------------*/
 /* type=100 发现码流错误 p_args[3..0]：错误编号*/
 #define REPORT_STRMERR(chan_id, err_code )          		\
@@ -658,7 +658,7 @@ do{ 														\
         g_event_report( chan_id, EVNT_RESOLUTION_CHANGE, (UINT8*)0, 0);  \
     }														\
 }while(0)
-	
+
 /* type=117  码流结束符上报 */
 #define REPORT_STREAM_END_SYNTAX(chan_id)                   \
 do{ 														\
@@ -681,7 +681,7 @@ do{ 														\
         g_event_report(chan_id, EVNT_NEED_ARRANGE, (UINT8*)para, sizeof(para));  \
 	}														\
 }while(0)
-    
+
     /* type=119 发现不支持的规格 上报类型及数值 */
 #define REPORT_UNSUPPORT_SPEC(chan_id, unsupport_spec, data)                       	\
 do{                                                         \
@@ -693,7 +693,7 @@ do{                                                         \
         g_event_report( chan_id, EVNT_UNSUPPORT_SPEC, (UINT8*)para, sizeof(para));    \
     }                                                       \
 }while(0)
-    
+
 /* type=120  变分辨率时输出假帧让后级还帧 */
 #define REPORT_FAKE_FRAME(chan_id)                     	\
 do{                                                         \
@@ -723,17 +723,17 @@ extern "C" {
 #define dprint(type, fmt, arg...)  dprint_vfmw(type, fmt, ##arg)
 #endif
 #else
-#define dprint(type, fmt, arg...)  
+#define dprint(type, fmt, arg...)
 #endif
 
 #else
 
 // 高安不能检测到字符串和printk
 #define dprint(type, fmt, arg...) vfmw_dprint_nothing()
-#endif 
+#endif
 
 /***********************************************************************
-      functions 
+      functions
  ***********************************************************************/
 VOID vfmw_dprint_nothing(VOID);
 SINT32 IsDprintTypeEnable(UINT32 type);

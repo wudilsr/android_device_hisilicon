@@ -19,7 +19,13 @@
 #define SO_TIME_OFFSET                (10)
 #define SO_QUEUE_RESET_CHECK_TIME     (100)
 #define SO_QUEUE_MAX_CLEAR_NODE_NUM   (512)
-#define SO_SEND_OFFSET                (20)  /**< 20ms */
+#define SO_SEND_OFFSET                (SO_TIME_OFFSET)
+
+#define SO_INVALID_HANDLE   (0x0)
+
+#define SO_INSTANCE_MAX_NUM (96)
+#define SO_HANDLE_BASE   (0xFFFF0000)
+
 
 #define SO_CALLBACK_LOCK()    \
     do{\
@@ -54,6 +60,8 @@
     }while(0)
 
 static HI_BOOL s_bSoInit = HI_FALSE;
+static HI_VOID* s_ahSo[SO_INSTANCE_MAX_NUM];
+
 
 typedef struct tagSO_CLEAR_NODE_S
 {
@@ -89,21 +97,101 @@ typedef struct tagSO_MEMBER_S
     HI_S64 s64LastPts;                 /**< Last subt frame pts */
     HI_U32 u32IntervalMs;           /**< subtitle max interval time*/
     SO_CLEAR_NODE_S astClearNodeList[SO_QUEUE_MAX_CLEAR_NODE_NUM];
+    SO_INFO_S stCurSubInfo;
 } SO_MEMBER_S;
 
-static HI_S32 SO_DrawSubtitle(const HI_UNF_SO_SUBTITLE_INFO_S *pstInfo)
+
+typedef struct tagSO_SYNC_INFO_S
 {
+    HI_S64 s64CurPts;
+    HI_S64 s64CurNodePts;
+
+    HI_U32 u32Duration;
+    HI_U32 u32NodeDuration;
+
+    HI_BOOL bDirectOut;
+    HI_BOOL bClearSub;
+} SO_SYNC_INFO_S;
+
+static HI_U16 SO_GetIndexByHandle(HI_HANDLE hSo)
+{
+    HI_U16 u16HandleIndex = hSo & 0x0000FFFF;
+
+    return u16HandleIndex;
+}
+
+
+static HI_HANDLE SO_GetHandleByIndex(HI_U16 u16HandleIndex)
+{
+    HI_HANDLE hSo = SO_INVALID_HANDLE;
+
+    hSo = SO_HANDLE_BASE | u16HandleIndex;
+
+    return hSo;
+}
+
+static HI_VOID* SO_GetMemAddr(HI_HANDLE hSo)
+{
+    HI_U16 u16HandleIndex = SO_GetIndexByHandle(hSo);
+
+    if (u16HandleIndex >= SO_INSTANCE_MAX_NUM)
+    {
+        return HI_NULL;
+    }
+
+
+    if (SO_HANDLE_BASE == (hSo & 0xFFFF0000))
+    {
+        return s_ahSo[u16HandleIndex];
+    }
+    else
+    {
+        return HI_NULL;
+    }
+}
+
+static HI_S32 SO_GetFreeIndex(HI_U16* pu16FreeIndex)
+{
+    HI_U16  i = 0;
+
+
+    for (i = 0; i < SO_INSTANCE_MAX_NUM; i++)
+    {
+        if (SO_INVALID_HANDLE == s_ahSo[i])
+        {
+            break;
+        }
+    }
+
+    if (i >= SO_INSTANCE_MAX_NUM)
+    {
+        return HI_FAILURE;
+    }
+
+    *pu16FreeIndex = i;
+
     return HI_SUCCESS;
 }
 
-static HI_S32 SO_GetNodeClearInfo(const SO_INFO_S *pstInfo, HI_UNF_SO_CLEAR_PARAM_S *pstClearParam)
+
+
+static HI_S32 SO_GetNodeClearInfo(const SO_INFO_S* pstInfo, HI_UNF_SO_CLEAR_PARAM_S* pstClearParam)
 {
+
+    pstClearParam->s64NodePts = 0;
+    pstClearParam->u32Duration = 0;
+
+
     if (HI_UNF_SUBTITLE_BITMAP == pstInfo->eType)
     {
         pstClearParam->x = pstInfo->unSubtitleParam.stGfx.x;
         pstClearParam->y = pstInfo->unSubtitleParam.stGfx.y;
         pstClearParam->w = pstInfo->unSubtitleParam.stGfx.w;
         pstClearParam->h = pstInfo->unSubtitleParam.stGfx.h;
+
+        pstClearParam->s64NodePts = pstInfo->unSubtitleParam.stGfx.s64Pts;
+        pstClearParam->u32Duration = pstInfo->unSubtitleParam.stGfx.u32Duration;
+
     }
     else if (HI_UNF_SUBTITLE_TEXT == pstInfo->eType)
     {
@@ -111,6 +199,10 @@ static HI_S32 SO_GetNodeClearInfo(const SO_INFO_S *pstInfo, HI_UNF_SO_CLEAR_PARA
         pstClearParam->y = pstInfo->unSubtitleParam.stText.y;
         pstClearParam->w = pstInfo->unSubtitleParam.stText.w;
         pstClearParam->h = pstInfo->unSubtitleParam.stText.h;
+
+        pstClearParam->s64NodePts = pstInfo->unSubtitleParam.stText.s64Pts;
+        pstClearParam->u32Duration = pstInfo->unSubtitleParam.stText.u32Duration;
+
     }
     else if (HI_UNF_SUBTITLE_ASS == pstInfo->eType)
     {
@@ -130,7 +222,7 @@ static HI_S32 SO_GetNodeClearInfo(const SO_INFO_S *pstInfo, HI_UNF_SO_CLEAR_PARA
     return HI_SUCCESS;
 }
 
-static HI_S32 SO_GetNodePts(const SO_INFO_S *pstInfo, HI_S64 *ps64Pts, HI_U32 *pu32Duration)
+static HI_S32 SO_GetNodePts(const SO_INFO_S* pstInfo, HI_S64* ps64Pts, HI_U32* pu32Duration)
 {
     if (HI_UNF_SUBTITLE_BITMAP == pstInfo->eType)
     {
@@ -155,7 +247,7 @@ static HI_S32 SO_GetNodePts(const SO_INFO_S *pstInfo, HI_S64 *ps64Pts, HI_U32 *p
     return HI_SUCCESS;
 }
 
-static HI_S32 SO_InsertToClearList(SO_MEMBER_S *pstMember, const SO_INFO_S *pstSoInfo, HI_S64 s64NodePts, HI_U32 u32Duration)
+static HI_S32 SO_InsertToClearList(SO_MEMBER_S* pstMember, const SO_INFO_S* pstSoInfo, HI_S64 s64NodePts, HI_U32 u32Duration)
 {
     HI_U32 u32NodeNum = 0;
 
@@ -204,9 +296,10 @@ static HI_S32 SO_InsertToClearList(SO_MEMBER_S *pstMember, const SO_INFO_S *pstS
     return HI_SUCCESS;
 }
 
-static HI_S32 SO_ClearNode(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts, HI_UNF_SO_ONCLEAR_FN pfnOnClear)
+static HI_S32 SO_ClearNode(SO_MEMBER_S* pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts, HI_UNF_SO_ONCLEAR_FN pfnOnClear)
 {
-    HI_S64 s64NodePts = 0, s64CurPts = 0;
+    HI_S64 s64NodePts = 0;
+    HI_S64 s64CurPts = 0;
     HI_U32 u32Duration = 0;
 
     if (NULL == pfnGetPts || NULL == pfnOnClear)
@@ -221,18 +314,17 @@ static HI_S32 SO_ClearNode(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts
 
         (HI_VOID)pfnGetPts(pstMember->u32PtsUserData, &s64CurPts);
 
-        if (HI_UNF_SO_NO_PTS != (HI_U32)s64CurPts
+        if (HI_UNF_SO_NO_PTS != s64CurPts
             && ((s64CurPts - s64NodePts) >= (u32Duration - SO_TIME_OFFSET) || u32Duration < SO_TIME_OFFSET))
         {
             // clear this subtitle
             // l00192899 add current time in stClearParam,check it while clear pgs sub.
             pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearParam.s64ClearTime = s64CurPts;
-            pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearParam.s64NodePts = s64NodePts;
-            pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearParam.u32Duration = u32Duration;
+
             if (NULL != pfnOnClear)
             {
                 (HI_VOID)pfnOnClear(pstMember->u32DrawUserData,
-                    (HI_VOID*)&pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearParam);
+                                    (HI_VOID*)&pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearParam);
             }
 
             pstMember->u32ReadIndx++;
@@ -242,85 +334,26 @@ static HI_S32 SO_ClearNode(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts
     return HI_SUCCESS;
 }
 
-static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts,
-                                   HI_UNF_SO_ONDRAW_FN  pfnOnDraw,
-                                   HI_UNF_SO_ONCLEAR_FN pfnOnClear,
-                                   const SO_INFO_S *pstSoInfo)
+
+static HI_S32 SO_Sync_ProcDuration(SO_MEMBER_S* pstMember, const SO_INFO_S* pstSoInfo, SO_SYNC_INFO_S* pstSyncInfo, SO_INFO_S* pstNextSubInfo)
 {
     HI_S32  s32Ret = 0;
-    HI_S64  s64CurPts = 0, s64NodePts = 0, s64CurNodePts = 0;
-    HI_S64  s64MaxPts = 0, s64MinPts = 0;
-    HI_U32  u32Duration = 0, u32NodeDuration = 0;
-
-    HI_BOOL bDirectOut = HI_FALSE;
-    HI_BOOL bClearSub = HI_TRUE;
-
+    HI_U32  u32Duration = 0;
+    HI_S64  s64NodePts = 0;
+    HI_BOOL bClearSub = pstSyncInfo->bClearSub;
+    HI_BOOL bDirectOut = pstSyncInfo->bDirectOut;
+    HI_S64  s64CurPts = pstSyncInfo->s64CurPts;
+    HI_S64  s64CurNodePts = pstSyncInfo->s64CurNodePts;
+    HI_U32  u32NodeDuration = pstSyncInfo->u32NodeDuration;
     SO_INFO_S stNextSubInfo;
 
-    for (;;)
-    {
-        if (HI_TRUE == pstMember->bThreadExit || HI_TRUE == pstMember->bQueueReset)
-        {
-            //pstMember->bQueueReset = HI_FALSE;
-            return HI_SUCCESS;
-        }
-        (HI_VOID)SO_ClearNode(pstMember, pfnGetPts, pstMember->pfnOnClear);
-        (HI_VOID)pfnGetPts(pstMember->u32PtsUserData, &s64CurPts);
-        (HI_VOID)SO_GetNodePts(pstSoInfo, &s64CurNodePts, &u32NodeDuration);
 
-        s64CurNodePts += pstMember->s64PtsOffset;
-
-        /* CurPts less than LastPts, need to reset SO */
-        if (((s64CurPts + SO_PLAY_TIME_JUMP_JUDGE) < pstMember->s64LastPts) && (HI_UNF_SO_NO_PTS != s64CurPts))
-        {
-            pstMember->bQueueReset = HI_TRUE;
-            pstMember->s64LastPts = 0;
-            return HI_SUCCESS;
-        }
-        pstMember->s64LastPts = s64CurPts;
-
-        /* local time is invalid, do not output subtitle */
-
-        if (HI_UNF_SO_NO_PTS == (HI_U32)s64CurPts)
-        {
-            SO_SLEEP(SO_TIME_OFFSET);
-            continue;
-        }
-        /*the subtitle display pts and video pts interval is too large,direct output*/
-        /*app set interval time*/
-        if(0 != pstMember->u32IntervalMs)
-        {
-            s64MaxPts = s64CurNodePts + pstMember->u32IntervalMs;
-            s64MinPts = s64CurNodePts - pstMember->u32IntervalMs;
-
-            if((s64CurPts <= s64MinPts) || (s64CurPts >= s64MaxPts))
-            {
-                bDirectOut = HI_TRUE;
-                break;
-            }
-        }
-
-        if ((s64CurPts < s64CurNodePts) && (s64CurNodePts - s64CurPts > SO_SEND_OFFSET))
-        {
-            /* pts of subtitle is larger than local time */
-
-            SO_SLEEP(SO_TIME_OFFSET);
-            continue;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    /* pts of subtitle is less than or equal to local time */
-    //bClearSub = HI_TRUE;
     if (0 != u32NodeDuration)
     {
         /* local time is larger than (pts + duration), skip this subtitle */
-        if(bDirectOut == HI_FALSE)
+        if (bDirectOut == HI_FALSE)
         {
-            SO_RETURN((s64CurPts > s64CurNodePts + u32NodeDuration), HI_SUCCESS, NULL);
+            SO_RETURN((s64CurPts > s64CurNodePts + u32NodeDuration), HI_FAILURE, NULL);
         }
 
         u32Duration = (HI_U32)((s64CurNodePts + u32NodeDuration) - s64CurPts);
@@ -343,28 +376,35 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
             s64NodePts += pstMember->s64PtsOffset;
 
             /* local time is larger than this subtitle, skip last subtitle */
-            if(bDirectOut == HI_FALSE)
+            if (bDirectOut == HI_FALSE)
             {
-                SO_RETURN((s64CurPts + SO_TIME_OFFSET >= s64NodePts), HI_SUCCESS, NULL);
+                SO_RETURN((s64CurPts + SO_TIME_OFFSET >= s64NodePts), HI_FAILURE, NULL);
             }
+
             u32Duration = (HI_U32)(s64NodePts - s64CurPts - SO_TIME_OFFSET);
             u32Duration = u32Duration > SO_NORMAL_MAX_DISPLAY_TIME ? SO_NORMAL_MAX_DISPLAY_TIME : u32Duration;
+
             if (HI_UNF_SUBTITLE_BITMAP == pstSoInfo->eType && u32Duration < SO_NORMAL_MAX_DISPLAY_TIME)
             {
                 bClearSub = HI_FALSE;
             }
         }
+
+        *pstNextSubInfo = stNextSubInfo;
     }
 
-#if 0
-    /* clear last subtitle */
+    pstSyncInfo->u32Duration = u32Duration;
+    pstSyncInfo->bClearSub = bClearSub;
 
-    if (NULL != pfnOnClear)
-    {
-        (HI_VOID)pfnOnClear(pstMember->u32DrawUserData);
-    }
-#endif
+    return HI_SUCCESS;
+}
 
+static HI_S32 SO_Sync_ProcMsgType(SO_MEMBER_S* pstMember,
+                                  const SO_INFO_S* pstSoInfo,
+                                  SO_INFO_S* pstNextSubInfo,
+                                  HI_UNF_SO_GETPTS_FN pfnGetPts)
+{
+    /* pts of subtitle is less than or equal to local time */
     if (HI_UNF_SUBTITLE_BITMAP == pstSoInfo->eType && HI_UNF_SO_DISP_MSG_ERASE == pstSoInfo->unSubtitleParam.stGfx.enMsgType)
     {
         pstMember->u32ReadIndx = 0;
@@ -373,8 +413,8 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
 
         /* if reset clear list, insert a empty node */
 
-        stNextSubInfo.eType = HI_UNF_SUBTITLE_BUTT;
-        SO_InsertToClearList(pstMember, &stNextSubInfo, 0, SO_TIME_OFFSET);
+        pstNextSubInfo->eType = HI_UNF_SUBTITLE_BUTT;
+        SO_InsertToClearList(pstMember, pstNextSubInfo, 0, SO_TIME_OFFSET);
     }
 
     if (HI_UNF_SUBTITLE_BITMAP == pstSoInfo->eType && HI_UNF_SO_DISP_MSG_NORM == pstSoInfo->unSubtitleParam.stGfx.enMsgType)
@@ -391,14 +431,122 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
 
             /* if reset clear list, insert a empty node */
 
-            stNextSubInfo.eType = HI_UNF_SUBTITLE_BUTT;
-            SO_InsertToClearList(pstMember, &stNextSubInfo, 0, SO_TIME_OFFSET);
+            pstNextSubInfo->eType = HI_UNF_SUBTITLE_BUTT;
+            SO_InsertToClearList(pstMember, pstNextSubInfo, 0, SO_TIME_OFFSET);
             (HI_VOID)SO_ClearNode(pstMember, pfnGetPts, pstMember->pfnOnClear);
 
-            return HI_SUCCESS;
+            return HI_FAILURE;
         }
     }
-    (HI_VOID)SO_ClearNode(pstMember, pfnGetPts, pstMember->pfnOnClear);
+
+    return HI_SUCCESS;
+}
+
+
+static HI_S32 SO_SyncOutput(SO_MEMBER_S* pstMember, HI_UNF_SO_GETPTS_FN pfnGetPts,
+                            HI_UNF_SO_ONDRAW_FN  pfnOnDraw,
+                            HI_UNF_SO_ONCLEAR_FN pfnOnClear,
+                            const SO_INFO_S* pstSoInfo)
+{
+    HI_S32  s32Ret = 0;
+    HI_S64  s64CurPts = 0, s64CurNodePts = 0;
+    HI_S64  s64MaxPts = 0, s64MinPts = 0;
+    HI_U32  u32NodeDuration = 0;
+
+    HI_BOOL bDirectOut = HI_FALSE;
+    HI_BOOL bClearSub = HI_TRUE;
+    SO_INFO_S stNextSubInfo;
+    SO_SYNC_INFO_S stSyncInfo;
+
+    SO_MEMSET(&stNextSubInfo, 0, sizeof(SO_INFO_S));
+    SO_MEMSET(&stSyncInfo, 0, sizeof(SO_SYNC_INFO_S));
+
+
+    for (;;)
+    {
+        if (HI_TRUE == pstMember->bThreadExit || HI_TRUE == pstMember->bQueueReset)
+        {
+            //pstMember->bQueueReset = HI_FALSE;
+            return HI_SUCCESS;
+        }
+
+        (HI_VOID)SO_ClearNode(pstMember, pfnGetPts, pfnOnClear);
+        (HI_VOID)pfnGetPts(pstMember->u32PtsUserData, &s64CurPts);
+        (HI_VOID)SO_GetNodePts(pstSoInfo, &s64CurNodePts, &u32NodeDuration);
+
+        s64CurNodePts += pstMember->s64PtsOffset;
+
+        /* CurPts less than LastPts, need to reset SO */
+        if (((s64CurPts + SO_PLAY_TIME_JUMP_JUDGE) < pstMember->s64LastPts) && (HI_UNF_SO_NO_PTS != s64CurPts))
+        {
+            pstMember->bQueueReset = HI_TRUE;
+            pstMember->s64LastPts = 0;
+            return HI_SUCCESS;
+        }
+
+        pstMember->s64LastPts = s64CurPts;
+
+        /* local time is invalid, do not output subtitle */
+
+        if (HI_UNF_SO_NO_PTS == s64CurPts)
+        {
+            SO_SLEEP(SO_TIME_OFFSET);
+            continue;
+        }
+
+        /*the subtitle display pts and video pts interval is too large,direct output*/
+        /*app set interval time*/
+        if (0 != pstMember->u32IntervalMs)
+        {
+            s64MaxPts = s64CurNodePts + pstMember->u32IntervalMs;
+            s64MinPts = s64CurNodePts - pstMember->u32IntervalMs;
+
+            if ((s64CurPts <= s64MinPts) || (s64CurPts >= s64MaxPts))
+            {
+                bDirectOut = HI_TRUE;
+                break;
+            }
+        }
+
+        if ((s64CurPts < s64CurNodePts) && (s64CurNodePts - s64CurPts > SO_SEND_OFFSET))
+        {
+            /* pts of subtitle is larger than local time */
+
+            SO_SLEEP(SO_TIME_OFFSET);
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+
+    stSyncInfo.bClearSub = bClearSub;
+    stSyncInfo.bDirectOut = bDirectOut;
+    stSyncInfo.s64CurNodePts = s64CurNodePts;
+    stSyncInfo.s64CurPts = s64CurPts;
+    stSyncInfo.u32Duration = 0;
+    stSyncInfo.u32NodeDuration = u32NodeDuration;
+
+
+    s32Ret = SO_Sync_ProcDuration(pstMember, pstSoInfo, &stSyncInfo, &stNextSubInfo);
+
+    if (HI_SUCCESS != s32Ret) /*skip this subtitle */
+    {
+        return HI_SUCCESS;
+    }
+
+
+    s32Ret = SO_Sync_ProcMsgType(pstMember, pstSoInfo, &stNextSubInfo, pfnGetPts);
+
+    if (HI_SUCCESS != s32Ret) /*skip this subtitle */
+    {
+        return HI_SUCCESS;
+    }
+
+
+    (HI_VOID)SO_ClearNode(pstMember, pfnGetPts, pfnOnClear);
 
     if (NULL != pfnOnDraw)
     {
@@ -409,79 +557,18 @@ static HI_S32 SO_SyncOutput(SO_MEMBER_S *pstMember, HI_UNF_SO_GETPTS_FN pfnGetPt
     else
     {
         /* not support */
-
-        (HI_VOID)SO_DrawSubtitle(pstSoInfo);
     }
 
     /* insert node into clear list */
-
-    if (bClearSub)
+    if (stSyncInfo.bClearSub)
     {
-        SO_InsertToClearList(pstMember, pstSoInfo, /*s64CurNodePts*/s64CurPts, u32Duration);
+        SO_InsertToClearList(pstMember, pstSoInfo, /*s64CurNodePts*/s64CurPts, stSyncInfo.u32Duration);
     }
-
-#if 0
-    /* clear node from list */
-    if (pstMember->u32WriteIndx > pstMember->u32ReadIndx)
-    {
-        u32Duration = pstMember->astClearNodeList[pstMember->u32ReadIndx].u32Duration;
-        s64NodePts  = pstMember->astClearNodeList[pstMember->u32ReadIndx].s64NodePts;
-
-        (HI_VOID)pfnGetPts(pstMember->u32PtsUserData, &s64CurPts);
-
-        if (HI_UNF_SO_NO_PTS != (HI_U32)s64CurPts
-            && (s64CurPts - s64NodePts >= u32Duration - SO_TIME_OFFSET || u32Duration < SO_TIME_OFFSET))
-        {
-            /* clear this subtitle */
-
-            if (NULL != pfnOnClear)
-            {
-                (HI_VOID)pfnOnClear(pstMember->u32DrawUserData,
-                    (HI_VOID*)&pstMember->astClearNodeList[pstMember->u32ReadIndx].stClearPos);
-            }
-
-            pstMember->u32ReadIndx++;
-        }
-    }
-#endif
-#if 0
-    /* clear node from list */
-    s32DisTotalTime = 0;
-
-    while ((u32Duration >= SO_TIME_OFFSET) && ((HI_U32)s32DisTotalTime < (u32Duration - SO_TIME_OFFSET)))
-    {
-        if (HI_TRUE == pstMember->bThreadExit || HI_TRUE == pstMember->bQueueReset)
-        {
-            //pstMember->bQueueReset = HI_FALSE;
-            break;
-        }
-
-        /* check the time of outputting next subtitle */
-
-        (HI_VOID)pfnGetPts(pstMember->u32PtsUserData, &s64CurPts);
-        s32Ret = SO_QueueGetNodeInfoNotDel(pstMember->queuehdl, &stNextSubInfo);
-        (HI_VOID)SO_GetNodePts(&stNextSubInfo, &s64NodePts, &u32NodeDuration);
-        s64NodePts += pstMember->s64PtsOffset;
-
-        if ((HI_SUCCESS == s32Ret) && (s64NodePts - s64CurPts <= SO_TIME_OFFSET))
-        {
-            break;
-        }
-
-        SO_SLEEP(SO_TIME_OFFSET);
-        s32DisTotalTime += SO_TIME_OFFSET;
-    }
-
-    if (NULL != pfnOnClear)
-    {
-        (HI_VOID)pfnOnClear(pstMember->u32DrawUserData);
-    }
-#endif
 
     return HI_SUCCESS;
 }
 
-static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
+static HI_VOID* SO_ThreadMainFunction(HI_VOID* pArg)
 {
     HI_S32  s32Ret = HI_SUCCESS;
     HI_UNF_SO_GETPTS_FN  pfnGetPts = NULL;
@@ -489,7 +576,10 @@ static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
     HI_UNF_SO_ONCLEAR_FN pfnOnClear = NULL;
 
     SO_INFO_S stSubInfo;
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)pArg;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)pArg;
+
+
+    SO_MEMSET(&stSubInfo, 0, sizeof(SO_INFO_S));
 
     if (NULL == pstMember)
     {
@@ -516,6 +606,7 @@ static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
             {
                 (HI_VOID)SO_QueueReset(pstMember->queuehdl);
             }
+
             pstMember->bQueueReset = HI_FALSE;
             pstMember->u32ReadIndx = 0;
             pstMember->u32WriteIndx = 0;
@@ -538,6 +629,8 @@ static HI_VOID* SO_ThreadMainFunction(HI_VOID *pArg)
 
         SO_MEMSET(&stSubInfo, 0, sizeof(stSubInfo));
         s32Ret = SO_QueueGet(pstMember->queuehdl, &stSubInfo);
+
+        pstMember->stCurSubInfo = stSubInfo;
 
         if (HI_SUCCESS != s32Ret)
         {
@@ -570,6 +663,8 @@ HI_S32 HI_UNF_SO_Init(HI_VOID)
         return HI_SUCCESS;
     }
 
+    memset(s_ahSo, 0x0, sizeof(s_ahSo));
+
     s_bSoInit = HI_TRUE;
 
     return HI_SUCCESS;
@@ -577,23 +672,45 @@ HI_S32 HI_UNF_SO_Init(HI_VOID)
 
 HI_S32 HI_UNF_SO_DeInit(HI_VOID)
 {
+    HI_U8 i = 0;
+
     if (HI_FALSE == s_bSoInit)
     {
         return HI_SUCCESS;
     }
+
+
+    for (i = 0; i < SO_INSTANCE_MAX_NUM; i++)
+    {
+        if (s_ahSo[i])
+        {
+            HI_HANDLE hSo = SO_GetHandleByIndex(i);
+            HI_UNF_SO_Destroy(hSo);
+        }
+    }
+
+    memset(s_ahSo, 0, sizeof(s_ahSo));
 
     s_bSoInit = HI_FALSE;
 
     return HI_SUCCESS;
 }
 
-HI_S32 HI_UNF_SO_Create(HI_HANDLE *phdl)
+HI_S32 HI_UNF_SO_Create(HI_HANDLE* phdl)
 {
+    HI_U16 u16Index = 0;
     HI_S32 s32Ret = 0;
-    SO_MEMBER_S *pstMember = NULL;
+    SO_MEMBER_S* pstMember = NULL;
 
     SO_RETURN(HI_FALSE == s_bSoInit, HI_FAILURE, "");
     SO_RETURN(NULL == phdl, HI_FAILURE, "");
+
+    s32Ret = SO_GetFreeIndex(&u16Index);
+
+    if (HI_SUCCESS != s32Ret)
+    {
+        return HI_FAILURE;
+    }
 
     pstMember = (SO_MEMBER_S*)SO_MALLOC(sizeof(SO_MEMBER_S));
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
@@ -632,14 +749,17 @@ HI_S32 HI_UNF_SO_Create(HI_HANDLE *phdl)
         return HI_FAILURE;
     }
 
-    *phdl = (HI_HANDLE)pstMember;
+    s_ahSo[u16Index] = pstMember;
+    *phdl = SO_GetHandleByIndex(u16Index);
 
     return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_SO_Destroy(HI_HANDLE handle)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    HI_U16 u16HandleIndex = SO_GetIndexByHandle(handle);
+
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -654,12 +774,14 @@ HI_S32 HI_UNF_SO_Destroy(HI_HANDLE handle)
     (HI_VOID)SO_QueueDeinit(pstMember->queuehdl);
     SO_FREE(pstMember);
 
+    s_ahSo[u16HandleIndex] = SO_INVALID_HANDLE;
+
     return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_SO_RegGetPtsCb(HI_HANDLE handle, HI_UNF_SO_GETPTS_FN pfnCallback, HI_U32 u32UserData)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN((NULL == pstMember || NULL == pfnCallback), HI_FAILURE, "");
 
@@ -672,9 +794,9 @@ HI_S32 HI_UNF_SO_RegGetPtsCb(HI_HANDLE handle, HI_UNF_SO_GETPTS_FN pfnCallback, 
 }
 
 HI_S32 HI_UNF_SO_RegOnDrawCb(HI_HANDLE handle, HI_UNF_SO_ONDRAW_FN pfnOnDraw,
-                                          HI_UNF_SO_ONCLEAR_FN pfnOnClear, HI_U32 u32UserData)
+                             HI_UNF_SO_ONCLEAR_FN pfnOnClear, HI_U32 u32UserData)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN((NULL == pstMember || NULL == pfnOnDraw), HI_FAILURE, "");
 
@@ -689,7 +811,7 @@ HI_S32 HI_UNF_SO_RegOnDrawCb(HI_HANDLE handle, HI_UNF_SO_ONDRAW_FN pfnOnDraw,
 
 HI_S32 HI_UNF_SO_SetDrawSurface(HI_HANDLE handle, HI_HANDLE hSurfaceHandle)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN((NULL == pstMember || 0 == hSurfaceHandle), HI_FAILURE, "");
 
@@ -702,7 +824,7 @@ HI_S32 HI_UNF_SO_SetDrawSurface(HI_HANDLE handle, HI_HANDLE hSurfaceHandle)
 
 HI_S32 HI_UNF_SO_SetFont(HI_HANDLE handle, HI_HANDLE hFont)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -713,7 +835,7 @@ HI_S32 HI_UNF_SO_SetFont(HI_HANDLE handle, HI_HANDLE hFont)
 
 HI_S32 HI_UNF_SO_SetOffset(HI_HANDLE handle, HI_S64 s64OffsetMs)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -724,7 +846,7 @@ HI_S32 HI_UNF_SO_SetOffset(HI_HANDLE handle, HI_S64 s64OffsetMs)
 
 HI_S32 HI_UNF_SO_SetColor(HI_HANDLE handle, HI_U32 u32Color)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -735,7 +857,7 @@ HI_S32 HI_UNF_SO_SetColor(HI_HANDLE handle, HI_U32 u32Color)
 
 HI_S32 HI_UNF_SO_SetPos(HI_HANDLE handle, HI_U32 u32x, HI_U32 u32y)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -745,9 +867,9 @@ HI_S32 HI_UNF_SO_SetPos(HI_HANDLE handle, HI_U32 u32x, HI_U32 u32y)
     return HI_SUCCESS;
 }
 
-HI_S32 HI_UNF_SO_GetSubNumInBuff(HI_HANDLE handle, HI_U32 *pu32SubNum)
+HI_S32 HI_UNF_SO_GetSubNumInBuff(HI_HANDLE handle, HI_U32* pu32SubNum)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember || NULL == pu32SubNum, HI_FAILURE, "");
 
@@ -759,7 +881,7 @@ HI_S32 HI_UNF_SO_GetSubNumInBuff(HI_HANDLE handle, HI_U32 *pu32SubNum)
 HI_S32 HI_UNF_SO_ResetSubBuf(HI_HANDLE handle)
 {
     HI_S32 s32Ret = 0;
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
     HI_U32 i = 0;
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
@@ -785,7 +907,7 @@ HI_S32 HI_UNF_SO_ResetSubBuf(HI_HANDLE handle)
 
 HI_S32 HI_UNF_SO_ResetSubBuf_ByPts(HI_HANDLE handle, HI_S64 s64Pts)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 
@@ -793,18 +915,34 @@ HI_S32 HI_UNF_SO_ResetSubBuf_ByPts(HI_HANDLE handle, HI_S64 s64Pts)
     return HI_UNF_SO_ResetSubBuf(handle);
 }
 
-HI_S32 HI_UNF_SO_SendData(HI_HANDLE handle, const HI_UNF_SO_SUBTITLE_INFO_S *pstSubInfo, HI_U32 u32TimeOut)
+HI_S32 HI_UNF_SO_SendData(HI_HANDLE handle, const HI_UNF_SO_SUBTITLE_INFO_S* pstSubInfo, HI_U32 u32TimeOut)
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN((NULL == pstMember || NULL == pstSubInfo), HI_FAILURE, "");
+
+    SO_RETURN((pstSubInfo->eType >= HI_UNF_SUBTITLE_BUTT), HI_FAILURE, "");
 
     return SO_QueuePut(pstMember->queuehdl, (const SO_INFO_S*)pstSubInfo);
 }
 
+
+HI_S32 HI_UNF_SO_GetCurData(HI_HANDLE handle, HI_UNF_SO_SUBTITLE_INFO_S* pstSubInfo)
+{
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
+
+    SO_RETURN(NULL == pstMember, HI_FAILURE, "");
+    SO_RETURN(NULL == pstSubInfo, HI_FAILURE, "");
+
+    *pstSubInfo = pstMember->stCurSubInfo;
+
+    return HI_SUCCESS;
+}
+
 HI_S32 HI_UNF_SO_SetMaxInterval(HI_HANDLE handle, HI_U32 u32IntervalMs )
 {
-    SO_MEMBER_S *pstMember = (SO_MEMBER_S*)handle;
+    SO_MEMBER_S* pstMember = (SO_MEMBER_S*)SO_GetMemAddr(handle);
 
     SO_RETURN(NULL == pstMember, HI_FAILURE, "");
 

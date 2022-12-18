@@ -77,8 +77,8 @@ typedef struct
 } tBitStream;
 
 HI_VOID OMX_VENC_BsOpenBitStream(tBitStream* pBS, HI_U32* pBuffer);
-HI_VOID OMX_VENC_BsPutBits31(tBitStream* pBS, HI_U32 code, int bits);
-HI_VOID OMX_VENC_BsPutBits32(tBitStream* pBS, HI_U32 code, int bits);
+HI_VOID OMX_VENC_BsPutBits31(tBitStream* pBS, HI_U32 code, HI_U32 bits);
+HI_VOID OMX_VENC_BsPutBits32(tBitStream* pBS, HI_U32 code, HI_U32 bits);
 
 #ifdef __cplusplus
 #if __cplusplus

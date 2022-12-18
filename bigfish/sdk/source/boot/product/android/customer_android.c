@@ -10,7 +10,11 @@ int Android_Main(void)
 #ifdef HI_ADVCA_SUPPORT
     if (-1 == HI_Android_Authenticate())
     {
+	#ifdef HI_MINIBOOT_SUPPORT
+        run_cmd("reset", 0);
+	#else
         run_command("reset", 0);
+	#endif
     }
 #endif
     return 0;
@@ -30,7 +34,14 @@ int Android_Security_WriteRSAKey(void)
     HI_BOOL bEnable = HI_FALSE;
     HI_BOOL rsaKeySetFlag = HI_FALSE;
 
-    HI_SIMPLEINFO_CA("Security Begin Read RSA Key!\n");
+    HI_SIMPLEINFO_CA("Security begin read RSA CRC Key in USB disk\n");
+    ret = read_ca_key_file("root_rsa_pub_crc.bin", CRCKey);
+    if (ret != sizeof(CRCKey))
+    {
+        HI_SIMPLEINFO_CA("Security no RSA CRC Key in USB disk\n");
+        return HI_FAILURE;
+    }
+    HI_SIMPLEINFO_CA("Security read RSA CRC Key in USB disk success\n");
 
     ret = HI_UNF_ADVCA_Init();
     if (HI_SUCCESS != ret)
@@ -72,15 +83,6 @@ int Android_Security_WriteRSAKey(void)
     }
     else
     {
-        ret = read_ca_key_file("root_rsa_pub_crc.bin", CRCKey);
-        if (ret != sizeof(CRCKey))
-        {
-            HI_SIMPLEINFO_CA("Security Read RSA Key Failed, length is %d\n", ret);
-            return HI_FAILURE;
-        }
-
-        HI_SIMPLEINFO_CA("Security Read RSA+CRC Key Success\n");
-
         memcpy(RSAKey, CRCKey, sizeof(RSAKey));
 
         ret = HI_UNF_ADVCA_GetRSAKey(oldRSAKey);
@@ -94,7 +96,7 @@ int Android_Security_WriteRSAKey(void)
         {
             if (oldRSAKey[i] != 0x0)
             {
-                HI_SIMPLEINFO_CA("Security RSA Key has already been set!\n", ret);
+                HI_SIMPLEINFO_CA("Security RSA Key has already been set!\n");
                 rsaKeySetFlag = HI_TRUE;
                 break;
             }
@@ -105,7 +107,7 @@ int Android_Security_WriteRSAKey(void)
             ret = memcmp(RSAKey, oldRSAKey, sizeof(RSAKey));
             if(0 != ret)
             {
-                HI_ERR_CA("RSAKey and oldRSAKey are not the same and not lock the key! ret:0x%x\n", ret);
+                HI_SIMPLEINFO_CA("RSAKey and oldRSAKey are not the same and not lock the key! ret:0x%x\n", ret);
                 return HI_FAILURE;
             }
         }
@@ -167,7 +169,7 @@ int Android_Security_WriteRSAKey(void)
     return 0;
 }
 #endif
-
+#if 0
 #ifdef HI_BOOT_IR_SUPPORT
 int Android_Qb_CheckRemote(void)
 {
@@ -210,4 +212,5 @@ int Android_Qb_CheckRemote(void)
 
     return ret_val;
 }
+#endif
 #endif

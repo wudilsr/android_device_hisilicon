@@ -17,6 +17,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cutils/properties.h>
 
 #define LOGTAG "ir_user"
 #include <utils/Log.h>
@@ -431,6 +432,7 @@ static int PowerResumSet()
     unsigned int i,j;
     unsigned int power_num;
     signed int ret;
+    char tmp[PROP_VALUE_MAX];
 
     HI_UNF_PMOC_MODE_E mode;
     HI_UNF_PMOC_WKUP_S wakeup;
@@ -445,6 +447,13 @@ static int PowerResumSet()
 
     memset(&wakeup, 0, sizeof(HI_UNF_PMOC_WKUP_S));
     memset(&devType, 0, sizeof(HI_UNF_PMOC_DEV_TYPE_S));
+    property_get("persist.suspend.mode", tmp, "deep_restart");
+    if(!strcmp(tmp, "deep_restart"))
+    {
+        wakeup.bResumeResetEnable = HI_TRUE;
+    } else {
+        wakeup.bResumeResetEnable = HI_FALSE;
+    }
     devType.irtype = HI_UNF_IR_CODE_RAW;
     devType.kltype = 2 ; //HI_UNF_KEYLED_TYPE_CT1642;
 

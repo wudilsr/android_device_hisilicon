@@ -143,9 +143,9 @@ typedef struct tagTTX_SEGMENT_QUEUE_S
 typedef struct tagTTX_REQUEST_S
 {
     HI_UNF_TTX_PAGE_ADDR_S stReqPgAddr;
-    HI_S32 (*NotifyFunction)(HI_HANDLE hTTX,                                /**callback function,if request success ,call this function*/
+    HI_S32 (*NotifyFunction)(const HI_VOID* hTTX,                                /**callback function,if request success ,call this function*/
                            TTX_SEGMENT_S_PTR pstSegment);
-    HI_U32 u32UserData;  /**<user data*/
+    HI_VOID* pvUserData;  /**<user data*/
 } TTX_Filter_S, *TTX_Filter_S_PTR;
 
 typedef struct tagTTX_HANDLE_FILTER_S
@@ -157,8 +157,8 @@ typedef struct tagTTX_HANDLE_FILTER_S
 
 typedef struct tagTTX_DMX_PARAM_S
 {
-    HI_HANDLE hDataRecv;
-    HI_HANDLE hDataParse;
+    HI_VOID* hDataRecv;
+    HI_VOID* hDataParse;
     HI_UNF_TTX_REQUEST_RAWDATA_S stRequest; /**<Request for ttx raw data*/
 } TTX_PARAM_S;
 
@@ -232,7 +232,7 @@ typedef struct tagTTX_P28_4_M29_4_INFO_S
 }TTX_P28_4_M29_4_INFO_S;
 
 
-/*DCLUT information, define by packet X/28/1 or M/29/1, if X/28/1 and M/29/1 
+/*DCLUT information, define by packet X/28/1 or M/29/1, if X/28/1 and M/29/1
 exist at same time ,the X/28/1 takes precedence over M/29/1*/
 typedef struct tagTTX_DCLUT_S
 {

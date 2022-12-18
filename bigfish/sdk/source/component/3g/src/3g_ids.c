@@ -65,8 +65,8 @@ static int g3_card_zte_adjust_modem(g3_card *card)
 
 /*********************************************************************/
 g3_card_ids g3_card_list[] = {
-    /**----------------- HUAWEI ---------------*/
-    {   /* HUAWEI: EC169 */
+    /**----------------- Hisilicon ---------------*/
+    {   /* Hisilicon: EC169 */
         .product_name = "EC169",
         .pre_init     = g3_card_huawei_ec169_set_crm,
     },

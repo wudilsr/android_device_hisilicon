@@ -250,6 +250,7 @@ HI_S32 PngOsiDestroyDecoder(HI_PNG_HANDLE s32Handle)
 
     /* release decoder */
     s32Ret = PngOsiResReleaseHandle(s32Handle);
+    UNUSED(s32Ret);
     //assert(HI_SUCCESS == s32Ret);
 
     return HI_SUCCESS;
@@ -373,7 +374,9 @@ HI_S32 PngOsiReleaseBuf(HI_PNG_HANDLE s32Handle)
 {
     HI_S32 s32Ret = HI_SUCCESS;
     PNG_INSTANCE_S *pstInstance = HI_NULL;
+#ifdef HIPNG_STREAMBUF_KERNEL
     HI_U32 u32Phyaddr = 0;
+#endif
     HI_VOID *pViraddr = HI_NULL;
     HI_U32 u32NextPhyaddr = 0;
     HI_VOID *pNextViraddr = HI_NULL;
@@ -393,8 +396,9 @@ HI_S32 PngOsiReleaseBuf(HI_PNG_HANDLE s32Handle)
         PNG_UP(&pstInstance->stInstanceLock);
         return HI_ERR_PNG_DEV_BUSY;
     }
-
+#ifdef HIPNG_STREAMBUF_KERNEL
     u32Phyaddr = pstInstance->u32StartBufPhyAddr;
+#endif
     pViraddr = pstInstance->pStartBufVir;
     while(HI_NULL != pViraddr)
     {
@@ -405,8 +409,9 @@ HI_S32 PngOsiReleaseBuf(HI_PNG_HANDLE s32Handle)
         PngOsiResReleaseMem(u32Phyaddr);
 #endif
 		kfree(pViraddr);
-
+#ifdef HIPNG_STREAMBUF_KERNEL
         u32Phyaddr = u32NextPhyaddr;
+#endif
         pViraddr = pNextViraddr;
     }
 

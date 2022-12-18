@@ -29,11 +29,11 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0/scene/stb  \
                 -I$(MSP_DIR)/drv/vfmw/vfmw_v4.0         		
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-EXTRA_CFLAGS += -I$(TEE_INCLUDE)                           \
-                -I$(TVP_DIR)/libteec/inc                   \
-                -I$(TVP_DIR)/libteec/sec_mmz/inc			
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+EXTRA_CFLAGS += -I$(TEE_DRV_INCLUDE)
+EXTRA_CFLAGS += -I$(KERNEL_SRC_DIR)/drivers/hisilicon/sec_mmz
 endif
+
 
 #===============================================================================
 # 512M ddr memory config flags
@@ -196,8 +196,8 @@ else
 EXTRA_CFLAGS += -DHI_VDEC_USERDATA_CC_SUPPORT=0
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-EXTRA_CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+EXTRA_CFLAGS += -DHI_TEE_SUPPORT
 endif
 
 ifeq (y,$(CFG_HI_VDEC_VPU_SUPPORT))

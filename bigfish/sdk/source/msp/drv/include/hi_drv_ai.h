@@ -53,7 +53,7 @@ History       :
                 return HI_ERR_AI_NULL_PTR;                   \
             }                                               \
          } while(0)
-         
+
 #define CHECK_AI_CREATE(state)                              \
     do                                                      \
     {                                                       \
@@ -89,10 +89,10 @@ History       :
 #define CHECK_AI_CHN_OPEN(AiHandle) \
     do                                                         \
     {                                                          \
-        AiHandle &= AI_CHNID_MASK;                            \
-        if (NULL == g_pstGlobalAIRS.pstAI_ATTR_S[AiHandle])   \
+        CHECK_AI_ID(AiHandle); \
+        if (HI_NULL == g_pstGlobalAIRS.pstAI_ATTR_S[AiHandle & AI_CHNID_MASK])   \
         {                                                       \
-            HI_ERR_AI(" Invalid AI id %d(not open)\n", AiHandle);        \
+            HI_ERR_AI(" Invalid AI id %d not open\n", AiHandle & AI_CHNID_MASK);        \
             return HI_ERR_AI_INVALID_PARA;                       \
         }                                                       \
     } while (0)
@@ -121,7 +121,7 @@ History       :
             HI_WARN_AI("invalid sample out rate %d\n", outrate);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 
 #define CHECK_AI_BCLKDIV(BclkDiv)                   \
@@ -145,7 +145,7 @@ History       :
             HI_WARN_AI("invalid bclkDiv %d\n", BclkDiv);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 #define CHECK_AI_MCLKDIV(MclkSel)                   \
     do                                                  \
@@ -163,7 +163,7 @@ History       :
             HI_WARN_AI("invalid mclk sel %d\n", MclkSel);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 #define CHECK_AI_CHN(Chn)                   \
     do                                                  \
@@ -178,7 +178,7 @@ History       :
             HI_WARN_AI("invalid chn %d\n", Chn);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 
 #define CHECK_AI_BITDEPTH(BitDepth )                   \
@@ -193,7 +193,7 @@ History       :
             HI_WARN_AI("invalid bitDepth %d\n", BitDepth);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 
 #define CHECK_AI_PCMDELAY(PcmDelayCycle)                   \
@@ -213,7 +213,7 @@ History       :
             HI_WARN_AI("invalid pcmDelayCycle %d\n", PcmDelayCycle);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
 #define CHECK_AI_HdmiDataFormat(HdmiDataFormat)         \
     do                                                  \
@@ -228,7 +228,7 @@ History       :
             HI_ERR_AI("invalid Hdmi DataFormat %d\n", HdmiDataFormat);    \
             return HI_ERR_AI_INVALID_PARA;                        \
         }                                                       \
-    } while (0)   
+    } while (0)
 
  #define HI_AI_LOCK(mutex) (void)pthread_mutex_lock(mutex);
  #define HI_AI_UNLOCK(mutex) (void)pthread_mutex_unlock(mutex);
@@ -245,7 +245,7 @@ History       :
      HI_U32 u32KernelVirBaseAddr;
      //TO DO
      //MMZ Handle
-     
+
  } AI_BUF_ATTR_S;
 
 #ifdef __cplusplus

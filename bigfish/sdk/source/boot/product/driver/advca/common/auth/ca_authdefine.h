@@ -15,7 +15,7 @@ History       :
 #define __CA_AUTHDEFINE_H__
 
 #include "hi_type.h"
-#include <config.h>
+#include "hi_debug.h"
 #include "ca_pub.h"
 
 #ifndef HI_MINIBOOT_SUPPORT
@@ -30,13 +30,8 @@ History       :
 #define RSA_2048_LEN            (0x100)
 #define SIGNATURE_LEN           (0x100)                             
 #define KEYAREALEN              (0x200)
-#define CMD_LEN                 (0X200)
-#if defined (CHIP_TYPE_hi3716mv310)
-#define IMG_VERIFY_ADDRESS      (0X84000000)
-#else
-#define IMG_VERIFY_ADDRESS      (0X04000000)
-#endif
-
+#define CMD_LEN                 (0x200)
+#define IMG_VERIFY_ADDRESS      (0x04000000)
 
 #define CAImgHeadAreaLen        NAND_PAGE_SIZE
 #define IMG_MAX_BLOCK_NUM       (5)
@@ -119,7 +114,11 @@ typedef union
 #ifdef HI_ADVCA_FUNCTION_RELEASE
 #define HI_DEBUG_CA(format, arg...)
 #else
+#ifdef  CONFIG_PRINT
 #define HI_DEBUG_CA(format, arg...)     printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
+#else
+#define HI_DEBUG_CA(format, arg...)
+#endif
 #endif
 
 #ifdef  HI_ADVCA_FUNCTION_RELEASE
@@ -127,9 +126,15 @@ typedef union
 #define HI_INFO_CA(format, arg...)   
 #define HI_SIMPLEINFO_CA(format, arg...)   
 #else
+#ifdef  CONFIG_PRINT
 #define HI_ERR_CA(format, arg...)       printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)   
 #define HI_INFO_CA(format, arg...)      printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg) 
 #define HI_SIMPLEINFO_CA(format, arg...)printf(format, ## arg)
+#else
+#define HI_ERR_CA(format, arg...)    
+#define HI_INFO_CA(format, arg...)   
+#define HI_SIMPLEINFO_CA(format, arg...)
+#endif
 #endif
 
 #define CA_CheckPointer(p) \

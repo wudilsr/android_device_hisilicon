@@ -33,11 +33,37 @@ HISILICON_SECURITY_L2_COMMON_MODE_SIGN := false
 #Setup SecurityL3
 HISILICON_SECURITY_L3 := false
 
+#setup android tee
+HISILICON_TEE := false
+
+ifeq ($(strip $(HISILICON_TEE)),true)
+HISILICON_TEE_MEM := 2G
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.drm.tee=true \
+    ro.drm.tvp=true \
+    ro.playready.tee=false
+endif
+
 #Quick Boot Support
 BOARD_QBSUPPORT := false
 
+#Verimatrix Advanced
+VMX_ADVANCED_SUPPORT := false
+
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vmx.support=true
+endif
+
 #Unified update.zip for BGA and QFP fastboots
 SUPPORT_UNIFIED_UPDATE := false
+
+#support sdcardfs.
+SUPPORT_SDCARDFS := false
+#support fuse
+SUPPORT_FUSE := false
+#SUPPROT UI for wipe data or update from USB when pressed remote control power button on boot
+SUPPORT_REMOTE_RECOVERY := false
 
 # Whether fastplay should be played completely or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -87,8 +113,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.zygote.optimize=true \
-    persist.sys.boot.optimize=true
-
+    persist.sys.boot.optimize=true \
+    persist.sys.preload.fork=true
 # Whether CVBS is enabled or not when HDMI is plugged in
 ifeq ($(strip $(PRODUCT_TARGET)), telecom)
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -100,7 +126,9 @@ else
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.cvbs.and.hdmi=false
 endif
-
+# apk control mode: none/whitelist/signature/md5
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sys.apkcontrol.mode=none
 # Whether display format self-adaption is enabled or not when HDMI is plugged in
 # 0 -> disable; 1 -> enable
 ifeq ($(strip $(PRODUCT_TARGET)), telecom)
@@ -116,6 +144,10 @@ else
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.optimalfmt.enable=1
 endif
+
+# display hdmi cec
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.hdmi.cec=false
 
 # Preferential display format: native, i50hz, p50hz, i60hz, p60hz or max_fmt
 # persist.sys.optimalfmt.perfer is valid only if persist.sys.optimalfmt.enable=1

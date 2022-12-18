@@ -17,8 +17,11 @@ RECOVERY_RESOURCES_PRIVATE := $(strip $(wildcard $(TARGET_DEVICE_DIR)/recovery/r
 RECOVERY_RESOURCES_DEPS := $(shell find $(RECOVERY_RESOURCES_COMMON) \
   $(RECOVERY_RESOURCES_PRIVATE) -type f)
 RECOVERY_FSTAB := $(call include-path-for, recovery)/etc/recovery.fstab
+ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
+RECOVERY_EMMC_FSTAB := $(call include-path-for, recovery)/etc/recovery.emmc.fstab.update
+else
 RECOVERY_EMMC_FSTAB := $(call include-path-for, recovery)/etc/recovery.emmc.fstab
-
+endif
 
 recovery_prepare:
 	mkdir -p $(RECOVERY_OUT)

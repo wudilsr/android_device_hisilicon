@@ -20,7 +20,9 @@
 
 #include "gki.h"
 #include "dyn_mem.h"
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+#include <time.h>
+#endif
 /* Task States: (For OSRdyTbl) */
 #define TASK_DEAD       0   /* b0000 */
 #define TASK_READY      1   /* b0001 */
@@ -65,6 +67,12 @@ typedef struct _buffer_hdr
 	UINT8   task_id;              /* task which allocated the buffer*/
     UINT8   status;               /* FREE, UNLINKED or QUEUED */
 	UINT8   Type;
+#ifdef BLUETOOTH_RTK_DBG_MEM
+    char   func[32];
+    int    line;
+    int    size;
+    time_t ts;
+#endif
 } BUFFER_HDR_T;
 
 typedef struct _free_queue

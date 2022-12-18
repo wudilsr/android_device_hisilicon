@@ -164,6 +164,7 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 	char	*s;
 	int	machid = bd->bi_arch_number;
 	void	(*theKernel)(int zero, int arch, uint params);
+	unsigned long r2;
 
 #ifdef CONFIG_CMDLINE_TAG
 	char *commandline = getenv ("bootargs");
@@ -262,6 +263,19 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 
 	cleanup_before_linux ();
 
+	r2 = bd->bi_boot_params;
+
+#ifdef CONFIG_TEE_SUPPORT
+	{
+		extern u32 secure_entry_addr;
+		extern u32 _text_end;
+		if (secure_entry_addr) {
+			void (*secure_entry)(int, int, int, int, int, int) = (void(*)(int, int, int, int, int, int))(secure_entry_addr);
+			unsigned int text_end = roundup(_text_end, 0x10); /* align for secure os clean boot */
+			secure_entry(0, (int)machid, (int)r2, (int)theKernel, TEXT_BASE, text_end);
+		}
+	}
+#endif
 	theKernel (0, machid, bd->bi_boot_params);
 	/* does not return */
 

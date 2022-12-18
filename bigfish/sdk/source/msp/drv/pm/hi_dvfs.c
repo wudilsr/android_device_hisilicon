@@ -15,7 +15,7 @@
 #include <mach/platform.h>
 #include <linux/platform_device.h>
 #include <linux/delay.h>
-#include <mach/clock.h>
+#include "clock.h"
 #include <linux/kthread.h>
 
 #include "hi_reg_common.h"
@@ -520,7 +520,7 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
 #endif
 
         msleep(10);
-        ret = clk_set_rate(clk, tdvfs_info->new_freq);
+        ret = hi_clk_set_rate(clk, tdvfs_info->new_freq);
         if (ret)
         {
             HI_ERR_PM("%s: scale freq to %ld falt\n",
@@ -530,7 +530,7 @@ static int _dvfs_scale(struct device *target_dev, struct hi_dvfs_info *tdvfs_inf
     }
     else
     {
-        ret = clk_set_rate(clk, tdvfs_info->new_freq);
+        ret = hi_clk_set_rate(clk, tdvfs_info->new_freq);
         if (ret)
         {
             HI_ERR_PM("%s: scale freq to %ld falt\n",

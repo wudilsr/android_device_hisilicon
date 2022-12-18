@@ -5,14 +5,17 @@ choice
 
 config  LINUX-3.10.y
 	bool "linux-3.10.y"
-config  LINUX-3.10.y-L
-	bool "linux-3.10.y-L"
+	depends on ARM_HISIV200_LINUX
+	
+config  LINUX-3.18.y
+	bool "linux-3.18.y" 
+	depends on ARM_HISTBV310_LINUX	
 endchoice
 
 config  HI_KERNEL_VERSION
 	string
 	default linux-3.10.y if LINUX-3.10.y
-	default linux-3.10.y-L if LINUX-3.10.y-L
+	default linux-3.18.y if LINUX-3.18.y
 
 config  HI_KERNEL_CFG
 	prompt "Kernel Config File"

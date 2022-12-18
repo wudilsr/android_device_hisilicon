@@ -363,3 +363,41 @@ LOCAL_SRC_FILES  += $(sort $(call all-c-files-under, auth))
 LOCAL_SRC_FILES  += sample_ca_sw_hash.c  
 LOCAL_SHARED_LIBRARIES := liblog libcutils libdl libm libhi_common libhi_msp libhi_sample_common
 include $(BUILD_EXECUTABLE)
+
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+include $(CLEAR_VARS)
+include $(SDK_DIR)/Android.def
+LOCAL_MODULE := sample_ca_enabletrustzone
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_CFLAGS := $(CFG_HI_CFLAGS) $(CFG_HI_BOARD_CONFIGS)
+
+LOCAL_SRC_FILES := sample_ca_enabletrustzone.c
+LOCAL_C_INCLUDES := $(COMMON_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
+LOCAL_C_INCLUDES += $(SAMPLE_DIR)/common
+LOCAL_SHARED_LIBRARIES := liblog libcutils libdl libm libhi_common libhi_msp libhi_sample_common
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+include $(SDK_DIR)/Android.def
+LOCAL_MODULE := sample_ca_gettrustzonestatus
+ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+LOCAL_MODULE_TAGS := optional
+LOCAL_CFLAGS := $(CFG_HI_CFLAGS) $(CFG_HI_BOARD_CONFIGS)
+
+LOCAL_SRC_FILES := sample_ca_gettrustzonestatus.c
+LOCAL_C_INCLUDES := $(COMMON_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(COMMON_API_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_UNF_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_DRV_INCLUDE)
+LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
+LOCAL_C_INCLUDES += $(SAMPLE_DIR)/common
+LOCAL_SHARED_LIBRARIES := liblog libcutils libdl libm libhi_common libhi_msp libhi_sample_common
+include $(BUILD_EXECUTABLE)
+endif

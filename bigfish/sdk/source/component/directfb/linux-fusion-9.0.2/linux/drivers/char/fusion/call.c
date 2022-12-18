@@ -44,6 +44,7 @@ typedef struct {
 
      bool executed;
      bool signalled;
+     bool interrupted;
 
      FusionWaitQueue wait;
 
@@ -414,6 +415,9 @@ restart:
 
                     return -EINTR;
                }
+               if (execution->interrupted) {
+                    return -EIDRM;
+               }
 #else
                fusion_core_wq_wait( fusion_core, &execution->wait, 0, false );
 #endif
@@ -590,6 +594,9 @@ restart:
                     }
 
                     return -EINTR;
+               }
+               if (execution->interrupted) {
+                    return -EIDRM;
                }
 #else
                fusion_core_wq_wait( fusion_core, &execution->wait, 0, false );
@@ -839,6 +846,9 @@ restart:
 
                     return -EINTR;
                }
+               if (execution->interrupted) {
+                    return -EIDRM;
+               }
 #else
                fusion_core_wq_wait( fusion_core, &execution->wait, 0, false );
 #endif
@@ -1056,14 +1066,26 @@ void fusion_call_destroy_all(FusionDev * dev, Fusionee *fusionee)
 
                /* If an execution is pending... */
                direct_list_foreach (execution, call->executions) {
-                    // FIMXE: indicate to caller that fusionee did quit
-
+                    /* indicate to caller that fusionee did quit */
+                    execution->interrupted = true;
                     /* Wake up uninterruptibly(!) waiting caller! */
                     fusion_core_wq_wake( fusion_core, &execution->wait );
                }
 
                fusion_entry_destroy_locked(call->entry.entries,
                                            &call->entry);
+          }
+          else
+          {
+               /* Cleanup call executions initiated and not finished by fusionee */
+               FusionCallExecution *execution, *next;
+               direct_list_foreach_safe (execution, next, call->executions) {
+                    if (execution->caller == fusionee) {
+                         /* Remove and free execution */
+                         remove_execution(call, execution);
+                         free_execution(dev, execution);
+                    }
+               }
           }
 
           l = next;

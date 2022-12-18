@@ -370,7 +370,6 @@ void ff_rtp_send_punch_packets(URLContext* rtp_handle)
     av_free(buf);
 }
 
-
 /**
  * open a new RTP parse context for stream 'st'. 'st' can be NULL for
  * MPEG2TS streams to indicate that they should be demuxed inside the
@@ -424,6 +423,35 @@ RTPDemuxContext *ff_rtp_parse_open(AVFormatContext *s1, AVStream *st, URLContext
     s->rtp_ctx = rtpc;
     gethostname(s->hostname, sizeof(s->hostname));
     return s;
+}
+
+int ff_rtp_parse_reset(RTPDemuxContext *s, URLContext *rtpc)
+{
+    RTPDemuxContext s_bak;
+
+    if (!s) {
+        av_log(NULL, AV_LOG_ERROR, "[%s,%d] invalid param\n", __FUNCTION__, __LINE__);
+        return -1;
+    }
+
+    av_log(NULL, AV_LOG_INFO, "[%s,%d] reset rtp parser, rtpc=%p\n", __FUNCTION__, __LINE__, rtpc);
+
+    /* WARN: clear queue first! */
+    ff_rtp_reset_packet_queue(s);
+
+    s_bak = *s;
+    memset((void *)s, 0, sizeof(*s));
+    s->payload_type = s_bak.payload_type;
+    s->ic = s_bak.ic;
+    s->st = s_bak.st;
+    s->queue_size = s_bak.queue_size;
+    s->ts = s_bak.ts;
+    s->rtp_ctx = rtpc;
+    s->last_rtcp_ntp_time = AV_NOPTS_VALUE;
+    s->first_rtcp_ntp_time = AV_NOPTS_VALUE;
+    rtp_init_statistics(&s->statistics, 0); // do we know the initial sequence from sdp?
+
+    return 0;
 }
 
 void

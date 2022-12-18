@@ -2,6 +2,7 @@ package com.hisilicon.multiscreen.mybox;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -87,10 +88,31 @@ public class WelcomeActivity extends Activity
         }
         else
         {
-            Intent intent = new Intent(WelcomeActivity.this, DeviceDiscoveryActivity.class);
+            Intent intent;
+            boolean isHomePageRemote =
+                readStatusPreference(MultiSettingActivity.HOMEPAGE_REMOTE_KEY);
+            if (isHomePageRemote == true)
+            {
+                intent = new Intent(WelcomeActivity.this, RemoteActivity.class);
+            }
+            else
+            {
+                intent = new Intent(WelcomeActivity.this, DeviceDiscoveryActivity.class);
+            }
             startActivity(intent);
             finish();
         }
     }
 
+    /**
+     * Read enable/disable record.<br>
+     * CN:开启/关闭记录读取。
+     * @param statusKey
+     */
+    private boolean readStatusPreference(String statusKey)
+    {
+        SharedPreferences prefrence =
+            getSharedPreferences(MultiSettingActivity.SETTING_STATUS_FILE_NAME, MODE_PRIVATE);
+        return prefrence.getBoolean(statusKey, false);
+    }
 }

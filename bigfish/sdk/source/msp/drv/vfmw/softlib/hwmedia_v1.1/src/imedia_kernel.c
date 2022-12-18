@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NIQe0+PABsdaVBvBywkVW5G8adGW4T782mUyetR
 ku9RbDwGY35I2hs4ecx0R510w0T55+LZjoiJRkFRpy4VZIySC8+7WL9WCM6t16jBtjSSFi+M

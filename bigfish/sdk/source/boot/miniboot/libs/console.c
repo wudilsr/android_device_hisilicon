@@ -17,7 +17,6 @@
 ******************************************************************************/
 
 #include <stddef.h>
-#include <stdio.h>
 #include <console.h>
 
 #define KEY_CTRL_C                     0x03

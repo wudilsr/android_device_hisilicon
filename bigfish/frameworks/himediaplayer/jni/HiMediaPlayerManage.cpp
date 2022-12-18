@@ -446,8 +446,12 @@ RE:
             LOGV("isPlaying: %d", temp);
             if ((mCurrentState & MEDIA_PLAYER_STARTED) && !temp)
             {
-                LOGE("internal/external state mismatch corrected");
+                LOGE("internal/external(playing) state mismatch corrected");
                 mCurrentState = MEDIA_PLAYER_PAUSED;
+            } else if ((mCurrentState & MEDIA_PLAYER_PAUSED) && temp)
+            {
+                LOGE("internal(playing)/external state mismatch corrected");
+                mCurrentState = MEDIA_PLAYER_STARTED;
             }
 
             return temp;
@@ -756,6 +760,9 @@ RE:
                 mCurrentPosition = mSeekPosition = -1;
             }
 
+            break;
+        case MEDIA_SEEK_START:
+            LOGV("Received seek start");
             break;
         case MEDIA_BUFFERING_UPDATE:
             LOGV("buffering %d", ext1);

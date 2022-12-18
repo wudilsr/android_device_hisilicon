@@ -38,6 +38,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <pthread.h>
 #include <semaphore.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "OMX_Core.h"
 #include "OMX_Component.h"
@@ -45,14 +46,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OMX_VideoExt.h"
 #include "OMX_IndexExt.h"
 #include "OMX_RoleNames.h"
-#include "hi_common.h"
 #include "sample_queue.h"
 #include "sample_tidx.h"
 
 #include "sample_omxvdec.h"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #include "tee_client_api.h"
+#include "mpi_mmz.h"
 #endif
 
 /**********************************************************
@@ -66,7 +67,7 @@ OmxTestInfo_S OmxTestInfo[MAX_INST_NUM];
 
 /************************************************************************/
 #define  SAMPLETRACE()        printf("fun: %s, line: %d\n", __func__, __LINE__)
-#define  DEBUG_PRINT          //printf
+#define  DEBUG_PRINT(format...)  //printf
 #define  DEBUG_PRINT_ERROR    printf
 #define  DEBUG_PRINT_ALWS     printf
 
@@ -85,7 +86,9 @@ OmxTestInfo_S OmxTestInfo[MAX_INST_NUM];
 #define EnableAndroidNativeBuffers         "OMX.google.android.index.enableAndroidNativeBuffers"
 #define GetAndroidNativeBufferUsage        "OMX.google.android.index.getAndroidNativeBufferUsage"
 #define UseAndroidNativeBuffer2            "OMX.google.android.index.useAndroidNativeBuffer2"
-    
+#define MAX_COMP_NUM                       (30)//(30)  // total component num
+#define MAX_COMP_NAME_LEN                  (50)  // max len of one component name
+
 /************************************************************************/
 
 #define CONFIG_VERSION_SIZE(param) \
@@ -102,20 +105,100 @@ static int g_TestInstNum = 0;
 
 OMX_ERRORTYPE error;
 
+#ifdef HI_OMX_TEE_SUPPORT
+#define TEEC_CMD_COM_CA2TA_DATA  18
+
+static TEEC_Context  g_TeeContext;
+static TEEC_Session g_teeSession;
+
+#endif
+
+/* CodecType Relative */
+static char *tComponentName[MAX_COMP_NUM][2] = {
+
+	/*video decoder components */
+	{"OMX.hisi.video.decoder.avc",  OMX_ROLE_VIDEO_DECODER_AVC},
+	{"OMX.hisi.video.decoder.vc1",  OMX_ROLE_VIDEO_DECODER_VC1},
+	{"OMX.hisi.video.decoder.mpeg1",  OMX_ROLE_VIDEO_DECODER_MPEG1},
+	{"OMX.hisi.video.decoder.mpeg2",  OMX_ROLE_VIDEO_DECODER_MPEG2},
+	{"OMX.hisi.video.decoder.mpeg4",  OMX_ROLE_VIDEO_DECODER_MPEG4},
+	{"OMX.hisi.video.decoder.h263",  OMX_ROLE_VIDEO_DECODER_H263},
+	{"OMX.hisi.video.decoder.divx3",  OMX_ROLE_VIDEO_DECODER_DIVX3},
+	{"OMX.hisi.video.decoder.vp8",  OMX_ROLE_VIDEO_DECODER_VP8},
+	{"OMX.hisi.video.decoder.vp6",  OMX_ROLE_VIDEO_DECODER_VP6},
+	{"OMX.hisi.video.decoder.wmv",  OMX_ROLE_VIDEO_DECODER_WMV},
+	{"OMX.hisi.video.decoder.avs",  OMX_ROLE_VIDEO_DECODER_AVS},
+	{"OMX.hisi.video.decoder.sorenson",  OMX_ROLE_VIDEO_DECODER_SORENSON},
+	{"OMX.hisi.video.decoder.hevc",  OMX_ROLE_VIDEO_DECODER_HEVC},
+	{"OMX.hisi.video.decoder.mvc",  OMX_ROLE_VIDEO_DECODER_MVC},
+
+  #if (defined(REAL8_SUPPORT) || defined(REAL9_SUPPORT))
+    /* For copyright, vfmw didn't support std real. */
+    {"OMX.hisi.video.decoder.real",  OMX_ROLE_VIDEO_DECODER_RV},
+    {"OMX.hisi.video.decoder.real.secure",  OMX_ROLE_VIDEO_DECODER_RV},
+  #endif
+
+    /*secure video decoder components */
+    {"OMX.hisi.video.decoder.avc.secure",  OMX_ROLE_VIDEO_DECODER_AVC},
+    {"OMX.hisi.video.decoder.vc1.secure",  OMX_ROLE_VIDEO_DECODER_VC1},
+    {"OMX.hisi.video.decoder.mpeg1.secure",  OMX_ROLE_VIDEO_DECODER_MPEG1},
+    {"OMX.hisi.video.decoder.mpeg2.secure",  OMX_ROLE_VIDEO_DECODER_MPEG2},
+    {"OMX.hisi.video.decoder.mpeg4.secure",  OMX_ROLE_VIDEO_DECODER_MPEG4},
+    {"OMX.hisi.video.decoder.divx3.secure",  OMX_ROLE_VIDEO_DECODER_DIVX3},
+    {"OMX.hisi.video.decoder.vp8.secure",  OMX_ROLE_VIDEO_DECODER_VP8},
+    {"OMX.hisi.video.decoder.vp6.secure",  OMX_ROLE_VIDEO_DECODER_VP6},
+    {"OMX.hisi.video.decoder.wmv.secure",  OMX_ROLE_VIDEO_DECODER_WMV},
+    {"OMX.hisi.video.decoder.avs.secure",  OMX_ROLE_VIDEO_DECODER_AVS},
+    {"OMX.hisi.video.decoder.hevc.secure",  OMX_ROLE_VIDEO_DECODER_HEVC},
+
+    /* terminate the table */
+    {NULL, NULL},
+
+};
+
+
+static int get_componet_name_by_role(char *vdecCompNames, const char *compRole)
+{
+    int i, ret = 0;
+
+    int count = sizeof(tComponentName)/(sizeof(tComponentName[0]));
+
+    for (i = 0; i< count; i++)
+    {
+        if (!strcmp(compRole, tComponentName[i][1]))
+        {
+            strcpy(vdecCompNames, tComponentName[i][0]);
+
+            break;
+        }
+    }
+
+    if (i == count)
+    {
+        DEBUG_PRINT(" %s can NOT find component name by role:%s\n", __FUNCTION__, compRole);
+
+        vdecCompNames = NULL;
+        ret = -1;
+    }
+
+    return ret;
+}
+
 /****************************************************************************/
 /* 获取系统时间  单位：毫秒                                                 */
 /****************************************************************************/
+#ifdef CalcFrameRate
 static int GetTimeInMs(void)
 {
     int CurrMs = 0;
     struct timeval CurrentTime;
-    
+
     gettimeofday(&CurrentTime, 0);
     CurrMs = (int)(CurrentTime.tv_sec*1000 + CurrentTime.tv_usec/1000);
-    
+
     return CurrMs;
 }
-
+#endif
 
 static void wait_for_event(OmxTestInfo_S * pOmxTestInfo, int cmd)
 {
@@ -196,34 +279,41 @@ unsigned long char_to_long(char *buf, int len)
     return frame_len;
 }
 
-static int VP9_Read_EsRawStream(OmxTestInfo_S * pOmxTestInfo, OMX_BUFFERHEADERTYPE  *pBufHdr)
+int VP9_Read_EsRawStream(OmxTestInfo_S *pOmxTestInfo, OMX_BUFFERHEADERTYPE *pBufHdr)
 {
 	int bytes_read = 0;
-    char tmp_buf[4];
+    char tmp_buf[64];
     OMX_U8* pBuffer = NULL;
     unsigned long read_len = 0;
 
     pBuffer = pBufHdr->pBuffer;
-    
+
     if (0 == pOmxTestInfo->send_cnt)
     {
         bytes_read = fread(tmp_buf, 1, 32, pOmxTestInfo->inputBufferFileFd);
         if (bytes_read < 32)
         {
             DEBUG_PRINT_ALWS("Less than 32 byte(%d), stream send over!\n", bytes_read);
-            pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+            pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
         }
+
+        if (memcmp("DKIF", tmp_buf, 4) != 0)
+        {
+            DEBUG_PRINT_ERROR("VP9 file is not IVF file ERROR.\n");
+
+            return 0;
+        }
+
         pBufHdr->nFlags |= OMX_BUFFERFLAG_CODECCONFIG;
     }
-    else
-    {
+
         if (0 == pOmxTestInfo->frame_flag)
         {
             bytes_read = fread(tmp_buf, 1, 12, pOmxTestInfo->inputBufferFileFd);
             if (bytes_read < 12)
             {
                 DEBUG_PRINT_ALWS("Less than 12 byte(%d), stream send over!\n", bytes_read);
-                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
             }
             else
             {
@@ -231,24 +321,25 @@ static int VP9_Read_EsRawStream(OmxTestInfo_S * pOmxTestInfo, OMX_BUFFERHEADERTY
                 pOmxTestInfo->frame_len |= tmp_buf[2] << 16;
                 pOmxTestInfo->frame_len |= tmp_buf[1] << 8;
                 pOmxTestInfo->frame_len |= tmp_buf[0];
-                
-                DEBUG_PRINT_ALWS("frame_len %d\n", pOmxTestInfo->frame_len);
+
+            DEBUG_PRINT_ALWS("frame_len %lu\n", pOmxTestInfo->frame_len);
                 if (pOmxTestInfo->frame_len > 0)
                 {
                     pOmxTestInfo->frame_flag = 1;
                 }
                 else
                 {
-                    DEBUG_PRINT_ALWS("Frame Len(%d) invalid, stream send over!\n", pOmxTestInfo->frame_len);
+                DEBUG_PRINT_ALWS("Frame Len(%lu) invalid, stream send over!\n", pOmxTestInfo->frame_len);
                     pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
                 }
             }
         }
-        else
+
+       if (1 == pOmxTestInfo->frame_flag)
         {
             if (pOmxTestInfo->frame_len > pBufHdr->nAllocLen)
             {
-                DEBUG_PRINT_ALWS("WARNNING: frame_len(%d) > pBufHdr->nAllocLen(%d)\n", pOmxTestInfo->frame_len, pBufHdr->nAllocLen);
+            DEBUG_PRINT_ALWS("WARNNING: frame_len(%lu) > pBufHdr->nAllocLen(%lu)\n", pOmxTestInfo->frame_len, pBufHdr->nAllocLen);
                 read_len =  pBufHdr->nAllocLen;
                 pOmxTestInfo->frame_len = pOmxTestInfo->frame_len - read_len;
             }
@@ -262,8 +353,8 @@ static int VP9_Read_EsRawStream(OmxTestInfo_S * pOmxTestInfo, OMX_BUFFERHEADERTY
             bytes_read = fread(pBuffer, 1, read_len, pOmxTestInfo->inputBufferFileFd);
             if (bytes_read < read_len)
             {
-                DEBUG_PRINT_ALWS("ReadByte(%d) < NeedByte(%d), stream send over!\n", bytes_read, read_len);
-                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+            DEBUG_PRINT_ALWS("ReadByte(%d) < NeedByte(%lu), stream send over!\n", bytes_read, read_len);
+                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
             }
 
             if (0 == pOmxTestInfo->frame_flag)
@@ -272,9 +363,9 @@ static int VP9_Read_EsRawStream(OmxTestInfo_S * pOmxTestInfo, OMX_BUFFERHEADERTY
                 pBufHdr->nFlags |= OMX_BUFFERFLAG_ENDOFFRAME;
             }
         }
-    }
+
     pOmxTestInfo->send_cnt++;
-    
+
     return bytes_read;
 
 }
@@ -286,11 +377,11 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
     OMX_U8* pBuffer = NULL;
 
     unsigned long read_len = 0;
-    unsigned long frame_offset = 0;
+    //unsigned long frame_offset = 0;
 
 	DEBUG_PRINT("Inside Read_Buffer_from_EsRawStream\n");
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     if (1 == pOmxTestInfo->tvp_option)
     {
         pBuffer = (OMX_U8*)pOmxTestInfo->pCAStreamBuf.user_viraddr;
@@ -304,7 +395,8 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
     /* VP9读码流比较特殊，单独走一个分支 */
     if (CODEC_FORMAT_VP9 == pOmxTestInfo->codec_format_option)
     {
-        return VP9_Read_EsRawStream(pOmxTestInfo, pBufHdr);
+        bytes_read = VP9_Read_EsRawStream(pOmxTestInfo, pBufHdr);
+        goto EXIT;
     }
 
  	/* 读取码流的长度，有些码流的长度在前四个字节 */
@@ -316,7 +408,7 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
            if (bytes_read < 4)
            {
                DEBUG_PRINT_ALWS("Less than 4 byte(%d), stream send over!\n", bytes_read);
-               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
            }
            else
            {
@@ -333,12 +425,12 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
                }
            }
        }
-    
+
        if (1 == pOmxTestInfo->frame_flag)
        {
            if (pOmxTestInfo->frame_len > pBufHdr->nAllocLen)
            {
-               DEBUG_PRINT_ALWS("WARNNING: frame_len(%ld) > pBufHdr->nAllocLen(%d)\n", pOmxTestInfo->frame_len, pBufHdr->nAllocLen);
+               DEBUG_PRINT_ALWS("WARNNING: frame_len(%lu) > pBufHdr->nAllocLen(%lu)\n", pOmxTestInfo->frame_len, pBufHdr->nAllocLen);
                read_len =  pBufHdr->nAllocLen;
                pOmxTestInfo->frame_len = pOmxTestInfo->frame_len - read_len;
            }
@@ -348,14 +440,14 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
                pOmxTestInfo->frame_len = 0;
                pOmxTestInfo->frame_flag = 0;
            }
-    
+
            bytes_read = fread(pBuffer, 1, read_len, pOmxTestInfo->inputBufferFileFd);
            if (bytes_read < (int)read_len)
            {
                DEBUG_PRINT_ALWS("ReadByte(%d) < NeedByte(%ld), stream send over!\n", bytes_read, read_len);
-               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
            }
-           
+
            if (0 == pOmxTestInfo->frame_flag)
            {
                pOmxTestInfo->send_cnt++;
@@ -368,7 +460,7 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
     {	/* 当按帧大小送流时，从tidx文件读取每次送流的大小 */
         if (true == pOmxTestInfo->frame_in_packet)
         {
-           if  (0 != pOmxTestInfo->stContext.stFrameInfotidx[pOmxTestInfo->send_cnt].s32FrameSize) 
+           if  (0 != pOmxTestInfo->stContext.stFrameInfotidx[pOmxTestInfo->send_cnt].s32FrameSize)
            {
                read_len = pOmxTestInfo->stContext.stFrameInfotidx[pOmxTestInfo->send_cnt].s32FrameSize;
                //DEBUG_PRINT_ALWS("L%d: send_cnt = %d, read_len = %d\n", __LINE__,pOmxTestInfo->send_cnt, read_len);
@@ -381,15 +473,15 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
                lseek(pOmxTestInfo->inputBufferFileFd, frame_offset, 0);
            }
          #endif
-           
+
            bytes_read = fread(pBuffer, 1, read_len, pOmxTestInfo->inputBufferFileFd);
            //DEBUG_PRINT_ALWS("Frame Stream bytes_read: %d\n", bytes_read);
            if (bytes_read < (int)read_len)
            {
                DEBUG_PRINT_ALWS("ReadByte(%d) < FrameSize(%ld), stream send over!\n", bytes_read, read_len);
-               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
            }
-    
+
            if (0 == pOmxTestInfo->send_cnt)
            {
                if (CODEC_FORMAT_VC1SMP == pOmxTestInfo->codec_format_option
@@ -398,16 +490,16 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
                    pBufHdr->nFlags |= OMX_BUFFERFLAG_CODECCONFIG;
                }
            }
-           
+
            //DEBUG_PRINT_ALWS("Frame Stream send: %d\n", pOmxTestInfo->send_cnt);
            pBufHdr->nFlags |= OMX_BUFFERFLAG_ENDOFFRAME;
            pOmxTestInfo->send_cnt++;
-    
+
            if (pOmxTestInfo->stContext.stFrameInfotidx[pOmxTestInfo->send_cnt].s32FrameNum <= 0)
            {
-               DEBUG_PRINT_ALWS("FrameNum(%d) in FrameInfo invalid, stream send over!\n", 
+               DEBUG_PRINT_ALWS("FrameNum(%d) in FrameInfo invalid, stream send over!\n",
 			   	                 pOmxTestInfo->stContext.stFrameInfotidx[pOmxTestInfo->send_cnt].s32FrameNum);
-               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+               pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
            }
         }
         else
@@ -415,22 +507,42 @@ static int Read_Buffer_from_EsRawStream (OmxTestInfo_S * pOmxTestInfo, OMX_BUFFE
             bytes_read = fread(pBuffer, 1, pBufHdr->nAllocLen, pOmxTestInfo->inputBufferFileFd);
             if (bytes_read < (int)pBufHdr->nAllocLen)
             {
-                DEBUG_PRINT_ALWS("ReadByte(%d) < AllocLen(%d), stream send over!\n", bytes_read, pBufHdr->nAllocLen);
-                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;  
+                DEBUG_PRINT_ALWS("ReadByte(%d) < AllocLen(%lu), stream send over!\n", bytes_read, pBufHdr->nAllocLen);
+                pBufHdr->nFlags |= OMX_BUFFERFLAG_EOS;
             }
             //DEBUG_PRINT_ALWS("Random Stream send: %d\n", send_cnt);
             pOmxTestInfo->send_cnt++;
         }
     }
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (1 == pOmxTestInfo->tvp_option && bytes_read > 0)
     {
-        pBuffer = (OMX_U8*)pOmxTestInfo->pCAStreamBuf.user_viraddr;
-        HI_SEC_MMZ_CA2TA((unsigned long)(pOmxTestInfo->pCAStreamBuf.phyaddr),(unsigned long)(pBufHdr->pBuffer), bytes_read);
+        TEEC_Result result;
+        TEEC_Operation operation;
+
+        operation.started = 1;
+        operation.paramTypes = TEEC_PARAM_TYPES(TEEC_VALUE_INOUT, TEEC_VALUE_INPUT, TEEC_NONE, TEEC_NONE);
+        operation.params[0].value.a = (HI_U32)(pOmxTestInfo->pCAStreamBuf.phyaddr);
+        operation.params[0].value.b = (HI_U32)(pBufHdr->pBuffer);
+        operation.params[1].value.a = bytes_read;
+        operation.params[1].value.b = TEEC_VALUE_UNDEF;
+
+        DEBUG_PRINT_ERROR("\n\n\n------ca phy:0x%x  sec vir:0x%p len:%d -----\n", (pOmxTestInfo->pCAStreamBuf.phyaddr), pBufHdr->pBuffer, bytes_read);
+
+        result = TEEC_InvokeCommand(&g_teeSession, TEEC_CMD_COM_CA2TA_DATA, &operation, HI_NULL);
+        if (TEEC_SUCCESS != result)
+        {
+            DEBUG_PRINT_ERROR("sec memcpy Failed!\n");
+            exit(0);
+        }
+
+        DEBUG_PRINT_ERROR("RawPlay sec memcpy 2\n");
     }
+
 #endif
 
+EXIT:
 	return bytes_read;
 }
 
@@ -450,7 +562,7 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 	OmxTestInfo_S *pOmxTestInfo = NULL;
 
 	int index = 0;
-	
+
 	for (index = 0; index < g_TestInstNum; index++)
 	{
 		if (OmxTestInfo[index].dec_handle == (OMX_COMPONENTTYPE *)hComponent)
@@ -465,7 +577,7 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 		DEBUG_PRINT_ERROR("invalid parameter!\n");
 		return OMX_ErrorBadParameter;
 	}
-	
+
 	switch(eEvent)
 	{
 	case OMX_EventCmdComplete:
@@ -474,16 +586,16 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 
 	    if(OMX_CommandPortDisable == (OMX_COMMANDTYPE)nData1)
 	    {
-	        printf("*********************************************\n");
-	        printf("Recieved DISABLE Event Command Complete[%d]\n",nData2);
-	        printf("*********************************************\n");
+            DEBUG_PRINT("*********************************************\n");
+            DEBUG_PRINT("Recieved DISABLE Event Command Complete[%d]\n",nData2);
+            DEBUG_PRINT("*********************************************\n");
     		event_complete(pOmxTestInfo, nData1);
 	    }
 	    else if(OMX_CommandPortEnable == (OMX_COMMANDTYPE)nData1)
 	    {
-	        printf("*********************************************\n");
-	        printf("Recieved ENABLE Event Command Complete[%d]\n",nData2);
-	        printf("*********************************************\n");
+            DEBUG_PRINT("*********************************************\n");
+            DEBUG_PRINT("Recieved ENABLE Event Command Complete[%d]\n",nData2);
+            DEBUG_PRINT("*********************************************\n");
 
 		//pthread_mutex_lock(&enable_lock);
 	        pOmxTestInfo->sent_disabled = 0;
@@ -492,31 +604,31 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 	    }
 	    else if(OMX_CommandFlush == (OMX_COMMANDTYPE)nData1)
 	    {
-	        printf("*********************************************\n");
-	        printf("Received FLUSH Event Command Complete[%d]\n",nData2);
-	        printf("*********************************************\n");
+            DEBUG_PRINT("*********************************************\n");
+            DEBUG_PRINT("Received FLUSH Event Command Complete[%d]\n",nData2);
+            DEBUG_PRINT("*********************************************\n");
 
 			if (nData2 == 0) {
-				printf("**** Flush In Complete ****\n");
+                DEBUG_PRINT("**** Flush In Complete ****\n");
 				pOmxTestInfo->flush_input_progress = 0;
 				sem_post(&pOmxTestInfo->in_flush_sem);
 			}
 			else if (nData2 == 1) {
-				printf("**** Flush Out Complete ****\n");
+                DEBUG_PRINT("**** Flush Out Complete ****\n");
 				pOmxTestInfo->flush_output_progress = 0;
 				sem_post(&pOmxTestInfo->out_flush_sem);
 			}
-            
+
     	    if (!pOmxTestInfo->flush_input_progress && !pOmxTestInfo->flush_output_progress)
-            {   
+            {
             	event_complete(pOmxTestInfo, nData1);
             }
 	    }
         else
         {
-	        printf("*********************************************\n");
-	        printf("Received Event Command %d Complete[%d]\n",nData1, nData2);
-	        printf("*********************************************\n");
+            DEBUG_PRINT("*********************************************\n");
+            DEBUG_PRINT("Received Event Command %d Complete[%d]\n",nData1, nData2);
+            DEBUG_PRINT("*********************************************\n");
             event_complete(pOmxTestInfo, nData1);
         }
 
@@ -524,9 +636,9 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 
 	case OMX_EventError:
 
-	    printf("*********************************************\n");
-	    printf("Received OMX_EventError Event Command ! Error = 0x%x\n", nData1);
-	    printf("*********************************************\n");
+        DEBUG_PRINT("*********************************************\n");
+        DEBUG_PRINT("Received OMX_EventError Event Command ! Error = 0x%x\n", nData1);
+        DEBUG_PRINT("*********************************************\n");
 
 	    pOmxTestInfo->currentStatus = ERROR_STATE;
 
@@ -544,12 +656,12 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 		}
 
 		event_complete(pOmxTestInfo, -1);
-		
+
 		break;
 
 	case OMX_EventPortSettingsChanged:
 
-	    printf("OMX_EventPortSettingsChanged\n");
+        DEBUG_PRINT("OMX_EventPortSettingsChanged\n");
 
         pOmxTestInfo->preStatus = pOmxTestInfo->currentStatus;
 	    pOmxTestInfo->currentStatus = PORT_SETTING_CHANGE_STATE;
@@ -569,23 +681,23 @@ OMX_ERRORTYPE EventHandler(OMX_IN OMX_HANDLETYPE hComponent,
 			if (!g_PrintAlready)
 			{
     			int spend_time_ms = 0;
-    		
+
     			for (index = 0; index < g_TestInstNum; index++)
     			{
     				OmxTestInfo[index].stop_time = GetTimeInMs();
-    
+
     				if (OmxTestInfo[index].stop_time > OmxTestInfo[index].start_time)
     				{
     					spend_time_ms = OmxTestInfo[index].stop_time - OmxTestInfo[index].start_time;
-    				
+
     					DEBUG_PRINT_ALWS("INSTANCE NO:%d fram rate:%f\n", OmxTestInfo[index].inst_no,\
     					   		         (float)(OmxTestInfo[index].receive_frame_cnt*1000)/spend_time_ms);
     				}
     			}
 				g_PrintAlready = true;
 			}
-		#endif	
-            printf("Inst %d receive last frame, thank you!\n", pOmxTestInfo->inst_no);		
+		#endif
+            DEBUG_PRINT_ALWS("Inst %d receive last frame\n", pOmxTestInfo->inst_no);
 	    }
 	    else
 	    {
@@ -607,13 +719,10 @@ OMX_ERRORTYPE EmptyBufferDone(OMX_IN OMX_HANDLETYPE hComponent,
                               OMX_IN OMX_BUFFERHEADERTYPE* pBuffer)
 {
 	int index     = 0;
-	int readBytes = 0; 
-    int bufCnt    = 0;
-	OMX_ERRORTYPE result;
 	OmxTestInfo_S *pOmxTestInfo = NULL;
 
     DEBUG_PRINT("Enter %s\n", __FUNCTION__);
-	
+
 	for (index = 0; index < g_TestInstNum; index++)
 	{
 		if (OmxTestInfo[index].dec_handle == (OMX_COMPONENTTYPE *)hComponent)
@@ -628,9 +737,9 @@ OMX_ERRORTYPE EmptyBufferDone(OMX_IN OMX_HANDLETYPE hComponent,
 		DEBUG_PRINT_ERROR("invalid parameter!\n");
 		return OMX_ErrorBadParameter;
 	}
-    
+
     pOmxTestInfo->free_ip_buf_cnt++;
-    
+
 	if(pOmxTestInfo->bInputEosReached)
 	{
 		DEBUG_PRINT("EBD: Input EoS Reached.\n");
@@ -642,13 +751,13 @@ OMX_ERRORTYPE EmptyBufferDone(OMX_IN OMX_HANDLETYPE hComponent,
 		DEBUG_PRINT("EBD: Seeking Pending.\n");
 		return OMX_ErrorNone;
 	}
-    
+
     if(pOmxTestInfo->flush_input_progress)
     {
         DEBUG_PRINT("EBD: Input Flushing.\n");
 		return OMX_ErrorNone;
     }
-    
+
 	pthread_mutex_lock(&pOmxTestInfo->etb_lock);
 	if(push(pOmxTestInfo->etb_queue, (void *) pBuffer) < 0)
 	{
@@ -671,14 +780,14 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
 	* In case that there is no dynamic port setting, OMX will not call event cb,
 	* instead OMX will send empty this buffer directly and we need to clear an event here
 	*/
-    int ms;
-    
+    //int ms;
+
 	OmxTestInfo_S *pOmxTestInfo = NULL;
-	
+
 	int index = 0;
-	
+
     DEBUG_PRINT("Enter %s\n", __FUNCTION__);
-	   
+
 	for (index = 0; index < g_TestInstNum; index++)
 	{
 		if (OmxTestInfo[index].dec_handle == (OMX_COMPONENTTYPE *)hComponent)
@@ -693,45 +802,47 @@ OMX_ERRORTYPE FillBufferDone(OMX_OUT OMX_HANDLETYPE hComponent,
 		DEBUG_PRINT_ERROR("invalid parameter!\n");
 		return OMX_ErrorBadParameter;
 	}
-	
+
     DEBUG_PRINT("Fill buffer done\n");
-    
+
 	pOmxTestInfo->free_op_buf_cnt++;
-    
+
     if (pBuffer->nFilledLen != 0)
     {
         gettimeofday(&pOmxTestInfo->t_cur_get, NULL);
+        /*
         if (pOmxTestInfo->receive_frame_cnt == 0 )
         {
             ms = (pOmxTestInfo->t_cur_get.tv_sec - pOmxTestInfo->t_first_send.tv_sec)*1000 +
-            	(pOmxTestInfo->t_cur_get.tv_usec - pOmxTestInfo->t_first_send.tv_usec)/1000;
+                (pOmxTestInfo->t_cur_get.tv_usec - pOmxTestInfo->t_first_send.tv_usec)/1000;
             //DEBUG_PRINT_ALWS("\nREPORT: first frame delay time:%dms\n\n", ms);
         }
         else
         {
             ms = (pOmxTestInfo->t_cur_get.tv_sec - pOmxTestInfo->t_last_get.tv_sec)*1000 +
-            	(pOmxTestInfo->t_cur_get.tv_usec - pOmxTestInfo->t_last_get.tv_usec)/1000;
+                (pOmxTestInfo->t_cur_get.tv_usec - pOmxTestInfo->t_last_get.tv_usec)/1000;
             //DEBUG_PRINT_ALWS("REPORT: this frame use time:%dms\n", ms);
         }
-		
-	#ifdef CalcFrameRate
-		if (pOmxTestInfo->receive_frame_cnt == 0)
-		{
-			pOmxTestInfo->start_time = GetTimeInMs();
-		}
-	#endif
-	
-        DEBUG_PRINT_ALWS("Inst %d: Frame %d\n", pOmxTestInfo->inst_no, pOmxTestInfo->receive_frame_cnt);
+        */
+
+    #ifdef CalcFrameRate
+        if (pOmxTestInfo->receive_frame_cnt == 0)
+        {
+            pOmxTestInfo->start_time = GetTimeInMs();
+        }
+    #endif
+
+        DEBUG_PRINT_ALWS("Receive Inst %d: Frame %d\n", pOmxTestInfo->inst_no, pOmxTestInfo->receive_frame_cnt);
 
         pOmxTestInfo->receive_frame_cnt++;
     }
-    
+
     if (pOmxTestInfo->flush_output_progress)
     {
         DEBUG_PRINT("FBD: Output Flushing.\n");
 		return OMX_ErrorNone;
     }
-  
+
 	pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
 
 	if (!pOmxTestInfo->sent_disabled)
@@ -775,11 +886,9 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	OMX_ERRORTYPE omxresult;
 	OMX_U32 total = 0;
 	OMX_U32 i = 0, is_found = 0;
-	long bufCnt = 0;
 
-    char vdecCompNames[40] = "OMX.hisi.video.decoder";
+    char vdecCompNames[MAX_COMP_NAME_LEN];// = "OMX.hisi.video.decoder";
 	char compRole[OMX_MAX_STRINGNAME_SIZE];
-	int roles;
 
 	OMX_CALLBACKTYPE call_back = {
 		&EventHandler,
@@ -796,7 +905,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 		DEBUG_PRINT_ERROR("Failed to Init OpenMAX core\n");
 		return -1;
 	}
-    
+
 	DEBUG_PRINT("OpenMAX Core Init sucess!\n");
 
     /* CodecType Relative */
@@ -905,8 +1014,9 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 		DEBUG_PRINT_ERROR("Error: Unsupported codec %d\n", pOmxTestInfo->codec_format_option);
 		return -1;
 	}
-    
-#ifdef HI_TVP_SUPPORT
+    get_componet_name_by_role(vdecCompNames, compRole);
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (1 == pOmxTestInfo->tvp_option)
     {
         strncat(vdecCompNames, ".secure", 10);
@@ -1018,11 +1128,10 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
     /* CodecType Relative */
     OMX_VIDEO_PARAM_VP6TYPE vp6_param;
     OMX_VIDEO_PARAM_VC1TYPE vc1_param;
-    OMX_VIDEO_PARAM_WMVTYPE wmv_param;
     OMX_VIDEO_PARAM_RVTYPE  rv_param;
     if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_VP6)
-	{  
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param); 
+	{
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1039,8 +1148,8 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
         }
 	}
     else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_VP6F)
-	{  
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param); 
+	{
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1058,7 +1167,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	}
 	else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_VP6A)
 	{
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param); 
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVp6, &vp6_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1076,7 +1185,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	}
 	else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_VC1AP)
 	{
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVC1, &vc1_param); 
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVC1, &vc1_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1094,7 +1203,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	}
 	else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_VC1SMP)
 	{
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVC1, &vc1_param); 
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoVC1, &vc1_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1112,7 +1221,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	}
 	else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_REAL8)
 	{
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoRv, &rv_param); 
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoRv, &rv_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1130,7 +1239,7 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 	}
 	else if (pOmxTestInfo->codec_format_option == CODEC_FORMAT_REAL9)
 	{
-        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoRv, &rv_param); 
+        omxresult = OMX_GetParameter(pOmxTestInfo->dec_handle, OMX_IndexParamVideoRv, &rv_param);
         if(FAILED(omxresult))
         {
             DEBUG_PRINT_ERROR("L%d: ERROR - Failed to get Parameter!\n", __LINE__);
@@ -1154,12 +1263,13 @@ static int Init_Decoder(OmxTestInfo_S * pOmxTestInfo)
 static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
 {
 	OMX_VIDEO_PARAM_PORTFORMATTYPE videoportFmt = {0};
-	int i, bufCnt, index = 0;
+    int bufCnt, index = 0;
 	int frameSize = 0;
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
-	OMX_BUFFERHEADERTYPE* pBuffer = NULL;
 	OMX_STATETYPE state = OMX_StateMax;
+#ifdef SupportNative
     OMX_INDEXTYPE index_type;
+#endif
 
 	DEBUG_PRINT("Inside %s\n", __FUNCTION__);
 
@@ -1212,7 +1322,7 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
     {
        pOmxTestInfo->portFmt.nBufferSize = (unsigned int)(250 << 10);
     }*/
-    
+
     //pOmxTestInfo->portFmt.nBufferSize = (unsigned int)(20 << 10);
     //pOmxTestInfo->portFmt.nBufferCountActual = 8;
 	OMX_SetParameter(pOmxTestInfo->dec_handle,OMX_IndexParamPortDefinition, &pOmxTestInfo->portFmt);
@@ -1301,7 +1411,7 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
        }
        DEBUG_PRINT("OMX_AllocateBuffer Output buffer success\n");
    }
-       
+
 #ifdef SupportNative
    else
    {
@@ -1312,12 +1422,12 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
 		    do_freeHandle_and_clean_up(pOmxTestInfo, true);
             return -1;
         }
-        
+
         EnableAndroidNativeBuffersParams param_data;
         param_data.nPortIndex = pOmxTestInfo->portFmt.nPortIndex;
         param_data.bEnable = true;
         OMX_SetParameter(pOmxTestInfo->dec_handle, index_type, &param_data);
-        
+
         error = OMX_GetExtensionIndex(pOmxTestInfo->dec_handle, UseAndroidNativeBuffer2, &index_type);
         if (error != OMX_ErrorNone)
         {
@@ -1325,7 +1435,7 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
 		    do_freeHandle_and_clean_up(pOmxTestInfo, true);
             return -1;
         }
-   
+
         error = Use_Buffers(pOmxTestInfo->dec_handle, &pOmxTestInfo->pOutYUVBufHdrs, pOmxTestInfo->portFmt.nPortIndex, \
 			                pOmxTestInfo->portFmt.nBufferCountActual, pOmxTestInfo->portFmt.nBufferSize);
         if (error != OMX_ErrorNone)
@@ -1432,10 +1542,10 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
 		pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags = 0;
 
 		frameSize = Read_Buffer_from_EsRawStream(pOmxTestInfo, pOmxTestInfo->pInputBufHdrs[bufCnt]);
-        
+
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFilledLen = frameSize;
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
-        
+
         //DEBUG_PRINT_ALWS("%s: Timestamp sent(%lld)\n", __func__, pOmxTestInfo->pInputBufHdrs[bufCnt]->nTimeStamp);
 
 		ret = OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pInputBufHdrs[bufCnt]);
@@ -1454,7 +1564,7 @@ static int Play_Decoder(OmxTestInfo_S * pOmxTestInfo)
 			DEBUG_PRINT("OMX_EmptyThisBuffer success!\n");
             pOmxTestInfo->free_ip_buf_cnt--;
 		}
-        
+
 		if (pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags & OMX_BUFFERFLAG_EOS)
 		{
 			pOmxTestInfo->bInputEosReached = true;
@@ -1530,9 +1640,6 @@ static int get_next_command(OmxTestInfo_S * pOmxTestInfo, FILE *seq_file)
 
 static int process_current_command(OmxTestInfo_S * pOmxTestInfo, const char *seq_command)
 {
-	char *data_str = NULL;
-	unsigned int data = 0, bufCnt = 0, i = 0;
-	int frameSize;
 
     if (pOmxTestInfo->currentStatus == PORT_SETTING_CHANGE_STATE)
     {
@@ -1640,7 +1747,7 @@ static int process_current_command(OmxTestInfo_S * pOmxTestInfo, const char *seq
 static void* ebd_thread(void* pArg)
 {
 	OmxTestInfo_S * pOmxTestInfo = (OmxTestInfo_S *)pArg;
-	
+
 	while(pOmxTestInfo->currentStatus != ERROR_STATE)
 	{
 		int readBytes =0;
@@ -1665,7 +1772,7 @@ static void* ebd_thread(void* pArg)
 
         if (pOmxTestInfo->bInputEosReached)
             continue;
-        
+
 		pthread_mutex_lock(&pOmxTestInfo->etb_lock);
 		pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->etb_queue);
 		pthread_mutex_unlock(&pOmxTestInfo->etb_lock);
@@ -1680,26 +1787,26 @@ static void* ebd_thread(void* pArg)
 
 		pBuffer->nOffset = 0;
         pBuffer->nFlags  = 0;
-        
+
         readBytes = Read_Buffer_from_EsRawStream(pOmxTestInfo, pBuffer);
-        
+
 		if(pOmxTestInfo->seeking_progress)
 		{
 		    DEBUG_PRINT("Read es done meet seeking.\n");
 			continue;
 		}
-        
+
 		if(pOmxTestInfo->flush_input_progress)
 		{
 		    DEBUG_PRINT("Read es done meet input flushing.\n");
 			continue;
 		}
-        
+
         if (pOmxTestInfo->ebd_thread_exit)
         {
             break;
         }
-            
+
 		if(readBytes > 0)
 		{
 			DEBUG_PRINT("%s: Timestamp sent(%lld)\n", __func__, pBuffer->nTimeStamp);
@@ -1713,12 +1820,12 @@ static void* ebd_thread(void* pArg)
 			DEBUG_PRINT("EBD::Either EOS or Some Error while reading file\n");
 			pOmxTestInfo->bInputEosReached = true;
 		}
-        
+
 		pBuffer->nFilledLen = readBytes;
 		OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle,pBuffer);
         pOmxTestInfo->free_ip_buf_cnt--;
 	}
-    
+
     pOmxTestInfo->EtbStatus = THREAD_INVALID;
 
 	return NULL;
@@ -1735,7 +1842,7 @@ static void* fbd_thread(void* pArg)
 	while(pOmxTestInfo->currentStatus != ERROR_STATE)
 	{
         pOmxTestInfo->FtbStatus = THREAD_WAITING;
-        
+
 		if(pOmxTestInfo->flush_output_progress)
 		{
 			sem_wait(&pOmxTestInfo->out_flush_sem);
@@ -1751,15 +1858,15 @@ static void* fbd_thread(void* pArg)
         if (pOmxTestInfo->currentStatus == PORT_SETTING_CHANGE_STATE)
         {
 			pOmxTestInfo->currentStatus = PORT_SETTING_RECONFIG_STATE;
-            printf("\nRECONFIG OP PORT\n\n");
+            DEBUG_PRINT("\nRECONFIG OP PORT\n\n");
             if (output_port_reconfig(pOmxTestInfo) != 0)
             {
-                printf("ERROR: While Reconfig OP...\n");
+                DEBUG_PRINT("ERROR: While Reconfig OP...\n");
                 pOmxTestInfo->currentStatus = pOmxTestInfo->preStatus;
                 do_freeHandle_and_clean_up(pOmxTestInfo, true);
                 break;
             }
-            printf("\nRECONFIG OP PORT DONE!\n\n");
+            DEBUG_PRINT("\nRECONFIG OP PORT DONE!\n\n");
             pOmxTestInfo->currentStatus = pOmxTestInfo->preStatus;
         }
 
@@ -1777,7 +1884,7 @@ static void* fbd_thread(void* pArg)
 			DEBUG_PRINT("Info - No pBuffer to dequeue\n");
 			continue;
 		}
-        
+
         pOmxTestInfo->FtbStatus = THREAD_RUNNING;
 
 		/********************************************************************/
@@ -1787,27 +1894,27 @@ static void* fbd_thread(void* pArg)
 		if (pOmxTestInfo->flush_output_progress)
 		{
         #if 0  // continue to send buffer after output flush
-            
+
     			pBuffer->nFilledLen = 0;
     			pBuffer->nFlags &= ~OMX_BUFFERFLAG_EXTRADATA;
-    
+
     			pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
-    
+
     			if(push(pOmxTestInfo->fbd_queue, (void *)pBuffer) < 0)
     			{
     				DEBUG_PRINT_ERROR("Error in enqueueing fbd_data\n");
     			}
     			else
-                {         
+                {
     				sem_post(&pOmxTestInfo->ftb_sem);
                 }
     			pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
-            
+
         #else  // not send buffer after output flush
-            
+
 	        DEBUG_PRINT("Fill this buffer meet output flushing.\n");
 		    continue;
-                
+
         #endif
 		}
         else if (pOmxTestInfo->seeking_progress)
@@ -1824,7 +1931,7 @@ static void* fbd_thread(void* pArg)
 			}
 		}
     }
-    
+
     pOmxTestInfo->FtbStatus = THREAD_INVALID;
 
 	return NULL;
@@ -1836,7 +1943,7 @@ static void* fbd_thread(void* pArg)
 void SignalHandle(int sig)
 {
 	int i = 0;
-    
+
 	printf("Signal Handle - I got signal %d\n", sig);
 	(void) signal(SIGINT,SIG_IGN);
 
@@ -1859,7 +1966,7 @@ static void Init_OmxInst()
 	memset(OmxTestInfo, 0, g_TestInstNum * sizeof(OmxTestInfo_S));
 
 	for (i = 0; i < g_TestInstNum; i++)
-	{   
+	{
     	OmxTestInfo[i].timestampInterval = 33333;
     	OmxTestInfo[i].currentStatus = GOOD_STATE;
 
@@ -1900,7 +2007,7 @@ int get_resolution(char *pFileName, int *pWidth, int *pHeight)
             *pHeight  = atoi(tmpBuf);
             found_num = 1;
         }
-        
+
         if ('_' == pFileName[i] && found_num)
         {
             strncpy(tmpBuf, &pFileName[i+1], 4);
@@ -1932,7 +2039,7 @@ int is_framepacket_standard(codec_format format)
      || CODEC_FORMAT_VC1SMP   == format
      || CODEC_FORMAT_SORENSON == format
      || CODEC_FORMAT_REAL8    == format
-     || CODEC_FORMAT_REAL9    == format 
+     || CODEC_FORMAT_REAL9    == format
      || CODEC_FORMAT_VP9      == format )
     {
         return 1;
@@ -1962,17 +2069,67 @@ int is_tidx_file_exist(char *psrc_file)
     }
 }
 
+
+#ifdef HI_OMX_TEE_SUPPORT
+
+HI_S32 InitSecEnvironment(HI_VOID)
+{
+    DEBUG_PRINT_ERROR("%s enter \n", __func__);
+
+    TEEC_Result result;
+    uint32_t origin;
+    TEEC_UUID svc_id = {0x0D0D0D0D, 0x0D0D, 0x0D0D,
+                        {0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D}
+                       };
+
+    TEEC_Operation session_operation;
+
+    memset(&session_operation, 0, sizeof(TEEC_Operation));
+
+    session_operation.started = 1;
+    session_operation.paramTypes = TEEC_PARAM_TYPES(
+                               TEEC_NONE,
+                               TEEC_NONE,
+                               TEEC_MEMREF_TEMP_INPUT,
+                               TEEC_MEMREF_TEMP_INPUT);
+
+    if (TEEC_InitializeContext(HI_NULL, &g_TeeContext) != TEEC_SUCCESS)
+    {
+        DEBUG_PRINT_ERROR("TEEC_InitializeContext Failed!\n");
+        return HI_FAILURE;
+    }
+
+    result = TEEC_OpenSession(&g_TeeContext, &g_teeSession, &svc_id, TEEC_LOGIN_IDENTIFY, HI_NULL, &session_operation, &origin);
+    if (result != TEEC_SUCCESS)
+    {
+        DEBUG_PRINT_ERROR("TEEC_OpenSession Failed!\n");
+        TEEC_FinalizeContext(&g_TeeContext);
+
+        exit(0);
+    }
+
+    DEBUG_PRINT_ERROR("%s exit \n", __func__);
+
+    return HI_SUCCESS;
+}
+
+
+HI_VOID DeInitSecEnvironment(HI_VOID)
+{
+    TEEC_CloseSession(&g_teeSession);
+
+    TEEC_FinalizeContext(&g_TeeContext);
+}
+
+#endif
+
 int main(int argc, char **argv)
 {
 	int i = 0;
-	int bufCnt = 0;
-	int num = 0;
 
 	int width = 0;
 	int height = 0;
 
-	int pic_order = 0;
-	OMX_ERRORTYPE result;
 
 	if (argc > MAX_INST_NUM + 1)
 	{
@@ -1982,15 +2139,15 @@ int main(int argc, char **argv)
 	}
 
 	g_TestInstNum = argc - 1;
-	
+
 	Init_OmxInst();
 
 	for (i = 0; i < g_TestInstNum; i++)
-	{	
+	{
 		OmxTestInfo[i].inst_no = i; //记录实例号
     	strncpy(OmxTestInfo[i].in_filename, argv[i+1], strlen(argv[i+1])+1);
     	printf("Input values: inputfilename[%s]\n", OmxTestInfo[i].in_filename);
-    
+
         if (get_resolution(OmxTestInfo[i].in_filename, &width, &height) == 0)
         {
             if (width*height <= MAX_WIDTH*MAX_HEIGHT && width > 0 && height > 0)
@@ -2000,7 +2157,7 @@ int main(int argc, char **argv)
                 printf("get_resolution: width=%d, height=%d\n", OmxTestInfo[i].width, OmxTestInfo[i].height);
             }
         }
-    
+
         /* 1. Set Codec Format */
     	printf("Command line argument is available\n");
     	printf("*********************************************\n");
@@ -2026,16 +2183,16 @@ int main(int argc, char **argv)
     	printf("17--> HEVC\n");
     	printf("18--> MVC\n");
     	printf("19--> VP9\n");
-    
+
     	fflush(stdin);
     	scanf("%d", (int *)(&OmxTestInfo[i].codec_format_option));
-    
+
     	if (OmxTestInfo[i].codec_format_option >= CODEC_FORMAT_MAX)
     	{
     		printf("Wrong test case...[%d]\n", OmxTestInfo[i].codec_format_option);
     		return -1;
     	}
-    
+
     #ifdef EnableSetColor
         /* 2. Set Color Format */
         printf("Set Output Color Format:\n");
@@ -2056,53 +2213,52 @@ int main(int argc, char **argv)
                 return -1;
         }
     #endif
-     
+
     #ifdef SupportNative
-        printf("*********************************************\n");
-     	printf("please enter alloc/use option for Instance [%d]\n", i);
-     	printf("*********************************************\n");
-     	printf("0--> Alloc Buffers\n");
-     	printf("1--> Use Buffers\n");
-     
+        DEBUG_PRINT_ALWS("*********************************************\n");
+         DEBUG_PRINT_ALWS("please enter alloc/use option for Instance [%d]\n", i);
+         DEBUG_PRINT_ALWS("*********************************************\n");
+         DEBUG_PRINT_ALWS("0--> Alloc Buffers\n");
+         DEBUG_PRINT_ALWS("1--> Use Buffers\n");
+
      	fflush(stdin);
      	scanf("%d", &(OmxTestInfo[i].alloc_use_option));
-     
+
      	fflush(stdin);
      	if (OmxTestInfo[i].alloc_use_option != 0 && OmxTestInfo[i].alloc_use_option != 1)
      	{
-     		printf("Wrong test option...[%d]\n", OmxTestInfo[i].alloc_use_option);
+             DEBUG_PRINT_ERROR("Wrong test option...[%d]\n", OmxTestInfo[i].alloc_use_option);
      		return -1;
      	}
     #endif
-    
-    #ifdef HI_TVP_SUPPORT
-        printf("*********************************************\n");
-        printf("please enter tvp option for Instance [%d]\n", i);
-        printf("*********************************************\n");
-        printf("0 --> disable tvp option.\n");
-        printf("1 --> enable  tvp option.\n");
+    #ifdef HI_OMX_TEE_SUPPORT
+        DEBUG_PRINT_ALWS("*********************************************\n");
+        DEBUG_PRINT_ALWS("please enter tvp option for Instance [%d]\n", i);
+        DEBUG_PRINT_ALWS("*********************************************\n");
+        DEBUG_PRINT_ALWS("0 --> disable tvp option.\n");
+        DEBUG_PRINT_ALWS("1 --> enable  tvp option.\n");
         fflush(stdin);
         scanf("%d", &(OmxTestInfo[i].tvp_option));
         fflush(stdin);
      	if (OmxTestInfo[i].tvp_option != 0 && OmxTestInfo[i].tvp_option != 1)
      	{
-     		printf("Wrong tvp option...[%d]\n", OmxTestInfo[i].tvp_option);
+             DEBUG_PRINT_ERROR("Wrong tvp option...[%d]\n", OmxTestInfo[i].tvp_option);
      		return -1;
      	}
     #endif
-    
+
     #ifdef EnableTest
-        printf("*********************************************\n");
-       	printf("please enter test option for Instance [%d]\n", i);
-    	printf("*********************************************\n");
-    	printf("0 --> Play the clip till the end\n");
-    	printf("1 --> Run compliance test. Do NOT expect any display for most option.\n");
-    	printf("Please only see \"TEST SUCCESSFULL\"to indicate test pass\n");
-    	fflush(stdin);
+        DEBUG_PRINT_ALWS("*********************************************\n");
+           DEBUG_PRINT_ALWS("please enter test option for Instance [%d]\n", i);
+        DEBUG_PRINT_ALWS("*********************************************\n");
+        DEBUG_PRINT_ALWS("0 --> Play the clip till the end\n");
+        DEBUG_PRINT_ALWS("1 --> Run compliance test. Do NOT expect any display for most option.\n");
+        DEBUG_PRINT_ALWS("Please only see \"TEST SUCCESSFULL\"to indicate test pass\n");
+        DEBUG_PRINT_ALWS(stdin);
         scanf("%d", &(OmxTestInfo[i].test_option));
        	fflush(stdin);
     #endif
-    
+
         /* 3. Set Extra Option */
         if (is_framepacket_standard(OmxTestInfo[i].codec_format_option))
         {
@@ -2116,7 +2272,7 @@ int main(int argc, char **argv)
                 OmxTestInfo[i].frame_in_packet = 0;
                 OmxTestInfo[i].readsize_add_in_stream = true;
             }
-        } 
+        }
 
         /* CodecType Relative */
     	switch (OmxTestInfo[i].codec_format_option)
@@ -2185,7 +2341,7 @@ int main(int argc, char **argv)
         	DEBUG_PRINT_ERROR("Error: Unknown code %d\n", OmxTestInfo[i].codec_format_option);
         	return -1;
     	}
-        
+
     	if (OmxTestInfo[i].test_option == 1)
     	{
     		printf("*********************************************\n");
@@ -2195,7 +2351,7 @@ int main(int argc, char **argv)
     		printf("2 --> Call Free Handle at the OMX_StateIdle\n");
     		printf("3 --> Call Free Handle at the OMX_StateExecuting\n");
     		printf("4 --> Call Free Handle at the OMX_StatePause\n");
-    
+
     		fflush(stdin);
     		scanf("%d", (int *)(&OmxTestInfo[i].freeHandle_option));
     		fflush(stdin);
@@ -2204,49 +2360,49 @@ int main(int argc, char **argv)
     	{
     		OmxTestInfo[i].freeHandle_option = (freeHandle_test)0;
     	}
-    
+
     	DEBUG_PRINT("*********get cmd line ok! *******\n");
 
      	pthread_cond_init(&(OmxTestInfo[i].event_cond), 0);
      	pthread_mutex_init(&OmxTestInfo[i].event_lock, 0);
      	pthread_mutex_init(&OmxTestInfo[i].etb_lock, 0);
      	pthread_mutex_init(&OmxTestInfo[i].ftb_lock, 0);
-     
+
      	if (-1 == sem_init(&OmxTestInfo[i].etb_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
-     
+
      	if (-1 == sem_init(&OmxTestInfo[i].ftb_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
-     
+
      	if (-1 == sem_init(&OmxTestInfo[i].in_flush_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
-     
+
      	if (-1 == sem_init(&OmxTestInfo[i].out_flush_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
-     
+
      	if (-1 == sem_init(&OmxTestInfo[i].seek_sem, 0, 0))
      	{
      		DEBUG_PRINT("Error - sem_init failed %d\n", errno);
      	}
-     
+
         /* 注册ctrl c 函数 */
         (void) signal(SIGINT, SignalHandle);
-          
+
      	OmxTestInfo[i].etb_queue = alloc_queue();
      	if (OmxTestInfo[i].etb_queue == NULL)
      	{
      		DEBUG_PRINT_ERROR("Error in Creating etb_queue\n");
      		return -1;
      	}
-     
+
      	OmxTestInfo[i].ftb_queue = alloc_queue();
      	if (OmxTestInfo[i].ftb_queue == NULL)
      	{
@@ -2255,7 +2411,7 @@ int main(int argc, char **argv)
      		return -1;
      	}
 	}
-    
+
 	for (i = 0; i < g_TestInstNum; i++)
 	{
     	if(0 != pthread_create(&OmxTestInfo[i].fbd_thread_id, NULL, fbd_thread, &OmxTestInfo[i]))
@@ -2265,39 +2421,46 @@ int main(int argc, char **argv)
     		free_queue(OmxTestInfo[i].ftb_queue);
     		return -1;
     	}
-    
+
     	//OmxTestInfo[i].Read_Buffer = Read_Buffer_from_EsRawStream;
     	if(Init_Decoder(&OmxTestInfo[i]) < 0)
     	{
     		DEBUG_PRINT_ERROR("Error - Decoder Init failed\n");
     		return -1;
     	}
-    
-    #ifdef HI_TVP_SUPPORT
+
+    #ifdef HI_OMX_TEE_SUPPORT
         if (1 == OmxTestInfo[i].tvp_option)
         {
-            HI_SEC_MMZ_Init();
-            
+
             strncpy(OmxTestInfo[i].pCAStreamBuf.bufname, "OmxSampleEsBuf", sizeof(OmxTestInfo[i].pCAStreamBuf.bufname));
             OmxTestInfo[i].pCAStreamBuf.overflow_threshold = 100;
             OmxTestInfo[i].pCAStreamBuf.underflow_threshold = 0;
             OmxTestInfo[i].pCAStreamBuf.bufsize = 4*1024*1024;
-            if (HI_SUCCESS != HI_MMZ_Malloc(&OmxTestInfo[i].pCAStreamBuf))
+            if (HI_SUCCESS != HI_MPI_MMZ_Malloc(&OmxTestInfo[i].pCAStreamBuf))
             {
     		    DEBUG_PRINT_ERROR("Alloc OmxSampleEsBuf failed\n");
-                HI_SEC_MMZ_DeInit();
+
+                return -1;
+            }
+
+            if (HI_SUCCESS != InitSecEnvironment())
+            {
+                DEBUG_PRINT_ERROR("call HI_UNF_AVPLAY_Start failed.\n");
+                HI_MPI_MMZ_Free(&OmxTestInfo[i].pCAStreamBuf);
+
                 return -1;
             }
         }
     #endif
-    
+
     	if(Play_Decoder(&OmxTestInfo[i]) < 0)
     	{
     		DEBUG_PRINT_ERROR("Error - Decode Play failed\n");
-    #ifdef HI_TVP_SUPPORT
+    #ifdef HI_OMX_TEE_SUPPORT
             if (1 == OmxTestInfo[i].tvp_option)
             {
-                HI_SEC_MMZ_DeInit();
+                DeInitSecEnvironment();
             }
     #endif
     		return -1;
@@ -2322,18 +2485,17 @@ static void exit_loop(OmxTestInfo_S * pOmxTestInfo)
 static void loop_function(void)
 {
 	int i = 0;
-	int index = 0;
 	int cmd_error = 0;
 
-    char curr_seq_command[512];	
+    char curr_seq_command[512];
 	int command_inst_no = 0; //命令对应的实例; 等于0表示对所有实例有效
 
-	printf("\nTest for control, cmds as follows:\n");
-	printf("First input the command type, Then input the instance num.\n");
+    DEBUG_PRINT("\nTest for control, cmds as follows:\n");
+    DEBUG_PRINT("First input the command type, Then input the instance num.\n");
 
-	printf("\nPlease input the COMMAND:\n");
-	printf("q (exit), p (pause), r (resume), f (flush all), f0 (flush in), f1 (flush out), s (seek)\n\n");
-		
+    DEBUG_PRINT("\nPlease input the COMMAND:\n");
+    DEBUG_PRINT("q (exit), p (pause), r (resume), f (flush all), f0 (flush in), f1 (flush out), s (seek)\n\n");
+
 	while (cmd_error == 0)
 	{
 		for (i = 0; i < g_TestInstNum; i++)
@@ -2343,10 +2505,10 @@ static void loop_function(void)
                 //goto exit1;
             }
 		}
-        
+
 		fflush(stdin);
 		scanf("%s", curr_seq_command);
-		
+
         command_inst_no = 0;
         if (g_TestInstNum > 1)
         {
@@ -2354,7 +2516,7 @@ static void loop_function(void)
 		    fflush(stdin);
 		    scanf("%d", &command_inst_no);
 		    DEBUG_PRINT_ALWS("command :%s inst:%d\n", curr_seq_command, command_inst_no);
-			
+
 			if (command_inst_no < 0 || command_inst_no > g_TestInstNum)
 			{
 				DEBUG_PRINT_ERROR("invalid parameter!\n");
@@ -2362,7 +2524,7 @@ static void loop_function(void)
 			}
         }
 
-        if (!strcmp(curr_seq_command, "q")) 
+        if (!strcmp(curr_seq_command, "q"))
         {
 		    if (g_TestInstNum > 1)  // multi inst on run
 		    {
@@ -2397,7 +2559,7 @@ static void loop_function(void)
             	printf("Test-case exit!\n");
 				goto exit1;
 			}
-            
+
         }
 		else
 		{
@@ -2425,9 +2587,9 @@ static void loop_function(void)
 		}
    }
 
-	
+
 exit1:
-	
+
 	for (i = 0; i < MAX_INST_NUM; i++)
 	{
 		if (1 == OmxTestInfo[i].is_open)
@@ -2493,14 +2655,15 @@ static OMX_ERRORTYPE Use_Buffers ( OMX_COMPONENTTYPE *dec_handle,
                                        long bufCntMin, long bufSize)
 {
 	OMX_ERRORTYPE error = OMX_ErrorNone;
-	long bufCnt=0;
 
+#ifdef SupportNative
+    private_handle_t private_handle;
 	OmxTestInfo_S *pOmxTestInfo = NULL;
 
 	int index = 0;
-	
+
 	DEBUG_PRINT("Inside %s pBufHdrs = %p, nPortIndex = %d, bufCntMin = %ld, bufSize = %ld\n", __FUNCTION__, pBufHdrs, nPortIndex, bufCntMin, bufSize);
-	
+
 	for (index = 0; index < g_TestInstNum; index++)
 	{
 		if (OmxTestInfo[index].dec_handle == (OMX_COMPONENTTYPE *)dec_handle)
@@ -2515,15 +2678,11 @@ static OMX_ERRORTYPE Use_Buffers ( OMX_COMPONENTTYPE *dec_handle,
 		DEBUG_PRINT_ERROR("invalid parameter!\n");
 		return OMX_ErrorBadParameter;
 	}
-	
-	
-#ifdef SupportNative
-       private_handle_t private_handle;
 
 	DEBUG_PRINT("pBufHdrs = %x,bufCntMin = %d\n", pBufHdrs, bufCntMin);
 	*pBufHdrs= (OMX_BUFFERHEADERTYPE **)malloc(sizeof(OMX_BUFFERHEADERTYPE*)*bufCntMin);
 
-	for(bufCnt=0; bufCnt < bufCntMin; ++bufCnt) 
+	for(bufCnt=0; bufCnt < bufCntMin; ++bufCnt)
        {
 		DEBUG_PRINT("OMX_UseBuffer No %d\n", bufCnt);
               HI_MMZ_Malloc(&pOmxTestInfo->buffer[bufCnt]);
@@ -2552,7 +2711,7 @@ static int disable_output_port(OmxTestInfo_S * pOmxTestInfo)
 {
        int q_flag = 0;
 	OMX_BUFFERHEADERTYPE *pBuffer = NULL;
-       
+
 	DEBUG_PRINT("prepre to disable output port\n");
 
 	// Send DISABLE command.
@@ -2565,7 +2724,7 @@ static int disable_output_port(OmxTestInfo_S * pOmxTestInfo)
        pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
        pBuffer = (OMX_BUFFERHEADERTYPE *)pop(pOmxTestInfo->ftb_queue);
        pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
-       
+
        if (NULL != pBuffer)
        {
            if (0 == pOmxTestInfo->alloc_use_option)
@@ -2626,7 +2785,7 @@ static int enable_output_port(OmxTestInfo_S * pOmxTestInfo)
     }
     else
     {
-        error = Use_Buffers(pOmxTestInfo->dec_handle, &pOmxTestInfo->pOutYUVBufHdrs, pOmxTestInfo->portFmt.nPortIndex, 
+        error = Use_Buffers(pOmxTestInfo->dec_handle, &pOmxTestInfo->pOutYUVBufHdrs, pOmxTestInfo->portFmt.nPortIndex,
                             pOmxTestInfo->portFmt.nBufferCountActual, pOmxTestInfo->portFmt.nBufferSize);
 
         if (error != OMX_ErrorNone)
@@ -2649,7 +2808,7 @@ static int enable_output_port(OmxTestInfo_S * pOmxTestInfo)
 
 	// wait for enable event to come back
 	DEBUG_PRINT("waiting enable done....\n");
-    
+
 	wait_for_event(pOmxTestInfo, OMX_CommandPortEnable);
 
 	if (pOmxTestInfo->currentStatus == ERROR_STATE)
@@ -2669,7 +2828,7 @@ static int enable_output_port(OmxTestInfo_S * pOmxTestInfo)
 		pOmxTestInfo->pOutYUVBufHdrs[bufCnt]->nFlags &= ~OMX_BUFFERFLAG_EOS;
 
 		ret = OMX_FillThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pOutYUVBufHdrs[bufCnt]);
-		if (OMX_ErrorNone != ret) 
+		if (OMX_ErrorNone != ret)
         {
 			DEBUG_PRINT_ERROR("OMX_FillThisBuffer failed, result %d\n", ret);
 		}
@@ -2706,7 +2865,7 @@ static int output_port_reconfig(OmxTestInfo_S * pOmxTestInfo)
 #if 0
     // for test change the buffer num in component
 	DEBUG_PRINT_ALWS("Min Buffer Count = %d, Act Buffer Count = %d\n", pOmxTestInfo->portFmt.nBufferCountMin, pOmxTestInfo->portFmt.nBufferCountActual);
-    DEBUG_PRINT_ALWS("nBufferSize = %d\n", pOmxTestInfo->portFmt.nBufferSize);   
+    DEBUG_PRINT_ALWS("nBufferSize = %d\n", pOmxTestInfo->portFmt.nBufferSize);
     pOmxTestInfo->portFmt.nBufferCountActual += 2;
 	OMX_SetParameter(pOmxTestInfo->dec_handle,OMX_IndexParamPortDefinition, &pOmxTestInfo->portFmt);
 #endif
@@ -2734,13 +2893,14 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
 	int frameSize = 0;
     OMX_BUFFERHEADERTYPE *pBuffer = NULL;
 	OMX_ERRORTYPE ret = OMX_ErrorNone;
-    
+
 	DEBUG_PRINT("Enter seek_progress!\n");
 
     if (pOmxTestInfo->EtbStatus == THREAD_RUNNING || pOmxTestInfo->FtbStatus == THREAD_RUNNING)
     {
         DEBUG_PRINT_ERROR("EtbStatus/FtbStatus = THREAD_RUNNING, sleep for a while.\n");
-        do {
+        do
+        {
             sleep(1);
         }while(pOmxTestInfo->EtbStatus == THREAD_RUNNING || pOmxTestInfo->FtbStatus == THREAD_RUNNING);
         DEBUG_PRINT_ERROR("EtbStatus&FtbStatus != THREAD_RUNNING, wake up.\n");
@@ -2751,25 +2911,25 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
         pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->etb_queue);
         pthread_mutex_unlock(&pOmxTestInfo->etb_lock);
     }while(pBuffer != NULL);
-    
+
     do {
         pthread_mutex_lock(&pOmxTestInfo->ftb_lock);
         pBuffer = (OMX_BUFFERHEADERTYPE *) pop(pOmxTestInfo->ftb_queue);
         pthread_mutex_unlock(&pOmxTestInfo->ftb_lock);
     }while(pBuffer != NULL);
-    
+
     rewind(pOmxTestInfo->inputBufferFileFd);
     pOmxTestInfo->frame_flag = 0;
     pOmxTestInfo->send_cnt   = 0;
     pOmxTestInfo->receive_frame_cnt = 0;
     pOmxTestInfo->bInputEosReached = false;
-    
+
 	if (pOmxTestInfo->used_op_buf_cnt != pOmxTestInfo->free_op_buf_cnt)
     {
         DEBUG_PRINT_ERROR("ERROR: seek_progress used_op_buf_cnt = %d, free_op_buf_cnt = %d!\n", pOmxTestInfo->used_op_buf_cnt, pOmxTestInfo->free_op_buf_cnt);
         sleep(3);
     }
-    
+
     for(bufCnt = 0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
     {
         DEBUG_PRINT("OMX_FillThisBuffer on output buf no.%d\n",bufCnt);
@@ -2790,13 +2950,13 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
             pOmxTestInfo->free_op_buf_cnt--;
         }
     }
-    
+
 	if (pOmxTestInfo->used_ip_buf_cnt != pOmxTestInfo->free_ip_buf_cnt)
     {
         DEBUG_PRINT_ERROR("ERROR: seek_progress used_ip_buf_cnt = %d, free_ip_buf_cnt = %d!\n", pOmxTestInfo->used_ip_buf_cnt, pOmxTestInfo->free_ip_buf_cnt);
         sleep(3);
     }
-    
+
     for (bufCnt = 0; bufCnt < pOmxTestInfo->used_ip_buf_cnt; bufCnt++)
     {
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
@@ -2804,10 +2964,10 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags = 0;
 
     	frameSize = Read_Buffer_from_EsRawStream(pOmxTestInfo, pOmxTestInfo->pInputBufHdrs[bufCnt]);
-        
+
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nFilledLen = frameSize;
     	pOmxTestInfo->pInputBufHdrs[bufCnt]->nInputPortIndex = 0;
-        
+
         DEBUG_PRINT("%s: Timestamp sent(%lld)\n", __func__, pOmxTestInfo->pInputBufHdrs[bufCnt]->nTimeStamp);
 
     	ret = OMX_EmptyThisBuffer(pOmxTestInfo->dec_handle, pOmxTestInfo->pInputBufHdrs[bufCnt]);
@@ -2821,14 +2981,14 @@ static int seek_progress(OmxTestInfo_S * pOmxTestInfo)
     	{
             pOmxTestInfo->free_ip_buf_cnt--;
     	}
-        
+
     	if (pOmxTestInfo->pInputBufHdrs[bufCnt]->nFlags & OMX_BUFFERFLAG_EOS)
     	{
     		pOmxTestInfo->bInputEosReached = true;
             break;
     	}
     }
-    
+
 	DEBUG_PRINT("SEEK PROGRESS DONE!\n");
 	return 0;
 }
@@ -2843,7 +3003,7 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 
 	pOmxTestInfo->ebd_thread_exit = 1;
 	pOmxTestInfo->fbd_thread_exit = 1;
-	sem_post(&pOmxTestInfo->etb_sem);  
+	sem_post(&pOmxTestInfo->etb_sem);
 	sem_post(&pOmxTestInfo->ftb_sem);
 
 	OMX_GetState(pOmxTestInfo->dec_handle, &state);
@@ -2852,7 +3012,7 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 	pOmxTestInfo->flush_output_progress = 1;
 	OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandFlush, OMX_ALL, 0);
 	wait_for_event(pOmxTestInfo, OMX_CommandFlush);
-    
+
     DEBUG_PRINT("Flush All done.\n");
 
 	if (pOmxTestInfo->currentStatus == PORT_SETTING_RECONFIG_STATE)
@@ -2869,7 +3029,7 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 		DEBUG_PRINT("Requesting transition to Idle\n");
 		OMX_SendCommand(pOmxTestInfo->dec_handle, OMX_CommandStateSet, OMX_StateIdle, 0);
 		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
-        
+
         DEBUG_PRINT("In Idle state.\n");
 
 		OMX_GetState(pOmxTestInfo->dec_handle, &state);
@@ -2898,7 +3058,7 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 		}
 
 		DEBUG_PRINT("free ip buffer ok!\n");
-        
+
 		for(bufCnt = 0; bufCnt < pOmxTestInfo->used_op_buf_cnt; ++bufCnt)
 		{
 		     OMX_FreeBuffer(pOmxTestInfo->dec_handle, 1, pOmxTestInfo->pOutYUVBufHdrs[bufCnt]);
@@ -2915,7 +3075,7 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 		DEBUG_PRINT("free op buffer ok!\n");
 
 		wait_for_event(pOmxTestInfo, OMX_CommandStateSet);
-        
+
         DEBUG_PRINT("In Loaded state.\n");
 
 		OMX_GetState(pOmxTestInfo->dec_handle, &state);
@@ -2931,9 +3091,9 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
                      HI_MMZ_Free(&pOmxTestInfo->buffer[bufCnt]);
                  }
               }
-              
+
 		DEBUG_PRINT("current component state :%d\n", state);
-        
+
 	}
 
 	DEBUG_PRINT("[OMX Vdec Test] - Free omx handle start \n");
@@ -2973,19 +3133,20 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 		pOmxTestInfo->ftb_queue = NULL;
 	}
 	DEBUG_PRINT("after free ftb_queue\n");
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_OMX_TEE_SUPPORT
     if (1 == pOmxTestInfo->tvp_option)
     {
-        HI_MMZ_Free(&pOmxTestInfo->pCAStreamBuf);
-        HI_SEC_MMZ_DeInit();
+        HI_MPI_MMZ_Free(&pOmxTestInfo->pCAStreamBuf);
+
+        DeInitSecEnvironment();
     }
 #endif
 
 	pthread_join(pOmxTestInfo->ebd_thread_id, NULL);
-    
+
 	DEBUG_PRINT("after join ebd thread\n");
-    
+
 	pthread_join(pOmxTestInfo->fbd_thread_id, NULL);
 
 	DEBUG_PRINT("after join fbd thread\n");
@@ -3024,18 +3185,18 @@ static void do_freeHandle_and_clean_up(OmxTestInfo_S * pOmxTestInfo, int isDueTo
 	}
 
     close((long)pOmxTestInfo->in_filename);
-    
+
     pOmxTestInfo->is_open = 0;
-    
-	printf("*********************************************\n");
+
+    DEBUG_PRINT_ALWS("*********************************************\n");
 
 	if (isDueToError)
-		printf("**************...TEST FAILED...**************\n");
+        DEBUG_PRINT_ALWS("**************...TEST FAILED...**************\n");
 	else
-		printf("************...TEST SUCCESSFULL...***********\n");
+        DEBUG_PRINT_ALWS("************...TEST SUCCESSFULL...***********\n");
 
-	printf("*********************************************\n\n\n");
-    
+    DEBUG_PRINT_ALWS("*********************************************\n\n\n");
+
     return;
 }
 

@@ -345,6 +345,7 @@ typedef struct hiADEC_PROC_ITEM_S
 
     HI_U32           u32CodecUnsupportNum;
     HI_U32           u32StreamCorruptNum;
+    HI_U32           u32bps;
 } ADEC_PROC_ITEM_S;
 
 #define ADEC_LOCK_DECLARE(p_mutex) ;                 \

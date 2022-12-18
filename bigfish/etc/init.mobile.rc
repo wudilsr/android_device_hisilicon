@@ -165,20 +165,25 @@ on emmc-fs
     mount ext4 ext4@cache /cache nosuid nodev
     mount ext4 ext4@private /private nosuid nodev
 
+on sdcardfs-export-para
+# mount /data/media to /mnt/shell/emulated by sdcardfs
+    export EXTERNAL_STORAGE /mnt/sdcard
+    mkdir /mnt/sdcard 0771 root sdcard_r
+
 on fuse-sdcard
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
     rmdir /storage/emulated/0
     symlink /mnt/shell/emulated/0 /storage/emulated/0
 
-on post-fs
-
+on export-para
 # defaultStorage function ,please change EXTERNAL_STORAGE to /mnt/sdcard
     export EXTERNAL_STORAGE /storage/emulated/0
+
+on post-fs
     export EXTERNAL_STORAGE_VOLD /storage/emulated/0
     export EXTERNAL_STORAGE_VOLD_PATH /data/data/com.android.settings/shared_prefs/com.android.settings_preferences.xml
     symlink /mnt/sdcard /sdcard
-
 
     # once everything is setup, no need to modify /
     mount rootfs rootfs / ro remount
@@ -432,6 +437,11 @@ on boot
     class_start core
     class_start main
 
+on sdcard-fs
+    mkdir /data/media 0770 media_rw media_rw
+    wait /data/media/0
+    mount sdcardfs /data/media /storage/emulated nosuid nodev derive=legacy,reserved_mb=100
+
 on nonencrypted
     class_start late_start
 
@@ -577,7 +587,7 @@ service drm /system/bin/drmserver
 service media /system/bin/mediaserver
     class main
     user media
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm sdcard_r
     ioprio rt 4
 
 service bootanim /system/bin/bootanimation

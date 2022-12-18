@@ -92,6 +92,32 @@ static inline void ir_start(struct ir_priv *ir)
     writel(1, ir->base + IR_START);
 }
 
+static void ir_set_clk(bool bFlag)
+{
+    HI_U32 * pIRRest = HI_NULL_PTR;
+    HI_U32 u32RegVal = 0;
+    
+    pIRRest = (void *)IO_ADDRESS(0xf8000048);
+
+
+    u32RegVal = readl(pIRRest);
+    
+    if (HI_TRUE == bFlag)
+    {
+        u32RegVal |= 0x10; //open clk
+        u32RegVal &= 0xffffffdf;
+    }
+    else
+    {
+        u32RegVal |= 0x20; //close clk
+        u32RegVal &= 0xffffffef;
+    }
+
+    writel(u32RegVal, pIRRest);
+    
+    return;
+}
+
 #if 0
 static inline void ir_stop(struct ir_priv *ir)
 {
@@ -537,6 +563,7 @@ static int ir_open(struct inode *inode, struct file *filp)
 
     if (1 == atomic_inc_return(&ir->refcnt))
     {
+	    ir_set_clk(HI_TRUE);
         ret = ir_config(ir);
         if (ret)
         {
@@ -578,6 +605,7 @@ static int ir_close(struct inode *inode, struct file *filp)
             memset(ir->symbol_buf, 0,
                    sizeof(struct ir_buffer));
         }
+	    ir_set_clk(HI_FALSE);
     }
 
     up(&ir->sem);
@@ -813,6 +841,12 @@ static ssize_t ir_read(struct file *filp, char __user *buf,
     struct ir_priv *ir = &ir_local;
     int ret = 0;
     struct key_attr *key;
+	
+	if( atomic_read(&ir->refcnt) == 0)
+	{
+		HI_FATAL_IR("not open!\n");
+		return -1;
+	}
 
     if (down_interruptible(&ir->sem))
     {
@@ -831,45 +865,33 @@ static ssize_t ir_read(struct file *filp, char __user *buf,
         if (filp->f_flags & O_NONBLOCK)
         {
             ret = -EAGAIN;
-			goto out;
+            goto out;
         }
+		
+		if ((u32) ~0 == ir->key_read_timeout)
+		{
+			ir->key_read_timeout = 200;
+		}
+		
+        ret = wait_event_interruptible_timeout(ir->read_wait,
+                                               ir->key_buf->writer != ir->key_buf->reader,
+                                               msecs_to_jiffies(ir->key_read_timeout));
 
-        if ((u32) ~0 != ir->key_read_timeout)
+        if (ret < 0)
         {
-            ret = wait_event_interruptible_timeout(ir->read_wait,
-                                                   ir->key_buf->writer != ir->key_buf->reader,
-                                                   msecs_to_jiffies(ir->key_read_timeout));
-
-            if (ret < 0)
-            {
-                ret = -EAGAIN;
-                goto out;
-            }
-            else if (ret == 0)
-            {
-                ret = -ETIME;
-                goto out;
-            }
-            else
-            {
-                break;
-            }
+            ret = -EAGAIN;
+            goto out;
+        }
+        else if (ret == 0)
+        {
+            ret = -ETIME;
+            goto out;
         }
         else
         {
-            ret = wait_event_interruptible(ir->read_wait,
-                                           ir->key_buf->writer != ir->key_buf->reader);
-
-            if (ret < 0)
-            {
-                ret = -EAGAIN;
-                goto out;
-            }
-            else
-            {
-                break;
-            }
+            break;
         }
+
     }
 
     ret = 0;
@@ -1049,6 +1071,7 @@ static int ir_plat_driver_probe(struct platform_device *pdev)
     int ret;
     struct ir_priv *ir = &ir_local;
 
+    ir_set_clk(HI_FALSE);
     ir_adjust_freq();
 
     if (ir_check_module_param())

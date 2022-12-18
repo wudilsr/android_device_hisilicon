@@ -66,6 +66,19 @@ HI_S32 LOADER_DOWNLOAD_Init(HI_LOADER_TYPE_E enType, HI_VOID * Para)
         break;
     }
 
+	case HI_LOADER_TYPE_FS:
+    {
+#ifdef HI_LOADER_MODE_FS
+        g_enLoaderType = enType;
+        s32Ret = LOADER_DOWNLOAD_FS_Init((HI_VOID *)(pstLoaderInfo ? pstLoaderInfo->stPara.stUSBParam.as8FileName : NULL));
+        if (s32Ret != HI_SUCCESS)
+            HI_ERR_LOADER("init file system failed.\n");
+#else
+        HI_FATAL_LOADER("FS Download mode is not select!\n");
+#endif
+        break;
+    }
+
     default:
         g_enLoaderType = HI_LOADER_TYPE_BUTT;
         HI_FATAL_LOADER("no found valid upgrade type!\n");
@@ -104,6 +117,16 @@ HI_S32 LOADER_DOWNLOAD_DeInit(HI_VOID)
         s32Ret = LOADER_DOWNLOAD_USB_DeInit();
 #else
         HI_ERR_LOADER("USB Download mode is not select!");
+#endif
+        break;
+    }
+
+	case HI_LOADER_TYPE_FS:
+    {
+#ifdef HI_LOADER_MODE_FS
+        s32Ret = LOADER_DOWNLOAD_FS_DeInit();
+#else
+        HI_ERR_LOADER("FS Download mode is not select!");
 #endif
         break;
     }
@@ -147,6 +170,16 @@ HI_S32 LOADER_DOWNLOAD_Getdata(HI_VOID * pbuffer, HI_U32 size, HI_U32 * outlen)
         s32Ret = LOADER_DOWNLOAD_USB_Getdata(pbuffer, size, outlen);
 #else
         HI_ERR_LOADER("USB Download mode is not select!");
+#endif
+        break;
+    }
+
+	case HI_LOADER_TYPE_FS:
+    {
+#ifdef HI_LOADER_MODE_FS
+        s32Ret = LOADER_DOWNLOAD_FS_Getdata(pbuffer, size, outlen);
+#else
+        HI_ERR_LOADER("FS Download mode is not select!");
 #endif
         break;
     }

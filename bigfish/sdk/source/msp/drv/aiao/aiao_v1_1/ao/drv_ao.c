@@ -557,7 +557,7 @@ HI_S32 AO_SND_Open( HI_UNF_SND_E enSound, HI_UNF_SND_ATTR_S *pstAttr,
             if(pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiSetAudioMute)
             {
                 (pCard->pstHdmiFunc->pfnHdmiSetAudioMute)(HI_UNF_HDMI_ID_0);
-            }            
+            }
 
             if(pCard->pstHdmiFunc && pCard->pstHdmiFunc->pfnHdmiGetAoAttr)
             {
@@ -1026,7 +1026,7 @@ static HI_S32 AO_Snd_SetLowLatency(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E
 {
     SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
     CHECK_AO_NULL_PTR(pCard);
-    
+
     return  SND_SetLowLatency(pCard, eOutPort, u32LatencyMs);
 }
 
@@ -1034,7 +1034,7 @@ static HI_S32 AO_Snd_GetLowLatency(HI_UNF_SND_E enSound, HI_UNF_SND_OUTPUTPORT_E
 {
     SND_CARD_STATE_S *pCard = SND_CARD_GetCard(enSound);
     CHECK_AO_NULL_PTR(pCard);
-    
+
     return  SND_GetLowLatency(pCard,eOutPort,pu32LatencyMs);
 }
 
@@ -1280,7 +1280,7 @@ HI_S32 AO_Track_AllocHandle(HI_HANDLE *phHandle, HI_UNF_SND_TRACK_TYPE_E enTrack
         {
             HI_ERR_AO("Too many LowLatency track!\n");
             goto err0;
-        }   
+        }
     }
 
     /* Allocate new channel */
@@ -1313,14 +1313,14 @@ HI_S32 AO_Track_AllocHandle(HI_HANDLE *phHandle, HI_UNF_SND_TRACK_TYPE_E enTrack
       */
     if(enTrackType == HI_UNF_SND_TRACK_TYPE_LOWLATENCY)
     {
-        *phHandle = (HI_ID_AO << 16) | (HI_ID_LOWLATENCY_TRACK << 8) | i;   
+        *phHandle = (HI_ID_AO << 16) | (HI_ID_LOWLATENCY_TRACK << 8) | i;
         s_stAoDrv.bLowLatencyCreated = HI_TRUE;
     }
     else
     {
         *phHandle = (HI_ID_AO << 16) | (HI_ID_MASTER_SLAVE_TRACK << 8) | i;
     }
-    
+
     return HI_SUCCESS;
 
 err0:
@@ -2015,18 +2015,19 @@ HI_S32 AO_Track_PreCreate(HI_UNF_SND_E enSound, HI_UNF_AUDIOTRACK_ATTR_S *pstAtt
 
     if(pCard)
     {
-		s32Ret = TRACK_CheckAttr(pstAttr);
-		if(HI_SUCCESS != s32Ret)
-		{
-			return HI_FAILURE;
-		}
-        if(HI_UNF_SND_TRACK_TYPE_MASTER == pstAttr->enTrackType)
+        s32Ret = TRACK_CheckAttr(pstAttr);
+        if (HI_SUCCESS != s32Ret)
+        {
+            return s32Ret;
+        }
+
+        if (HI_UNF_SND_TRACK_TYPE_MASTER == pstAttr->enTrackType)
         {
             u32TrackID = TRACK_GetMasterId(pCard);
             if (AO_MAX_TOTAL_TRACK_NUM != u32TrackID)  //judge if master track exist
             {
                 s32Ret = AO_Track_MasterSlaveExchange(pCard, u32TrackID);    //force master to slave
-                if(HI_SUCCESS != s32Ret)
+                if (HI_SUCCESS != s32Ret)
                 {
                     HI_ERR_AO("Failed to Force Master track(%d) To Slave!\n", u32TrackID);
                     return HI_FAILURE;
@@ -3627,7 +3628,7 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         Ret = AO_Snd_SetLowLatency(pstLowLatencyParam->enSound,pstLowLatencyParam->eOutPort, pstLowLatencyParam->u32LatencyMs);
         break;
     }
-	
+
     case CMD_AO_SND_GETLOWLATENCY:
     {
         AO_SND_Set_LowLatency_Param_S_PTR pstLowLatencyParam = (AO_SND_Set_LowLatency_Param_S_PTR)arg;
@@ -3635,7 +3636,7 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         Ret = AO_Snd_GetLowLatency(pstLowLatencyParam->enSound,pstLowLatencyParam->eOutPort, &pstLowLatencyParam->u32LatencyMs);
         break;
     }
-	
+
     case CMD_AO_SND_ATTACHAEF:
     {
         AO_SND_AttAef_Param_S_PTR pstSndAttAef = (AO_SND_AttAef_Param_S_PTR)arg;
@@ -3831,7 +3832,7 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         CHECK_AO_TRACK_OPEN(pstTrackAttr->hTrack);
         Ret = AO_Track_GetAttr(pstTrackAttr->hTrack, &pstTrackAttr->stAttr);
         break;
-    }    
+    }
     case CMD_AO_TRACK_MMAPTRACKATTR:
     {
         AO_Track_GetTrackMapInfo_Param_S_PTR pstTrackMapInfo = (AO_Track_GetTrackMapInfo_Param_S_PTR)arg;
@@ -3843,6 +3844,8 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
     case CMD_AO_TRACK_CREATE:
     {
         AO_Track_Create_Param_S_PTR pstTrack = (AO_Track_Create_Param_S_PTR)arg;
+
+        CHECK_AO_SNDCARD_OPEN(pstTrack->enSound);
         Ret = AO_Track_AllocHandle(&hHandle, pstTrack->stAttr.enTrackType, file);
         if (HI_SUCCESS == Ret)
         {
@@ -3988,7 +3991,7 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         Ret = AO_Track_GetChannelMode(pstChannelMode->hTrack, &pstChannelMode->enMode);
 		break;
 	}
-	
+
 	case CMD_AO_TRACK_SETFIFOBYPASS:
 	{
         AO_Track_FifoBypass_Param_S_PTR pstFifoBypass = (AO_Track_FifoBypass_Param_S_PTR)arg;
@@ -4013,7 +4016,7 @@ static HI_S32 AO_ProcessCmd( struct inode *inode, struct file *file, HI_U32 cmd,
         Ret = AO_Track_GePriority(pstTrackPriority->hTrack, &pstTrackPriority->bEnable);
         break;
        }
-	   
+
     case CMD_AO_TRACK_SETSPEEDADJUST:
     {
         AO_Track_SpeedAdjust_Param_S_PTR pstSpeed = (AO_Track_SpeedAdjust_Param_S_PTR)arg;

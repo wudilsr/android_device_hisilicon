@@ -419,7 +419,7 @@ static OMX_ERRORTYPE post_event(OMX_COMPONENT_PRIVATE* pcom_priv,
 {
     OMX_ERRORTYPE ret = OMX_ErrorNone;
     OMX_S32 n = -1;
-    pthread_mutex_lock(&pcom_priv->m_lock);
+    (void)pthread_mutex_lock(&pcom_priv->m_lock);
     if ((id == OMX_GENERATE_FTB) || (id == OMX_GENERATE_FBD))
     {
         push_entry(&pcom_priv->m_ftb_q, param1, param2, id);
@@ -438,7 +438,7 @@ static OMX_ERRORTYPE post_event(OMX_COMPONENT_PRIVATE* pcom_priv,
         DEBUG_PRINT_ERROR("post message failed,id = %d\n", id);
         ret =  OMX_ErrorUndefined;
     }
-    pthread_mutex_unlock(&pcom_priv->m_lock);
+    (void)pthread_mutex_unlock(&pcom_priv->m_lock);
     return ret;
 }
 
@@ -1442,6 +1442,8 @@ static OMX_ERRORTYPE free_buffer_internal(OMX_COMPONENT_PRIVATE* pcom_priv,
 
     free(puser_buf);
     free(omx_bufhdr);
+    puser_buf = NULL;
+    omx_bufhdr = NULL;
 
     port_priv->m_omx_bufhead[i] = NULL;
     port_priv->m_venc_bufhead[i] = NULL;
@@ -1455,12 +1457,6 @@ static OMX_ERRORTYPE omx_flush_port( OMX_COMPONENT_PRIVATE* pcom_priv,
                                      OMX_U32 port)
 {
     OMX_PORT_PRIVATE* port_priv = NULL;
-
-    if ((port != OMX_ALL) && (port > OUTPUT_PORT_INDEX))
-    {
-        DEBUG_PRINT_ERROR("omx_flush_port: invalid port index\n");
-        return OMX_ErrorUndefined;
-    }
 
     if (port == OUTPUT_PORT_INDEX || port == OMX_ALL)
     {
@@ -1488,7 +1484,7 @@ static void return_outbuffers(OMX_COMPONENT_PRIVATE* pcom_priv)
 {
     OMX_PORT_PRIVATE* port_priv = &pcom_priv->m_port[OUTPUT_PORT_INDEX];
     OMX_U32 param1 = 0, param2 = 0, ident = 0;
-    pthread_mutex_lock(&pcom_priv->m_lock);
+    (void)pthread_mutex_lock(&pcom_priv->m_lock);
     while (get_q_size(&pcom_priv->m_ftb_q) > 0)
     {
         pop_entry(&pcom_priv->m_ftb_q, &param1, &param2, &ident);
@@ -1498,7 +1494,7 @@ static void return_outbuffers(OMX_COMPONENT_PRIVATE* pcom_priv)
         }
         fill_buffer_done(pcom_priv, (OMX_BUFFERHEADERTYPE*)param1);
     }
-    pthread_mutex_unlock(&pcom_priv->m_lock);
+    (void)pthread_mutex_unlock(&pcom_priv->m_lock);
 }
 
 
@@ -1506,7 +1502,7 @@ static void return_inbuffers(OMX_COMPONENT_PRIVATE* pcom_priv)
 {
     OMX_PORT_PRIVATE* port_priv = &pcom_priv->m_port[INPUT_PORT_INDEX];
     OMX_U32 param1 = 0, param2 = 0, ident = 0;
-    pthread_mutex_lock(&pcom_priv->m_lock);
+    (void)pthread_mutex_lock(&pcom_priv->m_lock);
     while (get_q_size(&pcom_priv->m_etb_q) > 0)
     {
         pop_entry(&pcom_priv->m_etb_q, &param1, &param2, &ident);
@@ -1516,7 +1512,7 @@ static void return_inbuffers(OMX_COMPONENT_PRIVATE* pcom_priv)
         }
         empty_buffer_done(pcom_priv, (OMX_BUFFERHEADERTYPE*)param1);
     }
-    pthread_mutex_unlock(&pcom_priv->m_lock);
+    (void)pthread_mutex_unlock(&pcom_priv->m_lock);
 }
 
 static OMX_ERRORTYPE get_supported_profile_level(OMX_COMPONENT_PRIVATE* pcomp_priv, OMX_VIDEO_PARAM_PROFILELEVELTYPE* profileLevelType)
@@ -1589,7 +1585,7 @@ static OMX_ERRORTYPE get_current_profile_level(OMX_COMPONENT_PRIVATE* pcomp_priv
     }
 
     /* FIXME : profile & level may not correct! */
-    if (strncmp((OMX_STRING)pcomp_priv->m_role, OMX_COMPONENTROLES_H264, OMX_MAX_STRINGNAME_SIZE))
+    if (strncmp((OMX_STRING)pcomp_priv->m_role, OMX_COMPONENTROLES_H264, sizeof(OMX_COMPONENTROLES_H264)))
     {
         return  OMX_ErrorBadParameter;
     }
@@ -1660,7 +1656,7 @@ static OMX_ERRORTYPE set_current_profile_level(OMX_COMPONENT_PRIVATE* pcomp_priv
     }
 
     /* FIXME : profile & level may not correct! */
-    if (strncmp((OMX_STRING)pcomp_priv->m_role, OMX_COMPONENTROLES_H264, OMX_MAX_STRINGNAME_SIZE))
+    if (strncmp((OMX_STRING)pcomp_priv->m_role, OMX_COMPONENTROLES_H264, sizeof(OMX_COMPONENTROLES_H264)))
     {
         return  OMX_ErrorBadParameter;
     }
@@ -1975,6 +1971,7 @@ static OMX_ERRORTYPE empty_this_buffer_proxy(
 #endif
         pomx_buf->nFilledLen = 0;
         post_event(pcom_priv, (OMX_U32)pomx_buf, VENC_DONE_SUCCESS, OMX_GENERATE_EBD);
+
         return OMX_ErrorNone;                                  //add by l00228308
 
     }
@@ -2108,8 +2105,8 @@ static OMX_ERRORTYPE empty_this_buffer_proxy(
         }*/
     }
 
-    puser_buf->user_buf.timestamp0   = (HI_U32)(pomx_buf->nTimeStamp & 0x00000000ffffffff) ;//pomx_buf->nTimeStamp / 1e3;
-    puser_buf->user_buf.timestamp1   = (HI_U32)(pomx_buf->nTimeStamp >> 32) ;
+    puser_buf->user_buf.timestamp0   = (HI_U32)((HI_U64)pomx_buf->nTimeStamp & 0x00000000ffffffff) ;//pomx_buf->nTimeStamp / 1e3;
+    puser_buf->user_buf.timestamp1   = (HI_U32)((HI_U64)pomx_buf->nTimeStamp >> 32) ;
     puser_buf->user_buf.flags        = pomx_buf->nFlags;
 
 
@@ -2158,12 +2155,12 @@ static OMX_ERRORTYPE empty_this_buffer_proxy(
 
     /////////////////////////////////////////////////////////////////////////         end
     port_priv->m_buf_pend_cnt++;
-
     /*DEBUG_PRINT("[ETB] %s() success,bufheard :0x%x\n", __func__,pomx_buf);*/
     return OMX_ErrorNone;
 
 empty_error:
     post_event(pcom_priv, (OMX_U32)pomx_buf, (OMX_U32)VENC_DONE_FAILED, OMX_GENERATE_EBD);
+
     return ret;
 }
 
@@ -2375,11 +2372,14 @@ static OMX_S32 message_process (OMX_COMPONENT_PRIVATE*  pcom_priv, void* message
                                puser_buf->bufferaddr_Phy, (OMX_S32)puser_buf->data_len);
 
             {
-                HI_U64 u64Pts1 = (HI_U64)puser_buf->timestamp1;
+		        HI_U64 u64Pts0 = (HI_U64)puser_buf->timestamp0;
+		        HI_U64 u64Pts1 = (HI_U64)puser_buf->timestamp1;
+		        HI_U64 u64Pts = ((u64Pts1 << 32) & 0xffffffff00000000LL) | u64Pts0;	
+				
                 pomx_buf->nFilledLen = puser_buf->data_len;
                 pomx_buf->nFlags	 = (OMX_U32)puser_buf->flags;
                 pomx_buf->nTimeStamp = (OMX_TICKS)puser_buf->timestamp0;
-                pomx_buf->nTimeStamp |= (OMX_TICKS)((u64Pts1 << 32) & 0xffffffff00000000LL);
+                pomx_buf->nTimeStamp |= (OMX_TICKS)u64Pts;
             }
 
             if ((puser_buf->timestamp0 == g_end_pts[0]) && (puser_buf->timestamp1 == g_end_pts[1]))
@@ -3210,13 +3210,13 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
     }
 
     /* process event from cmd/etb/ftb queue */
-    pthread_mutex_lock(&pcom_priv->m_lock);
+    (void)pthread_mutex_lock(&pcom_priv->m_lock);
     if ((id == OMX_GENERATE_FTB) || (id == OMX_GENERATE_FBD))
     {
         qsize = get_q_size(&pcom_priv->m_ftb_q);
         if ((qsize == 0) /*|| (pcom_priv->m_state == OMX_StatePause)*/)
         {
-            pthread_mutex_unlock(&pcom_priv->m_lock);
+            (void)pthread_mutex_unlock(&pcom_priv->m_lock);
             return;
         }
         pop_entry(&pcom_priv->m_ftb_q, &p1, &p2, &ident);
@@ -3226,7 +3226,7 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
         qsize = get_q_size(&pcom_priv->m_etb_q);
         if ((qsize == 0) /*|| (pcom_priv->m_state == OMX_StatePause)*/)
         {
-            pthread_mutex_unlock(&pcom_priv->m_lock);
+            (void)pthread_mutex_unlock(&pcom_priv->m_lock);
             return;
         }
         pop_entry(&pcom_priv->m_etb_q, &p1, &p2, &ident);
@@ -3236,13 +3236,13 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
         qsize = get_q_size(&pcom_priv->m_cmd_q);
         if (qsize == 0)
         {
-            pthread_mutex_unlock(&pcom_priv->m_lock);
+            (void)pthread_mutex_unlock(&pcom_priv->m_lock);
             return;
         }
         pop_entry(&pcom_priv->m_cmd_q, &p1, &p2, &ident);
     }
 
-    pthread_mutex_unlock(&pcom_priv->m_lock);
+    (void)pthread_mutex_unlock(&pcom_priv->m_lock);
 
     if (id != ident)
     {
@@ -3255,23 +3255,19 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
     switch (id)
     {
         case OMX_GENERATE_COMMAND_DONE:
-            ret = generate_command_done(pcom_priv, p1, p2);
+            generate_command_done(pcom_priv, p1, p2);
             break;
 
         case OMX_GENERATE_ETB:
-            ret = empty_this_buffer_proxy(pcom_priv,
-                                          (OMX_BUFFERHEADERTYPE*)p1);
+            empty_this_buffer_proxy(pcom_priv, (OMX_BUFFERHEADERTYPE*)p1);
             break;
 
         case OMX_GENERATE_FTB:
-            ret = fill_this_buffer_proxy(pcom_priv,
-                                         (OMX_BUFFERHEADERTYPE*)p1);
+            fill_this_buffer_proxy(pcom_priv, (OMX_BUFFERHEADERTYPE*)p1);
             break;
 
         case OMX_GENERATE_COMMAND:
-            ret = send_command_proxy(pcom_priv,
-                                     (OMX_COMMANDTYPE)p1,
-                                     (OMX_U32)p2, (OMX_PTR)NULL);
+            send_command_proxy(pcom_priv, (OMX_COMMANDTYPE)p1, (OMX_U32)p2, (OMX_PTR)NULL);
             break;
 
         case OMX_GENERATE_EBD:
@@ -3282,8 +3278,7 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
                 break;
             }
 
-            ret = empty_buffer_done(pcom_priv,
-                                    (OMX_BUFFERHEADERTYPE*)p1);
+            ret = empty_buffer_done(pcom_priv, (OMX_BUFFERHEADERTYPE*)p1);
             if (ret != OMX_ErrorNone)
             {
                 DEBUG_PRINT_ERROR("empty_buffer_done failure\n");
@@ -3299,8 +3294,7 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
                 break;
             }
 
-            ret = fill_buffer_done(pcom_priv,
-                                   (OMX_BUFFERHEADERTYPE*)p1);
+            ret = fill_buffer_done(pcom_priv, (OMX_BUFFERHEADERTYPE*)p1);
             if (ret != OMX_ErrorNone)
             {
                 DEBUG_PRINT_ERROR("fill_buffer_done failure\n");
@@ -3498,7 +3492,6 @@ static void event_process(OMX_COMPONENT_PRIVATE* pcom_priv, OMX_U32 id)
 
         case OMX_GENERATE_CROP_RECT_CHANGE:
             DEBUG_PRINT("crop rect changed!\n");
-            port_priv = &pcom_priv->m_port[OUTPUT_PORT_INDEX];
             omx_report_event(pcom_priv,
                              OMX_EventPortSettingsChanged,
                              OUTPUT_PORT_INDEX, OMX_IndexConfigCommonOutputCrop, NULL);
@@ -3639,10 +3632,15 @@ static OMX_S32 ports_init(OMX_COMPONENT_PRIVATE* pcom_priv)
 outport_error:
     free(out_port->m_omx_bufhead);
     free(out_port->m_venc_bufhead);
+    out_port->m_omx_bufhead = NULL;
+    out_port->m_venc_bufhead = NULL;
 
 inport_error:
     free(in_port->m_omx_bufhead);
     free(in_port->m_venc_bufhead);
+    in_port->m_omx_bufhead = NULL;
+    in_port->m_venc_bufhead = NULL;
+
     return result;
 }
 
@@ -3654,6 +3652,8 @@ static void ports_deinit(OMX_COMPONENT_PRIVATE* pcom_priv)
     {
         free(pcom_priv->m_port[i].m_venc_bufhead);
         free(pcom_priv->m_port[i].m_omx_bufhead);
+        pcom_priv->m_port[i].m_venc_bufhead = NULL;
+        pcom_priv->m_port[i].m_omx_bufhead = NULL;		
     }
     DEBUG_PRINT("exit %s()", __func__);
 }
@@ -5852,7 +5852,7 @@ OMX_ERRORTYPE component_init(OMX_HANDLETYPE phandle,
     OMX_S32 result = -1;
 
     OMX_CHECK_ARG_RETURN(phandle == NULL);
-    if (strncmp(comp_name, OMX_VENC_COMP_NAME, OMX_MAX_STRINGNAME_SIZE) != 0)
+    if (strncmp(comp_name, OMX_VENC_COMP_NAME, sizeof(OMX_VENC_COMP_NAME)) != 0)
     {
         DEBUG_PRINT_ERROR("compname:  %s not match \n", comp_name);
         return OMX_ErrorBadParameter;
@@ -6006,14 +6006,19 @@ error_exit2:
     close(pcom_priv->m_pipe_in);
     close(pcom_priv->m_pipe_out);
 error_exit1:
+	sem_post(&pcom_priv->m_async_sem);
     pcom_priv->event_thread_exit		= OMX_TRUE;
     pthread_join(pcom_priv->event_thread_id, NULL);
 error_exit0:
     pthread_mutex_destroy(&pcom_priv->m_lock);
+#ifdef ENABLE_BUFFER_LOCK
+    sem_destroy(&pcom_priv->m_buf_lock);
+#endif	
     sem_destroy(&pcom_priv->m_cmd_lock);
     sem_destroy(&pcom_priv->m_async_sem);
 error_exit:
     free(pcom_priv);
+	pcom_priv = NULL;
     pcomp->pComponentPrivate = NULL;
 
     return error;

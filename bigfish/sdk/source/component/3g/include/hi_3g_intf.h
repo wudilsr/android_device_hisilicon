@@ -58,7 +58,7 @@ typedef enum HI_3G_CARD_STATE_E
     HI_3G_CARD_STATUS_BOTT,
 } HI_3G_CARD_STATE_E;
 
-/** 3g card search and register operators mode, huawei private */
+/** 3g card search and register operators mode, hisilicon private */
 typedef enum HI_3G_CARD_MODE_E {
     HI_3G_CARD_MODE_AUTO = 2,                 /**< auto search and register */
     HI_3G_CARD_MODE_GSM_ONLY = 13,            /**< only search and register to GSM */
@@ -68,7 +68,7 @@ typedef enum HI_3G_CARD_MODE_E {
     HI_3G_CARD_MODE_BOTT = 17,
 } HI_3G_CARD_MODE_E;
 
-/** 3g card register operators priority , huawei private*/
+/** 3g card register operators priority , hisilicon private*/
 typedef enum HI_3G_CARD_ACQORDER_E {
     HI_3G_CARD_ACQORDER_AUTO = 0,             /**< auto register */
     HI_3G_CARD_ACQORDER_GSM_PRIOR_UTRAN,      /**< register GSM prior to UTRAN */

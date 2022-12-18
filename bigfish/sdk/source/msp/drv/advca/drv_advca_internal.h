@@ -20,15 +20,13 @@
 extern "C" {
 #endif
 
-#include "drv_ca_otp_v100.h"
-#include "drv_ca_otp_reg_v100.h"
+#include "hi_type.h"
+#include "drv_advca_ioctl.h"
 #include "drv_ca_otp_v200.h"
 #include "drv_ca_otp_reg_v200.h"
 #include "drv_ca_otp.h"
 #include "drv_ca_otp_common.h"
-#include "drv_advca_v200.h"
 #include "drv_advca_common.h"
-#include "drv_advca_v200_reg.h"
 #include "drv_advca_v300_reg.h"
 #include "hal_advca_v300.h"
 

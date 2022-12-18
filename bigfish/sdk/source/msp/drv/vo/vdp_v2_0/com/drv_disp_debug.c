@@ -150,11 +150,11 @@ int vdp_k_fwrite(char *buf, int len, struct file *filp)
 HI_S32 vdp_k_SaveYUVImg(struct file *pfYUV, HI_DRV_VIDEO_FRAME_S *pstFrame, HI_S32 num)
 {
     MMZ_BUFFER_S stMBuf;
-    HI_U8 *ptr;
-    HI_U8 *pu8Udata;
-    HI_U8 *pu8Vdata;
-    HI_U8 *pu8Ydata;
-    HI_U32 i,j;
+    HI_U8 *ptr = HI_NULL;
+    HI_U8 *pu8Udata = HI_NULL;
+    HI_U8 *pu8Vdata = HI_NULL;
+    HI_U8 *pu8Ydata = HI_NULL;
+    HI_U32 i = 0, j = 0;
     HI_S32 nRet = HI_SUCCESS;
 
     if ((!pstFrame) || (!pfYUV) )
@@ -189,15 +189,15 @@ HI_S32 vdp_k_SaveYUVImg(struct file *pfYUV, HI_DRV_VIDEO_FRAME_S *pstFrame, HI_S
 
     pu8Udata = (HI_U8 *)DISP_MALLOC(pstFrame->stBufAddr[0].u32Stride_C * pstFrame->u32Height / 2 /2);
     if (!pu8Udata)
-        goto EXIT3;
+        goto ERROR_EXIT;
 
     pu8Vdata = (HI_U8 *)DISP_MALLOC(pstFrame->stBufAddr[0].u32Stride_Cr * pstFrame->u32Height / 2 /2);
     if ( !pu8Vdata)
-        goto EXIT2;
+        goto ERROR_EXIT;
 
     pu8Ydata = (HI_U8 *)DISP_MALLOC(pstFrame->stBufAddr[0].u32Stride_Y);
     if (!pu8Ydata)
-       goto EXIT1;
+       goto ERROR_EXIT;
 
 
     /*write Y*/
@@ -237,20 +237,33 @@ HI_S32 vdp_k_SaveYUVImg(struct file *pfYUV, HI_DRV_VIDEO_FRAME_S *pstFrame, HI_S
     /*write V */
     vdp_k_fwrite(pu8Vdata, pstFrame->u32Width * pstFrame->u32Height / 2 /2, pfYUV);
 
-EXIT1:
-   DISP_FREE(pu8Ydata);
-EXIT2:
-    DISP_FREE(pu8Vdata);
-EXIT3:
-    DISP_FREE(pu8Udata);
-
 #ifdef VDP_DEBUG_USE_IOREMAP
-    iounmap(ptr);
+        iounmap(ptr);
 #else
-    HI_DRV_MMZ_Unmap(&stMBuf);
+        HI_DRV_MMZ_Unmap(&stMBuf);
 #endif
 
+    DISP_FREE(pu8Ydata);
+    DISP_FREE(pu8Vdata);
+    DISP_FREE(pu8Udata);
+
     return HI_SUCCESS;
+
+ERROR_EXIT:
+    if (pu8Ydata)
+    {
+        DISP_FREE(pu8Ydata);
+    }
+    if (pu8Vdata)
+    {
+        DISP_FREE(pu8Vdata);
+    }
+    if (pu8Udata)
+    {
+        DISP_FREE(pu8Udata);
+    }
+
+    return HI_FAILURE;
 }
 
 
@@ -281,7 +294,8 @@ HI_S32 vdp_DebugSaveYUVImg(HI_DRV_VIDEO_FRAME_S *pstCurFrame, HI_CHAR *buffer, H
 
     if (u8VdpDebugStr[0] == '/')
     {
-        if(u8VdpDebugStr[j-1] == '/')
+        if ((u8VdpDebugStr[j-1] == '/')
+            && (j >= 1))
         {
             u8VdpDebugStr[j-1] = 0;
         }

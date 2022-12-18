@@ -26,7 +26,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -1249,6 +1251,8 @@ HI_S32 KEYLED_Resume_FD650(HI_VOID)
 
 HI_S32 KEYLED_LED_SetLockIndicator_FD650(HI_BOOL bLock)
 {
+    if((FD650Status & LedON ) != LedON)
+        return HI_FAILURE;
     keyled_fd650_display_lockled(bLock);
     return HI_SUCCESS;
 }

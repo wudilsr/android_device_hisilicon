@@ -1,8 +1,8 @@
 /******************************************************************************
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 * and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
@@ -16,10 +16,10 @@ Description	    : the jpeg hard decode realize in this function
                   			 相关的应用程序 CNend\n
 Function List 	:
 
-			  		  
+
 History       	:
 Date				Author        		Modification
-2014/06/20		    y00181162		    Created file      	
+2014/06/20		    y00181162		    Created file
 ******************************************************************************/
 
 /*********************************add include here******************************/
@@ -103,7 +103,7 @@ typedef struct tabJPEGLEAVEMEMINFO
 #ifndef CONFIG_JPEG_CSC_DISABLE
 /** Structure of the some function should realize before main function */
 /** CNcomment:一些必须在main函数之前实现的功能变量 */
-typedef struct tagJPEG_DECOMPRESS_RES 
+typedef struct tagJPEG_DECOMPRESS_RES
 {
 	HI_S32     s32CscDev;         /**< the csc device             *//**<CNcomment:打开csc设备        */
     HI_CHAR*   pStreamPhyBuf;     /**< The stream physics address *//**<CNcomment:码流buffer物理地址 */
@@ -208,11 +208,11 @@ HI_S32 JPEG_HDEC_OpenDev(const struct jpeg_decompress_struct *cinfo)
 
 		HI_S32 s32Ret = HI_SUCCESS;
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-				
+
 		if(pJpegHandle->s32JpegDev < 0){
 			pJpegHandle->s32JpegDev = open(JPG_DEV, O_RDWR | O_SYNC);
 			if(pJpegHandle->s32JpegDev < 0){
-				return HI_FAILURE; 
+				return HI_FAILURE;
 			}
 		}
 
@@ -253,7 +253,9 @@ HI_S32 JPEG_HDEC_OpenDev(const struct jpeg_decompress_struct *cinfo)
 															 pJpegHandle->s32JpegDev,  \
 															 (off_t)0);
 		if(MAP_FAILED == pJpegHandle->pJpegRegVirAddr){
-			return HI_FAILURE; 
+            close(pJpegHandle->s32JpegDev);
+            pJpegHandle->s32JpegDev = -1;
+			return HI_FAILURE;
 		}
 
 #ifdef CONFIG_JPEG_TEST_CHIP_RANDOM_RESET
@@ -266,12 +268,16 @@ HI_S32 JPEG_HDEC_OpenDev(const struct jpeg_decompress_struct *cinfo)
 		 ** CNcomment: 打开TDE设备  CNend\n
 		 **/
 #ifndef CONFIG_JPEG_CSC_DISABLE
-		if(gs_stJpegDecompressRes.s32CscDev < 0){
-			gs_stJpegDecompressRes.s32CscDev = JPEG_HDEC_CSC_Open();
-		}
-	    if(gs_stJpegDecompressRes.s32CscDev < 0){
-			return HI_FAILURE;
-	    }
+       if(gs_stJpegDecompressRes.s32CscDev < 0)
+       {
+          gs_stJpegDecompressRes.s32CscDev = JPEG_HDEC_CSC_Open();
+       }
+       if(gs_stJpegDecompressRes.s32CscDev < 0)
+       {
+           close(pJpegHandle->s32JpegDev);
+           pJpegHandle->s32JpegDev = -1;
+           return HI_FAILURE;
+       }
 #endif
 
 		return HI_SUCCESS;
@@ -298,7 +304,7 @@ static HI_S32 JPEG_HDEC_SetProcInfo(const struct jpeg_decompress_struct *cinfo)
 
 	 const HI_U32 u32InFmt[10]  = {0,1,2,3,4,5,6,7,8,9};
 	 const HI_U32 u32OutFmt[20] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
-	 
+
      JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
      if(NULL == pJpegHandle->pJpegRegVirAddr){
@@ -347,17 +353,17 @@ static HI_S32 JPEG_HDEC_SetProcInfo(const struct jpeg_decompress_struct *cinfo)
 		 **create decompress
 		 **/
 	     pJpegHandle->eDecState = JPEG_DEC_FINISH_CREATE_DECOMPRESS;
-	 }else if(DSTATE_INHEADER == cinfo->global_state){ 
+	 }else if(DSTATE_INHEADER == cinfo->global_state){
 	    /**
 		 **read header ready
 		 **/
 	     pJpegHandle->eDecState = JPEG_DEC_FINISH_READ_HEADER;
-	 }else if(DSTATE_SCANNING == cinfo->global_state){  
+	 }else if(DSTATE_SCANNING == cinfo->global_state){
 	    /**
 		 **start decompress ready
 		 **/
 	     pJpegHandle->eDecState = JPEG_DEC_FINISH_START_DECOMPRESS;
-	 }else if(DSTATE_SCANNING == cinfo->global_state){  
+	 }else if(DSTATE_SCANNING == cinfo->global_state){
 	    /**
 		 **read scanlines ready
 		 **/
@@ -367,27 +373,27 @@ static HI_S32 JPEG_HDEC_SetProcInfo(const struct jpeg_decompress_struct *cinfo)
 		 **finish decompress
 		 **/
 	     pJpegHandle->eDecState = JPEG_DEC_FINISH_FINISH_DECOMPRESS;
-	 }else if(0 == cinfo->global_state){  
+	 }else if(0 == cinfo->global_state){
 	    /**
 		 **destory decompress
 		 **/
 	     pJpegHandle->eDecState = JPEG_DEC_FINISH_DESTORY_DECOMPRESS;
 	 }
-	 
+
 	 stProcInfo.eDecState        = pJpegHandle->eDecState;
-	 
+
 	 if(HI_TRUE == pJpegHandle->bHdecEnd){
 	    stProcInfo.eDecodeType      = JPEG_DEC_HW;
 	 }else{
 	    stProcInfo.eDecodeType      = JPEG_DEC_SW;
 	 }
-	 
+
 	 s32Ret = ioctl(pJpegHandle->s32JpegDev, CMD_JPG_READPROC, &stProcInfo);
      if(HI_SUCCESS != s32Ret){
         return HI_FAILURE;
      }
      return HI_SUCCESS;
-	 
+
 }
 #endif
 
@@ -416,7 +422,7 @@ HI_S32 JPEG_HDEC_CloseDev(const struct jpeg_common_struct *cinfo)
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 #ifdef CONFIG_JPEG_PROC_ENABLE
-		s32Ret = JPEG_HDEC_SetProcInfo((j_decompress_ptr)cinfo); /*lint !e740 !e826 ignore by y00181162, because this cast is ok */  
+		s32Ret = JPEG_HDEC_SetProcInfo((j_decompress_ptr)cinfo); /*lint !e740 !e826 ignore by y00181162, because this cast is ok */
 #endif
 
 #ifdef CONFIG_JPEG_TEST_CHIP_RANDOM_RESET
@@ -465,7 +471,7 @@ HI_S32 JPEG_HDEC_CloseDev(const struct jpeg_common_struct *cinfo)
 		if(pJpegHandle->s32JpegDev < 0){
 		    return HI_SUCCESS;
 		}
-		
+
 		close(pJpegHandle->s32JpegDev);
 		pJpegHandle->s32JpegDev = -1;
 
@@ -481,7 +487,7 @@ HI_S32 JPEG_HDEC_CloseDev(const struct jpeg_common_struct *cinfo)
 		}
 
 		return HI_SUCCESS;
-		
+
 
 }
 
@@ -577,7 +583,7 @@ static HI_VOID JPEG_HDEC_ReleaseRes(const struct jpeg_common_struct *cinfo)
 		/**
 		** get the stream mem
 		** CNcomment: 获取硬件解码的码流buffer CNend\n
-		**/	 
+		**/
 		JPEG_HDEC_FreeStreamMem(pJpegHandle);
 
 		JPEG_HDEC_FreeYUVMem(pJpegHandle);
@@ -633,10 +639,10 @@ HI_S32 JPEG_HDEC_Destroy(const struct jpeg_common_struct *cinfo)
 		}
 
 		free(pJpegHandle);
-		pJpegHandle = NULL;
+		//pJpegHandle = NULL;
 
 		return HI_SUCCESS;
-		 
+
 }
 /*****************************************************************************
 * func			: JPEG_HDEC_Abort
@@ -673,10 +679,10 @@ HI_S32 JPEG_HDEC_Abort(const struct jpeg_common_struct *cinfo)
 		**/
 #ifdef CONFIG_JPEG_GETDECTIME
 		u32PreTime = pJpegHandle->u32CurTime;
-#endif		
-		memset(pJpegHandle,0,sizeof(JPEG_HDEC_HANDLE_S));		
+#endif
+		memset(pJpegHandle,0,sizeof(JPEG_HDEC_HANDLE_S));
 		pJpegHandle->bReleaseRes        =  HI_TRUE;
-		
+
 
 		pJpegHandle->bFirstDec			=  HI_TRUE;
 		pJpegHandle->bFillInput         =  HI_TRUE;
@@ -713,7 +719,7 @@ HI_S32 JPEG_HDEC_Abort(const struct jpeg_common_struct *cinfo)
 		pJpegHandle->enImageFmt      =  JPEG_FMT_BUTT;
 
 		return HI_SUCCESS;
-		 
+
 }
 
 /*****************************************************************************
@@ -732,7 +738,7 @@ HI_VOID JPEG_HDEC_CheckCropSurface(const struct jpeg_decompress_struct *cinfo)
 		   ||(pJpegHandle->stOutDesc.stCropRect.x < 0)  ||  (pJpegHandle->stOutDesc.stCropRect.y < 0)
 		   ||((HI_U32)(pJpegHandle->stOutDesc.stCropRect.x + pJpegHandle->stOutDesc.stCropRect.w) > cinfo->output_width)
 		   ||((HI_U32)(pJpegHandle->stOutDesc.stCropRect.y + pJpegHandle->stOutDesc.stCropRect.h) > cinfo->output_height)){
-			ERREXIT(cinfo, JERR_CROP_CANNOT_SUPPORT);  /*lint !e740  ignore by y00181162, because this function is macro */ 
+			ERREXIT(cinfo, JERR_CROP_CANNOT_SUPPORT);  /*lint !e740  ignore by y00181162, because this function is macro */
 		}
 
 }
@@ -784,15 +790,15 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 		/**
-		 ** at hard decode, we check this message only once just ok 
+		 ** at hard decode, we check this message only once just ok
 		 ** because only one program can operation,and if the message
-		 ** is wrong, the hardware can not support, so the followed 
+		 ** is wrong, the hardware can not support, so the followed
 		 ** can not operation
 		 ** CNcomment: 硬件解码过程只判断一次，假如这个值被改变了，要么使用内部的退出函数
 		 **            退出整个应用，要么使用用户回调的错误管理函数结束该张图片解码 CNend\n
 		 **/
 		if(CLIENT_DATA_MARK != pJpegHandle->s32ClientData){
-			ERREXIT(cinfo, JERR_CLIENT_DATA_ERR); /*lint !e740  ignore by y00181162, because this function is macro */  
+			ERREXIT(cinfo, JERR_CLIENT_DATA_ERR); /*lint !e740  ignore by y00181162, because this function is macro */
 		}
 
 #ifdef CONFIG_JPEG_TEST_CHIP_RANDOM_RESET
@@ -824,7 +830,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 		}
 #endif
 
-		
+
 #ifdef CONFIG_JPEG_DEBUG_INFO
 	#ifdef CONFIG_JPEG_ANDROID_DEBUG_ENABLE
 			/**
@@ -845,7 +851,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 			**默认硬件解码支持走硬件解码
 			**/
 			pJpegDecMod = getenv( "JPEGDECMOD" );
-			if(pJpegDecMod && 0 == strncmp("soft", pJpegDecMod, strlen("soft")>strlen(pJpegDecMod)?strlen("soft"):strlen(pJpegDecMod))){ 
+			if(pJpegDecMod && 0 == strncmp("soft", pJpegDecMod, strlen("soft")>strlen(pJpegDecMod)?strlen("soft"):strlen(pJpegDecMod))){
 				JPEG_TRACE("=== force to soft decode !\n");
 				return HI_FAILURE;
 			}
@@ -944,7 +950,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 #endif
 
 		/**
-		** progressive, arith code ,data_prcidion !=8, cann't use hard decode 
+		** progressive, arith code ,data_prcidion !=8, cann't use hard decode
 		** CNcomment: progressive arith code data_prcidion !=8硬件不支持 CNend\n
 		**/
 		if(	(FALSE != cinfo->progressive_mode) ||(FALSE != cinfo->arith_code) ||(8 != cinfo->data_precision)){
@@ -987,7 +993,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 		** CNcomment:要是jpeg文件没有带哈夫曼表就使用标准哈夫曼表 CNend\n
 		**/
 #ifndef CONFIG_JPEG_MPG_DEC_ENABLE
-		if (	(NULL == cinfo->dc_huff_tbl_ptrs[0]) || (NULL != cinfo->dc_huff_tbl_ptrs[2]) 
+		if (	(NULL == cinfo->dc_huff_tbl_ptrs[0]) || (NULL != cinfo->dc_huff_tbl_ptrs[2])
 			 || (NULL == cinfo->ac_huff_tbl_ptrs[0]) || (NULL != cinfo->ac_huff_tbl_ptrs[2]) ){
 			ERREXIT(cinfo, JERR_BAD_HUFF_TABLE); /*lint !e740 ignore by y00181162, because this is needed */
 		}
@@ -1021,7 +1027,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 		/**
 		** get the middle mem
 		** CNcomment: 获取硬件解码的中间buffer CNend\n
-		**/ 
+		**/
 		s32RetVal = JPEG_HDEC_GetYUVMem(pJpegHandle);
 		if(HI_SUCCESS != s32RetVal){/** soft decode, output user buffer **/
 			return HI_FAILURE;
@@ -1042,7 +1048,7 @@ HI_S32 JPEG_HDEC_IfSupport(j_decompress_ptr cinfo)
 		}
 
 		return HI_SUCCESS;
-		 
+
 
 }
 
@@ -1085,7 +1091,7 @@ HI_S32 JPEG_HDEC_Start(j_decompress_ptr cinfo)
 		** CNcomment: 这个变量仅用在使用回调码流函数进行解码的情况 CNend\n
 		**/
 		pJpegHandle->bInHardDec = HI_TRUE;
-		
+
 		/**
 		 ** send the stream to hard register to start dec
 		 ** CNcomment:将码流送给硬件寄存器开始解码 CNend\n
@@ -1134,11 +1140,11 @@ HI_S32 JPEG_HDEC_Start(j_decompress_ptr cinfo)
 			pJpegHandle->u64LuPixValue = (HI_U64)((u64RegistLuaPixSum1<<32) | u32RegistLuaPixSum0);
 		}
         #endif
-		
+
 		/**
 		 ** the jpeg hard decode finish
 		 ** CNcomment: jpeg硬件解码完成 CNend\n
-		 **/	
+		 **/
 		pJpegHandle->bHdecEnd  = HI_TRUE;
 
 #ifdef CONFIG_JPEG_TEST_SAVE_YUVSP_DATA
@@ -1150,7 +1156,7 @@ HI_S32 JPEG_HDEC_Start(j_decompress_ptr cinfo)
 #endif
 
 		return HI_SUCCESS;
-		
+
 }
 
 
@@ -1166,7 +1172,7 @@ HI_S32 JPEG_HDEC_Start(j_decompress_ptr cinfo)
 #if defined(CONFIG_JPEG_CSC_DISABLE) || defined(CONFIG_JPEG_HARDDEC2ARGB)
 static HI_VOID JPEG_HDEC_SetCompoent(j_decompress_ptr cinfo)
 {
-	
+
 	switch(cinfo->out_color_space){
 	    case JCS_CMYK:
 		case JCS_ARGB_8888:
@@ -1190,7 +1196,7 @@ static HI_VOID JPEG_HDEC_SetCompoent(j_decompress_ptr cinfo)
 		default:
 			break;
 	}
-	
+
 }
 #endif
 
@@ -1247,7 +1253,7 @@ static HI_VOID JPEG_HDEC_YUV400TORGB(j_decompress_ptr cinfo)
 	HI_CHAR* pUVSrcBuf     = NULL;
 	HI_CHAR* pDtsSrcBuf    = NULL;
     JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
-    
+
 	pYSrcBuf    = pJpegHandle->stMiddleSurface.pMiddleVir[0];
 	pUVSrcBuf   = pJpegHandle->stMiddleSurface.pMiddleVir[1];
 	pDtsSrcBuf  = pJpegHandle->stMiddleSurface.pOutVir;
@@ -1255,7 +1261,7 @@ static HI_VOID JPEG_HDEC_YUV400TORGB(j_decompress_ptr cinfo)
 	s32YRowStride     = pJpegHandle->stJpegSofInfo.u32YStride;
 	s32UVRowStride    = pJpegHandle->stJpegSofInfo.u32CbCrStride;
     s32DstRowStride	  = pJpegHandle->stJpegSofInfo.u32DisplayStride;
-		
+
 	for(s32Row = 0; s32Row < cinfo->output_height; s32Row++){
 		s32YOffset    = s32YRowStride   * s32Row;
 		s32UVOffset   = s32UVRowStride  * s32Row;
@@ -1378,7 +1384,7 @@ HI_S32 JPEG_HDEC_SoftCSC(j_decompress_ptr cinfo)
 			return HI_SUCCESS;
 		}
 	#endif
-	
+
 	if((HI_TRUE == pJpegHandle->bOutYCbCrSP)||(HI_TRUE == pJpegHandle->bCSCEnd)){
 			return HI_SUCCESS;
 	}
@@ -1407,7 +1413,7 @@ HI_S32 JPEG_HDEC_SoftCSC(j_decompress_ptr cinfo)
 		case JCS_RGB:
 		case JCS_BGR:
 			cinfo->output_components = 3;
-			break; 
+			break;
 		case JCS_ARGB_8888:
 		case JCS_ABGR_8888:
 			cinfo->output_components = 4;
@@ -1421,7 +1427,7 @@ HI_S32 JPEG_HDEC_SoftCSC(j_decompress_ptr cinfo)
 		default:
 			return HI_FAILURE;
 	}
-	
+
 	pJpegHandle->bCSCEnd = HI_TRUE;
 
 	return HI_SUCCESS;
@@ -1451,7 +1457,7 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 		HI_S32 s32Ret           =  HI_SUCCESS;
 		HI_BOOL bYUVMemMMUType  = HI_TRUE;
 		HI_BOOL bXRGBMemMMUType = HI_TRUE;
-		
+
 		TDE2_MB_COLOR_FMT_E enMbFmt[6] = {
 			TDE2_MB_COLOR_FMT_JPG_YCbCr400MBP,
 			TDE2_MB_COLOR_FMT_JPG_YCbCr420MBP,
@@ -1463,7 +1469,7 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
-		
+
 		if((pJpegHandle->u32MemTypeMask & JPEG_YOUTPUT_MEM_MMU_TYPE) || (pJpegHandle->u32MemTypeMask & JPEG_UVOUTPUT_MEM_MMU_TYPE)){
 			bYUVMemMMUType = HI_TRUE;
 		}else{
@@ -1526,11 +1532,11 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 			case JCS_RGB:
 				DstSurface.enColorFmt    = TDE2_COLOR_FMT_BGR888;
 				cinfo->output_components = 3;
-				break; 
+				break;
 			case JCS_BGR:
 				DstSurface.enColorFmt	 = TDE2_COLOR_FMT_RGB888;
 				cinfo->output_components = 3;
-				break; 
+				break;
 			case JCS_ARGB_8888:
 			#ifdef CONFIG_JPEG_ADD_GOOGLEFUNCTION
 			case JCS_RGBA_8888:
@@ -1565,7 +1571,7 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 			case JCS_CrCbY:
 				DstSurface.enColorFmt    = TDE2_COLOR_FMT_YCbCr888;
 				cinfo->output_components = 3;
-				break; 
+				break;
 			default:
 				return HI_FAILURE;
 		}
@@ -1618,7 +1624,7 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 		memset(&stMbOpt,0,sizeof(TDE2_MBOPT_S));
 		stMbOpt.enResize   = TDE2_MBRESIZE_QUALITY_LOW;
 		//stMbOpt.bDeflicker = HI_TRUE;
-		
+
 		if ((s32Handle = JPEG_HDEC_CSC_BeginJob(gs_stJpegDecompressRes.s32CscDev)) != HI_ERR_TDE_INVALID_HANDLE){
 			s32Ret = JPEG_HDEC_CSC_MbBlit(s32Handle, &SrcSurface, &SrcRect, &DstSurface, &DstRect, &stMbOpt,gs_stJpegDecompressRes.s32CscDev,bYUVMemMMUType,bXRGBMemMMUType);
 			if(HI_SUCCESS != s32Ret){
@@ -1659,7 +1665,7 @@ HI_S32 JPEG_HDEC_HardCSC(j_decompress_ptr cinfo)
 		JPEG_HDEC_SetCompoent(cinfo);
 #endif
 		return HI_SUCCESS;
-		  
+
 
 }
 
@@ -1681,7 +1687,7 @@ static HI_S32 JPEG_HDEC_CheckCpy(j_decompress_ptr cinfo,JDIMENSION max_lines)
 	JPEG_HDEC_HANDLE_S_PTR	pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 	if(    (HI_FALSE == pJpegHandle->bCSCEnd)
-		|| (HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){  
+		|| (HI_TRUE == pJpegHandle->stOutDesc.stOutSurface.bUserPhyMem)){
 		/**
 		** not use tde convert or use physics buffer,so not output the usr buffer
 		** CNcomment: tde转换失败或者使用物理内存，所以不需要输出到用户buffer中 CNend\n
@@ -1727,7 +1733,7 @@ HI_S32 JPEG_HDEC_OutUserBuf(j_decompress_ptr cinfo,JDIMENSION max_lines, HI_CHAR
 		HI_CHAR *pDstBuf         = NULL;
 		HI_CHAR *pSrcBuf         = NULL;
 		HI_S32 s32Ret            = 0;
-		
+
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 		if ((max_lines+(cinfo->output_scanline)) > (cinfo->output_height)){
@@ -1738,7 +1744,7 @@ HI_S32 JPEG_HDEC_OutUserBuf(j_decompress_ptr cinfo,JDIMENSION max_lines, HI_CHAR
 		if(HI_FAILURE != s32Ret){
 			return s32Ret;
 		}
-		
+
 		/**
 		** is not set output description,so is output scanlines buffer
 		** CNcomment:说明没有设置解码输出的属性，是输出到行buffer中 CNend\n
@@ -1797,14 +1803,14 @@ HI_S32 JPEG_HDEC_OutUserBuf(j_decompress_ptr cinfo,JDIMENSION max_lines, HI_CHAR
 HI_S32	JPEG_HDEC_DuplicateStreamInfo(const struct jpeg_decompress_struct *cinfo)
 {
 #if 0
-		my_src_ptr src = (my_src_ptr)cinfo->src; /*lint !e740 !e826 ignore by y00181162, because this is needed */  
+		my_src_ptr src = (my_src_ptr)cinfo->src; /*lint !e740 !e826 ignore by y00181162, because this is needed */
 
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
 		if(HI_TRUE == pJpegHandle->stHDecDataBuf.bUseFileData)
 		{  /**
 			** only use file stream or use external stream should save the data.
-			** because the mem stream decode, the hard has no change the 
+			** because the mem stream decode, the hard has no change the
 			** cinfo->src->next_input_byte buffer and leave data.
 			** CNcomment: 使用文件码流才需要回退，因为内存码流硬件解码的时候
 			**            没有使用cinfo->src->next_input_byte这块临时buffer以及
@@ -1841,7 +1847,7 @@ HI_S32	JPEG_HDEC_ResumeStreamInfo(j_decompress_ptr cinfo)
 #if 0
 
 		HI_S32 s32Ret;
-		my_src_ptr src = (my_src_ptr) cinfo->src; /*lint !e740 !e826 ignore by y00181162, because this is needed */  
+		my_src_ptr src = (my_src_ptr) cinfo->src; /*lint !e740 !e826 ignore by y00181162, because this is needed */
 
 		JPEG_HDEC_HANDLE_S_PTR  pJpegHandle = (JPEG_HDEC_HANDLE_S_PTR)(cinfo->client_data);
 
@@ -1853,21 +1859,21 @@ HI_S32	JPEG_HDEC_ResumeStreamInfo(j_decompress_ptr cinfo)
 			   ** the stream back failure,not soft decode again
 			   ** CNcomment: 码流回退错误，不需要在进行软件解码了 CNend\n
 			   **/
-				ERREXIT(cinfo, JERR_STREAM_BACK_FAILURE); /*lint !e740  ignore by y00181162, because this function is macro */  
+				ERREXIT(cinfo, JERR_STREAM_BACK_FAILURE); /*lint !e740  ignore by y00181162, because this function is macro */
 			}
 			memcpy((char*)cinfo->src->next_input_byte,		   \
 				   pJpegHandle->stJpegHtoSInfo.pLeaveBuf,	   \
 				   pJpegHandle->stJpegHtoSInfo.u32LeaveByte);
-			
+
 			cinfo->src->bytes_in_buffer = pJpegHandle->stJpegHtoSInfo.u32LeaveByte;
-			
+
 		}
 #else
 		if(cinfo->progressive_mode)
 			return HI_SUCCESS;
 #endif
 		return HI_SUCCESS;
-		
+
 }
 /*****************************************************************************
 * func			: JPEG_HDEC_CheckStreamMemType
@@ -1886,7 +1892,7 @@ HI_S32 JPEG_HDEC_CheckStreamMemType(const struct jpeg_decompress_struct *cinfo,H
      HI_U32 u32Size     = 0;
 	 HI_S32 s32Ret      = HI_SUCCESS;
 	 HI_CHAR* pPhyAddr  = NULL;
-	 
+
 #ifdef CONFIG_JPEG_MMU_SUPPORT
 	 HI_BOOL bMmu;
 #endif
@@ -1914,11 +1920,11 @@ HI_S32 JPEG_HDEC_CheckStreamMemType(const struct jpeg_decompress_struct *cinfo,H
 	 }else{
 	     return HI_FAILURE;
 	 }
-	 
+
 }
 /*****************************************************************************
 * func			: JPEG_HDEC_GetMemFromMemInfo
-* description	: get leave memory from cat /proc/meminfo 
+* description	: get leave memory from cat /proc/meminfo
                   CNcomment: 从内存信息中获取剩余内存大小 CNend\n
 * param[out]    : pu64MemSize  CNcomment:  内存大小  CNend\n
 * retval	    : HI_SUCCESS   CNcomment:  成功      CNend\n
@@ -1940,7 +1946,7 @@ HI_S32 JPEG_HDEC_GetMemFromMemInfo(HI_U64 *pu64MemSize)
 	  HI_U64 MEMINFO_MemFree  = 0L;
 	  HI_U64 MEMINFO_MemTotal = 0L;
 	  HI_CHAR NameBuf[256]     = {0};
-	  
+
 	  HI_CHAR MemInfoBuf[2048] = {0};
 	  HI_S32  s32MemInfoFd        = -1;
 	  HI_S32  s32ReadMemInfoSize = 0;
@@ -1948,39 +1954,39 @@ HI_S32 JPEG_HDEC_GetMemFromMemInfo(HI_U64 *pu64MemSize)
 	  JPEG_LEAVE_MEMINFO Findme  ={NameBuf, NULL};
 	  JPEG_LEAVE_MEMINFO *pFound = NULL;
 	  HI_CHAR *pHead = NULL;
-	  HI_CHAR *pTail = NULL;  	  
+	  HI_CHAR *pTail = NULL;
 
 	  /**
 	   **这个赋值要注意顺序，因为是二分查找
 	   **/
 	  JPEG_LEAVE_MEMINFO MemInfo[] =
-							{	
+							{
 								  {"Buffers",	   &MEMINFO_Buffers},
 								  {"Cached",	   &MEMINFO_Cached},
 								  {"MemFree",	   &MEMINFO_MemFree},
-								  {"MemTotal",	   &MEMINFO_MemTotal}	  
+								  {"MemTotal",	   &MEMINFO_MemTotal}
 							};
-	   
+
 	  const HI_U32 u32MemInfoCount = sizeof(MemInfo) / sizeof(JPEG_LEAVE_MEMINFO);
 
 	  *pu64MemSize = MEMLEAVESIZE_DEFAULT;
 	  /**=========================================================================
-	                           read meminfo start 
+	                           read meminfo start
 	   ==========================================================================**/
-	  
+
 	  s32MemInfoFd = open(MEMINFO_FILE,O_RDONLY);
 	  if(s32MemInfoFd < 0){
 			JPEG_TRACE("open %s failure\n",MEMINFO_FILE);
 	  		return HI_FAILURE;
 	  }
-	  
+
 	  s32LeekOffset = lseek(s32MemInfoFd, 0L, SEEK_SET);
 	  if(s32LeekOffset < 0){
 			close(s32MemInfoFd);
 			JPEG_TRACE("lseek %s failure\n",MEMINFO_FILE);
 	  		return HI_FAILURE;
 	  }
-	  
+
 	  s32ReadMemInfoSize = read(s32MemInfoFd, MemInfoBuf, (sizeof(MemInfoBuf) - 1));
 	  if (s32ReadMemInfoSize <= 0 || s32ReadMemInfoSize > (HI_S32)(sizeof(MemInfoBuf) - 1)){
 			close(s32MemInfoFd);
@@ -2024,14 +2030,14 @@ HI_S32 JPEG_HDEC_GetMemFromMemInfo(HI_U64 *pu64MemSize)
 			 **转成10进制
 			 **/
 		    *(pFound->pSize) = strtoul(pHead,&pTail,10);
-			
+
 			NextFind:
 	    		pTail = strchr(pHead, '\n');
 	    		if(!pTail){
 					break;
 	    		}
 	   			pHead = pTail + 1;
-		
+
 	 }
 
 	 *pu64MemSize = MEMINFO_MemFree;
@@ -2047,5 +2053,5 @@ HI_S32 JPEG_HDEC_GetMemFromMemInfo(HI_U64 *pu64MemSize)
 #endif
 
 	 return HI_SUCCESS;
-	 	
+
 }

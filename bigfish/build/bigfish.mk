@@ -5,10 +5,23 @@ INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
 INSTALLED_CACHEIMAGE_TARGET := $(PRODUCT_OUT)/cache.img
 INSTALLED_SDCARDIMAGE_TARGET := $(PRODUCT_OUT)/sdcard.img
 INSTALLED_PRIVATEIMAGE_TARGET := $(PRODUCT_OUT)/private.img
+ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
+INSTALLED_BACKUPIMAGE_TARGET := $(PRODUCT_OUT)/backup.img
+endif
+ifeq ($(strip $(HISILICON_TEE)),true)
+INSTALLED_SECURESTOREIMAGE_TARGET := $(PRODUCT_OUT)/securestore.img
+endif
+
 TARGET_OUT_SDCARD:=$(PRODUCT_OUT)/sdcard
+ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
+TARGET_OUT_BACKUP:=$(PRODUCT_OUT)/backup
+endif
 TARGET_OUT_PRIVATE:=$(PRODUCT_OUT)/private
 NAND_PRODUCT_OUT := $(PRODUCT_OUT)/Nand
 EMMC_PRODUCT_OUT := $(PRODUCT_OUT)/Emmc
+ifeq ($(strip $(HISILICON_TEE)),true)
+TARGET_OUT_SECURESTORE:=$(PRODUCT_OUT)/securestore
+endif
 UPDATE_TOOLS :=$(HOST_OUT_EXECUTABLES)/bsdiff \
                $(HOST_OUT_EXECUTABLES)/fs_config
 
@@ -84,6 +97,7 @@ ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 -include device/hisilicon/bigfish/build/security.mk
 endif
 endif
+-include device/hisilicon/bigfish/build/secureos.mk
 
 # hiboot
 .PHONY: hiboot
@@ -115,7 +129,7 @@ else
 RECORVERY_OR_APPLOADER_TARGET := recoveryimg updatezip
 endif
 .PHONY: bigfish
-bigfish: prebuilt hiboot kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
+bigfish: prebuilt hiboot secureos kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
 ifdef BOARD_QBSUPPORT
 ifeq ($(strip $(BOARD_QBSUPPORT)),true)
 	$(hide) rm  -rf $(NAND_PRODUCT_OUT)

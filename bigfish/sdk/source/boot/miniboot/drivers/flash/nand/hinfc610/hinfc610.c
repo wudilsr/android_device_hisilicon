@@ -29,12 +29,8 @@ extern void hinfc610_controller_enable(struct hinfc_host *host, int enable);
 
 /*****************************************************************************/
 
-#if defined(CONFIG_ARCH_S40) || defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_S40V3)
+#if defined(CONFIG_ARCH_S40) || defined(CONFIG_ARCH_S5) || defined(CONFIG_ARCH_S40V3) || defined(CONFIG_ARCH_HI3798MX)
 #  include "hinfc610_s40.c"
-#endif
-
-#if defined(CONFIG_ARCH_HI3716MV310)
-#  include "hinfc610_hi3716mv310.c"
 #endif
 
 /*****************************************************************************/
@@ -1467,6 +1463,7 @@ static struct nand_dev_t *hinfc610_driver_init(void)
 		host->flags |= NANDC_HW_AUTO;
 
 	/* check if chip is sync mode. */
+#ifndef CONFIG_ARCH_HI3798MX
 	if ((host->version != HINFC_VER_620) && 
 		(regval & HINFC610_BOOT_CFG_SYC_NAND_PAD)) {
 		host->flags |= NANDC_IS_SYNC_BOOT;
@@ -1480,7 +1477,7 @@ static struct nand_dev_t *hinfc610_driver_init(void)
 		/* set synchronous clock and timing. */
 		hinfc610_sync_clock(host, ENABLE);
 	}
-
+#endif
 	/*
 	 * check if start from nand.
 	 * This register REG_SC_GEN15 is set in start.S

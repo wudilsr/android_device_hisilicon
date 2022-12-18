@@ -681,6 +681,13 @@ bool      TDEFillRectangle( void *drv, void *dev, DFBRectangle *rect)
 		memset(&TDEOpt, 0, sizeof(TDE2_OPT_S));
 		/** using solidDraw do alpha blending */
 
+		s32Ret = ADP_ColorExpand(pDev->dst_surface.enColorFmt, pDev->color_pixel, &u32FillData);
+		if(s32Ret != HI_SUCCESS){
+			return HI_FALSE;
+		}
+		FillColor.enColorFmt   = pDev->dst_surface.enColorFmt;
+		FillColor.u32FillColor = u32FillData;
+		
 		/** prepare alpha,key,rop opt */ 
 		s32Ret = ADP_GenerateTDEFillOpt(pDev, &TDEOpt, HI_FALSE);
 		if (HI_SUCCESS != s32Ret)

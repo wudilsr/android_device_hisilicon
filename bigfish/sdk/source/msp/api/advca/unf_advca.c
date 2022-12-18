@@ -37,10 +37,9 @@ History       :
 #include "hi_mpi_cipher.h"
 
 #define INVALID_VALUE (0xffffffff)
-#define CA_PVR_MAGINNUMBER "HISI_ADVCA_PVR\0"
 
 /* for CodeCC, to limit the maxmun value of FPNum, Suppose: 3 FPNums comes per 20 seconds */
-#define MAX_FP_NUM	(3*60*24*30)
+#define MAX_FP_NUM  (3*60*24*30)
 
 static HI_S32 g_s32CaFd = -1;
 static HI_S32 g_AdvcaInitCounter = -1;
@@ -49,7 +48,21 @@ static HI_UNF_ADVCA_KEYLADDER_LEV_E g_dvbLadder;
 static HI_UNF_ADVCA_KEYLADDER_LEV_E g_r2rLadder;
 static HI_UNF_ADVCA_VENDORID_E g_vendorType;
 
+static HI_HANDLE  g_hCipher ;
+static HI_BOOL g_bCryptologyConfig = HI_FALSE;
+
+typedef struct
+{
+    HI_UNF_ADVCA_ALG_TYPE_E KeyladderAlg;
+    HI_UNF_ADVCA_KEYLADDER_LEV_E KeyladderLevel;
+    HI_U8 SessionKey1[16];
+    HI_U8 SessionKey2[16];
+    HI_HANDLE hCipherHandle ;
+    HI_UNF_CIPHER_CTRL_S stCipherCtrl;
+}HI_UNF_R2RKeyladder_Cipher_Info_S;
+
 /*for PVR*/
+#ifdef HI_PVR_SUPPORT
 #define PVR_CA_MAX_CHANNEL 5
 #define MAX_PVR_KEY_BLOCK_NUMBERS 5000
 
@@ -57,7 +70,7 @@ static HI_UNF_ADVCA_VENDORID_E g_vendorType;
 //static HI_U64 PVR_BLOCK_SIZE = 0x100000000;//4G
 static HI_U64 PVR_BLOCK_SIZE =  0x40000000; //1G
 
-
+#define CA_PVR_MAGINNUMBER "HISI_ADVCA_PVR\0"
 
 static sem_t g_PVRSem;
 
@@ -66,10 +79,7 @@ static sem_t g_PvrRecPlylock;
 #define ADVCA_PVR_LOCK()       ((HI_VOID)sem_wait(&g_PvrRecPlylock))
 #define ADVCA_PVR_UNLOCK()     ((HI_VOID)sem_post(&g_PvrRecPlylock))
 
-static HI_HANDLE  g_hCipher ;  
-static HI_BOOL g_bCryptologyConfig = HI_FALSE; 
-
-typedef struct ADVCA_PVR_CA_PrivateFileHead_S
+typedef struct
 {
     HI_U8 MagicNum[32];
     HI_UNF_ADVCA_Time_S Starttime;
@@ -77,57 +87,45 @@ typedef struct ADVCA_PVR_CA_PrivateFileHead_S
     HI_U32 FPNum;
     HI_U32  u32UriStartIndex;   /*For rewind model, URI[] will be used as loop queue*/
     HI_UNF_PVR_URI_S URI[MAX_URI_NUM];        /* Maturity of this recorded stream*/
-    HI_U8 MacKey[16]; 
-}ADVCA_PVR_CA_PrivateFileHead_S;
+    HI_U8 MacKey[16];
+} ADVCA_PVR_CA_PrivateFileHead_S;
 
-typedef struct ADVCA_PVR_CA_MacPrivateFileHead_S
+typedef struct
 {
     HI_U8 Mac[16];
-    ADVCA_PVR_CA_PrivateFileHead_S stCAPrivateFileHead; 
-}ADVCA_PVR_CA_MacPrivateFileHead_S;
+    ADVCA_PVR_CA_PrivateFileHead_S stCAPrivateFileHead;
+} ADVCA_PVR_CA_MacPrivateFileHead_S;
 
-typedef struct HiADVCA_PVR_MAC_FP_INFO_S
+typedef struct
 {
     HI_UNF_PVR_FP_INFO_S stPVRFPInfo;
-    HI_U8 Mac[16];    
-}ADVCA_PVR_MAC_FP_INFO_S;
+    HI_U8 Mac[16];
+} ADVCA_PVR_MAC_FP_INFO_S;
 
-
-typedef struct hiUNF_R2RKeyladder_Cipher_Info_S
-{
-    HI_UNF_ADVCA_ALG_TYPE_E KeyladderAlg;
-    HI_UNF_ADVCA_KEYLADDER_LEV_E KeyladderLevel;
-    HI_U8 SessionKey1[16]; 
-    HI_U8 SessionKey2[16]; 
-    HI_HANDLE hCipherHandle ;
-    HI_UNF_CIPHER_CTRL_S stCipherCtrl;
-}HI_UNF_R2RKeyladder_Cipher_Info_S;  
-
-typedef struct hiUNF_CA_PVR_KEY_INFO_S
+typedef struct
 {
     HI_U32  u32BlockNum; /*Block key index, begin from 0*/
     HI_U32  u32Reserved;
     HI_U64  u64OffsetForKey;
     HI_U8   Cipherkey[16];
-}HI_CA_PVR_KEY_INFO_S;
+} HI_CA_PVR_KEY_INFO_S;
 
-typedef struct hiUNF_CA_PVR_CADATA_S
+typedef struct
 {
     HI_CHAR FileName[256];
-    HI_CHAR CAPrivateFileName[128];    
-    HI_U64  u64CxVerifiedLen; 
+    HI_CHAR CAPrivateFileName[128];
+    HI_U64  u64CxVerifiedLen;
     HI_U32  u32TotalBlockNum;
     HI_UNF_R2RKeyladder_Cipher_Info_S stR2RkeyladderCipherInfo;
-}HI_CA_PVR_CADATA_S;
+} HI_CA_PVR_CADATA_S;
 
-
-typedef struct hiUNF_CA_PVR_MAC_CADATA_S
+typedef struct
 {
     HI_U8 u8AES_CMAC[16];     /*The MAC of upper parameter of HI_CA_PVR_CADATA_S, use R2R-SWPK key-ladder */
     HI_CA_PVR_CADATA_S stPvrCaData;
-}HI_CA_PVR_MAC_CADATA_S;
+} HI_CA_PVR_MAC_CADATA_S;
 
-typedef struct hiUNF_CA_PVR_RECORD_CHANNEL_INFO_S
+typedef struct
 {
     HI_U32  u32ChnID;
     HI_BOOL bRewind;                /*Is rewind model?*/
@@ -141,10 +139,9 @@ typedef struct hiUNF_CA_PVR_RECORD_CHANNEL_INFO_S
     HI_U32  u32UriNumbers;
     HI_U32  u32FpNumbers;
     HI_CA_PVR_CADATA_S stPvrRecCaData;
-}HI_CA_PVR_RECORD_CHANNEL_INFO_S;
+} HI_CA_PVR_RECORD_CHANNEL_INFO_S;
 
-
-typedef struct hiUNF_CA_PVR_PLAY_CHANNEL_INFO_S
+typedef struct
 {
     HI_U32  u32ChnID;
     HI_BOOL bIsTimeshiftPlay;
@@ -154,10 +151,11 @@ typedef struct hiUNF_CA_PVR_PLAY_CHANNEL_INFO_S
     HI_U8   PvrPlayTrackKey[16];
     HI_U8   *pu8KeyBuffer;
     HI_CA_PVR_CADATA_S stPvrPlyCaData;
-}HI_CA_PVR_PLAY_CHANNEL_INFO_S;
+} HI_CA_PVR_PLAY_CHANNEL_INFO_S;
 
 HI_CA_PVR_RECORD_CHANNEL_INFO_S PvrRecChannelInfo[PVR_CA_MAX_CHANNEL];
 HI_CA_PVR_PLAY_CHANNEL_INFO_S   PvrPlayChannelInfo[PVR_CA_MAX_CHANNEL];
+#endif
 
 #define CA_CheckPointer(p) \
     do {  \
@@ -167,18 +165,18 @@ HI_CA_PVR_PLAY_CHANNEL_INFO_S   PvrPlayChannelInfo[PVR_CA_MAX_CHANNEL];
             return -1; \
         } \
     } while (0)
-    
+
 #define CA_ASSERT(api, ret) \
     do{ \
         ret = api; \
         if (ret != HI_SUCCESS) \
         { \
             HI_ERR_CA("run %s failed, ERRNO:%#x.\n", #api, ret); \
-            return -1;\
+            return ret;\
         } \
         else\
         {\
-        /*printf("sample %s: run %s ok.\n", __FUNCTION__, #api);}*/   \
+        /*HI_INFO_CA("sample %s: run %s ok.\n", __FUNCTION__, #api);}*/   \
         }\
     }while(0)
 
@@ -200,57 +198,66 @@ HI_S32 HI_UNF_ADVCA_Init(HI_VOID)
     HI_S32 ret = HI_SUCCESS;
     HI_S32 s32DevFd = 0;
     HI_U32 u32VendorType = 0;
+#ifdef HI_PVR_SUPPORT
     HI_U8 i = 0;
-
-    HI_INFO_CA("\n HI_UNF_ADVCA_Init: compile in %s_%s\n\n", __DATE__, __TIME__); 
-	if(g_AdvcaInitCounter > 0)
-    {
-	    g_AdvcaInitCounter++;
-        return HI_SUCCESS;
-	}
-
-#ifdef SDK_SECURITY_ARCH_VERSION_V2
-        HI_INFO_CA("SDK_SECURITY_ARCH_VERSION_V2 HI_UNF_ADVCA_Init\n");
-        s32DevFd = open(X5_CA_DEV_NAME, O_RDWR, 0);
-#else
-        s32DevFd = open("/dev/" UMAP_DEVNAME_CA, O_RDWR, 0);
 #endif
-        if (s32DevFd < 0)
-        {
-            HI_ERR_CA("ca open err. \n");
-            return HI_ERR_CA_OPEN_ERR;
-        }
-		g_AdvcaInitCounter = 1;
 
-        g_s32CaFd   = s32DevFd;
-        ret = HI_UNF_ADVCA_GetDVBKeyLadderStage(&g_dvbLadder);
-        ret = HI_UNF_ADVCA_GetR2RKeyLadderStage(&g_r2rLadder);
-        ret = HI_UNF_ADVCA_GetVendorID(&u32VendorType);
-        if (HI_SUCCESS != ret)
-        {
-            HI_ERR_CA("get vendor type err. \n");
-			(HI_VOID)HI_UNF_ADVCA_DeInit();
-            return HI_FAILURE;
-        }
+    if (g_AdvcaInitCounter > 0)
+    {
+        g_AdvcaInitCounter++;
+        return HI_SUCCESS;
+    }
 
-        g_vendorType = (HI_UNF_ADVCA_VENDORID_E)u32VendorType;
+    s32DevFd = open("/dev/" UMAP_DEVNAME_CA, O_RDWR, 0);
+    if (s32DevFd < 0)
+    {
+        HI_ERR_CA("ca open err. \n");
+        return HI_ERR_CA_OPEN_ERR;
+    }
+    g_AdvcaInitCounter = 1;
 
-        for ( i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++ )
-        {            
-            memset(&PvrRecChannelInfo[i], 0, sizeof(HI_CA_PVR_RECORD_CHANNEL_INFO_S));
-            memset(&PvrPlayChannelInfo[i], 0, sizeof(HI_CA_PVR_PLAY_CHANNEL_INFO_S));
-            PvrRecChannelInfo[i].u32ChnID  = INVALID_VALUE;
-            PvrPlayChannelInfo[i].u32ChnID  = INVALID_VALUE;
-        }
- 
-        (HI_VOID)sem_init(&g_PVRSem, 0, 1);
-        ADVCA_PVR_LOCK_INIT();
+    g_s32CaFd   = s32DevFd;
+    ret = HI_UNF_ADVCA_GetDVBKeyLadderStage(&g_dvbLadder);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("get dvb keyladder stage err.\n");
+        (HI_VOID)HI_UNF_ADVCA_DeInit();
+        return HI_FAILURE;
+    }
+    ret = HI_UNF_ADVCA_GetR2RKeyLadderStage(&g_r2rLadder);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("get r2r keyladder err.\n");
+        (HI_VOID)HI_UNF_ADVCA_DeInit();
+        return HI_FAILURE;
+    }
+    ret = HI_UNF_ADVCA_GetVendorID(&u32VendorType);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("get vendor type err. \n");
+        (HI_VOID)HI_UNF_ADVCA_DeInit();
+        return HI_FAILURE;
+    }
+
+    g_vendorType = (HI_UNF_ADVCA_VENDORID_E)u32VendorType;
+#ifdef HI_PVR_SUPPORT
+    for ( i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++ )
+    {
+        memset(&PvrRecChannelInfo[i], 0, sizeof(HI_CA_PVR_RECORD_CHANNEL_INFO_S));
+        memset(&PvrPlayChannelInfo[i], 0, sizeof(HI_CA_PVR_PLAY_CHANNEL_INFO_S));
+        PvrRecChannelInfo[i].u32ChnID  = INVALID_VALUE;
+        PvrPlayChannelInfo[i].u32ChnID  = INVALID_VALUE;
+    }
+
+    (HI_VOID)sem_init(&g_PVRSem, 0, 1);
+    ADVCA_PVR_LOCK_INIT();
+#endif
 
     return HI_SUCCESS;
 }
 
 /***********************************************************************************
-*  Function:       HI_UNF_KEYLED_DeInit
+*  Function:       HI_UNF_ADVCA_DeInit
 *  Description:    close ca
 *  Calls:
 *  Data Accessed:  NA
@@ -266,16 +273,16 @@ HI_S32 HI_UNF_ADVCA_DeInit(HI_VOID)
     {
         g_AdvcaInitCounter--;
     }
-    
-	if(g_AdvcaInitCounter != 0)
+
+    if(g_AdvcaInitCounter != 0)
     {
         return HI_SUCCESS;
     }
 
     close(g_s32CaFd);
     g_s32CaFd   = -1;
-	g_AdvcaInitCounter = -1;
-	
+    g_AdvcaInitCounter = -1;
+
     g_dvbLadder = HI_UNF_ADVCA_KEYLADDER_BUTT;
     g_r2rLadder = HI_UNF_ADVCA_KEYLADDER_BUTT;
     g_vendorType = HI_UNF_ADVCA_NULL;
@@ -377,6 +384,11 @@ HI_S32 HI_UNF_ADVCA_SetMarketId(HI_U8 u8MarketId[4])
         HI_ERR_CA("ca not init\n");
         return HI_ERR_CA_NOT_INIT;
     }
+    if (HI_NULL == u8MarketId)
+    {
+        HI_ERR_CA("pu32MarketId == NULL, invalid.\n");
+        return HI_ERR_CA_INVALID_PARA;
+    }
 
     ret = ioctl(g_s32CaFd, CMD_CA_SET_MARKETID, u8MarketId);
     if (HI_SUCCESS != ret)
@@ -411,7 +423,7 @@ HI_S32 HI_UNF_ADVCA_GetStbSn(HI_U8 u8StbSn[4])
 
     if (HI_NULL == u8StbSn)
     {
-        HI_ERR_CA("pu32SerialNumber == NULL, invalid.\n");
+        HI_ERR_CA("u8StbSn == NULL, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
 
@@ -446,6 +458,11 @@ HI_S32 HI_UNF_ADVCA_SetStbSn(HI_U8 u8StbSn[4])
         return HI_ERR_CA_NOT_INIT;
     }
 
+    if (HI_NULL == u8StbSn)
+    {
+        HI_ERR_CA("u8StbSn == NULL, invalid.\n");
+        return HI_ERR_CA_INVALID_PARA;
+    }
     ret = ioctl(g_s32CaFd, CMD_CA_SET_STBSN, u8StbSn);
     if (HI_SUCCESS != ret)
     {
@@ -514,6 +531,12 @@ HI_S32 HI_UNF_ADVCA_SetVersionId(HI_U8 u8VersionId[4])
         return HI_ERR_CA_NOT_INIT;
     }
 
+    if (HI_NULL == u8VersionId)
+    {
+        HI_ERR_CA("u8VersionId == NULL, invalid.\n");
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
     ret = ioctl(g_s32CaFd, CMD_CA_SET_VERSIONID, u8VersionId);
     if (HI_SUCCESS != ret)
     {
@@ -538,7 +561,7 @@ HI_S32 HI_UNF_ADVCA_SetVersionId(HI_U8 u8VersionId[4])
 HI_S32 HI_UNF_ADVCA_LockHardCwSel(HI_VOID)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -551,7 +574,7 @@ HI_S32 HI_UNF_ADVCA_LockHardCwSel(HI_VOID)
         HI_ERR_CA("ca ioctl CMD_CA_LOCKHARDCWSEL err. \n");
         return ret;
     }
-    
+
     return HI_SUCCESS;
 }
 
@@ -583,7 +606,7 @@ HI_S32 HI_UNF_ADVCA_LockBootDecEn(HI_VOID)
         return ret;
     }
 
-    return HI_SUCCESS;    
+    return HI_SUCCESS;
 }
 
 /***********************************************************************************
@@ -606,7 +629,7 @@ HI_S32 HI_UNF_ADVCA_GetBootDecEnStat(HI_U32 *pu32Stat)
         HI_ERR_CA("ca not init\n");
         return HI_ERR_CA_NOT_INIT;
     }
-    
+
     if (HI_NULL == pu32Stat)
     {
         HI_ERR_CA("pu32Stat == NULL, invalid.\n");
@@ -620,7 +643,7 @@ HI_S32 HI_UNF_ADVCA_GetBootDecEnStat(HI_U32 *pu32Stat)
         return ret;
     }
 
-    return HI_SUCCESS;    
+    return HI_SUCCESS;
 }
 
 /***********************************************************************************
@@ -637,7 +660,7 @@ HI_S32 HI_UNF_ADVCA_GetBootDecEnStat(HI_U32 *pu32Stat)
 HI_S32 HI_UNF_ADVCA_LockR2RHardKey(HI_VOID)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -650,7 +673,7 @@ HI_S32 HI_UNF_ADVCA_LockR2RHardKey(HI_VOID)
         HI_ERR_CA("ca ioctl CMD_CA_LOCKR2RHARDKEY err. \n");
         return ret;
     }
-    
+
     return HI_SUCCESS;
 }
 
@@ -668,7 +691,7 @@ HI_S32 HI_UNF_ADVCA_LockR2RHardKey(HI_VOID)
 HI_S32 HI_UNF_ADVCA_GetHardCwSelStat(HI_BOOL *pbLock)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -680,14 +703,14 @@ HI_S32 HI_UNF_ADVCA_GetHardCwSelStat(HI_BOOL *pbLock)
         HI_ERR_CA("pbLock == NULL, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     ret = ioctl(g_s32CaFd, CMD_CA_STATHARDCWSEL,pbLock);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("ca ioctl CMD_CA_STATHARDCWSEL err. \n");
         return ret;
-    }    
-    
+    }
+
     return HI_SUCCESS;
 }
 
@@ -706,7 +729,7 @@ HI_S32 HI_UNF_ADVCA_GetHardCwSelStat(HI_BOOL *pbLock)
 HI_S32 HI_UNF_ADVCA_GetR2RHardKeyStat(HI_BOOL *pbLock)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -724,8 +747,8 @@ HI_S32 HI_UNF_ADVCA_GetR2RHardKeyStat(HI_BOOL *pbLock)
     {
         HI_ERR_CA("ca ioctl CMD_CA_STATR2RHARDKEY err. \n");
         return ret;
-    }    
-    
+    }
+
     return HI_SUCCESS;
 
 }
@@ -744,7 +767,7 @@ HI_S32 HI_UNF_ADVCA_GetR2RHardKeyStat(HI_BOOL *pbLock)
 HI_S32 HI_UNF_ADVCA_DisableLinkProtection(HI_VOID)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -757,13 +780,13 @@ HI_S32 HI_UNF_ADVCA_DisableLinkProtection(HI_VOID)
         HI_ERR_CA("ca ioctl CMD_CA_DISABLELP err. \n");
         return ret;
     }
-    
+
     return HI_SUCCESS;
 }
 
 /***********************************************************************************
 *  Function:       HI_UNF_ADVCA_DisableSelfBoot
-*  Description:    Disable self boot. 
+*  Description:    Disable self boot.
 *  Calls:
 *  Data Accessed:  NA
 *  Data Updated:   NA
@@ -775,7 +798,7 @@ HI_S32 HI_UNF_ADVCA_DisableLinkProtection(HI_VOID)
 HI_S32 HI_UNF_ADVCA_DisableSelfBoot(HI_VOID)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -788,7 +811,7 @@ HI_S32 HI_UNF_ADVCA_DisableSelfBoot(HI_VOID)
         HI_ERR_CA("ca ioctl CMD_CA_DISABLESELFBOOT err. \n");
         return ret;
     }
-    
+
     return HI_SUCCESS;
 }
 
@@ -806,7 +829,7 @@ HI_S32 HI_UNF_ADVCA_DisableSelfBoot(HI_VOID)
 HI_S32 HI_UNF_ADVCA_GetSelfBootStat(HI_BOOL *pbDisable)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -825,7 +848,7 @@ HI_S32 HI_UNF_ADVCA_GetSelfBootStat(HI_BOOL *pbDisable)
         HI_ERR_CA("ca ioctl CMD_CA_GET_SELFBOOT err. \n");
         return ret;
     }
-    
+
     return HI_SUCCESS;
 }
 
@@ -878,7 +901,7 @@ HI_S32 HI_UNF_ADVCA_GetSecBootStat(HI_BOOL *pbEnable,HI_UNF_ADVCA_FLASH_TYPE_E *
     {
         *pbEnable = HI_FALSE;
     }
-    
+
     /**Get boot flash selection control flag. CNcomment:获取flash启动类型控制标志 CNend*/
     ret = ioctl(g_s32CaFd, CMD_CA_GET_BOOTSEL_CTRL, &val);
     if (HI_SUCCESS != ret)
@@ -886,7 +909,7 @@ HI_S32 HI_UNF_ADVCA_GetSecBootStat(HI_BOOL *pbEnable,HI_UNF_ADVCA_FLASH_TYPE_E *
         HI_ERR_CA("ca ioctl CMD_CA_GET_BOOTSEL_CTRL err. \n");
         return ret;
     }
-    
+
     if(0 == val)
     {
         *penFlashType = HI_UNF_ADVCA_FLASH_TYPE_BUTT;
@@ -920,7 +943,7 @@ HI_S32 HI_UNF_ADVCA_EnableSecBoot(HI_UNF_ADVCA_FLASH_TYPE_E enFlashType)
 {
     HI_S32 ret;
     HI_U32 u32BootselCtrl = 1;
-   
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -967,7 +990,7 @@ HI_S32 HI_UNF_ADVCA_EnableSecBoot(HI_UNF_ADVCA_FLASH_TYPE_E enFlashType)
 HI_S32 HI_UNF_ADVCA_EnableSecBootEx(HI_VOID)
 {
     HI_S32 ret;
-   
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -989,7 +1012,7 @@ HI_S32 HI_UNF_ADVCA_SetFlashTypeEx(HI_UNF_ADVCA_FLASH_TYPE_E enFlashType)
 {
     HI_S32 ret;
     HI_U32 u32BootselCtrl = 1;
-   
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -1005,7 +1028,7 @@ HI_S32 HI_UNF_ADVCA_SetFlashTypeEx(HI_UNF_ADVCA_FLASH_TYPE_E enFlashType)
     {
         HI_ERR_CA("enFlashType set to HI_UNF_ADVCA_FLASH_TYPE_NOR, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
-    }    
+    }
 
      /**Set the startup flash type.  CNcomment:设置安全启动的Flash类型 CNend*/
     ret = ioctl(g_s32CaFd, CMD_CA_SET_BOOTMODE, &enFlashType);
@@ -1427,7 +1450,7 @@ HI_S32 HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U8
     }
 
     ret = ioctl(g_s32CaFd, CMD_CA_R2R_GETLADDER, &enTotalStage);
-    if (HI_SUCCESS != ret)    
+    if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("ca ioctl CMD_CA_R2R_GETLADDER err. \n");
         return ret;
@@ -1498,10 +1521,10 @@ HI_S32 HI_UNF_ADVCA_SetDVBSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U8
 }
 
 HI_S32 HI_UNF_ADVCA_SetGDRMSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
-									HI_HANDLE hCipherHandle,
-									HI_U8 *pu8Input,
-									HI_U32 u32InputLen,
-									HI_U32 *pu32GdrmFlag)
+                                    HI_HANDLE hCipherHandle,
+                                    HI_U8 *pu8Input,
+                                    HI_U32 u32InputLen,
+                                    HI_U32 *pu32GdrmFlag)
 {
     HI_S32 ret = HI_SUCCESS;
     CA_CMD_SUPPER_ID_S stTrans;
@@ -1519,8 +1542,8 @@ HI_S32 HI_UNF_ADVCA_SetGDRMSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
         return HI_ERR_CA_INVALID_PARA;
     }
 
-	if ((HI_UNF_ADVCA_KEYLADDER_LEV3 == enLevel) && (NULL == pu32GdrmFlag))
-	{
+    if ((HI_UNF_ADVCA_KEYLADDER_LEV3 == enLevel) && (NULL == pu32GdrmFlag))
+    {
         HI_ERR_CA("Invalid level and enLevel, pu8GdrmFlag pointer.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
@@ -1530,12 +1553,12 @@ HI_S32 HI_UNF_ADVCA_SetGDRMSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
 
     stGDRMCryptParam.stCACryptParams.ladder = enLevel;
     stGDRMCryptParam.stCACryptParams.enKlTarget = HI_UNF_ADVCA_CA_TARGET_MULTICIPHER;
-	if (HI_UNF_ADVCA_KEYLADDER_LEV3 == enLevel)
-	{
-		stGDRMCryptParam.u32KeyAddr = hCipherHandle & 0xFF;
-		stGDRMCryptParam.pu32GDRMFlag = pu32GdrmFlag;
-	}
-	stGDRMCryptParam.bIsDecrypt = HI_TRUE;
+    if (HI_UNF_ADVCA_KEYLADDER_LEV3 == enLevel)
+    {
+        stGDRMCryptParam.u32KeyAddr = hCipherHandle & 0xFF;
+        stGDRMCryptParam.pu32GDRMFlag = pu32GdrmFlag;
+    }
+    stGDRMCryptParam.bIsDecrypt = HI_TRUE;
     memcpy(stGDRMCryptParam.stCACryptParams.pDin, pu8Input, u32InputLen);
 
     stTrans.enCmdChildID = CMD_CHILD_ID_CA_GDRM_CRYPT;
@@ -1552,7 +1575,7 @@ HI_S32 HI_UNF_ADVCA_SetGDRMSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel,
     return HI_SUCCESS;
 }
 
-/** 
+/**
 \brief 加载LPK
 */
 HI_S32 HI_UNF_ADVCA_LoadLpk(HI_U8 *pEncryptedLpk)
@@ -1572,12 +1595,6 @@ HI_S32 HI_UNF_ADVCA_LoadLpk(HI_U8 *pEncryptedLpk)
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_CONAX != g_vendorType)
-    {
-        HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
-        return HI_ERR_CA_NOT_SUPPORT;
-    }
-
     memcpy(stLoadLpk.EncryptLpk, pEncryptedLpk, 16);
     ret = ioctl(g_s32CaFd, CMD_CA_LPK_LOAD, &stLoadLpk);
     if (HI_SUCCESS != ret)
@@ -1586,7 +1603,7 @@ HI_S32 HI_UNF_ADVCA_LoadLpk(HI_U8 *pEncryptedLpk)
         return ret;
     }
 
-    return HI_SUCCESS; 
+    return HI_SUCCESS;
 }
 
 /***********************************************************************************
@@ -1623,12 +1640,6 @@ static HI_S32 HI_ADVCA_DecryptLptBlock(HI_U8 *pEncryptedBlock,HI_U8 *pPlainBlock
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_CONAX != g_vendorType)
-    {
-        HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
-        return HI_ERR_CA_NOT_SUPPORT;
-    }
-    
     memcpy(stDecryptLpData.EncryptData, pEncryptedBlock, 8);
     ret = ioctl(g_s32CaFd, CMD_CA_LPK_DECRYPT, &stDecryptLpData);
     if (HI_SUCCESS != ret)
@@ -1657,145 +1668,139 @@ HI_S32 HI_UNF_ADVCA_DecryptLptParam(HI_U8 *pCipherText,HI_S32 s32TextLen,HI_U8 *
     HI_S32 BlkNum, BlkIdx,s32BlkLen = 8;
     HI_S32 i,Ret;
     HI_S32 TailValidBytes;
-    HI_U8 En1[8], Dn[8];
-    HI_U8 IV[8];
+    HI_U8 En1[8], Dn[8] = {0};
+    HI_U8 IV[8]= {0};
     HI_U8 *pCipherBlk,*pPlainBlk;
-    HI_U8 CN2[8],*pCN1,*pPN1,*pCN,*pPN;
+    HI_U8 CN2[8] = {0},*pCN1,*pPN1,*pCN,*pPN;
 
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
         return HI_ERR_CA_NOT_INIT;
     }
-    
+
     if (HI_NULL == pCipherText || HI_NULL == pPlainText || s32TextLen <= s32BlkLen)
     {
         HI_ERR_CA("invalid parameter\n");
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if (HI_UNF_ADVCA_CONAX != g_vendorType)
-    {
-        HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
-        return HI_ERR_CA_NOT_SUPPORT;
-    }
-    
-    BlkNum = (s32TextLen + s32BlkLen - 1) / s32BlkLen;	
+    BlkNum = (s32TextLen + s32BlkLen - 1) / s32BlkLen;
     pCipherBlk = pCipherText;
     pPlainBlk = pPlainText;
     memset(IV, 0, (HI_U32)s32BlkLen);
-	    
+
     if (0 != s32TextLen%8)
     {
-	    /*1. Decrypt P[0] ~ P[n-2] */
-	    for (BlkIdx = 0; BlkIdx < BlkNum - 2; BlkIdx++)
-	    {
-	        /* ECB Decrypt */
-	        Ret = HI_ADVCA_DecryptLptBlock(pCipherBlk,pPlainBlk);
-	        if (HI_SUCCESS != Ret)
-	        {
-	            HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
-	            return Ret;
-	        }
-	        
-	        /* XOR */
-	        for (i = 0; i < s32BlkLen; i++)
-	        {
-	        	pPlainBlk[i] = pPlainBlk[i] ^ IV[i];
-	        }
-	
-	        /* Update */
-	        memcpy(IV, pCipherBlk, (HI_U32)s32BlkLen);
-	        pCipherBlk += s32BlkLen;
-	        pPlainBlk  += s32BlkLen;
-	    }
-	
-	    /* Record C[n-2] C[n-1] P[n-1]*/
-	    memcpy(CN2, IV, (HI_U32)s32BlkLen);
-	    pCN1 = pCipherBlk;
-	    pPN1 = pPlainBlk;
-	
-	    /*2. Decrypt P[n] */
-	    // D[n] = Decrypt (K, C[n-1]).
-	    Ret = HI_ADVCA_DecryptLptBlock(pCN1,Dn);
-	    if (HI_SUCCESS != Ret)
-	    {
-	        HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
-	        return Ret;
-	    }
-	
-	    // C = Cn || 0(B-M)
-	    memcpy(IV, pCipherText + (BlkNum-1) * s32BlkLen, (HI_U32)s32BlkLen);  /* IV = Cn */
-	    TailValidBytes = (0 == s32TextLen % s32BlkLen) ? (s32BlkLen) : (s32TextLen % s32BlkLen);
-	    for (i = TailValidBytes; i < s32BlkLen; i++)
-	    {
-	        IV[i] = 0;
-	    }
-	
-	    // X[n] = D[n] XOR C
-	    for (i = 0; i < s32BlkLen; i++)
-	    {
-	        Dn[i] = Dn[i] ^ IV[i];
-	    }
-	
-	    // Pn = Head(X[n],M)
-	    pPN = pPlainText + (BlkNum - 1) * s32BlkLen;
-	    memcpy(pPN, Dn, (HI_U32)TailValidBytes);
-	
-	    /*3. Decrypt P[n-1] */
-	    // E[n-1] = Cn || Tail (Xn, B-M) 
-	    pCN  = pCN1 + s32BlkLen;
-	    memcpy(En1, pCN, (HI_U32)TailValidBytes);
+        /*1. Decrypt P[0] ~ P[n-2] */
+        for (BlkIdx = 0; BlkIdx < BlkNum - 2; BlkIdx++)
+        {
+            /* ECB Decrypt */
+            Ret = HI_ADVCA_DecryptLptBlock(pCipherBlk,pPlainBlk);
+            if (HI_SUCCESS != Ret)
+            {
+                HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
+                return Ret;
+            }
 
-		if ( (s32BlkLen - TailValidBytes) <= (8 - TailValidBytes) )
-		{
-		    memcpy(En1 + TailValidBytes, Dn + TailValidBytes, (HI_U32)(s32BlkLen - TailValidBytes));
-		}
-		else
-		{
-		    HI_ERR_CA("Invalid TailValidBytes, Overrunning static array of size 8 bytes!\n");
-			return HI_FAILURE;
-		}
-	
-	    // X[n-1] = Decrypt (K, E[n-1])
-	    pPN1 = pPlainText + (BlkNum - 2) * s32BlkLen;
-	    Ret = HI_ADVCA_DecryptLptBlock(En1,pPN1);   
-	    if (HI_SUCCESS != Ret)
-	    {
-	        HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
-	        return Ret;
-	    }
-	
-	    // P[n-1] = X[n-1] XOR C[n-2]
-	    for (i = 0; i < s32BlkLen; i++)
-	    {
-	        pPN1[i] = pPN1[i] ^ CN2[i];
-	    }
+            /* XOR */
+            for (i = 0; i < s32BlkLen; i++)
+            {
+                pPlainBlk[i] = pPlainBlk[i] ^ IV[i];
+            }
+
+            /* Update */
+            memcpy(IV, pCipherBlk, (HI_U32)s32BlkLen);
+            pCipherBlk += s32BlkLen;
+            pPlainBlk  += s32BlkLen;
+        }
+
+        /* Record C[n-2] C[n-1] P[n-1]*/
+        memcpy(CN2, IV, (HI_U32)s32BlkLen);
+        pCN1 = pCipherBlk;
+        pPN1 = pPlainBlk;
+
+        /*2. Decrypt P[n] */
+        // D[n] = Decrypt (K, C[n-1]).
+        Ret = HI_ADVCA_DecryptLptBlock(pCN1,Dn);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
+            return Ret;
+        }
+
+        // C = Cn || 0(B-M)
+        memcpy(IV, pCipherText + (BlkNum-1) * s32BlkLen, (HI_U32)s32BlkLen);  /* IV = Cn */
+        TailValidBytes = (0 == s32TextLen % s32BlkLen) ? (s32BlkLen) : (s32TextLen % s32BlkLen);
+        for (i = TailValidBytes; i < s32BlkLen; i++)
+        {
+            IV[i] = 0;
+        }
+
+        // X[n] = D[n] XOR C
+        for (i = 0; i < s32BlkLen; i++)
+        {
+            Dn[i] = Dn[i] ^ IV[i];
+        }
+
+        // Pn = Head(X[n],M)
+        pPN = pPlainText + (BlkNum - 1) * s32BlkLen;
+        memcpy(pPN, Dn, (HI_U32)TailValidBytes);
+
+        /*3. Decrypt P[n-1] */
+        // E[n-1] = Cn || Tail (Xn, B-M)
+        pCN  = pCN1 + s32BlkLen;
+        memcpy(En1, pCN, (HI_U32)TailValidBytes);
+
+        if ( (s32BlkLen - TailValidBytes) <= (8 - TailValidBytes) )
+        {
+            memcpy(En1 + TailValidBytes, Dn + TailValidBytes, (HI_U32)(s32BlkLen - TailValidBytes));
+        }
+        else
+        {
+            HI_ERR_CA("Invalid TailValidBytes, Overrunning static array of size 8 bytes!\n");
+            return HI_FAILURE;
+        }
+
+        // X[n-1] = Decrypt (K, E[n-1])
+        pPN1 = pPlainText + (BlkNum - 2) * s32BlkLen;
+        Ret = HI_ADVCA_DecryptLptBlock(En1,pPN1);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
+            return Ret;
+        }
+
+        // P[n-1] = X[n-1] XOR C[n-2]
+        for (i = 0; i < s32BlkLen; i++)
+        {
+            pPN1[i] = pPN1[i] ^ CN2[i];
+        }
 
     }
     else
     {
-	    for (BlkIdx = 0; BlkIdx < BlkNum ; BlkIdx++)
-	    {
-	        /* ECB Decrypt */
-	        Ret = HI_ADVCA_DecryptLptBlock(pCipherBlk,pPlainBlk);
-	        if (HI_SUCCESS != Ret)
-	        {
-	            HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
-	            return Ret;
-	        }
-	        
-	        /* XOR */
-	        for (i = 0; i < s32BlkLen; i++)
-	        {
-	        	pPlainBlk[i] = pPlainBlk[i] ^ IV[i];
-	        }
-	
-	        /* Update */
-	        memcpy(IV, pCipherBlk, (HI_U32)s32BlkLen);
-	        pCipherBlk += s32BlkLen;
-	        pPlainBlk  += s32BlkLen;
-	    }
+        for (BlkIdx = 0; BlkIdx < BlkNum ; BlkIdx++)
+        {
+            /* ECB Decrypt */
+            Ret = HI_ADVCA_DecryptLptBlock(pCipherBlk,pPlainBlk);
+            if (HI_SUCCESS != Ret)
+            {
+                HI_ERR_CA("HI_ADVCA_DecryptLptBlock failed:%x\n",Ret);
+                return Ret;
+            }
+
+            /* XOR */
+            for (i = 0; i < s32BlkLen; i++)
+            {
+                pPlainBlk[i] = pPlainBlk[i] ^ IV[i];
+            }
+
+            /* Update */
+            memcpy(IV, pCipherBlk, (HI_U32)s32BlkLen);
+            pCipherBlk += s32BlkLen;
+            pPlainBlk  += s32BlkLen;
+        }
     }
     return HI_SUCCESS;
 }
@@ -2007,13 +2012,13 @@ HI_S32 HI_UNF_ADVCA_GetJtagKey(HI_U8 *pkey)
 
 HI_S32 HI_UNF_ADVCA_SetSPRootKey(HI_U8 *pu8Key, HI_U32 u32Len)
 {
-	HI_S32 ret = HI_SUCCESS;
-	CA_KEY_S stCaKey;
-	if((NULL == pu8Key) || (16 != u32Len))
-	{
-		HI_ERR_CA("Invalid parameters!\n");
+    HI_S32 ret = HI_SUCCESS;
+    CA_KEY_S stCaKey;
+    if((NULL == pu8Key) || (16 != u32Len))
+    {
+        HI_ERR_CA("Invalid parameters!\n");
         return HI_ERR_CA_INVALID_PARA;
-	}
+    }
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
@@ -2026,7 +2031,7 @@ HI_S32 HI_UNF_ADVCA_SetSPRootKey(HI_U8 *pu8Key, HI_U32 u32Len)
         HI_ERR_CA("ca ioctl CMD_CA_SET_SP_ROOT_KEY err. \n");
         return ret;
     }
-	return HI_SUCCESS;
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_SetRSAKey(HI_U8 *pkey)
@@ -2061,7 +2066,7 @@ HI_S32 HI_UNF_ADVCA_SetRSAKey(HI_U8 *pkey)
         HI_ERR_CA("ca ioctl CMD_CA_EXT1_GETRSAKEY err. \n");
         return ret;
     }
-    
+
     if (memcmp(stCaKey.KeyBuf, stRdKey.KeyBuf, 512))
     {
         HI_ERR_CA("RSA Key Set err. \n");
@@ -2112,17 +2117,17 @@ HI_S32 HI_UNF_ADVCA_OtpReadByte(HI_U32 Addr, HI_U8 *pu8Value)
         return HI_ERR_CA_NOT_INIT;
     }
 
-	if((Addr >= 0x800) || (NULL == pu8Value))
-	{
+    if((Addr >= 0x800) || (NULL == pu8Value))
+    {
         HI_ERR_CA("Invalid parameters!\n");
         return HI_FAILURE;
-	}
+    }
 
     memset(&stCmdParam, 0, sizeof(stCmdParam));
 
     stCmdParam.enCmdChildID = CMD_CHILD_ID_OTP_READ_BYTE;
     memcpy(stCmdParam.pu8ParamBuf, &Addr, sizeof(HI_U32));
-	stCmdParam.u32ParamLen = 5;
+    stCmdParam.u32ParamLen = 5;
 
     ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != ret)
@@ -2131,7 +2136,7 @@ HI_S32 HI_UNF_ADVCA_OtpReadByte(HI_U32 Addr, HI_U8 *pu8Value)
         return ret;
     }
 
-	*pu8Value = stCmdParam.pu8ParamBuf[4];
+    *pu8Value = stCmdParam.pu8ParamBuf[4];
 
     return HI_SUCCESS;
 }
@@ -2175,7 +2180,7 @@ HI_S32 HI_UNF_ADVCA_OtpRead(HI_U32 Addr, HI_U32 *pValue)
         HI_ERR_CA("invalid param pValue\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     if (0 != (Addr % 4))
     {
         HI_ERR_CA("Addr is not aliged by 4\n");
@@ -2201,21 +2206,25 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
     HI_U32 u32VendorType = 0;
     HI_U8  SessionKey1[16];
     HI_U8  SessionKey2[16];
-    HI_UNF_CIPHER_CTRL_S CipherCtrl; 
+    HI_UNF_CIPHER_CTRL_S CipherCtrl;
     HI_UNF_ADVCA_KEYLADDER_LEV_E enStage = HI_UNF_ADVCA_KEYLADDER_BUTT;
-    HI_U8 u8CipherKey[16] = {0x10, 0x6b, 0xe2, 0x28, 0xc6, 0x7b, 0x82, 0x09, 0x6a, 0x17, 0xc7, 0x25, 0xe5, 0xd5, 0x55, 0x4e};
-    HI_U8 u8KeyladderKey1[16] = {0xb4, 0x8a, 0x34, 0xee, 0x36, 0x74, 0x8b, 0xf8, 0x98, 0x11, 0x10, 0x2c, 0x27, 0x8c, 0xe6, 0xdf};
-    HI_U8 u8KeyladderKey2[16] = {0xd2, 0x7b, 0xfc, 0x9b, 0x68, 0x91, 0x99, 0x62, 0x77, 0x0f, 0x27, 0x3c, 0xc8, 0x45, 0xfa, 0xfb};
-#ifdef SDK_SECURITY_ARCH_VERSION_V3
-	HI_UNF_CIPHER_ATTS_S stCipherAttr = {0};
-#endif
-    
+    HI_U8 u8CipherInput[16] = {0x10, 0x6b, 0xe2, 0x28, 0xc6, 0x7b, 0x82, 0x09, 0x6a, 0x17, 0xc7, 0x25, 0xe5, 0xd5, 0x55, 0x4e};
+    HI_U8 u8KeyladderInput1[16] = {0xb4, 0x8a, 0x34, 0xee, 0x36, 0x74, 0x8b, 0xf8, 0x98, 0x11, 0x10, 0x2c, 0x27, 0x8c, 0xe6, 0xdf};
+    HI_U8 u8KeyladderInput2[16] = {0xd2, 0x7b, 0xfc, 0x9b, 0x68, 0x91, 0x99, 0x62, 0x77, 0x0f, 0x27, 0x3c, 0xc8, 0x45, 0xfa, 0xfb};
+    HI_UNF_CIPHER_ATTS_S stCipherAttr = {0};
+
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
+
     if(HI_TRUE == g_bCryptologyConfig)
     {
-        HI_INFO_CA("HI_UNF_ADVCA_NovelCryptologyConfig has already be called\n");   
+        HI_INFO_CA("HI_UNF_ADVCA_NovelCryptologyConfig has already be called\n");
         return 0;
     }
-    
+
     ret = HI_UNF_ADVCA_GetVendorID(&u32VendorType);
     if (HI_SUCCESS != ret)
     {
@@ -2223,30 +2232,36 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
         return HI_FAILURE;
     }
     g_vendorType = (HI_UNF_ADVCA_VENDORID_E)u32VendorType;
-    
+
     if (HI_UNF_ADVCA_NOVEL != g_vendorType)
     {
         HI_ERR_CA("CA vendor NOT match! Permission denied:%d != %d!\n", HI_UNF_ADVCA_NOVEL, g_vendorType);
         return HI_ERR_CA_NOT_SUPPORT;
     }
-    
-    memset(SessionKey1,0,sizeof(SessionKey1)); 
-    memset(SessionKey2,0,sizeof(SessionKey2)); 
+
+    memset(SessionKey1,0,sizeof(SessionKey1));
+    memset(SessionKey2,0,sizeof(SessionKey2));
     memset(&CipherCtrl, 0, sizeof(HI_UNF_CIPHER_CTRL_S));
 
     /*open and config keyladder*/
-	ret = HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_AES);
+    ret = HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_AES);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("HI_UNF_ADVCA_SetR2RAlg failed:%#x\n", ret);
+        return ret;
+    }
+
     ret = HI_UNF_ADVCA_GetR2RKeyLadderStage(&enStage);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("HI_UNF_ADVCA_SetR2RSessionKey failed:%#x\n", ret);
         return ret;
     }
-    memcpy(SessionKey1, u8KeyladderKey1, sizeof(SessionKey1));
-    ret |= HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV1,SessionKey1); 
+    memcpy(SessionKey1, u8KeyladderInput1, sizeof(SessionKey1));
+    ret |= HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV1,SessionKey1);
     if(enStage == HI_UNF_ADVCA_KEYLADDER_LEV3)
     {
-        memcpy(SessionKey2, u8KeyladderKey2, sizeof(SessionKey2));
+        memcpy(SessionKey2, u8KeyladderInput2, sizeof(SessionKey2));
         ret |= HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV2,SessionKey2);
         if (HI_SUCCESS != ret)
         {
@@ -2254,32 +2269,30 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
             return ret;
         }
     }
-    /*open and config Cipher*/     
+    /*open and config Cipher*/
     CipherCtrl.bKeyByCA = HI_TRUE;
     CipherCtrl.enAlg = HI_UNF_CIPHER_ALG_AES;
     CipherCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     CipherCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
-    CipherCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB; 
+    CipherCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB;
     memset(CipherCtrl.u32IV, 0, sizeof(CipherCtrl.u32IV));
-    memcpy(CipherCtrl.u32Key, u8CipherKey, 16);
+    memcpy(CipherCtrl.u32Key, u8CipherInput, 16);
     ret = HI_UNF_CIPHER_Open();
     if (ret != HI_SUCCESS)
     {
         HI_ERR_CA("HI_UNF_CIPHER_Open failed:%#x\n", ret);
         return ret;
     }
-    
-#ifndef SDK_SECURITY_ARCH_VERSION_V3
-    ret = HI_UNF_CIPHER_CreateHandle(&g_hCipher);
-#else
+
     stCipherAttr.enCipherType = HI_UNF_CIPHER_TYPE_NORMAL;
-	ret = HI_UNF_CIPHER_CreateHandle(&g_hCipher, &stCipherAttr);
-#endif
+
+    ret = HI_UNF_CIPHER_CreateHandle(&g_hCipher, &stCipherAttr);
     if (ret != HI_SUCCESS)
     {
         HI_ERR_CA("HI_UNF_CIPHER_CreateHandle failed:%#x\n", ret);
         return ret;
     }
+
     ret = HI_UNF_CIPHER_ConfigHandle(g_hCipher, &CipherCtrl);
     if (ret != HI_SUCCESS)
     {
@@ -2289,26 +2302,26 @@ HI_S32 HI_UNF_ADVCA_NovelCryptologyConfig(HI_VOID)
     }
     g_bCryptologyConfig = HI_TRUE;
     return HI_SUCCESS;
-} 
+}
 
 HI_S32 HI_UNF_ADVCA_NovelDataEncrypt(HI_U8 *pPlainText, HI_U32 TextLen, HI_U8 *pCipherText)
 {
     HI_S32 ret = HI_FAILURE;
-    
-    if(HI_FALSE == g_bCryptologyConfig)
+
+    if (HI_FALSE == g_bCryptologyConfig)
     {
         HI_ERR_CA("call HI_UNF_ADVCA_NovelCryptologyConfig first\n");
-        return ret; 
+        return ret;
     }
-    else if(!pPlainText || !pCipherText)             
+    if ((HI_NULL == pPlainText) || (HI_NULL == pCipherText))
     {
         HI_ERR_CA("null pointer error\n");
-        return ret; 
+        return HI_ERR_CA_INVALID_PARA;
     }
-    else if((TextLen < 16) || (TextLen%16 != 0))
+    if ((TextLen < 16) || (TextLen%16 != 0))
     {
         HI_ERR_CA("Data length must be times of 16BYTE\n");
-        return ret;     
+        return HI_ERR_CA_INVALID_PARA;
     }
 
     if (HI_UNF_ADVCA_NOVEL != g_vendorType)
@@ -2316,29 +2329,29 @@ HI_S32 HI_UNF_ADVCA_NovelDataEncrypt(HI_U8 *pPlainText, HI_U32 TextLen, HI_U8 *p
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
     }
-    
-    return HI_UNF_CIPHER_Encrypt(g_hCipher,(HI_U32)pPlainText,(HI_U32)pCipherText,TextLen);
+
+    return HI_UNF_CIPHER_Encrypt(g_hCipher, (HI_U32)pPlainText, (HI_U32)pCipherText, TextLen);
 }
 
 
 HI_S32 HI_UNF_ADVCA_NovelDataDecrypt(HI_U8 *pCipherText, HI_U32 TextLen, HI_U8 *pPlainText)
 {
     HI_S32 ret = HI_FAILURE;
-    
+
     if(HI_FALSE == g_bCryptologyConfig)
     {
         HI_ERR_CA("call HI_UNF_ADVCA_NovelCryptologyConfig first\n");
-        return ret; 
+        return ret;
     }
-    else if(!pPlainText || !pCipherText)             
+    if ((HI_NULL == pPlainText) || (HI_NULL == pCipherText))
     {
         HI_ERR_CA("null pointer error\n");
-        return ret; 
+        return HI_ERR_CA_INVALID_PARA;
     }
-    else if((TextLen < 16) || (TextLen%16 != 0))
+    if ((TextLen < 16) || (TextLen%16 != 0))
     {
         HI_ERR_CA("Data length must be times of 16BYTE\n");
-        return ret;     
+        return HI_ERR_CA_INVALID_PARA;
     }
 
     if (HI_UNF_ADVCA_NOVEL != g_vendorType)
@@ -2346,8 +2359,8 @@ HI_S32 HI_UNF_ADVCA_NovelDataDecrypt(HI_U8 *pCipherText, HI_U32 TextLen, HI_U8 *
         HI_ERR_CA("CA vendor NOT match! Permission denied!\n");
         return HI_ERR_CA_NOT_SUPPORT;
     }
-    
-    return HI_UNF_CIPHER_Decrypt(g_hCipher,(HI_U32)pCipherText,(HI_U32)pPlainText,TextLen);
+
+    return HI_UNF_CIPHER_Decrypt(g_hCipher, (HI_U32)pCipherText, (HI_U32)pPlainText, TextLen);
 }
 
 HI_S32 HI_UNF_ADVCA_IsMarketIdSet(HI_BOOL *pbIsMarketIdSet)
@@ -2369,7 +2382,7 @@ HI_S32 HI_UNF_ADVCA_IsMarketIdSet(HI_BOOL *pbIsMarketIdSet)
     ret = ioctl(g_s32CaFd, CMD_CA_CHECK_MARKET_ID_SET, pbIsMarketIdSet);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_CHECK_MARKET_ID_SET err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_CHECK_MARKET_ID_SET err.\n");
         return ret;
     }
 
@@ -2397,7 +2410,7 @@ HI_S32 HI_UNF_ADVCA_GetVendorID(HI_U32 *pu32VendorID)
     ret = ioctl(g_s32CaFd, CMD_CA_GET_VENDOR_ID, pu32VendorID);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_VENDOR_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_VENDOR_ID err.\n");
         return ret;
     }
 
@@ -2434,7 +2447,7 @@ HI_S32 HI_UNF_ADVCA_GetSPKeyLadderStage(HI_UNF_ADVCA_KEYLADDER_LEV_E *penStage)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_GETLADDER, penStage);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err.\n");
         return ret;
     }
 
@@ -2471,7 +2484,7 @@ HI_S32 HI_UNF_ADVCA_SetSPKeyLadderStage(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_SETLADDER, &enStage);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_SETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_SETLADDER err.\n");
         return ret;
     }
 
@@ -2508,7 +2521,7 @@ HI_S32 HI_UNF_ADVCA_SetSPAlg(HI_UNF_ADVCA_ALG_TYPE_E enType)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_SETALG, &enType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_SETALG err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_SETALG err.\n");
         return ret;
     }
 
@@ -2545,7 +2558,7 @@ HI_S32 HI_UNF_ADVCA_GetSPAlg(HI_UNF_ADVCA_ALG_TYPE_E *pEnType)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_GETALG, pEnType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_GETALG err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_GETALG err.\n");
         return ret;
     }
 
@@ -2582,7 +2595,7 @@ HI_S32 HI_UNF_ADVCA_SetSPDscMode(HI_UNF_ADVCA_SP_DSC_MODE_E enType)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_SET_DSC_MODE, &enType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_SET_DSC_MODE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_SET_DSC_MODE err.\n");
         return ret;
     }
 
@@ -2619,7 +2632,7 @@ HI_S32 HI_UNF_ADVCA_GetSPDscMode(HI_UNF_ADVCA_SP_DSC_MODE_E *pEnType)
     ret = ioctl(g_s32CaFd, CMD_CA_SP_GET_DSC_MODE, pEnType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_GET_DSC_MODE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_GET_DSC_MODE err.\n");
         return ret;
     }
 
@@ -2656,9 +2669,9 @@ HI_S32 HI_UNF_ADVCA_SetSPSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U8 
     }
 
     ret = ioctl(g_s32CaFd, CMD_CA_SP_GETLADDER, &enTotalStage);
-    if (HI_SUCCESS != ret)    
+    if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err.\n");
         return ret;
     }
 
@@ -2673,7 +2686,7 @@ HI_S32 HI_UNF_ADVCA_SetSPSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U8 
     ret = ioctl(g_s32CaFd, CMD_CA_SP_CRYPT, &cryptPm);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_CRYPT err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_CRYPT err.\n");
         return ret;
     }
 
@@ -2710,7 +2723,7 @@ HI_S32 HI_UNF_ADVCA_GetCSA3Alg(HI_UNF_ADVCA_ALG_TYPE_E *pEnType)
     ret = ioctl(g_s32CaFd, CMD_CA_DVB_CSA3_GETALG, pEnType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_DVB_CSA3_GETALG err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_DVB_CSA3_GETALG err.\n");
         return ret;
     }
 
@@ -2747,7 +2760,7 @@ HI_S32 HI_UNF_ADVCA_SetCSA3Alg(HI_UNF_ADVCA_ALG_TYPE_E enType)
     ret = ioctl(g_s32CaFd, CMD_CA_DVB_CSA3_SETALG, &enType);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_DVB_CSA3_SETALG err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_DVB_CSA3_SETALG err.\n");
         return ret;
     }
 
@@ -2784,7 +2797,7 @@ HI_S32 HI_UNF_ADVCA_GetCSA3KeyLadderStage(HI_UNF_ADVCA_KEYLADDER_LEV_E *penStage
     ret = ioctl(g_s32CaFd, CMD_CA_CSA3_GETLADDER, penStage);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_CSA3_GETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_CSA3_GETLADDER err.\n");
         return ret;
     }
 
@@ -2821,7 +2834,7 @@ HI_S32 HI_UNF_ADVCA_SetCSA3KeyLadderStage(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage)
     ret = ioctl(g_s32CaFd, CMD_CA_CSA3_SETLADDER, &enStage);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_CSA3_SETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_CSA3_SETLADDER err.\n");
         return ret;
     }
 
@@ -2858,9 +2871,9 @@ HI_S32 HI_UNF_ADVCA_SetCSA3SessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U
     }
 
     ret = ioctl(g_s32CaFd, CMD_CA_CSA3_GETLADDER, &enTotalStage);
-    if (HI_SUCCESS != ret)    
+    if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SP_GETLADDER err.\n");
         return ret;
     }
 
@@ -2875,7 +2888,7 @@ HI_S32 HI_UNF_ADVCA_SetCSA3SessionKey(HI_UNF_ADVCA_KEYLADDER_LEV_E enStage, HI_U
     ret = ioctl(g_s32CaFd, CMD_CA_CSA3_CRYPT, &cryptPm);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_CSA3_CRYPT err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_CSA3_CRYPT err.\n");
         return ret;
     }
 
@@ -2896,11 +2909,11 @@ HI_S32 HI_UNF_ADVCA_DisableDDRWakeup(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_LOWPOWER_DISABLE, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_LOWPOWER_DISABLE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_LOWPOWER_DISABLE err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -2918,11 +2931,11 @@ HI_S32 HI_UNF_ADVCA_SetDDRScramble(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_DDR_SCRAMBLE_EN, &u32Set);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_DDR_SCRAMBLE_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_DDR_SCRAMBLE_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -2941,15 +2954,15 @@ HI_S32 HI_UNF_ADVCA_GetDDRScrambleStat(HI_U32 *pu32Stat)
         HI_ERR_CA("pu32Stat == NULL, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     ret = ioctl(g_s32CaFd, CMD_CA_GET_DDR_SCRAMBLE_EN, pu32Stat);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_DDR_SCRAMBLE_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_DDR_SCRAMBLE_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -2967,31 +2980,37 @@ HI_S32 HI_UNF_ADVCA_LockCSA3HardCW(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_CSA3_HARDONLY_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_CSA3_HARDONLY_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_CSA3_HARDONLY_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
 HI_S32 HI_UNF_ADVCA_GetCSA3HardCWStat(HI_BOOL *pbLock)
 {
     HI_S32 ret;
-    
+
     if (g_AdvcaInitCounter < 0)
     {
         HI_ERR_CA("ca not init\n");
         return HI_ERR_CA_NOT_INIT;
     }
 
+    if (HI_NULL == pbLock)
+    {
+        HI_ERR_CA("pbLock == NULL, invalid.\n");
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
     ret = ioctl(g_s32CaFd, CMD_CA_GET_CSA3_HARDONLY_EN, pbLock);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_CSA3_HARDONLY_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_CSA3_HARDONLY_EN err.\n");
         return ret;
-    }    
-    
+    }
+
     return HI_SUCCESS;
 }
 
@@ -3009,11 +3028,11 @@ HI_S32 HI_UNF_ADVCA_LockSPHardCW(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_SP_HARDONLY_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_SP_HARDONLY_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_SP_HARDONLY_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3031,11 +3050,11 @@ HI_S32 HI_UNF_ADVCA_DisableTsklDES(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_TSKL_DES_DISABLE, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_TSKL_DES_DISABLE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_TSKL_DES_DISABLE err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3053,11 +3072,11 @@ HI_S32 HI_UNF_ADVCA_LockGlobalOTP(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_OTP_GLOBAL_LOCK_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_OTP_GLOBAL_LOCK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_OTP_GLOBAL_LOCK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3075,11 +3094,11 @@ HI_S32 HI_UNF_ADVCA_DisableDCasKl(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_DCAS_KL_DISABLE, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_DCAS_KL_DISABLE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_DCAS_KL_DISABLE err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3097,11 +3116,11 @@ HI_S32 HI_UNF_ADVCA_EnableRuntimeCheck(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_RUNTIME_CHECK_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_RUNTIME_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_RUNTIME_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3119,11 +3138,11 @@ HI_S32 HI_UNF_ADVCA_EnableDDRWakeupCheck(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_WAKEUP_DDR_CHECK_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_WAKEUP_DDR_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_WAKEUP_DDR_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3141,11 +3160,11 @@ HI_S32 HI_UNF_ADVCA_EnableVersionCheck(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_VERSION_CHECK_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_VERSION_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_VERSION_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3164,15 +3183,15 @@ HI_S32 HI_UNF_ADVCA_GetVersionCheckStat(HI_U32 *pu32Stat)
         HI_ERR_CA("pu32Stat == NULL, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     ret = ioctl(g_s32CaFd, CMD_CA_GET_VERSION_CHECK_EN, pu32Stat);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_VERSION_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_VERSION_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3190,11 +3209,11 @@ HI_S32 HI_UNF_ADVCA_EnableBootMSIDCheck(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_BL_MSID_CHECK_EN, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_BL_MSID_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_BL_MSID_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3213,15 +3232,15 @@ HI_S32 HI_UNF_ADVCA_GetBootMSIDCheckStat(HI_U32 *pu32Stat)
         HI_ERR_CA("pu32Stat == NULL, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     ret = ioctl(g_s32CaFd, CMD_CA_GET_BL_MSID_CHECK_EN, pu32Stat);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_BL_MSID_CHECK_EN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_BL_MSID_CHECK_EN err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
+    return HI_SUCCESS;
 
 }
 
@@ -3239,33 +3258,41 @@ HI_S32 HI_UNF_ADVCA_DisableJtagRead(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SET_JTAG_READ_DISABLE, &u32Value);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SET_JTAG_READ_DISABLE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SET_JTAG_READ_DISABLE err.\n");
         return ret;
     }
 
-    return HI_SUCCESS;     
-
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(HI_UNF_R2RKeyladder_Cipher_Info_S * pstR2RkeyladderCipherInfo)
 {
     HI_S32 ret = 0;
+
     CA_CheckPointer(pstR2RkeyladderCipherInfo);
 
-    (HI_VOID)sem_wait(&g_PVRSem); 
-    
-    
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
+
+#ifdef HI_PVR_SUPPORT
+    (HI_VOID)sem_wait(&g_PVRSem);
+#endif
+
     ret = HI_UNF_ADVCA_SetR2RAlg(pstR2RkeyladderCipherInfo->KeyladderAlg);
-    if (ret)
+    if (ret != HI_SUCCESS)
     {
         HI_ERR_CA(" call HI_UNF_ADVCA_SetR2RAlg failed\n ");
         goto ConfigErr;
     }
+
     ret = HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV1, pstR2RkeyladderCipherInfo->SessionKey1);
-    if(HI_UNF_ADVCA_KEYLADDER_LEV3 == pstR2RkeyladderCipherInfo->KeyladderLevel)
+    if (HI_UNF_ADVCA_KEYLADDER_LEV3 == pstR2RkeyladderCipherInfo->KeyladderLevel)
     {
         ret |= HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV2, pstR2RkeyladderCipherInfo->SessionKey2);
-        if (ret)
+        if (ret != HI_SUCCESS)
         {
             HI_ERR_CA(" call HI_UNF_ADVCA_SetR2RSessionKey failed\n ");
             goto ConfigErr;
@@ -3273,19 +3300,21 @@ HI_S32 HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(HI_UNF_R2RKeyladder_Cipher_Info_
     }
 
     ret = HI_UNF_CIPHER_ConfigHandle(pstR2RkeyladderCipherInfo->hCipherHandle, &(pstR2RkeyladderCipherInfo->stCipherCtrl));
-    if (ret)
+    if (ret != HI_SUCCESS)
     {
         HI_ERR_CA(" call HI_UNF_CIPHER_ConfigHandle failed, hCipherHandle = 0x%x\n ",pstR2RkeyladderCipherInfo->hCipherHandle);
         goto ConfigErr;
     }
-    
+#ifdef HI_PVR_SUPPORT
     (HI_VOID)sem_post(&g_PVRSem);
-    return HI_SUCCESS;  
+#endif
+    return HI_SUCCESS;
 
- ConfigErr:
-    
-    (HI_VOID)sem_post(&g_PVRSem); 
-    return HI_FAILURE;  
+ConfigErr:
+#ifdef HI_PVR_SUPPORT
+    (HI_VOID)sem_post(&g_PVRSem);
+#endif
+    return HI_FAILURE;
 }
 
 #ifdef HI_PVR_SUPPORT
@@ -3294,21 +3323,38 @@ static unsigned char new_rand()
 {
     HI_U8 n = 0;
     HI_U32 u32Number = 0;
+    HI_S32 ret = HI_SUCCESS;
 
-    (HI_VOID)HI_MPI_CIPHER_Init();
-    (HI_VOID)HI_MPI_CIPHER_GetRandomNumber(&u32Number, -1);
-    (HI_VOID)HI_MPI_CIPHER_DeInit();
+    ret = HI_MPI_CIPHER_Init();
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("call HI_MPI_CIPHER_Init failed, ret: 0x%x\n", ret);
+        return 0;
+    }
+
+    ret = HI_MPI_CIPHER_GetRandomNumber(&u32Number, -1);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("call HI_MPI_CIPHER_GetRandomNumber failed, ret: 0x%x\n", ret);
+    }
+
+    ret = HI_MPI_CIPHER_DeInit();
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("call HI_MPI_CIPHER_DeInit failed, ret: 0x%x\n", ret);
+        return 0;
+    }
 
     n = u32Number & 0XFF;
 
     return n;
 }
 
-HI_S32 ADVCA_PVR_GetCADataFileName(const HI_CHAR *pRefFileName, HI_CHAR KeyFileName[128])
+static HI_S32 ADVCA_PVR_GetCADataFileName(const HI_CHAR *pRefFileName, HI_CHAR KeyFileName[128])
 {
     HI_CHAR  IndexSuffix[5] = ".key";
     HI_CHAR  *p = HI_NULL;
-    
+
     CA_CheckPointer(pRefFileName);
     CA_CheckPointer(KeyFileName);
 
@@ -3319,22 +3365,169 @@ HI_S32 ADVCA_PVR_GetCADataFileName(const HI_CHAR *pRefFileName, HI_CHAR KeyFileN
         memcpy(KeyFileName,pRefFileName,(HI_U32)(p - pRefFileName));
         memcpy(KeyFileName + (HI_U32)(p - pRefFileName),IndexSuffix,4);
         return HI_SUCCESS;
-    }   
+    }
     return HI_FAILURE;
 }
 
-HI_S32 ADVCA_PVR_SetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrCaData, HI_CA_PVR_KEY_INFO_S *pstNewKey)
+static HI_S32 ADVCA_PVR_SetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrCaData, HI_CA_PVR_KEY_INFO_S *pstNewKey)
 {
-    HI_S32 ret = HI_SUCCESS;    
-    HI_S32 fd = -1;
-    HI_U32 u32Seek = 0;
-    HI_U32 u32WriteCount = 0, u32TmpBlocks;
-    HI_U32 u32DataLen = 0, u32DataOffset;
-    HI_U8  *pu8Buf = HI_NULL;
+    HI_S32 ret = HI_SUCCESS;
+    HI_S32 fd;
+    HI_S32 len;
+    HI_U32 DataLen = 0;
+    HI_U8 *buf = HI_NULL;
+    HI_CHAR KeyFileName[128] = {0};
+    HI_CA_PVR_MAC_CADATA_S *pMacCaData;
+
+    CA_CheckPointer(pFileName);
+    CA_CheckPointer(pstPvrCaData);
+
+    if (pstNewKey != HI_NULL)
+    {
+        if (0 == pstPvrCaData->u32TotalBlockNum)
+        {
+            HI_ERR_CA("TotalBlockNum error!\n");
+            return HI_FAILURE;
+        }
+    }
+
+    if (pstPvrCaData->u32TotalBlockNum > MAX_PVR_KEY_BLOCK_NUMBERS)
+    {
+        HI_ERR_CA("u32TotalBlockNum: %d > %d\n", pstPvrCaData->u32TotalBlockNum, MAX_PVR_KEY_BLOCK_NUMBERS);
+        return HI_FAILURE;
+    }
+
+    ret = ADVCA_PVR_GetCADataFileName(pFileName, KeyFileName);
+    if (ret != HI_SUCCESS)
+    {
+        HI_ERR_CA("error, fail to get key file name!\n");
+        return HI_FAILURE;
+    }
+
+    fd = open(KeyFileName, O_RDWR);
+    if (fd < 0)
+    {
+        HI_ERR_CA("error, open %s failed!\n", KeyFileName);
+
+        return HI_FAILURE;
+    }
+
+    DataLen = sizeof(HI_CA_PVR_MAC_CADATA_S) + pstPvrCaData->u32TotalBlockNum * sizeof(HI_CA_PVR_KEY_INFO_S);
+
+    buf = (HI_U8*)malloc(DataLen);
+    if (buf == HI_NULL)
+    {
+        HI_ERR_CA("error, fail to malloc memory!\n");
+
+        close(fd);
+
+        return HI_FAILURE;
+    }
+
+    len = read(fd, buf, DataLen);
+    if (len != DataLen)
+    {
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    pMacCaData = (HI_CA_PVR_MAC_CADATA_S*)buf;
+
+    memset(pMacCaData->u8AES_CMAC, 0, sizeof(pMacCaData->u8AES_CMAC));
+    memcpy(&pMacCaData->stPvrCaData, pstPvrCaData, sizeof(HI_CA_PVR_CADATA_S));
+
+    if (pstNewKey != HI_NULL)
+    {
+       /*copy new key into buffer, because the latest key have no save into flash now! */
+       memcpy(buf + DataLen - sizeof(HI_CA_PVR_KEY_INFO_S), pstNewKey, sizeof(HI_CA_PVR_KEY_INFO_S));
+    }
+
+    ret = HI_UNF_ADVCA_CalculteAES_CMAC(buf + sizeof(pMacCaData->u8AES_CMAC), DataLen - sizeof(pMacCaData->u8AES_CMAC),
+        pstPvrCaData->stR2RkeyladderCipherInfo.SessionKey1, pMacCaData->u8AES_CMAC);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
+        pstPvrCaData->u32TotalBlockNum--;
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    if (0 != lseek(fd, 0, SEEK_SET))
+    {
+        HI_ERR_CA("lseek error\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    len = write(fd, buf, sizeof(HI_CA_PVR_MAC_CADATA_S));
+    if (len != sizeof(HI_CA_PVR_MAC_CADATA_S))
+    {
+        HI_ERR_CA("write CA private file error\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    if (pstNewKey != HI_NULL)
+    {
+        HI_U32 offset = DataLen - sizeof(HI_CA_PVR_KEY_INFO_S);
+
+        if (offset != lseek(fd, offset, SEEK_SET))
+        {
+            HI_ERR_CA("lseek error\n");
+
+            ret = HI_FAILURE;
+
+            goto RET;
+        }
+
+        len = write(fd, pstNewKey, sizeof(HI_CA_PVR_KEY_INFO_S));
+        if (len != sizeof(HI_CA_PVR_KEY_INFO_S))
+        {
+            HI_ERR_CA("write CA private file error\n");
+
+            ret = HI_FAILURE;
+
+            goto RET;
+        }
+    }
+
+    ret = HI_SUCCESS;
+
+RET:
+    if (fd >= 0)
+    {
+        close(fd);
+    }
+
+    if (HI_NULL != buf)
+    {
+        free(buf);
+    }
+
+    return ret;
+}
+
+static HI_S32 ADVCA_PVR_GetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S *pstPvrCaData, HI_U8 *pu8Buffer)
+{
+    HI_S32 ret = HI_SUCCESS;
+    HI_S32 fd;
+    HI_S32 len;
+    HI_U32 DataLen = 0;
+    HI_U8  *pu8Buf;
     HI_U8 MacKey[16];
+    HI_U8 Mac[16] = {0};
     HI_CHAR KeyFileName[128];
     HI_CA_PVR_MAC_CADATA_S stMacCaData;
+    HI_CA_PVR_CADATA_S* pstPrivateInfo = &stMacCaData.stPvrCaData;
 
+    CA_CheckPointer(pFileName);
     CA_CheckPointer(pstPvrCaData);
 
     ret = ADVCA_PVR_GetCADataFileName(pFileName, KeyFileName);
@@ -3344,160 +3537,28 @@ HI_S32 ADVCA_PVR_SetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrC
        return HI_FAILURE;
     }
 
-    memset(&stMacCaData,0x00,sizeof(HI_CA_PVR_MAC_CADATA_S));    
-    memcpy(&stMacCaData.stPvrCaData,pstPvrCaData,sizeof(HI_CA_PVR_CADATA_S));   
+    HI_INFO_CA("KeyFileName=%s\n", KeyFileName);
 
-    HI_INFO_CA("SetPVRKeyData:pstPrivateInfo->u32TotalBlockNum is %d------>\n", pstPvrCaData->u32TotalBlockNum);
-
-    pu8Buf = (HI_U8 *)malloc(sizeof(HI_CA_PVR_CADATA_S)
-              + (pstPvrCaData->u32TotalBlockNum)*sizeof(HI_CA_PVR_KEY_INFO_S));
-    if (pu8Buf == HI_NULL)
+    fd = open(KeyFileName, O_RDONLY);
+    if (fd < 0)
     {
-        HI_ERR_CA("error, fail to malloc memory!\n");
+        HI_ERR_CA("open %s failed!\n", KeyFileName);
         return HI_FAILURE;
     }
 
-    /*copy head into buffer */
-    memcpy(&pu8Buf[0], &stMacCaData.stPvrCaData, sizeof(HI_CA_PVR_CADATA_S));
-
-    fd = open(KeyFileName,O_RDWR);
-	if(fd < 0)
-	{
-		HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
-		free(pu8Buf);
-		return HI_FAILURE;
-	}
-
-    /*skip head info*/
-    u32Seek = sizeof(HI_CA_PVR_MAC_CADATA_S);
-    (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
-    u32DataOffset = sizeof(HI_CA_PVR_CADATA_S);
-    if (pstNewKey != HI_NULL)
+    len = read(fd, &stMacCaData, sizeof(HI_CA_PVR_MAC_CADATA_S));
+    if ((sizeof(HI_CA_PVR_MAC_CADATA_S) != len) || (0 == pstPrivateInfo->u32TotalBlockNum) || (pstPrivateInfo->u32TotalBlockNum > MAX_PVR_KEY_BLOCK_NUMBERS))
     {
-    	if(pstPvrCaData->u32TotalBlockNum < 1)
-    	{
-    	  //Error!
-    	   HI_ERR_CA("pstPvrCaData->u32TotalBlockNum error!\n");
-    	   u32TmpBlocks = 0;    	  
-    	}
-    	else
-        {
-        	u32TmpBlocks = pstPvrCaData->u32TotalBlockNum-1;
-        }
-    }
-    else
-    {
-        u32TmpBlocks = pstPvrCaData->u32TotalBlockNum;
-    }
-    
-    if (u32TmpBlocks > 0)
-    {
-       (HI_VOID)read(fd, &pu8Buf[u32DataOffset], u32TmpBlocks*sizeof(HI_CA_PVR_KEY_INFO_S));
-       u32DataOffset = u32DataOffset + u32TmpBlocks*sizeof(HI_CA_PVR_KEY_INFO_S);
-    }
-
-    if (pstNewKey != HI_NULL)
-    {
-       /*copy new key into buffer, because the latest key have no save into flash now! */ 
-       memcpy(&pu8Buf[u32DataOffset], pstNewKey, sizeof(HI_CA_PVR_KEY_INFO_S));
-    }
-	//u32DataLen do not contain stMacCaData.u8AES_CMAC
-    u32DataLen = sizeof(HI_CA_PVR_CADATA_S) + pstPvrCaData->u32TotalBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S);
-
-    /*HI_INFO_CA("SetPVRKeyData: data is:\n");
-    for(i = 0; i < u32DataLen; i++)
-    {
-        HI_INFO_CA("%02X ", pu8Buf[i]);//from the first byte is from SCI.
-        if((i+1)%16 == 0)
-        {
-            HI_INFO_CA("\n");
-            HI_INFO_CA("                ");
-        }
-    }*/
-    
-    memset(MacKey, 0, sizeof(MacKey));
-    memcpy(MacKey,pstPvrCaData->stR2RkeyladderCipherInfo.SessionKey1,16);
-    
-    ret = HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, u32DataLen, MacKey, stMacCaData.u8AES_CMAC);
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
-        pstPvrCaData->u32TotalBlockNum--;
         close(fd);
-        free(pu8Buf);
-        return HI_FAILURE;
-    } 
-
-    /*save private head*/
-    (HI_VOID)lseek(fd, 0, SEEK_SET);
-    u32WriteCount = (HI_U32)write(fd,&stMacCaData,sizeof(HI_CA_PVR_MAC_CADATA_S));
-    if (sizeof(HI_CA_PVR_MAC_CADATA_S) != u32WriteCount)
-    {
-        HI_ERR_CA("write CA private file error\n");
-        close(fd);
-        free(pu8Buf);
+        HI_ERR_CA("read failed, len=%d\n", len);
         return HI_FAILURE;
     }
-    
-    /*save new key*/
-    if (pstNewKey != HI_NULL)
-    {            
-        u32Seek = sizeof(HI_CA_PVR_MAC_CADATA_S) + (pstPvrCaData->u32TotalBlockNum - 1) * sizeof(HI_CA_PVR_KEY_INFO_S);
-        (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
-        u32WriteCount = (HI_U32)write(fd, pstNewKey, sizeof(HI_CA_PVR_KEY_INFO_S));
-        if (sizeof(HI_CA_PVR_KEY_INFO_S) != u32WriteCount)
-        {
-            HI_ERR_CA("write CA key file error\n");
-            close(fd);
-            free(pu8Buf);
-            return HI_FAILURE;
-        }
-    }
 
-    close(fd); 
-    free(pu8Buf);
-    return HI_SUCCESS;  
-}
+    HI_INFO_CA("TotalBlockNum=%u\n", pstPrivateInfo->u32TotalBlockNum);
 
-HI_S32 ADVCA_PVR_GetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrCaData, HI_U8 *pu8Buffer)
-{
-    HI_S32 ret = HI_SUCCESS;    
-    HI_S32 fd = -1;
-    HI_U32 u32Seek = 0;
-    HI_U32 u32DataLen = 0, u32DataOffset;
-    HI_U8  *pu8Buf;
-    HI_U8 MacKey[16];
-    HI_U8 Mac[16];
-    HI_CHAR KeyFileName[128];
-    HI_CA_PVR_MAC_CADATA_S stMacCaData;
-    HI_CA_PVR_CADATA_S* pstTmpPrivateInfo = &stMacCaData.stPvrCaData;
+    DataLen = pstPrivateInfo->u32TotalBlockNum * sizeof(HI_CA_PVR_KEY_INFO_S);
 
-    CA_CheckPointer(pFileName);
-    CA_CheckPointer(pstPvrCaData);
-        
-    ret = ADVCA_PVR_GetCADataFileName(pFileName, KeyFileName);
-    if (ret != HI_SUCCESS)
-    {
-       HI_ERR_CA("ADVCA_PVR_GetCAData: error, fail to get key file name!\n");
-       return HI_FAILURE;
-    }
-
-    HI_INFO_CA("ADVCA_PVR_GetCAData:KeyFileName is %s------>\n", KeyFileName);
-
-    fd = open(KeyFileName,O_RDWR);
-	if(fd < 0)
-	{
-		HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
-		return HI_FAILURE;
-	}
-
-    (HI_VOID)lseek(fd,0,SEEK_SET);
-    (HI_VOID)read(fd,&stMacCaData,sizeof(HI_CA_PVR_MAC_CADATA_S));
-
-    HI_INFO_CA("ADVCA_PVR_GetPVRKeyData:pstPrivateInfo->u32TotalBlockNum is %d------>\n", pstTmpPrivateInfo->u32TotalBlockNum);
-
-    pu8Buf = malloc(sizeof(HI_CA_PVR_CADATA_S)
-              + pstTmpPrivateInfo->u32TotalBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S));
+    pu8Buf = malloc(sizeof(HI_CA_PVR_CADATA_S) + DataLen);
     if (pu8Buf == HI_NULL)
     {
         close(fd);
@@ -3507,60 +3568,52 @@ HI_S32 ADVCA_PVR_GetCAData(const HI_CHAR *pFileName, HI_CA_PVR_CADATA_S* pstPvrC
 
     memcpy(pu8Buf, &stMacCaData.stPvrCaData, sizeof(HI_CA_PVR_CADATA_S));
 
-    /*read saved key infor into buffer*/
-    u32Seek = sizeof(HI_CA_PVR_MAC_CADATA_S);
-    (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
-    u32DataOffset = sizeof(HI_CA_PVR_CADATA_S);
-    if (pstTmpPrivateInfo->u32TotalBlockNum > 0)
+    len = read(fd, pu8Buf + sizeof(HI_CA_PVR_CADATA_S), DataLen);
+    if (len != DataLen)
     {
-       (HI_VOID)read(fd, &pu8Buf[u32DataOffset], pstTmpPrivateInfo->u32TotalBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S));
-    }
-  
-    u32DataLen = sizeof(HI_CA_PVR_CADATA_S) + pstTmpPrivateInfo->u32TotalBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S);
+        free(pu8Buf);
 
-    /*HI_INFO_CA("SetPVRKeyData: data is:\n");
-    for(i = 0; i < u32DataLen; i++)
-    {
-        HI_INFO_CA("%02X ", pu8Buf[i]);//from the first byte is from SCI.
-        if((i+1)%16 == 0)
-        {
-            HI_INFO_CA("\n");
-            HI_INFO_CA("                ");
-        }
-    }*/
-    
-    memset(MacKey, 0, sizeof(MacKey));
+        close(fd);
+
+        HI_ERR_CA("read failed, len=%d\n", len);
+
+        return HI_FAILURE;
+    }
+
+    close(fd);
+
     memset(Mac, 0, sizeof(Mac));
-    memcpy(MacKey,pstTmpPrivateInfo->stR2RkeyladderCipherInfo.SessionKey1,16);
-    
-    ret = HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, u32DataLen, MacKey, Mac);
+    memcpy(MacKey, pstPrivateInfo->stR2RkeyladderCipherInfo.SessionKey1, 16);
+
+    ret = HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, sizeof(HI_CA_PVR_CADATA_S) + DataLen, MacKey, Mac);
     if (HI_SUCCESS != ret)
     {
+        free(pu8Buf);
+
         HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
-        close(fd);
-        free(pu8Buf);
-        return HI_FAILURE;
-    } 
 
-    if (0 != memcmp(Mac,stMacCaData.u8AES_CMAC,16))
+        return HI_FAILURE;
+    }
+
+    if (0 != memcmp(Mac, stMacCaData.u8AES_CMAC, 16))
     {
+        free(pu8Buf);
+
         HI_ERR_CA("error, CAData Mac error\n");
-        close(fd); 
-        free(pu8Buf);
+
         return HI_FAILURE;
     }
-    
-    memcpy(pstPvrCaData,&stMacCaData.stPvrCaData,sizeof(HI_CA_PVR_CADATA_S));
 
-    if (pu8Buffer != HI_NULL && pstTmpPrivateInfo->u32TotalBlockNum <= MAX_PVR_KEY_BLOCK_NUMBERS)
+    memcpy(pstPvrCaData, &stMacCaData.stPvrCaData, sizeof(HI_CA_PVR_CADATA_S));
+
+    if (pu8Buffer != HI_NULL && pstPrivateInfo->u32TotalBlockNum <= MAX_PVR_KEY_BLOCK_NUMBERS)
     {
-       u32DataOffset = sizeof(HI_CA_PVR_CADATA_S);
-       memcpy(pu8Buffer,&pu8Buf[u32DataOffset], pstTmpPrivateInfo->u32TotalBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S));
+        memcpy(pu8Buffer, pu8Buf + sizeof(HI_CA_PVR_CADATA_S), DataLen);
     }
-       
-    close(fd); 
+
     free(pu8Buf);
-    return HI_SUCCESS;  
+
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
@@ -3574,18 +3627,17 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
     HI_UNF_CIPHER_CTRL_S *pstCipherCtrl = NULL;
     HI_CA_PVR_CADATA_S * pstPvrRecCaData = NULL;
     HI_UNF_R2RKeyladder_Cipher_Info_S * pstR2RkeyladderCipherInfo = NULL;
-#ifdef SDK_SECURITY_ARCH_VERSION_V3
     HI_UNF_CIPHER_ATTS_S stCipherAttr;
-    memset(&stCipherAttr, 0, sizeof(HI_UNF_CIPHER_ATTS_S));
-#endif
     HI_UNF_PVR_REC_ATTR_S recAttr;
+
+    memset(&stCipherAttr, 0, sizeof(HI_UNF_CIPHER_ATTS_S));
 
     memset(SessionKey1, 0, sizeof(SessionKey1));
     memset(SessionKey2, 0, sizeof(SessionKey2));
     memset(CipherKey, 0, sizeof(CipherKey));
     memset(&recAttr, 0, sizeof(HI_UNF_PVR_REC_ATTR_S));
 
-    CA_ASSERT(HI_UNF_ADVCA_Init(),ret);   
+    CA_ASSERT(HI_UNF_ADVCA_Init(),ret);
 
     for ( i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++ )
     {
@@ -3600,7 +3652,7 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
     {
         if(INVALID_VALUE == PvrRecChannelInfo[i].u32ChnID)
         {
-            break;            
+            break;
         }
     }
 
@@ -3612,22 +3664,21 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
 
     RecChnIndex = i;
 
+    memset(&PvrRecChannelInfo[RecChnIndex], 0x0, sizeof(HI_CA_PVR_RECORD_CHANNEL_INFO_S));
 
-    memset(&PvrRecChannelInfo[RecChnIndex], 0x0, sizeof(HI_CA_PVR_RECORD_CHANNEL_INFO_S)); 
-    
-    PvrRecChannelInfo[RecChnIndex].u32ChnID = u32RecChnID;    
+    PvrRecChannelInfo[RecChnIndex].u32ChnID = u32RecChnID;
     PvrRecChannelInfo[RecChnIndex].PvrRecVerifyLenAcc = 0UL;
     PvrRecChannelInfo[RecChnIndex].PvrRecBlockDataAcc = 0UL;
     PvrRecChannelInfo[RecChnIndex].PvrRecForceChangeKey = HI_FALSE;
     PvrRecChannelInfo[RecChnIndex].bCADataSavedFlag = HI_FALSE;
-    
+
     pstPvrRecCaData = &PvrRecChannelInfo[RecChnIndex].stPvrRecCaData;
     memset(pstPvrRecCaData,0,sizeof(HI_CA_PVR_CADATA_S));
 
 #ifndef HI_LOADER_APPLOADER
-    HI_UNF_PVR_RecGetChn(u32RecChnID, &recAttr);
+    CA_ASSERT(HI_UNF_PVR_RecGetChn(u32RecChnID, &recAttr), ret);
 #endif
-    
+
     PvrRecChannelInfo[RecChnIndex].bRewind = recAttr.bRewind;
 
     pstR2RkeyladderCipherInfo = &(pstPvrRecCaData->stR2RkeyladderCipherInfo);
@@ -3661,7 +3712,7 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
     {
         CipherKey[0] = CipherKey[8] + 1;
     }
-     
+
     CA_ASSERT(HI_UNF_ADVCA_GetR2RKeyLadderStage(&KeyladderStage),ret);
 
     pstR2RkeyladderCipherInfo->KeyladderAlg = HI_UNF_ADVCA_ALG_TYPE_AES;
@@ -3672,14 +3723,11 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
     /*open cipher*/
     CA_ASSERT(HI_UNF_CIPHER_Open(),ret);
     pstR2RkeyladderCipherInfo->hCipherHandle = INVALID_VALUE;
-#ifndef SDK_SECURITY_ARCH_VERSION_V3
-    CA_ASSERT( HI_UNF_CIPHER_CreateHandle(&pstR2RkeyladderCipherInfo->hCipherHandle),ret);
-#else
+
     memset(&stCipherAttr, 0, sizeof(stCipherAttr));
     stCipherAttr.enCipherType = HI_UNF_CIPHER_TYPE_NORMAL;
-	CA_ASSERT( HI_UNF_CIPHER_CreateHandle(&pstR2RkeyladderCipherInfo->hCipherHandle, &stCipherAttr),ret);
-#endif
-     
+    CA_ASSERT( HI_UNF_CIPHER_CreateHandle(&pstR2RkeyladderCipherInfo->hCipherHandle, &stCipherAttr),ret);
+
     PvrRecChannelInfo[RecChnIndex].CurBlockNum = 0;
     pstPvrRecCaData->u32TotalBlockNum++;
     pstCipherCtrl = &(pstR2RkeyladderCipherInfo->stCipherCtrl);
@@ -3688,13 +3736,13 @@ HI_S32 HI_UNF_ADVCA_PVR_RecOpen(HI_U32 u32RecChnID)
     pstCipherCtrl->enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     pstCipherCtrl->enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB;
     pstCipherCtrl->enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
-        
+
     memcpy(pstCipherCtrl->u32Key,CipherKey,16);
 
     CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);
     /*update track key value to avoid config keyladder key more times*/
-    memcpy(PvrRecChannelInfo[RecChnIndex].PvrRecTrackKey,CipherKey,16);  
-    return  HI_SUCCESS;    
+    memcpy(PvrRecChannelInfo[RecChnIndex].PvrRecTrackKey,CipherKey,16);
+    return  HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_RecClose(HI_U32 u32RecChnID)
@@ -3734,7 +3782,7 @@ HI_S32 HI_UNF_ADVCA_PVR_RecClose(HI_U32 u32RecChnID)
 
     hCipher = pstPvrRecCaData->stR2RkeyladderCipherInfo.hCipherHandle;
 
-    ADVCA_PVR_LOCK();   
+    ADVCA_PVR_LOCK();
     for (i = 0 ; i < PVR_CA_MAX_CHANNEL; i++)
     {
        if ((PvrPlayChannelInfo[i].u32ChnID != INVALID_VALUE)
@@ -3757,25 +3805,23 @@ HI_S32 HI_UNF_ADVCA_PVR_RecClose(HI_U32 u32RecChnID)
 
     if (INVALID_VALUE != hCipher)
     {
-        CA_ASSERT(HI_UNF_CIPHER_DestroyHandle(hCipher),ret);        
+        CA_ASSERT(HI_UNF_CIPHER_DestroyHandle(hCipher),ret);
     }
 
-    return  HI_SUCCESS;    
+    return  HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_PlayOpen(HI_U32 u32PlayChnID, HI_UNF_ADVCA_PVR_PlAY_INFOR_S stPlayInfo)
 {
     HI_S32 ret;
     HI_U32 i = 0, PlyChnIndex=0;
-#ifdef SDK_SECURITY_ARCH_VERSION_V3
-	HI_UNF_CIPHER_ATTS_S stCipherAttr;
-#endif
+    HI_UNF_CIPHER_ATTS_S stCipherAttr;
 
     HI_CA_PVR_CADATA_S * pstPvrPlyCaData = NULL;
 
     CA_ASSERT(HI_UNF_ADVCA_Init(),ret);
     CA_ASSERT(HI_UNF_CIPHER_Open(),ret);
-    
+
     for ( i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++ )
     {
         if (u32PlayChnID == PvrPlayChannelInfo[i].u32ChnID )
@@ -3789,7 +3835,7 @@ HI_S32 HI_UNF_ADVCA_PVR_PlayOpen(HI_U32 u32PlayChnID, HI_UNF_ADVCA_PVR_PlAY_INFO
     {
         if(INVALID_VALUE == PvrPlayChannelInfo[i].u32ChnID)
         {
-            break;            
+            break;
         }
     }
 
@@ -3800,8 +3846,8 @@ HI_S32 HI_UNF_ADVCA_PVR_PlayOpen(HI_U32 u32PlayChnID, HI_UNF_ADVCA_PVR_PlAY_INFO
     }
 
     PlyChnIndex = i;
-    
-    memset(&PvrPlayChannelInfo[PlyChnIndex], 0x0, sizeof(HI_CA_PVR_PLAY_CHANNEL_INFO_S));   
+
+    memset(&PvrPlayChannelInfo[PlyChnIndex], 0x0, sizeof(HI_CA_PVR_PLAY_CHANNEL_INFO_S));
 
     PvrPlayChannelInfo[PlyChnIndex].u32ChnID = u32PlayChnID;
     PvrPlayChannelInfo[PlyChnIndex].bIsTimeshiftPlay = stPlayInfo.bIsTimeshiftPlay;
@@ -3819,23 +3865,19 @@ HI_S32 HI_UNF_ADVCA_PVR_PlayOpen(HI_U32 u32PlayChnID, HI_UNF_ADVCA_PVR_PlAY_INFO
 
     pstPvrPlyCaData = &PvrPlayChannelInfo[PlyChnIndex].stPvrPlyCaData;
     memset(pstPvrPlyCaData,0,sizeof(HI_CA_PVR_CADATA_S));
-    
-//    HI_INFO_CA("channel i = %d ,chanenl ID = 0x%x\n",i,u32PlayChnID);
 
     pstPvrPlyCaData->stR2RkeyladderCipherInfo.hCipherHandle = INVALID_VALUE;
-#ifndef SDK_SECURITY_ARCH_VERSION_V3
-    CA_ASSERT(HI_UNF_CIPHER_CreateHandle(&pstPvrPlyCaData->stR2RkeyladderCipherInfo.hCipherHandle),ret);
-#else
+
     memset(&stCipherAttr, 0, sizeof(stCipherAttr));
     stCipherAttr.enCipherType = HI_UNF_CIPHER_TYPE_NORMAL;
-	CA_ASSERT(HI_UNF_CIPHER_CreateHandle(&pstPvrPlyCaData->stR2RkeyladderCipherInfo.hCipherHandle, &stCipherAttr),ret);
-#endif
+    CA_ASSERT(HI_UNF_CIPHER_CreateHandle(&pstPvrPlyCaData->stR2RkeyladderCipherInfo.hCipherHandle, &stCipherAttr),ret);
+
     PvrPlayChannelInfo[PlyChnIndex].bAlreadyGetPlayInfo = HI_FALSE;
     return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_PlayClose(HI_U32 u32PlayChnID)
-{ 
+{
     HI_U8 i = 0,  PlyChnIndex=0;
     HI_S32 ret = 0;
     HI_CA_PVR_CADATA_S * pstPvrPlyCaData = NULL;
@@ -3869,7 +3911,7 @@ HI_S32 HI_UNF_ADVCA_PVR_PlayClose(HI_U32 u32PlayChnID)
     memset(pstPvrPlyCaData,0x00,sizeof(HI_CA_PVR_CADATA_S));
     PvrPlayChannelInfo[PlyChnIndex].u32ChnID = INVALID_VALUE;
     PvrPlayChannelInfo[PlyChnIndex].bIsTimeshiftPlay = HI_FALSE;
-    PvrPlayChannelInfo[PlyChnIndex].u32RecChnID = INVALID_VALUE;    
+    PvrPlayChannelInfo[PlyChnIndex].u32RecChnID = INVALID_VALUE;
 
     if (INVALID_VALUE != hCipher)
     {
@@ -3879,10 +3921,10 @@ HI_S32 HI_UNF_ADVCA_PVR_PlayClose(HI_U32 u32PlayChnID)
     return  HI_SUCCESS;
 }
 
-HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs)    
-{     
+HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs)
+{
     HI_S32 ret = 0;
-    HI_U32 i = 0, RecChnIndex=0, CurBlockNum=0; 
+    HI_U32 i = 0, RecChnIndex=0, CurBlockNum=0;
     HI_BOOL isGenerateKey = HI_FALSE;
     HI_U8 CipherKey[16];
     HI_CA_PVR_KEY_INFO_S stNewKey;
@@ -3890,21 +3932,21 @@ HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArg
     HI_CHAR * pFileName = pstCAPVRArgs->pFileName;
     HI_U64 u64DataStart = pstCAPVRArgs->u64GlobalOffset;
     HI_U32 u32PhyAddr = pstCAPVRArgs->u32PhyAddr;
-    HI_U32 u32DataSize = pstCAPVRArgs->u32DataSize; 
+    HI_U32 u32DataSize = pstCAPVRArgs->u32DataSize;
     HI_U64 u64DataEnd = u64DataStart + u32DataSize;
     HI_U64 u64BlockSize = PVR_BLOCK_SIZE;
     HI_UNF_CIPHER_CTRL_S *pstCipherCtrl = NULL;
     HI_CA_PVR_CADATA_S * pstPvrRecCaData = NULL;
     HI_UNF_R2RKeyladder_Cipher_Info_S * pstR2RkeyladderCipherInfo = NULL;
-    HI_CHAR CaDataFileName[128];
+    HI_CHAR CaDataFileName[128] = {0};
     HI_S32 fd = -1;
-        
+
     CA_CheckPointer(pstCAPVRArgs);
     CA_CheckPointer(pstCAPVRArgs->pFileName);
 
     if ((u32DataSize%16) != 0)
     {
-       HI_INFO_CA("HI_UNF_ADVCA_PVR_WriteCallBack: crypted data is not 16 bytes alignment ----\n");
+        HI_INFO_CA("crypted data is not 16 bytes alignment\n");
     }
 
     /*find out the PVR CA infor by PVR channel ID*/
@@ -3928,13 +3970,13 @@ HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArg
 
     pstR2RkeyladderCipherInfo = &(pstPvrRecCaData->stR2RkeyladderCipherInfo);
     pstCipherCtrl = &(pstR2RkeyladderCipherInfo->stCipherCtrl);
-    
+
     if (INVALID_VALUE == pstR2RkeyladderCipherInfo->hCipherHandle)
     {
         HI_ERR_CA("hCipherHandle = -1 , call HI_UNF_ADVCA_PVR_Open first \n");
         return HI_FAILURE;
     }
-     
+
     if (HI_FALSE == PvrRecChannelInfo[RecChnIndex].bCADataSavedFlag)
     {
         /*First, create key file*/
@@ -3942,45 +3984,45 @@ HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArg
         ret = ADVCA_PVR_GetCADataFileName(pFileName,CaDataFileName);
         if (HI_FAILURE == ret)
         {
-    	    HI_ERR_CA("error, Get ca key file failed!\n");
+            HI_ERR_CA("error, Get ca key file failed!\n");
             return HI_FAILURE;
         }
-        
+
         fd = open(CaDataFileName,O_RDWR|O_CREAT, 0666);
-    	if ( fd < 0 )
-    	{
-    	    HI_ERR_CA("error,open ca key file failed!\n");
+        if (fd < 0)
+        {
+            HI_ERR_CA("error,open ca key file failed!\n");
             return HI_FAILURE;
-    	}
-    	close(fd);
-	
+        }
+        close(fd);
+
         PvrRecChannelInfo[RecChnIndex].bCADataSavedFlag = HI_TRUE;
-        memset(pstPvrRecCaData->FileName,0,sizeof(pstPvrRecCaData->FileName));        
+        memset(pstPvrRecCaData->FileName,0,sizeof(pstPvrRecCaData->FileName));
         memcpy(pstPvrRecCaData->FileName,pFileName,strlen(pFileName));
 
         stNewKey.u32BlockNum = 0;
         stNewKey.u64OffsetForKey = 0UL;
-        memcpy(stNewKey.Cipherkey, pstCipherCtrl->u32Key, 16);        
+        memcpy(stNewKey.Cipherkey, pstCipherCtrl->u32Key, 16);
         CA_ASSERT(ADVCA_PVR_SetCAData(pFileName,pstPvrRecCaData, &stNewKey),ret);
         PvrRecChannelInfo[RecChnIndex].PvrRecBlockDataAcc = u64DataStart;
     }
 
     /*HI_INFO_CA("\n HI_UNF_ADVCA_PVR_WriteCallBack: u64DataStart=%lld u64DataEnd=%lld u32DataSize=%d current block number=%d------>\n", \
-				  u64DataStart, \
-				  u64DataEnd, \
-				  u32DataSize, \				  
-				  PvrRecChannelInfo[RecChnIndex].CurBlockNum);*/				  
-          
+                  u64DataStart, \
+                  u64DataEnd, \
+                  u32DataSize, \
+                  PvrRecChannelInfo[RecChnIndex].CurBlockNum);*/
+
     if (PvrRecChannelInfo[RecChnIndex].PvrRecForceChangeKey == HI_TRUE)
     {
-        HI_INFO_CA("HI_UNF_ADVCA_PVR_WriteCallBack: detect PvrRecForceChangeKey----->\n");
+        HI_INFO_CA("detect PvrRecForceChangeKey\n");
         isGenerateKey = HI_TRUE;
         PvrRecChannelInfo[RecChnIndex].PvrRecForceChangeKey = HI_FALSE;
     }
     else
     {
         PvrRecChannelInfo[RecChnIndex].PvrRecBlockDataAcc += u32DataSize;
-    
+
         if (PvrRecChannelInfo[RecChnIndex].PvrRecBlockDataAcc > u64BlockSize)
         {
            isGenerateKey = HI_TRUE;
@@ -3990,9 +4032,9 @@ HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArg
     CurBlockNum = PvrRecChannelInfo[RecChnIndex].CurBlockNum;
 
     if (isGenerateKey == HI_TRUE)
-    {         
+    {
         CurBlockNum = CurBlockNum+1;
-                
+
         /*generate the random cipher key*/
         for(i=0;i<16;i++)
         {
@@ -4002,73 +4044,72 @@ HI_S32 HI_UNF_ADVCA_PVR_WriteCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArg
         {
             CipherKey[0] = CipherKey[8] + 1;
         }
-       
+
         memcpy(pstCipherCtrl->u32Key,CipherKey,16);
-        HI_INFO_CA("HI_UNF_ADVCA_PVR_WriteCallBack: config key ladder in block %d !!!!!!!!!!!!!!!!!!!!!!!!!!\n", CurBlockNum);
+        HI_INFO_CA("config key ladder in block %d!\n", CurBlockNum);
         CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);
 
         PvrRecChannelInfo[RecChnIndex].CurBlockNum = CurBlockNum;
         /*update track key value to avoid config keyladder key more times*/
         memcpy(PvrRecChannelInfo[RecChnIndex].PvrRecTrackKey, CipherKey,16);
-        
-        pstPvrRecCaData->u32TotalBlockNum++;           
+
+        pstPvrRecCaData->u32TotalBlockNum++;
         stNewKey.u32BlockNum = CurBlockNum;
         stNewKey.u64OffsetForKey = u64DataStart;
-        memcpy(stNewKey.Cipherkey,CipherKey,16); 
-        
+        memcpy(stNewKey.Cipherkey,CipherKey,16);
+
         CA_ASSERT(ADVCA_PVR_SetCAData(pFileName,pstPvrRecCaData, &stNewKey),ret);
-        
+
         PvrRecChannelInfo[RecChnIndex].PvrRecBlockDataAcc = 0;
     }
-         
+
     if ((u32DataSize%16) != 0)
-    {           
-	   HI_INFO_CA("HI_UNF_ADVCA_PVR_WriteCallBack: data is not 16bytes align!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	   u32DataSize = u32DataSize - (u32DataSize%16);
-    }        
-    
+    {
+       HI_INFO_CA("data is not 16bytes align\n");
+       u32DataSize = u32DataSize - (u32DataSize%16);
+    }
+
     CA_ASSERT(HI_UNF_CIPHER_Encrypt(pstR2RkeyladderCipherInfo->hCipherHandle, u32PhyAddr, u32PhyAddr, u32DataSize),ret);
-              
 
     PvrRecChannelInfo[RecChnIndex].PvrRecVerifyLenAcc = PvrRecChannelInfo[RecChnIndex].PvrRecVerifyLenAcc + u32DataSize;
     if (PvrRecChannelInfo[RecChnIndex].PvrRecVerifyLenAcc > PVR_CA_VERIFY_LEN_DELTA)
     {
         /*We save end data into u64CxVerifiedLen to be convient to calculate u64CxVerifiedLen when play back.*/
-        pstPvrRecCaData->u64CxVerifiedLen = u64DataEnd; 
+        pstPvrRecCaData->u64CxVerifiedLen = u64DataEnd;
         PvrRecChannelInfo[RecChnIndex].PvrRecVerifyLenAcc = 0;
         CA_ASSERT(ADVCA_PVR_SetCAData(pFileName,pstPvrRecCaData, HI_NULL),ret);
     }
-    
-    return  HI_SUCCESS;
+
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs)
-{   
+{
     HI_U32 i = 0, PlyChnIndex=0, CurBlockNum=0, NextBlockNum=0;
-    HI_S32 ret = 0;   
+    HI_S32 ret = 0;
     HI_U32 u32PlayChnID = pstCAPVRArgs->u32ChnID;
     HI_CHAR *pFileName = pstCAPVRArgs->pFileName;
     HI_U64 u64DataStart = pstCAPVRArgs->u64GlobalOffset;
     HI_U32 u32PhyAddr = pstCAPVRArgs->u32PhyAddr;
-    HI_U32 u32DataSize = pstCAPVRArgs->u32DataSize;    
+    HI_U32 u32DataSize = pstCAPVRArgs->u32DataSize;
     HI_U64 u64DataEnd = u64DataStart + u32DataSize;
     HI_BOOL bIsCrossKeyBlock = HI_FALSE;
     HI_U32 u32DataSize1 = 0;
-    HI_U32 u32DataSize2 = 0;   
+    HI_U32 u32DataSize2 = 0;
     HI_UNF_CIPHER_CTRL_S *pstCipherCtrl = NULL;
     HI_UNF_R2RKeyladder_Cipher_Info_S *pstR2RkeyladderCipherInfo = NULL;
     HI_CA_PVR_CADATA_S *pstPvrPlyCaData  = NULL;
     HI_CA_PVR_CADATA_S  stTmpPvrPlyPrivateInfo;
     HI_CA_PVR_KEY_INFO_S stBlockKey;
     HI_U8   *pu8KeyBuffer = HI_NULL;
-    HI_U32  u32RecChnIndex = 0, u32TotalBlockNum = 0; 
+    HI_U32  u32RecChnIndex = 0, u32TotalBlockNum = 0;
     HI_BOOL bIsTimeshiftPlay = HI_FALSE;
 
     CA_CheckPointer(pstCAPVRArgs);
     CA_CheckPointer(pstCAPVRArgs->pFileName);
 
     if ((u32DataSize%16) != 0)
-    {     
+    {
          HI_INFO_CA("HI_UNF_ADVCA_PVR_ReadCallBack: decrypted data is not 16 bytes alignment ----\n");
     }
 
@@ -4087,7 +4128,7 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
         HI_ERR_CA("in HI_UNF_ADVCA_PVR_ReadCallBack u32PlayChnID = %d\n", u32PlayChnID);
         return HI_FAILURE;
     }
-    
+
     PlyChnIndex = i;
 
     if (PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer == HI_NULL)
@@ -4095,43 +4136,43 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
         HI_ERR_CA("HI_UNF_ADVCA_PVR_ReadCallBack: key buffer is NULL\n");
         return HI_SUCCESS;
     }
-   
+
     pstPvrPlyCaData = &PvrPlayChannelInfo[PlyChnIndex].stPvrPlyCaData;
 
     pstR2RkeyladderCipherInfo = &(pstPvrPlyCaData->stR2RkeyladderCipherInfo);
     pstCipherCtrl = &(pstR2RkeyladderCipherInfo->stCipherCtrl);
 
     memset(&stTmpPvrPlyPrivateInfo, 0, sizeof(HI_CA_PVR_CADATA_S));
-    
+
     if (HI_FALSE == PvrPlayChannelInfo[PlyChnIndex].bAlreadyGetPlayInfo)
     {
-        CA_ASSERT(ADVCA_PVR_GetCAData(pFileName,&stTmpPvrPlyPrivateInfo, PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer),ret);     
+        CA_ASSERT(ADVCA_PVR_GetCAData(pFileName,&stTmpPvrPlyPrivateInfo, PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer),ret);
         stTmpPvrPlyPrivateInfo.stR2RkeyladderCipherInfo.hCipherHandle = pstPvrPlyCaData->stR2RkeyladderCipherInfo.hCipherHandle;
         memcpy(pstPvrPlyCaData, &stTmpPvrPlyPrivateInfo, sizeof(HI_CA_PVR_CADATA_S));
-        
+
         pu8KeyBuffer = PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer;
         memcpy(&stBlockKey, pu8KeyBuffer, sizeof(HI_CA_PVR_KEY_INFO_S));
         memcpy(pstCipherCtrl->u32Key, stBlockKey.Cipherkey,16);
         PvrPlayChannelInfo[PlyChnIndex].bAlreadyGetPlayInfo = HI_TRUE;
         PvrPlayChannelInfo[PlyChnIndex].CurBlockNum = 0;
     }
-    
-	/*HI_INFO_CA("\nHI_UNF_ADVCA_PVR_ReadCallBack: u64DataStart=%lld u64DataEnd=%lld u32DataSize=%d current BlockNum=%d------>\n", \
-				   u64DataStart, \
-				   u64DataEnd, \
-				   u32DataSize, \
-				   PvrPlayChannelInfo[PlyChnIndex].CurBlockNum);*/
 
-    ADVCA_PVR_LOCK();  
+    /*HI_INFO_CA("\nHI_UNF_ADVCA_PVR_ReadCallBack: u64DataStart=%lld u64DataEnd=%lld u32DataSize=%d current BlockNum=%d------>\n", \
+                   u64DataStart, \
+                   u64DataEnd, \
+                   u32DataSize, \
+                   PvrPlayChannelInfo[PlyChnIndex].CurBlockNum);*/
+
+    ADVCA_PVR_LOCK();
     if (PvrPlayChannelInfo[PlyChnIndex].bIsTimeshiftPlay == HI_TRUE)
-    {       
+    {
         for (i = 0; i < PVR_CA_MAX_CHANNEL; i++)
         {
             if (PvrPlayChannelInfo[PlyChnIndex].u32RecChnID == PvrRecChannelInfo[i].u32ChnID)
             {
                 break;
             }
-        }        
+        }
         if (PVR_CA_MAX_CHANNEL == i)
         {
             HI_ERR_CA("PVR channel ID error\n");
@@ -4140,12 +4181,12 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
         }
         bIsTimeshiftPlay = HI_TRUE;
         u32RecChnIndex = i;
-        u32TotalBlockNum = PvrRecChannelInfo[u32RecChnIndex].stPvrRecCaData.u32TotalBlockNum;        
+        u32TotalBlockNum = PvrRecChannelInfo[u32RecChnIndex].stPvrRecCaData.u32TotalBlockNum;
     }
     ADVCA_PVR_UNLOCK();
-    
+
     if (bIsTimeshiftPlay == HI_TRUE)
-    {                
+    {
         if (pstPvrPlyCaData->u32TotalBlockNum < u32TotalBlockNum)
         {
            /*re-acquire key into buffer*/
@@ -4166,17 +4207,17 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
     }
     else
     {
-    	if (u64DataEnd > pstPvrPlyCaData->u64CxVerifiedLen)
-    	{
+        if (u64DataEnd > pstPvrPlyCaData->u64CxVerifiedLen)
+        {
             HI_ERR_CA("HI_UNF_ADVCA_PVR_ReadCallBack: play length is great than verify length, \
                       u64DataEnd=%llu u64CxVerifiedLen=%llu\n", u64DataEnd, pstPvrPlyCaData->u64CxVerifiedLen);
             return HI_SUCCESS;
-    	}    
-	}
+        }
+    }
 
     //HI_INFO_CA("HI_UNF_ADVCA_PVR_ReadCallBack: pstPvrPlyCaData->u32TotalBlockNum = %d \n", pstPvrPlyCaData->u32TotalBlockNum);
     for (i=0; i<pstPvrPlyCaData->u32TotalBlockNum; i++)
-    {      
+    {
         pu8KeyBuffer = PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer + i*sizeof(HI_CA_PVR_KEY_INFO_S);
         memcpy(&stBlockKey, pu8KeyBuffer, sizeof(HI_CA_PVR_KEY_INFO_S));
         //HI_INFO_CA("HI_UNF_ADVCA_PVR_ReadCallBack: u64DataStart = 0x%x stBlockKey.u64OffsetForKey=0x%x\n", u64DataStart, stBlockKey.u64OffsetForKey);
@@ -4191,27 +4232,27 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
         HI_ERR_CA("in HI_UNF_ADVCA_PVR_ReadCallBack: Fail to find key\n");
         return HI_FAILURE;
     }
-         
-    CurBlockNum = i-1; 
 
-    if (CurBlockNum < (pstPvrPlyCaData->u32TotalBlockNum-1) 
-       && u64DataEnd > stBlockKey.u64OffsetForKey)    
-    {     
+    CurBlockNum = i-1;
+
+    if (CurBlockNum < (pstPvrPlyCaData->u32TotalBlockNum-1)
+       && u64DataEnd > stBlockKey.u64OffsetForKey)
+    {
        HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: cross block in %d!!!!!!!!!!!!!!!!!!!!!!!!!!\n", CurBlockNum);
-       bIsCrossKeyBlock = HI_TRUE;    
-    }    
+       bIsCrossKeyBlock = HI_TRUE;
+    }
 
     PvrPlayChannelInfo[PlyChnIndex].CurBlockNum = CurBlockNum;
 
     pu8KeyBuffer = PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer + CurBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S);
     memcpy(&stBlockKey, pu8KeyBuffer, sizeof(HI_CA_PVR_KEY_INFO_S));
-        
+
     if (0 != memcmp(PvrPlayChannelInfo[PlyChnIndex].PvrPlayTrackKey, stBlockKey.Cipherkey,16))
     {
         HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: config_1 key ladder in block %d!!!!!!!!!!!!!!!!!!!!!!!!!!\n", CurBlockNum);
         memcpy(pstCipherCtrl->u32Key, stBlockKey.Cipherkey, 16);
-        
-        CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);   
+
+        CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);
         /*update track key value to avoid config keyladder key more times*/
         memcpy(PvrPlayChannelInfo[PlyChnIndex].PvrPlayTrackKey,stBlockKey.Cipherkey,16);
     }
@@ -4220,30 +4261,30 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
     {
         CA_ASSERT(HI_UNF_CIPHER_Decrypt(pstR2RkeyladderCipherInfo->hCipherHandle, u32PhyAddr, u32PhyAddr, u32DataSize),ret);
     }
-    else 
-    {        
+    else
+    {
         NextBlockNum = CurBlockNum+1;
         pu8KeyBuffer = PvrPlayChannelInfo[PlyChnIndex].pu8KeyBuffer + NextBlockNum*sizeof(HI_CA_PVR_KEY_INFO_S);
         memcpy(&stBlockKey, pu8KeyBuffer, sizeof(HI_CA_PVR_KEY_INFO_S));
-        
-        u32DataSize1 = (HI_U32)(stBlockKey.u64OffsetForKey - u64DataStart);        
+
+        u32DataSize1 = (HI_U32)(stBlockKey.u64OffsetForKey - u64DataStart);
         if ((u32DataSize1%16) != 0)
-        {           
-		   HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: data 1 is not 16bytes align!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-		   u32DataSize1 = u32DataSize1 + (16 - u32DataSize1%16);
-        }                
+        {
+           HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: data 1 is not 16bytes align!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+           u32DataSize1 = u32DataSize1 + (16 - u32DataSize1%16);
+        }
         CA_ASSERT(HI_UNF_CIPHER_Decrypt(pstR2RkeyladderCipherInfo->hCipherHandle, u32PhyAddr, u32PhyAddr, u32DataSize1),ret);
 
         /*Process part2 data*/
         PvrPlayChannelInfo[PlyChnIndex].CurBlockNum = NextBlockNum;
-        
+
         memcpy(pstCipherCtrl->u32Key,stBlockKey.Cipherkey,16);
         /*update track key value to avoid config keyladder key more times*/
         memcpy(PvrPlayChannelInfo[PlyChnIndex].PvrPlayTrackKey, stBlockKey.Cipherkey,16);
-        
+
         HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: config_2 key ladder in block %d!!!!!!!!!!!!!!!!!!!!!!!!!!\n", NextBlockNum);
         /*every time when cipher key changing, should use mutex and set keyladder and cipher again*/
-        CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);  
+        CA_ASSERT(HI_UNF_ADVCA_ConfigR2RKeyladderAndCipher(pstR2RkeyladderCipherInfo),ret);
 
         if ((u32DataSize1 + INT_MIN) > u32DataSize)
         {
@@ -4254,9 +4295,9 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
             u32DataSize2 = u32DataSize - u32DataSize1;
         }
         if ((u32DataSize2%16) != 0)
-        {           
-		   HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: data 2 is not 16bytes align!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-		   u32DataSize2 = u32DataSize2 - (u32DataSize2%16);
+        {
+           HI_WARN_CA("HI_UNF_ADVCA_PVR_ReadCallBack: data 2 is not 16bytes align!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+           u32DataSize2 = u32DataSize2 - (u32DataSize2%16);
         }
 
         if (u32DataSize2 > 0)
@@ -4266,10 +4307,10 @@ HI_S32 HI_UNF_ADVCA_PVR_ReadCallBack(HI_UNF_PVR_CA_CALLBACK_ARGS_S* pstCAPVRArgs
             {
                 HI_ERR_CA("error,HI_UNF_CIPHER_Decrypt failed ,hCipherHandle = 0x%x\n",pstR2RkeyladderCipherInfo->hCipherHandle);
                 return HI_FAILURE;
-            }    
+            }
         }
     }
-    
+
     return  HI_SUCCESS;
 }
 #endif
@@ -4327,50 +4368,42 @@ HI_S32 HI_UNF_ADVCA_GetDCASChipId(HI_U32 *pu32MSBID, HI_U32 *pu32LSBID)
     HI_S32 Ret = 0;
     HI_U32 u32DCASID_MSBAddr, u32DCASID_LSBAddr;
     HI_U32 u32StbSN0, u32StbSN1;
-    HI_SYS_VERSION_S stVersion;
-    
+
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
+
     if((pu32MSBID == NULL) || (pu32LSBID == NULL))
     {
-    	HI_ERR_CA("Invalid parameter!\r\n");
-    	return HI_FAILURE;
+        HI_ERR_CA("Invalid parameter!\r\n");
+        return HI_ERR_CA_INVALID_PARA;
     }
-    
-    memset(&stVersion, 0, sizeof(HI_SYS_VERSION_S));
-    Ret = HI_SYS_GetVersion(&stVersion);
-    
-    if( (stVersion.enChipTypeSoft == HI_CHIP_TYPE_HI3716M) && (stVersion.enChipVersion == HI_CHIP_VERSION_V300))
-    {
-        //Hi3716MV300
-        u32DCASID_MSBAddr = 0x10180118;
-        u32DCASID_LSBAddr = 0x1018011C;
-    }
-    else
-    {
-        //Hi3716CV200
-        u32DCASID_MSBAddr = 0xf8ab0118;
-        u32DCASID_LSBAddr = 0xf8ab011c;
-    }
+
+    u32DCASID_MSBAddr = 0xF8AB00E8;
+    u32DCASID_LSBAddr = 0xF8AB00EC;
 
     Ret = HI_SYS_ReadRegister(u32DCASID_MSBAddr, &u32StbSN0);
     if (HI_SUCCESS != Ret)
     {
-        HI_ERR_CA("get stb sn failed\n");
-    	*pu32MSBID = 0X00;
-    	*pu32LSBID = 0X00;
+        HI_ERR_CA("Get Dcas chipid MSB failed\n");
+        *pu32MSBID = 0X00;
+        *pu32LSBID = 0X00;
         return HI_FAILURE;
     }
-    
+
     Ret = HI_SYS_ReadRegister(u32DCASID_LSBAddr, &u32StbSN1);
     if (HI_SUCCESS != Ret)
     {
-        HI_ERR_CA("get stb sn failed\n");
-    	*pu32MSBID = 0X00;
-    	*pu32LSBID = 0X00;
+        HI_ERR_CA("Get Dcas chipid LSB failed\n");
+        *pu32MSBID = 0X00;
+        *pu32LSBID = 0X00;
         return HI_FAILURE;
     }
-    
-	*pu32MSBID = u32StbSN0;
-	*pu32LSBID = u32StbSN1;
+
+    *pu32MSBID = u32StbSN0;
+    *pu32LSBID = u32StbSN1;
 
     return HI_SUCCESS;
 }
@@ -4399,7 +4432,7 @@ HI_S32 HI_UNF_ADVCA_DCASClose(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_DCAS_CLOSE, 0);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_DCAS_CLOSE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_DCAS_CLOSE err.\n");
         return ret;
     }
 
@@ -4434,23 +4467,24 @@ HI_S32 HI_UNF_ADVCA_SetDCASSessionKey(HI_UNF_ADVCA_DCAS_KEYLADDER_LEV_E enDCASLe
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    if(enDCASLevel >= HI_UNF_ADVCA_DCAS_KEYLADDER_BUTT)
+    if (enDCASLevel >= HI_UNF_ADVCA_DCAS_KEYLADDER_BUTT)
     {
         HI_ERR_CA("enDCASLevel >= HI_UNF_ADVCA_DCAS_KEYLADDER_BUTT, invalid.\n");
         return HI_ERR_CA_INVALID_PARA;
     }
-    
+
     memset(&DCASParam, 0, sizeof(CA_DCAS_PARAM_S));
     DCASParam.level = enDCASLevel;
     memcpy(DCASParam.pDin, au8Key, 16);
 
     ret = ioctl(g_s32CaFd, CMD_CA_DCAS_PARAM_ID_SET, &DCASParam);
-    memcpy(au8Output, DCASParam.pDout, 16);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_DCAS_CRYPT err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_DCAS_CRYPT err.\n");
         return ret;
     }
+
+    memcpy(au8Output, DCASParam.pDout, 16);
 
     return HI_SUCCESS;
 }
@@ -4478,7 +4512,7 @@ HI_S32 HI_UNF_ADVCA_SWPKKeyLadderOpen(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SWPK_KEY_LADDER_OPEN, 0);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SWPK_KEY_LADDER_OPEN err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SWPK_KEY_LADDER_OPEN err.\n");
         return ret;
     }
 
@@ -4509,7 +4543,7 @@ HI_S32 HI_UNF_ADVCA_SWPKKeyLadderClose(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_SWPK_KEY_LADDER_CLOSE, 0);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SWPK_KEY_LADDER_CLOSE err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SWPK_KEY_LADDER_CLOSE err.\n");
         return ret;
     }
 
@@ -4540,7 +4574,7 @@ HI_S32 HI_UNF_ADVCA_OtpReset(HI_VOID)
     ret = ioctl(g_s32CaFd, CMD_CA_OTP_RESET, NULL);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_OTP_RESET err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_OTP_RESET err.\n");
         return ret;
     }
 
@@ -4578,12 +4612,12 @@ HI_S32 HI_UNF_ADVCA_GetRevision(HI_U8 u8Revision[25])
     ret = ioctl(g_s32CaFd, CMD_CA_GET_REVISION, &stCaKey);
     if (HI_SUCCESS != ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_GET_REVISION err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_GET_REVISION err.\n");
         return ret;
     }
 
     memcpy(u8Revision, stCaKey.KeyBuf, 25);
-    
+
     return HI_SUCCESS;
 }
 
@@ -4592,7 +4626,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetCAPrivateFileName(HI_CHAR * pIndexFileName,HI_CHAR CA
 {
     HI_CHAR   CASuffix[4] = ".ca";
     HI_CHAR *p;
-    
+
     CA_CheckPointer(pIndexFileName);
     CA_CheckPointer(CAPrivateFileName);
 
@@ -4603,7 +4637,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetCAPrivateFileName(HI_CHAR * pIndexFileName,HI_CHAR CA
         memcpy(CAPrivateFileName,pIndexFileName,(HI_U32)(p - pIndexFileName));
         memcpy(CAPrivateFileName + (HI_U32)(p - pIndexFileName),CASuffix,3);
         return HI_SUCCESS;
-    }    
+    }
     return HI_FAILURE;
 }
 
@@ -4612,7 +4646,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetCAIndexFileName(HI_CHAR * pCAPrivateFileName,HI_CHAR 
 {
     HI_CHAR   IndexSuffix[5] = ".idx";
     HI_CHAR *p;
-    
+
     CA_CheckPointer(pCAPrivateFileName);
     CA_CheckPointer(IndexFileName);
 
@@ -4623,7 +4657,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetCAIndexFileName(HI_CHAR * pCAPrivateFileName,HI_CHAR 
         memcpy(IndexFileName,pCAPrivateFileName,(HI_U32)(p - pCAPrivateFileName));
         memcpy(IndexFileName + (HI_U32)(p - pCAPrivateFileName),IndexSuffix,4);
         return HI_SUCCESS;
-    }    
+    }
     return HI_FAILURE;
 }
 
@@ -4637,7 +4671,7 @@ HI_S32 HI_UNF_ADVCA_PVR_CreateCAPrivateFile(HI_U32 u32RecChnID,HI_CHAR * pCAPriv
     HI_CA_PVR_CADATA_S* pstPvrRecCaData = NULL;
     ADVCA_PVR_CA_MacPrivateFileHead_S *pstMACPrivateFileHead = NULL;
     ADVCA_PVR_CA_PrivateFileHead_S* pstPrivateFileHead = NULL;
-        
+
     CA_CheckPointer(pCAPrivateFileName);
     CA_CheckPointer(pCurTime);
 
@@ -4656,7 +4690,7 @@ HI_S32 HI_UNF_ADVCA_PVR_CreateCAPrivateFile(HI_U32 u32RecChnID,HI_CHAR * pCAPriv
     {
         if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID )
         {
-            break; 
+            break;
         }
     }
     if (PVR_CA_MAX_CHANNEL == i)
@@ -4670,17 +4704,16 @@ HI_S32 HI_UNF_ADVCA_PVR_CreateCAPrivateFile(HI_U32 u32RecChnID,HI_CHAR * pCAPriv
 
     pstPvrRecCaData = &PvrRecChannelInfo[RecChnIndex].stPvrRecCaData;
 
-    
+
     /*read private file to get the file head*/
     fd = open(pCAPrivateFileName,O_RDWR|O_CREAT, 0666);
-	if ( fd < 0 )
-	{
-	    HI_ERR_CA("error,open pCAPrivateFileName failed!\n");
+    if ( fd < 0 )
+    {
+        HI_ERR_CA("error,open pCAPrivateFileName failed!\n");
         free(pstMACPrivateFileHead);
         return HI_FAILURE;
-	}
+    }
 
-    (HI_VOID)lseek(fd,0,SEEK_SET);
     //Added ADVCA_PVR_CA_PrivateFileHead_S in front of ca privatedata file
     //Initiaze the header
     memset((HI_U8 *)pstMACPrivateFileHead, 0, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
@@ -4697,7 +4730,6 @@ HI_S32 HI_UNF_ADVCA_PVR_CreateCAPrivateFile(HI_U32 u32RecChnID,HI_CHAR * pCAPriv
         return HI_FAILURE;
     }
     memcpy(pstMACPrivateFileHead->Mac, MAC, 16);
-    (HI_VOID)lseek(fd,0,SEEK_SET);
     u32WriteCount = write(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if(u32WriteCount != sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S))
     {
@@ -4706,21 +4738,19 @@ HI_S32 HI_UNF_ADVCA_PVR_CreateCAPrivateFile(HI_U32 u32RecChnID,HI_CHAR * pCAPriv
         free(pstMACPrivateFileHead);
         return HI_FAILURE;
     }
-    close(fd); 
+    close(fd);
 
-    CA_CheckPointer(pstPvrRecCaData);
     memset(pstPvrRecCaData->CAPrivateFileName,0x0, sizeof(pstPvrRecCaData->CAPrivateFileName));
     memcpy(pstPvrRecCaData->CAPrivateFileName,pCAPrivateFileName, strlen(pCAPrivateFileName));
-    
+
     PvrRecChannelInfo[RecChnIndex].bCAPrivateFileCreated = HI_TRUE;
 
     free(pstMACPrivateFileHead);
-    
-    return HI_SUCCESS;
 
+    return HI_SUCCESS;
 }
 
-static HI_S32 ADVCA_PVR_CheckCAPrivateFileCreated( HI_U32 u32RecChnID)
+static HI_S32 ADVCA_PVR_CheckCAPrivateFileCreated(HI_U32 u32RecChnID)
 {
     HI_S32 fd = -1;
     HI_U8 i = 0, RecChnIndex=0;
@@ -4732,7 +4762,7 @@ static HI_S32 ADVCA_PVR_CheckCAPrivateFileCreated( HI_U32 u32RecChnID)
     {
         if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID )
         {
-            break; 
+            break;
         }
     }
     if (PVR_CA_MAX_CHANNEL == i)
@@ -4756,12 +4786,11 @@ static HI_S32 ADVCA_PVR_CheckCAPrivateFileCreated( HI_U32 u32RecChnID)
     if (-1 == fd)
     {
         HI_ERR_CA("CA private file open error!\n");
-        return HI_FAILURE;   
+        return HI_FAILURE;
     }
-    close(fd);     
-    
-    return HI_SUCCESS; 
-    
+    close(fd);
+
+    return HI_SUCCESS;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC( HI_CHAR * pCAPrivateFileName, HI_UNF_ADVCA_Time_S *pOutRecordStartTime)
@@ -4771,15 +4800,17 @@ HI_S32 HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC( HI_CHAR * pCAPrivateFileName, HI_
     HI_U32 u32ReadCount = 0, u32DataOffset;
     HI_U8  *pu8Buf = NULL;
     HI_U32 u32DataLen=0;
-	HI_U32 u32tmp = 0;
+    HI_U32 u32tmp = 0;
     HI_U32 u32Seek = 0;
-    HI_U8 MAC[16];
-    HI_CHAR IdxFileName[128];
-	HI_U32 u32MacBufLen = 0;
+    HI_U8 MAC[16] = {0};
+    HI_CHAR IdxFileName[128] = {0};
+    HI_U32 u32MacBufLen = 0;
     ADVCA_PVR_CA_MacPrivateFileHead_S *pstMACPrivateFileHead = HI_NULL;
     HI_CA_PVR_CADATA_S   *pstTmpPvrPrivateInfo = HI_NULL;
     ADVCA_PVR_CA_PrivateFileHead_S* pstPrivateFileHead = HI_NULL;
+
     CA_CheckPointer(pCAPrivateFileName);
+    CA_CheckPointer(pOutRecordStartTime);
 
     memset(MAC, 0, sizeof(MAC));
     memset(IdxFileName, 0, sizeof(IdxFileName));
@@ -4787,7 +4818,8 @@ HI_S32 HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC( HI_CHAR * pCAPrivateFileName, HI_
     if (NULL == pstMACPrivateFileHead)
     {
         HI_ERR_CA("error: failed to malloc %d bytes memory\n", sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
-        return HI_FAILURE;
+        ret = HI_FAILURE;
+        goto RET;
     }
     memset(pstMACPrivateFileHead, 0, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
 
@@ -4795,8 +4827,8 @@ HI_S32 HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC( HI_CHAR * pCAPrivateFileName, HI_
     if (NULL == pstTmpPvrPrivateInfo)
     {
         HI_ERR_CA("error: failed to malloc %d bytes memory\n", sizeof(HI_CA_PVR_CADATA_S));
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+        ret = HI_FAILURE;
+        goto RET;
     }
     memset(pstTmpPvrPrivateInfo, 0, sizeof(HI_CA_PVR_CADATA_S));
 
@@ -4804,156 +4836,161 @@ HI_S32 HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC( HI_CHAR * pCAPrivateFileName, HI_
     if (HI_FAILURE == ret)
     {
         HI_ERR_CA("Failed to Get Ca Index File Name\n");
-        free(pstTmpPvrPrivateInfo);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+        ret = HI_FAILURE;
+        goto RET;
     }
-    
-    ret = ADVCA_PVR_GetCAData(IdxFileName,pstTmpPvrPrivateInfo, NULL);     
+
+    ret = ADVCA_PVR_GetCAData(IdxFileName,pstTmpPvrPrivateInfo, NULL);
     if (HI_FAILURE == ret)
     {
         HI_ERR_CA("Failed to Get Ca Data\n");
-        free(pstTmpPvrPrivateInfo);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+        ret = HI_FAILURE;
+        goto RET;
     }
-    
+
     /*read private file to get the file head*/
     fd = open(pCAPrivateFileName,O_RDWR);
     if (fd < 0)
     {
         HI_ERR_CA("%s is not exist\n",pCAPrivateFileName);
-        free(pstTmpPvrPrivateInfo);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-    }    
+        ret = HI_FAILURE;
+        goto RET;
+    }
 
-    (HI_VOID)lseek(fd,0,SEEK_SET);
     u32ReadCount = (HI_U32)read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if (u32ReadCount != sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S))
     {
         HI_ERR_CA("get CAPrivatehead error\n");
-        goto CheckMacError;
+        ret = HI_FAILURE;
+        goto RET;
     }
-    
+
     pstPrivateFileHead = &(pstMACPrivateFileHead->stCAPrivateFileHead);
     if (0 != memcmp(pstPrivateFileHead->MacKey, pstTmpPvrPrivateInfo->stR2RkeyladderCipherInfo.SessionKey1, 16))
     {
         HI_ERR_CA("error :CA Private file and index file not match\n");
-        goto CheckMacError;
+        ret = HI_FAILURE;
+        goto RET;
     }
 
     HI_INFO_CA("HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC:pstPrivateFileHead->FPNum is %d------>\n", pstPrivateFileHead->FPNum);
 
-	if(pstPrivateFileHead->FPNum > MAX_FP_NUM)
-	{
+    if(pstPrivateFileHead->FPNum > MAX_FP_NUM)
+    {
         HI_ERR_CA("error : pstPrivateFileHead->FPNum:0x%x > MAX_FP_NUM:0x%x\n", pstPrivateFileHead->FPNum, MAX_FP_NUM);
-        goto CheckMacError;
-	}
+        ret = HI_FAILURE;
+        goto RET;
+    }
 
-	u32tmp = pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
+    u32tmp = pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
 
-	u32MacBufLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + u32tmp;
+    u32MacBufLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + u32tmp;
     pu8Buf = (HI_U8 *)malloc(u32MacBufLen);
     if (pu8Buf == HI_NULL)
     {
-        close(fd);
         HI_ERR_CA("error, fail to malloc memory!\n");
-        free(pstTmpPvrPrivateInfo);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+        ret = HI_FAILURE;
+        goto RET;
     }
 
     memcpy(pu8Buf, &(pstMACPrivateFileHead->stCAPrivateFileHead), sizeof(ADVCA_PVR_CA_PrivateFileHead_S));
     u32DataOffset = sizeof(ADVCA_PVR_CA_PrivateFileHead_S);
 
-	u32DataLen = u32tmp;
+    u32DataLen = u32tmp;
     if (u32DataLen > 0)
     {
         u32Seek = sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S);
-        (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
+        if (u32Seek != lseek(fd, (long)u32Seek, SEEK_SET))
+        {
+            HI_ERR_CA("lseek error\n");
+            ret = HI_FAILURE;
+            goto RET;
+        }
 
-		if(u32DataLen > (u32MacBufLen - u32DataOffset))
-		{
-			HI_ERR_CA("error, u32DataLen:0x%x > u32MacBufLen:0x%x!\n", u32DataLen > u32MacBufLen);
-	        close(fd);
-			free(pu8Buf);
-	        free(pstTmpPvrPrivateInfo);
-	        free(pstMACPrivateFileHead);
-	        return HI_FAILURE;
-		}
+        if(u32DataLen > (u32MacBufLen - u32DataOffset))
+        {
+            HI_ERR_CA("error, u32DataLen:0x%x > u32MacBufLen:0x%x!\n", u32DataLen, u32MacBufLen);
+            ret = HI_FAILURE;
+            goto RET;
+        }
 
-        (HI_VOID)read(fd, &pu8Buf[u32DataOffset], u32DataLen);
+        u32ReadCount = read(fd, &pu8Buf[u32DataOffset], u32DataLen);
+        if (u32ReadCount != u32DataLen)
+        {
+            HI_ERR_CA("error, u32ReadCount:0x%x != u32DataLen:0x%x!\n", u32ReadCount, u32DataLen);
+            ret = HI_FAILURE;
+            goto RET;
+        }
     }
 
-    u32DataLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + u32DataLen;    
-    /*HI_INFO_CA("HI_UNF_ADVCA_PVR_CheckCAPrivateFileMAC: data is:\n");
-    for(i = 0; i < u32DataLen; i++)
-    {
-        HI_INFO_CA("%02X ", pu8Buf[i]);//from the first byte is from SCI.
-        if((i+1)%16 == 0)
-        {
-            HI_INFO_CA("\n");
-            HI_INFO_CA("                ");
-        }
-    }*/
+    u32DataLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + u32DataLen;
 
-	if(u32DataLen > u32MacBufLen)
-	{
-		HI_ERR_CA("Invalid data length, u32MacBufLen:0x%x < u32DataLen:0x%x\n", u32MacBufLen, u32DataLen);
-        goto CheckMacError;
-	}
+    if(u32DataLen > u32MacBufLen)
+    {
+        HI_ERR_CA("Invalid data length, u32MacBufLen:0x%x < u32DataLen:0x%x\n", u32MacBufLen, u32DataLen);
+        ret = HI_FAILURE;
+        goto RET;
+    }
 
     ret = HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, u32DataLen, pstPrivateFileHead->MacKey, MAC);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
-        goto CheckMacError;
+        ret = HI_FAILURE;
+        goto RET;
     }
-    
+
     if (memcmp(MAC,pstMACPrivateFileHead->Mac,16))
     {
         HI_ERR_CA("call MACPrivateFileHead check mac error\n");
-        goto CheckMacError;
+        ret = HI_FAILURE;
+        goto RET;
     }
-    
+
     HI_INFO_CA("CheckCAPrivateFileMAC OK\n");
 
     //URI will be check in upper lib
     //Get the RecordBegin Time
-    memcpy(pOutRecordStartTime, &(pstPrivateFileHead->Starttime), sizeof(HI_UNF_ADVCA_Time_S));    
+    memcpy(pOutRecordStartTime, &(pstPrivateFileHead->Starttime), sizeof(HI_UNF_ADVCA_Time_S));
+    ret = HI_SUCCESS;
 
-    close(fd); 
-    free(pu8Buf);
-    free(pstTmpPvrPrivateInfo);
-    free(pstMACPrivateFileHead);
-    
-    return HI_SUCCESS;
-
-CheckMacError:
-    close(fd);
-    free(pu8Buf);
-    free(pstTmpPvrPrivateInfo);
-    free(pstMACPrivateFileHead);
-    
-    return HI_FAILURE;
+RET:
+    if (fd != -1)
+    {
+        close(fd);
+    }
+    if (pu8Buf != HI_NULL)
+    {
+        free(pu8Buf);
+    }
+    if (pstTmpPvrPrivateInfo != HI_NULL)
+    {
+        free(pstTmpPvrPrivateInfo);
+    }
+    if (pstMACPrivateFileHead != HI_NULL)
+    {
+        free(pstMACPrivateFileHead);
+    }
+ 
+    return ret;
 }
 
 HI_S32 HI_UNF_ADVCA_PVR_SaveURI( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName ,HI_UNF_PVR_URI_S* pstPVRURI)
 {
     HI_S32 ret = 0;
-    HI_U32 i = 0, RecChnIndex=0; 
+    HI_U32 i = 0, RecChnIndex=0;
     HI_S32 fd = -1;
+    HI_S32 len;
     HI_U32 u32WriteCount = 0, u32DataOffset;
     HI_U8  *pu8Buf = NULL;
     HI_U32 u32DataLen=0;
     HI_U32 u32Seek = 0;
     HI_U8 MAC[16];
-	HI_U32 u32MacBufLen = 0;
+    HI_U32 u32MacBufLen = 0;
     HI_CA_PVR_CADATA_S* pstPvrRecCaData = NULL;
     ADVCA_PVR_CA_MacPrivateFileHead_S *pstMACPrivateFileHead = HI_NULL;
-    ADVCA_PVR_CA_PrivateFileHead_S* pstPrivateFileHead = HI_NULL; 
-    //HI_U32 i;
+    ADVCA_PVR_CA_PrivateFileHead_S* pstPrivateFileHead = HI_NULL;
+
     CA_CheckPointer(pCAPrivateFileName);
     CA_CheckPointer(pstPVRURI);
 
@@ -4966,69 +5003,86 @@ HI_S32 HI_UNF_ADVCA_PVR_SaveURI( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName
     pstPrivateFileHead = &(pstMACPrivateFileHead->stCAPrivateFileHead);
 
     /*find out the PVR CA infor by PVR channel ID*/
-    for (i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++)
+    for (i = 0; i < PVR_CA_MAX_CHANNEL; i++)
     {
-        if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID )
+        if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID)
         {
             break;
         }
     }
+
     if (PVR_CA_MAX_CHANNEL == i)
     {
         HI_ERR_CA("PVR channel ID error\n");
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-    }
-    
-    RecChnIndex = i;
 
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    RecChnIndex = i;
 
     pstPvrRecCaData = &PvrRecChannelInfo[RecChnIndex].stPvrRecCaData;
     memset(MAC, 0, sizeof(MAC));
     memset(pstMACPrivateFileHead, 0, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
 
-    
-    ret = ADVCA_PVR_CheckCAPrivateFileCreated( u32RecChnID);
+    ret = ADVCA_PVR_CheckCAPrivateFileCreated(u32RecChnID);
     if (HI_FAILURE == ret)
     {
-	    HI_ERR_CA("error, Create CA Private File failed!\n");
-        free(pstMACPrivateFileHead);
-		return HI_FAILURE;
-    }
-    /*read private file to get the file head*/
-    fd = open(pCAPrivateFileName,O_RDWR);
-	if ( fd < 0 )
-	{
-	    HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
-        free(pstMACPrivateFileHead);
-		return HI_FAILURE;
-	}
+        HI_ERR_CA("error, Create CA Private File failed!\n");
 
-    (HI_VOID)lseek(fd,0,SEEK_SET);
-    (HI_VOID)read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    /*read private file to get the file head*/
+    fd = open(pCAPrivateFileName, O_RDWR);
+    if (fd < 0)
+    {
+        HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    len = read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
+    if (sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) != len)
+    {
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
 
     if (pstPrivateFileHead->URINum >= MAX_URI_NUM)
     {
-       close(fd);
-       free(pstMACPrivateFileHead);
-       return HI_FAILURE;
+        ret = HI_FAILURE;
+
+        goto RET;
     }
 
-    HI_INFO_CA("HI_UNF_ADVCA_PVR_SaveURI:pstPrivateFileHead->FPNum is %d------>\n", pstPrivateFileHead->FPNum);
+    HI_INFO_CA("FPNum is %d\n", pstPrivateFileHead->FPNum);
+    if(pstPrivateFileHead->FPNum > MAX_FP_NUM)
+    {
+        ret = HI_FAILURE;
 
-	u32MacBufLen = (sizeof(ADVCA_PVR_CA_PrivateFileHead_S)
-             + (pstPrivateFileHead->FPNum)*sizeof(ADVCA_PVR_MAC_FP_INFO_S));
+        goto RET;
+    }
+
+    u32MacBufLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
     pu8Buf = malloc(u32MacBufLen);
     if (pu8Buf == HI_NULL)
     {
-        close(fd);
         HI_ERR_CA("error, fail to malloc memory!\n");
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
-    
+
     /*Below code save URI and caculate the MAC*/
-    
+
     memcpy((HI_U8*)&pstPrivateFileHead->URI[pstPrivateFileHead->URINum],pstPVRURI,sizeof(HI_UNF_PVR_URI_S));
     pstPrivateFileHead->URINum++;
 
@@ -5041,53 +5095,65 @@ HI_S32 HI_UNF_ADVCA_PVR_SaveURI( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName
     if (u32DataLen > 0)
     {
        u32Seek = sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S);
-       (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
-       (HI_VOID)read(fd, &pu8Buf[u32DataOffset], u32DataLen);
+       if (u32Seek != lseek(fd, (long)u32Seek, SEEK_SET))
+       {
+           HI_ERR_CA("lseek error\n");
+       
+           ret = HI_FAILURE;
+       
+           goto RET;
+       }
+       if (u32DataLen != read(fd, &pu8Buf[u32DataOffset], u32DataLen))
+       {
+           HI_ERR_CA("read error\n");
+       
+           ret = HI_FAILURE;
+       
+           goto RET;
+       }
     }
-    
+
     /*Now, we calculate CMAC involving private head and fingerprint*/
     u32DataLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + u32DataLen;
 
-    /*HI_INFO_CA("HI_UNF_ADVCA_PVR_SaveURI: data is:\n");
-    for(i = 0; i < u32DataLen; i++)
+    if (u32DataLen > u32MacBufLen)
     {
-        HI_INFO_CA("%02X ", pu8Buf[i]);//from the first byte is from SCI.
-        if((i+1)%16 == 0)
-        {
-            HI_INFO_CA("\n");
-            HI_INFO_CA("                ");
-        }
-    }*/
-
-	if(u32DataLen > u32MacBufLen)
-	{
         HI_ERR_CA("Error, u32DataLen:0x%x > u32MacBufLen:0x%x\n", u32DataLen, u32MacBufLen);
-        close(fd);
-        free(pu8Buf);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-	}
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
 
     ret = HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, u32DataLen, pstPvrRecCaData->stR2RkeyladderCipherInfo.SessionKey1, MAC);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
-        close(fd);
-        free(pu8Buf);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-    } 
-    
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
     memcpy(pstMACPrivateFileHead->Mac, MAC, 16);
-    (HI_VOID)lseek(fd,0,SEEK_SET);
+
+    if (0 != lseek(fd, 0, SEEK_SET))
+    {
+        HI_ERR_CA("lseek error\n");
+    
+        ret = HI_FAILURE;
+    
+        goto RET;
+    }
+
     u32WriteCount = (HI_U32)write(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if (sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) != u32WriteCount)
     {
         HI_ERR_CA("write CA private file error\n");
-        close(fd);
-        free(pu8Buf);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
 
     /*Only force change Record key from second URI*/
@@ -5097,36 +5163,47 @@ HI_S32 HI_UNF_ADVCA_PVR_SaveURI( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName
     }
 
     PvrRecChannelInfo[RecChnIndex].u32UriNumbers++;
-     
-    close(fd); 
-    if (pu8Buf != NULL)
+
+    ret = HI_SUCCESS;
+
+RET:
+    if (fd >= 0)
     {
-       free(pu8Buf);
+        close(fd);
     }
-    free(pstMACPrivateFileHead);
-    
-    return HI_SUCCESS;
+
+    if (HI_NULL != pu8Buf)
+    {
+        free(pu8Buf);
+    }
+
+    if (HI_NULL != pstMACPrivateFileHead)
+    {
+        free(pstMACPrivateFileHead);
+    }
+
+    return ret;
 }
 
-HI_S32 HI_UNF_ADVCA_PVR_SaveFP( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName,HI_UNF_PVR_FP_INFO_S* pstFPInfo)
+HI_S32 HI_UNF_ADVCA_PVR_SaveFP(HI_U32 u32RecChnID, HI_CHAR *pCAPrivateFileName, HI_UNF_PVR_FP_INFO_S *pstFPInfo)
 {
     HI_S32 ret = 0;
-    HI_U32 i = 0, RecChnIndex=0; 
+    HI_U32 i = 0, RecChnIndex=0;
     HI_S32 fd = -1;
+    HI_S32 len;
     HI_U32 u32Seek = 0;
     HI_U32 u32WriteCount = 0;
     HI_U32 u32DataLen = 0, u32DataOffset;
-    HI_U8  *pu8Buf;
+    HI_U8  *pu8Buf = HI_NULL;
     HI_U8  HeadMAC[16];
     HI_U8  FPMAC[16];
     HI_CA_PVR_CADATA_S* pstPvrRecCaData = NULL;
-    HI_U32  CurBlockNum;
-	HI_U32 u32MacBufLen = 0;
+    HI_U32 u32MacBufLen = 0;
     ADVCA_PVR_MAC_FP_INFO_S *pstTmpMACFP = HI_NULL;
     HI_UNF_CIPHER_CTRL_S *pstCipherCtrl = NULL;
     ADVCA_PVR_CA_MacPrivateFileHead_S *pstMACPrivateFileHead = HI_NULL;
     ADVCA_PVR_CA_PrivateFileHead_S* pstPrivateFileHead = HI_NULL;
-    //HI_U32 i;
+
     CA_CheckPointer(pCAPrivateFileName);
     CA_CheckPointer(pstFPInfo);
 
@@ -5141,14 +5218,16 @@ HI_S32 HI_UNF_ADVCA_PVR_SaveFP( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName,
     if (HI_NULL == pstMACPrivateFileHead)
     {
         HI_ERR_CA("Failed to malloc %d bytes memory\n", sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
-        free(pstTmpMACFP);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
-    
+
     /*find out the PVR CA infor by PVR channel ID*/
-    for (i = 0 ; i < PVR_CA_MAX_CHANNEL ; i++)
+    for (i = 0; i < PVR_CA_MAX_CHANNEL; i++)
     {
-        if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID )
+        if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID)
         {
             break;
         }
@@ -5156,151 +5235,193 @@ HI_S32 HI_UNF_ADVCA_PVR_SaveFP( HI_U32 u32RecChnID,HI_CHAR * pCAPrivateFileName,
     if (PVR_CA_MAX_CHANNEL == i)
     {
         HI_ERR_CA("PVR channel ID error\n");
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
-    
+
     RecChnIndex = i;
 
     pstPvrRecCaData = &PvrRecChannelInfo[RecChnIndex].stPvrRecCaData;
-    CurBlockNum = PvrRecChannelInfo[RecChnIndex].CurBlockNum;
 
     memset(HeadMAC, 0, sizeof(HeadMAC));
     memset(FPMAC, 0, sizeof(FPMAC));
     memset(pstTmpMACFP, 0, sizeof(ADVCA_PVR_MAC_FP_INFO_S));
     memset(pstMACPrivateFileHead, 0, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     pstPrivateFileHead = &pstMACPrivateFileHead->stCAPrivateFileHead;
-    
-    
-   // CA_ASSERT(CX_PVR_CreateCAPrivateFile(u32RecChnID,pCAPrivateFileName),ret);  
+
     ret = ADVCA_PVR_CheckCAPrivateFileCreated(u32RecChnID);
     if (HI_FAILURE == ret)
     {
-		HI_ERR_CA("error, create Private File failed!\n");
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-		return HI_FAILURE;
+        HI_ERR_CA("error, create Private File failed!\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
-      
-    fd = open(pCAPrivateFileName,O_RDWR);
-	if(fd < 0)
-	{
-		HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-		return HI_FAILURE;
-	}
 
-    (HI_VOID)lseek(fd,0,SEEK_SET);
-    (HI_VOID)read(fd, pstMACPrivateFileHead,sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
+    fd = open(pCAPrivateFileName, O_RDWR);
+    if (fd < 0)
+    {
+        HI_ERR_CA("error, open pCAPrivateFileName failed!\n");
 
-    //HI_INFO_CA("HI_UNF_ADVCA_PVR_SaveFP:pstPrivateFileHead->FPNum is %d------>\n", pstPrivateFileHead->FPNum);
+        ret = HI_FAILURE;
 
-	u32MacBufLen = (sizeof(ADVCA_PVR_CA_PrivateFileHead_S)
-              + (pstPrivateFileHead->FPNum+1)*sizeof(ADVCA_PVR_MAC_FP_INFO_S));
+        goto RET;
+    }
+
+    len = read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
+    if (sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) != len)
+    {
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    if (pstPrivateFileHead->FPNum > MAX_FP_NUM)
+    {
+        HI_ERR_CA("FPNum %d is error\n", pstPrivateFileHead->FPNum);
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
+
+    u32MacBufLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + (pstPrivateFileHead->FPNum + 1) * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
+
     pu8Buf = malloc(u32MacBufLen);
     if (pu8Buf == HI_NULL)
     {
-        close(fd);
         HI_ERR_CA("error, fail to malloc memory!\n");
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
 
-
-    /*read saved Fp into buffer*/
-    u32Seek = sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S);
-    (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
-    u32DataOffset = sizeof(ADVCA_PVR_CA_PrivateFileHead_S);
     if (pstPrivateFileHead->FPNum > 0)
     {
-       (HI_VOID)read(fd, &pu8Buf[u32DataOffset], pstPrivateFileHead->FPNum*sizeof(ADVCA_PVR_MAC_FP_INFO_S));
-       u32DataOffset = u32DataOffset + pstPrivateFileHead->FPNum*sizeof(ADVCA_PVR_MAC_FP_INFO_S);
+        len = read(fd, pu8Buf + sizeof(ADVCA_PVR_CA_PrivateFileHead_S), pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S));
+        if (len != pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S))
+        {
+            ret = HI_FAILURE;
+
+            goto RET;
+        }
     }
-  
+
+    u32DataOffset = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
+
     /*save FP and caculate the MAC*/
-    memcpy(&pstTmpMACFP->stPVRFPInfo,pstFPInfo,sizeof(HI_UNF_PVR_FP_INFO_S));
+    memcpy(&pstTmpMACFP->stPVRFPInfo, pstFPInfo, sizeof(HI_UNF_PVR_FP_INFO_S));
 
     pstCipherCtrl = &pstPvrRecCaData->stR2RkeyladderCipherInfo.stCipherCtrl;
-    
-    ret = HI_UNF_ADVCA_CalculteAES_CMAC((HI_U8 *)&pstTmpMACFP->stPVRFPInfo, sizeof(HI_UNF_PVR_FP_INFO_S), (HI_U8*)pstCipherCtrl->u32Key, FPMAC);
 
-    memcpy(pstTmpMACFP->Mac,FPMAC,16);
+    ret = HI_UNF_ADVCA_CalculteAES_CMAC((HI_U8*)&pstTmpMACFP->stPVRFPInfo, sizeof(HI_UNF_PVR_FP_INFO_S), (HI_U8*)pstCipherCtrl->u32Key, FPMAC);
 
-    memcpy(&pu8Buf[u32DataOffset], pstTmpMACFP, sizeof(ADVCA_PVR_MAC_FP_INFO_S));
+    memcpy(pstTmpMACFP->Mac, FPMAC, 16);
+
+    memcpy(pu8Buf + u32DataOffset, pstTmpMACFP, sizeof(ADVCA_PVR_MAC_FP_INFO_S));
 
     pstPrivateFileHead->FPNum++;
 
     /*we should copy head after update pstPrivateFileHead->FPNum*/
     memcpy(&pu8Buf[0], &pstMACPrivateFileHead->stCAPrivateFileHead, sizeof(ADVCA_PVR_CA_PrivateFileHead_S));
 
-    u32DataLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + pstPrivateFileHead->FPNum*sizeof(ADVCA_PVR_MAC_FP_INFO_S);
-   	if(u32DataLen > u32MacBufLen)
-   	{
-		HI_ERR_CA("Error, u32DataLen:0x%x, u32MacBufLen:0x%x\n", u32DataLen, u32MacBufLen);
+    u32DataLen = sizeof(ADVCA_PVR_CA_PrivateFileHead_S) + pstPrivateFileHead->FPNum * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
+    if (u32DataLen > u32MacBufLen)
+    {
+        HI_ERR_CA("Error, u32DataLen:0x%x, u32MacBufLen:0x%x\n", u32DataLen, u32MacBufLen);
         pstPrivateFileHead->FPNum--;
-        close(fd);
-        free(pu8Buf);
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-	}
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
 
     ret |= HI_UNF_ADVCA_CalculteAES_CMAC(pu8Buf, u32DataLen, pstPvrRecCaData->stR2RkeyladderCipherInfo.SessionKey1, HeadMAC);
     if (HI_SUCCESS != ret)
     {
         HI_ERR_CA("call HI_UNF_ADVCA_CalculteAES_CMAC error\n");
         pstPrivateFileHead->FPNum--;
-        close(fd);
-        free(pu8Buf);
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
-    } 
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
 
     memcpy(pstMACPrivateFileHead->Mac,HeadMAC,16);
 
     /*save new Fingerpint*/
     u32Seek = sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) + (pstPrivateFileHead->FPNum - 1) * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
 
-    (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
+    if (u32Seek != lseek(fd, (long)u32Seek, SEEK_SET))
+    {
+        HI_ERR_CA("lseek error\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
     u32WriteCount = (HI_U32)write(fd, pstTmpMACFP,sizeof(ADVCA_PVR_MAC_FP_INFO_S));
     if (sizeof(ADVCA_PVR_MAC_FP_INFO_S) != u32WriteCount)
     {
         HI_ERR_CA("write CA private file error\n");
-        close(fd);
-        free(pu8Buf);
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
 
     /*save private head*/
-    (HI_VOID)lseek(fd, 0, SEEK_SET);
+    if (0 != lseek(fd, 0, SEEK_SET))
+    {
+        HI_ERR_CA("lseek error\n");
+
+        ret = HI_FAILURE;
+
+        goto RET;
+    }
     u32WriteCount = (HI_U32)write(fd,pstMACPrivateFileHead,sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if (sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) != u32WriteCount)
     {
         HI_ERR_CA("write CA private file error\n");
-        close(fd);
-        free(pu8Buf);
-        free(pstTmpMACFP);
-        free(pstMACPrivateFileHead);
-        return HI_FAILURE;
+
+        ret = HI_FAILURE;
+
+        goto RET;
     }
 
     PvrRecChannelInfo[RecChnIndex].u32FpNumbers++;
-    
-    close(fd); 
-    free(pu8Buf);
-    free(pstTmpMACFP);
-    free(pstMACPrivateFileHead);
 
-    return HI_SUCCESS;
+    ret = HI_SUCCESS;
+
+RET:
+    if (fd >= 0)
+    {
+        close(fd);
+    }
+
+    if (HI_NULL != pu8Buf)
+    {
+        free(pu8Buf);
+    }
+
+    if (HI_NULL != pstTmpMACFP)
+    {
+        free(pstTmpMACFP);
+    }
+
+    if (HI_NULL != pstMACPrivateFileHead)
+    {
+        free(pstMACPrivateFileHead);
+    }
+
+    return ret;
 }
 
-HI_S32 HI_UNF_ADVCA_PVR_GetURIAndFPNum( HI_CHAR * pCAPrivateFileName,HI_U32* u32URINum,HI_U32* u32FPNum)
+HI_S32 HI_UNF_ADVCA_PVR_GetURIAndFPNum(HI_CHAR *pCAPrivateFileName, HI_U32 *u32URINum, HI_U32 *u32FPNum)
 {
     HI_S32 fd = -1;
     HI_U32 u32ReadCount = 0;
@@ -5326,7 +5447,6 @@ HI_S32 HI_UNF_ADVCA_PVR_GetURIAndFPNum( HI_CHAR * pCAPrivateFileName,HI_U32* u32
         free(pstMACPrivateFileHead);
         return HI_FAILURE;
     }
-    (HI_VOID)lseek(fd,0,SEEK_SET);
     u32ReadCount = (HI_U32)read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if (u32ReadCount != sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S))
     {
@@ -5354,7 +5474,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetFP( HI_CHAR * pCAPrivateFileName,HI_U32 u32FPNum,HI_U
     HI_U32 u32FPTotalNum = 0;
     HI_U32 u32URITotalNum = 0;
     ADVCA_PVR_MAC_FP_INFO_S stTmpMacFPInfo;
-        
+
     CA_CheckPointer(pCAPrivateFileName);
     CA_CheckPointer(pstFPInfo);
 
@@ -5380,11 +5500,15 @@ HI_S32 HI_UNF_ADVCA_PVR_GetFP( HI_CHAR * pCAPrivateFileName,HI_U32 u32FPNum,HI_U
         HI_ERR_CA("%s is not exist\n",pCAPrivateFileName);
         return HI_FAILURE;
     }
-    
-    
+
+
     u32Seek = sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S) + (u32FPNum - 1) * sizeof(ADVCA_PVR_MAC_FP_INFO_S);
-    
-    (HI_VOID)lseek(fd,(long)u32Seek,SEEK_SET);
+    if (u32Seek != lseek(fd, (long)u32Seek, SEEK_SET))
+    {
+        HI_ERR_CA("lseek error\n");
+        close(fd);
+        return HI_FAILURE;
+    }
     u32ReadCount = (HI_U32)read(fd,&stTmpMacFPInfo,sizeof(ADVCA_PVR_MAC_FP_INFO_S));
     if (u32ReadCount != sizeof(ADVCA_PVR_MAC_FP_INFO_S))
     {
@@ -5394,7 +5518,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetFP( HI_CHAR * pCAPrivateFileName,HI_U32 u32FPNum,HI_U
     }
     memcpy(pstFPInfo,&stTmpMacFPInfo.stPVRFPInfo,sizeof(HI_UNF_PVR_FP_INFO_S));
 
-    close(fd); 
+    close(fd);
     return HI_SUCCESS;
 }
 
@@ -5439,7 +5563,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetURI( HI_CHAR * pCAPrivateFileName ,HI_U32 u32URINum, 
         free(pstMACPrivateFileHead);
         return HI_FAILURE;
     }
-    
+
 
     /*read private file to get the file head*/
     fd = open(pCAPrivateFileName,O_RDWR);
@@ -5449,7 +5573,6 @@ HI_S32 HI_UNF_ADVCA_PVR_GetURI( HI_CHAR * pCAPrivateFileName ,HI_U32 u32URINum, 
         free(pstMACPrivateFileHead);
         return HI_FAILURE;
     }
-    (HI_VOID)lseek(fd,0,SEEK_SET);
     u32ReadCount = (HI_U32)read(fd, pstMACPrivateFileHead, sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S));
     if (u32ReadCount != sizeof(ADVCA_PVR_CA_MacPrivateFileHead_S))
     {
@@ -5460,7 +5583,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetURI( HI_CHAR * pCAPrivateFileName ,HI_U32 u32URINum, 
     }
     memcpy((HI_U8*)pstURI,(HI_U8*)&pstPrivateFileHead->URI[u32URINum - 1],sizeof(HI_UNF_PVR_URI_S));
     free(pstMACPrivateFileHead);
-    close(fd); 
+    close(fd);
     return HI_SUCCESS;
 }
 
@@ -5474,7 +5597,7 @@ HI_S32 HI_UNF_ADVCA_PVR_GetRecStatus(HI_U32 u32RecChnID, HI_UNF_ADVCA_PVR_REC_ST
     {
         if (u32RecChnID == PvrRecChannelInfo[i].u32ChnID )
         {
-            break; 
+            break;
         }
     }
     if (PVR_CA_MAX_CHANNEL == i)
@@ -5485,10 +5608,10 @@ HI_S32 HI_UNF_ADVCA_PVR_GetRecStatus(HI_U32 u32RecChnID, HI_UNF_ADVCA_PVR_REC_ST
 
     RecChnIndex = i;
 
-    
+
     pstRecStatus->u32UriNumbers = PvrRecChannelInfo[RecChnIndex].u32UriNumbers;
     pstRecStatus->u32FpNumbers = PvrRecChannelInfo[RecChnIndex].u32FpNumbers;
-    
+
     return HI_SUCCESS;
 }
 #endif
@@ -5497,77 +5620,87 @@ HI_S32 HI_UNF_ADVCA_CalculteAES_CMAC(HI_U8 *buffer, HI_U32 Length, HI_U8 Key[16]
 {
     HI_S32 ret = 0;
     HI_HANDLE hCipher = 0xffffffff;
-    HI_UNF_CIPHER_CTRL_S CipherCtrl ; 
-#ifdef SDK_SECURITY_ARCH_VERSION_V3
+    HI_UNF_CIPHER_CTRL_S CipherCtrl;
+    HI_U8 au8SessionInput1[16] = {0x23,0x34,0x34,0x52,0x34,0x55,0x45,0x84,0x54,0x54,0x84,0x53,0x34,0x47,0x34,0x47};
+    HI_U8 au8SessionInput2[16] = {0x56,0x34,0x88,0x52,0x34,0x89,0x45,0xa0,0x54,0x54,0x77,0x53,0x34,0x47,0x34,0x91};
+    HI_UNF_ADVCA_KEYLADDER_LEV_E enStage = 0;
     HI_UNF_CIPHER_ATTS_S stCipherAttr;
-#endif
-    
+
     CA_CheckPointer(buffer);
     CA_CheckPointer(Key);
     CA_CheckPointer(MAC);
-    
+
     /*open and config cipher*/
-    CA_ASSERT(HI_UNF_CIPHER_Open(),ret);
-#ifndef SDK_SECURITY_ARCH_VERSION_V3
-    CA_ASSERT(HI_UNF_CIPHER_CreateHandle(&hCipher),ret);
-#else
+    CA_ASSERT(HI_UNF_ADVCA_Init(),ret);
+    CA_ASSERT(HI_UNF_CIPHER_Init(),ret);
+    CA_ASSERT(HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_AES), ret);
+    CA_ASSERT(HI_UNF_ADVCA_GetR2RKeyLadderStage(&enStage), ret);
+
     memset(&stCipherAttr, 0, sizeof(stCipherAttr));
     stCipherAttr.enCipherType = HI_UNF_CIPHER_TYPE_NORMAL;
     CA_ASSERT(HI_UNF_CIPHER_CreateHandle(&hCipher, &stCipherAttr),ret);
-#endif
-    memset(&CipherCtrl,0x00,sizeof(HI_UNF_CIPHER_CTRL_S));
 
+#ifdef HI_PVR_SUPPORT
+    (HI_VOID)sem_wait(&g_PVRSem);
+#endif
+    if (enStage >= HI_UNF_ADVCA_KEYLADDER_LEV2)
+    {
+        ret = HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV1, au8SessionInput1);
+        if (ret != HI_SUCCESS)
+        {
+            HI_ERR_CA("Fail to set R2R session key, level %d\n", HI_UNF_ADVCA_KEYLADDER_LEV1);
+            goto ERROR_EXIT;
+        }
+    }
+
+    if (enStage >= HI_UNF_ADVCA_KEYLADDER_LEV3)
+    {
+        ret = HI_UNF_ADVCA_SetR2RSessionKey(HI_UNF_ADVCA_KEYLADDER_LEV2, au8SessionInput2);
+        if (ret != HI_SUCCESS)
+        {
+           HI_ERR_CA("Fail to set R2R session key, level %d\n", HI_UNF_ADVCA_KEYLADDER_LEV2);
+           goto ERROR_EXIT;
+        }
+    }
+
+    memset(&CipherCtrl,0x00,sizeof(HI_UNF_CIPHER_CTRL_S));
     CipherCtrl.bKeyByCA = HI_TRUE;
+    CipherCtrl.enCaType = HI_UNF_CIPHER_CA_TYPE_R2R;
     CipherCtrl.enAlg = HI_UNF_CIPHER_ALG_AES;
     CipherCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_CBC;
     CipherCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     CipherCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
     CipherCtrl.stChangeFlags.bit1IV = 1;
-
-    memcpy(CipherCtrl.u32Key,Key,16);
+    memcpy(CipherCtrl.u32Key, Key, 16);
     memset(CipherCtrl.u32IV, 0x0, 16);
 
-    (HI_VOID)sem_wait(&g_PVRSem); /*qstian add*/
-
-#ifndef SDK_SECURITY_ARCH_VERSION_V2
-    ret = HI_UNF_ADVCA_SWPKKeyLadderOpen();  /*qstian add 20130531*/
+    ret = HI_UNF_CIPHER_ConfigHandle(hCipher,&CipherCtrl);
     if (ret != HI_SUCCESS)
     {
-        HI_ERR_CA("Fail to open swpk key ladder \n");
-        goto ERROR_EXIT;
-    }
-#endif
-    
-    ret = HI_UNF_CIPHER_ConfigHandle(hCipher,&CipherCtrl); 
-    if (ret != HI_SUCCESS)
-    {
-       HI_ERR_CA("Fail to config cipher \n");
+       HI_ERR_CA("Fail to config cipher\n");
        goto ERROR_EXIT;
     }
 
-#ifndef SDK_SECURITY_ARCH_VERSION_V2
-    //CA_ASSERT(HI_UNF_ADVCA_SWPKKeyLadderOpen(),ret);    
-    (HI_VOID)HI_UNF_CIPHER_CalcMAC(hCipher, buffer, Length, MAC, HI_TRUE); 
-    
-    ret = HI_UNF_ADVCA_SWPKKeyLadderClose();
+    ret = HI_UNF_CIPHER_CalcMAC(hCipher, buffer, Length, MAC, HI_TRUE);
     if (ret != HI_SUCCESS)
     {
-       HI_ERR_CA("Fail to close key ladder \n");
+       HI_ERR_CA("HI_UNF_CIPHER_CalcMAC failed, ret: 0x%x\n", ret);
        goto ERROR_EXIT;
     }
-#endif
 
-     ret = HI_SUCCESS;
+    ret = HI_SUCCESS;
 
 ERROR_EXIT:
-    (HI_VOID)sem_post(&g_PVRSem); /*qstian add*/
-    
+#ifdef HI_PVR_SUPPORT
+    (HI_VOID)sem_post(&g_PVRSem);
+#endif
+
     if (HI_SUCCESS != HI_UNF_CIPHER_DestroyHandle(hCipher))
     {
        HI_ERR_CA("Fail to destory cipher handle\n");
        return HI_FAILURE;
     }
-   
+
     return ret;
 }
 
@@ -5589,7 +5722,7 @@ HI_S32 HI_UNF_ADVCA_SetKlDPAClkSelEn(HI_BOOL bValue)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5619,7 +5752,7 @@ HI_S32 HI_UNF_ADVCA_SetMiscRootKey(HI_U8 *pu8Key, HI_U32 u32Len)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5649,7 +5782,7 @@ HI_S32 HI_UNF_ADVCA_SetESCK(HI_U8 *pu8Key, HI_U32 u32Len)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5659,7 +5792,6 @@ HI_S32 HI_UNF_ADVCA_SetESCK(HI_U8 *pu8Key, HI_U32 u32Len)
 HI_S32 HI_UNF_ADVCA_SetMiscKlLevel(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    HI_BOOL bTmp = HI_FALSE;
     CA_CMD_SUPPER_ID_S stCmdParam;
 
     if (g_AdvcaInitCounter < 0)
@@ -5680,7 +5812,7 @@ HI_S32 HI_UNF_ADVCA_SetMiscKlLevel(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5710,7 +5842,7 @@ HI_S32 HI_UNF_ADVCA_GetMiscKlLevel(HI_UNF_ADVCA_KEYLADDER_LEV_E *penLevel)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5730,13 +5862,19 @@ HI_S32 HI_UNF_ADVCA_SetMiscAlg(HI_UNF_ADVCA_ALG_TYPE_E enType)
         return HI_ERR_CA_NOT_INIT;
     }
 
+    if (enType >= HI_UNF_ADVCA_ALG_TYPE_BUTT)
+    {
+        HI_ERR_CA("Invalid alg type: %d\n", enType);
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
     memset(&stCmdParam, 0, sizeof(stCmdParam));
     stCmdParam.enCmdChildID = CMD_CHILD_ID_MISC_SETALG;
     memcpy(stCmdParam.pu8ParamBuf, &enType, sizeof(HI_UNF_ADVCA_ALG_TYPE_E));
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5767,7 +5905,7 @@ HI_S32 HI_UNF_ADVCA_GetMiscAlg(HI_UNF_ADVCA_ALG_TYPE_E *penType)
     memcpy(&enType, stCmdParam.pu8ParamBuf, sizeof(HI_UNF_ADVCA_ALG_TYPE_E));
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5790,7 +5928,7 @@ HI_S32 HI_UNF_ADVCA_SetOEMRootKey(HI_U8 *pu8OEMRootKey, HI_U32 u32KeyLen)
     if( (NULL == pu8OEMRootKey) || (16 != u32KeyLen))
     {
         HI_ERR_CA("Error! Invalid parameter input!\n");
-        return HI_FAILURE;
+        return HI_ERR_CA_INVALID_PARA;
     }
 
     memset(&stCmdParam, 0, sizeof(stCmdParam));
@@ -5799,7 +5937,7 @@ HI_S32 HI_UNF_ADVCA_SetOEMRootKey(HI_U8 *pu8OEMRootKey, HI_U32 u32KeyLen)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5820,7 +5958,7 @@ HI_S32 HI_UNF_ADVCA_GetOEMRootKey(HI_U8 *pu8OEMRootKey, HI_U32 u32KeyLen)
     if( (NULL == pu8OEMRootKey) || (16 != u32KeyLen))
     {
         HI_ERR_CA("Error! Invalid parameter input!\n");
-        return HI_FAILURE;
+        return HI_ERR_CA_INVALID_PARA;
     }
 
     memset(&stCmdParam, 0, sizeof(stCmdParam));
@@ -5828,7 +5966,7 @@ HI_S32 HI_UNF_ADVCA_GetOEMRootKey(HI_U8 *pu8OEMRootKey, HI_U32 u32KeyLen)
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
     if (HI_SUCCESS != s32Ret)
     {
-        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err. \n");
+        HI_ERR_CA("ca ioctl CMD_CA_SUPPER_ID err.\n");
         return s32Ret;
     }
 
@@ -5848,10 +5986,10 @@ HI_S32 HI_UNF_ADVCA_GetOEMRootKeyLockFlag(HI_BOOL *pbLockFlag)
         return HI_ERR_CA_NOT_INIT;
     }
 
-    if( NULL == pbLockFlag )
+    if( NULL == pbLockFlag)
     {
         HI_ERR_CA("Error! Invalid parameter input!\n");
-        return HI_FAILURE;
+        return HI_ERR_CA_INVALID_PARA;
     }
 
     memset(&stCmdParam, 0, sizeof(stCmdParam));
@@ -5996,7 +6134,7 @@ HI_S32 HI_UNF_ADVCA_GetTZOtp(HI_U32 u32Addr, HI_U32 u32Len, HI_U8 *pu8OutData)
         HI_ERR_CA("Invalid param, null pointer!");
         return HI_FAILURE;
     }
-    
+
     if((u32Addr % 16) != 0)
     {
         HI_ERR_CA("u32Addr(0x%x) is not aligned by 16!", u32Addr);
@@ -6013,7 +6151,7 @@ HI_S32 HI_UNF_ADVCA_GetTZOtp(HI_U32 u32Addr, HI_U32 u32Len, HI_U8 *pu8OutData)
 
     stOtpTzTrans.u32Addr = u32Addr;
     stOtpTzTrans.u32Len = u32Len;
-    
+
     memcpy(stCmdParam.pu8ParamBuf, &stOtpTzTrans, sizeof(CA_OTP_TZ_DATA_S));
     stCmdParam.enCmdChildID = CMD_CHILD_ID_GET_OTP_TZ;
     s32Ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stCmdParam);
@@ -6031,9 +6169,9 @@ HI_S32 HI_UNF_ADVCA_GetTZOtp(HI_U32 u32Addr, HI_U32 u32Len, HI_U8 *pu8OutData)
 
 HI_S32 HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_TYPE_E enType, HI_U8 *pu8ParamIn, HI_U32 u32ParamLen)
 {
-	HI_S32 ret = HI_SUCCESS;
-	CA_CMD_SUPPER_ID_S stParams;
-	HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S *pstParams = NULL;
+    HI_S32 ret = HI_SUCCESS;
+    CA_CMD_SUPPER_ID_S stParams;
+    HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S *pstParams = NULL;
 
     if (g_s32CaFd <= 0)
     {
@@ -6041,101 +6179,101 @@ HI_S32 HI_UNF_ADVCA_ConfigLockFlag(HI_UNF_ADVCA_LOCK_TYPE_E enType, HI_U8 *pu8Pa
         return HI_ERR_CA_NOT_INIT;
     }
 
-	memset(&stParams, 0, sizeof(stParams));
-	switch ( enType )
-	{
-	    case HI_UNF_ADVCA_LOCK_RSA_KEY:
-	    {
-			stParams.enCmdChildID = CMD_CHILD_ID_LOCK_RSA_KEY;
-			ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
-		    if (HI_SUCCESS != ret)
-		    {
-		        HI_ERR_CA("ca ioctl  set rsa key lock flag err. \n");
-		        return ret;
-		    }
-	        break;
-		}
-	    case HI_UNF_ADVCA_LOCK_TZ_OTP:
-	    {
-			if ( (NULL == pu8ParamIn) || (0 == u32ParamLen) || (u32ParamLen != sizeof(HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S)) )
-			{
-			    HI_ERR_CA("Invalid params input.\n");
-				return HI_ERR_CA_INVALID_PARA;
-			}
+    memset(&stParams, 0, sizeof(stParams));
+    switch ( enType )
+    {
+        case HI_UNF_ADVCA_LOCK_RSA_KEY:
+        {
+            stParams.enCmdChildID = CMD_CHILD_ID_LOCK_RSA_KEY;
+            ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_CA("ca ioctl  set rsa key lock flag err. \n");
+                return ret;
+            }
+            break;
+        }
+        case HI_UNF_ADVCA_LOCK_TZ_OTP:
+        {
+            if ( (NULL == pu8ParamIn) || (0 == u32ParamLen) || (u32ParamLen != sizeof(HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S)) )
+            {
+                HI_ERR_CA("Invalid params input.\n");
+                return HI_ERR_CA_INVALID_PARA;
+            }
 
-			pstParams = (HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S *)pu8ParamIn;
+            pstParams = (HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S *)pu8ParamIn;
 
-			/* tz otp : 0x100 ~ 0x17f , total length : 128 bytes*/
-			if((0 != (pstParams->u32Addr%16)) || (pstParams->u32Addr < 0x100) || (pstParams->u32Addr > 0x170))
-			{
-		        HI_ERR_CA("Invalid params, addr.\n");
-		        return HI_FAILURE;
-			}
+            /* tz otp : 0x100 ~ 0x17f , total length : 128 bytes*/
+            if((0 != (pstParams->u32Addr%16)) || (pstParams->u32Addr < 0x100) || (pstParams->u32Addr > 0x170))
+            {
+                HI_ERR_CA("Invalid params, addr.\n");
+                return HI_ERR_CA_INVALID_PARA;
+            }
 
-			if ( (0!=(pstParams->u32Len%16)) || (pstParams->u32Len > 128) )
-			{
-		        HI_ERR_CA("Invalid params, u32Len.\n");
-		        return HI_FAILURE;
-			}
-			if ( ((pstParams->u32Addr + pstParams->u32Len) > 0x180) )
-			{
-		        HI_ERR_CA("Invalid params, u32Len.\n");
-		        return HI_FAILURE;
-			}
+            if ( (0!=(pstParams->u32Len%16)) || (pstParams->u32Len > 128) )
+            {
+                HI_ERR_CA("Invalid params, u32Len.\n");
+                return HI_ERR_CA_INVALID_PARA;
+            }
+            if ( ((pstParams->u32Addr + pstParams->u32Len) > 0x180) )
+            {
+                HI_ERR_CA("Invalid params, u32Len.\n");
+                return HI_ERR_CA_INVALID_PARA;
+            }
 
-			stParams.enCmdChildID = CMD_CHILD_ID_LOCK_OTP_TZ;
-			memcpy(stParams.pu8ParamBuf, (HI_VOID *)pstParams, sizeof(HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S));
-			stParams.u32ParamLen = u32ParamLen;
+            stParams.enCmdChildID = CMD_CHILD_ID_LOCK_OTP_TZ;
+            memcpy(stParams.pu8ParamBuf, (HI_VOID *)pstParams, sizeof(HI_UNF_ADVCA_LOCK_TZ_OTP_PARAM_S));
+            stParams.u32ParamLen = u32ParamLen;
 
-			ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
-		    if (HI_SUCCESS != ret)
-		    {
-		        HI_ERR_CA("ca ioctl set tz otp lock flag err. \n");
-		        return ret;
-		    }
-	        break;
-		}
-	    case HI_UNF_ADVCA_LOCK_MISC_KL_DISABLE:
-	    {
-			stParams.enCmdChildID = CMD_CHILD_ID_LOCK_MISC_KL_DISABLE;
-			ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
-		    if (HI_SUCCESS != ret)
-		    {
-		        HI_ERR_CA("ca ioctl lock misc kl disable err. \n");
-		        return ret;
-		    }
-	        break;
-		}
-	    case HI_UNF_ADVCA_LOCK_GG_KL_DISABLE:
-	    {
-			stParams.enCmdChildID = CMD_CHILD_ID_LOCK_GG_KL_DISABLE;
-			ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
-		    if (HI_SUCCESS != ret)
-		    {
-		        HI_ERR_CA("ca ioctl lock gg kl disable err. \n");
-		        return ret;
-		    }
-	        break;
-		}
-	    case HI_UNF_ADVCA_LOCK_TSKL_CSA3_DISABLE:
-	    {
-			stParams.enCmdChildID = CMD_CHILD_ID_LOCK_TSKL_CSA3_DISABLE;
-			ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
-		    if (HI_SUCCESS != ret)
-		    {
-		        HI_ERR_CA("ca ioctl lock tskl csa3 disable err. \n");
-		        return ret;
-		    }
-	        break;
-		}					
-	    default:
-	    {
-		    HI_ERR_CA("Not supported.\n");
-			return HI_ERR_CA_NOT_SUPPORT;
-		}
-	}
+            ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_CA("ca ioctl set tz otp lock flag err. \n");
+                return ret;
+            }
+            break;
+        }
+        case HI_UNF_ADVCA_LOCK_MISC_KL_DISABLE:
+        {
+            stParams.enCmdChildID = CMD_CHILD_ID_LOCK_MISC_KL_DISABLE;
+            ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_CA("ca ioctl lock misc kl disable err. \n");
+                return ret;
+            }
+            break;
+        }
+        case HI_UNF_ADVCA_LOCK_GG_KL_DISABLE:
+        {
+            stParams.enCmdChildID = CMD_CHILD_ID_LOCK_GG_KL_DISABLE;
+            ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_CA("ca ioctl lock gg kl disable err. \n");
+                return ret;
+            }
+            break;
+        }
+        case HI_UNF_ADVCA_LOCK_TSKL_CSA3_DISABLE:
+        {
+            stParams.enCmdChildID = CMD_CHILD_ID_LOCK_TSKL_CSA3_DISABLE;
+            ret = ioctl(g_s32CaFd, CMD_CA_SUPPER_ID, &stParams);
+            if (HI_SUCCESS != ret)
+            {
+                HI_ERR_CA("ca ioctl lock tskl csa3 disable err. \n");
+                return ret;
+            }
+            break;
+        }
+        default:
+        {
+            HI_ERR_CA("Not supported.\n");
+            return HI_ERR_CA_NOT_SUPPORT;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 HI_S32 HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_OTP_ATTR_S *pstOtpFuseAttr)
@@ -6143,7 +6281,13 @@ HI_S32 HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_O
     HI_S32 ret = HI_SUCCESS;
     CA_OTP_ATTR_S stOtpAttr;
 
-    if(enOtpFuse >= HI_UNF_ADVCA_OTP_FUSE_BUTT)
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
+
+    if(enOtpFuse >= HI_UNF_ADVCA_OTP_FUSE_BUTT || enOtpFuse <= HI_UNF_ADVCA_OTP_NULL)
     {
         HI_ERR_CA("Invalid parameter, enOtpFuse = %d\n", enOtpFuse);
         return HI_ERR_CA_INVALID_PARA;
@@ -6153,9 +6297,9 @@ HI_S32 HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_O
     {
         HI_ERR_CA("Invalid parameter, pstOtpFuseAttr = NULL\n");
         return HI_ERR_CA_INVALID_PARA;
-    } 
+    }
 
-    memset(&stOtpAttr, 0, sizeof(stOtpAttr));    
+    memset(&stOtpAttr, 0, sizeof(stOtpAttr));
     stOtpAttr.enOtpFuseId = enOtpFuse;
     memcpy(&stOtpAttr.stOtpAttr, pstOtpFuseAttr, sizeof(HI_UNF_ADVCA_OTP_ATTR_S));
     ret = ioctl(g_s32CaFd, CMD_CA_SET_OTP_FUSE, &stOtpAttr);
@@ -6163,7 +6307,7 @@ HI_S32 HI_UNF_ADVCA_SetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_O
     {
         HI_ERR_CA("ca ioctl CMD_CA_SET_OTP_FUSE err. \n");
         return ret;
-    }    
+    }
 
     return ret;
 }
@@ -6173,7 +6317,13 @@ HI_S32 HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_O
     HI_S32 ret = HI_SUCCESS;
     CA_OTP_ATTR_S stOtpAttr;
 
-    if(enOtpFuse >= HI_UNF_ADVCA_OTP_FUSE_BUTT)
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
+
+    if(enOtpFuse >= HI_UNF_ADVCA_OTP_FUSE_BUTT || enOtpFuse <= HI_UNF_ADVCA_OTP_NULL)
     {
         HI_ERR_CA("Invalid parameter, enOtpFuse = %d\n", enOtpFuse);
         return HI_ERR_CA_INVALID_PARA;
@@ -6185,7 +6335,7 @@ HI_S32 HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse, HI_UNF_ADVCA_O
         return HI_ERR_CA_INVALID_PARA;
     }
 
-    memset(&stOtpAttr, 0, sizeof(stOtpAttr));    
+    memset(&stOtpAttr, 0, sizeof(stOtpAttr));
     stOtpAttr.enOtpFuseId = enOtpFuse;
     ret = ioctl(g_s32CaFd, CMD_CA_GET_OTP_FUSE, &stOtpAttr);
     if (HI_SUCCESS != ret)
@@ -6202,6 +6352,12 @@ HI_S32 HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_TYPE_E enKeyLadderTy
 {
     HI_S32 ret = HI_SUCCESS;
     CA_KEYLADDER_ATTR_S stKeyladderAttr;
+
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
 
     if(enKeyLadderType >= HI_UNF_ADVCA_KEYLADDER_TYPE_BUTT)
     {
@@ -6234,8 +6390,11 @@ HI_S32 HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_TYPE_E enKeyLadderTy
         HI_ERR_CA("ca ioctl CMD_CA_SET_KEYLADDER_ATTR err:0x%x\n", ret);
         return ret;
     }
-
-    if (HI_UNF_ADVCA_KEYLADDER_GDRM == enKeyLadderType) 
+#if !defined(CHIP_TYPE_hi3798mv100) \
+ && !defined(CHIP_TYPE_hi3796mv100) \
+ && !defined(CHIP_TYPE_hi3716dv100) \
+ && defined(HI_ADVCA_TYPE_VERIMATRIX)
+    if (HI_UNF_ADVCA_KEYLADDER_GDRM == enKeyLadderType)
     {
         if (HI_UNF_ADVCA_KEYLADDER_GDRM_ATTR_ENCRYPT == pstKeyladderAttr->unKlAttr.stGDRMAttr.enGDRMKlAttr)
         {
@@ -6246,11 +6405,11 @@ HI_S32 HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_TYPE_E enKeyLadderTy
             memcpy(pstKeyladderAttr->unKlAttr.stGDRMAttr.au8Output, stKeyladderAttr.stKeyladderAttr.unKlAttr.stGDRMAttr.au8Output, 4);
         }
     }
-    
+#endif
     return ret;
 }
 
-    
+
 HI_S32 HI_UNF_ADVCA_CaVendorOperation(HI_UNF_ADVCA_VENDORID_E enCaVendor, HI_UNF_ADVCA_CA_VENDOR_OPT_S *pstCaVendorOpt)
 {
     HI_S32 ret = HI_SUCCESS;
@@ -6260,7 +6419,13 @@ HI_S32 HI_UNF_ADVCA_CaVendorOperation(HI_UNF_ADVCA_VENDORID_E enCaVendor, HI_UNF
     HI_U32 u32AppLen;
     HI_UNF_CIPHER_HASH_ATTS_S stCipherHashAttr;
     HI_HANDLE hHandle = HI_INVALID_HANDLE;
-    HI_U8 u8CbcMac[16] = {0};
+    HI_U8 u8CbcMac[32] = {0};
+
+    if (g_AdvcaInitCounter < 0)
+    {
+        HI_ERR_CA("ca not init\n");
+        return HI_ERR_CA_NOT_INIT;
+    }
 
     if (enCaVendor >= HI_UNF_ADVCA_VENDORIDE_BUTT)
     {
@@ -6276,21 +6441,21 @@ HI_S32 HI_UNF_ADVCA_CaVendorOperation(HI_UNF_ADVCA_VENDORID_E enCaVendor, HI_UNF
 
     enCaVendorOpt = pstCaVendorOpt->enCaVendorOpt;
     if (enCaVendor == HI_UNF_ADVCA_IRDETO && enCaVendorOpt == HI_UNF_ADVCA_CA_VENDOR_OPT_IRDETO_CBCMAC_CALC)
-    {   
+    {
         stCipherHashAttr.eShaType = HI_UNF_CIPHER_HASH_TYPE_IRDETO_CBCMAC;
         ret = HI_UNF_CIPHER_HashInit(&stCipherHashAttr, &hHandle);
         ret |= HI_UNF_CIPHER_HashUpdate(hHandle, pstCaVendorOpt->unCaVendorOpt.stIrdetoCbcMac.pu8InputData,
                                                                                     pstCaVendorOpt->unCaVendorOpt.stIrdetoCbcMac.u32InputDataLen);
-        ret |= HI_UNF_CIPHER_HashFinal(hHandle, u8CbcMac);      
+        ret |= HI_UNF_CIPHER_HashFinal(hHandle, u8CbcMac);
         if (HI_SUCCESS != ret)
         {
             HI_ERR_CA("CBC-MAC calculation error!\n");
             return ret;
         }
         memcpy(pstCaVendorOpt->unCaVendorOpt.stIrdetoCbcMac.au8OutputCBCMAC, u8CbcMac,  16);
-    }    
+    }
     else if (enCaVendor == HI_UNF_ADVCA_IRDETO && enCaVendorOpt == HI_UNF_ADVCA_CA_VENDOR_OPT_IRDETO_CBCMAC_AUTH)
-    {   
+    {
         pu8RefCbcMac = pstCaVendorOpt->unCaVendorOpt.stIrdetoCbcMac.au8RefCBCMAC;
         u32AppLen = pstCaVendorOpt->unCaVendorOpt.stIrdetoCbcMac.u32AppLen;
         ret = HI_MPI_CIPHER_CbcMac_Auth(pu8RefCbcMac, u32AppLen);
@@ -6306,12 +6471,12 @@ HI_S32 HI_UNF_ADVCA_CaVendorOperation(HI_UNF_ADVCA_VENDORID_E enCaVendor, HI_UNF
             return ret;
         }
     }
-	else if(enCaVendor == HI_UNF_ADVCA_VERIMATRIX && enCaVendorOpt == HI_UNF_ADVCA_CA_VENDOR_OPT_VMX_GET_RNG)
+    else if(enCaVendor == HI_UNF_ADVCA_VERIMATRIX && enCaVendorOpt == HI_UNF_ADVCA_CA_VENDOR_OPT_VMX_GET_RNG)
     {
         HI_U32 u32RandomNumber = 0;
 
         ret = HI_UNF_CIPHER_Init();
-		ret |= HI_MPI_CIPHER_GetRandomNumber(&u32RandomNumber, 0);
+        ret |= HI_MPI_CIPHER_GetRandomNumber(&u32RandomNumber, 0);
         if (HI_SUCCESS != ret && HI_ERR_CIPHER_NO_AVAILABLE_RNG != ret)
         {
             HI_ERR_CA("HI_MPI_CIPHER_GetRandomNumber error! ret = 0x%x\n", ret);
@@ -6319,11 +6484,11 @@ HI_S32 HI_UNF_ADVCA_CaVendorOperation(HI_UNF_ADVCA_VENDORID_E enCaVendor, HI_UNF
         }
         else if(HI_ERR_CIPHER_NO_AVAILABLE_RNG == ret)
         {
-			return ret;
+            return ret;
         }
 
         pstCaVendorOpt->unCaVendorOpt.stVMXRng.u32RNG = u32RandomNumber;
-    }	
+    }
     else
     {
         memset(&CaVendorOpt, 0, sizeof(CaVendorOpt));

@@ -93,8 +93,11 @@
 #include "agp.h"
 
 #include <core/core_system.h>
+
+#ifdef CONFIG_GFX_DFB_OPTV5_SUPPORT
 #include "hi_mpi_disp.h"
 #include "hi_mpi_hdmi.h"
+#endif
 
 DFB_CORE_SYSTEM( fbdev )
 
@@ -2025,6 +2028,7 @@ primaryFlipRegion( CoreLayer             *layer,
 
      D_DEBUG_AT( FBDev_Primary, "%s()\n", __FUNCTION__ );
 
+#if 0
      if (((flags & DSFLIP_WAITFORSYNC) == DSFLIP_WAITFORSYNC) &&
          !dfb_config->pollvsync_after)
           dfb_screen_wait_vsync( dfb_screens_at(DSCID_PRIMARY) );
@@ -2038,7 +2042,24 @@ primaryFlipRegion( CoreLayer             *layer,
      if ((flags & DSFLIP_WAIT) &&
          (dfb_config->pollvsync_after || !(flags & DSFLIP_ONSYNC)))
           dfb_screen_wait_vsync( dfb_screens_at(DSCID_PRIMARY) );
+		  
+#else //hisi, resolve shake screen when flip
 
+     if (false/*((flags & DSFLIP_WAITFORSYNC) == DSFLIP_WAITFORSYNC) &&
+         !dfb_config->pollvsync_after*/)
+          dfb_screen_wait_vsync( dfb_screens_at(DSCID_PRIMARY) );
+
+     ret = dfb_fbdev_pan( config->source.x,
+                          left_lock->offset / left_lock->pitch + config->source.y,
+                          true/*(flags & DSFLIP_WAITFORSYNC) == DSFLIP_ONSYNC*/ );
+     if (ret)
+          return ret;
+
+     if (true/*(flags & DSFLIP_WAIT) &&
+         (dfb_config->pollvsync_after || !(flags & DSFLIP_ONSYNC))*/)
+          dfb_screen_wait_vsync( dfb_screens_at(DSCID_PRIMARY) );
+#endif	
+		  
      dfb_surface_flip( surface, false );
 
      return DFB_OK;

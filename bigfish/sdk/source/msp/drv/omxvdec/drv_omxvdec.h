@@ -27,7 +27,7 @@
 
 //合入低延迟修改 20150827
 //合入overlay
-#define OMXVDEC_VERSION	 		        (2015081899)
+#define OMXVDEC_VERSION	 		        (2016112900)//(2015081899)
 
 #define OMXVDEC_NAME                    "hi_omxvdec"
 #define DRIVER_PATH                     "/dev/hi_omxvdec"
@@ -119,9 +119,10 @@ typedef enum {
 }ePORT_DIR;
 
 typedef enum {
-    OMX_ALLOCATE_USR,
-    OMX_USE_OTHER,
+    OMX_USE_NOSECURE,
+    OMX_USE_SECURE,
     OMX_USE_NATIVE,
+    OMX_ALLOCATE_NONSECURE,
     OMX_ALLOCATE_SECURE,
     OMX_ALLOCATE_DRIVER,
     OMX_BUTT_TYPE,
@@ -186,10 +187,11 @@ typedef struct {
 typedef struct {
 	HI_U32           phyaddr;
 	HI_U32           buffer_len;
+    HI_U32           align;
 	HI_U32           data_offset;
 	HI_U32           data_len;
 	HI_U32           private_phyaddr;//VPSS 假4K输出需要额外信息
-	HI_U32           private_len;	    
+	HI_U32           private_len;
 	HI_U32           flags;
 	HI_S64           timestamp;
 	eBUFFER_TYPE     buffer_type;
@@ -199,7 +201,8 @@ typedef struct {
 	HI_VOID         *client_data;
     HI_U32           u32FrameIndex;
     HI_HANDLE        hTunnelSrc;
-    HI_U32           u32FrameRate;    
+    HI_U32           u32FrameRate;
+    HI_BOOL          is_sec;
 }OMXVDEC_BUF_DESC;
 
 typedef struct {
@@ -271,11 +274,14 @@ typedef struct {
 #define VDEC_IOCTL_CHAN_STOP_MSG \
 	_IO(VDEC_IOCTL_MAGIC, 15)
 
-#define VDEC_IOCTL_CHAN_ALLOC_BUFFER	\
+#define VDEC_IOCTL_CHAN_ALLOC_BUF    \
 	_IO(VDEC_IOCTL_MAGIC, 16)
 
-#define VDEC_IOCTL_CHAN_FREE_BUFFER	\
+#define VDEC_IOCTL_CHAN_RELEASE_BUF \
 	_IO(VDEC_IOCTL_MAGIC, 17)
+
+#define VDEC_IOCTL_CHAN_PORT_ENABLE \
+    _IO(VDEC_IOCTL_MAGIC, 18)
 
 #endif
 

@@ -38,7 +38,7 @@ HI_S32 GFX2D_OS_ReadProc(struct seq_file *p, HI_VOID *v)
 {
     if (GFX2D_CONFIG_IsProcOn())
         (HI_VOID)GFX2D_CTL_ReadProc(p, v);
-    
+
     return HI_SUCCESS;
 }
 
@@ -48,7 +48,7 @@ HI_S32 GFX2D_OS_WriteProc(struct file * file, const char __user * buf,
     (HI_VOID)GFX2D_CONFIG_WriteProc(file, buf, count, ppos);
 
     (HI_VOID)GFX2D_CTL_WriteProc(file, buf, count, ppos);
-    
+
     return HI_SUCCESS;
 }
 #endif
@@ -65,7 +65,18 @@ HI_S32 GFX2D_OS_Release(struct inode *finode, struct file *ffile)
 
 long GFX2D_OS_Ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
 {
-    void __user *argp = (void __user *)arg;    
+    void __user *argp = (void __user *)arg;
+
+    if (NULL == argp)
+    {
+       return -EFAULT;
+    }
+
+
+    if (GFX2D_CTL_CheckOpen() == HI_FALSE)
+    {
+        return -EFAULT;
+    }
 
     switch(cmd)
     {
@@ -107,7 +118,7 @@ long GFX2D_OS_Ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
 HI_S32 GFX2D_OS_PmSuspend(PM_BASEDEV_S *pstDev, pm_message_t state)
 {
     GFX2D_CTL_WaitAllDone(HI_GFX2D_DEV_ID_0, 0);
-    
+
     return HI_SUCCESS;
 }
 
@@ -123,28 +134,28 @@ DECLARE_GFX_NODE(GFX2D_MODULENAME,GFX2D_OS_Open, GFX2D_OS_Release, NULL, GFX2D_O
 static HI_VOID HI_GFX_ShowVersionK(HIGFX_MODE_ID_E ModID)
 {
 	#if !defined(CONFIG_GFX_COMM_VERSION_DISABLE) && !defined(CONFIG_GFX_COMM_DEBUG_DISABLE)
-	
+
     	HI_CHAR MouleName[7][10] = {"tde","jpegdec","jpegenc","fb","png", "higo", "gfx2d"};
         HI_CHAR Version[160] ="SDK_VERSION:["MKMARCOTOSTR(SDK_VERSION)"] Build Time:["\
 		__DATE__", "__TIME__"]";
 
     	if (ModID >= HIGFX_BUTT_ID)
     		return;
-	
-	if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	
+
+	if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))
 		GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
 	else
-		GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);		
+		GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);
 
 	return;
-		
+
 	#endif
 }
 
 
 HI_S32 GFX2D_OS_ModInit(HI_VOID)
-{    
-    HI_S32 s32Ret; 
+{
+    HI_S32 s32Ret;
 #ifndef GFX2D_PROC_UNSUPPORT
     GFX_PROC_ITEM_S stProcItem = {GFX2D_OS_ReadProc,GFX2D_OS_WriteProc,NULL};
 #endif

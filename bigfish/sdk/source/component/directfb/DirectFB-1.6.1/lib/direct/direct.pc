@@ -1,4 +1,4 @@
-prefix=/home/p203646/CV200/Code/source/component/directfb/directfb
+prefix=/home/y00181162/007-STB-SDK/SDK_SVN_V1R2/trunk/BBIT-Hi3798CV200/HiSTBLinuxV100R003C00SPC062/Code/source/component/directfb/directfb
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 moduledir=${exec_prefix}/lib/directfb-1.6-0

@@ -361,8 +361,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR** argv)
     }
     HI_DEBUG_ADVCA("IMLB: 0x%02x %02x\n",  stOtpAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[0],
                                                 stOtpAttr.unOtpFuseAttr.stItCsa3IMLB.au8ItCsa3IMLB[1]);    
-
-#if 0
+#if defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
     /*To check if the USB is disabled*/
     Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_USB_DEACTIVATION, &stOtpAttr);
     if (HI_SUCCESS != Ret)
@@ -405,7 +404,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR** argv)
     HI_DEBUG_ADVCA("SM4 crypto engine : %s\n",  bEnable == HI_TRUE ? "Disabled" : "Enabled");   
 
     /*To check if TDES crypto engine is diabled */
-    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION, &stOtpAttr);
+    Ret = HI_UNF_ADVCA_GetOtpFuse(HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION, &stOtpAttr);
     if (HI_SUCCESS != Ret)
     {
         HI_DEBUG_ADVCA("Get TDES crypto engine status failed\n");

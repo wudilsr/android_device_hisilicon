@@ -21,16 +21,16 @@ typedef struct tagSCTE_SUBT_SECTION_S
 
 typedef struct tagSCTE_SUBT_DATA_RECV_S
 {
-    HI_HANDLE           hParse;
+    HI_VOID*           hParse;
     SCTE_SUBT_SECTION_S astSCTESection[HI_SECTION_MAX_NUM];
     HI_U8               au8SectionAddr[HI_SECTION_MAX_SIZE];
-    HI_U8               *pu8SectionWriteAddr;
+    HI_U8*               pu8SectionWriteAddr;
     HI_U32              u32SectionSize;
 } SCTE_SUBT_DATA_RECV_S;
 
-static HI_VOID BufferReset(SCTE_SUBT_DATA_RECV_S *pstDataRecv)
+static HI_VOID BufferReset(SCTE_SUBT_DATA_RECV_S* pstDataRecv)
 {
-    HI_U32 i=0;
+    HI_U32 i = 0;
 
     for (i = 0; i < HI_SECTION_MAX_NUM; i++)
     {
@@ -51,12 +51,13 @@ HI_S32 SCTE_SUBT_Data_DeInit(HI_VOID)
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Data_Create(HI_HANDLE hParse, HI_HANDLE *phData)
+HI_S32 SCTE_SUBT_Data_Create(HI_VOID* hParse, HI_VOID** pphData)
 {
     HI_S32 s32Ret = HI_SUCCESS;
-    SCTE_SUBT_DATA_RECV_S *pstDataRecv = HI_NULL;
+    SCTE_SUBT_DATA_RECV_S* pstDataRecv = HI_NULL;
 
     pstDataRecv = (SCTE_SUBT_DATA_RECV_S*)malloc(sizeof(SCTE_SUBT_DATA_RECV_S));
+
     if (HI_NULL == pstDataRecv)
     {
         HI_ERR_SUBT("malloc data struct failure!!\n");
@@ -65,16 +66,16 @@ HI_S32 SCTE_SUBT_Data_Create(HI_HANDLE hParse, HI_HANDLE *phData)
 
     memset(pstDataRecv, 0, sizeof(SCTE_SUBT_DATA_RECV_S));
     pstDataRecv->hParse = hParse;
-    *phData = (HI_HANDLE)pstDataRecv;
+    *pphData = pstDataRecv;
 
-    HI_INFO_SUBT("SCTE_SUBT_Data_Create success, with handle:0x%08x!...\n", *phData);
+    HI_INFO_SUBT("SCTE_SUBT_Data_Create success, with handle:0x%08x!...\n", *pphData);
 
     return s32Ret;
 }
 
-HI_S32 SCTE_SUBT_Data_Destroy(HI_HANDLE hData)
+HI_S32 SCTE_SUBT_Data_Destroy(HI_VOID* hData)
 {
-    SCTE_SUBT_DATA_RECV_S *pstDataRecv = (SCTE_SUBT_DATA_RECV_S *)hData;
+    SCTE_SUBT_DATA_RECV_S* pstDataRecv = (SCTE_SUBT_DATA_RECV_S*)hData;
 
     if (HI_NULL == pstDataRecv)
     {
@@ -85,15 +86,16 @@ HI_S32 SCTE_SUBT_Data_Destroy(HI_HANDLE hData)
     HI_INFO_SUBT("begin to use handle:0x%08x!...\n", pstDataRecv);
 
     free((void*)pstDataRecv);
+    pstDataRecv = HI_NULL;
 
     HI_INFO_SUBT("SCTE_SUBT_Data_Destroy  success...\n");
 
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Data_Reset(HI_HANDLE hData)
+HI_S32 SCTE_SUBT_Data_Reset(HI_VOID* hData)
 {
-    SCTE_SUBT_DATA_RECV_S *pstDataRecv = (SCTE_SUBT_DATA_RECV_S *)hData;
+    SCTE_SUBT_DATA_RECV_S* pstDataRecv = (SCTE_SUBT_DATA_RECV_S*)hData;
 
     if (HI_NULL == pstDataRecv)
     {
@@ -106,14 +108,14 @@ HI_S32 SCTE_SUBT_Data_Reset(HI_HANDLE hData)
     return HI_SUCCESS;
 }
 
-HI_S32 SCTE_SUBT_Data_Inject(HI_HANDLE hData, const HI_U8 *pu8Data, HI_U32 u32DataSize)
+HI_S32 SCTE_SUBT_Data_Inject(HI_VOID* hData, const HI_U8* pu8Data, HI_U32 u32DataSize)
 {
     HI_S32 s32Ret = HI_SUCCESS;
     HI_U16 u16TableExtension = 0;
     HI_U16 u16LastSegment   = 0;
     HI_U16 u16SegmentNumber = 0;
     HI_U8  i = 0;
-    SCTE_SUBT_DATA_RECV_S *pstDataRecv = (SCTE_SUBT_DATA_RECV_S *)hData;
+    SCTE_SUBT_DATA_RECV_S* pstDataRecv = (SCTE_SUBT_DATA_RECV_S*)hData;
 
     if ((HI_NULL == pstDataRecv) || (HI_NULL == pu8Data) || (0 == u32DataSize))
     {
@@ -177,6 +179,7 @@ HI_S32 SCTE_SUBT_Data_Inject(HI_HANDLE hData, const HI_U8 *pu8Data, HI_U32 u32Da
             if (u16LastSegment == u16SegmentNumber)
             {
                 pstDataRecv->pu8SectionWriteAddr = pstDataRecv->au8SectionAddr;
+
                 for (i = 0; i < HI_SECTION_MAX_NUM; i++)
                 {
                     if (pstDataRecv->astSCTESection[i].bUsed
@@ -194,6 +197,7 @@ HI_S32 SCTE_SUBT_Data_Inject(HI_HANDLE hData, const HI_U8 *pu8Data, HI_U32 u32Da
                 /* update section size in head */
                 pstDataRecv->au8SectionAddr[2] = (HI_U8)(pstDataRecv->u32SectionSize - 3);
                 pstDataRecv->au8SectionAddr[1] = (HI_U8)((pstDataRecv->u32SectionSize - 3) >> 8);
+
                 if (pstDataRecv->u32SectionSize > HI_SECTION_MAX_SIZE)
                 {
                     HI_ERR_SUBT("Section Size too long!!\n");
@@ -207,6 +211,7 @@ HI_S32 SCTE_SUBT_Data_Inject(HI_HANDLE hData, const HI_U8 *pu8Data, HI_U32 u32Da
                 {
                     s32Ret = SCTE_SUBT_Parse_ParseSection(pstDataRecv->hParse, pstDataRecv->au8SectionAddr,
                                                           pstDataRecv->u32SectionSize);
+
                     if (s32Ret != HI_SUCCESS)
                     {
                         HI_ERR_SUBT("Failed to SCTE_SUBT_Parse_ParseSection...\n");
@@ -220,10 +225,12 @@ HI_S32 SCTE_SUBT_Data_Inject(HI_HANDLE hData, const HI_U8 *pu8Data, HI_U32 u32Da
         {
             memcpy(pstDataRecv->au8SectionAddr, pu8Data, u32DataSize);
             pstDataRecv->u32SectionSize = u32DataSize;
+
             if (pstDataRecv->hParse)
             {
                 s32Ret = SCTE_SUBT_Parse_ParseSection(pstDataRecv->hParse, pstDataRecv->au8SectionAddr,
                                                       pstDataRecv->u32SectionSize);
+
                 if (s32Ret != HI_SUCCESS)
                 {
                     HI_ERR_SUBT("Failed to SCTE_SUBT_Parse_ParseSection...\n");

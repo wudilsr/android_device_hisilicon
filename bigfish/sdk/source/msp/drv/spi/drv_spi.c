@@ -21,7 +21,9 @@
 #include <linux/workqueue.h>
 
 #include <asm/uaccess.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <asm/io.h>
 
 #include <linux/kernel.h>

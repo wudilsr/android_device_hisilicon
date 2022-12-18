@@ -1341,7 +1341,9 @@ typedef struct hls_segment_s {
 typedef struct hls_stream_info_s {
     int     bandwidth;                  /* bandwidth usage of segments (bits per second) */
     char    url[INITIAL_URL_SIZE];      /* M3U8 URL */
+    char    org_url[INITIAL_URL_SIZE];
     char    second_level_url[INITIAL_URL_SIZE];
+    int     is_parsed;
     /* Segments list */
     struct segment_list_s
     {
@@ -1394,7 +1396,6 @@ typedef struct hls_stream_info_s {
     int has_read;
     int video_codec;
     int audio_codec;
-    int need_refresh_url;
 } hls_stream_info_t;
 
 /** The information of the URL info */
@@ -1446,6 +1447,11 @@ typedef struct HLSContext_s {
     char                    cur_download_url[INITIAL_URL_SIZE];/*segment/m3u8 url is downloading*/
     int                     need_fresh_url;
     int                     need_fresh_currentidx;
+    int                     parse_a_m3u8_first;
+    URLContext              *preopen_seg_input;
+    char                    preopen_seg_url[INITIAL_URL_SIZE];
+    pthread_t               preopen_thread_id;
+    int                     join_preopen_thread; /* join it when thread exit to avoid blocked */
     uint64_t                seg_download_consume;
     pthread_t hRefreashThread;
     pthread_mutex_t stRefreshMutex;
@@ -2411,6 +2417,9 @@ int av_match_ext(const char *filename, const char *extensions);
  *         A negative number if this information is not available.
  */
 int avformat_query_codec(AVOutputFormat *ofmt, enum CodecID codec_id, int std_compliance);
+
+int ff_create_alloc_codec_thread(void);
+AVCodecContext *ff_pop_a_codec(void);
 
 /**
  * @}

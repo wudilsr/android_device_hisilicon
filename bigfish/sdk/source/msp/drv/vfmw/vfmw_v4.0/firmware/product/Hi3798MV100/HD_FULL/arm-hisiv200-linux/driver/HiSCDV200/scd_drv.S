@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200/.scd_drv.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200/scd_drv.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200/scd_drv.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200/scd_drv.o -O2 -Wall
@@ -242,10 +242,10 @@ GetInstIDByRawArray:
 	moveq	r0, #14	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
 .L17:
-	ldr	r3, [r3, #760]	@ D.49684, <variable>.pSmInstArray
-	cmp	r3, #0	@ D.49684,
+	ldr	r3, [r3, #760]	@ D.49698, <variable>.pSmInstArray
+	cmp	r3, #0	@ D.49698,
 	beq	.L18	@,
-	add	r3, r3, #208	@ tmp183, D.49684,
+	add	r3, r3, #208	@ tmp183, D.49698,
 	cmp	r3, r0	@ tmp183, pRawArray
 	moveq	r0, #15	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -281,8 +281,8 @@ GetRawState:
 	movw	r1, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp137,
 	add	r3, r1, r0, asl #4	@, tmp143, tmp137, tmp141,
-	ldr	r3, [r3, #40]	@ D.49782, <variable>.pSmInstArray
-	cmp	r3, #0	@ D.49782,
+	ldr	r3, [r3, #40]	@ D.49796, <variable>.pSmInstArray
+	cmp	r3, #0	@ D.49796,
 	beq	.L22	@,
 	movw	ip, #:lower16:98516	@ tmp145,
 	movt	ip, #:upper16:98516	@ tmp145,
@@ -323,18 +323,18 @@ SetFirstOffset:
 	cmp	r0, #0	@ pRawStreamArray
 	bne	.L31	@,
 .L27:
-	mvn	r0, #0	@ D.49838,
+	mvn	r0, #0	@ D.49852,
 	ldmfd	sp, {fp, sp, pc}	@
 .L31:
 	movw	ip, #:lower16:98308	@ tmp140,
 	movt	ip, #:upper16:98308	@ tmp140,
 	mov	r2, #98304	@ tmp139,
-	ldr	r2, [r0, r2]	@ D.49839, <variable>.Head
+	ldr	r2, [r0, r2]	@ D.49853, <variable>.Head
 	ldr	r3, [r0, ip]	@ <variable>.Tail, <variable>.Tail
-	cmp	r2, r3	@ D.49839, <variable>.Tail
-	mvneq	r0, #2	@ D.49838,
+	cmp	r2, r3	@ D.49853, <variable>.Tail
+	mvneq	r0, #2	@ D.49852,
 	ldmeqfd	sp, {fp, sp, pc}	@
-	add	ip, r2, r2, asl #1	@, tmp146, D.49839, D.49839,
+	add	ip, r2, r2, asl #1	@, tmp146, D.49853, D.49853,
 	movw	r3, #:lower16:98316	@ tmp142,
 	movt	r3, #:upper16:98316	@ tmp142,
 	add	r2, r0, ip, asl #5	@, tmp148, pRawStreamArray, tmp146,
@@ -343,7 +343,7 @@ SetFirstOffset:
 	add	r1, r1, ip	@ TargetOffset, Offset, <variable>.FirstPacketOffset
 	cmp	r1, r2	@ TargetOffset, <variable>.Length
 	strlt	r1, [r0, r3]	@ TargetOffset, <variable>.FirstPacketOffset
-	movlt	r0, #0	@ D.49838,
+	movlt	r0, #0	@ D.49852,
 	ldmltfd	sp, {fp, sp, pc}	@
 	b	.L27	@
 	.fnend
@@ -370,7 +370,7 @@ GetFirstOffset:
 	mov	r3, r0	@ pRawStreamArray, pRawStreamArray
 	movne	r0, #0	@, tmp143
 	moveq	r0, #1	@, tmp143
-	mvneq	r0, #0	@ D.49858,
+	mvneq	r0, #0	@ D.49872,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	movw	r2, #:lower16:98308	@ tmp145,
 	movt	r2, #:upper16:98308	@ tmp145,
@@ -380,7 +380,7 @@ GetFirstOffset:
 	cmp	ip, r2	@ <variable>.Head, <variable>.Tail
 	movwne	r2, #:lower16:98316	@ tmp148,
 	movtne	r2, #:upper16:98316	@ tmp148,
-	mvneq	r0, #2	@ D.49858,
+	mvneq	r0, #2	@ D.49872,
 	ldrne	r3, [r3, r2]	@ <variable>.FirstPacketOffset, <variable>.FirstPacketOffset
 	strne	r3, [r1, #0]	@ <variable>.FirstPacketOffset,* pOffset
 	ldmfd	sp, {fp, sp, pc}	@
@@ -406,20 +406,20 @@ GetRawStreamSize:
 	cmp	r0, #0	@ pRawStreamArray
 	bne	.L41	@,
 .L38:
-	mvn	r0, #0	@ D.50082,
+	mvn	r0, #0	@ D.50096,
 	ldmfd	sp, {fp, sp, pc}	@
 .L41:
 	movw	ip, #:lower16:98324	@ tmp139,
 	movt	ip, #:upper16:98324	@ tmp139,
 	movw	r3, #:lower16:98316	@ tmp140,
 	movt	r3, #:upper16:98316	@ tmp140,
-	ldr	r2, [r0, ip]	@ D.50083, <variable>.RawTotalSize
-	str	r2, [r1, #0]	@ D.50083,* pStreamSize
+	ldr	r2, [r0, ip]	@ D.50097, <variable>.RawTotalSize
+	str	r2, [r1, #0]	@ D.50097,* pStreamSize
 	ldr	ip, [r0, r3]	@ <variable>.FirstPacketOffset, <variable>.FirstPacketOffset
-	rsb	r3, ip, r2	@ D.50086, <variable>.FirstPacketOffset, D.50083
-	str	r3, [r1, #0]	@ D.50086,* pStreamSize
-	cmp	r3, #0	@ D.50086,
-	movge	r0, #0	@ D.50082,
+	rsb	r3, ip, r2	@ D.50100, <variable>.FirstPacketOffset, D.50097
+	str	r3, [r1, #0]	@ D.50100,* pStreamSize
+	cmp	r3, #0	@ D.50100,
+	movge	r0, #0	@ D.50096,
 	ldmgefd	sp, {fp, sp, pc}	@
 	b	.L38	@
 	.fnend
@@ -442,18 +442,18 @@ GetRawStreamNum:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #0	@ pRawStreamArray
-	mvneq	r0, #0	@ D.50095,
+	mvneq	r0, #0	@ D.50109,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	movw	r3, #:lower16:98308	@ tmp138,
 	movt	r3, #:upper16:98308	@ tmp138,
 	mov	ip, #98304	@ tmp139,
 	ldr	r2, [r0, ip]	@ <variable>.Head, <variable>.Head
 	ldr	ip, [r0, r3]	@ <variable>.Tail, <variable>.Tail
-	mov	r0, #0	@ D.50095,
-	rsb	r3, r2, ip	@ D.50098, <variable>.Head, <variable>.Tail
-	str	r3, [r1, #0]	@ D.50098,* pStreamNum
-	cmp	r3, #0	@ D.50098,
-	addlt	r3, r3, #1024	@ tmp142, D.50098,
+	mov	r0, #0	@ D.50109,
+	rsb	r3, r2, ip	@ D.50112, <variable>.Head, <variable>.Tail
+	str	r3, [r1, #0]	@ D.50112,* pStreamNum
+	cmp	r3, #0	@ D.50112,
+	addlt	r3, r3, #1024	@ tmp142, D.50112,
 	strlt	r3, [r1, #0]	@ tmp142,* pStreamNum
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -476,7 +476,7 @@ GetRawStreamNumInBuffer:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #0	@ pRawStreamArray
-	mvneq	r0, #0	@ D.50109,
+	mvneq	r0, #0	@ D.50123,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	movw	ip, #:lower16:98308	@ tmp138,
 	movw	r3, #:lower16:98312	@ tmp139,
@@ -484,11 +484,11 @@ GetRawStreamNumInBuffer:
 	movt	r3, #:upper16:98312	@ tmp139,
 	ldr	r2, [r0, ip]	@ <variable>.Tail, <variable>.Tail
 	ldr	ip, [r0, r3]	@ <variable>.History, <variable>.History
-	mov	r0, #0	@ D.50109,
-	rsb	r3, ip, r2	@ D.50112, <variable>.History, <variable>.Tail
-	str	r3, [r1, #0]	@ D.50112,* pStreamNum
-	cmp	r3, #0	@ D.50112,
-	addlt	r3, r3, #1024	@ tmp142, D.50112,
+	mov	r0, #0	@ D.50123,
+	rsb	r3, ip, r2	@ D.50126, <variable>.History, <variable>.Tail
+	str	r3, [r1, #0]	@ D.50126,* pStreamNum
+	cmp	r3, #0	@ D.50126,
+	addlt	r3, r3, #1024	@ tmp142, D.50126,
 	strlt	r3, [r1, #0]	@ tmp142,* pStreamNum
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -558,12 +558,12 @@ GetFreeSegBuf:
 	str	r5, [r1, #0]	@ <variable>.SegBufWriteAddr,* pAddr
 	str	r3, [r2, #0]	@ tmp146,* pLength
 	ldr	r1, [r0, ip]	@ temp.979, <variable>.SegBufWriteAddr
-	ldr	ip, [r0, r4]	@ D.50185, <variable>.SegBufReadAddr
-	cmp	r1, ip	@ temp.979, D.50185
+	ldr	ip, [r0, r4]	@ D.50199, <variable>.SegBufReadAddr
+	cmp	r1, ip	@ temp.979, D.50199
 	bgt	.L61	@,
 	movw	r3, #:lower16:92188	@ tmp156,
 	movt	r3, #:upper16:92188	@ tmp156,
-	sublt	ip, ip, #1	@ tmp155, D.50185,
+	sublt	ip, ip, #1	@ tmp155, D.50199,
 	ldrge	r3, [r0, r3]	@ prephitmp.968, <variable>.SegBufSize
 	rsblt	r1, r1, ip	@ Len, temp.979, tmp155
 	ldrlt	r3, [r0, r3]	@ prephitmp.968, <variable>.SegBufSize
@@ -575,7 +575,7 @@ GetFreeSegBuf:
 	movw	r3, #:lower16:92188	@ tmp152,
 	movt	r3, #:upper16:92188	@ tmp152,
 	ldr	r3, [r0, r3]	@ prephitmp.968, <variable>.SegBufSize
-	add	ip, ip, r3	@ tmp153, D.50185, prephitmp.968
+	add	ip, ip, r3	@ tmp153, D.50199, prephitmp.968
 	sub	r0, ip, #1	@ tmp154, tmp153,
 	rsb	r1, r1, r0	@ Len, temp.979, tmp154
 	cmp	r1, r3	@ Len, prephitmp.968
@@ -608,10 +608,10 @@ CheckStream:
 	cmp	r3, #0	@ <variable>.eVidStd,
 	cmpne	r3, #3	@, <variable>.eVidStd,
 	ldmnefd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
-	movw	r2, #:lower16:251572	@ tmp157,
-	movt	r2, #:upper16:251572	@ tmp157,
-	ldr	r1, [r4, r2]	@ D.50210, <variable>.s32FindStartCodeCnt
-	cmp	r1, #199	@ D.50210,
+	movw	r2, #:lower16:253108	@ tmp157,
+	movt	r2, #:upper16:253108	@ tmp157,
+	ldr	r1, [r4, r2]	@ D.50224, <variable>.s32FindStartCodeCnt
+	cmp	r1, #199	@ D.50224,
 	ldmgtfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	ldrb	ip, [r0, #0]	@ zero_extendqisi2	@ tmp158,* pSegBufVirAddr
 	cmp	ip, #0	@ tmp158,
@@ -623,40 +623,40 @@ CheckStream:
 	cmp	r7, #1	@ tmp160,
 	beq	.L75	@,
 .L64:
-	movw	r2, #:lower16:251580	@ tmp255,
-	movw	r0, #:lower16:251584	@ tmp258,
-	movt	r2, #:upper16:251580	@ tmp255,
-	movt	r0, #:upper16:251584	@ tmp258,
-	movw	r6, #:lower16:251572	@ tmp252,
-	movw	r7, #:lower16:251576	@ tmp254,
+	movw	r2, #:lower16:253116	@ tmp255,
+	movw	r0, #:lower16:253120	@ tmp258,
+	movt	r2, #:upper16:253116	@ tmp255,
+	movt	r0, #:upper16:253120	@ tmp258,
+	movw	r6, #:lower16:253108	@ tmp252,
+	movw	r7, #:lower16:253112	@ tmp254,
 	ldr	sl, [r4, r2]	@ <variable>.s32LastOneStartCode, <variable>.s32LastOneStartCode
-	movt	r6, #:upper16:251572	@ tmp252,
+	movt	r6, #:upper16:253108	@ tmp252,
 	ldr	r8, [r4, r0]	@ <variable>.s32CurrentStartCode, <variable>.s32CurrentStartCode
-	movt	r7, #:upper16:251576	@ tmp254,
+	movt	r7, #:upper16:253112	@ tmp254,
 	mov	ip, #0	@ tmp261,
-	add	r1, r1, #1	@ tmp253, D.50210,
+	add	r1, r1, #1	@ tmp253, D.50224,
 	str	ip, [r4, r0]	@ tmp261, <variable>.s32CurrentStartCode
 	str	sl, [r4, r7]	@ <variable>.s32LastOneStartCode, <variable>.s32LastTwoStartCode
 	str	r8, [r4, r2]	@ <variable>.s32CurrentStartCode, <variable>.s32LastOneStartCode
 	str	r1, [r4, r6]	@ tmp253, <variable>.s32FindStartCodeCnt
 .L67:
-	movw	r2, #:lower16:251568	@ tmp221,
-	movt	r2, #:upper16:251568	@ tmp221,
+	movw	r2, #:lower16:253104	@ tmp221,
+	movt	r2, #:upper16:253104	@ tmp221,
 	ldr	r1, [r4, r2]	@ <variable>.s32Mpeg2Score, <variable>.s32Mpeg2Score
 	add	r0, r1, #1	@ tmp224, <variable>.s32Mpeg2Score,
 	str	r0, [r4, r2]	@ tmp224, <variable>.s32Mpeg2Score
 .L68:
-	movw	r0, #:lower16:251572	@ tmp225,
-	movt	r0, #:upper16:251572	@ tmp225,
+	movw	r0, #:lower16:253108	@ tmp225,
+	movt	r0, #:upper16:253108	@ tmp225,
 	ldr	r2, [r4, r0]	@ prephitmp.1001, <variable>.s32FindStartCodeCnt
 	cmp	r2, #2	@ prephitmp.1001,
 	ldmlefd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
-	cmp	ip, #0	@ D.50238,
+	cmp	ip, #0	@ D.50252,
 	beq	.L69	@,
-	movw	r0, #:lower16:251584	@ tmp226,
-	movw	r1, #:lower16:251580	@ tmp227,
-	movt	r0, #:upper16:251584	@ tmp226,
-	movt	r1, #:upper16:251580	@ tmp227,
+	movw	r0, #:lower16:253120	@ tmp226,
+	movw	r1, #:lower16:253116	@ tmp227,
+	movt	r0, #:upper16:253120	@ tmp226,
+	movt	r1, #:upper16:253116	@ tmp227,
 	ldr	r0, [r4, r0]	@ temp.1015, <variable>.s32CurrentStartCode
 	ldr	r1, [r4, r1]	@ temp.1016, <variable>.s32LastOneStartCode
 	rsb	ip, r1, r0	@ tmp228, temp.1016, temp.1015
@@ -668,10 +668,10 @@ CheckStream:
 .L69:
 	cmp	r2, #199	@ prephitmp.1001,
 	ldmlefd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
-	movw	r7, #:lower16:251564	@ tmp242,
-	movw	r6, #:lower16:251568	@ tmp243,
-	movt	r7, #:upper16:251564	@ tmp242,
-	movt	r6, #:upper16:251568	@ tmp243,
+	movw	r7, #:lower16:253100	@ tmp242,
+	movw	r6, #:lower16:253104	@ tmp243,
+	movt	r7, #:upper16:253100	@ tmp242,
+	movt	r6, #:upper16:253104	@ tmp243,
 	ldr	r2, [r4, r7]	@ prephitmp.1026, <variable>.s32H264Score
 	ldr	r1, [r4, r6]	@ prephitmp.1025, <variable>.s32Mpeg2Score
 	rsb	ip, r1, r2	@ tmp244, prephitmp.1025, prephitmp.1026
@@ -697,8 +697,8 @@ CheckStream:
 	blx	ip	@ g_event_report.1023
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L76:
-	movw	ip, #:lower16:251576	@ tmp229,
-	movt	ip, #:upper16:251576	@ tmp229,
+	movw	ip, #:lower16:253112	@ tmp229,
+	movt	ip, #:upper16:253112	@ tmp229,
 	ldr	ip, [r4, ip]	@ <variable>.s32LastTwoStartCode, <variable>.s32LastTwoStartCode
 	rsb	ip, ip, r1	@ tmp230, <variable>.s32LastTwoStartCode, temp.1016
 	cmp	ip, #1	@ tmp230,
@@ -708,24 +708,24 @@ CheckStream:
 	beq	.L69	@,
 	cmp	r0, #20	@ temp.1015,
 	beq	.L69	@,
-	movw	r1, #:lower16:251564	@ tmp234,
-	movt	r1, #:upper16:251564	@ tmp234,
-	movw	r2, #:lower16:251572	@ tmp241,
-	movt	r2, #:upper16:251572	@ tmp241,
+	movw	r1, #:lower16:253100	@ tmp234,
+	movt	r1, #:upper16:253100	@ tmp234,
+	movw	r2, #:lower16:253108	@ tmp241,
+	movt	r2, #:upper16:253108	@ tmp241,
 	ldr	r0, [r4, r1]	@ temp.1018, <variable>.s32H264Score
 	ldr	r2, [r4, r2]	@ prephitmp.1001, <variable>.s32FindStartCodeCnt
 	cmp	r0, #0	@ temp.1018,
 	subgt	r0, r0, #1	@ tmp236, temp.1018,
 	strgt	r0, [r4, r1]	@ tmp236, <variable>.s32H264Score
-	movw	r1, #:lower16:251568	@ tmp237,
-	movt	r1, #:upper16:251568	@ tmp237,
+	movw	r1, #:lower16:253104	@ tmp237,
+	movt	r1, #:upper16:253104	@ tmp237,
 	ldr	ip, [r4, r1]	@ <variable>.s32Mpeg2Score, <variable>.s32Mpeg2Score
 	add	r0, ip, #1	@ tmp240, <variable>.s32Mpeg2Score,
 	str	r0, [r4, r1]	@ tmp240, <variable>.s32Mpeg2Score
 	b	.L69	@
 .L77:
-	movw	ip, #:lower16:251576	@ tmp232,
-	movt	ip, #:upper16:251576	@ tmp232,
+	movw	ip, #:lower16:253112	@ tmp232,
+	movt	ip, #:upper16:253112	@ tmp232,
 	ldr	r1, [r4, ip]	@ <variable>.s32LastTwoStartCode, <variable>.s32LastTwoStartCode
 	cmp	r0, r1	@ temp.1015, <variable>.s32LastTwoStartCode
 	bne	.L69	@,
@@ -746,26 +746,26 @@ CheckStream:
 	b	.L73	@
 .L75:
 	ldrb	r0, [r0, #3]	@ zero_extendqisi2	@ u8Data,
-	movw	r6, #:lower16:251580	@ tmp164,
-	movw	r7, #:lower16:251584	@ tmp167,
-	movt	r6, #:upper16:251580	@ tmp164,
-	movt	r7, #:upper16:251584	@ tmp167,
-	and	ip, r0, #31	@ D.50238, u8Data,
+	movw	r6, #:lower16:253116	@ tmp164,
+	movw	r7, #:lower16:253120	@ tmp167,
+	movt	r6, #:upper16:253116	@ tmp164,
+	movt	r7, #:upper16:253120	@ tmp167,
+	and	ip, r0, #31	@ D.50252, u8Data,
 	ldr	r9, [r4, r6]	@ <variable>.s32LastOneStartCode, <variable>.s32LastOneStartCode
-	sub	r8, ip, #1	@ tmp171, D.50238,
+	sub	r8, ip, #1	@ tmp171, D.50252,
 	ldr	sl, [r4, r7]	@ <variable>.s32CurrentStartCode, <variable>.s32CurrentStartCode
 	cmp	r8, #12	@ tmp171,
-	movw	r8, #:lower16:251576	@ tmp163,
-	movt	r8, #:upper16:251576	@ tmp163,
-	add	r1, r1, #1	@ tmp162, D.50210,
-	str	ip, [r4, r7]	@ D.50238, <variable>.s32CurrentStartCode
+	movw	r8, #:lower16:253112	@ tmp163,
+	movt	r8, #:upper16:253112	@ tmp163,
+	add	r1, r1, #1	@ tmp162, D.50224,
+	str	ip, [r4, r7]	@ D.50252, <variable>.s32CurrentStartCode
 	str	r9, [r4, r8]	@ <variable>.s32LastOneStartCode, <variable>.s32LastTwoStartCode
 	str	r1, [r4, r2]	@ tmp162, <variable>.s32FindStartCodeCnt
 	str	sl, [r4, r6]	@ <variable>.s32CurrentStartCode, <variable>.s32LastOneStartCode
 	bhi	.L79	@,
 .L65:
-	movw	r2, #:lower16:251564	@ tmp177,
-	movt	r2, #:upper16:251564	@ tmp177,
+	movw	r2, #:lower16:253100	@ tmp177,
+	movt	r2, #:upper16:253100	@ tmp177,
 	cmp	r0, #0	@ u8Data,
 	cmpne	r0, #177	@, u8Data,
 	ldr	r6, [r4, r2]	@ <variable>.s32H264Score, <variable>.s32H264Score
@@ -798,15 +798,15 @@ CheckStream:
 	beq	.L68	@,
 	b	.L67	@
 .L79:
-	cmp	ip, #19	@ D.50238,
+	cmp	ip, #19	@ D.50252,
 	beq	.L65	@,
 	cmp	r0, #0	@ u8Data,
 	cmpne	r0, #177	@, u8Data,
 	movne	r1, #0	@, prephitmp.1003
 	moveq	r1, #1	@, prephitmp.1003
-	cmp	ip, #30	@ D.50238,
+	cmp	ip, #30	@ D.50252,
 	beq	.L65	@,
-	cmp	ip, #31	@ D.50238,
+	cmp	ip, #31	@ D.50252,
 	beq	.L65	@,
 	b	.L66	@
 	.fnend
@@ -831,8 +831,8 @@ GetSegStreamSize:
 	subs	r3, r0, #0	@ pSegStreamArray, pSegStreamArray
 	movwne	r2, #:lower16:92200	@ tmp137,
 	movtne	r2, #:upper16:92200	@ tmp137,
-	mvneq	r0, #0	@ D.50467,
-	movne	r0, #0	@ D.50467,
+	mvneq	r0, #0	@ D.50481,
+	movne	r0, #0	@ D.50481,
 	ldrne	r3, [r3, r2]	@ <variable>.SegTotalSize, <variable>.SegTotalSize
 	strne	r3, [r1, #0]	@ <variable>.SegTotalSize,* pStreamSize
 	ldmfd	sp, {fp, sp, pc}	@
@@ -856,7 +856,7 @@ GetSegStreamNum:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #0	@ pSegStreamArray
-	mvneq	r0, #0	@ D.50475,
+	mvneq	r0, #0	@ D.50489,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	movw	ip, #:lower16:92172	@ tmp138,
 	movw	r3, #:lower16:92168	@ tmp139,
@@ -864,11 +864,11 @@ GetSegStreamNum:
 	movt	r3, #:upper16:92168	@ tmp139,
 	ldr	r2, [r0, ip]	@ <variable>.Tail, <variable>.Tail
 	ldr	ip, [r0, r3]	@ <variable>.Head, <variable>.Head
-	mov	r0, #0	@ D.50475,
-	rsb	r3, ip, r2	@ D.50478, <variable>.Head, <variable>.Tail
-	str	r3, [r1, #0]	@ D.50478,* pStreamNum
-	cmp	r3, #0	@ D.50478,
-	addlt	r3, r3, #1152	@ tmp142, D.50478,
+	mov	r0, #0	@ D.50489,
+	rsb	r3, ip, r2	@ D.50492, <variable>.Head, <variable>.Tail
+	str	r3, [r1, #0]	@ D.50492,* pStreamNum
+	cmp	r3, #0	@ D.50492,
+	addlt	r3, r3, #1152	@ tmp142, D.50492,
 	strlt	r3, [r1, #0]	@ tmp142,* pStreamNum
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1011,8 +1011,8 @@ SM_Start:
 	movw	r2, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp137,
 	add	r3, r2, r0, asl #4	@, tmp143, tmp137, tmp141,
-	ldr	r3, [r3, #40]	@ D.50951, <variable>.pSmInstArray
-	cmp	r3, #0	@ D.50951,
+	ldr	r3, [r3, #40]	@ D.50965, <variable>.pSmInstArray
+	cmp	r3, #0	@ D.50965,
 	bne	.L106	@,
 .L103:
 	mvn	r0, #6	@ ret,
@@ -1061,7 +1061,7 @@ SM_Stop:
 	cmp	ip, #0	@ <variable>.Mode,
 	bne	.L112	@,
 .L108:
-	mov	r0, #0	@ D.50967,
+	mov	r0, #0	@ D.50981,
 	ldmfd	sp, {fp, sp, pc}	@
 .L112:
 	movw	ip, #:lower16:190868	@ tmp147,
@@ -1069,7 +1069,7 @@ SM_Stop:
 	ldr	r1, [r2, ip]	@ <variable>.ScdID, <variable>.ScdID
 	cmp	r1, #0	@ <variable>.ScdID,
 	movle	r0, #0	@ tmp150,
-	mvngt	r0, #6	@ D.50967,
+	mvngt	r0, #6	@ D.50981,
 	strle	r0, [r2, r3]	@ tmp150, <variable>.Mode
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1116,42 +1116,42 @@ SM_GetInfo:
 	movw	r2, #:lower16:98532	@ tmp161,
 	ldr	r0, [r3, r0]	@ <variable>.RawPacketArray.Tail, <variable>.RawPacketArray.Tail
 	movt	r2, #:upper16:98532	@ tmp161,
-	rsb	r4, ip, r0	@ D.53801, <variable>.RawPacketArray.Head, <variable>.RawPacketArray.Tail
-	str	r4, [r1, #4]	@ D.53801, <variable>.RawNum
-	cmp	r4, #0	@ D.53801,
+	rsb	r4, ip, r0	@ D.53813, <variable>.RawPacketArray.Head, <variable>.RawPacketArray.Tail
+	str	r4, [r1, #4]	@ D.53813, <variable>.RawNum
+	cmp	r4, #0	@ D.53813,
 	movw	ip, #:lower16:98524	@ tmp162,
-	addlt	r4, r4, #1024	@ tmp160, D.53801,
+	addlt	r4, r4, #1024	@ tmp160, D.53813,
 	strlt	r4, [r1, #4]	@ tmp160, <variable>.RawNum
-	ldr	r4, [r3, r2]	@ D.53811, <variable>.RawPacketArray.RawTotalSize
+	ldr	r4, [r3, r2]	@ D.53823, <variable>.RawPacketArray.RawTotalSize
 	movt	ip, #:upper16:98524	@ tmp162,
 	movw	r0, #:lower16:190708	@ tmp165,
 	movw	r2, #:lower16:190704	@ tmp166,
 	movt	r0, #:upper16:190708	@ tmp165,
 	movt	r2, #:upper16:190704	@ tmp166,
-	str	r4, [r1, #12]	@ D.53811, <variable>.TotalRawSize
+	str	r4, [r1, #12]	@ D.53823, <variable>.TotalRawSize
 	ldr	ip, [r3, ip]	@ <variable>.RawPacketArray.FirstPacketOffset, <variable>.RawPacketArray.FirstPacketOffset
-	rsb	r4, ip, r4	@ tmp164, <variable>.RawPacketArray.FirstPacketOffset, D.53811
+	rsb	r4, ip, r4	@ tmp164, <variable>.RawPacketArray.FirstPacketOffset, D.53823
 	str	r4, [r1, #12]	@ tmp164, <variable>.TotalRawSize
 	ldr	r0, [r3, r0]	@ <variable>.StreamSegArray.Tail, <variable>.StreamSegArray.Tail
 	ldr	r2, [r3, r2]	@ <variable>.StreamSegArray.Head, <variable>.StreamSegArray.Head
-	rsb	ip, r2, r0	@ D.53818, <variable>.StreamSegArray.Head, <variable>.StreamSegArray.Tail
+	rsb	ip, r2, r0	@ D.53830, <variable>.StreamSegArray.Head, <variable>.StreamSegArray.Tail
 	movw	r2, #:lower16:190736	@ tmp170,
 	movt	r2, #:upper16:190736	@ tmp170,
-	cmp	ip, #0	@ D.53818,
-	str	ip, [r1, #8]	@ D.53818, <variable>.SegNum
-	addlt	ip, ip, #1152	@ tmp169, D.53818,
+	cmp	ip, #0	@ D.53830,
+	str	ip, [r1, #8]	@ D.53830, <variable>.SegNum
+	addlt	ip, ip, #1152	@ tmp169, D.53830,
 	strlt	ip, [r1, #8]	@ tmp169, <variable>.SegNum
-	mov	r0, #0	@ D.50980,
+	mov	r0, #0	@ D.50994,
 	ldr	ip, [r3, r2]	@ <variable>.StreamSegArray.SegTotalSize, <variable>.StreamSegArray.SegTotalSize
 	str	ip, [r1, #16]	@ <variable>.StreamSegArray.SegTotalSize, <variable>.TotalSegSize
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L120:
 	cmp	r1, #0	@ pSmInstInfo,
 	strneb	r3, [r1, #0]	@ pSmInstArray, <variable>.InstMode
-	mvnne	r0, #0	@ D.50980,
+	mvnne	r0, #0	@ D.50994,
 	ldmnefd	sp, {r3, r4, fp, sp, pc}	@
 .L114:
-	mvn	r0, #0	@ D.50980,
+	mvn	r0, #0	@ D.50994,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	SM_GetInfo, .-SM_GetInfo
@@ -1181,14 +1181,14 @@ SetInstMode:
 	ldr	r3, [r0, #40]	@ pSmInstArray, <variable>.pSmInstArray
 	bls	.L125	@,
 .L122:
-	mvn	r0, #0	@ D.51358,
+	mvn	r0, #0	@ D.51372,
 	ldmfd	sp, {fp, sp, pc}	@
 .L125:
 	cmp	r3, #0	@ pSmInstArray,
 	beq	.L122	@,
 	movw	r2, #:lower16:190880	@ tmp147,
 	movt	r2, #:upper16:190880	@ tmp147,
-	mov	r0, #0	@ D.51358,
+	mov	r0, #0	@ D.51372,
 	str	r1, [r3, r2]	@ Mode, <variable>.Mode
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1235,18 +1235,18 @@ ScdParseUpMsgInfo:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r1, #0	@ ParseUpMsgInfo
-	mvneq	r5, #0	@ D.51638,
+	mvneq	r5, #0	@ D.51652,
 	beq	.L132	@,
 	ldr	r5, [r0, #12]	@ <variable>.ModeFlag, <variable>.ModeFlag
 	ldrb	r4, [r1, #72]	@ zero_extendqisi2	@,
-	mul	r2, r2, r3	@ D.51644, SegNum, UpMsgStepNum
+	mul	r2, r2, r3	@ D.51658, SegNum, UpMsgStepNum
 	cmp	r5, #1	@ <variable>.ModeFlag,
 	bfceq	r4, #0, #1	@ tmp142,,
 	orrne	r4, r4, #1	@ tmp146, tmp145,
 	strb	r4, [r1, #72]	@ tmp146,
-	mov	r5, #0	@ D.51638,
+	mov	r5, #0	@ D.51652,
 	ldr	r3, [r0, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
-	add	ip, r2, #2	@ tmp153, D.51644,
+	add	ip, r2, #2	@ tmp153, D.51658,
 	ldrb	r4, [r1, #72]	@ zero_extendqisi2	@,
 	ldr	r3, [r3, r2, asl #2]	@ tmp150,* <variable>.pScdUpMsg
 	mov	r3, r3, lsr #31	@ tmp149, tmp150,
@@ -1271,7 +1271,7 @@ ScdParseUpMsgInfo:
 	bfi	r3, r2, #7, #4	@ tmp184, tmp181,,
 	strh	r3, [r1, #72]	@ movhi	@ tmp184,
 .L132:
-	mov	r0, r5	@, D.51638
+	mov	r0, r5	@, D.51652
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	ScdParseUpMsgInfo, .-ScdParseUpMsgInfo
@@ -1293,13 +1293,13 @@ CheckSegValid:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #0	@ pSegPacket
-	mvneq	r0, #0	@ D.51791,
+	mvneq	r0, #0	@ D.51805,
 	ldmeqfd	sp, {fp, sp, pc}	@
 	ldr	r3, [r0, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	cmp	r3, #0	@ <variable>.PhyAddr,
 	bne	.L141	@,
 .L139:
-	mvn	r0, #6	@ D.51791,
+	mvn	r0, #6	@ D.51805,
 	ldmfd	sp, {fp, sp, pc}	@
 .L141:
 	ldr	r2, [r0, #0]	@ <variable>.VirAddr, <variable>.VirAddr
@@ -1307,7 +1307,7 @@ CheckSegValid:
 	beq	.L139	@,
 	ldr	ip, [r0, #16]	@ <variable>.LenInByte, <variable>.LenInByte
 	cmp	ip, r1	@ <variable>.LenInByte, SegFreeBufLen
-	movle	r0, #0	@ D.51791,
+	movle	r0, #0	@ D.51805,
 	ldmlefd	sp, {fp, sp, pc}	@
 	b	.L139	@
 	.fnend
@@ -1415,11 +1415,11 @@ SM_GetInstanceRawDiscontinue:
 	beq	.L154	@,
 	ldr	r1, [r2, #84]	@ <variable>.Config.DisContinueRawPacketFlag, <variable>.Config.DisContinueRawPacketFlag
 	cmp	r1, #1	@ <variable>.Config.DisContinueRawPacketFlag,
-	movne	r0, #0	@, D.52321
-	moveq	r0, #1	@, D.52321
+	movne	r0, #0	@, D.52333
+	moveq	r0, #1	@, D.52333
 	ldmfd	sp, {fp, sp, pc}	@
 .L154:
-	mov	r0, #0	@ D.52321,
+	mov	r0, #0	@ D.52333,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	SM_GetInstanceRawDiscontinue, .-SM_GetInstanceRawDiscontinue
@@ -1445,7 +1445,7 @@ SM_GetInstanceStreamEmptyFlag:
 	cmp	r0, #15	@ InstID,
 	bls	.L162	@,
 .L158:
-	mov	r0, #0	@ D.52358,
+	mov	r0, #0	@ D.52370,
 .L160:
 	sub	sp, fp, #12
 	ldmfd	sp, {fp, sp, pc}
@@ -1459,15 +1459,15 @@ SM_GetInstanceStreamEmptyFlag:
 	ldr	r2, [fp, #-20]	@ stInstInfo.TotalSegSize, stInstInfo.TotalSegSize
 	add	r1, r2, ip	@ tmp138, stInstInfo.TotalSegSize, stInstInfo.TotalRawSize
 	cmp	r1, #102400	@ tmp138,
-	movlt	r0, #1	@ D.52358,
+	movlt	r0, #1	@ D.52370,
 	blt	.L160	@,
 	ldr	r0, [fp, #-28]	@ stInstInfo.SegNum, stInstInfo.SegNum
 	cmp	r0, #9	@ stInstInfo.SegNum,
 	bgt	.L158	@,
 	ldr	lr, [fp, #-32]	@ stInstInfo.RawNum, stInstInfo.RawNum
 	cmp	lr, #1	@ stInstInfo.RawNum,
-	movgt	r0, #0	@, D.52358
-	movle	r0, #1	@, D.52358
+	movgt	r0, #0	@, D.52370
+	movle	r0, #1	@, D.52370
 	b	.L160	@
 	.fnend
 	.size	SM_GetInstanceStreamEmptyFlag, .-SM_GetInstanceStreamEmptyFlag
@@ -2543,16 +2543,16 @@ SM_AddMatchMode:
 	mov	r2, #0	@ tmp354,
 	str	r2, [r5, r0]	@ tmp354, <variable>.MatchScdIdPlus1
 .L275:
-	ldr	r4, [r4, #760]	@ D.53163, <variable>.pSmInstArray
-	cmp	r4, #0	@ D.53163,
+	ldr	r4, [r4, #760]	@ D.53175, <variable>.pSmInstArray
+	cmp	r4, #0	@ D.53175,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r3, [r4, #88]	@ <variable>.Config.ScdLowdlyEnable, <variable>.Config.ScdLowdlyEnable
 	cmp	r3, #0	@ <variable>.Config.ScdLowdlyEnable,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	movw	r3, #:lower16:g_DspDrvState	@ tmp363,
 	movt	r3, #:upper16:g_DspDrvState	@ tmp363,
-	ldr	r2, [r3, #0]	@ D.53171, g_DspDrvState
-	cmp	r2, #1	@ D.53171,
+	ldr	r2, [r3, #0]	@ D.53183, g_DspDrvState
+	cmp	r2, #1	@ D.53183,
 	ldrne	r3, [r3, #4]	@ prephitmp.1621, g_DspDrvState
 	beq	.L316	@,
 .L283:
@@ -2573,7 +2573,7 @@ SM_AddMatchMode:
 	cmp	r3, #2	@ prephitmp.1621,
 	movweq	r3, #:lower16:190876	@ tmp367,
 	movteq	r3, #:upper16:190876	@ tmp367,
-	streq	r2, [r4, r3]	@ D.53171, <variable>.MatchScdIdPlus1
+	streq	r2, [r4, r3]	@ D.53183, <variable>.MatchScdIdPlus1
 	bne	.L283	@,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L301:
@@ -2854,19 +2854,19 @@ SM_SetRawDiscontinueFlag:
 	cmp	r3, #0	@ <variable>.Mode,
 	strne	r1, [ip, #84]	@ Flag, <variable>.Config.DisContinueRawPacketFlag
 	streq	r3, [ip, #84]	@ <variable>.Mode, <variable>.Config.DisContinueRawPacketFlag
-	moveq	r0, #1	@ D.52339,
-	movne	r0, #1	@ D.52339,
+	moveq	r0, #1	@ D.52351,
+	movne	r0, #1	@ D.52351,
 	b	.L319	@
 .L324:
 	mov	r3, r1	@, Flag
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC53	@,
-	movw	r2, #4332	@,
+	movw	r2, #4327	@,
 	movt	r1, #:upper16:.LC53	@,
 	str	ip, [sp, #0]	@ pSmInstArray,
 	bl	dprint_vfmw	@
 .L323:
-	mov	r0, #0	@ D.52339,
+	mov	r0, #0	@ D.52351,
 .L319:
 	sub	sp, fp, #12
 	ldmfd	sp, {fp, sp, pc}
@@ -2901,7 +2901,7 @@ SM_CfgBuf:
 	add	r0, r2, r0, asl #4	@, tmp146, tmp140, tmp144,
 	ldr	ip, [r0, #40]	@ pSmInstArray, <variable>.pSmInstArray
 	cmp	ip, #0	@ pSmInstArray,
-	mvneq	r0, #0	@ D.50916,
+	mvneq	r0, #0	@ D.50930,
 	beq	.L327	@,
 	movw	r3, #:lower16:190868	@ tmp148,
 	movt	r3, #:upper16:190868	@ tmp148,
@@ -2946,7 +2946,7 @@ SM_CfgBuf:
 	movt	r5, #:upper16:190824	@ tmp173,
 	movw	r9, #:lower16:190836	@ tmp182,
 	movt	r9, #:upper16:190836	@ tmp182,
-	mov	r0, r1	@ D.50916, ScdId
+	mov	r0, r1	@ D.50930, ScdId
 	str	r4, [ip, sl]	@, <variable>.BufAddrCfg.pUpMsgVirAddr
 	ldr	sl, [r2, #800]	@, <variable>.ScdDrvMem.UpMsgMemSize
 	str	sl, [ip, r7]	@, <variable>.BufAddrCfg.UpMsgSize
@@ -2978,7 +2978,7 @@ SM_CfgBuf:
 	mov	r2, #2192	@,
 	movt	r1, #:upper16:.LC55	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50916,
+	mvn	r0, #0	@ D.50930,
 	b	.L327	@
 .L332:
 	mov	r3, r0	@, SmID
@@ -2987,7 +2987,7 @@ SM_CfgBuf:
 	movt	r1, #:upper16:.LC54	@,
 	movw	r2, #2186	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50916,
+	mvn	r0, #0	@ D.50930,
 	b	.L327	@
 	.fnend
 	.size	SM_CfgBuf, .-SM_CfgBuf
@@ -3011,10 +3011,10 @@ SCDDRV_ExitSleep:
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp135,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp135,
 	mov	r4, r0	@ ScdId, ScdId
-	ldr	r3, [r3, #16]	@ D.50521, g_vdm_hal_fun_ptr.pfun_SCDDRV_OpenHardware
-	cmp	r3, #0	@ D.50521,
+	ldr	r3, [r3, #16]	@ D.50535, g_vdm_hal_fun_ptr.pfun_SCDDRV_OpenHardware
+	cmp	r3, #0	@ D.50535,
 	beq	.L335	@,
-	blx	r3	@ D.50521
+	blx	r3	@ D.50535
 	movw	r1, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp137,
 	mov	r0, #0	@ tmp142,
@@ -3022,7 +3022,7 @@ SCDDRV_ExitSleep:
 	str	r0, [r4, #768]	@ tmp142, s_eScdDrvSleepStage
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L335:
-	mov	r0, r3	@, D.50521
+	mov	r0, r3	@, D.50535
 	movw	r1, #:lower16:.LC56	@,
 	movw	r2, #1560	@,
 	movt	r1, #:upper16:.LC56	@,
@@ -3087,11 +3087,11 @@ ReleaseStreamSeg:
 	cmp	r5, r3	@ StreamID, i.1814
 	beq	.L345	@,
 .L355:
-	add	r3, r3, #1	@ D.50436, i.1814,
-	umull	ip, r2, r1, r3	@, tmp212, tmp287, D.50436
+	add	r3, r3, #1	@ D.50450, i.1814,
+	umull	ip, r2, r1, r3	@, tmp212, tmp287, D.50450
 	mov	r2, r2, lsr #8	@ i.1814, tmp212,
 	add	ip, r2, r2, asl #3	@, tmp216, i.1814, i.1814,
-	sub	r3, r3, ip, asl #7	@ i.1814, D.50436, tmp216,
+	sub	r3, r3, ip, asl #7	@ i.1814, D.50450, tmp216,
 	cmp	r3, r0	@ i.1814, temp.1824
 	bne	.L359	@,
 .L341:
@@ -3136,18 +3136,18 @@ ReleaseStreamSeg:
 	movw	r1, #:lower16:92172	@ tmp151,
 	movt	ip, #:upper16:92168	@ tmp150,
 	movt	r1, #:upper16:92172	@ tmp151,
-	ldr	sl, [r4, ip]	@ D.50407, <variable>.Head
+	ldr	sl, [r4, ip]	@ D.50421, <variable>.Head
 	ldr	r0, [r4, r1]	@ <variable>.Tail, <variable>.Tail
-	cmp	sl, r0	@ D.50407, <variable>.Tail
+	cmp	sl, r0	@ D.50421, <variable>.Tail
 	beq	.L341	@,
-	mov	r2, sl	@, D.50407
+	mov	r2, sl	@, D.50421
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC57	@,
-	mov	r9, sl, asl #2	@ tmp270, D.50407,
+	mov	r9, sl, asl #2	@ tmp270, D.50421,
 	movt	r1, #:upper16:.LC57	@,
-	mov	r5, sl	@ StreamID, D.50407
+	mov	r5, sl	@ StreamID, D.50421
 	bl	dprint_vfmw	@
-	add	r3, r9, sl	@ tmp156, tmp270, D.50407
+	add	r3, r9, sl	@ tmp156, tmp270, D.50421
 	mov	r8, r3, asl #1	@ tmp158, tmp156,
 	add	r8, r8, #3	@ tmp159, tmp158,
 	ldr	r2, [r4, r8, asl #3]	@ <variable>.LenInByte, <variable>.LenInByte
@@ -3173,7 +3173,7 @@ ReleaseStreamSeg:
 	cmp	r0, #0	@ tmp186,
 	bne	.L343	@,
 .L342:
-	add	ip, r9, sl	@ tmp189, tmp270, D.50407
+	add	ip, r9, sl	@ tmp189, tmp270, D.50421
 	movw	r1, #:lower16:.LC39	@,
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC39	@,
@@ -3293,9 +3293,9 @@ GetRawNumOffsert:
 	orrs	ip, ip, r1, lsr #31	@,, tmp161, Len,
 	beq	.L382	@,
 .L370:
-	mvn	ip, #0	@ D.49991,
+	mvn	ip, #0	@ D.50005,
 .L378:
-	mov	r0, ip	@, D.49991
+	mov	r0, ip	@, D.50005
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L382:
@@ -3304,21 +3304,21 @@ GetRawNumOffsert:
 	beq	.L370	@,
 	mov	ip, #98304	@ tmp173,
 	movw	sl, #:lower16:98308	@ tmp180,
-	ldr	r8, [r0, ip]	@ D.49997, <variable>.Head
+	ldr	r8, [r0, ip]	@ D.50011, <variable>.Head
 	movt	sl, #:upper16:98308	@ tmp180,
 	movw	r4, #:lower16:98316	@ tmp179,
 	movt	r4, #:upper16:98316	@ tmp179,
 	ldr	r6, [r0, sl]	@ <variable>.Tail, <variable>.Tail
-	mov	r5, r8, asl #1	@ tmp333, D.49997,
-	ldr	sl, [r0, r4]	@ D.49999, <variable>.FirstPacketOffset
-	add	r7, r5, r8	@ tmp176, tmp333, D.49997
-	add	r4, r5, r8	@ tmp184, tmp333, D.49997
-	subs	r6, r6, r8	@ RawNum, <variable>.Tail, D.49997
+	mov	r5, r8, asl #1	@ tmp333, D.50011,
+	ldr	sl, [r0, r4]	@ D.50013, <variable>.FirstPacketOffset
+	add	r7, r5, r8	@ tmp176, tmp333, D.50011
+	add	r4, r5, r8	@ tmp184, tmp333, D.50011
+	subs	r6, r6, r8	@ RawNum, <variable>.Tail, D.50011
 	add	r9, r0, r7, asl #5	@, tmp178, pRawStreamArray, tmp176,
 	addmi	r6, r6, #1024	@ RawNum, RawNum,
-	add	ip, r6, r8	@, RawNum, D.49997
+	add	ip, r6, r8	@, RawNum, D.50011
 	ldr	r6, [fp, #4]	@, pPts
-	ldr	r7, [r9, #8]	@ D.49998, <variable>.Length
+	ldr	r7, [r9, #8]	@ D.50012, <variable>.Length
 	mov	r9, r4, asl #5	@ tmp186, tmp184,
 	str	ip, [fp, #-48]	@, %sfp
 	add	ip, r9, #16	@ tmp187, tmp186,
@@ -3352,7 +3352,7 @@ GetRawNumOffsert:
 	ldr	ip, [fp, #-48]	@, %sfp
 	cmp	ip, r4	@, i
 	ble	.L372	@,
-	rsb	r6, sl, r7	@ TotalLen, D.49999, D.49998
+	rsb	r6, sl, r7	@ TotalLen, D.50013, D.50012
 	cmp	r1, r6	@ Len, TotalLen
 	blt	.L372	@,
 	str	r6, [fp, #-72]	@ TotalLen, %sfp
@@ -3432,7 +3432,7 @@ GetRawNumOffsert:
 	beq	.L372	@,
 	add	r5, r7, r5	@ tmp325, tmp332, Index
 	rsb	r4, ip, r4	@ tmp329, temp.1884, i
-	mov	ip, #0	@ D.49991,
+	mov	ip, #0	@ D.50005,
 	add	r0, r0, r5, asl #5	@, tmp327, pRawStreamArray, tmp325,
 	ldr	r0, [r0, #8]	@ <variable>.Length, <variable>.Length
 	str	r4, [r2, #0]	@ tmp329,* pNum
@@ -3508,12 +3508,12 @@ GetSegPts:
 	str	ip, [sp, #28]	@ tmp157,
 	str	lr, [fp, #-48]	@ tmp138, Num
 	bl	GetRawNumOffsert	@
-	ldrd	r2, [r4, #24]	@ D.51818, pSegPacket,
+	ldrd	r2, [r4, #24]	@ D.51832, pSegPacket,
 	ldrd	r0, [r5]	@ tmp158,* pLastPts
-	cmp	r1, r3	@ tmp158, D.51818
-	cmpeq	r0, r2	@ tmp158, D.51818
+	cmp	r1, r3	@ tmp158, D.51832
+	cmpeq	r0, r2	@ tmp158, D.51832
 	beq	.L389	@,
-	strd	r2, [r5]	@ D.51818,* pLastPts
+	strd	r2, [r5]	@ D.51832,* pLastPts
 .L388:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -3548,10 +3548,10 @@ DeleteRawPacket:
 	beq	.L426	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp261,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp261,
-	ldr	r2, [r3, #40]	@ D.53840, <variable>.pSmInstArray
-	cmp	r2, #0	@ D.53840,
+	ldr	r2, [r3, #40]	@ D.53852, <variable>.pSmInstArray
+	cmp	r2, #0	@ D.53852,
 	beq	.L393	@,
-	add	r2, r2, #208	@ tmp172, D.53840,
+	add	r2, r2, #208	@ tmp172, D.53852,
 	cmp	r0, r2	@ pRawStreamArray, tmp172
 	beq	.L394	@,
 .L393:
@@ -3679,7 +3679,7 @@ DeleteRawPacket:
 	movw	r2, #705	@,
 	movt	r1, #:upper16:.LC61	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.49880,
+	mvn	r0, #0	@ D.49894,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L410:
 	mov	r6, #15	@ SmID,
@@ -3687,14 +3687,14 @@ DeleteRawPacket:
 	movw	ip, #:lower16:98308	@ tmp205,
 	movt	ip, #:upper16:98308	@ tmp205,
 	mov	r1, #98304	@ tmp204,
-	ldr	r0, [r4, ip]	@ D.49887, <variable>.Tail
-	ldr	r7, [r4, r1]	@ D.49886, <variable>.Head
-	cmp	r7, r0	@ D.49886, D.49887
-	addgt	r0, r0, #1024	@ tmp206, D.49887,
-	rsb	r2, r7, r0	@ PacketNum, D.49886, tmp206
+	ldr	r0, [r4, ip]	@ D.49901, <variable>.Tail
+	ldr	r7, [r4, r1]	@ D.49900, <variable>.Head
+	cmp	r7, r0	@ D.49900, D.49901
+	addgt	r0, r0, #1024	@ tmp206, D.49901,
+	rsb	r2, r7, r0	@ PacketNum, D.49900, tmp206
 	cmp	r2, r9	@ PacketNum, DelNum
 	bcc	.L427	@,
-	add	sl, r7, r7, asl #1	@, tmp210, D.49886, D.49886,
+	add	sl, r7, r7, asl #1	@, tmp210, D.49900, D.49900,
 	add	r6, r6, r6, asl #1	@, tmp266, SmID, SmID,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC63	@,
@@ -3707,14 +3707,14 @@ DeleteRawPacket:
 	ldr	r3, [r4, r8, asl #3]	@, <variable>.Length
 	and	sl, r5, #1	@ tmp273, tmp271,
 	bl	dprint_vfmw	@
-	ldr	r3, [r6, #40]!	@ D.49902, <variable>.pSmInstArray
+	ldr	r3, [r6, #40]!	@ D.49916, <variable>.pSmInstArray
 	movw	r5, #:lower16:98532	@ tmp270,
 	movt	r5, #:upper16:98532	@ tmp270,
 	ldr	r2, [r4, r8, asl #3]	@ <variable>.Length, <variable>.Length
-	add	r8, r7, #1	@ D.49906, D.49886,
+	add	r8, r7, #1	@ D.49920, D.49900,
 	ldr	r1, [r3, r5]	@ <variable>.RawPacketArray.RawTotalSize, <variable>.RawPacketArray.RawTotalSize
 	cmp	r9, #1	@ DelNum,
-	mov	r7, r8, asl #22	@ j, D.49906,
+	mov	r7, r8, asl #22	@ j, D.49920,
 	mov	r8, #1	@ i,
 	rsb	ip, r2, r1	@ tmp237, <variable>.Length, <variable>.RawPacketArray.RawTotalSize
 	str	ip, [r3, r5]	@ tmp237, <variable>.RawPacketArray.RawTotalSize
@@ -3747,12 +3747,12 @@ DeleteRawPacket:
 	add	r8, r8, #1	@ i, tmp274,
 	ldr	r3, [r4, sl, asl #3]	@, <variable>.Length
 	bl	dprint_vfmw	@
-	ldr	r3, [r6, #0]	@ D.49902, <variable>.pSmInstArray
-	add	r1, r7, #1	@ D.49906, j,
+	ldr	r3, [r6, #0]	@ D.49916, <variable>.pSmInstArray
+	add	r1, r7, #1	@ D.49920, j,
 	ldr	r2, [r4, sl, asl #3]	@ <variable>.Length, <variable>.Length
 	mov	r0, #26	@,
 	ldr	ip, [r3, r5]	@ <variable>.RawPacketArray.RawTotalSize, <variable>.RawPacketArray.RawTotalSize
-	mov	r7, r1, asl #22	@ j, D.49906,
+	mov	r7, r1, asl #22	@ j, D.49920,
 	movw	r1, #:lower16:.LC63	@,
 	movt	r1, #:upper16:.LC63	@,
 	rsb	r2, r2, ip	@ tmp293, <variable>.Length, <variable>.RawPacketArray.RawTotalSize
@@ -3769,12 +3769,12 @@ DeleteRawPacket:
 .L425:
 	ldr	r3, [r4, sl, asl #3]	@, <variable>.Length
 	bl	dprint_vfmw	@
-	ldr	r3, [r6, #0]	@ D.49902, <variable>.pSmInstArray
+	ldr	r3, [r6, #0]	@ D.49916, <variable>.pSmInstArray
 	ldr	r2, [r4, sl, asl #3]	@ <variable>.Length, <variable>.Length
-	add	ip, r7, #1	@ D.49906, j,
+	add	ip, r7, #1	@ D.49920, j,
 	cmp	r9, r8	@ DelNum, i
 	ldr	r1, [r3, r5]	@ <variable>.RawPacketArray.RawTotalSize, <variable>.RawPacketArray.RawTotalSize
-	mov	r7, ip, asl #22	@ j, D.49906,
+	mov	r7, ip, asl #22	@ j, D.49920,
 	rsb	r0, r2, r1	@ tmp339, <variable>.Length, <variable>.RawPacketArray.RawTotalSize
 	str	r0, [r3, r5]	@ tmp339, <variable>.RawPacketArray.RawTotalSize
 	ldr	r3, [r6, #0]	@ temp.1945, <variable>.pSmInstArray
@@ -3789,13 +3789,13 @@ DeleteRawPacket:
 	ldr	r1, [r4, r0]	@ <variable>.Head, <variable>.Head
 	movt	ip, #:upper16:98316	@ tmp258,
 	mov	r2, #0	@ tmp259,
-	add	r9, r9, r1	@ D.49909, DelNum, <variable>.Head
+	add	r9, r9, r1	@ D.49923, DelNum, <variable>.Head
 	str	r2, [r4, ip]	@ tmp259, <variable>.FirstPacketOffset
-	cmp	r9, #1024	@ D.49909,
-	str	r9, [r4, r0]	@ D.49909, <variable>.Head
-	subge	r9, r9, #1024	@ tmp257, D.49909,
+	cmp	r9, #1024	@ D.49923,
+	str	r9, [r4, r0]	@ D.49923, <variable>.Head
+	subge	r9, r9, #1024	@ tmp257, D.49923,
 	strge	r9, [r4, r0]	@ tmp257, <variable>.Head
-	mov	r0, r2	@ D.49880, tmp259
+	mov	r0, r2	@ D.49894, tmp259
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L427:
 	movw	r1, #:lower16:.LC62	@,
@@ -3804,7 +3804,7 @@ DeleteRawPacket:
 	movt	r1, #:upper16:.LC62	@,
 	bl	dprint_vfmw	@
 .L426:
-	mvn	r0, #0	@ D.49880,
+	mvn	r0, #0	@ D.49894,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	.fnend
 	.size	DeleteRawPacket, .-DeleteRawPacket
@@ -3875,13 +3875,13 @@ DeleteRawLen:
 	movw	r1, #:lower16:98308	@ tmp167,
 	movt	r1, #:upper16:98308	@ tmp167,
 	mov	ip, #98304	@ tmp166,
-	ldr	r2, [r5, ip]	@ D.53858, <variable>.Head
+	ldr	r2, [r5, ip]	@ D.53870, <variable>.Head
 	ldr	r3, [r5, r1]	@ <variable>.Tail, <variable>.Tail
 	ldr	r1, [fp, #-36]	@ RawPacketOffSet.478, RawPacketOffSet
-	cmp	r2, r3	@ D.53858, <variable>.Tail
+	cmp	r2, r3	@ D.53870, <variable>.Tail
 	mvneq	r0, #2	@ Ret,
 	beq	.L432	@,
-	add	ip, r2, r2, asl #1	@, tmp173, D.53858, D.53858,
+	add	ip, r2, r2, asl #1	@, tmp173, D.53870, D.53870,
 	ldr	r0, [r5, r4]	@ <variable>.FirstPacketOffset, <variable>.FirstPacketOffset
 	add	lr, r5, ip, asl #5	@, tmp175, pRawStreamArray, tmp173,
 	add	r2, r1, r0	@ TargetOffset, RawPacketOffSet.478, <variable>.FirstPacketOffset
@@ -3962,16 +3962,16 @@ SetMaxSegSize:
 	bhi	.L451	@,
 	cmp	r0, #25	@ eCapLevel,
 	beq	.L452	@,
-	ldr	r1, [r4, #8]	@ D.53697, <variable>.VidStd
-	cmp	r1, #16	@ D.53697,
-	cmpne	r1, #0	@, D.53697,
+	ldr	r1, [r4, #8]	@ D.53709, <variable>.VidStd
+	cmp	r1, #16	@ D.53709,
+	cmpne	r1, #0	@, D.53709,
 	bne	.L449	@,
-	sub	r0, r0, #13	@ D.53862, eCapLevel,
-	cmp	r0, #19	@ D.53862,
+	sub	r0, r0, #13	@ D.53874, eCapLevel,
+	cmp	r0, #19	@ D.53874,
 	bhi	.L449	@,
 	movw	r2, #:lower16:.LANCHOR1	@ tmp160,
 	movt	r2, #:upper16:.LANCHOR1	@ tmp160,
-	add	r0, r2, r0, asl #2	@, tmp163, tmp160, D.53862,
+	add	r0, r2, r0, asl #2	@, tmp163, tmp160, D.53874,
 	ldr	r0, [r0, #20]	@ MaxSegSize, CSWTCH.727
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L452:
@@ -4039,7 +4039,7 @@ PrintScdSegState:
 	movt	r6, #:upper16:190704	@ tmp219,
 	mov	r2, r8	@, SmID
 	mov	r0, #26	@,
-	ldr	r4, [r1, #40]	@ D.53612, <variable>.pSmInstArray
+	ldr	r4, [r1, #40]	@ D.53624, <variable>.pSmInstArray
 	movw	r5, #:lower16:190708	@ tmp222,
 	movw	r1, #:lower16:.LC67	@,
 	movt	r5, #:upper16:190708	@ tmp222,
@@ -4107,17 +4107,17 @@ PrintScdSegState:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L467:
-	add	r3, r4, #98304	@ tmp242, D.53612,
+	add	r3, r4, #98304	@ tmp242, D.53624,
 	add	lr, r3, #232	@ tmp242, tmp242,
 	cmp	lr, #0	@ tmp242,
 	beq	.L457	@,
-	ldr	sl, [r4, r6]	@ D.53874, <variable>.StreamSegArray.Head
+	ldr	sl, [r4, r6]	@ D.53886, <variable>.StreamSegArray.Head
 	ldr	r7, [r4, r5]	@ <variable>.StreamSegArray.Tail, <variable>.StreamSegArray.Tail
-	subs	r7, r7, sl	@ SegNum, <variable>.StreamSegArray.Tail, D.53874
+	subs	r7, r7, sl	@ SegNum, <variable>.StreamSegArray.Tail, D.53886
 	addmi	r7, r7, #1152	@ SegNum, SegNum,
 	cmp	r7, #0	@ SegNum,
 	ble	.L456	@,
-	add	r2, sl, sl, asl #2	@, tmp260, D.53874, D.53874,
+	add	r2, sl, sl, asl #2	@, tmp260, D.53886, D.53886,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC78	@,
 	movt	r1, #:upper16:.LC78	@,
@@ -4127,7 +4127,7 @@ PrintScdSegState:
 	sub	r9, r7, #1	@ tmp275, SegNum,
 	add	sl, r5, #248	@ tmp263, tmp263,
 	and	r9, r9, #1	@ tmp277, tmp275,
-	add	sl, r4, sl	@ tmp265, D.53612, tmp263
+	add	sl, r4, sl	@ tmp265, D.53624, tmp263
 	add	r4, sl, #84	@ ivtmp.2075, tmp265,
 	mov	r5, sl	@ ivtmp.2075, tmp265
 	ldr	r2, [r5, #4]!	@, <variable>.PhyAddr
@@ -4287,7 +4287,7 @@ PrintScdSegState:
 	movw	r1, #:lower16:.LC76	@,
 	ldr	r2, .L468	@,
 	movt	r1, #:upper16:.LC76	@,
-	movw	r3, #6417	@,
+	movw	r3, #6412	@,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	b	.L456	@
@@ -4328,7 +4328,7 @@ PrintScdRawState:
 	movt	r6, #:upper16:98512	@ tmp159,
 	mov	r2, r8	@, SmID
 	mov	r0, #26	@,
-	ldr	r4, [r1, #40]	@ D.53497, <variable>.pSmInstArray
+	ldr	r4, [r1, #40]	@ D.53509, <variable>.pSmInstArray
 	movw	r5, #:lower16:98516	@ tmp162,
 	movw	r1, #:lower16:.LC85	@,
 	movt	r5, #:upper16:98516	@ tmp162,
@@ -4375,19 +4375,19 @@ PrintScdRawState:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L483:
-	cmn	r4, #208	@ D.53497,
+	cmn	r4, #208	@ D.53509,
 	beq	.L473	@,
-	ldr	r3, [r4, r6]	@ D.53883, <variable>.RawPacketArray.Head
+	ldr	r3, [r4, r6]	@ D.53895, <variable>.RawPacketArray.Head
 	ldr	r7, [r4, r5]	@ <variable>.RawPacketArray.Tail, <variable>.RawPacketArray.Tail
-	subs	r7, r7, r3	@ RawNum, <variable>.RawPacketArray.Tail, D.53883
+	subs	r7, r7, r3	@ RawNum, <variable>.RawPacketArray.Tail, D.53895
 	addmi	r7, r7, #1024	@ RawNum, RawNum,
 	cmp	r7, #0	@ RawNum,
 	ble	.L472	@,
-	add	r5, r3, r3, asl #1	@, tmp187, D.53883, D.53883,
+	add	r5, r3, r3, asl #1	@, tmp187, D.53895, D.53895,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC93	@,
 	movt	r1, #:upper16:.LC93	@,
-	add	r4, r4, r5, asl #5	@, tmp189, D.53497, tmp187,
+	add	r4, r4, r5, asl #5	@, tmp189, D.53509, tmp187,
 	mov	r6, #1	@ i,
 	add	r5, r4, #216	@ ivtmp.2123, tmp189,
 	sub	sl, r7, #1	@ tmp195, RawNum,
@@ -4490,7 +4490,7 @@ PrintScdRawState:
 	movw	r1, #:lower16:.LC91	@,
 	ldr	r2, .L484	@,
 	movt	r1, #:upper16:.LC91	@,
-	movw	r3, #6281	@,
+	movw	r3, #6276	@,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	b	.L472	@
@@ -4524,72 +4524,72 @@ PrintScdVtrlReg:
 	movt	r0, #:upper16:-121387004	@,
 	str	r2, [fp, #-48]	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r8, r0	@ D.53410,
+	mov	r8, r0	@ D.53422,
 	movw	r0, #:lower16:-121387000	@ tmp143,
 	movt	r0, #:upper16:-121387000	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r7, r0	@ D.53411,
+	mov	r7, r0	@ D.53423,
 	movw	r0, #:lower16:-121386996	@ tmp144,
 	movt	r0, #:upper16:-121386996	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r6, r0	@ D.53412,
+	mov	r6, r0	@ D.53424,
 	movw	r0, #:lower16:-121386992	@ tmp145,
 	movt	r0, #:upper16:-121386992	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r5, r0	@ D.53413,
+	mov	r5, r0	@ D.53425,
 	movw	r0, #:lower16:-121386988	@ tmp146,
 	movt	r0, #:upper16:-121386988	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r4, r0	@ D.53414,
+	mov	r4, r0	@ D.53426,
 	movw	r0, #:lower16:-121386984	@ tmp147,
 	movt	r0, #:upper16:-121386984	@,
 	bl	MEM_ReadPhyWord	@
-	mov	sl, r0	@ D.53415,
+	mov	sl, r0	@ D.53427,
 	movw	r0, #:lower16:-121386976	@ tmp148,
 	movt	r0, #:upper16:-121386976	@,
 	bl	MEM_ReadPhyWord	@
-	mov	r9, r0	@ D.53416,
+	mov	r9, r0	@ D.53428,
 	movw	r0, #:lower16:-121387008	@ tmp149,
 	movt	r0, #:upper16:-121387008	@,
 	bl	MEM_ReadPhyWord	@
 	ldr	r2, [fp, #-48]	@,
 	movw	r1, #:lower16:.LC97	@,
 	movt	r1, #:upper16:.LC97	@,
-	mov	ip, r0	@ D.53417,
+	mov	ip, r0	@ D.53429,
 	mov	r0, #24	@,
 	str	ip, [fp, #-48]	@,
 	bl	dprint_vfmw	@
-	mov	r2, r8	@, D.53410
+	mov	r2, r8	@, D.53422
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC98	@,
 	movt	r1, #:upper16:.LC98	@,
 	bl	dprint_vfmw	@
-	mov	r2, r7	@, D.53411
+	mov	r2, r7	@, D.53423
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC99	@,
 	movt	r1, #:upper16:.LC99	@,
 	bl	dprint_vfmw	@
-	mov	r2, r6	@, D.53412
+	mov	r2, r6	@, D.53424
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC100	@,
 	movt	r1, #:upper16:.LC100	@,
 	bl	dprint_vfmw	@
-	mov	r2, r5	@, D.53413
+	mov	r2, r5	@, D.53425
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC101	@,
 	movt	r1, #:upper16:.LC101	@,
 	bl	dprint_vfmw	@
-	mov	r2, r4	@, D.53414
+	mov	r2, r4	@, D.53426
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC102	@,
 	movt	r1, #:upper16:.LC102	@,
 	bl	dprint_vfmw	@
-	mov	r2, sl	@, D.53415
+	mov	r2, sl	@, D.53427
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC103	@,
 	movt	r1, #:upper16:.LC103	@,
 	bl	dprint_vfmw	@
-	mov	r2, r9	@, D.53416
+	mov	r2, r9	@, D.53428
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC104	@,
 	movt	r1, #:upper16:.LC104	@,
@@ -4598,7 +4598,7 @@ PrintScdVtrlReg:
 	movw	r1, #:lower16:.LC105	@,
 	mov	r0, #24	@,
 	movt	r1, #:upper16:.LC105	@,
-	sxtb	r2, r3	@, D.53417
+	sxtb	r2, r3	@, D.53429
 	bl	dprint_vfmw	@
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -4729,7 +4729,7 @@ GetNextVop:
 	movt	r5, #:upper16:-33488896	@ tmp191,
 	ldr	r2, [r4, #0]	@ pretmp.2221, <variable>.pSegBufVirAddr
 	mla	r0, r7, r3, r8	@ ivtmp.2243, pretmp.2247, i, pUsedSeg
-	rsb	ip, r7, #0	@ D.55594, pretmp.2247
+	rsb	ip, r7, #0	@ D.55606, pretmp.2247
 	bne	.L515	@,
 .L503:
 	ldr	r7, [r0, #0]	@ tmp174,* ivtmp.2243
@@ -4756,9 +4756,9 @@ GetNextVop:
 	beq	.L498	@,
 .L501:
 	subs	r4, r3, #1	@ i.2246, i,
-	add	r9, r0, ip	@ ivtmp.2243, ivtmp.2243, D.55594
+	add	r9, r0, ip	@ ivtmp.2243, ivtmp.2243, D.55606
 	bmi	.L502	@,
-	ldr	r7, [r0, ip]	@ tmp198,* D.55594
+	ldr	r7, [r0, ip]	@ tmp198,* D.55606
 	cmp	r1, #1	@ pretmp.2226,
 	mov	r3, r4	@ i, i.2246
 	rsb	r8, r6, r7	@ tmp199, pretmp.2225, tmp198
@@ -4782,7 +4782,7 @@ GetNextVop:
 	cmp	r7, #1	@ flag,
 	beq	.L512	@,
 .L511:
-	add	r0, r9, ip	@ ivtmp.2243, ivtmp.2243, D.55594
+	add	r0, r9, ip	@ ivtmp.2243, ivtmp.2243, D.55606
 	sub	r3, r4, #1	@ i, i.2246,
 	b	.L503	@
 .L515:
@@ -4810,7 +4810,7 @@ GetNextVop:
 	beq	.L507	@,
 .L506:
 	subs	r4, r3, #1	@ i.2246, i,
-	add	r0, r0, ip	@ ivtmp.2243, ivtmp.2243, D.55594
+	add	r0, r0, ip	@ ivtmp.2243, ivtmp.2243, D.55606
 	movpl	r3, r4	@ i, i.2246
 	bpl	.L503	@,
 .L502:
@@ -4926,7 +4926,7 @@ WaitSCDFinish:
 	cmp	r3, #1	@ <variable>.SCDState,
 	beq	.L552	@,
 .L536:
-	mov	r0, #0	@ D.53396,
+	mov	r0, #0	@ D.53408,
 .L540:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
@@ -4976,10 +4976,10 @@ WaitSCDFinish:
 	movt	r1, #:upper16:.LC107	@,
 	str	ip, [sp, #0]	@ t_wait,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.53396,
+	mvn	r0, #6	@ D.53408,
 	b	.L540	@
 .L553:
-	mvn	r0, #6	@ D.53396,
+	mvn	r0, #6	@ D.53408,
 	b	.L540	@
 	.fnend
 	.size	WaitSCDFinish, .-WaitSCDFinish
@@ -5024,14 +5024,14 @@ CalcInstBlockTime:
 .L558:
 	movw	r2, #:lower16:204712	@ tmp152,
 	movt	r2, #:upper16:204712	@ tmp152,
-	ldr	r1, [r4, r2]	@ D.51342, <variable>.LastBlockTime
-	cmp	r0, r1	@ CurTime, D.51342
+	ldr	r1, [r4, r2]	@ D.51356, <variable>.LastBlockTime
+	cmp	r0, r1	@ CurTime, D.51356
 	bls	.L559	@,
-	rsb	r3, r1, r0	@ D.51345, D.51342, CurTime
+	rsb	r3, r1, r0	@ D.51359, D.51356, CurTime
 	movw	lr, #:lower16:204708	@ tmp153,
 	movt	lr, #:upper16:204708	@ tmp153,
-	mov	r0, r3	@ prephitmp.2292, D.51345
-	str	r3, [r4, lr]	@ D.51345,
+	mov	r0, r3	@ prephitmp.2292, D.51359
+	str	r3, [r4, lr]	@ D.51359,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L559:
 	movw	ip, #:lower16:204708	@ tmp154,
@@ -5235,23 +5235,23 @@ ResetSCD:
 	orr	r5, r5, #32	@ u32TmpValue, u32TmpValue,
 	str	r5, [r2, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldr	r1, [r4, #0]	@ prephitmp.2401, g_pstRegCrg
-	mov	r6, r0	@ D.49701,
+	mov	r6, r0	@ D.49715,
 	b	.L570	@
 .L578:
-	ldr	r2, [r1, #372]	@ D.49705, <variable>.PERI_CRG93.u32
-	and	lr, r2, #2	@ tmp170, D.49705,
-	str	r2, [fp, #-32]	@ D.49705, u32TmpValue_93.u32
+	ldr	r2, [r1, #372]	@ D.49719, <variable>.PERI_CRG93.u32
+	and	lr, r2, #2	@ tmp170, D.49719,
+	str	r2, [fp, #-32]	@ D.49719, u32TmpValue_93.u32
 	uxtb	r0, lr	@ tmp171, tmp170
 	cmp	r0, #0	@ tmp171,
 	bne	.L569	@,
 	cmp	r3, ip	@ i, tmp163
 	beq	.L577	@,
 .L570:
-	ldr	r0, [r1, #372]	@ D.49705, <variable>.PERI_CRG93.u32
+	ldr	r0, [r1, #372]	@ D.49719, <variable>.PERI_CRG93.u32
 	add	r3, r3, #1	@ tmp164, i,
 	add	r3, r3, #1	@ i, tmp164,
-	tst	r0, #2	@ D.49705,
-	str	r0, [fp, #-32]	@ D.49705, u32TmpValue_93.u32
+	tst	r0, #2	@ D.49719,
+	str	r0, [fp, #-32]	@ D.49719, u32TmpValue_93.u32
 	beq	.L578	@,
 .L569:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp154,
@@ -5259,7 +5259,7 @@ ResetSCD:
 	bfc	r5, #5, #1	@ u32TmpValue,,
 	str	r5, [r1, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldr	r0, [r3, #868]	@ s_RegPhyBaseAddr, s_RegPhyBaseAddr
-	and	r1, r6, #1	@, D.49701,
+	and	r1, r6, #1	@, D.49715,
 	add	ip, r0, #2064	@, s_RegPhyBaseAddr,
 	add	r0, ip, #12	@,,
 	bl	MEM_WritePhyWord	@
@@ -5294,7 +5294,7 @@ SCDDRV_CheckDevice:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	subs	r5, r0, #0	@ ScdId, ScdId
-	mvnne	r0, #0	@ D.53287,
+	mvnne	r0, #0	@ D.53299,
 	beq	.L586	@,
 .L581:
 	sub	sp, fp, #24
@@ -5307,13 +5307,13 @@ SCDDRV_CheckDevice:
 	ldr	ip, [r4, #856]	@ <variable>.SCDState, <variable>.SCDState
 	movt	r1, #:upper16:.LC109	@,
 	ldr	r2, .L588	@,
-	movw	r3, #5847	@,
+	movw	r3, #5842	@,
 	stmia	sp, {r5, ip}	@ phole stm
 	bl	dprint_vfmw	@
 	ldr	r6, [r4, #856]	@ temp.2442, <variable>.SCDState
 	cmp	r6, #0	@ temp.2442,
 	beq	.L587	@,
-	movw	r3, #5856	@,
+	movw	r3, #5851	@,
 	ldr	r2, .L588	@,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC109	@,
@@ -5321,11 +5321,11 @@ SCDDRV_CheckDevice:
 	stmia	sp, {r5, r6}	@ phole stm
 	bl	dprint_vfmw	@
 	bl	OSAL_GetTimeInMs	@
-	ldr	r3, [r4, #860]	@ D.53296, <variable>.LastProcessTime
-	cmp	r0, r3	@ CurTime, D.53296
+	ldr	r3, [r4, #860]	@ D.53308, <variable>.LastProcessTime
+	cmp	r0, r3	@ CurTime, D.53308
 	strcc	r0, [r4, #860]	@ CurTime, <variable>.LastProcessTime
 	bcc	.L584	@,
-	rsb	r3, r3, r0	@ DelayTime, D.53296, CurTime
+	rsb	r3, r3, r0	@ DelayTime, D.53308, CurTime
 	cmp	r3, #2000	@ DelayTime,
 	bls	.L584	@,
 	mov	r2, r5	@, ScdId
@@ -5338,28 +5338,28 @@ SCDDRV_CheckDevice:
 	ldr	r0, [r4, #852]	@, <variable>.ThisInstID
 	str	r5, [r4, #856]	@ ScdId, <variable>.SCDState
 	bl	DeleteLastSendRaw	@
-	mov	r0, r5	@ D.53287, ScdId
+	mov	r0, r5	@ D.53299, ScdId
 	b	.L581	@
 .L584:
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC112	@,
 	ldr	r2, .L588	@,
 	movt	r1, #:upper16:.LC112	@,
-	mov	r3, #5888	@,
+	movw	r3, #5883	@,
 	mov	lr, #0	@ tmp164,
 	str	lr, [sp, #0]	@ tmp164,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.53287,
+	mov	r0, #1	@ D.53299,
 	b	.L581	@
 .L587:
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC110	@,
 	ldr	r2, .L588	@,
 	movt	r1, #:upper16:.LC110	@,
-	movw	r3, #5850	@,
+	movw	r3, #5845	@,
 	str	r6, [sp, #0]	@ temp.2442,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.53287, temp.2442
+	mov	r0, r6	@ D.53299, temp.2442
 	b	.L581	@
 .L589:
 	.align	2
@@ -5426,9 +5426,9 @@ FillEosRawStream:
 	bl	memcpy	@
 	cmp	r4, #0	@ pRawPacket,
 	beq	.L610	@,
-	ldr	r3, [r6, #56]	@ D.52578, <variable>.Config.VidStd
-	cmp	r3, #16	@ D.52578,
-	ldrls	pc, [pc, r3, asl #2]	@ D.52578
+	ldr	r3, [r6, #56]	@ D.52590, <variable>.Config.VidStd
+	cmp	r3, #16	@ D.52590,
+	ldrls	pc, [pc, r3, asl #2]	@ D.52590
 	b	.L596	@
 .L605:
 	.word	.L603
@@ -5453,7 +5453,7 @@ FillEosRawStream:
 	cmp	r1, #1	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile,
 	beq	.L609	@,
 .L601:
-	mov	r0, #0	@ D.52577,
+	mov	r0, #0	@ D.52589,
 .L595:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
@@ -5461,14 +5461,14 @@ FillEosRawStream:
 	mov	r1, r5	@ pu8Flag, tmp177
 	mov	r6, #15	@ u32FlagLen,
 .L606:
-	ldr	ip, [r4, #8]	@ D.52583, <variable>.Length
-	cmp	r6, ip	@ u32FlagLen, D.52583
+	ldr	ip, [r4, #8]	@ D.52595, <variable>.Length
+	cmp	r6, ip	@ u32FlagLen, D.52595
 	bhi	.L611	@,
 	ldr	r0, [r4, #4]	@, <variable>.VirAddr
 	mov	r2, r6	@, u32FlagLen
 	bl	memcpy	@
 	str	r6, [r4, #8]	@ u32FlagLen, <variable>.Length
-	mov	r0, #0	@ D.52577,
+	mov	r0, #0	@ D.52589,
 	b	.L595	@
 .L609:
 	add	r1, r5, #20	@ pu8Flag, tmp177,
@@ -5480,7 +5480,7 @@ FillEosRawStream:
 	ldr	r2, .L612+4	@,
 	movt	r1, #:upper16:.LC114	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.52577,
+	mvn	r0, #6	@ D.52589,
 	b	.L595	@
 .L604:
 	add	r1, r5, #80	@ pu8Flag, tmp177,
@@ -5500,9 +5500,9 @@ FillEosRawStream:
 	movw	r1, #:lower16:.LC115	@,
 	ldr	r2, .L612+4	@,
 	movt	r1, #:upper16:.LC115	@,
-	str	ip, [sp, #0]	@ D.52583,
+	str	ip, [sp, #0]	@ D.52595,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.52577,
+	mvn	r0, #6	@ D.52589,
 	b	.L595	@
 .L610:
 	mov	r0, r4	@, pRawPacket
@@ -5510,7 +5510,7 @@ FillEosRawStream:
 	ldr	r2, .L612+4	@,
 	movt	r1, #:upper16:.LC113	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.52577,
+	mvn	r0, #6	@ D.52589,
 	b	.L595	@
 .L613:
 	.align	2
@@ -5548,8 +5548,8 @@ GetStreamSeg:
 	movt	r2, #:upper16:92168	@ tmp151,
 	movt	r3, #:upper16:92172	@ tmp152,
 	ldr	r6, [r4, r2]	@ i, <variable>.Head
-	ldr	ip, [r4, r3]	@ D.50361, <variable>.Tail
-	cmp	r6, ip	@ i, D.50361
+	ldr	ip, [r4, r3]	@ D.50375, <variable>.Tail
+	cmp	r6, ip	@ i, D.50375
 	beq	.L617	@,
 	mov	r3, r6, asl #2	@ tmp240, i,
 	add	r2, r3, r6	@ tmp155, tmp240, i
@@ -5566,13 +5566,13 @@ GetStreamSeg:
 	cmp	r2, #1	@ <variable>.SegState,
 	beq	.L618	@,
 .L622:
-	add	r6, r6, #1	@ D.50370, i,
-	smull	r3, r2, r0, r6	@, tmp230, tmp241, D.50370
-	mov	r3, r6, asr #31	@ tmp233, D.50370,
+	add	r6, r6, #1	@ D.50384, i,
+	smull	r3, r2, r0, r6	@, tmp230, tmp241, D.50384
+	mov	r3, r6, asr #31	@ tmp233, D.50384,
 	rsb	r3, r3, r2, asr #8	@, i, tmp233, tmp230,
 	add	r3, r3, r3, asl #3	@, tmp236, i, i,
-	sub	r6, r6, r3, asl #7	@ i, D.50370, tmp236,
-	cmp	r6, ip	@ i, D.50361
+	sub	r6, r6, r3, asl #7	@ i, D.50384, tmp236,
+	cmp	r6, ip	@ i, D.50375
 	mov	r3, r6, asl #2	@ tmp240, i,
 	add	r2, r3, r6	@ tmp165, tmp240, i
 	bne	.L620	@,
@@ -5595,7 +5595,7 @@ GetStreamSeg:
 	movw	r2, #:lower16:92208	@ tmp204,
 	movt	ip, #:upper16:92204	@ tmp201,
 	movt	r2, #:upper16:92208	@ tmp204,
-	ldr	r3, [r0, #8]	@ D.50374, <variable>.LenInByte
+	ldr	r3, [r0, #8]	@ D.50388, <variable>.LenInByte
 	mov	r1, #2	@ tmp193,
 	strb	r1, [r5, #4]	@ tmp193, <variable>.SegState
 	mov	r6, r0	@ tmp217, tmp200
@@ -5603,12 +5603,12 @@ GetStreamSeg:
 	mov	r0, #26	@,
 	ldr	lr, [r4, r2]	@ <variable>.SegFreshNum, <variable>.SegFreshNum
 	movw	r1, #:lower16:.LC116	@,
-	rsb	r7, r3, r7	@ D.50375, D.50374, <variable>.SegFreshSize
+	rsb	r7, r3, r7	@ D.50389, D.50388, <variable>.SegFreshSize
 	movt	r1, #:upper16:.LC116	@,
-	sub	lr, lr, #1	@ D.50377, <variable>.SegFreshNum,
-	bic	r7, r7, r7, asr #31	@ tmp207, D.50375
+	sub	lr, lr, #1	@ D.50391, <variable>.SegFreshNum,
+	bic	r7, r7, r7, asr #31	@ tmp207, D.50389
 	str	r7, [r4, ip]	@ tmp207, <variable>.SegFreshSize
-	bic	ip, lr, lr, asr #31	@ tmp209, D.50377
+	bic	ip, lr, lr, asr #31	@ tmp209, D.50391
 	str	ip, [r4, r2]	@ tmp209, <variable>.SegFreshNum
 	ldrb	ip, [r5, #5]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	ldr	r2, [r6, #4]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -5663,10 +5663,10 @@ InsertStreamSeg:
 	mov	r1, r2	@, InstID
 	ldr	r0, [r5, #0]	@, <variable>.VirAddr
 	bl	CheckStream	@
-	ldr	r9, [r4, r6]	@ D.50334, <variable>.Tail
+	ldr	r9, [r4, r6]	@ D.50348, <variable>.Tail
 	mov	r1, r5	@, pStreamSeg
 	mov	r2, #80	@,
-	add	sl, r9, r9, asl #2	@, tmp165, D.50334, D.50334,
+	add	sl, r9, r9, asl #2	@, tmp165, D.50348, D.50348,
 	add	ip, r4, sl, asl #4	@, tmp168, pStreamSegArray, tmp165,
 	add	r9, r4, sl, asl #4	@, tmp194, pStreamSegArray, tmp165,
 	add	r0, ip, #8	@, tmp168,
@@ -5735,7 +5735,7 @@ ShowNextRawPacket:
 	mov	r3, r0	@ pRawStreamArray, pRawStreamArray
 	movne	r4, #0	@, tmp144
 	moveq	r4, #1	@, tmp144
-	mvneq	r0, #0	@ D.49820,
+	mvneq	r0, #0	@ D.49834,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	movw	r2, #:lower16:98320	@ tmp145,
 	movt	r2, #:upper16:98320	@ tmp145,
@@ -5751,7 +5751,7 @@ ShowNextRawPacket:
 	mov	r0, r0, lsr #22	@ tmp151, tmp151,
 	rsb	r0, ip, r0	@ tmp153, tmp149, tmp151
 	cmp	r5, r0	@ <variable>.Tail, tmp153
-	mvneq	r0, #2	@ D.49820,
+	mvneq	r0, #2	@ D.49834,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
 	add	lr, r0, r0, asl #1	@, tmp159, tmp153, tmp153,
 	str	r0, [r3, r2]	@ tmp153, <variable>.CurShowIndex
@@ -5759,7 +5759,7 @@ ShowNextRawPacket:
 	mov	r2, #96	@,
 	add	r1, r3, lr, asl #5	@,, pRawStreamArray, tmp159,
 	bl	memcpy	@
-	mov	r0, r4	@ D.49820, tmp144
+	mov	r0, r4	@ D.49834, tmp144
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	ShowNextRawPacket, .-ShowNextRawPacket
@@ -5785,25 +5785,25 @@ ShowFirstRawPacket:
 	mov	r3, r0	@ pRawStreamArray, pRawStreamArray
 	movne	r4, #0	@, tmp144
 	moveq	r4, #1	@, tmp144
-	mvneq	r0, #0	@ D.49801,
+	mvneq	r0, #0	@ D.49815,
 	ldmeqfd	sp, {r3, r4, fp, sp, pc}	@
 	movw	r2, #:lower16:98308	@ tmp146,
 	movt	r2, #:upper16:98308	@ tmp146,
 	mov	r0, #98304	@ tmp145,
-	ldr	ip, [r3, r0]	@ D.49802, <variable>.Head
+	ldr	ip, [r3, r0]	@ D.49816, <variable>.Head
 	ldr	r2, [r3, r2]	@ <variable>.Tail, <variable>.Tail
-	cmp	ip, r2	@ D.49802, <variable>.Tail
-	mvneq	r0, #2	@ D.49801,
+	cmp	ip, r2	@ D.49816, <variable>.Tail
+	mvneq	r0, #2	@ D.49815,
 	ldmeqfd	sp, {r3, r4, fp, sp, pc}	@
-	add	r2, ip, ip, asl #1	@, tmp151, D.49802, D.49802,
+	add	r2, ip, ip, asl #1	@, tmp151, D.49816, D.49816,
 	movw	lr, #:lower16:98320	@ tmp148,
 	movt	lr, #:upper16:98320	@ tmp148,
 	mov	r0, r1	@, pRawPacket
 	add	r1, r3, r2, asl #5	@,, pRawStreamArray, tmp151,
 	mov	r2, #96	@,
-	str	ip, [r3, lr]	@ D.49802, <variable>.CurShowIndex
+	str	ip, [r3, lr]	@ D.49816, <variable>.CurShowIndex
 	bl	memcpy	@
-	mov	r0, r4	@ D.49801, tmp144
+	mov	r0, r4	@ D.49815, tmp144
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 	.fnend
 	.size	ShowFirstRawPacket, .-ShowFirstRawPacket
@@ -5926,28 +5926,28 @@ WriteScdMsg:
 	bne	.L654	@,
 .L647:
 	cmp	r4, #0	@ PushRawNum,
-	mvneq	r0, #5	@ D.51584,
+	mvneq	r0, #5	@ D.51598,
 	bne	.L648	@,
 .L649:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L654:
 	ldr	r6, [fp, #-144]	@, %sfp
-	ldr	r2, [sl, #4]	@ D.51569, <variable>.PushRawTotalLen
+	ldr	r2, [sl, #4]	@ D.51583, <variable>.PushRawTotalLen
 	sub	lr, r6, #16	@ tmp198,,
 	cmp	r6, r7	@, RawShowTotalLen
-	cmplt	r2, lr	@, D.51569, tmp198
+	cmplt	r2, lr	@, D.51583, tmp198
 	bge	.L647	@,
 	cmp	r4, #1024	@ PushRawNum,
 	bge	.L648	@,
-	rsb	r2, r2, r6	@ D.51578, D.51569,
-	cmp	r3, r2	@ temp.2631, D.51578
+	rsb	r2, r2, r6	@ D.51592, D.51583,
+	cmp	r3, r2	@ temp.2631, D.51592
 	blt	.L647	@,
 	ldr	r0, [fp, #-140]	@ RawPacket.PhyAddr, RawPacket.PhyAddr
 	add	r6, r8, #1	@ j.2636, j.2648,
 	ldr	ip, [fp, #8]	@, LowdlyFlag
 	add	r3, r6, #1	@ j.2644, j.2636,
-	add	r1, r0, r2	@ tmp206, RawPacket.PhyAddr, D.51578
+	add	r1, r0, r2	@ tmp206, RawPacket.PhyAddr, D.51592
 	add	r4, r4, #1	@ PushRawNum, PushRawNum,
 	sub	lr, r1, #1	@ tmp209, tmp206,
 	str	ip, [fp, #-132]	@, RawPacket.Length
@@ -5958,7 +5958,7 @@ WriteScdMsg:
 	add	r1, ip, r8, asl #2	@, tmp211,, j.2648,
 	str	r1, [r5, r3, asl #2]	@ tmp211,* pDownMsgVirAddr
 	ldr	r0, [sl, #4]	@ <variable>.PushRawTotalLen, <variable>.PushRawTotalLen
-	add	r6, r0, r2	@ tmp214, <variable>.PushRawTotalLen, D.51578
+	add	r6, r0, r2	@ tmp214, <variable>.PushRawTotalLen, D.51592
 	str	r6, [sl, #4]	@ tmp214, <variable>.PushRawTotalLen
 .L648:
 	sub	r8, r8, #1	@ tmp216, j.2648,
@@ -5972,7 +5972,7 @@ WriteScdMsg:
 	str	lr, [sl, #8]	@ tmp218, <variable>.PushRawOver
 	str	r4, [sl, #0]	@ PushRawNum, <variable>.PushRawNum
 	bl	PrintDownMsg	@
-	mov	r0, r6	@ D.51584, tmp217
+	mov	r0, r6	@ D.51598, tmp217
 	b	.L649	@
 .L641:
 	mov	r8, #0	@ prephitmp.2605,
@@ -6055,15 +6055,15 @@ InsertRawPacket:
 	mov	r4, r0	@ pRawStreamArray, pRawStreamArray
 	movne	r5, #0	@, tmp144
 	moveq	r5, #1	@, tmp144
-	mvneq	r0, #0	@ D.49761,
+	mvneq	r0, #0	@ D.49775,
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	movw	r6, #:lower16:98308	@ tmp145,
 	movt	r6, #:upper16:98308	@ tmp145,
 	movw	r3, #:lower16:98312	@ tmp154,
 	movt	r3, #:upper16:98312	@ tmp154,
-	ldr	r2, [r4, r6]	@ D.49762, <variable>.Tail
+	ldr	r2, [r4, r6]	@ D.49776, <variable>.Tail
 	ldr	ip, [r4, r3]	@ <variable>.History, <variable>.History
-	add	r3, r2, #1	@ tmp146, D.49762,
+	add	r3, r2, #1	@ tmp146, D.49776,
 	mov	r0, r3, asr #31	@ tmp148, tmp146,
 	mov	r0, r0, lsr #22	@ tmp149, tmp148,
 	add	r3, r3, r0	@ tmp150, tmp146, tmp149
@@ -6071,14 +6071,14 @@ InsertRawPacket:
 	mov	r3, r3, lsr #22	@ tmp151, tmp151,
 	rsb	r3, r0, r3	@ tmp153, tmp149, tmp151
 	cmp	r3, ip	@ tmp153, <variable>.History
-	mvneq	r0, #3	@ D.49761,
+	mvneq	r0, #3	@ D.49775,
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	add	lr, r2, r2, asl #1	@, tmp158, D.49762, D.49762,
+	add	lr, r2, r2, asl #1	@, tmp158, D.49776, D.49776,
 	mov	r2, #96	@,
 	add	r0, r4, lr, asl #5	@,, pRawStreamArray, tmp158,
 	bl	memcpy	@
 	ldr	r3, [r4, r6]	@ <variable>.Tail, <variable>.Tail
-	mov	r0, r5	@ D.49761, tmp144
+	mov	r0, r5	@ D.49775, tmp144
 	add	ip, r3, #1	@ tmp167, <variable>.Tail,
 	mov	r2, ip, asr #31	@ tmp169, tmp167,
 	mov	r2, r2, lsr #22	@ tmp170, tmp169,
@@ -6220,7 +6220,7 @@ ReleaseRawStreamData:
 .L680:
 	mov	r3, r6	@, InstID
 	movw	r1, #:lower16:.LC118	@,
-	movw	r2, #4979	@,
+	movw	r2, #4974	@,
 	movt	r1, #:upper16:.LC118	@,
 	mvn	r4, #6	@ ret,
 	bl	dprint_vfmw	@
@@ -6249,26 +6249,26 @@ SM_MoveRawData:
 	movw	r3, #:lower16:98516	@ tmp144,
 	movt	r3, #:upper16:98516	@ tmp144,
 	mov	r4, r0	@ pSmInstArray, pSmInstArray
-	ldr	ip, [r4, #204]	@ D.53012, <variable>.Config.MaxRawPacketSize
-	ldr	r1, [r0, r3]	@ D.52995, <variable>.RawPacketArray.Tail
-	subs	r6, r1, #1	@ LastPos, D.52995,
+	ldr	ip, [r4, #204]	@ D.53024, <variable>.Config.MaxRawPacketSize
+	ldr	r1, [r0, r3]	@ D.53007, <variable>.RawPacketArray.Tail
+	subs	r6, r1, #1	@ LastPos, D.53007,
 	addmi	r6, r6, #1024	@ LastPos, LastPos,
-	subs	r0, r1, #2	@ PrePos, D.52995,
+	subs	r0, r1, #2	@ PrePos, D.53007,
 	addmi	r0, r0, #1024	@ PrePos, PrePos,
 	add	r8, r6, r6, asl #1	@, tmp155, LastPos, LastPos,
 	add	r5, r0, r0, asl #1	@, tmp148, PrePos, PrePos,
 	mov	r8, r8, asl #5	@ tmp156, tmp155,
 	add	r5, r4, r5, asl #5	@, tmp150, pSmInstArray, tmp148,
 	add	r7, r8, r4	@ tmp157, tmp156, pSmInstArray
-	ldr	r0, [r5, #216]	@ D.53009, <variable>.Length
-	ldr	r3, [r7, #216]	@ D.53010, <variable>.Length
-	add	r2, r3, r0	@ tmp159, D.53010, D.53009
-	cmp	r2, ip	@ tmp159, D.53012
+	ldr	r0, [r5, #216]	@ D.53021, <variable>.Length
+	ldr	r3, [r7, #216]	@ D.53022, <variable>.Length
+	add	r2, r3, r0	@ tmp159, D.53022, D.53021
+	cmp	r2, ip	@ tmp159, D.53024
 	bgt	.L684	@,
 	ldr	lr, [r5, #212]	@ <variable>.VirAddr, <variable>.VirAddr
-	mov	r2, r3	@, D.53010
+	mov	r2, r3	@, D.53022
 	ldr	r1, [r7, #212]	@, <variable>.VirAddr
-	add	r0, r0, lr	@, D.53009, <variable>.VirAddr
+	add	r0, r0, lr	@, D.53021, <variable>.VirAddr
 	bl	memcpy	@
 	ldr	r0, [r7, #216]	@ <variable>.Length, <variable>.Length
 	ldr	ip, [r5, #216]	@ <variable>.Length, <variable>.Length
@@ -6282,19 +6282,19 @@ SM_MoveRawData:
 	bl	ReleaseRawStreamData	@
 	movw	ip, #:lower16:98516	@ tmp213,
 	movt	ip, #:upper16:98516	@ tmp213,
-	mov	r0, #0	@ D.53023,
+	mov	r0, #0	@ D.53035,
 	str	r6, [r4, ip]	@ LastPos, <variable>.RawPacketArray.Tail
 .L685:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L684:
-	mov	r2, r0	@, D.53009
+	mov	r2, r0	@, D.53021
 	movw	r1, #:lower16:.LC119	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC119	@,
-	str	ip, [sp, #0]	@ D.53012,
+	str	ip, [sp, #0]	@ D.53024,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.53023,
+	mvn	r0, #6	@ D.53035,
 	b	.L685	@
 	.fnend
 	.size	SM_MoveRawData, .-SM_MoveRawData
@@ -6333,7 +6333,7 @@ DeleteRawPacketInBuffer:
 	cmp	r1, #0	@ <variable>.Mode,
 	bne	.L691	@,
 .L690:
-	mvn	r0, #0	@ D.49932,
+	mvn	r0, #0	@ D.49946,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L707:
 	mov	r2, r0	@, SmID
@@ -6341,7 +6341,7 @@ DeleteRawPacketInBuffer:
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC120	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.49932,
+	mvn	r0, #0	@ D.49946,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L691:
 	movw	r6, #:lower16:98512	@ tmp158,
@@ -6349,13 +6349,13 @@ DeleteRawPacketInBuffer:
 	movt	r6, #:upper16:98512	@ tmp158,
 	movt	r3, #:upper16:98520	@ tmp159,
 	ldr	sl, [r5, r6]	@ RawHead, <variable>.RawPacketArray.Head
-	ldr	r6, [r5, r3]	@ D.49944, <variable>.RawPacketArray.History
-	cmp	sl, r6	@ RawHead, D.49944
+	ldr	r6, [r5, r3]	@ D.49958, <variable>.RawPacketArray.History
+	cmp	sl, r6	@ RawHead, D.49958
 	addlt	sl, sl, #1024	@ tmp160, RawHead,
-	rsb	sl, r6, sl	@ DelNum, D.49944, tmp160
+	rsb	sl, r6, sl	@ DelNum, D.49958, tmp160
 	cmp	sl, #0	@ DelNum,
 	beq	.L690	@,
-	add	r8, r6, r6, asl #1	@, tmp164, D.49944, D.49944,
+	add	r8, r6, r6, asl #1	@, tmp164, D.49958, D.49958,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC63	@,
 	movt	r1, #:upper16:.LC63	@,
@@ -6371,9 +6371,9 @@ DeleteRawPacketInBuffer:
 	add	r1, r5, r1	@, pSmInstArray, tmp181
 	mov	r0, r4	@, SmID
 	bl	ReleaseRawStreamData	@
-	add	r2, r6, r7	@ D.49958, D.49944,
+	add	r2, r6, r7	@ D.49972, D.49958,
 	cmp	r7, sl	@ i, DelNum
-	mov	r0, r2, asl #22	@ j, D.49958,
+	mov	r0, r2, asl #22	@ j, D.49972,
 	mov	r6, r0, lsr #22	@ j, j,
 	bcs	.L703	@,
 	cmp	r9, #0	@ tmp197,
@@ -6391,7 +6391,7 @@ DeleteRawPacketInBuffer:
 	movw	r1, #:lower16:.LC63	@,
 	movt	r1, #:upper16:.LC63	@,
 	mov	r8, lr, asl #5	@ tmp203, tmp202,
-	add	r6, r6, #1	@ D.49958, j,
+	add	r6, r6, #1	@ D.49972, j,
 	add	r2, r8, r5	@ tmp204, tmp203, pSmInstArray
 	add	r7, r7, #1	@ tmp198, i,
 	add	r7, r7, #1	@ i, tmp198,
@@ -6402,7 +6402,7 @@ DeleteRawPacketInBuffer:
 	add	r1, r5, r0	@, pSmInstArray, tmp209
 	mov	r0, r4	@, SmID
 	bl	ReleaseRawStreamData	@
-	mov	r3, r6, asl #22	@ j, D.49958,
+	mov	r3, r6, asl #22	@ j, D.49972,
 	movw	r1, #:lower16:.LC63	@,
 	movt	r1, #:upper16:.LC63	@,
 	mov	r6, r3, lsr #22	@ j, j,
@@ -6418,20 +6418,20 @@ DeleteRawPacketInBuffer:
 	add	r1, r5, r2	@, pSmInstArray, tmp235
 	mov	r0, r4	@, SmID
 	bl	ReleaseRawStreamData	@
-	add	r0, r6, #1	@ D.49958, j,
+	add	r0, r6, #1	@ D.49972, j,
 	cmp	r7, sl	@ i, DelNum
-	mov	r6, r0, asl #22	@ j, D.49958,
+	mov	r6, r0, asl #22	@ j, D.49972,
 	mov	r6, r6, lsr #22	@ j, j,
 	bcc	.L694	@,
 .L703:
 	movw	r1, #:lower16:98520	@ tmp184,
 	movt	r1, #:upper16:98520	@ tmp184,
-	mov	r0, #0	@ D.49932,
+	mov	r0, #0	@ D.49946,
 	ldr	ip, [r5, r1]	@ <variable>.RawPacketArray.History, <variable>.RawPacketArray.History
-	add	sl, sl, ip	@ D.49960, DelNum, <variable>.RawPacketArray.History
-	str	sl, [r5, r1]	@ D.49960, <variable>.RawPacketArray.History
-	cmp	sl, #1024	@ D.49960,
-	subge	sl, sl, #1024	@ tmp190, D.49960,
+	add	sl, sl, ip	@ D.49974, DelNum, <variable>.RawPacketArray.History
+	str	sl, [r5, r1]	@ D.49974, <variable>.RawPacketArray.History
+	cmp	sl, #1024	@ D.49974,
+	subge	sl, sl, #1024	@ tmp190, D.49974,
 	strge	sl, [r5, r1]	@ tmp190, <variable>.RawPacketArray.History
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 	.fnend
@@ -6461,7 +6461,7 @@ CutStreamWithSCD:
 	str	r3, [fp, #-56]	@ tmp150, SegBufSize
 	mov	sl, r1	@ ScdId, ScdId
 	ldr	r6, [r0, #56]	@ StdType, <variable>.Config.VidStd
-	ldr	r8, [r0, #88]	@ D.51380, <variable>.Config.ScdLowdlyEnable
+	ldr	r8, [r0, #88]	@ D.51394, <variable>.Config.ScdLowdlyEnable
 	bne	.L729	@,
 .L709:
 	mvn	r5, #0	@ Ret,
@@ -6556,8 +6556,8 @@ CutStreamWithSCD:
 	movw	ip, #:lower16:190724	@ tmp177,
 	movt	ip, #:upper16:190724	@ tmp177,
 	ldr	r5, [fp, #-48]	@ SegStreamSize, SegStreamSize
-	ldr	r3, [r4, ip]	@ D.51418, <variable>.StreamSegArray.SegBufSize
-	cmp	r5, r3, asr #3	@ SegStreamSize, D.51418,
+	ldr	r3, [r4, ip]	@ D.51432, <variable>.StreamSegArray.SegBufSize
+	cmp	r5, r3, asr #3	@ SegStreamSize, D.51432,
 	ble	.L714	@,
 	movw	r5, #:lower16:190864	@ tmp182,
 	movw	lr, #:lower16:190720	@ tmp180,
@@ -6565,7 +6565,7 @@ CutStreamWithSCD:
 	movt	lr, #:upper16:190720	@ tmp180,
 	mov	r1, sl	@, ScdId
 	ldr	r0, [r4, r5]	@, <variable>.InstID
-	str	r3, [fp, #-56]	@ D.51418,
+	str	r3, [fp, #-56]	@ D.51432,
 	ldr	ip, [r4, lr]	@, <variable>.StreamSegArray.SegBufPhyAddr
 	str	ip, [fp, #-184]	@, %sfp
 	bl	SM_CfgBuf	@
@@ -6662,7 +6662,7 @@ CutStreamWithSCD:
 	ldr	r1, [fp, #-180]	@, %sfp
 	ldr	r3, [fp, #-220]	@, %sfp
 	ldr	r0, [fp, #-184]	@, %sfp
-	str	r8, [fp, #-64]	@ D.51380, ScdCtrlReg.ScdLowdlyEnable
+	str	r8, [fp, #-64]	@ D.51394, ScdCtrlReg.ScdLowdlyEnable
 	str	lr, [fp, #-100]	@, ScdCtrlReg.DvmMemAddr
 	str	r1, [fp, #-88]	@, ScdCtrlReg.DspSedTopMemAddr
 	str	r3, [fp, #-60]	@, ScdCtrlReg.reg_avs_flag
@@ -7133,7 +7133,7 @@ SM_ClearInst:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #15	@ SmID,
-	mvnhi	r0, #0	@ D.50581,
+	mvnhi	r0, #0	@ D.50595,
 	ldmhifd	sp, {r4, r5, fp, sp, pc}	@
 	add	r0, r0, r0, asl #1	@, tmp140, SmID, SmID,
 	movw	r5, #:lower16:.LANCHOR0	@ tmp136,
@@ -7148,7 +7148,7 @@ SM_ClearInst:
 	movw	r3, #:lower16:204720	@ tmp155,
 	movt	r3, #:upper16:204720	@ tmp155,
 	mvn	r4, #0	@ tmp156,
-	mov	r0, #0	@ D.50581,
+	mov	r0, #0	@ D.50595,
 	strd	r4, [r2, r3]	@ tmp156, <variable>.pSmInstArray, tmp155
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
@@ -7220,27 +7220,27 @@ SM_CopyYuvToDnr:
 	add	r3, r1, r0, asl #4	@, tmp154, tmp148, tmp152,
 	ldr	r4, [r3, #40]	@ pSmInstArray, <variable>.pSmInstArray
 	cmp	r4, #0	@ pSmInstArray,
-	mvneq	r0, #0	@ D.51175,
+	mvneq	r0, #0	@ D.51189,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	movw	r3, #:lower16:98512	@ tmp156,
 	movw	ip, #:lower16:98516	@ tmp157,
 	movt	r3, #:upper16:98512	@ tmp156,
 	movt	ip, #:upper16:98516	@ tmp157,
-	ldr	r5, [r4, r3]	@ D.51182, <variable>.RawPacketArray.Head
+	ldr	r5, [r4, r3]	@ D.51196, <variable>.RawPacketArray.Head
 	ldr	r2, [r4, ip]	@ <variable>.RawPacketArray.Tail, <variable>.RawPacketArray.Tail
-	cmp	r2, r5	@ <variable>.RawPacketArray.Tail, D.51182
-	mvneq	r0, #3	@ D.51175,
+	cmp	r2, r5	@ <variable>.RawPacketArray.Tail, D.51196
+	mvneq	r0, #3	@ D.51189,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	add	r7, r4, #98304	@, pSmInstArray,
-	mov	r6, r5, asl #1	@ tmp221, D.51182,
+	mov	r6, r5, asl #1	@ tmp221, D.51196,
 	add	r0, r7, #232	@,,
 	add	r7, r4, #208	@ pRawPacketArray, pSmInstArray,
 	bl	ResetStreamSegArray	@
-	add	r0, r6, r5	@ tmp164, tmp221, D.51182
+	add	r0, r6, r5	@ tmp164, tmp221, D.51196
 	add	r1, r4, r0, asl #5	@, tmp166, pSmInstArray, tmp164,
 	ldr	r3, [r1, #212]	@ pu32tmp, <variable>.VirAddr
 	ldmia	r3, {r0, r2}	@ phole ldm
-	sub	ip, r0, #32	@ tmp170, D.51190,
+	sub	ip, r0, #32	@ tmp170, D.51204,
 	cmp	ip, #1888	@ tmp170,
 	movls	ip, #0	@, tmp172
 	movhi	ip, #1	@, tmp172
@@ -7250,25 +7250,25 @@ SM_CopyYuvToDnr:
 	bne	.L782	@,
 	cmp	r2, #1088	@ h,
 	bgt	.L782	@,
-	ldr	r1, [r1, #216]	@ D.51202, <variable>.Length
-	cmp	r1, #1552	@ D.51202,
+	ldr	r1, [r1, #216]	@ D.51216, <variable>.Length
+	cmp	r1, #1552	@ D.51216,
 	blt	.L782	@,
 	movw	lr, #:lower16:3133456	@ tmp184,
 	movt	lr, #:upper16:3133456	@ tmp184,
-	cmp	r1, lr	@ D.51202, tmp184
+	cmp	r1, lr	@ D.51216, tmp184
 	bgt	.L782	@,
 	mov	lr, #3	@ tmp186,
 	movw	ip, #:lower16:190724	@ tmp188,
-	mul	r0, lr, r0	@ tmp185, tmp186, D.51190
+	mul	r0, lr, r0	@ tmp185, tmp186, D.51204
 	movt	ip, #:upper16:190724	@ tmp188,
 	ldr	lr, [r4, ip]	@ <variable>.StreamSegArray.SegBufSize, <variable>.StreamSegArray.SegBufSize
 	sub	ip, lr, #262144	@ tmp189, <variable>.StreamSegArray.SegBufSize,
 	mul	r2, r2, r0	@ tmp187, h, tmp185
-	mov	r2, r2, asr #1	@ D.51207, tmp187,
-	cmp	r2, ip	@ D.51207, tmp189
+	mov	r2, r2, asr #1	@ D.51221, tmp187,
+	cmp	r2, ip	@ D.51221, tmp189
 	bgt	.L782	@,
-	add	r2, r2, #16	@ tmp191, D.51207,
-	cmp	r1, r2	@ D.51202, tmp191
+	add	r2, r2, #16	@ tmp191, D.51221,
+	cmp	r1, r2	@ D.51216, tmp191
 	blt	.L782	@,
 	ldr	r2, [r3, #8]	@ tmp205,
 	movw	lr, #1916	@ tmp207,
@@ -7289,17 +7289,17 @@ SM_CopyYuvToDnr:
 	movt	r1, #:upper16:.LC128	@,
 	bl	dprint_vfmw	@
 	mov	r1, #96	@ tmp215,
-	mla	r4, r1, r5, r4	@ tmp216, tmp215, D.51182, pSmInstArray
+	mla	r4, r1, r5, r4	@ tmp216, tmp215, D.51196, pSmInstArray
 	mov	r0, r7	@, pRawPacketArray
 	ldr	r1, [r4, #216]	@, <variable>.Length
 	bl	DeleteRawLen	@
 	cmp	r0, #0	@,
 	bne	.L788	@,
 .L784:
-	mov	r0, #0	@ D.51175,
+	mov	r0, #0	@ D.51189,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L782:
-	add	r5, r6, r5	@ tmp196, tmp221, D.51182
+	add	r5, r6, r5	@ tmp196, tmp221, D.51196
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC126	@,
 	movt	r1, #:upper16:.LC126	@,
@@ -7315,12 +7315,12 @@ SM_CopyYuvToDnr:
 	movw	r2, #2642	@,
 	movt	r1, #:upper16:.LC127	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.51175,
+	mov	r0, #0	@ D.51189,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L786:
 	mov	r0, r7	@, pRawPacketArray
 	bl	DeleteRawLen	@
-	mov	r0, #0	@ D.51175,
+	mov	r0, #0	@ D.51189,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L788:
 	mov	r0, #0	@,
@@ -7328,7 +7328,7 @@ SM_CopyYuvToDnr:
 	movw	r2, #2653	@,
 	movt	r1, #:upper16:.LC127	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.51175,
+	mov	r0, #0	@ D.51189,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	SM_CopyYuvToDnr, .-SM_CopyYuvToDnr
@@ -7359,12 +7359,12 @@ SM_DoNextInstance:
 	bne	.L810	@,
 	movw	r9, #:lower16:.LANCHOR0	@ tmp269,
 	movt	r9, #:upper16:.LANCHOR0	@ tmp269,
-	ldr	r3, [r9, #768]	@ D.53053, s_eScdDrvSleepStage
-	cmp	r3, #0	@ D.53053,
+	ldr	r3, [r9, #768]	@ D.53065, s_eScdDrvSleepStage
+	cmp	r3, #0	@ D.53065,
 	bne	.L811	@,
 	ldr	r5, [r9, #852]	@ NextInstId, <variable>.ThisInstID
 	movw	r8, #:lower16:190872	@ tmp272,
-	str	r3, [fp, #-88]	@ D.53053, %sfp
+	str	r3, [fp, #-88]	@ D.53065, %sfp
 	movw	r7, #:lower16:204752	@ tmp273,
 	ldr	r2, [fp, #-88]	@, %sfp
 	movw	r6, #:lower16:190744	@,
@@ -7386,21 +7386,21 @@ SM_DoNextInstance:
 	str	r9, [fp, #-80]	@ tmp269, %sfp
 	b	.L807	@
 .L795:
-	cmp	r3, #11	@ D.53069,
+	cmp	r3, #11	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #14	@ D.53069,
+	cmp	r3, #14	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #4	@ D.53069,
+	cmp	r3, #4	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #12	@ D.53069,
+	cmp	r3, #12	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #10	@ D.53069,
+	cmp	r3, #10	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #13	@ D.53069,
+	cmp	r3, #13	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #18	@ D.53069,
+	cmp	r3, #18	@ D.53081,
 	beq	.L794	@,
-	cmp	r3, #17	@ D.53069,
+	cmp	r3, #17	@ D.53081,
 	beq	.L812	@,
 .L797:
 	mov	r1, #0	@,
@@ -7440,12 +7440,12 @@ SM_DoNextInstance:
 	cmp	r6, #16	@ i,
 	beq	.L793	@,
 .L807:
-	add	r4, r5, #1	@ D.53058, NextInstId,
+	add	r4, r5, #1	@ D.53070, NextInstId,
 	ldr	r2, [fp, #-80]	@, %sfp
 	sub	r1, fp, #76	@,,
-	mov	ip, r4, asr #31	@ tmp163, D.53058,
+	mov	ip, r4, asr #31	@ tmp163, D.53070,
 	mov	sl, ip, lsr #28	@ tmp164, tmp163,
-	add	r0, r4, sl	@ tmp165, D.53058, tmp164
+	add	r0, r4, sl	@ tmp165, D.53070, tmp164
 	and	r5, r0, #15	@ tmp166, tmp165,
 	rsb	r5, sl, r5	@ NextInstId, tmp164, tmp166
 	mov	sl, r5, asl #1	@ tmp270, NextInstId,
@@ -7460,25 +7460,25 @@ SM_DoNextInstance:
 	ldr	r1, [r4, r8]	@ <variable>.CutingFlag, <variable>.CutingFlag
 	cmp	r1, #1	@ <variable>.CutingFlag,
 	beq	.L794	@,
-	ldr	r3, [r4, #56]	@ D.53069, <variable>.Config.VidStd
-	sub	lr, r3, #8	@ tmp180, D.53069,
-	cmp	r3, #5	@ D.53069,
+	ldr	r3, [r4, #56]	@ D.53081, <variable>.Config.VidStd
+	sub	lr, r3, #8	@ tmp180, D.53081,
+	cmp	r3, #5	@ D.53081,
 	cmpne	lr, #1	@, tmp180,
 	bls	.L794	@,
-	cmp	r3, #1	@ D.53069,
+	cmp	r3, #1	@ D.53081,
 	bne	.L795	@,
 	ldr	r3, [r4, #72]	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile, <variable>.Config.StdExt.Vc1Ext.IsAdvProfile
 	cmp	r3, #0	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile,
 	bne	.L797	@,
 	b	.L794	@
 .L811:
-	cmp	r3, #1	@ D.53053,
+	cmp	r3, #1	@ D.53065,
 	moveq	r3, #2	@ tmp161,
-	mvneq	r0, #2	@ D.53051,
+	mvneq	r0, #2	@ D.53063,
 	streq	r3, [r9, #768]	@ tmp161, s_eScdDrvSleepStage
 	beq	.L791	@,
 .L793:
-	mvn	r0, #2	@ D.53051,
+	mvn	r0, #2	@ D.53063,
 .L791:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -7562,7 +7562,7 @@ SM_DoNextInstance:
 	cmp	r0, #0	@,
 	bne	.L816	@,
 .L806:
-	mov	r0, #0	@ D.53051,
+	mov	r0, #0	@ D.53063,
 	b	.L791	@
 .L816:
 	bl	OSAL_GetTimeInMs	@
@@ -7570,18 +7570,18 @@ SM_DoNextInstance:
 	movw	r2, #:lower16:g_TraceBsPeriod	@ tmp256,
 	movt	r2, #:upper16:g_TraceBsPeriod	@ tmp256,
 	ldr	ip, [r9, #872]	@ tmp255, last_rec_pos_time
-	mov	r3, r0	@ D.53141,
+	mov	r3, r0	@ D.53153,
 	ldr	r0, [r2, #0]	@ g_TraceBsPeriod, g_TraceBsPeriod
-	rsb	r1, ip, r3	@ tmp254, tmp255, D.53141
+	rsb	r1, ip, r3	@ tmp254, tmp255, D.53153
 	cmp	r1, r0	@ tmp254, g_TraceBsPeriod
 	bls	.L806	@,
 	mov	lr, r5, asl #24	@ tmp265, NextInstId,
 	ldr	r0, .L817	@,
 	add	r2, lr, #65536	@, tmp265,
-	movw	r1, #5556	@,
-	str	r3, [r9, #872]	@ D.53141, last_rec_pos_time
+	movw	r1, #5551	@,
+	str	r3, [r9, #872]	@ D.53153, last_rec_pos_time
 	bl	DBG_AddTrace	@
-	mov	r0, #0	@ D.53051,
+	mov	r0, #0	@ D.53063,
 	b	.L791	@
 .L802:
 	mov	r0, r5	@, NextInstId
@@ -7627,7 +7627,7 @@ SM_DoNextInstance:
 	mov	r0, #26	@,
 	movt	r1, #:upper16:.LC129	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53051,
+	mvn	r0, #0	@ D.53063,
 	b	.L791	@
 .L818:
 	.align	2
@@ -7674,7 +7674,7 @@ SCDDRV_ActivateSCD:
 	movw	r1, #:lower16:.LC132	@,
 	ldr	r2, .L823	@,
 	movt	r1, #:upper16:.LC132	@,
-	movw	r3, #5907	@,
+	movw	r3, #5902	@,
 	str	r0, [r4, #860]	@, <variable>.LastProcessTime
 	mov	r0, #26	@,
 	bl	dprint_vfmw	@
@@ -7710,7 +7710,7 @@ ConfigStreamSegArray:
 	mov	r5, r0	@ pStreamSegArray, pStreamSegArray
 	bne	.L829	@,
 .L826:
-	mvn	r0, #0	@ D.50135,
+	mvn	r0, #0	@ D.50149,
 .L827:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
@@ -7737,7 +7737,7 @@ ConfigStreamSegArray:
 	movw	r1, #:lower16:92192	@ tmp157,
 	ldr	r3, [fp, #-36]	@,
 	movt	r1, #:upper16:92192	@ tmp157,
-	mov	r0, r6	@ D.50135, tmp154
+	mov	r0, r6	@ D.50149, tmp154
 	str	r3, [r5, ip]	@ BufSize, <variable>.SegBufSize
 	ldr	r2, [fp, #-32]	@,
 	str	r4, [r5, r1]	@ BufPhyAddr, <variable>.SegBufReadAddr
@@ -7785,8 +7785,8 @@ SM_Config:
 	movt	r2, #:upper16:204768	@ tmp164,
 	ldr	sl, [r4, #60]	@ <variable>.Config.BufPhyAddr, <variable>.Config.BufPhyAddr
 	str	r8, [r4, r2]	@ <variable>.s32ChanLowlyEnable, <variable>.s32ChanLowlyEnable
-	ldr	r2, [r1, #12]	@ D.50846, <variable>.BufPhyAddr
-	cmp	sl, r2	@ <variable>.Config.BufPhyAddr, D.50846
+	ldr	r2, [r1, #12]	@ D.50860, <variable>.BufPhyAddr
+	cmp	sl, r2	@ <variable>.Config.BufPhyAddr, D.50860
 	addeq	r7, r4, #48	@ tmp304, pSmInstArray,
 	bne	.L846	@,
 .L834:
@@ -7800,7 +7800,7 @@ SM_Config:
 	movw	r3, #:lower16:190864	@ tmp301,
 	movt	r3, #:upper16:190864	@ tmp301,
 	str	r0, [r4, ip]	@ tmp297, <variable>.UpMsgStepNum
-	mov	r0, #0	@ D.50837,
+	mov	r0, #0	@ D.50851,
 	ldr	r1, [r6, #8]	@ <variable>.VidStd, <variable>.VidStd
 	str	r5, [r4, r3]	@ SmID, <variable>.InstID
 	cmp	r1, #2	@ <variable>.VidStd,
@@ -7817,13 +7817,13 @@ SM_Config:
 	movw	r2, #2071	@,
 	str	r6, [sp, #0]	@ pSmCfg,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50837,
+	mvn	r0, #0	@ D.50851,
 	b	.L832	@
 .L846:
-	cmp	r2, #0	@ D.50846,
+	cmp	r2, #0	@ D.50860,
 	bne	.L847	@,
 .L833:
-	mvn	r0, #0	@ D.50837,
+	mvn	r0, #0	@ D.50851,
 	b	.L832	@
 .L847:
 	ldr	r2, [r1, #0]	@ <variable>.pBufVirAddr, <variable>.pBufVirAddr
@@ -7962,10 +7962,10 @@ SM_Config:
 	str	ip, [r4, r9]	@ tmp270, <variable>.BufAddrCfg.pSegBufVirAddr
 	bl	SetMaxSegSize	@
 	ldr	r1, [r6, #16]	@ <variable>.BufSize, <variable>.BufSize
-	rsb	r8, r8, r1	@ D.50886, ByteOffsetInWord, <variable>.BufSize
+	rsb	r8, r8, r1	@ D.50900, ByteOffsetInWord, <variable>.BufSize
 	cmn	r0, #1	@,
 	moveq	r0, #2097152	@ SmMaxSegBufSize,
-	cmp	r0, r8	@ SmMaxSegBufSize, D.50886
+	cmp	r0, r8	@ SmMaxSegBufSize, D.50900
 	bge	.L838	@,
 	movw	r3, #:lower16:-1024	@ tmp272,
 	movw	r1, #:lower16:190860	@ tmp274,
@@ -7995,14 +7995,14 @@ SM_Config:
 	str	r1, [r4, ip]	@ tmp290, <variable>.ScdID
 	b	.L834	@
 .L838:
-	sub	r2, r8, #1024	@ tmp275, D.50886,
+	sub	r2, r8, #1024	@ tmp275, D.50900,
 	movw	r0, #:lower16:190860	@ tmp276,
 	rsb	r3, r7, r2	@ prephitmp.3124, prephitmp.3123, tmp275
 	movt	r0, #:upper16:190860	@ tmp276,
 	cmp	r3, #262144	@ prephitmp.3124,
 	str	r3, [r4, r0]	@ prephitmp.3124, <variable>.BufAddrCfg.SegBufSize
 	bge	.L839	@,
-	mvn	r0, #0	@ D.50837,
+	mvn	r0, #0	@ D.50851,
 	b	.L832	@
 	.fnend
 	.size	SM_Config, .-SM_Config
@@ -8041,7 +8041,7 @@ SM_Reset:
 	cmp	r2, #1	@ tmp151,
 	bls	.L860	@,
 .L852:
-	add	lr, r4, #203776	@ D.50554, pSmInstArray,
+	add	lr, r4, #203776	@ D.50568, pSmInstArray,
 	mov	r8, #0	@ tmp154,
 	add	r1, r4, #48	@, pSmInstArray,
 	str	r8, [r4, #84]	@ tmp154, <variable>.Config.DisContinueRawPacketFlag
@@ -8049,7 +8049,7 @@ SM_Reset:
 	mvn	r0, #0	@ tmp155,
 	str	r0, [r4, #80]	@ tmp155, <variable>.Config.LastRawDisContinueCount
 	sub	r0, fp, #332	@,,
-	add	r7, lr, #1000	@ D.50554, D.50554,
+	add	r7, lr, #1000	@ D.50568, D.50568,
 	str	r8, [fp, #-344]	@,
 	bl	memcpy	@
 	movw	r3, #:lower16:204772	@ tmp162,
@@ -8060,7 +8060,7 @@ SM_Reset:
 	ldr	ip, [r4, r3]	@, <variable>.HeaderLen
 	sub	r0, fp, #172	@,,
 	add	r6, r6, sl, asl #4	@, tmp175, tmp212, tmp173,
-	mov	r1, r7	@, D.50554
+	mov	r1, r7	@, D.50568
 	mov	r2, #128	@,
 	str	ip, [fp, #-336]	@, %sfp
 	ldr	r9, [r4, r8]	@, <variable>.Mode
@@ -8114,12 +8114,12 @@ SM_Reset:
 	movls	r2, #1	@ tmp197,
 	movhi	r2, #0	@ tmp199,
 	str	r2, [r4, r0]	@ tmp199, <variable>.Mode
-	mov	r0, r7	@, D.50554
+	mov	r0, r7	@, D.50568
 	ldr	ip, [fp, #-336]	@, %sfp
 	mov	r2, #128	@,
 	str	ip, [r4, r3]	@, <variable>.HeaderLen
 	bl	memcpy	@
-	mov	r0, #0	@ D.50543,
+	mov	r0, #0	@ D.50557,
 .L850:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -8137,7 +8137,7 @@ SM_Reset:
 	movw	r2, #1588	@,
 	bl	dprint_vfmw	@
 .L858:
-	mvn	r0, #0	@ D.50543,
+	mvn	r0, #0	@ D.50557,
 	b	.L850	@
 .L860:
 	add	r1, r4, #104	@, pSmInstArray,
@@ -8193,15 +8193,15 @@ FillExtraData:
 	mov	r4, r1	@ pRawPacket, pRawPacket
 	bls	.L887	@,
 .L866:
-	mvn	r0, #0	@ D.52610,
+	mvn	r0, #0	@ D.52622,
 .L868:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L887:
 	cmp	r1, #0	@ pRawPacket,
 	beq	.L866	@,
-	ldr	ip, [r1, #8]	@ D.52613, <variable>.Length
-	cmp	ip, #0	@ D.52613,
+	ldr	ip, [r1, #8]	@ D.52625, <variable>.Length
+	cmp	ip, #0	@ D.52625,
 	ble	.L888	@,
 	add	r0, r0, r0, asl #1	@, tmp167, InstID, InstID,
 	movw	r1, #:lower16:.LANCHOR0	@ tmp163,
@@ -8216,7 +8216,7 @@ FillExtraData:
 	cmp	r3, #1	@ <variable>.Config.VidStd,
 	beq	.L889	@,
 .L869:
-	mov	r0, #0	@ D.52610,
+	mov	r0, #0	@ D.52622,
 	b	.L868	@
 .L889:
 	ldr	r0, [r5, #72]	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile, <variable>.Config.StdExt.Vc1Ext.IsAdvProfile
@@ -8226,13 +8226,13 @@ FillExtraData:
 	ands	r7, r7, #128	@ tmp205, <variable>.RawExt.Flags,
 	beq	.L877	@,
 	ldr	r6, [r4, #80]	@ temp.3221, <variable>.RawExt.BufLen
-	add	lr, ip, #12	@ D.52649, D.52613,
-	cmp	lr, r6	@ D.52649, temp.3221
+	add	lr, ip, #12	@ D.52661, D.52625,
+	cmp	lr, r6	@ D.52661, temp.3221
 	bhi	.L878	@,
-	cmp	lr, #128	@ D.52649,
+	cmp	lr, #128	@ D.52661,
 	bgt	.L878	@,
 	ldr	r1, [r4, #4]	@ temp.3222, <variable>.VirAddr
-	mov	r2, ip	@, D.52613
+	mov	r2, ip	@, D.52625
 	add	r0, r1, #8	@, temp.3222,
 	bl	memmove	@
 	add	r1, r4, #84	@, pRawPacket,
@@ -8257,31 +8257,31 @@ FillExtraData:
 	str	ip, [r5, r3]	@ tmp227, <variable>.HeaderLen
 	ldmib	r4, {r1, r2}	@ phole ldm
 	bl	memcpy	@
-	mov	r0, #0	@ D.52610,
+	mov	r0, #0	@ D.52622,
 	b	.L868	@
 .L872:
 	ldr	r7, [r4, #76]	@ <variable>.RawExt.Flags, <variable>.RawExt.Flags
 	ands	r7, r7, #128	@ tmp273, <variable>.RawExt.Flags,
 	beq	.L882	@,
-	cmp	ip, #128	@ D.52613,
+	cmp	ip, #128	@ D.52625,
 	bgt	.L891	@,
 .L883:
 	movw	r2, #:lower16:204772	@ tmp279,
 	movt	r2, #:upper16:204772	@ tmp279,
 	add	r1, r5, #203776	@, pSmInstArray,
-	str	ip, [r5, r2]	@ D.52613, <variable>.HeaderLen
+	str	ip, [r5, r2]	@ D.52625, <variable>.HeaderLen
 	add	r0, r1, #1000	@,,
 	ldmib	r4, {r1, r2}	@ phole ldm
 	bl	memcpy	@
-	mov	r0, #0	@ D.52610,
+	mov	r0, #0	@ D.52622,
 	b	.L868	@
 .L871:
 	ldr	lr, [r4, #80]	@ temp.3246, <variable>.RawExt.BufLen
-	add	r5, ip, #8	@ D.52665, D.52613,
-	cmp	r5, lr	@ D.52665, temp.3246
+	add	r5, ip, #8	@ D.52677, D.52625,
+	cmp	r5, lr	@ D.52677, temp.3246
 	bhi	.L892	@,
 	ldr	r1, [r4, #4]	@ temp.3247, <variable>.VirAddr
-	mov	r2, ip	@, D.52613
+	mov	r2, ip	@, D.52625
 	add	r0, r1, #8	@, temp.3247,
 	bl	memmove	@
 	add	r1, r4, #84	@, pRawPacket,
@@ -8294,7 +8294,7 @@ FillExtraData:
 	add	r0, r0, r2	@, <variable>.VirAddr,
 	bl	memcpy	@
 	ldr	r3, [r4, #8]	@ <variable>.Length, <variable>.Length
-	mov	r0, #0	@ D.52610,
+	mov	r0, #0	@ D.52622,
 	add	ip, r3, #8	@ tmp272, <variable>.Length,
 	str	ip, [r4, #8]	@ tmp272, <variable>.Length
 	b	.L868	@
@@ -8303,12 +8303,12 @@ FillExtraData:
 	movt	r6, #:upper16:204772	@ tmp287,
 	ldr	r8, [r4, #80]	@ temp.3268, <variable>.RawExt.BufLen
 	ldr	r0, [r5, r6]	@ temp.3266, <variable>.HeaderLen
-	add	lr, ip, r0	@ temp.3267, D.52613, temp.3266
+	add	lr, ip, r0	@ temp.3267, D.52625, temp.3266
 	cmp	lr, r8	@ temp.3267, temp.3268
 	bhi	.L893	@,
 .L884:
 	ldr	r1, [r4, #4]	@ temp.3270, <variable>.VirAddr
-	mov	r2, ip	@, D.52613
+	mov	r2, ip	@, D.52625
 	add	r0, r1, r0	@, temp.3270, temp.3266
 	bl	memmove	@
 	add	r0, r5, #203776	@, pSmInstArray,
@@ -8318,7 +8318,7 @@ FillExtraData:
 	bl	memcpy	@
 	ldr	r3, [r5, r6]	@ <variable>.HeaderLen, <variable>.HeaderLen
 	ldr	r1, [r4, #8]	@ <variable>.Length, <variable>.Length
-	mov	r0, r7	@ D.52610, tmp273
+	mov	r0, r7	@ D.52622, tmp273
 	add	ip, r1, r3	@ tmp303, <variable>.Length, <variable>.HeaderLen
 	str	ip, [r4, #8]	@ tmp303, <variable>.Length
 	b	.L868	@
@@ -8327,7 +8327,7 @@ FillExtraData:
 	movt	r6, #:upper16:204772	@ tmp237,
 	ldr	r8, [r4, #80]	@ temp.3234, <variable>.RawExt.BufLen
 	ldr	r0, [r5, r6]	@ temp.3232, <variable>.HeaderLen
-	add	lr, ip, r0	@ temp.3233, D.52613, temp.3232
+	add	lr, ip, r0	@ temp.3233, D.52625, temp.3232
 	cmp	lr, r8	@ temp.3233, temp.3234
 	bls	.L884	@,
 	mov	r0, r3	@, <variable>.Config.VidStd
@@ -8337,13 +8337,13 @@ FillExtraData:
 	str	lr, [sp, #0]	@ temp.3233,
 	str	r8, [sp, #4]	@ temp.3234,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L890:
 	ldr	r2, [r4, #76]	@ <variable>.RawExt.Flags, <variable>.RawExt.Flags
 	tst	r2, #128	@ <variable>.RawExt.Flags,
 	beq	.L874	@,
-	cmp	ip, #128	@ D.52613,
+	cmp	ip, #128	@ D.52625,
 	ble	.L883	@,
 	ldr	r2, .L895	@,
 	movw	r1, #:lower16:.LC136	@,
@@ -8353,7 +8353,7 @@ FillExtraData:
 	mov	lr, #128	@ tmp278,
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L874:
 	ldrb	r3, [r4, #72]	@ zero_extendqisi2	@ <variable>.RawExt.IsSeekPending, <variable>.RawExt.IsSeekPending
@@ -8361,16 +8361,16 @@ FillExtraData:
 	beq	.L869	@,
 	movw	r6, #:lower16:204772	@ tmp188,
 	movt	r6, #:upper16:204772	@ tmp188,
-	ldr	lr, [r4, #80]	@ D.52638, <variable>.RawExt.BufLen
-	ldr	r0, [r5, r6]	@ D.52636, <variable>.HeaderLen
-	add	r6, ip, r0	@ D.52637, D.52613, D.52636
-	cmp	r6, lr	@ D.52637, D.52638
+	ldr	lr, [r4, #80]	@ D.52650, <variable>.RawExt.BufLen
+	ldr	r0, [r5, r6]	@ D.52648, <variable>.HeaderLen
+	add	r6, ip, r0	@ D.52649, D.52625, D.52648
+	cmp	r6, lr	@ D.52649, D.52650
 	bhi	.L894	@,
 	ldr	r1, [r4, #4]	@ temp.3211, <variable>.VirAddr
-	mov	r2, ip	@, D.52613
+	mov	r2, ip	@, D.52625
 	movw	r6, #:lower16:204772	@ tmp194,
 	movt	r6, #:upper16:204772	@ tmp194,
-	add	r0, r1, r0	@, temp.3211, D.52636
+	add	r0, r1, r0	@, temp.3211, D.52648
 	bl	memmove	@
 	add	r0, r5, #203776	@, pSmInstArray,
 	add	r1, r0, #1000	@,,
@@ -8379,7 +8379,7 @@ FillExtraData:
 	bl	memcpy	@
 	ldr	r1, [r5, r6]	@ <variable>.HeaderLen, <variable>.HeaderLen
 	ldr	r2, [r4, #8]	@ <variable>.Length, <variable>.Length
-	mov	r0, #0	@ D.52610,
+	mov	r0, #0	@ D.52622,
 	add	ip, r2, r1	@ tmp204, <variable>.Length, <variable>.HeaderLen
 	str	ip, [r4, #8]	@ tmp204, <variable>.Length
 	b	.L868	@
@@ -8390,7 +8390,7 @@ FillExtraData:
 	movt	r1, #:upper16:.LC139	@,
 	stmia	sp, {r5, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L878:
 	mov	r0, #1	@,
@@ -8398,12 +8398,12 @@ FillExtraData:
 	ldr	r2, .L895	@,
 	movt	r1, #:upper16:.LC138	@,
 	mov	r3, r0	@,
-	str	lr, [sp, #0]	@ D.52649,
+	str	lr, [sp, #0]	@ D.52661,
 	str	r6, [sp, #4]	@ temp.3221,
 	mov	lr, #128	@ tmp210,
 	str	lr, [sp, #8]	@ tmp210,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L893:
 	mov	r0, #1	@,
@@ -8413,16 +8413,16 @@ FillExtraData:
 	str	lr, [sp, #0]	@ temp.3267,
 	str	r8, [sp, #4]	@ temp.3268,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L888:
-	mov	r3, ip	@, D.52613
+	mov	r3, ip	@, D.52625
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC135	@,
 	ldr	r2, .L895	@,
 	movt	r1, #:upper16:.LC135	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52610,
+	mvn	r0, #0	@ D.52622,
 	b	.L868	@
 .L891:
 	movw	r1, #:lower16:.LC136	@,
@@ -8438,7 +8438,7 @@ FillExtraData:
 	mov	r3, r0	@,
 	stmia	sp, {r6, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52610,
+	mvn	r0, #1	@ D.52622,
 	b	.L868	@
 .L896:
 	.align	2
@@ -8584,7 +8584,7 @@ ReadRawStreamData:
 .L913:
 	mov	r3, r5	@, InstID
 	movw	r1, #:lower16:.LC141	@,
-	movw	r2, #4899	@,
+	movw	r2, #4894	@,
 	movt	r1, #:upper16:.LC141	@,
 	mvn	r4, #6	@ ret,
 	bl	dprint_vfmw	@
@@ -8625,10 +8625,10 @@ FillRawData:
 	ldr	r1, [r4, #56]	@ <variable>.Config.VidStd, <variable>.Config.VidStd
 	cmp	r1, #18	@ <variable>.Config.VidStd,
 	beq	.L939	@,
-	ldr	r3, [r4, #84]	@ D.52400, <variable>.Config.DisContinueRawPacketFlag
-	cmp	r3, #1	@ D.52400,
+	ldr	r3, [r4, #84]	@ D.52412, <variable>.Config.DisContinueRawPacketFlag
+	cmp	r3, #1	@ D.52412,
 	beq	.L939	@,
-	cmp	r3, #2	@ D.52400,
+	cmp	r3, #2	@ D.52412,
 	movne	r0, r5, asl #24	@, InstID,
 	strne	r0, [fp, #-156]	@, %sfp
 	beq	.L951	@,
@@ -8666,9 +8666,9 @@ FillRawData:
 	ldr	r0, [fp, #-92]	@ RawPacket.discontinue_count, RawPacket.discontinue_count
 	cmp	r0, r3	@ RawPacket.discontinue_count, prephitmp.3335
 	beq	.L930	@,
-	ldr	ip, [r4, #56]	@ D.52483, <variable>.Config.VidStd
-	cmp	ip, #3	@ D.52483,
-	cmpne	ip, #1	@, D.52483,
+	ldr	ip, [r4, #56]	@ D.52495, <variable>.Config.VidStd
+	cmp	ip, #3	@ D.52495,
+	cmpne	ip, #1	@, D.52495,
 	beq	.L952	@,
 .L930:
 	ldr	r9, [fp, #-132]	@ RawPacket.Length, RawPacket.Length
@@ -8728,16 +8728,16 @@ FillRawData:
 	mov	r0, r5	@, InstID
 	sub	r1, fp, #140	@,,
 	bl	SM_PushRaw	@
-	subs	r8, r0, #0	@ D.52509,
+	subs	r8, r0, #0	@ D.52521,
 	bne	.L950	@,
 .L934:
 	mov	r3, #1	@ tmp308,
-	mov	r1, r8	@, D.52509
-	mov	r2, r8	@, D.52509
+	mov	r1, r8	@, D.52521
+	mov	r2, r8	@, D.52521
 	strb	r3, [r4, #4]	@ tmp308, <variable>.FillNewRawFlag
 	mov	r0, r5	@, InstID
 	bl	DBG_CountTimeInfo	@
-	mov	r0, r8	@, D.52509
+	mov	r0, r8	@, D.52521
 	bl	CHECK_REC_POS_ENABLE	@
 	cmp	r0, #0	@,
 	bne	.L954	@,
@@ -8802,7 +8802,7 @@ FillRawData:
 	cmp	r1, r2	@ tmp315, g_TraceBsPeriod
 	bls	.L935	@,
 	ldr	lr, [fp, #-152]	@, %sfp
-	movw	r1, #4566	@,
+	movw	r1, #4561	@,
 	ldr	r0, .L960	@,
 	ldr	r2, [fp, #-156]	@, %sfp
 	str	r3, [lr, #0]	@ ThisTime.3370, last_rec_pos_time
@@ -8815,7 +8815,7 @@ FillRawData:
 	mvn	r3, #0	@,
 	strd	r2, [fp, #-124]	@ tmp305,,
 	bl	SM_PushRaw	@
-	subs	r8, r0, #0	@ D.52509,
+	subs	r8, r0, #0	@ D.52521,
 	beq	.L934	@,
 .L950:
 	movw	r1, #:lower16:.LC147	@,
@@ -8845,12 +8845,12 @@ FillRawData:
 	add	sl, r2, ip	@ tmp169, <variable>.Config.DisContinueRawPacket.Length, <variable>.TotalRawSize
 	str	sl, [r4, r7]	@ tmp169, <variable>.TotalRawSize
 	bl	OSAL_GetTimeInMs	@
-	ldr	r3, [r4, r8]	@ D.52409, <variable>.LastStatTime
-	cmp	r3, #0	@ D.52409,
+	ldr	r3, [r4, r8]	@ D.52421, <variable>.LastStatTime
+	cmp	r3, #0	@ D.52421,
 	mov	sl, r0	@ ThisTime,
 	streq	r0, [r4, r8]	@ ThisTime, <variable>.LastStatTime
 	beq	.L921	@,
-	rsb	r1, r3, r0	@ TimePeriod, D.52409, ThisTime
+	rsb	r1, r3, r0	@ TimePeriod, D.52421, ThisTime
 	cmp	r1, #2000	@ TimePeriod,
 	bls	.L921	@,
 	ldr	lr, [r4, r7]	@ <variable>.TotalRawSize, <variable>.TotalRawSize
@@ -8887,15 +8887,15 @@ FillRawData:
 	mov	r0, r5	@, InstID
 	add	r1, r4, #104	@, pSmInstArray,
 	bl	SM_PushRaw	@
-	subs	r7, r0, #0	@ D.52427,
+	subs	r7, r0, #0	@ D.52439,
 	bne	.L950	@,
-	mov	r1, r7	@, D.52427
-	mov	r2, r7	@, D.52427
+	mov	r1, r7	@, D.52439
+	mov	r2, r7	@, D.52439
 	mov	r0, #1	@ tmp196,
 	strb	r0, [r4, #4]	@ tmp196, <variable>.FillNewRawFlag
 	mov	r0, r5	@, InstID
 	bl	DBG_CountTimeInfo	@
-	mov	r0, r7	@, D.52427
+	mov	r0, r7	@, D.52439
 	bl	CHECK_REC_POS_ENABLE	@
 	cmp	r0, #0	@,
 	moveq	r1, r5, asl #24	@, InstID,
@@ -8983,7 +8983,7 @@ FillRawData:
 	mov	lr, r5, asl #24	@, InstID,
 	str	r2, [r3, #936]	@ ThisTime.3349, last_rec_pos_time
 	ldr	r0, .L960	@,
-	movw	r1, #4457	@,
+	movw	r1, #4452	@,
 	mov	r2, lr	@,
 	str	lr, [fp, #-156]	@, %sfp
 	bl	DBG_AddTrace	@
@@ -9015,8 +9015,8 @@ SM_Wakeup:
 	bl	__gnu_mcount_nc
 	movw	r4, #:lower16:.LANCHOR0	@ tmp211,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp211,
-	ldr	r2, [r4, #40]	@ D.53363, <variable>.pSmInstArray
-	cmp	r2, #0	@ D.53363,
+	ldr	r2, [r4, #40]	@ D.53375, <variable>.pSmInstArray
+	cmp	r2, #0	@ D.53375,
 	beq	.L963	@,
 	movw	r0, #:lower16:190880	@ tmp151,
 	movt	r0, #:upper16:190880	@ tmp151,
@@ -9161,7 +9161,7 @@ SM_Wakeup:
 .L978:
 	mov	r4, #0	@ tmp201,
 	ldr	r2, .L998	@,
-	movw	r3, #5974	@,
+	movw	r3, #5969	@,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC150	@,
 	movt	r1, #:upper16:.LC150	@,
@@ -9170,16 +9170,16 @@ SM_Wakeup:
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, tmp201
 	bl	SCDDRV_CheckDevice	@
-	subs	r5, r0, #0	@ D.53370,
+	subs	r5, r0, #0	@ D.53382,
 	bne	.L979	@,
 	ldr	r2, .L998	@,
-	movw	r3, #5977	@,
+	movw	r3, #5972	@,
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC151	@,
 	movt	r1, #:upper16:.LC151	@,
-	str	r5, [sp, #0]	@ D.53370,
+	str	r5, [sp, #0]	@ D.53382,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@, D.53370
+	mov	r0, r5	@, D.53382
 	bl	SCDDRV_ActivateSCD	@
 .L981:
 	sub	sp, fp, #20
@@ -9188,7 +9188,7 @@ SM_Wakeup:
 	movw	r1, #:lower16:.LC152	@,
 	ldr	r2, .L998	@,
 	movt	r1, #:upper16:.LC152	@,
-	movw	r3, #5982	@,
+	movw	r3, #5977	@,
 	mov	r0, #26	@,
 	str	r4, [sp, #0]	@ tmp201,
 	bl	dprint_vfmw	@
@@ -9289,7 +9289,7 @@ SM_SeekPts:
 	str	r1, [fp, #-60]	@ pArgs, %sfp
 	ldr	r4, [r3, #40]	@ pSmInstArray, <variable>.pSmInstArray
 	cmp	r4, #0	@ pSmInstArray,
-	mvneq	r0, #0	@ D.52825,
+	mvneq	r0, #0	@ D.52837,
 	bne	.L1087	@,
 .L1002:
 	sub	sp, fp, #40
@@ -9342,17 +9342,17 @@ SM_SeekPts:
 	ldrsb	r3, [r3, #4]	@ <variable>.SegState, <variable>.SegState
 	cmp	r3, #1	@ <variable>.SegState,
 	bne	.L1007	@,
-	ldrd	r2, [r2]	@ D.52853, <variable>.RawPts
+	ldrd	r2, [r2]	@ D.52865, <variable>.RawPts
 	mvn	r0, #0	@,
 	mvn	r1, #0	@,
-	cmp	r3, r1	@ D.52853,
-	cmpeq	r2, r0	@ D.52853,
+	cmp	r3, r1	@ D.52865,
+	cmpeq	r2, r0	@ D.52865,
 	beq	.L1089	@,
 	add	r0, r5, #1	@, i.3524,
 	str	r0, [fp, #-80]	@, %sfp
 	ldrd	r0, [fp, #-52]	@,,
-	cmp	r1, r3	@, D.52853
-	cmpeq	r0, r2	@, D.52853
+	cmp	r1, r3	@, D.52865
+	cmpeq	r0, r2	@, D.52865
 	ldr	r1, [fp, #-80]	@, %sfp
 	ldr	r0, [fp, #-80]	@, %sfp
 	smull	r1, r2, sl, r1	@, tmp291, tmp637,
@@ -9388,7 +9388,7 @@ SM_SeekPts:
 .L1080:
 	add	ip, r6, r6, asl #2	@, tmp232, j, j,
 	mov	r1, r6	@, j
-	add	r6, r6, #1	@ D.52848, j,
+	add	r6, r6, #1	@ D.52860, j,
 	mov	r0, r8	@, pStreamSegArray
 	add	lr, r4, ip, asl #4	@, tmp234, pSmInstArray, tmp232,
 	mov	ip, #2	@,
@@ -9399,19 +9399,19 @@ SM_SeekPts:
 	ldr	ip, [r3, #0]	@ <variable>.LenInByte, <variable>.LenInByte
 	ldr	r2, [r4, r7]	@ <variable>.StreamSegArray.SegFreshSize, <variable>.StreamSegArray.SegFreshSize
 	ldr	lr, [r4, r5]	@ <variable>.StreamSegArray.SegFreshNum, <variable>.StreamSegArray.SegFreshNum
-	rsb	r3, ip, r2	@ D.52842, <variable>.LenInByte, <variable>.StreamSegArray.SegFreshSize
-	sub	ip, lr, #1	@ D.52844, <variable>.StreamSegArray.SegFreshNum,
-	bic	r2, r3, r3, asr #31	@ tmp253, D.52842
-	bic	lr, ip, ip, asr #31	@ tmp255, D.52844
+	rsb	r3, ip, r2	@ D.52854, <variable>.LenInByte, <variable>.StreamSegArray.SegFreshSize
+	sub	ip, lr, #1	@ D.52856, <variable>.StreamSegArray.SegFreshNum,
+	bic	r2, r3, r3, asr #31	@ tmp253, D.52854
+	bic	lr, ip, ip, asr #31	@ tmp255, D.52856
 	str	r2, [r4, r7]	@ tmp253, <variable>.StreamSegArray.SegFreshSize
 	str	lr, [r4, r5]	@ tmp255, <variable>.StreamSegArray.SegFreshNum
 	bl	ReleaseStreamSeg	@
-	smull	r0, r1, r9, r6	@, tmp256, tmp622, D.52848
-	mov	r3, r6, asr #31	@ tmp259, D.52848,
+	smull	r0, r1, r9, r6	@, tmp256, tmp622, D.52860
+	mov	r3, r6, asr #31	@ tmp259, D.52860,
 	ldr	ip, [r4, sl]	@ <variable>.StreamSegArray.Tail, <variable>.StreamSegArray.Tail
 	rsb	r2, r3, r1, asr #8	@, j, tmp259, tmp256,
 	add	r1, r2, r2, asl #3	@, tmp262, j, j,
-	sub	r6, r6, r1, asl #7	@ j, D.52848, tmp262,
+	sub	r6, r6, r1, asl #7	@ j, D.52860, tmp262,
 	cmp	ip, r6	@ <variable>.StreamSegArray.Tail, j
 	bne	.L1080	@,
 .L1005:
@@ -9425,21 +9425,21 @@ SM_SeekPts:
 	add	r1, r4, #208	@, pSmInstArray,
 	str	r1, [fp, #-96]	@, %sfp
 	movw	r9, #:lower16:98512	@ tmp414,
-	ldr	r1, [r4, ip]	@ D.52882, <variable>.RawPacketArray.Head
+	ldr	r1, [r4, ip]	@ D.52894, <variable>.RawPacketArray.Head
 	movt	r9, #:upper16:98512	@ tmp414,
-	ldr	r3, [r4, r0]	@ D.52883, <variable>.RawPacketArray.Tail
+	ldr	r3, [r4, r0]	@ D.52895, <variable>.RawPacketArray.Tail
 	movw	r7, #:lower16:98520	@ tmp413,
 	movt	r7, #:upper16:98520	@ tmp413,
-	cmp	r1, r3	@ D.52882, D.52883
-	addgt	r3, r3, #1024	@ tmp412, D.52883,
-	rsb	sl, r1, r3	@, D.52882, tmp412
+	cmp	r1, r3	@ D.52894, D.52895
+	addgt	r3, r3, #1024	@ tmp412, D.52895,
+	rsb	sl, r1, r3	@, D.52894, tmp412
 	str	sl, [fp, #-80]	@, %sfp
 	movw	sl, #:lower16:98516	@ tmp415,
 	movt	sl, #:upper16:98516	@ tmp415,
 	ldr	r3, [r4, r9]	@ i, <variable>.RawPacketArray.Head
 	mov	r9, r7	@ tmp615, tmp413
 	ldr	ip, [r4, sl]	@ prephitmp.3456, <variable>.RawPacketArray.Tail
-	str	r1, [r4, r7]	@ D.52882, <variable>.RawPacketArray.History
+	str	r1, [r4, r7]	@ D.52894, <variable>.RawPacketArray.History
 .L1078:
 	add	lr, r3, r3, asl #1	@, tmp423, i, i,
 	cmp	r3, ip	@ i, prephitmp.3456
@@ -9526,47 +9526,47 @@ SM_SeekPts:
 	ldr	r2, [fp, #-64]	@, %sfp
 	ldr	ip, [r4, r1]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.Head
 	ldr	r0, [r4, r2]	@ prephitmp.3460, <variable>.RawPacketArray.Tail
-	mov	r3, ip	@ i.3478, <variable>.RawPacketArray.Head
+	mov	r3, ip	@ i.3477, <variable>.RawPacketArray.Head
 	str	ip, [r4, sl]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.History
 .L1079:
-	add	lr, r3, r3, asl #1	@, tmp525, i.3478, i.3478,
-	cmp	r3, r0	@ i.3478, prephitmp.3460
+	add	lr, r3, r3, asl #1	@, tmp525, i.3477, i.3477,
+	cmp	r3, r0	@ i.3477, prephitmp.3460
 	add	r2, r4, lr, asl #5	@, tmp527, pSmInstArray, tmp525,
 	beq	.L1094	@,
 .L1045:
-	ldrd	r8, [r2, #224]	@ D.52897, tmp527,
+	ldrd	r8, [r2, #224]	@ D.52909, tmp527,
 	mvn	r6, #0	@,
 	mvn	r7, #0	@,
 	add	r5, r2, #224	@ tmp528, tmp527,
-	cmp	r9, r7	@ D.52897,
-	cmpeq	r8, r6	@ D.52897,
+	cmp	r9, r7	@ D.52909,
+	cmpeq	r8, r6	@ D.52909,
 	beq	.L1095	@,
 	ldrd	r6, [fp, #-52]	@,,
-	add	r1, r3, #1	@ temp.3489, i.3478,
-	cmp	r7, r9	@, D.52897
-	cmpeq	r6, r8	@, D.52897
+	add	r1, r3, #1	@ temp.3489, i.3477,
+	cmp	r7, r9	@, D.52909
+	cmpeq	r6, r8	@, D.52909
 	mov	ip, r1, asr #31	@ tmp537, temp.3489,
 	bls	.L1052	@,
 	mov	r6, ip, lsr #22	@ tmp538, tmp537,
-	str	r3, [r4, sl]	@ i.3478, <variable>.RawPacketArray.History
+	str	r3, [r4, sl]	@ i.3477, <variable>.RawPacketArray.History
 	add	lr, r1, r6	@ tmp539, temp.3489, tmp538
 	ldr	r7, [fp, #-64]	@, %sfp
 	mov	r3, lr, asl #22	@ tmp540, tmp539,
 	ldr	r0, [r4, r7]	@ prephitmp.3460, <variable>.RawPacketArray.Tail
 	mov	r9, r3, lsr #22	@ tmp540, tmp540,
-	rsb	r3, r6, r9	@ i.3478, tmp538, tmp540
-	cmp	r3, r0	@ i.3478, prephitmp.3460
-	add	lr, r3, r3, asl #1	@, tmp525, i.3478, i.3478,
+	rsb	r3, r6, r9	@ i.3477, tmp538, tmp540
+	cmp	r3, r0	@ i.3477, prephitmp.3460
+	add	lr, r3, r3, asl #1	@, tmp525, i.3477, i.3477,
 	add	r2, r4, lr, asl #5	@, tmp527, pSmInstArray, tmp525,
 	bne	.L1045	@,
 .L1094:
 	ldr	r6, [fp, #-76]	@, %sfp
 	ldr	r2, [r4, r6]	@ temp.3485, <variable>.RawPacketArray.Head
-	cmp	r3, r2	@ i.3478, temp.3485
+	cmp	r3, r2	@ i.3477, temp.3485
 	rsblt	r1, r2, #1024	@ tmp519, temp.3485,
-	rsbge	r1, r2, r3	@ DelNum.3476, temp.3485, i.3478
-	addlt	r1, r1, r3	@ DelNum.3476, tmp519, i.3478
-	cmp	r1, #0	@ DelNum.3476,
+	rsbge	r1, r2, r3	@ DelNum.3473, temp.3485, i.3477
+	addlt	r1, r1, r3	@ DelNum.3473, tmp519, i.3477
+	cmp	r1, #0	@ DelNum.3473,
 	streq	r2, [r4, sl]	@ temp.3485, <variable>.RawPacketArray.History
 	bne	.L1096	@,
 .L1049:
@@ -9577,7 +9577,7 @@ SM_SeekPts:
 	cmp	r9, r0	@,
 	blt	.L1063	@,
 .L1044:
-	mvn	r0, #1	@ D.52825,
+	mvn	r0, #1	@ D.52837,
 	b	.L1002	@
 .L1007:
 	add	r5, r5, #1	@ temp.3548, i.3524,
@@ -9627,15 +9627,15 @@ SM_SeekPts:
 	ldr	r1, [r4, r6]	@ temp.3514, <variable>.RawPacketArray.Head
 	cmp	r3, r1	@ i, temp.3514
 	rsblt	r1, r1, #1024	@ tmp487, temp.3514,
-	rsbge	r3, r1, r3	@ DelNum.3473, temp.3514, i
-	addlt	r3, r1, r3	@ DelNum.3473, tmp487, i
-	cmp	r3, #0	@ DelNum.3473,
+	rsbge	r3, r1, r3	@ DelNum.3474, temp.3514, i
+	addlt	r3, r1, r3	@ DelNum.3474, tmp487, i
+	cmp	r3, #0	@ DelNum.3474,
 	beq	.L1039	@,
 	movw	r5, #:lower16:190752	@ tmp488,
 	movt	r5, #:upper16:190752	@ tmp488,
 	ldr	r0, [fp, #-64]	@, %sfp
 	ldr	lr, [r4, r5]	@ <variable>.SmPushRaw.PushRawNum, <variable>.SmPushRaw.PushRawNum
-	cmp	r3, lr	@ DelNum.3473, <variable>.SmPushRaw.PushRawNum
+	cmp	r3, lr	@ DelNum.3474, <variable>.SmPushRaw.PushRawNum
 	cmple	r0, #1	@,,
 	movne	r5, #0	@, tmp496
 	moveq	r5, #1	@, tmp496
@@ -9653,7 +9653,7 @@ SM_SeekPts:
 	movt	r3, #:upper16:98520	@ tmp497,
 	movw	r2, #:lower16:190760	@ tmp500,
 	movt	r2, #:upper16:190760	@ tmp500,
-	mov	r0, #0	@ D.52825,
+	mov	r0, #0	@ D.52837,
 	str	ip, [r4, r3]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.History
 	str	r9, [r4, r2]	@, <variable>.SmPushRaw.PushRawOver
 	b	.L1002	@
@@ -9666,17 +9666,17 @@ SM_SeekPts:
 	ldr	r2, [r4, r3]	@ i.3537, <variable>.StreamSegArray.History
 	add	r6, r2, r2, asl #2	@, tmp348, i.3537, i.3537,
 	add	r0, r4, r6, asl #4	@, tmp350, pSmInstArray, tmp348,
-	ldrd	r6, [r0, ip]	@ D.52867, tmp350, tmp274
+	ldrd	r6, [r0, ip]	@ D.52879, tmp350, tmp274
 	mvn	r0, #0	@ tmp281,
-	cmp	r7, r1	@ D.52867, tmp281
-	cmpeq	r6, r0	@ D.52867, tmp281
+	cmp	r7, r1	@ D.52879, tmp281
+	cmpeq	r6, r0	@ D.52879, tmp281
 	beq	.L1081	@,
 	ldrd	r0, [fp, #-52]	@,,
-	cmp	r1, r7	@, D.52867
-	cmpeq	r0, r6	@, D.52867
+	cmp	r1, r7	@, D.52879
+	cmpeq	r0, r6	@, D.52879
 	bls	.L1016	@,
-	subs	r6, r0, r6	@ tmp354,, D.52867
-	sbc	r7, r1, r7	@ tmp354,, D.52867
+	subs	r6, r0, r6	@ tmp354,, D.52879
+	sbc	r7, r1, r7	@ tmp354,, D.52879
 	ldrd	r0, [fp, #-92]	@,,
 	cmp	r1, r7	@, tmp354
 	cmpeq	r0, r6	@, tmp354
@@ -9733,7 +9733,7 @@ SM_SeekPts:
 	movt	r2, #:upper16:98576	@ tmp393,
 	ldr	r1, [fp, #-60]	@, %sfp
 	add	r4, r4, r3, asl #4	@, tmp398, pSmInstArray, tmp396,
-	mov	r0, #0	@ D.52825,
+	mov	r0, #0	@ D.52837,
 	ldrd	r2, [r2, r4]	@ <variable>.RawPts, tmp393, tmp398
 	strd	r2, [r1]	@ <variable>.RawPts,
 	b	.L1002	@
@@ -9762,7 +9762,7 @@ SM_SeekPts:
 	movt	r1, #:upper16:.LC153	@,
 	strd	r6, [sp]	@ RawNumInVfmw,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.52825,
+	mvn	r0, #1	@ D.52837,
 	b	.L1002	@
 .L1092:
 	movw	r7, #:lower16:98520	@ tmp419,
@@ -9804,17 +9804,17 @@ SM_SeekPts:
 	cmp	r9, r7	@,
 	cmpeq	r8, r6	@,
 	bcs	.L1059	@,
-	str	r3, [r4, r1]	@ i.3478, <variable>.RawPacketArray.History
+	str	r3, [r4, r1]	@ i.3477, <variable>.RawPacketArray.History
 	ldrd	r0, [r2, #224]	@, tmp527,
 	strd	r0, [fp, #-76]	@,,
 .L1058:
 	movw	r2, #:lower16:98512	@ tmp576,
 	movt	r2, #:upper16:98512	@ tmp576,
 	ldr	r6, [r4, r2]	@ temp.3496, <variable>.RawPacketArray.Head
-	cmp	r3, r6	@ i.3478, temp.3496
+	cmp	r3, r6	@ i.3477, temp.3496
 	rsblt	r6, r6, #1024	@ tmp577, temp.3496,
-	rsbge	r0, r6, r3	@ DelNum, temp.3496, i.3478
-	addlt	r0, r6, r3	@ DelNum, tmp577, i.3478
+	rsbge	r0, r6, r3	@ DelNum, temp.3496, i.3477
+	addlt	r0, r6, r3	@ DelNum, tmp577, i.3477
 	cmp	r0, #0	@ DelNum,
 	bne	.L1062	@,
 	ldrd	r6, [fp, #-76]	@,,
@@ -9828,13 +9828,13 @@ SM_SeekPts:
 	str	lr, [r4, r3]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.History
 	b	.L1002	@
 .L1095:
-	add	lr, r3, #1	@ D.52856, i.3478,
-	mov	r2, lr, asr #31	@ tmp530, D.52856,
+	add	lr, r3, #1	@ D.52868, i.3477,
+	mov	r2, lr, asr #31	@ tmp530, D.52868,
 	mov	r6, r2, lsr #22	@ tmp531, tmp530,
-	add	ip, lr, r6	@ tmp532, D.52856, tmp531
+	add	ip, lr, r6	@ tmp532, D.52868, tmp531
 	mov	r3, ip, asl #22	@ tmp533, tmp532,
 	mov	r9, r3, lsr #22	@ tmp533, tmp533,
-	rsb	r3, r6, r9	@ i.3478, tmp531, tmp533
+	rsb	r3, r6, r9	@ i.3477, tmp531, tmp533
 	b	.L1079	@
 .L1097:
 	movw	lr, #:lower16:98512	@ tmp442,
@@ -9842,15 +9842,15 @@ SM_SeekPts:
 	ldr	ip, [r4, lr]	@ temp.3507, <variable>.RawPacketArray.Head
 	cmp	r3, ip	@ i, temp.3507
 	rsblt	ip, ip, #1024	@ tmp443, temp.3507,
-	rsbge	r3, ip, r3	@ DelNum.3477, temp.3507, i
-	addlt	r3, ip, r3	@ DelNum.3477, tmp443, i
-	cmp	r3, #0	@ DelNum.3477,
+	rsbge	r3, ip, r3	@ DelNum.3476, temp.3507, i
+	addlt	r3, ip, r3	@ DelNum.3476, tmp443, i
+	cmp	r3, #0	@ DelNum.3476,
 	beq	.L1032	@,
 	movw	r7, #:lower16:190752	@ tmp444,
 	movt	r7, #:upper16:190752	@ tmp444,
 	ldr	r5, [r4, r7]	@ <variable>.SmPushRaw.PushRawNum, <variable>.SmPushRaw.PushRawNum
 	ldr	r7, [fp, #-64]	@, %sfp
-	cmp	r3, r5	@ DelNum.3477, <variable>.SmPushRaw.PushRawNum
+	cmp	r3, r5	@ DelNum.3476, <variable>.SmPushRaw.PushRawNum
 	cmple	r7, #1	@,,
 	movne	r5, #0	@, tmp452
 	moveq	r5, #1	@, tmp452
@@ -9864,19 +9864,19 @@ SM_SeekPts:
 .L1099:
 	movw	ip, #:lower16:98512	@ tmp544,
 	movt	ip, #:upper16:98512	@ tmp544,
-	ldr	r1, [r4, ip]	@ temp.3490, <variable>.RawPacketArray.Head
-	cmp	r1, r3	@ temp.3490, i.3478
-	rsbgt	r1, r1, #1024	@ tmp545, temp.3490,
-	rsble	r0, r1, r3	@ DelNum.3474, temp.3490, i.3478
-	addgt	r0, r1, r3	@ DelNum.3474, tmp545, i.3478
-	cmp	r0, #0	@ DelNum.3474,
+	ldr	r1, [r4, ip]	@ temp.3491, <variable>.RawPacketArray.Head
+	cmp	r1, r3	@ temp.3491, i.3477
+	rsbgt	r1, r1, #1024	@ tmp545, temp.3491,
+	rsble	r0, r1, r3	@ DelNum.3478, temp.3491, i.3477
+	addgt	r0, r1, r3	@ DelNum.3478, tmp545, i.3477
+	cmp	r0, #0	@ DelNum.3478,
 	bne	.L1056	@,
 	ldr	r1, [fp, #-60]	@, %sfp
 	movw	lr, #:lower16:98512	@ tmp547,
 	movt	lr, #:upper16:98512	@ tmp547,
 	movw	r3, #:lower16:98520	@ tmp546,
 	movt	r3, #:upper16:98520	@ tmp546,
-	strd	r8, [r1]	@ D.52897,
+	strd	r8, [r1]	@ D.52909,
 	ldr	r2, [r4, lr]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.Head
 	str	r2, [r4, r3]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.History
 	b	.L1002	@
@@ -9929,7 +9929,7 @@ SM_SeekPts:
 	movt	r3, #:upper16:98576	@ tmp336,
 	ldr	r1, [fp, #-60]	@, %sfp
 	add	r4, r4, r5, asl #4	@, tmp341, pSmInstArray, tmp339,
-	mov	r0, #0	@ D.52825,
+	mov	r0, #0	@ D.52837,
 	ldrd	r2, [r3, r4]	@ <variable>.RawPts, tmp336, tmp341
 	strd	r2, [r1]	@ <variable>.RawPts,
 	b	.L1002	@
@@ -9945,7 +9945,7 @@ SM_SeekPts:
 	mov	r3, r1	@ i, i.3512
 	b	.L1035	@
 .L1059:
-	mov	r3, r0	@ i.3478, i.3495
+	mov	r3, r0	@ i.3477, i.3495
 	b	.L1058	@
 .L1062:
 	ldrd	r6, [fp, #-76]	@,,
@@ -9964,16 +9964,16 @@ SM_SeekPts:
 	ldr	r0, [fp, #-56]	@, %sfp
 	mov	r1, #0	@,
 	bl	DeleteRawPacketInBuffer	@
-	mov	r0, #0	@ D.52825,
+	mov	r0, #0	@ D.52837,
 	b	.L1002	@
 .L1056:
 	ldr	ip, [fp, #-60]	@, %sfp
 	movw	r3, #:lower16:98512	@ tmp550,
 	movt	r3, #:upper16:98512	@ tmp550,
-	strd	r8, [ip]	@ D.52897,
+	strd	r8, [ip]	@ D.52909,
 	b	.L1084	@
 .L1100:
-	str	r3, [r4, r1]	@ i.3478, <variable>.RawPacketArray.History
+	str	r3, [r4, r1]	@ i.3477, <variable>.RawPacketArray.History
 	ldrd	r0, [r5]	@, <variable>.Pts
 	strd	r0, [fp, #-76]	@,,
 	b	.L1058	@
@@ -9987,14 +9987,14 @@ SM_SeekPts:
 	ldr	ip, [r4, r1]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.Head
 .L1085:
 	movt	r2, #:upper16:98520	@ tmp501,
-	mov	r1, r3	@, DelNum.3473
+	mov	r1, r3	@, DelNum.3474
 	ldr	r0, [fp, #-96]	@, %sfp
 	str	ip, [r4, r2]	@ <variable>.RawPacketArray.Head, <variable>.RawPacketArray.History
 	bl	DeleteRawPacket	@
 	ldr	r0, [fp, #-56]	@, %sfp
 	mov	r1, r5	@, tmp496
 	bl	DeleteRawPacketInBuffer	@
-	mov	r0, r5	@ D.52825, tmp496
+	mov	r0, r5	@ D.52837, tmp496
 	b	.L1002	@
 .L1033:
 	ldr	r2, [fp, #-60]	@, %sfp
@@ -10050,7 +10050,7 @@ ScdReturnSegFilter:
 	ldr	r1, [fp, #-52]	@, %sfp
 	ldr	ip, [r3, #0]	@ tmp174,* <variable>.pScdUpMsg
 	and	r7, r5, #-2147483648	@ tmp175, <variable>.SegBufPhyAddr,
-	mov	r5, r6, asl #2	@ D.57053, UpMsgStepNum,
+	mov	r5, r6, asl #2	@ D.57065, UpMsgStepNum,
 	sub	r9, r1, #1	@ tmp256,,
 	bic	r8, ip, #-2147483648	@ tmp173, tmp174,
 	movw	r1, #:lower16:.LC155	@,
@@ -10060,8 +10060,8 @@ ScdReturnSegFilter:
 	movt	r1, #:upper16:.LC155	@,
 	mov	r7, #1	@ i.3615,
 	and	r9, r9, #1	@ tmp258, tmp256,
-	add	r6, sl, r5	@ ivtmp.3594, pTransFormSeg, D.57053
-	mov	r8, r5	@ ivtmp.3593, D.57053
+	add	r6, sl, r5	@ ivtmp.3594, pTransFormSeg, D.57065
+	mov	r8, r5	@ ivtmp.3593, D.57065
 	ldr	ip, [lr, #4]	@ tmp182,
 	str	ip, [sl, #4]	@ tmp182,
 	ldr	r3, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
@@ -10078,18 +10078,18 @@ ScdReturnSegFilter:
 	mov	r0, #24	@,
 	movw	r1, #:lower16:.LC155	@,
 	movt	r1, #:upper16:.LC155	@,
-	ldr	lr, [r8, r5]	@ tmp291,* D.57053
+	ldr	lr, [r8, r5]	@ tmp291,* D.57065
 	and	ip, r7, #-2147483648	@ tmp294, <variable>.SegBufPhyAddr,
 	mov	r7, #2	@ i.3615,
-	mov	r8, r5, asl #1	@ ivtmp.3593, D.57053,
+	mov	r8, r5, asl #1	@ ivtmp.3593, D.57065,
 	bic	r3, lr, #-2147483648	@ tmp292, tmp291,
 	orr	lr, r3, ip	@ tmp295, tmp292, tmp294
 	str	lr, [r6, #0]	@ tmp295,* ivtmp.3594
 	ldr	r3, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
-	add	ip, r5, r3	@ tmp297, D.57053, <variable>.pScdUpMsg
+	add	ip, r5, r3	@ tmp297, D.57065, <variable>.pScdUpMsg
 	ldr	lr, [ip, #4]	@ tmp299,
 	str	lr, [r6, #4]	@ tmp299,
-	add	r6, r6, r5	@ ivtmp.3594, ivtmp.3594, D.57053
+	add	r6, r6, r5	@ ivtmp.3594, ivtmp.3594, D.57065
 	ldr	r3, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
 	ldr	r3, [r3, #4]	@,
 	bl	dprint_vfmw	@
@@ -10098,7 +10098,7 @@ ScdReturnSegFilter:
 	ble	.L1103	@,
 .L1104:
 	ldr	r3, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
-	add	lr, r6, r5	@, ivtmp.3594, D.57053
+	add	lr, r6, r5	@, ivtmp.3594, D.57065
 	ldr	sl, [r4, #20]	@ <variable>.SegBufPhyAddr, <variable>.SegBufPhyAddr
 	mov	r2, r7	@, i.3615
 	mov	r0, #24	@,
@@ -10108,13 +10108,13 @@ ScdReturnSegFilter:
 	str	lr, [fp, #-48]	@, %sfp
 	movt	r1, #:upper16:.LC155	@,
 	bic	lr, r9, #-2147483648	@ tmp265, tmp264,
-	add	sl, r8, r5	@ ivtmp.3593, ivtmp.3593, D.57053
+	add	sl, r8, r5	@ ivtmp.3593, ivtmp.3593, D.57065
 	orr	r3, lr, ip	@ tmp268, tmp265, tmp267
 	str	r3, [r6, #0]	@ tmp268,* ivtmp.3594
 	ldr	lr, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
 	add	r9, r7, #1	@ tmp259, i.3615,
 	add	ip, r8, lr	@ tmp270, ivtmp.3593, <variable>.pScdUpMsg
-	add	r8, sl, r5	@ ivtmp.3593, ivtmp.3593, D.57053
+	add	r8, sl, r5	@ ivtmp.3593, ivtmp.3593, D.57065
 	ldr	r3, [ip, #4]	@ tmp272,
 	str	r3, [r6, #4]	@ tmp272,
 	ldr	lr, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
@@ -10131,11 +10131,11 @@ ScdReturnSegFilter:
 	mov	r2, r9	@, tmp259
 	bic	r3, r3, #-2147483648	@ tmp280, tmp279,
 	orr	r3, r3, ip	@ tmp283, tmp280, tmp282
-	str	r3, [r6, r5]	@ tmp283,* D.57053
+	str	r3, [r6, r5]	@ tmp283,* D.57065
 	ldr	r3, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
 	ldr	ip, [fp, #-48]	@, %sfp
 	add	sl, sl, r3	@ tmp285, ivtmp.3593, <variable>.pScdUpMsg
-	add	r6, ip, r5	@ ivtmp.3594,, D.57053
+	add	r6, ip, r5	@ ivtmp.3594,, D.57065
 	ldr	r3, [sl, #4]	@ tmp287,
 	str	r3, [ip, #4]	@ tmp287,
 	ldr	ip, [r4, #4]	@ <variable>.pScdUpMsg, <variable>.pScdUpMsg
@@ -10157,29 +10157,29 @@ ScdReturnSegFilter:
 .L1102:
 	ldr	r0, [r4, #20]	@, <variable>.SegBufPhyAddr
 	bl	MEM_Phy2Vir	@
-	subs	r3, r0, #0	@ D.51718,
+	subs	r3, r0, #0	@ D.51732,
 	bne	.L1126	@,
 .L1106:
-	mvn	r0, #6	@ D.51721,
+	mvn	r0, #6	@ D.51735,
 	b	.L1105	@
 .L1126:
-	ldrb	lr, [r3, #1]	@ zero_extendqisi2	@ D.51726,
-	ldrb	ip, [r3, #2]	@ zero_extendqisi2	@ D.51731,
+	ldrb	lr, [r3, #1]	@ zero_extendqisi2	@ D.51740,
+	ldrb	ip, [r3, #2]	@ zero_extendqisi2	@ D.51745,
 	ldr	r0, [r4, #28]	@, <variable>.SegBufRollAddr
-	ldrb	r9, [r3, #3]	@ zero_extendqisi2	@ D.51736,
-	ldrb	r8, [r3, #0]	@ zero_extendqisi2	@ D.51722,* D.51718
+	ldrb	r9, [r3, #3]	@ zero_extendqisi2	@ D.51750,
+	ldrb	r8, [r3, #0]	@ zero_extendqisi2	@ D.51736,* D.51732
 	str	lr, [fp, #-68]	@,
 	str	ip, [fp, #-64]	@,
 	bl	MEM_Phy2Vir	@
 	ldr	r2, [fp, #-68]	@,
 	ldr	r3, [fp, #-64]	@,
-	cmp	r0, #0	@ D.51739
+	cmp	r0, #0	@ D.51753
 	beq	.L1106	@,
-	orr	r8, r9, r8, asl #24	@, tmp188, D.51736, D.51722,
+	orr	r8, r9, r8, asl #24	@, tmp188, D.51750, D.51736,
 	mov	r9, sl	@ ivtmp.3608, pTransFormSeg
-	orr	ip, r8, r2, asl #16	@, tmp190, tmp188, D.51726,
+	orr	ip, r8, r2, asl #16	@, tmp190, tmp188, D.51740,
 	mov	sl, r5	@ i, tmp169
-	orr	r7, ip, r3, asl #8	@, Data32, tmp190, D.51731,
+	orr	r7, ip, r3, asl #8	@, Data32, tmp190, D.51745,
 	mov	r2, r6, asl #2	@, UpMsgStepNum,
 	strb	r7, [r0, #3]	@ Data32,
 	mov	r5, r7, lsr #16	@ tmp194, Data32,
@@ -10189,7 +10189,7 @@ ScdReturnSegFilter:
 	strb	r6, [r0, #2]	@ tmp196,
 	mov	r1, r7, lsr #24	@ tmp192, Data32,
 	add	r6, r9, #4	@ ivtmp.3611, ivtmp.3608,
-	strb	r1, [r0, #0]	@ tmp192,* D.51739
+	strb	r1, [r0, #0]	@ tmp192,* D.51753
 	mov	r7, r9	@ ivtmp.3666, ivtmp.3608
 	movw	r0, #:lower16:g_event_report	@,
 	mov	r5, #4	@ ivtmp.3610,
@@ -10225,9 +10225,9 @@ ScdReturnSegFilter:
 	beq	.L1106	@,
 	mov	r0, r8	@, TmpPhyAddr.3630
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.51751
+	cmp	r0, #0	@ D.51765
 	beq	.L1106	@,
-	ldrb	r1, [r0, #0]	@ zero_extendqisi2	@ tmp208,* D.51751
+	ldrb	r1, [r0, #0]	@ zero_extendqisi2	@ tmp208,* D.51765
 	ldrb	r3, [r0, #3]	@ zero_extendqisi2	@ tmp207,
 	ldrb	ip, [r0, #1]	@ zero_extendqisi2	@ tmp211,
 	ldrb	lr, [r0, #2]	@ zero_extendqisi2	@ tmp214,
@@ -10265,28 +10265,28 @@ ScdReturnSegFilter:
 	ldr	r4, [fp, #-56]	@, %sfp
 	str	sl, [r4, #0]	@ i,
 	mov	r4, #0	@ i.3612,
-	ldr	r5, [fp, #-48]	@ D.57072, %sfp
+	ldr	r5, [fp, #-48]	@ D.57084, %sfp
 	b	.L1115	@
 .L1116:
 	ldr	r3, [r3, #0]	@,
 	bl	dprint_vfmw	@
 .L1115:
 	cmp	r4, sl	@ i.3612, i
-	add	r9, r9, r5	@ ivtmp.3608, ivtmp.3608, D.57072
+	add	r9, r9, r5	@ ivtmp.3608, ivtmp.3608, D.57084
 	mov	r2, r4	@, i.3612
 	movw	r1, #:lower16:.LC155	@,
 	mov	r0, #24	@,
 	movt	r1, #:upper16:.LC155	@,
 	add	r4, r4, #1	@ i.3612, i.3612,
-	rsb	r3, r5, r9	@ tmp244, D.57072, ivtmp.3608
+	rsb	r3, r5, r9	@ tmp244, D.57084, ivtmp.3608
 	blt	.L1116	@,
-	mov	r0, #0	@ D.51721,
+	mov	r0, #0	@ D.51735,
 	b	.L1105	@
 .L1111:
 	ldr	r1, [r4, #16]	@ <variable>.LastH263Num, <variable>.LastH263Num
-	add	r3, r1, #1	@ D.51775, <variable>.LastH263Num,
-	str	r3, [r4, #16]	@ D.51775, <variable>.LastH263Num
-	cmp	r3, #12	@ D.51775,
+	add	r3, r1, #1	@ D.51789, <variable>.LastH263Num,
+	str	r3, [r4, #16]	@ D.51789, <variable>.LastH263Num
+	cmp	r3, #12	@ D.51789,
 	ble	.L1110	@,
 	ldr	r0, [fp, #-60]	@, %sfp
 	ldr	ip, [r0, #0]	@ g_event_report.589, g_event_report
@@ -10335,7 +10335,7 @@ SM_CopyRawToSeg:
 	cmp	r5, #0	@ pSmInstArray,
 	bne	.L1153	@,
 .L1131:
-	mvn	r0, #0	@ D.51051,
+	mvn	r0, #0	@ D.51065,
 .L1137:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -10346,9 +10346,9 @@ SM_CopyRawToSeg:
 	movw	r1, #:lower16:98512	@ tmp176,
 	movt	ip, #:upper16:98516	@ tmp175,
 	movt	r1, #:upper16:98512	@ tmp176,
-	ldr	r0, [r5, ip]	@ D.51058, <variable>.RawPacketArray.Tail
+	ldr	r0, [r5, ip]	@ D.51072, <variable>.RawPacketArray.Tail
 	ldr	r3, [r5, r1]	@, <variable>.RawPacketArray.Head
-	cmp	r0, r3	@ D.51058,
+	cmp	r0, r3	@ D.51072,
 	str	r3, [fp, #-48]	@, %sfp
 	beq	.L1132	@,
 	mov	r1, r3, asl #1	@ tmp419,,
@@ -10361,18 +10361,18 @@ SM_CopyRawToSeg:
 	b	.L1133	@
 .L1134:
 	mov	r2, r2, lsr #22	@ index, index,
-	cmp	r0, ip	@ D.51058, index
-	add	r3, r2, #1	@ D.51066, index,
+	cmp	r0, ip	@ D.51072, index
+	add	r3, r2, #1	@ D.51080, index,
 	add	r7, r7, #1	@ rawnum, rawnum,
 	add	ip, r2, r2, asl #1	@, tmp442, index, index,
-	ldr	r1, [r6, #216]	@ D.51068, <variable>.Length
-	mov	r3, r3, asl #22	@ index, D.51066,
+	ldr	r1, [r6, #216]	@ D.51082, <variable>.Length
+	mov	r3, r3, asl #22	@ index, D.51080,
 	beq	.L1132	@,
 	movw	r4, #1025	@,
 	cmp	r7, r4	@ rawnum,
 	add	ip, r5, ip, asl #5	@, tmp444, pSmInstArray, tmp442,
 	mov	r3, r3, lsr #22	@ index, index,
-	add	sl, sl, r1	@ TotalSrcLength, TotalSrcLength, D.51068
+	add	sl, sl, r1	@ TotalSrcLength, TotalSrcLength, D.51082
 	mov	r4, r7	@ tmp430, rawnum
 	beq	.L1132	@,
 	ldrb	r8, [r6, #260]	@ zero_extendqisi2	@ <variable>.is_not_last_packet_flag, <variable>.is_not_last_packet_flag
@@ -10381,30 +10381,30 @@ SM_CopyRawToSeg:
 	cmp	r8, #0	@ <variable>.is_not_last_packet_flag,
 	add	r6, r5, r6, asl #5	@, tmp457, pSmInstArray, tmp455,
 	beq	.L1152	@,
-	cmp	r0, r2	@ D.51058, index
+	cmp	r0, r2	@ D.51072, index
 	add	r7, r7, #1	@ rawnum, rawnum,
-	ldr	r2, [ip, #216]	@ D.51068, <variable>.Length
+	ldr	r2, [ip, #216]	@ D.51082, <variable>.Length
 	beq	.L1132	@,
 	ldrb	ip, [ip, #260]	@ zero_extendqisi2	@ <variable>.is_not_last_packet_flag, <variable>.is_not_last_packet_flag
-	add	sl, sl, r2	@ TotalSrcLength, TotalSrcLength, D.51068
+	add	sl, sl, r2	@ TotalSrcLength, TotalSrcLength, D.51082
 	cmp	ip, #0	@ <variable>.is_not_last_packet_flag,
 	beq	.L1152	@,
-	cmp	r0, r3	@ D.51058, index
+	cmp	r0, r3	@ D.51072, index
 	add	r7, r4, #2	@ rawnum, tmp430,
-	ldr	r2, [r6, #216]	@ D.51068, <variable>.Length
+	ldr	r2, [r6, #216]	@ D.51082, <variable>.Length
 	beq	.L1132	@,
-	add	sl, sl, r2	@ TotalSrcLength, TotalSrcLength, D.51068
+	add	sl, sl, r2	@ TotalSrcLength, TotalSrcLength, D.51082
 .L1133:
 	add	r2, r1, r3	@ tmp433, tmp422, index
-	add	r6, r3, #1	@ D.51066, index,
-	mov	ip, r6, asl #22	@ index, D.51066,
+	add	r6, r3, #1	@ D.51080, index,
+	mov	ip, r6, asl #22	@ index, D.51080,
 	add	r6, r5, r2, asl #5	@, tmp435, pSmInstArray, tmp433,
 	mov	ip, ip, lsr #22	@ index, index,
 	ldrb	r3, [r6, #260]	@ zero_extendqisi2	@ <variable>.is_not_last_packet_flag, <variable>.is_not_last_packet_flag
-	add	r2, ip, #1	@ D.51066, index,
+	add	r2, ip, #1	@ D.51080, index,
 	add	r1, ip, ip, asl #1	@, tmp188, index, index,
 	cmp	r3, #0	@ <variable>.is_not_last_packet_flag,
-	mov	r2, r2, asl #22	@ index, D.51066,
+	mov	r2, r2, asl #22	@ index, D.51080,
 	add	r6, r5, r1, asl #5	@, tmp190, pSmInstArray, tmp188,
 	bne	.L1134	@,
 .L1152:
@@ -10469,10 +10469,10 @@ SM_CopyRawToSeg:
 	mov	r2, #96	@ tmp302,
 	mov	r1, #3	@ tmp313,
 	cmp	r7, #0	@ rawnum,
-	mov	r3, r0	@ D.51129,
+	mov	r3, r0	@ D.51143,
 	ldr	r0, [fp, #-48]	@, %sfp
-	rsb	ip, r3, r9	@ tmp299, D.51129, TmpVirAddr
-	str	r3, [r6, #0]	@ D.51129, <variable>.VirAddr
+	rsb	ip, r3, r9	@ tmp299, D.51143, TmpVirAddr
+	str	r3, [r6, #0]	@ D.51143, <variable>.VirAddr
 	str	ip, [r6, #16]	@ tmp299, <variable>.LenInByte
 	mov	ip, #1	@ tmp320,
 	mla	r2, r2, r0, r5	@ tmp303, tmp302,, pSmInstArray
@@ -10570,10 +10570,10 @@ SM_CopyRawToSeg:
 	ldr	r0, [fp, #-68]	@, %sfp
 	mov	r1, sl	@, TotalSrcLength
 	bl	DeleteRawLen	@
-	mov	r0, #0	@ D.51051,
+	mov	r0, #0	@ D.51065,
 	b	.L1137	@
 .L1132:
-	mvn	r0, #3	@ D.51051,
+	mvn	r0, #3	@ D.51065,
 	b	.L1137	@
 .L1138:
 	ldr	r0, [fp, #-48]	@, %sfp
@@ -10595,14 +10595,14 @@ SM_CopyRawToSeg:
 	ldr	r0, [fp, #-68]	@, %sfp
 	mov	r1, sl	@, TotalSrcLength
 	bl	DeleteRawLen	@
-	cmp	r0, #0	@ D.51080
+	cmp	r0, #0	@ D.51094
 	beq	.L1137	@,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC127	@,
 	movw	r2, #2440	@,
 	movt	r1, #:upper16:.LC127	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.51051,
+	mov	r0, #0	@ D.51065,
 	b	.L1137	@
 .L1141:
 	cmp	r7, #1	@ rawnum,
@@ -10697,24 +10697,24 @@ SM_ReadStreamSeg:
 .L1163:
 	cmp	r5, #0	@ pSmInstArray,
 	beq	.L1156	@,
-	ldr	r3, [r5, #56]	@ D.51252, <variable>.Config.VidStd
-	sub	r1, r3, #8	@ tmp148, D.51252,
-	cmp	r3, #5	@ D.51252,
+	ldr	r3, [r5, #56]	@ D.51266, <variable>.Config.VidStd
+	sub	r1, r3, #8	@ tmp148, D.51266,
+	cmp	r3, #5	@ D.51266,
 	cmpne	r1, #1	@, tmp148,
 	bls	.L1157	@,
-	cmp	r3, #4	@ D.51252,
+	cmp	r3, #4	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #10	@ D.51252,
+	cmp	r3, #10	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #14	@ D.51252,
+	cmp	r3, #14	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #11	@ D.51252,
+	cmp	r3, #11	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #12	@ D.51252,
+	cmp	r3, #12	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #13	@ D.51252,
+	cmp	r3, #13	@ D.51266,
 	beq	.L1157	@,
-	cmp	r3, #1	@ D.51252,
+	cmp	r3, #1	@ D.51266,
 	bne	.L1158	@,
 	ldr	r4, [r5, #72]	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile, <variable>.Config.StdExt.Vc1Ext.IsAdvProfile
 	cmp	r4, #0	@ <variable>.Config.StdExt.Vc1Ext.IsAdvProfile,
@@ -10883,7 +10883,7 @@ WriteCabacTabDsp:
 	bl	__gnu_mcount_nc
 	bl	MEM_Phy2Vir	@
 	cmp	r0, #0	@ p
-	addne	r4, r0, #5120	@ D.57326, p,
+	addne	r4, r0, #5120	@ D.57338, p,
 	movwne	r3, #:lower16:g_CabacMN	@ ivtmp.3835,
 	movtne	r3, #:upper16:g_CabacMN	@ ivtmp.3835,
 	beq	.L1188	@,
@@ -10911,7 +10911,7 @@ WriteCabacTabDsp:
 	str	ip, [r0, #32]	@ tmp156,
 	add	r0, r2, #32	@ p, tmp152,
 	ldr	r1, [lr, #4]	@ tmp157, g_CabacMN
-	cmp	r0, r4	@ p, D.57326
+	cmp	r0, r4	@ p, D.57338
 	str	r1, [r2, #4]	@ tmp157,
 	ldr	ip, [lr, #8]	@ tmp158, g_CabacMN
 	str	ip, [r2, #8]	@ tmp158,
@@ -10968,7 +10968,7 @@ SM_OpenSCDDrv:
 	ldr	r2, .L1208	@,
 	movt	r1, #:upper16:.LC161	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.50706,
+	mvn	r0, #6	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1202:
 	bne	.L1193	@,
@@ -10978,16 +10978,16 @@ SM_OpenSCDDrv:
 	movt	r1, #:upper16:.LC162	@,
 	movw	r3, #1785	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.50706,
+	mvn	r0, #6	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1193:
 	movw	r0, #:lower16:g_vdm_hal_fun_ptr	@ tmp173,
 	movt	r0, #:upper16:g_vdm_hal_fun_ptr	@ tmp173,
-	ldr	r3, [r0, #16]	@ D.50710, g_vdm_hal_fun_ptr.pfun_SCDDRV_OpenHardware
-	cmp	r3, #0	@ D.50710,
+	ldr	r3, [r0, #16]	@ D.50724, g_vdm_hal_fun_ptr.pfun_SCDDRV_OpenHardware
+	cmp	r3, #0	@ D.50724,
 	beq	.L1194	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.50710
+	blx	r3	@ D.50724
 .L1195:
 	ldr	r1, [r4, #848]	@ <variable>.IsScdDrvOpen, <variable>.IsScdDrvOpen
 	movw	r4, #:lower16:.LANCHOR0	@ tmp175,
@@ -11005,17 +11005,17 @@ SM_OpenSCDDrv:
 	movw	r0, #:lower16:g_VfmwGlobalStat	@ tmp181,
 	rsb	r8, r5, r8	@ Offset, MemAddr, tmp184
 	movt	r0, #:upper16:g_VfmwGlobalStat	@ tmp181,
-	add	r3, r8, r5	@ D.50731, Offset, MemAddr
+	add	r3, r8, r5	@ D.50745, Offset, MemAddr
 	str	sl, [r4, #768]	@ tmp180, s_eScdDrvSleepStage
 	str	sl, [r0, #76]	@ tmp180, <variable>.u32SaScdLoad
-	mov	r0, r3	@, D.50731
-	str	r3, [r4, #780]	@ D.50731, <variable>.ScdDrvMem.DownMsgMemAddr
+	mov	r0, r3	@, D.50745
+	str	r3, [r4, #780]	@ D.50745, <variable>.ScdDrvMem.DownMsgMemAddr
 	str	r5, [r4, #772]	@ MemAddr, <variable>.ScdDrvMem.HwMemAddr
 	str	r6, [r4, #776]	@ MemSize, <variable>.ScdDrvMem.HwMemSize
 	bl	MEM_Phy2Vir	@
-	add	r1, r8, #12288	@ D.50736, Offset,
+	add	r1, r8, #12288	@ D.50750, Offset,
 	mov	r2, #12288	@ tmp190,
-	add	ip, r1, r5	@ temp.3884, D.50736, MemAddr
+	add	ip, r1, r5	@ temp.3884, D.50750, MemAddr
 	str	r2, [r4, #788]	@ tmp190, <variable>.ScdDrvMem.DownMsgMemSize
 	str	ip, [r4, #792]	@ temp.3884, <variable>.ScdDrvMem.UpMsgMemAddr
 	str	r0, [r4, #784]	@, <variable>.ScdDrvMem.pDownMsgMemVirAddr
@@ -11029,8 +11029,8 @@ SM_OpenSCDDrv:
 	str	r0, [r4, #796]	@, <variable>.ScdDrvMem.pUpMsgMemVirAddr
 	mov	r0, ip	@, temp.3886
 	bl	MEM_Phy2Vir	@
-	cmp	r0, sl	@ D.50742,
-	str	r0, [r4, #808]	@ D.50742, <variable>.ScdDrvMem.pDvmMemVirAddr
+	cmp	r0, sl	@ D.50756,
+	str	r0, [r4, #808]	@ D.50756, <variable>.ScdDrvMem.pDvmMemVirAddr
 	beq	.L1203	@,
 	mov	r1, #512	@,
 	add	r8, r8, #22016	@ Offset.3887, Offset,
@@ -11040,8 +11040,8 @@ SM_OpenSCDDrv:
 	str	r0, [r4, #816]	@ temp.3888, <variable>.ScdDrvMem.DspSedTopMemAddr
 	str	r1, [r4, #812]	@ tmp201, <variable>.ScdDrvMem.DvmMemSize
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.50754,
-	str	r0, [r4, #820]	@ D.50754, <variable>.ScdDrvMem.pDspSedTopMemVirAddr
+	cmp	r0, #0	@ D.50768,
+	str	r0, [r4, #820]	@ D.50768, <variable>.ScdDrvMem.pDspSedTopMemVirAddr
 	beq	.L1204	@,
 	mov	r7, #278528	@ tmp208,
 	str	r7, [r4, #824]	@ tmp208, <variable>.ScdDrvMem.DspSedTopMemSize
@@ -11051,8 +11051,8 @@ SM_OpenSCDDrv:
 	add	r0, r0, r5	@ temp.3890, Offset.3889, MemAddr
 	str	r0, [r4, #828]	@ temp.3890, <variable>.ScdDrvMem.DspCaMnMemAddr
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.50766,
-	str	r0, [r4, #832]	@ D.50766, <variable>.ScdDrvMem.pDspCaMnMemVirAddr
+	cmp	r0, #0	@ D.50780,
+	str	r0, [r4, #832]	@ D.50780, <variable>.ScdDrvMem.pDspCaMnMemVirAddr
 	beq	.L1205	@,
 	mov	r1, r7	@, tmp208
 	add	r8, r8, #557056	@ Offset.3891, Offset.3887,
@@ -11065,22 +11065,22 @@ SM_OpenSCDDrv:
 	bic	r0, r2, #127	@ g_hex_base_addr.508, tmp219,
 	str	r0, [r4, #1000]	@ g_hex_base_addr.508, g_hex_base_addr
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.50783,
-	str	r0, [r4, #1008]	@ D.50783, g_hex_base_vir_addr
+	cmp	r0, #0	@ D.50797,
+	str	r0, [r4, #1008]	@ D.50797, g_hex_base_vir_addr
 	beq	.L1206	@,
-	add	r8, r8, #17920	@ D.50791, Offset.3891,
+	add	r8, r8, #17920	@ D.50805, Offset.3891,
 	ldr	lr, [r4, #868]	@ s_RegPhyBaseAddr, s_RegPhyBaseAddr
-	cmp	r6, r8	@ MemSize, D.50791
+	cmp	r6, r8	@ MemSize, D.50805
 	mov	r3, #17920	@ tmp227,
 	str	sl, [r4, #844]	@ tmp180, <variable>.ScdDrvMem.ScdResetRegAddr
 	str	r3, [r4, #1012]	@ tmp227, g_hex_len
 	str	lr, [r4, #840]	@ s_RegPhyBaseAddr, <variable>.ScdDrvMem.ScdRegAddr
 	bge	.L1207	@,
 .L1196:
-	mvn	r0, #6	@ D.50706,
+	mvn	r0, #6	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1194:
-	mov	r0, r3	@, D.50710
+	mov	r0, r3	@, D.50724
 	movw	r1, #:lower16:.LC56	@,
 	movw	r2, #1789	@,
 	movt	r1, #:upper16:.LC56	@,
@@ -11091,7 +11091,7 @@ SM_OpenSCDDrv:
 	ldr	r2, .L1208	@,
 	movt	r1, #:upper16:.LC166	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50706,
+	mvn	r0, #0	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1207:
 	ldr	ip, [r4, #784]	@ <variable>.ScdDrvMem.pDownMsgMemVirAddr, <variable>.ScdDrvMem.pDownMsgMemVirAddr
@@ -11100,7 +11100,7 @@ SM_OpenSCDDrv:
 	ldr	r2, [r4, #796]	@ <variable>.ScdDrvMem.pUpMsgMemVirAddr, <variable>.ScdDrvMem.pUpMsgMemVirAddr
 	cmp	r2, #0	@ <variable>.ScdDrvMem.pUpMsgMemVirAddr,
 	movne	r2, #1	@ tmp238,
-	movne	r0, sl	@ D.50706, tmp180
+	movne	r0, sl	@ D.50720, tmp180
 	strne	r2, [r4, #848]	@ tmp238, <variable>.IsScdDrvOpen
 	ldmnefd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 	b	.L1196	@
@@ -11109,21 +11109,21 @@ SM_OpenSCDDrv:
 	ldr	r2, .L1208	@,
 	movt	r1, #:upper16:.LC165	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50706,
+	mvn	r0, #0	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1203:
 	movw	r1, #:lower16:.LC163	@,
 	ldr	r2, .L1208	@,
 	movt	r1, #:upper16:.LC163	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50706,
+	mvn	r0, #0	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1204:
 	movw	r1, #:lower16:.LC164	@,
 	ldr	r2, .L1208	@,
 	movt	r1, #:upper16:.LC164	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50706,
+	mvn	r0, #0	@ D.50720,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L1209:
 	.align	2
@@ -11167,15 +11167,15 @@ JudgeH264NewFrame:
 	cmpne	r0, #5	@, NalUnitType,
 	beq	.L1214	@,
 .L1211:
-	mov	r0, #0	@ D.51922,
+	mov	r0, #0	@ D.51936,
 .L1212:
 	sub	sp, fp, #16
 	ldmfd	sp, {r4, fp, sp, pc}
 .L1214:
 	mov	r0, r4	@, tmp140
 	bl	BsUeV	@
-	rsbs	r0, r0, #1	@ D.51922,
-	movcc	r0, #0	@ D.51922
+	rsbs	r0, r0, #1	@ D.51936,
+	movcc	r0, #0	@ D.51936
 	b	.L1212	@
 	.fnend
 	.size	JudgeH264NewFrame, .-JudgeH264NewFrame
@@ -11270,7 +11270,7 @@ ProcessScdReturn:
 	bl	MEM_ReadPhyWord	@
 	ldr	r6, [fp, #-48]	@ ScdSegNum, ScdSegNum
 	cmp	r6, #1152	@ ScdSegNum,
-	movge	r6, #1152	@ D.52025,
+	movge	r6, #1152	@ D.52037,
 	and	r0, r0, #15	@ tmp227,,
 	str	r0, [r4, #16]	@ tmp227, <variable>.SegFilter.ProtocolType
 	movw	r0, #:lower16:-121386996	@,
@@ -11278,7 +11278,7 @@ ProcessScdReturn:
 	bl	MEM_ReadPhyWord	@
 	ldr	r1, [fp, #-260]	@, %sfp
 	bl	__aeabi_uidiv	@
-	cmp	r6, r0	@ D.52025,
+	cmp	r6, r0	@ D.52037,
 	bhi	.L1279	@,
 	ldr	r3, [fp, #-48]	@ ScdSegNum.3975, ScdSegNum
 	cmp	r3, #1152	@ ScdSegNum.3975,
@@ -11299,7 +11299,7 @@ ProcessScdReturn:
 	movt	r6, #:upper16:190720	@ tmp247,
 	movw	r9, #:lower16:190864	@ tmp255,
 	movt	r9, #:upper16:190864	@ tmp255,
-	add	sl, r4, #190464	@ D.52052, pScdInstance,
+	add	sl, r4, #190464	@ D.52064, pScdInstance,
 	movw	r2, #:lower16:98536	@ tmp246,
 	movt	r2, #:upper16:98536	@ tmp246,
 	ldr	lr, [fp, #-52]	@ SegBufAddr, SegBufAddr
@@ -11307,12 +11307,12 @@ ProcessScdReturn:
 	ldr	r3, [r4, r0]	@ <variable>.BufAddrCfg.pUpMsgVirAddr, <variable>.BufAddrCfg.pUpMsgVirAddr
 	add	r0, r4, #8	@, pScdInstance,
 	ldr	r7, [r4, r6]	@ <variable>.StreamSegArray.SegBufPhyAddr, <variable>.StreamSegArray.SegBufPhyAddr
-	add	r6, sl, #420	@ D.52052, D.52052,
+	add	r6, sl, #420	@ D.52064, D.52064,
 	ldr	sl, [r4, r9]	@ <variable>.InstID, <variable>.InstID
 	ldr	r9, [fp, #-76]	@ SmStateReg.ScdRollAddr, SmStateReg.ScdRollAddr
 	rsb	r7, r7, lr	@ tmp248, <variable>.StreamSegArray.SegBufPhyAddr, SegBufAddr
 	str	r0, [fp, #-296]	@, %sfp
-	mov	r1, r6	@, D.52052
+	mov	r1, r6	@, D.52064
 	ldr	ip, [r4, r2]	@ <variable>.StreamSegArray.pSegBufVirAddr, <variable>.StreamSegArray.pSegBufVirAddr
 	sub	r2, fp, #68	@,,
 	str	r3, [r4, #12]	@ <variable>.BufAddrCfg.pUpMsgVirAddr, <variable>.SegFilter.pScdUpMsg
@@ -11386,13 +11386,13 @@ ProcessScdReturn:
 	cmp	r6, r3	@ i.3989, prephitmp.4105
 	bge	.L1281	@,
 	ldr	r9, [fp, #-260]	@, %sfp
-	add	ip, r1, #1	@ D.52147, ivtmp.3968,
+	add	ip, r1, #1	@ D.52159, ivtmp.3968,
 	add	r7, r1, r9	@ ivtmp.4098, ivtmp.3968,
 	add	r1, r1, #47616	@ tmp358, ivtmp.3968,
 	add	r0, r7, #47616	@ tmp364, ivtmp.4098,
 	add	sl, r1, #104	@ tmp358, tmp358,
 	add	r3, r0, #104	@ tmp364, tmp364,
-	add	r9, ip, #47616	@ tmp648, D.52147,
+	add	r9, ip, #47616	@ tmp648, D.52159,
 	add	r1, r4, sl, asl #2	@, tmp362, pScdInstance, tmp358,
 	add	r0, r6, #1	@, i.3989,
 	add	r8, r4, r3, asl #2	@, tmp368, pScdInstance, tmp364,
@@ -11531,13 +11531,13 @@ ProcessScdReturn:
 	ldr	r2, [fp, #-76]	@ SmStateReg.ScdRollAddr, SmStateReg.ScdRollAddr
 	ldr	r1, [r4, r5]	@ <variable>.StreamSegArray.SegBufPhyAddr, <variable>.StreamSegArray.SegBufPhyAddr
 	ldr	r5, [r4, r3]	@ <variable>.StreamSegArray.pSegBufVirAddr, <variable>.StreamSegArray.pSegBufVirAddr
-	rsb	r3, r8, r2	@ D.52249, CurrSegPhyAddr, SmStateReg.ScdRollAddr
+	rsb	r3, r8, r2	@ D.52261, CurrSegPhyAddr, SmStateReg.ScdRollAddr
 	ldr	r0, [fp, #-264]	@, %sfp
 	rsb	ip, r1, r8	@ tmp506, <variable>.StreamSegArray.SegBufPhyAddr, CurrSegPhyAddr
 	sub	r2, fp, #60	@,,
 	sub	r1, fp, #64	@,,
 	add	ip, r5, ip	@ tmp509, <variable>.StreamSegArray.pSegBufVirAddr, tmp506
-	add	r3, lr, r3	@ tmp513, tmp511, D.52249
+	add	r3, lr, r3	@ tmp513, tmp511, D.52261
 	str	ip, [fp, #-172]	@ tmp509, SegPacket.VirAddr
 	mov	ip, #0	@,
 	str	r3, [fp, #-156]	@ tmp513, SegPacket.LenInByte
@@ -11560,9 +11560,9 @@ ProcessScdReturn:
 	addmi	lr, lr, #1152	@,,
 	strmi	lr, [fp, #-300]	@, %sfp
 .L1254:
-	ldr	r0, [fp, #-160]	@ D.54053, SegPacket.PhyAddr
+	ldr	r0, [fp, #-160]	@ D.54065, SegPacket.PhyAddr
 	ldr	r1, [fp, #-300]	@, %sfp
-	cmp	r0, #0	@ D.54053,
+	cmp	r0, #0	@ D.54065,
 	ldr	r2, [fp, #-60]	@ SegFreeBufLen.4037, SegFreeBufLen
 	rsb	ip, r1, #1152	@,,
 	str	ip, [fp, #-300]	@, %sfp
@@ -11571,13 +11571,13 @@ ProcessScdReturn:
 	ldr	r5, [fp, #-300]	@, %sfp
 	cmp	r5, #1	@,
 	ble	.L1291	@,
-	movw	r2, #4215	@,
+	movw	r2, #4210	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC172	@,
 	movt	r1, #:upper16:.LC172	@,
 	bl	dprint_vfmw	@
 	ldr	r8, [fp, #-316]	@, %sfp
-	movw	r2, #4216	@,
+	movw	r2, #4211	@,
 	ldr	r3, [fp, #-60]	@, SegFreeBufLen
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC173	@,
@@ -11589,7 +11589,7 @@ ProcessScdReturn:
 	movw	r1, #:lower16:.LC174	@,
 	movt	r1, #:upper16:.LC174	@,
 	mov	r0, #1	@,
-	movw	r2, #4217	@,
+	movw	r2, #4212	@,
 .L1274:
 	ldr	lr, [fp, #-236]	@ LastSegPacket.LenInByte, LastSegPacket.LenInByte
 	mov	r5, #1	@ ScdErrFlag,
@@ -11650,13 +11650,13 @@ ProcessScdReturn:
 	cmp	r5, #0	@ LastSegPacket.PhyAddr,
 	bne	.L1293	@,
 .L1244:
-	movw	r2, #4075	@,
+	movw	r2, #4070	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC172	@,
 	movt	r1, #:upper16:.LC172	@,
 	bl	dprint_vfmw	@
 	ldr	r8, [fp, #-316]	@, %sfp
-	movw	r2, #4076	@,
+	movw	r2, #4071	@,
 	ldr	r3, [fp, #-60]	@, SegFreeBufLen
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC173	@,
@@ -11668,7 +11668,7 @@ ProcessScdReturn:
 	ldrb	ip, [fp, #-247]	@ zero_extendqisi2	@ LastSegPacket.IsLastSeg, LastSegPacket.IsLastSeg
 	ldr	r3, [fp, #-240]	@, LastSegPacket.PhyAddr
 	movt	r1, #:upper16:.LC174	@,
-	movw	r2, #4077	@,
+	movw	r2, #4072	@,
 	b	.L1274	@
 .L1293:
 	ldr	r1, [fp, #-252]	@ LastSegPacket.VirAddr, LastSegPacket.VirAddr
@@ -11715,7 +11715,7 @@ ProcessScdReturn:
 	b	.L1248	@
 .L1278:
 	ldr	r3, [fp, #-280]	@, %sfp
-	movw	r2, #3879	@,
+	movw	r2, #3874	@,
 	movw	r1, #:lower16:.LC167	@,
 	movt	r1, #:upper16:.LC167	@,
 	mvn	r8, #6	@,
@@ -11742,7 +11742,7 @@ ProcessScdReturn:
 	ldr	r2, [fp, #-288]	@, %sfp
 	sub	r3, fp, #172	@,,
 	add	r9, r4, r9, asl #2	@, tmp531, pScdInstance, tmp527,
-	rsb	ip, r0, r1	@ tmp526, D.54053, SmStateReg.ScdRollAddr
+	rsb	ip, r0, r1	@ tmp526, D.54065, SmStateReg.ScdRollAddr
 	str	ip, [fp, #-156]	@ tmp526, SegPacket.LenInByte
 	ldr	lr, [r9, #4]	@ tmp534, <variable>.TransFormSeg
 	ldr	r0, [fp, #-292]	@, %sfp
@@ -11882,7 +11882,7 @@ ProcessScdReturn:
 	str	r1, [fp, #-268]	@, %sfp
 	b	.L1218	@
 .L1237:
-	mov	r1, r6	@, D.52052
+	mov	r1, r6	@, D.52064
 	mov	r0, r4	@, pScdInstance
 	ldr	r2, [fp, #-264]	@, %sfp
 	str	r5, [sp, #0]	@ ScdId,
@@ -11894,7 +11894,7 @@ ProcessScdReturn:
 	movw	r1, #:lower16:.LC179	@,
 	ldr	r2, .L1297	@,
 	movt	r1, #:upper16:.LC179	@,
-	movw	r3, #4172	@,
+	movw	r3, #4167	@,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	b	.L1254	@
@@ -11911,7 +11911,7 @@ ProcessScdReturn:
 .L1294:
 	mov	r0, #26	@,
 	movw	r1, #:lower16:.LC169	@,
-	mov	r2, #4064	@,
+	movw	r2, #4059	@,
 	movt	r1, #:upper16:.LC169	@,
 	bl	dprint_vfmw	@
 	mov	r5, #0	@ ScdErrFlag,
@@ -11933,9 +11933,9 @@ ProcessScdReturn:
 	mov	r0, sl	@, NextSegPhyAddr
 	str	ip, [fp, #-320]	@,
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.52218
+	cmp	r0, #0	@ D.52230
 	beq	.L1216	@,
-	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ tmp470,* D.52218
+	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ tmp470,* D.52230
 	ldrb	r2, [r0, #3]	@ zero_extendqisi2	@ tmp469,
 	ldrb	r1, [r0, #1]	@ zero_extendqisi2	@ tmp473,
 	ldrb	r0, [r0, #2]	@ zero_extendqisi2	@ tmp476,
@@ -11967,7 +11967,7 @@ ProcessScdReturn:
 	bl	GetFreeSegBuf	@
 	ldr	r0, [fp, #-320]	@,
 	ldr	r2, [fp, #-288]	@, %sfp
-	add	r3, r0, #47616	@ tmp491, D.52147,
+	add	r3, r0, #47616	@ tmp491, D.52159,
 	ldr	r0, [fp, #-292]	@, %sfp
 	add	r1, r3, #104	@ tmp491, tmp491,
 	sub	r3, fp, #252	@,,
@@ -12062,7 +12062,7 @@ ProcessScdReturn:
 	ldr	r3, [fp, #-156]	@ prephitmp.4040, SegPacket.LenInByte
 .L1256:
 	ldrb	ip, [fp, #-167]	@ zero_extendqisi2	@ SegPacket.IsLastSeg, SegPacket.IsLastSeg
-	mov	r2, r0	@, D.54053
+	mov	r2, r0	@, D.54065
 	movw	r1, #:lower16:.LC180	@,
 	mov	r0, #26	@,
 	movt	r1, #:upper16:.LC180	@,
@@ -12073,13 +12073,13 @@ ProcessScdReturn:
 .L1296:
 	ldr	r1, [fp, #-260]	@, %sfp
 	sub	r3, r0, #-1073741823	@ tmp296,,
-	mul	r7, r1, r3	@ D.52089,, tmp296
-	add	r2, r7, #47616	@ tmp297, D.52089,
+	mul	r7, r1, r3	@ D.52101,, tmp296
+	add	r2, r7, #47616	@ tmp297, D.52101,
 	add	r0, r2, #104	@ tmp297, tmp297,
 	add	lr, r4, r0, asl #2	@, tmp301, pScdInstance, tmp297,
 	ldr	r0, [lr, #4]	@, <variable>.TransFormSeg
 	bl	MEM_Phy2Vir	@
-	add	ip, r7, #47616	@ tmp304, D.52089,
+	add	ip, r7, #47616	@ tmp304, D.52101,
 	add	r7, ip, #105	@ tmp304, tmp304,
 	movw	r3, #:lower16:190756	@ tmp303,
 	movt	r3, #:upper16:190756	@ tmp303,
@@ -12291,7 +12291,7 @@ SM_SCDIntServeProc:
 	mov	lr, r8, asl #24	@ tmp188, prephitmp.4158,
 	ldr	r0, .L1331	@,
 	add	r2, lr, #131072	@, tmp188,
-	movw	r1, #5661	@,
+	movw	r1, #5656	@,
 	str	ip, [r3, #1024]	@ CurTimeInMs, last_rec_pos_time
 	bl	DBG_AddTrace	@
 	b	.L1325	@
@@ -12443,8 +12443,8 @@ SM_DeletDSPCtxMem:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r4, r0	@ pstDSPMem, pstDSPMem
-	ldr	r0, [r0, #8]	@ D.50655, <variable>.PhyAddr
-	cmp	r0, #0	@ D.50655,
+	ldr	r0, [r0, #8]	@ D.50669, <variable>.PhyAddr
+	cmp	r0, #0	@ D.50669,
 	bne	.L1337	@,
 	movw	r1, #:lower16:.LC184	@,
 	movt	r1, #:upper16:.LC184	@,
@@ -12496,7 +12496,7 @@ SM_AllocDSPCtxMem:
 	mov	r3, r4	@, tmp145
 	str	r5, [sp, #0]	@ tmp148,
 	bl	MEM_AllocMemBlock	@
-	subs	sl, r0, #0	@ D.50615,
+	subs	sl, r0, #0	@ D.50629,
 	bne	.L1339	@,
 	ldr	r1, [fp, #-48]	@, stTempMem.VirAddr
 	add	r7, r7, r7, asl #1	@, tmp155, SmID, SmID,
@@ -12512,14 +12512,14 @@ SM_AllocDSPCtxMem:
 	add	r4, r7, #1	@ tmp165, tmp155,
 	rsb	r8, r6, r8	@ Offset, MemAddr, tmp160
 	add	r7, r5, r7, asl #4	@, tmp157, tmp152, tmp155,
-	add	ip, r8, r6	@ D.50627, Offset, MemAddr
+	add	ip, r8, r6	@ D.50641, Offset, MemAddr
 	stmia	r7, {r0, r1, r2, r3}	@ tmp157,,,,
-	str	ip, [r5, r4, asl #4]	@ D.50627, <variable>.DspCtxMem.DspSpsMsgMemAddr
-	mov	r0, ip	@, D.50627
+	str	ip, [r5, r4, asl #4]	@ D.50641, <variable>.DspCtxMem.DspSpsMsgMemAddr
+	mov	r0, ip	@, D.50641
 	add	r5, r5, r4, asl #4	@, tmp173, tmp152, tmp165,
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.50629,
-	str	r0, [r5, #4]	@ D.50629, <variable>.DspCtxMem.pDspSpsMsgMemVirAddr
+	cmp	r0, #0	@ D.50643,
+	str	r0, [r5, #4]	@ D.50643, <variable>.DspCtxMem.pDspSpsMsgMemVirAddr
 	beq	.L1346	@,
 	mov	r1, #1024	@ tmp189,
 	add	r6, r6, #1024	@ tmp200, MemAddr,
@@ -12528,13 +12528,13 @@ SM_AllocDSPCtxMem:
 	add	r0, r6, r8	@ temp.4238, tmp200, Offset
 	str	r0, [r7, #28]	@ temp.4238, <variable>.DspCtxMem.DspPpsMsgMemAddr
 	bl	MEM_Phy2Vir	@
-	cmp	r0, #0	@ D.50641,
-	str	r0, [r7, #32]	@ D.50641, <variable>.DspCtxMem.pDspPpsMsgMemVirAddr
+	cmp	r0, #0	@ D.50655,
+	str	r0, [r7, #32]	@ D.50655, <variable>.DspCtxMem.pDspPpsMsgMemVirAddr
 	beq	.L1347	@,
 	mov	r1, #8192	@ tmp228,
 	str	r1, [r7, #36]	@ tmp228, <variable>.DspCtxMem.DspPpsMsgMemSize
 	bl	__memzero	@
-	mov	r0, sl	@ D.50623, D.50615
+	mov	r0, sl	@ D.50637, D.50629
 .L1342:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -12544,21 +12544,21 @@ SM_AllocDSPCtxMem:
 	ldr	r2, .L1348	@,
 	movt	r1, #:upper16:.LC186	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.50623,
+	mvn	r0, #6	@ D.50637,
 	b	.L1342	@
 .L1347:
 	movw	r1, #:lower16:.LC188	@,
 	ldr	r2, .L1348	@,
 	movt	r1, #:upper16:.LC188	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.50623,
+	mvn	r0, #6	@ D.50637,
 	b	.L1342	@
 .L1346:
 	movw	r1, #:lower16:.LC187	@,
 	ldr	r2, .L1348	@,
 	movt	r1, #:upper16:.LC187	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #6	@ D.50623,
+	mvn	r0, #6	@ D.50637,
 	b	.L1342	@
 .L1349:
 	.align	2
@@ -12580,9 +12580,9 @@ SM_AllocDSPCtxMem:
 	.section	.rodata
 	.align	2
 .LANCHOR1 = . + 0
-	.type	__func__.50397, %object
-	.size	__func__.50397, 17
-__func__.50397:
+	.type	__func__.50411, %object
+	.size	__func__.50411, 17
+__func__.50411:
 	.ascii	"ReleaseStreamSeg\000"
 	.space	3
 	.type	CSWTCH.727, %object
@@ -12608,29 +12608,29 @@ CSWTCH.727:
 	.word	3145728
 	.word	3145728
 	.word	20971520
-	.type	__func__.53604, %object
-	.size	__func__.53604, 17
-__func__.53604:
+	.type	__func__.53616, %object
+	.size	__func__.53616, 17
+__func__.53616:
 	.ascii	"PrintScdSegState\000"
 	.space	3
-	.type	__func__.53489, %object
-	.size	__func__.53489, 17
-__func__.53489:
+	.type	__func__.53501, %object
+	.size	__func__.53501, 17
+__func__.53501:
 	.ascii	"PrintScdRawState\000"
 	.space	3
-	.type	__func__.51859, %object
-	.size	__func__.51859, 11
-__func__.51859:
+	.type	__func__.51873, %object
+	.size	__func__.51873, 11
+__func__.51873:
 	.ascii	"GetNextVop\000"
 	.space	1
-	.type	__func__.53284, %object
-	.size	__func__.53284, 19
-__func__.53284:
+	.type	__func__.53296, %object
+	.size	__func__.53296, 19
+__func__.53296:
 	.ascii	"SCDDRV_CheckDevice\000"
 	.space	1
-	.type	C.639.52573, %object
-	.size	C.639.52573, 100
-C.639.52573:
+	.type	C.639.52585, %object
+	.size	C.639.52585, 100
+C.639.52585:
 	.byte	0
 	.byte	0
 	.byte	1
@@ -12731,53 +12731,53 @@ C.639.52573:
 	.byte	0
 	.byte	0
 	.byte	0
-	.type	__func__.52553, %object
-	.size	__func__.52553, 17
-__func__.52553:
+	.type	__func__.52565, %object
+	.size	__func__.52565, 17
+__func__.52565:
 	.ascii	"FillEosRawStream\000"
 	.space	3
-	.type	__func__.53044, %object
-	.size	__func__.53044, 18
-__func__.53044:
+	.type	__func__.53056, %object
+	.size	__func__.53056, 18
+__func__.53056:
 	.ascii	"SM_DoNextInstance\000"
 	.space	2
-	.type	__func__.53310, %object
-	.size	__func__.53310, 19
-__func__.53310:
+	.type	__func__.53322, %object
+	.size	__func__.53322, 19
+__func__.53322:
 	.ascii	"SCDDRV_ActivateSCD\000"
 	.space	1
-	.type	__func__.52598, %object
-	.size	__func__.52598, 14
-__func__.52598:
+	.type	__func__.52610, %object
+	.size	__func__.52610, 14
+__func__.52610:
 	.ascii	"FillExtraData\000"
 	.space	2
-	.type	__func__.52384, %object
-	.size	__func__.52384, 12
-__func__.52384:
+	.type	__func__.52396, %object
+	.size	__func__.52396, 12
+__func__.52396:
 	.ascii	"FillRawData\000"
-	.type	__func__.53358, %object
-	.size	__func__.53358, 10
-__func__.53358:
+	.type	__func__.53370, %object
+	.size	__func__.53370, 10
+__func__.53370:
 	.ascii	"SM_Wakeup\000"
 	.space	2
-	.type	__func__.50692, %object
-	.size	__func__.50692, 14
-__func__.50692:
+	.type	__func__.50706, %object
+	.size	__func__.50706, 14
+__func__.50706:
 	.ascii	"SM_OpenSCDDrv\000"
 	.space	2
-	.type	__func__.51982, %object
-	.size	__func__.51982, 17
-__func__.51982:
+	.type	__func__.51994, %object
+	.size	__func__.51994, 17
+__func__.51994:
 	.ascii	"ProcessScdReturn\000"
 	.space	3
-	.type	__func__.53192, %object
-	.size	__func__.53192, 19
-__func__.53192:
+	.type	__func__.53204, %object
+	.size	__func__.53204, 19
+__func__.53204:
 	.ascii	"SM_SCDIntServeProc\000"
 	.space	1
-	.type	__func__.50601, %object
-	.size	__func__.50601, 18
-__func__.50601:
+	.type	__func__.50615, %object
+	.size	__func__.50615, 18
+__func__.50615:
 	.ascii	"SM_AllocDSPCtxMem\000"
 	.data
 	.align	2
@@ -22322,13 +22322,13 @@ g_ScdDrvParam:
 	.size	s_RegPhyBaseAddr, 4
 s_RegPhyBaseAddr:
 	.space	4
-	.type	last_rec_pos_time.53040, %object
-	.size	last_rec_pos_time.53040, 64
-last_rec_pos_time.53040:
+	.type	last_rec_pos_time.53052, %object
+	.size	last_rec_pos_time.53052, 64
+last_rec_pos_time.53052:
 	.space	64
-	.type	last_rec_pos_time.52377, %object
-	.size	last_rec_pos_time.52377, 64
-last_rec_pos_time.52377:
+	.type	last_rec_pos_time.52389, %object
+	.size	last_rec_pos_time.52389, 64
+last_rec_pos_time.52389:
 	.space	64
 	.type	g_hex_base_addr, %object
 	.size	g_hex_base_addr, 4
@@ -22346,17 +22346,17 @@ g_hex_base_vir_addr:
 	.size	g_hex_len, 4
 g_hex_len:
 	.space	4
-	.type	LastEventTime.51301, %object
-	.size	LastEventTime.51301, 4
-LastEventTime.51301:
+	.type	LastEventTime.51315, %object
+	.size	LastEventTime.51315, 4
+LastEventTime.51315:
 	.space	4
 	.type	s_SCDInISR, %object
 	.size	s_SCDInISR, 4
 s_SCDInISR:
 	.space	4
-	.type	last_rec_pos_time.53191, %object
-	.size	last_rec_pos_time.53191, 64
-last_rec_pos_time.53191:
+	.type	last_rec_pos_time.53203, %object
+	.size	last_rec_pos_time.53203, 64
+last_rec_pos_time.53203:
 	.space	64
 	.type	ForceRelease, %object
 	.size	ForceRelease, 4

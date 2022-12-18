@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2009 HUAWEI - All Rights Reserved
+* Copyright (c) 2009 Hisilicon - All Rights Reserved
 *
 * File: $real9_vfmw.h$
 * Date: $2009/06/18$

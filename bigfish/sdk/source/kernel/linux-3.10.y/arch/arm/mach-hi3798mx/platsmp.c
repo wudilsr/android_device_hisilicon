@@ -40,6 +40,19 @@ static void prepare_slave_cores_boot(unsigned int start_addr, /* slave start phy
 				     unsigned int jump_addr)  /* slave jump phy address */
 {
 	unsigned int *virtaddr;
+#ifdef CONFIG_SECURE_EXTENSION
+
+	virtaddr = ioremap(REG_BASE_SCTL + REG_SC_GEN1, PAGE_SIZE);
+
+	*virtaddr = jump_addr;  /* pc jump phy address */
+
+	smp_wmb();
+	__cpuc_flush_dcache_area((void *)virtaddr,
+				(size_t)sizeof(*virtaddr));
+	outer_clean_range(__pa(virtaddr), __pa(virtaddr + sizeof(*virtaddr)));
+
+	iounmap(virtaddr);
+#else
 	unsigned int *p_virtaddr;
 
 	p_virtaddr = virtaddr = ioremap(start_addr, PAGE_SIZE);
@@ -53,6 +66,7 @@ static void prepare_slave_cores_boot(unsigned int start_addr, /* slave start phy
 	outer_clean_range(__pa(virtaddr), __pa(p_virtaddr));
 
 	iounmap(virtaddr);
+#endif
 }
 
 /*

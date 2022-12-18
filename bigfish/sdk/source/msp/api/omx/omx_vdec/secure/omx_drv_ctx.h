@@ -41,5 +41,8 @@ OMX_S32 channel_submit_frame(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *pus
 OMX_S32 channel_bind_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf);
 OMX_S32 channel_unbind_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf);
 OMX_S8  channel_save_yuv(FILE* pFile, SaveYuvOption *pOption);
+OMX_S32 channel_alloc_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf);
+void channel_release_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf);
+OMX_S32 channel_port_enable(OMXVDEC_DRV_CONTEXT* drv_ctx, OMX_BOOL bEnable);
 
 #endif

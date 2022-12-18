@@ -16,17 +16,25 @@ VI_REG_S *pViReg = NULL;
 HI_U32 ViRegRead(HI_U32 a)
 {
     HI_U32 *reg = NULL;
-
-    reg = (HI_U32 *)(a + (HI_U32)pViReg);
-    return (*(reg));
+    if(pViReg)
+    {
+        reg = (HI_U32 *)(a + (HI_U32)pViReg);
+        return (*(reg));
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 HI_VOID ViRegWrite(HI_U32 a, HI_U32 b)
 {
     HI_U32 *reg = NULL;
-
-    reg = (HI_U32 *)(a + (HI_U32)pViReg);
-    (*(reg)) = b;
+    if(pViReg)
+    {
+        reg = (HI_U32 *)(a + (HI_U32)pViReg);
+        (*(reg)) = b;
+    }
 }
 
 /**
@@ -1001,12 +1009,12 @@ HI_VOID VI_DRV_SetChChFirOffset(HI_U32 ChId, HI_S32 hchroma_offset)
     if (0 > hchroma_offset)
     {
         hchroma_offset *= -1;
-        CH_CHFIR_OFFSET.bits.hchroma_offset = (((~hchroma_offset) + 1) & 0x1FFFF);
+        CH_CHFIR_OFFSET.bits.hchroma_offset = (unsigned int)(((~hchroma_offset) + 1) & 0x1FFFF);
     }
     else
     {
         /* complement */
-        CH_CHFIR_OFFSET.bits.hchroma_offset = hchroma_offset;
+        CH_CHFIR_OFFSET.bits.hchroma_offset = (unsigned int)hchroma_offset;
     }
 
     ViRegWrite(u32RegAddr, CH_CHFIR_OFFSET.u32);
@@ -1094,7 +1102,7 @@ HI_U32 inline VI_DRV_Conver_FirCoef(HI_S32 s32Value)
 
     if (s32Value >= 0)
     {
-        return s32Value;
+        return (HI_U32)s32Value;
     }
     /* valid bit 0~9, bit9 is sign bit */
     else
@@ -1377,8 +1385,8 @@ HI_VOID VI_DRV_SetChDes(HI_U32 ChId, VI_DRV_CHN_STORE_INFO * pstStoreCfg)
 {
     volatile U_CH_PACK_Y_CFG CH_PACK_Y_CFG;
     volatile U_CH_PACK_C_CFG CH_PACK_C_CFG;
-    volatile HI_U32 CH_PACK_Y_WIDTH;
-    volatile HI_U32 CH_PACK_C_WIDTH;
+    volatile HI_U32 CH_PACK_Y_WIDTH = 0;
+    volatile HI_U32 CH_PACK_C_WIDTH = 0;
 
     volatile U_CH_DES_Y_WIDTH CH_DES_Y_WIDTH;
     volatile U_CH_DES_Y_HEIGHT CH_DES_Y_HEIGHT;

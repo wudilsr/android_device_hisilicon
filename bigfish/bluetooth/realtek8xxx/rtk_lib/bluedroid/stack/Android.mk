@@ -38,7 +38,10 @@ ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
 LOCAL_C_INCLUDES += . \
     $(LOCAL_PATH)/../realtek/include
 endif
-
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_COEX),true)
+LOCAL_C_INCLUDES += . \
+    $(LOCAL_PATH)/../hci/include
+endif
 ifeq ($(BOARD_HAVE_BLUETOOTH_BCM),true)
 LOCAL_CFLAGS += \
 	-DBOARD_HAVE_BLUETOOTH_BCM

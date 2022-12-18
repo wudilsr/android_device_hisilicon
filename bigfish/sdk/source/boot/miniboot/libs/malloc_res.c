@@ -212,25 +212,6 @@ int get_res_end(uint32 *end)
 }
 /*****************************************************************************/
 
-void resmem_init(void)
-{
-	uint32 start, end, size;
-
-	size = CONFIG_RESERVE_MEMORY_SIZE;
-	if (get_res_end(&end) < 0) {
-		pr_error("Fail to parse mem args!\n");
-		return;
-	}
-
-	if (end <= size) {
-		pr_warn("Not enough mem for reserve mem, reserve mem will not init\n");
-		return;
-	}
-	start = end - size;
-	resmalloc_init(start, size);
-}
-/*****************************************************************************/
-
 void resmem_dump(int verbose)
 {
 	struct alloc_t *mem;

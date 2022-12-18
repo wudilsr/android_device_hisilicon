@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2014 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+  <!-- The user visible name of the application. [CHAR LIMIT=20] -->
+  <string name="application_name">ExoPlayer Demo</string>
+
+  <string name="enable_background_audio">Play in background</string>
+
+  <string name="video">Video</string>
+
+  <string name="audio">Audio</string>
+
+  <string name="text">Text</string>
+
+  <string name="logging">Logging</string>
+
+  <string name="logging_normal">Normal</string>
+
+  <string name="logging_verbose">Verbose</string>
+
+  <string name="retry">Retry</string>
+
+  <string name="off">[off]</string>
+
+  <string name="error_drm_not_supported">Protected content not supported on API levels below 18</string>
+
+  <string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>
+
+  <string name="error_drm_unknown">An unknown DRM error occurred</string>
+
+  <string name="error_no_decoder">This device does not provide a decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+
+  <string name="error_no_secure_decoder">This device does not provide a secure decoder for <xliff:g id="mime_type">%1$s</xliff:g></string>
+
+  <string name="error_querying_decoders">Unable to query device decoders</string>
+
+  <string name="error_instantiating_decoder">Unable to instantiate decoder <xliff:g id="decoder_name">%1$s</xliff:g></string>
+
+  <string name="storage_permission_denied">Permission to access storage was denied</string>
+
+  <string name="browser">Browser Files</string>
+
+  <string name="disable_audio">Disable Audio</string>
+
+  <string name="resize_window">Resize Window</string>
+
+  <string name="tunneled_playback">Tunneded Playback</string>
+
+  <string name="secure_playback">Secure Playback</string>
+
+   <string name="software_codec">Software Codec</string>
+
+  <string name="overlay">OverLay</string>
+
+  <string name="savees">Save ES</string>
+
+  <string name="mediacodec_logcat">MediaCodec Logcat</string>
+
+  <string name="acodec_logcat">ACodec Logcat</string>
+
+  <string name="audiotrack_logcat">AudioTrack Logcat</string>
+
+  <string name="android_extractor">Android Extractor</string>
+
+  <string name="time_stats">Time Statistics</string>
+
+  <string name="action_settings">Settings</string>
+  <string name="start_test">Start Test</string>
+  <string name="play">Play</string>
+  <string name="device">Device:</string>
+  <string name="instructions">Instructions:</string>
+  <string-array name="instruction_items">
+      <item>测试H264编码 </item>
+      <item>I帧间隔: 1秒</item>
+      <item>得分计算公式:宽x高x帧率</item>
+      <item>D1: 720x480_2Mbps</item>
+      <item>720P: 1280x720_6Mbps</item>
+      <item>1080P: 1920x1080_10Mbps</item>
+      <item>编码后的Mp4视频文件保存在SD卡根目录</item>
+  </string-array>
+  <string-array name="encode_results">
+      <item>Score</item>
+      <item>Total Frames</item>
+      <item>Total Time (ms)</item>
+      <item>First Frame Delay (ms)</item>
+      <item>Frame Rate (fps)</item>
+      <item>CPU</item>
+      <item>Memory</item>
+  </string-array>
+  <string-array name="resolution_items">
+      <item>QCIF</item>
+      <item>D1</item>
+      <item>720P</item>
+      <item>1080P</item>
+  </string-array>
+  <string name="codec_name">Codec Name: %1$s</string>
+  <string name="start_encode">Start to encode: %1$s</string>
+  <string name="encode_error">Create encoder error, not support %1$s</string>
+  <string name="finish_encode">Finish to encode %1$s</string>
+
+</resources>

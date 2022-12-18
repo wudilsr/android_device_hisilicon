@@ -731,7 +731,7 @@ typedef struct
 } VeduEfl_IpCtx_S;
 
 HI_S32	VENC_DRV_EflOpenVedu( HI_VOID );
-HI_S32	VENC_DRV_EflCloseVedu( HI_VOID );
+HI_VOID VENC_DRV_EflCloseVedu( HI_VOID );
 HI_S32	VENC_DRV_EflCreateVenc( VeduEfl_EncPara_S** pEncHandle, VeduEfl_EncCfg_S* pEncCfg );
 HI_S32	VENC_DRV_EflDestroyVenc( VeduEfl_EncPara_S* EncHandle );
 HI_S32	VENC_DRV_EflAttachInput( VeduEfl_EncPara_S* EncHandle, VeduEfl_SrcInfo_S* pSrcInfo );
@@ -779,7 +779,7 @@ HI_VOID VENC_DRV_EflRcCalIFrmQp(VeduEfl_Rc_S *pRc, HI_S32 w, HI_S32 h, HI_S32 ti
 HI_VOID VENC_DRV_EflRcCalPFrmQp(VeduEfl_Rc_S* pRc, VeduEfl_EncPara_S* pEncPara, HI_S32 FrameIMBRatio);
 
 HI_S32 VENC_DRV_DbgWriteYUV(HI_DRV_VIDEO_FRAME_S *pstFrame,HI_CHAR* pFileName);
-HI_S32 VENC_DRV_EflSuspendVedu( HI_VOID );
+HI_VOID VENC_DRV_EflSuspendVedu( HI_VOID );
 HI_S32 VENC_DRV_EflFlushStrmHeader( VeduEfl_EncPara_S  *pEncPara );
 
 HI_S32 VENC_DRV_EflAllocBuf2Jpge( VeduEfl_EncPara_S* EncHandle, HI_U32 CapLevel);

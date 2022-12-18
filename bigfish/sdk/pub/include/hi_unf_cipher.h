@@ -99,6 +99,8 @@ typedef enum
     HI_UNF_CIPHER_TYPE_BUTT,
 }HI_UNF_CIPHER_TYPE_E;
 
+/** Structure of the cipher type */
+/** CNcomment:加密类型结构 */
 typedef struct
 {
     HI_UNF_CIPHER_TYPE_E enCipherType;
@@ -148,6 +150,77 @@ typedef struct
     HI_U32 u32HMACKeyLen;
     HI_UNF_CIPHER_HASH_TYPE_E eShaType;
 }HI_UNF_CIPHER_HASH_ATTS_S;
+
+typedef enum hiHI_UNF_CIPHER_RSA_ENC_SCHEME_E
+{ 
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_NO_PADDING,            /**< without padding */             /**< CNcomment: 不填充 */
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_BLOCK_TYPE_0,          /**< PKCS#1 block type 0 padding*/  /**< CNcomment: PKCS#1的block type 0填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_BLOCK_TYPE_1,          /**< PKCS#1 block type 1 padding*/  /**< CNcomment: PKCS#1的block type 1填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_BLOCK_TYPE_2,          /**< PKCS#1 block type 2 padding*/  /**< CNcomment: PKCS#1的block type 2填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_RSAES_OAEP_SHA1,       /**< PKCS#1 RSAES-OAEP-SHA1 padding*/    /**< CNcomment: PKCS#1的RSAES-OAEP-SHA1填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_RSAES_OAEP_SHA256,     /**< PKCS#1 RSAES-OAEP-SHA256 padding*/  /**< CNcomment: PKCS#1的RSAES-OAEP-SHA256填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_RSAES_PKCS1_V1_5,      /**< PKCS#1 RSAES-PKCS1_V1_5 padding*/   /**< CNcomment: PKCS#1的PKCS1_V1_5填充方式*/
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_BUTT,
+}HI_UNF_CIPHER_RSA_ENC_SCHEME_E;
+
+typedef enum hiHI_UNF_CIPHER_RSA_SIGN_SCHEME_E
+{ 
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_RSASSA_PKCS1_V15_SHA1 = 0x100, /**< PKCS#1 RSASSA_PKCS1_V15_SHA1 signature*/   /**< CNcomment: PKCS#1 RSASSA_PKCS1_V15_SHA1签名算法*/
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_RSASSA_PKCS1_V15_SHA256,       /**< PKCS#1 RSASSA_PKCS1_V15_SHA256 signature*/   /**< CNcomment: PKCS#1 RSASSA_PKCS1_V15_SHA256签名算法*/
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_RSASSA_PKCS1_PSS_SHA1,         /**< PKCS#1 RSASSA_PKCS1_PSS_SHA1 signature*/   /**< CNcomment: PKCS#1 RSASSA_PKCS1_PSS_SHA1签名算法*/
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_RSASSA_PKCS1_PSS_SHA256,       /**< PKCS#1 RSASSA_PKCS1_PSS_SHA256 signature*/   /**< CNcomment: PKCS#1 RSASSA_PKCS1_PSS_SHA256签名算法*/
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_BUTT,
+}HI_UNF_CIPHER_RSA_SIGN_SCHEME_E;
+
+typedef struct
+{
+    HI_U8  *pu8N;              /**< point to public modulus  */   /**< CNcomment: 指向RSA公钥N的指针*/
+	HI_U8  *pu8E;			   /**< point to public exponent */   /**< CNcomment: 指向RSA公钥E的指针*/
+    HI_U16 u16NLen;            /**< length of public modulus, max value is 512Byte*/  /**< CNcomment: RSA公钥N的长度, 最大为512Byte*/
+    HI_U16 u16ELen;            /**< length of public exponent, max value is 512Byte*/  /**< CNcomment: RSA公钥E的长度, 最大为512Byte*/
+}HI_UNF_CIPHER_RSA_PUB_KEY_S;
+
+/** RSA private key struct */
+/** CNcomment:RSA私钥结构体 */
+typedef struct
+{
+    HI_U8 *pu8N;                      /*!<  public modulus    */ /**< CNcomment: 指向RSA公钥N的指针*/
+    HI_U8 *pu8D;                      /*!<  private exponent  */ /**< CNcomment: 指向RSA私钥D的指针*/
+    HI_U16 u16NLen;                   /**< length of public modulus, max value is 512Byte*/   /**< CNcomment: RSA公钥N的长度, 最大为512Byte*/
+    HI_U16 u16DLen;                   /**< length of private exponent, max value is 512Byte*/ /**< CNcomment: RSA私钥D的长度, 最大为512Byte*/
+}HI_UNF_CIPHER_RSA_PRI_KEY_S;
+
+/** RSA public key encryption struct input */
+/** CNcomment:RSA 公钥加解密算法参数结构体 */
+typedef struct
+{
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_E enScheme;   /** RSA encryption scheme*/ /** CNcomment:RSA数据加解密算法策略*/
+    HI_UNF_CIPHER_RSA_PUB_KEY_S stPubKey;      /** RSA private key struct */ /** CNcomment:RSA私钥结构体 */
+}HI_UNF_CIPHER_RSA_PUB_ENC_S;
+
+/** RSA private key decryption struct input */
+/** CNcomment:RSA 私钥解密算法参数结构体 */
+typedef struct
+{
+    HI_UNF_CIPHER_RSA_ENC_SCHEME_E enScheme; /** RSA encryption scheme */ /** CNcomment:RSA数据加解密算法*/
+    HI_UNF_CIPHER_RSA_PRI_KEY_S stPriKey;    /** RSA public key struct */ /** CNcomment:RSA公钥结构体 */
+}HI_UNF_CIPHER_RSA_PRI_ENC_S;
+
+/** RSA signature struct input */
+/** CNcomment:RSA签名算法参数结构体 */
+typedef struct
+{
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_E enScheme;  /** RSA signature scheme*/ /** CNcomment:RSA数据签名策略*/
+    HI_UNF_CIPHER_RSA_PRI_KEY_S stPriKey;      /** RSA private key struct */ /** CNcomment:RSA私钥结构体 */
+ }HI_UNF_CIPHER_RSA_SIGN_S;
+
+/** RSA signature verify struct input */
+/** CNcomment:RSA签名验证算法参数输入结构体 */
+typedef struct
+{
+    HI_UNF_CIPHER_RSA_SIGN_SCHEME_E enScheme; /** RSA signature scheme*/ /** CNcomment:RSA数据签名策略*/
+    HI_UNF_CIPHER_RSA_PUB_KEY_S stPubKey;     /** RSA public key struct */ /** CNcomment:RSA公钥结构体 */
+ }HI_UNF_CIPHER_RSA_VERIFY_S;
 
 /** @} */  /** <!-- ==== Structure Definition End ==== */
 
@@ -419,6 +492,147 @@ N/A
 */
 HI_S32 HI_UNF_CIPHER_HashFinal(HI_HANDLE hHashHandle, HI_U8 *pu8OutputHash);
 
+/**
+\brief RSA encryption a plaintext with a RSA public key.
+CNcomment:使用RSA公钥加密一段明文。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaEnc:   encryption struct.                                   CNcomment:加密属性结构体。 CNend
+\param[in] pu8Input：   input data to be encryption                          CNcomment: 待加密的数据。 CNend
+\param[out] u32InLen:   length of input data to be encryption                CNcomment: 待加密的数据长度。 CNend
+\param[out] pu8Output： output data to be encryption                         CNcomment: 加密结果数据。 CNend
+\param[out] pu32OutLen: length of output data to be encryption               CNcomment: 加密结果的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_CIPHER_RsaPublicEncrypt(HI_UNF_CIPHER_RSA_PUB_ENC_S *pstRsaEnc, 
+								  HI_U8 *pu8Input, HI_U32 u32InLen, 
+								  HI_U8 *pu8Output, HI_U32 *pu32OutLen);
+
+/**
+\brief RSA decryption a ciphertext with a RSA private key.
+CNcomment:使用RSA私钥解密一段密文。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaDec:   decryption struct.                                   CNcomment: 公钥解密属性结构体。 CNend
+\param[in] pu8Input：   input data to be decryption                          CNcomment: 待解密的数据。 CNend
+\param[out] u32InLen:   length of input data to be decryption                CNcomment: 待解密的数据长度。 CNend
+\param[out] pu8Output： output data to be decryption                         CNcomment: 解密结果数据。 CNend
+\param[out] pu32OutLen: length of output data to be decryption               CNcomment: 解密结果的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_CIPHER_RsaPrivateDecrypt(HI_UNF_CIPHER_RSA_PRI_ENC_S *pstRsaDec,								  
+								   HI_U8 *pu8Input, HI_U32 u32InLen, 
+								   HI_U8 *pu8Output, HI_U32 *pu32OutLen);
+
+/**
+\brief RSA encryption a plaintext with a RSA private key.
+CNcomment:使用RSA私钥加密一段明文。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaSign:   encryption struct.                                  CNcomment:加密属性结构体。 CNend
+\param[in] pu8Input：   input data to be encryption                          CNcomment: 待加密的数据。 CNend
+\param[out] u32InLen:   length of input data to be encryption                CNcomment: 待加密的数据长度。 CNend
+\param[out] pu8Output： output data to be encryption                         CNcomment: 加密结果数据。 CNend
+\param[out] pu32OutLen: length of output data to be encryption               CNcomment: 加密结果的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_CIPHER_RsaPrivateEncrypt(HI_UNF_CIPHER_RSA_PRI_ENC_S *pstRsaEnc, 
+							 	   HI_U8 *pu8Input, HI_U32 u32InLen, 
+								   HI_U8 *pu8Output, HI_U32 *pu32OutLen);
+
+/**
+\brief RSA decryption a ciphertext with a RSA public key.
+CNcomment:使用RSA公钥解密一段密文。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaVerify:   decryption struct.                                CNcomment: 解密属性结构体。 CNend
+\param[in] pu8Input：   input data to be decryption                          CNcomment: 待解密的数据。 CNend
+\param[out] u32InLen:   length of input data to be decryption                CNcomment: 待解密的数据长度。 CNend
+\param[out] pu8Output： output data to be decryption                         CNcomment: 解密结果数据。 CNend
+\param[out] pu32OutLen: length of output data to be decryption               CNcomment: 解密结果的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_CIPHER_RsaPublicDecrypt(HI_UNF_CIPHER_RSA_PUB_ENC_S *pstRsaDec,
+							   HI_U8 *pu8Input, HI_U32 u32InLen,
+							   HI_U8 *pu8Output, HI_U32 *pu32OutLen);
+
+/**
+\brief RSA signature a context with appendix, where a signer’s RSA private key is used.
+CNcomment:使用RSA私钥签名一段文本。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaSign:      signature struct.                                    CNcomment: 签名属性结构体。 CNend
+\param[in] pu8Input：       input context to be signature，maybe null            CNcomment: 待签名的数据, 如果pu8HashData不为空，则该指空可以为空。 CNend
+\param[in] u32InLen:        length of input context to be signature              CNcomment: 待签名的数据长度。 CNend
+\param[in] pu8HashData：    hash value of context,if NULL, let pu8HashData = Hash(context) automatically   Ncomment: 待签名文本的HASH摘要，如果为空，则自动计算文本的HASH摘要。 CNend                     
+\param[out] pu8OutSign：    output message of signature                          CNcomment: 签名信息。 CNend
+\param[out] pu32OutSignLen: length of message of signature                       CNcomment: 签名信息的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/								   
+HI_S32 HI_UNF_CIPHER_RsaSign(HI_UNF_CIPHER_RSA_SIGN_S *pstRsaSign, 
+							 HI_U8 *pu8InData, HI_U32 u32InDataLen,
+							 HI_U8 *pu8HashData,
+							 HI_U8 *pu8OutSign, HI_U32 *pu32OutSignLen);
+
+/**
+\brief RSA signature verification a context with appendix, where a signer’s RSA public key is used.
+CNcomment:使用RSA公钥签名验证一段文本。 CNend
+
+\attention \n
+N/A
+
+\param[in] pstRsaVerify:    signature verification struct.                         CNcomment: 签名验证属性结构体。 CNend
+\param[in] pu8Input：       input context to be signature verification，maybe null CNcomment: 待签名验证的数据, 如果pu8HashData不为空，则该指空可以为空。 CNend
+\param[in] u32InLen:        length of input context to be signature                CNcomment: 待签名验证的数据长度。 CNend
+\param[in] pu8HashData：    hash value of context,if NULL, let pu8HashData = Hash(context) automatically   Ncomment: 待签名文本的HASH摘要，如果为空，则自动计算文本的HASH摘要。 CNend                     
+\param[in] pu8InSign：      message of signature                                 CNcomment: 签名信息。 CNend
+\param[in] pu32InSignLen:   length of message of signature                       CNcomment: 签名信息的数据长度。 CNend
+
+\retval ::HI_SUCCESS  Call this API succussful.                         CNcomment:API系统调用成功。 CNend
+\retval ::HI_FAILURE  Call this API fails.                              CNcomment:API系统调用失败。 CNend
+
+\see \n
+N/A
+*/
+HI_S32 HI_UNF_CIPHER_RsaVerify(HI_UNF_CIPHER_RSA_VERIFY_S *pstRsaVerify,
+							   HI_U8 *pu8InData, HI_U32 u32InDataLen,
+							   HI_U8 *pu8HashData,
+							   HI_U8 *pu8InSign, HI_U32 u32InSignLen);
 
 
 /** @} */  /** <!-- ==== API declaration end ==== */

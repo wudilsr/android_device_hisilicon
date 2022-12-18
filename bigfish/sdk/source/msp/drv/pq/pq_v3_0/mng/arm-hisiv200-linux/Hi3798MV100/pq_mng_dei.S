@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_dei.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_dei.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_dei.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_dei.o -O2 -Wall -Wundef
@@ -96,7 +96,7 @@
 	.type	PQ_MNG_DeInitDei, %function
 PQ_MNG_DeInitDei:
 	.fnstart
-.LFB668:
+.LFB681:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -123,7 +123,7 @@ PQ_MNG_DeInitDei:
 	.type	PQ_MNG_GetGlobMotiGain, %function
 PQ_MNG_GetGlobMotiGain:
 	.fnstart
-.LFB673:
+.LFB686:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -148,7 +148,7 @@ PQ_MNG_GetGlobMotiGain:
 	.type	PQ_MNG_SetVpssMktCoordinate, %function
 PQ_MNG_SetVpssMktCoordinate:
 	.fnstart
-.LFB672:
+.LFB685:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -395,7 +395,7 @@ PQ_MNG_SetVpssMktCoordinate:
 	.type	PQ_MNG_GetDeiDemoMode, %function
 PQ_MNG_GetDeiDemoMode:
 	.fnstart
-.LFB671:
+.LFB684:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -478,20 +478,20 @@ PQ_MNG_GetDeiDemoMode:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	movw	r2, #:lower16:.LANCHOR2	@,
-	movw	r3, #354	@,
+	mov	r3, #356	@,
 	movt	r2, #:upper16:.LANCHOR2	@,
-	movw	lr, #:lower16:.LC1	@ tmp156,
-	movt	lr, #:upper16:.LC1	@ tmp156,
-	str	lr, [sp, #0]	@ tmp156,
+	movw	lr, #:lower16:.LC1	@ tmp155,
+	movt	lr, #:upper16:.LC1	@ tmp155,
+	str	lr, [sp, #0]	@ tmp155,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.23996,
+	mvn	r0, #0	@ D.24203,
 .L46:
 	sub	sp, fp, #16
 	ldmfd	sp, {r4, fp, sp, pc}
 .L47:
-	movw	r1, #:lower16:.LANCHOR0	@ tmp157,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp157,
-	mov	r0, #0	@ D.23996,
+	movw	r1, #:lower16:.LANCHOR0	@ tmp156,
+	movt	r1, #:upper16:.LANCHOR0	@ tmp156,
+	mov	r0, #0	@ D.24203,
 	ldr	r3, [r1, #4]	@ sg_enMode, sg_enMode
 	str	r3, [r4, #0]	@ sg_enMode,* penMode
 	b	.L46	@
@@ -499,13 +499,13 @@ PQ_MNG_GetDeiDemoMode:
 	add	r0, r0, #1	@,,
 	mov	r1, #41	@,
 	movw	r2, #:lower16:.LANCHOR2	@,
-	movw	r3, #342	@,
+	mov	r3, #344	@,
 	movt	r2, #:upper16:.LANCHOR2	@,
-	movw	ip, #:lower16:.LC0	@ tmp154,
-	movt	ip, #:upper16:.LC0	@ tmp154,
-	str	ip, [sp, #0]	@ tmp154,
+	movw	ip, #:lower16:.LC0	@ tmp153,
+	movt	ip, #:upper16:.LC0	@ tmp153,
+	str	ip, [sp, #0]	@ tmp153,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.23996,
+	mvn	r0, #0	@ D.24203,
 	b	.L46	@
 	.fnend
 	.size	PQ_MNG_GetDeiDemoMode, .-PQ_MNG_GetDeiDemoMode
@@ -514,7 +514,7 @@ PQ_MNG_GetDeiDemoMode:
 	.type	PQ_MNG_SetDeiDemoMode, %function
 PQ_MNG_SetDeiDemoMode:
 	.fnstart
-.LFB670:
+.LFB683:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -610,8 +610,8 @@ PQ_MNG_SetDeiDemoMode:
 	cmp	r5, #0	@ s32Ret,
 	movweq	r3, #:lower16:.LANCHOR0	@ tmp153,
 	movteq	r3, #:upper16:.LANCHOR0	@ tmp153,
-	mvnne	r0, #0	@ D.23984,
-	moveq	r0, r5	@ D.23984, s32Ret
+	mvnne	r0, #0	@ D.24191,
+	moveq	r0, r5	@ D.24191, s32Ret
 	streq	r4, [r3, #4]	@ enMode, sg_enMode
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L71:
@@ -761,7 +761,7 @@ PQ_MNG_SetDeiDemoMode:
 	.type	PQ_MNG_EnableDeiDemo, %function
 PQ_MNG_EnableDeiDemo:
 	.fnstart
-.LFB669:
+.LFB682:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -1008,7 +1008,7 @@ PQ_MNG_EnableDeiDemo:
 	.type	PQ_MNG_InitDei, %function
 PQ_MNG_InitDei:
 	.fnstart
-.LFB667:
+.LFB680:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
@@ -1026,7 +1026,7 @@ PQ_MNG_InitDei:
 	movt	r4, #:upper16:.LANCHOR0	@ tmp137,
 	ldr	r3, [r4, #0]	@ sg_bDeiInitFlag, sg_bDeiInitFlag
 	cmp	r3, #1	@ sg_bDeiInitFlag,
-	moveq	r0, #0	@ D.23941,
+	moveq	r0, #0	@ D.24148,
 	beq	.L126	@,
 	mov	r1, #1	@,
 	mov	r0, #0	@,
@@ -1038,7 +1038,7 @@ PQ_MNG_InitDei:
 	mov	r5, #1	@ tmp142,
 	str	r5, [sp, #0]	@ tmp142,
 	bl	PQ_MNG_InitPhyList	@
-	cmp	r0, #0	@ s32Ret.442
+	cmp	r0, #0	@ s32Ret.444
 	streq	r5, [r4, #0]	@ tmp142, sg_bDeiInitFlag
 	bne	.L131	@,
 .L126:
@@ -1048,23 +1048,23 @@ PQ_MNG_InitDei:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	ldr	r2, .L132	@,
-	mov	r3, #264	@,
+	movw	r3, #266	@,
 	movw	ip, #:lower16:.LC2	@ tmp141,
 	movt	ip, #:upper16:.LC2	@ tmp141,
 	str	ip, [sp, #0]	@ tmp141,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.23941,
+	mvn	r0, #0	@ D.24148,
 	b	.L126	@
 .L131:
 	mov	r0, r5	@, tmp142
 	mov	r1, #41	@,
 	ldr	r2, .L132	@,
-	movw	r3, #271	@,
+	movw	r3, #273	@,
 	movw	lr, #:lower16:.LC3	@ tmp145,
 	movt	lr, #:upper16:.LC3	@ tmp145,
 	str	lr, [sp, #0]	@ tmp145,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.23941,
+	mvn	r0, #0	@ D.24148,
 	b	.L126	@
 .L133:
 	.align	2
@@ -1077,51 +1077,55 @@ PQ_MNG_InitDei:
 	.type	PQ_MNG_GetGlobalMotion, %function
 PQ_MNG_GetGlobalMotion:
 	.fnstart
-.LFB666:
+.LFB679:
 	@ args = 0, pretend = 0, frame = 200
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
 	mov	ip, sp	@,
-	stmfd	sp!, {r4, r5, r6, fp, ip, lr, pc}	@,
+	stmfd	sp!, {r4, r5, fp, ip, lr, pc}	@,
 	.pad #4
-	.save {r4, r5, r6, fp, ip, lr}
+	.save {r4, r5, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	.pad #212
-	sub	sp, sp, #212	@,,
+	.pad #208
+	sub	sp, sp, #208	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
+	sub	r5, fp, #216	@ tmp185,,
 	mov	r4, r0	@ pstMotionInput, pstMotionInput
-	mov	r0, #1	@ movhi	@,
-	strh	r0, [fp, #-64]	@ movhi	@, stMotionHist.GLOBAL_MOTION_EN
-	ldr	r0, [r4, #8]	@, <variable>.u32HandleNo
-	mov	r1, #255	@ movhi	@,
-	mov	lr, #0	@ movhi	@,
-	mov	r2, #192	@ movhi	@,
-	strh	r1, [fp, #-58]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
-	mov	r3, #3	@ movhi	@,
-	strh	r2, [fp, #-60]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
-	mov	ip, #128	@ movhi	@,
-	mov	r2, #32	@ movhi	@,
-	strh	r1, [fp, #-56]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
-	strh	r1, [fp, #-54]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
-	strh	r1, [fp, #-52]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
-	mov	r1, #98	@ movhi	@,
-	strh	r3, [fp, #-40]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
+	mov	r1, #128	@,
+	add	r0, r5, #8	@, tmp185,
+	mov	ip, #255	@ movhi	@,
+	mov	r3, #1	@ movhi	@,
+	mov	lr, #192	@ movhi	@,
+	strh	r3, [fp, #-56]	@ movhi	@, stMotionHist.GLOBAL_MOTION_EN
+	mov	r2, #3	@ movhi	@,
+	mov	r3, #0	@ movhi	@,
+	strh	lr, [fp, #-52]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
+	strh	ip, [fp, #-50]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
+	mov	lr, #128	@ movhi	@,
+	strh	ip, [fp, #-48]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
+	strh	ip, [fp, #-46]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
+	strh	ip, [fp, #-44]	@ movhi	@, stMotionHist.GLOBAL_MOTION_THD
+	mov	ip, #32	@ movhi	@,
+	strh	r2, [fp, #-32]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
+	mov	r2, #98	@ movhi	@,
+	strh	r3, [fp, #-30]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
+	strh	r3, [fp, #-28]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
+	strh	r3, [fp, #-26]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
 	mov	r3, #16	@ tmp147,
-	strh	lr, [fp, #-38]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
-	strh	lr, [fp, #-36]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
-	strh	lr, [fp, #-34]	@ movhi	@, stMotionHist.GLOBAL_MOTION_SLOPE
-	strh	ip, [fp, #-32]	@ movhi	@, stMotionHist.MAX_GLOBAL_MOTION_RATIO
-	strh	r2, [fp, #-30]	@ movhi	@, stMotionHist.MIN_GLOBAL_MOTION_RATIO
-	strh	r2, [fp, #-50]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
-	strh	r1, [fp, #-48]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
-	strh	r1, [fp, #-46]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
-	strh	r1, [fp, #-44]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
-	strh	r1, [fp, #-42]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
-	strh	r3, [fp, #-62]	@ movhi	@ tmp147, stMotionHist.GLOBAL_MOTION_THD
-	str	r3, [fp, #-224]	@ tmp147, stMotionHist.SMALL_MOTION_THD
-	str	r3, [fp, #-220]	@ tmp147, stMotionHist.LARGE_MOTION_THD
+	strh	lr, [fp, #-24]	@ movhi	@, stMotionHist.MAX_GLOBAL_MOTION_RATIO
+	strh	ip, [fp, #-22]	@ movhi	@, stMotionHist.MIN_GLOBAL_MOTION_RATIO
+	strh	ip, [fp, #-42]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
+	strh	r2, [fp, #-40]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
+	strh	r2, [fp, #-38]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
+	strh	r2, [fp, #-36]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
+	strh	r2, [fp, #-34]	@ movhi	@, stMotionHist.GLOBAL_MOTION_RATIO
+	strh	r3, [fp, #-54]	@ movhi	@ tmp147, stMotionHist.GLOBAL_MOTION_THD
+	str	r3, [fp, #-216]	@ tmp147, stMotionHist.SMALL_MOTION_THD
+	str	r3, [fp, #-212]	@ tmp147, stMotionHist.LARGE_MOTION_THD
+	bl	__memzero	@
+	ldr	r0, [r4, #8]	@, <variable>.u32HandleNo
 	bl	PQ_HAL_GetInterlaceMotionEn	@
 	cmp	r0, #0	@,
 	bne	.L135	@,
@@ -1135,19 +1139,18 @@ PQ_MNG_GetGlobalMotion:
 	bne	.L147	@,
 .L136:
 	mov	r0, #0	@,
-	sub	sp, fp, #24
-	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
+	sub	sp, fp, #20
+	ldmfd	sp, {r4, r5, fp, sp, pc}
 .L135:
-	sub	r6, fp, #224	@ tmp191,,
 	mov	r0, r4	@, pstMotionInput
-	mov	r1, r6	@, tmp191
+	mov	r1, r5	@, tmp185
 	bl	PQ_HAL_GetMotionHistReg	@
-	ldrh	r3, [fp, #-64]	@ stMotionHist.GLOBAL_MOTION_EN, stMotionHist.GLOBAL_MOTION_EN
-	cmp	r3, #0	@ stMotionHist.GLOBAL_MOTION_EN,
+	ldrh	r0, [fp, #-56]	@ stMotionHist.GLOBAL_MOTION_EN, stMotionHist.GLOBAL_MOTION_EN
+	cmp	r0, #0	@ stMotionHist.GLOBAL_MOTION_EN,
 	bne	.L137	@,
-	movw	lr, #:lower16:.LANCHOR1	@ tmp193,
-	movt	lr, #:upper16:.LANCHOR1	@ tmp193,
-	ldr	r5, [lr, #0]	@ gain, sg_u32gain
+	movw	r1, #:lower16:.LANCHOR1	@ tmp195,
+	movt	r1, #:upper16:.LANCHOR1	@ tmp195,
+	ldr	r5, [r1, #0]	@ gain, sg_u32gain
 .L138:
 	mov	r1, r5	@, gain
 	ldr	r0, [r4, #8]	@, <variable>.u32HandleNo
@@ -1160,32 +1163,32 @@ PQ_MNG_GetGlobalMotion:
 	bl	PQ_HAL_PrintMsg	@
 	b	.L136	@
 .L137:
-	ldrh	r3, [fp, #-62]	@ D.24177, stMotionHist.GLOBAL_MOTION_THD
-	ldrh	r1, [fp, #-32]	@ D.24239, stMotionHist.MAX_GLOBAL_MOTION_RATIO
-	cmp	r3, #254	@ D.24177,
-	ldrh	r2, [fp, #-30]	@ D.24238, stMotionHist.MIN_GLOBAL_MOTION_RATIO
-	ldrhih	r5, [fp, #-50]	@ DataOut, stMotionHist.GLOBAL_MOTION_RATIO
+	ldrh	r3, [fp, #-54]	@ D.24329, stMotionHist.GLOBAL_MOTION_THD
+	ldrh	r1, [fp, #-24]	@ D.24391, stMotionHist.MAX_GLOBAL_MOTION_RATIO
+	cmp	r3, #254	@ D.24329,
+	ldrh	r2, [fp, #-22]	@ D.24390, stMotionHist.MIN_GLOBAL_MOTION_RATIO
+	ldrhih	r5, [fp, #-42]	@ DataOut, stMotionHist.GLOBAL_MOTION_RATIO
 	bhi	.L140	@,
-	ldrh	r0, [fp, #-60]	@ D.24180, stMotionHist.GLOBAL_MOTION_THD
-	add	ip, r6, #184	@ D.24240, tmp191,
-	cmp	r0, #254	@ D.24180,
+	ldrh	r0, [fp, #-52]	@ D.24332, stMotionHist.GLOBAL_MOTION_THD
+	add	ip, r5, #184	@ D.24392, tmp185,
+	cmp	r0, #254	@ D.24332,
 	bhi	.L148	@,
-	ldrh	lr, [fp, #-58]	@ D.24191, stMotionHist.GLOBAL_MOTION_THD
-	cmp	lr, #254	@ D.24191,
+	ldrh	lr, [fp, #-50]	@ D.24343, stMotionHist.GLOBAL_MOTION_THD
+	cmp	lr, #254	@ D.24343,
 	bls	.L142	@,
-	ldrh	r3, [ip, #2]	@ tmp202,
-	rsb	r0, r0, #255	@ tmp201, D.24180,
-	ldrh	ip, [fp, #-48]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
-	mul	lr, r3, r0	@ tmp203, tmp202, tmp201
-	add	r5, lr, #4	@ tmp204, tmp203,
-	add	r5, ip, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp204,
+	ldrh	r3, [ip, #2]	@ tmp204,
+	rsb	r0, r0, #255	@ tmp203, D.24332,
+	ldrh	lr, [fp, #-40]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
+	mul	ip, r3, r0	@ tmp205, tmp204, tmp203
+	add	r5, ip, #4	@ tmp206, tmp205,
+	add	r5, lr, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp206,
 .L140:
-	movw	ip, #:lower16:.LANCHOR1	@ tmp221,
-	movt	ip, #:upper16:.LANCHOR1	@ tmp221,
-	cmp	r5, r1	@ DataOut, D.24239
-	movge	r5, r1	@ D.24235, D.24239
-	cmp	r5, r2	@ D.24235, D.24238
-	movlt	r5, r2	@ gain, D.24238
+	movw	ip, #:lower16:.LANCHOR1	@ tmp223,
+	movt	ip, #:upper16:.LANCHOR1	@ tmp223,
+	cmp	r5, r1	@ DataOut, D.24391
+	movge	r5, r1	@ D.24387, D.24391
+	cmp	r5, r2	@ D.24387, D.24390
+	movlt	r5, r2	@ gain, D.24390
 	str	r5, [ip, #0]	@ gain, sg_u32gain
 	b	.L138	@
 .L147:
@@ -1193,40 +1196,40 @@ PQ_MNG_GetGlobalMotion:
 	mov	r1, #41	@,
 	ldr	r2, .L149+4	@,
 	mov	r3, #49	@,
-	movw	ip, #:lower16:.LC2	@ tmp190,
-	movt	ip, #:upper16:.LC2	@ tmp190,
-	str	ip, [sp, #0]	@ tmp190,
+	movw	ip, #:lower16:.LC2	@ tmp192,
+	movt	ip, #:upper16:.LC2	@ tmp192,
+	str	ip, [sp, #0]	@ tmp192,
 	bl	HI_LogOut	@
 	b	.L136	@
 .L148:
-	ldrh	lr, [r6, #184]	@ tmp196,
-	rsb	r3, r3, #255	@ tmp195, D.24177,
-	ldrh	r0, [fp, #-50]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
-	mul	ip, lr, r3	@ tmp197, tmp196, tmp195
-	add	r5, ip, #4	@ tmp198, tmp197,
-	add	r5, r0, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp198,
+	ldrh	r0, [r5, #184]	@ tmp198,
+	rsb	r3, r3, #255	@ tmp197, D.24329,
+	ldrh	lr, [fp, #-42]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
+	mul	ip, r0, r3	@ tmp199, tmp198, tmp197
+	add	r5, ip, #4	@ tmp200, tmp199,
+	add	r5, lr, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp200,
 	b	.L140	@
 .L142:
-	ldrh	r3, [fp, #-56]	@ D.24204, stMotionHist.GLOBAL_MOTION_THD
-	cmp	r3, #254	@ D.24204,
+	ldrh	r3, [fp, #-48]	@ D.24356, stMotionHist.GLOBAL_MOTION_THD
+	cmp	r3, #254	@ D.24356,
 	bls	.L143	@,
-	ldrh	r0, [ip, #4]	@ tmp208,
-	rsb	lr, lr, #255	@ tmp207, D.24191,
-	ldrh	ip, [fp, #-46]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
-	mul	r3, r0, lr	@ tmp209, tmp208, tmp207
-	add	r5, r3, #4	@ tmp210, tmp209,
-	add	r5, ip, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp210,
+	ldrh	r0, [ip, #4]	@ tmp210,
+	rsb	lr, lr, #255	@ tmp209, D.24343,
+	ldrh	ip, [fp, #-38]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
+	mul	r3, r0, lr	@ tmp211, tmp210, tmp209
+	add	r5, r3, #4	@ tmp212, tmp211,
+	add	r5, ip, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp212,
 	b	.L140	@
 .L143:
-	ldrh	r0, [fp, #-54]	@ stMotionHist.GLOBAL_MOTION_THD, stMotionHist.GLOBAL_MOTION_THD
+	ldrh	r0, [fp, #-46]	@ stMotionHist.GLOBAL_MOTION_THD, stMotionHist.GLOBAL_MOTION_THD
 	cmp	r0, #254	@ stMotionHist.GLOBAL_MOTION_THD,
-	rsbhi	r3, r3, #255	@ tmp214, D.24204,
-	ldrhih	r5, [ip, #6]	@ tmp215,
-	ldrhih	r0, [fp, #-44]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
-	ldrlsh	r5, [fp, #-42]	@ DataOut, stMotionHist.GLOBAL_MOTION_RATIO
-	mulhi	r5, r5, r3	@ tmp216, tmp215, tmp214
-	addhi	r5, r5, #4	@ tmp217, tmp216,
-	addhi	r5, r0, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp217,
+	rsbhi	r3, r3, #255	@ tmp216, D.24356,
+	ldrhih	r5, [ip, #6]	@ tmp217,
+	ldrhih	r0, [fp, #-36]	@ stMotionHist.GLOBAL_MOTION_RATIO, stMotionHist.GLOBAL_MOTION_RATIO
+	ldrlsh	r5, [fp, #-34]	@ DataOut, stMotionHist.GLOBAL_MOTION_RATIO
+	mulhi	r5, r5, r3	@ tmp218, tmp217, tmp216
+	addhi	r5, r5, #4	@ tmp219, tmp218,
+	addhi	r5, r0, r5, asr #3	@, DataOut, stMotionHist.GLOBAL_MOTION_RATIO, tmp219,
 	b	.L140	@
 .L150:
 	.align	2
@@ -1238,23 +1241,23 @@ PQ_MNG_GetGlobalMotion:
 	.section	.rodata
 	.align	2
 .LANCHOR2 = . + 0
-	.type	__func__.23990, %object
-	.size	__func__.23990, 22
-__func__.23990:
+	.type	__func__.24197, %object
+	.size	__func__.24197, 22
+__func__.24197:
 	.ascii	"PQ_MNG_GetDeiDemoMode\000"
 	.space	2
-	.type	__func__.23937, %object
-	.size	__func__.23937, 15
-__func__.23937:
+	.type	__func__.24144, %object
+	.size	__func__.24144, 15
+__func__.24144:
 	.ascii	"PQ_MNG_InitDei\000"
 	.space	1
-	.type	__func__.23719, %object
-	.size	__func__.23719, 28
-__func__.23719:
+	.type	__func__.23918, %object
+	.size	__func__.23918, 28
+__func__.23918:
 	.ascii	"PQ_MNG_SetInterlaceMotionEn\000"
-	.type	__func__.23920, %object
-	.size	__func__.23920, 23
-__func__.23920:
+	.type	__func__.24127, %object
+	.size	__func__.24127, 23
+__func__.24127:
 	.ascii	"PQ_MNG_GetGlobalMotion\000"
 	.data
 	.align	2

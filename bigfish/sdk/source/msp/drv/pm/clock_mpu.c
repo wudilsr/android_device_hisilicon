@@ -16,7 +16,6 @@
 #include <mach/platform.h>
 #include <linux/clkdev.h>
 #include <asm/clkdev.h>
-#include <mach/clock.h>
 #include <mach/early-debug.h>
 #include <linux/device.h>
 
@@ -25,6 +24,7 @@
 #include "hi_drv_pmoc.h"
 #include "hi_dvfs.h"
 #include "hi_drv_sys.h"
+#include "clock.h"
 
 struct device *mpu_dev;
 
@@ -678,8 +678,8 @@ void  mpu_init_clocks(void)
     mpu_ck.min_rate = MIN_FREQ;
 
     mpu_ck.spinlock = mpu_clock_lock;
-    clk_init(&mpu_ck);
-
+    hi_clk_init(&mpu_ck);
+    
     mpu_clk_set_rate(&mpu_ck, mpu_ck.rate);
 
     /* delay 8 ms to wait hpm ok */
@@ -698,5 +698,5 @@ void  mpu_resume_clocks(void)
 
 void  mpu_exit_clocks(void)
 {
-    clk_exit(&mpu_ck);
+    hi_clk_exit(&mpu_ck);
 }

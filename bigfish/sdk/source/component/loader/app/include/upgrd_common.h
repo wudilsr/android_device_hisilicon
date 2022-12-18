@@ -27,6 +27,7 @@
 #include <ctype.h>
 #include <sys/reboot.h>
 #include "hi_osal.h"
+#include "hi_flash.h"
 #endif
 
 #include "hi_type.h"
@@ -151,6 +152,10 @@ extern "C" {
 #define HI_UPGRD_CA_SSD_CRYPT_FAIL \
     UPGRD_DEF_ERR(MID_LOADER, UPGRD_LOG_LEVEL_ERROR, 0x117)
 
+/**fatcotry reset error */
+#define HI_UPGRD_FACTORY_RESET_FAIL \
+    UPGRD_DEF_ERR(MID_LOADER, UPGRD_LOG_LEVEL_ERROR, 0x118)
+
 #define SAVE_FREE( p ) \
     do {\
         if (p){\
@@ -175,6 +180,26 @@ typedef enum UpgrdLogLevel_E
     UPGRD_LOG_LEVEL_FATEL = 4,
     UPGRD_LOG_LEVEL_BUTT
 } UPGRD_LOG_LEVEL_E;
+
+#define HI_LOADER_FLASH_NAME_LEN   32
+/*Flash partition info from bootargs(proc/cmdline or getenv in boot) for loader use*/
+typedef struct hiLOADER_FLASH_INFO_BOOTARGS_S
+{
+    HI_CHAR             Name[HI_LOADER_FLASH_NAME_LEN];
+	HI_U32              u32FlashType;
+    HI_BOOL             bShared;  /*whether share one partition with other data*/
+	HI_U32              u32Offset;
+    HI_U32              u32Size;
+	HI_U64              u64Startaddr;
+}LOADER_FLASH_INFO_BOOTARGS_S;
+
+/*Flash pation index and flashtype*/
+typedef struct hiLOADER_PARTITION_INDEX_S
+{	 
+	HI_U32 	  u32FlashIndex;
+	HI_U32		u32FlashType;
+}LOADER_PARTITION_INDEX_S;
+
 
 /******************************************************************************
 |----------------------------------------------------------------|
@@ -229,6 +254,13 @@ HI_S32        LOADER_Entire_CRC32(const HI_U8* pu8Data, HI_U32 u32Len, HI_U32* p
 HI_U8 * LOADER_GetUsableMemory(HI_U32 u32ExpectSize, HI_U32 *pu32Size);
 
 void LOADER_FreeUsableMemory(HI_U8 * ptr);
+
+/* get flash partition index and type from bootargs by name, the index from 0, so if the flash type is emmc, the emmc partition number is always index+1*/
+HI_S32 Loader_GetFlashParIndex(const HI_CHAR *pPartitionName, LOADER_PARTITION_INDEX_S *pstPartitionIndex);
+
+/* get flash info from bootargs by name or address*/
+HI_S32 LOADER_GetFlashInfoByName(HI_CHAR *pPartitionName, LOADER_FLASH_INFO_BOOTARGS_S *pstInfo);
+HI_S32 LOADER_GetFlashInfoByAddr(HI_U64 u64FlashAddr, HI_FLASH_TYPE_E eFlashType, LOADER_FLASH_INFO_BOOTARGS_S *pstInfo);
 
 #ifdef __cplusplus
  #if __cplusplus

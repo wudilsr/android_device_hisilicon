@@ -849,8 +849,8 @@ public class MainExplorerActivity extends CommonActivity {
 					// getString(R.string.quit_app));
 					if (getIntent().getBooleanExtra("subFlag", false)) {
 						Intent intent = new Intent();
-						intent.setClassName("com.huawei.activity",
-								"com.huawei.activity.VideoActivity");
+						intent.setClassName("com.hisilicon.activity",
+								"com.hisilicon.activity.VideoActivity");
 						intent.putExtra("path", "");
 						intent.putExtra("pathFlag", false);
 						startActivity(intent);

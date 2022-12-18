@@ -47,8 +47,8 @@ extern "C"{
 #define HI_INFO_WIN(fmt...)
 #endif
 
-#define DEF_MAX_WIN_NUM_ON_SINGLE_DISP 16
-#define DEF_MAX_WIN_NUM_ON_VIRTUAL_DISP 16
+#define DEF_MAX_WIN_NUM_ON_SINGLE_DISP 17
+#define DEF_MAX_WIN_NUM_ON_VIRTUAL_DISP 17
 
 /* window type */
 typedef enum hiDRV_WIN_TYPE_E

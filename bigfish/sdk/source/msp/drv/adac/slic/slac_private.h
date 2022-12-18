@@ -1,4 +1,4 @@
-/*****************Copyright (c) 2010 HuaWei Tech Co., Ltd.********************** 
+/*****************Copyright (c) 2010 Hisilicon Tech Co., Ltd.********************** 
     project: wish
     subprj:  device driver
     module:  audio codec
@@ -28,7 +28,9 @@
 #include <asm/uaccess.h>
 //#include <asm/hardware.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/miscdevice.h>
 #include <linux/delay.h>
 #include <linux/proc_fs.h>

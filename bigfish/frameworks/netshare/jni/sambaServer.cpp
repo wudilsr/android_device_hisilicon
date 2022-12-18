@@ -414,7 +414,7 @@ int SambaServer::set_global(const char *workgroup, const char *server_string, co
 		SECURITY = 0x01;
 		changeConf(SMBCONF_PATH.c_str(),"valid users","");
 		changeConf(SMBCONF_PATH.c_str(),"guest ok","yes");
-
+                changeConf(SMBCONF_PATH.c_str(),"force user","root");
         }
         else if(!strcmp(security,"user"))
         {
@@ -551,6 +551,10 @@ int SambaServer::set_share_property(Share_Parameter *para)
 		{
 		sprintf(buf,"\tvalid users = \n");
 		}
+                else if(strstr(buf,"force user"))
+                {
+                sprintf(buf,"\tforce user = root \n");
+                }
 		}
 
 		strcat(writebuf,buf);
@@ -796,6 +800,8 @@ int SambaServer::add_share_path(Share_Parameter *para)
         sprintf(buf, "\tvalid users = \n");
         fputs(buf, stream);
         sprintf(buf, "\tguest ok = yes\n");
+        fputs(buf, stream);
+        sprintf(buf, "\tforce user = root \n");
         fputs(buf, stream);
     }
     fclose(stream);

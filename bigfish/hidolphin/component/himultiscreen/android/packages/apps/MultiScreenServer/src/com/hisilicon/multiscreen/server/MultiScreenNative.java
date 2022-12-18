@@ -123,4 +123,12 @@ public class MultiScreenNative
      * CN:待机处理。
      */
     public native int MultiScreenNativeSuspend();
+
+    /**
+     * Native method for scene recognition.<br>
+     * CN:STB场景识别。
+     * @param sceneType CN:场景类型。
+     * @return result.
+     */
+    public native int native_MultiScreenNotifySceneRecognition(String sceneType);
 }

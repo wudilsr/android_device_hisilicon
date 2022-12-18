@@ -53,11 +53,20 @@
 #include "uipc.h"
 #include <unistd.h>
 #include <pthread.h>
+#include "rtkbt_ifly_voice.h"
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
 
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#include "btm_int.h"
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
 #ifdef BLUETOOTH_RTK
 static BOOLEAN Stop_timer = FALSE;
+extern void RTKBT_clear_db();
+
 #endif
 
 
@@ -898,6 +907,9 @@ static void btif_hh_upstreams_evt(UINT16 event, char* p_param)
                     // The connect request must come from device side and exceeded the connected
                                    // HID device number.
                     BTA_HhClose(p_data->conn.handle);
+#ifdef BLUETOOTH_RTK
+                    btif_dm_hid_connect_fail(p_data->conn.bda);
+#endif
                     HAL_CBACK(bt_hh_callbacks, connection_state_cb, (bt_bdaddr_t*) &p_data->conn.bda,BTHH_CONN_STATE_DISCONNECTED);
                 }
                 else if (p_dev->fd < 0) {
@@ -918,6 +930,33 @@ static void btif_hh_upstreams_evt(UINT16 event, char* p_param)
                     btif_hh_cb.p_curr_dev = btif_hh_find_connected_dev_by_handle(p_data->conn.handle);
                     BTA_HhGetDscpInfo(p_data->conn.handle);
                     p_dev->dev_status = BTHH_CONN_STATE_CONNECTED;
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+                    tBTM_SEC_DEV_REC *p_dev_rec = btm_find_dev (p_data->conn.bda);
+                    if ((p_dev_rec != NULL) &&((p_dev_rec->device_type &= BT_DEVICE_TYPE_BLE) == 0x02))
+                    {
+                        bt_property_t remote_ble_property;
+                        uint32_t RCU_id =0;
+                        uint8_t  profile_map =0;
+#ifdef BLUETOOTH_RTK_AUTOPAIR
+                        remote_ble_property.type = BT_PROPERTY_RTKBT_AUTOPAIR_RCUID;
+#endif
+                        remote_ble_property.val = &RCU_id;
+                        remote_ble_property.len = sizeof(RCU_id);
+                        btif_storage_get_remote_device_property((bt_bdaddr_t*)p_data->conn.bda, &remote_ble_property);
+                        if (RCU_id == 1)
+                            profile_map |= 0x07;
+                        if (check_cod((bt_bdaddr_t*)p_data->conn.bda, COD_HID_COMBO))
+                            profile_map |= 0x03;
+                        if (check_cod((bt_bdaddr_t*)p_data->conn.bda, COD_HID_KEYBOARD ))
+                            profile_map |= 0x02;
+                        if (check_cod((bt_bdaddr_t*)p_data->conn.bda, COD_HID_MAJOR))
+                            profile_map |= 0x01;
+                        p_dev_rec->profile_map = profile_map;
+                        rtk_add_le_profile(p_data->conn.bda,  p_dev_rec->hci_handle, profile_map);
+                    }
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
                     HAL_CBACK(bt_hh_callbacks, connection_state_cb,&(p_dev->bd_addr), p_dev->dev_status);
                 }
             }
@@ -1330,7 +1369,10 @@ static bt_status_t init( bthh_callbacks_t* callbacks )
 /*BOARD_HAVE_BLUETOOTH_RTK_VR begin*/
 #ifdef BLUETOOTH_RTK_VR
     HH_task_running = TRUE;
-    UIPC_Open(UIPC_CH_ID_RTKBT_VR_CTRL , btif_voice_ctrl_cb);
+    if(rtkbt_getRealRcuID(remote_controller_id) == RTKBT_RCUID_IFLYTEK) {
+       RTKBT_Iflytek_init();
+    } else
+        UIPC_Open(UIPC_CH_ID_RTKBT_VR_CTRL , btif_voice_ctrl_cb);
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
 
@@ -1825,7 +1867,10 @@ static void  cleanup( void )
 
 /*BOARD_HAVE_BLUETOOTH_RTK_VR begin*/
 #ifdef BLUETOOTH_RTK_VR
-    UIPC_Close(UIPC_CH_ID_RTKBT_VR_CTRL);
+    if(rtkbt_getRealRcuID(remote_controller_id) == RTKBT_RCUID_IFLYTEK) {
+        RTKBT_Iflytek_cleanup();
+    } else
+        UIPC_Close(UIPC_CH_ID_RTKBT_VR_CTRL);
     HH_task_running = FALSE;
 #endif
 /*BOARD_HAVE_BLUETOOTH_RTK_VR end*/
@@ -1885,7 +1930,11 @@ bt_status_t btif_hh_execute_service(BOOLEAN b_enable)
      if (b_enable)
      {
           /* Enable and register with BTA-HH */
-          BTA_HhEnable(BTA_SEC_NONE, bte_hh_evt);
+#ifdef BLUETOOTH_RTK
+        BTA_HhEnable(BTA_SEC_ENCRYPT, bte_hh_evt);
+#else
+        BTA_HhEnable(BTA_SEC_NONE, bte_hh_evt);
+#endif
      }
      else {
          /* Disable HH */
@@ -2013,7 +2062,7 @@ static void btif_voice_ctrl_cb(tUIPC_CH_ID ch_id, tUIPC_EVENT event)
             break;
 
         case UIPC_CLOSE_EVT:
-            if (HH_task_running)
+            if (HH_task_running && rtkbt_getRealRcuID(remote_controller_id) != RTKBT_RCUID_IFLYTEK)
                 UIPC_Open(UIPC_CH_ID_RTKBT_VR_CTRL , btif_voice_ctrl_cb);
             break;
 

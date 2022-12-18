@@ -115,7 +115,9 @@ typedef union
         HI_U32 level_sel      : 2; //[1:0]
         HI_U32 tdes_aes_sel   : 1; //[2]
         HI_U32 raw_mode       : 1; //[3]
-        HI_U32 reserved1      : 4; //[7:4]
+        HI_U32 level_sel_5    : 1; //[4]
+        HI_U32 ta_kl_flag     : 1; //[5] //for irdeto MSR2.2
+        HI_U32 reserved1      : 2; //[7:6]
         HI_U32 key_addr       : 8; //[15:8]
         HI_U32 dsc_mode       : 8; //[23:16]
         HI_U32 reserved       : 8; //[31:24]

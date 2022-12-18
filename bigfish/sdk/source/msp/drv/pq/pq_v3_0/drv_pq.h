@@ -117,10 +117,6 @@ typedef struct hiPQ_PROC_INFO_S
     HI_BOOL bSrEn;
     HI_U32  u32SrMode;
     HI_U32  u32SrSharpStr;
-    /* Dither Enable */
-    HI_BOOL bDnrDithEn;
-    HI_BOOL bVpssDithEn;
-    HI_BOOL bVdpDithEn;
     /* DCI */
     HI_BOOL bDciEn;
     HI_U32  u32DciLevelGain;

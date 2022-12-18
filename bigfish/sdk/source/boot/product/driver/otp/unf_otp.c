@@ -337,8 +337,10 @@ HI_S32 HI_OTP_LockIdWord(HI_VOID)
         return HI_FAILURE;
     }
 #ifndef HI_ADVCA_FUNCTION_RELEASE
-    printf("Burn to secure chipset success!\n");  // Please attention, this log must be print
-#endif
+        #ifdef CONFIG_PRINT
+            printf("Burn to secure chipset success!\n");  // Please attention, this log must be print
+        #endif    
+#endif    
 #endif
 
     /* Check and lock ID_WORD */
@@ -349,10 +351,33 @@ HI_S32 HI_OTP_LockIdWord(HI_VOID)
         return HI_FAILURE;
     }
 #ifndef HI_ADVCA_FUNCTION_RELEASE
-    printf("Lock ID_Word success!\n");    // Please attention, this log must be print
+        #ifdef CONFIG_PRINT
+            printf("Lock ID_Word success!\n");    // Please attention, this log must be print
+        #endif    
 #endif
 
     return HI_SUCCESS;
 }
 #endif
+
+HI_U32 HI_UNF_OTP_Read(HI_U32 addr)
+{
+    return HI_OTP_Read(addr);
+}
+
+HI_U8 HI_UNF_OTP_ReadByte(HI_U32 addr)
+{
+	return HI_OTP_ReadByte(addr);
+}
+
+HI_S32 HI_UNF_OTP_Write(HI_U32 addr, HI_U32 u32Data)
+{
+    return HI_OTP_Write(addr, u32Data);
+}
+
+HI_S32 HI_UNF_OTP_WriteByte(HI_U32 addr, HI_U8 u8data)
+{
+    return HI_OTP_WriteByte(addr, u8data);
+}
+
 

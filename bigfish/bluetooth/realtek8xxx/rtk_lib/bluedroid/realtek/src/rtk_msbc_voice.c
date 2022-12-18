@@ -33,6 +33,7 @@
 static sbc_t        sbc_dec;
 static BOOLEAN      msbc_init = FALSE;
 static BOOLEAN      mutex_init = FALSE;
+static BOOLEAN      channel_flag = FALSE;
 static UINT16       pkt_num_last = 0;
 static tMSBC_REC_CB msbc_rec_cb;
 static tMSBC_RR_CB msbc_rr_cb;  //for record request thread
@@ -155,6 +156,40 @@ static void resetPCMBuffer()
     VOICE_UNLOCK();
 }
 
+static void msbc_voice_in_cb(tUIPC_CH_ID ch_id, tUIPC_EVENT event)
+{
+    switch(event)
+    {
+        case UIPC_OPEN_EVT:
+            msbc_rec_cb.channel_status = TRUE;
+            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_OPEN_EVT");
+            break;
+
+        case UIPC_CLOSE_EVT:
+            VOICE_LOCK();
+            //msbc_rec_cb.p_dev_cb = NULL;
+            //msbc_rec_cb.conn_id = 0;
+            msbc_rec_cb.channel_status = FALSE;
+            channel_flag = FALSE;
+            VOICE_UNLOCK();
+            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_CLOSE_EVT");
+            break;
+
+        case UIPC_RX_DATA_EVT:
+            break;
+
+        case UIPC_RX_DATA_READY_EVT:
+            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_RX_DATA_READY_EVT");
+            break;
+        case UIPC_TX_DATA_READY_EVT:
+            break;
+
+        default :
+            BTM_TRACE_ERROR1("### SCO-CHANNEL EVENT %d NOT HANDLED ###", event);
+            break;
+    }
+}
+
 /* blocking call */
 void stop_thread(void)
 {
@@ -247,6 +282,15 @@ static void voice_task(void *arg)
                 else{
                     BTIF_TRACE_VERBOSE0("The buffer is Empty, the data send from msbc_voice_decode!");
                 }
+            }
+            else if (!channel_flag) {
+                usleep(100000);
+                SOCKET_LOCK();
+                channel_flag = UIPC_Open(UIPC_CH_ID_RTKBT_VR_AUDIO, msbc_voice_in_cb);
+                if(channel_flag)
+                    UIPC_Ioctl(UIPC_CH_ID_RTKBT_VR_AUDIO, UIPC_SET_READ_POLL_TMO, 0);
+                SOCKET_UNLOCK();
+                BTIF_TRACE_DEBUG1("The data channel open in voice_task, channel_flag = %d", channel_flag)
             }
         }
         else {
@@ -361,39 +405,6 @@ void rtk_msbc_setup()
     }
 }
 
-static void msbc_voice_in_cb(tUIPC_CH_ID ch_id, tUIPC_EVENT event)
-{
-    switch(event)
-    {
-        case UIPC_OPEN_EVT:
-            msbc_rec_cb.channel_status = TRUE;
-            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_OPEN_EVT");
-            break;
-
-        case UIPC_CLOSE_EVT:
-            VOICE_LOCK();
-            //msbc_rec_cb.p_dev_cb = NULL;
-            //msbc_rec_cb.conn_id = 0;
-            msbc_rec_cb.channel_status = FALSE;
-            VOICE_UNLOCK();
-            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_CLOSE_EVT");
-            break;
-
-        case UIPC_RX_DATA_EVT:
-            break;
-
-        case UIPC_RX_DATA_READY_EVT:
-            BTM_TRACE_DEBUG0("msbc_voice_in_cb: UIPC_RX_DATA_READY_EVT");
-            break;
-        case UIPC_TX_DATA_READY_EVT:
-            break;
-
-        default :
-            BTM_TRACE_ERROR1("### SCO-CHANNEL EVENT %d NOT HANDLED ###", event);
-            break;
-    }
-}
-
 BOOLEAN RTKBT_VR_start_msbc_voice_rec(tBTA_HH_DEV_CB *p_dev_cb, UINT16 conn_id)
 {
     //remove file pcm to data
@@ -436,8 +447,9 @@ BOOLEAN RTKBT_VR_start_msbc_voice_rec(tBTA_HH_DEV_CB *p_dev_cb, UINT16 conn_id)
     //add for iflytek end
     //UIPC_Init(NULL);
     SOCKET_LOCK();
-    UIPC_Open(UIPC_CH_ID_RTKBT_VR_AUDIO, msbc_voice_in_cb);
-    UIPC_Ioctl(UIPC_CH_ID_RTKBT_VR_AUDIO, UIPC_SET_READ_POLL_TMO, 0);
+    channel_flag = UIPC_Open(UIPC_CH_ID_RTKBT_VR_AUDIO, msbc_voice_in_cb);
+    if(channel_flag)
+        UIPC_Ioctl(UIPC_CH_ID_RTKBT_VR_AUDIO, UIPC_SET_READ_POLL_TMO, 0);
     SOCKET_UNLOCK();
 
     if(start_thread() < 0)

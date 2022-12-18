@@ -16,7 +16,8 @@ PHONY: help
 #====================================================================================
 .PHONY: build rebuild
 #++++++++++++++++++++++++++++++++++++++++++++++++++++
-build: install
+build: install prebuilts
+	$(AT)make signature
 rebuild: distclean
 	$(AT)make build
 
@@ -33,10 +34,10 @@ endif
 
 INSTALL_OBJS += rootbox_install
 
-all:  tools hiboot linux common msp rootfs component plugin
+all:  tools hiboot linux common msp rootfs component tee
 
 distclean: clean
-clean: uninstall sample_clean plugin_clean component_clean rootfs_clean msp_clean common_clean linux_clean hiboot_clean tools_clean
+clean: uninstall sample_clean tee_clean component_clean rootfs_clean msp_clean common_clean linux_clean hiboot_clean tools_clean
 	$(AT)rm -rf $(IMAGE_DIR)/fastboot-burn.bin
 	$(AT)rm -rf $(IMAGE_DIR)/hi_kernel.bin
 	$(AT)rm -rf $(IMAGE_DIR)/rootfs*
@@ -46,6 +47,10 @@ clean: uninstall sample_clean plugin_clean component_clean rootfs_clean msp_clea
 	$(AT)cd $(EXTERN_LIB_DIR)   && rm -rf *
 	$(AT)cd $(MODULE_DIR)       && rm -rf *
 	$(AT)cd $(ROOTFS_DIR)       && rm -rf *
+signature_clean:
+ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
+	make -C $(SDK_DIR)/tools/linux/utils/advca/sig_image clean
+endif
 
 install: $(INSTALL_OBJS)
 ifeq ($(CFG_HI_FS_BUILDIN),y)
@@ -56,8 +61,12 @@ endif
 ifeq ($(CFG_HI_LOADER_APPLOADER)_$(CFG_HI_LOADER_RECOVERY),_)
 	$(AT)make -C $(SAMPLE_DIR) all
 endif
+signature:
+ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
+	make -C $(SDK_DIR)/tools/linux/utils/advca/sig_image all
+endif
 
-uninstall: rootbox_uninstall plugin_uninstall component_uninstall msp_uninstall common_uninstall rootfs_uninstall linux_uninstall hiboot_uninstall tools_uninstall
+uninstall: rootbox_uninstall component_uninstall msp_uninstall common_uninstall rootfs_uninstall linux_uninstall hiboot_uninstall tools_uninstall
 
 obj=$(mod)
 
@@ -78,6 +87,49 @@ tools_install:
 tools_uninstall:
 	$(AT)make -C $(TOOLS_DIR) uninstall
 
+#====================================================================================
+#                   prebuilts
+#====================================================================================
+.PHONY:  prebuilts prebuilts_clean
+#++++++++++++++++++++++++++++++++++++++++++++++++++++
+#=============BOOTARGS_VAR======================================================================
+BOOTARGS_INPUT  := bootargs.txt
+BOOTARGS_OUTPUT := bootargs.bin
+
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+        BOOTARGS_INPUT := bootargs_tee_DDR_$(CFG_HI_TVP_MEM_LAYOUT)B.txt
+	ifeq ($(CFG_HI_ADVCA_TYPE),VERIMATRIX)
+		BOOTARGS_INPUT := bootargs_tee_ca_vmx.txt
+	endif        
+else
+	ifeq ($(CFG_HI_ADVCA_TYPE),VERIMATRIX)
+		BOOTARGS_INPUT := bootargs_ca_vmx.txt
+	else
+		BOOTARGS_INPUT := bootargs.txt
+	endif
+endif
+
+prebuilts:
+	$(AT)(test -f $(MKBOOTARGS) || make -C $(SERVER_UNTILS_DIR)/mkbootargs-tool)
+ifeq ($(CFG_HI_EMMC_SUPPORT),y)	
+	$(AT)(cd $(IMAGE_DIR) && $(MKBOOTARGS) -b $(CFG_HI_BOOT_ENV_SIZE) -r $(HI_PREBUILTS_DIR)/emmc_$(BOOTARGS_INPUT) -o bootargs_emmc.bin)
+	$(AT)cp -f $(HI_PREBUILTS_DIR)/emmc_*.xml $(IMAGE_DIR)/
+endif	
+ifeq ($(CFG_HI_NAND_SUPPORT),y)
+ifneq ($(CFG_HI_TEE_SUPPORT),y)
+	$(AT)(cd $(IMAGE_DIR) && $(MKBOOTARGS) -b $(CFG_HI_BOOT_ENV_SIZE) -r $(HI_PREBUILTS_DIR)/nand_$(BOOTARGS_INPUT) -o bootargs_nand.bin)
+	$(AT)cp -f $(HI_PREBUILTS_DIR)/nand_*.xml $(IMAGE_DIR)/
+endif	
+endif
+	$(AT)cp -f $(HI_PREBUILTS_DIR)/logo.img $(HI_PREBUILTS_DIR)/baseparam.img $(HI_PREBUILTS_DIR)/pq_param.bin $(IMAGE_DIR)/	
+prebuilts_clean:
+ifeq ($(CFG_HI_EMMC_SUPPORT),y)	
+	$(AT)rm -rf $(IMAGE_DIR)/bootargs_emmc.bin
+endif
+ifeq ($(CFG_HI_NAND_SUPPORT),y)
+	$(AT)rm -rf $(IMAGE_DIR)/bootargs_nand.bin
+endif
+	
 #====================================================================================
 #                   hiboot
 #====================================================================================
@@ -199,21 +251,17 @@ component_uninstall:
 	$(AT)make -C $(COMPONENT_DIR) uninstall
 
 #====================================================================================
-#                   plugin
+#                   tee
 #====================================================================================
-.PHONY:  plugin plugin_clean plugin_install plugin_uninstall
+.PHONY: tee tee_clean
 #++++++++++++++++++++++++++++++++++++++++++++++++++++
-plugin: linux
-	$(AT)make -C $(PLUGIN_DIR) all
+tee:
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+	$(AT)[ ! -d $(HI_TEE_OS_DIR) ] || make -C $(HI_TEE_OS_DIR) all
+endif
 
-plugin_clean:
-	$(AT)make -C $(PLUGIN_DIR) clean
-
-plugin_install: linux_install
-	$(AT)make -C $(PLUGIN_DIR) install
-
-plugin_uninstall:
-	$(AT)make -C $(PLUGIN_DIR) uninstall
+tee_clean:
+	$(AT)[ ! -d $(HI_TEE_OS_DIR) ] || make -C $(HI_TEE_OS_DIR) clean
 
 #====================================================================================
 #                   sample
@@ -231,7 +279,7 @@ sample_clean:
 #====================================================================================
 include rootbox.mk
 
-rootbox_install: tools_install rootfs_install common_install msp_install component_install plugin_install
+rootbox_install: tools_install rootfs_install common_install msp_install component_install tee
 	$(AT)make rootbox_chmod
 	$(AT)echo "rootbox is ready"
 

@@ -31,11 +31,11 @@ HI_S32 SCTE_SUBT_Display_Init(HI_VOID);
 
 HI_S32 SCTE_SUBT_Display_DeInit(HI_VOID);
 
-HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U32 u32UserData, HI_HANDLE *phDisplay);
+HI_S32 SCTE_SUBT_Display_Create(SCTE_SUBT_DISPLAY_CALLBACK_FN pfnCallback, HI_U32 u32UserData, HI_VOID** pphDisplay);
 
-HI_S32 SCTE_SUBT_Display_Destroy(HI_HANDLE hDisplay);
+HI_S32 SCTE_SUBT_Display_Destroy(HI_VOID* hDisplay);
 
-HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_HANDLE hDisplay, SCTE_SUBT_OUTPUT_S *pstOutData);
+HI_S32 SCTE_SUBT_Display_DisplaySubt(HI_VOID* hDisplay, SCTE_SUBT_OUTPUT_S *pstOutData);
 
 #ifdef __cplusplus
 }

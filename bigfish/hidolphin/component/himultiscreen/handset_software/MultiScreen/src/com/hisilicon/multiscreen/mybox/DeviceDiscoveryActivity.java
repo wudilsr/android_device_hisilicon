@@ -48,6 +48,7 @@ import com.hisilicon.multiscreen.protocol.message.MessageDef;
 import com.hisilicon.multiscreen.protocol.utils.HostNetInterface;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
 import com.hisilicon.multiscreen.protocol.utils.ServiceUtil;
+import com.hisilicon.multiscreen.scene.SceneType;
 import com.hisilicon.multiscreen.upnputils.MultiScreenDeviceList;
 import com.hisilicon.multiscreen.upnputils.UpnpDeviceListHandler;
 
@@ -836,6 +837,7 @@ public class DeviceDiscoveryActivity extends Activity
         mMultiScreenControlService.setTopActivity(MultiScreenControlService.TopActivity.discovery);
 
         resetAccessListener();
+        clearSceneListener();
         checkCurrentDevice();
         searchDelay();
         showListDelay();
@@ -848,6 +850,15 @@ public class DeviceDiscoveryActivity extends Activity
     {
         mMultiScreenControlService.setOriginalDeviceListListener(mIOriginalDeviceListListener);
         mMultiScreenControlService.setAllAccessListener(mAccessListener);
+    }
+
+    /**
+     * Clear scene listener.<br>
+     * CN:设备发现页面清空场景监听。
+     */
+    private void clearSceneListener()
+    {
+        mMultiScreenControlService.setSceneListener(null);
     }
 
     /**
@@ -1300,7 +1311,37 @@ public class DeviceDiscoveryActivity extends Activity
 
     private void gotoRemote()
     {
-        startActivity(new Intent(this, RemoteActivity.class));
+        Intent intent = new Intent(this, RemoteActivity.class);
+        SceneType scene = SceneType.REMOTE_TOUCH;
+
+        if (MultiScreenControlService.isSceneOpen())
+        {
+            scene = MultiScreenControlService.getScene();
+        }
+
+        switch (scene)
+        {
+            case REMOTE_TOUCH:
+            {
+                intent.putExtra(MessageDef.INTENT_REMOTE_STATUS, MessageDef.REMOTE_TOUCH);
+            }
+                break;
+
+            case REMOTE_AIRMOUSE:
+            {
+                intent.putExtra(MessageDef.INTENT_REMOTE_STATUS, MessageDef.REMOTE_AIRMOUSE);
+            }
+                break;
+
+            default:
+            {
+                intent.putExtra(MessageDef.INTENT_REMOTE_STATUS, MessageDef.REMOTE_TOUCH);
+            }
+                break;
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
     }
 
     /**
@@ -1570,7 +1611,7 @@ public class DeviceDiscoveryActivity extends Activity
 
         private String[] mtags_info;
 
-        private HashMap<String, Bitmap> map = new HashMap<String, Bitmap>();
+        private HashMap<String, SoftReference<Bitmap> > map = new HashMap<String, SoftReference<Bitmap>>();
 
         public GridViewAdapter(Integer[] mImageIds, String[] mtags, String[] mtags_info,
             Context context)
@@ -1588,8 +1629,8 @@ public class DeviceDiscoveryActivity extends Activity
 
                 BitmapFactory.Options opts = new BitmapFactory.Options();
                 opts.inSampleSize = 1;
-                Bitmap bmp =
-                    BitmapFactory.decodeResource(context.getResources(), mImageIds[i], opts);
+                SoftReference<Bitmap> bmp = new SoftReference<Bitmap>(
+                    BitmapFactory.decodeResource(context.getResources(), mImageIds[i], opts));
                 map.put(mImageIds[i] + "", bmp);
             }
 
@@ -1642,20 +1683,29 @@ public class DeviceDiscoveryActivity extends Activity
             viewHolder.mDevice_image.setAdjustViewBounds(true);
             viewHolder.mDevice_image.setScaleType(ImageView.ScaleType.FIT_XY);
             viewHolder.mDevice_layer.setScaleType(ImageView.ScaleType.FIT_XY);
-            Bitmap bit1 = map.get(mImageId[position] + "");
-            Bitmap bit = preScaleBitmap(bit1);
-            if (bit != null && !bit.isRecycled())
+            SoftReference<Bitmap> bit1 = map.get(mImageId[position] + "");
+            SoftReference<Bitmap> bit = null ;
+            Bitmap bitmap = null;
+            if(bit1 != null)
             {
-                viewHolder.mDevice_image.setImageBitmap(bit);
+                bit = preScaleBitmap(bit1.get());
+                if(bit != null)
+                    bitmap = bit.get();
+            }
+
+            if (bitmap != null)
+            {
+                viewHolder.mDevice_image.setImageBitmap(bitmap);
             }
             else
             {
                 BitmapFactory.Options opts = new BitmapFactory.Options();
                 opts.inSampleSize = 1;
-                Bitmap bmp =
+                SoftReference<Bitmap> bmp = new SoftReference<Bitmap>(
                     BitmapFactory.decodeResource(convertView.getResources(), mImageId[position],
-                        opts);
+                        opts));
                 map.put(mImageId[position] + "", bmp);
+                viewHolder.mDevice_image.setImageBitmap(bmp.get());
             }
             viewHolder.mDevice_tag.setText(mtag[position]);
             viewHolder.mDevice_tag_info.setText(mtags_info[position]);
@@ -1729,14 +1779,16 @@ public class DeviceDiscoveryActivity extends Activity
         /**
          * CN:按比例放大缩小图片。
          */
-        public Bitmap preScaleBitmap(Bitmap temp)
+        public SoftReference<Bitmap> preScaleBitmap(Bitmap temp)
         {
+            if(temp == null)
+                return null;
             float scaleWidth = displayWidth - 35 * 2;
             float scale = scaleWidth / temp.getWidth();
             Matrix matrix = new Matrix();
             matrix.postScale(scale, scale);
-            Bitmap temp2 =
-                Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true);
+            SoftReference<Bitmap> temp2 =new SoftReference<Bitmap>(
+                Bitmap.createBitmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), matrix, true));
             return temp2;
         }
 
@@ -1757,8 +1809,35 @@ public class DeviceDiscoveryActivity extends Activity
     private void startMultiScreen()
     {
         Intent intent = new Intent(this, MultiScreenActivity.class);
+        SceneType scene = SceneType.MIRROR;
+
+        if (MultiScreenControlService.isSceneOpen())
+        {
+            scene = MultiScreenControlService.getScene();
+        }
+
+        switch (scene)
+        {
+            case MIRROR_SENSOR:
+            {
+                intent.putExtra(MessageDef.INTENT_MIRROR_STATUS, MessageDef.MIRROR_STATUS_SENSOR);
+            }
+                break;
+
+            case MIRROR:
+            {
+                intent.putExtra(MessageDef.INTENT_MIRROR_STATUS, MessageDef.MIRROR_STATUS_DEFAULT);
+            }
+                break;
+
+            default:
+            {
+                intent.putExtra(MessageDef.INTENT_MIRROR_STATUS, MessageDef.MIRROR_STATUS_DEFAULT);
+            }
+                break;
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        intent.putExtra(MessageDef.INTENT_MIRROR_STATUS, MessageDef.MIRROR_STATUS_DEFAULT);
         startActivity(intent);
     }
 

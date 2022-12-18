@@ -67,7 +67,7 @@ HI_S32 RTP_Create(const RTP_ATTR_S *pstRtpAttr, HI_HANDLE *phRTP);
 HI_S32 RTP_Destroy(HI_HANDLE hRTP);
 
 HI_S32 RTP_Send(HI_HANDLE hRTP, HI_U8 *pu8BufAddr, HI_U32 u32Len, HI_U32 u32PtsMs);
-HI_S32 RTP_AcquireES(HI_HANDLE hRTP, HI_U32 *u32BufAddr, HI_U32 *u32Len, HI_U32 *u32PtsMs);
+HI_S32 RTP_AcquireES(HI_HANDLE hRTP, size_t *u32BufAddr, HI_U32 *u32Len, HI_U32 *u32PtsMs);
 HI_S32 RTP_ReleaseES(HI_HANDLE hRTP);
 
 HI_S32 RTP_GetAttr(HI_HANDLE hRTP, RTP_ATTR_S *pstRtpAttr);

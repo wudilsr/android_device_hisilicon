@@ -29,7 +29,7 @@
 
 #define KPC_EV_KEY_PRESS          (0x1)
 #define KPC_EV_KEY_RELEASE        (0x0)
-#define KEY_POWER                  116
+
 #define Vinput_FILE               "/dev/vinput"
 
 #define NOT_DETECTED_CEC           1
@@ -45,6 +45,7 @@ HI_U32 hdmiHotPlugCase = 0;
 
 HI_U32  g_HotPlugDetected = 0;
 
+HI_U32 hdmiCECUserStatus = HI_FALSE;
 
 
 static int HDMI_TV_MAX_SUPPORT_FMT[] = {
@@ -103,13 +104,19 @@ extern int displayType;
 extern int cvbs_dac_port;
 extern int hdmi_enable;
 extern int cvbs_enable;
-//extern HI_U32 TVHMax ;
-//extern HI_U32 TVWMax ;
+extern HI_U32 TVHMax ;
+extern HI_U32 TVWMax ;
 
 User_HDMI_CallBack pfnHdmiUserCallback = NULL;
 HI_UNF_HDMI_STATUS_S           stHdmiStatus;
 HI_UNF_HDMI_ATTR_S             stHdmiAttr;
 HI_UNF_EDID_BASE_INFO_S        stSinkCap;
+
+//STB hdmi cec info
+HI_UNF_CEC_LOGICALADD_S stHdmiSTBLogicAdrrs ;
+HI_U8 *stHdmiSTBPhysicalAddr ;
+HI_BOOL stHdmiCecEnable = HI_FALSE;
+
 #ifdef HI_HDCP_SUPPORT
 const HI_CHAR * pstencryptedHdcpKey = "/system/etc/EncryptedKey_332bytes.bin";
 #define HDCP_KEY_LOCATION           "deviceinfo"
@@ -196,6 +203,8 @@ static HI_CHAR *g_pDispFmtString[HI_UNF_ENC_FMT_BUTT+1] = {
 extern int get_format(display_format_e *format);
 extern int set_format(display_format_e format);
 extern int baseparam_save(void);
+extern HI_U32 get_HDMI_CEC_Suspend_Enable();
+extern HI_VOID HDMI_CEC_Proc(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_CMD_S *pstCECCmd, HI_VOID *pData);
 int getOptimalFormat();
 int isCapabilityChanged(int getCapResult,HI_UNF_EDID_BASE_INFO_S *pstSinkAttr);
 void capToString(char* buffer,HI_UNF_EDID_BASE_INFO_S cap);
@@ -293,11 +302,14 @@ void setTVproperty()
             ALOGE("get formate failed!\n");
 	}
 
-//    sprintf(tmpsize,"%d",(int)(sqrt(TVHMax*TVHMax +TVWMax*TVWMax)/2.54 +0.5));
 	property_set("persist.sys.tv.name",stSinkCap.stMfrsInfo.u8MfrsName);
 	property_set("persist.sys.tv.type",stSinkCap.stMfrsInfo.u8pSinkName);
-//	property_set("persist.sys.tv.size",tmpsize);
 	property_set("persist.sys.tv.dpi",tmpdpi);
+	TVWMax = (HI_U32) stSinkCap.stBaseDispPara.u8MaxImageWidth;
+        TVHMax = (HI_U32) stSinkCap.stBaseDispPara.u8MaxImageHeight;
+        sprintf(tmpsize,"%d",(int)(sqrt(TVHMax*TVHMax +TVWMax*TVWMax)/2.54 +0.5));
+        ALOGE("TVWidth:%d,Height:%d,TVSzie:%s", TVWMax, TVHMax, tmpsize);
+        property_set("persist.sys.tv.size",tmpsize);
 	return ;
 }
 
@@ -442,6 +454,350 @@ HI_BOOL isMutexStrategyEnabledForHdmiAndCvbs()
         return HI_TRUE;
     }
     return HI_FALSE;
+}
+
+HI_S32 HDMI_CEC_Standy(){
+    hdmiCECUserStatus = HI_FALSE;
+    HI_UNF_HDMI_CEC_STATUS_S cecStatuss;
+    HI_UNF_HDMI_CECStatus(g_stHdmiArgs.enHdmi,&cecStatuss);
+    HI_U8 myu8LogicalAddr = HI_UNF_CEC_LOGICALADD_TUNER_1;
+    stHdmiCecEnable = cecStatuss.bEnable;
+    if(cecStatuss.bEnable == HI_TRUE)
+    {
+        myu8LogicalAddr = cecStatuss.u8LogicalAddr;
+        stHdmiSTBLogicAdrrs = myu8LogicalAddr;
+        stHdmiSTBPhysicalAddr = cecStatuss.u8PhysicalAddr;
+    }
+    HI_U32                 RetError = HI_SUCCESS;
+    HI_UNF_HDMI_CEC_CMD_S  CECCmd;
+    memset(&CECCmd, 0, sizeof(HI_UNF_HDMI_CEC_CMD_S));
+    CECCmd.enSrcAdd = myu8LogicalAddr;
+    CECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_BROADCAST;//HI_UNF_CEC_LOGICALADD_TV;
+    CECCmd.u8Opcode = 0x36;
+    CECCmd.unOperand.stRawData.u8Length = 0x00;
+    memcpy(&(CECCmd.unOperand.stRawData.u8Data), 0X36, 0x00);
+    HI_U32 ret = HI_UNF_HDMI_SetCECCommand(g_stHdmiArgs.enHdmi, &CECCmd);
+    HI_UNF_HDMI_UnRegCECCallBackFunc(g_stHdmiArgs.enHdmi, HDMI_CEC_Proc);
+    HI_UNF_HDMI_CEC_Disable(g_stHdmiArgs.enHdmi);
+    ALOGE("CEC hdmi_cec_cmd HDMI_CEC_Standy ret = %d",ret);
+    return ret;
+}
+
+void HDMI_CEC_Out_Standy(HI_VOID *pPrivateData,HI_UNF_HDMI_ID_E  ehdmi){
+    int ret ;
+    HI_UNF_HDMI_CEC_STATUS_S cecStatuss;
+    HI_U8 myu8LogicalAddr = HI_UNF_CEC_LOGICALADD_TUNER_1;
+    int i ;
+    for(i= 0;i<10 ;i++){
+        usleep(200*1000);
+        ret = HI_UNF_HDMI_CECStatus(ehdmi,&cecStatuss);
+        stHdmiCecEnable = cecStatuss.bEnable;
+        if(cecStatuss.bEnable == HI_TRUE)
+        {
+            myu8LogicalAddr = cecStatuss.u8LogicalAddr;
+            stHdmiSTBLogicAdrrs = myu8LogicalAddr;
+            stHdmiSTBPhysicalAddr = cecStatuss.u8PhysicalAddr;
+            ALOGE("CEC HI_UNF_HDMI_CECStatus  bEnable true myu8LogicalAddr = %d time = %d",myu8LogicalAddr,i);
+            break;
+        }
+    }
+    hdmiCECUserStatus = HI_TRUE;
+    //hdmi out of standy
+    HI_U32                 RetError = HI_SUCCESS;
+    HI_UNF_HDMI_CEC_CMD_S  CECCmd;
+    memset(&CECCmd, 0, sizeof(HI_UNF_HDMI_CEC_CMD_S));
+    CECCmd.enSrcAdd = myu8LogicalAddr;
+    CECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_TV;//HI_UNF_CEC_LOGICALADD_TV;
+    CECCmd.u8Opcode = 0X04;
+    CECCmd.unOperand.stRawData.u8Length = 0x00;
+    memcpy(&(CECCmd.unOperand.stRawData.u8Data), 0X04, 0x00);
+    usleep(2000*1000);
+    ret = HI_UNF_HDMI_SetCECCommand(ehdmi, &CECCmd);
+    ALOGE("CEC hdmi_cec_cmd HI_UNF_HDMI_SetCECCommand ret = %d",ret);
+}
+
+HI_VOID HDMI_CEC_RESPONSE_PHYSICAL_ADDRESS(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd){
+    if(stHdmiCecEnable==HI_TRUE){
+        HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+        respCECCmd.enDstAdd = 0x0f;
+        respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+        respCECCmd.u8Opcode   = CEC_OPCODE_REPORT_PHYSICAL_ADDRESS;
+        respCECCmd.unOperand.stRawData.u8Length          = 3;
+        respCECCmd.unOperand.stRawData.u8Data[0]     = ((stHdmiSTBPhysicalAddr[0] << 4) & 0xf0) | (stHdmiSTBPhysicalAddr[1] & 0x0f); // [Physical Address(A.B.C.D):A B]
+        respCECCmd.unOperand.stRawData.u8Data[1]     = ((stHdmiSTBPhysicalAddr[2] << 4) & 0xf0) | (stHdmiSTBPhysicalAddr[3] & 0x0f) ; // [Physical Address(A.B.C.D):C D]
+        respCECCmd.unOperand.stRawData.u8Data[2]     = stHdmiSTBLogicAdrrs;
+        HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+        ALOGE("stHdmiSTBPhysicalAddr is %d %d %d ",respCECCmd.unOperand.stRawData.u8Data[0],
+            respCECCmd.unOperand.stRawData.u8Data[1],
+            respCECCmd.unOperand.stRawData.u8Data[2]);
+    }
+}
+HI_VOID HDMI_CEC_RESPONSE_CEC_VERSION(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_TV;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_CEC_VERSION;
+    respCECCmd.unOperand.stRawData.u8Length         = 1;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = 0x04;
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_CEC_DEVICE_VENDOR_ID(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_TV;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_DEVICE_VENDOR_ID;
+    respCECCmd.unOperand.stRawData.u8Length         = 3;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = 'h';
+    respCECCmd.unOperand.stRawData.u8Data[1]     = 'i' ;
+    respCECCmd.unOperand.stRawData.u8Data[2]     = 's' ;
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_CEC_OSD_NAME(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_TV;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_SET_OSD_NAME;
+    respCECCmd.unOperand.stRawData.u8Length         = 3;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = 'h';
+    respCECCmd.unOperand.stRawData.u8Data[1]     = 'i' ;
+    respCECCmd.unOperand.stRawData.u8Data[2]     = 's' ;
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_DEVICE_POWER_STATUS(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_TV;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_REPORT_POWER_STATUS;
+    respCECCmd.unOperand.stRawData.u8Length         = 1;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = 0x00;
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_REQUEST_ACTIVE_SOURCE(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd = HI_UNF_CEC_LOGICALADD_BROADCAST;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_ACTIVE_SOURCE;
+    respCECCmd.unOperand.stRawData.u8Length          = 2;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = ((stHdmiSTBPhysicalAddr[0] << 4) & 0xf0) | (stHdmiSTBPhysicalAddr[1] & 0x0f); // [Physical Address(A.B.C.D):A B]
+    respCECCmd.unOperand.stRawData.u8Data[1]     = ((stHdmiSTBPhysicalAddr[2] << 4) & 0xf0) | (stHdmiSTBPhysicalAddr[3] & 0x0f) ; // [Physical Address(A.B.C.D):C D]
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_VENDOR_COMMAND_WITH_ID(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    respCECCmd.enDstAdd =HI_UNF_CEC_LOGICALADD_TV;// pstCECCmd->enSrcAdd;
+    respCECCmd.enSrcAdd = stHdmiSTBLogicAdrrs;
+    respCECCmd.u8Opcode   = CEC_OPCODE_VENDOR_COMMAND_WITH_ID;
+    respCECCmd.unOperand.stRawData.u8Length         = 3;
+    respCECCmd.unOperand.stRawData.u8Data[0]     = 's';
+    respCECCmd.unOperand.stRawData.u8Data[1]     = 't' ;
+    respCECCmd.unOperand.stRawData.u8Data[2]     = 'b' ;
+    HI_UNF_HDMI_SetCECCommand(enHdmi, &respCECCmd);
+}
+HI_VOID HDMI_CEC_RESPONSE_CONTROL_PRESSED(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    //TV ir contral
+    HI_U8 irCode = pstCECCmd->unOperand.stRawData.u8Data[0];
+    ALOGE(" -- HDMI_CEC_RESPONSE_CONTROL_PRESSED irCode = %d",irCode);
+    switch(irCode){
+        case HI_UNF_CEC_UICMD_SELECT:
+            HDMI_Suspend_ReportKeyEvent(KEY_ENTER, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_ENTER, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_UP:
+            HDMI_Suspend_ReportKeyEvent(KEY_UP, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_UP, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_DOWN:
+            HDMI_Suspend_ReportKeyEvent(KEY_DOWN, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_DOWN, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_LEFT:
+            HDMI_Suspend_ReportKeyEvent(KEY_LEFT, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_LEFT, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_RIGHT:
+            HDMI_Suspend_ReportKeyEvent(KEY_RIGHT, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_RIGHT, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_EXIT:
+            HDMI_Suspend_ReportKeyEvent(KEY_BACK, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_BACK, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_ROOT_MENU:
+            HDMI_Suspend_ReportKeyEvent(KEY_MENU, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_MENU, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_PAGE_UP:
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_UP, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_UP, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_PAGE_DOWN:
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_DOWN, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_DOWN, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_FAST_FORWARD:
+            HDMI_Suspend_ReportKeyEvent(KEY_FAST_FORWARD, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_FAST_FORWARD, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_REWIND:
+            HDMI_Suspend_ReportKeyEvent(KEY_REWIND, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_REWIND, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_0:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_0, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_0, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_1:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_1, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_1, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_2:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_2, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_2, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_3:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_3, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_3, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_4:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_4, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_4, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_5:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_5, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_5, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_6:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_6, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_6, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_7:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_7, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_7, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_8:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_8, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_8, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_NUM_9:
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_9, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_NUM_9, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_PLAY:
+            HDMI_Suspend_ReportKeyEvent(KEY_PLAY, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PLAY, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_STOP:
+            HDMI_Suspend_ReportKeyEvent(KEY_STOP, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_STOP, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_PAUSE:
+            HDMI_Suspend_ReportKeyEvent(KEY_PLAY, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PLAY, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_VOLUME_UP:
+            HDMI_Suspend_ReportKeyEvent(KEY_VOLUME_UP, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_VOLUME_UP, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_VOLUME_DOWN:
+            HDMI_Suspend_ReportKeyEvent(KEY_VOLUME_DOWN, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_VOLUME_DOWN, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_FORWARD:
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_DOWN, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_DOWN, KPC_EV_KEY_RELEASE);
+            break;
+        case HI_UNF_CEC_UICMD_BACKWARD:
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_UP, KPC_EV_KEY_PRESS);
+            HDMI_Suspend_ReportKeyEvent(KEY_PAGE_UP, KPC_EV_KEY_RELEASE);
+            break;
+    }
+}
+HI_VOID HDMI_CEC_RESPONSE_CONTROL_RELEASED(HI_UNF_HDMI_ID_E enHdmi,HI_UNF_HDMI_CEC_CMD_S *pstCECCmd)
+{
+    //TV ir contral release
+}
+HI_VOID HDMI_CEC_Proc(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_CMD_S *pstCECCmd, HI_VOID *pData)
+{
+    HI_U8 opcode = pstCECCmd->u8Opcode;
+    pstCECCmd->unOperand.stRawData.u8Data;
+    ALOGE(" ---> HDMI_CEC_Proc enSrcAdd %d enDstAdd %d  opcode=%d  pOperand = %d %d %d pOperand.length=%d",
+        pstCECCmd->enSrcAdd,
+        pstCECCmd->enDstAdd,opcode,
+        pstCECCmd->unOperand.stRawData.u8Data[0],
+        pstCECCmd->unOperand.stRawData.u8Data[1],
+        pstCECCmd->unOperand.stRawData.u8Data[2],
+        pstCECCmd->unOperand.stRawData.u8Length);
+    HI_UNF_HDMI_CEC_CMD_S respCECCmd ;
+    HI_UNF_HDMI_CEC_STATUS_S cecStatuss;
+    switch(opcode)
+    {
+        case CEC_OPCODE_STANDBY:
+            HI_UNF_HDMI_CECStatus(enHdmi,&cecStatuss);
+            if(cecStatuss.bEnable == HI_TRUE&&hdmiCECUserStatus==HI_TRUE){
+                hdmiCECUserStatus = HI_FALSE;
+                HDMI_Suspend_ReportKeyEvent(KEY_POWER, KPC_EV_KEY_PRESS);
+                HDMI_Suspend_ReportKeyEvent(KEY_POWER, KPC_EV_KEY_RELEASE);
+                char property_buffer[BUFLEN] ;
+                property_get("ro.product.target", property_buffer, "telecom");
+                if(property_buffer!=NULL&&strcmp(property_buffer,"shcmcc")==0){
+                    usleep(2000*1000);
+                    HDMI_Suspend_ReportKeyEvent(KEY_RIGHT, KPC_EV_KEY_PRESS);
+                    HDMI_Suspend_ReportKeyEvent(KEY_RIGHT, KPC_EV_KEY_RELEASE);
+                    ALOGE("HDMI_CEC_Proc: send power key to suspend1");
+                    usleep(500*1000);
+                    HDMI_Suspend_ReportKeyEvent(KEY_ENTER, KPC_EV_KEY_PRESS);
+                    HDMI_Suspend_ReportKeyEvent(KEY_ENTER, KPC_EV_KEY_RELEASE);
+                }
+                ALOGE("HDMI_CEC_Proc: send power key to suspend");
+                HI_UNF_HDMI_UnRegCECCallBackFunc(enHdmi, HDMI_CEC_Proc);
+            }
+            break;
+        case CEC_OPCODE_REPORT_PHYSICAL_ADDRESS:
+            {
+                HI_U8 type= pstCECCmd->unOperand.stRawData.u8Data[2];
+                if(type==0){
+                    ALOGE("---> HDMI_CEC_Proc  is TV");
+                }
+            }
+            break;
+        case CEC_OPCODE_GET_CEC_VERSION:
+            HDMI_CEC_RESPONSE_CEC_VERSION(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_GIVE_PHYSICAL_ADDRESS:
+            //response physical address
+            HDMI_CEC_RESPONSE_PHYSICAL_ADDRESS(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_GIVE_DEVICE_VENDOR_ID:
+            //response stb device vendor id
+            HDMI_CEC_RESPONSE_CEC_DEVICE_VENDOR_ID(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_GIVE_OSD_NAME:
+            HDMI_CEC_RESPONSE_CEC_OSD_NAME(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_VENDOR_COMMAND_WITH_ID:
+            HDMI_CEC_RESPONSE_VENDOR_COMMAND_WITH_ID(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_GIVE_DEVICE_POWER_STATUS:
+            HDMI_CEC_RESPONSE_DEVICE_POWER_STATUS(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_REQUEST_ACTIVE_SOURCE:
+            HDMI_CEC_RESPONSE_REQUEST_ACTIVE_SOURCE(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_USER_CONTROL_PRESSED:
+            //deal with TV button
+            HDMI_CEC_RESPONSE_CONTROL_PRESSED(enHdmi,&pstCECCmd);
+            break;
+        case CEC_OPCODE_USER_CONTROL_RELEASED:
+            HDMI_CEC_RESPONSE_CONTROL_RELEASED(enHdmi,&pstCECCmd);
+            break;
+    }
 }
 
 void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
@@ -724,8 +1080,12 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
         if(0 == isCapabilityChanged(getCapRet,&stSinkCap))
         {
             ALOGE("\n capability is not changed \n");
+            char tmp[BUFLEN] = {0,0,0,0};
+            int value = property_get("persist.sys.hdcp.auth", tmp, "0");
+            value = atoi(tmp);
             // 2.1.1 Optimal format is enabled.
-            if(1 == getOptimalFormat())
+            if(1 == getOptimalFormat()
+                || ((0 == stSinkCap.bSupportFormat[format]) && (value == 0)))
             {
                 ALOGE("\n optimum format enable is enabled \n");
                 if (stHdmiAttr.bEnableHdmi == HI_TRUE)//for tv
@@ -787,7 +1147,6 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
             int value = 0;
             property_get("persist.sys.hdcp.auth", tmp, "0");
             value = atoi(tmp);
-
             if( (1 == getOptimalFormat())
                 || ((0 == stSinkCap.bSupportFormat[format]) && (value == 0)) )
             {
@@ -878,7 +1237,13 @@ void HDMI_HotPlug_Proc(HI_VOID *pPrivateData)
     HDMI_PrintAttr(&stHdmiAttr);
 
     hdmi_enable = 1;
-
+    int ret_a = HI_UNF_HDMI_CEC_Enable(hHdmi);
+    ALOGE(" -- CEC HI_UNF_HDMI_CEC_Enable ret = %d",ret_a);
+    //CEC standby
+    if(get_HDMI_CEC_Suspend_Enable()==1){
+        HI_UNF_HDMI_RegCECCallBackFunc(hHdmi, HDMI_CEC_Proc);
+        HDMI_CEC_Out_Standy(pPrivateData,hHdmi);
+    }
     ALOGI_IF(DEBUG_HDMI_INIT, "HDMI Hotplug event done %s(%d)" , __func__, __LINE__);
     return;
 
@@ -1142,6 +1507,37 @@ HI_U32 get_HDMI_Suspend_Enable()
     ALOGE("get_hdmi_suspend_enable: value is :%d",value);
     return value;
 }
+HI_U32 get_HDMI_CEC_Suspend_Enable()
+{
+    char buffer[BUFLEN];
+    HI_U32 value = -1;
+
+    property_get("persist.sys.hdmi.cec", buffer, "false");
+    ALOGE("get_HDMI_CEC_Suspend_Enable: value is :%d",value);
+    if(strcmp("true",buffer)==0){
+        value = 1;
+    }
+    else{
+        value = 0;
+    }
+    return value;
+}
+HI_U32 set_HDMI_CEC_Suspend_Enable(int iEnable)
+{
+    ALOGE("set_HDMI_CEC_Suspend_Enable: iEnable is :%d",iEnable);
+    HI_U32 ret = -1;
+    char  buffer[BUFLEN];
+    sprintf(buffer,"%d", iEnable);
+    if(iEnable!=HI_TRUE){
+        HI_UNF_HDMI_UnRegCECCallBackFunc(g_stHdmiArgs.enHdmi, HDMI_CEC_Proc);
+        ret = property_set("persist.sys.hdmi.cec", "false");
+    }else{
+        HI_UNF_HDMI_RegCECCallBackFunc(g_stHdmiArgs.enHdmi, HDMI_CEC_Proc);
+        ret = property_set("persist.sys.hdmi.cec", "true");
+    }
+    return ret;
+}
+
 
 int HDMI_Suspend_ReportKeyEvent(int iKeyValue,int iStatus)
 {
@@ -1190,7 +1586,7 @@ HI_VOID HDMI_Suspend_Callback(HI_UNF_HDMI_EVENT_TYPE_E event, HI_VOID *pPrivateD
     //1.1 if hdmi suspend is disable, do nothing
     if(0 == get_HDMI_Suspend_Enable())
     {
-        ALOGE("hdmi cec suspend disable");
+        ALOGE("hdmi suspend disable");
         return;
     }
 
@@ -1513,6 +1909,7 @@ HI_S32 HIADP_HDMI_SetHDCPKey_DeviceInfo(HI_UNF_HDMI_ID_E enHDMIId)
 }
 #endif
 
+
 HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
 {
     ALOGI_IF(DEBUG_HDMI_INIT, "HDMI init enter %s(%d)" , __func__, __LINE__);
@@ -1611,7 +2008,12 @@ HI_S32 HIADP_HDMI_Init(HI_UNF_HDMI_ID_E enHDMIId, HI_UNF_ENC_FMT_E enWantFmt)
 
 HI_S32 HIADP_HDMI_DeInit(HI_UNF_HDMI_ID_E enHDMIId)
 {
-
+    //suspend tv by cec
+    if(get_HDMI_CEC_Suspend_Enable()==1){
+        ALOGE("HIADP_HDMI_DeInit suspend tv");
+        HI_UNF_HDMI_UnRegCECCallBackFunc(enHDMIId, HDMI_CEC_Proc);
+        HDMI_CEC_Standy();
+    }
     HI_UNF_HDMI_Stop(enHDMIId);
 
     HI_UNF_HDMI_Close(enHDMIId);

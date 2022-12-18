@@ -70,7 +70,7 @@ HI_S32 VI_DRV_Close(struct inode *finode, struct file *ffile)
 
 HI_S32 VI_DRV_Ioctl_k(struct inode *inode, struct file *file, unsigned int cmd, HI_VOID *arg)
 {
-    HI_S32 Ret;
+    HI_S32 Ret = HI_FAILURE;
 
     Ret = down_interruptible(&g_ViMutex);
     if (Ret)
@@ -172,7 +172,10 @@ HI_S32 VI_DRV_Ioctl_k(struct inode *inode, struct file *file, unsigned int cmd, 
         break;
     }
     }
-
+    if(Ret != HI_SUCCESS)
+    {
+        HI_INFO_VI("vi cmd oper failed, cmd=%#x ret=%#x\n", cmd, Ret);
+    }
     up(&g_ViMutex);
     return Ret;
 }

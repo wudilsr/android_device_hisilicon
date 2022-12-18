@@ -34,7 +34,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -165,7 +167,7 @@ HI_U8 *g_pVDPDispFmtString[HI_DRV_DISP_FMT_BUTT] = {
     "3840x2160_30",
     "3840x2160_50",
     "3840x2160_60",
-    
+
     "4096x2160_24",
     "4096x2160_25",
     "4096x2160_30",
@@ -799,13 +801,11 @@ HI_S32 DispProcCmdProcee(HI_DRV_DISPLAY_E enDisp, HI_CHAR *pArg1,HI_CHAR *pArg2)
         {
             nRet = DISP_SetFormat(enDisp, HI_DRV_DISP_STEREO_NONE, fmtold);
         }
-
-        if (0 == HI_OSAL_Strncmp(pArg2, "sbs_hf", strlen("sbs_hf")))
+        else if (0 == HI_OSAL_Strncmp(pArg2, "sbs_hf", strlen("sbs_hf")))
         {
             nRet = DISP_SetFormat(enDisp, HI_DRV_DISP_STEREO_SBS_HALF, fmtold);
         }
-
-        if (0 == HI_OSAL_Strncmp(pArg2, "tab", strlen("tab")))
+        else if (0 == HI_OSAL_Strncmp(pArg2, "tab", strlen("tab")))
         {
             nRet = DISP_SetFormat(enDisp, HI_DRV_DISP_STEREO_TAB, fmtold);
         }
@@ -942,7 +942,7 @@ HI_S32 DispProcCmdProcee(HI_DRV_DISPLAY_E enDisp, HI_CHAR *pArg1,HI_CHAR *pArg2)
         if (!pstCurFrame)
         {
             HI_ERR_DISP("alloc frame info memory failed\n");
-            return nRet;
+            return HI_ERR_DISP_MALLOC_FAILED;
         }
 
         /* get currently displayed frame */
@@ -1200,7 +1200,10 @@ HI_S32 DISP_FileClose(struct inode *finode, struct file  *ffile)
         g_s32DispAttachCount = 0;
     }
 
+    if (HI_NULL != ffile->private_data)
+    {
     HI_KFREE(HI_ID_DISP, ffile->private_data);
+    }
 
     up(&g_DispMutex);
     return 0;
@@ -1288,6 +1291,11 @@ HI_U32 DISP_Get_CountStatus(void)
 HI_S32 DISP_ExtOpen(HI_DRV_DISPLAY_E enDisp, DRV_DISP_STATE_S *pDispState, HI_BOOL bUser)
 {
     HI_S32            Ret;
+
+    if(HI_DRV_DISPLAY_BUTT <= enDisp)
+    {
+       return HI_ERR_DISP_INVALID_PARA;
+    }
 
     /* create DISP for the first time */
     if (!pDispState->bDispOpen[enDisp])
@@ -1415,6 +1423,8 @@ HI_S32 HI_DRV_DISP_Attach(HI_DRV_DISPLAY_E enMaster, HI_DRV_DISPLAY_E enSlave)
 {
     HI_S32 Ret;
     DISP_ATTACH_S  enDispAttach;
+    DispCheckID(enMaster);
+    DispCheckID(enSlave);
 
     enDispAttach.enMaster = enMaster;
     enDispAttach.enSlave  = enSlave;
@@ -1426,6 +1436,8 @@ HI_S32 HI_DRV_DISP_Detach(HI_DRV_DISPLAY_E enMaster, HI_DRV_DISPLAY_E enSlave)
 {
     HI_S32 Ret;
     DISP_ATTACH_S  enDispAttach;
+    DispCheckID(enMaster);
+    DispCheckID(enSlave);
 
     enDispAttach.enMaster = enMaster;
     enDispAttach.enSlave  = enSlave;
@@ -1437,6 +1449,7 @@ HI_S32 HI_DRV_DISP_SetFormat(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_FMT_E enFormat
 {
     HI_S32 Ret;
     DISP_FORMAT_S  enDispFormat;
+    DispCheckID(enDisp);
 
     enDispFormat.enDisp = enDisp;
     enDispFormat.enFormat = enFormat;
@@ -1449,6 +1462,7 @@ HI_S32 HI_DRV_DISP_GetFormat(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_FMT_E *penForm
 {
     HI_S32 Ret;
     DISP_FORMAT_S  enDispFormat;
+    DispCheckID(enDisp);
 
     if (!penFormat)
     {
@@ -1466,6 +1480,7 @@ HI_S32 HI_DRV_DISP_GetFormat(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_FMT_E *penForm
 
 HI_S32 HI_DRV_DISP_SetHDMI420(HI_DRV_DISPLAY_E enDisp,HI_BOOL bEnable)
 {
+    DispCheckID(enDisp);
 	return Disp_SetHDMI420( enDisp,bEnable);
 }
 
@@ -1473,6 +1488,8 @@ HI_S32 HI_DRV_DISP_SetCustomTiming(HI_DRV_DISPLAY_E enDisp,  HI_DRV_DISP_TIMING_
 {
     HI_S32 Ret;
     DISP_TIMING_S  DispTiming;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstTiming);
     DispTiming.enDisp = enDisp;
     memcpy(&DispTiming.stTimingPara, pstTiming, sizeof(HI_DRV_DISP_TIMING_S));
     Ret = HI_DRV_DISP_Process(CMD_DISP_SET_TIMING, &DispTiming);
@@ -1483,6 +1500,8 @@ HI_S32 HI_DRV_DISP_GetCustomTiming(HI_DRV_DISPLAY_E enDisp,  HI_DRV_DISP_TIMING_
 {
     HI_S32 Ret;
     DISP_TIMING_S  DispTiming;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstTiming);
     memset(&DispTiming, 0, sizeof(DISP_TIMING_S));
     DispTiming.enDisp = enDisp;
     Ret = HI_DRV_DISP_Process(CMD_DISP_GET_TIMING, &DispTiming);
@@ -1499,6 +1518,8 @@ HI_S32 HI_DRV_DISP_AddIntf(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_INTF_S *pstIntf)
     HI_S32          Ret;
     DISP_SET_INTF_S DispIntf;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstIntf);
     DispIntf.enDisp = enDisp;
 
     memcpy(&DispIntf.stIntf, pstIntf, sizeof(HI_DRV_DISP_INTF_S));
@@ -1512,6 +1533,8 @@ HI_S32 HI_DRV_DISP_DelIntf(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_INTF_S *pstIntf)
     HI_S32          Ret;
     DISP_SET_INTF_S DispIntf;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstIntf);
     DispIntf.enDisp = enDisp;
 
     memcpy(&DispIntf.stIntf, pstIntf, sizeof(HI_DRV_DISP_INTF_S));
@@ -1529,6 +1552,7 @@ HI_S32 HI_DRV_DISP_Open(HI_DRV_DISPLAY_E enDisp)
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
     Ret = HI_DRV_DISP_Process(CMD_DISP_OPEN, &enDisp);
     return Ret;
 }
@@ -1537,6 +1561,7 @@ HI_S32 HI_DRV_DISP_Close(HI_DRV_DISPLAY_E enDisp)
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
     Ret = HI_DRV_DISP_Process(CMD_DISP_CLOSE, &enDisp);
     return Ret;
 }
@@ -1546,6 +1571,7 @@ HI_S32 HI_DRV_DISP_SetEnable(HI_DRV_DISPLAY_E enDisp, HI_BOOL bEnable)
     HI_S32 Ret;
     DISP_ENABLE_S  stDispEnable;
 
+    DispCheckID(enDisp);
     stDispEnable.bEnable = bEnable;
     stDispEnable.enDisp = enDisp;
     Ret = HI_DRV_DISP_Process(CMD_DISP_SET_ENABLE, &stDispEnable);
@@ -1556,6 +1582,8 @@ HI_S32 HI_DRV_DISP_GetEnable(HI_DRV_DISPLAY_E enDisp, HI_BOOL *pbEnable)
 {
     HI_S32 Ret;
     DISP_ENABLE_S  stDispEnable;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pbEnable);
 
     memset(&stDispEnable, 0, sizeof(DISP_ENABLE_S));
     stDispEnable.enDisp = enDisp;
@@ -1573,6 +1601,7 @@ HI_S32 HI_DRV_DISP_SetRightEyeFirst(HI_DRV_DISPLAY_E enDisp, HI_BOOL bEnable)
     HI_S32 Ret;
     DISP_R_EYE_FIRST_S  stREFirst;
 
+    DispCheckID(enDisp);
     stREFirst.bREFirst = bEnable;
     stREFirst.enDisp = enDisp;
     Ret = HI_DRV_DISP_Process(CMD_DISP_SET_R_E_FIRST, &stREFirst);
@@ -1584,6 +1613,8 @@ HI_S32 HI_DRV_DISP_SetBgColor(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_COLOR_S *pstB
     HI_S32 Ret;
     DISP_BGC_S  stDispBgc;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstBgColor);
     stDispBgc.stBgColor = *pstBgColor;
     stDispBgc.enDisp = enDisp;
     Ret = HI_DRV_DISP_Process(CMD_DISP_SET_BGC, &stDispBgc);
@@ -1594,6 +1625,8 @@ HI_S32 HI_DRV_DISP_GetBgColor(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_COLOR_S *pstB
 {
     HI_S32 Ret;
     DISP_BGC_S  stDispBgc;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstBgColor);
 
     memset(&stDispBgc, 0, sizeof(DISP_BGC_S));
     stDispBgc.enDisp = enDisp;
@@ -1612,6 +1645,7 @@ HI_S32 HI_DRV_DISP_SetAspectRatio(HI_DRV_DISPLAY_E enDisp, HI_U32 u32Ratio_h, HI
     HI_S32 Ret;
     DISP_ASPECT_RATIO_S stDispRatio;
 
+    DispCheckID(enDisp);
     stDispRatio.enDisp = enDisp;
     stDispRatio.u32ARHori = u32Ratio_h;
     stDispRatio.u32ARVert = u32Ratio_v;
@@ -1623,6 +1657,9 @@ HI_S32 HI_DRV_DISP_GetAspectRatio(HI_DRV_DISPLAY_E enDisp, HI_U32 *pu32Ratio_h, 
 {
     HI_S32 Ret;
     DISP_ASPECT_RATIO_S stDispRatio;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pu32Ratio_h);
+    DispCheckNullPointer(pu32Ratio_v);
 
     memset(&stDispRatio, 0, sizeof(DISP_ASPECT_RATIO_S));
     stDispRatio.enDisp = enDisp;
@@ -1640,6 +1677,12 @@ HI_S32 HI_DRV_DISP_SetLayerZorder(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_LAYER_E e
     HI_S32 Ret;
     DISP_ZORDER_S stDispZorder;
 
+    if ((enLayer >= HI_DRV_DISP_LAYER_BUTT) || (enZFlag >= HI_DRV_DISP_ZORDER_BUTT))
+    {
+        DISP_ERROR("Invalid layer or zorder flag.\n");
+        return HI_ERR_DISP_INVALID_PARA;
+    }
+    DispCheckID(enDisp);
     stDispZorder.enDisp = enDisp;
     stDispZorder.Layer  = enLayer;
     stDispZorder.ZFlag  = enZFlag;
@@ -1651,7 +1694,13 @@ HI_S32 HI_DRV_DISP_GetLayerZorder(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_LAYER_E e
 {
     HI_S32 Ret;
     DISP_ZORDER_S stDispZorder;
-
+    if (enLayer >= HI_DRV_DISP_LAYER_BUTT)
+    {
+        DISP_ERROR("Invalid layer or zorder flag.\n");
+        return HI_ERR_DISP_INVALID_PARA;
+    }
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pu32Zorder);
     memset(&stDispZorder, 0, sizeof(DISP_ZORDER_S));
     stDispZorder.enDisp = enDisp;
     stDispZorder.Layer  = enLayer;
@@ -1665,6 +1714,9 @@ HI_S32 HI_DRV_DISP_CreateCast (HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CAST_CFG_S *
     HI_S32 Ret;
     DISP_CAST_CREATE_S stCastCreate;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstCfg);
+    DispCheckNullPointer(phCast);
     stCastCreate.enDisp = enDisp;
     stCastCreate.hCast = *phCast;
     stCastCreate.stCfg = *pstCfg;
@@ -1698,6 +1750,7 @@ HI_S32  HI_DRV_DISP_GetCastEnable(HI_HANDLE hCast, HI_BOOL *pbEnable)
     HI_S32 Ret;
     DISP_CAST_ENABLE_S stCastEnable;
 
+    DispCheckNullPointer(pbEnable);
     memset(&stCastEnable, 0, sizeof(DISP_CAST_ENABLE_S));
     stCastEnable.hCast = hCast;
     Ret = HI_DRV_DISP_Process(CMD_DISP_GET_CAST_ENABLE, &stCastEnable);
@@ -1712,6 +1765,7 @@ HI_S32  HI_DRV_DISP_AcquireCastFrame(HI_HANDLE hCast, HI_DRV_VIDEO_FRAME_S *pstC
 {
     HI_S32 Ret;
     DISP_CAST_FRAME_S stCastFrame;
+    DispCheckNullPointer(pstCastFrame);
 
     memset(&stCastFrame, 0, sizeof(DISP_CAST_FRAME_S));
     stCastFrame.hCast = hCast;
@@ -1728,6 +1782,7 @@ HI_S32 HI_DRV_DISP_ReleaseCastFrame(HI_HANDLE hCast, HI_DRV_VIDEO_FRAME_S *pstCa
     HI_S32 Ret;
     DISP_CAST_FRAME_S stCastFrame;
 
+    DispCheckNullPointer(pstCastFrame);
     stCastFrame.hCast = hCast;
     stCastFrame.stFrame = *pstCastFrame;
 
@@ -1750,7 +1805,7 @@ HI_S32 HI_DRV_DISP_ExternlAttach(HI_HANDLE hCast, HI_HANDLE hSink)
     return Ret ;
 }
 
-HI_S32 HI_DRV_DISP_SetCastAttr(HI_HANDLE hCast, 
+HI_S32 HI_DRV_DISP_SetCastAttr(HI_HANDLE hCast,
                                 HI_U32 u32Width,
                                 HI_U32 u32Height,
                                 HI_U32 u32FrmRate)
@@ -1770,6 +1825,7 @@ HI_S32 HI_DRV_DISP_GetCastAttr(HI_HANDLE hCast, HI_DRV_DISP_Cast_Attr_S *pstCast
 {
     HI_S32 Ret;
     DISP_CAST_EXT_ATTR_S disp_cast_attr;
+    DispCheckNullPointer(pstCastAttr);
     memset((void*)&disp_cast_attr, 0, sizeof(DISP_CAST_EXT_ATTR_S));
 
     disp_cast_attr.hCast = hCast;
@@ -1800,6 +1856,7 @@ HI_S32 HI_DRV_DISP_GetInitFlag(HI_BOOL *pbInited)
 {
     HI_S32 Ret;
 
+    DispCheckNullPointer(pbInited);
     Ret = down_interruptible(&g_DispMutex);
 
     Ret = DISP_GetInitFlag(pbInited);
@@ -1812,6 +1869,7 @@ HI_S32 HI_DRV_DISP_GetInitFlag(HI_BOOL *pbInited)
 HI_S32 HI_DRV_DISP_GetVersion(HI_DRV_DISP_VERSION_S *pstVersion)
 {
     HI_S32 Ret;
+    DispCheckNullPointer(pstVersion);
 
     Ret = down_interruptible(&g_DispMutex);
 
@@ -1824,21 +1882,29 @@ HI_S32 HI_DRV_DISP_GetVersion(HI_DRV_DISP_VERSION_S *pstVersion)
 
 HI_BOOL HI_DRV_DISP_IsOpened(HI_DRV_DISPLAY_E enDisp)
 {
-    HI_S32 Ret;
+    HI_BOOL bOpen = HI_FALSE;
 
-    Ret = down_interruptible(&g_DispMutex);
+    if (HI_DRV_DISPLAY_BUTT <= enDisp)
+    {
+        DISP_ERROR("Invalid display type!\n");
+        return HI_FALSE;
+    }
 
-    Ret = DISP_IsOpened(enDisp);
+    down_interruptible(&g_DispMutex);
+
+    bOpen = DISP_IsOpened(enDisp);
 
     up(&g_DispMutex);
 
-    return Ret;
+    return bOpen;
 }
 
 HI_S32 HI_DRV_DISP_GetSlave(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISPLAY_E *penSlave)
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(penSlave);
     Ret = down_interruptible(&g_DispMutex);
 
     Ret = DISP_GetSlave(enDisp, penSlave);
@@ -1852,6 +1918,8 @@ HI_S32 HI_DRV_DISP_GetMaster(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISPLAY_E *penMaste
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(penMaster);
     Ret = down_interruptible(&g_DispMutex);
 
     Ret = DISP_GetMaster(enDisp, penMaster);
@@ -1865,6 +1933,8 @@ HI_S32 HI_DRV_DISP_GetDisplayInfo(HI_DRV_DISPLAY_E enDisp, HI_DISP_DISPLAY_INFO_
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstInfo);
     Ret = down_interruptible(&g_DispMutex);
 
     Ret = DISP_GetDisplayInfo(enDisp, pstInfo);
@@ -1878,6 +1948,13 @@ HI_S32 HI_DRV_DISP_RegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_TYP
                             HI_DRV_DISP_CALLBACK_S *pstCallback)
 {
     HI_S32 Ret;
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstCallback);
+    if (eType >= HI_DRV_DISP_C_TYPE_BUTT)
+    {
+        DISP_ERROR("Invalid display callback type!\n");
+        return HI_ERR_DISP_INVALID_PARA;
+    }
 
     Ret = down_interruptible(&g_DispMutex);
     Ret = DISP_RegCallback(enDisp, eType, pstCallback);
@@ -1890,6 +1967,13 @@ HI_S32 HI_DRV_DISP_UnRegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_T
 {
     HI_S32 Ret;
 
+    DispCheckID(enDisp);
+    DispCheckNullPointer(pstCallback);
+    if (eType >= HI_DRV_DISP_C_TYPE_BUTT)
+    {
+        DISP_ERROR("Invalid display callback type!\n");
+        return HI_ERR_DISP_INVALID_PARA;
+    }
     Ret = down_interruptible(&g_DispMutex);
     Ret = DISP_UnRegCallback(enDisp, eType, pstCallback);
     up(&g_DispMutex);
@@ -1899,9 +1983,9 @@ HI_S32 HI_DRV_DISP_UnRegCallback(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_CALLBACK_T
 HI_S32 DRV_DISP_Suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 {
     HI_S32 Ret;
-	
+
 	HDMI_EXPORT_FUNC_S* pstHDMIFunc = HI_NULL;
-    
+
     Ret = HI_DRV_MODULE_GetFunction(HI_ID_HDMI, (HI_VOID**)&pstHDMIFunc);
 
     if ((Ret != HI_SUCCESS) || (pstHDMIFunc == HI_NULL))
@@ -1978,7 +2062,7 @@ HI_S32 DRV_DISP_Resume(PM_BASEDEV_S *pdev)
         DISP_ERROR("DISP_get HDMI func failed!");
         return HI_FAILURE;
     }
-	
+
     if (Disp_GetFastbootupFlag() == DISP_FASTBOOTUP_FLAG)
     {
         stIntf.eID = HI_DRV_DISP_INTF_HDMI0;
@@ -1992,16 +2076,16 @@ HI_S32 DRV_DISP_Resume(PM_BASEDEV_S *pdev)
             DISP_GetDisplaySetting(HI_DRV_DISPLAY_1, &enFormat,&eDispMode);
         }
 		 #if defined (HI_HDMI_SUPPORT_2_0)
-		 
+
 		 HI_DRV_DISPLAY_E enDisp;
          HDMI_VIDEO_ATTR_S  stVideoAttr;
 		 enDisp = DISPGetIntfChannel(HI_DRV_DISP_INTF_HDMI0);
-	
+
 		 if (HI_SUCCESS == DISPGetDispPara(enDisp,&stVideoAttr))
 		 {
 			pstHDMIFunc->pfnHdmiSoftResume(&stVideoAttr);
 		 }
-		 #else		
+		 #else
 			pstHDMIFunc->pfnHdmiSoftResume(enFormat, eDispMode);
 		 #endif
 		Disp_SetFastbootupFlag(0);
@@ -2011,13 +2095,19 @@ HI_S32 DRV_DISP_Resume(PM_BASEDEV_S *pdev)
         pstHDMIFunc->pfnHdmiResume(NULL);
     }
 
-    
+
     return 0;
 }
 
 HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDispState, HI_BOOL bUser)
 {
     HI_S32       Ret = HI_FAILURE;
+
+    if ((HI_NULL == arg) || (HI_NULL == pDispState))
+    {
+        HI_FATAL_DISP("pass null ptr.\n");
+        return HI_ERR_DISP_NULL_PTR;
+    }
 
     switch (cmd)
     {
@@ -2045,6 +2135,7 @@ HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDi
 
         case CMD_DISP_OPEN:
             {
+
                 Ret = DISP_ExtOpen(*((HI_DRV_DISPLAY_E *)arg), pDispState, bUser);
 
                 break;
@@ -2362,9 +2453,15 @@ HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDi
                 if (pDispMcrvsn->pPriv)
                 {
                     Ret = DISP_SetMacrovisionCustomer(pDispMcrvsn->enDisp, pDispMcrvsn->pPriv);
+                    if (HI_SUCCESS == Ret)
+                    {
+                        Ret = DISP_SetMacrovision(pDispMcrvsn->enDisp, pDispMcrvsn->eMcrvsn);
+                    }
                 }
-
-                Ret = DISP_SetMacrovision(pDispMcrvsn->enDisp, pDispMcrvsn->eMcrvsn);
+                else
+                {
+                    Ret = DISP_SetMacrovision(pDispMcrvsn->enDisp, pDispMcrvsn->eMcrvsn);
+                }
 
                 break;
             }
@@ -2417,11 +2514,12 @@ HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDi
                 DISP_CAST_CREATE_S *pstC = (DISP_CAST_CREATE_S *)arg;
 
                 /*if cast already open , return failed*/
+                DispCheckID(pstC->enDisp);
                 if (pDispState->hCastHandle[pstC->enDisp] != HI_NULL)
                     return HI_ERR_DISP_INVALID_OPT;
 #if defined (CHIP_HIFONEB02)
                 pstC->stCfg.bLowDelay = HI_FALSE;
-#endif				
+#endif
                 //printk(">>>>>>>>>>>>>>>> CMD_DISP_CREATE_CAST >>>>>>>>>>>>. \n");
                 Ret = DISP_CreateCast(pstC->enDisp, &pstC->stCfg, &pstC->hCast);
                 if (!Ret)
@@ -2487,6 +2585,7 @@ HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDi
                 DISP_SNAPSHOT_FRAME_S *pstFrame = (DISP_SNAPSHOT_FRAME_S*)arg;
                 HI_HANDLE snapshotHandleOut = 0;
 
+                DispCheckID(pstFrame->enDispLayer);
                 /*does not support continuous snapshot.*/
                 if (pDispState->hSnapshot[pstFrame->enDispLayer] != 0)
                     break;
@@ -2506,6 +2605,7 @@ HI_S32 DRV_DISP_ProcessCmd(unsigned int cmd, HI_VOID *arg, DRV_DISP_STATE_S *pDi
                 DISP_SNAPSHOT_FRAME_S *pstFrame = (DISP_SNAPSHOT_FRAME_S*)arg;
 
                 /*for released snapshot, just break.*/
+                DispCheckID(pstFrame->enDispLayer);
                 if (pDispState->hSnapshot[pstFrame->enDispLayer] == 0)
                     break;
 

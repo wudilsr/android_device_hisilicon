@@ -173,8 +173,6 @@ void write_regVal(void)
     return ;
 }
 
-#ifdef HI_ADVCA_SUPPORT
-
 /* function */
 void read_regVal_big(void)
 {
@@ -217,7 +215,7 @@ void write_regVal_Big(void)
     CMD_REG = 0x00;
     return ;
 }
-#endif
+
 
 /*************************************************************************
                         dbg  module

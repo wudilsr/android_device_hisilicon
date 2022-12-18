@@ -53,21 +53,16 @@
 #define ERR_TIMEOUT_RXDR_INT        5
 #define ERR_TIMEOUT_ACMD41_COMP     6
 
-extern void emmc_timeout_print(int num);
-
-static inline unsigned int himci_readl(unsigned addr)
+static unsigned int himci_readl(unsigned addr)
 {
 	return *((volatile unsigned *) (addr));
 }
 
-static inline void himci_writel(unsigned val, unsigned addr)
+static void himci_writel(unsigned val, unsigned addr)
 {
 	(*(volatile unsigned *) (addr)) = (val);
 }
 
-static inline void emmc_io_init(void)
-{
-}
 
 #include "early_timer.c"
 
@@ -89,8 +84,6 @@ static void emmc_update_clk(void)
 	} while ((tmp_reg & START_CMD)&&(timer_get_val() < DELAY_10S)); 
 	timer_stop();
 	
-	if (tmp_reg & START_CMD)
-		emmc_timeout_print(ERR_TIMEOUT_UPDATE_CLK);
 }
 
 static void emmc_send_cmd(unsigned cmd, unsigned arg, unsigned wait_busy)
@@ -108,17 +101,12 @@ static void emmc_send_cmd(unsigned cmd, unsigned arg, unsigned wait_busy)
 	} while ((tmp_reg & START_CMD)&&(timer_get_val() < DELAY_10S)); 
 	timer_stop();
 	
-	if (tmp_reg & START_CMD)
-		emmc_timeout_print(ERR_TIMEOUT_SEND_CMD);
-	
+
 	timer_start();
 	do {
 		tmp_reg = himci_readl(mmc_base + MCI_RINTSTS);
 	} while (((tmp_reg&CD_INT_STATUS) == 0)&&(timer_get_val() < DELAY_10S)); 
 	timer_stop();
-	
-	if ((tmp_reg&CD_INT_STATUS) == 0)
-		emmc_timeout_print(ERR_TIMEOUT_CMD_COMP);
 	
 	if (wait_busy) {
 		timer_start();
@@ -126,9 +114,6 @@ static void emmc_send_cmd(unsigned cmd, unsigned arg, unsigned wait_busy)
 			tmp_reg = himci_readl(mmc_base + MCI_STATUS);
 		} while ((tmp_reg & DATA_BUSY)&&(timer_get_val() < DELAY_10S)); 
 		timer_stop();
-		
-		if (tmp_reg & DATA_BUSY)
-			emmc_timeout_print(ERR_TIMEOUT_CARD_COMP);
 	}
 }
 
@@ -137,8 +122,6 @@ static unsigned int emmc_init(void)
 	unsigned int tmp_reg, wait_retry_count = 0;
 	unsigned int mmc_base = REG_BASE_MCI;
 	unsigned int hcs;
-
-	emmc_io_init();
 
 	emmc_sys_init();
 
@@ -216,9 +199,6 @@ static unsigned int emmc_init(void)
 			break;	
 		wait_retry_count ++;
 	} while (wait_retry_count < 2000);
-
-	if (wait_retry_count == 2000)
-		emmc_timeout_print(ERR_TIMEOUT_CMD1_COMP);
 
 	hcs = ((tmp_reg & OCR_HCS) == OCR_HCS);
 
@@ -303,16 +283,12 @@ static void emmc_read(void *ptr, unsigned int size, unsigned int hcs)
 			val = (DRTO_INT_STATUS | HTO_INT_STATUS
 				 | HLE_INT_STATUS | EBE_INT_STATUS);
 			if (tmp_reg & val) {
-				emmc_timeout_print(val);
 				timer_stop();
 				return;
 			}
 		} while (timer_get_val() < DELAY_10S);
 		timer_stop();
 
-		if (!(tmp_reg & (RXDR_INT_STATUS|DTO_INT_STATUS)))
-			emmc_timeout_print(ERR_TIMEOUT_RXDR_INT);
-		
 		himci_writel(tmp_reg, mmc_base + MCI_RINTSTS);
 
 		tmp_reg = himci_readl(mmc_base + MCI_STATUS);
@@ -352,11 +328,7 @@ static unsigned int sd_init(void)
 	unsigned int mmc_base = REG_BASE_MCI;
 	unsigned int hcs;
 
-
-	emmc_io_init();
-
 	emmc_sys_init();
-
 	/*
 	 * card power off and power on
 	 * 84ms for hi3716mv300; 55ms for hi3716c

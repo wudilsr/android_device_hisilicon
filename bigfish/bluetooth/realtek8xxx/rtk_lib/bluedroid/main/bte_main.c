@@ -53,7 +53,7 @@
 
 /* Stack preload process timeout period  */
 #ifndef PRELOAD_START_TIMEOUT_MS
-#define PRELOAD_START_TIMEOUT_MS 3000  // 3 seconds
+#define PRELOAD_START_TIMEOUT_MS 30000  // 3 seconds
 #endif
 
 /* Stack preload process maximum retry attempts  */

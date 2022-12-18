@@ -1082,7 +1082,11 @@ tBTA_GATTC_CLCB * bta_gattc_find_int_disconn_clcb(tBTA_GATTC_DATA *p_msg)
 
     bta_gattc_conn_dealloc(p_msg->int_conn.remote_bda);
     /* connection attempt timeout, send connection callback event */
+#ifdef BLUETOOTH_RTK
+    if (reason == GATT_CONN_CANCEL || reason == GATT_CONN_L2C_FAILURE || reason == GATT_CONN_UNKNOWN)
+#else
     if (reason == GATT_CONN_CANCEL || reason == GATT_CONN_L2C_FAILURE)
+#endif
     {
         p_clcb = bta_gattc_find_clcb_by_cif(p_msg->int_conn.client_if,
                                             p_msg->int_conn.remote_bda);

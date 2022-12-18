@@ -114,6 +114,10 @@ enum
     BTA_DM_API_DISABLE_TEST_MODE_EVT,
     BTA_DM_API_EXECUTE_CBACK_EVT,
     BTA_DM_API_SET_AFH_CHANNEL_ASSESMENT_EVT,
+#ifdef BLUETOOTH_RTK
+    BTA_DM_API_ADD_BLEDEVICEEXTRAINFO_EVT,
+#endif
+
     BTA_DM_MAX_EVT
 };
 
@@ -446,6 +450,17 @@ typedef struct
 
 }tBTA_DM_API_ADD_BLE_DEVICE;
 
+#ifdef BLUETOOTH_RTK
+typedef struct
+{
+    BT_HDR                  hdr;
+    BD_ADDR                 bd_addr;
+    DEV_CLASS               dev_class;
+    BD_NAME                 bd_name;
+
+}tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO;
+#endif
+
 typedef struct
 {
     BT_HDR                  hdr;
@@ -649,6 +664,10 @@ typedef union
     tBTA_DM_API_SET_EIR_CONFIG          set_eir_cfg;
 #endif
     tBTA_DM_API_REMOVE_ACL              remove_acl;
+
+#ifdef BLUETOOTH_RTK
+    tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO add_ble_device_extra_info;
+#endif
 
 } tBTA_DM_MSG;
 
@@ -996,6 +1015,10 @@ extern void bta_dm_close_gatt_conn(tBTA_DM_MSG *p_data);
 extern void bta_dm_ble_observe (tBTA_DM_MSG *p_data);
 extern void bta_dm_ble_set_adv_params (tBTA_DM_MSG *p_data);
 extern void bta_dm_ble_set_adv_config (tBTA_DM_MSG *p_data);
+
+#ifdef BLUETOOTH_RTK
+extern void bta_dm_add_ble_device_extra_info(tBTA_DM_MSG *p_data);
+#endif
 
 #endif
 extern void bta_dm_set_encryption(tBTA_DM_MSG *p_data);

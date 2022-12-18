@@ -68,7 +68,7 @@ extern "C"{
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_ReadFrame(HI_HANDLE hPlayer, HI_SMOOTHSTREAMING_FORMAT_FRAME_S **ppstFmtFrame);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_ReadFrame(HI_VOID *hPlayer, HI_SMOOTHSTREAMING_FORMAT_FRAME_S **ppstFmtFrame);
 
 /**
 \brief Release frame data. CNcomment:ÊÍ·ÅÖ¡Êý¾ÝCNend
@@ -82,7 +82,7 @@ extern HI_S32 HI_SVR_SMOOTHSTREAMING_ReadFrame(HI_HANDLE hPlayer, HI_SMOOTHSTREA
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_FreeFrame(HI_HANDLE hPlayer, HI_SMOOTHSTREAMING_FORMAT_FRAME_S **ppstFmtFrame);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_FreeFrame(HI_VOID *hPlayer, HI_SMOOTHSTREAMING_FORMAT_FRAME_S **ppstFmtFrame);
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -565,4 +565,16 @@ public class HiSysManager{
     /** {@hide} this api is for internal use only */
     public native int enableCapable(int type);
     private native final int native_updateLogo(String path);
+
+    /**
+     * snapshot interface.
+     * <p>
+     * snapshot interface.<br>
+     * <br>
+     * @param path  the paht of the picture.
+     * @return result 0: sucess,-1: failed.
+     */
+    public native int snapshot(String path);
+    public native int setDynamicPolicy(String state, String activity,
+        String process);
 }

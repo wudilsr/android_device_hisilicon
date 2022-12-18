@@ -98,7 +98,7 @@ public class ActivityBase extends Activity
 
         mProgressDialog.setTitle(pTitleId);
         mProgressDialog.setMessage(getString(pMessageId));
-        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCancelable(true);
         mProgressDialog.show();
     }
 

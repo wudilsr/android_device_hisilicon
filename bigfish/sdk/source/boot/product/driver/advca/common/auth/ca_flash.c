@@ -231,7 +231,7 @@ HI_S32 CA_flash_read(HI_CHAR *pPartionName, HI_U64 offset, HI_U32 bytes, HI_U8 *
     flashhandle = HI_Flash_OpenByName(pPartionName);
     if ((0 == flashhandle) || (HI_INVALID_HANDLE == flashhandle))
     {
-        HI_ERR_CA("HI_Flash_Open error\n");
+        HI_ERR_CA("HI_Flash_Open error, pPartionName:%s\n", pPartionName);
         return -1;
     }
 
@@ -291,8 +291,8 @@ HI_S32 CA_flash_write(HI_CHAR *pPartionName, HI_U64 offset, HI_U32 bytes, HI_U8 
         return -1;
     }
 
-    printf("CA_flash_write pPartionName:%s, handleddd = 0x%08x, bytes = 0x%x\n", pPartionName, flashhandle, bytes);
-	printf("offset = 0x%llx\n", offset);
+    HI_INFO_CA("CA_flash_write pPartionName:%s, handleddd = 0x%08x, bytes = 0x%x\n", pPartionName, flashhandle, bytes);
+	HI_INFO_CA("offset = 0x%llx\n", offset);
 
 #ifndef HI_MINIBOOT_SUPPORT
     Ret = HI_Flash_Write(flashhandle, offset, buf, bytes, HI_FLASH_RW_FLAG_ERASE_FIRST);
@@ -324,6 +324,8 @@ HI_S32 CA_flash_write(HI_CHAR *pPartionName, HI_U64 offset, HI_U32 bytes, HI_U8 
     return 0;
 
 }
+
+//the address use the flash, which include boot and bootargs
 HI_HANDLE CA_flash_open_addr(HI_U64 u64addr,HI_U64 u64Len)
 {
     HI_HANDLE hFlashHandle;
@@ -335,7 +337,7 @@ HI_HANDLE CA_flash_open_addr(HI_U64 u64addr,HI_U64 u64Len)
     u64Len = (u64Len + g_MaxBlockSize -1)& (~(g_MaxBlockSize -1) );//¿é¶ÔÆë  
     
     enFlashType = CA_get_env_flash_type();
-    printf("Open addr, enFlashType: 0x%08x\n", enFlashType);
+    HI_INFO_CA("Open addr, enFlashType: 0x%08x\n", enFlashType);
 
     hFlashHandle = HI_Flash_OpenByTypeAndAddr(enFlashType,u64addr,u64Len);
     if(HI_INVALID_HANDLE == hFlashHandle)
@@ -394,11 +396,13 @@ HI_S32 CA_flash_read_addr(HI_U32 u32addr, HI_U32 u32Len, HI_U8 * buf, HI_Flash_I
     HI_Flash_Close(flashhandle);
     return 0;
 }
+
 HI_S32 CA_flash_write_addr(HI_U32 u32addr, HI_U32 u32Len, HI_U8 * buf)
 {
     HI_S32 Ret = 0;
     HI_HANDLE flashhandle;
-    
+    HI_Flash_InterInfo_S stFlashInfo;
+    HI_U32 u32EraseSize = 0;
     flashhandle = CA_flash_open_addr(u32addr,u32Len);
     if ((0 == flashhandle) || (HI_INVALID_HANDLE == flashhandle))
     {
@@ -406,7 +410,27 @@ HI_S32 CA_flash_write_addr(HI_U32 u32addr, HI_U32 u32Len, HI_U8 * buf)
         return -1;
     }
 
-    Ret = HI_Flash_Write(flashhandle, 0ULL, buf, u32Len, HI_FLASH_RW_FLAG_ERASE_FIRST);
+    memset(&stFlashInfo, 0x0, sizeof (HI_Flash_InterInfo_S));
+
+    Ret = HI_Flash_GetInfo(flashhandle, &stFlashInfo);
+    if (HI_SUCCESS != Ret)
+    {
+        HI_ERR_CA("HI_Flash_GetInfo error\n");
+        return -1;
+    }
+    
+    u32EraseSize = ((u32Len + stFlashInfo.BlockSize - 1) & (~(stFlashInfo.BlockSize -1)) );//¿é¶ÔÆë  
+
+    HI_INFO_CA("u32Len:%x, BlockSize:%x, u32EraseSize:%x\n", u32Len, stFlashInfo.BlockSize, u32EraseSize);
+
+    Ret = HI_Flash_Erase(flashhandle, (HI_U64)0, (HI_U64)u32EraseSize);
+    if (Ret <  0)
+    {
+        HI_ERR_CA("HI_Flash_Erase error\n");
+        return -1;
+    }
+
+    Ret = HI_Flash_Write(flashhandle, 0ULL, buf, u32Len, HI_FLASH_RW_FLAG_RAW);
     if (Ret <= 0)
     {
         HI_ERR_CA("HI_Flash_Write addr 0x%X error\n", u32addr);

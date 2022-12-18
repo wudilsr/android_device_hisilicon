@@ -425,7 +425,7 @@ HI_VOID HI_PVR_RemoveFile(const HI_CHAR *pFileName)
     }
     PVR_REMOVE_FILE64(pFileName);
     snprintf(idxFileName, sizeof(idxFileName),"%s.idx", pFileName);
-    remove(idxFileName);
+    (HI_VOID)remove(idxFileName);
 }
 
 HI_S32 HI_PVR_RegisterExtraCallback(HI_U32 u32ChnID, HI_UNF_PVR_EXTRA_CALLBACK_E eExtraCallbackType, ExtraCallBack fCallback, HI_VOID *args)

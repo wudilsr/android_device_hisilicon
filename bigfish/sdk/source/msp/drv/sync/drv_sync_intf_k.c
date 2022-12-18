@@ -30,7 +30,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -220,6 +222,12 @@ HI_S32 SYNC_Destroy(HI_U32 SyncId)
 {    
     HI_CHAR   ProcName[15];
     MMZ_BUFFER_S      MemBuf;  
+
+    if(SyncId >= SYNC_MAX_NUM)
+    {
+        HI_ERR_SYNC("this is invalid para.\n");
+        return HI_ERR_SYNC_DESTROY_ERR;  
+    }
      
     if (HI_NULL == g_SyncGlobalState.SyncInfo[SyncId].pSync)
     {            
@@ -256,6 +264,12 @@ HI_S32 SYNC_Destroy(HI_U32 SyncId)
 
 HI_S32 SYNC_SetUsrAddr(SYNC_USR_ADDR_S *pSyncUsrAddr)
 {
+    if(pSyncUsrAddr->SyncId >= SYNC_MAX_NUM)
+    {
+        HI_ERR_SYNC("this is invalid handle.\n");
+        return HI_ERR_SYNC_INVALID_PARA;
+    }
+
     g_SyncGlobalState.SyncInfo[pSyncUsrAddr->SyncId].SyncUsrAddr = (HI_U32)(pSyncUsrAddr->SyncUsrAddr);
     return HI_SUCCESS;
 }
@@ -263,6 +277,13 @@ HI_S32 SYNC_SetUsrAddr(SYNC_USR_ADDR_S *pSyncUsrAddr)
 
 HI_S32 SYNC_CheckId(SYNC_USR_ADDR_S *pSyncUsrAddr, struct file *file)
 {    
+
+    if(pSyncUsrAddr->SyncId >= SYNC_MAX_NUM)
+    {
+        HI_ERR_SYNC("this is invalid handle.\n");
+        return HI_ERR_SYNC_INVALID_PARA;
+    }
+    
     if (g_SyncGlobalState.SyncInfo[pSyncUsrAddr->SyncId].File != ((HI_U32)file))
     {
         HI_ERR_SYNC("this is invalid handle.\n");
@@ -751,6 +772,8 @@ static HI_VOID DRV_SYNC_ResetStatInfo(SYNC_S *pSync, SYNC_CHAN_E enChn)
         pSync->PreSyncTarget = SYNC_CHAN_VID;
         pSync->PreSyncTargetTime = HI_INVALID_TIME;
         pSync->PreSyncTargetInit = HI_FALSE;
+        pSync->PreSyncPauseStartSysTime = HI_INVALID_TIME;
+        pSync->PreSyncPauseEndSysTime = HI_INVALID_TIME;
         
         pSync->PcrSyncInfo.PcrFirstCome = HI_FALSE;
         pSync->PcrSyncInfo.PcrAdjustDeltaOK = HI_TRUE;

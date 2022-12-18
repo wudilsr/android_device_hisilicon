@@ -57,9 +57,10 @@ HI_S32 TX_PHY_ReadRegister(HI_U32 u32RegAddr, HI_U32 *pu32Value)
 HI_S32 TX_PHY_HighBandwidth(HI_BOOL bTermEn)
 {
     HI_U32 u32Ret = HI_SUCCESS;
-    HI_U32 u32phyreg = 0;
+    
 
 #if defined(BOARD_TYPE_S40V2_fpga)
+    HI_U32 u32phyreg = 0;
     if(HI_TRUE == bTermEn)
     {
         HDMIPrint("From Jing:TMDS_CTL2[4]:term_en must be set to 1 for HDMI Eye-Diagram test\n");
@@ -88,7 +89,7 @@ HI_S32 TX_PHY_HighBandwidth(HI_BOOL bTermEn)
     || defined(CHIP_TYPE_hi3719mv100)   \
     || defined(CHIP_TYPE_hi3796cv100)   \
     || defined(CHIP_TYPE_hi3798cv100)
-
+    HI_U32 u32phyreg = 0;
     //ÐÂphy
     if(HI_TRUE == bTermEn)
     {
@@ -112,12 +113,12 @@ HI_S32 TX_PHY_HighBandwidth(HI_BOOL bTermEn)
     }
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
 
-    HDMIPrint("No source termination ctrl 0x%x\n", u32phyreg);
+    //HDMIPrint("No source termination ctrl 0x%x\n", u32phyreg);
 #endif
     return u32Ret;
 }
@@ -153,7 +154,7 @@ HI_S32 TX_PHY_GetOutPutEnable(void)
 
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -188,7 +189,7 @@ HI_S32 TX_PHY_DisableHdmiOutput(void)
     TX_PHY_WriteRegister(0x05, u32Reg);
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -223,7 +224,7 @@ HI_S32 TX_PHY_EnableHdmiOutput(void)
     TX_PHY_WriteRegister(0x05, u32Reg);
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -288,7 +289,7 @@ void TX_PHY_INIT(void)
     TX_PHY_WriteRegister(0x0d,0x00);
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv310)
     // oe
     TX_PHY_WriteRegister(PHY_OE_ADDR,0x00);
@@ -377,7 +378,7 @@ HI_S32 TX_PHY_PowerDown(HI_BOOL bPwdown)
     HDMIPrint("writing phy 0x%x PowerDown\n",u32Value);
     TX_PHY_WriteRegister(0x05, u32Value);
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -446,7 +447,7 @@ HI_S32 TX_PHY_SetDeepColor(HI_U8 bDeepColor)
     HDMIPrint("PLL_CTRL  new walue:0x%x\n", u32Value);
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -528,7 +529,7 @@ HI_S32 TX_PHY_4KRisingTime(HI_BOOL b4KFmt)
     }
 
 #elif  defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv410)   \
     || defined(CHIP_TYPE_hi3716mv420)   \
     || defined(CHIP_TYPE_hi3716mv310)
@@ -548,7 +549,7 @@ HI_S32 TX_PHY_DVIEncoder(HI_BOOL bEnable)
 HI_S32 TX_PHY_SwingCtrl(SWING_CTL_E enSwing)
 {
 #if    defined(CHIP_TYPE_hi3798mv100)   \
-    || defined(CHIP_TYPE_hi3796mv100)   \
+    || defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3716dv100)   \
     || defined(CHIP_TYPE_hi3716mv310)
     // taiyan phy, use encoder in ctrl
 

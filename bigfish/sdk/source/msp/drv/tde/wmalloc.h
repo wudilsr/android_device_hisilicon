@@ -1,5 +1,5 @@
 /*CNcomment:****************************************************************************/
-/*                Copyright 2009 - 2014, Huawei Tech. Co., Ltd.              */
+/*                Copyright 2009 - 2014, Hisilicon Tech. Co., Ltd.              */
 /*                           ALL RIGHTS RESERVED                             */
 /*                                                                           */
 /* FileName: wmalloc.h                                                       */

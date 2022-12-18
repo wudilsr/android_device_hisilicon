@@ -158,23 +158,16 @@ typedef struct
 }DETAILED_TIMING_BLOCK;
 
 
+/******************************************************************************/
+/* Public  interfaces                                                         */
+/******************************************************************************/
 HI_S32 SI_ReadSinkEDID(HI_VOID);
-
 HI_U8 SI_ParseEDID(HI_U8 *DisplayType);
-
-//HI_S32 SI_GetCapability(HI_U8 *pData);
-#if 0
-HI_S32 SI_GetParseCapability(HI_U8 *pu8Edid, HI_U32 u32EdidLength,HI_UNF_HDMI_SINK_CAPABILITY_EXT_S *pExtCapablity);
-#endif
 HI_S32 SI_SetForceSinkCapability(HI_VOID);
-
 HI_U8 SI_Proc_ReadEDIDBlock(HI_U8 *DataBlock, HI_U32 *size);
-
 HI_U8 SI_Force_GetEDID(HI_U8 *datablock, HI_U32 *length);
 HI_U8 Transfer_VideoTimingFromat_to_VModeTablesIndex(HI_UNF_ENC_FMT_E unfFmt);
-
 HI_U8 SI_ByteReadEDID(HI_U8, HI_U8, HI_U8 *);
-
 HI_S32 SI_GetHdmiSinkCaps(HI_UNF_EDID_BASE_INFO_S *pCapability);
 
 

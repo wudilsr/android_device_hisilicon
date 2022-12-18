@@ -16,7 +16,7 @@
 #include "channel.h"
 #include "decoder.h"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #include "sec_mmz.h"
 #endif
 
@@ -93,7 +93,7 @@ static HI_S32 task_alloc_channel_mem(OMXVDEC_CHAN_CTX *pchan)
     u32NeededFrameNum = pchan->ref_frame_num + g_DispNum;
     u32NeededMemSize  = pchan->ref_frame_size * u32NeededFrameNum;
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     if (1 == pchan->is_tvp)
     {
         pchan->decoder_vdh_buf.u32StartPhyAddr = (HI_U32)HI_SEC_MMZ_New(u32NeededMemSize, OMXVDEC_SEC_ZONE, "SEC_OMXVDEC_DFS");
@@ -264,6 +264,8 @@ HI_S32 task_destroy_thread(OMXVDEC_ENTRY* omxvdec)
     
     if(task->task_thread != HI_NULL)
     {
+        task->task_state = TASK_STATE_ONCALL;
+        wake_up(&task->task_wait);
         kthread_stop(task->task_thread);
 
         task->task_thread = HI_NULL;

@@ -1080,7 +1080,7 @@ HI_S32 JPEG_HDEC_SendStreamFromVirMem(j_decompress_ptr cinfo)
 #endif
 
 			eIntStatus = JPG_INTTYPE_ERROR;
-			s32Ret = JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, JPG_INTTYPE_DELAY_TIME);
+			(HI_VOID)JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, JPG_INTTYPE_DELAY_TIME);
 			if(JPG_INTTYPE_ERROR == eIntStatus) 
 			{
 				goto FAIL;
@@ -1514,7 +1514,7 @@ HI_S32 JPEG_HDEC_SendStreamFromFile(j_decompress_ptr cinfo)
 			s32Ret = JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, 1000);
 			JPEG_TRACE("waite up now\n");
 #else
-			s32Ret = JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, JPG_INTTYPE_DELAY_TIME);
+			(HI_VOID)JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, JPG_INTTYPE_DELAY_TIME);
 #endif
 			if(JPG_INTTYPE_ERROR == eIntStatus) 
 			{
@@ -1733,7 +1733,7 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 		** CNcomment:这个是必须的，要告诉硬件码流已经读完了，否则硬件会一直解
 		**           硬件本省无法判断读码流结束 CNend\n
 		**/
-		bReachEOF = HI_FALSE;
+		//bReachEOF = HI_FALSE;
         pJpegHandle->bFirstContinueStream = HI_TRUE;/** 默认是续码流 **/
         
 		pStreamStartVirAddr = pJpegHandle->stHDecDataBuf.pSaveStreamVirBuf;
@@ -1778,7 +1778,7 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 			do
 			{/** read stream data till as 1M bytes **/
 
-				u32ReadSize = 0;
+				//u32ReadSize = 0;
 				if (0 == cinfo->src->bytes_in_buffer)
 				{
 					bRetVal = (*cinfo->src->fill_input_buffer)(cinfo);
@@ -1888,7 +1888,7 @@ HI_S32 JPEG_HDEC_SendStreamFromCallBack(j_decompress_ptr cinfo)
 				JPEG_HDEC_WriteReg(pJpegHandle->pJpegRegVirAddr,JPGD_REG_RESUME,(bReachEOF ? (JPG_EOF_VALUE|JPG_RESUME_VALUE) : JPG_RESUME_VALUE));
 			}
 
-			eIntStatus = JPG_INTTYPE_ERROR;
+			//eIntStatus = JPG_INTTYPE_ERROR;
 			s32Ret = JPEG_HDEC_GetIntStatus(pJpegHandle, &eIntStatus, JPG_INTTYPE_DELAY_TIME);
 			if(JPG_INTTYPE_ERROR == eIntStatus) 
 			{

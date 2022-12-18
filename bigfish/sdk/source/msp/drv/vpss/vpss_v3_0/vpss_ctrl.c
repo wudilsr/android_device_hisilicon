@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NIRPPHRIp4tDw0KuNvhYIciTJdXhHJZAQWfz60t
 2YLck3v/FP2W0NjnNpbAXiAHo3F3QlL0HJ9FJCtWNJGsdoTFnMgZZZ3a9w0m6uflFoqgxsmd
@@ -536,6 +536,9 @@ HI_S32 VPSS_CTRL_FixTask(VPSS_IP_E enIp, HI_DRV_BUF_ADDR_E enLR, VPSS_TASK_S *ps
             {
 
             }
+        }
+		else
+        {
         }
     }
 	else
@@ -2360,7 +2363,7 @@ HI_S32 VPSS_CTRL_CreateThread(VPSS_IP_E enIp)
     param.sched_priority = 99;
     sched_setscheduler(g_stVpssCtrl[enIp].hThread, SCHED_RR, &param);
     
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 	kthread_bind(g_stVpssCtrl[enIp].hThread, 3);	
 #endif
 #endif

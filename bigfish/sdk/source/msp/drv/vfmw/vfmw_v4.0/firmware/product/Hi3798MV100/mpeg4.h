@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2007 HUAWEI - All Rights Reserved
+* Copyright (c) 2007 Hisilicon - All Rights Reserved
 *
 * File: $mpeg4.h$
 * Date: $2007/03/1$

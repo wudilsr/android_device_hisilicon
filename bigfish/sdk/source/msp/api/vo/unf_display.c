@@ -438,7 +438,7 @@ HI_S32 HI_UNF_DISP_GetIntf(HI_UNF_DISP_E enDisp, HI_U32* pu32IntfNum,  HI_UNF_DI
 HI_S32 HI_UNF_DISP_SetCustomTiming(HI_UNF_DISP_E enDisp,  HI_UNF_DISP_TIMING_S* pstTiming)
 {
     HI_DRV_DISP_TIMING_S stTiming;
-    HI_DRV_DISPLAY_E enD;
+    HI_DRV_DISPLAY_E enD = HI_DRV_DISPLAY_BUTT;
     HI_S32 s32Ret;
 
     if (!pstTiming)
@@ -459,7 +459,7 @@ HI_S32 HI_UNF_DISP_SetCustomTiming(HI_UNF_DISP_E enDisp,  HI_UNF_DISP_TIMING_S* 
 HI_S32 HI_UNF_DISP_GetCustomTiming(HI_UNF_DISP_E enDisp, HI_UNF_DISP_TIMING_S* pstTiming)
 {
     HI_DRV_DISP_TIMING_S stTiming;
-    HI_DRV_DISPLAY_E enD;
+    HI_DRV_DISPLAY_E enD = HI_DRV_DISPLAY_BUTT;
     HI_S32 s32Ret;
 
     if (!pstTiming)
@@ -467,6 +467,8 @@ HI_S32 HI_UNF_DISP_GetCustomTiming(HI_UNF_DISP_E enDisp, HI_UNF_DISP_TIMING_S* p
         HI_ERR_DISP("para pstTiming is null.\n");
         return HI_ERR_DISP_NULL_PTR;
     }
+
+    memset(&stTiming, 0, sizeof(HI_DRV_DISP_TIMING_S));
 
     Transfer_DispID(&enDisp, &enD, HI_TRUE);
 
@@ -555,8 +557,8 @@ HI_S32 HI_UNF_DISP_SetBgColor(HI_UNF_DISP_E enDisp, const HI_UNF_DISP_BG_COLOR_S
 
 HI_S32 HI_UNF_DISP_GetBgColor(HI_UNF_DISP_E enDisp, HI_UNF_DISP_BG_COLOR_S* pstBgColor)
 {
-    HI_DRV_DISPLAY_E enD;
-    HI_DRV_DISP_COLOR_S stColor;
+    HI_DRV_DISPLAY_E enD = HI_DRV_DISPLAY_BUTT;
+    HI_DRV_DISP_COLOR_S stColor = {0};
     HI_S32 s32Ret;
 
     if (!pstBgColor)
@@ -899,10 +901,10 @@ HI_S32 HI_UNF_DISP_SetCgms(HI_UNF_DISP_E enDisp, const HI_UNF_DISP_CGMS_CFG_S* p
         HI_ERR_DISP("para pstCgmsCfg is null.\n");
         return HI_ERR_DISP_NULL_PTR;
     }
-    
+
     (HI_VOID)Transfer_DispID(&enDisp, &enD, HI_TRUE);
 	(HI_VOID)Transfer_CgmsCfg(pstCgmsCfg, &stCgmsCgf, HI_TRUE);
-	
+
     s32Ret = HI_MPI_DISP_SetCgms(enDisp, (const HI_DRV_DISP_CGMSA_CFG_S *)&stCgmsCgf);
 
     return s32Ret;
@@ -1406,7 +1408,7 @@ HI_S32 HI_UNF_DISP_SetIsogenyAttr(const HI_UNF_DISP_ISOGENY_ATTR_S *pstIsogeny, 
         HI_ERR_DISP("para pstIsogeny is null.\n");
         return HI_ERR_DISP_NULL_PTR;
     }
-	
+
 
 	for (i = 0; i < u32ChannelNum; i++)
 	{
@@ -1419,25 +1421,25 @@ HI_S32 HI_UNF_DISP_SetIsogenyAttr(const HI_UNF_DISP_ISOGENY_ATTR_S *pstIsogeny, 
 			HI_ERR_DISP("para enDisp is invalid or not support now.\n");
 	        return HI_ERR_DISP_INVALID_PARA;
 		}
-		
+
 		Ret = Transfer_DispID((HI_UNF_DISP_E *)&pstIsogeny[i].enDisp, &stMpiIsogeny[i].enDisp, HI_TRUE);
 		Ret |= Transfer_EncFmt((HI_UNF_ENC_FMT_E *)&pstIsogeny[i].enFormat, &stMpiIsogeny[i].enFormat, HI_TRUE);
-		
+
 	    if (HI_SUCCESS != Ret)
-	    { 
+	    {
 			HI_ERR_DISP("param disp and fmt trans error.\n");
 			return Ret;
 		}
-	}	
+	}
 
 
-    Ret = HI_MPI_DISP_SetIsogenyAttr(stMpiIsogeny, u32ChannelNum);	
+    Ret = HI_MPI_DISP_SetIsogenyAttr(stMpiIsogeny, u32ChannelNum);
     if (HI_SUCCESS != Ret)
-    { 
+    {
 		return Ret;
-	}	
+	}
 
-    return HI_SUCCESS;	
+    return HI_SUCCESS;
 }
 
 #ifdef __cplusplus

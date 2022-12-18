@@ -118,6 +118,15 @@ static pthread_mutex_t  g_AvplayMutex = PTHREAD_MUTEX_INITIALIZER;
 
 #define    AVPLAY_VDEC_SEEKPTS_THRESHOLD 5000
 
+/* esbuffer waterline when multi-aud presync */
+/* CNcomment: 多音轨切换时音频ES缓存水线满的百分比*/
+#define    AVPLAY_MULTIAUD_ESFULL_PERCENT       90
+
+/* sync array when multi-aud presync */
+/* CNcomment: 多音轨切换时预同步的同步区间*/
+#define    AVPLAY_MULTIAUD_AUDVID_PLAY_DIFF     100
+#define    AVPLAY_MULTIAUD_AUDVID_REWIND_DIFF   12000   
+
 
 typedef    HI_S32 (*AVPLAY_EVT_CB_FN)(HI_HANDLE hAvplay, HI_UNF_AVPLAY_EVENT_E EvtMsg, HI_U32 EvtPara);
 
@@ -187,7 +196,7 @@ typedef struct
     HI_UNF_VCODEC_ATTR_S            VdecAttr;
     HI_UNF_AVPLAY_LOW_DELAY_ATTR_S  LowDelayAttr;
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_UNF_AVPLAY_TVP_ATTR_S        TVPAttr;
 #endif
 
@@ -211,6 +220,7 @@ typedef struct
     HI_UNF_ACODEC_ATTR_S            *pstAcodecAttr;
 
     HI_HANDLE                       hSharedOrgWin;  /*Original window of homologous*/
+    HI_BOOL                         bMultiPreSync;
 
     /*multi video frame channel*/
     AVPLAY_VID_PORT_AND_WIN_S       MasterFrmChn;
@@ -371,7 +381,7 @@ static const HI_U8 s_szAVPLAYVersion[] __attribute__((used)) = "SDK_VERSION:["\
                             MKMARCOTOSTR(SDK_VERSION)"] Build Time:["\
                             __DATE__", "__TIME__"]";
 
-static HI_VOID AVPLAY_DRV2UNF_VidFrm(HI_DRV_VIDEO_FRAME_S *pstDRVFrm, HI_UNF_VIDEO_FRAME_INFO_S *pstUNFFrm);
+static HI_VOID AVPLAY_DRV2UNF_VidFrm(HI_DRV_VIDEO_FRAME_S *pstDRVFrm, HI_UNF_VIDEO_FRAME_INFO_S *pstUNFFrm,HI_UNF_VIDEO_FRM_STATUS_INFO_S *pstUnfFrmStatusInfo);
 
 //static HI_U32 u32ThreadMutexCount = 0, u32AvplayMutexCount = 0;
 void AVPLAY_ThreadMutex_Lock(pthread_mutex_t *ss)
@@ -1633,8 +1643,38 @@ HI_VOID AVPLAY_ProcVdecToVo(AVPLAY_S *pAvplay)
         {
             HI_UNF_VIDEO_FRAME_INFO_S           VdecUnfFrm;
 
-            AVPLAY_DRV2UNF_VidFrm(&(pAvplay->CurFrmPack.stFrame[0].stFrameVideo), &VdecUnfFrm);
+            AVPLAY_DRV2UNF_VidFrm(&(pAvplay->CurFrmPack.stFrame[0].stFrameVideo), &VdecUnfFrm,HI_NULL);
             AVPLAY_Notify(pAvplay, HI_UNF_AVPLAY_EVENT_NEW_VID_FRAME, (HI_U32)(&VdecUnfFrm));
+        }
+		
+		if (pAvplay->EvtCbFunc[HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT])
+        {
+            HI_UNF_VIDEO_FRM_STATUS_INFO_S           VidFrmStatusInfo;
+            HI_DRV_VIDEO_PRIVATE_S                  *pstFrmPriv = HI_NULL;
+			
+            AVPLAY_DRV2UNF_VidFrm(&(pAvplay->CurFrmPack.stFrame[0].stFrameVideo),HI_NULL, &VidFrmStatusInfo);
+
+            pstFrmPriv = (HI_DRV_VIDEO_PRIVATE_S *)(pAvplay->CurFrmPack.stFrame[0].stFrameVideo.u32Priv);
+            /* obtain original stream info, judge whether Progressive*/
+            if (HI_DRV_FIELD_ALL == pstFrmPriv->eOriginField)
+            {
+                pAvplay->VidInfo.bProgressive = HI_TRUE;
+            }
+            else
+            {
+                pAvplay->VidInfo.bProgressive = HI_FALSE;
+            }
+
+			if((pAvplay->VidInfo.bProgressive == HI_FALSE)&&
+			   (pAvplay->CurFrmPack.stFrame[0].stFrameVideo.bProgressive== HI_TRUE)&&
+				(pAvplay->LstFrmPack.stFrame[0].stFrameVideo.u32FrameIndex == pAvplay->CurFrmPack.stFrame[0].stFrameVideo.u32FrameIndex))
+			{
+
+			}
+			else
+			{
+                AVPLAY_Notify(pAvplay, HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT, (HI_U32)(&VidFrmStatusInfo));
+			}
         }
 
         /* record low delay event */
@@ -1734,6 +1774,7 @@ HI_VOID AVPLAY_ProcDmxToAdec(AVPLAY_S *pAvplay)
     HI_S32                          Ret;
     HI_U32                          i;
     HI_UNF_ES_BUF_S                 AudDmxEsBuf = {0};
+    HI_MPI_DMX_BUF_STATUS_S         stDmxBufStatus = {0};
 
     /* AVPLAY_Start: pAvplay->AudEnable = HI_TRUE */
     if (!pAvplay->AudEnable)
@@ -1749,29 +1790,112 @@ HI_VOID AVPLAY_ProcDmxToAdec(AVPLAY_S *pAvplay)
 
     if (!pAvplay->AvplayProcDataFlag[AVPLAY_PROC_DMX_ADEC])
     {
-        for (i = 0; i < pAvplay->DmxAudChnNum; i++)
+        if (pAvplay->bMultiPreSync)
         {
-            if (i == pAvplay->CurDmxAudChn)
+            HI_UNF_SYNC_STATUS_S stSyncStatus;
+            Ret = HI_MPI_SYNC_GetStatus(pAvplay->hSync, &stSyncStatus);
+            if ((HI_SUCCESS != Ret) || (stSyncStatus.u32LastVidPts == HI_INVALID_PTS))
             {
-                pAvplay->DebugInfo.AcquireAudEsNum++;
-                Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &(pAvplay->AvplayDmxEsBuf));
-                if (HI_SUCCESS == Ret)
+                pAvplay->AvplayProcContinue = HI_TRUE;
+                return ;
+            }
+
+            if (pAvplay->AvplayDmxEsBuf.u32PtsMs == HI_INVALID_PTS)
+            {
+                Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[pAvplay->CurDmxAudChn], &pAvplay->AvplayDmxEsBuf);
+                if (HI_SUCCESS == Ret && pAvplay->AvplayDmxEsBuf.u32PtsMs == HI_INVALID_PTS)
+                {
+                    pAvplay->DebugInfo.AcquiredAudEsNum++;
+                    (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[pAvplay->CurDmxAudChn], &pAvplay->AvplayDmxEsBuf);
+                    for (i = 0; i < pAvplay->DmxAudChnNum; i++)
+                    {
+                        if (i == pAvplay->CurDmxAudChn)
+                        {
+                            continue;
+                        }
+                        Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                        if (HI_SUCCESS == Ret)
+                        {
+                            (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                        }
+                    }
+                    pAvplay->AvplayProcContinue = HI_TRUE;
+                    return ;
+                }
+            }
+
+            if (pAvplay->AvplayDmxEsBuf.u32PtsMs != HI_INVALID_PTS)
+            {
+                if (((pAvplay->AvplayDmxEsBuf.u32PtsMs > stSyncStatus.u32LastVidPts) && 
+                    (pAvplay->AvplayDmxEsBuf.u32PtsMs - stSyncStatus.u32LastVidPts < AVPLAY_MULTIAUD_AUDVID_PLAY_DIFF)) ||
+                    (pAvplay->AvplayDmxEsBuf.u32PtsMs <= stSyncStatus.u32LastVidPts) ||
+                    (abs(pAvplay->AvplayDmxEsBuf.u32PtsMs - stSyncStatus.u32LastVidPts) > AVPLAY_MULTIAUD_AUDVID_REWIND_DIFF))
                 {
                     pAvplay->DebugInfo.AcquiredAudEsNum++;
                     pAvplay->AvplayProcDataFlag[AVPLAY_PROC_DMX_ADEC] = HI_TRUE;
+                    pAvplay->bMultiPreSync = HI_FALSE;
+                    for (i = 0; i < pAvplay->DmxAudChnNum; i++)
+                    {
+                        if (i == pAvplay->CurDmxAudChn)
+                        {
+                            continue;
+                        }
+                        Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                        if (HI_SUCCESS == Ret)
+                        {
+                            (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                        }
+                    }
                 }
                 else
                 {
-                    /*if is eos and there is no data in demux channel, set eos to adec and ao*/
-                    if (HI_ERR_DMX_EMPTY_BUFFER == Ret
-                        && pAvplay->bSetEosFlag && !pAvplay->bSetAudEos)
+                    pAvplay->AvplayProcContinue = HI_FALSE;
+                }
+            }
+
+            for (i = 0; i < pAvplay->DmxAudChnNum; i++)
+            {
+                if (i == pAvplay->CurDmxAudChn)
+                {
+                    continue;
+                }
+
+                Ret = HI_MPI_DMX_GetPESBufferStatus(pAvplay->hDmxAud[i] ,&stDmxBufStatus);
+                if ((Ret == HI_SUCCESS) && (stDmxBufStatus.u32UsedSize * 100 / stDmxBufStatus.u32BufSize >= AVPLAY_MULTIAUD_ESFULL_PERCENT))
+                {
+                    Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                    if (HI_SUCCESS == Ret)
                     {
-                        Ret = HI_MPI_ADEC_SetEosFlag(pAvplay->hAdec);
-                        if (HI_SUCCESS != Ret)
+                        (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for(i=0; i<pAvplay->DmxAudChnNum; i++)
+            {
+                if(i == pAvplay->CurDmxAudChn)
+                {
+                    pAvplay->DebugInfo.AcquireAudEsNum++;
+                    Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &(pAvplay->AvplayDmxEsBuf));
+                    if (HI_SUCCESS == Ret)
+                    {
+                        pAvplay->DebugInfo.AcquiredAudEsNum++;
+                        pAvplay->AvplayProcDataFlag[AVPLAY_PROC_DMX_ADEC] = HI_TRUE;
+                    }
+                    else
+                    {
+                        /*if is eos and there is no data in demux channel, set eos to adec and ao*/
+                        if (HI_ERR_DMX_EMPTY_BUFFER == Ret
+                            && pAvplay->bSetEosFlag && !pAvplay->bSetAudEos)
                         {
-                            HI_ERR_AVPLAY("ERR: HI_MPI_ADEC_SetEosFlag, Ret = %#x! \n", Ret);
-                            return;
-                        }
+                            Ret = HI_MPI_ADEC_SetEosFlag(pAvplay->hAdec);
+                            if (HI_SUCCESS != Ret)
+                            {
+                                HI_ERR_AVPLAY("ERR: HI_MPI_ADEC_SetEosFlag, Ret = %#x! \n", Ret);
+                                return;
+                            }
 
                         if (HI_INVALID_HANDLE != pAvplay->hSyncTrack)
                         {
@@ -1783,16 +1907,17 @@ HI_VOID AVPLAY_ProcDmxToAdec(AVPLAY_S *pAvplay)
                             }
                         }
 
-                        pAvplay->bSetAudEos = HI_TRUE;
+                            pAvplay->bSetAudEos = HI_TRUE;
+                        }
                     }
                 }
-            }
-            else
-            {
-                Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
-                if (HI_SUCCESS == Ret)
+                else
                 {
-                    (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                    Ret = HI_MPI_DMX_AcquireEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                    if (HI_SUCCESS == Ret)
+                    {
+                        (HI_VOID)HI_MPI_DMX_ReleaseEs(pAvplay->hDmxAud[i], &AudDmxEsBuf);
+                    }
                 }
             }
         }
@@ -2363,8 +2488,10 @@ HI_VOID AVPLAY_ProcCheckBuf(AVPLAY_S *pAvplay)
     return;
 }
 
-static HI_VOID AVPLAY_DRV2UNF_VidFrm(HI_DRV_VIDEO_FRAME_S *pstDRVFrm, HI_UNF_VIDEO_FRAME_INFO_S *pstUNFFrm)
+static HI_VOID AVPLAY_DRV2UNF_VidFrm(HI_DRV_VIDEO_FRAME_S *pstDRVFrm, HI_UNF_VIDEO_FRAME_INFO_S *pstUNFFrm,HI_UNF_VIDEO_FRM_STATUS_INFO_S *pstUnfFrmStatusInfo)
 {
+    if(HI_NULL != pstUNFFrm)
+	{
     pstUNFFrm->u32FrameIndex = pstDRVFrm->u32FrameIndex;
     pstUNFFrm->stVideoFrameAddr[0].u32YAddr = pstDRVFrm->stBufAddr[0].u32PhyAddr_Y;
     pstUNFFrm->stVideoFrameAddr[0].u32CAddr = pstDRVFrm->stBufAddr[0].u32PhyAddr_C;
@@ -2507,7 +2634,20 @@ static HI_VOID AVPLAY_DRV2UNF_VidFrm(HI_DRV_VIDEO_FRAME_S *pstDRVFrm, HI_UNF_VID
     pstUNFFrm->u32DisplayCenterX = (HI_U32)pstDRVFrm->stDispRect.s32X;
     pstUNFFrm->u32DisplayCenterY = (HI_U32)pstDRVFrm->stDispRect.s32Y;
     pstUNFFrm->u32ErrorLevel = pstDRVFrm->u32ErrorLevel;
+	}
 
+    if(HI_NULL != pstUnfFrmStatusInfo)
+	{
+	//	printf("pstDRVFrm->FrameStreamSize:%d\n",pstDRVFrm->FrameStreamSize);
+    	pstUnfFrmStatusInfo->enVidFrmType = (HI_UNF_VIDEO_FRAME_TYPE_E)(pstDRVFrm->FrameType + 1);
+    	pstUnfFrmStatusInfo->u32VidFrmSize = pstDRVFrm->FrameStreamSize;
+    	pstUnfFrmStatusInfo->u32VidFrmPTS = pstDRVFrm->u32Pts;
+    	pstUnfFrmStatusInfo->u32VidFrmQP = pstDRVFrm->AvgQp;
+    	pstUnfFrmStatusInfo->u32MaxMV = pstDRVFrm->MaxMV;
+    	pstUnfFrmStatusInfo->u32MinMV = pstDRVFrm->MinMV;
+    	pstUnfFrmStatusInfo->u32AvgMV = pstDRVFrm->AvgMV;
+    	pstUnfFrmStatusInfo->u32SkipRatio = pstDRVFrm->SkipRatio;
+    }
     return;
 }
 
@@ -2862,6 +3002,7 @@ HI_VOID AVPLAY_ResetProcFlag(AVPLAY_S *pAvplay)
     pAvplay->AdecDelayMs = 0;
 
     pAvplay->u32DispOptimizeFlag = 0;
+    pAvplay->bMultiPreSync = HI_FALSE;
 
     if (HI_TRUE == pAvplay->CurBufferEmptyState)
     {
@@ -3080,7 +3221,7 @@ HI_S32 AVPLAY_FreeDmxChn(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_BUFID_E BufId)
 HI_S32 AVPLAY_MallocVidChn(AVPLAY_S *pAvplay, const HI_VOID *pPara)
 {
     HI_S32             Ret = 0;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     VDEC_BUFFER_ATTR_S stVdecBufAttr = {0};
 #endif
 
@@ -3101,7 +3242,7 @@ HI_S32 AVPLAY_MallocVidChn(AVPLAY_S *pAvplay, const HI_VOID *pPara)
             return Ret;
         }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         stVdecBufAttr.u32BufSize = 0;
         stVdecBufAttr.bTvp = pAvplay->TVPAttr.bEnable;
         Ret = HI_MPI_VDEC_ChanBufferInit(pAvplay->hVdec, pAvplay->hDmxVid, &stVdecBufAttr);
@@ -3118,7 +3259,7 @@ HI_S32 AVPLAY_MallocVidChn(AVPLAY_S *pAvplay, const HI_VOID *pPara)
     }
     else if (HI_UNF_AVPLAY_STREAM_TYPE_ES == pAvplay->AvplayAttr.stStreamAttr.enStreamType)
     {
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         /* set vdec to trust video path mode */
         Ret = HI_MPI_VDEC_SetTVP(pAvplay->hVdec, &(pAvplay->TVPAttr));
         if (HI_SUCCESS != Ret)
@@ -3227,7 +3368,7 @@ HI_S32 AVPLAY_FreeAudChn(AVPLAY_S *pAvplay)
 HI_S32 AVPLAY_SetStreamMode(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_ATTR_S *pAvplayAttr)
 {
     HI_S32    Ret;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     VDEC_BUFFER_ATTR_S stVdecBufAttr = {0};
 #endif
 
@@ -3324,7 +3465,7 @@ HI_S32 AVPLAY_SetStreamMode(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_ATTR_S *pAvplayAttr
                 return Ret;
             }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
             stVdecBufAttr.u32BufSize = 0;
             stVdecBufAttr.bTvp = pAvplay->TVPAttr.bEnable;
             Ret = HI_MPI_VDEC_ChanBufferInit(pAvplay->hVdec, pAvplay->hDmxVid, &stVdecBufAttr);
@@ -3340,7 +3481,7 @@ HI_S32 AVPLAY_SetStreamMode(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_ATTR_S *pAvplayAttr
         }
         else if (HI_UNF_AVPLAY_STREAM_TYPE_ES == pAvplay->AvplayAttr.stStreamAttr.enStreamType)
         {
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
             stVdecBufAttr.u32BufSize = pAvplay->AvplayAttr.stStreamAttr.u32VidBufSize;
             stVdecBufAttr.bTvp = pAvplay->TVPAttr.bEnable;
             Ret = HI_MPI_VDEC_ChanBufferInit(pAvplay->hVdec, HI_INVALID_HANDLE, &stVdecBufAttr);
@@ -3605,6 +3746,18 @@ HI_S32 AVPLAY_SetPid(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_ATTR_ID_E enAttrID, const 
             (HI_VOID)HI_MPI_ADEC_Start(pAvplay->hAdec);
 
             (HI_VOID)HI_MPI_SYNC_Start(pAvplay->hSync, SYNC_CHAN_AUD);
+
+            HI_UNF_SYNC_STATUS_S stSyncStatus;
+            Ret = HI_MPI_SYNC_GetStatus(pAvplay->hSync, &stSyncStatus);
+            if (Ret == HI_SUCCESS)
+            {
+                /*Only change multi-aud pid, bMultiPreSync will be true*/
+                if (stSyncStatus.u32FirstVidPts != HI_INVALID_PTS)
+                {
+                    pAvplay->bMultiPreSync = HI_TRUE;
+                    pAvplay->AvplayDmxEsBuf.u32PtsMs = HI_INVALID_PTS;
+                }
+            }
 
             AVPLAY_Mutex_UnLock(&pAvplay->AvplayThreadMutex);
 
@@ -5467,7 +5620,7 @@ HI_S32 AVPLAY_DetachWindow(AVPLAY_S *pAvplay, HI_HANDLE hWin)
     return HI_SUCCESS;
 }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 HI_S32 AVPLAY_SetTVP(AVPLAY_S *pAvplay, HI_UNF_AVPLAY_TVP_ATTR_S *pstAttr)
 {
     HI_S32                  Ret;
@@ -5837,7 +5990,7 @@ static HI_S32 AVPLAY_ProcRead(HI_PROC_SHOW_BUFFER_S *ProcBuf, HI_VOID *Data)
                     szFrcOutRate,
                     szTplaySpeed,
                     (pAvplay->LowDelayAttr.bEnable) ? "TRUE" : "FALSE",
-                #ifdef HI_TVP_SUPPORT
+                #ifdef HI_TEE_SUPPORT
                     (pAvplay->TVPAttr.bEnable) ? "TRUE" : "FALSE",
                 #else
                     "FALSE",
@@ -6340,7 +6493,7 @@ HI_S32 HI_MPI_AVPLAY_Create(const HI_UNF_AVPLAY_ATTR_S *pstAvAttr, HI_HANDLE *ph
 
     pAvplay->LowDelayAttr.bEnable   = HI_FALSE;
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     pAvplay->TVPAttr.bEnable = HI_FALSE;
 #endif
 
@@ -6407,6 +6560,7 @@ HI_S32 HI_MPI_AVPLAY_Create(const HI_UNF_AVPLAY_ATTR_S *pstAvAttr, HI_HANDLE *ph
 
     pAvplay->bVidPreEnable = HI_FALSE;
     pAvplay->bAudPreEnable = HI_FALSE;
+    pAvplay->bMultiPreSync = HI_FALSE;
 
     pAvplay->LstStatus = HI_UNF_AVPLAY_STATUS_STOP;
     pAvplay->CurStatus = HI_UNF_AVPLAY_STATUS_STOP;
@@ -7015,7 +7169,7 @@ HI_S32 HI_MPI_AVPLAY_SetAttr(HI_HANDLE hAvplay, HI_UNF_AVPLAY_ATTR_ID_E enAttrID
             break;
 
         case HI_UNF_AVPLAY_ATTR_ID_TVP:
-        #ifdef HI_TVP_SUPPORT
+        #ifdef HI_TEE_SUPPORT
             Ret = AVPLAY_SetTVP(pAvplay, (HI_UNF_AVPLAY_TVP_ATTR_S *)pPara);
             if (Ret != HI_SUCCESS)
             {
@@ -7155,7 +7309,7 @@ HI_S32 HI_MPI_AVPLAY_GetAttr(HI_HANDLE hAvplay, HI_UNF_AVPLAY_ATTR_ID_E enAttrID
             break;
 
         case HI_UNF_AVPLAY_ATTR_ID_TVP:
-        #ifdef HI_TVP_SUPPORT
+        #ifdef HI_TEE_SUPPORT
             Ret = AVPLAY_GetTVP(pAvplay, (HI_UNF_AVPLAY_TVP_ATTR_S *)pPara);
             if (Ret != HI_SUCCESS)
             {
@@ -7406,7 +7560,7 @@ HI_S32 HI_MPI_AVPLAY_DecodeIFrame(HI_HANDLE hAvplay, const HI_UNF_AVPLAY_I_FRAME
             (HI_VOID)HI_MPI_VDEC_ReleaseFrame(stFrmPack.stFrame[i].hport, &stFrmPack.stFrame[i].stFrameVideo);
         }
 
-        AVPLAY_DRV2UNF_VidFrm(&(pAvplay->stIFrame.stFrameVideo), pstCapPicture);
+        AVPLAY_DRV2UNF_VidFrm(&(pAvplay->stIFrame.stFrameVideo), pstCapPicture,HI_NULL);
     }
 
     AVPLAY_INST_UNLOCK(Id);

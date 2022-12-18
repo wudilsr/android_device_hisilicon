@@ -344,7 +344,7 @@ typedef enum hiDRV_BUF_ADDR_E
     HI_DRV_BUF_ADDR_MAX
 }HI_DRV_BUF_ADDR_E;
 
-#define DEF_HI_DRV_FRAME_INFO_SIZE 128
+#define DEF_HI_DRV_FRAME_INFO_SIZE 100
 #if 0
 typedef struct hiDRV_VIDEO_PRIV_INFO_S
 {
@@ -479,7 +479,16 @@ typedef struct hiDRV_VIDEO_FRAME_S
     HI_U32 u32SrcPts;  /* 0xffffffff means unknown */
     HI_U32 u32Pts;     /* 0xffffffff means unknown */
     HI_S64 s64OmxPts;  /* for OMX */
-		 
+
+    HI_U32 FrameStreamSize;
+    HI_U32 AvgQp;
+    HI_U32 FrameType;
+
+    HI_U32 MaxMV;
+    HI_U32 MinMV;
+    HI_U32 AvgMV;
+    HI_U32 SkipRatio;
+
     HI_U32 u32AspectWidth;    
     HI_U32 u32AspectHeight; 
 	

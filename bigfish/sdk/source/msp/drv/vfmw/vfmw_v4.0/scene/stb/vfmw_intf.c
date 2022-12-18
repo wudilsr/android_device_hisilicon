@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NJ5vAPu/oxljuTsvJQOTqM/rc+aZJCW69Jife4y
 0B+Jv7yJbMHyGnXmGQfqpUGtgdrBqyDfRXOCbVHtfxJ0HsQGmm1aaQk4odhIDW7drCOjTDAb
@@ -45,7 +45,7 @@ LzAxQNsUGgQMXJ7Vig20oCrnvz6uDSzh2NqK98SFhimN/p74TFD+Hqzu7wPuWA==#*/
 
 #define VFMW_NAME       "HI_VFMW"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 extern HI_VOID TVP_VDEC_OpenModule(HI_VOID);
 extern HI_VOID TVP_VDEC_ExitModule(HI_VOID);
 extern HI_S32  TVP_VDEC_Init(HI_S32 (*VdecCallback)(HI_S32, HI_S32, HI_VOID*));
@@ -57,6 +57,7 @@ extern HI_S32  TVP_VDEC_Resume(HI_VOID);
 extern HI_S32  TVP_VDEC_SetDbgOption (HI_U32 opt, HI_U8* p_args);
 extern HI_S32  TVP_VDEC_TrustDecoderInit(VDEC_OPERATION_S *pArgs);
 extern HI_S32  TVP_VDEC_TrustDecoderExit(HI_VOID);
+extern HI_S32  TVP_VDEC_init_proc (HI_VOID);
 #endif
 
 /* svdec used vfmw function */
@@ -66,15 +67,15 @@ extern HI_VOID VFMW_SVDEC_DRV_Exit (HI_VOID);
 extern HI_VOID SVDEC_ModeInit(HI_VOID);
 extern HI_VOID SVDEC_ModeExit(HI_VOID);
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 static VFMW_EXPORT_FUNC_S s_VfmwExportFuncs =
 {
     .pfnVfmwOpenModule              = TVP_VDEC_OpenModule,
     .pfnVfmwExitModule              = TVP_VDEC_ExitModule,
-    .pfnVfmwInit                    = TVP_VDEC_Init, 
-    .pfnVfmwInitWithOperation       = TVP_VDEC_InitWithOperation,  
+    .pfnVfmwInit                    = TVP_VDEC_Init,
+    .pfnVfmwInitWithOperation       = TVP_VDEC_InitWithOperation,
     .pfnVfmwControl                 = TVP_VDEC_Control,
-    .pfnVfmwExit                    = TVP_VDEC_Exit,     
+    .pfnVfmwExit                    = TVP_VDEC_Exit,
     .pfnVfmwSuspend                 = TVP_VDEC_Suspend,
     .pfnVfmwResume                  = TVP_VDEC_Resume,
     .pfnVfmwSetDbgOption            = TVP_VDEC_SetDbgOption,
@@ -87,7 +88,7 @@ static VFMW_EXPORT_FUNC_S s_VfmwExportFuncs =
     .pfnVfmwOpenModule              = VDEC_OpenModule,
     .pfnVfmwExitModule              = VDEC_ExitModule,
     .pfnVfmwInit                    = VDEC_Init,
-    .pfnVfmwInitWithOperation       = VDEC_InitWithOperation,       
+    .pfnVfmwInitWithOperation       = VDEC_InitWithOperation,
     .pfnVfmwControl                 = VDEC_Control,
     .pfnVfmwExit                    = VDEC_Exit,
     .pfnVfmwSuspend                 = VDEC_Suspend,
@@ -111,6 +112,9 @@ HI_S32 VFMW_DRV_Init(HI_VOID)
 
     VDEC_OpenModule();   // open proc
     HI_INFO_VFMW("inner vfmw mod init OK\n");
+#ifdef HI_TEE_SUPPORT
+    TVP_VDEC_OpenModule();
+#endif
     return HI_SUCCESS;
 }
 
@@ -155,8 +159,11 @@ HI_S32 VFMW_DRV_ModInit(void)
     BPD_CloseHardware();
 #endif
 
-#ifdef HI_TVP_SUPPORT
-    TVP_VDEC_OpenModule();
+#ifdef HI_TEE_SUPPORT
+#ifndef  HI_ADVCA_FUNCTION_RELEASE
+
+    ret = TVP_VDEC_init_proc();
+#endif
 #endif
 #ifdef MODULE
     HI_PRINT("Load hi_vfmw.ko success.\t(%s)\n", VERSION_STRING);
@@ -171,11 +178,11 @@ HI_VOID VFMW_DRV_ModExit(void)
     #ifndef HI_MCE_SUPPORT
     VFMW_DRV_Exit();
     #endif
-	/* svdec */	
+	/* svdec */
 	VFMW_SVDEC_DRV_Exit();
 #endif
-#ifdef HI_TVP_SUPPORT
-    TVP_VDEC_ExitModule(); 
+#ifdef HI_TEE_SUPPORT
+    TVP_VDEC_ExitModule();
 #endif
 #ifdef MODULE
     HI_PRINT("Unload hi_vfmw.ko success.\t(%s)\n", VERSION_STRING);

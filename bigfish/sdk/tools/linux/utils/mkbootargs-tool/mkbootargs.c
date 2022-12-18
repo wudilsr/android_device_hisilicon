@@ -5,16 +5,18 @@
 
 extern unsigned long crc32 (unsigned int crc, const unsigned char *p, unsigned int len);
 
+#define MAX_LINE_LENGTH   (4096)
+
 int main(int argc, char *argv[])
 {
 	FILE *fp = NULL;
 	FILE *fp_input = NULL;
 	char *buf = NULL;
-	int size = 512;
+	int size = MAX_LINE_LENGTH;
 	long int totalhiflashsize = -1;
 	long int totalnandflashsize = 256 * 1024;
 	unsigned long crc;
-	char line[512];
+	char line[MAX_LINE_LENGTH];
 	char bootargs_input[1024] = "bootargs_input.txt";
 	char bootargs_bin[1024] = "bootargs.bin";
 	char *strsrc;
@@ -22,18 +24,21 @@ int main(int argc, char *argv[])
 	int oc = 0;
 	char *tmp = NULL;
 	int len = 0;
+	unsigned int sizeInBytes=0;
+	char sizeInBytesStr[32]={0};
 
 	if (argc < 2) {
 		printf("\r\nUsage: mkbootargs [-s Size] [-r Input File] [-o Output File] :\n"
 		       "       -r Input File: A TXT file that describes the Boot Env config, default 'bootargs_input.txt'\n"
 		       "       -o Output File: The output bin file, default 'bootargs.bin'\n"
-		       "       -s Size: Boot Env size in KB, usually, equal to the bootargs partition size. default '512'.\n"
+		       "       -s Size: Boot Env size in KB, usually, equal to the bootargs partition size. default '4KB'.\n"
+		       "       -b Size: Boot Env size in Byte, usually, equal to the bootargs partition size. default '4096'.\n"
 		       "\r\nmkbootargs will read 'Input File' and create 'Output File'.\n");
 		printf("\r\nExample:./makebootargs -s 64 -r bootargs_input.txt -o bootargs.bin\n\n");
+		printf("\r\n\t./makebootargs -b 0x20000 -r bootargs_input.txt -o bootargs.bin\n\n");
 		return 1;
 	}
-
-	while ((oc = getopt(argc, argv, "r:o:s:p:n:")) != -1) {
+	while ((oc = getopt(argc, argv, "r:o:s:b:p:n")) != -1) {
 		switch (oc) {
 		case 'r':
 			sprintf(bootargs_input, "%s", optarg);
@@ -47,15 +52,25 @@ int main(int argc, char *argv[])
 			size = atoi(optarg);
 			printf("optarg:%s\n", optarg);
 			break;
+		case 'b':
+			sizeInBytes = strtol(optarg, NULL,0);;
+			printf("optarg:%s\n", optarg);
+			break;			
 		default:
 			printf("unknow args\n");
 			break;
 		}
 	}
 
-	if (size > 1) {
-		printf("flash size is %dKB.\n", size);
+	if (size > 1 || 0 != sizeInBytes) {
 		size = size * 1024;
+		
+		if(0 != sizeInBytes)
+		{
+			size =	(sizeInBytes/1024)*1024;
+		}
+		printf("flash size is %dKB.\n", size/1024);
+		
 	} else
 		printf("flash size too small.\n");
 
@@ -91,7 +106,7 @@ int main(int argc, char *argv[])
 	memset(buf, 0x00, size);
 	memset(strsrc, 0x00, size);
 
-	while (fgets(line, 511, fp_input) != NULL) {
+	while (fgets(line, size-1, fp_input) != NULL) {
 		strcat(strsrc, line);
 		tmp = line;
 		while (*tmp != '\0') {

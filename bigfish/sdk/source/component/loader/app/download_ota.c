@@ -67,6 +67,11 @@ HI_S32 LOADER_GetTunerAttr(HI_UNF_TUNER_ATTR_S *pstTunerAttr)
 	
 #if defined(LOADER_USE_GPIO)
 	HI_U32 u32LoaderI2cNum = 0;
+	if (HI_SUCCESS != HI_UNF_I2C_Init())
+	{
+		HI_ERR_LOADER("HI_UNF_I2C_Init error!\n");
+		return HI_FAILURE;
+	}
 	if (LOADER_I2C_INVALID == stAttr.enI2cChannel)
 	{
 		if (HI_SUCCESS == HI_UNF_I2C_CreateGpioI2c(&u32LoaderI2cNum, g_u32LoaderGpioScl, g_u32LoaderGpioSda))
@@ -75,7 +80,9 @@ HI_S32 LOADER_GetTunerAttr(HI_UNF_TUNER_ATTR_S *pstTunerAttr)
 		}
 		else
 		{
-			HI_ERR_LOADER("created i2c num error!,the num is %d\n", u32LoaderI2cNum);
+			HI_ERR_LOADER("created i2c num error!,the num is %d, g_u32LoaderGpioScl is %d, g_u32LoaderGpioSda is %d\n", 
+						u32LoaderI2cNum, g_u32LoaderGpioScl, g_u32LoaderGpioSda);
+			return HI_FAILURE;
 		}
 	}
 #endif
@@ -126,7 +133,7 @@ static HI_S32 LOADER_AttachTSPort(HI_U32 Dmxid, HI_U32 TunerID)
     }
     else
     {
-        printf("No this tuner device\n");
+        HI_ERR_LOADER("No this tuner device\n");
         return HI_FAILURE;
     }
     Ret = HI_UNF_DMX_GetTSPortAttr(DmxAttachPort, &DmxAttachPortAttr);
@@ -171,13 +178,13 @@ static HI_S32 LOADER_AttachTSPort(HI_U32 Dmxid, HI_U32 TunerID)
     Ret |= HI_UNF_DMX_SetTSPortAttr(DmxAttachPort, &DmxAttachPortAttr);
     if (HI_SUCCESS != Ret)
     {
-        printf("call HI_UNF_DMX_SetTSPortAttr failed.\n");
+        HI_ERR_LOADER("call HI_UNF_DMX_SetTSPortAttr failed.\n");
         return HI_FAILURE;
     }
     Ret = HI_UNF_DMX_AttachTSPort(Dmxid, DmxAttachPort);
     if (HI_SUCCESS != Ret)
     {
-        printf("call HI_UNF_DMX_AttachTSPort.\n");
+        HI_ERR_LOADER("call HI_UNF_DMX_AttachTSPort failed.\n");
         return HI_FAILURE;
     }
     return HI_SUCCESS;

@@ -7,7 +7,7 @@
  *
  *        Version:  1.0
  *        Created:  03/14/2015 05:22:31 PM
- *         Author:    [zhoutongwei@huawei.com]
+ *         Author:    [zhoutongwei@hisilicon.com]
  *
  *       Revision:  initial draft;
  **************************************************************************************

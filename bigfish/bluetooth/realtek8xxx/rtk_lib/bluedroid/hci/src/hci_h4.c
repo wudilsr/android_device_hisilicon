@@ -34,6 +34,15 @@
 #include "userial.h"
 #include "utils.h"
 
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#include "rtk_parse.h"
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+#ifdef BLUETOOTH_RTK
+unsigned int rtkbt_logfilter = 0;
+#endif
+
 /******************************************************************************
 **  Constants & Macros
 ******************************************************************************/
@@ -167,6 +176,8 @@ void lpm_tx_done(uint8_t is_tx_done);
 #ifdef BLUETOOTH_RTK_HEARTBEAT
 void poll_enable(uint8_t turn_on);
 void poll_timer_flush(void);
+uint32_t rtkbt_heartbeat_evt_seqno = 0xffffffff;
+uint32_t rtkbt_heartbeat_noack_num = 0;
 #endif
 
 /******************************************************************************
@@ -268,6 +279,12 @@ uint8_t internal_event_intercept(void)
 
     p = (uint8_t *)(p_cb->p_rcv_msg + 1);
 
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    rtk_parse_internal_event_intercept(p);
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
+
     event_code = *p++;
     len = *p++;
 
@@ -281,11 +298,24 @@ uint8_t internal_event_intercept(void)
         if (opcode == HCI_CMD_VNDR_HEARTBEAT)
         {
             uint8_t status = *p++;
-
-            HCIDBG("Heartbeat event status: %d", status);
-
+            rtkbt_heartbeat_noack_num = 0;
             if (status == 0)
             {
+                uint32_t seqno = *(short *)p;
+                HCIDBG("Heartbeat event status: %d Seq %04x", status, seqno);
+                if(rtkbt_heartbeat_evt_seqno < 0x10000)
+                {
+                    if(((seqno+0x10000-rtkbt_heartbeat_evt_seqno)%0x10000) > 2)
+                    {
+                        usleep(10000); /* 10 milliseconds */
+                        ALOGE("Heartbeat event status: %d Seq %04x->%04x", status, rtkbt_heartbeat_evt_seqno, seqno);
+                        rtkbt_heartbeat_evt_seqno = 0xffffffff;
+                        rtkbt_heartbeat_noack_num = 0;
+                        kill(getpid(), SIGKILL);
+                    }
+                }
+                rtkbt_heartbeat_evt_seqno = seqno;
+
                 if (bt_hc_cbacks)
                 {
                     bt_hc_cbacks->dealloc((TRANSAC) p_cb->p_rcv_msg, \
@@ -295,7 +325,10 @@ uint8_t internal_event_intercept(void)
             }
             else if (status == 1)
             {
+                ALOGE("Heartbeat event status: %d Seq %04x", status, rtkbt_heartbeat_evt_seqno);
                 usleep(10000); /* 10 milliseconds */
+                rtkbt_heartbeat_evt_seqno = 0xffffffff;
+                rtkbt_heartbeat_noack_num = 0;
                 kill(getpid(), SIGKILL);
             }
         }
@@ -595,8 +628,16 @@ void hci_h4_init(void)
     h4_cb.hc_ble_acl_data_size = 27;
 
 #ifdef BLUETOOTH_RTK_HEARTBEAT
+    rtkbt_heartbeat_evt_seqno = 0xffffffff;
+    rtkbt_heartbeat_noack_num = 0;
     poll_enable(TRUE);
 #endif
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+     rtk_parse_init();
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
     btsnoop_init();
 }
@@ -616,10 +657,18 @@ void hci_h4_cleanup(void)
 
 #ifdef BLUETOOTH_RTK_HEARTBEAT
     poll_enable(FALSE);
+    rtkbt_heartbeat_evt_seqno = 0xffffffff;
+    rtkbt_heartbeat_noack_num = 0;
 #endif
 
     btsnoop_close();
     btsnoop_cleanup();
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    rtk_parse_cleanup();
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 }
 
 /*******************************************************************************
@@ -666,6 +715,17 @@ void hci_h4_send_msg(HC_BT_HDR *p_msg)
         acl_data_size = h4_cb.hc_ble_acl_data_size;
         acl_pkt_size = h4_cb.hc_ble_acl_data_size + HCI_ACL_PREAMBLE_SIZE;
     }
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    uint8_t *pp = ((uint8_t *)(p_msg + 1)) + p_msg->offset;
+    if (event == MSG_STACK_TO_HC_HCI_ACL)
+        rtk_parse_l2cap_data(pp, 1);
+
+    if (event == MSG_STACK_TO_HC_HCI_CMD)
+        rtk_parse_command(pp);
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
     /* Check if sending ACL data that needs fragmenting */
     if ((event == MSG_STACK_TO_HC_HCI_ACL) && (p_msg->len > acl_pkt_size))
@@ -758,6 +818,11 @@ void hci_h4_send_msg(HC_BT_HDR *p_msg)
     }
 
     /* generate snoop trace message */
+#ifdef BLUETOOTH_RTK_HEARTBEAT
+    uint8_t * p_cc = ((uint8_t *)(p_msg + 1)) + p_msg->offset;
+    if(((rtkbt_logfilter&1)==0) || (*p_cc != 0x94) || (*(p_cc + 1) != 0xfc))
+#endif
+
     btsnoop_capture(p_msg, FALSE);
 
     if (bt_hc_cbacks)
@@ -1000,10 +1065,28 @@ uint16_t hci_h4_receive_msg(void)
             /* generate snoop trace message */
             /* ACL packet tracing had done in acl_rx_frame_end_chk() */
             if (p_cb->p_rcv_msg->event != MSG_HC_TO_STACK_HCI_ACL)
+#ifdef BLUETOOTH_RTK_HEARTBEAT
+            {
+                uint8_t *p_cc = (uint8_t *)(p_cb->p_rcv_msg + 1) + p_cb->p_rcv_msg->offset;
+                if((*(p_cc + 3) == 0x94) && (*(p_cc + 4) == 0xfc) && (*(p_cc + 5) == 0x00)&&(rtkbt_logfilter&1)){}
+                else
+#endif
                 btsnoop_capture(p_cb->p_rcv_msg, TRUE);
-
+#ifdef BLUETOOTH_RTK_HEARTBEAT
+            }
+#endif
             if (p_cb->p_rcv_msg->event == MSG_HC_TO_STACK_HCI_EVT)
                 intercepted = internal_event_intercept();
+
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+            if (p_cb->p_rcv_msg->event == MSG_HC_TO_STACK_HCI_ACL)
+            {
+                uint8_t *pp = ((uint8_t *)(p_cb->p_rcv_msg + 1)) + p_cb->p_rcv_msg->offset;
+                rtk_parse_l2cap_data(pp ,0);
+            }
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
             if ((bt_hc_cbacks) && (intercepted == FALSE))
             {

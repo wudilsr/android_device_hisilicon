@@ -253,20 +253,20 @@ int main( int argc, char *argv[] )
      }
 
      while (1) {
-          double t;
-          float  w, h;
-          struct timeval tv;
+          //double t;
+          //float  w, h;
+          //struct timeval tv;
 
           /* Wait max. 20ms for an event, if one arrived then quit */
           if (events->WaitForEventWithTimeout( events, 0, 20 ) == DFB_OK)
                break;
 
-          gettimeofday( &tv, NULL );
+          //gettimeofday( &tv, NULL );
 
-          t = tv.tv_sec + tv.tv_usec / 1000000.0;
+         // t = tv.tv_sec + tv.tv_usec / 1000000.0;
 
-          w = ( (float)sin(4*t) + 1.0f ) / 8.0f + 0.7f;
-          h = ( (float)cos(3*t) + 1.0f ) / 8.0f + 0.7f;
+         // w = ( (float)sin(4*t) + 1.0f ) / 8.0f + 0.7f;
+          //h = ( (float)cos(3*t) + 1.0f ) / 8.0f + 0.7f;
 
 /*          videolayer->SetScreenLocation( videolayer,
                                          0.5f - w/2.0f, 0.5f - h/2.0f, w, h );*/

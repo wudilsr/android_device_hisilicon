@@ -22,11 +22,12 @@
 #define  LAST_FRAME_FLAG_NULL        (0)
 #define  DECODER_REPORT_LAST_FRAME   (1)
 #define  PROCESSOR_GOT_LAST_FRAME    (2)
+#define  DECODER_REPORT_FAKE_FRAME   (4)
 #define  REPORT_LAST_FRAME_SUCCESS   (0)
 #define  REPORT_LAST_FRAME_FAIL      (1)
 #define  REPORT_LAST_FRAME_WITH_ID   (2)
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
 #define OMXVDEC_SEC_ZONE                "SEC-MMZ"
 #endif
 
@@ -56,14 +57,14 @@ typedef enum {
 }eDFS_STATE;
 
 typedef struct {
-    
+
     eBUFFER_TYPE       buf_type;
 	eBUFFER_STATE      status;
 	HI_U32             phy_addr;
-	HI_U32             private_phy_addr;//VPSS 假4K输出需要metabuf传递额外信息    
+	HI_U32             private_phy_addr;//VPSS 假4K输出需要metabuf传递额外信息
 	HI_U32             buf_len;
 	HI_U32             act_len;
-	HI_U32             private_len;    
+	HI_U32             private_len;
 	HI_U32             offset;
 	HI_U32             flags;
 	HI_U32             buf_id;
@@ -76,8 +77,12 @@ typedef struct {
 	HI_VOID           *client_data;
     HI_U32             u32FrameRate;
 }OMXVDEC_BUF_S;
-  
+
 typedef struct {
+    HI_U32 ETB;
+    HI_U32 EBD;
+    HI_U32 FTB;
+    HI_U32 FBD;
     HI_U32 DecoderIn;
     HI_U32 DecoderOut;
     HI_U32 ProcessorIn;
@@ -113,6 +118,7 @@ typedef struct {
 		               eos_recv_flag:         1,           // end of stream flag
 		               eof_send_flag:         1,           // last frame flag
 		               recfg_flag:            1,           // reconfig flag
+                       port_enable_flag:      1,
 		               reset_pending:         1,           // reset flag
 		               seek_pending:          1,          
 		               progress:              1; 
@@ -128,6 +134,7 @@ typedef struct {
                                      1 fail,  
                                      2+ report last frame image id */
     HI_U8              last_frame_info[2];  
+    HI_U8              end_frame_flag;
     HI_S32             bLowdelay;                       
     OMX_PIX_FORMAT_E   color_format;
 	eCHAN_STATE        state;
@@ -214,6 +221,10 @@ OMXVDEC_CHAN_CTX* channel_find_inst_need_wake_up(OMXVDEC_ENTRY *vdec);
 
 VOID channel_add_lowdelay_tag_time(OMXVDEC_CHAN_CTX *pchan, UINT32 tag, UINT32 type, UINT32 time);
 HI_VOID channel_proc_entry(struct seq_file *p, OMXVDEC_CHAN_CTX *pchan);
+
+HI_S32 channel_alloc_buf(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
+
+HI_S32 channel_release_buf(OMXVDEC_CHAN_CTX *pchan, OMXVDEC_BUF_DESC *puser_buf);
 
 #if (1 == BPP_MODE_ENABLE)
 

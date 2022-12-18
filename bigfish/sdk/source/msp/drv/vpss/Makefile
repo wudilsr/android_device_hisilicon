@@ -26,7 +26,7 @@ EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
                 -I$(MSP_UNF_INCLUDE)                    \
                 -I$(MSP_API_INCLUDE)                    \
                 -I$(MSP_DRV_INCLUDE)                    \
-		-I$(KERNEL_DIR)/linux-3.10.y/drivers/hisilicon/sec_mmz
+		-I$(KERNEL_DIR)/$(CFG_HI_KERNEL_VERSION)/drivers/hisilicon/sec_mmz
 
 KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers
 

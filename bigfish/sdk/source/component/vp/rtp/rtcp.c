@@ -98,11 +98,6 @@ static HI_U32 RTCP_UTILS_TimeGetTime (HI_VOID)
 
     return  u32TimeMs;
 
-#if 0 
-    struct timeval tv;
-    (void) gettimeofday (&tv, tz);
-    return ( ( (HI_U32) tv.tv_sec) * 1000 + ( (HI_U32) tv.tv_usec) / 1000);
-#endif 
 }
 
 
@@ -550,7 +545,7 @@ static HI_S32 RTCP_BuildReportBlocks (VP_RTCP_SESSION* pstSession, VP_RTCPREPORT
                 pstReportBlock->ulSSRC = htonl (pstSource->ulSSRC);
                 pstReportBlock->ulFractLost = (HI_U32) iFraction;
                 pstSession->stRtcpStatisticInfo.stSendInfo.uiLossFraction = (HI_U32) (iFraction * 100 / 256);
-                pstReportBlock->ulTotalLost = htonl (lTotalLost & 0x00FFFFFF) >> 8;
+                pstReportBlock->ulTotalLost = htonl (lTotalLost & (HI_U32)0x00FFFFFF) >> 8;
                 pstSession->stRtcpStatisticInfo.stSendInfo.uiTotalLostPacket = lTotalLost;
                 pstReportBlock->ulSequence = htonl (ulSequence);
                 pstReportBlock->ulJitter = htonl (pstSource->uiRTPJitter / RTCP_MEAN_DEVIATION_COUNT);
@@ -1936,18 +1931,6 @@ static VP_RTP_RESULT RTCP_PackPacket (VP_tRTCPSessionHandle hHandle, VP_RTPPACKE
 
     pstPacket->ulLen = RTCP_PACKET_DATA_MAX_LEN - iLength;
 
-#if 0 
-    printf ("@@@@[%s]line:%d\n", __FUNCTION__, __LINE__);  
-
-    HI_U32 i = 0;
-
-    for (i = 0; i < pstPacket->ulLen ; i += 4)
-    {
-        printf ("%2d:%08x\n", i, ntohl (* (HI_U32*) (pstPacket->data + i)));  
-    }
-
-#endif 
-
     return RTP_ERR_OK;
 }
 
@@ -2122,16 +2105,6 @@ static HI_VOID RTCP_DeleteLocal (VP_RTCP_SESSION* pstSession)
         pstSession->LOCAL = HI_NULL;
     }
 
-#if 0
-
-    if (pstSession->RTPLockHandle)
-    {
-        RTCP_UTILS_CriticalSectionDestroy (pstSession->RTPLockHandle);
-        pstSession->RTPLockHandle = HI_NULL;
-    }
-
-#endif
-
 
     return;
 }
@@ -2260,16 +2233,6 @@ VP_RTP_RESULT VP_RTCP_ParsePacket (VP_tRTCPSessionHandle hHandle, VP_RTPPACKET_S
     pBuf   = (HI_S8*) pstPacket;
     ulTime = RTCP_UTILS_TimeGetTime();
     
-#if 0 
-    printf ("@@@@[%s]line:%d,ulTime:%x\n", __FUNCTION__, __LINE__, ulTime);  
-    HI_U32 i = 0;
-
-    for (i = 0; i < pstPacket->ulLen; i += 4)
-    {
-        printf ("%2d:0x%08x\n", i, ntohl (* (HI_U32*) (pstPacket->data + i))); 
-    }
-#endif 
-
     while (iLength > 0)
     {
         TempData  = ntohl (* (HI_U32*) (pBuf));

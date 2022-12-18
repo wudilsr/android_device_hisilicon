@@ -339,7 +339,13 @@ BOOLEAN gatt_act_connect (tGATT_REG *p_reg, BD_ADDR bd_addr)
         else if(st == GATT_CH_CLOSING)
         {
             /* need to complete the closing first */
-            ret = FALSE;
+#ifdef BLUETOOTH_RTK
+	    	usleep(10000);
+            if (!gatt_connect(bd_addr,  p_tcb))
+                ret = FALSE;
+#else
+			ret = FALSE;
+#endif
         }
     }
     else

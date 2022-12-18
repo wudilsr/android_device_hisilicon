@@ -239,7 +239,6 @@ containers_add_input_eventbuffer(CreateEventBuffer_Context * context)
      if (!container) {
           D_OOM();
           D_ERROR( "Can not allocate memory! in %s\n", __FUNCTION__ );
-          return;
      }
      container->caps = context->caps;
      container->iface = *context->interface;
@@ -253,10 +252,15 @@ void
 containers_remove_input_eventbuffer(IDirectFBEventBuffer  *thiz)
 {
      Event_Buffer_Container  *container = NULL;
+	 Event_Buffer_Container  *tmp = NULL;
 
      pthread_mutex_lock( &containers_lock );
 
+#if 0
      direct_list_foreach(container, containers) {
+#else
+	 direct_list_foreach_safe(container, tmp, containers) {
+#endif
           if (thiz == container->iface) {
                direct_list_remove(&containers, &container->link);
                D_FREE(container);
@@ -954,7 +958,6 @@ IDirectFB_CreateSurface( IDirectFB                    *thiz,
                      * since the IDirectFB::GetDisplayLayer automatic flip
                      * defect fix prevents flipping when the region is frozen.
                      */
-
                     if (config.buffermode != DLBM_BACKVIDEO && 
                         config.buffermode != DLBM_TRIPLE) {
                          /* If a window stack is available, give it the

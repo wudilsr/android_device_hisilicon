@@ -41,7 +41,7 @@ void HDMI_ProcessCableIn(void);
 void TX_SetHDMIMode(HI_U8 Enabled);
 
 HI_S32 TX_CTRL_DVIEncoder(HI_BOOL bEnable);
-
+HI_U32 TX_RSEN_Status(void);
 
 
 void ReadBlockHDMITXP0(HI_U8 Addr, HI_U8 NBytes, HI_U8 * Data );

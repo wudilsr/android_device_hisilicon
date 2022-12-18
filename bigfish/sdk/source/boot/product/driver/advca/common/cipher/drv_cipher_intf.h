@@ -30,12 +30,17 @@ extern "C"{
 
 #define MAX_DATA_LEN (1024*1024 - 16) //the max data length for encryption / decryption is  8k one time
 
-#ifdef  HI_ADVCA_FUNCTION_RELEASE
+#ifdef  HI_ADVCA_FUNCTION_RELEASE 
 #define HI_ERR_CIPHER(format, arg...)    
 #define HI_INFO_CIPHER(format, arg...)   
 #else
+#ifdef  CONFIG_PRINT
 #define HI_ERR_CIPHER(format, arg...)       printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)   
 #define HI_INFO_CIPHER(format, arg...)      printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg) 
+#else
+#define HI_ERR_CIPHER(format, arg...)    
+#define HI_INFO_CIPHER(format, arg...)  
+#endif    
 #endif
 
 /******************************* API Declaration *****************************/

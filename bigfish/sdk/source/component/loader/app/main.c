@@ -71,6 +71,22 @@ static HI_S32 ShowResultInfo(HI_U32 type, LOADER_Content_E enContent)
     return LOADER_NotifyInfo(HI_NULL, 3, astInfo);
 }
 
+static HI_S32 ShowFactoryResetInfo(LOADER_Content_E enContent)
+{
+    NOTIFY_INFO_S astInfo[2];
+
+    astInfo[0].s32StartX = 120;
+    astInfo[0].s32StartY = 90;
+
+    HI_OSAL_Snprintf(astInfo[0].acInfo, sizeof(astInfo[0].acInfo), "%s", LoaderOSDGetText(LOADER_CONTENT_INFO));
+
+	astInfo[1].s32StartX = 80;
+    astInfo[1].s32StartY = 130;
+    HI_OSAL_Snprintf(astInfo[1].acInfo, sizeof(astInfo[1].acInfo), "%s", LoaderOSDGetText(enContent));
+
+    return LOADER_NotifyInfo(HI_NULL, 2, astInfo);
+}
+
 static HI_S32 BurnData(LOADER_DATA_S * pstData, HI_U32 u32Number)
 {
     HI_S32 s32Ret = HI_SUCCESS;
@@ -172,6 +188,10 @@ static HI_VOID ShowLoaderInfo(HI_VOID)
 #if defined(HI_LOADER_MODE_IP)
     HI_INFO_LOADER("IP\n");
 #endif
+
+#if defined(HI_LOADER_MODE_FS)
+    HI_INFO_LOADER("FS\n");
+#endif
 }
 
 static HI_VOID ShowUpgrdParam(UPGRD_LOADER_INFO_S *ptrParam)
@@ -187,7 +207,7 @@ static HI_VOID ShowUpgrdParam(UPGRD_LOADER_INFO_S *ptrParam)
     if (ptrParam->stTagPara.bTagManuForceUpgrd)
         HI_DBG_LOADER("manual_force_upgrd                     : %d\n", ptrParam->stTagPara.bTagManuForceUpgrd);
     else
-        HI_DBG_LOADER("upgrd_type(0:OTA,1:IP,2:USB,3:INVALID) : %d\n", ptrParam->stLoaderParam.eUpdateType);
+        HI_DBG_LOADER("upgrd_type(0:OTA,1:IP,2:USB,3:FS,4:FACTORY_RESET,5:INVALID) : %d\n", ptrParam->stLoaderParam.eUpdateType);
 
     HI_DBG_LOADER("destroy_tag                            : %d\n", ptrParam->stLoaderPrivate.bTagDestroy);
     HI_DBG_LOADER("fail_cnt                               : %d\n", ptrParam->stLoaderPrivate.u32FailedCnt);
@@ -259,6 +279,11 @@ static HI_LOADER_TYPE_E LOADER_ProbeUpgrdType(HI_VOID )
     }
 
     ShowUpgrdParam(&g_stLoaderInfo);
+
+    if (HI_TRUE == g_stLoaderInfo.stLoaderPrivate.bTagDestroy)
+    {
+        return g_stLoaderInfo.stLoaderParam.eUpdateType;
+    }
 
     s32Ret = LOADER_CheckUpgradeTypePolicy(&g_stLoaderInfo, &enUpgrdType);
     if (HI_SUCCESS != s32Ret)
@@ -348,6 +373,9 @@ out:
     case HI_LOADER_TYPE_USB: \
         HI_DBG_LOADER(">> start USB ugprade procedure...\n"); \
         break;\
+    case HI_LOADER_TYPE_FS: \
+        HI_DBG_LOADER(">> start FS ugprade procedure...\n"); \
+        break;\
     default:\
         HI_DBG_LOADER("invalid upgrade type.\n");\
     }\
@@ -415,7 +443,7 @@ out:
 
 }
 
-static HI_VOID LOADER_ShowUpgradeResult(HI_S32 s32Ret)
+HI_VOID LOADER_ShowUpgradeResult(HI_S32 s32Ret)
 {
     if (HI_SUCCESS != s32Ret)
     {
@@ -527,6 +555,13 @@ static HI_VOID LOADER_ShowUpgradeResult(HI_S32 s32Ret)
             break;
         }
 
+		case HI_UPGRD_FACTORY_RESET_FAIL:
+        {
+            ShowResultInfo(2, LOADER_CONTENT_FACTORY_RESET_FAILED);
+            LOADER_KEYLED_DisplayString("E17");
+            break;
+        }
+
         default:
             ShowResultInfo(2, LOADER_CONTENT_FAIL_DOWNLOAD);
             LOADER_KEYLED_DisplayString("E02");
@@ -543,6 +578,53 @@ static HI_VOID LOADER_ShowUpgradeResult(HI_S32 s32Ret)
 
     /* keep OSD display upgrade result 3 seconds */
     LOADER_Delayms(3000);
+}
+
+static HI_VOID LOADER_FactoryReset()
+{
+	LOADER_PARTITION_INDEX_S	stLoaderParIndex;
+	HI_S8 acCommand[128] = {0};
+	pid_t child_pid;
+
+	memset(&stLoaderParIndex, 0x0, sizeof(stLoaderParIndex));
+	if (HI_SUCCESS != Loader_GetFlashParIndex(CACHE, &stLoaderParIndex))
+	{
+		HI_ERR_LOADER("can't find %s partition!\n", CACHE);
+		LOADER_ShowUpgradeResult(HI_UPGRD_FACTORY_RESET_FAIL);
+		return;
+	}
+	if (HI_FLASH_TYPE_EMMC_0 == stLoaderParIndex.u32FlashType)
+	{
+		HI_OSAL_Snprintf(acCommand, sizeof(acCommand), "mkfs.ext4 /dev/mmcblk0p%d -F", stLoaderParIndex.u32FlashIndex+1);
+	}
+	child_pid = system(acCommand);
+	if (!(-1!=child_pid && WIFEXITED(child_pid) && 0 == WEXITSTATUS(child_pid)))
+	{
+		HI_ERR_LOADER("format %s partition error!\n", CACHE);
+		LOADER_ShowUpgradeResult(HI_UPGRD_FACTORY_RESET_FAIL);
+		return;
+	}
+
+	memset(&stLoaderParIndex, 0x0, sizeof(stLoaderParIndex));
+	if (HI_SUCCESS != Loader_GetFlashParIndex(USERDATA, &stLoaderParIndex))
+	{
+		HI_ERR_LOADER("can't find %s partition!\n", USERDATA);
+		LOADER_ShowUpgradeResult(HI_UPGRD_FACTORY_RESET_FAIL);
+		return;
+	}
+	if (HI_FLASH_TYPE_EMMC_0 == stLoaderParIndex.u32FlashType)
+	{
+		HI_OSAL_Snprintf(acCommand, sizeof(acCommand), "mkfs.ext4 /dev/mmcblk0p%d -F", stLoaderParIndex.u32FlashIndex+1);
+	}
+
+	child_pid = system(acCommand);
+	if (!(-1!=child_pid && WIFEXITED(child_pid) && 0 == WEXITSTATUS(child_pid)))
+	{
+		HI_ERR_LOADER("format %s partition error!\n", USERDATA);
+		LOADER_ShowUpgradeResult(HI_UPGRD_FACTORY_RESET_FAIL);
+		return;
+	}
+	(HI_VOID)ShowFactoryResetInfo(LOADER_CONTENT_FACTORY_RESET_SUCC);
 }
 
 
@@ -569,6 +651,14 @@ HI_S32 LOADER_App(HI_VOID)
         s32Ret = HI_FAILURE;
         goto out;
     }
+
+	if (enUpgrdType == HI_LOADER_TPYE_FACT_RESET)
+	{
+		(HI_VOID)ShowFactoryResetInfo(LOADER_CONTENT_FACTORY_RESET_GOINGON);
+		LOADER_FactoryReset();
+		ClearUpgradeParam();
+		goto out;
+	}
 
     s32Ret = LOADER_DoUpgrdProcedure(enUpgrdType);
     if (HI_SUCCESS == s32Ret)
@@ -601,13 +691,13 @@ static HI_S32 DisplayUsbUpgrdProgress(OSD_EVENT_TYPE_E enType, HI_U32 u32CurSize
     {
     case OSD_EVENT_TYPE_DOWNLOAD:
         u32Progress = u32CurSize / (u32TotalSize / 100);
-        printf("%d%%\n", u32Progress);
+        HI_INFO_LOADER("%d%%\n", u32Progress);
         break;
 
     case OSD_EVENT_TYPE_BURN:
     {
         /* this printf keep heartbeat between hipro */
-        printf("writing...\n");
+        HI_INFO_LOADER("writing...\n");
 
         break;
     }

@@ -4,6 +4,8 @@ include $(LOCAL_PATH)/../../cfg.mak
 DRM_SOURCE_PATH := $(LOCAL_PATH)/source
 DRM_SAMPLE_PATH := $(LOCAL_PATH)/sample
 
+-include $(DRM_SOURCE_PATH)/util/Android.mk
+-include $(DRM_SOURCE_PATH)/emptydrm/Android.mk
 ifeq ($(CFG_HI_HDCP_SUPPORT),y)
 -include $(DRM_SOURCE_PATH)/hdcp/Android.mk
 -include $(DRM_SAMPLE_PATH)/hdcp/Android.mk

@@ -62,13 +62,13 @@ static TDE_EXPORT_FUNC_S s_TdeExportFuncs =
     .pfnTdeEndJob           = TdeOsiEndJob,
     .pfnTdeCancelJob        = TdeOsiCancelJob,
     .pfnTdeWaitForDone      = TdeOsiWaitForDone,
-    .pfnTdeWaitAllDone      = TdeOsiWaitAllDone, 
+    .pfnTdeWaitAllDone      = TdeOsiWaitAllDone,
     .pfnTdeQuickCopy        = TdeOsiQuickCopy,
-    .pfnTdeQuickFill        = TdeOsiQuickFill,   
+    .pfnTdeQuickFill        = TdeOsiQuickFill,
     .pfnTdeQuickResize      = TdeOsiQuickResize,
     .pfnTdeQuickFlicker     = TdeOsiQuickFlicker,
     .pfnTdeBlit             = TdeOsiBlit,
-    .pfnTdeMbBlit           = TdeOsiMbBlit,      
+    .pfnTdeMbBlit           = TdeOsiMbBlit,
     .pfnTdeSolidDraw        = TdeOsiSolidDraw,
     .pfnTdeSetDeflickerLevel        = TdeOsiSetDeflickerLevel,
     .pfnTdeEnableRegionDeflicker    = TdeOsiEnableRegionDeflicker,
@@ -107,7 +107,7 @@ HI_S32 tde_init_module_k(HI_VOID)
         TdeHalRelease();
         return -1;
     }
-	
+
     TdeOsiListInit();
 
     ret = HI_GFX_MODULE_Register(HIGFX_TDE_ID, TDE_NAME,&s_TdeExportFuncs);
@@ -119,7 +119,7 @@ HI_S32 tde_init_module_k(HI_VOID)
     }
     spin_lock_init(&s_taskletlock);
     spin_lock_init(&s_TdeRefLock);
-    
+
     return 0;
 }
 
@@ -144,7 +144,7 @@ int tde_open(struct inode *finode, struct file  *ffile)
     TDE_LOCK(&s_TdeRefLock, s_TdeRefLockFlags);
     if (1 == atomic_inc_return(&g_TDECount))
     {
-        TdeHalResumeInit(); 
+        TdeHalResumeInit();
 
 #ifdef TDE_FENCE_SUPPORT
         bOpenFence = HI_TRUE;
@@ -157,7 +157,7 @@ int tde_open(struct inode *finode, struct file  *ffile)
     {
         TDE_FENCE_Open();
     }
-#endif  
+#endif
 
     return 0;
 }
@@ -175,7 +175,7 @@ int tde_release(struct inode *finode, struct file  *ffile)
         bCloseFence = HI_TRUE;
 #endif
 
-    	TdeHalClose(); 
+    	TdeHalClose();
         //todo:
         //tasklet_kill(&tde_tasklet);
     }
@@ -200,6 +200,13 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
 {
     void __user *argp = (void __user *)arg;
 
+    if (cmd != TDE_WAITALLDONE && cmd != TDE_RESET)
+    {
+       if (NULL == argp)
+       {
+          return -EFAULT;
+       }
+    }
 
     switch (cmd)
     {
@@ -346,7 +353,7 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             {
                 return -EFAULT;
             }
-            
+
             return HI_SUCCESS;
         }
 
@@ -400,10 +407,10 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             {
                 return -EFAULT;
             }
-            return TdeOsiBitmapMaskRop(stBmpMaskRop.s32Handle, 
-                        &stBmpMaskRop.stBackGround, &stBmpMaskRop.stBackGroundRect, 
-                        &stBmpMaskRop.stForeGround, &stBmpMaskRop.stForeGroundRect, 
-                        &stBmpMaskRop.stMask, &stBmpMaskRop.stMaskRect, 
+            return TdeOsiBitmapMaskRop(stBmpMaskRop.s32Handle,
+                        &stBmpMaskRop.stBackGround, &stBmpMaskRop.stBackGroundRect,
+                        &stBmpMaskRop.stForeGround, &stBmpMaskRop.stForeGroundRect,
+                        &stBmpMaskRop.stMask, &stBmpMaskRop.stMaskRect,
                         &stBmpMaskRop.stDst, &stBmpMaskRop.stDstRect,
                         stBmpMaskRop.enRopCode_Color, stBmpMaskRop.enRopCode_Alpha);
         }
@@ -414,8 +421,8 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             {
                 return -EFAULT;
             }
-            return TdeOsiBitmapMaskBlend(stBmpMaskBlend.s32Handle, &stBmpMaskBlend.stBackGround, &stBmpMaskBlend.stBackGroundRect, 
-                        &stBmpMaskBlend.stForeGround, &stBmpMaskBlend.stForeGroundRect, &stBmpMaskBlend.stMask, &stBmpMaskBlend.stMaskRect, 
+            return TdeOsiBitmapMaskBlend(stBmpMaskBlend.s32Handle, &stBmpMaskBlend.stBackGround, &stBmpMaskBlend.stBackGroundRect,
+                        &stBmpMaskBlend.stForeGround, &stBmpMaskBlend.stForeGroundRect, &stBmpMaskBlend.stMask, &stBmpMaskBlend.stMaskRect,
                         &stBmpMaskBlend.stDst, &stBmpMaskBlend.stDstRect, stBmpMaskBlend.u8Alpha, stBmpMaskBlend.enBlendMode);
         }
         case TDE_SET_DEFLICKERLEVEL:
@@ -436,7 +443,7 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             {
                 return HI_FAILURE;
             }
-            
+
             if (copy_to_user(argp, &eDeflickerLevel, sizeof(TDE_DEFLICKER_LEVEL_E)))
             {
                 return -EFAULT;
@@ -487,7 +494,7 @@ long tde_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg)
             HI_BOOL bEnAlphaThreshold;
 
             TdeOsiGetAlphaThresholdState(&bEnAlphaThreshold);
-            
+
             if (copy_to_user(argp, &bEnAlphaThreshold, sizeof(HI_BOOL)))
             {
                 return -EFAULT;
@@ -583,14 +590,14 @@ STATIC int tde_osr_isr(int irq, void *dev_id)
         #endif
         TDE_TRACE(TDE_KERN_ERR, "tde interrupts coredump!\n");
         TdeHalResumeInit();
-        
+
         return IRQ_HANDLED;
     }
-    
+
     TDE_TRACE(TDE_KERN_DEBUG, "tde register int status: 0x%x!\n", (HI_U32)int_status);
 
     tde_tasklet.data = tde_tasklet.data |((HI_UL)int_status);
-    
+
     tasklet_schedule(&tde_tasklet);
 
     return IRQ_HANDLED;
@@ -624,16 +631,16 @@ int tde_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
     TdeOsiWaitAllDone(HI_FALSE);
 
 	TdeHalSuspend();
-	
+
     HI_PRINT("TDE suspend OK\n");
-    
+
     return 0;
 }
 
 /* wait for resume */
 int tde_pm_resume(PM_BASEDEV_S *pdev)
 {
-    if ( atomic_read(&g_TDECount) > 0 ) 
+    if ( atomic_read(&g_TDECount) > 0 )
     {
         TdeHalResumeInit();
     }
@@ -648,11 +655,11 @@ int tde_pm_resume(PM_BASEDEV_S *pdev)
  Description     : open TDE equipment
  Input           : I_VOID  **
  Output          : None
- Return Value    : 
- Global Variable   
-    Read Only    : 
-    Read & Write : 
-  History         
+ Return Value    :
+ Global Variable
+    Read Only    :
+    Read & Write :
+  History
   1.Date         : 2008/5/26
     Author       : wming
     Modification : Created function
@@ -668,11 +675,11 @@ HI_S32 TdeOsiOpen(HI_VOID)
  Description     : close TDE equipment
  Input           : I_VOID  **
  Output          : None
- Return Value    : 
- Global Variable   
-    Read Only    : 
-    Read & Write : 
-  History         
+ Return Value    :
+ Global Variable
+    Read Only    :
+    Read & Write :
+  History
   1.Date         : 2008/5/26
     Author       : wming
     Modification : Created function

@@ -52,9 +52,6 @@ HI_VOID *ca_ioremap_nocache(HI_U32 u32Addr, HI_U32 u32Len);
 HI_VOID ca_iounmap(HI_VOID *pAddr);
 HI_VOID ca_msleep(HI_U32 u32Time);
 HI_VOID ca_udelay(HI_U32 us);
-HI_VOID * ca_memset(HI_VOID * s, HI_S32 c, HI_S32 count);
-HI_U32 ca_memcmp(void *pBufferA, void *pBufferB, HI_U32 len);
-HI_S32 	ca_snprintf(char * buf, HI_U32 size, const char * fmt, ...);
 
 /* suspend and resume functions */
 int ca_v200_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state);
@@ -91,7 +88,9 @@ HI_S32 HAL_ADVCA_V300_DecryptMisc(HI_UNF_ADVCA_KEYLADDER_LEV_E enLevel, HI_U32 *
 HI_S32 HAL_ADVCA_V300_GetSecretKeyChecksumFlag(HI_U32 *pu32Checksum);
 HI_S32 HAL_ADVCA_V300_GetCAStates(HI_U32 *pu32State);
 HI_S32 HAL_ADVCA_V300_DecryptSWPK(HI_U32 *pu32DataIn,HI_U32 AddrID);
+/******* proc function begin ********/
 HI_S32 HAL_ADVCA_ProcGetReginfo(HI_U32 au32RegInfo[3]);
+/******* proc function end   ********/
 HI_S32 HAL_ADVCA_V300_GetGDRMFlag(HI_U32 * pGDRMFlag);
 
 HI_VOID CA_readReg(HI_U32 addr, HI_U32 *pu32Result);

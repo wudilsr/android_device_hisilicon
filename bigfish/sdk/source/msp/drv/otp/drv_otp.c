@@ -26,7 +26,6 @@
 #include "drv_otp.h"
 #include "drv_otp_ext.h"
 #include "drv_otp_common.h"
-#include "drv_otp_v100.h"
 #include "drv_otp_v200.h"
 #include "drv_otp_reg_v200.h"
 #if defined(CHIP_TYPE_hi3716mv310)
@@ -47,22 +46,13 @@ static OTP_EXPORT_FUNC_S s_OTPExportFuncs =
 	.HAL_OTP_V200_Write		        =   HAL_OTP_V200_Write,
 	.HAL_OTP_V200_WriteByte	        =   HAL_OTP_V200_WriteByte,
 	.HAL_OTP_V200_WriteBit	        =   HAL_OTP_V200_WriteBit,
-	.HAL_OTP_V100_WriteByte	        =   HAL_OTP_V100_WriteByte,
-	.HAL_OTP_V100_WriteBit		    =   HAL_OTP_V100_WriteBit,
-	.HAL_OTP_V100_SetWriteProtect	=   HAL_OTP_V100_SetWriteProtect,
-	.HAL_OTP_V100_GetWriteProtect	=   HAL_OTP_V100_GetWriteProtect,
-	.HAL_OTP_V100_Read		        =   HAL_OTP_V100_Read,
-	.HAL_OTP_V100_GetSrBit			=   HAL_OTP_V100_GetSrBit,
-	.HAL_OTP_V100_SetSrBit			=   HAL_OTP_V100_SetSrBit,
-	.HAL_OTP_V100_Reset				=   HAL_OTP_V100_Reset,
-	.HAL_OTP_V100_FuncDisable	    =   HAL_OTP_V100_FuncDisable,
 	.pfnOTPSuspend					=	HI_DRV_OTP_Suspend,
 	.pfnOTPResume					=	HI_DRV_OTP_Resume,
 };
 
 extern HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E *penChipVersion);
 
-static OTP_VERSION_E gOTPVesion = OTP_VERSION_100;
+static OTP_VERSION_E gOTPVesion = OTP_VERSION_200;
 
 static HI_VOID DRV_OTP_ClockConfig(HI_VOID)
 {
@@ -104,6 +94,7 @@ HI_S32 DRV_OTP_DeInit(void)
     return HI_SUCCESS;
 }
 
+/******* proc function begin ********/
 static HI_U8  G_FakeOTPBuffer[8096] = {0};
 static HI_U32 G_FakeOTPBuffer_Length;
 static DRV_OTP_FAKE_FLAG_E G_FakeOTP_FLag = DRV_OTP_NO_FAKE_FLAG;
@@ -221,76 +212,53 @@ HI_S32 DRV_OTP_FakeOTP_WriteByte(HI_U32 Addr, HI_U8 value)
     return HI_SUCCESS;
 }
 
+/******* proc function end   ********/
 
 HI_U32 DRV_OTP_Read(HI_U32 Addr)
 {
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        return HAL_OTP_V200_Read(Addr);
-    }
-    else
-    {
-        return HAL_OTP_V100_Read(Addr);
-    }
+    return HAL_OTP_V200_Read(Addr);
 }
 
 HI_U8 DRV_OTP_ReadByte(HI_U32 Addr)
 {
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        return HAL_OTP_V200_ReadByte(Addr);
-    }
-    else
-    {
-        HI_ERR_OTP("Not supported for otpv100!\n");
-        return 0;
-    }
+    return HAL_OTP_V200_ReadByte(Addr);
 }
 
 HI_S32 DRV_OTP_Write(HI_U32 Addr, HI_U32 value)
 {
     HI_S32 ErrorReturn = HI_SUCCESS;
 
-    if(gOTPVesion == OTP_VERSION_200)
+    HI_U8 *pByte = (HI_U8*)&value;
+    ErrorReturn = HAL_OTP_V200_WriteByte((Addr + 0), pByte[0]);
+    if (HI_SUCCESS != ErrorReturn)
     {
-        HI_U8 *pByte = (HI_U8*)&value;
-        ErrorReturn = HAL_OTP_V200_WriteByte((Addr + 0), pByte[0]);
-        ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 1), pByte[1]);
-        ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 2), pByte[2]);
-        ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 3), pByte[3]);
+        HI_ERR_OTP("HAL_OTP_V200_WriteByte failed, ret: 0x%x\n", ErrorReturn);
+        return ErrorReturn;
     }
-    else
+    ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 1), pByte[1]);
+    if (HI_SUCCESS != ErrorReturn)
     {
-        HI_U8 *pByte = (HI_U8*)&value;
-        ErrorReturn = HAL_OTP_V100_WriteByte((Addr + 0), pByte[0]);
-        ErrorReturn |= HAL_OTP_V100_WriteByte((Addr + 1), pByte[1]);
-        ErrorReturn |= HAL_OTP_V100_WriteByte((Addr + 2), pByte[2]);
-        ErrorReturn |= HAL_OTP_V100_WriteByte((Addr + 3), pByte[3]);
+        HI_ERR_OTP("HAL_OTP_V200_WriteByte failed, ret: 0x%x\n", ErrorReturn);
+        return ErrorReturn;
     }
+    ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 2), pByte[2]);
+    if (HI_SUCCESS != ErrorReturn)
+    {
+        HI_ERR_OTP("HAL_OTP_V200_WriteByte failed, ret: 0x%x\n", ErrorReturn);
+        return ErrorReturn;
+    }
+    ErrorReturn |= HAL_OTP_V200_WriteByte((Addr + 3), pByte[3]);
 
     return ErrorReturn;
 }
 
 HI_S32 DRV_OTP_Write_Byte(HI_U32 Addr, HI_U8 value)
 {
-    HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = HAL_OTP_V200_WriteByte(Addr, value);
-    }
-    else
-    {
-        ErrorReturn = HAL_OTP_V100_WriteByte(Addr, value);
-    }
-
-    return ErrorReturn;
+    return HAL_OTP_V200_WriteByte(Addr, value);;
 }
 
 HI_S32 DRV_OTP_Write_Bit(HI_U32 Addr, HI_U32 BitPos, HI_U32 BitValue)
 {
-    HI_S32 ErrorReturn = HI_SUCCESS;
-
 	if (BitPos >= 8)
 	{
 		HI_ERR_OTP("Write OTP bit ERROR! BitPos >= 8\n");
@@ -303,157 +271,61 @@ HI_S32 DRV_OTP_Write_Bit(HI_U32 Addr, HI_U32 BitPos, HI_U32 BitValue)
 		return HI_FAILURE;
 	}
 
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = HAL_OTP_V200_WriteBit(Addr, BitPos, BitValue);
-    }
-    else
-    {
-        ErrorReturn = HAL_OTP_V100_WriteBit(Addr, BitPos, BitValue);
-    }
-
-    return ErrorReturn;
+    return HAL_OTP_V200_WriteBit(Addr, BitPos, BitValue);
 }
 
 HI_S32 DRV_OTP_Reset(HI_VOID)
 {
-    HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = OTP_V200_Reset();
-    }
-    else
-    {
-        ErrorReturn = HAL_OTP_V100_Reset();
-    }
-
-    return ErrorReturn;
+    return OTP_V200_Reset();
 }
 
 HI_S32 DRV_OTP_Func_Disable(HI_U32 u32SRBit)
 {
-	HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        /*Not supported on OTP V200*/
-    }
-    else
-    {
-        ErrorReturn = OTP_V100_Func_Disable(u32SRBit);
-    }
-
-    return ErrorReturn;
+    HI_ERR_OTP("not support\n");
+    return HI_FAILURE;
 }
 
 HI_S32 DRV_OTP_Set_CustomerKey(OTP_CUSTOMER_KEY_S *pCustomerKey)
 {
-	HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = OTP_V200_Set_CustomerKey(pCustomerKey);
-    }
-    else
-    {
-        ErrorReturn = OTP_V100_Set_CustomerKey(pCustomerKey);
-    }
-
-    return ErrorReturn;
+    return OTP_V200_Set_CustomerKey(pCustomerKey);
 }
 
 HI_S32 DRV_OTP_Get_CustomerKey(OTP_CUSTOMER_KEY_S *pCustomerKey)
 {
-	HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = OTP_V200_Get_CustomerKey(pCustomerKey);
-    }
-    else
-    {
-        ErrorReturn = OTP_V100_Get_CustomerKey(pCustomerKey);
-    }
-
-    return ErrorReturn;
+    return OTP_V200_Get_CustomerKey(pCustomerKey);
 }
 
 HI_S32 DRV_OTP_Get_DDPLUS_Flag(HI_BOOL *pDDPLUSFlag)
 {
-	HI_S32 ErrorReturn = HI_SUCCESS;
-
-	if(gOTPVesion == OTP_VERSION_200)
-	{
-		ErrorReturn = OTP_V200_Get_DDPLUS_Flag(pDDPLUSFlag);
-	}
-	else
-	{
-		ErrorReturn = OTP_V100_Get_DDPLUS_Flag(pDDPLUSFlag);
-	}
-
-	return ErrorReturn;
+ 	return OTP_V200_Get_DDPLUS_Flag(pDDPLUSFlag);
 }
 
 HI_S32 DRV_OTP_Get_DTS_Flag(HI_BOOL *pDTSFlag)
 {
-	HI_S32 ErrorReturn = HI_SUCCESS;
-
-	if(gOTPVesion == OTP_VERSION_200)
-	{
-		ErrorReturn = OTP_V200_Get_DTS_Flag(pDTSFlag);
-	}
-	else
-	{
-		ErrorReturn = OTP_V100_Get_DTS_Flag(pDTSFlag);
-	}
-
-	return ErrorReturn;
+ 	return OTP_V200_Get_DTS_Flag(pDTSFlag);
 }
 
 HI_S32 DRV_OTP_Set_StbPrivData(OTP_STB_PRIV_DATA_S *pStbPrivData)
 {
-    HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = OTP_V200_Set_StbPrivData(pStbPrivData);
-    }
-    else
-    {
-        ErrorReturn = OTP_V100_Set_StbPrivData(pStbPrivData);
-    }
-
-    return ErrorReturn;
+     return OTP_V200_Set_StbPrivData(pStbPrivData);
 }
 
 HI_S32 DRV_OTP_Get_StbPrivData(OTP_STB_PRIV_DATA_S *pStbPrivData)
 {
-    HI_S32 ErrorReturn = HI_SUCCESS;
-
-    if(gOTPVesion == OTP_VERSION_200)
-    {
-        ErrorReturn = OTP_V200_Get_StbPrivData(pStbPrivData);
-    }
-    else
-    {
-        ErrorReturn = OTP_V100_Get_StbPrivData(pStbPrivData);
-    }
-
-    return ErrorReturn;
+     return OTP_V200_Get_StbPrivData(pStbPrivData);
 }
 
 HI_S32 DRV_OTP_DieID_Check(HI_VOID)
 {
     HI_S32 ErrorReturn = HI_FAILURE;
 
-    if (gOTPVesion == OTP_VERSION_200)
+    ErrorReturn = OTP_V200_DieID_Check();
+    if (HI_SUCCESS != ErrorReturn)
     {
-        //DRV_OTP_SetFakeOTPFlag(DRV_OTP_FAKE_BUFFER_FLAG);
-        ErrorReturn = OTP_V200_DieID_Check();
-        (HI_VOID)OTP_V200_Reset();
+        HI_ERR_OTP("OTP_V200_DieID_Check failed, ret: 0x%x\n", ErrorReturn);
         return ErrorReturn;
     }
+    ErrorReturn = OTP_V200_Reset();  
 
     return ErrorReturn;
 }

@@ -66,6 +66,7 @@ HI_DECLARE_MUTEX(g_OtpV200Mutex);
 		up(&g_OtpV200Mutex);		\
 	}while(0)
 
+/******* proc function begin ********/
 
 #define DRV_OTPV200_FAKE_OTP_ACCESSERR_CHECK() do{		            \
 		if(DRV_OTP_Is_FakeOTPAccessErr_Flag() == HI_SUCCESS)		\
@@ -75,6 +76,7 @@ HI_DECLARE_MUTEX(g_OtpV200Mutex);
 		}                                                           \
 	}while(0)
 
+/******* proc function end   ********/
 
 HI_U32 HAL_OTP_V200_Read(HI_U32 addr)
 {
@@ -85,6 +87,7 @@ HI_U32 HAL_OTP_V200_Read(HI_U32 addr)
     OTP_V200_RADDR_U       RAddr;
     OTP_V200_RDATA_U       Redata;
     HI_U32 u32OTPTimeValue = 0;
+/******* proc function begin ********/   
     
     DRV_OTPV200_FAKE_OTP_ACCESSERR_CHECK();  //Fake test
     
@@ -100,6 +103,7 @@ HI_U32 HAL_OTP_V200_Read(HI_U32 addr)
         return u32VALUE;
     }
     
+/******* proc function end   ********/   
     DRV_OTPV200_LOCK();    
     CtrlStaut.u32 = otp_read_reg(OTP_V200_CTRL_STATUS);
     //Check CTRL_STATUS ctrl_ready to 0x01
@@ -221,6 +225,7 @@ HI_S32  HAL_OTP_V200_Write(HI_U32 addr, HI_U32 tdata)
     OTP_V200_WDATA_U       WDATA;
     OTP_V200_WR_START_U    WRStart;
 	HI_U32 u32OTPTimeValue = 0;
+/******* proc function begin ********/
 	
     DRV_OTPV200_FAKE_OTP_ACCESSERR_CHECK();  //Fake test
     
@@ -240,6 +245,7 @@ HI_S32  HAL_OTP_V200_Write(HI_U32 addr, HI_U32 tdata)
         return HI_SUCCESS;
     }
     
+/******* proc function end   ********/    
     DRV_OTPV200_LOCK();
     
     /* check if addr is 4bytes aligned or not */
@@ -317,6 +323,7 @@ HI_S32 HAL_OTP_V200_WriteByte(HI_U32 addr, HI_U8 tdata)
     OTP_V200_WDATA_U       WDATA;
     OTP_V200_WR_START_U    WRStart;
 	HI_U32 u32OTPTimeValue = 0;
+/******* proc function begin ********/
 	
     DRV_OTPV200_FAKE_OTP_ACCESSERR_CHECK();  //Fake test
     
@@ -328,6 +335,7 @@ HI_S32 HAL_OTP_V200_WriteByte(HI_U32 addr, HI_U8 tdata)
         return DRV_OTP_FakeOTP_WriteByte(addr, u8VALUE);
     }
 
+/******* proc function end   ********/
     DRV_OTPV200_LOCK();    
     CtrlStaut.u32 = otp_read_reg(OTP_V200_CTRL_STATUS);
     //Check CTRL_STATUS ctrl_ready to 0x01
@@ -389,6 +397,7 @@ HI_S32 HAL_OTP_V200_WriteByte(HI_U32 addr, HI_U8 tdata)
 HI_S32  HAL_OTP_V200_WriteBit(HI_U32 addr, HI_U32 bit_pos, HI_U32 bit_value)
 {
     HI_U8 u8Data = 0;
+/******* proc function begin ********/
     
     DRV_OTPV200_FAKE_OTP_ACCESSERR_CHECK();  //Fake test
     
@@ -400,6 +409,7 @@ HI_S32  HAL_OTP_V200_WriteBit(HI_U32 addr, HI_U32 bit_pos, HI_U32 bit_value)
         u8VALUE |= (1 << bit_pos);
         return DRV_OTP_FakeOTP_WriteByte(addr, u8VALUE);
     }
+/******* proc function end   ********/
 
     if(bit_value == 1)
     {

@@ -949,4 +949,43 @@ public class HiDisplayManager  {
             return -1;
         }
     }
+    /**
+     * set CEC suspend
+     * <p>
+     * Get enable status of output port.<br>
+     * <br>
+     * @param port output port. 0 -> HDMI, 1 -> CVBS.
+     * @return 0 disabled, -1 enabled
+     */
+    public int setCECSuspend()
+    {
+        try
+        {
+            return m_Display.setCECSuspend();
+        }
+        catch(Exception ex)
+        {
+            return -1;
+        }
+    }
+    public int getHDMICECSuspendEnable(){
+        try
+        {
+            return m_Display.getHDMICECSuspendEnable();
+        }
+        catch(Exception ex)
+        {
+            return -1;
+        }
+    }
+    public int setHDMICECSuspendEnable(int enable){
+        try
+        {
+            return m_Display.setHDMICECSuspendEnable(enable);
+        }
+        catch(Exception ex)
+        {
+            return -1;
+        }
+    }
 }

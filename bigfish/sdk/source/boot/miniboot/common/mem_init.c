@@ -92,6 +92,12 @@ static void ddrlayout_malloc_init(struct ddrlayout_t *ddr)
 }
 /*****************************************************************************/
 
+static void ddrlayout_resmem_init(struct ddrlayout_t *ddr)
+{
+	resmalloc_init(ddr->start, ddr->size);
+}
+/*****************************************************************************/
+
 static void ddrlayout_global_init(struct ddrlayout_t *ddr)
 {
 	__global_start = (char *)ddr->start;
@@ -178,7 +184,7 @@ static struct ddrlayout_t ddrlayout[] = {
 		.size = DDRLAYOUT_AUTO,
 		.attribue = 0,
 		.name = "resmem",
-		.init = NULL,//ddrlayout_resmem_init,
+		.init = ddrlayout_resmem_init,
 	}, {
 		.name = NULL,
 	}
@@ -187,10 +193,28 @@ static struct ddrlayout_t ddrlayout[] = {
 
 static struct ddrlayout_t *ddrlayout_init(struct ddrlayout_t *ddr)
 {
-	uint32 ddrend = ddr->start + get_ddr_size();
+	uint32 ddrsize  = get_ddr_size();
+	uint32 ddrend = ddr->start + ddrsize;
 	struct ddrlayout_t *prev = NULL;
 
 	for (; ddr->name; ddr++) {
+
+		if (ddr->name && (!strncmp(ddr->name,"resmem",6))) {
+			if (ddrsize >= _2G) {
+				ddr->start = ddrend - _512M;
+				ddr->size = _512M;
+			} else if (ddrsize >= _1G) {
+				ddr->start = ddrend - _256M;
+				ddr->size = _256M;
+			} else if (ddrsize >= _512M) {
+				ddr->start = ddrend - _64M;
+				ddr->size = _64M;
+			} else if (ddrsize >= _256M) {
+				ddr->start = ddrend - _32M;
+				ddr->size = _32M;
+			}
+		}
+
 		if (ddr->start == DDRLAYOUT_AUTO) {
 			ASSERT(prev != NULL);
 			ddr->start = prev->end;

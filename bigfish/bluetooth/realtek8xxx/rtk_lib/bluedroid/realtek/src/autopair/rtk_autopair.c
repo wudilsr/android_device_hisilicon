@@ -70,6 +70,13 @@ int RTKBT_AUTOPAIR_CheckMSD(UINT8 * p, UINT8 len, UINT32 * p_rcuid, UINT8 * p_cl
     STREAM_TO_UINT16(vendor,p);
     BTIF_TRACE_ERROR1("AutoPairing:ITEM:vendor %04x\n",vendor);
     left -= 2;
+    if((vendor == 0x7966)||(vendor == 0x6679))
+    {
+        *p_rcuid = 2;
+        *p_classic_supported = 0;
+        BTIF_TRACE_ERROR2("AutoPairing: IflyTek Vendor %04x ==> RcuID:%d\n",vendor,*p_rcuid);
+        return 0;
+    }
     if(vendor == BLUETOOTH_RTK_AUTOPAIR_VENDOR)
     {
         if(left<2) return -4;

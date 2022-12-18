@@ -56,6 +56,9 @@ extern const HI_CHAR* HI_VAL_PDY_EncryVersion2;
 extern const HI_CHAR* HI_VAL_PDY_EncryTypeWMDRM;
 extern const HI_CHAR* HI_VAL_PDY_EncryTypePlayReady;
 
+#define SVR_DRM_TYPE_WIDEVINE   "video/wvm"
+#define SVR_DRM_TYPE_PLAYREADY  "video/playready"
+
 /*PlayReady Certification Buffer define*/
 typedef struct tagHI_PLAYREADY_DEVCERT_BUF_S HI_PLAYREADY_DEVCERT_BUF_S;
 struct tagHI_PLAYREADY_DEVCERT_BUF_S
@@ -95,7 +98,7 @@ typedef enum hiDRM_ERROR_E{
     HI_DRM_ERROR_CANNOT_HANDLE                 = HI_DRM_ERROR_BASE - 6,
     HI_DRM_ERROR_TAMPER_DETECTED               = HI_DRM_ERROR_BASE - 7,
     HI_DRM_ERROR_NO_PERMISSION                 = HI_DRM_ERROR_BASE - 8,
-
+    HI_DRM_ERROR_NOT_SUPPORT                   = HI_DRM_ERROR_BASE - 9,
     HI_DRM_NO_ERROR                            = HI_SUCCESS
 } HI_DRM_ERROR_E;
 
@@ -116,8 +119,29 @@ typedef enum hiDRM_COPY_CONTROL_E {
 typedef struct hiDRM_BUFFER_S {
     HI_CHAR* data;
     HI_U32   length;
-    HI_VOID (*destructor)(HI_VOID*);
 } HI_DRM_BUFFER_S;
+
+/** Type of the stream data that is parsed by the file DEMUX */
+/** CNcomment:流类型，文件解析器解析出来的流数据类型 */
+typedef enum hiDRM_FORMAT_DATA_TYPE_E
+{
+    HI_DRM_FORMAT_DATA_DEFAULT,
+    HI_DRM_FORMAT_DATA_AUD,          /**< Audio stream *//**< CNcomment:音频流 */
+    HI_DRM_FORMAT_DATA_VID,          /**< Video stream *//**< CNcomment:视频流 */
+    HI_DRM_FORMAT_DATA_BUTT
+} HI_DRM_FORMAT_DATA_TYPE_E;
+
+typedef struct hiDRM_DECRYPT_EXTRADATA_S {
+    HI_DRM_BUFFER_S* IV;
+    HI_DRM_BUFFER_S* key;
+    HI_U32   u32length;
+    HI_S32   s32CryptoMode;
+    HI_S32   *pEncryptUnitInfo;
+    HI_S32   s32EncryptSize;
+    HI_DRM_FORMAT_DATA_TYPE_E emStreamType;
+    HI_BOOL  bDrmTvp;
+} HI_DRM_DECRYPT_EXTRADATA_S;
+
 
 #define DECLARE_DRM_BUFFER(name, _data, _len) \
     HI_DRM_BUFFER_S name = {\

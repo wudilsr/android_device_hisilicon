@@ -753,6 +753,8 @@ HI_S32 HI_MPI_OTP_BurnToSecureChipset(HI_VOID)
     return HI_SUCCESS;
 }
 #endif
+
+/******* proc function begin ********/
 HI_S32 HI_MPI_OTP_TEST(HI_U8 u8TestValue[16])
 {
     HI_S32 s32Ret = HI_SUCCESS;
@@ -774,7 +776,7 @@ HI_S32 HI_MPI_OTP_TEST(HI_U8 u8TestValue[16])
     HI_OTP_UNLOCK();
     return HI_SUCCESS;
 }
-
+/******* proc function end   ********/
 
 #ifdef __cplusplus
  #if __cplusplus

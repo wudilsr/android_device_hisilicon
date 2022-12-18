@@ -5,7 +5,7 @@
 ******************************************************************************
   File Name     : rawplay.c
   Version       : Initial Draft
-  Description   : video raw data player, multi channel support 
+  Description   : video raw data player, multi channel support
   History       :
   1.Date        : 2014/11/13
     Author      : y00226912
@@ -40,9 +40,12 @@
 #include "hi_adp_audio.h"
 #include "hi_adp_mpi.h"
 #include "hi_adp_hdmi.h"
+#include "mpi_mmz.h"
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 #include "tee_client_api.h"
+#define TEEC_CMD_COM_CA2TA_DATA      18
+TEEC_Context  g_TeeContext;
 #endif
 
 #ifdef CONFIG_SUPPORT_CA_RELEASE
@@ -55,7 +58,7 @@
 #define DEFAULT_DISP_WIDTH    (1280)
 #define DEFAULT_DISP_HEIGHT   (720)
 
-static HI_U32 g_RectWinTable[MAX_CODEC_NUM][3] = 
+static HI_U32 g_RectWinTable[MAX_CODEC_NUM][3] =
 {
     {1, 1, 1},  {2, 2, 1},  {3, 2, 2},  {4, 2, 2},
     {5, 3, 2},  {6, 3, 2},  {7, 3, 3},  {8, 3, 3},
@@ -70,7 +73,7 @@ typedef struct hiCODEC_PARAM_S
     HI_BOOL bReadFrameSize;
     FILE   *pVidEsFile;
     pthread_t EsThread;
-    HI_UNF_VCODEC_TYPE_E VdecType; 
+    HI_UNF_VCODEC_TYPE_E VdecType;
     HI_BOOL bAdvancedProfile;
     HI_U32  CodecVersion;
     HI_HANDLE hAvplay;
@@ -95,20 +98,51 @@ HI_VOID EsTthread(HI_VOID *args)
     CODEC_PARAM_S *pCodec  = HI_NULL;
     HI_UNF_STREAM_BUF_S              stStreamBuf;
     HI_UNF_AVPLAY_FLUSH_STREAM_OPT_S stFlushOpt;
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
     HI_MMZ_BUF_S stCAStreamBuf;
     HI_UNF_AVPLAY_TVP_ATTR_S AvTVPAttr;
+    TEEC_Session teeSession;
+    TEEC_Result result;
+    TEEC_Operation operation;
+
+    TEEC_UUID svc_id = {0x0D0D0D0D, 0x0D0D, 0x0D0D,
+                        {0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D, 0x0D}
+                       };
     memset(&stCAStreamBuf, 0, sizeof(HI_MMZ_BUF_S));
     memset(&AvTVPAttr, 0, sizeof(HI_UNF_AVPLAY_TVP_ATTR_S));
+
+    uint32_t origin;
+
+    TEEC_Operation session_operation;
+
+    memset(&session_operation, 0, sizeof(TEEC_Operation));
+
+    session_operation.started = 1;
+    session_operation.paramTypes = TEEC_PARAM_TYPES(
+                               TEEC_NONE,
+                               TEEC_NONE,
+                               TEEC_MEMREF_TEMP_INPUT,
+                               TEEC_MEMREF_TEMP_INPUT);
+
 #endif
 
     pCodec  = (CODEC_PARAM_S *)args;
     hAvplay = pCodec->hAvplay;
     bVidBufAvail = HI_FALSE;
 
-#ifdef HI_TVP_SUPPORT    
+#ifdef HI_TEE_SUPPORT
     HI_UNF_AVPLAY_GetAttr(hAvplay, HI_UNF_AVPLAY_ATTR_ID_TVP, &AvTVPAttr);
+    if(HI_TRUE == AvTVPAttr.bEnable)
+    {
+        result = TEEC_OpenSession(&g_TeeContext, &teeSession, &svc_id, TEEC_LOGIN_IDENTIFY, HI_NULL, &session_operation, &origin);
+
+        if (result != TEEC_SUCCESS)
+        {
+            sample_printf("TEEC_OpenSession Failed!\n");
+            exit(0);
+        }
+    }
 #endif
 
     while (!g_StopThread)
@@ -123,11 +157,11 @@ HI_VOID EsTthread(HI_VOID *args)
             {
                 Ret = HI_UNF_AVPLAY_GetBuf(hAvplay, HI_UNF_AVPLAY_BUF_ID_ES_VID, 0x4000, &stStreamBuf, 0);
             }
-            
+
             if (HI_SUCCESS == Ret)
             {
                 bVidBufAvail = HI_TRUE;
-                
+
                 if (HI_FALSE != pCodec->bReadFrameSize)
                 {
                     Readlen = fread(&FrameSize, 1, 4, pCodec->pVidEsFile);
@@ -140,8 +174,8 @@ HI_VOID EsTthread(HI_VOID *args)
                 {
                     FrameSize = 0x4000;
                 }
-                
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
                 if(HI_TRUE == AvTVPAttr.bEnable)
                 {
                     if(0 == stCAStreamBuf.phyaddr)
@@ -158,7 +192,7 @@ HI_VOID EsTthread(HI_VOID *args)
                             stCAStreamBuf.bufsize = 0x4000;
                         }
 
-                        Ret = HI_MMZ_Malloc(&stCAStreamBuf);
+                        Ret = HI_MPI_MMZ_Malloc(&stCAStreamBuf);
                         if (HI_SUCCESS != Ret)
                         {
                             sample_printf("MMZ_Malloc CAStreamBuf %d failed!\n", stCAStreamBuf.bufsize);
@@ -172,17 +206,31 @@ HI_VOID EsTthread(HI_VOID *args)
                 {
                     pBuffer = (HI_U8 *)stStreamBuf.pu8Data;
                 }
-                
-                Readlen = fread(pBuffer, sizeof(HI_S8), FrameSize, pCodec->pVidEsFile);
 
-#ifdef HI_TVP_SUPPORT
-                if(AvTVPAttr.bEnable == HI_TRUE)
-                {
-                    HI_SEC_MMZ_CA2TA(stCAStreamBuf.phyaddr, (unsigned long)stStreamBuf.pu8Data, Readlen);
-                }
-#endif
+                Readlen = fread(pBuffer, sizeof(HI_S8), FrameSize, pCodec->pVidEsFile);
                 if (Readlen > 0)
                 {
+#ifdef HI_TEE_SUPPORT
+                    if(AvTVPAttr.bEnable == HI_TRUE)
+                    {
+                        operation.started = 1;
+                        operation.paramTypes = TEEC_PARAM_TYPES(TEEC_VALUE_INOUT, TEEC_VALUE_INPUT, TEEC_NONE, TEEC_NONE);
+                        operation.params[0].value.a = (HI_U32)stCAStreamBuf.phyaddr;
+                        operation.params[0].value.b = (HI_U32)(long)stStreamBuf.pu8Data;
+                        operation.params[1].value.a = Readlen;
+                        operation.params[1].value.b = TEEC_VALUE_UNDEF;
+
+                        sample_printf("RawPlay sec memcpy : ca phy:0x%p ta:0x%p size:%d\n", stCAStreamBuf.phyaddr, stStreamBuf.pu8Data, Readlen);
+
+                        result = TEEC_InvokeCommand(&teeSession, TEEC_CMD_COM_CA2TA_DATA, &operation, HI_NULL);
+                        if (TEEC_SUCCESS != result)
+                        {
+                            sample_printf("RawPlay sec memcpy Failed!\n");
+                            exit(0);
+                        }
+                    }
+#endif
+
                     Ret = HI_UNF_AVPLAY_PutBuf(hAvplay, HI_UNF_AVPLAY_BUF_ID_ES_VID, Readlen, 0);
                     if (Ret != HI_SUCCESS)
                     {
@@ -197,7 +245,7 @@ HI_VOID EsTthread(HI_VOID *args)
                     {
                         sample_printf("Esplay flush stream.\n");
                         HI_UNF_AVPLAY_FlushStream(hAvplay, &stFlushOpt);
-                        do 
+                        do
                         {
                             Ret = HI_UNF_AVPLAY_IsBuffEmpty(hAvplay, &bIsEmpty);
                             if (Ret != HI_SUCCESS)
@@ -233,11 +281,12 @@ HI_VOID EsTthread(HI_VOID *args)
             usleep(1000 * 10);
         }
     }
-    
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
     if(AvTVPAttr.bEnable == HI_TRUE)
-    {   
-        HI_MMZ_Free(&stCAStreamBuf);
+    {
+        HI_MPI_MMZ_Free(&stCAStreamBuf);
+        TEEC_CloseSession(&teeSession);
     }
 #endif
 
@@ -286,7 +335,7 @@ HI_S32 GetCodecParam(HI_CHAR *argv[], CODEC_PARAM_S *pCodec, HI_U32 uNoPrint)
 	else if (!strcasecmp("h265", argv[1]))
     {
         pCodec->VdecType = HI_UNF_VCODEC_TYPE_HEVC;
-    }	
+    }
     else if (!strcasecmp("mvc", argv[1]))
     {
         pCodec->VdecType = HI_UNF_VCODEC_TYPE_MVC;
@@ -385,6 +434,24 @@ HI_VOID GetWinParam(HI_U32 TotalWinNum, HI_U32 Index, HI_RECT_S *pRectWin)
     return;
 }
 
+#ifdef HI_TEE_SUPPORT
+HI_S32 InitSecEnvironment(HI_VOID)
+{
+    if (TEEC_InitializeContext(HI_NULL, &g_TeeContext) != TEEC_SUCCESS)
+    {
+        sample_printf("TEEC_InitializeContext Failed!\n");
+        return HI_FAILURE;
+    }
+
+    return HI_SUCCESS;
+}
+
+HI_VOID DeInitSecEnvironment(HI_VOID)
+{
+    TEEC_FinalizeContext(&g_TeeContext);
+}
+#endif
+
 HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
 {
     HI_S32  Ret = HI_FAILURE;
@@ -401,7 +468,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
     HI_UNF_VCODEC_ATTR_S          stVcodecAttr;
     HI_UNF_AVPLAY_FRMRATE_PARAM_S stFramerate;
     HI_UNF_AVPLAY_OPEN_OPT_S      stMaxCapbility;
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     HI_UNF_AVPLAY_TVP_ATTR_S      stAvTVPAttr;
 #endif
 
@@ -413,13 +480,13 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                " -once,     run one time only \n"
                " -fps 60,   run on on 60 fps \n"
                " 1080p_50 or 1080p_60  video output at 1080p_50 or 1080p_60\n");
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         printf(" -tvpon,   turn on tvp only the first channel run on tvp \n");
         printf(" -tvpoff,  turn off tvp \n");
 #endif
         printf(" examples: \n");
         printf("   sample_rawplay vfile0  h264 vfile1 h265 ...\n");
-        
+
         return HI_FAILURE;
     }
 
@@ -432,8 +499,8 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
         {
             break;
         }
-        
-        Ret = GetCodecParam(&argv[pos], &g_stCodec[index], CurCodecNum);  
+
+        Ret = GetCodecParam(&argv[pos], &g_stCodec[index], CurCodecNum);
         if (Ret == HI_SUCCESS)
         {
             CurCodecNum++;
@@ -479,7 +546,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
 				return HI_FAILURE;
 			}
 		}
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         else if (strcasestr("-tvpon", argv[index]))
         {
             for (pos = 0; pos < CurCodecNum; pos++)
@@ -506,7 +573,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
         }
 #endif
     }
-    
+
     HI_SYS_Init();
 
     HIADP_MCE_Exit();
@@ -524,7 +591,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
         sample_printf("call DispInit failed.\n");
         goto AVPLAY_DEINIT;
     }
-    
+
     Ret = HIADP_VO_Init(HI_UNF_VO_DEV_MODE_NORMAL);
     if (Ret != HI_SUCCESS)
     {
@@ -538,14 +605,14 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
         if (pCodec->bVidPlay)
         {
             Ret  = HI_UNF_AVPLAY_GetDefaultConfig(&stAvplayAttr, HI_UNF_AVPLAY_STREAM_TYPE_ES);
-            stAvplayAttr.stStreamAttr.u32VidBufSize = 2*1024*1024;
+            stAvplayAttr.stStreamAttr.u32VidBufSize = 5*1024*1024;
             Ret |= HI_UNF_AVPLAY_Create(&stAvplayAttr, &pCodec->hAvplay);
             if (Ret != HI_SUCCESS)
             {
                 sample_printf("call HI_UNF_AVPLAY_Create failed.\n");
                 goto VO_DEINIT;
             }
-            
+
             Ret = HI_UNF_AVPLAY_GetAttr(pCodec->hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stAvSyncAttr);
             stAvSyncAttr.enSyncRef = HI_UNF_SYNC_REF_NONE;
             Ret |= HI_UNF_AVPLAY_SetAttr(pCodec->hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stAvSyncAttr);
@@ -554,7 +621,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                 sample_printf("call HI_UNF_AVPLAY_SetAttr failed.\n");
                 goto AVPLAY_DESTROY;
             }
-            
+
             GetWinParam(CurCodecNum, index, &stRectWin);
             Ret |= HIADP_VO_CreatWin(&stRectWin, &pCodec->hWin);
             if (Ret != HI_SUCCESS)
@@ -563,7 +630,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                 HIADP_VO_DeInit();
                 goto AVPLAY_DESTROY;
             }
-            
+
             if (HI_UNF_VCODEC_TYPE_MVC == pCodec->VdecType)
             {
                 stMaxCapbility.enCapLevel      = HI_UNF_VCODEC_CAP_LEVEL_FULLHD;
@@ -576,8 +643,8 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                 stMaxCapbility.enDecType       = HI_UNF_VCODEC_DEC_TYPE_BUTT;
                 stMaxCapbility.enProtocolLevel = HI_UNF_VCODEC_PRTCL_LEVEL_BUTT;
             }
-        
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
             stAvTVPAttr.bEnable = pCodec->bTVPEnable;
             Ret = HI_UNF_AVPLAY_SetAttr(pCodec->hAvplay, HI_UNF_AVPLAY_ATTR_ID_TVP, &stAvTVPAttr);
             if (Ret != HI_SUCCESS)
@@ -592,10 +659,10 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                 sample_printf("call HI_UNF_AVPLAY_ChnOpen failed.\n");
                 goto VO_DESTROY;
             }
-        
+
             /*set compress attr*/
             Ret = HI_UNF_AVPLAY_GetAttr(pCodec->hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &stVcodecAttr);
-        
+
             if (HI_UNF_VCODEC_TYPE_VC1 == pCodec->VdecType)
             {
                 stVcodecAttr.unExtAttr.stVC1Attr.bAdvancedProfile = pCodec->bAdvancedProfile;
@@ -605,30 +672,30 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
             {
                 stVcodecAttr.unExtAttr.stVP6Attr.bReversed = 0;
             }
-        
+
             stVcodecAttr.enType = pCodec->VdecType;
-         
+
             Ret |= HI_UNF_AVPLAY_SetAttr(pCodec->hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, &stVcodecAttr);
             if (HI_SUCCESS != Ret)
             {
                 sample_printf("call HI_UNF_AVPLAY_SetAttr failed.\n");
                 goto VCHN_CLOSE;
             }
-        
+
             Ret = HI_UNF_VO_AttachWindow(pCodec->hWin, pCodec->hAvplay);
             if (Ret != HI_SUCCESS)
             {
                 sample_printf("call HI_UNF_VO_AttachWindow failed.\n");
                 goto VCHN_CLOSE;
             }
-        
+
             Ret = HI_UNF_VO_SetWindowEnable(pCodec->hWin, HI_TRUE);
             if (Ret != HI_SUCCESS)
             {
                 sample_printf("call HI_UNF_VO_SetWindowEnable failed.\n");
                 goto WIN_DETATCH;
             }
-        
+
             if (0 != s32FrameRate)
             {
                stFramerate.enFrmRateType = HI_UNF_AVPLAY_FRMRATE_TYPE_USER;
@@ -641,7 +708,7 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
                     goto WIN_DETATCH;
                 }
             }
-        
+
             Ret = HI_UNF_AVPLAY_Start(pCodec->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID, HI_NULL);
             if (Ret != HI_SUCCESS)
             {
@@ -650,9 +717,14 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
             }
         }
     }
-    
-#ifdef HI_TVP_SUPPORT
-    HI_SEC_MMZ_Init();
+
+#ifdef HI_TEE_SUPPORT
+    Ret = InitSecEnvironment();
+    if (Ret != HI_SUCCESS)
+    {
+        sample_printf("call HI_UNF_AVPLAY_Start failed.\n");
+        exit(0);
+    }
 #endif
 
     g_StopThread = HI_FALSE;
@@ -680,8 +752,8 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
             HI_UNF_DISP_3D_FRAME_PACKING,
             HI_UNF_ENC_FMT_1080P_24_FRAME_PACKING);
         }
-        
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
         if ('t' == InputCmd[0] || 'T' == InputCmd[0])
         {
             if(stAvTVPAttr.bEnable == HI_TRUE)
@@ -725,9 +797,9 @@ HI_S32 main(HI_S32 argc, HI_CHAR *argv[])
         stStopAttr.u32TimeoutMs = 0;
         HI_UNF_AVPLAY_Stop(pCodec->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID, &stStopAttr);
     }
-    
-#ifdef HI_TVP_SUPPORT
-    HI_SEC_MMZ_DeInit();
+
+#ifdef HI_TEE_SUPPORT
+    DeInitSecEnvironment();
 #endif
 
 WIN_DETATCH:
@@ -741,30 +813,30 @@ WIN_DETATCH:
 VCHN_CLOSE:
     for (index = 0; index < CurCodecNum; index++)
     {
-        pCodec = &g_stCodec[index]; 
+        pCodec = &g_stCodec[index];
         HI_UNF_AVPLAY_ChnClose(pCodec->hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
     }
 
 VO_DESTROY:
     for (index = 0; index < CurCodecNum; index++)
     {
-        pCodec = &g_stCodec[index]; 
+        pCodec = &g_stCodec[index];
         HI_UNF_VO_DestroyWindow(pCodec->hWin);
     }
-    
+
 AVPLAY_DESTROY:
     for (index = 0; index < CurCodecNum; index++)
     {
-        pCodec = &g_stCodec[index]; 
+        pCodec = &g_stCodec[index];
         HI_UNF_AVPLAY_Destroy(pCodec->hAvplay);
     }
-    
+
 VO_DEINIT:
     HIADP_VO_DeInit();
-    
+
 DISP_DEINIT:
     HIADP_Disp_DeInit();
-    
+
 AVPLAY_DEINIT:
     HI_UNF_AVPLAY_DeInit();
 
@@ -772,11 +844,11 @@ SYS_DEINIT:
     HI_SYS_DeInit();
     for (index = 0; index < CurCodecNum; index++)
     {
-        pCodec = &g_stCodec[index]; 
+        pCodec = &g_stCodec[index];
         fclose(pCodec->pVidEsFile);
         pCodec->pVidEsFile = HI_NULL;
     }
-    
+
     return HI_SUCCESS;
 }
 

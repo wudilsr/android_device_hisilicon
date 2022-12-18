@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NKtG06vaX0WeWNkkjMzfG9L0/39FA6YL5STDYVh
 3bRFxcATGKl5Z1fsoKqM5OeEcMx+v9piclgV5S9t9nZhdQPTVh9QDSpyZpV18o8diriMbdhT
@@ -896,7 +896,10 @@ HI_S32 VPSS_IMG_CorrectListOrder(VPSS_IMAGELIST_INFO_S *pstImgInfo,
     }
 
     for (pos = (pstImageList->stFulImageList).next, n = pos->next; 
-            pos != &(pstImageList->stFulImageList);
+
+            (pos != &(pstImageList->stFulImageList))
+                && (n != &(pstImageList->stFulImageList));
+
             pos = pos->next, n = pos->next)
     {
         pPreNode = pos->prev;
@@ -908,7 +911,10 @@ HI_S32 VPSS_IMG_CorrectListOrder(VPSS_IMAGELIST_INFO_S *pstImgInfo,
         if(pstCurFieldNode->stSrcImage.u32FrameIndex
            != pstPreFieldNode->stSrcImage.u32FrameIndex)
         {
-            VPSS_FATAL("Field Order Detect Error\n");
+            VPSS_FATAL("Field Order Detect Error(%d,%d)\n", 
+                pstCurFieldNode->stSrcImage.u32FrameIndex,
+              pstPreFieldNode->stSrcImage.u32FrameIndex
+            );
         }
         
         if(pstImageList->pstTarget_1 == n)

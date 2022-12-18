@@ -1,9 +1,9 @@
 /******************************************************************************
 
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 *  and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
@@ -73,6 +73,7 @@ struct argTTX_CONTEXT_S
     HI_U8 *                  pu8WriteDataAddr;          /*The data address of includeing start code PES packet */
     HI_U32                   u32PESWritenLen;           /*The data length of recving PES packket, in byte */
     HI_BOOL                  bAutoPlay;
+    HI_BOOL                  bHold;
 
     HI_UNF_TTX_PACKET_TYPE_E enPacketType;
 };
@@ -92,63 +93,77 @@ typedef struct argTTX_CONTEXT_S * TTX_CONTEXT_S_PTR;
 /*
  *@brief: Initializing the data receiving module,initializing the data of this modual
  *
- *@param[out] phTtx - this module handle.
+ *@param[out] pphDataRecv - this module handle.
  *
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to initialize.
  */
 
-HI_S32 TTX_Recv_Create(HI_HANDLE* phTtx);
+HI_S32 TTX_Recv_Create(HI_VOID** pphDataRecv);
 
 /*
  *@brief:Destroy all data of  data receiving moudle
  *
- *@param[in] hTtx - this module handle
+ *@param[in] hDataRecv - this module handle
  *@param[out] None.
  *
  *@retval ::HI_SUCCESS - upon successful
  *@retval ::HI_FAILURE - failed to destroy.
  */
 
-HI_S32 TTX_Recv_Destroy(HI_HANDLE hTtx);
+HI_S32 TTX_Recv_Destroy(HI_VOID* hDataRecv);
 
 /*
  *@brief: create one thread for receiving PES data.
  *
- *@param[in]hTtx - this module handle
+ *@param[in]hDataRecv - this data recv module handle.
+ *@param[in]hDataParse - this data parse module handle.
+ *@param[in]pstFilter - filter info.
  *
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to create thread.
  */
 
-HI_S32 TTX_Recv_SetFilter( HI_HANDLE hDataRecv, HI_HANDLE hDataParse, TTX_Filter_S_PTR pstFilter );
+HI_S32 TTX_Recv_SetFilter(HI_VOID* hDataRecv, HI_VOID* hDataParse, TTX_Filter_S_PTR pstFilter );
 
 /*
  *@brief: clear request
  *
- *@param[in]hTtx - this mode handle
+ *@param[in]hDataRecv - this data recv module handle.
  *
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed clear request.
  */
-HI_S32 TTX_Recv_ClearFilter(HI_HANDLE hTtx);
+HI_S32 TTX_Recv_ClearFilter(HI_VOID* hDataRecv);
+
+/*
+ *@brief:set Hold flag
+ *
+ *@param[in]hDataRecv - this data recv module handle.
+ *@param[in]u8Enable - HI_TRUE hold the display ,HI_FALSE not hold
+ *
+ *@retval ::HI_SUCCESS - upon successful.
+ *@retval ::HI_FAILURE - failed to set hold flag.
+ */
+
+HI_S32 TTX_Recv_Hold(HI_VOID* hDataRecv, HI_BOOL bHold);
 
 /*
  *@brief:set Auto play subpage flag
  *
- *@param[in]hTtx - this mode handle.
+ *@param[in]hDataRecv - this data recv module handle.
  *@param[in]u8Enable - HI_TRUE open atuo play ,HI_FALSE close auto play
  *
  *@retval ::HI_SUCCESS - upon successful.
  *@retval ::HI_FAILURE - failed to set auto play flag.
  */
 
-HI_S32 TTX_Recv_AutoPlay(HI_HANDLE hTtx, HI_U8 u8Enable);
+HI_S32 TTX_Recv_AutoPlay(HI_VOID* hDataRecv, HI_U8 u8Enable);
 
 /*
  *@brief: set init page number
  *
- *@param[in]hTtx -this mode handle.
+ *@param[in]hDataRecv - this data recv module handle.
  *@param[in]u32MagazineNum - magazine number
  *@param[in] u32PageNum - page number
  *@param[in]bSubtitle - HI_TRUE subtitle HI_FALSE non-subtitle
@@ -157,12 +172,12 @@ HI_S32 TTX_Recv_AutoPlay(HI_HANDLE hTtx, HI_U8 u8Enable);
  *@retval ::HI_FAILURE - failed to set init page number.
  */
 
-HI_S32 TTX_Recv_SetInitpage(HI_HANDLE hTtx, HI_U32 u32MagazineNum, HI_U32 u32PageNum, HI_BOOL bSubtitle);
+HI_S32 TTX_Recv_SetInitpage(HI_VOID* hDataRecv, HI_U32 u32MagazineNum, HI_U32 u32PageNum, HI_BOOL bSubtitle);
 
 /*
  *@brief: set output type
  *
- *@param[in]hTtx - this mode handle.
+ *@param[in]hDataRecv - this data recv module handle.
  *@param[in]enType - output mod
  *@param[in] bEnable - HI_TRUE open,HI_FALSE close
  *
@@ -170,13 +185,13 @@ HI_S32 TTX_Recv_SetInitpage(HI_HANDLE hTtx, HI_U32 u32MagazineNum, HI_U32 u32Pag
  *@retval ::HI_FAILURE - failed to store one page.
  */
 
-HI_S32 TTX_Recv_SetOutputType(HI_HANDLE hTtx, TTX_OBJECTTYPE_E enType, HI_BOOL bEnable);
+HI_S32 TTX_Recv_SetOutputType(HI_VOID* hDataRecv, TTX_OBJECTTYPE_E enType, HI_BOOL bEnable);
 
-HI_S32 TTX_Recv_ProcessData(HI_HANDLE hTTX, HI_U8 *pu8Data, HI_U32 u32DataLength);
+HI_S32 TTX_Recv_ProcessData(HI_VOID* hDataRecv, HI_U8 *pu8Data, HI_U32 u32DataLength);
 
-HI_S32  TTX_Recv_SetRequest(HI_HANDLE hDataRecv, TTX_Filter_S_PTR pstFilter);
+HI_S32  TTX_Recv_SetRequest(HI_VOID* hDataRecv, TTX_Filter_S_PTR pstFilter);
 
-HI_S32 TTX_Recv_ClearRequest(HI_HANDLE hDataRecv);
+HI_S32 TTX_Recv_ClearRequest(HI_VOID* hDataRecv);
 
 #ifdef __cplusplus
 }

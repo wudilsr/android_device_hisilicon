@@ -1,4 +1,4 @@
-/* Copyright (C), 1988-2012, Huawei Tech. Co,.Ltd
+/* Copyright (C), 1988-2012, Hisilicon Tech. Co,.Ltd
  * File name: cmd_bootss.h
  * Author:     Version: 0.0.1    Date: 2012.09.05
  * Description: upgrade module header file.

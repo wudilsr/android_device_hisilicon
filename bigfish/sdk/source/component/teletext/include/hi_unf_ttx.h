@@ -66,9 +66,13 @@ typedef enum hiUNF_TTX_KEY_E
                            /**<CNcomment:X/27 包中的第四个链接，无X/27则显示第四有效页。如果遥控器上没有CYAN键，你可以用BLUE键来替代。*/
     HI_UNF_TTX_KEY_INDEX,  /**<Sixth  link in packet X/27, if inexistence, Show index  page*//**<CNcomment:X/27 包中的第六个链接，无X/27则指向起始页 */
     HI_UNF_TTX_KEY_REVEAL, /**<Reveal or hide concealed  information *//**<CNcomment:显示/隐藏conceal 信息 */
-    HI_UNF_TTX_KEY_HOLD,   /**<Switch between start and stop auto play  *//**<CNcomment:自动播放/停止自动播放切换 */
+    HI_UNF_TTX_KEY_HOLD,   /**<Switch between hold and resume ttx play  *//**<CNcomment:暂停图文播放/恢复图文播放切换 */
     HI_UNF_TTX_KEY_MIX,    /**<Switch  between  transparent and nontransparent  background *//**<CNcomment:Teletext背景透明/不透明切换 */
     HI_UNF_TTX_KEY_UPDATE, /**<Update current page*//**<CNcomment:更新当前页 */
+    HI_UNF_TTX_KEY_ZOOM,   /**<Send this cmd sevral times to display the upper,then the lower part of the screen and then return to the normal size teletext page*/
+                           /**<CNcomment:通过连续发送此命令依次显示teletext页面的上半部分、下半部分、全部 */
+    HI_UNF_TTX_KEY_SUBPAGE,/**<switch from page num ipunt mode to subpage input mode*//**<CNcomment:输入页号输入模式转到subpage输入模式 */
+    HI_UNF_TTX_KEY_CANCEL,/**<Hide or display current page except page number, currently not support*//**<CNcomment:隐藏或者显示除了页号外的当前页内容 ,当前暂不支持*/
     HI_UNF_TTX_KEY_BUTT    /**<Invalid key*//**<CNcomment:无效的按键 */
 } HI_UNF_TTX_KEY_E;
 

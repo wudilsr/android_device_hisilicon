@@ -32,8 +32,9 @@
 #define UIPC_CH_ID_SCO_CTRL 4
 #define UIPC_CH_ID_SCO_OUT  5
 #define UIPC_CH_ID_SCO_IN   6
-#define UIPC_CH_NUM         7
-#define UIPC_CH_ID_ALL      8   /* used to address all the ch id at once */
+#define UIPC_CH_ID_RTKBT_DATA 7
+#define UIPC_CH_NUM         8
+#define UIPC_CH_ID_ALL      9   /* used to address all the ch id at once */
 #else
 /* BOARD_HAVE_BLUETOOTH_RTK end */
 #define UIPC_CH_NUM         2
@@ -147,7 +148,7 @@ UDRV_API extern INT32 UIPC_Send_noblock(tUIPC_CH_ID ch_id, UINT16 msg_evt, UINT8
 *******************************************************************************/
 UDRV_API extern UINT32 UIPC_Read(tUIPC_CH_ID ch_id, UINT16 *p_msg_evt, UINT8 *p_buf, UINT32 len);
 
-#ifdef BLUETOOTH_RTK_SCO
+#ifdef BLUETOOTH_RTK
 UDRV_API extern INT32 UIPC_Read_noblock(tUIPC_CH_ID ch_id, UINT16 *p_msg_evt, UINT8 *p_buf, UINT32 len);
 #endif
 

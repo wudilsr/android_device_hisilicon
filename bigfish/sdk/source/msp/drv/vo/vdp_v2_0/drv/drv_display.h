@@ -167,6 +167,14 @@ HI_S32 DISP_SetAllDacEn(HI_BOOL bDacEn);
             return HI_ERR_DISP_INVALID_PARA;  \
         }                             \
     }
+#define DispCheckNullPointer(ptr) \
+{                                \
+    if (!ptr)                    \
+    {                            \
+        DISP_ERROR("DISP ERROR! Input null pointer in %s!\n", __FUNCTION__); \
+        return HI_ERR_DISP_NULL_PTR;  \
+    }                             \
+}
 
 HI_DRV_DISPLAY_E  DISPGetIntfChannel(HI_DRV_DISP_INTF_ID_E enIntfID);
 

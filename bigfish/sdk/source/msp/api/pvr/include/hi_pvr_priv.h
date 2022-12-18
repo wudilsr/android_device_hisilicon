@@ -73,7 +73,8 @@ extern "C" {
 #define PVR_TS_PD_SIZE_POS              4         /* the fifth byte in TS header of the length area of padding */
 #define PVR_TS_PD_FLAG_POS              5         /* the sixth byte in TS header of the flag area of padding  */
 #define PVR_TS_MIN_PD_SIZE              2
-
+#define PVR_VIDEO_TYPE_TOTAL_NUM        (40)    /*this macro should sync to HI_UNF_VCODEC_TYPE_E*/
+#define PVR_PLAY_MAX_STATUS_NUM         (12)
 
 /*
 Table 2-6 -- Adaptation field control values

@@ -11,10 +11,9 @@ endif
 # local variables
 #===============================================================================
 CA_SSD_DIR := $(COMPONENT_DIR)/loader/app/ca
-
+ 
 ifeq ($(CFG_HI_ADVCA_SUPPORT), y)
 CA_SSD_SRC := $(CA_SSD_DIR)/ca_ssd.c
-
 ifneq ($(CFG_HI_ADVCA_TYPE), VERIMATRIX)
 ifeq ($(CFG_HI_ADVCA_TYPE), NAGRA)
 CA_SSD_SRC += $(CA_SSD_DIR)/nasc/api/nasc1x_ssd.c
@@ -25,9 +24,11 @@ endif
 else
 CA_SSD_SRC += $(wildcard $(CA_SSD_DIR)/vmx/api/*.c)
 endif
+
 endif
 
-CFLAGS := -I$(INCLUDE_DIR)/
+CFLAGS := -I$(INCLUDE_DIR)
+CFLAGS += -I$(MSP_UNF_INCLUDE)
 CFLAGS += -I$(COMPONENT_DIR)/loader/app/include
 ifeq ($(CFG_HI_ADVCA_SUPPORT), y)
 CFLAGS += -I$(CA_SSD_DIR)/
@@ -41,6 +42,7 @@ CFLAGS += -I$(CA_SSD_DIR)/cx/polarssl
 endif
 else
 CFLAGS += -I$(CA_SSD_DIR)/vmx/include
+CFLAGS += -I$(COMPONENT_DIR)/loader/api/include
 endif
 endif
 
@@ -106,4 +108,3 @@ ifeq ($(CFG_HI_LOADER_APPLOADER),y)
 
 endif
 endif
-

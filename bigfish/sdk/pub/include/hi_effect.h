@@ -1,6 +1,6 @@
 /*****************************************************************************/
 
-/*                Copyright 2005 - 2005, Huawei Tech. Co., Ltd.              */
+/*                Copyright 2005 - 2005, Hisilicon Tech. Co., Ltd.              */
 /*                           ALL RIGHTS RESERVED                             */
 /*                                                                           */
 /* FileName: hi_peffect.h                                                    */

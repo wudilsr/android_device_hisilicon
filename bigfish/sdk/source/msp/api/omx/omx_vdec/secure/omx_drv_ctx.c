@@ -294,6 +294,27 @@ OMX_S32 channel_bind_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puse
 }
 
 
+OMX_S32 channel_port_enable(OMXVDEC_DRV_CONTEXT* drv_ctx, OMX_BOOL bEnable)
+{
+    OMX_S32 vdec_fd = -1;
+    OMXVDEC_IOCTL_MSG msg = {0, 0, 0};
+    OMX_BOOL bPortEnable = bEnable;
+
+    if (NULL == drv_ctx ||  (drv_ctx->chan_handle < 0))
+    {
+        DEBUG_PRINT_ERROR("%s failed", __func__);
+        return -1;
+    }
+
+    vdec_fd      = drv_ctx->video_driver_fd;
+    msg.chan_num = drv_ctx->chan_handle;
+    msg.in       = &bPortEnable;
+    msg.out      = 0;
+    DEBUG_PRINT_ALWS("%s,%d, bPortEnable = %d\n",__func__,__LINE__,bEnable);
+    return ioctl(vdec_fd, VDEC_IOCTL_CHAN_PORT_ENABLE, &msg);
+}
+
+
 OMX_S32 channel_unbind_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf)
 {
 	OMX_S32 vdec_fd = -1;
@@ -312,6 +333,68 @@ OMX_S32 channel_unbind_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *pu
 
 	return ioctl(vdec_fd, VDEC_IOCTL_CHAN_UNBIND_BUFFER, (void *)&msg);
 }
+
+
+OMX_S32 channel_alloc_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf)
+{
+    OMX_S32 ret = 0;
+    OMX_S32 vdec_fd = -1;
+    OMXVDEC_IOCTL_MSG msg = {0, 0, 0};
+
+    if (NULL == drv_ctx || NULL == puser_buf || drv_ctx->chan_handle < 0)
+    {
+        DEBUG_PRINT_ERROR("%s failed", __func__);
+        return -1;
+    }
+
+    vdec_fd      = drv_ctx->video_driver_fd;
+    msg.chan_num = drv_ctx->chan_handle;
+    msg.in       = puser_buf;
+    msg.out      = puser_buf;
+
+    ret = ioctl(vdec_fd, VDEC_IOCTL_CHAN_ALLOC_BUF, (void *)&msg);
+    if (ret < 0)
+    {
+        DEBUG_PRINT_ERROR("alloc buffer failed\n");
+        return ret;
+    }
+    /*
+    DEBUG_PRINT_ALWS("Alloc buffer  vir:0x%p phy:0x%x, size:%d dir:%d sec:%d success!\n", \
+         (void *)puser_buf->bufferaddr, puser_buf->phyaddr, puser_buf->buffer_len, puser_buf->dir, puser_buf->is_sec);
+    */
+    return ret;
+}
+
+
+void channel_release_buffer(OMXVDEC_DRV_CONTEXT *drv_ctx, OMXVDEC_BUF_DESC *puser_buf)
+{
+    OMX_S32 vdec_fd = -1;
+    OMXVDEC_IOCTL_MSG msg = {0, 0, 0};
+    OMX_S32 ret = 0;
+
+    if (NULL == drv_ctx || NULL == puser_buf || drv_ctx->chan_handle < 0)
+    {
+        DEBUG_PRINT_ERROR("%s failed", __func__);
+        return;
+    }
+
+    vdec_fd      = drv_ctx->video_driver_fd;
+    msg.chan_num = drv_ctx->chan_handle;
+    msg.in       = puser_buf;
+    msg.out      = 0;
+
+    ret = ioctl(vdec_fd, VDEC_IOCTL_CHAN_RELEASE_BUF, (void *)&msg);
+    if (ret < 0)
+    {
+        DEBUG_PRINT_ERROR("release buffer failed\n");
+        return;
+    }
+    /*
+    DEBUG_PRINT_ALWS("Free buffer phy:0x%x dir:%d  sec:%d success!\n", \
+                  puser_buf->phyaddr, puser_buf->dir, puser_buf->is_sec);
+    */
+}
+
 
 void vdec_deinit_drv_context(OMXVDEC_DRV_CONTEXT  *drv_ctx)
 {
@@ -357,7 +440,6 @@ void vdec_deinit_drv_context(OMXVDEC_DRV_CONTEXT  *drv_ctx)
 
 OMX_S32 vdec_init_drv_context(OMXVDEC_DRV_CONTEXT *drv_ctx)
 {
-	OMX_S32 r = -1;
 	if (!drv_ctx)
 	{
 		DEBUG_PRINT_ERROR("%s invalid param\n", __func__);
@@ -374,7 +456,7 @@ OMX_S32 vdec_init_drv_context(OMXVDEC_DRV_CONTEXT *drv_ctx)
     drv_ctx->chan_handle                  = -1;
     
     memset(&drv_ctx->drv_cfg, 0, sizeof(drv_ctx->drv_cfg));
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_OMX_TEE_SUPPORT
     drv_ctx->drv_cfg.is_tvp               = HI_TRUE;
 #endif
     drv_ctx->drv_cfg.cfg_width            = DEFAULT_FRAME_WIDTH;

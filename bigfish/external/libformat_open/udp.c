@@ -67,6 +67,8 @@
 #define __FILE_NAME__  av_filename(__FILE__)
 #define UDP_TRACE()    av_log(NULL, AV_LOG_INFO, "[%s:%d] at this\n", __FILE_NAME__, __LINE__)
 
+#define UDP_READ_TIME_OUT   (5000000) // 5 second;
+
 typedef struct {
     int udp_fd;
     int ttl;
@@ -346,6 +348,9 @@ static void *circular_buffer_task( void *_URLContext)
     UDPContext *s = h->priv_data;
     fd_set rfds;
     struct timeval tv;
+    int network_disconnect = 0;
+    int64_t timeout_start_time = av_gettime(), now_time, start_time;
+    int64_t last_pkt_recv_time  = -1;
 
     while(!s->exit_thread) {
         int left;
@@ -355,6 +360,21 @@ static void *circular_buffer_task( void *_URLContext)
         if (ff_check_interrupt(&h->interrupt_callback)) {
             s->circular_buffer_error = AVERROR(EINTR);
             goto end;
+        }
+
+        if (!network_disconnect) {
+            now_time   = av_gettime();
+            start_time = last_pkt_recv_time > 0?last_pkt_recv_time:timeout_start_time;
+            if (start_time > 0 && (llabs(now_time - start_time) > UDP_READ_TIME_OUT)) {
+                av_log(NULL, AV_LOG_ERROR, "[%s,%d] udp no data received for %d us, send NETWORK_DISCONNECT && return error!\n",
+                   __FUNCTION__, __LINE__, UDP_READ_TIME_OUT);
+                url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_DISCONNECT, "udp");
+                network_disconnect = 1;
+                if (timeout_start_time > 0) {
+                    s->circular_buffer_error = AVERROR(EIO);
+                    goto end;
+                }
+            }
         }
 
         FD_ZERO(&rfds);
@@ -396,6 +416,18 @@ static void *circular_buffer_task( void *_URLContext)
             }
             continue;
         }
+        if (timeout_start_time > 0) {
+            timeout_start_time = -1;
+            av_log(0, AV_LOG_INFO, "[%s,%d] udp first pkt received, disable timeout checking!\n",
+                __FUNCTION__, __LINE__);
+        }
+        last_pkt_recv_time = av_gettime();
+        if (network_disconnect) {
+            av_log(0, AV_LOG_INFO, "[%s,%d] udp network recovered, send NETWORK_NORMAL\n", __FUNCTION__, __LINE__);
+            url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_NORMAL, "udp");
+            network_disconnect = 0;
+        }
+
         left = av_fifo_space(s->fifo);
         /* No Space left, error, what do we do now */
         if(left < len + 4) {

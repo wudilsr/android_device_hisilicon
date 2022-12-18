@@ -11,15 +11,14 @@ config  LIB_JPEG_VERSION_9A
         bool "libjpeg-9a"
 endchoice
 
-choice
-        prompt "png version"
-        default LIB_PNG_VERSION_1_4_0
 
-config  LIB_PNG_VERSION_1_4_0
-        bool "libpng-1.4.0"
-config  LIB_PNG_VERSION_1_6_16
-        bool "libpng-1.6.16"
-endchoice
+config HI_DIRECTFB_MULTI_SUPPORT
+    bool "DirectFB Multi Process support"
+    default n
+
+config HI_DIRECTFB_DEBUG_SUPPORT
+    bool "DirectFB Debug support"
+    default n
 
 config  HIFB_STEREO3D_SUPPORT
         bool "Hardware Stereo3d Support"

@@ -1,7 +1,7 @@
 ###############################################################################
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
-
+include $(SDK_DIR)/Android.def
 LOCAL_C_INCLUDES +=                                           \
     external/jpeg                                             \
     external/skia/src/images                                  \
@@ -33,6 +33,15 @@ LOCAL_MODULE := libcamera_common
 
 LOCAL_MODULE_TAGS := optional
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
+
+
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+    LOCAL_CFLAGS += -DHI_TEE_SUPPORT
+endif
+
+ifeq ($(CFG_HI_TVP_SUPPORT),y)
+     LOCAL_CFLAGS += -DHI_TEE_SUPPORT
+endif
 
 include $(BUILD_STATIC_LIBRARY)
 ###############################################################################

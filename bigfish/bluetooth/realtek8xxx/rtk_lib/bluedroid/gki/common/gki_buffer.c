@@ -73,6 +73,9 @@ static void gki_init_free_queue (UINT8 id, UINT16 size, UINT16 total, void *p_me
         p_cb->freeq[id].p_first = hdr;
         for (i = 0; i < total; i++)
         {
+#ifdef BLUETOOTH_RTK_DBG_MEM
+            memset(hdr->func, 0, sizeof(hdr->func));
+#endif
             hdr->task_id = GKI_INVALID_TASK;
             hdr->q_id    = id;
             hdr->status  = BUF_STATUS_FREE;
@@ -347,8 +350,6 @@ void GKI_init_q (BUFFER_Q *p_q)
 
     return;
 }
-
-
 /*******************************************************************************
 **
 ** Function         GKI_getbuf
@@ -365,7 +366,11 @@ void GKI_init_q (BUFFER_Q *p_q)
 ** Returns          A pointer to the buffer, or NULL if none available
 **
 *******************************************************************************/
+#ifdef BLUETOOTH_RTK_DBG_MEM
+void *RTKBT_GKI_getbuf (UINT16 size, const char* func, int line)
+#else
 void *GKI_getbuf (UINT16 size)
+#endif
 {
     UINT8         i;
     FREE_QUEUE_T  *Q;
@@ -427,13 +432,24 @@ void *GKI_getbuf (UINT16 size)
             p_hdr->status  = BUF_STATUS_UNLINKED;
             p_hdr->p_next  = NULL;
             p_hdr->Type    = 0;
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+            strncpy(p_hdr->func, func, sizeof(p_hdr->func)-1);
+            p_hdr->line = line;
+            p_hdr->size = size;
+            p_hdr->ts = time(0);
+#endif
             return ((void *) ((UINT8 *)p_hdr + BUFFER_HDR_SIZE));
         }
+#ifdef BLUETOOTH_RTK_DBG_MEM
+        else
+            RTKBT_GKI_DumpMemStatus(1<<i);
+#endif
     }
 
     GKI_enable();
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+    RTKBT_GKI_DumpMemStatus(0xffffffff);
+#endif
     GKI_exception (GKI_ERROR_OUT_OF_BUFFERS, "getbuf: out of buffers");
     return (NULL);
 }
@@ -454,7 +470,11 @@ void *GKI_getbuf (UINT16 size)
 ** Returns          A pointer to the buffer, or NULL if none available
 **
 *******************************************************************************/
+#ifdef BLUETOOTH_RTK_DBG_MEM
+void *RTKBT_GKI_getpoolbuf (UINT8 pool_id, const char* func, int line)
+#else
 void *GKI_getpoolbuf (UINT8 pool_id)
+#endif
 {
     FREE_QUEUE_T  *Q;
     BUFFER_HDR_T  *p_hdr;
@@ -495,7 +515,12 @@ void *GKI_getpoolbuf (UINT8 pool_id)
         p_hdr->status  = BUF_STATUS_UNLINKED;
         p_hdr->p_next  = NULL;
         p_hdr->Type    = 0;
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+        strncpy(p_hdr->func, func, sizeof(p_hdr->func)-1);
+        p_hdr->line = line;
+        p_hdr->size = -1;
+        p_hdr->ts = time(0);
+#endif
         return ((void *) ((UINT8 *)p_hdr + BUFFER_HDR_SIZE));
     }
 
@@ -506,7 +531,6 @@ void *GKI_getpoolbuf (UINT8 pool_id)
     return (GKI_getbuf(p_cb->freeq[pool_id].size));
 
 }
-
 /*******************************************************************************
 **
 ** Function         GKI_freebuf
@@ -560,6 +584,9 @@ void GKI_freebuf (void *p_buf)
     p_hdr->p_next  = NULL;
     p_hdr->status  = BUF_STATUS_FREE;
     p_hdr->task_id = GKI_INVALID_TASK;
+#ifdef BLUETOOTH_RTK_DBG_MEM
+    memset(p_hdr->func, 0, sizeof(p_hdr->func));
+#endif
     if (Q->cur_cnt > 0)
         Q->cur_cnt--;
 

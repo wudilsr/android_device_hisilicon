@@ -49,6 +49,21 @@ CMD({&cw_go, NULL},
 static int do_boot(struct cmd_t *cmd)
 {
 	uint32 addr = param_int32(cmd, 1);
+
+#ifdef CONFIG_TEE_SUPPORT
+	/* Load Trustedcore OS */
+	char *buf = (char *)addr;
+	if (is_trustedcore_img(buf)) {
+		return do_load_secure_os((u32)buf, 0, 0, 0, NULL);
+	}
+#ifdef CONFIG_SUPPORT_CA_RELEASE
+	else if (!memcmp((char *)buf, HI_ADVCA_MAGIC, HI_ADVCA_MAGIC_SIZE) && is_trustedcore_img(buf + HI_ADVCA_HEADER_SIZE)) {
+		printf("Boot Hisilicon ADVCA SecureOS Image ...\n");
+		return do_load_secure_os((u32)buf, HI_ADVCA_HEADER_SIZE, 0, 0, NULL);
+	}
+#endif
+#endif
+
 	kern_load((char *)addr);
 	return 0;
 }

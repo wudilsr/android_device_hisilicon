@@ -13,6 +13,7 @@
 
 #include "hi_type.h"
 #include "hi_flash.h"
+#include "loader_upgrade.h"
 
 #ifdef __cplusplus
  #if __cplusplus
@@ -20,15 +21,17 @@ extern "C" {
  #endif
 #endif /* __cplusplus */
 
+#define LOADER_BURN_SIZE_PERTIME    (0xA00000)
 /*
  * basic burn definition
  */
 typedef struct tagFLASH_DATA_INFO_S
 {
-    HI_HANDLE         hFlashHandle;
+    HI_HANDLE           hFlashHandle;
     HI_U32              u32PartitionId;
     HI_U64              u64PartitionSize;
-    HI_BOOL            bErased;
+    HI_U64              u64PartitionStartAddr;
+    HI_BOOL             bErased;
     HI_FLASH_TYPE_E     enFlashType;
     HI_U32              u32FlashBlockSize;
     HI_U32              u32DataBlockSize;
@@ -43,7 +46,7 @@ typedef struct tagFLASH_DATA_INFO_S
 } FLASH_DATA_INFO_S;
 
 /*
- * export public burn interface 
+ * export public burn interface
  */
 HI_S32 LOADER_BURN_Init(LOADER_PARTITION_INFO_S * pstPartInfo, HI_U32 u32PartNum, LOADER_OSD_CALLBACK pfnOsdCallback);
 HI_S32 LOADER_BURN_WriteData(LOADER_DATA_S *pstPartInfo, HI_U32 u32PartNum);

@@ -1028,25 +1028,46 @@ UINT16 SDP_GetDiRecord( UINT8 get_record_index, tSDP_DI_GET_RECORD *p_device_inf
 
         /* ClientExecutableURL is optional */
         p_curr_attr = SDP_FindAttributeInRec( p_curr_record, ATTR_ID_CLIENT_EXE_URL );
+#ifdef BLUETOOTH_RTK
+        if ( p_curr_attr ) {
+            UINT16 attr_len = SDP_DISC_ATTR_LEN(p_curr_attr->attr_len_type);
+            SDP_TRACE_WARNING1("SDP_GetDiRecord ATTR_ID_CLIENT_EXE_URL attr_len = %d", attr_len);
+            memcpy(p_device_info->rec.client_executable_url, (char *)p_curr_attr->attr_value.v.array, attr_len);}
+#else
         if ( p_curr_attr )
             BCM_STRNCPY_S( p_device_info->rec.client_executable_url, sizeof(p_device_info->rec.client_executable_url),
                            (char *)p_curr_attr->attr_value.v.array, SDP_MAX_ATTR_LEN );
+#endif
         else
             p_device_info->rec.client_executable_url[0] = '\0';
 
         /* Service Description is optional */
         p_curr_attr = SDP_FindAttributeInRec( p_curr_record, ATTR_ID_SERVICE_DESCRIPTION );
+#ifdef BLUETOOTH_RTK
+        if ( p_curr_attr ) {
+            UINT16 attr_len = SDP_DISC_ATTR_LEN(p_curr_attr->attr_len_type);
+            SDP_TRACE_WARNING1("SDP_GetDiRecord ATTR_ID_SERVICE_DESCRIPTION attr_len = %d", attr_len);
+            memcpy(p_device_info->rec.service_description, (char *)p_curr_attr->attr_value.v.array, attr_len);}
+#else
         if ( p_curr_attr )
             BCM_STRNCPY_S( p_device_info->rec.service_description, sizeof(p_device_info->rec.service_description),
                            (char *)p_curr_attr->attr_value.v.array, SDP_MAX_ATTR_LEN );
+#endif
         else
             p_device_info->rec.service_description[0] = '\0';
 
         /* DocumentationURL is optional */
         p_curr_attr = SDP_FindAttributeInRec( p_curr_record, ATTR_ID_DOCUMENTATION_URL );
+#ifdef BLUETOOTH_RTK
+        if ( p_curr_attr ) {
+            UINT16 attr_len = SDP_DISC_ATTR_LEN(p_curr_attr->attr_len_type);
+            SDP_TRACE_WARNING1("SDP_GetDiRecord ATTR_ID_DOCUMENTATION_URL attr_len = %d", attr_len);
+            memcpy(p_device_info->rec.documentation_url, (char *)p_curr_attr->attr_value.v.array, attr_len);}
+#else
         if ( p_curr_attr )
             BCM_STRNCPY_S( p_device_info->rec.documentation_url, sizeof(p_device_info->rec.documentation_url),
                            (char *)p_curr_attr->attr_value.v.array, SDP_MAX_ATTR_LEN );
+#endif
         else
             p_device_info->rec.documentation_url[0] = '\0';
 

@@ -1,0 +1,191 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUG_ON	media-mem.c	63;"	d	file:
+HIL_MMB_FMT_S	media-mem.c	76;"	d	file:
+HIL_MMB_MAP2KERN	media-mem.c	81;"	d	file:
+HIL_MMB_MAP2KERN_CACHED	media-mem.c	82;"	d	file:
+HIL_MMB_MAP2UK	media-mem.c	83;"	d	file:
+HIL_MMB_MAP2UK_CACHED	media-mem.c	84;"	d	file:
+HIL_MMB_NAME_LEN	media-mem.c	100;"	d	file:
+HIL_MMB_NAME_LEN	mmz-userdev.h	5;"	d
+HIL_MMB_RELEASED	media-mem.c	85;"	d	file:
+HIL_MMZ_FMT_S	media-mem.c	73;"	d	file:
+HIL_MMZ_NAME_LEN	media-mem.c	88;"	d	file:
+HIL_MMZ_NAME_LEN	mmz-userdev.h	4;"	d
+HI_MMZ_BUF_S	mmz_struct.h	/^}HI_MMZ_BUF_S;$/;"	t	typeref:struct:hiMMZ_BUF_S
+HI_TEE_MMZ_Alloc	mmz_ext.c	/^mmb_addr_t HI_TEE_MMZ_Alloc(const char *name, int size, unsigned int alloc_type, const char *zone_name)$/;"	f
+HI_TEE_MMZ_Delete	mmz_ext.c	/^void HI_TEE_MMZ_Delete(mmb_addr_t addr)$/;"	f
+HI_TEE_MMZ_Flush	mmz_ext.c	/^int HI_TEE_MMZ_Flush(unsigned long addr)$/;"	f
+HI_TEE_MMZ_Remap	mmz_ext.c	/^void *HI_TEE_MMZ_Remap(mmb_addr_t addr)$/;"	f
+HI_TEE_MMZ_RemapCached	mmz_ext.c	/^void *HI_TEE_MMZ_RemapCached(mmb_addr_t addr)$/;"	f
+HI_TEE_MMZ_Unmap	mmz_ext.c	/^int HI_TEE_MMZ_Unmap(void *mapped_addr)$/;"	f
+INIT_LIST_HEAD	list.h	/^static inline void INIT_LIST_HEAD(struct list_head *list)$/;"	f
+IOC_MMB_ADD_REF	mmz-userdev.h	73;"	d
+IOC_MMB_ALLOC	mmz-userdev.h	58;"	d
+IOC_MMB_ALLOC_SHARE	mmz-userdev.h	62;"	d
+IOC_MMB_ALLOC_SHM_COM	mmz-userdev.h	63;"	d
+IOC_MMB_ATTR	mmz-userdev.h	59;"	d
+IOC_MMB_DEC_REF	mmz-userdev.h	74;"	d
+IOC_MMB_FLUSH_DCACHE	mmz-userdev.h	76;"	d
+IOC_MMB_FLUSH_DCACHE_DIRTY	mmz-userdev.h	78;"	d
+IOC_MMB_FORCE_FREE	mmz-userdev.h	65;"	d
+IOC_MMB_FREE	mmz-userdev.h	60;"	d
+IOC_MMB_GET_SHM_COM	mmz-userdev.h	64;"	d
+IOC_MMB_TEST_CACHE	mmz-userdev.h	80;"	d
+IOC_MMB_USER_GETPHYADDR	mmz-userdev.h	70;"	d
+IOC_MMB_USER_REMAP	mmz-userdev.h	67;"	d
+IOC_MMB_USER_REMAP_CACHED	mmz-userdev.h	68;"	d
+IOC_MMB_USER_UNMAP	mmz-userdev.h	69;"	d
+LIST_HEAD	list.h	34;"	d
+LIST_HEAD_INIT	list.h	32;"	d
+LIST_POISON1	list.h	113;"	d
+LIST_POISON2	list.h	114;"	d
+MACH_MMB	media-mem.c	47;"	d	file:
+MAX_BUFFER_NAME_SIZE	mmz_struct.h	35;"	d
+MMZ_DBG_LEVEL	media-mem.c	31;"	d	file:
+MMZ_DEBUG	debug.c	3;"	d	file:
+MMZ_DEL	mmz-user.c	/^int MMZ_DEL(unsigned long addr)$/;"	f
+MMZ_FLUSH	mmz-user.c	/^int MMZ_FLUSH(unsigned long addr)$/;"	f
+MMZ_FREE	mmz-user.c	/^int MMZ_FREE(HI_MMZ_BUF_S *pBuf)$/;"	f
+MMZ_GRAIN	media-mem.c	41;"	d	file:
+MMZ_MALLOC	mmz-user.c	/^int MMZ_MALLOC(HI_MMZ_BUF_S *pBuf)$/;"	f
+MMZ_MAP	mmz-user.c	/^int MMZ_MAP(unsigned long addr, unsigned long cached)$/;"	f
+MMZ_NEW	mmz-user.c	/^int MMZ_NEW(HI_MMZ_BUF_S *pBuf, char *mmz_name, char *mmb_name)$/;"	f
+MMZ_UNMAP	mmz-user.c	/^int MMZ_UNMAP(unsigned long addr)$/;"	f
+NON_SECURE_MEM	media-mem.h	48;"	d
+NON_SECURE_MEM	mmz_struct.h	40;"	d
+PRINTK_CA	media-mem.h	34;"	d
+PRINTK_CA	media-mem.h	36;"	d
+SECTION_SIZE	media-mem.c	40;"	d	file:
+SECURE_MEM	media-mem.h	44;"	d
+SECURE_MEM	mmz_struct.h	39;"	d
+SZ_1K	media-mem.c	72;"	d	file:
+TEE_IsNonSecMem	mmz-user.c	/^int TEE_IsNonSecMem(unsigned long phys_addr, unsigned long size)$/;"	f
+TEE_IsSecMem	mmz-user.c	/^int TEE_IsSecMem(unsigned long phys_addr, unsigned long size)$/;"	f
+_LIST_H	list.h	2;"	d
+__ASM_ARCH_MEDIA_MEM_H	media-mem.h	22;"	d
+__MMZ_STRUCT_H__	mmz_struct.h	19;"	d
+__MMZ_USERDEV_H	mmz-userdev.h	2;"	d
+__list_add	list.h	/^static inline void __list_add(struct list_head *new,$/;"	f
+__list_del	list.h	/^static inline void __list_del(struct list_head * prev, struct list_head * next)$/;"	f
+__list_del_entry	list.h	/^static inline void __list_del_entry(struct list_head *entry)$/;"	f
+_do_mmb_alloc	media-mem.c	/^static int _do_mmb_alloc(hil_mmb_t *mmb)$/;"	f	file:
+_find_fixed_region	media-mem.c	/^static unsigned long _find_fixed_region(unsigned long *region_len, hil_mmz_t *mmz,$/;"	f	file:
+alloc_type	media-mem.c	/^    unsigned int alloc_type;$/;"	m	struct:hil_media_memory_zone	file:
+alloc_type	mmz_struct.h	/^    unsigned int alloc_type;        \/**<Indicate to alloc mem from the non-secure or secure memory*\/ \/**<CNcomment:  指示从安全内存还是非安全内存中分配 *\/$/;"	m	struct:hiMMZ_BUF_S
+anony	media-mem.c	/^static int anony = 0;$/;"	v	file:
+bufname	mmz_struct.h	/^    char bufname[MAX_BUFFER_NAME_SIZE];  \/**<Strings of an MMZ buffer name*\/ \/**<CNcomment:  MMZ buffer名字字符串 *\/$/;"	m	struct:hiMMZ_BUF_S
+bufsize	mmz_struct.h	/^    unsigned int  bufsize;                \/**<Size of an MMZ buffer*\/ \/**<CNcomment:  MMZ buffer大小 *\/$/;"	m	struct:hiMMZ_BUF_S
+call_debug	debug.c	/^int call_debug(unsigned long arg0, unsigned long arg1, unsigned long arg2, unsigned long arg3)$/;"	f
+container_of	list.h	17;"	d
+delayed_free	mmz-userdev.h	/^            unsigned long delayed_free :1;$/;"	m	struct:mmb_info::__anon1::__anon2
+delete_mmb	mmz_intf.c	/^void delete_mmb(mmb_addr_t addr)$/;"	f
+delete_zone	mmz_intf.c	/^void delete_zone(void *zone)$/;"	f
+destructor	media-mem.c	/^    void (*destructor)(void *);$/;"	m	struct:hil_media_memory_zone	file:
+dirty_area	mmz-userdev.h	/^struct dirty_area {$/;"	s
+dirty_phys_start	mmz-userdev.h	/^    unsigned long dirty_phys_start;    \/* dirty physical address *\/$/;"	m	struct:dirty_area
+dirty_size	mmz-userdev.h	/^    unsigned long dirty_size;$/;"	m	struct:dirty_area
+dirty_virt_start	mmz-userdev.h	/^    unsigned long dirty_virt_start; \/* dirty virtual  address,$/;"	m	struct:dirty_area
+flags	media-mem.c	/^    unsigned long flags;$/;"	m	struct:hil_media_memory_block	file:
+flags	mmz-userdev.h	/^            unsigned long flags :12;\/* MAP_SHARED or MAP_PRIVATE *\/$/;"	m	struct:mmb_info::__anon1::__anon2
+flush_mmb	mmz_intf.c	/^int flush_mmb(unsigned long addr)$/;"	f
+hiMMZ_BUF_S	mmz_struct.h	/^typedef struct hiMMZ_BUF_S$/;"	s
+hil_media_memory_block	media-mem.c	/^struct hil_media_memory_block {$/;"	s	file:
+hil_media_memory_zone	media-mem.c	/^struct hil_media_memory_zone {$/;"	s	file:
+hil_mmb_alloc	media-mem.c	/^void *hil_mmb_alloc(const char *name, unsigned long size,$/;"	f
+hil_mmb_flush_l2cached	media-mem.c	/^void hil_mmb_flush_l2cached(void *_mmb)$/;"	f
+hil_mmb_fmt_arg	media-mem.c	77;"	d	file:
+hil_mmb_free	media-mem.c	/^int hil_mmb_free(void *_mmb)$/;"	f
+hil_mmb_getby_kvirt	media-mem.c	/^void *hil_mmb_getby_kvirt(void *virt)$/;"	f
+hil_mmb_getby_phys	media-mem.c	/^void *hil_mmb_getby_phys(unsigned long addr)$/;"	f
+hil_mmb_kvirt	media-mem.c	/^void *hil_mmb_kvirt(void *_mmb)$/;"	f
+hil_mmb_map2kern	media-mem.c	/^void *hil_mmb_map2kern(void *_mmb)$/;"	f
+hil_mmb_map2kern_cached	media-mem.c	/^void *hil_mmb_map2kern_cached(void *_mmb)$/;"	f
+hil_mmb_map2uk	media-mem.c	/^void *hil_mmb_map2uk(void *_mmb)$/;"	f
+hil_mmb_map2uk_cached	media-mem.c	/^void *hil_mmb_map2uk_cached(void *_mmb)$/;"	f
+hil_mmb_phys	media-mem.c	/^unsigned long hil_mmb_phys(void *_mmb)$/;"	f
+hil_mmb_t	media-mem.c	/^typedef struct hil_media_memory_block hil_mmb_t;$/;"	t	typeref:struct:hil_media_memory_block	file:
+hil_mmb_unmap	media-mem.c	/^int hil_mmb_unmap(void *_mmb)$/;"	f
+hil_mmz_create	media-mem.c	/^void *hil_mmz_create(const char *name, unsigned int alloc_type,$/;"	f
+hil_mmz_destroy	media-mem.c	/^int hil_mmz_destroy(void *mmz)$/;"	f
+hil_mmz_dump	media-mem.c	/^void hil_mmz_dump(void)$/;"	f
+hil_mmz_fmt_arg	media-mem.c	74;"	d	file:
+hil_mmz_register	media-mem.c	/^int hil_mmz_register(void *mmz)$/;"	f
+hil_mmz_t	media-mem.c	/^typedef struct hil_media_memory_zone hil_mmz_t;$/;"	t	typeref:struct:hil_media_memory_zone	file:
+hil_mmz_unregister	media-mem.c	/^int hil_mmz_unregister(void *mmz)$/;"	f
+hil_tee_is_nonsec_mem	media-mem.c	/^int hil_tee_is_nonsec_mem(unsigned long phy_addr, unsigned long size)$/;"	f
+hil_tee_is_sec_mem	media-mem.c	/^int hil_tee_is_sec_mem(unsigned long phy_addr, unsigned long size)$/;"	f
+kernel_viraddr	mmz_struct.h	/^    char  *kernel_viraddr;         \/**<Kernel-state virtual address of an MMZ buffer*\/ \/**<CNcomment:  MMZ buffer内核态虚拟地址 *\/$/;"	m	struct:hiMMZ_BUF_S
+kvirt	media-mem.c	/^    void *kvirt;$/;"	m	struct:hil_media_memory_block	file:
+length	media-mem.c	/^    unsigned long length;$/;"	m	struct:hil_media_memory_block	file:
+list	media-mem.c	/^    struct list_head list;$/;"	m	struct:hil_media_memory_block	typeref:struct:hil_media_memory_block::list_head	file:
+list	media-mem.c	/^    struct list_head list;$/;"	m	struct:hil_media_memory_zone	typeref:struct:hil_media_memory_zone::list_head	file:
+list	mmz-userdev.h	/^    struct list_head list;$/;"	m	struct:mmb_info	typeref:struct:mmb_info::list_head
+list_add	list.h	/^static inline void list_add(struct list_head *new, struct list_head *head)$/;"	f
+list_add_tail	list.h	/^static inline void list_add_tail(struct list_head *new, struct list_head *head)$/;"	f
+list_del	list.h	/^static inline void list_del(struct list_head *entry)$/;"	f
+list_empty	list.h	/^static inline int list_empty(const struct list_head *head)$/;"	f
+list_entry	list.h	145;"	d
+list_first_entry	list.h	156;"	d
+list_for_each_entry	list.h	165;"	d
+list_head	list.h	/^struct list_head {$/;"	s
+list_is_last	list.h	/^static inline int list_is_last(const struct list_head *list,$/;"	f
+map_cached	mmz-userdev.h	/^            unsigned long map_cached :1;$/;"	m	struct:mmb_info::__anon1::__anon2
+map_ref	media-mem.c	/^    int map_ref;$/;"	m	struct:hil_media_memory_block	file:
+map_ref	mmz-userdev.h	/^    int map_ref;$/;"	m	struct:mmb_info
+mapped	mmz-userdev.h	/^    void *mapped;           \/* userspace mapped ptr *\/$/;"	m	struct:mmb_info
+mem_copy	mmz-user.c	/^int mem_copy(unsigned long va_src, unsigned long va_dest, int size)$/;"	f
+mmb	mmz-userdev.h	/^    hil_mmb_t *mmb;$/;"	m	struct:mmb_info
+mmb_alloc	media-mem.c	/^static hil_mmb_t *mmb_alloc(const char *name, unsigned long size, unsigned int alloc_type,$/;"	f	file:
+mmb_free	media-mem.c	/^static int mmb_free(hil_mmb_t *mmb)$/;"	f	file:
+mmb_info	mmz-userdev.h	/^struct mmb_info {$/;"	s
+mmb_list	media-mem.c	/^    struct list_head mmb_list;$/;"	m	struct:hil_media_memory_zone	typeref:struct:hil_media_memory_zone::list_head	file:
+mmb_map2kern	media-mem.c	/^static void *mmb_map2kern(hil_mmb_t *mmb, unsigned long cached)$/;"	f	file:
+mmb_map2uk	media-mem.c	/^static void *mmb_map2uk(hil_mmb_t *mmb, unsigned long cached)$/;"	f	file:
+mmb_name	mmz-userdev.h	/^    char mmb_name[HIL_MMB_NAME_LEN];$/;"	m	struct:mmb_info
+mmb_ref	mmz-userdev.h	/^    int mmb_ref;$/;"	m	struct:mmb_info
+mmb_remap_cached	media-mem.c	/^static void *mmb_remap_cached(unsigned long pa, unsigned long size)$/;"	f	file:
+mmb_remap_nocache	media-mem.c	/^static void *mmb_remap_nocache(unsigned long pa, unsigned long size)$/;"	f	file:
+mmb_remap_uk_cached	media-mem.c	/^static void *mmb_remap_uk_cached(unsigned long pa, unsigned long size)$/;"	f	file:
+mmb_remap_uk_nocache	media-mem.c	/^static void *mmb_remap_uk_nocache(unsigned long pa, unsigned long size)$/;"	f	file:
+mmb_unmap	media-mem.c	/^static void mmb_unmap(void * va, unsigned long size, unsigned long flags)$/;"	f	file:
+mmz_align2	media-mem.c	43;"	d	file:
+mmz_alloc	media-mem.c	/^static void *mmz_alloc(unsigned long size)$/;"	f	file:
+mmz_check	media-mem.c	/^static int mmz_check(hil_mmz_t *zone)$/;"	f	file:
+mmz_dump	mmz_intf.c	/^void mmz_dump(void)$/;"	f
+mmz_free	media-mem.c	/^static void mmz_free(void *memblock)$/;"	f	file:
+mmz_grain_align	media-mem.c	44;"	d	file:
+mmz_length2grain	media-mem.c	45;"	d	file:
+mmz_name	mmz-userdev.h	/^    char mmz_name[HIL_MMZ_NAME_LEN];$/;"	m	struct:mmb_info
+mmz_trace	media-mem.c	32;"	d	file:
+mmz_trace_func	media-mem.c	38;"	d	file:
+name	media-mem.c	/^    char name[HIL_MMB_NAME_LEN];$/;"	m	struct:hil_media_memory_block	file:
+name	media-mem.c	/^    char name[HIL_MMZ_NAME_LEN];$/;"	m	struct:hil_media_memory_zone	file:
+nbytes	media-mem.c	/^    unsigned long nbytes;$/;"	m	struct:hil_media_memory_zone	file:
+new_mmb	mmz_intf.c	/^mmb_addr_t new_mmb(const char *name, int size, unsigned int alloc_type,$/;"	f
+new_zone	mmz_intf.c	/^void *new_zone(const char *name, unsigned long phys_start,$/;"	f
+next	list.h	/^        struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+offsetof	list.h	8;"	d
+overflow_threshold	mmz_struct.h	/^    unsigned int  overflow_threshold;     \/**<Overflow threshold of an MMZ buffer, in percentage. For example, the value 100 indicates 100%.*\/ \/**<CNcomment:  MMZ buffer上溢水线，按百分比设置，例如: 100 indicates 100%.*\/$/;"	m	struct:hiMMZ_BUF_S
+phyaddr	mmz_struct.h	/^    unsigned int  phyaddr;                \/**<Physical address of an MMZ buffer*\/ \/**<CNcomment:  MMZ buffer物理地址 *\/$/;"	m	struct:hiMMZ_BUF_S
+phys_addr	media-mem.c	/^    unsigned long phys_addr;$/;"	m	struct:hil_media_memory_block	file:
+phys_addr	mmz-userdev.h	/^    unsigned long phys_addr;    \/* phys-memory address *\/$/;"	m	struct:mmb_info
+phys_start	media-mem.c	/^    unsigned long phys_start;$/;"	m	struct:hil_media_memory_zone	file:
+prev	list.h	/^        struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::
+prot	mmz-userdev.h	/^            unsigned long prot  :8; \/* PROT_READ or PROT_WRITE *\/$/;"	m	struct:mmb_info::__anon1::__anon2
+remap_mmb	mmz_intf.c	/^void *remap_mmb(mmb_addr_t addr)$/;"	f
+remap_mmb_cached	mmz_intf.c	/^void *remap_mmb_cached(mmb_addr_t addr)$/;"	f
+remap_mmb_uk	mmz_intf.c	/^void *remap_mmb_uk(mmb_addr_t addr)$/;"	f
+remap_mmb_uk_cached	mmz_intf.c	/^void *remap_mmb_uk_cached(mmb_addr_t addr)$/;"	f
+reserved	mmz-userdev.h	/^            unsigned long reserved :8; \/* reserved, do not use *\/$/;"	m	struct:mmb_info::__anon1::__anon2
+size	mmz-userdev.h	/^    unsigned long size;     \/* length of memory you need, in bytes *\/$/;"	m	struct:mmb_info
+strlcpy	media-mem.c	/^unsigned long strlcpy(char *dest, const char *src, unsigned long size)$/;"	f
+underflow_threshold	mmz_struct.h	/^    unsigned int  underflow_threshold;    \/**<Underflow threshold of an MMZ buffer, in percentage. For example, the value 0 indicates 0%.*\/ \/**<CNcomment:  MMZ buffer下溢水线，按百分比设置，例如: 0 indicates 0%.*\/$/;"	m	struct:hiMMZ_BUF_S
+unmap_mmb	mmz_intf.c	/^int unmap_mmb(void *mapped_addr)$/;"	f
+user_viraddr	mmz_struct.h	/^    char  *user_viraddr;           \/**<User-state virtual address of an MMZ buffer*\/ \/**<CNcomment:  MMZ buffer用户态虚拟地址 *\/$/;"	m	struct:hiMMZ_BUF_S
+w32_stuf	mmz-userdev.h	/^        unsigned long w32_stuf;$/;"	m	union:mmb_info::__anon1
+zone	media-mem.c	/^    struct hil_media_memory_zone *zone;$/;"	m	struct:hil_media_memory_block	typeref:struct:hil_media_memory_block::hil_media_memory_zone	file:

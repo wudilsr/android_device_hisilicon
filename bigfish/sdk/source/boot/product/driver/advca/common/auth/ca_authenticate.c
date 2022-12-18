@@ -17,6 +17,8 @@ History       :
 
 #ifndef HI_ADVCA_TYPE_VERIMATRIX
 #include "alg.h"
+#else
+#include "vmx_auth.h"
 #endif
 
 #ifdef HI_MINIBOOT_SUPPORT
@@ -38,7 +40,10 @@ History       :
 #undef printf
 #include "ca_authdefine.h"
 #include "ca_flash.h"
-/* for printf end */
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+#include "vmx_3rd_auth.h"
+#endif
 
 #ifndef HI_ADVCA_TYPE_VERIMATRIX
 
@@ -2280,6 +2285,9 @@ HI_S32 HI_CA_CommonVerify_BootPara(HI_U32 u32ParaPartionAddr, HI_U32 u32ParaPari
     return ret;
 }
 #else //#ifndef HI_ADVCA_TYPE_VERIMATRIX
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+static int g_vmx_reboot_flag = 0;
+#endif
 
 #ifdef HI_MINIBOOT_SUPPORT
 extern int reboot();
@@ -2343,15 +2351,15 @@ static HI_S32 VMX_PrintBuffer(const HI_CHAR *string, HI_U8 *pu8Input, HI_U32 u32
 
     if ( NULL != string )
     {
-        printf("%s\n", string);
+        HI_SIMPLEINFO_CA("%s\n", string);
     }
 
     for ( i = 0 ; i < u32Length; i++ )
     {
-        if( (i % 16 == 0) && (i != 0)) printf("\n");
-        printf("%02x ", pu8Input[i]);
+        if( (i % 16 == 0) && (i != 0)) HI_SIMPLEINFO_CA("\n");
+        HI_SIMPLEINFO_CA("%02x ", pu8Input[i]);
     }
-    printf("\n");
+    HI_SIMPLEINFO_CA("\n");
 
     return HI_SUCCESS;
 }
@@ -2361,6 +2369,27 @@ static HI_S32 VMX_PrintBuffer(const HI_CHAR *string, HI_U8 *pu8Input, HI_U32 u32
 #define VMX_IMG_OFFSET  (VMX_SIG_OFFSET + VMX_SIG_LENGTH)
 #define VMX_HEAD_LENGTH (VMX_IMG_OFFSET)
 
+
+
+//The address below is used for image verify
+#if defined(HI_ANDROID_BOOT_SUPPORT)
+#define VMX_VERIFY_TEMP_ADDR    (0x20000000)
+#else
+#define VMX_VERIFY_TEMP_ADDR    (0x8000000)
+#endif
+
+
+#if defined(CHIP_TYPE_hi3716cv200) || defined(CHIP_TYPE_hi3719cv100)
+#define KERNEL_VERIFY_ADDR_VMX  (0x4100000)
+#define LOADER_VERIFY_ADDR_VMX  (0x4100000)
+#else
+#define KERNEL_VERIFY_ADDR_VMX  (0x1FFFFC0 - VMX_HEAD_LENGTH)
+#define LOADER_VERIFY_ADDR_VMX  (0x2100000)
+#endif
+#define SYSTEM_VERIFY_ADDR_VMX  (0x4100000)
+
+#define SOS_DEFAULT_LOAD_ADDR (0x6B700000)
+
 static HI_VOID printbuffer(HI_U8 *pu8Buf, HI_U32 u32Length)
 {
     HI_U32 i;
@@ -2369,16 +2398,216 @@ static HI_VOID printbuffer(HI_U8 *pu8Buf, HI_U32 u32Length)
     {
         if(i % 16 == 0 && i != 0)
         {
-            printf("\n");
+            HI_SIMPLEINFO_CA("\n");
         }
-        printf("0x%02X, ", pu8Buf[i]);
+        HI_SIMPLEINFO_CA("0x%02X, ", pu8Buf[i]);
     }
-    printf("\n");
+    HI_SIMPLEINFO_CA("\n");
 
     return;
 }
 
-static VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr)
+
+HI_S32 hi_bootargs_append(HI_CHAR* appendStr)
+{
+    HI_S32 Ret;
+    HI_CHAR *pTmp = HI_NULL;
+    HI_CHAR Bootarg[1024] = {0};
+    HI_U32 mem;
+    HI_U32 stride;
+    HI_U32 tmp;
+
+    pTmp = getenv("bootargs");
+    if(pTmp)
+    {
+        snprintf(Bootarg, 1024, "%s %s" ,pTmp, appendStr);
+        setenv("bootargs", Bootarg);
+        return HI_SUCCESS;
+    }
+    else
+    {
+        return HI_FAILURE;
+    }
+
+}
+
+extern unsigned int get_ddr_size(void);
+
+static HI_CHAR *getBootargs(HI_VOID)
+{
+    HI_CHAR *bootargs = HI_NULL;
+    HI_U32  size = 0;
+
+    size = get_ddr_size();
+    switch (size)
+    {
+    case 0x20000000: //512M
+        bootargs = getenv("bootargs_512M");
+        break;
+    case 0x30000000: //768M
+        bootargs = getenv("bootargs_768M");
+        break;
+    case 0x40000000: //1G
+        bootargs = getenv("bootargs_1G");
+        break;
+    case 0x60000000: //1536M
+        bootargs = getenv("bootargs_1536M");
+        break;
+    case 0x80000000: //2G
+        bootargs = getenv("bootargs_2G");
+        break;
+    case 0xF0000000: //3840M
+        bootargs = getenv("bootargs_3840M");
+        break;
+    default:
+        HI_ERR_CA("Get defalut bootargs param\n");
+        bootargs = getenv("bootargs");
+        break;
+    }
+
+    return bootargs;
+}
+
+static HI_U32 getSecOsLoadAddr(HI_VOID)
+{
+    HI_CHAR *bootargs;
+    HI_U32 addr = 0;
+    HI_CHAR *loadaddr = HI_NULL;
+
+    bootargs = getBootargs();
+    if (HI_NULL == bootargs)
+    {
+        HI_ERR_CA("Get bootargs error,return default load addr:%x\n", SOS_DEFAULT_LOAD_ADDR);
+        return SOS_DEFAULT_LOAD_ADDR;
+    }
+
+    loadaddr = strstr(bootargs, "secureos_load_addr=");
+    if (HI_NULL == loadaddr)
+    {
+        HI_ERR_CA("Get secureos load addr error,return default load addr:%x\n", SOS_DEFAULT_LOAD_ADDR);
+        return SOS_DEFAULT_LOAD_ADDR;
+    }
+
+    addr = strtoul(loadaddr + strlen("secureos_load_addr="), NULL, 0);
+
+    return (addr == 0 ? SOS_DEFAULT_LOAD_ADDR : addr);
+}
+
+static HI_S32 VMX_Auth_Bootargs(HI_U8 *ptr, HI_U8 *ptr_tmp, HI_U32 offset, HI_U32 size)
+{
+    HI_U32 image_len = 0;
+    HI_U8 errorCode = 0;
+    HI_S32 ret;
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+    VMX_APPLICATION_HEADER_S stAppHeader;
+#endif
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+    memset(&stAppHeader, 0, sizeof(VMX_APPLICATION_HEADER_S));
+    stAppHeader.u32ImageLen = *((HI_U32 *)ptr);
+    stAppHeader.enc_ctrl.enc_flag = ptr[4]&0x1;
+
+    HI_ERR_CA("bootargs enc flag:%d\n", stAppHeader.enc_ctrl.enc_flag);
+    (void)VMX3RD_SetEncFlag(stAppHeader.enc_ctrl.enc_flag);
+#endif
+
+    image_len = *((HI_U32 *)ptr);
+
+    if(0 != (image_len & 0xF))
+    {
+        HI_ERR_CA("failed, Invalid image_len:0x%x!\n", image_len);
+        return HI_FAILURE;
+    }
+    HI_INFO_CA("verify bootargs parameter ptr:0x%x, image len:%x\n", ptr, image_len);
+    ret = verifySignature((ptr + VMX_SIG_OFFSET),
+                        (ptr + VMX_IMG_OFFSET),
+                        ptr_tmp + VMX_IMG_OFFSET,
+                        image_len,
+                        image_len,
+                        0,
+                        &errorCode);
+
+
+    if (1 == ret)
+    {
+        return HI_SUCCESS;
+    }
+    else if ((1 == errorCode) && (0 == ret))
+    {
+        HI_ERR_CA("verify bootargs errorCode: 0x%x, ret: 0x%x!!!!!!!!!\n", errorCode, ret);        
+        return HI_FAILURE;
+    }
+    else if ((2 == errorCode) && (0 == ret))
+    {
+
+        HI_INFO_CA("verify success! burn src to flash, errorCode:0x%x\n", errorCode);
+
+        HI_HANDLE hFlashHandle;
+        HI_Flash_InterInfo_S stFlashInfo;
+        HI_U32 write_length = 0;
+
+        hFlashHandle = CA_flash_open_addr((HI_U64)offset, (HI_U64)(size + VMX_HEAD_LENGTH));
+        HI_INFO_CA("CA_flash_open_addr: Offset:0x%x, size:0x%x, hFlashHandle:%x\n", offset, (image_len + VMX_HEAD_LENGTH), hFlashHandle);
+        if ((0 == hFlashHandle) || (HI_INVALID_HANDLE == hFlashHandle))
+        {
+            HI_ERR_CA("HI_Flash_Open error\n");
+            return HI_FAILURE;
+        }
+
+        ret = HI_Flash_GetInfo(hFlashHandle, &stFlashInfo);
+        if (HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("HI_Flash_GetInfo error\n");
+            return HI_FAILURE;
+        }
+
+        write_length =  ((VMX_HEAD_LENGTH + image_len) + stFlashInfo.PageSize - 1) & (~(stFlashInfo.PageSize - 1));
+        HI_INFO_CA("Try to Write back the bootargs into Flash\n");
+        HI_INFO_CA("write info: BlockSize:0x%x, PageSize:0x%x, image_len:0x%x, write_length:0x%x, g_EnvFlashAddr:0x%x\n", stFlashInfo.BlockSize, stFlashInfo.PageSize, image_len, write_length, offset);
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+        memcpy(ptr_tmp, ptr, VMX_IMG_OFFSET);
+        ret = CA_flash_write_addr(offset, (HI_U64)write_length, ptr_tmp);
+#else
+        ret = CA_flash_write_addr(offset, (HI_U64)write_length, ptr);
+#endif
+        if (HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("Burn image to flash failed! ret:0x%x, Resetting ...\n", ret);
+            CA_Reset();
+            return HI_FAILURE;
+        }
+        else
+        {
+            HI_INFO_CA("\nWrite src to flash success, ret:0x%x! Resetting ...\n", ret);
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+            HI_ERR_CA("set reboot flag to 1, return success\n");
+            g_vmx_reboot_flag = 1;
+            return HI_SUCCESS;
+#else
+            CA_Reset();
+            return HI_SUCCESS;
+#endif  
+        }
+        ret = HI_Flash_Close(hFlashHandle);
+        if (HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("HI_Flash_Close error \n");
+            return HI_FAILURE;
+        }
+
+    }
+    else
+    {
+        HI_ERR_CA("VMX Not support return!!!!!!\n");
+    }
+
+    return HI_FAILURE;
+}
+
+
+static HI_S32 VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr, HI_U8 *ptr_tmp)
 {
     HI_S32 ret = HI_SUCCESS;
     HI_U32 image_len = 0;
@@ -2386,31 +2615,35 @@ static VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr)
     HI_U32 tmp_len = 0;
     HI_U8 *pu8Tmp = NULL;
 
-    if(NULL == partition_name)
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+    VMX_APPLICATION_HEADER_S stAppHeader;
+#endif
+    if(NULL == partition_name || NULL == ptr || NULL == ptr_tmp)
     {
-        printf("%s %d, failed, NULL pointer!\n", __FUNCTION__, __LINE__);
+        HI_ERR_CA("failed, NULL pointer!\n");
         return HI_FAILURE;
     }
+    HI_INFO_CA("VMX Verify no-boot-image name:%s\n", partition_name);
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+    memset(&stAppHeader, 0, sizeof(VMX_APPLICATION_HEADER_S));
+    stAppHeader.u32ImageLen = *((HI_U32 *)ptr);
+    stAppHeader.enc_ctrl.enc_flag = ptr[4]&0x1;
+    HI_INFO_CA(" no-boot-image encrypted flag:%x\n", stAppHeader.enc_ctrl.enc_flag);
 
+    (void)VMX3RD_SetEncFlag(stAppHeader.enc_ctrl.enc_flag);
+#endif
+    
     image_len = *((HI_U32 *)ptr);
-    printf("%s image_len: 0x%08x\n", partition_name, image_len);
+	VMX_PrintBuffer("image:", ptr, 32);
+    HI_INFO_CA("%s image_len: 0x%08x\n", partition_name, image_len);
 
     if(0 != (image_len & 0xF))
     {
-        printf("%s %d, failed, Invalid image_len:0x%x!\n", __FUNCTION__, __LINE__, image_len);
+        HI_ERR_CA("failed, Invalid image_len:0x%x!\n", image_len);
         return HI_FAILURE;
     }
 
-    pu8Tmp = (HI_U8 *)reserve_mem_alloc(image_len, &tmp_len);
-    if((NULL == pu8Tmp) || (tmp_len < image_len))
-    {
-        printf("VMX_Auth_Partition_Image: reserve_mem_alloc:0x%08x failed\n", image_len);
-        return HI_FAILURE;
-    }
-    else
-    {
-        printf("VMX_Auth_Partition_Image: reserve_mem_alloc:0x%08x success\n", image_len);
-    }
+	pu8Tmp = ptr_tmp;
 
     /*
         errorCode is a pointer to a value that tells the reason for not having a valid image
@@ -2422,26 +2655,29 @@ static VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr)
 
         There are three situations: ret=1; ret=0 and errorCode=1;  ret=0 and errorCode=2;
     */
+
+    HI_INFO_CA("verify parameter ptr:0x%x, image len:%x\n", ptr, image_len);
     ret = verifySignature((ptr + VMX_SIG_OFFSET),
                         (ptr + VMX_IMG_OFFSET),
-                        pu8Tmp,
+                        pu8Tmp + VMX_IMG_OFFSET,
                         image_len,
                         image_len,
                         0,
                         &errorCode);
+
     if(1 == ret)
     {
-        printf("verify success! ret:0x%x, Continue ...\n", ret);
+        HI_ERR_CA("verify success! ret:0x%x, Continue ...\n", ret);
         return HI_SUCCESS;
     }
     else if((1 == errorCode) && (0 == ret))         /* Invalid signature, maybe */
     {
-        printf("do not start the application, reset! errorCode: 0x%x, ret: 0x%x, Resetting ...\n", errorCode, ret);
+        HI_ERR_CA("do not start the application, reset! errorCode: 0x%x, ret: 0x%x, Resetting ...\n", errorCode, ret);
         CA_Reset();
     }
     else if((2 == errorCode) && (0 == ret))         /* Src is re-encrypted inside BL library, burn to flash */
     {
-        printf("verify success! burn src to flash, errorCode:0x%x\n", errorCode);
+        HI_ERR_CA("verify success! burn src to flash, errorCode:0x%x\n", errorCode);
 
         HI_U32 PartionSize = 0;
         HI_U32 BlockSize = 0;
@@ -2452,27 +2688,38 @@ static VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr)
         ret = CA_flash_getinfo(partition_name, &PartionSize, &BlockSize, &PageSize, &OobSize);
         if(HI_SUCCESS != ret)
         {
-            printf("CA_flash_getinfo failed! ret:0x%x\n", ret);
+            HI_ERR_CA("CA_flash_getinfo failed! ret:0x%x\n", ret);
             return HI_FAILURE;
         }
 
+
         write_length = ((VMX_HEAD_LENGTH + image_len) + BlockSize - 1) & (~(BlockSize -1));
 
-        printf("before write(32 bytes):\n");
-        printbuffer(ptr, 32);
+        VMX_PrintBuffer("before write(32 bytes):", ptr, 32);
 
-        printf("write info: partition_name:%s\, BlockSize:0x%x, PageSize:0x%x, OobSize:0x%x, write_length:0x%x\n", partition_name, BlockSize, PageSize, OobSize, write_length);
-        ret = CA_flash_write(partition_name, (HI_U64)0, write_length, ptr);
+        HI_INFO_CA("write info: partition_name:%s\, BlockSize:0x%x, PageSize:0x%x, OobSize:0x%x, write_length:0x%x\n", partition_name, BlockSize, PageSize, OobSize, write_length);
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+        memcpy(pu8Tmp, ptr, VMX_IMG_OFFSET);
+        ret = CA_flash_write(partition_name, (HI_U64)0, write_length, pu8Tmp);
+#else
+        ret= CA_flash_write(partition_name, (HI_U64)0, write_length, ptr);
+#endif
         if(HI_SUCCESS != ret)
         {
-            printf("Burn image to flash failed! ret:0x%x, Resetting ...\n", ret);
+            HI_ERR_CA("Burn image to flash failed! ret:0x%x, Resetting ...\n", ret);
             CA_Reset();
         }
         else
         {
-            printf("\nWrite src to flash success, ret:0x%x! Resetting ...\n", ret);
+            HI_INFO_CA("\nWrite src to flash success, ret:0x%x! Resetting ...\n", ret);
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+            g_vmx_reboot_flag = 1;
+#else
             CA_Reset();
+#endif
         }
+
     }
     else
     {
@@ -2483,8 +2730,131 @@ static VMX_Auth_Partition_Image(HI_CHAR *partition_name, HI_U8 *ptr)
 }
 
 
+#if defined(HI_ADVCA_SUPPORT) && defined(HI_ADVCA_TYPE_VERIMATRIX)
 
-#define VMX_VERIFY_MEM_ALLOC_SIZE  (0x4000000)
+#ifdef CONFIG_ENV_BACKUP
+    static HI_U32 s_u32LoadEnvLoop = 2;
+#else
+    static HI_U32 s_u32LoadEnvLoop = 1;
+#endif
+
+int load_direct_env(void *env, unsigned int offset, unsigned int size)
+{
+    HI_S32 ret = 0;
+
+    HI_INFO_CA("Enter VMX Advcanced load_direct_env offset:%x, size:%x\n", offset, size);
+
+    if (s_u32LoadEnvLoop > 0)
+    {
+        s_u32LoadEnvLoop--;
+    }
+    else
+    {
+        return HI_FAILURE;
+    }
+
+    ret = CA_flash_read_addr(offset, size + NAND_PAGE_SIZE, (HI_U8*)IMG_VERIFY_ADDRESS, HI_NULL);
+    printbuffer((HI_U8 *)IMG_VERIFY_ADDRESS, 512);
+    if (HI_SUCCESS == ret)
+    {
+        ret = VMX_Auth_Bootargs((HI_U8 *)IMG_VERIFY_ADDRESS, (HI_U8 *) VMX_VERIFY_TEMP_ADDR, offset, size);
+    }
+    else
+    {
+    	HI_INFO_CA("CA_flash_read_addr bootargs failed\n");
+    }
+
+    if ((HI_SUCCESS != ret) && (0 == s_u32LoadEnvLoop))
+    {
+        HI_ERR_CA("Authenticate bootargs failed\n");
+        CA_Reset();
+    }
+
+    if (HI_SUCCESS == ret)
+    {
+        HI_INFO_CA("Authenticate bootargs success\n");
+
+        memset(env, 0, size);
+        memcpy(env, (HI_U8 *)(IMG_VERIFY_ADDRESS + VMX_IMG_OFFSET), size);
+    }
+
+    return ret;
+}
+#endif
+
+static HI_S32 VMX_ReadUpgrdFlag(HI_BOOL *pbNeedUpgrd)
+{
+    HI_S32 ret = HI_SUCCESS;
+    UPGRD_PARA_HEAD_S *pstParamHead;
+    UPGRD_TAG_PARA_S  pstUpgrdParam;
+    HI_HANDLE hFlash = HI_INVALID_HANDLE;
+    HI_Flash_InterInfo_S stFlashInfo;
+    HI_U32 u32CRC32Value = 0;
+
+    CA_CheckPointer(pbNeedUpgrd);
+
+	*pbNeedUpgrd = HI_FALSE;
+
+    /*Read loaderdb partition*/
+    hFlash = HI_Flash_OpenByName(LOADER_INFOBASIC);
+	if ((0 == hFlash) || (HI_INVALID_HANDLE == hFlash))
+	{
+		HI_ERR_CA("HI_Flash_Open() %s error, hFlash:0x%x\n", LOADER_INFOBASIC, hFlash);
+		return HI_SUCCESS;
+	}
+
+    ret = HI_Flash_GetInfo(hFlash, &stFlashInfo);
+    if(HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("HI_Flash_GetInfo() error, result %x!\n",ret);
+        (HI_VOID)HI_Flash_Close(hFlash);
+        return HI_SUCCESS;
+    }
+
+    ret = HI_Flash_Read(hFlash, 0ULL, (HI_U8*)IMG_VERIFY_ADDRESS, stFlashInfo.BlockSize, HI_FLASH_RW_FLAG_RAW);
+    if (ret <= 0)
+    {
+        HI_ERR_CA("HI_Flash_Read partion %s error\n", LOADER_INFOBASIC);
+        HI_Flash_Close(hFlash);
+        return HI_SUCCESS;
+    }
+    HI_Flash_Close(hFlash);
+
+    pstParamHead = (UPGRD_PARA_HEAD_S *)IMG_VERIFY_ADDRESS;
+
+    /* Verify Magic Number */
+    if ( LOADER_MAGIC_NUMBER != pstParamHead->u32MagicNumber)
+    {
+        HI_ERR_CA("Check Magic Number for loaderdb failed!\n");
+		return HI_SUCCESS;
+	}
+
+    if( pstParamHead->u32Length >= stFlashInfo.BlockSize )
+    {
+        HI_ERR_CA("Read loaderdb value failed!\n");
+		return HI_SUCCESS;
+	}
+
+    /* Veriry CRC value */
+    u32CRC32Value = crc32(0, (HI_U8 *)(IMG_VERIFY_ADDRESS + sizeof(HI_U32) * 2), (pstParamHead->u32Length + sizeof(HI_U32)));
+    if (u32CRC32Value != pstParamHead->u32Crc)
+    {
+        HI_ERR_CA("Check CRC for loaderdb failed u32CRC32Value %x != pstParamHead->u32Crc %x!\n", u32CRC32Value, pstParamHead->u32Crc);
+		return HI_SUCCESS;
+	}
+
+    HI_INFO_CA("Get upgrade tag info from loderdb successfully.\n");
+
+    memcpy(&pstUpgrdParam, (void *)(IMG_VERIFY_ADDRESS + sizeof(UPGRD_PARA_HEAD_S)), sizeof(UPGRD_TAG_PARA_S));
+    *pbNeedUpgrd = pstUpgrdParam.bTagNeedUpgrd;
+
+    return HI_SUCCESS;
+}
+
+
+
+#define VMX_VERIFY_BUFFER_ALLIGN      (0x100000)
+#define ANDROID_SYSTEM_VERIFY_ADDR    (0x4800000)
 HI_S32 HI_CA_AuthenticateEntry_VMX(HI_VOID)
 {
     HI_S32 ret = HI_SUCCESS;
@@ -2493,6 +2863,7 @@ HI_S32 HI_CA_AuthenticateEntry_VMX(HI_VOID)
     HI_U32 u32FsSize = 0;
     HI_U8 *ptr = NULL;
     HI_U8 *ptr_trace = NULL;
+    HI_U8 *ptr_fs_trace = NULL;
     HI_Flash_InterInfo_S flashInfo;
 
     HI_U32 KernelPartionSize = 0;
@@ -2501,123 +2872,229 @@ HI_S32 HI_CA_AuthenticateEntry_VMX(HI_VOID)
     HI_U32 PageSize = 0;
     HI_U32 OobSize = 0;
     HI_U32 u32FSReadSize = 0;
+    HI_U32 u32KernelReadSize = 0;
     HI_U32 u32TotalBufLen = 0;
     HI_CHAR *loader_name = "loader";
     HI_CHAR *kernel_name = "kernel";
+#ifdef HI_TEE_SUPPORT    
+    HI_CHAR *secos_name  = "trustedcore";
+    HI_U32 u32SecOSSize  = 0;
+    HI_U32 u32SecOSReadSize = 0;
+    HI_U32 u32SecOSLoadAddr = 0;
+#endif
+#if defined(HI_ANDROID_BOOT_SUPPORT)
+    HI_CHAR *rootfs_name = "shatable";
+#else
     HI_CHAR *rootfs_name = "rootfs";
+#endif
+    HI_CHAR acRootfsParam[128];
+    HI_BOOL bNeedUpgrd = HI_FALSE;
+    HI_CHAR as8BootCmd[64];
 
-    printf("HI_CA_AuthenticateEntry_VMX start --->\n");
+    HI_U8 *pu8Tmp_system = NULL;
+    HI_INFO_CA("start ---------->\n");
+    c51_loadCode();
 
-    /* Read and setenv bootargs data first */
-    ret = CA_flash_read_addr(g_EnvFlashAddr, g_EnvFlashPartionSize, ParaBase, HI_NULL);
-    if (HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("CA_flash_read_addr: env_addr:0x%x, size:0x%x failed\n", g_EnvFlashAddr, g_EnvFlashPartionSize);
-        return HI_FAILURE;
-    }
-    (HI_VOID)CA_nand_env_relocate_spec(ParaBase);
-
-#if 0
-    ptr = (HI_U8 *)reserve_mem_alloc(VMX_VERIFY_MEM_ALLOC_SIZE, &u32TotalBufLen);
-    if((NULL == ptr) || (u32TotalBufLen < VMX_VERIFY_MEM_ALLOC_SIZE))
-    {
-        printf("HI_CA_AuthenticateEntry_VMX: reserve_mem_alloc:0x%08x failed\n", VMX_VERIFY_MEM_ALLOC_SIZE);
-        return HI_FAILURE;
-    }
-    else
-    {
-        printf("HI_CA_AuthenticateEntry_VMX: reserve_mem_alloc:0x%08x success\n", VMX_VERIFY_MEM_ALLOC_SIZE);
-        ptr_trace = ptr;
-    }
-#else
-    ptr = (HI_U8 *)IMG_VERIFY_ADDRESS;
-    ptr_trace = ptr;
+#ifdef HI_LOADER_SUPPORT
+	ret = VMX_ReadUpgrdFlag(&bNeedUpgrd);
+	if (HI_SUCCESS != ret)
+	{
+		HI_ERR_CA("read upgrade flag for loader failed, env_addr:0x%x, size:0x%x failed\n", g_EnvFlashAddr, g_EnvFlashPartionSize);
+		//return HI_FAILURE;
+	}
+	HI_INFO_CA("bNeedUpgrd = %d\n", bNeedUpgrd);
 #endif
 
-    /* prepare the loader image data to ddr */
-    ret = CA_flash_getinfo(loader_name, &LoaderPartionSize, &BlockSize, &PageSize, &OobSize);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
+	if(HI_TRUE == bNeedUpgrd)
+	{
+		ptr = (HI_U8 *)LOADER_VERIFY_ADDR_VMX;
+		ptr_trace =  (HI_U8 *)VMX_VERIFY_TEMP_ADDR;
 
-    ret = CA_flash_read(loader_name, 0, LoaderPartionSize, ptr_trace, &flashInfo);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
-    printf("%s partition size is: 0x%x\n", loader_name, LoaderPartionSize);
-    ptr_trace += LoaderPartionSize;
+        HI_INFO_CA("Need to upgrade, enter to verify loader\n");
+	    /* prepare the loader image data to ddr */
+	    ret = CA_flash_getinfo(loader_name, &LoaderPartionSize, &BlockSize, &PageSize, &OobSize);
+	    if(HI_SUCCESS != ret)
+	    {
+	        HI_ERR_CA("failed, ret:%d!\n", ret);
+	        return HI_FAILURE;
+	    }
+		HI_INFO_CA("PageSize:0x%x\n", PageSize);
 
-    /* prepare kernel image data to ddr */
-    ret = CA_flash_getinfo(kernel_name, &KernelPartionSize, &BlockSize, &PageSize, &OobSize);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
+	    ret = CA_flash_read(loader_name, (unsigned long long)0, LoaderPartionSize, ptr, &flashInfo);
+	    if(HI_SUCCESS != ret)
+	    {
+	        HI_ERR_CA("failed, ret:%d!\n", ret);
+	        return HI_FAILURE;
+	    }
+		VMX_PrintBuffer("loader:", ptr, 32);
+	    HI_INFO_CA("%s partition size is: 0x%x\n", loader_name, LoaderPartionSize);
+		/* verify loader now */
+		ret = VMX_Auth_Partition_Image(loader_name, ptr, ptr_trace);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("Authenticate %s failed\n", loader_name);
+			CA_Reset();
+		}
+		HI_INFO_CA("Authenticate %s success.\n\n\n", loader_name);
+	}
+	else
+	{        
+		ptr = (HI_U8 *)KERNEL_VERIFY_ADDR_VMX;
+		ptr_trace = (HI_U8 *)VMX_VERIFY_TEMP_ADDR;
 
-    ret = CA_flash_read(kernel_name, 0, KernelPartionSize, ptr_trace, &flashInfo);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
-    printf("%s partition size is: 0x%x\n", kernel_name, KernelPartionSize);
-    ptr_trace += KernelPartionSize;
+		/* get kernel partition info */
+		ret = CA_flash_getinfo(kernel_name, &KernelPartionSize, &BlockSize, &PageSize, &OobSize);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("failed, ret:%d!\n", ret);
+			return HI_FAILURE;
+		}
 
-    /* prepare fs image data to ddr */
-    ret = CA_flash_read(rootfs_name, 0, PageSize, ptr_trace, &flashInfo);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
-    u32FsSize = *(HI_U32 *)ptr_trace;
-    u32FSReadSize = PageSize * ((VMX_SIG_OFFSET + VMX_SIG_LENGTH + u32FsSize + PageSize -1)/PageSize);
-    printf("%s partition size is: 0x%x, u32FSReadSize:0x%x\n", rootfs_name, u32FsSize, u32FSReadSize);
+		//read kernel signed header
+		ret = CA_flash_read(kernel_name, (unsigned long long)0, PageSize, ptr, &flashInfo);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("failed, ret:%d!\n", ret);
+			return HI_FAILURE;
+		}
+		VMX_PrintBuffer("kernel header:", ptr, 32);
+		u32KernelSize = *(HI_U32 *)ptr;
+		u32KernelReadSize = PageSize * ((u32KernelSize + PageSize -1)/PageSize)+PageSize;
+		HI_INFO_CA("%s real size is: 0x%x, read size is: 0x%x\n", kernel_name, u32KernelSize, u32KernelReadSize);
 
-    ret = CA_flash_read(rootfs_name, 0, u32FSReadSize, ptr_trace, &flashInfo);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("%s %d, failed, ret!\n", __FUNCTION__, __LINE__, ret);
-        return HI_FAILURE;
-    }
+		//read kernel image
+		ret = CA_flash_read(kernel_name, (unsigned long long)0, u32KernelReadSize, ptr, &flashInfo);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("failed, ret:%d!\n", ret);
+			return HI_FAILURE;
+		}
+		VMX_PrintBuffer("kernel header:", ptr, 32);
+		VMX_PrintBuffer("kernel image(first 32 bytes):", ptr + VMX_HEAD_LENGTH, 32);
+		ret = VMX_Auth_Partition_Image(kernel_name, ptr, ptr_trace);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("Authenticate %s failed\n", kernel_name);
+			CA_Reset();
+		}
+	    HI_INFO_CA("Authenticate %s success.\n\n\n", kernel_name);
 
-    /* verify images now */
-    ret = VMX_Auth_Partition_Image(loader_name, ptr);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("VMX_Auth_Partition_Image:%s failed\n", loader_name);
-        CA_Reset();
-    }
-    printf("Authenticate %s success.\n\n\n", loader_name);
-
-    ret = VMX_Auth_Partition_Image(kernel_name, ptr + LoaderPartionSize);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("VMX_Auth_Partition_Image:%s failed\n", kernel_name);
-        CA_Reset();
-    }
-    printf("Authenticate %s success.\n\n\n", kernel_name);
-
-    ret = VMX_Auth_Partition_Image(rootfs_name, ptr + LoaderPartionSize + KernelPartionSize);
-    if(HI_SUCCESS != ret)
-    {
-        HI_ERR_CA("VMX_Auth_Partition_Image:%s failed\n", rootfs_name);
-        CA_Reset();
-    }
-    printf("Authenticate %s success.\n\n\n", rootfs_name);
-
-    /* start the kernel */
-#ifdef HI_MINIBOOT_SUPPORT
-    //HI_U32 addr = ptr + VMX_SIG_OFFSET + VMX_SIG_LENGTH;
-    //kern_load((char *)addr);
+        /* prepare fs image data to ddr */
+#if defined(HI_ANDROID_BOOT_SUPPORT)
+        pu8Tmp_system = (HI_U8 *)(ANDROID_SYSTEM_VERIFY_ADDR);
 #else
-    run_command("bootm 0x4000110", 0);
+        pu8Tmp_system = (HI_U8 *) ((KERNEL_VERIFY_ADDR_VMX + u32KernelReadSize + VMX_VERIFY_BUFFER_ALLIGN - 1) & ~(VMX_VERIFY_BUFFER_ALLIGN -1));
 #endif
+
+		HI_SIMPLEINFO_CA("FS image read in addr: 0x%x\n", pu8Tmp_system);
+
+        ret = CA_flash_read(rootfs_name, 0, PageSize, pu8Tmp_system, &flashInfo);
+        if(HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("failed, ret!\n", ret);
+            return HI_FAILURE;
+        }
+        u32FsSize = *(HI_U32 *)pu8Tmp_system;
+        u32FSReadSize = PageSize * ((VMX_SIG_OFFSET + VMX_SIG_LENGTH + u32FsSize + PageSize -1)/PageSize);
+        HI_SIMPLEINFO_CA("%s partition size is: 0x%x, u32FSReadSize:0x%x\n", rootfs_name, u32FsSize, u32FSReadSize);
+
+        ptr_fs_trace = pu8Tmp_system;
+
+
+		HI_INFO_CA("%s partition size is: 0x%x, u32FSReadSize:0x%x\n", rootfs_name, u32FsSize, u32FSReadSize);
+		ret = CA_flash_read(rootfs_name, (unsigned long long)0, u32FSReadSize, ptr_fs_trace, &flashInfo);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("failed, ret:%d!\n", ret);
+			return HI_FAILURE;
+		}
+		ptr_trace = VMX_VERIFY_TEMP_ADDR;
+
+		ret = VMX_Auth_Partition_Image(rootfs_name, pu8Tmp_system, ptr_trace);
+	    if(HI_SUCCESS != ret)
+	    {
+	        HI_ERR_CA("Authenticate %s failed\n", rootfs_name);
+	        CA_Reset();
+	    }
+	    HI_INFO_CA("Authenticate %s success.\n\n\n", rootfs_name);
+
+	    //set system file start addr to bootargs
+	    memset(acRootfsParam, 0x0, sizeof (acRootfsParam));
+
+#if defined(HI_ANDROID_BOOT_SUPPORT)
+	    snprintf(acRootfsParam, sizeof (acRootfsParam), "initfile=0,0x%x,0x%x", ANDROID_SYSTEM_VERIFY_ADDR + VMX_HEAD_LENGTH, u32FSReadSize);
+#else
+	    snprintf(acRootfsParam, sizeof (acRootfsParam), "initrd=0x%x,0x%x root=/dev/ram ramdisk_size=81920 rootfstype=squashfs", pu8Tmp_system + VMX_HEAD_LENGTH, u32FSReadSize);
+#endif
+	    HI_INFO_CA("ram system param: %s\n", acRootfsParam);
+	    ret =  hi_bootargs_append(acRootfsParam);
+	    if (HI_SUCCESS != ret)
+	    {
+	        HI_ERR_CA("set ram system param error!\n");
+	        CA_Reset();
+	    }
+
+#ifdef HI_TEE_SUPPORT
+        u32SecOSLoadAddr = getSecOsLoadAddr();
+		ptr = u32SecOSLoadAddr - VMX_HEAD_LENGTH;
+		ptr_trace = (HI_U8 *)VMX_VERIFY_TEMP_ADDR;
+
+        ret = CA_flash_read(secos_name, 0, PageSize, ptr, &flashInfo);
+        if(HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("failed, ret!\n", ret);
+            return HI_FAILURE;
+        }
+        u32SecOSSize = *(HI_U32 *)ptr;
+        u32SecOSReadSize = PageSize * ((VMX_SIG_OFFSET + VMX_SIG_LENGTH + u32SecOSSize + PageSize -1)/PageSize);
+        HI_INFO_CA("%s partition size is: 0x%x, ReadSize:0x%x\n", rootfs_name, u32SecOSSize, u32SecOSReadSize);
+
+		ret = CA_flash_read(secos_name, (unsigned long long)0, u32SecOSReadSize, ptr, &flashInfo);
+		if(HI_SUCCESS != ret)
+		{
+			HI_ERR_CA("failed, ret:%d!\n", ret);
+			return HI_FAILURE;
+		}
+
+		ret = VMX_Auth_Partition_Image(secos_name, ptr, ptr_trace);
+	    if(HI_SUCCESS != ret)
+	    {
+	        HI_ERR_CA("Authenticate %s failed\n", secos_name);
+	        CA_Reset();
+	    }
+
+#endif
+	}
+
+#ifdef HI_ADVCA_VMX_3RD_SIGN
+    if(1 == g_vmx_reboot_flag)
+    {
+		HI_ERR_CA("set ram system param error!\n");
+
+        CA_Reset();
+    }
+#endif
+    /* start the kernel or loader*/
+	if(HI_TRUE == bNeedUpgrd)
+	{	
+		memset(as8BootCmd, 0, sizeof(as8BootCmd));
+    	snprintf(as8BootCmd, sizeof(as8BootCmd), "bootm 0x%x", LOADER_VERIFY_ADDR_VMX + VMX_HEAD_LENGTH);
+    	HI_INFO_CA("Load Loader: %s\n", as8BootCmd);
+        run_cmd(as8BootCmd, strlen(as8BootCmd));
+	}
+	
+	ptr = KERNEL_VERIFY_ADDR_VMX + VMX_HEAD_LENGTH;        
+
+#ifdef HI_TEE_SUPPORT
+	memset(as8BootCmd, 0, sizeof(as8BootCmd));
+	snprintf(as8BootCmd, sizeof(as8BootCmd), "bootm 0x%x", u32SecOSLoadAddr);
+	HI_INFO_CA("Load Secure os: %s, as8Bootcmdlen:%x\n", as8BootCmd, sizeof(as8BootCmd));
+    run_cmd(as8BootCmd, strlen(as8BootCmd));
+#endif
+	memset(as8BootCmd, 0, sizeof(as8BootCmd));
+	snprintf(as8BootCmd, sizeof(as8BootCmd), "bootm 0x%x", ptr);
+	HI_INFO_CA("Load kernel: %s\n", as8BootCmd);
+    run_cmd(as8BootCmd, strlen(as8BootCmd));
 
     return HI_SUCCESS;
 }

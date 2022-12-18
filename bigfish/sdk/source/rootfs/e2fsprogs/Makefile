@@ -10,7 +10,7 @@ CROSS_COMPILE  ?= arm-hisiv200-linux-
 BUILD_DIR      := $(shell pwd)/tmp
 HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
-E2FSPROGS      := e2fsprogs-1.41.11
+E2FSPROGS      := e2fsprogs-1.42.13
 
 CFG_HI_LOADER_TYPE_CFG_HI_BUSYBOX_CFG_NAME := \
 	$(join $(CFG_HI_LOADER_TYPE),_$(CFG_HI_BUSYBOX_CFG_NAME))

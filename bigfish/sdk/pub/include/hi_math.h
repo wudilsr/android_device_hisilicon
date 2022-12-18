@@ -1,6 +1,6 @@
 /******************************************************************************
 
-  Copyright (C), 2009-2014, Huawei Tech. Co., Ltd.
+  Copyright (C), 2009-2014, Hisilicon Tech. Co., Ltd.
 
  ******************************************************************************
   File Name     : hi_math.h
@@ -263,6 +263,7 @@ __inline static HI_BOOL FpsControl(FPS_CTRL_S *pFrmCtrl)
 *******************************************************************************/
 #ifdef __KERNEL__
     #include <linux/time.h>
+    #include <linux/ktime.h>
 #else
     #include <sys/time.h>
 #endif

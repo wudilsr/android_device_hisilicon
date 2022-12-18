@@ -124,16 +124,39 @@ typedef enum
 {
 
     IPTV_PLAYER_EVT_STREAM_VALID=0,
-
     IPTV_PLAYER_EVT_FIRST_PTS,     //first frame decoded event
-
     IPTV_PLAYER_EVT_VOD_EOS,       //VOD EOS event
-
     IPTV_PLAYER_EVT_ABEND,         //under flow event
-
     IPTV_PLAYER_EVT_PLAYBACK_ERROR,// playback error event
+    IPTV_PLAYER_EVT_VID_FRAME_ERROR =0x200,// 视频解码错误
+    IPTV_PLAYER_EVT_VID_DISCARD_FRAME,// 视频解码丢帧
+    IPTV_PLAYER_EVT_VID_DEC_UNDERFLOW,// 视频解码下溢
+    IPTV_PLAYER_EVT_VID_PTS_ERROR,// 视频解码Pts错误
+    IPTV_PLAYER_EVT_AUD_FRAME_ERROR,// 音频解码错误
+    IPTV_PLAYER_EVT_AUD_DISCARD_FRAME,// 音频解码丢弃
+    IPTV_PLAYER_EVT_AUD_DEC_UNDERFLOW,//音频解码下溢
+    IPTV_PLAYER_EVT_AUD_PTS_ERROR,// 音频PTS错误
+
+    IPTV_PLAYER_EVT_BUTT
+
 }IPTV_PLAYER_EVT_e;
 
+
+typedef enum
+{
+
+    IPTV_PLAYER_ATTR_VID_ASPECT=0,  /* 视频宽高比
+                 0--640*480，1--720*576，2--1280*720，3--1920*1080,4--3840*2160,5--others等标识指定分辨率*/
+    IPTV_PLAYER_ATTR_VID_RATIO,     //视频宽高比, 0代表4：3，1代表16：9
+    IPTV_PLAYER_ATTR_VID_SAMPLETYPE,     //帧场模式, 1代表逐行源，0代表隔行源
+    IPTV_PLAYER_ATTR_VIDAUDDIFF,     //音视频播放diff
+    IPTV_PLAYER_ATTR_VID_BUF_SIZE,     //视频缓冲区大小
+    IPTV_PLAYER_ATTR_VID_USED_SIZE,     //视频缓冲区使用大小
+    IPTV_PLAYER_ATTR_AUD_BUF_SIZE,     //音频缓冲区大小
+    IPTV_PLAYER_ATTR_AUD_USED_SIZE,     //音频缓冲区已使用大小
+
+    IPTV_PLAYER_ATTR_BUTT
+}IPTV_ATTR_TYPE_e;
 
 /*
 * Note  : Struct CTC_SUBT_PARM_S used for CTC_MediaProcessor Subtitle Info
@@ -152,6 +175,53 @@ typedef struct tagCTC_SUBT_PARM_S
     HI_UNF_SUBT_ITEM_S stSubtItem[SUBT_ITEM_MAX_NUM];
 }CTC_SUBT_PARM_S;
 
+
+/*定义视频帧的类型枚举*/
+typedef enum
+{
+    VID_FRAME_TYPE_UNKNOWN = 0,   //未知的帧类型
+    VID_FRAME_TYPE_I,         // I帧
+    VID_FRAME_TYPE_P,         //P帧
+    VID_FRAME_TYPE_B,         //B帧
+    VID_FRAME_TYPE_IDR,       //IDR帧
+    VID_FRAME_TYPE_BUTT,
+}VID_FRAME_TYPE_e;
+
+
+typedef struct{
+
+    VID_FRAME_TYPE_e enVidFrmType;  //视频帧类型
+    int  nVidFrmSize;    //视频帧大小
+    int  nVidFrmQP;      // 视频帧QP
+    int  nVidFrmPTS;    //视频帧PTS
+    int  nMaxMV;       //最大MV
+    int  nMinMV;        //最小MV
+    int  nAvgMV;      //平均MV
+    int  SkipRatio;   // MV=0的MB比例
+}VIDEO_FRM_STATUS_INFO_T;
+
+
+typedef enum
+{
+    IPTV_PLAYER_PARAM_EVT_VIDFRM_STATUS_REPORT = 0, // 对应参数结构 VIDEO_FRM_STATUS_INFO_T
+
+	IPTV_PLAYER_PARAM_EVT_BUTT
+}IPTV_PLAYER_PARAM_Evt_e;
+
+
+typedef void (*IPTV_PLAYER_PARAM_EVENT_CB)( void *hander, IPTV_PLAYER_PARAM_Evt_e enEvt, void *pParam);
+
+
+
+/**
+带参数的播放事件回调接口, 主要用于Qos相关
+
+\param[in] hander 为调用回调函数时的handler参数
+\param[in] enEvt 为事件类型
+\param[in] pfunc 为回调函数
+\param[out] 无
+\retval ::无
+*/
 
 typedef void (*IPTV_PLAYER_EVT_CB)(IPTV_PLAYER_EVT_e evt, void *handler);
 
@@ -218,6 +288,11 @@ class CTC_MediaProcessor{
         virtual void leaveChannel() = 0;
 
         virtual void playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander) = 0;
+
+		virtual void RegisterParamEvtCb(void *hander, IPTV_PLAYER_PARAM_Evt_e enEvt, IPTV_PLAYER_PARAM_EVENT_CB  pfunc) = 0;
+
+        virtual int playerback_getStatusInfo(IPTV_ATTR_TYPE_e enAttrType, int *value) = 0;
+
         virtual int EnableSubtitle(CTC_SUBT_PARM_S *pstSubParam) = 0;
 };
 
@@ -284,6 +359,10 @@ class CTsPlayer : public CTC_MediaProcessor{
         //leave channel
         virtual void leaveChannel();
         virtual void playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander);
+		virtual void RegisterParamEvtCb(void *hander, IPTV_PLAYER_PARAM_Evt_e enEvt, IPTV_PLAYER_PARAM_EVENT_CB  pfunc);
+
+		//获取播放器的一些播放状态相关信息
+        virtual int playerback_getStatusInfo(IPTV_ATTR_TYPE_e enAttrType, int *value);
 
         //hisi private interface, support set eos event
         virtual bool SetEos();
@@ -329,10 +408,10 @@ class CTsPlayer : public CTC_MediaProcessor{
 
         HI_S32  SetAudStream();
 
-        HI_S32 HIADP_VO_Init(HI_UNF_VO_DEV_MODE_E enDevMode);
-        HI_S32 HIADP_VO_DeInit();
+		HI_S32 HIADP_VO_Init(HI_UNF_VO_DEV_MODE_E enDevMode);
+		HI_S32 HIADP_VO_DeInit();
 
-        HI_S32 HIADP_AVPlay_SetVdecAttr(HI_HANDLE hAvplay,HI_UNF_VCODEC_TYPE_E enType,HI_UNF_VCODEC_MODE_E enMode);
+		HI_S32 HIADP_AVPlay_SetVdecAttr(HI_HANDLE hAvplay,HI_UNF_VCODEC_TYPE_E enType,HI_UNF_VCODEC_MODE_E enMode);
 
         HI_S32 HIADP_IPTV_Disp_Init();
         HI_S32 HIADP_IPTV_Disp_DeInit(HI_VOID);

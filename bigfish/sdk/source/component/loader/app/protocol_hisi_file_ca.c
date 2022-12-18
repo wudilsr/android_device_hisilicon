@@ -48,7 +48,7 @@ static LOADER_DATA_S g_astData[MAX_UPGRADE_IMAGE_NUM];
  */
 HI_S32 LOADER_PROTOCOL_HisiFILE_Init_OTA(HI_VOID)
 {
-    g_pu8DataBuf = (HI_U8 *)malloc(8 * 1024);
+    g_pu8DataBuf = (HI_U8 *)malloc(MAX_FILE_HEAD_LENGHT);
 
     if (HI_NULL == g_pu8DataBuf)
     {
@@ -68,7 +68,7 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Init_OTA(HI_VOID)
  */
 HI_S32 LOADER_PROTOCOL_HisiCAFILE_Init(HI_LOADER_TYPE_E enType, HI_VOID * para)
 {
-    g_pu8DataBuf = (HI_U8 *)malloc(8 * 1024);
+    g_pu8DataBuf = (HI_U8 *)malloc(MAX_FILE_HEAD_LENGHT);
 
     if (HI_NULL == g_pu8DataBuf)
     {
@@ -147,6 +147,12 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_GetVersionInfo_OTA(LOADER_VERSION_INFO_S * pstVe
         }
         
         u32HeaderLen = getBits(g_pu8DataBuf, 0, 64, 32);
+        if (u32HeaderLen > MAX_FILE_HEAD_LENGHT)
+        {
+            HI_ERR_LOADER("File head length has overflowed!\n");
+            s32Ret = HI_UPGRD_UPGRDPARSE_DATAERROR;
+            break;
+        }
         g_u32USBHeaderLen = u32HeaderLen;
         g_u32USBHeaderNotAligned = g_u32USBHeaderLen % 16;
 
@@ -257,6 +263,12 @@ HI_S32 LOADER_PROTOCOL_HisiCAFILE_GetVersionInfo(LOADER_VERSION_INFO_S * pstVers
         }
         
         u32HeaderLen = getBits(g_pu8DataBuf, 0, 64, 32);
+        if (u32HeaderLen > MAX_FILE_HEAD_LENGHT)
+        {
+            HI_ERR_LOADER("File head length has overflowed!\n");
+            s32Ret = HI_UPGRD_UPGRDPARSE_DATAERROR;
+            break;
+        }
         g_u32USBHeaderLen = u32HeaderLen;
         g_u32USBHeaderNotAligned = g_u32USBHeaderLen % 16;
 
@@ -338,7 +350,6 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
     HI_U32 u32TmpCRC = 0;
     HI_U8 *pMemAddr = HI_NULL;
     HI_U32 u32Size = 0;
-    HI_U32 u32MemSize = 0;
     HI_U8 offset = 0;
 
     if ((0 == u32MaxMemorySize) || (HI_NULL == pu8Data) || ((HI_U32)s_stFileHeader.u64FileLen > u32Len))
@@ -362,24 +373,13 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         return HI_FAILURE;
     }
 
-    u32MemSize = (HI_U32)s_stFileHeader.u64FileLen + PLUS_MEM_SIZE;
-    /* Malloc more size to store the data unaligned with 16 Bytes */
-    pMemAddr = (HI_U8 *)LOADER_GetUsableMemory(u32MemSize, &u32Size);
-    /* Malloc the whole size */
-    if ((NULL == pMemAddr) || (u32MemSize != u32Size))
-    {
-        HI_ERR_LOADER("There is no Usable Memory.\n");
-        return HI_FAILURE;
-    }
-
-    /* Decrypt the whole data */
-    memcpy(pMemAddr, pu8Data, (HI_U32)s_stFileHeader.u64FileLen);
+    /* set the pMemAddr as the start buffer of data */
+    pMemAddr = (HI_U8 *)pu8Data;
 
     ret = CA_SSD_DecryptUpgradeImage(pMemAddr, (HI_U32)s_stFileHeader.u64FileLen);
     if ( HI_SUCCESS != ret )
     {
         HI_ERR_LOADER("Decrypt upgrade image failed.\n");
-        LOADER_FreeUsableMemory(pMemAddr);
         return HI_FAILURE;
     }
 
@@ -401,7 +401,6 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         if ( pImg->u32DataCRC != u32TmpCRC )
         {
             HI_ERR_LOADER("crc auth failed!\n");
-            LOADER_FreeUsableMemory(pMemAddr);
             return HI_FAILURE;
         }
 
@@ -413,7 +412,6 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         if ( HI_SUCCESS != ret )
         {
             HI_ERR_LOADER("ca auth failed!\n");
-            LOADER_FreeUsableMemory(pMemAddr);
             return HI_FAILURE;
         }
 
@@ -430,12 +428,9 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Process_OTA(HI_U32 u32MaxMemorySize, const HI_U8
         if (HI_SUCCESS != ret)
         {
             HI_ERR_LOADER("pfnDataCallback error");
-            LOADER_FreeUsableMemory(pMemAddr);
             return ret;
         }
     }
-
-    LOADER_FreeUsableMemory(pMemAddr);
 
     return ret;
 }

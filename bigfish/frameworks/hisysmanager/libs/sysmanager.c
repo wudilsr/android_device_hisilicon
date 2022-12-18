@@ -756,4 +756,149 @@ int do_getDRMKey(const char* tdname,int offset,const char* filename,int datasize
     return ret;
 }
 
+int hisi_disp_init()
+{
+    HI_S32 Ret = HI_SUCCESS;
+
+    Ret = HI_UNF_DISP_Init();
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_Init falied!iRet=%d", Ret);
+        return Ret;
+    }
+
+    HI_UNF_DISP_BG_COLOR_S BgColor;
+    BgColor.u8Red   = 0;
+    BgColor.u8Green = 0;
+    BgColor.u8Blue  = 0;
+
+    HI_UNF_DISP_SetBgColor(HI_UNF_DISPLAY1, &BgColor);
+
+    Ret = HI_UNF_DISP_Open(HI_UNF_DISPLAY1);
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_Open HI_UNF_DISPLAY1 falied!iRet=%d", Ret);
+        HI_UNF_DISP_DeInit();
+        return Ret;
+    }
+
+    Ret = HI_UNF_DISP_Open(HI_UNF_DISPLAY0);
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_Open HI_UNF_DISPLAY0 falied!iRet=%d", Ret);
+        HI_UNF_DISP_Close(HI_UNF_DISPLAY1);
+        HI_UNF_DISP_DeInit();
+        return Ret;
+    }
+
+    SLOGE("do_snapshot hisi_disp_init OK");
+    return HI_SUCCESS;
+}
+
+int hisi_disp_deinit()
+{
+    HI_S32 Ret = HI_SUCCESS;
+
+    Ret = HI_UNF_DISP_Close(HI_UNF_DISPLAY0);
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_Close HI_UNF_DISPLAY0 falied!iRet=%d", Ret);
+        return Ret;
+    }
+
+    Ret = HI_UNF_DISP_Close(HI_UNF_DISPLAY1);
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_Close HI_UNF_DISPLAY1 falied!iRet=%d", Ret);
+        return Ret;
+    }
+
+    Ret = HI_UNF_DISP_DeInit();
+    if (Ret != HI_SUCCESS)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_DeInit falied!iRet=%d", Ret);
+        return Ret;
+    }
+
+    return HI_SUCCESS;
+}
+
+int do_snapshot(const char* path)
+{
+
+    SLOGE("do_snapshot the path = %s", path);
+    const int JPG = 1;
+    const int PNG = 2;
+    HI_S32 EncodeType = 1;
+    if (NULL == path)
+    {
+        SLOGE("do_snapshot the path is NULL!");
+        return -1;
+    }
+
+    if (strstr(path, "jpg"))
+    {
+        EncodeType = JPG;
+    } else if (strstr(path, "png")) {
+        EncodeType = PNG;
+    } else {
+        SLOGE("do_snapshot the path is wrong please input corrent path example: /data/a.png or /data/a.jpg!");
+        return -1;
+    }
+
+    int ret = HI_SUCCESS;
+    HI_BOOL bUseDisp = HI_FALSE;
+    HI_UNF_VIDEO_FRAME_INFO_S VidFrame;
+    ret = HI_UNF_DISP_AcquireSnapshot(HI_UNF_DISPLAY1, &VidFrame);
+    if (HI_ERR_DISP_NO_INIT == ret)
+    {
+        SLOGE("do_snapshot failed with HI_ERR_DISP_NO_INIT !");
+        ret = hisi_disp_init();
+        if (HI_SUCCESS != ret)
+        {
+            SLOGE("do_snapshot failed with hisi_Disp_Init !");
+            return HI_FAILURE;
+        }
+        bUseDisp = HI_TRUE;
+        ret = HI_UNF_DISP_AcquireSnapshot(HI_UNF_DISPLAY1, &VidFrame);
+    }
+
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_AcquireSnapshot failed 0x%x", ret);
+        return HI_FAILURE;
+    }
+
+    HIADP_OSD_Init();
+
+    /* jpg picture  */
+    ret = HIADP_OSD_EncodeFrame(&VidFrame, 1, path);
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_snapshot HIADP_OSD_EncodeFrame failed 0x%x", ret);
+        return HI_FAILURE;
+    }
+
+    HIADP_OSD_DeInit();
+
+    ret = HI_UNF_DISP_ReleaseSnapshot(HI_UNF_DISPLAY1, &VidFrame);
+    if (HI_SUCCESS != ret)
+    {
+        SLOGE("do_snapshot HI_UNF_DISP_ReleaseSnapshot failed 0x%x", ret);
+        return HI_FAILURE;
+    }
+
+    if (bUseDisp)
+    {
+        ret = hisi_disp_deinit();
+        if (HI_SUCCESS != ret)
+        {
+             SLOGE("do_snapshot hisi_Disp_DeInit failed2 0x%x", ret);
+        }
+    }
+
+    SLOGE("do_snapshot hisi_media_snapshot success");
+    return -1;
+}
+
 

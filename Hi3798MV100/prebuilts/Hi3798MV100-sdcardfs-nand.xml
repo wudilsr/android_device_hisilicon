@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<Partition_Info>
+<Part Sel="1" PartitionName="fastboot" FlashType="nand" FileSystem="none" Start="0" Length="8M" SelectFile=""/>
+<Part Sel="1" PartitionName="bootargs" FlashType="nand" FileSystem="none" Start="8M" Length="8M" SelectFile=""/>
+<Part Sel="1" PartitionName="recovery" FlashType="nand" FileSystem="none" Start="16M" Length="8M" SelectFile=""/>
+<Part Sel="0" PartitionName="deviceinfo" FlashType="nand" FileSystem="none" Start="24M" Length="8M" SelectFile=""/>
+<Part Sel="1" PartitionName="baseparam" FlashType="nand" FileSystem="none" Start="32M" Length="8M" SelectFile=""/>
+<Part Sel="0" PartitionName="pqparam" FlashType="nand" FileSystem="none" Start="40M" Length="8M" SelectFile=""/>
+<Part Sel="1" PartitionName="logo" FlashType="nand" FileSystem="none" Start="48M" Length="20M" SelectFile=""/>
+<Part Sel="0" PartitionName="logobak" FlashType="nand" FileSystem="none" Start="68M" Length="20M" SelectFile=""/>
+<Part Sel="1" PartitionName="fastplay" FlashType="nand" FileSystem="none" Start="88M" Length="40M" SelectFile=""/>
+<Part Sel="0" PartitionName="fastplaybak" FlashType="nand" FileSystem="none" Start="128M" Length="40M" SelectFile=""/>
+<Part Sel="1" PartitionName="kernel" FlashType="nand" FileSystem="none" Start="168M" Length="40M" SelectFile=""/>
+<Part Sel="0" PartitionName="misc" FlashType="nand" FileSystem="none" Start="208M" Length="20M" SelectFile=""/>
+<Part Sel="1" PartitionName="system" FlashType="nand" FileSystem="ubifs" Start="228M" Length="800M" SelectFile=""/>
+<Part Sel="1" PartitionName="cache" FlashType="nand" FileSystem="ubifs" Start="1028M" Length="500M" SelectFile=""/>
+<Part Sel="1" PartitionName="userdata" FlashType="nand" FileSystem="ubifs" Start="1528M" Length="-" SelectFile=""/>
+</Partition_Info>

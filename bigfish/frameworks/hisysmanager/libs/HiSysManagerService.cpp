@@ -33,10 +33,11 @@
 // {
 //
 // }
-//extern "C"
-// {
-//   extern int do_upgrade(const char* path);
-// }
+extern "C"
+{
+    int set_dynamic_policy(const char* state, const char* activity, const char* process);
+}
+
 
 namespace android
 {
@@ -178,18 +179,28 @@ int HiSysManagerService::cleanQbFlag(){
 }
 int HiSysManagerService::doInitSh(int type){
     //1-98M 2-98C 0-other
-    const char* max_freq = "echo 1000000 >/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq";
+    const char* max_freq = "echo 1200000 >/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq";
     const char* scaling_governor = "echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
     const char* timer_rate = "echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate";
     const char* nandcache = "echo cache off > /proc/nandcache";
+    const char* boostpulse_duration ="echo 1500000 > /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration"; 
+
+
+    const char* mali_dvfs_enable ="echo 1 > /sys/module/mali/parameters/mali_dvfs_enable";
+    const char* mali_dvfs_max_freqency ="echo 432000 > /sys/module/mali/parameters/mali_dvfs_max_freqency";
+
     if(type==1||type==2){
         system(max_freq);
         system(scaling_governor);
         system(timer_rate);
+	system(boostpulse_duration);
         system(nandcache);
     }else{
         system(scaling_governor);
     }
+
+    system(mali_dvfs_enable);
+    system(mali_dvfs_max_freqency);
     return 0;
 }
 int HiSysManagerService::getNetTime(String8 time){
@@ -407,4 +418,21 @@ int HiSysManagerService::setUIAsyncCompose(int mode){
     }
     return 1;
 }
+/*
+ *  screen snapshot
+ */
+int HiSysManagerService::snapshot(String8 path) {
+    const char* mpath = path.string();
+    int ret = 0;
+    ret = do_snapshot(path);
+    return ret;
+}
+int HiSysManagerService::setDynamicPolicy(String8 state, String8 activity, String8 process)
+{
+    char* mState = const_cast<char *>(state.string());
+    char* mActivity = const_cast<char *>(activity.string());
+    char* mProcess = const_cast<char *>(process.string());
+    return set_dynamic_policy(mState, mActivity, mProcess);
+}
+
 };

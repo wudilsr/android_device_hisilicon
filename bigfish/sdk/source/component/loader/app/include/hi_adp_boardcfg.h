@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#define TUNER_PORT              (HI_TUNER0_ID)
+#define TUNER_PORT              (HI_LOADER_TUNER_INDEX)
 
 #define LOADER_I2C_INVALID 0xFF
 

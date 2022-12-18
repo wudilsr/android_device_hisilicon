@@ -25,5 +25,10 @@ LOCAL_C_INCLUDES += $(MSP_DRV_INCLUDE)
 LOCAL_C_INCLUDES += $(MSP_API_INCLUDE)
 
 LOCAL_SHARED_LIBRARIES := libcutils libhi_common libhi_msp
-
+ifneq ($(PRODUCT_TARGET),shcmcc)
+ifneq ($(VMX_ADVANCED_SUPPORT),true)
+ifneq ($(HISILICON_TEE),true)
 include $(BUILD_EXECUTABLE)
+endif
+endif
+endif

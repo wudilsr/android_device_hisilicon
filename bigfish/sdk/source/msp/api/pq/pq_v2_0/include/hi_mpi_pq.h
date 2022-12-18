@@ -38,6 +38,15 @@ extern "C" {
 #define ACM_S_NUM            13
 #endif
 
+#define MPI_PQ_CHECK_NULL_PTR(ptr) \
+    do{\
+        if (HI_NULL == ptr){\
+            HI_ERR_PQ("ptr is NULL!\n");\
+            return HI_ERR_PQ_NULL_PTR;\
+        }\
+    }while(0)
+
+
 /*ACM table½á¹¹*/
 typedef struct hiMPI_COLOR_PARAM_S
 {

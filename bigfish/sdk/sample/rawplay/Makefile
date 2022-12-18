@@ -14,9 +14,10 @@ include $(SAMPLE_DIR)/base.mak
 CFLAGS += $(CFG_HI_SAMPLE_CFLAGS)
 CFLAGS += -I$(SDK_INC_DIR) -I$(SAMPLE_DIR)/common
 
-ifeq ($(CFG_HI_TVP_SUPPORT), y)
-CFLAGS += -DHI_TVP_SUPPORT
-CFLAGS += -I$(TVP_DIR)/libteec/inc/
+ifeq ($(CFG_HI_TEE_SUPPORT), y)
+CFLAGS += -DHI_TEE_SUPPORT
+CFLAGS += -I$(HI_TEE_OS_DIR)/libteec/inc/
+CFLAGS += -I$(COMMON_DIR)/api/mmz
 HI_LIBS += -lteec
 endif
 

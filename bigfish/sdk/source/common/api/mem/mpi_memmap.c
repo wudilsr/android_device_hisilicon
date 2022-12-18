@@ -3,7 +3,7 @@
 /* linux /dev/mem mmap support func                         */
 /*                                                          */
 /*                                                          */
-/* Copyright 2005 huawei com.                               */
+/* Copyright 2005 Hisilicon com.                               */
 /* Author :zhouaidi(42136)                                  */
 /* Create date: 2005-04-07                                  */
 /* Modify history                                           */

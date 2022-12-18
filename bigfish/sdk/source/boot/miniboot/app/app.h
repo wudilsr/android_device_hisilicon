@@ -51,7 +51,7 @@ typedef uint64                        u_quad_t;
 extern int sprintf(char *buf, const char *cfmt, ...);
 extern int snprintf(char *str, size_t size, const char *format, ...);
 
-#ifndef CONFIG_SUPPORT_CA_RELEASE
+#ifdef CONFIG_PRINT 
 extern int printf(const char *cfmt, ...);
 extern int getchar(void);
 extern int getc(void);
@@ -127,10 +127,7 @@ extern const void *flash_get_info(u_int flash);
 #define BOOT_MEDIA_DDR                         (1)
 #define BOOT_MEDIA_NAND                        (2)
 #define BOOT_MEDIA_SPIFLASH                    (3)
-#define BOOT_MEDIA_SPI_NAND                    (4)
-#define BOOT_MEDIA_EMMC                        (5)
-#define BOOT_MEDIA_SD                          (6)
-
+#define BOOT_MEDIA_EMMC                        (4)
 extern int get_boot_media(void);
 
 /* for ca nagra only */

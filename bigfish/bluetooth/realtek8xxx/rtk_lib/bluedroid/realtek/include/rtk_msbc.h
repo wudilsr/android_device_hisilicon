@@ -1,4 +1,4 @@
-#ifdef BLUETOOTH_RTK_VR
+#ifdef BLUETOOTH_RTK
 
 #ifndef RTK_PATCH_H
 #define RTK_PATCH_H

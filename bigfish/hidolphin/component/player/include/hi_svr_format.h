@@ -27,6 +27,9 @@ extern "C" {
 /** Reach the end of a file. CNcomment:到达文件结束位置 CNend*/
 #define HI_FORMAT_ERRO_ENDOFFILE            (HI_FAILURE - 1)
 
+/** Reach the start of a file. CNcomment:到达文件开始位置 CNend*/
+#define HI_FORMAT_ERRO_STARTOFFILE            (HI_FAILURE - 2)
+
 /** Return the file size(byte). CNcomment:返回文件实际大小，单位byte CNend*/
 #define HI_FORMAT_SEEK_FILESIZE             (65536)
 
@@ -97,6 +100,13 @@ extern "C" {
 /** Internet address maximum length */
 /** CNcomment: IP地址最大长度 */
 #define HI_FORMAT_IP_LEN (16)
+/** the length of mimetype info */
+/** CNcomment: mimetype 信息数据长度 */
+#define HI_FORMAT_MIMETYPE_LEN (256)
+/** the max number of DRM header info*/
+/** CNcomment: DRM消息头的最大值 */
+#define HI_FORMAT_MAX_DRM_NB (32)
+/** the max number of chapters*/
 
 /*************************** Structure Definition ****************************/
 /** Version number definition */
@@ -341,6 +351,24 @@ typedef struct hiFORMAT_STREAM_INFO_S
     HI_S64      s64PlayTime;  /**< Elapsed time, in the unit of ms. *//**< CNcomment:已播放时间，单位ms */
 } HI_FORMAT_STREAM_INFO_S;
 
+/** Get the information relate to DRM */
+/** CNcomment:获取解析器的DRM信息 */
+#define MAX_DRM_NB (32)
+typedef struct hiFORMAT_DRM_INFO_S
+{
+    struct DRM_HEADER {
+        HI_S32  s32ID;      /**< DRM stream unit id. *//**< CNcomment:DRM 音视频流ID */
+        HI_S32  s32Size;    /**< DRM stream header size. *//**< CNcomment:DRM流头信息大小 */
+        HI_U8*  pu8Data;    /**< DRM stream header buffer. *//**< CNcomment:DRM流信息缓存 */
+    } headers[HI_FORMAT_MAX_DRM_NB];
+    HI_U32  u32HeaderNum;   /**< DRM stream header number. *//**< CNcomment:DRM流信息数目*/
+    HI_CHAR szMimeType[HI_FORMAT_MIMETYPE_LEN]; /**< DRM mimetype info. *//**< CNcomment:DRM mimetype 信息*/
+} HI_FORMAT_DRM_INFO_S;
+typedef struct hiFORMAT_TPLAY_CAPABILITIES_S
+{
+    HI_BOOL bSupportTplay;
+} HI_FORMAT_TPLAY_CAPABILITIES_S;
+
 /** Command of the invoking */
 /** CNcomment:invoke操作命令 */
 typedef enum hiFORMAT_INVOKE_ID_E
@@ -409,7 +437,9 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_SET_FREE_RUN,         /**< the command of setting play free run behavior, the parameter is ::HI_S32*, HI_TRUE:: play video only, as fast as possible; HI_FALSE: resume to normal play*//**< CNcomment:设置free run开关模式，参数类型为::HI_S32,  HI_TRUE:快速输出视频帧; HI_FALSE: 恢复正常播放*/
     HI_FORMAT_INVOKE_SET_HTTP_DOWNLOAD_SIZE_ONCE,        /**< the command of setting download size each http connection in MB, the parameter is ::HI_S32 */ /**< CNcomment:设置每次http连接下载的数据大小，单位MB，参数类型为::HI_S32 */
     HI_FORMAT_INVOKE_SET_BUFFER_SEEK,      /**< the command of setting seek in buffer, the parameter is ::HI_BOOL*, HI_TRUE:: seek in buffer; HI_FALSE: not seek in buffer*//**< CNcomment:设置buffer内seek标识，此命令只能由播放器内部使用，参数类型为::HI_BOOL,  HI_TRUE:需要进行buffer内seek; HI_FALSE:无需buffer内seek*/
-
+    HI_FORMAT_INVOKE_GET_TPLAY_CAPABILITIES,     /**< the command of getting tplay capabilities,only used by hiplayer internally,the parameter is ::HI_FORMAT_TPLAY_CAPABILITIES_S* */ /**< CNcomment:获取TPLAY能力集，仅供hiplayer内部使用，参数::HI_FORMAT_TPLAY_CAPABILITIES_S* */
+    HI_FORMAT_INVOKE_SET_PLAY_SPEED,             /**< the command of setting tplay speed,only used by hiplayer internally,the parameter is ::HI_FLOAT* */ /**< CNcomment:设置TPlay速度，仅供hiplayer内部使用，参数::HI_FLOAT* */
+    HI_FORMAT_INVOKE_GET_DRM_INFO,         /**< the command of getting DRM information,the parameter is ::HI_FORMAT_DRM_INFO_S *//**< CNcomment:获取DRM信息,参数类型::HI_FORMAT_DRM_INFO_S* */
     /* if hisilicon invoke command, please defined before USER */
     HI_FORMAT_INVOKE_PROTOCOL_USER=100,    /**< the command of setting data to user protocol *//**< CNcomment:设置用户协议数据 */
     HI_FORMAT_INVOKE_GET_URL_INFO,
@@ -647,6 +677,7 @@ typedef struct hiFORMAT_SUB_INFO_S
                             /**< CNcomment:mpeg dash 的 Role descriptor 的值,高8位代表scheme(请参考HI_FORMAT_ROLE_SCHEME_E),低24位代表descriptor 值,descriptor值是HI_FORMAT_ROLE_VALUE_E中定义的任意1个或多个值的位运算'|' 的结果*/
     HI_U32 u32Accessibility; /**<  Accessibility descriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, value type is number*/
                                     /**< CNcomment:mpeg dash 的 Accessibility descriptor 的值,高8位代表scheme(请参考hiFORMAT_ACCESSIBILITY_SCHEME_E),低24位代表descriptor 值,descriptor值类型是数字类型*/
+    HI_CHAR paszFileName[HI_FORMAT_MAX_URL_LEN];       /**< File name of external subtitle. *//**< CNcomment:外挂字幕文件名 */
 } HI_FORMAT_SUB_INFO_S;
 
 
@@ -680,6 +711,7 @@ typedef struct hiFORMAT_FILE_INFO_S
     HI_CHAR aszFileFormat[HI_FORMAT_TITLE_MAX_LEN];   /**< File demuxer info .Not used now*//**< CNcomment:文件格式描述，来自于解析器。目前没有使用 */
     HI_U32  u32ProgramNum;                  /**< Actual number of programs *//**< CNcomment:实际节目个数 */
     HI_FORMAT_PROGRAM_INFO_S *pastProgramInfo; /**< Program information *//**< CNcomment:节目信息 */
+    HI_BOOL bIsDrmFile;
 } HI_FORMAT_FILE_INFO_S;
 
 /** Frame data */
@@ -701,6 +733,14 @@ typedef struct hiFORMAT_FRAME_S
     HI_U32  u32Duration;                  /**< Display duration, in the unit of ms. It is set to 0 if there is no duration. *//**< CNcomment:显示时长，单位ms，没有duration，设置为0 */
     HI_U32  u32UserData;                  /**< Private data. The DEMUX can transparently transmit private data by using this parameter. *//**< CNcomment:私有数据，解析器可以通过该参数回带私有数据 */
     HI_U32  u32Format;                   /**< Video/Audio/Subtitle format, For details about the value definition, see::HI_FORMAT_VIDEO_TYPE_E/HI_FORMAT_AUDIO_TYPE_E/HI_FORMAT_SUBTITLE_TYPE_E *//**< CNcomment:视频/音频/字幕/字幕格式，取值::HI_FORMAT_VIDEO_TYPE_E/HI_FORMAT_AUDIO_TYPE_E/HI_FORMAT_SUBTITLE_TYPE_E */
+
+    HI_U8   *pu8IVBuffer;                 /**< DRM IV buffer *//**< CNcomment: DRM 解密向量 */
+    HI_U32  u32IVSize;                    /**< DRM IV buffer *//**< CNcomment: DRM 解密向量大小 */
+    HI_U8   *pu8KeyID;                    /**< DRM key ID buffer *//**< CNcomment: DRM UUID缓存 */
+    HI_U32  u32KeyIDSize;                 /**< DRM key ID buffer size*//**< CNcomment: DRM UUID缓存大小 */
+    HI_S32  s32Cryptomode;
+    HI_S32  s32Encryptsize;
+    HI_S32  *ps32Encryptsize;
 } HI_FORMAT_FRAME_S;
 
 /** Parameters of the thumbnail */

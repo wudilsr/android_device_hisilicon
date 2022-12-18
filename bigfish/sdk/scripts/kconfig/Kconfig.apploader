@@ -33,6 +33,22 @@ config  HI_APPLOADER_USB_PROTOCOL_HISI_FILE
 endchoice
 
 #------------------------------------------------
+config  HI_APPLOADER_MODE_FS
+	bool "FS Upgrade Support"
+	default y
+	depends on HI_LOADER_APPLOADER
+
+#------------------------------------------------
+choice
+        prompt "Protocol Type"
+        default HI_APPLOADER_FS_PROTOCOL_HISI_FILE
+        depends on HI_APPLOADER_MODE_FS
+
+config  HI_APPLOADER_FS_PROTOCOL_HISI_FILE
+        bool "Hisi File Protocol"
+endchoice
+
+#------------------------------------------------
 config  HI_APPLOADER_MODE_IP
 	bool "IP Upgrade Support"
 	depends on HI_LOADER_APPLOADER && !ADVCA_VERIMATRIX
@@ -64,16 +80,27 @@ choice
 config  HI_APPLOADER_TUNER_CAB
 	bool "Cable"
 
+config  HI_APPLOADER_TUNER_TER
+	bool "Terrestrial"
+
 config  HI_APPLOADER_TUNER_SAT
 	bool "Satellite"
-
-config  HI_APPLOADER_TUNER_DVB_T
-    bool "Terrestrial DVB_T"
-
-config  HI_APPLOADER_TUNER_DVB_T2
-  	bool "Terrestrial DVB_T2"
 endchoice
 
+#------------------------------------------------
+config HI_APPLOADER_TUNER_INDEX
+    int "Tuner Port Index (0,3)"
+    range 0 3
+    default 0
+    depends on HI_APPLOADER_MODE_OTA
+    ---help---
+        This option controls tuner port index, range from 0 to 3.
+          0-the satellite tuner port index
+          1-the cable tuner port index
+          2-the cable tuner port index
+          3-the cable tuner port index
+          Default 0.
+        NOTICE: This value control the tuner port index, the default value in 3796m is always 0(satellite).
 #------------------------------------------------
 choice
 	prompt "Protocol Type"

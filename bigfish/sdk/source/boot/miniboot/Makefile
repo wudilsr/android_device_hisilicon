@@ -98,6 +98,16 @@ ZLIBS       := arm/compress/ arm/lib/
 LIBS  := $(addsuffix $(BUILDOBJ).o,$(addprefix $(TOPDIR)/,$(LIBS)))
 ZLIBS := $(addsuffix $(BUILDOBJ).o,$(addprefix $(TOPDIR)/,$(ZLIBS)))
 
+ifeq ($(CONFIG_DDR_TRAINING_V2),y)
+DDR_TRAIN   := $(shell if [ -d $(TOPDIR)/drivers/ddr/$(PLATFORM) ]; then \
+			echo drivers/ddr/$(PLATFORM); \
+		else \
+			echo drivers/ddr/default; \
+		fi;)
+DDR_CMD_BIN := $(DDR_TRAIN)/cmd_bin
+DDRLIBS     := $(addsuffix $(BUILDOBJ).o,$(addprefix $(TOPDIR)/,$(DDR_TRAIN)/))
+endif
+
 TOOLPATH    := tools
 DEFLATE     := $(TOPDIR)/$(TOOLPATH)/deflate
 MKBOOTARGS  := $(TOPDIR)/$(TOOLPATH)/mkbootargs
@@ -154,7 +164,7 @@ $(BOOT).elf: check_reg $(CONFIGINC) $(MKSYM) $(ZLIBS) $(LINKLDS) $(PLATFORMLDS)
 
 $(ZLIBS): data.z
 
-data.z: $(LIBS) $(LINKLDS) $(PLATFORMLDS) $(DEFLATE) force
+data.z: $(LIBS) $(LINKLDS) $(PLATFORMLDS) $(DEFLATE) $(DDRLIBS) force
 	$(Q)$(MAKE) $(MKFLAGS) SRCDIR="$(BOOTPATH)" LIBS="$(LIBS) $(LIBAPPS)" \
 		$(ZBOOT).elf
 	$(call show_cmd,OBJCOPY,$(ZBOOT).elf)
@@ -164,7 +174,7 @@ data.z: $(LIBS) $(LINKLDS) $(PLATFORMLDS) $(DEFLATE) force
 	$(call show_cmd,DEFLATE,$@)
 	$(Q)$(DEFLATE) $(ZBOOT).bin $@
 else
-$(BOOT).elf: check_reg $(CONFIGINC) $(MKSYM) $(LIBS) $(LINKLDS) $(PLATFORMLDS) force
+$(BOOT).elf: check_reg $(CONFIGINC) $(MKSYM) $(LIBS) $(LINKLDS) $(PLATFORMLDS) $(DDRLIBS) force
 	$(Q)$(MAKE) $(MKFLAGS) SRCDIR="$(BOOTPATH)" LIBS="$(LIBS) $(LIBAPPS)" \
 		$(BOOT).elf
 endif
@@ -173,7 +183,7 @@ $(TOPDIR)/$(TOOLPATH)/%:
 	$(call show_cmd,TOOLS,$@)
 	$(Q)$(MAKE) -s SRCDIR="$(TOPDIR)/$(TOOLPATH)" -C $(@D) $(@F)
 
-%/$(BUILDOBJ).o: $(CONFIGINC) force
+%/$(BUILDOBJ).o: $(CONFIGINC) ddr_bin force
 	$(Q)$(MAKE) $(MKFLAGS) SRCDIR="$(@D)/" $@
 
 $(DEFCONFIG): $(TGTCONFIG)
@@ -207,11 +217,18 @@ tools:;
 
 force:;
 
+ddr_bin:
+ifeq ($(CONFIG_DDR_TRAINING_V2),y)
+	$(MAKE) -C $(DDR_CMD_BIN) PLATFORM=$(PLATFORM) TOPDIR=$(shell pwd) ARCH=$(ARCH) ddr_cmd.bin
+endif
 ################################################################################
 PHONYS += clean $(TOPDIR)/$(TOOLPATH)/clean
-clean: $(addsuffix .clean,$(LIBS) $(ZLIBS)) $(TOPDIR)/$(TOOLPATH)/clean
+clean: $(addsuffix .clean,$(LIBS) $(ZLIBS) $(DDRLIBS)) $(TOPDIR)/$(TOOLPATH)/clean
 	$(Q)$(RM) -f $(TEMPS)
 	$(Q)test ! -d "$(BOOTPATH)" || $(MAKE) $(CLFLAGS) SRCDIR="$(BOOTPATH)" clean
+ifeq ($(CONFIG_DDR_TRAINING_V2),y)
+	$(Q) $(MAKE) -C $(DDR_CMD_BIN) --no-print-directory clean
+endif
 
 $(TOPDIR)/$(TOOLPATH)/clean:
 	$(call show_cmd,CLEAN,$(@D))

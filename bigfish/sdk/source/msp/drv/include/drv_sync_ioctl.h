@@ -178,6 +178,8 @@ typedef struct hiSYNC_S
     SYNC_CHAN_E                PreSyncTarget;        /* presynchronization target*/
     HI_U32                     PreSyncTargetTime;    /* target time of presynchronization */
     HI_BOOL                    PreSyncTargetInit;    /* initialize flag of presynchronization target */
+    HI_U32                     PreSyncPauseStartSysTime;
+    HI_U32                     PreSyncPauseEndSysTime;
     HI_BOOL                    BufFundFinish;        /* finish flag of audio and video data cumulation */
     HI_U32                     BufFundEndSysTime;    /* end time of audio and video data cumulation  */
     HI_U32                     ExtPreSyncTagetTime;

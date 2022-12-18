@@ -116,10 +116,22 @@ void hiusb_start_hcd_hi3798mx(resource_size_t host_addr)
 			writel(reg, PERI_CRG100);
 			udelay(300);
 
+			/* PLL core clock 240M */
+			writel(0xa809, PERI_USB14);
+			writel(0xe809, PERI_USB14);
+			writel(0xa809, PERI_USB14);
+			udelay(300);
+
 			/* cancel power on reset */
 			reg = readl(PERI_CRG100);
 			reg &= ~(USB2_PHY2_SRST_REQ);
 			writel(reg, PERI_CRG100);
+			mdelay(2);
+
+			/* PLL core clock 480M */
+			writel(0xa801, PERI_USB14);
+			writel(0xe801, PERI_USB14);
+			writel(0xa801, PERI_USB14);
 			udelay(300);
 
 			/* config clk output */
@@ -215,6 +227,12 @@ void hiusb_start_hcd_hi3798mx(resource_size_t host_addr)
 			writel(reg, PERI_CRG47);
 			udelay(300);
 
+			/* PLL core clock 240M */
+			writel(0xa809, PERI_USB1);
+			writel(0xe809, PERI_USB1);
+			writel(0xa809, PERI_USB1);
+			udelay(300);
+
 			/* cancel power on reset */
 			reg = readl(PERI_CRG47);
 			reg &= ~(USB_PHY0_SRST_REQ
@@ -253,6 +271,13 @@ void hiusb_start_hcd_hi3798mx(resource_size_t host_addr)
 			writel(0xabe0, PERI_USB1);
 			writel(0xebe0, PERI_USB1);
 			writel(0xabe0, PERI_USB1);
+			udelay(500);
+			udelay(500);
+
+			/* PLL core clock 480M */
+			writel(0xa801, PERI_USB1);
+			writel(0xe801, PERI_USB1);
+			writel(0xa801, PERI_USB1);
 			udelay(500);
 			udelay(500);
 

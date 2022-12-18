@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2012 S00133955/HUAWEI  All rights reserved.
+# Copyright (c) 2008-2012 S00133955/Hisilicon  All rights reserved.
 #  
 
 OUTPUT_NAME_SO = libhwmedia.so

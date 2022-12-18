@@ -287,6 +287,11 @@ typedef struct hiFORMAT_URL_INFO_S
     HI_CHAR ipaddr[HI_FORMAT_IP_LEN];         /**< output parameter, internet address *//**< CNcomment:IP地址*/
 } HI_FORMAT_URL_INFO_S;
 
+typedef struct hiFORMAT_DMX_INFO_S
+{
+    HI_CHAR aszDmxName[HI_FORMAT_PROTOCAL_NAME_LEN];
+} HI_FORMAT_DMX_INFO_S;
+
 /** Command of the invoking */
 /** CNcomment:invoke操作命令 */
 typedef enum hiFORMAT_INVOKE_ID_E
@@ -345,6 +350,8 @@ typedef enum hiFORMAT_INVOKE_ID_E
     HI_FORMAT_INVOKE_GET_HLS_SECOND_LEVEL_URL, /**< the command of getting hls second level url, the parameter is ::HI_CHAR* */ /**< CNcomment:获取hls的二级列表，参数类型为::HI_CHAR* */
     HI_FORMAT_INVOKE_GET_AUDIO_FORMAT_BUFFER,    /**< the command of getting network audio stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
     HI_FORMAT_INVOKE_GET_VIDEO_FORMAT_BUFFER,    /**< the command of getting network video stream duration in format(.e.g ffmpeg)  , the parameter is HI_FORMAT_BUFFER_STATUS_S */
+    HI_FORMAT_INVOKE_GET_DMX_INFO,               /**< the command of getting get demux info, the parameter is HI_FORMAT_DMX_INFO_S * */
+    HI_FORMAT_INVOKE_SET_SWITCH_TIME,            /**< the command of setting start play time, the parameter is HI_U32 * */
     HI_FORMAT_INVOKE_BUTT
 } HI_FORMAT_INVOKE_ID_E;
 
@@ -593,6 +600,8 @@ typedef struct hiFORMAT_PROGRAM_INFO_S
     HI_FORMAT_AUD_INFO_S *pastAudStream;   /**< Audio stream information *//**< CNcomment:音频流信息 */
     HI_U32 u32SubStreamNum;                /**< Number of subtitles *//**< CNcomment:字幕个数 */
     HI_FORMAT_SUB_INFO_S *pastSubStream;   /**< Subtitle information *//**< CNcomment:字幕信息 */
+    HI_S64  s64StartTime;                   /**< Start time of program, in the unit is ms. *//**< CNcomment:节目播放起始时间，单位ms */
+    HI_S64  s64Duration;                    /**< Total duration of program, in the unit of ms. *//**< CNcomment:节目总时长，单位ms */
 } HI_FORMAT_PROGRAM_INFO_S;
 
 /** Media file information */

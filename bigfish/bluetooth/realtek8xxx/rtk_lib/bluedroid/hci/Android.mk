@@ -9,11 +9,6 @@ LOCAL_SRC_FILES := \
         src/btsnoop.c \
         src/utils.c
 
-ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
-LOCAL_SRC_FILES += \
-        src/bt_list.c
-endif
-
 ifeq ($(BLUETOOTH_HCI_USE_MCT),true)
 
 LOCAL_CFLAGS := -DHCI_USE_MCT
@@ -40,10 +35,26 @@ endif
 
 endif
 
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
+LOCAL_CFLAGS += -DBLUETOOTH_RTK
+LOCAL_SRC_FILES += \
+        src/bt_list.c
+endif
+
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_HEARTBEAT),true)
 LOCAL_CFLAGS += -DBLUETOOTH_RTK_HEARTBEAT
 LOCAL_SRC_FILES += \
         src/poll.c
+endif
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_COEX),true)
+LOCAL_CFLAGS += -DBLUETOOTH_RTK_COEX
+LOCAL_SRC_FILES += \
+        src/rtk_parse.c
+
+LOCAL_C_INCLUDES += \
+        $(LOCAL_PATH)/../stack/include \
+        $(LOCAL_PATH)/../gki/ulinux
 endif
 
 LOCAL_C_INCLUDES += \

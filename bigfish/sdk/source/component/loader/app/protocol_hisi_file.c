@@ -405,7 +405,7 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_Init(HI_LOADER_TYPE_E enType, HI_VOID * para)
     g_u32DownLoadDataSize = 0;
     g_u32FullDataSize = 0;
 
-    g_pu8DataBuf = (HI_U8 *)malloc(8 * 1024);
+    g_pu8DataBuf = (HI_U8 *)malloc(MAX_FILE_HEAD_LENGHT);
 
     if (HI_NULL == g_pu8DataBuf)
     {
@@ -481,6 +481,12 @@ HI_S32 LOADER_PROTOCOL_HisiFILE_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersio
 		}
 			
 		u32HeaderLen = getBits(g_pu8DataBuf, 0, 64, 32);
+		if (u32HeaderLen > MAX_FILE_HEAD_LENGHT)
+        {
+            HI_ERR_LOADER("File head length has overflowed!\n");
+            s32Ret = HI_UPGRD_UPGRDPARSE_DATAERROR;
+            break;
+        }
 
 		pTmp += 16;
 		g_u32ReadOffset += u32ReadLen;

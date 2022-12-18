@@ -77,12 +77,12 @@ HI_S32 SUBT_DataParse_DeInit(HI_VOID);
 /*
  *@brief:create data parse module.
  *
- *@param[out] phDataParse This module handle.
+ *@param[out] pphDataParse This module handle.
  *
  *@retval ::HI_SUCCESS, upon successfully.
  *@retval ::HI_FAILURE, failed.
  */
-HI_S32 SUBT_DataParse_Create(HI_HANDLE* phDataParse);
+HI_S32 SUBT_DataParse_Create(HI_VOID** pphDataParse);
 
 /*
  *@brief:Destroy data parse module.
@@ -93,7 +93,7 @@ HI_S32 SUBT_DataParse_Create(HI_HANDLE* phDataParse);
  *@retval ::HI_SUCCESS, upon successful
  *@retval ::HI_FAILURE, failed
  */
-HI_S32 SUBT_DataParse_Destroy(HI_HANDLE hDataParse);
+HI_S32 SUBT_DataParse_Destroy(HI_VOID* hDataParse);
 
 /*
  *@brief:Reset parse module data
@@ -104,7 +104,7 @@ HI_S32 SUBT_DataParse_Destroy(HI_HANDLE hDataParse);
  *
  *@retval ::None.
  */
-HI_S32 SUBT_DataParse_Reset(HI_HANDLE hDataParse, HI_BOOL bParseFlag);
+HI_S32 SUBT_DataParse_Reset(HI_VOID* hDataParse, HI_BOOL bParseFlag);
 
 /*
  *@brief: To parse PES data packet.
@@ -118,7 +118,7 @@ HI_S32 SUBT_DataParse_Reset(HI_HANDLE hDataParse, HI_BOOL bParseFlag);
  *@retval ::HI_SUCCESS, upon successful
  *@retval ::HI_FAILURE, failed
  */
-HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , HI_U32 u32Len, HI_U16 u16PageID, HI_U16 u16AncillaryID);
+HI_S32 SUBT_DataParse_ParsePESPacket(HI_VOID* hDataParse, HI_U8 *pu8DataSrc , HI_U32 u32Len, HI_U16 u16PageID, HI_U16 u16AncillaryID);
 
 /*
  *@brief: update callback info.
@@ -130,7 +130,7 @@ HI_S32 SUBT_DataParse_ParsePESPacket(HI_HANDLE hDataParse, HI_U8 *pu8DataSrc , H
  *@retval ::HI_SUCCESS, upon successful
  *@retval ::HI_FAILURE, failed
  */
-HI_S32 SUBT_DataParse_Update(HI_HANDLE hDataParse, SUBT_DATAPARSE_CALLBACK_FN pfnCallback, HI_U32 u32UserData);
+HI_S32 SUBT_DataParse_Update(HI_VOID* hDataParse, SUBT_DATAPARSE_CALLBACK_FN pfnCallback, HI_U32 u32UserData);
 
 #ifdef __cplusplus
 }

@@ -171,6 +171,8 @@ namespace android
         MEDIA_INFO_STREM_IFRAME_ERROR = 1012,
         // stream norm switch
         MEDIA_INFO_STREM_NORM_SWITCH = 1013,
+        // first frame after seek
+        MEDIA_INFO_FIRST_FRAME_AFTER_SEEK = 1014,
 
         //hiplayer Video INFO string,set only
         KEY_PARAMETER_VIDEO_POSITION_INFO = 6009,

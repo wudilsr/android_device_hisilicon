@@ -36,6 +36,9 @@
 #define EXCEL_ERR       "Excel config error:"
 #define MAX_INFNAME     16
 
+#ifdef CONFIG_NET
+
+extern int eth_nums;
 
 static const char *_intfnames[] = {
 	"mii", "rmii", "rgmii", "unknown", NULL,
@@ -74,7 +77,7 @@ char *get_eth_phyaddr_str(void)
 	char *env = NULL;
 
 	env = env_get("phyaddr");
-	if (!env) 
+	if (!env)
 		env = eth_config.phyaddr;
 
 	return env;
@@ -101,11 +104,14 @@ int get_eth_phyaddr(int index, int defval)
 	}
 
 	phyaddr = strtoul(env, NULL, 0);
-	if (phyaddr < 0 || phyaddr > 31) {
+	if ((phyaddr < 0 || phyaddr > 31) && (phyaddr != 0xff)) {
 		printf("eth%d phyaddr(%d) out of range, use default:%d\n",
 		       index, phyaddr, defval);
 		phyaddr = defval;
 	}
+
+	if (phyaddr == 0xff)
+		phyaddr = defval;
 
 	return phyaddr;
 }
@@ -186,11 +192,14 @@ int get_eth_phymdio(int index, int defval)
 	}
 
 	phymdio = strtoul(env, NULL, 0);
-	if (phymdio != 0 && phymdio != 1) {
+	if ((phymdio != 0 && phymdio != 1) && (phymdio != 0xff)) {
 		printf("eth%d phymdio(%d) invalid, use default:%d\n",
 		       index, phymdio, defval);
 		phymdio = defval;
 	}
+
+	if (phymdio == 0xff)
+		phymdio = defval;
 
 	return phymdio;
 }
@@ -301,12 +310,6 @@ static void set_hi3798mx_eth_phyintf(void)
 
 	regval = readl(REG_BASE_SF + HISFV300_MAC0_PORTSEL);
 	phy0intf = ((regval >> 1) & 0x1);
-	if (phy0intf != 0 && phy0intf != 1) {
-		printf("MAC_PORTSEL register should be 0(MII) or 1(RMII), "
-		       "but current is %d\n",
-		       phy0intf);
-		return;
-	}
 
 	snprintf(eth_config.phyintf, sizeof(eth_config.phyintf), "%s,%s",
 		 ethphy_intfname(hi3798mx_phyinf[phy0intf]),
@@ -347,19 +350,23 @@ static void set_eth_phyaddr(uint32 regval)
 	phy0addr = regval & 0xff;
 	phy1addr = (regval >> 16) & 0xff;
 
-	if (phy0addr > 31) {
+	if (phy0addr > 31 && phy0addr != 0xff) {
 		printf(EXCEL_ERR
 		       "MAC0_PHY_ADDR register should be 0-31, "
 		       "but current is %d\n", phy0addr);
 		return;
 	}
 
-	if (phy1addr > 31) {
+	eth_nums++;
+
+	if (phy1addr > 31 && phy1addr != 0xff) {
 		printf(EXCEL_ERR
 		       "MAC1_PHY_ADDR register should be 0-31, "
 		       "but current is %d\n", phy1addr);
 		return;
 	}
+
+	eth_nums++;
 
 	snprintf(eth_config.phyaddr, sizeof(eth_config.phyaddr),
 		 "%d,%d", phy0addr, phy1addr);
@@ -393,8 +400,6 @@ static void set_eth_phygpio(uint32 regval)
 		len = snprintf(p, buflen - len, "%x-%x",
 				phy1gpio_base, phy1gpio_bit);
 }
-
-
 /*****************************************************************************/
 void setup_eth_param(void)
 {
@@ -418,7 +423,7 @@ void setup_eth_param(void)
 	if (env)
 		set_param_data("ethaddr", env, strlen(env));
 
-	for (i = 0; i < MAX_MAC_NUMS; i++) {
+	for (i = 0; i < eth_nums; i++) {
 		char name[16];
 		uint32 gpio_base, gpio_bit, data[2];
 
@@ -439,6 +444,7 @@ void eth_config_init(void)
 	uint32 phyaddrmdio_val;
 	uint32 phygpio_val;
 
+	eth_nums = 0;
 	memset(&eth_config, 0, sizeof(eth_config));
 	/* REG_SC_GEN10
 	 * bit 0 -- 7:  phyaddr for mac0
@@ -465,9 +471,9 @@ void eth_config_init(void)
 	}
 
 	/* There's only one eth port for hi3798mx. */
-	set_eth_phygpio((phygpio_val & 0x0000ffff) | 0xffff0000);
-	set_eth_phyaddr((phyaddrmdio_val & 0x0000ffff) | 0xff1f0000);
-	set_eth_phymdio((phyaddrmdio_val & 0x0000ffff) | 0xff1f0000);
+	set_eth_phygpio(phygpio_val);
+	set_eth_phyaddr(phyaddrmdio_val & 0xff1fff1f);
+	set_eth_phymdio(phyaddrmdio_val);
 	set_hi3798mx_eth_phyintf();
 }
-
+#endif

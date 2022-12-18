@@ -39,6 +39,7 @@ typedef struct RTPDynamicProtocolHandler_s RTPDynamicProtocolHandler;
 
 typedef struct RTPDemuxContext RTPDemuxContext;
 RTPDemuxContext *ff_rtp_parse_open(AVFormatContext *s1, AVStream *st, URLContext *rtpc, int payload_type, int queue_size, int is_parse_tspkt);
+int ff_rtp_parse_reset(RTPDemuxContext *s, URLContext *rtpc);
 void ff_rtp_parse_set_dynamic_protocol(RTPDemuxContext *s, PayloadContext *ctx,
                                        RTPDynamicProtocolHandler *handler);
 int ff_rtp_parse_packet(RTPDemuxContext *s, AVPacket *pkt,

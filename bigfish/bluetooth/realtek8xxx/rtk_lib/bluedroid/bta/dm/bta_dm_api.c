@@ -1305,6 +1305,53 @@ void BTA_DmAddBleDevice(BD_ADDR bd_addr, tBLE_ADDR_TYPE addr_type, tBT_DEVICE_TY
     }
 #endif
 }
+
+#ifdef BLUETOOTH_RTK
+/*******************************************************************************
+**
+** Function         BTA_DmAddBleDeviceExtraInfo
+**
+** Description      Add a BLE device.  This function will be normally called
+**                  during host startup to restore all required information
+**                  for a LE device stored in the NVRAM.
+**
+** Parameters:      bd_addr          - BD address of the peer
+**                  dev_type         - Remote device's device type.
+**                  addr_type        - LE device address type.
+**
+**
+** Returns          void
+**
+*******************************************************************************/
+void BTA_DmAddBleDeviceExtraInfo(BD_ADDR bd_addr, DEV_CLASS dev_class, BD_NAME bd_name)
+{
+#if BLE_INCLUDED == TRUE
+    tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO *p_msg;
+    APPL_TRACE_API3 ("BTA_DmAddBleDeviceExtraInfo: dev_class: %d : %d : %d ", dev_class[0],dev_class[1],dev_class[2]);
+
+    if ((p_msg = (tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO *) GKI_getbuf(sizeof(tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO))) != NULL)
+    {
+        memset (p_msg, 0, sizeof(tBTA_DM_API_ADD_BLE_DEVICE_EXTRA_INFO));
+
+        p_msg->hdr.event = BTA_DM_API_ADD_BLEDEVICEEXTRAINFO_EVT;
+        bdcpy(p_msg->bd_addr, bd_addr);
+
+        if (dev_class)
+        {
+            memcpy (p_msg->dev_class, dev_class, DEV_CLASS_LEN);
+        }
+
+        memcpy (p_msg->bd_name , bd_name, BD_NAME_LEN);
+        bta_sys_sendmsg(p_msg);
+    }
+    else
+        APPL_TRACE_API0 ("BTA_DmAddBleDeviceExtraInfo getbuf fail ");
+#endif
+}
+
+#endif
+
+
 /*******************************************************************************
 **
 ** Function         BTA_DmBlePasskeyReply

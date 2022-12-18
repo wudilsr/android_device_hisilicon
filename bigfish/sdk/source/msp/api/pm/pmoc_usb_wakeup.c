@@ -1,6 +1,6 @@
 /*********************************************************************************
 *
-*  Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*  Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
 *  This program is confidential and proprietary to Hisilicon Technologies Co., Ltd.
 *  (Hisilicon), and may not be copied, reproduced, modified, disclosed to
@@ -33,6 +33,8 @@
 #define USB_DEVICE_REMOTE_WAKEUP 1      /* dev may initiate wakeup */
 #define USB_RECIP_DEVICE 0x00
 
+#define PATH_MAX 4096
+
 struct libusb
 {
     char *sysfs;
@@ -44,8 +46,8 @@ struct libusb
     char *remotewakeup;
     char *autosuspend;
     char *bDeviceClass;
-	char *busnum;
-	char *devnum;
+    char *busnum;
+    char *devnum;
 };
 
 /**
@@ -58,24 +60,39 @@ struct libusb
  */
 static char *mkpath(const char *path, const char *name)
 {
-    char *n;
-    int len1 = strlen(path);
-    int len2 = strlen(name);
+    char *n = NULL;
+    size_t len1 = 0, len2 = 0;
 
-    n = malloc(len1 + len2 + 2);
+    if (!path || !name)
+    {
+        return NULL;
+    }
+
+    len1 = strlen(path);
+    len2 = strlen(name);
+
+    if ((len1 > PATH_MAX) || (len2 > PATH_MAX))
+    {
+        return NULL;
+    }
+
+    n = (char*)malloc(len1 + len2 + 2);
     if (!n)
     {
         HI_ERR_PM("cannot allocate %d bytes \n", len1 + len2 + 2);
         return NULL;
     }
 
+    memset(n, 0, (len1 + len2 + 2));
+
     memcpy(n, path, len1);
     if (n[len1 - 1] != '/')
     {
-        n[len1++] = '/';
+        n[len1] = '/';
     }
 
-    memcpy(n + len1, name, len2 + 1);
+    memcpy(n + len1 + 1, name, len2);
+    n[len1 + len2 + 1] = '\0';
     return n;
 }
 
@@ -83,8 +100,10 @@ struct libusb * libusb_open(void)
 {
     int fd;
     struct libusb *lib;
+    int size;
 
-    lib = calloc(1, sizeof(struct libusb));
+    size = sizeof(struct libusb);
+    lib	 = calloc(1, size);
     if (!lib)
     {
         return NULL;
@@ -103,14 +122,14 @@ struct libusb * libusb_open(void)
     {
         goto error;
     }
-	
-	lib->devnode1 = mkpath(lib->dev, "usbdev%c%c%c%c%c%c%c");
-	if (!lib->devnode1)
-	{
-		goto error;
-	}	
 
-	lib->devnode2 = mkpath(lib->dev, "bus/usb/%s/%s");
+    lib->devnode1 = mkpath(lib->dev, "usbdev%c%c%c%c%c%c%c");
+    if (!lib->devnode1)
+    {
+        goto error;
+    }
+
+    lib->devnode2 = mkpath(lib->dev, "bus/usb/%s/%s");
     if (!lib->devnode2)
     {
         goto error;
@@ -149,28 +168,29 @@ struct libusb * libusb_open(void)
         goto error;
     }
 
-	lib->bDeviceClass = mkpath(lib->usb_dev, "bDeviceClass");
-	if (!lib->bDeviceClass)
-	{
+    lib->bDeviceClass = mkpath(lib->usb_dev, "bDeviceClass");
+    if (!lib->bDeviceClass)
+    {
         goto error;
-	}
-	
-	lib->busnum = mkpath(lib->usb_dev, "busnum");
-	if (!lib->busnum)
-	{
-        goto error;
-	}
+    }
 
-	lib->devnum = mkpath(lib->usb_dev, "devnum");
-	if (!lib->devnum)
-	{
+    lib->busnum = mkpath(lib->usb_dev, "busnum");
+    if (!lib->busnum)
+    {
         goto error;
-	}
+    }
+
+    lib->devnum = mkpath(lib->usb_dev, "devnum");
+    if (!lib->devnum)
+    {
+        goto error;
+    }
+
     return lib;
 
 error:
-	free(lib->devnum);
-	free(lib->busnum);
+    free(lib->devnum);
+    free(lib->busnum);
     free(lib->bDeviceClass);
     free(lib->remotewakeup);
     free(lib->autosuspend);
@@ -178,9 +198,22 @@ error:
     free(lib->sysfs_usb);
     free(lib->sysfs);
     free(lib->devnode1);
-	free(lib->devnode2);
+    free(lib->devnode2);
     free(lib->dev);
+    lib->devnum = NULL;
+    lib->busnum = NULL;
+    lib->bDeviceClass = NULL;
+    lib->remotewakeup = NULL;
+    lib->autosuspend  = NULL;
+    lib->usb_dev = NULL;
+    lib->sysfs_usb = NULL;
+    lib->sysfs = NULL;
+    lib->devnode1 = NULL;
+    lib->devnode2 = NULL;
+    lib->dev = NULL;
     free(lib);
+    lib = NULL;
+
     return NULL;
 }
 
@@ -188,8 +221,13 @@ void libusb_close(struct libusb * desc)
 {
     struct libusb *lib = (struct libusb *)desc;
 
-	free(lib->devnum);
-	free(lib->busnum);
+    if (!lib)
+    {
+        return;
+    }
+
+    free(lib->devnum);
+    free(lib->busnum);
     free(lib->bDeviceClass);
     free(lib->remotewakeup);
     free(lib->autosuspend);
@@ -197,13 +235,27 @@ void libusb_close(struct libusb * desc)
     free(lib->sysfs_usb);
     free(lib->sysfs);
     free(lib->devnode1);
-	free(lib->devnode2);
+    free(lib->devnode2);
     free(lib->dev);
+    lib->devnum = NULL;
+    lib->busnum = NULL;
+    lib->bDeviceClass = NULL;
+    lib->remotewakeup = NULL;
+    lib->autosuspend  = NULL;
+    lib->usb_dev = NULL;
+    lib->sysfs_usb = NULL;
+    lib->sysfs = NULL;
+    lib->devnode1 = NULL;
+    lib->devnode2 = NULL;
+    lib->dev = NULL;
     free(lib);
+    lib = NULL;
+
+    return;
 }
 
-static int io_ctrl_set_devnode(const char *patt1, const char *patt2, char a, char b, 
-	char c, char d, char e, char f, char g,	char * busnum, char* devnum)
+static int io_ctrl_set_devnode(const char *patt1, const char *patt2, char a, char b,
+                               char c, char d, char e, char f, char g, char * busnum, char* devnum)
 {
     int fd, ret;
     struct usbdevfs_ctrltransfer ctrl;
@@ -213,21 +265,23 @@ static int io_ctrl_set_devnode(const char *patt1, const char *patt2, char a, cha
     HI_OSAL_Snprintf(file, sizeof(file), patt1, a, b, c, d, e, f, g);
 
     errno = 0;
-    fd = open(&file[0], O_RDWR);
+    fd = open(file, O_RDWR);
     if (fd < 0)
     {
-		memset(file, 0, sizeof(file));
-		HI_OSAL_Snprintf(file, sizeof(file), patt2, busnum, devnum);
-		errno = 0;
-		fd = open(&file[0], O_RDWR);
-		if (fd < 0)
-		{
-			HI_ERR_PM("open failed: \n");
-			return -1;
-		}
-		HI_INFO_PM("%s\n", file);
+        memset(file, 0, sizeof(file));
+        HI_OSAL_Snprintf(file, sizeof(file), patt2, busnum, devnum);
+        errno = 0;
+        fd = open(file, O_RDWR);
+        if (fd < 0)
+        {
+            HI_ERR_PM("open failed: \n");
+            return -1;
+        }
+
+        HI_INFO_PM("%s\n", file);
     }
-	HI_INFO_PM("%s\n", file);
+
+    HI_INFO_PM("%s\n", file);
     errno = 0;
     ctrl.bRequest = USB_REQ_SET_FEATURE;
     ctrl.bRequestType = USB_RECIP_DEVICE;
@@ -260,29 +314,25 @@ static int io_ctrl_set_devnode(const char *patt1, const char *patt2, char a, cha
  *
  * This function returns %0 in case of success and %-1 in case of failure.
  */
-static int dev_read_str(const char *patt, char* string, char *value)
+static int dev_read_str(const char *patt, char* string)
 {
     int fd, rd;
     char buf[50];
-    char file[strlen(patt) + 50];
+    char file[256];
 
+    memset(buf, 0, sizeof(buf));
     memset(file, 0, sizeof(file));
     HI_OSAL_Snprintf(file, sizeof(file), patt, string);
-    fd = open(&file[0], O_RDONLY);
+    fd = open(file, O_RDONLY);
     if (fd == -1)
     {
         return -1;
     }
 
-    rd = read(fd, &buf[0], 50);
+    rd = read(fd, buf, 49);
+    buf[49] = '\0';
     if (rd == -1)
     {
-        goto error;
-    }
-
-    if (sscanf(&buf[0], "%9s", value) != 1)
-    {
-        HI_ERR_PM("bad string at sysfs file\n");
         goto error;
     }
 
@@ -306,11 +356,11 @@ error:
 static int dev_write_str(const char *patt, char* string, char *value)
 {
     int fd, rd;
-    char file[strlen(patt) + 50];
+    char file[256];
 
     memset(file, 0, sizeof(file));
-    HI_OSAL_Snprintf(file, sizeof(file), patt, string);   
-    fd = open(&file[0], O_WRONLY);
+    HI_OSAL_Snprintf(file, sizeof(file), patt, string);
+    fd = open(file, O_WRONLY);
     if (fd == -1)
     {
         return -1;
@@ -334,27 +384,25 @@ static int dev_read_int(const char *patt, char* string, int *value)
 {
     int fd, rd;
     char buf[50];
-    char file[strlen(patt) + 50];
+    char file[256];
 
+    memset(buf, 0, sizeof(buf));
     memset(file, 0, sizeof(file));
     HI_OSAL_Snprintf(file, sizeof(file), patt, string);
-    fd = open(&file[0], O_RDONLY);
+    fd = open(file, O_RDONLY);
     if (fd == -1)
     {
         return -1;
     }
 
-    rd = read(fd, &buf[0], 50);
+    rd = read(fd, buf, 49);
+    buf[49] = '\0';
     if (rd == -1)
     {
         goto error;
     }
 
-    if (sscanf(&buf[0], "%8x", value) != 1)
-    {
-        HI_ERR_PM("bad value at sysfs file\n");
-        goto error;
-    }
+    *value = atoi(buf);
 
     close(fd);
     return 0;
@@ -369,13 +417,21 @@ int usb_set_remote(struct libusb * desc)
     DIR *sysfs_usb;
     struct dirent *dirent;
     struct libusb *lib = (struct libusb *)desc;
-    char buf[10] = {
-        0
+    char busnum[4] = {
+        0x00
     };
-	char busnum[4]={0x00};
-	char devnum[4]={0x00};
+    char devnum[4] = {
+        0x00
+    };
     int rc = 0, dev_cnt = 0;
     int value = 0;
+
+    if ((!lib) || !(lib->sysfs_usb) || !(lib->bDeviceClass)
+        || !(lib->remotewakeup) || !(lib->devnum) || !(lib->autosuspend)
+        || !(lib->devnode1) || !(lib->devnode2))
+    {
+        return -1;
+    }
 
     /*
      * We have to scan the USB sysfs directory to identify how many USB
@@ -393,7 +449,7 @@ int usb_set_remote(struct libusb * desc)
 
         /* dev of root hub support remote wakeup */
         {
-            rc = dev_read_str(lib->remotewakeup, name, buf);
+            rc = dev_read_str(lib->remotewakeup, name);
 
             /* remote wake up is supported */
             if (rc != -1)
@@ -415,67 +471,68 @@ int usb_set_remote(struct libusb * desc)
                             goto close;
                         }
 
-						value = 0;
-						rc = dev_read_int(lib->busnum,name,&value);
-						if(rc == -1)
-						{
-							goto close;
-						}
-						
-						busnum[0] = '0' + value/100;
-						value %= 100;
-						busnum[1] = '0' + value/10;
-						busnum[2] = '0' + value%10;
-					
-						value = 0;
-						rc = dev_read_int(lib->devnum,name,&value);
-						if(rc == -1)
-						{
-							goto close;
-						}
-						
-						devnum[0] = '0' + value/100;
-						value %= 100;
-						devnum[1] = '0' + value/10;
-						devnum[2] = '0' + value%10;
+                        value = 0;
+                        rc = dev_read_int(lib->busnum, name, &value);
+                        if (rc == -1)
+                        {
+                            goto close;
+                        }
+
+                        busnum[0] = '0' + value / 100;
+                        value %= 100;
+                        busnum[1] = '0' + value / 10;
+                        busnum[2] = '0' + value % 10;
+
+                        value = 0;
+                        rc = dev_read_int(lib->devnum, name, &value);
+                        if (rc == -1)
+                        {
+                            goto close;
+                        }
+
+                        devnum[0] = '0' + value / 100;
+                        value %= 100;
+                        devnum[1] = '0' + value / 10;
+                        devnum[2] = '0' + value % 10;
 
                         if (strlen(name) == 3)
                         {
                             rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
-								name[0], name[2], '\0', '\0', '\0', '\0', '\0',busnum,devnum);
+                                                     name[0], name[2], '\0', '\0', '\0', '\0', '\0', busnum, devnum);
                         }
                         else if (strlen(name) == 5)
                         {
-                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2, 
-								name[0], name[2], name[4], '\0', '\0', '\0', '\0',busnum,devnum);
+                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
+                                                     name[0], name[2], name[4], '\0', '\0', '\0', '\0', busnum, devnum);
                         }
                         else if (strlen(name) == 7)
                         {
-                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2, 
-								name[0], name[2], name[4], name[6], '\0', '\0', '\0',busnum,devnum);
+                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
+                                                     name[0], name[2], name[4], name[6], '\0', '\0', '\0', busnum,
+                                                     devnum);
                         }
                         else if (strlen(name) == 9)
                         {
-                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2, 
-								name[0], name[2], name[4], name[6], name[8], '\0',
-                                                     '\0',busnum,devnum);
+                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
+                                                     name[0], name[2], name[4], name[6], name[8], '\0',
+                                                     '\0', busnum, devnum);
                         }
                         else if (strlen(name) == 11)
                         {
-                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2, 
-                                name[0], name[2], name[4], name[6], name[8], name[10],
-                                                    '\0',busnum,devnum);
+                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
+                                                     name[0], name[2], name[4], name[6], name[8], name[10],
+                                                     '\0', busnum, devnum);
                         }
                         else if (strlen(name) == 13)
                         {
-                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2, 
-                                name[0], name[2], name[4], name[6], name[8], name[10],
-                                                    name[12],busnum,devnum);
+                            rc = io_ctrl_set_devnode(lib->devnode1, lib->devnode2,
+                                                     name[0], name[2], name[4], name[6], name[8], name[10],
+                                                     name[12], busnum, devnum);
                         }
 
-						if(rc == -1)
-						{
-							goto close;
+                        if (rc == -1)
+                        {
+                            goto close;
                         }
                     }
                 }
@@ -496,11 +553,14 @@ int usb_get_remote(struct libusb * desc, unsigned char * intmask)
     DIR *sysfs_usb;
     struct dirent *dirent;
     struct libusb *lib = (struct libusb *)desc;
-    char buf[10] = {
-        0
-    };
     int rc, dev_cnt = 0;
     int value = 0;
+
+    if ((!lib) || !(lib->sysfs_usb) || !(lib->remotewakeup)
+        || !(lib->bDeviceClass))
+    {
+        return -1;
+    }
 
     /*
      * We have to scan the USBsysfs directory to identify how many USB
@@ -529,7 +589,7 @@ int usb_get_remote(struct libusb * desc, unsigned char * intmask)
 
         /* dev of root hub support remote wakeup */
         {
-            rc = dev_read_str(lib->remotewakeup, name, buf);
+            rc = dev_read_str(lib->remotewakeup, name);
 
             /* remote wake up is supported */
             if (rc != -1)
@@ -542,38 +602,64 @@ int usb_get_remote(struct libusb * desc, unsigned char * intmask)
                     {
                         dev_cnt++;
 #if    defined(CHIP_TYPE_hi3798cv100)
-                        if (name[0]==0x33){
-                            *intmask |=(0x01<<1);
-                        } else {
-                            if(name[2]==0x31)
-                               *intmask |= (0x01<<0);
-                            else if (name[2]==0x32)
-                               *intmask |= (0x01<<3);
-                            else if (name[2]==0x33)
-                               *intmask |= (0x01<<2);
+                        if (name[0] == 0x33)
+                        {
+                            *intmask |= (0x01 << 1);
                         }
+                        else
+                        {
+                            if (name[2] == 0x31)
+                            {
+                                *intmask |= (0x01 << 0);
+                            }
+                            else if (name[2] == 0x32)
+                            {
+                                *intmask |= (0x01 << 3);
+                            }
+                            else if (name[2] == 0x33)
+                            {
+                                *intmask |= (0x01 << 2);
+                            }
+                        }
+
 #else
-#if   defined(CHIP_TYPE_hi3798mv100_a) || defined(CHIP_TYPE_hi3798mv100)
-                       if (name[0]==0x35) {
-                            *intmask |=(0x01<<1);
-                       } else {
-                           if((name[0]==0x33)&&(name[2]==0x31))
-                              *intmask |= (0x01<<0);
-                           else if (name[2]==0x32)
-                              *intmask |= (0x01<<3);
-                           else if ((name[0]==0x34)&&(name[2]==0x31))
-                              *intmask |= (0x01<<2);
-                      }
+#if   defined(CHIP_TYPE_hi3796mv100) || defined(CHIP_TYPE_hi3798mv100)
+                        if (name[0] == 0x35)
+                        {
+                            *intmask |= (0x01 << 1);
+                        }
+                        else
+                        {
+                            if ((name[0] == 0x33) && (name[2] == 0x31))
+                            {
+                                *intmask |= (0x01 << 0);
+                            }
+                            else if (name[2] == 0x32)
+                            {
+                                *intmask |= (0x01 << 3);
+                            }
+                            else if ((name[0] == 0x34) && (name[2] == 0x31))
+                            {
+                                *intmask |= (0x01 << 2);
+                            }
+                        }
+
 #else
-                      if(name[2]==0x31)
-                           *intmask |= (0x01<<0);
-                      else if (name[2]==0x32)
-                           *intmask |= (0x01<<3);
-                      else if (name[2]==0x33)
-                           *intmask |= (0x01<<2);
+                        if (name[2] == 0x31)
+                        {
+                            *intmask |= (0x01 << 0);
+                        }
+                        else if (name[2] == 0x32)
+                        {
+                            *intmask |= (0x01 << 3);
+                        }
+                        else if (name[2] == 0x33)
+                        {
+                            *intmask |= (0x01 << 2);
+                        }
 #endif
 #endif
-                   }
+                    }
                 }
             }
         }

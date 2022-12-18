@@ -5,11 +5,13 @@ include $(SDK_DIR)/Android.def
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libextrator_adp
-ifeq (4.4,$(findstring 4.4,$(PLATFORM_VERSION)))
+ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) <= 20 ))" )))
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 else
 LOCAL_32_BIT_ONLY := true
 endif
+LOCAL_CFLAGS += -DPLATFORM_SDK_VERSION=$(PLATFORM_SDK_VERSION)
+LOCAL_CFLAGS += -DANDROID_VERSION
 
 LOCAL_SRC_FILES +=  \
     extrator_adp/svr_extrator_adp.cpp
@@ -26,11 +28,6 @@ LOCAL_SHARED_LIBRARIES :=       \
     libhi_common                \
     libstagefright_foundation   \
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-LOCAL_CFLAGS += -DHI_TVP_SUPPORT
-LOCAL_SHARED_LIBRARIES += libteec
-endif
-
 LOCAL_C_INCLUDES +=         \
     $(LOCAL_PATH)/extrator_adp \
     $(TOP)/frameworks/av/include/media \
@@ -41,15 +38,9 @@ LOCAL_C_INCLUDES +=         \
     $(TOP)/external/libxml2/include \
     $(TOP)/external/icu4c/common \
     $(TOP)/frameworks/native/include \
-    $(TOP)/device/hisilicon/bigfish/sdk/source/common/include \
+    $(TOP)/$(SDK_DIR)/source/common/include \
     $(TOP)/external/skia/include/core \
     $(TOP)/device/hisilicon/bigfish/hidolphin/component/player/include
-
-
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-LOCAL_C_INCLUDES += \
-    $(TOP)/device/hisilicon/bigfish/sdk/source/plugin/tvp/libteec/inc
-endif
 
 
 HISMOOTHSTREAMINGPLAYER_DRM_ENABLE := true
@@ -58,7 +49,7 @@ LOCAL_CFLAGS += -DHISMOOTHSTREAMINGPLAYER_DRM_ENABLE
 
 LOCAL_C_INCLUDES +=  \
         $(TOP)/device/hisilicon/bigfish/hidolphin/component/smoothstreaming/inc \
-        $(TOP)/device/hisilicon/bigfish/sdk/source/msp/include \
+        $(TOP)/$(SDK_DIR)/source/msp/include \
 
 LOCAL_SHARED_LIBRARIES += \
         libhi_smoothstreaming
@@ -72,7 +63,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libextrator_demux
-ifeq (4.4,$(findstring 4.4,$(PLATFORM_VERSION)))
+ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) <= 20 ))" )))
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 else
 LOCAL_32_BIT_ONLY := true
@@ -102,7 +93,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_PRELINK_MODULE := false
 LOCAL_MODULE := sample_test_extractor
-ifeq (4.4,$(findstring 4.4,$(PLATFORM_VERSION)))
+ifeq (1,$(filter 1,$(shell echo "$$(( $(PLATFORM_SDK_VERSION) <= 20 ))" )))
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 else
 LOCAL_32_BIT_ONLY := true

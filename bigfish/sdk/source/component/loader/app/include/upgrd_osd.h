@@ -101,7 +101,10 @@ typedef enum tagLOADER_Content_E
     LOADER_CONTENT_NOT_FIND_USB_FILE,
     LOADER_CONTENT_REBOOT,
 
-    //55-
+    //55-60
+	LOADER_CONTENT_FACTORY_RESET_GOINGON,
+	LOADER_CONTENT_FACTORY_RESET_SUCC,
+	LOADER_CONTENT_FACTORY_RESET_FAILED,
     LOADER_CONTENT_WARNING,
     LOADER_CONTENT_INFO,
 
@@ -186,7 +189,10 @@ typedef enum tagLOADER_Content_E
 #define UPGRD_L_CN_NOT_FIND_USB_FILE "没有找到USB或升级文件"
 #define UPGRD_L_CN_REBOOT "请重启机顶盒!"
 
-//55-
+//55-60
+#define UPGRD_L_CN_FACTORY_NOTICE "正在恢复出厂设置, 请稍候..."
+#define UPGRD_L_CN_FACTORY_SUCCESS "恢复出厂设置成功"
+#define UPGRD_L_CN_FACTORY_FAILED "恢复出厂设置失败"
 #define UPGRD_L_CN_WARNING "警告!"
 #define UPGRD_L_CN_INFO "提示:"
 
@@ -268,7 +274,10 @@ typedef enum tagLOADER_Content_E
 #define UPGRD_L_EN_NOT_FIND_USB_FILE "can not find upgrade file"
 #define UPGRD_L_EN_REBOOT "Please reboot the machine!"
 
-//55-
+//55-60
+#define UPGRD_L_EN_FACTORY_NOTICE "Factory Reset is going on, waiting..."
+#define UPGRD_L_EN_FACTORY_SUCCESS "Factory Reset Success"
+#define UPGRD_L_EN_FACTORY_FAILED "Factory Reset Failed"
 #define UPGRD_L_EN_WARNING "WARNING!"
 #define UPGRD_L_EN_INFO "INFO"
 

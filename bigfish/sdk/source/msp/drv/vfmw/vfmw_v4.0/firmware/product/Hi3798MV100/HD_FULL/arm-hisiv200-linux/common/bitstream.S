@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.bitstream.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/bitstream.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/bitstream.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/bitstream.o -O2 -Wall -Wundef
@@ -159,13 +159,13 @@ BsInit:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	bic	r3, r1, #3	@ D.32214, pInput,
-	add	ip, r3, #8	@ tmp141, D.32214,
+	bic	r3, r1, #3	@ D.32220, pInput,
+	add	ip, r3, #8	@ tmp141, D.32220,
 	str	r2, [r0, #16]	@ length, <variable>.BsLen
 	str	ip, [r0, #4]	@ tmp141, <variable>.pTail
 	and	r5, r1, #3	@ tmp160, pInput,
-	str	r3, [r0, #0]	@ D.32214, <variable>.pHead
-	ldr	r2, [r3, #0]	@ Data,* D.32214
+	str	r3, [r0, #0]	@ D.32220, <variable>.pHead
+	ldr	r2, [r3, #0]	@ Data,* D.32220
 	mov	r1, r5, asl #3	@ tmp161, tmp160,
 	and	r4, r2, #65280	@ tmp145, Data,
 	and	ip, r2, #16711680	@ tmp148, Data,
@@ -224,13 +224,13 @@ BsGet:
 	.save {r4, r5, r6, r7, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	ldr	r2, [r0, #20]	@ D.32497, <variable>.BufPos
+	ldr	r2, [r0, #20]	@ D.32503, <variable>.BufPos
 	mov	r3, r0	@ pBS, pBS
-	add	ip, r1, r2	@ ABBufPos, nBits, D.32497
+	add	ip, r1, r2	@ ABBufPos, nBits, D.32503
 	cmp	ip, #32	@ ABBufPos,
 	ble	.L11	@,
 	ldr	r4, [r0, #12]	@ <variable>.Bufb, <variable>.Bufb
-	rsb	r0, r2, #32	@ tmp143, D.32497,
+	rsb	r0, r2, #32	@ tmp143, D.32503,
 	ldr	r7, [r3, #8]	@ <variable>.Bufa, <variable>.Bufa
 	rsb	r5, r1, #32	@ tmp146, nBits,
 	ldr	r6, [r3, #24]	@ <variable>.TotalPos, <variable>.TotalPos
@@ -238,7 +238,7 @@ BsGet:
 	orr	r2, r0, r7, asl r2	@, Data.568, tmp144, <variable>.Bufa,
 	add	r1, r6, r1	@ tmp148, <variable>.TotalPos, nBits
 	str	r1, [r3, #24]	@ tmp148, <variable>.TotalPos
-	mov	r0, r2, lsr r5	@ D.32490, Data.568,
+	mov	r0, r2, lsr r5	@ D.32496, Data.568,
 .L12:
 	ldr	r1, [r3, #4]	@ tmp167, <variable>.pTail
 	sub	r5, ip, #32	@ tmp154, ABBufPos,
@@ -261,7 +261,7 @@ BsGet:
 	mov	r2, r0, asl r2	@ tmp149, <variable>.Bufa,
 	add	r1, r5, r1	@ tmp153, <variable>.TotalPos, nBits
 	str	r1, [r3, #24]	@ tmp153, <variable>.TotalPos
-	mov	r0, r2, lsr r4	@ D.32490, tmp149,
+	mov	r0, r2, lsr r4	@ D.32496, tmp149,
 	beq	.L16	@,
 	str	ip, [r3, #20]	@ ABBufPos, <variable>.BufPos
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
@@ -285,8 +285,8 @@ BsShow:
 	.save {r4, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	ldr	r3, [r0, #20]	@ D.32249, <variable>.BufPos
-	add	r2, r1, r3	@ tmp140, nBits, D.32249
+	ldr	r3, [r0, #20]	@ D.32255, <variable>.BufPos
+	add	r2, r1, r3	@ tmp140, nBits, D.32255
 	cmp	r2, #32	@ tmp140,
 	bgt	.L21	@,
 	ldr	r0, [r0, #8]	@ <variable>.Bufa, <variable>.Bufa
@@ -296,7 +296,7 @@ BsShow:
 	ldmfd	sp, {r4, fp, sp, pc}	@
 .L21:
 	ldr	r4, [r0, #12]	@ <variable>.Bufb, <variable>.Bufb
-	rsb	ip, r3, #32	@ tmp142, D.32249,
+	rsb	ip, r3, #32	@ tmp142, D.32255,
 	ldr	r2, [r0, #8]	@ <variable>.Bufa, <variable>.Bufa
 	rsb	r1, r1, #32	@ tmp145, nBits,
 	mov	r0, r4, lsr ip	@ tmp143, <variable>.Bufb,
@@ -365,22 +365,22 @@ BsBack:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r2, [r0, #24]	@ D.32293, <variable>.TotalPos
+	ldr	r2, [r0, #24]	@ D.32299, <variable>.TotalPos
 	ldr	ip, [r0, #20]	@ <variable>.BufPos, <variable>.BufPos
 	mov	r3, r0	@ pBS, pBS
-	cmp	r1, r2	@ nBits, D.32293
+	cmp	r1, r2	@ nBits, D.32299
 	movlt	r0, r1	@ nBits.651, nBits
-	movge	r0, r2	@ nBits.651, D.32293
+	movge	r0, r2	@ nBits.651, D.32299
 	subs	ip, ip, r0	@ PredBufPos, <variable>.BufPos, nBits.651
-	rsb	r2, r0, r2	@ tmp142, nBits.651, D.32293
+	rsb	r2, r0, r2	@ tmp142, nBits.651, D.32299
 	strpl	ip, [r3, #20]	@ PredBufPos, <variable>.BufPos
 	str	r2, [r3, #24]	@ tmp142, <variable>.TotalPos
 	ldmplfd	sp, {r3, r4, fp, sp, pc}	@
 	ldr	r2, [r3, #4]	@ <variable>.pTail, <variable>.pTail
 	add	r4, ip, #32	@ tmp154, PredBufPos,
 	ldr	r1, [r3, #8]	@ <variable>.Bufa, <variable>.Bufa
-	sub	r2, r2, #4	@ D.32302, <variable>.pTail,
-	str	r2, [r3, #4]	@ D.32302, <variable>.pTail
+	sub	r2, r2, #4	@ D.32308, <variable>.pTail,
+	str	r2, [r3, #4]	@ D.32308, <variable>.pTail
 	str	r1, [r3, #12]	@ <variable>.Bufa, <variable>.Bufb
 	ldr	r2, [r2, #-8]	@ Data1,
 	str	r4, [r3, #20]	@ tmp154, <variable>.BufPos
@@ -411,10 +411,10 @@ BsBitsToNextByte:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r3, [r0, #24]	@ D.32322, <variable>.TotalPos
-	add	r1, r3, #7	@ tmp137, D.32322,
+	ldr	r3, [r0, #24]	@ D.32328, <variable>.TotalPos
+	add	r1, r3, #7	@ tmp137, D.32328,
 	bic	r0, r1, #7	@ tmp138, tmp137,
-	rsb	r0, r3, r0	@, D.32322, tmp138
+	rsb	r0, r3, r0	@, D.32328, tmp138
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	BsBitsToNextByte, .-BsBitsToNextByte
@@ -435,14 +435,14 @@ BsToNextByte:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	ip, [r0, #24]	@ D.32330, <variable>.TotalPos
+	ldr	ip, [r0, #24]	@ D.32336, <variable>.TotalPos
 	mov	r3, r0	@ pBS, pBS
 	ldr	r1, [r0, #20]	@ <variable>.BufPos, <variable>.BufPos
-	add	r2, ip, #7	@ tmp139, D.32330,
+	add	r2, ip, #7	@ tmp139, D.32336,
 	bic	r0, r2, #7	@ tmp140, tmp139,
-	rsb	r0, ip, r0	@ SkipLen, D.32330, tmp140
+	rsb	r0, ip, r0	@ SkipLen, D.32336, tmp140
 	add	r1, r0, r1	@ ABBufPos, SkipLen, <variable>.BufPos
-	add	r2, r0, ip	@ tmp142, SkipLen, D.32330
+	add	r2, r0, ip	@ tmp142, SkipLen, D.32336
 	cmp	r1, #31	@ ABBufPos,
 	str	r2, [r3, #24]	@ tmp142, <variable>.TotalPos
 	bgt	.L36	@,
@@ -530,12 +530,12 @@ BsNextBitsByteAligned:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	lr, [r0, #24]	@ D.32354, <variable>.TotalPos
+	ldr	lr, [r0, #24]	@ D.32360, <variable>.TotalPos
 	ldr	r2, [r0, #20]	@ <variable>.BufPos, <variable>.BufPos
-	and	r3, lr, #7	@ tmp145, D.32354,
-	rsb	r3, r3, #8	@ D.32356, tmp145,
-	add	r2, r3, r2	@ ABBufPos, D.32356, <variable>.BufPos
-	add	ip, r3, lr	@ tmp147, D.32356, D.32354
+	and	r3, lr, #7	@ tmp145, D.32360,
+	rsb	r3, r3, #8	@ D.32362, tmp145,
+	add	r2, r3, r2	@ ABBufPos, D.32362, <variable>.BufPos
+	add	ip, r3, lr	@ tmp147, D.32362, D.32360
 	cmp	r2, #31	@ ABBufPos,
 	str	ip, [r0, #24]	@ tmp147, <variable>.TotalPos
 	ble	.L42	@,
@@ -564,7 +564,7 @@ BsNextBitsByteAligned:
 	movgt	r4, r4, lsr lr	@ tmp163, <variable>.Bufb,
 	orrgt	r4, r4, ip, asl r2	@, Data.774, tmp163, prephitmp.761,
 	mov	r4, r4, lsr r1	@ Data.775, tmp166,
-	mov	r1, r3	@, D.32356
+	mov	r1, r3	@, D.32362
 	bl	BsBack	@
 	mov	r0, r4	@, Data.775
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
@@ -632,23 +632,23 @@ BsLongSkip:
 	str	r7, [r0, #20]	@ tmp188, <variable>.BufPos
 	cmp	r1, #0	@ nBits,
 	add	r6, r1, #31	@ tmp190, nBits,
-	add	r2, r5, r3	@ D.32378, bits, <variable>.TotalPos
-	str	r2, [r0, #24]	@ D.32378, <variable>.TotalPos
+	add	r2, r5, r3	@ D.32384, bits, <variable>.TotalPos
+	str	r2, [r0, #24]	@ D.32384, <variable>.TotalPos
 	movge	r6, r1	@ nBits, nBits
 	ands	r5, r1, #31	@ bits.802, nBits,
 	mov	r4, r6, asr #5	@ tmp191, nBits,
 	sub	ip, r4, #-1073741823	@ tmp192, tmp191,
-	add	r4, r2, r4, asl #5	@, D.32401, D.32378, tmp191,
-	add	r2, r8, ip, asl #2	@, D.32386, <variable>.pTail, tmp192,
-	str	r2, [r0, #4]	@ D.32386, <variable>.pTail
-	ldr	r3, [r8, ip, asl #2]	@ D.32388,* <variable>.pTail
-	add	r7, r2, #4	@ D.32398, D.32386,
-	add	ip, r7, #4	@ tmp213, D.32398,
-	str	r7, [r0, #4]	@ D.32398, <variable>.pTail
-	and	r7, r3, #65280	@ tmp198, D.32388,
-	and	r6, r3, #16711680	@ tmp201, D.32388,
-	mov	r8, r3, asl #24	@ tmp196, D.32388,
-	orr	r3, r8, r3, lsr #24	@, tmp197, tmp196, D.32388,
+	add	r4, r2, r4, asl #5	@, D.32407, D.32384, tmp191,
+	add	r2, r8, ip, asl #2	@, D.32392, <variable>.pTail, tmp192,
+	str	r2, [r0, #4]	@ D.32392, <variable>.pTail
+	ldr	r3, [r8, ip, asl #2]	@ D.32394,* <variable>.pTail
+	add	r7, r2, #4	@ D.32404, D.32392,
+	add	ip, r7, #4	@ tmp213, D.32404,
+	str	r7, [r0, #4]	@ D.32404, <variable>.pTail
+	and	r7, r3, #65280	@ tmp198, D.32394,
+	and	r6, r3, #16711680	@ tmp201, D.32394,
+	mov	r8, r3, asl #24	@ tmp196, D.32394,
+	orr	r3, r8, r3, lsr #24	@, tmp197, tmp196, D.32394,
 	orr	r3, r3, r7, asl #8	@, tmp200, tmp197, tmp198,
 	orr	r3, r3, r6, lsr #8	@, tmp203, tmp200, tmp201,
 	str	r3, [r0, #8]	@ tmp203, <variable>.Bufa
@@ -657,11 +657,11 @@ BsLongSkip:
 	and	ip, r3, #65280	@ tmp207, temp.804,
 	and	r2, r3, #16711680	@ tmp210, temp.804,
 	mov	r6, r3, asl #24	@ tmp205, temp.804,
-	str	r4, [r0, #24]	@ D.32401, <variable>.TotalPos
+	str	r4, [r0, #24]	@ D.32407, <variable>.TotalPos
 	orr	r3, r6, r3, lsr #24	@, tmp206, tmp205, temp.804,
 	strne	r5, [r0, #20]	@ bits.802, <variable>.BufPos
 	orr	r3, r3, ip, asl #8	@, tmp209, tmp206, tmp207,
-	addne	r4, r4, r5	@ tmp215, D.32401, bits.802
+	addne	r4, r4, r5	@ tmp215, D.32407, bits.802
 	orr	ip, r3, r2, lsr #8	@, tmp212, tmp209, tmp210,
 	strne	r4, [r0, #24]	@ tmp215, <variable>.TotalPos
 	str	ip, [r0, #12]	@ tmp212, <variable>.Bufb
@@ -829,8 +829,8 @@ BsUeV:
 	ldr	r0, [r2, #24]	@ <variable>.TotalPos, <variable>.TotalPos
 	cmp	ip, #31	@ ABBufPos,
 	strle	ip, [r2, #20]	@ prephitmp.886, <variable>.BufPos
-	add	r1, r3, r0	@ D.32712, zeros, <variable>.TotalPos
-	str	r1, [r2, #24]	@ D.32712, <variable>.TotalPos
+	add	r1, r3, r0	@ D.32718, zeros, <variable>.TotalPos
+	str	r1, [r2, #24]	@ D.32718, <variable>.TotalPos
 	ble	.L72	@,
 	ldr	r4, [r2, #4]	@ tmp208, <variable>.pTail
 	sub	ip, ip, #32	@ prephitmp.886, ABBufPos,
@@ -847,14 +847,14 @@ BsUeV:
 	orr	r4, r0, r6, lsr #8	@, tmp206, tmp203, tmp204,
 	str	r4, [r2, #12]	@ tmp206, <variable>.Bufb
 .L72:
-	add	r3, r3, #1	@ D.32463, zeros,
-	add	r4, ip, r3	@ ABBufPos, prephitmp.886, D.32463
+	add	r3, r3, #1	@ D.32469, zeros,
+	add	r4, ip, r3	@ ABBufPos, prephitmp.886, D.32469
 	cmp	r4, #32	@ ABBufPos,
 	ble	.L73	@,
 	ldr	r6, [r2, #12]	@ <variable>.Bufb, <variable>.Bufb
 	rsb	r7, ip, #32	@ tmp210, prephitmp.886,
-	rsb	r0, r3, #32	@ tmp213, D.32463,
-	add	r3, r1, r3	@ tmp215, D.32712, D.32463
+	rsb	r0, r3, #32	@ tmp213, D.32469,
+	add	r3, r1, r3	@ tmp215, D.32718, D.32469
 	str	r3, [r2, #24]	@ tmp215, <variable>.TotalPos
 	mov	r3, r6, lsr r7	@ tmp211, <variable>.Bufb,
 	orr	r1, r3, r5, asl ip	@, Data.903, tmp211, prephitmp.887,
@@ -897,14 +897,14 @@ BsUeV:
 	b	.L77	@
 .L73:
 	mov	r5, r5, asl ip	@ tmp216, prephitmp.887,
-	rsb	r0, r3, #32	@ tmp217, D.32463,
-	add	r1, r1, r3	@ tmp219, D.32712, D.32463
+	rsb	r0, r3, #32	@ tmp217, D.32469,
+	add	r1, r1, r3	@ tmp219, D.32718, D.32469
 	str	r1, [r2, #24]	@ tmp219, <variable>.TotalPos
 	mov	ip, r5, lsr r0	@ tmp218, tmp216,
 	sub	r0, ip, #1	@ INFO, tmp218,
 	beq	.L79	@,
 	ldr	r1, [r2, #20]	@ <variable>.BufPos, <variable>.BufPos
-	add	ip, r1, r3	@ tmp235, <variable>.BufPos, D.32463
+	add	ip, r1, r3	@ tmp235, <variable>.BufPos, D.32469
 	str	ip, [r2, #20]	@ tmp235, <variable>.BufPos
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L79:

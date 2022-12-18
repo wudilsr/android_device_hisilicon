@@ -798,7 +798,9 @@ void GKI_run (void *p_task_id)
     GKI_timer_queue_register_callback( gki_system_tick_start_stop_cback );
     GKI_TRACE( "GKI_run(): Start/Stop GKI_timer_update_registered!" );
 #endif
-
+#ifdef BLUETOOTH_RTK_DBG_MEM
+    RTKBT_GKI_Init();
+#endif
 #ifdef NO_GKI_RUN_RETURN
     pthread_attr_t timer_attr;
 
@@ -1512,5 +1514,102 @@ void GKI_sched_unlock(void)
 {
     GKI_TRACE("GKI_sched_unlock");
 }
+
+
+#ifdef BLUETOOTH_RTK_DBG_MEM
+GKI_API void RTKBT_GKI_DumpMemStatus(unsigned int mask)
+{
+    UINT8 *p_start;
+    UINT16 buf_size;
+    UINT16 num_bufs;
+    BUFFER_HDR_T *p_hdr;
+    UINT16 i;
+    UINT32 *magic;
+    UINT16 *p;
+    UINT8 pool_id;
+
+    static int loop = 1;
+
+    for(pool_id = 0; (mask&(1<<pool_id)); pool_id++)
+    {
+        if ((pool_id >= GKI_NUM_TOTAL_BUF_POOLS) || (gki_cb.com.pool_start[pool_id] == 0))
+        {
+            continue;
+        }
+
+        p_start = gki_cb.com.pool_start[pool_id];
+        buf_size = gki_cb.com.freeq[pool_id].size + BUFFER_PADDING_SIZE;
+        num_bufs = gki_cb.com.freeq[pool_id].total;
+
+        for (i = 0; i < num_bufs; i++, p_start += buf_size)
+        {
+            p_hdr = (BUFFER_HDR_T *)p_start;
+            if (p_hdr->status != BUF_STATUS_FREE)
+            {
+                GKI_INFO("(%d)mask:%08x %d-%d:%d %s %d %d\n", loop, mask, pool_id, i, p_hdr->status,p_hdr->func, p_hdr->line, p_hdr->size);
+            }
+        }
+    }
+    loop++;
+}
+
+GKI_API void RTKBT_GKI_MonitorMemStatus(unsigned int mask)
+{
+    UINT8 *p_start;
+    UINT16 buf_size;
+    UINT16 num_bufs;
+    BUFFER_HDR_T *p_hdr;
+    UINT16 i;
+    UINT32 *magic;
+    UINT16 *p;
+    UINT8 pool_id;
+    time_t ts;
+
+    ts = time(0);
+    for(pool_id = 0; (mask&(1<<pool_id)); pool_id++)
+    {
+        if ((pool_id >= GKI_NUM_TOTAL_BUF_POOLS) || (gki_cb.com.pool_start[pool_id] == 0))
+        {
+            continue;
+        }
+
+        p_start = gki_cb.com.pool_start[pool_id];
+        buf_size = gki_cb.com.freeq[pool_id].size + BUFFER_PADDING_SIZE;
+        num_bufs = gki_cb.com.freeq[pool_id].total;
+
+        for (i = 0; i < num_bufs; i++, p_start += buf_size)
+        {
+            p_hdr = (BUFFER_HDR_T *)p_start;
+            if ((p_hdr->status != BUF_STATUS_FREE)&&((ts-p_hdr->ts) > 10))
+            {
+                GKI_INFO("Warning,No Free:%08d(%d->%d)mask:%08x %d-%d:%d %s %d %d\n", (int)(ts-p_hdr->ts), (int)p_hdr->ts, (int)ts, mask, pool_id, i, p_hdr->status,p_hdr->func, p_hdr->line, p_hdr->size);
+            }
+        }
+    }
+}
+GKI_API void * RTKBT_GKI_MonitorMemStatus_task(void * args)
+{
+    while(1)
+    {
+        RTKBT_GKI_MonitorMemStatus(0xffffffff);
+        sleep(5);
+    }
+}
+
+GKI_API void RTKBT_GKI_Init()
+{
+    static pthread_t thread_id = 0;
+    pthread_attr_t timer_attr;
+    pthread_attr_init(&timer_attr);
+    if (pthread_create( &thread_id,
+              &timer_attr,
+              RTKBT_GKI_MonitorMemStatus_task,
+              NULL) != 0 )
+    {
+        GKI_ERROR_LOG("pthread_create failed to create timer_thread!\n\r");
+        return;
+    }
+}
+#endif
 
 

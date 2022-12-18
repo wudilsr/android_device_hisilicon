@@ -100,9 +100,8 @@ typedef struct hiVDEC_STREAM_BUF_S
     HI_U32              u32Size;    /* Buffer size[in] */
     HI_HANDLE           hHandle;    /* Stream buffer handle [out] */
     HI_U32              u32PhyAddr; /* Buffer phy address [out] */
-	#ifdef HI_TVP_SUPPORT
     HI_BOOL             bTvp;      /*Trust Video Path Flag[in]*/
-	#endif
+    HI_HANDLE           hVdec;
 }HI_DRV_VDEC_STREAM_BUF_S;
 
 /** Stream buffer status */
@@ -147,50 +146,6 @@ typedef struct hiVDEC_VPU_FRAME_STATUS_S
     HI_U32 u32FrmPhyAddr;
     HI_U32 u32IsPutVdecQueue;
 }HI_DRV_VDEC_VPU_FRAME_STATUS_S;
-
-
-typedef struct hiVDEC_VPU_STATUS_S
-{
-    HI_U32  u32Version;  
-
-    /* vpu decoder status*/
-    HI_U32 u32DecodeStatus; 
-    HI_U32 u32DecodeMode; 
-    HI_U32 u32InstanceMode; 
-
-    /* vpu bitstream buf information*/
-    HI_U32 u32PhyAddr; 
-    HI_U32 u32BsBufSize; 
-    HI_U32 u32BsBuFUsedSize; 
-    HI_U32 u32BsBufPercent; 
-    HI_U32 u32BsBufReadPtr;
-    HI_U32 u32BsBufWritePtr; 
-    HI_U32 u32Profile; 
-    HI_U32 u32LumaBitdepth; 
-    HI_U32 u32ChromaBitdepth; 
-
-    /* vpu information*/
-    HI_U32 u32VedioStandard; 
-    HI_U32 u32DecWidth; 
-    HI_U32 u32DecHeight;
-    HI_U32 u32DispWidth; 
-    HI_U32 u32DispHeight; 
-    HI_U32 u32ErrRatio; 
-    HI_U32 u32NumOfErrMBs;
-    HI_U32 u32SeqChangeCount;
-    HI_S32 s32indexFrameDisplay;
-    HI_S32 s32indexFrameDecoded;
-    HI_U32 u32OldWidth[10];
-    HI_U32 u32OldHeight[10];
-    HI_U32 u32OldActualFrmBufNum[10];
-    HI_U32 u32BsRate;
-
-    /* vpu frame buf information*/
-    HI_DRV_VDEC_VPU_FRAME_STATUS_S stFrmStatus[31];
-    HI_U32 u32ActualFrmBufNum;
-    HI_U32 u32OldFrmBufNum;
-
-} HI_DRV_VDEC_VPU_STATUS_S;
 
 typedef  HI_S32 ( *EventCallBack)(HI_HANDLE vHandle,HI_VOID *pEvent, VIDDEC_EVNT_TYPE_E eType);
 typedef  HI_S32 ( *GetDmxHdlCallBack)(HI_HANDLE dmxID,HI_U32 chanType, HI_HANDLE *pDmxHdl);

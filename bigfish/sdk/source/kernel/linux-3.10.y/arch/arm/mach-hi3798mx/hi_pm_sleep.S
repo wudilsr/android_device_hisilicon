@@ -14,6 +14,8 @@
 
 #define SRAM_BASE_VIRT  0xff000000      /* according to io.h, asm file can not use complex IO_ADDRESS */
 
+#define OTP_IDWORD_ADDR 0xf8ab0128      /* OTP shadow register to indicate if it is advca chipset */
+#define OTP_CA_ID_WORD  0x6EDBE953	/* ID_WORD for CA chipset */
 /* General CPU constants */
 #define MODE_USR        0x10
 #define MODE_FIQ        0x11
@@ -272,26 +274,21 @@ store_resume:
 	ldr	r5, =(__virt_to_phys(resume_code))
 	ldr	r4, =hi_sc_virtbase
 	ldr	r4, [r4]
-#ifdef CONFIG_CA_WARKUP_CHECK
-	str r5, [r4, #REG_SC_GEN9]
-#else
-	str	r5, [r4, #REG_SC_GEN30]
-#endif /* CONFIG_CA_WARKUP_CHECK */
-	ldr	r0, =IO_ADDRESS(0xf8a9007C)
-	ldr	r0, [r0]
-	and	r0, r0, #0xFF00
-	ldr	r1, =0x4000
-	cmp	r0, r1
-#ifdef CONFIG_CA_WARKUP_CHECK
-	bne	entry_ddr_wakeup_check
-#else
-	bne	enable_mcu
-#endif
-	ldr	r5, =0x0
-	str	r5, [r4, #REG_SC_GEN28]
 
-#ifdef CONFIG_CA_WARKUP_CHECK
+	/*Store resume address for non-advca chipset*/
+	str	r5, [r4, #REG_SC_GEN30]
+
+	/* if it is not advca chipset, jump to enable_mcu */
+	ldr	r1, =IO_ADDRESS(OTP_IDWORD_ADDR)
+	ldr	r2, [r1]
+	ldr r1, = OTP_CA_ID_WORD
+	cmp r1, r2
+	bne	enable_mcu
+
+/*Wakeup process for advca chipset*/
 entry_ddr_wakeup_check:
+	/*Resume address is different for advca chipset*/
+	str	r5, [r4, #REG_SC_GEN9]
 	ldr	r0, = _ddr_wakeup_check_code_begin
 	ldr	r0, [r0]
 	ldr	r1, =hi_sram_virtbase
@@ -309,21 +306,21 @@ loop_copy_to_ddr:
 	bic	r1, #1
 	MCR	p15, 0, r1, c1, c0, 0
 
-	@addr: 0xffff0000
-	mov	r1, #0x0000
+	@addr: 0xffff2000
+	mov	r1, #0x2000
 	movt	r1, #0xffff
 	BX	r1
 	b .
-#endif /* CONFIG_CA_WARKUP_CHECK */
 
 enable_mcu:
 	ldr	r1, =IO_ADDRESS(MCU_START_CTRL)
 	ldr	r2, [r1]
 	orr	r2, #0x1
 	str	r2, [r1]
-	ldr	r1, =IO_ADDRESS(0xf8407520)
+	ldr	r1, =hi_sc_virtbase
+	ldr	r1, [r1]
 	ldr	r2, =0x12345678
-	str	r2, [r1]
+	str	r2, [r1, #REG_SC_GEN13]
 
 go_wfi:
 	mov	r1, #0x10
@@ -341,6 +338,7 @@ loop_wfi:
 	nop
 
 	ldr	r4, =hi_sc_virtbase
+	ldr	r4, [r4]
 	add	r1, #0x1
 	str	r1, [r4, #REG_SC_GEN8]
 	b	loop_wfi
@@ -482,8 +480,6 @@ scureg_base:
 .word scureg_base
 
 
-#ifdef CONFIG_CA_WARKUP_CHECK
-
 .global hi_sram_virtbase
 hi_sram_virtbase:
 .word hi_sram_virtbase
@@ -495,5 +491,3 @@ _ddr_wakeup_check_code_begin:
 .global _ddr_wakeup_check_code_end
 _ddr_wakeup_check_code_end:
 .word _ddr_wakeup_check_code_end
-
-#endif /* CONFIG_CA_WARKUP_CHECK */

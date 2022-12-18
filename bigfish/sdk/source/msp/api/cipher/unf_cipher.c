@@ -1,6 +1,6 @@
 /******************************************************************************
  
-  Copyright (C), 2001-2011, Huawei Tech. Co., Ltd.
+  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
  
  ******************************************************************************
   File Name     : unf_cipher.c
@@ -95,4 +95,49 @@ HI_S32 HI_UNF_CIPHER_HashFinal(HI_HANDLE hHashHandle, HI_U8 *pu8OutputHash)
     return HI_MPI_CIPHER_HashFinal(hHashHandle, pu8OutputHash);
 }
 
+HI_S32 HI_UNF_CIPHER_RsaPublicEncrypt(HI_UNF_CIPHER_RSA_PUB_ENC_S *pstRsaEnc, 
+								  HI_U8 *pu8Input, HI_U32 u32InLen, 
+								  HI_U8 *pu8Output, HI_U32 *pu32OutLen)
+{
+    return HI_MPI_CIPHER_RsaPublicEncrypt(pstRsaEnc, pu8Input, u32InLen, pu8Output, pu32OutLen);
+}
+
+HI_S32 HI_UNF_CIPHER_RsaPrivateDecrypt(HI_UNF_CIPHER_RSA_PRI_ENC_S *pstRsaDec,								  
+								   HI_U8 *pu8Input, HI_U32 u32InLen, 
+								   HI_U8 *pu8Output, HI_U32 *pu32OutLen)
+{
+    return HI_MPI_CIPHER_RsaPrivateDecrypt(pstRsaDec, pu8Input, u32InLen, pu8Output, pu32OutLen);
+}
+
+HI_S32 HI_UNF_CIPHER_RsaSign(HI_UNF_CIPHER_RSA_SIGN_S *pstRsaSign, 
+							 HI_U8 *pu8InData, HI_U32 u32InDataLen,
+							 HI_U8 *pu8HashData,
+							 HI_U8 *pu8OutSign, HI_U32 *pu32OutSignLen)
+{
+    return HI_MPI_CIPHER_RsaSign(pstRsaSign, pu8InData, u32InDataLen, pu8HashData, 
+        pu8OutSign, pu32OutSignLen);
+}
+
+HI_S32 HI_UNF_CIPHER_RsaVerify(HI_UNF_CIPHER_RSA_VERIFY_S *pstRsaVerify,
+							   HI_U8 *pu8InData, HI_U32 u32InDataLen,
+							   HI_U8 *pu8HashData,
+							   HI_U8 *pu8InSign, HI_U32 u32InSignLen)
+{
+    return HI_MPI_CIPHER_RsaVerify(pstRsaVerify, pu8InData, u32InDataLen, pu8HashData, 
+        pu8InSign, u32InSignLen);
+}
+
+HI_S32 HI_UNF_CIPHER_RsaPrivateEncrypt(HI_UNF_CIPHER_RSA_PRI_ENC_S *pstRsaEnc, 
+							 	   HI_U8 *pu8Input, HI_U32 u32InLen, 
+								   HI_U8 *pu8Output, HI_U32 *pu32OutLen)
+{
+    return HI_MPI_CIPHER_RsaPrivateEncrypt(pstRsaEnc, pu8Input, u32InLen, pu8Output, pu32OutLen);
+}
+
+HI_S32 HI_UNF_CIPHER_RsaPublicDecrypt(HI_UNF_CIPHER_RSA_PUB_ENC_S *pstRsaDec,
+							   HI_U8 *pu8Input, HI_U32 u32InLen,
+							   HI_U8 *pu8Output, HI_U32 *pu32OutLen)
+{
+    return HI_MPI_CIPHER_RsaPublicDecrypt(pstRsaDec, pu8Input, u32InLen, pu8Output,pu32OutLen); 
+}
 

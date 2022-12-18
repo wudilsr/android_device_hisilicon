@@ -100,6 +100,15 @@ typedef struct hiUNF_EDID_MANUFACTURE_INFO_E
     HI_U8      u8pSinkName[14];          /**<Sink Name*//**<CNcomment:设备名称*/
 }HI_UNF_EDID_MANUFACTURE_INFO_S;
 
+
+/**EDID Display Base Parameters struct*//**CNcomment:EDID 显示屏基本参数 */
+typedef struct hiUNF_EDID_BASE_PARA_S
+{
+    HI_U8      u8MaxImageWidth;               /**<The disp image max width  (0~255)cm*//**<CNcomment: 可显示图像最大宽 */
+    HI_U8      u8MaxImageHeight;              /**<The disp image max height (0~255)cm*//**<CNcomment: 可显示图像最大高 */
+} HI_UNF_EDID_BASE_DISP_PARA_S;
+
+
 /**EDID Colorimety Info struct*//**CNcomment:EDID 色调信息结构体 */
 typedef struct hiUNF_EDID_COLORIMETRY_S
 {
@@ -211,11 +220,13 @@ typedef struct hiUNF_EDID_BASE_INFO_S
     HI_U8                           u8Version;              /**<the version of manufacture*//**<CNcomment:设备版本号 */
     HI_U8                           u8Revision;             /**<the revision of manufacture*//**<CNcomment:设备子版本号 */
     HI_UNF_EDID_MANUFACTURE_INFO_S  stMfrsInfo;
- 
+
     HI_UNF_EDID_CEC_ADDRESS_S       stCECAddr;              /**<cec address Info*//**<CNcomment:cec地址信息 */
     HI_BOOL                         bSupportDVIDual;        /**<the DVI support dual-link or not *//**<CNcomment:是否支持 DVI dual-link 操作 */
     HI_BOOL                         bSupportsAI;            /**<support AI or not *//**<CNcomment:是否支持 Supports_AI 模式 */
     HI_UNF_EDID_TIMING_S            stPerferTiming;         /**<first detailed timing Info*//**<CNcomment:VESA最佳详细制式信息 */          
+
+    HI_UNF_EDID_BASE_DISP_PARA_S	stBaseDispPara;		    /**<the parameters of display*//**<CNcomment: 显示屏参数 */
 
 } HI_UNF_EDID_BASE_INFO_S;
 

@@ -51,7 +51,7 @@
 #include "btif_profile_queue.h"
 #include "btif_config.h"
 
-#ifdef BLUETOOTH_RTK_POWERON
+#ifdef BLUETOOTH_RTK
 #include "rtkbt_virtual_hid.h"
 #endif
 /************************************************************************************
@@ -715,6 +715,10 @@ void btif_enable_bluetooth_evt(tBTA_STATUS status, BD_ADDR local_bd)
 #ifdef BLUETOOTH_RTK_POWERON
         RTKBT_vhid_setup();
 #endif
+
+#ifdef BLUETOOTH_RTK
+        RTKBT_rcu_vhid_setup();
+#endif
     }
     else
     {
@@ -754,6 +758,10 @@ bt_status_t btif_disable_bluetooth(void)
     BTIF_TRACE_DEBUG0("BTIF DISABLE BLUETOOTH");
 #ifdef BLUETOOTH_RTK_POWERON
         RTKBT_vhid_destroy();
+#endif
+
+#ifdef BLUETOOTH_RTK
+    RTKBT_rcu_vhid_destroy();
 #endif
     btif_dm_on_disable();
     btif_core_state = BTIF_CORE_STATE_DISABLING;

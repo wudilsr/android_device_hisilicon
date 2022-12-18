@@ -16,9 +16,14 @@ CONFIG_CA_RELEASE   ?= n
 BUILD_DIR      := $(shell pwd)/tmp
 HOST           := glibc
 STRIP          := $(CROSS_COMPILE)strip
+
 ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
-BUSYBOX        := busybox-1.22.1
-else
+BUSYBOX        := busybox-1.24.1
+endif
+ifeq (${CROSS_COMPILE},arm-histbv310-linux-)
+BUSYBOX        := busybox-1.24.1
+endif
+ifeq (${CROSS_COMPILE},arm-hisiv200-linux-)
 BUSYBOX        := busybox-1.16.1
 endif
 
@@ -99,8 +104,9 @@ $(PREFIX)/bin/busybox: \
 	cp -fv $(call compile_busybox, $(BUSYBOX_CONFIG)/$(CONFIG_BUSYBOX_NAME)) \
 		$(BUILD_DIR)/$(BUSYBOX)/.config
 	cd $(BUILD_DIR)/$(BUSYBOX)/ && \
-	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) && \
+	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) -j 16 && \
 	make $(MKFLAGS) CONFIG_PREFIX=$(PREFIX) install
+
  
    
 ###############################################################################

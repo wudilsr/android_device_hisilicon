@@ -19,9 +19,8 @@
 #include "app.h"
 
 extern void add_task(void);
-extern void  resmem_init(void);
+
 void app_init(void)
 {
-	resmem_init();
 	add_task();
 }

@@ -192,7 +192,7 @@ static HI_VOID* VP_ScheduleCaptureYUV(HI_VOID* args)
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 i;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     enum   v4l2_buf_type type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     struct v4l2_buffer stUsbBuf;
     struct v4l2_format stUsbFmt;
@@ -328,7 +328,7 @@ static HI_VOID* VP_ScheduleCaptureYUV(HI_VOID* args)
 static HI_VOID* VP_ScheduleCaptureMJPEG(HI_VOID* args)
 {
     HI_S32 s32Ret = HI_FAILURE;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     struct v4l2_buffer stUsbBuf;
     struct v4l2_format stUsbFmt;
     enum   v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -429,7 +429,7 @@ static HI_VOID* VP_ScheduleRtpSend(HI_VOID* args)
     HI_U32 j = 0, k = 0;
     HI_U32 iFrameFreq  = 15;
     HI_U32 iFrameTotal = 6;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     HI_U8 *pu8Stream = HI_NULL;
     HI_U32 u32SysPtsMs = HI_INVALID_PTS;
     HI_U8 ZeroDelay[] =
@@ -512,10 +512,10 @@ static HI_VOID* VP_ScheduleRtpSend(HI_VOID* args)
 static HI_VOID* VP_ScheduleRtpRecv(HI_VOID* args)
 {
     HI_S32 s32Ret = HI_FAILURE;
-    HI_U32 u32BufAddr;
+    size_t u32BufAddr;
     HI_U32 u32Len;
     HI_U32 u32PtsMs;
-    HI_U32 u32Chn = (HI_U32)args;
+    HI_U32 u32Chn = (HI_U32)(HI_SIZE_T)args;
     HI_UNF_STREAM_BUF_S stAvplayBuf = {0};
 
     while (!g_stVPAttr[u32Chn].bNetRecvStop)
@@ -827,12 +827,12 @@ static HI_S32 VP_AttachUsbCamMJPEG(HI_U32 u32Chn, HI_UNF_VP_SOURCE_ATTR_S *pstSr
     return HI_SUCCESS;
 
 ERR3:
-    s32Ret = HI_UNF_AVPLAY_ChnClose(g_stVPAttr[u32Chn].hLocalAVPLAY, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
+    (HI_VOID)HI_UNF_AVPLAY_ChnClose(g_stVPAttr[u32Chn].hLocalAVPLAY, HI_UNF_AVPLAY_MEDIA_CHAN_VID);
 ERR2:
-    s32Ret = HI_UNF_AVPLAY_Destroy(g_stVPAttr[u32Chn].hLocalAVPLAY);
+    (HI_VOID)HI_UNF_AVPLAY_Destroy(g_stVPAttr[u32Chn].hLocalAVPLAY);
     g_stVPAttr[u32Chn].hLocalAVPLAY = HI_INVALID_HANDLE;
 ERR1:
-    s32Ret = HI_UNF_VO_DestroyWindow(g_stVPAttr[u32Chn].hVirWin);
+    (HI_VOID)HI_UNF_VO_DestroyWindow(g_stVPAttr[u32Chn].hVirWin);
     g_stVPAttr[u32Chn].hVirWin = HI_INVALID_HANDLE;
 ERR0:
     return HI_FAILURE;
@@ -1353,7 +1353,7 @@ static HI_S32 VP_SendLocalVideo_Start(HI_U32 u32Chn)
     if (HI_FALSE == g_stVPAttr[i].bSendEmptyPackage)
     {
         g_stVPAttr[i].bNetSendStop = HI_FALSE;
-        if (pthread_create(&g_stVPAttr[i].threadNetSend, HI_NULL, VP_ScheduleRtpSend, (HI_VOID*)i))
+        if (pthread_create(&g_stVPAttr[i].threadNetSend, HI_NULL, VP_ScheduleRtpSend, (HI_VOID*)(HI_SIZE_T)i))
         {
             HI_ERR_VP("can not create VP_ScheduleRtpSend\n");
             g_stVPAttr[i].bNetSendStop = HI_TRUE;
@@ -1445,11 +1445,11 @@ ERR5:
         if ((HI_UNF_VP_SRC_MODE_USBCAM == g_stVPAttr[i].stSrcAttr.enSrcMode)
             && (V4L2_PIX_FMT_MJPEG == g_stVPAttr[i].stUsbcamPara.u32CapFmt))
         {
-            s32Ret = HI_UNF_AVPLAY_Stop(g_stVPAttr[i].hLocalAVPLAY, HI_UNF_AVPLAY_MEDIA_CHAN_VID, HI_NULL);
+            HI_UNF_AVPLAY_Stop(g_stVPAttr[i].hLocalAVPLAY, HI_UNF_AVPLAY_MEDIA_CHAN_VID, HI_NULL);
         }
         else
         {
-            s32Ret = HI_UNF_VI_Stop(g_stVPAttr[i].hVI);
+            HI_UNF_VI_Stop(g_stVPAttr[i].hVI);
         }
     }
 
@@ -1457,11 +1457,11 @@ ERR4:
     if ((HI_UNF_VP_SRC_MODE_USBCAM == g_stVPAttr[i].stSrcAttr.enSrcMode)
         && (V4L2_PIX_FMT_MJPEG == g_stVPAttr[i].stUsbcamPara.u32CapFmt))
     {
-        s32Ret = HI_UNF_VO_SetWindowEnable(g_stVPAttr[i].hVirWin, HI_FALSE);
-        s32Ret = HI_UNF_VO_DetachWindow(g_stVPAttr[i].hVirWin,g_stVPAttr[i].hLocalAVPLAY);
+        HI_UNF_VO_SetWindowEnable(g_stVPAttr[i].hVirWin, HI_FALSE);
+        HI_UNF_VO_DetachWindow(g_stVPAttr[i].hVirWin,g_stVPAttr[i].hLocalAVPLAY);
     }
 ERR3:
-    s32Ret = HI_UNF_VENC_DetachInput(g_stVPAttr[i].hVENC);
+    HI_UNF_VENC_DetachInput(g_stVPAttr[i].hVENC);
 
 ERR2:
     g_stVPAttr[i].bNetSendStop = HI_TRUE;
@@ -1520,14 +1520,7 @@ static HI_S32 VP_SendLocalVideo_Stop(HI_U32 u32Chn)
         /*net  send empty package --> start*/
         g_stVPAttr[i].bSendEmptyPackage = HI_TRUE;
         /* no need to wait venc operation finish,because venc stop, release stream can be done.*/
-#if 0
-        s32Ret = VP_RTP_SwitchCtrlMode(i, RTP_ONLY_RECV);
-        if (HI_SUCCESS != s32Ret)
-        {
-            HI_ERR_VP("VP_RTP_SwitchCtrlMode failed, ret = 0x%08x\n", s32Ret);
-            return s32Ret;
-        }
-#endif
+
     }
 
     s32Ret = HI_UNF_VENC_Stop(g_stVPAttr[i].hVENC);
@@ -1630,7 +1623,7 @@ static HI_S32 VP_RecvRemoteVideo_Start(HI_U32 u32Chn)
     }
 
     g_stVPAttr[i].bNetRecvStop = HI_FALSE;
-    s32Ret= pthread_create(&g_stVPAttr[i].threadNetRecv, HI_NULL, VP_ScheduleRtpRecv, (HI_VOID*)i);
+    s32Ret= pthread_create(&g_stVPAttr[i].threadNetRecv, HI_NULL, VP_ScheduleRtpRecv, (HI_VOID*)(HI_SIZE_T)i);
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_VP("can not create VP_ScheduleRtpRecv\n");
@@ -2284,11 +2277,6 @@ HI_S32 HI_UNF_VP_AttachSource(HI_HANDLE hVP, HI_UNF_VP_SOURCE_ATTR_S *pstSrcAttr
 {
     HI_S32 s32Ret = HI_FAILURE;
     struct v4l2_format stUsbFmt;
-    struct v4l2_buffer stUsbBuf;
-    struct v4l2_streamparm stUsbStrm;
-    struct v4l2_requestbuffers stUsbRb;
-    HI_UNF_VI_ATTR_S stViAttr;
-    HI_UNF_VI_BUFFER_ATTR_S stViBufAttr;
     HI_U32 i;
 
     CHECK_VP_INIT;
@@ -2301,12 +2289,6 @@ HI_S32 HI_UNF_VP_AttachSource(HI_HANDLE hVP, HI_UNF_VP_SOURCE_ATTR_S *pstSrcAttr
     }
 
     memset(&stUsbFmt, 0, sizeof(struct v4l2_format));
-    memset(&stUsbBuf, 0, sizeof(struct v4l2_buffer));
-    memset(&stUsbStrm, 0, sizeof(struct v4l2_streamparm));
-    memset(&stUsbRb, 0, sizeof(struct v4l2_requestbuffers));
-    memset(&stViAttr, 0, sizeof(HI_UNF_VI_ATTR_S));
-    memset(&stViBufAttr, 0, sizeof(HI_UNF_VI_BUFFER_ATTR_S));
-
     s32Ret = VP_FindValidChannel(hVP, &i);
     if (HI_SUCCESS != s32Ret)
     {

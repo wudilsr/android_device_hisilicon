@@ -4,7 +4,7 @@
 #include "teletext_debug.h"
 
 #define TTX_QUEUE_LOCK()  \
-   do{\
+    do{\
         int ret = pthread_mutex_lock(&pstQueue->Queue_lock);\
         if(ret != 0){\
             HI_ERR_TTX("TTX call pthread_mutex_lock(QUEUE) failure ret = 0x%x\n",ret);\
@@ -39,11 +39,11 @@ static HI_S32 IsFullQueue(TTX_SEGMENT_QUEUE_S* pstQueue)
 
     if (pstQueue->pstSegmentRear >= pstQueue->pstSegmentFront)
     {
-        u32RemainSpace = ((HI_U32)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen) - (HI_U32)pstQueue->pstSegmentRear;
+        u32RemainSpace = ((size_t)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen) - (size_t)pstQueue->pstSegmentRear;
 
-        if ((HI_U32)pstQueue->pstSegmentFront > (HI_U32)pstQueue->pu8BaseAddr)
+        if ((size_t)pstQueue->pstSegmentFront > (size_t)pstQueue->pu8BaseAddr)
         {
-            u32RemainSpace += (HI_U32)((HI_U32)pstQueue->pstSegmentFront - MIN_GAP - (HI_U32)pstQueue->pu8BaseAddr);
+            u32RemainSpace += ((size_t)pstQueue->pstSegmentFront - MIN_GAP - (size_t)pstQueue->pu8BaseAddr);
         }
         else
         {
@@ -52,7 +52,7 @@ static HI_S32 IsFullQueue(TTX_SEGMENT_QUEUE_S* pstQueue)
     }
     else
     {
-        u32RemainSpace = (HI_U32)pstQueue->pstSegmentFront - MIN_GAP - (HI_U32)pstQueue->pstSegmentRear;
+        u32RemainSpace = (size_t)pstQueue->pstSegmentFront - MIN_GAP - (size_t)pstQueue->pstSegmentRear;
     }
 
     if (u32Step > u32RemainSpace)
@@ -78,18 +78,18 @@ HI_S32 TTX_PesQueue_IsMemTensity(TTX_SEGMENT_QUEUE_S* pstQueue)
 
     if (pstQueue->pstSegmentRear >= pstQueue->pstSegmentFront)
     {
-        u32RemainSpace = ((HI_U32)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen) - (HI_U32)pstQueue->pstSegmentRear;
+        u32RemainSpace = ((size_t)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen) - (size_t)pstQueue->pstSegmentRear;
 
-        if ((HI_U32)pstQueue->pstSegmentFront > (HI_U32)pstQueue->pu8BaseAddr)
+        if ((size_t)pstQueue->pstSegmentFront > (size_t)pstQueue->pu8BaseAddr)
         {
-            u32RemainSpace += ((HI_U32)pstQueue->pstSegmentFront - (HI_U32)pstQueue->pu8BaseAddr);
+            u32RemainSpace += ((size_t)pstQueue->pstSegmentFront - (size_t)pstQueue->pu8BaseAddr);
         }
         else
         {}
     }
     else
     {
-        u32RemainSpace = (HI_U32)pstQueue->pstSegmentFront - (HI_U32)pstQueue->pstSegmentRear;
+        u32RemainSpace = (size_t)pstQueue->pstSegmentFront - (size_t)pstQueue->pstSegmentRear;
     }
 
     if (u32RemainSpace > (pstQueue->u32MaxLen / 6))
@@ -143,6 +143,7 @@ HI_S32 TTX_PesQueue_En(TTX_SEGMENT_QUEUE_S* pstQueue, TTX_SEGMENT_S* pSegment)
     TTX_QUEUE_LOCK();
 
     pstQueue->pstSegmentRear->u16DataLength = pSegment->u16DataLength;
+
     if (IsFullQueue(pstQueue) == HI_SUCCESS)
     {
         TTX_QUEUE_UNLOCK();
@@ -152,21 +153,22 @@ HI_S32 TTX_PesQueue_En(TTX_SEGMENT_QUEUE_S* pstQueue, TTX_SEGMENT_S* pSegment)
 
     u32ItemSize = u32DataTypeSize + pSegment->u16DataLength;
 
-    if (((HI_U32)pstQueue->pstSegmentRear + u32ItemSize) > ((HI_U32)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen))
+    if (((size_t)pstQueue->pstSegmentRear + u32ItemSize) > ((size_t)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen))
     {
-        pstQueue->pstSegmentRear->pu8SegmentData = (HI_U8*)((HI_U32)pstQueue->pu8BaseAddr + u32DataTypeSize);
+        pstQueue->pstSegmentRear->pu8SegmentData = (HI_U8*)(pstQueue->pu8BaseAddr + u32DataTypeSize);
     }
     else
     {
-        pstQueue->pstSegmentRear->pu8SegmentData = (HI_U8*)((HI_U32)pstQueue->pstSegmentRear + u32DataTypeSize);
+        pstQueue->pstSegmentRear->pu8SegmentData = (HI_U8*)(pstQueue->pstSegmentRear + u32DataTypeSize);
     }
 
     pstQueue->pstSegmentRear->u16DataLength = pSegment->u16DataLength;
 
     memcpy(pstQueue->pstSegmentRear->pu8SegmentData, pSegment->pu8SegmentData, pSegment->u16DataLength);
 
-    pstNextSegAddr = (TTX_SEGMENT_S*)((HI_U32)pstQueue->pstSegmentRear + u32ItemSize);
-    if (((HI_U32)pstNextSegAddr + u32DataTypeSize) > ((HI_U32)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen))
+    pstNextSegAddr = (TTX_SEGMENT_S*)((size_t)pstQueue->pstSegmentRear + u32ItemSize);
+
+    if (((size_t)pstNextSegAddr + u32DataTypeSize) > ((size_t)pstQueue->pu8BaseAddr + pstQueue->u32MaxLen))
     {
         pstNextSegAddr = (TTX_SEGMENT_S*)pstQueue->pu8BaseAddr;
     }
@@ -176,6 +178,7 @@ HI_S32 TTX_PesQueue_En(TTX_SEGMENT_QUEUE_S* pstQueue, TTX_SEGMENT_S* pSegment)
     pstQueue->pstSegmentRear->pstNext = pstNextSegAddr;
     pstQueue->pstSegmentRear = pstNextSegAddr;
     pstQueue->pstSegmentRear->u16DataLength = 0;
+
     if (IsFullQueue(pstQueue) == HI_SUCCESS)
     {
         TTX_QUEUE_UNLOCK();
@@ -231,4 +234,19 @@ HI_S32 TTX_PesQueue_Reset(TTX_SEGMENT_QUEUE_S* pstQueue, const HI_U8* pszBufAddr
 
     TTX_QUEUE_UNLOCK();
     return HI_SUCCESS;
+}
+
+HI_BOOL TTX_IsLastFigureInputted(TTX_INPUT_NUM_S* pstInputNum, HI_U8 u8InputNumConuntMax)
+{
+    return (pstInputNum->u8Count == u8InputNumConuntMax) ? HI_TRUE : HI_FALSE;
+}
+
+HI_BOOL TTX_InputNumIsOnGoing(TTX_INPUT_NUM_S* pstInputNum)
+{
+    return (pstInputNum->u8Count > 0) ? HI_TRUE : HI_FALSE;
+}
+
+HI_VOID TTX_ResetInputNum(TTX_INPUT_NUM_S* pstInputNum)
+{
+    memset(pstInputNum, 0, sizeof(TTX_INPUT_NUM_S));
 }

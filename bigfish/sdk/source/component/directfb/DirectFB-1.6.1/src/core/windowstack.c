@@ -133,12 +133,17 @@ static void
 stack_containers_remove(CoreWindowStack *p)
 {
      Stack_Container    *stack_cntr = NULL;
+	 Stack_Container    *tmp = NULL;
 
      D_DEBUG_AT( Core_WindowStack, "Enter:%s()\n", __FUNCTION__);
 
      pthread_mutex_lock( &stack_containers_lock );
 
+#if 0
      direct_list_foreach(stack_cntr, stack_containers) {
+#else
+	direct_list_foreach_safe(stack_cntr, tmp, stack_containers) {
+#endif
           if((void *)p == stack_cntr->ctx) {
                direct_list_remove(&stack_containers, &stack_cntr->link);
                D_FREE(stack_cntr);

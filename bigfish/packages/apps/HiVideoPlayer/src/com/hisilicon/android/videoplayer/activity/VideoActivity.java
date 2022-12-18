@@ -303,12 +303,14 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
     public static int m3DMVCAdapte = 1;
     private int m3DSubtitle = 0;
     private LanguageXmlParser mLanguageXmlParser;
+    private boolean isExcept2Exit = true;
 
     private static final int HI_2D_MODE = HiDisplayManager.HI_DISP_MODE_NORMAL;
     private static final int HI_3D_MODE_FRAME_PACKING = HiDisplayManager.HI_DISP_MODE_FRAME_PACKING;
     private static final int HI_3D_MODE_SIDE_BY_SIDE = HiDisplayManager.HI_DISP_MODE_SIDE_BY_SIDE;
     private static final int HI_3D_MODE_TOP_BOTTOM = HiDisplayManager.HI_DISP_MODE_TOP_BOTTOM;
     private static int HI_3D_MODE = HI_3D_MODE_FRAME_PACKING;
+    private static final int MEDIA_FAST_BACKWORD_COMPLETE = 21;
 
     private static final int HI_VIDEOFORMAT_TYPE_MVC = 35;
 
@@ -727,8 +729,17 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
         videoView.setOnCompletionListener(mCompletionListener);
         videoView.setOnErrorListener(mOnErrorListener);
         videoView.setOnSeekCompleteListener(mOnSeekCompleteListener);
+        videoView.setOn3DModeReceivedListener(m3DModeReceivedListener);
         videoView.setVideoPath(getCurrPath);
         showLoadProgressDialog();
+        mProgressDialog.setOnDismissListener(new OnDismissListener() {
+            @Override
+                public void onDismiss(DialogInterface arg0) {
+              if(isExcept2Exit){
+                VideoActivity.this.onDestroy();
+                VideoActivity.this.finish();
+              }
+            }});
     }
 
     OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener()
@@ -756,21 +767,36 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
             videoStart();
 		}
 	};
+    OnInfoListener m3DModeReceivedListener =
+        new OnInfoListener()
+    {
+        public boolean onInfo(MediaPlayer mp, int what, int extra)
+        {
+            if (what==MEDIA_FAST_BACKWORD_COMPLETE)
+            {
+                playStatus.setVisibility(View.INVISIBLE);
+                forwardRate = 1;
+                rewindRate = 1;
+                rewindOrForward = false;
+            }
 
+            return false;
+        }
+    };
     OnPreparedListener mPreparedListener = new OnPreparedListener()
     {
         public void onPrepared(MediaPlayer mp)
         {
             inflateAudioInfo();
             inflateSubtitleInfo();
-
+            isExcept2Exit=false;
             setVideoCvrs();
             setVideoStep();
-
             checkDbData(getPlayPath);
 
             Parcel mediaInfo = videoView.getMediaInfo();
             mediaInfo.readInt();
+            mediaInfo.readString();
             int mFormat = mediaInfo.readInt();
             mediaInfo.readInt();
             long mSize = mediaInfo.readLong();
@@ -2932,17 +2958,19 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
 
     class DThread  implements Runnable
     {
-        Dialog dialog = null;
-        Dialog predialog = null;
+        ArrayList<Dialog> dialogList = new ArrayList<Dialog>();
 
         public DThread(Dialog dialog)
         {
-            this.dialog = dialog;
+            synchronized (dialogList) {
+                dialogList.add(dialog);
+            }
         }
         public void SetDialog(Dialog dialog)
         {
-            this.predialog = this.dialog;
-            this.dialog = dialog;
+            synchronized (dialogList) {
+                dialogList.add(dialog);
+            }
         }
         public void run()
         {
@@ -2951,10 +2979,15 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
 
             if (distance >= Constants.DIALOG_SHOW)
             {
-                if(dialog != null)
-                    dialog.dismiss();
-                if(predialog != null)
-                    predialog.dismiss();
+                synchronized (dialogList) {
+                    int size = dialogList.size();
+                    for(int i = 0 ;i <size ;i++){
+                        Dialog dialog = dialogList.get(i);
+                        if(dialog!=null){
+                            dialog.dismiss();
+                        }
+                    }
+                }
                 dHandler.removeCallbacks(dThread);
                 isDShow = false;
             }
@@ -4483,13 +4516,13 @@ public class VideoActivity extends ActivityFrame implements SurfaceHolder.Callba
 
         if (mModelBDInfo != null)
         {
-            File file = new File(mModelBDInfo.getBDISOPath());
+            File file = new File(mModelBDInfo.getPath());
             if(file != null && file.exists())
                 currDirectory = file.getParentFile().getPath();
         }
         else if(mModelDVDInfo != null)
         {
-            File file = new File(mModelDVDInfo.getDVDISOPath());
+            File file = new File(mModelDVDInfo.getPath());
             if(file != null && file.exists())
                 currDirectory = file.getParentFile().getPath();
         }

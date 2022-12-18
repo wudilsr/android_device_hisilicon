@@ -175,7 +175,7 @@ public class Constants {
     public static final int SUB_FILE = 132;
     /* disenble subtile */
     public static final int SUB_DISABLE = 135;
-    public static final String STARTVIDEO = "com.huawei.video";
+    public static final String STARTVIDEO = "com.hisilicon.video";
     public static final String ISVIDEOPLAYING = "SHOW_HIDE_FLAG";
     /* Called by playlist */
     public static final int FROMPLAYLIST = 0;

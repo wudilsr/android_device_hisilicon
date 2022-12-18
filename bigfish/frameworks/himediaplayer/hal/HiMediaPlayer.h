@@ -19,6 +19,7 @@
 #include "HiASink.h"
 
 #define ANDROID_LOOP_TAG "ANDROID_LOOP"
+#define MAXNUM 60
 #define HIMEDIA_FREE_ALL_PROGRAMS(stFileInfo) \
     do{ \
         HI_U32 i = 0; \
@@ -462,6 +463,8 @@ private:
         bool              mIsTimedTextTrackEnable;
         bool              mIsSubtitleDataTrackEnable;
         int               mPrepareResult;
+        //add for guangdongyidong
+        int               isFormatNotSupport;
         virtual status_t  AddTimedTextSource(const Parcel& request);
         virtual status_t  selectTrack(int trackIndex, bool select);
         status_t          selectAudioTrack(int trackIndex);
@@ -514,11 +517,14 @@ private:
         bool mUseStaticResource;
         int mTimeShiftDuration;
         int mYunosSource;
+        bool mNeedSendFirstFrameAfterSeekEvent;
         HI_S32 mS32ErrorCode;
         char mUUID[HI_FORMAT_TITLE_MAX_LEN];
         /* subtitle type, SUB_DEFAULT_FRAME_PACK:auto recognise,  0:normal 2d subtitle, 1:sbs subtitle, 2:tab subtitle */
         int mSubFramePackType;
-
+        HI_UNF_VIDEO_FRM_STATUS_INFO_S *mVideoInfos;
+        int mVideoNumber;
+        clock_t mLastSendTime;
         /* Value is:
                * DP_STRATEGY_ADAPT_MASK : 0x0001
                * DP_STRATEGY_2D_MASK      : 0x0002
@@ -534,6 +540,8 @@ private:
         bool mNonVSink;
         sp <Surface> mSurface;
         sp <surfaceSetting>  mSurfaceSetting;
+        //add for guangdongyidong
+        int isNetworkOk;
         status_t setNativeWindow_l(const sp<ANativeWindow> &native);
         bool          AppendStringMeta(int key, char *val, Parcel *records);
         bool          AppendByteMeta(int key, char *val, int size, Parcel *records);
@@ -551,8 +559,7 @@ private:
         static int      hiPlayerEventCallback(HI_HANDLE hPlayer, HI_SVR_PLAYER_EVENT_S *pstruEvent);
         static KeyedVector <HI_HANDLE, HiMediaPlayer*>  mInstances;
         friend  class   CommandQueue;
-        static HI_S32   streamIFrameErrorCB(HI_HANDLE hAvPlayer, HI_UNF_AVPLAY_EVENT_E enEvent, HI_U32 u32Para);
-        static HI_S32   streamNormSwitchCB(HI_HANDLE hAvPlayer, HI_UNF_AVPLAY_EVENT_E enEvent, HI_U32 u32Para);
+        static HI_S32   AVPlayEventCB(HI_HANDLE hAvPlayer, HI_UNF_AVPLAY_EVENT_E enEvent, HI_U32 u32Para);
         static HiMediaPlayer* getHiMediaPlayerByAVPlayer(HI_HANDLE hAvPlayer);
         int             createHiplayer();
         void            destroyHiPlayer();
@@ -616,6 +623,7 @@ private:
         /* for adapting mobaihe event info  */
         MEDIA_INFO_EXTEND_BUFFER_LENGTH = 5000,
         MEDIA_INFO_EXTEND_FIRST_FRAME_TIME = 5001,
+        MEDIA_INFO_EXTEND_NETWORK_ADJUST_BITRATE = 5002,
     };
 
 }; // namespace

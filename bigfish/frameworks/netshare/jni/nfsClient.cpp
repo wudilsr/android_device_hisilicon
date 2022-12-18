@@ -200,6 +200,7 @@ JNIEXPORT jstring JNICALL Java_com_hisilicon_android_nfsClient_getShareFolders(J
 JNIEXPORT jint JNICALL Java_com_hisilicon_android_nfsClient_mount(JNIEnv *env, jobject obj, jstring path)
 {
     FILE * fm;
+    int result =0;
     const char * Path = env ->GetStringUTFChars(path,NULL);
     DB_LOG("mount Path=%s",Path);
     for(numMount=nm.begin();numMount!=nm.end();numMount++){
@@ -222,8 +223,16 @@ JNIEXPORT jint JNICALL Java_com_hisilicon_android_nfsClient_mount(JNIEnv *env, j
     memset(cmdStr,0,CMDLEN);
     snprintf( cmdStr, sizeof(cmdStr), "%s %s %s","-o nolock,tcp",Path ,mountPoint);
     DB_LOG("mount cmdstr=%s",cmdStr);
-	HiNSClient::NSMount(cmdStr);
-
+	result = HiNSClient::NSMount(cmdStr);
+    if(result==-1){
+        char cmdStr_1[CMDLEN] = {0};
+            snprintf( cmdStr_1, sizeof(cmdStr_1), "%s  %s","/system/bin/rmdir",mountPoint);
+           if((pm = popen(cmdStr_1,"r")) == NULL){
+              SLOGE("rmdir \"%s\" error !",mountPoint);
+              return -5;
+          }
+            return -5;
+    }
     DB_LOG("add new mountlist Path=%s,mountPoint=%s",Path,mountPoint);
     NFS_MOUNT * mountlist =new NFS_MOUNT;
     mountlist->path = Path ;

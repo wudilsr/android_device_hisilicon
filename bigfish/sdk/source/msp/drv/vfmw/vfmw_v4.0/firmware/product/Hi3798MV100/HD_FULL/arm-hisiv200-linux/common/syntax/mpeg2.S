@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/.mpeg2.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg2.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg2.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/syntax/mpeg2.o -O2 -Wall
@@ -149,14 +149,14 @@ MP2_EstimatePicQp:
 	sub	r0, fp, #148	@,,
 	mov	r2, #128	@,
 	bl	memcpy	@
-	movw	r1, #:lower16:79216	@ tmp142,
-	movt	r1, #:upper16:79216	@ tmp142,
+	movw	r1, #:lower16:80752	@ tmp142,
+	movt	r1, #:upper16:80752	@ tmp142,
 	ldr	r0, [r4, #300]	@ QuantScaleCode, <variable>.quantiser_scale_code
 	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
 	cmp	r3, #1	@ <variable>.CodecInfo.MpegFlag,
 	beq	.L5	@,
-	movw	lr, #:lower16:80504	@ tmp145,
-	movt	lr, #:upper16:80504	@ tmp145,
+	movw	lr, #:lower16:82040	@ tmp145,
+	movt	lr, #:upper16:82040	@ tmp145,
 	ldr	ip, [r4, lr]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldrb	r2, [ip, #13]	@ zero_extendqisi2	@ <variable>.q_scale_type, <variable>.q_scale_type
 	cmp	r2, #0	@ <variable>.q_scale_type,
@@ -187,52 +187,52 @@ MP2_CalcRealEncFrameRate:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	ip, #:lower16:80504	@ tmp152,
-	movt	ip, #:upper16:80504	@ tmp152,
+	movw	ip, #:lower16:82040	@ tmp152,
+	movt	ip, #:upper16:82040	@ tmp152,
 	mov	r4, r0	@ pCtx, pCtx
-	movw	r6, #:lower16:79320	@ tmp146,
-	movw	r2, #:lower16:79332	@ tmp147,
-	ldr	r7, [r0, ip]	@ D.39498, <variable>.pSyntaxInfNew
-	movt	r6, #:upper16:79320	@ tmp146,
-	movt	r2, #:upper16:79332	@ tmp147,
-	movw	r5, #:lower16:79316	@ tmp148,
-	movw	r1, #:lower16:79328	@ tmp149,
-	movt	r5, #:upper16:79316	@ tmp148,
+	movw	r6, #:lower16:80856	@ tmp146,
+	movw	r2, #:lower16:80868	@ tmp147,
+	ldr	r7, [r0, ip]	@ D.39514, <variable>.pSyntaxInfNew
+	movt	r6, #:upper16:80856	@ tmp146,
+	movt	r2, #:upper16:80868	@ tmp147,
+	movw	r5, #:lower16:80852	@ tmp148,
+	movw	r1, #:lower16:80864	@ tmp149,
+	movt	r5, #:upper16:80852	@ tmp148,
 	ldrb	r3, [r7, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
-	movt	r1, #:upper16:79328	@ tmp149,
-	movw	ip, #:lower16:79312	@ tmp150,
-	movw	r0, #:lower16:79324	@ tmp151,
+	movt	r1, #:upper16:80864	@ tmp149,
+	movw	ip, #:lower16:80848	@ tmp150,
+	movw	r0, #:lower16:80860	@ tmp151,
 	cmp	r3, #1	@ <variable>.picture_coding_type,
-	movt	r0, #:upper16:79324	@ tmp151,
-	movt	ip, #:upper16:79312	@ tmp150,
-	ldr	r3, [r4, r6]	@ D.39492, <variable>.GopFrmCnt
-	ldr	r2, [r4, r2]	@ D.39493, <variable>.GopFrmCnt
-	ldr	r6, [r4, r5]	@ D.39494, <variable>.GopFldCnt
-	ldr	r1, [r4, r1]	@ D.39495, <variable>.GopFldCnt
-	ldr	r5, [r4, r0]	@ D.39497, <variable>.GopFrmCntNoRpt
-	ldr	ip, [r4, ip]	@ D.39496, <variable>.GopFrmCntNoRpt
-	ldr	r0, [r7, #72]	@ D.39499, <variable>.frame_rate
+	movt	r0, #:upper16:80860	@ tmp151,
+	movt	ip, #:upper16:80848	@ tmp150,
+	ldr	r3, [r4, r6]	@ D.39508, <variable>.GopFrmCnt
+	ldr	r2, [r4, r2]	@ D.39509, <variable>.GopFrmCnt
+	ldr	r6, [r4, r5]	@ D.39510, <variable>.GopFldCnt
+	ldr	r1, [r4, r1]	@ D.39511, <variable>.GopFldCnt
+	ldr	r5, [r4, r0]	@ D.39513, <variable>.GopFrmCntNoRpt
+	ldr	ip, [r4, ip]	@ D.39512, <variable>.GopFrmCntNoRpt
+	ldr	r0, [r7, #72]	@ D.39515, <variable>.frame_rate
 	ldmnefd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-	add	ip, r5, ip	@ FrmNumNoRpt, D.39497, D.39496
-	cmp	r0, #0	@ D.39499,
+	add	ip, r5, ip	@ FrmNumNoRpt, D.39513, D.39512
+	cmp	r0, #0	@ D.39515,
 	cmpgt	ip, #0	@, FrmNumNoRpt,
 	ble	.L11	@,
-	add	r1, r1, r6	@ FldNum, D.39495, D.39494
+	add	r1, r1, r6	@ FldNum, D.39511, D.39510
 	cmp	r1, #0	@ FldNum,
 	ble	.L11	@,
-	mul	r0, ip, r0	@, FrmNumNoRpt, D.39499
+	mul	r0, ip, r0	@, FrmNumNoRpt, D.39515
 	ldrb	lr, [r7, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
 	cmp	lr, #1	@ <variable>.progressive_sequence,
-	addeq	r1, r2, r3	@, D.39493, D.39492
+	addeq	r1, r2, r3	@, D.39509, D.39508
 	movne	r0, r0, asl #1	@, tmp168,
 	bl	__aeabi_idiv	@
 	mov	r2, #100	@ tmp176,
-	movw	r1, #:lower16:79348	@ tmp173,
-	movt	r1, #:upper16:79348	@ tmp173,
+	movw	r1, #:lower16:80884	@ tmp173,
+	movt	r1, #:upper16:80884	@ tmp173,
 	mul	r3, r2, r0	@ tmp175, tmp176, prephitmp.587
 	str	r0, [r4, r1]	@ prephitmp.587, <variable>.CodecInfo.RealFrmRate
-	movw	r1, #:lower16:79348	@ tmp174,
-	movt	r1, #:upper16:79348	@ tmp174,
+	movw	r1, #:lower16:80884	@ tmp174,
+	movt	r1, #:upper16:80884	@ tmp174,
 	add	ip, r3, #1020	@ tmp178, tmp175,
 	cmp	r3, #0	@ tmp175,
 	add	r2, ip, #3	@ tmp178, tmp178,
@@ -241,8 +241,8 @@ MP2_CalcRealEncFrameRate:
 	str	r0, [r4, r1]	@ tmp180, <variable>.CodecInfo.RealFrmRate
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L11:
-	movw	r3, #:lower16:79348	@ tmp181,
-	movt	r3, #:upper16:79348	@ tmp181,
+	movw	r3, #:lower16:80884	@ tmp181,
+	movt	r3, #:upper16:80884	@ tmp181,
 	mov	r0, #0	@ tmp182,
 	str	r0, [r4, r3]	@ tmp182, <variable>.CodecInfo.RealFrmRate
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
@@ -265,15 +265,15 @@ MP2_CalcDar:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:80504	@ tmp138,
-	movt	r3, #:upper16:80504	@ tmp138,
+	movw	r3, #:lower16:82040	@ tmp138,
+	movt	r3, #:upper16:82040	@ tmp138,
 	ldr	ip, [r0, r3]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldr	r1, [ip, #84]	@ <variable>.aspect_ratio_information, <variable>.aspect_ratio_information
-	sub	r3, r1, #1	@ D.41121, <variable>.aspect_ratio_information,
-	cmp	r3, #2	@ D.41121,
+	sub	r3, r1, #1	@ D.41137, <variable>.aspect_ratio_information,
+	cmp	r3, #2	@ D.41137,
 	movwls	r2, #:lower16:.LANCHOR0	@ tmp140,
 	movtls	r2, #:upper16:.LANCHOR0	@ tmp140,
-	addls	r3, r2, r3, asl #2	@, tmp143, tmp140, D.41121,
+	addls	r3, r2, r3, asl #2	@, tmp143, tmp140, D.41137,
 	movhi	r0, #0	@ prephitmp.612,
 	ldrls	r0, [r3, #128]	@ prephitmp.612, CSWTCH.526
 	ldmfd	sp, {fp, sp, pc}	@
@@ -358,34 +358,34 @@ MP2_RecordVFMWState:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r5, #:lower16:80504	@ tmp141,
-	movt	r5, #:upper16:80504	@ tmp141,
-	ldr	r2, [r0, #0]	@ D.39835, <variable>.pstExtraData
+	movw	r5, #:lower16:82040	@ tmp141,
+	movt	r5, #:upper16:82040	@ tmp141,
+	ldr	r2, [r0, #0]	@ D.39851, <variable>.pstExtraData
 	ldr	r1, [r0, r5]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldr	r4, [r1, #48]	@ <variable>.horizontal_size, <variable>.horizontal_size
 	str	r4, [r2, #568]	@ <variable>.horizontal_size, <variable>.stChanState.image_width
 	ldr	r6, [r1, #52]	@ <variable>.vertical_size, <variable>.vertical_size
 	str	r6, [r2, #572]	@ <variable>.vertical_size, <variable>.stChanState.image_height
 	ldr	r3, [r0, r5]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
-	movw	r5, #:lower16:79216	@ tmp156,
-	movt	r5, #:upper16:79216	@ tmp156,
+	movw	r5, #:lower16:80752	@ tmp156,
+	movt	r5, #:upper16:80752	@ tmp156,
 	ldr	ip, [r3, #84]	@ <variable>.aspect_ratio_information, <variable>.aspect_ratio_information
-	movw	r3, #:lower16:114676	@ tmp161,
-	movt	r3, #:upper16:114676	@ tmp161,
-	sub	r4, ip, #1	@ D.41132, <variable>.aspect_ratio_information,
+	movw	r3, #:lower16:117748	@ tmp161,
+	movt	r3, #:upper16:117748	@ tmp161,
+	sub	r4, ip, #1	@ D.41148, <variable>.aspect_ratio_information,
 	mov	ip, #0	@ tmp152,
-	cmp	r4, #2	@ D.41132,
+	cmp	r4, #2	@ D.41148,
 	str	ip, [r2, #580]	@ tmp152, <variable>.stChanState.scan_type
 	str	ip, [r2, #584]	@ tmp152, <variable>.stChanState.video_format
 	movwls	r6, #:lower16:.LANCHOR0	@ tmp147,
 	movtls	r6, #:upper16:.LANCHOR0	@ tmp147,
-	addls	r4, r6, r4, asl #2	@, tmp150, tmp147, D.41132,
+	addls	r4, r6, r4, asl #2	@, tmp150, tmp147, D.41148,
 	movhi	r4, #0	@ prephitmp.662,
 	ldrls	r4, [r4, #128]	@ prephitmp.662, CSWTCH.526
 	str	r4, [r2, #576]	@ prephitmp.662, <variable>.stChanState.aspect_ratio
-	movw	r4, #:lower16:114680	@ tmp164,
+	movw	r4, #:lower16:117752	@ tmp164,
 	ldr	r6, [r1, #72]	@ <variable>.frame_rate, <variable>.frame_rate
-	movt	r4, #:upper16:114680	@ tmp164,
+	movt	r4, #:upper16:117752	@ tmp164,
 	str	ip, [r2, #592]	@ tmp152, <variable>.stChanState.bit_rate
 	str	r6, [r2, #588]	@ <variable>.frame_rate, <variable>.stChanState.frame_rate
 	ldr	r5, [r0, r5]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
@@ -399,10 +399,10 @@ MP2_RecordVFMWState:
 	str	r1, [r2, #604]	@ <variable>.level, <variable>.stChanState.level
 	ldr	r1, [r0, r3]	@ <variable>.numTotalFrame, <variable>.numTotalFrame
 	str	r1, [r2, #608]	@ <variable>.numTotalFrame, <variable>.stChanState.total_frame_num
-	ldr	r1, [r0, r4]	@ D.39846, <variable>.numOutputFrame
+	ldr	r1, [r0, r4]	@ D.39862, <variable>.numOutputFrame
 	ldr	r3, [r0, r3]	@ temp.673, <variable>.numTotalFrame
-	cmp	r3, r1	@ temp.673, D.39846
-	rsbge	ip, r1, r3	@ iftmp.485, D.39846, temp.673
+	cmp	r3, r1	@ temp.673, D.39862
+	rsbge	ip, r1, r3	@ iftmp.485, D.39862, temp.673
 	str	ip, [r2, #612]	@ iftmp.485, <variable>.stChanState.error_frame_num
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
@@ -467,7 +467,7 @@ MP2_GetPacketState:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	mov	r3, #114688	@ tmp136,
+	mov	r3, #117760	@ tmp136,
 	ldrb	r0, [r0, r3]	@ zero_extendqisi2	@ <variable>.IsWaitToDecFlag, <variable>.IsWaitToDecFlag
 	cmp	r0, #1	@ <variable>.IsWaitToDecFlag,
 	moveq	r0, #2	@,
@@ -492,8 +492,8 @@ MPEG2DEC_Destroy:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:79188	@ tmp139,
-	movt	r3, #:upper16:79188	@ tmp139,
+	movw	r3, #:lower16:80724	@ tmp139,
+	movt	r3, #:upper16:80724	@ tmp139,
 	movw	r1, #:lower16:.LC0	@,
 	movt	r1, #:upper16:.LC0	@,
 	ldr	r2, [r0, r3]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
@@ -520,30 +520,30 @@ MP2_SetVDMInf:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:79132	@ tmp144,
-	movt	r1, #:upper16:79132	@ tmp144,
+	movw	r1, #:lower16:80668	@ tmp144,
+	movt	r1, #:upper16:80668	@ tmp144,
 	mov	r4, r0	@ pCtx, pCtx
-	add	r0, r0, #78848	@ pBs, pCtx,
+	add	r0, r0, #80896	@ pBs, pCtx,
 	ldrsb	r3, [r4, r1]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.IsLastSeg
-	add	r0, r0, #576	@ pBs, pBs,
+	add	r0, r0, #64	@ pBs, pBs,
 	cmp	r3, #1	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg,
 	beq	.L56	@,
-	movw	r5, #:lower16:79448	@ tmp168,
-	movt	r5, #:upper16:79448	@ tmp168,
-	movw	r7, #:lower16:79144	@ tmp169,
-	movt	r7, #:upper16:79144	@ tmp169,
+	movw	r5, #:lower16:80984	@ tmp168,
+	movt	r5, #:upper16:80984	@ tmp168,
+	movw	r7, #:lower16:80680	@ tmp169,
+	movt	r7, #:upper16:80680	@ tmp169,
 	ldr	r3, [r4, r5]	@ temp.789, <variable>.Bs.TotalPos
-	movw	r2, #:lower16:79128	@ tmp173,
+	movw	r2, #:lower16:80664	@ tmp173,
 	ldr	r1, [r4, r7]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
-	movt	r2, #:upper16:79128	@ tmp173,
+	movt	r2, #:upper16:80664	@ tmp173,
 	cmp	r3, #0	@ temp.789,
 	add	r7, r3, #7	@ tmp176, temp.789,
 	ldr	lr, [r4, r2]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
 	add	ip, r1, r3, lsr #3	@, tmp185, <variable>.CodecInfo.stMp2Packet.BsPhyAddr, temp.789,
 	movge	r7, r3	@ temp.789, temp.789
-	movw	r5, #:lower16:79148	@ tmp166,
+	movw	r5, #:lower16:80684	@ tmp166,
 	add	r3, r3, r1, asl #3	@, bs_offset.794, temp.789, <variable>.CodecInfo.stMp2Packet.BsPhyAddr,
-	movt	r5, #:upper16:79148	@ tmp166,
+	movt	r5, #:upper16:80684	@ tmp166,
 	add	r1, lr, r7, asr #3	@, tmp180, <variable>.CodecInfo.BsOffset, temp.789,
 	and	lr, r3, #31	@ tmp188, bs_offset.794,
 	str	r1, [r4, r2]	@ tmp180, <variable>.CodecInfo.BsOffset
@@ -552,8 +552,8 @@ MP2_SetVDMInf:
 	str	r1, [r4, #164]	@ tmp187, <variable>.Mp2DecParam.StreamPhyAddr
 	ldr	r6, [r4, r5]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	bl	BsResidBits	@
-	movw	r3, #:lower16:79156	@ tmp193,
-	movt	r3, #:upper16:79156	@ tmp193,
+	movw	r3, #:lower16:80692	@ tmp193,
+	movt	r3, #:upper16:80692	@ tmp193,
 	ldr	r2, [r4, r5]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	bic	r6, r6, #3	@ stream_base_addr.788, <variable>.CodecInfo.stMp2Packet.BsPhyAddr,
 	ldr	r3, [r4, r3]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
@@ -566,21 +566,21 @@ MP2_SetVDMInf:
 	str	r0, [r4, #180]	@, <variable>.Mp2DecParam.StreamLength
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L56:
-	movw	ip, #:lower16:79448	@ tmp147,
-	movt	ip, #:upper16:79448	@ tmp147,
-	movw	r5, #:lower16:79144	@ tmp146,
-	movt	r5, #:upper16:79144	@ tmp146,
-	ldr	r3, [r4, ip]	@ D.39810, <variable>.Bs.TotalPos
-	movw	r2, #:lower16:79128	@ tmp148,
-	ldr	r1, [r4, r5]	@ D.39809, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
-	movt	r2, #:upper16:79128	@ tmp148,
-	cmp	r3, #0	@ D.39810,
-	add	r5, r3, #7	@ tmp151, D.39810,
+	movw	ip, #:lower16:80984	@ tmp147,
+	movt	ip, #:upper16:80984	@ tmp147,
+	movw	r5, #:lower16:80680	@ tmp146,
+	movt	r5, #:upper16:80680	@ tmp146,
+	ldr	r3, [r4, ip]	@ D.39826, <variable>.Bs.TotalPos
+	movw	r2, #:lower16:80664	@ tmp148,
+	ldr	r1, [r4, r5]	@ D.39825, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
+	movt	r2, #:upper16:80664	@ tmp148,
+	cmp	r3, #0	@ D.39826,
+	add	r5, r3, #7	@ tmp151, D.39826,
 	ldr	lr, [r4, r2]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	add	ip, r3, r1, asl #3	@, tmp161, D.39810, D.39809,
-	movge	r5, r3	@ D.39810, D.39810
-	add	r3, r1, r3, lsr #3	@, tmp157, D.39809, D.39810,
-	add	r1, lr, r5, asr #3	@, tmp155, <variable>.CodecInfo.BsOffset, D.39810,
+	add	ip, r3, r1, asl #3	@, tmp161, D.39826, D.39825,
+	movge	r5, r3	@ D.39826, D.39826
+	add	r3, r1, r3, lsr #3	@, tmp157, D.39825, D.39826,
+	add	r1, lr, r5, asr #3	@, tmp155, <variable>.CodecInfo.BsOffset, D.39826,
 	bic	r3, r3, #3	@ tmp158, tmp157,
 	str	r1, [r4, r2]	@ tmp155, <variable>.CodecInfo.BsOffset
 	and	lr, ip, #31	@ tmp162, tmp161,
@@ -617,33 +617,33 @@ MP2_DecNewPic:
 	mov	r5, r0	@ pCtx, pCtx
 	bl	MP2_SetVDMInf	@
 	ldr	r2, [r5, #0]	@ temp.832, <variable>.pstExtraData
-	movw	r0, #:lower16:80504	@ tmp146,
-	movt	r0, #:upper16:80504	@ tmp146,
+	movw	r0, #:lower16:82040	@ tmp146,
+	movt	r0, #:upper16:82040	@ tmp146,
 	movw	r3, #45324	@ tmp143,
-	ldr	r1, [r5, r0]	@ D.39436, <variable>.pSyntaxInfNew
+	ldr	r1, [r5, r0]	@ D.39452, <variable>.pSyntaxInfNew
 	ldr	r0, [r2, #684]	@ <variable>.s32Compress_en, <variable>.s32Compress_en
 	str	r0, [r5, r3]	@ <variable>.s32Compress_en, <variable>.Mp2DecParam.Compress_en
-	ldrb	r3, [r1, #22]	@ zero_extendqisi2	@ D.39437, <variable>.picture_coding_type
-	cmp	r3, #3	@ D.39437,
+	ldrb	r3, [r1, #22]	@ zero_extendqisi2	@ D.39453, <variable>.picture_coding_type
+	cmp	r3, #3	@ D.39453,
 	beq	.L66	@,
-	cmp	r3, #2	@ D.39437,
-	movweq	r3, #:lower16:114684	@ tmp156,
-	movteq	r3, #:upper16:114684	@ tmp156,
+	cmp	r3, #2	@ D.39453,
+	movweq	r3, #:lower16:117756	@ tmp156,
+	movteq	r3, #:upper16:117756	@ tmp156,
 	moveq	r1, #1	@ tmp157,
 	streq	r1, [r5, r3]	@ tmp157, <variable>.PPicFound
 .L59:
-	add	r1, r5, #8	@ D.39451, pCtx,
-	str	r1, [r5, #4]	@ D.39451, <variable>.pMp2DecParam
-	ldr	r3, [r2, #896]	@ D.39452, <variable>.stDisParams.s32Mode
-	cmp	r3, #1	@ D.39452,
+	add	r1, r5, #8	@ D.39467, pCtx,
+	str	r1, [r5, #4]	@ D.39467, <variable>.pMp2DecParam
+	ldr	r3, [r2, #896]	@ D.39468, <variable>.stDisParams.s32Mode
+	cmp	r3, #1	@ D.39468,
 	beq	.L67	@,
-	cmp	r3, #2	@ D.39452,
+	cmp	r3, #2	@ D.39468,
 	beq	.L68	@,
 .L63:
-	movw	r3, #:lower16:80504	@ tmp174,
-	movt	r3, #:upper16:80504	@ tmp174,
-	movw	r0, #:lower16:79180	@ tmp169,
-	movt	r0, #:upper16:79180	@ tmp169,
+	movw	r3, #:lower16:82040	@ tmp174,
+	movt	r3, #:upper16:82040	@ tmp174,
+	movw	r0, #:lower16:80716	@ tmp169,
+	movt	r0, #:upper16:80716	@ tmp169,
 	ldr	r2, [r5, r3]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldr	lr, [r5, r0]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	bic	r4, lr, #16252928	@ tmp172, <variable>.CodecInfo.StreamIntegrality,
@@ -663,9 +663,9 @@ MP2_DecNewPic:
 	cmp	ip, #0	@ g_event_report.472,
 	beq	.L64	@,
 	ldr	r0, [r5, #180]	@ <variable>.Mp2DecParam.StreamLength, <variable>.Mp2DecParam.StreamLength
-	movw	r3, #:lower16:114672	@ tmp183,
+	movw	r3, #:lower16:117744	@ tmp183,
 	ldr	lr, [r5, #184]	@ <variable>.Mp2DecParam.StreamLength, <variable>.Mp2DecParam.StreamLength
-	movt	r3, #:upper16:114672	@ tmp183,
+	movt	r3, #:upper16:117744	@ tmp183,
 	sub	r2, fp, #20	@ tmp185,,
 	mov	r1, #20	@,
 	add	lr, lr, r0	@ tmp177, <variable>.Mp2DecParam.StreamLength, <variable>.Mp2DecParam.StreamLength
@@ -680,31 +680,31 @@ MP2_DecNewPic:
 	mov	r0, r4	@ Ret, <variable>.picture_coding_type
 	b	.L61	@
 .L66:
-	movw	ip, #:lower16:114684	@ tmp147,
-	movt	ip, #:upper16:114684	@ tmp147,
+	movw	ip, #:lower16:117756	@ tmp147,
+	movt	ip, #:upper16:117756	@ tmp147,
 	ldr	r0, [r5, ip]	@ <variable>.PPicFound, <variable>.PPicFound
 	cmp	r0, #0	@ <variable>.PPicFound,
 	bne	.L59	@,
-	movw	r3, #:lower16:79220	@ tmp149,
-	movt	r3, #:upper16:79220	@ tmp149,
+	movw	r3, #:lower16:80756	@ tmp149,
+	movt	r3, #:upper16:80756	@ tmp149,
 	ldr	lr, [r5, r3]	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
 	cmp	lr, #2	@ <variable>.CodecInfo.RefNum,
 	beq	.L59	@,
 	ldrb	r2, [r1, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	cmp	r2, #3	@ <variable>.picture_structure,
 	beq	.L61	@,
-	movw	ip, #:lower16:79192	@ tmp152,
-	movt	ip, #:upper16:79192	@ tmp152,
+	movw	ip, #:lower16:80728	@ tmp152,
+	movt	ip, #:upper16:80728	@ tmp152,
 	ldr	lr, [r5, ip]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	rsbs	r1, lr, #1	@ tmp155, <variable>.CodecInfo.Second_Field
 	movcc	r1, #0	@ tmp155
 	str	r1, [r5, ip]	@ tmp155, <variable>.CodecInfo.Second_Field
 	b	.L61	@
 .L67:
-	cmp	r1, #0	@ D.39451,
+	cmp	r1, #0	@ D.39467,
 	beq	.L63	@,
-	movw	r1, #:lower16:80504	@ tmp159,
-	movt	r1, #:upper16:80504	@ tmp159,
+	movw	r1, #:lower16:82040	@ tmp159,
+	movt	r1, #:upper16:82040	@ tmp159,
 	ldr	r2, [r5, r1]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldrb	r3, [r2, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	r3, #3	@ <variable>.picture_coding_type,
@@ -716,10 +716,10 @@ MP2_DecNewPic:
 	ldr	r0, [r2, #900]	@ <variable>.stDisParams.s32DisNums, <variable>.stDisParams.s32DisNums
 	cmp	r0, #0	@ <variable>.stDisParams.s32DisNums,
 	ble	.L63	@,
-	cmp	r1, #0	@ D.39451,
+	cmp	r1, #0	@ D.39467,
 	beq	.L63	@,
-	movw	r3, #:lower16:80504	@ tmp164,
-	movt	r3, #:upper16:80504	@ tmp164,
+	movw	r3, #:lower16:82040	@ tmp164,
+	movt	r3, #:upper16:82040	@ tmp164,
 	ldr	lr, [r5, r3]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldrb	ip, [lr, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	ip, #3	@ <variable>.picture_coding_type,
@@ -754,16 +754,16 @@ MP2_u_v:
 	mov	r5, r1	@ LenInBits, LenInBits
 	bl	BsShow	@
 	mov	r1, r5	@, LenInBits
-	mov	r4, r0	@ D.40950,
+	mov	r4, r0	@ D.40966,
 	mov	r0, r6	@, pBs
 	bl	BsSkip	@
 	mov	r2, r7	@, SeTraceString
-	mov	r3, r4	@, D.40950
+	mov	r3, r4	@, D.40966
 	mov	r0, #2	@,
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@, D.40950
+	mov	r0, r4	@, D.40966
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	MP2_u_v, .-MP2_u_v
@@ -789,7 +789,7 @@ MP2_MbAddrInc:
 	bl	BsShow	@
 	movw	r4, #:lower16:.LANCHOR0	@ tmp144,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp144,
-	add	r3, r4, r0, asl #3	@, tmp147, tmp144, D.41051,
+	add	r3, r4, r0, asl #3	@, tmp147, tmp144, D.41067,
 	ldr	r5, [r3, #140]	@ MbAddrInc, tab_for_first_4bit
 	ldr	r1, [r3, #144]	@ SkipBit, tab_for_first_4bit
 	cmp	r5, #6	@ MbAddrInc,
@@ -850,9 +850,9 @@ MP2_InitMb:
 	ldr	r4, [r0, #52]	@ pBs, <variable>.pBs
 	b	.L80	@
 .L84:
-	cmp	r0, #15	@ D.40974,
+	cmp	r0, #15	@ D.40990,
 	beq	.L81	@,
-	cmp	r0, #8	@ D.40974,
+	cmp	r0, #8	@ D.40990,
 	add	r5, r5, #33	@ macroblock_escape, macroblock_escape,
 	bne	.L90	@,
 .L81:
@@ -865,22 +865,22 @@ MP2_InitMb:
 	mov	r1, #11	@,
 	mov	r0, r4	@, pBs
 	bl	BsShow	@
-	cmp	r0, #23	@ D.40974,
+	cmp	r0, #23	@ D.40990,
 	bls	.L84	@,
 	mov	r0, r4	@, pBs
 	bl	MP2_MbAddrInc	@
 	ldr	r4, [r6, #16]	@ <variable>.FirstMbInSliceFlag, <variable>.FirstMbInSliceFlag
 	cmp	r4, #0	@ <variable>.FirstMbInSliceFlag,
 	beq	.L85	@,
-	ldr	r1, [r6, #28]	@ D.40979, <variable>.previous_macroblock_address
+	ldr	r1, [r6, #28]	@ D.40995, <variable>.previous_macroblock_address
 	add	r2, r5, r0	@ tmp147, macroblock_escape, macroblock_address_increment
 	ldr	r3, [r6, #12]	@ <variable>.pic_total_mb_num, <variable>.pic_total_mb_num
-	cmp	r1, #0	@ D.40979,
-	addne	r2, r2, r1	@ SlcStartMbNum, tmp147, D.40979
+	cmp	r1, #0	@ D.40995,
+	addne	r2, r2, r1	@ SlcStartMbNum, tmp147, D.40995
 	subeq	r2, r2, #1	@ SlcStartMbNum, tmp148,
-	sub	r3, r3, #1	@ D.40987, <variable>.pic_total_mb_num,
+	sub	r3, r3, #1	@ D.41003, <variable>.pic_total_mb_num,
 	str	r2, [r6, #44]	@ SlcStartMbNum, <variable>.slicen_start_mb_num
-	cmp	r2, r3	@ SlcStartMbNum, D.40987
+	cmp	r2, r3	@ SlcStartMbNum, D.41003
 	movls	r0, #1	@ ret,
 	ldmlsfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r0, #1	@,
@@ -945,10 +945,10 @@ MP2_DecSliceHeader:
 	mov	r1, #5	@,
 	movw	r2, #:lower16:.LC8	@,
 	movt	r2, #:upper16:.LC8	@,
-	mul	lr, r0, r3	@ D.40925, <variable>.pic_width_in_mb, tmp152
+	mul	lr, r0, r3	@ D.40941, <variable>.pic_width_in_mb, tmp152
 	mov	r0, r4	@, pBs
-	cmp	lr, #0	@ D.40925,
-	subne	lr, lr, #1	@ iftmp.520, D.40925,
+	cmp	lr, #0	@ D.40941,
+	subne	lr, lr, #1	@ iftmp.520, D.40941,
 	str	lr, [r5, #28]	@ iftmp.520, <variable>.previous_macroblock_address
 	bl	MP2_u_v	@
 	mov	ip, #0	@ tmp155,
@@ -1009,8 +1009,8 @@ MP2_DecSliceHeader:
 	movw	r2, #:lower16:.LC7	@,
 	movt	r2, #:upper16:.LC7	@,
 	bl	MP2_u_v	@
-	mov	r1, r0, asl #7	@ prephitmp.930, D.40919,
-	str	r0, [r5, #24]	@ D.40919, <variable>.slice_vertical_position_extension
+	mov	r1, r0, asl #7	@ prephitmp.930, D.40935,
+	str	r0, [r5, #24]	@ D.40935, <variable>.slice_vertical_position_extension
 	b	.L93	@
 	.fnend
 	.size	MP2_DecSliceHeader, .-MP2_DecSliceHeader
@@ -1057,9 +1057,9 @@ copyright_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r0, r0, #78848	@, pCtx,
+	add	r0, r0, #80896	@, pCtx,
 	mov	r1, #32	@,
-	add	r0, r0, #576	@,,
+	add	r0, r0, #64	@,,
 	bl	BsSkip	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1081,9 +1081,9 @@ picture_temporal_scalable_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r0, r0, #78848	@, pCtx,
+	add	r0, r0, #80896	@, pCtx,
 	mov	r1, #32	@,
-	add	r0, r0, #576	@,,
+	add	r0, r0, #64	@,,
 	bl	BsSkip	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1105,9 +1105,9 @@ picture_spatial_scalable_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r0, r0, #78848	@, pCtx,
+	add	r0, r0, #80896	@, pCtx,
 	mov	r1, #32	@,
-	add	r0, r0, #576	@,,
+	add	r0, r0, #64	@,,
 	bl	BsSkip	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1129,9 +1129,9 @@ sequence_scalable_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r0, r0, #78848	@, pCtx,
+	add	r0, r0, #80896	@, pCtx,
 	mov	r1, #32	@,
-	add	r0, r0, #576	@,,
+	add	r0, r0, #64	@,,
 	bl	BsSkip	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1158,9 +1158,9 @@ MP2_ClearCurPic:
 	mov	r6, r0	@ pCtx, pCtx
 	cmp	r3, #0	@ <variable>.Mp2DecParam.SlcNum,
 	beq	.L114	@,
-	movw	r7, #:lower16:114672	@ tmp181,
+	movw	r7, #:lower16:117744	@ tmp181,
 	mov	r4, r0	@ ivtmp.1086, pCtx
-	movt	r7, #:upper16:114672	@ tmp181,
+	movt	r7, #:upper16:117744	@ tmp181,
 	mov	r5, #0	@ i,
 	b	.L116	@
 .L115:
@@ -1212,16 +1212,16 @@ MP2_WriteSliceInfo:
 	bl	__gnu_mcount_nc
 	movw	r1, #45316	@ tmp141,
 	mov	r4, r0	@ pCtx, pCtx
-	ldr	r0, [r0, r1]	@ D.41007, <variable>.Mp2DecParam.SlcNum
+	ldr	r0, [r0, r1]	@ D.41023, <variable>.Mp2DecParam.SlcNum
 	mov	r5, #44	@ tmp144,
-	movw	r3, #:lower16:79400	@ tmp147,
-	movt	r3, #:upper16:79400	@ tmp147,
-	movw	r2, #:lower16:79416	@ tmp154,
-	mla	r5, r5, r0, r4	@ tmp145, tmp144, D.41007, pCtx
+	movw	r3, #:lower16:80936	@ tmp147,
+	movt	r3, #:upper16:80936	@ tmp147,
+	movw	r2, #:lower16:80952	@ tmp154,
+	mla	r5, r5, r0, r4	@ tmp145, tmp144, D.41023, pCtx
 	ldr	ip, [r4, r3]	@ <variable>.SliceInfo.intra_slice, <variable>.SliceInfo.intra_slice
-	movt	r2, #:upper16:79416	@ tmp154,
-	movw	lr, #:lower16:79412	@ tmp161,
-	movt	lr, #:upper16:79412	@ tmp161,
+	movt	r2, #:upper16:80952	@ tmp154,
+	movw	lr, #:lower16:80948	@ tmp161,
+	movt	lr, #:upper16:80948	@ tmp161,
 	add	r0, r5, #288	@ tmp146, tmp145,
 	str	ip, [r0, #8]	@ <variable>.SliceInfo.intra_slice, <variable>.intra_slice
 	ldr	r2, [r4, r2]	@ <variable>.SliceInfo.quantiser_scale_code, <variable>.SliceInfo.quantiser_scale_code
@@ -1231,41 +1231,41 @@ MP2_WriteSliceInfo:
 	ldr	r2, [r4, r1]	@ temp.1117, <variable>.Mp2DecParam.SlcNum
 	cmp	r2, #1024	@ temp.1117,
 	bcs	.L126	@,
-	movw	r3, #:lower16:79448	@ tmp172,
-	movt	r3, #:upper16:79448	@ tmp172,
-	movw	r0, #:lower16:79144	@ tmp179,
-	movt	r0, #:upper16:79144	@ tmp179,
-	ldr	r1, [r4, r3]	@ D.41021, <variable>.Bs.TotalPos
-	movw	r3, #:lower16:79160	@ tmp193,
+	movw	r3, #:lower16:80984	@ tmp172,
+	movt	r3, #:upper16:80984	@ tmp172,
+	movw	r0, #:lower16:80680	@ tmp179,
+	movt	r0, #:upper16:80680	@ tmp179,
+	ldr	r1, [r4, r3]	@ D.41037, <variable>.Bs.TotalPos
+	movw	r3, #:lower16:80696	@ tmp193,
 	ldr	r2, [r4, r0]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
-	movt	r3, #:upper16:79160	@ tmp193,
-	and	lr, r1, #7	@ tmp187, D.41021,
+	movt	r3, #:upper16:80696	@ tmp193,
+	and	lr, r1, #7	@ tmp187, D.41037,
 	str	lr, [r5, #276]	@ tmp187, <variable>.BsBitOffset
-	add	ip, r2, r1, lsr #3	@, tmp181, <variable>.CodecInfo.stMp2Packet.BsPhyAddr, D.41021,
+	add	ip, r2, r1, lsr #3	@, tmp181, <variable>.CodecInfo.stMp2Packet.BsPhyAddr, D.41037,
 	str	ip, [r5, #260]	@ tmp181, <variable>.BsPhyAddr
 	ldr	lr, [r4, r3]	@ <variable>.CodecInfo.stMp2Packet.StreamID, <variable>.CodecInfo.stMp2Packet.StreamID
-	add	r0, r4, #78848	@, pCtx,
-	add	r0, r0, #576	@,,
+	add	r0, r4, #80896	@, pCtx,
+	add	r0, r0, #64	@,,
 	str	lr, [r5, #284]	@ <variable>.CodecInfo.stMp2Packet.StreamID, <variable>.BsID
 	bl	BsResidBits	@
-	movw	r3, #:lower16:79132	@ tmp202,
-	movt	r3, #:upper16:79132	@ tmp202,
+	movw	r3, #:lower16:80668	@ tmp202,
+	movt	r3, #:upper16:80668	@ tmp202,
 	str	r0, [r5, #268]	@, <variable>.BsLenInBit
-	ldrsh	r2, [r4, r3]	@ D.41026,
-	cmp	r2, #1	@ D.41026,
+	ldrsh	r2, [r4, r3]	@ D.41042,
+	cmp	r2, #1	@ D.41042,
 	beq	.L127	@,
-	cmp	r2, #256	@ D.41026,
+	cmp	r2, #256	@ D.41042,
 	bne	.L124	@,
-	movw	ip, #:lower16:79148	@ tmp234,
-	movt	ip, #:upper16:79148	@ tmp234,
+	movw	ip, #:lower16:80684	@ tmp234,
+	movt	ip, #:upper16:80684	@ tmp234,
 	add	r0, r5, #276	@ tmp240, tmp145,
-	movw	lr, #:lower16:79164	@ tmp247,
+	movw	lr, #:lower16:80700	@ tmp247,
 	ldr	r1, [r4, ip]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
-	movt	lr, #:upper16:79164	@ tmp247,
+	movt	lr, #:upper16:80700	@ tmp247,
 	mov	r3, #0	@ tmp241,
 	str	r3, [r0, #4]	@ tmp241, <variable>.BsBitOffset
-	movw	ip, #:lower16:79156	@ tmp254,
-	movt	ip, #:upper16:79156	@ tmp254,
+	movw	ip, #:lower16:80692	@ tmp254,
+	movt	ip, #:upper16:80692	@ tmp254,
 	str	r1, [r5, #264]	@ <variable>.CodecInfo.stMp2Packet.BsPhyAddr, <variable>.BsPhyAddr
 	movw	r1, #45316	@ tmp262,
 	ldr	r2, [r4, lr]	@ <variable>.CodecInfo.stMp2Packet.StreamID, <variable>.CodecInfo.stMp2Packet.StreamID
@@ -1274,7 +1274,7 @@ MP2_WriteSliceInfo:
 	mov	r0, r3, asl #3	@ tmp256, <variable>.CodecInfo.stMp2Packet.BsLength,
 	str	r0, [r5, #272]	@ tmp256, <variable>.BsLenInBit
 	ldr	r3, [r4, r1]	@ <variable>.Mp2DecParam.SlcNum, <variable>.Mp2DecParam.SlcNum
-	mov	r0, #1	@ D.41018,
+	mov	r0, #1	@ D.41034,
 	add	r2, r3, r0	@ tmp265, <variable>.Mp2DecParam.SlcNum,
 	str	r2, [r4, r1]	@ tmp265, <variable>.Mp2DecParam.SlcNum
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
@@ -1286,13 +1286,13 @@ MP2_WriteSliceInfo:
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	MP2_ClearCurPic	@
-	movw	r3, #:lower16:79180	@ tmp166,
-	movt	r3, #:upper16:79180	@ tmp166,
-	movw	r2, #:lower16:79236	@ tmp170,
-	movt	r2, #:upper16:79236	@ tmp170,
+	movw	r3, #:lower16:80716	@ tmp166,
+	movt	r3, #:upper16:80716	@ tmp166,
+	movw	r2, #:lower16:80772	@ tmp170,
+	movt	r2, #:upper16:80772	@ tmp170,
 	mov	r1, #0	@ tmp171,
 	ldr	ip, [r4, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	mov	r0, r1	@ D.41018, tmp171
+	mov	r0, r1	@ D.41034, tmp171
 	str	r1, [r4, r2]	@ tmp171, <variable>.CodecInfo.HDRState
 	bic	r1, ip, #5767168	@ tmp169, <variable>.CodecInfo.StreamIntegrality,
 	str	r1, [r4, r3]	@ tmp169, <variable>.CodecInfo.StreamIntegrality
@@ -1307,22 +1307,22 @@ MP2_WriteSliceInfo:
 	movw	r1, #45316	@ tmp262,
 	str	ip, [r2, #4]	@ tmp209, <variable>.BsBitOffset
 	str	ip, [lr, #4]	@ tmp209, <variable>.BsLenInBit
-	mov	r0, #1	@ D.41018,
+	mov	r0, #1	@ D.41034,
 	str	ip, [r5, #4]	@ tmp209, <variable>.BsID
 	ldr	r3, [r4, r1]	@ <variable>.Mp2DecParam.SlcNum, <variable>.Mp2DecParam.SlcNum
 	add	r2, r3, r0	@ tmp265, <variable>.Mp2DecParam.SlcNum,
 	str	r2, [r4, r1]	@ tmp265, <variable>.Mp2DecParam.SlcNum
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L124:
-	movw	lr, #:lower16:79133	@ tmp260,
-	movt	lr, #:upper16:79133	@ tmp260,
+	movw	lr, #:lower16:80669	@ tmp260,
+	movt	lr, #:upper16:80669	@ tmp260,
 	ldrsb	r2, [r4, r3]	@, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	mov	r0, #1	@,
 	ldrsb	r3, [r4, lr]	@, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	movw	r1, #:lower16:.LC15	@,
 	movt	r1, #:upper16:.LC15	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.41018,
+	mov	r0, #0	@ D.41034,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	MP2_WriteSliceInfo, .-MP2_WriteSliceInfo
@@ -1343,51 +1343,51 @@ MP2_DecSlice:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:80504	@ tmp140,
-	movw	lr, #:lower16:79136	@ tmp142,
-	movt	r3, #:upper16:80504	@ tmp140,
-	movt	lr, #:upper16:79136	@ tmp142,
-	movw	r2, #:lower16:79152	@ tmp145,
-	movt	r2, #:upper16:79152	@ tmp145,
-	movw	r5, #:lower16:79216	@ tmp148,
-	movt	r5, #:upper16:79216	@ tmp148,
+	movw	r3, #:lower16:82040	@ tmp140,
+	movw	lr, #:lower16:80672	@ tmp142,
+	movt	r3, #:upper16:82040	@ tmp140,
+	movt	lr, #:upper16:80672	@ tmp142,
+	movw	r2, #:lower16:80688	@ tmp145,
+	movt	r2, #:upper16:80688	@ tmp145,
+	movw	r5, #:lower16:80752	@ tmp148,
+	movt	r5, #:upper16:80752	@ tmp148,
 	ldr	r3, [r0, r3]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	ldr	r6, [r0, lr]	@ <variable>.CodecInfo.stMp2Packet.BsVirAddr, <variable>.CodecInfo.stMp2Packet.BsVirAddr
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r7, [r0, r2]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
-	movw	ip, #:lower16:79404	@ tmp141,
+	movw	ip, #:lower16:80940	@ tmp141,
 	ldr	lr, [r0, r5]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
-	movt	ip, #:upper16:79404	@ tmp141,
-	movw	r0, #:lower16:79408	@ tmp144,
-	movw	r2, #:lower16:79368	@ tmp147,
-	movt	r0, #:upper16:79408	@ tmp144,
-	movt	r2, #:upper16:79368	@ tmp147,
+	movt	ip, #:upper16:80940	@ tmp141,
+	movw	r0, #:lower16:80944	@ tmp144,
+	movw	r2, #:lower16:80904	@ tmp147,
+	movt	r0, #:upper16:80944	@ tmp144,
+	movt	r2, #:upper16:80904	@ tmp147,
 	str	r6, [r4, ip]	@ <variable>.CodecInfo.stMp2Packet.BsVirAddr, <variable>.SliceInfo.VirAddr
 	cmp	lr, #1	@ <variable>.CodecInfo.MpegFlag,
 	movne	r5, #0	@, tmp150
 	moveq	r5, #1	@, tmp150
 	str	r7, [r4, r0]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.SliceInfo.ByteLen
-	movw	r7, #:lower16:79372	@ tmp151,
+	movw	r7, #:lower16:80908	@ tmp151,
 	str	r5, [r4, r2]	@ tmp150, <variable>.SliceInfo.mpeg1_flag
-	movt	r7, #:upper16:79372	@ tmp151,
+	movt	r7, #:upper16:80908	@ tmp151,
 	ldr	ip, [r3, #60]	@ <variable>.mb_height, <variable>.mb_height
-	movw	r6, #:lower16:79376	@ tmp153,
-	movt	r6, #:upper16:79376	@ tmp153,
-	movw	r5, #:lower16:79388	@ tmp163,
-	movt	r5, #:upper16:79388	@ tmp163,
-	add	lr, r4, #78848	@ tmp167, pCtx,
+	movw	r6, #:lower16:80912	@ tmp153,
+	movt	r6, #:upper16:80912	@ tmp153,
+	movw	r5, #:lower16:80924	@ tmp163,
+	movt	r5, #:upper16:80924	@ tmp163,
+	add	lr, r4, #80896	@ tmp167, pCtx,
 	str	ip, [r4, r7]	@ <variable>.mb_height, <variable>.SliceInfo.pic_height_in_mb
-	movw	r2, #:lower16:79380	@ tmp155,
+	movw	r2, #:lower16:80916	@ tmp155,
 	ldr	r7, [r3, #56]	@ <variable>.mb_width, <variable>.mb_width
-	movt	r2, #:upper16:79380	@ tmp155,
-	movw	ip, #:lower16:79420	@ tmp165,
-	movt	ip, #:upper16:79420	@ tmp165,
+	movt	r2, #:upper16:80916	@ tmp155,
+	movw	ip, #:lower16:80956	@ tmp165,
+	movt	ip, #:upper16:80956	@ tmp165,
 	mov	r0, lr	@, tmp167
-	add	lr, lr, #576	@ tmp167, tmp167,
+	add	lr, lr, #64	@ tmp167, tmp167,
 	str	r7, [r4, r6]	@ <variable>.mb_width, <variable>.SliceInfo.pic_width_in_mb
 	uxtb	r6, r1	@ tmp164, code
 	ldr	r1, [r3, #48]	@ <variable>.horizontal_size, <variable>.horizontal_size
-	add	r0, r0, #520	@,,
+	add	r0, r0, #8	@,,
 	ldr	r3, [r3, #52]	@ <variable>.vertical_size, <variable>.vertical_size
 	add	r1, r1, #15	@ tmp159, <variable>.horizontal_size,
 	str	r6, [r4, r5]	@ tmp164, <variable>.SliceInfo.slice_vertical_position
@@ -1398,8 +1398,8 @@ MP2_DecSlice:
 	mul	r3, r1, r5	@ tmp162, tmp161, tmp158
 	str	r3, [r4, r2]	@ tmp162, <variable>.SliceInfo.pic_total_mb_num
 	bl	MP2_GetFirstMbInSlice	@
-	cmp	r0, #1	@ D.40888,
-	mov	r5, r0	@ D.40888,
+	cmp	r0, #1	@ D.40904,
+	mov	r5, r0	@ D.40904,
 	beq	.L129	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC16	@,
@@ -1410,9 +1410,9 @@ MP2_DecSlice:
 .L129:
 	mov	r0, r4	@, pCtx
 	bl	MP2_WriteSliceInfo	@
-	cmp	r0, #1	@ D.40893,
+	cmp	r0, #1	@ D.40909,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-	mov	r0, r5	@, D.40888
+	mov	r0, r5	@, D.40904
 	movw	r1, #:lower16:.LC17	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
@@ -1474,23 +1474,23 @@ MP2_ReceivePacket:
 	subs	r4, r1, #0	@ pPacket, pPacket
 	mov	r1, r0	@ pMp2CodecInfo, pMp2CodecInfo
 	beq	.L142	@,
-	movw	ip, #33800	@ tmp141,
+	movw	ip, #35336	@ tmp141,
 	mov	r5, #0	@ tmp142,
 	str	r5, [r0, ip]	@ tmp142, <variable>.BsOffset
-	movw	r3, #33844	@ tmp143,
+	movw	r3, #35380	@ tmp143,
 	ldr	r0, [r4, #16]	@ <variable>.LenInByte, <variable>.LenInByte
-	movw	ip, #33816	@ tmp145,
+	movw	ip, #35352	@ tmp145,
 	str	r0, [r1, r3]	@ <variable>.LenInByte, <variable>.PacketTail
-	movw	r3, #33808	@ tmp147,
+	movw	r3, #35344	@ tmp147,
 	ldr	r0, [r4, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r0, [r1, ip]	@ <variable>.PhyAddr, <variable>.stMp2Packet.BsPhyAddr
-	movw	r0, #33824	@ tmp149,
+	movw	r0, #35360	@ tmp149,
 	ldr	ip, [r4, #0]	@ <variable>.VirAddr, <variable>.VirAddr
 	str	ip, [r1, r3]	@ <variable>.VirAddr, <variable>.stMp2Packet.BsVirAddr
-	movw	r3, #33804	@ tmp151,
+	movw	r3, #35340	@ tmp151,
 	ldr	ip, [r4, #16]	@ <variable>.LenInByte, <variable>.LenInByte
 	str	ip, [r1, r0]	@ <variable>.LenInByte, <variable>.stMp2Packet.BsLength
-	movw	ip, #33832	@ tmp154,
+	movw	ip, #35368	@ tmp154,
 	ldrb	r0, [r4, #5]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	strb	r0, [r1, r3]	@ <variable>.IsLastSeg, <variable>.stMp2Packet.IsLastSeg
 	ldr	r0, [r4, #20]	@ <variable>.StreamID, <variable>.StreamID
@@ -1499,16 +1499,16 @@ MP2_ReceivePacket:
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	beq	.L139	@,
 	ldr	r0, [r4, #92]	@ <variable>.PhyAddr, <variable>.PhyAddr
-	movw	r3, #33820	@ tmp157,
-	movw	ip, #33812	@ tmp159,
+	movw	r3, #35356	@ tmp157,
+	movw	ip, #35348	@ tmp159,
 	str	r0, [r1, r3]	@ <variable>.PhyAddr, <variable>.stMp2Packet.BsPhyAddr
-	movw	r3, #33828	@ tmp161,
+	movw	r3, #35364	@ tmp161,
 	ldr	r0, [r4, #80]	@ <variable>.VirAddr, <variable>.VirAddr
 	str	r0, [r1, ip]	@ <variable>.VirAddr, <variable>.stMp2Packet.BsVirAddr
-	movw	r0, #33805	@ tmp163,
+	movw	r0, #35341	@ tmp163,
 	ldr	ip, [r4, #96]	@ <variable>.LenInByte, <variable>.LenInByte
 	str	ip, [r1, r3]	@ <variable>.LenInByte, <variable>.stMp2Packet.BsLength
-	movw	r3, #33836	@ tmp166,
+	movw	r3, #35372	@ tmp166,
 	ldrb	ip, [r4, #85]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	strb	ip, [r1, r0]	@ <variable>.IsLastSeg, <variable>.stMp2Packet.IsLastSeg
 	ldr	r0, [r4, #100]	@ <variable>.StreamID, <variable>.StreamID
@@ -1516,7 +1516,7 @@ MP2_ReceivePacket:
 	ldrb	r0, [r4, #85]	@ zero_extendqisi2	@ <variable>.IsLastSeg, <variable>.IsLastSeg
 	cmp	r0, #1	@ <variable>.IsLastSeg,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
-	add	r1, r1, #33792	@, pMp2CodecInfo,
+	add	r1, r1, #35328	@, pMp2CodecInfo,
 	mov	r0, r2	@, ChanID
 	add	r1, r1, #12	@,,
 	bl	MP2_ClearCurPacket	@
@@ -1525,28 +1525,28 @@ MP2_ReceivePacket:
 	movw	r1, #:lower16:.LC19	@,
 	movt	r1, #:upper16:.LC19	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.40799, tmp142
+	mov	r0, r5	@ D.40815, tmp142
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L139:
-	movw	ip, #33836	@ tmp182,
-	movw	r2, #33820	@ tmp173,
+	movw	ip, #35372	@ tmp182,
+	movw	r2, #35356	@ tmp173,
 	str	r5, [r1, ip]	@ tmp142, <variable>.stMp2Packet.StreamID
-	movw	r3, #33812	@ tmp175,
+	movw	r3, #35348	@ tmp175,
 	str	r5, [r1, r2]	@ tmp142, <variable>.stMp2Packet.BsPhyAddr
-	movw	ip, #33828	@ tmp177,
-	movw	r2, #33805	@ tmp179,
+	movw	ip, #35364	@ tmp177,
+	movw	r2, #35341	@ tmp179,
 	str	r5, [r1, r3]	@ tmp142, <variable>.stMp2Packet.BsVirAddr
 	str	r5, [r1, ip]	@ tmp142, <variable>.stMp2Packet.BsLength
 	strb	r5, [r1, r2]	@ tmp142, <variable>.stMp2Packet.IsLastSeg
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L142:
-	movw	r3, #33860	@ tmp139,
+	movw	r3, #35396	@ tmp139,
 	mov	r0, #1	@,
 	ldr	r2, [r1, r3]	@, <variable>.Frame_Cnt
 	movw	r1, #:lower16:.LC18	@,
 	movt	r1, #:upper16:.LC18	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.40799, pPacket
+	mov	r0, r4	@ D.40815, pPacket
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	MP2_ReceivePacket, .-MP2_ReceivePacket
@@ -1572,14 +1572,14 @@ MPEG2DEC_GetImageBuffer:
 	ldrb	r3, [r4, r0]	@ zero_extendqisi2	@ <variable>.CodecInfo.Last_FieldStruct, <variable>.CodecInfo.Last_FieldStruct
 	cmp	r3, #3	@ <variable>.CodecInfo.Last_FieldStruct,
 	beq	.L144	@,
-	movw	r2, #:lower16:79192	@ tmp140,
-	movt	r2, #:upper16:79192	@ tmp140,
+	movw	r2, #:lower16:80728	@ tmp140,
+	movt	r2, #:upper16:80728	@ tmp140,
 	ldr	r1, [r4, r2]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	r1, #0	@ <variable>.CodecInfo.Second_Field,
 	beq	.L145	@,
 .L144:
-	movw	r5, #:lower16:114672	@ tmp142,
-	movt	r5, #:upper16:114672	@ tmp142,
+	movw	r5, #:lower16:117744	@ tmp142,
+	movt	r5, #:upper16:117744	@ tmp142,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_IsNewFsAvalible	@
 	cmp	r0, #1	@,
@@ -1589,15 +1589,15 @@ MPEG2DEC_GetImageBuffer:
 	cmn	r0, #1	@,
 	beq	.L146	@,
 .L149:
-	mov	r0, #0	@ D.40771,
+	mov	r0, #0	@ D.40787,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L145:
-	mov	r0, #1	@ D.40771,
+	mov	r0, #1	@ D.40787,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L146:
-	add	ip, r4, #79872	@, pCtx,
+	add	ip, r4, #81920	@, pCtx,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
-	add	r1, ip, #640	@,,
+	add	r1, ip, #128	@,,
 	bl	FSP_ClearNotInVoQueue	@
 	b	.L149	@
 	.fnend
@@ -1619,10 +1619,10 @@ MP2_ProtocolPPSCheck:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:79216	@ tmp144,
-	movt	r3, #:upper16:79216	@ tmp144,
-	movw	r2, #:lower16:80504	@ tmp143,
-	movt	r2, #:upper16:80504	@ tmp143,
+	movw	r3, #:lower16:80752	@ tmp144,
+	movt	r3, #:upper16:80752	@ tmp144,
+	movw	r2, #:lower16:82040	@ tmp143,
+	movt	r2, #:upper16:82040	@ tmp143,
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r3, [r0, r3]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
 	ldr	r1, [r0, r2]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
@@ -1630,8 +1630,8 @@ MP2_ProtocolPPSCheck:
 	beq	.L152	@,
 	cmp	r3, #2	@ <variable>.CodecInfo.MpegFlag,
 	beq	.L170	@,
-	movw	ip, #:lower16:79180	@ tmp168,
-	movt	ip, #:upper16:79180	@ tmp168,
+	movw	ip, #:lower16:80716	@ tmp168,
+	movt	ip, #:upper16:80716	@ tmp168,
 	ldr	r2, [r0, ip]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r2, r2, #63	@ prephitmp.1238, <variable>.CodecInfo.StreamIntegrality,
 	str	r2, [r0, ip]	@ prephitmp.1238, <variable>.CodecInfo.StreamIntegrality
@@ -1641,12 +1641,12 @@ MP2_ProtocolPPSCheck:
 	beq	.L164	@,
 	cmp	r3, #3	@ prephitmp.1242,
 	ldmeqfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
-	movw	lr, #:lower16:79180	@ tmp172,
-	movw	r5, #:lower16:114672	@ tmp174,
-	movt	lr, #:upper16:79180	@ tmp172,
-	movt	r5, #:upper16:114672	@ tmp174,
-	movw	r7, #:lower16:79260	@ tmp176,
-	movt	r7, #:upper16:79260	@ tmp176,
+	movw	lr, #:lower16:80716	@ tmp172,
+	movw	r5, #:lower16:117744	@ tmp174,
+	movt	lr, #:upper16:80716	@ tmp172,
+	movt	r5, #:upper16:117744	@ tmp174,
+	movw	r7, #:lower16:80796	@ tmp176,
+	movt	r7, #:upper16:80796	@ tmp176,
 	orr	r6, r2, #64	@ tmp173, prephitmp.1238,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	str	r6, [r4, lr]	@ tmp173, <variable>.CodecInfo.StreamIntegrality
@@ -1655,9 +1655,9 @@ MP2_ProtocolPPSCheck:
 	subs	r6, r0, #0	@ pImg,
 	beq	.L166	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
-	movw	sl, #:lower16:79256	@ tmp200,
+	movw	sl, #:lower16:80792	@ tmp200,
 	ldr	r1, [r6, #212]	@, <variable>.p_usrdat
-	movt	sl, #:upper16:79256	@ tmp200,
+	movt	sl, #:upper16:80792	@ tmp200,
 	bl	FreeUsdByDec	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
@@ -1688,21 +1688,21 @@ MP2_ProtocolPPSCheck:
 	cmp	r0, r8	@,
 	bne	.L171	@,
 .L166:
-	movw	r3, #:lower16:79220	@ tmp212,
-	movt	r3, #:upper16:79220	@ tmp212,
+	movw	r3, #:lower16:80756	@ tmp212,
+	movt	r3, #:upper16:80756	@ tmp212,
 	mov	r1, #0	@ tmp213,
 	str	r1, [r4, r3]	@ tmp213,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L164:
 	cmp	r3, #1	@ prephitmp.1242,
 	biceq	r2, r2, #192	@ tmp215, prephitmp.1238,
-	movweq	r3, #:lower16:79180	@ tmp214,
-	movteq	r3, #:upper16:79180	@ tmp214,
+	movweq	r3, #:lower16:80716	@ tmp214,
+	movteq	r3, #:upper16:80716	@ tmp214,
 	streq	r2, [r4, r3]	@ tmp215,
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}	@
 .L170:
-	movw	r3, #:lower16:79180	@ tmp161,
-	movt	r3, #:upper16:79180	@ tmp161,
+	movw	r3, #:lower16:80716	@ tmp161,
+	movt	r3, #:upper16:80716	@ tmp161,
 	ldr	r2, [r0, r3]	@ prephitmp.1241, <variable>.CodecInfo.StreamIntegrality
 	tst	r2, #1048576	@ prephitmp.1241,
 	orreq	r2, r2, #16	@ prephitmp.1241, prephitmp.1241,
@@ -1713,8 +1713,8 @@ MP2_ProtocolPPSCheck:
 	cmp	r0, #2	@ tmp165,
 	bls	.L169	@,
 .L163:
-	movw	r0, #:lower16:79180	@ tmp167,
-	movt	r0, #:upper16:79180	@ tmp167,
+	movw	r0, #:lower16:80716	@ tmp167,
+	movt	r0, #:upper16:80716	@ tmp167,
 	orr	r2, r2, #8	@ prephitmp.1238, prephitmp.1241,
 	str	r2, [r4, r0]	@ prephitmp.1238, <variable>.CodecInfo.StreamIntegrality
 	ldrb	r3, [r1, #22]	@ zero_extendqisi2	@ prephitmp.1242, <variable>.picture_coding_type
@@ -1724,10 +1724,10 @@ MP2_ProtocolPPSCheck:
 	sub	r2, r3, #1	@ tmp146, prephitmp.1242,
 	uxtb	r2, r2	@ tmp147, tmp146
 	cmp	r2, #3	@ tmp147,
-	movwhi	r3, #:lower16:79180	@ tmp149,
-	movthi	r3, #:upper16:79180	@ tmp149,
-	movwls	r2, #:lower16:79180	@ tmp148,
-	movtls	r2, #:upper16:79180	@ tmp148,
+	movwhi	r3, #:lower16:80716	@ tmp149,
+	movthi	r3, #:upper16:80716	@ tmp149,
+	movwls	r2, #:lower16:80716	@ tmp148,
+	movtls	r2, #:upper16:80716	@ tmp148,
 	ldrhi	r2, [r0, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	ldrls	r2, [r0, r2]	@ prephitmp.1244, <variable>.CodecInfo.StreamIntegrality
 	orrhi	r2, r2, #8	@ prephitmp.1244, <variable>.CodecInfo.StreamIntegrality,
@@ -1738,18 +1738,18 @@ MP2_ProtocolPPSCheck:
 	cmp	r0, #1	@ tmp153,
 	bls	.L172	@,
 .L169:
-	movw	r1, #:lower16:79180	@ tmp166,
-	movt	r1, #:upper16:79180	@ tmp166,
+	movw	r1, #:lower16:80716	@ tmp166,
+	movt	r1, #:upper16:80716	@ tmp166,
 	ldr	r2, [r4, r1]	@ prephitmp.1238, <variable>.CodecInfo.StreamIntegrality
 	b	.L160	@
 .L172:
 	ldrb	r0, [r1, #24]	@ zero_extendqisi2	@ <variable>.forward_f_code, <variable>.forward_f_code
 	cmp	r0, #0	@ <variable>.forward_f_code,
 	orreq	r2, r2, #8	@ prephitmp.1248, prephitmp.1244,
-	movweq	r3, #:lower16:79180	@ tmp156,
-	movteq	r3, #:upper16:79180	@ tmp156,
-	movwne	r2, #:lower16:79180	@ tmp155,
-	movtne	r2, #:upper16:79180	@ tmp155,
+	movweq	r3, #:lower16:80716	@ tmp156,
+	movteq	r3, #:upper16:80716	@ tmp156,
+	movwne	r2, #:lower16:80716	@ tmp155,
+	movtne	r2, #:upper16:80716	@ tmp155,
 	streq	r2, [r4, r3]	@ prephitmp.1248, <variable>.CodecInfo.StreamIntegrality
 	ldreqb	r3, [r1, #22]	@ zero_extendqisi2	@ prephitmp.1242, <variable>.picture_coding_type
 	ldrne	r2, [r4, r2]	@ prephitmp.1248, <variable>.CodecInfo.StreamIntegrality
@@ -1762,8 +1762,8 @@ MP2_ProtocolPPSCheck:
 .L171:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r7]	@ D.39746, <variable>.CodecInfo.BwdFsID
-	str	r0, [r4, sl]	@ D.39746, <variable>.CodecInfo.FwdFsID
+	str	r0, [r4, r7]	@ D.39762, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, sl]	@ D.39762, <variable>.CodecInfo.FwdFsID
 	b	.L166	@
 	.fnend
 	.size	MP2_ProtocolPPSCheck, .-MP2_ProtocolPPSCheck
@@ -1786,10 +1786,10 @@ MPEG2DEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r5, r0, #0	@ pCtx, pCtx
 	mov	r6, r1	@ img_id, img_id
-	moveq	r0, r5	@ D.40559, pCtx
+	moveq	r0, r5	@ D.40575, pCtx
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-	movw	r4, #:lower16:114672	@ tmp139,
-	movt	r4, #:upper16:114672	@ tmp139,
+	movw	r4, #:lower16:117744	@ tmp139,
+	movt	r4, #:upper16:117744	@ tmp139,
 	mov	r2, #0	@,
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FSP_SetDisplay	@
@@ -1797,7 +1797,7 @@ MPEG2DEC_RecycleImage:
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pImg,
-	moveq	r0, #1	@ D.40559,
+	moveq	r0, #1	@ D.40575,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	mov	r7, #0	@ tmp146,
@@ -1815,7 +1815,7 @@ MPEG2DEC_RecycleImage:
 	ldr	r1, [r6, #224]	@, <variable>.p_usrdat
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FreeUsdByDec	@
-	mov	r0, #1	@ D.40559,
+	mov	r0, #1	@ D.40575,
 	str	r7, [r6, #224]	@ tmp146, <variable>.p_usrdat
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
@@ -1837,63 +1837,63 @@ MPEG2DEC_Init:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r5, #:lower16:80856	@ tmp139,
-	movt	r5, #:upper16:80856	@ tmp139,
+	movw	r5, #:lower16:82392	@ tmp139,
+	movt	r5, #:upper16:82392	@ tmp139,
 	mov	r7, r1	@ pstExtraData, pstExtraData
-	movw	r1, #:lower16:114696	@,
-	movt	r1, #:upper16:114696	@,
-	ldr	r8, [r0, r5]	@ D.40458, <variable>.ImageQue.ResetMagicWord
+	movw	r1, #:lower16:117768	@,
+	movt	r1, #:upper16:117768	@,
+	ldr	r8, [r0, r5]	@ D.40474, <variable>.ImageQue.ResetMagicWord
 	mov	r4, r0	@ pCtx, pCtx
 	bl	__memzero	@
-	add	r2, r4, #79872	@, pCtx,
-	add	r0, r2, #640	@,,
+	add	r2, r4, #81920	@, pCtx,
+	add	r0, r2, #128	@,,
 	mov	r6, #0	@ tmp151,
-	str	r8, [r4, r5]	@ D.40458, <variable>.ImageQue.ResetMagicWord
-	movw	r5, #:lower16:114684	@ tmp150,
+	str	r8, [r4, r5]	@ D.40474, <variable>.ImageQue.ResetMagicWord
+	movw	r5, #:lower16:117756	@ tmp150,
 	bl	ResetVoQueue	@
-	add	lr, r4, #79872	@ tmp146, pCtx,
-	movw	ip, #:lower16:80508	@ tmp144,
-	movt	ip, #:upper16:80508	@ tmp144,
-	movt	r5, #:upper16:114684	@ tmp150,
-	movw	r1, #:lower16:80504	@ tmp147,
-	movw	r2, #:lower16:79192	@ tmp152,
-	movt	r1, #:upper16:80504	@ tmp147,
-	movt	r2, #:upper16:79192	@ tmp152,
-	movw	r3, #:lower16:79236	@ tmp157,
-	movt	r3, #:upper16:79236	@ tmp157,
+	add	lr, r4, #80896	@ tmp146, pCtx,
+	movw	ip, #:lower16:82044	@ tmp144,
+	movt	ip, #:upper16:82044	@ tmp144,
+	movt	r5, #:upper16:117756	@ tmp150,
+	movw	r1, #:lower16:82040	@ tmp147,
+	movw	r2, #:lower16:80728	@ tmp152,
+	movt	r1, #:upper16:82040	@ tmp147,
+	movt	r2, #:upper16:80728	@ tmp152,
+	movw	r3, #:lower16:80772	@ tmp157,
+	movt	r3, #:upper16:80772	@ tmp157,
 	mov	r0, lr	@ tmp149, tmp146
-	add	lr, lr, #256	@ tmp146, tmp146,
+	add	lr, lr, #768	@ tmp146, tmp146,
 	str	lr, [r4, ip]	@ tmp146, <variable>.pSyntaxInfOld
 	movw	lr, #45329	@ tmp154,
 	str	r6, [r4, r5]	@ tmp151, <variable>.PPicFound
 	str	r6, [r4, r3]	@ tmp151, <variable>.CodecInfo.HDRState
-	add	r5, r0, #444	@ tmp149, tmp149,
+	add	r5, r0, #956	@ tmp149, tmp149,
 	str	r7, [r4, #0]	@ pstExtraData, <variable>.pstExtraData
 	mov	r0, #3	@ tmp155,
 	str	r5, [r4, r1]	@ tmp149, <variable>.pSyntaxInfNew
 	mov	r5, #1	@ tmp153,
 	strb	r0, [r4, lr]	@ tmp155, <variable>.CodecInfo.Last_FieldStruct
-	movw	ip, #:lower16:79168	@ tmp159,
+	movw	ip, #:lower16:80704	@ tmp159,
 	str	r5, [r4, r2]	@ tmp153, <variable>.CodecInfo.Second_Field
-	movt	ip, #:upper16:79168	@ tmp159,
+	movt	ip, #:upper16:80704	@ tmp159,
 	ldr	r1, [r7, #8]	@ <variable>.s32DecMode, <variable>.s32DecMode
-	movw	r2, #:lower16:79228	@ tmp161,
-	movt	r2, #:upper16:79228	@ tmp161,
+	movw	r2, #:lower16:80764	@ tmp161,
+	movt	r2, #:upper16:80764	@ tmp161,
 	mov	r0, r4	@, pCtx
 	str	r6, [r4, r2]	@ tmp151, <variable>.CodecInfo.Imgbuf_allocated
 	str	r1, [r4, ip]	@ <variable>.s32DecMode, <variable>.CodecInfo.UsedDecMode
 	bl	VCTRL_GetChanIDByCtx	@
-	movw	r3, #:lower16:114672	@ tmp163,
-	movt	r3, #:upper16:114672	@ tmp163,
-	cmn	r0, #1	@ D.40471,
-	str	r0, [r4, r3]	@ D.40471, <variable>.ChanID
-	movne	r0, r5	@ D.40476, tmp153
+	movw	r3, #:lower16:117744	@ tmp163,
+	movt	r3, #:upper16:117744	@ tmp163,
+	cmn	r0, #1	@ D.40487,
+	str	r0, [r4, r3]	@ D.40487, <variable>.ChanID
+	movne	r0, r5	@ D.40492, tmp153
 	ldmnefd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 	mov	r0, r6	@, tmp151
 	movw	r1, #:lower16:.LC20	@,
 	movt	r1, #:upper16:.LC20	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.40476,
+	mvn	r0, #19	@ D.40492,
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 	.fnend
 	.size	MPEG2DEC_Init, .-MPEG2DEC_Init
@@ -1914,8 +1914,8 @@ extra_bit_information:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r4, r0, #78848	@ pBs, pCtx,
-	add	r4, r4, #576	@ pBs, pBs,
+	add	r4, r0, #80896	@ pBs, pCtx,
+	add	r4, r4, #64	@ pBs, pBs,
 	mov	r5, #0	@ Byte_Count,
 .L183:
 	mov	r1, #1	@,
@@ -1953,13 +1953,13 @@ picture_coding_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r7, #:lower16:79180	@ tmp165,
-	movt	r7, #:upper16:79180	@ tmp165,
-	add	r4, r0, #78848	@ pBs, pCtx,
-	add	r4, r4, #576	@ pBs, pBs,
-	movw	lr, #:lower16:80504	@ tmp164,
+	movw	r7, #:lower16:80716	@ tmp165,
+	movt	r7, #:upper16:80716	@ tmp165,
+	add	r4, r0, #80896	@ pBs, pCtx,
+	add	r4, r4, #64	@ pBs, pBs,
+	movw	lr, #:lower16:82040	@ tmp164,
 	ldr	r2, [r0, r7]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	movt	lr, #:upper16:80504	@ tmp164,
+	movt	lr, #:upper16:82040	@ tmp164,
 	mov	r6, r0	@ pCtx, pCtx
 	mov	r1, #4	@,
 	orr	r5, r2, #1048576	@ tmp168, <variable>.CodecInfo.StreamIntegrality,
@@ -1987,8 +1987,8 @@ picture_coding_extension:
 	uxtb	ip, r3	@ tmp186, tmp184
 	cmp	r2, #0	@ temp.1403,
 	cmpne	ip, #4	@, tmp186,
-	movwls	ip, #:lower16:79180	@ tmp193,
-	movtls	ip, #:upper16:79180	@ tmp193,
+	movwls	ip, #:lower16:80716	@ tmp193,
+	movtls	ip, #:upper16:80716	@ tmp193,
 	ldrls	r2, [r6, ip]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orrls	r2, r2, #16	@ tmp196, <variable>.CodecInfo.StreamIntegrality,
 	strls	r2, [r6, ip]	@ tmp196, <variable>.CodecInfo.StreamIntegrality
@@ -2000,8 +2000,8 @@ picture_coding_extension:
 	cmp	r0, #0	@ temp.1388,
 	cmpne	r3, #4	@, tmp200,
 	bhi	.L191	@,
-	movw	r1, #:lower16:79180	@ tmp213,
-	movt	r1, #:upper16:79180	@ tmp213,
+	movw	r1, #:lower16:80716	@ tmp213,
+	movt	r1, #:upper16:80716	@ tmp213,
 	ldr	r2, [r6, r1]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	lr, r2, #16	@ tmp216, <variable>.CodecInfo.StreamIntegrality,
 	str	lr, [r6, r1]	@ tmp216, <variable>.CodecInfo.StreamIntegrality
@@ -2009,15 +2009,15 @@ picture_coding_extension:
 	mov	r0, r4	@, pBs
 	mov	r1, #4	@,
 	bl	BsGet	@
-	uxtb	r0, r0	@ D.40357,
-	strb	r0, [r5, #7]	@ D.40357, <variable>.f_code
-	sub	ip, r0, #10	@ tmp218, D.40357,
+	uxtb	r0, r0	@ D.40373,
+	strb	r0, [r5, #7]	@ D.40373, <variable>.f_code
+	sub	ip, r0, #10	@ tmp218, D.40373,
 	uxtb	r3, ip	@ tmp220, tmp218
-	cmp	r0, #0	@ D.40357,
+	cmp	r0, #0	@ D.40373,
 	cmpne	r3, #4	@, tmp220,
 	bhi	.L195	@,
-	movw	r3, #:lower16:79180	@ tmp207,
-	movt	r3, #:upper16:79180	@ tmp207,
+	movw	r3, #:lower16:80716	@ tmp207,
+	movt	r3, #:upper16:80716	@ tmp207,
 	ldr	r0, [r6, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r1, r0, #16	@ tmp210, <variable>.CodecInfo.StreamIntegrality,
 	str	r1, [r6, r3]	@ tmp210, <variable>.CodecInfo.StreamIntegrality
@@ -2029,12 +2029,12 @@ picture_coding_extension:
 	strb	r0, [r5, #8]	@, <variable>.intra_dc_precision
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
-	uxtb	ip, r0	@ D.40369,
-	strb	ip, [r5, #9]	@ D.40369, <variable>.picture_structure
-	cmp	ip, #0	@ D.40369,
+	uxtb	ip, r0	@ D.40385,
+	strb	ip, [r5, #9]	@ D.40385, <variable>.picture_structure
+	cmp	ip, #0	@ D.40385,
 	bne	.L199	@,
-	movw	r1, #:lower16:79180	@ tmp227,
-	movt	r1, #:upper16:79180	@ tmp227,
+	movw	r1, #:lower16:80716	@ tmp227,
+	movt	r1, #:upper16:80716	@ tmp227,
 	ldr	r2, [r6, r1]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	lr, r2, #16	@ tmp230, <variable>.CodecInfo.StreamIntegrality,
 	str	lr, [r6, r1]	@ tmp230, <variable>.CodecInfo.StreamIntegrality
@@ -2079,9 +2079,9 @@ picture_coding_extension:
 	strb	r0, [r5, #18]	@, <variable>.progressive_frame
 	mov	r0, r4	@, pBs
 	bl	BsGet	@
-	uxtb	r0, r0	@ D.40392,
-	strb	r0, [r5, #3]	@ D.40392, <variable>.composite_display_flag
-	cmp	r0, #0	@ D.40392,
+	uxtb	r0, r0	@ D.40408,
+	strb	r0, [r5, #3]	@ D.40408, <variable>.composite_display_flag
+	cmp	r0, #0	@ D.40408,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	mov	r1, #1	@,
 	mov	r0, r4	@, pBs
@@ -2123,15 +2123,15 @@ picture_display_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r7, #:lower16:80504	@ tmp145,
-	movt	r7, #:upper16:80504	@ tmp145,
-	movw	r2, #:lower16:79180	@ tmp146,
-	movt	r2, #:upper16:79180	@ tmp146,
+	movw	r7, #:lower16:82040	@ tmp145,
+	movt	r7, #:upper16:82040	@ tmp145,
+	movw	r2, #:lower16:80716	@ tmp146,
+	movt	r2, #:upper16:80716	@ tmp146,
 	mov	sl, r0	@ pCtx, pCtx
 	ldr	r5, [r0, r7]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
-	add	r4, r0, #78848	@ pBs, pCtx,
+	add	r4, r0, #80896	@ pBs, pCtx,
 	ldr	r1, [r0, r2]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	add	r4, r4, #576	@ pBs, pBs,
+	add	r4, r4, #64	@ pBs, pBs,
 	orr	r0, r1, #2097152	@ tmp149, <variable>.CodecInfo.StreamIntegrality,
 	str	r0, [sl, r2]	@ tmp149, <variable>.CodecInfo.StreamIntegrality
 	ldrb	r3, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
@@ -2237,8 +2237,8 @@ picture_display_extension:
 	mov	r0, r4	@, pBs
 	bne	.L206	@,
 .L224:
-	movw	r1, #:lower16:79180	@ tmp159,
-	movt	r1, #:upper16:79180	@ tmp159,
+	movw	r1, #:lower16:80716	@ tmp159,
+	movt	r1, #:upper16:80716	@ tmp159,
 	ldr	ip, [sl, r1]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r0, ip, #32	@ tmp162, <variable>.CodecInfo.StreamIntegrality,
 	str	r0, [sl, r1]	@ tmp162, <variable>.CodecInfo.StreamIntegrality
@@ -2281,23 +2281,23 @@ quant_matrix_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r4, r0, #78848	@ pBs, pCtx,
-	add	r4, r4, #576	@ pBs, pBs,
-	movw	r3, #:lower16:80504	@ tmp179,
-	movt	r3, #:upper16:80504	@ tmp179,
+	add	r4, r0, #80896	@ pBs, pCtx,
+	add	r4, r4, #64	@ pBs, pBs,
+	movw	r3, #:lower16:82040	@ tmp179,
+	movt	r3, #:upper16:82040	@ tmp179,
 	mov	r5, r0	@ pCtx, pCtx
 	mov	r1, #1	@,
 	mov	r0, r4	@, pBs
 	ldr	sl, [r5, r3]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40267,
-	str	r0, [sl, #76]	@ D.40267, <variable>.load_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40283,
+	str	r0, [sl, #76]	@ D.40283, <variable>.load_intra_quantizer_matrix
 	beq	.L245	@,
 	mov	r0, r4	@, pBs
 	mov	r1, #1	@,
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40277,
-	str	r0, [sl, #80]	@ D.40277, <variable>.load_non_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40293,
+	str	r0, [sl, #80]	@ D.40293, <variable>.load_non_intra_quantizer_matrix
 	beq	.L246	@,
 .L230:
 	mov	r0, r4	@, pBs
@@ -2343,27 +2343,27 @@ quant_matrix_extension:
 .L229:
 	mov	r1, #8	@,
 	mov	r0, r4	@, pBs
-	ldrb	r8, [r7, r6]	@ zero_extendqisi2	@ D.40274, zigzag
+	ldrb	r8, [r7, r6]	@ zero_extendqisi2	@ D.40290, zigzag
 	bl	BsGet	@
 	add	r2, r6, #1	@ tmp194, i,
 	mov	r1, #8	@,
-	add	r3, r8, #19712	@ tmp181, D.40274,
+	add	r3, r8, #20224	@ tmp181, D.40290,
 	add	r6, r2, #1	@ i, tmp194,
-	add	ip, r3, #152	@ tmp181, tmp181,
+	add	ip, r3, #24	@ tmp181, tmp181,
 	str	r0, [r5, ip, asl #2]	@, <variable>.intra_quantizer_matrix
 	mov	r0, r4	@, pBs
-	ldrb	r8, [r7, r2]	@ zero_extendqisi2	@ D.40274, zigzag
+	ldrb	r8, [r7, r2]	@ zero_extendqisi2	@ D.40290, zigzag
 	bl	BsGet	@
 	cmp	r6, #64	@ i,
-	add	r8, r8, #19712	@ tmp199, D.40274,
-	add	r8, r8, #152	@ tmp199, tmp199,
+	add	r8, r8, #20224	@ tmp199, D.40290,
+	add	r8, r8, #24	@ tmp199, tmp199,
 	str	r0, [r5, r8, asl #2]	@, <variable>.intra_quantizer_matrix
 	bne	.L229	@,
 	mov	r0, r4	@, pBs
 	mov	r1, #1	@,
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40277,
-	str	r0, [sl, #80]	@ D.40277, <variable>.load_non_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40293,
+	str	r0, [sl, #80]	@ D.40293, <variable>.load_non_intra_quantizer_matrix
 	bne	.L230	@,
 .L246:
 	movw	r7, #:lower16:.LANCHOR1	@ tmp200,
@@ -2376,16 +2376,16 @@ quant_matrix_extension:
 	bl	BsGet	@
 	add	r2, r6, #1	@ tmp193, i.1498,
 	mov	r1, #8	@,
-	add	r3, r8, #19712	@ tmp184, temp.1497,
+	add	r3, r8, #20224	@ tmp184, temp.1497,
 	add	r6, r2, #1	@ i.1498, tmp193,
-	add	ip, r3, #216	@ tmp184, tmp184,
+	add	ip, r3, #88	@ tmp184, tmp184,
 	str	r0, [r5, ip, asl #2]	@, <variable>.non_intra_quantizer_matrix
 	mov	r0, r4	@, pBs
 	ldrb	r8, [r7, r2]	@ zero_extendqisi2	@ temp.1497, zigzag
 	bl	BsGet	@
 	cmp	r6, #64	@ i.1498,
-	add	r1, r8, #19712	@ tmp205, temp.1497,
-	add	r8, r1, #216	@ tmp205, tmp205,
+	add	r1, r8, #20224	@ tmp205, temp.1497,
+	add	r8, r1, #88	@ tmp205, tmp205,
 	str	r0, [r5, r8, asl #2]	@, <variable>.non_intra_quantizer_matrix
 	bne	.L231	@,
 	b	.L230	@
@@ -2408,15 +2408,15 @@ sequence_display_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:80504	@ tmp146,
-	movt	r1, #:upper16:80504	@ tmp146,
-	movw	r2, #:lower16:79180	@ tmp154,
-	movt	r2, #:upper16:79180	@ tmp154,
+	movw	r1, #:lower16:82040	@ tmp146,
+	movt	r1, #:upper16:82040	@ tmp146,
+	movw	r2, #:lower16:80716	@ tmp154,
+	movt	r2, #:upper16:80716	@ tmp154,
 	mov	r6, r0	@ pCtx, pCtx
 	ldr	r4, [r0, r1]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
-	add	r5, r0, #78848	@ pBs, pCtx,
+	add	r5, r0, #80896	@ pBs, pCtx,
 	mov	lr, #0	@ tmp147,
-	add	r5, r5, #576	@ pBs, pBs,
+	add	r5, r5, #64	@ pBs, pBs,
 	mov	r1, #3	@,
 	str	lr, [r4, #152]	@ tmp147, <variable>.display_vertical_size
 	mov	r0, r5	@, pBs
@@ -2434,8 +2434,8 @@ sequence_display_extension:
 	str	r0, [r4, #128]	@, <variable>.video_format
 	mov	r0, r5	@, pBs
 	bl	BsGet	@
-	cmp	r0, #0	@ D.40230,
-	str	r0, [r4, #132]	@ D.40230, <variable>.color_description
+	cmp	r0, #0	@ D.40246,
+	str	r0, [r4, #132]	@ D.40246, <variable>.color_description
 	bne	.L252	@,
 .L248:
 	mov	r1, #14	@,
@@ -2447,8 +2447,8 @@ sequence_display_extension:
 	bl	BsGet	@
 	cmp	r0, #0	@,
 	bne	.L249	@,
-	movw	r3, #:lower16:79180	@ tmp158,
-	movt	r3, #:upper16:79180	@ tmp158,
+	movw	r3, #:lower16:80716	@ tmp158,
+	movt	r3, #:upper16:80716	@ tmp158,
 	ldr	r2, [r6, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r0, r2, #4	@ tmp161, <variable>.CodecInfo.StreamIntegrality,
 	str	r0, [r6, r3]	@ tmp161, <variable>.CodecInfo.StreamIntegrality
@@ -2492,16 +2492,16 @@ sequence_extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r7, #:lower16:79180	@ tmp159,
-	movt	r7, #:upper16:79180	@ tmp159,
-	add	r8, r0, #78848	@ pBs, pCtx,
-	add	r8, r8, #576	@ pBs, pBs,
-	movw	r2, #:lower16:79176	@ tmp163,
+	movw	r7, #:lower16:80716	@ tmp159,
+	movt	r7, #:upper16:80716	@ tmp159,
+	add	r8, r0, #80896	@ pBs, pCtx,
+	add	r8, r8, #64	@ pBs, pBs,
+	movw	r2, #:lower16:80712	@ tmp163,
 	ldr	r4, [r0, r7]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	movt	r2, #:upper16:79176	@ tmp163,
+	movt	r2, #:upper16:80712	@ tmp163,
 	mov	r5, r0	@ pCtx, pCtx
-	movw	r3, #:lower16:80504	@ tmp158,
-	movt	r3, #:upper16:80504	@ tmp158,
+	movw	r3, #:lower16:82040	@ tmp158,
+	movt	r3, #:upper16:82040	@ tmp158,
 	orr	r1, r4, #131072	@ tmp162, <variable>.CodecInfo.StreamIntegrality,
 	str	r1, [r0, r7]	@ tmp162, <variable>.CodecInfo.StreamIntegrality
 	mov	r1, #8	@,
@@ -2523,15 +2523,15 @@ sequence_extension:
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	mov	r1, #2	@,
-	mov	r9, r0	@ D.40143,
+	mov	r9, r0	@ D.40159,
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	mov	r1, #12	@,
-	mov	sl, r0	@ D.40144,
+	mov	sl, r0	@ D.40160,
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	mov	r1, #1	@,
-	mov	r6, r0	@ D.40145,
+	mov	r6, r0	@ D.40161,
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	cmp	r0, #0	@,
@@ -2545,7 +2545,7 @@ sequence_extension:
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	mov	r1, #1	@,
-	mov	r7, r0	@ D.40150,
+	mov	r7, r0	@ D.40166,
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	mov	r1, #2	@,
@@ -2557,23 +2557,23 @@ sequence_extension:
 	mov	r0, r8	@, pBs
 	bl	BsGet	@
 	ldrb	ip, [r4, #30]	@ zero_extendqisi2	@ <variable>.frame_rate_extension_n, <variable>.frame_rate_extension_n
-	uxtb	r2, r0	@ D.40156,
+	uxtb	r2, r0	@ D.40172,
 	add	r0, ip, #1	@, <variable>.frame_rate_extension_n,
-	add	r1, r2, #1	@, D.40156,
-	strb	r2, [r4, #31]	@ D.40156, <variable>.frame_rate_extension_d
+	add	r1, r2, #1	@, D.40172,
+	strb	r2, [r4, #31]	@ D.40172, <variable>.frame_rate_extension_d
 	bl	__aeabi_idiv	@
 	ldr	r1, [r4, #88]	@ <variable>.frame_rate_code, <variable>.frame_rate_code
 	movw	r3, #:lower16:.LANCHOR0	@ tmp181,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp181,
-	ldr	r2, [r4, #124]	@ D.40170, <variable>.profile_and_level_indication
+	ldr	r2, [r4, #124]	@ D.40186, <variable>.profile_and_level_indication
 	add	ip, r3, r1, asl #2	@, tmp185, tmp181, <variable>.frame_rate_code,
-	tst	r2, #128	@ D.40170,
+	tst	r2, #128	@ D.40186,
 	ldr	r1, [ip, #1100]	@ tmp187, frame_rate_Table
 	mul	r3, r1, r0	@ tmp188, tmp187,
 	str	r3, [r4, #72]	@ tmp188, <variable>.frame_rate
 	bne	.L266	@,
-	and	ip, r2, #15	@ tmp196, D.40170,
-	ubfx	r1, r2, #4, #3	@ tmp194, D.40170,,
+	and	ip, r2, #15	@ tmp196, D.40186,
+	ubfx	r1, r2, #4, #3	@ tmp194, D.40186,,
 	str	ip, [r4, #44]	@ tmp196, <variable>.level
 	str	r1, [r4, #40]	@ tmp194, <variable>.profile
 .L257:
@@ -2582,18 +2582,18 @@ sequence_extension:
 	mov	r1, ip, asl #20	@ tmp198, <variable>.horizontal_size,
 	mov	r0, r3, asl #20	@ tmp202, <variable>.vertical_size,
 	mov	lr, r1, lsr #20	@ tmp198, tmp198,
-	orr	r9, lr, r9, asl #12	@, prephitmp.1539, tmp198, D.40143,
+	orr	r9, lr, r9, asl #12	@, prephitmp.1539, tmp198, D.40159,
 	mov	r2, r0, lsr #20	@ tmp202, tmp202,
 	cmp	r9, #0	@ prephitmp.1539,
-	orr	sl, r2, sl, asl #12	@, D.40187, tmp202, D.40144,
+	orr	sl, r2, sl, asl #12	@, D.40203, tmp202, D.40160,
 	str	r9, [r4, #48]	@ prephitmp.1539, <variable>.horizontal_size
-	str	sl, [r4, #52]	@ D.40187, <variable>.vertical_size
+	str	sl, [r4, #52]	@ D.40203, <variable>.vertical_size
 	beq	.L258	@,
-	cmp	sl, #0	@ D.40187,
+	cmp	sl, #0	@ D.40203,
 	bne	.L259	@,
 .L258:
-	movw	r0, #:lower16:79180	@ tmp205,
-	movt	r0, #:upper16:79180	@ tmp205,
+	movw	r0, #:lower16:80716	@ tmp205,
+	movt	r0, #:upper16:80716	@ tmp205,
 	ldr	r2, [r5, r0]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r9, r2, #1	@ tmp208, <variable>.CodecInfo.StreamIntegrality,
 	str	r9, [r5, r0]	@ tmp208, <variable>.CodecInfo.StreamIntegrality
@@ -2605,8 +2605,8 @@ sequence_extension:
 	cmp	lr, #8192	@ <variable>.vertical_size,
 	bls	.L261	@,
 .L260:
-	movw	r3, #:lower16:79180	@ tmp210,
-	movt	r3, #:upper16:79180	@ tmp210,
+	movw	r3, #:lower16:80716	@ tmp210,
+	movt	r3, #:upper16:80716	@ tmp210,
 	movw	r0, #:lower16:g_event_report	@ tmp214,
 	movt	r0, #:upper16:g_event_report	@ tmp214,
 	ldr	ip, [r5, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
@@ -2615,8 +2615,8 @@ sequence_extension:
 	ldr	ip, [r0, #0]	@ g_event_report.494, g_event_report
 	cmp	ip, #0	@ g_event_report.494,
 	beq	.L261	@,
-	movw	lr, #:lower16:114672	@ tmp215,
-	movt	lr, #:upper16:114672	@ tmp215,
+	movw	lr, #:lower16:117744	@ tmp215,
+	movt	lr, #:upper16:117744	@ tmp215,
 	mov	r2, #0	@,
 	mov	r1, #102	@,
 	ldr	r0, [r5, lr]	@, <variable>.ChanID
@@ -2626,13 +2626,13 @@ sequence_extension:
 	ldr	ip, [r4, #92]	@ <variable>.bit_rate_value, <variable>.bit_rate_value
 	mov	r0, #400	@ tmp219,
 	ldr	r2, [r4, #40]	@ prephitmp.1557, <variable>.profile
-	add	r6, ip, r6, asl #18	@, D.40201, <variable>.bit_rate_value, D.40145,
-	str	r6, [r4, #92]	@ D.40201, <variable>.bit_rate_value
+	add	r6, ip, r6, asl #18	@, D.40217, <variable>.bit_rate_value, D.40161,
+	str	r6, [r4, #92]	@ D.40217, <variable>.bit_rate_value
 	sub	r1, r2, #4	@ tmp224, prephitmp.1557,
 	ldr	r3, [r4, #96]	@ <variable>.vbv_buffer_size, <variable>.vbv_buffer_size
-	mul	r6, r0, r6	@ tmp220, tmp219, D.40201
+	mul	r6, r0, r6	@ tmp220, tmp219, D.40217
 	cmp	r1, #1	@ tmp224,
-	add	r7, r3, r7, asl #10	@, tmp223, <variable>.vbv_buffer_size, D.40150,
+	add	r7, r3, r7, asl #10	@, tmp223, <variable>.vbv_buffer_size, D.40166,
 	str	r7, [r4, #96]	@ tmp223, <variable>.vbv_buffer_size
 	str	r6, [r4, #68]	@ tmp220, <variable>.bit_rate
 	bls	.L262	@,
@@ -2641,8 +2641,8 @@ sequence_extension:
 	ldr	ip, [lr, #0]	@ g_event_report.1558, g_event_report
 	cmp	ip, #0	@ g_event_report.1558,
 	beq	.L263	@,
-	movw	r3, #:lower16:114672	@ tmp226,
-	movt	r3, #:upper16:114672	@ tmp226,
+	movw	r3, #:lower16:117744	@ tmp226,
+	movt	r3, #:upper16:117744	@ tmp226,
 	mov	r2, #0	@,
 	mov	r1, #102	@,
 	ldr	r0, [r5, r3]	@, <variable>.ChanID
@@ -2664,8 +2664,8 @@ sequence_extension:
 	ldr	ip, [r0, #0]	@ g_event_report.1561, g_event_report
 	cmp	ip, #0	@ g_event_report.1561,
 	beq	.L264	@,
-	movw	lr, #:lower16:114672	@ tmp231,
-	movt	lr, #:upper16:114672	@ tmp231,
+	movw	lr, #:lower16:117744	@ tmp231,
+	movt	lr, #:upper16:117744	@ tmp231,
 	mov	r2, #0	@,
 	mov	r1, #102	@,
 	mov	r3, r2	@,
@@ -2679,7 +2679,7 @@ sequence_extension:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}	@
 .L266:
-	and	r0, r2, #15	@ tmp190, D.40170,
+	and	r0, r2, #15	@ tmp190, D.40186,
 	cmp	r0, #5	@ tmp190,
 	moveq	r3, #133	@ tmp191,
 	moveq	lr, #8	@ tmp192,
@@ -2705,9 +2705,9 @@ extension:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r1, r0, #78848	@, pCtx,
+	add	r1, r0, #80896	@, pCtx,
 	mov	r4, r0	@ pCtx, pCtx
-	add	r0, r1, #576	@,,
+	add	r0, r1, #64	@,,
 	mov	r1, #4	@,
 	bl	BsGet	@
 	sub	r0, r0, #1	@ tmp138,,
@@ -2790,14 +2790,14 @@ picture_header:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r6, #:lower16:79180	@ tmp146,
-	movt	r6, #:upper16:79180	@ tmp146,
-	add	r4, r0, #78848	@ pBs, pCtx,
+	movw	r6, #:lower16:80716	@ tmp146,
+	movt	r6, #:upper16:80716	@ tmp146,
+	add	r4, r0, #80896	@ pBs, pCtx,
 	mov	r5, r0	@ pCtx, pCtx
-	add	r4, r4, #576	@ pBs, pBs,
+	add	r4, r4, #64	@ pBs, pBs,
 	ldr	r1, [r0, r6]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	movw	lr, #:lower16:80504	@ tmp145,
-	movt	lr, #:upper16:80504	@ tmp145,
+	movw	lr, #:lower16:82040	@ tmp145,
+	movt	lr, #:upper16:82040	@ tmp145,
 	bic	r0, r1, #3145728	@ tmp148, <variable>.CodecInfo.StreamIntegrality,
 	mov	r1, #10	@,
 	bic	r3, r0, #56	@ tmp148, tmp148,
@@ -2871,19 +2871,19 @@ group_of_pictures_header:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r4, r0	@ pCtx, pCtx
-	add	r0, r0, #78848	@ pBs, pCtx,
-	movw	r9, #:lower16:80504	@ tmp165,
-	add	r7, r0, #576	@ pBs, pBs,
-	movt	r9, #:upper16:80504	@ tmp165,
+	add	r0, r0, #80896	@ pBs, pCtx,
+	movw	r9, #:lower16:82040	@ tmp165,
+	add	r7, r0, #64	@ pBs, pBs,
+	movt	r9, #:upper16:82040	@ tmp165,
 	mov	r1, #1	@,
-	add	r6, r4, #78848	@ tmp149, pCtx,
+	add	r6, r4, #79872	@ tmp149, pCtx,
 	mov	r0, r7	@, pBs
 	ldr	r8, [r4, r9]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	bl	BsGet	@
 	mov	r1, #5	@,
-	add	r5, r4, #78848	@ tmp148, pCtx,
-	movw	r9, #:lower16:79344	@ tmp170,
-	movt	r9, #:upper16:79344	@ tmp170,
+	add	r5, r4, #79872	@ tmp148, pCtx,
+	movw	r9, #:lower16:80880	@ tmp170,
+	movt	r9, #:upper16:80880	@ tmp170,
 	mov	sl, #0	@ tmp159,
 	strb	r0, [r8, #2]	@, <variable>.drop_flag
 	mov	r0, r7	@, pBs
@@ -2911,16 +2911,16 @@ group_of_pictures_header:
 	str	r0, [r8, #116]	@, <variable>.closed_gop
 	mov	r0, r7	@, pBs
 	bl	BsGet	@
-	add	ip, r6, #464	@ tmp149, tmp149,
-	movw	r6, #:lower16:79336	@ tmp169,
-	movt	r6, #:upper16:79336	@ tmp169,
+	add	ip, r6, #976	@ tmp149, tmp149,
+	movw	r6, #:lower16:80872	@ tmp169,
+	movt	r6, #:upper16:80872	@ tmp169,
 	mov	r1, r5	@ tmp153, tmp148
 	add	r2, r4, r6	@, pCtx, tmp169
-	add	r3, r1, #476	@ tmp153, tmp153,
+	add	r3, r1, #988	@ tmp153, tmp153,
 	str	r2, [fp, #-48]	@, %sfp
-	add	r5, r5, #452	@ tmp148, tmp148,
-	movw	r7, #:lower16:79340	@ tmp171,
-	movt	r7, #:upper16:79340	@ tmp171,
+	add	r5, r5, #964	@ tmp148, tmp148,
+	movw	r7, #:lower16:80876	@ tmp171,
+	movt	r7, #:upper16:80876	@ tmp171,
 	str	r0, [r8, #120]	@, <variable>.broken_link
 	ldmia	ip, {r0, r1, r2}	@ tmp149,,,
 	stmia	r5, {r0, r1, r2}	@ tmp148,,,
@@ -2953,15 +2953,15 @@ sequence_header:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r5, r0, #78848	@ pBs, pCtx,
-	add	r5, r5, #576	@ pBs, pBs,
-	movw	r6, #:lower16:79180	@ tmp164,
-	movw	r2, #:lower16:79176	@ tmp166,
-	movt	r6, #:upper16:79180	@ tmp164,
-	movt	r2, #:upper16:79176	@ tmp166,
+	add	r5, r0, #80896	@ pBs, pCtx,
+	add	r5, r5, #64	@ pBs, pBs,
+	movw	r6, #:lower16:80716	@ tmp164,
+	movw	r2, #:lower16:80712	@ tmp166,
+	movt	r6, #:upper16:80716	@ tmp164,
+	movt	r2, #:upper16:80712	@ tmp166,
 	mov	r4, r0	@ pCtx, pCtx
-	movw	r3, #:lower16:80504	@ tmp163,
-	movt	r3, #:upper16:80504	@ tmp163,
+	movw	r3, #:lower16:82040	@ tmp163,
+	movt	r3, #:upper16:82040	@ tmp163,
 	mov	r1, #12	@,
 	mov	sl, #65536	@ tmp165,
 	str	sl, [r0, r6]	@ tmp165, <variable>.CodecInfo.StreamIntegrality
@@ -3005,14 +3005,14 @@ sequence_header:
 	strb	r0, [sl, #1]	@, <variable>.constrained_parameters_flag
 	mov	r0, r5	@, pBs
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40053,
-	str	r0, [sl, #76]	@ D.40053, <variable>.load_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40069,
+	str	r0, [sl, #76]	@ D.40069, <variable>.load_intra_quantizer_matrix
 	beq	.L305	@,
-	add	r1, r4, #78848	@ ivtmp.1698, pCtx,
+	add	r1, r4, #80896	@ ivtmp.1698, pCtx,
 	movw	r6, #:lower16:.LANCHOR1	@ tmp188,
 	movt	r6, #:upper16:.LANCHOR1	@ tmp188,
-	add	r1, r1, #608	@ ivtmp.1698, ivtmp.1698,
-	add	ip, r6, #64	@ tmp190, tmp188,
+	add	r1, r1, #96	@ ivtmp.1698, ivtmp.1698,
+	add	ip, r6, #64	@ tmp189, tmp188,
 	mov	r3, #0	@ i.1701,
 .L291:
 	ldrb	lr, [ip, r3]	@ zero_extendqisi2	@ tmp179, default_intra_quantizer_matrix
@@ -3028,8 +3028,8 @@ sequence_header:
 	mov	r0, r5	@, pBs
 	mov	r1, #1	@,
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40066,
-	str	r0, [sl, #80]	@ D.40066, <variable>.load_non_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40082,
+	str	r0, [sl, #80]	@ D.40082, <variable>.load_non_intra_quantizer_matrix
 	movne	r3, #0	@ ivtmp.1682,
 	movne	ip, #16	@ tmp193,
 	beq	.L306	@,
@@ -3037,11 +3037,11 @@ sequence_header:
 	add	r0, r3, #4	@ tmp196, ivtmp.1682,
 	add	r3, r4, r3	@ tmp183, pCtx, ivtmp.1682
 	add	r2, r4, r0	@ tmp214, pCtx, tmp196
-	add	r1, r3, #78848	@ tmp184, tmp183,
-	add	lr, r2, #78848	@ tmp216, tmp214,
+	add	r1, r3, #80896	@ tmp184, tmp183,
+	add	lr, r2, #80896	@ tmp216, tmp214,
 	add	r3, r0, #4	@ ivtmp.1682, tmp196,
-	add	r1, r1, #864	@ tmp184, tmp184,
-	add	r0, lr, #864	@ tmp216, tmp216,
+	add	r1, r1, #352	@ tmp184, tmp184,
+	add	r0, lr, #352	@ tmp216, tmp216,
 	cmp	r3, #256	@ ivtmp.1682,
 	str	ip, [r1, #0]	@ tmp193, <variable>.non_intra_quantizer_matrix
 	str	ip, [r0, #0]	@ tmp193, <variable>.non_intra_quantizer_matrix
@@ -3055,27 +3055,27 @@ sequence_header:
 .L289:
 	mov	r1, #8	@,
 	mov	r0, r5	@, pBs
-	ldrb	r8, [r6, r7]	@ zero_extendqisi2	@ D.40060, zigzag
+	ldrb	r8, [r6, r7]	@ zero_extendqisi2	@ D.40076, zigzag
 	bl	BsGet	@
 	add	ip, r7, #1	@ tmp197, i,
 	mov	r1, #8	@,
-	add	r2, r8, #19712	@ tmp174, D.40060,
+	add	r2, r8, #20224	@ tmp174, D.40076,
 	add	r7, ip, #1	@ i, tmp197,
-	add	r3, r2, #152	@ tmp174, tmp174,
+	add	r3, r2, #24	@ tmp174, tmp174,
 	str	r0, [r4, r3, asl #2]	@, <variable>.intra_quantizer_matrix
 	mov	r0, r5	@, pBs
-	ldrb	r8, [r6, ip]	@ zero_extendqisi2	@ D.40060, zigzag
+	ldrb	r8, [r6, ip]	@ zero_extendqisi2	@ D.40076, zigzag
 	bl	BsGet	@
 	cmp	r7, #64	@ i,
-	add	r8, r8, #19712	@ tmp204, D.40060,
-	add	r8, r8, #152	@ tmp204, tmp204,
+	add	r8, r8, #20224	@ tmp204, D.40076,
+	add	r8, r8, #24	@ tmp204, tmp204,
 	str	r0, [r4, r8, asl #2]	@, <variable>.intra_quantizer_matrix
 	bne	.L289	@,
 	mov	r0, r5	@, pBs
 	mov	r1, #1	@,
 	bl	BsGet	@
-	cmp	r0, #1	@ D.40066,
-	str	r0, [sl, #80]	@ D.40066, <variable>.load_non_intra_quantizer_matrix
+	cmp	r0, #1	@ D.40082,
+	str	r0, [sl, #80]	@ D.40082, <variable>.load_non_intra_quantizer_matrix
 	movne	r3, #0	@ ivtmp.1682,
 	movne	ip, #16	@ tmp193,
 	bne	.L295	@,
@@ -3088,16 +3088,16 @@ sequence_header:
 	bl	BsGet	@
 	add	r3, r7, #1	@ tmp195, i.1704,
 	mov	r1, #8	@,
-	add	ip, r8, #19712	@ tmp181, temp.1703,
+	add	ip, r8, #20224	@ tmp181, temp.1703,
 	add	r7, r3, #1	@ i.1704, tmp195,
-	add	r2, ip, #216	@ tmp181, tmp181,
+	add	r2, ip, #88	@ tmp181, tmp181,
 	str	r0, [r4, r2, asl #2]	@, <variable>.non_intra_quantizer_matrix
 	mov	r0, r5	@, pBs
 	ldrb	r8, [r6, r3]	@ zero_extendqisi2	@ temp.1703, zigzag
 	bl	BsGet	@
 	cmp	r7, #64	@ i.1704,
-	add	ip, r8, #19712	@ tmp212, temp.1703,
-	add	r8, ip, #216	@ tmp212, tmp212,
+	add	ip, r8, #20224	@ tmp212, temp.1703,
+	add	r8, ip, #88	@ tmp212, tmp212,
 	str	r0, [r4, r8, asl #2]	@, <variable>.non_intra_quantizer_matrix
 	bne	.L293	@,
 	mov	r0, #1	@,
@@ -3123,8 +3123,8 @@ next_start_code:
 	sub	sp, sp, #20	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r4, r0, #78848	@ pBs, pCtx,
-	add	r4, r4, #576	@ pBs, pBs,
+	add	r4, r0, #80896	@ pBs, pCtx,
+	add	r4, r4, #64	@ pBs, pBs,
 	mov	r5, r0	@ pCtx, pCtx
 	mov	r0, r4	@, pBs
 	bl	BsToNextByte	@
@@ -3133,22 +3133,22 @@ next_start_code:
 	mov	r6, r0	@ pcode,
 	mov	r0, r4	@, pBs
 	bl	BsResidBits	@
-	mov	r7, r0	@ D.39972,
-	add	r2, r0, #7	@ tmp157, D.39972,
-	cmp	r7, #0	@ D.39972,
+	mov	r7, r0	@ D.39988,
+	add	r2, r0, #7	@ tmp157, D.39988,
+	cmp	r7, #0	@ D.39988,
 	mov	r0, r6	@, pcode
-	movlt	r7, r2	@ D.39972, tmp157
-	mov	r1, r7, asr #3	@, D.39972,
+	movlt	r7, r2	@ D.39988, tmp157
+	mov	r1, r7, asr #3	@, D.39988,
 	bl	MP2_SearchStartCode	@
 	mov	r1, r0, asl #3	@ tmp159,,
 	mov	r0, r4	@, pBs
 	bl	BsLongSkip	@
 	mov	r0, r4	@, pBs
 	bl	BsResidBits	@
-	add	r3, r0, #7	@ tmp162, D.39978,
-	cmp	r0, #0	@ D.39978,
-	movlt	r0, r3	@ D.39978, tmp162
-	mov	r3, r0, asr #3	@ tmp163, D.39978,
+	add	r3, r0, #7	@ tmp162, D.39994,
+	cmp	r0, #0	@ D.39994,
+	movlt	r0, r3	@ D.39994, tmp162
+	mov	r3, r0, asr #3	@ tmp163, D.39994,
 	sub	r7, r3, #3	@ remain_byte, tmp163,
 	cmp	r7, #0	@ remain_byte,
 	ble	.L308	@,
@@ -3201,40 +3201,40 @@ next_start_code:
 	mov	r0, r4	@, pBs
 	bne	.L335	@,
 .L309:
-	mov	r0, #1	@ D.39983,
+	mov	r0, #1	@ D.39999,
 .L313:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L308:
-	movw	r6, #:lower16:79132	@ tmp164,
-	movt	r6, #:upper16:79132	@ tmp164,
+	movw	r6, #:lower16:80668	@ tmp164,
+	movt	r6, #:upper16:80668	@ tmp164,
 	ldrsb	r8, [r5, r6]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	cmp	r8, #0	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg,
 	bne	.L311	@,
-	movw	r7, #:lower16:79133	@ tmp166,
-	movt	r7, #:upper16:79133	@ tmp166,
+	movw	r7, #:lower16:80669	@ tmp166,
+	movt	r7, #:upper16:80669	@ tmp166,
 	ldrsb	r0, [r5, r7]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	cmp	r0, #0	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg,
 	beq	.L311	@,
-	movw	sl, #:lower16:79156	@ tmp168,
-	movt	sl, #:upper16:79156	@ tmp168,
+	movw	sl, #:lower16:80692	@ tmp168,
+	movt	sl, #:upper16:80692	@ tmp168,
 	ldr	r1, [r5, sl]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
 	cmp	r1, #0	@ <variable>.CodecInfo.stMp2Packet.BsLength,
 	beq	.L311	@,
 	mov	r0, #7	@,
 	movw	r1, #:lower16:.LC23	@,
 	movt	r1, #:upper16:.LC23	@,
-	movw	r9, #:lower16:79152	@,
-	movw	lr, #:lower16:79136	@ tmp174,
-	movt	r9, #:upper16:79152	@,
-	movt	lr, #:upper16:79136	@ tmp174,
+	movw	r9, #:lower16:80688	@,
+	movw	lr, #:lower16:80672	@ tmp174,
+	movt	r9, #:upper16:80688	@,
+	movt	lr, #:upper16:80672	@ tmp174,
 	str	r9, [fp, #-48]	@, %sfp
 	str	lr, [fp, #-56]	@,
 	bl	dprint_vfmw	@
 	ldr	r2, [fp, #-48]	@, %sfp
-	movw	r9, #:lower16:79140	@ tmp171,
+	movw	r9, #:lower16:80676	@ tmp171,
 	ldr	ip, [fp, #-56]	@,
-	movt	r9, #:upper16:79140	@ tmp171,
+	movt	r9, #:upper16:80676	@ tmp171,
 	ldr	r1, [r5, r2]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
 	mov	r2, #3	@,
 	ldr	r3, [r5, ip]	@ <variable>.CodecInfo.stMp2Packet.BsVirAddr, <variable>.CodecInfo.stMp2Packet.BsVirAddr
@@ -3245,23 +3245,23 @@ next_start_code:
 	bl	memcpy	@
 	ldr	r2, [fp, #-56]	@,
 	ldr	r0, [r5, sl]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
-	movw	r3, #:lower16:79148	@ tmp187,
+	movw	r3, #:lower16:80684	@ tmp187,
 	ldr	r1, [r5, r9]	@ <variable>.CodecInfo.stMp2Packet.BsVirAddr, <variable>.CodecInfo.stMp2Packet.BsVirAddr
-	movt	r3, #:upper16:79148	@ tmp187,
+	movt	r3, #:upper16:80684	@ tmp187,
 	add	ip, r0, #3	@, <variable>.CodecInfo.stMp2Packet.BsLength,
 	str	ip, [fp, #-52]	@, %sfp
-	sub	r1, r1, #3	@ D.40004, <variable>.CodecInfo.stMp2Packet.BsVirAddr,
-	str	r1, [r5, r2]	@ D.40004, <variable>.CodecInfo.stMp2Packet.BsVirAddr
+	sub	r1, r1, #3	@ D.40020, <variable>.CodecInfo.stMp2Packet.BsVirAddr,
+	str	r1, [r5, r2]	@ D.40020, <variable>.CodecInfo.stMp2Packet.BsVirAddr
 	ldr	r2, [fp, #-52]	@, %sfp
-	movw	lr, #:lower16:79144	@ tmp192,
+	movw	lr, #:lower16:80680	@ tmp192,
 	ldr	r0, [fp, #-48]	@, %sfp
-	movt	lr, #:upper16:79144	@ tmp192,
+	movt	lr, #:upper16:80680	@ tmp192,
 	ldr	ip, [r5, r3]	@, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	str	r8, [r5, r9]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsVirAddr
 	str	r2, [r5, r0]	@, <variable>.CodecInfo.stMp2Packet.BsLength
-	sub	r0, ip, #3	@ D.40003,,
+	sub	r0, ip, #3	@ D.40019,,
 	str	r8, [r5, sl]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsLength
-	str	r0, [r5, lr]	@ D.40003, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
+	str	r0, [r5, lr]	@ D.40019, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	mov	lr, #1	@,
 	str	r8, [r5, r3]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	mov	r0, r4	@, pBs
@@ -3278,22 +3278,22 @@ next_start_code:
 	mov	r5, r0	@ pcode.1737,
 	mov	r0, r4	@, pBs
 	bl	BsResidBits	@
-	mov	r3, r0	@ D.40006,
-	add	r2, r0, #7	@ tmp215, D.40006,
-	cmp	r3, #0	@ D.40006,
+	mov	r3, r0	@ D.40022,
+	add	r2, r0, #7	@ tmp215, D.40022,
+	cmp	r3, #0	@ D.40022,
 	mov	r0, r5	@, pcode.1737
-	movlt	r3, r2	@ D.40006, tmp215
-	mov	r1, r3, asr #3	@, D.40006,
+	movlt	r3, r2	@ D.40022, tmp215
+	mov	r1, r3, asr #3	@, D.40022,
 	bl	MP2_SearchStartCode	@
 	mov	r1, r0, asl #3	@ tmp217,,
 	mov	r0, r4	@, pBs
 	bl	BsLongSkip	@
 	mov	r0, r4	@, pBs
 	bl	BsResidBits	@
-	cmp	r0, #0	@ D.40009,
-	add	ip, r0, #7	@ tmp220, D.40009,
-	movlt	r0, ip	@ D.40009, tmp220
-	mov	r3, r0, asr #3	@ tmp221, D.40009,
+	cmp	r0, #0	@ D.40025,
+	add	ip, r0, #7	@ tmp220, D.40025,
+	movlt	r0, ip	@ D.40025, tmp220
+	mov	r3, r0, asr #3	@ tmp221, D.40025,
 	sub	r6, r3, #3	@ remain_byte.1741, tmp221,
 	cmp	r6, #0	@ remain_byte.1741,
 	ble	.L311	@,
@@ -3347,7 +3347,7 @@ next_start_code:
 	bne	.L336	@,
 	b	.L309	@
 .L311:
-	mov	r0, #0	@ D.39983,
+	mov	r0, #0	@ D.39999,
 	b	.L313	@
 	.fnend
 	.size	next_start_code, .-next_start_code
@@ -3370,17 +3370,17 @@ MP2_GetUsrData:
 	sub	sp, sp, #20	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r6, r0, #78848	@ pBs, pCtx,
-	add	r6, r6, #576	@ pBs, pBs,
+	add	r6, r0, #80896	@ pBs, pCtx,
+	add	r6, r6, #64	@ pBs, pBs,
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r0, r6	@, pBs
 	bl	BsToNextByte	@
 	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
-	add	r9, r0, #7	@ tmp160, D.39872,
-	cmp	r0, #0	@ D.39872,
-	movlt	r0, r9	@ D.39872, tmp160
-	mov	r9, r0, asr #3	@ RemainByte, D.39872,
+	add	r9, r0, #7	@ tmp160, D.39888,
+	cmp	r0, #0	@ D.39888,
+	movlt	r0, r9	@ D.39888, tmp160
+	mov	r9, r0, asr #3	@ RemainByte, D.39888,
 	cmp	r9, #0	@ RemainByte,
 	ble	.L338	@,
 	sub	r2, r9, #1	@ tmp386, RemainByte,
@@ -3467,18 +3467,18 @@ MP2_GetUsrData:
 	add	r5, r5, #1	@ cnt, cnt,
 	bgt	.L342	@,
 .L343:
-	movw	r7, #:lower16:79132	@ tmp368,
-	movt	r7, #:upper16:79132	@ tmp368,
+	movw	r7, #:lower16:80668	@ tmp368,
+	movt	r7, #:upper16:80668	@ tmp368,
 	ldrsb	r8, [r4, r7]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	cmp	r8, #0	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg,
 	bne	.L344	@,
-	movw	sl, #:lower16:79133	@ tmp166,
-	movt	sl, #:upper16:79133	@ tmp166,
+	movw	sl, #:lower16:80669	@ tmp166,
+	movt	sl, #:upper16:80669	@ tmp166,
 	ldrsb	r1, [r4, sl]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.IsLastSeg
 	cmp	r1, #0	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg,
 	beq	.L344	@,
-	movw	r9, #:lower16:79156	@ tmp168,
-	movt	r9, #:upper16:79156	@ tmp168,
+	movw	r9, #:lower16:80692	@ tmp168,
+	movt	r9, #:upper16:80692	@ tmp168,
 	ldr	lr, [r4, r9]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
 	cmp	lr, #0	@ <variable>.CodecInfo.stMp2Packet.BsLength,
 	bne	.L397	@,
@@ -3490,29 +3490,29 @@ MP2_GetUsrData:
 	mov	r6, #1	@,
 	str	r6, [fp, #-48]	@, %sfp
 .L348:
-	movw	r6, #:lower16:79212	@ tmp222,
-	movt	r6, #:upper16:79212	@ tmp222,
-	ldr	r2, [r4, r6]	@ D.39916, <variable>.CodecInfo.TotalUsrDatNum
-	cmp	r2, #3	@ D.39916,
+	movw	r6, #:lower16:80748	@ tmp222,
+	movt	r6, #:upper16:80748	@ tmp222,
+	ldr	r2, [r4, r6]	@ D.39932, <variable>.CodecInfo.TotalUsrDatNum
+	cmp	r2, #3	@ D.39932,
 	ble	.L350	@,
-	movw	r8, #:lower16:114672	@ tmp223,
-	movw	sl, #:lower16:79196	@ tmp225,
-	movt	r8, #:upper16:114672	@ tmp223,
-	movt	sl, #:upper16:79196	@ tmp225,
-	movw	r9, #:lower16:79200	@ tmp231,
-	movt	r9, #:upper16:79200	@ tmp231,
+	movw	r8, #:lower16:117744	@ tmp223,
+	movw	sl, #:lower16:80732	@ tmp225,
+	movt	r8, #:upper16:117744	@ tmp223,
+	movt	sl, #:upper16:80732	@ tmp225,
+	movw	r9, #:lower16:80736	@ tmp231,
+	movt	r9, #:upper16:80736	@ tmp231,
 	ldr	r1, [r4, sl]	@, <variable>.CodecInfo.pUsrDatArray
-	movw	r7, #:lower16:79204	@ tmp237,
+	movw	r7, #:lower16:80740	@ tmp237,
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
-	movt	r7, #:upper16:79204	@ tmp237,
+	movt	r7, #:upper16:80740	@ tmp237,
 	str	r7, [fp, #-56]	@,
 	bl	FreeUsdByDec	@
 	mov	r7, #0	@ tmp228,
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	str	r7, [r4, sl]	@ tmp228, <variable>.CodecInfo.pUsrDatArray
-	movw	sl, #:lower16:79208	@ tmp243,
+	movw	sl, #:lower16:80744	@ tmp243,
 	ldr	r1, [r4, r9]	@, <variable>.CodecInfo.pUsrDatArray
-	movt	sl, #:upper16:79208	@ tmp243,
+	movt	sl, #:upper16:80744	@ tmp243,
 	str	r7, [fp, #-60]	@ tmp12,
 	bl	FreeUsdByDec	@
 	str	r7, [r4, r9]	@ tmp228, <variable>.CodecInfo.pUsrDatArray
@@ -3529,35 +3529,35 @@ MP2_GetUsrData:
 	str	r7, [r4, r6]	@ tmp228, <variable>.CodecInfo.TotalUsrDatNum
 	ldr	r2, [fp, #-60]	@,
 .L350:
-	movw	lr, #:lower16:114672	@ tmp249,
-	movt	lr, #:upper16:114672	@ tmp249,
-	add	r6, r2, #19712	@ tmp373, prephitmp.1763,
+	movw	lr, #:lower16:117744	@ tmp249,
+	movt	lr, #:upper16:117744	@ tmp249,
+	add	r6, r2, #19968	@ tmp370, prephitmp.1763,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
-	add	r6, r6, #86	@ tmp373, tmp373,
+	add	r6, r6, #214	@ tmp370, tmp370,
 	bl	GetUsd	@
-	movw	r2, #:lower16:79212	@ tmp257,
-	movt	r2, #:upper16:79212	@ tmp257,
-	add	r3, r4, r6, asl #2	@, tmp255, pCtx, tmp373,
+	movw	r2, #:lower16:80748	@ tmp257,
+	movt	r2, #:upper16:80748	@ tmp257,
+	add	r3, r4, r6, asl #2	@, tmp255, pCtx, tmp370,
 	ldr	r2, [r4, r2]	@ temp.1792, <variable>.CodecInfo.TotalUsrDatNum
-	add	r1, r2, #19712	@ tmp258, temp.1792,
-	add	ip, r1, #86	@ tmp258, tmp258,
+	add	r1, r2, #19968	@ tmp258, temp.1792,
+	add	ip, r1, #214	@ tmp258, tmp258,
 	add	r1, r4, ip, asl #2	@, tmp262, pCtx, tmp258,
-	str	r0, [r3, #4]	@ D.39923, <variable>.CodecInfo.pUsrDatArray
+	str	r0, [r3, #4]	@ D.39939, <variable>.CodecInfo.pUsrDatArray
 	ldr	r1, [r1, #4]	@ tmp264, <variable>.CodecInfo.pUsrDatArray
 	cmp	r1, #0	@ tmp264,
 	beq	.L351	@,
 	ldr	r7, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	movw	lr, #:lower16:79184	@ tmp275,
-	movt	lr, #:upper16:79184	@ tmp275,
-	movw	r2, #:lower16:80504	@ tmp292,
-	movt	r2, #:upper16:80504	@ tmp292,
-	movw	ip, #:lower16:114676	@ tmp302,
+	movw	lr, #:lower16:80720	@ tmp275,
+	movt	lr, #:upper16:80720	@ tmp275,
+	movw	r2, #:lower16:82040	@ tmp292,
+	movt	r2, #:upper16:82040	@ tmp292,
+	movw	ip, #:lower16:117748	@ tmp302,
 	ldrd	r8, [r7, #56]	@ <variable>.pts, <variable>.pstExtraData,
 	mov	r7, #1056	@ tmp265,
-	movt	ip, #:upper16:114676	@ tmp302,
-	movw	r1, #:lower16:79180	@ tmp315,
-	movt	r1, #:upper16:79180	@ tmp315,
-	strd	r8, [r0, r7]	@ <variable>.pts, D.39923, tmp265
+	movt	ip, #:upper16:117748	@ tmp302,
+	movw	r1, #:lower16:80716	@ tmp315,
+	movt	r1, #:upper16:80716	@ tmp315,
+	strd	r8, [r0, r7]	@ <variable>.pts, D.39939, tmp265
 	ldr	r0, [r3, #4]	@ tmp270, <variable>.CodecInfo.pUsrDatArray
 	ldr	lr, [r4, lr]	@ <variable>.CodecInfo.SeqCnt, <variable>.CodecInfo.SeqCnt
 	str	lr, [r0, #1040]	@ <variable>.CodecInfo.SeqCnt, <variable>.seq_cnt
@@ -3576,7 +3576,7 @@ MP2_GetUsrData:
 	strb	lr, [r2, #1025]	@ <variable>.top_field_first, <variable>.top_field_first
 	ldr	ip, [r4, r1]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	ldr	r1, [r3, #4]	@ tmp320, <variable>.CodecInfo.pUsrDatArray
-	add	r3, r4, r6, asl #2	@, tmp338, pCtx, tmp373,
+	add	r3, r4, r6, asl #2	@, tmp338, pCtx, tmp370,
 	tst	ip, #524288	@ <variable>.CodecInfo.StreamIntegrality,
 	movne	ip, #3	@ tmp325,
 	moveq	ip, #1	@ tmp333,
@@ -3596,17 +3596,17 @@ MP2_GetUsrData:
 	ldr	ip, [r0, #0]	@ g_event_report.489, g_event_report
 	cmp	ip, #0	@ g_event_report.489,
 	beq	.L355	@,
-	add	r6, r4, r6, asl #2	@, tmp359, pCtx, tmp373,
-	movw	r0, #:lower16:114672	@ tmp353,
-	movt	r0, #:upper16:114672	@ tmp353,
+	add	r6, r4, r6, asl #2	@, tmp359, pCtx, tmp370,
+	movw	r0, #:lower16:117744	@ tmp353,
+	movt	r0, #:upper16:117744	@ tmp353,
 	mov	r1, #6	@,
 	ldr	r2, [r6, #4]	@, <variable>.CodecInfo.pUsrDatArray
 	mov	r3, #1072	@,
 	ldr	r0, [r4, r0]	@, <variable>.ChanID
 	blx	ip	@ g_event_report.489
 .L355:
-	movw	r3, #:lower16:79212	@ tmp362,
-	movt	r3, #:upper16:79212	@ tmp362,
+	movw	r3, #:lower16:80748	@ tmp362,
+	movt	r3, #:upper16:80748	@ tmp362,
 	ldr	r2, [r4, r3]	@ <variable>.CodecInfo.TotalUsrDatNum, <variable>.CodecInfo.TotalUsrDatNum
 	add	r1, r2, #1	@ tmp365, <variable>.CodecInfo.TotalUsrDatNum,
 	str	r1, [r4, r3]	@ tmp365, <variable>.CodecInfo.TotalUsrDatNum
@@ -3621,16 +3621,16 @@ MP2_GetUsrData:
 	bl	dprint_vfmw	@
 	b	.L356	@
 .L397:
-	movw	r0, #:lower16:79152	@,
+	movw	r0, #:lower16:80688	@,
 	movw	r1, #:lower16:.LC23	@,
-	movt	r0, #:upper16:79152	@,
+	movt	r0, #:upper16:80688	@,
 	movt	r1, #:upper16:.LC23	@,
 	str	r0, [fp, #-52]	@, %sfp
 	mov	r0, r8	@, <variable>.CodecInfo.stMp2Packet.IsLastSeg
-	movw	ip, #:lower16:79140	@ tmp171,
-	movw	r3, #:lower16:79136	@,
-	movt	ip, #:upper16:79140	@ tmp171,
-	movt	r3, #:upper16:79136	@,
+	movw	ip, #:lower16:80676	@ tmp171,
+	movw	r3, #:lower16:80672	@,
+	movt	ip, #:upper16:80676	@ tmp171,
+	movt	r3, #:upper16:80672	@,
 	str	ip, [fp, #-56]	@,
 	str	r3, [fp, #-48]	@, %sfp
 	bl	dprint_vfmw	@
@@ -3647,22 +3647,22 @@ MP2_GetUsrData:
 	bl	memcpy	@
 	ldr	r3, [fp, #-56]	@,
 	ldr	r0, [fp, #-48]	@, %sfp
-	movw	ip, #:lower16:79148	@ tmp187,
-	movt	ip, #:upper16:79148	@ tmp187,
+	movw	ip, #:lower16:80684	@ tmp187,
+	movt	ip, #:upper16:80684	@ tmp187,
 	ldr	r2, [r4, r9]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
 	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.stMp2Packet.BsVirAddr, <variable>.CodecInfo.stMp2Packet.BsVirAddr
-	movw	lr, #:lower16:79144	@ tmp193,
-	movt	lr, #:upper16:79144	@ tmp193,
-	add	r2, r2, #3	@ D.39902, <variable>.CodecInfo.stMp2Packet.BsLength,
-	sub	r1, r1, #3	@ D.39905, <variable>.CodecInfo.stMp2Packet.BsVirAddr,
-	str	r1, [r4, r0]	@ D.39905, <variable>.CodecInfo.stMp2Packet.BsVirAddr
+	movw	lr, #:lower16:80680	@ tmp193,
+	movt	lr, #:upper16:80680	@ tmp193,
+	add	r2, r2, #3	@ D.39918, <variable>.CodecInfo.stMp2Packet.BsLength,
+	sub	r1, r1, #3	@ D.39921, <variable>.CodecInfo.stMp2Packet.BsVirAddr,
+	str	r1, [r4, r0]	@ D.39921, <variable>.CodecInfo.stMp2Packet.BsVirAddr
 	ldr	r0, [fp, #-52]	@, %sfp
 	str	r8, [r4, r3]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsVirAddr
 	ldr	r3, [r4, ip]	@, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
-	str	r2, [r4, r0]	@ D.39902, <variable>.CodecInfo.stMp2Packet.BsLength
-	sub	r0, r3, #3	@ D.39904,,
+	str	r2, [r4, r0]	@ D.39918, <variable>.CodecInfo.stMp2Packet.BsLength
+	sub	r0, r3, #3	@ D.39920,,
 	str	r8, [r4, r9]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsLength
-	str	r0, [r4, lr]	@ D.39904, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
+	str	r0, [r4, lr]	@ D.39920, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	mov	r0, r6	@, pBs
 	str	r8, [r4, ip]	@ <variable>.CodecInfo.stMp2Packet.IsLastSeg, <variable>.CodecInfo.stMp2Packet.BsPhyAddr
 	mov	ip, #1	@,
@@ -3676,10 +3676,10 @@ MP2_GetUsrData:
 	bl	BsToNextByte	@
 	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
-	add	r9, r0, #7	@ tmp216, D.39906,
-	cmp	r0, #0	@ D.39906,
-	movlt	r0, r9	@ D.39906, tmp216
-	mov	r3, r0, asr #3	@ tmp217, D.39906,
+	add	r9, r0, #7	@ tmp216, D.39922,
+	cmp	r0, #0	@ D.39922,
+	movlt	r0, r9	@ D.39922, tmp216
+	mov	r3, r0, asr #3	@ tmp217, D.39922,
 	sub	r9, r3, #3	@ RemainByte.1787, tmp217,
 	cmp	r9, #0	@ RemainByte.1787,
 	ble	.L344	@,
@@ -3797,17 +3797,17 @@ MP2_GetImageBuffer:
 	sub	sp, sp, #8	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r5, #:lower16:114672	@ tmp145,
-	movt	r5, #:upper16:114672	@ tmp145,
+	movw	r5, #:lower16:117744	@ tmp145,
+	movt	r5, #:upper16:117744	@ tmp145,
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r1, #1	@,
-	movw	r6, #:lower16:79264	@ tmp147,
+	movw	r6, #:lower16:80800	@ tmp147,
 	ldr	r0, [r0, r5]	@, <variable>.ChanID
-	movt	r6, #:upper16:79264	@ tmp147,
+	movt	r6, #:upper16:80800	@ tmp147,
 	bl	FSP_NewLogicFs	@
-	cmp	r0, #0	@ D.39760,
-	mov	r1, r0	@ D.39760,
-	str	r0, [r4, r6]	@ D.39760, <variable>.CodecInfo.CurFsID
+	cmp	r0, #0	@ D.39776,
+	mov	r1, r0	@ D.39776,
+	str	r0, [r4, r6]	@ D.39776, <variable>.CodecInfo.CurFsID
 	blt	.L405	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
@@ -3818,14 +3818,14 @@ MP2_GetImageBuffer:
 	movw	r1, #:lower16:.LC27	@,
 	movt	r1, #:upper16:.LC27	@,
 	bl	dprint_vfmw	@
-	ldr	r2, [r5, #520]	@ D.39785, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.39785,
+	ldr	r2, [r5, #544]	@ D.39801, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.39801,
 	beq	.L403	@,
-	ldr	r3, [r5, #524]	@ D.39788, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.39788,
+	ldr	r3, [r5, #548]	@ D.39804, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.39804,
 	beq	.L403	@,
-	ldr	ip, [r5, #528]	@ D.39791, <variable>.pstTfOutFs
-	cmp	ip, #0	@ D.39791,
+	ldr	ip, [r5, #552]	@ D.39807, <variable>.pstTfOutFs
+	cmp	ip, #0	@ D.39807,
 	beq	.L403	@,
 	ldr	ip, [ip, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	mov	r0, #18	@,
@@ -3835,16 +3835,16 @@ MP2_GetImageBuffer:
 	movt	r1, #:upper16:.LC28	@,
 	str	ip, [sp, #0]	@ <variable>.PhyAddr,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.39779,
+	mov	r0, #1	@ D.39795,
 .L401:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L403:
-	mov	r0, #1	@ D.39779,
+	mov	r0, #1	@ D.39795,
 	b	.L401	@
 .L405:
-	movw	r7, #:lower16:79260	@ tmp151,
-	movt	r7, #:upper16:79260	@ tmp151,
+	movw	r7, #:lower16:80796	@ tmp151,
+	movt	r7, #:upper16:80796	@ tmp151,
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC25	@,
 	movt	r1, #:upper16:.LC25	@,
@@ -3855,9 +3855,9 @@ MP2_GetImageBuffer:
 	subs	r6, r0, #0	@ pImg,
 	beq	.L400	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
-	movw	sl, #:lower16:79256	@ tmp175,
+	movw	sl, #:lower16:80792	@ tmp175,
 	ldr	r1, [r6, #212]	@, <variable>.p_usrdat
-	movt	sl, #:upper16:79256	@ tmp175,
+	movt	sl, #:upper16:80792	@ tmp175,
 	bl	FreeUsdByDec	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
@@ -3888,30 +3888,30 @@ MP2_GetImageBuffer:
 	cmp	r0, r8	@,
 	bne	.L407	@,
 .L400:
-	movw	r2, #:lower16:79220	@ tmp187,
-	movw	r3, #:lower16:114672	@ tmp189,
-	movt	r2, #:upper16:79220	@ tmp187,
-	movt	r3, #:upper16:114672	@ tmp189,
-	add	r1, r4, #79872	@, pCtx,
+	movw	r2, #:lower16:80756	@ tmp187,
+	movw	r3, #:lower16:117744	@ tmp189,
+	movt	r2, #:upper16:80756	@ tmp187,
+	movt	r3, #:upper16:117744	@ tmp189,
+	add	r1, r4, #81920	@, pCtx,
 	mov	r5, #0	@ tmp188,
-	add	r1, r1, #640	@,,
+	add	r1, r1, #128	@,,
 	str	r5, [r4, r2]	@ tmp188, <variable>.CodecInfo.RefNum
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	bl	FSP_ClearNotInVoQueue	@
-	mov	r0, r5	@ D.39779, tmp188
+	mov	r0, r5	@ D.39795, tmp188
 	b	.L401	@
 .L407:
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r7]	@ D.39777, <variable>.CodecInfo.BwdFsID
-	str	r0, [r4, sl]	@ D.39777, <variable>.CodecInfo.FwdFsID
+	str	r0, [r4, r7]	@ D.39793, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, sl]	@ D.39793, <variable>.CodecInfo.FwdFsID
 	b	.L400	@
 .L406:
 	movw	r1, #:lower16:.LC26	@,
-	movw	r2, #1784	@,
+	movw	r2, #1787	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.39779, pLf
+	mov	r0, r5	@ D.39795, pLf
 	b	.L401	@
 	.fnend
 	.size	MP2_GetImageBuffer, .-MP2_GetImageBuffer
@@ -3932,63 +3932,63 @@ MP2_SetImgFormat:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:114672	@ tmp161,
-	movw	r2, #:lower16:79264	@ tmp163,
-	movt	r1, #:upper16:114672	@ tmp161,
-	movt	r2, #:upper16:79264	@ tmp163,
+	movw	r1, #:lower16:117744	@ tmp161,
+	movw	r2, #:lower16:80800	@ tmp163,
+	movt	r1, #:upper16:117744	@ tmp161,
+	movt	r2, #:upper16:80800	@ tmp163,
 	mov	r6, r0	@ pCtx, pCtx
-	movw	r3, #:lower16:80504	@ tmp160,
-	movt	r3, #:upper16:80504	@ tmp160,
+	movw	r3, #:lower16:82040	@ tmp160,
+	movt	r3, #:upper16:82040	@ tmp160,
 	ldr	r0, [r0, r1]	@, <variable>.ChanID
 	ldr	r1, [r6, r2]	@, <variable>.CodecInfo.CurFsID
 	ldr	r5, [r6, r3]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	bl	FSP_GetFsImagePtr	@
 	subs	r4, r0, #0	@ pImg,
 	ldmeqfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
-	ldrb	ip, [r5, #22]	@ zero_extendqisi2	@ D.39554, <variable>.picture_coding_type
-	ldrb	lr, [r5, #27]	@ zero_extendqisi2	@ D.39560, <variable>.progressive_sequence
-	cmp	ip, #4	@ D.39554,
+	ldrb	ip, [r5, #22]	@ zero_extendqisi2	@ D.39570, <variable>.picture_coding_type
+	ldrb	lr, [r5, #27]	@ zero_extendqisi2	@ D.39576, <variable>.progressive_sequence
+	cmp	ip, #4	@ D.39570,
 	ldr	r8, [r5, #128]	@ vfmt, <variable>.video_format
-	subne	ip, ip, #1	@ tmp165, D.39554,
-	ldr	r3, [r4, #160]	@ D.39561, <variable>.format
+	subne	ip, ip, #1	@ tmp165, D.39570,
+	ldr	r3, [r4, #160]	@ D.39577, <variable>.format
 	moveq	ip, #0	@ prephitmp.1867,
 	andne	ip, ip, #3	@ prephitmp.1867, tmp165,
-	cmp	lr, #0	@ D.39560,
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ D.39563, <variable>.picture_structure
+	cmp	lr, #0	@ D.39576,
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ D.39579, <variable>.picture_structure
 	movne	r0, #4096	@ prephitmp.1893,
 	bne	.L413	@,
-	cmp	r7, #3	@ D.39563,
+	cmp	r7, #3	@ D.39579,
 	beq	.L428	@,
-	movw	r2, #:lower16:79192	@ tmp168,
-	movt	r2, #:upper16:79192	@ tmp168,
+	movw	r2, #:lower16:80728	@ tmp168,
+	movt	r2, #:upper16:80728	@ tmp168,
 	ldr	r0, [r6, r2]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	r0, #0	@ <variable>.CodecInfo.Second_Field,
 	bne	.L415	@,
-	cmp	r7, #1	@ D.39563,
+	cmp	r7, #1	@ D.39579,
 	movne	r0, #0	@, tmp172
 	moveq	r0, #1	@, tmp172
 	mov	r0, r0, asl #12	@ prephitmp.1893, tmp172,
 .L413:
-	movw	r2, #:lower16:80504	@ tmp177,
-	movt	r2, #:upper16:80504	@ tmp177,
-	orr	r3, r7, r3, lsr #10	@, tmp192, D.39563, D.39561,
+	movw	r2, #:lower16:82040	@ tmp177,
+	movt	r2, #:upper16:82040	@ tmp177,
+	orr	r3, r7, r3, lsr #10	@, tmp192, D.39579, D.39577,
 	and	r8, r8, #3	@ tmp189, vfmt,
 	ldr	r2, [r6, r2]	@ <variable>.pSyntaxInfNew, <variable>.pSyntaxInfNew
 	and	r3, r3, #3	@ tmp193, tmp192,
 	ldr	r2, [r2, #84]	@ <variable>.aspect_ratio_information, <variable>.aspect_ratio_information
 	str	ip, [r4, #156]	@ prephitmp.1867, <variable>.bottom_fld_type
-	sub	r2, r2, #1	@ D.41146, <variable>.aspect_ratio_information,
+	sub	r2, r2, #1	@ D.41162, <variable>.aspect_ratio_information,
 	str	ip, [r4, #152]	@ prephitmp.1867, <variable>.top_fld_type
-	cmp	r2, #2	@ D.41146,
+	cmp	r2, #2	@ D.41162,
 	movwls	r1, #:lower16:.LANCHOR0	@ tmp179,
 	movtls	r1, #:upper16:.LANCHOR0	@ tmp179,
-	addls	r2, r1, r2, asl #2	@, tmp182, tmp179, D.41146,
+	addls	r2, r1, r2, asl #2	@, tmp182, tmp179, D.41162,
 	movhi	r1, #0	@ prephitmp.1894,
 	movhi	r2, r1	@ prephitmp.1896, prephitmp.1894
 	ldrls	r1, [r2, #128]	@ prephitmp.1894, CSWTCH.526
 	andls	r2, r1, #7	@ pretmp.1895, prephitmp.1894,
 	movls	r2, r2, asl #14	@ prephitmp.1896, pretmp.1895,
-	cmp	lr, #0	@ D.39560,
+	cmp	lr, #0	@ D.39576,
 	moveq	lr, #256	@ tmp188,
 	movne	lr, #0	@ tmp188,
 	orr	lr, lr, r8, asl #5	@, tmp191, tmp188, tmp189,
@@ -4000,32 +4000,32 @@ MP2_SetImgFormat:
 	str	lr, [r4, #160]	@ tmp198, <variable>.format
 	bl	SetAspectRatio	@
 	mov	r3, #3	@ tmp199,
-	str	r3, [r4, #384]	@ tmp199, <variable>.ImageDnr.video_standard
+	str	r3, [r4, #408]	@ tmp199, <variable>.ImageDnr.video_standard
 	mov	r1, #1	@ tmp202,
 	ldrb	ip, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	mov	r2, #1	@ tmp209,
-	strb	r1, [r4, #379]	@ tmp202, <variable>.ImageDnr.use_pic_qp_en
+	strb	r1, [r4, #403]	@ tmp202, <variable>.ImageDnr.use_pic_qp_en
 	cmp	ip, #3	@ <variable>.picture_structure,
 	movne	r1, #4	@ iftmp.475,
 	moveq	r1, #0	@ iftmp.475,
-	strb	r1, [r4, #372]	@ iftmp.475, <variable>.ImageDnr.pic_structure
-	ldr	r0, [r6, #4]	@ D.39601, <variable>.pMp2DecParam
-	cmp	r0, #0	@ D.39601,
-	streqb	r0, [r4, #379]	@ D.39601, <variable>.ImageDnr.use_pic_qp_en
+	strb	r1, [r4, #396]	@ iftmp.475, <variable>.ImageDnr.pic_structure
+	ldr	r0, [r6, #4]	@ D.39617, <variable>.pMp2DecParam
+	cmp	r0, #0	@ D.39617,
+	streqb	r0, [r4, #403]	@ D.39617, <variable>.ImageDnr.use_pic_qp_en
 	ldrneb	r0, [r0, #144]	@ zero_extendqisi2	@ prephitmp.1868, <variable>.EstmatedPicQp
 	moveq	ip, #32	@ tmp208,
-	strb	r2, [r4, #377]	@ tmp209, <variable>.ImageDnr.chroma_format_idc
+	strb	r2, [r4, #401]	@ tmp209, <variable>.ImageDnr.chroma_format_idc
 	moveq	r0, ip	@ prephitmp.1868, tmp208
-	streq	ip, [r4, #388]	@ tmp208, <variable>.ImageDnr.QP_Y
-	strne	r0, [r4, #388]	@ prephitmp.1868, <variable>.ImageDnr.QP_Y
-	str	r0, [r4, #392]	@ prephitmp.1868, <variable>.ImageDnr.QP_U
-	str	r0, [r4, #396]	@ prephitmp.1868, <variable>.ImageDnr.QP_V
+	streq	ip, [r4, #412]	@ tmp208, <variable>.ImageDnr.QP_Y
+	strne	r0, [r4, #412]	@ prephitmp.1868, <variable>.ImageDnr.QP_Y
+	str	r0, [r4, #416]	@ prephitmp.1868, <variable>.ImageDnr.QP_U
+	str	r0, [r4, #420]	@ prephitmp.1868, <variable>.ImageDnr.QP_V
 	ldr	r3, [r5, #72]	@ <variable>.frame_rate, <variable>.frame_rate
 	str	r3, [r4, #188]	@ <variable>.frame_rate, <variable>.frame_rate
 	ldr	r3, [r5, #48]	@ prephitmp.1869, <variable>.horizontal_size
 	str	r3, [r4, #164]	@ prephitmp.1869, <variable>.image_width
-	ldr	r2, [r5, #52]	@ D.39611, <variable>.vertical_size
-	str	r2, [r4, #168]	@ D.39611, <variable>.image_height
+	ldr	r2, [r5, #52]	@ D.39627, <variable>.vertical_size
+	str	r2, [r4, #168]	@ D.39627, <variable>.image_height
 	ldr	r1, [r6, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	ldr	ip, [r1, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	ip, #25	@ <variable>.eCapLevel,
@@ -4037,15 +4037,15 @@ MP2_SetImgFormat:
 	str	ip, [r4, #180]	@ tmp226, <variable>.disp_center_x
 	mov	r3, r1, lsr #1	@ tmp228, <variable>.image_height,
 	str	r3, [r4, #184]	@ tmp228, <variable>.disp_center_y
-	ldr	r3, [r5, #148]	@ D.39643, <variable>.display_horizontal_size
-	cmp	r3, #0	@ D.39643,
+	ldr	r3, [r5, #148]	@ D.39659, <variable>.display_horizontal_size
+	cmp	r3, #0	@ D.39659,
 	beq	.L423	@,
 	ldr	lr, [r5, #152]	@ <variable>.display_vertical_size, <variable>.display_vertical_size
 	cmp	lr, #0	@ <variable>.display_vertical_size,
 	beq	.L423	@,
-	cmp	r2, r3	@ <variable>.image_width, D.39643
+	cmp	r2, r3	@ <variable>.image_width, D.39659
 	strls	r2, [r4, #172]	@, <variable>.image_width, <variable>.disp_width
-	strhi	r3, [r4, #172]	@, D.39643, <variable>.disp_width
+	strhi	r3, [r4, #172]	@, D.39659, <variable>.disp_width
 	ldr	r2, [r5, #152]	@ <variable>.display_vertical_size, <variable>.display_vertical_size
 	cmp	r1, r2	@ <variable>.image_height, <variable>.display_vertical_size
 	strls	r1, [r4, #176]	@, <variable>.image_height, <variable>.disp_height
@@ -4057,19 +4057,19 @@ MP2_SetImgFormat:
 .L424:
 	ldrb	lr, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
 	mov	r0, r6	@, pCtx
-	str	lr, [r4, #484]	@ <variable>.progressive_sequence, <variable>.optm_inf.IsProgressiveSeq
+	str	lr, [r4, #508]	@ <variable>.progressive_sequence, <variable>.optm_inf.IsProgressiveSeq
 	ldrb	ip, [r5, #18]	@ zero_extendqisi2	@ <variable>.progressive_frame, <variable>.progressive_frame
-	str	ip, [r4, #488]	@ <variable>.progressive_frame, <variable>.optm_inf.IsProgressiveFrm
+	str	ip, [r4, #512]	@ <variable>.progressive_frame, <variable>.optm_inf.IsProgressiveFrm
 	ldr	r3, [r5, #144]	@ <variable>.matrix_coefficients, <variable>.matrix_coefficients
-	str	r3, [r4, #496]	@ <variable>.matrix_coefficients, <variable>.optm_inf.MatrixCoef
+	str	r3, [r4, #520]	@ <variable>.matrix_coefficients, <variable>.optm_inf.MatrixCoef
 	bl	MP2_CalcRealEncFrameRate	@
-	movw	r0, #:lower16:79348	@ tmp240,
-	movt	r0, #:upper16:79348	@ tmp240,
+	movw	r0, #:lower16:80884	@ tmp240,
+	movt	r0, #:upper16:80884	@ tmp240,
 	ldr	r1, [r6, r0]	@ <variable>.CodecInfo.RealFrmRate, <variable>.CodecInfo.RealFrmRate
-	str	r1, [r4, #492]	@ <variable>.CodecInfo.RealFrmRate, <variable>.optm_inf.RealFrmRate
+	str	r1, [r4, #516]	@ <variable>.CodecInfo.RealFrmRate, <variable>.optm_inf.RealFrmRate
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L415:
-	subs	r2, r7, #1	@ tmp175, D.39563,
+	subs	r2, r7, #1	@ tmp175, D.39579,
 	movne	r2, #1	@ tmp175
 	mov	r0, r2, asl #12	@ prephitmp.1893, tmp175,
 	b	.L413	@
@@ -4079,22 +4079,22 @@ MP2_SetImgFormat:
 	mov	r0, r0, asl #12	@ prephitmp.1893, tmp167,
 	b	.L413	@
 .L429:
-	ldr	r1, [r4, #192]	@ D.39616, <variable>.image_stride
-	add	r0, r2, #15	@ tmp215, D.39611,
+	ldr	r1, [r4, #192]	@ D.39632, <variable>.image_stride
+	add	r0, r2, #15	@ tmp215, D.39627,
 	ldr	r3, [r4, #104]	@ <variable>.luma_phy_addr, <variable>.luma_phy_addr
 	mov	r2, r0, lsr #4	@ tmp216, tmp215,
 	ldr	r0, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
-	mov	lr, r1, asl #4	@ tmp214, D.39616,
-	add	ip, r3, r1	@ tmp221, <variable>.luma_phy_addr, D.39616
+	mov	lr, r1, asl #4	@ tmp214, D.39632,
+	add	ip, r3, r1	@ tmp221, <variable>.luma_phy_addr, D.39632
 	str	ip, [r4, #96]	@ tmp221, <variable>.btm_luma_phy_addr
-	mul	r2, r2, lr	@ D.39622, tmp216, tmp214
+	mul	r2, r2, lr	@ D.39638, tmp216, tmp214
 	str	r3, [r4, #120]	@ <variable>.luma_phy_addr, <variable>.luma_2d_phy_addr
 	str	r0, [r4, #48]	@ <variable>.luma_vir_addr, <variable>.luma_2d_vir_addr
 	str	r3, [r4, #88]	@ <variable>.luma_phy_addr, <variable>.top_luma_phy_addr
-	add	ip, r2, r3	@ tmp218, D.39622, <variable>.luma_phy_addr
-	add	lr, r0, r2	@ tmp220, <variable>.luma_vir_addr, D.39622
+	add	ip, r2, r3	@ tmp218, D.39638, <variable>.luma_phy_addr
+	add	lr, r0, r2	@ tmp220, <variable>.luma_vir_addr, D.39638
 	str	ip, [r4, #108]	@ tmp218, <variable>.chrom_phy_addr
-	add	r0, ip, r1	@ tmp222, tmp218, D.39616
+	add	r0, ip, r1	@ tmp222, tmp218, D.39632
 	str	lr, [r4, #36]	@ tmp220, <variable>.chrom_vir_addr
 	str	r0, [r4, #100]	@ tmp222, <variable>.btm_chrom_phy_addr
 	mov	r0, ip	@, tmp218
@@ -4127,27 +4127,26 @@ MPEG2DEC_VDMPostProc:
 	sub	sp, sp, #8	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
+	ldrb	ip, [r0, #152]	@ zero_extendqisi2	@ <variable>.Mp2DecParam.EstmatedPicQp, <variable>.Mp2DecParam.EstmatedPicQp
 	mov	r4, r0	@ pCtx, pCtx
-	ldrb	ip, [r4, #152]	@ zero_extendqisi2	@ <variable>.Mp2DecParam.EstmatedPicQp, <variable>.Mp2DecParam.EstmatedPicQp
-	movw	r0, #:lower16:79360	@ tmp161,
-	movt	r0, #:upper16:79360	@ tmp161,
-	movw	r8, #:lower16:80504	@ tmp160,
-	movt	r8, #:upper16:80504	@ tmp160,
 	mov	r2, r1	@, ErrRatio
-	strb	ip, [r4, r0]	@ <variable>.Mp2DecParam.EstmatedPicQp, <variable>.CodecInfo.EstmatedPicQp
 	mov	r7, r1	@ ErrRatio, ErrRatio
+	movw	r8, #:lower16:82040	@ tmp160,
+	mov	r1, #80896	@ tmp161,
+	movt	r8, #:upper16:82040	@ tmp160,
+	strb	ip, [r4, r1]	@ <variable>.Mp2DecParam.EstmatedPicQp, <variable>.CodecInfo.EstmatedPicQp
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC29	@,
 	movt	r1, #:upper16:.LC29	@,
 	ldr	r5, [r4, r8]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
+	movw	r8, #:lower16:117744	@ tmp166,
 	bl	MP2_RecordVFMWState	@
-	movw	r8, #:lower16:114672	@ tmp166,
+	movt	r8, #:upper16:117744	@ tmp166,
 	mov	r0, r4	@, pCtx
-	movt	r8, #:upper16:114672	@ tmp166,
-	movw	r6, #:lower16:79264	@ tmp168,
-	movt	r6, #:upper16:79264	@ tmp168,
+	movw	r6, #:lower16:80800	@ tmp168,
+	movt	r6, #:upper16:80800	@ tmp168,
 	bl	MP2_ClearCurPic	@
 	add	r0, r4, #8	@, pCtx,
 	movw	r1, #45320	@,
@@ -4155,14 +4154,14 @@ MPEG2DEC_VDMPostProc:
 	ldr	r1, [r4, r6]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
-	movw	r2, #:lower16:79260	@ tmp172,
-	movt	r2, #:upper16:79260	@ tmp172,
+	movw	r2, #:lower16:80796	@ tmp172,
+	movt	r2, #:upper16:80796	@ tmp172,
 	ldr	r1, [r4, r2]	@, <variable>.CodecInfo.BwdFsID
 	mov	r6, r0	@ pCurImg,
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
-	movw	r3, #:lower16:79256	@ tmp176,
-	movt	r3, #:upper16:79256	@ tmp176,
+	movw	r3, #:lower16:80792	@ tmp176,
+	movt	r3, #:upper16:80792	@ tmp176,
 	ldr	r1, [r4, r3]	@, <variable>.CodecInfo.FwdFsID
 	mov	sl, r0	@ pBwdImg,
 	ldr	r0, [r4, r8]	@, <variable>.ChanID
@@ -4170,11 +4169,11 @@ MPEG2DEC_VDMPostProc:
 	cmp	r6, #0	@ pCurImg,
 	mov	ip, r0	@ pFwdImg,
 	beq	.L457	@,
-	ldrb	r1, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
+	ldrb	r0, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	r7, #0	@ ErrRatio,
 	movw	lr, #45328	@ tmp179,
 	movlt	r7, #0	@ iftmp.513,
-	strb	r1, [r4, lr]	@ <variable>.picture_coding_type, <variable>.CodecInfo.LastDecPicCodingType
+	strb	r0, [r4, lr]	@ <variable>.picture_coding_type, <variable>.CodecInfo.LastDecPicCodingType
 	blt	.L434	@,
 	cmp	r7, #100	@ ErrRatio,
 	movge	r7, #100	@ iftmp.513,
@@ -4183,8 +4182,8 @@ MPEG2DEC_VDMPostProc:
 	ldrb	r3, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	r3, #3	@ <variable>.picture_coding_type,
 	beq	.L435	@,
-	ldr	r0, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r0, #0]	@ <variable>.s32RefErrThr, <variable>.s32RefErrThr
+	ldr	r1, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	ldr	r2, [r1, #0]	@ <variable>.s32RefErrThr, <variable>.s32RefErrThr
 	cmp	r7, r2	@ iftmp.513, <variable>.s32RefErrThr
 	bhi	.L458	@,
 .L435:
@@ -4194,135 +4193,135 @@ MPEG2DEC_VDMPostProc:
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	MP2_SetImgFormat	@
-	ldrb	r3, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
-	cmp	r3, #3	@ <variable>.picture_structure,
+	ldrb	r0, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
+	cmp	r0, #3	@ <variable>.picture_structure,
 	beq	.L443	@,
-	movw	r1, #:lower16:79192	@ tmp243,
-	movt	r1, #:upper16:79192	@ tmp243,
-	ldr	ip, [r4, r1]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
+	movw	lr, #:lower16:80728	@ tmp243,
+	movt	lr, #:upper16:80728	@ tmp243,
+	ldr	ip, [r4, lr]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	ip, #1	@ <variable>.CodecInfo.Second_Field,
-	movne	r0, #1	@ D.40657,
+	movne	r0, #1	@ D.40673,
 	beq	.L443	@,
 .L432:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L443:
-	movw	r0, #:lower16:79196	@ tmp227,
-	movt	r0, #:upper16:79196	@ tmp227,
-	movw	r3, #:lower16:79196	@ tmp230,
-	movw	r1, #:lower16:79200	@ tmp232,
-	ldr	lr, [r4, r0]	@ temp.1980, <variable>.CodecInfo.pUsrDatArray
-	movt	r1, #:upper16:79200	@ tmp232,
-	movt	r3, #:upper16:79196	@ tmp230,
+	movw	r3, #:lower16:80732	@ tmp227,
+	movt	r3, #:upper16:80732	@ tmp227,
+	movw	r0, #:lower16:80732	@ tmp230,
+	movw	lr, #:lower16:80736	@ tmp232,
+	ldr	r1, [r4, r3]	@ temp.1980, <variable>.CodecInfo.pUsrDatArray
+	movt	lr, #:upper16:80736	@ tmp232,
+	movt	r0, #:upper16:80732	@ tmp230,
 	mov	ip, #0	@ tmp231,
-	cmp	lr, #0	@ temp.1980,
-	strne	lr, [r6, #212]	@ temp.1980, <variable>.p_usrdat
-	movne	lr, #0	@ tmp229,
-	strne	lr, [r4, r0]	@ tmp229, <variable>.CodecInfo.pUsrDatArray
-	str	ip, [r4, r3]	@ tmp231, <variable>.CodecInfo.pUsrDatArray
-	movw	r0, #:lower16:79200	@ tmp235,
-	ldr	r2, [r4, r1]	@ temp.1982, <variable>.CodecInfo.pUsrDatArray
-	movt	r0, #:upper16:79200	@ tmp235,
-	movw	r3, #:lower16:79204	@ tmp237,
-	movt	r3, #:upper16:79204	@ tmp237,
+	cmp	r1, #0	@ temp.1980,
+	strne	r1, [r6, #212]	@ temp.1980, <variable>.p_usrdat
+	movne	r1, #0	@ tmp229,
+	strne	r1, [r4, r3]	@ tmp229, <variable>.CodecInfo.pUsrDatArray
+	str	ip, [r4, r0]	@ tmp231, <variable>.CodecInfo.pUsrDatArray
+	movw	r3, #:lower16:80736	@ tmp235,
+	ldr	r2, [r4, lr]	@ temp.1982, <variable>.CodecInfo.pUsrDatArray
+	movt	r3, #:upper16:80736	@ tmp235,
+	movw	r0, #:lower16:80740	@ tmp237,
+	movt	r0, #:upper16:80740	@ tmp237,
 	cmp	r2, ip	@ temp.1982,
 	strne	r2, [r6, #216]	@ temp.1982, <variable>.p_usrdat
-	strne	ip, [r4, r1]	@ tmp231, <variable>.CodecInfo.pUsrDatArray
-	mov	r1, #0	@ tmp236,
-	str	r1, [r4, r0]	@ tmp236, <variable>.CodecInfo.pUsrDatArray
-	movw	ip, #:lower16:79204	@ tmp240,
-	ldr	lr, [r4, r3]	@ temp.1983, <variable>.CodecInfo.pUsrDatArray
-	movt	ip, #:upper16:79204	@ tmp240,
-	movw	r0, #:lower16:79208	@ tmp242,
-	movt	r0, #:upper16:79208	@ tmp242,
-	cmp	lr, r1	@ temp.1983,
-	strne	lr, [r6, #220]	@ temp.1983, <variable>.p_usrdat
-	mov	lr, #0	@ tmp241,
-	strne	r1, [r4, r3]	@ tmp236, <variable>.CodecInfo.pUsrDatArray
-	movw	r3, #:lower16:79212	@ tmp249,
-	str	lr, [r4, ip]	@ tmp241, <variable>.CodecInfo.pUsrDatArray
-	movt	r3, #:upper16:79212	@ tmp249,
-	ldr	r2, [r4, r0]	@ D.40696, <variable>.CodecInfo.pUsrDatArray
-	movw	ip, #:lower16:79208	@ tmp247,
-	movt	ip, #:upper16:79208	@ tmp247,
-	cmp	r2, lr	@ D.40696,
-	strne	r2, [r6, #224]	@ D.40696, <variable>.p_usrdat
-	strne	lr, [r4, r0]	@ tmp241, <variable>.CodecInfo.pUsrDatArray
-	mov	r0, #0	@ tmp248,
-	ldr	lr, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	str	r0, [r4, ip]	@ tmp248, <variable>.CodecInfo.pUsrDatArray
-	str	r0, [r4, r3]	@ tmp248, <variable>.CodecInfo.TotalUsrDatNum
-	ldr	r2, [lr, #12]	@ <variable>.s32DecOrderOutput, <variable>.s32DecOrderOutput
+	strne	ip, [r4, lr]	@ tmp231, <variable>.CodecInfo.pUsrDatArray
+	mov	lr, #0	@ tmp236,
+	str	lr, [r4, r3]	@ tmp236, <variable>.CodecInfo.pUsrDatArray
+	movw	ip, #:lower16:80740	@ tmp240,
+	ldr	r1, [r4, r0]	@ temp.1983, <variable>.CodecInfo.pUsrDatArray
+	movt	ip, #:upper16:80740	@ tmp240,
+	movw	r3, #:lower16:80744	@ tmp242,
+	movt	r3, #:upper16:80744	@ tmp242,
+	cmp	r1, lr	@ temp.1983,
+	strne	r1, [r6, #220]	@ temp.1983, <variable>.p_usrdat
+	mov	r1, #0	@ tmp241,
+	strne	lr, [r4, r0]	@ tmp236, <variable>.CodecInfo.pUsrDatArray
+	str	r1, [r4, ip]	@ tmp241, <variable>.CodecInfo.pUsrDatArray
+	movw	ip, #:lower16:80744	@ tmp247,
+	ldr	r2, [r4, r3]	@ D.40712, <variable>.CodecInfo.pUsrDatArray
+	movt	ip, #:upper16:80744	@ tmp247,
+	cmp	r2, r1	@ D.40712,
+	strne	r2, [r6, #224]	@ D.40712, <variable>.p_usrdat
+	ldr	r0, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	strne	r1, [r4, r3]	@ tmp241, <variable>.CodecInfo.pUsrDatArray
+	movw	r3, #:lower16:80748	@ tmp249,
+	movt	r3, #:upper16:80748	@ tmp249,
+	mov	r1, #0	@ tmp248,
+	str	r1, [r4, ip]	@ tmp248, <variable>.CodecInfo.pUsrDatArray
+	str	r1, [r4, r3]	@ tmp248, <variable>.CodecInfo.TotalUsrDatNum
+	ldr	r2, [r0, #12]	@ <variable>.s32DecOrderOutput, <variable>.s32DecOrderOutput
 	cmp	r2, #1	@ <variable>.s32DecOrderOutput,
 	beq	.L444	@,
-	ldrb	r1, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
-	cmp	r1, #3	@ <variable>.picture_coding_type,
+	ldrb	lr, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
+	cmp	lr, #3	@ <variable>.picture_coding_type,
 	beq	.L444	@,
-	movw	r2, #:lower16:79256	@ tmp254,
-	movt	r2, #:upper16:79256	@ tmp254,
-	movw	lr, #:lower16:79268	@ tmp255,
-	movt	lr, #:upper16:79268	@ tmp255,
+	movw	r2, #:lower16:80792	@ tmp254,
+	movt	r2, #:upper16:80792	@ tmp254,
+	movw	r0, #:lower16:80804	@ tmp255,
+	movt	r0, #:upper16:80804	@ tmp255,
 	ldr	r1, [r4, r2]	@ prephitmp.1919,
-	str	r1, [r4, lr]	@ prephitmp.1919, <variable>.CodecInfo.ToQueFsID
+	str	r1, [r4, r0]	@ prephitmp.1919, <variable>.CodecInfo.ToQueFsID
 .L446:
 	cmn	r1, #1	@ prephitmp.1919,
 	beq	.L447	@,
-	movw	r6, #:lower16:114672	@ tmp260,
-	movt	r6, #:upper16:114672	@ tmp260,
+	movw	r6, #:lower16:117744	@ tmp260,
+	movt	r6, #:upper16:117744	@ tmp260,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetDisplay	@
 	cmp	r0, #1	@,
 	beq	.L448	@,
-	movw	ip, #:lower16:79268	@ tmp264,
-	movt	ip, #:upper16:79268	@ tmp264,
+	movw	lr, #:lower16:80804	@ tmp264,
+	movt	lr, #:upper16:80804	@ tmp264,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.ToQueFsID
+	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.ToQueFsID
 	bl	FSP_GetDisplay	@
 	cmp	r0, #2	@,
 	beq	.L448	@,
 .L447:
-	ldrb	r3, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
-	cmp	r3, #1	@ <variable>.progressive_sequence,
+	ldrb	ip, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
+	cmp	ip, #1	@ <variable>.progressive_sequence,
 	beq	.L459	@,
 	ldrb	r2, [r5, #18]	@ zero_extendqisi2	@ <variable>.progressive_frame, <variable>.progressive_frame
 	cmp	r2, #1	@ <variable>.progressive_frame,
 	beq	.L460	@,
-	movw	lr, #:lower16:79344	@ tmp350,
-	movt	lr, #:upper16:79344	@ tmp350,
-	movw	r0, #:lower16:79340	@ tmp353,
-	movt	r0, #:upper16:79340	@ tmp353,
-	ldr	r2, [r4, lr]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	movw	r0, #:lower16:80880	@ tmp350,
+	movt	r0, #:upper16:80880	@ tmp350,
+	movw	lr, #:lower16:80876	@ tmp353,
+	movt	lr, #:upper16:80876	@ tmp353,
+	ldr	r2, [r4, r0]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
 	add	r1, r2, #1	@ temp.1979, <variable>.GopFrmCnt,
-	str	r1, [r4, lr]	@ temp.1979, <variable>.GopFrmCnt
-	mov	ip, r1, asl #1	@ tmp354, temp.1979,
-	str	ip, [r4, r0]	@ tmp354, <variable>.GopFldCnt
+	str	r1, [r4, r0]	@ temp.1979, <variable>.GopFrmCnt
+	mov	r3, r1, asl #1	@ tmp354, temp.1979,
+	str	r3, [r4, lr]	@ tmp354, <variable>.GopFldCnt
 .L454:
-	movw	r2, #:lower16:79336	@ tmp355,
-	movt	r2, #:upper16:79336	@ tmp355,
-	movw	r3, #:lower16:79188	@ tmp359,
-	movt	r3, #:upper16:79188	@ tmp359,
+	movw	r2, #:lower16:80872	@ tmp355,
+	movt	r2, #:upper16:80872	@ tmp355,
+	movw	r3, #:lower16:80724	@ tmp359,
+	movt	r3, #:upper16:80724	@ tmp359,
 	ldr	ip, [r4, r2]	@ <variable>.GopFrmCntNoRpt, <variable>.GopFrmCntNoRpt
-	mov	r0, #1	@ D.40657,
-	add	lr, ip, r0	@ tmp358, <variable>.GopFrmCntNoRpt,
-	str	lr, [r4, r2]	@ tmp358, <variable>.GopFrmCntNoRpt
-	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
-	add	ip, r1, r0	@ tmp362, <variable>.CodecInfo.Frame_Cnt,
+	mov	r0, #1	@ D.40673,
+	add	r1, ip, r0	@ tmp358, <variable>.GopFrmCntNoRpt,
+	str	r1, [r4, r2]	@ tmp358, <variable>.GopFrmCntNoRpt
+	ldr	lr, [r4, r3]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
+	add	ip, lr, r0	@ tmp362, <variable>.CodecInfo.Frame_Cnt,
 	str	ip, [r4, r3]	@ tmp362,
 	b	.L432	@
 .L458:
-	movw	r5, #:lower16:114672	@ tmp185,
-	movw	r7, #:lower16:79260	@ tmp187,
-	movt	r5, #:upper16:114672	@ tmp185,
-	movt	r7, #:upper16:79260	@ tmp187,
+	movw	r5, #:lower16:117744	@ tmp185,
+	movw	r7, #:lower16:80796	@ tmp187,
+	movt	r5, #:upper16:117744	@ tmp185,
+	movt	r7, #:upper16:80796	@ tmp187,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.BwdFsID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pImg,
 	beq	.L436	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
-	movw	sl, #:lower16:79256	@ tmp211,
+	movw	sl, #:lower16:80792	@ tmp211,
 	ldr	r1, [r6, #212]	@, <variable>.p_usrdat
-	movt	sl, #:upper16:79256	@ tmp211,
+	movt	sl, #:upper16:80792	@ tmp211,
 	bl	FreeUsdByDec	@
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	ldr	r1, [r6, #216]	@, <variable>.p_usrdat
@@ -4354,51 +4353,51 @@ MPEG2DEC_VDMPostProc:
 	beq	.L436	@,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r7]	@ D.40688, <variable>.CodecInfo.BwdFsID
-	str	r0, [r4, sl]	@ D.40688, <variable>.CodecInfo.FwdFsID
+	str	r0, [r4, r7]	@ D.40704, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, sl]	@ D.40704, <variable>.CodecInfo.FwdFsID
 .L436:
-	movw	r1, #:lower16:79220	@ tmp223,
-	movt	r1, #:upper16:79220	@ tmp223,
+	movw	lr, #:lower16:80756	@ tmp223,
+	movt	lr, #:upper16:80756	@ tmp223,
 	mov	ip, #0	@ tmp224,
-	mov	r0, #1	@ D.40657,
-	str	ip, [r4, r1]	@ tmp224,
+	mov	r0, #1	@ D.40673,
+	str	ip, [r4, lr]	@ tmp224,
 	b	.L432	@
 .L460:
-	movw	r2, #:lower16:79344	@ tmp340,
-	movt	r2, #:upper16:79344	@ tmp340,
-	movw	ip, #:lower16:79340	@ tmp344,
-	movt	ip, #:upper16:79340	@ tmp344,
-	ldr	r3, [r4, r2]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
-	ldr	r0, [r4, ip]	@ <variable>.GopFldCnt, <variable>.GopFldCnt
-	add	lr, r3, #1	@ tmp343, <variable>.GopFrmCnt,
-	str	lr, [r4, r2]	@ tmp343, <variable>.GopFrmCnt
+	movw	r2, #:lower16:80880	@ tmp340,
+	movt	r2, #:upper16:80880	@ tmp340,
+	movw	r3, #:lower16:80876	@ tmp344,
+	movt	r3, #:upper16:80876	@ tmp344,
+	ldr	ip, [r4, r2]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	ldr	lr, [r4, r3]	@ <variable>.GopFldCnt, <variable>.GopFldCnt
+	add	r0, ip, #1	@ tmp343, <variable>.GopFrmCnt,
+	str	r0, [r4, r2]	@ tmp343, <variable>.GopFrmCnt
 	ldrb	r1, [r5, #16]	@ zero_extendqisi2	@ <variable>.repeat_first_field, <variable>.repeat_first_field
-	add	r3, r0, #2	@ tmp346, <variable>.GopFldCnt,
-	add	lr, r3, r1	@ tmp349, tmp346, <variable>.repeat_first_field
-	str	lr, [r4, ip]	@ tmp349, <variable>.GopFldCnt
+	add	ip, lr, #2	@ tmp346, <variable>.GopFldCnt,
+	add	r0, ip, r1	@ tmp349, tmp346, <variable>.repeat_first_field
+	str	r0, [r4, r3]	@ tmp349, <variable>.GopFldCnt
 	b	.L454	@
 .L448:
-	movw	r7, #:lower16:114672	@ tmp266,
-	movw	r8, #:lower16:79268	@ tmp268,
-	movt	r7, #:upper16:114672	@ tmp266,
-	movt	r8, #:upper16:79268	@ tmp268,
+	movw	r7, #:lower16:117744	@ tmp266,
+	movw	r8, #:lower16:80804	@ tmp268,
+	movt	r7, #:upper16:117744	@ tmp266,
+	movt	r8, #:upper16:80804	@ tmp268,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	ldr	r1, [r4, r8]	@, <variable>.CodecInfo.ToQueFsID
 	bl	FSP_GetFsImagePtr	@
 	subs	r6, r0, #0	@ pToQueImg,
 	beq	.L461	@,
-	ldr	r2, [r6, #200]	@ D.40721, <variable>.error_level
-	cmp	r2, #0	@ D.40721,
+	ldr	r2, [r6, #200]	@ D.40737, <variable>.error_level
+	cmp	r2, #0	@ D.40737,
 	beq	.L450	@,
 	ldr	sl, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r3, [sl, #4]	@ D.40723, <variable>.s32OutErrThr
-	cmp	r2, r3	@ D.40721, D.40723
+	ldr	r3, [sl, #4]	@ D.40739, <variable>.s32OutErrThr
+	cmp	r2, r3	@ D.40737, D.40739
 	bhi	.L451	@,
 .L450:
-	movw	r8, #:lower16:79268	@ tmp272,
-	movt	r8, #:upper16:79268	@ tmp272,
-	movw	r7, #:lower16:114672	@ tmp273,
-	movt	r7, #:upper16:114672	@ tmp273,
+	movw	r8, #:lower16:80804	@ tmp272,
+	movt	r8, #:upper16:80804	@ tmp272,
+	movw	r7, #:lower16:117744	@ tmp273,
+	movt	r7, #:upper16:117744	@ tmp273,
 	ldr	sl, [r4, r8]	@ temp.1967, <variable>.CodecInfo.ToQueFsID
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	mov	r1, sl	@, temp.1967
@@ -4406,16 +4405,16 @@ MPEG2DEC_VDMPostProc:
 	mov	r2, sl	@, temp.1967
 	movw	r1, #:lower16:.LC32	@,
 	movt	r1, #:upper16:.LC32	@,
-	mov	r3, r0	@ D.40726,
+	mov	r3, r0	@ D.40742,
 	mov	r0, #12	@,
 	bl	dprint_vfmw	@
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	ldr	r1, [r4, r8]	@, <variable>.CodecInfo.ToQueFsID
 	mov	r2, #1	@,
 	bl	FSP_SetDisplay	@
-	add	r2, r4, #79872	@, pCtx,
+	add	r2, r4, #81920	@, pCtx,
 	ldr	r0, [r4, r7]	@ <variable>.ChanID, <variable>.ChanID
-	add	r3, r2, #640	@,,
+	add	r3, r2, #128	@,,
 	mov	r1, #3	@,
 	mov	r2, r4	@, pCtx
 	str	r6, [sp, #0]	@ pToQueImg,
@@ -4443,30 +4442,30 @@ MPEG2DEC_VDMPostProc:
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	ldr	r1, [r4, r8]	@, <variable>.CodecInfo.ToQueFsID
 	bl	FSP_SetDisplay	@
-	mov	r0, r5	@ D.40657, tmp287
+	mov	r0, r5	@ D.40673, tmp287
 	b	.L432	@
 .L444:
-	movw	r3, #:lower16:79264	@ tmp258,
-	movt	r3, #:upper16:79264	@ tmp258,
-	movw	r0, #:lower16:79268	@ tmp259,
-	movt	r0, #:upper16:79268	@ tmp259,
-	ldr	r1, [r4, r3]	@ prephitmp.1919,
-	str	r1, [r4, r0]	@ prephitmp.1919, <variable>.CodecInfo.ToQueFsID
+	movw	ip, #:lower16:80800	@ tmp258,
+	movt	ip, #:upper16:80800	@ tmp258,
+	movw	r3, #:lower16:80804	@ tmp259,
+	movt	r3, #:upper16:80804	@ tmp259,
+	ldr	r1, [r4, ip]	@ prephitmp.1919,
+	str	r1, [r4, r3]	@ prephitmp.1919, <variable>.CodecInfo.ToQueFsID
 	b	.L446	@
 .L459:
-	movw	lr, #:lower16:79344	@ tmp330,
-	movt	lr, #:upper16:79344	@ tmp330,
+	movw	r3, #:lower16:80880	@ tmp330,
+	movt	r3, #:upper16:80880	@ tmp330,
 	ldrb	ip, [r5, #16]	@ zero_extendqisi2	@ <variable>.repeat_first_field, <variable>.repeat_first_field
-	movw	r2, #:lower16:79340	@ tmp337,
-	ldr	r3, [r4, lr]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
-	movt	r2, #:upper16:79340	@ tmp337,
+	movw	r2, #:lower16:80876	@ tmp337,
+	ldr	lr, [r4, r3]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	movt	r2, #:upper16:80876	@ tmp337,
 	ldrb	r0, [r5, #10]	@ zero_extendqisi2	@ <variable>.top_field_first, <variable>.top_field_first
-	add	r1, r3, #1	@ tmp331, <variable>.GopFrmCnt,
-	add	r3, r1, ip	@ tmp334, tmp331, <variable>.repeat_first_field
-	add	r1, r3, r0	@ D.40745, tmp334, <variable>.top_field_first
-	str	r1, [r4, lr]	@ D.40745, <variable>.GopFrmCnt
-	mov	ip, r1, asl #1	@ tmp338, D.40745,
-	str	ip, [r4, r2]	@ tmp338, <variable>.GopFldCnt
+	add	r1, lr, #1	@ tmp331, <variable>.GopFrmCnt,
+	add	lr, r1, ip	@ tmp334, tmp331, <variable>.repeat_first_field
+	add	r1, lr, r0	@ D.40761, tmp334, <variable>.top_field_first
+	str	r1, [r4, r3]	@ D.40761, <variable>.GopFrmCnt
+	mov	lr, r1, asl #1	@ tmp338, D.40761,
+	str	lr, [r4, r2]	@ tmp338, <variable>.GopFldCnt
 	b	.L454	@
 .L451:
 	mov	r0, #1	@,
@@ -4503,21 +4502,21 @@ MPEG2DEC_VDMPostProc:
 	movt	r1, #:upper16:.LC30	@,
 	str	ip, [sp, #0]	@ pFwdImg,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.40657, pCurImg
+	mov	r0, r6	@ D.40673, pCurImg
 	b	.L432	@
 .L452:
-	movw	lr, #:lower16:114680	@ tmp304,
-	movt	lr, #:upper16:114680	@ tmp304,
-	ldr	r0, [r4, lr]	@ <variable>.numOutputFrame, <variable>.numOutputFrame
-	add	r1, r0, #1	@ tmp307, <variable>.numOutputFrame,
-	str	r1, [r4, lr]	@ tmp307, <variable>.numOutputFrame
+	movw	r0, #:lower16:117752	@ tmp304,
+	movt	r0, #:upper16:117752	@ tmp304,
+	ldr	r3, [r4, r0]	@ <variable>.numOutputFrame, <variable>.numOutputFrame
+	add	r1, r3, #1	@ tmp307, <variable>.numOutputFrame,
+	str	r1, [r4, r0]	@ tmp307, <variable>.numOutputFrame
 	b	.L447	@
 .L461:
 	movw	r1, #:lower16:.LC26	@,
-	movw	r2, #3272	@,
+	movw	r2, #3275	@,
 	movt	r1, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.40657, pToQueImg
+	mov	r0, r6	@ D.40673, pToQueImg
 	b	.L432	@
 	.fnend
 	.size	MPEG2DEC_VDMPostProc, .-MPEG2DEC_VDMPostProc
@@ -4545,10 +4544,10 @@ MPEG2DEC_GetRemainImg:
 	ldr	r3, [r0, #12]	@ <variable>.s32DecOrderOutput, <variable>.s32DecOrderOutput
 	cmp	r3, #1	@ <variable>.s32DecOrderOutput,
 	beq	.L463	@,
-	movw	r7, #:lower16:114672	@ tmp146,
-	movw	r6, #:lower16:79260	@ tmp148,
-	movt	r7, #:upper16:114672	@ tmp146,
-	movt	r6, #:upper16:79260	@ tmp148,
+	movw	r7, #:lower16:117744	@ tmp146,
+	movw	r6, #:lower16:80796	@ tmp148,
+	movt	r7, #:upper16:117744	@ tmp146,
+	movt	r6, #:upper16:80796	@ tmp148,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	ldr	r1, [r4, r6]	@, <variable>.CodecInfo.BwdFsID
 	bl	FSP_GetFsImagePtr	@
@@ -4560,8 +4559,8 @@ MPEG2DEC_GetRemainImg:
 	cmp	r0, #2	@,
 	beq	.L474	@,
 .L463:
-	add	r0, r4, #79872	@, pCtx,
-	add	r0, r0, #640	@,,
+	add	r0, r4, #81920	@, pCtx,
+	add	r0, r0, #128	@,,
 	bl	GetVoLastImageID	@
 .L469:
 	sub	sp, fp, #28
@@ -4570,60 +4569,60 @@ MPEG2DEC_GetRemainImg:
 	mov	r0, r4	@, pCtx
 	mov	r7, #0	@ tmp158,
 	bl	MP2_SetImgFormat	@
-	movw	r3, #:lower16:79196	@ tmp154,
-	movt	r3, #:upper16:79196	@ tmp154,
-	movw	r1, #:lower16:79196	@ tmp157,
-	movw	r0, #:lower16:79200	@ tmp159,
-	movt	r1, #:upper16:79196	@ tmp157,
+	movw	r3, #:lower16:80732	@ tmp154,
+	movt	r3, #:upper16:80732	@ tmp154,
+	movw	r1, #:lower16:80732	@ tmp157,
+	movw	r0, #:lower16:80736	@ tmp159,
+	movt	r1, #:upper16:80732	@ tmp157,
 	ldr	ip, [r4, r3]	@ temp.2027, <variable>.CodecInfo.pUsrDatArray
-	movt	r0, #:upper16:79200	@ tmp159,
-	movw	r6, #:lower16:79200	@ tmp162,
-	movt	r6, #:upper16:79200	@ tmp162,
+	movt	r0, #:upper16:80736	@ tmp159,
+	movw	r6, #:lower16:80736	@ tmp162,
+	movt	r6, #:upper16:80736	@ tmp162,
 	cmp	ip, #0	@ temp.2027,
 	strne	ip, [r5, #212]	@ temp.2027, <variable>.p_usrdat
 	movne	ip, #0	@ tmp156,
 	strne	ip, [r4, r3]	@ tmp156, <variable>.CodecInfo.pUsrDatArray
 	str	r7, [r4, r1]	@ tmp158, <variable>.CodecInfo.pUsrDatArray
-	movw	ip, #:lower16:79204	@ tmp164,
+	movw	ip, #:lower16:80740	@ tmp164,
 	ldr	r2, [r4, r0]	@ temp.2032, <variable>.CodecInfo.pUsrDatArray
-	movt	ip, #:upper16:79204	@ tmp164,
+	movt	ip, #:upper16:80740	@ tmp164,
 	mov	r1, #0	@ tmp163,
 	cmp	r2, r7	@ temp.2032,
 	strne	r2, [r5, #216]	@ temp.2032, <variable>.p_usrdat
-	movw	r2, #:lower16:79204	@ tmp167,
+	movw	r2, #:lower16:80740	@ tmp167,
 	strne	r7, [r4, r0]	@ tmp158, <variable>.CodecInfo.pUsrDatArray
-	movt	r2, #:upper16:79204	@ tmp167,
+	movt	r2, #:upper16:80740	@ tmp167,
 	str	r1, [r4, r6]	@ tmp163, <variable>.CodecInfo.pUsrDatArray
-	movw	r7, #:lower16:79208	@ tmp169,
+	movw	r7, #:lower16:80744	@ tmp169,
 	ldr	r3, [r4, ip]	@ temp.2033, <variable>.CodecInfo.pUsrDatArray
-	movt	r7, #:upper16:79208	@ tmp169,
+	movt	r7, #:upper16:80744	@ tmp169,
 	mov	r6, #0	@ tmp168,
 	cmp	r3, r1	@ temp.2033,
 	strne	r3, [r5, #220]	@ temp.2033, <variable>.p_usrdat
-	movw	r3, #:lower16:79208	@ tmp172,
+	movw	r3, #:lower16:80744	@ tmp172,
 	strne	r1, [r4, ip]	@ tmp163, <variable>.CodecInfo.pUsrDatArray
-	movt	r3, #:upper16:79208	@ tmp172,
+	movt	r3, #:upper16:80744	@ tmp172,
 	str	r6, [r4, r2]	@ tmp168, <variable>.CodecInfo.pUsrDatArray
-	movw	ip, #:lower16:79212	@ tmp174,
-	ldr	r0, [r4, r7]	@ D.40592, <variable>.CodecInfo.pUsrDatArray
-	movt	ip, #:upper16:79212	@ tmp174,
+	movw	ip, #:lower16:80748	@ tmp174,
+	ldr	r0, [r4, r7]	@ D.40608, <variable>.CodecInfo.pUsrDatArray
+	movt	ip, #:upper16:80748	@ tmp174,
 	mov	r1, #1	@ tmp176,
-	cmp	r0, r6	@ D.40592,
+	cmp	r0, r6	@ D.40608,
 	mov	r2, r1	@, tmp176
-	strne	r0, [r5, #224]	@ D.40592, <variable>.p_usrdat
+	strne	r0, [r5, #224]	@ D.40608, <variable>.p_usrdat
 	strne	r6, [r4, r7]	@ tmp168, <variable>.CodecInfo.pUsrDatArray
-	movw	r7, #:lower16:114672	@ tmp177,
-	movt	r7, #:upper16:114672	@ tmp177,
+	movw	r7, #:lower16:117744	@ tmp177,
+	movt	r7, #:upper16:117744	@ tmp177,
 	mov	r6, #0	@ tmp173,
 	str	r6, [r4, r3]	@ tmp173, <variable>.CodecInfo.pUsrDatArray
 	str	r6, [r4, ip]	@ tmp173, <variable>.CodecInfo.TotalUsrDatNum
-	str	r1, [r5, #244]	@ tmp176, <variable>.last_frame
+	str	r1, [r5, #268]	@ tmp176, <variable>.last_frame
 	ldr	r1, [r5, #196]	@, <variable>.image_id
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_SetDisplay	@
-	add	r2, r4, #79872	@, pCtx,
+	add	r2, r4, #81920	@, pCtx,
 	ldr	r0, [r4, r7]	@ <variable>.ChanID, <variable>.ChanID
-	add	r3, r2, #640	@,,
+	add	r3, r2, #128	@,,
 	mov	r1, #3	@,
 	mov	r2, r4	@, pCtx
 	str	r5, [sp, #0]	@ pImg,
@@ -4667,13 +4666,13 @@ MP2_GetPictureInfo:
 	sub	sp, sp, #16	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r5, #:lower16:79216	@ tmp165,
-	movt	r5, #:upper16:79216	@ tmp165,
-	movw	r2, #:lower16:80504	@ tmp163,
-	movw	r3, #:lower16:80508	@ tmp164,
-	movt	r2, #:upper16:80504	@ tmp163,
+	movw	r5, #:lower16:80752	@ tmp165,
+	movt	r5, #:upper16:80752	@ tmp165,
+	movw	r2, #:lower16:82040	@ tmp163,
+	movw	r3, #:lower16:82044	@ tmp164,
+	movt	r2, #:upper16:82040	@ tmp163,
 	ldr	r1, [r0, r5]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
-	movt	r3, #:upper16:80508	@ tmp164,
+	movt	r3, #:upper16:82044	@ tmp164,
 	mov	r4, r0	@ pCtx, pCtx
 	ldr	r5, [r0, r2]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
 	cmp	r1, #1	@ <variable>.CodecInfo.MpegFlag,
@@ -4683,10 +4682,10 @@ MP2_GetPictureInfo:
 	ldrb	lr, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	cmp	lr, #3	@ <variable>.picture_structure,
 	beq	.L477	@,
-	movw	r7, #:lower16:79192	@ tmp176,
-	movt	r7, #:upper16:79192	@ tmp176,
-	movw	r1, #:lower16:79224	@ tmp180,
-	movt	r1, #:upper16:79224	@ tmp180,
+	movw	r7, #:lower16:80728	@ tmp176,
+	movt	r7, #:upper16:80728	@ tmp176,
+	movw	r1, #:lower16:80760	@ tmp180,
+	movt	r1, #:upper16:80760	@ tmp180,
 	ldr	r8, [r4, r7]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.LastTempReference, <variable>.CodecInfo.LastTempReference
 	rsbs	r8, r8, #1	@ tmp178, <variable>.CodecInfo.Second_Field
@@ -4700,16 +4699,16 @@ MP2_GetPictureInfo:
 .L478:
 	ldrb	lr, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	movw	r1, #45329	@ tmp214,
-	movw	r3, #:lower16:79224	@ tmp217,
-	movt	r3, #:upper16:79224	@ tmp217,
+	movw	r3, #:lower16:80760	@ tmp217,
+	movt	r3, #:upper16:80760	@ tmp217,
 	strb	lr, [r4, r1]	@ <variable>.picture_structure, <variable>.CodecInfo.Last_FieldStruct
-	movw	lr, #:lower16:79192	@ tmp234,
+	movw	lr, #:lower16:80728	@ tmp234,
 	ldr	r2, [r5, #156]	@ <variable>.temporal_reference, <variable>.temporal_reference
-	movt	lr, #:upper16:79192	@ tmp234,
+	movt	lr, #:upper16:80728	@ tmp234,
 	str	r2, [r4, r3]	@ <variable>.temporal_reference, <variable>.CodecInfo.LastTempReference
-	movw	r3, #:lower16:79216	@ tmp241,
+	movw	r3, #:lower16:80752	@ tmp241,
 	ldrh	ip, [r5, #56]	@, <variable>.mb_width
-	movt	r3, #:upper16:79216	@ tmp241,
+	movt	r3, #:upper16:80752	@ tmp241,
 	strh	ip, [r4, #160]	@ movhi	@, <variable>.Mp2DecParam.PicWidthInMb
 	ldrb	r0, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	ldr	ip, [r4, lr]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
@@ -4761,27 +4760,27 @@ MP2_GetPictureInfo:
 	ldrb	r2, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	cmp	r2, #3	@ <variable>.picture_structure,
 	beq	.L483	@,
-	movw	r0, #:lower16:79192	@ tmp269,
-	movt	r0, #:upper16:79192	@ tmp269,
+	movw	r0, #:lower16:80728	@ tmp269,
+	movt	r0, #:upper16:80728	@ tmp269,
 	ldr	r6, [r4, r0]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	r6, #0	@ <variable>.CodecInfo.Second_Field,
 	beq	.L483	@,
 .L484:
-	movw	r7, #:lower16:114672	@ tmp327,
-	movw	lr, #:lower16:79264	@ tmp329,
-	movt	r7, #:upper16:114672	@ tmp327,
-	movt	lr, #:upper16:79264	@ tmp329,
+	movw	r7, #:lower16:117744	@ tmp327,
+	movw	lr, #:lower16:80800	@ tmp329,
+	movt	r7, #:upper16:117744	@ tmp327,
+	movt	lr, #:upper16:80800	@ tmp329,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	ldr	r1, [r4, lr]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_GetLogicFs	@
-	movw	ip, #:lower16:79256	@ tmp333,
-	movt	ip, #:upper16:79256	@ tmp333,
+	movw	ip, #:lower16:80792	@ tmp333,
+	movt	ip, #:upper16:80792	@ tmp333,
 	ldr	r1, [r4, ip]	@, <variable>.CodecInfo.FwdFsID
 	mov	r5, r0	@ pCur,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_GetLogicFs	@
-	movw	r2, #:lower16:79260	@ tmp337,
-	movt	r2, #:upper16:79260	@ tmp337,
+	movw	r2, #:lower16:80796	@ tmp337,
+	movt	r2, #:upper16:80796	@ tmp337,
 	ldr	r1, [r4, r2]	@, <variable>.CodecInfo.BwdFsID
 	mov	r6, r0	@ pFwd,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
@@ -4792,64 +4791,64 @@ MP2_GetPictureInfo:
 	beq	.L491	@,
 	cmp	r0, #0	@ pBwd,
 	beq	.L491	@,
-	ldr	r2, [r5, #520]	@ D.39248, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.39248,
+	ldr	r2, [r5, #544]	@ D.39264, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.39264,
 	beq	.L493	@,
-	ldr	r0, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	r0, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	cmp	r0, #0	@ <variable>.pstTfOutFs,
 	beq	.L493	@,
-	ldr	ip, [r5, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	ip, [r5, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	cmp	ip, #0	@ <variable>.pstDispOutFs,
 	beq	.L493	@,
-	ldr	ip, [r7, #520]	@ D.39255, <variable>.pstDecodeFs
-	cmp	ip, #0	@ D.39255,
+	ldr	ip, [r7, #544]	@ D.39271, <variable>.pstDecodeFs
+	cmp	ip, #0	@ D.39271,
 	ldrne	lr, [ip, #12]	@ iftmp.461, <variable>.PhyAddr
 	ldreq	lr, [r2, #12]	@ iftmp.461, <variable>.PhyAddr
 	str	lr, [r4, #200]	@ iftmp.461, <variable>.Mp2DecParam.BwdRefPhyAddr
-	ldr	r2, [r6, #520]	@ D.39262, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.39262,
-	ldreq	r2, [r5, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	ldr	r2, [r6, #544]	@ D.39278, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.39278,
+	ldreq	r2, [r5, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	ldr	ip, [r2, #12]	@ iftmp.462, <variable>.PhyAddr
 	str	ip, [r4, #204]	@ iftmp.462, <variable>.Mp2DecParam.FwdRefPhyAddr
-	ldr	r8, [r5, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
-	ldr	r2, [r8, #12]	@ D.39267, <variable>.PhyAddr
-	str	r2, [r4, #208]	@ D.39267, <variable>.Mp2DecParam.CurPicPhyAddr
-	ldr	r8, [r5, #532]	@ D.39269, <variable>.PmvAddr
-	str	r8, [r4, #248]	@ D.39269, <variable>.Mp2DecParam.PmvColmbPhyAddr
-	ldr	r0, [r7, #528]	@ D.39271, <variable>.pstTfOutFs
-	cmp	r0, #0	@ D.39271,
-	ldreq	r0, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	r8, [r5, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	ldr	r2, [r8, #12]	@ D.39283, <variable>.PhyAddr
+	str	r2, [r4, #208]	@ D.39283, <variable>.Mp2DecParam.CurPicPhyAddr
+	ldr	r8, [r5, #556]	@ D.39285, <variable>.PmvAddr
+	str	r8, [r4, #248]	@ D.39285, <variable>.Mp2DecParam.PmvColmbPhyAddr
+	ldr	r0, [r7, #552]	@ D.39287, <variable>.pstTfOutFs
+	cmp	r0, #0	@ D.39287,
+	ldreq	r0, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r3, [r0, #12]	@ iftmp.463, <variable>.PhyAddr
 	str	r3, [r4, #220]	@ iftmp.463, <variable>.Mp2DecParam.TfBwdPhyAddr
-	ldr	r1, [r6, #528]	@ D.39278, <variable>.pstTfOutFs
-	cmp	r1, #0	@ D.39278,
-	ldreq	r1, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	r1, [r6, #552]	@ D.39294, <variable>.pstTfOutFs
+	cmp	r1, #0	@ D.39294,
+	ldreq	r1, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r0, [r1, #12]	@ iftmp.464, <variable>.PhyAddr
 	movw	r1, #:lower16:.LC42	@,
 	movt	r1, #:upper16:.LC42	@,
 	str	r0, [r4, #224]	@ iftmp.464, <variable>.Mp2DecParam.TfFwdPhyAddr
 	mov	r0, #13	@,
-	ldr	r3, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	r3, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r3, [r3, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	r3, [r4, #228]	@ <variable>.PhyAddr, <variable>.Mp2DecParam.TfCurPhyAddr
-	ldr	r3, [r5, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
-	ldr	r3, [r3, #12]	@ D.39285, <variable>.PhyAddr
-	str	r3, [r4, #232]	@ D.39285, <variable>.Mp2DecParam.DispFramePhyAddr
+	ldr	r3, [r5, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	r3, [r3, #12]	@ D.39301, <variable>.PhyAddr
+	str	r3, [r4, #232]	@ D.39301, <variable>.Mp2DecParam.DispFramePhyAddr
 	ldr	r7, [r7, #156]	@ <variable>.stDispImg.is_fld_save, <variable>.stDispImg.is_fld_save
 	str	r7, [r4, #212]	@ <variable>.stDispImg.is_fld_save, <variable>.Mp2DecParam.BwdRefIsFldSave
 	ldr	r6, [r6, #156]	@ <variable>.stDispImg.is_fld_save, <variable>.stDispImg.is_fld_save
 	str	r6, [r4, #216]	@ <variable>.stDispImg.is_fld_save, <variable>.Mp2DecParam.FwdRefIsFldSave
-	ldr	r7, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	r7, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	ldr	r6, [r7, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	ip, [sp, #0]	@ iftmp.462,
 	movw	ip, #45320	@ tmp376,
 	str	lr, [sp, #4]	@ iftmp.461,
 	str	r6, [r4, ip]	@ <variable>.PhyAddr, <variable>.Mp2DecParam.DnrMbInfoStAddr
-	str	r8, [sp, #8]	@ D.39269,
+	str	r8, [sp, #8]	@ D.39285,
 	bl	dprint_vfmw	@
-	ldr	r7, [r5, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
-	add	r3, r4, #78848	@ ivtmp.2066, pCtx,
-	add	r3, r3, #608	@ ivtmp.2066, ivtmp.2066,
+	ldr	r7, [r5, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	add	r3, r4, #80896	@ ivtmp.2066, pCtx,
+	add	r3, r3, #96	@ ivtmp.2066, ivtmp.2066,
 	mov	r2, r4	@ ivtmp.2070, pCtx
 	mov	r0, #0	@ i,
 	ldr	r5, [r7, #20]	@ <variable>.Stride, <variable>.Stride
@@ -4871,7 +4870,7 @@ MP2_GetPictureInfo:
 	strb	lr, [r1, #24]	@ tmp404, <variable>.Mp2DecParam.NonIntraQuantTab
 	bne	.L503	@,
 	mov	r0, r4	@, pCtx
-	mov	r6, #1	@ D.39206,
+	mov	r6, #1	@ D.39222,
 	bl	MP2_EstimatePicQp	@
 	strb	r0, [r4, #152]	@, <variable>.Mp2DecParam.EstmatedPicQp
 	b	.L486	@
@@ -4879,12 +4878,12 @@ MP2_GetPictureInfo:
 	mov	r0, r4	@, pCtx
 	mov	r1, #0	@,
 	bl	MP2_GetImageBuffer	@
-	subs	r6, r0, #0	@ D.39202,
+	subs	r6, r0, #0	@ D.39218,
 	beq	.L515	@,
-	movw	r2, #:lower16:114672	@ tmp274,
-	movw	r7, #:lower16:79264	@ tmp276,
-	movt	r2, #:upper16:114672	@ tmp274,
-	movt	r7, #:upper16:79264	@ tmp276,
+	movw	r2, #:lower16:117744	@ tmp274,
+	movw	r7, #:lower16:80800	@ tmp276,
+	movt	r2, #:upper16:117744	@ tmp274,
+	movt	r7, #:upper16:80800	@ tmp276,
 	ldr	r0, [r4, r2]	@, <variable>.ChanID
 	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_GetFsImagePtr	@
@@ -4930,13 +4929,13 @@ MP2_GetPictureInfo:
 	ldrb	r6, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	r6, #3	@ <variable>.picture_coding_type,
 	beq	.L484	@,
-	movw	ip, #:lower16:79220	@ tmp300,
-	movt	ip, #:upper16:79220	@ tmp300,
-	movw	r6, #:lower16:79256	@ tmp303,
-	movw	r5, #:lower16:79260	@ tmp304,
+	movw	ip, #:lower16:80756	@ tmp300,
+	movt	ip, #:upper16:80756	@ tmp300,
+	movw	r6, #:lower16:80792	@ tmp303,
+	movw	r5, #:lower16:80796	@ tmp304,
 	ldr	r0, [r4, ip]	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
-	movt	r6, #:upper16:79256	@ tmp303,
-	movt	r5, #:upper16:79260	@ tmp304,
+	movt	r6, #:upper16:80792	@ tmp303,
+	movt	r5, #:upper16:80796	@ tmp304,
 	cmp	r0, #0	@ <variable>.CodecInfo.RefNum,
 	ldr	r2, [r4, r6]	@ prephitmp.2049, <variable>.CodecInfo.FwdFsID
 	ldr	r1, [r4, r5]	@ <variable>.CodecInfo.BwdFsID, <variable>.CodecInfo.BwdFsID
@@ -4945,8 +4944,8 @@ MP2_GetPictureInfo:
 	cmp	r2, r1	@ prephitmp.2049, <variable>.CodecInfo.BwdFsID
 	str	r0, [r4, ip]	@ iftmp.457, <variable>.CodecInfo.RefNum
 	beq	.L490	@,
-	movw	r7, #:lower16:114672	@ tmp307,
-	movt	r7, #:upper16:114672	@ tmp307,
+	movw	r7, #:lower16:117744	@ tmp307,
+	movt	r7, #:upper16:117744	@ tmp307,
 	mov	r0, #13	@,
 	movw	r1, #:lower16:.LC38	@,
 	movt	r1, #:upper16:.LC38	@,
@@ -4957,15 +4956,15 @@ MP2_GetPictureInfo:
 	bl	FSP_SetRef	@
 	ldr	r2, [r4, r5]	@ prephitmp.2049, <variable>.CodecInfo.BwdFsID
 .L490:
-	movw	r5, #:lower16:79264	@ tmp314,
-	movt	r5, #:upper16:79264	@ tmp314,
-	movw	r6, #:lower16:79256	@ tmp312,
-	movw	r3, #:lower16:79260	@ tmp313,
+	movw	r5, #:lower16:80800	@ tmp314,
+	movt	r5, #:upper16:80800	@ tmp314,
+	movw	r6, #:lower16:80792	@ tmp312,
+	movw	r3, #:lower16:80796	@ tmp313,
 	ldr	r1, [r4, r5]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.CurFsID
-	movt	r3, #:upper16:79260	@ tmp313,
-	movt	r6, #:upper16:79256	@ tmp312,
-	movw	r7, #:lower16:114672	@ tmp316,
-	movt	r7, #:upper16:114672	@ tmp316,
+	movt	r3, #:upper16:80796	@ tmp313,
+	movt	r6, #:upper16:80792	@ tmp312,
+	movw	r7, #:lower16:117744	@ tmp316,
+	movt	r7, #:upper16:117744	@ tmp316,
 	str	r1, [r4, r3]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.BwdFsID
 	str	r2, [r4, r6]	@ prephitmp.2049, <variable>.CodecInfo.FwdFsID
 	mov	r2, #1	@,
@@ -4981,29 +4980,29 @@ MP2_GetPictureInfo:
 	bl	dprint_vfmw	@
 	b	.L484	@
 .L515:
-	movw	ip, #:lower16:79188	@ tmp272,
-	movt	ip, #:upper16:79188	@ tmp272,
+	movw	ip, #:lower16:80724	@ tmp272,
+	movt	ip, #:upper16:80724	@ tmp272,
 	movw	r1, #:lower16:.LC36	@,
 	movt	r1, #:upper16:.LC36	@,
 	ldr	r2, [r4, ip]	@, <variable>.CodecInfo.Frame_Cnt
 	bl	dprint_vfmw	@
 .L486:
-	mov	r0, r6	@, D.39206
+	mov	r0, r6	@, D.39222
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, fp, sp, pc}
 .L477:
 	movw	r3, #45329	@ tmp197,
-	ldrb	ip, [r4, r3]	@ zero_extendqisi2	@ D.39160, <variable>.CodecInfo.Last_FieldStruct
-	cmp	ip, #3	@ D.39160,
+	ldrb	ip, [r4, r3]	@ zero_extendqisi2	@ D.39176, <variable>.CodecInfo.Last_FieldStruct
+	cmp	ip, #3	@ D.39176,
 	beq	.L479	@,
-	movw	r1, #:lower16:79192	@ tmp198,
-	movt	r1, #:upper16:79192	@ tmp198,
+	movw	r1, #:lower16:80728	@ tmp198,
+	movt	r1, #:upper16:80728	@ tmp198,
 	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	r3, #0	@ <variable>.CodecInfo.Second_Field,
 	beq	.L516	@,
 .L479:
-	movw	r0, #:lower16:79192	@ tmp212,
-	movt	r0, #:upper16:79192	@ tmp212,
+	movw	r0, #:lower16:80728	@ tmp212,
+	movt	r0, #:upper16:80728	@ tmp212,
 	mov	r6, #1	@ tmp213,
 	str	r6, [r4, r0]	@ tmp213,
 	b	.L478	@
@@ -5016,10 +5015,10 @@ MP2_GetPictureInfo:
 	strb	r0, [r5, #5]	@ <variable>.forward_f_code, <variable>.f_code
 	b	.L476	@
 .L491:
-	movw	r1, #:lower16:114672	@ tmp346,
-	movw	r3, #:lower16:79264	@ tmp348,
-	movt	r1, #:upper16:114672	@ tmp346,
-	movt	r3, #:upper16:79264	@ tmp348,
+	movw	r1, #:lower16:117744	@ tmp346,
+	movw	r3, #:lower16:80800	@ tmp348,
+	movt	r1, #:upper16:117744	@ tmp346,
+	movt	r3, #:upper16:80800	@ tmp348,
 	mov	r2, #1	@,
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	ldr	r1, [r4, r3]	@, <variable>.CodecInfo.CurFsID
@@ -5027,25 +5026,25 @@ MP2_GetPictureInfo:
 	mov	r3, r5	@, pCur
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC40	@,
-	movw	r2, #1146	@,
+	movw	r2, #1149	@,
 	movt	r1, #:upper16:.LC40	@,
 	str	r6, [sp, #0]	@ pFwd,
-	mov	r6, #0	@ D.39206,
+	mov	r6, #0	@ D.39222,
 	str	r7, [sp, #4]	@ pBwd,
 	bl	dprint_vfmw	@
 	b	.L486	@
 .L514:
-	movw	lr, #:lower16:79188	@ tmp184,
-	movt	lr, #:upper16:79188	@ tmp184,
+	movw	lr, #:lower16:80724	@ tmp184,
+	movt	lr, #:upper16:80724	@ tmp184,
 	mov	r0, r8	@, tmp178
 	movw	r1, #:lower16:.LC34	@,
 	ldr	r2, [r4, lr]	@, <variable>.CodecInfo.Frame_Cnt
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
-	movw	r1, #:lower16:114672	@ tmp188,
-	movw	ip, #:lower16:79264	@ tmp190,
-	movt	r1, #:upper16:114672	@ tmp188,
-	movt	ip, #:upper16:79264	@ tmp190,
+	movw	r1, #:lower16:117744	@ tmp188,
+	movw	ip, #:lower16:80800	@ tmp190,
+	movt	r1, #:upper16:117744	@ tmp188,
+	movt	ip, #:upper16:80800	@ tmp190,
 	mov	r3, #0	@ tmp187,
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	mov	r2, r8	@, tmp178
@@ -5055,50 +5054,50 @@ MP2_GetPictureInfo:
 	ldrb	r0, [r6, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	r0, #3	@ <variable>.picture_coding_type,
 	beq	.L478	@,
-	movw	r0, #:lower16:79180	@ tmp193,
-	movt	r0, #:upper16:79180	@ tmp193,
+	movw	r0, #:lower16:80716	@ tmp193,
+	movt	r0, #:upper16:80716	@ tmp193,
 	ldr	r2, [r4, r0]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orr	r6, r2, #192	@ tmp196, <variable>.CodecInfo.StreamIntegrality,
 	str	r6, [r4, r0]	@ tmp196,
 	b	.L478	@
 .L516:
-	movw	lr, #:lower16:79188	@ tmp201,
-	movt	lr, #:upper16:79188	@ tmp201,
+	movw	lr, #:lower16:80724	@ tmp201,
+	movt	lr, #:upper16:80724	@ tmp201,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC35	@,
 	ldr	r2, [r4, lr]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
 	movt	r1, #:upper16:.LC35	@,
-	str	ip, [sp, #0]	@ D.39160,
+	str	ip, [sp, #0]	@ D.39176,
 	bl	dprint_vfmw	@
-	movw	r1, #:lower16:114672	@ tmp203,
-	movw	r3, #:lower16:79264	@ tmp205,
-	movt	r1, #:upper16:114672	@ tmp203,
-	movt	r3, #:upper16:79264	@ tmp205,
+	movw	r1, #:lower16:117744	@ tmp203,
+	movw	r3, #:lower16:80800	@ tmp205,
+	movt	r1, #:upper16:117744	@ tmp203,
+	movt	r3, #:upper16:80800	@ tmp205,
 	mov	r2, #1	@,
 	ldr	r0, [r4, r1]	@, <variable>.ChanID
 	ldr	r1, [r4, r3]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_ClearLogicFs	@
 	ldrb	ip, [r6, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
 	cmp	ip, #3	@ <variable>.picture_coding_type,
-	movwne	ip, #:lower16:79180	@ tmp208,
-	movtne	ip, #:upper16:79180	@ tmp208,
+	movwne	ip, #:lower16:80716	@ tmp208,
+	movtne	ip, #:upper16:80716	@ tmp208,
 	ldrne	r2, [r4, ip]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	orrne	r2, r2, #192	@ tmp211, <variable>.CodecInfo.StreamIntegrality,
 	strne	r2, [r4, ip]	@ tmp211, <variable>.CodecInfo.StreamIntegrality
 	b	.L479	@
 .L493:
-	movw	lr, #:lower16:114672	@ tmp353,
-	movw	r6, #:lower16:79264	@ tmp355,
-	movt	lr, #:upper16:114672	@ tmp353,
-	movt	r6, #:upper16:79264	@ tmp355,
+	movw	lr, #:lower16:117744	@ tmp353,
+	movw	r6, #:lower16:80800	@ tmp355,
+	movt	lr, #:upper16:117744	@ tmp353,
+	movt	r6, #:upper16:80800	@ tmp355,
 	mov	r2, #1	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	ldr	r1, [r4, r6]	@, <variable>.CodecInfo.CurFsID
 	bl	FSP_ClearLogicFs	@
-	movw	r1, #:lower16:79260	@ tmp362,
-	movt	r1, #:upper16:79260	@ tmp362,
-	movw	r2, #:lower16:79256	@ tmp358,
-	movt	r2, #:upper16:79256	@ tmp358,
+	movw	r1, #:lower16:80796	@ tmp362,
+	movt	r1, #:upper16:80796	@ tmp362,
+	movw	r2, #:lower16:80792	@ tmp358,
+	movt	r2, #:upper16:80792	@ tmp358,
 	ldr	r3, [r4, r6]	@ <variable>.CodecInfo.CurFsID, <variable>.CodecInfo.CurFsID
 	ldr	ip, [r4, r1]	@ <variable>.CodecInfo.BwdFsID, <variable>.CodecInfo.BwdFsID
 	mov	r0, #0	@,
@@ -5106,14 +5105,14 @@ MP2_GetPictureInfo:
 	movw	r1, #:lower16:.LC41	@,
 	movt	r1, #:upper16:.LC41	@,
 	str	ip, [sp, #0]	@ <variable>.CodecInfo.BwdFsID,
-	ldr	r6, [r5, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	ldr	r6, [r5, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
 	str	r6, [sp, #4]	@ <variable>.pstDecodeFs,
-	ldr	ip, [r5, #528]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
+	ldr	ip, [r5, #552]	@ <variable>.pstTfOutFs, <variable>.pstTfOutFs
 	str	ip, [sp, #8]	@ <variable>.pstTfOutFs,
-	ldr	r6, [r5, #524]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
+	ldr	r6, [r5, #548]	@ <variable>.pstDispOutFs, <variable>.pstDispOutFs
 	str	r6, [sp, #12]	@ <variable>.pstDispOutFs,
 	bl	dprint_vfmw	@
-	mov	r6, #0	@ D.39206,
+	mov	r6, #0	@ D.39222,
 	b	.L486	@
 	.fnend
 	.size	MP2_GetPictureInfo, .-MP2_GetPictureInfo
@@ -5136,121 +5135,124 @@ MP2_DecodingDecide:
 	sub	sp, sp, #12	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:79180	@ tmp167,
-	movt	r3, #:upper16:79180	@ tmp167,
-	movw	r2, #:lower16:80504	@ tmp166,
-	movt	r2, #:upper16:80504	@ tmp166,
+	movw	r3, #:lower16:80716	@ tmp167,
+	movt	r3, #:upper16:80716	@ tmp167,
+	movw	r2, #:lower16:82040	@ tmp166,
+	movt	r2, #:upper16:82040	@ tmp166,
 	mov	r4, r0	@ pCtx, pCtx
-	ldr	r3, [r0, r3]	@ prephitmp.2174, <variable>.CodecInfo.StreamIntegrality
+	ldr	r3, [r0, r3]	@ prephitmp.2176, <variable>.CodecInfo.StreamIntegrality
 	ldr	r5, [r0, r2]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
-	tst	r3, #8388608	@ prephitmp.2174,
-	mvneq	r0, #0	@ D.38919,
+	tst	r3, #8388608	@ prephitmp.2176,
+	mvneq	r0, #0	@ D.38933,
 	beq	.L519	@,
 	ldrb	r0, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	cmp	r0, #3	@ <variable>.picture_structure,
 	beq	.L520	@,
-	movw	r7, #:lower16:79192	@ tmp170,
-	movt	r7, #:upper16:79192	@ tmp170,
+	movw	r7, #:lower16:80728	@ tmp170,
+	movt	r7, #:upper16:80728	@ tmp170,
 	ldr	r1, [r4, r7]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
 	cmp	r1, #1	@ <variable>.CodecInfo.Second_Field,
 	beq	.L520	@,
-	ands	r7, r3, #255	@ tmp177, prephitmp.2174,
+	ands	r7, r3, #255	@ tmp177, prephitmp.2176,
 	beq	.L522	@,
-.L563:
+.L565:
 	movw	r0, #:lower16:g_event_report	@ tmp178,
 	movt	r0, #:upper16:g_event_report	@ tmp178,
 	ldr	ip, [r0, #0]	@ g_event_report.448, g_event_report
 	cmp	ip, #0	@ g_event_report.448,
 	beq	.L523	@,
-	movw	lr, #:lower16:114672	@ tmp179,
-	movt	lr, #:upper16:114672	@ tmp179,
+	movw	lr, #:lower16:117744	@ tmp179,
+	movt	lr, #:upper16:117744	@ tmp179,
 	mov	r2, #0	@,
 	mov	r1, #103	@,
 	mov	r3, r2	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	blx	ip	@ g_event_report.448
-	movw	r1, #:lower16:79180	@ tmp181,
-	movt	r1, #:upper16:79180	@ tmp181,
-	ldr	r3, [r4, r1]	@ prephitmp.2174, <variable>.CodecInfo.StreamIntegrality
+	movw	r1, #:lower16:80716	@ tmp181,
+	movt	r1, #:upper16:80716	@ tmp181,
+	ldr	r3, [r4, r1]	@ prephitmp.2176, <variable>.CodecInfo.StreamIntegrality
 .L523:
-	movw	ip, #:lower16:79188	@ tmp183,
-	movt	ip, #:upper16:79188	@ tmp183,
+	movw	ip, #:lower16:80724	@ tmp183,
+	movt	ip, #:upper16:80724	@ tmp183,
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC43	@,
 	ldr	r2, [r4, ip]	@, <variable>.CodecInfo.Frame_Cnt
 	movt	r1, #:upper16:.LC43	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38919,
+	mov	r0, #0	@ D.38933,
 .L519:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L520:
-	movw	r3, #:lower16:79180	@ tmp176,
-	movt	r3, #:upper16:79180	@ tmp176,
-	movw	lr, #:lower16:114676	@ tmp172,
-	movt	lr, #:upper16:114676	@ tmp172,
-	ldr	r3, [r4, r3]	@ prephitmp.2174, <variable>.CodecInfo.StreamIntegrality
+	movw	r3, #:lower16:80716	@ tmp176,
+	movt	r3, #:upper16:80716	@ tmp176,
+	movw	lr, #:lower16:117748	@ tmp172,
+	movt	lr, #:upper16:117748	@ tmp172,
+	ldr	r3, [r4, r3]	@ prephitmp.2176, <variable>.CodecInfo.StreamIntegrality
 	ldr	r2, [r4, lr]	@ <variable>.numTotalFrame, <variable>.numTotalFrame
-	ands	r7, r3, #255	@ tmp177, prephitmp.2174,
+	ands	r7, r3, #255	@ tmp177, prephitmp.2176,
 	add	ip, r2, #1	@ tmp175, <variable>.numTotalFrame,
 	str	ip, [r4, lr]	@ tmp175, <variable>.numTotalFrame
-	bne	.L563	@,
+	bne	.L565	@,
 .L522:
-	movw	r2, #:lower16:79228	@ tmp185,
-	movt	r2, #:upper16:79228	@ tmp185,
+	movw	r2, #:lower16:80764	@ tmp185,
+	movt	r2, #:upper16:80764	@ tmp185,
 	ldr	r6, [r4, r2]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	r6, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
-	beq	.L564	@,
-	movw	r9, #:lower16:79168	@ tmp190,
-	movt	r9, #:upper16:79168	@ tmp190,
+	beq	.L566	@,
+	movw	r9, #:lower16:80704	@ tmp190,
+	movt	r9, #:upper16:80704	@ tmp190,
 	ldr	r8, [r4, r9]	@ <variable>.CodecInfo.UsedDecMode, <variable>.CodecInfo.UsedDecMode
 	sub	r6, r8, #2	@ tmp191, <variable>.CodecInfo.UsedDecMode,
 	cmp	r6, #1	@ tmp191,
 	bls	.L525	@,
-	ldr	sl, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r1, [sl, #8]	@ prephitmp.2180, <variable>.s32DecMode
+.L561:
+	ldr	r7, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	ldr	r2, [r7, #8]	@ prephitmp.2182, <variable>.s32DecMode
 .L526:
-	movw	r3, #:lower16:79168	@ tmp248,
-	movt	r3, #:upper16:79168	@ tmp248,
-	sub	r2, r1, #1	@ tmp249, prephitmp.2180,
-	str	r1, [r4, r3]	@ prephitmp.2180, <variable>.CodecInfo.UsedDecMode
-	cmp	r2, #3	@ tmp249,
-	ldrls	pc, [pc, r2, asl #2]	@ tmp249
-	b	.L528	@
-.L533:
-	.word	.L529
+	movw	r3, #:lower16:80704	@ tmp250,
+	movt	r3, #:upper16:80704	@ tmp250,
+	sub	r8, r2, #1	@ tmp251, prephitmp.2182,
+	str	r2, [r4, r3]	@ prephitmp.2182, <variable>.CodecInfo.UsedDecMode
+	cmp	r8, #3	@ tmp251,
+	ldrls	pc, [pc, r8, asl #2]	@ tmp251
+	b	.L529	@
+.L534:
 	.word	.L530
 	.word	.L531
 	.word	.L532
+	.word	.L533
 .L525:
-	ldr	r0, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r0, #8]	@ D.38945, <variable>.s32DecMode
-	cmp	r2, #4	@ D.38945,
-	cmpne	r2, #1	@, D.38945,
-	mov	r1, r2	@ prephitmp.2180, D.38945
+	ldr	sl, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	ldr	r2, [sl, #8]	@ prephitmp.2182, <variable>.s32DecMode
+	cmp	r2, #4	@ prephitmp.2182,
+	cmpne	r2, #1	@, prephitmp.2182,
 	bhi	.L526	@,
 	mov	r0, #2	@,
 	movw	r1, #:lower16:.LC45	@,
 	movt	r1, #:upper16:.LC45	@,
-	movw	r6, #:lower16:114672	@ tmp207,
 	bl	dprint_vfmw	@
-	movw	ip, #:lower16:79180	@ tmp203,
-	movt	ip, #:upper16:79180	@ tmp203,
-	movt	r6, #:upper16:114672	@ tmp207,
-	movw	sl, #:lower16:79260	@ tmp209,
-	movt	sl, #:upper16:79260	@ tmp209,
-	ldr	r2, [r4, ip]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
+	ldrb	r0, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
+	cmp	r0, #1	@ <variable>.picture_coding_type,
+	beq	.L561	@,
+	movw	lr, #:lower16:80716	@ tmp205,
+	movt	lr, #:upper16:80716	@ tmp205,
+	movw	r6, #:lower16:117744	@ tmp209,
+	movw	sl, #:lower16:80796	@ tmp211,
+	ldr	ip, [r4, lr]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
+	movt	r6, #:upper16:117744	@ tmp209,
+	movt	sl, #:upper16:80796	@ tmp211,
+	orr	r1, ip, #128	@ tmp208, <variable>.CodecInfo.StreamIntegrality,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	orr	r1, r2, #128	@ tmp206, <variable>.CodecInfo.StreamIntegrality,
-	str	r1, [r4, ip]	@ tmp206, <variable>.CodecInfo.StreamIntegrality
+	str	r1, [r4, lr]	@ tmp208, <variable>.CodecInfo.StreamIntegrality
 	ldr	r1, [r4, sl]	@, <variable>.CodecInfo.BwdFsID
 	bl	FSP_GetFsImagePtr	@
 	subs	r8, r0, #0	@ pImg,
-	beq	.L527	@,
+	beq	.L528	@,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	movw	r9, #:lower16:79256	@ tmp233,
+	movw	r9, #:lower16:80792	@ tmp235,
 	ldr	r1, [r8, #212]	@, <variable>.p_usrdat
-	movt	r9, #:upper16:79256	@ tmp233,
+	movt	r9, #:upper16:80792	@ tmp235,
 	bl	FreeUsdByDec	@
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r8, #216]	@, <variable>.p_usrdat
@@ -5278,367 +5280,367 @@ MP2_DecodingDecide:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetFspType	@
 	cmp	r0, #0	@,
-	bne	.L565	@,
-.L527:
-	ldr	r7, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	movw	r3, #:lower16:79220	@ tmp245,
-	movt	r3, #:upper16:79220	@ tmp245,
-	mov	lr, #0	@ tmp246,
-	str	lr, [r4, r3]	@ tmp246, <variable>.CodecInfo.RefNum
-	ldr	r1, [r7, #8]	@ prephitmp.2180, <variable>.s32DecMode
+	bne	.L567	@,
+.L528:
+	ldr	r2, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	movw	r3, #:lower16:80756	@ tmp247,
+	movt	r3, #:upper16:80756	@ tmp247,
+	mov	r6, #0	@ tmp248,
+	str	r6, [r4, r3]	@ tmp248, <variable>.CodecInfo.RefNum
+	ldr	r2, [r2, #8]	@ prephitmp.2182, <variable>.s32DecMode
 	b	.L526	@
-.L564:
-	movw	r3, #:lower16:79188	@ tmp188,
-	movt	r3, #:upper16:79188	@ tmp188,
+.L566:
+	movw	r3, #:lower16:80724	@ tmp188,
+	movt	r3, #:upper16:80724	@ tmp188,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC44	@,
 	ldr	r2, [r4, r3]	@, <variable>.CodecInfo.Frame_Cnt
 	movt	r1, #:upper16:.LC44	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.38919, <variable>.CodecInfo.Imgbuf_allocated
+	mov	r0, r6	@ D.38933, <variable>.CodecInfo.Imgbuf_allocated
 	b	.L519	@
-.L532:
-	ldrb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_coding_type
-	cmp	r7, #1	@ prephitmp.2248,
-	movweq	r3, #:lower16:114684	@ tmp266,
-	movteq	r3, #:upper16:114684	@ tmp266,
-	moveq	r2, #0	@ tmp267,
-	streq	r2, [r4, r3]	@ tmp267, <variable>.PPicFound
-	ldreqb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_coding_type
-	cmp	r7, #3	@ prephitmp.2248,
-	beq	.L566	@,
-	cmp	r7, #2	@ prephitmp.2248,
-	beq	.L543	@,
-.L561:
-	mov	r9, r7	@ prephitmp.2182, prephitmp.2248
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
+.L533:
+	ldrb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_coding_type
+	cmp	r7, #1	@ prephitmp.2253,
+	movweq	r3, #:lower16:117756	@ tmp268,
+	movteq	r3, #:upper16:117756	@ tmp268,
+	moveq	r2, #0	@ tmp269,
+	streq	r2, [r4, r3]	@ tmp269, <variable>.PPicFound
+	ldreqb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_coding_type
+	cmp	r7, #3	@ prephitmp.2253,
+	beq	.L568	@,
+	cmp	r7, #2	@ prephitmp.2253,
+	beq	.L544	@,
+.L563:
+	mov	r9, r7	@ prephitmp.2184, prephitmp.2253
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
 	mov	sl, #1	@ ret,
-.L534:
-	movw	r0, #:lower16:79128	@ tmp278,
-	movw	r2, #:lower16:79232	@ tmp279,
-	movt	r0, #:upper16:79128	@ tmp278,
-	movt	r2, #:upper16:79232	@ tmp279,
-	add	r3, r4, #78848	@, pCtx,
-	movw	lr, #:lower16:79188	@ tmp277,
-	ldr	r8, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	movt	lr, #:upper16:79188	@ tmp277,
-	ldr	r1, [r4, r2]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r0, r3, #576	@,,
-	add	r6, r8, r1	@ D.39004, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
-	ldr	r8, [r4, lr]	@ temp.2218, <variable>.CodecInfo.Frame_Cnt
+.L535:
+	movw	r3, #:lower16:80664	@ tmp280,
+	movw	r2, #:lower16:80768	@ tmp281,
+	movt	r3, #:upper16:80664	@ tmp280,
+	movt	r2, #:upper16:80768	@ tmp281,
+	movw	lr, #:lower16:80724	@ tmp279,
+	add	r0, r4, #80896	@, pCtx,
+	ldr	r8, [r4, r3]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	movt	lr, #:upper16:80724	@ tmp279,
+	ldr	ip, [r4, r2]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
+	add	r0, r0, #64	@,,
+	add	r6, r8, ip	@ D.39020, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	ldr	r8, [r4, lr]	@ temp.2220, <variable>.CodecInfo.Frame_Cnt
 	bl	BsPos	@
-	mov	r3, r9	@, prephitmp.2182
+	mov	r3, r9	@, prephitmp.2184
+	str	r7, [sp, #0]	@ prephitmp.2253,
 	movw	r1, #:lower16:.LC46	@,
+	mov	r2, r8	@, temp.2220
 	movt	r1, #:upper16:.LC46	@,
-	mov	r2, r8	@, temp.2218
-	str	r7, [sp, #0]	@ prephitmp.2248,
-	add	ip, r6, r0, lsr #3	@, tmp286, D.39004,,
+	add	r7, r6, r0, lsr #3	@, tmp288, D.39020,,
 	mov	r0, #18	@,
-	str	ip, [sp, #4]	@ tmp286,
+	str	r7, [sp, #4]	@ tmp288,
 	bl	dprint_vfmw	@
-	movw	r3, #:lower16:79180	@ tmp287,
-	movt	r3, #:upper16:79180	@ tmp287,
-	ldr	r7, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r0, [r4, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	bic	r6, r0, #14155776	@ tmp290, <variable>.CodecInfo.StreamIntegrality,
-	str	r6, [r4, r3]	@ tmp290, <variable>.CodecInfo.StreamIntegrality
-	ldr	r0, [r7, #700]	@ <variable>.s32SupportAllP, <variable>.s32SupportAllP
+	movw	r3, #:lower16:80716	@ tmp289,
+	movt	r3, #:upper16:80716	@ tmp289,
+	ldr	r6, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
+	bic	r0, r1, #14155776	@ tmp292, <variable>.CodecInfo.StreamIntegrality,
+	str	r0, [r4, r3]	@ tmp292, <variable>.CodecInfo.StreamIntegrality
+	ldr	r0, [r6, #700]	@ <variable>.s32SupportAllP, <variable>.s32SupportAllP
 	cmp	r0, #1	@ <variable>.s32SupportAllP,
-	beq	.L567	@,
-	movw	ip, #:lower16:79220	@ tmp297,
-	movt	ip, #:upper16:79220	@ tmp297,
-	ldr	r3, [r4, ip]	@ temp.2221, <variable>.CodecInfo.RefNum
-	cmp	r3, #0	@ temp.2221,
-	bne	.L547	@,
-	ldrb	r1, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
-	sub	lr, r1, #2	@ tmp300, <variable>.picture_coding_type,
-	uxtb	r6, lr	@ tmp301, tmp300
-	cmp	r6, #1	@ tmp301,
-	bls	.L568	@,
-.L545:
-	movw	r6, #:lower16:114672	@ tmp305,
-	movw	r7, #:lower16:79256	@ tmp307,
-	movt	r6, #:upper16:114672	@ tmp305,
-	movt	r7, #:upper16:79256	@ tmp307,
+	beq	.L569	@,
+	movw	r7, #:lower16:80756	@ tmp299,
+	movt	r7, #:upper16:80756	@ tmp299,
+	ldr	r3, [r4, r7]	@ temp.2224, <variable>.CodecInfo.RefNum
+	cmp	r3, #0	@ temp.2224,
+	bne	.L548	@,
+	ldrb	ip, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
+	sub	lr, ip, #2	@ tmp302, <variable>.picture_coding_type,
+	uxtb	r6, lr	@ tmp303, tmp302
+	cmp	r6, #1	@ tmp303,
+	bls	.L570	@,
+.L546:
+	movw	r6, #:lower16:117744	@ tmp307,
+	movw	r3, #:lower16:80792	@ tmp309,
+	movt	r6, #:upper16:117744	@ tmp307,
+	movt	r3, #:upper16:80792	@ tmp309,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.FwdFsID
+	ldr	r1, [r4, r3]	@, <variable>.CodecInfo.FwdFsID
 	bl	FSP_GetFsImagePtr	@
-	movw	r2, #:lower16:79260	@ tmp311,
-	movt	r2, #:upper16:79260	@ tmp311,
+	movw	r2, #:lower16:80796	@ tmp313,
+	movt	r2, #:upper16:80796	@ tmp313,
 	ldr	r1, [r4, r2]	@, <variable>.CodecInfo.BwdFsID
 	mov	r7, r0	@ pFwdImg,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	cmp	r7, #0	@ pFwdImg,
 	cmpne	r0, #0	@, pBwdImg,
-	movne	r6, #0	@, tmp319
-	moveq	r6, #1	@, tmp319
-	beq	.L569	@,
-	ldrb	r3, [r5, #22]	@ zero_extendqisi2	@ temp.2228, <variable>.picture_coding_type
-	cmp	r3, #2	@ temp.2228,
-	beq	.L570	@,
-	cmp	r3, #3	@ temp.2228,
+	movne	r6, #0	@, tmp321
+	moveq	r6, #1	@, tmp321
 	beq	.L571	@,
-.L550:
+	ldrb	r3, [r5, #22]	@ zero_extendqisi2	@ temp.2231, <variable>.picture_coding_type
+	cmp	r3, #2	@ temp.2231,
+	beq	.L572	@,
+	cmp	r3, #3	@ temp.2231,
+	beq	.L573	@,
+.L551:
 	cmp	sl, #0	@ ret,
-	movne	r0, #1	@ D.38919,
+	movne	r0, #1	@ D.38933,
 	bne	.L519	@,
-	ldrb	r1, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
-	cmp	r1, #3	@ <variable>.picture_structure,
-	beq	.L553	@,
-	movw	r2, #:lower16:79192	@ tmp330,
-	movt	r2, #:upper16:79192	@ tmp330,
-	ldr	r3, [r4, r2]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
-	cmp	r3, #0	@ <variable>.CodecInfo.Second_Field,
-	movne	r0, sl	@ D.38919, ret
+	ldrb	ip, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
+	cmp	ip, #3	@ <variable>.picture_structure,
+	beq	.L554	@,
+	movw	r3, #:lower16:80728	@ tmp332,
+	movt	r3, #:upper16:80728	@ tmp332,
+	ldr	r2, [r4, r3]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
+	cmp	r2, #0	@ <variable>.CodecInfo.Second_Field,
+	movne	r0, sl	@ D.38933, ret
 	bne	.L519	@,
-.L553:
+.L554:
 	ldrb	r0, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
 	cmp	r0, #1	@ <variable>.progressive_sequence,
-	beq	.L572	@,
+	beq	.L574	@,
 	ldrb	lr, [r5, #18]	@ zero_extendqisi2	@ <variable>.progressive_frame, <variable>.progressive_frame
 	cmp	lr, #1	@ <variable>.progressive_frame,
-	beq	.L573	@,
-	movw	r0, #:lower16:79344	@ tmp353,
-	movt	r0, #:upper16:79344	@ tmp353,
-	movw	lr, #:lower16:79340	@ tmp356,
-	movt	lr, #:upper16:79340	@ tmp356,
-	ldr	r2, [r4, r0]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
-	add	r1, r2, #1	@ temp.2240, <variable>.GopFrmCnt,
-	str	r1, [r4, r0]	@ temp.2240, <variable>.GopFrmCnt
-	mov	r3, r1, asl #1	@ tmp357, temp.2240,
-	str	r3, [r4, lr]	@ tmp357, <variable>.GopFldCnt
-.L555:
-	movw	r2, #:lower16:79336	@ tmp358,
-	movt	r2, #:upper16:79336	@ tmp358,
-	movw	r3, #:lower16:79188	@ tmp362,
-	movt	r3, #:upper16:79188	@ tmp362,
+	beq	.L575	@,
+	movw	r3, #:lower16:80880	@ tmp355,
+	movt	r3, #:upper16:80880	@ tmp355,
+	movw	lr, #:lower16:80876	@ tmp358,
+	movt	lr, #:upper16:80876	@ tmp358,
+	ldr	r2, [r4, r3]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	add	r1, r2, #1	@ temp.2243, <variable>.GopFrmCnt,
+	str	r1, [r4, r3]	@ temp.2243, <variable>.GopFrmCnt
+	mov	ip, r1, asl #1	@ tmp359, temp.2243,
+	str	ip, [r4, lr]	@ tmp359, <variable>.GopFldCnt
+.L556:
+	movw	r2, #:lower16:80872	@ tmp360,
+	movt	r2, #:upper16:80872	@ tmp360,
+	movw	lr, #:lower16:80724	@ tmp364,
+	movt	lr, #:upper16:80724	@ tmp364,
 	ldr	ip, [r4, r2]	@ <variable>.GopFrmCntNoRpt, <variable>.GopFrmCntNoRpt
-	mov	r0, #0	@ D.38919,
-	add	r1, ip, #1	@ tmp361, <variable>.GopFrmCntNoRpt,
-	str	r1, [r4, r2]	@ tmp361, <variable>.GopFrmCntNoRpt
-	ldr	lr, [r4, r3]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
-	add	ip, lr, #1	@ tmp365, <variable>.CodecInfo.Frame_Cnt,
-	str	ip, [r4, r3]	@ tmp365, <variable>.CodecInfo.Frame_Cnt
+	mov	r0, #0	@ D.38933,
+	add	r3, ip, #1	@ tmp363, <variable>.GopFrmCntNoRpt,
+	str	r3, [r4, r2]	@ tmp363, <variable>.GopFrmCntNoRpt
+	ldr	r1, [r4, lr]	@ <variable>.CodecInfo.Frame_Cnt, <variable>.CodecInfo.Frame_Cnt
+	add	ip, r1, #1	@ tmp367, <variable>.CodecInfo.Frame_Cnt,
+	str	ip, [r4, lr]	@ tmp367, <variable>.CodecInfo.Frame_Cnt
 	b	.L519	@
+.L532:
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	mov	sl, #0	@ ret,
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
 .L531:
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	mov	sl, #0	@ ret,
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	sub	lr, r9, #2	@ tmp257, prephitmp.2184,
+	uxtb	sl, lr	@ tmp258, tmp257
+	cmp	sl, #1	@ tmp258,
+	bls	.L538	@,
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	mov	sl, #1	@ ret,
+	b	.L535	@
 .L530:
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	sub	r1, r9, #2	@ tmp255, prephitmp.2182,
-	uxtb	sl, r1	@ tmp256, tmp255
-	cmp	sl, #1	@ tmp256,
-	bls	.L537	@,
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	mov	sl, #1	@ ret,
-	b	.L534	@
-.L529:
-	ldrb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_coding_type
-	cmp	r7, #3	@ prephitmp.2248,
-	bne	.L561	@,
-	ldrb	r6, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
-	cmp	r6, #3	@ <variable>.picture_structure,
-	beq	.L536	@,
-	movw	r9, #:lower16:79192	@ tmp251,
-	movt	r9, #:upper16:79192	@ tmp251,
+	ldrb	r7, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_coding_type
+	cmp	r7, #3	@ prephitmp.2253,
+	bne	.L563	@,
+	ldrb	r9, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
+	cmp	r9, #3	@ <variable>.picture_structure,
+	beq	.L537	@,
+	movw	r7, #:lower16:80728	@ tmp253,
+	movt	r7, #:upper16:80728	@ tmp253,
 	mov	sl, #0	@ ret,
-	ldr	r0, [r4, r9]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
-	cmp	r0, sl	@ <variable>.CodecInfo.Second_Field,
-	movne	r8, #0	@, tmp254
-	moveq	r8, #1	@, tmp254
-	str	r8, [r4, r9]	@ tmp254, <variable>.CodecInfo.Second_Field
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L528:
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
+	ldr	r1, [r4, r7]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
+	cmp	r1, sl	@ <variable>.CodecInfo.Second_Field,
+	movne	r0, #0	@, tmp256
+	moveq	r0, #1	@, tmp256
+	str	r0, [r4, r7]	@ tmp256, <variable>.CodecInfo.Second_Field
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
+.L529:
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
 	mov	sl, #1	@ ret,
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L547:
-	cmp	r3, #1	@ temp.2221,
-	bhi	.L545	@,
-	ldrb	r3, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
-	cmp	r3, #3	@ <variable>.picture_coding_type,
-	bne	.L545	@,
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
+.L548:
+	cmp	r3, #1	@ temp.2224,
+	bhi	.L546	@,
+	ldrb	r0, [r5, #22]	@ zero_extendqisi2	@ <variable>.picture_coding_type, <variable>.picture_coding_type
+	cmp	r0, #3	@ <variable>.picture_coding_type,
+	bne	.L546	@,
 	movw	r1, #:lower16:.LC50	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC50	@,
 	mov	sl, #0	@ ret,
 	bl	dprint_vfmw	@
-	b	.L545	@
-.L567:
-	movw	r7, #:lower16:79220	@ tmp293,
-	movt	r7, #:upper16:79220	@ tmp293,
-	ldr	r3, [r4, r7]	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
+	b	.L546	@
+.L569:
+	movw	r1, #:lower16:80756	@ tmp295,
+	movt	r1, #:upper16:80756	@ tmp295,
+	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.RefNum, <variable>.CodecInfo.RefNum
 	cmp	r3, #0	@ <variable>.CodecInfo.RefNum,
-	bne	.L545	@,
-	ldrb	r2, [r5, #22]	@ zero_extendqisi2	@ D.38969, <variable>.picture_coding_type
-	cmp	r2, #3	@ D.38969,
-	beq	.L574	@,
-	cmp	r2, #2	@ D.38969,
-	bne	.L545	@,
+	bne	.L546	@,
+	ldrb	r2, [r5, #22]	@ zero_extendqisi2	@ temp.2223, <variable>.picture_coding_type
+	cmp	r2, #3	@ temp.2223,
+	beq	.L576	@,
+	cmp	r2, #2	@ temp.2223,
+	bne	.L546	@,
 	movw	r1, #:lower16:.LC48	@,
 	movt	r1, #:upper16:.LC48	@,
 	bl	dprint_vfmw	@
-	b	.L545	@
-.L569:
+	b	.L546	@
+.L571:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC51	@,
-	ldr	r2, .L577	@,
+	ldr	r2, .L579	@,
 	movt	r1, #:upper16:.LC51	@,
-	mov	r3, #860	@,
+	movw	r3, #863	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38919,
+	mov	r0, #0	@ D.38933,
 	b	.L519	@
-.L570:
-	ldr	ip, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r7, #200]	@ D.39048, <variable>.error_level
-	ldr	r3, [ip, #0]	@ D.39049, <variable>.s32RefErrThr
-	cmp	r2, r3	@ D.39048, D.39049
-	bls	.L550	@,
+.L572:
+	ldr	r1, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
+	ldr	r2, [r7, #200]	@ D.39064, <variable>.error_level
+	ldr	r3, [r1, #0]	@ D.39065, <variable>.s32RefErrThr
+	cmp	r2, r3	@ D.39064, D.39065
+	bls	.L551	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC52	@,
 	movt	r1, #:upper16:.LC52	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.38919, tmp319
+	mov	r0, r6	@ D.38933, tmp321
 	b	.L519	@
-.L571:
+.L573:
 	ldr	lr, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
-	ldr	r2, [r7, #200]	@ temp.2230, <variable>.error_level
-	ldr	r3, [lr, #0]	@ temp.2232, <variable>.s32RefErrThr
-	cmp	r2, r3	@ temp.2230, temp.2232
-	bhi	.L575	@,
-	ldr	r2, [r0, #200]	@ D.39065, <variable>.error_level
-	cmp	r3, r2	@ temp.2232, D.39065
-	bcs	.L550	@,
+	ldr	r2, [r7, #200]	@ temp.2233, <variable>.error_level
+	ldr	r3, [lr, #0]	@ temp.2235, <variable>.s32RefErrThr
+	cmp	r2, r3	@ temp.2233, temp.2235
+	bhi	.L577	@,
+	ldr	r2, [r0, #200]	@ D.39081, <variable>.error_level
+	cmp	r3, r2	@ temp.2235, D.39081
+	bcs	.L551	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC54	@,
 	movt	r1, #:upper16:.LC54	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.38919, tmp319
+	mov	r0, r6	@ D.38933, tmp321
 	b	.L519	@
-.L572:
-	movw	r3, #:lower16:79344	@ tmp333,
-	movt	r3, #:upper16:79344	@ tmp333,
+.L574:
+	movw	r2, #:lower16:80880	@ tmp335,
+	movt	r2, #:upper16:80880	@ tmp335,
 	ldrb	ip, [r5, #16]	@ zero_extendqisi2	@ <variable>.repeat_first_field, <variable>.repeat_first_field
-	movw	lr, #:lower16:79340	@ tmp340,
-	ldr	r2, [r4, r3]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
-	movt	lr, #:upper16:79340	@ tmp340,
+	movw	lr, #:lower16:80876	@ tmp342,
+	ldr	r3, [r4, r2]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	movt	lr, #:upper16:80876	@ tmp342,
 	ldrb	r0, [r5, #10]	@ zero_extendqisi2	@ <variable>.top_field_first, <variable>.top_field_first
-	add	r1, r2, #1	@ tmp334, <variable>.GopFrmCnt,
-	add	r2, r1, ip	@ tmp337, tmp334, <variable>.repeat_first_field
-	add	r1, r2, r0	@ D.39082, tmp337, <variable>.top_field_first
-	str	r1, [r4, r3]	@ D.39082, <variable>.GopFrmCnt
-	mov	ip, r1, asl #1	@ tmp341, D.39082,
-	str	ip, [r4, lr]	@ tmp341, <variable>.GopFldCnt
-	b	.L555	@
-.L575:
+	add	r1, r3, #1	@ tmp336, <variable>.GopFrmCnt,
+	add	r3, r1, ip	@ tmp339, tmp336, <variable>.repeat_first_field
+	add	ip, r3, r0	@ D.39098, tmp339, <variable>.top_field_first
+	str	ip, [r4, r2]	@ D.39098, <variable>.GopFrmCnt
+	mov	r1, ip, asl #1	@ tmp343, D.39098,
+	str	r1, [r4, lr]	@ tmp343, <variable>.GopFldCnt
+	b	.L556	@
+.L577:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC53	@,
 	movt	r1, #:upper16:.LC53	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ D.38919, tmp319
+	mov	r0, r6	@ D.38933, tmp321
 	b	.L519	@
-.L566:
-	movw	r8, #:lower16:114684	@ tmp268,
-	movt	r8, #:upper16:114684	@ tmp268,
-	ldr	sl, [r4, r8]	@ <variable>.PPicFound, <variable>.PPicFound
+.L568:
+	movw	r0, #:lower16:117756	@ tmp270,
+	movt	r0, #:upper16:117756	@ tmp270,
+	ldr	sl, [r4, r0]	@ <variable>.PPicFound, <variable>.PPicFound
 	cmp	sl, #0	@ <variable>.PPicFound,
-	bne	.L561	@,
-	ldrb	r9, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
-	cmp	r9, #3	@ <variable>.picture_structure,
-	beq	.L536	@,
-	movw	r1, #:lower16:79192	@ tmp271,
-	movt	r1, #:upper16:79192	@ tmp271,
-	ldr	ip, [r4, r1]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
-	rsbs	r0, ip, #1	@ tmp274, <variable>.CodecInfo.Second_Field
-	movcc	r0, #0	@ tmp274
-	str	r0, [r4, r1]	@ tmp274, <variable>.CodecInfo.Second_Field
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L537:
-	cmp	r9, #2	@ prephitmp.2182,
-	beq	.L576	@,
+	bne	.L563	@,
+	ldrb	r1, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
+	cmp	r1, #3	@ <variable>.picture_structure,
+	beq	.L537	@,
+	movw	lr, #:lower16:80728	@ tmp273,
+	movt	lr, #:upper16:80728	@ tmp273,
+	ldr	ip, [r4, lr]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
+	rsbs	r7, ip, #1	@ tmp276, <variable>.CodecInfo.Second_Field
+	movcc	r7, #0	@ tmp276
+	str	r7, [r4, lr]	@ tmp276, <variable>.CodecInfo.Second_Field
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
 .L538:
+	cmp	r9, #2	@ prephitmp.2184,
+	beq	.L578	@,
+.L539:
 	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ <variable>.picture_structure, <variable>.picture_structure
 	cmp	r7, #3	@ <variable>.picture_structure,
-	beq	.L562	@,
-	movw	r3, #:lower16:79192	@ tmp262,
-	movt	r3, #:upper16:79192	@ tmp262,
+	beq	.L564	@,
+	movw	r3, #:lower16:80728	@ tmp264,
+	movt	r3, #:upper16:80728	@ tmp264,
 	mov	sl, #0	@ ret,
-	ldr	r6, [r4, r3]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
-	cmp	r6, sl	@ <variable>.CodecInfo.Second_Field,
-	movne	lr, #0	@, tmp265
-	moveq	lr, #1	@, tmp265
-	str	lr, [r4, r3]	@ tmp265, <variable>.CodecInfo.Second_Field
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L573:
-	movw	r2, #:lower16:79344	@ tmp343,
-	movt	r2, #:upper16:79344	@ tmp343,
-	movw	r3, #:lower16:79340	@ tmp347,
-	movt	r3, #:upper16:79340	@ tmp347,
-	ldr	ip, [r4, r2]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
-	ldr	lr, [r4, r3]	@ <variable>.GopFldCnt, <variable>.GopFldCnt
-	add	r0, ip, #1	@ tmp346, <variable>.GopFrmCnt,
-	str	r0, [r4, r2]	@ tmp346, <variable>.GopFrmCnt
-	ldrb	ip, [r5, #16]	@ zero_extendqisi2	@ <variable>.repeat_first_field, <variable>.repeat_first_field
-	add	r1, lr, #2	@ tmp349, <variable>.GopFldCnt,
-	add	r0, r1, ip	@ tmp352, tmp349, <variable>.repeat_first_field
-	str	r0, [r4, r3]	@ tmp352, <variable>.GopFldCnt
-	b	.L555	@
-.L543:
-	movw	r2, #:lower16:114684	@ tmp275,
-	movt	r2, #:upper16:114684	@ tmp275,
-	mov	sl, #1	@ tmp276,
-	str	sl, [r4, r2]	@ tmp276, <variable>.PPicFound
-	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2182, <variable>.picture_coding_type
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L568:
+	ldr	r9, [r4, r3]	@ <variable>.CodecInfo.Second_Field, <variable>.CodecInfo.Second_Field
+	cmp	r9, sl	@ <variable>.CodecInfo.Second_Field,
+	movne	r8, #0	@, tmp267
+	moveq	r8, #1	@, tmp267
+	str	r8, [r4, r3]	@ tmp267, <variable>.CodecInfo.Second_Field
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
+.L575:
+	movw	r2, #:lower16:80880	@ tmp345,
+	movt	r2, #:upper16:80880	@ tmp345,
+	movw	ip, #:lower16:80876	@ tmp349,
+	movt	ip, #:upper16:80876	@ tmp349,
+	ldr	r0, [r4, r2]	@ <variable>.GopFrmCnt, <variable>.GopFrmCnt
+	ldr	r3, [r4, ip]	@ <variable>.GopFldCnt, <variable>.GopFldCnt
+	add	lr, r0, #1	@ tmp348, <variable>.GopFrmCnt,
+	str	lr, [r4, r2]	@ tmp348, <variable>.GopFrmCnt
+	ldrb	r0, [r5, #16]	@ zero_extendqisi2	@ <variable>.repeat_first_field, <variable>.repeat_first_field
+	add	r1, r3, #2	@ tmp351, <variable>.GopFldCnt,
+	add	r2, r1, r0	@ tmp354, tmp351, <variable>.repeat_first_field
+	str	r2, [r4, ip]	@ tmp354, <variable>.GopFldCnt
+	b	.L556	@
+.L544:
+	movw	r2, #:lower16:117756	@ tmp277,
+	movt	r2, #:upper16:117756	@ tmp277,
+	mov	sl, #1	@ tmp278,
+	str	sl, [r4, r2]	@ tmp278, <variable>.PPicFound
+	ldrb	r9, [r5, #22]	@ zero_extendqisi2	@ prephitmp.2184, <variable>.picture_coding_type
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
+.L570:
 	movw	r1, #:lower16:.LC49	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC49	@,
-	mov	sl, r3	@ ret, temp.2221
+	mov	sl, r3	@ ret, temp.2224
 	bl	dprint_vfmw	@
-	b	.L545	@
-.L536:
-	mov	r9, #3	@ prephitmp.2182,
-.L562:
+	b	.L546	@
+.L537:
+	mov	r9, #3	@ prephitmp.2184,
+.L564:
 	mov	sl, #0	@ ret,
-	b	.L534	@
-.L574:
+	b	.L535	@
+.L576:
 	movw	r1, #:lower16:.LC47	@,
 	movt	r1, #:upper16:.LC47	@,
 	mov	sl, r3	@ ret, <variable>.CodecInfo.RefNum
 	bl	dprint_vfmw	@
-	b	.L545	@
-.L565:
-	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, sl]	@ D.38967, <variable>.CodecInfo.BwdFsID
-	str	r0, [r4, r9]	@ D.38967, <variable>.CodecInfo.FwdFsID
-	b	.L527	@
-.L576:
-	movw	r2, #45329	@ tmp257,
+	b	.L546	@
+.L578:
+	movw	r2, #45329	@ tmp259,
 	ldrb	ip, [r4, r2]	@ zero_extendqisi2	@ <variable>.CodecInfo.Last_FieldStruct, <variable>.CodecInfo.Last_FieldStruct
 	cmp	ip, #3	@ <variable>.CodecInfo.Last_FieldStruct,
-	beq	.L538	@,
-	movw	r7, #45328	@ tmp259,
-	ldrb	sl, [r4, r7]	@ zero_extendqisi2	@ <variable>.CodecInfo.LastDecPicCodingType, <variable>.CodecInfo.LastDecPicCodingType
+	beq	.L539	@,
+	movw	r6, #45328	@ tmp261,
+	ldrb	sl, [r4, r6]	@ zero_extendqisi2	@ <variable>.CodecInfo.LastDecPicCodingType, <variable>.CodecInfo.LastDecPicCodingType
 	cmp	sl, #1	@ <variable>.CodecInfo.LastDecPicCodingType,
-	bne	.L538	@,
-	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2248, <variable>.picture_structure
-	b	.L534	@
-.L578:
+	bne	.L539	@,
+	ldrb	r7, [r5, #9]	@ zero_extendqisi2	@ prephitmp.2253, <variable>.picture_structure
+	b	.L535	@
+.L567:
+	ldr	r0, [r4, r6]	@, <variable>.ChanID
+	bl	FSP_GetNullLogicFs	@
+	str	r0, [r4, sl]	@ D.38984, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, r9]	@ D.38984, <variable>.CodecInfo.FwdFsID
+	b	.L528	@
+.L580:
 	.align	2
-.L577:
+.L579:
 	.word	.LANCHOR0+1164
 	.fnend
 	.size	MP2_DecodingDecide, .-MP2_DecodingDecide
@@ -5661,27 +5663,27 @@ MP2_ArrangeVHBMem:
 	sub	sp, sp, #52	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:80504	@ tmp157,
-	movt	r3, #:upper16:80504	@ tmp157,
+	movw	r3, #:lower16:82040	@ tmp157,
+	movt	r3, #:upper16:82040	@ tmp157,
 	mov	r6, r0	@ pCtx, pCtx
 	ldr	r3, [r0, r3]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
-	ldr	r2, [r3, #48]	@ D.38650, <variable>.horizontal_size
-	cmp	r2, #31	@ D.38650,
-	ldrls	r3, [r3, #52]	@ prephitmp.2263, <variable>.vertical_size
-	bls	.L581	@,
-	ldr	r3, [r3, #52]	@ prephitmp.2263, <variable>.vertical_size
-	cmp	r3, #31	@ prephitmp.2263,
-	bls	.L581	@,
-	ldr	r1, [r0, #0]	@ D.38657, <variable>.pstExtraData
+	ldr	r2, [r3, #48]	@ D.38664, <variable>.horizontal_size
+	cmp	r2, #31	@ D.38664,
+	ldrls	r3, [r3, #52]	@ prephitmp.2268, <variable>.vertical_size
+	bls	.L583	@,
+	ldr	r3, [r3, #52]	@ prephitmp.2268, <variable>.vertical_size
+	cmp	r3, #31	@ prephitmp.2268,
+	bls	.L583	@,
+	ldr	r1, [r0, #0]	@ D.38671, <variable>.pstExtraData
 	ldr	r0, [r1, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	r0, #25	@ <variable>.eCapLevel,
-	beq	.L604	@,
-	mov	r4, r2	@ PicWidth, D.38650
-	mov	r5, r3	@ PicHeight, prephitmp.2263
-	mov	r8, #5	@ prephitmp.2265,
+	beq	.L606	@,
+	mov	r4, r2	@ PicWidth, D.38664
+	mov	r5, r3	@ PicHeight, prephitmp.2268
+	mov	r8, #5	@ prephitmp.2270,
 	mov	sl, #2	@ PmvNum,
 	mov	r9, #3	@ DecFsNum,
-.L591:
+.L593:
 	sub	r7, fp, #84	@ tmp193,,
 	mov	r1, #36	@,
 	mov	r0, r7	@, tmp193
@@ -5696,13 +5698,13 @@ MP2_ArrangeVHBMem:
 	strb	ip, [fp, #-84]	@ <variable>.s32DnrDispOutEnable, FspInstCfg.s32DispLoopEnable
 	str	r5, [fp, #-68]	@ PicHeight, FspInstCfg.s32DecFsHeight
 	ldr	r5, [r3, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
-	strb	r8, [fp, #-77]	@ prephitmp.2265, FspInstCfg.s32ExpectedDispFsNum
+	strb	r8, [fp, #-77]	@ prephitmp.2270, FspInstCfg.s32ExpectedDispFsNum
 	cmp	r5, #24	@ <variable>.eCapLevel,
-	movw	r5, #:lower16:114672	@ tmp182,
+	movw	r5, #:lower16:117744	@ tmp182,
 	uxtbne	r0, r9	@ iftmp.441, DecFsNum
 	strb	r0, [fp, #-79]	@ iftmp.441, FspInstCfg.s32ExpectedDecFsNum
 	ldr	r1, [r3, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
-	movt	r5, #:upper16:114672	@ tmp182,
+	movt	r5, #:upper16:117744	@ tmp182,
 	cmp	r1, #24	@ <variable>.eCapLevel,
 	mov	r1, r7	@, tmp193
 	uxtbne	sl, sl	@ iftmp.442, PmvNum
@@ -5712,100 +5714,100 @@ MP2_ArrangeVHBMem:
 	ldr	r0, [r6, r5]	@, <variable>.ChanID
 	strb	r7, [fp, #-80]	@ tmp180, FspInstCfg.s32UserDec
 	bl	FSP_ConfigInstance	@
-	subs	r4, r0, #0	@ D.38701,
-	bne	.L601	@,
-	ldr	lr, [r6, #0]	@ temp.2292, <variable>.pstExtraData
+	subs	r4, r0, #0	@ D.38715,
+	bne	.L603	@,
+	ldr	lr, [r6, #0]	@ temp.2297, <variable>.pstExtraData
 	sub	r3, fp, #48	@,,
 	ldr	r0, [r6, r5]	@, <variable>.ChanID
 	ldr	r2, [lr, #28]	@, <variable>.s32SyntaxMemSize
 	ldr	r1, [lr, #24]	@, <variable>.s32SyntaxMemAddr
 	bl	FSP_PartitionFsMemory	@
 	cmp	r0, r7	@,
-	moveq	r0, #1	@ D.38654,
-	beq	.L583	@,
-	mov	r0, r4	@, D.38701
+	moveq	r0, #1	@ D.38668,
+	beq	.L585	@,
+	mov	r0, r4	@, D.38715
 	movw	r1, #:lower16:.LC57	@,
 	movt	r1, #:upper16:.LC57	@,
 	bl	dprint_vfmw	@
-	mov	r0, r4	@ D.38654, D.38701
-	b	.L583	@
-.L581:
+	mov	r0, r4	@ D.38668, D.38715
+	b	.L585	@
+.L583:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC55	@,
 	movt	r1, #:upper16:.LC55	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38654,
-.L583:
+	mov	r0, #0	@ D.38668,
+.L585:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L601:
+.L603:
 	mov	r0, r7	@, tmp180
 	movw	r1, #:lower16:.LC58	@,
 	movt	r1, #:upper16:.LC58	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.38654, tmp180
-	b	.L583	@
-.L604:
+	mov	r0, r7	@ D.38668, tmp180
+	b	.L585	@
+.L606:
 	ldr	ip, [r1, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	ip, #0	@ <variable>.stChanOption.s32ReRangeEn,
-	bne	.L585	@,
+	bne	.L587	@,
 	ldr	r4, [r1, #744]	@ PicWidth, <variable>.stChanOption.s32MaxWidth
-	cmp	r2, r4	@ D.38650, PicWidth
+	cmp	r2, r4	@ D.38664, PicWidth
 	ldrhi	r5, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
-	bhi	.L587	@,
+	bhi	.L589	@,
 	ldr	r5, [r1, #748]	@ PicHeight, <variable>.stChanOption.s32MaxHeight
-	cmp	r3, r5	@ prephitmp.2263, PicHeight
-	bhi	.L587	@,
+	cmp	r3, r5	@ prephitmp.2268, PicHeight
+	bhi	.L589	@,
 	ldr	r2, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ D.38670, <variable>.stChanOption.s32MaxRefFrameNum
+	ldr	r9, [r1, #768]	@ D.38684, <variable>.stChanOption.s32MaxRefFrameNum
 	cmp	r2, #0	@ <variable>.stChanOption.s32SupportBFrame,
 	moveq	sl, #1	@ PmvNum,
-	beq	.L590	@,
-	add	sl, r9, #1	@ PmvNum.2278, D.38670,
-	cmp	sl, #17	@ PmvNum.2278,
-	movge	sl, #17	@ PmvNum,
-.L590:
-	add	r9, r9, #2	@ DecFsNum, D.38670,
-	ldrb	r8, [r1, #796]	@ zero_extendqisi2	@ prephitmp.2265, <variable>.stChanOption.s32DisplayFrameNum
-	b	.L591	@
-.L585:
-	ldr	ip, [r1, #744]	@ D.38664, <variable>.stChanOption.s32MaxWidth
-	cmp	r2, ip	@ D.38650, D.38664
-	ldrhi	lr, [r1, #748]	@ prephitmp.2267, <variable>.stChanOption.s32MaxHeight
-	bhi	.L593	@,
-	ldr	lr, [r1, #748]	@ prephitmp.2267, <variable>.stChanOption.s32MaxHeight
-	cmp	r3, lr	@ prephitmp.2263, prephitmp.2267
-	bhi	.L593	@,
-	ldr	r4, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
-	ldr	r9, [r1, #768]	@ temp.2281, <variable>.stChanOption.s32MaxRefFrameNum
-	cmp	r4, #0	@ <variable>.stChanOption.s32SupportBFrame,
-	moveq	sl, #1	@ PmvNum,
-	beq	.L596	@,
-	add	sl, r9, #1	@ PmvNum.2283, temp.2281,
+	beq	.L592	@,
+	add	sl, r9, #1	@ PmvNum.2283, D.38684,
 	cmp	sl, #17	@ PmvNum.2283,
 	movge	sl, #17	@ PmvNum,
-.L596:
-	ldrb	r8, [r1, #796]	@ zero_extendqisi2	@ prephitmp.2265, <variable>.stChanOption.s32DisplayFrameNum
-	add	r9, r9, #2	@ DecFsNum, temp.2281,
-	mov	r4, r2	@ PicWidth, D.38650
-	mov	r5, r3	@ PicHeight, prephitmp.2263
-	b	.L591	@
-.L593:
+.L592:
+	add	r9, r9, #2	@ DecFsNum, D.38684,
+	ldrb	r8, [r1, #796]	@ zero_extendqisi2	@ prephitmp.2270, <variable>.stChanOption.s32DisplayFrameNum
+	b	.L593	@
+.L587:
+	ldr	ip, [r1, #744]	@ D.38678, <variable>.stChanOption.s32MaxWidth
+	cmp	r2, ip	@ D.38664, D.38678
+	ldrhi	lr, [r1, #748]	@ prephitmp.2272, <variable>.stChanOption.s32MaxHeight
+	bhi	.L595	@,
+	ldr	lr, [r1, #748]	@ prephitmp.2272, <variable>.stChanOption.s32MaxHeight
+	cmp	r3, lr	@ prephitmp.2268, prephitmp.2272
+	bhi	.L595	@,
+	ldr	r4, [r1, #776]	@ <variable>.stChanOption.s32SupportBFrame, <variable>.stChanOption.s32SupportBFrame
+	ldr	r9, [r1, #768]	@ temp.2286, <variable>.stChanOption.s32MaxRefFrameNum
+	cmp	r4, #0	@ <variable>.stChanOption.s32SupportBFrame,
+	moveq	sl, #1	@ PmvNum,
+	beq	.L598	@,
+	add	sl, r9, #1	@ PmvNum.2288, temp.2286,
+	cmp	sl, #17	@ PmvNum.2288,
+	movge	sl, #17	@ PmvNum,
+.L598:
+	ldrb	r8, [r1, #796]	@ zero_extendqisi2	@ prephitmp.2270, <variable>.stChanOption.s32DisplayFrameNum
+	add	r9, r9, #2	@ DecFsNum, temp.2286,
+	mov	r4, r2	@ PicWidth, D.38664
+	mov	r5, r3	@ PicHeight, prephitmp.2268
+	b	.L593	@
+.L595:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC56	@,
 	movt	r1, #:upper16:.LC56	@,
 	stmia	sp, {ip, lr}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38654,
-	b	.L583	@
-.L587:
+	mov	r0, #0	@ D.38668,
+	b	.L585	@
+.L589:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC56	@,
 	movt	r1, #:upper16:.LC56	@,
 	stmia	sp, {r4, r5}	@ phole stm
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.38654,
-	b	.L583	@
+	mov	r0, #0	@ D.38668,
+	b	.L585	@
 	.fnend
 	.size	MP2_ArrangeVHBMem, .-MP2_ArrangeVHBMem
 	.align	2
@@ -5827,14 +5829,14 @@ MP2_GetSequenceInfo:
 	sub	sp, sp, #36	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r3, #:lower16:79216	@ tmp156,
-	movt	r3, #:upper16:79216	@ tmp156,
+	movw	r3, #:lower16:80752	@ tmp156,
+	movt	r3, #:upper16:80752	@ tmp156,
 	mov	r4, r0	@ pCtx, pCtx
-	movw	ip, #:lower16:80508	@ tmp155,
-	movw	r0, #:lower16:80504	@ tmp154,
+	movw	ip, #:lower16:82044	@ tmp155,
+	movw	r0, #:lower16:82040	@ tmp154,
 	ldr	r2, [r4, r3]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
-	movt	r0, #:upper16:80504	@ tmp154,
-	movt	ip, #:upper16:80508	@ tmp155,
+	movt	r0, #:upper16:82040	@ tmp154,
+	movt	ip, #:upper16:82044	@ tmp155,
 	mov	r1, #0	@ tmp151,
 	cmp	r2, #1	@ <variable>.CodecInfo.MpegFlag,
 	ldr	r5, [r4, r0]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
@@ -5842,74 +5844,74 @@ MP2_GetSequenceInfo:
 	str	r1, [fp, #-56]	@ tmp151, NewNum
 	str	r1, [fp, #-48]	@ tmp151, RefNum
 	str	r1, [fp, #-52]	@ tmp151, ReadNum
-	beq	.L607	@,
+	beq	.L609	@,
 	cmp	r2, #2	@ <variable>.CodecInfo.MpegFlag,
-	beq	.L632	@,
-	movw	r2, #:lower16:79180	@ tmp169,
-	movt	r2, #:upper16:79180	@ tmp169,
+	beq	.L634	@,
+	movw	r2, #:lower16:80716	@ tmp169,
+	movt	r2, #:upper16:80716	@ tmp169,
 	ldr	r1, [r4, r2]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	tst	r1, #3538944	@ <variable>.CodecInfo.StreamIntegrality,
-	bne	.L633	@,
-.L612:
+	bne	.L635	@,
+.L614:
 	mov	r2, #1	@ tmp183,
 	str	r2, [r4, r3]	@ tmp183, <variable>.CodecInfo.MpegFlag
-.L610:
+.L612:
 	mov	r0, #17	@,
 	movw	r1, #:lower16:.LC59	@,
 	movt	r1, #:upper16:.LC59	@,
 	bl	dprint_vfmw	@
-	movw	r3, #:lower16:79216	@ tmp185,
-	movt	r3, #:upper16:79216	@ tmp185,
+	movw	r3, #:lower16:80752	@ tmp185,
+	movt	r3, #:upper16:80752	@ tmp185,
 	ldr	r3, [r4, r3]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
 	cmp	r3, #1	@ <variable>.CodecInfo.MpegFlag,
-	beq	.L634	@,
-.L615:
+	beq	.L636	@,
+.L617:
 	ldr	lr, [r5, #48]	@ <variable>.horizontal_size, <variable>.horizontal_size
-	movw	r0, #:lower16:79216	@ tmp211,
-	movt	r0, #:upper16:79216	@ tmp211,
+	movw	r0, #:lower16:80752	@ tmp211,
+	movt	r0, #:upper16:80752	@ tmp211,
 	add	r2, lr, #15	@ tmp208, <variable>.horizontal_size,
 	mov	r3, r2, lsr #4	@ tmp210, tmp208,
 	str	r3, [r5, #56]	@ tmp210, <variable>.mb_width
 	ldr	ip, [r4, r0]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
 	cmp	ip, #2	@ <variable>.CodecInfo.MpegFlag,
-	beq	.L635	@,
-.L616:
-	ldr	r2, [r5, #52]	@ temp.2333, <variable>.vertical_size
-	add	r3, r2, #15	@ tmp217, temp.2333,
+	beq	.L637	@,
+.L618:
+	ldr	r2, [r5, #52]	@ temp.2338, <variable>.vertical_size
+	add	r3, r2, #15	@ tmp217, temp.2338,
 	mov	r1, r3, lsr #4	@ iftmp.466, tmp217,
-.L617:
-	movw	ip, #:lower16:79216	@ tmp220,
-	movt	ip, #:upper16:79216	@ tmp220,
+.L619:
+	movw	ip, #:lower16:80752	@ tmp220,
+	movt	ip, #:upper16:80752	@ tmp220,
 	str	r1, [r5, #60]	@ iftmp.466, <variable>.mb_height
 	mov	r1, #0	@ tmp219,
 	str	r1, [r5, #64]	@ tmp219, <variable>.mb_height_progressive_subtract1mb
 	ldr	lr, [r4, ip]	@ <variable>.CodecInfo.MpegFlag, <variable>.CodecInfo.MpegFlag
 	cmp	lr, #2	@ <variable>.CodecInfo.MpegFlag,
-	beq	.L636	@,
-.L618:
-	movw	r0, #:lower16:79228	@ tmp229,
-	movt	r0, #:upper16:79228	@ tmp229,
-	ldr	r3, [r4, r0]	@ prephitmp.2338, <variable>.CodecInfo.Imgbuf_allocated
-	cmp	r3, #0	@ prephitmp.2338,
-	beq	.L619	@,
+	beq	.L638	@,
+.L620:
+	movw	r0, #:lower16:80764	@ tmp229,
+	movt	r0, #:upper16:80764	@ tmp229,
+	ldr	r3, [r4, r0]	@ prephitmp.2343, <variable>.CodecInfo.Imgbuf_allocated
+	cmp	r3, #0	@ prephitmp.2343,
+	beq	.L621	@,
 	ldr	r1, [r5, #56]	@ <variable>.mb_width, <variable>.mb_width
 	ldr	r2, [r9, #56]	@ <variable>.mb_width, <variable>.mb_width
 	cmp	r1, r2	@ <variable>.mb_width, <variable>.mb_width
-	beq	.L637	@,
-.L619:
-	movw	r6, #:lower16:114672	@ tmp234,
-	movw	r8, #:lower16:79260	@ tmp236,
-	movt	r6, #:upper16:114672	@ tmp234,
-	movt	r8, #:upper16:79260	@ tmp236,
+	beq	.L639	@,
+.L621:
+	movw	r6, #:lower16:117744	@ tmp234,
+	movw	r8, #:lower16:80796	@ tmp236,
+	movt	r6, #:upper16:117744	@ tmp234,
+	movt	r8, #:upper16:80796	@ tmp236,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	ldr	r1, [r4, r8]	@, <variable>.CodecInfo.BwdFsID
 	bl	FSP_GetFsImagePtr	@
 	subs	r7, r0, #0	@ pImg,
-	beq	.L621	@,
+	beq	.L623	@,
 	ldr	r1, [r7, #212]	@, <variable>.p_usrdat
-	movw	sl, #:lower16:79256	@,
+	movw	sl, #:lower16:80792	@,
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
-	movt	sl, #:upper16:79256	@,
+	movt	sl, #:upper16:80792	@,
 	str	sl, [fp, #-72]	@, %sfp
 	bl	FreeUsdByDec	@
 	ldr	r1, [r7, #216]	@, <variable>.p_usrdat
@@ -5941,45 +5943,45 @@ MP2_GetSequenceInfo:
 	str	sl, [r4, r7]	@ tmp250, <variable>.CodecInfo.FwdFsID
 	bl	FSP_GetFspType	@
 	cmp	r0, sl	@,
-	bne	.L638	@,
-.L621:
-	add	ip, r4, #79872	@ D.39386, pCtx,
-	movw	r2, #:lower16:79220	@ tmp272,
-	add	r6, ip, #640	@ D.39386, D.39386,
-	movt	r2, #:upper16:79220	@ tmp272,
-	movw	lr, #:lower16:114672	@ tmp275,
-	movt	lr, #:upper16:114672	@ tmp275,
+	bne	.L640	@,
+.L623:
+	add	ip, r4, #81920	@ D.39402, pCtx,
+	movw	r2, #:lower16:80756	@ tmp272,
+	add	r6, ip, #128	@ D.39402, D.39402,
+	movt	r2, #:upper16:80756	@ tmp272,
+	movw	lr, #:lower16:117744	@ tmp275,
+	movt	lr, #:upper16:117744	@ tmp275,
 	mov	r1, #0	@ tmp273,
 	str	r1, [r4, r2]	@ tmp273, <variable>.CodecInfo.RefNum
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
-	mov	r1, r6	@, D.39386
+	mov	r1, r6	@, D.39402
 	bl	FSP_ClearNotInVoQueue	@
-	ldr	r3, [r4, #0]	@ D.39389, <variable>.pstExtraData
+	ldr	r3, [r4, #0]	@ D.39405, <variable>.pstExtraData
 	ldr	r0, [r3, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r0, #0	@ <variable>.stChanOption.s32ReRangeEn,
-	bne	.L622	@,
+	bne	.L624	@,
 	ldr	r7, [r3, #32]	@ <variable>.eCapLevel, <variable>.eCapLevel
 	cmp	r7, #25	@ <variable>.eCapLevel,
-	beq	.L639	@,
-.L622:
-	movw	r3, #:lower16:79228	@ tmp284,
-	movt	r3, #:upper16:79228	@ tmp284,
+	beq	.L641	@,
+.L624:
+	movw	r3, #:lower16:80764	@ tmp284,
+	movt	r3, #:upper16:80764	@ tmp284,
 	ldr	r0, [r4, r3]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	r0, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
-	beq	.L624	@,
+	beq	.L626	@,
 	ldr	lr, [r9, #56]	@ <variable>.mb_width, <variable>.mb_width
 	cmp	lr, #0	@ <variable>.mb_width,
-	beq	.L624	@,
+	beq	.L626	@,
 	ldr	r1, [r9, #60]	@ <variable>.mb_height, <variable>.mb_height
 	cmp	r1, #0	@ <variable>.mb_height,
-	bne	.L640	@,
-.L624:
-	movw	r7, #:lower16:114672	@ tmp294,
-	movt	r7, #:upper16:114672	@ tmp294,
+	bne	.L642	@,
+.L626:
+	movw	r7, #:lower16:117744	@ tmp294,
+	movt	r7, #:upper16:117744	@ tmp294,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	bl	FSP_GetFspType	@
 	cmp	r0, #0	@,
-	bne	.L625	@,
+	bne	.L627	@,
 	sub	r3, fp, #56	@,,
 	ldr	r0, [r4, r7]	@, <variable>.ChanID
 	sub	r1, fp, #48	@,,
@@ -5988,19 +5990,19 @@ MP2_GetSequenceInfo:
 	ldr	ip, [r4, #0]	@ <variable>.pstExtraData, <variable>.pstExtraData
 	ldr	r3, [ip, #788]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.stChanOption.s32ReRangeEn
 	cmp	r3, #1	@ <variable>.stChanOption.s32ReRangeEn,
-	beq	.L641	@,
-.L626:
-	mov	r0, r6	@, D.39386
+	beq	.L643	@,
+.L628:
+	mov	r0, r6	@, D.39402
 	mov	r6, #0	@ tmp310,
 	bl	ResetVoQueue	@
-	movw	r2, #:lower16:114689	@ tmp309,
-	movt	r2, #:upper16:114689	@ tmp309,
+	movw	r2, #:lower16:117761	@ tmp309,
+	movt	r2, #:upper16:117761	@ tmp309,
 	strb	r6, [r4, r2]	@ tmp310, <variable>.IsWaitToReRange
-.L625:
-	movw	r6, #:lower16:79228	@ tmp312,
-	movw	r0, #:lower16:79244	@ tmp314,
-	movt	r6, #:upper16:79228	@ tmp312,
-	movt	r0, #:upper16:79244	@ tmp314,
+.L627:
+	movw	r6, #:lower16:80764	@ tmp312,
+	movw	r0, #:lower16:80780	@ tmp314,
+	movt	r6, #:upper16:80764	@ tmp312,
+	movt	r0, #:upper16:80780	@ tmp314,
 	mov	r1, #0	@ tmp313,
 	str	r1, [r4, r0]	@ tmp313, <variable>.CodecInfo.QueueImageNum
 	mov	r0, r4	@, pCtx
@@ -6015,15 +6017,15 @@ MP2_GetSequenceInfo:
 	mov	r2, ip, asl #4	@, <variable>.mb_width,
 	mov	r3, r3, asl #4	@, <variable>.mb_height,
 	bl	dprint_vfmw	@
-.L623:
+.L625:
 	movw	lr, #:lower16:g_event_report	@ tmp322,
 	movt	lr, #:upper16:g_event_report	@ tmp322,
-	ldr	ip, [lr, #0]	@ g_event_report.2359, g_event_report
-	cmp	ip, #0	@ g_event_report.2359,
-	beq	.L631	@,
+	ldr	ip, [lr, #0]	@ g_event_report.2364, g_event_report
+	cmp	ip, #0	@ g_event_report.2364,
+	beq	.L633	@,
 	ldrh	r2, [r9, #56]	@, <variable>.mb_width
-	movw	r3, #:lower16:114672	@ tmp328,
-	movt	r3, #:upper16:114672	@ tmp328,
+	movw	r3, #:lower16:117744	@ tmp328,
+	movt	r3, #:upper16:117744	@ tmp328,
 	strh	r2, [fp, #-64]	@ movhi	@, para
 	sub	r2, fp, #64	@,,
 	ldrh	r9, [r9, #60]	@, <variable>.mb_height
@@ -6035,29 +6037,29 @@ MP2_GetSequenceInfo:
 	strh	r5, [fp, #-58]	@ movhi	@, para
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	mov	r3, #8	@,
-	blx	ip	@ g_event_report.2359
+	blx	ip	@ g_event_report.2364
+.L633:
+	movw	ip, #:lower16:80764	@ tmp331,
+	movt	ip, #:upper16:80764	@ tmp331,
+	ldr	r3, [r4, ip]	@ prephitmp.2343, <variable>.CodecInfo.Imgbuf_allocated
+.L622:
+	movw	r0, #:lower16:80712	@ tmp332,
+	movt	r0, #:upper16:80712	@ tmp332,
+	str	r3, [r4, r0]	@ prephitmp.2343, <variable>.CodecInfo.NewSeqInited
 .L631:
-	movw	ip, #:lower16:79228	@ tmp331,
-	movt	ip, #:upper16:79228	@ tmp331,
-	ldr	r3, [r4, ip]	@ prephitmp.2338, <variable>.CodecInfo.Imgbuf_allocated
-.L620:
-	movw	r0, #:lower16:79176	@ tmp332,
-	movt	r0, #:upper16:79176	@ tmp332,
-	str	r3, [r4, r0]	@ prephitmp.2338, <variable>.CodecInfo.NewSeqInited
-.L629:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L632:
-	movw	ip, #:lower16:79180	@ tmp164,
-	movt	ip, #:upper16:79180	@ tmp164,
+.L634:
+	movw	ip, #:lower16:80716	@ tmp164,
+	movt	ip, #:upper16:80716	@ tmp164,
 	ldr	r1, [r4, ip]	@ tmp166,
 	and	lr, r1, #1769472	@ tmp165, tmp166,
 	cmp	lr, #589824	@ tmp165,
-	bne	.L610	@,
-	b	.L612	@
-.L607:
-	movw	r0, #:lower16:79180	@ tmp158,
-	movt	r0, #:upper16:79180	@ tmp158,
+	bne	.L612	@,
+	b	.L614	@
+.L609:
+	movw	r0, #:lower16:80716	@ tmp158,
+	movt	r0, #:upper16:80716	@ tmp158,
 	movw	r1, #:lower16:1179666	@ tmp159,
 	movt	r1, #:upper16:1179666	@ tmp159,
 	ldr	ip, [r4, r0]	@ tmp161,
@@ -6065,8 +6067,8 @@ MP2_GetSequenceInfo:
 	cmp	lr, #1179648	@ tmp159,
 	moveq	r2, #2	@ tmp163,
 	streq	r2, [r4, r3]	@ tmp163, <variable>.CodecInfo.MpegFlag
-	b	.L610	@
-.L634:
+	b	.L612	@
+.L636:
 	mov	r2, #0	@ tmp198,
 	mov	r1, #3	@ tmp191,
 	mov	lr, #5	@ tmp197,
@@ -6081,45 +6083,45 @@ MP2_GetSequenceInfo:
 	strb	r2, [r5, #13]	@ tmp198, <variable>.q_scale_type
 	strb	r2, [r5, #14]	@ tmp198, <variable>.intra_vlc_format
 	strb	r2, [r5, #15]	@ tmp198, <variable>.alternate_scan
-	b	.L615	@
-.L636:
+	b	.L617	@
+.L638:
 	ldrb	r0, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
 	cmp	r0, r1	@ <variable>.progressive_sequence,
-	bne	.L618	@,
-	add	ip, r2, #31	@ tmp223, temp.2333,
-	add	lr, r2, #15	@ tmp226, temp.2333,
+	bne	.L620	@,
+	add	ip, r2, #31	@ tmp223, temp.2338,
+	add	lr, r2, #15	@ tmp226, temp.2338,
 	mov	r3, ip, lsr #5	@ tmp224, tmp223,
 	mov	r1, lr, lsr #4	@ tmp227, tmp226,
 	rsb	r2, r1, r3, asl #1	@, tmp228, tmp227, tmp224,
 	str	r2, [r5, #64]	@ tmp228, <variable>.mb_height_progressive_subtract1mb
-	b	.L618	@
-.L635:
+	b	.L620	@
+.L637:
 	ldrb	r1, [r5, #27]	@ zero_extendqisi2	@ <variable>.progressive_sequence, <variable>.progressive_sequence
 	cmp	r1, #0	@ <variable>.progressive_sequence,
-	bne	.L616	@,
-	ldr	r2, [r5, #52]	@ temp.2333, <variable>.vertical_size
-	add	r0, r2, #31	@ tmp214, temp.2333,
+	bne	.L618	@,
+	ldr	r2, [r5, #52]	@ temp.2338, <variable>.vertical_size
+	add	r0, r2, #31	@ tmp214, temp.2338,
 	mov	ip, r0, lsr #5	@ tmp216, tmp214,
 	mov	r1, ip, asl #1	@ iftmp.466, tmp216,
-	b	.L617	@
-.L633:
-	tst	r1, #131072	@ prephitmp.2312,
+	b	.L619	@
+.L635:
+	tst	r1, #131072	@ prephitmp.2317,
 	mov	r0, #2	@ tmp173,
-	orreq	r1, r1, r0	@ prephitmp.2312, prephitmp.2312,
-	streq	r1, [r4, r2]	@ prephitmp.2312, <variable>.CodecInfo.StreamIntegrality
-	tst	r1, #1048576	@ prephitmp.2312,
+	orreq	r1, r1, r0	@ prephitmp.2317, prephitmp.2317,
+	streq	r1, [r4, r2]	@ prephitmp.2317, <variable>.CodecInfo.StreamIntegrality
+	tst	r1, #1048576	@ prephitmp.2317,
 	str	r0, [r4, r3]	@ tmp173, <variable>.CodecInfo.MpegFlag
-	orreq	r1, r1, #16	@ tmp180, prephitmp.2312,
-	movweq	r2, #:lower16:79180	@ tmp179,
-	movwne	r3, #:lower16:79216	@ tmp178,
-	movteq	r2, #:upper16:79180	@ tmp179,
-	movweq	r3, #:lower16:79216	@ tmp181,
-	movtne	r3, #:upper16:79216	@ tmp178,
-	movteq	r3, #:upper16:79216	@ tmp181,
+	orreq	r1, r1, #16	@ tmp180, prephitmp.2317,
+	movweq	r2, #:lower16:80716	@ tmp179,
+	movwne	r3, #:lower16:80752	@ tmp178,
+	movteq	r2, #:upper16:80716	@ tmp179,
+	movweq	r3, #:lower16:80752	@ tmp181,
+	movtne	r3, #:upper16:80752	@ tmp178,
+	movteq	r3, #:upper16:80752	@ tmp181,
 	streq	r1, [r4, r2]	@ tmp180, <variable>.CodecInfo.StreamIntegrality
-	ldr	r2, [r4, r3]	@ prephitmp.2336, <variable>.CodecInfo.MpegFlag
-	b	.L610	@
-.L640:
+	ldr	r2, [r4, r3]	@ prephitmp.2341, <variable>.CodecInfo.MpegFlag
+	b	.L612	@
+.L642:
 	mov	r7, #0	@ tmp289,
 	mov	r0, #1	@,
 	str	r7, [r4, r3]	@ tmp289, <variable>.CodecInfo.Imgbuf_allocated
@@ -6130,54 +6132,54 @@ MP2_GetSequenceInfo:
 	movt	r2, #:upper16:g_event_report	@ tmp291,
 	ldr	ip, [r2, #0]	@ g_event_report.469, g_event_report
 	cmp	ip, r7	@ g_event_report.469,
-	beq	.L624	@,
-	movw	r3, #:lower16:114672	@ tmp292,
-	movt	r3, #:upper16:114672	@ tmp292,
+	beq	.L626	@,
+	movw	r3, #:lower16:117744	@ tmp292,
+	movt	r3, #:upper16:117744	@ tmp292,
 	mov	r2, r7	@, tmp289
 	mov	r1, #120	@,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	mov	r3, r7	@, tmp2
 	blx	ip	@ g_event_report.469
-	b	.L624	@
-.L637:
+	b	.L626	@
+.L639:
 	ldr	lr, [r5, #60]	@ <variable>.mb_height, <variable>.mb_height
 	ldr	ip, [r9, #60]	@ <variable>.mb_height, <variable>.mb_height
 	cmp	lr, ip	@ <variable>.mb_height, <variable>.mb_height
-	bne	.L619	@,
-	b	.L620	@
-.L641:
+	bne	.L621	@,
+	b	.L622	@
+.L643:
 	ldr	lr, [fp, #-52]	@ ReadNum, ReadNum
 	ldr	r1, [fp, #-56]	@ NewNum, NewNum
 	add	r0, r1, lr	@ tmp303, NewNum, ReadNum
 	cmp	r0, #0	@ tmp303,
-	movwgt	r0, #:lower16:114689	@ tmp306,
-	movtgt	r0, #:upper16:114689	@ tmp306,
+	movwgt	r0, #:lower16:117761	@ tmp306,
+	movtgt	r0, #:upper16:117761	@ tmp306,
 	strgtb	r3, [r4, r0]	@ <variable>.stChanOption.s32ReRangeEn, <variable>.IsWaitToReRange
-	bgt	.L629	@,
-	b	.L626	@
-.L638:
+	bgt	.L631	@,
+	b	.L628	@
+.L640:
 	ldr	r0, [r4, r6]	@, <variable>.ChanID
 	bl	FSP_GetNullLogicFs	@
-	str	r0, [r4, r8]	@ D.39385, <variable>.CodecInfo.BwdFsID
+	str	r0, [r4, r8]	@ D.39401, <variable>.CodecInfo.BwdFsID
 	ldr	r6, [fp, #-72]	@, %sfp
-	str	r0, [r4, r6]	@ D.39385, <variable>.CodecInfo.FwdFsID
-	b	.L621	@
-.L639:
-	movw	r7, #:lower16:79228	@ tmp279,
-	movt	r7, #:upper16:79228	@ tmp279,
+	str	r0, [r4, r6]	@ D.39401, <variable>.CodecInfo.FwdFsID
+	b	.L623	@
+.L641:
+	movw	r7, #:lower16:80764	@ tmp279,
+	movt	r7, #:upper16:80764	@ tmp279,
 	ldr	r8, [r4, r7]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	r8, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
-	bne	.L623	@,
-	mov	r0, r6	@, D.39386
+	bne	.L625	@,
+	mov	r0, r6	@, D.39402
 	bl	ResetVoQueue	@
 	mov	r0, r4	@, pCtx
 	mov	r1, r8	@, <variable>.CodecInfo.Imgbuf_allocated
 	bl	MP2_ArrangeVHBMem	@
-	movw	r3, #:lower16:79244	@ tmp282,
-	movt	r3, #:upper16:79244	@ tmp282,
+	movw	r3, #:lower16:80780	@ tmp282,
+	movt	r3, #:upper16:80780	@ tmp282,
 	str	r8, [r4, r3]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.QueueImageNum
 	str	r0, [r4, r7]	@, <variable>.CodecInfo.Imgbuf_allocated
-	b	.L623	@
+	b	.L625	@
 	.fnend
 	.size	MP2_GetSequenceInfo, .-MP2_GetSequenceInfo
 	.align	2
@@ -6197,78 +6199,78 @@ GetSliceHdr:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r6, r0, #78848	@ pBs, pCtx,
-	movw	r7, #:lower16:79240	@ tmp159,
+	add	r6, r0, #80896	@ pBs, pCtx,
+	movw	r7, #:lower16:80776	@ tmp159,
 	mov	r5, r0	@ pCtx, pCtx
-	add	r6, r6, #576	@ pBs, pBs,
-	movt	r7, #:upper16:79240	@ tmp159,
-	b	.L643	@
-.L648:
+	add	r6, r6, #64	@ pBs, pBs,
+	movt	r7, #:upper16:80776	@ tmp159,
+	b	.L645	@
+.L650:
 	bl	BsShow	@
-	mov	r4, r0	@ D.38876,
+	mov	r4, r0	@ D.38890,
 	mov	r0, r6	@, pBs
 	bl	BsPos	@
-	sub	r4, r4, #256	@ tmp146, D.38876,
+	sub	r4, r4, #256	@ tmp146, D.38890,
 	sub	r4, r4, #1	@ tmp146, tmp146,
 	mov	r1, #32	@,
 	cmp	r4, #174	@ tmp146,
 	str	r0, [r5, r7]	@, <variable>.CodecInfo.HDRUsedBits
 	mov	r0, r6	@, pBs
-	bls	.L653	@,
+	bls	.L655	@,
 	bl	BsSkip	@
-.L643:
+.L645:
 	mov	r0, r5	@, pCtx
 	bl	next_start_code	@
 	mov	r1, #32	@,
-	mov	r4, r0	@ ret.2390,
-	cmp	r4, #1	@ ret.2390,
+	mov	r4, r0	@ ret.2395,
+	cmp	r4, #1	@ ret.2395,
 	mov	r0, r6	@, pBs
-	beq	.L648	@,
-	cmn	r4, #1	@ ret.2390,
-	beq	.L649	@,
-.L652:
-	mov	r0, r4	@ prephitmp.2379, ret.2390
+	beq	.L650	@,
+	cmn	r4, #1	@ ret.2395,
+	beq	.L651	@,
+.L654:
+	mov	r0, r4	@ prephitmp.2384, ret.2395
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L649:
+.L651:
 	movw	lr, #:lower16:g_event_report	@ tmp154,
 	movt	lr, #:upper16:g_event_report	@ tmp154,
 	ldr	ip, [lr, #0]	@ g_event_report.447, g_event_report
 	cmp	ip, #0	@ g_event_report.447,
-	beq	.L652	@,
-	movw	r3, #:lower16:114672	@ tmp155,
-	movt	r3, #:upper16:114672	@ tmp155,
+	beq	.L654	@,
+	movw	r3, #:lower16:117744	@ tmp155,
+	movt	r3, #:upper16:117744	@ tmp155,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r5, r3]	@, <variable>.ChanID
 	mov	r3, r2	@,
 	blx	ip	@ g_event_report.447
-	mov	r0, r4	@ prephitmp.2379, ret.2390
+	mov	r0, r4	@ prephitmp.2384, ret.2395
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L653:
+.L655:
 	bl	BsResidBits	@
 	cmp	r0, #40	@,
-	mvnle	r4, #0	@ ret.2390,
-	ble	.L649	@,
-	movw	r0, #:lower16:79176	@ tmp150,
-	movt	r0, #:upper16:79176	@ tmp150,
+	mvnle	r4, #0	@ ret.2395,
+	ble	.L651	@,
+	movw	r0, #:lower16:80712	@ tmp150,
+	movt	r0, #:upper16:80712	@ tmp150,
 	mov	r1, #0	@ tmp149,
-	movw	r3, #:lower16:79236	@ tmp148,
+	movw	r3, #:lower16:80772	@ tmp148,
 	ldr	r2, [r5, r0]	@ <variable>.CodecInfo.NewSeqInited, <variable>.CodecInfo.NewSeqInited
-	movt	r3, #:upper16:79236	@ tmp148,
+	movt	r3, #:upper16:80772	@ tmp148,
 	cmp	r2, r1	@ <variable>.CodecInfo.NewSeqInited,
 	str	r1, [r5, r3]	@ tmp149, <variable>.CodecInfo.HDRState
-	bne	.L646	@,
+	bne	.L648	@,
 	mov	r0, r5	@, pCtx
 	bl	MP2_GetSequenceInfo	@
-	movw	ip, #:lower16:79228	@ tmp152,
-	movt	ip, #:upper16:79228	@ tmp152,
+	movw	ip, #:lower16:80764	@ tmp152,
+	movt	ip, #:upper16:80764	@ tmp152,
 	ldr	r0, [r5, ip]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	r0, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
 	ldmeqfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
-.L646:
+.L648:
 	mov	r0, r5	@, pCtx
 	bl	MP2_ProtocolPPSCheck	@
-	mov	r0, #1	@ prephitmp.2379,
+	mov	r0, #1	@ prephitmp.2384,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 	.fnend
 	.size	GetSliceHdr, .-GetSliceHdr
@@ -6291,508 +6293,517 @@ MP2_GetHDR:
 	sub	sp, sp, #100	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	ip, #:lower16:80508	@ tmp172,
-	movt	ip, #:upper16:80508	@ tmp172,
+	sub	sl, fp, #76	@ tmp389,,
+	add	r2, sl, #4	@ tmp391, tmp389,
+	movw	r3, #:lower16:82040	@ tmp180,
+	movt	r3, #:upper16:82040	@ tmp180,
 	mov	r4, r0	@ pCtx, pCtx
-	add	r5, r0, #78848	@ pBs, pCtx,
-	movw	lr, #:lower16:80504	@ tmp171,
-	ldr	r6, [r4, ip]	@, <variable>.pSyntaxInfOld
-	add	r5, r5, #576	@ pBs, pBs,
-	movt	lr, #:upper16:80504	@ tmp171,
-	mov	sl, #114688	@ tmp173,
+	mov	r9, #117760	@ tmp182,
+	mov	r5, #0	@ tmp171,
+	str	r5, [r2], #4	@ tmp171, bs_tmp
+	movw	lr, #:lower16:82044	@ tmp181,
+	str	r5, [r2], #4	@ tmp171, bs_tmp
+	movt	lr, #:upper16:82044	@ tmp181,
+	str	r5, [r2], #4	@ tmp171, bs_tmp
+	add	r6, r0, #80896	@ pBs, pCtx,
+	str	r5, [r2], #4	@ tmp171, bs_tmp
+	add	r6, r6, #64	@ pBs, pBs,
+	str	r5, [r2], #4	@ tmp171, bs_tmp
 	mov	r1, #32	@,
-	mov	r8, #0	@ tmp174,
-	strb	r8, [r0, sl]	@ tmp174, <variable>.IsWaitToDecFlag
-	mov	r0, r5	@, pBs
-	ldr	r9, [r4, lr]	@ pSyntaxInfNew, <variable>.pSyntaxInfNew
-	movw	r7, #:lower16:79180	@ tmp176,
-	str	r6, [fp, #-112]	@, %sfp
+	strb	r5, [r0, r9]	@ tmp171, <variable>.IsWaitToDecFlag
+	mov	r0, r6	@, pBs
+	str	r5, [r2], #4	@ tmp171, bs_tmp
+	movw	r8, #:lower16:80716	@ tmp185,
+	str	r5, [r2, #0]	@ tmp171, bs_tmp
+	movt	r8, #:upper16:80716	@ tmp185,
+	str	r5, [fp, #-76]	@ tmp171, bs_tmp
+	ldr	ip, [r4, r3]	@, <variable>.pSyntaxInfNew
+	str	ip, [fp, #-116]	@, %sfp
+	ldr	r7, [r4, lr]	@, <variable>.pSyntaxInfOld
+	str	r7, [fp, #-112]	@, %sfp
 	bl	BsShow	@
-	movt	r7, #:upper16:79180	@ tmp176,
-	ldr	r1, [r4, r7]	@, <variable>.CodecInfo.StreamIntegrality
-	str	r1, [fp, #-116]	@, %sfp
-	mov	r6, r0	@ code,
-	mov	r0, r5	@, pBs
+	ldr	r1, [r4, r8]	@, <variable>.CodecInfo.StreamIntegrality
+	str	r1, [fp, #-120]	@, %sfp
+	mov	r7, r0	@ code,
+	mov	r0, r6	@, pBs
 	bl	BsPos	@
-	movw	r2, #:lower16:79240	@ tmp177,
-	movt	r2, #:upper16:79240	@ tmp177,
+	movw	r2, #:lower16:80776	@ tmp186,
+	movt	r2, #:upper16:80776	@ tmp186,
 	mov	r1, #32	@,
 	str	r0, [r4, r2]	@, <variable>.CodecInfo.HDRUsedBits
-	mov	r0, r5	@, pBs
+	mov	r0, r6	@, pBs
 	bl	BsSkip	@
-	movw	r3, #439	@ tmp178,
-	cmp	r6, r3	@ code, tmp178
-	beq	.L691	@,
-	movw	ip, #435	@ tmp218,
-	cmp	r6, ip	@ code, tmp218
-	cmpne	r6, #440	@, code,
-	bne	.L692	@,
-.L656:
-	movw	r3, #:lower16:79236	@ tmp231,
-	movt	r3, #:upper16:79236	@ tmp231,
-	ldr	r7, [r4, r3]	@ <variable>.CodecInfo.HDRState, <variable>.CodecInfo.HDRState
-	cmp	r7, #1	@ <variable>.CodecInfo.HDRState,
+	movw	r3, #439	@ tmp187,
+	cmp	r7, r3	@ code, tmp187
 	beq	.L693	@,
-.L659:
-	movw	r2, #435	@ tmp245,
-	cmp	r6, r2	@ code, tmp245
-	beq	.L663	@,
-.L696:
-	bls	.L694	@,
-	movw	r3, #437	@ tmp248,
-	cmp	r6, r3	@ code, tmp248
-	beq	.L665	@,
-	bcs	.L695	@,
-.L679:
-	mov	r0, #0	@ prephitmp.2409,
+	movw	ip, #435	@ tmp227,
+	cmp	r7, ip	@ code, tmp227
+	cmpne	r7, #440	@, code,
+	bne	.L694	@,
 .L658:
+	movw	r3, #:lower16:80772	@ tmp240,
+	movt	r3, #:upper16:80772	@ tmp240,
+	ldr	r5, [r4, r3]	@ <variable>.CodecInfo.HDRState, <variable>.CodecInfo.HDRState
+	cmp	r5, #1	@ <variable>.CodecInfo.HDRState,
+	beq	.L695	@,
+.L661:
+	movw	r2, #435	@ tmp254,
+	cmp	r7, r2	@ code, tmp254
+	beq	.L665	@,
+.L698:
+	bls	.L696	@,
+	movw	r3, #437	@ tmp257,
+	cmp	r7, r3	@ code, tmp257
+	beq	.L667	@,
+	bcs	.L697	@,
+.L681:
+	mov	r0, #0	@ prephitmp.2414,
+.L660:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L692:
-	cmp	r6, #256	@ code,
-	beq	.L656	@,
-	movw	r2, #435	@ tmp245,
-	cmp	r6, r2	@ code, tmp245
-	bne	.L696	@,
-.L663:
-	movw	r0, #:lower16:79128	@ tmp251,
-	movw	r1, #:lower16:79232	@ tmp252,
-	movt	r0, #:upper16:79128	@ tmp251,
-	movt	r1, #:upper16:79232	@ tmp252,
-	ldr	r6, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	mov	r0, r5	@, pBs
+.L694:
+	cmp	r7, #256	@ code,
+	beq	.L658	@,
+	movw	r2, #435	@ tmp254,
+	cmp	r7, r2	@ code, tmp254
+	bne	.L698	@,
+.L665:
+	movw	r0, #:lower16:80664	@ tmp260,
+	movw	r1, #:lower16:80768	@ tmp261,
+	movt	r0, #:upper16:80664	@ tmp260,
+	movt	r1, #:upper16:80768	@ tmp261,
+	ldr	r5, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	mov	r0, r6	@, pBs
 	ldr	lr, [r4, r1]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r6, r6, lr	@ D.38770, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	add	r5, r5, lr	@ D.38784, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
 	bl	BsPos	@
 	movw	r1, #:lower16:.LC62	@,
 	movt	r1, #:upper16:.LC62	@,
-	add	r2, r6, r0, lsr #3	@, tmp257, D.38770,,
+	add	r2, r5, r0, lsr #3	@, tmp266, D.38784,,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	sequence_header	@
-	mov	r0, r5	@, pBs
+	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
 	cmp	r0, #0	@,
-	blt	.L697	@,
-	movw	r5, #:lower16:79180	@ tmp267,
-	movt	r5, #:upper16:79180	@ tmp267,
+	blt	.L699	@,
+	movw	r5, #:lower16:80716	@ tmp276,
+	movt	r5, #:upper16:80716	@ tmp276,
 	ldr	r6, [r4, r5]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	ands	r6, r6, #7	@ tmp268, <variable>.CodecInfo.StreamIntegrality,
-	bne	.L670	@,
+	ands	r6, r6, #7	@ tmp277, <variable>.CodecInfo.StreamIntegrality,
+	bne	.L672	@,
+	ldr	r1, [fp, #-116]	@, %sfp
+	mov	lr, #1	@ tmp279,
 	ldr	r0, [fp, #-112]	@, %sfp
-	mov	r1, r9	@, pSyntaxInfNew
-	mov	lr, #1	@ tmp270,
 	mov	r2, #188	@,
-	strb	lr, [r9, #0]	@ tmp270, <variable>.valid_flag
+	strb	lr, [r1, #0]	@ tmp279, <variable>.valid_flag
 	bl	memcpy	@
-	movw	r1, #:lower16:79184	@ tmp276,
-	movt	r1, #:upper16:79184	@ tmp276,
-	mov	r0, r6	@ prephitmp.2409, tmp268
+	movw	r1, #:lower16:80720	@ tmp285,
+	movt	r1, #:upper16:80720	@ tmp285,
+	mov	r0, r6	@ prephitmp.2414, tmp277
 	ldr	r2, [r4, r1]	@ <variable>.CodecInfo.SeqCnt, <variable>.CodecInfo.SeqCnt
-	add	ip, r2, #1	@ tmp279, <variable>.CodecInfo.SeqCnt,
-	str	ip, [r4, r1]	@ tmp279, <variable>.CodecInfo.SeqCnt
-	b	.L658	@
-.L694:
-	cmp	r6, #256	@ code,
-	beq	.L661	@,
-	bcc	.L660	@,
-	cmp	r6, #432	@ code,
-	bls	.L660	@,
-	movw	r0, #:lower16:79128	@ tmp327,
-	movw	lr, #:lower16:79232	@ tmp328,
-	movt	r0, #:upper16:79128	@ tmp327,
-	movt	lr, #:upper16:79232	@ tmp328,
-	ldr	r6, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	mov	r0, r5	@, pBs
-	ldr	r3, [r4, lr]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r5, r6, r3	@ temp.2454, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	add	ip, r2, #1	@ tmp288, <variable>.CodecInfo.SeqCnt,
+	str	ip, [r4, r1]	@ tmp288, <variable>.CodecInfo.SeqCnt
+	b	.L660	@
+.L696:
+	cmp	r7, #256	@ code,
+	beq	.L663	@,
+	bcc	.L662	@,
+	cmp	r7, #432	@ code,
+	bls	.L662	@,
+	movw	r0, #:lower16:80664	@ tmp336,
+	movt	r0, #:upper16:80664	@ tmp336,
+	movw	r3, #:lower16:80768	@ tmp337,
+	movt	r3, #:upper16:80768	@ tmp337,
+	ldr	r5, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	mov	r0, r6	@, pBs
+	ldr	r6, [r4, r3]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
 	bl	BsPos	@
 	movw	r1, #:lower16:.LC68	@,
 	movt	r1, #:upper16:.LC68	@,
-	add	r2, r5, r0, lsr #3	@, tmp333, temp.2454,,
+	add	r5, r5, r6	@ temp.2459, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	add	r2, r5, r0, lsr #3	@, tmp342, temp.2459,,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	MP2_GetUsrData	@
-	subs	r6, r0, #0	@ D.38826,
-	beq	.L698	@,
+	subs	r6, r0, #0	@ D.38840,
+	beq	.L700	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC70	@,
 	movt	r1, #:upper16:.LC70	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@ prephitmp.2409, D.38826
-	b	.L658	@
-.L695:
-	movw	ip, #439	@ tmp250,
-	cmp	r6, ip	@ code, tmp250
-	beq	.L679	@,
-	cmp	r6, #440	@ code,
-	beq	.L699	@,
-.L660:
-	sub	r2, r6, #256	@ tmp357, code,
-	sub	r0, r2, #1	@ tmp357, tmp357,
-	cmp	r0, #174	@ tmp357,
-	bhi	.L677	@,
-	movw	r3, #:lower16:79176	@ tmp359,
-	movt	r3, #:upper16:79176	@ tmp359,
-	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.NewSeqInited, <variable>.CodecInfo.NewSeqInited
-	cmp	r1, #0	@ <variable>.CodecInfo.NewSeqInited,
-	beq	.L700	@,
-.L678:
-	movw	r3, #:lower16:79180	@ tmp365,
-	movt	r3, #:upper16:79180	@ tmp365,
+	mov	r0, r6	@ prephitmp.2414, D.38840
+	b	.L660	@
+.L697:
+	movw	ip, #439	@ tmp259,
+	cmp	r7, ip	@ code, tmp259
+	beq	.L681	@,
+	cmp	r7, #440	@ code,
+	beq	.L701	@,
+.L662:
+	sub	r2, r7, #256	@ tmp366, code,
+	sub	r0, r2, #1	@ tmp366, tmp366,
+	cmp	r0, #174	@ tmp366,
+	bhi	.L679	@,
+	movw	r1, #:lower16:80712	@ tmp368,
+	movt	r1, #:upper16:80712	@ tmp368,
+	ldr	r3, [r4, r1]	@ <variable>.CodecInfo.NewSeqInited, <variable>.CodecInfo.NewSeqInited
+	cmp	r3, #0	@ <variable>.CodecInfo.NewSeqInited,
+	beq	.L702	@,
+.L680:
+	movw	r3, #:lower16:80716	@ tmp374,
+	movt	r3, #:upper16:80716	@ tmp374,
 	ldr	r2, [r4, r3]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	tst	r2, #589824	@ <variable>.CodecInfo.StreamIntegrality,
-	beq	.L679	@,
-	movw	r1, #:lower16:79236	@ tmp368,
-	movt	r1, #:upper16:79236	@ tmp368,
-	orr	r5, r2, #4194304	@ tmp373, <variable>.CodecInfo.StreamIntegrality,
+	beq	.L681	@,
+	movw	r1, #:lower16:80772	@ tmp377,
+	movt	r1, #:upper16:80772	@ tmp377,
+	orr	r5, r2, #4194304	@ tmp382, <variable>.CodecInfo.StreamIntegrality,
 	mov	r0, r4	@, pCtx
-	str	r5, [r4, r3]	@ tmp373, <variable>.CodecInfo.StreamIntegrality
-	mov	r5, #1	@ tmp369,
-	str	r5, [r4, r1]	@ tmp369, <variable>.CodecInfo.HDRState
-	mov	r1, r6	@, code
+	str	r5, [r4, r3]	@ tmp382, <variable>.CodecInfo.StreamIntegrality
+	mov	r5, #1	@ tmp378,
+	str	r5, [r4, r1]	@ tmp378, <variable>.CodecInfo.HDRState
+	mov	r1, r7	@, code
 	bl	MP2_DecSlice	@
-	cmp	r0, r5	@ D.38858,
-	beq	.L658	@,
-	mov	r0, r5	@, tmp369
-	mov	r2, r6	@, code
+	cmp	r0, r5	@ D.38872,
+	beq	.L660	@,
+	mov	r0, r5	@, tmp378
+	mov	r2, r7	@, code
 	movw	r1, #:lower16:.LC72	@,
 	movt	r1, #:upper16:.LC72	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L699:
-	movw	r0, #:lower16:79128	@ tmp295,
-	movw	lr, #:lower16:79232	@ tmp296,
-	movt	r0, #:upper16:79128	@ tmp295,
-	movt	lr, #:upper16:79232	@ tmp296,
-	ldr	r6, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	mov	r0, r5	@, pBs
+	mov	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L701:
+	movw	r0, #:lower16:80664	@ tmp304,
+	movw	lr, #:lower16:80768	@ tmp305,
+	movt	r0, #:upper16:80664	@ tmp304,
+	movt	lr, #:upper16:80768	@ tmp305,
+	ldr	r5, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	mov	r0, r6	@, pBs
 	ldr	r2, [r4, lr]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r6, r6, r2	@ temp.2438, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	add	r5, r5, r2	@ temp.2443, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
 	bl	BsPos	@
 	movw	r1, #:lower16:.LC64	@,
 	movt	r1, #:upper16:.LC64	@,
-	add	r2, r6, r0, lsr #3	@, tmp301, temp.2438,,
+	add	r2, r5, r0, lsr #3	@, tmp310, temp.2443,,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	group_of_pictures_header	@
-	mov	r0, r5	@, pBs
+	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
 	cmp	r0, #0	@,
-	bge	.L679	@,
-	ldr	ip, [fp, #-116]	@, %sfp
-	movw	r1, #:lower16:79180	@ tmp302,
-	movw	r3, #:lower16:g_event_report	@ tmp303,
-	movt	r1, #:upper16:79180	@ tmp302,
-	movt	r3, #:upper16:g_event_report	@ tmp303,
+	bge	.L681	@,
+	ldr	ip, [fp, #-120]	@, %sfp
+	movw	r1, #:lower16:80716	@ tmp311,
+	movw	r3, #:lower16:g_event_report	@ tmp312,
+	movt	r1, #:upper16:80716	@ tmp311,
+	movt	r3, #:upper16:g_event_report	@ tmp312,
 	str	ip, [r4, r1]	@, <variable>.CodecInfo.StreamIntegrality
-	ldr	ip, [r3, #0]	@ g_event_report.2439, g_event_report
-	cmp	ip, #0	@ g_event_report.2439,
-	beq	.L672	@,
-	movw	lr, #:lower16:114672	@ tmp304,
-	movt	lr, #:upper16:114672	@ tmp304,
+	ldr	ip, [r3, #0]	@ g_event_report.2444, g_event_report
+	cmp	ip, #0	@ g_event_report.2444,
+	beq	.L674	@,
+	movw	lr, #:lower16:117744	@ tmp313,
+	movt	lr, #:upper16:117744	@ tmp313,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r3, r2	@,
-	blx	ip	@ g_event_report.2439
-.L672:
-	movw	r3, #:lower16:114672	@ tmp306,
-	movt	r3, #:upper16:114672	@ tmp306,
-	add	r2, r4, #78848	@, pCtx,
+	blx	ip	@ g_event_report.2444
+.L674:
+	movw	r3, #:lower16:117744	@ tmp315,
+	movt	r3, #:upper16:117744	@ tmp315,
+	add	r2, r4, #79872	@, pCtx,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
-	add	r1, r2, #284	@,,
+	add	r1, r2, #796	@,,
 	bl	MP2_ClearCurPacket	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC65	@,
 	mov	r2, #440	@,
 	movt	r1, #:upper16:.LC65	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L693:
-	movw	r2, #:lower16:79180	@ tmp233,
-	movt	r2, #:upper16:79180	@ tmp233,
+	mvn	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L695:
+	movw	r2, #:lower16:80716	@ tmp242,
+	movt	r2, #:upper16:80716	@ tmp242,
 	ldr	r1, [r4, r2]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	tst	r1, #4194304	@ <variable>.CodecInfo.StreamIntegrality,
-	beq	.L659	@,
-	orr	r0, r1, #8388608	@ tmp242, <variable>.CodecInfo.StreamIntegrality,
-	mov	r1, #114688	@ tmp236,
-	str	r0, [r4, r2]	@ tmp242, <variable>.CodecInfo.StreamIntegrality
-	mov	lr, #0	@ tmp244,
+	beq	.L661	@,
+	orr	r0, r1, #8388608	@ tmp251, <variable>.CodecInfo.StreamIntegrality,
+	mov	r1, #117760	@ tmp245,
+	str	r0, [r4, r2]	@ tmp251, <variable>.CodecInfo.StreamIntegrality
+	mov	lr, #0	@ tmp253,
 	mov	r0, r4	@, pCtx
-	strb	r7, [r4, r1]	@ <variable>.CodecInfo.HDRState, <variable>.IsWaitToDecFlag
-	str	lr, [r4, r3]	@ tmp244, <variable>.CodecInfo.HDRState
+	strb	r5, [r4, r1]	@ <variable>.CodecInfo.HDRState, <variable>.IsWaitToDecFlag
+	str	lr, [r4, r3]	@ tmp253, <variable>.CodecInfo.HDRState
 	bl	MP2_ProtocolPPSCheck	@
-	mov	r0, r7	@ prephitmp.2409, <variable>.CodecInfo.HDRState
-	b	.L658	@
-.L691:
-	mov	lr, r5	@, pBs
+	mov	r0, r5	@ prephitmp.2414, <variable>.CodecInfo.HDRState
+	b	.L660	@
+.L693:
+	mov	lr, r6	@, pBs
 	sub	ip, fp, #108	@,,
 	ldmia	lr!, {r0, r1, r2, r3}	@,,,,
 	str	ip, [fp, #-136]	@, %sfp
-	str	lr, [fp, #-120]	@, %sfp
-	sub	lr, fp, #76	@,,
-	str	lr, [fp, #-128]	@, %sfp
-	ldr	lr, [fp, #-136]	@ tmp381, %sfp
-	stmia	lr!, {r0, r1, r2, r3}	@ tmp381,,,,
-	ldr	ip, [fp, #-120]	@, %sfp
+	str	lr, [fp, #-124]	@, %sfp
+	mov	lr, ip	@ tmp397,
+	stmia	lr!, {r0, r1, r2, r3}	@ tmp397,,,,
+	ldr	ip, [fp, #-124]	@, %sfp
 	ldmia	ip, {r0, r1, r2, r3}	@,,,,
-	stmia	lr, {r0, r1, r2, r3}	@ tmp381,,,,
-	ldr	ip, [fp, #-136]	@ tmp382, %sfp
-	ldmia	ip!, {r0, r1, r2, r3}	@ tmp382,,,,
-	ldr	ip, [fp, #-128]	@ tmp383, %sfp
-	stmia	ip!, {r0, r1, r2, r3}	@ tmp383,,,,
-	ldmia	lr, {r0, r1, r2, r3}	@ tmp381,,,,
-	stmia	ip, {r0, r1, r2, r3}	@ tmp383,,,,
+	stmia	lr, {r0, r1, r2, r3}	@ tmp397,,,,
+	ldr	ip, [fp, #-136]	@ tmp398, %sfp
+	ldmia	ip!, {r0, r1, r2, r3}	@ tmp398,,,,
+	mov	ip, sl	@ tmp191, tmp389
+	stmia	ip!, {r0, r1, r2, r3}	@ tmp191,,,,
+	ldmia	lr, {r0, r1, r2, r3}	@ tmp397,,,,
+	stmia	ip, {r0, r1, r2, r3}	@ tmp191,,,,
 	mov	r1, #32	@,
-	sub	r0, fp, #76	@,,
+	mov	r0, sl	@, tmp389
 	bl	BsGet	@
 	mov	r1, #32	@,
-	mov	ip, r0	@ D.38740,
-	sub	r0, fp, #76	@,,
-	str	ip, [fp, #-124]	@,
+	mov	r2, r0	@ D.38754,
+	mov	r0, sl	@, tmp389
+	str	r2, [fp, #-128]	@,
 	bl	BsGet	@
-	ldr	r1, [fp, #-124]	@,
-	movw	r2, #:lower16:1128615492	@ tmp187,
-	movw	r3, #:lower16:1213419593	@ tmp190,
-	movt	r2, #:upper16:1128615492	@ tmp187,
-	movt	r3, #:upper16:1213419593	@ tmp190,
-	cmp	r0, r2	@, tmp187
-	cmpeq	r1, r3	@, D.38740, tmp190
-	bne	.L656	@,
-	movw	r3, #:lower16:79236	@ tmp195,
-	movt	r3, #:upper16:79236	@ tmp195,
+	ldr	ip, [fp, #-128]	@,
+	movw	r1, #:lower16:1128615492	@ tmp196,
+	movw	r3, #:lower16:1213419593	@ tmp199,
+	movt	r1, #:upper16:1128615492	@ tmp196,
+	movt	r3, #:upper16:1213419593	@ tmp199,
+	cmp	r0, r1	@, tmp196
+	cmpeq	ip, r3	@, D.38754, tmp199
+	bne	.L658	@,
+	movw	r3, #:lower16:80772	@ tmp204,
+	movt	r3, #:upper16:80772	@ tmp204,
 	ldr	r6, [r4, r3]	@ <variable>.CodecInfo.HDRState, <variable>.CodecInfo.HDRState
 	cmp	r6, #1	@ <variable>.CodecInfo.HDRState,
-	beq	.L701	@,
-.L657:
-	movw	r3, #:lower16:114690	@ tmp212,
-	movt	r3, #:upper16:114690	@ tmp212,
-	mov	r2, #1	@ tmp213,
-	mov	r0, #0	@ prephitmp.2409,
-	strb	r2, [r4, r3]	@ tmp213, <variable>.IsStreamEndFlag
-	b	.L658	@
-.L661:
-	movw	r0, #:lower16:79128	@ tmp311,
-	movw	ip, #:lower16:79232	@ tmp312,
-	movt	r0, #:upper16:79128	@ tmp311,
-	movt	ip, #:upper16:79232	@ tmp312,
-	ldr	r6, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	mov	r0, r5	@, pBs
+	beq	.L703	@,
+.L659:
+	movw	r3, #:lower16:117762	@ tmp221,
+	movt	r3, #:upper16:117762	@ tmp221,
+	mov	r2, #1	@ tmp222,
+	mov	r0, #0	@ prephitmp.2414,
+	strb	r2, [r4, r3]	@ tmp222, <variable>.IsStreamEndFlag
+	b	.L660	@
+.L663:
+	movw	r0, #:lower16:80664	@ tmp320,
+	movw	ip, #:lower16:80768	@ tmp321,
+	movt	r0, #:upper16:80664	@ tmp320,
+	movt	ip, #:upper16:80768	@ tmp321,
+	ldr	r5, [r4, r0]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	mov	r0, r6	@, pBs
 	ldr	r1, [r4, ip]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r6, r6, r1	@ temp.2446, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	add	r5, r5, r1	@ temp.2451, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
 	bl	BsPos	@
 	movw	r1, #:lower16:.LC66	@,
 	movt	r1, #:upper16:.LC66	@,
-	add	r2, r6, r0, lsr #3	@, tmp317, temp.2446,,
+	add	r2, r5, r0, lsr #3	@, tmp326, temp.2451,,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	picture_header	@
-	mov	r0, r5	@, pBs
+	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
 	cmp	r0, #0	@,
-	bge	.L679	@,
-	ldr	r3, [fp, #-116]	@, %sfp
-	movw	r2, #:lower16:79180	@ tmp318,
-	movw	lr, #:lower16:g_event_report	@ tmp319,
-	movt	r2, #:upper16:79180	@ tmp318,
-	movt	lr, #:upper16:g_event_report	@ tmp319,
+	bge	.L681	@,
+	ldr	r3, [fp, #-120]	@, %sfp
+	movw	r2, #:lower16:80716	@ tmp327,
+	movw	lr, #:lower16:g_event_report	@ tmp328,
+	movt	r2, #:upper16:80716	@ tmp327,
+	movt	lr, #:upper16:g_event_report	@ tmp328,
 	str	r3, [r4, r2]	@, <variable>.CodecInfo.StreamIntegrality
-	ldr	ip, [lr, #0]	@ g_event_report.2447, g_event_report
-	cmp	ip, #0	@ g_event_report.2447,
-	beq	.L673	@,
-	movw	lr, #:lower16:114672	@ tmp320,
-	movt	lr, #:upper16:114672	@ tmp320,
+	ldr	ip, [lr, #0]	@ g_event_report.2452, g_event_report
+	cmp	ip, #0	@ g_event_report.2452,
+	beq	.L675	@,
+	movw	lr, #:lower16:117744	@ tmp329,
+	movt	lr, #:upper16:117744	@ tmp329,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r3, r2	@,
-	blx	ip	@ g_event_report.2447
-.L673:
-	movw	ip, #:lower16:114672	@ tmp322,
-	movt	ip, #:upper16:114672	@ tmp322,
-	add	r1, r4, #78848	@, pCtx,
+	blx	ip	@ g_event_report.2452
+.L675:
+	movw	ip, #:lower16:117744	@ tmp331,
+	movt	ip, #:upper16:117744	@ tmp331,
+	add	r1, r4, #79872	@, pCtx,
 	ldr	r0, [r4, ip]	@, <variable>.ChanID
-	add	r1, r1, #284	@,,
+	add	r1, r1, #796	@,,
 	bl	MP2_ClearCurPacket	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC67	@,
 	mov	r2, #256	@,
 	movt	r1, #:upper16:.LC67	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L665:
-	movw	lr, #:lower16:79128	@ tmp342,
-	movw	r6, #:lower16:79232	@ tmp343,
-	movt	lr, #:upper16:79128	@ tmp342,
-	movt	r6, #:upper16:79232	@ tmp343,
-	mov	r0, r5	@, pBs
-	ldr	ip, [r4, lr]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
-	ldr	r3, [r4, r6]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
-	add	r6, ip, r3	@ temp.2462, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
+	mvn	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L667:
+	movw	r3, #:lower16:80664	@ tmp351,
+	movw	r5, #:lower16:80768	@ tmp352,
+	movt	r3, #:upper16:80664	@ tmp351,
+	movt	r5, #:upper16:80768	@ tmp352,
+	mov	r0, r6	@, pBs
+	ldr	r1, [r4, r3]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
+	ldr	ip, [r4, r5]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
+	add	r5, r1, ip	@ temp.2467, <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.Used_byte
 	bl	BsPos	@
 	movw	r1, #:lower16:.LC71	@,
 	movt	r1, #:upper16:.LC71	@,
-	add	r2, r6, r0, lsr #3	@, tmp348, temp.2462,,
+	add	r2, r5, r0, lsr #3	@, tmp357, temp.2467,,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, pCtx
 	bl	extension	@
-	mov	r0, r5	@, pBs
+	mov	r0, r6	@, pBs
 	bl	BsResidBits	@
 	cmp	r0, #0	@,
-	bge	.L679	@,
-	ldr	r1, [fp, #-116]	@, %sfp
-	movw	r2, #:lower16:79180	@ tmp349,
-	movw	r0, #:lower16:g_event_report	@ tmp350,
-	movt	r2, #:upper16:79180	@ tmp349,
-	movt	r0, #:upper16:g_event_report	@ tmp350,
-	str	r1, [r4, r2]	@, <variable>.CodecInfo.StreamIntegrality
-	ldr	ip, [r0, #0]	@ g_event_report.2463, g_event_report
-	cmp	ip, #0	@ g_event_report.2463,
-	beq	.L676	@,
-	movw	r3, #:lower16:114672	@ tmp351,
-	movt	r3, #:upper16:114672	@ tmp351,
+	bge	.L681	@,
+	ldr	lr, [fp, #-120]	@, %sfp
+	movw	r2, #:lower16:80716	@ tmp358,
+	movw	r0, #:lower16:g_event_report	@ tmp359,
+	movt	r2, #:upper16:80716	@ tmp358,
+	movt	r0, #:upper16:g_event_report	@ tmp359,
+	str	lr, [r4, r2]	@, <variable>.CodecInfo.StreamIntegrality
+	ldr	ip, [r0, #0]	@ g_event_report.2468, g_event_report
+	cmp	ip, #0	@ g_event_report.2468,
+	beq	.L678	@,
+	movw	r3, #:lower16:117744	@ tmp360,
+	movt	r3, #:upper16:117744	@ tmp360,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
 	mov	r3, r2	@,
-	blx	ip	@ g_event_report.2463
-.L676:
-	movw	lr, #:lower16:114672	@ tmp353,
-	movt	lr, #:upper16:114672	@ tmp353,
-	add	ip, r4, #78848	@, pCtx,
-	ldr	r0, [r4, lr]	@, <variable>.ChanID
-	add	r1, ip, #284	@,,
+	blx	ip	@ g_event_report.2468
+.L678:
+	movw	ip, #:lower16:117744	@ tmp362,
+	movt	ip, #:upper16:117744	@ tmp362,
+	add	r1, r4, #79872	@, pCtx,
+	ldr	r0, [r4, ip]	@, <variable>.ChanID
+	add	r1, r1, #796	@,,
 	bl	MP2_ClearCurPacket	@
-.L687:
-	mvn	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L670:
+.L689:
+	mvn	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L672:
 	ldr	r2, [fp, #-112]	@, %sfp
 	ldrb	r0, [r2, #0]	@ zero_extendqisi2	@ <variable>.valid_flag, <variable>.valid_flag
 	cmp	r0, #1	@ <variable>.valid_flag,
-	beq	.L702	@,
-.L677:
-	movw	r3, #:lower16:g_event_report	@ tmp375,
-	movt	r3, #:upper16:g_event_report	@ tmp375,
-	ldr	ip, [r3, #0]	@ g_event_report.2469, g_event_report
-	cmp	ip, #0	@ g_event_report.2469,
-	beq	.L679	@,
-.L688:
-	movw	lr, #:lower16:114672	@ tmp376,
-	movt	lr, #:upper16:114672	@ tmp376,
+	beq	.L704	@,
+.L679:
+	movw	r3, #:lower16:g_event_report	@ tmp384,
+	movt	r3, #:upper16:g_event_report	@ tmp384,
+	ldr	ip, [r3, #0]	@ g_event_report.2474, g_event_report
+	cmp	ip, #0	@ g_event_report.2474,
+	beq	.L681	@,
+.L690:
+	movw	lr, #:lower16:117744	@ tmp385,
+	movt	lr, #:upper16:117744	@ tmp385,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r3, r2	@,
-	blx	ip	@ g_event_report.2469
-	mov	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L701:
-	ldr	r2, [r4, r7]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
+	blx	ip	@ g_event_report.2474
+	mov	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L703:
+	ldr	r2, [r4, r8]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
 	tst	r2, #4194304	@ <variable>.CodecInfo.StreamIntegrality,
-	beq	.L657	@,
-	movw	r1, #:lower16:114690	@ tmp200,
-	movt	r1, #:upper16:114690	@ tmp200,
-	orr	r0, r2, #8388608	@ tmp209, <variable>.CodecInfo.StreamIntegrality,
-	str	r8, [r4, r3]	@ tmp174, <variable>.CodecInfo.HDRState
-	str	r0, [r4, r7]	@ tmp209, <variable>.CodecInfo.StreamIntegrality
+	beq	.L659	@,
+	movw	r1, #:lower16:117762	@ tmp209,
+	movt	r1, #:upper16:117762	@ tmp209,
+	orr	r0, r2, #8388608	@ tmp218, <variable>.CodecInfo.StreamIntegrality,
+	str	r5, [r4, r3]	@ tmp171, <variable>.CodecInfo.HDRState
+	str	r0, [r4, r8]	@ tmp218, <variable>.CodecInfo.StreamIntegrality
 	mov	r0, r4	@, pCtx
 	strb	r6, [r4, r1]	@ <variable>.CodecInfo.HDRState, <variable>.IsStreamEndFlag
-	strb	r6, [r4, sl]	@ <variable>.CodecInfo.HDRState, <variable>.IsWaitToDecFlag
+	strb	r6, [r4, r9]	@ <variable>.CodecInfo.HDRState, <variable>.IsWaitToDecFlag
 	bl	MP2_ProtocolPPSCheck	@
-	mov	r0, r6	@ prephitmp.2409, <variable>.CodecInfo.HDRState
-	b	.L658	@
-.L700:
+	mov	r0, r6	@ prephitmp.2414, <variable>.CodecInfo.HDRState
+	b	.L660	@
+.L702:
 	mov	r0, r4	@, pCtx
 	bl	MP2_GetSequenceInfo	@
-	movw	r0, #:lower16:79228	@ tmp361,
-	movt	r0, #:upper16:79228	@ tmp361,
+	movw	r0, #:lower16:80764	@ tmp370,
+	movt	r0, #:upper16:80764	@ tmp370,
 	ldr	ip, [r4, r0]	@ <variable>.CodecInfo.Imgbuf_allocated, <variable>.CodecInfo.Imgbuf_allocated
 	cmp	ip, #0	@ <variable>.CodecInfo.Imgbuf_allocated,
-	beq	.L679	@,
-	movw	r2, #:lower16:114689	@ tmp363,
-	movt	r2, #:upper16:114689	@ tmp363,
+	beq	.L681	@,
+	movw	r2, #:lower16:117761	@ tmp372,
+	movt	r2, #:upper16:117761	@ tmp372,
 	ldrb	lr, [r4, r2]	@ zero_extendqisi2	@ <variable>.IsWaitToReRange, <variable>.IsWaitToReRange
 	cmp	lr, #1	@ <variable>.IsWaitToReRange,
-	bne	.L678	@,
-	b	.L679	@
-.L702:
+	bne	.L680	@,
+	b	.L681	@
+.L704:
 	mov	r1, r2	@,
-	mov	r0, r9	@, pSyntaxInfNew
+	ldr	r0, [fp, #-116]	@, %sfp
 	mov	r2, #188	@,
 	bl	memcpy	@
 	ldr	r1, [r4, r5]	@ <variable>.CodecInfo.StreamIntegrality, <variable>.CodecInfo.StreamIntegrality
-	movw	r3, #:lower16:g_event_report	@ tmp289,
-	movt	r3, #:upper16:g_event_report	@ tmp289,
-	bic	ip, r1, #7	@ tmp288, <variable>.CodecInfo.StreamIntegrality,
-	str	ip, [r4, r5]	@ tmp288, <variable>.CodecInfo.StreamIntegrality
-	ldr	ip, [r3, #0]	@ g_event_report.2431, g_event_report
-	cmp	ip, #0	@ g_event_report.2431,
-	bne	.L688	@,
-	b	.L679	@
-.L698:
-	movw	r5, #:lower16:114672	@ tmp334,
-	movt	r5, #:upper16:114672	@ tmp334,
-	add	r1, r4, #78848	@, pCtx,
-	add	r1, r1, #284	@,,
+	movw	r3, #:lower16:g_event_report	@ tmp298,
+	movt	r3, #:upper16:g_event_report	@ tmp298,
+	bic	ip, r1, #7	@ tmp297, <variable>.CodecInfo.StreamIntegrality,
+	str	ip, [r4, r5]	@ tmp297, <variable>.CodecInfo.StreamIntegrality
+	ldr	ip, [r3, #0]	@ g_event_report.2436, g_event_report
+	cmp	ip, #0	@ g_event_report.2436,
+	bne	.L690	@,
+	b	.L681	@
+.L700:
+	movw	r5, #:lower16:117744	@ tmp343,
+	movt	r5, #:upper16:117744	@ tmp343,
+	add	lr, r4, #79872	@, pCtx,
+	add	r1, lr, #796	@,,
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	bl	MP2_ClearCurPacket	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC69	@,
 	movt	r1, #:upper16:.LC69	@,
 	bl	dprint_vfmw	@
-	movw	r2, #:lower16:g_event_report	@ tmp339,
-	movt	r2, #:upper16:g_event_report	@ tmp339,
-	ldr	ip, [r2, #0]	@ g_event_report.2457, g_event_report
-	cmp	ip, #0	@ g_event_report.2457,
-	beq	.L687	@,
-	mov	r2, r6	@, D.38826
+	movw	r2, #:lower16:g_event_report	@ tmp348,
+	movt	r2, #:upper16:g_event_report	@ tmp348,
+	ldr	ip, [r2, #0]	@ g_event_report.2462, g_event_report
+	cmp	ip, #0	@ g_event_report.2462,
+	beq	.L689	@,
+	mov	r2, r6	@, D.38840
 	ldr	r0, [r4, r5]	@, <variable>.ChanID
 	mov	r1, #113	@,
 	mov	r3, r6	@, tmp2
-	blx	ip	@ g_event_report.2457
-	mvn	r0, #0	@ prephitmp.2409,
-	b	.L658	@
-.L697:
-	ldr	ip, [fp, #-116]	@, %sfp
-	movw	r2, #:lower16:79180	@ tmp258,
-	movw	r3, #:lower16:g_event_report	@ tmp259,
-	movt	r2, #:upper16:79180	@ tmp258,
-	movt	r3, #:upper16:g_event_report	@ tmp259,
+	blx	ip	@ g_event_report.2462
+	mvn	r0, #0	@ prephitmp.2414,
+	b	.L660	@
+.L699:
+	ldr	ip, [fp, #-120]	@, %sfp
+	movw	r2, #:lower16:80716	@ tmp267,
+	movw	r3, #:lower16:g_event_report	@ tmp268,
+	movt	r2, #:upper16:80716	@ tmp267,
+	movt	r3, #:upper16:g_event_report	@ tmp268,
 	str	ip, [r4, r2]	@, <variable>.CodecInfo.StreamIntegrality
 	ldr	ip, [r3, #0]	@ g_event_report.445, g_event_report
 	cmp	ip, #0	@ g_event_report.445,
-	beq	.L669	@,
-	movw	lr, #:lower16:114672	@ tmp260,
-	movt	lr, #:upper16:114672	@ tmp260,
+	beq	.L671	@,
+	movw	lr, #:lower16:117744	@ tmp269,
+	movt	lr, #:upper16:117744	@ tmp269,
 	mov	r2, #0	@,
 	mov	r1, #113	@,
 	ldr	r0, [r4, lr]	@, <variable>.ChanID
 	mov	r3, r2	@,
 	blx	ip	@ g_event_report.445
-.L669:
-	movw	r3, #:lower16:114672	@ tmp262,
-	movt	r3, #:upper16:114672	@ tmp262,
-	add	r1, r4, #78848	@, pCtx,
+.L671:
+	movw	r3, #:lower16:117744	@ tmp271,
+	movt	r3, #:upper16:117744	@ tmp271,
+	add	r1, r4, #79872	@, pCtx,
 	ldr	r0, [r4, r3]	@, <variable>.ChanID
-	add	r1, r1, #284	@,,
+	add	r1, r1, #796	@,,
 	bl	MP2_ClearCurPacket	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC63	@,
 	movw	r2, #435	@,
 	movt	r1, #:upper16:.LC63	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ prephitmp.2409,
-	b	.L658	@
+	mvn	r0, #0	@ prephitmp.2414,
+	b	.L660	@
 	.fnend
 	.size	MP2_GetHDR, .-MP2_GetHDR
 	.align	2
@@ -6812,134 +6823,134 @@ MPEG2DEC_Decode:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	add	r2, r0, #79872	@ D.40490, pCtx,
-	add	r4, r2, #96	@ D.40490, D.40490,
+	add	r2, r0, #80896	@ D.40506, pCtx,
+	add	r4, r2, #608	@ D.40506, D.40506,
 	mov	r5, r0	@ pCtx, pCtx
 	mov	r2, #160	@,
-	mov	r0, r4	@, D.40490
+	mov	r0, r4	@, D.40506
 	bl	memcpy	@
-	movw	r3, #:lower16:114672	@ tmp155,
-	movt	r3, #:upper16:114672	@ tmp155,
+	movw	r3, #:lower16:117744	@ tmp155,
+	movt	r3, #:upper16:117744	@ tmp155,
 	add	r0, r5, #45312	@, pCtx,
 	add	r0, r0, #16	@,,
-	mov	r1, r4	@, D.40490
+	mov	r1, r4	@, D.40506
 	ldr	r2, [r5, r3]	@, <variable>.ChanID
 	bl	MP2_ReceivePacket	@
 	cmp	r0, #1	@,
-	beq	.L704	@,
+	beq	.L706	@,
 	movw	r1, #:lower16:.LC73	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC73	@,
 	mov	r4, #0	@ ret,
 	bl	dprint_vfmw	@
-.L705:
+.L707:
 	mov	r0, r4	@, ret
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L704:
-	movw	r3, #:lower16:79136	@ tmp160,
-	movw	ip, #:lower16:79152	@ tmp162,
-	movt	r3, #:upper16:79136	@ tmp160,
-	movt	ip, #:upper16:79152	@ tmp162,
-	add	lr, r5, #78848	@, pCtx,
+.L706:
+	movw	r3, #:lower16:80672	@ tmp160,
+	movw	ip, #:lower16:80688	@ tmp162,
+	movt	r3, #:upper16:80672	@ tmp160,
+	movt	ip, #:upper16:80688	@ tmp162,
+	add	lr, r5, #80896	@, pCtx,
 	ldr	r1, [r5, r3]	@, <variable>.CodecInfo.stMp2Packet.BsVirAddr
-	add	r0, lr, #576	@,,
+	add	r0, lr, #64	@,,
 	ldr	r2, [r5, ip]	@, <variable>.CodecInfo.stMp2Packet.BsLength
 	bl	BsInit	@
-	ldr	r3, [r5, #0]	@ D.40502, <variable>.pstExtraData
+	ldr	r3, [r5, #0]	@ D.40518, <variable>.pstExtraData
 	ldr	r1, [r3, #864]	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r1, #1	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn,
-	beq	.L719	@,
-.L706:
-	movw	r3, #:lower16:79180	@ tmp170,
-	movt	r3, #:upper16:79180	@ tmp170,
-	movw	lr, #:lower16:79364	@ tmp169,
-	movt	lr, #:upper16:79364	@ tmp169,
+	beq	.L721	@,
+.L708:
+	movw	r3, #:lower16:80716	@ tmp170,
+	movt	r3, #:upper16:80716	@ tmp170,
+	movw	lr, #:lower16:80900	@ tmp169,
+	movt	lr, #:upper16:80900	@ tmp169,
 	ldr	ip, [r5, r3]	@ <variable>.CodecInfo.StreamIntegrality,
 	str	ip, [r5, lr]	@ <variable>.CodecInfo.StreamIntegrality,
-.L707:
+.L709:
 	mov	r0, r5	@, pCtx
 	bl	MP2_GetHDR	@
 	add	r4, r0, #1	@ tmp172,,
 	cmp	r4, #1	@ tmp172,
-	bls	.L720	@,
+	bls	.L722	@,
 	mov	r0, r5	@, pCtx
 	bl	MP2_DecodingDecide	@
 	subs	r4, r0, #0	@ ret,
-	beq	.L721	@,
+	beq	.L723	@,
 	cmn	r4, #1	@ ret,
-	beq	.L710	@,
+	beq	.L712	@,
 	mov	r0, r5	@, pCtx
 	bl	MP2_GetPictureInfo	@
-	subs	r6, r0, #0	@ D.40531,
-	bne	.L714	@,
-	movw	r4, #:lower16:114672	@ tmp189,
-	movt	r4, #:upper16:114672	@ tmp189,
-	add	ip, r5, #78848	@, pCtx,
-	add	r1, ip, #284	@,,
+	subs	r6, r0, #0	@ D.40547,
+	bne	.L716	@,
+	movw	r4, #:lower16:117744	@ tmp189,
+	movt	r4, #:upper16:117744	@ tmp189,
+	add	ip, r5, #79872	@, pCtx,
+	add	r1, ip, #796	@,,
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	MP2_ClearCurPacket	@
 	mov	r0, r5	@, pCtx
 	bl	MP2_ClearCurPic	@
 	movw	r2, #:lower16:g_event_report	@ tmp193,
 	movt	r2, #:upper16:g_event_report	@ tmp193,
-	ldr	ip, [r2, #0]	@ g_event_report.2504, g_event_report
-	cmp	ip, #0	@ g_event_report.2504,
-	beq	.L715	@,
-	mov	r2, r6	@, D.40531
+	ldr	ip, [r2, #0]	@ g_event_report.2509, g_event_report
+	cmp	ip, #0	@ g_event_report.2509,
+	beq	.L717	@,
+	mov	r2, r6	@, D.40547
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	mov	r1, #113	@,
 	mov	r3, r6	@, tmp2
-	blx	ip	@ g_event_report.2504
-.L715:
+	blx	ip	@ g_event_report.2509
+.L717:
 	movw	r1, #:lower16:.LC75	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC75	@,
 	mov	r4, #0	@ ret,
 	bl	dprint_vfmw	@
-	b	.L705	@
-.L720:
-	ldr	r3, [r5, #0]	@ temp.2495, <variable>.pstExtraData
+	b	.L707	@
+.L722:
+	ldr	r3, [r5, #0]	@ temp.2500, <variable>.pstExtraData
 	ldr	r0, [r3, #864]	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r0, #1	@ <variable>.stChanOption.u32DynamicFrameStoreAllocEn,
-	beq	.L722	@,
-.L709:
-	movw	ip, #:lower16:114689	@ tmp175,
-	movt	ip, #:upper16:114689	@ tmp175,
+	beq	.L724	@,
+.L711:
+	movw	ip, #:lower16:117761	@ tmp175,
+	movt	ip, #:upper16:117761	@ tmp175,
 	ldrb	r2, [r5, ip]	@ zero_extendqisi2	@ <variable>.IsWaitToReRange, <variable>.IsWaitToReRange
 	cmp	r2, #1	@ <variable>.IsWaitToReRange,
-	beq	.L710	@,
-	movw	r3, #:lower16:114672	@ tmp177,
-	movt	r3, #:upper16:114672	@ tmp177,
-	add	lr, r5, #78848	@, pCtx,
+	beq	.L712	@,
+	movw	r3, #:lower16:117744	@ tmp177,
+	movt	r3, #:upper16:117744	@ tmp177,
+	add	lr, r5, #79872	@, pCtx,
 	mov	r4, #0	@ ret,
 	ldr	r0, [r5, r3]	@, <variable>.ChanID
-	add	r1, lr, #284	@,,
+	add	r1, lr, #796	@,,
 	bl	MP2_ClearCurPacket	@
-	b	.L705	@
-.L722:
+	b	.L707	@
+.L724:
 	ldr	r1, [r3, #904]	@ <variable>.s32WaitFsFlag, <variable>.s32WaitFsFlag
 	cmp	r1, #0	@ <variable>.s32WaitFsFlag,
-	beq	.L709	@,
-.L710:
+	beq	.L711	@,
+.L712:
 	mov	r4, #0	@ ret,
 	mov	r0, r4	@, ret
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-.L719:
+.L721:
 	ldr	r4, [r3, #904]	@ <variable>.s32WaitFsFlag, <variable>.s32WaitFsFlag
 	cmp	r4, #1	@ <variable>.s32WaitFsFlag,
-	bne	.L706	@,
-	movw	r2, #:lower16:79364	@ tmp167,
-	movt	r2, #:upper16:79364	@ tmp167,
-	movw	r1, #:lower16:79180	@ tmp166,
-	movt	r1, #:upper16:79180	@ tmp166,
+	bne	.L708	@,
+	movw	r2, #:lower16:80900	@ tmp167,
+	movt	r2, #:upper16:80900	@ tmp167,
+	movw	r1, #:lower16:80716	@ tmp166,
+	movt	r1, #:upper16:80716	@ tmp166,
 	ldr	r0, [r5, r2]	@ <variable>.CodecInfo.LastStreamIntegrality,
 	str	r0, [r5, r1]	@ <variable>.CodecInfo.LastStreamIntegrality,
-	b	.L707	@
-.L721:
-	movw	r6, #:lower16:114672	@ tmp181,
-	movt	r6, #:upper16:114672	@ tmp181,
-	add	r1, r5, #78848	@, pCtx,
-	add	r1, r1, #284	@,,
+	b	.L709	@
+.L723:
+	movw	r6, #:lower16:117744	@ tmp181,
+	movt	r6, #:upper16:117744	@ tmp181,
+	add	r1, r5, #79872	@, pCtx,
+	add	r1, r1, #796	@,,
 	ldr	r0, [r5, r6]	@, <variable>.ChanID
 	bl	MP2_ClearCurPacket	@
 	mov	r0, r5	@, pCtx
@@ -6948,68 +6959,68 @@ MPEG2DEC_Decode:
 	movt	r0, #:upper16:g_event_report	@ tmp185,
 	ldr	ip, [r0, #0]	@ g_event_report.502, g_event_report
 	cmp	ip, #0	@ g_event_report.502,
-	beq	.L712	@,
+	beq	.L714	@,
 	ldr	r0, [r5, r6]	@, <variable>.ChanID
 	mov	r1, #113	@,
 	mov	r2, r4	@, ret
 	mov	r3, r4	@, ret
 	blx	ip	@ g_event_report.502
-.L712:
+.L714:
 	movw	r1, #:lower16:.LC74	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC74	@,
 	bl	dprint_vfmw	@
-	b	.L705	@
-.L714:
+	b	.L707	@
+.L716:
 	mov	r0, r5	@, pCtx
 	bl	MP2_DecNewPic	@
-	subs	r6, r0, #0	@ D.40537,
-	beq	.L723	@,
-	movw	lr, #:lower16:79128	@ tmp215,
-	movt	lr, #:upper16:79128	@ tmp215,
-	movw	ip, #:lower16:79232	@ tmp209,
-	movw	r0, #:lower16:79152	@ tmp210,
-	movt	ip, #:upper16:79232	@ tmp209,
-	movt	r0, #:upper16:79152	@ tmp210,
+	subs	r6, r0, #0	@ D.40553,
+	beq	.L725	@,
+	movw	lr, #:lower16:80664	@ tmp215,
+	movt	lr, #:upper16:80664	@ tmp215,
+	movw	ip, #:lower16:80768	@ tmp209,
+	movw	r0, #:lower16:80688	@ tmp210,
+	movt	ip, #:upper16:80768	@ tmp209,
+	movt	r0, #:upper16:80688	@ tmp210,
 	ldr	r4, [r5, lr]	@ <variable>.CodecInfo.BsOffset, <variable>.CodecInfo.BsOffset
 	ldr	r3, [r5, ip]	@ <variable>.CodecInfo.Used_byte, <variable>.CodecInfo.Used_byte
 	ldr	r1, [r5, r0]	@ <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.stMp2Packet.BsLength
 	mov	r4, r4, asl #3	@ ret, <variable>.CodecInfo.BsOffset,
 	add	r2, r1, r3	@ tmp214, <variable>.CodecInfo.stMp2Packet.BsLength, <variable>.CodecInfo.Used_byte
 	str	r2, [r5, ip]	@ tmp214, <variable>.CodecInfo.Used_byte
-	b	.L705	@
-.L723:
-	movw	r4, #:lower16:114672	@ tmp197,
-	movw	lr, #:lower16:79264	@ tmp199,
-	movt	r4, #:upper16:114672	@ tmp197,
-	movt	lr, #:upper16:79264	@ tmp199,
+	b	.L707	@
+.L725:
+	movw	r4, #:lower16:117744	@ tmp197,
+	movw	lr, #:lower16:80800	@ tmp199,
+	movt	r4, #:upper16:117744	@ tmp197,
+	movt	lr, #:upper16:80800	@ tmp199,
 	mov	r2, #1	@,
 	ldr	r1, [r5, lr]	@, <variable>.CodecInfo.CurFsID
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	FSP_ClearLogicFs	@
-	add	r0, r5, #78848	@, pCtx,
-	add	r1, r0, #284	@,,
+	add	r0, r5, #79872	@, pCtx,
+	add	r1, r0, #796	@,,
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	bl	MP2_ClearCurPacket	@
 	mov	r0, r5	@, pCtx
 	bl	MP2_ClearCurPic	@
 	movw	r3, #:lower16:g_event_report	@ tmp205,
 	movt	r3, #:upper16:g_event_report	@ tmp205,
-	ldr	ip, [r3, #0]	@ g_event_report.2509, g_event_report
-	cmp	ip, #0	@ g_event_report.2509,
-	beq	.L717	@,
-	mov	r2, r6	@, D.40537
+	ldr	ip, [r3, #0]	@ g_event_report.2514, g_event_report
+	cmp	ip, #0	@ g_event_report.2514,
+	beq	.L719	@,
+	mov	r2, r6	@, D.40553
 	ldr	r0, [r5, r4]	@, <variable>.ChanID
 	mov	r1, #113	@,
 	mov	r3, r6	@, tmp2
-	blx	ip	@ g_event_report.2509
-.L717:
+	blx	ip	@ g_event_report.2514
+.L719:
 	movw	r1, #:lower16:.LC76	@,
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC76	@,
 	mov	r4, #0	@ ret,
 	bl	dprint_vfmw	@
-	b	.L705	@
+	b	.L707	@
 	.fnend
 	.size	MPEG2DEC_Decode, .-MPEG2DEC_Decode
 	.global	default_intra_quantizer_matrix
@@ -7018,9 +7029,9 @@ MPEG2DEC_Decode:
 	.section	.rodata
 	.align	2
 .LANCHOR0 = . + 0
-	.type	C.452.39103, %object
-	.size	C.452.39103, 128
-C.452.39103:
+	.type	C.452.39119, %object
+	.size	C.452.39119, 128
+C.452.39119:
 	.word	0
 	.word	1
 	.word	2
@@ -7324,9 +7335,9 @@ frame_rate_Table:
 	.word	-1
 	.word	-1
 	.word	-1
-	.type	__func__.38914, %object
-	.size	__func__.38914, 19
-__func__.38914:
+	.type	__func__.38928, %object
+	.size	__func__.38928, 19
+__func__.38928:
 	.ascii	"MP2_DecodingDecide\000"
 	.data
 	.align	2

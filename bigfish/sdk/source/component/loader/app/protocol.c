@@ -63,6 +63,7 @@ HI_S32 LOADER_PROTOCOL_Init(HI_LOADER_TYPE_E enDownloadType, HI_VOID * pDownload
 	}
 
 	case HI_LOADER_TYPE_USB:
+	case HI_LOADER_TYPE_FS:
 	{
 #if defined HI_LOADER_PROTOCOL_HISI_FILE
 
@@ -76,7 +77,7 @@ HI_S32 LOADER_PROTOCOL_Init(HI_LOADER_TYPE_E enDownloadType, HI_VOID * pDownload
 	}
 	
 #else   /*NO ADVCA SUPPORT*/
-case HI_LOADER_TYPE_OTA:
+    case HI_LOADER_TYPE_OTA:
 	{
 #if defined HI_LOADER_PROTOCOL_HISI_OTA
 		g_enProtocolType = PROTOCOL_TYPE_HISI_OTA;
@@ -94,6 +95,7 @@ case HI_LOADER_TYPE_OTA:
 
 	case HI_LOADER_TYPE_IP:
 	case HI_LOADER_TYPE_USB:
+	case HI_LOADER_TYPE_FS:
 	{
 #if defined HI_LOADER_PROTOCOL_HISI_FILE
 		g_enProtocolType = PROTOCOL_TYPE_HISI_FILE;
@@ -151,7 +153,7 @@ HI_S32 LOADER_PROTOCOL_RegisterCallback(LOADERCALLBACKSET_S *pstCallback)
     case PROTOCOL_TYPE_HISI_CAFILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
+        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
         {
             s32Ret = LOADER_PROTOCOL_HisiFILE_RegisterCallback(pstCallback);
         }
@@ -258,7 +260,7 @@ HI_VOID LOADER_PROTOCOL_DeInit(HI_VOID)
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
 		case PROTOCOL_TYPE_HISI_FILE:
 		{
-			if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
+			if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
 				LOADER_PROTOCOL_HisiFILE_DeInit();
 			
 			break;
@@ -334,7 +336,7 @@ HI_S32 LOADER_PROTOCOL_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersionInfo)
     case PROTOCOL_TYPE_HISI_FILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
+        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
         {
             s32Ret = LOADER_PROTOCOL_HisiFILE_GetVersionInfo(pstVersionInfo);
         }
@@ -371,7 +373,7 @@ HI_S32 LOADER_PROTOCOL_GetVersionInfo(LOADER_VERSION_INFO_S * pstVersionInfo)
     case PROTOCOL_TYPE_HISI_CAFILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if (HI_LOADER_TYPE_USB == g_enDownloadType)
+        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
         {
             s32Ret = LOADER_PROTOCOL_HisiCAFILE_GetVersionInfo(pstVersionInfo);
         }
@@ -427,7 +429,7 @@ HI_S32 LOADER_PROTOCOL_GetPartitionInfo(LOADER_PARTITION_INFO_S * pstPartInfo, H
     case PROTOCOL_TYPE_HISI_CAFILE:
     {
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
+        if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
             s32Ret = LOADER_PROTOCOL_HisiFILE_GetPartitionInfo(pstPartInfo, u32BufNum, pu32PartNum);
         else
             s32Ret = HI_FAILURE;
@@ -517,7 +519,7 @@ HI_S32 LOADER_PROTOCOL_Process(HI_U32 u32MaxMemorySize)
 	case PROTOCOL_TYPE_HISI_FILE:
 	{
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-		if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType))
+		if ((HI_LOADER_TYPE_USB == g_enDownloadType) || (HI_LOADER_TYPE_IP == g_enDownloadType) || (HI_LOADER_TYPE_FS == g_enDownloadType))
 			s32Ret = LOADER_PROTOCOL_HisiFILE_Process(u32MaxMemorySize);
 		else
 			s32Ret = HI_FAILURE;
@@ -569,7 +571,7 @@ HI_S32 LOADER_PROTOCOL_Process(HI_U32 u32MaxMemorySize)
 	case PROTOCOL_TYPE_HISI_CAFILE:
 	{
 #ifdef HI_LOADER_PROTOCOL_HISI_FILE
-		if (HI_LOADER_TYPE_USB == g_enDownloadType)
+		if (HI_LOADER_TYPE_USB == g_enDownloadType || (HI_LOADER_TYPE_FS == g_enDownloadType))
 			s32Ret = LOADER_PROTOCOL_HisiCAFILE_Process(u32MaxMemorySize);
 		else
 			s32Ret = HI_FAILURE;

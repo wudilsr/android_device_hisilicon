@@ -61,10 +61,10 @@ static int hisfc350_os_reg_erase(struct mtd_info *mtd, struct erase_info *instr)
 
 	ret = hisfc350_reg_erase(host, mtd->size, instr->addr,
 		instr->len, &state);
+	mutex_unlock(&host->lock);
+
 	instr->state = (u_char)state;
 	mtd_erase_callback(instr);
-
-	mutex_unlock(&host->lock);
 
 	return ret;
 }

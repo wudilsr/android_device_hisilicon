@@ -34,6 +34,8 @@ import com.hisilicon.multiscreen.protocol.remote.RemoteTouch;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
 import com.hisilicon.multiscreen.protocol.utils.MultiScreenIntentAction;
 import com.hisilicon.multiscreen.protocol.utils.ServiceUtil;
+import com.hisilicon.multiscreen.scene.ISceneListener;
+import com.hisilicon.multiscreen.scene.SceneType;
 import com.hisilicon.multiscreen.vime.VImeClientControlService;
 
 /**
@@ -128,10 +130,21 @@ public abstract class BaseActivity extends Activity implements RemotePool
     private static boolean vib_status;
 
     /**
+     * True if home page use remote.<br>
+     */
+    protected static boolean isHomePageRemote = false;
+
+    /**
      * Access ping listener.<br>
      * CN:网络状态监听回调。
      */
     protected IAccessListener mAccessListener = null;
+
+    /**
+     * Scene recognize listener.<br>
+     * CN:场景识别监听。
+     */
+    protected ISceneListener mSceneListener = null;
 
     /**
      * Handler of access event.
@@ -250,6 +263,7 @@ public abstract class BaseActivity extends Activity implements RemotePool
         LogTool.v("on pause.");
         super.onPause();
         dismissProgressDialog();
+        clearSceneListener();
     }
 
     /**
@@ -272,15 +286,6 @@ public abstract class BaseActivity extends Activity implements RemotePool
         super.onDestroy();
         if (mVibrator != null)
             mVibrator.cancel();
-    }
-
-    /**
-     * Clear access listener.<br>
-     * CN:清除回调。
-     */
-    protected void clearAccessListener()
-    {
-        mMultiScreenControlService.setAllAccessListener(null);
     }
 
     /**
@@ -331,7 +336,42 @@ public abstract class BaseActivity extends Activity implements RemotePool
         clearCurrentDevice();
     }
 
-
+    /**
+     * Deal Scene changed.<br>
+     * CN:处理场景切换。
+     * @param sceneType
+     */
+    protected void dealSceneChanged(SceneType sceneType)
+    {
+        switch (sceneType)
+        {
+            case REMOTE_TOUCH:
+            {
+                gotoRemoteTouch();
+            }
+                break;
+            case REMOTE_AIRMOUSE:
+            {
+                gotoAirMouse();
+            }
+                break;
+            case MIRROR:
+            {
+                gotoMirror();
+            }
+                break;
+            case MIRROR_SENSOR:
+            {
+                gotoMirrorSensor();
+            }
+                break;
+            default:
+            {
+                gotoRemoteTouch();
+            }
+                break;
+        }
+    }
 
     /**
      * CN:滑动遥控器。<br>
@@ -575,6 +615,30 @@ public abstract class BaseActivity extends Activity implements RemotePool
         mMultiScreenControlService.setAllAccessListener(mAccessListener);
     }
 
+    /**
+     * CN:重置场景识别观察者。
+     */
+    protected void resetSceneListener()
+    {
+        if (mSceneListener == null)
+        {
+            mSceneListener = new ISceneListener()
+            {
+                @Override
+                public void sceneChanged(SceneType sceneType)
+                {
+                    dealSceneChanged(sceneType);
+                }
+            };
+        }
+        mMultiScreenControlService.setSceneListener(mSceneListener);
+    }
+
+    private void clearSceneListener()
+    {
+        mMultiScreenControlService.setSceneListener(null);
+    }
+
     private void sendAccessStatusMessage(Caller caller, int what)
     {
         Message msg = mAccessEventHandler.obtainMessage();
@@ -699,6 +763,8 @@ public abstract class BaseActivity extends Activity implements RemotePool
         // Get instance of remote control center.
         mRemoteControlCenter = mMultiScreenControlService.getRemoteControlCenter();
         mAccessEventHandler = new AccessEventHandler(this);
+        // isHomePageRemote =
+        // readStatusPreference(MultiSettingActivity.HOMEPAGE_REMOTE_KEY);
     }
 
     /**

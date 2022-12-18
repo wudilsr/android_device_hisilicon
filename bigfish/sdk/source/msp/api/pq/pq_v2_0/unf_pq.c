@@ -91,10 +91,7 @@ N/A CNcomment: нч CNend
  */
 HI_S32 HI_UNF_PQ_GetImageMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_MODE_E* penImageMode)
 {
-    if (NULL == penImageMode )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(penImageMode);
 
     return HI_SUCCESS;
 }
@@ -130,10 +127,7 @@ HI_S32 HI_UNF_PQ_SetChanOption(const HI_UNF_PQ_OPT_CHANS_S* pstChanOption)
 {
     HI_UNF_DISP_E enChan;
 
-    if (NULL == pstChanOption )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstChanOption);
 
     enChan = pstChanOption->enChan;
 
@@ -163,10 +157,7 @@ HI_S32 HI_UNF_PQ_GetChanOption(HI_UNF_PQ_OPT_CHANS_S* pstChanOption)
     HI_U32 u32Hue = 0;
     HI_U32 u32Saturation = 0;
 
-    if (NULL == pstChanOption )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstChanOption);
 
     enChan = pstChanOption->enChan;
 
@@ -199,11 +190,7 @@ N/A CNcomment: нч CNend
 
 HI_S32 HI_UNF_PQ_SetCommOption(const HI_UNF_PQ_OPT_COMMON_S* pstCommOption)
 {
-
-    if (NULL == pstCommOption )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstCommOption);
 
     return HI_MPI_PQ_SetSharpness(pstCommOption->u32Sharpeness);
 }
@@ -220,14 +207,10 @@ N/A CNcomment: нч CNend
 
 HI_S32 HI_UNF_PQ_GetCommOption(HI_UNF_PQ_OPT_COMMON_S* pstCommOption)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Sharpness = 0;
 
-
-    if ( NULL == pstCommOption)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstCommOption);
 
     s32Ret = HI_MPI_PQ_GetSharpness(&u32Sharpness);
     if (HI_SUCCESS != s32Ret)
@@ -303,13 +286,10 @@ HI_S32 HI_UNF_PQ_SetDefaultParam(HI_VOID)
  */
 HI_S32 HI_UNF_PQ_GetBrightness(HI_UNF_DISP_E enChan, HI_U32* pu32Brightness)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Brightness = 0;
 
-    if ( NULL == pu32Brightness)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32Brightness);
 
     s32Ret = HI_MPI_PQ_GetBrightness((HI_DRV_DISPLAY_E)enChan, &u32Brightness);
     if (HI_SUCCESS != s32Ret)
@@ -336,7 +316,7 @@ HI_S32 HI_UNF_PQ_SetBrightness(HI_UNF_DISP_E enChan, HI_U32 u32Brightness)
 {
     if ( u32Brightness > 100)
     {
-        HI_ERR_PQ("The brightness is out of range!");
+        HI_ERR_PQ("The brightness is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -359,13 +339,10 @@ HI_S32 HI_UNF_PQ_SetBrightness(HI_UNF_DISP_E enChan, HI_U32 u32Brightness)
 
 HI_S32 HI_UNF_PQ_GetContrast(HI_UNF_DISP_E enChan, HI_U32* pu32Contrast)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Contrast = 0;
 
-    if ( NULL == pu32Contrast)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32Contrast);
 
     s32Ret = HI_MPI_PQ_GetContrast((HI_DRV_DISPLAY_E)enChan, &u32Contrast);
     if (HI_SUCCESS != s32Ret)
@@ -392,7 +369,7 @@ HI_S32 HI_UNF_PQ_SetContrast(HI_UNF_DISP_E enChan, HI_U32 u32Contrast)
 {
     if ( u32Contrast > 100)
     {
-        HI_ERR_PQ("The Contrast is out of range!");
+        HI_ERR_PQ("The Contrast is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -414,13 +391,10 @@ HI_S32 HI_UNF_PQ_SetContrast(HI_UNF_DISP_E enChan, HI_U32 u32Contrast)
 
 HI_S32 HI_UNF_PQ_GetHue(HI_UNF_DISP_E enChan, HI_U32* pu32Hue)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Hue = 0;
 
-    if ( NULL == pu32Hue)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32Hue);
 
     s32Ret = HI_MPI_PQ_GetHue((HI_DRV_DISPLAY_E)enChan, &u32Hue);
     if (HI_SUCCESS != s32Ret)
@@ -447,7 +421,7 @@ HI_S32 HI_UNF_PQ_SetHue(HI_UNF_DISP_E enChan, HI_U32 u32Hue)
 {
     if ( u32Hue > 100)
     {
-        HI_ERR_PQ("The Hue level is out of range!");
+        HI_ERR_PQ("The Hue level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -500,9 +474,10 @@ HI_S32 HI_UNF_PQ_SetBasicImageParam(HI_UNF_PQ_IMAGE_TYPE_E enType, HI_UNF_DISP_E
 
 HI_S32 HI_UNF_PQ_GetBasicImageParam(HI_UNF_PQ_IMAGE_TYPE_E enType, HI_UNF_DISP_E enChan, HI_UNF_PQ_IMAGE_PARAM_S* pstParam)
 {
-    HI_S32 s32Ret = HI_FAILURE;
-
+    HI_S32 s32Ret;
     HI_PQ_IMAGE_PARAM_S stImageParam = {0};
+
+    MPI_PQ_CHECK_NULL_PTR(pstParam);
 
     s32Ret = HI_MPI_PQ_GetBasicImageParam((HI_MPI_PQ_IMAGE_TYPE_E)enType, (HI_DRV_DISPLAY_E)enChan, &stImageParam);
 
@@ -527,19 +502,15 @@ HI_S32 HI_UNF_PQ_GetBasicImageParam(HI_UNF_PQ_IMAGE_TYPE_E enType, HI_UNF_DISP_E
 
 HI_S32 HI_UNF_PQ_GetSaturation(HI_UNF_DISP_E enChan, HI_U32* pu32Saturation)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Saturation = 0;
 
-
-    if ( NULL == pu32Saturation)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32Saturation);
 
     s32Ret = HI_MPI_PQ_GetSaturation((HI_DRV_DISPLAY_E)enChan, &u32Saturation);
     if (HI_SUCCESS != s32Ret)
     {
-        return HI_FAILURE;
+        return s32Ret;
     }
 
     *pu32Saturation = u32Saturation;
@@ -561,7 +532,7 @@ HI_S32 HI_UNF_PQ_SetSaturation(HI_UNF_DISP_E enChan, HI_U32 u32Saturation)
 {
     if ( u32Saturation > 100)
     {
-        HI_ERR_PQ("The Saturation level is out of range!");
+        HI_ERR_PQ("The Saturation level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -583,10 +554,7 @@ HI_S32 HI_UNF_PQ_SetSaturation(HI_UNF_DISP_E enChan, HI_U32 u32Saturation)
 
 HI_S32 HI_UNF_PQ_GetNR(HI_UNF_DISP_E enChan, HI_U32* pu32NRLevel)
 {
-    if ( NULL == pu32NRLevel)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32NRLevel);
 
     return HI_MPI_PQ_GetTNR(pu32NRLevel);
 }
@@ -606,7 +574,7 @@ HI_S32 HI_UNF_PQ_SetNR(HI_UNF_DISP_E enChan, HI_U32 u32NRLevel)
 {
     if ( u32NRLevel > 100)
     {
-        HI_ERR_PQ("The NR level is out of range!");
+        HI_ERR_PQ("The NR level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -666,10 +634,8 @@ HI_S32 HI_UNF_PQ_SetNRAutoMode(HI_UNF_DISP_E enChan, HI_U32 u32OnOff)
 
 HI_S32 HI_UNF_PQ_GetSRMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_SR_DEMO_E* penType)
 {
-    if ( NULL == penType)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(penType);
+
 
     return HI_MPI_PQ_GetSRMode((HI_PQ_SR_DEMO_E*)penType);
 }
@@ -703,14 +669,10 @@ HI_S32 HI_UNF_PQ_SetSRMode(HI_UNF_DISP_E enChan, HI_UNF_PQ_SR_DEMO_E enType)
 
 HI_S32 HI_UNF_PQ_GetSharpness(HI_UNF_DISP_E enChan, HI_U32* pu32Sharpness)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32Sharpness = 0;
 
-
-    if ( NULL == pu32Sharpness)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32Sharpness);
 
     s32Ret = HI_MPI_PQ_GetSharpness(&u32Sharpness);
     if (HI_SUCCESS != s32Ret)
@@ -737,7 +699,7 @@ HI_S32 HI_UNF_PQ_SetSharpness(HI_UNF_DISP_E enChan, HI_U32 u32Sharpness)
 {
     if ( u32Sharpness > 100)
     {
-        HI_ERR_PQ("The Sharpness level is out of range!");
+        HI_ERR_PQ("The Sharpness level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -848,13 +810,10 @@ HI_S32 HI_UNF_PQ_SetDeRinging(HI_UNF_DISP_E enChan, HI_U32 u32DRlevel)
 
 HI_S32 HI_UNF_PQ_GetColorGain(HI_UNF_DISP_E enChan, HI_U32* pu32ColorGainLevel)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret;
     HI_U32 u32ColorGainLevel = 0;
 
-    if ( NULL == pu32ColorGainLevel)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32ColorGainLevel);
 
     s32Ret = HI_MPI_PQ_GetColorGain(&u32ColorGainLevel);
     if (HI_SUCCESS != s32Ret)
@@ -881,7 +840,7 @@ HI_S32 HI_UNF_PQ_SetColorGain(HI_UNF_DISP_E enChan, HI_U32 u32ColorGainLevel)
 {
     if ( u32ColorGainLevel > 100)
     {
-        HI_ERR_PQ("The ColorGain level is out of range!");
+        HI_ERR_PQ("The ColorGain level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -902,10 +861,7 @@ HI_S32 HI_UNF_PQ_SetColorGain(HI_UNF_DISP_E enChan, HI_U32 u32ColorGainLevel)
 
 HI_S32 HI_UNF_PQ_GetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E* pu32FleshToneLevel)
 {
-    if ( NULL == pu32FleshToneLevel)
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32FleshToneLevel);
 
     return HI_MPI_PQ_GetFleshTone(pu32FleshToneLevel);
 }
@@ -925,7 +881,7 @@ HI_S32 HI_UNF_PQ_SetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E enFles
 {
     if ( enFleshToneLevel >= HI_UNF_PQ_FLESHTONE_GAIN_BUTT)
     {
-        HI_ERR_PQ("The FleshTone level is out of range!");
+        HI_ERR_PQ("The FleshTone level is out of range!\n");
 
         return HI_FAILURE;
     }
@@ -947,7 +903,9 @@ HI_S32 HI_UNF_PQ_SetFleshTone(HI_UNF_DISP_E enChan, HI_UNF_PQ_FLESHTONE_E enFles
 
 HI_S32 HI_UNF_PQ_GetPQModule( HI_UNF_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
 {
-    if ((NULL == pu32OnOff ) || (enFlags >= HI_UNF_PQ_MODULE_BUTT))
+    MPI_PQ_CHECK_NULL_PTR(pu32OnOff);
+
+    if (enFlags >= HI_UNF_PQ_MODULE_BUTT)
     {
         return HI_FAILURE;
     }
@@ -1068,15 +1026,12 @@ HI_S32 HI_UNF_PQ_GetDemoMode( HI_UNF_DISP_E enChan, HI_UNF_PQ_DEMO_MODE_E* penMo
 HI_S32 HI_UNF_PQ_GetColorEnhanceParam(HI_UNF_PQ_COLOR_ENHANCE_S* pstColorEnhanceParam)
 {
     HI_S32 s32Ret = HI_FAILURE;
-    HI_UNF_PQ_COLOR_ENHANCE_E 	 enType;
+    HI_UNF_PQ_COLOR_ENHANCE_E    enType;
     HI_UNF_PQ_FLESHTONE_E enFleshToneLevel = HI_UNF_PQ_FLESHTONE_GAIN_OFF;
     HI_UNF_PQ_SIX_BASE_S stSixBase = {0};
     HI_UNF_PQ_COLOR_SPEC_MODE_E enColorMode = HI_UNF_PQ_COLOR_MODE_RECOMMEND;
 
-    if (NULL == pstColorEnhanceParam )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pstColorEnhanceParam);
 
     enType = pstColorEnhanceParam->enColorEnhanceType;
 
@@ -1164,10 +1119,7 @@ HI_S32 HI_UNF_PQ_SetColorEnhanceParam(HI_UNF_PQ_COLOR_ENHANCE_S stColorEnhancePa
 
 HI_S32 HI_UNF_PQ_GetDynamicContrast(HI_U32* pu32DCIlevel)
 {
-    if (NULL == pu32DCIlevel )
-    {
-        return HI_FAILURE;
-    }
+    MPI_PQ_CHECK_NULL_PTR(pu32DCIlevel);
 
     return HI_MPI_PQ_GetDciLevel(pu32DCIlevel);
 }

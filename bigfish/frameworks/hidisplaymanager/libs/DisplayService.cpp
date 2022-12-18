@@ -532,6 +532,36 @@ namespace android
         ret = mDevice->get_output_enable(port);
         return  ret;
     }
+    int DisplayService::setCECSuspend()
+    {
+        int ret = -1;
+        if(mDevice == 0)
+        {
+            return ret;
+        }
+        ret = mDevice->set_hdmi_cec_suspend();
+        return  ret;
+    }
+    int DisplayService::getHDMICECSuspendEnable()
+    {
+        int ret = -1;
+        if(mDevice == 0)
+        {
+            return ret;
+        }
+        ret = mDevice->get_hdmi_cec_suspend_enable();
+        return  ret;
+    }
+    int DisplayService::setHDMICECSuspendEnable(int enable)
+    {
+        int ret = -1;
+        if(mDevice == 0)
+        {
+            return ret;
+        }
+        ret = mDevice->set_hdmi_cec_suspend_enable(enable);
+        return  ret;
+    }
 
     void DisplayService::binderDied(const wp<IBinder>& who) {
         /* What if client is force close, reset statue of display to 2D mode. */

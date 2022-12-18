@@ -20,7 +20,7 @@ HI_S32 VIR_BUFFER_Init(VIR_BUFFER_S *pstBuffer)
 
     pstBuffer->enType = MUTUAL_TYPE_SINKACTIVE;
 
-    return HI_SUCCESS;    
+    return HI_SUCCESS;
 }
 HI_S32 VIR_BUFFER_DeInit(VIR_BUFFER_S *pstBuffer)
 {
@@ -48,7 +48,7 @@ HI_S32 VIR_BUFFER_SetType(VIR_BUFFER_S *pstBuffer, MUTUAL_TYPE_E enType)
         WIN_ERROR("Virtual Window buffer type can't be changed.\n");
         return HI_FAILURE;
     }
-    
+
     pstBuffer->enType = enType;
 
     return HI_SUCCESS;
@@ -61,7 +61,7 @@ HI_S32 VIR_BUFFER_GetFrm(VIR_BUFFER_S *pstBuffer,HI_DRV_VIDEO_FRAME_S *pstFrm)
     HI_U32 u32Head;
     HI_U32 u32Tail;
     HI_DRV_VIDEO_FRAME_S *pstArrayFrm;
-    
+
     enType = pstBuffer->enType;
 
     switch (enType)
@@ -92,21 +92,21 @@ HI_S32 VIR_BUFFER_GetFrm(VIR_BUFFER_S *pstBuffer,HI_DRV_VIDEO_FRAME_S *pstFrm)
             s32Ret = HI_FAILURE;
             break;
     }
-    
+
     return s32Ret;
-    
+
 }
 
 HI_S32 VIR_BUFFER_AddFrm(VIR_BUFFER_S *pstBuffer,HI_DRV_VIDEO_FRAME_S *pstFrm)
-{   
+{
     MUTUAL_TYPE_E enType;
     HI_S32 s32Ret;
     HI_U32 u32Head;
     HI_U32 u32Tail;
     HI_DRV_VIDEO_FRAME_S *pstArrayFrm;
-    
+
     enType = pstBuffer->enType;
-    
+
     switch (enType)
     {
         case MUTUAL_TYPE_SRCACTIVE:
@@ -133,14 +133,14 @@ HI_S32 VIR_BUFFER_AddFrm(VIR_BUFFER_S *pstBuffer,HI_DRV_VIDEO_FRAME_S *pstFrm)
             s32Ret = HI_FAILURE;
             break;
     }
-    
+
     return s32Ret;
 }
 
 HI_S32 WIN_VIR_Create(HI_DRV_WIN_ATTR_S *pWinAttr, VIRTUAL_S **ppstVirWin)
-{   
+{
     VIRTUAL_S *pstVirWin;
-    
+
     pstVirWin = (VIRTUAL_S *)DISP_MALLOC(sizeof(VIRTUAL_S));
     if (!pstVirWin)
     {
@@ -156,11 +156,11 @@ HI_S32 WIN_VIR_Create(HI_DRV_WIN_ATTR_S *pWinAttr, VIRTUAL_S **ppstVirWin)
     pstVirWin->stAttrBuf.stCropRect.u32LeftOffset   = 0;
     pstVirWin->stAttrBuf.stCropRect.u32RightOffset  = 0;
     pstVirWin->stAttrBuf.stCropRect.u32TopOffset    = 0;
-        
+
     atomic_set(&pstVirWin->bNewAttrFlag, 1);
 
     VIR_BUFFER_Init(&(pstVirWin->stBuffer));
-    
+
     pstVirWin->enBufType = MUTUAL_TYPE_SINKACTIVE;
 	pstVirWin->stSrcInfo.hSrc = HI_INVALID_HANDLE;
     pstVirWin->stSrcInfo.pfAcqFrame = HI_NULL;
@@ -175,7 +175,7 @@ HI_S32 WIN_VIR_Create(HI_DRV_WIN_ATTR_S *pWinAttr, VIRTUAL_S **ppstVirWin)
     pstVirWin->bVertFlip = HI_FALSE;
     *ppstVirWin = pstVirWin;
 
-    
+
     return HI_SUCCESS;
 }
 
@@ -183,11 +183,11 @@ HI_S32 WIN_VIR_Destroy(VIRTUAL_S *pstVirWin)
 {
 
      WinCheckNullPointer(pstVirWin);
-     
+
      VIR_BUFFER_DeInit(&(pstVirWin->stBuffer));
 
      DISP_FREE(pstVirWin);
-     
+
      return HI_SUCCESS;
 }
 
@@ -202,29 +202,21 @@ HI_S32 WIN_VIR_Reset(VIRTUAL_S *pstVirWin)
     }
     else if (pstVirWin->stBuffer.enType == MUTUAL_TYPE_SINKACTIVE)
     {
-        if (0)
+        s32Ret = VIR_BUFFER_GetFrm(&(pstVirWin->stBuffer), &stFrame);
+
+        while (HI_SUCCESS == s32Ret)
         {
-            DISP_ERROR("Window is working ,can't reset %d\n",pstVirWin->stBuffer.enType);
-            s32Ret = HI_ERR_VO_INVALID_OPT;
-        }
-        else
-        {
+            hSrc = pstVirWin->stSrcInfo.hSrc;
+            WinCheckNullPointer(pstVirWin->stSrcInfo.pfRlsFrame);
+
+            (HI_VOID)pstVirWin->stSrcInfo.pfRlsFrame(hSrc, &stFrame);
+
             s32Ret = VIR_BUFFER_GetFrm(&(pstVirWin->stBuffer), &stFrame);
-
-            while(HI_SUCCESS == s32Ret)
-            {
-                hSrc = pstVirWin->stSrcInfo.hSrc;
-                WinCheckNullPointer(pstVirWin->stSrcInfo.pfRlsFrame);
-				
-                (HI_VOID)pstVirWin->stSrcInfo.pfRlsFrame(hSrc,&stFrame);
-                
-                s32Ret = VIR_BUFFER_GetFrm(&(pstVirWin->stBuffer), &stFrame);
-            }
-            
-            (HI_VOID)VIR_BUFFER_Reset(&(pstVirWin->stBuffer));
-
-            s32Ret = HI_SUCCESS;
         }
+
+        (HI_VOID)VIR_BUFFER_Reset(&(pstVirWin->stBuffer));
+
+        s32Ret = HI_SUCCESS;
     }
     else
     {
@@ -251,9 +243,9 @@ HI_S32 WIN_VIR_SendAttrToSource(VIRTUAL_S *pstVirWin)
 		stWinPriv.stOutRect.s32X = 0;
 		stWinPriv.stOutRect.s32Y = 0;
 		if ((pstVirWin->u32Width == 0 && pstVirWin->u32Height == 0)
-				|| pstVirWin->u32Width > 1920 
+				|| pstVirWin->u32Width > 1920
 				|| pstVirWin->u32Height > 1088)
-		{   
+		{
 			stWinPriv.stOutRect.s32Height = 0;
 			stWinPriv.stOutRect.s32Width = 0;
 		}
@@ -298,14 +290,14 @@ HI_S32 WIN_VIR_SendAttrToSource(VIRTUAL_S *pstVirWin)
 HI_S32 WIN_VIR_SetAttr(VIRTUAL_S *pstVirWin,HI_DRV_WIN_ATTR_S *pWinAttr)
 {
     atomic_set(&pstVirWin->bNewAttrFlag, 0);
-        
+
     pstVirWin->stAttrBuf = *pWinAttr;
 
     atomic_set(&pstVirWin->bNewAttrFlag, 1);
 
-    
+
     WIN_VIR_SendAttrToSource(pstVirWin);
-    
+
     return HI_SUCCESS;
 }
 
@@ -320,7 +312,7 @@ HI_S32 WIN_VIR_SetFrmRate(VIRTUAL_S *pstVirWin,HI_U32 u32FrmRate)
 
 HI_S32 WIN_VIR_SetSize(VIRTUAL_S *pstVirWin,HI_U32 u32Width,HI_U32 u32Height)
 {
-    
+
     if (u32Width > 1920 || u32Height > 1088
        || u32Width < 64 || u32Height < 64)
     {
@@ -330,7 +322,7 @@ HI_S32 WIN_VIR_SetSize(VIRTUAL_S *pstVirWin,HI_U32 u32Width,HI_U32 u32Height)
     }
     pstVirWin->u32Width = u32Width;
     pstVirWin->u32Height = u32Height;
-    
+
     WIN_VIR_SendAttrToSource(pstVirWin);
 
     return HI_SUCCESS;
@@ -339,7 +331,7 @@ HI_S32 WIN_VIR_SetSize(VIRTUAL_S *pstVirWin,HI_U32 u32Width,HI_U32 u32Height)
 HI_S32 WIN_VIR_GetFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
 {
     HI_S32  s32Ret = HI_FAILURE;
-    
+
     if (pstVirWin->bEnable == HI_TRUE)
     {
         switch(pstVirWin->enBufType)
@@ -367,12 +359,12 @@ HI_S32 WIN_VIR_RelFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
 {
     HI_S32  s32Ret;
     HI_HANDLE hSrc;
-    
+
     if(pstVirWin->bEnable == HI_TRUE)
     {
         hSrc = pstVirWin->stSrcInfo.hSrc;
         WinCheckNullPointer(pstVirWin->stSrcInfo.pfRlsFrame);
-        
+
         s32Ret = pstVirWin->stSrcInfo.pfRlsFrame(hSrc,pstFrm);
     }
     else
@@ -380,7 +372,7 @@ HI_S32 WIN_VIR_RelFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
         WIN_ERROR("Window is disabled.\n");
         s32Ret = HI_FAILURE;
     }
-    
+
     return s32Ret;
 }
 
@@ -400,13 +392,13 @@ HI_S32 WIN_VIR_AddNewFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
                 hSink = pstVirWin->hSink;
                 WinCheckNullPointer(pstVirWin->pfnQueueFrm);
                 pfnQueueFrm = (FN_VENC_PUT_FRAME)pstVirWin->pfnQueueFrm;
-                
+
                 s32Ret = pfnQueueFrm(hSink,pstFrm);
 
                 break;
             case MUTUAL_TYPE_SINKACTIVE:
                 s32Ret = VIR_BUFFER_AddFrm(&(pstVirWin->stBuffer), pstFrm);
-           
+
                 break;
             default:
                 WIN_ERROR("MUTUAL TYPE Can't be supported.\n");
@@ -418,7 +410,7 @@ HI_S32 WIN_VIR_AddNewFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
     {
         s32Ret = HI_FAILURE;
     }
-    
+
     if (HI_FAILURE == s32Ret)
     {
         hSrc = pstVirWin->stSrcInfo.hSrc;
@@ -439,7 +431,7 @@ HI_S32 WIN_VIR_AddUlsFrm(VIRTUAL_S *pstVirWin,HI_DRV_VIDEO_FRAME_S *pstFrm)
     hSrc = pstVirWin->stSrcInfo.hSrc;
     WinCheckNullPointer(pstVirWin->stSrcInfo.pfRlsFrame);
     s32Ret = pstVirWin->stSrcInfo.pfRlsFrame(hSrc, pstFrm);
-       
+
     return s32Ret;
 }
 
@@ -459,14 +451,14 @@ HI_BOOL WinCheckVirtual(HI_U32 u32WinIndex)
     else
     {
         return HI_FALSE;
-    }    
+    }
 }
 
 HI_S32 WIN_VIR_DetachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink)
 {
     HI_MOD_ID_E enModID;
     HI_S32 s32Ret;
-    
+
     enModID = (HI_MOD_ID_E)((hSink & 0xff0000) >> 16);
     if (pstVirWin->stSrcInfo.hSrc != HI_INVALID_HANDLE)
     {
@@ -489,9 +481,9 @@ HI_S32 WIN_VIR_DetachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink)
         s32Ret = HI_FAILURE;
     }
 
-    
+
     return s32Ret;
-    
+
 }
 
 HI_S32 WIN_VIR_AttachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink)
@@ -499,14 +491,14 @@ HI_S32 WIN_VIR_AttachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink)
     HI_MOD_ID_E enModID;
     VENC_EXPORT_FUNC_S *pstVenFunc;
     HI_S32 s32Ret;
-    
+
     if (pstVirWin->hSink != HI_INVALID_HANDLE)
     {
         WIN_ERROR("Virtual Window is already attached,hSink=%#x\n",pstVirWin->hSink);
         return HI_FAILURE;
     }
     enModID = (HI_MOD_ID_E)((hSink & 0xff0000) >> 16);
-    
+
     if ( HI_ID_VENC == enModID )
     {
         s32Ret = HI_DRV_MODULE_GetFunction(enModID,(HI_VOID**)&(pstVenFunc));
@@ -530,7 +522,7 @@ HI_S32 WIN_VIR_AttachSink(VIRTUAL_S *pstVirWin,HI_HANDLE hSink)
     }
 
     return s32Ret;
-    
+
 }
 #ifdef __cplusplus
  #if __cplusplus

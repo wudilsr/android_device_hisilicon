@@ -11,7 +11,7 @@
 #include "upgrd_common.h"
 #define LOADER_GetDeviceInfo HI_DRV_PDM_GetDeviceInfo
 #define LOADER_GetDeviceSN HI_DRV_PDM_GetDeviceInfo
-#elif defined(HI_LOADER_APPLOADER) && defined(HI_ADVCA_SUPPORT)
+#elif defined(HI_LOADER_APPLOADER) && defined(HI_ADVCA_TYPE_NAGRA)
 #include "hi_drv_pdm.h"
 #include "hi_unf_pdm.h"
 #include "upgrd_common.h"
@@ -22,6 +22,12 @@
 #include "upgrd_common.h"
 #define LOADER_GetDeviceInfo  HI_UNF_PDM_GetDeviceInfo
 #define LOADER_GetDeviceSN HI_UNF_PDM_GetDeviceInfo
+#elif defined(HI_LOADER_APPLOADER) && defined(HI_ADVCA_TYPE_VERIMATRIX)
+#include "hi_unf_pdm.h"
+#include "upgrd_common.h"
+#define LOADER_GetDeviceInfo  HI_UNF_PDM_GetDeviceInfo
+#define LOADER_GetDeviceSN HI_UNF_PDM_GetDeviceInfo
+
 
 #else /* libhiloader.a &so */
 #include <string.h>
@@ -110,7 +116,7 @@ HI_S32 HI_LOADER_WriteParameters(HI_LOADER_PARAMETER_S* info)
 }
 
 
-#if defined(HI_ADVCA_SUPPORT) && !defined(HI_LOADER_BOOTLOADER)
+#if defined(HI_ADVCA_TYPE_NAGRA) && !defined(HI_LOADER_BOOTLOADER)
 #include "hi_drv_pdm.h"
 #include "hi_unf_pdm.h"
 #define LOADER_GetDeviceInfo  GetCADeviceInfo
@@ -485,7 +491,7 @@ HI_S32 HI_LOADER_WriteSTBInfo(HI_LOADER_STB_INFO_S* pstStbinfo)
     pCurPos += strlen(ac8TmpBuf) + 1; /* skip \0 */
 
     /* SN */
-    snprintf(ac8TmpBuf, sizeof(ac8TmpBuf), "%x", pstStbinfo->u32HWSerialNum);
+    snprintf(ac8TmpBuf, sizeof(ac8TmpBuf), "%08x", pstStbinfo->u32HWSerialNum);
     strncpy(pCurPos, ac8TmpBuf, strlen(ac8TmpBuf) + 1);
     pCurPos += strlen(ac8TmpBuf) + 1; /* skip \0 */
     

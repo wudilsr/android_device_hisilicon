@@ -6,7 +6,7 @@
  *              abstract burn interface definition.
  * History:
  * Version   Date         Author     DefectNum    Description
- * 
+ *
  ******************************************************************************/
 #include "loader_upgrade.h"
 #include "upgrd_common.h"
@@ -21,7 +21,7 @@ extern "C" {
 
 static HI_U32 g_FlashTotalWriteLen = 0;
 static HI_U32 g_FlashCurWriteLen = 0;
-static HI_U32 g_u32PartitionNum = 0;
+HI_U32 g_u32PartitionNum = 0;
 static HI_BOOL g_bBurnFirstPiece = HI_TRUE;
 LOADER_OSD_CALLBACK g_pfnOSDCallback  = HI_NULL;
 FLASH_DATA_INFO_S *g_pstFlashDataInfo = HI_NULL;
@@ -97,7 +97,7 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
 
         HI_DBG_LOADER("FlashType:%x, u32ImageFS:0x%08x, StartAddr:%Lx EndAddr:0x%08Lx \n",
                 u32FlashType, u32ImageFS, u64StartAddr, u64EndAddr);
-        
+
         hHandle = HI_Flash_Open((HI_FLASH_TYPE_E)u32FlashType, NULL, (HI_U64)u64StartAddr, (HI_U64)(u64EndAddr - u64StartAddr));
         if (HI_INVALID_HANDLE == hHandle)
         {
@@ -130,6 +130,7 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
         g_pstFlashDataInfo[i].u32PartitionCalCRC = 0xffffffff;
         g_pstFlashDataInfo[i].bErased = HI_FALSE;
         g_pstFlashDataInfo[i].u64PartitionSize = (HI_U64)(u64EndAddr - u64StartAddr);
+        g_pstFlashDataInfo[i].u64PartitionStartAddr = u64StartAddr;
         g_pstFlashDataInfo[i].LOADER_BURN_WriteData =  HI_NULL;
         g_pstFlashDataInfo[i].private =  HI_NULL;
 
@@ -161,7 +162,7 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
         {
             g_pstFlashDataInfo[i].pu8Buff = HI_NULL;
         }
-        
+
 #else
         g_pstFlashDataInfo[i].pu8Buff = (HI_U8 *)malloc(g_pstFlashDataInfo[i].u32DataBlockSize);
 #endif
@@ -172,7 +173,7 @@ static HI_S32 InitFlashPartition(LOADER_PARTITION_INFO_S *pstPartionInfo, HI_U32
         }
 
         g_pstFlashDataInfo[i].u32BuffLen = 0;
-        
+
     }
 
     return HI_SUCCESS;
@@ -207,25 +208,30 @@ HI_S32 LOADER_BURN_Init(LOADER_PARTITION_INFO_S * pstPartInfo, HI_U32 u32PartNum
 static HI_S32 LOADER_BURN_ProbeImageType(HI_U32 u32Index, HI_U8 * pucBuff, HI_U32 u32DataLen)
 {
     /* set burn method */
-    if (!g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData)
+#if defined(HI_ADVCA_SUPPORT)
+#if defined(HI_ADVCA_TYPE_VERIMATRIX)
+    if (HI_TRUE == vmxSSDIsSignatured(g_pstFlashDataInfo[u32Index].u64PartitionStartAddr))
     {
-#if defined(HI_ADVCA_SUPPORT) && !defined(HI_LOADER_BOOTLOADER)
         g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_CA;
-#else
-        /* ext4sp */
-        if (HI_TRUE == LOADER_BURN_Identify_ext4sp(pucBuff, u32DataLen))
-        {
-            HI_DBG_LOADER("image is ext4 sparse filesystem for partition(%d).\n", u32Index + 1);
-            g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_ext4sp;
-        }
-        else /* raw */
-        {
-            HI_DBG_LOADER("image is raw data for partition(%d).\n", u32Index + 1);
-            g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_raw;
-        }
-#endif  
+        return HI_SUCCESS;
     }
-    
+#else
+    g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_CA;
+    return HI_SUCCESS;
+#endif
+#endif
+
+    if (HI_TRUE == LOADER_BURN_Identify_ext4sp(pucBuff, u32DataLen))
+    {
+        HI_DBG_LOADER("image is ext4 sparse filesystem for partition(%d).\n", u32Index + 1);
+        g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_ext4sp;
+    }
+    else
+    {
+        HI_DBG_LOADER("image is raw data for partition(%d).\n", u32Index + 1);
+        g_pstFlashDataInfo[u32Index].LOADER_BURN_WriteData = LOADER_BURN_WriteData_raw;
+    }
+
     return HI_SUCCESS;
 }
 
@@ -234,8 +240,8 @@ static HI_S32 LOADER_BURN_ProbeImageType(HI_U32 u32Index, HI_U8 * pucBuff, HI_U3
 * Description:   update data to flash
 * Data Accessed:
 * Data Updated:
-* Input:           
-* Output:           
+* Input:
+* Output:
 * Return: HI_SUCCESS
 * Others:
 *****************************************************************************/

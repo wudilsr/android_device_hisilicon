@@ -88,6 +88,8 @@ Date				Author        		Modification
 		HI_BOOL bResetState;		   /**< 待机时候的复位状态 **/
 		HI_BOOL bLock;				   /**< 已经处于锁状态	   **/
 		HI_BOOL bMceUse;			   /**< 是否MCE在jpeg设备		   **/
+		HI_U32 SystemAnomalCnt;
+        HI_U32 OmxDecHandle;
 		struct semaphore   SemGetDev; /**< protect the device to occupy the operation singnal */
 		struct file 	   *pFile;
 		JPG_INTTYPE_E	   IntType; 	 /**< lately happened halt type  */

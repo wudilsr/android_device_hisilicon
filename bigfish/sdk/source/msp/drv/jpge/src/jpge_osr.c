@@ -36,7 +36,7 @@ static atomic_t g_JPGECount = ATOMIC_INIT(0);
 
 static HI_BOOL gs_bClockOpen = HI_FALSE;
 
-	
+
 static JPGE_EXPORT_FUNC_S s_JpgeExportFuncs =
 {
 	.pfnJpgeInit                = Jpge_Init,
@@ -54,7 +54,7 @@ static int jpge_open(struct inode *finode, struct file  *ffile)
     {
     	Jpge_SetClock();;
     }
-    
+
     return 0;
 }
 
@@ -75,7 +75,7 @@ static int jpge_release(struct inode *finode, struct file  *ffile)
     {
         atomic_set(&g_JPGECount, 0);
     }
-    
+
     return 0;
 }
 
@@ -98,12 +98,18 @@ static long jpge_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg
     void __user *argp = (void __user *)arg;
     long ret;
 
+    if (NULL == argp)
+    {
+       return -EFAULT;
+    }
+
     switch (cmd)
     {
     case JPGE_CREATE_CMD:
     {
         Jpge_EncCfgInfo_S EncCfgInfo;
-
+        memset(&EncCfgInfo,0x0,sizeof(Jpge_EncCfgInfo_S));
+        
         if ((ret = copy_from_user(&EncCfgInfo, argp, sizeof(Jpge_EncCfgInfo_S))) < 0)
         {
             return -EFAULT;
@@ -121,12 +127,14 @@ static long jpge_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg
     }
     case JPGE_ENCODE_CMD:
     {
-        Jpge_EncInfo_S EncInfo;   
+        Jpge_EncInfo_S EncInfo;
+        memset(&EncInfo,0x0,sizeof(Jpge_EncInfo_S));
+        
         if ((ret = copy_from_user(&EncInfo, argp, sizeof(Jpge_EncInfo_S))) < 0)
         {
             return -EFAULT;
         }
-        ret =  Jpge_Encode ( EncInfo.EncHandle, &EncInfo.EncIn, &EncInfo.EncOut);
+        ret =  Jpge_Encode ( (HI_U32)EncInfo.EncHandle, &EncInfo.EncIn, &EncInfo.EncOut);
         if(0 != ret)
         {
             return ret;
@@ -139,7 +147,7 @@ static long jpge_ioctl(struct file  *ffile, unsigned int  cmd, unsigned long arg
     }
     case JPGE_DESTROY_CMD:
     {
-         HI_U32  u32Handle;
+         HI_U32  u32Handle = 0;
         if ((ret = copy_from_user(&u32Handle, argp, sizeof(HI_U32))) < 0)
         {
             return -EFAULT;
@@ -158,21 +166,21 @@ DECLARE_GFX_NODE("hi_jpge", jpge_open, jpge_release, NULL, jpge_ioctl, jpge_pm_s
 static HI_VOID HI_GFX_ShowVersionK(HIGFX_MODE_ID_E ModID)
 {
 	#if !defined(CONFIG_GFX_COMM_VERSION_DISABLE) && !defined(CONFIG_GFX_COMM_DEBUG_DISABLE)
-	
+
     	HI_CHAR MouleName[7][10] = {"tde","jpegdec","jpegenc","fb","png", "higo", "gfx2d"};
         HI_CHAR Version[160] ="SDK_VERSION:["MKMARCOTOSTR(SDK_VERSION)"] Build Time:["\
 		__DATE__", "__TIME__"]";
 
     	if (ModID >= HIGFX_BUTT_ID)
     		return;
-	
-	if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))	
+
+	//if ((HIGFX_JPGDEC_ID == ModID) || (HIGFX_JPGENC_ID == ModID))
 		GFX_Printk("Load hi_%s.ko success.\t(%s)\n", MouleName[ModID],Version);
-	else
-		GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);		
+	//else
+	//	GFX_Printk("Load hi_%s.ko success.\t\t(%s)\n", MouleName[ModID],Version);
 
 	return;
-		
+
 	#endif
 }
 
@@ -186,15 +194,15 @@ void JPGE_DRV_ModExit(void);
 
 int JPGE_DRV_ModInit(void)
 {
-    int ret; 
-    
+    int ret;
+
     ret = Jpge_Open();
     if(0 != ret)
     {
         HI_PRINT("request_irq for JPGE failure!\n");
         return -1;
     }
-    
+
     ret = HI_GFX_PM_Register();
     if (0 != ret)
     {
@@ -212,7 +220,7 @@ int JPGE_DRV_ModInit(void)
     }
 
     HI_GFX_ShowVersionK(HIGFX_JPGENC_ID);
-    
+
     return 0;
 }
 
@@ -242,7 +250,7 @@ static int jpge_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
 
 
 	HI_PRINT("JPGE suspend OK\n");
-    
+
     return 0;
 }
 

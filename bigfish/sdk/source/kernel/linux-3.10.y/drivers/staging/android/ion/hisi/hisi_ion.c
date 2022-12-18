@@ -21,6 +21,18 @@ static int num_heaps;
 static struct ion_device *idev;
 static struct ion_heap **heaps;
 
+struct ion_client *hisi_ion_client_create(const char *name)
+{
+	return ion_client_create(idev, name);
+}
+EXPORT_SYMBOL(hisi_ion_client_create);
+
+void hisi_ion_client_destroy(struct ion_client *client)
+{
+	ion_client_destroy(client);
+}
+EXPORT_SYMBOL(hisi_ion_client_destroy);
+
 static int hisi_ion_probe(struct platform_device *pdev)
 {
 	struct ion_platform_data *pdata = pdev->dev.platform_data;
@@ -98,5 +110,5 @@ static void __exit hisi_ion_exit(void)
 	platform_driver_unregister(&hisi_ion_driver);
 }
 
-module_init(hisi_ion_init);
+subsys_initcall(hisi_ion_init);
 module_exit(hisi_ion_exit);

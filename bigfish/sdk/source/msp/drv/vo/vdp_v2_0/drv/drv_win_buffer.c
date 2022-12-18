@@ -170,7 +170,7 @@ __ERR_EXIT_:
         }
     }
 
-    nRet = DispBuf_Destoy(&pstWinBP->stBuffer);
+    (HI_VOID)DispBuf_Destoy(&pstWinBP->stBuffer);
 
     return HI_FAILURE;
 }
@@ -318,7 +318,7 @@ HI_S32 WinBuf_ReleaseCaptureFrame(WB_POOL_S *pstWinBP, HI_DRV_VIDEO_FRAME_S *pst
 	{
         WIN_FATAL(" release wrong capture frame.\n");
         return HI_ERR_VO_INVALID_OPT;
-    } 
+    }
     /* when release, if capture not equal to capture frame nor equal to black
        frame,return error.
     */
@@ -889,11 +889,12 @@ HI_DRV_VIDEO_FRAME_S * WinBuf_GetFrameByMaxID(WB_POOL_S *pstWinBP, HI_DRV_VIDEO_
     pstWinBP->pstConfig = pstWBNode;
 
     pstCurrFrame = (HI_DRV_VIDEO_FRAME_S *)pstWBNode->u32Data;
-    pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstCurrFrame->u32Priv[0]);
 
     WinBuf_DebugAddCfg(pstWinBP->pstDebugInfo, pstCurrFrame->u32FrameIndex);
 
 #ifdef WIN_BUF_GetFrameByMaxID_PRINT
+    pstPriv = (HI_DRV_VIDEO_PRIVATE_S *)&(pstCurrFrame->u32Priv[0]);
+
     printk("02 Dest=%d,tb=%d,ID=%d, tb=%d\n",
                                   u32RefID,
                                   enDstField,

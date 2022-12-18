@@ -47,6 +47,12 @@
 #define LOG_TAG "audio_a2dp_hw"
 /* #define LOG_NDEBUG 0 */
 #include <cutils/log.h>
+#define A2DP_DATA_RECORD false
+
+#if A2DP_DATA_RECORD
+static FILE *g_pAudCastFile = NULL;
+static FILE *g_pAudCastFile_or = NULL;
+#endif
 
 /*****************************************************************************
 **  Constants & Macros
@@ -476,6 +482,24 @@ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
         return -1;
     }
 
+
+#if A2DP_DATA_RECORD
+            if(g_pAudCastFile_or == NULL)
+            {
+                DEBUG("------------- open XXXXXX -----------------\n");
+                g_pAudCastFile_or = fopen("/data/misc/media/hal_audio_or.pcm", "w+b");
+                if (!g_pAudCastFile_or)
+                {
+                    ALOGI("\n\n HAL File can not be created \n\n");
+                }
+            }
+            else
+            {
+                DEBUG("\n Hal File write  \n");
+                fwrite((char *)buffer, 1, bytes, g_pAudCastFile_or);
+                fflush(g_pAudCastFile_or);
+            }
+#endif
     sent = skt_write(out->audio_fd, buffer,  bytes);
 
     if (sent == -1)
@@ -884,6 +908,11 @@ static void adev_close_output_stream(struct audio_hw_device *dev,
     skt_disconnect(out->ctrl_fd);
     free(stream);
     a2dp_dev->output = NULL;
+#if A2DP_DATA_RECORD
+	fclose(g_pAudCastFile_or);
+	g_pAudCastFile = NULL;
+	g_pAudCastFile_or = NULL;
+#endif
 
     DEBUG("done");
 }

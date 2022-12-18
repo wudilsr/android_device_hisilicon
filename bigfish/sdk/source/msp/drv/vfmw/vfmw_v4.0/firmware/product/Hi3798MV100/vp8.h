@@ -1,7 +1,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2009 HUAWEI - All Rights Reserved
+* Copyright (c) 2009 Hisilicon - All Rights Reserved
 *
 * File: $vp8_vfmw.h$
 * Date: $2010/11/9$

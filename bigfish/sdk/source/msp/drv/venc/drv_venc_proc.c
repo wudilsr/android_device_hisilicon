@@ -336,17 +336,17 @@ static HI_S32 VENC_DRV_ProcRead(struct seq_file *p, HI_VOID *v)
     HI_U32  srcID;
     HI_CHAR srcTab[4][8]={{"VI"},{"Win"},{"DISP"},{"User"}};
 	
-    HI_CHAR szProtocol[][8] = {"MPEG2", "MPEG4", "AVS",  "H.263",    "H.264", "REAL8", "REAL9",
-                               "VC1",   "VP6", "VP6F", "VP6A", "SORENSON", "MJPEG", "DIVX3", "RAW",   "JPEG",  "UNKNOWN"
-                              };
-    HI_CHAR szAVCProfile[][16] = {"Baseline","Main","Extended","High","UNKNOWN"};
-    HI_CHAR szEncodeLevel[][8] = {"QCIF", "CIF", "D1",  "720P", "1080P", "UNKNOWN"};
+    HI_CHAR szProtocol[17][10] = {{"MPEG2"}, {"MPEG4"}, {"AVS"}, {"H.263"},{"H.264"}, {"REAL8"}, {"REAL9"},{"VC1"}, 
+		                          {"VP6"}, {"VP6F"}, {"VP6A"}, {"SORENSON"}, {"MJPEG"}, {"DIVX3"}, {"RAW"}, {"JPEG"}, {"UNKNOWN"}};
+    HI_CHAR szAVCProfile[5][16] = {{"Baseline"},{"Main"},{"Extended"},{"High"},{"UNKNOWN"}};
+    HI_CHAR szEncodeLevel[6][8] = {{"QCIF"},{"CIF"}, {"D1"},{"720P"},{"1080P"},{"UNKNOWN"}};
 
-	HI_CHAR szBoolTab[][8] = {"FALSE", "TRUE"};
-	HI_CHAR szStateTab[][8] = {"Stop", "Start"};
-	HI_CHAR szPixFormat[][16] = {"SP420_VU", "SP420_UV", "Planer420",  "Planer422", "Package422_YUYV", "Package422_UYVY","Package422_YVYU","SP422","UNKNOWN"};
-    HI_CHAR szBufStateTab[][8] = {"NA","NA","NA","NA","NA","NA"};
-	HI_CHAR szMaxMinQP[][8]= {"NA","NA"};
+	HI_CHAR szBoolTab[2][8] = {{"FALSE"}, {"TRUE"}};
+	HI_CHAR szStateTab[][8] = {{"Stop"}, {"Start"}};
+	HI_CHAR szPixFormat[9][16] = {{"SP420_UV"}, {"SP420_VU"}, {"Planer420"}, {"Planer422"}, 
+		                          {"Package422_YUYV"}, {"Package422_UYVY"},{"Package422_YVYU"},{"SP422"},{"UNKNOWN"}};
+    HI_CHAR szBufStateTab[6][8] = {{"NA"},{"NA"},{"NA"},{"NA"},{"NA"},{"NA"}};
+	HI_CHAR szMaxMinQP[2][8]= {{"NA"},{"NA"}};
 
 	HI_CHAR szRCSkipThr[8] = "";
 	
@@ -528,6 +528,8 @@ static HI_S32 VENC_DRV_ProcWrite(struct file *file, const char __user *buffer, s
 	HI_U32 u32ChnID;
 	HI_S32 i,j;
 	HI_U32 parm;
+    HI_U32 cnt = 0;
+
     hVenc = (VeduEfl_EncPara_S*)(pProcItem->data);
     D_VENC_GET_CHN(u32ChnID, hVenc);
 	if (u32ChnID >= VENC_MAX_CHN_NUM)
@@ -687,8 +689,16 @@ static HI_S32 VENC_DRV_ProcWrite(struct file *file, const char __user *buffer, s
 	                }
 	                else
 	                {
-	                    msleep(100);
-	                }
+                        cnt++;
+
+                        if (cnt == 6000)
+                        {
+                            HI_ERR_VENC("Time of saving frame is 60s,stop saving!\n");
+                            break;
+                        }
+
+                        msleep(100);
+                    }
 	            }
 	            VENC_DRV_OsalFclose(g_stVencChn[u32ChnID].stProcWrite.fpSaveFile);
 		   }

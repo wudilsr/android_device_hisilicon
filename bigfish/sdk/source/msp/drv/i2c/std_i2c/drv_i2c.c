@@ -1508,6 +1508,19 @@ HI_S32 I2C_Ioctl(struct file *file, unsigned int cmd, unsigned long arg)
                 break;
             }
 
+            if ((I2cData.DataLen > HI_I2C_MAX_LENGTH) || (I2cData.I2cNum >= HI_MAX_I2C_NUM))
+            {
+                Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
+
+            if(I2cData.I2cRegCount > 4)
+            {
+                HI_ERR_I2C("invalid regCnt %d\n",I2cData.I2cRegCount);
+		        Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
+
             pData = HI_KMALLOC(HI_ID_I2C, I2cData.DataLen, GFP_KERNEL);
             if (!pData)
             {
@@ -1552,6 +1565,19 @@ HI_S32 I2C_Ioctl(struct file *file, unsigned int cmd, unsigned long arg)
             {
                 HI_INFO_I2C("copy data from user fail!\n");
                 Ret = HI_ERR_I2C_COPY_DATA_ERR;
+                break;
+            }
+
+            if ((I2cData.DataLen > HI_I2C_MAX_LENGTH) || (I2cData.I2cNum >= HI_MAX_I2C_NUM))
+            {
+                Ret = HI_ERR_I2C_INVALID_PARA;
+                break;
+            }
+
+            if(I2cData.I2cRegCount > 4)
+            {
+                HI_ERR_I2C("invalid regCnt %d\n",I2cData.I2cRegCount);
+		        Ret = HI_ERR_I2C_INVALID_PARA;
                 break;
             }
 
@@ -1600,6 +1626,12 @@ HI_S32 I2C_Ioctl(struct file *file, unsigned int cmd, unsigned long arg)
             {
                 HI_INFO_I2C("copy data from user fail!\n");
                 Ret = HI_FAILURE;
+                break;
+            }
+
+            if (I2cRate.I2cNum >= HI_MAX_I2C_NUM)
+            {
+                Ret = HI_ERR_I2C_INVALID_PARA;
                 break;
             }
 

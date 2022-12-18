@@ -12,6 +12,7 @@
 #define _HI_SVR_SMOOTHSTREAMING_H
 
 #include "hi_type.h"
+typedef void*   HI_PTR;
 
 /*************************** Structure Definition ****************************/
 /** @{ */  /** <!-- [HiSmoothStreaming data structure] CNcomment:¡¾HiSmoothStreamingÊý¾Ý½á¹¹¡¿ */
@@ -70,6 +71,8 @@ typedef enum hiSVR_SMOOTHSTREAMING_ATTR_E
                                                         /**< CNcomment:À©Õ¹½Ó¿Ú£¬ÔÝÊ±Î´ÊµÏÖ£¬Ô¤ÁôÓÃÓÚ´ÓÍâ²¿Í¸´«bufferÐÎÊ½µÄplayreadyÖ¤Êé*/
     HI_SVR_SMOOTHSTREAMING_ATTR_DRM_INITIATOR,          /**< reserved, currently no use.*/
                                                         /**< CNcomment:À©Õ¹½Ó¿Ú£¬ÔÝÊ±Î´ÊµÏÖ£¬Ô¤ÁôÓÃÓÚ´ÓÍâ²¿Í¸´«DRMµÄ³õÊ¼»¯ÐÅÏ¢*/
+    HI_SVR_SMOOTHSTREAMING_ATTR_INITIAL_BPS,            /**< Set the initial network bitrate. The parameter is the UINT32 variable. */
+                                                        /**< CNcomment:ÉèÖÃÆð²¥Ê±µÄ³õÊ¼ÂëÂÊ£¬²ÎÊýÎªUINT32±äÁ¿ */
     HI_SVR_SMOOTHSTREAMING_ATTR_USERDATA,               /**< reserved, currently no use.*/
                                                         /**< CNcomment:À©Õ¹½Ó¿Ú£¬ÔÝÊ±Î´ÊµÏÖ£¬Ô¤ÁôÓÃÓÚ´ÓÍâ²¿Í¸´«ÓÃ»§¶¨ÒåµÄÐÅÏ¢£¬ÈçÃ½ÌåÊý¾Ýµ¥¶ÀµÄURLµÈ*/
     HI_SVR_SMOOTHSTREAMING_ATTR_BUTT
@@ -386,7 +389,7 @@ None.
 \see \n
 None.
 */
-typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_ERROR_FN)(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_ERROR_S *pstruErr);
+typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_ERROR_FN)(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_ERROR_S *pstruErr);
 
 
 /**
@@ -401,7 +404,7 @@ None.
 \see \n
 None.
 */
-typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_MEDIAREADY_FN)(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_INFO_S *pstruMediaInfo);
+typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_MEDIAREADY_FN)(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_INFO_S *pstruMediaInfo);
 
 /**
 \brief state update event callback function. The ::HI_SVR_SMOOTHSTREAMING_RegistStateEventCb interface can be called to register the callback function. CNcomment:²¥·ÅÆ÷×´Ì¬¸üÐÂÊÂ¼þ»Øµ÷º¯Êý£¬µ÷ÓÃ::HI_SVR_SMOOTHSTREAMING_RegistStateEventCb½Ó¿Ú×¢²á¸Ã»Øµ÷º¯Êý
@@ -415,7 +418,7 @@ None.
 \see \n
 None.
 */
-typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_STATE_FN)(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_STATE_INFO_S* pStruEvent);
+typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_STATE_FN)(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_STATE_INFO_S* pStruEvent);
 
 /**
 \brief command done event callback function. The ::HI_SVR_SMOOTHSTREAMING_RegistCmdCb interface can be called to register the callback function. CNcomment:²¥·ÅÃüÁîÖ´ÐÐÍêÊÂ¼þ»Øµ÷º¯Êý£¬µ÷ÓÃ::HI_SVR_SMOOTHSTREAMING_RegistCmdCb½Ó¿Ú×¢²á¸Ã»Øµ÷º¯Êý
@@ -429,7 +432,7 @@ None.
 \see \n
 None.
 */
-typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_CMD_FN)(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_CMD_INFO_S* pStruEvent);
+typedef HI_VOID (*HI_SVR_SMOOTHSTREAMING_CMD_FN)(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_CMD_INFO_S* pStruEvent);
 
 /**
 \brief subtitle text data call back function. CNcomment:×ÖÄ»Êý¾Ý»Øµ÷º¯Êý:HI_SVR_SMOOTHSTREAMING_RegistSubCb½Ó¿Ú×¢²á¸Ã»Øµ÷º¯Êý
@@ -449,7 +452,7 @@ None.
 None.
 */
 
-typedef HI_S32 (*HI_SVR_SMOOTHSTREAMING_SUB_DATA_FN)(HI_HANDLE hPlayer, HI_U8* pData, HI_U32 u32DataLen, HI_BOOL isFinal,HI_S64 s64PtsAjustTimeMs,HI_U32 u32UserData);
+typedef HI_S32 (*HI_SVR_SMOOTHSTREAMING_SUB_DATA_FN)(HI_PTR hPlayer, HI_U8* pData, HI_U32 u32DataLen, HI_BOOL isFinal,HI_S64 s64PtsAjustTimeMs,HI_U32 u32UserData);
 
 
 #ifdef __cplusplus
@@ -516,7 +519,7 @@ CNcomment:¸Ã½Ó¿Ú±ØÐëÔÚ³õÊ¼»¯ºóµ÷ÓÃ.\n
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Create(HI_SVR_SMOOTHSTREAMING_PARAM_S *pstruParam, HI_HANDLE *phPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Create(HI_SVR_SMOOTHSTREAMING_PARAM_S *pstruParam, HI_PTR *phPlayer);
 
 /**
 \brief Destroy a player instance. CNcomment:Ïú»ÙÒ»¸ö²¥·ÅÆ÷ÊµÀý
@@ -531,7 +534,7 @@ CNcomment:µ÷ÓÃ::HI_SMOOTHSTREAMING_Create´´½¨²¥·ÅÆ÷ºó£¬µ÷ÓÃ¸Ã½Ó¿ÚÏú»Ù²¥·ÅÆ÷×ÊÔ´
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Destroy(HI_HANDLE hPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Destroy(HI_PTR hPlayer);
 
 /**
 \brief Open a smooth streaming media presentation. CNcomment:´ò¿ªÒ»¸ösmooth streamingÃ½Ìå
@@ -548,7 +551,7 @@ CNcomment:Í¬²½½Ó¿Ú£¬·µ»ØÖµHI_SUCCESS±íÊ¾open³É¹¦, HI_FAILURE±íÊ¾Ê§°Ü
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Open(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_S* pstruMedia);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Open(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_S* pstruMedia);
 
 /**
 \brief Start playing. CNcomment:¿ªÊ¼²¥·Å
@@ -568,7 +571,7 @@ CNcomment:Òì²½½Ó¿Ú£¬¸Ã½Ó¿Ú±ØÐëÔÚµ÷ÓÃ::HI_SMOOTHSTREAMING_Open½Ó¿Úºóµ÷ÓÃ£¬²¥·Å³É¹
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Play(HI_HANDLE hPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Play(HI_PTR hPlayer);
 
 /**
 \brief Stop playing. CNcomment:Í£Ö¹²¥·Å
@@ -588,7 +591,7 @@ CNcomment:Òì²½½Ó¿Ú£¬²¥·Å¡¢¿ì½ø¡¢¿ìÍË¡¢ÔÝÍ£¹ý³ÌÖÐ¶¼¿ÉÒÔµ÷ÓÃ¸Ã½Ó¿ÚÍ£Ö¹²¥·Å£¬²»ÄÜÍ¨
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Stop(HI_HANDLE hPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Stop(HI_PTR hPlayer);
 
 /**
 \brief Pause playing. CNcomment:ÔÝÍ£²¥·Å
@@ -611,7 +614,7 @@ CNcomment:Òì²½½Ó¿Ú£¬²¥·Å¡¢¿ì½ø¡¢¿ìÍË¡¢ÔÝÍ£¹ý³ÌÖÐ¶¼¿ÉÒÔµ÷ÓÃ¸Ã½Ó¿ÚÍ£Ö¹²¥·Å£¬µ«ÔÚ¿ì
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Pause(HI_HANDLE hPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Pause(HI_PTR hPlayer);
 
 /**
 \brief Resume playing. CNcomment:»Ö¸´Õý³£²¥·Å
@@ -630,7 +633,7 @@ CNcomment:Òì²½½Ó¿Ú£¬µ÷ÓÃHI_SMOOTHSTREAMING_PauseÔÝÍ£²¥·Å»òÕßµ÷ÓÃHI_SMOOTHSTREAMI
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Resume(HI_HANDLE hPlayer);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Resume(HI_PTR hPlayer);
 
 /**
 \brief Fast forward and rewind. CNcomment:¿ì½ø¡¢¿ìÍË
@@ -651,7 +654,7 @@ CNcomment:Òì²½½Ó¿Ú£¬¸Ãº¯Êý±ØÐëµ÷ÓÃ::HI_SMOOTHSTREAMING_Playºóµ÷ÓÃ£¬²»ÄÜÍ¨¹ý¸Ã½Ó¿
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_TPlay(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_SPEED_E eSpeed);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_TPlay(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_SPEED_E eSpeed);
 
 /**
 \brief Seek to a specified location for playing. CNcomment:Ìøµ½Ö¸¶¨Î»ÖÃ²¥·Å
@@ -668,7 +671,7 @@ CNcomment:Òì²½½Ó¿Ú£¬¸Ã½Ó¿Ú±ØÐëÔÚµ÷ÓÃ::HI_SMOOTHSTREAMING_Open½Ó¿Úºóµ÷ÓÃ£¬µ÷ÓÃ¸Ã½
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Seek(HI_HANDLE hPlayer, HI_S64 s64Sec);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Seek(HI_PTR hPlayer, HI_S64 s64Sec);
 
 /**
 \brief Extended Interface.
@@ -684,7 +687,7 @@ extern HI_S32 HI_SVR_SMOOTHSTREAMING_Seek(HI_HANDLE hPlayer, HI_S64 s64Sec);
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_Invoke(HI_HANDLE hPlayer, HI_U32 u32InvokeId, HI_VOID *pArg);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_Invoke(HI_PTR hPlayer, HI_U32 u32InvokeId, HI_VOID *pArg);
 
 /**
 \brief Obtain information about the current player running information,
@@ -702,7 +705,7 @@ CNcomment:¸Ãº¯Êý±ØÐëÔÚµ÷ÓÃ::HI_SMOOTHSTREAMING_Open½Ó¿Úºóµ÷ÓÃ
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetPlayerInfo(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_RUNNING_INFO_S* pstruRunningInfo);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetPlayerInfo(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_RUNNING_INFO_S* pstruRunningInfo);
 
 /**
 \brief Obtain information about the current open file, such as the file size, playing duration, file bit rate, video width, video height, coding format, frame rate, video bit rate, audio encoding, and audio bit rate.
@@ -720,7 +723,7 @@ CNcomment:¸Ãº¯Êý±ØÐëÔÚµ÷ÓÃ::HI_SVR_SMOOTHSTREAMING_Open½Ó¿Úºóµ÷ÓÃCNend
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetMediaInfo(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_INFO_S *pMediaInfo);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetMediaInfo(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIA_INFO_S *pMediaInfo);
 
 
 /**
@@ -737,7 +740,7 @@ CNcomment:¸Ãº¯Êý±ØÐëÔÚµ÷ÓÃ::HI_SMOOTHSTREAMING_Create½Ó¿Úºóµ÷ÓÃ£¬¸Ãº¯Êý²»ÄÜÔÚpla
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistErrCb(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_ERROR_FN pfnErrCb);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistErrCb(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_ERROR_FN pfnErrCb);
 
 /**
 \brief Register a player error callback function. CNcomment:×¢²á²¥·ÅÆ÷Ã½Ìå×¼±¸ºÃ»Øµ÷º¯Êý, mediareadyÖ¸ÒÑ¾­»ñÈ¡µ½Ã½ÌåÃèÊöÎÄ¼þ²¢ÕýÈ·½âÎö£¬ÒÑ»ñÈ¡µ½Ã½ÌåÏà¹ØÐÅÏ¢
@@ -754,7 +757,7 @@ CNcomment:²¥·ÅÆ÷mediaready»Øµ÷º¯Êý£¬»Øµ÷º¯Êý¶¨Òå::HI_SVR_SMOOTHSTREAMING_MEDIARE
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistMediaReadyCb(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIAREADY_FN pfnMediaReadyCb);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistMediaReadyCb(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_MEDIAREADY_FN pfnMediaReadyCb);
 
 /**
 \brief Register a player event callback function. CNcomment:×¢²á²¥·ÅÆ÷×´Ì¬¸üÐÂÊÂ¼þµÄ»Øµ÷º¯Êý\n
@@ -771,7 +774,7 @@ CNcomment:²¥·ÅÆ÷×´Ì¬¸üÐÂÊÂ¼þ»Øµ÷º¯Êý£¬»Øµ÷º¯Êý¶¨Òå::HI_SVR_SMOOTHSTREAMING_STATE
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistStateEventCb(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_STATE_FN pfnStateCb);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistStateEventCb(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_STATE_FN pfnStateCb);
 
 /**
 \brief Register a player event callback function. CNcomment:×¢²á²¥·ÅÃüÁîÖ´ÐÐÍêÊÂ¼þµÄ»Øµ÷º¯Êý\n
@@ -788,7 +791,7 @@ CNcomment:²¥·ÅÆ÷²¥·ÅÃüÁîÖ´ÐÐÍê»Øµ÷º¯Êý£¬»Øµ÷º¯Êý¶¨Òå::HI_SVR_SMOOTHSTREAMING_CMD
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistCmdCb(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_CMD_FN pfnCommandCb);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistCmdCb(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_CMD_FN pfnCommandCb);
 
 /**
 \brief Register subtitle data callback function. CNcomment:×¢²á²¥·ÅÊý¾Ý»Øµ÷º¯Êý\n
@@ -805,7 +808,7 @@ CNcomment:pfnSubCbÎª×ÖÄ»Êý¾Ý»Øµ÷º¯Êý£¬»Øµ÷º¯Êý¶¨Òå::HI_SVR_SMOOTHSTREAMING_SUB_D
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistSubCb(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_SUB_DATA_FN pfnSubCb);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_RegistSubCb(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_SUB_DATA_FN pfnSubCb);
 
 /**
 \brief force a quality level(biterate level). CNcomment:Í£Ö¹smooth streaming¸ù¾ÝÍøÂç´ø¿í×Ô¶¯Ñ¡Ôñ²»Í¬ÂëÂÊµÄ¹¦ÄÜ£¬Ç¿ÖÆÑ¡ÔñÒ»¸öÂëÂÊ²¥·Å\n
@@ -823,7 +826,7 @@ CNcomment:ÓÃ»§¿ÉÒÔ¸ù¾ÝÓÉ×¢²áµÄHI_SVR_SMOOTHSTREAMING_MEDIAREADY_FN´«»ØµÄHI_SVR_S
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_ForceQualityLevel(HI_HANDLE hPlayer, HI_S32 s32TrackIdx);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_ForceQualityLevel(HI_PTR hPlayer, HI_S32 s32TrackIdx);
 
 /**
 \brief obtain player parameters. CNcomment:»ñÈ¡²¥·ÅÆ÷²ÎÊý
@@ -850,7 +853,7 @@ HI_SVR_SMOOTHSTREAMING_ATTR_HTTP_SETTING: ÓÃÓÚ»ñÈ¡httpÏà¹ØÉèÖÃµÄ²ÎÊý.
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetParam(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_ATTR_E eAttrId, HI_VOID* pArg);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_GetParam(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_ATTR_E eAttrId, HI_VOID* pArg);
 
 /**
 \brief Set player parameters. CNcomment:ÉèÖÃ²¥·ÅÆ÷²ÎÊý
@@ -877,7 +880,7 @@ HI_SVR_SMOOTHSTREAMING_ATTR_DRM_DOMAIN, ÓÃÓÚÉèÖÃDRMÓòÐÅÏ¢
 \see \n
 None.
 */
-extern HI_S32 HI_SVR_SMOOTHSTREAMING_SetParam(HI_HANDLE hPlayer, HI_SVR_SMOOTHSTREAMING_ATTR_E eAttrId, HI_VOID* pArg);
+extern HI_S32 HI_SVR_SMOOTHSTREAMING_SetParam(HI_PTR hPlayer, HI_SVR_SMOOTHSTREAMING_ATTR_E eAttrId, HI_VOID* pArg);
 
 #ifdef __cplusplus
 }

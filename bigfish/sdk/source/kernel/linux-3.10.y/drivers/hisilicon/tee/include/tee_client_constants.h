@@ -1,7 +1,7 @@
 /**
  * @file tee_client_constants.h
  *
- * Copyright(C), 2008-2013, Huawei Tech. Co., Ltd. ALL RIGHTS RESERVED. \n
+ * Copyright(C), 2008-2013, Hisilicon Tech. Co., Ltd. ALL RIGHTS RESERVED. \n
  *
  * 描述：定义静态变量\n
  */

@@ -236,7 +236,7 @@ HI_S32 HI_MPI_HDMI_Init(void)
         return HI_ERR_HDMI_DEV_NOT_OPEN;
     }
 
-    Ret = pthread_mutex_init(&g_HDMIMutex, NULL);
+    pthread_mutex_init(&g_HDMIMutex, NULL);
     HI_HDMI_LOCK();
     Ret = ioctl(g_HDMIDevFd, CMD_HDMI_INIT, &stHDMIInit);
     if ((Ret == HI_SUCCESS) || (Ret == HI_ERR_HDMI_CALLBACK_ALREADY))
@@ -350,11 +350,11 @@ HI_S32 HI_MPI_HDMI_DeInit(void)
     {
         HI_INFO_HDMI("stop hdmi task\n");
 
-        Ret = pthread_join(g_stHdmiCommUserParam.tEventTimer, NULL);
+        pthread_join(g_stHdmiCommUserParam.tEventTimer, NULL);
         g_stHdmiCommUserParam.bEnableTimer = HI_FALSE;
     }
 
-    Ret = close(g_HDMIDevFd);
+    close(g_HDMIDevFd);
     g_HDMIDevFd = -1;
     memset(&g_stHdmiCommUserParam, 0, sizeof(HDMI_COMM_USER_ATTR_S));//clean
     
@@ -427,6 +427,10 @@ HI_S32 HI_MPI_HDMI_Close(HI_UNF_HDMI_ID_E enHdmi)
         memset(&stHDMIStop, 0, sizeof(HDMI_STOP_S));
         stHDMIStop.enHdmi          = enHdmi;
         Ret = ioctl(g_HDMIDevFd, CMD_HDMI_STOP, &stHDMIStop);
+        if (HI_SUCCESS != Ret)
+        {
+            HI_WARN_HDMI("stop hdmi failed!\n");
+        }
         g_stHdmiChnUserParam[enHdmi].bStart = HI_FALSE;
         HI_HDMI_UNLOCK();
     }

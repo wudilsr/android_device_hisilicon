@@ -91,13 +91,13 @@ HI_S32 SCTE_SUBT_Parse_Init(HI_VOID);
 
 HI_S32 SCTE_SUBT_Parse_DeInit(HI_VOID);
 
-HI_S32 SCTE_SUBT_Parse_Create(HI_HANDLE hDisplay, HI_HANDLE *phParse);
+HI_S32 SCTE_SUBT_Parse_Create(HI_VOID* hDisplay, HI_VOID** pphParse);
 
-HI_S32 SCTE_SUBT_Parse_Destroy(HI_HANDLE hParse);
+HI_S32 SCTE_SUBT_Parse_Destroy(HI_VOID* hParse);
 
-HI_S32 SCTE_SUBT_Parse_RegGetPtsCb(HI_HANDLE hParse, HI_UNF_SUBT_GETPTS_FN pfnGetPts, HI_U32 u32UserData);
+HI_S32 SCTE_SUBT_Parse_RegGetPtsCb(HI_VOID* hParse, HI_UNF_SUBT_GETPTS_FN pfnGetPts, HI_VOID* pUserData);
 
-HI_S32 SCTE_SUBT_Parse_ParseSection(HI_HANDLE hParse, HI_U8 *pu8DataSrc, HI_U32 u32DataLen);
+HI_S32 SCTE_SUBT_Parse_ParseSection(HI_VOID* hParse, HI_U8 *pu8DataSrc, HI_U32 u32DataLen);
 
 #ifdef __cplusplus
 }

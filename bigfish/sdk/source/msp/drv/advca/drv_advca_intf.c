@@ -275,21 +275,6 @@ HI_VOID ca_mdelay(HI_U32 u32Time)
     return;
 }
 
-HI_VOID * ca_memset(void * s, int c, HI_S32 count)
-{
-    return memset(s, c, count);
-}
-
-HI_U32 ca_memcmp(void *pBufferA, void *pBufferB, HI_U32 len)
-{
-    return memcmp(pBufferA, pBufferB, len);
-}
-
-HI_S32 ca_snprintf(char * buf, HI_U32 size, const char * fmt, ...)
-{
-    return snprintf(buf, size, fmt);
-}
-
 /*****************************************************************************
  Prototype    :
  Description  : CA V200 Module suspend function
@@ -303,6 +288,10 @@ int  ca_v200_pm_suspend(PM_BASEDEV_S *pdev, pm_message_t state)
     HI_U32 u32Value = 0;
 
     ret = ca_atomic_read(&u32Value);
+    if (HI_SUCCESS != ret)
+    {
+        HI_FATAL_CA("ca_atomic_read failed, 0x%x\n", ret);
+    }
     if (0 != u32Value)
     {
         //CA driver may need to do something after resume
@@ -326,6 +315,10 @@ int  ca_v200_pm_resume(PM_BASEDEV_S *pdev)
 	}
 
     ret = ca_atomic_read(&u32Value);
+    if (HI_SUCCESS != ret)
+    {
+        HI_FATAL_CA("ca_atomic_read failed, 0x%x\n", ret);
+    }
     if (0 != u32Value)
     {
 		//CA driver may need to do something after resume
@@ -443,6 +436,7 @@ static PM_BASEOPS_S ca_drvops =
 *****************************************************************************/
 extern HI_S32 DRV_ADVCA_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VERSION_E *penChipVersion);
 
+/******* proc function begin ********/
 static HI_S32 DRV_ADVCA_ProcGetSCSStatus(struct seq_file* p)
 {
     HI_S32 ret = HI_SUCCESS;
@@ -1276,6 +1270,11 @@ HI_S32 DRV_ADVCA_ProcRead(struct seq_file *p, HI_VOID *v)
 	if( NULL == g_pOTPExportFunctionList)
 	{
 		ret = HI_DRV_MODULE_GetFunction(HI_ID_OTP, (HI_VOID**)&g_pOTPExportFunctionList);
+        if (HI_SUCCESS != ret)
+        {
+            HI_ERR_CA("HI_DRV_MODULE_GetFunction failed, ret: 0x%x\n", ret);
+            return HI_FAILURE;
+        }
 		if( NULL == g_pOTPExportFunctionList)
 		{
 			PROC_PRINT(p, "Get otp functions failed!\n");
@@ -1309,7 +1308,7 @@ HI_S32 DRV_ADVCA_ProcRead(struct seq_file *p, HI_VOID *v)
     (HI_VOID)DRV_ADVCA_ProcGetCAState(p);
     PROC_PRINT(p, "====================================\n");
     ret = HAL_ADVCA_ProcGetReginfo(au32Debug);
-    if( NULL != HI_SUCCESS)
+    if( ret != HI_SUCCESS)
     {
         HI_ERR_CA("Failed to get reg infomation\n");
     }
@@ -1320,22 +1319,10 @@ HI_S32 DRV_ADVCA_ProcRead(struct seq_file *p, HI_VOID *v)
 
     PROC_PRINT(p, "====================================\n");
     ret = DRV_ADVCA_ProcGetKeyLadderinfo(p);
-    return HI_SUCCESS;
+    return ret;
 }
 
-HI_S32 DRV_ADVCA_ProcWrite(struct file * file, const char __user * buf, size_t count, loff_t *ppos)
-{
-    HI_CHAR ProcPara[64];
-
-    if (copy_from_user(ProcPara, buf, count))
-    {
-        return -EFAULT;
-    }
-
-    /* bootrom debug infomation */
-    return count;
-}
-
+/******* proc function end   ********/
 /*****************************************************************************
  Prototype    :
  Description  : CAÄ£¿é ×¢²áº¯Êý
@@ -1347,7 +1334,10 @@ HI_S32 ADVCA_DRV_ModeInit(HI_VOID)
 {
     HI_S32 ret = HI_SUCCESS;
     HI_U8 i = 0;
+
+/******* proc function begin ********/
     DRV_PROC_EX_S stProcFunc = {0};
+/******* proc function end   ********/
 
     mutex_init(&g_ca_mutex.ca_oplock);
 
@@ -1362,7 +1352,7 @@ HI_S32 ADVCA_DRV_ModeInit(HI_VOID)
 		return HI_FAILURE;
 	}
 
-	ca_snprintf(caUmapDev.devfs_name, sizeof(caUmapDev.devfs_name), UMAP_DEVNAME_CA);
+	snprintf(caUmapDev.devfs_name, sizeof(caUmapDev.devfs_name), UMAP_DEVNAME_CA);
 	caUmapDev.minor  = UMAP_MIN_MINOR_CA;
 	caUmapDev.owner  = THIS_MODULE;
 	caUmapDev.fops   = &ca_fpops;
@@ -1372,10 +1362,12 @@ HI_S32 ADVCA_DRV_ModeInit(HI_VOID)
         HI_FATAL_CA("register CA failed.\n");
 		goto err0;
     }
+
+/******* proc function begin ********/
     stProcFunc.fnRead = DRV_ADVCA_ProcRead;
-    stProcFunc.fnWrite = DRV_ADVCA_ProcWrite;
 
     HI_DRV_PROC_AddModule(HI_MOD_CA, &stProcFunc, NULL);
+/******* proc function end   ********/
 
 #ifdef MODULE
     HI_PRINT("Load hi_advca.ko success.\t(%s)\n", VERSION_STRING);
@@ -1391,7 +1383,9 @@ err0:
 
 HI_VOID ADVCA_DRV_ModeExit(HI_VOID)
 {
+/******* proc function begin ********/
     HI_DRV_PROC_RemoveModule(HI_MOD_CA);
+/******* proc function end   ********/
 
     HI_DRV_DEV_UnRegister(&caUmapDev);
 

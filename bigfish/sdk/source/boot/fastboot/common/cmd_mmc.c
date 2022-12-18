@@ -28,6 +28,7 @@
 extern int select_boot_part(struct mmc *mmc, int boot_part);
 extern void emmc_bootmode_read(void *ptr, unsigned int size);
 extern int print_mmc_reg(int dev_num, int show_ext_csd);
+extern int mmc_test(struct mmc *mmc, int dev, void *addr_in, void *addr_out, int blk, u32 cnt);
 
 #ifdef CONFIG_EXT4_SPARSE
 extern int ext4_unsparse(struct mmc *mmc, u32 dev, u8 *pbuf, u32 blk, u32 cnt);
@@ -238,6 +239,31 @@ int do_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 			printf("%d blocks written: %s\n",
 				n, (n == cnt) ? "OK" : "ERROR");
 			return (n == cnt) ? 0 : 1;
+		} else if (strncmp(argv[1], "test", sizeof("test")) == 0) {
+			int dev = simple_strtoul(argv[2], NULL, 10);
+			void *addr_in = (void *)simple_strtoul(argv[3], NULL, 16);
+			void *addr_out = (void *)simple_strtoul(argv[4], NULL, 16);
+			int blk = simple_strtoul(argv[5], NULL, 16);
+			u32 cnt = simple_strtoul(argv[6], NULL, 16);
+			struct mmc *mmc = find_mmc_device(dev);
+
+			if (!mmc) {
+				printf("Invalid mmc device index!\n");
+				return 1;
+			}
+
+			printf("\nMMC test: dev # %d, block # %d, count %d \n", dev, blk, cnt);
+
+			if (mmc_init(mmc) < 0 ) {
+				printf("MMC init failed!\n");
+				hang();
+				return 1;
+			}
+
+			if (mmc_test(mmc, dev, addr_in, addr_out, blk, cnt))
+				return 1;
+
+			return 0;
 		} else if (strncmp(argv[1], "erase", sizeof("erase")) == 0) {
 			int dev = simple_strtoul(argv[2], NULL, 10);
 			u32 blk = simple_strtoul(argv[3], NULL, 16);
@@ -372,7 +398,7 @@ int do_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 }
 
 U_BOOT_CMD(
-	mmc, 6, 1, do_mmcops,
+	mmc, 7, 1, do_mmcops,
 	"MMC sub system",
 	"read <device num> addr blk# cnt\n"
 	"mmc write <device num> addr blk# cnt\n"

@@ -60,7 +60,7 @@ Date				Author        		Modification
 	#define CMD_JPG_GETSIGNAL_ID             _IOWR(VID_CMD_MAGIC, 0x2, int)
 	#define CMD_JPG_GETINTSTATUS             _IOWR(VID_CMD_MAGIC, 0x9,  JPG_GETINTTYPE_S)
 #endif
-	#define CMD_JPG_GETRESUMEVALUE           _IOWR(VID_CMD_MAGIC, 0x10, unsigned int)
+	#define CMD_JPG_GETRESUMEVALUE           _IOWR(VID_CMD_MAGIC, 0x10, HI_JPG_SAVEINFO_S)
 	
 	#define CMD_JPG_READPROC                 _IOWR(VID_CMD_MAGIC, 0x11,  HI_JPEG_PROC_INFO_S)
 

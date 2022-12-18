@@ -17,18 +17,20 @@
 #include <linux/dmi.h>
 #include <linux/slab.h>
 #include <linux/input.h>
-
+#include <linux/version.h>
 //#include <linux/opp.h>
 #include "opp.h"
 #include <linux/io.h>
 #include <linux/delay.h>
 #include <linux/uaccess.h>
-#include <mach/clock.h>
+#include "clock.h"
 #include <linux/platform_device.h>
 
 #include <asm/processor.h>
 #include <linux/cpu.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <asm/smp_plat.h>
 #include <asm/cpu.h>
 #include "hi_dvfs.h"
@@ -62,14 +64,14 @@ static DEFINE_MUTEX(hi_cpufreq_lock);
 struct clk *pMpuClk;
 static unsigned int hi_cpufreq_getspeed(unsigned int cpu)
 {
-    unsigned long rate;
+    unsigned int rate;
 
     if (cpu >= NR_CPUS)
     {
         return 0;
     }
 
-    rate = clk_get_rate(pMpuClk);
+    rate = (unsigned int)hi_clk_get_rate(pMpuClk);
 
     return rate;
 }
@@ -102,7 +104,11 @@ static int hi_cpufreq_scale(struct cpufreq_policy *policy, unsigned int target_f
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
     cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
 #else
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
     cpufreq_notify_transition(policy, &freqs, CPUFREQ_PRECHANGE);
+ #else
+    cpufreq_freq_transition_begin(policy, &freqs);
+ #endif
 #endif
     //printk("hi_cpufreq: transition: %u --> %u\n", freqs.old, freqs.new);
     ret = hi_device_scale(&mpu_dev, freqs.old, freqs.new );
@@ -148,7 +154,11 @@ static int hi_cpufreq_scale(struct cpufreq_policy *policy, unsigned int target_f
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
     cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
 #else
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
     cpufreq_notify_transition(policy, &freqs, CPUFREQ_POSTCHANGE);
+ #else
+    cpufreq_freq_transition_end(policy, &freqs, 0);
+ #endif
 #endif
     put_online_cpus();
 
@@ -213,11 +223,8 @@ static inline void freq_table_free(void)
     }
 }
 
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 72))
-extern void cpufreq_interactive_boost(void);
-#else
-extern void cpufreq_interactive_boost(struct cpufreq_interactive_tunables *tunables);
-#endif
+
+extern int cpufreq_interactive_boostpulse(void);
 
 int pm_cpufreq_boost(void)
 {
@@ -232,11 +239,12 @@ int pm_cpufreq_boost(void)
 
     if (!strnicmp(cur_policy.user_policy.governor->name, "interactive", CPUFREQ_NAME_LEN))
     {
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 72))
-        cpufreq_interactive_boost();
-#else
-        cpufreq_interactive_boost(cur_policy.governor_data);
-#endif
+        ret = cpufreq_interactive_boostpulse();
+        if (ret)
+        {
+            return ret;
+        }
+
     }
 
     return 0;
@@ -348,7 +356,7 @@ static int hi_cpufreq_cpu_init(struct cpufreq_policy *policy)
                 __func__, policy->cpu, result);
         goto fail_ck;
     }
-
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
     result = cpufreq_frequency_table_cpuinfo(policy, freq_table);
     if (result)
     {
@@ -356,6 +364,13 @@ static int hi_cpufreq_cpu_init(struct cpufreq_policy *policy)
     }
 
     cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
+#else
+    result = cpufreq_table_validate_and_show(policy, freq_table);
+    if (result)
+    {
+        goto fail_table;
+    }
+#endif
 
     policy->min = policy->cpuinfo.min_freq;
     policy->max = policy->cpuinfo.max_freq;
@@ -374,14 +389,9 @@ static int hi_cpufreq_cpu_init(struct cpufreq_policy *policy)
      * is to keep SMP_ON_UP build working.
      */
 
-#ifndef MODULE
 #ifdef CONFIG_SMP
-    if (is_smp())
-    {
-        policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
-        cpumask_setall(policy->cpus);
-    }
-#endif
+    policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
+    cpumask_setall(policy->cpus);
 #endif
 
     /* FIXME: what's the actual transition time? */
@@ -402,14 +412,12 @@ static int hi_cpufreq_cpu_init(struct cpufreq_policy *policy)
 fail_table:
     freq_table_free();
 fail_ck:
-    clk_put(pMpuClk);
     return result;
 }
 
 static int hi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
 {
     freq_table_free();
-    clk_put(pMpuClk);
     return 0;
 }
 
@@ -441,7 +449,9 @@ static struct cpufreq_driver hi_cpufreq_driver = {
     .exit = hi_cpufreq_cpu_exit,
     .resume = hi_cpufreq_resume,
     .name  = "hi-cpufreq",
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))    
     .owner = THIS_MODULE,
+#endif
     .attr  = hi_cpufreq_attr,
 };
 

@@ -76,10 +76,19 @@ History       :
 
 #ifdef HI_ADVCA_FUNCTION_RELEASE
 #define HI_ERR_OTP(format, arg...)
-#define HI_INFO_OTP printf
+    #ifdef  CONFIG_PRINT
+        #define HI_INFO_OTP printf
+    #else
+        #define HI_INFO_OTP 
+    #endif    
 #else
-#define HI_ERR_OTP(format, arg...) printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
-#define HI_INFO_OTP printf
+    #ifdef CONFIG_PRINT
+        #define HI_ERR_OTP(format, arg...) printf( "%s,%d: " format , __FUNCTION__, __LINE__, ## arg)
+        #define HI_INFO_OTP printf       
+    #else
+        #define HI_ERR_OTP(format, arg...)   
+        #define HI_INFO_OTP  
+    #endif
 #endif
 
 typedef struct hiOTP_CUSTOMER_KEY_S

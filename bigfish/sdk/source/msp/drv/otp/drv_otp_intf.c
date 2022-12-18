@@ -47,6 +47,7 @@ extern HI_VOID HI_DRV_SYS_GetChipVersion(HI_CHIP_TYPE_E *penChipType, HI_CHIP_VE
 
 static UMAP_DEVICE_S   g_stOtpUmapDev;
 HI_DECLARE_MUTEX(g_OtpMutex);
+/******* proc function begin ********/
 
 static HI_VOID OTP_ProcGetHelpInfo(HI_VOID)
 {
@@ -196,7 +197,7 @@ HI_S32 OTP_ProcWrite(struct file * file, const char __user * pBufIn, size_t coun
         (HI_VOID)OTP_ProcGetHelpInfo();
         return -EFAULT;
     }
-    ProcParam[count] = 0;
+    p[count] = 0;
 
     if (strlen(p) <= 0)
     {
@@ -306,9 +307,10 @@ HI_S32 OTP_ProcWrite(struct file * file, const char __user * pBufIn, size_t coun
     return count;
 }
 
+/******* proc function end   ********/
 HI_S32 OTP_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VOID *arg)
 {
-    HI_S32   Ret = HI_SUCCESS;
+    HI_S32   Ret;
 
     if(down_interruptible(&g_OtpMutex))
     {
@@ -321,6 +323,7 @@ HI_S32 OTP_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VO
         {
             OTP_ENTRY_S *pOtpEntry = (OTP_ENTRY_S *)arg;
             pOtpEntry->Value = DRV_OTP_Read(pOtpEntry->Addr);
+            Ret = HI_SUCCESS;
             break;
         }
         case CMD_OTP_WRITE:
@@ -425,7 +428,12 @@ HI_S32 OTP_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VO
             }
 
             Ret = DRV_OTP_Reset();
-            Ret |= g_pCIPHERExportFunctionList->pfnCipherSoftReset();
+            if ( HI_SUCCESS != Ret )
+            {
+                HI_ERR_OTP("DRV_OTP_Reset failed!\n");
+                break;
+            }
+            Ret = g_pCIPHERExportFunctionList->pfnCipherSoftReset();
 
             break;
         }
@@ -458,7 +466,12 @@ HI_S32 OTP_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VO
             }
 
             Ret = DRV_OTP_Reset();
-            Ret |= g_pCIPHERExportFunctionList->pfnCipherSoftReset();
+            if ( HI_SUCCESS != Ret )
+            {
+                HI_ERR_OTP("DRV_OTP_Reset failed!\n");
+                break;
+            }
+            Ret = g_pCIPHERExportFunctionList->pfnCipherSoftReset();
             break;
         }
         case CMD_OTP_READSTBROOTKEY:
@@ -480,11 +493,14 @@ HI_S32 OTP_Ioctl(struct inode *inode, struct file *file, unsigned int cmd, HI_VO
 
             break;
         }
+/******* proc function begin ********/
         case CMD_OTP_TEST:
         {
             OTP_VisualTest((HI_U8 *)arg);
+            Ret = HI_SUCCESS;
             break;
         }
+/******* proc function end   ********/
         default:
         {
             Ret = -ENOTTY;
@@ -575,8 +591,10 @@ static PM_BASEOPS_S  otp_drvops = {
 HI_S32 OTP_DRV_ModInit(HI_VOID)
 {
     HI_S32 ret = HI_SUCCESS;
+/******* proc function begin ********/
     DRV_PROC_EX_S stProcFunc = {0};
 
+/******* proc function end   ********/
     snprintf(g_stOtpUmapDev.devfs_name, sizeof(UMAP_DEVNAME_OTP), UMAP_DEVNAME_OTP);
     g_stOtpUmapDev.minor = UMAP_MIN_MINOR_OTP;
 	g_stOtpUmapDev.owner  = THIS_MODULE;
@@ -595,10 +613,12 @@ HI_S32 OTP_DRV_ModInit(HI_VOID)
         return ret;
     }
 
+/******* proc function begin ********/
     stProcFunc.fnRead   = OTP_ProcRead;
     stProcFunc.fnWrite  = OTP_ProcWrite;
     HI_DRV_PROC_AddModule(HI_MOD_OTP, &stProcFunc, NULL);
 
+/******* proc function end   ********/
 #if defined(CHIP_TYPE_hi3798mv100) || defined(CHIP_TYPE_hi3796mv100)
     (HI_VOID)DRV_OTP_DieID_Check();
 #endif
@@ -612,8 +632,10 @@ HI_S32 OTP_DRV_ModInit(HI_VOID)
 
 HI_VOID OTP_DRV_ModExit(HI_VOID)
 {
+/******* proc function begin ********/
     HI_DRV_PROC_RemoveModule(HI_MOD_OTP);
 
+/******* proc function end   ********/
     DRV_OTP_DeInit();
 
     HI_DRV_DEV_UnRegister(&g_stOtpUmapDev);

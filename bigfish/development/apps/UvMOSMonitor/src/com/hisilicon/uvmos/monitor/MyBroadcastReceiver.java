@@ -3,6 +3,7 @@ package com.hisilicon.uvmos.monitor;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import android.os.SystemProperties;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {

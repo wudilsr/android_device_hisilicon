@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NK2S/IwjF+iSiPjVxhOtL63o3qH0IrWNAv2hEYV
 49TcBeXweO5+8foigfyOpWUpw9pGaj6c1ZC2zZL0cerxVJr/5istJI3v5YJ690/fFpmuURd6
@@ -386,13 +386,6 @@ HI_S32 VPSS_IN_ReviseImage(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S *pIm
             pstFrmPriv->eColorSpace = pstEntity->enSrcCS;        
         }
     }  
-    
-    if (pstEntity->stStreamInfo.u32RealTopFirst != DEF_TOPFIRST_BUTT
-        && pstEntity->stStreamInfo.u32StreamProg == pImage->bProgressive)
-    {
-        pImage->bTopFieldFirst = pstEntity->stStreamInfo.u32RealTopFirst; 
-    }
-    
     /*
       * 2. 3d addr revise
       * SBS TAB read half image
@@ -534,7 +527,13 @@ HI_S32 VPSS_IN_UpdateStreamInfo(VPSS_IN_ENTITY_S *pstEntity,HI_DRV_VIDEO_FRAME_S
     {
         pstEntity->u32ScenceChgCnt++;
     }
-    
+
+    if (pstStreamInfo->u32StreamTopFirst != pstSrcImage->bTopFieldFirst)
+    {
+        pstStreamInfo->u32StreamTopFirst = pstSrcImage->bTopFieldFirst;
+        pstStreamInfo->u32IsNewImage = HI_TRUE;
+    }
+
     pstStreamInfo->u32StreamInRate = pstSrcImage->u32FrameRate;
     pstStreamInfo->u32StreamTopFirst = pstSrcImage->bTopFieldFirst;
     pstStreamInfo->u32StreamProg = pstSrcImage->bProgressive;
@@ -605,7 +604,7 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
         pstVdecPriv = (HI_VDEC_PRIV_FRAMEINFO_S *)&(pstPriv->u32Reserve[0]);
         
 
-        HI_PRINT("Image Info:Index %d Type %d Format %d W %d H %d Prog %d FieldMode %d PTS %d Rate %d LastFlag %#x Delta %d CodeType %d,SourceType %d,BitWidth %d\n"
+        HI_PRINT("Image Info:Index %d Type %d Format %d W %d H %d Prog %d TopFirst %d FieldMode %d PTS %d Rate %d LastFlag %#x Delta %d CodeType %d,SourceType %d,BitWidth %d\n"
                  "           L:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n"
                  "           R:Y %#x C %#x YH %#x CH %#x YS %d CS %d \n",
                 pstFrm->u32FrameIndex,
@@ -614,6 +613,7 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
                 pstFrm->u32Width,
                 pstFrm->u32Height,
                 pstFrm->bProgressive,
+                pstFrm->bTopFieldFirst,
                 pstFrm->enFieldMode,
                 pstFrm->u32Pts,
                 pstFrm->u32FrameRate,
@@ -723,6 +723,12 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
         
         (HI_VOID)VPSS_IN_ChangeInRate(pstEntity, pstImage);
         
+		(HI_VOID)VPSS_IN_UpdateStreamInfo(pstEntity, pstImage);
+		
+		if (HI_TRUE == pstEntity->stStreamInfo.u32IsNewImage)
+        {
+            pstEntity->stStreamInfo.u32RealTopFirst = DEF_TOPFIRST_BUTT;
+        }
         (HI_VOID)VPSS_IN_CorrectFieldOrder(pstEntity, pstImage);
 
 		if (HI_TRUE == pstEntity->stDbginfo.bDeiDisable)
@@ -730,11 +736,6 @@ HI_S32 VPSS_IN_Refresh_V1(VPSS_IN_ENTITY_S *pstEntity)
 			pstImage->enFieldMode = HI_DRV_FIELD_ALL;
 			pstImage->bProgressive = HI_TRUE;
 		}
-		else
-		{
-		}	
-
-        (HI_VOID)VPSS_IN_UpdateStreamInfo(pstEntity, pstImage);
 		pstEntity->stTransFbInfo.bNeedTrans = HI_FALSE;
 
         if (HI_TRUE == pstEntity->stStreamInfo.u32IsNewImage)

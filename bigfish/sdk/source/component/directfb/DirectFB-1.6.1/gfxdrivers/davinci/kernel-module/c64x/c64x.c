@@ -46,7 +46,9 @@
 #include <asm/cacheflush.h>
 #include <asm/io.h>
 #include <asm/irq.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <asm/uaccess.h>
 
 #include <linux/c64x.h>

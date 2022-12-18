@@ -23,7 +23,7 @@ CFLAGS  +=  -I$(COMMON_UNF_INCLUDE)                 \
 
 LIBS := libOMX.hisi.video.decoder
 
-OBJS := omx_allocator.o omx_event_queue.o omx_vdec.o omx_drv_ctx.o
+OBJS := omx_event_queue.o omx_vdec.o omx_drv_ctx.o
 
 #===============================================================================
 # rules

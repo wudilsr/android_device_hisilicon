@@ -73,8 +73,8 @@ source "scripts/kconfig/Kconfig.spi"
 source "scripts/kconfig/Kconfig.ci"
 endmenu
 
-menu "Plugin"
-source "scripts/kconfig/Kconfig.tvp"
+menu "TEE"
+source "scripts/kconfig/Kconfig.tee"
 endmenu
 
 #--------------------------------

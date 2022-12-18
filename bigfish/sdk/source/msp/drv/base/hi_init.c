@@ -70,10 +70,6 @@
 #include "drv_cimaxplus_ext.h"
 #include "drv_hdmirx_ext.h"
 
-#ifdef HI_ANDROID_SECURITY_L2_SYSTEM_CHECK
-extern int system_verify_init(void);
-#endif
-
 #ifndef MODULE
 HI_S32 HI_DRV_LoadModules(HI_VOID)
 {
@@ -225,10 +221,6 @@ HI_S32 HI_DRV_LoadModules(HI_VOID)
 
 #ifdef HI_CI_DEV_CIMAXPLUS
     CIMAXPLUS_DRV_ModInit();
-#endif
-
-#ifdef HI_ANDROID_SECURITY_L2_SYSTEM_CHECK
-    system_verify_init();
 #endif
 
     return HI_SUCCESS;

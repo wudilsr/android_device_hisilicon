@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_dci.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_dci.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_dci.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_dci.o -O2 -Wall -Wundef
@@ -137,31 +137,6 @@ PQ_MNG_GetDCIEnable:
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	PQ_MNG_GetDCIEnable, .-PQ_MNG_GetDCIEnable
-	.align	2
-	.global	PQ_MNG_GetDCILevelGain
-	.type	PQ_MNG_GetDCILevelGain, %function
-PQ_MNG_GetDCILevelGain:
-	.fnstart
-.LFB852:
-	@ args = 0, pretend = 0, frame = 0
-	@ frame_needed = 1, uses_anonymous_args = 0
-	.movsp ip
-	mov	ip, sp	@,
-	stmfd	sp!, {fp, ip, lr, pc}	@,
-	.pad #4
-	.save {fp, ip, lr}
-	.setfp fp, ip, #-4
-	sub	fp, ip, #4	@,,
-	push	{lr}
-	bl	__gnu_mcount_nc
-	movw	r1, #:lower16:.LANCHOR0	@ tmp135,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp135,
-	ldr	r3, [r1, #4]	@ sg_u32DCILevel, sg_u32DCILevel
-	str	r3, [r0, #0]	@ sg_u32DCILevel,* pu32DCILevelGain
-	mov	r0, #0	@,
-	ldmfd	sp, {fp, sp, pc}	@
-	.fnend
-	.size	PQ_MNG_GetDCILevelGain, .-PQ_MNG_GetDCILevelGain
 	.align	2
 	.global	PQ_MNG_GetDCIDemoMode
 	.type	PQ_MNG_GetDCIDemoMode, %function
@@ -272,6 +247,49 @@ PQ_MNG_EnableDCIDemo:
 	.fnend
 	.size	PQ_MNG_EnableDCIDemo, .-PQ_MNG_EnableDCIDemo
 	.align	2
+	.global	PQ_MNG_GetDCILevelGain
+	.type	PQ_MNG_GetDCILevelGain, %function
+PQ_MNG_GetDCILevelGain:
+	.fnstart
+.LFB852:
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 1, uses_anonymous_args = 0
+	.movsp ip
+	mov	ip, sp	@,
+	stmfd	sp!, {fp, ip, lr, pc}	@,
+	.pad #4
+	.save {fp, ip, lr}
+	.setfp fp, ip, #-4
+	sub	fp, ip, #4	@,,
+	.pad #8
+	sub	sp, sp, #8	@,,
+	push	{lr}
+	bl	__gnu_mcount_nc
+	subs	r2, r0, #0	@ pu32DCILevelGain, pu32DCILevelGain
+	beq	.L18	@,
+	movw	r1, #:lower16:.LANCHOR0	@ tmp138,
+	movt	r1, #:upper16:.LANCHOR0	@ tmp138,
+	mov	r0, #0	@ D.27186,
+	ldr	r3, [r1, #4]	@ sg_u32DCILevel, sg_u32DCILevel
+	str	r3, [r2, #0]	@ sg_u32DCILevel,* pu32DCILevelGain
+.L15:
+	sub	sp, fp, #12
+	ldmfd	sp, {fp, sp, pc}
+.L18:
+	mov	r0, #1	@,
+	mov	r1, #41	@,
+	movw	r2, #:lower16:.LANCHOR2	@,
+	movw	r3, #327	@,
+	movt	r2, #:upper16:.LANCHOR2	@,
+	movw	ip, #:lower16:.LC0	@ tmp137,
+	movt	ip, #:upper16:.LC0	@ tmp137,
+	str	ip, [sp, #0]	@ tmp137,
+	bl	HI_LogOut	@
+	mvn	r0, #0	@ D.27186,
+	b	.L15	@
+	.fnend
+	.size	PQ_MNG_GetDCILevelGain, .-PQ_MNG_GetDCILevelGain
+	.align	2
 	.type	PQ_MNG_FindDciGain, %function
 PQ_MNG_FindDciGain:
 	.fnstart
@@ -293,72 +311,75 @@ PQ_MNG_FindDciGain:
 	movt	ip, #:upper16:.LANCHOR1	@ tmp206,
 	ldr	ip, [ip, #4]	@ sg_pstPqParam.320, sg_pstPqParam
 	cmp	ip, #0	@ sg_pstPqParam.320,
-	beq	.L28	@,
+	beq	.L31	@,
 	add	r5, ip, #37888	@ ivtmp.529, sg_pstPqParam.320,
-	movw	r4, #:lower16:-120831700	@ tmp215,
+	movw	r4, #:lower16:-120831700	@ tmp216,
 	add	ip, r5, #244	@ ivtmp.529, ivtmp.529,
-	movt	r4, #:upper16:-120831700	@ tmp215,
+	movt	r4, #:upper16:-120831700	@ tmp216,
 	mov	r9, #0	@ i,
-.L19:
+.L23:
 	ldr	r7, [ip, #-12]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
-	add	r6, ip, #16	@ tmp217, ivtmp.529,
-	add	r9, r9, #1	@ tmp216, i,
+	add	r6, ip, #16	@ tmp218, ivtmp.529,
+	add	r9, r9, #1	@ tmp217, i,
 	ldr	r5, [ip, #0]	@ u32Value, <variable>.u32Value
-	cmp	r7, r4	@ <variable>.u32RegAddr, tmp215
+	cmp	r7, r4	@ <variable>.u32RegAddr, tmp216
 	ldrb	r8, [ip, #-7]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r7, [ip, #-8]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldrb	sl, [ip, #-6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L18	@,
+	bne	.L22	@,
 	cmp	r7, r1	@ u8Lsb, u8GainLsb
-	bne	.L18	@,
+	bne	.L22	@,
 	cmp	r8, r2	@ u8Msb, uGain8Msb
-	bne	.L18	@,
+	bne	.L22	@,
 	cmp	sl, r3	@ u8SourceMode, u32InMode
-	bne	.L18	@,
-.L25:
+	bne	.L22	@,
+.L29:
 	str	r5, [r0, #0]	@ u32Value,* pu32Value
 	mov	r2, r5	@, u32Value
 	mov	r0, #8192	@,
 	movw	r1, #:lower16:.LC1	@,
 	movt	r1, #:upper16:.LC1	@,
 	bl	PQ_HAL_PrintMsg	@
-	mov	r0, #0	@ D.27072,
-.L17:
+	mov	r0, #0	@ D.27057,
+.L21:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L18:
+.L22:
 	ldr	r8, [r6, #-12]	@ <variable>.u32RegAddr, <variable>.u32RegAddr
 	ldr	r5, [ip, #16]	@ u32Value, <variable>.u32Value
-	cmp	r8, r4	@ <variable>.u32RegAddr, tmp215
+	cmp	r8, r4	@ <variable>.u32RegAddr, tmp216
 	ldrb	ip, [r6, #-8]	@ zero_extendqisi2	@ u8Lsb, <variable>.u8Lsb
 	ldrb	r7, [r6, #-7]	@ zero_extendqisi2	@ u8Msb, <variable>.u8Msb
 	ldrb	r8, [r6, #-6]	@ zero_extendqisi2	@ u8SourceMode, <variable>.u8SourceMode
-	bne	.L22	@,
+	bne	.L26	@,
 	cmp	ip, r1	@ u8Lsb, u8GainLsb
-	bne	.L22	@,
+	bne	.L26	@,
 	cmp	r7, r2	@ u8Msb, uGain8Msb
-	bne	.L22	@,
+	bne	.L26	@,
 	cmp	r8, r3	@ u8SourceMode, u32InMode
-	beq	.L25	@,
-.L22:
-	add	r9, r9, #1	@ i, tmp216,
-	add	ip, r6, #16	@ ivtmp.529, tmp217,
+	beq	.L29	@,
+.L26:
+	add	r9, r9, #1	@ i, tmp217,
+	add	ip, r6, #16	@ ivtmp.529, tmp218,
 	cmp	r9, #2048	@ i,
-	bne	.L19	@,
-	mvn	r0, #0	@ D.27072,
-	b	.L17	@
-.L28:
+	bne	.L23	@,
+	mvn	r0, #0	@ D.27057,
+	b	.L21	@
+.L31:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	movw	r2, #:lower16:.LANCHOR2	@,
+	ldr	r2, .L32	@,
 	mov	r3, #157	@,
-	movt	r2, #:upper16:.LANCHOR2	@,
-	movw	lr, #:lower16:.LC0	@ tmp208,
-	movt	lr, #:upper16:.LC0	@ tmp208,
-	str	lr, [sp, #0]	@ tmp208,
+	movw	lr, #:lower16:.LC0	@ tmp209,
+	movt	lr, #:upper16:.LC0	@ tmp209,
+	str	lr, [sp, #0]	@ tmp209,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.27072,
-	b	.L17	@
+	mvn	r0, #0	@ D.27057,
+	b	.L21	@
+.L33:
+	.align	2
+.L32:
+	.word	.LANCHOR2+24
 	.fnend
 	.size	PQ_MNG_FindDciGain, .-PQ_MNG_FindDciGain
 	.align	2
@@ -406,14 +427,14 @@ PQ_MNG_SetDCILevelGain:
 	mov	r1, #14	@,
 	mov	r2, #19	@,
 	mov	r3, r4	@, u32SourceMode
-	mov	r6, r0	@ D.27444,
+	mov	r6, r0	@ D.27432,
 	sub	r0, fp, #48	@,,
 	bl	PQ_MNG_FindDciGain	@
-	orr	r6, r6, r8	@ tmp156, D.27444, s32Ret
+	orr	r6, r6, r8	@ tmp156, D.27432, s32Ret
 	orr	r6, r6, r0	@ tmp157, tmp156,
 	cmn	r6, #1	@ tmp157,
-	beq	.L51	@,
-.L31:
+	beq	.L56	@,
+.L36:
 	mov	r0, r4, asl #1	@ tmp336, u32SourceMode,
 	ldr	r3, [fp, #-48]	@ u32BinGain2.330, u32BinGain2
 	add	r2, r0, r4	@ tmp168, tmp336, u32SourceMode
@@ -424,14 +445,14 @@ PQ_MNG_SetDCILevelGain:
 	str	lr, [r1, #8]	@ u32BinGain0, sg_s32DCILevelGain
 	str	ip, [r1, #12]	@ u32BinGain1, sg_s32DCILevelGain
 	str	r3, [r1, #16]	@ u32BinGain2.330, sg_s32DCILevelGain
-	beq	.L34	@,
+	beq	.L39	@,
 	cmp	r4, #3	@ u32SourceMode,
-	beq	.L35	@,
+	beq	.L40	@,
 	cmp	r4, #1	@ u32SourceMode,
-	beq	.L33	@,
-.L34:
+	beq	.L38	@,
+.L39:
 	cmp	r7, #50	@ u32DCILevelGain,
-	bls	.L39	@,
+	bls	.L44	@,
 	add	lr, r7, r7, asl #2	@, tmp252, u32DCILevelGain, u32DCILevelGain,
 	movw	r2, #:lower16:1374389535	@ tmp258,
 	movt	r2, #:upper16:1374389535	@ tmp258,
@@ -442,42 +463,42 @@ PQ_MNG_SetDCILevelGain:
 	mov	r7, r7, asr #31	@ tmp260, tmp255,
 	rsb	r2, r7, lr, asr #5	@, s32GainOffset0, tmp260, tmp257,
 	mov	ip, r2	@ s32GainOffset2, s32GainOffset0
-.L37:
+.L42:
 	add	r1, r0, r4	@ tmp316, tmp336, u32SourceMode
 	add	lr, r5, r1, asl #2	@, tmp318, tmp335, tmp316,
 	ldr	r1, [lr, #8]	@ tmp320, sg_s32DCILevelGain
-	adds	r1, r2, r1	@ D.27169, s32GainOffset0, tmp320
+	adds	r1, r2, r1	@ D.27154, s32GainOffset0, tmp320
 	movmi	r1, #0	@ prephitmp.548,
-	bmi	.L42	@,
-	cmp	r1, #63	@ D.27169,
+	bmi	.L47	@,
+	cmp	r1, #63	@ D.27154,
 	movge	r1, #63	@ tmp321,
 	uxtb	r1, r1	@ prephitmp.548, tmp321
-.L42:
+.L47:
 	add	r4, r0, r4	@ tmp325, tmp336, u32SourceMode
 	add	r5, r5, r4, asl #2	@, tmp329, tmp335, tmp325,
 	ldr	r0, [r5, #12]	@ tmp331, sg_s32DCILevelGain
-	adds	r2, r2, r0	@ D.27176, s32GainOffset0, tmp331
+	adds	r2, r2, r0	@ D.27161, s32GainOffset0, tmp331
 	movmi	r2, #0	@ prephitmp.578,
-	bmi	.L44	@,
-	cmp	r2, #63	@ D.27176,
+	bmi	.L49	@,
+	cmp	r2, #63	@ D.27161,
 	movge	r2, #63	@ tmp332,
 	uxtb	r2, r2	@ prephitmp.578, tmp332
-.L44:
-	adds	r3, ip, r3	@ D.27183, s32GainOffset2, u32BinGain2.330
+.L49:
+	adds	r3, ip, r3	@ D.27168, s32GainOffset2, u32BinGain2.330
 	movmi	r3, #0	@ prephitmp.577,
-	bmi	.L46	@,
-	cmp	r3, #63	@ D.27183,
+	bmi	.L51	@,
+	cmp	r3, #63	@ D.27168,
 	movge	r3, #63	@ tmp333,
 	uxtb	r3, r3	@ prephitmp.577, tmp333
-.L46:
+.L51:
 	mov	r0, #0	@,
 	bl	PQ_HAL_SetDCIlevel	@
 	mov	r0, #0	@,
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
-.L33:
+.L38:
 	cmp	r7, #50	@ u32DCILevelGain,
-	bhi	.L52	@,
+	bhi	.L57	@,
 	add	r8, r7, r7, asl #2	@, tmp241, u32DCILevelGain, u32DCILevelGain,
 	mov	r6, #50	@ tmp232,
 	mul	r7, r6, r7	@ tmp231, tmp232, u32DCILevelGain
@@ -489,16 +510,16 @@ PQ_MNG_SetDCILevelGain:
 	sub	ip, r7, #2448	@ tmp233, tmp231,
 	sub	r7, ip, #2	@ tmp233, tmp233,
 	mov	r8, lr, asr #31	@ tmp249, tmp244,
-.L49:
+.L54:
 	smull	r2, ip, r1, lr	@, tmp246, tmp236, tmp244
 	mov	r6, r7, asr #31	@ tmp238, tmp233,
 	smull	lr, r2, r1, r7	@, tmp235, tmp236, tmp233
 	rsb	ip, r8, ip, asr #5	@, s32GainOffset2, tmp249, tmp246,
 	rsb	r2, r6, r2, asr #5	@, s32GainOffset0, tmp238, tmp235,
-	b	.L37	@
-.L35:
+	b	.L42	@
+.L40:
 	cmp	r7, #50	@ u32DCILevelGain,
-	bls	.L40	@,
+	bls	.L45	@,
 	add	r7, r7, r7, asl #2	@, tmp272, u32DCILevelGain, u32DCILevelGain,
 	movw	ip, #:lower16:1374389535	@ tmp278,
 	movt	ip, #:upper16:1374389535	@ tmp278,
@@ -513,8 +534,8 @@ PQ_MNG_SetDCILevelGain:
 	mov	lr, r1, asr #31	@ tmp291, tmp286,
 	rsb	r2, r7, r2, asr #5	@, s32GainOffset0, tmp280, tmp277,
 	rsb	ip, lr, ip, asr #5	@, s32GainOffset2, tmp291, tmp288,
-	b	.L37	@
-.L39:
+	b	.L42	@
+.L44:
 	add	ip, r7, r7, asl #6	@, tmp263, u32DCILevelGain, u32DCILevelGain,
 	movw	r1, #:lower16:1374389535	@ tmp267,
 	sub	r7, ip, #3200	@ tmp264, tmp263,
@@ -523,8 +544,8 @@ PQ_MNG_SetDCILevelGain:
 	mov	r7, r7, asr #31	@ tmp269, tmp264,
 	rsb	r2, r7, r2, asr #5	@, s32GainOffset0, tmp269, tmp266,
 	mov	ip, r2	@ s32GainOffset2, s32GainOffset0
-	b	.L37	@
-.L40:
+	b	.L42	@
+.L45:
 	add	ip, r7, r7, asl #2	@, tmp294, u32DCILevelGain, u32DCILevelGain,
 	add	r7, r7, r7, asl #6	@, tmp305, u32DCILevelGain, u32DCILevelGain,
 	sub	r6, r7, #3200	@ tmp306, tmp305,
@@ -539,8 +560,8 @@ PQ_MNG_SetDCILevelGain:
 	smull	r7, r2, r1, lr	@, tmp299, tmp300, tmp297
 	rsb	ip, r8, ip, asr #5	@, s32GainOffset2, tmp311, tmp308,
 	rsb	r2, r6, r2, asr #5	@, s32GainOffset0, tmp302, tmp299,
-	b	.L37	@
-.L52:
+	b	.L42	@
+.L57:
 	rsb	r6, r7, r7, asl #3	@, tmp213, u32DCILevelGain, u32DCILevelGain,
 	add	r1, r7, r7, asl #6	@, tmp224, u32DCILevelGain, u32DCILevelGain,
 	sub	lr, r1, #3200	@ tmp225, tmp224,
@@ -550,11 +571,11 @@ PQ_MNG_SetDCILevelGain:
 	sub	r7, r8, #2688	@ tmp216, tmp215,
 	mov	r8, lr, asr #31	@ tmp230, tmp225,
 	sub	r7, r7, #12	@ tmp216, tmp216,
-	b	.L49	@
-.L51:
+	b	.L54	@
+.L56:
 	mov	r0, #4	@,
 	mov	r1, #41	@,
-	ldr	r2, .L53	@,
+	ldr	r2, .L58	@,
 	mov	r3, #233	@,
 	mov	lr, #42	@ tmp158,
 	movw	ip, #:lower16:.LC2	@ tmp163,
@@ -564,11 +585,11 @@ PQ_MNG_SetDCILevelGain:
 	str	lr, [fp, #-44]	@ tmp158, u32BinGain1
 	str	ip, [sp, #0]	@ tmp163,
 	bl	HI_LogOut	@
-	b	.L31	@
-.L54:
+	b	.L36	@
+.L59:
 	.align	2
-.L53:
-	.word	.LANCHOR2+20
+.L58:
+	.word	.LANCHOR2+44
 	.fnend
 	.size	PQ_MNG_SetDCILevelGain, .-PQ_MNG_SetDCILevelGain
 	.align	2
@@ -642,7 +663,7 @@ PQ_MNG_DCILUTInit:
 	bl	__gnu_mcount_nc
 	subs	r6, r0, #0	@ pstPqParam, pstPqParam
 	str	r1, [fp, #-568]	@ bDefault, %sfp
-	beq	.L66	@,
+	beq	.L71	@,
 	sub	r5, fp, #564	@ tmp142,,
 	movw	r3, #:lower16:.LANCHOR1	@ tmp141,
 	movt	r3, #:upper16:.LANCHOR1	@ tmp141,
@@ -697,7 +718,7 @@ PQ_MNG_DCILUTInit:
 	bl	memcpy	@
 	ldr	r2, [fp, #-568]	@, %sfp
 	cmp	r2, #1	@,
-	beq	.L67	@,
+	beq	.L72	@,
 	add	r1, r6, #1376	@, pstPqParam,
 	mov	r2, #66	@,
 	sub	r0, fp, #244	@,,
@@ -712,20 +733,20 @@ PQ_MNG_DCILUTInit:
 	sub	r0, fp, #112	@,,
 	mov	r2, #66	@,
 	bl	memcpy	@
-.L63:
+.L68:
 	sub	r0, fp, #564	@,,
 	bl	PQ_HAL_SetDCILut	@
 	subs	r5, r0, #0	@ s32Ret,
-	bne	.L68	@,
+	bne	.L73	@,
 	ldrh	r3, [r4, #40]	@, sg_s32DCILevelGain
 	ldrh	r1, [r4, #32]	@, sg_s32DCILevelGain
 	ldrh	r2, [r4, #36]	@, sg_s32DCILevelGain
 	bl	PQ_HAL_SetDCIlevel	@
-	mov	r0, r5	@ D.26998, s32Ret
-.L61:
+	mov	r0, r5	@ D.26983, s32Ret
+.L66:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L67:
+.L72:
 	add	r1, r4, #376	@, tmp238,
 	mov	r2, #66	@,
 	sub	r0, fp, #244	@,,
@@ -761,33 +782,33 @@ PQ_MNG_DCILUTInit:
 	strh	r2, [r6, ip]	@ movhi	@, <variable>.stPQCoef.stDciCoef.stPqDciLut.u16Gain1
 	ldrh	r0, [r4, #40]	@, sg_s32DCILevelGain
 	strh	r0, [r6, r1]	@ movhi	@, <variable>.stPQCoef.stDciCoef.stPqDciLut.u16Gain2
-	b	.L63	@
-.L68:
+	b	.L68	@
+.L73:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L69	@,
+	ldr	r2, .L74	@,
 	mov	r3, #83	@,
 	movw	lr, #:lower16:.LC3	@ tmp227,
 	movt	lr, #:upper16:.LC3	@ tmp227,
 	str	lr, [sp, #0]	@ tmp227,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26998,
-	b	.L61	@
-.L66:
+	mvn	r0, #0	@ D.26983,
+	b	.L66	@
+.L71:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L69	@,
+	ldr	r2, .L74	@,
 	mov	r3, #49	@,
 	movw	ip, #:lower16:.LC0	@ tmp140,
 	movt	ip, #:upper16:.LC0	@ tmp140,
 	str	ip, [sp, #0]	@ tmp140,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.26998,
-	b	.L61	@
-.L70:
+	mvn	r0, #0	@ D.26983,
+	b	.L66	@
+.L75:
 	.align	2
-.L69:
-	.word	.LANCHOR2+44
+.L74:
+	.word	.LANCHOR2+68
 	.fnend
 	.size	PQ_MNG_DCILUTInit, .-PQ_MNG_DCILUTInit
 	.align	2
@@ -813,59 +834,59 @@ PQ_MNG_InitDCI:
 	mov	r5, r1	@ bDefault, bDefault
 	bl	PQ_HAL_DCIInit	@
 	cmp	r0, #0	@,
-	bne	.L77	@,
+	bne	.L82	@,
 	mov	r1, r5	@, bDefault
 	mov	r0, r4	@, pstPqParam
 	bl	PQ_MNG_DCILUTInit	@
 	subs	r1, r0, #0	@ s32Ret.676,
-	bne	.L78	@,
+	bne	.L83	@,
 	mov	r2, #2	@,
 	mov	ip, #16	@ tmp146,
 	mov	r3, r2	@,
 	str	ip, [sp, #0]	@ tmp146,
 	bl	PQ_MNG_InitPhyList	@
 	cmp	r0, #0	@ s32Ret.677
-	bne	.L79	@,
-.L73:
+	bne	.L84	@,
+.L78:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
-.L77:
+.L82:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L80	@,
+	ldr	r2, .L85	@,
 	mov	r3, #101	@,
 	movw	ip, #:lower16:.LC4	@ tmp142,
 	movt	ip, #:upper16:.LC4	@ tmp142,
 	str	ip, [sp, #0]	@ tmp142,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.27029,
-	b	.L73	@
-.L78:
+	mvn	r0, #0	@ D.27014,
+	b	.L78	@
+.L83:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L80	@,
+	ldr	r2, .L85	@,
 	mov	r3, #115	@,
 	movw	lr, #:lower16:.LC5	@ tmp145,
 	movt	lr, #:upper16:.LC5	@ tmp145,
 	str	lr, [sp, #0]	@ tmp145,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.27029,
-	b	.L73	@
-.L79:
+	mvn	r0, #0	@ D.27014,
+	b	.L78	@
+.L84:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L80	@,
+	ldr	r2, .L85	@,
 	mov	r3, #122	@,
 	movw	lr, #:lower16:.LC6	@ tmp149,
 	movt	lr, #:upper16:.LC6	@ tmp149,
 	str	lr, [sp, #0]	@ tmp149,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.27029,
-	b	.L73	@
-.L81:
+	mvn	r0, #0	@ D.27014,
+	b	.L78	@
+.L86:
 	.align	2
-.L80:
-	.word	.LANCHOR2+64
+.L85:
+	.word	.LANCHOR2+88
 	.fnend
 	.size	PQ_MNG_InitDCI, .-PQ_MNG_InitDCI
 	.global	HistCoef0
@@ -878,24 +899,29 @@ PQ_MNG_InitDCI:
 	.section	.rodata
 	.align	2
 .LANCHOR2 = . + 0
-	.type	__func__.27064, %object
-	.size	__func__.27064, 19
-__func__.27064:
+	.type	__func__.27183, %object
+	.size	__func__.27183, 23
+__func__.27183:
+	.ascii	"PQ_MNG_GetDCILevelGain\000"
+	.space	1
+	.type	__func__.27049, %object
+	.size	__func__.27049, 19
+__func__.27049:
 	.ascii	"PQ_MNG_FindDciGain\000"
 	.space	1
-	.type	__func__.27115, %object
-	.size	__func__.27115, 23
-__func__.27115:
+	.type	__func__.27100, %object
+	.size	__func__.27100, 23
+__func__.27100:
 	.ascii	"PQ_MNG_SetDCILevelGain\000"
 	.space	1
-	.type	__func__.26992, %object
-	.size	__func__.26992, 18
-__func__.26992:
+	.type	__func__.26977, %object
+	.size	__func__.26977, 18
+__func__.26977:
 	.ascii	"PQ_MNG_DCILUTInit\000"
 	.space	2
-	.type	__func__.27025, %object
-	.size	__func__.27025, 15
-__func__.27025:
+	.type	__func__.27010, %object
+	.size	__func__.27010, 15
+__func__.27010:
 	.ascii	"PQ_MNG_InitDCI\000"
 	.data
 	.align	2

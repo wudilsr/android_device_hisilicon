@@ -69,6 +69,10 @@ typedef struct
     BOOLEAN                       vup_timer_active;
     TIMER_LIST_ENT                vup_timer;
     BOOLEAN                       local_vup; // Indicated locally initiated VUP
+
+#ifdef BLUETOOTH_RTK
+    volatile BOOLEAN                       uhid_start;
+#endif
 } btif_hh_device_t;
 
 /* Control block to maintain properties of devices */

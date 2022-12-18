@@ -269,6 +269,7 @@ static HI_U32 DescGetTableId(HI_UNF_DMX_DESCRAMBLER_TYPE_E DescType)
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_IPTV :
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_ECB :
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CI:
+        case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC:
             return 2;
 
         case HI_UNF_DMX_DESCRAMBLER_TYPE_DES_CI :
@@ -355,6 +356,7 @@ HI_S32 DMXDescramblerCreate1(HI_U32 *KeyId, HI_UNF_DMX_DESCRAMBLER_ATTR_S *Attr)
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_IPTV :
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_ECB :
         case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CI :
+		case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC :
         #ifdef DMX_DESCRAMBLER_TYPE_SPE_SUPPORT
             if (CaInfo.bits.dis_spe)
             {
@@ -490,25 +492,6 @@ HI_S32 DMXDescramblerCreate1(HI_U32 *KeyId, HI_UNF_DMX_DESCRAMBLER_ATTR_S *Attr)
 
         case HI_UNF_DMX_DESCRAMBLER_TYPE_SMS4_CBC :
         #ifdef DMX_DESCRAMBLER_TYPE_SMS4_CBC_SUPPORT
-            if (CaInfo.bits.dis_others)
-            {
-                HI_WARN_DEMUX("disable others\n");
-
-                return HI_ERR_DMX_NOT_SUPPORT;
-            }
-
-            if (   (HI_UNF_DMX_CA_NORMAL == Attr->enCaType)
-                && (CaInfo.bits.hardonly_others || (DMX_KEY_HARDONLY_FLAG == DmxDevOsi->KeyOtherHardFlag)) )
-            {
-                return HI_ERR_DMX_NOT_SUPPORT;
-            }
-        #else
-            return HI_ERR_DMX_NOT_SUPPORT;
-        #endif
-            break;
-
-        case HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC :
-        #ifdef DMX_DESCRAMBLER_TYPE_AES_CBC_SUPPORT
             if (CaInfo.bits.dis_others)
             {
                 HI_WARN_DEMUX("disable others\n");
@@ -736,6 +719,8 @@ HI_S32 DMX_OsiDescramblerDestroy(HI_U32 KeyId)
         {
             if (ChanInfo[i].KeyId == KeyId)
             {
+                ChanInfo[i].KeyId = DMX_INVALID_KEY_ID;
+                                
                 DmxHalSetChannelCWIndex(ChanInfo[i].ChanId, 0);
 
                 DmxHalSetChannelDsc(ChanInfo[i].ChanId, HI_FALSE);
@@ -893,7 +878,8 @@ HI_S32 DMX_OsiDescramblerSetIVKey(HI_U32 KeyId, DMX_KEY_TYPE_E KeyType, HI_U8 *K
         return HI_ERR_DMX_INVALID_PARA;
     }
 
-    if (HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CI == KeyInfo->DescType)    //change iv cw order, AES CI+ request
+    if (HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CI == KeyInfo->DescType
+        || HI_UNF_DMX_DESCRAMBLER_TYPE_AES_CBC == KeyInfo->DescType)    //change iv cw order, AES CI+ request
     {
         HI_U32  len = KeyInfo->KeyLen * sizeof(HI_U32);
         HI_U8   tmp[DMX_KEY_MAX_LEN];

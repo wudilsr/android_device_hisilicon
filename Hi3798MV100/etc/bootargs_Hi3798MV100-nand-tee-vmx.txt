@@ -1,0 +1,23 @@
+bootdelay=0
+verify=n
+baudrate=115200
+ipaddr=192.168.1.10
+serverip=192.168.1.1
+netmask=255.255.255.0
+bootfile="uImage"
+phy_intf=mii,rgmii
+use_mdio=0,1
+phy_addr=2,1
+gmac_debug=0
+bootargs_1G=mem=1G mmz=ddr,0,0,380M secureos_load_addr=0x2B700000
+bootargs_2G=mem=2G mmz=ddr,0,0,600M secureos_load_addr=0x6B700000
+bootcmd=nand read 0x1FFBFC0 0xc800000 0xa00000;bootm 0x1FFBFC0
+bootargs=console=ttyAMA0,115200 mtdparts=hinand:8M(fastboot),8M(bootargs),8M(stbinfo),8M(loaderdb),8M(loaderdbbak),8M(deviceinfo),8M(loader),8M(loaderbak),8M(baseparam),8M(pqparam),20M(logo),20M(logobak),40M(fastplay),40M(fastplaybak),40M(kernel),20M(misc),40M(trustedcore),16M(cadata),800M(system),1016M(userdata),8M(securestore),500M(cache),-(sdcard) ubi.mtd=system ubi.mtd=userdata ubi.mtd=cache ubi.mtd=sdcard
+bootargs_512M=mem=512M mmz=ddr,0,0,112M
+bootargs_768M=mem=768M mmz=ddr,0,0,300M
+bootargs_1G=mem=1G mmz=ddr,0,0,435M
+bootargs_2G=mem=2G mmz=ddr,0,0,620M
+stdin=serial
+stdout=serial
+stderr=serial
+signature_check=sign:recovery,recovery,0x200000 sign:kernel,kernel,0x700000

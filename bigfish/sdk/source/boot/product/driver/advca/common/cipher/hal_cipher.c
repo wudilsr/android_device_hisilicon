@@ -21,9 +21,9 @@ History       :
 #include "ca_authdefine.h"
 #include "ca_common.h"
 #include <config.h>
-
+#include "hi_error_mpi.h"
 #ifdef HI_MINIBOOT_SUPPORT
-#include "delay.h"
+#include "app.h"
 #endif
 #ifndef HI_MINIBOOT_SUPPORT
 #include "asm/atomic.h"
@@ -1233,10 +1233,10 @@ HI_S32 HAL_Cipher_CalcHashUpdate(CIPHER_HASH_DATA_S *pCipherHashData)
 
     if( 0 != u32WriteLength )
     {
+#if 0
         /*Align with 4KB*/
         u32MallocLen = (pCipherHashData->u32InputDataLen + 0xfff) & 0xfffff000;
         s32Ret = HI_MEM_Alloc(&u32MMZPhyAddr, u32MallocLen);
-        //s32Ret = HI_DRV_MMZ_AllocAndMap("HASH", NULL, u32WriteLength, 0, &stMMZBuffer);
         if( HI_SUCCESS != s32Ret )
         {
             HI_ERR_CIPHER("Error, mmz alloc and map failed!\n");
@@ -1244,9 +1244,10 @@ HI_S32 HAL_Cipher_CalcHashUpdate(CIPHER_HASH_DATA_S *pCipherHashData)
             return HI_FAILURE;
         }
 
-        //memcpy((HI_U8 *)stMMZBuffer.u32StartVirAddr, pCipherHashData->pu8InputData, u32WriteLength);
         memcpy((HI_U8 *)u32MMZPhyAddr, pCipherHashData->pu8InputData, u32WriteLength);
-
+#else
+        u32MMZPhyAddr = pCipherHashData->pu8InputData;
+#endif
         //CIPHER_WRITE_REG(CIPHER_HASH_REG_DMA_START_ADDR, stMMZBuffer.u32StartPhyAddr);
         CIPHER_WRITE_REG(CIPHER_HASH_REG_DMA_START_ADDR, u32MMZPhyAddr);
         CIPHER_WRITE_REG(CIPHER_HASH_REG_DMA_LEN, u32WriteLength);
@@ -1655,3 +1656,48 @@ HI_VOID HAL_Cipher_ClearCbcMacVerifyFlag(HI_VOID)
 	return;
 }
 
+HI_S32 HAL_Cipher_GetRandomNumber(HI_U32 *pu32RandomNumber)
+{
+#if defined (CHIP_TYPE_hi3798cv200)|| defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv200_a) 
+    HI_U32 u32RngStat = 0;
+    HI_U32 u32TimeOut = 0;
+
+    (HI_VOID)CIPHER_WRITE_REG(HISEC_COM_TRNG_CTRL, 0x0a);
+    while(u32TimeOut ++ < 1000)
+    {
+        (HI_VOID)CIPHER_READ_REG(HISEC_COM_TRNG_DATA_ST, u32RngStat);
+        if(((u32RngStat >> 8) & 0x3F) > 0)
+        {
+            break;
+        }
+    }
+    if (u32TimeOut >= 1000)
+    {
+        return HI_ERR_CIPHER_NO_AVAILABLE_RNG;
+    }
+
+    (HI_VOID)CIPHER_READ_REG(HISEC_COM_TRNG_FIFO_DATA, *pu32RandomNumber);
+    
+#else
+    HI_U32 u32RngStat = 0;
+    HI_U32 u32TimeOut = 0;
+
+    (HI_VOID)CIPHER_WRITE_REG(REG_RNG_BASE_ADDR, 0x90a2);
+
+    while(u32TimeOut ++ < 1000)
+    {
+        (HI_VOID)CIPHER_READ_REG(REG_RNG_STAT_ADDR, u32RngStat);
+        if((u32RngStat & 0x7) > 0)
+        {
+            break;
+        }
+		udelay(1000);
+    }
+    if (u32TimeOut >= 1000)
+    {
+        return HI_ERR_CIPHER_NO_AVAILABLE_RNG;
+    }
+    (HI_VOID)CIPHER_READ_REG(REG_RNG_NUMBER_ADDR, *pu32RandomNumber);
+#endif
+    return HI_SUCCESS;
+}

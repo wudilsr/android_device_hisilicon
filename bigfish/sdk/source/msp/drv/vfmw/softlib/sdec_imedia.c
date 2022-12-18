@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------*/
-/*!!Warning: Huawei key information asset. No spread without permission. */
+/*!!Warning: Hisilicon key information asset. No spread without permission. */
 /*CODEMARK:EG4uRhTwMmgcVFBsBnYHCEm2UPcyllv4D4NOje6cFLSYglw6LvPA978sGAr3yTchgOI0M46H
 HZIZCDLcNqR1rYgDnWEYHdqiWpPUq+8h0NIQe0+PABsdaVBvBywkVW5G8adGW4T782mUyetR
 ku9RbAsnSjMUDF4hA623qupsGQ6vu5C7y5qowir3IMpG9nsEfq9Jyheu8+vkuE4jKyEkw5TC
@@ -31,7 +31,7 @@ CLvnRWxu+yKFPjZBkaEN4ZykxAMNbwkh93+nrJJSYUhpLM7Gk85YCu/i28eiXg==#*/
 
 /***********************************************************************
 *
-* Copyright (c) 2007 HUAWEI - All Rights Reserved
+* Copyright (c) 2007 Hisilicon - All Rights Reserved
 *
 * File     : $sh263.c$
 * Date     : $2010/09/08$

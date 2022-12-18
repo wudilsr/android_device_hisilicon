@@ -18,6 +18,8 @@
 
 #include "hi_drv_mem.h"
 #include "pq_hal_comm.h"
+#include "hi_osal.h"
+
 
 #define VPSS_REGS_ADDR    0xf8cb0000UL
 #define VDP_REGS_ADDR     0xf8cc0000UL
@@ -947,7 +949,7 @@ HI_S32 PQ_HAL_PrintMsg(HI_U32 type, const HI_S8* format, ...)
     }
     /* 将信息打印成字符串 */
     va_start( args, format );
-    nTotalChar = vsnprintf( sg_PrintMsg, sizeof(sg_PrintMsg), format, args );
+    nTotalChar = HI_OSAL_Vsnprintf( sg_PrintMsg, sizeof(sg_PrintMsg), format, args );
     va_end( args );
 
     if ((nTotalChar <= 0) || (nTotalChar >= 1023))
@@ -956,11 +958,10 @@ HI_S32 PQ_HAL_PrintMsg(HI_U32 type, const HI_S8* format, ...)
     }
 
 #ifndef  HI_ADVCA_FUNCTION_RELEASE
-    return ( HI_PRINT("%s", sg_PrintMsg) );
-#else
-    return HI_SUCCESS;
+    HI_PRINT("%s", sg_PrintMsg);
 #endif
 
+    return HI_SUCCESS;
 }
 
 HI_S32 PQ_HAL_SetPrintType(HI_U32 type)
@@ -968,43 +969,5 @@ HI_S32 PQ_HAL_SetPrintType(HI_U32 type)
     sg_PrintType = type;
     return HI_SUCCESS;
 }
-
-HI_S32 PQ_HAL_GetVpssDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff)
-{
-#if defined(CHIP_TYPE_hi3798cv200_a)
-    S_CAS_REGS_TYPE* pstVpssVirReg = HI_NULL;
-    pstVpssVirReg = PQ_HAL_GetVpssReg(u32HandleNo);
-    PQ_CHECK_NULL_PTR(pstVpssVirReg);
-
-    *bOnOff = pstVpssVirReg->VPSS_VHD0CTRL.bits.vhd0_dither_en;
-#endif
-    return HI_SUCCESS;
-}
-
-HI_S32 PQ_HAL_GetDnrDitherEn(HI_U32 u32HandleNo, HI_BOOL* bOnOff)
-{
-#if defined(CHIP_TYPE_hi3798cv200_a)
-    S_CAS_REGS_TYPE* pstVpssVirReg = HI_NULL;
-    pstVpssVirReg = PQ_HAL_GetVpssReg(u32HandleNo);
-    PQ_CHECK_NULL_PTR(pstVpssVirReg);
-
-    *bOnOff = pstVpssVirReg->VPSS_DNR_INFO.bits.dnr_dither_en;
-#endif
-    return HI_SUCCESS;
-}
-
-HI_S32 PQ_HAL_GetVdpDitherEn(HI_BOOL* bOnOff)
-{
-#if defined(CHIP_TYPE_hi3798cv200_a)
-    S_VDP_REGS_TYPE* pstVdpReg = NULL;
-    U_WBC_DHD0_DITHER_CTRL WBC_DHD0_DITHER_CTRL;
-
-    pstVdpReg = PQ_HAL_GetVdpReg();
-    WBC_DHD0_DITHER_CTRL.u32 = PQ_HAL_RegRead((HI_U32) & (pstVdpReg->WBC_DHD0_DITHER_CTRL.u32));/* VDP_LAYER_WBC_HD0 */
-    *bOnOff = WBC_DHD0_DITHER_CTRL.bits.dither_en;
-#endif
-    return HI_SUCCESS;
-}
-
 
 

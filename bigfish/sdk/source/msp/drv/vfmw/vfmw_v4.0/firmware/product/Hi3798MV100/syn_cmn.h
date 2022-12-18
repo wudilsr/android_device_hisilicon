@@ -143,6 +143,8 @@ typedef struct hiSYNTAX_EXTRA_DATA_S
     //add by l00228308 
     SINT32      s32Is4k60fps;      //1: 该通道正在播放的是4k60码流
     SINT32      s32IsHevcMain10;   //1: 该通道是H265 main10 profile通道，有可能是10bit的流
+
+    UINT32 StopRecord;
 } SYNTAX_EXTRA_DATA_S;
 
 

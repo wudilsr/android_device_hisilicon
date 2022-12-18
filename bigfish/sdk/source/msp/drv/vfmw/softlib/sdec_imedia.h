@@ -2,7 +2,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2007 HUAWEI - All Rights Reserved
+* Copyright (c) 2007 Hisilicon - All Rights Reserved
 *
 * File     : $sh263.c$
 * Date     : $2010/09/08$

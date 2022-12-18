@@ -16,6 +16,19 @@ History       :
 
 #include "../../../../api/src/cx_ssd.h"
 
+
+#define VMX_SSD_MAX_PARTITIONS	(128)
+#define VMX_SSD_HEADER_LEN		(16)
+#define VMX_SSD_SIG_LEN			(256)
+
+typedef struct
+{
+	HI_BOOL bIsValid;
+	HI_BOOL bBurnFlag;
+	HI_U64  u64FlashAddress;
+}HI_VMX_SSD_S;
+
+
 /**
 \brief authenticate the data CNcomment:对数据进行校验
 \param[in]  StartVirAddr start virtual address of data CNcomment:StartVirAddr 数据起始虚拟地址

@@ -583,6 +583,8 @@ void avio_flush(AVIOContext *s);
  */
 int avio_read(AVIOContext *s, unsigned char *buf, int size);
 
+int avio_clear_buffer(AVIOContext *s);
+
 /**
  * @name Functions for reading from AVIOContext
  * @{

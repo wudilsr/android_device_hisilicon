@@ -1207,7 +1207,7 @@ and USER_HW_DISABLE_API macros */
 /* Maximum number of consecutive HCI commands  that can time out
 * before  it gets treated as H/w error*/
 #ifndef BTM_MAX_HCI_CMD_TOUT_BEFORE_RESTART
-#define BTM_MAX_HCI_CMD_TOUT_BEFORE_RESTART 2
+#define BTM_MAX_HCI_CMD_TOUT_BEFORE_RESTART 1
 #endif
 
 /******************************************************************************
@@ -1296,7 +1296,13 @@ and USER_HW_DISABLE_API macros */
 
 /* Minimum number of ACL credit for high priority link */
 #ifndef L2CAP_HIGH_PRI_MIN_XMIT_QUOTA
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#define L2CAP_HIGH_PRI_MIN_XMIT_QUOTA       8
+#else
 #define L2CAP_HIGH_PRI_MIN_XMIT_QUOTA       5
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 #endif
 
 /* used for monitoring HCI ACL credit management */

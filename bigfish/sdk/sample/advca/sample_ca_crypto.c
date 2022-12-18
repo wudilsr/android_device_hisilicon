@@ -46,7 +46,7 @@ static HI_U32 loadR2RLadderSessionKey(HI_HANDLE hCipher)
     HI_UNF_CIPHER_CTRL_S stCtrl;
     
     /* genarate private key */  
-    Ret = HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_AES);
+    Ret = HI_UNF_ADVCA_SetR2RAlg(HI_UNF_ADVCA_ALG_TYPE_TDES);
     Ret |= HI_UNF_ADVCA_GetR2RKeyLadderStage(&enStage);
     
     HI_DEBUG_ADVCA("================   key    ===================\n");
@@ -91,7 +91,7 @@ static HI_U32 loadR2RLadderSessionKey(HI_HANDLE hCipher)
     stCtrl.enAlg = HI_UNF_CIPHER_ALG_3DES;
     stCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     stCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB;
-    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
+    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_DES_2KEY;
     stCtrl.enCaType = HI_UNF_CIPHER_CA_TYPE_R2R;
     Ret = HI_UNF_CIPHER_ConfigHandle(hCipher,&stCtrl);
     if (HI_SUCCESS != Ret)
@@ -105,7 +105,7 @@ static HI_U32 loadR2RLadderSessionKey(HI_HANDLE hCipher)
         HI_DEBUG_ADVCA("%02x",g_contentkey[i]);
     }
     HI_DEBUG_ADVCA("\n");
-    
+
     return HI_SUCCESS;
 }
 
@@ -115,7 +115,6 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
     HI_UNF_ADVCA_KEYLADDER_ATTR_S stKeyladderAttr;
     HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse;
     HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
-    HI_U32 stKeyladderLevSel = 0;
     HI_UNF_CIPHER_CTRL_S stCtrl;
 
     memset(&stKeyladderAttr, 0, sizeof(HI_UNF_ADVCA_KEYLADDER_ATTR_S));
@@ -129,15 +128,14 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
     Ret = HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
 
     enOtpFuse = HI_UNF_ADVCA_OTP_MISC_KL_LEVEL_SEL;
-    memset(&stOtpFuseAttr, 0, sizeof(&stOtpFuseAttr));
+    memset(&stOtpFuseAttr, 0, sizeof(stOtpFuseAttr));
     Ret = HI_UNF_ADVCA_GetOtpFuse(enOtpFuse, &stOtpFuseAttr);
     if(Ret != HI_SUCCESS)
     {
         HI_DEBUG_ADVCA("call HI_UNF_ADVCA_GetOtpFuse get MISC Key-ladder level failed\n");
-        return HI_FAILURE;
+        goto DEACTIVEMISC;
     }
     printf("Misc key-level stage is:0x%x\n", stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel);
-    stKeyladderLevSel = stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel;
     if(stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel >= HI_UNF_ADVCA_KEYLADDER_LEV2)
     {
         printf("Level 1 is setting\n");
@@ -146,6 +144,10 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
 		stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage = HI_UNF_ADVCA_KEYLADDER_LEV1;
         memcpy(stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, g_sessionkey1, 16);
         Ret |= HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+        if (Ret != HI_SUCCESS)
+        {
+            goto DEACTIVEMISC;
+        }
         Debug_Register();
     }
     if(stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel >= HI_UNF_ADVCA_KEYLADDER_LEV3)
@@ -156,6 +158,10 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
 		stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage = HI_UNF_ADVCA_KEYLADDER_LEV2;
         memcpy(stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, g_sessionkey2, 16);
         Ret |= HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+        if (Ret != HI_SUCCESS)
+        {
+            goto DEACTIVEMISC;
+        }
         Debug_Register();
     }
     if(stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel >= HI_UNF_ADVCA_KEYLADDER_LEV4)
@@ -166,6 +172,11 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
 		stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage = HI_UNF_ADVCA_KEYLADDER_LEV3;
         memcpy(stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, g_sessionkey3, 16);
         Ret |= HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+        if (Ret != HI_SUCCESS)
+        {
+            goto DEACTIVEMISC;
+        }
+
         Debug_Register();
     }
     if(stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel >= HI_UNF_ADVCA_KEYLADDER_LEV5)
@@ -176,6 +187,11 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
 		stKeyladderAttr.unKlAttr.stMiscKlAttr.enStage = HI_UNF_ADVCA_KEYLADDER_LEV4;
         memcpy(stKeyladderAttr.unKlAttr.stMiscKlAttr.u8SessionKey, g_sessionkey4, 16);
         Ret |= HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+        if (Ret != HI_SUCCESS)
+        {
+            goto DEACTIVEMISC;
+        }
+
         Debug_Register();
     }
 
@@ -185,13 +201,13 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
     stCtrl.enAlg = HI_UNF_CIPHER_ALG_3DES;
     stCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     stCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB;
-    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
+    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_DES_2KEY;
     stCtrl.enCaType = HI_UNF_CIPHER_CA_TYPE_R2R;
     Ret = HI_UNF_CIPHER_ConfigHandle(hCipher,&stCtrl);
     if (HI_SUCCESS != Ret)
     {
         HI_DEBUG_ADVCA("HI_UNF_CIPHER_ConfigHandle failed:%x\n",Ret);
-        return HI_FAILURE;
+        goto DEACTIVEMISC;
     }  
     HI_DEBUG_ADVCA("content   key :");
     for ( i = 0 ; i < 16; i++ )
@@ -199,13 +215,14 @@ static HI_U32 loadMiscKeyLadderSessionKey(HI_HANDLE hCipher)
         HI_DEBUG_ADVCA("%02x",g_contentkey[i]);
     }
     HI_DEBUG_ADVCA("\n");
-    
+
+DEACTIVEMISC:    
 	//After use the MISC keyladder, deactive the MISC keyladder
     stKeyladderAttr.unKlAttr.stMiscKlAttr.enMiscKlAttr = HI_UNF_ADVCA_KEYLADDER_MISC_ATTR_ENABLE;
     stKeyladderAttr.unKlAttr.stMiscKlAttr.bEnable = HI_FALSE;
-    Ret = HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+    HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
     
-    return 0;
+    return Ret;
 }
 
 static HI_U32 loadSPKeyLadderSessionKey(HI_HANDLE hCipher)
@@ -214,7 +231,6 @@ static HI_U32 loadSPKeyLadderSessionKey(HI_HANDLE hCipher)
     HI_UNF_ADVCA_KEYLADDER_ATTR_S stKeyladderAttr;
     HI_UNF_ADVCA_OTP_FUSE_E enOtpFuse;
     HI_UNF_ADVCA_OTP_ATTR_S stOtpFuseAttr;
-    HI_U32 stKeyladderLevSel = 0;
     HI_UNF_CIPHER_CTRL_S stCtrl;
 
     memset(&stKeyladderAttr, 0, sizeof(HI_UNF_ADVCA_KEYLADDER_ATTR_S));
@@ -228,15 +244,14 @@ static HI_U32 loadSPKeyLadderSessionKey(HI_HANDLE hCipher)
     Ret = HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_SP, &stKeyladderAttr);
 
     enOtpFuse = HI_UNF_ADVCA_OTP_SP_KL_LEVEL_SEL;
-    memset(&stOtpFuseAttr, 0, sizeof(&stOtpFuseAttr));
+    memset(&stOtpFuseAttr, 0, sizeof(stOtpFuseAttr));
     Ret = HI_UNF_ADVCA_GetOtpFuse(enOtpFuse, &stOtpFuseAttr);
     if(Ret != HI_SUCCESS)
     {
         HI_DEBUG_ADVCA("call HI_UNF_ADVCA_GetOtpFuse get SP Key-ladder level failed\n");
-        return HI_FAILURE;
+        goto DEACTIVESP;
     }
     printf("SP key-level stage is:0x%x\n", stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel);
-    stKeyladderLevSel = stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel;
     if(stOtpFuseAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel >= HI_UNF_ADVCA_KEYLADDER_LEV2)
     {
         printf("Level 1 is setting\n");
@@ -284,13 +299,13 @@ static HI_U32 loadSPKeyLadderSessionKey(HI_HANDLE hCipher)
     stCtrl.enAlg = HI_UNF_CIPHER_ALG_3DES;
     stCtrl.enBitWidth = HI_UNF_CIPHER_BIT_WIDTH_128BIT;
     stCtrl.enWorkMode = HI_UNF_CIPHER_WORK_MODE_ECB;
-    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_AES_128BIT;
+    stCtrl.enKeyLen = HI_UNF_CIPHER_KEY_DES_2KEY;
     stCtrl.enCaType = HI_UNF_CIPHER_CA_TYPE_R2R;
     Ret = HI_UNF_CIPHER_ConfigHandle(hCipher,&stCtrl);
     if (HI_SUCCESS != Ret)
     {
         HI_DEBUG_ADVCA("HI_UNF_CIPHER_ConfigHandle failed:%x\n",Ret);
-        return HI_FAILURE;
+        goto DEACTIVESP;
     }  
     HI_DEBUG_ADVCA("content   key :");
     for ( i = 0 ; i < 16; i++ )
@@ -298,11 +313,12 @@ static HI_U32 loadSPKeyLadderSessionKey(HI_HANDLE hCipher)
         HI_DEBUG_ADVCA("%02x",g_contentkey[i]);
     }
     HI_DEBUG_ADVCA("\n");
-    
-	//After use the MISC keyladder, deactive the MISC keyladder
+
+DEACTIVESP:   
+	//After use the SP keyladder, deactive the SP keyladder
     stKeyladderAttr.unKlAttr.stSPKlAttr.enSPKlAttr = HI_UNF_ADVCA_KEYLADDER_SP_ATTR_ENABLE;
     stKeyladderAttr.unKlAttr.stSPKlAttr.bEnable = HI_FALSE;
-    Ret = HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_MISC, &stKeyladderAttr);
+    Ret = HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_SP, &stKeyladderAttr);
     
     return 0;
 }
@@ -365,19 +381,23 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
         if(index == 0)
         {
             HI_DEBUG_ADVCA("===============R2R_RootKey KeyLadder==========\n");
-            loadR2RLadderSessionKey(hCipher);
+            Ret = loadR2RLadderSessionKey(hCipher);
         }
         else if(index == 1)
         {
             HI_DEBUG_ADVCA("===============MISC_RootKey KeyLadder==========\n");
-            loadMiscKeyLadderSessionKey(hCipher);
+            Ret = loadMiscKeyLadderSessionKey(hCipher);            
         }
         else if(index == 2)
         {
             HI_DEBUG_ADVCA("===============SP_RootKey KeyLadder==========\n");
-            loadSPKeyLadderSessionKey(hCipher);
+            Ret = loadSPKeyLadderSessionKey(hCipher);
         }
 
+        if (HI_SUCCESS != Ret)
+        {
+            continue;
+        }
       
         /* encryption demo */  
         printf("===============encryption demo===============\n");
@@ -425,6 +445,7 @@ HI_S32 main(HI_S32 argc,HI_CHAR **argv)
         {
             printf("%02x",PlainBuf.user_viraddr[i]);
         }
+        usleep(100*1000);
         printf("\n");
     }
 

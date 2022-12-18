@@ -482,5 +482,28 @@ int  HiSysManagerClient::setUIAsyncCompose(int mode){
     }
     return ret;
 }
+/*
+ *  screen snapshot
+ */
+int HiSysManagerClient::snapshot(String8 path)
+{
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->snapshot(path);
+    }
+    return ret;
+}
+int HiSysManagerClient::setDynamicPolicy(String8 state, String8 activity, String8 process)
+{
+    int ret = -1;
+    const sp<IHiSysManagerService>& ps = getSysManagerService();
+    if(ps != 0)
+    {
+        ret = ps->setDynamicPolicy(state, activity, process);
+    }
+    return ret;
+}
 };
 //end namespace

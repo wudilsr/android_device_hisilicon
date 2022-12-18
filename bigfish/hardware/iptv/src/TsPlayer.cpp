@@ -235,6 +235,13 @@ static HI_S32 GetPlayingPts(HI_U32 u32UserData, HI_S64 *ps64CurrentPts);
 
 CTC_MediaProcessor              *g_pHandle = NULL;
 static IPTV_PLAYER_EVT_CB       g_CallBackFunc = NULL;
+static IPTV_PLAYER_PARAM_EVENT_CB g_CallBackParaFunc = NULL;
+static HI_U32 g_EvtCall1[IPTV_PLAYER_EVT_PLAYBACK_ERROR+1] = {0};//from 0 IPTV_PLAYER_EVT_e
+static HI_U32 g_EvtCall2[IPTV_PLAYER_EVT_BUTT-IPTV_PLAYER_EVT_VID_FRAME_ERROR + 2] = {0};//from_0x200 IPTV_PLAYER_EVT_e
+static HI_U32 g_EvtCall3[IPTV_PLAYER_PARAM_EVT_BUTT] = {0};//from 0 IPTV_PLAYER_PARAM_Evt_e
+static HI_VOID *g_CallBackParaHandle[IPTV_PLAYER_PARAM_EVT_BUTT] = {0};
+
+
 static HI_VOID                  *g_CallBackHandle = NULL;
 static HI_U32                   g_FirstFrm = 0;
 static HI_U32                   g_Ratio = 1;
@@ -517,11 +524,110 @@ static HI_S32 TsPlayer_EvnetHandler(HI_HANDLE handle, HI_UNF_AVPLAY_EVENT_E enEv
             g_CallBackFunc(IPTV_PLAYER_EVT_VOD_EOS, g_CallBackHandle);
             PLAYER_LOGI("### Get eos flag\n");
         }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_IFRAME_ERR)
+        {
+            g_CallBackFunc(IPTV_PLAYER_EVT_VID_FRAME_ERROR, g_CallBackHandle);
+            PLAYER_LOGI("### Get FRAME_ERROR flag\n");
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_SYNC_STAT_CHANGE)
+        {
+            HI_UNF_SYNC_STAT_PARAM_S *pStatParam = (HI_UNF_SYNC_STAT_PARAM_S *)&para;
+            HI_UNF_SYNC_ATTR_S stSync;
+            HI_S32 Ret;
+
+            Ret = HI_UNF_AVPLAY_GetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_SYNC, &stSync);
+            if(Ret != HI_SUCCESS)
+            {
+                PLAYER_LOGI("### Get HI_UNF_AVPLAY_ATTR_ID_SYNC faile, Ret:%#x\n", Ret);
+                return Ret;
+            }
+
+            if(pStatParam->s32VidAudDiff >= stSync.stSyncStartRegion.s32VidPlusTime)
+            {
+                if(stSync.enSyncRef == HI_UNF_SYNC_REF_PCR)
+                {
+                    g_CallBackFunc(IPTV_PLAYER_EVT_AUD_DISCARD_FRAME, g_CallBackHandle);
+                }
+            }
+            else if(pStatParam->s32VidAudDiff <= stSync.stSyncStartRegion.s32VidNegativeTime)
+            {
+                g_CallBackFunc(IPTV_PLAYER_EVT_VID_DISCARD_FRAME, g_CallBackHandle);
+                PLAYER_LOGI("### Get VID_DISCARD_FRAME flag\n");
+            }
+
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_SYNC_PTS_JUMP)
+        {
+            HI_UNF_SYNC_PTSJUMP_PARAM_S    *pVidPtsJumpParam = (HI_UNF_SYNC_PTSJUMP_PARAM_S    *)&para;
+            if(pVidPtsJumpParam->enPtsChan == HI_UNF_SYNC_PTS_CHAN_VID)
+            {
+                g_CallBackFunc(IPTV_PLAYER_EVT_VID_PTS_ERROR, g_CallBackHandle);
+                PLAYER_LOGI("### Get VID_PTS_ERROR flag\n");
+            }
+            else if(pVidPtsJumpParam->enPtsChan == HI_UNF_SYNC_PTS_CHAN_AUD)
+            {
+                g_CallBackFunc(IPTV_PLAYER_EVT_AUD_PTS_ERROR, g_CallBackHandle);
+                PLAYER_LOGI("### Get AUD_PTS_ERROR flag\n");
+            }
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_VID_BUF_STATE)
+        {
+            HI_UNF_AVPLAY_BUF_STATE_E CurVidBufState = (HI_UNF_AVPLAY_BUF_STATE_E)para;
+
+            if(CurVidBufState == HI_UNF_AVPLAY_BUF_STATE_EMPTY)
+            {
+                g_CallBackFunc(IPTV_PLAYER_EVT_VID_DEC_UNDERFLOW, g_CallBackHandle);
+            }
+            PLAYER_LOGI("### Get VID_DEC_UNDERFLOW flag\n");
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_AUD_BUF_STATE)
+        {
+            HI_UNF_AVPLAY_BUF_STATE_E CurAudBufState = (HI_UNF_AVPLAY_BUF_STATE_E)para;
+
+            if(CurAudBufState == HI_UNF_AVPLAY_BUF_STATE_EMPTY)
+            {
+                g_CallBackFunc(IPTV_PLAYER_EVT_AUD_DEC_UNDERFLOW, g_CallBackHandle);
+            }
+            PLAYER_LOGI("### Get AUD_DEC_UNDERFLOW flag\n");
+        }
+        else if (enEvent == HI_UNF_AVPLAY_EVENT_AUD_FRAME_ERR)
+        {
+            g_CallBackFunc(IPTV_PLAYER_EVT_AUD_FRAME_ERROR, g_CallBackHandle);
+            PLAYER_LOGI("### Get AUD_FRAME_ERROR flag\n");
+        }
         else
         {
             /*do nothing*/
         }
     }
+
+	if(g_CallBackParaFunc)
+	{
+		if(enEvent == HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT &&
+			g_EvtCall3[IPTV_PLAYER_PARAM_EVT_VIDFRM_STATUS_REPORT])
+		{
+			HI_UNF_VIDEO_FRM_STATUS_INFO_S	*pVidFrmStatusInfo = (HI_UNF_VIDEO_FRM_STATUS_INFO_S *)para;
+			VIDEO_FRM_STATUS_INFO_T stVidFram;
+
+			stVidFram.enVidFrmType = (VID_FRAME_TYPE_e)pVidFrmStatusInfo->enVidFrmType;
+			stVidFram.nAvgMV = pVidFrmStatusInfo->u32AvgMV;
+			stVidFram.nMaxMV = pVidFrmStatusInfo->u32MaxMV;
+			stVidFram.nMinMV = pVidFrmStatusInfo->u32MinMV;
+			stVidFram.nVidFrmPTS = pVidFrmStatusInfo->u32VidFrmPTS;
+			stVidFram.nVidFrmQP = pVidFrmStatusInfo->u32VidFrmQP;
+			stVidFram.nVidFrmSize = pVidFrmStatusInfo->u32VidFrmSize;
+			stVidFram.SkipRatio = pVidFrmStatusInfo->u32SkipRatio;
+			PLAYER_LOGI("### VID Info, enVidFrmType:%d, nAvgMV:%d, nMaxMV:%d, nVidFrmPTS:%d, nVidFrmQP:%d, nVidFrmSize:%d, SkipRatio:%d\n", stVidFram.enVidFrmType,
+											stVidFram.nAvgMV,
+											stVidFram.nMaxMV,
+											stVidFram.nVidFrmPTS,
+											stVidFram.nVidFrmQP,
+											stVidFram.nVidFrmSize,
+											stVidFram.SkipRatio);
+			g_CallBackParaFunc(g_CallBackHandle, IPTV_PLAYER_PARAM_EVT_VIDFRM_STATUS_REPORT,  &stVidFram);
+			PLAYER_LOGI("### Get HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT flag\n");
+		}
+	}
 
     return 0;
 }
@@ -1972,6 +2078,27 @@ bool CTsPlayer::MediaDeviceCreate()
     s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_EOS, TsPlayer_EvnetHandler);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent eos failed");
 
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_IFRAME_ERR, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_IFRAME_ERR failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_SYNC_STAT_CHANGE, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_SYNC_STAT_CHANGE failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_VID_BUF_STATE, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_VID_BUF_STATE failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_SYNC_PTS_JUMP, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_SYNC_PTS_JUMP failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_AUD_BUF_STATE, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_AUD_BUF_STATE failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_AUD_FRAME_ERR, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_AUD_FRAME_ERR failed");
+
+    s32Ret = HI_UNF_AVPLAY_RegisterEvent(g_hAvplay, HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT, TsPlayer_EvnetHandler);
+    PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_RegisterEvent HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT failed");
+
     s32Ret = HI_UNF_AVPLAY_ChnOpen(g_hAvplay, HI_UNF_AVPLAY_MEDIA_CHAN_VID, HI_NULL);
     PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Call HI_UNF_AVPLAY_ChnOpen VID failed");
 
@@ -2916,22 +3043,36 @@ bool CTsPlayer::Fast()
         return true;
     }
 
-	HI_CODEC_VIDEO_CMD_S	stVdecCmd ={0};
-	HI_BOOL bProgressive;
+#if 0
+    HI_CODEC_VIDEO_CMD_S	stVdecCmd ={0};
+    HI_BOOL bProgressive;
 
-	bProgressive = HI_TRUE;
+    bProgressive = HI_TRUE;
 
-	stVdecCmd.u32CmdID = HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD;
-	stVdecCmd.pPara = (HI_VOID *)&bProgressive;
+    stVdecCmd.u32CmdID = HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD;
+    stVdecCmd.pPara = (HI_VOID *)&bProgressive;
 
-	/*针对vod点播快进场景，服务器下发的全隔行I帧流时，强制逐行，减小底层通路上的视频帧缓存*/
-	s32Ret = HI_UNF_AVPLAY_Invoke(g_hAvplay, HI_UNF_AVPLAY_INVOKE_VCODEC, &stVdecCmd);
-	if (s32Ret != HI_SUCCESS)
-	{
-	   PLAYER_LOGI("%s->%d, fail!\n",__func__,__LINE__);
-	}
+    /*针对vod点播快进场景，服务器下发的全隔行I帧流时，强制逐行，减小底层通路上的视频帧缓存*/
+    s32Ret = HI_UNF_AVPLAY_Invoke(g_hAvplay, HI_UNF_AVPLAY_INVOKE_VCODEC, &stVdecCmd);
+    if (s32Ret != HI_SUCCESS)
+    {
+       PLAYER_LOGI("%s->%d, fail!\n",__func__,__LINE__);
+    }
 
-	PLAYER_LOGI("### CTsPlayer::Fast invoke HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD .\n");
+    PLAYER_LOGI("### CTsPlayer::Fast invoke HI_UNF_AVPLAY_SET_PROGRESSIVE_CMD .\n");
+#endif
+
+    HI_UNF_AVPLAY_CONTROL_INFO_S stControlInfo;
+    stControlInfo.u32IDRFlag = HI_TRUE;
+    stControlInfo.u32BFrmRefFlag = HI_FALSE;
+    stControlInfo.u32ContinuousFlag = HI_FALSE;
+    stControlInfo.u32BackwardOptimizeFlag = HI_FALSE;
+    stControlInfo.u32DispOptimizeFlag = HI_FALSE;
+
+    HI_CODEC_VIDEO_CMD_S stVdecCmdPara = {0};
+    stVdecCmdPara.u32CmdID = HI_UNF_AVPLAY_SET_CTRL_INFO_CMD;
+    stVdecCmdPara.pPara = &stControlInfo;
+    (HI_VOID)HI_UNF_AVPLAY_Invoke(g_hAvplay, HI_UNF_AVPLAY_INVOKE_VCODEC, (HI_VOID *)&stVdecCmdPara);
 
 
     s32Ret = HI_UNF_DMX_ResetTSBuffer(hTsBuf);
@@ -3001,6 +3142,18 @@ bool CTsPlayer::StopFast()
         s32Ret = HI_UNF_AVPLAY_SetAttr(g_hAvplay, HI_UNF_AVPLAY_ATTR_ID_VDEC, (HI_VOID*)&stVdecAdvAttr);
         PLAYER_CHK_PRINTF((HI_SUCCESS != s32Ret), s32Ret, "Set vdec adv attr  failed");
     }
+
+    HI_UNF_AVPLAY_CONTROL_INFO_S stControlInfo;
+    stControlInfo.u32IDRFlag = HI_TRUE;
+    stControlInfo.u32BFrmRefFlag = HI_FALSE;
+    stControlInfo.u32ContinuousFlag = HI_TRUE;
+    stControlInfo.u32BackwardOptimizeFlag = HI_FALSE;
+    stControlInfo.u32DispOptimizeFlag = HI_TRUE;
+
+    HI_CODEC_VIDEO_CMD_S stVdecCmdPara = {0};
+    stVdecCmdPara.u32CmdID = HI_UNF_AVPLAY_SET_CTRL_INFO_CMD;
+    stVdecCmdPara.pPara = &stControlInfo;
+    (HI_VOID)HI_UNF_AVPLAY_Invoke(g_hAvplay, HI_UNF_AVPLAY_INVOKE_VCODEC, (HI_VOID *)&stVdecCmdPara);
 
     g_eTsplayerState = HI_TSPLAYER_STATE_PLAY;
 
@@ -3384,10 +3537,195 @@ bool CTsPlayer::SetEos()
 void CTsPlayer::playerback_register_evt_cb(IPTV_PLAYER_EVT_CB pfunc, void *hander)
 {
     PLAYER_LOGI("### CTsPlayer::playerback_register_evt_cb \n");
+
+
     g_CallBackFunc   = pfunc;
     g_CallBackHandle = hander;
 
     return;
+}
+
+void CTsPlayer::RegisterParamEvtCb(void *hander, IPTV_PLAYER_PARAM_Evt_e enEvt, IPTV_PLAYER_PARAM_EVENT_CB  pfunc)
+{
+    PLAYER_LOGI("### CTsPlayer::playerback_register_evt_cb \n");
+	HI_S32 s32Ret;
+
+	if(enEvt < IPTV_PLAYER_PARAM_EVT_VIDFRM_STATUS_REPORT  &&
+		enEvt >= IPTV_PLAYER_PARAM_EVT_BUTT)
+	{
+		PLAYER_LOGE("### CTsPlayer::enEvt:%d  is illegal\n", enEvt);
+		return ;
+	}
+
+	g_EvtCall3[enEvt] = 1;
+    g_CallBackParaFunc   = pfunc;
+    g_CallBackParaHandle[enEvt] = hander;
+
+    return;
+}
+
+int CTsPlayer::playerback_getStatusInfo(IPTV_ATTR_TYPE_e enAttrType, int *value)
+{
+    PLAYER_LOGI("### enter \n");
+
+	HI_S32	  Ret = HI_SUCCESS;
+	HI_UNF_AVPLAY_STATUS_INFO_S stStatusInfo;
+	HI_UNF_AVPLAY_STREAM_INFO_S stStreamInfo;
+
+	if(!value)
+	{
+		PLAYER_LOGE("### value should not be null! \n");
+		return HI_FAILURE;
+	}
+
+	switch(enAttrType)
+	{
+
+		/* 视频宽高比
+                0--640*480，1--720*576，2--1280*720，3--1920*1080,4--3840*2160,5--others
+                等标识指定分辨率*/
+		case IPTV_PLAYER_ATTR_VID_ASPECT:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStreamInfo(g_hAvplay, &stStreamInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStreamInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			if(stStreamInfo.stVidStreamInfo.u32Height <= 480  )
+		        {
+				*value = 0;
+			}
+			else if(stStreamInfo.stVidStreamInfo.u32Height <= 576  )
+			{
+				*value = 1;
+			}
+			else if(stStreamInfo.stVidStreamInfo.u32Height <= 720)
+			{
+				*value = 2;
+			}
+			else if(stStreamInfo.stVidStreamInfo.u32Height <= 1080)
+			{
+				*value = 3;
+			}
+			else if(stStreamInfo.stVidStreamInfo.u32Height <= 2160)
+			{
+				*value = 4;
+			}
+			else
+			{
+				*value = 5;
+			}
+
+			break;
+		/* 视频宽高比, 0代表4：3，1代表16：9 */
+		case IPTV_PLAYER_ATTR_VID_RATIO:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStreamInfo(g_hAvplay, &stStreamInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStreamInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			if((stStreamInfo.stVidStreamInfo.u32Height == 720 && stStreamInfo.stVidStreamInfo.u32Width == 1280 ) ||
+				(stStreamInfo.stVidStreamInfo.u32Height == 1080 && stStreamInfo.stVidStreamInfo.u32Width == 1920 )
+				)
+		        {
+				*value = 1;
+			}
+			else
+			{
+				*value = 0;
+			}
+
+			break;
+		/*帧场模式, 1代表逐行源，0代表隔行源*/
+		case IPTV_PLAYER_ATTR_VID_SAMPLETYPE:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStreamInfo(g_hAvplay, &stStreamInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStreamInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			if(stStreamInfo.stVidStreamInfo.bProgressive)
+			{
+				*value = 1;
+			}
+			else
+			{
+				*value = 0;
+			}
+			break;
+		/*音视频播放diff*/
+		case IPTV_PLAYER_ATTR_VIDAUDDIFF:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStatusInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+			*value = stStatusInfo.stSyncStatus.s32DiffAvPlayTime;
+			break;
+		/*视频缓冲区大小*/
+		case IPTV_PLAYER_ATTR_VID_BUF_SIZE:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStatusInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			*value = (HI_S32)(stStatusInfo.stBufStatus[HI_UNF_AVPLAY_BUF_ID_ES_VID].u32BufSize);
+			break;
+		/*视频缓冲区使用大小*/
+		case IPTV_PLAYER_ATTR_VID_USED_SIZE:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStatusInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			*value = (HI_S32)(stStatusInfo.stBufStatus[HI_UNF_AVPLAY_BUF_ID_ES_VID].u32UsedSize);
+			break;
+		/* 音频缓冲区大小*/
+		case IPTV_PLAYER_ATTR_AUD_BUF_SIZE:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStatusInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+                        *value = (HI_S32)(stStatusInfo.stBufStatus[HI_UNF_AVPLAY_BUF_ID_ES_AUD].u32BufSize);
+			break;
+		/*音频缓冲区已使用大小*/
+		case IPTV_PLAYER_ATTR_AUD_USED_SIZE:
+			memset(&stStatusInfo, 0, sizeof(HI_UNF_AVPLAY_STATUS_INFO_S));
+			Ret = HI_UNF_AVPLAY_GetStatusInfo(g_hAvplay, &stStatusInfo);
+	                if (HI_SUCCESS != Ret)
+	                {
+	                    PLAYER_LOGE("Get HI_UNF_AVPLAY_GetStatusInfo  failed, Ret:%#x\n", Ret);
+	                    return Ret;
+	                }
+
+			*value = (HI_S32)(stStatusInfo.stBufStatus[HI_UNF_AVPLAY_BUF_ID_ES_AUD].u32UsedSize);
+			break;
+		default:
+			PLAYER_LOGE("Event Type:%d is not support!\n", enAttrType);
+			break;
+
+	}
+
+    return HI_SUCCESS;
 }
 
 CTC_MediaProcessor* GetMediaProcessor()

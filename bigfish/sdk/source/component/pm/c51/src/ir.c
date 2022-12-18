@@ -135,6 +135,13 @@ void IR_Disable(void)
     regAddr.val32 = IR_BASE_ADDR + IR_EN;
     write_regVal();
 
+    /* Reset IR and close IR clock */
+    regAddr.val32 = CFG_BASE_ADDR + MCU_SRST_CTRL;
+    read_regVal();
+    regData.val8[3] |= 0x20;//bit 5 to 1
+    regData.val8[3] &= 0xef;//bit 4 to 0
+    write_regVal();
+
     return;
 }
 
@@ -658,6 +665,13 @@ void ir_std_isr()
 
 void IR_Init(void)
 {
+   /* open IR clock */
+    regAddr.val32 = CFG_BASE_ADDR + MCU_SRST_CTRL;
+    read_regVal();
+    regData.val8[3] |= 0x10;//bit 4 to 1
+    regData.val8[3] &= 0xdf;//bit 5 to 0
+    write_regVal();
+    
     //enable IR
     regData.val32 = 0x1;
     regAddr.val32 = IR_BASE_ADDR + IR_EN;

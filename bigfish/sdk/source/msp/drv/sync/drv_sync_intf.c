@@ -30,7 +30,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -263,6 +265,11 @@ static HI_S32 SYNC_ProcWrite(struct file * file,
     HI_CHAR           ProcPara[64]={0};
     HI_CHAR           *pItem,*pValue;
     HI_S32            Ret;
+	
+	if(count > 64)
+	{
+	    return -EFAULT;
+	}
 
     if (copy_from_user(ProcPara, buf, count))
     {

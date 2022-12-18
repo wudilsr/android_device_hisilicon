@@ -471,6 +471,7 @@ HI_S32 HI_CODEC_RegisterLib(const HI_CHAR *pszCodecDllName)
         (HI_VOID)CODEC_UNLOCK(s_stParam.stMutex);
         HI_FREE_CODEC(pstCodecParam);
         HI_ERR_CODEC("Too many codecs registered.\n");
+        dlclose(pDllModule);
         return HI_ERR_CODEC_NOENOUGHRES;
     }
 

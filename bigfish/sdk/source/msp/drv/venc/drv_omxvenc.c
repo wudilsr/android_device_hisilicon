@@ -164,6 +164,10 @@ HI_S32 VENC_DRV_QueueFrame_OMX(HI_HANDLE hVencChn, venc_user_buf *pstFrameInfo )
 static HI_S32 Convert_FrameStructure_OMX_DRV(venc_user_buf *pstOmxFrameInfo ,HI_DRV_VIDEO_FRAME_S *pstDrvImage)
 {
    HI_DRV_VIDEO_PRIVATE_S *pVideoPriv;
+   HI_U64 timestamp0;
+   HI_U64 timestamp1;
+   HI_U64 timestamp;
+   
    D_VENC_CHECK_PTR(pstOmxFrameInfo);
    D_VENC_CHECK_PTR(pstDrvImage);
  
@@ -183,12 +187,14 @@ static HI_S32 Convert_FrameStructure_OMX_DRV(venc_user_buf *pstOmxFrameInfo ,HI_
    pstDrvImage->stBufAddr[0].u32PhyAddr_Cr= pstDrvImage->stBufAddr[0].u32PhyAddr_C + pstOmxFrameInfo->offset_YCr;
    pstDrvImage->stBufAddr[0].u32Stride_Cr = pstOmxFrameInfo->strideC;
 
-
    pstDrvImage->u32Width = pstOmxFrameInfo->picWidth;
    pstDrvImage->u32Height= pstOmxFrameInfo->picHeight;   
 
-   pstDrvImage->s64OmxPts  =  (HI_S64)(pstOmxFrameInfo->timestamp0);
-   pstDrvImage->s64OmxPts |=  (((HI_S64)(pstOmxFrameInfo->timestamp1) << 32) & 0xffffffff00000000LL);
+   timestamp0 = (HI_U64)(pstOmxFrameInfo->timestamp0);
+   timestamp1 = (HI_U64)(pstOmxFrameInfo->timestamp1);
+   timestamp  = ((timestamp1 << 32) & 0xffffffff00000000LL) | timestamp0;
+   
+   pstDrvImage->s64OmxPts  =  (HI_S64)timestamp;
 
    switch(pstOmxFrameInfo->store_type)
    {
@@ -320,6 +326,11 @@ HI_S32 VENC_DRV_QueueFrame_OMX(VeduEfl_EncPara_S* hVencChn, venc_user_buf* pstFr
 	       pstEncChnPara->stSrcInfo.pfGetImage   = pVpssFunc->pfnVpssGetPortFrame;
 	       pstEncChnPara->stSrcInfo.pfPutImage   = pVpssFunc->pfnVpssRelPortFrame;
 	       s32Ret = (pVpssFunc->pfnVpssSetSourceMode)(g_stVencChn[u32VeChn].hVPSS,VPSS_SOURCE_MODE_USERACTIVE, HI_NULL);
+           if (s32Ret != HI_SUCCESS)
+           {
+               HI_ERR_VENC("pfnVpssSetSourceMode VPSS_SOURCE_MODE_USERACTIVE ERROR!\n");
+           }
+           
 	      (pVpssFunc->pfnVpssEnablePort)(g_stVencChn[u32VeChn].hPort[0], HI_TRUE);       
        }
 	   else

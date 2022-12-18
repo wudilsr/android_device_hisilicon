@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.vfmw_ctrl.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/vfmw_ctrl.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/vfmw_ctrl.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/vfmw_ctrl.o -O2 -Wall -Wundef
@@ -122,9 +122,9 @@ VCTRL_GetFrameInterface:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r0, [r3, r0, asl #2]	@ D.50311, s_pstVfmwChan
-	cmp	r0, #0	@ D.50311,
-	addne	r0, r0, #176	@ D.50314, D.50311,
+	ldr	r0, [r3, r0, asl #2]	@ D.50324, s_pstVfmwChan
+	cmp	r0, #0	@ D.50324,
+	addne	r0, r0, #176	@ D.50327, D.50324,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetFrameInterface, .-VCTRL_GetFrameInterface
@@ -147,10 +147,10 @@ VCTRL_GetSyntaxCtx:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r0, [r3, r0, asl #2]	@ D.50360, s_pstVfmwChan
-	cmp	r0, #0	@ D.50360,
-	addne	r0, r0, #250880	@ D.50363, D.50360,
-	addne	r0, r0, #712	@ D.50363, D.50363,
+	ldr	r0, [r3, r0, asl #2]	@ D.50373, s_pstVfmwChan
+	cmp	r0, #0	@ D.50373,
+	addne	r0, r0, #252928	@ D.50376, D.50373,
+	addne	r0, r0, #200	@ D.50376, D.50376,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetSyntaxCtx, .-VCTRL_GetSyntaxCtx
@@ -173,9 +173,9 @@ VCTRL_GetImageInterface:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r0, [r3, r0, asl #2]	@ D.50421, s_pstVfmwChan
-	cmp	r0, #0	@ D.50421,
-	addne	r0, r0, #164	@ D.50424, D.50421,
+	ldr	r0, [r3, r0, asl #2]	@ D.50434, s_pstVfmwChan
+	cmp	r0, #0	@ D.50434,
+	addne	r0, r0, #164	@ D.50437, D.50434,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetImageInterface, .-VCTRL_GetImageInterface
@@ -197,10 +197,10 @@ VCTRL_GetChanCtxSize:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #26	@ eCapLevel,
-	movweq	r3, #:lower16:11613576	@ tmp135,
-	movwne	r3, #:lower16:4780712	@ tmp136,
-	movteq	r3, #:upper16:11613576	@ tmp135,
-	movtne	r3, #:upper16:4780712	@ tmp136,
+	movweq	r3, #:lower16:11616216	@ tmp135,
+	movwne	r3, #:lower16:4782920	@ tmp136,
+	movteq	r3, #:upper16:11616216	@ tmp135,
+	movtne	r3, #:upper16:4782920	@ tmp136,
 	str	r3, [r1, #0]	@ tmp136,* s32ChanCtxSize
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -224,17 +224,17 @@ VCTRL_CmpConfigParameter:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r3, [r3, r0, asl #2]	@ D.51281, s_pstVfmwChan
+	ldr	r3, [r3, r0, asl #2]	@ D.51294, s_pstVfmwChan
 	ldr	r2, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r2, #19	@ <variable>.eVidStd,
 	bne	.L24	@,
 .L18:
-	mvn	r0, #0	@ D.51334,
+	mvn	r0, #0	@ D.51347,
 	ldmfd	sp, {fp, sp, pc}	@
 .L24:
-	ldr	r2, [r3, #48]	@ D.51286, <variable>.stChanCfg.eVidStd
+	ldr	r2, [r3, #48]	@ D.51299, <variable>.stChanCfg.eVidStd
 	ldr	r0, [r1, #0]	@ <variable>.eVidStd, <variable>.eVidStd
-	cmp	r2, r0	@ D.51286, <variable>.eVidStd
+	cmp	r2, r0	@ D.51299, <variable>.eVidStd
 	bne	.L18	@,
 	ldr	ip, [r3, #64]	@ <variable>.stChanCfg.s32ChanErrThr, <variable>.stChanCfg.s32ChanErrThr
 	ldr	r0, [r1, #16]	@ <variable>.s32ChanErrThr, <variable>.s32ChanErrThr
@@ -284,9 +284,9 @@ VCTRL_CmpConfigParameter:
 	ldr	r0, [r1, #68]	@ <variable>.s32SupportAllP, <variable>.s32SupportAllP
 	cmp	ip, r0	@ <variable>.stChanCfg.s32SupportAllP, <variable>.s32SupportAllP
 	bne	.L18	@,
-	cmp	r2, #1	@ D.51286,
+	cmp	r2, #1	@ D.51299,
 	beq	.L25	@,
-	sub	r0, r2, #10	@ tmp170, D.51286,
+	sub	r0, r2, #10	@ tmp170, D.51299,
 	cmp	r0, #2	@ tmp170,
 	bhi	.L20	@,
 	ldr	r2, [r3, #52]	@ <variable>.stChanCfg.StdExt.Vp6Ext.bReversed, <variable>.stChanCfg.StdExt.Vp6Ext.bReversed
@@ -294,7 +294,7 @@ VCTRL_CmpConfigParameter:
 	cmp	r2, ip	@ <variable>.stChanCfg.StdExt.Vp6Ext.bReversed, <variable>.StdExt.Vp6Ext.bReversed
 	bne	.L18	@,
 .L20:
-	mov	r0, #0	@ D.51334,
+	mov	r0, #0	@ D.51347,
 	ldmfd	sp, {fp, sp, pc}	@
 .L25:
 	ldr	r0, [r3, #52]	@ <variable>.stChanCfg.StdExt.Vc1Ext.IsAdvProfile, <variable>.stChanCfg.StdExt.Vc1Ext.IsAdvProfile
@@ -354,13 +354,13 @@ VCTRL_IsChanActive:
 	cmp	r0, #15	@ ChanID,
 	bls	.L32	@,
 .L29:
-	mvn	r0, #0	@ D.52534,
+	mvn	r0, #0	@ D.52547,
 	ldmfd	sp, {fp, sp, pc}	@
 .L32:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r3, [r3, r0, asl #2]	@ D.52533, s_pstVfmwChan
-	cmp	r3, #0	@ D.52533,
+	ldr	r3, [r3, r0, asl #2]	@ D.52546, s_pstVfmwChan
+	cmp	r3, #0	@ D.52546,
 	beq	.L29	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #0	@ <variable>.s32IsOpen,
@@ -373,7 +373,7 @@ VCTRL_IsChanActive:
 	beq	.L29	@,
 	ldr	r3, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r3, #19	@ <variable>.eVidStd,
-	movne	r0, #0	@ D.52534,
+	movne	r0, #0	@ D.52547,
 	ldmnefd	sp, {fp, sp, pc}	@
 	b	.L29	@
 	.fnend
@@ -401,8 +401,8 @@ VCTRL_GetChanMemSizeByResolution:
 	movt	ip, #:upper16:g_vdm_hal_fun_ptr	@ tmp141,
 	mov	r5, r2	@ VdmMemSize, VdmMemSize
 	mov	r4, r3	@ ScdMemSize, ScdMemSize
-	ldr	ip, [ip, #48]	@ D.52917, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
-	cmp	ip, #0	@ D.52917,
+	ldr	ip, [ip, #48]	@ D.52930, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	ip, #0	@ D.52930,
 	beq	.L34	@,
 	mov	r2, r0	@, MaxWidth
 	mov	r3, r1	@, MaxHeight
@@ -418,7 +418,7 @@ VCTRL_GetChanMemSizeByResolution:
 	mov	r0, #1	@,
 	str	lr, [sp, #8]	@ tmp144,
 	mvn	r1, #-2147483648	@,
-	blx	ip	@ D.52917
+	blx	ip	@ D.52930
 	cmp	r0, #0	@ ret
 	bne	.L34	@,
 	ldr	r2, [fp, #-956]	@ MemArrange.TotalMemUsed, MemArrange.TotalMemUsed
@@ -433,7 +433,7 @@ VCTRL_GetChanMemSizeByResolution:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
 .L34:
-	mvn	r0, #0	@ D.52930,
+	mvn	r0, #0	@ D.52943,
 	b	.L35	@
 	.fnend
 	.size	VCTRL_GetChanMemSizeByResolution, .-VCTRL_GetChanMemSizeByResolution
@@ -459,8 +459,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #0]	@ temp.1143, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1143,
 	beq	.L38	@,
-	add	r1, r2, #250880	@ tmp153, temp.1143,
-	add	r2, r1, #720	@ tmp153, tmp153,
+	add	r1, r2, #252928	@ tmp153, temp.1143,
+	add	r2, r1, #208	@ tmp153, tmp153,
 	cmp	r2, r0	@ tmp153, pCtx
 	moveq	r0, #0	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -468,8 +468,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #4]	@ temp.1145, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1145,
 	beq	.L40	@,
-	add	r2, r2, #250880	@ tmp156, temp.1145,
-	add	ip, r2, #720	@ tmp156, tmp156,
+	add	r2, r2, #252928	@ tmp156, temp.1145,
+	add	ip, r2, #208	@ tmp156, tmp156,
 	cmp	ip, r0	@ tmp156, pCtx
 	moveq	r0, #1	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -477,8 +477,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #8]	@ temp.1147, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1147,
 	beq	.L41	@,
-	add	ip, r2, #250880	@ tmp159, temp.1147,
-	add	r1, ip, #720	@ tmp159, tmp159,
+	add	ip, r2, #252928	@ tmp159, temp.1147,
+	add	r1, ip, #208	@ tmp159, tmp159,
 	cmp	r1, r0	@ tmp159, pCtx
 	moveq	r0, #2	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -486,8 +486,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #12]	@ temp.1149, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1149,
 	beq	.L42	@,
-	add	r1, r2, #250880	@ tmp162, temp.1149,
-	add	r2, r1, #720	@ tmp162, tmp162,
+	add	r1, r2, #252928	@ tmp162, temp.1149,
+	add	r2, r1, #208	@ tmp162, tmp162,
 	cmp	r2, r0	@ tmp162, pCtx
 	moveq	r0, #3	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -495,8 +495,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #16]	@ temp.1151, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1151,
 	beq	.L43	@,
-	add	r2, r2, #250880	@ tmp165, temp.1151,
-	add	ip, r2, #720	@ tmp165, tmp165,
+	add	r2, r2, #252928	@ tmp165, temp.1151,
+	add	ip, r2, #208	@ tmp165, tmp165,
 	cmp	ip, r0	@ tmp165, pCtx
 	moveq	r0, #4	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -504,8 +504,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #20]	@ temp.1153, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1153,
 	beq	.L44	@,
-	add	ip, r2, #250880	@ tmp168, temp.1153,
-	add	r1, ip, #720	@ tmp168, tmp168,
+	add	ip, r2, #252928	@ tmp168, temp.1153,
+	add	r1, ip, #208	@ tmp168, tmp168,
 	cmp	r1, r0	@ tmp168, pCtx
 	moveq	r0, #5	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -513,8 +513,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #24]	@ temp.1155, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1155,
 	beq	.L45	@,
-	add	r1, r2, #250880	@ tmp171, temp.1155,
-	add	r2, r1, #720	@ tmp171, tmp171,
+	add	r1, r2, #252928	@ tmp171, temp.1155,
+	add	r2, r1, #208	@ tmp171, tmp171,
 	cmp	r2, r0	@ tmp171, pCtx
 	moveq	r0, #6	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -522,8 +522,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #28]	@ temp.1157, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1157,
 	beq	.L46	@,
-	add	r2, r2, #250880	@ tmp174, temp.1157,
-	add	ip, r2, #720	@ tmp174, tmp174,
+	add	r2, r2, #252928	@ tmp174, temp.1157,
+	add	ip, r2, #208	@ tmp174, tmp174,
 	cmp	ip, r0	@ tmp174, pCtx
 	moveq	r0, #7	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -531,8 +531,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #32]	@ temp.1159, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1159,
 	beq	.L47	@,
-	add	ip, r2, #250880	@ tmp177, temp.1159,
-	add	r1, ip, #720	@ tmp177, tmp177,
+	add	ip, r2, #252928	@ tmp177, temp.1159,
+	add	r1, ip, #208	@ tmp177, tmp177,
 	cmp	r1, r0	@ tmp177, pCtx
 	moveq	r0, #8	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -540,8 +540,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #36]	@ temp.1161, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1161,
 	beq	.L48	@,
-	add	r1, r2, #250880	@ tmp180, temp.1161,
-	add	r2, r1, #720	@ tmp180, tmp180,
+	add	r1, r2, #252928	@ tmp180, temp.1161,
+	add	r2, r1, #208	@ tmp180, tmp180,
 	cmp	r2, r0	@ tmp180, pCtx
 	moveq	r0, #9	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -549,8 +549,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #40]	@ temp.1163, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1163,
 	beq	.L49	@,
-	add	r2, r2, #250880	@ tmp183, temp.1163,
-	add	ip, r2, #720	@ tmp183, tmp183,
+	add	r2, r2, #252928	@ tmp183, temp.1163,
+	add	ip, r2, #208	@ tmp183, tmp183,
 	cmp	ip, r0	@ tmp183, pCtx
 	moveq	r0, #10	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -558,8 +558,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #44]	@ temp.1165, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1165,
 	beq	.L50	@,
-	add	ip, r2, #250880	@ tmp186, temp.1165,
-	add	r1, ip, #720	@ tmp186, tmp186,
+	add	ip, r2, #252928	@ tmp186, temp.1165,
+	add	r1, ip, #208	@ tmp186, tmp186,
 	cmp	r1, r0	@ tmp186, pCtx
 	moveq	r0, #11	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -567,8 +567,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #48]	@ temp.1167, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1167,
 	beq	.L51	@,
-	add	r1, r2, #250880	@ tmp189, temp.1167,
-	add	r2, r1, #720	@ tmp189, tmp189,
+	add	r1, r2, #252928	@ tmp189, temp.1167,
+	add	r2, r1, #208	@ tmp189, tmp189,
 	cmp	r2, r0	@ tmp189, pCtx
 	moveq	r0, #12	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -576,8 +576,8 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #52]	@ temp.1169, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1169,
 	beq	.L52	@,
-	add	r2, r2, #250880	@ tmp192, temp.1169,
-	add	ip, r2, #720	@ tmp192, tmp192,
+	add	r2, r2, #252928	@ tmp192, temp.1169,
+	add	ip, r2, #208	@ tmp192, tmp192,
 	cmp	ip, r0	@ tmp192, pCtx
 	moveq	r0, #13	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -585,17 +585,17 @@ VCTRL_GetChanIDByCtx:
 	ldr	r2, [r3, #56]	@ temp.1171, s_pstVfmwChan
 	cmp	r2, #0	@ temp.1171,
 	beq	.L53	@,
-	add	ip, r2, #250880	@ tmp195, temp.1171,
-	add	r1, ip, #720	@ tmp195, tmp195,
+	add	ip, r2, #252928	@ tmp195, temp.1171,
+	add	r1, ip, #208	@ tmp195, tmp195,
 	cmp	r1, r0	@ tmp195, pCtx
 	moveq	r0, #14	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
 .L53:
-	ldr	r3, [r3, #60]	@ D.53472, s_pstVfmwChan
-	cmp	r3, #0	@ D.53472,
+	ldr	r3, [r3, #60]	@ D.53485, s_pstVfmwChan
+	cmp	r3, #0	@ D.53485,
 	beq	.L54	@,
-	add	r2, r3, #250880	@ tmp198, D.53472,
-	add	r3, r2, #720	@ tmp198, tmp198,
+	add	r2, r3, #252928	@ tmp198, D.53485,
+	add	r3, r2, #208	@ tmp198, tmp198,
 	cmp	r3, r0	@ tmp198, pCtx
 	moveq	r0, #15	@ i,
 	ldmeqfd	sp, {fp, sp, pc}	@
@@ -848,22 +848,22 @@ VCTRL_GetChanIDByMemAddr:
 	cmp	r0, r1	@ PhyAddr, tmp255
 	blt	.L109	@,
 .L100:
-	ldr	r3, [r3, #60]	@ D.53488, s_pstVfmwChan
-	cmp	r3, #0	@ D.53488,
+	ldr	r3, [r3, #60]	@ D.53501, s_pstVfmwChan
+	cmp	r3, #0	@ D.53501,
 	beq	.L103	@,
-	ldr	r2, [r3, #228]	@ D.53491, <variable>.stChanMem_vdh.PhyAddr
-	cmp	r2, r0	@ D.53491, PhyAddr
+	ldr	r2, [r3, #228]	@ D.53504, <variable>.stChanMem_vdh.PhyAddr
+	cmp	r2, r0	@ D.53504, PhyAddr
 	bgt	.L104	@,
 	ldr	r1, [r3, #232]	@ <variable>.stChanMem_vdh.Length, <variable>.stChanMem_vdh.Length
-	add	r2, r2, r1	@ tmp260, D.53491, <variable>.stChanMem_vdh.Length
+	add	r2, r2, r1	@ tmp260, D.53504, <variable>.stChanMem_vdh.Length
 	cmp	r0, r2	@ PhyAddr, tmp260
 	blt	.L107	@,
 .L104:
-	ldr	r2, [r3, #244]	@ D.53499, <variable>.stChanMem_scd.PhyAddr
-	cmp	r0, r2	@ PhyAddr, D.53499
+	ldr	r2, [r3, #244]	@ D.53512, <variable>.stChanMem_scd.PhyAddr
+	cmp	r0, r2	@ PhyAddr, D.53512
 	blt	.L103	@,
 	ldr	r3, [r3, #248]	@ <variable>.stChanMem_scd.Length, <variable>.stChanMem_scd.Length
-	add	ip, r2, r3	@ tmp262, D.53499, <variable>.stChanMem_scd.Length
+	add	ip, r2, r3	@ tmp262, D.53512, <variable>.stChanMem_scd.Length
 	cmp	r0, ip	@ PhyAddr, tmp262
 	blt	.L107	@,
 .L103:
@@ -1013,8 +1013,8 @@ VCTRL_GetChanVoQue:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r3, [r3, r0, asl #2]	@ D.53715, s_pstVfmwChan
-	cmp	r3, #0	@ D.53715,
+	ldr	r3, [r3, r0, asl #2]	@ D.53728, s_pstVfmwChan
+	cmp	r3, #0	@ D.53728,
 	beq	.L123	@,
 	ldr	r2, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r2, #18	@ <variable>.eVidStd,
@@ -1041,65 +1041,65 @@ VCTRL_GetChanVoQue:
 	.word	.L123
 	.word	.L137
 .L137:
-	add	r0, r3, #250880	@ pstVoQue, D.53715,
-	add	r0, r0, #728	@ pstVoQue, pstVoQue,
+	add	r0, r3, #252928	@ pstVoQue, D.53728,
+	add	r0, r0, #216	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L123:
 	mov	r0, #0	@ pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L126:
-	add	ip, r3, #270336	@ pstVoQue, D.53715,
-	add	r0, ip, #3872	@ pstVoQue, pstVoQue,
+	add	ip, r3, #274432	@ pstVoQue, D.53728,
+	add	r0, ip, #1312	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L127:
-	add	r1, r3, #331776	@ pstVoQue, D.53715,
-	add	r0, r1, #336	@ pstVoQue, pstVoQue,
+	add	r1, r3, #331776	@ pstVoQue, D.53728,
+	add	r0, r1, #3408	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L128:
-	movw	r1, #:lower16:277464	@ pstVoQue,
-	movt	r1, #:upper16:277464	@ pstVoQue,
-	add	r0, r3, r1	@ pstVoQue, D.53715, pstVoQue
+	movw	r1, #:lower16:280152	@ pstVoQue,
+	movt	r1, #:upper16:280152	@ pstVoQue,
+	add	r0, r3, r1	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 .L129:
-	add	ip, r3, #282624	@ pstVoQue, D.53715,
-	add	r0, ip, #2784	@ pstVoQue, pstVoQue,
+	add	ip, r3, #286720	@ pstVoQue, D.53728,
+	add	r0, ip, #1760	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L125:
-	add	r2, r3, #364544	@ pstVoQue, D.53715,
-	add	r0, r2, #1072	@ pstVoQue, pstVoQue,
+	add	r2, r3, #364544	@ pstVoQue, D.53728,
+	add	r0, r2, #2752	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L136:
-	movw	r0, #:lower16:2384336	@ pstVoQue,
-	movt	r0, #:upper16:2384336	@ pstVoQue,
-	add	r0, r3, r0	@ pstVoQue, D.53715, pstVoQue
+	movw	r0, #:lower16:2385904	@ pstVoQue,
+	movt	r0, #:upper16:2385904	@ pstVoQue,
+	add	r0, r3, r0	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 .L134:
-	add	ip, r3, #259072	@ pstVoQue, D.53715,
-	add	r0, ip, #696	@ pstVoQue, pstVoQue,
+	add	ip, r3, #261120	@ pstVoQue, D.53728,
+	add	r0, ip, #184	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L135:
-	add	r2, r3, #251904	@ pstVoQue, D.53715,
-	add	r0, r2, #280	@ pstVoQue, pstVoQue,
+	add	r2, r3, #252928	@ pstVoQue, D.53728,
+	add	r0, r2, #792	@ pstVoQue, pstVoQue,
 	ldmfd	sp, {fp, sp, pc}	@
 .L130:
-	movw	r2, #:lower16:267688	@ pstVoQue,
-	movt	r2, #:upper16:267688	@ pstVoQue,
-	add	r0, r3, r2	@ pstVoQue, D.53715, pstVoQue
+	movw	r2, #:lower16:269224	@ pstVoQue,
+	movt	r2, #:upper16:269224	@ pstVoQue,
+	add	r0, r3, r2	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 .L131:
-	movw	r0, #:lower16:297736	@ pstVoQue,
-	movt	r0, #:upper16:297736	@ pstVoQue,
-	add	r0, r3, r0	@ pstVoQue, D.53715, pstVoQue
+	movw	r0, #:lower16:300808	@ pstVoQue,
+	movt	r0, #:upper16:300808	@ pstVoQue,
+	add	r0, r3, r0	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 .L132:
-	movw	r1, #:lower16:297720	@ pstVoQue,
-	movt	r1, #:upper16:297720	@ pstVoQue,
-	add	r0, r3, r1	@ pstVoQue, D.53715, pstVoQue
+	movw	r1, #:lower16:300792	@ pstVoQue,
+	movt	r1, #:upper16:300792	@ pstVoQue,
+	add	r0, r3, r1	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 .L133:
-	movw	r0, #:lower16:264248	@ pstVoQue,
-	movt	r0, #:upper16:264248	@ pstVoQue,
-	add	r0, r3, r0	@ pstVoQue, D.53715, pstVoQue
+	movw	r0, #:lower16:265784	@ pstVoQue,
+	movt	r0, #:upper16:265784	@ pstVoQue,
+	add	r0, r3, r0	@ pstVoQue, D.53728, pstVoQue
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanVoQue, .-VCTRL_GetChanVoQue
@@ -1129,13 +1129,13 @@ str2val:
 .L143:
 	add	r0, r0, r5	@ ivtmp.1352, str, i
 	mov	ip, #0	@ dat,
-	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55061,* ivtmp.1352
-	cmp	r3, #31	@ D.55061,
+	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55082,* ivtmp.1352
+	cmp	r3, #31	@ D.55082,
 	bls	.L144	@,
 	cmp	r4, #16	@ weight,
 	beq	.L173	@,
 .L154:
-	sub	ip, r3, #48	@ tmp194, D.55061,
+	sub	ip, r3, #48	@ tmp194, D.55082,
 	uxtb	r3, ip	@ tmp195, tmp194
 	cmp	r3, #9	@ tmp195,
 	bhi	.L174	@,
@@ -1145,13 +1145,13 @@ str2val:
 	add	r0, r0, r2	@ ivtmp.1352, ivtmp.1352,
 	add	r5, r5, r2	@ i, i,
 	beq	.L151	@,
-	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55061,* ivtmp.1352
-	cmp	r3, #31	@ D.55061,
+	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55082,* ivtmp.1352
+	cmp	r3, #31	@ D.55082,
 	bls	.L144	@,
 	cmp	r4, #16	@ weight,
 	beq	.L177	@,
 .L159:
-	sub	r3, r3, #48	@ tmp199, D.55061,
+	sub	r3, r3, #48	@ tmp199, D.55082,
 	uxtb	r2, r3	@ tmp200, tmp199
 	cmp	r2, #9	@ tmp200,
 	bhi	.L174	@,
@@ -1162,28 +1162,28 @@ str2val:
 	mla	ip, r4, ip, r3	@ dat, weight, dat, d
 	bls	.L151	@,
 .L144:
-	mov	r0, #0	@ D.55081,
+	mov	r0, #0	@ D.55102,
 	str	ip, [r1, #0]	@ dat,* data
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L146:
-	cmp	r3, #64	@ D.55061,
+	cmp	r3, #64	@ D.55082,
 	bhi	.L147	@,
 .L145:
-	sub	r3, r3, #48	@ tmp181, D.55061,
+	sub	r3, r3, #48	@ tmp181, D.55082,
 	uxtb	r2, r3	@ tmp182, tmp181
 	cmp	r2, #9	@ tmp182,
 	bhi	.L174	@,
 .L148:
-	ldrb	r2, [r0, #1]	@ zero_extendqisi2	@ D.55061,
+	ldrb	r2, [r0, #1]	@ zero_extendqisi2	@ D.55082,
 	add	r5, r5, #1	@ tmp186, i,
 	mla	ip, r4, ip, r3	@ dat, weight, dat, d
-	cmp	r2, #31	@ D.55061,
+	cmp	r2, #31	@ D.55082,
 	add	r0, r0, #1	@ tmp187, ivtmp.1352,
 	bls	.L144	@,
 	cmp	r4, #16	@ weight,
 	beq	.L180	@,
 .L165:
-	sub	r2, r2, #48	@ tmp203, D.55061,
+	sub	r2, r2, #48	@ tmp203, D.55082,
 	uxtb	r3, r2	@ tmp204, tmp203
 	cmp	r3, #9	@ tmp204,
 	bhi	.L174	@,
@@ -1194,72 +1194,72 @@ str2val:
 	mla	ip, r4, ip, r2	@ dat, weight, dat, d
 	bhi	.L144	@,
 .L151:
-	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55061,* ivtmp.1352
-	cmp	r3, #31	@ D.55061,
+	ldrb	r3, [r0, #0]	@ zero_extendqisi2	@ D.55082,* ivtmp.1352
+	cmp	r3, #31	@ D.55082,
 	bls	.L144	@,
 	cmp	r4, #16	@ weight,
 	bne	.L145	@,
-	cmp	r3, #96	@ D.55061,
+	cmp	r3, #96	@ D.55082,
 	bls	.L146	@,
-	cmp	r3, #102	@ D.55061,
-	subls	r3, r3, #87	@ d, D.55061,
+	cmp	r3, #102	@ D.55082,
+	subls	r3, r3, #87	@ d, D.55082,
 	bls	.L148	@,
 .L147:
-	cmp	r3, #70	@ D.55061,
-	subls	r3, r3, #55	@ d, D.55061,
+	cmp	r3, #70	@ D.55082,
+	subls	r3, r3, #55	@ d, D.55082,
 	bls	.L148	@,
 	b	.L145	@
 .L180:
-	cmp	r2, #96	@ D.55061,
+	cmp	r2, #96	@ D.55082,
 	bls	.L167	@,
-	cmp	r2, #102	@ D.55061,
+	cmp	r2, #102	@ D.55082,
 	bhi	.L168	@,
-	sub	r2, r2, #87	@ d, D.55061,
+	sub	r2, r2, #87	@ d, D.55082,
 	b	.L181	@
 .L167:
-	cmp	r2, #64	@ D.55061,
+	cmp	r2, #64	@ D.55082,
 	bls	.L165	@,
 .L168:
-	cmp	r2, #70	@ D.55061,
-	subls	r2, r2, #55	@ d, D.55061,
+	cmp	r2, #70	@ D.55082,
+	subls	r2, r2, #55	@ d, D.55082,
 	bls	.L181	@,
 	b	.L165	@
 .L184:
-	ldrb	r2, [r0, #1]	@ zero_extendqisi2	@ D.55055,
-	cmp	r2, #120	@ D.55055,
-	cmpne	r2, #88	@, D.55055,
+	ldrb	r2, [r0, #1]	@ zero_extendqisi2	@ D.55076,
+	cmp	r2, #120	@ D.55076,
+	cmpne	r2, #88	@, D.55076,
 	moveq	r4, #16	@ weight,
 	moveq	r5, #2	@ i,
 	beq	.L143	@,
 	b	.L142	@
 .L173:
-	cmp	r3, #96	@ D.55061,
+	cmp	r3, #96	@ D.55082,
 	bls	.L156	@,
-	cmp	r3, #102	@ D.55061,
+	cmp	r3, #102	@ D.55082,
 	bhi	.L157	@,
-	sub	ip, r3, #87	@ d, D.55061,
+	sub	ip, r3, #87	@ d, D.55082,
 	b	.L175	@
 .L156:
-	cmp	r3, #64	@ D.55061,
+	cmp	r3, #64	@ D.55082,
 	bls	.L154	@,
 .L157:
-	cmp	r3, #70	@ D.55061,
-	subls	ip, r3, #55	@ d, D.55061,
+	cmp	r3, #70	@ D.55082,
+	subls	ip, r3, #55	@ d, D.55082,
 	bls	.L175	@,
 	b	.L154	@
 .L177:
-	cmp	r3, #96	@ D.55061,
+	cmp	r3, #96	@ D.55082,
 	bls	.L161	@,
-	cmp	r3, #102	@ D.55061,
+	cmp	r3, #102	@ D.55082,
 	bhi	.L162	@,
-	sub	r3, r3, #87	@ d, D.55061,
+	sub	r3, r3, #87	@ d, D.55082,
 	b	.L178	@
 .L161:
-	cmp	r3, #64	@ D.55061,
+	cmp	r3, #64	@ D.55082,
 	bls	.L159	@,
 .L162:
-	cmp	r3, #70	@ D.55061,
-	subls	r3, r3, #55	@ d, D.55061,
+	cmp	r3, #70	@ D.55082,
+	subls	r3, r3, #55	@ d, D.55082,
 	bhi	.L159	@,
 	add	r5, r5, #1	@ i, i,
 	add	r0, r0, #1	@ ivtmp.1352, ivtmp.1352,
@@ -1268,7 +1268,7 @@ str2val:
 	bls	.L151	@,
 	b	.L144	@
 .L174:
-	mvn	r0, #0	@ D.55081,
+	mvn	r0, #0	@ D.55102,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 	.fnend
 	.size	str2val, .-str2val
@@ -1290,11 +1290,11 @@ vfmw_proc_write:
 	bl	__gnu_mcount_nc
 	ldr	ip, [r0, #128]	@ <variable>.private_data, <variable>.private_data
 	ldr	ip, [ip, #72]	@ <variable>.private, <variable>.private
-	ldr	ip, [ip, #20]	@ D.55258, <variable>.write
-	cmp	ip, #0	@ D.55258,
-	mvneq	r0, #37	@ D.55261,
+	ldr	ip, [ip, #20]	@ D.55279, <variable>.write
+	cmp	ip, #0	@ D.55279,
+	mvneq	r0, #37	@ D.55282,
 	ldmeqfd	sp, {fp, sp, pc}	@
-	blx	ip	@ D.55258
+	blx	ip	@ D.55279
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	vfmw_proc_write, .-vfmw_proc_write
@@ -1317,8 +1317,8 @@ VCTRL_SetChanFsPartitionState:
 	bl	__gnu_mcount_nc
 	movw	ip, #:lower16:.LANCHOR0	@ tmp135,
 	movt	ip, #:upper16:.LANCHOR0	@ tmp135,
-	movw	r3, #:lower16:249264	@ tmp138,
-	movt	r3, #:upper16:249264	@ tmp138,
+	movw	r3, #:lower16:250800	@ tmp138,
+	movt	r3, #:upper16:250800	@ tmp138,
 	ldr	r2, [ip, r0, asl #2]	@ tmp136, s_pstVfmwChan
 	str	r1, [r2, r3]	@ state, <variable>.FspInst.eFspPartitionState
 	ldmfd	sp, {fp, sp, pc}	@
@@ -1343,8 +1343,8 @@ VCTRL_GetCurChanFsSize:
 	bl	__gnu_mcount_nc
 	movw	r1, #:lower16:.LANCHOR0	@ tmp136,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp136,
-	movw	r3, #:lower16:249272	@ tmp140,
-	movt	r3, #:upper16:249272	@ tmp140,
+	movw	r3, #:lower16:250808	@ tmp140,
+	movt	r3, #:upper16:250808	@ tmp140,
 	ldr	r2, [r1, r0, asl #2]	@ tmp137, s_pstVfmwChan
 	ldr	r0, [r2, r3]	@, <variable>.s32CurFsSize
 	ldmfd	sp, {fp, sp, pc}	@
@@ -1370,11 +1370,11 @@ VCTRL_SetFsParamToChan:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp135,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp135,
 	ldr	r5, [r1, #8]	@ <variable>.Length, <variable>.Length
-	movw	ip, #:lower16:249280	@ tmp158,
-	movt	ip, #:upper16:249280	@ tmp158,
+	movw	ip, #:lower16:250816	@ tmp158,
+	movt	ip, #:upper16:250816	@ tmp158,
 	ldr	r4, [r3, r0, asl #2]	@ tmp136, s_pstVfmwChan
-	movw	r2, #:lower16:249292	@ tmp159,
-	movt	r2, #:upper16:249292	@ tmp159,
+	movw	r2, #:lower16:250828	@ tmp159,
+	movt	r2, #:upper16:250828	@ tmp159,
 	str	r5, [r4, #284]	@ <variable>.Length, <variable>.s32VdmChanMemSize
 	ldr	r4, [r3, r0, asl #2]	@ tmp139, s_pstVfmwChan
 	ldr	r5, [r1, #0]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -1416,9 +1416,9 @@ VCTRL_GetImageHeight:
 	bl	__gnu_mcount_nc
 	movw	r2, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp139,
-	movw	r3, #:lower16:251592	@ tmp140,
-	movt	r3, #:upper16:251592	@ tmp140,
-	ldr	r0, [r2, r0, asl #2]	@ D.56041, s_pstVfmwChan
+	movw	r3, #:lower16:253128	@ tmp140,
+	movt	r3, #:upper16:253128	@ tmp140,
+	ldr	r0, [r2, r0, asl #2]	@ D.56062, s_pstVfmwChan
 	ldr	r3, [r0, r3]	@ <variable>.stSynCtx.eVidStd, <variable>.stSynCtx.eVidStd
 	cmp	r3, #2	@ <variable>.stSynCtx.eVidStd,
 	beq	.L198	@,
@@ -1427,18 +1427,18 @@ VCTRL_GetImageHeight:
 	cmp	r3, #0	@ <variable>.stSynCtx.eVidStd,
 	movne	r0, #0	@ uImageHeight,
 	ldmnefd	sp, {fp, sp, pc}	@
-	add	r1, r0, #250880	@, D.56041,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.56062,
+	add	r0, r1, #208	@,,
 	bl	H264DEC_GetImageHeight	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L199:
-	add	ip, r0, #250880	@, D.56041,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.56062,
+	add	r0, ip, #208	@,,
 	bl	HEVCDEC_GetImageHeight	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L198:
-	add	r0, r0, #250880	@, D.56041,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.56062,
+	add	r0, r0, #208	@,,
 	bl	MPEG4DEC_GetImageHeight	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1462,9 +1462,9 @@ VCTRL_GetImageWidth:
 	bl	__gnu_mcount_nc
 	movw	r2, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp139,
-	movw	r3, #:lower16:251592	@ tmp140,
-	movt	r3, #:upper16:251592	@ tmp140,
-	ldr	r0, [r2, r0, asl #2]	@ D.56022, s_pstVfmwChan
+	movw	r3, #:lower16:253128	@ tmp140,
+	movt	r3, #:upper16:253128	@ tmp140,
+	ldr	r0, [r2, r0, asl #2]	@ D.56043, s_pstVfmwChan
 	ldr	r3, [r0, r3]	@ <variable>.stSynCtx.eVidStd, <variable>.stSynCtx.eVidStd
 	cmp	r3, #2	@ <variable>.stSynCtx.eVidStd,
 	beq	.L205	@,
@@ -1473,18 +1473,18 @@ VCTRL_GetImageWidth:
 	cmp	r3, #0	@ <variable>.stSynCtx.eVidStd,
 	movne	r0, #0	@ uImageWidth,
 	ldmnefd	sp, {fp, sp, pc}	@
-	add	r1, r0, #250880	@, D.56022,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.56043,
+	add	r0, r1, #208	@,,
 	bl	H264DEC_GetImageWidth	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L206:
-	add	ip, r0, #250880	@, D.56022,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.56043,
+	add	r0, ip, #208	@,,
 	bl	HEVCDEC_GetImageWidth	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L205:
-	add	r0, r0, #250880	@, D.56022,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.56043,
+	add	r0, r0, #208	@,,
 	bl	MPEG4DEC_GetImageWidth	@
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
@@ -1513,8 +1513,8 @@ VCTRL_CloseHardware:
 	mov	r4, r2	@ bpd_need_flag, ivtmp.1535
 	mov	r0, r2	@ vdm_need_flag, ivtmp.1535
 .L217:
-	ldr	r3, [r6, r2]	@ D.55522, s_pstVfmwChan
-	cmp	r3, #0	@ D.55522,
+	ldr	r3, [r6, r2]	@ D.55543, s_pstVfmwChan
+	cmp	r3, #0	@ D.55543,
 	beq	.L210	@,
 	cmp	r0, #0	@ vdm_need_flag,
 	ldr	r1, [r3, #552]	@ eVidStd, <variable>.eVidStd
@@ -1552,10 +1552,10 @@ VCTRL_CloseHardware:
 	bne	.L218	@,
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp234,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp234,
-	ldr	r3, [r3, #4]	@ D.55583, g_vdm_hal_fun_ptr.pfun_VDMDRV_CloseHardware
-	cmp	r3, #0	@ D.55583,
+	ldr	r3, [r3, #4]	@ D.55604, g_vdm_hal_fun_ptr.pfun_VDMDRV_CloseHardware
+	cmp	r3, #0	@ D.55604,
 	beq	.L229	@,
-	blx	r3	@ D.55583
+	blx	r3	@ D.55604
 .L220:
 	movw	r0, #:lower16:g_ScdDrvParam	@ tmp236,
 	movt	r0, #:upper16:g_ScdDrvParam	@ tmp236,
@@ -1566,20 +1566,20 @@ VCTRL_CloseHardware:
 	bne	.L221	@,
 	movw	lr, #:lower16:g_vdm_hal_fun_ptr	@ tmp238,
 	movt	lr, #:upper16:g_vdm_hal_fun_ptr	@ tmp238,
-	ldr	r3, [lr, #12]	@ D.55593, g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware
-	cmp	r3, #0	@ D.55593,
+	ldr	r3, [lr, #12]	@ D.55614, g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware
+	cmp	r3, #0	@ D.55614,
 	beq	.L230	@,
 	mov	r0, r5	@, dsp_need_flag
-	blx	r3	@ D.55593
+	blx	r3	@ D.55614
 .L221:
 	cmp	r4, #0	@ bpd_need_flag,
 	ldmnefd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	movw	ip, #:lower16:g_vdm_hal_fun_ptr	@ tmp240,
 	movt	ip, #:upper16:g_vdm_hal_fun_ptr	@ tmp240,
-	ldr	r3, [ip, #28]	@ D.55600, g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware
-	cmp	r3, #0	@ D.55600,
+	ldr	r3, [ip, #28]	@ D.55621, g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware
+	cmp	r3, #0	@ D.55621,
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
-	blx	r3	@ D.55600
+	blx	r3	@ D.55621
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L227:
 	ldr	r4, [r3, #16]	@ <variable>.s32IsRun, <variable>.s32IsRun
@@ -1661,23 +1661,23 @@ VCTRL_OpenHardware:
 	bhi	.L331	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp585,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp585,
-	ldr	r0, [r4, r0, asl #2]	@ D.55432, s_pstVfmwChan
-	cmp	r0, #0	@ D.55432,
+	ldr	r0, [r4, r0, asl #2]	@ D.55453, s_pstVfmwChan
+	cmp	r0, #0	@ D.55453,
 	beq	.L332	@,
 	ldr	r3, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
 	bne	.L236	@,
-	ldr	r3, [r0, #552]	@ D.55440, <variable>.eVidStd
-	cmp	r3, #19	@ D.55440,
+	ldr	r3, [r0, #552]	@ D.55461, <variable>.eVidStd
+	cmp	r3, #19	@ D.55461,
 	beq	.L236	@,
-	cmp	r3, #7	@ D.55440,
-	cmpne	r3, #4	@, D.55440,
+	cmp	r3, #7	@ D.55461,
+	cmpne	r3, #4	@, D.55461,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
-	cmp	r3, #14	@ D.55440,
-	cmpne	r3, #18	@, D.55440,
+	cmp	r3, #14	@ D.55461,
+	cmpne	r3, #18	@, D.55461,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
-	ldr	r3, [r4, #0]	@ D.56205, s_pstVfmwChan
-	cmp	r3, #0	@ D.56205,
+	ldr	r3, [r4, #0]	@ D.56226, s_pstVfmwChan
+	cmp	r3, #0	@ D.56226,
 	beq	.L238	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #0	@ <variable>.s32IsOpen,
@@ -1728,15 +1728,15 @@ VCTRL_OpenHardware:
 	ldr	r1, [r2, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	cmp	r1, #0	@ <variable>.s32Priority,
 	beq	.L240	@,
-	ldr	r2, [r2, #552]	@ D.56200, <variable>.eVidStd
-	cmp	r2, #19	@ D.56200,
+	ldr	r2, [r2, #552]	@ D.56221, <variable>.eVidStd
+	cmp	r2, #19	@ D.56221,
 	beq	.L240	@,
-	cmp	r2, #4	@ D.56200,
-	cmpne	r2, #7	@, D.56200,
+	cmp	r2, #4	@ D.56221,
+	cmpne	r2, #7	@, D.56221,
 	beq	.L240	@,
-	cmp	r2, #14	@ D.56200,
+	cmp	r2, #14	@ D.56221,
 	beq	.L240	@,
-	cmp	r2, #18	@ D.56200,
+	cmp	r2, #18	@ D.56221,
 	addne	r3, r3, #1	@ activeChanNum, activeChanNum,
 .L240:
 	ldr	r2, [r4, #8]	@ temp.1594, s_pstVfmwChan
@@ -2243,8 +2243,8 @@ VCTRL_OpenHardware:
 	cmp	r1, #0	@ tmp557,
 	movne	r3, #1	@ dsp_need_flag,
 .L315:
-	ldr	r1, [r4, #60]	@ D.55455, s_pstVfmwChan
-	cmp	r1, #0	@ D.55455,
+	ldr	r1, [r4, #60]	@ D.55476, s_pstVfmwChan
+	cmp	r1, #0	@ D.55476,
 	beq	.L319	@,
 	ldr	r0, [r1, #552]	@ eVidStd, <variable>.eVidStd
 	cmp	r0, #0	@ eVidStd,
@@ -2279,10 +2279,10 @@ VCTRL_OpenHardware:
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
 	movw	ip, #:lower16:g_vdm_hal_fun_ptr	@ tmp575,
 	movt	ip, #:upper16:g_vdm_hal_fun_ptr	@ tmp575,
-	ldr	r3, [ip, #24]	@ D.55496, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
-	cmp	r3, #0	@ D.55496,
+	ldr	r3, [ip, #24]	@ D.55517, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
+	cmp	r3, #0	@ D.55517,
 	ldmeqfd	sp, {r4, r5, fp, sp, pc}	@
-	blx	r3	@ D.55496
+	blx	r3	@ D.55517
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L260:
 	ldr	r3, [r3, #1268]	@ <variable>.stSynExtraData.s32LowdlyEnable, <variable>.stSynExtraData.s32LowdlyEnable
@@ -2395,23 +2395,23 @@ VCTRL_OpenHardware:
 .L334:
 	movw	lr, #:lower16:g_vdm_hal_fun_ptr	@ tmp422,
 	movt	lr, #:upper16:g_vdm_hal_fun_ptr	@ tmp422,
-	ldr	r3, [lr, #0]	@ D.55469, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
-	cmp	r3, #0	@ D.55469,
+	ldr	r3, [lr, #0]	@ D.55490, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
+	cmp	r3, #0	@ D.55490,
 	beq	.L335	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.55469
+	blx	r3	@ D.55490
 .L258:
 	movw	r2, #:lower16:g_pstRegCrg	@ tmp584,
 	movt	r2, #:upper16:g_pstRegCrg	@ tmp584,
 	mov	ip, #25	@ tmp425,
 	ldr	r1, [r2, #0]	@ g_pstRegCrg.886, g_pstRegCrg
-	ldr	lr, [r1, #120]	@ D.55475, <variable>.PERI_CRG30.u32
+	ldr	lr, [r1, #120]	@ D.55496, <variable>.PERI_CRG30.u32
 	bfi	lr, ip, #12, #5	@ u32TmpValue, tmp425,,
 	bfc	lr, #17, #1	@ u32TmpValue,,
 	str	lr, [r1, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	ldr	r3, [r2, #0]	@ g_pstRegCrg.1574, g_pstRegCrg
-	ldr	r0, [r3, #120]	@ D.55477, <variable>.PERI_CRG30.u32
-	orr	ip, r0, #131072	@ u32TmpValue, D.55477,
+	ldr	r0, [r3, #120]	@ D.55498, <variable>.PERI_CRG30.u32
+	orr	ip, r0, #131072	@ u32TmpValue, D.55498,
 	str	ip, [r3, #120]	@ u32TmpValue, <variable>.PERI_CRG30.u32
 	b	.L256	@
 .L332:
@@ -2421,7 +2421,7 @@ VCTRL_OpenHardware:
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L335:
-	mov	r0, r3	@, D.55469
+	mov	r0, r3	@, D.55490
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #10132	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -2523,8 +2523,8 @@ VCTRL_SetLastFrameState:
 	bhi	.L359	@,
 	movw	r2, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp138,
-	ldr	r3, [r2, r0, asl #2]	@ D.54351, s_pstVfmwChan
-	cmp	r3, #0	@ D.54351,
+	ldr	r3, [r2, r0, asl #2]	@ D.54372, s_pstVfmwChan
+	cmp	r3, #0	@ D.54372,
 	strne	r1, [r3, #344]	@ eState, <variable>.eLastFrameState
 	ldmfd	sp, {fp, sp, pc}	@
 .L359:
@@ -2631,8 +2631,8 @@ VCTRL_SetLastFrameIdPlus2:
 	bhi	.L371	@,
 	movw	r2, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp138,
-	ldr	r3, [r2, r0, asl #2]	@ D.54339, s_pstVfmwChan
-	cmp	r3, #0	@ D.54339,
+	ldr	r3, [r2, r0, asl #2]	@ D.54360, s_pstVfmwChan
+	cmp	r3, #0	@ D.54360,
 	strne	r1, [r3, #340]	@ Value, <variable>.s32LastFrameIdPlus2
 	ldmfd	sp, {fp, sp, pc}	@
 .L371:
@@ -2667,10 +2667,10 @@ VCTRL_GetLastFrameIdPlus2:
 	bhi	.L377	@,
 	movw	r1, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r3, [r1, r0, asl #2]	@ D.54327, s_pstVfmwChan
-	cmp	r3, #0	@ D.54327,
-	mvneq	r0, #0	@ D.54325,
-	ldrne	r0, [r3, #340]	@ D.54325, <variable>.s32LastFrameIdPlus2
+	ldr	r3, [r1, r0, asl #2]	@ D.54348, s_pstVfmwChan
+	cmp	r3, #0	@ D.54348,
+	mvneq	r0, #0	@ D.54346,
+	ldrne	r0, [r3, #340]	@ D.54346, <variable>.s32LastFrameIdPlus2
 	ldmfd	sp, {fp, sp, pc}	@
 .L377:
 	mov	r0, #0	@,
@@ -2680,7 +2680,7 @@ VCTRL_GetLastFrameIdPlus2:
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.54325,
+	mvn	r0, #0	@ D.54346,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetLastFrameIdPlus2, .-VCTRL_GetLastFrameIdPlus2
@@ -2776,20 +2776,20 @@ VCTRL_GetChanCapLevel:
 	bhi	.L389	@,
 	movw	r1, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r3, [r1, r0, asl #2]	@ D.53787, s_pstVfmwChan
-	cmp	r3, #0	@ D.53787,
-	moveq	r0, #33	@ D.53785,
-	ldrne	r0, [r3, #40]	@ D.53785, <variable>.eChanCapLevel
+	ldr	r3, [r1, r0, asl #2]	@ D.53800, s_pstVfmwChan
+	cmp	r3, #0	@ D.53800,
+	moveq	r0, #33	@ D.53798,
+	ldrne	r0, [r3, #40]	@ D.53798, <variable>.eChanCapLevel
 	ldmfd	sp, {fp, sp, pc}	@
 .L389:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7496	@,
+	movw	r2, #7495	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53785,
+	mvn	r0, #0	@ D.53798,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanCapLevel, .-VCTRL_GetChanCapLevel
@@ -2814,29 +2814,29 @@ VCTRL_GetChanHeight:
 	bhi	.L395	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r0, [r3, r0, asl #2]	@ D.53775, s_pstVfmwChan
-	cmp	r0, #0	@ D.53775,
+	ldr	r0, [r3, r0, asl #2]	@ D.53788, s_pstVfmwChan
+	cmp	r0, #0	@ D.53788,
 	beq	.L396	@,
-	ldr	r0, [r0, #1308]	@ D.53773, <variable>.stSynExtraData.stChanOption.s32MaxHeight
+	ldr	r0, [r0, #1308]	@ D.53786, <variable>.stSynExtraData.stChanOption.s32MaxHeight
 	ldmfd	sp, {fp, sp, pc}	@
 .L395:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	mov	r2, #7488	@,
+	movw	r2, #7487	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53773,
+	mvn	r0, #0	@ D.53786,
 	ldmfd	sp, {fp, sp, pc}	@
 .L396:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7489	@,
+	mov	r2, #7488	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53773,
+	mvn	r0, #0	@ D.53786,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanHeight, .-VCTRL_GetChanHeight
@@ -2861,29 +2861,29 @@ VCTRL_GetChanWidth:
 	bhi	.L402	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp139,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp139,
-	ldr	r0, [r3, r0, asl #2]	@ D.53763, s_pstVfmwChan
-	cmp	r0, #0	@ D.53763,
+	ldr	r0, [r3, r0, asl #2]	@ D.53776, s_pstVfmwChan
+	cmp	r0, #0	@ D.53776,
 	beq	.L403	@,
-	ldr	r0, [r0, #1304]	@ D.53761, <variable>.stSynExtraData.stChanOption.s32MaxWidth
+	ldr	r0, [r0, #1304]	@ D.53774, <variable>.stSynExtraData.stChanOption.s32MaxWidth
 	ldmfd	sp, {fp, sp, pc}	@
 .L402:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7480	@,
+	movw	r2, #7479	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53761,
+	mvn	r0, #0	@ D.53774,
 	ldmfd	sp, {fp, sp, pc}	@
 .L403:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7481	@,
+	movw	r2, #7480	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53761,
+	mvn	r0, #0	@ D.53774,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanWidth, .-VCTRL_GetChanWidth
@@ -2980,10 +2980,10 @@ VCTRL_GetChanMemSize:
 	bl	__gnu_mcount_nc
 	mov	sl, r0, asl #3	@ tmp317, eCapLevel,
 	rsb	r8, r0, sl	@ tmp169, eCapLevel, tmp317
-	sub	r3, r0, #18	@ D.56216, eCapLevel,
+	sub	r3, r0, #18	@ D.56237, eCapLevel,
 	movw	r6, #:lower16:CapItem	@ tmp316,
 	movt	r6, #:upper16:CapItem	@ tmp316,
-	cmp	r3, #7	@ D.56216,
+	cmp	r3, #7	@ D.56237,
 	add	r4, r6, r8, asl #2	@, tmp171, tmp316, tmp169,
 	str	r2, [fp, #-996]	@ ScdMemSize, %sfp
 	mov	r5, r0	@ eCapLevel, eCapLevel
@@ -2992,7 +2992,7 @@ VCTRL_GetChanMemSize:
 	movtls	r2, #:upper16:.LANCHOR1	@ tmp197,
 	ldr	r0, [r4, #20]	@, CapItem
 	ldr	ip, [r4, #8]	@ TempPmv, CapItem
-	addls	r3, r2, r3, asl #2	@, tmp200, tmp197, D.56216,
+	addls	r3, r2, r3, asl #2	@, tmp200, tmp197, D.56237,
 	ldr	r9, [r4, #16]	@ TempMiddleFrame, CapItem
 	movw	r4, #:lower16:.LANCHOR0	@ tmp318,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp318,
@@ -3010,10 +3010,10 @@ VCTRL_GetChanMemSize:
 	movgt	r7, #0	@ extra_ref_tmp,
 	bgt	.L417	@,
 	ldr	r7, [r4, #68]	@ extra_ref_tmp, extra_ref
-	add	r2, r3, r7	@ D.52969, s32MaxRefFrameNum, extra_ref_tmp
-	cmp	r2, #16	@ D.52969,
-	addgt	r7, r7, #16	@ D.52972, extra_ref_tmp,
-	rsbgt	r7, r2, r7	@ extra_ref_tmp, D.52969, D.52972
+	add	r2, r3, r7	@ D.52982, s32MaxRefFrameNum, extra_ref_tmp
+	cmp	r2, #16	@ D.52982,
+	addgt	r7, r7, #16	@ D.52985, extra_ref_tmp,
+	rsbgt	r7, r2, r7	@ extra_ref_tmp, D.52982, D.52985
 .L417:
 	add	r3, r7, ip	@ TempPmv.2075, extra_ref_tmp, TempPmv
 	ldr	r1, [r4, #72]	@, extra_disp
@@ -3027,14 +3027,14 @@ VCTRL_GetChanMemSize:
 	cmp	r5, #23	@ eCapLevel,
 	bhi	.L420	@,
 	ldr	ip, [fp, #-1000]	@, %sfp
-	add	r3, r7, ip	@ D.52975, extra_ref_tmp,
-	add	r2, r3, r8	@ TempMinFrame.2072, D.52975, TempMinFrame
-	add	r1, r3, r9	@ TempMiddleFrame.2073, D.52975, TempMiddleFrame
+	add	r3, r7, ip	@ D.52988, extra_ref_tmp,
+	add	r2, r3, r8	@ TempMinFrame.2072, D.52988, TempMinFrame
+	add	r1, r3, r9	@ TempMiddleFrame.2073, D.52988, TempMiddleFrame
 	cmp	r2, #0	@ TempMinFrame.2072,
 	cmpgt	r1, #0	@, TempMiddleFrame.2073,
 	ble	.L421	@,
 	ldr	r0, [fp, #-1008]	@, %sfp
-	add	lr, r3, r0	@ TempFluentFrame.2074, D.52975,
+	add	lr, r3, r0	@ TempFluentFrame.2074, D.52988,
 	cmp	lr, #0	@ TempFluentFrame.2074,
 	strgt	lr, [fp, #-1012]	@ TempFluentFrame.2074, %sfp
 	strgt	r1, [fp, #-1000]	@ TempMiddleFrame.2073, %sfp
@@ -3043,8 +3043,8 @@ VCTRL_GetChanMemSize:
 .L423:
 	movw	r7, #:lower16:g_vdm_hal_fun_ptr	@ tmp219,
 	movt	r7, #:upper16:g_vdm_hal_fun_ptr	@ tmp219,
-	ldr	ip, [r7, #48]	@ D.52993, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
-	cmp	ip, #0	@ D.52993,
+	ldr	ip, [r7, #48]	@ D.53006, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	ip, #0	@ D.53006,
 	beq	.L426	@,
 .L434:
 	rsb	r5, r5, sl	@ tmp223, eCapLevel, tmp317
@@ -3065,7 +3065,7 @@ VCTRL_GetChanMemSize:
 	movt	r4, #:upper16:CapItem	@ tmp220,
 	str	r9, [sp, #16]	@ tmp236,
 	add	r6, r6, r5, asl #2	@, tmp225, tmp316, tmp223,
-	blx	ip	@ D.52993
+	blx	ip	@ D.53006
 	subs	r3, r0, #0	@ ret,
 	bne	.L426	@,
 	ldr	r2, [fp, #-980]	@ MemArrange.TotalMemUsed, MemArrange.TotalMemUsed
@@ -3135,7 +3135,7 @@ VCTRL_GetChanMemSize:
 	cmp	r5, #32	@ eCapLevel,
 	bls	.L424	@,
 .L432:
-	mvn	r0, #0	@ D.53011,
+	mvn	r0, #0	@ D.53024,
 .L425:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -3160,16 +3160,16 @@ VCTRL_GetChanMemSize:
 	str	r9, [sp, #4]	@ TempMiddleFrame,
 	str	lr, [sp, #16]	@ tmp4,
 	bl	dprint_vfmw	@
-	ldr	ip, [r7, #48]	@ D.52993, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
-	cmp	ip, #0	@ D.52993,
+	ldr	ip, [r7, #48]	@ D.53006, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	ip, #0	@ D.53006,
 	bne	.L434	@,
 .L426:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC17	@,
-	movw	r2, #6197	@,
+	movw	r2, #6196	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53011,
+	mvn	r0, #0	@ D.53024,
 	b	.L425	@
 .L424:
 	ldr	r7, [fp, #-1008]	@, %sfp
@@ -3190,14 +3190,14 @@ VCTRL_GetChanMemSize:
 .L428:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC17	@,
-	movw	r2, #6216	@,
+	movw	r2, #6215	@,
 	movt	r1, #:upper16:.LC17	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53011,
+	mvn	r0, #0	@ D.53024,
 	b	.L425	@
 .L430:
 	movw	r1, #:lower16:.LC17	@,
-	movw	r2, #6235	@,
+	movw	r2, #6234	@,
 	movt	r1, #:upper16:.LC17	@,
 	mov	r0, #0	@,
 	bl	dprint_vfmw	@
@@ -3223,11 +3223,11 @@ VCTRL_GetChanMemSizeWithOption:
 	sub	sp, sp, #972	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	ip, #:lower16:4780712	@ tmp242,
+	movw	ip, #:lower16:4782920	@ tmp242,
 	cmp	r0, #26	@ eCapLevel,
-	movt	ip, #:upper16:4780712	@ tmp242,
-	movw	sl, #:lower16:11613576	@ tmp241,
-	movt	sl, #:upper16:11613576	@ tmp241,
+	movt	ip, #:upper16:4782920	@ tmp242,
+	movw	sl, #:lower16:11616216	@ tmp241,
+	movt	sl, #:upper16:11616216	@ tmp241,
 	movne	sl, ip	@ s32ChanCtxSize, tmp242
 	cmp	r3, #2	@ flag,
 	mov	r7, r0	@ eCapLevel, eCapLevel
@@ -3237,12 +3237,12 @@ VCTRL_GetChanMemSizeWithOption:
 	beq	.L438	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp165,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp165,
-	ldr	ip, [r1, #64]	@ D.52792, <variable>.s32DisplayFrameNum
+	ldr	ip, [r1, #64]	@ D.52805, <variable>.s32DisplayFrameNum
 	ldr	r9, [r3, #72]	@ extra_disp.643, extra_disp
-	ldr	r2, [r1, #36]	@ D.52790, <variable>.s32MaxRefFrameNum
+	ldr	r2, [r1, #36]	@ D.52803, <variable>.s32MaxRefFrameNum
 	ldr	r3, [r3, #68]	@ extra_ref.642, extra_ref
-	add	r6, r9, ip	@ TempDispNum, extra_disp.643, D.52792
-	add	r1, r3, r2	@ TempRefNum, extra_ref.642, D.52790
+	add	r6, r9, ip	@ TempDispNum, extra_disp.643, D.52805
+	add	r1, r3, r2	@ TempRefNum, extra_ref.642, D.52803
 	orrs	r0, r6, r1	@, TempDispNum, TempRefNum
 	bmi	.L466	@,
 	cmp	r1, #16	@ TempRefNum,
@@ -3257,17 +3257,17 @@ VCTRL_GetChanMemSizeWithOption:
 	cmp	r8, #0	@ tmp185,
 	bne	.L468	@,
 .L438:
-	ldr	r3, [r4, #4]	@ D.52811, <variable>.Purpose
-	cmp	r3, #2	@ D.52811,
+	ldr	r3, [r4, #4]	@ D.52824, <variable>.Purpose
+	cmp	r3, #2	@ D.52824,
 	bhi	.L469	@,
 	bne	.L444	@,
-	ldr	r3, [r4, #68]	@ D.52819, <variable>.s32SlotWidth
-	cmp	r3, #0	@ D.52819,
+	ldr	r3, [r4, #68]	@ D.52832, <variable>.s32SlotWidth
+	cmp	r3, #0	@ D.52832,
 	beq	.L445	@,
-	ldr	r2, [r4, #72]	@ D.52821, <variable>.s32SlotHeight
-	cmp	r2, #0	@ D.52821,
+	ldr	r2, [r4, #72]	@ D.52834, <variable>.s32SlotHeight
+	cmp	r2, #0	@ D.52834,
 	beq	.L445	@,
-	mul	r3, r2, r3	@ tmp189, D.52821, D.52819
+	mul	r3, r2, r3	@ tmp189, D.52834, D.52832
 	ldr	r1, [r4, #64]	@ <variable>.s32DisplayFrameNum, <variable>.s32DisplayFrameNum
 	mov	r0, #0	@ tmp194,
 	stmib	r5, {r0, sl}	@ phole stm
@@ -3287,26 +3287,26 @@ VCTRL_GetChanMemSizeWithOption:
 	str	r0, [r4, #36]	@ tmp178, <variable>.s32MaxRefFrameNum
 	b	.L442	@
 .L444:
-	cmp	r3, #1	@ D.52811,
-	mvnne	r0, #0	@ D.52800,
+	cmp	r3, #1	@ D.52824,
+	mvnne	r0, #0	@ D.52813,
 	bne	.L440	@
 .L447:
 	ldr	r0, [r4, #36]	@ temp.2118, <variable>.s32MaxRefFrameNum
 	cmp	r0, #0	@ temp.2118,
 	blt	.L448	@,
-	ldr	r2, [r4, #12]	@ D.52834, <variable>.s32MaxWidth
-	cmp	r2, #31	@ D.52834,
+	ldr	r2, [r4, #12]	@ D.52847, <variable>.s32MaxWidth
+	cmp	r2, #31	@ D.52847,
 	ble	.L448	@,
-	ldr	r3, [r4, #16]	@ D.52836, <variable>.s32MaxHeight
-	cmp	r3, #31	@ D.52836,
+	ldr	r3, [r4, #16]	@ D.52849, <variable>.s32MaxHeight
+	cmp	r3, #31	@ D.52849,
 	ble	.L448	@,
 	ldr	ip, [r4, #60]	@ <variable>.s32SCDBufSize, <variable>.s32SCDBufSize
 	cmp	ip, #262144	@ <variable>.s32SCDBufSize,
 	blt	.L448	@,
-	ldr	r1, [r4, #48]	@ D.52840, <variable>.s32SupportH264
-	cmp	r1, #1	@ D.52840,
+	ldr	r1, [r4, #48]	@ D.52853, <variable>.s32SupportH264
+	cmp	r1, #1	@ D.52853,
 	beq	.L470	@,
-	cmp	r1, #2	@ D.52840,
+	cmp	r1, #2	@ D.52853,
 	beq	.L471	@,
 .L450:
 	ldr	r6, [r4, #44]	@ <variable>.s32SupportBFrame, <variable>.s32SupportBFrame
@@ -3319,13 +3319,13 @@ VCTRL_GetChanMemSizeWithOption:
 .L452:
 	movw	r1, #:lower16:g_vdm_hal_fun_ptr	@ tmp206,
 	movt	r1, #:upper16:g_vdm_hal_fun_ptr	@ tmp206,
-	sub	r6, r7, #27	@ D.52858, eCapLevel,
+	sub	r6, r7, #27	@ D.52871, eCapLevel,
 	ldr	r8, [r4, #64]	@ temp.2123, <variable>.s32DisplayFrameNum
-	cmp	r6, #6	@ D.52858,
-	ldr	ip, [r1, #48]	@ D.52863, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
+	cmp	r6, #6	@ D.52871,
+	ldr	ip, [r1, #48]	@ D.52876, g_vdm_hal_fun_ptr.pfun_VDMHAL_ArrangeMem
 	mvncc	r1, #1	@, eFlag,
 	mvncs	r1, #0	@, eFlag,
-	cmp	ip, #0	@ D.52863,
+	cmp	ip, #0	@ D.52876,
 	beq	.L455	@,
 	add	r0, r0, r8	@ tmp207, temp.2118, temp.2123
 	str	lr, [sp, #0]	@ PmvNum,
@@ -3338,15 +3338,15 @@ VCTRL_GetChanMemSizeWithOption:
 	mvn	r1, #-2147483648	@,
 	str	r0, [sp, #8]	@ tmp209,
 	mov	r0, #1	@,
-	blx	ip	@ D.52863
+	blx	ip	@ D.52876
 	cmp	r0, #0	@,
 	bne	.L455	@,
 	ldr	ip, [fp, #-980]	@ MemArrange.TotalMemUsed, MemArrange.TotalMemUsed
-	add	r3, ip, #16	@ D.52871, MemArrange.TotalMemUsed,
-	str	r3, [r5, #0]	@ D.52871, <variable>.VdhDetailMem
+	add	r3, ip, #16	@ D.52884, MemArrange.TotalMemUsed,
+	str	r3, [r5, #0]	@ D.52884, <variable>.VdhDetailMem
 	ldr	r2, [r4, #132]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
 	cmp	r2, #1	@ <variable>.u32DynamicFrameStoreAllocEn,
-	addne	r3, r3, #47616	@ tmp214, D.52871,
+	addne	r3, r3, #47616	@ tmp214, D.52884,
 	strne	r3, [r5, #0]	@ tmp214, <variable>.VdhDetailMem
 	ldreq	r3, [r4, #60]	@ <variable>.s32SCDBufSize, <variable>.s32SCDBufSize
 	ldrne	r3, [r4, #60]	@ <variable>.s32SCDBufSize, <variable>.s32SCDBufSize
@@ -3360,19 +3360,19 @@ VCTRL_GetChanMemSizeWithOption:
 	beq	.L459	@,
 	ldr	lr, [r4, #20]	@ <variable>.s32MaxSliceNum, <variable>.s32MaxSliceNum
 	movw	r1, #4060	@ tmp222,
-	ldr	r0, [r4, #28]	@ D.52888, <variable>.s32MaxSpsNum
+	ldr	r0, [r4, #28]	@ D.52901, <variable>.s32MaxSpsNum
 	mov	r3, #4000	@ tmp224,
-	ldr	r2, [r4, #32]	@ D.52891, <variable>.s32MaxPpsNum
+	ldr	r2, [r4, #32]	@ D.52904, <variable>.s32MaxPpsNum
 	mov	ip, #2208	@ tmp227,
-	mul	r1, r1, lr	@ D.52887, tmp222, <variable>.s32MaxSliceNum
-	mla	lr, r3, r0, r1	@ tmp225, tmp224, D.52888, D.52887
-	mla	r3, ip, r2, lr	@ TempAddMem, tmp227, D.52891, tmp225
+	mul	r1, r1, lr	@ D.52900, tmp222, <variable>.s32MaxSliceNum
+	mla	lr, r3, r0, r1	@ tmp225, tmp224, D.52901, D.52900
+	mla	r3, ip, r2, lr	@ TempAddMem, tmp227, D.52904, tmp225
 	cmp	r3, #0	@ TempAddMem,
 	movcc	r3, #0	@ TempAddMem,
 	cmp	r7, #26	@ eCapLevel,
 	beq	.L472	@,
 .L459:
-	cmp	r6, #5	@ D.52858,
+	cmp	r6, #5	@ D.52871,
 	bhi	.L460	@,
 	movw	lr, #:lower16:1718176	@ tmp234,
 	movt	lr, #:upper16:1718176	@ tmp234,
@@ -3380,7 +3380,7 @@ VCTRL_GetChanMemSizeWithOption:
 	movcc	r3, lr	@ TempAddMem, tmp234
 .L460:
 	add	r3, r3, sl	@ tmp235, TempAddMem, s32ChanCtxSize
-	mov	r0, #0	@ D.52800,
+	mov	r0, #0	@ D.52813,
 	str	r3, [r5, #8]	@ tmp235, <variable>.ChanCtxDetailMem
 	b	.L440	@
 .L445:
@@ -3388,30 +3388,30 @@ VCTRL_GetChanMemSizeWithOption:
 	movw	r1, #:lower16:.LC22	@,
 	movt	r1, #:upper16:.LC22	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 .L468:
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC20	@,
 	movt	r1, #:upper16:.LC20	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 .L469:
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC21	@,
 	movt	r1, #:upper16:.LC21	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 .L466:
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC18	@,
 	movt	r1, #:upper16:.LC18	@,
-	str	ip, [sp, #0]	@ D.52792,
+	str	ip, [sp, #0]	@ D.52805,
 	str	r9, [sp, #4]	@ extra_disp.643,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 .L470:
 	ldr	r1, [r4, #20]	@ <variable>.s32MaxSliceNum, <variable>.s32MaxSliceNum
@@ -3429,7 +3429,7 @@ VCTRL_GetChanMemSizeWithOption:
 	movw	r1, #:lower16:.LC23	@,
 	movt	r1, #:upper16:.LC23	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 .L471:
 	ldr	ip, [r4, #20]	@ <variable>.s32MaxSliceNum, <variable>.s32MaxSliceNum
@@ -3441,19 +3441,19 @@ VCTRL_GetChanMemSizeWithOption:
 	b	.L448	@
 .L472:
 	movw	ip, #3992	@ tmp229,
-	mla	r1, ip, r0, r1	@ tmp230, tmp229, D.52888, D.52887
+	mla	r1, ip, r0, r1	@ tmp230, tmp229, D.52901, D.52900
 	mov	r0, #2240	@ tmp232,
-	mla	r2, r0, r2, r1	@ tmp233, tmp232, D.52891, tmp230
+	mla	r2, r0, r2, r1	@ tmp233, tmp232, D.52904, tmp230
 	cmp	r3, r2	@ TempAddMem, tmp233
 	movcc	r3, r2	@ TempAddMem, tmp233
 	b	.L459	@
 .L455:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC24	@,
-	movw	r2, #5966	@,
+	movw	r2, #5965	@,
 	movt	r1, #:upper16:.LC24	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52800,
+	mvn	r0, #0	@ D.52813,
 	b	.L440	@
 	.fnend
 	.size	VCTRL_GetChanMemSizeWithOption, .-VCTRL_GetChanMemSizeWithOption
@@ -3478,8 +3478,8 @@ VCTRL_ConfigFFFBSpeed:
 	bhi	.L480	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r3, [r3, r0, asl #2]	@ D.52457, s_pstVfmwChan
-	cmp	r3, #0	@ D.52457,
+	ldr	r3, [r3, r0, asl #2]	@ D.52470, s_pstVfmwChan
+	cmp	r3, #0	@ D.52470,
 	beq	.L481	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #1	@ <variable>.s32IsOpen,
@@ -3487,48 +3487,48 @@ VCTRL_ConfigFFFBSpeed:
 	cmp	r1, #0	@ pArgs,
 	beq	.L483	@,
 	ldr	ip, [r1, #0]	@ tmp148,* pArgs
-	mov	r0, #0	@ D.52455,
+	mov	r0, #0	@ D.52468,
 	str	ip, [r3, #1252]	@ tmp148, <variable>.stSynExtraData.s32FastForwardBackwardSpeed
 	ldmfd	sp, {fp, sp, pc}	@
 .L482:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5028	@,
+	movw	r2, #5027	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC26	@,
 	movt	r3, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52455,
+	mvn	r0, #0	@ D.52468,
 	ldmfd	sp, {fp, sp, pc}	@
 .L480:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5026	@,
+	movw	r2, #5025	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52455,
+	mvn	r0, #0	@ D.52468,
 	ldmfd	sp, {fp, sp, pc}	@
 .L481:
-	mov	r0, r3	@, D.52457
+	mov	r0, r3	@, D.52470
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5027	@,
+	movw	r2, #5026	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC25	@,
 	movt	r3, #:upper16:.LC25	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52455,
+	mvn	r0, #0	@ D.52468,
 	ldmfd	sp, {fp, sp, pc}	@
 .L483:
 	mov	r0, r1	@, pArgs
-	movw	r2, #5029	@,
+	movw	r2, #5028	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC27	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC27	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52455,
+	mvn	r0, #0	@ D.52468,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_ConfigFFFBSpeed, .-VCTRL_ConfigFFFBSpeed
@@ -3553,46 +3553,46 @@ VCTRL_GetChanMemInfo:
 	bhi	.L490	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp141,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp141,
-	ldr	r0, [r3, r0, asl #2]	@ D.52222, s_pstVfmwChan
-	cmp	r0, #0	@ D.52222,
+	ldr	r0, [r3, r0, asl #2]	@ D.52235, s_pstVfmwChan
+	cmp	r0, #0	@ D.52235,
 	beq	.L491	@,
 	cmp	r1, #0	@ pstMemRec,
 	bne	.L492	@,
 .L488:
-	mvn	r0, #0	@ D.52220,
+	mvn	r0, #0	@ D.52233,
 	ldmfd	sp, {fp, sp, pc}	@
 .L491:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4643	@,
+	movw	r2, #4642	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52220,
+	mvn	r0, #0	@ D.52233,
 	ldmfd	sp, {fp, sp, pc}	@
 .L492:
 	ldr	r2, [r0, #200]	@ <variable>.s32OneChanMem, <variable>.s32OneChanMem
 	cmp	r2, #1	@ <variable>.s32OneChanMem,
 	bne	.L488	@,
-	ldr	r3, [r0, #208]	@ D.52234, <variable>.stChanMem.VirAddr
+	ldr	r3, [r0, #208]	@ D.52247, <variable>.stChanMem.VirAddr
 	ldr	ip, [r0, #216]	@ <variable>.stChanMem.Length, <variable>.stChanMem.Length
 	ldr	r2, [r0, #212]	@ <variable>.stChanMem.PhyAddr, <variable>.stChanMem.PhyAddr
-	cmp	r3, #0	@ D.52234,
-	str	r3, [r1, #4]	@ D.52234, <variable>.VirAddr
+	cmp	r3, #0	@ D.52247,
+	str	r3, [r1, #4]	@ D.52247, <variable>.VirAddr
 	str	ip, [r1, #12]	@ <variable>.stChanMem.Length, <variable>.Length
-	movne	r0, #0	@ D.52220,
+	movne	r0, #0	@ D.52233,
 	str	r2, [r1, #8]	@ <variable>.stChanMem.PhyAddr, <variable>.PhyAddr
 	ldmnefd	sp, {fp, sp, pc}	@
 	b	.L488	@
 .L490:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4642	@,
+	movw	r2, #4641	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC28	@,
 	movt	r3, #:upper16:.LC28	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52220,
+	mvn	r0, #0	@ D.52233,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanMemInfo, .-VCTRL_GetChanMemInfo
@@ -3617,8 +3617,8 @@ VCTRL_GetVidStd:
 	bhi	.L494	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r3, [r3, r0, asl #2]	@ D.52120, s_pstVfmwChan
-	cmp	r3, #0	@ D.52120,
+	ldr	r3, [r3, r0, asl #2]	@ D.52133, s_pstVfmwChan
+	cmp	r3, #0	@ D.52133,
 	beq	.L494	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #1	@ <variable>.s32IsOpen,
@@ -3627,20 +3627,20 @@ VCTRL_GetVidStd:
 	movw	r1, #:lower16:.LC30	@,
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC30	@,
-	movw	r2, #4463	@,
+	movw	r2, #4462	@,
 	bl	dprint_vfmw	@
-	mov	r0, #19	@ D.52122,
+	mov	r0, #19	@ D.52135,
 	ldmfd	sp, {fp, sp, pc}	@
 .L494:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC29	@,
-	movw	r2, #4456	@,
+	movw	r2, #4455	@,
 	movt	r1, #:upper16:.LC29	@,
 	bl	dprint_vfmw	@
-	mov	r0, #19	@ D.52122,
+	mov	r0, #19	@ D.52135,
 	ldmfd	sp, {fp, sp, pc}	@
 .L497:
-	ldr	r0, [r3, #552]	@ D.52122, <variable>.eVidStd
+	ldr	r0, [r3, #552]	@ D.52135, <variable>.eVidStd
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetVidStd, .-VCTRL_GetVidStd
@@ -3668,7 +3668,7 @@ VCTRL_CheckChanWH:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp143,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp143,
 	ldr	ip, [r2, #0]	@ g_chipID.528, g_chipID
-	ldr	r3, [r3, r0, asl #2]	@ D.51372, s_pstVfmwChan
+	ldr	r3, [r3, r0, asl #2]	@ D.51385, s_pstVfmwChan
 	cmp	ip, #12	@ g_chipID.528,
 	ldr	r0, [r3, #1308]	@ ChanMaxHeight, <variable>.stSynExtraData.stChanOption.s32MaxHeight
 	ldr	r3, [r3, #1304]	@ ChanMaxWidth, <variable>.stSynExtraData.stChanOption.s32MaxWidth
@@ -3681,14 +3681,14 @@ VCTRL_CheckChanWH:
 	ldr	r2, [r2, #0]	@ g_ChipMaxWidth.2226, g_ChipMaxWidth
 	cmp	r3, r2	@ ChanMaxWidth, g_ChipMaxWidth.2226
 	ble	.L511	@,
-	ldr	r3, [r1, #0]	@ D.51386, <variable>.eVidStd
-	cmp	r3, #13	@ D.51386,
-	cmpne	r3, #0	@, D.51386,
+	ldr	r3, [r1, #0]	@ D.51399, <variable>.eVidStd
+	cmp	r3, #13	@ D.51399,
+	cmpne	r3, #0	@, D.51399,
 	beq	.L505	@,
 .L516:
-	cmp	r3, #15	@ D.51386,
+	cmp	r3, #15	@ D.51399,
 	beq	.L505	@,
-	cmp	r3, #18	@ D.51386,
+	cmp	r3, #18	@ D.51399,
 	bne	.L512	@,
 .L505:
 	mov	r0, #0	@ ret,
@@ -3748,9 +3748,9 @@ VCTRL_CheckChanWH:
 	ldr	r3, [r3, #0]	@ g_ChipMaxHeight, g_ChipMaxHeight
 	cmp	r0, r3	@ ChanMaxHeight, g_ChipMaxHeight
 	ble	.L505	@,
-	ldr	r3, [r1, #0]	@ D.51386, <variable>.eVidStd
-	cmp	r3, #13	@ D.51386,
-	cmpne	r3, #0	@, D.51386,
+	ldr	r3, [r1, #0]	@ D.51399, <variable>.eVidStd
+	cmp	r3, #13	@ D.51399,
+	cmpne	r3, #0	@, D.51399,
 	bne	.L516	@,
 	b	.L505	@
 .L512:
@@ -3788,7 +3788,7 @@ RefreshDecCore:
 	movw	r4, #:lower16:.LANCHOR0	@ tmp167,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp167,
 	mov	r5, r0	@ ChanID, ChanID
-	ldr	r3, [r4, r0, asl #2]	@ D.51250, s_pstVfmwChan
+	ldr	r3, [r4, r0, asl #2]	@ D.51263, s_pstVfmwChan
 	ldr	r2, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	ldr	ip, [r3, #1496]	@ eOldDecCore, <variable>.eDecCore
 	cmp	r2, #4	@ <variable>.eVidStd,
@@ -3810,13 +3810,13 @@ RefreshDecCore:
 	sub	ip, ip, #1	@ tmp152, eOldDecCore,
 	cmp	ip, #4	@ tmp152,
 	bhi	.L523	@,
-	ldr	r3, [r6, #80]	@ D.51259, g_SdecFunc.pfun_iMediaSoftDEC_Destroy
-	cmp	r3, #0	@ D.51259,
+	ldr	r3, [r6, #80]	@ D.51272, g_SdecFunc.pfun_iMediaSoftDEC_Destroy
+	cmp	r3, #0	@ D.51272,
 	beq	.L523	@,
-	add	r0, r0, #250880	@, prephitmp.2245,
+	add	r0, r0, #252928	@, prephitmp.2245,
 	str	r1, [fp, #-32]	@,
-	add	r0, r0, #720	@,,
-	blx	r3	@ D.51259
+	add	r0, r0, #208	@,,
+	blx	r3	@ D.51272
 	ldr	r0, [r6, r5, asl #2]	@ prephitmp.2245, s_pstVfmwChan
 	ldr	r1, [fp, #-32]	@,
 	ldr	r2, [r0, #1496]	@ prephitmp.2247, <variable>.eDecCore
@@ -3825,23 +3825,23 @@ RefreshDecCore:
 	cmp	r3, #4	@ tmp157,
 	bhi	.L522	@,
 	ldr	ip, [r0, #40]	@ <variable>.eChanCapLevel, <variable>.eChanCapLevel
-	movw	lr, #:lower16:251612	@ tmp158,
-	movt	lr, #:upper16:251612	@ tmp158,
+	movw	lr, #:lower16:253148	@ tmp158,
+	movt	lr, #:upper16:253148	@ tmp158,
 	movw	r2, #:lower16:.LANCHOR0	@ tmp160,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp160,
 	str	ip, [r0, lr]	@ <variable>.eChanCapLevel, <variable>.stSynCtx.unSyntax.stiMediaSoftCtx.eChanCapLevel
-	ldr	r3, [r4, #76]	@ D.51271, g_SdecFunc.pfun_iMediaSoftDEC_Create
-	cmp	r3, #0	@ D.51271,
+	ldr	r3, [r4, #76]	@ D.51284, g_SdecFunc.pfun_iMediaSoftDEC_Create
+	cmp	r3, #0	@ D.51284,
 	beq	.L524	@,
 	ldr	r2, [r2, r5, asl #2]	@ temp.2258, s_pstVfmwChan
-	add	r0, r2, #250880	@, temp.2258,
-	add	r0, r0, #720	@,,
+	add	r0, r2, #252928	@, temp.2258,
+	add	r0, r0, #208	@,,
 	ldr	r2, [r2, #552]	@, <variable>.eVidStd
-	blx	r3	@ D.51271
+	blx	r3	@ D.51284
 	cmp	r0, #0	@,
 	bne	.L524	@,
 .L522:
-	mov	r0, #0	@ D.51275,
+	mov	r0, #0	@ D.51288,
 .L525:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
@@ -3850,7 +3850,7 @@ RefreshDecCore:
 	movw	r1, #:lower16:.LC34	@,
 	movt	r1, #:upper16:.LC34	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51275,
+	mvn	r0, #0	@ D.51288,
 	b	.L525	@
 	.fnend
 	.size	RefreshDecCore, .-RefreshDecCore
@@ -3873,21 +3873,21 @@ VCTRL_GetSendStreamAgainFlag:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp137,
-	ldr	r0, [r3, r0, asl #2]	@ D.50273, s_pstVfmwChan
-	cmp	r0, #0	@ D.50273,
+	ldr	r0, [r3, r0, asl #2]	@ D.50286, s_pstVfmwChan
+	cmp	r0, #0	@ D.50286,
 	beq	.L532	@,
-	movw	r1, #:lower16:249300	@ tmp140,
-	movt	r1, #:upper16:249300	@ tmp140,
-	ldr	r0, [r0, r1]	@ D.50277, <variable>.s32SendStreamAgainFlag
+	movw	r1, #:lower16:250836	@ tmp140,
+	movt	r1, #:upper16:250836	@ tmp140,
+	ldr	r0, [r0, r1]	@ D.50290, <variable>.s32SendStreamAgainFlag
 	ldmfd	sp, {fp, sp, pc}	@
 .L532:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1076	@,
+	movw	r2, #1075	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50277,
+	mvn	r0, #0	@ D.50290,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetSendStreamAgainFlag, .-VCTRL_GetSendStreamAgainFlag
@@ -3910,23 +3910,23 @@ VCTRL_SetSendStreamAgainFlag:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp138,
-	ldr	r2, [r3, r0, asl #2]	@ D.50264, s_pstVfmwChan
-	cmp	r2, #0	@ D.50264,
+	ldr	r2, [r3, r0, asl #2]	@ D.50277, s_pstVfmwChan
+	cmp	r2, #0	@ D.50277,
 	beq	.L537	@,
-	movw	ip, #:lower16:249300	@ tmp141,
-	movt	ip, #:upper16:249300	@ tmp141,
-	mov	r0, #0	@ D.50268,
+	movw	ip, #:lower16:250836	@ tmp141,
+	movt	ip, #:upper16:250836	@ tmp141,
+	mov	r0, #0	@ D.50281,
 	str	r1, [r2, ip]	@ flag, <variable>.s32SendStreamAgainFlag
 	ldmfd	sp, {fp, sp, pc}	@
 .L537:
-	mov	r0, r2	@, D.50264
+	mov	r0, r2	@, D.50277
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1069	@,
+	movw	r2, #1068	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50268,
+	mvn	r0, #0	@ D.50281,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_SetSendStreamAgainFlag, .-VCTRL_SetSendStreamAgainFlag
@@ -3962,12 +3962,12 @@ VCTRL_SetCallBack:
 	movw	r1, #:lower16:.LC36	@,
 	movt	r1, #:upper16:.LC36	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50133,
+	mvn	r0, #0	@ D.50147,
 	ldmfd	sp, {fp, sp, pc}	@
 .L547:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	mov	r0, #0	@ D.50133,
+	mov	r0, #0	@ D.50147,
 	str	r1, [r3, #292]	@ event_report, s_VfmwCTrl.event_report_omxvdec
 	ldmfd	sp, {fp, sp, pc}	@
 .L546:
@@ -3978,7 +3978,7 @@ VCTRL_SetCallBack:
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC35	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50133,
+	mvn	r0, #0	@ D.50147,
 	ldmfd	sp, {fp, sp, pc}	@
 .L549:
 	.align	2
@@ -4010,8 +4010,8 @@ VCTRL_EventReport:
 	bhi	.L561	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp145,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp145,
-	ldr	r3, [r4, r0, asl #2]	@ D.50102, s_pstVfmwChan
-	cmp	r3, #0	@ D.50102,
+	ldr	r3, [r4, r0, asl #2]	@ D.50116, s_pstVfmwChan
+	cmp	r3, #0	@ D.50116,
 	beq	.L562	@,
 	ldr	r3, [r3, #36]	@ eType, <variable>.eAdapterType
 	cmp	r3, #0	@ eType,
@@ -4029,24 +4029,24 @@ VCTRL_EventReport:
 	sub	sp, fp, #16
 	ldmfd	sp, {r4, fp, sp, pc}
 .L555:
-	ldr	r3, [r4, #288]	@ D.50105, s_VfmwCTrl.event_report_vdec
-	cmp	r3, #0	@ D.50105,
+	ldr	r3, [r4, #288]	@ D.50119, s_VfmwCTrl.event_report_vdec
+	cmp	r3, #0	@ D.50119,
 	beq	.L564	@,
 .L558:
-	blx	r3	@ D.50111
+	blx	r3	@ D.50125
 	b	.L552	@
 .L563:
-	ldr	r3, [r4, #292]	@ D.50111, s_VfmwCTrl.event_report_omxvdec
-	cmp	r3, #0	@ D.50111,
+	ldr	r3, [r4, #292]	@ D.50125, s_VfmwCTrl.event_report_omxvdec
+	cmp	r3, #0	@ D.50125,
 	bne	.L558	@,
-	mov	r0, r3	@, D.50111
+	mov	r0, r3	@, D.50125
 	movw	r1, #:lower16:.LC39	@,
 	movt	r1, #:upper16:.LC39	@,
 	bl	dprint_vfmw	@
 	mvn	r0, #0	@ ret,
 	b	.L552	@
 .L564:
-	mov	r0, r3	@, D.50105
+	mov	r0, r3	@, D.50119
 	movw	r1, #:lower16:.LC38	@,
 	movt	r1, #:upper16:.LC38	@,
 	bl	dprint_vfmw	@
@@ -4063,7 +4063,7 @@ VCTRL_EventReport:
 	mvn	r0, #0	@ ret,
 	b	.L552	@
 .L562:
-	mov	r0, r3	@, D.50102
+	mov	r0, r3	@, D.50116
 	movw	r1, #:lower16:.LC5	@,
 	mov	r2, #748	@,
 	movt	r1, #:upper16:.LC5	@,
@@ -4099,8 +4099,8 @@ VCTRL_SetMoreGapEnable:
 	bhi	.L574	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r3, [r3, r0, asl #2]	@ D.50073, s_pstVfmwChan
-	cmp	r3, #0	@ D.50073,
+	ldr	r3, [r3, r0, asl #2]	@ D.50087, s_pstVfmwChan
+	cmp	r3, #0	@ D.50087,
 	beq	.L575	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #1	@ <variable>.s32IsOpen,
@@ -4108,8 +4108,8 @@ VCTRL_SetMoreGapEnable:
 	cmp	r1, #1	@ MoreGapEnable,
 	strls	r1, [r3, #1248]	@ MoreGapEnable, <variable>.stSynExtraData.s32MoreGapEnable
 	movhi	r2, #0	@ tmp146,
-	movls	r0, #0	@ D.50071,
-	mvnhi	r0, #0	@ D.50071,
+	movls	r0, #0	@ D.50085,
+	mvnhi	r0, #0	@ D.50085,
 	strhi	r2, [r3, #1248]	@ tmp146, <variable>.stSynExtraData.s32MoreGapEnable
 	ldmfd	sp, {fp, sp, pc}	@
 .L576:
@@ -4120,7 +4120,7 @@ VCTRL_SetMoreGapEnable:
 	movw	r3, #:lower16:.LC41	@,
 	movt	r3, #:upper16:.LC41	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50071,
+	mvn	r0, #0	@ D.50085,
 	ldmfd	sp, {fp, sp, pc}	@
 .L574:
 	mov	r0, #0	@,
@@ -4130,17 +4130,17 @@ VCTRL_SetMoreGapEnable:
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50071,
+	mvn	r0, #0	@ D.50085,
 	ldmfd	sp, {fp, sp, pc}	@
 .L575:
-	mov	r0, r3	@, D.50073
+	mov	r0, r3	@, D.50087
 	movw	r1, #:lower16:.LC5	@,
 	movw	r2, #726	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50071,
+	mvn	r0, #0	@ D.50085,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_SetMoreGapEnable, .-VCTRL_SetMoreGapEnable
@@ -4185,12 +4185,12 @@ VCTRL_RegisterSoftDecoder:
 	mov	r4, r0	@ pstSdecFunc, pstSdecFunc
 	ldr	ip, .L594	@ tmp158,
 	ldmia	r4!, {r0, r1, r2, r3}	@ pstSdecFunc,,,,
-	mov	r5, #0	@ D.49783,
+	mov	r5, #0	@ D.49797,
 	stmia	ip!, {r0, r1, r2, r3}	@ tmp158,,,,
 	ldmia	r4, {r0, r1, r2}	@ pstSdecFunc,,,
 	stmia	ip, {r0, r1, r2}	@ tmp161,,,
 .L579:
-	mov	r0, r5	@, D.49783
+	mov	r0, r5	@, D.49797
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L587:
 	mov	r0, r3	@, <variable>.pfun_iMediaSoftDEC_Create
@@ -4198,7 +4198,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC43	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC43	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L592:
@@ -4207,7 +4207,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC48	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC48	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L591:
@@ -4216,7 +4216,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC47	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC47	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L590:
@@ -4225,7 +4225,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC46	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC46	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L589:
@@ -4234,7 +4234,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC45	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC45	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L588:
@@ -4243,7 +4243,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC44	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC44	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L593:
@@ -4252,7 +4252,7 @@ VCTRL_RegisterSoftDecoder:
 	movw	r2, #:lower16:.LC49	@,
 	movt	r1, #:upper16:.LC42	@,
 	movt	r2, #:upper16:.LC49	@,
-	mvn	r5, #0	@ D.49783,
+	mvn	r5, #0	@ D.49797,
 	bl	dprint_vfmw	@
 	b	.L579	@
 .L595:
@@ -4282,8 +4282,8 @@ VCTRL_ConfigPVRInfo:
 	bhi	.L603	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	ip, [r3, r0, asl #2]	@ D.52476, s_pstVfmwChan
-	cmp	ip, #0	@ D.52476,
+	ldr	ip, [r3, r0, asl #2]	@ D.52489, s_pstVfmwChan
+	cmp	ip, #0	@ D.52489,
 	beq	.L604	@,
 	ldr	r0, [ip, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r0, #1	@ <variable>.s32IsOpen,
@@ -4291,55 +4291,55 @@ VCTRL_ConfigPVRInfo:
 	cmp	r1, #0	@ pArgs,
 	beq	.L606	@,
 	mov	r4, r1	@ pArgs, pArgs
-	add	r5, ip, #1264	@ tmp148, D.52476,
+	add	r5, ip, #1264	@ tmp148, D.52489,
 	ldmia	r4!, {r0, r1, r2, r3}	@ pArgs,,,,
 	add	ip, r5, #8	@ tmp148, tmp148,
-	mov	r5, #0	@ D.52474,
+	mov	r5, #0	@ D.52487,
 	stmia	ip!, {r0, r1, r2, r3}	@ tmp148,,,,
 	ldr	r2, [r4, #0]	@ tmp152,* pArgs
 	str	r2, [ip, #0]	@ tmp152, <variable>.stSynExtraData.stPvrInfo
 .L598:
-	mov	r0, r5	@, D.52474
+	mov	r0, r5	@, D.52487
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L605:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5041	@,
+	movw	r2, #5040	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC26	@,
 	movt	r3, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.52474,
+	mvn	r5, #0	@ D.52487,
 	b	.L598	@
 .L603:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5039	@,
+	movw	r2, #5038	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.52474,
+	mvn	r5, #0	@ D.52487,
 	b	.L598	@
 .L606:
 	mov	r0, r1	@, pArgs
-	movw	r2, #5042	@,
+	movw	r2, #5041	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC27	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC27	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.52474,
+	mvn	r5, #0	@ D.52487,
 	b	.L598	@
 .L604:
-	mov	r0, ip	@, D.52476
+	mov	r0, ip	@, D.52489
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5040	@,
+	movw	r2, #5039	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC25	@,
 	movt	r3, #:upper16:.LC25	@,
 	bl	dprint_vfmw	@
-	mvn	r5, #0	@ D.52474,
+	mvn	r5, #0	@ D.52487,
 	b	.L598	@
 	.fnend
 	.size	VCTRL_ConfigPVRInfo, .-VCTRL_ConfigPVRInfo
@@ -4366,44 +4366,44 @@ VCTRL_GetChanCfg:
 	beq	.L614	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp142,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp142,
-	ldr	r3, [r3, r0, asl #2]	@ D.51236, s_pstVfmwChan
-	cmp	r3, #0	@ D.51236,
+	ldr	r3, [r3, r0, asl #2]	@ D.51249, s_pstVfmwChan
+	cmp	r3, #0	@ D.51249,
 	beq	.L615	@,
 	mov	r0, r1	@, pstCfg
 	mov	r2, #104	@,
-	add	r1, r3, #48	@, D.51236,
+	add	r1, r3, #48	@, D.51249,
 	bl	memcpy	@
-	mov	r0, #0	@ D.51232,
+	mov	r0, #0	@ D.51245,
 	ldmfd	sp, {fp, sp, pc}	@
 .L613:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2892	@,
+	movw	r2, #2891	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51232,
+	mvn	r0, #0	@ D.51245,
 	ldmfd	sp, {fp, sp, pc}	@
 .L615:
-	mov	r0, r3	@, D.51236
+	mov	r0, r3	@, D.51249
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2894	@,
+	movw	r2, #2893	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51232,
+	mvn	r0, #0	@ D.51245,
 	ldmfd	sp, {fp, sp, pc}	@
 .L614:
 	mov	r0, r1	@, pstCfg
-	movw	r2, #2893	@,
+	movw	r2, #2892	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC50	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC50	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51232,
+	mvn	r0, #0	@ D.51245,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_GetChanCfg, .-VCTRL_GetChanCfg
@@ -4431,48 +4431,48 @@ VCTRL_SetDiscardPicParam:
 	beq	.L624	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp143,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp143,
-	ldr	ip, [r3, r0, asl #2]	@ D.50347, s_pstVfmwChan
-	cmp	ip, #0	@ D.50347,
+	ldr	ip, [r3, r0, asl #2]	@ D.50360, s_pstVfmwChan
+	cmp	ip, #0	@ D.50360,
 	beq	.L625	@,
 	ldmia	r1, {r0, r1}	@ pArgs,,
-	add	ip, ip, #1456	@ tmp146, D.50347,
+	add	ip, ip, #1456	@ tmp146, D.50360,
 	stmia	ip, {r0, r1}	@ tmp146,,
 	ldr	r3, [r3, r2, asl #2]	@ temp.2484, s_pstVfmwChan
 	ldr	r0, [r3, #1456]	@ <variable>.stSynExtraData.stDisParams.s32Mode, <variable>.stSynExtraData.stDisParams.s32Mode
 	sub	r2, r0, #1	@ tmp150, <variable>.stSynExtraData.stDisParams.s32Mode,
-	mov	r0, #0	@ D.50343,
+	mov	r0, #0	@ D.50356,
 	cmp	r2, #1	@ tmp150,
 	strhi	r0, [r3, #1456]	@ tmp152, <variable>.stSynExtraData.stDisParams.s32Mode
 	ldmfd	sp, {fp, sp, pc}	@
 .L623:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1154	@,
+	movw	r2, #1153	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50343,
+	mvn	r0, #0	@ D.50356,
 	ldmfd	sp, {fp, sp, pc}	@
 .L625:
-	mov	r0, ip	@, D.50347
+	mov	r0, ip	@, D.50360
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1156	@,
+	movw	r2, #1155	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50343,
+	mvn	r0, #0	@ D.50356,
 	ldmfd	sp, {fp, sp, pc}	@
 .L624:
 	mov	r0, r1	@, pArgs
-	movw	r2, #1155	@,
+	movw	r2, #1154	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC51	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC51	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50343,
+	mvn	r0, #0	@ D.50356,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_SetDiscardPicParam, .-VCTRL_SetDiscardPicParam
@@ -4497,35 +4497,35 @@ VCTRL_SetFrameInterface:
 	beq	.L631	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r3, [r3, r0, asl #2]	@ D.50303, s_pstVfmwChan
-	cmp	r3, #0	@ D.50303,
+	ldr	r3, [r3, r0, asl #2]	@ D.50316, s_pstVfmwChan
+	cmp	r3, #0	@ D.50316,
 	beq	.L632	@,
 	ldmia	r1, {r0, r1, r2}	@ pstFrameIntf,,,
-	add	r3, r3, #176	@ tmp143, D.50303,
-	mov	ip, #0	@ D.50301,
+	add	r3, r3, #176	@ tmp143, D.50316,
+	mov	ip, #0	@ D.50314,
 	stmia	r3, {r0, r1, r2}	@ tmp143,,,
 .L628:
-	mov	r0, ip	@, D.50301
+	mov	r0, ip	@, D.50314
 	ldmfd	sp, {fp, sp, pc}	@
 .L632:
-	mov	r0, r3	@, D.50303
+	mov	r0, r3	@, D.50316
 	movw	r1, #:lower16:.LC5	@,
-	mov	r2, #1104	@,
+	movw	r2, #1103	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	ip, #0	@ D.50301,
+	mvn	ip, #0	@ D.50314,
 	b	.L628	@
 .L631:
 	mov	r0, r1	@, pstFrameIntf
-	movw	r2, #1103	@,
+	movw	r2, #1102	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC52	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC52	@,
 	bl	dprint_vfmw	@
-	mvn	ip, #0	@ D.50301,
+	mvn	ip, #0	@ D.50314,
 	b	.L628	@
 	.fnend
 	.size	VCTRL_SetFrameInterface, .-VCTRL_SetFrameInterface
@@ -4551,38 +4551,38 @@ VCTRL_SetStreamInterface:
 	beq	.L638	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r0, [r4, r0, asl #2]	@ D.50252, s_pstVfmwChan
-	cmp	r0, #0	@ D.50252,
+	ldr	r0, [r4, r0, asl #2]	@ D.50265, s_pstVfmwChan
+	cmp	r0, #0	@ D.50265,
 	beq	.L639	@,
 	add	r5, r5, r5, asl #1	@, tmp152, ChanID, ChanID,
 	mov	r2, #12	@,
 	add	r4, r4, #312	@ tmp149, tmp140,
-	add	r0, r0, #152	@, D.50252,
+	add	r0, r0, #152	@, D.50265,
 	bl	memcpy	@
 	mov	r1, r6	@, pstStreamParam
 	add	r0, r4, r5, asl #2	@,, tmp149, tmp152,
 	mov	r2, #12	@,
 	bl	memcpy	@
-	mov	r0, #0	@ D.50250,
+	mov	r0, #0	@ D.50263,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L639:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1060	@,
+	movw	r2, #1059	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50250,
+	mvn	r0, #0	@ D.50263,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L638:
 	mov	r0, r6	@, pstStreamParam
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1059	@,
+	movw	r2, #1058	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC53	@,
 	movt	r3, #:upper16:.LC53	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50250,
+	mvn	r0, #0	@ D.50263,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_SetStreamInterface, .-VCTRL_SetStreamInterface
@@ -4868,11 +4868,11 @@ DBG_WriteBigTileYuv:
 	mov	r7, r0, lsr #1	@ tmp281,,
 	ldr	r2, [fp, #-64]	@, %sfp
 	mov	r4, sl, lsr #1	@ pretmp.2591,,
-	mla	sl, lr, r5, r7	@ D.55977,, tmp279, tmp281
+	mla	sl, lr, r5, r7	@ D.55998,, tmp279, tmp281
 	mov	r1, r4	@, pretmp.2591
 	and	r7, r6, #1	@ tmp355, tmp353,
 	mov	r6, #1	@ i.2709,
-	add	r0, r3, sl	@ pCbPicAddr, pUl.2707, D.55977
+	add	r0, r3, sl	@ pCbPicAddr, pUl.2707, D.55998
 	add	r5, r0, lr	@ pCbPicAddr, pCbPicAddr,
 	bl	klib_fwrite	@
 	cmp	r8, r6	@ disp_chroma_height,
@@ -4892,7 +4892,7 @@ DBG_WriteBigTileYuv:
 	str	r9, [fp, #-48]	@ pVl.2708, %sfp
 	mov	r0, r5	@ pCbPicAddr, pCbPicAddr
 	ldr	r9, [fp, #-68]	@ chrom_width, %sfp
-	mov	r5, sl	@ D.55977, D.55977
+	mov	r5, sl	@ D.55998, D.55998
 	ldr	sl, [fp, #-64]	@ fpYuv, %sfp
 .L660:
 	add	r7, r0, r9	@ pCbPicAddr, pCbPicAddr, chrom_width
@@ -4909,9 +4909,9 @@ DBG_WriteBigTileYuv:
 	add	r0, r7, r9	@ pCbPicAddr, pCbPicAddr, chrom_width
 	bhi	.L660	@,
 	ldr	r9, [fp, #-48]	@ pVl.2708, %sfp
-	mov	sl, r5	@ D.55977, D.55977
+	mov	sl, r5	@ D.55998, D.55998
 .L742:
-	add	r6, r9, sl	@ pCrPicAddr, pVl.2708, D.55977
+	add	r6, r9, sl	@ pCrPicAddr, pVl.2708, D.55998
 	sub	ip, r8, #1	@ tmp349, disp_chroma_height,
 	mov	r1, r4	@, pretmp.2591
 	ldr	r2, [fp, #-64]	@, %sfp
@@ -5157,12 +5157,12 @@ DBG_WriteBigTileYuv:
 	ldr	r0, [r6, #512]	@, pUl
 	mul	r4, r2, r3	@ tmp329,,
 	ldr	r2, [fp, #-64]	@, %sfp
-	mov	r4, r4, lsr #1	@ D.56011, tmp329,
+	mov	r4, r4, lsr #1	@ D.56032, tmp329,
 .L770:
-	mov	r1, r4	@, D.56011
+	mov	r1, r4	@, D.56032
 	bl	klib_fwrite	@
 	ldr	r0, [r6, #508]	@, pVl
-	mov	r1, r4	@, D.56011
+	mov	r1, r4	@, D.56032
 	ldr	r2, [fp, #-64]	@, %sfp
 	bl	klib_fwrite	@
 	b	.L677	@
@@ -5198,36 +5198,36 @@ DBG_WriteBigTileYuv:
 	cmp	r4, #0	@ tmp359,
 	beq	.L657	@,
 	ldrb	r4, [r3, #0]	@ zero_extendqisi2	@ tmp505,* ivtmp.2622
-	add	lr, r1, r2	@ D.55945, ivtmp.2635, j.2702
+	add	lr, r1, r2	@ D.55966, ivtmp.2635, j.2702
 	ldr	r0, [r6, #508]	@ pVl, pVl
 	mov	r2, #2	@ j.2702,
 	cmp	r5, r2	@ chrom_width, j.2702
-	strb	r4, [r0, lr]	@ tmp505,* D.55945
+	strb	r4, [r0, lr]	@ tmp505,* D.55966
 	ldrb	r4, [r3, #1]	@ zero_extendqisi2	@ tmp507,
 	add	r3, r3, r2	@ ivtmp.2622, ivtmp.2622,
 	ldr	ip, [r6, #512]	@ pUl, pUl
-	strb	r4, [ip, lr]	@ tmp507,* D.55945
+	strb	r4, [ip, lr]	@ tmp507,* D.55966
 	bls	.L658	@,
 .L657:
 	ldrb	r8, [r3, #0]	@ zero_extendqisi2	@ tmp263,* ivtmp.2622
-	add	ip, r1, r2	@ D.55945, ivtmp.2635, j.2702
+	add	ip, r1, r2	@ D.55966, ivtmp.2635, j.2702
 	ldr	r4, [r6, #508]	@ pVl, pVl
 	add	r2, r2, #1	@ tmp360, j.2702,
-	add	lr, r1, r2	@ D.55945, ivtmp.2635, tmp360
+	add	lr, r1, r2	@ D.55966, ivtmp.2635, tmp360
 	add	r0, r3, #2	@ tmp361, ivtmp.2622,
 	add	r2, r2, #1	@ j.2702, tmp360,
-	strb	r8, [r4, ip]	@ tmp263,* D.55945
+	strb	r8, [r4, ip]	@ tmp263,* D.55966
 	cmp	r5, r2	@ chrom_width, j.2702
 	ldrb	r8, [r3, #1]	@ zero_extendqisi2	@ tmp267,
 	ldr	r7, [r6, #512]	@ pUl, pUl
-	strb	r8, [r7, ip]	@ tmp267,* D.55945
+	strb	r8, [r7, ip]	@ tmp267,* D.55966
 	ldrb	r7, [r3, #2]	@ zero_extendqisi2	@ tmp436,
 	add	r3, r0, #2	@ ivtmp.2622, tmp361,
 	ldr	r4, [r6, #508]	@ pVl, pVl
-	strb	r7, [r4, lr]	@ tmp436,* D.55945
+	strb	r7, [r4, lr]	@ tmp436,* D.55966
 	ldr	r4, [r6, #512]	@ pUl, pUl
 	ldrb	ip, [r0, #1]	@ zero_extendqisi2	@ tmp438,
-	strb	ip, [r4, lr]	@ tmp438,* D.55945
+	strb	ip, [r4, lr]	@ tmp438,* D.55966
 	bhi	.L657	@,
 .L658:
 	ldr	r3, [fp, #-56]	@, %sfp
@@ -5267,36 +5267,36 @@ DBG_WriteBigTileYuv:
 	cmp	ip, #0	@ tmp378,
 	beq	.L673	@,
 	ldrb	ip, [r3, #0]	@ zero_extendqisi2	@ tmp524,* ivtmp.2659
-	add	r1, r2, lr	@ D.55993, j.2736, pretmp.2745
+	add	r1, r2, lr	@ D.56014, j.2736, pretmp.2745
 	ldr	r0, [r6, #508]	@ pVl, pVl
 	mov	r2, #2	@ j.2736,
 	cmp	r4, r2	@ chrom_width, j.2736
-	strb	ip, [r0, r1]	@ tmp524,* D.55993
+	strb	ip, [r0, r1]	@ tmp524,* D.56014
 	ldrb	ip, [r3, #1]	@ zero_extendqisi2	@ tmp526,
 	add	r3, r3, r2	@ ivtmp.2659, ivtmp.2659,
 	ldr	r0, [r6, #512]	@ pUl, pUl
-	strb	ip, [r0, r1]	@ tmp526,* D.55993
+	strb	ip, [r0, r1]	@ tmp526,* D.56014
 	bls	.L674	@,
 .L673:
 	ldrb	r9, [r3, #0]	@ zero_extendqisi2	@ tmp319,* ivtmp.2659
-	add	ip, r2, lr	@ D.55993, j.2736, pretmp.2745
+	add	ip, r2, lr	@ D.56014, j.2736, pretmp.2745
 	ldr	r5, [r6, #508]	@ pVl, pVl
 	add	r2, r2, #1	@ tmp379, j.2736,
-	add	r1, r2, lr	@ D.55993, tmp379, pretmp.2745
+	add	r1, r2, lr	@ D.56014, tmp379, pretmp.2745
 	add	r0, r3, #2	@ tmp380, ivtmp.2659,
 	add	r2, r2, #1	@ j.2736, tmp379,
-	strb	r9, [r5, ip]	@ tmp319,* D.55993
+	strb	r9, [r5, ip]	@ tmp319,* D.56014
 	cmp	r4, r2	@ chrom_width, j.2736
 	ldrb	r9, [r3, #1]	@ zero_extendqisi2	@ tmp323,
 	ldr	r5, [r6, #512]	@ pUl, pUl
-	strb	r9, [r5, ip]	@ tmp323,* D.55993
+	strb	r9, [r5, ip]	@ tmp323,* D.56014
 	ldrb	r5, [r3, #2]	@ zero_extendqisi2	@ tmp491,
 	add	r3, r0, #2	@ ivtmp.2659, tmp380,
 	ldr	ip, [r6, #508]	@ pVl, pVl
-	strb	r5, [ip, r1]	@ tmp491,* D.55993
+	strb	r5, [ip, r1]	@ tmp491,* D.56014
 	ldr	ip, [r6, #512]	@ pUl, pUl
 	ldrb	r0, [r0, #1]	@ zero_extendqisi2	@ tmp493,
-	strb	r0, [ip, r1]	@ tmp493,* D.55993
+	strb	r0, [ip, r1]	@ tmp493,* D.56014
 	bhi	.L673	@,
 .L674:
 	ldr	lr, [fp, #-56]	@, %sfp
@@ -5320,7 +5320,7 @@ DBG_WriteBigTileYuv:
 	ldr	ip, [fp, #-56]	@, %sfp
 	ldr	r2, [fp, #-64]	@, %sfp
 	ldr	r0, [r6, #512]	@, pUl
-	mul	r4, r3, ip	@ D.55972,,
+	mul	r4, r3, ip	@ D.55993,,
 	b	.L770	@
 	.fnend
 	.size	DBG_WriteBigTileYuv, .-DBG_WriteBigTileYuv
@@ -5345,8 +5345,8 @@ VCTRL_GetDecParam:
 	bhi	.L777	@,
 	movw	r2, #:lower16:.LANCHOR0	@ tmp159,
 	movt	r2, #:upper16:.LANCHOR0	@ tmp159,
-	ldr	r5, [r2, r0, asl #2]	@ D.52155, s_pstVfmwChan
-	cmp	r5, #0	@ D.52155,
+	ldr	r5, [r2, r0, asl #2]	@ D.52168, s_pstVfmwChan
+	cmp	r5, #0	@ D.52168,
 	beq	.L777	@,
 	ldr	r3, [r5, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
@@ -5358,7 +5358,7 @@ VCTRL_GetDecParam:
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L777:
 	mov	r3, r0	@, ChanId
-	mov	r2, #4480	@,
+	movw	r2, #4479	@,
 	mov	r4, #0	@ pDecParam,
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC55	@,
@@ -5397,8 +5397,8 @@ VCTRL_GetDecParam:
 	tst	r4, #1	@ g_VdmCharacter,
 	beq	.L780	@,
 .L797:
-	movw	r0, #:lower16:251604	@ tmp156,
-	movt	r0, #:upper16:251604	@ tmp156,
+	movw	r0, #:lower16:253140	@ tmp156,
+	movt	r0, #:upper16:253140	@ tmp156,
 	ldr	r4, [r5, r0]	@ pDecParam,
 .L795:
 	cmp	r4, #0	@ pDecParam,
@@ -5407,23 +5407,23 @@ VCTRL_GetDecParam:
 	str	r0, [r5, #44]	@, <variable>.u32timeLastDecParamReady
 	b	.L779	@
 .L782:
-	movw	r2, #:lower16:251960	@ tmp143,
-	movt	r2, #:upper16:251960	@ tmp143,
+	movw	r2, #:lower16:253496	@ tmp143,
+	movt	r2, #:upper16:253496	@ tmp143,
 	ldr	r4, [r5, r2]	@ pDecParam,
 	b	.L795	@
 .L793:
-	movw	ip, #:lower16:2211792	@ tmp144,
-	movt	ip, #:upper16:2211792	@ tmp144,
+	movw	ip, #:lower16:2213328	@ tmp144,
+	movt	ip, #:upper16:2213328	@ tmp144,
 	ldr	r4, [r5, ip]	@ pDecParam,
 	b	.L795	@
 .L792:
-	movw	r1, #:lower16:251828	@ tmp157,
-	movt	r1, #:upper16:251828	@ tmp157,
+	movw	r1, #:lower16:253364	@ tmp157,
+	movt	r1, #:upper16:253364	@ tmp157,
 	ldr	r4, [r5, r1]	@ pDecParam,
 	b	.L795	@
 .L784:
-	movw	r3, #:lower16:252636	@ tmp146,
-	movt	r3, #:upper16:252636	@ tmp146,
+	movw	r3, #:lower16:254172	@ tmp146,
+	movt	r3, #:upper16:254172	@ tmp146,
 	ldr	r4, [r5, r3]	@ pDecParam,
 	b	.L795	@
 	.fnend
@@ -5452,8 +5452,8 @@ VCTRL_ChanDecparamInValidFlag:
 	bhi	.L800	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp144,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp144,
-	ldr	r3, [r4, r0, asl #2]	@ D.52182, s_pstVfmwChan
-	cmp	r3, #0	@ D.52182,
+	ldr	r3, [r4, r0, asl #2]	@ D.52195, s_pstVfmwChan
+	cmp	r3, #0	@ D.52195,
 	beq	.L800	@,
 	ldr	r1, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r1, #1	@ <variable>.s32IsOpen,
@@ -5466,19 +5466,19 @@ VCTRL_ChanDecparamInValidFlag:
 	movw	r1, #:lower16:.LC56	@,
 	movt	r1, #:upper16:.LC56	@,
 	bl	dprint_vfmw	@
-	mov	r3, #0	@ D.52184,
+	mov	r3, #0	@ D.52197,
 .L802:
-	mov	r0, r3	@, D.52184
+	mov	r0, r3	@, D.52197
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
 .L800:
 	mov	r3, r2	@, ChanId
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC55	@,
-	movw	r2, #4590	@,
+	movw	r2, #4589	@,
 	movt	r1, #:upper16:.LC55	@,
 	bl	dprint_vfmw	@
-	mov	r3, #0	@ D.52184,
+	mov	r3, #0	@ D.52197,
 	b	.L802	@
 .L804:
 	str	r0, [fp, #-32]	@ tmp2,
@@ -5488,7 +5488,7 @@ VCTRL_ChanDecparamInValidFlag:
 	beq	.L810	@,
 	ldr	r0, [r4, r2, asl #2]	@ tmp154, s_pstVfmwChan
 	mov	ip, #0	@ tmp155,
-	mov	r3, ip	@ D.52184, tmp155
+	mov	r3, ip	@ D.52197, tmp155
 	str	ip, [r0, #348]	@ tmp155, <variable>.s32CountNoDecparamFlag
 	ldr	r2, [r4, r2, asl #2]	@ tmp157, s_pstVfmwChan
 	str	ip, [r2, #352]	@ tmp155, <variable>.u32NoDecparamStartTime
@@ -5502,16 +5502,16 @@ VCTRL_ChanDecparamInValidFlag:
 	bl	OSAL_GetTimeInMs	@
 	ldr	r2, [fp, #-32]	@,
 	ldr	r3, [r4, r2, asl #2]	@ temp.2810, s_pstVfmwChan
-	ldr	r1, [r3, #352]	@ D.52205, <variable>.u32NoDecparamStartTime
-	cmp	r0, r1	@ tmp, D.52205
+	ldr	r1, [r3, #352]	@ D.52218, <variable>.u32NoDecparamStartTime
+	cmp	r0, r1	@ tmp, D.52218
 	bls	.L807	@,
-	rsb	lr, r1, r0	@ tmp160, D.52205, tmp
+	rsb	lr, r1, r0	@ tmp160, D.52218, tmp
 	cmp	lr, #40	@ tmp160,
-	movls	r3, r6	@ D.52184, pDecParam
+	movls	r3, r6	@ D.52197, pDecParam
 	bls	.L802	@,
 .L807:
 	str	r6, [r3, #348]	@ pDecParam, <variable>.s32CountNoDecparamFlag
-	mov	r3, r5	@ D.52184, <variable>.s32IsRun
+	mov	r3, r5	@ D.52197, <variable>.s32IsRun
 	ldr	r1, [r4, r2, asl #2]	@ tmp167, s_pstVfmwChan
 	str	r6, [r1, #352]	@ pDecParam, <variable>.u32NoDecparamStartTime
 	b	.L802	@
@@ -5519,7 +5519,7 @@ VCTRL_ChanDecparamInValidFlag:
 	str	r5, [r3, #348]	@ <variable>.s32IsRun, <variable>.s32CountNoDecparamFlag
 	ldr	r4, [r4, r2, asl #2]	@ temp.2807, s_pstVfmwChan
 	bl	OSAL_GetTimeInMs	@
-	mov	r3, r7	@ D.52184, <variable>.s32CountNoDecparamFlag
+	mov	r3, r7	@ D.52197, <variable>.s32CountNoDecparamFlag
 	str	r0, [r4, #352]	@, <variable>.u32NoDecparamStartTime
 	b	.L802	@
 	.fnend
@@ -5723,7 +5723,7 @@ vfmw_proc_destroy:
 	bl	__gnu_mcount_nc
 	ldr	r4, .L861	@ ivtmp.2927,
 	mov	r5, r0	@ proc_name, proc_name
-	add	r7, r4, #768	@ D.58359, ivtmp.2927,
+	add	r7, r4, #768	@ D.58380, ivtmp.2927,
 	b	.L854	@
 .L852:
 	add	r4, r4, #24	@ ivtmp.2927, ivtmp.2927,
@@ -5732,7 +5732,7 @@ vfmw_proc_destroy:
 	subs	r6, r0, #0	@ tmp143,
 	beq	.L859	@,
 	add	r4, r4, #24	@ ivtmp.2927, ivtmp.2927,
-	cmp	r4, r7	@ ivtmp.2927, D.58359
+	cmp	r4, r7	@ ivtmp.2927, D.58380
 	beq	.L860	@,
 .L854:
 	mov	r2, #16	@,
@@ -6064,7 +6064,7 @@ vfmw_proc_create:
 	str	sl, [r4, #20]	@ write, <variable>.write
 	bls	.L885	@,
 .L873:
-	mvn	r0, #0	@ D.55288,
+	mvn	r0, #0	@ D.55309,
 .L876:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -6081,7 +6081,7 @@ vfmw_proc_create:
 	str	r4, [sp, #0]	@ proc,
 	bl	proc_create_data	@
 	cmp	r0, #0	@,
-	movne	r0, #0	@ D.55288,
+	movne	r0, #0	@ D.55309,
 	bne	.L876	@,
 	b	.L873	@
 .L887:
@@ -6363,7 +6363,7 @@ vfmw_proc_init:
 	cmp	r0, #0	@,
 	beq	.L892	@,
 .L889:
-	mvn	r0, #0	@ D.55332,
+	mvn	r0, #0	@ D.55353,
 .L890:
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
@@ -6443,14 +6443,14 @@ vfmw_proc_open:
 	bl	__gnu_mcount_nc
 	mov	r4, r1	@ file, file
 	bl	PDE_DATA	@
-	subs	r2, r0, #0	@ D.55240,
+	subs	r2, r0, #0	@ D.55261,
 	bne	.L897	@,
 .L894:
-	mvn	r0, #37	@ D.55243,
+	mvn	r0, #37	@ D.55264,
 	ldmfd	sp, {r3, r4, fp, sp, pc}	@
 .L897:
-	ldr	r1, [r2, #16]	@ D.55244, <variable>.read
-	cmp	r1, #0	@ D.55244,
+	ldr	r1, [r2, #16]	@ D.55265, <variable>.read
+	cmp	r1, #0	@ D.55265,
 	beq	.L894	@,
 	mov	r0, r4	@, file
 	bl	single_open	@
@@ -7010,8 +7010,8 @@ vfmw_read_proc_chn:
 	str	lr, [sp, #0]	@ <variable>.s32Priority,
 	bl	seq_printf	@
 .L915:
-	ldr	r0, [r5, #60]	@ D.54826, s_pstVfmwChan
-	cmp	r0, #0	@ D.54826,
+	ldr	r0, [r5, #60]	@ D.54847, s_pstVfmwChan
+	cmp	r0, #0	@ D.54847,
 	beq	.L916	@,
 	ldr	ip, [r0, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	movw	r1, #:lower16:.LC78	@,
@@ -7417,9 +7417,9 @@ vfmw_read_proc:
 	bl	seq_printf	@
 	mov	r1, r4	@, tmp137
 	mov	r0, r6	@, p
-	movw	r3, #:lower16:2015071093	@ tmp139,
+	movw	r3, #:lower16:2016112900	@ tmp139,
 	movw	r2, #:lower16:.LC143	@,
-	movt	r3, #:upper16:2015071093	@,
+	movt	r3, #:upper16:2016112900	@,
 	movt	r2, #:upper16:.LC143	@,
 	bl	seq_printf	@
 	ldr	r3, [r5, #68]	@, extra_ref
@@ -7488,40 +7488,40 @@ vfmw_read_proc_priv:
 	movw	r2, #:lower16:.LC151	@,
 	movt	r1, #:upper16:.LC150	@,
 	movt	r2, #:upper16:.LC151	@,
-	movw	r3, #:lower16:2015071093	@,
-	movt	r3, #:upper16:2015071093	@,
+	movw	r3, #:lower16:2016112900	@,
+	movt	r3, #:upper16:2016112900	@,
 	bl	seq_printf	@
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC152	@,
 	movt	r1, #:upper16:.LC152	@,
 	bl	seq_printf	@
-	ldr	ip, [r5, #1388]	@ D.54701, <variable>.u32VaVdmLoad
+	ldr	ip, [r5, #1388]	@ D.54722, <variable>.u32VaVdmLoad
 	movw	r6, #:lower16:-858993459	@ tmp164,
 	movt	r6, #:upper16:-858993459	@ tmp164,
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC153	@,
-	umull	r2, r3, r6, ip	@, tmp163, tmp164, D.54701
+	umull	r2, r3, r6, ip	@, tmp163, tmp164, D.54722
 	movt	r1, #:upper16:.LC153	@,
 	movw	r2, #:lower16:.LC154	@,
 	movt	r2, #:upper16:.LC154	@,
 	mov	r3, r3, lsr #3	@ tmp162, tmp163,
 	add	lr, r3, r3, asl #2	@, tmp170, tmp162, tmp162,
-	sub	ip, ip, lr, asl #1	@ tmp172, D.54701, tmp170,
+	sub	ip, ip, lr, asl #1	@ tmp172, D.54722, tmp170,
 	str	ip, [sp, #0]	@ tmp172,
 	bl	seq_printf	@
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC155	@,
 	movt	r1, #:upper16:.LC155	@,
 	bl	seq_printf	@
-	ldr	ip, [r5, #1452]	@ D.54709, <variable>.u32SaScdLoad
+	ldr	ip, [r5, #1452]	@ D.54730, <variable>.u32SaScdLoad
 	mov	r2, #0	@,
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC156	@,
 	movt	r1, #:upper16:.LC156	@,
-	umull	lr, r3, r6, ip	@, tmp177, tmp164, D.54709
+	umull	lr, r3, r6, ip	@, tmp177, tmp164, D.54730
 	mov	r3, r3, lsr #3	@ tmp176, tmp177,
 	add	lr, r3, r3, asl #2	@, tmp184, tmp176, tmp176,
-	sub	ip, ip, lr, asl #1	@ tmp186, D.54709, tmp184,
+	sub	ip, ip, lr, asl #1	@ tmp186, D.54730, tmp184,
 	str	ip, [sp, #0]	@ tmp186,
 	bl	seq_printf	@
 	mov	r0, r4	@, p
@@ -7794,20 +7794,20 @@ VCTRL_GetStreamSize:
 	bhi	.L948	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r0, [r3, r0, asl #2]	@ D.50327, s_pstVfmwChan
-	cmp	r0, #0	@ D.50327,
+	ldr	r0, [r3, r0, asl #2]	@ D.50340, s_pstVfmwChan
+	cmp	r0, #0	@ D.50340,
 	beq	.L949	@,
 	ldr	r2, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #1	@ <variable>.s32IsOpen,
 	bne	.L950	@,
-	add	r0, r0, #99328	@, D.50327,
+	add	r0, r0, #99328	@, D.50340,
 	add	r0, r0, #712	@,,
 	bl	GetSegStreamSize	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L950:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1142	@,
+	movw	r2, #1141	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC162	@,
 	movt	r3, #:upper16:.LC162	@,
@@ -7817,7 +7817,7 @@ VCTRL_GetStreamSize:
 .L948:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1140	@,
+	movw	r2, #1139	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
@@ -7826,7 +7826,7 @@ VCTRL_GetStreamSize:
 	ldmfd	sp, {fp, sp, pc}	@
 .L949:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1141	@,
+	movw	r2, #1140	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC161	@,
 	movt	r3, #:upper16:.LC161	@,
@@ -7878,28 +7878,28 @@ vfmw_read_proc_info:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L982:
-	add	r6, r8, #208	@ D.54631, pInst,
+	add	r6, r8, #208	@ D.54652, pInst,
 	sub	r1, fp, #52	@,,
-	mov	r0, r6	@, D.54631
+	mov	r0, r6	@, D.54652
 	bl	GetRawStreamSize	@
 	cmp	r0, #0	@,
 	bne	.L983	@,
 .L953:
-	mov	r0, r6	@, D.54631
+	mov	r0, r6	@, D.54652
 	sub	r1, fp, #48	@,,
 	bl	GetRawStreamNum	@
 	cmp	r0, #0	@,
 	bne	.L984	@,
 .L954:
-	add	r6, r8, #98304	@ D.54639, pInst,
+	add	r6, r8, #98304	@ D.54660, pInst,
 	sub	r1, fp, #60	@,,
-	add	r6, r6, #232	@ D.54639, D.54639,
-	mov	r0, r6	@, D.54639
+	add	r6, r6, #232	@ D.54660, D.54660,
+	mov	r0, r6	@, D.54660
 	bl	GetSegStreamSize	@
 	cmp	r0, #0	@,
 	bne	.L985	@,
 .L955:
-	mov	r0, r6	@, D.54639
+	mov	r0, r6	@, D.54660
 	sub	r1, fp, #56	@,,
 	bl	GetSegStreamNum	@
 	cmp	r0, #0	@,
@@ -7922,8 +7922,8 @@ vfmw_read_proc_info:
 	movw	r2, #:lower16:.LC151	@,
 	movt	r1, #:upper16:.LC150	@,
 	movt	r2, #:upper16:.LC151	@,
-	movw	r3, #:lower16:2015071093	@,
-	movt	r3, #:upper16:2015071093	@,
+	movw	r3, #:lower16:2016112900	@,
+	movt	r3, #:upper16:2016112900	@,
 	bl	seq_printf	@
 	mov	r3, sl	@, chanID
 	mov	r0, r4	@, p
@@ -7970,16 +7970,16 @@ vfmw_read_proc_info:
 	movw	r1, #:lower16:.LC172	@,
 	movt	r1, #:upper16:.LC172	@,
 	bl	seq_printf	@
-	ldr	lr, [r5, #1388]	@ D.54656, <variable>.u32VaVdmLoad
+	ldr	lr, [r5, #1388]	@ D.54677, <variable>.u32VaVdmLoad
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC153	@,
 	movw	r2, #:lower16:.LC154	@,
 	movt	r1, #:upper16:.LC153	@,
-	umull	ip, r3, r6, lr	@, tmp213, tmp214, D.54656
+	umull	ip, r3, r6, lr	@, tmp213, tmp214, D.54677
 	movt	r2, #:upper16:.LC154	@,
 	mov	r3, r3, lsr #3	@ tmp212, tmp213,
 	add	ip, r3, r3, asl #2	@, tmp220, tmp212, tmp212,
-	sub	ip, lr, ip, asl #1	@ tmp222, D.54656, tmp220,
+	sub	ip, lr, ip, asl #1	@ tmp222, D.54677, tmp220,
 	str	ip, [sp, #0]	@ tmp222,
 	bl	seq_printf	@
 	ldr	ip, [r7, #72]	@ <variable>.stInstCfg.s32DecFsHeight, <variable>.stInstCfg.s32DecFsHeight
@@ -8000,29 +8000,29 @@ vfmw_read_proc_info:
 	movt	r2, #:upper16:.LC175	@,
 	str	ip, [sp, #0]	@ <variable>.stInstCfg.s32DispFsHeight,
 	bl	seq_printf	@
-	ldr	ip, [r5, #1468]	@ D.54668, <variable>.u32FrFrameRate
+	ldr	ip, [r5, #1468]	@ D.54689, <variable>.u32FrFrameRate
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC176	@,
 	movw	r2, #:lower16:.LC177	@,
 	movt	r1, #:upper16:.LC176	@,
-	umull	lr, r3, r6, ip	@, tmp235, tmp214, D.54668
+	umull	lr, r3, r6, ip	@, tmp235, tmp214, D.54689
 	movt	r2, #:upper16:.LC177	@,
 	mov	r3, r3, lsr #3	@ tmp234, tmp235,
 	add	r6, r3, r3, asl #2	@, tmp242, tmp234, tmp234,
-	sub	ip, ip, r6, asl #1	@ tmp244, D.54668, tmp242,
+	sub	ip, ip, r6, asl #1	@ tmp244, D.54689, tmp242,
 	str	ip, [sp, #0]	@ tmp244,
 	bl	seq_printf	@
-	ldrb	ip, [r7, #10]	@ zero_extendqisi2	@ D.54677, <variable>.s32DecFsNum
-	sxtb	r6, ip	@ D.54678, D.54677
-	cmp	r6, #0	@ D.54678,
+	ldrb	ip, [r7, #10]	@ zero_extendqisi2	@ D.54698, <variable>.s32DecFsNum
+	sxtb	r6, ip	@ D.54699, D.54698
+	cmp	r6, #0	@ D.54699,
 	movle	r5, #0	@ usedFrameNum,
 	ble	.L960	@,
-	add	r3, r7, #34816	@ ivtmp.3467, pFsp,
-	rsb	r0, r6, r6, asl #4	@, tmp249, D.54678, D.54678,
+	add	r3, r7, #36352	@ ivtmp.3467, pFsp,
+	rsb	r0, r6, r6, asl #4	@, tmp249, D.54699, D.54699,
 	mov	r5, #0	@ usedFrameNum,
 	ldrsb	r1, [r3, #158]!	@ <variable>.DispState, <variable>.DispState
-	mov	lr, r0, asl #2	@ D.58903, tmp249,
-	sub	r2, lr, #60	@ tmp266, D.58903,
+	mov	lr, r0, asl #2	@ D.58924, tmp249,
+	sub	r2, lr, #60	@ tmp266, D.58924,
 	cmp	r1, #3	@ <variable>.DispState,
 	ubfx	r1, r2, #2, #1	@ tmp270, tmp266,,
 	beq	.L968	@,
@@ -8031,7 +8031,7 @@ vfmw_read_proc_info:
 	beq	.L968	@,
 .L969:
 	mov	r2, #60	@ ivtmp.3468,
-	cmp	r2, lr	@ ivtmp.3468, D.58903
+	cmp	r2, lr	@ ivtmp.3468, D.58924
 	add	r3, r3, r2	@ ivtmp.3467, ivtmp.3467,
 	beq	.L960	@,
 	cmp	r1, #0	@ tmp270,
@@ -8044,13 +8044,13 @@ vfmw_read_proc_info:
 	beq	.L971	@,
 	add	r2, r2, #60	@ ivtmp.3468, ivtmp.3468,
 	add	r3, r3, #60	@ ivtmp.3467, ivtmp.3467,
-	cmp	r2, lr	@ ivtmp.3468, D.58903
+	cmp	r2, lr	@ ivtmp.3468, D.58924
 	bne	.L963	@,
 .L960:
-	cmp	ip, #0	@ D.54677,
+	cmp	ip, #0	@ D.54698,
 	bne	.L988	@,
 .L965:
-	mov	r3, r6	@, D.54678
+	mov	r3, r6	@, D.54699
 	mov	r0, r4	@, p
 	movw	r1, #:lower16:.LC170	@,
 	movw	r2, #:lower16:.LC178	@,
@@ -8077,7 +8077,7 @@ vfmw_read_proc_info:
 .L976:
 	add	r2, r2, #60	@ ivtmp.3468, tmp272,
 	add	r3, r1, #60	@ ivtmp.3467, tmp271,
-	cmp	r2, lr	@ ivtmp.3468, D.58903
+	cmp	r2, lr	@ ivtmp.3468, D.58924
 	beq	.L960	@,
 .L963:
 	ldrsb	r0, [r3, #0]	@ <variable>.DispState, <variable>.DispState
@@ -8095,7 +8095,7 @@ vfmw_read_proc_info:
 	b	.L976	@
 .L988:
 	mov	lr, #100	@ tmp254,
-	mov	r1, r6	@, D.54678
+	mov	r1, r6	@, D.54699
 	mul	r0, lr, r5	@, tmp254, usedFrameNum
 	bl	__aeabi_idiv	@
 	mov	ip, r0	@ s32percent.3471,
@@ -8114,7 +8114,7 @@ vfmw_read_proc_info:
 .L971:
 	add	r2, r2, #60	@ ivtmp.3468, ivtmp.3468,
 	add	r5, r5, #1	@ usedFrameNum, usedFrameNum,
-	cmp	r2, lr	@ ivtmp.3468, D.58903
+	cmp	r2, lr	@ ivtmp.3468, D.58924
 	add	r3, r3, #60	@ ivtmp.3467, ivtmp.3467,
 	bne	.L963	@,
 	b	.L960	@
@@ -8176,9 +8176,9 @@ VCTRL_OutputLastFrame:
 	movw	r1, #:lower16:.LANCHOR0	@ tmp137,
 	movt	r1, #:upper16:.LANCHOR0	@ tmp137,
 	mov	r5, r0	@ ChanId, ChanId
-	movw	r2, #:lower16:251592	@ tmp138,
-	movt	r2, #:upper16:251592	@ tmp138,
-	ldr	r0, [r1, r0, asl #2]	@ D.54415, s_pstVfmwChan
+	movw	r2, #:lower16:253128	@ tmp138,
+	movt	r2, #:upper16:253128	@ tmp138,
+	ldr	r0, [r1, r0, asl #2]	@ D.54436, s_pstVfmwChan
 	ldr	r3, [r0, r2]	@ <variable>.stSynCtx.eVidStd, <variable>.stSynCtx.eVidStd
 	cmp	r3, #16	@ <variable>.stSynCtx.eVidStd,
 	ldrls	pc, [pc, r3, asl #2]	@ <variable>.stSynCtx.eVidStd
@@ -8202,8 +8202,8 @@ VCTRL_OutputLastFrame:
 	.word	.L1004
 	.word	.L1005
 .L1005:
-	add	lr, r0, #250880	@, D.54415,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.54436,
+	add	r0, lr, #208	@,,
 	bl	HEVCDEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 .L1007:
@@ -8234,68 +8234,68 @@ VCTRL_OutputLastFrame:
 	mov	r0, r4	@, ret
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L994:
-	add	ip, r0, #250880	@, D.54415,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.54436,
+	add	r0, ip, #208	@,,
 	bl	H264DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L995:
-	add	r4, r0, #250880	@, D.54415,
-	add	r0, r4, #720	@,,
+	add	r4, r0, #252928	@, D.54436,
+	add	r0, r4, #208	@,,
 	bl	VC1DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L996:
-	add	r4, r0, #250880	@, D.54415,
-	add	r0, r4, #720	@,,
+	add	r4, r0, #252928	@, D.54436,
+	add	r0, r4, #208	@,,
 	bl	MPEG4DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L997:
-	add	r0, r0, #250880	@, D.54415,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.54436,
+	add	r0, r0, #208	@,,
 	bl	MPEG2DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L998:
-	add	r0, r0, #250880	@, D.54415,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.54436,
+	add	r0, r0, #208	@,,
 	bl	DIVX3DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L999:
-	add	r3, r0, #250880	@, D.54415,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.54436,
+	add	r0, r3, #208	@,,
 	bl	AVSDEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L1000:
-	add	r2, r0, #250880	@, D.54415,
-	add	r0, r2, #720	@,,
+	add	r2, r0, #252928	@, D.54436,
+	add	r0, r2, #208	@,,
 	bl	REAL8DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L1001:
-	add	r1, r0, #250880	@, D.54415,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.54436,
+	add	r0, r1, #208	@,,
 	bl	REAL9DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L1002:
-	add	ip, r0, #250880	@, D.54415,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.54436,
+	add	r0, ip, #208	@,,
 	bl	VP6DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L1003:
-	add	lr, r0, #250880	@, D.54415,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.54436,
+	add	r0, lr, #208	@,,
 	bl	VP8DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
 .L1004:
-	add	r3, r0, #250880	@, D.54415,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.54436,
+	add	r0, r3, #208	@,,
 	bl	MVC_DEC_GetRemainImg	@
 	mov	r4, r0	@ ret,
 	b	.L1007	@
@@ -8366,84 +8366,84 @@ VCTRL_RlsAllFrameNode:
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r8, #0	@ i,
-	movw	r5, #:lower16:.LANCHOR0	@ tmp200,
+	movw	r5, #:lower16:.LANCHOR0	@ tmp199,
 	mov	r6, r0	@ ChanID, ChanID
-	movt	r5, #:upper16:.LANCHOR0	@ tmp200,
+	movt	r5, #:upper16:.LANCHOR0	@ tmp199,
 	mov	r0, r8	@ s32Ret, i
 	b	.L1023	@
 .L1022:
-	add	r2, r9, r8	@ tmp166, tmp202, i
+	add	r2, r9, r8	@ tmp166, tmp203, i
 	mov	r8, r2, asl #2	@ tmp167, tmp166,
-	add	r1, r8, sl	@ tmp168, tmp167, D.50513
-	add	r0, r1, #248832	@ tmp177, tmp168,
-	add	lr, r0, #472	@ tmp177, tmp177,
-	add	sl, r0, #480	@ tmp169, tmp169,
+	add	r1, r8, sl	@ tmp168, tmp167, D.50526
+	add	r0, r1, #249856	@ tmp177, tmp168,
+	add	lr, r0, #984	@ tmp177, tmp177,
+	add	sl, r0, #992	@ tmp169, tmp169,
 	ldr	r1, [lr, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldmia	sl, {r0, r2}	@ phole ldm
 	bl	MEM_DelMemRecord	@
 	ldr	r3, [r5, r6, asl #2]	@ tmp188, s_pstVfmwChan
 	mvn	r1, #0	@,
 	add	ip, r8, r3	@ tmp194, tmp167, tmp188
-	add	r2, ip, #248832	@ tmp195, tmp194,
-	add	r8, r2, #488	@ tmp195, tmp195,
+	add	r2, ip, #249856	@ tmp195, tmp194,
+	add	r8, r2, #1000	@ tmp195, tmp195,
 	strb	r1, [r8, #0]	@, <variable>.u8BufferNodeState
 .L1021:
-	ldr	r8, [r5, r6, asl #2]	@ D.50513, s_pstVfmwChan
+	ldr	r8, [r5, r6, asl #2]	@ D.50526, s_pstVfmwChan
 	add	r1, r7, r4	@ tmp213, tmp212, tmp208
-	add	r2, r8, r1, asl #2	@, tmp215, D.50513, tmp213,
-	add	r3, r2, #248832	@ tmp216, tmp215,
-	add	ip, r3, #488	@ tmp216, tmp216,
-	ldrb	r3, [ip, #0]	@ zero_extendqisi2	@ D.50515, <variable>.u8BufferNodeState
-	cmp	r3, #255	@ D.50515,
+	add	r2, r8, r1, asl #2	@, tmp215, D.50526, tmp213,
+	add	r3, r2, #249856	@ tmp216, tmp215,
+	add	ip, r3, #1000	@ tmp216, tmp216,
+	ldrb	r3, [ip, #0]	@ zero_extendqisi2	@ D.50528, <variable>.u8BufferNodeState
+	cmp	r3, #255	@ D.50528,
 	beq	.L1027	@,
-	cmp	r3, #1	@ D.50515,
+	cmp	r3, #1	@ D.50528,
 	beq	.L1031	@,
 .L1028:
 	add	r2, r7, r4	@ tmp219, tmp212, tmp208
 	mov	r7, r2, asl #2	@ tmp220, tmp219,
-	add	r8, r7, r8	@ tmp221, tmp220, D.50513
-	add	r3, r8, #248832	@ tmp225, tmp221,
+	add	r8, r7, r8	@ tmp221, tmp220, D.50526
+	add	r3, r8, #249856	@ tmp225, tmp221,
 	mvn	r8, #0	@,
-	add	lr, r3, #480	@ tmp222, tmp222,
-	add	r0, r3, #472	@ tmp225, tmp225,
+	add	lr, r3, #992	@ tmp222, tmp222,
+	add	r0, r3, #984	@ tmp225, tmp225,
 	ldr	r2, [lr, #4]	@, <variable>.stFrameBuffer.Length
 	ldr	r1, [r0, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [lr, #0]	@, <variable>.stFrameBuffer.PhyAddr
 	bl	MEM_DelMemRecord	@
 	ldr	ip, [r5, r6, asl #2]	@ tmp228, s_pstVfmwChan
 	add	r2, r7, ip	@ tmp230, tmp220, tmp228
-	add	r7, r2, #248832	@ tmp231, tmp230,
-	add	r7, r7, #488	@ tmp231, tmp231,
+	add	r7, r2, #249856	@ tmp231, tmp230,
+	add	r7, r7, #1000	@ tmp231, tmp231,
 	strb	r8, [r7, #0]	@, <variable>.u8BufferNodeState
 .L1027:
 	add	r8, r4, #1	@ i, tmp208,
 	cmp	r8, #64	@ i,
 	beq	.L1033	@,
 .L1023:
-	mov	r9, r8, asl #2	@ tmp202, i,
-	ldr	sl, [r5, r6, asl #2]	@ D.50513, s_pstVfmwChan
-	add	r2, r9, r8	@ tmp143, tmp202, i
+	mov	r9, r8, asl #2	@ tmp203, i,
+	ldr	sl, [r5, r6, asl #2]	@ D.50526, s_pstVfmwChan
+	add	r2, r9, r8	@ tmp143, tmp203, i
 	add	r4, r8, #1	@ tmp208, i,
-	add	r2, sl, r2, asl #2	@, tmp145, D.50513, tmp143,
+	add	r2, sl, r2, asl #2	@, tmp145, D.50526, tmp143,
 	mov	r7, r4, asl #2	@ tmp212, tmp208,
-	add	r1, r2, #248832	@ tmp146, tmp145,
-	add	r3, r1, #488	@ tmp146, tmp146,
-	ldrb	r3, [r3, #0]	@ zero_extendqisi2	@ D.50515, <variable>.u8BufferNodeState
-	cmp	r3, #255	@ D.50515,
+	add	r1, r2, #249856	@ tmp146, tmp145,
+	add	r3, r1, #1000	@ tmp146, tmp146,
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2	@ D.50528, <variable>.u8BufferNodeState
+	cmp	r3, #255	@ D.50528,
 	beq	.L1021	@,
-	cmp	r3, #1	@ D.50515,
+	cmp	r3, #1	@ D.50528,
 	bne	.L1022	@,
-	add	r0, r2, #248832	@ tmp161, tmp145,
-	add	ip, r0, #472	@ tmp161, tmp161,
-	add	lr, r0, #480	@ tmp153, tmp153,
+	add	r0, r2, #249856	@ tmp161, tmp145,
+	add	ip, r0, #984	@ tmp161, tmp161,
+	add	lr, r0, #992	@ tmp153, tmp153,
 	ldr	r1, [ip, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [lr, #0]	@, <variable>.stFrameBuffer.PhyAddr
 	bl	MEM_ReleaseMemBlock	@
 	b	.L1022	@
 .L1031:
-	add	r0, r2, #248832	@ tmp235, tmp215,
-	add	ip, r0, #472	@ tmp235, tmp235,
-	add	lr, r0, #480	@ tmp233, tmp233,
+	add	r0, r2, #249856	@ tmp235, tmp215,
+	add	ip, r0, #984	@ tmp235, tmp235,
+	add	lr, r0, #992	@ tmp233, tmp233,
 	ldr	r1, [ip, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [lr, #0]	@, <variable>.stFrameBuffer.PhyAddr
 	bl	MEM_ReleaseMemBlock	@
@@ -8473,8 +8473,8 @@ VCTRL_AllocMemPre:
 	movw	r8, #:lower16:.LANCHOR0	@ tmp249,
 	movt	r8, #:upper16:.LANCHOR0	@ tmp249,
 	mov	r5, r1	@ s32FrmNum, s32FrmNum
-	movw	r3, #:lower16:249272	@ tmp150,
-	movt	r3, #:upper16:249272	@ tmp150,
+	movw	r3, #:lower16:250808	@ tmp150,
+	movt	r3, #:upper16:250808	@ tmp150,
 	ldr	r2, [r8, r0, asl #2]	@ prephitmp.3559, s_pstVfmwChan
 	mov	r4, r0	@ ChanID, ChanID
 	ldr	r1, [r2, #228]	@, <variable>.stChanMem_vdh.PhyAddr
@@ -8508,8 +8508,8 @@ VCTRL_AllocMemPre:
 	movlt	r3, #1	@, prephitmp.3561
 	mov	r1, r1, asl #2	@ tmp260, tmp259,
 	add	r0, r1, r0	@ tmp261, tmp260, prephitmp.3559
-	add	r2, r0, #248832	@ tmp262, tmp261,
-	add	r2, r2, #488	@ tmp262, tmp262,
+	add	r2, r0, #249856	@ tmp262, tmp261,
+	add	r2, r2, #1000	@ tmp262, tmp262,
 	ldrb	r2, [r2, #0]	@ zero_extendqisi2	@ <variable>.u8BufferNodeState, <variable>.u8BufferNodeState
 	cmp	r2, #255	@ <variable>.u8BufferNodeState,
 	movne	r2, #0	@, tmp267
@@ -8528,8 +8528,8 @@ VCTRL_AllocMemPre:
 	add	r1, r6, r6, asl #2	@, tmp294, i, i,
 	mov	r1, r1, asl #2	@ tmp295, tmp294,
 	add	r0, r1, r0	@ tmp296, tmp295, prephitmp.3559
-	add	r2, r0, #248832	@ tmp297, tmp296,
-	add	r2, r2, #488	@ tmp297, tmp297,
+	add	r2, r0, #249856	@ tmp297, tmp296,
+	add	r2, r2, #1000	@ tmp297, tmp297,
 	ldrb	r2, [r2, #0]	@ zero_extendqisi2	@ <variable>.u8BufferNodeState, <variable>.u8BufferNodeState
 	cmp	r2, #255	@ <variable>.u8BufferNodeState,
 	movne	r2, #0	@, tmp302
@@ -8549,17 +8549,17 @@ VCTRL_AllocMemPre:
 	movlt	r3, #1	@, prephitmp.3561
 	mov	r0, r0, asl #2	@ tmp164, tmp163,
 	add	r2, r0, r2	@ tmp165, tmp164, prephitmp.3559
-	add	ip, r2, #248832	@ tmp166, tmp165,
-	add	r1, ip, #488	@ tmp166, tmp166,
+	add	ip, r2, #249856	@ tmp166, tmp165,
+	add	r1, ip, #1000	@ tmp166, tmp166,
 	ldrb	ip, [r1, #0]	@ zero_extendqisi2	@ <variable>.u8BufferNodeState, <variable>.u8BufferNodeState
 	cmp	ip, #255	@ <variable>.u8BufferNodeState,
 	movne	r1, #0	@, tmp172
 	andeq	r1, r3, #1	@,, tmp172, prephitmp.3561
 	cmp	r1, #0	@ tmp172,
 	beq	.L1036	@,
-	add	ip, r2, #248832	@ tmp179, tmp165,
+	add	ip, r2, #249856	@ tmp179, tmp165,
 	ldr	lr, [fp, #-52]	@, %sfp
-	add	r2, ip, #480	@ tmp179, tmp179,
+	add	r2, ip, #992	@ tmp179, tmp179,
 	ldr	r1, [fp, #-48]	@, %sfp
 	add	r3, sl, lr	@ tmp180, ivtmp.3585,
 	add	r6, r6, #1	@ i, i,
@@ -8568,25 +8568,25 @@ VCTRL_AllocMemPre:
 	ldr	ip, [r8, r4, asl #2]	@ tmp182, s_pstVfmwChan
 	add	r7, r7, #1	@ s32AllocedFrameNum, s32AllocedFrameNum,
 	add	r1, r0, ip	@ tmp188, tmp164, tmp182
-	add	r2, r1, #248832	@ tmp189, tmp188,
-	add	r3, r2, #472	@ tmp189, tmp189,
+	add	r2, r1, #249856	@ tmp189, tmp188,
+	add	r3, r2, #984	@ tmp189, tmp189,
 	str	lr, [r3, #4]	@ tmp190, <variable>.stFrameBuffer.VirAddr
 	ldr	ip, [r8, r4, asl #2]	@ tmp192, s_pstVfmwChan
 	add	r1, r0, ip	@ tmp198, tmp164, tmp192
-	add	r2, r1, #248832	@ tmp199, tmp198,
-	add	r3, r2, #480	@ tmp199, tmp199,
+	add	r2, r1, #249856	@ tmp199, tmp198,
+	add	r3, r2, #992	@ tmp199, tmp199,
 	mov	r2, #0	@,
 	str	r9, [r3, #4]	@ s32FrameSize, <variable>.stFrameBuffer.Length
 	ldr	lr, [r8, r4, asl #2]	@ tmp201, s_pstVfmwChan
 	add	ip, r0, lr	@ tmp207, tmp164, tmp201
-	add	r1, ip, #248832	@ tmp208, tmp207,
-	add	r3, r1, #488	@ tmp208, tmp208,
+	add	r1, ip, #249856	@ tmp208, tmp207,
+	add	r3, r1, #1000	@ tmp208, tmp208,
 	strb	r2, [r3, #0]	@, <variable>.u8BufferNodeState
 	ldr	lr, [r8, r4, asl #2]	@ temp.3591, s_pstVfmwChan
 	add	ip, r0, lr	@ tmp217, tmp164, temp.3591
-	add	r2, ip, #248832	@ tmp226, tmp217,
-	add	lr, r2, #480	@ tmp218, tmp218,
-	add	r3, r2, #472	@ tmp226, tmp226,
+	add	r2, ip, #249856	@ tmp226, tmp217,
+	add	lr, r2, #992	@ tmp218, tmp218,
+	add	r3, r2, #984	@ tmp226, tmp226,
 	ldmia	lr, {r0, r2}	@ phole ldm
 	ldr	r1, [r3, #4]	@, <variable>.stFrameBuffer.VirAddr
 	bl	MEM_AddMemRecord	@
@@ -8611,34 +8611,34 @@ VCTRL_AllocMemPre:
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L1054:
 	ldr	r2, [fp, #-52]	@, %sfp
-	add	r6, r0, #248832	@ tmp268, tmp261,
+	add	r6, r0, #249856	@ tmp268, tmp261,
 	ldr	lr, [fp, #-48]	@, %sfp
 	add	r7, r7, #1	@ s32AllocedFrameNum, s32AllocedFrameNum,
 	add	r3, ip, r2	@ tmp269, ivtmp.3585,
-	add	r2, r6, #480	@ tmp268, tmp268,
+	add	r2, r6, #992	@ tmp268, tmp268,
 	add	r6, ip, lr	@ tmp273, ivtmp.3585,
 	str	r3, [r2, #0]	@ tmp269, <variable>.stFrameBuffer.PhyAddr
 	ldr	r0, [r8, r4, asl #2]	@ tmp270, s_pstVfmwChan
 	add	r2, r1, r0	@ tmp271, tmp260, tmp270
-	add	lr, r2, #248832	@ tmp272, tmp271,
-	add	r3, lr, #472	@ tmp272, tmp272,
+	add	lr, r2, #249856	@ tmp272, tmp271,
+	add	r3, lr, #984	@ tmp272, tmp272,
 	str	r6, [r3, #4]	@ tmp273, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [r8, r4, asl #2]	@ tmp274, s_pstVfmwChan
 	add	r2, r1, r0	@ tmp275, tmp260, tmp274
-	add	lr, r2, #248832	@ tmp276, tmp275,
-	add	r6, lr, #480	@ tmp276, tmp276,
+	add	lr, r2, #249856	@ tmp276, tmp275,
+	add	r6, lr, #992	@ tmp276, tmp276,
 	str	r9, [r6, #4]	@ s32FrameSize, <variable>.stFrameBuffer.Length
 	mov	r6, #0	@,
 	ldr	r3, [r8, r4, asl #2]	@ tmp277, s_pstVfmwChan
 	add	r0, r1, r3	@ tmp278, tmp260, tmp277
-	add	r2, r0, #248832	@ tmp279, tmp278,
-	add	lr, r2, #488	@ tmp279, tmp279,
+	add	r2, r0, #249856	@ tmp279, tmp278,
+	add	lr, r2, #1000	@ tmp279, tmp279,
 	strb	r6, [lr, #0]	@, <variable>.u8BufferNodeState
 	ldr	r3, [r8, r4, asl #2]	@ temp.3591, s_pstVfmwChan
 	add	r1, r1, r3	@ tmp282, tmp260, temp.3591
-	add	r2, r1, #248832	@ tmp285, tmp282,
-	add	lr, r2, #472	@ tmp285, tmp285,
-	add	r6, r2, #480	@ tmp283, tmp283,
+	add	r2, r1, #249856	@ tmp285, tmp282,
+	add	lr, r2, #984	@ tmp285, tmp285,
+	add	r6, r2, #992	@ tmp283, tmp283,
 	ldr	r1, [lr, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldmia	r6, {r0, r2}	@ phole ldm
 	str	ip, [fp, #-60]	@,
@@ -8648,34 +8648,34 @@ VCTRL_AllocMemPre:
 	b	.L1049	@
 .L1050:
 	ldr	r2, [fp, #-52]	@, %sfp
-	add	r6, r0, #248832	@ tmp303, tmp296,
+	add	r6, r0, #249856	@ tmp303, tmp296,
 	ldr	lr, [fp, #-48]	@, %sfp
 	add	r7, r7, #1	@ s32AllocedFrameNum, s32AllocedFrameNum,
 	add	r3, ip, r2	@ tmp304, ivtmp.3585,
-	add	r2, r6, #480	@ tmp303, tmp303,
+	add	r2, r6, #992	@ tmp303, tmp303,
 	add	r6, ip, lr	@ tmp308, ivtmp.3585,
 	str	r3, [r2, #0]	@ tmp304, <variable>.stFrameBuffer.PhyAddr
 	ldr	r0, [r8, r4, asl #2]	@ tmp305, s_pstVfmwChan
 	add	r2, r1, r0	@ tmp306, tmp295, tmp305
-	add	lr, r2, #248832	@ tmp307, tmp306,
-	add	r3, lr, #472	@ tmp307, tmp307,
+	add	lr, r2, #249856	@ tmp307, tmp306,
+	add	r3, lr, #984	@ tmp307, tmp307,
 	str	r6, [r3, #4]	@ tmp308, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [r8, r4, asl #2]	@ tmp309, s_pstVfmwChan
 	add	r2, r1, r0	@ tmp310, tmp295, tmp309
-	add	r6, r2, #248832	@ tmp311, tmp310,
-	add	lr, r6, #480	@ tmp311, tmp311,
+	add	r6, r2, #249856	@ tmp311, tmp310,
+	add	lr, r6, #992	@ tmp311, tmp311,
 	str	r9, [lr, #4]	@ s32FrameSize, <variable>.stFrameBuffer.Length
 	mov	lr, #0	@,
 	ldr	r3, [r8, r4, asl #2]	@ tmp312, s_pstVfmwChan
 	add	r0, r1, r3	@ tmp313, tmp295, tmp312
-	add	r2, r0, #248832	@ tmp314, tmp313,
-	add	r6, r2, #488	@ tmp314, tmp314,
+	add	r2, r0, #249856	@ tmp314, tmp313,
+	add	r6, r2, #1000	@ tmp314, tmp314,
 	strb	lr, [r6, #0]	@, <variable>.u8BufferNodeState
 	ldr	r3, [r8, r4, asl #2]	@ temp.3591, s_pstVfmwChan
 	add	r0, r1, r3	@ tmp317, tmp295, temp.3591
-	add	r6, r0, #248832	@ tmp320, tmp317,
-	add	r3, r6, #480	@ tmp318, tmp318,
-	add	lr, r6, #472	@ tmp320, tmp320,
+	add	r6, r0, #249856	@ tmp320, tmp317,
+	add	r3, r6, #992	@ tmp318, tmp318,
+	add	lr, r6, #984	@ tmp320, tmp320,
 	ldr	r2, [r3, #4]	@, <variable>.stFrameBuffer.Length
 	ldr	r1, [lr, #4]	@, <variable>.stFrameBuffer.VirAddr
 	ldr	r0, [r3, #0]	@, <variable>.stFrameBuffer.PhyAddr
@@ -8740,11 +8740,11 @@ VCTRL_AllocMemMMZ:
 	movt	r5, #:upper16:.LANCHOR0	@ tmp218,
 	str	r1, [fp, #-60]	@ s32FrmNum, %sfp
 	mov	r6, r0	@ ChanID, ChanID
-	movw	r8, #:lower16:249272	@ tmp147,
+	movw	r8, #:lower16:250808	@ tmp147,
 	ldr	r7, [r5, r0, asl #2]	@ prephitmp.3614, s_pstVfmwChan
 	mov	r0, #0	@,
 	str	r0, [fp, #-52]	@, %sfp
-	movt	r8, #:upper16:249272	@ tmp147,
+	movt	r8, #:upper16:250808	@ tmp147,
 	mov	r4, r0	@ s32Times,
 	mov	sl, r0	@ i, s32Times
 	ldr	r2, [r7, #1428]	@ <variable>.stSynExtraData.stChanOption.s32DelayTime, <variable>.stSynExtraData.stChanOption.s32DelayTime
@@ -8772,9 +8772,9 @@ VCTRL_AllocMemMMZ:
 	ldr	ip, [fp, #-52]	@, %sfp
 	mov	r2, r2, asl #2	@ tmp158, tmp157,
 	add	r1, r2, r7	@ tmp159, tmp158, prephitmp.3614
-	add	r3, r1, #248832	@ tmp160, tmp159,
+	add	r3, r1, #249856	@ tmp160, tmp159,
 	ldr	r1, [fp, #-60]	@, %sfp
-	add	r4, r3, #488	@ tmp160, tmp160,
+	add	r4, r3, #1000	@ tmp160, tmp160,
 	ldrb	r3, [r4, #0]	@ zero_extendqisi2	@ <variable>.u8BufferNodeState, <variable>.u8BufferNodeState
 	cmp	ip, r1	@,
 	movge	r4, #0	@,
@@ -8783,9 +8783,9 @@ VCTRL_AllocMemMMZ:
 	movne	r4, #0	@,,
 	cmp	r4, #0	@ tmp166,
 	beq	.L1057	@,
-	add	r3, r2, #248832	@ tmp171, tmp158,
+	add	r3, r2, #249856	@ tmp171, tmp158,
 	mov	r1, r8	@, tmp227
-	add	lr, r3, #472	@ tmp171, tmp171,
+	add	lr, r3, #984	@ tmp171, tmp171,
 	movw	r0, #:lower16:.LC186	@,
 	add	r7, r7, lr	@ MEM_RECORD, prephitmp.3614, tmp171
 	movt	r0, #:upper16:.LC186	@,
@@ -8838,8 +8838,8 @@ VCTRL_AllocMemMMZ:
 	add	sl, sl, #1	@ i, i,
 	cmp	sl, #64	@ i,
 	add	r1, r3, r2, asl #2	@, tmp207, tmp201, tmp205,
-	add	r4, r1, #248832	@ tmp208, tmp207,
-	add	ip, r4, #488	@ tmp208, tmp208,
+	add	r4, r1, #249856	@ tmp208, tmp207,
+	add	ip, r4, #1000	@ tmp208, tmp208,
 	mov	r4, #1	@,
 	strb	r4, [ip, #0]	@, <variable>.u8BufferNodeState
 	bne	.L1070	@,
@@ -8892,11 +8892,11 @@ VCTRL_RequestChanMem:
 	bl	__gnu_mcount_nc
 	movw	r5, #:lower16:.LANCHOR0	@ tmp210,
 	movt	r5, #:upper16:.LANCHOR0	@ tmp210,
-	movw	r2, #:lower16:249272	@ tmp154,
-	movt	r2, #:upper16:249272	@ tmp154,
-	movw	ip, #:lower16:249280	@ tmp153,
-	ldr	r3, [r5, r0, asl #2]	@ D.55748, s_pstVfmwChan
-	movt	ip, #:upper16:249280	@ tmp153,
+	movw	r2, #:lower16:250808	@ tmp154,
+	movt	r2, #:upper16:250808	@ tmp154,
+	movw	ip, #:lower16:250816	@ tmp153,
+	ldr	r3, [r5, r0, asl #2]	@ D.55769, s_pstVfmwChan
+	movt	ip, #:upper16:250816	@ tmp153,
 	mov	r6, r0	@ ChanID, ChanID
 	ldr	r1, [r3, r2]	@ s32FrameSize, <variable>.s32CurFsSize
 	ldr	r7, [r3, ip]	@ s32NeededFrmNum, <variable>.s32NeededFrameNum
@@ -8907,8 +8907,8 @@ VCTRL_RequestChanMem:
 	cmp	r4, #0	@ <variable>.s32VdmChanMemAddr,
 	cmpne	r2, #0	@, s32PreAllocSize,
 	bgt	.L1083	@,
-	movw	r4, #:lower16:249292	@ tmp197,
-	movt	r4, #:upper16:249292	@ tmp197,
+	movw	r4, #:lower16:250828	@ tmp197,
+	movt	r4, #:upper16:250828	@ tmp197,
 	ldr	r3, [r3, r4]	@ temp.3674, <variable>.s32NeedMMZ
 	cmp	r3, #1	@ temp.3674,
 	bne	.L1080	@,
@@ -8917,11 +8917,11 @@ VCTRL_RequestChanMem:
 	ldr	r8, [r5, r6, asl #2]	@ temp.3675, s_pstVfmwChan
 	mov	r4, r0	@ s32Ret,
 	bl	OSAL_GetTimeInMs	@
-	movw	ip, #:lower16:251540	@ tmp199,
-	movt	ip, #:upper16:251540	@ tmp199,
-	movw	r3, #:lower16:249288	@ tmp202,
+	movw	ip, #:lower16:253076	@ tmp199,
+	movt	ip, #:upper16:253076	@ tmp199,
+	movw	r3, #:lower16:250824	@ tmp202,
 	cmp	r4, #0	@ s32Ret,
-	movt	r3, #:upper16:249288	@ tmp202,
+	movt	r3, #:upper16:250824	@ tmp202,
 	str	r0, [r8, ip]	@, <variable>.stDynamicFSTimestamp.u32MMZEndTime
 	ldr	r1, [r5, r6, asl #2]	@ tmp201, s_pstVfmwChan
 	str	r7, [r1, r3]	@ s32NeededFrmNum, <variable>.s32MMZFrmNum
@@ -8942,11 +8942,11 @@ VCTRL_RequestChanMem:
 	ldr	r8, [r5, r6, asl #2]	@ temp.3671, s_pstVfmwChan
 	mov	r4, r0	@ s32Ret,
 	bl	OSAL_GetTimeInMs	@
-	movw	r2, #:lower16:251536	@ tmp190,
-	movt	r2, #:upper16:251536	@ tmp190,
-	movw	ip, #:lower16:249284	@ tmp193,
+	movw	r2, #:lower16:253072	@ tmp190,
+	movt	r2, #:upper16:253072	@ tmp190,
+	movw	ip, #:lower16:250820	@ tmp193,
 	cmp	r4, #0	@ s32Ret,
-	movt	ip, #:upper16:249284	@ tmp193,
+	movt	ip, #:upper16:250820	@ tmp193,
 	str	r0, [r8, r2]	@, <variable>.stDynamicFSTimestamp.u32PreEndTime
 	ldr	r0, [r5, r6, asl #2]	@ tmp192, s_pstVfmwChan
 	str	r7, [r0, ip]	@ s32NeededFrmNum, <variable>.s32PreAllocFrmNum
@@ -8968,20 +8968,20 @@ VCTRL_RequestChanMem:
 	ldr	r7, [r5, r6, asl #2]	@ temp.3666, s_pstVfmwChan
 	mov	r4, r0	@ s32Ret,
 	bl	OSAL_GetTimeInMs	@
-	movw	r1, #:lower16:251536	@ tmp168,
-	movt	r1, #:upper16:251536	@ tmp168,
-	movw	r3, #:lower16:249284	@ tmp171,
+	movw	r1, #:lower16:253072	@ tmp168,
+	movt	r1, #:upper16:253072	@ tmp168,
+	movw	r3, #:lower16:250820	@ tmp171,
 	cmp	r4, #0	@ s32Ret,
-	movt	r3, #:upper16:249284	@ tmp171,
+	movt	r3, #:upper16:250820	@ tmp171,
 	str	r0, [r7, r1]	@, <variable>.stDynamicFSTimestamp.u32PreEndTime
 	ldr	r0, [r5, r6, asl #2]	@ tmp170, s_pstVfmwChan
 	str	r8, [r0, r3]	@ tmp166, <variable>.s32PreAllocFrmNum
 	bne	.L1077	@,
 	ldr	ip, [r5, r6, asl #2]	@ tmp173, s_pstVfmwChan
-	movw	lr, #:lower16:249292	@ tmp174,
-	movt	lr, #:upper16:249292	@ tmp174,
-	ldr	r3, [ip, lr]	@ D.55769, <variable>.s32NeedMMZ
-	cmp	r3, #1	@ D.55769,
+	movw	lr, #:lower16:250828	@ tmp174,
+	movt	lr, #:upper16:250828	@ tmp174,
+	ldr	r3, [ip, lr]	@ D.55790, <variable>.s32NeedMMZ
+	cmp	r3, #1	@ D.55790,
 	bne	.L1078	@,
 	mov	r0, r6	@, ChanID
 	mov	r1, sl	@, s32MMZFrmNum
@@ -8990,10 +8990,10 @@ VCTRL_RequestChanMem:
 	bne	.L1086	@,
 	ldr	r7, [r5, r6, asl #2]	@ temp.3669, s_pstVfmwChan
 	bl	OSAL_GetTimeInMs	@
-	movw	r1, #:lower16:251540	@ tmp179,
-	movt	r1, #:upper16:251540	@ tmp179,
-	movw	r3, #:lower16:249288	@ tmp182,
-	movt	r3, #:upper16:249288	@ tmp182,
+	movw	r1, #:lower16:253076	@ tmp179,
+	movt	r1, #:upper16:253076	@ tmp179,
+	movw	r3, #:lower16:250824	@ tmp182,
+	movt	r3, #:upper16:250824	@ tmp182,
 	str	r0, [r7, r1]	@, <variable>.stDynamicFSTimestamp.u32MMZEndTime
 	mov	r0, r4	@, s32Ret
 	ldr	r2, [r5, r6, asl #2]	@ tmp181, s_pstVfmwChan
@@ -9075,17 +9075,17 @@ VCTRL_EnableAllInt:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp134,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp134,
-	ldr	r3, [r3, #76]	@ D.53919, g_vdm_hal_fun_ptr.pfun_VDMHAL_EnableInt
-	cmp	r3, #0	@ D.53919,
+	ldr	r3, [r3, #76]	@ D.53932, g_vdm_hal_fun_ptr.pfun_VDMHAL_EnableInt
+	cmp	r3, #0	@ D.53932,
 	beq	.L1093	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.53919
+	blx	r3	@ D.53932
 	mov	r0, #0	@,
 	bl	SCDDRV_EnableInt	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1093:
-	mov	r0, r3	@, D.53919
-	movw	r2, #7742	@,
+	mov	r0, r3	@, D.53932
+	movw	r2, #7741	@,
 	movw	r1, #:lower16:.LC0	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
@@ -9113,17 +9113,17 @@ VCTRL_MaskAllInt:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp134,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp134,
-	ldr	r3, [r3, #72]	@ D.53904, g_vdm_hal_fun_ptr.pfun_VDMHAL_MaskInt
-	cmp	r3, #0	@ D.53904,
+	ldr	r3, [r3, #72]	@ D.53917, g_vdm_hal_fun_ptr.pfun_VDMHAL_MaskInt
+	cmp	r3, #0	@ D.53917,
 	beq	.L1098	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.53904
+	blx	r3	@ D.53917
 	mov	r0, #0	@,
 	bl	SCDDRV_MaskInt	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1098:
-	mov	r0, r3	@, D.53904
-	movw	r2, #7707	@,
+	mov	r0, r3	@, D.53917
+	movw	r2, #7706	@,
 	movw	r1, #:lower16:.LC0	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
@@ -9168,36 +9168,36 @@ VCTRL_GetChanImgNum:
 	mov	r1, r7	@, pReadImgNum
 	bl	GetQueueImgNum	@
 	ldr	r2, [r4, r5, asl #2]	@ temp.3747, s_pstVfmwChan
-	ldr	r3, [r2, #552]	@ D.53735, <variable>.eVidStd
-	cmp	r3, #0	@ D.53735,
+	ldr	r3, [r2, #552]	@ D.53748, <variable>.eVidStd
+	cmp	r3, #0	@ D.53748,
 	beq	.L1108	@,
-	cmp	r3, #16	@ D.53735,
+	cmp	r3, #16	@ D.53748,
 	beq	.L1109	@,
-	cmp	r3, #15	@ D.53735,
-	movweq	r3, #:lower16:11374616	@ tmp149,
-	movteq	r3, #:upper16:11374616	@ tmp149,
+	cmp	r3, #15	@ D.53748,
+	movweq	r3, #:lower16:11376248	@ tmp149,
+	movteq	r3, #:upper16:11376248	@ tmp149,
 	movne	r3, #2	@ tmp151,
 	ldreq	r3, [r2, r3]	@ <variable>.stSynCtx.unSyntax.stMvcCtx.DPB.size,
 	str	r3, [r6, #0]	@ tmp151,* pRefImgNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L1108:
-	movw	r1, #:lower16:278232	@ tmp145,
-	movt	r1, #:upper16:278232	@ tmp145,
+	movw	r1, #:lower16:279768	@ tmp145,
+	movt	r1, #:upper16:279768	@ tmp145,
 	ldr	r0, [r2, r1]	@ <variable>.stSynCtx.unSyntax.stH264Ctx.DPB.size,
 	str	r0, [r6, #0]	@ <variable>.stSynCtx.unSyntax.stH264Ctx.DPB.size,* pRefImgNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L1107:
 	mov	r0, ip	@, tmp141
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7434	@,
+	movw	r2, #7433	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
 .L1109:
-	movw	lr, #:lower16:2211968	@ tmp147,
-	movt	lr, #:upper16:2211968	@ tmp147,
+	movw	lr, #:lower16:2213504	@ tmp147,
+	movt	lr, #:upper16:2213504	@ tmp147,
 	ldr	ip, [r2, lr]	@ <variable>.stSynCtx.unSyntax.stHevcCtx.DPB.size,
 	str	ip, [r6, #0]	@ <variable>.stSynCtx.unSyntax.stHevcCtx.DPB.size,* pRefImgNum
 	ldmfd	sp, {r3, r4, r5, r6, r7, r8, fp, sp, pc}	@
@@ -9213,13 +9213,13 @@ VCTRL_GetChanState:
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
 	mov	ip, sp	@,
-	stmfd	sp!, {r4, r5, r6, r7, r8, fp, ip, lr, pc}	@,
+	stmfd	sp!, {r4, r5, r6, r7, fp, ip, lr, pc}	@,
 	.pad #4
-	.save {r4, r5, r6, r7, r8, fp, ip, lr}
+	.save {r4, r5, r6, r7, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	.pad #68
-	sub	sp, sp, #68	@,,
+	.pad #64
+	sub	sp, sp, #64	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #15	@ ChanID,
@@ -9233,14 +9233,14 @@ VCTRL_GetChanState:
 	mov	r0, r1	@, pstChanState
 	mov	r1, #108	@,
 	mov	r7, #0	@ tmp144,
-	str	r7, [fp, #-40]	@ tmp144, RefNum
-	str	r7, [fp, #-44]	@ tmp144, ReadNum
-	str	r7, [fp, #-48]	@ tmp144, NewNum
+	str	r7, [fp, #-32]	@ tmp144, RefNum
+	str	r7, [fp, #-36]	@ tmp144, ReadNum
+	str	r7, [fp, #-40]	@ tmp144, NewNum
 	bl	__memzero	@
-	ldr	r1, [r6, r5, asl #2]	@ D.50395, s_pstVfmwChan
-	cmp	r1, r7	@ D.50395,
+	ldr	r1, [r6, r5, asl #2]	@ D.50408, s_pstVfmwChan
+	cmp	r1, r7	@ D.50408,
 	beq	.L1117	@,
-	add	r1, r1, #1120	@, D.50395,
+	add	r1, r1, #1120	@, D.50408,
 	mov	r0, r4	@, pstChanState
 	add	r1, r1, #4	@,,
 	mov	r2, #108	@,
@@ -9248,75 +9248,73 @@ VCTRL_GetChanState:
 	ldr	r0, [r6, r5, asl #2]	@ temp.3782, s_pstVfmwChan
 	movw	r3, #:lower16:206418	@ tmp155,
 	movt	r3, #:upper16:206418	@ tmp155,
-	ldrsb	lr, [r0, r3]	@ temp.3781, <variable>.FspInst.s32DecFsNum
-	cmp	lr, r7	@ temp.3781,
+	ldrsb	ip, [r0, r3]	@ temp.3781, <variable>.FspInst.s32DecFsNum
+	cmp	ip, r7	@ temp.3781,
 	ble	.L1114	@,
-	movw	r1, #:lower16:241382	@ tmp163,
-	movt	r1, #:upper16:241382	@ tmp163,
-	add	r3, r0, r1	@ tmp163, temp.3782, tmp163
-	rsb	lr, lr, lr, asl #4	@, tmp160, temp.3781, temp.3781,
-	ldrsb	r2, [r3, #0]	@ <variable>.DispState, <variable>.DispState
-	mov	lr, lr, asl #2	@ D.59224, tmp160,
-	sub	ip, lr, #60	@ tmp209, D.59224,
-	cmp	r2, #3	@ <variable>.DispState,
-	ubfx	r2, ip, #2, #1	@ tmp213, tmp209,,
+	add	r1, r0, #242688	@ tmp163, temp.3782,
+	rsb	ip, ip, ip, asl #4	@, tmp160, temp.3781, temp.3781,
+	add	r3, r1, #230	@ tmp163, tmp163,
+	mov	ip, ip, asl #2	@ D.59245, tmp160,
+	ldrsb	lr, [r3, #0]	@ <variable>.DispState, <variable>.DispState
+	sub	r2, ip, #60	@ tmp209, D.59245,
+	ubfx	r2, r2, #2, #1	@ tmp213, tmp209,,
+	cmp	lr, #3	@ <variable>.DispState,
 	beq	.L1131	@,
 .L1119:
 	mov	r3, #60	@ ivtmp.3777,
-	cmp	r3, lr	@ ivtmp.3777, D.59224
+	cmp	r3, ip	@ ivtmp.3777, D.59245
 	beq	.L1114	@,
 	cmp	r2, #0	@ tmp213,
 	beq	.L1116	@,
-	movw	ip, #:lower16:241442	@ tmp228,
-	movt	ip, #:upper16:241442	@ tmp228,
-	add	r1, r0, ip	@ tmp228, temp.3782, tmp228
+	add	r2, r0, r3	@ tmp226, temp.3782, ivtmp.3777
 	add	r3, r3, #60	@ ivtmp.3777, ivtmp.3777,
+	add	lr, r2, #242688	@ tmp228, tmp226,
+	add	r1, lr, #230	@ tmp228, tmp228,
 	ldrsb	r2, [r1, #0]	@ <variable>.DispState, <variable>.DispState
 	cmp	r2, #3	@ <variable>.DispState,
 	addeq	r7, r7, #1	@ s32DecodedFrameNum, s32DecodedFrameNum,
-	cmp	r3, lr	@ ivtmp.3777, D.59224
+	cmp	r3, ip	@ ivtmp.3777, D.59245
 	bne	.L1116	@,
 	b	.L1114	@
 .L1124:
 	add	r3, r1, #60	@ ivtmp.3777, tmp214,
-	cmp	r3, lr	@ ivtmp.3777, D.59224
+	cmp	r3, ip	@ ivtmp.3777, D.59245
 	beq	.L1114	@,
 .L1116:
-	movw	r2, #:lower16:241382	@ tmp219,
-	movt	r2, #:upper16:241382	@ tmp219,
 	add	r1, r3, #60	@ tmp214, ivtmp.3777,
-	add	r8, r0, r3	@ tmp217, temp.3782, ivtmp.3777
-	add	ip, r0, r1	@ tmp222, temp.3782, tmp214
-	mov	r3, r2	@ tmp224, tmp219
-	add	r2, r8, r2	@ tmp219, tmp217, tmp219
-	add	r3, ip, r3	@ tmp224, tmp222, tmp224
-	ldrsb	r2, [r2, #0]	@ <variable>.DispState, <variable>.DispState
-	ldrsb	ip, [r3, #0]	@ <variable>.DispState, <variable>.DispState
-	cmp	r2, #3	@ <variable>.DispState,
+	add	r2, r0, r3	@ tmp217, temp.3782, ivtmp.3777
+	add	r3, r2, #242688	@ tmp219, tmp217,
+	add	lr, r0, r1	@ tmp222, temp.3782, tmp214
+	add	r2, lr, #242688	@ tmp224, tmp222,
+	add	lr, r3, #230	@ tmp219, tmp219,
+	add	r2, r2, #230	@ tmp224, tmp224,
+	ldrsb	r3, [lr, #0]	@ <variable>.DispState, <variable>.DispState
+	ldrsb	lr, [r2, #0]	@ <variable>.DispState, <variable>.DispState
+	cmp	r3, #3	@ <variable>.DispState,
 	addeq	r7, r7, #1	@ s32DecodedFrameNum, s32DecodedFrameNum,
-	cmp	ip, #3	@ <variable>.DispState,
+	cmp	lr, #3	@ <variable>.DispState,
 	bne	.L1124	@,
 	add	r3, r1, #60	@ ivtmp.3777, tmp214,
 	add	r7, r7, #1	@ s32DecodedFrameNum, s32DecodedFrameNum,
-	cmp	r3, lr	@ ivtmp.3777, D.59224
+	cmp	r3, ip	@ ivtmp.3777, D.59245
 	bne	.L1116	@,
 .L1114:
 	str	r7, [r4, #92]	@ prephitmp.3762, <variable>.wait_disp_frame_num
 	movw	ip, #:lower16:206418	@ tmp168,
 	ldr	lr, [r6, r5, asl #2]	@ tmp167, s_pstVfmwChan
 	movt	ip, #:upper16:206418	@ tmp168,
-	sub	r2, fp, #44	@,,
-	sub	r3, fp, #48	@,,
+	sub	r2, fp, #36	@,,
+	sub	r3, fp, #40	@,,
 	mov	r0, r5	@, ChanID
-	sub	r1, fp, #40	@,,
+	sub	r1, fp, #32	@,,
 	ldrsb	ip, [lr, ip]	@ <variable>.FspInst.s32DecFsNum, <variable>.FspInst.s32DecFsNum
 	str	ip, [r4, #100]	@ <variable>.FspInst.s32DecFsNum, <variable>.total_disp_frame_num
 	bl	VCTRL_GetChanImgNum	@
 	mov	r1, #300	@ tmp179,
 	mla	r3, r1, r5, r6	@ tmp180, tmp179, ChanID, tmp205
-	ldr	ip, [fp, #-48]	@ NewNum, NewNum
-	ldr	r2, [fp, #-44]	@ ReadNum, ReadNum
-	sub	r1, fp, #96	@,,
+	ldr	ip, [fp, #-40]	@ NewNum, NewNum
+	ldr	r2, [fp, #-36]	@ ReadNum, ReadNum
+	sub	r1, fp, #88	@,,
 	mov	r0, r5	@, ChanID
 	add	r2, ip, r2	@ tmp175, NewNum, ReadNum
 	str	r2, [r4, #56]	@ tmp175, <variable>.decoded_1d_frame_num
@@ -9325,30 +9323,30 @@ VCTRL_GetChanState:
 	ldr	r2, [r3, #1468]	@ <variable>.u32FrFrameRate, <variable>.u32FrFrameRate
 	str	r2, [r4, #24]	@ <variable>.u32FrFrameRate, <variable>.frame_rate
 	bl	SM_GetInfo	@
-	ldr	r3, [fp, #-88]	@ SmInstInfo.SegNum, SmInstInfo.SegNum
-	ldr	ip, [fp, #-80]	@ SmInstInfo.TotalSegSize, SmInstInfo.TotalSegSize
-	sub	r1, fp, #72	@,,
+	ldr	ip, [fp, #-80]	@ SmInstInfo.SegNum, SmInstInfo.SegNum
+	ldr	r3, [fp, #-72]	@ SmInstInfo.TotalSegSize, SmInstInfo.TotalSegSize
+	sub	r1, fp, #64	@,,
 	mov	r0, r5	@, ChanID
-	str	r3, [r4, #64]	@ SmInstInfo.SegNum, <variable>.buffered_stream_num
-	str	ip, [r4, #60]	@ SmInstInfo.TotalSegSize, <variable>.buffered_stream_size
+	str	ip, [r4, #64]	@ SmInstInfo.SegNum, <variable>.buffered_stream_num
+	str	r3, [r4, #60]	@ SmInstInfo.TotalSegSize, <variable>.buffered_stream_size
 	bl	SM_GetInfo	@
-	ldr	r0, [fp, #-52]	@ ScdInstInfo.numReadSegFail, ScdInstInfo.numReadSegFail
-	movw	r3, #:lower16:267464	@ tmp198,
-	movt	r3, #:upper16:267464	@ tmp198,
+	ldr	r0, [fp, #-44]	@ ScdInstInfo.numReadSegFail, ScdInstInfo.numReadSegFail
+	movw	r1, #:lower16:269000	@ tmp198,
+	movt	r1, #:upper16:269000	@ tmp198,
 	cmp	r0, #10	@ ScdInstInfo.numReadSegFail,
 	movle	r2, #0	@, tmp195
 	movgt	r2, #1	@, tmp195
 	str	r2, [r4, #88]	@ tmp195, <variable>.stream_not_enough
-	ldr	ip, [r6, r5, asl #2]	@ tmp197, s_pstVfmwChan
-	ldrb	r1, [ip, r3]	@ zero_extendqisi2	@ tmp200,
-	and	r0, r1, #1	@ tmp202, tmp200,
+	ldr	r3, [r6, r5, asl #2]	@ tmp197, s_pstVfmwChan
+	ldrb	ip, [r3, r1]	@ zero_extendqisi2	@ tmp200,
+	and	r0, ip, #1	@ tmp202, tmp200,
 	str	r0, [r4, #96]	@ tmp202, <variable>.mpeg4_shorthead
 .L1117:
-	sub	sp, fp, #32
-	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
+	sub	sp, fp, #28
+	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
 .L1130:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #1199	@,
+	movw	r2, #1198	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC194	@,
 	mov	r0, #0	@,
@@ -9385,11 +9383,11 @@ CloseDrivers:
 	beq	.L1133	@,
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp157,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp157,
-	ldr	r3, [r3, #44]	@ D.53306, g_vdm_hal_fun_ptr.pfun_VDMHAL_CloseHAL
-	cmp	r3, #0	@ D.53306,
+	ldr	r3, [r3, #44]	@ D.53319, g_vdm_hal_fun_ptr.pfun_VDMHAL_CloseHAL
+	cmp	r3, #0	@ D.53319,
 	beq	.L1134	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.53306
+	blx	r3	@ D.53319
 .L1135:
 	ldr	r1, [r4, #4]	@, <variable>.VirAddr
 	ldr	r0, [r4, #8]	@, <variable>.PhyAddr
@@ -9527,9 +9525,9 @@ CloseDrivers:
 	bl	__memzero	@
 	b	.L1139	@
 .L1134:
-	mov	r0, r3	@, D.53306
+	mov	r0, r3	@, D.53319
 	movw	r1, #:lower16:.LC0	@,
-	movw	r2, #6652	@,
+	movw	r2, #6651	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
 	b	.L1135	@
@@ -9592,10 +9590,10 @@ OpenDrivers:
 	bne	.L1174	@,
 	movw	r5, #:lower16:g_vdm_hal_fun_ptr	@ tmp161,
 	movt	r5, #:upper16:g_vdm_hal_fun_ptr	@ tmp161,
-	ldr	r3, [r5, #24]	@ D.53140, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
-	cmp	r3, #0	@ D.53140,
+	ldr	r3, [r5, #24]	@ D.53153, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
+	cmp	r3, #0	@ D.53153,
 	beq	.L1174	@,
-	blx	r3	@ D.53140
+	blx	r3	@ D.53153
 	cmp	r0, #0	@,
 	bne	.L1174	@,
 	add	r7, r4, #80	@ pstMem.3867, pstDrvMem,
@@ -9608,31 +9606,31 @@ OpenDrivers:
 	movt	r0, #:upper16:-121389056	@,
 	mov	r2, r7	@, pstMem.3867
 	bl	MEM_MapRegisterAddr	@
-	subs	r6, r0, #0	@ D.53175,
+	subs	r6, r0, #0	@ D.53188,
 	bne	.L1178	@,
 	sub	r8, fp, #68	@ tmp201,,
 	ldr	r1, [r4, #84]	@, <variable>.VirAddr
 	ldr	r2, [r4, #92]	@, <variable>.Length
 	ldr	r0, [r4, #88]	@, <variable>.PhyAddr
 	bl	MEM_AddMemRecord	@
-	mov	r3, r6	@, D.53175
+	mov	r3, r6	@, D.53188
 	mov	r0, r8	@, tmp201
 	mov	r1, #20	@,
 	movw	r2, #:lower16:.LC195	@,
 	movt	r2, #:upper16:.LC195	@,
 	bl	snprintf	@
-	ldr	r3, [r5, #36]	@ D.53186, g_vdm_hal_fun_ptr.pfun_VDMHAL_GetHalMemSize
-	cmp	r3, #0	@ D.53186,
+	ldr	r3, [r5, #36]	@ D.53199, g_vdm_hal_fun_ptr.pfun_VDMHAL_GetHalMemSize
+	cmp	r3, #0	@ D.53199,
 	beq	.L1178	@,
-	blx	r3	@ D.53186
+	blx	r3	@ D.53199
 	subs	r2, r0, #0	@ Size,
 	ble	.L1178	@,
-	mov	r1, r6	@, D.53175
+	mov	r1, r6	@, D.53188
 	mov	r0, r8	@, tmp201
 	mov	r3, r4	@, pstDrvMem
-	str	r6, [sp, #0]	@ D.53175,
+	str	r6, [sp, #0]	@ D.53188,
 	bl	MEM_AllocMemBlock	@
-	subs	r7, r0, #0	@ D.53199,
+	subs	r7, r0, #0	@ D.53212,
 	bne	.L1165	@,
 	sub	r6, fp, #48	@ tmp176,,
 	ldr	r2, [r4, #12]	@, <variable>.Length
@@ -9642,16 +9640,16 @@ OpenDrivers:
 	mov	r1, #12	@,
 	mov	r0, r6	@, tmp176
 	bl	__memzero	@
-	ldr	r3, [r5, #40]	@ D.53209, g_vdm_hal_fun_ptr.pfun_VDMHAL_OpenHAL
+	ldr	r3, [r5, #40]	@ D.53222, g_vdm_hal_fun_ptr.pfun_VDMHAL_OpenHAL
 	ldr	r1, [r4, #8]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	ldr	r2, [r4, #12]	@ <variable>.Length, <variable>.Length
-	cmp	r3, #0	@ D.53209,
-	str	r7, [fp, #-40]	@ D.53199, VDMOpenParam.VdhId
+	cmp	r3, #0	@ D.53222,
+	str	r7, [fp, #-40]	@ D.53212, VDMOpenParam.VdhId
 	str	r1, [fp, #-48]	@ <variable>.PhyAddr, VDMOpenParam.MemBaseAddr
 	str	r2, [fp, #-44]	@ <variable>.Length, VDMOpenParam.Size
 	beq	.L1165	@,
 	mov	r0, r6	@, tmp176
-	blx	r3	@ D.53209
+	blx	r3	@ D.53222
 	cmp	r0, #0	@,
 	bne	.L1165	@,
 	mov	r0, #0	@,
@@ -9670,36 +9668,36 @@ OpenDrivers:
 	mov	r3, r7	@, pstMem.3877
 	str	ip, [sp, #0]	@ tmp184,
 	bl	MEM_AllocMemBlock	@
-	subs	r5, r0, #0	@ D.53224,
+	subs	r5, r0, #0	@ D.53237,
 	bne	.L1178	@,
 	ldr	r1, [r4, #20]	@, <variable>.VirAddr
 	ldr	r2, [r4, #28]	@, <variable>.Length
 	ldr	r0, [r4, #24]	@, <variable>.PhyAddr
 	bl	MEM_AddMemRecord	@
-	mov	r2, r5	@, D.53224
+	mov	r2, r5	@, D.53237
 	ldr	r0, [r4, #24]	@, <variable>.PhyAddr
 	ldr	r1, [r4, #28]	@, <variable>.Length
 	bl	SM_OpenSCDDrv	@
-	subs	r5, r0, #0	@ D.53227,
+	subs	r5, r0, #0	@ D.53240,
 	bne	.L1178	@,
 	bl	SM_InstInit	@
-	mov	r2, r5	@, D.53227
+	mov	r2, r5	@, D.53240
 	mov	r0, #127	@,
 	movw	r1, #:lower16:VCTRL_Isr_0	@,
 	mov	r3, #32	@,
 	movt	r1, #:upper16:VCTRL_Isr_0	@,
-	str	r5, [sp, #4]	@ D.53227,
+	str	r5, [sp, #4]	@ D.53240,
 	movw	ip, #:lower16:.LC197	@ tmp191,
 	movt	ip, #:upper16:.LC197	@ tmp191,
 	str	ip, [sp, #0]	@ tmp191,
 	bl	request_threaded_irq	@
-	subs	ip, r0, #0	@ D.56236,
+	subs	ip, r0, #0	@ D.56257,
 	bne	.L1178	@,
 	movw	r5, #:lower16:.LANCHOR0	@ tmp193,
 	movt	r5, #:upper16:.LANCHOR0	@ tmp193,
-	str	ip, [sp, #4]	@ D.56236,
+	str	ip, [sp, #4]	@ D.56257,
 	mov	r6, #1	@ tmp194,
-	mov	r2, ip	@, D.56236
+	mov	r2, ip	@, D.56257
 	str	r6, [r5, #296]	@ tmp194, s_VfmwCTrl.stIrqRecord.VdhIrq
 	mov	r0, #136	@,
 	movw	r1, #:lower16:VCTRL_Scd_Isr	@,
@@ -9709,7 +9707,7 @@ OpenDrivers:
 	movt	lr, #:upper16:.LC198	@ tmp196,
 	str	lr, [sp, #0]	@ tmp196,
 	bl	request_threaded_irq	@
-	cmp	r0, #0	@ D.56243
+	cmp	r0, #0	@ D.56264
 	streq	r6, [r5, #300]	@ tmp194, s_VfmwCTrl.stIrqRecord.ScdIrq
 	bne	.L1178	@,
 .L1157:
@@ -9722,7 +9720,7 @@ OpenDrivers:
 	bl	__memzero	@
 	mov	r0, r4	@, pstDrvMem
 	bl	CloseDrivers	@
-	mvn	r0, #0	@ D.53122,
+	mvn	r0, #0	@ D.53135,
 	b	.L1157	@
 .L1178:
 	mov	r0, r7	@, pstMem.3877
@@ -9733,7 +9731,7 @@ OpenDrivers:
 	bl	__memzero	@
 	mov	r0, r4	@, pstDrvMem
 	bl	CloseDrivers	@
-	mvn	r0, #0	@ D.53122,
+	mvn	r0, #0	@ D.53135,
 	b	.L1157	@
 .L1154:
 	mov	r0, r5	@, pstMem
@@ -9763,8 +9761,8 @@ VCTRL_GetUsrdecFrame:
 	movt	r5, #:upper16:.LANCHOR0	@ tmp144,
 	mov	r6, r0	@ ChanID, ChanID
 	mov	r7, r1	@ pMem, pMem
-	ldr	r3, [r5, r0, asl #2]	@ D.52663, s_pstVfmwChan
-	cmp	r3, #0	@ D.52663,
+	ldr	r3, [r5, r0, asl #2]	@ D.52676, s_pstVfmwChan
+	cmp	r3, #0	@ D.52676,
 	beq	.L1190	@,
 	ldr	r8, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r8, #18	@ <variable>.eVidStd,
@@ -9773,9 +9771,9 @@ VCTRL_GetUsrdecFrame:
 	cmp	r3, #2	@ <variable>.s32UsrdecFrameNum,
 	ble	.L1192	@,
 	bl	FSP_IsNewFsAvalible	@
-	cmp	r0, #1	@ D.52676,
+	cmp	r0, #1	@ D.52689,
 	bne	.L1193	@,
-	mov	r1, r0	@, D.52676
+	mov	r1, r0	@, D.52689
 	mov	r0, r6	@, ChanID
 	bl	FSP_NewLogicFs	@
 	subs	sl, r0, #0	@ id,
@@ -9791,14 +9789,14 @@ VCTRL_GetUsrdecFrame:
 	bl	dprint_vfmw	@
 	cmp	r4, #0	@ pLf,
 	beq	.L1195	@,
-	ldr	r2, [r4, #520]	@ D.52691, <variable>.pstDecodeFs
-	cmp	r2, #0	@ D.52691,
+	ldr	r2, [r4, #544]	@ D.52704, <variable>.pstDecodeFs
+	cmp	r2, #0	@ D.52704,
 	beq	.L1188	@,
-	ldr	r3, [r4, #524]	@ D.52693, <variable>.pstDispOutFs
-	cmp	r3, #0	@ D.52693,
+	ldr	r3, [r4, #548]	@ D.52706, <variable>.pstDispOutFs
+	cmp	r3, #0	@ D.52706,
 	beq	.L1188	@,
-	ldr	ip, [r4, #528]	@ D.52695, <variable>.pstTfOutFs
-	cmp	ip, #0	@ D.52695,
+	ldr	ip, [r4, #552]	@ D.52708, <variable>.pstTfOutFs
+	cmp	ip, #0	@ D.52708,
 	beq	.L1188	@,
 	ldr	lr, [ip, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	mov	r0, r8	@, <variable>.eVidStd
@@ -9808,8 +9806,8 @@ VCTRL_GetUsrdecFrame:
 	movt	r1, #:upper16:.LC205	@,
 	str	lr, [sp, #0]	@ <variable>.PhyAddr,
 	bl	dprint_vfmw	@
-	ldr	r3, [r4, #520]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
-	mov	r0, #0	@ D.52667,
+	ldr	r3, [r4, #544]	@ <variable>.pstDecodeFs, <variable>.pstDecodeFs
+	mov	r0, #0	@ D.52680,
 	ldr	ip, [r3, #12]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	str	ip, [r7, #0]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	ldr	r2, [r5, r6, asl #2]	@ tmp162, s_pstVfmwChan
@@ -9823,53 +9821,53 @@ VCTRL_GetUsrdecFrame:
 	movw	r1, #:lower16:.LC201	@,
 	movt	r1, #:upper16:.LC201	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1191:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC199	@,
 	movt	r1, #:upper16:.LC199	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1192:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC200	@,
 	movt	r1, #:upper16:.LC200	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1188:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC206	@,
 	movt	r1, #:upper16:.LC206	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1194:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC202	@,
 	movt	r1, #:upper16:.LC202	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1190:
-	mov	r0, r3	@, D.52663
+	mov	r0, r3	@, D.52676
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5381	@,
+	movw	r2, #5380	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 .L1195:
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC204	@,
-	movw	r2, #5412	@,
+	movw	r2, #5411	@,
 	movt	r1, #:upper16:.LC204	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52667,
+	mvn	r0, #0	@ D.52680,
 	b	.L1182	@
 	.fnend
 	.size	VCTRL_GetUsrdecFrame, .-VCTRL_GetUsrdecFrame
@@ -9906,7 +9904,7 @@ VDH_PutUsrdecFrame:
 	mov	r1, r5	@, PicBufID
 	mov	r2, #0	@,
 	bl	FSP_ClearLogicFs	@
-	mov	r0, #0	@ D.52594,
+	mov	r0, #0	@ D.52607,
 .L1198:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -9946,13 +9944,13 @@ VDH_PutUsrdecFrame:
 	str	lr, [r4, #92]	@ temp.3945, <variable>.top_chrom_phy_addr
 	str	lr, [r4, #124]	@ temp.3945, <variable>.chrom_2d_phy_addr
 	bl	MEM_Phy2Vir	@
-	str	r0, [r4, #32]	@ D.52617, <variable>.luma_vir_addr
-	str	r0, [r4, #48]	@ D.52617, <variable>.luma_2d_vir_addr
+	str	r0, [r4, #32]	@ D.52630, <variable>.luma_vir_addr
+	str	r0, [r4, #48]	@ D.52630, <variable>.luma_2d_vir_addr
 	ldr	r0, [r4, #92]	@, <variable>.top_chrom_phy_addr
 	bl	MEM_Phy2Vir	@
 	ldr	ip, [r4, #88]	@ <variable>.top_luma_phy_addr, <variable>.top_luma_phy_addr
-	str	r0, [r4, #36]	@ D.52620, <variable>.chrom_vir_addr
-	str	r0, [r4, #52]	@ D.52620, <variable>.chrom_2d_vir_addr
+	str	r0, [r4, #36]	@ D.52633, <variable>.chrom_vir_addr
+	str	r0, [r4, #52]	@ D.52633, <variable>.chrom_2d_vir_addr
 	ldr	r3, [r8, #32]	@ <variable>.s32LumaStride, <variable>.s32LumaStride
 	ldr	r0, [r4, #92]	@ <variable>.top_chrom_phy_addr, <variable>.top_chrom_phy_addr
 	add	r2, r3, ip	@ tmp172, <variable>.s32LumaStride, <variable>.top_luma_phy_addr
@@ -9979,8 +9977,8 @@ VDH_PutUsrdecFrame:
 	str	r6, [r4, #188]	@ tmp166, <variable>.frame_rate
 	str	r0, [r4, #192]	@ <variable>.s32LumaStride, <variable>.image_stride
 	str	r6, [r4, #200]	@ tmp166, <variable>.error_level
-	str	sl, [r4, #228]	@ tmp165, <variable>.chroma_idc
-	str	r6, [r4, #276]	@ tmp166, <variable>.line_num_phy_addr
+	str	sl, [r4, #252]	@ tmp165, <variable>.chroma_idc
+	str	r6, [r4, #300]	@ tmp166, <variable>.line_num_phy_addr
 	str	r6, [r4, #56]	@ tmp166, <variable>.line_num_vir_addr
 	ldr	r0, [r8, #16]	@, <variable>.s32IsSemiPlanar
 	ldr	r1, [r8, #0]	@, <variable>.enFmt
@@ -9988,31 +9986,31 @@ VDH_PutUsrdecFrame:
 	cmp	r0, #13	@ eYuvFormat,
 	mov	r2, r0	@ eYuvFormat,
 	beq	.L1208	@,
-	str	r0, [r4, #476]	@ eYuvFormat, <variable>.BTLInfo.YUVFormat
+	str	r0, [r4, #500]	@ eYuvFormat, <variable>.BTLInfo.YUVFormat
 	mov	r2, sl	@, tmp165
 	ldr	ip, [r8, #44]	@ <variable>.s32ChromStride, <variable>.s32ChromStride
 	mov	sl, #18	@ tmp194,
 	mov	r0, r7	@, ChanID
 	mov	r1, r5	@, PicBufID
-	str	ip, [r4, #452]	@ <variable>.s32ChromStride, <variable>.BTLInfo.u32CStride
+	str	ip, [r4, #476]	@ <variable>.s32ChromStride, <variable>.BTLInfo.u32CStride
 	ldr	r3, [r8, #48]	@ <variable>.s32ChromCrStride, <variable>.s32ChromCrStride
-	str	r3, [r4, #448]	@ <variable>.s32ChromCrStride, <variable>.BTLInfo.u32CrStride
+	str	r3, [r4, #472]	@ <variable>.s32ChromCrStride, <variable>.BTLInfo.u32CrStride
 	ldr	lr, [r8, #40]	@ <variable>.s32CrPhyAddr, <variable>.s32CrPhyAddr
-	str	sl, [r4, #384]	@ tmp194, <variable>.ImageDnr.video_standard
-	str	lr, [r4, #456]	@ <variable>.s32CrPhyAddr, <variable>.BTLInfo.u32CrAddr
+	str	sl, [r4, #408]	@ tmp194, <variable>.ImageDnr.video_standard
+	str	lr, [r4, #480]	@ <variable>.s32CrPhyAddr, <variable>.BTLInfo.u32CrAddr
 	bl	FSP_SetDisplay	@
 	movw	ip, #:lower16:.LANCHOR0	@ tmp195,
 	movt	ip, #:upper16:.LANCHOR0	@ tmp195,
 	str	r4, [sp, #0]	@ pLogic,
 	mov	r1, sl	@, tmp194
 	mov	r0, r7	@, ChanID
-	ldr	r2, [ip, r7, asl #2]	@ D.52648, s_pstVfmwChan
-	add	ip, r2, #250880	@, D.52648,
-	add	r2, ip, #720	@, tmp3,
-	add	r3, ip, #728	@,,
+	ldr	r2, [ip, r7, asl #2]	@ D.52661, s_pstVfmwChan
+	add	ip, r2, #252928	@, D.52661,
+	add	r2, ip, #208	@, tmp3,
+	add	r3, ip, #216	@,,
 	bl	InsertImgToVoQueue	@
 	cmp	r0, #1	@,
-	moveq	r0, r6	@ D.52594, tmp166
+	moveq	r0, r6	@ D.52607, tmp166
 	beq	.L1198	@,
 	mov	r0, r7	@, ChanID
 	ldr	r1, [r4, #212]	@, <variable>.p_usrdat
@@ -10026,7 +10024,7 @@ VDH_PutUsrdecFrame:
 	mov	r1, r5	@, PicBufID
 	mov	r2, r6	@, tmp166
 	bl	FSP_SetDisplay	@
-	mvn	r0, #0	@ D.52594,
+	mvn	r0, #0	@ D.52607,
 	b	.L1198	@
 .L1206:
 	ldr	r1, [r8, #4]	@ <variable>.s32IsFrameValid, <variable>.s32IsFrameValid
@@ -10036,7 +10034,7 @@ VDH_PutUsrdecFrame:
 	movw	r1, #:lower16:.LC208	@,
 	movt	r1, #:upper16:.LC208	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52594,
+	mvn	r0, #0	@ D.52607,
 	b	.L1198	@
 .L1205:
 	ldr	r2, [r8, #28]	@, <variable>.s32LumaPhyAddr
@@ -10044,22 +10042,22 @@ VDH_PutUsrdecFrame:
 	movw	r1, #:lower16:.LC207	@,
 	movt	r1, #:upper16:.LC207	@,
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.52594, PicBufID
+	mov	r0, r5	@ D.52607, PicBufID
 	b	.L1198	@
 .L1208:
 	mov	r0, sl	@, tmp165
 	movw	r1, #:lower16:.LC210	@,
 	movt	r1, #:upper16:.LC210	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52594,
+	mvn	r0, #0	@ D.52607,
 	b	.L1198	@
 .L1207:
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC209	@,
-	movw	r2, #5215	@,
+	movw	r2, #5214	@,
 	movt	r1, #:upper16:.LC209	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52594,
+	mvn	r0, #0	@ D.52607,
 	b	.L1198	@
 	.fnend
 	.size	VDH_PutUsrdecFrame, .-VDH_PutUsrdecFrame
@@ -10084,16 +10082,16 @@ VCTRL_PutUsrdecFrame:
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
 	mov	r6, r0	@ ChanID, ChanID
 	mov	ip, r1	@ pUsrdecFrame, pUsrdecFrame
-	ldr	lr, [r3, r0, asl #2]	@ D.52708, s_pstVfmwChan
-	cmp	lr, #0	@ D.52708,
+	ldr	lr, [r3, r0, asl #2]	@ D.52721, s_pstVfmwChan
+	cmp	lr, #0	@ D.52721,
 	beq	.L1216	@,
 	cmp	r1, #0	@ pUsrdecFrame,
 	beq	.L1217	@,
-	ldr	r2, [lr, #552]	@ D.52715, <variable>.eVidStd
-	cmp	r2, #18	@ D.52715,
+	ldr	r2, [lr, #552]	@ D.52728, <variable>.eVidStd
+	cmp	r2, #18	@ D.52728,
 	bne	.L1218	@,
 	mov	r4, r1	@ pUsrdecFrame, pUsrdecFrame
-	add	lr, lr, #496	@ tmp146, D.52708,
+	add	lr, lr, #496	@ tmp146, D.52721,
 	ldmia	r4!, {r0, r1, r2, r3}	@ pUsrdecFrame,,,,
 	mov	r5, lr	@ tmp147, tmp146
 	stmia	r5!, {r0, r1, r2, r3}	@ tmp147,,,,
@@ -10107,40 +10105,40 @@ VCTRL_PutUsrdecFrame:
 	mov	r0, r6	@, ChanID
 	mov	r1, ip	@, pUsrdecFrame
 	bl	VDH_PutUsrdecFrame	@
-	cmp	r0, #0	@ D.52720
+	cmp	r0, #0	@ D.52733
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC213	@,
 	movt	r1, #:upper16:.LC213	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52712,
+	mvn	r0, #0	@ D.52725,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1218:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC212	@,
 	movt	r1, #:upper16:.LC212	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52712,
+	mvn	r0, #0	@ D.52725,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1217:
 	mov	r0, r1	@, pUsrdecFrame
-	movw	r2, #5464	@,
+	movw	r2, #5463	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC211	@,
 	movt	r1, #:upper16:.LC5	@,
 	movt	r3, #:upper16:.LC211	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52712,
+	mvn	r0, #0	@ D.52725,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1216:
-	mov	r0, lr	@, D.52708
+	mov	r0, lr	@, D.52721
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #5463	@,
+	movw	r2, #5462	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52712,
+	mvn	r0, #0	@ D.52725,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_PutUsrdecFrame, .-VCTRL_PutUsrdecFrame
@@ -10163,7 +10161,7 @@ USERDEC_RecycleImage:
 	bl	__gnu_mcount_nc
 	subs	r4, r0, #0	@ pCtx, pCtx
 	mov	r5, r1	@ ImgID, ImgID
-	mvneq	r0, #1	@ D.52573,
+	mvneq	r0, #1	@ D.52586,
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	ldr	r0, [r4, #360]	@, <variable>.ChanID
 	mov	r2, #0	@,
@@ -10172,7 +10170,7 @@ USERDEC_RecycleImage:
 	ldr	r0, [r4, #360]	@, <variable>.ChanID
 	bl	FSP_GetFsImagePtr	@
 	subs	r5, r0, #0	@ pImg,
-	moveq	r0, #1	@ D.52573,
+	moveq	r0, #1	@ D.52586,
 	ldmeqfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	ldr	r0, [r4, #360]	@, <variable>.ChanID
 	mov	r6, #0	@ tmp143,
@@ -10182,7 +10180,7 @@ USERDEC_RecycleImage:
 	ldr	r1, [r5, #216]	@, <variable>.p_usrdat
 	ldr	r0, [r4, #360]	@, <variable>.ChanID
 	bl	FreeUsdByDec	@
-	mov	r0, #1	@ D.52573,
+	mov	r0, #1	@ D.52586,
 	str	r6, [r5, #216]	@ tmp143, <variable>.p_usrdat
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
@@ -10204,13 +10202,13 @@ USERDEC_Init:
 	sub	fp, ip, #4	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	ldr	r6, [r0, #352]	@ D.52552, <variable>.ImageQue.ResetMagicWord
+	ldr	r6, [r0, #352]	@ D.52565, <variable>.ImageQue.ResetMagicWord
 	mov	r4, r0	@ pCtx, pCtx
 	mov	r5, r1	@ pstExtraData, pstExtraData
 	mov	r1, #368	@,
 	bl	__memzero	@
 	add	r0, r4, #8	@, pCtx,
-	str	r6, [r4, #352]	@ D.52552, <variable>.ImageQue.ResetMagicWord
+	str	r6, [r4, #352]	@ D.52565, <variable>.ImageQue.ResetMagicWord
 	bl	ResetVoQueue	@
 	movw	r3, #:lower16:.LANCHOR0	@ tmp207,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp207,
@@ -10218,8 +10216,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #0]	@ temp.4031, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4031,
 	beq	.L1225	@,
-	add	r0, r2, #250880	@ tmp157, temp.4031,
-	add	r2, r0, #720	@ tmp157, tmp157,
+	add	r0, r2, #252928	@ tmp157, temp.4031,
+	add	r2, r0, #208	@ tmp157, tmp157,
 	cmp	r4, r2	@ pCtx, tmp157
 	moveq	r3, #0	@ i,
 	beq	.L1226	@,
@@ -10227,8 +10225,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #4]	@ temp.4033, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4033,
 	beq	.L1227	@,
-	add	ip, r2, #250880	@ tmp160, temp.4033,
-	add	r1, ip, #720	@ tmp160, tmp160,
+	add	ip, r2, #252928	@ tmp160, temp.4033,
+	add	r1, ip, #208	@ tmp160, tmp160,
 	cmp	r4, r1	@ pCtx, tmp160
 	moveq	r3, #1	@ i,
 	beq	.L1226	@,
@@ -10236,8 +10234,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #8]	@ temp.4035, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4035,
 	beq	.L1228	@,
-	add	r2, r2, #250880	@ tmp163, temp.4035,
-	add	lr, r2, #720	@ tmp163, tmp163,
+	add	r2, r2, #252928	@ tmp163, temp.4035,
+	add	lr, r2, #208	@ tmp163, tmp163,
 	cmp	r4, lr	@ pCtx, tmp163
 	moveq	r3, #2	@ i,
 	beq	.L1226	@,
@@ -10245,8 +10243,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #12]	@ temp.4037, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4037,
 	beq	.L1229	@,
-	add	r1, r2, #250880	@ tmp166, temp.4037,
-	add	r0, r1, #720	@ tmp166, tmp166,
+	add	r1, r2, #252928	@ tmp166, temp.4037,
+	add	r0, r1, #208	@ tmp166, tmp166,
 	cmp	r4, r0	@ pCtx, tmp166
 	moveq	r3, #3	@ i,
 	beq	.L1226	@,
@@ -10254,8 +10252,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #16]	@ temp.4039, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4039,
 	beq	.L1230	@,
-	add	lr, r2, #250880	@ tmp169, temp.4039,
-	add	ip, lr, #720	@ tmp169, tmp169,
+	add	lr, r2, #252928	@ tmp169, temp.4039,
+	add	ip, lr, #208	@ tmp169, tmp169,
 	cmp	r4, ip	@ pCtx, tmp169
 	moveq	r3, #4	@ i,
 	beq	.L1226	@,
@@ -10263,8 +10261,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #20]	@ temp.4041, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4041,
 	beq	.L1231	@,
-	add	r0, r2, #250880	@ tmp172, temp.4041,
-	add	r2, r0, #720	@ tmp172, tmp172,
+	add	r0, r2, #252928	@ tmp172, temp.4041,
+	add	r2, r0, #208	@ tmp172, tmp172,
 	cmp	r4, r2	@ pCtx, tmp172
 	moveq	r3, #5	@ i,
 	beq	.L1226	@,
@@ -10272,8 +10270,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #24]	@ temp.4043, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4043,
 	beq	.L1232	@,
-	add	ip, r2, #250880	@ tmp175, temp.4043,
-	add	r1, ip, #720	@ tmp175, tmp175,
+	add	ip, r2, #252928	@ tmp175, temp.4043,
+	add	r1, ip, #208	@ tmp175, tmp175,
 	cmp	r4, r1	@ pCtx, tmp175
 	moveq	r3, #6	@ i,
 	beq	.L1226	@,
@@ -10281,8 +10279,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #28]	@ temp.4045, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4045,
 	beq	.L1233	@,
-	add	r2, r2, #250880	@ tmp178, temp.4045,
-	add	lr, r2, #720	@ tmp178, tmp178,
+	add	r2, r2, #252928	@ tmp178, temp.4045,
+	add	lr, r2, #208	@ tmp178, tmp178,
 	cmp	r4, lr	@ pCtx, tmp178
 	moveq	r3, #7	@ i,
 	beq	.L1226	@,
@@ -10290,8 +10288,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #32]	@ temp.4047, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4047,
 	beq	.L1234	@,
-	add	r1, r2, #250880	@ tmp181, temp.4047,
-	add	r0, r1, #720	@ tmp181, tmp181,
+	add	r1, r2, #252928	@ tmp181, temp.4047,
+	add	r0, r1, #208	@ tmp181, tmp181,
 	cmp	r4, r0	@ pCtx, tmp181
 	moveq	r3, #8	@ i,
 	beq	.L1226	@,
@@ -10299,8 +10297,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #36]	@ temp.4049, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4049,
 	beq	.L1235	@,
-	add	lr, r2, #250880	@ tmp184, temp.4049,
-	add	ip, lr, #720	@ tmp184, tmp184,
+	add	lr, r2, #252928	@ tmp184, temp.4049,
+	add	ip, lr, #208	@ tmp184, tmp184,
 	cmp	r4, ip	@ pCtx, tmp184
 	moveq	r3, #9	@ i,
 	beq	.L1226	@,
@@ -10308,8 +10306,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #40]	@ temp.4051, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4051,
 	beq	.L1236	@,
-	add	r0, r2, #250880	@ tmp187, temp.4051,
-	add	r2, r0, #720	@ tmp187, tmp187,
+	add	r0, r2, #252928	@ tmp187, temp.4051,
+	add	r2, r0, #208	@ tmp187, tmp187,
 	cmp	r4, r2	@ pCtx, tmp187
 	moveq	r3, #10	@ i,
 	beq	.L1226	@,
@@ -10317,8 +10315,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #44]	@ temp.4053, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4053,
 	beq	.L1237	@,
-	add	ip, r2, #250880	@ tmp190, temp.4053,
-	add	r1, ip, #720	@ tmp190, tmp190,
+	add	ip, r2, #252928	@ tmp190, temp.4053,
+	add	r1, ip, #208	@ tmp190, tmp190,
 	cmp	r4, r1	@ pCtx, tmp190
 	moveq	r3, #11	@ i,
 	beq	.L1226	@,
@@ -10326,8 +10324,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #48]	@ temp.4055, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4055,
 	beq	.L1238	@,
-	add	r2, r2, #250880	@ tmp193, temp.4055,
-	add	lr, r2, #720	@ tmp193, tmp193,
+	add	r2, r2, #252928	@ tmp193, temp.4055,
+	add	lr, r2, #208	@ tmp193, tmp193,
 	cmp	r4, lr	@ pCtx, tmp193
 	moveq	r3, #12	@ i,
 	beq	.L1226	@,
@@ -10335,8 +10333,8 @@ USERDEC_Init:
 	ldr	r2, [r3, #52]	@ temp.4057, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4057,
 	beq	.L1239	@,
-	add	r1, r2, #250880	@ tmp196, temp.4057,
-	add	r0, r1, #720	@ tmp196, tmp196,
+	add	r1, r2, #252928	@ tmp196, temp.4057,
+	add	r0, r1, #208	@ tmp196, tmp196,
 	cmp	r4, r0	@ pCtx, tmp196
 	moveq	r3, #13	@ i,
 	beq	.L1226	@,
@@ -10344,17 +10342,17 @@ USERDEC_Init:
 	ldr	r2, [r3, #56]	@ temp.4059, s_pstVfmwChan
 	cmp	r2, #0	@ temp.4059,
 	beq	.L1240	@,
-	add	lr, r2, #250880	@ tmp199, temp.4059,
-	add	ip, lr, #720	@ tmp199, tmp199,
+	add	lr, r2, #252928	@ tmp199, temp.4059,
+	add	ip, lr, #208	@ tmp199, tmp199,
 	cmp	r4, ip	@ pCtx, tmp199
 	moveq	r3, #14	@ i,
 	beq	.L1226	@,
 .L1240:
-	ldr	r3, [r3, #60]	@ D.56249, s_pstVfmwChan
-	cmp	r3, #0	@ D.56249,
+	ldr	r3, [r3, #60]	@ D.56270, s_pstVfmwChan
+	cmp	r3, #0	@ D.56270,
 	beq	.L1241	@,
-	add	r2, r3, #250880	@ tmp202, D.56249,
-	add	r3, r2, #720	@ tmp202, tmp202,
+	add	r2, r3, #252928	@ tmp202, D.56270,
+	add	r3, r2, #208	@ tmp202, tmp202,
 	cmp	r4, r3	@ pCtx, tmp202
 	beq	.L1242	@,
 .L1241:
@@ -10364,12 +10362,12 @@ USERDEC_Init:
 	movt	r1, #:upper16:.LC214	@,
 	mov	r0, #0	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #19	@ D.52565,
+	mvn	r0, #19	@ D.52578,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1242:
 	mov	r3, #15	@ i,
 .L1226:
-	mov	r0, #1	@ D.52565,
+	mov	r0, #1	@ D.52578,
 	str	r3, [r4, #360]	@ i, <variable>.ChanID
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
@@ -10393,8 +10391,8 @@ InitSyntaxCtx:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp184,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp184,
-	ldr	r1, [r3, r0, asl #2]	@ D.52747, s_pstVfmwChan
-	cmp	r1, #0	@ D.52747,
+	ldr	r1, [r3, r0, asl #2]	@ D.52760, s_pstVfmwChan
+	cmp	r1, #0	@ D.52760,
 	beq	.L1264	@,
 	ldr	r2, [r1, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r2, #18	@ <variable>.eVidStd,
@@ -10421,96 +10419,96 @@ InitSyntaxCtx:
 	.word	.L1263
 	.word	.L1261
 .L1261:
-	add	lr, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, lr, #720	@,,
+	add	lr, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, lr, #208	@,,
 	bl	USERDEC_Init	@
 .L1263:
 	ldmfd	sp, {fp, sp, pc}	@
 .L1248:
-	add	ip, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, ip, #720	@,,
+	add	ip, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, ip, #208	@,,
 	bl	H264DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1249:
-	add	lr, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, lr, #720	@,,
+	add	lr, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, lr, #208	@,,
 	bl	VC1DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1250:
-	add	r3, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r3, #720	@,,
+	add	r3, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r3, #208	@,,
 	bl	MPEG4DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1251:
-	add	r0, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r0, #720	@,,
+	add	r0, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r0, #208	@,,
 	bl	MPEG2DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1252:
-	ldr	r3, [r3, #84]	@ D.52764, g_SdecFunc.pfun_iMediaSoftDEC_Init
-	cmp	r3, #0	@ D.52764,
+	ldr	r3, [r3, #84]	@ D.52777, g_SdecFunc.pfun_iMediaSoftDEC_Init
+	cmp	r3, #0	@ D.52777,
 	ldmeqfd	sp, {fp, sp, pc}	@
-	add	r0, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r0, #720	@,,
-	blx	r3	@ D.52764
+	add	r0, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r0, #208	@,,
+	blx	r3	@ D.52777
 	ldmfd	sp, {fp, sp, pc}	@
 .L1253:
-	add	ip, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, ip, #720	@,,
+	add	ip, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, ip, #208	@,,
 	bl	DIVX3DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1254:
-	add	r2, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r2, #720	@,,
+	add	r2, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r2, #208	@,,
 	bl	AVSDEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1255:
-	add	r0, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r0, #720	@,,
+	add	r0, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r0, #208	@,,
 	bl	REAL8DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1256:
-	add	r3, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r3, #720	@,,
+	add	r3, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r3, #208	@,,
 	bl	REAL9DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1257:
-	add	r2, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r2, #720	@,,
+	add	r2, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r2, #208	@,,
 	bl	VP6DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1258:
-	add	r3, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, r3, #720	@,,
+	add	r3, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, r3, #208	@,,
 	bl	VP8DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1259:
-	add	ip, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, ip, #720	@,,
+	add	ip, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, ip, #208	@,,
 	bl	MVC_DEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1260:
-	add	lr, r1, #250880	@, D.52747,
-	add	r1, r1, #560	@, D.52747,
-	add	r0, lr, #720	@,,
+	add	lr, r1, #252928	@, D.52760,
+	add	r1, r1, #560	@, D.52760,
+	add	r0, lr, #208	@,,
 	bl	HEVCDEC_Init	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1264:
-	mov	r0, r1	@, D.52747
-	movw	r2, #5491	@,
+	mov	r0, r1	@, D.52760
+	movw	r2, #5490	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r1, #:upper16:.LC5	@,
@@ -10540,8 +10538,8 @@ VCTRL_GetImageBuffer:
 	bhi	.L1286	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp174,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp174,
-	ldr	r0, [r3, r0, asl #2]	@ D.52411, s_pstVfmwChan
-	cmp	r0, #0	@ D.52411,
+	ldr	r0, [r3, r0, asl #2]	@ D.52424, s_pstVfmwChan
+	cmp	r0, #0	@ D.52424,
 	beq	.L1287	@,
 	ldr	r2, [r0, #16]	@ <variable>.s32IsRun, <variable>.s32IsRun
 	cmp	r2, #1	@ <variable>.s32IsRun,
@@ -10576,72 +10574,72 @@ VCTRL_GetImageBuffer:
 	mov	r0, #1	@ Ret,
 	ldmfd	sp, {fp, sp, pc}	@
 .L1276:
-	add	r3, r0, #250880	@, D.52411,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.52424,
+	add	r0, r3, #208	@,,
 	bl	DIVX3DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1277:
-	add	r2, r0, #250880	@, D.52411,
-	add	r0, r2, #720	@,,
+	add	r2, r0, #252928	@, D.52424,
+	add	r0, r2, #208	@,,
 	bl	AVSDEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1278:
-	add	r1, r0, #250880	@, D.52411,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.52424,
+	add	r0, r1, #208	@,,
 	bl	REAL8DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1279:
-	add	r0, r0, #250880	@, D.52411,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52424,
+	add	r0, r0, #208	@,,
 	bl	REAL9DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1281:
-	add	r1, r0, #250880	@, D.52411,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.52424,
+	add	r0, r1, #208	@,,
 	bl	VP8DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1282:
-	add	r0, r0, #250880	@, D.52411,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52424,
+	add	r0, r0, #208	@,,
 	bl	MVC_DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1283:
-	add	r3, r0, #250880	@, D.52411,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.52424,
+	add	r0, r3, #208	@,,
 	bl	HEVCDEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1270:
 	mov	r0, #0	@ Ret,
 	ldmfd	sp, {fp, sp, pc}	@
 .L1271:
-	add	r0, r0, #250880	@, D.52411,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52424,
+	add	r0, r0, #208	@,,
 	bl	H264DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1272:
-	add	ip, r0, #250880	@, D.52411,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.52424,
+	add	r0, ip, #208	@,,
 	bl	VC1DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1273:
-	add	lr, r0, #250880	@, D.52411,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.52424,
+	add	r0, lr, #208	@,,
 	bl	MPEG4DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1274:
-	add	ip, r0, #250880	@, D.52411,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.52424,
+	add	r0, ip, #208	@,,
 	bl	MPEG2DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1289:
-	add	lr, r0, #250880	@, D.52411,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.52424,
+	add	r0, lr, #208	@,,
 	bl	VP6DEC_GetImageBuffer	@
 	ldmfd	sp, {fp, sp, pc}	@
 .L1288:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4932	@,
+	movw	r2, #4931	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC216	@,
 	movt	r3, #:upper16:.LC216	@,
@@ -10651,7 +10649,7 @@ VCTRL_GetImageBuffer:
 .L1286:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4930	@,
+	movw	r2, #4929	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC28	@,
 	movt	r3, #:upper16:.LC28	@,
@@ -10660,7 +10658,7 @@ VCTRL_GetImageBuffer:
 	ldmfd	sp, {fp, sp, pc}	@
 .L1287:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4931	@,
+	movw	r2, #4930	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC215	@,
 	movt	r3, #:upper16:.LC215	@,
@@ -10693,8 +10691,8 @@ DecChanSyntax:
 	bhi	.L1329	@,
 	movw	r5, #:lower16:.LANCHOR0	@ tmp414,
 	movt	r5, #:upper16:.LANCHOR0	@ tmp414,
-	ldr	r0, [r5, r0, asl #2]	@ D.53525, s_pstVfmwChan
-	cmp	r0, #0	@ D.53525,
+	ldr	r0, [r5, r0, asl #2]	@ D.53538, s_pstVfmwChan
+	cmp	r0, #0	@ D.53538,
 	beq	.L1330	@,
 	ldr	sl, [r0, #16]	@ <variable>.s32IsRun, <variable>.s32IsRun
 	cmp	sl, #1	@ <variable>.s32IsRun,
@@ -10720,14 +10718,14 @@ DecChanSyntax:
 	strhi	r0, [ip, #-1924]	@ currtime, last_rec_pos_time
 	movw	r3, #:lower16:.LANCHOR0	@ tmp196,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp196,
-	ldr	r2, [r2, #552]	@ D.53544, <variable>.eVidStd
+	ldr	r2, [r2, #552]	@ D.53557, <variable>.eVidStd
 	movls	sl, r6	@ rec_pos_print_flag, <variable>.s32StopSyntax
-	sub	r1, r2, #10	@ tmp198, D.53544,
+	sub	r1, r2, #10	@ tmp198, D.53557,
 	cmp	r1, #2	@ tmp198,
 	bls	.L1333	@,
-	cmp	r2, #14	@ D.53544,
+	cmp	r2, #14	@ D.53557,
 	beq	.L1300	@,
-	cmp	r2, #4	@ D.53544,
+	cmp	r2, #4	@ D.53557,
 	bne	.L1299	@,
 .L1300:
 	mov	r0, r4	@, ChanID
@@ -10735,20 +10733,20 @@ DecChanSyntax:
 	cmp	r0, #1	@,
 	bne	.L1334	@,
 	ldr	r6, [r5, r4, asl #2]	@ temp.4169, s_pstVfmwChan
-	ldr	r2, [r6, #1424]	@ D.53569, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
-	cmp	r2, #0	@ D.53569,
+	ldr	r2, [r6, #1424]	@ D.53582, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
+	cmp	r2, #0	@ D.53582,
 	beq	.L1304	@,
-	cmp	r2, #1	@ D.53569,
+	cmp	r2, #1	@ D.53582,
 	beq	.L1335	@,
-	movw	lr, #:lower16:249264	@ tmp409,
-	movt	lr, #:upper16:249264	@ tmp409,
+	movw	lr, #:lower16:250800	@ tmp409,
+	movt	lr, #:upper16:250800	@ tmp409,
 	ldr	r3, [r6, lr]	@ prephitmp.4152, <variable>.FspInst.eFspPartitionState
 .L1324:
 	mov	r0, #31	@,
 	movw	r1, #:lower16:.LC227	@,
 	movt	r1, #:upper16:.LC227	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53523,
+	mvn	r0, #0	@ D.53536,
 .L1292:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -10757,7 +10755,7 @@ DecChanSyntax:
 	tst	lr, #1	@ g_VdmCharacter,
 	beq	.L1300	@,
 .L1299:
-	cmp	r2, #18	@ D.53544,
+	cmp	r2, #18	@ D.53557,
 	beq	.L1300	@,
 	mov	r0, r4	@, ChanID
 	bl	VCTRL_GetDecParam	@
@@ -10765,7 +10763,7 @@ DecChanSyntax:
 	beq	.L1300	@,
 	cmp	sl, #1	@ rec_pos_print_flag,
 	beq	.L1301	@,
-	mvn	r0, #1	@ D.53523,
+	mvn	r0, #1	@ D.53536,
 	b	.L1292	@
 .L1304:
 	ldrb	r2, [r6, #697]	@ zero_extendqisi2	@ <variable>.stSynExtraData.stSegPacket.IsCurrSegWaitDec, <variable>.stSynExtraData.stSegPacket.IsCurrSegWaitDec
@@ -10787,11 +10785,11 @@ DecChanSyntax:
 	mov	r3, r9	@, <variable>.stSynExtraData.stSegPacket.CurrSeg.Pts
 	bl	dprint_vfmw	@
 	ldr	r0, [r5, r4, asl #2]	@ prephitmp.4150, s_pstVfmwChan
-	ldr	r1, [r0, #48]	@ D.53596, <variable>.stChanCfg.eVidStd
-	cmp	r1, #1	@ D.53596,
+	ldr	r1, [r0, #48]	@ D.53609, <variable>.stChanCfg.eVidStd
+	cmp	r1, #1	@ D.53609,
 	beq	.L1337	@,
-	sub	ip, r1, #2	@ tmp235, D.53596,
-	cmp	r1, #6	@ D.53596,
+	sub	ip, r1, #2	@ tmp235, D.53609,
+	cmp	r1, #6	@ D.53609,
 	cmpne	ip, #1	@, tmp235,
 	bls	.L1311	@,
 .L1310:
@@ -10848,8 +10846,8 @@ DecChanSyntax:
 	add	r0, r6, #696	@, temp.4169,
 	movw	r6, #:lower16:.LANCHOR0	@ tmp371,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp371,
-	add	ip, lr, #250880	@, temp.4221,
-	add	r2, ip, #720	@,,
+	add	ip, lr, #252928	@, temp.4221,
+	add	r2, ip, #208	@,,
 	ldr	r1, [lr, #552]	@, <variable>.eVidStd
 	bl	DecodeStream	@
 	ldr	r0, [r5, r4, asl #2]	@ temp.4223, s_pstVfmwChan
@@ -10862,11 +10860,11 @@ DecChanSyntax:
 	cmp	r0, #0	@,
 	bne	.L1340	@,
 .L1323:
-	mov	r0, #0	@ D.53523,
+	mov	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1337:
-	movw	r3, #:lower16:251600	@ tmp227,
-	movt	r3, #:upper16:251600	@ tmp227,
+	movw	r3, #:lower16:253136	@ tmp227,
+	movt	r3, #:upper16:253136	@ tmp227,
 	ldr	lr, [r0, r3]	@ <variable>.stSynCtx.unSyntax.stVc1Ctx.pstExtraData, <variable>.stSynCtx.unSyntax.stVc1Ctx.pstExtraData
 	ldrb	r2, [lr, #556]	@ zero_extendqisi2	@ <variable>.StdExt.Vc1Ext.IsAdvProfile, <variable>.StdExt.Vc1Ext.IsAdvProfile
 	cmp	r2, #1	@ <variable>.StdExt.Vc1Ext.IsAdvProfile,
@@ -10945,9 +10943,9 @@ DecChanSyntax:
 	mov	r3, r4, asl #24	@ tmp406, ChanID,
 	ldr	r0, .L1345	@,
 	add	r2, r3, #262144	@, tmp406,
-	movw	r1, #7313	@,
+	movw	r1, #7312	@,
 	bl	DBG_AddTrace	@
-	mov	r0, #0	@ D.53523,
+	mov	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1341:
 	ldr	r3, [r5, r4, asl #2]	@ prephitmp.4146, s_pstVfmwChan
@@ -11051,24 +11049,24 @@ DecChanSyntax:
 .L1308:
 	ldr	r3, [r5, r4, asl #2]	@ tmp218, s_pstVfmwChan
 	mov	lr, #1	@ tmp219,
-	mvn	r0, #3	@ D.53523,
+	mvn	r0, #3	@ D.53536,
 	str	lr, [r3, #336]	@ tmp219, <variable>.s32NoStreamFlag
 	b	.L1292	@
 .L1339:
 	ldr	r1, [r0, #1488]	@ <variable>.stSynExtraData.s32IsHevcMain10, <variable>.stSynExtraData.s32IsHevcMain10
 	cmp	r1, #1	@ <variable>.stSynExtraData.s32IsHevcMain10,
 	beq	.L1321	@,
-	add	r0, r0, #250880	@, temp.4223,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, temp.4223,
+	add	r0, r0, #208	@,,
 	bl	IsMain10Profile	@
-	cmp	r0, #0	@ D.53666
+	cmp	r0, #0	@ D.53679
 	bne	.L1344	@,
 	ldr	lr, [r6, r4, asl #2]	@ tmp388, s_pstVfmwChan
-	str	r0, [lr, #1488]	@ D.53666, <variable>.stSynExtraData.s32IsHevcMain10
+	str	r0, [lr, #1488]	@ D.53679, <variable>.stSynExtraData.s32IsHevcMain10
 	b	.L1321	@
 .L1335:
-	movw	ip, #:lower16:249264	@ tmp205,
-	movt	ip, #:upper16:249264	@ tmp205,
+	movw	ip, #:lower16:250800	@ tmp205,
+	movt	ip, #:upper16:250800	@ tmp205,
 	ldr	r3, [r6, ip]	@ prephitmp.4152, <variable>.FspInst.eFspPartitionState
 	cmp	r3, #0	@ prephitmp.4152,
 	cmpne	r3, #2	@, prephitmp.4152,
@@ -11080,7 +11078,7 @@ DecChanSyntax:
 	movt	r1, #:upper16:.LC226	@,
 	bl	dprint_vfmw	@
 .L1328:
-	mvn	r0, #2	@ D.53523,
+	mvn	r0, #2	@ D.53536,
 	b	.L1292	@
 .L1334:
 	cmp	sl, #1	@ rec_pos_print_flag,
@@ -11090,7 +11088,7 @@ DecChanSyntax:
 	movw	r1, #:lower16:.LC219	@,
 	movt	r1, #:upper16:.LC219	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #2	@ D.53523,
+	mvn	r0, #2	@ D.53536,
 	b	.L1292	@
 .L1344:
 	mov	r3, r4	@, ChanID
@@ -11110,27 +11108,27 @@ DecChanSyntax:
 	movw	r1, #:lower16:.LC218	@,
 	movt	r1, #:upper16:.LC218	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #1	@ D.53523,
+	mvn	r0, #1	@ D.53536,
 	b	.L1292	@
 .L1331:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7092	@,
+	movw	r2, #7091	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC216	@,
 	movt	r3, #:upper16:.LC216	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53523,
+	mvn	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1332:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7093	@,
+	movw	r2, #7092	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC217	@,
 	movt	r3, #:upper16:.LC217	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53523,
+	mvn	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1342:
 	mov	lr, #624	@ tmp249,
@@ -11143,18 +11141,18 @@ DecChanSyntax:
 	mov	r3, r4, asl #24	@ tmp369, ChanID,
 	ldr	r0, .L1345	@,
 	add	r2, r3, #196608	@, tmp369,
-	movw	r1, #7280	@,
+	movw	r1, #7279	@,
 	bl	DBG_AddTrace	@
 	b	.L1320	@
 .L1329:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7090	@,
+	movw	r2, #7089	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53523,
+	mvn	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1343:
 	movw	r1, #:lower16:.LC220	@,
@@ -11165,12 +11163,12 @@ DecChanSyntax:
 	b	.L1308	@
 .L1330:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #7091	@,
+	movw	r2, #7090	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC215	@,
 	movt	r3, #:upper16:.LC215	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.53523,
+	mvn	r0, #0	@ D.53536,
 	b	.L1292	@
 .L1346:
 	.align	2
@@ -11204,7 +11202,7 @@ DecSyntax:
 	ldr	r9, [r6, #0]	@ temp.4278, s_pstVfmwChan
 	ldr	r8, [r6, #4]	@ temp.4280, s_pstVfmwChan
 	cmp	r9, #0	@ temp.4278,
-	ldr	r7, [r6, #8]	@ D.53417, s_pstVfmwChan
+	ldr	r7, [r6, #8]	@ D.53430, s_pstVfmwChan
 	ldr	r2, [r6, #12]	@ temp.4282, s_pstVfmwChan
 	ldrne	r9, [r9, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	cmp	r8, #0	@ temp.4280,
@@ -11212,7 +11210,7 @@ DecSyntax:
 	ldr	r0, [r6, #20]	@ temp.4286, s_pstVfmwChan
 	str	r9, [r4, #-1796]	@ <variable>.s32Priority, ChanPriTab
 	ldrne	r8, [r8, #24]	@ <variable>.s32Priority, <variable>.s32Priority
-	cmp	r7, #0	@ D.53417,
+	cmp	r7, #0	@ D.53430,
 	ldr	r3, [r6, #24]	@ temp.4288, s_pstVfmwChan
 	ldr	ip, [r6, #28]	@ temp.4290, s_pstVfmwChan
 	str	r8, [r4, #-1792]	@ <variable>.s32Priority, ChanPriTab
@@ -11338,8 +11336,8 @@ DecSyntax:
 	add	r2, r5, #1	@ s_VfmwCTrl__s32ThisChanIDPlus1s_VfmwCTrl.4259, MaxPriChan.4307,
 	str	r7, [ip, #-1796]	@ MaxPriChan.4307, ChanPriTab
 	ble	.L1396	@,
-	ldr	r3, [r6, r5, asl #2]	@ D.53428, s_pstVfmwChan
-	cmp	r3, #0	@ D.53428,
+	ldr	r3, [r6, r5, asl #2]	@ D.53441, s_pstVfmwChan
+	cmp	r3, #0	@ D.53441,
 	beq	.L1408	@,
 	str	r2, [sl, #156]	@ s_VfmwCTrl__s32ThisChanIDPlus1s_VfmwCTrl.4259, s_VfmwCTrl.s32ThisChanIDPlus1
 	ldr	ip, [r3, #16]	@ <variable>.s32IsRun, <variable>.s32IsRun
@@ -11488,11 +11486,11 @@ VCTRL_FlushDecoder:
 	movw	r4, #:lower16:.LANCHOR0	@ tmp184,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp184,
 	mov	r5, r0	@ ChanID, ChanID
-	ldr	r0, [r4, r0, asl #2]	@ D.52351, s_pstVfmwChan
-	cmp	r0, #0	@ D.52351,
+	ldr	r0, [r4, r0, asl #2]	@ D.52364, s_pstVfmwChan
+	cmp	r0, #0	@ D.52364,
 	beq	.L1452	@,
-	movw	r1, #:lower16:251592	@ tmp143,
-	movt	r1, #:upper16:251592	@ tmp143,
+	movw	r1, #:lower16:253128	@ tmp143,
+	movt	r1, #:upper16:253128	@ tmp143,
 	ldr	r3, [r0, r1]	@ <variable>.stSynCtx.eVidStd, <variable>.stSynCtx.eVidStd
 	cmp	r3, #16	@ <variable>.stSynCtx.eVidStd,
 	ldrls	pc, [pc, r3, asl #2]	@ <variable>.stSynCtx.eVidStd
@@ -11516,84 +11514,84 @@ VCTRL_FlushDecoder:
 	.word	.L1447
 	.word	.L1448
 .L1437:
-	add	lr, r0, #250880	@, D.52351,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.52364,
+	add	r0, lr, #208	@,,
 	bl	H264_FlushDecoder	@
 	bl	VDMDRV_WakeUpVdm	@
 	bl	VDMDRV_WakeUpVdm	@
 	ldr	r3, [r4, r5, asl #2]	@ tmp154, s_pstVfmwChan
-	add	ip, r3, #250880	@, tmp154,
-	add	r0, ip, #720	@,,
+	add	ip, r3, #252928	@, tmp154,
+	add	r0, ip, #208	@,,
 	bl	FlushDPB	@
 	cmp	r0, #0	@,
 	bne	.L1453	@,
 .L1436:
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1438:
-	add	r2, r0, #250880	@, D.52351,
-	add	r0, r2, #720	@,,
+	add	r2, r0, #252928	@, D.52364,
+	add	r0, r2, #208	@,,
 	bl	VC1DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1439:
-	add	r2, r0, #250880	@, D.52351,
-	add	r0, r2, #720	@,,
+	add	r2, r0, #252928	@, D.52364,
+	add	r0, r2, #208	@,,
 	bl	MPEG4DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1440:
-	add	r0, r0, #250880	@, D.52351,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52364,
+	add	r0, r0, #208	@,,
 	bl	MPEG2DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1441:
-	add	r1, r0, #250880	@, D.52351,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.52364,
+	add	r0, r1, #208	@,,
 	bl	DIVX3DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1442:
-	add	r3, r0, #250880	@, D.52351,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.52364,
+	add	r0, r3, #208	@,,
 	bl	AVSDEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1443:
-	add	lr, r0, #250880	@, D.52351,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.52364,
+	add	r0, lr, #208	@,,
 	bl	REAL8DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1444:
-	add	r0, r0, #250880	@, D.52351,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52364,
+	add	r0, r0, #208	@,,
 	bl	REAL9DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1445:
-	add	ip, r0, #250880	@, D.52351,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.52364,
+	add	r0, ip, #208	@,,
 	bl	VP6DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1446:
-	add	r3, r0, #250880	@, D.52351,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.52364,
+	add	r0, r3, #208	@,,
 	bl	VP8DEC_GetRemainImg	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1447:
-	add	ip, r0, #250880	@, D.52351,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.52364,
+	add	r0, ip, #208	@,,
 	bl	MVC_FlushDecoder	@
 	bl	VDMDRV_WakeUpVdm	@
 	bl	VDMDRV_WakeUpVdm	@
 	ldr	r2, [r4, r5, asl #2]	@ tmp165, s_pstVfmwChan
 	mvn	r1, #0	@,
-	add	r0, r2, #250880	@, tmp165,
-	add	r0, r0, #720	@,,
+	add	r0, r2, #252928	@, tmp165,
+	add	r0, r0, #208	@,,
 	bl	MVC_FlushDPB	@
 	cmp	r0, #0	@,
 	beq	.L1436	@,
@@ -11601,13 +11599,13 @@ VCTRL_FlushDecoder:
 	movw	r1, #:lower16:.LC230	@,
 	ldr	r2, .L1455	@,
 	movt	r1, #:upper16:.LC230	@,
-	movw	r3, #4877	@,
+	movw	r3, #4876	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1448:
-	add	r1, r0, #250880	@, D.52351,
-	add	r0, r1, #720	@,,
+	add	r1, r0, #252928	@, D.52364,
+	add	r0, r1, #208	@,,
 	bl	HEVC_FlushOutputFrmFromDPB	@
 	cmp	r0, #0	@,
 	bne	.L1454	@,
@@ -11618,11 +11616,11 @@ VCTRL_FlushDecoder:
 	bl	dprint_vfmw	@
 	bl	VDMDRV_WakeUpVdm	@
 	bl	VDMDRV_WakeUpVdm	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1454:
 	movw	r1, #:lower16:.LC228	@,
-	movw	r2, #4863	@,
+	movw	r2, #4862	@,
 	movt	r1, #:upper16:.LC228	@,
 	mov	r0, #0	@,
 	bl	dprint_vfmw	@
@@ -11630,19 +11628,19 @@ VCTRL_FlushDecoder:
 .L1453:
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC228	@,
-	movw	r2, #4855	@,
+	movw	r2, #4854	@,
 	movt	r1, #:upper16:.LC228	@,
 	bl	dprint_vfmw	@
-	mov	r0, #0	@ D.52355,
+	mov	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1452:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4834	@,
+	movw	r2, #4833	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.52355,
+	mvn	r0, #0	@ D.52368,
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1456:
 	.align	2
@@ -11673,8 +11671,8 @@ VCTRL_PostProc:
 	movt	r4, #:upper16:.LANCHOR0	@ tmp274,
 	mov	r5, r0	@ ChanId, ChanId
 	ldr	ip, [fp, #4]	@ VdhId, VdhId
-	ldr	r0, [r4, r0, asl #2]	@ D.52265, s_pstVfmwChan
-	cmp	r0, #0	@ D.52265,
+	ldr	r0, [r4, r0, asl #2]	@ D.52278, s_pstVfmwChan
+	cmp	r0, #0	@ D.52278,
 	beq	.L1491	@,
 	ldr	r7, [r0, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	ldr	r6, [r0, #1264]	@ ModuleLowlyEnable, <variable>.stSynExtraData.s32ModuleLowlyEnable
@@ -11700,15 +11698,15 @@ VCTRL_PostProc:
 	.word	.L1470
 	.word	.L1471
 .L1460:
-	add	r2, r0, #250880	@, D.52265,
+	add	r2, r0, #252928	@, D.52278,
 	str	ip, [sp, #4]	@ VdhId,
-	add	r0, r2, #720	@,,
+	add	r0, r2, #208	@,,
 	mov	r2, #1	@,
 	str	r6, [sp, #0]	@ ModuleLowlyEnable,
 	bl	H264DEC_VDMPostProc	@
 	ldr	r0, [r4, r5, asl #2]	@ tmp152, s_pstVfmwChan
-	movw	r7, #:lower16:265160	@ tmp153,
-	movt	r7, #:upper16:265160	@ tmp153,
+	movw	r7, #:lower16:266696	@ tmp153,
+	movt	r7, #:upper16:266696	@ tmp153,
 	movw	r8, #:lower16:.LANCHOR0	@ tmp151,
 	movt	r8, #:upper16:.LANCHOR0	@ tmp151,
 	ldrb	r3, [r0, r7]	@ zero_extendqisi2	@ <variable>.stSynCtx.unSyntax.stH264Ctx.IsStreamEndFlag, <variable>.stSynCtx.unSyntax.stH264Ctx.IsStreamEndFlag
@@ -11718,22 +11716,22 @@ VCTRL_PostProc:
 	cmp	r6, #1	@ ModuleLowlyEnable,
 	beq	.L1480	@,
 	ldr	r0, [r4, r5, asl #2]	@ tmp161, s_pstVfmwChan
-	movw	r3, #:lower16:251960	@ tmp162,
-	movt	r3, #:upper16:251960	@ tmp162,
+	movw	r3, #:lower16:253496	@ tmp162,
+	movt	r3, #:upper16:253496	@ tmp162,
 	mov	lr, #0	@ tmp163,
 	str	lr, [r0, r3]	@ tmp163,
 .L1480:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
 .L1471:
-	add	r7, r0, #250880	@, D.52265,
+	add	r7, r0, #252928	@, D.52278,
 	mov	r2, #1	@,
-	add	r0, r7, #720	@,,
+	add	r0, r7, #208	@,,
 	stmia	sp, {r6, ip}	@ phole stm
 	bl	HEVCDEC_VDMPostProc	@
 	ldr	r1, [r4, r5, asl #2]	@ tmp167, s_pstVfmwChan
-	movw	r7, #:lower16:251606	@ tmp168,
-	movt	r7, #:upper16:251606	@ tmp168,
+	movw	r7, #:lower16:253142	@ tmp168,
+	movt	r7, #:upper16:253142	@ tmp168,
 	movw	r8, #:lower16:.LANCHOR0	@ tmp166,
 	movt	r8, #:upper16:.LANCHOR0	@ tmp166,
 	ldrb	r2, [r1, r7]	@ zero_extendqisi2	@ <variable>.stSynCtx.unSyntax.stHevcCtx.IsStreamEndFlag, <variable>.stSynCtx.unSyntax.stHevcCtx.IsStreamEndFlag
@@ -11743,16 +11741,16 @@ VCTRL_PostProc:
 	cmp	r6, #1	@ ModuleLowlyEnable,
 	beq	.L1480	@,
 	ldr	r2, [r4, r5, asl #2]	@ tmp176, s_pstVfmwChan
-	movw	r3, #:lower16:2211792	@ tmp177,
-	movt	r3, #:upper16:2211792	@ tmp177,
+	movw	r3, #:lower16:2213328	@ tmp177,
+	movt	r3, #:upper16:2213328	@ tmp177,
 	mov	lr, #0	@ tmp178,
 	str	lr, [r2, r3]	@ tmp178,
 	b	.L1480	@
 .L1461:
-	add	r2, r0, #250880	@, D.52265,
-	movw	r6, #:lower16:329855	@ tmp239,
-	add	r0, r2, #720	@,,
-	movt	r6, #:upper16:329855	@ tmp239,
+	add	r2, r0, #252928	@, D.52278,
+	movw	r6, #:lower16:331391	@ tmp239,
+	add	r0, r2, #208	@,,
+	movt	r6, #:upper16:331391	@ tmp239,
 	bl	VC1DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ prephitmp.4439, s_pstVfmwChan
 .L1490:
@@ -11762,102 +11760,102 @@ VCTRL_PostProc:
 	cmp	lr, #1	@ <variable>.stSynCtx.unSyntax.stVc1Ctx.CodecInfo.IsStreamEndFlag,
 	beq	.L1494	@,
 .L1484:
-	movw	r0, #:lower16:251604	@ tmp234,
-	movt	r0, #:upper16:251604	@ tmp234,
+	movw	r0, #:lower16:253140	@ tmp234,
+	movt	r0, #:upper16:253140	@ tmp234,
 	mov	r1, #0	@ tmp235,
 	str	r1, [r2, r0]	@ tmp235,
 	b	.L1480	@
 .L1462:
-	add	ip, r0, #250880	@, D.52265,
+	add	ip, r0, #252928	@, D.52278,
 	mov	r2, r3	@, pLumaInfo
-	add	r0, ip, #720	@,,
+	add	r0, ip, #208	@,,
 	movw	r6, #:lower16:.LANCHOR0	@ tmp194,
 	bl	MPEG4DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ prephitmp.4433, s_pstVfmwChan
-	movw	r4, #:lower16:308408	@ tmp195,
-	movt	r4, #:upper16:308408	@ tmp195,
+	movw	r4, #:lower16:311480	@ tmp195,
+	movt	r4, #:upper16:311480	@ tmp195,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp194,
 	ldrb	r1, [r2, r4]	@ zero_extendqisi2	@ <variable>.stSynCtx.unSyntax.stMpeg4Ctx.IsStreamEndFlag, <variable>.stSynCtx.unSyntax.stMpeg4Ctx.IsStreamEndFlag
 	cmp	r1, #1	@ <variable>.stSynCtx.unSyntax.stMpeg4Ctx.IsStreamEndFlag,
 	beq	.L1495	@,
 .L1476:
-	movw	r3, #:lower16:252636	@ tmp203,
-	movt	r3, #:upper16:252636	@ tmp203,
+	movw	r3, #:lower16:254172	@ tmp203,
+	movt	r3, #:upper16:254172	@ tmp203,
 	mov	lr, #0	@ tmp204,
 	str	lr, [r2, r3]	@ tmp204,
 	b	.L1480	@
 .L1463:
-	add	r6, r0, #250880	@, D.52265,
-	add	r0, r6, #720	@,,
-	movw	r6, #:lower16:366290	@ tmp182,
+	add	r6, r0, #252928	@, D.52278,
+	add	r0, r6, #208	@,,
+	movw	r6, #:lower16:370898	@ tmp182,
 	bl	MPEG2DEC_VDMPostProc	@
-	movt	r6, #:upper16:366290	@ tmp182,
+	movt	r6, #:upper16:370898	@ tmp182,
 	ldr	r2, [r4, r5, asl #2]	@ prephitmp.4430, s_pstVfmwChan
 	b	.L1490	@
 .L1464:
-	add	ip, r0, #250880	@, D.52265,
-	add	r0, ip, #720	@,,
+	add	ip, r0, #252928	@, D.52278,
+	add	r0, ip, #208	@,,
 	bl	DIVX3DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ tmp233, s_pstVfmwChan
 	b	.L1484	@
 .L1465:
-	add	r6, r0, #250880	@, D.52265,
-	add	r0, r6, #720	@,,
-	movw	r6, #:lower16:268724	@ tmp208,
+	add	r6, r0, #252928	@, D.52278,
+	add	r0, r6, #208	@,,
+	movw	r6, #:lower16:270260	@ tmp208,
 	bl	AVSDEC_VDMPostProc	@
-	movt	r6, #:upper16:268724	@ tmp208,
+	movt	r6, #:upper16:270260	@ tmp208,
 	ldr	r2, [r4, r5, asl #2]	@ prephitmp.4436, s_pstVfmwChan
 	b	.L1490	@
 .L1466:
-	add	lr, r0, #250880	@, D.52265,
-	add	r0, lr, #720	@,,
+	add	lr, r0, #252928	@, D.52278,
+	add	r0, lr, #208	@,,
 	bl	REAL8DEC_VDMPostProc	@
 	ldr	ip, [r4, r5, asl #2]	@ tmp221, s_pstVfmwChan
-	movw	r0, #:lower16:251604	@ tmp222,
-	movt	r0, #:upper16:251604	@ tmp222,
+	movw	r0, #:lower16:253140	@ tmp222,
+	movt	r0, #:upper16:253140	@ tmp222,
 	mov	r1, #0	@ tmp223,
 	str	r1, [ip, r0]	@ tmp223,
 	b	.L1480	@
 .L1467:
-	add	r3, r0, #250880	@, D.52265,
-	add	r0, r3, #720	@,,
+	add	r3, r0, #252928	@, D.52278,
+	add	r0, r3, #208	@,,
 	bl	REAL9DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ tmp233, s_pstVfmwChan
 	b	.L1484	@
 .L1468:
-	add	r0, r0, #250880	@, D.52265,
-	add	r0, r0, #720	@,,
+	add	r0, r0, #252928	@, D.52278,
+	add	r0, r0, #208	@,,
 	bl	VP6DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ tmp233, s_pstVfmwChan
 	b	.L1484	@
 .L1469:
-	add	r2, r0, #250880	@, D.52265,
-	add	r0, r2, #720	@,,
+	add	r2, r0, #252928	@, D.52278,
+	add	r0, r2, #208	@,,
 	bl	VP8DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ tmp233, s_pstVfmwChan
 	b	.L1484	@
 .L1470:
-	add	r6, r0, #250880	@, D.52265,
+	add	r6, r0, #252928	@, D.52278,
 	mov	r2, #1	@,
-	add	r0, r6, #720	@,,
+	add	r0, r6, #208	@,,
 	movw	r6, #:lower16:.LANCHOR0	@ tmp263,
 	bl	MVC_DEC_VDMPostProc	@
 	ldr	r2, [r4, r5, asl #2]	@ prephitmp.4400, s_pstVfmwChan
-	movw	r4, #:lower16:251601	@ tmp264,
-	movt	r4, #:upper16:251601	@ tmp264,
+	movw	r4, #:lower16:253137	@ tmp264,
+	movt	r4, #:upper16:253137	@ tmp264,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp263,
 	ldrb	r1, [r2, r4]	@ zero_extendqisi2	@ <variable>.stSynCtx.unSyntax.stMvcCtx.IsStreamEndFlag, <variable>.stSynCtx.unSyntax.stMvcCtx.IsStreamEndFlag
 	cmp	r1, #1	@ <variable>.stSynCtx.unSyntax.stMvcCtx.IsStreamEndFlag,
 	beq	.L1496	@,
 .L1479:
-	movw	r0, #:lower16:251828	@ tmp272,
-	movt	r0, #:upper16:251828	@ tmp272,
+	movw	r0, #:lower16:253364	@ tmp272,
+	movt	r0, #:upper16:253364	@ tmp272,
 	mov	lr, #0	@ tmp273,
 	str	lr, [r2, r0]	@ tmp273,
 	b	.L1480	@
 .L1491:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4671	@,
+	movw	r2, #4670	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
@@ -11930,8 +11928,8 @@ VCTRL_VdmPostProc:
 	bhi	.L1503	@,
 	movw	r3, #:lower16:.LANCHOR0	@ tmp142,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp142,
-	ldr	r3, [r3, r0, asl #2]	@ D.52321, s_pstVfmwChan
-	cmp	r3, #0	@ D.52321,
+	ldr	r3, [r3, r0, asl #2]	@ D.52334, s_pstVfmwChan
+	cmp	r3, #0	@ D.52334,
 	beq	.L1504	@,
 	ldr	r1, [r3, #16]	@ <variable>.s32IsRun, <variable>.s32IsRun
 	cmp	r1, #1	@ <variable>.s32IsRun,
@@ -11939,7 +11937,7 @@ VCTRL_VdmPostProc:
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC216	@,
 	movt	r1, #:upper16:.LC5	@,
-	movw	r2, #4820	@,
+	movw	r2, #4819	@,
 	movt	r3, #:upper16:.LC216	@,
 	mov	r0, #0	@,
 	bl	dprint_vfmw	@
@@ -11960,7 +11958,7 @@ VCTRL_VdmPostProc:
 	b	.L1502	@
 .L1503:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4818	@,
+	movw	r2, #4817	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC28	@,
 	mov	r0, #0	@,
@@ -11968,9 +11966,9 @@ VCTRL_VdmPostProc:
 	bl	dprint_vfmw	@
 	b	.L1502	@
 .L1504:
-	mov	r0, r3	@, D.52321
+	mov	r0, r3	@, D.52334
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4819	@,
+	movw	r2, #4818	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC215	@,
 	movt	r3, #:upper16:.LC215	@,
@@ -12037,7 +12035,7 @@ VCTRL_ExtAccPostProcess:
 VCTRL_ReleaseChanImage:
 	.fnstart
 .LFB1585:
-	@ args = 0, pretend = 0, frame = 504
+	@ args = 0, pretend = 0, frame = 528
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
 	mov	ip, sp	@,
@@ -12046,8 +12044,8 @@ VCTRL_ReleaseChanImage:
 	.save {r4, r5, r6, r7, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	.pad #504
-	sub	sp, sp, #504	@,,
+	.pad #528
+	sub	sp, sp, #528	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
 	cmp	r0, #15	@ ChanID,
@@ -12056,8 +12054,8 @@ VCTRL_ReleaseChanImage:
 	bhi	.L1523	@,
 	movw	r5, #:lower16:.LANCHOR0	@ tmp145,
 	movt	r5, #:upper16:.LANCHOR0	@ tmp145,
-	ldr	r0, [r5, r0, asl #2]	@ D.52066, s_pstVfmwChan
-	cmp	r0, #0	@ D.52066,
+	ldr	r0, [r5, r0, asl #2]	@ D.52079, s_pstVfmwChan
+	cmp	r0, #0	@ D.52079,
 	beq	.L1524	@,
 	ldr	r3, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
@@ -12076,25 +12074,25 @@ VCTRL_ReleaseChanImage:
 	ldr	r0, [r5, r4, asl #2]	@ temp.4518, s_pstVfmwChan
 	cmp	r0, #0	@ temp.4518,
 	movweq	r1, #:lower16:.LC233	@,
-	movweq	r2, #4377	@,
+	movweq	r2, #4376	@,
 	movteq	r1, #:upper16:.LC233	@,
 	beq	.L1522	@,
 	ldr	r1, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r1, #1	@ <variable>.s32IsOpen,
 	bne	.L1527	@,
-	add	r0, r0, #250880	@, temp.4518,
+	add	r0, r0, #252928	@, temp.4518,
 	mov	r1, r6	@, pImage
-	add	r0, r0, #712	@,,
+	add	r0, r0, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
-	ldr	r3, [r6, #252]	@ D.52084, <variable>.image_id_1
-	cmn	r3, #1	@ D.52084,
+	ldr	r3, [r6, #276]	@ D.52097, <variable>.image_id_1
+	cmn	r3, #1	@ D.52097,
 	mov	r7, r0	@ ret,
 	beq	.L1517	@,
 	ldr	r7, [r5, r4, asl #2]	@ tmp167, s_pstVfmwChan
-	sub	r1, fp, #532	@,,
-	str	r3, [fp, #-336]	@ D.52084, Image_1.image_id
-	add	r2, r7, #250880	@, tmp167,
-	add	r0, r2, #712	@,,
+	sub	r1, fp, #556	@,,
+	str	r3, [fp, #-360]	@ D.52097, Image_1.image_id
+	add	r2, r7, #252928	@, tmp167,
+	add	r0, r2, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
 	mov	r7, r0	@ ret,
 .L1517:
@@ -12135,7 +12133,7 @@ VCTRL_ReleaseChanImage:
 	mov	r4, r4, asl #24	@ tmp186, ChanID,
 	ldr	r0, .L1530	@,
 	add	r2, r4, #851968	@ tmp187, tmp186,
-	movw	r1, #4414	@,
+	movw	r1, #4413	@,
 	cmp	r7, #1	@ ret,
 	addeq	r2, r2, #1	@,,, tmp187
 	str	ip, [r3, #-1720]	@ currtime, last_rec_pos_time
@@ -12147,7 +12145,7 @@ VCTRL_ReleaseChanImage:
 .L1527:
 	movw	r1, #:lower16:.LC234	@,
 	movt	r1, #:upper16:.LC234	@,
-	movw	r2, #4383	@,
+	movw	r2, #4382	@,
 	mov	r0, #0	@,
 .L1522:
 	bl	dprint_vfmw	@
@@ -12159,7 +12157,7 @@ VCTRL_ReleaseChanImage:
 .L1525:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4369	@,
+	movw	r2, #4368	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC215	@,
 	movt	r3, #:upper16:.LC215	@,
@@ -12169,7 +12167,7 @@ VCTRL_ReleaseChanImage:
 .L1523:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4367	@,
+	movw	r2, #4366	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
@@ -12178,7 +12176,7 @@ VCTRL_ReleaseChanImage:
 	b	.L1511	@
 .L1526:
 	mov	r0, r1	@, pImage
-	movw	r2, #4370	@,
+	movw	r2, #4369	@,
 	movw	r1, #:lower16:.LC5	@,
 	movw	r3, #:lower16:.LC231	@,
 	movt	r1, #:upper16:.LC5	@,
@@ -12188,7 +12186,7 @@ VCTRL_ReleaseChanImage:
 	b	.L1511	@
 .L1524:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4368	@,
+	movw	r2, #4367	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
@@ -12207,7 +12205,7 @@ VCTRL_ReleaseChanImage:
 VCTRL_GetChanImage:
 	.fnstart
 .LFB1584:
-	@ args = 0, pretend = 0, frame = 512
+	@ args = 0, pretend = 0, frame = 536
 	@ frame_needed = 1, uses_anonymous_args = 0
 	.movsp ip
 	mov	ip, sp	@,
@@ -12216,8 +12214,8 @@ VCTRL_GetChanImage:
 	.save {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr}
 	.setfp fp, ip, #-4
 	sub	fp, ip, #4	@,,
-	.pad #548
-	sub	sp, sp, #548	@,,
+	.pad #572
+	sub	sp, sp, #572	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
 	mov	r5, r0	@ ChanID, ChanID
@@ -12231,8 +12229,8 @@ VCTRL_GetChanImage:
 	bhi	.L1556	@,
 	movw	r6, #:lower16:.LANCHOR0	@ tmp327,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp327,
-	ldr	r0, [r6, r5, asl #2]	@ D.51943, s_pstVfmwChan
-	cmp	r0, #0	@ D.51943,
+	ldr	r0, [r6, r5, asl #2]	@ D.51956, s_pstVfmwChan
+	cmp	r0, #0	@ D.51956,
 	beq	.L1557	@,
 	ldr	r3, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
@@ -12243,26 +12241,26 @@ VCTRL_GetChanImage:
 	ldr	r0, [r6, r5, asl #2]	@ temp.4561, s_pstVfmwChan
 	cmp	r0, #0	@ temp.4561,
 	movweq	r1, #:lower16:.LC233	@,
-	movweq	r2, #4161	@,
+	moveq	r2, #4160	@,
 	movteq	r1, #:upper16:.LC233	@,
 	beq	.L1555	@,
 	ldr	r1, [r0, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r1, #1	@ <variable>.s32IsOpen,
 	bne	.L1559	@,
-	add	r0, r0, #250880	@, temp.4561,
+	add	r0, r0, #252928	@, temp.4561,
 	mov	r1, r4	@, pImage
-	add	r0, r0, #712	@,,
+	add	r0, r0, #200	@,,
 	bl	SYNTAX_ReceiveImage	@
 	cmp	r0, #1	@ ret,
-	movne	r3, #0	@, D.51957
-	moveq	r3, #1	@, D.51957
+	movne	r3, #0	@, D.51970
+	moveq	r3, #1	@, D.51970
 	mov	r7, r0	@ ret,
 	cmp	r4, #0	@ pImage,
 	moveq	r2, #0	@, tmp170
-	andne	r2, r3, #1	@,, tmp170, D.51957
+	andne	r2, r3, #1	@,, tmp170, D.51970
 	cmp	r2, #0	@ tmp170,
 	bne	.L1560	@,
-	cmp	r3, #0	@ D.51957,
+	cmp	r3, #0	@ D.51970,
 	bne	.L1540	@,
 .L1542:
 	mov	r0, #12	@,
@@ -12275,12 +12273,12 @@ VCTRL_GetChanImage:
 	beq	.L1562	@,
 .L1552:
 	ldr	ip, [r6, r5, asl #2]	@ tmp319, s_pstVfmwChan
-	movw	lr, #:lower16:267684	@ tmp320,
-	movt	lr, #:upper16:267684	@ tmp320,
+	movw	lr, #:lower16:269220	@ tmp320,
+	movt	lr, #:upper16:269220	@ tmp320,
 	movw	r0, #:lower16:g_SpinLockIrq_Destroy	@,
 	movt	r0, #:upper16:g_SpinLockIrq_Destroy	@,
 	ldrb	r3, [ip, lr]	@ zero_extendqisi2	@ <variable>.stSynCtx.unSyntax.stAvsCtx.SyntaxNew.bAvsPlus, <variable>.stSynCtx.unSyntax.stAvsCtx.SyntaxNew.bAvsPlus
-	strb	r3, [r4, #480]	@ <variable>.stSynCtx.unSyntax.stAvsCtx.SyntaxNew.bAvsPlus, <variable>.optm_inf.bAvsPlus
+	strb	r3, [r4, #504]	@ <variable>.stSynCtx.unSyntax.stAvsCtx.SyntaxNew.bAvsPlus, <variable>.optm_inf.bAvsPlus
 	bl	OSAL_SpinUnLockIRQ	@
 .L1534:
 	mov	r0, r7	@, ret
@@ -12290,8 +12288,8 @@ VCTRL_GetChanImage:
 	movw	r3, #:lower16:.LANCHOR3	@ tmp171,
 	movt	r3, #:upper16:.LANCHOR3	@ tmp171,
 	add	r8, r3, r5, asl #2	@, tmp174, tmp171, ChanID,
-	ldr	r0, [r8, #-1656]	@ D.51962, vfmw_save_yuv_file
-	cmp	r0, #0	@ D.51962,
+	ldr	r0, [r8, #-1656]	@ D.51975, vfmw_save_yuv_file
+	cmp	r0, #0	@ D.51975,
 	beq	.L1540	@,
 	ldr	r7, [r4, #160]	@ <variable>.format, <variable>.format
 	ldr	lr, [r3, #-1528]	@ save_yuv_with_crop, save_yuv_with_crop
@@ -12300,18 +12298,18 @@ VCTRL_GetChanImage:
 	moveq	ip, #1	@, tmp179
 	cmp	lr, #0	@ save_yuv_with_crop,
 	beq	.L1541	@,
-	ldr	lr, [r4, #352]	@, <variable>.bottom_offset
-	ldr	r9, [r4, #348]	@ <variable>.top_offset, <variable>.top_offset
+	ldr	lr, [r4, #376]	@, <variable>.bottom_offset
+	ldr	r9, [r4, #372]	@ <variable>.top_offset, <variable>.top_offset
 	ldr	r1, [r4, #32]	@ <variable>.luma_vir_addr, <variable>.luma_vir_addr
 	ldr	r2, [r4, #36]	@ <variable>.chrom_vir_addr, <variable>.chrom_vir_addr
 	ldr	r3, [r4, #164]	@ <variable>.image_width, <variable>.image_width
 	ldr	r7, [r4, #192]	@ <variable>.image_stride, <variable>.image_stride
-	ldr	r8, [r4, #340]	@ <variable>.left_offset, <variable>.left_offset
-	ldr	sl, [r4, #344]	@ <variable>.right_offset, <variable>.right_offset
-	str	lr, [fp, #-552]	@, %sfp
+	ldr	r8, [r4, #364]	@ <variable>.left_offset, <variable>.left_offset
+	ldr	sl, [r4, #368]	@ <variable>.right_offset, <variable>.right_offset
+	str	lr, [fp, #-576]	@, %sfp
 	ldr	lr, [r4, #168]	@, <variable>.image_height
 	str	r9, [sp, #24]	@ <variable>.top_offset,
-	ldr	r9, [fp, #-552]	@, %sfp
+	ldr	r9, [fp, #-576]	@, %sfp
 	str	lr, [sp, #0]	@,
 	mov	lr, #0	@ tmp186,
 	str	r7, [sp, #8]	@ <variable>.image_stride,
@@ -12322,24 +12320,24 @@ VCTRL_GetChanImage:
 	str	r9, [sp, #28]	@,
 	bl	DBG_WriteBigTileYuv	@
 .L1540:
-	ldr	ip, [r4, #256]	@ <variable>.is_3D, <variable>.is_3D
+	ldr	ip, [r4, #280]	@ <variable>.is_3D, <variable>.is_3D
 	mvn	r8, #0	@ tmp202,
-	str	r8, [r4, #252]	@ tmp202, <variable>.image_id_1
+	str	r8, [r4, #276]	@ tmp202, <variable>.image_id_1
 	cmp	ip, #1	@ <variable>.is_3D,
 	movne	r7, #1	@ ret,
 	bne	.L1542	@,
 .L1564:
-	ldr	sl, [r4, #244]	@ <variable>.last_frame, <variable>.last_frame
+	ldr	sl, [r4, #268]	@ <variable>.last_frame, <variable>.last_frame
 	cmp	sl, #0	@ <variable>.last_frame,
 	beq	.L1563	@,
-	add	sl, r4, #420	@ tmp285, pImage,
+	add	sl, r4, #444	@ tmp285, pImage,
 	ldr	r9, [r4, #92]	@, <variable>.top_chrom_phy_addr
-	add	lr, r4, #280	@ tmp284, pImage,
+	add	lr, r4, #304	@ tmp284, pImage,
 	mov	r7, ip	@ ret, <variable>.is_3D
 	ldmia	sl!, {r0, r1, r2, r3}	@ tmp287,,,,
-	str	r9, [r4, #264]	@, <variable>.top_chrom_phy_addr_1
+	str	r9, [r4, #288]	@, <variable>.top_chrom_phy_addr_1
 	ldr	r9, [r4, #88]	@, <variable>.top_luma_phy_addr
-	str	r9, [r4, #260]	@, <variable>.top_luma_phy_addr_1
+	str	r9, [r4, #284]	@, <variable>.top_luma_phy_addr_1
 	mov	r9, lr	@ tmp286, tmp284
 	mov	lr, sl	@ tmp341, tmp287
 	stmia	r9!, {r0, r1, r2, r3}	@ tmp286,,,,
@@ -12351,9 +12349,9 @@ VCTRL_GetChanImage:
 	ldmia	lr, {r0, r1, r2}	@ tmp343,,,
 	stmia	sl, {r0, r1, r2}	@ tmp344,,,
 	mov	r1, #3	@ tmp289,
-	str	r8, [r4, #252]	@ tmp202, <variable>.image_id_1
-	str	r1, [r4, #364]	@ tmp289, <variable>.eFramePackingType
-	str	ip, [r4, #244]	@ <variable>.is_3D, <variable>.last_frame
+	str	r8, [r4, #276]	@ tmp202, <variable>.image_id_1
+	str	r1, [r4, #388]	@ tmp289, <variable>.eFramePackingType
+	str	ip, [r4, #268]	@ <variable>.is_3D, <variable>.last_frame
 	b	.L1542	@
 .L1561:
 	bl	OSAL_GetTimeInMs	@
@@ -12371,7 +12369,7 @@ VCTRL_GetChanImage:
 	mov	lr, r5, asl #24	@ tmp307, ChanID,
 	ldr	r0, .L1569	@,
 	add	r2, lr, #786432	@ tmp308, tmp307,
-	movw	r1, #4327	@,
+	movw	r1, #4326	@,
 	cmp	r7, #1	@ ret,
 	addeq	r2, r2, #1	@,,, tmp308
 	str	ip, [r3, #-1524]	@ currtime, last_rec_pos_time
@@ -12387,7 +12385,7 @@ VCTRL_GetChanImage:
 	ldr	r1, [r4, #160]	@ <variable>.format, <variable>.format
 	str	r1, [r0, #328]	@ <variable>.format, <variable>.stRecentImgformat
 	ldr	r2, [r6, r5, asl #2]	@ tmp316, s_pstVfmwChan
-	ldr	ip, [r4, #364]	@ <variable>.eFramePackingType, <variable>.eFramePackingType
+	ldr	ip, [r4, #388]	@ <variable>.eFramePackingType, <variable>.eFramePackingType
 	str	ip, [r2, #332]	@ <variable>.eFramePackingType, <variable>.stRecentImgPackingType
 	b	.L1552	@
 .L1541:
@@ -12406,8 +12404,8 @@ VCTRL_GetChanImage:
 	str	lr, [sp, #20]	@ save_yuv_with_crop,
 	str	lr, [sp, #24]	@ save_yuv_with_crop,
 	bl	DBG_WriteBigTileYuv	@
-	ldr	ip, [r4, #256]	@ <variable>.is_3D, <variable>.is_3D
-	str	r8, [r4, #252]	@ tmp202, <variable>.image_id_1
+	ldr	ip, [r4, #280]	@ <variable>.is_3D, <variable>.is_3D
+	str	r8, [r4, #276]	@ tmp202, <variable>.image_id_1
 	cmp	ip, #1	@ <variable>.is_3D,
 	movne	r7, #1	@ ret,
 	bne	.L1542	@,
@@ -12415,7 +12413,7 @@ VCTRL_GetChanImage:
 .L1558:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4154	@,
+	movw	r2, #4153	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC215	@,
 	movt	r3, #:upper16:.LC215	@,
@@ -12425,7 +12423,7 @@ VCTRL_GetChanImage:
 .L1559:
 	movw	r1, #:lower16:.LC234	@,
 	movt	r1, #:upper16:.LC234	@,
-	movw	r2, #4167	@,
+	movw	r2, #4166	@,
 	mov	r0, #0	@,
 .L1555:
 	bl	dprint_vfmw	@
@@ -12436,44 +12434,44 @@ VCTRL_GetChanImage:
 	b	.L1534	@
 .L1563:
 	ldr	r3, [r6, r5, asl #2]	@ tmp208, s_pstVfmwChan
-	sub	sl, fp, #548	@ tmp209,,
+	sub	sl, fp, #572	@ tmp209,,
 	movw	r9, #:lower16:.LANCHOR0	@ tmp205,
 	movt	r9, #:upper16:.LANCHOR0	@ tmp205,
-	add	ip, r3, #250880	@, tmp208,
+	add	ip, r3, #252928	@, tmp208,
 	mov	r1, sl	@, tmp209
-	add	r0, ip, #712	@,,
+	add	r0, ip, #200	@,,
 	bl	SYNTAX_ReceiveImage	@
 	cmp	r0, #1	@ ret,
 	mov	r7, r0	@ ret,
 	bne	.L1565	@,
-	ldr	r3, [r4, #248]	@ D.51993, <variable>.view_id
-	ldr	r0, [fp, #-300]	@ D.51994, Image_1.view_id
-	cmp	r3, r0	@ D.51993, D.51994
+	ldr	r3, [r4, #272]	@ D.52006, <variable>.view_id
+	ldr	r0, [fp, #-300]	@ D.52007, Image_1.view_id
+	cmp	r3, r0	@ D.52006, D.52007
 	blt	.L1566	@,
 	bgt	.L1567	@,
-	cmp	r3, #0	@ D.51993,
+	cmp	r3, #0	@ D.52006,
 	bne	.L1548	@,
 	ldr	r0, [r9, r5, asl #2]	@ tmp242, s_pstVfmwChan
-	add	lr, r0, #250880	@, tmp242,
-	add	r0, lr, #712	@,,
+	add	lr, r0, #252928	@, tmp242,
+	add	r0, lr, #200	@,,
 	bl	SYNTAX_ReturnImage	@
 	ldr	r2, [r9, r5, asl #2]	@ tmp246, s_pstVfmwChan
 	mov	r1, r4	@, pImage
-	add	ip, r2, #250880	@, tmp246,
-	add	r0, ip, #712	@,,
+	add	ip, r2, #252928	@, tmp246,
+	add	r0, ip, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
 	mov	r0, r7	@, ret
 	movw	r1, #:lower16:.LC238	@,
 	ldr	r2, .L1569	@,
 	movt	r1, #:upper16:.LC238	@,
-	ldr	r3, [r4, #248]	@, <variable>.view_id
+	ldr	r3, [r4, #272]	@, <variable>.view_id
 	mvn	r7, #1	@ ret,
 	bl	dprint_vfmw	@
 	b	.L1542	@
 .L1556:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4150	@,
+	movw	r2, #4149	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
@@ -12482,25 +12480,25 @@ VCTRL_GetChanImage:
 	b	.L1534	@
 .L1565:
 	ldr	r2, [r9, r5, asl #2]	@ tmp214, s_pstVfmwChan
-	add	r1, r2, #250880	@, tmp214,
-	add	r0, r1, #712	@,,
+	add	r1, r2, #252928	@, tmp214,
+	add	r0, r1, #200	@,,
 	bl	SYNTAX_ReturnImage	@
 	movw	r0, #:lower16:g_SpinLockIrq_Destroy	@,
 	movt	r0, #:upper16:g_SpinLockIrq_Destroy	@,
 	bl	OSAL_SpinUnLockIRQ	@
 	b	.L1534	@
 .L1566:
-	ldr	r8, [fp, #-456]	@ Image_1.top_chrom_phy_addr, Image_1.top_chrom_phy_addr
+	ldr	r8, [fp, #-480]	@ Image_1.top_chrom_phy_addr, Image_1.top_chrom_phy_addr
 	sub	lr, fp, #128	@ tmp221,,
-	add	ip, r4, #280	@ tmp220, pImage,
+	add	ip, r4, #304	@ tmp220, pImage,
 	ldmia	lr!, {r0, r1, r2, r3}	@ tmp329,,,,
-	str	r8, [r4, #264]	@ Image_1.top_chrom_phy_addr, <variable>.top_chrom_phy_addr_1
-	ldr	r8, [fp, #-460]	@ Image_1.top_luma_phy_addr, Image_1.top_luma_phy_addr
-	str	r8, [r4, #260]	@ Image_1.top_luma_phy_addr, <variable>.top_luma_phy_addr_1
-	ldr	r8, [fp, #-452]	@ Image_1.btm_luma_phy_addr, Image_1.btm_luma_phy_addr
-	str	r8, [r4, #268]	@ Image_1.btm_luma_phy_addr, <variable>.btm_luma_phy_addr_1
-	ldr	r8, [fp, #-448]	@ Image_1.btm_chrom_phy_addr, Image_1.btm_chrom_phy_addr
-	str	r8, [r4, #272]	@ Image_1.btm_chrom_phy_addr, <variable>.btm_chrom_phy_addr_1
+	str	r8, [r4, #288]	@ Image_1.top_chrom_phy_addr, <variable>.top_chrom_phy_addr_1
+	ldr	r8, [fp, #-484]	@ Image_1.top_luma_phy_addr, Image_1.top_luma_phy_addr
+	str	r8, [r4, #284]	@ Image_1.top_luma_phy_addr, <variable>.top_luma_phy_addr_1
+	ldr	r8, [fp, #-476]	@ Image_1.btm_luma_phy_addr, Image_1.btm_luma_phy_addr
+	str	r8, [r4, #292]	@ Image_1.btm_luma_phy_addr, <variable>.btm_luma_phy_addr_1
+	ldr	r8, [fp, #-472]	@ Image_1.btm_chrom_phy_addr, Image_1.btm_chrom_phy_addr
+	str	r8, [r4, #296]	@ Image_1.btm_chrom_phy_addr, <variable>.btm_chrom_phy_addr_1
 	mov	r8, ip	@ tmp330, tmp220
 	stmia	r8!, {r0, r1, r2, r3}	@ tmp330,,,,
 	mov	ip, r8	@ tmp332, tmp330
@@ -12511,39 +12509,39 @@ VCTRL_GetChanImage:
 	ldmia	lr, {r0, r1, r2}	@ tmp333,,,
 	stmia	ip, {r0, r1, r2}	@ tmp334,,,
 	ldr	r3, [fp, #-304]	@ Image_1.last_frame, Image_1.last_frame
-	ldr	lr, [fp, #-352]	@ Image_1.image_id, Image_1.image_id
+	ldr	lr, [fp, #-376]	@ Image_1.image_id, Image_1.image_id
 	mov	ip, #3	@ tmp223,
 	cmp	r3, #0	@ Image_1.last_frame,
-	str	ip, [r4, #364]	@ tmp223, <variable>.eFramePackingType
-	str	lr, [r4, #252]	@ Image_1.image_id, <variable>.image_id_1
-	strne	r7, [r4, #244]	@ ret, <variable>.last_frame
+	str	ip, [r4, #388]	@ tmp223, <variable>.eFramePackingType
+	str	lr, [r4, #276]	@ Image_1.image_id, <variable>.image_id_1
+	strne	r7, [r4, #268]	@ ret, <variable>.last_frame
 	b	.L1542	@
 .L1548:
 	ldr	ip, [r9, r5, asl #2]	@ tmp254, s_pstVfmwChan
 	mov	r1, r4	@, pImage
-	add	r3, ip, #250880	@, tmp254,
-	add	r0, r3, #712	@,,
+	add	r3, ip, #252928	@, tmp254,
+	add	r0, r3, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
 	ldr	r1, [fp, #-304]	@ Image_1.last_frame, Image_1.last_frame
 	cmp	r1, #0	@ Image_1.last_frame,
 	beq	.L1568	@,
-	ldr	r3, [r4, #248]	@, <variable>.view_id
+	ldr	r3, [r4, #272]	@, <variable>.view_id
 	mov	r0, r7	@, ret
 	ldr	r2, .L1569	@,
 	movw	r1, #:lower16:.LC239	@,
 	movt	r1, #:upper16:.LC239	@,
 	bl	dprint_vfmw	@
 	mov	r1, sl	@, tmp209
-	mov	r2, #504	@,
+	mov	r2, #528	@,
 	mov	r0, r4	@, pImage
 	bl	memcpy	@
 	sub	lr, fp, #128	@ tmp278,,
-	ldr	sl, [fp, #-456]	@ Image_1.top_chrom_phy_addr, Image_1.top_chrom_phy_addr
-	add	ip, r4, #280	@ tmp277, pImage,
+	ldr	sl, [fp, #-480]	@ Image_1.top_chrom_phy_addr, Image_1.top_chrom_phy_addr
+	add	ip, r4, #304	@ tmp277, pImage,
 	ldmia	lr!, {r0, r1, r2, r3}	@ tmp335,,,,
-	str	sl, [r4, #264]	@ Image_1.top_chrom_phy_addr, <variable>.top_chrom_phy_addr_1
-	ldr	sl, [fp, #-460]	@ Image_1.top_luma_phy_addr, Image_1.top_luma_phy_addr
-	str	sl, [r4, #260]	@ Image_1.top_luma_phy_addr, <variable>.top_luma_phy_addr_1
+	str	sl, [r4, #288]	@ Image_1.top_chrom_phy_addr, <variable>.top_chrom_phy_addr_1
+	ldr	sl, [fp, #-484]	@ Image_1.top_luma_phy_addr, Image_1.top_luma_phy_addr
+	str	sl, [r4, #284]	@ Image_1.top_luma_phy_addr, <variable>.top_luma_phy_addr_1
 	mov	sl, ip	@ tmp336, tmp277
 	mov	ip, lr	@ tmp337, tmp335
 	stmia	sl!, {r0, r1, r2, r3}	@ tmp336,,,,
@@ -12555,24 +12553,24 @@ VCTRL_GetChanImage:
 	ldmia	ip, {r0, r1, r2}	@ tmp339,,,
 	stmia	lr, {r0, r1, r2}	@ tmp340,,,
 	mov	r0, #3	@ tmp280,
-	str	r8, [r4, #252]	@ tmp202, <variable>.image_id_1
-	str	r0, [r4, #364]	@ tmp280, <variable>.eFramePackingType
-	str	r7, [r4, #244]	@ ret, <variable>.last_frame
+	str	r8, [r4, #276]	@ tmp202, <variable>.image_id_1
+	str	r0, [r4, #388]	@ tmp280, <variable>.eFramePackingType
+	str	r7, [r4, #268]	@ ret, <variable>.last_frame
 	b	.L1542	@
 .L1567:
 	ldr	r3, [r9, r5, asl #2]	@ tmp229, s_pstVfmwChan
-	add	r1, r3, #250880	@, tmp229,
-	add	r0, r1, #712	@,,
+	add	r1, r3, #252928	@, tmp229,
+	add	r0, r1, #200	@,,
 	bl	SYNTAX_ReturnImage	@
 	ldr	r0, [r9, r5, asl #2]	@ tmp233, s_pstVfmwChan
 	mov	r1, r4	@, pImage
-	add	r2, r0, #250880	@, tmp233,
-	add	r0, r2, #712	@,,
+	add	r2, r0, #252928	@, tmp233,
+	add	r0, r2, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
 	mov	r0, r7	@, ret
 	ldr	r7, [fp, #-300]	@ Image_1.view_id, Image_1.view_id
 	movw	r1, #:lower16:.LC237	@,
-	ldr	r3, [r4, #248]	@ <variable>.view_id, <variable>.view_id
+	ldr	r3, [r4, #272]	@ <variable>.view_id, <variable>.view_id
 	movt	r1, #:upper16:.LC237	@,
 	ldr	r2, .L1569	@,
 	str	r7, [sp, #0]	@ Image_1.view_id,
@@ -12581,7 +12579,7 @@ VCTRL_GetChanImage:
 	b	.L1542	@
 .L1557:
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4151	@,
+	movw	r2, #4150	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
@@ -12591,14 +12589,14 @@ VCTRL_GetChanImage:
 .L1568:
 	ldr	lr, [r9, r5, asl #2]	@ tmp259, s_pstVfmwChan
 	mov	r1, sl	@, tmp209
-	add	r2, lr, #250880	@, tmp259,
-	add	r0, r2, #712	@,,
+	add	r2, lr, #252928	@, tmp259,
+	add	r0, r2, #200	@,,
 	bl	SYNTAX_ReleaseImage	@
 	mov	r0, r7	@, ret
 	movw	r1, #:lower16:.LC239	@,
 	ldr	r2, .L1569	@,
 	movt	r1, #:upper16:.LC239	@,
-	ldr	r3, [r4, #248]	@, <variable>.view_id
+	ldr	r3, [r4, #272]	@, <variable>.view_id
 	mvn	r7, #1	@ ret,
 	bl	dprint_vfmw	@
 	b	.L1542	@
@@ -12632,17 +12630,17 @@ VCTRL_ReleaseStream:
 	beq	.L1576	@,
 	bl	SM_Reset	@
 	cmp	r0, #0	@ ret
-	mvnne	r0, #0	@, D.51856,
+	mvnne	r0, #0	@, D.51869,
 	ldmfd	sp, {fp, sp, pc}	@
 .L1576:
 	mov	r0, r3	@, tmp138
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4029	@,
+	movw	r2, #4028	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51856,
+	mvn	r0, #0	@ D.51869,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_ReleaseStream, .-VCTRL_ReleaseStream
@@ -12670,10 +12668,10 @@ VCTRL_LoadDspCode:
 	movw	r5, #:lower16:.LANCHOR3	@ tmp404,
 	movt	r5, #:upper16:.LANCHOR3	@ tmp404,
 	mov	r7, r0	@ ChanID, ChanID
-	ldr	r2, [r4, r0, asl #2]	@ D.51731, s_pstVfmwChan
+	ldr	r2, [r4, r0, asl #2]	@ D.51744, s_pstVfmwChan
 	ldr	ip, [r5, #-1460]	@ eDSPState, g_DSPState
-	ldr	r3, [r2, #552]	@ D.51732, <variable>.eVidStd
-	cmp	r3, #0	@ D.51732,
+	ldr	r3, [r2, #552]	@ D.51745, <variable>.eVidStd
+	cmp	r3, #0	@ D.51745,
 	movne	r2, #0	@ ScdLowdlyEnable,
 	ldreq	r2, [r2, #1268]	@ ScdLowdlyEnable, <variable>.stSynExtraData.s32LowdlyEnable
 	cmp	ip, #0	@ eDSPState,
@@ -12724,25 +12722,25 @@ VCTRL_LoadDspCode:
 	cmp	ip, #0	@ eDSPState,
 	bne	.L1580	@,
 	cmp	r2, #1	@ ScdLowdlyEnable,
-	movne	sl, #0	@, D.51742
-	moveq	sl, #1	@, D.51742
+	movne	sl, #0	@, D.51755
+	moveq	sl, #1	@, D.51755
 	mov	r8, #1	@ prephitmp.4657,
 .L1584:
 	movw	r6, #:lower16:g_vdm_hal_fun_ptr	@ tmp405,
 	movt	r6, #:upper16:g_vdm_hal_fun_ptr	@ tmp405,
-	ldr	r3, [r6, #0]	@ D.51751, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
-	cmp	r3, #0	@ D.51751,
+	ldr	r3, [r6, #0]	@ D.51764, g_vdm_hal_fun_ptr.pfun_VDMDRV_OpenHardware
+	cmp	r3, #0	@ D.51764,
 	beq	.L1661	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.51751
+	blx	r3	@ D.51764
 .L1588:
-	ldr	r3, [r6, #8]	@ D.51756, g_vdm_hal_fun_ptr.pfun_DSPDRV_OpenHardware
-	cmp	r3, #0	@ D.51756,
+	ldr	r3, [r6, #8]	@ D.51769, g_vdm_hal_fun_ptr.pfun_DSPDRV_OpenHardware
+	cmp	r3, #0	@ D.51769,
 	beq	.L1589	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.51756
+	blx	r3	@ D.51769
 .L1590:
-	ands	r1, r8, sl	@ tmp234, prephitmp.4657, D.51742
+	ands	r1, r8, sl	@ tmp234, prephitmp.4657, D.51755
 	beq	.L1591	@,
 	ldr	r2, [r4, r7, asl #2]	@ tmp236, s_pstVfmwChan
 	add	r5, r5, r7, asl #2	@, tmp241, tmp404, ChanID,
@@ -12945,8 +12943,8 @@ VCTRL_LoadDspCode:
 	cmp	r3, #0	@ tmp387,
 	movne	r0, #1	@ dsp_need_flag,
 .L1649:
-	ldr	r3, [r4, #60]	@ D.51770, s_pstVfmwChan
-	cmp	r3, #0	@ D.51770,
+	ldr	r3, [r4, #60]	@ D.51783, s_pstVfmwChan
+	cmp	r3, #0	@ D.51783,
 	beq	.L1653	@,
 	ldr	r2, [r3, #552]	@ eVidStd, <variable>.eVidStd
 	cmp	r2, #0	@ eVidStd,
@@ -12965,10 +12963,10 @@ VCTRL_LoadDspCode:
 .L1653:
 	cmp	r0, #0	@ dsp_need_flag,
 	bne	.L1656	@,
-	ldr	r3, [r6, #12]	@ D.51784, g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware
-	cmp	r3, #0	@ D.51784,
+	ldr	r3, [r6, #12]	@ D.51797, g_vdm_hal_fun_ptr.pfun_DSPDRV_CloseHardware
+	cmp	r3, #0	@ D.51797,
 	beq	.L1662	@,
-	blx	r3	@ D.51784
+	blx	r3	@ D.51797
 .L1656:
 	bl	VCTRL_CloseHardware	@
 	mov	r0, #0	@ ret,
@@ -12977,13 +12975,13 @@ VCTRL_LoadDspCode:
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
 .L1580:
 	cmp	r2, #1	@ ScdLowdlyEnable,
-	movne	sl, #0	@, D.51742
-	moveq	sl, #1	@, D.51742
+	movne	sl, #0	@, D.51755
+	moveq	sl, #1	@, D.51755
 	cmp	ip, #2	@ eDSPState,
 	cmpeq	r2, #1	@, ScdLowdlyEnable,
 	beq	.L1582	@,
 	cmp	ip, #1	@ eDSPState,
-	cmpeq	r3, #6	@, D.51732,
+	cmpeq	r3, #6	@, D.51745,
 	movne	r8, #0	@, tmp226
 	moveq	r8, #1	@, tmp226
 	bne	.L1584	@,
@@ -13100,22 +13098,22 @@ VCTRL_LoadDspCode:
 	moveq	r3, #1	@, prephitmp.4742
 	b	.L1648	@
 .L1589:
-	mov	r0, r3	@, D.51756
+	mov	r0, r3	@, D.51769
 	movw	r1, #:lower16:.LC0	@,
-	movw	r2, #3799	@,
+	movw	r2, #3798	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
 	b	.L1590	@
 .L1661:
-	mov	r0, r3	@, D.51751
+	mov	r0, r3	@, D.51764
 	movw	r1, #:lower16:.LC0	@,
-	movw	r2, #3798	@,
+	movw	r2, #3797	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
 	b	.L1588	@
 .L1662:
 	movw	r1, #:lower16:.LC0	@,
-	movw	r2, #3852	@,
+	movw	r2, #3851	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
 	b	.L1656	@
@@ -13140,17 +13138,17 @@ VCTRL_SeekPts:
 	bl	__gnu_mcount_nc
 	movw	r3, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r2, [r3, r0, asl #2]	@ D.51684, s_pstVfmwChan
-	cmp	r2, #0	@ D.51684,
+	ldr	r2, [r3, r0, asl #2]	@ D.51697, s_pstVfmwChan
+	cmp	r2, #0	@ D.51697,
 	beq	.L1670	@,
-	ldr	r2, [r2, #552]	@ D.51692, <variable>.eVidStd
-	sub	ip, r2, #10	@ tmp143, D.51692,
+	ldr	r2, [r2, #552]	@ D.51705, <variable>.eVidStd
+	sub	ip, r2, #10	@ tmp143, D.51705,
 	cmp	ip, #2	@ tmp143,
 	bls	.L1671	@,
-	cmp	r2, #4	@ D.51692,
+	cmp	r2, #4	@ D.51705,
 	bne	.L1672	@,
 .L1667:
-	mvn	r0, #0	@ D.51688,
+	mvn	r0, #0	@ D.51701,
 	ldmfd	sp, {fp, sp, pc}	@
 .L1671:
 	ldr	r3, [r3, #516]	@ g_VdmCharacter, g_VdmCharacter
@@ -13162,18 +13160,18 @@ VCTRL_SeekPts:
 	ldmeqfd	sp, {fp, sp, pc}	@
 	b	.L1667	@
 .L1672:
-	cmp	r2, #14	@ D.51692,
+	cmp	r2, #14	@ D.51705,
 	beq	.L1667	@,
 	b	.L1668	@
 .L1670:
-	mov	r0, r2	@, D.51684
+	mov	r0, r2	@, D.51697
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #3593	@,
+	movw	r2, #3592	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51688,
+	mvn	r0, #0	@ D.51701,
 	ldmfd	sp, {fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_SeekPts, .-VCTRL_SeekPts
@@ -13199,34 +13197,34 @@ VCTRL_StopChan:
 	bhi	.L1679	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp140,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp140,
-	ldr	r3, [r4, r0, asl #2]	@ D.51215, s_pstVfmwChan
-	cmp	r3, #0	@ D.51215,
+	ldr	r3, [r4, r0, asl #2]	@ D.51228, s_pstVfmwChan
+	cmp	r3, #0	@ D.51228,
 	beq	.L1680	@,
 	ldr	r2, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r2, #1	@ <variable>.s32IsOpen,
 	beq	.L1681	@,
 .L1677:
-	mvn	r0, #0	@ D.51213,
+	mvn	r0, #0	@ D.51226,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1680:
-	mov	r0, r3	@, D.51215
+	mov	r0, r3	@, D.51228
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2844	@,
+	movw	r2, #2843	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC241	@,
 	movt	r3, #:upper16:.LC241	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51213,
+	mvn	r0, #0	@ D.51226,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1679:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2843	@,
+	movw	r2, #2842	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51213,
+	mvn	r0, #0	@ D.51226,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1681:
 	str	r2, [r3, #28]	@ <variable>.s32IsOpen, <variable>.s32StopSyntax
@@ -13244,7 +13242,7 @@ VCTRL_StopChan:
 	ldr	r0, [r4, r5, asl #2]	@ tmp149, s_pstVfmwChan
 	str	r6, [r0, #28]	@ s32Ret, <variable>.s32StopSyntax
 	bl	VCTRL_CloseHardware	@
-	mov	r0, r6	@ D.51213, s32Ret
+	mov	r0, r6	@ D.51226, s32Ret
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 	.fnend
 	.size	VCTRL_StopChan, .-VCTRL_StopChan
@@ -13329,8 +13327,8 @@ VCTRL_StartChan:
 	bhi	.L1732	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp326,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp326,
-	ldr	r3, [r4, r0, asl #2]	@ D.51139, s_pstVfmwChan
-	cmp	r3, #0	@ D.51139,
+	ldr	r3, [r4, r0, asl #2]	@ D.51152, s_pstVfmwChan
+	cmp	r3, #0	@ D.51152,
 	beq	.L1733	@,
 	ldr	r6, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r6, #1	@ <variable>.s32IsOpen,
@@ -13465,7 +13463,7 @@ VCTRL_StartChan:
 	streq	lr, [r2, #52]	@ temp.4901, g_ChanCtx.PriorByChanId
 	ldrne	r0, [lr, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	streq	lr, [r3, #-1344]	@ temp.4901, PrioArray
-	ldr	r1, [r4, #60]	@ D.51152, s_pstVfmwChan
+	ldr	r1, [r4, #60]	@ D.51165, s_pstVfmwChan
 	strne	r0, [r3, #-1344]	@ <variable>.s32Priority, PrioArray
 	ldrne	lr, [lr, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	strne	lr, [r2, #52]	@ <variable>.s32Priority, g_ChanCtx.PriorByChanId
@@ -13476,14 +13474,14 @@ VCTRL_StartChan:
 	strne	r0, [r3, #-1340]	@ <variable>.s32Priority, PrioArray
 	ldrne	ip, [ip, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	strne	ip, [r2, #56]	@ <variable>.s32Priority, g_ChanCtx.PriorByChanId
-	cmp	r1, #0	@ D.51152,
+	cmp	r1, #0	@ D.51165,
 	ldrne	r0, [r1, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	strne	r0, [r3, #-1336]	@ <variable>.s32Priority, PrioArray
 	ldrne	r3, [r1, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	ldr	r0, .L1737	@,
 	strne	r3, [r2, #60]	@ <variable>.s32Priority, g_ChanCtx.PriorByChanId
-	streq	r1, [r2, #60]	@ D.51152, g_ChanCtx.PriorByChanId
-	streq	r1, [r3, #-1336]	@ D.51152, PrioArray
+	streq	r1, [r2, #60]	@ D.51165, g_ChanCtx.PriorByChanId
+	streq	r1, [r3, #-1336]	@ D.51165, PrioArray
 	bl	VDMDRV_SetPriority	@
 	mov	r0, r5	@, ChanID
 	bl	VDMDRV_ClearChanIsDec	@
@@ -13492,7 +13490,7 @@ VCTRL_StartChan:
 	bl	VDMDRV_ClearChanIsDec	@
 	mov	r0, r5	@, ChanID
 	bl	VCTRL_OpenHardware	@
-	mov	r0, #0	@ D.51137,
+	mov	r0, #0	@ D.51150,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1736:
 	movw	r3, #:lower16:.LANCHOR3	@ tmp327,
@@ -13505,42 +13503,42 @@ VCTRL_StartChan:
 .L1734:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2676	@,
+	movw	r2, #2675	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC26	@,
 	movt	r3, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51137,
+	mvn	r0, #0	@ D.51150,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1732:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2674	@,
+	movw	r2, #2673	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51137,
+	mvn	r0, #0	@ D.51150,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1735:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2677	@,
+	movw	r2, #2676	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC242	@,
 	movt	r3, #:upper16:.LC242	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51137,
+	mvn	r0, #0	@ D.51150,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1733:
-	mov	r0, r3	@, D.51139
+	mov	r0, r3	@, D.51152
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2675	@,
+	movw	r2, #2674	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC161	@,
 	movt	r3, #:upper16:.LC161	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51137,
+	mvn	r0, #0	@ D.51150,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L1738:
 	.align	2
@@ -13574,8 +13572,8 @@ VCTRL_FreeChanResource:
 	ldr	r1, [r1, #20]	@, <variable>.stChanMem_vdh.VirAddr
 	bl	MEM_DelMemRecord	@
 .L1741:
-	ldr	r2, [r6, #44]	@ D.50561, <variable>.stChanMem_scd.Length
-	cmp	r2, #0	@ D.50561,
+	ldr	r2, [r6, #44]	@ D.50574, <variable>.stChanMem_scd.Length
+	cmp	r2, #0	@ D.50574,
 	bne	.L1762	@,
 	ldr	ip, [r6, #80]	@ <variable>.s32SelfAllocChanMem_vdh, <variable>.s32SelfAllocChanMem_vdh
 	cmp	ip, #1	@ <variable>.s32SelfAllocChanMem_vdh,
@@ -13643,11 +13641,11 @@ VCTRL_FreeChanResource:
 .L1742:
 	ldr	r2, [r6, #108]	@ <variable>.pstChanFrmBuf, <variable>.pstChanFrmBuf
 	add	r4, r4, #20	@ tmp202, ivtmp.4944,
-	add	r5, r4, r2	@ D.50546, tmp202, <variable>.pstChanFrmBuf
-	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.50547, <variable>.u8BufferNodeState
-	cmp	r3, #255	@ D.50547,
+	add	r5, r4, r2	@ D.50559, tmp202, <variable>.pstChanFrmBuf
+	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.50560, <variable>.u8BufferNodeState
+	cmp	r3, #255	@ D.50560,
 	beq	.L1755	@,
-	cmp	r3, #1	@ D.50547,
+	cmp	r3, #1	@ D.50560,
 	beq	.L1760	@,
 .L1756:
 	ldr	r0, [r5, #8]	@, <variable>.stFrameBuffer.PhyAddr
@@ -13666,11 +13664,11 @@ VCTRL_FreeChanResource:
 	beq	.L1741	@,
 .L1745:
 	ldr	r5, [r6, #108]	@ <variable>.pstChanFrmBuf, <variable>.pstChanFrmBuf
-	add	r5, r4, r5	@ D.50546, ivtmp.4944, <variable>.pstChanFrmBuf
-	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.50547, <variable>.u8BufferNodeState
-	cmp	r3, #255	@ D.50547,
+	add	r5, r4, r5	@ D.50559, ivtmp.4944, <variable>.pstChanFrmBuf
+	ldrb	r3, [r5, #16]	@ zero_extendqisi2	@ D.50560, <variable>.u8BufferNodeState
+	cmp	r3, #255	@ D.50560,
 	beq	.L1742	@,
-	cmp	r3, #1	@ D.50547,
+	cmp	r3, #1	@ D.50560,
 	beq	.L1768	@,
 .L1743:
 	ldr	r0, [r5, #8]	@, <variable>.stFrameBuffer.PhyAddr
@@ -13711,8 +13709,8 @@ VCTRL_FreeChanResource:
 	bl	MEM_ReleaseMemBlock	@
 	b	.L1756	@
 .L1767:
-	ldr	r0, [r6, #56]	@ D.50596, <variable>.stChanMem_ctx.PhyAddr
-	cmp	r0, #0	@ D.50596,
+	ldr	r0, [r6, #56]	@ D.50609, <variable>.stChanMem_ctx.PhyAddr
+	cmp	r0, #0	@ D.50609,
 	beq	.L1751	@,
 	ldr	r1, [r6, #52]	@, <variable>.stChanMem_ctx.VirAddr
 	bl	MEM_ReleaseMemBlock	@
@@ -13822,7 +13820,7 @@ VCTRL_PartitionMemForStdUser:
 	strb	r3, [fp, #-80]	@, FspInstCfg.s32UserDec
 	bl	FSP_ConfigInstance	@
 	ldr	r2, [fp, #-88]	@,
-	subs	r5, r0, #0	@ D.50470,
+	subs	r5, r0, #0	@ D.50483,
 	bne	.L1775	@,
 	mov	r1, sl	@, MemAddr
 	mov	r0, r6	@, ChanID
@@ -13836,11 +13834,11 @@ VCTRL_PartitionMemForStdUser:
 	ldr	r1, .L1791	@,
 	bl	FSP_GetInstInfo	@
 	ldrb	r1, [r5, #-1331]	@ zero_extendqisi2	@, FspInstInfo.s32DecFsNum
-	sxtb	r0, r1	@ D.50480, FspInstInfo.s32DecFsNum
-	cmp	r0, #16	@ D.50480,
-	movge	r0, #16	@ D.50480,
-	str	r0, [r4, #488]	@ D.50480, <variable>.s32UsrdecFrameNum
-	cmp	r0, #2	@ D.50480,
+	sxtb	r0, r1	@ D.50493, FspInstInfo.s32DecFsNum
+	cmp	r0, #16	@ D.50493,
+	movge	r0, #16	@ D.50493,
+	str	r0, [r4, #488]	@ D.50493, <variable>.s32UsrdecFrameNum
+	cmp	r0, #2	@ D.50493,
 	ble	.L1790	@,
 	ldr	ip, [r5, #2516]	@ FspInstInfo.s32DecFsSize, FspInstInfo.s32DecFsSize
 	add	r0, r4, #420	@, pstChan,
@@ -13850,13 +13848,13 @@ VCTRL_PartitionMemForStdUser:
 	add	r0, r4, #356	@, pstChan,
 	mov	r1, #64	@,
 	bl	__memzero	@
-	ldr	r5, [r4, #488]	@ D.50479, <variable>.s32UsrdecFrameNum
-	cmp	r5, #0	@ D.50479,
+	ldr	r5, [r4, #488]	@ D.50492, <variable>.s32UsrdecFrameNum
+	cmp	r5, #0	@ D.50492,
 	ble	.L1778	@,
 	ldr	r3, .L1791	@ ivtmp.5018,
 	mov	r2, #1	@ i,
-	cmp	r2, r5	@ i, D.50479
-	sub	r0, r5, #1	@ tmp203, D.50479,
+	cmp	r2, r5	@ i, D.50492
+	sub	r0, r5, #1	@ tmp203, D.50492,
 	and	ip, r0, r2	@ tmp205, tmp203,
 	add	r1, r4, #4	@ ivtmp.5021, pstChan,
 	ldr	lr, [r3, #20]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -13867,7 +13865,7 @@ VCTRL_PartitionMemForStdUser:
 	beq	.L1779	@,
 	ldr	lr, [r3, #20]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	mov	r2, #2	@ i,
-	cmp	r2, r5	@ i, D.50479
+	cmp	r2, r5	@ i, D.50492
 	ldr	r3, .L1791+8	@ ivtmp.5018,
 	str	lr, [r1, #420]	@ <variable>.PhyAddr, <variable>.s32UsrdecFramePhyAddr
 	add	r1, r1, #4	@ ivtmp.5021, ivtmp.5021,
@@ -13876,7 +13874,7 @@ VCTRL_PartitionMemForStdUser:
 	ldr	r0, [r3, #20]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	add	r2, r2, #2	@ i, i,
 	add	lr, r1, #4	@ tmp208, ivtmp.5021,
-	cmp	r2, r5	@ i, D.50479
+	cmp	r2, r5	@ i, D.50492
 	str	r0, [r1, #420]	@ <variable>.PhyAddr, <variable>.s32UsrdecFramePhyAddr
 	add	r1, lr, #4	@ ivtmp.5021, tmp208,
 	ldr	ip, [r3, #80]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -13884,7 +13882,7 @@ VCTRL_PartitionMemForStdUser:
 	str	ip, [lr, #420]	@ <variable>.PhyAddr, <variable>.s32UsrdecFramePhyAddr
 	blt	.L1779	@,
 .L1778:
-	mov	r0, #0	@ D.50458,
+	mov	r0, #0	@ D.50471,
 .L1773:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -13893,30 +13891,30 @@ VCTRL_PartitionMemForStdUser:
 	movw	r1, #:lower16:.LC246	@,
 	movt	r1, #:upper16:.LC246	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50458,
+	mvn	r0, #0	@ D.50471,
 	b	.L1773	@
 .L1775:
 	mov	r0, r8	@, tmp166
 	movw	r1, #:lower16:.LC249	@,
 	movt	r1, #:upper16:.LC249	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50458,
+	mvn	r0, #0	@ D.50471,
 	b	.L1773	@
 .L1789:
-	mov	r0, r5	@, D.50470
+	mov	r0, r5	@, D.50483
 	movw	r1, #:lower16:.LC247	@,
 	movt	r1, #:upper16:.LC247	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50458,
+	mvn	r0, #0	@ D.50471,
 	b	.L1773	@
 .L1790:
 	mov	r0, r7	@, Ret
 	movw	r1, #:lower16:.LC248	@,
 	ldr	r2, .L1791+12	@,
 	movt	r1, #:upper16:.LC248	@,
-	movw	r3, #1381	@,
+	movw	r3, #1380	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50458,
+	mvn	r0, #0	@ D.50471,
 	b	.L1773	@
 .L1787:
 	mov	r2, r5	@, MaxWidth
@@ -13925,7 +13923,7 @@ VCTRL_PartitionMemForStdUser:
 	movw	r1, #:lower16:.LC245	@,
 	movt	r1, #:upper16:.LC245	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50458,
+	mvn	r0, #0	@ D.50471,
 	b	.L1773	@
 .L1792:
 	.align	2
@@ -13956,28 +13954,28 @@ VCTRL_GetStreamInterface:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp138,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp138,
 	mov	r5, r0	@ ChanID, ChanID
-	ldr	r4, [r3, r0, asl #2]	@ D.50282, s_pstVfmwChan
-	cmp	r4, #0	@ D.50282,
+	ldr	r4, [r3, r0, asl #2]	@ D.50295, s_pstVfmwChan
+	cmp	r4, #0	@ D.50295,
 	beq	.L1795	@,
-	add	r4, r4, #152	@ D.50285, D.50282,
+	add	r4, r4, #152	@ D.50298, D.50295,
 	add	r0, r0, r0, asl #1	@, tmp143, ChanID, ChanID,
 	add	r3, r3, #312	@ tmp140, tmp138,
 	mov	r2, #12	@,
 	add	r0, r3, r0, asl #2	@,, tmp140, tmp143,
-	mov	r1, r4	@, D.50285
+	mov	r1, r4	@, D.50298
 	bl	memcmp	@
 	cmp	r0, #0	@,
 	bne	.L1797	@,
 .L1795:
-	mov	r0, r4	@, D.50285
+	mov	r0, r4	@, D.50298
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L1797:
 	mov	r3, r5	@, ChanID
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC250	@,
-	movw	r2, #1091	@,
+	movw	r2, #1090	@,
 	movt	r1, #:upper16:.LC250	@,
-	mov	r4, r0	@ D.50285,
+	mov	r4, r0	@ D.50298,
 	bl	dprint_vfmw	@
 	b	.L1795	@
 	.fnend
@@ -14011,7 +14009,7 @@ VCTRL_OpenVfmw:
 	cmp	r8, #0	@ s_VfmwCTrl.s32IsVCTRLOpen,
 	beq	.L1822	@,
 .L1799:
-	mvn	r0, #0	@ D.50159,
+	mvn	r0, #0	@ D.50173,
 .L1820:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, sl, fp, sp, pc}
@@ -14039,7 +14037,7 @@ VCTRL_OpenVfmw:
 	movt	r1, #:upper16:.LC252	@,
 	mov	r0, sl	@, p.704
 	bl	strsep	@
-	subs	r3, r0, #0	@ D.60520,
+	subs	r3, r0, #0	@ D.60541,
 	beq	.L1805	@,
 	mov	r0, sl	@, p.704
 	movw	r1, #:lower16:.LC121	@,
@@ -14086,7 +14084,7 @@ VCTRL_OpenVfmw:
 	movt	r1, #:upper16:.LC252	@,
 	mov	r0, sl	@, p.715
 	bl	strsep	@
-	subs	r3, r0, #0	@ D.60540,
+	subs	r3, r0, #0	@ D.60561,
 	beq	.L1812	@,
 	mov	r0, sl	@, p.715
 	movw	r1, #:lower16:.LC121	@,
@@ -14169,14 +14167,14 @@ VCTRL_OpenVfmw:
 	movt	r1, #:upper16:.LC257	@,
 	movt	r2, #:upper16:VFMW_CTRL_thread_proc	@,
 	bl	OSAL_CreateTask	@
-	subs	r4, r0, #0	@ D.50179,
+	subs	r4, r0, #0	@ D.50193,
 	bne	.L1819	@,
 	mov	lr, #3	@ tmp294,
 	add	r0, r6, #148	@, tmp271,
 	str	lr, [r6, #140]	@ tmp294, s_VfmwCTrl.eTaskState
 	bl	OSAL_WakeupTask	@
 	mov	r3, #1	@ tmp299,
-	mov	r0, r4	@ D.50159, D.50179
+	mov	r0, r4	@ D.50173, D.50193
 	str	r3, [r6, #104]	@ tmp299, s_VfmwCTrl.s32IsVCTRLOpen
 	b	.L1820	@
 .L1814:
@@ -14265,7 +14263,7 @@ VCTRL_OpenVfmw:
 	movw	r1, #:lower16:.LC163	@,
 	ldr	r2, .L1826+12	@,
 	movt	r1, #:upper16:.LC163	@,
-	movw	r3, #7783	@,
+	movw	r3, #7782	@,
 	add	r0, r0, #22	@,,
 	bl	dprint_vfmw	@
 	b	.L1803	@
@@ -14273,7 +14271,7 @@ VCTRL_OpenVfmw:
 	movw	r1, #:lower16:.LC163	@,
 	ldr	r2, .L1826+16	@,
 	movt	r1, #:upper16:.LC163	@,
-	movw	r3, #7818	@,
+	movw	r3, #7817	@,
 	mov	r0, #22	@,
 	bl	dprint_vfmw	@
 	b	.L1810	@
@@ -14281,14 +14279,14 @@ VCTRL_OpenVfmw:
 	movw	r1, #:lower16:.LC163	@,
 	ldr	r2, .L1826+20	@,
 	movt	r1, #:upper16:.LC163	@,
-	movw	r3, #7864	@,
+	movw	r3, #7863	@,
 	add	r0, r0, #22	@,,
 	bl	dprint_vfmw	@
 	b	.L1815	@
 .L1819:
 	add	r0, r6, #160	@, tmp271,
 	bl	CloseDrivers	@
-	mvn	r0, #0	@ D.50159,
+	mvn	r0, #0	@ D.50173,
 	b	.L1820	@
 .L1827:
 	.align	2
@@ -14354,14 +14352,14 @@ VCTRL_ExtAccGetDecParam:
 	bl	OSAL_SpinLockIRQ	@
 	ldr	r0, .L1880	@,
 	bl	OSAL_SpinLockIRQ	@
-	ldr	r8, [r6, #0]	@ D.53841, <variable>.ChanID
+	ldr	r8, [r6, #0]	@ D.53854, <variable>.ChanID
 	movt	r7, #:upper16:.LANCHOR3	@ tmp242,
-	cmn	r8, #1	@ D.53841,
+	cmn	r8, #1	@ D.53854,
 	beq	.L1871	@,
-	cmp	r8, #15	@ D.53841,
+	cmp	r8, #15	@ D.53854,
 	bls	.L1872	@,
 .L1843:
-	mov	r3, r8	@, D.53841
+	mov	r3, r8	@, D.53854
 	ldr	r2, .L1880+4	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC261	@,
@@ -14374,13 +14372,13 @@ VCTRL_ExtAccGetDecParam:
 	bl	OSAL_SpinUnLockIRQ	@
 	ldr	r0, .L1880+8	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.53876,
+	mvn	r0, #0	@ D.53889,
 .L1841:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L1872:
-	ldr	r3, [r4, r8, asl #2]	@ D.56267, s_pstVfmwChan
-	cmp	r3, #0	@ D.56267,
+	ldr	r3, [r4, r8, asl #2]	@ D.56288, s_pstVfmwChan
+	cmp	r3, #0	@ D.56288,
 	beq	.L1843	@,
 	ldr	r1, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r1, #0	@ <variable>.s32IsOpen,
@@ -14394,18 +14392,18 @@ VCTRL_ExtAccGetDecParam:
 	ldr	ip, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	ip, #19	@ <variable>.eVidStd,
 	beq	.L1843	@,
-	mov	r0, r8	@, D.53841
+	mov	r0, r8	@, D.53854
 	bl	VDMDRV_IsChanDec	@
 	cmp	r0, #1	@,
 	beq	.L1873	@,
-	mov	r0, r8	@, D.53841
+	mov	r0, r8	@, D.53854
 	bl	VCTRL_GetDecParam	@
 	subs	r5, r0, #0	@ pDecParam.5193,
 	beq	.L1874	@,
 	ldr	r3, [r4, r8, asl #2]	@ temp.5195, s_pstVfmwChan
 	cmp	r3, #0	@ temp.5195,
 	beq	.L1875	@,
-	str	r8, [fp, #-56]	@ D.53841, DecParamInfo.ChanID
+	str	r8, [fp, #-56]	@ D.53854, DecParamInfo.ChanID
 	sub	r0, fp, #56	@,,
 	ldr	lr, [r3, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	ldr	ip, [r7, #3564]	@ AcceleratorCharacter, AcceleratorCharacter
@@ -14414,7 +14412,7 @@ VCTRL_ExtAccGetDecParam:
 	blx	ip	@ AcceleratorCharacter
 	cmp	r0, #1	@,
 	bne	.L1847	@,
-	mov	r0, r8	@, D.53841
+	mov	r0, r8	@, D.53854
 .L1869:
 	ldr	ip, [fp, #-56]	@ DecParamInfo.ChanID, DecParamInfo.ChanID
 	mov	r1, #4	@,
@@ -14428,22 +14426,22 @@ VCTRL_ExtAccGetDecParam:
 	bl	OSAL_SpinUnLockIRQ	@
 	ldr	r0, .L1880+8	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, #0	@ D.53876,
+	mov	r0, #0	@ D.53889,
 	b	.L1841	@
 .L1871:
 	movw	r5, #:lower16:g_ChanCtx	@ ivtmp.5190,
 	movt	r5, #:upper16:g_ChanCtx	@ ivtmp.5190,
-	add	r8, r5, #64	@ D.60723, ivtmp.5190,
+	add	r8, r5, #64	@ D.60744, ivtmp.5190,
 	sub	r9, fp, #56	@ tmp248,,
 	mov	sl, r4	@ tmp247, tmp241
 .L1842:
-	ldr	r3, [r5, #64]	@ D.53847,
-	cmp	r3, #0	@ D.53847,
+	ldr	r3, [r5, #64]	@ D.53860,
+	cmp	r3, #0	@ D.53860,
 	blt	.L1834	@,
-	cmp	r3, #15	@ D.53847,
+	cmp	r3, #15	@ D.53860,
 	bhi	.L1835	@,
-	ldr	r2, [r4, r3, asl #2]	@ D.56258, s_pstVfmwChan
-	cmp	r2, #0	@ D.56258,
+	ldr	r2, [r4, r3, asl #2]	@ D.56279, s_pstVfmwChan
+	cmp	r2, #0	@ D.56279,
 	beq	.L1835	@,
 	ldr	r1, [r2, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r1, #0	@ <variable>.s32IsOpen,
@@ -14459,10 +14457,10 @@ VCTRL_ExtAccGetDecParam:
 	bl	dprint_vfmw	@
 .L1837:
 	add	r5, r5, #4	@ tmp253, ivtmp.5190,
-	ldr	r3, [r5, #64]	@ D.53847,
-	cmp	r3, #0	@ D.53847,
+	ldr	r3, [r5, #64]	@ D.53860,
+	cmp	r3, #0	@ D.53860,
 	blt	.L1834	@,
-	cmp	r3, #15	@ D.53847,
+	cmp	r3, #15	@ D.53860,
 	bls	.L1864	@,
 .L1854:
 	movw	r1, #:lower16:.LC258	@,
@@ -14472,12 +14470,12 @@ VCTRL_ExtAccGetDecParam:
 	bl	dprint_vfmw	@
 .L1865:
 	add	r5, r5, #4	@ ivtmp.5190, tmp253,
-	cmp	r5, r8	@ ivtmp.5190, D.60723
+	cmp	r5, r8	@ ivtmp.5190, D.60744
 	bne	.L1842	@,
 	b	.L1834	@
 .L1864:
-	ldr	r2, [r4, r3, asl #2]	@ D.56258, s_pstVfmwChan
-	cmp	r2, #0	@ D.56258,
+	ldr	r2, [r4, r3, asl #2]	@ D.56279, s_pstVfmwChan
+	cmp	r2, #0	@ D.56279,
 	beq	.L1854	@,
 	ldr	r0, [r2, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r0, #0	@ <variable>.s32IsOpen,
@@ -14491,21 +14489,21 @@ VCTRL_ExtAccGetDecParam:
 	ldr	r2, [r2, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r2, #19	@ <variable>.eVidStd,
 	beq	.L1854	@,
-	mov	r0, r3	@, D.53847
+	mov	r0, r3	@, D.53860
 	str	r3, [fp, #-64]	@,
 	bl	VDMDRV_IsChanDec	@
 	ldr	r3, [fp, #-64]	@,
 	cmp	r0, #1	@,
 	beq	.L1856	@,
-	mov	r0, r3	@, D.53847
+	mov	r0, r3	@, D.53860
 	bl	VCTRL_GetDecParam	@
 	ldr	r3, [fp, #-64]	@,
 	subs	r2, r0, #0	@ pDecParam,
 	beq	.L1866	@,
-	ldr	r1, [sl, r3, asl #2]	@ D.53866, s_pstVfmwChan
-	cmp	r1, #0	@ D.53866,
+	ldr	r1, [sl, r3, asl #2]	@ D.53879, s_pstVfmwChan
+	cmp	r1, #0	@ D.53879,
 	beq	.L1867	@,
-	str	r3, [fp, #-56]	@ D.53847, DecParamInfo.ChanID
+	str	r3, [fp, #-56]	@ D.53860, DecParamInfo.ChanID
 	mov	r0, r9	@, tmp248
 	ldr	r1, [r1, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	ldr	r3, [r7, #3564]	@ AcceleratorCharacter, AcceleratorCharacter
@@ -14525,22 +14523,22 @@ VCTRL_ExtAccGetDecParam:
 	ldr	r2, [r2, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	cmp	r2, #19	@ <variable>.eVidStd,
 	beq	.L1835	@,
-	mov	r0, r3	@, D.53847
+	mov	r0, r3	@, D.53860
 	str	r3, [fp, #-64]	@,
 	bl	VDMDRV_IsChanDec	@
 	ldr	r3, [fp, #-64]	@,
 	cmp	r0, #1	@,
 	beq	.L1877	@,
-	mov	r0, r3	@, D.53847
+	mov	r0, r3	@, D.53860
 	str	r3, [fp, #-64]	@,
 	bl	VCTRL_GetDecParam	@
 	ldr	r3, [fp, #-64]	@,
 	subs	r2, r0, #0	@ pDecParam,
 	beq	.L1878	@,
-	ldr	r1, [sl, r3, asl #2]	@ D.53866, s_pstVfmwChan
-	cmp	r1, #0	@ D.53866,
+	ldr	r1, [sl, r3, asl #2]	@ D.53879, s_pstVfmwChan
+	cmp	r1, #0	@ D.53879,
 	beq	.L1879	@,
-	str	r3, [fp, #-56]	@ D.53847, DecParamInfo.ChanID
+	str	r3, [fp, #-56]	@ D.53860, DecParamInfo.ChanID
 	mov	r0, r9	@, tmp248
 	ldr	lr, [r1, #552]	@ <variable>.eVidStd, <variable>.eVidStd
 	ldr	ip, [r7, #3564]	@ AcceleratorCharacter, AcceleratorCharacter
@@ -14556,27 +14554,27 @@ VCTRL_ExtAccGetDecParam:
 	b	.L1837	@
 .L1879:
 	movw	r1, #:lower16:.LC55	@,
-	movw	r2, #7597	@,
+	movw	r2, #7596	@,
 	movt	r1, #:upper16:.LC55	@,
 	mov	r0, #1	@,
 	bl	dprint_vfmw	@
 	b	.L1837	@
 .L1867:
 	movw	r1, #:lower16:.LC55	@,
-	movw	r2, #7597	@,
+	movw	r2, #7596	@,
 	movt	r1, #:upper16:.LC55	@,
 	mov	r0, #1	@,
 	bl	dprint_vfmw	@
 	b	.L1865	@
 .L1877:
-	mov	r2, r3	@, D.53847
+	mov	r2, r3	@, D.53860
 	movw	r1, #:lower16:.LC259	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC259	@,
 	bl	dprint_vfmw	@
 	b	.L1837	@
 .L1856:
-	mov	r2, r3	@, D.53847
+	mov	r2, r3	@, D.53860
 	movw	r1, #:lower16:.LC259	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC259	@,
@@ -14587,25 +14585,25 @@ VCTRL_ExtAccGetDecParam:
 	str	r1, [r6, #8]	@ tmp228, <variable>.pDecParam
 	b	.L1834	@
 .L1868:
-	mov	r0, r3	@, D.53847
+	mov	r0, r3	@, D.53860
 	b	.L1869	@
 .L1878:
-	mov	r2, r3	@, D.53847
+	mov	r2, r3	@, D.53860
 	movw	r1, #:lower16:.LC260	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC260	@,
 	bl	dprint_vfmw	@
 	b	.L1837	@
 .L1866:
-	mov	r2, r3	@, D.53847
+	mov	r2, r3	@, D.53860
 	movw	r1, #:lower16:.LC260	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC260	@,
 	bl	dprint_vfmw	@
 	b	.L1865	@
 .L1875:
-	mov	r3, r8	@, D.53841
-	movw	r2, #7658	@,
+	mov	r3, r8	@, D.53854
+	movw	r2, #7657	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC55	@,
 	movt	r1, #:upper16:.LC55	@,
@@ -14614,7 +14612,7 @@ VCTRL_ExtAccGetDecParam:
 	str	r0, [r6, #8]	@ tmp210, <variable>.pDecParam
 	b	.L1834	@
 .L1873:
-	mov	r2, r8	@, D.53841
+	mov	r2, r8	@, D.53854
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC259	@,
 	movt	r1, #:upper16:.LC259	@,
@@ -14626,11 +14624,11 @@ VCTRL_ExtAccGetDecParam:
 	bl	OSAL_SpinUnLockIRQ	@
 	add	r0, r4, #520	@, tmp241,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.53876,
+	mvn	r0, #0	@ D.53889,
 	b	.L1841	@
 .L1874:
 	bl	VCTRL_ExtraWakeUpThread	@
-	mov	r2, r8	@, D.53841
+	mov	r2, r8	@, D.53854
 	mov	r0, #22	@,
 	movw	r1, #:lower16:.LC260	@,
 	movt	r1, #:upper16:.LC260	@,
@@ -14849,10 +14847,10 @@ VCTRL_Resume:
 	bl	VDMDRV_ExitSleep	@
 	movw	r3, #:lower16:g_vdm_hal_fun_ptr	@ tmp138,
 	movt	r3, #:upper16:g_vdm_hal_fun_ptr	@ tmp138,
-	ldr	r3, [r3, #24]	@ D.49921, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
-	cmp	r3, #0	@ D.49921,
+	ldr	r3, [r3, #24]	@ D.49935, g_vdm_hal_fun_ptr.pfun_BPDDRV_OpenHardware
+	cmp	r3, #0	@ D.49935,
 	beq	.L1903	@,
-	blx	r3	@ D.49921
+	blx	r3	@ D.49935
 .L1903:
 	bl	VCTRL_StartTask	@
 	bl	OSAL_GetTimeInMs	@
@@ -14954,22 +14952,22 @@ VCTRL_Suspend:
 .L1912:
 	movw	r5, #:lower16:g_vdm_hal_fun_ptr	@ tmp171,
 	movt	r5, #:upper16:g_vdm_hal_fun_ptr	@ tmp171,
-	ldr	r3, [r5, #20]	@ D.49885, g_vdm_hal_fun_ptr.pfun_SCDDRV_CloseHardware
-	cmp	r3, #0	@ D.49885,
+	ldr	r3, [r5, #20]	@ D.49899, g_vdm_hal_fun_ptr.pfun_SCDDRV_CloseHardware
+	cmp	r3, #0	@ D.49899,
 	beq	.L1918	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.49885
+	blx	r3	@ D.49899
 .L1919:
-	ldr	r3, [r5, #28]	@ D.49891, g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware
-	cmp	r3, #0	@ D.49891,
+	ldr	r3, [r5, #28]	@ D.49905, g_vdm_hal_fun_ptr.pfun_BPDDRV_CloseHardware
+	cmp	r3, #0	@ D.49905,
 	beq	.L1920	@,
-	blx	r3	@ D.49891
+	blx	r3	@ D.49905
 .L1920:
-	ldr	r3, [r5, #4]	@ D.49896, g_vdm_hal_fun_ptr.pfun_VDMDRV_CloseHardware
-	cmp	r3, #0	@ D.49896,
+	ldr	r3, [r5, #4]	@ D.49910, g_vdm_hal_fun_ptr.pfun_VDMDRV_CloseHardware
+	cmp	r3, #0	@ D.49910,
 	beq	.L1921	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.49896
+	blx	r3	@ D.49910
 .L1922:
 	bl	VCTRL_StopTask	@
 	bl	OSAL_GetTimeInMs	@
@@ -14984,14 +14982,14 @@ VCTRL_Suspend:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L1918:
-	mov	r0, r3	@, D.49885
+	mov	r0, r3	@, D.49899
 	movw	r1, #:lower16:.LC0	@,
 	mov	r2, #388	@,
 	movt	r1, #:upper16:.LC0	@,
 	bl	dprint_vfmw	@
 	b	.L1919	@
 .L1921:
-	mov	r0, r3	@, D.49896
+	mov	r0, r3	@, D.49910
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #393	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -15053,7 +15051,7 @@ VCTRL_SetDbgOption:
 	cmp	r1, #0	@ p_args
 	bne	.L2006	@,
 .L1932:
-	mvn	r0, #1	@ D.54123,
+	mvn	r0, #1	@ D.54139,
 .L1979:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -15071,22 +15069,25 @@ VCTRL_SetDbgOption:
 	cmp	r0, #1	@ opt,
 	beq	.L1934	@,
 	bls	.L2007	@,
-	bic	r5, r4, #-16777216	@ Thr, dat,
+	bic	r6, r4, #-16777216	@ Thr, dat,
 	mov	r4, r4, lsr #24	@ ChanID, dat,
-	sub	r6, fp, #148	@ tmp483,,
+	sub	r5, fp, #148	@ tmp484,,
 	mov	r0, #32	@,
 	mov	r2, r4	@, ChanID
-	mov	r3, r5	@, Thr
+	mov	r3, r6	@, Thr
 	movw	r1, #:lower16:.LC267	@,
 	movt	r1, #:upper16:.LC267	@,
 	bl	dprint_vfmw	@
+	mov	r0, r5	@, tmp484
+	mov	r1, #104	@,
+	bl	__memzero	@
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp483
+	mov	r1, r5	@, tmp484
 	bl	VCTRL_GetChanCfg	@
 	cmp	r0, #0	@,
 	beq	.L2008	@,
 .L1934:
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1968:
 	cmp	r0, #1280	@ opt,
@@ -15103,25 +15104,25 @@ VCTRL_SetDbgOption:
 	cmp	r0, #768	@ opt,
 	bne	.L1932	@,
 	bl	VCTRL_Suspend	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1958:
-	movw	r3, #:lower16:g_TraceCtrl	@ tmp440,
-	movt	r3, #:upper16:g_TraceCtrl	@ tmp440,
+	movw	r3, #:lower16:g_TraceCtrl	@ tmp441,
+	movt	r3, #:upper16:g_TraceCtrl	@ tmp441,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC305	@,
 	str	r4, [r3, #0]	@ dat,
 	movt	r1, #:upper16:.LC305	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2008:
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp483
-	str	r5, [fp, #-132]	@ Thr, ChanCfg.s32ChanErrThr
+	mov	r1, r5	@, tmp484
+	str	r6, [fp, #-132]	@ Thr, ChanCfg.s32ChanErrThr
 	bl	VCTRL_ConfigChan	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1969:
 	movw	r3, #257	@ tmp190,
@@ -15140,7 +15141,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC273	@,
 	movt	r1, #:upper16:.LC273	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1974:
 	movw	r2, #1537	@ tmp204,
@@ -15158,17 +15159,17 @@ VCTRL_SetDbgOption:
 	bne	.L1932	@,
 	cmp	r4, #15	@ dat,
 	bhi	.L2003	@,
-	movw	r0, #:lower16:.LANCHOR0	@ tmp449,
-	movt	r0, #:upper16:.LANCHOR0	@ tmp449,
-	mov	r5, #1	@ tmp451,
+	movw	r0, #:lower16:.LANCHOR0	@ tmp450,
+	movt	r0, #:upper16:.LANCHOR0	@ tmp450,
+	mov	r5, #1	@ tmp452,
 	mov	r2, r4	@, dat
-	ldr	ip, [r0, r4, asl #2]	@ tmp450, s_pstVfmwChan
+	ldr	ip, [r0, r4, asl #2]	@ tmp451, s_pstVfmwChan
 	movw	r1, #:lower16:.LC310	@,
 	mov	r0, #32	@,
 	movt	r1, #:upper16:.LC310	@,
-	str	r5, [ip, #1264]	@ tmp451, <variable>.stSynExtraData.s32ModuleLowlyEnable
+	str	r5, [ip, #1264]	@ tmp452, <variable>.stSynExtraData.s32ModuleLowlyEnable
 	bl	dprint_vfmw	@
-	mov	r0, r5	@ D.54123, tmp451
+	mov	r0, r5	@ D.54139, tmp452
 	b	.L1979	@
 .L1975:
 	cmp	r0, #1024	@ opt,
@@ -15202,7 +15203,7 @@ VCTRL_SetDbgOption:
 	mov	r3, r0	@ ret.5483,
 	mov	r0, #32	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1970:
 	cmp	r0, #5	@ opt,
@@ -15214,7 +15215,7 @@ VCTRL_SetDbgOption:
 	bne	.L1932	@,
 	bic	r5, r4, #-16777216	@ Thr, dat,
 	mov	r4, r4, lsr #24	@ ChanID, dat,
-	sub	r6, fp, #460	@ tmp227,,
+	sub	r6, fp, #460	@ tmp228,,
 	mov	r0, #32	@,
 	mov	r2, r4	@, ChanID
 	mov	r3, r5	@, Thr
@@ -15222,15 +15223,15 @@ VCTRL_SetDbgOption:
 	movt	r1, #:upper16:.LC271	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp227
+	mov	r1, r6	@, tmp228
 	bl	VCTRL_GetChanCfg	@
 	cmp	r0, #0	@,
 	bne	.L1934	@,
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp227
+	mov	r1, r6	@, tmp228
 	str	r5, [fp, #-440]	@ Thr, ChanCfg.s32ChanStrmOFThr
 	bl	VCTRL_ConfigChan	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1971:
 	movw	r1, #513	@ tmp192,
@@ -15241,11 +15242,11 @@ VCTRL_SetDbgOption:
 	bne	.L1932	@,
 	cmp	r4, #15	@ dat,
 	bhi	.L1934	@,
-	movw	r5, #:lower16:.LANCHOR3	@ tmp245,
-	movt	r5, #:upper16:.LANCHOR3	@ tmp245,
-	add	r6, r5, r4, asl #2	@, tmp248, tmp245, dat,
-	ldr	r7, [r6, #3572]	@ tmp250, vfmw_save_str_file
-	cmp	r7, #0	@ tmp250,
+	movw	r5, #:lower16:.LANCHOR3	@ tmp246,
+	movt	r5, #:upper16:.LANCHOR3	@ tmp246,
+	add	r6, r5, r4, asl #2	@, tmp249, tmp246, dat,
+	ldr	r7, [r6, #3572]	@ tmp251, vfmw_save_str_file
+	cmp	r7, #0	@ tmp251,
 	beq	.L2010	@,
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC282	@,
@@ -15253,9 +15254,9 @@ VCTRL_SetDbgOption:
 	bl	dprint_vfmw	@
 	ldr	r0, [r6, #3572]	@, vfmw_save_str_file
 	bl	klib_fclose	@
-	mov	r0, #0	@ tmp278,
-	str	r0, [r6, #3572]	@ tmp278, vfmw_save_str_file
-	mov	r0, #1	@ D.54123,
+	mov	r0, #0	@ tmp279,
+	str	r0, [r6, #3572]	@ tmp279, vfmw_save_str_file
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1978:
 	movw	r1, #1539	@ tmp209,
@@ -15268,101 +15269,101 @@ VCTRL_SetDbgOption:
 	movw	ip, #1541	@ tmp212,
 	cmp	r0, ip	@ opt, tmp212
 	bne	.L1932	@,
-	movw	lr, #:lower16:.LANCHOR3	@ tmp480,
-	movt	lr, #:upper16:.LANCHOR3	@ tmp480,
+	movw	lr, #:lower16:.LANCHOR3	@ tmp481,
+	movt	lr, #:upper16:.LANCHOR3	@ tmp481,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC311	@,
 	str	r4, [lr, #3876]	@ dat, g_SCDID
 	movt	r1, #:upper16:.LC311	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2003:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC309	@,
 	movt	r1, #:upper16:.LC309	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1943:
-	movw	r6, #:lower16:g_PrintEnable	@ tmp241,
-	movt	r6, #:upper16:g_PrintEnable	@ tmp241,
+	movw	r6, #:lower16:g_PrintEnable	@ tmp242,
+	movt	r6, #:upper16:g_PrintEnable	@ tmp242,
 	mov	r0, r4	@, dat
-	mov	r2, #67108864	@ tmp243,
+	mov	r2, #67108864	@ tmp244,
 	ldr	r4, [r6, #0]	@ TmpPrintEnable, g_PrintEnable
 	mov	r1, #1	@,
-	str	r2, [r6, #0]	@ tmp243, g_PrintEnable
+	str	r2, [r6, #0]	@ tmp244, g_PrintEnable
 	bl	PrintScdRawState	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	str	r4, [r6, #0]	@ TmpPrintEnable, g_PrintEnable
 	b	.L1979	@
 .L1963:
 	cmp	r4, #15	@ dat,
 	bhi	.L2003	@,
-	movw	r1, #:lower16:.LANCHOR0	@ tmp454,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp454,
-	mov	ip, #0	@ tmp456,
+	movw	r1, #:lower16:.LANCHOR0	@ tmp455,
+	movt	r1, #:upper16:.LANCHOR0	@ tmp455,
+	mov	ip, #0	@ tmp457,
 	mov	r2, r4	@, dat
-	ldr	lr, [r1, r4, asl #2]	@ tmp455, s_pstVfmwChan
+	ldr	lr, [r1, r4, asl #2]	@ tmp456, s_pstVfmwChan
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC310	@,
 	movt	r1, #:upper16:.LC310	@,
-	str	ip, [lr, #1264]	@ tmp456, <variable>.stSynExtraData.s32ModuleLowlyEnable
+	str	ip, [lr, #1264]	@ tmp457, <variable>.stSynExtraData.s32ModuleLowlyEnable
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1961:
-	movw	r3, #:lower16:g_TraceImgPeriod	@ tmp446,
-	movt	r3, #:upper16:g_TraceImgPeriod	@ tmp446,
+	movw	r3, #:lower16:g_TraceImgPeriod	@ tmp447,
+	movt	r3, #:upper16:g_TraceImgPeriod	@ tmp447,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC308	@,
 	str	r4, [r3, #0]	@ dat,
 	movt	r1, #:upper16:.LC308	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1966:
-	add	r4, r4, r4, asl #1	@, tmp474, dat, dat,
-	movw	r1, #:lower16:s_SmIIS	@ tmp470,
-	movt	r1, #:upper16:s_SmIIS	@ tmp470,
-	mov	r2, #0	@ tmp479,
-	add	ip, r1, r4, asl #4	@, tmp476, tmp470, tmp474,
-	mov	r0, #1	@ D.54123,
+	add	r4, r4, r4, asl #1	@, tmp475, dat, dat,
+	movw	r1, #:lower16:s_SmIIS	@ tmp471,
+	movt	r1, #:upper16:s_SmIIS	@ tmp471,
+	mov	r2, #0	@ tmp480,
+	add	ip, r1, r4, asl #4	@, tmp477, tmp471, tmp475,
+	mov	r0, #1	@ D.54139,
 	ldr	r3, [ip, #40]	@ <variable>.pSmInstArray, <variable>.pSmInstArray
-	str	r2, [r3, #88]	@ tmp479, <variable>.Config.ScdLowdlyEnable
+	str	r2, [r3, #88]	@ tmp480, <variable>.Config.ScdLowdlyEnable
 	b	.L1979	@
 .L1964:
-	movw	r3, #:lower16:g_TunnelLineNumber	@ tmp458,
-	movt	r3, #:upper16:g_TunnelLineNumber	@ tmp458,
+	movw	r3, #:lower16:g_TunnelLineNumber	@ tmp459,
+	movt	r3, #:upper16:g_TunnelLineNumber	@ tmp459,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC310	@,
 	str	r4, [r3, #0]	@ dat,
 	movt	r1, #:upper16:.LC310	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1965:
-	add	r4, r4, r4, asl #1	@, tmp464, dat, dat,
-	movw	r0, #:lower16:s_SmIIS	@ tmp460,
-	movt	r0, #:upper16:s_SmIIS	@ tmp460,
-	mov	r2, #1	@ tmp469,
-	add	r1, r0, r4, asl #4	@, tmp466, tmp460, tmp464,
-	mov	r0, r2	@ D.54123, tmp469
+	add	r4, r4, r4, asl #1	@, tmp465, dat, dat,
+	movw	r0, #:lower16:s_SmIIS	@ tmp461,
+	movt	r0, #:upper16:s_SmIIS	@ tmp461,
+	mov	r2, #1	@ tmp470,
+	add	r1, r0, r4, asl #4	@, tmp467, tmp461, tmp465,
+	mov	r0, r2	@ D.54139, tmp470
 	ldr	ip, [r1, #40]	@ <variable>.pSmInstArray, <variable>.pSmInstArray
-	str	r2, [ip, #88]	@ tmp469, <variable>.Config.ScdLowdlyEnable
+	str	r2, [ip, #88]	@ tmp470, <variable>.Config.ScdLowdlyEnable
 	b	.L1979	@
 .L2007:
 	movw	r3, #:lower16:g_PrintEnable	@ tmp213,
 	movt	r3, #:upper16:g_PrintEnable	@ tmp213,
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	str	r4, [r3, #0]	@ dat, g_PrintEnable
 	b	.L1979	@
 .L1948:
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	r5, r4, #-2130706432	@ ptr, dat,
 	.pushsection .pv_table,"a"
@@ -15373,44 +15374,44 @@ VCTRL_SetDbgOption:
 	cmp	r5, #0	@ ptr,
 	ldmib	r1, {r7, r8}	@ phole ldm
 	beq	.L2005	@,
-	sub	r6, fp, #148	@ tmp487,,
+	sub	r6, fp, #148	@ tmp488,,
 	mov	r1, #50	@,
 	movw	r2, #:lower16:.LC297	@,
 	movw	r3, #:lower16:.LANCHOR2	@,
 	movt	r2, #:upper16:.LC297	@,
 	movt	r3, #:upper16:.LANCHOR2	@,
-	mov	r0, r6	@, tmp487
+	mov	r0, r6	@, tmp488
 	str	r4, [sp, #0]	@ dat,
 	bl	snprintf	@
-	mov	r0, r6	@, tmp487
+	mov	r0, r6	@, tmp488
 	mov	r1, #66	@,
 	mov	r2, #0	@,
 	bl	klib_fopen	@
 	subs	r4, r0, #0	@ fp,
 	beq	.L1996	@,
-	movw	lr, #:lower16:g_vdm_hal_fun_ptr	@ tmp420,
-	movt	lr, #:upper16:g_vdm_hal_fun_ptr	@ tmp420,
-	ldr	ip, [lr, #116]	@ D.54276, g_vdm_hal_fun_ptr.pfun_VDMHAL_Write1DYuv
-	cmp	ip, #0	@ D.54276,
+	movw	lr, #:lower16:g_vdm_hal_fun_ptr	@ tmp421,
+	movt	lr, #:upper16:g_vdm_hal_fun_ptr	@ tmp421,
+	ldr	ip, [lr, #116]	@ D.54297, g_vdm_hal_fun_ptr.pfun_VDMHAL_Write1DYuv
+	cmp	ip, #0	@ D.54297,
 	beq	.L1997	@,
-	mov	r1, #1	@ tmp421,
-	mov	r2, r7	@, D.54266
-	str	r1, [sp, #0]	@ tmp421,
-	mov	r3, r8	@, D.54268
+	mov	r1, #1	@ tmp422,
+	mov	r2, r7	@, D.54287
+	str	r1, [sp, #0]	@ tmp422,
+	mov	r3, r8	@, D.54289
 	mov	r1, r5	@, ptr
-	blx	ip	@ D.54276
+	blx	ip	@ D.54297
 .L1998:
 	mov	r0, r4	@, fp
 	bl	klib_fclose	@
 	movw	r1, #:lower16:.LC298	@,
-	mov	r2, r6	@, tmp487
+	mov	r2, r6	@, tmp488
 	movt	r1, #:upper16:.LC298	@,
 	mov	r0, #32	@,
 	bl	dprint_vfmw	@
 .L1995:
 	mov	r0, r5	@, ptr
 	bl	__arm_iounmap	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1940:
 	cmp	r4, #1	@ dat,
@@ -15420,12 +15421,12 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC275	@,
 	movt	r1, #:upper16:.LC275	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1936:
 	and	r5, r4, #3	@ DecOrderOutput, dat,
 	mov	r4, r4, lsr #24	@ ChanID, dat,
-	sub	r6, fp, #252	@ tmp485,,
+	sub	r6, fp, #252	@ tmp486,,
 	mov	r0, #32	@,
 	mov	r2, r4	@, ChanID
 	mov	r3, r5	@, DecOrderOutput
@@ -15433,78 +15434,78 @@ VCTRL_SetDbgOption:
 	movt	r1, #:upper16:.LC268	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp485
+	mov	r1, r6	@, tmp486
 	bl	VCTRL_GetChanCfg	@
 	cmp	r0, #0	@,
 	bne	.L1934	@,
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp485
+	mov	r1, r6	@, tmp486
 	str	r5, [fp, #-224]	@ DecOrderOutput, ChanCfg.s32DecOrderOutput
 	bl	VCTRL_ConfigChan	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1950:
 	bl	VCTRL_Resume	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1945:
 	cmp	r4, #15	@ dat,
 	bhi	.L1934	@,
-	movw	r5, #:lower16:.LANCHOR3	@ tmp486,
-	mov	r6, r4, asl #2	@ tmp484, dat,
-	movt	r5, #:upper16:.LANCHOR3	@ tmp486,
-	add	r3, r6, r5	@ tmp282, tmp484, tmp486
-	ldr	r1, [r3, #3708]	@ tmp284, vfmw_save_seg_file
-	cmp	r1, #0	@ tmp284,
+	movw	r5, #:lower16:.LANCHOR3	@ tmp487,
+	mov	r6, r4, asl #2	@ tmp485, dat,
+	movt	r5, #:upper16:.LANCHOR3	@ tmp487,
+	add	r3, r6, r5	@ tmp283, tmp485, tmp487
+	ldr	r1, [r3, #3708]	@ tmp285, vfmw_save_seg_file
+	cmp	r1, #0	@ tmp285,
 	beq	.L2012	@,
-	add	r5, r6, r5	@ tmp304, tmp484, tmp486
+	add	r5, r6, r5	@ tmp305, tmp485, tmp487
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC286	@,
 	movt	r1, #:upper16:.LC286	@,
 	bl	dprint_vfmw	@
 	ldr	r0, [r5, #3708]	@, vfmw_save_seg_file
 	bl	klib_fclose	@
-	mov	r2, #0	@ tmp312,
-	mov	r0, #1	@ D.54123,
-	str	r2, [r5, #3708]	@ tmp312, vfmw_save_seg_file
+	mov	r2, #0	@ tmp313,
+	mov	r0, #1	@ D.54139,
+	str	r2, [r5, #3708]	@ tmp313, vfmw_save_seg_file
 	b	.L1979	@
 .L1959:
-	movw	ip, #:lower16:g_TraceBsPeriod	@ tmp442,
-	movt	ip, #:upper16:g_TraceBsPeriod	@ tmp442,
+	movw	ip, #:lower16:g_TraceBsPeriod	@ tmp443,
+	movt	ip, #:upper16:g_TraceBsPeriod	@ tmp443,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC306	@,
 	str	r4, [ip, #0]	@ dat,
 	movt	r1, #:upper16:.LC306	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1955:
-	movw	r3, #:lower16:.LANCHOR3	@ tmp434,
-	movt	r3, #:upper16:.LANCHOR3	@ tmp434,
+	movw	r3, #:lower16:.LANCHOR3	@ tmp435,
+	movt	r3, #:upper16:.LANCHOR3	@ tmp435,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC302	@,
 	str	r4, [r3, #3864]	@ dat, g_SleepTime
 	movt	r1, #:upper16:.LC302	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1960:
-	movw	lr, #:lower16:g_TraceFramePeriod	@ tmp444,
-	movt	lr, #:upper16:g_TraceFramePeriod	@ tmp444,
+	movw	lr, #:lower16:g_TraceFramePeriod	@ tmp445,
+	movt	lr, #:upper16:g_TraceFramePeriod	@ tmp445,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC307	@,
 	str	r4, [lr, #0]	@ dat,
 	movt	r1, #:upper16:.LC307	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1937:
 	and	r5, r4, #7	@ Mode, dat,
 	mov	r4, r4, lsr #24	@ ChanID, dat,
-	sub	r6, fp, #356	@ tmp221,,
+	sub	r6, fp, #356	@ tmp222,,
 	mov	r0, #32	@,
 	mov	r2, r4	@, ChanID
 	mov	r3, r5	@, Mode
@@ -15512,15 +15513,15 @@ VCTRL_SetDbgOption:
 	movt	r1, #:upper16:.LC269	@,
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp221
+	mov	r1, r6	@, tmp222
 	bl	VCTRL_GetChanCfg	@
 	cmp	r0, #0	@,
 	bne	.L1980	@,
 	mov	r0, r4	@, ChanID
-	mov	r1, r6	@, tmp221
+	mov	r1, r6	@, tmp222
 	str	r5, [fp, #-332]	@ Mode, ChanCfg.s32DecMode
 	bl	VCTRL_ConfigChan	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1976:
 	cmp	r0, #896	@ opt,
@@ -15536,7 +15537,7 @@ VCTRL_SetDbgOption:
 	mov	r3, r0	@ ret.5475,
 	mov	r0, #32	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1951:
 	mov	r0, r4	@, dat
@@ -15547,7 +15548,7 @@ VCTRL_SetDbgOption:
 	mov	r3, r0	@ ret,
 	mov	r0, #32	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1977:
 	movw	r3, #1025	@ tmp202,
@@ -15556,26 +15557,26 @@ VCTRL_SetDbgOption:
 	movw	r1, #1026	@ tmp203,
 	cmp	r0, r1	@ opt, tmp203
 	bne	.L1932	@,
-	movw	lr, #:lower16:.LANCHOR3	@ tmp438,
-	movt	lr, #:upper16:.LANCHOR3	@ tmp438,
+	movw	lr, #:lower16:.LANCHOR3	@ tmp439,
+	movt	lr, #:upper16:.LANCHOR3	@ tmp439,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC304	@,
 	str	r4, [lr, #3872]	@ dat, g_StopDec
 	movt	r1, #:upper16:.LC304	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1956:
-	movw	ip, #:lower16:.LANCHOR3	@ tmp436,
-	movt	ip, #:upper16:.LANCHOR3	@ tmp436,
+	movw	ip, #:lower16:.LANCHOR3	@ tmp437,
+	movt	ip, #:upper16:.LANCHOR3	@ tmp437,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC303	@,
 	str	r4, [ip, #3868]	@ dat, g_DnrSleepTime
 	movt	r1, #:upper16:.LC303	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1973:
 	movw	r2, #514	@ tmp194,
@@ -15585,7 +15586,7 @@ VCTRL_SetDbgOption:
 	cmp	r0, ip	@ opt, tmp195
 	bne	.L1932	@,
 #APP
-@ 182 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
+@ 182 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/memory.h" 1
 	@ __pv_stub
 1:	sub	r5, r4, #-2130706432	@ ptr, dat,
 	.pushsection .pv_table,"a"
@@ -15595,16 +15596,16 @@ VCTRL_SetDbgOption:
 @ 0 "" 2
 	cmp	r5, #0	@ ptr,
 	beq	.L2005	@,
-	sub	r6, fp, #148	@ tmp407,,
+	sub	r6, fp, #148	@ tmp408,,
 	mov	r1, #50	@,
 	movw	r2, #:lower16:.LC294	@,
 	movw	r3, #:lower16:.LANCHOR2	@,
 	movt	r2, #:upper16:.LC294	@,
 	movt	r3, #:upper16:.LANCHOR2	@,
-	mov	r0, r6	@, tmp407
+	mov	r0, r6	@, tmp408
 	str	r4, [sp, #0]	@ dat,
 	bl	snprintf	@
-	mov	r0, r6	@, tmp407
+	mov	r0, r6	@, tmp408
 	mov	r1, #66	@,
 	mov	r2, #0	@,
 	bl	klib_fopen	@
@@ -15616,7 +15617,7 @@ VCTRL_SetDbgOption:
 	bl	klib_fwrite	@
 	mov	r0, r4	@, fp
 	bl	klib_fclose	@
-	mov	r2, r6	@, tmp407
+	mov	r2, r6	@, tmp408
 	movw	r1, #:lower16:.LC295	@,
 	mov	r0, #32	@,
 	movt	r1, #:upper16:.LC295	@,
@@ -15625,13 +15626,13 @@ VCTRL_SetDbgOption:
 .L1946:
 	cmp	r4, #15	@ dat,
 	bhi	.L1934	@,
-	movw	r5, #:lower16:.LANCHOR3	@ tmp313,
-	movt	r5, #:upper16:.LANCHOR3	@ tmp313,
-	add	r7, r5, r4, asl #2	@, tmp316, tmp313, dat,
-	sub	r8, r7, #1648	@ tmp317, tmp316,
-	ldr	r6, [r7, #-1656]	@ tmp318, vfmw_save_yuv_file
-	sub	r8, r8, #8	@ tmp317, tmp317,
-	cmp	r6, #0	@ tmp318,
+	movw	r5, #:lower16:.LANCHOR3	@ tmp314,
+	movt	r5, #:upper16:.LANCHOR3	@ tmp314,
+	add	r7, r5, r4, asl #2	@, tmp317, tmp314, dat,
+	sub	r8, r7, #1648	@ tmp318, tmp317,
+	ldr	r6, [r7, #-1656]	@ tmp319, vfmw_save_yuv_file
+	sub	r8, r8, #8	@ tmp318, tmp318,
+	cmp	r6, #0	@ tmp319,
 	beq	.L2013	@,
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC292	@,
@@ -15640,19 +15641,19 @@ VCTRL_SetDbgOption:
 	ldr	r0, [r7, #-1656]	@, vfmw_save_yuv_file
 	bl	klib_fclose	@
 	ldr	r0, [r5, #3856]	@ temp.5463, MemRecord_YUV.PhyAddr
-	movw	r3, #:lower16:.LANCHOR0	@ tmp388,
-	movw	r1, #:lower16:.LANCHOR2	@ tmp394,
-	movt	r3, #:upper16:.LANCHOR0	@ tmp388,
-	movt	r1, #:upper16:.LANCHOR2	@ tmp394,
+	movw	r3, #:lower16:.LANCHOR0	@ tmp389,
+	movw	r1, #:lower16:.LANCHOR2	@ tmp395,
+	movt	r3, #:upper16:.LANCHOR0	@ tmp389,
+	movt	r1, #:upper16:.LANCHOR2	@ tmp395,
 	cmp	r0, #0	@ temp.5463,
-	mov	r2, #0	@ tmp387,
-	mvn	ip, #0	@ tmp395,
-	str	r2, [r7, #-1656]	@ tmp387, vfmw_save_yuv_file
-	str	ip, [r1, #68]	@ tmp395, save_yuv_chan_num
-	str	r2, [r3, #504]	@ tmp387, pY
-	str	r2, [r5, #-1528]	@ tmp387, save_yuv_with_crop
-	str	r2, [r3, #508]	@ tmp387, pVl
-	str	r2, [r3, #512]	@ tmp387, pUl
+	mov	r2, #0	@ tmp388,
+	mvn	ip, #0	@ tmp396,
+	str	r2, [r7, #-1656]	@ tmp388, vfmw_save_yuv_file
+	str	ip, [r1, #68]	@ tmp396, save_yuv_chan_num
+	str	r2, [r3, #504]	@ tmp388, pY
+	str	r2, [r5, #-1528]	@ tmp388, save_yuv_with_crop
+	str	r2, [r3, #508]	@ tmp388, pVl
+	str	r2, [r3, #512]	@ tmp388, pUl
 	beq	.L1934	@,
 	ldr	r1, [r5, #3852]	@, MemRecord_YUV.VirAddr
 	bl	MEM_ReleaseMemBlock	@
@@ -15663,7 +15664,7 @@ VCTRL_SetDbgOption:
 	ldr	r0, .L2014	@,
 	mov	r1, #16	@,
 	bl	__memzero	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1972:
 	cmp	r0, #13	@ opt,
@@ -15676,7 +15677,7 @@ VCTRL_SetDbgOption:
 	bl	dprint_vfmw	@
 	mov	r0, r4	@, dat
 	bl	DBG_PrintTracer	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1941:
 	cmp	r4, #16	@ dat,
@@ -15686,7 +15687,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC276	@,
 	movt	r1, #:upper16:.LC276	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1980:
 	mov	r2, r4	@, ChanID
@@ -15694,18 +15695,18 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC270	@,
 	movt	r1, #:upper16:.LC270	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1983:
-	movw	r3, #:lower16:.LANCHOR0	@ tmp238,
-	movt	r3, #:upper16:.LANCHOR0	@ tmp238,
+	movw	r3, #:lower16:.LANCHOR0	@ tmp239,
+	movt	r3, #:upper16:.LANCHOR0	@ tmp239,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC277	@,
 	str	r4, [r3, #1364]	@ dat, g_CurProcChan
 	movt	r1, #:upper16:.LC277	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2005:
 	mov	r2, r4	@, dat
@@ -15715,36 +15716,36 @@ VCTRL_SetDbgOption:
 	bl	dprint_vfmw	@
 	b	.L1995	@
 .L2009:
-	movw	lr, #:lower16:USE_FF_APT_EN	@ tmp231,
-	movt	lr, #:upper16:USE_FF_APT_EN	@ tmp231,
+	movw	lr, #:lower16:USE_FF_APT_EN	@ tmp232,
+	movt	lr, #:upper16:USE_FF_APT_EN	@ tmp232,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC272	@,
 	str	r4, [lr, #0]	@ dat,
 	movt	r1, #:upper16:.LC272	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2011:
-	movw	ip, #:lower16:.LANCHOR0	@ tmp234,
-	movt	ip, #:upper16:.LANCHOR0	@ tmp234,
+	movw	ip, #:lower16:.LANCHOR0	@ tmp235,
+	movt	ip, #:upper16:.LANCHOR0	@ tmp235,
 	mov	r2, r4	@, dat
 	mov	r0, #32	@,
 	movw	r1, #:lower16:.LC274	@,
 	str	r4, [ip, #1372]	@ dat, g_ResetCreateNewSave
 	movt	r1, #:upper16:.LC274	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1996:
-	mov	r2, r6	@, tmp487
+	mov	r2, r6	@, tmp488
 	movw	r1, #:lower16:.LC296	@,
 	mov	r0, #32	@,
 	movt	r1, #:upper16:.LC296	@,
 	bl	dprint_vfmw	@
 	b	.L1995	@
 .L1997:
-	mov	r0, ip	@, D.54276
+	mov	r0, ip	@, D.54297
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #8263	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -15753,35 +15754,35 @@ VCTRL_SetDbgOption:
 .L2013:
 	ldr	ip, [r5, #3844]	@ save_file_cnt.755, save_file_cnt
 	sub	r9, fp, #148	@ str.752,,
-	movw	sl, #:lower16:.LANCHOR2	@ tmp323,
-	movt	sl, #:upper16:.LANCHOR2	@ tmp323,
-	add	lr, ip, #1	@ tmp321, save_file_cnt.755,
+	movw	sl, #:lower16:.LANCHOR2	@ tmp324,
+	movt	sl, #:upper16:.LANCHOR2	@ tmp324,
+	add	lr, ip, #1	@ tmp322, save_file_cnt.755,
 	mov	r1, #100	@,
 	str	ip, [sp, #0]	@ save_file_cnt.755,
-	mov	r3, sl	@, tmp323
-	str	lr, [r5, #3844]	@ tmp321, save_file_cnt
+	mov	r3, sl	@, tmp324
+	str	lr, [r5, #3844]	@ tmp322, save_file_cnt
 	mov	r0, r9	@, str.752
 	movw	r2, #:lower16:.LC287	@,
 	movt	r2, #:upper16:.LC287	@,
 	bl	snprintf	@
 	mov	r0, r9	@, str.752
 	movw	r1, #578	@,
-	mov	r2, r6	@, tmp318
+	mov	r2, r6	@, tmp319
 	bl	klib_fopen	@
-	cmp	r0, #0	@ D.54210,
-	str	r0, [r7, #-1656]	@ D.54210, vfmw_save_yuv_file
+	cmp	r0, #0	@ D.54231,
+	str	r0, [r7, #-1656]	@ D.54231, vfmw_save_yuv_file
 	beq	.L1989	@,
 	ldr	r0, .L2014	@,
 	mov	r1, #16	@,
 	bl	__memzero	@
 	movw	r0, #:lower16:.LC288	@,
-	mov	r1, r6	@, tmp318
+	mov	r1, r6	@, tmp319
 	movt	r0, #:upper16:.LC288	@,
 	mov	r2, #14155776	@,
 	ldr	r3, .L2014	@,
-	str	r6, [sp, #0]	@ tmp318,
+	str	r6, [sp, #0]	@ tmp319,
 	bl	MEM_AllocMemBlock	@
-	subs	r7, r0, #0	@ D.54223,
+	subs	r7, r0, #0	@ D.54244,
 	beq	.L1990	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC289	@,
@@ -15789,38 +15790,38 @@ VCTRL_SetDbgOption:
 	bl	dprint_vfmw	@
 	ldr	r0, [r8, #0]	@, vfmw_save_yuv_file
 	bl	klib_fclose	@
-	movw	r1, #:lower16:.LANCHOR0	@ tmp350,
-	movt	r1, #:upper16:.LANCHOR0	@ tmp350,
-	mvn	r0, #0	@ tmp357,
-	str	r6, [r5, #-1528]	@ tmp318, save_yuv_with_crop
-	str	r0, [sl, #68]	@ tmp357, save_yuv_chan_num
-	mov	r0, #1	@ D.54123,
-	str	r6, [r8, #0]	@ tmp318, vfmw_save_yuv_file
-	str	r6, [r1, #504]	@ tmp318, pY
-	str	r6, [r1, #508]	@ tmp318, pVl
-	str	r6, [r1, #512]	@ tmp318, pUl
+	movw	r1, #:lower16:.LANCHOR0	@ tmp351,
+	movt	r1, #:upper16:.LANCHOR0	@ tmp351,
+	mvn	r0, #0	@ tmp358,
+	str	r6, [r5, #-1528]	@ tmp319, save_yuv_with_crop
+	str	r0, [sl, #68]	@ tmp358, save_yuv_chan_num
+	mov	r0, #1	@ D.54139,
+	str	r6, [r8, #0]	@ tmp319, vfmw_save_yuv_file
+	str	r6, [r1, #504]	@ tmp319, pY
+	str	r6, [r1, #508]	@ tmp319, pVl
+	str	r6, [r1, #512]	@ tmp319, pUl
 	b	.L1979	@
 .L2012:
 	ldr	ip, [r5, #3836]	@ save_file_cnt.749, save_file_cnt
 	sub	r7, fp, #148	@ str.746,,
 	mov	r1, #50	@,
 	movw	r2, #:lower16:.LC283	@,
-	add	lr, ip, #1	@ tmp287, save_file_cnt.749,
+	add	lr, ip, #1	@ tmp288, save_file_cnt.749,
 	movt	r2, #:upper16:.LC283	@,
 	str	ip, [sp, #0]	@ save_file_cnt.749,
 	mov	r0, r7	@, str.746
-	str	lr, [r5, #3836]	@ tmp287, save_file_cnt
+	str	lr, [r5, #3836]	@ tmp288, save_file_cnt
 	movw	r3, #:lower16:.LANCHOR2	@,
 	movt	r3, #:upper16:.LANCHOR2	@,
-	add	r6, r6, r5	@ tmp293, tmp484, tmp486
+	add	r6, r6, r5	@ tmp294, tmp485, tmp487
 	bl	snprintf	@
 	mov	r0, r7	@, str.746
 	mov	r1, #66	@,
 	mov	r2, #0	@,
 	bl	klib_fopen	@
 	str	r4, [r5, #3840]	@ dat, save_seg_chan_num
-	cmp	r0, #0	@ D.54192,
-	str	r0, [r6, #3708]	@ D.54192, vfmw_save_seg_file
+	cmp	r0, #0	@ D.54213,
+	str	r0, [r6, #3708]	@ D.54213, vfmw_save_seg_file
 	beq	.L1987	@,
 	mov	r2, r7	@, str.746
 	mov	r3, r4	@, dat
@@ -15828,28 +15829,28 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC284	@,
 	movt	r1, #:upper16:.LC284	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2010:
 	ldr	ip, [r5, #3700]	@ save_file_cnt.743, save_file_cnt
 	sub	r8, fp, #148	@ str.739,,
 	mov	r1, #50	@,
 	movw	r2, #:lower16:.LC279	@,
-	add	lr, ip, #1	@ tmp253, save_file_cnt.743,
+	add	lr, ip, #1	@ tmp254, save_file_cnt.743,
 	movt	r2, #:upper16:.LC279	@,
 	str	ip, [sp, #0]	@ save_file_cnt.743,
 	mov	r0, r8	@, str.739
-	str	lr, [r5, #3700]	@ tmp253, save_file_cnt
+	str	lr, [r5, #3700]	@ tmp254, save_file_cnt
 	movw	r3, #:lower16:.LANCHOR2	@,
 	movt	r3, #:upper16:.LANCHOR2	@,
 	bl	snprintf	@
 	mov	r0, r8	@, str.739
-	mov	r2, r7	@, tmp250
+	mov	r2, r7	@, tmp251
 	mov	r1, #66	@,
 	bl	klib_fopen	@
 	str	r4, [r5, #3704]	@ dat, save_str_chan_num
-	cmp	r0, #0	@ D.54174,
-	str	r0, [r6, #3572]	@ D.54174, vfmw_save_str_file
+	cmp	r0, #0	@ D.54195,
+	str	r0, [r6, #3572]	@ D.54195, vfmw_save_str_file
 	beq	.L1985	@,
 	mov	r2, r8	@, str.739
 	mov	r3, r4	@, dat
@@ -15857,7 +15858,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC280	@,
 	movt	r1, #:upper16:.LC280	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1990:
 	ldr	r1, [r5, #3852]	@, MemRecord_YUV.VirAddr
@@ -15866,13 +15867,13 @@ VCTRL_SetDbgOption:
 	ldr	r0, [r5, #3856]	@, MemRecord_YUV.PhyAddr
 	bl	MEM_AddMemRecord	@
 	ldr	lr, [r5, #3852]	@ pY.759, MemRecord_YUV.VirAddr
-	movw	ip, #:lower16:.LANCHOR0	@ tmp364,
-	movt	ip, #:upper16:.LANCHOR0	@ tmp364,
+	movw	ip, #:lower16:.LANCHOR0	@ tmp365,
+	movt	ip, #:upper16:.LANCHOR0	@ tmp365,
 	str	r4, [r5, #-1528]	@ save_yuv_with_crop.764, save_yuv_with_crop
-	add	r6, lr, #11796480	@ tmp367, pY.759,
+	add	r6, lr, #11796480	@ tmp368, pY.759,
 	mov	r2, r9	@, str.752
-	str	r6, [ip, #508]	@ tmp367, pVl
-	mov	r3, r7	@, D.54223
+	str	r6, [ip, #508]	@ tmp368, pVl
+	mov	r3, r7	@, D.54244
 	str	r4, [sp, #0]	@ save_yuv_with_crop.764,
 	mov	r0, #32	@,
 	add	r4, lr, #9437184	@ pUl.761, pY.759,
@@ -15880,9 +15881,9 @@ VCTRL_SetDbgOption:
 	str	r4, [ip, #512]	@ pUl.761, pUl
 	movt	r1, #:upper16:.LC290	@,
 	str	lr, [ip, #504]	@ pY.759, pY
-	str	r7, [sl, #68]	@ D.54223, save_yuv_chan_num
+	str	r7, [sl, #68]	@ D.54244, save_yuv_chan_num
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1987:
 	mov	r2, r7	@, str.746
@@ -15890,7 +15891,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC285	@,
 	movt	r1, #:upper16:.LC285	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1989:
 	mov	r2, r9	@, str.752
@@ -15898,7 +15899,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC291	@,
 	movt	r1, #:upper16:.LC291	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L1985:
 	mov	r2, r8	@, str.739
@@ -15906,7 +15907,7 @@ VCTRL_SetDbgOption:
 	movw	r1, #:lower16:.LC281	@,
 	movt	r1, #:upper16:.LC281	@,
 	bl	dprint_vfmw	@
-	mov	r0, #1	@ D.54123,
+	mov	r0, #1	@ D.54139,
 	b	.L1979	@
 .L2015:
 	.align	2
@@ -15954,7 +15955,7 @@ vfmw_write_proc:
 	bic	r1, ip, #63	@ tmp172, tmp172,
 	ldr	r0, [r1, #8]	@ <variable>.addr_limit, <variable>.addr_limit
 #APP
-@ 434 "/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/uaccess.h" 1
+@ 434 "/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/asm/uaccess.h" 1
 	adds r2, r7, r4; sbcccs r2, r2, r0; movcc r0, #0	@ roksum, buffer, count, flag
 @ 0 "" 2
 	cmp	r0, #0	@ flag,
@@ -15974,7 +15975,7 @@ vfmw_write_proc:
 	sub	r1, fp, #32	@,,
 	strb	lr, [r3, #-4048]	@ tmp203, str
 	bl	str2val	@
-	subs	r3, r0, #0	@ D.55152,
+	subs	r3, r0, #0	@ D.55173,
 	bne	.L2056	@,
 	cmp	r4, r6	@ count, i
 	bls	.L2032	@,
@@ -16063,7 +16064,7 @@ vfmw_write_proc:
 	sub	r1, fp, #36	@,,
 	strb	ip, [r2, #-4048]	@ tmp225, str
 	bl	str2val	@
-	subs	r3, r0, #0	@ D.55165,
+	subs	r3, r0, #0	@ D.55186,
 	bne	.L2056	@,
 	ldr	r2, [fp, #-32]	@ prephitmp.5515, dat1
 	sub	lr, r2, #512	@ tmp235, prephitmp.5515,
@@ -16164,9 +16165,9 @@ vfmw_write_proc:
 	bne	.L2185	@,
 	cmp	r3, #0	@ j.5551,
 	beq	.L2065	@,
-	sub	r3, r3, #1	@ D.55212, j.5551,
+	sub	r3, r3, #1	@ D.55233, j.5551,
 	mov	r0, #32	@,
-	add	r5, r3, r2	@ tmp299, D.55212, tmp289
+	add	r5, r3, r2	@ tmp299, D.55233, tmp289
 	ldr	r2, .L2196	@,
 	ldrb	ip, [r5, #-4048]	@ zero_extendqisi2	@ tmp301, str
 	cmp	ip, #47	@ tmp301,
@@ -16199,7 +16200,7 @@ vfmw_write_proc:
 	str	ip, [fp, #-72]	@ dat3, args
 	str	r2, [fp, #-68]	@ dat4, args
 	bl	VCTRL_SetDbgOption	@
-	mov	r0, r4	@ D.55128, count
+	mov	r0, r4	@ D.55149, count
 .L2018:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
@@ -16306,7 +16307,7 @@ vfmw_write_proc:
 	movw	r1, #:lower16:.LC313	@,
 	movt	r1, #:upper16:.LC313	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #4	@ D.55128,
+	mvn	r0, #4	@ D.55149,
 	b	.L2018	@
 .L2191:
 	cmp	r4, r6	@ count, i
@@ -16396,7 +16397,7 @@ vfmw_write_proc:
 	sub	r1, fp, #40	@,,
 	strb	ip, [r3, #-4048]	@ tmp249, str
 	bl	str2val	@
-	subs	r3, r0, #0	@ D.55183,
+	subs	r3, r0, #0	@ D.55204,
 	bne	.L2056	@,
 	cmp	r4, r6	@ count, i
 	bls	.L2050	@,
@@ -16493,7 +16494,7 @@ vfmw_write_proc:
 	ldr	r2, .L2196+4	@,
 	movt	r1, #:upper16:.LC314	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.55128,
+	mvn	r0, #0	@ D.55149,
 	b	.L2018	@
 .L2194:
 	ldrb	r1, [r2, #0]	@ zero_extendqisi2	@ prephitmp.5553, cmd
@@ -16506,7 +16507,7 @@ vfmw_write_proc:
 	movw	r1, #:lower16:.LC312	@,
 	movt	r1, #:upper16:.LC312	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #4	@ D.55128,
+	mvn	r0, #4	@ D.55149,
 	b	.L2018	@
 .L2065:
 	mov	r0, #32	@,
@@ -16515,7 +16516,7 @@ vfmw_write_proc:
 	movt	r1, #:upper16:.LC316	@,
 	movw	r3, #9758	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.55128,
+	mvn	r0, #0	@ D.55149,
 	b	.L2018	@
 .L2197:
 	.align	2
@@ -16547,8 +16548,8 @@ VCTRL_ResetChan:
 	movw	r5, #:lower16:.LANCHOR0	@ tmp208,
 	movt	r5, #:upper16:.LANCHOR0	@ tmp208,
 	mov	r4, r0	@ ChanID, ChanID
-	ldr	r3, [r5, r0, asl #2]	@ D.51877, s_pstVfmwChan
-	cmp	r3, #0	@ D.51877,
+	ldr	r3, [r5, r0, asl #2]	@ D.51890, s_pstVfmwChan
+	cmp	r3, #0	@ D.51890,
 	beq	.L2208	@,
 	ldr	r7, [r3, #16]	@ ChanIsRun, <variable>.s32IsRun
 	bl	VCTRL_StopChan	@
@@ -16583,14 +16584,14 @@ VCTRL_ResetChan:
 	ldr	r2, [r5, r4, asl #2]	@ tmp164, s_pstVfmwChan
 	mov	r3, #616	@ tmp165,
 	mov	r0, #624	@ tmp169,
-	movw	r1, #:lower16:251572	@ tmp176,
-	movt	r1, #:upper16:251572	@ tmp176,
+	movw	r1, #:lower16:253108	@ tmp176,
+	movt	r1, #:upper16:253108	@ tmp176,
 	strd	r8, [r2, r3]	@ tmp166, tmp164, tmp165
-	movw	r2, #:lower16:251564	@ tmp180,
+	movw	r2, #:lower16:253100	@ tmp180,
 	ldr	ip, [r5, r4, asl #2]	@ tmp168, s_pstVfmwChan
-	movt	r2, #:upper16:251564	@ tmp180,
-	movw	r3, #:lower16:251568	@ tmp184,
-	movt	r3, #:upper16:251568	@ tmp184,
+	movt	r2, #:upper16:253100	@ tmp180,
+	movw	r3, #:lower16:253104	@ tmp184,
+	movt	r3, #:upper16:253104	@ tmp184,
 	strd	r8, [ip, r0]	@ tmp166, tmp168, tmp169
 	ldr	r0, [r5, r4, asl #2]	@ tmp172, s_pstVfmwChan
 	str	r6, [r0, #1112]	@ tmp146, <variable>.stSynExtraData.s32NewPicSegDetector
@@ -16648,7 +16649,7 @@ VCTRL_ResetChan:
 .L2206:
 	mov	r0, r4	@, ChanID
 	bl	VDMDRV_ClearChanIsDec	@
-	mov	r0, #0	@ D.51881,
+	mov	r0, #0	@ D.51894,
 .L2200:
 	sub	sp, fp, #36
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, fp, sp, pc}
@@ -16661,14 +16662,14 @@ VCTRL_ResetChan:
 	bl	FSP_EmptyInstance	@
 	b	.L2203	@
 .L2208:
-	mov	r0, r3	@, D.51877
+	mov	r0, r3	@, D.51890
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #4042	@,
+	movw	r2, #4041	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51881,
+	mvn	r0, #0	@ D.51894,
 	b	.L2200	@
 	.fnend
 	.size	VCTRL_ResetChan, .-VCTRL_ResetChan
@@ -16697,10 +16698,10 @@ VCTRL_ConfigChan:
 	str	r6, [fp, #-52]	@ tmp212, s32supportFlag
 	mov	r8, r1	@ pstCfg, pstCfg
 	bhi	.L2309	@,
-	movw	r4, #:lower16:.LANCHOR0	@ tmp673,
-	movt	r4, #:upper16:.LANCHOR0	@ tmp673,
-	ldr	r3, [r4, r0, asl #2]	@ D.51439, s_pstVfmwChan
-	cmp	r3, #0	@ D.51439,
+	movw	r4, #:lower16:.LANCHOR0	@ tmp674,
+	movt	r4, #:upper16:.LANCHOR0	@ tmp674,
+	ldr	r3, [r4, r0, asl #2]	@ D.51452, s_pstVfmwChan
+	cmp	r3, #0	@ D.51452,
 	beq	.L2310	@,
 	ldr	r3, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
@@ -16714,30 +16715,30 @@ VCTRL_ConfigChan:
 	bl	GetVdecCapability	@
 	ldr	r2, [r8, #0]	@ prephitmp.5625, <variable>.eVidStd
 	sub	r3, r6, #3792	@ ivtmp.5652, tmp675,
-	sub	ip, r6, #3664	@ D.61210, tmp675,
+	sub	ip, r6, #3664	@ D.61231, tmp675,
 	b	.L2218	@
 .L2216:
-	cmp	r1, r2	@ D.51450, prephitmp.5625
+	cmp	r1, r2	@ D.51463, prephitmp.5625
 	beq	.L2217	@,
-	ldr	r1, [r0, #20]	@ D.51450, Capability.SupportedStd
-	cmp	r1, #18	@ D.51450,
+	ldr	r1, [r0, #20]	@ D.51463, Capability.SupportedStd
+	cmp	r1, #18	@ D.51463,
 	bhi	.L2304	@,
-	cmp	r1, r2	@ D.51450, prephitmp.5625
+	cmp	r1, r2	@ D.51463, prephitmp.5625
 	beq	.L2217	@,
-	cmp	r3, ip	@ ivtmp.5652, D.61210
+	cmp	r3, ip	@ ivtmp.5652, D.61231
 	beq	.L2217	@,
 .L2218:
-	ldr	r1, [r3, #20]	@ D.51450, Capability.SupportedStd
+	ldr	r1, [r3, #20]	@ D.51463, Capability.SupportedStd
 	add	r0, r3, #4	@ tmp677, ivtmp.5652,
 	add	r3, r0, #4	@ ivtmp.5652, tmp677,
-	cmp	r1, #18	@ D.51450,
+	cmp	r1, #18	@ D.51463,
 	bls	.L2216	@,
 .L2304:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC320	@,
 	movt	r1, #:upper16:.LC320	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 .L2212:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -16751,26 +16752,26 @@ VCTRL_ConfigChan:
 	mov	r0, r5	@, ChanID
 	mov	r1, r8	@, pstCfg
 	bl	VCTRL_CmpConfigParameter	@
-	subs	r7, r0, #0	@ D.51466,
+	subs	r7, r0, #0	@ D.51479,
 	beq	.L2315	@,
 	ldr	r2, [r8, #80]	@ <variable>.s32IsOmxPath, <variable>.s32IsOmxPath
 	cmp	r2, #0	@ <variable>.s32IsOmxPath,
 	bne	.L2223	@,
-	ldr	r3, [r8, #0]	@ D.51454, <variable>.eVidStd
-	sub	r7, r3, #10	@ tmp235, D.51454,
+	ldr	r3, [r8, #0]	@ D.51467, <variable>.eVidStd
+	sub	r7, r3, #10	@ tmp235, D.51467,
 	cmp	r7, #2	@ tmp235,
 	bls	.L2316	@,
-	cmp	r3, #4	@ D.51454,
+	cmp	r3, #4	@ D.51467,
 	beq	.L2225	@,
 .L2226:
 	ldr	r7, [r4, r5, asl #2]	@ prephitmp.5627, s_pstVfmwChan
-	cmp	r3, #14	@ D.51454,
+	cmp	r3, #14	@ D.51467,
 	movne	r1, #0	@, prephitmp.5757
 	moveq	r1, #1	@, prephitmp.5757
 	movw	r3, #:lower16:.LANCHOR0	@ tmp241,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp241,
-	ldr	r2, [r7, #48]	@ D.51489, <variable>.stChanCfg.eVidStd
-	sub	sl, r2, #10	@ tmp242, D.51489,
+	ldr	r2, [r7, #48]	@ D.51502, <variable>.stChanCfg.eVidStd
+	sub	sl, r2, #10	@ tmp242, D.51502,
 	cmp	sl, #2	@ tmp242,
 	bhi	.L2228	@,
 .L2323:
@@ -16778,7 +16779,7 @@ VCTRL_ConfigChan:
 	tst	ip, #1	@ g_VdmCharacter,
 	beq	.L2229	@,
 .L2230:
-	cmp	r2, #14	@ D.51489,
+	cmp	r2, #14	@ D.51502,
 	movne	r2, #0	@, prephitmp.5632
 	moveq	r2, #1	@, prephitmp.5632
 	cmp	r2, r1	@ prephitmp.5632, prephitmp.5757
@@ -16847,7 +16848,7 @@ VCTRL_ConfigChan:
 	ldr	r0, [r7, #228]	@, <variable>.stChanMem_vdh.PhyAddr
 	ldr	r2, [r7, #232]	@, <variable>.stChanMem_vdh.Length
 	bl	MEM_AddMemRecord	@
-	subs	r9, r0, #0	@ D.51544,
+	subs	r9, r0, #0	@ D.51557,
 	bne	.L2321	@,
 	ldr	r2, [r7, #248]	@ temp.5693, <variable>.stChanMem_scd.Length
 	cmp	r2, #0	@ temp.5693,
@@ -16855,7 +16856,7 @@ VCTRL_ConfigChan:
 	ldr	r0, [r7, #244]	@, <variable>.stChanMem_scd.PhyAddr
 	ldr	r1, [r7, #240]	@, <variable>.stChanMem_scd.VirAddr
 	bl	MEM_DelMemRecord	@
-	subs	r3, r0, #0	@ D.51549,
+	subs	r3, r0, #0	@ D.51562,
 	bne	.L2322	@,
 	ldr	r0, [fp, #-232]	@, %sfp
 	ldr	r2, [r7, #248]	@, <variable>.stChanMem_scd.Length
@@ -16868,14 +16869,14 @@ VCTRL_ConfigChan:
 	cmp	r0, #0	@,
 	beq	.L2305	@,
 	ldr	r2, [r7, #248]	@ <variable>.stChanMem_scd.Length, <variable>.stChanMem_scd.Length
-	mov	r0, r3	@, D.51549
+	mov	r0, r3	@, D.51562
 	movw	r1, #:lower16:.LC324	@,
 	movt	r1, #:upper16:.LC324	@,
 	str	r2, [sp, #0]	@ <variable>.stChanMem_scd.Length,
 	ldr	r3, [r7, #240]	@, <variable>.stChanMem_scd.VirAddr
 	ldr	r2, [r7, #244]	@, <variable>.stChanMem_scd.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2316:
 	ldr	r9, [r4, #516]	@ g_VdmCharacter, g_VdmCharacter
@@ -16886,12 +16887,12 @@ VCTRL_ConfigChan:
 	movw	r3, #:lower16:.LANCHOR0	@ tmp241,
 	mov	r1, #1	@ prephitmp.5757,
 	movt	r3, #:upper16:.LANCHOR0	@ tmp241,
-	ldr	r2, [r7, #48]	@ D.51489, <variable>.stChanCfg.eVidStd
-	sub	sl, r2, #10	@ tmp242, D.51489,
+	ldr	r2, [r7, #48]	@ D.51502, <variable>.stChanCfg.eVidStd
+	sub	sl, r2, #10	@ tmp242, D.51502,
 	cmp	sl, #2	@ tmp242,
 	bls	.L2323	@,
 .L2228:
-	cmp	r2, #4	@ D.51489,
+	cmp	r2, #4	@ D.51502,
 	bne	.L2230	@,
 .L2229:
 	mov	r2, #1	@ prephitmp.5632,
@@ -16944,11 +16945,11 @@ VCTRL_ConfigChan:
 	streq	r0, [fp, #-76]	@ <variable>.s32MaxRawPacketNum, ScdInstCfg.MaxRawPacketNum
 	streq	r9, [fp, #-72]	@ <variable>.s32MaxRawPacketSize, ScdInstCfg.MaxRawPacketSize
 	cmp	sl, #0	@ <variable>.eVidStd,
-	add	sl, r8, #4	@ tmp670, pstCfg,
+	add	sl, r8, #4	@ tmp671, pstCfg,
 	ldr	r2, [r8, #76]	@ <variable>.s32ChanLowlyEnable, <variable>.s32ChanLowlyEnable
 	ldreq	ip, [r8, #48]	@ iftmp.547, <variable>.s32LowdlyEnable
 	sub	r9, fp, #48	@ tmp407,,
-	ldmia	sl, {r0, r1}	@ tmp670,,
+	ldmia	sl, {r0, r1}	@ tmp671,,
 	movne	ip, #0	@ iftmp.547,
 	str	r2, [fp, #-184]	@ <variable>.s32ChanLowlyEnable, ScdInstCfg.s32ChanLowlyEnable
 	str	ip, [fp, #-188]	@ iftmp.547, ScdInstCfg.ScdLowdlyEnable
@@ -16965,8 +16966,8 @@ VCTRL_ConfigChan:
 .L2262:
 	ldr	r3, [r4, r5, asl #2]	@ temp.5773, s_pstVfmwChan
 	mov	r2, #0	@ tmp458,
-	movw	lr, #:lower16:251592	@ tmp473,
-	movt	lr, #:upper16:251592	@ tmp473,
+	movw	lr, #:lower16:253128	@ tmp473,
+	movt	lr, #:upper16:253128	@ tmp473,
 	movw	r7, #:lower16:.LANCHOR0	@ tmp412,
 	movt	r7, #:upper16:.LANCHOR0	@ tmp412,
 	ldr	r1, [r3, #260]	@ <variable>.stChanMem_ctx.PhyAddr, <variable>.stChanMem_ctx.PhyAddr
@@ -17027,7 +17028,7 @@ VCTRL_ConfigChan:
 	ldr	r1, [r4, r5, asl #2]	@ tmp460, s_pstVfmwChan
 	str	r2, [r1, #1484]	@ tmp458, <variable>.stSynExtraData.s32Is4k60fps
 	ldr	r3, [r4, r5, asl #2]	@ tmp464, s_pstVfmwChan
-	ldmia	sl, {r0, r1}	@ tmp670,,
+	ldmia	sl, {r0, r1}	@ tmp671,,
 	add	ip, r3, #1104	@ tmp463, tmp464,
 	add	r3, ip, #12	@ tmp463, tmp463,
 	stmia	r3, {r0, r1}	@ tmp463,,
@@ -17061,8 +17062,8 @@ VCTRL_ConfigChan:
 .L2306:
 	ldr	r3, [r0, #552]	@ prephitmp.5629, <variable>.eVidStd
 .L2263:
-	movw	lr, #:lower16:251592	@ tmp482,
-	movt	lr, #:upper16:251592	@ tmp482,
+	movw	lr, #:lower16:253128	@ tmp482,
+	movt	lr, #:upper16:253128	@ tmp482,
 	movw	r7, #:lower16:.LANCHOR0	@ tmp483,
 	movt	r7, #:upper16:.LANCHOR0	@ tmp483,
 	str	r3, [r0, lr]	@ prephitmp.5629, <variable>.stSynCtx.eVidStd
@@ -17086,10 +17087,10 @@ VCTRL_ConfigChan:
 	ldr	r2, [r4, #8]	@ temp.5804, s_pstVfmwChan
 	streq	lr, [r6, #-3644]	@ temp.5659, PrioArray
 	ldrne	r1, [lr, #24]	@ <variable>.s32Priority, <variable>.s32Priority
-	movweq	r3, #:lower16:g_ChanCtx	@ tmp672,
-	movwne	r3, #:lower16:g_ChanCtx	@ tmp672,
-	movteq	r3, #:upper16:g_ChanCtx	@ tmp672,
-	movtne	r3, #:upper16:g_ChanCtx	@ tmp672,
+	movweq	r3, #:lower16:g_ChanCtx	@ tmp673,
+	movwne	r3, #:lower16:g_ChanCtx	@ tmp673,
+	movteq	r3, #:upper16:g_ChanCtx	@ tmp673,
+	movtne	r3, #:upper16:g_ChanCtx	@ tmp673,
 	ldr	ip, [r4, #12]	@ temp.5808, s_pstVfmwChan
 	strne	r1, [r6, #-3644]	@ <variable>.s32Priority, PrioArray
 	ldrne	lr, [lr, #24]	@ <variable>.s32Priority, <variable>.s32Priority
@@ -17215,13 +17216,13 @@ VCTRL_ConfigChan:
 	bl	VDMDRV_SetPriority	@
 	mov	r0, r5	@, ChanID
 	bl	VDMDRV_ClearChanIsDec	@
-	mov	r0, #0	@ D.51437,
+	mov	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2315:
 	movw	r1, #:lower16:.LC321	@,
 	movt	r1, #:upper16:.LC321	@,
 	bl	dprint_vfmw	@
-	mov	r0, r7	@ D.51437, D.51466
+	mov	r0, r7	@ D.51450, D.51479
 	b	.L2212	@
 .L2223:
 	ldr	r7, [r4, r5, asl #2]	@ prephitmp.5627, s_pstVfmwChan
@@ -17233,24 +17234,24 @@ VCTRL_ConfigChan:
 	cmp	r1, #0	@ s32supportFlag,
 	bne	.L2221	@,
 .L2220:
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2267:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC326	@,
 	movt	r1, #:upper16:.LC326	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2311:
 	mov	r0, r6	@, tmp212
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #3119	@,
+	movw	r2, #3118	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC41	@,
 	movt	r3, #:upper16:.LC41	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2233:
 	movw	sl, #:lower16:.LANCHOR0	@ tmp310,
@@ -17311,14 +17312,14 @@ VCTRL_ConfigChan:
 	add	lr, r9, r3	@ tmp346, pVir, <variable>.stChanMem_scd.Length
 	str	lr, [ip, #224]	@ tmp346, <variable>.stChanMem_vdh.VirAddr
 	bl	MEM_AddMemRecord	@
-	subs	r9, r0, #0	@ D.51591,
+	subs	r9, r0, #0	@ D.51604,
 	bne	.L2328	@,
 	ldr	r7, [sl, r5, asl #2]	@ temp.5739, s_pstVfmwChan
 	ldr	r2, [r7, #248]	@, <variable>.stChanMem_scd.Length
 	ldr	r0, [r7, #244]	@, <variable>.stChanMem_scd.PhyAddr
 	ldr	r1, [r7, #240]	@, <variable>.stChanMem_scd.VirAddr
 	bl	MEM_AddMemRecord	@
-	subs	r7, r0, #0	@ D.51594,
+	subs	r7, r0, #0	@ D.51607,
 	bne	.L2329	@,
 	ldr	r3, [sl, r5, asl #2]	@ temp.5749, s_pstVfmwChan
 	ldr	r2, [r3, #232]	@, <variable>.stChanMem_vdh.Length
@@ -17369,7 +17370,7 @@ VCTRL_ConfigChan:
 	b	.L2239	@
 .L2258:
 	ldr	r2, [sl, r5, asl #2]	@ temp.5754, s_pstVfmwChan
-	mov	r0, r7	@, D.51594
+	mov	r0, r7	@, D.51607
 .L2307:
 	ldr	lr, [r2, #232]	@ <variable>.stChanMem_vdh.Length, <variable>.stChanMem_vdh.Length
 	movw	r1, #:lower16:.LC324	@,
@@ -17378,14 +17379,14 @@ VCTRL_ConfigChan:
 	ldr	r3, [r2, #224]	@, <variable>.stChanMem_vdh.VirAddr
 	ldr	r2, [r2, #228]	@, <variable>.stChanMem_vdh.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2312:
 	mov	r0, r6	@, tmp212
 	movw	r1, #:lower16:.LC319	@,
 	movt	r1, #:upper16:.LC319	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2317:
 	ldr	r0, [r7, #240]	@, <variable>.stChanMem_scd.VirAddr
@@ -17394,12 +17395,12 @@ VCTRL_ConfigChan:
 .L2309:
 	mov	r0, r6	@, tmp212
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #3117	@,
+	movw	r2, #3116	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2241:
 	mov	r2, r5	@, ChanID
@@ -17407,7 +17408,7 @@ VCTRL_ConfigChan:
 	movw	r1, #:lower16:.LC323	@,
 	movt	r1, #:upper16:.LC323	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2318:
 	ldr	r0, [r7, #244]	@, <variable>.stChanMem_scd.PhyAddr
@@ -17417,7 +17418,7 @@ VCTRL_ConfigChan:
 	b	.L2239	@
 .L2329:
 	ldr	r2, [sl, r5, asl #2]	@ temp.5745, s_pstVfmwChan
-	mov	r0, r9	@, D.51591
+	mov	r0, r9	@, D.51604
 .L2308:
 	ldr	ip, [r2, #248]	@ <variable>.stChanMem_scd.Length, <variable>.stChanMem_scd.Length
 	movw	r1, #:lower16:.LC324	@,
@@ -17426,7 +17427,7 @@ VCTRL_ConfigChan:
 	ldr	r3, [r2, #240]	@, <variable>.stChanMem_scd.VirAddr
 	ldr	r2, [r2, #244]	@, <variable>.stChanMem_scd.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2313:
 	sub	r0, fp, #52	@,,
@@ -17437,14 +17438,14 @@ VCTRL_ConfigChan:
 	ldr	r2, [r8, #0]	@ prephitmp.5625, <variable>.eVidStd
 	b	.L2219	@
 .L2310:
-	mov	r0, r3	@, D.51439
+	mov	r0, r3	@, D.51452
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #3118	@,
+	movw	r2, #3117	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2320:
 	ldr	r2, [r7, #232]	@ <variable>.stChanMem_vdh.Length, <variable>.stChanMem_vdh.Length
@@ -17455,7 +17456,7 @@ VCTRL_ConfigChan:
 	ldr	r3, [r7, #224]	@, <variable>.stChanMem_vdh.VirAddr
 	ldr	r2, [r7, #228]	@, <variable>.stChanMem_vdh.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2328:
 	ldr	r2, [r7, #216]	@ <variable>.stChanMem.Length, <variable>.stChanMem.Length
@@ -17466,7 +17467,7 @@ VCTRL_ConfigChan:
 	ldr	r3, [r7, #208]	@, <variable>.stChanMem.VirAddr
 	ldr	r2, [r7, #212]	@, <variable>.stChanMem.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2321:
 	ldr	ip, [r7, #232]	@ <variable>.stChanMem_vdh.Length, <variable>.stChanMem_vdh.Length
@@ -17477,18 +17478,18 @@ VCTRL_ConfigChan:
 	ldr	r3, [r7, #224]	@, <variable>.stChanMem_vdh.VirAddr
 	ldr	r2, [r7, #228]	@, <variable>.stChanMem_vdh.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2322:
 	ldr	lr, [r7, #248]	@ <variable>.stChanMem_scd.Length, <variable>.stChanMem_scd.Length
-	mov	r0, r9	@, D.51544
+	mov	r0, r9	@, D.51557
 	movw	r1, #:lower16:.LC324	@,
 	movt	r1, #:upper16:.LC324	@,
 	str	lr, [sp, #0]	@ <variable>.stChanMem_scd.Length,
 	ldr	r3, [r7, #240]	@, <variable>.stChanMem_scd.VirAddr
 	ldr	r2, [r7, #244]	@, <variable>.stChanMem_scd.PhyAddr
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2327:
 	mov	r0, r9	@, pVir
@@ -17496,24 +17497,24 @@ VCTRL_ConfigChan:
 	movw	r1, #:lower16:.LC325	@,
 	movt	r1, #:upper16:.LC325	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2319:
 	movw	r1, #:lower16:.LC322	@,
 	ldr	r2, .L2330+8	@,
 	movt	r1, #:upper16:.LC322	@,
-	movw	r3, #3213	@,
+	movw	r3, #3212	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2326:
 	mov	r0, r3	@, temp.5716
 	movw	r1, #:lower16:.LC322	@,
 	ldr	r2, .L2330+8	@,
 	movt	r1, #:upper16:.LC322	@,
-	movw	r3, #3282	@,
+	movw	r3, #3281	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51437,
+	mvn	r0, #0	@ D.51450,
 	b	.L2212	@
 .L2331:
 	.align	2
@@ -17546,8 +17547,8 @@ VCTRL_StartChanWithOption:
 	bhi	.L2372	@,
 	movw	r4, #:lower16:.LANCHOR0	@ tmp342,
 	movt	r4, #:upper16:.LANCHOR0	@ tmp342,
-	ldr	r3, [r4, r0, asl #2]	@ D.51172, s_pstVfmwChan
-	cmp	r3, #0	@ D.51172,
+	ldr	r3, [r4, r0, asl #2]	@ D.51185, s_pstVfmwChan
+	cmp	r3, #0	@ D.51185,
 	beq	.L2373	@,
 	ldr	r6, [r3, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r6, #1	@ <variable>.s32IsOpen,
@@ -17584,8 +17585,8 @@ VCTRL_StartChanWithOption:
 	cmp	r2, #0	@ <variable>.s32Priority,
 	bne	.L2338	@,
 	str	r6, [r3, #24]	@ <variable>.s32IsOpen, <variable>.s32Priority
-	ldr	r1, [r4, #0]	@ D.51189, s_pstVfmwChan
-	cmp	r1, #0	@ D.51189,
+	ldr	r1, [r4, #0]	@ D.51202, s_pstVfmwChan
+	cmp	r1, #0	@ D.51202,
 	beq	.L2376	@,
 	ldr	r0, [r1, #24]	@ <variable>.s32Priority, <variable>.s32Priority
 	movw	r3, #:lower16:.LANCHOR4	@ tmp343,
@@ -17725,55 +17726,55 @@ VCTRL_StartChanWithOption:
 	bl	VDMDRV_ClearChanIsDec	@
 	mov	r0, r5	@, ChanID
 	bl	VCTRL_OpenHardware	@
-	mov	r0, #0	@ D.51170,
+	mov	r0, #0	@ D.51183,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L2376:
 	movw	r3, #:lower16:.LANCHOR4	@ tmp343,
 	movw	r2, #:lower16:g_ChanCtx	@ tmp344,
 	movt	r3, #:upper16:.LANCHOR4	@ tmp343,
 	movt	r2, #:upper16:g_ChanCtx	@ tmp344,
-	str	r1, [r3, #-3580]	@ D.51189, PrioArray
-	str	r1, [r2, #0]	@ D.51189, g_ChanCtx.PriorByChanId
+	str	r1, [r3, #-3580]	@ D.51202, PrioArray
+	str	r1, [r2, #0]	@ D.51202, g_ChanCtx.PriorByChanId
 	b	.L2340	@
 .L2374:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2746	@,
+	movw	r2, #2745	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC26	@,
 	movt	r3, #:upper16:.LC26	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51170,
+	mvn	r0, #0	@ D.51183,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L2372:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2744	@,
+	movw	r2, #2743	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC6	@,
 	movt	r3, #:upper16:.LC6	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51170,
+	mvn	r0, #0	@ D.51183,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L2375:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2747	@,
+	movw	r2, #2746	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC242	@,
 	movt	r3, #:upper16:.LC242	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51170,
+	mvn	r0, #0	@ D.51183,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L2373:
-	mov	r0, r3	@, D.51172
+	mov	r0, r3	@, D.51185
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #2745	@,
+	movw	r2, #2744	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC161	@,
 	movt	r3, #:upper16:.LC161	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51170,
+	mvn	r0, #0	@ D.51183,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L2378:
 	.align	2
@@ -17807,8 +17808,8 @@ VCTRL_DestroyChanWithOption:
 	bl	OSAL_SpinLockIRQ	@
 	cmp	r4, #15	@ ChanID,
 	bhi	.L2388	@,
-	ldr	r6, [r5, r4, asl #2]	@ D.51101, s_pstVfmwChan
-	cmp	r6, #0	@ D.51101,
+	ldr	r6, [r5, r4, asl #2]	@ D.51114, s_pstVfmwChan
+	cmp	r6, #0	@ D.51114,
 	beq	.L2389	@,
 	ldr	r3, [r6, #12]	@ <variable>.s32IsOpen, <variable>.s32IsOpen
 	cmp	r3, #1	@ <variable>.s32IsOpen,
@@ -17862,7 +17863,7 @@ VCTRL_DestroyChanWithOption:
 	add	r2, r3, #204	@ tmp187, temp.5965,
 	str	ip, [fp, #-160]	@, %sfp
 	add	ip, r4, r4, asl #1	@, tmp197, ChanID, ChanID,
-	add	r9, r3, #248832	@ tmp185, temp.5965,
+	add	r9, r3, #249856	@ tmp185, temp.5965,
 	add	r8, r3, #252	@ tmp189, temp.5965,
 	str	r0, [fp, #-68]	@ <variable>.s32SelfAllocChanMem_ctx, ChanMem.s32SelfAllocChanMem_ctx
 	add	ip, r6, ip, asl #4	@, tmp199, tmp194, tmp197,
@@ -17875,7 +17876,7 @@ VCTRL_DestroyChanWithOption:
 	str	lr, [fp, #-76]	@ <variable>.s32SelfAllocChanMem_vdh, ChanMem.s32SelfAllocChanMem_vdh
 	sub	r0, fp, #92	@,,
 	str	r6, [fp, #-180]	@, %sfp
-	add	r1, r9, #472	@ tmp185, tmp185,
+	add	r1, r9, #984	@ tmp185, tmp185,
 	str	r0, [fp, #-176]	@, %sfp
 	add	r9, r3, #220	@ tmp191, temp.5965,
 	ldr	r0, [r3, #272]	@ <variable>.s32SelfAllocChanMem_scd, <variable>.s32SelfAllocChanMem_scd
@@ -17922,31 +17923,31 @@ VCTRL_DestroyChanWithOption:
 	mov	r0, r4	@, ChanID
 	mov	r1, r7	@, tmp186
 	bl	VCTRL_FreeChanResource	@
-	mov	r0, r6	@ D.51099, tmp212
+	mov	r0, r6	@ D.51112, tmp212
 .L2381:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L2392:
-	ldr	r3, [r5, #80]	@ D.51114, g_SdecFunc.pfun_iMediaSoftDEC_Destroy
-	cmp	r3, #0	@ D.51114,
+	ldr	r3, [r5, #80]	@ D.51127, g_SdecFunc.pfun_iMediaSoftDEC_Destroy
+	cmp	r3, #0	@ D.51127,
 	beq	.L2385	@,
-	add	sl, r6, #250880	@, D.51101,
-	add	r0, sl, #720	@,,
-	blx	r3	@ D.51114
+	add	sl, r6, #252928	@, D.51114,
+	add	r0, sl, #208	@,,
+	blx	r3	@ D.51127
 	b	.L2385	@
 .L2390:
 	movw	r1, #:lower16:.LC327	@,
 	movw	r3, #:lower16:.LC329	@,
 	movt	r1, #:upper16:.LC327	@,
 	movt	r3, #:upper16:.LC329	@,
-	mov	r2, #2528	@,
+	movw	r2, #2527	@,
 	mov	r0, #0	@,
 .L2387:
 	bl	dprint_vfmw	@
 	bl	VCTRL_EnableAllInt	@
 	add	r0, r5, #520	@, tmp223,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.51099,
+	mvn	r0, #0	@ D.51112,
 	b	.L2381	@
 .L2391:
 	movw	r0, #:lower16:g_SpinLockIrq_Destroy	@,
@@ -17954,12 +17955,12 @@ VCTRL_DestroyChanWithOption:
 	bl	OSAL_SpinUnLockIRQ	@
 	add	r0, r5, #520	@, tmp223,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.51099,
+	mvn	r0, #0	@ D.51112,
 	b	.L2381	@
 .L2388:
 	movw	r1, #:lower16:.LC327	@,
 	movw	r3, #:lower16:.LC6	@,
-	movw	r2, #2510	@,
+	movw	r2, #2509	@,
 	mov	r0, #0	@,
 	movt	r1, #:upper16:.LC327	@,
 	movt	r3, #:upper16:.LC6	@,
@@ -17967,8 +17968,8 @@ VCTRL_DestroyChanWithOption:
 .L2389:
 	movw	r1, #:lower16:.LC327	@,
 	movw	r3, #:lower16:.LC328	@,
-	mov	r0, r6	@, D.51101
-	movw	r2, #2517	@,
+	mov	r0, r6	@, D.51114
+	movw	r2, #2516	@,
 	movt	r1, #:upper16:.LC327	@,
 	movt	r3, #:upper16:.LC328	@,
 	b	.L2387	@
@@ -18020,7 +18021,7 @@ VCTRL_CloseVfmw:
 	movt	r4, #:upper16:.LANCHOR0	@ tmp185,
 	ldr	r3, [r4, #104]	@ s_VfmwCTrl.s32IsVCTRLOpen, s_VfmwCTrl.s32IsVCTRLOpen
 	cmp	r3, #1	@ s_VfmwCTrl.s32IsVCTRLOpen,
-	mvnne	r0, #0	@ D.50230,
+	mvnne	r0, #0	@ D.50244,
 	ldmnefd	sp, {r4, r5, fp, sp, pc}	@
 	ldr	r0, [r4, #0]	@ s_pstVfmwChan, s_pstVfmwChan
 	cmp	r0, #0	@ s_pstVfmwChan,
@@ -18148,7 +18149,7 @@ VCTRL_CloseVfmw:
 	ldr	r0, .L2423+4	@,
 	bl	CloseDrivers	@
 	bl	DBG_DestroyTracer	@
-	mov	r0, r5	@ D.50230, tmp175
+	mov	r0, r5	@ D.50244, tmp175
 	str	r5, [r4, #104]	@ tmp175, s_VfmwCTrl.s32IsVCTRLOpen
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L2424:
@@ -18177,22 +18178,22 @@ VCTRL_CreateChanWithOption:
 	sub	sp, sp, #260	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	sub	r7, fp, #72	@ tmp718,,
-	sub	sl, fp, #88	@ tmp717,,
+	sub	r7, fp, #72	@ tmp716,,
+	sub	sl, fp, #88	@ tmp715,,
 	mov	r5, r0	@ eCapLevel, eCapLevel
 	mov	r4, r1	@ pChanOption, pChanOption
-	mov	r0, r7	@, tmp718
+	mov	r0, r7	@, tmp716
 	mov	r1, #16	@,
-	sub	r6, fp, #104	@ tmp716,,
+	sub	r6, fp, #104	@ tmp714,,
 	mov	r8, r2	@ flag, flag
 	str	r3, [fp, #-264]	@ OneChanMemFlag, %sfp
 	bl	__memzero	@
 	sub	r0, fp, #232	@,,
 	mov	r1, #16	@,
 	str	r0, [fp, #-272]	@, %sfp
-	mov	r0, sl	@, tmp717
+	mov	r0, sl	@, tmp715
 	bl	__memzero	@
-	mov	r0, r6	@, tmp716
+	mov	r0, r6	@, tmp714
 	mov	r1, #16	@,
 	bl	__memzero	@
 	sub	r0, fp, #232	@,,
@@ -18201,24 +18202,24 @@ VCTRL_CreateChanWithOption:
 	rsbs	r0, r8, #1	@ tmp192, flag
 	movcc	r0, #0	@ tmp192
 	cmp	r5, #25	@ eCapLevel,
-	movw	r1, #:lower16:4780712	@ tmp732,
-	movt	r1, #:upper16:4780712	@ tmp732,
-	movw	r2, #:lower16:11613576	@ tmp731,
+	movw	r1, #:lower16:4782920	@ tmp730,
+	movt	r1, #:upper16:4782920	@ tmp730,
+	movw	r2, #:lower16:11616216	@ tmp729,
 	moveq	r0, #0	@, tmp192,
 	cmp	r5, #26	@ eCapLevel,
-	movt	r2, #:upper16:11613576	@ tmp731,
+	movt	r2, #:upper16:11616216	@ tmp729,
 	movw	r3, #:lower16:.LANCHOR4	@ tmp185,
-	movne	r2, r1	@ tmp731, tmp732
+	movne	r2, r1	@ tmp729, tmp730
 	movt	r3, #:upper16:.LANCHOR4	@ tmp185,
 	cmp	r0, #0	@ tmp192,
-	str	r2, [fp, #-252]	@ tmp731, %sfp
+	str	r2, [fp, #-252]	@ tmp729, %sfp
 	str	r4, [r3, #-3516]	@ pChanOption, pOption
 	bne	.L2516	@,
-	ldr	r3, [r4, #4]	@ D.50810, <variable>.Purpose
-	cmp	r3, #2	@ D.50810,
+	ldr	r3, [r4, #4]	@ D.50823, <variable>.Purpose
+	cmp	r3, #2	@ D.50823,
 	bhi	.L2517	@,
 	beq	.L2518	@,
-	cmp	r3, #1	@ D.50810,
+	cmp	r3, #1	@ D.50823,
 	beq	.L2519	@,
 .L2433:
 	ldr	lr, [r4, #132]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
@@ -18230,14 +18231,14 @@ VCTRL_CreateChanWithOption:
 	movhi	lr, #0	@ tmp212,
 	strhi	lr, [r4, #132]	@ tmp212, <variable>.u32DynamicFrameStoreAllocEn
 	bl	VCTRL_GetChanMemSizeWithOption	@
-	subs	ip, r0, #0	@ D.50851,
+	subs	ip, r0, #0	@ D.50864,
 	bne	.L2520	@,
-	ldr	r3, [r4, #8]	@ D.50855, <variable>.MemAllocMode
-	cmp	r3, #1	@ D.50855,
+	ldr	r3, [r4, #8]	@ D.50868, <variable>.MemAllocMode
+	cmp	r3, #1	@ D.50868,
 	beq	.L2521	@,
-	cmp	r3, #2	@ D.50855,
+	cmp	r3, #2	@ D.50868,
 	beq	.L2522	@,
-	cmp	r3, #3	@ D.50855,
+	cmp	r3, #3	@ D.50868,
 	bne	.L2455	@,
 	ldr	lr, [r4, #120]	@ <variable>.MemDetail.ChanMemCtx.VirAddr, <variable>.MemDetail.ChanMemCtx.VirAddr
 	cmp	lr, #0	@ <variable>.MemDetail.ChanMemCtx.VirAddr,
@@ -18251,15 +18252,15 @@ VCTRL_CreateChanWithOption:
 	movt	r0, #:upper16:.LC335	@,
 	sub	r3, fp, #120	@,,
 	ldr	r2, [fp, #-48]	@, DetailMemSize.ChanCtxDetailMem
-	mov	r6, #1	@ tmp285,
-	str	r6, [sp, #0]	@ tmp285,
+	mov	r6, #1	@ tmp284,
+	str	r6, [sp, #0]	@ tmp284,
 	bl	MEM_AllocMemBlock	@
 	cmp	r0, #0	@,
 	bne	.L2523	@,
 	ldr	r1, [fp, #-116]	@, MemRecord.VirAddr
 	ldr	r0, [fp, #-112]	@, MemRecord.PhyAddr
 	ldr	r2, [fp, #-108]	@, MemRecord.Length
-	str	r6, [fp, #-256]	@ tmp285, %sfp
+	str	r6, [fp, #-256]	@ tmp284, %sfp
 	bl	MEM_AddMemRecord	@
 	ldr	r0, [fp, #-112]	@ MemRecord.PhyAddr, MemRecord.PhyAddr
 	ldr	r3, [fp, #-116]	@ MemRecord.VirAddr, MemRecord.VirAddr
@@ -18274,11 +18275,11 @@ VCTRL_CreateChanWithOption:
 	ldr	r1, [r4, #92]	@ <variable>.MemDetail.ChanMemVdh.Length, <variable>.MemDetail.ChanMemVdh.Length
 	cmp	r1, #0	@ <variable>.MemDetail.ChanMemVdh.Length,
 	beq	.L2461	@,
-	add	r3, r4, #84	@ tmp320, pChanOption,
+	add	r3, r4, #84	@ tmp319, pChanOption,
 	ldr	lr, [r4, #132]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
-	ldmia	r3, {r0, r1, r2, r3}	@ tmp320,,,,
+	ldmia	r3, {r0, r1, r2, r3}	@ tmp319,,,,
 	cmp	lr, #1	@ <variable>.u32DynamicFrameStoreAllocEn,
-	stmia	r7, {r0, r1, r2, r3}	@ tmp718,,,,
+	stmia	r7, {r0, r1, r2, r3}	@ tmp716,,,,
 	beq	.L2467	@,
 	ldr	r2, [fp, #-64]	@ prephitmp.6134, ChanMemVDH.Length
 	ldr	ip, [fp, #-56]	@ prephitmp.6135, DetailMemSize.VdhDetailMem
@@ -18297,11 +18298,11 @@ VCTRL_CreateChanWithOption:
 	ldr	r2, [r4, #108]	@ <variable>.MemDetail.ChanMemScd.Length, <variable>.MemDetail.ChanMemScd.Length
 	cmp	r2, #0	@ <variable>.MemDetail.ChanMemScd.Length,
 	beq	.L2470	@,
-	add	r7, r4, #100	@ tmp345, pChanOption,
+	add	r7, r4, #100	@ tmp344, pChanOption,
 	ldr	ip, [r4, #4]	@ temp.6159, <variable>.Purpose
-	ldmia	r7, {r0, r1, r2, r3}	@ tmp345,,,,
+	ldmia	r7, {r0, r1, r2, r3}	@ tmp344,,,,
 	cmp	ip, #2	@ temp.6159,
-	stmia	sl, {r0, r1, r2, r3}	@ tmp717,,,,
+	stmia	sl, {r0, r1, r2, r3}	@ tmp715,,,,
 	beq	.L2476	@,
 	ldr	r1, [fp, #-84]	@ temp.6160, ChanMemScd.VirAddr
 	cmp	r1, #0	@ temp.6160,
@@ -18320,9 +18321,9 @@ VCTRL_CreateChanWithOption:
 	str	r8, [fp, #-260]	@, %sfp
 	bl	MEM_AddMemRecord	@
 .L2446:
-	movw	r7, #:lower16:.LANCHOR0	@ tmp719,
-	movt	r7, #:upper16:.LANCHOR0	@ tmp719,
-	add	r0, r7, #520	@, tmp719,
+	movw	r7, #:lower16:.LANCHOR0	@ tmp717,
+	movt	r7, #:upper16:.LANCHOR0	@ tmp717,
+	add	r0, r7, #520	@, tmp717,
 	bl	OSAL_SpinLockIRQ	@
 	bl	VCTRL_MaskAllInt	@
 	ldr	r3, [r7, #0]	@ s_pstVfmwChan, s_pstVfmwChan
@@ -18383,8 +18384,8 @@ VCTRL_CreateChanWithOption:
 	moveq	r6, lr	@ ChanID.6307,
 	beq	.L2483	@,
 	ldr	lr, [r7, #40]	@ s_pstVfmwChan, s_pstVfmwChan
-	movw	r6, #:lower16:.LANCHOR0	@ tmp373,
-	movt	r6, #:upper16:.LANCHOR0	@ tmp373,
+	movw	r6, #:lower16:.LANCHOR0	@ tmp371,
+	movt	r6, #:upper16:.LANCHOR0	@ tmp371,
 	cmp	lr, #0	@ s_pstVfmwChan,
 	moveq	r0, #10	@,
 	streq	r0, [fp, #-244]	@, %sfp
@@ -18422,7 +18423,7 @@ VCTRL_CreateChanWithOption:
 	mvn	r9, #0	@,
 	str	r9, [fp, #-244]	@, %sfp
 	bl	VCTRL_EnableAllInt	@
-	add	r0, r6, #520	@, tmp373,
+	add	r0, r6, #520	@, tmp371,
 	bl	OSAL_SpinUnLockIRQ	@
 .L2429:
 	ldr	r0, [fp, #-244]	@, %sfp
@@ -18441,10 +18442,10 @@ VCTRL_CreateChanWithOption:
 	ldr	lr, [r4, #60]	@ <variable>.s32SCDBufSize, <variable>.s32SCDBufSize
 	cmp	lr, #262144	@ <variable>.s32SCDBufSize,
 	blt	.L2434	@,
-	ldr	r3, [r4, #48]	@ D.50835, <variable>.s32SupportH264
-	cmp	r3, #1	@ D.50835,
+	ldr	r3, [r4, #48]	@ D.50848, <variable>.s32SupportH264
+	cmp	r3, #1	@ D.50848,
 	beq	.L2527	@,
-	cmp	r3, #2	@ D.50835,
+	cmp	r3, #2	@ D.50848,
 	bne	.L2433	@,
 	ldr	r2, [r4, #20]	@ <variable>.s32MaxSliceNum, <variable>.s32MaxSliceNum
 	cmp	r2, #0	@ <variable>.s32MaxSliceNum,
@@ -18468,29 +18469,29 @@ VCTRL_CreateChanWithOption:
 	bl	dprint_vfmw	@
 	b	.L2429	@
 .L2457:
-	add	r3, r4, #116	@ tmp295, pChanOption,
+	add	r3, r4, #116	@ tmp294, pChanOption,
 	ldr	lr, [fp, #-48]	@ DetailMemSize.ChanCtxDetailMem, DetailMemSize.ChanCtxDetailMem
-	ldmia	r3, {r0, r1, r2, r3}	@ tmp295,,,,
-	stmia	r6, {r0, r1, r2, r3}	@ tmp716,,,,
+	ldmia	r3, {r0, r1, r2, r3}	@ tmp294,,,,
+	stmia	r6, {r0, r1, r2, r3}	@ tmp714,,,,
 	ldr	r2, [fp, #-96]	@ temp.6121, ChanMemCtx.Length
 	cmp	r2, lr	@ temp.6121, DetailMemSize.ChanCtxDetailMem
 	blt	.L2528	@,
 	ldr	r0, [fp, #-104]	@, ChanMemCtx.PhyAddr
 	ldr	r1, [fp, #-100]	@, ChanMemCtx.VirAddr
-	str	ip, [fp, #-256]	@ D.50851, %sfp
+	str	ip, [fp, #-256]	@ D.50864, %sfp
 	bl	MEM_AddMemRecord	@
 	b	.L2459	@
 .L2461:
 	ldr	r0, [r4, #132]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
 	cmp	r0, #1	@ <variable>.u32DynamicFrameStoreAllocEn,
 	beq	.L2463	@,
-	mov	lr, #0	@ tmp307,
+	mov	lr, #0	@ tmp306,
 	movw	r0, #:lower16:.LC337	@,
-	mov	r1, lr	@, tmp307
+	mov	r1, lr	@, tmp306
 	movt	r0, #:upper16:.LC337	@,
 	sub	r3, fp, #120	@,,
 	ldr	r2, [fp, #-56]	@, DetailMemSize.VdhDetailMem
-	str	lr, [sp, #0]	@ tmp307,
+	str	lr, [sp, #0]	@ tmp306,
 	bl	MEM_AllocMemBlock	@
 	cmp	r0, #0	@,
 	bne	.L2529	@,
@@ -18527,11 +18528,11 @@ VCTRL_CreateChanWithOption:
 	add	lr, r4, #100	@ tmp219, pChanOption,
 	add	ip, r4, #116	@ tmp221, pChanOption,
 	ldmia	r3, {r0, r1, r2, r3}	@ tmp217,,,,
-	stmia	r7, {r0, r1, r2, r3}	@ tmp718,,,,
+	stmia	r7, {r0, r1, r2, r3}	@ tmp716,,,,
 	ldmia	lr, {r0, r1, r2, r3}	@ tmp219,,,,
-	stmia	sl, {r0, r1, r2, r3}	@ tmp717,,,,
+	stmia	sl, {r0, r1, r2, r3}	@ tmp715,,,,
 	ldmia	ip, {r0, r1, r2, r3}	@ tmp221,,,,
-	stmia	r6, {r0, r1, r2, r3}	@ tmp716,,,,
+	stmia	r6, {r0, r1, r2, r3}	@ tmp714,,,,
 	ldr	r3, [fp, #-100]	@ ChanMemCtx.VirAddr, ChanMemCtx.VirAddr
 	cmp	r3, #0	@ ChanMemCtx.VirAddr,
 	beq	.L2439	@,
@@ -18547,12 +18548,12 @@ VCTRL_CreateChanWithOption:
 	cmp	ip, lr	@ ChanMemScd.Length, DetailMemSize.ScdDetailMem
 	blt	.L2441	@,
 .L2442:
-	ldr	r1, [fp, #-68]	@ D.50876, ChanMemVDH.VirAddr
-	cmp	r1, #0	@ D.50876,
+	ldr	r1, [fp, #-68]	@ D.50889, ChanMemVDH.VirAddr
+	cmp	r1, #0	@ D.50889,
 	beq	.L2443	@,
-	ldr	r2, [fp, #-64]	@ D.50878, ChanMemVDH.Length
+	ldr	r2, [fp, #-64]	@ D.50891, ChanMemVDH.Length
 	ldr	r0, [fp, #-56]	@ DetailMemSize.VdhDetailMem, DetailMemSize.VdhDetailMem
-	cmp	r2, r0	@ D.50878, DetailMemSize.VdhDetailMem
+	cmp	r2, r0	@ D.50891, DetailMemSize.VdhDetailMem
 	blt	.L2443	@,
 	ldr	r0, [fp, #-72]	@, ChanMemVDH.PhyAddr
 	bl	MEM_AddMemRecord	@
@@ -18573,18 +18574,18 @@ VCTRL_CreateChanWithOption:
 	bl	MEM_AddMemRecord	@
 	b	.L2446	@
 .L2463:
-	mov	r1, #0	@ tmp316,
-	str	r1, [fp, #-72]	@ tmp316, ChanMemVDH.PhyAddr
-	str	r1, [fp, #-68]	@ tmp316, ChanMemVDH.VirAddr
-	str	r1, [fp, #-240]	@ tmp316, %sfp
-	str	r1, [fp, #-64]	@ tmp316, ChanMemVDH.Length
+	mov	r1, #0	@ tmp315,
+	str	r1, [fp, #-72]	@ tmp315, ChanMemVDH.PhyAddr
+	str	r1, [fp, #-68]	@ tmp315, ChanMemVDH.VirAddr
+	str	r1, [fp, #-240]	@ tmp315, %sfp
+	str	r1, [fp, #-64]	@ tmp315, ChanMemVDH.Length
 	b	.L2466	@
 .L2441:
 	ldr	r0, [r4, #4]	@ <variable>.Purpose, <variable>.Purpose
 	cmp	r0, #1	@ <variable>.Purpose,
 	bne	.L2442	@,
 	movw	r1, #:lower16:.LC333	@,
-	movw	r2, #1894	@,
+	movw	r2, #1893	@,
 	movt	r1, #:upper16:.LC333	@,
 	bl	dprint_vfmw	@
 	mvn	r3, #0	@,
@@ -18607,20 +18608,20 @@ VCTRL_CreateChanWithOption:
 	mov	r6, r8	@ ChanID.6307,
 .L2483:
 	ldr	lr, [fp, #-252]	@, %sfp
-	movw	r9, #:lower16:g_FrameRate	@ tmp388,
+	movw	r9, #:lower16:g_FrameRate	@ tmp386,
 	ldr	r0, [fp, #-100]	@ prephitmp.6070, ChanMemCtx.VirAddr
-	movt	r9, #:upper16:g_FrameRate	@ tmp388,
+	movt	r9, #:upper16:g_FrameRate	@ tmp386,
 	sub	r1, lr, #207872	@ __n,,
-	movw	r3, #:lower16:g_LastFrameRate	@ tmp390,
+	movw	r3, #:lower16:g_LastFrameRate	@ tmp388,
 	sub	r1, r1, #8	@ __n, __n,
-	movt	r3, #:upper16:g_LastFrameRate	@ tmp390,
+	movt	r3, #:upper16:g_LastFrameRate	@ tmp388,
 	cmp	r1, #0	@ __n,
-	mov	sl, #30	@ tmp389,
-	movw	r8, #:lower16:.LANCHOR0	@ tmp392,
+	mov	sl, #30	@ tmp387,
+	movw	r8, #:lower16:.LANCHOR0	@ tmp390,
 	str	r0, [r7, r6, asl #2]	@ prephitmp.6070, s_pstVfmwChan
-	str	sl, [r3, r6, asl #2]	@ tmp389, g_LastFrameRate
-	movt	r8, #:upper16:.LANCHOR0	@ tmp392,
-	str	sl, [r9, r6, asl #2]	@ tmp389, g_FrameRate
+	str	sl, [r3, r6, asl #2]	@ tmp387, g_LastFrameRate
+	movt	r8, #:upper16:.LANCHOR0	@ tmp390,
+	str	sl, [r9, r6, asl #2]	@ tmp387, g_FrameRate
 	beq	.L2499	@,
 	bl	__memzero	@
 	ldr	r2, [fp, #-244]	@, %sfp
@@ -18631,183 +18632,183 @@ VCTRL_CreateChanWithOption:
 	add	r0, r9, #12	@,,
 	mov	r2, #164	@,
 	bl	memcpy	@
-	ldr	ip, [r7, r6, asl #2]	@ tmp402, s_pstVfmwChan
+	ldr	ip, [r7, r6, asl #2]	@ tmp400, s_pstVfmwChan
 	ldr	r8, [fp, #-252]	@, %sfp
 	movw	r3, #:lower16:s_SmIIS	@,
 	movt	r3, #:upper16:s_SmIIS	@,
-	add	r0, r6, r6, asl #1	@, tmp430, ChanID.6307, ChanID.6307,
-	mov	r9, #0	@ tmp409,
-	mov	r1, #19	@ tmp417,
+	add	r0, r6, r6, asl #1	@, tmp428, ChanID.6307, ChanID.6307,
+	mov	r9, #0	@ tmp407,
+	mov	r1, #19	@ tmp415,
 	str	r8, [ip, #1232]	@, <variable>.stSynExtraData.s32BasicCtxSize
-	add	lr, r3, r0, asl #4	@, tmp432,, tmp430,
-	ldr	sl, [r7, r6, asl #2]	@ tmp404, s_pstVfmwChan
-	movw	r2, #:lower16:251592	@ tmp420,
+	add	lr, r3, r0, asl #4	@, tmp430,, tmp428,
+	ldr	sl, [r7, r6, asl #2]	@ tmp402, s_pstVfmwChan
+	movw	r2, #:lower16:253128	@ tmp418,
 	str	r3, [fp, #-248]	@, %sfp
-	movt	r2, #:upper16:251592	@ tmp420,
-	movw	r8, #:lower16:s_pFspInst	@ tmp435,
-	movt	r8, #:upper16:s_pFspInst	@ tmp435,
+	movt	r2, #:upper16:253128	@ tmp418,
+	movw	r8, #:lower16:s_pFspInst	@ tmp433,
+	movt	r8, #:upper16:s_pFspInst	@ tmp433,
 	str	r5, [sl, #40]	@ eCapLevel, <variable>.eChanCapLevel
 	mov	r0, r6	@, ChanID.6307
-	ldr	ip, [r7, r6, asl #2]	@ tmp406, s_pstVfmwChan
-	mvn	sl, #0	@ tmp727,
-	str	r9, [fp, #-292]	@ tmp409, %sfp
+	ldr	ip, [r7, r6, asl #2]	@ tmp404, s_pstVfmwChan
+	mvn	sl, #0	@ tmp725,
+	str	r9, [fp, #-292]	@ tmp407, %sfp
 	str	r5, [ip, #592]	@ eCapLevel, <variable>.stSynExtraData.eCapLevel
-	ldr	r3, [r7, r6, asl #2]	@ tmp408, s_pstVfmwChan
-	str	r9, [r3, #1248]	@ tmp409, <variable>.stSynExtraData.s32MoreGapEnable
-	ldr	r5, [r7, r6, asl #2]	@ tmp411, s_pstVfmwChan
+	ldr	r3, [r7, r6, asl #2]	@ tmp406, s_pstVfmwChan
+	str	r9, [r3, #1248]	@ tmp407, <variable>.stSynExtraData.s32MoreGapEnable
+	ldr	r5, [r7, r6, asl #2]	@ tmp409, s_pstVfmwChan
 	str	r6, [r5, #8]	@ ChanID.6307, <variable>.s32ChanID
 	ldr	r3, [r4, #0]	@ <variable>.eAdapterType, <variable>.eAdapterType
-	ldr	ip, [r7, r6, asl #2]	@ tmp413, s_pstVfmwChan
+	ldr	ip, [r7, r6, asl #2]	@ tmp411, s_pstVfmwChan
 	str	r3, [ip, #36]	@ <variable>.eAdapterType, <variable>.eAdapterType
-	ldr	r5, [r7, r6, asl #2]	@ tmp416, s_pstVfmwChan
-	str	r1, [r5, #552]	@ tmp417, <variable>.eVidStd
-	ldr	ip, [r7, r6, asl #2]	@ tmp419, s_pstVfmwChan
-	str	r1, [ip, r2]	@ tmp417, <variable>.stSynCtx.eVidStd
-	ldr	r3, [r7, r6, asl #2]	@ tmp423, s_pstVfmwChan
-	str	r9, [r3, #32]	@ tmp409, <variable>.MatchVdhIdPlus1
+	ldr	r5, [r7, r6, asl #2]	@ tmp414, s_pstVfmwChan
+	str	r1, [r5, #552]	@ tmp415, <variable>.eVidStd
+	ldr	ip, [r7, r6, asl #2]	@ tmp417, s_pstVfmwChan
+	str	r1, [ip, r2]	@ tmp415, <variable>.stSynCtx.eVidStd
+	ldr	r3, [r7, r6, asl #2]	@ tmp421, s_pstVfmwChan
+	str	r9, [r3, #32]	@ tmp407, <variable>.MatchVdhIdPlus1
 	ldr	r2, [r7, r6, asl #2]	@ temp.6209, s_pstVfmwChan
-	add	ip, r2, #205824	@ tmp437, temp.6209,
-	add	r5, r2, #1504	@ tmp434, temp.6209,
-	add	r1, ip, #584	@ tmp437, tmp437,
-	str	r5, [lr, #40]	@ tmp434, <variable>.pSmInstArray
-	str	r1, [r8, r6, asl #2]	@ tmp437, s_pFspInst
+	add	ip, r2, #205824	@ tmp435, temp.6209,
+	add	r5, r2, #1504	@ tmp432, temp.6209,
+	add	r1, ip, #584	@ tmp435, tmp435,
+	str	r5, [lr, #40]	@ tmp432, <variable>.pSmInstArray
+	str	r1, [r8, r6, asl #2]	@ tmp435, s_pFspInst
 	bl	VCTRL_ResetChan	@
 	ldr	r2, [fp, #-240]	@, %sfp
-	ldr	r3, [r7, r6, asl #2]	@ tmp439, s_pstVfmwChan
-	movw	lr, #:lower16:249272	@ tmp446,
-	movt	lr, #:upper16:249272	@ tmp446,
-	movw	ip, #:lower16:249276	@ tmp450,
-	movt	ip, #:upper16:249276	@ tmp450,
-	movw	r0, #:lower16:249284	@ tmp454,
+	ldr	r3, [r7, r6, asl #2]	@ tmp437, s_pstVfmwChan
+	movw	lr, #:lower16:250808	@ tmp444,
+	movt	lr, #:upper16:250808	@ tmp444,
+	movw	ip, #:lower16:250812	@ tmp448,
+	movt	ip, #:upper16:250812	@ tmp448,
+	movw	r0, #:lower16:250820	@ tmp452,
 	str	r2, [r3, #268]	@, <variable>.s32SelfAllocChanMem_vdh
-	movt	r0, #:upper16:249284	@ tmp454,
+	movt	r0, #:upper16:250820	@ tmp452,
 	ldr	r5, [fp, #-260]	@, %sfp
-	movw	r1, #:lower16:249288	@ tmp458,
+	movw	r1, #:lower16:250824	@ tmp456,
 	ldr	r8, [r7, r6, asl #2]	@, s_pstVfmwChan
-	movt	r1, #:upper16:249288	@ tmp458,
-	movw	r2, #:lower16:249280	@ tmp462,
-	movt	r2, #:upper16:249280	@ tmp462,
-	movw	r3, #:lower16:249296	@ tmp466,
-	movt	r3, #:upper16:249296	@ tmp466,
+	movt	r1, #:upper16:250824	@ tmp456,
+	movw	r2, #:lower16:250816	@ tmp460,
+	movt	r2, #:upper16:250816	@ tmp460,
+	movw	r3, #:lower16:250832	@ tmp464,
+	movt	r3, #:upper16:250832	@ tmp464,
 	str	r5, [r8, #272]	@, <variable>.s32SelfAllocChanMem_scd
-	movw	r5, #:lower16:251556	@,
+	movw	r5, #:lower16:253092	@,
 	ldr	r8, [fp, #-256]	@, %sfp
-	movt	r5, #:upper16:251556	@,
+	movt	r5, #:upper16:253092	@,
 	str	r5, [fp, #-240]	@, %sfp
 	ldr	r5, [r7, r6, asl #2]	@, s_pstVfmwChan
 	str	r8, [r5, #276]	@, <variable>.s32SelfAllocChanMem_ctx
-	ldr	r5, [r7, r6, asl #2]	@ tmp445, s_pstVfmwChan
-	str	r9, [r5, lr]	@ tmp409, <variable>.s32CurFsSize
-	ldr	r8, [r7, r6, asl #2]	@ tmp449, s_pstVfmwChan
-	str	r9, [r8, ip]	@ tmp409, <variable>.s32RefNum
-	ldr	r5, [r7, r6, asl #2]	@ tmp453, s_pstVfmwChan
-	str	r9, [r5, r0]	@ tmp409, <variable>.s32PreAllocFrmNum
-	ldr	lr, [r7, r6, asl #2]	@ tmp457, s_pstVfmwChan
-	str	r9, [lr, r1]	@ tmp409, <variable>.s32MMZFrmNum
-	ldr	r1, [r7, r6, asl #2]	@ tmp461, s_pstVfmwChan
-	str	r9, [r1, r2]	@ tmp409, <variable>.s32NeededFrameNum
-	ldr	r8, [r7, r6, asl #2]	@ tmp465, s_pstVfmwChan
-	str	r9, [r8, r3]	@ tmp409, <variable>.s32RefNumChanged
+	ldr	r5, [r7, r6, asl #2]	@ tmp443, s_pstVfmwChan
+	str	r9, [r5, lr]	@ tmp407, <variable>.s32CurFsSize
+	ldr	r8, [r7, r6, asl #2]	@ tmp447, s_pstVfmwChan
+	str	r9, [r8, ip]	@ tmp407, <variable>.s32RefNum
+	ldr	r5, [r7, r6, asl #2]	@ tmp451, s_pstVfmwChan
+	str	r9, [r5, r0]	@ tmp407, <variable>.s32PreAllocFrmNum
+	ldr	lr, [r7, r6, asl #2]	@ tmp455, s_pstVfmwChan
+	str	r9, [lr, r1]	@ tmp407, <variable>.s32MMZFrmNum
+	ldr	r1, [r7, r6, asl #2]	@ tmp459, s_pstVfmwChan
+	str	r9, [r1, r2]	@ tmp407, <variable>.s32NeededFrameNum
+	ldr	r8, [r7, r6, asl #2]	@ tmp463, s_pstVfmwChan
+	str	r9, [r8, r3]	@ tmp407, <variable>.s32RefNumChanged
 	ldr	ip, [fp, #-240]	@, %sfp
-	ldr	r0, [r7, r6, asl #2]	@ tmp469, s_pstVfmwChan
+	ldr	r0, [r7, r6, asl #2]	@ tmp467, s_pstVfmwChan
 	ldr	r5, [r4, #132]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
 	str	r5, [r0, ip]	@ <variable>.u32DynamicFrameStoreAllocEn, <variable>.u32DynamicFrameStoreAllocEn
 	ldr	r8, [fp, #-292]	@ u32i, %sfp
 .L2500:
-	add	r2, r8, r8, asl #2	@, tmp477, u32i, u32i,
-	ldr	ip, [r7, r6, asl #2]	@ tmp473, s_pstVfmwChan
-	add	r5, r8, #1	@ tmp730, u32i,
+	add	r2, r8, r8, asl #2	@, tmp475, u32i, u32i,
+	ldr	ip, [r7, r6, asl #2]	@ tmp471, s_pstVfmwChan
+	add	r5, r8, #1	@ tmp728, u32i,
 	mov	r1, #16	@,
-	mov	r3, r2, asl #2	@ tmp478, tmp477,
-	add	r8, r5, #1	@ u32i, tmp730,
-	add	lr, r3, ip	@ tmp479, tmp478, tmp473
-	add	r0, r3, #248832	@ tmp488, tmp478,
-	add	r9, lr, #248832	@ tmp480, tmp479,
-	add	ip, r0, #472	@ tmp488, tmp488,
-	add	r2, r9, #488	@ tmp480, tmp480,
-	movw	r9, #:lower16:.LANCHOR0	@ tmp734,
-	movt	r9, #:upper16:.LANCHOR0	@ tmp734,
-	strb	sl, [r2, #0]	@ tmp727, <variable>.u8BufferNodeState
-	ldr	lr, [r7, r6, asl #2]	@ tmp491, s_pstVfmwChan
-	add	r0, ip, lr	@, tmp488, tmp491
+	mov	r3, r2, asl #2	@ tmp476, tmp475,
+	add	r8, r5, #1	@ u32i, tmp728,
+	add	lr, r3, ip	@ tmp477, tmp476, tmp471
+	add	r0, r3, #249856	@ tmp486, tmp476,
+	add	r9, lr, #249856	@ tmp478, tmp477,
+	add	ip, r0, #984	@ tmp486, tmp486,
+	add	r2, r9, #1000	@ tmp478, tmp478,
+	movw	r9, #:lower16:.LANCHOR0	@ tmp732,
+	movt	r9, #:upper16:.LANCHOR0	@ tmp732,
+	strb	sl, [r2, #0]	@ tmp725, <variable>.u8BufferNodeState
+	ldr	lr, [r7, r6, asl #2]	@ tmp489, s_pstVfmwChan
+	add	r0, ip, lr	@, tmp486, tmp489
 	bl	__memzero	@
-	add	r3, r5, r5, asl #2	@, tmp738, tmp730, tmp730,
-	ldr	r0, [r7, r6, asl #2]	@ tmp735, s_pstVfmwChan
+	add	r3, r5, r5, asl #2	@, tmp736, tmp728, tmp728,
+	ldr	r0, [r7, r6, asl #2]	@ tmp733, s_pstVfmwChan
 	mov	r1, #16	@,
-	mov	r5, r3, asl #2	@ tmp739, tmp738,
-	add	r2, r5, r0	@ tmp740, tmp739, tmp735
-	add	ip, r5, #248832	@ tmp744, tmp739,
-	add	r3, r2, #248832	@ tmp741, tmp740,
-	add	r5, ip, #472	@ tmp744, tmp744,
-	add	r0, r3, #488	@ tmp741, tmp741,
-	strb	sl, [r0, #0]	@ tmp727, <variable>.u8BufferNodeState
-	ldr	r2, [r7, r6, asl #2]	@ tmp745, s_pstVfmwChan
-	add	r0, r5, r2	@, tmp744, tmp745
+	mov	r5, r3, asl #2	@ tmp737, tmp736,
+	add	r2, r5, r0	@ tmp738, tmp737, tmp733
+	add	ip, r5, #249856	@ tmp742, tmp737,
+	add	r3, r2, #249856	@ tmp739, tmp738,
+	add	r5, ip, #984	@ tmp742, tmp742,
+	add	r0, r3, #1000	@ tmp739, tmp739,
+	strb	sl, [r0, #0]	@ tmp725, <variable>.u8BufferNodeState
+	ldr	r2, [r7, r6, asl #2]	@ tmp743, s_pstVfmwChan
+	add	r0, r5, r2	@, tmp742, tmp743
 	bl	__memzero	@
 	cmp	r8, #64	@ u32i,
 	bne	.L2500	@,
-	ldr	ip, [r9, r6, asl #2]	@ tmp495, s_pstVfmwChan
+	ldr	ip, [r9, r6, asl #2]	@ tmp493, s_pstVfmwChan
 	mov	r1, #948	@,
-	add	r5, r9, r6, asl #2	@, tmp503, tmp734, ChanID.6307,
-	mov	r8, #0	@ tmp505,
-	add	lr, ip, #249856	@, tmp495,
-	add	r0, lr, #728	@,,
+	add	r5, r9, r6, asl #2	@, tmp501, tmp732, ChanID.6307,
+	mov	r8, #0	@ tmp503,
+	add	lr, ip, #251904	@, tmp493,
+	add	r0, lr, #216	@,,
 	bl	__memzero	@
-	ldr	r3, [r9, r6, asl #2]	@ tmp499, s_pstVfmwChan
+	ldr	r3, [r9, r6, asl #2]	@ tmp497, s_pstVfmwChan
 	mov	r1, #24	@,
-	add	r0, r3, #250880	@, tmp499,
-	add	r0, r0, #652	@,,
+	add	r0, r3, #252928	@, tmp497,
+	add	r0, r0, #140	@,,
 	bl	__memzero	@
-	str	r8, [r5, #532]	@ tmp505, s_ChanControlState
+	str	r8, [r5, #532]	@ tmp503, s_ChanControlState
 	ldr	r1, [r4, #8]	@ <variable>.MemAllocMode, <variable>.MemAllocMode
 	cmp	r1, #3	@ <variable>.MemAllocMode,
 	beq	.L2531	@,
 	ldr	r2, [fp, #-244]	@, %sfp
 	ldr	r3, [r9, r2, asl #2]	@ prephitmp.6048, s_pstVfmwChan
 .L2502:
-	mov	r1, #0	@ tmp533,
-	str	r1, [r3, #200]	@ tmp533, <variable>.s32OneChanMem
+	mov	r1, #0	@ tmp531,
+	str	r1, [r3, #200]	@ tmp531, <variable>.s32OneChanMem
 .L2503:
-	ldr	r0, [r7, r6, asl #2]	@ tmp535, s_pstVfmwChan
-	movw	lr, #:lower16:249264	@ tmp569,
+	ldr	r0, [r7, r6, asl #2]	@ tmp533, s_pstVfmwChan
+	movw	lr, #:lower16:250800	@ tmp567,
 	ldr	r2, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
-	movt	lr, #:upper16:249264	@ tmp569,
-	mov	r1, #0	@ tmp570,
-	movw	r3, #:lower16:.LANCHOR0	@ tmp534,
-	movt	r3, #:upper16:.LANCHOR0	@ tmp534,
+	movt	lr, #:upper16:250800	@ tmp567,
+	mov	r1, #0	@ tmp568,
+	movw	r3, #:lower16:.LANCHOR0	@ tmp532,
+	movt	r3, #:upper16:.LANCHOR0	@ tmp532,
 	str	r2, [r0, #228]	@ ChanMemVDH.PhyAddr, <variable>.stChanMem_vdh.PhyAddr
 	ldr	ip, [fp, #-68]	@ ChanMemVDH.VirAddr, ChanMemVDH.VirAddr
-	ldr	r5, [r7, r6, asl #2]	@ tmp538, s_pstVfmwChan
+	ldr	r5, [r7, r6, asl #2]	@ tmp536, s_pstVfmwChan
 	str	ip, [r5, #224]	@ ChanMemVDH.VirAddr, <variable>.stChanMem_vdh.VirAddr
 	ldr	r8, [fp, #-64]	@ ChanMemVDH.Length, ChanMemVDH.Length
-	ldr	r2, [r7, r6, asl #2]	@ tmp541, s_pstVfmwChan
+	ldr	r2, [r7, r6, asl #2]	@ tmp539, s_pstVfmwChan
 	str	r8, [r2, #232]	@ ChanMemVDH.Length, <variable>.stChanMem_vdh.Length
 	ldr	r0, [fp, #-88]	@ ChanMemScd.PhyAddr, ChanMemScd.PhyAddr
-	ldr	r5, [r7, r6, asl #2]	@ tmp544, s_pstVfmwChan
+	ldr	r5, [r7, r6, asl #2]	@ tmp542, s_pstVfmwChan
 	str	r0, [r5, #244]	@ ChanMemScd.PhyAddr, <variable>.stChanMem_scd.PhyAddr
 	ldr	ip, [fp, #-84]	@ ChanMemScd.VirAddr, ChanMemScd.VirAddr
-	ldr	r8, [r7, r6, asl #2]	@ tmp547, s_pstVfmwChan
+	ldr	r8, [r7, r6, asl #2]	@ tmp545, s_pstVfmwChan
 	str	ip, [r8, #240]	@ ChanMemScd.VirAddr, <variable>.stChanMem_scd.VirAddr
 	ldr	r2, [fp, #-80]	@ ChanMemScd.Length, ChanMemScd.Length
-	ldr	r0, [r7, r6, asl #2]	@ tmp550, s_pstVfmwChan
+	ldr	r0, [r7, r6, asl #2]	@ tmp548, s_pstVfmwChan
 	str	r2, [r0, #248]	@ ChanMemScd.Length, <variable>.stChanMem_scd.Length
 	ldr	r5, [fp, #-104]	@ ChanMemCtx.PhyAddr, ChanMemCtx.PhyAddr
-	ldr	r8, [r7, r6, asl #2]	@ tmp553, s_pstVfmwChan
+	ldr	r8, [r7, r6, asl #2]	@ tmp551, s_pstVfmwChan
 	str	r5, [r8, #260]	@ ChanMemCtx.PhyAddr, <variable>.stChanMem_ctx.PhyAddr
 	ldr	ip, [fp, #-100]	@ ChanMemCtx.VirAddr, ChanMemCtx.VirAddr
-	ldr	r2, [r7, r6, asl #2]	@ tmp556, s_pstVfmwChan
+	ldr	r2, [r7, r6, asl #2]	@ tmp554, s_pstVfmwChan
 	str	ip, [r2, #256]	@ ChanMemCtx.VirAddr, <variable>.stChanMem_ctx.VirAddr
 	ldr	r0, [fp, #-96]	@ ChanMemCtx.Length, ChanMemCtx.Length
-	ldr	r5, [r7, r6, asl #2]	@ tmp559, s_pstVfmwChan
+	ldr	r5, [r7, r6, asl #2]	@ tmp557, s_pstVfmwChan
 	str	r0, [r5, #264]	@ ChanMemCtx.Length, <variable>.stChanMem_ctx.Length
 	ldr	r8, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
-	ldr	r2, [r7, r6, asl #2]	@ tmp562, s_pstVfmwChan
+	ldr	r2, [r7, r6, asl #2]	@ tmp560, s_pstVfmwChan
 	str	r8, [r2, #300]	@ ChanMemVDH.PhyAddr, <variable>.s32SdecMemAddr
 	ldr	ip, [fp, #-64]	@ ChanMemVDH.Length, ChanMemVDH.Length
-	ldr	r0, [r7, r6, asl #2]	@ tmp565, s_pstVfmwChan
+	ldr	r0, [r7, r6, asl #2]	@ tmp563, s_pstVfmwChan
 	str	ip, [r0, #304]	@ ChanMemVDH.Length, <variable>.s32SdecMemSize
-	ldr	r5, [r7, r6, asl #2]	@ tmp568, s_pstVfmwChan
-	str	r1, [r5, lr]	@ tmp570, <variable>.FspInst.eFspPartitionState
+	ldr	r5, [r7, r6, asl #2]	@ tmp566, s_pstVfmwChan
+	str	r1, [r5, lr]	@ tmp568, <variable>.FspInst.eFspPartitionState
 	ldr	r2, [r7, r6, asl #2]	@ temp.6259, s_pstVfmwChan
 	ldr	r8, [r2, #1424]	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn, <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn
 	cmp	r8, #1	@ <variable>.stSynExtraData.stChanOption.u32DynamicFrameStoreAllocEn,
@@ -18815,94 +18816,94 @@ VCTRL_CreateChanWithOption:
 	ldr	r5, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
 	ldr	r1, [r2, #292]	@ <variable>.s32OffLineDNRMemSize, <variable>.s32OffLineDNRMemSize
 	ldr	r8, [r2, #4]	@ <variable>.s32BtlMemSize, <variable>.s32BtlMemSize
-	add	r0, r1, r5	@ tmp573, <variable>.s32OffLineDNRMemSize, ChanMemVDH.PhyAddr
-	add	lr, r0, r8	@ tmp577, tmp573, <variable>.s32BtlMemSize
-	str	lr, [r2, #280]	@ tmp577, <variable>.s32VdmChanMemAddr
+	add	r0, r1, r5	@ tmp571, <variable>.s32OffLineDNRMemSize, ChanMemVDH.PhyAddr
+	add	lr, r0, r8	@ tmp575, tmp571, <variable>.s32BtlMemSize
+	str	lr, [r2, #280]	@ tmp575, <variable>.s32VdmChanMemAddr
 	ldr	lr, [r3, r6, asl #2]	@ temp.6262, s_pstVfmwChan
 	ldr	ip, [fp, #-64]	@ ChanMemVDH.Length, ChanMemVDH.Length
 	ldr	r1, [lr, #292]	@ <variable>.s32OffLineDNRMemSize, <variable>.s32OffLineDNRMemSize
 	ldr	r8, [lr, #4]	@ <variable>.s32BtlMemSize, <variable>.s32BtlMemSize
-	rsb	r5, r1, ip	@ tmp579, <variable>.s32OffLineDNRMemSize, ChanMemVDH.Length
-	rsb	r2, r8, r5	@ tmp582, <variable>.s32BtlMemSize, tmp579
-	sub	r0, r2, #16	@ tmp584, tmp582,
-	str	r0, [lr, #284]	@ tmp584, <variable>.s32VdmChanMemSize
+	rsb	r5, r1, ip	@ tmp577, <variable>.s32OffLineDNRMemSize, ChanMemVDH.Length
+	rsb	r2, r8, r5	@ tmp580, <variable>.s32BtlMemSize, tmp577
+	sub	r0, r2, #16	@ tmp582, tmp580,
+	str	r0, [lr, #284]	@ tmp582, <variable>.s32VdmChanMemSize
 	ldr	ip, [r3, r6, asl #2]	@ temp.6265, s_pstVfmwChan
 	ldr	r1, [ip, #284]	@ <variable>.s32VdmChanMemSize, <variable>.s32VdmChanMemSize
-	sub	r5, r1, #14848	@ tmp588, <variable>.s32VdmChanMemSize,
-	str	r5, [ip, #284]	@ tmp588, <variable>.s32VdmChanMemSize
+	sub	r5, r1, #14848	@ tmp586, <variable>.s32VdmChanMemSize,
+	str	r5, [ip, #284]	@ tmp586, <variable>.s32VdmChanMemSize
 	ldr	r2, [r3, r6, asl #2]	@ temp.6266, s_pstVfmwChan
 	ldr	r8, [r2, #284]	@ <variable>.s32VdmChanMemSize, <variable>.s32VdmChanMemSize
-	sub	lr, r8, #32768	@ tmp592, <variable>.s32VdmChanMemSize,
-	str	lr, [r2, #284]	@ tmp592, <variable>.s32VdmChanMemSize
+	sub	lr, r8, #32768	@ tmp590, <variable>.s32VdmChanMemSize,
+	str	lr, [r2, #284]	@ tmp590, <variable>.s32VdmChanMemSize
 	ldr	r8, [r3, r6, asl #2]	@ temp.6268, s_pstVfmwChan
 	ldr	r0, [r8, #280]	@ <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemAddr
 	ldr	r1, [r8, #284]	@ <variable>.s32VdmChanMemSize, <variable>.s32VdmChanMemSize
-	add	ip, r0, r1	@ tmp594, <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemSize
-	mov	r1, #14848	@ tmp601,
-	add	r5, ip, #15	@ tmp597, tmp594,
-	bic	lr, r5, #15	@ tmp598, tmp597,
-	str	lr, [r8, #312]	@ tmp598, <variable>.s32BpdChanMemAddr
-	ldr	r2, [r3, r6, asl #2]	@ tmp600, s_pstVfmwChan
-	str	r1, [r2, #316]	@ tmp601, <variable>.s32BpdChanMemSize
+	add	ip, r0, r1	@ tmp592, <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemSize
+	mov	r1, #14848	@ tmp599,
+	add	r5, ip, #15	@ tmp595, tmp592,
+	bic	lr, r5, #15	@ tmp596, tmp595,
+	str	lr, [r8, #312]	@ tmp596, <variable>.s32BpdChanMemAddr
+	ldr	r2, [r3, r6, asl #2]	@ tmp598, s_pstVfmwChan
+	str	r1, [r2, #316]	@ tmp599, <variable>.s32BpdChanMemSize
 	ldr	r2, [r3, r6, asl #2]	@ temp.6271, s_pstVfmwChan
 	ldr	ip, [r2, #280]	@ <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemAddr
 	ldr	r0, [r2, #284]	@ <variable>.s32VdmChanMemSize, <variable>.s32VdmChanMemSize
 	ldr	lr, [r2, #316]	@ <variable>.s32BpdChanMemSize, <variable>.s32BpdChanMemSize
-	add	r5, ip, r0	@ tmp603, <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemSize
-	add	r8, r5, #15	@ tmp606, tmp603,
-	mov	r5, #32768	@ tmp612,
-	add	r1, r8, lr	@ tmp607, tmp606, <variable>.s32BpdChanMemSize
-	bic	r0, r1, #15	@ tmp609, tmp607,
-	str	r0, [r2, #320]	@ tmp609, <variable>.s32Vp8SegIdChanMemAddr
-	ldr	ip, [r3, r6, asl #2]	@ tmp611, s_pstVfmwChan
-	str	r5, [ip, #324]	@ tmp612, <variable>.s32Vp8SegIdChanMemSize
+	add	r5, ip, r0	@ tmp601, <variable>.s32VdmChanMemAddr, <variable>.s32VdmChanMemSize
+	add	r8, r5, #15	@ tmp604, tmp601,
+	mov	r5, #32768	@ tmp610,
+	add	r1, r8, lr	@ tmp605, tmp604, <variable>.s32BpdChanMemSize
+	bic	r0, r1, #15	@ tmp607, tmp605,
+	str	r0, [r2, #320]	@ tmp607, <variable>.s32Vp8SegIdChanMemAddr
+	ldr	ip, [r3, r6, asl #2]	@ tmp609, s_pstVfmwChan
+	str	r5, [ip, #324]	@ tmp610, <variable>.s32Vp8SegIdChanMemSize
 	ldr	lr, [fp, #-88]	@ ChanMemScd.PhyAddr, ChanMemScd.PhyAddr
-	ldr	r8, [r3, r6, asl #2]	@ tmp614, s_pstVfmwChan
+	ldr	r8, [r3, r6, asl #2]	@ tmp612, s_pstVfmwChan
 	str	lr, [r8, #296]	@ ChanMemScd.PhyAddr, <variable>.s32ScdChanMemAddr
 	ldr	r1, [fp, #-80]	@ ChanMemScd.Length, ChanMemScd.Length
-	ldr	r3, [r3, r6, asl #2]	@ tmp617, s_pstVfmwChan
+	ldr	r3, [r3, r6, asl #2]	@ tmp615, s_pstVfmwChan
 	str	r1, [r3, #308]	@ ChanMemScd.Length, <variable>.s32ScdChanMemSize
 .L2505:
-	ldr	r5, [r7, r6, asl #2]	@ tmp659, s_pstVfmwChan
-	movw	r8, #:lower16:206408	@ tmp666,
-	movt	r8, #:upper16:206408	@ tmp666,
-	movw	r3, #:lower16:192368	@ tmp670,
-	movt	r3, #:upper16:192368	@ tmp670,
+	ldr	r5, [r7, r6, asl #2]	@ tmp657, s_pstVfmwChan
+	movw	r8, #:lower16:206408	@ tmp664,
+	movt	r8, #:upper16:206408	@ tmp664,
+	movw	r3, #:lower16:192368	@ tmp668,
+	movt	r3, #:upper16:192368	@ tmp668,
 	mov	r0, r6	@, ChanID.6307
 	str	r6, [r5, #8]	@ ChanID.6307, <variable>.s32ChanID
-	movw	r5, #:lower16:.LANCHOR0	@ tmp658,
-	ldr	ip, [r7, r6, asl #2]	@ tmp661, s_pstVfmwChan
-	movt	r5, #:upper16:.LANCHOR0	@ tmp658,
+	movw	r5, #:lower16:.LANCHOR0	@ tmp656,
+	ldr	ip, [r7, r6, asl #2]	@ tmp659, s_pstVfmwChan
+	movt	r5, #:upper16:.LANCHOR0	@ tmp656,
 	str	r6, [ip, #188]	@ ChanID.6307, <variable>.s32SCDInstID
-	ldr	r2, [r7, r6, asl #2]	@ tmp663, s_pstVfmwChan
+	ldr	r2, [r7, r6, asl #2]	@ tmp661, s_pstVfmwChan
 	str	r6, [r2, #192]	@ ChanID.6307, <variable>.s32VDMInstID
-	ldr	lr, [r7, r6, asl #2]	@ tmp665, s_pstVfmwChan
+	ldr	lr, [r7, r6, asl #2]	@ tmp663, s_pstVfmwChan
 	strb	r6, [lr, r8]	@ ChanID.6307, <variable>.FspInst.s32InstID
-	ldr	r1, [r7, r6, asl #2]	@ tmp669, s_pstVfmwChan
+	ldr	r1, [r7, r6, asl #2]	@ tmp667, s_pstVfmwChan
 	str	r6, [r1, r3]	@ ChanID.6307, <variable>.SmInstArray.InstID
 	bl	FSP_EnableInstance	@
 	cmp	r0, #0	@,
 	bne	.L2532	@,
 	mov	r0, r6	@, ChanID.6307
-	mov	r7, #1	@ tmp680,
+	mov	r7, #1	@ tmp678,
 	bl	SM_ClearInst	@
-	ldr	r2, [r5, r6, asl #2]	@ tmp673, s_pstVfmwChan
+	ldr	r2, [r5, r6, asl #2]	@ tmp671, s_pstVfmwChan
 	ldr	r8, [fp, #-252]	@, %sfp
 	mov	r0, r6	@, ChanID.6307
 	ldr	r1, [r2, #256]	@ <variable>.stChanMem_ctx.VirAddr, <variable>.stChanMem_ctx.VirAddr
-	sub	ip, r8, #205824	@ tmp674,,
-	sub	r3, ip, #8	@ tmp674, tmp674,
-	add	r1, r3, r1	@, tmp674, <variable>.stChanMem_ctx.VirAddr
+	sub	ip, r8, #205824	@ tmp672,,
+	sub	r3, ip, #8	@ tmp672, tmp672,
+	add	r1, r3, r1	@, tmp672, <variable>.stChanMem_ctx.VirAddr
 	bl	OpenUsdPool_WithMem	@
-	ldr	ip, [r5, r6, asl #2]	@ tmp679, s_pstVfmwChan
+	ldr	ip, [r5, r6, asl #2]	@ tmp677, s_pstVfmwChan
 	mov	r0, r6	@, ChanID.6307
-	str	r7, [ip, #12]	@ tmp680, <variable>.s32IsOpen
+	str	r7, [ip, #12]	@ tmp678, <variable>.s32IsOpen
 	bl	VDMDRV_ClearChanIsDec	@
 	bl	VCTRL_EnableAllInt	@
 	bl	VDMDRV_ParamInit	@
-	add	r0, r5, #520	@, tmp658,
+	add	r0, r5, #520	@, tmp656,
 	bl	OSAL_SpinUnLockIRQ	@
-	str	r7, [r4, #52]	@ tmp680, <variable>.s32ScdLowdlyEnable
+	str	r7, [r4, #52]	@ tmp678, <variable>.s32ScdLowdlyEnable
 	mov	r0, r6	@, ChanID.6307
 	bl	SM_AllocDSPCtxMem	@
 	b	.L2429	@
@@ -18910,13 +18911,13 @@ VCTRL_CreateChanWithOption:
 	ldr	r1, [r4, #4]	@ <variable>.Purpose, <variable>.Purpose
 	cmp	r1, #2	@ <variable>.Purpose,
 	beq	.L2472	@,
-	mov	lr, #0	@ tmp332,
+	mov	lr, #0	@ tmp331,
 	movw	r0, #:lower16:.LC339	@,
-	mov	r1, lr	@, tmp332
+	mov	r1, lr	@, tmp331
 	movt	r0, #:upper16:.LC339	@,
 	sub	r3, fp, #120	@,,
 	ldr	r2, [fp, #-52]	@, DetailMemSize.ScdDetailMem
-	str	lr, [sp, #0]	@ tmp332,
+	str	lr, [sp, #0]	@ tmp331,
 	bl	MEM_AllocMemBlock	@
 	cmp	r0, #0	@,
 	bne	.L2533	@,
@@ -18935,46 +18936,46 @@ VCTRL_CreateChanWithOption:
 	str	r2, [fp, #-80]	@ MemRecord.Length, ChanMemScd.Length
 	b	.L2446	@
 .L2504:
-	str	r1, [r2, #280]	@ tmp570, <variable>.s32VdmChanMemAddr
-	ldr	ip, [r3, r6, asl #2]	@ tmp621, s_pstVfmwChan
-	str	r1, [ip, #284]	@ tmp570, <variable>.s32VdmChanMemSize
+	str	r1, [r2, #280]	@ tmp568, <variable>.s32VdmChanMemAddr
+	ldr	ip, [r3, r6, asl #2]	@ tmp619, s_pstVfmwChan
+	str	r1, [ip, #284]	@ tmp568, <variable>.s32VdmChanMemSize
 	ldr	r0, [fp, #-88]	@ ChanMemScd.PhyAddr, ChanMemScd.PhyAddr
-	ldr	r2, [r3, r6, asl #2]	@ tmp624, s_pstVfmwChan
+	ldr	r2, [r3, r6, asl #2]	@ tmp622, s_pstVfmwChan
 	str	r0, [r2, #296]	@ ChanMemScd.PhyAddr, <variable>.s32ScdChanMemAddr
-	ldr	r8, [r3, r6, asl #2]	@ tmp627, s_pstVfmwChan
+	ldr	r8, [r3, r6, asl #2]	@ tmp625, s_pstVfmwChan
 	ldr	r5, [fp, #-80]	@ ChanMemScd.Length, ChanMemScd.Length
-	sub	lr, r5, #16	@ tmp629, ChanMemScd.Length,
-	str	lr, [r8, #308]	@ tmp629, <variable>.s32ScdChanMemSize
+	sub	lr, r5, #16	@ tmp627, ChanMemScd.Length,
+	str	lr, [r8, #308]	@ tmp627, <variable>.s32ScdChanMemSize
 	ldr	ip, [r3, r6, asl #2]	@ temp.6285, s_pstVfmwChan
 	ldr	r1, [ip, #308]	@ <variable>.s32ScdChanMemSize, <variable>.s32ScdChanMemSize
-	sub	r0, r1, #14848	@ tmp633, <variable>.s32ScdChanMemSize,
-	str	r0, [ip, #308]	@ tmp633, <variable>.s32ScdChanMemSize
+	sub	r0, r1, #14848	@ tmp631, <variable>.s32ScdChanMemSize,
+	str	r0, [ip, #308]	@ tmp631, <variable>.s32ScdChanMemSize
 	ldr	r5, [r3, r6, asl #2]	@ temp.6286, s_pstVfmwChan
 	ldr	r2, [r5, #308]	@ <variable>.s32ScdChanMemSize, <variable>.s32ScdChanMemSize
-	sub	r8, r2, #32768	@ tmp637, <variable>.s32ScdChanMemSize,
-	str	r8, [r5, #308]	@ tmp637, <variable>.s32ScdChanMemSize
+	sub	r8, r2, #32768	@ tmp635, <variable>.s32ScdChanMemSize,
+	str	r8, [r5, #308]	@ tmp635, <variable>.s32ScdChanMemSize
 	ldr	r2, [r3, r6, asl #2]	@ temp.6288, s_pstVfmwChan
 	ldr	lr, [r2, #296]	@ <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemAddr
 	ldr	ip, [r2, #308]	@ <variable>.s32ScdChanMemSize, <variable>.s32ScdChanMemSize
-	add	r1, lr, ip	@ tmp639, <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemSize
-	mov	lr, #14848	@ tmp646,
-	add	r0, r1, #15	@ tmp642, tmp639,
-	bic	r5, r0, #15	@ tmp643, tmp642,
-	str	r5, [r2, #312]	@ tmp643, <variable>.s32BpdChanMemAddr
-	ldr	r8, [r3, r6, asl #2]	@ tmp645, s_pstVfmwChan
-	str	lr, [r8, #316]	@ tmp646, <variable>.s32BpdChanMemSize
+	add	r1, lr, ip	@ tmp637, <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemSize
+	mov	lr, #14848	@ tmp644,
+	add	r0, r1, #15	@ tmp640, tmp637,
+	bic	r5, r0, #15	@ tmp641, tmp640,
+	str	r5, [r2, #312]	@ tmp641, <variable>.s32BpdChanMemAddr
+	ldr	r8, [r3, r6, asl #2]	@ tmp643, s_pstVfmwChan
+	str	lr, [r8, #316]	@ tmp644, <variable>.s32BpdChanMemSize
 	ldr	lr, [r3, r6, asl #2]	@ temp.6291, s_pstVfmwChan
 	ldr	ip, [lr, #296]	@ <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemAddr
 	ldr	r2, [lr, #308]	@ <variable>.s32ScdChanMemSize, <variable>.s32ScdChanMemSize
 	ldr	r5, [lr, #316]	@ <variable>.s32BpdChanMemSize, <variable>.s32BpdChanMemSize
-	add	r1, ip, r2	@ tmp648, <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemSize
-	mov	r2, #32768	@ tmp657,
-	add	r0, r1, #15	@ tmp651, tmp648,
-	add	r8, r0, r5	@ tmp652, tmp651, <variable>.s32BpdChanMemSize
-	bic	ip, r8, #15	@ tmp654, tmp652,
-	str	ip, [lr, #320]	@ tmp654, <variable>.s32Vp8SegIdChanMemAddr
-	ldr	r3, [r3, r6, asl #2]	@ tmp656, s_pstVfmwChan
-	str	r2, [r3, #324]	@ tmp657, <variable>.s32Vp8SegIdChanMemSize
+	add	r1, ip, r2	@ tmp646, <variable>.s32ScdChanMemAddr, <variable>.s32ScdChanMemSize
+	mov	r2, #32768	@ tmp655,
+	add	r0, r1, #15	@ tmp649, tmp646,
+	add	r8, r0, r5	@ tmp650, tmp649, <variable>.s32BpdChanMemSize
+	bic	ip, r8, #15	@ tmp652, tmp650,
+	str	ip, [lr, #320]	@ tmp652, <variable>.s32Vp8SegIdChanMemAddr
+	ldr	r3, [r3, r6, asl #2]	@ tmp654, s_pstVfmwChan
+	str	r2, [r3, #324]	@ tmp655, <variable>.s32Vp8SegIdChanMemSize
 	b	.L2505	@
 .L2531:
 	ldr	r3, [r9, r6, asl #2]	@ prephitmp.6048, s_pstVfmwChan
@@ -18991,42 +18992,42 @@ VCTRL_CreateChanWithOption:
 	ldr	ip, [fp, #-80]	@ ChanMemScd.Length, ChanMemScd.Length
 	ldr	r5, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
 	ldr	lr, [fp, #-264]	@, %sfp
-	add	r0, r1, ip	@ tmp513, temp.6226, ChanMemScd.Length
+	add	r0, r1, ip	@ tmp511, temp.6226, ChanMemScd.Length
 	cmp	lr, #1	@,
-	cmpeq	r0, r5	@, tmp513, ChanMemVDH.PhyAddr
+	cmpeq	r0, r5	@, tmp511, ChanMemVDH.PhyAddr
 	bne	.L2502	@,
 	str	r1, [r3, #212]	@ temp.6226, <variable>.stChanMem.PhyAddr
 	ldr	lr, [fp, #-84]	@ ChanMemScd.VirAddr, ChanMemScd.VirAddr
-	ldr	ip, [r9, r6, asl #2]	@ tmp522, s_pstVfmwChan
+	ldr	ip, [r9, r6, asl #2]	@ tmp520, s_pstVfmwChan
 	str	lr, [ip, #208]	@ ChanMemScd.VirAddr, <variable>.stChanMem.VirAddr
-	ldr	r8, [r9, r6, asl #2]	@ tmp525, s_pstVfmwChan
+	ldr	r8, [r9, r6, asl #2]	@ tmp523, s_pstVfmwChan
 	ldr	r5, [fp, #-80]	@ ChanMemScd.Length, ChanMemScd.Length
 	ldr	r0, [fp, #-64]	@ ChanMemVDH.Length, ChanMemVDH.Length
-	add	r1, r0, r5	@ tmp528, ChanMemVDH.Length, ChanMemScd.Length
-	str	r1, [r8, #216]	@ tmp528, <variable>.stChanMem.Length
-	ldr	r3, [r9, r6, asl #2]	@ tmp530, s_pstVfmwChan
+	add	r1, r0, r5	@ tmp526, ChanMemVDH.Length, ChanMemScd.Length
+	str	r1, [r8, #216]	@ tmp526, <variable>.stChanMem.Length
+	ldr	r3, [r9, r6, asl #2]	@ tmp528, s_pstVfmwChan
 	str	r2, [r3, #200]	@ <variable>.s32SelfAllocChanMem_ctx, <variable>.s32OneChanMem
 	b	.L2503	@
 .L2472:
 	ldr	ip, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
-	mov	r0, #0	@ tmp343,
+	mov	r0, #0	@ tmp342,
 	ldr	lr, [fp, #-68]	@ ChanMemVDH.VirAddr, ChanMemVDH.VirAddr
-	str	r0, [fp, #-260]	@ tmp343, %sfp
-	str	r0, [fp, #-80]	@ tmp343, ChanMemScd.Length
+	str	r0, [fp, #-260]	@ tmp342, %sfp
+	str	r0, [fp, #-80]	@ tmp342, ChanMemScd.Length
 	str	ip, [fp, #-88]	@ ChanMemVDH.PhyAddr, ChanMemScd.PhyAddr
 	str	lr, [fp, #-84]	@ ChanMemVDH.VirAddr, ChanMemScd.VirAddr
 	b	.L2446	@
 .L2522:
-	sub	r8, fp, #120	@ tmp715,,
-	mov	r1, ip	@, D.50851
+	sub	r8, fp, #120	@ tmp712,,
+	mov	r1, ip	@, D.50864
 	movw	r0, #:lower16:.LC335	@,
 	ldr	r2, [fp, #-48]	@, DetailMemSize.ChanCtxDetailMem
 	movt	r0, #:upper16:.LC335	@,
-	mov	r3, r8	@, tmp715
-	mov	r7, #1	@ tmp247,
-	str	r7, [sp, #0]	@ tmp247,
+	mov	r3, r8	@, tmp712
+	mov	r7, #1	@ tmp246,
+	str	r7, [sp, #0]	@ tmp246,
 	bl	MEM_AllocMemBlock	@
-	subs	r6, r0, #0	@ D.50890,
+	subs	r6, r0, #0	@ D.50903,
 	bne	.L2534	@,
 	ldr	r1, [fp, #-116]	@, MemRecord.VirAddr
 	ldr	r2, [fp, #-108]	@, MemRecord.Length
@@ -19041,19 +19042,19 @@ VCTRL_CreateChanWithOption:
 	str	r0, [fp, #-100]	@ MemRecord.VirAddr, ChanMemCtx.VirAddr
 	str	r3, [fp, #-96]	@ MemRecord.Length, ChanMemCtx.Length
 	beq	.L2449	@,
-	mov	r1, r6	@, D.50890
+	mov	r1, r6	@, D.50903
 	movw	r0, #:lower16:.LC337	@,
 	ldr	r2, [fp, #-56]	@, DetailMemSize.VdhDetailMem
 	movt	r0, #:upper16:.LC337	@,
-	mov	r3, r8	@, tmp715
-	str	r6, [sp, #0]	@ D.50890,
+	mov	r3, r8	@, tmp712
+	str	r6, [sp, #0]	@ D.50903,
 	bl	MEM_AllocMemBlock	@
 	cmp	r0, #0	@,
 	bne	.L2535	@,
 	ldr	r0, [fp, #-112]	@, MemRecord.PhyAddr
 	ldr	r1, [fp, #-116]	@, MemRecord.VirAddr
 	ldr	r2, [fp, #-108]	@, MemRecord.Length
-	str	r7, [fp, #-240]	@ tmp247, %sfp
+	str	r7, [fp, #-240]	@ tmp246, %sfp
 	bl	MEM_AddMemRecord	@
 	ldr	r0, [fp, #-112]	@ MemRecord.PhyAddr, MemRecord.PhyAddr
 	ldr	r3, [fp, #-116]	@ MemRecord.VirAddr, MemRecord.VirAddr
@@ -19066,11 +19067,11 @@ VCTRL_CreateChanWithOption:
 	cmp	lr, #2	@ <variable>.Purpose,
 	bne	.L2536	@,
 	ldr	r1, [fp, #-72]	@ ChanMemVDH.PhyAddr, ChanMemVDH.PhyAddr
-	mov	r0, #0	@ tmp279,
+	mov	r0, #0	@ tmp278,
 	ldr	r2, [fp, #-68]	@ ChanMemVDH.VirAddr, ChanMemVDH.VirAddr
 	mov	r3, #1	@,
-	str	r0, [fp, #-260]	@ tmp279, %sfp
-	str	r0, [fp, #-80]	@ tmp279, ChanMemScd.Length
+	str	r0, [fp, #-260]	@ tmp278, %sfp
+	str	r0, [fp, #-80]	@ tmp278, ChanMemScd.Length
 	str	r3, [fp, #-256]	@, %sfp
 	str	r1, [fp, #-88]	@ ChanMemVDH.PhyAddr, ChanMemScd.PhyAddr
 	str	r2, [fp, #-84]	@ ChanMemVDH.VirAddr, ChanMemScd.VirAddr
@@ -19086,22 +19087,22 @@ VCTRL_CreateChanWithOption:
 	mov	r6, r3	@ ChanID.6307,
 	b	.L2483	@
 .L2449:
-	str	r6, [fp, #-240]	@ D.50890, %sfp
-	str	r6, [fp, #-72]	@ D.50890, ChanMemVDH.PhyAddr
-	str	r6, [fp, #-68]	@ D.50890, ChanMemVDH.VirAddr
-	str	r6, [fp, #-64]	@ D.50890, ChanMemVDH.Length
+	str	r6, [fp, #-240]	@ D.50903, %sfp
+	str	r6, [fp, #-72]	@ D.50903, ChanMemVDH.PhyAddr
+	str	r6, [fp, #-68]	@ D.50903, ChanMemVDH.VirAddr
+	str	r6, [fp, #-64]	@ D.50903, ChanMemVDH.Length
 	b	.L2451	@
 .L2467:
 	ldr	r2, [fp, #-64]	@ prephitmp.6134, ChanMemVDH.Length
 	b	.L2468	@
 .L2536:
-	mov	ip, #0	@ tmp271,
-	mov	r3, r8	@, tmp715
-	mov	r1, ip	@, tmp271
+	mov	ip, #0	@ tmp270,
+	mov	r3, r8	@, tmp712
+	mov	r1, ip	@, tmp270
 	movw	r0, #:lower16:.LC339	@,
 	ldr	r2, [fp, #-52]	@, DetailMemSize.ScdDetailMem
 	movt	r0, #:upper16:.LC339	@,
-	str	ip, [sp, #0]	@ tmp271,
+	str	ip, [sp, #0]	@ tmp270,
 	bl	MEM_AllocMemBlock	@
 	cmp	r0, #0	@,
 	bne	.L2537	@,
@@ -19128,56 +19129,56 @@ VCTRL_CreateChanWithOption:
 	ldr	r9, [fp, #-248]	@, %sfp
 	add	sl, r3, #152	@, temp.6302,
 	ldr	r0, [r3, #276]	@ <variable>.s32SelfAllocChanMem_ctx, <variable>.s32SelfAllocChanMem_ctx
-	add	r2, r3, #204	@ tmp691, temp.6302,
+	add	r2, r3, #204	@ tmp689, temp.6302,
 	str	r7, [fp, #-276]	@, %sfp
-	add	r4, r3, #248832	@ tmp689, temp.6302,
-	add	r1, r4, #472	@ tmp689, tmp689,
-	add	ip, r3, #252	@ tmp693, temp.6302,
+	add	r4, r3, #249856	@ tmp687, temp.6302,
+	add	r1, r4, #984	@ tmp687, tmp687,
+	add	ip, r3, #252	@ tmp691, temp.6302,
 	str	r0, [fp, #-144]	@ <variable>.s32SelfAllocChanMem_ctx, ChanMem.s32SelfAllocChanMem_ctx
-	mov	r0, #48	@ tmp700,
+	mov	r0, #48	@ tmp698,
 	ldr	r7, [r3, #268]	@ <variable>.s32SelfAllocChanMem_vdh, <variable>.s32SelfAllocChanMem_vdh
-	add	r4, r3, #220	@ tmp695, temp.6302,
+	add	r4, r3, #220	@ tmp693, temp.6302,
 	str	sl, [fp, #-240]	@, %sfp
-	add	r8, r3, #236	@ tmp697, temp.6302,
-	mla	sl, r0, r6, r9	@ tmp701, tmp700, ChanID.6307,
+	add	r8, r3, #236	@ tmp695, temp.6302,
+	mla	sl, r0, r6, r9	@ tmp699, tmp698, ChanID.6307,
 	str	r7, [fp, #-152]	@ <variable>.s32SelfAllocChanMem_vdh, ChanMem.s32SelfAllocChanMem_vdh
 	sub	r7, fp, #140	@,,
 	str	r7, [fp, #-280]	@, %sfp
 	ldr	r0, [r3, #272]	@ <variable>.s32SelfAllocChanMem_scd, <variable>.s32SelfAllocChanMem_scd
-	sub	lr, fp, #184	@ tmp692,,
-	str	r1, [fp, #-124]	@ tmp689, ChanMem.pstChanFrmBuf
-	sub	r9, fp, #168	@ tmp702,,
+	sub	lr, fp, #184	@ tmp690,,
+	str	r1, [fp, #-124]	@ tmp687, ChanMem.pstChanFrmBuf
+	sub	r9, fp, #168	@ tmp700,,
 	ldr	r7, [fp, #-272]	@, %sfp
 	str	r0, [fp, #-148]	@ <variable>.s32SelfAllocChanMem_scd, ChanMem.s32SelfAllocChanMem_scd
-	ldmia	r2, {r0, r1, r2, r3}	@ tmp691,,,,
+	ldmia	r2, {r0, r1, r2, r3}	@ tmp689,,,,
 	stmia	r7, {r0, r1, r2, r3}	@,,,,
-	mov	r7, #0	@ tmp707,
-	ldmia	ip, {r0, r1, r2, r3}	@ tmp693,,,,
+	mov	r7, #0	@ tmp705,
+	ldmia	ip, {r0, r1, r2, r3}	@ tmp691,,,,
 	ldr	ip, [fp, #-288]	@, %sfp
-	stmia	lr, {r0, r1, r2, r3}	@ tmp692,,,,
-	ldmia	r4, {r0, r1, r2, r3}	@ tmp695,,,,
+	stmia	lr, {r0, r1, r2, r3}	@ tmp690,,,,
+	ldmia	r4, {r0, r1, r2, r3}	@ tmp693,,,,
 	stmia	ip, {r0, r1, r2, r3}	@,,,,
 	ldr	lr, [fp, #-276]	@, %sfp
-	ldmia	r8, {r0, r1, r2, r3}	@ tmp697,,,,
+	ldmia	r8, {r0, r1, r2, r3}	@ tmp695,,,,
 	stmia	lr, {r0, r1, r2, r3}	@,,,,
-	ldmia	sl, {r0, r1, r2, r3}	@ tmp701,,,,
-	stmia	r9, {r0, r1, r2, r3}	@ tmp702,,,,
+	ldmia	sl, {r0, r1, r2, r3}	@ tmp699,,,,
+	stmia	r9, {r0, r1, r2, r3}	@ tmp700,,,,
 	ldr	r3, [fp, #-240]	@, %sfp
 	ldmia	r3, {r0, r1, r2}	@,,,
-	str	r7, [r5, r6, asl #2]	@ tmp707, s_pstVfmwChan
+	str	r7, [r5, r6, asl #2]	@ tmp705, s_pstVfmwChan
 	ldr	r7, [fp, #-280]	@, %sfp
 	stmia	r7, {r0, r1, r2}	@,,,
 	mov	r0, r6	@, ChanID.6307
 	bl	VDMDRV_ClearChanIsDec	@
 	bl	VCTRL_EnableAllInt	@
-	add	r0, r5, #520	@, tmp658,
+	add	r0, r5, #520	@, tmp656,
 	bl	OSAL_SpinUnLockIRQ	@
 	mov	r0, r6	@, ChanID.6307
 	sub	r1, fp, #232	@,,
 	bl	VCTRL_FreeChanResource	@
 	b	.L2429	@
 .L2443:
-	movw	r2, #1900	@,
+	movw	r2, #1899	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC334	@,
 	movt	r1, #:upper16:.LC334	@,
@@ -19206,7 +19207,7 @@ VCTRL_CreateChanWithOption:
 .L2465:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC343	@,
-	movw	r2, #2025	@,
+	movw	r2, #2024	@,
 	movt	r1, #:upper16:.LC343	@,
 	bl	dprint_vfmw	@
 	mvn	r5, #0	@,
@@ -19229,7 +19230,7 @@ VCTRL_CreateChanWithOption:
 .L2475:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC345	@,
-	movw	r2, #2087	@,
+	movw	r2, #2086	@,
 	movt	r1, #:upper16:.LC345	@,
 	bl	dprint_vfmw	@
 	mvn	r0, #0	@,
@@ -19246,7 +19247,7 @@ VCTRL_CreateChanWithOption:
 .L2520:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC331	@,
-	movw	r2, #1877	@,
+	movw	r2, #1876	@,
 	movt	r1, #:upper16:.LC331	@,
 	bl	dprint_vfmw	@
 	mvn	r8, #0	@,
@@ -19260,9 +19261,9 @@ VCTRL_CreateChanWithOption:
 	bl	dprint_vfmw	@
 	b	.L2429	@
 .L2523:
-	mov	r0, r6	@, tmp285
+	mov	r0, r6	@, tmp284
 	movw	r1, #:lower16:.LC341	@,
-	movw	r2, #1990	@,
+	movw	r2, #1989	@,
 	movt	r1, #:upper16:.LC341	@,
 	bl	dprint_vfmw	@
 	mvn	ip, #0	@,
@@ -19276,7 +19277,7 @@ VCTRL_CreateChanWithOption:
 	mov	r3, r2	@, prephitmp.6134
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC344	@,
-	movw	r2, #2057	@,
+	movw	r2, #2056	@,
 	movt	r1, #:upper16:.LC344	@,
 	str	ip, [sp, #0]	@ prephitmp.6135,
 	mvn	r9, #0	@,
@@ -19286,14 +19287,14 @@ VCTRL_CreateChanWithOption:
 .L2439:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC332	@,
-	movw	r2, #1889	@,
+	mov	r2, #1888	@,
 	movt	r1, #:upper16:.LC332	@,
 	bl	dprint_vfmw	@
 	mvn	r9, #0	@,
 	str	r9, [fp, #-244]	@, %sfp
 	b	.L2429	@
 .L2528:
-	movw	r2, #2004	@,
+	movw	r2, #2003	@,
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC342	@,
 	movt	r1, #:upper16:.LC342	@,
@@ -19302,9 +19303,9 @@ VCTRL_CreateChanWithOption:
 	str	r2, [fp, #-244]	@, %sfp
 	b	.L2429	@
 .L2534:
-	mov	r0, r7	@, tmp247
+	mov	r0, r7	@, tmp246
 	movw	r1, #:lower16:.LC336	@,
-	movw	r2, #1916	@,
+	movw	r2, #1915	@,
 	movt	r1, #:upper16:.LC336	@,
 	ldr	r3, [fp, #-48]	@, DetailMemSize.ChanCtxDetailMem
 	mvn	r5, #0	@,
@@ -19342,7 +19343,7 @@ VCTRL_CreateChanWithOption:
 .L2481:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC333	@,
-	movw	r2, #2129	@,
+	mov	r2, #2128	@,
 	movt	r1, #:upper16:.LC333	@,
 	bl	dprint_vfmw	@
 	mvn	r7, #0	@,
@@ -19376,7 +19377,7 @@ VCTRL_CreateChanWithOption:
 	bl	MEM_DelMemRecord	@
 .L2454:
 	movw	r1, #:lower16:.LC340	@,
-	movw	r2, #1967	@,
+	movw	r2, #1966	@,
 	movt	r1, #:upper16:.LC340	@,
 	ldr	r3, [fp, #-52]	@, DetailMemSize.ScdDetailMem
 	mov	r0, #1	@,
@@ -19393,9 +19394,9 @@ VCTRL_CreateChanWithOption:
 	sub	r0, fp, #104
 	ldmia	r0, {r0, r1, r2}	@ phole ldm
 	bl	MEM_DelMemRecord	@
-	mov	r0, r7	@, tmp247
+	mov	r0, r7	@, tmp246
 	movw	r1, #:lower16:.LC338	@,
-	movw	r2, #1934	@,
+	movw	r2, #1933	@,
 	movt	r1, #:upper16:.LC338	@,
 	ldr	r3, [fp, #-56]	@, DetailMemSize.VdhDetailMem
 	bl	dprint_vfmw	@
@@ -19441,8 +19442,8 @@ VCTRL_CreateChan:
 	rsb	r1, r4, r2	@ tmp155, eCapLevel, tmp239
 	movw	r3, #:lower16:CapItem	@ tmp238,
 	movt	r3, #:upper16:CapItem	@ tmp238,
-	sub	r0, r4, #18	@ D.56302, eCapLevel,
-	cmp	r0, #7	@ D.56302,
+	sub	r0, r4, #18	@ D.56323, eCapLevel,
+	cmp	r0, #7	@ D.56323,
 	add	ip, r1, #1	@ tmp163, tmp155,
 	ldr	r1, [r3, r1, asl #2]	@ tmp158, CapItem
 	mov	lr, #1	@ tmp150,
@@ -19456,7 +19457,7 @@ VCTRL_CreateChan:
 	movwls	lr, #:lower16:.LANCHOR1	@ tmp168,
 	movtls	lr, #:upper16:.LANCHOR1	@ tmp168,
 	str	r1, [fp, #-252]	@ tmp158, stChanOption.s32MaxWidth
-	addls	r0, lr, r0, asl #2	@, tmp171, tmp168, D.56302,
+	addls	r0, lr, r0, asl #2	@, tmp171, tmp168, D.56323,
 	mov	r1, #136	@ tmp165,
 	str	r1, [fp, #-244]	@ tmp165, stChanOption.s32MaxSliceNum
 	rsb	r1, r4, r2	@ tmp177, eCapLevel, tmp239
@@ -19464,15 +19465,15 @@ VCTRL_CreateChan:
 	movhi	lr, #6	@ MinDispFspNum,
 	add	r0, r3, r1, asl #2	@, tmp179, tmp238, tmp177,
 	ldr	ip, [r3, ip, asl #2]	@ tmp164, CapItem
-	ldr	r1, [r0, #12]	@ D.50691, CapItem
+	ldr	r1, [r0, #12]	@ D.50704, CapItem
 	rsb	r0, r4, r2	@ tmp191, eCapLevel, tmp239
 	str	ip, [fp, #-248]	@ tmp164, stChanOption.s32MaxHeight
 	addls	ip, lr, #2	@ prephitmp.6338, MinDispFspNum,
 	add	r3, r3, r0, asl #2	@, tmp193, tmp238, tmp191,
 	movhi	ip, #8	@ prephitmp.6338,
-	cmp	r1, ip	@ D.50691, prephitmp.6338
+	cmp	r1, ip	@ D.50704, prephitmp.6338
 	mov	r2, #1	@ tmp184,
-	subgt	r1, r1, #2	@ tmp182, D.50691,
+	subgt	r1, r1, #2	@ tmp182, D.50704,
 	ldr	r3, [r3, #24]	@ tmp195, CapItem
 	movle	r1, #1	@ tmp181,
 	rsbgt	r1, lr, r1	@ tmp183, MinDispFspNum, tmp182
@@ -19505,8 +19506,8 @@ VCTRL_CreateChan:
 	bne	.L2557	@,
 	cmp	r8, #0	@ pChanMem,
 	beq	.L2551	@,
-	ldr	r3, [r8, #8]	@ D.50711, <variable>.Length
-	cmp	r3, #0	@ D.50711,
+	ldr	r3, [r8, #8]	@ D.50724, <variable>.Length
+	cmp	r3, #0	@ D.50724,
 	beq	.L2551	@,
 	ldr	ip, [r8, #0]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	cmp	ip, #0	@ <variable>.PhyAddr,
@@ -19517,18 +19518,18 @@ VCTRL_CreateChan:
 	ldr	lr, [fp, #-56]	@ VdmChanMemSize, VdmChanMemSize
 	ldr	r1, [fp, #-68]	@ ScdChanMemSize, ScdChanMemSize
 	add	r0, r1, lr	@ tmp209, ScdChanMemSize, VdmChanMemSize
-	cmp	r3, r0	@ D.50711, tmp209
+	cmp	r3, r0	@ D.50724, tmp209
 	blt	.L2552	@,
-	ldr	lr, [fp, #-64]	@ D.50724, ScdChanMemSize
+	ldr	lr, [fp, #-64]	@ D.50737, ScdChanMemSize
 	sub	r8, fp, #180	@,,
 	str	ip, [fp, #-100]	@ <variable>.PhyAddr, scd_MemRecord.PhyAddr
 	sub	r9, fp, #164	@ tmp221,,
 	str	r8, [fp, #-272]	@, %sfp
-	rsb	r8, lr, r3	@ tmp220, D.50724, D.50711
-	str	lr, [fp, #-92]	@ D.50724, scd_MemRecord.Length
-	add	ip, ip, lr	@ tmp216, <variable>.PhyAddr, D.50724
+	rsb	r8, lr, r3	@ tmp220, D.50737, D.50724
+	str	lr, [fp, #-92]	@ D.50737, scd_MemRecord.Length
+	add	ip, ip, lr	@ tmp216, <variable>.PhyAddr, D.50737
 	str	sl, [fp, #-96]	@ <variable>.VirAddr, scd_MemRecord.VirAddr
-	add	lr, sl, lr	@ tmp218, <variable>.VirAddr, D.50724
+	add	lr, sl, lr	@ tmp218, <variable>.VirAddr, D.50737
 	ldmia	r7, {r0, r1, r2, r3}	@ tmp237,,,,
 	str	ip, [fp, #-84]	@ tmp216, vdh_MemRecord.PhyAddr
 	str	lr, [fp, #-80]	@ tmp218, vdh_MemRecord.VirAddr
@@ -19549,7 +19550,7 @@ VCTRL_CreateChan:
 	mov	r3, ip	@, OneChanMemFlag
 	mov	r2, #1	@,
 	bl	VCTRL_CreateChanWithOption	@
-	orr	r0, r0, r0, asr #31	@ D.50672,
+	orr	r0, r0, r0, asr #31	@ D.50685,
 .L2542:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
@@ -19565,7 +19566,7 @@ VCTRL_CreateChan:
 	mov	r0, #1	@,
 	movt	r1, #:upper16:.LC349	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50672,
+	mvn	r0, #0	@ D.50685,
 	b	.L2542	@
 .L2552:
 	mov	r0, #1	@,
@@ -19587,14 +19588,14 @@ VCTRL_CreateChan:
 	movt	r1, #:upper16:.LC353	@,
 	add	r2, r2, r3	@, ScdChanMemSize, VdmChanMemSize
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50672,
+	mvn	r0, #0	@ D.50685,
 	b	.L2542	@
 .L2557:
 	mov	r0, #1	@,
 	movw	r1, #:lower16:.LC350	@,
 	movt	r1, #:upper16:.LC350	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.50672,
+	mvn	r0, #0	@ D.50685,
 	b	.L2542	@
 	.fnend
 	.size	VCTRL_CreateChan, .-VCTRL_CreateChan
@@ -19643,11 +19644,11 @@ VCTRL_RunProcess:
 	bl	SCDDRV_EnableInt	@
 	movw	r1, #:lower16:g_vdm_hal_fun_ptr	@ tmp196,
 	movt	r1, #:upper16:g_vdm_hal_fun_ptr	@ tmp196,
-	ldr	r3, [r1, #76]	@ D.50003, g_vdm_hal_fun_ptr.pfun_VDMHAL_EnableInt
-	cmp	r3, #0	@ D.50003,
+	ldr	r3, [r1, #76]	@ D.50017, g_vdm_hal_fun_ptr.pfun_VDMHAL_EnableInt
+	cmp	r3, #0	@ D.50017,
 	beq	.L2614	@,
 	mov	r0, #0	@,
-	blx	r3	@ D.50003
+	blx	r3	@ D.50017
 .L2565:
 	mov	r0, #0	@,
 	mov	r1, r0	@,
@@ -19792,7 +19793,7 @@ VCTRL_RunProcess:
 	mov	r5, r0	@ ret,
 	b	.L2561	@
 .L2614:
-	mov	r0, r3	@, D.50003
+	mov	r0, r3	@, D.50017
 	movw	r1, #:lower16:.LC0	@,
 	movw	r2, #591	@,
 	movt	r1, #:upper16:.LC0	@,
@@ -20163,7 +20164,7 @@ VFMW_CTRL_thread_proc:
 	bne	.L2645	@,
 	b	.L2636	@
 .L2638:
-	cmp	r3, #3	@ D.49961,
+	cmp	r3, #3	@ D.49975,
 	beq	.L2636	@,
 	ldr	r0, [r6, #140]	@ s_VfmwCTrl.eTaskState, s_VfmwCTrl.eTaskState
 	cmp	r0, #0	@ s_VfmwCTrl.eTaskState,
@@ -20175,8 +20176,8 @@ VFMW_CTRL_thread_proc:
 	movw	r1, #:lower16:.LC355	@,
 	movt	r1, #:upper16:.LC355	@,
 	bl	dprint_vfmw	@
-	ldr	r3, [r4, #144]	@ D.49961, s_VfmwCTrl.eTaskCommand
-	cmp	r3, #2	@ D.49961,
+	ldr	r3, [r4, #144]	@ D.49975, s_VfmwCTrl.eTaskCommand
+	cmp	r3, #2	@ D.49975,
 	bne	.L2638	@,
 .L2635:
 	mov	r0, #2	@,
@@ -20237,8 +20238,8 @@ VCTRL_ResetChanWithOption:
 	movt	r5, #:upper16:.LANCHOR0	@ tmp203,
 	mov	r4, r0	@ ChanID, ChanID
 	mov	r7, r1	@ pOption, pOption
-	ldr	r3, [r5, r0, asl #2]	@ D.51801, s_pstVfmwChan
-	cmp	r3, #0	@ D.51801,
+	ldr	r3, [r5, r0, asl #2]	@ D.51814, s_pstVfmwChan
+	cmp	r3, #0	@ D.51814,
 	beq	.L2658	@,
 	ldr	r2, [r1, #0]	@ <variable>.s32KeepBS, <variable>.s32KeepBS
 	cmp	r2, #1	@ <variable>.s32KeepBS,
@@ -20265,9 +20266,9 @@ VCTRL_ResetChanWithOption:
 	str	ip, [r2, #1256]	@ <variable>.s32KeepSPSPPS, <variable>.stSynExtraData.s32KeepSPSPPS
 	bl	InitSyntaxCtx	@
 	ldr	r3, [r5, r4, asl #2]	@ temp.6489, s_pstVfmwChan
-	add	r1, r3, #250880	@, temp.6489,
+	add	r1, r3, #252928	@, temp.6489,
 	ldr	r0, [r3, #552]	@, <variable>.eVidStd
-	add	r1, r1, #720	@,,
+	add	r1, r1, #208	@,,
 	bl	ReleaseCurPic	@
 	ldr	r2, [r5, r4, asl #2]	@ tmp169, s_pstVfmwChan
 	mov	r1, #416	@,
@@ -20331,7 +20332,7 @@ VCTRL_ResetChanWithOption:
 .L2656:
 	mov	r0, r4	@, ChanID
 	bl	VDMDRV_ClearChanIsDec	@
-	mov	r0, #0	@ D.51805,
+	mov	r0, #0	@ D.51818,
 .L2648:
 	sub	sp, fp, #32
 	ldmfd	sp, {r4, r5, r6, r7, r8, fp, sp, pc}
@@ -20350,20 +20351,20 @@ VCTRL_ResetChanWithOption:
 .L2659:
 	mov	r0, #0	@,
 	movw	r1, #:lower16:.LC359	@,
-	movw	r2, #3931	@,
+	movw	r2, #3930	@,
 	movt	r1, #:upper16:.LC359	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51805,
+	mvn	r0, #0	@ D.51818,
 	b	.L2648	@
 .L2658:
-	mov	r0, r3	@, D.51801
+	mov	r0, r3	@, D.51814
 	movw	r1, #:lower16:.LC5	@,
-	movw	r2, #3927	@,
+	movw	r2, #3926	@,
 	movt	r1, #:upper16:.LC5	@,
 	movw	r3, #:lower16:.LC10	@,
 	movt	r3, #:upper16:.LC10	@,
 	bl	dprint_vfmw	@
-	mvn	r0, #0	@ D.51805,
+	mvn	r0, #0	@ D.51818,
 	b	.L2648	@
 	.fnend
 	.size	VCTRL_ResetChanWithOption, .-VCTRL_ResetChanWithOption
@@ -20774,27 +20775,27 @@ vfmw_read_proc_scd:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
 .L2704:
-	add	r6, r5, #208	@ D.54774, pInst,
+	add	r6, r5, #208	@ D.54795, pInst,
 	sub	r1, fp, #36	@,,
-	mov	r0, r6	@, D.54774
+	mov	r0, r6	@, D.54795
 	bl	GetRawStreamSize	@
 	cmp	r0, #0	@,
 	bne	.L2705	@,
-	mov	r0, r6	@, D.54774
+	mov	r0, r6	@, D.54795
 	sub	r1, fp, #32	@,,
 	bl	GetRawStreamNum	@
 	cmp	r0, #0	@,
 	bne	.L2706	@,
 .L2700:
-	add	r6, r5, #98304	@ D.54782, pInst,
+	add	r6, r5, #98304	@ D.54803, pInst,
 	sub	r1, fp, #44	@,,
-	add	r6, r6, #232	@ D.54782, D.54782,
-	mov	r0, r6	@, D.54782
+	add	r6, r6, #232	@ D.54803, D.54803,
+	mov	r0, r6	@, D.54803
 	bl	GetSegStreamSize	@
 	cmp	r0, #0	@,
 	bne	.L2707	@,
 .L2701:
-	mov	r0, r6	@, D.54782
+	mov	r0, r6	@, D.54803
 	sub	r1, fp, #40	@,,
 	bl	GetSegStreamNum	@
 	cmp	r0, #0	@,
@@ -20938,22 +20939,22 @@ vfmw_read_proc_scd:
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC163	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@, D.54774
+	mov	r0, r6	@, D.54795
 	sub	r1, fp, #32	@,,
 	bl	GetRawStreamNum	@
 	cmp	r0, #0	@,
 	beq	.L2700	@,
 .L2706:
-	add	r6, r5, #98304	@ D.54782, pInst,
+	add	r6, r5, #98304	@ D.54803, pInst,
 	ldr	r2, .L2709	@,
-	add	r6, r6, #232	@ D.54782, D.54782,
+	add	r6, r6, #232	@ D.54803, D.54803,
 	movw	r3, #9132	@,
 	movw	r1, #:lower16:.LC163	@,
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC163	@,
 	bl	dprint_vfmw	@
 	sub	r1, fp, #44	@,,
-	mov	r0, r6	@, D.54782
+	mov	r0, r6	@, D.54803
 	bl	GetSegStreamSize	@
 	cmp	r0, #0	@,
 	beq	.L2701	@,
@@ -20964,7 +20965,7 @@ vfmw_read_proc_scd:
 	mov	r0, #22	@,
 	movt	r1, #:upper16:.LC163	@,
 	bl	dprint_vfmw	@
-	mov	r0, r6	@, D.54782
+	mov	r0, r6	@, D.54803
 	sub	r1, fp, #40	@,,
 	bl	GetSegStreamNum	@
 	cmp	r0, #0	@,
@@ -21003,52 +21004,52 @@ vfmw_read_proc_dec:
 	sub	sp, sp, #116	@,,
 	push	{lr}
 	bl	__gnu_mcount_nc
-	movw	r9, #:lower16:.LANCHOR0	@ tmp493,
-	movt	r9, #:upper16:.LANCHOR0	@ tmp493,
+	movw	r9, #:lower16:.LANCHOR0	@ tmp491,
+	movt	r9, #:upper16:.LANCHOR0	@ tmp491,
 	movw	r1, #:lower16:.LC413	@,
 	movt	r1, #:upper16:.LC413	@,
-	mov	r4, #0	@ tmp165,
+	mov	r4, #0	@ tmp163,
 	ldr	r2, [r9, #1364]	@, g_CurProcChan
-	movw	r6, #16718	@ tmp164,
-	str	r4, [fp, #-64]	@ tmp165, szAttach
+	movw	r6, #16718	@ tmp162,
+	str	r4, [fp, #-64]	@ tmp163, szAttach
 	mov	r5, r0	@ p, p
-	str	r6, [fp, #-68]	@ tmp164, szAttach
-	str	r4, [fp, #-60]	@ tmp165, szAttach
+	str	r6, [fp, #-68]	@ tmp162, szAttach
+	str	r4, [fp, #-60]	@ tmp163, szAttach
 	bl	seq_printf	@
 	ldr	r6, [r9, #1364]	@ i, g_CurProcChan
-	movw	r3, #:lower16:s_pFspInst	@ tmp172,
-	movt	r3, #:upper16:s_pFspInst	@ tmp172,
-	str	r4, [fp, #-48]	@ tmp165, RefNum
+	movw	r3, #:lower16:s_pFspInst	@ tmp170,
+	movt	r3, #:upper16:s_pFspInst	@ tmp170,
+	str	r4, [fp, #-48]	@ tmp163, RefNum
 	ldr	r8, [r3, r6, asl #2]	@ pFsp, s_pFspInst
 	cmp	r8, r4	@ pFsp,
 	beq	.L2712	@,
 	ldr	sl, [r9, r6, asl #2]	@ pChan, s_pstVfmwChan
 	cmp	sl, r4	@ pChan,
 	beq	.L2712	@,
-	movw	r7, #:lower16:g_ChanCtx	@ tmp176,
-	add	r2, r6, #32	@ tmp177, i,
-	movt	r7, #:upper16:g_ChanCtx	@ tmp176,
-	str	r4, [fp, #-56]	@ tmp165, NewNum
-	str	r4, [fp, #-52]	@ tmp165, ReadNum
-	ldr	r1, [r7, r2, asl #2]	@ tmp178, g_ChanCtx.ChanDecByVdhPlusOne
-	subs	r0, r1, #1	@, tmp178,
+	movw	r7, #:lower16:g_ChanCtx	@ tmp174,
+	add	r2, r6, #32	@ tmp175, i,
+	movt	r7, #:upper16:g_ChanCtx	@ tmp174,
+	str	r4, [fp, #-56]	@ tmp163, NewNum
+	str	r4, [fp, #-52]	@ tmp163, ReadNum
+	ldr	r1, [r7, r2, asl #2]	@ tmp176, g_ChanCtx.ChanDecByVdhPlusOne
+	subs	r0, r1, #1	@, tmp176,
 	str	r0, [fp, #-116]	@, %sfp
 	bmi	.L2741	@,
 	ldr	r1, [fp, #-116]	@, %sfp
-	movw	r4, #:lower16:g_VdmExtParam	@ tmp186,
-	movt	r4, #:upper16:g_VdmExtParam	@ tmp186,
-	mov	r2, #140	@ tmp189,
-	mla	r7, r2, r1, r4	@ tmp190, tmp189,, tmp186
+	movw	r4, #:lower16:g_VdmExtParam	@ tmp184,
+	movt	r4, #:upper16:g_VdmExtParam	@ tmp184,
+	mov	r2, #140	@ tmp187,
+	mla	r7, r2, r1, r4	@ tmp188, tmp187,, tmp184
 	ldr	r0, [r7, #4]	@ <variable>.VdmAttachStr.VdmAttachMode, <variable>.VdmAttachStr.VdmAttachMode
 	cmp	r0, #0	@ <variable>.VdmAttachStr.VdmAttachMode,
 	beq	.L2742	@,
-	movw	r2, #:lower16:.LC416	@ tmp200,
-	movt	r2, #:upper16:.LC416	@ tmp200,
+	movw	r2, #:lower16:.LC416	@ tmp198,
+	movt	r2, #:upper16:.LC416	@ tmp198,
 	sub	r1, fp, #68	@,,
 	str	r1, [fp, #-112]	@, %sfp
-	ldmia	r2, {r0, r1}	@ tmp200,,
-	mov	r4, r1, lsr #16	@ tmp203,,
-	strb	r4, [fp, #-62]	@ tmp203, szAttach
+	ldmia	r2, {r0, r1}	@ tmp198,,
+	mov	r4, r1, lsr #16	@ tmp201,,
+	strb	r4, [fp, #-62]	@ tmp201, szAttach
 	str	r0, [fp, #-68]	@, szAttach
 	strh	r1, [fp, #-64]	@ movhi	@, szAttach
 .L2714:
@@ -21059,15 +21060,15 @@ vfmw_read_proc_dec:
 	bl	VCTRL_GetChanImgNum	@
 	mov	r0, r6	@, i
 	bl	VCTRL_GetChanVoQue	@
-	sub	r7, fp, #88	@ tmp209,,
-	sub	r4, fp, #108	@ tmp211,,
+	sub	r7, fp, #88	@ tmp207,,
+	sub	r4, fp, #108	@ tmp209,,
 	cmp	r0, #0	@ pstDecQue
 	streq	r0, [fp, #-120]	@ pstDecQue, %sfp
 	streq	r0, [fp, #-124]	@ pstDecQue, %sfp
 	ldrneh	r1, [r0, #8]	@, <variable>.tail
 	streq	r0, [fp, #-128]	@ pstDecQue, %sfp
 	strne	r1, [fp, #-120]	@, %sfp
-	mov	r1, r7	@, tmp209
+	mov	r1, r7	@, tmp207
 	ldrneh	r2, [r0, #4]	@, <variable>.history
 	strne	r2, [fp, #-128]	@, %sfp
 	ldrneh	r0, [r0, #6]	@, <variable>.head
@@ -21075,7 +21076,7 @@ vfmw_read_proc_dec:
 	ldr	r0, [sl, #552]	@, <variable>.eVidStd
 	bl	VID_STD_Enum2Str	@
 	ldr	r0, [sl, #344]	@, <variable>.eLastFrameState
-	mov	r1, r4	@, tmp211
+	mov	r1, r4	@, tmp209
 	bl	VID_EofState_Enum2Str	@
 	ldr	ip, [fp, #-112]	@, %sfp
 	ldr	r3, [fp, #-116]	@, %sfp
@@ -21107,7 +21108,7 @@ vfmw_read_proc_dec:
 	movt	r1, #:upper16:.LC66	@,
 	movt	r2, #:upper16:.LC421	@,
 	bl	seq_printf	@
-	mov	r3, r7	@, tmp209
+	mov	r3, r7	@, tmp207
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC397	@,
 	movw	r2, #:lower16:.LC422	@,
@@ -21121,7 +21122,7 @@ vfmw_read_proc_dec:
 	movt	r1, #:upper16:.LC66	@,
 	movt	r2, #:upper16:.LC423	@,
 	bl	seq_printf	@
-	mov	r3, r4	@, tmp211
+	mov	r3, r4	@, tmp209
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC397	@,
 	movw	r2, #:lower16:.LC424	@,
@@ -21166,8 +21167,8 @@ vfmw_read_proc_dec:
 	ldr	r3, [sl, #552]	@ temp.6619, <variable>.eVidStd
 	cmp	r3, #1	@ temp.6619,
 	beq	.L2743	@,
-	sub	r0, r3, #10	@ tmp258, temp.6619,
-	cmp	r0, #2	@ tmp258,
+	sub	r0, r3, #10	@ tmp256, temp.6619,
+	cmp	r0, #2	@ tmp256,
 	bls	.L2744	@,
 	cmp	r3, #2	@ temp.6619,
 	beq	.L2745	@,
@@ -21329,8 +21330,8 @@ vfmw_read_proc_dec:
 	movt	r1, #:upper16:.LC66	@,
 	movt	r2, #:upper16:.LC458	@,
 	bl	seq_printf	@
-	ldrb	r3, [r8, #56]	@ zero_extendqisi2	@ D.54952, <variable>.stInstCfg.s32DispLoopEnable
-	cmp	r3, #0	@ D.54952,
+	ldrb	r3, [r8, #56]	@ zero_extendqisi2	@ D.54973, <variable>.stInstCfg.s32DispLoopEnable
+	cmp	r3, #0	@ D.54973,
 	bne	.L2747	@,
 .L2722:
 	ldrsb	r3, [r8, #10]	@, <variable>.s32DecFsNum
@@ -21342,7 +21343,7 @@ vfmw_read_proc_dec:
 	bl	seq_printf	@
 	ldrsb	r3, [r8, #10]	@ <variable>.s32DecFsNum, <variable>.s32DecFsNum
 	cmp	r3, #0	@ <variable>.s32DecFsNum,
-	addgt	r4, r8, #34816	@ ivtmp.6609, pFsp,
+	addgt	r4, r8, #36352	@ ivtmp.6609, pFsp,
 	movgt	r6, #0	@ j.6625,
 	addgt	r4, r4, #156	@ ivtmp.6609, ivtmp.6609,
 	ble	.L2727	@,
@@ -21377,60 +21378,60 @@ vfmw_read_proc_dec:
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC71	@,
 	movt	r1, #:upper16:.LC71	@,
-	movw	r6, #:lower16:-858993459	@ tmp433,
+	movw	r6, #:lower16:-858993459	@ tmp431,
 	bl	seq_printf	@
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC475	@,
 	movt	r1, #:upper16:.LC475	@,
 	bl	seq_printf	@
 	ldr	r1, [r9, #1468]	@ <variable>.u32FrFrameRate, <variable>.u32FrFrameRate
-	movt	r6, #:upper16:-858993459	@ tmp433,
-	movw	r2, #:lower16:.LANCHOR0	@ tmp429,
-	movt	r2, #:upper16:.LANCHOR0	@ tmp429,
-	umull	r0, r3, r6, r1	@, tmp432, tmp433, <variable>.u32FrFrameRate
-	ldr	r6, [r9, #1388]	@ D.55000, <variable>.u32VaVdmLoad
-	movs	r7, r3, lsr #3	@ VdhFps, tmp432,
+	movt	r6, #:upper16:-858993459	@ tmp431,
+	movw	r2, #:lower16:.LANCHOR0	@ tmp427,
+	movt	r2, #:upper16:.LANCHOR0	@ tmp427,
+	umull	r0, r3, r6, r1	@, tmp430, tmp431, <variable>.u32FrFrameRate
+	ldr	r6, [r9, #1388]	@ D.55021, <variable>.u32VaVdmLoad
+	movs	r7, r3, lsr #3	@ VdhFps, tmp430,
 	beq	.L2736	@,
 	ldr	r4, [r8, #68]	@ temp.6628, <variable>.stInstCfg.s32DecFsWidth
-	add	sl, r4, #15	@ tmp434, temp.6628,
-	cmp	sl, #30	@ tmp434,
+	add	sl, r4, #15	@ tmp432, temp.6628,
+	cmp	sl, #30	@ tmp432,
 	bls	.L2736	@,
 	ldr	r8, [r8, #72]	@ temp.6629, <variable>.stInstCfg.s32DecFsHeight
-	add	r3, r8, #15	@ tmp435, temp.6629,
-	cmp	r3, #30	@ tmp435,
+	add	r3, r8, #15	@ tmp433, temp.6629,
+	cmp	r3, #30	@ tmp433,
 	bhi	.L2749	@,
 .L2736:
 	mov	r8, #0	@ VdhCycle,
 .L2737:
-	movw	r4, #:lower16:-858993459	@ tmp463,
-	movt	r4, #:upper16:-858993459	@ tmp463,
+	movw	r4, #:lower16:-858993459	@ tmp461,
+	movt	r4, #:upper16:-858993459	@ tmp461,
 	mov	r3, #0	@,
 	mov	r0, r5	@, p
-	umull	r1, lr, r4, r6	@, tmp462, tmp463, D.55000
+	umull	r1, lr, r4, r6	@, tmp460, tmp461, D.55021
 	movw	r2, #:lower16:.LC477	@,
 	movw	r1, #:lower16:.LC476	@,
 	movt	r2, #:upper16:.LC477	@,
 	movt	r1, #:upper16:.LC476	@,
-	mov	ip, lr, lsr #3	@ tmp461, tmp462,
-	str	ip, [sp, #0]	@ tmp461,
-	add	lr, ip, ip, asl #2	@, tmp469, tmp461, tmp461,
-	sub	ip, r6, lr, asl #1	@ tmp471, D.55000, tmp469,
-	str	ip, [sp, #4]	@ tmp471,
+	mov	ip, lr, lsr #3	@ tmp459, tmp460,
+	str	ip, [sp, #0]	@ tmp459,
+	add	lr, ip, ip, asl #2	@, tmp467, tmp459, tmp459,
+	sub	ip, r6, lr, asl #1	@ tmp469, D.55021, tmp467,
+	str	ip, [sp, #4]	@ tmp469,
 	bl	seq_printf	@
 	ldr	ip, [r9, #1468]	@ <variable>.u32FrFrameRate, <variable>.u32FrFrameRate
 	mov	r3, r7	@, VdhFps
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC478	@,
 	movt	r1, #:upper16:.LC478	@,
-	umull	r2, lr, r4, ip	@, tmp477, tmp463, <variable>.u32FrFrameRate
+	umull	r2, lr, r4, ip	@, tmp475, tmp461, <variable>.u32FrFrameRate
 	movw	r2, #:lower16:.LC479	@,
 	movt	r2, #:upper16:.LC479	@,
-	mov	r4, #0	@ tmp484,
-	str	r4, [sp, #4]	@ tmp484,
-	mov	lr, lr, lsr #3	@ tmp475, tmp477,
-	add	lr, lr, lr, asl #2	@, tmp481, tmp475, tmp475,
-	sub	ip, ip, lr, asl #1	@ tmp483, <variable>.u32FrFrameRate, tmp481,
-	str	ip, [sp, #0]	@ tmp483,
+	mov	r4, #0	@ tmp482,
+	str	r4, [sp, #4]	@ tmp482,
+	mov	lr, lr, lsr #3	@ tmp473, tmp475,
+	add	lr, lr, lr, asl #2	@, tmp479, tmp473, tmp473,
+	sub	ip, ip, lr, asl #1	@ tmp481, <variable>.u32FrFrameRate, tmp479,
+	str	ip, [sp, #0]	@ tmp481,
 	bl	seq_printf	@
 	mov	r0, r5	@, p
 	mov	r3, r8	@, VdhCycle
@@ -21448,14 +21449,14 @@ vfmw_read_proc_dec:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 .L2742:
-	movw	r7, #:lower16:.LC415	@ tmp194,
-	movt	r7, #:upper16:.LC415	@ tmp194,
+	movw	r7, #:lower16:.LC415	@ tmp192,
+	movt	r7, #:upper16:.LC415	@ tmp192,
 	sub	r0, fp, #68	@,,
 	str	r0, [fp, #-112]	@, %sfp
-	ldmia	r7, {r0, r1, r2}	@ tmp194,,,
+	ldmia	r7, {r0, r1, r2}	@ tmp192,,,
 	ldr	lr, [fp, #-112]	@, %sfp
-	mov	r3, r2, lsr #16	@ tmp197,,
-	strb	r3, [fp, #-58]	@ tmp197, szAttach
+	mov	r3, r2, lsr #16	@ tmp195,,
+	strb	r3, [fp, #-58]	@ tmp195, szAttach
 	stmia	lr!, {r0, r1}	@,,
 	strh	r2, [lr, #0]	@ movhi	@, szAttach
 	b	.L2714	@
@@ -21490,7 +21491,7 @@ vfmw_read_proc_dec:
 .L2734:
 	add	r6, r6, #1	@ ivtmp.6601, ivtmp.6601,
 	add	r7, r7, #1	@ ivtmp.6602, ivtmp.6602,
-	add	r4, r4, #544	@ ivtmp.6605, ivtmp.6605,
+	add	r4, r4, #568	@ ivtmp.6605, ivtmp.6605,
 .L2731:
 	cmp	r6, #0	@ ivtmp.6601,
 	movw	r1, #:lower16:.LC463	@,
@@ -21507,7 +21508,7 @@ vfmw_read_proc_dec:
 	bl	seq_printf	@
 	b	.L2733	@
 .L2747:
-	sxtb	r3, r3	@, D.54952
+	sxtb	r3, r3	@, D.54973
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC459	@,
 	movw	r2, #:lower16:.LC460	@,
@@ -21530,7 +21531,7 @@ vfmw_read_proc_dec:
 	bl	seq_printf	@
 	ldrsb	r1, [r8, #11]	@ <variable>.s32DispFsNum, <variable>.s32DispFsNum
 	cmp	r1, #0	@ <variable>.s32DispFsNum,
-	addgt	r4, r8, #38656	@ ivtmp.6615, pFsp,
+	addgt	r4, r8, #40192	@ ivtmp.6615, pFsp,
 	movgt	r6, #0	@ j,
 	addgt	r4, r4, #156	@ ivtmp.6615, ivtmp.6615,
 	ble	.L2723	@,
@@ -21570,30 +21571,30 @@ vfmw_read_proc_dec:
 	b	.L2719	@
 .L2749:
 	ldr	ip, [r2, #1432]	@ <variable>.u32VaVdmKiloCycle, <variable>.u32VaVdmKiloCycle
-	mov	lr, #1000	@ tmp439,
+	mov	lr, #1000	@ tmp437,
 	mov	r1, r7	@, VdhFps
 	str	r3, [fp, #-132]	@,
-	mul	r0, lr, ip	@, tmp439, <variable>.u32VaVdmKiloCycle
+	mul	r0, lr, ip	@, tmp437, <variable>.u32VaVdmKiloCycle
 	bl	__aeabi_uidiv	@
 	cmp	r4, #0	@ temp.6628,
-	movlt	r4, sl	@ temp.6628, tmp434
+	movlt	r4, sl	@ temp.6628, tmp432
 	mov	r1, r4, asr #4	@, temp.6628,
 	bl	__aeabi_uidiv	@
 	ldr	r2, [fp, #-132]	@,
 	cmp	r8, #0	@ temp.6629,
-	movlt	r8, r2	@ temp.6629, tmp435
+	movlt	r8, r2	@ temp.6629, tmp433
 	mov	r1, r8, asr #4	@, temp.6629,
 	bl	__aeabi_uidiv	@
 	mov	r8, r0	@ VdhCycle,
 	b	.L2737	@
 .L2748:
-	movw	r4, #:lower16:249272	@ tmp399,
-	movt	r4, #:upper16:249272	@ tmp399,
+	movw	r4, #:lower16:250808	@ tmp397,
+	movt	r4, #:upper16:250808	@ tmp397,
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC466	@,
-	movw	r7, #:lower16:.LANCHOR4	@ tmp403,
+	movw	r7, #:lower16:.LANCHOR4	@ tmp401,
 	movt	r1, #:upper16:.LC466	@,
-	movt	r7, #:upper16:.LANCHOR4	@ tmp403,
+	movt	r7, #:upper16:.LANCHOR4	@ tmp401,
 	bl	seq_printf	@
 	ldr	r3, [sl, r4]	@, <variable>.s32CurFsSize
 	mov	r0, r5	@, p
@@ -21608,22 +21609,22 @@ vfmw_read_proc_dec:
 	movw	r2, #:lower16:.LC469	@,
 	movt	r1, #:upper16:.LC467	@,
 	movt	r2, #:upper16:.LC469	@,
-	movw	r7, #:lower16:249280	@ tmp423,
+	movw	r7, #:lower16:250816	@ tmp421,
 	bl	seq_printf	@
-	movw	ip, #:lower16:249276	@ tmp407,
-	movt	ip, #:upper16:249276	@ tmp407,
+	movw	ip, #:lower16:250812	@ tmp405,
+	movt	ip, #:upper16:250812	@ tmp405,
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC467	@,
 	movw	r2, #:lower16:.LC470	@,
 	ldr	r3, [sl, ip]	@, <variable>.s32RefNum
 	movt	r1, #:upper16:.LC467	@,
 	movt	r2, #:upper16:.LC470	@,
-	movt	r7, #:upper16:249280	@ tmp423,
+	movt	r7, #:upper16:250816	@ tmp421,
 	bl	seq_printf	@
-	movw	r2, #:lower16:251544	@ tmp413,
-	movt	r2, #:upper16:251544	@ tmp413,
-	movw	r3, #:lower16:249284	@ tmp411,
-	movt	r3, #:upper16:249284	@ tmp411,
+	movw	r2, #:lower16:253080	@ tmp411,
+	movt	r2, #:upper16:253080	@ tmp411,
+	movw	r3, #:lower16:250820	@ tmp409,
+	movt	r3, #:upper16:250820	@ tmp409,
 	mov	r0, r5	@, p
 	ldr	r6, [sl, r2]	@ <variable>.stDynamicFSTimestamp.u32PreAllocTime, <variable>.stDynamicFSTimestamp.u32PreAllocTime
 	movw	r1, #:lower16:.LC471	@,
@@ -21633,10 +21634,10 @@ vfmw_read_proc_dec:
 	movt	r2, #:upper16:.LC472	@,
 	str	r6, [sp, #0]	@ <variable>.stDynamicFSTimestamp.u32PreAllocTime,
 	bl	seq_printf	@
-	movw	r1, #:lower16:251548	@ tmp419,
-	movt	r1, #:upper16:251548	@ tmp419,
-	movw	r0, #:lower16:249288	@ tmp417,
-	movt	r0, #:upper16:249288	@ tmp417,
+	movw	r1, #:lower16:253084	@ tmp417,
+	movt	r1, #:upper16:253084	@ tmp417,
+	movw	r0, #:lower16:250824	@ tmp415,
+	movt	r0, #:upper16:250824	@ tmp415,
 	ldr	r4, [sl, r1]	@ <variable>.stDynamicFSTimestamp.u32MMZAllocTime, <variable>.stDynamicFSTimestamp.u32MMZAllocTime
 	movw	r2, #:lower16:.LC473	@,
 	ldr	r3, [sl, r0]	@ <variable>.s32MMZFrmNum, <variable>.s32MMZFrmNum
@@ -21646,8 +21647,8 @@ vfmw_read_proc_dec:
 	movt	r1, #:upper16:.LC471	@,
 	str	r4, [sp, #0]	@ <variable>.stDynamicFSTimestamp.u32MMZAllocTime,
 	bl	seq_printf	@
-	movw	ip, #:lower16:251552	@ tmp425,
-	movt	ip, #:upper16:251552	@ tmp425,
+	movw	ip, #:lower16:253088	@ tmp423,
+	movt	ip, #:upper16:253088	@ tmp423,
 	ldr	r3, [sl, r7]	@ <variable>.s32NeededFrameNum, <variable>.s32NeededFrameNum
 	movw	r1, #:lower16:.LC471	@,
 	movw	r2, #:lower16:.LC474	@,
@@ -21659,8 +21660,8 @@ vfmw_read_proc_dec:
 	bl	seq_printf	@
 	b	.L2735	@
 .L2743:
-	movw	lr, #:lower16:USE_FF_APT_EN	@ tmp250,
-	movt	lr, #:upper16:USE_FF_APT_EN	@ tmp250,
+	movw	lr, #:lower16:USE_FF_APT_EN	@ tmp248,
+	movt	lr, #:upper16:USE_FF_APT_EN	@ tmp248,
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC66	@,
 	ldr	r3, [lr, #0]	@, USE_FF_APT_EN
@@ -21684,19 +21685,19 @@ vfmw_read_proc_dec:
 	bl	seq_printf	@
 	b	.L2719	@
 .L2741:
-	movw	lr, #:lower16:.LC414	@ tmp180,
-	movt	lr, #:upper16:.LC414	@ tmp180,
+	movw	lr, #:lower16:.LC414	@ tmp178,
+	movt	lr, #:upper16:.LC414	@ tmp178,
 	sub	r3, fp, #68	@,,
 	str	r3, [fp, #-112]	@, %sfp
-	ldr	r4, [lr, #0]	@ tmp183,
-	mov	ip, r4, lsr #16	@ tmp184, tmp183,
-	strh	r4, [fp, #-68]	@ movhi	@ tmp183, szAttach
-	strb	ip, [fp, #-66]	@ tmp184, szAttach
+	ldr	r4, [lr, #0]	@ tmp181,
+	mov	ip, r4, lsr #16	@ tmp182, tmp181,
+	strh	r4, [fp, #-68]	@ movhi	@ tmp181, szAttach
+	strb	ip, [fp, #-66]	@ tmp182, szAttach
 	b	.L2714	@
 .L2745:
-	mov	r4, #300	@ tmp267,
+	mov	r4, #300	@ tmp265,
 	mov	r0, r5	@, p
-	mla	r4, r4, r6, r9	@ tmp268, tmp267, i, tmp493
+	mla	r4, r4, r6, r9	@ tmp266, tmp265, i, tmp491
 	movw	r1, #:lower16:.LC66	@,
 	movw	r2, #:lower16:.LC433	@,
 	movt	r1, #:upper16:.LC66	@,
@@ -21710,20 +21711,20 @@ vfmw_read_proc_dec:
 	movt	r1, #:upper16:.LC66	@,
 	movt	r2, #:upper16:.LC434	@,
 	bl	seq_printf	@
-	movw	r2, #:lower16:267464	@ tmp282,
-	movt	r2, #:upper16:267464	@ tmp282,
+	movw	r2, #:lower16:269000	@ tmp280,
+	movt	r2, #:upper16:269000	@ tmp280,
 	mov	r0, r5	@, p
 	movw	r1, #:lower16:.LC66	@,
 	movt	r1, #:upper16:.LC66	@,
-	ldrb	r3, [sl, r2]	@ zero_extendqisi2	@ tmp284,
+	ldrb	r3, [sl, r2]	@ zero_extendqisi2	@ tmp282,
 	movw	r2, #:lower16:.LC435	@,
 	movt	r2, #:upper16:.LC435	@,
-	and	r3, r3, #1	@, tmp284,
+	and	r3, r3, #1	@, tmp282,
 	bl	seq_printf	@
 	b	.L2719	@
 .L2746:
 	ldr	lr, [sl, #520]	@ <variable>.stRecentUsrdecFrame.s32YHeight, <variable>.stRecentUsrdecFrame.s32YHeight
-	mov	ip, #504	@ tmp293,
+	mov	ip, #504	@ tmp291,
 	ldr	r2, [sl, #496]	@ <variable>.stRecentUsrdecFrame.enFmt, <variable>.stRecentUsrdecFrame.enFmt
 	movw	r1, #:lower16:.LC436	@,
 	ldr	r3, [sl, #516]	@ <variable>.stRecentUsrdecFrame.s32YWidth, <variable>.stRecentUsrdecFrame.s32YWidth
@@ -21734,7 +21735,7 @@ vfmw_read_proc_dec:
 	str	r7, [sp, #4]	@ <variable>.stRecentUsrdecFrame.s32LumaStride,
 	ldr	r6, [sl, #540]	@ <variable>.stRecentUsrdecFrame.s32ChromStride, <variable>.stRecentUsrdecFrame.s32ChromStride
 	str	r6, [sp, #8]	@ <variable>.stRecentUsrdecFrame.s32ChromStride,
-	ldrd	r6, [sl, ip]	@ <variable>.stRecentUsrdecFrame.Pts, pChan, tmp293
+	ldrd	r6, [sl, ip]	@ <variable>.stRecentUsrdecFrame.Pts, pChan, tmp291
 	strd	r6, [sp, #16]	@ <variable>.stRecentUsrdecFrame.Pts,,
 	bl	seq_printf	@
 	b	.L2719	@
@@ -21799,14 +21800,14 @@ CSWTCH.928:
 	.word	1
 	.word	1
 	.word	1
-	.type	__func__.50129, %object
-	.size	__func__.50129, 18
-__func__.50129:
+	.type	__func__.50143, %object
+	.size	__func__.50143, 18
+__func__.50143:
 	.ascii	"VCTRL_SetCallBack\000"
 	.space	2
-	.type	__func__.50095, %object
-	.size	__func__.50095, 18
-__func__.50095:
+	.type	__func__.50109, %object
+	.size	__func__.50109, 18
+__func__.50109:
 	.ascii	"VCTRL_EventReport\000"
 	.space	2
 	.type	vfmw_proc_fops, %object
@@ -21827,65 +21828,65 @@ vfmw_proc_fops:
 	.space	4
 	.word	single_release
 	.space	52
-	.type	__func__.54621, %object
-	.size	__func__.54621, 20
-__func__.54621:
+	.type	__func__.54642, %object
+	.size	__func__.54642, 20
+__func__.54642:
 	.ascii	"vfmw_read_proc_info\000"
-	.type	__func__.55746, %object
-	.size	__func__.55746, 21
-__func__.55746:
+	.type	__func__.55767, %object
+	.size	__func__.55767, 21
+__func__.55767:
 	.ascii	"VCTRL_RequestChanMem\000"
 	.space	3
-	.type	__func__.53518, %object
-	.size	__func__.53518, 14
-__func__.53518:
+	.type	__func__.53531, %object
+	.size	__func__.53531, 14
+__func__.53531:
 	.ascii	"DecChanSyntax\000"
 	.space	2
-	.type	__func__.52339, %object
-	.size	__func__.52339, 19
-__func__.52339:
+	.type	__func__.52352, %object
+	.size	__func__.52352, 19
+__func__.52352:
 	.ascii	"VCTRL_FlushDecoder\000"
 	.space	1
-	.type	__func__.52059, %object
-	.size	__func__.52059, 23
-__func__.52059:
+	.type	__func__.52072, %object
+	.size	__func__.52072, 23
+__func__.52072:
 	.ascii	"VCTRL_ReleaseChanImage\000"
 	.space	1
-	.type	__func__.51928, %object
-	.size	__func__.51928, 19
-__func__.51928:
+	.type	__func__.51941, %object
+	.size	__func__.51941, 19
+__func__.51941:
 	.ascii	"VCTRL_GetChanImage\000"
 	.space	1
-	.type	__func__.50441, %object
-	.size	__func__.50441, 29
-__func__.50441:
+	.type	__func__.50454, %object
+	.size	__func__.50454, 29
+__func__.50454:
 	.ascii	"VCTRL_PartitionMemForStdUser\000"
 	.space	3
-	.type	__func__.53930, %object
-	.size	__func__.53930, 18
-__func__.53930:
+	.type	__func__.53943, %object
+	.size	__func__.53943, 18
+__func__.53943:
 	.ascii	"GetExtraRefFrmNum\000"
 	.space	2
-	.type	__func__.53966, %object
-	.size	__func__.53966, 19
-__func__.53966:
+	.type	__func__.53979, %object
+	.size	__func__.53979, 19
+__func__.53979:
 	.ascii	"GetExtraDispFrmNum\000"
 	.space	1
-	.type	__func__.54002, %object
-	.size	__func__.54002, 16
-__func__.54002:
+	.type	__func__.54015, %object
+	.size	__func__.54015, 16
+__func__.54015:
 	.ascii	"GetExtraCtrlCmd\000"
-	.type	__func__.53837, %object
-	.size	__func__.53837, 24
-__func__.53837:
+	.type	__func__.53850, %object
+	.size	__func__.53850, 24
+__func__.53850:
 	.ascii	"VCTRL_ExtAccGetDecParam\000"
-	.type	__func__.55121, %object
-	.size	__func__.55121, 16
-__func__.55121:
+	.type	__func__.55142, %object
+	.size	__func__.55142, 16
+__func__.55142:
 	.ascii	"vfmw_write_proc\000"
-	.type	__func__.51421, %object
-	.size	__func__.51421, 17
-__func__.51421:
+	.type	__func__.51434, %object
+	.size	__func__.51434, 17
+__func__.51434:
 	.ascii	"VCTRL_ConfigChan\000"
 	.space	3
 	.type	CSWTCH.931, %object
@@ -21899,9 +21900,9 @@ CSWTCH.931:
 	.word	1
 	.word	1
 	.word	1
-	.type	__func__.54760, %object
-	.size	__func__.54760, 19
-__func__.54760:
+	.type	__func__.54781, %object
+	.size	__func__.54781, 19
+__func__.54781:
 	.ascii	"vfmw_read_proc_scd\000"
 	.space	1
 	.type	__param_str_extra_cmd, %object
@@ -23539,25 +23540,25 @@ g_VfmwGlobalStat:
 	.size	g_VfmwChanStat, 4800
 g_VfmwChanStat:
 	.space	4800
-	.type	last_rec_pos_time.53512, %object
-	.size	last_rec_pos_time.53512, 64
-last_rec_pos_time.53512:
+	.type	last_rec_pos_time.53525, %object
+	.size	last_rec_pos_time.53525, 64
+last_rec_pos_time.53525:
 	.space	64
-	.type	last_rec_pos_decparam_time.53513, %object
-	.size	last_rec_pos_decparam_time.53513, 64
-last_rec_pos_decparam_time.53513:
+	.type	last_rec_pos_decparam_time.53526, %object
+	.size	last_rec_pos_decparam_time.53526, 64
+last_rec_pos_decparam_time.53526:
 	.space	64
-	.type	ChanPriTab.53396, %object
-	.size	ChanPriTab.53396, 64
-ChanPriTab.53396:
+	.type	ChanPriTab.53409, %object
+	.size	ChanPriTab.53409, 64
+ChanPriTab.53409:
 	.space	64
 	.type	g_ActivateLock, %object
 	.size	g_ActivateLock, 12
 g_ActivateLock:
 	.space	12
-	.type	last_rec_pos_time.52056, %object
-	.size	last_rec_pos_time.52056, 64
-last_rec_pos_time.52056:
+	.type	last_rec_pos_time.52069, %object
+	.size	last_rec_pos_time.52069, 64
+last_rec_pos_time.52069:
 	.space	64
 	.type	vfmw_save_yuv_file, %object
 	.size	vfmw_save_yuv_file, 128
@@ -23567,21 +23568,21 @@ vfmw_save_yuv_file:
 	.size	save_yuv_with_crop, 4
 save_yuv_with_crop:
 	.space	4
-	.type	last_rec_pos_time.51933, %object
-	.size	last_rec_pos_time.51933, 64
-last_rec_pos_time.51933:
+	.type	last_rec_pos_time.51946, %object
+	.size	last_rec_pos_time.51946, 64
+last_rec_pos_time.51946:
 	.space	64
 	.type	g_DSPState, %object
 	.size	g_DSPState, 64
 g_DSPState:
 	.space	64
-	.type	PrioArray.51129, %object
-	.size	PrioArray.51129, 64
-PrioArray.51129:
+	.type	PrioArray.51142, %object
+	.size	PrioArray.51142, 64
+PrioArray.51142:
 	.space	64
-	.type	FspInstInfo.50434, %object
-	.size	FspInstInfo.50434, 3852
-FspInstInfo.50434:
+	.type	FspInstInfo.50447, %object
+	.size	FspInstInfo.50447, 3852
+FspInstInfo.50447:
 	.space	3852
 	.type	cmdline, %object
 	.size	cmdline, 1024
@@ -23608,17 +23609,17 @@ g_IntEvent:
 	.size	AcceleratorCharacter, 4
 AcceleratorCharacter:
 	.space	4
-	.type	LastEventTime.50050, %object
-	.size	LastEventTime.50050, 4
-LastEventTime.50050:
+	.type	LastEventTime.50064, %object
+	.size	LastEventTime.50064, 4
+LastEventTime.50064:
 	.space	4
 	.type	vfmw_save_str_file, %object
 	.size	vfmw_save_str_file, 128
 vfmw_save_str_file:
 	.space	128
-	.type	save_file_cnt.54076, %object
-	.size	save_file_cnt.54076, 4
-save_file_cnt.54076:
+	.type	save_file_cnt.54092, %object
+	.size	save_file_cnt.54092, 4
+save_file_cnt.54092:
 	.space	4
 	.type	save_str_chan_num, %object
 	.size	save_str_chan_num, 4
@@ -23628,17 +23629,17 @@ save_str_chan_num:
 	.size	vfmw_save_seg_file, 128
 vfmw_save_seg_file:
 	.space	128
-	.type	save_file_cnt.54079, %object
-	.size	save_file_cnt.54079, 4
-save_file_cnt.54079:
+	.type	save_file_cnt.54095, %object
+	.size	save_file_cnt.54095, 4
+save_file_cnt.54095:
 	.space	4
 	.type	save_seg_chan_num, %object
 	.size	save_seg_chan_num, 4
 save_seg_chan_num:
 	.space	4
-	.type	save_file_cnt.54084, %object
-	.size	save_file_cnt.54084, 4
-save_file_cnt.54084:
+	.type	save_file_cnt.54100, %object
+	.size	save_file_cnt.54100, 4
+save_file_cnt.54100:
 	.space	4
 	.type	MemRecord_YUV, %object
 	.size	MemRecord_YUV, 16
@@ -23660,25 +23661,25 @@ g_StopDec:
 	.size	g_SCDID, 4
 g_SCDID:
 	.space	4
-	.type	cmd.55089, %object
-	.size	cmd.55089, 256
-cmd.55089:
+	.type	cmd.55110, %object
+	.size	cmd.55110, 256
+cmd.55110:
 	.space	256
-	.type	str.55090, %object
-	.size	str.55090, 256
-str.55090:
+	.type	str.55111, %object
+	.size	str.55111, 256
+str.55111:
 	.space	256
-	.type	Capability.51407, %object
-	.size	Capability.51407, 148
-Capability.51407:
+	.type	Capability.51420, %object
+	.size	Capability.51420, 148
+Capability.51420:
 	.space	148
-	.type	PrioArray.51406, %object
-	.size	PrioArray.51406, 64
-PrioArray.51406:
+	.type	PrioArray.51419, %object
+	.size	PrioArray.51419, 64
+PrioArray.51419:
 	.space	64
-	.type	PrioArray.51162, %object
-	.size	PrioArray.51162, 64
-PrioArray.51162:
+	.type	PrioArray.51175, %object
+	.size	PrioArray.51175, 64
+PrioArray.51175:
 	.space	64
 	.type	pOption, %object
 	.size	pOption, 4

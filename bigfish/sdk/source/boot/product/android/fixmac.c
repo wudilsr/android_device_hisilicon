@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <malloc.h>
 #include <flash.h>
-#include <net/net.h>
 #include <malloc.h>
 #else
 #include <common.h>
@@ -74,7 +73,13 @@ static void otp_mac_to_string(char *eth_str, unsigned char *mac)
 static void random_ether_addr(unsigned char *mac)
 {
 #ifdef HI_MINIBOOT_SUPPORT
-	generate_mac(mac);
+	//generate_mac(mac);
+	int loop = 6;
+	uint8 *ptr = mac;
+	srand(get_timer_value());
+	while (loop-- > 0)
+		*ptr++ = (uint8)(rand() % 255);
+	mac[0] &= ~0x01;
 #else
 	unsigned long ethaddr_low, ethaddr_high;
 

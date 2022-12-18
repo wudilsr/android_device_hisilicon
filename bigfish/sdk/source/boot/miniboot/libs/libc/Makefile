@@ -17,7 +17,7 @@
 ################################################################################
 
 SRCS-y += crc32.c util.c strtoul.c strncpy.c strndup.c strtok.c strdup.c \
-	rand.c  crc16.c
+	rand.c  crc16.c memmove.c
 
 SRCS-y += memcpy.S memset.S memcmp.S strcmp.S strncmp.S strlen.S
 SRCS-$(CONFIG_DEBUG) += dbg_libc.c

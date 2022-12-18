@@ -88,6 +88,14 @@ ifeq ($(CFG_HI_WIFI_DEVICE_MT76X2U),y)
 objects += usb_mt76x2u
 endif
 
+ifeq ($(CFG_HI_WIFI_DEVICE_RTL8821AU),y)
+objects += usb_rtl8821au
+endif
+
+ifeq ($(CFG_HI_WIFI_DEVICE_RTL8188FU),y)
+objects += usb_rtl8188fu
+endif
+
 objects_clean:=$(addsuffix _clean,$(objects))
 objects_install:=$(addsuffix _install,$(objects))
 objects_uninstall:=$(addsuffix _uninstall,$(objects))

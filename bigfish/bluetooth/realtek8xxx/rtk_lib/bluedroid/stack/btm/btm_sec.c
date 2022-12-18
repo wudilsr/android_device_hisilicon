@@ -28,6 +28,11 @@
 #include "btu.h"
 #include "btm_int.h"
 #include "l2c_int.h"
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+#include "rtk_parse.h"
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
 
 #if (BT_USE_TRACES == TRUE && BT_TRACE_VERBOSE == FALSE)
 /* needed for sprintf() */
@@ -3957,7 +3962,18 @@ void btm_sec_encrypt_change (UINT16 handle, UINT8 status, UINT8 encr_enable)
 
     if (p_acl && p_acl->is_le_link)
     {
-        btm_ble_link_encrypted(p_dev_rec->bd_addr, encr_enable);
+#ifdef BLUETOOTH_RTK
+        if(status == HCI_ERR_KEY_MISSING)
+		{
+			btm_add_dev_to_controller(FALSE,p_dev_rec->bd_addr,0);
+			btm_ble_link_encrypted(p_dev_rec->bd_addr, encr_enable);
+			btif_dm_remove_bond(p_dev_rec->bd_addr);
+		}
+		else
+			btm_ble_link_encrypted(p_dev_rec->bd_addr, encr_enable);
+#else
+		btm_ble_link_encrypted(p_dev_rec->bd_addr, encr_enable);
+#endif
         return;
     }
     else
@@ -4459,6 +4475,13 @@ void btm_sec_disconnected (UINT16 handle, UINT8 reason)
     if (!p_dev_rec)
         return;
 
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX begin*/
+#ifdef BLUETOOTH_RTK_COEX
+    if ((p_dev_rec->device_type &= BT_DEVICE_TYPE_BLE) == 0x02){
+        rtk_delete_le_profile(p_dev_rec->bd_addr, p_dev_rec->hci_handle, p_dev_rec->profile_map);
+    }
+#endif
+/*BOARD_HAVE_BLUETOOTH_RTK_COEX end*/
     p_dev_rec->rs_disc_pending = BTM_SEC_RS_NOT_PENDING;     /* reset flag */
 
 #if BTM_DISC_DURING_RS == TRUE

@@ -2,7 +2,7 @@
 
 /***********************************************************************
 *
-* Copyright (c) 2006 HUAWEI - All Rights Reserved
+* Copyright (c) 2006 Hisilicon - All Rights Reserved
 *
 * File: $bitstream.h$
 * Date: $2006/11/30$

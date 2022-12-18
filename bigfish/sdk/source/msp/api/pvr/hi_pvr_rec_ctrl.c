@@ -65,13 +65,13 @@ static HI_S32 PVRRecShowProc(HI_PROC_SHOW_BUFFER_S * pstBuf, HI_VOID *pPrivData)
     HI_U32 i = 0, j = 0;
     HI_U32 u32VidType = 0;
     PVR_REC_CHN_S *pChnAttr = g_stPvrRecChns;
-    HI_S8 pStreamType[][32] = {"MPEG2", "MPEG4 DIVX4 DIVX5", "AVS", "H263", "H264",
+    HI_S8 pStreamType[PVR_VIDEO_TYPE_TOTAL_NUM][32] = {"MPEG2", "MPEG4 DIVX4 DIVX5", "AVS", "H263", "H264",
                              "REAL8", "REAL9", "VC-1", "VP6", "VP6F", "VP6A", "MJPEG",
                              "SORENSON SPARK", "DIVX3", "RAW", "JPEG", "VP8", "MSMPEG4V1",
                              "MSMPEG4V2", "MSVIDEO1", "WMV1", "WMV2", "RV10", "RV20",
                              "SVQ1", "SVQ3", "H261", "VP3", "VP5", "CINEPAK", "INDEO2",
                              "INDEO3", "INDEO4", "INDEO5", "MJPEGB", "MVC", "HEVC", "DV", "INVALID"};
-    HI_S8 pEventType[][32] = {"DISKFUL", "ERROR", "OVER FIX", "REACH PLAY", "DISK SLOW", "RESV", "RESV", "RESV"};
+    HI_S8 pEventType[8][32] = {"DISKFUL", "ERROR", "OVER FIX", "REACH PLAY", "DISK SLOW", "RESV", "RESV", "RESV"};
     
     HI_PROC_Printf(pstBuf, "\n---------Hisilicon PVR Recording channel Info---------\n");
 
@@ -85,7 +85,7 @@ static HI_S32 PVRRecShowProc(HI_PROC_SHOW_BUFFER_S * pstBuf, HI_VOID *pPrivData)
             if (pChnAttr[i].IndexHandle != HI_NULL)
             {
                 u32VidType = PVR_Index_GetVtype(pChnAttr[i].IndexHandle) - 100;
-                u32VidType = (u32VidType > HI_UNF_VCODEC_TYPE_BUTT) ? HI_UNF_VCODEC_TYPE_BUTT : u32VidType;
+                u32VidType = (u32VidType > PVR_VIDEO_TYPE_TOTAL_NUM - 1) ? PVR_VIDEO_TYPE_TOTAL_NUM -1 : u32VidType;
             }
             
             HI_PROC_Printf(pstBuf, "chan %d infomation:\n", i);
@@ -2698,7 +2698,7 @@ HI_S32 HI_PVR_RecStopChn(HI_U32 u32ChnID)
     }
 
     /* state: stoping -> stop. make sure the index thread exit first   */
-    pRecChn->enState = HI_UNF_PVR_REC_STATE_STOPPING;
+    //pRecChn->enState = HI_UNF_PVR_REC_STATE_STOPPING;
 
     //(HI_VOID)HI_PthreadJoin(pRecChn->RecordCacheThread, NULL);
     //HI_ASSERT(HI_UNF_PVR_REC_STATE_STOP == pRecChn->enState);

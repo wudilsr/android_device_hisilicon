@@ -13,6 +13,7 @@ COBJS   += timer.o
 COBJS   += usb.o
 SOBJS   += uart.o
 SOBJS   += arm_exception.o
+SOBJS	+= slave_bootup.o
 
 SRCS	:= $(START:.o=.S) $(SOBJS:.o=.S) $(COBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(SOBJS) $(COBJS))

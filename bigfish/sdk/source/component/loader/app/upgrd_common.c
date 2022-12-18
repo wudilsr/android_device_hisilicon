@@ -139,14 +139,14 @@ extern HI_BOOL g_bHiproUpgrdFlg;
 HI_VOID LOADER_Delayms(HI_U32 u32TimeMS)
 {
 #ifdef HI_LOADER_BOOTLOADER
-	udelay(u32TimeMS * 1000);    
+	udelay(u32TimeMS * 1000);
 #else
     usleep(u32TimeMS * 1000);
 #endif
 
     return;
 }
- 
+
 /*------------------------------------------------------------------------
  * Function:     VTOP_CRC_32
  * Description: calculate crc value
@@ -287,16 +287,16 @@ HI_U8 * LOADER_GetUsableMemory(HI_U32 u32ExpectSize, HI_U32 *pu32Size)
     /* When using Hipro tool, use 32M buffer to receive and write file */
     if (HI_TRUE == g_bHiproUpgrdFlg)
     {
-        /* when *pu32Size less than HIPRO_RESTRICT_SPLICE_SIZE use it, 
+        /* when *pu32Size less than HIPRO_RESTRICT_SPLICE_SIZE use it,
 		   otherwise use HIPRO_RESTRICT_SPLICE_SIZE */
         if (HIPRO_RESTRICT_SPLICE_SIZE < *pu32Size)
         {
             *pu32Size = HIPRO_RESTRICT_SPLICE_SIZE;
         }
     }
-    
+
     HI_DBG_LOADER("bootloader data receive buffer size is %u bytes. \n", *pu32Size);
-	
+
     return (HI_U8 *)u32Addr;
 }
 
@@ -309,7 +309,7 @@ void LOADER_FreeUsableMemory(HI_U8 * ptr)
 HI_U8 * LOADER_GetUsableMemory(HI_U32 u32ExpectSize, HI_U32 *pu32Size)
 {
 	HI_U32 u32Addr = 0;
-	struct sysinfo info;	
+	struct sysinfo info;
 	HI_U32 u32Size;
 
 	if (pu32Size == HI_NULL)
@@ -328,7 +328,7 @@ HI_U8 * LOADER_GetUsableMemory(HI_U32 u32ExpectSize, HI_U32 *pu32Size)
 	if (!u32Addr)
 	{
 		HI_ERR_LOADER("malloc buffer failed.\n");
-		return HI_NULL;	
+		return HI_NULL;
 	}
 
 	*pu32Size = u32Size;
@@ -342,8 +342,574 @@ void LOADER_FreeUsableMemory(HI_U8 * ptr)
 	if (ptr)
 	{
 		free(ptr);
-	}	
+	}
 }
+
+/* get flash partition index and type from bootargs by name, the index from 0, so if the flash type is emmc, the emmc partition number is always index+1*/
+HI_S32 Loader_GetFlashParIndex(const HI_CHAR *pPartitionName, LOADER_PARTITION_INDEX_S *pstPartitionIndex)
+{
+    HI_CHAR Bootargs[512] = {0};
+    FILE    *pf = HI_NULL;
+    HI_CHAR tmp[32];
+    HI_S32  ReadLen = 0;
+	HI_S32  tmpIndex = 0;
+	HI_CHAR  *pStart, *pTmp, *pIndex;
+	HI_CHAR  *pFlashType1;
+	HI_CHAR  *pFlashType2;
+	HI_CHAR  *pFlashType3;
+	if (!pstPartitionIndex)
+	{
+		HI_ERR_LOADER("invalid arguments\n");
+		return HI_FAILURE;
+	}
+
+    pf = fopen("/proc/cmdline", "r");
+    if (HI_NULL == pf)
+    {
+        return HI_FAILURE;
+    }
+
+    memset(Bootargs, 0x0, 512);
+
+    ReadLen = fread(Bootargs, sizeof(HI_CHAR), 512, pf);
+    if (ReadLen <= 0)
+    {
+        fclose(pf);
+        pf = HI_NULL;
+        return HI_FAILURE;
+    }
+
+    fclose(pf);
+    pf = HI_NULL;
+
+    Bootargs[511] = '\0';
+
+	snprintf(tmp, sizeof(tmp), "(%s)", pPartitionName);
+
+	pIndex = strstr(Bootargs, tmp);
+	if (!pIndex)
+	{
+		HI_ERR_LOADER("can't find %s in bootars\n", tmp);
+		return HI_FAILURE;
+	}
+
+	pFlashType1 = strstr(Bootargs, "hi_sfc:");
+	pFlashType2 = strstr(Bootargs, "hinand:");
+	pFlashType3 = strstr(Bootargs, "mmcblk0:");
+
+	if (pFlashType1 && !pFlashType2 && pIndex > pFlashType1)
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_SPI_0;
+	}
+	else if (!pFlashType1 && pFlashType2 && pIndex > pFlashType2)
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_NAND_0;
+	}
+	else if (pFlashType1 && pFlashType2 && pIndex > pFlashType2)
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_NAND_0;
+	}
+	else if (pFlashType1 && pFlashType2 && pIndex < pFlashType2)
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_SPI_0;
+	}
+	else
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_BUTT;
+	}
+
+	if (pFlashType3 && pIndex > pFlashType3)
+	{
+		pstPartitionIndex->u32FlashType = HI_FLASH_TYPE_EMMC_0;
+	}
+
+	if (pstPartitionIndex->u32FlashType == HI_FLASH_TYPE_EMMC_0)
+	{
+		pStart = pFlashType3 + strlen("mmcblk0:");
+	}
+	else if (pstPartitionIndex->u32FlashType == HI_FLASH_TYPE_NAND_0)
+	{
+		pStart = pFlashType2 + strlen("hinand:");
+	}
+	else if (pstPartitionIndex->u32FlashType == HI_FLASH_TYPE_SPI_0)
+	{
+		pStart = pFlashType1 + strlen("hi_sfc:");
+	}
+	else
+	{
+		HI_ERR_LOADER(" invalid flash type!");
+		return HI_FAILURE;
+	}
+
+	pTmp = pStart;
+	if (pTmp >= pIndex)
+	{
+		HI_ERR_LOADER(" flash index error!");
+		return HI_FAILURE;
+	}
+	while(pTmp < pIndex)
+	{
+		if (')' == *pTmp)
+		{
+			tmpIndex++;
+		}
+		pTmp++;
+	}
+
+	if (0 != tmpIndex)
+	{
+		pstPartitionIndex->u32FlashIndex = tmpIndex;
+		return HI_SUCCESS;
+	}
+	else
+	{
+		return HI_FAILURE;
+	}
+
+}
+
+/***************************************************************************/
+/* get flash info from bootargs by name or address*/
+static HI_U32 str_to_flashsize(HI_CHAR *strsize)
+{
+    char *p, *q;
+    char tmp[32];
+    int size;
+
+    p = strsize;
+    q = strsize + strlen(strsize) - 1;
+
+    if (strlen(strsize) <= 1)
+    {
+        return 0;
+    }
+
+    if (sizeof(tmp) < strlen(strsize))
+    {
+        return 0;
+    }
+
+    memset(tmp, 0x0, sizeof(tmp));
+
+    memcpy(tmp, p, strlen(strsize) - 1);
+
+    size = strtoul(tmp, HI_NULL, 10);
+
+    if ((*q == 'K') || (*q == 'k'))
+    {
+        size = size * 1024;
+    }
+    else if ((*q == 'M') || (*q == 'm'))
+    {
+        size = size * 1024 * 1024;
+    }
+    else
+    {
+        size = 0;
+    }
+
+    return size;
+}
+
+static HI_S32 get_flash_type_addr(const HI_CHAR *pPartitionName, const HI_CHAR *Bootargs, LOADER_FLASH_INFO_BOOTARGS_S *pstInfo)
+{
+	HI_CHAR  *pIndex, *pSizeStart, *pSizeEnd;
+	HI_CHAR  *pNameStart, *pNameEnd;
+	HI_CHAR  tmp[32];
+	HI_CHAR  ParNametmp[32];
+	HI_CHAR  *pFlashType1;
+	HI_CHAR  *pFlashType2;
+	HI_CHAR  *pFlashType3;
+	HI_U64   u64tmpSize = 0;
+	snprintf(tmp, sizeof(tmp), "(%s)", pPartitionName);
+
+	pIndex = strstr(Bootargs, tmp);
+	if (!pIndex)
+	{
+		HI_ERR_LOADER("can't find %s in bootars in %s\n", tmp, __FUNCTION__);
+		return HI_FAILURE;
+	}
+
+	pFlashType1 = strstr(Bootargs, "hi_sfc:");
+	pFlashType2 = strstr(Bootargs, "hinand:");
+	pFlashType3 = strstr(Bootargs, "mmcblk0:");
+
+	if (pFlashType1 && !pFlashType2 && pIndex > pFlashType1)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_SPI_0;
+	}
+	else if (!pFlashType1 && pFlashType2 && pIndex > pFlashType2)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_NAND_0;
+	}
+	else if (pFlashType1 && pFlashType2 && pIndex > pFlashType2)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_NAND_0;
+	}
+	else if (pFlashType1 && pFlashType2 && pIndex < pFlashType2)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_SPI_0;
+	}
+	else
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_BUTT;
+	}
+	/* emmc flash type*/
+	if (pFlashType3 && pIndex > pFlashType3)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_EMMC_0;
+	}
+
+	if (pstInfo->u32FlashType == HI_FLASH_TYPE_EMMC_0)
+	{
+		pSizeStart = pFlashType3 + strlen("mmcblk0:");
+	}
+	else if (pstInfo->u32FlashType == HI_FLASH_TYPE_NAND_0)
+	{
+		pSizeStart = pFlashType2 + strlen("hinand:");
+	}
+	else if (pstInfo->u32FlashType == HI_FLASH_TYPE_SPI_0)
+	{
+		pSizeStart = pFlashType1 + strlen("hi_sfc:");
+	}
+	else
+	{
+		HI_ERR_LOADER("Invalid Flash Type.\n");
+		return HI_FAILURE;
+	}
+
+	while (pSizeStart && pSizeStart < pIndex)
+	{
+
+		for (pSizeEnd = pSizeStart; pSizeEnd < Bootargs + 512; pSizeEnd++)
+		{
+			if ((*pSizeEnd == '('))
+			{
+				break;
+			}
+		}
+
+		memset(tmp, 0, sizeof(tmp));
+
+		if ((HI_U32)(pSizeEnd - pSizeStart) >= sizeof(tmp))
+		{
+			return HI_FAILURE;
+		}
+
+		memcpy(tmp, pSizeStart, pSizeEnd - pSizeStart);
+		tmp[pSizeEnd - pSizeStart + 1] = '\0';
+
+		pNameStart = pSizeEnd + 1;
+
+		for (pNameEnd = pNameStart; pNameEnd < Bootargs + 512; pNameEnd++)
+		{
+			if ((*pNameEnd == ')'))
+			{
+				break;
+			}
+		}
+
+		if (0 == strncmp(pPartitionName, pNameStart, pNameEnd - pNameStart))
+		{
+			HI_INFO_LOADER("it has pased END by Name\n");
+			break;
+		}
+		u64tmpSize += str_to_flashsize(tmp);
+		/*  1  M        (             a       b  c         )  ,        2   M  (   c   d   e   )
+		    0  1        2             3	      4  5         6  7        8   9  10  11 12  13   14
+		pSizeStart	 pSizeEnd    pNameStart           pNameEnd       pSizeStart                        */
+		pSizeStart += (pNameEnd - pSizeStart + 2); // add ')'   ','
+	}
+	pstInfo->u64Startaddr = u64tmpSize;
+	return HI_SUCCESS;
+}
+
+HI_S32 LOADER_GetFlashInfoByName(HI_CHAR *pPartitionName, LOADER_FLASH_INFO_BOOTARGS_S *pstInfo)
+{
+    HI_CHAR Bootargs[512] = {0};
+    FILE            *pf = HI_NULL;
+    HI_CHAR         *p, *q;
+    HI_CHAR tmp[32];
+    HI_S32 ReadLen = 0;
+
+	if (!pPartitionName || !pstInfo)
+	{
+		HI_ERR_LOADER("Invalid arguments in %s\n", __FUNCTION__);
+		return HI_FAILURE;
+	}
+
+    pf = fopen("/proc/cmdline", "r");
+    if (HI_NULL == pf)
+    {
+        return HI_FAILURE;
+    }
+
+    memset(Bootargs, 0x0, 512);
+
+    ReadLen = fread(Bootargs, sizeof(HI_CHAR), 512, pf);
+    if (ReadLen <= 0)
+    {
+        fclose(pf);
+        pf = HI_NULL;
+        return HI_FAILURE;
+    }
+
+    fclose(pf);
+    pf = HI_NULL;
+
+    Bootargs[511] = '\0';
+
+    snprintf(tmp, sizeof(tmp), "(%s)", pPartitionName);
+
+    p = strstr(Bootargs, tmp);
+    if (0 != p)
+    {
+        for (q = p; q > Bootargs; q--)
+        {
+            if ((*q == ',') || (*q == ':'))
+            {
+                break;
+            }
+        }
+
+        memset(tmp, 0, sizeof(tmp));
+
+        if ((HI_U32)(p - q - 1) >= sizeof(tmp))
+        {
+            return HI_FAILURE;
+        }
+
+        memcpy(tmp, q + 1, p - q - 1);
+        tmp[sizeof(tmp) - 1] = '\0';
+
+        memset(pstInfo->Name, 0x0, sizeof(pstInfo->Name));
+
+        memcpy(pstInfo->Name, pPartitionName, strlen(pPartitionName));
+        pstInfo->u32Size   = str_to_flashsize(tmp);
+        pstInfo->u32Offset = 0;
+        pstInfo->bShared = HI_FALSE;
+
+		if(HI_SUCCESS != get_flash_type_addr(pPartitionName, Bootargs, pstInfo))
+		{
+			HI_ERR_LOADER("call get_flash_type_addr error in %s.\n", __FUNCTION__);
+			return HI_FAILURE;
+		}
+
+        return HI_SUCCESS;
+    }
+	else
+	{
+		HI_ERR_LOADER("can't find %s in bootars in %s\n", tmp, __FUNCTION__);
+		return HI_FAILURE;
+	}
+
+    snprintf(tmp, sizeof(tmp), " %s", pPartitionName);
+
+    p = strstr(Bootargs, tmp);
+    if (0 == p)
+    {
+        return HI_FAILURE;
+    }
+
+    p = strstr(p, "=");
+    if (0 == p)
+    {
+        return HI_FAILURE;
+    }
+
+    p++;
+
+    q = strstr(p, ",");
+    if (0 == q)
+    {
+        return HI_FAILURE;
+    }
+
+    memset(pstInfo->Name, 0x0, sizeof(pstInfo->Name));
+    memcpy(pstInfo->Name, p, q - p);
+
+    p = q + 1;
+    q = strstr(p, ",");
+    if (0 == q)
+    {
+        return HI_FAILURE;
+    }
+
+    memset(tmp, 0, sizeof(tmp));
+    memcpy(tmp, p, q - p);
+
+    pstInfo->u32Offset = strtoul(tmp, HI_NULL, 16);
+
+    p = q + 1;
+
+    q = strstr(p, " ");
+    if (0 == q)
+    {
+        q = Bootargs + strlen(Bootargs);
+    }
+
+    memset(tmp, 0, sizeof(tmp));
+    memcpy(tmp, p, q - p);
+
+    pstInfo->u32Size = strtoul(tmp, HI_NULL, 16);
+    pstInfo->bShared = HI_TRUE;
+
+	if(HI_SUCCESS != get_flash_type_addr(pPartitionName, Bootargs, pstInfo))
+	{
+		HI_ERR_LOADER("call get_flash_type_addr error in %s.\n", __FUNCTION__);
+		return HI_FAILURE;
+	}
+
+    return HI_SUCCESS;
+}
+
+HI_S32 LOADER_GetFlashInfoByAddr(HI_U64 u64FlashAddr, HI_FLASH_TYPE_E eFlashType, LOADER_FLASH_INFO_BOOTARGS_S *pstInfo)
+{
+    HI_CHAR   Bootargs[512] = {0};
+    FILE      *pf = HI_NULL;
+    HI_CHAR   *p, *q;
+    HI_CHAR   tmp[32];
+    HI_S32 	  ReadLen = 0;
+	HI_CHAR  *pSizeStart, *pSizeEnd;
+	HI_CHAR  *pNameStart, *pNameEnd;
+	HI_CHAR  *pFlashType1;
+	HI_CHAR  *pFlashType2;
+	HI_CHAR  *pFlashType3;
+	HI_U64   u64tmpSize = 0;
+
+	if (!pstInfo)
+	{
+		HI_ERR_LOADER("Invalid arguments in %s\n", __FUNCTION__);
+		return HI_FAILURE;
+	}
+
+    pf = fopen("/proc/cmdline", "r");
+    if (HI_NULL == pf)
+    {
+        return HI_FAILURE;
+    }
+
+    memset(Bootargs, 0x0, 512);
+
+    ReadLen = fread(Bootargs, sizeof(HI_CHAR), 512, pf);
+    if (ReadLen <= 0)
+    {
+        fclose(pf);
+        pf = HI_NULL;
+        return HI_FAILURE;
+    }
+
+    fclose(pf);
+    pf = HI_NULL;
+
+    Bootargs[511] = '\0';
+
+	pFlashType1 = strstr(Bootargs, "hi_sfc:");
+	pFlashType2 = strstr(Bootargs, "hinand:");
+	pFlashType3 = strstr(Bootargs, "mmcblk0:");
+
+	if (HI_FLASH_TYPE_SPI_0 == eFlashType && pFlashType1)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_SPI_0;
+		pSizeStart = pFlashType1 + strlen("hi_sfc:");
+	}
+	else if (HI_FLASH_TYPE_NAND_0 == eFlashType && pFlashType2)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_NAND_0;
+		pSizeStart = pFlashType2 + strlen("hinand:");
+	}
+	else if (HI_FLASH_TYPE_EMMC_0 == eFlashType && pFlashType3)
+	{
+		pstInfo->u32FlashType = HI_FLASH_TYPE_EMMC_0;
+		pSizeStart = pFlashType3 + strlen("mmcblk0:");
+	}
+	else
+	{
+		HI_ERR_LOADER("invalid flash type!\n");
+		exit(1);
+	}
+
+	while (pSizeStart && pSizeStart < Bootargs + 512)
+	{
+		for (pSizeEnd = pSizeStart; pSizeEnd < Bootargs + 512; pSizeEnd++)
+		{
+			if ((*pSizeEnd == '('))
+			{
+				break;
+			}
+		}
+
+		memset(tmp, 0, sizeof(tmp));
+
+		if ((HI_U32)(pSizeEnd - pSizeStart) >= sizeof(tmp))
+		{
+			return HI_FAILURE;
+		}
+
+		memcpy(tmp, pSizeStart, pSizeEnd - pSizeStart);
+		tmp[pSizeEnd - pSizeStart + 1] = '\0';
+
+		pNameStart = pSizeEnd + 1;
+
+		for (pNameEnd = pNameStart; pNameEnd < Bootargs + 512 ; pNameEnd++)
+		{
+			if ((*pNameEnd == ')'))
+			{
+				break;
+			}
+		}
+
+		if (u64tmpSize == u64FlashAddr)
+		{
+			memset(pstInfo->Name, 0, sizeof(pstInfo->Name));
+			memcpy(pstInfo->Name, pNameStart, pNameEnd - pNameStart);
+			HI_INFO_LOADER("it has pased END by Addr\n");
+			break;
+		}
+
+		u64tmpSize += str_to_flashsize(tmp);
+		/*  1  M        (             a       b  c         )  ,        2   M  (   c   d   e   )
+		    0  1        2             3	      4  5         6  7        8   9  10  11 12  13   14
+		pSizeStart	 pSizeEnd    pNameStart           pNameEnd       pSizeStart                        */
+		pSizeStart += (pNameEnd - pSizeStart + 2); // add ')' ','
+	}
+
+    snprintf(tmp, sizeof(tmp), "(%s)", pstInfo->Name);
+
+    p = strstr(Bootargs, tmp);
+    if (0 != p)
+    {
+        for (q = p; q > Bootargs; q--)
+        {
+            if ((*q == ',') || (*q == ':'))
+            {
+                break;
+            }
+        }
+
+        memset(tmp, 0, sizeof(tmp));
+
+        if ((HI_U32)(p - q - 1) >= sizeof(tmp))
+        {
+            return HI_FAILURE;
+        }
+
+        memcpy(tmp, q + 1, p - q - 1);
+        tmp[sizeof(tmp) - 1] = '\0';
+
+        pstInfo->u32Size   = str_to_flashsize(tmp);
+        pstInfo->u32Offset = 0;
+        pstInfo->bShared = HI_FALSE;
+
+        return HI_SUCCESS;
+    }
+	else
+	{
+		HI_ERR_LOADER("can't find %s in bootars in %s\n", tmp, __FUNCTION__);
+		return HI_FAILURE;
+	}
+}
+/***************************************************************************/
 #endif
 
 #ifdef __cplusplus

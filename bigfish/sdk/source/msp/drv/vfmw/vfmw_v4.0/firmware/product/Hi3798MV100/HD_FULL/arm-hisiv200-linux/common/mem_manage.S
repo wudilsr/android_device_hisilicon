@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0
 @ -Idrivers/msp/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/scene/stb
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/osal/linux_kernel
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/softlib
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common/syntax
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiSCDV200
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/driver/HiVDHV300R001
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/product/Hi3798MV100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/vfmw/vfmw_v4.0/firmware/common_test/vdecko
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112920 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -61,9 +61,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_vfmw) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/vfmw/vfmw_v4.0/firmware/common/.mem_manage.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/mem_manage.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/vfmw/vfmw_v4.0/firmware/common/mem_manage.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/vfmw/vfmw_v4.0/firmware/common/mem_manage.o -O2 -Wall -Wundef
@@ -177,14 +177,14 @@ MEM_Phy2Vir:
 	add	r3, r2, #8	@ ivtmp.540, tmp184,
 	b	.L8	@
 .L6:
-	ldr	r4, [ip, #12]	@ D.30331, <variable>.Length
+	ldr	r4, [ip, #12]	@ D.30337, <variable>.Length
 	add	r1, r1, #1	@ i, i,
-	cmp	r4, #0	@ D.30331,
+	cmp	r4, #0	@ D.30337,
 	mov	r5, r1	@ tmp185, i
 	beq	.L11	@,
-	ldr	r3, [ip, #8]	@ D.30334, <variable>.PhyAddr
-	cmp	r3, r0	@ D.30334, PhyAddr
-	add	r4, r3, r4	@ tmp189, D.30334, D.30331
+	ldr	r3, [ip, #8]	@ D.30340, <variable>.PhyAddr
+	cmp	r3, r0	@ D.30340, PhyAddr
+	add	r4, r3, r4	@ tmp189, D.30340, D.30337
 	bgt	.L11	@,
 	cmp	r0, r4	@ PhyAddr, tmp189
 	blt	.L14	@,
@@ -194,19 +194,19 @@ MEM_Phy2Vir:
 	cmp	r1, #512	@ i,
 	beq	.L17	@,
 .L8:
-	ldr	r4, [r3, #12]	@ D.30331, <variable>.Length
+	ldr	r4, [r3, #12]	@ D.30337, <variable>.Length
 	add	ip, r3, #16	@ tmp186, ivtmp.540,
-	cmp	r4, #0	@ D.30331,
+	cmp	r4, #0	@ D.30337,
 	beq	.L6	@,
-	ldr	r3, [r3, #8]	@ D.30334, <variable>.PhyAddr
-	cmp	r3, r0	@ D.30334, PhyAddr
-	add	r4, r3, r4	@ tmp175, D.30334, D.30331
+	ldr	r3, [r3, #8]	@ D.30340, <variable>.PhyAddr
+	cmp	r3, r0	@ D.30340, PhyAddr
+	add	r4, r3, r4	@ tmp175, D.30340, D.30337
 	bgt	.L6	@,
 	cmp	r0, r4	@ PhyAddr, tmp175
 	bge	.L6	@,
 .L14:
 	add	ip, r2, r1, asl #4	@, tmp179, tmp184, i,
-	rsb	r0, r3, r0	@ tmp181, D.30334, PhyAddr
+	rsb	r0, r3, r0	@ tmp181, D.30340, PhyAddr
 	ldr	r2, [ip, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	add	r0, r0, r2	@ VirAddr, tmp181, <variable>.VirAddr
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
@@ -238,14 +238,14 @@ MEM_Vir2Phy:
 	add	r3, r2, #20	@ ivtmp.571, tmp153,
 	b	.L21	@
 .L19:
-	ldr	r3, [r3, #16]	@ D.30354, <variable>.Length
+	ldr	r3, [r3, #16]	@ D.30360, <variable>.Length
 	add	r1, r1, #1	@ i, i,
-	cmp	r3, #0	@ D.30354,
+	cmp	r3, #0	@ D.30360,
 	mov	r4, r1	@ tmp154, i
 	beq	.L24	@,
-	ldr	ip, [r5, #-8]	@ D.30357, <variable>.VirAddr
-	cmp	ip, r0	@ D.30357, VirAddr
-	add	r3, ip, r3	@ tmp158, D.30357, D.30354
+	ldr	ip, [r5, #-8]	@ D.30363, <variable>.VirAddr
+	cmp	ip, r0	@ D.30363, VirAddr
+	add	r3, ip, r3	@ tmp158, D.30363, D.30360
 	bhi	.L24	@,
 	cmp	r0, r3	@ VirAddr, tmp158
 	bcc	.L27	@,
@@ -255,13 +255,13 @@ MEM_Vir2Phy:
 	cmp	r1, #512	@ i,
 	beq	.L29	@,
 .L21:
-	ldr	r4, [r3, #0]	@ D.30354, <variable>.Length
+	ldr	r4, [r3, #0]	@ D.30360, <variable>.Length
 	add	r5, r3, #16	@ tmp155, ivtmp.571,
-	cmp	r4, #0	@ D.30354,
+	cmp	r4, #0	@ D.30360,
 	beq	.L19	@,
-	ldr	ip, [r3, #-8]	@ D.30357, <variable>.VirAddr
-	cmp	ip, r0	@ D.30357, VirAddr
-	add	r4, ip, r4	@ tmp142, D.30357, D.30354
+	ldr	ip, [r3, #-8]	@ D.30363, <variable>.VirAddr
+	cmp	ip, r0	@ D.30363, VirAddr
+	add	r4, ip, r4	@ tmp142, D.30363, D.30360
 	bhi	.L19	@,
 	cmp	r0, r4	@ VirAddr, tmp142
 	bcs	.L19	@,
@@ -269,7 +269,7 @@ MEM_Vir2Phy:
 	add	r2, r2, r1, asl #4	@, tmp147, tmp153, i,
 	ldr	r3, [r2, #16]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	add	r0, r0, r3	@ tmp150, VirAddr, <variable>.PhyAddr
-	rsb	r0, ip, r0	@ PhyAddr, D.30357, tmp150
+	rsb	r0, ip, r0	@ PhyAddr, D.30363, tmp150
 	ldmfd	sp, {r4, r5, fp, sp, pc}	@
 .L29:
 	mov	r0, #0	@ PhyAddr,
@@ -299,14 +299,14 @@ MEM_WritePhyWord:
 	add	r3, r2, #8	@ ivtmp.606, tmp149,
 	b	.L34	@
 .L31:
-	ldr	r5, [r4, #12]	@ D.30576, <variable>.Length
+	ldr	r5, [r4, #12]	@ D.30582, <variable>.Length
 	add	ip, ip, #1	@ i, i,
-	cmp	r5, #0	@ D.30576,
+	cmp	r5, #0	@ D.30582,
 	mov	r6, ip	@ tmp151, i
 	beq	.L37	@,
-	ldr	r3, [r4, #8]	@ D.30575, <variable>.PhyAddr
-	cmp	r0, r3	@ PhyAddr, D.30575
-	add	r5, r3, r5	@ tmp155, D.30575, D.30576
+	ldr	r3, [r4, #8]	@ D.30581, <variable>.PhyAddr
+	cmp	r0, r3	@ PhyAddr, D.30581
+	add	r5, r3, r5	@ tmp155, D.30581, D.30582
 	blt	.L37	@,
 	cmp	r0, r5	@ PhyAddr, tmp155
 	blt	.L40	@,
@@ -316,19 +316,19 @@ MEM_WritePhyWord:
 	cmp	ip, #512	@ i,
 	beq	.L41	@,
 .L34:
-	ldr	r5, [r3, #12]	@ D.30576, <variable>.Length
+	ldr	r5, [r3, #12]	@ D.30582, <variable>.Length
 	add	r4, r3, #16	@ tmp152, ivtmp.606,
-	cmp	r5, #0	@ D.30576,
+	cmp	r5, #0	@ D.30582,
 	beq	.L31	@,
-	ldr	r3, [r3, #8]	@ D.30575, <variable>.PhyAddr
-	cmp	r0, r3	@ PhyAddr, D.30575
-	add	r5, r3, r5	@ tmp141, D.30575, D.30576
+	ldr	r3, [r3, #8]	@ D.30581, <variable>.PhyAddr
+	cmp	r0, r3	@ PhyAddr, D.30581
+	add	r5, r3, r5	@ tmp141, D.30581, D.30582
 	blt	.L31	@,
 	cmp	r0, r5	@ PhyAddr, tmp141
 	bge	.L31	@,
 .L40:
 	add	r2, r2, ip, asl #4	@, tmp145, tmp149, i,
-	rsb	r3, r3, r0	@ tmp147, D.30575, PhyAddr
+	rsb	r3, r3, r0	@ tmp147, D.30581, PhyAddr
 	ldr	r2, [r2, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	add	r0, r3, r2	@ pDst, tmp147, <variable>.VirAddr
 	cmp	r0, #0	@ pDst,
@@ -361,14 +361,14 @@ MEM_ReadPhyWord:
 	add	r3, r2, #8	@ ivtmp.639, tmp152,
 	b	.L46	@
 .L43:
-	ldr	r4, [ip, #12]	@ D.30587, <variable>.Length
+	ldr	r4, [ip, #12]	@ D.30593, <variable>.Length
 	add	r1, r1, #1	@ i, i,
-	cmp	r4, #0	@ D.30587,
+	cmp	r4, #0	@ D.30593,
 	mov	r5, r1	@ tmp153, i
 	beq	.L50	@,
-	ldr	r3, [ip, #8]	@ D.30586, <variable>.PhyAddr
-	cmp	r0, r3	@ PhyAddr, D.30586
-	add	r4, r3, r4	@ tmp157, D.30586, D.30587
+	ldr	r3, [ip, #8]	@ D.30592, <variable>.PhyAddr
+	cmp	r0, r3	@ PhyAddr, D.30592
+	add	r4, r3, r4	@ tmp157, D.30592, D.30593
 	blt	.L50	@,
 	cmp	r0, r4	@ PhyAddr, tmp157
 	blt	.L53	@,
@@ -378,19 +378,19 @@ MEM_ReadPhyWord:
 	cmp	r1, #512	@ i,
 	beq	.L45	@,
 .L46:
-	ldr	r4, [r3, #12]	@ D.30587, <variable>.Length
+	ldr	r4, [r3, #12]	@ D.30593, <variable>.Length
 	add	ip, r3, #16	@ tmp154, ivtmp.639,
-	cmp	r4, #0	@ D.30587,
+	cmp	r4, #0	@ D.30593,
 	beq	.L43	@,
-	ldr	r3, [r3, #8]	@ D.30586, <variable>.PhyAddr
-	cmp	r0, r3	@ PhyAddr, D.30586
-	add	r4, r3, r4	@ tmp143, D.30586, D.30587
+	ldr	r3, [r3, #8]	@ D.30592, <variable>.PhyAddr
+	cmp	r0, r3	@ PhyAddr, D.30592
+	add	r4, r3, r4	@ tmp143, D.30592, D.30593
 	blt	.L43	@,
 	cmp	r0, r4	@ PhyAddr, tmp143
 	bge	.L43	@,
 .L53:
 	add	ip, r2, r1, asl #4	@, tmp147, tmp152, i,
-	rsb	r3, r3, r0	@ tmp149, D.30586, PhyAddr
+	rsb	r3, r3, r0	@ tmp149, D.30592, PhyAddr
 	ldr	r2, [ip, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	add	r1, r3, r2	@ pDst, tmp149, <variable>.VirAddr
 	cmp	r1, #0	@ pDst,
@@ -435,36 +435,36 @@ MEM_ReleaseMemBlock:
 	bl	__memzero	@
 	ldr	r2, .L66	@ ivtmp.671,
 	str	r5, [fp, #-40]	@ VirAddr, FreeMem.VirAddr
-	add	r0, r2, #8192	@ D.30843, ivtmp.671,
+	add	r0, r2, #8192	@ D.30849, ivtmp.671,
 	str	r4, [fp, #-44]	@ PhyAddr, FreeMem.PhyAddr
 	b	.L58	@
 .L56:
-	ldr	r3, [r1, #12]	@ D.30532, <variable>.Length
-	cmp	r3, #0	@ D.30532,
+	ldr	r3, [r1, #12]	@ D.30538, <variable>.Length
+	cmp	r3, #0	@ D.30538,
 	beq	.L61	@,
-	ldr	lr, [r1, #8]	@ D.30535, <variable>.PhyAddr
-	cmp	r4, lr	@ PhyAddr, D.30535
-	add	ip, lr, r3	@ tmp154, D.30535, D.30532
+	ldr	lr, [r1, #8]	@ D.30541, <variable>.PhyAddr
+	cmp	r4, lr	@ PhyAddr, D.30541
+	add	ip, lr, r3	@ tmp154, D.30541, D.30538
 	blt	.L61	@,
 	cmp	r4, ip	@ PhyAddr, tmp154
 	blt	.L64	@,
 .L61:
 	add	r2, r1, #16	@ ivtmp.671, tmp151,
-	cmp	r2, r0	@ ivtmp.671, D.30843
+	cmp	r2, r0	@ ivtmp.671, D.30849
 	beq	.L57	@,
 .L58:
-	ldr	r3, [r2, #12]	@ D.30532, <variable>.Length
+	ldr	r3, [r2, #12]	@ D.30538, <variable>.Length
 	add	r1, r2, #16	@ tmp151, ivtmp.671,
-	cmp	r3, #0	@ D.30532,
+	cmp	r3, #0	@ D.30538,
 	beq	.L56	@,
-	ldr	r2, [r2, #8]	@ D.30535, <variable>.PhyAddr
-	cmp	r4, r2	@ PhyAddr, D.30535
-	add	ip, r2, r3	@ tmp148, D.30535, D.30532
+	ldr	r2, [r2, #8]	@ D.30541, <variable>.PhyAddr
+	cmp	r4, r2	@ PhyAddr, D.30541
+	add	ip, r2, r3	@ tmp148, D.30541, D.30538
 	blt	.L56	@,
 	cmp	r4, ip	@ PhyAddr, tmp148
 	bge	.L56	@,
 .L64:
-	str	r3, [fp, #-36]	@ D.30532, FreeMem.Length
+	str	r3, [fp, #-36]	@ D.30538, FreeMem.Length
 .L57:
 	mov	r0, r6	@, tmp150
 	bl	KernelMemFree	@
@@ -527,7 +527,7 @@ MEM_MapRegisterAddr:
 	moveq	r5, #1	@, tmp145
 	bne	.L75	@,
 .L72:
-	mvn	r0, #0	@ D.30488,
+	mvn	r0, #0	@ D.30494,
 .L73:
 	sub	sp, fp, #24
 	ldmfd	sp, {r4, r5, r6, fp, sp, pc}
@@ -542,7 +542,7 @@ MEM_MapRegisterAddr:
 	subs	r3, r0, #0	@ ptr,
 	beq	.L72	@,
 	str	r6, [r2, #12]	@ RegByteLen, <variable>.Length
-	mov	r0, r5	@ D.30488, tmp145
+	mov	r0, r5	@ D.30494, tmp145
 	stmib	r2, {r3, r4}	@ phole stm
 	b	.L73	@
 	.fnend
@@ -574,7 +574,7 @@ MEM_AllocMemBlock:
 	moveq	r5, #1	@, tmp148
 	bne	.L80	@,
 .L77:
-	mvn	r0, #0	@ D.30448,
+	mvn	r0, #0	@ D.30454,
 .L78:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
@@ -594,8 +594,8 @@ MEM_AllocMemBlock:
 	mov	r1, r2	@, ExpectedLen
 	mov	r2, #4	@,
 	bl	KernelMemMalloc	@
-	ldr	r3, [fp, #-40]	@ D.30462, AllocMem.VirAddr
-	cmp	r3, #0	@ D.30462,
+	ldr	r3, [fp, #-40]	@ D.30468, AllocMem.VirAddr
+	cmp	r3, #0	@ D.30468,
 	beq	.L77	@,
 	ldr	r2, [fp, #-44]	@ ExpectedPhyAddr, AllocMem.PhyAddr
 	ldr	ip, [fp, #-36]	@ ExpectedLen.743, AllocMem.Length
@@ -603,8 +603,8 @@ MEM_AllocMemBlock:
 	beq	.L77	@,
 	movw	r1, #:lower16:.LANCHOR1	@ tmp151,
 	movt	r1, #:upper16:.LANCHOR1	@ tmp151,
-	str	r3, [r4, #4]	@ D.30462, <variable>.VirAddr
-	mov	r0, r5	@ D.30448, tmp148
+	str	r3, [r4, #4]	@ D.30468, <variable>.VirAddr
+	mov	r0, r5	@ D.30454, tmp148
 	str	ip, [r4, #12]	@ ExpectedLen.743, <variable>.Length
 	str	r2, [r4, #8]	@ ExpectedPhyAddr, <variable>.PhyAddr
 	ldr	r2, [r1, #16]	@ s_MemOffset, s_MemOffset
@@ -638,14 +638,14 @@ MEM_CopyVir2Phy:
 	add	r3, ip, #8	@ ivtmp.775, tmp161,
 	b	.L85	@
 .L82:
-	ldr	r6, [r5, #12]	@ D.30598, <variable>.Length
+	ldr	r6, [r5, #12]	@ D.30604, <variable>.Length
 	add	r4, r4, #1	@ i, i,
-	cmp	r6, #0	@ D.30598,
+	cmp	r6, #0	@ D.30604,
 	mov	r7, r4	@ tmp162, i
 	beq	.L88	@,
-	ldr	r3, [r5, #8]	@ D.30597, <variable>.PhyAddr
-	cmp	r0, r3	@ DstPhyAddr, D.30597
-	add	r6, r3, r6	@ tmp166, D.30597, D.30598
+	ldr	r3, [r5, #8]	@ D.30603, <variable>.PhyAddr
+	cmp	r0, r3	@ DstPhyAddr, D.30603
+	add	r6, r3, r6	@ tmp166, D.30603, D.30604
 	blt	.L88	@,
 	cmp	r0, r6	@ DstPhyAddr, tmp166
 	blt	.L91	@,
@@ -655,19 +655,19 @@ MEM_CopyVir2Phy:
 	cmp	r4, #512	@ i,
 	beq	.L92	@,
 .L85:
-	ldr	r6, [r3, #12]	@ D.30598, <variable>.Length
+	ldr	r6, [r3, #12]	@ D.30604, <variable>.Length
 	add	r5, r3, #16	@ tmp163, ivtmp.775,
-	cmp	r6, #0	@ D.30598,
+	cmp	r6, #0	@ D.30604,
 	beq	.L82	@,
-	ldr	r3, [r3, #8]	@ D.30597, <variable>.PhyAddr
-	cmp	r0, r3	@ DstPhyAddr, D.30597
-	add	r6, r3, r6	@ tmp142, D.30597, D.30598
+	ldr	r3, [r3, #8]	@ D.30603, <variable>.PhyAddr
+	cmp	r0, r3	@ DstPhyAddr, D.30603
+	add	r6, r3, r6	@ tmp142, D.30603, D.30604
 	blt	.L82	@,
 	cmp	r0, r6	@ DstPhyAddr, tmp142
 	bge	.L82	@,
 .L91:
 	add	ip, ip, r4, asl #4	@, tmp146, tmp161, i,
-	rsb	r3, r3, r0	@ tmp148, D.30597, DstPhyAddr
+	rsb	r3, r3, r0	@ tmp148, D.30603, DstPhyAddr
 	ldr	ip, [ip, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	adds	r0, r3, ip	@ pDst, tmp148, <variable>.VirAddr
 	moveq	r4, #0	@, tmp151
@@ -706,14 +706,14 @@ MEM_CopyPhy2Vir:
 	add	r3, ip, #8	@ ivtmp.808, tmp161,
 	b	.L97	@
 .L94:
-	ldr	r6, [r5, #12]	@ D.30609, <variable>.Length
+	ldr	r6, [r5, #12]	@ D.30615, <variable>.Length
 	add	r4, r4, #1	@ i, i,
-	cmp	r6, #0	@ D.30609,
+	cmp	r6, #0	@ D.30615,
 	mov	r7, r4	@ tmp162, i
 	beq	.L100	@,
-	ldr	r3, [r5, #8]	@ D.30608, <variable>.PhyAddr
-	cmp	r1, r3	@ SrcPhyAddr, D.30608
-	add	r6, r3, r6	@ tmp166, D.30608, D.30609
+	ldr	r3, [r5, #8]	@ D.30614, <variable>.PhyAddr
+	cmp	r1, r3	@ SrcPhyAddr, D.30614
+	add	r6, r3, r6	@ tmp166, D.30614, D.30615
 	blt	.L100	@,
 	cmp	r1, r6	@ SrcPhyAddr, tmp166
 	blt	.L103	@,
@@ -723,19 +723,19 @@ MEM_CopyPhy2Vir:
 	cmp	r4, #512	@ i,
 	beq	.L104	@,
 .L97:
-	ldr	r6, [r3, #12]	@ D.30609, <variable>.Length
+	ldr	r6, [r3, #12]	@ D.30615, <variable>.Length
 	add	r5, r3, #16	@ tmp163, ivtmp.808,
-	cmp	r6, #0	@ D.30609,
+	cmp	r6, #0	@ D.30615,
 	beq	.L94	@,
-	ldr	r3, [r3, #8]	@ D.30608, <variable>.PhyAddr
-	cmp	r1, r3	@ SrcPhyAddr, D.30608
-	add	r6, r3, r6	@ tmp142, D.30608, D.30609
+	ldr	r3, [r3, #8]	@ D.30614, <variable>.PhyAddr
+	cmp	r1, r3	@ SrcPhyAddr, D.30614
+	add	r6, r3, r6	@ tmp142, D.30614, D.30615
 	blt	.L94	@,
 	cmp	r1, r6	@ SrcPhyAddr, tmp142
 	bge	.L94	@,
 .L103:
 	add	ip, ip, r4, asl #4	@, tmp146, tmp161, i,
-	rsb	r1, r3, r1	@ tmp148, D.30608, SrcPhyAddr
+	rsb	r1, r3, r1	@ tmp148, D.30614, SrcPhyAddr
 	ldr	ip, [ip, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	adds	r1, r1, ip	@ pSrc, tmp148, <variable>.VirAddr
 	moveq	r3, #0	@, tmp151
@@ -775,14 +775,14 @@ MEM_CopyPhy2Phy:
 	mov	r5, r3	@ ivtmp.851, ivtmp.853
 	b	.L108	@
 .L106:
-	ldr	r7, [r6, #12]	@ D.30620, <variable>.Length
+	ldr	r7, [r6, #12]	@ D.30626, <variable>.Length
 	add	r4, r4, #1	@ i, i,
-	cmp	r7, #0	@ D.30620,
+	cmp	r7, #0	@ D.30626,
 	mov	r8, r4	@ tmp177, i
 	beq	.L118	@,
-	ldr	r5, [r6, #8]	@ D.30619, <variable>.PhyAddr
-	cmp	r0, r5	@ DstPhyAddr, D.30619
-	add	r7, r5, r7	@ tmp184, D.30619, D.30620
+	ldr	r5, [r6, #8]	@ D.30625, <variable>.PhyAddr
+	cmp	r0, r5	@ DstPhyAddr, D.30625
+	add	r7, r5, r7	@ tmp184, D.30625, D.30626
 	blt	.L118	@,
 	cmp	r0, r7	@ DstPhyAddr, tmp184
 	blt	.L123	@,
@@ -792,33 +792,33 @@ MEM_CopyPhy2Phy:
 	cmp	r4, #512	@ i,
 	beq	.L125	@,
 .L108:
-	ldr	r7, [r5, #12]	@ D.30620, <variable>.Length
+	ldr	r7, [r5, #12]	@ D.30626, <variable>.Length
 	add	r6, r5, #16	@ tmp178, ivtmp.851,
-	cmp	r7, #0	@ D.30620,
+	cmp	r7, #0	@ D.30626,
 	beq	.L106	@,
-	ldr	r5, [r5, #8]	@ D.30619, <variable>.PhyAddr
-	cmp	r0, r5	@ DstPhyAddr, D.30619
-	add	r7, r5, r7	@ tmp147, D.30619, D.30620
+	ldr	r5, [r5, #8]	@ D.30625, <variable>.PhyAddr
+	cmp	r0, r5	@ DstPhyAddr, D.30625
+	add	r7, r5, r7	@ tmp147, D.30625, D.30626
 	blt	.L106	@,
 	cmp	r0, r7	@ DstPhyAddr, tmp147
 	bge	.L106	@,
 .L123:
 	add	r6, ip, r4, asl #4	@, tmp151, tmp174, i,
-	rsb	r0, r5, r0	@ tmp153, D.30619, DstPhyAddr
+	rsb	r0, r5, r0	@ tmp153, D.30625, DstPhyAddr
 	ldr	r4, [r6, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	add	r0, r0, r4	@ pDst, tmp153, <variable>.VirAddr
 .L107:
 	mov	r4, #0	@ i,
 	b	.L112	@
 .L109:
-	ldr	r6, [r5, #12]	@ D.30631, <variable>.Length
+	ldr	r6, [r5, #12]	@ D.30637, <variable>.Length
 	add	r4, r4, #1	@ i, i,
-	cmp	r6, #0	@ D.30631,
+	cmp	r6, #0	@ D.30637,
 	mov	r7, r4	@ tmp175, i
 	beq	.L116	@,
-	ldr	r3, [r5, #8]	@ D.30630, <variable>.PhyAddr
-	cmp	r1, r3	@ SrcPhyAddr, D.30630
-	add	r6, r3, r6	@ tmp183, D.30630, D.30631
+	ldr	r3, [r5, #8]	@ D.30636, <variable>.PhyAddr
+	cmp	r1, r3	@ SrcPhyAddr, D.30636
+	add	r6, r3, r6	@ tmp183, D.30636, D.30637
 	blt	.L116	@,
 	cmp	r1, r6	@ SrcPhyAddr, tmp183
 	blt	.L122	@,
@@ -828,19 +828,19 @@ MEM_CopyPhy2Phy:
 	cmp	r4, #512	@ i,
 	beq	.L126	@,
 .L112:
-	ldr	r6, [r3, #12]	@ D.30631, <variable>.Length
+	ldr	r6, [r3, #12]	@ D.30637, <variable>.Length
 	add	r5, r3, #16	@ tmp176, ivtmp.853,
-	cmp	r6, #0	@ D.30631,
+	cmp	r6, #0	@ D.30637,
 	beq	.L109	@,
-	ldr	r3, [r3, #8]	@ D.30630, <variable>.PhyAddr
-	cmp	r1, r3	@ SrcPhyAddr, D.30630
-	add	r6, r3, r6	@ tmp155, D.30630, D.30631
+	ldr	r3, [r3, #8]	@ D.30636, <variable>.PhyAddr
+	cmp	r1, r3	@ SrcPhyAddr, D.30636
+	add	r6, r3, r6	@ tmp155, D.30636, D.30637
 	blt	.L109	@,
 	cmp	r1, r6	@ SrcPhyAddr, tmp155
 	bge	.L109	@,
 .L122:
 	add	ip, ip, r4, asl #4	@, tmp159, tmp174, i,
-	rsb	r1, r3, r1	@ tmp161, D.30630, SrcPhyAddr
+	rsb	r1, r3, r1	@ tmp161, D.30636, SrcPhyAddr
 	ldr	ip, [ip, #12]	@ <variable>.VirAddr, <variable>.VirAddr
 	adds	r1, r1, ip	@ pSrc, tmp161, <variable>.VirAddr
 	moveq	r3, #0	@, tmp164
@@ -887,9 +887,9 @@ MEM_DelMemRecord:
 	add	r3, lr, #8	@ ivtmp.884, tmp173,
 	b	.L130	@
 .L128:
-	ldr	r3, [r1, #12]	@ D.30309, <variable>.Length
+	ldr	r3, [r1, #12]	@ D.30315, <variable>.Length
 	add	r2, r2, #1	@ i, i,
-	cmp	r3, #0	@ D.30309,
+	cmp	r3, #0	@ D.30315,
 	mov	r0, r2	@ tmp176, i
 	beq	.L133	@,
 	ldr	ip, [r1, #8]	@ <variable>.PhyAddr, <variable>.PhyAddr
@@ -901,9 +901,9 @@ MEM_DelMemRecord:
 	cmp	r2, #512	@ i,
 	beq	.L139	@,
 .L130:
-	ldr	r0, [r3, #12]	@ D.30309, <variable>.Length
+	ldr	r0, [r3, #12]	@ D.30315, <variable>.Length
 	add	r1, r3, #16	@ tmp177, ivtmp.884,
-	cmp	r0, #0	@ D.30309,
+	cmp	r0, #0	@ D.30315,
 	beq	.L128	@,
 	ldr	ip, [r3, #8]	@ <variable>.PhyAddr, <variable>.PhyAddr
 	cmp	ip, r4	@ <variable>.PhyAddr, PhyAddr
@@ -911,7 +911,7 @@ MEM_DelMemRecord:
 	ldr	r3, [r3, #4]	@ <variable>.VirAddr, <variable>.VirAddr
 	cmp	r3, r5	@ <variable>.VirAddr, VirAddr
 	bne	.L128	@,
-	cmp	r0, r6	@ D.30309, Length
+	cmp	r0, r6	@ D.30315, Length
 	bne	.L128	@,
 .L136:
 	add	r0, lr, r2, asl #4	@, tmp150, tmp173, i,
@@ -923,13 +923,13 @@ MEM_DelMemRecord:
 	str	r4, [r2, #12]	@ tmp153, <variable>.VirAddr
 	str	r4, [r1, #12]	@ tmp153, <variable>.Length
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, r4	@ D.30320, tmp153
+	mov	r0, r4	@ D.30326, tmp153
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L138:
 	ldr	ip, [r1, #4]	@ <variable>.VirAddr, <variable>.VirAddr
 	cmp	ip, r5	@ <variable>.VirAddr, VirAddr
 	bne	.L133	@,
-	cmp	r3, r6	@ D.30309, Length
+	cmp	r3, r6	@ D.30315, Length
 	beq	.L136	@,
 	add	r2, r0, #1	@ i, tmp176,
 	add	r3, r1, #16	@ ivtmp.884, tmp177,
@@ -938,7 +938,7 @@ MEM_DelMemRecord:
 .L139:
 	ldr	r0, .L140	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.30320,
+	mvn	r0, #0	@ D.30326,
 	ldmfd	sp, {r3, r4, r5, r6, fp, sp, pc}	@
 .L141:
 	.align	2
@@ -995,12 +995,12 @@ MEM_AddMemRecord:
 	str	r7, [r3, #12]	@ Length, <variable>.Length
 	str	r4, [r3, #8]	@ PhyAddr, <variable>.PhyAddr
 	bl	OSAL_SpinUnLockIRQ	@
-	mov	r0, r6	@ D.30297, <variable>.Length
+	mov	r0, r6	@ D.30303, <variable>.Length
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L152:
 	ldr	r0, .L154	@,
 	bl	OSAL_SpinUnLockIRQ	@
-	mvn	r0, #0	@ D.30297,
+	mvn	r0, #0	@ D.30303,
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}	@
 .L155:
 	.align	2

@@ -167,6 +167,7 @@ typedef enum hiUNF_AVPLAY_EVENT_E
 	HI_UNF_AVPLAY_EVENT_AUD_UNSUPPORT,		   /**< unsupported audio *//**<CNcomment: 不支持的音频*/
 	HI_UNF_AVPLAY_EVENT_AUD_FRAME_ERR,		   /**< audio frame error *//**<CNcomment: 音频帧出错*/
 	HI_UNF_AVPLAY_EVENT_VID_ERR_TYPE,          /**< the setting vid codec type is error, HI_UNF_VCODEC_TYPE_E*//**<CNcomment: 设置的视频协议类型错误, HI_UNF_VCODEC_TYPE_E*/ 
+    HI_UNF_AVPLAY_EVENT_VIDFRM_STATUS_REPORT,  /**<Video frame status report, HI_UNF_VIDEO_FRAME_PLAY_PARAM_S*/ /**<CNcomment: 视频帧的状态报告*/    
 	HI_UNF_AVPLAY_EVENT_BUTT
 } HI_UNF_AVPLAY_EVENT_E;
 

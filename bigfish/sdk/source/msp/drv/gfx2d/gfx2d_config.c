@@ -2,7 +2,7 @@
 *              Copyright 2004 - 2014, Hisilicon Tech. Co., Ltd.
 *                           ALL RIGHTS RESERVED
 * FileName: gfx2d_os.c
-* Description: 
+* Description:
 *
 * History:
 * Version   Date         Author     DefectNum    Description
@@ -48,7 +48,7 @@ HI_S32 GFX2D_CONFIG_SetMemSize(HI_U32 u32MemSize)
     }
 
     gs_u32MemSize = u32MemSize;
-    
+
     return HI_SUCCESS;
 }
 
@@ -96,11 +96,31 @@ HI_BOOL GFX2D_CONFIG_IsProcOn(HI_VOID)
 HI_S32 GFX2D_CONFIG_WriteProc(struct file * file, const char __user * buf,
                               size_t count, loff_t *ppos)
 {
-    if (strncasecmp(buf, "proc on", strlen("proc on")) == 0)
+
+
+    HI_CHAR TmpBuf[128] = {'\0'};
+
+    if (NULL == buf)
+    {
+       return 0;
+    }
+
+    if (count > sizeof(TmpBuf))
+    {
+       return 0;
+    }
+
+    if (copy_from_user(TmpBuf, buf, count))
+    {
+        return 0;
+    }
+    TmpBuf[sizeof(TmpBuf) - 1] = '\0';
+
+    if (strncasecmp(TmpBuf, "proc on", strlen("proc on")) == 0)
     {
         gs_bProcEnable = HI_TRUE;
     }
-    else if (strncasecmp(buf, "proc off", strlen("proc off")) == 0)
+    else if (strncasecmp(TmpBuf, "proc off", strlen("proc off")) == 0)
     {
         gs_bProcEnable = HI_FALSE;
     }
@@ -112,11 +132,11 @@ HI_S32 GFX2D_CONFIG_WriteProc(struct file * file, const char __user * buf,
         }
 
 #ifndef GFX2D_CHECK_UNSUPPORT
-        if (strncasecmp(buf, "check on", strlen("check on")) == 0)
+        if (strncasecmp(TmpBuf, "check on", strlen("check on")) == 0)
         {
             gs_bCheckEnable = HI_TRUE;
         }
-        else if (strncasecmp(buf, "check off", strlen("check off")) == 0)
+        else if (strncasecmp(TmpBuf, "check off", strlen("check off")) == 0)
         {
             gs_bCheckEnable = HI_FALSE;
         }

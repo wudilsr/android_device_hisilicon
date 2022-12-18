@@ -1,9 +1,25 @@
 include $(CLEAR_VARS)
 
+ifeq ($(SUPPORT_SDCARDFS),true)
+	ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
+	CHIP_TABLE := $(CHIPNAME)-sdcardfs-nand-loader.xml
+	else
+	CHIP_TABLE := $(CHIPNAME)-sdcardfs-nand.xml
+	endif
+else
 ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+ifeq ($(strip $(HISILICON_TEE)),true)
+CHIP_TABLE := $(CHIPNAME)-nand-tee-vmx.xml
+else
+CHIP_TABLE := $(CHIPNAME)-nand-vmx.xml
+endif
+else
 CHIP_TABLE := $(CHIPNAME)-nand-loader.xml
+endif
 else
 CHIP_TABLE := $(CHIPNAME)-nand.xml
+endif
 endif
 CHIP_TABLE_PATH         := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
 
@@ -58,7 +74,12 @@ include $(CLEAR_VARS)
 
 NAND_HIBOOT_IMG := fastboot-burn-nand.bin
 NAND_HIBOOT_OBJ := $(TARGET_OUT_INTERMEDIATES)/NAND_HIBOOT_OBJ
+
+ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
+NAND_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_VMX_CFG)
+else
 NAND_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_CFG)
+endif
 
 nand_fastboot_prepare:
 	mkdir -p $(NAND_HIBOOT_OBJ)
@@ -86,7 +107,16 @@ CFG_HI_APPLOADER_SUPPORT=y' $(NAND_HIBOOT_OBJ)/$(NAND_BOOT_ANDROID_CFG); \
 	fi
 	cd $(SDK_DIR);$(MAKE) hiboot O=$(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ) \
 	SDK_CFGFILE=../../../../$(NAND_HIBOOT_OBJ)/$(NAND_BOOT_ANDROID_CFG);\
-	cp -avf $(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/fastboot-burn.bin $(ANDROID_BUILD_TOP)/$(NAND_PRODUCT_OUT)/fastboot.bin
+	if [ -f "$(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/miniboot.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/miniboot.bin $(ANDROID_BUILD_TOP)/$(NAND_PRODUCT_OUT)/fastboot.bin ; \
+	elif [ -f "$(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/fastboot-burn.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/fastboot-burn.bin $(ANDROID_BUILD_TOP)/$(NAND_PRODUCT_OUT)/fastboot.bin ; \
+	else \
+	exit ;\
+	fi
+	if [ -f "$(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/advca_programmer.bin" ]; then \
+	cp -avf $(ANDROID_BUILD_TOP)/$(NAND_HIBOOT_OBJ)/advca_programmer.bin $(ANDROID_BUILD_TOP)/$(NAND_PRODUCT_OUT)/advca_programmer.bin; \
+	fi
 
 
 .PHONY: hiboot-nand

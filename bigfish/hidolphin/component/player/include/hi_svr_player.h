@@ -57,6 +57,7 @@ typedef enum hiSVR_PLAYER_TPLAY_MODE_E
 {
     HI_SVR_PLAYER_TPLAYMODE_SMOOTH = 0x0, /**< smooth tplay mode *//**< CNcomment: 平滑快进模式 */
     HI_SVR_PLAYER_TPLAYMODE_IFRAME= 0x1,/**< I frame tplay mode. *//**< CNcomment: I帧快进模式*/
+    HI_SVR_PLAYER_TPLAYMODE_DMX_IFRAME = 0x2, /**< demux Iframe tplay mode, must be set after setmedia, return error if demux not support. */ /**< CNcomment: 解析器I帧快进模式，必须在setmedia之后设置，如果解析器不支持将返回错误 */
     HI_SVR_PLAYER_TPLAYMODE_BUTT
 } HI_SVR_PLAYER_TPLAY_MODE_E;
 
@@ -143,6 +144,7 @@ typedef enum hiSVR_PLAYER_EVENT_E
     HI_SVR_PLAYER_EVENT_DOWNLOAD_PROGRESS,   /**< Current download progress of the player. The event is reported every 300 ms. The parameter is ::HI_SVR_PLAYER_PROGRESS_S. *//**< CNcomment:播放器当前下载进度，每隔300ms上报一次该事件，参数值为::HI_SVR_PLAYER_PROGRESS_S */
     HI_SVR_PLAYER_EVENT_BUFFER_STATE,        /**< Reporting buffer status. The parameter type is ::HI_SVR_PLAYER_BUFFER_S. *//**< CNcomment:缓冲状态上报,参数类型为::HI_SVR_PLAYER_BUFFER_S */
     HI_SVR_PLAYER_EVENT_FIRST_FRAME_TIME,    /**< The display time of the first frame from setting the setMedia. The parameter is ::HI_U32, in the unit of ms. *//**< CNcomment:从设置媒体setMedia开始第一帧显示时间,参数为::HI_U32,单位为ms .*/
+    HI_SVR_PLAYER_EVENT_FIRST_FRAME_AFTER_SEEK, /**< The event of getting first frame after seek. *//**< CNcomment: seek之后获取到第一帧视频 */
 
     HI_SVR_PLAYER_EVENT_ERROR,               /**< Event of indicating that an error occurs in the player. The parameter is ::HI_SVR_PLAYER_ERROR_E.*//**< CNcomment:播放器错误信息事件，参数为::HI_SVR_PLAYER_ERROR_E */
     HI_SVR_PLAYER_EVENT_NETWORK_INFO,       /**< Report the network status. The parameter is ::HI_FORMAT_NET_STATUS_S. *//**< CNcomment:网络状态上报, 参数为::HI_FORMAT_NET_STATUS_S */

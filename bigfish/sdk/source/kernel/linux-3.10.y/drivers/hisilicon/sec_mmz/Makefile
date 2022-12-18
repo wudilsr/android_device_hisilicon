@@ -5,7 +5,7 @@ CROSS_COMPILE ?= arm-histbv300-linux-
 PWD           := $(shell pwd)
 CONFIG_SEC_MMZ ?= y
 
-ccflags-y += -Idrivers/hisilicon/tee/include
+ccflags-y += -Idrivers/hisilicon/tee/tee_hisi/tzdriver
 
 obj-$(CONFIG_SEC_MMZ) += secmmz.o
 

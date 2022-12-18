@@ -1,6 +1,10 @@
 package com.hisilicon.multiscreen.mirror;
 
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,16 +12,23 @@ import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.media.AudioFormat;
 import android.media.AudioTrack;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 
 import com.hisilicon.multiscreen.mybox.MultiScreenControlService;
 import com.hisilicon.multiscreen.mybox.MultiSettingActivity;
+import com.hisilicon.multiscreen.mybox.R;
 import com.hisilicon.multiscreen.protocol.HiDeviceInfo;
+import com.hisilicon.multiscreen.protocol.utils.HostNetInterface;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
+import com.huawei.videoengineapp.ViEAndroidJavaAPI;
+import com.huawei.videoengine.ViERenderer;
 
 /**
  * Class mirrorView, be used to show mirror-screen on client.<br>
@@ -74,6 +85,16 @@ public class MirrorView extends SurfaceView
      * Surface view height.
      */
     private int viewHeight;
+
+    private ViEAndroidJavaAPI ViEAndroidAPI = null;
+    private SurfaceView mSurfaceView = null;
+    private boolean viERunning = false;
+    private LinearLayout mViewLayout = null;
+
+    /**
+     * use HME or not, true means use HME
+     */
+    private boolean useHME = true;
 
     /**
      * Constructor of mirrorView, to initialize SurfaceView.<br>
@@ -146,8 +167,7 @@ public class MirrorView extends SurfaceView
     }
 
     /**
-     * Implement SurfaceHolder interface to receive information about changes to
-     * the surface.<br>
+     * Implement SurfaceHolder interface to receive information about changes to the surface.<br>
      * CN:实现接口SurfaceHolder，用于接收Surface信息。
      */
     SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback()
@@ -166,6 +186,7 @@ public class MirrorView extends SurfaceView
             mSurfaceHolder = holder;
             mSurfaceHolder.setFormat(PixelFormat.RGB_565);
             openSurface();
+
             LogTool.v("surfaceCreated end");
         }
 
@@ -179,9 +200,100 @@ public class MirrorView extends SurfaceView
         }
     };
 
+    public void setViewLayout(LinearLayout mLayout)
+    {
+        mViewLayout = mLayout;
+
+    }
+
+    private String GetLocalIpAddress()
+    {
+        String localIP = "127.0.0.1";
+        WifiManager wifiMgr = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
+        WifiInfo info = (null == wifiMgr ? null : wifiMgr.getConnectionInfo());
+        if (null != info)
+        {
+            localIP = HostNetInterface.int2Ip(info.getIpAddress());
+        }
+        return localIP;
+    }
+
+    private void startVideo()
+    {
+
+        LogTool.d("startVideo start");
+        int ret = 0;
+        ViEAndroidJavaAPI.szRemoteIP = mAccessIp;
+        ViEAndroidJavaAPI.szLocalIP = GetLocalIpAddress();
+        LogTool.v("LocalIP  = " + ViEAndroidJavaAPI.szLocalIP + ",RemoteIP "
+                + ViEAndroidJavaAPI.szRemoteIP);
+        if (null == ViEAndroidAPI)
+        {
+            ViEAndroidAPI = new ViEAndroidJavaAPI(null);
+        }
+        ret = ViEAndroidAPI.Init(ViEAndroidJavaAPI.logLevel);
+        if (ret != 0)
+        {
+            LogTool.v("ViEAndroidAPI Init err..");
+        }
+        ret = ViEAndroidAPI.SetLocalReceiver(ViEAndroidJavaAPI.uiLocalPort,
+                ViEAndroidJavaAPI.szLocalIP.getBytes());
+        if (ret != 0)
+        {
+            LogTool.v("ViEAndroidAPI SetLocalReceiver err..");
+        }
+        ret = ViEAndroidAPI.SetSendDestination(ViEAndroidJavaAPI.uiRemotePort,
+                ViEAndroidJavaAPI.szRemoteIP.getBytes());
+        if (ret != 0)
+        {
+            LogTool.v("SetSendDestination err.." + ret);
+        }
+        mSurfaceView = ViERenderer.CreateRenderer(mContext, true);
+        if (null == mSurfaceView)
+        {
+            LogTool.v("ViEAndroidAPI CreateRenderer err..");
+        }
+        ViEAndroidAPI.SetReceiveCodec(ViEAndroidJavaAPI.uiBitRate, ViEAndroidJavaAPI.uiWidth,
+                ViEAndroidJavaAPI.uiHeight, ViEAndroidJavaAPI.fFrameRate,
+                ViEAndroidJavaAPI.eCipherType);
+        ret = ViEAndroidAPI.StartReceive(mSurfaceView);
+        if (ret != 0)
+        {
+            LogTool.v("ViEAndroidAPI StartReceive err..");
+        }
+        ViEAndroidAPI.SetSendCodec(ViEAndroidJavaAPI.uiBitRate, ViEAndroidJavaAPI.eCipherType);
+        ret = ViEAndroidAPI.StartSend();
+        if (ret != 0)
+        {
+            LogTool.v("ViEAndroidAPI StartSend err..");
+        }
+        mViewLayout.addView(mSurfaceView);
+        viERunning = true;
+        LogTool.d("startVideo end");
+    }
+
+    private void StopVideo()
+    {
+        LogTool.d("StopVideo begin");
+        if (ViEAndroidAPI != null)
+        {
+            if (viERunning)
+            {
+                viERunning = false;
+                //ViEAndroidAPI.StopReceive();
+                //ViEAndroidAPI.StopSend();
+                ViEAndroidAPI.Terminate();
+                mViewLayout.removeView(mSurfaceView);
+                com.huawei.videoengine.ViERenderer.setSurfaceNull(mSurfaceView);
+                com.huawei.videoengine.ViERenderer.FreeLocalRenderResource();
+                mSurfaceView = null;
+            }
+        }
+        LogTool.d("StopVideo end");
+    }
+
     /**
-     * Pass the surface object to JNI and set keep screen on when the surface is
-     * created.<br>
+     * Pass the surface object to JNI and set keep screen on when the surface is created.<br>
      * Surface建立时，将surface对象传入JNI，并保持屏幕打开。
      */
     private void openSurface()
@@ -201,7 +313,15 @@ public class MirrorView extends SurfaceView
         String type = MultiScreenControlService.getInstance().getSupportVideoType();
         if (type.equalsIgnoreCase(MultiScreenControlService.VIDEO_H264_TYPE))
         {
-            startH264Surface(mSurface, Integer.valueOf(osVersion), mAccessIp);
+            // y00273148 modify for hme
+            if(useHME == true)
+            {
+                startVideo();
+            }
+            else
+            {
+                startH264Surface(mSurface, Integer.valueOf(osVersion), mAccessIp);
+            }
         }
         else
         {
@@ -231,6 +351,7 @@ public class MirrorView extends SurfaceView
     @SuppressLint("NewApi")
     private void destroySurface()
     {
+        LogTool.d("destroySurface begin");
         if (mAudioTrack != null)
         {
             mAudioTrack.stop();
@@ -240,15 +361,23 @@ public class MirrorView extends SurfaceView
 
         if (sLastSurfaceType.equalsIgnoreCase(MultiScreenControlService.VIDEO_H264_TYPE))
         {
-            destroyH264Surface();
+            // y00273148 modify for h264
+            LogTool.d("StopVideo begin");
+            if(useHME == true)
+                StopVideo();
+            else
+                destroyH264Surface();
+            LogTool.d("StopVideo end");
         }
         else
         {
             destroyMirrorSurface();
         }
 
+        stopAudio();
         mSurface.release();
         mSurface = null;
+        LogTool.d("destroySurface end");
     }
 
     /**
@@ -291,8 +420,8 @@ public class MirrorView extends SurfaceView
 
     /**
      * config attributes of AudioTrack and run it.
-     * @param streamType eg:STREAM_VOICE_CALL, STREAM_SYSTEM, STREAM_RING,
-     *        STREAM_MUSIC and STREAM_ALARM
+     * @param streamType eg:STREAM_VOICE_CALL, STREAM_SYSTEM, STREAM_RING, STREAM_MUSIC and
+     *        STREAM_ALARM
      * @param sampleRate eg:48000,44100etc.
      * @param channelConfig channel num eg:1,2,5 etc
      * @param bytesPerSample bandwidth eg: 2,3 etc
@@ -300,11 +429,10 @@ public class MirrorView extends SurfaceView
      * @return broadcast delay
      */
     private static int configATrack(int streamType, int sampleRate, int channelConfig,
-        int bytesPerSample, int trackMode)
+            int bytesPerSample, int trackMode)
     {
         int latency = 0;
-        int chanConfig =
-            (channelConfig == 2) ? (AudioFormat.CHANNEL_CONFIGURATION_MONO)
+        int chanConfig = (channelConfig == 2) ? (AudioFormat.CHANNEL_CONFIGURATION_MONO)
                 : (AudioFormat.CHANNEL_CONFIGURATION_STEREO);
         // Get the AudioTrack minimum buffer size
         int iMinBufSize = AudioTrack.getMinBufferSize(sampleRate, chanConfig, bytesPerSample);
@@ -316,14 +444,12 @@ public class MirrorView extends SurfaceView
         // Constructor a AudioTrack object
         try
         {
-            mAudioTrack =
-                new AudioTrack(streamType, sampleRate, chanConfig, bytesPerSample, iMinBufSize * 4,
-                    trackMode);
+            mAudioTrack = new AudioTrack(streamType, sampleRate, chanConfig, bytesPerSample,
+                    iMinBufSize * 4, trackMode);
             LogTool.d("mAudioTrack OK" + streamType + sampleRate + chanConfig + bytesPerSample
-                + iMinBufSize * 2 + trackMode);
+                    + iMinBufSize * 2 + trackMode);
             mAudioTrack.play();
-            latency =
-                (int) (iMinBufSize * 4.0 * 1000 / bytesPerSample / sampleRate / channelConfig);
+            latency = (int) (iMinBufSize * 4.0 * 1000 / bytesPerSample / sampleRate / channelConfig);
             LogTool.d("mAudioTrack play OK");
         }
         catch (IllegalArgumentException iae)
@@ -334,8 +460,7 @@ public class MirrorView extends SurfaceView
     }
 
     /**
-     * JNI function, start mirror with the surface object and ANDROID API
-     * version.<br>
+     * JNI function, start mirror with the surface object and ANDROID API version.<br>
      * CN:JNI函数，设置surface对象和ANDROID API版本，并开启传屏。
      * @param surface - surface object
      * @param apiVersion - ANDROID API version
@@ -362,6 +487,12 @@ public class MirrorView extends SurfaceView
      */
     public native void startAudio(Object mirrorview_this);
 
+    /**
+     * JNI function, stop audio.<br>
+     * CN:JNI函数，关闭音频传输。
+     * @param mirrorview_this
+     */
+    public native void stopAudio();
     /**
      * JNI function, config Audio.<br>
      * CN:JNI函数,配置Audio的play 或者pause。

@@ -34,8 +34,8 @@ extern "C" {
 #define OMX_VDEC_NORMAL_COMPONENT_NAME     "OMX.hisi.video.decoder"
 #define OMX_VDEC_SECURE_COMPONENT_NAME     "OMX.hisi.video.decoder.secure"
 /* define support real , default not support real */
-//#define REAL8_SUPPORT
-//#define REAL9_SUPPORT
+#define REAL8_SUPPORT
+#define REAL9_SUPPORT
 
 /** Enum for video codingtype extensions */
 typedef enum OMX_VIDEO_CODINGEXTTYPE {
@@ -56,7 +56,7 @@ typedef enum OMX_VIDEO_VP6FORMATTYPE {
     OMX_VIDEO_VP6      = 0x02,   /**< On2 VP6 */
     OMX_VIDEO_VP6F     = 0x04,   /**< On2 VP6 (Flash version) */
     OMX_VIDEO_VP6A     = 0x08,   /**< On2 VP6 (Flash version, with alpha channel) */
-    OMX_VIDEO_VP6FormatKhronosExtensions = 0x6F000000, /**< Reserved region for introducing Khronos 
+    OMX_VIDEO_VP6FormatKhronosExtensions = 0x6F000000, /**< Reserved region for introducing Khronos
                                                             Standard Extensions */
     OMX_VIDEO_VP6FormatVendorStartUnused = 0x7F000000, /**< Reserved region for introducing Vendor Extensions */
     OMX_VIDEO_VP6FormatMax    = 0x7FFFFFFF
@@ -158,7 +158,7 @@ typedef struct OMX_HISI_PARAM_CHANNELATTRIBUTES  {
     OMX_U32 nDecodeMode;
     OMX_U32 nPictureOrder;
     OMX_U32 nLowdlyEnable;
-    OMX_U32 xFramerate;    
+    OMX_U32 xFramerate;
 }  OMX_HISI_PARAM_CHANNELATTRIBUTES;
 
 #ifdef ANDROID // native buffer
@@ -215,7 +215,7 @@ typedef struct PrepareForAdaptivePlaybackParams {
     OMX_VERSIONTYPE nVersion;
     OMX_U32 nPortIndex;
     OMX_BOOL bEnable;
-    OMX_U32 nMaxFrameWidth;                                                                                                                                                                                    
+    OMX_U32 nMaxFrameWidth;
     OMX_U32 nMaxFrameHeight;
 }PrepareForAdaptivePlaybackParams;
 #endif

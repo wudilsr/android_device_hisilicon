@@ -42,6 +42,7 @@ History       :
 
 #define CI_BUF_LIST_FLAG_IVSET_BIT  (21)
 #define CI_BUF_LIST_FLAG_EOL_BIT    (22)
+#define CIPHER_MAX_RSA_KEY_LEN 512
 
 typedef struct hiCI_BUF_LIST_ENTRY_S
 {
@@ -219,6 +220,17 @@ typedef struct hiCIPHER_TASK_S
     HI_DRV_CIPHER_DATA_INFO_S         	stData2Process;
     HI_U32                      u32CallBackArg;
 }HI_DRV_CIPHER_TASK_S;
+
+typedef struct
+{    
+    HI_U8  *pu8Input;    
+    HI_U8  *pu8Output;   
+    HI_U32  u32DataLen;    
+    HI_U8  *pu8N;    
+    HI_U8  *pu8K;    
+    HI_U16 u16NLen;    
+    HI_U16 u16KLen;
+}CIPHER_RSA_DATA_S;
 
 /***************************** Macro Definition ******************************/
 /** \addtogroup      H_3_5 */

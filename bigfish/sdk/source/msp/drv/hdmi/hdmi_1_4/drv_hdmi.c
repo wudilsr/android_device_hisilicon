@@ -243,6 +243,8 @@ static hdmi_VideoIdentification_t  VideoCodes[] =
     }                                                     \
 }while(0)
 
+#define HDMI_GET_CEC_CMD_TIMEOUT      (10000)
+
 static HI_U32 hdmi_Mutex_Event_Count = 0;
 HI_DECLARE_MUTEX(g_HDMIEventMutex);
 #define HDMI_EVENT_LOCK()                                     \
@@ -745,7 +747,7 @@ HI_U32 DRV_HDMI_Init(HI_U32 FromUserSpace)
         {
             bOpenAlready = HI_TRUE;
         }
-        
+
         SI_Adjust_SwingCtrl(DRV_HDMI_Disp2UnfFmt(enEncFmt), HI_UNF_HDMI_DEEP_COLOR_24BIT);
     }
 
@@ -1007,11 +1009,14 @@ HI_VOID hdmi_OpenNotify(HI_U32 u32ProcID,HI_UNF_HDMI_EVENT_TYPE_E event)
 HI_U32 DRV_HDMI_Open(HI_UNF_HDMI_ID_E enHdmi, HDMI_OPEN_S *pOpen, HI_U32 FromUserSpace,HI_U32 u32ProcID)
 {
     //HI_U32 Ret;
-    HI_BOOL bOpenLastTime = DRV_Get_IsChnOpened(enHdmi);
-    HDMI_APP_ATTR_S     *pstAppAttr = DRV_Get_AppAttr(enHdmi);
+    HI_BOOL         bOpenLastTime = HI_FALSE;
+    HDMI_APP_ATTR_S *pstAppAttr   = HI_NULL;
 
     COM_INFO("Enter DRV_HDMI_Open\n");
     HDMI_CHECK_ID(enHdmi);
+
+    bOpenLastTime = DRV_Get_IsChnOpened(enHdmi);
+    pstAppAttr = DRV_Get_AppAttr(enHdmi);
 
     g_HDMIOpenNum ++; //record open num
 
@@ -1376,7 +1381,11 @@ HI_U32 DRV_HDMI_GetAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_ATTR_S *pstAttr)
 #if defined (CEC_SUPPORT)
 HI_U32 DRV_HDMI_CECStatus(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_STATUS_S  *pStatus)
 {
-    HI_UNF_HDMI_CEC_STATUS_S *pstCecStatus = DRV_Get_CecStatus(enHdmi);
+    HI_UNF_HDMI_CEC_STATUS_S *pstCecStatus = HI_NULL;
+    HDMI_CHECK_ID(enHdmi);
+
+    pstCecStatus = DRV_Get_CecStatus(enHdmi);
+
     memset(pStatus, 0, sizeof(HI_UNF_HDMI_CEC_STATUS_S));
     memcpy(pStatus, pstCecStatus, sizeof(HI_UNF_HDMI_CEC_STATUS_S));
 
@@ -1400,13 +1409,15 @@ HI_U32 DRV_HDMI_GetCECAddress(HI_U8 *pPhyAddr, HI_U8 *pLogicalAddr)
 
 HI_U32 DRV_HDMI_SetCECCommand(HI_UNF_HDMI_ID_E enHdmi, const HI_UNF_HDMI_CEC_CMD_S  *pCECCmd)
 {
-    HI_UNF_HDMI_CEC_STATUS_S *pstCecStatus = DRV_Get_CecStatus(enHdmi);
+    HI_UNF_HDMI_CEC_STATUS_S *pstCecStatus = HI_NULL;
     HI_U32 Ret = HI_SUCCESS;
 
     COM_INFO("Enter DRV_HDMI_SetCECCommand\n");
     HDMI_CHECK_ID(enHdmi);
     HDMI_CheckChnOpen(enHdmi);
     HDMI_CHECK_NULL_PTR(pCECCmd);
+
+    pstCecStatus = DRV_Get_CecStatus(enHdmi);
 
     if(!DRV_Get_IsCECStart(enHdmi))
     {
@@ -1428,6 +1439,7 @@ HI_U32 DRV_HDMI_SetCECCommand(HI_UNF_HDMI_ID_E enHdmi, const HI_UNF_HDMI_CEC_CMD
 extern unsigned int  get_cec_msg(HI_UNF_HDMI_CEC_CMD_S *rx_cmd, unsigned int num, HI_U32 timeout);
 HI_U32 DRV_HDMI_GetCECCommand(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_CEC_CMD_S  *pCECCmd, HI_U32 timeout)
 {
+    timeout = (timeout >= HDMI_GET_CEC_CMD_TIMEOUT)? HDMI_GET_CEC_CMD_TIMEOUT: timeout;
     return get_cec_msg(pCECCmd, 1, timeout);
 }
 #endif
@@ -2285,14 +2297,20 @@ HI_U32 DRV_HDMI_ReadEvent(HI_UNF_HDMI_ID_E enHdmi,HI_U32 procID)
     HI_S32 s32Ret=-1;
     HI_U32 index, event = 0;
 
-    HDMI_PROC_EVENT_S *pEventList = DRV_Get_EventList(enHdmi);
-    HI_U32 u32EventNo = pEventList[procID].CurEventNo;
+    HDMI_PROC_EVENT_S *pEventList = HI_NULL;
+    HI_U32 u32EventNo = 0;
+
+    HDMI_CHECK_ID(enHdmi);
+
+    pEventList = DRV_Get_EventList(enHdmi);
 
     if(procID >= MAX_PROCESS_NUM)
     {
         COM_ERR("Invalid procID in ReadEvent\n");
         return HI_UNF_HDMI_EVENT_BUTT;
     }
+
+    u32EventNo = pEventList[procID].CurEventNo;
 
     //We deal with HDMI Event only after HDMI opened!
     if(DRV_Get_IsChnOpened(enHdmi))
@@ -2595,6 +2613,8 @@ HI_U32 DRV_HDMI_Start(HI_UNF_HDMI_ID_E enHdmi)
 
     if(DRV_Get_IsMce2App() || DRV_Get_IsOpenedInBoot())
     {
+        /* Now we wake up HDMI Output */
+        SI_WakeUpHDMITX();
         DRV_Set_Mce2App(HI_FALSE);
         DRV_Set_OpenedInBoot(HI_FALSE);
         SI_EnableHdmiDevice();
@@ -2717,12 +2737,18 @@ HI_U32 DRV_HDMI_Stop(HI_UNF_HDMI_ID_E enHdmi)
 
 HI_U32 DRV_HDMI_SetDeepColor(HI_UNF_HDMI_ID_E enHdmi, HI_UNF_HDMI_DEEP_COLOR_E enDeepColor)
 {
-    HDMI_VIDEO_ATTR_S   *pstVidAttr = DRV_Get_VideoAttr(enHdmi);
-    HDMI_AUDIO_ATTR_S   *pstAudAttr = DRV_Get_AudioAttr(enHdmi);
-    HDMI_APP_ATTR_S     *pstAppAttr = DRV_Get_AppAttr(enHdmi);
+    HDMI_VIDEO_ATTR_S   *pstVidAttr = HI_NULL;
+    HDMI_AUDIO_ATTR_S   *pstAudAttr = HI_NULL;
+    HDMI_APP_ATTR_S     *pstAppAttr = HI_NULL;
 
     HI_U8                SiDeepColor;
     HI_U32               RetError = HI_SUCCESS;
+
+    HDMI_CHECK_ID(enHdmi);
+
+    pstVidAttr = DRV_Get_VideoAttr(enHdmi);
+    pstAudAttr = DRV_Get_AudioAttr(enHdmi);
+    pstAppAttr = DRV_Get_AppAttr(enHdmi);
 
     COM_INFO("Enter DRV_HDMI_SetDeepColor\n");
     pstAppAttr->enDeepColorMode = enDeepColor;
@@ -2785,7 +2811,11 @@ HI_U32 DRV_HDMI_SetxvYCCMode(HI_UNF_HDMI_ID_E enHdmi, HI_BOOL bEnable)
     HI_U32 Ret;
     HI_U8 u8Data;
     HI_U8 InfCtrl2;
-    HDMI_VIDEO_ATTR_S   *pstVidAttr = DRV_Get_VideoAttr(enHdmi);
+    HDMI_VIDEO_ATTR_S   *pstVidAttr = HI_NULL;
+
+    HDMI_CHECK_ID(enHdmi);
+
+    pstVidAttr = DRV_Get_VideoAttr(enHdmi);
 
     InfCtrl2 = ReadByteHDMITXP1(INF_CTRL2);
     if (HI_TRUE == bEnable)
@@ -3023,17 +3053,17 @@ HI_U32 DRV_HDMI_SetFormat(HI_UNF_HDMI_ID_E enHdmi, HI_DRV_DISP_FMT_E enFmt, HI_D
         !(DRV_Get_IsLCDFmt(enEncodingFormat)) &&
         //DEBUG_PRINTK("Force to DVI Mode\n");
         //bHDMIMode = HI_FALSE;
-#endif    
-        (DRV_Get_IsValidSinkCap(HI_UNF_HDMI_ID_0)) && 
+#endif
+        (DRV_Get_IsValidSinkCap(HI_UNF_HDMI_ID_0)) &&
         (HI_TRUE == pSinkCap->stColorSpace.bYCbCr444))
         {
             enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
     }
-    else 
+    else
     {
         enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_RGB444;
     }
-    
+
 
     COM_INFO("enVidOutMode:%d\n", enVidOutMode);
     pstAppAttr->enVidOutMode = enVidOutMode;
@@ -3212,34 +3242,34 @@ HI_U32 DRV_HDMI_Read_EDID(HDMI_EDID_S *pEDID)
     HI_U32 u32EdidLength;
     HI_U8  u32EdidBlock[512];
     HI_U32 u32Ret = HI_FAILURE;
-    
-    EDID_INFO("Enter DRV_HDMI_Read_EDID\n");  
-    
+
+    EDID_INFO("Enter DRV_HDMI_Read_EDID\n");
+
     u32Ret = SI_Proc_ReadEDIDBlock(u32EdidBlock, &u32EdidLength);
     if (u32Ret == HI_SUCCESS)
-    {          
-        pEDID->u8EdidValid   = HI_TRUE;            
+    {
+        pEDID->u8EdidValid   = HI_TRUE;
         pEDID->u32Edidlength = u32EdidLength;
-        memcpy(pEDID->u8Edid, u32EdidBlock, u32EdidLength);        
+        memcpy(pEDID->u8Edid, u32EdidBlock, u32EdidLength);
         EDID_INFO("DRV_HDMI_Read_EDID success!!! len = %d\n", pEDID->u32Edidlength);
-    }        
-    else
-    {        
-        EDID_ERR("DRV_HDMI_Read_EDID error:length = %d\n", u32EdidLength);
-        goto EDID_FAIL;            
     }
-    
+    else
+    {
+        EDID_ERR("DRV_HDMI_Read_EDID error:length = %d\n", u32EdidLength);
+        goto EDID_FAIL;
+    }
+
     EDID_INFO("Leave DRV_HDMI_Read_EDID\n");
-    
+
     return u32Ret;
-    
+
 EDID_FAIL:
-    
+
     pEDID->u8EdidValid   = HI_FALSE;
     pEDID->u32Edidlength = 0;
-    memset(pEDID->u8Edid, 0, 512);      
+    memset(pEDID->u8Edid, 0, 512);
     EDID_INFO("Leave DRV_HDMI_Read_EDID\n");
-    
+
     return HI_FAILURE;
 }
 
@@ -3349,15 +3379,18 @@ HI_S32 DRV_HDMI_ReleaseProcID(HI_UNF_HDMI_ID_E enHdmi, HI_U32 u32ProcID)
 HI_S32 DRV_HDMI_AudioChange(HI_UNF_HDMI_ID_E enHdmi, HDMI_AUDIO_ATTR_S *pstHDMIAOAttr)
 {
     HI_S32                            Ret = HI_SUCCESS;
-    HI_UNF_HDMI_AUD_INFOFRAME_VER1_S *pstAUDInfoframe = DRV_Get_AudInfoFrm(enHdmi);
-    HDMI_AUDIO_ATTR_S                *pstAudAttr = DRV_Get_AudioAttr(enHdmi);
+    HI_UNF_HDMI_AUD_INFOFRAME_VER1_S *pstAUDInfoframe = HI_NULL;
+    HDMI_AUDIO_ATTR_S                *pstAudAttr = HI_NULL;
     //    HDMI_APP_ATTR_S                  *pstAppAttr = DRV_Get_AppAttr(enHdmi);
-
-    COM_INFO("DRV_HDMI_AudioChange : enSoundIntf:%d,enSampleRate:%d,u32Channels:%d \n",pstHDMIAOAttr->enSoundIntf,pstHDMIAOAttr->enSampleRate,pstHDMIAOAttr->u32Channels);
-    COM_INFO("enBitDepth:%d,u8DownSampleParm:%d,u8I2SCtlVbit:%d\n",pstHDMIAOAttr->enBitDepth,pstHDMIAOAttr->u8DownSampleParm,pstHDMIAOAttr->u8I2SCtlVbit);
 
     HDMI_CHECK_ID(enHdmi);
     HDMI_CheckChnOpen(enHdmi);
+
+    pstAUDInfoframe = DRV_Get_AudInfoFrm(enHdmi);
+    pstAudAttr = DRV_Get_AudioAttr(enHdmi);
+
+    COM_INFO("DRV_HDMI_AudioChange : enSoundIntf:%d,enSampleRate:%d,u32Channels:%d \n",pstHDMIAOAttr->enSoundIntf,pstHDMIAOAttr->enSampleRate,pstHDMIAOAttr->u32Channels);
+    COM_INFO("enBitDepth:%d,u8DownSampleParm:%d,u8I2SCtlVbit:%d\n",pstHDMIAOAttr->enBitDepth,pstHDMIAOAttr->u8DownSampleParm,pstHDMIAOAttr->u8I2SCtlVbit);
 
     //we force set bit depth to 16bit
     pstHDMIAOAttr->enBitDepth = HI_UNF_BIT_DEPTH_16;
@@ -3498,13 +3531,16 @@ HI_S32 DRV_HDMI_GetAOAttr(HI_UNF_HDMI_ID_E enHdmi, HDMI_AUDIO_ATTR_S *pstHDMIAOA
 {
     HI_S32  Ret = HI_SUCCESS;
     //HDMI_ATTR_S stHDMIAttr;
-    HDMI_AUDIO_ATTR_S  *pstAudAttr = DRV_Get_AudioAttr(enHdmi);
+    HDMI_AUDIO_ATTR_S  *pstAudAttr = HI_NULL;
     //HDMI_AUDIO_ATTR_S stAudAttr;
     //HI_UNF_HDMI_INFOFRAME_S     InfoFrame;
-    HI_UNF_HDMI_AUD_INFOFRAME_VER1_S *pstAUDInfoframe = DRV_Get_AudInfoFrm(enHdmi);
+    HI_UNF_HDMI_AUD_INFOFRAME_VER1_S *pstAUDInfoframe = HI_NULL;
 
     HDMI_CHECK_ID(enHdmi);
     HDMI_CheckChnOpen(enHdmi);
+
+    pstAudAttr = DRV_Get_AudioAttr(enHdmi);
+    pstAUDInfoframe = DRV_Get_AudInfoFrm(enHdmi);
 
     memcpy(pstHDMIAOAttr,pstAudAttr,sizeof(HDMI_AUDIO_ATTR_S));
     pstHDMIAOAttr->u32Channels = pstAUDInfoframe->u32ChannelCount;
@@ -4100,7 +4136,7 @@ HI_S32 DRV_HDMI_SetAOAttr(HI_UNF_HDMI_ID_E enHdmi,HDMI_AUDIO_ATTR_S *pstHDMIAOAt
 
     HDMI_AUDIO_ATTR_S *pstAudAttr = DRV_Get_AudioAttr(enHdmi);
     HDMI_APP_ATTR_S *pstAppAttr = DRV_Get_AppAttr(enHdmi);
-	
+
 #if    defined(CHIP_TYPE_hi3798mv100) \
     || defined(CHIP_TYPE_hi3796mv100) \
     || defined(CHIP_TYPE_hi3716mv420) \
@@ -4599,7 +4635,7 @@ HI_S32 DRV_HDMI_SetVOAttr(HI_UNF_HDMI_ID_E enHdmi,HDMI_VIDEO_ATTR_S *pstHDMIVOAt
                 // TV hd & LCD format with bt 709 colorspace
                 SI_TX_CSC709Select(HI_TRUE);
             }
-            
+
             SI_Adjust_SwingCtrl(Fmt, pstAppAttr->enDeepColorMode);
 
             // when TMDS Clk > 165Mhz.we need open source term

@@ -59,10 +59,12 @@ typedef struct hiOTP_STB_PRIV_DATA_S
     HI_U8 u8Data;
 }OTP_STB_PRIV_DATA_S;
 
+/******* proc function begin ********/
 typedef struct hiOTP_TEST_DATA_S
 {
     HI_U8 Reserved[16];
 }OTP_TEST_DATA_S;
+/******* proc function end   ********/
 
 #define CMD_OTP_READ              		_IOWR(IOC_TYPE_OTP, 0x1, OTP_ENTRY_S)
 #define CMD_OTP_WRITE             		_IOW(IOC_TYPE_OTP, 	0x2, OTP_ENTRY_S)
@@ -89,12 +91,12 @@ typedef struct hiOTP_TEST_DATA_S
 #define CMD_OTP_LOCKSTBROOTKEY          _IO(IOC_TYPE_OTP,   0x15)
 #define CMD_OTP_GETSTBROOTKEYLOCKFLAG   _IOR(IOC_TYPE_OTP,  0x16, HI_BOOL)
 
-//NEW, FOR DEBUG ONLY
 #define CMD_OTP_WRITE_BIT         		_IOW(IOC_TYPE_OTP, 0x17, OTP_ENTRY_S)
 #define CMD_OTP_RESET             		_IO(IOC_TYPE_OTP, 0x18)
-//Just for internal test
-#define CMD_OTP_TEST             		_IOWR(IOC_TYPE_OTP, 0x19, OTP_TEST_DATA_S)
 
+/******* proc function begin ********/
+#define CMD_OTP_TEST             		_IOWR(IOC_TYPE_OTP, 0x19, OTP_TEST_DATA_S)
+/******* proc function end   ********/
 
 #ifdef __cplusplus
 }

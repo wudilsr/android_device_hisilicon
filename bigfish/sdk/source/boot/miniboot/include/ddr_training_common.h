@@ -1,24 +1,20 @@
 /******************************************************************************
- *    Copyright (C) 2014 Hisilicon STB Development Dept
+ *    COPYRIGHT (C) 2012 Czyong. Hisilicon
  *    All rights reserved.
  * ***
- *    Create by Czyong
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *   http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *    Create by Czyong 2012-12-22
  *
 ******************************************************************************/
 
 #ifndef DDR_TRAININGH
 #define DDR_TRAININGH
 
+#define DDR_TRAINING_STAT_REG		(0xf800009c) /* SC_GEN7 */
+#define DDR_TRAINING_STAT_BITS_RD	(0)
+#define DDR_TRAINING_STAT_BITS_WAIT	(1)
+#define DDR_TRAINING_STAT_BITS_WS	(2)
+#define DDR_TRAINING_STAT_BITS_RS	(3)
+#define DDR_TRAINING_STAT_BITS_DES	(4)
 struct regval_t {
 	unsigned int reg;
 	unsigned int val;
@@ -26,9 +22,9 @@ struct regval_t {
 
 struct ddrtr_result_t {
 	unsigned int count;
-#define DDR_TRAINING_MAX_VALUE       20
+#define DDR_TRAINING_MAX_VALUE 2*4*6
 	struct regval_t reg[DDR_TRAINING_MAX_VALUE];
-	char data[1024];
+	char data[2*1024];
 };
 
 struct ddrtr_param_t {

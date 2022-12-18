@@ -60,8 +60,6 @@ static unsigned int retry_count = MAX_RETRY_COUNT;
 static unsigned int request_timeout = HI_MCI_REQUEST_TIMEOUT;
 int trace_level = HIMCI_TRACE_LEVEL;
 
-#ifdef MODULE
-
 module_param(detect_time, uint, 0600);
 MODULE_PARM_DESC(detect_timer, "card detect time (default:500ms))");
 
@@ -73,8 +71,6 @@ MODULE_PARM_DESC(request_timeout, "Request timeout time (default:3s))");
 
 module_param(trace_level, int, 0600);
 MODULE_PARM_DESC(trace_level, "HIMCI_TRACE_LEVEL");
-
-#endif
 
 /* get MMC host controler pointer for sdio wifi interface
  * hostid: sdio number ( sdio0:  0  sdio1:  1 )
@@ -827,6 +823,26 @@ static void hi_mci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 		himci_writel(0, host->base + MCI_BLKSIZ);
 	}
 
+	/* For all TOSHIBA eMMC, send CMD23 and others not */
+	if (mmc->card && !(mmc->card->cid.manfid == 0x11)) {
+		mrq->sbc = NULL;
+	}
+
+	if (mrq->sbc) {
+		ret = hi_mci_exec_cmd(host, mrq->sbc, NULL);
+		if (ret) {
+			mrq->sbc->error = ret;
+			goto request_end;
+		}
+
+		/* wait command send complete */
+		ret = hi_mci_wait_cmd_complete(host);
+		if (ret) {
+			mrq->sbc->error = ret;
+			goto request_end;
+		}
+	}
+
 	ret = hi_mci_exec_cmd(host, mrq->cmd, mrq->data);
 	if (ret) {
 		mrq->cmd->error = ret;
@@ -847,7 +863,9 @@ static void hi_mci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 		ret = hi_mci_wait_data_complete(host);
 		if (ret)
 			goto request_end;
-		if (mrq->stop) {
+			if (mrq->stop && (!mrq->sbc
+				|| (mrq->sbc && (mrq->cmd->error || mrq->data->error)))) {
+
 			/* send stop command */
 			ret = hi_mci_exec_cmd(host, host->mrq->stop,
 					      host->data);
@@ -1235,7 +1253,8 @@ static int hi_mci_probe(struct platform_device *pdev)
 		mmc->caps |= MMC_CAP_4_BIT_DATA | MMC_CAP_8_BIT_DATA
 		| MMC_CAP_SD_HIGHSPEED
 		| MMC_CAP_MMC_HIGHSPEED
-		| MMC_CAP_HW_RESET;
+		| MMC_CAP_HW_RESET
+		| MMC_CAP_CMD23;
 
 #if defined(CONFIG_ARCH_HI3798MX) || defined(CONFIG_ARCH_HIFONE)
 	mmc->caps |= MMC_CAP_UHS_DDR50 | MMC_CAP_1_8V_DDR;

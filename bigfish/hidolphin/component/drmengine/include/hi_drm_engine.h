@@ -329,7 +329,7 @@ typedef struct hiDRM_ENGINE_S {
      *     DRM_ERROR_DECRYPT for failure.
      */
     HI_S32 (*pfnDecrypt)(HI_DRM_ENGINE_PPTR ppSelf, HI_S32 uniqueId, HI_DECRYPT_HANDLE_PTR decryptHandle, HI_S32 decryptUnitId,
-            const HI_DRM_BUFFER_S encBuffer, HI_DRM_BUFFER_S** decBuffer, HI_DRM_BUFFER_S* IV);
+            const HI_DRM_BUFFER_S encBuffer, HI_DRM_BUFFER_S** decBuffer, HI_DRM_DECRYPT_EXTRADATA_S* extraData);
     /**
      * Finalize decryption for the given unit of the protected content
      *

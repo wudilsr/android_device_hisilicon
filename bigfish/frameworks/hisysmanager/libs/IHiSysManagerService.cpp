@@ -53,6 +53,8 @@ enum {
 	GETDRMKEY,
 	USERDATARESOURCEIPTV,
 	SETUIASYNCCOMPOSE,
+    SNAPSHOT,
+	SETDYNAMICPOLICY,
 };
 class BpHiSysManagerService : public BpInterface<IHiSysManagerService>
 {
@@ -837,8 +839,39 @@ public:
             ret = -1;
         }
         return ret;
+    }
+    /*
+     *  screen snapshot
+     */
+    virtual int snapshot(String8 path)
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+        data.writeString8(path);
+        remote()->transact(SNAPSHOT, data, &reply);
+        int32_t ret = reply.readInt32();
+        return ret;
+    }
+    virtual int setDynamicPolicy(String8 state, String8 activity, String8 process)
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(IHiSysManagerService::getInterfaceDescriptor());
+        data.writeString8(state);
+        data.writeString8(activity);
+        data.writeString8(process);
+        remote()->transact(SETDYNAMICPOLICY, data, &reply);
+        int32_t ret = reply.readInt32();
+        if(ret == 0)
+        {
+            ret = reply.readInt32();
         }
-    };
+        else
+        {
+            ret = -1;
+        }
+        return ret;
+    }
+};
 
 IMPLEMENT_META_INTERFACE(HiSysManagerService, "android.os.HiSysManagerService");
 
@@ -850,6 +883,9 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
 	String8 dst;
 	String8 gw;
 	String8 info;
+    String8 state;
+    String8 activity;
+    String8 process;
 	int length;
 	int offset;
 	int offlen;
@@ -1142,6 +1178,21 @@ status_t BnHiSysManagerService::onTransact( uint32_t code, const Parcel& data, P
         ret = setUIAsyncCompose(offlen);
         reply->writeInt32(ret);
         return NO_ERROR;
+    case SNAPSHOT:
+        CHECK_INTERFACE(IHiSysManagerService, data, reply);
+        name = data.readString8();
+        ret = snapshot(name);
+        reply->writeInt32(ret);
+    return NO_ERROR;
+	case SETDYNAMICPOLICY:
+        CHECK_INTERFACE(IHiSysManagerService, data, reply);
+        state = data.readString8();
+        activity = data.readString8();
+        process = data.readString8();
+        ret = setDynamicPolicy(state, activity, process);
+        reply->writeInt32(ret);
+        return NO_ERROR;
+
 	default:
 		return BBinder::onTransact(code, data, reply, flags);
 	}

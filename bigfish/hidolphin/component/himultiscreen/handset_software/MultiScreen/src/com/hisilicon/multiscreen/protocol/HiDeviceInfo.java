@@ -138,7 +138,7 @@ public class HiDeviceInfo implements Parcelable
         isOK = resetIp(controlPoint);
         if (isOK)
         {
-            // Add all services of upnp.
+            // Add all services of UPNP.
             // FIXME CN:重连时，本地服务更新失败使用原有服务信息。
             canSyncInfo(controlPoint, RETRY_TIMES);
         }

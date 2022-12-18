@@ -216,8 +216,10 @@ void siiSetVideoPath ( HI_U8 bVMode, HI_U8 * abVideoPath )
 
     InfCtrl1 = ReadByteHDMITXP1(INF_CTRL1);    // save packet buffer control regs
     InfCtrl2 = ReadByteHDMITXP1(INF_CTRL2);
-//    HDMIPrint("siiSetVideoPath to do SW_ResetHDMITX\n");
-//    SW_ResetHDMITX();               // Reset internal state machines and allow TCLK to Rx to stabilize
+
+    // Reset internal state machines and allow TCLK to Rx to stabilize
+    HDMIPrint("siiSetVideoPath to do SW_ResetHDMITX\n");
+    SW_ResetHDMITX();
 
     WriteByteHDMITXP1(INF_CTRL1, InfCtrl1);        // Retrieve packet buffer control regs
     WriteByteHDMITXP1(INF_CTRL2, InfCtrl2);

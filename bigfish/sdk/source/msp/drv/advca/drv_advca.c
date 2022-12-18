@@ -509,6 +509,10 @@ HI_S32  DRV_ADVCA_ModeInit_0(HI_VOID)
     if( NULL == g_pOTPExportFunctionList)
     {
         ret = HI_DRV_MODULE_GetFunction(HI_ID_OTP, (HI_VOID**)&g_pOTPExportFunctionList);
+        if (HI_SUCCESS != ret)
+        {
+            HI_FATAL_CA("Get otp functions failed(ignored), ret: 0x%x\n", ret);
+        }
         if( NULL == g_pOTPExportFunctionList)
         {
             HI_FATAL_CA("Get otp functions failed(ignored)!\n");

@@ -343,7 +343,7 @@ HI_S32 OTP_V200_SetHdcpRootKeyLock(HI_VOID)
 
     DataLock_0.u32 = 0;
     DataLock_0.bits.HDCP_RootKey_lock = 1;
-    HAL_OTP_V200_Write(OTP_V200_INTERNAL_DATALOCK_0, DataLock_0.u32);
+    ret = HAL_OTP_V200_Write(OTP_V200_INTERNAL_DATALOCK_0, DataLock_0.u32);
 
 	return ret;
 }
@@ -483,6 +483,7 @@ HI_S32 OTP_V200_GetSTBRootKey(HI_U8 u8Key[16])
 /* Not support Hi3716MV300 */
 HI_S32 OTP_V200_LockSTBRootKey(HI_VOID)
 {
+    HI_S32 s32Ret = HI_SUCCESS;
     OTP_V200_INTERNAL_DATALOCK_0_U DataLock_0;
 
     DataLock_0.u32 = HAL_OTP_V200_Read(OTP_V200_INTERNAL_DATALOCK_0);
@@ -495,9 +496,9 @@ HI_S32 OTP_V200_LockSTBRootKey(HI_VOID)
     /* lock */
     DataLock_0.u32 = 0;
     DataLock_0.bits.stb_rootkey_lock = 1;
-    HAL_OTP_V200_Write(OTP_V200_INTERNAL_DATALOCK_0, DataLock_0.u32);
+    s32Ret = HAL_OTP_V200_Write(OTP_V200_INTERNAL_DATALOCK_0, DataLock_0.u32);
 
-	return HI_SUCCESS;
+	return s32Ret;
 }
 
 HI_S32 OTP_V200_GetSTBRootKeyLockFlag(HI_BOOL *pBLock)

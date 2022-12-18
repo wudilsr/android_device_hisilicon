@@ -90,6 +90,7 @@ void ion_reserve(struct ion_platform_data *data);
 struct ion_client *ion_client_create(struct ion_device *dev,
 				     const char *name);
 
+struct ion_client *hisi_ion_client_create(const char *name);
 /**
  * ion_client_destroy() -  free's a client and all it's handles
  * @client:	the client
@@ -98,6 +99,7 @@ struct ion_client *ion_client_create(struct ion_device *dev,
  * any handles it is holding.
  */
 void ion_client_destroy(struct ion_client *client);
+void hisi_ion_client_destroy(struct ion_client *client);
 
 /**
  * ion_alloc - allocate ion memory

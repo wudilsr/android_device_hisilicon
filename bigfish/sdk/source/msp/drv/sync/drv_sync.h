@@ -35,6 +35,7 @@ HI_S32 SYNC_PauseSync(HI_U32 SyncId);
 HI_S32 SYNC_ResumeSync(HI_U32 SyncId);
 HI_S32 SYNC_GetTime(HI_U32 SyncId, HI_U32 *pLocalTime, HI_U32 *pPlayTime);
 HI_U32 SYNC_GetLocalTime(SYNC_S *pSync, SYNC_CHAN_E enChn);
+HI_U32 SYNC_GetSysTimeCost(HI_U32 LastSysTime);
 
 
 #ifdef __cplusplus

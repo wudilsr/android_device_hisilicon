@@ -504,15 +504,16 @@ public class RemoteActivity extends BaseActivity implements OnTouchListener
         mRemote_child_volume_min.setOnTouchListener(this);
 
         // FIXME CN:数字键不常用，后续换到其他页面，放大返回键图标。
-        // mRemote_bottom_number = (Button)
-        // findViewById(R.id.remote_bottom_number);
-        // mRemote_bottom_number.setOnTouchListener(this);
+         mRemote_bottom_number = (Button)
+         findViewById(R.id.remote_bottom_number);
+         mRemote_bottom_number.setOnTouchListener(this);
 
         mRemote_bottom_back = (Button) findViewById(R.id.remote_bottom_back);
         mRemote_bottom_back.setOnTouchListener(this);
 
         mRemote_bottom_voice = (Button) findViewById(R.id.remote_bottom_voice);
         mRemote_bottom_voice.setOnTouchListener(this);
+        mRemote_bottom_voice.setVisibility(View.INVISIBLE);
 
         mDeviceListPop = new DeviceListShow(RemoteActivity.this, new ClickCallback()
         {
@@ -794,6 +795,7 @@ public class RemoteActivity extends BaseActivity implements OnTouchListener
 
         mMultiScreenControlService.setOriginalDeviceListListener(mIOriginalDeviceListListener);
         resetAccessListener();
+        resetSceneListener();
         searchDelay();
         showListDelay();
     }
@@ -1910,30 +1912,30 @@ public class RemoteActivity extends BaseActivity implements OnTouchListener
             }
                 break;
 
-            // case R.id.remote_bottom_number:
-            // {
-            // CN:数字键
-            // if (event.getAction() == MotionEvent.ACTION_DOWN)
-            // {
-            // mRemote_bottom_number.setBackgroundResource(R.drawable.remote_mode_foucs);
-            //
-            // }
-            // else if (event.getAction() == MotionEvent.ACTION_UP
-            // || event.getAction() == MotionEvent.ACTION_CANCEL)
-            // {
-            // mRemote_bottom_number.setBackgroundResource(R.drawable.remote_mode);
-            //
-            // if (mNumberPop != null)
-            // {
-            // mNumberPop.dismiss();
-            // }
-            // mNumberPop = new RemoteNumber(RemoteActivity.this);
-            // mNumberPop.showAtLocation(mRemote_bottom_number, Gravity.CENTER,
-            // 0, 0);
-            //
-            // }
-            // }
-            // break;
+             case R.id.remote_bottom_number:
+             {
+             //CN:数字键
+             if (event.getAction() == MotionEvent.ACTION_DOWN)
+             {
+             mRemote_bottom_number.setBackgroundResource(R.drawable.remote_mode_foucs);
+            
+             }
+             else if (event.getAction() == MotionEvent.ACTION_UP
+             || event.getAction() == MotionEvent.ACTION_CANCEL)
+             {
+             mRemote_bottom_number.setBackgroundResource(R.drawable.remote_mode);
+            
+             if (mNumberPop != null)
+             {
+             mNumberPop.dismiss();
+             }
+             mNumberPop = new RemoteNumber(RemoteActivity.this);
+             mNumberPop.showAtLocation(mRemote_bottom_number, Gravity.CENTER,
+             0, 0);
+            
+             }
+             }
+             break;
             case R.id.remote_bottom_voice:
             {
                 if (event.getAction() == MotionEvent.ACTION_DOWN)

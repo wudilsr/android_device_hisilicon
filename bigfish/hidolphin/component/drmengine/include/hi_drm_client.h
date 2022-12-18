@@ -143,7 +143,7 @@ HI_S32 HI_DRM_InitializeDecryptUnit(HI_DRM_CLIENT_PPTR ppSelf,
  */
 HI_S32 HI_DRM_Decrypt(HI_DRM_CLIENT_PPTR ppSelf,
         HI_DECRYPT_HANDLE_PTR ecryptHandle, HI_S32 decryptUnitId,
-        const HI_DRM_BUFFER_S encBuffer, HI_DRM_BUFFER_S** decBuffer, HI_DRM_BUFFER_S* IV);
+        const HI_DRM_BUFFER_S encBuffer, HI_DRM_BUFFER_S** decBuffer, HI_DRM_DECRYPT_EXTRADATA_S* extraData);
 
 /**
  * \breif Finalize decryption for the given unit of the protected content

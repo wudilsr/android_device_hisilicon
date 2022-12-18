@@ -197,10 +197,7 @@ HI_BOOL g_bVdecPreESBUFMMZUsed = HI_FALSE;
 #endif
 
 static HI_S32   VDEC_RegChanProc(HI_S32 s32Num);
-static HI_S32   VDEC_VPU_RegChanProc(HI_S32 s32VpuNum);
 static HI_VOID  VDEC_UnRegChanProc(HI_S32 s32Num);
-static HI_VOID  VDEC_VPU_UnRegChanProc(HI_S32 s32Num_vpu);
-static HI_S32   VDEC_VPU_PTS_Free(HI_HANDLE hHandle, HI_HANDLE hHandle_vpu);
 static HI_S32   VDEC_Chan_VpssRecvFrmBuf(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S* pstFrm);
 static HI_S32   VDEC_Chan_VpssRlsFrmBuf(VPSS_HANDLE hVpss, HI_DRV_VIDEO_FRAME_S  *pstFrm);
 
@@ -433,7 +430,7 @@ static HI_S32 BUFMNG_VPSS_Init(BUFMNG_VPSS_INST_S* pstBufVpssInst)
             return HI_ERR_BM_NO_MEMORY;
         }
         s32Ret = HI_DRV_MMZ_AllocAndMap("VDEC_VPSSBuf", "VDEC", pstBufVpssInst->u32FrmBufSize, 0, &pstBufNode->MMZBuf_frm);
-        s32Ret |= HI_DRV_MMZ_AllocAndMap("VDEC_VPSSBuf_Meta", "VDEC", pstBufVpssInst->u32MetaBufSize, 0, &pstBufNode->MMZBuf_meta);		
+        s32Ret |= HI_DRV_MMZ_AllocAndMap("VDEC_VPSSBuf_Meta", "VDEC", pstBufVpssInst->u32MetaBufSize, 0, &pstBufNode->MMZBuf_meta);
         if (HI_SUCCESS != s32Ret)
         {
             HI_ERR_VDEC("BUFMNG_VPSS_Init Alloc MMZ fail:0x%x.\n", s32Ret);
@@ -506,7 +503,7 @@ static HI_S32 BUFMNG_VPSS_DeInit(BUFMNG_VPSS_INST_S* pstBufVpssInst)
         {
             pstTarget = list_entry(pos, BUFMNG_VPSS_NODE_S, node);
             HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_frm));
-            HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_meta));			
+            HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_meta));
             list_del_init(pos);
             vfree(pstTarget);
         }
@@ -515,7 +512,7 @@ static HI_S32 BUFMNG_VPSS_DeInit(BUFMNG_VPSS_INST_S* pstBufVpssInst)
         {
             pstTarget = list_entry(pos, BUFMNG_VPSS_NODE_S, node);
             HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_frm));
-            HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_meta));			
+            HI_DRV_MMZ_UnmapAndRelease(&(pstTarget->MMZBuf_meta));
             list_del_init(pos);
             vfree(pstTarget);
         }
@@ -526,7 +523,7 @@ static HI_S32 BUFMNG_VPSS_DeInit(BUFMNG_VPSS_INST_S* pstBufVpssInst)
         pstBufVpssInst->u32AvaiableFrameCnt = 0;
         pstBufVpssInst->u32BufNum           = 0;
         pstBufVpssInst->u32FrmBufSize       = 0;
-        pstBufVpssInst->u32MetaBufSize       = 0;		
+        pstBufVpssInst->u32MetaBufSize       = 0;
         pstBufVpssInst->enExtBufferState    = VDEC_EXTBUFFER_STATE_START;
         BUFMNG_SpinUnLockIRQ(&pstBufVpssInst->stUnAvailableListLock);
     }
@@ -720,7 +717,7 @@ static HI_S32 BUFMNG_VPSS_RecBuffer(HI_HANDLE hVpss,HI_HANDLE hPort,BUF_VPSS_S* 
     /*将pos节点添加到stVpssBufUnAvailableList上去*/
     list_add_tail(pos, &(pstVpssChan->stPort[j].stBufVpssInst.stVpssBufUnAvailableList));
 
-	memcpy(&pstMMZ_Buffer->MMZBuf_frm,&pstTarget->MMZBuf_frm,sizeof(MMZ_BUFFER_S));	
+	memcpy(&pstMMZ_Buffer->MMZBuf_frm,&pstTarget->MMZBuf_frm,sizeof(MMZ_BUFFER_S));
 
 	//当 地址为-1时，表示上层未分配metabuf,但还是把结构体传给vpss，给vpss做判断
 	if (pstTarget->MMZBuf_meta.u32StartPhyAddr == 0xffffffff)
@@ -792,7 +789,7 @@ static HI_S32 BUFMNG_VPSS_RelBuffer(HI_HANDLE hVpss,HI_HANDLE hPort,HI_DRV_VIDEO
         list_for_each_safe(pos, n, &(pstVpssChan->stPort[j].stBufVpssInst.stVpssBufUnAvailableList))
         {
              pstTarget = list_entry(pos, BUFMNG_VPSS_NODE_S, node);
-             if(pstImage->stBufAddr[0].u32PhyAddr_Y == pstTarget->MMZBuf_frm.u32StartPhyAddr)//C00277632 
+             if(pstImage->stBufAddr[0].u32PhyAddr_Y == pstTarget->MMZBuf_frm.u32StartPhyAddr)//C00277632
              {
                 //pstImage->stBufAddr[0].u32PhyAddr_Y,pstTarget->stMMZBuf.u32StartPhyAddr);
                  pstTarget->bBufUsed = HI_FALSE;
@@ -1397,7 +1394,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
 
     case EVNT_USRDAT:
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         if (pstChan->bTvp)
         {
             HI_ERR_VDEC("TVP not support USERDATA!\n");
@@ -1407,7 +1404,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
 #endif
         {
             pstUsrData = (USRDAT *)pArgs;
-    
+
         #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
             #if (0 == HI_VDEC_CC_FROM_IMAGE)
             if (pstUsrData->data_size > 5)
@@ -1424,7 +1421,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
             }
             #endif
         #endif
-    
+
             if (HI_NULL == pstChan->pstUsrData)
             {
                 pstChan->pstUsrData = HI_KMALLOC_ATOMIC_VDEC(sizeof(VDEC_USRDATA_PARAM_S));
@@ -1436,7 +1433,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
                 }
                 memset(pstChan->pstUsrData, 0, sizeof(VDEC_USRDATA_PARAM_S));
             }
-    
+
             /* Discard if the buffer of user data full */
             /* CNcomment: 如果用户数据buffer满就直接丢弃 */
             u32WriteID = pstChan->pstUsrData->u32WriteID;
@@ -1446,7 +1443,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
                 HI_INFO_VDEC("Chan %d drop user data\n", hHandle);
                 break;
             }
-    
+
             pstChan->pstUsrData->stAttr[u32WriteID].enBroadcastProfile = HI_UNF_VIDEO_BROADCAST_DVB;
             pstChan->pstUsrData->stAttr[u32WriteID].enPositionInStream = pstUsrData->from;
             pstChan->pstUsrData->stAttr[u32WriteID].u32Pts = (HI_U32)pstUsrData->PTS;
@@ -1506,7 +1503,7 @@ static HI_S32 VDEC_EventHandle(HI_S32 s32ChanID, HI_S32 s32EventType, HI_VOID *p
 #endif
         pstChan->bEndOfStrm = HI_TRUE;
         break;
-        
+
     /* Fake frame for vpss to release all frame to vfmw */
     case EVNT_FAKE_FRAME:
         pstChan->u32EndFrmFlag = 1;
@@ -1591,7 +1588,7 @@ static HI_S32 VDEC_VpssEventHandle(HI_HANDLE hVdec, HI_DRV_VPSS_EVENT_E enEventI
     HI_HANDLE hPort = HI_INVALID_HANDLE;
     HI_HANDLE hVpss = HI_INVALID_HANDLE;
     BUF_VPSS_S stMMZ_Buffer;
-    HI_DRV_VIDEO_FRAME_S stFrame;
+    HI_DRV_VIDEO_FRAME_S stFrame = {0};
     VDEC_VPSSCHANNEL_S *pstVpssChan = HI_NULL;
     HI_VDEC_PRIV_FRAMEINFO_S* pstPrivInfo = HI_NULL;
     HI_DRV_VPSS_PORT_BUFLIST_STATE_S stVpssBufListState;
@@ -1605,7 +1602,7 @@ static HI_S32 VDEC_VpssEventHandle(HI_HANDLE hVdec, HI_DRV_VPSS_EVENT_E enEventI
         }
     }
 
-    if (hHandle > HI_VDEC_MAX_INSTANCE_NEW)
+    if (hHandle >= HI_VDEC_MAX_INSTANCE_NEW)
     {
         HI_ERR_VDEC("bad handle %d!\n", hHandle);
         return HI_FAILURE;
@@ -1641,7 +1638,7 @@ static HI_S32 VDEC_VpssEventHandle(HI_HANDLE hVdec, HI_DRV_VPSS_EVENT_E enEventI
         hVpss = (HI_HANDLE)PORTHANDLE_TO_VPSSID(hPort);
         memset(&stMMZ_Buffer, 0, sizeof(MMZ_BUFFER_S));
         stMMZ_Buffer.MMZBuf_frm.u32Size = ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32Size;
-		
+
         s32Ret = BUFMNG_VPSS_RecBuffer(hVpss,hPort,&stMMZ_Buffer,&u32Stride);
         if (HI_SUCCESS != s32Ret)
         {
@@ -1652,7 +1649,7 @@ static HI_S32 VDEC_VpssEventHandle(HI_HANDLE hVdec, HI_DRV_VPSS_EVENT_E enEventI
         ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32StartPhyAddr = stMMZ_Buffer.MMZBuf_frm.u32StartPhyAddr;//c00277632
         ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32StartVirAddr = stMMZ_Buffer.MMZBuf_frm.u32StartVirAddr;
         ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32PrivDataPhyAddr = stMMZ_Buffer.MMZBuf_meta.u32StartPhyAddr;//c00277632
-        ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32PrivDataVirAddr = stMMZ_Buffer.MMZBuf_meta.u32StartVirAddr;		
+        ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32PrivDataVirAddr = stMMZ_Buffer.MMZBuf_meta.u32StartVirAddr;
         ((HI_DRV_VPSS_FRMBUF_S*)pstArgs)->u32Stride       = u32Stride;
      break;
      case VPSS_EVENT_REL_FRMBUFFER:
@@ -1858,57 +1855,12 @@ static HI_S32 VDEC_VpssEventHandle(HI_HANDLE hVdec, HI_DRV_VPSS_EVENT_E enEventI
 
         break;
      #endif
-     #if 0
-      case  VPSS_EVENT_BUFLIST_FULL:
-        for(i = 0; i<VDEC_MAX_PORT_NUM; i++)
-        {
-            if(VDEC_PORT_TYPE_MASTER == pstVpssChan->stPort[i].enPortType
-               || VDEC_PORT_TYPE_SLAVE == pstVpssChan->stPort[i].enPortType)
-            {
-                hPort = pstVpssChan->stPort[i].hPort;
-                break;
-            }
-            else
-            {
-                *(HI_DRV_VPSS_BUFFUL_STRATAGY_E *)pstArgs = HI_DRV_VPSS_BUFFUL_KEEPWORKING;
-                break;
-            }
-        }
-
-        if(i >= VDEC_MAX_PORT_NUM)
-        {
-            HI_WARN_VDEC("Port not exist!\n");
-            VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-            return HI_FAILURE;
-        }
-        else
-        {
-            memset(&stVpssBufListState, 0, sizeof(HI_DRV_VPSS_PORT_BUFLIST_STATE_S));
-            s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssGetPortBufListState)(hPort, &stVpssBufListState);
-            if(HI_SUCCESS == s32Ret)
-            {
-                /*master_port slave_port full:HI_DRV_VPSS_BUFFUL_PAUSE,master_port slave_port not full:HI_DRV_VPSS_BUFFUL_KEEPWORKING*/
-                if(stVpssBufListState.u32FulBufNumber == stVpssBufListState.u32TotalBufNumber)
-                {
-                     /*master_port slave_port full:HI_DRV_VPSS_BUFFUL_PAUSE*/
-                     *(HI_DRV_VPSS_BUFFUL_STRATAGY_E *)pstArgs = HI_DRV_VPSS_BUFFUL_PAUSE;
-                     break;
-                }
-                else
-                {
-                 /*master_port slave_port not full:HI_DRV_VPSS_BUFFUL_KEEPWORKING*/
-                 *(HI_DRV_VPSS_BUFFUL_STRATAGY_E *)pstArgs = HI_DRV_VPSS_BUFFUL_KEEPWORKING;
-                }
-            }
-        }
-
-        break;
-        #endif
      default:
          VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
          return HI_FAILURE;
     }
     VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
+
     return HI_SUCCESS;
 }
 
@@ -1965,6 +1917,7 @@ static HI_S32 VDEC_SetAttr(VDEC_CHANNEL_S *pstChan)
     HI_CHIP_TYPE_E          enChipType      = HI_CHIP_TYPE_HI3716C;
     HI_CHIP_VERSION_E       enChipVersion   = HI_CHIP_VERSION_V200;
     HI_SYS_MEM_CONFIG_S     MemConfig = {0};
+    HI_U32                  CtrlOptions     = pstCfg->s32CtrlOptions;
 
     memset(&stVdecChanCfg,0,sizeof(VDEC_CHAN_CFG_S));
     s32Ret = (s_stVdecDrv.pVfmwFunc->pfnVfmwControl)(pstChan->hChan, VDEC_CID_GET_CHAN_CFG, &stVdecChanCfg);
@@ -2118,7 +2071,7 @@ static HI_S32 VDEC_SetAttr(VDEC_CHANNEL_S *pstChan)
     /* Only if pstCfg->orderOutput is 1 we do the judge */
     if (pstCfg->bOrderOutput)
     {
-        if (pstCfg->s32CtrlOptions& HI_UNF_VCODEC_CTRL_OPTION_SIMPLE_DPB || pstChan->bLowdelay)
+        if (CtrlOptions& HI_UNF_VCODEC_CTRL_OPTION_SIMPLE_DPB || pstChan->bLowdelay)
         {
             /* set to 2 means both bOrderoutput and SIMPLE_DPB */
             stVdecChanCfg.s32DecOrderOutput = 2;
@@ -2133,7 +2086,7 @@ static HI_S32 VDEC_SetAttr(VDEC_CHANNEL_S *pstChan)
     {
         MemConfig.u32TotalSize = 1024; // if get memory config failed, we use 1G config
     }
-    
+
     //set the chan max resouion
     switch (MemConfig.u32TotalSize)
     {
@@ -2390,7 +2343,7 @@ static HI_S32 VDEC_CreateStrmBuf(HI_DRV_VDEC_STREAM_BUF_S *pstBuf)
 {
     HI_S32 s32Ret;
     BUFMNG_INST_CONFIG_S stBufInstCfg;
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
 	memset(&stBufInstCfg, 0, sizeof(BUFMNG_INST_CONFIG_S));
 	#endif
 
@@ -2406,7 +2359,7 @@ static HI_S32 VDEC_CreateStrmBuf(HI_DRV_VDEC_STREAM_BUF_S *pstBuf)
     stBufInstCfg.pu8UsrVirAddr = HI_NULL;
     stBufInstCfg.pu8KnlVirAddr = HI_NULL;
     stBufInstCfg.u32Size = pstBuf->u32Size;
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     stBufInstCfg.bTvp = pstBuf->bTvp;
 	#endif
     strncpy(stBufInstCfg.aszName, "VDEC_ESBuf", 16);
@@ -3181,7 +3134,7 @@ static HI_S32 VDEC_Chan_VOChangeWinInfo(HI_HANDLE hPort,HI_DRV_WIN_PRIV_INFO_S* 
     s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssSetVpssCfg)(hVpss,&stVpssCfg);
     if(0!=s32Ret)
 	{
-		HI_ERR_VDEC("call VpssSetVpssCfg err!\n");    
+		HI_ERR_VDEC("call VpssSetVpssCfg err!\n");
 	}
     VDEC_ConvertWinInfo(hPort,&stVpssPortCfg,pstWinInfo);
     /*重新设置PORT属性*/
@@ -3226,7 +3179,7 @@ static HI_S32 VDEC_Chan_CreateVpss(HI_HANDLE hVdec,HI_HANDLE * phVpss)
     s32Ret = down_interruptible(&s_stVdecDrv.stSem);
     if(0!=s32Ret)
 	{
-		HI_WARN_VDEC("call down_interruptible err!\n");    
+		HI_WARN_VDEC("call down_interruptible err!\n");
 	}
     /*保存vpss句柄*/
     s_stVdecDrv.astChanEntity[hVdec].stVpssChan.hVpss = *phVpss;
@@ -3303,9 +3256,9 @@ static HI_S32 VDEC_Chan_CreatePort(HI_HANDLE hVpss,HI_HANDLE* phPort, VDEC_PORT_
     HI_S32 i,j;
     VDEC_VPSSCHANNEL_S *pstVpssChan = HI_NULL;
 
-#ifdef HI_TVP_SUPPORT
-    VDEC_CHANNEL_S *pstChan = HI_NULL;    
-    HI_DRV_VPSS_CFG_S stVpssCfg;		
+#ifdef HI_TEE_SUPPORT
+    VDEC_CHANNEL_S *pstChan = HI_NULL;
+    HI_DRV_VPSS_CFG_S stVpssCfg;
 #endif
 
 
@@ -3340,7 +3293,7 @@ static HI_S32 VDEC_Chan_CreatePort(HI_HANDLE hVpss,HI_HANDLE* phPort, VDEC_PORT_
 
     pstVpssChan = &(s_stVdecDrv.astChanEntity[i].stVpssChan);
 
-#ifdef HI_TVP_SUPPORT	
+#ifdef HI_TEE_SUPPORT
 
     pstChan = s_stVdecDrv.astChanEntity[i].pstChan;
 
@@ -3584,7 +3537,7 @@ static HI_S32 VDEC_Chan_EnablePort(HI_HANDLE hVpss,HI_HANDLE hPort )
         s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssEnablePort)(hPort, HI_TRUE);
 		if(HI_SUCCESS!=s32Ret)
 		{
-			HI_ERR_VDEC("call VpssEnablePort err!\n");    
+			HI_ERR_VDEC("call VpssEnablePort err!\n");
 		}
     }
 
@@ -3651,7 +3604,7 @@ static HI_S32 VDEC_Chan_DisablePort(HI_HANDLE hVpss,HI_HANDLE hPort )
         s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssEnablePort)(hPort, HI_FALSE);
 		if(HI_SUCCESS!=s32Ret)
 		{
-			HI_ERR_VDEC("call pfnVpssEnablePort err!\n");    
+			HI_ERR_VDEC("call pfnVpssEnablePort err!\n");
 		}
     }
 
@@ -3972,9 +3925,9 @@ static HI_S32 VDEC_Chan_SetExtBuffer(HI_HANDLE hVpss,VDEC_BUFFER_ATTR_S *pstBuff
         if(0 == pstBufVpssInst->u32BufNum)
         {
             pstBufVpssInst->u32FrmBufSize = pstBufferAttr->u32BufSize;
-            pstBufVpssInst->u32MetaBufSize = pstBufferAttr->u32MetaBufSize;			
+            pstBufVpssInst->u32MetaBufSize = pstBufferAttr->u32MetaBufSize;
         }
-		
+
 		if (pstBufferAttr->u32PhyAddr_meta[0] == 0xffffffff || pstBufferAttr->u32PhyAddr_meta[0] == 0)
 		{
 			HI_BOOL bStore = HI_FALSE;
@@ -3989,8 +3942,8 @@ static HI_S32 VDEC_Chan_SetExtBuffer(HI_HANDLE hVpss,VDEC_BUFFER_ATTR_S *pstBuff
         {
             HI_ERR_VDEC("Vpss:%d call VpssSendCommand error!\n", pstVpssChan->hVpss);
             return HI_FAILURE;
-        }				
-		
+        }
+
         for(i=0;i<pstBufferAttr->u32BufNum;i++)
         {
             pstBufNode = HI_VMALLOC_BUFMNG(sizeof(BUFMNG_VPSS_NODE_S));
@@ -4009,9 +3962,9 @@ static HI_S32 VDEC_Chan_SetExtBuffer(HI_HANDLE hVpss,VDEC_BUFFER_ATTR_S *pstBuff
             pstBufNode->MMZBuf_frm.u32StartVirAddr = pstBufferAttr->u32UsrVirAddr[i];
             pstBufNode->MMZBuf_meta.u32StartPhyAddr = pstBufferAttr->u32PhyAddr_meta[i];
             pstBufNode->MMZBuf_meta.u32StartVirAddr = pstBufferAttr->u32UsrVirAddr_meta[i];
-			
+
             pstBufNode->MMZBuf_frm.u32Size         = pstBufferAttr->u32BufSize;
-            pstBufNode->MMZBuf_meta.u32Size         = pstBufferAttr->u32MetaBufSize;			
+            pstBufNode->MMZBuf_meta.u32Size         = pstBufferAttr->u32MetaBufSize;
             pstBufNode->enFrameBufferState       = HI_DRV_VDEC_BUF_STATE_IN_VDEC_EMPTY;
             pstBufNode->u32Stride                = pstBufferAttr->u32Stride;
             BUFMNG_SpinLockIRQ(&pstBufVpssInst->stUnAvailableListLock);
@@ -4871,12 +4824,6 @@ static HI_S32 VDEC_Chan_RecvVpssFrmBuf(HI_HANDLE hVpss, HI_DRV_VIDEO_FRAME_PACKA
                      return HI_FAILURE;
                  }
                  pstTarget = list_entry(pstVpssChan->stPort[j].stBufVpssInst.pstUnAvailableListPos->next, BUFMNG_VPSS_NODE_S, node);
-                 if(HI_NULL == pstTarget)
-                 {
-                     BUFMNG_SpinUnLockIRQ(&pstVpssChan->stPort[j].stBufVpssInst.stUnAvailableListLock);
-                     VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[i]);
-                     return HI_FAILURE;
-                 }
 
                  if(HI_DRV_VDEC_BUF_STATE_IN_USER == pstTarget->enFrameBufferState)
                  {
@@ -5207,7 +5154,7 @@ static HI_VOID VDEC_ConvertFrm(HI_UNF_VCODEC_TYPE_E enType, VDEC_CHANNEL_S *pstC
     {
         pstFrame->enBitWidth =  HI_DRV_PIXEL_BITWIDTH_8BIT;
     }
-    
+
 
     if (HI_UNF_VCODEC_TYPE_MJPEG == enType || HI_UNF_VCODEC_TYPE_SORENSON == enType || HI_UNF_VCODEC_TYPE_H263 == enType)
     {
@@ -5235,7 +5182,7 @@ static HI_VOID VDEC_ConvertFrm(HI_UNF_VCODEC_TYPE_E enType, VDEC_CHANNEL_S *pstC
                 pstFrame->stBufAddr_LB[0].u32PhyAddr_Y = pstImage->luma_2bit_phy_addr;
                 pstFrame->stBufAddr_LB[0].u32Stride_Y = pstImage->image_stride_2bit;
                 pstFrame->stBufAddr_LB[0].u32PhyAddr_C =pstImage->chrom_2bit_phy_addr;
-                pstFrame->stBufAddr_LB[0].u32Stride_C = pstImage->image_stride_2bit;                    
+                pstFrame->stBufAddr_LB[0].u32Stride_C = pstImage->image_stride_2bit;
             }
         }
         else
@@ -5298,6 +5245,17 @@ static HI_VOID VDEC_ConvertFrm(HI_UNF_VCODEC_TYPE_E enType, VDEC_CHANNEL_S *pstC
     pstChan->u32DecodeAspectHeight             = pstImage->u32AspectHeight;
     pstChan->u32LastLumaBitdepth               = pstImage->bit_depth_luma;
     pstChan->u32LastChromaBitdepth             = pstImage->bit_depth_chroma;
+
+    pstFrame->FrameStreamSize                  = pstImage->FrameStreamSize;
+    pstFrame->AvgQp                            = pstImage->AvgQp;
+    pstFrame->FrameType                        = (pstImage->format) & 0x3;
+    pstFrame->MaxMV                            = pstImage->MaxMV;
+    pstFrame->MinMV                            = pstImage->MinMV;
+    pstFrame->AvgMV                            = pstImage->AvgMV;
+    pstFrame->SkipRatio                        = pstImage->SkipRatio;
+
+    //HI_ERR_VDEC("FrameStreamSize = %d, AvgQp = %d, FrameType = %d, MaxMV = %d, MinMV = %d, AvgMV = %d, SkipRatio = %d\n", pstFrame->FrameStreamSize, pstFrame->AvgQp, pstFrame->FrameType, pstFrame->MaxMV, pstFrame->MinMV, pstFrame->AvgMV, pstFrame->SkipRatio);
+
 /* vfmw解码出来的FP信息不外透，统一由上层设置
    MVC传递的是两帧地址，还是保留 */
 if (HI_UNF_VCODEC_TYPE_MVC == enType)
@@ -5427,7 +5385,7 @@ if (HI_UNF_VCODEC_TYPE_MVC == enType)
     }
 
     pstPrivInfo->entype = enType;
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     /* Check if is secure frame */
     if (pstImage->is_SecureFrame != 0)
     {
@@ -5438,7 +5396,7 @@ if (HI_UNF_VCODEC_TYPE_MVC == enType)
         pstFrame->bSecure = HI_FALSE;
     }
 	#endif
-	
+
     if (0 == pstImage->is_fld_save)
     {
         pstVideoPriv->ePictureMode = HI_DRV_PICTURE_FRAME;
@@ -5472,7 +5430,26 @@ static HI_S32 VDEC_RlsFrm(VDEC_CHANNEL_S *pstChan, HI_DRV_VIDEO_FRAME_S *pstFram
     IMAGE stImage;
     IMAGE_INTF_S *pstImgInft = &pstChan->stImageIntf;
     VDEC_CHAN_STATINFO_S *pstStatInfo = &pstChan->stStatInfo;
-    HI_VDEC_PRIV_FRAMEINFO_S* pstPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S*)(((HI_DRV_VIDEO_PRIVATE_S *)(pstFrame->u32Priv))->u32Reserve);
+    //HI_VDEC_PRIV_FRAMEINFO_S* pstPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S*)(((HI_DRV_VIDEO_PRIVATE_S *)(pstFrame->u32Priv))->u32Reserve);
+    HI_DRV_VIDEO_PRIVATE_S *pstVideoPrivate = NULL;
+    HI_VDEC_PRIV_FRAMEINFO_S *pstPrivInfo = NULL;
+
+    pstVideoPrivate = (HI_DRV_VIDEO_PRIVATE_S *)(pstFrame->u32Priv);
+    if (pstVideoPrivate == NULL)
+    {
+        return HI_FAILURE;
+    }
+
+    pstPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S *)(pstVideoPrivate->u32Reserve);
+    if (pstPrivInfo == NULL)
+    {
+        return HI_FAILURE;
+    }
+
+    if (pstImgInft->release_image == NULL)
+    {
+        return HI_FAILURE;
+    }
 
     memset(&stImage,0,sizeof(stImage));
     stImage.image_stride = pstFrame->stBufAddr[0].u32Stride_Y;
@@ -5618,7 +5595,7 @@ static HI_S32 VDEC_RecvFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan, HI_DRV_VI
 {
     HI_S32 s32Ret = HI_FAILURE;
     HI_U32 u32UserdataId;
-    IMAGE stImage;
+    IMAGE stImage = {0};
     VDEC_VPSSCHANNEL_S *pstVpssChan = HI_NULL;
     VDEC_CHAN_STATE_S stChanState = {0};
     #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
@@ -5681,7 +5658,7 @@ static HI_S32 VDEC_RecvFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan, HI_DRV_VI
             pstChan->u32LastFrmId = -1;
             pstFrame->bProgressive = HI_FALSE;
             pstFrame->enFieldMode = HI_DRV_FIELD_ALL;
-            #ifdef HI_TVP_SUPPORT
+            #ifdef HI_TEE_SUPPORT
             if (HI_TRUE == pstChan->bTvp)
             {
                 pstFrame->bSecure = HI_TRUE;
@@ -5754,7 +5731,7 @@ static HI_S32 VDEC_RecvFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan, HI_DRV_VI
         return HI_FAILURE;
     }
 
-	pstChan->bAvsPlus = stImage.optm_inf.bAvsPlus; 
+	pstChan->bAvsPlus = stImage.optm_inf.bAvsPlus;
 
     #if 1
     if ((pstFrame->stDispRect.s32Height != pstChan->stLastFrm.stDispRect.s32Height) ||
@@ -5872,9 +5849,9 @@ static HI_S32 VDEC_RecvFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan, HI_DRV_VI
     {
         for(u32Index = 0 ; u32Index < 4; u32Index++)
         {
-    
+
             pstUsrData     = ((stImage.p_usrdat))[u32Index];
-    
+
             if(HI_NULL != pstUsrData)
             {
                 if(pstUsrData->data_size > 5)
@@ -5896,64 +5873,6 @@ static HI_S32 VDEC_RecvFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan, HI_DRV_VI
     return HI_SUCCESS;
 }
 
-static HI_S32 VDEC_RecvVPUFrm(HI_HANDLE hHandle, VDEC_CHANNEL_S *pstChan,HI_DRV_VIDEO_FRAME_S *pstFrame)
-{
-    HI_S32 s32Ret = HI_SUCCESS;
-    struct list_head *pos;
-    VDEC_VPU_FRAME_LIST_NODE_S *pstTarget;
-    IMAGE stImage;
-    VDEC_CHAN_STATINFO_S *pstStatInfo = &pstChan->stStatInfo;
-    memset(&stImage, 0, sizeof(IMAGE));
-    pstStatInfo->u32VdecRcvFrameTry++;
-    if( (&(pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList)) == pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList.next)
-    {
-        return HI_FAILURE;
-    }
-
-    BUFMNG_SpinLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-    pos = pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList.next;
-    pstTarget = list_entry(pos, VDEC_VPU_FRAME_LIST_NODE_S, node);
-    if(HI_NULL != pstTarget)
-    {
-        memcpy(pstFrame,&(pstTarget->stPortOutFrame),sizeof(HI_DRV_VIDEO_FRAME_S));
-        list_del_init(pos);
-        BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-        HI_VFREE_BUFMNG(pstTarget);
-    }
-    else
-    {
-        BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-        s32Ret = HI_FAILURE;
-    }
-//    BUFMNG_SaveYuv(0, pstFrame,HI_UNF_VCODEC_TYPE_H264);
-    stImage.SrcPts =(HI_U64)pstFrame->u32Pts;
-    stImage.PTS = (HI_U64)pstFrame->u32Pts;
-    stImage.image_width = pstFrame->u32Width;
-    stImage.image_height = pstFrame->u32Height;
-    PTSREC_CalcStamp(hHandle, pstChan->stCurCfg.enType, &stImage);
-    pstFrame->u32Pts = (HI_U32)stImage.PTS ;
-    pstFrame->u32FrameRate = (stImage.frame_rate/1024)*1000 + (stImage.frame_rate%1024);
-    memcpy(&(pstChan->stLastFrm),pstFrame,sizeof(HI_DRV_VIDEO_FRAME_S));
-    if(HI_SUCCESS == s32Ret)
-    {
-        pstStatInfo->u32VdecRcvFrameOK++;
-    }
-    return s32Ret;
-}
-static HI_S32 VDEC_RlsVPUFrm(VDEC_CHANNEL_S *pstChan, HI_DRV_VIDEO_FRAME_S *pstFrame)
-{
-    HI_S32 s32Index;
-    HI_VDEC_PRIV_FRAMEINFO_S* pstPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S *)(((HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv))->u32Reserve);
-    VDEC_CHAN_STATINFO_S *pstStatInfo = &pstChan->stStatInfo;
-    pstStatInfo->u32VdecRlsFrameTry++;
-    BUFMNG_SpinLockIRQ(&(pstChan->stVPUParam.stVPURlsParam.stVPURlsFrameListLock));
-    s32Index = pstChan->stVPUParam.stVPURlsParam.s32AvailableNum;
-    pstChan->stVPUParam.stVPURlsParam.RlsFrameIDArray[s32Index] = pstPrivInfo->image_id;
-    pstChan->stVPUParam.stVPURlsParam.s32AvailableNum++;
-    BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPURlsParam.stVPURlsFrameListLock));
-    pstStatInfo->u32VdecRlsFrameOK++;
-    return HI_SUCCESS;
-}
 HI_S32 HI_DRV_VDEC_GetFrmBuf(HI_HANDLE hHandle, HI_DRV_VDEC_FRAME_BUF_S* pstFrm)
 {
     HI_S32 s32Ret;
@@ -6182,14 +6101,8 @@ HI_S32 HI_DRV_VDEC_PutFrmBuf(HI_HANDLE hHandle, HI_DRV_VDEC_USR_FRAME_S* pstFrm)
 
     /*VPSS Read a frame from VDEC */
     pstChan->stStatInfo.u32UserAcqFrameTry++;
-    if(pstChan->bVPU)
-    {
-        s32Ret = VDEC_RecvVPUFrm(hHandle,pstChan,pstFrm);
-    }
-    else
-    {
     s32Ret = VDEC_RecvFrm(hHandle, pstChan, pstFrm);
-    }
+
     if (HI_SUCCESS != s32Ret)
     {
         VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
@@ -6239,17 +6152,11 @@ HI_S32 HI_DRV_VDEC_RlsFrmBuf(HI_HANDLE hHandle, HI_DRV_VIDEO_FRAME_S  *pstFrm)
         HI_WARN_VDEC("Chan %d not init!\n", hHandle);
         return HI_FAILURE;
     }
-    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
 
+    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
     pstChan->stStatInfo.u32UserRlsFrameTry++;
-    if(pstChan->bVPU)
-    {
-        s32Ret = VDEC_RlsVPUFrm(pstChan, pstFrm);
-    }
-    else
-    {
     s32Ret = VDEC_RlsFrm(pstChan, pstFrm);
-    }
+
     if (HI_SUCCESS != s32Ret)
     {
         VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
@@ -6425,7 +6332,7 @@ static inline HI_VOID VDEC_YUVFormat_UNF2VFMW(HI_DRV_PIX_FORMAT_E enVideo, YUV_F
 HI_S32 HI_DRV_VDEC_BlockToLine(HI_S32 hHandle, HI_DRV_VDEC_BTL_S *pstBTL)
 {
     /* Only hi3712 support this interface now. */
-#if 1
+#if 0
     HI_S32 s32Ret;
     VDEC_CHANNEL_S *pstChan = HI_NULL;
     struct
@@ -6679,7 +6586,7 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     HI_SYS_MEM_CONFIG_S         stMemConfig = {0};
 
 #if 0
-    #if (0 == PRE_ALLOC_VDEC_SCD_MMZ) 
+    #if (0 == PRE_ALLOC_VDEC_SCD_MMZ)
     HI_U32                      ScdBuf = 0;
     HI_U32                      VdhBuf = 0;
     #endif
@@ -6736,11 +6643,9 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     pstChan->stFrameRateParam.stSetFrmRate.u32fpsDecimal = 0;
     pstChan->bSetEosFlag = HI_FALSE;
     pstChan->bProcRegister = HI_FALSE;
-    pstChan->bVPUProcRegister = HI_FALSE;
     pstChan->u8ResolutionChange = 0;
     pstChan->u32DiscontinueCount = 0;
     pstChan->s32Speed = 1024;
-    pstChan->bVPU = HI_FALSE;
     pstChan->u32FrameCnt = 0;
     pstChan->s32FindStartCodeCnt =0;
     pstChan->s32Mpeg2Score=0;
@@ -6778,7 +6683,7 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
     pstChan->stOption.s32SlotHeight = 0;
 
 #if 0
-    #if (1 == PRE_ALLOC_VDEC_SCD_MMZ) 
+    #if (1 == PRE_ALLOC_VDEC_SCD_MMZ)
     pstChan->stOption.s32SCDBufSize = g_stSCDMMZ.u32Size - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
     #else
     VDEC_GetMemConfig(&ScdBuf, &VdhBuf);
@@ -6900,7 +6805,7 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
         pstChan->stOption.s32SCDBufSize = 3 * 1024 * 1024 - (HI_VDEC_SCD_EXT_MEM + HI_VDEC_EOS_MEM_SIZE);
         break;
     }
-    
+
 
     /* calculate refrence frame number and display frame number */
     s32Ret = HI_DRV_SYS_GetMemConfig(&stMemConfig);
@@ -6926,7 +6831,7 @@ static HI_S32 VDEC_Chan_InitParam(HI_HANDLE hHandle,HI_UNF_AVPLAY_OPEN_OPT_S *ps
             RefFrameNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_768;
             DispFrameNum = HI_VIDEO_MAX_DISP_FRAME_NUM_IN_768;
             pstChan->stOption.s32ExtraFrameStoreNum = HI_VIDEO_MAX_DISP_FRAME_NUM_IN_768;
-            pstChan->stOption.u32MaxMemUse = HI_VIDEO_MAX_VDH_BUF_IN_768 * 1024 * 1024;			
+            pstChan->stOption.u32MaxMemUse = HI_VIDEO_MAX_VDH_BUF_IN_768 * 1024 * 1024;
 		 break;
         case 2048:
             pstChan->stOption.s32MaxRefFrameNum = HI_VIDEO_MAX_REF_FRAME_NUM_IN_2048;
@@ -7104,7 +7009,7 @@ static HI_S32 VDEC_Chan_AllocHandle(HI_HANDLE *phHandle, struct file *pstFile)
     }
 
     s_stVdecDrv.u32ChanNum++;
-    *phHandle = (HI_ID_VDEC << 16) | i;  
+    *phHandle = (HI_ID_VDEC << 16) | i;
 
     #if 1
     if( HI_NULL == s_stVdecDrv.astChanEntity[i].pstChan)
@@ -7125,7 +7030,7 @@ static HI_S32 VDEC_Chan_AllocHandle(HI_HANDLE *phHandle, struct file *pstFile)
     }
     s_stVdecDrv.astChanEntity[i].pstChan = pstChan;
     #endif
-    up(&s_stVdecDrv.stSem);	
+    up(&s_stVdecDrv.stSem);
     return HI_SUCCESS;
 
 err0:
@@ -7234,7 +7139,7 @@ HI_S32 VDEC_Chan_FindPreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
            else
            {
                 u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size - pstMMZBuffer->u32Size;
-                
+
                 if(st_VdecChanPreUsedMMZInfo[i+1].u32NodeState == 0)
                 {
                     st_VdecChanPreUsedMMZInfo[i].u32Size           = pstMMZBuffer->u32Size;
@@ -7271,21 +7176,21 @@ HI_S32 VDEC_Chan_FindPreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
     {
        return HI_FAILURE;
     }
-    return HI_FAILURE;    
+    return HI_FAILURE;
 }
 
 HI_S32 VDEC_Chan_ReleasePreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
 {
-    HI_S32 s32Ret = HI_SUCCESS;    
+    HI_S32 s32Ret = HI_SUCCESS;
     HI_U32 i=0;
     HI_U32 j=0;
-    
+
 	if (!pstMMZBuffer)
 	{
 		HI_ERR_VDEC(" parameter NULL!\n");
 		return HI_FAILURE;
 	}
-	
+
     if (pstMMZBuffer->u32Size > 0)
     {
         if (pstMMZBuffer->u32StartPhyAddr >= g_stVDHMMZ.u32StartPhyAddr && pstMMZBuffer->u32StartPhyAddr < (g_stVDHMMZ.u32StartPhyAddr+g_stVDHMMZ.u32Size))
@@ -7294,7 +7199,7 @@ HI_S32 VDEC_Chan_ReleasePreMMZ(MMZ_BUFFER_S *pstMMZBuffer)
             {
                if( st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr == pstMMZBuffer->u32StartPhyAddr)
                {
-    
+
                    if(0==i)
                    {
                       if(0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState && st_VdecChanPreUsedMMZInfo[i+1].u32Size>0)
@@ -7455,10 +7360,11 @@ static HI_S32 VDEC_Chan_Create(HI_HANDLE hHandle)
 
     pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
 
-#ifdef HI_TVP_SUPPORT
-    pstChan->stOption.s32IsSecMode = (HI_TRUE == pstChan->bTvp)? 1: 0; 
+#ifdef HI_TEE_SUPPORT
+    pstChan->stOption.s32IsSecMode = (HI_TRUE == pstChan->bTvp)? 1: 0;
     if (1 == pstChan->stOption.s32IsSecMode)
     {
+        pstChan->stOption.Purpose = PURPOSE_DECODE;
         pstChan->stOption.MemAllocMode = MODE_ALL_BY_MYSELF;
         pstChan->stOption.MemDetail.ChanMemScd.Length  = 0;
         pstChan->stOption.MemDetail.ChanMemScd.PhyAddr = 0;
@@ -7500,7 +7406,7 @@ static HI_S32 VDEC_Chan_Create(HI_HANDLE hHandle)
             pstChan->stSCDMMZBuf.u32Size = pstChan->stMemSize.ScdDetailMem;
             pstChan->stSCDMMZBuf.u32StartPhyAddr = g_stSCDMMZ.u32StartPhyAddr;
             pstChan->stSCDMMZBuf.u32StartVirAddr = g_stSCDMMZ.u32StartVirAddr;
-            
+
             pstChan->stEOSBuffer.u32StartPhyAddr = pstChan->stSCDMMZBuf.u32StartPhyAddr + g_stSCDMMZ.u32Size - HI_VDEC_EOS_MEM_SIZE;
             pstChan->stEOSBuffer.u32StartVirAddr = pstChan->stSCDMMZBuf.u32StartVirAddr + g_stSCDMMZ.u32Size - HI_VDEC_EOS_MEM_SIZE;
             pstChan->stEOSBuffer.u32Size = HI_VDEC_EOS_MEM_SIZE;
@@ -7563,7 +7469,7 @@ static HI_S32 VDEC_Chan_Create(HI_HANDLE hHandle)
         {
             s32Ret = ~HI_SUCCESS;
         }
-		
+
         if(HI_SUCCESS == s32Ret)
         {
             /* CNcomment:解码采用预分配内存的方式，所以将预分配内存的大小分配给解码，而不是把其需要的大小赋值*/
@@ -7667,11 +7573,11 @@ errA:
         HI_DRV_MMZ_UnmapAndRelease(&pstChan->stSCDMMZBuf);
     }
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 
     if ( (HI_TRUE == pstChan->bTvp) && (NULL != pstChan->stEOSBuffer.u32StartPhyAddr))
     {
-        HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr); 
+        HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr);
     }
 #endif
 
@@ -7683,12 +7589,16 @@ err1:
 
 static HI_S32 VDEC_Chan_Destroy(HI_HANDLE hHandle)
 {
-    HI_S32 s32Ret;
-    
+    HI_S32 s32Ret = HI_FAILURE;
     VDEC_CHANNEL_S *pstChan = HI_NULL;
-    /* Stop channel first */
-    HI_DRV_VDEC_ChanStop(hHandle);
 
+    /* Stop channel first */
+    s32Ret = HI_DRV_VDEC_ChanStop(hHandle);
+    if(HI_SUCCESS != s32Ret)
+    {
+        HI_INFO_VDEC("INFO: VDEC_Chan_Destroy call HI_DRV_VDEC_ChanStop %d err !\n", hHandle);
+        return HI_FAILURE;
+    }
     /* Check and get pstChan pointer */
     if (HI_NULL == s_stVdecDrv.astChanEntity[hHandle].pstChan)
     {
@@ -7739,11 +7649,11 @@ static HI_S32 VDEC_Chan_Destroy(HI_HANDLE hHandle)
             HI_DRV_MMZ_UnmapAndRelease(&pstChan->stSCDMMZBuf);
         }
 
-    #ifdef HI_TVP_SUPPORT
+    #ifdef HI_TEE_SUPPORT
 
         if ( (HI_TRUE == pstChan->bTvp) && (NULL != pstChan->stEOSBuffer.u32StartPhyAddr))
         {
-            HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr); 
+            HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr);
         }
     #endif
 
@@ -8305,107 +8215,8 @@ static HI_S32 VDEC_Chan_Free(HI_HANDLE hHandle)
         pstChan->bProcRegister = HI_FALSE;
     }
 
-    VDEC_VPU_PTS_Free(hHandle, pstChan->u32VPUhandle);
 #ifdef TEST_VDEC_SAVEFILE
     VDEC_Dbg_CloseSaveFile(hHandle);
-#endif
-#if 0
-    /* Destroy VFMW decode channel */
-    if (HI_INVALID_HANDLE != pstChan->hChan)
-    {
-        s32Ret = (s_stVdecDrv.pVfmwFunc->pfnVfmwControl)( pstChan->hChan, VDEC_CID_DESTROY_CHAN_WITH_OPTION, HI_NULL);
-        if (VDEC_OK != s32Ret)
-        {
-            HI_ERR_VDEC("Chan %d DESTROY_CHAN err!\n", hHandle);
-        }
-
-        pstChan->hChan = HI_INVALID_HANDLE;
-        #if (1 == PRE_ALLOC_VDEC_VDH_MMZ)
-        if (pstChan->stVDHMMZBuf.u32StartPhyAddr >= g_stVDHMMZ.u32StartPhyAddr && pstChan->stVDHMMZBuf.u32StartPhyAddr < (g_stVDHMMZ.u32StartPhyAddr+g_stVDHMMZ.u32Size))
-        {
-            for(i=0;i<g_VdecPreMMZNodeNum;i++)
-            {
-               if( st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr == pstChan->stVDHMMZBuf.u32StartPhyAddr)
-               {
-                   if(0==i)
-                   {
-                      if(0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-                      {
-                          st_VdecChanPreUsedMMZInfo[i].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i+1].u32Size;
-                          st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                          st_VdecChanPreUsedMMZInfo[i+1].u32Size = 0;
-                          for(j=i+1;j<g_VdecPreMMZNodeNum;j++)
-                          {
-                              memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                          }
-                          g_VdecPreMMZNodeNum --;
-                      }
-                      else
-                      {
-                           st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                      }
-                   }
-                   else if(g_VdecPreMMZNodeNum-1==i)
-                   {
-                      if(0 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-                      {
-                          st_VdecChanPreUsedMMZInfo[i-1].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i-1].u32Size;
-                          st_VdecChanPreUsedMMZInfo[i].u32Size = 0;
-                          g_VdecPreMMZNodeNum --;
-                      }
-                      else
-                      {
-                           st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                      }
-                   }
-                   else
-                   {
-                       if(0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-                       {
-                          st_VdecChanPreUsedMMZInfo[i].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i+1].u32Size;
-                          st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                          st_VdecChanPreUsedMMZInfo[i+1].u32Size = 0;
-                          for(j=i+1;j<g_VdecPreMMZNodeNum;j++)
-                          {
-                              memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                          }
-                          g_VdecPreMMZNodeNum --;
-                       }
-                       if( 0 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-                       {
-                           st_VdecChanPreUsedMMZInfo[i-1].u32Size = st_VdecChanPreUsedMMZInfo[i-1].u32Size + st_VdecChanPreUsedMMZInfo[i].u32Size;
-                           for(j=i;j<g_VdecPreMMZNodeNum;j++)
-                           {
-                               memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                           }
-                           g_VdecPreMMZNodeNum --;
-                       }
-                       if(1 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState && 1 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-                       {
-                           st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                       }
-                   }
-               }
-            }
-        }
-        else
-#endif
-        {
-            HI_DRV_MMZ_UnmapAndRelease(&pstChan->stVDHMMZBuf);
-        }
-        /* Free vfmw memory */
-#if (1 == PRE_ALLOC_VDEC_SCD_MMZ)
-        if (pstChan->stSCDMMZBuf.u32StartPhyAddr == g_stSCDMMZ.u32StartPhyAddr)
-        {
-            g_bVdecPreSCDMMZUsed = HI_FALSE;
-            HI_DRV_MMZ_Unmap(&g_stSCDMMZ);
-        }
-        else
-#endif
-        {
-            HI_DRV_MMZ_UnmapAndRelease(&pstChan->stSCDMMZBuf);
-        }
-    }
 #endif
     /* Free I frame 2d buffer */
     if (0 != pstChan->stIFrame.st2dBuf.u32Size)
@@ -8491,13 +8302,13 @@ HI_S32 HI_DRV_VDEC_ChanStart(HI_HANDLE hHandle)
         //u32StartWithOptionFlag = HI_FALSE;
     }
 	#if 0
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     else if (HI_TRUE == s_stVdecDrv.astChanEntity[hHandle].pstChan->bTvp)
     {
 		u32StartWithOptionFlag = HI_FALSE;
     }
 	#endif
-	#endif	
+	#endif
 
     s32Ret = VDEC_SetAttr(pstChan);
     if (HI_SUCCESS != s32Ret)
@@ -8519,7 +8330,7 @@ HI_S32 HI_DRV_VDEC_ChanStart(HI_HANDLE hHandle)
     {
         VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
         HI_ERR_VDEC("Chan %d not init!\n", hHandle);
-        goto error_1; 
+        goto error_1;
     }
 
     /* Already running, retrun HI_SUCCESS */
@@ -8559,7 +8370,7 @@ HI_S32 HI_DRV_VDEC_ChanStart(HI_HANDLE hHandle)
        {
            VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
            HI_ERR_VDEC("Chan %d VDEC_CID_START_CHAN err!\n", pstChan->hChan);
-           goto error_1; 
+           goto error_1;
        }
     }
 
@@ -8575,7 +8386,7 @@ HI_S32 HI_DRV_VDEC_ChanStart(HI_HANDLE hHandle)
     if (HI_SUCCESS != s32Ret)
     {
         HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_START err!\n");
-        goto error_1; 
+        goto error_1;
     }
     /* Save state */
     pstChan->enCurState = VDEC_CHAN_STATE_RUN;
@@ -8597,8 +8408,8 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
 {
     HI_S32 s32Ret;
     HI_U32 i=0;
-    
-    
+
+
     VDEC_CHANNEL_S *pstChan = HI_NULL;
     hHandle = hHandle & 0xff;
     if (hHandle >= HI_VDEC_MAX_INSTANCE_NEW)
@@ -8651,7 +8462,7 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
             HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_STOP err!\n");
         }
     }
-	
+
 
     /* Lock */
     if (down_interruptible(&s_stVdecDrv.stSem))
@@ -8659,14 +8470,17 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
         HI_ERR_VDEC("Global lock err!\n");
         return HI_FAILURE;
     }
-	
+
     #if 1
     /* Destroy VFMW decode channel */
     if (HI_INVALID_HANDLE != s_stVdecDrv.astChanEntity[hHandle].pstChan->hChan)
     {
         /*reset vpss before VFMW decode channel destroy(reset VDH) change by l00228308*/
+        if(s_stVdecDrv.astChanEntity[hHandle].pstChan->bLowdelay)
+        {
         VDEC_Chan_ResetVpss(s_stVdecDrv.astChanEntity[hHandle].stVpssChan.hVpss);
-        
+        }
+
         for (i = 0; i < 50; i++)
         {
             s32Ret = (s_stVdecDrv.pVfmwFunc->pfnVfmwControl)(pstChan->hChan, VDEC_CID_DESTROY_CHAN_WITH_OPTION, HI_NULL);
@@ -8707,11 +8521,11 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
             HI_DRV_MMZ_UnmapAndRelease(&pstChan->stSCDMMZBuf);
         }
 
-    #ifdef HI_TVP_SUPPORT
+    #ifdef HI_TEE_SUPPORT
 
         if ( (HI_TRUE == pstChan->bTvp) && (NULL != pstChan->stEOSBuffer.u32StartPhyAddr))
         {
-            HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr); 
+            HI_SEC_MMZ_Delete(pstChan->stEOSBuffer.u32StartPhyAddr);
         }
     #endif
 
@@ -8724,7 +8538,7 @@ HI_S32 HI_DRV_VDEC_ChanStop(HI_HANDLE hHandle)
     }
 #endif
     up(&s_stVdecDrv.stSem);
-	
+
     /* Stop user data channel */
 #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
     USRDATA_Stop(hHandle);
@@ -8946,14 +8760,14 @@ HI_S32 HI_DRV_VDEC_SetChanAttr(HI_HANDLE hHandle, HI_UNF_VCODEC_ATTR_S *pstCfgPa
 
     /* Set config */
     pstChan->stCurCfg = *pstCfgParam;
-    
+
     if ((HI_UNF_VCODEC_TYPE_SORENSON == pstChan->stCurCfg.enType)
         || (HI_UNF_VCODEC_TYPE_H263 == pstChan->stCurCfg.enType)
         || (HI_UNF_VCODEC_TYPE_MJPEG == pstChan->stCurCfg.enType))
     {
         pstChan->stOption.u32DynamicFrameStoreAllocEn = 0;
     }
-    
+
     if (pstChan->enCurState == VDEC_CHAN_STATE_RUN)
     {
         s32Ret = VDEC_SetAttr(pstChan);
@@ -9023,9 +8837,9 @@ HI_S32 HI_DRV_VDEC_GetChanStatusInfo(HI_HANDLE hHandle, VDEC_STATUSINFO_S* pstSt
     HI_BOOL bAllPortCompleteFrm = HI_FALSE;
     VDEC_CHANNEL_S *pstChan = HI_NULL;
     VDEC_VPSSCHANNEL_S *pstVpssChan = HI_NULL;
-    VDEC_CHAN_STATE_S stChanState;
-    BUFMNG_STATUS_S stStatus;
-    HI_DRV_VPSS_PORT_BUFLIST_STATE_S stVpssBufListState;
+    VDEC_CHAN_STATE_S stChanState = {0};
+    BUFMNG_STATUS_S stStatus = {0};
+    HI_DRV_VPSS_PORT_BUFLIST_STATE_S stVpssBufListState = {0};
 
     /* check input parameters */
     if (HI_NULL == pstStatus)
@@ -9077,7 +8891,7 @@ HI_S32 HI_DRV_VDEC_GetChanStatusInfo(HI_HANDLE hHandle, VDEC_STATUSINFO_S* pstSt
 
     pstStatus->u32StrmInBps = pstChan->stStatInfo.u32AvrgVdecInBps;
     pstStatus->u32TotalDecFrmNum = pstChan->stStatInfo.u32TotalVdecOutFrame;
-    pstStatus->u32TotalErrFrmNum = pstChan->stStatInfo.u32VdecErrFrame;
+    pstStatus->u32TotalErrFrmNum = pstChan->stStatInfo.u32VdecDecErrFrame;
     pstStatus->u32TotalErrStrmNum = pstChan->stStatInfo.u32TotalStreamErrNum;
 
     /* judge if reach end of stream */
@@ -9259,6 +9073,13 @@ HI_S32 HI_DRV_VDEC_CheckNewEvent(HI_HANDLE hHandle, VDEC_EVENT_S *pstEvent)
         return HI_ERR_VDEC_INVALID_PARA;
     }
 
+    if (s_stVdecDrv.astChanEntity[hHandle].pstChan == NULL)
+    {
+        HI_INFO_VDEC("pstChan is null!\n");
+
+        return HI_FAILURE;
+    }
+
     /* Lock */
     VDEC_CHAN_TRY_USE_DOWN(&s_stVdecDrv.astChanEntity[hHandle]);
     if (HI_SUCCESS != s32Ret)
@@ -9359,7 +9180,7 @@ HI_S32 HI_DRV_VDEC_CheckNewEvent(HI_HANDLE hHandle, VDEC_EVENT_S *pstEvent)
         pstEvent->u32SecondValidPts = pstChan->u32SecondValidPts;
     }
     if (0 != pstChan->u32UnSupportStream)
-    {   
+    {
         pstEvent->u32UnSupportStream = pstChan->u32UnSupportStream;
         pstChan->u32UnSupportStream = 0;
     }
@@ -9832,7 +9653,7 @@ HI_S32 HI_DRV_VDEC_SetCtrlInfo(HI_HANDLE hHandle, HI_UNF_AVPLAY_CONTROL_INFO_S* 
         VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
         return HI_FAILURE;
     }
-    
+
     if(!pstCtrlInfo->u32DispOptimizeFlag)
     {
         bProgressive = HI_TRUE;
@@ -9847,7 +9668,7 @@ HI_S32 HI_DRV_VDEC_SetCtrlInfo(HI_HANDLE hHandle, HI_UNF_AVPLAY_CONTROL_INFO_S* 
     {
         bProgressive = HI_FALSE;
     }
-    
+
     s32Ret = HI_DRV_VDEC_SetDEI(hHandle,bProgressive);
     if (HI_SUCCESS != s32Ret)
     {
@@ -9976,13 +9797,13 @@ static HI_S32 VDEC_IFrame_SetAttr(VDEC_CHANNEL_S *pstChan, HI_UNF_VCODEC_TYPE_E 
 
     return HI_SUCCESS;
 }
-#ifndef HI_TVP_SUPPORT
+#ifndef HI_TEE_SUPPORT
 static HI_S32 VDEC_IFrame_BufInit(HI_U32 u32BufSize, MMZ_BUFFER_S* pstMMZBuf)
 #else
 static HI_S32 VDEC_IFrame_BufInit(HI_U32 u32BufSize, MMZ_BUFFER_S* pstMMZBuf, HI_BOOL bTvp)
 #endif
 {
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     if(HI_TRUE == bTvp)
     {
         pstMMZBuf->u32StartPhyAddr = (HI_U32)HI_SEC_MMZ_New(u32BufSize, BUFMNG_SEC_ZONE, "SEC_VDEC_IFrame");
@@ -10005,10 +9826,10 @@ static HI_S32 VDEC_IFrame_BufInit(HI_U32 u32BufSize, MMZ_BUFFER_S* pstMMZBuf, HI
 
 static HI_VOID VDEC_IFrame_BufDeInit(MMZ_BUFFER_S* pstMMZBuf)
 {
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     if (HI_TRUE == pstMMZBuf->bSecureMem)
     {
-        HI_SEC_MMZ_Delete(pstMMZBuf->u32StartPhyAddr); 
+        HI_SEC_MMZ_Delete(pstMMZBuf->u32StartPhyAddr);
     }
     else
 #endif
@@ -10100,7 +9921,7 @@ HI_S32 HI_DRV_VDEC_DecodeIFrame(HI_HANDLE hHandle, HI_UNF_AVPLAY_I_FRAME_S *pstS
     /* Init I frame buffer */
     pstChan->stIFrame.u32ReadTimes = 0;
     /* malloc the memory to save the stream from user,unmalloc below (OUT1) until read the frame from vfmw successly */
-    #ifndef HI_TVP_SUPPORT
+    #ifndef HI_TEE_SUPPORT
 	s32Ret = VDEC_IFrame_BufInit(pstStreamInfo->u32BufSize, &(pstChan->stIFrame.stMMZBuf));
 	#else
 	s32Ret = VDEC_IFrame_BufInit(pstStreamInfo->u32BufSize, &(pstChan->stIFrame.stMMZBuf), pstChan->bTvp);
@@ -10111,11 +9932,11 @@ HI_S32 HI_DRV_VDEC_DecodeIFrame(HI_HANDLE hHandle, HI_UNF_AVPLAY_I_FRAME_S *pstS
         HI_ERR_VDEC("Alloc IFrame buf err\n");
         goto OUT0;
     }
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
     if (HI_TRUE == pstChan->bTvp)
     {
-        HI_SEC_MMZ_TA2TA(pstStreamInfo->pu8Addr, pstChan->stIFrame.stMMZBuf.u32StartPhyAddr, 
-                          pstStreamInfo->u32BufSize);//当pstStreamInfo->pu8Add为安全地址，虚拟地址等于物理地址
+        /*需要实现一个安全拷贝安全安全的接口*/
+        //memcpy((HI_U8 *)pstChan->stIFrame.stMMZBuf.pu8StartVirAddr, pstStreamInfo->pu8Addr, pstStreamInfo->u32BufSize);
     }
     else
 #endif
@@ -10400,523 +10221,10 @@ HI_S32 HI_DRV_VDEC_SetLowdelay(HI_HANDLE hVdec,HI_BOOL bLowdelay)
 
     return HI_SUCCESS;
 }
-static HI_S32 VDEC_VPU_CreatBuffer(VDEC_CMD_VPU_BUF_CREATE_S *pstMMZBuffer)
-{
-    HI_S32 s32Ret;
-    if (HI_NULL == pstMMZBuffer)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    
-    pstMMZBuffer->u32Size += 1024;
 
-    s32Ret = VDEC_Chan_FindPreMMZ( (MMZ_BUFFER_S*)pstMMZBuffer);
-    if (s32Ret != HI_SUCCESS)
-    {
-        HI_WARN_VDEC("VDEC_VPU_CreatBuffer faild!\n");
-        return HI_FAILURE;
-    }
-    
-    pstMMZBuffer->u32StartPhyAddr = (pstMMZBuffer->u32StartPhyAddr + 1023) &(~1023);
-    pstMMZBuffer->u32StartVirAddr = (pstMMZBuffer->u32StartVirAddr + 1023) &(~1023);
-
-
-    return HI_SUCCESS;
-}
-
-static HI_S32 VDEC_VPU_RevertFrameBuffer(HI_U32 *u32PhyAddr)
-{
-    HI_S32 i = 0, j = 0;
-    for(i=0;i<g_VdecPreMMZNodeNum;i++)
-    {
-       if( st_VdecChanPreUsedMMZInfo[i].u32StartPhyAddr == (*u32PhyAddr) && (1 == st_VdecChanPreUsedMMZInfo[i].u32NodeState) )
-       {
-           if(0==i)
-           {
-              if(0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-              {
-                  st_VdecChanPreUsedMMZInfo[i].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i+1].u32Size;
-                  st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                  st_VdecChanPreUsedMMZInfo[i+1].u32Size = 0;
-                  for(j=i+1;j<g_VdecPreMMZNodeNum;j++)
-                  {
-                      memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                  }
-                  g_VdecPreMMZNodeNum --;
-              }
-              else
-              {
-                   st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-              }
-           }
-           else if(g_VdecPreMMZNodeNum-1==i)
-           {
-              if(0 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-              {
-                  st_VdecChanPreUsedMMZInfo[i-1].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i-1].u32Size;
-                  st_VdecChanPreUsedMMZInfo[i].u32Size = 0;
-                  g_VdecPreMMZNodeNum --;
-              }
-              else
-              {
-                   st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-              }
-           }
-           else
-           {
-               if(0 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState)
-               {
-                  st_VdecChanPreUsedMMZInfo[i].u32Size = st_VdecChanPreUsedMMZInfo[i].u32Size + st_VdecChanPreUsedMMZInfo[i+1].u32Size;
-                  st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-                  st_VdecChanPreUsedMMZInfo[i+1].u32Size = 0;
-                  for(j=i+1;j<g_VdecPreMMZNodeNum;j++)
-                  {
-                      memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                  }
-                  g_VdecPreMMZNodeNum --;
-               }
-               if( 0 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-               {
-                   st_VdecChanPreUsedMMZInfo[i-1].u32Size = st_VdecChanPreUsedMMZInfo[i-1].u32Size + st_VdecChanPreUsedMMZInfo[i].u32Size;
-                   for(j=i;j<g_VdecPreMMZNodeNum;j++)
-                   {
-                       memcpy(&st_VdecChanPreUsedMMZInfo[j],&st_VdecChanPreUsedMMZInfo[j+1],sizeof(VDEC_PREMMZ_NODE_S));
-                   }
-                   g_VdecPreMMZNodeNum --;
-               }
-               if(1 == st_VdecChanPreUsedMMZInfo[i+1].u32NodeState && 1 == st_VdecChanPreUsedMMZInfo[i-1].u32NodeState)
-               {
-                   st_VdecChanPreUsedMMZInfo[i].u32NodeState = 0;
-               }
-           }
-       }
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_DRV_VPU_CreateFrameList(HI_HANDLE hVdec)
-{
-    HI_S32 s32Ret;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_CreateFrameList err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
-    {
-         HI_ERR_VDEC("Chan not create!\n");
-         return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-    memset(&pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock,0,sizeof(BUFMNG_VPSS_IRQ_LOCK_S));
-    s32Ret  = BUFMNG_InitSpinLock(&pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock);
-    if(HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("BUFMNG_InitSpinLock err!ret:%d\n",s32Ret);
-        return s32Ret;
-    }
-    INIT_LIST_HEAD(&pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList);
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_DRV_VPU_ReleaseFrameList(HI_HANDLE hVdec)
-{
-    HI_S32 s32Ret = HI_SUCCESS;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    struct list_head *pos,*n;
-    VDEC_VPU_FRAME_LIST_NODE_S *pstTarget = HI_NULL;
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_ReleaseFrameList err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-    if( (&(pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList)) == pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList.next)
-    {
-        return HI_SUCCESS;
-    }
-    list_for_each_safe(pos, n, &(pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList))
-    {
-        BUFMNG_SpinLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-        pstTarget = list_entry(pos, VDEC_VPU_FRAME_LIST_NODE_S, node);
-        if(HI_NULL != pstTarget)
-        {
-            list_del_init(pos);
-            BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-            HI_VFREE_BUFMNG(pstTarget);
-        }
-        else
-        {
-            BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-            s32Ret = HI_FAILURE;
-        }
-    }
-    return s32Ret;
-}
-static HI_VOID VDEC_ConvertUserFrame(HI_DRV_VDEC_USR_FRAME_S stVPUFrame,VDEC_CHANNEL_S *pstChan,HI_DRV_VIDEO_FRAME_S *pstFrame)
-{
-    HI_VDEC_PRIV_FRAMEINFO_S* pstPrivInfo = (HI_VDEC_PRIV_FRAMEINFO_S *)(((HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv))->u32Reserve);
-    HI_DRV_VIDEO_PRIVATE_S* pstVideoPriv = (HI_DRV_VIDEO_PRIVATE_S*)(pstFrame->u32Priv);
-    memset(pstFrame,0,sizeof(HI_DRV_VIDEO_FRAME_S));
-    pstPrivInfo->image_id = stVPUFrame.s32FrameID;
-    pstFrame->u32FrameIndex = pstChan->u32FrameCnt;
-    if(pstChan->u32FrameCnt >= 0xFFFFFFFE)
-    {
-       pstChan->u32FrameCnt = 0;
-    }
-    else
-    {
-       pstChan->u32FrameCnt ++;
-    }
-    pstFrame->u32Pts                               = stVPUFrame.u32Pts;
-    pstFrame->u32SrcPts                            = stVPUFrame.u32Pts;
-    pstFrame->stBufAddr[0].u32PhyAddr_YHead        = stVPUFrame.s32LumaPhyAddr;
-    pstFrame->stBufAddr[0].u32PhyAddr_Y            = stVPUFrame.s32LumaPhyAddr;
-    pstFrame->stBufAddr[0].u32Stride_Y             = stVPUFrame.s32LumaStride;
-    pstFrame->stBufAddr[0].u32PhyAddr_CHead        = stVPUFrame.s32CbPhyAddr;
-    pstFrame->stBufAddr[0].u32PhyAddr_C            = stVPUFrame.s32CbPhyAddr;
-    pstFrame->stBufAddr[0].u32Stride_C             = stVPUFrame.s32ChromCrStride;
-    pstFrame->stBufAddr[0].u32PhyAddr_CrHead       = stVPUFrame.s32CrPhyAddr;
-    pstFrame->stBufAddr[0].u32PhyAddr_Cr           = stVPUFrame.s32CrPhyAddr;
-    pstFrame->stBufAddr[0].u32Stride_Cr            = stVPUFrame.s32ChromCrStride;
-    pstFrame->u32Width                             = stVPUFrame.s32YWidth;
-    pstFrame->u32Height                            = stVPUFrame.s32YHeight;
-    pstFrame->ePixFormat                           = HI_DRV_PIX_FMT_NV21 ;
-    pstFrame->enFieldMode                          = HI_DRV_FIELD_ALL;
-    pstVideoPriv->eColorSpace                           = HI_DRV_CS_BT601_YUV_LIMITED;
-    pstVideoPriv->stVideoOriginalInfo.enSource          = HI_DRV_SOURCE_DTV;
-    pstVideoPriv->stVideoOriginalInfo.u32Width          = pstFrame->u32Width  ;
-    pstVideoPriv->stVideoOriginalInfo.u32Height         = pstFrame->u32Height;
-    pstVideoPriv->stVideoOriginalInfo.u32FrmRate        = 25;
-    pstVideoPriv->stVideoOriginalInfo.en3dType          = HI_DRV_FT_NOT_STEREO;
-    pstVideoPriv->stVideoOriginalInfo.enSrcColorSpace   = HI_DRV_CS_BT601_YUV_LIMITED;
-    pstVideoPriv->stVideoOriginalInfo.enColorSys        = HI_DRV_COLOR_SYS_AUTO;
-    pstVideoPriv->stVideoOriginalInfo.bGraphicMode      = HI_FALSE;
-    pstVideoPriv->stVideoOriginalInfo.bInterlace        = 0;
-    return;
-}
-static HI_S32 VDEC_DRV_VPU_PutFrame(HI_HANDLE hVdec, HI_DRV_VDEC_USR_FRAME_S stVPUFrame)
-{
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    HI_DRV_VIDEO_FRAME_S stFrame;
-    VDEC_VPU_FRAME_LIST_NODE_S * pstBufNode;
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_PutFrame err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
-    {
-         HI_ERR_VDEC("Chan not create!\n");
-         return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-    memset(&stFrame,0,sizeof(HI_DRV_VIDEO_FRAME_S));
-    VDEC_ConvertUserFrame(stVPUFrame,pstChan,&stFrame);
-    pstBufNode = HI_VMALLOC_BUFMNG(sizeof(VDEC_VPU_FRAME_LIST_NODE_S));
-    if (HI_NULL == pstBufNode)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_PutFrame No memory.\n");
-        return HI_ERR_BM_NO_MEMORY;
-    }
-    memcpy(&(pstBufNode->stPortOutFrame),&stFrame,sizeof(HI_DRV_VIDEO_FRAME_S));
-    BUFMNG_SpinLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-    list_add_tail(&(pstBufNode->node), &(pstChan->stVPUParam.stVPUFrameList.stVdecVPUFrameList));
-    BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPUFrameList.stVPUFrameListLock));
-    return HI_SUCCESS;
-}
-// add by w00278582
-static HI_S32 VDEC_DRV_VPU_Status(HI_HANDLE hVdec, HI_DRV_VDEC_VPU_STATUS_S *stVPUStatus)
-{
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VPU_STATUS err hvdec:%d too large!\n", hVdec);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
-    {
-        HI_ERR_VDEC("Chan not create!\n");
-        return HI_FAILURE;
-    }
-
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-
-    if (HI_NULL == pstChan)
-    {
-        return HI_FAILURE;
-    }
-
-    memcpy(&(pstChan->stVdecVpuStatus), stVPUStatus, sizeof(HI_DRV_VDEC_VPU_STATUS_S));
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_DRV_VPU_SetAttr(HI_HANDLE hVdec, VDEC_VPU_ATTR_S stVPUAttr)
-{
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_SetAttr err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
-    {
-         HI_ERR_VDEC("VDEC_DRV_VPU_SetAttr Chan not create!\n");
-         return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-    pstChan->bVPU = stVPUAttr.bVPU;
-    return HI_SUCCESS;
-}
-static HI_S32  VDEC_DRV_VPU_CheckRlsFrameID(HI_HANDLE hVdec,HI_S32 *pID,HI_S32 *ps32Count)
-{
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    if (HI_INVALID_HANDLE == hVdec)
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    hVdec &= 0xFF;
-    if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        HI_ERR_VDEC("VDEC_DRV_VPU_SetAttr err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
-    {
-         HI_ERR_VDEC("VDEC_DRV_VPU_SetAttr Chan not create!\n");
-         return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
-    BUFMNG_SpinLockIRQ(&(pstChan->stVPUParam.stVPURlsParam.stVPURlsFrameListLock));
-    memcpy(pID,pstChan->stVPUParam.stVPURlsParam.RlsFrameIDArray,sizeof(HI_S32)*HI_VDEC_MAX_VPU_FRAME_NUM);
-    *ps32Count = pstChan->stVPUParam.stVPURlsParam.s32AvailableNum;
-    pstChan->stVPUParam.stVPURlsParam.s32AvailableNum = 0;
-    BUFMNG_SpinUnLockIRQ(&(pstChan->stVPUParam.stVPURlsParam.stVPURlsFrameListLock));
-    return HI_SUCCESS;
-}
-static HI_S32 HI_DRV_VDEC_VPU_ChanStart(HI_HANDLE hHandle)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    HI_BOOL bVPU = HI_FALSE;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
-    if ( HI_TRUE == pstChan->bVPU )
-    {
-        bVPU = HI_TRUE ;
-    }
-    s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssSendCommand)(s_stVdecDrv.astChanEntity[hHandle].stVpssChan.hVpss,HI_DRV_VPSS_USER_COMMAND_CHANGEIP, &bVPU);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_CHANGEIP err!\n");
-        return HI_FAILURE;
-    }
-    s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssSendCommand)(s_stVdecDrv.astChanEntity[hHandle].stVpssChan.hVpss,HI_DRV_VPSS_USER_COMMAND_START, NULL);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_START err!\n");
-        return HI_FAILURE;
-    }
-    pstChan->enCurState = VDEC_CHAN_STATE_RUN;
-    return HI_SUCCESS;
-}
-static HI_S32 HI_DRV_VDEC_VPU_ChanStop(HI_HANDLE hHandle)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
-    if (HI_INVALID_HANDLE != s_stVdecDrv.astChanEntity[hHandle].stVpssChan.hVpss)
-    {
-        s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssSendCommand)(s_stVdecDrv.astChanEntity[hHandle].stVpssChan.hVpss, HI_DRV_VPSS_USER_COMMAND_STOP, NULL);
-        if (HI_SUCCESS != s32Ret)
-        {
-            HI_ERR_VDEC("HI_DRV_VPSS_USER_COMMAND_STOP err!\n");
-            VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-            return HI_FAILURE;
-        }
-    }
-    pstChan->enCurState = VDEC_CHAN_STATE_STOP;
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_PTS_Alloc(HI_HANDLE hHandle, HI_HANDLE hHandle_vpu)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    s32Ret= PTSREC_Alloc(hHandle);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("VDEC_VPU_PTS_Alloc err!\n");
-        return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hHandle & 0xff].pstChan;
-    pstChan->stCurCfg.enType = HI_UNF_VCODEC_TYPE_HEVC;
-    pstChan->hDmxVidChn      = HI_INVALID_HANDLE;
-    if(HI_FALSE == pstChan->bProcRegister)
-    {
-        s32Ret  = VDEC_RegChanProc(hHandle);
-        if(HI_SUCCESS == s32Ret)
-        {
-           pstChan->bProcRegister = HI_TRUE;
-        }
-        else
-        {
-           pstChan->bProcRegister = HI_FALSE;
-        }
-        s32Ret  = VDEC_VPU_RegChanProc(hHandle_vpu);
-        if(HI_SUCCESS == s32Ret)
-        {
-           pstChan->bVPUProcRegister = HI_TRUE;
-    }
-        else
-        {
-           pstChan->bVPUProcRegister = HI_FALSE;
-        }
-        pstChan->u32VPUhandle = hHandle_vpu;
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_PTS_Free(HI_HANDLE hHandle, HI_HANDLE hHandle_vpu)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
-    s32Ret= PTSREC_Free(hHandle);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("VDEC_VPU_PTS_Free err!\n");
-        return HI_FAILURE;
-    }
-    if(HI_TRUE == pstChan->bProcRegister)
-    {
-        VDEC_UnRegChanProc(hHandle);
-        pstChan->bProcRegister = HI_FALSE;
-    }
-    if(HI_TRUE == pstChan->bVPUProcRegister)
-    {
-        VDEC_VPU_UnRegChanProc(hHandle_vpu);
-        pstChan->bVPUProcRegister = HI_FALSE;
-        pstChan->u32VPUhandle     = 0xffffffff;
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_PTS_Start(HI_HANDLE hHandle)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    s32Ret= PTSREC_Start(hHandle);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("VDEC_VPU_PTS_Start err!\n");
-        return HI_FAILURE;
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_PTS_Stop(HI_HANDLE hHandle)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    s32Ret= PTSREC_Stop(hHandle);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("VDEC_VPU_PTS_Stop err!\n");
-        return HI_FAILURE;
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_PTS_Reset(HI_HANDLE hHandle)
-{
-    HI_S32 s32Ret = HI_FAILURE;
-    s32Ret= PTSREC_Reset(hHandle);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_ERR_VDEC("VDEC_VPU_PTS_Reset err!\n");
-        return HI_FAILURE;
-    }
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_Get_FrameRateForNewFrm(HI_HANDLE hHandle, HI_DRV_VIDEO_FRAME_S *pstFrame)
-{
-    HI_S32 s32Ret = HI_SUCCESS;
-    VDEC_CHANNEL_S *pstChan = HI_NULL;
-    hHandle &= 0xFF;
-    if ((HI_NULL == pstFrame) || (HI_INVALID_HANDLE == hHandle))
-    {
-        HI_ERR_VDEC("Bad param!\n");
-        return HI_FAILURE;
-    }
-    memset(pstFrame, 0, sizeof(HI_DRV_VIDEO_FRAME_S));
-    if (hHandle >= HI_VDEC_MAX_INSTANCE_NEW)
-    {
-        return HI_ERR_VDEC_INVALID_PARA;
-    }
-    VDEC_CHAN_TRY_USE_DOWN(&s_stVdecDrv.astChanEntity[hHandle]);
-    if (HI_SUCCESS != s32Ret)
-    {
-        HI_WARN_VDEC("Chan %d lock fail!\n", hHandle);
-        return HI_FAILURE;
-    }
-    if (HI_NULL == s_stVdecDrv.astChanEntity[hHandle].pstChan)
-    {
-        VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-        HI_WARN_VDEC("Chan %d not init!\n", hHandle);
-        return HI_FAILURE;
-    }
-    pstChan = s_stVdecDrv.astChanEntity[hHandle].pstChan;
-    memcpy(pstFrame, &(pstChan->stLastDispFrameInfo), sizeof(HI_DRV_VIDEO_FRAME_S));
-    VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-    return HI_SUCCESS;
-}
-static HI_S32 VDEC_VPU_Get_Vpss_StatusInfo(HI_HANDLE hHandle, HI_BOOL *bAllPortCompleteFrm)
-{
-    HI_S32 s32Ret;
-    HI_BOOL bPortCompleteFrm = HI_FALSE;
-    VDEC_VPSSCHANNEL_S *pstVpssChan = HI_NULL;
-    hHandle &= 0xFF;
-    VDEC_CHAN_TRY_USE_DOWN(&s_stVdecDrv.astChanEntity[hHandle]);
-    pstVpssChan = &(s_stVdecDrv.astChanEntity[hHandle].stVpssChan);
-    s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssSendCommand)(pstVpssChan->hVpss,HI_DRV_VPSS_USER_COMMAND_CHECKALLDONE,&bPortCompleteFrm);
-    if(HI_SUCCESS != s32Ret)
-    {
-        VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-        HI_ERR_VDEC("Vpss:%d VDEC_VPU_Get_Vpss_StatusInfo error!\n", pstVpssChan->hVpss);
-        return HI_FAILURE;
-    }
-    *bAllPortCompleteFrm = bPortCompleteFrm;
-    VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[hHandle]);
-    return s32Ret ;
-}
-
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
 HI_S32 HI_DRV_VDEC_SetTvp(HI_HANDLE hVdec,HI_BOOL bTvp)
-{    
+{
 
     VDEC_OPERATION_S stOpt;
     VDEC_CHANNEL_S *pstChan = HI_NULL;
@@ -10929,12 +10237,12 @@ HI_S32 HI_DRV_VDEC_SetTvp(HI_HANDLE hVdec,HI_BOOL bTvp)
     if(hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
     {
         HI_ERR_VDEC("HI_DRV_VDEC_SetTvp err hvdec:%d too large!\n",hVdec);
-        return HI_FAILURE;  
+        return HI_FAILURE;
     }
     if (HI_NULL == s_stVdecDrv.astChanEntity[hVdec].pstChan)
     {
          HI_ERR_VDEC("Chan not create!\n");
-         return HI_FAILURE;  
+         return HI_FAILURE;
     }
     pstChan = s_stVdecDrv.astChanEntity[hVdec].pstChan;
 
@@ -10951,22 +10259,21 @@ HI_S32 HI_DRV_VDEC_SetTvp(HI_HANDLE hVdec,HI_BOOL bTvp)
             HI_ERR_VDEC("Init trusted vfmw failed\n");
             return HI_FAILURE;
         }
-    } 
+    }
 
-    return HI_SUCCESS;    
+    return HI_SUCCESS;
 }
 #endif
 
 
 HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, void *arg)
 {
-    HI_S32 s32Ret;
+    HI_S32 s32Ret = HI_FAILURE;
     HI_HANDLE hHandle = HI_INVALID_HANDLE;
 
     /* Check parameter in this switch */
     switch (cmd)
     {
-
         case UMAPC_VDEC_GETCAP:
         case UMAPC_VDEC_ALLOCHANDLE:
         case UMAPC_VDEC_CREATE_ESBUF:
@@ -10978,16 +10285,6 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
         case UMAPC_VDEC_RLSBUF:
         case UMAPC_VDEC_RESET_ESBUF:
         case UMAPC_VDEC_GET_ESBUF_STATUS:
-        case UMAPC_VDEC_CHAN_CREATE_VPU_BUF:
-        case UMAPC_VDEC_CHAN_VPU_REVERT_FRAME_BUF:
-        case UMAPC_VDEC_CHAN_VPU_CREATE_FRAMELIST:
-        case UMAPC_VDEC_CHAN_VPU_RELEASE_FRAMELIST:
-        case UMAPC_VDEC_CHAN_VPU_PUT_FRAME:
-        case UMAPC_VDEC_CHAN_VPU_ATTR:
-        case UMAPC_VDEC_CHAN_VPU_CHECK_RLSFRM:
-        case UMAPC_VDEC_VPU_PTS_Alloc:
-        case UMAPC_VDEC_VPU_PTS_Free:
-        case UMAPC_VDEC_VPU_PROC:
             if (HI_NULL == arg)
             {
                 HI_ERR_VDEC("CMD %p Bad arg!\n", (HI_VOID*)cmd);
@@ -11000,13 +10297,6 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
         case UMAPC_VDEC_CHAN_FREE:
         case UMAPC_VDEC_CHAN_START:
         case UMAPC_VDEC_CHAN_STOP:
-        case UMAPC_VDEC_CHAN_VPU_START:
-        case UMAPC_VDEC_CHAN_VPU_STOP:
-        case UMAPC_VDEC_VPU_PTS_Start:
-        case UMAPC_VDEC_VPU_PTS_Stop:
-        case UMAPC_VDEC_VPU_PTS_Reset:
-        case UMAPC_VDEC_VPU_GET_FRAME_RATE:
-        case UMAPC_VDEC_VPU_GET_VPSS_STATUSINFO:
         case UMAPC_VDEC_CHAN_RESET:
         case UMAPC_VDEC_CHAN_SETATTR:
         case UMAPC_VDEC_CHAN_GETATTR:
@@ -11041,9 +10331,11 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
         case UMAPC_VDEC_CHAN_GETPORTSTATE:
         case UMAPC_VDEC_CHAN_PROGRSSIVE:
         case UMAPC_VDEC_CHAN_LOWDELAY:
-#ifdef HI_TVP_SUPPORT
+
+#ifdef HI_TEE_SUPPORT
 		case UMAPC_VDEC_CHAN_TVP:
 #endif
+
         case UMAPC_VDEC_CHAN_DPBFULL:
         case UMAPC_VDEC_CHAN_SETCOLORSPACE:
             if (HI_NULL == arg)
@@ -11122,7 +10414,7 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 		if(HI_SUCCESS != s32Ret)
 		{
 			HI_WARN_VDEC("HI_DRV_VDEC_DecodeIFrame err!:%d\n",s32Ret);
-		}		
+		}
         s32Ret |= VDEC_Chan_Reset((pstIFrameDec->hHandle)&0xff, VDEC_RESET_TYPE_ALL);
 		if(HI_SUCCESS != s32Ret)
 		{
@@ -11143,7 +10435,6 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 
     case UMAPC_VDEC_CHAN_ALLOC:
     {
-        //s32Ret = VDEC_Chan_Alloc(hHandle, &(((VDEC_CMD_ALLOC_S*)arg)->stOpenOpt));
         if(((VDEC_CMD_ALLOC_S*)arg)->u32DFSEnable > 1)//l00273086
         {
             ((VDEC_CMD_ALLOC_S*)arg)->u32DFSEnable = 0;
@@ -11213,6 +10504,21 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
     }
     case UMAPC_VDEC_CREATE_ESBUF:
     {
+        HI_HANDLE hVdec = ((HI_DRV_VDEC_STREAM_BUF_S *)arg)->hVdec & 0xff;
+        if (hVdec >= HI_VDEC_MAX_INSTANCE_NEW)
+        {
+            HI_ERR_VDEC("CMD: %d, Invalide handle: %d\n", cmd, hVdec);
+
+            return HI_ERR_VDEC_INVALID_PARA;
+        }
+
+        if (s_stVdecDrv.astChanEntity[hVdec].pstChan == NULL)
+        {
+            HI_INFO_VDEC("pstChan is null!\n");
+
+            return HI_FAILURE;
+        }
+
         s32Ret = VDEC_CreateStrmBuf((HI_DRV_VDEC_STREAM_BUF_S *)arg);
 		if(HI_SUCCESS != s32Ret)
 		{
@@ -11402,8 +10708,14 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
     }
     case UMAPC_VDEC_CHAN_EVNET_NEWFRAME:
     {
-        VDEC_CMD_FRAME_S* pstFrameCmd = (VDEC_CMD_FRAME_S*)arg;
-        pstFrameCmd->stFrame = s_stVdecDrv.astChanEntity[pstFrameCmd->hHandle&0xff].pstChan->stLastFrm;
+        VDEC_CMD_FRAME_S *pstFrameCmd = (VDEC_CMD_FRAME_S *)arg;
+        if (s_stVdecDrv.astChanEntity[pstFrameCmd->hHandle & 0xff].pstChan == NULL)
+        {
+            HI_INFO_VDEC("pstChan is null!\n");
+
+            return HI_FAILURE;
+        }
+        pstFrameCmd->stFrame = s_stVdecDrv.astChanEntity[pstFrameCmd->hHandle & 0xff].pstChan->stLastFrm;
         s32Ret = HI_SUCCESS;
         break;
     }
@@ -11459,6 +10771,13 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 #if (1 == HI_VDEC_USERDATA_CC_SUPPORT)
     case UMAPC_VDEC_CHAN_USERDATAINITBUF:
     {
+        if (s_stVdecDrv.astChanEntity[hHandle].pstChan == NULL)
+        {
+            HI_INFO_VDEC("pstChan is null!\n");
+
+            return HI_FAILURE;
+        }
+        
         s32Ret = USRDATA_Alloc(hHandle, &(((VDEC_CMD_USERDATABUF_S*)arg)->stBuf));
 		if(HI_SUCCESS != s32Ret)
 		{
@@ -11583,7 +10902,7 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 		}
         break;
     }
-	#ifdef HI_TVP_SUPPORT
+	#ifdef HI_TEE_SUPPORT
     case UMAPC_VDEC_CHAN_TVP:
 	{
 		s32Ret = HI_DRV_VDEC_SetTvp(hHandle,((VDEC_CMD_SET_TVP_S*)arg)->bTVP);
@@ -11591,7 +10910,7 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 		{
 			HI_WARN_VDEC("HI_DRV_VDEC_SetTvp err!:%d\n",s32Ret);
 		}
-		break;			
+		break;
 	}
 	#endif
     case UMAPC_VDEC_CHAN_SETCOLORSPACE:
@@ -11782,159 +11101,6 @@ HI_S32 VDEC_Ioctl(struct inode *inode, struct file  *filp, unsigned int cmd, voi
 		}
         break;
     }
-    case UMAPC_VDEC_CHAN_CREATE_VPU_BUF:
-    {
-        s32Ret = VDEC_VPU_CreatBuffer((VDEC_CMD_VPU_BUF_CREATE_S *)arg);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_CreatBuffer err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_REVERT_FRAME_BUF:
-    {
-        s32Ret = VDEC_VPU_RevertFrameBuffer((HI_U32 *)arg);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_RevertFrameBuffer err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_CREATE_FRAMELIST:
-    {
-        s32Ret = VDEC_DRV_VPU_CreateFrameList(((VDEC_CMD_CREATE_FRAME_LIST_S*)arg)->hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_CreateFrameList err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_RELEASE_FRAMELIST:
-    {
-        s32Ret = VDEC_DRV_VPU_ReleaseFrameList(((VDEC_CMD_RELEASE_FRAME_LIST_S*)arg)->hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_ReleaseFrameList err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_PUT_FRAME:
-    {
-        s32Ret = VDEC_DRV_VPU_PutFrame(((VDEC_CMD_VPU_PUT_FRAME_S*)arg)->hHandle,((VDEC_CMD_VPU_PUT_FRAME_S*)arg)->stFrame);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_PutFrame err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PROC:
-    {
-        s32Ret = VDEC_DRV_VPU_Status((((VDEC_CMD_VPU_PROC_STATUS_S*)arg)->hVdecHandle), &(((VDEC_CMD_VPU_PROC_STATUS_S*)arg)->stVPUStatus));
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_Status err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_ATTR:
-    {
-        s32Ret = VDEC_DRV_VPU_SetAttr(((VDEC_CMD_VPU_ATTR_S*)arg)->hHandle,((VDEC_CMD_VPU_ATTR_S*)arg)->stVPUAttr);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_SetAttr err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_CHECK_RLSFRM:
-    {
-        s32Ret = VDEC_DRV_VPU_CheckRlsFrameID(((VDEC_CMD_VPU_CHECK_RLSFRAME_S*)arg)->hHandle,((VDEC_CMD_VPU_CHECK_RLSFRAME_S*)arg)->as32FrameID,&(((VDEC_CMD_VPU_CHECK_RLSFRAME_S*)arg)->s32Count));
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_DRV_VPU_CheckRlsFrameID err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_START:
-    {
-        s32Ret = HI_DRV_VDEC_VPU_ChanStart(hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("HI_DRV_VDEC_VPU_ChanStart err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_CHAN_VPU_STOP:
-    {
-        s32Ret = HI_DRV_VDEC_VPU_ChanStop(hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("HI_DRV_VDEC_VPU_ChanStop err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PTS_Alloc:
-    {
-        s32Ret = VDEC_VPU_PTS_Alloc((((VDEC_CMD_VPU_PROC_HANDLE_S*)arg)->hVdecHandle & 0xff), ((VDEC_CMD_VPU_PROC_HANDLE_S*)arg)->hVpuHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_PTS_Alloc err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PTS_Free:
-    {
-        s32Ret = VDEC_VPU_PTS_Free((((VDEC_CMD_VPU_PROC_HANDLE_S*)arg)->hVdecHandle & 0xff), ((VDEC_CMD_VPU_PROC_HANDLE_S*)arg)->hVpuHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_PTS_Free err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PTS_Start:
-    {
-        s32Ret = VDEC_VPU_PTS_Start(hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_PTS_Start err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PTS_Stop:
-    {
-        s32Ret = VDEC_VPU_PTS_Stop(hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_PTS_Stop err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_PTS_Reset:
-    {
-        s32Ret = VDEC_VPU_PTS_Reset(hHandle);
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_PTS_Reset err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_GET_FRAME_RATE:
-    {
-        s32Ret = VDEC_VPU_Get_FrameRateForNewFrm(((VDEC_CMD_VO_FRAME_S*)arg)->hHandle, &(((VDEC_CMD_VO_FRAME_S*)arg)->stFrame));
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_Get_FrameRateForNewFrm err!:%d\n",s32Ret);
-		}
-        break;
-    }
-    case UMAPC_VDEC_VPU_GET_VPSS_STATUSINFO:
-    {
-        s32Ret = VDEC_VPU_Get_Vpss_StatusInfo(((VDEC_CMD_VPU_GET_VPSS_STATUSINFO_S*)arg)->hHandle, &(((VDEC_CMD_VPU_GET_VPSS_STATUSINFO_S*)arg)->bAllPortCompleteFrm));
-		if(HI_SUCCESS != s32Ret)
-		{
-			HI_WARN_VDEC("VDEC_VPU_Get_Vpss_StatusInfo err!:%d\n",s32Ret);
-		}
-        break;
-    }
     case UMAPC_VDEC_CHAN_SETEXTBUFFER:
     {
         s32Ret = VDEC_Chan_SetExtBuffer(hHandle, &((VDEC_CMD_VPSS_FRAME_S*)arg)->stBufferAttr);
@@ -12031,30 +11197,6 @@ static HI_S32 VDEC_RegChanProc(HI_S32 s32Num)
     return HI_SUCCESS;
 }
 
-static HI_S32 VDEC_VPU_RegChanProc(HI_S32 s32VpuNum)
-{
-    HI_CHAR aszBuf[16];
-    DRV_PROC_ITEM_S *pstItem;
-    if (HI_NULL == s_stVdecDrv.pstProcParam)
-    {
-        return HI_FAILURE;
-    }
-    if (-1 < s32VpuNum)
-    {
-        snprintf(aszBuf, sizeof(aszBuf), "vdec_vpu%02d", s32VpuNum);
-        pstItem = HI_DRV_PROC_AddModule(aszBuf, HI_NULL, HI_NULL);
-        if (!pstItem)
-        {
-            HI_FATAL_VDEC("Create vdec_vpu proc entry fail!\n");
-            return HI_FAILURE;
-        }
-        pstItem->read  = s_stVdecDrv.pstProcParam->pfnVpuReadProc;
-        pstItem->write = s_stVdecDrv.pstProcParam->pfnVpuWriteProc;
-    }
-    HI_INFO_VDEC("Create proc entry for vdec_vpu%02d OK!\n", s32VpuNum);
-    return HI_SUCCESS;
-}
-
 static HI_VOID VDEC_UnRegChanProc(HI_S32 s32Num)
 {
     HI_CHAR aszBuf[16];
@@ -12068,18 +11210,6 @@ static HI_VOID VDEC_UnRegChanProc(HI_S32 s32Num)
         snprintf(aszBuf, sizeof(aszBuf), "vdec%02d", s32Num);
     }
     HI_DRV_PROC_RemoveModule(aszBuf);
-    return;
-}
-static HI_VOID VDEC_VPU_UnRegChanProc(HI_S32 s32VpuNum)
-{
-    HI_CHAR aszBuf[16];
-    if (-1 < s32VpuNum)
-    {
-        snprintf(aszBuf, sizeof(aszBuf), "vdec_vpu%02d", s32VpuNum);
-        HI_DRV_PROC_RemoveModule(aszBuf);
-    }
-
-    return;
 }
 
 static HI_VOID VDEC_TimerFunc(HI_LENGTH_T value)
@@ -12136,15 +11266,13 @@ static HI_VOID VDEC_TimerFunc(HI_LENGTH_T value)
     }
 
     add_timer(&s_stVdecDrv.stTimer);
-    return;
 }
+
 HI_S32 VDEC_VPSS_Init(HI_VOID)
 {
-    //HI_U32 i,j;
     HI_S32 s32Ret;
-    /*init vpss*/
-    /*CNcomment:对vpss初始化*/
     s32Ret = (s_stVdecDrv.pVpssFunc->pfnVpssGlobalInit)();
+
     return s32Ret;
 }
 //l00273086 start//
@@ -12270,7 +11398,7 @@ static SINT32 VDEC_AllocMemForVfmw(HI_HANDLE hHandle)
         u32NeededFrameNum = (pstChan->stOption.u32CfgFrameNum + pstChan->stOption.s32ExtraFrameStoreNum);
         stMMZBuffer.u32Size = (pstChan->u32FrameSize) * (u32NeededFrameNum);//计算需要的帧存大小
 
-#ifdef HI_TVP_SUPPORT
+#ifdef HI_TEE_SUPPORT
         if (pstChan->bTvp)
         {
             stFsParam.PhyAddr = HI_NULL;
@@ -12347,7 +11475,7 @@ static SINT32 VdecTaskFunc(VOID* param)   //l00273086
                {
                    // HI_ERR_VDEC("%s Lock %d err!\n", __FUNCTION__, i);
                    continue;
-               }            
+               }
                 s32Ret = VDEC_AllocMemForVfmw(i);
                 VDEC_CHAN_USE_UP(&s_stVdecDrv.astChanEntity[i]);
             }
@@ -12547,7 +11675,7 @@ static HI_S32 VDEC_CloseDev(HI_VOID)
 
     /* Vfmw exit */
     (s_stVdecDrv.pVfmwFunc->pfnVfmwExit)();
-  #ifdef HI_TVP_SUPPORT
+  #ifdef HI_TEE_SUPPORT
     (s_stVdecDrv.pVfmwFunc->pfnVfmwTrustDecoderExit)();
   #endif
 
@@ -12599,7 +11727,7 @@ HI_S32 VDEC_DRV_Open(struct inode *inode, struct file  *filp)
             HI_FATAL_VDEC("Get vfmw function err!\n");
             goto err;
         }
-      #ifdef HI_TVP_SUPPORT
+      #ifdef HI_TEE_SUPPORT
         if ((HI_NULL == s_stVdecDrv.pVfmwFunc->pfnVfmwTrustDecoderInit)
           ||(HI_NULL == s_stVdecDrv.pVfmwFunc->pfnVfmwTrustDecoderExit))
         {
@@ -12629,46 +11757,57 @@ err:
     return HI_FAILURE;
 }
 
-HI_S32 VDEC_DRV_Release(struct inode *inode, struct file  *filp)
+HI_S32 VDEC_DRV_Release(struct inode *inode, struct file *filp)
 {
-    HI_S32 i,j;
-    HI_S32 s32Ret;
+    HI_S32 i;
+
     /* Not the last close, only close the channel match with the 'filp' */
-    if (atomic_dec_return(&s_stVdecDrv.atmOpenCnt) != 0)
+    if (0 != atomic_dec_return(&s_stVdecDrv.atmOpenCnt))
     {
         for (i = 0; i < HI_VDEC_MAX_INSTANCE_NEW; i++)
         {
-            if (s_stVdecDrv.astChanEntity[i].u32File == ((HI_U32)filp))
-            {
-                s32Ret = down_interruptible(&s_stVdecDrv.stSem);
-                for(j=0;j<VDEC_MAX_PORT_NUM;j++)
-                {
-                    if(s_stVdecDrv.astChanEntity[i].stVpssChan.stPort[j].hPort != HI_INVALID_HANDLE)
-                    {
-                        if(HI_DRV_VPSS_BUF_USER_ALLOC_MANAGE == s_stVdecDrv.astChanEntity[i].stVpssChan.stPort[j].bufferType)
-                        {
-                            BUFMNG_VPSS_DeInit(&s_stVdecDrv.astChanEntity[i].stVpssChan.stPort[j].stBufVpssInst);
-                        }
-                    }
-                }
-                if (HI_INVALID_HANDLE != s_stVdecDrv.astChanEntity[i].stVpssChan.hVpss)
-                {
-                    VDEC_Chan_DestroyVpss(i);
-                }
-                up(&s_stVdecDrv.stSem);
+            VDEC_CHAN_ENTITY_S *Chan = &s_stVdecDrv.astChanEntity[i];
+            HI_U32              j;
 
-                if (s_stVdecDrv.astChanEntity[i].bUsed)
+            if (Chan->u32File != ((HI_U32)filp))
+            {
+                continue;
+            }
+
+            if (0 != down_interruptible(&s_stVdecDrv.stSem))
+            {
+                HI_ERR_VDEC("down_interruptible error\n");
+            }
+
+            for (j = 0; j < VDEC_MAX_PORT_NUM; j++)
+            {
+                if (Chan->stVpssChan.stPort[j].hPort != HI_INVALID_HANDLE)
                 {
-                    if (s_stVdecDrv.astChanEntity[i].pstChan)
+                    if (HI_DRV_VPSS_BUF_USER_ALLOC_MANAGE == Chan->stVpssChan.stPort[j].bufferType)
                     {
-                        if (HI_SUCCESS != VDEC_Chan_Free(i))
-                        {
-                            atomic_inc(&s_stVdecDrv.atmOpenCnt);
-                            return HI_FAILURE;
-                        }
+                        BUFMNG_VPSS_DeInit(&Chan->stVpssChan.stPort[j].stBufVpssInst);
                     }
-                    VDEC_Chan_FreeHandle(i);
                 }
+            }
+
+            if (HI_INVALID_HANDLE != Chan->stVpssChan.hVpss)
+            {
+                VDEC_Chan_DestroyVpss(i);
+            }
+
+            up(&s_stVdecDrv.stSem);
+
+            if (Chan->bUsed)
+            {
+                if (Chan->pstChan)
+                {
+                    if (HI_SUCCESS != VDEC_Chan_Free(i))
+                    {
+                        atomic_inc(&s_stVdecDrv.atmOpenCnt);
+                        return HI_FAILURE;
+                    }
+                }
+                VDEC_Chan_FreeHandle(i);
             }
         }
     }

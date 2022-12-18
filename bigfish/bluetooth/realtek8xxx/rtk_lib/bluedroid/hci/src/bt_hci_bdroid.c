@@ -70,6 +70,8 @@ void lpm_wake_assert(void);
 #ifdef BLUETOOTH_RTK_HEARTBEAT
 void poll_init(void);
 void poll_cleanup(void);
+extern uint32_t rtkbt_heartbeat_evt_seqno;
+extern uint32_t rtkbt_heartbeat_noack_num;
 #endif
 
 void init_vnd_if(unsigned char *local_bdaddr);
@@ -590,7 +592,7 @@ static void *bt_hc_worker_thread(void *arg)
 #ifdef BLUETOOTH_RTK_HEARTBEAT
         if (events & HC_EVENT_POLL_IDLE_TIMEOUT)
         {
-            if (bt_hc_cbacks)
+            if (bt_hc_cbacks && (num_hci_cmd_pkts>0))
             {
 #define HCI_CMD_PREAMBLE_SIZE   3
 #define HCI_CMD_VNDR_HEARTBEAT 0xFC94
@@ -608,7 +610,16 @@ static void *bt_hc_worker_thread(void *arg)
                     p = (uint8_t *) (p_hb_msg + 1);
                     UINT16_TO_STREAM(p, HCI_CMD_VNDR_HEARTBEAT);
                     *p = 0;
-
+                    if(rtkbt_heartbeat_noack_num > 3)
+                    {
+                            usleep(10000); /* 10 milliseconds */
+                            ALOGE("Heartbeat: %d EvtSeq %04x NoACK %d", rtkbt_heartbeat_evt_seqno, rtkbt_heartbeat_noack_num);
+                            rtkbt_heartbeat_evt_seqno = 0xffffffff;
+                            rtkbt_heartbeat_noack_num = 0;
+                            kill(getpid(), SIGKILL);
+                            break;
+                    }
+                    rtkbt_heartbeat_noack_num ++;
                     utils_enqueue(&tx_q, (void *) p_hb_msg);
                     bthc_signal_event(HC_EVENT_TX);
                 }

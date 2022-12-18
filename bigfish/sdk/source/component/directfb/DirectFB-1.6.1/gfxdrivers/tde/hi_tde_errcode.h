@@ -1,17 +1,24 @@
 /******************************************************************************
-  Copyright (C), 2001-2011, Hisilicon Tech. Co., Ltd.
- ******************************************************************************
- File Name     : tde_errcode.h
-Version       : Initial Draft
-Author        : Hisilicon multimedia software group
-Created       : 2005/4/23
-Last Modified :
-Description   : err code define
-Function List :
-History       : May modify the code to errcode.h FOR hi3110
- ******************************************************************************/
-#ifndef __TDE_ERRCODE_H__
-#define __TDE_ERRCODE_H__
+*
+* Copyright (C) 2016 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+*
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* and may not be copied, reproduced, modified, disclosed to others, published or used, in
+* whole or in part, without the express prior written permission of Hisilicon.
+*
+******************************************************************************
+File Name           : hi_tde_errcode.h
+Version             : Initial Draft
+Author              : 
+Created             : 2014/06/20
+Description         : 
+Function List       :                    
+History             :
+Date                        Author                  Modification
+2014/06/20                  y00181162               Created file        
+******************************************************************************/
+#ifndef  __HI_TDE_ERRCODE_H__
+#define  __HI_TDE_ERRCODE_H__
 
 //#include "hi_debug.h"
 #include "hi_type.h"
@@ -39,7 +46,8 @@ enum
     HI_ERR_TDE_CLIP_AREA,                       /**<  clip area and operation area have no intersection */
     HI_ERR_TDE_JOB_TIMEOUT,                     /**<  blocked job wait timeout */
     HI_ERR_TDE_UNSUPPORTED_OPERATION,           /**<  unsupported operation */
-    HI_ERR_TDE_QUERY_TIMEOUT                    /**<  query time out */
+    HI_ERR_TDE_QUERY_TIMEOUT,                    /**<  query time out */
+    HI_ERR_TDE_INTERRUPT              /* blocked job was interrupted */
 };
     
 

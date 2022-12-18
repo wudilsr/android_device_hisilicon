@@ -1,0 +1,32 @@
+LOCAL_PATH:= $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:= TTA_TCF.c
+LOCAL_C_INCLUDES:= $(LOCAL_PATH)/../../inc
+LOCAL_MODULE_TAGS:= eng
+LOCAL_MODULE:= TTA_TCF
+LOCAL_SHARED_LIBRARIES := libcutils libteec
+
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:= TTA_TCF_SingleInstanceTA.c
+LOCAL_C_INCLUDES:= $(LOCAL_PATH)/../../inc
+LOCAL_MODULE_TAGS:= eng
+LOCAL_MODULE:= TTA_TCF_SingleInstaceTA
+LOCAL_SHARED_LIBRARIES := libcutils libteec
+
+include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:= TTA_TCF_MultipleInstanceTA.c
+LOCAL_C_INCLUDES:= $(LOCAL_PATH)/../../inc
+LOCAL_MODULE_TAGS:= eng
+LOCAL_MODULE:= TTA_TCF_MultipleInstanceTA
+LOCAL_SHARED_LIBRARIES := libcutils libteec
+
+include $(BUILD_EXECUTABLE)
+

@@ -33,7 +33,7 @@ HI_VOID TDEProcRecordNode(TDE_HWNode_S* pHWNode)
     {
         return;
     }
-    
+
     memcpy(&g_stTdeProcInfo.stTdeHwNode[g_stTdeProcInfo.u32CurNode], pHWNode, sizeof(TDE_HWNode_S));
 
     g_stTdeProcInfo.u32CurNode++;
@@ -50,9 +50,14 @@ HI_VOID TDEProcClearNode(HI_VOID)
 }
 
 int tde_write_proc(struct file * file,
-    const char __user * buf, size_t count, loff_t *ppos)  
+    const char __user * buf, size_t count, loff_t *ppos)
 {
-    char buffer[128] = {0};
+    char buffer[128] = {'\0'};
+
+    if (NULL == buf)
+    {
+       return 0;
+    }
 
     if(count > sizeof(buffer))
     {
@@ -148,15 +153,21 @@ int tde_read_proc(struct seq_file *p, HI_VOID *v)
     };
 
     TDE_HWNode_S *pstHwNode = g_stTdeProcInfo.stTdeHwNode;
+
+    if (NULL == p)
+    {
+        return HI_FAILURE;
+    }
+
     p = wprintinfo(p+len);
      #ifndef CONFIG_TDE_STR_DISABLE
-   
+
     for (j = 0 ; j < g_stTdeProcInfo.u32CurNode; j++)
     {
         pu32Cur = (HI_U32*)&pstHwNode[j];
          /* print node information */
         PROC_PRINT(p,"\n--------- Hisilicon TDE Node params Info ---------\n");
-                
+
         for (i = 0; i < sizeof(TDE_HWNode_S) / 4; i++)
         {
             PROC_PRINT(p, "(%s):\t0x%08x\n", chUpdate[i], *(pu32Cur + i));
@@ -166,7 +177,7 @@ int tde_read_proc(struct seq_file *p, HI_VOID *v)
 #ifdef TDE_FENCE_SUPPORT
     TDE_FENCE_ReadProc(p, v);
 #endif
-    
+
     #endif
     return 0;
 }

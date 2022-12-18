@@ -17,7 +17,7 @@ CFLAGS += -I$(SDK_INC_DIR)		\
 LIBPATH = -L$(SDK_STATIC_LIB_DIR) -L$(SDK_SHARE_LIB_DIR)
 LIB = -Wl,--start-group $(SYS_LIBS) $(HI_LIBS) -Wl,--end-group
 
-image = sample_cipher sample_rng sample_multicipher sample_hash sample_cbcmac sample_anticopy
+image = sample_cipher sample_rng sample_multicipher sample_hash sample_cbcmac sample_anticopy sample_rsa_enc sample_rsa_sign
 #===============================================================================
 # rules
 #===============================================================================
@@ -49,6 +49,14 @@ sample_anticopy: sample_anticopy.c
 	@echo "compiling $@..."
 	@$(CC) -o $@ $^ $(CFLAGS) $(LIBPATH) $(LIB)
 
+sample_rsa_enc: sample_rsa_enc.c
+	@echo "compiling $@..."
+	@$(CC) -o $@ $^ $(CFLAGS) $(LIBPATH) $(LIB)
+
+sample_rsa_sign: sample_rsa_sign.c
+	@echo "compiling $@..."
+	@$(CC) -o $@ $^ $(CFLAGS) $(LIBPATH) $(LIB)
+	
 clean:
 	-@rm -f $(image)
 

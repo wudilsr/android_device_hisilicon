@@ -5,6 +5,7 @@
 #include <dirent.h>
 //#include "version.h"
 #include "hash.h"
+#include "openssl/sha.h"
 
 #define MAX_PATH_LEN 512
 #define FILENAME_LENGTH 32
@@ -12,7 +13,7 @@
 char outputFile[MAX_PATH_LEN+FILENAME_LENGTH] = {0};
 int inputDirLen = 0;
 FILE* fp = NULL;
-int count =0;
+int count = 0;
 
 int CalHash(char* path, HASH_ALGORITHM stALGTHM, unsigned char* hash)
 {
@@ -27,7 +28,7 @@ int CalHash(char* path, HASH_ALGORITHM stALGTHM, unsigned char* hash)
         if ((fpInFile = fopen(path, "rb")) == NULL)
         {
             printf("Open file %s failed!\n", path);
-            return -1;
+            return -2;
         }
 
         stat(path, &buf);
@@ -48,13 +49,14 @@ int CalHash(char* path, HASH_ALGORITHM stALGTHM, unsigned char* hash)
         WriteHashToFile(path, hash, hashLength);
 
         free(pBuf);
+        return 0;
     }
     else if (stALGTHM == SHA256_ALG)
     {
         if ((fpInFile = fopen(path, "rb")) == NULL)
         {
             printf("Open file %s failed!\n", path);
-            return -1;
+            return -2;
         }
 
         stat(path, &buf);
@@ -75,7 +77,9 @@ int CalHash(char* path, HASH_ALGORITHM stALGTHM, unsigned char* hash)
         WriteHashToFile(path, hash, hashLength);
 
         free(pBuf);
+        return 0;
     }
+    return 0;
 }
 
 void WriteHashToFile(char* path, unsigned char* hash, int hashLength)
@@ -117,7 +121,7 @@ int CalAllFilesHash(char *dirname, HASH_ALGORITHM hashAlgorithm)
     struct dirent *filename = NULL;//readdir return type
     DIR *dir = NULL;
     struct stat s;
-
+    int ret = 0;
     if(dirname == NULL)
     {
          printf("dirname %s is NULL!\n",dirname);
@@ -137,7 +141,6 @@ int CalAllFilesHash(char *dirname, HASH_ALGORITHM hashAlgorithm)
             continue;
         if(!strcmp(filename->d_name,"system_list"))
             continue;
-
         sprintf(path,"%s/%s", dirname, filename->d_name);
 
         lstat(path, &s);
@@ -151,15 +154,19 @@ int CalAllFilesHash(char *dirname, HASH_ALGORITHM hashAlgorithm)
         }
         else
         {
-             //printf("%s\n", path);
-             count++;
-
-             if (CalHash(path, hashAlgorithm, hash) == -1)
-             {
-                 printf("CalHash failed!\n");
-                 closedir(dir);
-                 return -1;
-             }
+            printf("%s\n", path);
+            count++;
+            ret = CalHash(path, hashAlgorithm, hash);
+            if (ret == -1)
+            {
+                printf("CalHash failed!\n");
+                closedir(dir);
+                return -1;
+            }
+            else if (ret == -2)
+            {
+                printf("This is a link file!\n");
+            }
         }
     }
     closedir(dir);
@@ -171,6 +178,12 @@ int main(int argc, char **argv)
     char inputDir[MAX_PATH_LEN] = {0};
     char outputDir[MAX_PATH_LEN] = {0};
     HASH_ALGORITHM hashAlgorithm = SHA1_ALG;
+    if(argc != 4)
+    {
+        printf("The argc is wrong!\n");
+        printf("Usage: ./hash hashAlgorithm(1:SHA1; 2:SHA256) /home/myFolder/system /home/outputDir/\n");
+        return -1;
+    }
 
     if (!strcmp(argv[1], "1"))
     {
@@ -183,13 +196,6 @@ int main(int argc, char **argv)
     else
     {
         printf("Hash algorithm is wrong!\n");
-        printf("Usage: ./hash hashAlgorithm(1:SHA1; 2:SHA256) /home/myFolder/system /home/outputDir/\n");
-        return -1;
-    }
-
-    if(argc != 4)
-    {
-        printf("The argc is wrong!\n");
         printf("Usage: ./hash hashAlgorithm(1:SHA1; 2:SHA256) /home/myFolder/system /home/outputDir/\n");
         return -1;
     }
@@ -224,8 +230,8 @@ int main(int argc, char **argv)
         fp = NULL;
         return -1;
     }
-
-    printf("Total files:%d\n",count);
+    fwrite(&count, sizeof(int), 1, fp);
+    printf("Total files:%d\n", count);
     fclose(fp);
     fp = NULL;
     return 0;

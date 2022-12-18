@@ -13,6 +13,7 @@ History       :
 ******************************************************************************/
 #include "ca_common.h"
 #include "hi_unf_cipher.h"
+#include "hi_unf_advca.h"
 #include "drv_cipher.h"
 #include "otp.h"
 
@@ -429,5 +430,43 @@ HI_S32 HI_UNF_ADVCA_GetStbSn(HI_U8 au8StbSn[4])
 	
     return HI_SUCCESS;
 }
+
+HI_S32 HI_UNF_ADVCA_SetKeyLadderAttr(HI_UNF_ADVCA_KEYLADDER_TYPE_E enKeyLadderType, HI_UNF_ADVCA_KEYLADDER_ATTR_S *pstKeyladderAttr)
+{
+    HI_S32 ret = HI_SUCCESS;
+    CA_KEYLADDER_ATTR_S stKeyladderAttr;
+
+    if(enKeyLadderType >= HI_UNF_ADVCA_KEYLADDER_TYPE_BUTT)
+    {
+        HI_ERR_CA("Invalid parameter, enKeyLadderType = %d\n", enKeyLadderType);
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
+    if(pstKeyladderAttr == NULL)
+    {
+        HI_ERR_CA("Invalid parameter, pstKeyladderAttr = NULL\n");
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
+    /**The LPK Protected Data is decrypted in the UNF layer**/
+    if(enKeyLadderType == HI_UNF_ADVCA_KEYLADDER_LP &&
+        pstKeyladderAttr->unKlAttr.stLpKlAttr.enLPKlAttr == HI_UNF_ADVCA_KEYLADDER_LP_ATTR_DECRYPT_PROTECTED_DATA)
+    {
+        return HI_ERR_CA_INVALID_PARA;
+    }
+
+    memset(&stKeyladderAttr, 0, sizeof(stKeyladderAttr));
+    stKeyladderAttr.enKeyLadderType = enKeyLadderType;
+    memcpy(&stKeyladderAttr.stKeyladderAttr, pstKeyladderAttr, sizeof(HI_UNF_ADVCA_KEYLADDER_ATTR_S));
+    ret = HAL_ADVCA_V300_SetKeyladderAttr(&stKeyladderAttr);
+    if (HI_SUCCESS != ret)
+    {
+        HI_ERR_CA("Set keyladder attrf err:0x%x\n", ret);
+        return ret;
+    }
+
+    return ret;
+}
+
 
 

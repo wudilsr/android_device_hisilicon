@@ -101,6 +101,21 @@ BOOLEAN BTM_SecAddBleDevice (BD_ADDR bd_addr, BD_NAME bd_name, tBT_DEVICE_TYPE d
             }
         }
 
+#ifdef BLUETOOTH_RTK
+        if(p_dev_rec) {
+            tBTM_INQ_INFO    *p_inq_info;
+            if ((p_inq_info = BTM_InqDbRead(bd_addr)) != NULL)
+            {
+                memcpy (p_dev_rec->dev_class, p_inq_info->results.dev_class, DEV_CLASS_LEN);
+            }
+            else {
+                if (!memcmp (bd_addr, btm_cb.connecting_bda, BD_ADDR_LEN))
+                    memcpy (p_dev_rec->dev_class, btm_cb.connecting_dc, DEV_CLASS_LEN);
+                }
+        }
+#endif
+
+
         if (!p_dev_rec)
             return(FALSE);
     }
@@ -144,6 +159,64 @@ BOOLEAN BTM_SecAddBleDevice (BD_ADDR bd_addr, BD_NAME bd_name, tBT_DEVICE_TYPE d
 #endif
     return(TRUE);
 }
+
+
+#ifdef BLUETOOTH_RTK
+/********************************************************
+**
+** Function         BTM_SecAddBleDevice
+**
+** Description      Add/modify device.  This function will be normally called
+**                  during host startup to restore all required information
+**                  for a LE device stored in the NVRAM.
+**
+** Parameters:      bd_addr          - BD address of the peer
+**                  bd_name          - Name of the peer device.  NULL if unknown.
+**                  dev_type         - Remote device's device type.
+**                  addr_type        - LE device address type.
+**
+** Returns          TRUE if added OK, else FALSE
+**
+*******************************************************************************/
+BOOLEAN BTM_SecAddBleDeviceExtraInfo (BD_ADDR bd_addr, BD_NAME bd_name, DEV_CLASS dev_class)
+{
+    tBTM_SEC_DEV_REC  *p_dev_rec;
+    UINT8               i = 0;
+    tBTM_INQ_INFO      *p_info=NULL;
+
+    BTM_TRACE_DEBUG0 ("BTM_SecAddBleDeviceExtraInfo");
+    p_dev_rec = btm_find_dev (bd_addr);
+
+    if (!p_dev_rec)
+    {
+        BTM_TRACE_DEBUG0("Device not exist");
+        return FALSE;
+    }
+    else
+    {
+        BTM_TRACE_DEBUG0("Device  exist");
+    }
+
+    memset(p_dev_rec->sec_bd_name, 0, sizeof(tBTM_BD_NAME));
+
+    if (bd_name && bd_name[0])
+    {
+        p_dev_rec->sec_flags |= BTM_SEC_NAME_KNOWN;
+        BCM_STRNCPY_S ((char *)p_dev_rec->sec_bd_name, sizeof (p_dev_rec->sec_bd_name),
+                       (char *)bd_name, BTM_MAX_REM_BD_NAME_LEN);
+    }
+
+    BTM_TRACE_DEBUG1("sec_flags=0x%x",p_dev_rec->sec_flags);
+
+    if(dev_class) {
+        memcpy (p_dev_rec->dev_class, dev_class, DEV_CLASS_LEN);
+    }
+
+    return(TRUE);
+}
+
+#endif
+
 
 /*******************************************************************************
 **
@@ -1563,7 +1636,7 @@ void btm_ble_connected (UINT8 *bda, UINT16 handle, UINT8 enc_mode, UINT8 role,
         p_cb->inq_var.adv_mode  = BTM_BLE_ADV_DISABLE;
     p_cb->inq_var.directed_conn = FALSE;
 
-#ifdef BLUETOOTH_RTK
+#ifdef BLUETOOTH_RTK_SHUTOFF
     p_cb->wl_state &= ~BTM_BLE_WL_INIT;
 #endif
     return;

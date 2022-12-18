@@ -7,7 +7,8 @@
 #include <utils/KeyedVector.h>
 #include <utils/threads.h>
 #include <DrmManagerClient.h>
-
+#include <DrmInfoRequest.h>
+#include <DrmInfo.h>
 #include "hi_svr_format.h"
 #include "hi_svr_codec.h"
 
@@ -322,7 +323,7 @@ struct SVRExtratorAdp {
     SVRExtratorAdp();
     virtual ~SVRExtratorAdp();
 
-    status_t createDataSource(const char *uri, const KeyedVector<String8, String8> *headers);
+    status_t createDataSource(const char *uri, const KeyedVector<String8, String8> *headers, void *parg);
     status_t openFile(HI_FORMAT_FILE_INFO_S **fileinfo);
     status_t getFileInfo(HI_FORMAT_FILE_INFO_S **fileinfo);
     status_t getTrackExtraData(HI_FORMAT_FRAME_S *frame);
@@ -333,9 +334,13 @@ struct SVRExtratorAdp {
     status_t reset();
     status_t stop();
     status_t start();
+    status_t setInitBps();
+    void setInitBufConfig();
+    status_t acquireDrmInfo();
     void checkDrmStatus(const sp<DataSource>& dataSource);
+    void getFrameMetadata();
     sp<MediaExtractor> mExtractor;
-
+    status_t getFrameMetadata(HI_FORMAT_FRAME_S *pFrame, MediaBuffer *pFrameRead);
 private:
     sp<DataSource> mSource;
     sp<MediaSource> mVideoTrack;
@@ -346,6 +351,8 @@ private:
     DrmManagerClient *mDrmManagerClient;
     sp<DecryptHandle> mDecryptHandle;
     KeyedVector<String8, String8> mUriHeaders;
+    HI_CHAR *aszHeaders;
+    HI_FORMAT_BUFFER_CONFIG_S stBufConfig;
 
     MediaBuffer *mVideoBuffer;
     MediaBuffer *mAudioBuffer;
@@ -361,6 +368,8 @@ private:
     bool mParseFileInfo;
     mutable Mutex mLock;
     bool mSeeking;
+    String8 mMimeType;
+    int64_t s64BufferMaxSize;
     MediaSource::ReadOptions options;
 
     HI_FORMAT_FILE_INFO_S mFileInfo;

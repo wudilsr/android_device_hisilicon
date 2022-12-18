@@ -769,10 +769,12 @@ call_ioctl(FusionDev * dev, Fusionee * fusionee,
 
                     if (!(execute3.flags & FCEF_DONE)) {
                          if (execute3.flags & FCEF_ERROR) {
+                            #if 0
                               printk( KERN_ERR "fusion: FUSION_CALL_EXECUTE3 with errorneous call (failed on previous ioctl call), "
-                                               "call id %d, flags 0x%08x, arg %d, length %u, serial %u,  %ld\n",
+                                               "call id %d, flags 0x%08x, arg %d, length %u, serial %u,  %d\n",
                                       execute3.call_id, execute3.flags, execute3.call_arg, execute3.length, execute3.ret_length,
                                       (execute3_bin - (FusionCallExecute3 *) arg) );
+                             #endif
                               return -EIO;
                          }
 
@@ -1500,6 +1502,9 @@ static struct file_operations fusion_fops = {
      .unlocked_ioctl = fusion_ioctl,
 #else
      .ioctl = fusion_ioctl,
+#endif
+#ifdef CONFIG_COMPAT
+     .compat_ioctl = fusion_ioctl,
 #endif
      .mmap = fusion_mmap
 };

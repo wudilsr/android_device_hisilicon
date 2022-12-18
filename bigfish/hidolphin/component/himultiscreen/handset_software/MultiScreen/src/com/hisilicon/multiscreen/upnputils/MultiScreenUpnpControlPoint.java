@@ -19,7 +19,11 @@ import org.cybergarage.upnp.event.Subscription;
 import org.cybergarage.upnp.ssdp.SSDPPacket;
 import org.cybergarage.util.Debug;
 
+import com.hisilicon.multiscreen.mybox.MultiScreenControlService;
 import com.hisilicon.multiscreen.protocol.utils.LogTool;
+import com.hisilicon.multiscreen.scene.ISceneListener;
+import com.hisilicon.multiscreen.scene.SceneManager;
+import com.hisilicon.multiscreen.scene.SceneType;
 
 public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyListener,
     EventListener, SearchResponseListener, DeviceChangeListener
@@ -75,6 +79,12 @@ public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyL
     private IUpnpControlPointListener mUpnpControlPointListener = null;
 
     /**
+     * Manager of iScene.<br>
+     * CN:STB场景识别管理。
+     */
+    private SceneManager mSceneManager = null;
+
+    /**
      * Timer of renew subscriber.<br>
      * CN:重置Access事件订阅的计时器。
      */
@@ -103,6 +113,7 @@ public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyL
         Debug.off();
         this.setSSDPPort(SSDP_PORT_FOR_MULTISCREEN);
         this.setHTTPPort(HTTP_PORT_FOR_MULTISCREEN);
+        initSceneManager();
     }
 
     @Override
@@ -146,12 +157,29 @@ public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyL
                 }
             }
         }
+        else if (name.equals(UpnpMultiScreenDeviceInfo.VAR_SCENE_TYPE))
+        {
+            // FIXME
+            // LogTool.d(name + ": " + value);
+            if (MultiScreenControlService.getInstance().isRunning())
+            {
+                // CN:成功接入并且观察者非空，触发场景切换。
+                if (mSceneManager != null)
+                {
+                    mSceneManager.renew(SceneType.getType(value));
+                }
+            }
+        }
+        else
+        {
+            // We don't handle the other variables.
+            // LogTool.d(name);
+        }
     }
 
     @Override
     public void deviceNotifyReceived(SSDPPacket ssdpPacket)
     {
-        // TODO Auto-generated method stub
         // LogTool.d("deviceNotifyReceived");
         // LogTool.d("NT:  "+ssdpPacket.getNT());
         // LogTool.d("nts:  "+ssdpPacket.getNTS());
@@ -222,6 +250,26 @@ public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyL
     public void setControlPointListener(IUpnpControlPointListener listener)
     {
         mUpnpControlPointListener = listener;
+    }
+
+    public void setSceneListener(ISceneListener listener)
+    {
+        mSceneManager.setListener(listener);
+    }
+
+    public static SceneType getScene()
+    {
+        return SceneManager.getScene();
+    }
+
+    public static void switchScene(boolean isOpen)
+    {
+        SceneManager.setSwitch(isOpen);
+    }
+
+    public static boolean isSceneOpen()
+    {
+        return SceneManager.isOpen();
     }
 
     public boolean startGsensor()
@@ -465,6 +513,14 @@ public class MultiScreenUpnpControlPoint extends ControlPoint implements NotifyL
     public void setRemoteId(String localId)
     {
         mRemoteID = localId;
+    }
+
+    private void initSceneManager()
+    {
+        if (mSceneManager == null)
+        {
+            mSceneManager = new SceneManager();
+        }
     }
 
     private void registerListener()

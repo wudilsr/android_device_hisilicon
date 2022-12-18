@@ -13,34 +13,34 @@
 @	compiled by GNU C version 4.1.1 20061011 (Red Hat 4.1.1-30), GMP version 4.3.1, MPFR version 2.4.2.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include
 @ -Iarch/arm/include/generated
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include
 @ -Iinclude
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/include/uapi
 @ -Iarch/arm/include/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/uapi
 @ -Iinclude/generated/uapi
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0
 @ -Idrivers/msp/pq/pq_v3_0
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
-@ -I/home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/mach-hi3798mx/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/common/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/pq/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/api/higo/include
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/mng
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/hi3798mv100
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0/hal/common
+@ -I/home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/../../../source/msp/drv/pq/pq_v3_0
 @ -imultilib armv7a_soft -iprefix
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/
 @ -isysroot /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../target
 @ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DCHIP_TYPE_hi3796mv100
-@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301 -DHI_MCE_SUPPORT
+@ -DSDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822 -DHI_MCE_SUPPORT
 @ -DHI_GPIOI2C_SUPPORT -DHI_LOG_SUPPORT=1 -DHI_LOG_LEVEL=4
 @ -DHI_PROC_SUPPORT=1 -DHI_HDMI_SUPPORT_1_4 -DHI_KEYLED_SUPPORT
 @ -DHI_HDCP_SUPPORT -DHI_SCI_SUPPORT -DHI_PVR_SUPPORT -DHI_VI_SUPPORT
@@ -49,9 +49,9 @@
 @ -DKBUILD_MODNAME=KBUILD_STR(hi_pq) -isystem
 @ /opt/hisi-linux/x86-arm/arm-hisiv200-linux/bin/../lib/gcc/arm-hisiv200-linux-gnueabi/4.4.1/include
 @ -include
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/include/linux/kconfig.h
 @ -MD drivers/msp/pq/pq_v3_0/mng/.pq_mng_csc.o.d
-@ /home/tangxiaodi/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC064/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_csc.c
+@ /home/t00194509/HiSTBAndroidV5/images_and_tools/release/hi3798mv100/verify/maintain_spc062/HiSTBAndroidV5_release/HiSTBAndroidV600R001C00SPC065/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/drivers/msp/pq/pq_v3_0/mng/pq_mng_csc.c
 @ -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -marm -march=armv7-a -msoft-float -auxbase-strip
 @ drivers/msp/pq/pq_v3_0/mng/pq_mng_csc.o -O2 -Wall -Wundef
@@ -398,7 +398,7 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	mov	r5, r9, asr #31	@,,
 	ldr	r9, [fp, #-60]	@, %sfp
 	str	r5, [fp, #-120]	@, %sfp
-	rsb	r6, sl, r6, asr #5	@, D.24753, tmp400, tmp397,
+	rsb	r6, sl, r6, asr #5	@, D.24747, tmp400, tmp397,
 	smull	r5, r9, r3, r9	@,, tmp576,
 	ldr	r5, [fp, #-80]	@, %sfp
 	str	r9, [fp, #-116]	@, %sfp
@@ -413,7 +413,7 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	str	r5, [fp, #-136]	@, %sfp
 	ldr	r5, [fp, #-140]	@, %sfp
 	mla	r7, r4, ip, r9	@, tmp467, bGain,
-	rsb	r8, r5, r8, asr #12	@, D.24078,, tmp311,
+	rsb	r8, r5, r8, asr #12	@, D.24070,, tmp311,
 	ldr	r4, [fp, #-104]	@, %sfp
 	movw	r9, #299	@,
 	ldr	r5, [fp, #-56]	@, %sfp
@@ -438,7 +438,7 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	ldr	r7, [fp, #-48]	@, %sfp
 	ldr	r9, [fp, #-52]	@, %sfp
 	str	sl, [fp, #-80]	@, %sfp
-	rsb	sl, ip, r4, asr #5	@, D.24745,,,
+	rsb	sl, ip, r4, asr #5	@, D.24739,,,
 	ldr	ip, [fp, #-64]	@, %sfp
 	mov	r4, r7	@,
 	smull	r4, r0, r3, r4	@, tmp186, tmp576,
@@ -473,11 +473,11 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	smull	r5, r9, r3, r0	@,, tmp576,
 	str	ip, [fp, #-48]	@, %sfp
 	ldr	r5, [fp, #-68]	@, %sfp
-	rsb	ip, r7, r4, asr #12	@, D.24088, tmp342, tmp339,
+	rsb	ip, r7, r4, asr #12	@, D.24080, tmp342, tmp339,
 	ldr	r7, [fp, #-56]	@, %sfp
 	ldr	r4, [fp, #-52]	@, %sfp
 	str	r9, [fp, #-96]	@, %sfp
-	rsb	r9, r4, r5, asr #5	@, D.24739,,,
+	rsb	r9, r4, r5, asr #5	@, D.24733,,,
 	smull	r5, r0, r3, r7	@,, tmp576,
 	ldr	r4, [fp, #-72]	@, %sfp
 	ldr	r7, [fp, #-108]	@, %sfp
@@ -490,80 +490,80 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	ldr	r0, [fp, #-76]	@, %sfp
 	ldr	r5, [fp, #-100]	@, %sfp
 	str	r4, [fp, #-52]	@, %sfp
-	rsb	r4, r7, r0, asr #5	@, D.24731,,,
+	rsb	r4, r7, r0, asr #5	@, D.24725,,,
 	smull	r7, r0, r3, r5	@,, tmp576,
 	ldr	r5, [fp, #-56]	@, %sfp
 	ldr	r7, [fp, #-60]	@, %sfp
 	mov	r3, r5, asr #31	@ tmp195,,
 	str	r0, [fp, #-72]	@, %sfp
 	mov	r5, r7, asr #31	@,,
-	mul	r0, sl, r8	@, D.24745, D.24078
+	mul	r0, sl, r8	@, D.24739, D.24070
 	str	r5, [fp, #-56]	@, %sfp
 	ldr	r5, [fp, #-80]	@, %sfp
 	str	r0, [fp, #-116]	@, %sfp
 	ldr	r0, [fp, #-136]	@, %sfp
-	mul	r7, r0, sl	@,, D.24745
+	mul	r7, r0, sl	@,, D.24739
 	ldr	r0, [fp, #-88]	@, %sfp
 	str	r7, [fp, #-108]	@, %sfp
 	mov	r7, r5, asr #31	@ tmp465,,
-	mul	r5, sl, r0	@, D.24745,
+	mul	r5, sl, r0	@, D.24739,
 	ldr	sl, [fp, #-100]	@, %sfp
 	mov	r0, sl, asr #31	@ tmp474,,
 	ldr	sl, [fp, #-104]	@, %sfp
 	str	r5, [fp, #-112]	@, %sfp
-	mul	r5, r8, r6	@, D.24078, D.24753
+	mul	r5, r8, r6	@, D.24070, D.24747
 	str	r5, [fp, #-100]	@, %sfp
 	mov	r5, sl, asr #31	@,,
 	ldr	sl, [fp, #-120]	@, %sfp
 	str	r5, [fp, #-76]	@, %sfp
-	mul	r8, r8, sl	@, D.24078,
+	mul	r8, r8, sl	@, D.24070,
 	str	r8, [fp, #-104]	@, %sfp
 	ldr	r5, [fp, #-68]	@, %sfp
-	rsb	r8, r3, r5, asr #5	@, D.24029, tmp195,,
+	rsb	r8, r3, r5, asr #5	@, D.24021, tmp195,,
 	ldr	r3, [fp, #-136]	@, %sfp
 	ldr	r5, [fp, #-48]	@, %sfp
-	mul	sl, r3, r6	@,, D.24753
+	mul	sl, r3, r6	@,, D.24747
 	ldr	r3, [fp, #-56]	@, %sfp
 	str	sl, [fp, #-68]	@, %sfp
-	rsb	sl, r3, r5, asr #12	@, D.24098,,,
+	rsb	sl, r3, r5, asr #12	@, D.24090,,,
 	ldr	r5, [fp, #-120]	@, %sfp
 	ldr	r3, [fp, #-136]	@, %sfp
 	mul	r3, r3, r5	@,,
 	ldr	r5, [fp, #-52]	@, %sfp
-	rsb	r7, r7, r5, asr #5	@, D.24725, tmp465,,
+	rsb	r7, r7, r5, asr #5	@, D.24719, tmp465,,
 	ldr	r5, [fp, #-88]	@, %sfp
 	str	r3, [fp, #-48]	@, %sfp
-	mul	r3, r5, r6	@,, D.24753
+	mul	r3, r5, r6	@,, D.24747
 	ldr	r6, [fp, #-72]	@, %sfp
 	str	r3, [fp, #-52]	@, %sfp
-	rsb	r3, r0, r6, asr #5	@, D.24721, tmp474,,
+	rsb	r3, r0, r6, asr #5	@, D.24715, tmp474,,
 	ldr	r6, [fp, #-120]	@, %sfp
 	mul	r0, r5, r6	@,,
 	ldr	r6, [fp, #-76]	@, %sfp
 	str	r0, [fp, #-120]	@, %sfp
 	ldr	r0, [fp, #-96]	@, %sfp
-	rsb	r5, r6, r0, asr #5	@, D.24717,,,
+	rsb	r5, r6, r0, asr #5	@, D.24711,,,
 	ldr	r6, [fp, #-116]	@, %sfp
-	mla	r0, r4, ip, r6	@, D.24731, D.24088,
+	mla	r0, r4, ip, r6	@, D.24725, D.24080,
 	ldr	r6, [fp, #-108]	@, %sfp
 	str	r0, [fp, #-76]	@, %sfp
 	ldr	r0, [fp, #-124]	@, %sfp
-	mla	r0, r0, r4, r6	@,, D.24731,
+	mla	r0, r0, r4, r6	@,, D.24725,
 	ldr	r6, [fp, #-112]	@, %sfp
 	str	r0, [fp, #-88]	@, %sfp
 	ldr	r0, [fp, #-84]	@, %sfp
-	mla	r4, r4, r0, r6	@, D.24731,,
+	mla	r4, r4, r0, r6	@, D.24725,,
 	ldr	r0, [fp, #-100]	@, %sfp
 	ldr	r6, [fp, #-104]	@, %sfp
 	str	r4, [fp, #-60]	@, %sfp
-	mla	r4, ip, r9, r0	@, D.24088, D.24739,
+	mla	r4, ip, r9, r0	@, D.24080, D.24733,
 	ldr	r0, [fp, #-68]	@, %sfp
 	str	r4, [fp, #-80]	@, %sfp
 	ldr	r4, [fp, #-64]	@, %sfp
-	mla	ip, ip, r4, r6	@, D.24088,,
+	mla	ip, ip, r4, r6	@, D.24080,,
 	str	ip, [fp, #-72]	@, %sfp
 	ldr	ip, [fp, #-124]	@, %sfp
-	mla	r6, ip, r9, r0	@,, D.24739,
+	mla	r6, ip, r9, r0	@,, D.24733,
 	ldr	ip, [fp, #-48]	@, %sfp
 	str	r6, [fp, #-56]	@, %sfp
 	ldr	r6, [fp, #-124]	@, %sfp
@@ -573,7 +573,7 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	ldr	r4, [fp, #-52]	@, %sfp
 	ldr	r6, [fp, #-64]	@, %sfp
 	ldr	ip, [fp, #-120]	@, %sfp
-	mla	r9, r0, r9, r4	@,, D.24739,
+	mla	r9, r0, r9, r4	@,, D.24733,
 	mla	r4, r0, r6, ip	@,,,
 	ldr	ip, [fp, #-88]	@, %sfp
 	ldr	r0, [fp, #-92]	@, %sfp
@@ -581,35 +581,35 @@ PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr:
 	str	r9, [fp, #-48]	@, %sfp
 	ldr	r9, [fp, #-76]	@, %sfp
 	str	r4, [fp, #-64]	@, %sfp
-	mla	r4, r5, sl, r9	@ tmp568, D.24717, D.24098,
-	mla	r9, r8, r5, ip	@ tmp508, D.24029, D.24717,
+	mla	r4, r5, sl, r9	@ tmp568, D.24711, D.24090,
+	mla	r9, r8, r5, ip	@ tmp508, D.24021, D.24711,
 	ldr	ip, [fp, #-80]	@, %sfp
-	mla	r5, r5, r0, r6	@ tmp538, D.24717,,
-	mla	r6, sl, r7, ip	@, D.24098, D.24725,
+	mla	r5, r5, r0, r6	@ tmp538, D.24711,,
+	mla	r6, sl, r7, ip	@, D.24090, D.24719,
 	mov	r0, r4, asr #31	@, tmp568,
 	ldr	ip, [fp, #-72]	@, %sfp
 	str	r0, [fp, #-52]	@, %sfp
 	ldr	r0, [fp, #-56]	@, %sfp
-	mla	sl, sl, r3, ip	@ tmp558, D.24098, D.24721,
+	mla	sl, sl, r3, ip	@ tmp558, D.24090, D.24715,
 	str	r6, [fp, #-76]	@, %sfp
 	mov	ip, r5, asr #31	@, tmp538,
 	mov	r6, r9, asr #31	@, tmp508,
 	str	ip, [fp, #-88]	@, %sfp
 	str	r6, [fp, #-84]	@, %sfp
 	ldr	ip, [fp, #-76]	@, %sfp
-	mla	r6, r8, r7, r0	@ tmp488, D.24029, D.24725,
+	mla	r6, r8, r7, r0	@ tmp488, D.24021, D.24719,
 	ldr	r0, [fp, #-68]	@, %sfp
-	mla	r8, r8, r3, r0	@ tmp498, D.24029, D.24721,
+	mla	r8, r8, r3, r0	@ tmp498, D.24021, D.24715,
 	mov	r0, ip, asr #31	@,,
 	ldr	ip, [fp, #-92]	@, %sfp
 	str	r0, [fp, #-68]	@, %sfp
 	ldr	r0, [fp, #-48]	@, %sfp
-	mla	r7, ip, r7, r0	@ tmp518,, D.24725,
+	mla	r7, ip, r7, r0	@ tmp518,, D.24719,
 	mov	r0, sl, asr #31	@, tmp558,
 	ldr	ip, [fp, #-64]	@, %sfp
 	str	r0, [fp, #-48]	@, %sfp
 	ldr	r0, [fp, #-92]	@, %sfp
-	mla	r3, r0, r3, ip	@ tmp528,, D.24721,
+	mla	r3, r0, r3, ip	@ tmp528,, D.24715,
 	mov	r0, r6, asr #31	@, tmp488,
 	str	r0, [fp, #-60]	@, %sfp
 	smull	r0, ip, r2, r4	@,, tmp577, tmp568
@@ -792,7 +792,7 @@ PQ_MNG_Get8BitCscCoef:
 	beq	.L40	@,
 	mov	r3, #0	@ tmp329,
 	mvn	r5, #127	@ tmp338,
-	mov	ip, r3	@ D.24563, tmp329
+	mov	ip, r3	@ D.24557, tmp329
 	mov	r4, #128	@ tmp341,
 	mov	r0, #1024	@ tmp328,
 	str	r3, [r1, #4]	@ tmp329, <variable>.csc_coef01
@@ -815,7 +815,7 @@ PQ_MNG_Get8BitCscCoef:
 	str	r4, [r2, #16]	@ tmp341, <variable>.csc_out_dc1
 	b	.L9	@
 .L30:
-	mov	ip, r0	@ D.24563, enCscMode
+	mov	ip, r0	@ D.24557, enCscMode
 	str	r0, [r1, #32]	@ enCscMode, <variable>.csc_coef22
 	str	r0, [r1, #4]	@ enCscMode, <variable>.csc_coef01
 	movw	r4, #1192	@ tmp163,
@@ -840,12 +840,12 @@ PQ_MNG_Get8BitCscCoef:
 	str	r0, [r2, #20]	@ enCscMode, <variable>.csc_out_dc2
 	str	r0, [r2, #16]	@ enCscMode, <variable>.csc_out_dc1
 .L9:
-	mov	r0, ip	@, D.24563
+	mov	r0, ip	@, D.24557
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
 .L29:
 	movw	r0, #450	@ tmp153,
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r0, [r1, #24]	@ tmp153, <variable>.csc_coef20
 	mov	r4, #128	@ tmp161,
 	str	r0, [r1, #20]	@ tmp153, <variable>.csc_coef12
@@ -875,7 +875,7 @@ PQ_MNG_Get8BitCscCoef:
 	b	.L9	@
 .L31:
 	movw	r0, #450	@ tmp183,
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r0, [r1, #24]	@ tmp183, <variable>.csc_coef20
 	mov	r4, #128	@ tmp191,
 	str	r0, [r1, #20]	@ tmp183, <variable>.csc_coef12
@@ -902,7 +902,7 @@ PQ_MNG_Get8BitCscCoef:
 	str	r4, [r1, #24]	@ tmp193, <variable>.csc_coef20
 	movw	r0, #1836	@ tmp195,
 	str	r4, [r1, #0]	@ tmp193, <variable>.csc_coef00
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r0, [r1, #8]	@ tmp195, <variable>.csc_coef02
 	mvn	r0, #217	@ tmp197,
 	str	r4, [r1, #12]	@ tmp193, <variable>.csc_coef10
@@ -923,7 +923,7 @@ PQ_MNG_Get8BitCscCoef:
 .L33:
 	mov	r4, #1024	@ tmp208,
 	str	r3, [r1, #12]	@ tmp144, <variable>.csc_coef10
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r3, [r1, #24]	@ tmp144, <variable>.csc_coef20
 	str	r4, [r1, #0]	@ tmp208, <variable>.csc_coef00
 	mvn	r0, #127	@ tmp218,
@@ -953,7 +953,7 @@ PQ_MNG_Get8BitCscCoef:
 .L34:
 	mov	r4, #1024	@ tmp223,
 	str	r3, [r1, #12]	@ tmp144, <variable>.csc_coef10
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r3, [r1, #24]	@ tmp144, <variable>.csc_coef20
 	str	r4, [r1, #0]	@ tmp223, <variable>.csc_coef00
 	mvn	r0, #127	@ tmp233,
@@ -973,7 +973,7 @@ PQ_MNG_Get8BitCscCoef:
 .L35:
 	mov	r0, #1024	@ tmp238,
 	str	r3, [r1, #4]	@ tmp144, <variable>.csc_coef01
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r3, [r1, #8]	@ tmp144, <variable>.csc_coef02
 	str	r0, [r1, #32]	@ tmp238, <variable>.csc_coef22
 	mvn	r5, #127	@ tmp248,
@@ -989,7 +989,7 @@ PQ_MNG_Get8BitCscCoef:
 	str	r4, [r1, #24]	@ tmp253, <variable>.csc_coef20
 	movw	r0, #1436	@ tmp255,
 	str	r4, [r1, #0]	@ tmp253, <variable>.csc_coef00
-	mov	ip, r3	@ D.24563, tmp144
+	mov	ip, r3	@ D.24557, tmp144
 	str	r0, [r1, #8]	@ tmp255, <variable>.csc_coef02
 	movw	r0, #:lower16:-352	@ tmp257,
 	str	r4, [r1, #12]	@ tmp253, <variable>.csc_coef10
@@ -1013,7 +1013,7 @@ PQ_MNG_Get8BitCscCoef:
 	str	r3, [r1, #32]	@ tmp269, <variable>.csc_coef22
 	mvn	r4, #127	@ tmp278,
 	str	r0, [r1, #24]	@ tmp268, <variable>.csc_coef20
-	mov	ip, r3	@ D.24563, tmp269
+	mov	ip, r3	@ D.24557, tmp269
 	str	r0, [r1, #0]	@ tmp268, <variable>.csc_coef00
 	str	r0, [r1, #12]	@ tmp268, <variable>.csc_coef10
 	movw	r0, #1613	@ tmp270,
@@ -1039,7 +1039,7 @@ PQ_MNG_Get8BitCscCoef:
 	movw	r0, #306	@ tmp283,
 	str	r4, [r1, #24]	@ tmp288, <variable>.csc_coef20
 	str	r4, [r1, #20]	@ tmp288, <variable>.csc_coef12
-	mov	ip, r3	@ D.24563, tmp292
+	mov	ip, r3	@ D.24557, tmp292
 	str	r0, [r1, #0]	@ tmp283, <variable>.csc_coef00
 	mov	r4, #128	@ tmp296,
 	movw	r0, #601	@ tmp284,
@@ -1067,12 +1067,12 @@ PQ_MNG_Get8BitCscCoef:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	ldr	r2, .L41	@,
-	movw	r3, #1876	@,
+	movw	r3, #1873	@,
 	movw	ip, #:lower16:.LC0	@ tmp147,
 	movt	ip, #:upper16:.LC0	@ tmp147,
 	str	ip, [sp, #0]	@ tmp147,
 	bl	HI_LogOut	@
-	mvn	ip, #0	@ D.24563,
+	mvn	ip, #0	@ D.24557,
 	b	.L9	@
 .L39:
 	mov	r3, #0	@ tmp307,
@@ -1080,7 +1080,7 @@ PQ_MNG_Get8BitCscCoef:
 	mov	r0, #218	@ tmp298,
 	str	r4, [r1, #24]	@ tmp303, <variable>.csc_coef20
 	str	r4, [r1, #20]	@ tmp303, <variable>.csc_coef12
-	mov	ip, r3	@ D.24563, tmp307
+	mov	ip, r3	@ D.24557, tmp307
 	str	r0, [r1, #0]	@ tmp298, <variable>.csc_coef00
 	mov	r4, #128	@ tmp311,
 	mov	r0, #732	@ tmp299,
@@ -1102,7 +1102,7 @@ PQ_MNG_Get8BitCscCoef:
 	str	r3, [r1, #4]	@ tmp314, <variable>.csc_coef01
 	mov	r0, #2	@ tmp325,
 	str	r3, [r1, #8]	@ tmp314, <variable>.csc_coef02
-	mov	ip, r3	@ D.24563, tmp314
+	mov	ip, r3	@ D.24557, tmp314
 	str	r3, [r1, #12]	@ tmp314, <variable>.csc_coef10
 	str	r4, [r1, #32]	@ tmp313, <variable>.csc_coef22
 	str	r4, [r1, #0]	@ tmp313, <variable>.csc_coef00
@@ -1176,7 +1176,7 @@ PQ_MNG_GetCscCoef:
 	str	r3, [r1, #4]	@ tmp329, <variable>.csc_coef01
 	mov	r4, #512	@ tmp341,
 	str	r3, [r1, #8]	@ tmp329, <variable>.csc_coef02
-	mov	ip, r3	@ D.24515, tmp329
+	mov	ip, r3	@ D.24509, tmp329
 	str	r3, [r1, #12]	@ tmp329, <variable>.csc_coef10
 	str	r0, [r1, #32]	@ tmp328, <variable>.csc_coef22
 	str	r0, [r1, #0]	@ tmp328, <variable>.csc_coef00
@@ -1196,7 +1196,7 @@ PQ_MNG_GetCscCoef:
 	str	r4, [r2, #16]	@ tmp341, <variable>.csc_out_dc1
 	b	.L45	@
 .L65:
-	mov	ip, r0	@ D.24515, enCscMode
+	mov	ip, r0	@ D.24509, enCscMode
 	str	r0, [r1, #32]	@ enCscMode, <variable>.csc_coef22
 	str	r0, [r1, #4]	@ enCscMode, <variable>.csc_coef01
 	movw	r3, #1192	@ tmp163,
@@ -1222,12 +1222,12 @@ PQ_MNG_GetCscCoef:
 	str	r0, [r2, #20]	@ enCscMode, <variable>.csc_out_dc2
 	str	r0, [r2, #16]	@ enCscMode, <variable>.csc_out_dc1
 .L45:
-	mov	r0, ip	@, D.24515
+	mov	r0, ip	@, D.24509
 	sub	sp, fp, #20
 	ldmfd	sp, {r4, r5, fp, sp, pc}
 .L64:
 	movw	r0, #450	@ tmp153,
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r0, [r1, #24]	@ tmp153, <variable>.csc_coef20
 	mov	r4, #512	@ tmp161,
 	str	r0, [r1, #20]	@ tmp153, <variable>.csc_coef12
@@ -1257,7 +1257,7 @@ PQ_MNG_GetCscCoef:
 	b	.L45	@
 .L66:
 	movw	r0, #450	@ tmp183,
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r0, [r1, #24]	@ tmp183, <variable>.csc_coef20
 	mov	r4, #512	@ tmp191,
 	str	r0, [r1, #20]	@ tmp183, <variable>.csc_coef12
@@ -1282,7 +1282,7 @@ PQ_MNG_GetCscCoef:
 	str	r3, [r1, #4]	@ tmp144, <variable>.csc_coef01
 	movw	r4, #1836	@ tmp195,
 	str	r0, [r1, #24]	@ tmp193, <variable>.csc_coef20
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r4, [r1, #8]	@ tmp195, <variable>.csc_coef02
 	mvn	r4, #217	@ tmp197,
 	str	r0, [r1, #0]	@ tmp193, <variable>.csc_coef00
@@ -1305,7 +1305,7 @@ PQ_MNG_GetCscCoef:
 	b	.L45	@
 .L68:
 	str	r3, [r1, #12]	@ tmp144, <variable>.csc_coef10
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r3, [r1, #24]	@ tmp144, <variable>.csc_coef20
 	mov	r0, #512	@ tmp221,
 	mov	r3, #1024	@ tmp208,
@@ -1336,7 +1336,7 @@ PQ_MNG_GetCscCoef:
 	b	.L45	@
 .L69:
 	str	r3, [r1, #12]	@ tmp144, <variable>.csc_coef10
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r3, [r1, #24]	@ tmp144, <variable>.csc_coef20
 	mov	r0, #512	@ tmp236,
 	mov	r3, #1024	@ tmp223,
@@ -1359,7 +1359,7 @@ PQ_MNG_GetCscCoef:
 	str	r3, [r1, #8]	@ tmp144, <variable>.csc_coef02
 	mov	r5, #512	@ tmp251,
 	str	r3, [r1, #12]	@ tmp144, <variable>.csc_coef10
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r3, [r1, #20]	@ tmp144, <variable>.csc_coef12
 	movw	r0, #:lower16:-512	@ tmp248,
 	str	r3, [r1, #24]	@ tmp144, <variable>.csc_coef20
@@ -1379,7 +1379,7 @@ PQ_MNG_GetCscCoef:
 	b	.L45	@
 .L71:
 	movw	r0, #1436	@ tmp255,
-	mov	ip, r3	@ D.24515, tmp144
+	mov	ip, r3	@ D.24509, tmp144
 	str	r0, [r1, #8]	@ tmp255, <variable>.csc_coef02
 	movw	r0, #:lower16:-352	@ tmp257,
 	movt	r0, #:upper16:-352	@ tmp257,
@@ -1411,7 +1411,7 @@ PQ_MNG_GetCscCoef:
 	movw	r0, #1613	@ tmp270,
 	str	r3, [r1, #32]	@ tmp269, <variable>.csc_coef22
 	str	r0, [r1, #8]	@ tmp270, <variable>.csc_coef02
-	mov	ip, r3	@ D.24515, tmp269
+	mov	ip, r3	@ D.24509, tmp269
 	mvn	r0, #190	@ tmp272,
 	str	r3, [r1, #4]	@ tmp269, <variable>.csc_coef01
 	str	r0, [r1, #16]	@ tmp272, <variable>.csc_coef11
@@ -1426,7 +1426,7 @@ PQ_MNG_GetCscCoef:
 .L73:
 	mov	r3, #0	@ tmp292,
 	movw	r4, #306	@ tmp283,
-	mov	ip, r3	@ D.24515, tmp292
+	mov	ip, r3	@ D.24509, tmp292
 	str	r4, [r1, #0]	@ tmp283, <variable>.csc_coef00
 	movw	r4, #601	@ tmp284,
 	str	r4, [r1, #4]	@ tmp284, <variable>.csc_coef01
@@ -1456,18 +1456,18 @@ PQ_MNG_GetCscCoef:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	ldr	r2, .L76	@,
-	movw	r3, #1579	@,
+	movw	r3, #1576	@,
 	movw	ip, #:lower16:.LC0	@ tmp147,
 	movt	ip, #:upper16:.LC0	@ tmp147,
 	str	ip, [sp, #0]	@ tmp147,
 	bl	HI_LogOut	@
-	mvn	ip, #0	@ D.24515,
+	mvn	ip, #0	@ D.24509,
 	b	.L45	@
 .L74:
 	mov	r3, #0	@ tmp307,
 	mov	r0, #512	@ tmp303,
 	mov	r4, #218	@ tmp298,
-	mov	ip, r3	@ D.24515, tmp307
+	mov	ip, r3	@ D.24509, tmp307
 	str	r4, [r1, #0]	@ tmp298, <variable>.csc_coef00
 	mov	r4, #732	@ tmp299,
 	str	r0, [r1, #20]	@ tmp303, <variable>.csc_coef12
@@ -1490,7 +1490,7 @@ PQ_MNG_GetCscCoef:
 	str	r3, [r1, #4]	@ tmp314, <variable>.csc_coef01
 	mov	r0, #2	@ tmp325,
 	str	r3, [r1, #8]	@ tmp314, <variable>.csc_coef02
-	mov	ip, r3	@ D.24515, tmp314
+	mov	ip, r3	@ D.24509, tmp314
 	str	r3, [r1, #12]	@ tmp314, <variable>.csc_coef10
 	str	r4, [r1, #32]	@ tmp313, <variable>.csc_coef22
 	str	r4, [r1, #0]	@ tmp313, <variable>.csc_coef00
@@ -1535,7 +1535,7 @@ PQ_MNG_GetCSCMode:
 	movw	r3, #:lower16:.LANCHOR1	@ tmp140,
 	movt	r3, #:upper16:.LANCHOR1	@ tmp140,
 	add	ip, r3, r0, asl #3	@, tmp143, tmp140, enDisplayId,
-	mov	r0, #0	@ D.24378,
+	mov	r0, #0	@ D.24372,
 	ldr	r2, [ip, #32]	@ <variable>.enCSC, <variable>.enCSC
 	ldr	r3, [ip, #28]	@ <variable>.bCSCEn, <variable>.bCSCEn
 	str	r2, [r1, #4]	@ <variable>.enCSC, <variable>.enCSC
@@ -1547,12 +1547,12 @@ PQ_MNG_GetCSCMode:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
 	ldr	r2, .L83	@,
-	movw	r3, #1358	@,
+	movw	r3, #1355	@,
 	movw	ip, #:lower16:.LC1	@ tmp139,
 	movt	ip, #:upper16:.LC1	@ tmp139,
 	str	ip, [sp, #0]	@ tmp139,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24378,
+	mvn	r0, #0	@ D.24372,
 	b	.L80	@
 .L84:
 	.align	2
@@ -1586,110 +1586,157 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r5, r0	@ enDisplayId, enDisplayId
 	cmp	r3, #0	@ tmp195,
 	mov	r4, r1	@ pstCSCParameter, pstCSCParameter
-	bne	.L105	@,
-	ldrh	r2, [r1, #40]	@ <variable>.u16InputColorSpace, <variable>.u16InputColorSpace
-	cmp	r2, #0	@ <variable>.u16InputColorSpace,
+	bne	.L106	@,
+	ldrh	r3, [r1, #40]	@ <variable>.u16InputColorSpace, <variable>.u16InputColorSpace
+	cmp	r3, #0	@ <variable>.u16InputColorSpace,
 	beq	.L88	@,
-	ldrh	r3, [r1, #42]	@ <variable>.u16OutputColorSpace, <variable>.u16OutputColorSpace
-	cmp	r3, #0	@ <variable>.u16OutputColorSpace,
+	ldrh	r2, [r1, #42]	@ prephitmp.389, <variable>.u16OutputColorSpace
+	cmp	r2, #0	@ prephitmp.389,
 	beq	.L88	@,
-	cmp	r2, #9	@ <variable>.u16InputColorSpace,
-	beq	.L106	@,
-	cmp	r3, #9	@ <variable>.u16OutputColorSpace,
+	cmp	r3, #9	@ <variable>.u16InputColorSpace,
+	bhi	.L90	@,
 	beq	.L107	@,
+	cmp	r2, #9	@ prephitmp.389,
+	beq	.L108	@,
 	ldr	r8, [r1, #20]	@ <variable>.as16ColorTempGain, <variable>.as16ColorTempGain
 	movw	r6, #:lower16:.LANCHOR0	@ tmp876,
 	movt	r6, #:upper16:.LANCHOR0	@ tmp876,
-	cmp	r3, #1	@ <variable>.u16OutputColorSpace,
-	add	sl, r6, r2, asl #3	@, tmp879, tmp876, <variable>.u16InputColorSpace,
+	cmp	r2, #1	@ prephitmp.389,
+	add	sl, r6, r3, asl #3	@, tmp879, tmp876, <variable>.u16InputColorSpace,
 	ldr	r0, [r1, #4]	@ <variable>.u16Contrast, <variable>.u16Contrast
 	ldr	r2, [r4, #8]	@ <variable>.u16Hue, <variable>.u16Hue
 	ldr	r1, [r1, #12]	@ <variable>.u16Saturation, <variable>.u16Saturation
 	ldr	r3, [r4, #16]	@ <variable>.as16ColorTempGain, <variable>.as16ColorTempGain
-	ldreq	lr, [sl, #668]	@ pCSCMatrix.412, CSC_YCbCr_MatrixTbl
-	ldrne	lr, [sl, #672]	@ pCSCMatrix.412, CSC_YCbCr_MatrixTbl
+	ldreq	lr, [sl, #668]	@ pCSCMatrix.419, CSC_YCbCr_MatrixTbl
+	ldrne	lr, [sl, #672]	@ pCSCMatrix.419, CSC_YCbCr_MatrixTbl
 	str	r8, [sp, #0]	@ <variable>.as16ColorTempGain,
 	ldr	ip, [r4, #24]	@ <variable>.as16ColorTempGain, <variable>.as16ColorTempGain
-	str	lr, [sp, #8]	@ pCSCMatrix.412,
+	str	lr, [sp, #8]	@ pCSCMatrix.419,
 	sub	lr, fp, #140	@ tmp894,,
 	str	lr, [sp, #12]	@ tmp894,
 	str	ip, [sp, #4]	@ <variable>.as16ColorTempGain,
 	bl	PQ_MNG_CalCSCCoefTprtYCbCrtoYCbCr	@
 	ldr	r3, [fp, #-136]	@, stCSCMatrix.csc_coef01
 	ldr	r2, [fp, #-124]	@, stCSCMatrix.csc_coef11
-	ldr	sl, [fp, #-140]	@ prephitmp.411, stCSCMatrix.csc_coef00
+	ldr	sl, [fp, #-140]	@ prephitmp.409, stCSCMatrix.csc_coef00
 	str	r3, [fp, #-224]	@, %sfp
 	str	r2, [fp, #-220]	@, %sfp
-	ldr	r7, [fp, #-132]	@ prephitmp.421, stCSCMatrix.csc_coef02
-	ldr	ip, [fp, #-128]	@ prephitmp.422, stCSCMatrix.csc_coef10
+	ldr	r7, [fp, #-132]	@ prephitmp.430, stCSCMatrix.csc_coef02
+	ldr	ip, [fp, #-128]	@ prephitmp.431, stCSCMatrix.csc_coef10
 	sub	r1, fp, #120
 	ldmia	r1, {r1, r8, lr}	@ phole ldm
-	ldr	r9, [fp, #-108]	@ prephitmp.426, stCSCMatrix.csc_coef22
-	ldrh	r2, [r4, #40]	@ <variable>.u16InputColorSpace, <variable>.u16InputColorSpace
-	ldrh	r3, [r4, #42]	@ <variable>.u16OutputColorSpace, <variable>.u16OutputColorSpace
-.L92:
-	str	sl, [fp, #-104]	@ prephitmp.411, st_csc_coef.csc_coef00
-	cmp	r2, #9	@ <variable>.u16InputColorSpace,
+	ldr	r9, [fp, #-108]	@ prephitmp.428, stCSCMatrix.csc_coef22
+	ldrh	r3, [r4, #40]	@ <variable>.u16InputColorSpace, <variable>.u16InputColorSpace
+	ldrh	r2, [r4, #42]	@ prephitmp.389, <variable>.u16OutputColorSpace
+.L93:
+	str	sl, [fp, #-104]	@ prephitmp.409, st_csc_coef.csc_coef00
+	cmp	r3, #9	@ <variable>.u16InputColorSpace,
 	ldr	r0, [fp, #-220]	@, %sfp
 	movw	r6, #:lower16:-2139062143	@ tmp900,
 	ldr	sl, [fp, #-224]	@, %sfp
 	movt	r6, #:upper16:-2139062143	@ tmp900,
-	str	r1, [fp, #-84]	@ prephitmp.424, st_csc_coef.csc_coef12
+	str	r1, [fp, #-84]	@ prephitmp.433, st_csc_coef.csc_coef12
 	str	r0, [fp, #-88]	@, st_csc_coef.csc_coef11
-	str	lr, [fp, #-76]	@ prephitmp.425, st_csc_coef.csc_coef21
+	str	lr, [fp, #-76]	@ prephitmp.427, st_csc_coef.csc_coef21
 	mov	lr, #100	@ tmp897,
 	str	sl, [fp, #-100]	@, st_csc_coef.csc_coef01
-	str	r7, [fp, #-96]	@ prephitmp.421, st_csc_coef.csc_coef02
-	str	ip, [fp, #-92]	@ prephitmp.422, st_csc_coef.csc_coef10
-	str	r8, [fp, #-80]	@ prephitmp.384, st_csc_coef.csc_coef20
-	str	r9, [fp, #-72]	@ prephitmp.426, st_csc_coef.csc_coef22
+	str	r7, [fp, #-96]	@ prephitmp.430, st_csc_coef.csc_coef02
+	str	ip, [fp, #-92]	@ prephitmp.431, st_csc_coef.csc_coef10
+	str	r8, [fp, #-80]	@ prephitmp.391, st_csc_coef.csc_coef20
+	str	r9, [fp, #-72]	@ prephitmp.428, st_csc_coef.csc_coef22
 	ldr	ip, [r4, #0]	@ <variable>.u16Brightness, <variable>.u16Brightness
-	mul	r2, lr, ip	@ tmp895, tmp897, <variable>.u16Brightness
-	smull	lr, r6, r6, r2	@, tmp899, tmp900, tmp895
-	mov	r1, r2, asr #31	@ tmp903, tmp895,
-	add	r0, r6, r2	@ tmp901, tmp899, tmp895
-	rsb	r2, r1, r0, asr #7	@, tmp898, tmp903, tmp901,
-	sub	r1, r2, #50	@ s32Brightness, tmp898,
-	beq	.L108	@,
-	cmp	r3, #9	@ <variable>.u16OutputColorSpace,
+	mul	r3, lr, ip	@ tmp895, tmp897, <variable>.u16Brightness
+	smull	lr, r6, r6, r3	@, tmp899, tmp900, tmp895
+	mov	r1, r3, asr #31	@ tmp903, tmp895,
+	add	r0, r6, r3	@ tmp901, tmp899, tmp895
+	rsb	r3, r1, r0, asr #7	@, tmp898, tmp903, tmp901,
+	sub	r1, r3, #50	@ s32Brightness, tmp898,
 	beq	.L109	@,
-	sub	r2, r2, #34	@ tmp945, tmp898,
-	mov	r1, #512	@ tmp947,
-	mvn	lr, #63	@ tmp942,
-	movw	r3, #:lower16:-512	@ tmp943,
-	mov	ip, r2, asl #2	@ tmp946, tmp945,
-	movt	r3, #:upper16:-512	@ tmp943,
-	str	r1, [fp, #-56]	@ tmp947, stDcCoef.csc_out_dc0
-	str	lr, [fp, #-60]	@ tmp942, stDcCoef.csc_in_dc2
-	str	ip, [fp, #-48]	@ tmp946, stDcCoef.csc_out_dc2
-	str	r1, [fp, #-52]	@ tmp947, stDcCoef.csc_out_dc1
-	str	r3, [fp, #-68]	@ tmp943, stDcCoef.csc_in_dc0
-	str	r3, [fp, #-64]	@ tmp943, stDcCoef.csc_in_dc1
-.L102:
+	cmp	r2, #9	@ prephitmp.389,
+	beq	.L110	@,
+.L104:
+	add	r2, r1, #16	@ tmp943, s32Brightness,
+	mov	r0, #512	@ tmp945,
+	mvn	r3, #63	@ tmp940,
+	movw	lr, #:lower16:-512	@ tmp941,
+	mov	ip, r2, asl #2	@ tmp944, tmp943,
+	movt	lr, #:upper16:-512	@ tmp941,
+	str	r0, [fp, #-56]	@ tmp945, stDcCoef.csc_out_dc0
+	str	r3, [fp, #-60]	@ tmp940, stDcCoef.csc_in_dc2
+	str	ip, [fp, #-48]	@ tmp944, stDcCoef.csc_out_dc2
+	str	r0, [fp, #-52]	@ tmp945, stDcCoef.csc_out_dc1
+	str	lr, [fp, #-68]	@ tmp941, stDcCoef.csc_in_dc0
+	str	lr, [fp, #-64]	@ tmp941, stDcCoef.csc_in_dc1
+.L103:
 	sub	r1, fp, #68	@,,
 	mov	r0, r5	@, enDisplayId
 	bl	PQ_HAL_SetCscDcCoef	@
 	mov	r0, r5	@, enDisplayId
 	sub	r1, fp, #104	@,,
 	bl	PQ_HAL_SetCscCoef	@
-	mov	r0, #0	@ D.24322,
+	mov	r0, #0	@ D.24316,
 .L87:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L106:
-	cmp	r3, #9	@ <variable>.u16OutputColorSpace,
-	beq	.L110	@,
+.L90:
+	ldr	r6, [r1, #0]	@ <variable>.u16Brightness, <variable>.u16Brightness
+	mov	r1, #100	@ tmp952,
+	movw	r0, #:lower16:-2139062143	@ tmp955,
+	movt	r0, #:upper16:-2139062143	@ tmp955,
+	cmp	r2, #9	@ prephitmp.389,
+	mul	r3, r1, r6	@ tmp950, tmp952, <variable>.u16Brightness
+	smull	r6, ip, r0, r3	@, tmp954, tmp955, tmp950
+	mov	lr, r3, asr #31	@ tmp958, tmp950,
+	add	r1, ip, r3	@ tmp956, tmp954, tmp950
+	rsb	r6, lr, r1, asr #7	@, tmp953, tmp958, tmp956,
+	sub	r1, r6, #50	@ s32Brightness, tmp953,
+	bne	.L104	@,
+.L110:
+	sub	r1, r1, #16	@ tmp930, s32Brightness,
+	movw	r3, #:lower16:-512	@ tmp932,
+	movt	r3, #:upper16:-512	@ tmp932,
+	str	r3, [fp, #-68]	@ tmp932, stDcCoef.csc_in_dc0
+	str	r3, [fp, #-64]	@ tmp932, stDcCoef.csc_in_dc1
+	mov	r2, r1, asl #2	@ tmp931, tmp930,
+	str	r2, [fp, #-60]	@ tmp931, stDcCoef.csc_in_dc2
+	ldr	ip, [r4, #28]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	sub	r0, ip, #128	@ tmp935, <variable>.as16ColorTempOffset,
+	str	r0, [fp, #-48]	@ tmp935, stDcCoef.csc_out_dc2
+	ldr	lr, [r4, #32]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	sub	r1, lr, #128	@ tmp937, <variable>.as16ColorTempOffset,
+	str	r1, [fp, #-52]	@ tmp937, stDcCoef.csc_out_dc1
+	ldr	r3, [r4, #36]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	sub	r2, r3, #128	@ tmp939, <variable>.as16ColorTempOffset,
+	str	r2, [fp, #-56]	@ tmp939, stDcCoef.csc_out_dc0
+	b	.L103	@
+.L109:
+	cmp	r2, #9	@ prephitmp.389,
+	beq	.L111	@,
+	sub	ip, r3, #34	@ tmp926, tmp898,
+	mov	lr, #0	@ tmp923,
+	mov	r1, #512	@ tmp928,
+	str	lr, [fp, #-68]	@ tmp923, stDcCoef.csc_in_dc0
+	mov	r0, ip, asl #2	@ tmp927, tmp926,
+	str	r1, [fp, #-56]	@ tmp928, stDcCoef.csc_out_dc0
+	str	r0, [fp, #-48]	@ tmp927, stDcCoef.csc_out_dc2
+	str	lr, [fp, #-60]	@ tmp923, stDcCoef.csc_in_dc2
+	str	lr, [fp, #-64]	@ tmp923, stDcCoef.csc_in_dc1
+	str	r1, [fp, #-52]	@ tmp928, stDcCoef.csc_out_dc1
+	b	.L103	@
+.L107:
+	cmp	r2, #9	@ prephitmp.389,
+	beq	.L112	@,
 	ldr	r6, [r4, #8]	@ <variable>.u16Hue, <variable>.u16Hue
-	movw	r0, #:lower16:.LANCHOR0	@ tmp953,
+	movw	r0, #:lower16:.LANCHOR0	@ tmp962,
 	ldr	sl, [r4, #4]	@ <variable>.u16Contrast, <variable>.u16Contrast
-	movt	r0, #:upper16:.LANCHOR0	@ tmp953,
+	movt	r0, #:upper16:.LANCHOR0	@ tmp962,
 	ldr	lr, [r1, #44]	@ <variable>.bFullRange, <variable>.bFullRange
-	cmp	r3, #1	@ <variable>.u16OutputColorSpace,
+	cmp	r2, #1	@ prephitmp.389,
 	rsb	r9, r6, r6, asl #4	@, tmp494, <variable>.u16Hue, <variable>.u16Hue,
 	ldr	r7, [r4, #12]	@ <variable>.u16Saturation, <variable>.u16Saturation
 	add	ip, sl, sl, asl #2	@, tmp480, <variable>.u16Contrast, <variable>.u16Contrast,
 	ldr	sl, [r4, #16]	@ <variable>.as16ColorTempGain, <variable>.as16ColorTempGain
-	add	r1, r0, lr, asl #3	@, tmp467, tmp953, <variable>.bFullRange,
+	add	r1, r0, lr, asl #3	@, tmp467, tmp962, <variable>.bFullRange,
 	mov	r9, r9, asl #2	@ tmp495, tmp494,
 	movw	lr, #:lower16:-2139062143	@ tmp497,
 	movt	lr, #:upper16:-2139062143	@ tmp497,
@@ -1711,8 +1758,8 @@ PQ_MNG_SetCSCPictureParam:
 	umull	ip, sl, r1, sl	@,, tmp483,
 	add	lr, lr, lr, asl #2	@,, <variable>.as16ColorTempGain, <variable>.as16ColorTempGain,
 	str	lr, [fp, #-152]	@, %sfp
-	add	lr, r0, r9, asl #2	@, tmp544, tmp953, Hue,
-	ldr	r9, [r0, r9, asl #2]	@ D.25169, COS_TABLE
+	add	lr, r0, r9, asl #2	@, tmp544, tmp962, Hue,
+	ldr	r9, [r0, r9, asl #2]	@ D.25163, COS_TABLE
 	add	r6, r6, r6, asl #2	@, tmp508, <variable>.as16ColorTempGain, <variable>.as16ColorTempGain,
 	ldr	r0, [fp, #-156]	@, %sfp
 	mov	r6, r6, asl #3	@, tmp508,
@@ -1723,7 +1770,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r7, [fp, #-152]	@, %sfp
 	str	sl, [fp, #-156]	@, %sfp
 	ldr	r6, [fp, #-144]	@, %sfp
-	ldr	sl, [lr, #244]	@ D.25164, SIN_TABLE
+	ldr	sl, [lr, #244]	@ D.25158, SIN_TABLE
 	mov	lr, r7, asl #3	@,,
 	str	ip, [fp, #-148]	@, %sfp
 	ldr	ip, [r8, #24]	@, <variable>.csc_coef20
@@ -1737,37 +1784,37 @@ PQ_MNG_SetCSCPictureParam:
 	movw	r7, #:lower16:274877907	@ tmp550,
 	str	lr, [fp, #-176]	@, %sfp
 	movt	r7, #:upper16:274877907	@ tmp550,
-	str	r0, [fp, #-168]	@, %sfp
+	str	r0, [fp, #-172]	@, %sfp
 	movw	lr, #:lower16:1125899907	@ tmp563,
 	ldr	r0, [r8, #12]	@ <variable>.csc_coef10, <variable>.csc_coef10
 	movt	lr, #:upper16:1125899907	@ tmp563,
 	ldr	ip, [r8, #16]	@ <variable>.csc_coef11, <variable>.csc_coef11
-	mul	r6, r0, r9	@, <variable>.csc_coef10, D.25169
-	mul	r0, ip, r9	@, <variable>.csc_coef11, D.25169
+	mul	r6, r0, r9	@, <variable>.csc_coef10, D.25163
+	mul	r0, ip, r9	@, <variable>.csc_coef11, D.25163
 	str	r6, [fp, #-180]	@, %sfp
 	str	r0, [fp, #-204]	@, %sfp
 	ldr	ip, [r8, #0]	@, <variable>.csc_coef00
 	str	ip, [fp, #-200]	@, %sfp
 	ldr	r6, [r8, #20]	@, <variable>.csc_coef12
-	mul	r0, r6, r9	@,, D.25169
+	mul	r0, r6, r9	@,, D.25163
 	ldr	r6, [fp, #-160]	@, %sfp
 	str	r0, [fp, #-144]	@, %sfp
 	ldr	r0, [fp, #-180]	@, %sfp
 	ldr	ip, [r8, #4]	@, <variable>.csc_coef01
 	str	ip, [fp, #-212]	@, %sfp
-	mul	ip, r6, sl	@ tmp553,, D.25164
+	mul	ip, r6, sl	@ tmp553,, D.25158
 	mov	r6, r0, asr #31	@,,
-	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-172]	@, %sfp
 	str	r6, [fp, #-184]	@, %sfp
-	mul	r6, r0, sl	@,, D.25164
+	mul	r6, r0, sl	@,, D.25158
 	ldr	r0, [fp, #-204]	@, %sfp
 	str	r6, [fp, #-148]	@, %sfp
 	mov	r6, r0, asr #31	@,,
 	str	r6, [fp, #-208]	@, %sfp
 	ldr	r0, [r8, #32]	@, <variable>.csc_coef22
-	mul	r6, r0, sl	@,, D.25164
+	mul	r6, r0, sl	@,, D.25158
 	ldr	r0, [fp, #-144]	@, %sfp
-	str	r6, [fp, #-172]	@, %sfp
+	str	r6, [fp, #-168]	@, %sfp
 	mov	r6, r0, asr #31	@,,
 	ldr	r0, [fp, #-192]	@, %sfp
 	str	r6, [fp, #-220]	@, %sfp
@@ -1789,7 +1836,7 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r1, r0, lsr #5	@,,
 	ldr	r0, [fp, #-176]	@, %sfp
 	str	r1, [fp, #-164]	@, %sfp
-	mul	r1, r6, r0	@ D.25160,,
+	mul	r1, r6, r0	@ D.25154,,
 	ldr	r0, [fp, #-156]	@, %sfp
 	mov	r6, r0, lsr #5	@,,
 	ldr	r0, [fp, #-180]	@, %sfp
@@ -1802,7 +1849,7 @@ PQ_MNG_SetCSCPictureParam:
 	smull	r0, r6, r7, ip	@,, tmp550, tmp553
 	ldr	ip, [fp, #-204]	@, %sfp
 	str	r6, [fp, #-180]	@, %sfp
-	ldr	r6, [fp, #-172]	@, %sfp
+	ldr	r6, [fp, #-168]	@, %sfp
 	mov	r0, r6, asr #31	@,,
 	str	r0, [fp, #-224]	@, %sfp
 	smull	r0, r6, r7, ip	@,, tmp550,
@@ -1824,7 +1871,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r0, [fp, #-208]	@, %sfp
 	rsb	r0, r0, r6, asr #6	@,,,,
 	str	r0, [fp, #-188]	@, %sfp
-	ldr	r0, [fp, #-172]	@, %sfp
+	ldr	r0, [fp, #-168]	@, %sfp
 	smull	r6, r0, r7, r0	@,, tmp550,
 	ldr	r6, [fp, #-148]	@, %sfp
 	str	r0, [fp, #-204]	@, %sfp
@@ -1832,19 +1879,19 @@ PQ_MNG_SetCSCPictureParam:
 	rsb	r0, r0, r6, asr #6	@,,,,
 	ldr	r6, [fp, #-164]	@, %sfp
 	str	r0, [fp, #-180]	@, %sfp
-	mul	r0, r6, r1	@,, D.25160
+	mul	r0, r6, r1	@,, D.25154
 	ldr	r6, [fp, #-220]	@, %sfp
 	rsb	ip, r6, ip, asr #6	@, tmp588,, tmp589,
-	str	r0, [fp, #-172]	@, %sfp
+	str	r0, [fp, #-168]	@, %sfp
 	ldr	r0, [fp, #-176]	@, %sfp
-	mul	r6, r0, r1	@,, D.25160
+	mul	r6, r0, r1	@,, D.25154
 	ldr	r0, [fp, #-196]	@, %sfp
 	str	r6, [fp, #-148]	@, %sfp
 	ldr	r6, [fp, #-192]	@, %sfp
 	add	r6, r6, r0	@,,
 	ldr	r0, [fp, #-156]	@, %sfp
 	str	r6, [fp, #-184]	@, %sfp
-	mul	r1, r0, r1	@,, D.25160
+	mul	r1, r0, r1	@,, D.25154
 	str	r1, [fp, #-144]	@, %sfp
 	ldr	r6, [fp, #-204]	@, %sfp
 	ldr	r0, [fp, #-224]	@, %sfp
@@ -1857,7 +1904,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	r0, [fp, #-188]	@, %sfp
 	ldr	r0, [r8, #32]	@, <variable>.csc_coef22
 	ldr	r1, [fp, #-184]	@, %sfp
-	mul	r6, r0, r9	@,, D.25169
+	mul	r6, r0, r9	@,, D.25163
 	ldr	r0, [fp, #-148]	@, %sfp
 	str	r6, [fp, #-192]	@, %sfp
 	ldr	ip, [r8, #8]	@, <variable>.csc_coef02
@@ -1869,7 +1916,7 @@ PQ_MNG_SetCSCPictureParam:
 	movt	r0, #:upper16:1759218605	@,
 	str	r0, [fp, #-228]	@, %sfp
 	mul	r1, r1, r6	@,,
-	ldr	r6, [fp, #-172]	@, %sfp
+	ldr	r6, [fp, #-168]	@, %sfp
 	str	r1, [fp, #-188]	@, %sfp
 	ldr	r1, [fp, #-180]	@, %sfp
 	mul	r0, r6, r1	@,,
@@ -1895,8 +1942,8 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r6, [fp, #-180]	@, %sfp
 	str	r0, [fp, #-216]	@, %sfp
 	ldr	r0, [fp, #-208]	@, %sfp
-	rsb	ip, ip, r6, asr #18	@, prephitmp.422, tmp565,,
-	str	ip, [fp, #-128]	@ prephitmp.422, stCSCMatrix.csc_coef10
+	rsb	ip, ip, r6, asr #18	@, prephitmp.431, tmp565,,
+	str	ip, [fp, #-128]	@ prephitmp.431, stCSCMatrix.csc_coef10
 	rsb	r6, r0, r1, asr #18	@,,,,
 	str	r6, [fp, #-220]	@, %sfp
 	ldr	r0, [r8, #12]	@, <variable>.csc_coef10
@@ -1906,23 +1953,23 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r0, [fp, #-188]	@, %sfp
 	ldr	r1, [r8, #16]	@, <variable>.csc_coef11
 	str	r1, [fp, #-184]	@, %sfp
-	rsb	r1, r6, r0, asr #18	@, prephitmp.424,,,
+	rsb	r1, r6, r0, asr #18	@, prephitmp.433,,,
 	ldr	r0, [fp, #-160]	@, %sfp
-	str	r1, [fp, #-120]	@ prephitmp.424, stCSCMatrix.csc_coef12
+	str	r1, [fp, #-120]	@ prephitmp.433, stCSCMatrix.csc_coef12
 	ldr	r8, [r8, #20]	@ <variable>.csc_coef12, <variable>.csc_coef12
-	mul	r6, r0, r9	@,, D.25169
+	mul	r6, r0, r9	@,, D.25163
 	ldr	r0, [fp, #-180]	@, %sfp
-	mul	r8, r8, sl	@ tmp653, <variable>.csc_coef12, D.25164
+	mul	r8, r8, sl	@ tmp653, <variable>.csc_coef12, D.25158
 	str	r6, [fp, #-160]	@, %sfp
-	mul	r6, r0, sl	@,, D.25164
-	ldr	r0, [fp, #-168]	@, %sfp
-	mul	r9, r0, r9	@ tmp626,, D.25169
+	mul	r6, r0, sl	@,, D.25158
+	ldr	r0, [fp, #-172]	@, %sfp
+	mul	r9, r0, r9	@ tmp626,, D.25163
 	str	r6, [fp, #-180]	@, %sfp
 	ldr	r6, [fp, #-160]	@, %sfp
 	mov	r0, r6, asr #31	@,,
 	ldr	r6, [fp, #-184]	@, %sfp
-	str	r0, [fp, #-168]	@, %sfp
-	mul	r0, r6, sl	@,, D.25164
+	str	r0, [fp, #-172]	@, %sfp
+	mul	r0, r6, sl	@,, D.25158
 	mov	r6, r8, asr #31	@, tmp653,
 	str	r6, [fp, #-216]	@, %sfp
 	smull	r6, sl, r7, r8	@,, tmp550, tmp653
@@ -1942,7 +1989,7 @@ PQ_MNG_SetCSCPictureParam:
 	mov	sl, r6, asr #31	@,,
 	ldr	r0, [fp, #-160]	@, %sfp
 	smull	r6, r9, r7, r9	@, tmp629, tmp550, tmp626
-	ldr	r6, [fp, #-168]	@, %sfp
+	ldr	r6, [fp, #-172]	@, %sfp
 	str	sl, [fp, #-180]	@, %sfp
 	rsb	sl, r6, r0, asr #6	@,,,,
 	ldr	r6, [fp, #-224]	@, %sfp
@@ -1950,7 +1997,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	sl, [fp, #-160]	@, %sfp
 	smull	r6, sl, r7, r6	@, tmp636, tmp550,
 	rsb	r6, r0, r8, asr #6	@,,, tmp616,
-	str	r6, [fp, #-168]	@, %sfp
+	str	r6, [fp, #-172]	@, %sfp
 	ldr	r8, [fp, #-192]	@, %sfp
 	smull	r6, r7, r7, r8	@, tmp649, tmp550,
 	ldr	r6, [fp, #-188]	@, %sfp
@@ -1971,7 +2018,7 @@ PQ_MNG_SetCSCPictureParam:
 	rsb	r8, r6, r0, asr #6	@, tmp655,,,
 	ldr	r6, [fp, #-164]	@, %sfp
 	mul	r0, r6, r9	@,,
-	ldr	r9, [fp, #-168]	@, %sfp
+	ldr	r9, [fp, #-172]	@, %sfp
 	ldr	r6, [fp, #-204]	@, %sfp
 	rsb	r7, r6, r7, asr #6	@, tmp648,, tmp649,
 	str	r0, [fp, #-152]	@, %sfp
@@ -1987,7 +2034,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r6, [fp, #-176]	@, %sfp
 	ldr	r0, [fp, #-200]	@, %sfp
 	mul	r7, r8, r9	@,,
-	str	sl, [fp, #-168]	@, %sfp
+	str	sl, [fp, #-172]	@, %sfp
 	ldr	r8, [fp, #-164]	@, %sfp
 	mul	sl, r0, r6	@ tmp520,,
 	ldr	r6, [fp, #-152]	@, %sfp
@@ -2003,15 +2050,15 @@ PQ_MNG_SetCSCPictureParam:
 	str	r0, [fp, #-152]	@, %sfp
 	mul	r0, r8, r7	@,,
 	str	r0, [fp, #-148]	@, %sfp
-	ldr	r0, [fp, #-172]	@, %sfp
-	ldr	r7, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r7, [fp, #-172]	@, %sfp
 	ldr	r6, [fp, #-184]	@, %sfp
 	mov	r8, r6, asr #31	@,,
 	str	r8, [fp, #-144]	@, %sfp
 	mul	r8, r0, r7	@ tmp661,,
 	ldr	r7, [fp, #-228]	@, %sfp
 	mov	r6, r9, asr #31	@, tmp534,
-	str	r6, [fp, #-172]	@, %sfp
+	str	r6, [fp, #-168]	@, %sfp
 	smull	r6, r0, r7, r9	@,,, tmp534
 	ldr	r6, [fp, #-228]	@, %sfp
 	ldr	r7, [fp, #-152]	@, %sfp
@@ -2021,7 +2068,7 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r0, r7, asr #31	@,,
 	str	r0, [fp, #-156]	@, %sfp
 	mov	r6, r8, asr #31	@, tmp661,
-	str	r6, [fp, #-168]	@, %sfp
+	str	r6, [fp, #-172]	@, %sfp
 	mov	r7, r9, asr #31	@,,
 	str	r7, [fp, #-164]	@, %sfp
 	smull	r7, r0, lr, r8	@,, tmp563, tmp661
@@ -2030,58 +2077,70 @@ PQ_MNG_SetCSCPictureParam:
 	str	r0, [fp, #-160]	@, %sfp
 	ldr	r0, [fp, #-184]	@, %sfp
 	smull	r8, r6, r9, r0	@, tmp529,,
-	sub	r0, fp, #180
-	ldmia	r0, {r0, r8, r9}	@ phole ldm
-	rsb	sl, r8, sl, asr #12	@, prephitmp.411,, tmp522,
-	str	sl, [fp, #-140]	@ prephitmp.411, stCSCMatrix.csc_coef00
+	ldr	r0, [fp, #-180]	@, %sfp
+	ldr	r8, [fp, #-176]	@, %sfp
+	ldr	r9, [fp, #-168]	@, %sfp
+	rsb	sl, r8, sl, asr #12	@, prephitmp.409,, tmp522,
+	str	sl, [fp, #-140]	@ prephitmp.409, stCSCMatrix.csc_coef00
 	smull	r7, r8, lr, r7	@, tmp622, tmp563,
-	rsb	r7, r9, r0, asr #12	@, prephitmp.421,,,
+	rsb	r7, r9, r0, asr #12	@, prephitmp.430,,,
 	ldr	r9, [fp, #-148]	@, %sfp
-	str	r7, [fp, #-132]	@ prephitmp.421, stCSCMatrix.csc_coef02
+	str	r7, [fp, #-132]	@ prephitmp.430, stCSCMatrix.csc_coef02
 	smull	r0, r9, lr, r9	@,, tmp563,
-	ldr	lr, [fp, #-168]	@, %sfp
+	ldr	lr, [fp, #-172]	@, %sfp
 	str	r9, [fp, #-148]	@, %sfp
 	ldr	r9, [fp, #-144]	@, %sfp
 	rsb	r0, r9, r6, asr #12	@,,, tmp529,
 	ldr	r6, [fp, #-160]	@, %sfp
 	str	r0, [fp, #-224]	@, %sfp
 	ldr	r0, [fp, #-156]	@, %sfp
-	rsb	r9, lr, r6, asr #18	@, prephitmp.426,,,
+	rsb	r9, lr, r6, asr #18	@, prephitmp.428,,,
 	ldr	lr, [fp, #-224]	@, %sfp
 	ldr	r6, [fp, #-148]	@, %sfp
-	rsb	r8, r0, r8, asr #18	@, prephitmp.384,, tmp622,
+	rsb	r8, r0, r8, asr #18	@, prephitmp.391,, tmp622,
 	ldr	r0, [fp, #-164]	@, %sfp
 	str	lr, [fp, #-136]	@, stCSCMatrix.csc_coef01
-	str	r8, [fp, #-116]	@ prephitmp.384, stCSCMatrix.csc_coef20
-	rsb	lr, r0, r6, asr #18	@, prephitmp.425,,,
-	str	r9, [fp, #-108]	@ prephitmp.426, stCSCMatrix.csc_coef22
-	str	lr, [fp, #-112]	@ prephitmp.425, stCSCMatrix.csc_coef21
-	b	.L92	@
+	str	r8, [fp, #-116]	@ prephitmp.391, stCSCMatrix.csc_coef20
+	rsb	lr, r0, r6, asr #18	@, prephitmp.427,,,
+	str	r9, [fp, #-108]	@ prephitmp.428, stCSCMatrix.csc_coef22
+	str	lr, [fp, #-112]	@ prephitmp.427, stCSCMatrix.csc_coef21
+	b	.L93	@
+.L111:
+	movw	r3, #4768	@ tmp909,
+	mov	r2, #0	@ tmp905,
+	mul	ip, r3, r1	@ tmp908, tmp909, s32Brightness
+	str	r2, [fp, #-68]	@ tmp905, stDcCoef.csc_in_dc0
+	str	r2, [fp, #-60]	@ tmp905, stDcCoef.csc_in_dc2
+	str	r2, [fp, #-64]	@ tmp905, stDcCoef.csc_in_dc1
+	add	r3, ip, #512	@ tmp910, tmp908,
+	ldr	lr, [r4, #28]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	add	r0, r3, #255	@ tmp912, tmp910,
+	cmp	r3, #0	@ tmp910,
+	sub	ip, lr, #128	@ tmp914, <variable>.as16ColorTempOffset,
+	movlt	r3, r0	@ tmp911, tmp912
+	mov	r3, r3, asr #8	@ tmp913, tmp911,
+	add	r2, ip, r3	@ tmp916, tmp914, tmp913
+	str	r2, [fp, #-48]	@ tmp916, stDcCoef.csc_out_dc2
+	ldr	r1, [r4, #32]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	sub	r0, r1, #128	@ tmp917, <variable>.as16ColorTempOffset,
+	add	lr, r0, r3	@ tmp919, tmp917, tmp913
+	str	lr, [fp, #-52]	@ tmp919, stDcCoef.csc_out_dc1
+	ldr	ip, [r4, #36]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
+	sub	r2, ip, #128	@ tmp920, <variable>.as16ColorTempOffset,
+	add	r1, r2, r3	@ tmp922, tmp920, tmp913
+	str	r1, [fp, #-56]	@ tmp922, stDcCoef.csc_out_dc0
+	b	.L103	@
 .L108:
-	cmp	r3, #9	@ <variable>.u16OutputColorSpace,
-	beq	.L111	@,
-	sub	ip, r2, #34	@ tmp927, tmp898,
-	mov	r3, #0	@ tmp924,
-	mov	r0, #512	@ tmp929,
-	str	r3, [fp, #-68]	@ tmp924, stDcCoef.csc_in_dc0
-	mov	r1, ip, asl #2	@ tmp928, tmp927,
-	str	r0, [fp, #-56]	@ tmp929, stDcCoef.csc_out_dc0
-	str	r1, [fp, #-48]	@ tmp928, stDcCoef.csc_out_dc2
-	str	r3, [fp, #-60]	@ tmp924, stDcCoef.csc_in_dc2
-	str	r3, [fp, #-64]	@ tmp924, stDcCoef.csc_in_dc1
-	str	r0, [fp, #-52]	@ tmp929, stDcCoef.csc_out_dc1
-	b	.L102	@
-.L107:
 	ldr	r9, [r4, #8]	@ <variable>.u16Hue, <variable>.u16Hue
 	movw	ip, #:lower16:-2139062143	@ tmp705,
 	ldr	r8, [r4, #4]	@ <variable>.u16Contrast, <variable>.u16Contrast
 	movt	ip, #:upper16:-2139062143	@ tmp705,
 	ldr	r7, [r4, #12]	@ <variable>.u16Saturation, <variable>.u16Saturation
-	movw	lr, #:lower16:.LANCHOR0	@ tmp956,
+	movw	lr, #:lower16:.LANCHOR0	@ tmp963,
 	rsb	r6, r9, r9, asl #4	@, tmp702, <variable>.u16Hue, <variable>.u16Hue,
 	ldr	r0, [r1, #44]	@ <variable>.bFullRange, <variable>.bFullRange
-	movt	lr, #:upper16:.LANCHOR0	@ tmp956,
-	cmp	r2, #1	@ <variable>.u16InputColorSpace,
+	movt	lr, #:upper16:.LANCHOR0	@ tmp963,
+	cmp	r3, #1	@ <variable>.u16InputColorSpace,
 	mov	r9, r6, asl #2	@ tmp703, tmp702,
 	add	sl, r7, r7, asl #2	@, tmp695, <variable>.u16Saturation, <variable>.u16Saturation,
 	add	r7, r8, r8, asl #2	@, tmp688, <variable>.u16Contrast, <variable>.u16Contrast,
@@ -2092,14 +2151,14 @@ PQ_MNG_SetCSCPictureParam:
 	movw	r0, #:lower16:-1600085855	@ tmp691,
 	mov	sl, sl, asl #3	@ tmp696, tmp695,
 	movt	r0, #:upper16:-1600085855	@ tmp691,
-	add	r1, lr, r1, asl #2	@, tmp674, tmp956, tmp670,
+	add	r1, lr, r1, asl #2	@, tmp674, tmp963, tmp670,
 	umull	ip, sl, r0, sl	@, tmp697, tmp691, tmp696
 	mov	r9, r9, lsr #7	@ Hue, tmp704,
 	add	ip, r6, r6, asl #2	@,, <variable>.as16ColorTempGain, <variable>.as16ColorTempGain,
-	ldreq	r1, [r1, #600]	@ pCSCMatrix.403, CSC_YCbCr_to_RGBPrim_MatrixTbl
+	ldreq	r1, [r1, #600]	@ pCSCMatrix.411, CSC_YCbCr_to_RGBPrim_MatrixTbl
 	umull	r8, r6, r0, r7	@,, tmp691, tmp689
-	add	r7, lr, r9, asl #2	@, tmp738, tmp956, Hue,
-	ldrne	r1, [r1, #628]	@ pCSCMatrix.403, CSC_YCbCr_to_RGBPrim_MatrixTbl
+	add	r7, lr, r9, asl #2	@, tmp738, tmp963, Hue,
+	ldrne	r1, [r1, #628]	@ pCSCMatrix.411, CSC_YCbCr_to_RGBPrim_MatrixTbl
 	mov	sl, sl, lsr #5	@, tmp697,
 	ldr	r8, [r7, #244]	@, SIN_TABLE
 	str	ip, [fp, #-144]	@, %sfp
@@ -2108,7 +2167,7 @@ PQ_MNG_SetCSCPictureParam:
 	movt	ip, #:upper16:274877907	@ tmp744,
 	str	r8, [fp, #-192]	@, %sfp
 	str	r6, [fp, #-152]	@, %sfp
-	ldr	r9, [lr, r9, asl #2]	@ D.25287, COS_TABLE
+	ldr	r9, [lr, r9, asl #2]	@ D.25281, COS_TABLE
 	ldr	sl, [r1, #28]	@, <variable>.csc_coef21
 	ldr	r6, [r4, #24]	@, <variable>.as16ColorTempGain
 	ldr	lr, [r4, #16]	@, <variable>.as16ColorTempGain
@@ -2116,7 +2175,7 @@ PQ_MNG_SetCSCPictureParam:
 	add	r8, r6, r6, asl #2	@, tmp716,,,
 	add	r6, lr, lr, asl #2	@, tmp723,,,
 	str	r7, [fp, #-180]	@, %sfp
-	mul	lr, sl, r9	@ tmp835,, D.25287
+	mul	lr, sl, r9	@ tmp835,, D.25281
 	ldr	r7, [fp, #-148]	@, %sfp
 	ldr	sl, [fp, #-192]	@, %sfp
 	mul	r7, r7, sl	@,,
@@ -2131,21 +2190,21 @@ PQ_MNG_SetCSCPictureParam:
 	str	r8, [fp, #-196]	@, %sfp
 	ldr	sl, [fp, #-152]	@, %sfp
 	ldr	r8, [fp, #-148]	@, %sfp
-	mul	r7, r7, r9	@ tmp740, <variable>.csc_coef01, D.25287
+	mul	r7, r7, r9	@ tmp740, <variable>.csc_coef01, D.25281
 	mov	r6, sl, lsr #5	@,,
 	mul	sl, r8, lr	@,, tmp835
 	str	r6, [fp, #-152]	@, %sfp
 	ldr	r8, [fp, #-192]	@, %sfp
-	str	sl, [fp, #-172]	@, %sfp
+	str	sl, [fp, #-168]	@, %sfp
 	movw	sl, #:lower16:351843721	@ tmp751,
 	ldr	r6, [r1, #16]	@, <variable>.csc_coef11
 	movt	sl, #:upper16:351843721	@ tmp751,
-	mul	lr, r6, r9	@,, D.25287
-	str	lr, [fp, #-168]	@, %sfp
+	mul	lr, r6, r9	@,, D.25281
+	str	lr, [fp, #-172]	@, %sfp
 	ldr	r6, [r1, #32]	@, <variable>.csc_coef22
 	mul	lr, r6, r8	@,,
 	str	lr, [fp, #-176]	@, %sfp
-	ldr	r8, [fp, #-172]	@, %sfp
+	ldr	r8, [fp, #-168]	@, %sfp
 	ldr	lr, [fp, #-156]	@, %sfp
 	mov	r6, r8, asr #31	@,,
 	str	r6, [fp, #-208]	@, %sfp
@@ -2156,7 +2215,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	lr, [fp, #-200]	@, %sfp
 	ldr	lr, [fp, #-180]	@, %sfp
 	mul	lr, lr, r8	@,,
-	ldr	r8, [fp, #-168]	@, %sfp
+	ldr	r8, [fp, #-172]	@, %sfp
 	str	lr, [fp, #-144]	@, %sfp
 	mov	lr, r8, asr #31	@,,
 	ldr	r8, [fp, #-196]	@, %sfp
@@ -2188,7 +2247,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	r8, [fp, #-160]	@, %sfp
 	smull	lr, r8, ip, r7	@, tmp743, tmp744, tmp740
 	ldr	r7, [fp, #-176]	@, %sfp
-	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-172]	@, %sfp
 	mov	lr, r7, asr #31	@,,
 	ldr	r7, [fp, #-200]	@, %sfp
 	str	lr, [fp, #-216]	@, %sfp
@@ -2200,7 +2259,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r8, [fp, #-212]	@, %sfp
 	rsb	r6, r8, r6, asr #13	@,,, tmp750,
 	str	r6, [fp, #-144]	@, %sfp
-	ldr	r7, [fp, #-172]	@, %sfp
+	ldr	r7, [fp, #-168]	@, %sfp
 	smull	r8, r6, sl, r7	@, tmp839, tmp751,
 	ldr	r8, [fp, #-188]	@, %sfp
 	rsb	r7, r8, lr, asr #6	@, tmp791,, tmp792,
@@ -2209,7 +2268,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r8, [fp, #-204]	@, %sfp
 	rsb	r0, r8, r0, asr #6	@,,, tmp799,
 	ldr	r8, [fp, #-164]	@, %sfp
-	str	r0, [fp, #-168]	@, %sfp
+	str	r0, [fp, #-172]	@, %sfp
 	ldr	r0, [fp, #-152]	@, %sfp
 	mul	r0, r0, r8	@,,
 	ldr	r8, [fp, #-208]	@, %sfp
@@ -2228,26 +2287,26 @@ PQ_MNG_SetCSCPictureParam:
 	mul	r8, r8, r0	@,,
 	ldr	r0, [fp, #-216]	@, %sfp
 	rsb	lr, r0, lr, asr #6	@, tmp845,, tmp846,
-	str	r8, [fp, #-172]	@, %sfp
-	ldr	r8, [fp, #-168]	@, %sfp
+	str	r8, [fp, #-168]	@, %sfp
+	ldr	r8, [fp, #-172]	@, %sfp
 	rsb	r0, r8, r7	@ tmp803,, tmp791
 	rsb	r8, lr, r6	@, tmp845, tmp838
 	ldr	r6, [fp, #-164]	@, %sfp
-	ldr	lr, [fp, #-172]	@, %sfp
-	str	r8, [fp, #-168]	@, %sfp
+	ldr	lr, [fp, #-168]	@, %sfp
+	str	r8, [fp, #-172]	@, %sfp
 	movw	r8, #:lower16:1759218605	@ tmp731,
 	mul	r7, r6, r0	@ tmp804,, tmp803
 	ldr	r0, [fp, #-200]	@, %sfp
 	movt	r8, #:upper16:1759218605	@ tmp731,
 	mul	r6, lr, r0	@ tmp755,,
-	ldr	lr, [fp, #-168]	@, %sfp
+	ldr	lr, [fp, #-172]	@, %sfp
 	movw	r0, #:lower16:1125899907	@,
 	movt	r0, #:upper16:1125899907	@,
 	str	r0, [fp, #-144]	@, %sfp
 	ldr	r0, [fp, #-176]	@, %sfp
 	mul	r0, r0, lr	@,,
 	ldr	lr, [fp, #-144]	@, %sfp
-	str	r0, [fp, #-168]	@, %sfp
+	str	r0, [fp, #-172]	@, %sfp
 	ldr	r0, [r1, #0]	@, <variable>.csc_coef00
 	str	r0, [fp, #-196]	@, %sfp
 	smull	r0, lr, lr, r7	@,,, tmp804
@@ -2256,13 +2315,13 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r7, r7, asr #31	@ tmp808, tmp804,
 	smull	r0, r6, r8, r6	@, tmp756, tmp731, tmp755
 	str	lr, [fp, #-184]	@, %sfp
-	ldr	lr, [fp, #-168]	@, %sfp
+	ldr	lr, [fp, #-172]	@, %sfp
 	smull	r0, lr, r8, lr	@,, tmp731,
 	str	lr, [fp, #-188]	@, %sfp
-	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-172]	@, %sfp
 	mov	lr, r0, asr #31	@ tmp855,,
 	ldr	r0, [r1, #8]	@, <variable>.csc_coef02
-	mul	r0, r0, r9	@,, D.25287
+	mul	r0, r0, r9	@,, D.25281
 	str	r0, [fp, #-212]	@, %sfp
 	ldr	r0, [fp, #-200]	@, %sfp
 	rsb	r6, r0, r6, asr #12	@,,, tmp756,
@@ -2278,9 +2337,9 @@ PQ_MNG_SetCSCPictureParam:
 	str	r6, [fp, #-124]	@, stCSCMatrix.csc_coef11
 	str	r0, [fp, #-200]	@, %sfp
 	ldr	r6, [r1, #16]	@, <variable>.csc_coef11
-	rsb	lr, lr, r7, asr #12	@, prephitmp.425, tmp855,,
+	rsb	lr, lr, r7, asr #12	@, prephitmp.427, tmp855,,
 	ldr	r7, [fp, #-156]	@, %sfp
-	str	lr, [fp, #-112]	@ prephitmp.425, stCSCMatrix.csc_coef21
+	str	lr, [fp, #-112]	@ prephitmp.427, stCSCMatrix.csc_coef21
 	str	r6, [fp, #-188]	@, %sfp
 	ldr	r0, [r1, #28]	@, <variable>.csc_coef21
 	mul	r6, r0, r7	@,,
@@ -2289,9 +2348,9 @@ PQ_MNG_SetCSCPictureParam:
 	str	r0, [fp, #-184]	@, %sfp
 	ldr	r6, [r1, #32]	@, <variable>.csc_coef22
 	ldr	r0, [fp, #-148]	@, %sfp
-	mul	r7, r6, r9	@,, D.25287
+	mul	r7, r6, r9	@,, D.25281
 	ldr	r6, [fp, #-212]	@, %sfp
-	str	r7, [fp, #-168]	@, %sfp
+	str	r7, [fp, #-172]	@, %sfp
 	ldr	r1, [r1, #24]	@, <variable>.csc_coef20
 	ldr	r7, [fp, #-192]	@, %sfp
 	str	r1, [fp, #-204]	@, %sfp
@@ -2300,14 +2359,14 @@ PQ_MNG_SetCSCPictureParam:
 	mul	r6, r0, r7	@,,
 	ldr	r7, [fp, #-156]	@, %sfp
 	mov	r0, r7, asr #31	@,,
-	ldr	r7, [fp, #-168]	@, %sfp
+	ldr	r7, [fp, #-172]	@, %sfp
 	str	r0, [fp, #-212]	@, %sfp
 	str	r6, [fp, #-148]	@, %sfp
 	ldr	r6, [fp, #-180]	@, %sfp
 	mov	r0, r7, asr #31	@,,
 	str	r0, [fp, #-208]	@, %sfp
 	ldr	r7, [fp, #-188]	@, %sfp
-	mul	r9, r6, r9	@ tmp809,, D.25287
+	mul	r9, r6, r9	@ tmp809,, D.25281
 	ldr	r6, [fp, #-192]	@, %sfp
 	mul	r0, r7, r6	@,,
 	ldr	r7, [fp, #-156]	@, %sfp
@@ -2319,11 +2378,11 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r6, r7, asr #31	@,,
 	str	r6, [fp, #-156]	@, %sfp
 	str	r0, [fp, #-200]	@, %sfp
-	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-172]	@, %sfp
 	smull	r6, r7, ip, r0	@,, tmp744,
 	mov	r0, r9, asr #31	@, tmp809,
 	ldr	r6, [fp, #-216]	@, %sfp
-	str	r0, [fp, #-168]	@, %sfp
+	str	r0, [fp, #-172]	@, %sfp
 	smull	r0, sl, sl, r1	@, tmp764, tmp751, tmp762
 	str	r7, [fp, #-188]	@, %sfp
 	ldr	r7, [fp, #-148]	@, %sfp
@@ -2345,7 +2404,7 @@ PQ_MNG_SetCSCPictureParam:
 	rsb	r7, r0, r1, asr #6	@, tmp770,, tmp771,
 	ldr	r1, [fp, #-152]	@, %sfp
 	add	r7, sl, r7	@ tmp775, tmp763, tmp770
-	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r0, [fp, #-172]	@, %sfp
 	ldr	sl, [fp, #-192]	@, %sfp
 	mul	r6, ip, r1	@,,
 	ldr	ip, [fp, #-208]	@, %sfp
@@ -2356,7 +2415,7 @@ PQ_MNG_SetCSCPictureParam:
 	rsb	r9, ip, r6, asr #6	@, tmp865,,,
 	ldr	ip, [fp, #-180]	@, %sfp
 	rsb	r9, r9, r0	@ tmp870, tmp865,
-	ldr	r0, [fp, #-172]	@, %sfp
+	ldr	r0, [fp, #-168]	@, %sfp
 	rsb	r6, sl, ip, asr #6	@, tmp818,,,
 	ldr	ip, [fp, #-152]	@, %sfp
 	add	r1, r1, r6	@ tmp823, tmp811, tmp818
@@ -2369,7 +2428,7 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r6, [fp, #-176]	@, %sfp
 	ldr	ip, [fp, #-196]	@, %sfp
 	mul	r1, r0, r1	@ tmp824,, tmp823
-	ldr	r0, [fp, #-172]	@, %sfp
+	ldr	r0, [fp, #-168]	@, %sfp
 	mul	r9, r6, r9	@ tmp871,, tmp870
 	ldr	r6, [fp, #-160]	@, %sfp
 	str	sl, [fp, #-156]	@, %sfp
@@ -2377,7 +2436,7 @@ PQ_MNG_SetCSCPictureParam:
 	mov	ip, r6, asr #31	@,,
 	ldr	r0, [fp, #-176]	@, %sfp
 	ldr	r6, [fp, #-204]	@, %sfp
-	str	ip, [fp, #-172]	@, %sfp
+	str	ip, [fp, #-168]	@, %sfp
 	mul	ip, r6, r0	@,,
 	ldr	r0, [fp, #-144]	@, %sfp
 	mov	r6, r1, asr #31	@, tmp824,
@@ -2396,82 +2455,39 @@ PQ_MNG_SetCSCPictureParam:
 	smull	r6, sl, r8, sl	@, tmp730, tmp731, tmp728
 	ldr	r0, [fp, #-160]	@, %sfp
 	ldr	ip, [fp, #-176]	@, %sfp
-	rsb	r1, ip, r1, asr #18	@, prephitmp.424,, tmp825,
-	str	r1, [fp, #-120]	@ prephitmp.424, stCSCMatrix.csc_coef12
+	rsb	r1, ip, r1, asr #18	@, prephitmp.433,, tmp825,
+	str	r1, [fp, #-120]	@ prephitmp.433, stCSCMatrix.csc_coef12
 	smull	r6, ip, r8, r0	@, tmp784, tmp731,
 	ldr	r0, [fp, #-152]	@, %sfp
 	ldr	r6, [fp, #-148]	@, %sfp
-	rsb	sl, r6, sl, asr #12	@, prephitmp.411,, tmp730,
-	str	sl, [fp, #-140]	@ prephitmp.411, stCSCMatrix.csc_coef00
+	rsb	sl, r6, sl, asr #12	@, prephitmp.409,, tmp730,
+	str	sl, [fp, #-140]	@ prephitmp.409, stCSCMatrix.csc_coef00
 	smull	r6, r8, r8, r0	@, tmp831, tmp731,
 	ldr	r0, [fp, #-164]	@, %sfp
 	ldr	r6, [fp, #-156]	@, %sfp
-	rsb	r9, r9, r0, asr #12	@, prephitmp.426, tmp875,,
-	rsb	r7, r6, r7, asr #12	@, prephitmp.421,, tmp777,
+	rsb	r9, r9, r0, asr #12	@, prephitmp.428, tmp875,,
+	rsb	r7, r6, r7, asr #12	@, prephitmp.430,, tmp777,
 	ldr	r0, [fp, #-144]	@, %sfp
-	ldr	r6, [fp, #-172]	@, %sfp
-	rsb	r8, r0, r8, asr #12	@, prephitmp.384,, tmp831,
-	str	r7, [fp, #-132]	@ prephitmp.421, stCSCMatrix.csc_coef02
-	rsb	ip, r6, ip, asr #12	@, prephitmp.422,, tmp784,
-	str	r9, [fp, #-108]	@ prephitmp.426, stCSCMatrix.csc_coef22
-	str	ip, [fp, #-128]	@ prephitmp.422, stCSCMatrix.csc_coef10
-	str	r8, [fp, #-116]	@ prephitmp.384, stCSCMatrix.csc_coef20
-	b	.L92	@
-.L111:
-	movw	lr, #4768	@ tmp910,
-	mov	r2, #0	@ tmp906,
-	mul	ip, lr, r1	@ tmp909, tmp910, s32Brightness
-	str	r2, [fp, #-68]	@ tmp906, stDcCoef.csc_in_dc0
-	str	r2, [fp, #-60]	@ tmp906, stDcCoef.csc_in_dc2
-	str	r2, [fp, #-64]	@ tmp906, stDcCoef.csc_in_dc1
-	add	r3, ip, #512	@ tmp911, tmp909,
-	ldr	r0, [r4, #28]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	add	r1, r3, #255	@ tmp913, tmp911,
-	cmp	r3, #0	@ tmp911,
-	sub	lr, r0, #128	@ tmp915, <variable>.as16ColorTempOffset,
-	movlt	r3, r1	@ tmp912, tmp913
-	mov	r1, r3, asr #8	@ tmp914, tmp912,
-	add	ip, lr, r1	@ tmp917, tmp915, tmp914
-	str	ip, [fp, #-48]	@ tmp917, stDcCoef.csc_out_dc2
-	ldr	r2, [r4, #32]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	sub	r0, r2, #128	@ tmp918, <variable>.as16ColorTempOffset,
-	add	lr, r0, r1	@ tmp920, tmp918, tmp914
-	str	lr, [fp, #-52]	@ tmp920, stDcCoef.csc_out_dc1
-	ldr	ip, [r4, #36]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	sub	r2, ip, #128	@ tmp921, <variable>.as16ColorTempOffset,
-	add	r3, r2, r1	@ tmp923, tmp921, tmp914
-	str	r3, [fp, #-56]	@ tmp923, stDcCoef.csc_out_dc0
-	b	.L102	@
-.L109:
-	sub	lr, r2, #66	@ tmp932, tmp898,
-	movw	r0, #:lower16:-512	@ tmp934,
-	movt	r0, #:upper16:-512	@ tmp934,
-	str	r0, [fp, #-68]	@ tmp934, stDcCoef.csc_in_dc0
-	str	r0, [fp, #-64]	@ tmp934, stDcCoef.csc_in_dc1
-	mov	r2, lr, asl #2	@ tmp933, tmp932,
-	str	r2, [fp, #-60]	@ tmp933, stDcCoef.csc_in_dc2
-	ldr	ip, [r4, #28]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	sub	r1, ip, #128	@ tmp937, <variable>.as16ColorTempOffset,
-	str	r1, [fp, #-48]	@ tmp937, stDcCoef.csc_out_dc2
-	ldr	r3, [r4, #32]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	sub	r0, r3, #128	@ tmp939, <variable>.as16ColorTempOffset,
-	str	r0, [fp, #-52]	@ tmp939, stDcCoef.csc_out_dc1
-	ldr	lr, [r4, #36]	@ <variable>.as16ColorTempOffset, <variable>.as16ColorTempOffset
-	sub	r2, lr, #128	@ tmp941, <variable>.as16ColorTempOffset,
-	str	r2, [fp, #-56]	@ tmp941, stDcCoef.csc_out_dc0
-	b	.L102	@
+	ldr	r6, [fp, #-168]	@, %sfp
+	rsb	r8, r0, r8, asr #12	@, prephitmp.391,, tmp831,
+	str	r7, [fp, #-132]	@ prephitmp.430, stCSCMatrix.csc_coef02
+	rsb	ip, r6, ip, asr #12	@, prephitmp.431,, tmp784,
+	str	r9, [fp, #-108]	@ prephitmp.428, stCSCMatrix.csc_coef22
+	str	ip, [fp, #-128]	@ prephitmp.431, stCSCMatrix.csc_coef10
+	str	r8, [fp, #-116]	@ prephitmp.391, stCSCMatrix.csc_coef20
+	b	.L93	@
 .L88:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L112	@,
-	movw	r3, #1229	@,
+	ldr	r2, .L113	@,
+	movw	r3, #1226	@,
 	movw	lr, #:lower16:.LC3	@ tmp201,
 	movt	lr, #:upper16:.LC3	@ tmp201,
 	str	lr, [sp, #0]	@ tmp201,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24322,
+	mvn	r0, #0	@ D.24316,
 	b	.L87	@
-.L110:
+.L112:
 	ldr	r1, [r1, #8]	@ <variable>.u16Hue, <variable>.u16Hue
 	movw	sl, #:lower16:-2139062143	@ tmp222,
 	ldr	r8, [r4, #12]	@ <variable>.u16Saturation, <variable>.u16Saturation
@@ -2498,55 +2514,55 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r8, r7, asl #3	@, tmp226,
 	add	sl, r1, ip, asl #2	@, tmp240, tmp237, Hue,
 	ldr	ip, [r1, ip, asl #2]	@ tmp244, COS_TABLE
-	mov	r1, r0, lsr #5	@ D.25081, tmp214,
+	mov	r1, r0, lsr #5	@ D.25075, tmp214,
 	str	r8, [fp, #-148]	@, %sfp
 	ldr	r0, [sl, #244]	@ tmp242, SIN_TABLE
 	add	sl, r9, r9, asl #2	@, tmp248, <variable>.as16ColorTempGain, <variable>.as16ColorTempGain,
-	mul	ip, ip, r1	@ D.25066, tmp244, D.25081
+	mul	ip, ip, r1	@ D.25060, tmp244, D.25075
 	add	r6, r6, r6, asl #2	@, tmp233, <variable>.as16ColorTempGain, <variable>.as16ColorTempGain,
-	mul	r0, r0, r1	@ D.25072, tmp242, D.25081
+	mul	r0, r0, r1	@ D.25066, tmp242, D.25075
 	mov	r1, sl, asl #3	@, tmp248,
 	mov	sl, #227	@ tmp403,
 	mov	r9, #179	@,
 	mov	r7, r6, asl #3	@, tmp233,
 	str	r1, [fp, #-156]	@, %sfp
-	mul	r8, sl, ip	@, tmp403, D.25066
+	mul	r8, sl, ip	@, tmp403, D.25060
 	str	r7, [fp, #-200]	@, %sfp
-	mul	r6, r9, r0	@,, D.25072
+	mul	r6, r9, r0	@,, D.25066
 	mov	r9, #190	@ tmp418,
-	mul	sl, sl, r0	@, tmp403, D.25072
+	mul	sl, sl, r0	@, tmp403, D.25066
 	movw	r1, #:lower16:351843721	@ tmp260,
 	str	r8, [fp, #-180]	@, %sfp
-	mov	r8, r0, asl #3	@ tmp285, D.25072,
-	add	r7, r8, r0	@, tmp285, D.25072
+	mov	r8, r0, asl #3	@ tmp285, D.25066,
+	add	r7, r8, r0	@, tmp285, D.25066
 	str	r7, [fp, #-144]	@, %sfp
 	ldr	r7, [fp, #-156]	@, %sfp
-	rsb	r8, r0, r8	@ tmp286, D.25072, tmp285
-	str	r6, [fp, #-172]	@, %sfp
+	rsb	r8, r0, r8	@ tmp286, D.25066, tmp285
+	str	r6, [fp, #-168]	@, %sfp
 	movt	r1, #:upper16:351843721	@ tmp260,
-	mul	r6, r9, r0	@, tmp418, D.25072
+	mul	r6, r9, r0	@, tmp418, D.25066
 	str	sl, [fp, #-164]	@, %sfp
 	umull	r9, r7, lr, r7	@,, tmp208,
-	add	sl, r0, r0, asl #2	@, tmp338, D.25072, D.25072,
+	add	sl, r0, r0, asl #2	@, tmp338, D.25066, D.25066,
 	add	r8, r8, r8, asl #4	@, tmp288, tmp286, tmp286,
 	rsb	sl, sl, sl, asl #4	@,, tmp338, tmp338,
 	str	sl, [fp, #-220]	@, %sfp
 	ldr	sl, [fp, #-152]	@, %sfp
 	str	r6, [fp, #-160]	@, %sfp
-	add	r6, r0, r0, asl #1	@, tmp359, D.25072, D.25072,
+	add	r6, r0, r0, asl #1	@, tmp359, D.25066, D.25066,
 	str	r7, [fp, #-212]	@, %sfp
 	ldr	r7, [fp, #-144]	@, %sfp
-	add	r9, r0, r7, asl #2	@,, D.25072,,
+	add	r9, r0, r7, asl #2	@,, D.25066,,
 	mov	r7, #150	@ tmp278,
-	str	r9, [fp, #-168]	@, %sfp
-	rsb	r0, r0, r0, asl #4	@, tmp256, D.25072, D.25072,
-	mul	r9, r7, ip	@, tmp278, D.25066
+	str	r9, [fp, #-172]	@, %sfp
+	rsb	r0, r0, r0, asl #4	@, tmp256, D.25066, D.25066,
+	mul	r9, r7, ip	@, tmp278, D.25060
 	mov	r7, #77	@ tmp331,
 	str	r9, [fp, #-144]	@, %sfp
-	mul	r9, r7, ip	@, tmp331, D.25066
+	mul	r9, r7, ip	@, tmp331, D.25060
 	mov	r7, #106	@ tmp371,
 	str	r9, [fp, #-176]	@, %sfp
-	mul	r9, r7, ip	@, tmp371, D.25066
+	mul	r9, r7, ip	@, tmp371, D.25060
 	umull	r7, sl, lr, sl	@,, tmp208,
 	str	r9, [fp, #-156]	@, %sfp
 	mov	r9, r6, asl #3	@ tmp360, tmp359,
@@ -2556,17 +2572,17 @@ PQ_MNG_SetCSCPictureParam:
 	str	sl, [fp, #-196]	@, %sfp
 	ldr	sl, [fp, #-200]	@, %sfp
 	umull	r7, sl, lr, sl	@,, tmp208,
-	rsb	r7, ip, ip, asl #3	@, tmp304, D.25066, D.25066,
+	rsb	r7, ip, ip, asl #3	@, tmp304, D.25060, D.25060,
 	str	sl, [fp, #-200]	@, %sfp
 	mov	sl, #179	@,
-	mul	lr, sl, ip	@,, D.25066
+	mul	lr, sl, ip	@,, D.25060
 	add	sl, r6, r6, asl #5	@,, tmp359, tmp359,
 	mov	r6, r0, asl #2	@, tmp256,
 	str	sl, [fp, #-248]	@, %sfp
-	add	sl, ip, r7, asl #2	@,, D.25066, tmp304,
+	add	sl, ip, r7, asl #2	@,, D.25060, tmp304,
 	str	lr, [fp, #-148]	@, %sfp
 	str	r6, [fp, #-152]	@, %sfp
-	ldr	r0, [fp, #-172]	@, %sfp
+	ldr	r0, [fp, #-168]	@, %sfp
 	ldr	ip, [fp, #-220]	@, %sfp
 	str	sl, [fp, #-240]	@, %sfp
 	smull	r6, lr, r1, r0	@,, tmp260,
@@ -2582,7 +2598,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	ip, [fp, #-192]	@, %sfp
 	smull	ip, r6, r1, sl	@,, tmp260,
 	str	lr, [fp, #-208]	@, %sfp
-	ldr	sl, [fp, #-168]	@, %sfp
+	ldr	sl, [fp, #-172]	@, %sfp
 	ldr	lr, [fp, #-200]	@, %sfp
 	str	r6, [fp, #-224]	@, %sfp
 	mov	r7, lr, lsr #5	@,,
@@ -2595,7 +2611,7 @@ PQ_MNG_SetCSCPictureParam:
 	mov	r8, r8, asr #31	@ tmp293, tmp288,
 	str	ip, [fp, #-228]	@, %sfp
 	ldr	ip, [fp, #-248]	@, %sfp
-	ldr	r7, [fp, #-172]	@, %sfp
+	ldr	r7, [fp, #-168]	@, %sfp
 	str	sl, [fp, #-184]	@, %sfp
 	smull	sl, r6, r1, ip	@,, tmp260,
 	mov	lr, r7, asr #31	@ tmp318,,
@@ -2612,12 +2628,12 @@ PQ_MNG_SetCSCPictureParam:
 	smull	r7, r9, r1, ip	@,, tmp260,
 	mov	ip, sl, asr #31	@,,
 	str	ip, [fp, #-252]	@, %sfp
-	ldr	sl, [fp, #-168]	@, %sfp
+	ldr	sl, [fp, #-172]	@, %sfp
 	str	r9, [fp, #-232]	@, %sfp
 	ldr	r9, [fp, #-152]	@, %sfp
 	smull	ip, r7, r1, r9	@,, tmp260,
 	mov	r9, sl, asr #31	@,,
-	str	r9, [fp, #-172]	@, %sfp
+	str	r9, [fp, #-168]	@, %sfp
 	str	r7, [fp, #-160]	@, %sfp
 	ldr	r7, [fp, #-144]	@, %sfp
 	smull	sl, ip, r1, r7	@,, tmp260,
@@ -2629,7 +2645,6 @@ PQ_MNG_SetCSCPictureParam:
 	smull	sl, lr, r1, r9	@,, tmp260,
 	rsb	sl, r6, r7, asr #13	@, tmp341, tmp345,,
 	ldr	r6, [fp, #-176]	@, %sfp
-	rsb	ip, ip, ip, asl #30	@,, tmp314, tmp314,
 	smull	r7, r9, r1, r6	@,, tmp260,
 	str	lr, [fp, #-188]	@, %sfp
 	ldr	r7, [fp, #-208]	@, %sfp
@@ -2644,11 +2659,10 @@ PQ_MNG_SetCSCPictureParam:
 	str	r7, [fp, #-208]	@, %sfp
 	rsb	r7, r6, lr, asr #13	@, tmp419,,,
 	ldr	r6, [fp, #-148]	@, %sfp
-	rsb	r7, r7, r7, asl #30	@,, tmp419, tmp419,
 	smull	lr, r6, r1, r6	@,, tmp260,
 	ldr	lr, [fp, #-228]	@, %sfp
-	str	r6, [fp, #-168]	@, %sfp
-	ldr	r6, [fp, #-172]	@, %sfp
+	str	r6, [fp, #-172]	@, %sfp
+	ldr	r6, [fp, #-168]	@, %sfp
 	rsb	r1, r6, lr, asr #13	@, tmp440,,,
 	ldr	lr, [fp, #-196]	@, %sfp
 	mul	r6, lr, r0	@,, ContrastAdjust
@@ -2656,7 +2670,7 @@ PQ_MNG_SetCSCPictureParam:
 	str	r6, [fp, #-196]	@, %sfp
 	mul	r6, lr, r0	@,, ContrastAdjust
 	ldr	lr, [fp, #-248]	@, %sfp
-	str	r6, [fp, #-172]	@, %sfp
+	str	r6, [fp, #-168]	@, %sfp
 	mov	r6, lr, asr #31	@ tmp393,,
 	ldr	lr, [fp, #-192]	@, %sfp
 	mul	r0, lr, r0	@,, ContrastAdjust
@@ -2670,123 +2684,125 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r8, [fp, #-216]	@, %sfp
 	rsb	r6, r6, r8, asr #13	@,, tmp393,,
 	rsb	r8, r0, lr, asr #13	@,, tmp408,,
-	ldr	r0, [fp, #-152]	@, %sfp
-	ldr	lr, [fp, #-144]	@, %sfp
 	str	r6, [fp, #-200]	@, %sfp
+	ldr	lr, [fp, #-144]	@, %sfp
+	ldr	r6, [fp, #-152]	@, %sfp
+	ldr	r0, [fp, #-240]	@, %sfp
 	str	r8, [fp, #-184]	@, %sfp
-	mov	r6, r0, asr #31	@,,
-	ldr	r8, [fp, #-240]	@, %sfp
-	str	r6, [fp, #-216]	@, %sfp
+	mov	r8, r6, asr #31	@ tmp262,,
 	mov	r6, lr, asr #31	@ tmp282,,
-	str	ip, [fp, #-152]	@, %sfp
-	ldr	r0, [fp, #-176]	@, %sfp
-	mov	lr, r8, asr #31	@ tmp310,,
-	rsb	r8, sl, sl, asl #30	@,, tmp341, tmp341,
-	str	r8, [fp, #-144]	@, %sfp
-	rsb	sl, r1, r1, asl #30	@,, tmp440, tmp440,
-	ldr	r1, [fp, #-188]	@, %sfp
-	mov	ip, r0, asr #31	@ tmp335,,
-	ldr	r0, [fp, #-156]	@, %sfp
+	mov	lr, r0, asr #31	@ tmp310,,
+	rsb	r0, ip, ip, asl #30	@,, tmp314, tmp314,
+	str	r0, [fp, #-152]	@, %sfp
+	ldr	ip, [fp, #-176]	@, %sfp
+	mov	r0, ip, asr #31	@ tmp335,,
+	rsb	ip, sl, sl, asl #30	@,, tmp341, tmp341,
+	ldr	sl, [fp, #-156]	@, %sfp
+	str	ip, [fp, #-144]	@, %sfp
+	mov	ip, sl, asr #31	@ tmp376,,
+	rsb	sl, r7, r7, asl #30	@,, tmp419, tmp419,
+	rsb	r7, r1, r1, asl #30	@,, tmp440, tmp440,
 	str	sl, [fp, #-176]	@, %sfp
-	str	r7, [fp, #-156]	@, %sfp
-	rsb	lr, lr, r1, asr #13	@, D.25037, tmp310,,
-	mov	r8, r0, asr #31	@ tmp376,,
-	ldr	r0, [fp, #-180]	@, %sfp
-	ldr	r7, [fp, #-212]	@, %sfp
-	mov	sl, r0, asr #31	@ tmp455,,
-	ldr	r0, [fp, #-204]	@, %sfp
-	rsb	r6, r6, r7, asr #13	@, D.25050, tmp282,,
-	ldr	r7, [fp, #-216]	@, %sfp
-	rsb	r1, ip, r0, asr #13	@, D.25024, tmp335,,
-	ldr	ip, [fp, #-160]	@, %sfp
-	rsb	r0, r7, ip, asr #13	@, tmp258,,,
-	ldr	r7, [fp, #-208]	@, %sfp
-	ldr	ip, [fp, #-232]	@, %sfp
-	add	r0, r0, #77	@ tmp263, tmp258,
-	rsb	r8, r8, r7, asr #13	@, tmp372, tmp376,,
-	ldr	r7, [fp, #-148]	@, %sfp
-	rsb	sl, sl, ip, asr #13	@, tmp451, tmp455,,
-	mov	ip, r7, asr #31	@ tmp270,,
-	add	r7, r8, r9, asl #2	@,, tmp372, tmp368,
-	ldr	r8, [fp, #-168]	@, %sfp
-	str	r7, [fp, #-148]	@, %sfp
+	ldr	r1, [fp, #-212]	@, %sfp
+	ldr	sl, [fp, #-180]	@, %sfp
+	str	r7, [fp, #-216]	@, %sfp
+	rsb	r6, r6, r1, asr #13	@, D.25044, tmp282,,
+	ldr	r1, [fp, #-204]	@, %sfp
+	mov	r7, sl, asr #31	@ tmp455,,
+	ldr	sl, [fp, #-188]	@, %sfp
+	rsb	r0, r0, r1, asr #13	@, D.25018, tmp335,,
+	ldr	r1, [fp, #-208]	@, %sfp
+	rsb	lr, lr, sl, asr #13	@, D.25031, tmp310,,
+	ldr	sl, [fp, #-160]	@, %sfp
+	rsb	ip, ip, r1, asr #13	@, tmp372, tmp376,,
+	ldr	r1, [fp, #-148]	@, %sfp
+	rsb	r8, r8, sl, asr #13	@, tmp258, tmp262,,
+	ldr	sl, [fp, #-232]	@, %sfp
+	add	ip, ip, r9, asl #2	@,, tmp372, tmp368,
+	ldr	r9, [fp, #-172]	@, %sfp
+	str	ip, [fp, #-148]	@, %sfp
+	add	r8, r8, #77	@ tmp263, tmp258,
+	rsb	r7, r7, sl, asr #13	@, tmp451, tmp455,,
+	mov	sl, r1, asr #31	@ tmp270,,
+	rsb	ip, sl, r9, asr #13	@, tmp266, tmp270,,
+	ldr	sl, [fp, #-200]	@, %sfp
 	ldr	r9, [fp, #-184]	@, %sfp
-	ldr	r7, [fp, #-200]	@, %sfp
-	rsb	ip, ip, r8, asr #13	@, tmp266, tmp270,,
-	add	ip, r0, ip	@, tmp263, tmp266
-	ldr	r0, [fp, #-172]	@, %sfp
-	rsb	r8, lr, r7, asl #2	@, tmp395, D.25037,,
-	rsb	r7, r1, r9, asl #2	@,, D.25024,,
-	ldr	r9, [fp, #-156]	@, %sfp
-	str	r7, [fp, #-160]	@, %sfp
-	rsb	r7, r6, r9, asl #2	@, tmp428, D.25050,,
-	ldr	r9, [fp, #-176]	@, %sfp
-	add	r7, r7, #150	@ tmp429, tmp428,
-	add	sl, sl, r9, asl #2	@,, tmp451,,
-	str	sl, [fp, #-168]	@, %sfp
-	ldr	sl, [fp, #-164]	@, %sfp
+	rsb	r1, lr, sl, asl #2	@,, D.25031,,
+	str	r1, [fp, #-156]	@, %sfp
+	rsb	sl, r0, r9, asl #2	@,, D.25018,,
+	ldr	r1, [fp, #-176]	@, %sfp
+	str	sl, [fp, #-160]	@, %sfp
+	ldr	sl, [fp, #-216]	@, %sfp
+	rsb	r9, r6, r1, asl #2	@,, D.25044,,
+	str	r9, [fp, #-172]	@, %sfp
 	ldr	r9, [fp, #-152]	@, %sfp
-	str	ip, [fp, #-164]	@, %sfp
-	mov	ip, r0, asl #2	@ D.25060,,
-	rsb	r6, r6, sl, asl #2	@, tmp295, D.25050,,
+	add	r1, r7, sl, asl #2	@,, tmp451,,
 	ldr	sl, [fp, #-144]	@, %sfp
-	rsb	lr, lr, r9, asl #2	@, tmp323, D.25037,,
-	add	r6, r6, #150	@ tmp296, tmp295,
+	ldr	r7, [fp, #-164]	@, %sfp
+	str	r1, [fp, #-180]	@, %sfp
+	rsb	lr, lr, r9, asl #2	@, tmp323, D.25031,,
+	ldr	r1, [fp, #-192]	@, %sfp
+	rsb	r9, r0, sl, asl #2	@, tmp350, D.25018,,
+	rsb	r6, r6, r7, asl #2	@, tmp295, D.25044,,
+	ldr	r0, [fp, #-168]	@, %sfp
+	ldr	r7, [fp, #-196]	@, %sfp
+	add	sl, r8, ip	@ tmp271, tmp263, tmp266
 	add	lr, lr, #29	@, tmp323,
 	str	lr, [fp, #-144]	@, %sfp
-	rsb	r9, r1, sl, asl #2	@, tmp350, D.25024,,
-	ldr	r1, [fp, #-192]	@, %sfp
-	ldr	sl, [fp, #-196]	@, %sfp
-	mov	r0, r1, asl #2	@ D.25047,,
-	mov	r1, sl, asl #2	@ D.25034,,
-	add	sl, r9, #77	@, tmp350,
-	ldr	r9, [fp, #-148]	@, %sfp
-	str	sl, [fp, #-172]	@, %sfp
-	add	sl, r8, #29	@, tmp395,
-	add	lr, r9, #150	@,,
-	str	lr, [fp, #-176]	@, %sfp
-	str	sl, [fp, #-156]	@, %sfp
-	ldr	r9, [fp, #-160]	@, %sfp
-	mul	sl, r0, r7	@, D.25047, tmp429
-	add	r8, r9, #77	@ tmp411,,
-	ldr	lr, [fp, #-168]	@, %sfp
-	mul	r8, ip, r8	@, D.25060, tmp411
-	ldr	r7, [fp, #-164]	@, %sfp
+	mov	ip, r0, asl #2	@ D.25054,,
+	ldr	lr, [fp, #-156]	@, %sfp
+	mov	r0, r1, asl #2	@ D.25041,,
+	mov	r1, r7, asl #2	@ D.25028,,
+	ldr	r7, [fp, #-148]	@, %sfp
+	add	r8, r9, #77	@, tmp350,
+	str	r8, [fp, #-168]	@, %sfp
+	add	r8, lr, #29	@,,
+	add	r9, r7, #150	@,,
+	str	r9, [fp, #-176]	@, %sfp
+	str	r8, [fp, #-156]	@, %sfp
+	add	r6, r6, #150	@ tmp296, tmp295,
+	ldr	r7, [fp, #-160]	@, %sfp
+	ldr	r9, [fp, #-172]	@, %sfp
+	add	r8, r7, #77	@ tmp411,,
+	ldr	lr, [fp, #-180]	@, %sfp
+	add	r7, r9, #150	@ tmp429,,
+	mul	r8, ip, r8	@, D.25054, tmp411
 	add	r9, lr, #29	@ tmp457,,
+	mul	r7, r0, r7	@, D.25041, tmp429
 	movw	lr, #:lower16:1759218605	@ tmp274,
-	str	sl, [fp, #-148]	@, %sfp
+	mul	r9, r1, r9	@ tmp458, D.25028, tmp457
 	movt	lr, #:upper16:1759218605	@ tmp274,
-	mul	r9, r1, r9	@ tmp458, D.25034, tmp457
-	mul	sl, ip, r7	@ tmp272, D.25060,
 	str	r8, [fp, #-152]	@, %sfp
+	mul	sl, ip, sl	@ tmp272, D.25054, tmp271
+	str	r7, [fp, #-148]	@, %sfp
 	mov	r7, r8, asr #31	@,,
 	ldr	r8, [fp, #-148]	@, %sfp
 	str	r7, [fp, #-164]	@, %sfp
-	mul	r6, r0, r6	@ tmp297, D.25047, tmp296
+	mul	r6, r0, r6	@ tmp297, D.25041, tmp296
 	mov	r7, r8, asr #31	@,,
 	ldr	r8, [fp, #-144]	@, %sfp
 	str	r7, [fp, #-160]	@, %sfp
-	mul	r7, r1, r8	@ tmp325, D.25034,
+	mul	r7, r1, r8	@ tmp325, D.25028,
 	mov	r8, r9, asr #31	@, tmp458,
 	str	r8, [fp, #-180]	@, %sfp
-	ldr	r8, [fp, #-172]	@, %sfp
-	mul	ip, ip, r8	@ tmp352, D.25060,
+	ldr	r8, [fp, #-168]	@, %sfp
+	mul	ip, ip, r8	@ tmp352, D.25054,
 	mov	r8, sl, asr #31	@, tmp272,
 	str	r8, [fp, #-184]	@, %sfp
 	ldr	r8, [fp, #-176]	@, %sfp
-	mul	r0, r0, r8	@ tmp379, D.25047,
+	mul	r0, r0, r8	@ tmp379, D.25041,
 	mov	r8, r6, asr #31	@, tmp297,
 	str	r8, [fp, #-144]	@, %sfp
 	ldr	r8, [fp, #-156]	@, %sfp
-	mul	r1, r1, r8	@, D.25034,
+	mul	r1, r1, r8	@, D.25028,
 	str	r1, [fp, #-188]	@, %sfp
 	mov	r1, r7, asr #31	@, tmp325,
-	str	r1, [fp, #-172]	@, %sfp
+	str	r1, [fp, #-168]	@, %sfp
 	smull	r1, r8, lr, r9	@,, tmp274, tmp458
 	mov	r1, r0, asr #31	@, tmp379,
 	str	r1, [fp, #-176]	@, %sfp
 	mov	r9, ip, asr #31	@ tmp356, tmp352,
-	str	r8, [fp, #-168]	@, %sfp
+	str	r8, [fp, #-172]	@, %sfp
 	smull	r8, sl, lr, sl	@, tmp273, tmp274, tmp272
 	smull	r8, r6, lr, r6	@, tmp298, tmp274, tmp297
 	ldr	r8, [fp, #-188]	@, %sfp
@@ -2795,16 +2811,16 @@ PQ_MNG_SetCSCPictureParam:
 	smull	r8, r7, lr, r7	@, tmp326, tmp274, tmp325
 	ldr	r8, [fp, #-184]	@, %sfp
 	ldr	r1, [fp, #-144]	@, %sfp
-	rsb	sl, r8, sl, asr #12	@, prephitmp.411,, tmp273,
+	rsb	sl, r8, sl, asr #12	@, prephitmp.409,, tmp273,
 	smull	r8, ip, lr, ip	@, tmp353, tmp274, tmp352
 	rsb	r8, r1, r6, asr #12	@,,, tmp298,
 	smull	r6, r0, lr, r0	@, tmp380, tmp274, tmp379
 	str	r8, [fp, #-224]	@, %sfp
 	ldr	r6, [fp, #-188]	@, %sfp
-	rsb	ip, r9, ip, asr #12	@, prephitmp.422, tmp356, tmp353,
+	rsb	ip, r9, ip, asr #12	@, prephitmp.431, tmp356, tmp353,
 	ldr	r8, [fp, #-152]	@, %sfp
-	ldr	r1, [fp, #-172]	@, %sfp
-	rsb	r7, r1, r7, asr #12	@, prephitmp.421,, tmp326,
+	ldr	r1, [fp, #-168]	@, %sfp
+	rsb	r7, r1, r7, asr #12	@, prephitmp.430,, tmp326,
 	smull	r6, r1, lr, r6	@, tmp398, tmp274,
 	smull	r9, r6, lr, r8	@,, tmp274,
 	ldr	r9, [fp, #-176]	@, %sfp
@@ -2815,42 +2831,42 @@ PQ_MNG_SetCSCPictureParam:
 	ldr	r6, [fp, #-148]	@, %sfp
 	smull	r9, r0, lr, r6	@,, tmp274,
 	ldr	r9, [fp, #-156]	@, %sfp
-	ldr	lr, [fp, #-168]	@, %sfp
-	rsb	r1, r9, r1, asr #12	@, prephitmp.424,, tmp398,
+	ldr	lr, [fp, #-172]	@, %sfp
+	rsb	r1, r9, r1, asr #12	@, prephitmp.433,, tmp398,
 	str	r0, [fp, #-148]	@, %sfp
-	rsb	r9, r8, lr, asr #12	@, prephitmp.426,,,
-	str	sl, [fp, #-140]	@ prephitmp.411, stCSCMatrix.csc_coef00
+	rsb	r9, r8, lr, asr #12	@, prephitmp.428,,,
+	str	sl, [fp, #-140]	@ prephitmp.409, stCSCMatrix.csc_coef00
 	ldr	r0, [fp, #-144]	@, %sfp
 	ldr	r6, [fp, #-164]	@, %sfp
 	ldr	lr, [fp, #-224]	@, %sfp
-	rsb	r8, r6, r0, asr #12	@, prephitmp.384,,,
+	rsb	r8, r6, r0, asr #12	@, prephitmp.391,,,
 	ldr	r6, [fp, #-148]	@, %sfp
 	ldr	r0, [fp, #-160]	@, %sfp
 	str	lr, [fp, #-136]	@, stCSCMatrix.csc_coef01
-	rsb	lr, r0, r6, asr #12	@, prephitmp.425,,,
+	rsb	lr, r0, r6, asr #12	@, prephitmp.427,,,
 	ldr	r0, [fp, #-220]	@, %sfp
-	str	r7, [fp, #-132]	@ prephitmp.421, stCSCMatrix.csc_coef02
-	str	ip, [fp, #-128]	@ prephitmp.422, stCSCMatrix.csc_coef10
+	str	r7, [fp, #-132]	@ prephitmp.430, stCSCMatrix.csc_coef02
+	str	ip, [fp, #-128]	@ prephitmp.431, stCSCMatrix.csc_coef10
 	str	r0, [fp, #-124]	@, stCSCMatrix.csc_coef11
-	str	r1, [fp, #-120]	@ prephitmp.424, stCSCMatrix.csc_coef12
-	str	r8, [fp, #-116]	@ prephitmp.384, stCSCMatrix.csc_coef20
-	str	lr, [fp, #-112]	@ prephitmp.425, stCSCMatrix.csc_coef21
-	str	r9, [fp, #-108]	@ prephitmp.426, stCSCMatrix.csc_coef22
-	b	.L92	@
-.L105:
+	str	r1, [fp, #-120]	@ prephitmp.433, stCSCMatrix.csc_coef12
+	str	r8, [fp, #-116]	@ prephitmp.391, stCSCMatrix.csc_coef20
+	str	lr, [fp, #-112]	@ prephitmp.427, stCSCMatrix.csc_coef21
+	str	r9, [fp, #-108]	@ prephitmp.428, stCSCMatrix.csc_coef22
+	b	.L93	@
+.L106:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L112	@,
-	movw	r3, #1223	@,
+	ldr	r2, .L113	@,
+	movw	r3, #1220	@,
 	movw	ip, #:lower16:.LC2	@ tmp198,
 	movt	ip, #:upper16:.LC2	@ tmp198,
 	str	ip, [sp, #0]	@ tmp198,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24322,
+	mvn	r0, #0	@ D.24316,
 	b	.L87	@
-.L113:
+.L114:
 	.align	2
-.L112:
+.L113:
 	.word	.LANCHOR0+552
 	.fnend
 	.size	PQ_MNG_SetCSCPictureParam, .-PQ_MNG_SetCSCPictureParam
@@ -2879,22 +2895,22 @@ PQ_MNG_SetHDPictureSetting:
 	mov	r3, r0	@ pstPictureSetting, pstPictureSetting
 	movne	sl, #0	@, tmp151
 	moveq	sl, #1	@, tmp151
-	beq	.L118	@,
-	ldrh	r8, [r0, #4]	@ D.24444, <variable>.u16Hue
+	beq	.L119	@,
+	ldrh	r8, [r0, #4]	@ D.24438, <variable>.u16Hue
 	movw	ip, #:lower16:.LANCHOR1	@ tmp155,
-	ldrh	r6, [r0, #0]	@ D.24441, <variable>.u16Brightness
+	ldrh	r6, [r0, #0]	@ D.24435, <variable>.u16Brightness
 	movt	ip, #:upper16:.LANCHOR1	@ tmp155,
-	ldrh	r7, [r3, #6]	@ D.24443, <variable>.u16Saturation
+	ldrh	r7, [r3, #6]	@ D.24437, <variable>.u16Saturation
 	mov	lr, #128	@ tmp177,
-	ldrh	r5, [r3, #2]	@ D.24442, <variable>.u16Contrast
+	ldrh	r5, [r3, #2]	@ D.24436, <variable>.u16Contrast
 	mov	r0, #2097152	@,
-	strh	r6, [ip, #20]	@ movhi	@ D.24441, sg_stHDPictureSetting.u16Brightness
-	mov	r2, r6	@, D.24441
-	strh	r7, [ip, #26]	@ movhi	@ D.24443, sg_stHDPictureSetting.u16Saturation
+	strh	r6, [ip, #20]	@ movhi	@ D.24435, sg_stHDPictureSetting.u16Brightness
+	mov	r2, r6	@, D.24435
+	strh	r7, [ip, #26]	@ movhi	@ D.24437, sg_stHDPictureSetting.u16Saturation
 	movw	r1, #:lower16:.LC5	@,
-	strh	r5, [ip, #22]	@ movhi	@ D.24442, sg_stHDPictureSetting.u16Contrast
-	mov	r3, r5	@, D.24442
-	strh	r8, [ip, #24]	@ movhi	@ D.24444, sg_stHDPictureSetting.u16Hue
+	strh	r5, [ip, #22]	@ movhi	@ D.24436, sg_stHDPictureSetting.u16Contrast
+	mov	r3, r5	@, D.24436
+	strh	r8, [ip, #24]	@ movhi	@ D.24438, sg_stHDPictureSetting.u16Hue
 	movt	r1, #:upper16:.LC5	@,
 	ldrh	r9, [r4, #10]	@, <variable>.s16BlueOffset
 	strh	r9, [ip, #18]	@ movhi	@, sg_stColorTemp.s16BlueOffset
@@ -2907,11 +2923,11 @@ PQ_MNG_SetHDPictureSetting:
 	ldrh	r9, [r4, #6]	@, <variable>.s16RedOffset
 	strh	r9, [ip, #14]	@ movhi	@, sg_stColorTemp.s16RedOffset
 	ldrh	r9, [r4, #8]	@, <variable>.s16GreenOffset
-	str	r6, [fp, #-92]	@ D.24441, stV0CSCParameter.u16Brightness
-	str	r5, [fp, #-88]	@ D.24442, stV0CSCParameter.u16Contrast
+	str	r6, [fp, #-92]	@ D.24435, stV0CSCParameter.u16Brightness
+	str	r5, [fp, #-88]	@ D.24436, stV0CSCParameter.u16Contrast
 	ldrh	r4, [ip, #68]	@, <variable>.u16InputColorSpace
 	strh	r9, [ip, #16]	@ movhi	@, sg_stColorTemp.s16GreenOffset
-	str	r7, [fp, #-80]	@ D.24443, stV0CSCParameter.u16Saturation
+	str	r7, [fp, #-80]	@ D.24437, stV0CSCParameter.u16Saturation
 	strh	r4, [fp, #-52]	@ movhi	@, stV0CSCParameter.u16InputColorSpace
 	ldrh	r9, [ip, #72]	@, <variable>.u16OutputColorSpace
 	str	lr, [fp, #-76]	@ tmp177, stV0CSCParameter.as16ColorTempGain
@@ -2920,7 +2936,7 @@ PQ_MNG_SetHDPictureSetting:
 	str	lr, [fp, #-64]	@ tmp177, stV0CSCParameter.as16ColorTempOffset
 	str	lr, [fp, #-60]	@ tmp177, stV0CSCParameter.as16ColorTempOffset
 	strh	r9, [fp, #-50]	@ movhi	@, stV0CSCParameter.u16OutputColorSpace
-	str	r8, [fp, #-84]	@ D.24444, stV0CSCParameter.u16Hue
+	str	r8, [fp, #-84]	@ D.24438, stV0CSCParameter.u16Hue
 	str	lr, [fp, #-56]	@ tmp177, stV0CSCParameter.as16ColorTempOffset
 	ldr	r4, [ip, #76]	@, <variable>.bFullRange
 	str	r4, [fp, #-48]	@, stV0CSCParameter.bFullRange
@@ -2935,13 +2951,13 @@ PQ_MNG_SetHDPictureSetting:
 	str	lr, [fp, #-116]	@ tmp177, stV1CSCParameter.as16ColorTempGain
 	str	lr, [fp, #-112]	@ tmp177, stV1CSCParameter.as16ColorTempOffset
 	str	lr, [fp, #-108]	@ tmp177, stV1CSCParameter.as16ColorTempOffset
-	str	r7, [sp, #0]	@ D.24443,
+	str	r7, [sp, #0]	@ D.24437,
 	str	r4, [fp, #-96]	@ <variable>.bFullRange, stV1CSCParameter.bFullRange
-	str	r8, [sp, #4]	@ D.24444,
-	str	r6, [fp, #-140]	@ D.24441, stV1CSCParameter.u16Brightness
-	str	r5, [fp, #-136]	@ D.24442, stV1CSCParameter.u16Contrast
-	str	r7, [fp, #-128]	@ D.24443, stV1CSCParameter.u16Saturation
-	str	r8, [fp, #-132]	@ D.24444, stV1CSCParameter.u16Hue
+	str	r8, [sp, #4]	@ D.24438,
+	str	r6, [fp, #-140]	@ D.24435, stV1CSCParameter.u16Brightness
+	str	r5, [fp, #-136]	@ D.24436, stV1CSCParameter.u16Contrast
+	str	r7, [fp, #-128]	@ D.24437, stV1CSCParameter.u16Saturation
+	str	r8, [fp, #-132]	@ D.24438, stV1CSCParameter.u16Hue
 	bl	PQ_HAL_PrintMsg	@
 	sub	r1, fp, #92	@,,
 	mov	r0, sl	@, tmp151
@@ -2949,25 +2965,25 @@ PQ_MNG_SetHDPictureSetting:
 	mov	r0, #1	@,
 	sub	r1, fp, #140	@,,
 	bl	PQ_MNG_SetCSCPictureParam	@
-	mov	r0, sl	@ D.24440, tmp151
-.L116:
+	mov	r0, sl	@ D.24434, tmp151
+.L117:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L118:
+.L119:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L119	@,
-	movw	r3, #1460	@,
+	ldr	r2, .L120	@,
+	movw	r3, #1457	@,
 	movw	ip, #:lower16:.LC4	@ tmp154,
 	movt	ip, #:upper16:.LC4	@ tmp154,
 	str	ip, [sp, #0]	@ tmp154,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24440,
-	b	.L116	@
-.L120:
+	mvn	r0, #0	@ D.24434,
+	b	.L117	@
+.L121:
 	.align	2
-.L119:
-	.word	.LANCHOR0+740
+.L120:
+	.word	.LANCHOR0+748
 	.fnend
 	.size	PQ_MNG_SetHDPictureSetting, .-PQ_MNG_SetHDPictureSetting
 	.align	2
@@ -2995,22 +3011,22 @@ PQ_MNG_SetSDPictureSetting:
 	mov	r3, r0	@ pstPictureSetting, pstPictureSetting
 	movne	sl, #0	@, tmp151
 	moveq	sl, #1	@, tmp151
-	beq	.L125	@,
-	ldrh	r8, [r0, #4]	@ D.24398, <variable>.u16Hue
+	beq	.L126	@,
+	ldrh	r8, [r0, #4]	@ D.24392, <variable>.u16Hue
 	movw	ip, #:lower16:.LANCHOR1	@ tmp155,
-	ldrh	r6, [r0, #0]	@ D.24395, <variable>.u16Brightness
+	ldrh	r6, [r0, #0]	@ D.24389, <variable>.u16Brightness
 	movt	ip, #:upper16:.LANCHOR1	@ tmp155,
-	ldrh	r7, [r3, #6]	@ D.24397, <variable>.u16Saturation
+	ldrh	r7, [r3, #6]	@ D.24391, <variable>.u16Saturation
 	mov	lr, #128	@ tmp177,
-	ldrh	r5, [r3, #2]	@ D.24396, <variable>.u16Contrast
+	ldrh	r5, [r3, #2]	@ D.24390, <variable>.u16Contrast
 	mov	r0, #2097152	@,
-	strh	r6, [ip, #0]	@ movhi	@ D.24395, sg_stSDPictureSetting.u16Brightness
-	mov	r2, r6	@, D.24395
-	strh	r7, [ip, #6]	@ movhi	@ D.24397, sg_stSDPictureSetting.u16Saturation
+	strh	r6, [ip, #0]	@ movhi	@ D.24389, sg_stSDPictureSetting.u16Brightness
+	mov	r2, r6	@, D.24389
+	strh	r7, [ip, #6]	@ movhi	@ D.24391, sg_stSDPictureSetting.u16Saturation
 	movw	r1, #:lower16:.LC6	@,
-	strh	r5, [ip, #2]	@ movhi	@ D.24396, sg_stSDPictureSetting.u16Contrast
-	mov	r3, r5	@, D.24396
-	strh	r8, [ip, #4]	@ movhi	@ D.24398, sg_stSDPictureSetting.u16Hue
+	strh	r5, [ip, #2]	@ movhi	@ D.24390, sg_stSDPictureSetting.u16Contrast
+	mov	r3, r5	@, D.24390
+	strh	r8, [ip, #4]	@ movhi	@ D.24392, sg_stSDPictureSetting.u16Hue
 	movt	r1, #:upper16:.LC6	@,
 	ldrh	r9, [r4, #10]	@, <variable>.s16BlueOffset
 	strh	r9, [ip, #18]	@ movhi	@, sg_stColorTemp.s16BlueOffset
@@ -3023,11 +3039,11 @@ PQ_MNG_SetSDPictureSetting:
 	ldrh	r9, [r4, #6]	@, <variable>.s16RedOffset
 	strh	r9, [ip, #14]	@ movhi	@, sg_stColorTemp.s16RedOffset
 	ldrh	r9, [r4, #8]	@, <variable>.s16GreenOffset
-	str	r6, [fp, #-92]	@ D.24395, stV3CSCParameter.u16Brightness
-	str	r5, [fp, #-88]	@ D.24396, stV3CSCParameter.u16Contrast
+	str	r6, [fp, #-92]	@ D.24389, stV3CSCParameter.u16Brightness
+	str	r5, [fp, #-88]	@ D.24390, stV3CSCParameter.u16Contrast
 	ldrh	r4, [ip, #104]	@, <variable>.u16InputColorSpace
 	strh	r9, [ip, #16]	@ movhi	@, sg_stColorTemp.s16GreenOffset
-	str	r7, [fp, #-80]	@ D.24397, stV3CSCParameter.u16Saturation
+	str	r7, [fp, #-80]	@ D.24391, stV3CSCParameter.u16Saturation
 	strh	r4, [fp, #-52]	@ movhi	@, stV3CSCParameter.u16InputColorSpace
 	ldrh	r9, [ip, #108]	@, <variable>.u16OutputColorSpace
 	str	lr, [fp, #-76]	@ tmp177, stV3CSCParameter.as16ColorTempGain
@@ -3036,7 +3052,7 @@ PQ_MNG_SetSDPictureSetting:
 	str	lr, [fp, #-64]	@ tmp177, stV3CSCParameter.as16ColorTempOffset
 	str	lr, [fp, #-60]	@ tmp177, stV3CSCParameter.as16ColorTempOffset
 	strh	r9, [fp, #-50]	@ movhi	@, stV3CSCParameter.u16OutputColorSpace
-	str	r8, [fp, #-84]	@ D.24398, stV3CSCParameter.u16Hue
+	str	r8, [fp, #-84]	@ D.24392, stV3CSCParameter.u16Hue
 	str	lr, [fp, #-56]	@ tmp177, stV3CSCParameter.as16ColorTempOffset
 	ldr	r4, [ip, #112]	@, <variable>.bFullRange
 	str	r4, [fp, #-48]	@, stV3CSCParameter.bFullRange
@@ -3051,13 +3067,13 @@ PQ_MNG_SetSDPictureSetting:
 	str	lr, [fp, #-116]	@ tmp177, stV4CSCParameter.as16ColorTempGain
 	str	lr, [fp, #-112]	@ tmp177, stV4CSCParameter.as16ColorTempOffset
 	str	lr, [fp, #-108]	@ tmp177, stV4CSCParameter.as16ColorTempOffset
-	str	r7, [sp, #0]	@ D.24397,
+	str	r7, [sp, #0]	@ D.24391,
 	str	r4, [fp, #-96]	@ <variable>.bFullRange, stV4CSCParameter.bFullRange
-	str	r8, [sp, #4]	@ D.24398,
-	str	r6, [fp, #-140]	@ D.24395, stV4CSCParameter.u16Brightness
-	str	r5, [fp, #-136]	@ D.24396, stV4CSCParameter.u16Contrast
-	str	r7, [fp, #-128]	@ D.24397, stV4CSCParameter.u16Saturation
-	str	r8, [fp, #-132]	@ D.24398, stV4CSCParameter.u16Hue
+	str	r8, [sp, #4]	@ D.24392,
+	str	r6, [fp, #-140]	@ D.24389, stV4CSCParameter.u16Brightness
+	str	r5, [fp, #-136]	@ D.24390, stV4CSCParameter.u16Contrast
+	str	r7, [fp, #-128]	@ D.24391, stV4CSCParameter.u16Saturation
+	str	r8, [fp, #-132]	@ D.24392, stV4CSCParameter.u16Hue
 	bl	PQ_HAL_PrintMsg	@
 	sub	r1, fp, #92	@,,
 	mov	r0, #3	@,
@@ -3065,25 +3081,25 @@ PQ_MNG_SetSDPictureSetting:
 	mov	r0, #4	@,
 	sub	r1, fp, #140	@,,
 	bl	PQ_MNG_SetCSCPictureParam	@
-	mov	r0, sl	@ D.24394, tmp151
-.L123:
+	mov	r0, sl	@ D.24388, tmp151
+.L124:
 	sub	sp, fp, #40
 	ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
-.L125:
+.L126:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L126	@,
-	movw	r3, #1386	@,
+	ldr	r2, .L127	@,
+	movw	r3, #1383	@,
 	movw	ip, #:lower16:.LC4	@ tmp154,
 	movt	ip, #:upper16:.LC4	@ tmp154,
 	str	ip, [sp, #0]	@ tmp154,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24394,
-	b	.L123	@
-.L127:
+	mvn	r0, #0	@ D.24388,
+	b	.L124	@
+.L128:
 	.align	2
-.L126:
-	.word	.LANCHOR0+768
+.L127:
+	.word	.LANCHOR0+776
 	.fnend
 	.size	PQ_MNG_SetSDPictureSetting, .-PQ_MNG_SetSDPictureSetting
 	.align	2
@@ -3107,14 +3123,14 @@ PQ_MNG_SetCSCMode:
 	bl	__gnu_mcount_nc
 	subs	r6, r1, #0	@ pstCscMode, pstCscMode
 	mov	r4, r0	@ enDisplayId, enDisplayId
-	beq	.L159	@,
+	beq	.L160	@,
 	cmp	r0, #4	@ enDisplayId,
-	bhi	.L160	@,
-	ldr	r3, [r6, #4]	@ D.24338, <variable>.enCSC
-	cmp	r3, #1	@ D.24338,
-	beq	.L161	@,
-	cmp	r3, #0	@ D.24338,
-	bne	.L134	@,
+	bhi	.L161	@,
+	ldr	r3, [r6, #4]	@ D.24332, <variable>.enCSC
+	cmp	r3, #1	@ D.24332,
+	beq	.L162	@,
+	cmp	r3, #0	@ D.24332,
+	bne	.L135	@,
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	r1, r2, r0	@ tmp166, tmp548, enDisplayId
@@ -3124,16 +3140,16 @@ PQ_MNG_SetCSCMode:
 	add	lr, r5, r1, asl #2	@, tmp168, tmp550, tmp166,
 	str	r0, [lr, #72]	@ tmp179, <variable>.u16OutputColorSpace
 	str	ip, [lr, #68]	@ tmp170, <variable>.u16InputColorSpace
-.L133:
+.L134:
 	add	r1, r2, r4	@ tmp325, tmp548, enDisplayId
 	mov	r7, r4, asl #3	@ tmp549, enDisplayId,
 	add	lr, r7, r5	@ tmp333, tmp549, tmp550
-	cmp	r3, #2	@ D.24338,
+	cmp	r3, #2	@ D.24332,
 	add	r0, r5, r1, asl #2	@, tmp327, tmp550, tmp325,
 	mov	r1, #0	@ tmp329,
 	str	r1, [r0, #76]	@ tmp329, <variable>.bFullRange
-	str	r3, [lr, #32]	@ D.24338, <variable>.enCSC
-	bne	.L141	@,
+	str	r3, [lr, #32]	@ D.24332, <variable>.enCSC
+	bne	.L142	@,
 	movw	r0, #450	@ tmp340,
 	mov	r2, #512	@ tmp348,
 	mov	ip, #264	@ tmp335,
@@ -3160,7 +3176,7 @@ PQ_MNG_SetCSCMode:
 	str	r1, [fp, #-44]	@ tmp329, stDcCoef.csc_in_dc2
 	str	r1, [fp, #-48]	@ tmp329, stDcCoef.csc_in_dc1
 	str	r2, [fp, #-36]	@ tmp348, stDcCoef.csc_out_dc1
-.L142:
+.L143:
 	sub	r1, fp, #88	@,,
 	mov	r0, r4	@, enDisplayId
 	bl	PQ_HAL_SetCscCoef	@
@@ -3175,44 +3191,44 @@ PQ_MNG_SetCSCMode:
 	str	r2, [r5, #28]	@ <variable>.bCSCEn, <variable>.bCSCEn
 	ldr	r0, [r6, #0]	@ <variable>.bCSCEn, <variable>.bCSCEn
 	cmp	r0, #1	@ <variable>.bCSCEn,
-	beq	.L154	@,
-.L158:
-	mov	r0, #0	@ D.24335,
-.L130:
+	beq	.L155	@,
+.L159:
+	mov	r0, #0	@ D.24329,
+.L131:
 	sub	sp, fp, #28
 	ldmfd	sp, {r4, r5, r6, r7, fp, sp, pc}
-.L134:
-	cmp	r3, #11	@ D.24338,
-	beq	.L162	@,
-	cmp	r3, #3	@ D.24338,
+.L135:
+	cmp	r3, #11	@ D.24332,
 	beq	.L163	@,
-	cmp	r3, #2	@ D.24338,
+	cmp	r3, #3	@ D.24332,
 	beq	.L164	@,
-	cmp	r3, #6	@ D.24338,
+	cmp	r3, #2	@ D.24332,
 	beq	.L165	@,
-	cmp	r3, #4	@ D.24338,
+	cmp	r3, #6	@ D.24332,
 	beq	.L166	@,
-	cmp	r3, #5	@ D.24338,
+	cmp	r3, #4	@ D.24332,
 	beq	.L167	@,
+	cmp	r3, #5	@ D.24332,
+	beq	.L168	@,
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	r0, r2, r0	@ tmp292, tmp548, enDisplayId
 	movt	r5, #:upper16:.LANCHOR1	@ tmp550,
-	sub	r1, r3, #7	@ tmp306, D.24338,
+	sub	r1, r3, #7	@ tmp306, D.24332,
 	mov	lr, #0	@ tmp296,
 	add	r0, r5, r0, asl #2	@, tmp294, tmp550, tmp292,
 	cmp	r1, #3	@ tmp306,
 	str	lr, [r0, #72]	@ tmp296, <variable>.u16OutputColorSpace
 	str	lr, [r0, #68]	@ tmp296, <variable>.u16InputColorSpace
-	bhi	.L133	@,
+	bhi	.L134	@,
 	mov	r7, r4, asl #3	@ tmp549, enDisplayId,
 	mov	ip, #1	@ tmp315,
 	add	r2, r7, r5	@ tmp319, tmp549, tmp550
 	str	ip, [r0, #76]	@ tmp315, <variable>.bFullRange
-	str	r3, [r2, #32]	@ D.24338, <variable>.enCSC
-.L141:
-	cmp	r3, #0	@ D.24338,
-	bne	.L143	@,
+	str	r3, [r2, #32]	@ D.24332, <variable>.enCSC
+.L142:
+	cmp	r3, #0	@ D.24332,
+	bne	.L144	@,
 	movw	r1, #1192	@ tmp350,
 	movw	r0, #1634	@ tmp352,
 	movw	r2, #:lower16:-400	@ tmp354,
@@ -3223,43 +3239,43 @@ PQ_MNG_SetCSCMode:
 	movw	lr, #2066	@ tmp357,
 	mvn	r0, #63	@ tmp359,
 	movw	r2, #:lower16:-512	@ tmp360,
-	str	r3, [fp, #-40]	@ D.24338, stDcCoef.csc_out_dc0
+	str	r3, [fp, #-40]	@ D.24332, stDcCoef.csc_out_dc0
 	movt	r2, #:upper16:-512	@ tmp360,
 	str	r1, [fp, #-64]	@ tmp350, st_csc_coef.csc_coef20
 	str	r1, [fp, #-88]	@ tmp350, st_csc_coef.csc_coef00
 	str	ip, [fp, #-68]	@ tmp355, st_csc_coef.csc_coef12
 	str	lr, [fp, #-60]	@ tmp357, st_csc_coef.csc_coef21
 	str	r0, [fp, #-44]	@ tmp359, stDcCoef.csc_in_dc2
-	str	r3, [fp, #-84]	@ D.24338, st_csc_coef.csc_coef01
+	str	r3, [fp, #-84]	@ D.24332, st_csc_coef.csc_coef01
 	str	r2, [fp, #-52]	@ tmp360, stDcCoef.csc_in_dc0
 	str	r1, [fp, #-76]	@ tmp350, st_csc_coef.csc_coef10
-	str	r3, [fp, #-56]	@ D.24338, st_csc_coef.csc_coef22
+	str	r3, [fp, #-56]	@ D.24332, st_csc_coef.csc_coef22
 	str	r2, [fp, #-48]	@ tmp360, stDcCoef.csc_in_dc1
-	str	r3, [fp, #-32]	@ D.24338, stDcCoef.csc_out_dc2
-	str	r3, [fp, #-36]	@ D.24338, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L143:
-	cmp	r3, #3	@ D.24338,
-	beq	.L168	@,
-	cmp	r3, #1	@ D.24338,
+	str	r3, [fp, #-32]	@ D.24332, stDcCoef.csc_out_dc2
+	str	r3, [fp, #-36]	@ D.24332, stDcCoef.csc_out_dc1
+	b	.L143	@
+.L144:
+	cmp	r3, #3	@ D.24332,
 	beq	.L169	@,
-	cmp	r3, #4	@ D.24338,
+	cmp	r3, #1	@ D.24332,
 	beq	.L170	@,
-	cmp	r3, #5	@ D.24338,
+	cmp	r3, #4	@ D.24332,
 	beq	.L171	@,
-	cmp	r3, #6	@ D.24338,
-	beq	.L153	@,
-	cmp	r3, #7	@ D.24338,
+	cmp	r3, #5	@ D.24332,
 	beq	.L172	@,
-	cmp	r3, #8	@ D.24338,
+	cmp	r3, #6	@ D.24332,
+	beq	.L154	@,
+	cmp	r3, #7	@ D.24332,
 	beq	.L173	@,
-	cmp	r3, #9	@ D.24338,
+	cmp	r3, #8	@ D.24332,
 	beq	.L174	@,
-	cmp	r3, #10	@ D.24338,
+	cmp	r3, #9	@ D.24332,
 	beq	.L175	@,
-	cmp	r3, #11	@ D.24338,
+	cmp	r3, #10	@ D.24332,
 	beq	.L176	@,
-.L153:
+	cmp	r3, #11	@ D.24332,
+	beq	.L177	@,
+.L154:
 	mov	r3, #0	@ tmp516,
 	mov	r1, #1024	@ tmp515,
 	mov	r0, #512	@ tmp528,
@@ -3282,8 +3298,8 @@ PQ_MNG_SetCSCMode:
 	str	r3, [fp, #-64]	@ tmp516, st_csc_coef.csc_coef20
 	str	r2, [fp, #-48]	@ tmp525, stDcCoef.csc_in_dc1
 	str	r0, [fp, #-36]	@ tmp528, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L161:
+	b	.L143	@
+.L162:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	r7, r2, r0	@ tmp148, tmp548, enDisplayId
@@ -3291,18 +3307,18 @@ PQ_MNG_SetCSCMode:
 	mov	r0, #9	@ tmp161,
 	add	r1, r5, r7, asl #2	@, tmp150, tmp550, tmp148,
 	str	r0, [r1, #72]	@ tmp161, <variable>.u16OutputColorSpace
-	str	r3, [r1, #68]	@ D.24338, <variable>.u16InputColorSpace
-	b	.L133	@
-.L154:
+	str	r3, [r1, #68]	@ D.24332, <variable>.u16InputColorSpace
+	b	.L134	@
+.L155:
 	movw	r0, #:lower16:.LANCHOR1	@,
 	movt	r0, #:upper16:.LANCHOR1	@,
 	add	r1, r0, #8	@,,
 	bl	PQ_MNG_SetSDPictureSetting	@
-	ldr	r0, .L177	@,
+	ldr	r0, .L178	@,
 	sub	r1, r0, #12	@,,
 	bl	PQ_MNG_SetHDPictureSetting	@
-	b	.L158	@
-.L163:
+	b	.L159	@
+.L164:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	ip, r2, r0	@ tmp202, tmp548, enDisplayId
@@ -3312,8 +3328,8 @@ PQ_MNG_SetCSCMode:
 	add	r1, r5, ip, asl #2	@, tmp204, tmp550, tmp202,
 	str	r7, [r1, #72]	@ tmp215, <variable>.u16OutputColorSpace
 	str	r0, [r1, #68]	@ tmp206, <variable>.u16InputColorSpace
-	b	.L133	@
-.L169:
+	b	.L134	@
+.L170:
 	mov	r3, #0	@ tmp381,
 	movw	r1, #1192	@ tmp380,
 	movw	r2, #1836	@ tmp382,
@@ -3339,8 +3355,8 @@ PQ_MNG_SetCSCMode:
 	str	r0, [fp, #-48]	@ tmp390, stDcCoef.csc_in_dc1
 	str	r3, [fp, #-32]	@ tmp381, stDcCoef.csc_out_dc2
 	str	r3, [fp, #-36]	@ tmp381, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L162:
+	b	.L143	@
+.L163:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	lr, r2, r0	@ tmp184, tmp548, enDisplayId
@@ -3349,8 +3365,8 @@ PQ_MNG_SetCSCMode:
 	add	ip, r5, lr, asl #2	@, tmp186, tmp550, tmp184,
 	str	r7, [ip, #72]	@ tmp188, <variable>.u16OutputColorSpace
 	str	r7, [ip, #68]	@ tmp188, <variable>.u16InputColorSpace
-	b	.L133	@
-.L168:
+	b	.L134	@
+.L169:
 	mov	r3, #0	@ tmp374,
 	movw	r0, #450	@ tmp370,
 	mov	r1, #512	@ tmp378,
@@ -3378,8 +3394,8 @@ PQ_MNG_SetCSCMode:
 	str	lr, [fp, #-32]	@ tmp377, stDcCoef.csc_out_dc2
 	str	r3, [fp, #-48]	@ tmp374, stDcCoef.csc_in_dc1
 	str	r1, [fp, #-36]	@ tmp378, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L164:
+	b	.L143	@
+.L165:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	r7, r2, r0	@ tmp220, tmp548, enDisplayId
@@ -3389,8 +3405,8 @@ PQ_MNG_SetCSCMode:
 	add	r1, r5, r7, asl #2	@, tmp222, tmp550, tmp220,
 	str	r0, [r1, #72]	@ tmp233, <variable>.u16OutputColorSpace
 	str	lr, [r1, #68]	@ tmp224, <variable>.u16InputColorSpace
-	b	.L133	@
-.L170:
+	b	.L134	@
+.L171:
 	mov	r3, #1024	@ tmp395,
 	str	r3, [fp, #-88]	@ tmp395, st_csc_coef.csc_coef00
 	mvn	r3, #73	@ tmp402,
@@ -3409,7 +3425,7 @@ PQ_MNG_SetCSCMode:
 	str	ip, [fp, #-80]	@ tmp397, st_csc_coef.csc_coef02
 	str	lr, [fp, #-72]	@ tmp399, st_csc_coef.csc_coef11
 	str	r1, [fp, #-68]	@ tmp400, st_csc_coef.csc_coef12
-.L156:
+.L157:
 	mvn	r0, #63	@ tmp419,
 	movw	lr, #:lower16:-512	@ tmp420,
 	mov	ip, #64	@ tmp422,
@@ -3420,8 +3436,8 @@ PQ_MNG_SetCSCMode:
 	str	lr, [fp, #-52]	@ tmp420, stDcCoef.csc_in_dc0
 	str	ip, [fp, #-32]	@ tmp422, stDcCoef.csc_out_dc2
 	str	lr, [fp, #-48]	@ tmp420, stDcCoef.csc_in_dc1
-	b	.L142	@
-.L167:
+	b	.L143	@
+.L168:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	ip, r2, r0	@ tmp274, tmp548, enDisplayId
@@ -3431,8 +3447,8 @@ PQ_MNG_SetCSCMode:
 	add	r1, r5, ip, asl #2	@, tmp276, tmp550, tmp274,
 	str	r7, [r1, #72]	@ tmp287, <variable>.u16OutputColorSpace
 	str	r0, [r1, #68]	@ tmp278, <variable>.u16InputColorSpace
-	b	.L133	@
-.L172:
+	b	.L134	@
+.L173:
 	mov	r3, #0	@ tmp441,
 	mov	ip, #1024	@ tmp440,
 	movw	r1, #1436	@ tmp442,
@@ -3458,8 +3474,8 @@ PQ_MNG_SetCSCMode:
 	str	r1, [fp, #-48]	@ tmp450, stDcCoef.csc_in_dc1
 	str	r3, [fp, #-32]	@ tmp441, stDcCoef.csc_out_dc2
 	str	r3, [fp, #-36]	@ tmp441, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L165:
+	b	.L143	@
+.L166:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	r1, r2, r0	@ tmp238, tmp548, enDisplayId
@@ -3468,8 +3484,8 @@ PQ_MNG_SetCSCMode:
 	add	lr, r5, r1, asl #2	@, tmp240, tmp550, tmp238,
 	str	ip, [lr, #72]	@ tmp242, <variable>.u16OutputColorSpace
 	str	ip, [lr, #68]	@ tmp242, <variable>.u16InputColorSpace
-	b	.L133	@
-.L171:
+	b	.L134	@
+.L172:
 	mov	r2, #0	@ tmp413,
 	mov	r1, #1024	@ tmp410,
 	mvn	r3, #117	@ tmp411,
@@ -3488,8 +3504,8 @@ PQ_MNG_SetCSCMode:
 	str	ip, [fp, #-72]	@ tmp414, st_csc_coef.csc_coef11
 	str	lr, [fp, #-68]	@ tmp415, st_csc_coef.csc_coef12
 	str	r1, [fp, #-60]	@ tmp417, st_csc_coef.csc_coef21
-	b	.L156	@
-.L166:
+	b	.L157	@
+.L167:
 	mov	r2, r0, asl #1	@ tmp548, enDisplayId,
 	movw	r5, #:lower16:.LANCHOR1	@ tmp550,
 	add	lr, r2, r0	@ tmp256, tmp548, enDisplayId
@@ -3499,19 +3515,19 @@ PQ_MNG_SetCSCMode:
 	add	r7, r5, lr, asl #2	@, tmp258, tmp550, tmp256,
 	str	ip, [r7, #72]	@ tmp269, <variable>.u16OutputColorSpace
 	str	r0, [r7, #68]	@ tmp260, <variable>.u16InputColorSpace
-	b	.L133	@
-.L160:
+	b	.L134	@
+.L161:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L177+4	@,
-	movw	r3, #1265	@,
+	ldr	r2, .L178+4	@,
+	movw	r3, #1262	@,
 	movw	lr, #:lower16:.LC8	@ tmp143,
 	movt	lr, #:upper16:.LC8	@ tmp143,
 	str	lr, [sp, #0]	@ tmp143,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24335,
-	b	.L130	@
-.L173:
+	mvn	r0, #0	@ D.24329,
+	b	.L131	@
+.L174:
 	mov	r3, #0	@ tmp456,
 	mov	lr, #1024	@ tmp455,
 	movw	r2, #1613	@ tmp457,
@@ -3536,8 +3552,8 @@ PQ_MNG_SetCSCMode:
 	str	r2, [fp, #-48]	@ tmp465, stDcCoef.csc_in_dc1
 	str	r3, [fp, #-32]	@ tmp456, stDcCoef.csc_out_dc2
 	str	r3, [fp, #-36]	@ tmp456, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L174:
+	b	.L143	@
+.L175:
 	mov	r1, #117	@ tmp472,
 	str	r1, [fp, #-80]	@ tmp472, st_csc_coef.csc_coef02
 	mvn	r1, #82	@ tmp478,
@@ -3558,14 +3574,14 @@ PQ_MNG_SetCSCMode:
 	str	r3, [fp, #-64]	@ tmp475, st_csc_coef.csc_coef20
 	str	ip, [fp, #-72]	@ tmp474, st_csc_coef.csc_coef11
 	str	lr, [fp, #-60]	@ tmp477, st_csc_coef.csc_coef21
-.L157:
+.L158:
 	str	r1, [fp, #-56]	@ tmp493, st_csc_coef.csc_coef22
 	str	r2, [fp, #-44]	@ tmp494, stDcCoef.csc_in_dc2
 	str	r2, [fp, #-48]	@ tmp494, stDcCoef.csc_in_dc1
 	str	r2, [fp, #-52]	@ tmp494, stDcCoef.csc_in_dc0
 	str	r3, [fp, #-36]	@ tmp490, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L175:
+	b	.L143	@
+.L176:
 	mov	r3, #512	@ tmp490,
 	mov	r1, #218	@ tmp485,
 	mov	r0, #732	@ tmp486,
@@ -3586,8 +3602,8 @@ PQ_MNG_SetCSCMode:
 	str	lr, [fp, #-76]	@ tmp488, st_csc_coef.csc_coef10
 	str	r3, [fp, #-64]	@ tmp490, st_csc_coef.csc_coef20
 	str	r0, [fp, #-60]	@ tmp492, st_csc_coef.csc_coef21
-	b	.L157	@
-.L176:
+	b	.L158	@
+.L177:
 	mov	r3, #0	@ tmp501,
 	mov	lr, #1024	@ tmp500,
 	mov	r2, #2	@ tmp512,
@@ -3606,23 +3622,23 @@ PQ_MNG_SetCSCMode:
 	str	r3, [fp, #-48]	@ tmp501, stDcCoef.csc_in_dc1
 	str	r2, [fp, #-32]	@ tmp512, stDcCoef.csc_out_dc2
 	str	r2, [fp, #-36]	@ tmp512, stDcCoef.csc_out_dc1
-	b	.L142	@
-.L159:
+	b	.L143	@
+.L160:
 	mov	r0, #1	@,
 	mov	r1, #41	@,
-	ldr	r2, .L177+4	@,
-	movw	r3, #1259	@,
+	ldr	r2, .L178+4	@,
+	movw	r3, #1256	@,
 	movw	ip, #:lower16:.LC7	@ tmp140,
 	movt	ip, #:upper16:.LC7	@ tmp140,
 	str	ip, [sp, #0]	@ tmp140,
 	bl	HI_LogOut	@
-	mvn	r0, #0	@ D.24335,
-	b	.L130	@
-.L178:
+	mvn	r0, #0	@ D.24329,
+	b	.L131	@
+.L179:
 	.align	2
-.L177:
+.L178:
 	.word	.LANCHOR1+20
-	.word	.LANCHOR0+796
+	.word	.LANCHOR0+804
 	.fnend
 	.size	PQ_MNG_SetCSCMode, .-PQ_MNG_SetCSCMode
 	.global	SIN_TABLE
@@ -3778,24 +3794,24 @@ SIN_TABLE:
 	.word	469
 	.word	485
 	.word	500
-	.type	__func__.24557, %object
-	.size	__func__.24557, 22
-__func__.24557:
+	.type	__func__.24551, %object
+	.size	__func__.24551, 22
+__func__.24551:
 	.ascii	"PQ_MNG_Get8BitCscCoef\000"
 	.space	2
-	.type	__func__.24509, %object
-	.size	__func__.24509, 18
-__func__.24509:
+	.type	__func__.24503, %object
+	.size	__func__.24503, 18
+__func__.24503:
 	.ascii	"PQ_MNG_GetCscCoef\000"
 	.space	2
-	.type	__func__.24375, %object
-	.size	__func__.24375, 18
-__func__.24375:
+	.type	__func__.24369, %object
+	.size	__func__.24369, 18
+__func__.24369:
 	.ascii	"PQ_MNG_GetCSCMode\000"
 	.space	2
-	.type	__func__.24316, %object
-	.size	__func__.24316, 26
-__func__.24316:
+	.type	__func__.24310, %object
+	.size	__func__.24310, 26
+__func__.24310:
 	.ascii	"PQ_MNG_SetCSCPictureParam\000"
 	.space	2
 	.type	CSC_RGBPrim_to_YCbCr_MatrixTbl, %object
@@ -3827,10 +3843,10 @@ CSC_YCbCr_to_RGBPrim_MatrixTbl:
 	.word	0
 	.word	CSCTable_XvYCCSDYCbCr_to_RGB_Full
 	.type	CSC_YCbCr_MatrixTbl, %object
-	.size	CSC_YCbCr_MatrixTbl, 72
+	.size	CSC_YCbCr_MatrixTbl, 80
 CSC_YCbCr_MatrixTbl:
-	.word	0
-	.space	4
+	.word	CSCTable_Identity_YCbCr_to_YCbCr
+	.word	CSCTable_Identity_YCbCr_to_YCbCr
 	.word	CSCTable_Identity_YCbCr_to_YCbCr
 	.word	CSCTable_HDYCbCr_to_XvYCCSDYCbCr
 	.word	CSCTable_Identity_YCbCr_to_YCbCr
@@ -3847,19 +3863,21 @@ CSC_YCbCr_MatrixTbl:
 	.word	CSCTable_240MHDYCbCr_to_XvYCCSDYCbCr
 	.word	CSCTable_XvYCCSDYCbCr_to_HDYCbCr
 	.word	CSCTable_Identity_YCbCr_to_YCbCr
-	.type	__func__.24434, %object
-	.size	__func__.24434, 27
-__func__.24434:
+	.word	CSCTable_Identity_RGB_to_RGB
+	.word	CSCTable_Identity_RGB_to_RGB
+	.type	__func__.24428, %object
+	.size	__func__.24428, 27
+__func__.24428:
 	.ascii	"PQ_MNG_SetHDPictureSetting\000"
 	.space	1
-	.type	__func__.24388, %object
-	.size	__func__.24388, 27
-__func__.24388:
+	.type	__func__.24382, %object
+	.size	__func__.24382, 27
+__func__.24382:
 	.ascii	"PQ_MNG_SetSDPictureSetting\000"
 	.space	1
-	.type	__func__.24332, %object
-	.size	__func__.24332, 18
-__func__.24332:
+	.type	__func__.24326, %object
+	.size	__func__.24326, 18
+__func__.24326:
 	.ascii	"PQ_MNG_SetCSCMode\000"
 	.data
 	.align	2

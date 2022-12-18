@@ -111,12 +111,24 @@ MSID in the boot is equalled to the MSID in the OTP.\n",
 "[HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID] - This fuse is used to set the Market Segment ID in the OTP.\n",    
 
 "[HI_UNF_ADVCA_OTP_VERSION_ID] - This fuse is used to set the Version ID in the OTP.\n", 
-#if 0
-"[HI_UNF_ADVCA_OTP_USB_DEACTIVATION] - This fuse is used to disable usb in the OTP\n",
 
-"[HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION] - This fuse is used to disable serial port in the OTP\n",
+"[HI_UNF_ADVCA_OTP_MISC_KL_LEVEL_SEL]\n",
 
-"[HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION] - This fuse is used to disable ethernet in the OTP\n",    
+"[HI_UNF_ADVCA_OTP_VMX_BL_FUSE]\n",
+
+"[HI_UNF_ADVCA_OTP_IRDETO_ITCSA3_ACTIVATION]\n",
+
+"[HI_UNF_ADVCA_OTP_BOOTINFO_DEACTIVATION]\n",
+
+"[HI_UNF_ADVCA_OTP_ITCSA3_IMLB]\n",
+
+#if defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+
+"[HI_UNF_ADVCA_OTP_USB_DEACTIVATION] - This fuse is used to disable usb in the OTP.\n",
+
+"[HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION] - This fuse is used to disable serial port in the OTP.\n",
+
+"[HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION] - This fuse is used to disable ethernet in the OTP.\n",    
 
 "[HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION] - This fuse is used to disable SM4 crypto engine in the OTP.\n",    
 
@@ -217,13 +229,15 @@ HI_VOID show_usage(HI_VOID)
     HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_CHIP_ID\n", HI_UNF_ADVCA_OTP_CHIP_ID);
     HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID\n", HI_UNF_ADVCA_OTP_MARKET_SEGMENT_ID);
     HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_VERSION_ID\n", HI_UNF_ADVCA_OTP_VERSION_ID);
-#if 0
-    HI_DEBUG_ADVCA("42: HI_UNF_ADVCA_OTP_USB_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("43: HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("45: HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("46: HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION\n");
-    HI_DEBUG_ADVCA("47: HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION\n");
-#endif    
+#if defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_USB_DEACTIVATION\n", HI_UNF_ADVCA_OTP_USB_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION\n", HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION\n", HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION\n", HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION);
+    HI_DEBUG_ADVCA("%d: HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION\n", HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION);
+#endif
+ 
+    
 }
 
 HI_VOID show_help(HI_U32 u32otpfuse)
@@ -256,6 +270,7 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
     HI_CHAR cTmpBuf[16];
     HI_U32 u32MSID;
     HI_U32 u32VersionId;
+
 
     if (argc == 2 && strcmp(argv[1], "help") == 0)
     {
@@ -324,19 +339,17 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
         case HI_UNF_ADVCA_OTP_GOOGLE_KL_DEACTIVATION: 
         case HI_UNF_ADVCA_OTP_DCAS_KL_DEACTIVATION:
         case HI_UNF_ADVCA_OTP_DDR_SCRAMBLE_ACTIVATION: 
-        case HI_UNF_ADVCA_OTP_GLOBAL_LOCK_ACTIVATION: 
         case HI_UNF_ADVCA_OTP_RUNTIME_CHECK_ACTIVATION: 
         case HI_UNF_ADVCA_OTP_DDR_WAKEUP_CHECK_ACTIVATION: 
         case HI_UNF_ADVCA_OTP_VERSION_ID_CHECK_ACTIVATION: 
         case HI_UNF_ADVCA_OTP_BOOT_MSID_CHECK_ACTIVATION: 
         case HI_UNF_ADVCA_OTP_JTAG_READ_DEACTIVATION:
-#if 0
-        case HI_UNF_ADVCA_OTP_USB_DEACTIVATION:
+#if defined(CHIP_TYPE_hi3716mv410) || defined(CHIP_TYPE_hi3716mv420)            
         case HI_UNF_ADVCA_OTP_SERIAL_DEACTIVATION:
         case HI_UNF_ADVCA_OTP_ETHERNET_DEACTIVATION:
         case HI_UNF_ADVCA_OTP_SM4_CRYPTO_ENGINE_DEACTIVATION:
         case HI_UNF_ADVCA_OTP_TDES_CRYPTO_ENGINE_DEACTIVATION:
-#endif
+#endif      
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
             
@@ -359,7 +372,7 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
             fgets(cUserInput, 512, stdin);
             enJtagMode = (HI_UNF_ADVCA_JTAG_MODE_E)strtol(cUserInput, NULL, 0);
             
-            stOtpAttr.unOtpFuseAttr.stKeyladderLevSel.enKeyladderLevel = enJtagMode;
+            stOtpAttr.unOtpFuseAttr.stJtagPrtMode.enJtagMode = enJtagMode;
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
             break;
             
@@ -409,6 +422,10 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
             HI_U32 u32ChipId = 0;
             fgets(cUserInput, 512, stdin);
             u32ChipId = strtol(cUserInput, NULL, 16);
+            for (i = 0; i < 8; i++)
+            {
+                stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[i] = 0;
+            }
             stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[0] = (HI_U8)(u32ChipId >> 24);
             stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[1] = (HI_U8)(u32ChipId >> 16);
             stOtpAttr.unOtpFuseAttr.stChipId.au8ChipId[2] = (HI_U8)(u32ChipId >> 8);
@@ -443,6 +460,10 @@ HI_S32 run_cmdline(HI_S32 argc, HI_CHAR** argv)
             stOtpAttr.unOtpFuseAttr.stVersionId.u8VersionId[3] = (HI_U8)u32VersionId;
 
             Ret = HI_UNF_ADVCA_SetOtpFuse((HI_UNF_ADVCA_OTP_FUSE_E)u32otpfuse, &stOtpAttr);
+		break;
+        default:
+            HI_DEBUG_ADVCA("not support num!!!\n");
+            Ret = HI_FAILURE;
             break;
         }
     }

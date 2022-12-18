@@ -42,6 +42,7 @@ typedef struct HiRTPContext {
     void  *rtp_queue;
     void  *empty_buf_queue;//+ performance 3%
     RTPDemuxContext  *rtpdmx;/*use to parse rtp/rtcp packet*/
+    pthread_mutex_t   rtpdmx_lock;
     pthread_t stream_thread_tid;
     pthread_t dgram_thread_tid;
     int is_exit;
@@ -295,6 +296,7 @@ static void *_rtp_stream_thread_process(void *arg)
     DataPacket rtppkt = {0}, emptypkt = {0};
     int len, ret, fd_max = -1, bufsize = 0, rcv_max_pkt_size = 0;
     int fd[2], i, fd_num = 0, check_reconnect_cnt = 0;
+    int network_disconnect = 0;
     fd_set rfds;
     struct timeval tv;
     int64_t timeout_start_time;//set <=0 to disable check timeout
@@ -316,8 +318,9 @@ static void *_rtp_stream_thread_process(void *arg)
         }
 
        if (timeout_start_time > 0 && llabs(av_gettime() - timeout_start_time) > HIRTP_READ_TIME_OUT) {
-           av_log(NULL, AV_LOG_ERROR, "[%s,%d] HiRtp no data received for %d us, return error !\n",
+           av_log(NULL, AV_LOG_ERROR, "[%s,%d] HiRtp no data received for %d us, send NETWORK_DISCONNECT && return error!\n",
             __FUNCTION__, __LINE__, HIRTP_READ_TIME_OUT);
+           url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_DISCONNECT, "rtp");
            s->is_exit = 1;
            break;
        }
@@ -330,6 +333,11 @@ static void *_rtp_stream_thread_process(void *arg)
                 (now_time - last_reconnect_time >= HIRTP_RECONNECT_CYCLE)) {
                  av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] haven't received pkts for %lld ms, do reconnecting...\n",
                     __FUNCTION__, __LINE__, (now_time - last_pkt_recv_time)/1000);
+                 if (!network_disconnect) {
+                    av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] network disconnect, send NETWORK_DISCONNECT\n", __FUNCTION__, __LINE__);
+                    url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_DISCONNECT, "rtp");
+                    network_disconnect = 1;
+                 }
                 _close_connection(s);
                 fd_num = 0;
                 last_reconnect_time = now_time;
@@ -382,6 +390,17 @@ static void *_rtp_stream_thread_process(void *arg)
                             timeout_start_time = -1;
                             av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] first pkt received, disable timeout checking!seq=%u\n",
                                 __FUNCTION__, __LINE__, (unsigned)((unsigned)rcv_buf[2]<<8|rcv_buf[3]));
+                        }
+                        if (network_disconnect) {
+                            /* rtp pkt sequence may wrap itself when network recover,
+                               clear all to avoid waiting long time for dropping too many pkts. */
+                            pktq_clear(s->rtp_queue);
+                            pthread_mutex_lock(&s->rtpdmx_lock);
+                            ff_rtp_reset_packet_queue(s->rtpdmx);
+                            pthread_mutex_unlock(&s->rtpdmx_lock);
+                            av_log(0, AV_LOG_INFO, "[%s,%d][HIRTP] network recovered, send NETWORK_NORMAL\n", __FUNCTION__, __LINE__);
+                            url_errorcode_cb(h->interrupt_callback.opaque, NETWORK_NORMAL, "rtp");
+                            network_disconnect = 0;
                         }
                         if (len > rcv_max_pkt_size)
                             rcv_max_pkt_size = len;
@@ -469,11 +488,14 @@ static int hirtp_open(URLContext *h, const char *uri, int flags)
         av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] ff_rtp_parse_open error!\n",
             __FUNCTION__, __LINE__);
         goto fail;
+    } else {
+        pthread_mutex_init(&s->rtpdmx_lock, NULL);
     }
 
     s->is_exit = 0;
     ret = pthread_create(&s->stream_thread_tid, NULL, _rtp_stream_thread_process, (void *)s);
     if (ret < 0) {
+        pthread_mutex_destroy(&s->rtpdmx_lock);
         av_log(0, AV_LOG_ERROR, "[%s,%d][HIRTP] pthread_create return  error=%d\n",
             __FUNCTION__, __LINE__, ret);
         goto fail;
@@ -549,7 +571,9 @@ static int hirtp_read(URLContext *h, uint8_t *buf, int size)
 
         //ff_rtp_check_and_send_back_rr(s->rtpdmx, ret);
 
+        pthread_mutex_lock(&s->rtpdmx_lock);
         ret = ff_rtp_parse_packet(s->rtpdmx, &av_tspkt, &rtppkt.data, rtppkt.data_size);
+        pthread_mutex_unlock(&s->rtpdmx_lock);
         if (rtppkt.data != NULL) {
             if (pktq_put_pkt(s->empty_buf_queue, &rtppkt, 0) < 0) {
                 av_free(rtppkt.data);
@@ -569,7 +593,9 @@ static int hirtp_read(URLContext *h, uint8_t *buf, int size)
             //have some more packets waiting.
             if (ret == 1) {
                 do {
+                    pthread_mutex_lock(&s->rtpdmx_lock);
                     ret = ff_rtp_parse_packet(s->rtpdmx, &av_tspkt, NULL, 0);
+                    pthread_mutex_unlock(&s->rtpdmx_lock);
                     if (ret == 0 || ret == 1) {
                         data_tspkt.data = av_tspkt.data;
                         data_tspkt.data_size = av_tspkt.size;
@@ -620,8 +646,10 @@ static int hirtp_close(URLContext *h)
     if (s->dgram_thread_tid)
         pthread_join(s->dgram_thread_tid, NULL);
     //close rtp packet parser then,
-    if (s->rtpdmx)
+    if (s->rtpdmx) {
         ff_rtp_parse_close(s->rtpdmx);
+        pthread_mutex_destroy(&s->rtpdmx_lock);
+    }
     //close udp connection at the last.
     _close_connection(s);
     if (s->ts_queue)

@@ -1,5 +1,7 @@
 package com.hisilicon.multiscreen.widget;
 
+import java.lang.ref.SoftReference;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -17,7 +19,7 @@ public class RemoteTouchShowView extends ImageView
 
     private int touch_y;
 
-    private Bitmap originalBitmap;
+    private SoftReference<Bitmap> originalBitmap;
 
     public RemoteTouchShowView(Context context)
     {
@@ -34,11 +36,11 @@ public class RemoteTouchShowView extends ImageView
         touch_x = x;
         touch_y = y;
 
-        Bitmap bitmap =
+        SoftReference<Bitmap> bitmap = new SoftReference<Bitmap>(
             BitmapFactory.decodeStream(getResources().openRawResource(
-                R.drawable.remote_touch_arrow_left));
-
-        drawLeft(bitmap);
+                R.drawable.remote_touch_arrow_left)));
+        if(bitmap != null)
+            drawLeft(bitmap.get());
     }
 
     private void drawLeft(Bitmap bitmap)
@@ -54,11 +56,11 @@ public class RemoteTouchShowView extends ImageView
         touch_x = x;
         touch_y = y;
 
-        Bitmap bitmap =
+        SoftReference<Bitmap> bitmap =new SoftReference<Bitmap>(
             BitmapFactory.decodeStream(getResources().openRawResource(
-                R.drawable.remote_touch_arrow_right));
-
-        drawRight(bitmap);
+                R.drawable.remote_touch_arrow_right)));
+        if(bitmap != null)
+            drawRight(bitmap.get());
     }
 
     private void drawRight(Bitmap bitmap)
@@ -72,11 +74,11 @@ public class RemoteTouchShowView extends ImageView
     {
         touch_x = x;
         touch_y = y;
-        Bitmap bitmap =
+        SoftReference<Bitmap> bitmap =new SoftReference<Bitmap>(
             BitmapFactory.decodeStream(getResources().openRawResource(
-                R.drawable.remote_touch_arrow_up));
-
-        drawUp(bitmap);
+                R.drawable.remote_touch_arrow_up)));
+        if(bitmap != null)
+            drawUp(bitmap.get());
     }
 
     private void drawUp(Bitmap bitmap)
@@ -92,11 +94,11 @@ public class RemoteTouchShowView extends ImageView
         touch_x = x;
         touch_y = y;
 
-        Bitmap bitmap =
+        SoftReference<Bitmap> bitmap =new SoftReference<Bitmap>(
             BitmapFactory.decodeStream(getResources().openRawResource(
-                R.drawable.remote_touch_arrow_down));
-
-        drawDown(bitmap);
+                R.drawable.remote_touch_arrow_down)));
+        if(bitmap != null)
+            drawDown(bitmap.get());
     }
 
     private void drawDown(Bitmap bitmap)
@@ -111,10 +113,12 @@ public class RemoteTouchShowView extends ImageView
         touch_x = x;
         touch_y = y;
 
-        Bitmap bitmap =
+        SoftReference<Bitmap> bitmap =new SoftReference<Bitmap>(
             BitmapFactory.decodeStream(getResources().openRawResource(
-                R.drawable.remote_touch_arrow_ok));
-        drawOk(bitmap);
+                R.drawable.remote_touch_arrow_ok)));
+
+        if(bitmap != null)
+            drawOk(bitmap.get());
     }
 
     private void drawOk(Bitmap bitmap)
@@ -127,25 +131,31 @@ public class RemoteTouchShowView extends ImageView
 
     private void drawBitmap(Bitmap bitmap)
     {
-        recycle(originalBitmap);
+        if(originalBitmap != null)
+            recycle(originalBitmap.get());
 
-        originalBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
+        originalBitmap = new SoftReference<Bitmap>(Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888));
 
-        Paint paint = new Paint();
+        if(originalBitmap != null)
+        {
+            Paint paint = new Paint();
 
-        Canvas canvas = new Canvas(originalBitmap);
+            Canvas canvas = new Canvas(originalBitmap.get());
 
-        canvas.drawBitmap(bitmap, touch_x, touch_y, paint);
+            canvas.drawBitmap(bitmap, touch_x, touch_y, paint);
 
-        recycle(bitmap);
+            recycle(bitmap);
 
-        setImageBitmap(originalBitmap);
+            setImageBitmap(originalBitmap.get());
+        }
+
     }
 
     public void touchClearShow()
     {
         setImageBitmap(null);
-        recycle(originalBitmap);
+        if(originalBitmap != null)
+            recycle(originalBitmap.get());
     }
 
     private void recycle(Bitmap bitmap)
@@ -155,5 +165,6 @@ public class RemoteTouchShowView extends ImageView
             bitmap.recycle();
             bitmap = null;
         }
+        System.gc();
     }
 }

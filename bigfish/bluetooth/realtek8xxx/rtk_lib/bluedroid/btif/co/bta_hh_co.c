@@ -31,7 +31,25 @@
 #include "bta_api.h"
 #include "bta_hh_api.h"
 
-
+#ifdef BLUETOOTH_RTK
+#include "btif_dm.h"
+#include <sys/ioctl.h>
+#include "rtkbt_virtual_hid.h"
+#include "rtkbt_ifly_voice.h"
+#define DATA_LOCK() pthread_mutex_lock(&resend_data_cb.data_mutex);
+#define DATA_UNLOCK() pthread_mutex_unlock(&resend_data_cb.data_mutex);
+#define TOTAL_DATA_NUM (10)
+typedef struct {
+UINT32 num;
+pthread_mutex_t data_mutex;
+UINT8 * rsd_data[TOTAL_DATA_NUM];
+} tRSD_DATA_CB;
+static BOOLEAN mutex_init = FALSE;
+static tRSD_DATA_CB resend_data_cb;
+static UINT8  data_index = 0;
+void RTKBT_resend_data(btif_hh_device_t *p_data_dev);
+extern int rcu_uhid_fd;
+#endif
 
 const char *dev_path = "/dev/uhid";
 
@@ -58,6 +76,10 @@ static int uhid_write(int fd, const struct uhid_event *ev)
 static int uhid_event(btif_hh_device_t *p_dev)
 {
     struct uhid_event ev;
+#ifdef BLUETOOTH_RTK
+    BT_HDR  *p_buf;
+    UINT8 *data ;
+#endif
     ssize_t ret;
     memset(&ev, 0, sizeof(ev));
     if(!p_dev)
@@ -89,18 +111,49 @@ static int uhid_event(btif_hh_device_t *p_dev)
         break;
     case UHID_OPEN:
         APPL_TRACE_DEBUG0("UHID_OPEN from uhid-dev\n");
+
+#ifdef BLUETOOTH_RTK
+        p_dev->uhid_start = TRUE;
+#endif
         break;
     case UHID_CLOSE:
         APPL_TRACE_DEBUG0("UHID_CLOSE from uhid-dev\n");
+
+#ifdef BLUETOOTH_RTK
+        p_dev->uhid_start = FALSE;
+#endif
+
         break;
     case UHID_OUTPUT:
         APPL_TRACE_DEBUG2("UHID_OUTPUT: Report type = %d, report_size = %d"
                             ,ev.u.output.rtype, ev.u.output.size);
         //Send SET_REPORT with feature report if the report type in output event is FEATURE
-        if(ev.u.output.rtype == UHID_FEATURE_REPORT)
+        if(ev.u.output.rtype == UHID_FEATURE_REPORT) {
+            APPL_TRACE_DEBUG0("UHID_FEATURE_REPORT!");
             btif_hh_setreport(p_dev,BTHH_FEATURE_REPORT,ev.u.output.size,ev.u.output.data);
-        else if(ev.u.output.rtype == UHID_OUTPUT_REPORT)
+        }
+        else if(ev.u.output.rtype == UHID_OUTPUT_REPORT) {
+#ifdef BLUETOOTH_RTK
+            APPL_TRACE_DEBUG0("UHID_OUTPUT_REPORT!");
+            if(ev.u.output.size > 0){
+                if((p_buf = (BT_HDR *) GKI_getbuf((UINT16)(sizeof(BT_HDR) + ev.u.output.size ))) != NULL)
+                {
+                    memset(p_buf, 0, sizeof(BT_HDR) + ev.u.output.size);
+                    p_buf->len = ev.u.output.size;
+                    p_buf->layer_specific = BTA_HH_RPTT_OUTPUT;
+                    data = (UINT8 *)(p_buf + 1);
+                    memcpy(data, ev.u.output.data, ev.u.output.size);
+                    APPL_TRACE_DEBUG0("BTA_HhSendData to send output data!");
+                    BTA_HhSendData(p_dev->dev_handle, NULL, p_buf);
+                    APPL_TRACE_DEBUG0("BTA_HhSendData to send output data end!");
+                    GKI_freebuf(p_buf);
+                }
+            } else
+                APPL_TRACE_DEBUG0("not send output data!");
+#else
             btif_hh_setreport(p_dev,BTHH_OUTPUT_REPORT,ev.u.output.size,ev.u.output.data);
+#endif
+        }
         else
             btif_hh_setreport(p_dev,BTHH_INPUT_REPORT,ev.u.output.size,ev.u.output.data);
            break;
@@ -160,6 +213,7 @@ static void *btif_hh_poll_event_thread(void *arg)
 
     btif_hh_device_t *p_dev = arg;
     APPL_TRACE_DEBUG2("%s: Thread created fd = %d", __FUNCTION__, p_dev->fd);
+
     struct pollfd pfds[1];
     int ret;
     pfds[0].fd = p_dev->fd;
@@ -267,6 +321,9 @@ void bta_hh_co_open(UINT8 dev_handle, UINT8 sub_class, tBTA_HH_ATTR_MASK attr_ma
             }
             p_dev->hh_keep_polling = 1;
             p_dev->hh_poll_thread_id = create_thread(btif_hh_poll_event_thread, p_dev);
+#ifdef BLUETOOTH_RTK_VR
+            RTKBT_Iflytek_NotifyRcuStatus(1, &(p_dev->bd_addr));
+#endif
             break;
         }
         p_dev = NULL;
@@ -282,6 +339,9 @@ void bta_hh_co_open(UINT8 dev_handle, UINT8 sub_class, tBTA_HH_ATTR_MASK attr_ma
                 p_dev->sub_class  = sub_class;
                 p_dev->app_id     = app_id;
                 p_dev->local_vup  = FALSE;
+#ifdef BLUETOOTH_RTK
+                p_dev->uhid_start = FALSE;
+#endif
 
                 btif_hh_cb.device_num++;
                 // This is a new device,open the uhid driver now.
@@ -293,6 +353,9 @@ void bta_hh_co_open(UINT8 dev_handle, UINT8 sub_class, tBTA_HH_ATTR_MASK attr_ma
                     APPL_TRACE_DEBUG2("%s: uhid fd = %d", __FUNCTION__, p_dev->fd);
                     p_dev->hh_keep_polling = 1;
                     p_dev->hh_poll_thread_id = create_thread(btif_hh_poll_event_thread, p_dev);
+#ifdef BLUETOOTH_RTK_VR
+                    RTKBT_Iflytek_NotifyRcuStatus(1, &(p_dev->bd_addr));
+#endif
                 }
 
 
@@ -342,6 +405,12 @@ void bta_hh_co_close(UINT8 dev_handle, UINT8 app_id)
                                                         ,__FUNCTION__,p_dev->dev_status
                                                         ,p_dev->dev_handle);
             btif_hh_close_poll_thread(p_dev);
+#ifdef BLUETOOTH_RTK_VR
+            RTKBT_Iflytek_NotifyRcuStatus(0, &(p_dev->bd_addr));
+#endif
+#ifdef BLUETOOTH_RTK
+            p_dev->uhid_start = FALSE;
+#endif
             break;
         }
      }
@@ -444,4 +513,105 @@ void bta_hh_co_send_hid_info(btif_hh_device_t *p_dev, char *dev_name, UINT16 ven
     }
 }
 
+#ifdef BLUETOOTH_RTK
+void RTKBT_resend_data(btif_hh_device_t *p_data_dev)
+{
+    int num = 0;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    UINT8 dev_handle;
+    UINT16 len;
+    btif_hh_device_t *p_dev;
+    APPL_TRACE_WARNING3("%s: start num = %d,mutex_init = %d", __FUNCTION__,num,mutex_init);
+    if(mutex_init == FALSE)
+    {
+        pthread_mutexattr_t attr = PTHREAD_MUTEX_NORMAL;
+        pthread_mutex_init(&resend_data_cb.data_mutex, &attr);
+        mutex_init = TRUE;
+    }
+    DATA_LOCK();
+    num = resend_data_cb.num;
+    APPL_TRACE_WARNING3("%s: start num = %d,data_index = %d", __FUNCTION__,num,data_index);
+    k = data_index;
+    if(resend_data_cb.num == 0){
+        DATA_UNLOCK();
+        return;
+    }
+    usleep(150000);
+    for(i = 0; i < TOTAL_DATA_NUM; i++){
+        j = (k + i) % TOTAL_DATA_NUM;
+        if(resend_data_cb.rsd_data[j] != NULL) {
+            dev_handle = resend_data_cb.rsd_data[j][0];
+            memcpy(&len, &resend_data_cb.rsd_data[j][1], 2);
+            p_dev = btif_hh_find_connected_dev_by_handle(dev_handle);
+            APPL_TRACE_WARNING2("%s: resend data, dev_handle = %d", __FUNCTION__,dev_handle);
+            if(p_data_dev->dev_handle == dev_handle) {
+                APPL_TRACE_WARNING1("%s: begin to resend data", __FUNCTION__);
+                if (p_dev->fd >= 0) {
+                    bta_hh_co_write(p_dev->fd, &resend_data_cb.rsd_data[j][3], len);
+                    usleep(10000);
+                }
+                GKI_freebuf(resend_data_cb.rsd_data[j]);
+                resend_data_cb.rsd_data[j] = NULL;
+                resend_data_cb.num--;
+            }
+            else if(data_index == k)
+                data_index = j;
+        }
+    }
+    APPL_TRACE_WARNING3("%s: end num = %d,data_index = %d", __FUNCTION__,resend_data_cb.num,data_index);
+    DATA_UNLOCK();
+}
 
+void RTKBT_clear_db()
+{
+    int i = 0;
+    int j = 0;
+    UINT8 dev_handle;
+    btif_hh_device_t *p_dev;
+    if(mutex_init == FALSE)
+    {
+        pthread_mutexattr_t attr = PTHREAD_MUTEX_NORMAL;
+        pthread_mutex_init(&resend_data_cb.data_mutex, &attr);
+        mutex_init = TRUE;
+    }
+
+    DATA_LOCK();
+    if(resend_data_cb.num == 0){
+        DATA_UNLOCK();
+        return;
+    }
+
+    int k = data_index;
+    for(i = 0; i < TOTAL_DATA_NUM; i++){
+        j = (k + i) % TOTAL_DATA_NUM;
+        if(resend_data_cb.rsd_data[j] != NULL) {
+            dev_handle = resend_data_cb.rsd_data[j][0];
+            if((p_dev = btif_hh_find_connected_dev_by_handle(dev_handle)) == NULL)
+            {
+                GKI_freebuf(resend_data_cb.rsd_data[j]);
+                resend_data_cb.rsd_data[j] = NULL;
+                resend_data_cb.num--;
+            }
+            else
+            {
+                if((p_dev->dev_status != BTHH_CONN_STATE_CONNECTED) || (p_dev->dev_status != BTHH_CONN_STATE_CONNECTING))
+                {
+                    GKI_freebuf(resend_data_cb.rsd_data[j]);
+                    resend_data_cb.rsd_data[j] = NULL;
+                    resend_data_cb.num--;
+                }
+                else if(resend_data_cb.rsd_data[data_index] == NULL)
+                    data_index = j;
+            }
+        }
+    }
+    if(resend_data_cb.num == 0)
+    {
+        data_index = 0;
+    }
+    DATA_UNLOCK();
+    APPL_TRACE_WARNING3("%s: end num = %d,data_index = %d", __FUNCTION__,resend_data_cb.num,data_index);
+}
+#endif

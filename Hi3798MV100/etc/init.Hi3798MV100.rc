@@ -93,6 +93,20 @@ service iprenew_eth1 /system/bin/dhcpcd -n
     disabled
     oneshot
 
+service ipconflict_eth0 /system/bin/ipconflict
+    class main
+    disabled
+    oneshot
+
+service ipconflict_eth1 /system/bin/ipconflict
+    class main
+    disabled
+    oneshot
+
+service ipconflict_wlan0 /system/bin/ipconflict
+    class main
+    disabled
+    oneshot
 #pppoe
 service pppoe_conn_eth0 /system/etc/ppp/ppp.connect
     class main

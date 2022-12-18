@@ -135,19 +135,22 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, buf
 			return -1;
 		}
 
-		cpu_ptr = (unsigned char *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, shared_fd, 0);
-
-		if (MAP_FAILED == cpu_ptr)
+		if(!(usage & GRALLOC_USAGE_PROTECTED))
 		{
-			AERR("ion_map( %d ) failed", m->ion_client);
+			cpu_ptr = (unsigned char *)mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, shared_fd, 0);
 
-			if (0 != ion_free(m->ion_client, ion_hnd))
+			if (MAP_FAILED == cpu_ptr)
 			{
-				AERR("ion_free( %d ) failed", m->ion_client);
-			}
+				AERR("ion_map( %d ) failed", m->ion_client);
 
-			close(shared_fd);
-			return -1;
+				if (0 != ion_free(m->ion_client, ion_hnd))
+				{
+					AERR("ion_free( %d ) failed", m->ion_client);
+				}
+
+				close(shared_fd);
+				return -1;
+			}
 		}
 
 		private_handle_t *hnd = new private_handle_t(private_handle_t::PRIV_FLAGS_USES_ION, usage, size, cpu_ptr, private_handle_t::LOCK_STATE_MAPPED);
@@ -159,13 +162,15 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, buf
 			if(0!=pri_hisi_device_layerbuffer_alloc(dev, size, usage, pHandle, m, ion_hnd, hnd))
 			{
 				close(shared_fd);
-				ret = munmap(cpu_ptr, size);
+				if(!(usage & GRALLOC_USAGE_PROTECTED))	
+				{	
+					ret = munmap(cpu_ptr, size);
 
-				if (0 != ret)
-				{
-					AERR("munmap failed for base:%p size: %lu", cpu_ptr, (unsigned long)size);
+					if (0 != ret)
+					{
+						AERR("munmap failed for base:%p size: %lu", cpu_ptr, (unsigned long)size);
+					}
 				}
-
 				ret = ion_free(m->ion_client, ion_hnd);
 
 				if (0 != ret)
@@ -187,11 +192,15 @@ static int gralloc_alloc_buffer(alloc_device_t *dev, size_t size, int usage, buf
 		}
 
 		close(shared_fd);
-		ret = munmap(cpu_ptr, size);
 
-		if (0 != ret)
+		if(!(usage & GRALLOC_USAGE_PROTECTED))
 		{
-			AERR("munmap failed for base:%p size: %lu", cpu_ptr, (unsigned long)size);
+			ret = munmap(cpu_ptr, size);
+
+			if (0 != ret)
+			{
+				AERR("munmap failed for base:%p size: %lu", cpu_ptr, (unsigned long)size);
+			}
 		}
 
 		ret = ion_free(m->ion_client, ion_hnd);
@@ -601,11 +610,14 @@ static int alloc_device_free(alloc_device_t *dev, buffer_handle_t handle)
 		private_module_t *m = reinterpret_cast<private_module_t *>(dev->common.module);
 
 		/* Buffer might be unregistered so we need to check for invalid ump handle*/
-		if (0 != hnd->base)
+		if(!(hnd->usage & GRALLOC_USAGE_PROTECTED))
 		{
-			if (0 != munmap((void *)hnd->base, hnd->size))
+			if (0 != hnd->base)
 			{
-				AERR("Failed to munmap handle 0x%p", hnd);
+				if (0 != munmap((void *)hnd->base, hnd->size))
+				{
+					AERR("Failed to munmap handle 0x%p", hnd);
+				}
 			}
 		}
 

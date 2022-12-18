@@ -304,6 +304,10 @@ typedef struct
 #define BTA_HH_LE_MTU_CMPL  0x02
     UINT8 disc_flag;
 #endif
+
+#ifdef BLUETOOTH_RTK
+    UINT8 num_report;
+#endif
 } tBTA_HH_DEV_CB;
 
 /* key board parsing control block */

@@ -30,6 +30,7 @@ HI_U16   GetPixelClock(HI_U8 Index){
    return  VModeTables[Index].PixClk;
 }
 */
+#if 0
 //--------------------------------------------------------
 static HI_U8 CompareWithVMTableRef(HI_U8 Index, HI_U16 ClksForLine){
 
@@ -73,6 +74,7 @@ HI_U16 HSyncsPerFrame;
    return 1;
 
 }
+#endif
 //---------------------------------------------------------
 void SI_GetVModeData(HI_U8 Index, HI_U8 * Data) {
    Data[0] = VModeTables[Index].ModeId.Mode_C1;
@@ -85,6 +87,7 @@ void SI_GetVModeData(HI_U8 Index, HI_U8 * Data) {
 
 }
 
+#if 0
 //---------------------------------------------------------
 HI_U8 SI_VideoModeDetection(HI_U8 * Index)
 {
@@ -113,6 +116,6 @@ HI_U8 SI_VideoModeDetection(HI_U8 * Index)
     }
     return Res;
 }
-
+#endif
 
 

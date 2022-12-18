@@ -137,6 +137,11 @@ public class UpnpMultiScreenDeviceInfo
     public static final String VAR_ACCESS_REMOTE_LIST = "HI_UPNP_VAR_AccessRemoteList";
 
     /**
+     * State variable of access remote list.<br>
+     */
+    public static final String VAR_SCENE_TYPE = "HI_UPNP_VAR_SceneType";
+
+    /**
      * State variable of vinput server uri.<br>
      */
     public static final String VAR_VINPUT_SERVER_URI = "HI_UPNP_VAR_VinpuServerURI";

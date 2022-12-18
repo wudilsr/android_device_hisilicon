@@ -334,7 +334,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_setVolume(JNIEnv *en
         return;
     }
 
-    process_media_player_call( env, thiz, mp->setVolume(leftVolume, rightVolume), NULL, NULL );
+    mp->setVolume(leftVolume, rightVolume);
+    /* report error will lead to apk stop playing */
+    //process_media_player_call( env, thiz, mp->setVolume(leftVolume, rightVolume), NULL, NULL );
 }
 
 
@@ -386,7 +388,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_setAudioStreamType(J
         return;
     }
 
-    process_media_player_call( env, thiz, mp->setAudioStreamType(streamtype), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->setAudioStreamType(streamtype);
+   // process_media_player_call( env, thiz, mp->setAudioStreamType(streamtype), NULL, NULL );
 }
 
 static void com_hisilicon_android_mediaplayer_himediaplayer_setLooping(JNIEnv *env, jobject thiz, jboolean looping)
@@ -399,7 +403,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_setLooping(JNIEnv *e
         return;
     }
 
-    process_media_player_call( env, thiz, mp->setLooping(looping), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->setLooping(looping);
+    //process_media_player_call( env, thiz, mp->setLooping(looping), NULL, NULL );
 }
 
 static jboolean
@@ -439,7 +445,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_stop(JNIEnv *env, jo
         return;
     }
 
-    process_media_player_call( env, thiz, mp->stop(), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->stop();
+   // process_media_player_call( env, thiz, mp->stop(), NULL, NULL );
 }
 
 static void com_hisilicon_android_mediaplayer_himediaplayer_pause(JNIEnv *env, jobject thiz)
@@ -452,7 +460,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_pause(JNIEnv *env, j
         return;
     }
 
-    process_media_player_call( env, thiz, mp->pause(), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->pause();
+    //process_media_player_call( env, thiz, mp->pause(), NULL, NULL );
 }
 
 static void com_hisilicon_android_mediaplayer_himediaplayer_seekTo(JNIEnv *env, jobject thiz, int msec)
@@ -466,7 +476,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_seekTo(JNIEnv *env, 
     }
 
     LOGV("seekTo: %d(msec)", msec);
-    process_media_player_call( env, thiz, mp->seekTo(msec), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->seekTo(msec);
+    //process_media_player_call( env, thiz, mp->seekTo(msec), NULL, NULL );
 }
 
 static jboolean com_hisilicon_android_mediaplayer_himediaplayer_isPlaying(JNIEnv *env, jobject thiz)
@@ -492,7 +504,7 @@ static int com_hisilicon_android_mediaplayer_himediaplayer_getDuration(JNIEnv *e
         jniThrowException(env, "java/lang/IllegalStateException", NULL);
         return 0;
     }
-    int msec;
+    int msec = -1;
     process_media_player_call( env, thiz, mp->getDuration(&msec), NULL, NULL );
     LOGV("getDuration: %d (msec)", msec);
     return msec;
@@ -524,7 +536,9 @@ static void com_hisilicon_android_mediaplayer_himediaplayer_start(JNIEnv *env, j
         return;
     }
 
-    process_media_player_call( env, thiz, mp->start(), NULL, NULL );
+    /* report error will lead to apk stop playing */
+    mp->start();
+    //process_media_player_call( env, thiz, mp->start(), NULL, NULL );
 }
 
 // Sends the new filter to the client.

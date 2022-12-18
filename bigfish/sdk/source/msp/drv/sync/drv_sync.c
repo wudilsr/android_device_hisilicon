@@ -30,7 +30,9 @@
 #include <linux/delay.h>
 #include <asm/uaccess.h>
 #include <asm/io.h>
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 #include <asm/system.h>
+#endif
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
@@ -47,6 +49,19 @@
 extern "C"{
 #endif
 #endif
+
+#define SYNC_CHECK_ID(id)   \
+    do { \
+        if ((id) >= SYNC_MAX_NUM) { \
+            HI_ERR_SYNC("invalid id\n"); \
+            return HI_ERR_SYNC_INVALID_PARA; \
+        } \
+        if (HI_NULL == g_SyncGlobalState.SyncInfo[id].pSync) { \
+           HI_ERR_SYNC("this is invalid handle.\n"); \
+           return HI_ERR_SYNC_INVALID_PARA; \
+		}\
+    } while (0)
+
 
 extern SYNC_GLOBAL_STATE_S  g_SyncGlobalState;
 
@@ -219,6 +234,8 @@ HI_S32 SYNC_StartSync(HI_U32 SyncId)
 {
     SYNC_S  *pSync;
 
+    SYNC_CHECK_ID(SyncId);
+
     pSync = g_SyncGlobalState.SyncInfo[SyncId].pSync;
 
     pSync->PreSyncStartSysTime = SYNC_GetSysTime();
@@ -250,6 +267,8 @@ HI_S32 SYNC_PauseSync(HI_U32 SyncId)
 {
     SYNC_S  *pSync;
 
+    SYNC_CHECK_ID(SyncId);
+
     pSync = g_SyncGlobalState.SyncInfo[SyncId].pSync;
 
     pSync->PcrSyncInfo.PcrPauseLocalTime = SYNC_GetLocalTime(pSync, SYNC_CHAN_PCR);
@@ -257,13 +276,18 @@ HI_S32 SYNC_PauseSync(HI_U32 SyncId)
     pSync->VidPauseLocalTime = SYNC_GetLocalTime(pSync, SYNC_CHAN_VID);
 #ifdef HI_AVPLAY_SCR_SUPPORT    
     pSync->ScrPauseLocalTime = SYNC_GetLocalTime(pSync, SYNC_CHAN_SCR);
-#endif    
+#endif
+    if (pSync->PreSyncStartSysTime != HI_INVALID_TIME && pSync->PreSyncFinish == HI_FALSE)
+        pSync->PreSyncPauseStartSysTime = SYNC_GetSysTime();
+
     return HI_SUCCESS;
 }
 
 HI_S32 SYNC_ResumeSync(HI_U32 SyncId)
 {
     SYNC_S  *pSync;
+
+    SYNC_CHECK_ID(SyncId);
 
     pSync = g_SyncGlobalState.SyncInfo[SyncId].pSync;
 
@@ -287,7 +311,10 @@ HI_S32 SYNC_ResumeSync(HI_U32 SyncId)
     {
         SYNC_SetLocalTime(pSync, SYNC_CHAN_SCR, pSync->ScrPauseLocalTime);
     }
-#endif  
+#endif
+    if (pSync->PreSyncStartSysTime != HI_INVALID_TIME && pSync->PreSyncFinish == HI_FALSE)
+        pSync->PreSyncPauseEndSysTime = SYNC_GetSysTime();
+
     return HI_SUCCESS;
 }
 
@@ -298,6 +325,8 @@ HI_S32 SYNC_GetTime(HI_U32 SyncId, HI_U32 *pLocalTime, HI_U32 *pPlayTime)
     HI_U32      AudLocalTime;
     HI_U32      VidLocalTime;
     HI_U32      PcrLocalTime;
+
+    SYNC_CHECK_ID(SyncId);
 
     pSync = g_SyncGlobalState.SyncInfo[SyncId].pSync;
 
@@ -562,6 +591,7 @@ HI_BOOL SYNC_CheckAudTimeout(SYNC_S *pSync)
 HI_VOID SYNC_PreSync(SYNC_S *pSync, SYNC_CHAN_E enChn)
 {
     HI_U32      CostSysTime;
+    HI_U32      PauseCostSysTime = 0;
     HI_S32      VidAudDiff; 
     HI_S32      AudPcrDiff;
     HI_S32      VidPcrDiff;
@@ -569,6 +599,18 @@ HI_VOID SYNC_PreSync(SYNC_S *pSync, SYNC_CHAN_E enChn)
     HI_S32      VidTargetDiff, AudTargetDiff;
 
     CostSysTime = SYNC_GetSysTimeCost(pSync->PreSyncStartSysTime);
+
+    if (pSync->PreSyncPauseStartSysTime != HI_INVALID_TIME)
+    {
+        if (pSync->PreSyncPauseEndSysTime != HI_INVALID_TIME)
+        {
+            PauseCostSysTime = pSync->PreSyncPauseEndSysTime - pSync->PreSyncPauseStartSysTime;
+        }
+        else
+        {
+            PauseCostSysTime = SYNC_GetSysTimeCost(pSync->PreSyncPauseStartSysTime);
+        }
+    }
 
     /* do not do presync if video or audio is disable */
     if ( (!pSync->AudEnable) || (!pSync->VidEnable) )
@@ -584,7 +626,7 @@ HI_VOID SYNC_PreSync(SYNC_S *pSync, SYNC_CHAN_E enChn)
     }
 
     /* presync timeout*/
-    if (CostSysTime >= pSync->SyncAttr.u32PreSyncTimeoutMs)
+    if (CostSysTime >= (pSync->SyncAttr.u32PreSyncTimeoutMs + PauseCostSysTime))
     {
         pSync->PreSyncEndSysTime = SYNC_GetSysTime();
         pSync->PreSyncFinish = HI_TRUE;

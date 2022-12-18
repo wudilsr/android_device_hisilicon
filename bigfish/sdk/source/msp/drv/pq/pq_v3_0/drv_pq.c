@@ -949,6 +949,15 @@ HI_S32 DRV_PQ_SetHDVideoSetting(HI_PQ_PICTURE_SETTING_S* pstPictureSetting)
 
     PQ_CHECK_NULL_PTR(pstPictureSetting);
 
+    if ((pstPictureSetting->u16Brightness > 100)
+        || (pstPictureSetting->u16Contrast > 100)
+        || (pstPictureSetting->u16Saturation > 100)
+        || (pstPictureSetting->u16Hue > 100))
+    {
+        HI_ERR_PQ("out of range!\n");
+        return HI_FAILURE;
+    }
+
     pqprint(PQ_PRN_CSC, "Set Brightness:%d, Contrast:%d, Hue:%d, Saturation:%d\n",
             pstPictureSetting->u16Brightness,
             pstPictureSetting->u16Contrast,
@@ -987,6 +996,15 @@ HI_S32 DRV_PQ_SetSDVideoSetting(HI_PQ_PICTURE_SETTING_S* pstPictureSetting)
     COLOR_TEMPERATURE_S stColorTemp = {0};
 
     PQ_CHECK_NULL_PTR(pstPictureSetting);
+
+    if ((pstPictureSetting->u16Brightness > 100)
+        || (pstPictureSetting->u16Contrast > 100)
+        || (pstPictureSetting->u16Saturation > 100)
+        || (pstPictureSetting->u16Hue > 100))
+    {
+        HI_ERR_PQ("out of range!\n");
+        return HI_FAILURE;
+    }
 
     pqprint(PQ_PRN_CSC, "Set Brightness:%d, Contrast:%d, Hue:%d, Saturation:%d\n",
             pstPictureSetting->u16Brightness,
@@ -1070,6 +1088,15 @@ HI_S32 DRV_PQ_SetHDPictureSetting(HI_PQ_PICTURE_SETTING_S* pstPictureSetting)
 {
     PQ_CHECK_NULL_PTR(pstPictureSetting);
 
+    if ((pstPictureSetting->u16Brightness > 100)
+        || (pstPictureSetting->u16Contrast > 100)
+        || (pstPictureSetting->u16Saturation > 100)
+        || (pstPictureSetting->u16Hue > 100))
+    {
+        HI_ERR_PQ("out of range!\n");
+        return HI_FAILURE;
+    }
+
     HI_DEBUG_PQ("SetHDPicture Brightness:%d, Contrast:%d, Hue:%d, Saturation:%d\n", \
                 pstPictureSetting->u16Brightness, \
                 pstPictureSetting->u16Contrast, \
@@ -1098,6 +1125,15 @@ HI_S32 DRV_PQ_SetSDPictureSetting(HI_PQ_PICTURE_SETTING_S* pstPictureSetting)
 {
     PQ_CHECK_NULL_PTR(pstPictureSetting);
 
+    if ((pstPictureSetting->u16Brightness > 100)
+        || (pstPictureSetting->u16Contrast > 100)
+        || (pstPictureSetting->u16Saturation > 100)
+        || (pstPictureSetting->u16Hue > 100))
+    {
+        HI_ERR_PQ("out of range!\n");
+        return HI_FAILURE;
+    }
+
     stPqParam.stSDPictureSetting.u16Brightness = LEVEL2NUM(pstPictureSetting->u16Brightness);
     stPqParam.stSDPictureSetting.u16Contrast   = LEVEL2NUM(pstPictureSetting->u16Contrast);
     stPqParam.stSDPictureSetting.u16Hue        = LEVEL2NUM(pstPictureSetting->u16Hue);
@@ -1117,6 +1153,8 @@ HI_S32 DRV_PQ_SetSDPictureSetting(HI_PQ_PICTURE_SETTING_S* pstPictureSetting)
  */
 HI_S32 DRV_PQ_GetSharpness(HI_U32* pu32Sharpness)
 {
+    PQ_CHECK_NULL_PTR(pu32Sharpness);
+
     *pu32Sharpness = NUM2LEVEL(stPqParam.u32Sharpness);
 
     pqprint(PQ_PRN_SHARPEN, "Get sharpen: %d\n", *pu32Sharpness);
@@ -1194,6 +1232,12 @@ HI_S32 DRV_PQ_SetColorEhance(HI_U32 u32ColorGainLevel)
 {
     HI_U32 u32Num = LEVEL2NUM(u32ColorGainLevel);
 
+    if (u32ColorGainLevel > 100)
+    {
+        HI_ERR_PQ("%d:ColorGainLevel is over range!\n", u32ColorGainLevel);
+        return HI_FAILURE;
+    }
+
     stPqParam.u32ColorGainLevel = u32Num;
     pqprint(PQ_PRN_ACM, "Set ColorGainLevel: %d\n", u32ColorGainLevel);
     return PQ_MNG_SetColorGainLevel(u32Num);
@@ -1235,6 +1279,8 @@ HI_S32 DRV_PQ_GetFleshToneLevel(HI_U32* pu32FleshToneLevel)
  */
 HI_S32 DRV_PQ_SetFleshToneLevel(HI_PQ_FLESHTONE_E enFleshToneLevel)
 {
+    PQ_CHECK_OVER_RANGE(enFleshToneLevel, HI_PQ_FLESHTONE_GAIN_BUTT);
+
     stPqParam.stColorEnhance.enColorEnhanceType = HI_PQ_COLOR_ENHANCE_FLESHTONE;
     stPqParam.stColorEnhance.unColorGain.enFleshtone = enFleshToneLevel;
 
@@ -1279,6 +1325,8 @@ HI_S32 DRV_PQ_SetSixBaseColorLevel(HI_PQ_SIX_BASE_S* pstSixBaseColorOffset)
  */
 HI_S32 DRV_PQ_SetColorEnhanceMode(HI_PQ_COLOR_SPEC_MODE_E enColorSpecMode)
 {
+    PQ_CHECK_OVER_RANGE(enColorSpecMode, HI_PQ_COLOR_MODE_BUTT);
+
     stPqParam.stColorEnhance.enColorEnhanceType = HI_PQ_COLOR_ENHANCE_SPEC_COLOR_MODE;
     stPqParam.stColorEnhance.unColorGain.enColorMode = enColorSpecMode;
 
@@ -1324,7 +1372,10 @@ HI_S32 DRV_PQ_SetDCILevelGain(HI_U32 u32DCILevelGain)
  */
 HI_S32 DRV_PQ_SetDCIWgtLut(DCI_WGT_S* pstDciCoef)
 {
+    PQ_CHECK_NULL_PTR(pstDciCoef);
+
     g_pstPqParam->stPQCoef.stDciCoef.stPqDciLut = *(PQ_DCI_LUT_S*)pstDciCoef;
+
     return PQ_HAL_SetDCIWgtLut(pstDciCoef);
 }
 
@@ -1403,6 +1454,8 @@ HI_S32 DRV_PQ_SetTnrLevel(HI_U32 u32TnrLevel)
 HI_S32 DRV_PQ_SetDemoMode(HI_PQ_DEMO_E enFlags, HI_BOOL bOnOff)
 {
     HI_U32 i;
+
+    PQ_CHECK_OVER_RANGE(enFlags, HI_PQ_DEMO_BUTT);
 
     if (enFlags == HI_PQ_DEMO_DB)
     {
@@ -1500,6 +1553,8 @@ HI_S32 DRV_PQ_SetDemoDispMode(HI_PQ_DEMO_MODE_E enDemoMode)
 {
     HI_S32 s32Ret = HI_FAILURE;
 
+    PQ_CHECK_OVER_RANGE(enDemoMode, HI_PQ_DEMO_MODE_BUTT);
+
     if ((HI_PQ_DEMO_MODE_FIXED_R == enDemoMode) || (HI_PQ_DEMO_MODE_SCROLL_R == enDemoMode))
     {
         //Vpss
@@ -1564,6 +1619,9 @@ HI_S32 DRV_PQ_GetDemoDispMode(HI_PQ_DEMO_MODE_E* penDemoMode)
  */
 HI_S32 DRV_PQ_GetPQModule(HI_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
 {
+    PQ_CHECK_NULL_PTR(pu32OnOff);
+    PQ_CHECK_OVER_RANGE(enFlags, HI_PQ_MODULE_BUTT);
+
     if (enFlags == HI_PQ_MODULE_DCI)
     {
         PQ_MNG_GetDCIEnable(pu32OnOff);
@@ -1629,7 +1687,9 @@ HI_S32 DRV_PQ_GetPQModule(HI_PQ_MODULE_E enFlags, HI_U32* pu32OnOff)
  */
 HI_S32 DRV_PQ_SetPQModule(HI_PQ_MODULE_E enFlags, HI_U32 u32OnOff)
 {
-    HI_S32 s32Ret = HI_FAILURE;
+    HI_S32 s32Ret = HI_SUCCESS;
+
+    PQ_CHECK_OVER_RANGE(enFlags, HI_PQ_MODULE_BUTT);
 
     if (enFlags == HI_PQ_MODULE_DCI)
     {
@@ -1731,6 +1791,12 @@ HI_S32 DRV_PQ_UpdateVpssPQ(HI_U32 u32HandleNo, HI_VPSS_PQ_INFO_S* pstTimingInfo,
 {
     HI_S32 s32Ret;
 
+    if (u32HandleNo >= VPSS_HANDLE_NUM)
+    {
+        HI_ERR_PQ("VPSS HandleNo[%d] over range!\n", u32HandleNo);
+        return HI_FAILURE;
+    }
+
     PQ_HAL_UpdateVpssReg(u32HandleNo, pstVPSSReg, pstWbcReg);
     PQ_HAL_UpdatePQModule((PQ_HAL_MODULE_S*)pstPQModule);
     if (pstVPSSReg != HI_NULL && pstTimingInfo != HI_NULL)
@@ -1773,7 +1839,7 @@ HI_S32 DRV_PQ_UpdateVpssPQ(HI_U32 u32HandleNo, HI_VPSS_PQ_INFO_S* pstTimingInfo,
             HI_ERR_PQ("DRV_PQ_SetSharpness failed!\n");
             return s32Ret;
         }
-		
+
         /* Set DBM; Enable DB and DB Demo Using Users Data When Timming Change */
         /* Can Control DB Enable Using Software method in MV410; It is useless In HiFone and 98M */
         PQ_MNG_EnableDB(stPqParam.bModuleOnOff[HI_PQ_MODULE_DB]);
@@ -1821,6 +1887,7 @@ HI_S32 DRV_PQ_UpdateVpssPQ(HI_U32 u32HandleNo, HI_VPSS_PQ_INFO_S* pstTimingInfo,
 HI_S32 DRV_PQ_UpdateVdpPQ(HI_U32 u32DisplayId, HI_VDP_PQ_INFO_S* pstTimingInfo, S_VDP_REGS_TYPE* pstVDPReg)
 {
     HI_S32 s32Ret;
+
 
     /* Update VDP Register point */
     PQ_HAL_UpdateVdpReg(pstVDPReg);
@@ -2088,6 +2155,8 @@ HI_S32 DRV_PQ_SetSRMode(HI_PQ_SR_DEMO_E eSRMode)
 {
     HI_S32 s32Ret;
 
+    PQ_CHECK_OVER_RANGE(eSRMode, HI_PQ_SR_DEMO_BUTT);
+
     s32Ret = PQ_MNG_SetSRDemo(eSRMode);
     if (HI_SUCCESS != s32Ret)
     {
@@ -2338,7 +2407,7 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
     PQ_MNG_GetVdpZmeFirEn(&(stProcInfo.bVdpZmeFirEn));
     PQ_MNG_GetVdpZmeMedEn(&(stProcInfo.bVdpZmeMedEn));
     PQ_MNG_GetVpssZmeFirEn(&(stProcInfo.bVpssZmeFirEn));
-    PQ_MNG_GetVpssZmeMedEn(&(stProcInfo.bVdpZmeMedEn));
+    PQ_MNG_GetVpssZmeMedEn(&(stProcInfo.bVpssZmeMedEn));
 
     /* Dci */
     PQ_HAL_GetDCIWindow(&(stProcInfo.u16DciHStart), &(stProcInfo.u16DciHEnd), &(stProcInfo.u16DciVStart), &(stProcInfo.u16DciVEnd));
@@ -2358,11 +2427,6 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
     DRV_PQ_GetPQModule(HI_PQ_MODULE_SR, &(stProcInfo.bSrEn));
     PQ_HAL_GetSRSharpStr(VDP_LAYER_VID0, &(stProcInfo.u32SrSharpStr));
     DRV_PQ_GetSRMode(&(stProcInfo.u32SrMode));/* prinrk Word, Not Number(Use enum) */
-
-    /* Dither */
-    PQ_HAL_GetVpssDitherEn(0, &(stProcInfo.bVpssDithEn));
-    PQ_HAL_GetDnrDitherEn(0, &(stProcInfo.bDnrDithEn));
-    PQ_HAL_GetVdpDitherEn(&(stProcInfo.bVdpDithEn));
 
     /* CSC */
     PQ_MNG_GetCSCMode(HAL_DISP_LAYER_V0, &stProcInfo.stCSC[HAL_DISP_LAYER_V0]);
@@ -2403,7 +2467,8 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
 
     PROC_PRINT(s, "%-20s: %d\n", "sharpness", NUM2LEVEL(stPqParam.u32Sharpness));
     PROC_PRINT(s, "%-20s: %d\n", "DCI gain", stProcInfo.u32DciLevelGain);
-    PROC_PRINT(s, "%-20s: %s\n", "flesh tone level", g_pPQProcFleshTone[stProcInfo.u32FleshStr]);
+    PROC_PRINT(s, "%-20s: %s\n", "flesh tone level", (stProcInfo.u32FleshStr < FLE_GAIN_BUTT) ?
+        g_pPQProcFleshTone[stProcInfo.u32FleshStr] : g_pPQProcFleshTone[FLE_GAIN_OFF]);
     PROC_PRINT(s, "%-20s: %s (%d*%d)\n", "source", g_pPQProcSourceType[sg_u32SourceMode], sg_u32ImageWidth, sg_u32ImageHeight);
     PROC_PRINT(s, "%-20s: %s (%d*%d)\n", "output", g_pPQProcSourceType[sg_u32OutputMode], sg_u32OutWidth, sg_u32OutHeight);
 
@@ -2441,7 +2506,8 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
     PROC_PRINT(s, "--------------------------------------- ACM ---------------------------------------\n");
     PROC_PRINT(s, "%-20s: %-20s", "module", stPqParam.bModuleOnOff[HI_PQ_MODULE_COLOR] ? "on" : "off");
     PROC_PRINT(s, "%-20s: %-20s\n", "demo", stPqParam.bDemoOnOff[HI_PQ_DEMO_COLOR] ? "on" : "off");
-    PROC_PRINT(s, "%-20s: %-20s", "enhance mode", g_pPQProcEnhanceMode[stProcInfo.u32ColorMode]);
+    PROC_PRINT(s, "%-20s: %-20s", "enhance mode", (stProcInfo.u32ColorMode < COLOR_MODE_BUTT) ?
+               g_pPQProcEnhanceMode[stProcInfo.u32ColorMode] : g_pPQProcEnhanceMode[COLOR_MODE_RECOMMEND]);
     PROC_PRINT(s, "%-20s: %-20d\n", "luma gain", stProcInfo.u32AcmLumaGain);
     PROC_PRINT(s, "%-20s: %-20d", "hue gain", stProcInfo.u32AcmHueGain);
     PROC_PRINT(s, "%-20s: %-20d\n", "sat gain", stProcInfo.u32AcmSatGain);
@@ -2449,7 +2515,8 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
     PROC_PRINT(s, "--------------------------------------- SR ----------------------------------------\n");
     PROC_PRINT(s, "%-20s: %-20s", "module", stPqParam.bModuleOnOff[HI_PQ_MODULE_SR] ? "on" : "off");
     PROC_PRINT(s, "%-20s: %-20s\n", "demo", stPqParam.bDemoOnOff[HI_PQ_DEMO_SR] ? "on" : "off");
-    PROC_PRINT(s, "%-20s: %-20s", "SR demo mode", g_pPQProcSRDemoMode[stProcInfo.u32SrMode]);
+    PROC_PRINT(s, "%-20s: %-20s", "SR demo mode", (stProcInfo.u32SrMode < SR_DEMO_BUTT) ?
+               g_pPQProcSRDemoMode[stProcInfo.u32SrMode] : g_pPQProcSRDemoMode[SR_DISABLE]);
     PROC_PRINT(s, "%-20s: %-20d\n", "sharp strength", stProcInfo.u32SrSharpStr);
 
     PROC_PRINT(s, "-------------------------------------- Sharpn -------------------------------------\n");
@@ -2471,12 +2538,6 @@ HI_S32 DRV_PQ_ProcRead(struct seq_file* s, HI_VOID* data)
     PROC_PRINT(s, "--------------------------------------- TNR ---------------------------------------\n");
     PROC_PRINT(s, "%-20s: %-20s", "module", stPqParam.bModuleOnOff[HI_PQ_MODULE_TNR] ? "on" : "off");
     PROC_PRINT(s, "%-20s: %-20s\n", "demo", stPqParam.bDemoOnOff[HI_PQ_DEMO_TNR] ? "on" : "off");
-
-    PROC_PRINT(s, "-------------------------------------- Dither -------------------------------------\n");
-    PROC_PRINT(s, "%-20s: %-20s", "DNR dither", stProcInfo.bDnrDithEn  ? "enable" : "disable");
-    PROC_PRINT(s, "%-20s: %-20s\n", "vpss dither", stProcInfo.bVpssDithEn  ? "enable" : "disable");
-    PROC_PRINT(s, "%-20s: %-20s", "vdp dither", stProcInfo.bVdpDithEn  ? "enable" : "disable");
-    PROC_PRINT(s, "%-40s\n", "");
 
     PROC_PRINT(s, "=====================================================================================\n");
 
@@ -3013,6 +3074,8 @@ static HI_S32 DRV_PQ_GetFlashPqBin(PQ_PARAM_S* pstPqParam)
 
 HI_S32 DRV_PQ_GetBinPhyAddr(HI_U32* pu32Addr)
 {
+    PQ_CHECK_NULL_PTR(pu32Addr);
+
     *pu32Addr = g_stPqBinBuf.u32StartPhyAddr;
 
     return HI_SUCCESS;
@@ -3211,12 +3274,16 @@ HI_S32 DRV_PQ_SetAcmSat(HI_PQ_ACM_LUT_S* pstAttr)
 
 HI_S32 DRV_PQ_SetReg(HI_PQ_REGISTER_S* pstAttr)
 {
+    PQ_CHECK_NULL_PTR(pstAttr);
+
     return PQ_MNG_SetReg(pstAttr, sg_u32SourceMode, sg_u32OutputMode);
 }
 
 
 HI_S32 DRV_PQ_GetReg(HI_PQ_REGISTER_S* pstAttr)
 {
+    PQ_CHECK_NULL_PTR(pstAttr);
+
     return PQ_MNG_GetReg(pstAttr);
 }
 

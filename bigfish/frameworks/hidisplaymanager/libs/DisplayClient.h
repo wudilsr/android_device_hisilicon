@@ -59,6 +59,7 @@ namespace android
             int Reload();
             int SetOutputEnable(int port, int enable);
             int GetOutputEnable(int port);
+            int SetCECSuspend();
 
         private:
             const sp<IDisplayService> & getDisplayService();

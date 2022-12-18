@@ -26,6 +26,11 @@ int pri_hisi_ion_get_heapid(alloc_device_t *dev, size_t size, int usage, buffer_
 #ifdef GRALLOC_USE_CMA
 	return ION_HEAP(ION_HIS_ID_DDR);
 #else
+	if(usage & GRALLOC_USAGE_PROTECTED)
+	{
+		return ION_HEAP_TEE_SEC_MASK;
+	}
+
 	return (usage & GRALLOC_USAGE_PHYSICAL_MEM) ? ION_HEAP(ION_HIS_ID_DDR): ION_HEAP_SYSTEM_MASK;
 #endif
 

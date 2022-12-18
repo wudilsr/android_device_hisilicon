@@ -15,9 +15,14 @@ HOST           := $(patsubst %-,%,$(CROSS_COMPILE))
 STRIP          := $(CROSS_COMPILE)strip
 ifeq (${CROSS_COMPILE},arm-histbv300-linux-)
 GDB            := gdb-7.8.1
-else
+endif
+ifeq (${CROSS_COMPILE},arm-histbv310-linux-)
+GDB            := gdb-7.8.1
+endif
+ifeq (${CROSS_COMPILE},arm-hisiv200-linux-)
 GDB            := gdb-6.8
 endif
+
 NCURSES        := ncurses-5.7
 TARGETS        := bin/gdbserver bin/gdb
 

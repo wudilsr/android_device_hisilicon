@@ -5,6 +5,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#ifdef VMX_ADVANCED_SUPPORT
+#include "hi_loader_info.h"
+#endif
 
 #include "mtdutils.h"
 
@@ -41,6 +44,29 @@ static int get_bootargs(char *bootargs)
 
 static void recordUUID2File(const char* pMnt)
 {
+#ifdef VMX_ADVANCED_SUPPORT
+    ALOGE("pMnt is %s\n",pMnt);
+    HI_LOADER_PARAMETER_S stLoaderInfo;
+    if (HI_SUCCESS != HI_LOADER_ReadParameters(&stLoaderInfo)) {
+        printf("%s: read loaderdb failed \n", __func__);
+        return;
+    }
+    if (strncmp(pMnt, "/cache", 6) == 0 || strncmp(pMnt, "/storage/emulated", 17) == 0) {
+        stLoaderInfo.eUpdateType = HI_LOADER_TYPE_FS;
+
+    } else if (strncmp(pMnt, "/mnt/sd", 7) == 0) {
+        stLoaderInfo.eUpdateType = HI_LOADER_TYPE_USB;
+    } else {
+        printf("unknown type");
+    }
+    strncpy((char*)stLoaderInfo.stPara.stUSBParam.as8FileName, "usb_update.bin", sizeof(stLoaderInfo.stPara.stUSBParam.as8FileName));
+    stLoaderInfo.stPara.stUSBParam.as8FileName[sizeof(stLoaderInfo.stPara.stUSBParam.as8FileName) - 1] = '\0';
+    if (HI_SUCCESS != HI_LOADER_WriteParameters(&stLoaderInfo)) {
+        printf("Write LoaderDB info failed!\n");
+        return;
+    }
+    sync();
+#endif
     struct stat buf;
     int ret = stat("/cache/recovery/", &buf);
     if(ret < 0)
@@ -93,6 +119,21 @@ static void recordUUID2File(const char* pMnt)
 
 static int resume_factory()
 {
+#ifdef VMX_ADVANCED_SUPPORT
+    HI_LOADER_PARAMETER_S stLoaderInfo;
+    if (HI_SUCCESS != HI_LOADER_ReadParameters(&stLoaderInfo)) {
+        ALOGE("%s: read loaderdb failed \n", __func__);
+        return -1;
+    }
+    stLoaderInfo.eUpdateType = HI_LOADER_TPYE_FACT_RESET;
+
+    if (HI_SUCCESS != HI_LOADER_WriteParameters(&stLoaderInfo))
+    {
+        printf("Write LoaderDB info failed!\n");
+        return -1;
+    }
+    return 0;
+#endif
     struct bootloader_message boot;
     memset(&boot, 0, sizeof(boot));
     strlcpy(boot.command, "boot-recovery", sizeof(boot.command));
@@ -178,6 +219,8 @@ int rebootForReset()
 int rebootForUpgrade(char* path)
 {
     recordUUID2File(path);
+#ifndef VMX_ADVANCED_SUPPORT
     resume_factory();
+#endif
     return 0;
 }

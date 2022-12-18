@@ -1,4 +1,4 @@
-CFG_HI_SDK_VERSION=HiSTBAndroidV600R001C00SPC064_v2016061301
+CFG_HI_SDK_VERSION=HiSTBAndroidV600R001C00SPC065_v2016112822
 
 ifeq ($(SDK_CFGFILE),)
 SDK_CFGFILE=cfg.mak
@@ -20,6 +20,7 @@ COMMON_DIR=${SOURCE_DIR}/common
 MSP_DIR=${SOURCE_DIR}/msp
 COMPONENT_DIR=${SOURCE_DIR}/component
 SAMPLE_DIR=${SDK_DIR}/sample
+KERNEL_SRC_DIR  := $(SOURCE_DIR)/kernel/$(CFG_HI_KERNEL_VERSION)
 
 ifneq ($(ANDROID_BUILD),y)
 PLUGIN_DIR=${SOURCE_DIR}/plugin
@@ -28,16 +29,21 @@ BOOT_DIR=${SOURCE_DIR}/boot
 KERNEL_DIR=${SOURCE_DIR}/kernel
 CFG_HI_BASE_ENV+=" MSP_DIR COMPONET_DIR ROOTFS_SRC_DIR BOOT_DIR KERNEL_DIR COMMON_DIR PLUGIN_DIR "
 endif
-#=============TVP_DIR==================================================================
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-ifdef CFG_ANDROID_PRODUCT
-TVP_DIR=${SDK_DIR}/source/plugin/tvp
-else
-TVP_DIR=${SDK_DIR}/source/plugin/tee/tee_hisi
-endif
-TEE_DIR=${LINUX_DIR}/drivers/hisilicon/tee
-TEE_INCLUDE=${TEE_DIR}/include
-endif
+
+#=============HI_OUT_DIR======================================================================
+HI_CONFIGS_DIR := $(SDK_DIR)/configs
+HI_SCRIPTS_DIR := $(SDK_DIR)/scripts
+HI_TOOLS_DIR := $(SDK_DIR)/tools/linux/utils
+
+AT:=
+HI_OUT_DIR:= $(SDK_DIR)/pub
+HI_OUT_DIR := $(shell cd $(HI_OUT_DIR) && /bin/pwd)
+$(if $(HI_OUT_DIR),,$(error output directory "$(saved-output)" does not exist))
+HI_INSTALL_DIR := $(HI_OUT_DIR)
+
+HI_PREBUILTS_DIR    := $(HI_CONFIGS_DIR)/$(CFG_HI_CHIP_TYPE)/prebuilts
+HI_IMAGE_DIR        := $(HI_INSTALL_DIR)/image
+
 #=============INCLUDE_DIR==================================================================
 MSP_UNF_INCLUDE=${MSP_DIR}/include
 MSP_API_INCLUDE=${MSP_DIR}/api/include
@@ -64,6 +70,43 @@ ROOTFS_DIR=${PUB_DIR}/rootfs
 CFG_HI_BASE_ENV+=" IMAGE_DIR INCLUDE_DIR LIB_DIR STATIC_LIB_DIR SHARED_LIB_DIR EXTERN_LIB_DIR "
 CFG_HI_BASE_ENV+=" MODULE_DIR ROOTFS_DIR ROOTBOX_DIR ROOTBOX_DIR "
 endif
+
+#==============================================================================================
+HI_OUT_DIR     :=$(SDK_DIR)/pub
+HI_INCLUDE_DIR := $(HI_OUT_DIR)/include
+HI_INSTALL_DIR := $(HI_OUT_DIR)
+
+HI_USER_SPACE_LIB := y
+CFG_HI_ARM_TOOLCHAINS_NAME := $(CFG_HI_TOOLCHAINS_NAME)
+
+#=============HI_OUT_DIR======================================================================
+HI_PREBUILTS_DIR    := $(HI_CONFIGS_DIR)/$(CFG_HI_CHIP_TYPE)/prebuilts
+HI_IMAGE_DIR        := $(HI_INSTALL_DIR)/image
+HI_MODULE_DIR       := $(HI_INSTALL_DIR)/kmod
+HI_ROOTFS_DIR       := $(HI_INSTALL_DIR)/rootfs
+
+HI_LIB_DIR          := $(HI_INSTALL_DIR)/lib
+HI_STATIC_LIB_DIR   := $(HI_LIB_DIR)/static
+HI_SHARED_LIB_DIR   := $(HI_LIB_DIR)/share
+HI_EXTERN_LIB_DIR   := $(HI_LIB_DIR)/extern
+
+HI_LIB64_DIR        := $(HI_INSTALL_DIR)/lib64
+HI_STATIC_LIB64_DIR := $(HI_LIB64_DIR)/static
+HI_SHARED_LIB64_DIR := $(HI_LIB64_DIR)/share
+HI_EXTERN_LIB64_DIR := $(HI_LIB64_DIR)/extern
+
+
+#=============TEE_DIR==================================================================
+HI_TEE_OS_DIR   := $(SDK_DIR)/source/tee/core
+HI_TEE_API_DIR  := $(SDK_DIR)/source/tee/api
+HI_TEE_DRV_DIR  := $(SDK_DIR)/source/tee/drv
+HI_TEE_TA_DIR   := $(SDK_DIR)/source/tee/ta
+
+TEE_API_INCLUDE := $(HI_TEE_OS_DIR)/libteec/inc
+TEE_DRV_INCLUDE := $(KERNEL_SRC_DIR)/drivers/hisilicon/tee/tee_hisi/tzdriver
+
+#==========================================================================================
+
 #=============LINUX_DIR====================================================================
 ifneq ($(ANDROID_BUILD),y)
 LINUX_DIR=${KERNEL_DIR}/${CFG_HI_KERNEL_VERSION}
@@ -86,6 +129,7 @@ endif
 #=============SERVER_UNTILS=================================================================
 ifneq ($(ANDROID_BUILD),y)
 SERVER_UNTILS_DIR=${TOOLS_DIR}/utils
+MKBOOTARGS=$(SERVER_UNTILS_DIR)/mkbootargs-tool/mkbootargs
 MKIMAGE=${SERVER_UNTILS_DIR}/mkimage
 MKCRAMFS=${SERVER_UNTILS_DIR}/mkfs.cramfs
 MKEXT2FS=${SERVER_UNTILS_DIR}/genext2fs
@@ -118,15 +162,11 @@ ifeq (${CFG_HI_TOOLCHAINS_NAME},arm-hisiv200-linux)
 CFG_HI_CFLAGS += -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=softfp -mfpu=vfpv3-d16
 endif
 
-ifeq (${CFG_HI_TOOLCHAINS_NAME},arm-histbv300-linux)
-ifeq (${CFG_HI_CHIP_TYPE},hi3798mv100)
+ifeq ($(CFG_HI_TOOLCHAINS_NAME), arm-histbv310-linux)
+ifneq ($(findstring $(CFG_HI_CHIP_TYPE), hi3798mv100 hi3796mv100),)
 CFG_HI_CFLAGS += -mcpu=cortex-a7 -mfloat-abi=softfp -mfpu=vfpv4-d16
 else
-ifeq (${CFG_HI_CHIP_TYPE},hi3796mv100)
-CFG_HI_CFLAGS += -mcpu=cortex-a7 -mfloat-abi=softfp -mfpu=vfpv4-d16
-else
-CFG_HI_CFLAGS += -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=softfp -mfpu=vfpv3-d16
-endif
+CFG_HI_CFLAGS += -mcpu=cortex-a9 -mfloat-abi=softfp -mfpu=vfpv3-d16
 endif
 endif
 
@@ -224,8 +264,8 @@ ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
     endif
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-CFG_HI_CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+CFG_HI_CFLAGS += -DHI_TEE_SUPPORT
 endif
 
 #=============KERNEL MODULE COMPILE OPTIONS=====================================================
@@ -347,15 +387,12 @@ ifeq ($(CFG_HI_ADVCA_SUPPORT),y)
             CFG_HI_KMOD_CFLAGS += -DHI_ADVCA_FUNCTION_$(CFG_HI_ADVCA_FUNCTION)
         endif
     endif
-
-    ifeq ($(CFG_HI_ANDROID_SECURITY_L2_SYSTEM_CHECK),y)
-        CFG_HI_KMOD_CFLAGS += -DHI_ANDROID_SECURITY_L2_SYSTEM_CHECK
-    endif
 endif
 
-ifeq ($(CFG_HI_TVP_SUPPORT),y)
-CFG_HI_KMOD_CFLAGS += -DHI_TVP_SUPPORT
+ifeq ($(CFG_HI_TEE_SUPPORT),y)
+CFG_HI_KMOD_CFLAGS += -DHI_TEE_SUPPORT
 endif
+
 #=============BOARD CONFIGURATION OPTIONS=====================================================
 CFG_HI_BOARD_CONFIGS :=
 

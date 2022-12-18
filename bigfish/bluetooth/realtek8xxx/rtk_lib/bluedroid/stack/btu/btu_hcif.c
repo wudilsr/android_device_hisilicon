@@ -1814,8 +1814,11 @@ void btu_hcif_cmd_timeout (UINT8 controller_id)
 
     /* free stored command */
     GKI_freebuf(p_cmd);
+    if(opcode != 0xfc77)
+        num_hci_cmds_timed_out++;
+    else
+        ALOGE("# WARNING : BTU HCI(id=%d) command timeout. opcode=0x%x Ignore!!!", controller_id, opcode);
 
-    num_hci_cmds_timed_out++;
     /* When we receive consecutive HCI cmd timeouts for >=BTM_MAX_HCI_CMD_TOUT_BEFORE_RESTART
      times, Bluetooth process will be killed and restarted */
     if (num_hci_cmds_timed_out >= BTM_MAX_HCI_CMD_TOUT_BEFORE_RESTART)

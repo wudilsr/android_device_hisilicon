@@ -55,23 +55,17 @@
 
     <!-- setting Switch -->
     <string name="SettingSwitch_VIME_Title">虚拟输入法</string>
-    <string name="SettingSwitch_VIME_status_on">开启状态</string>
-    <string name="SettingSwitch_VIME_status_off">关闭状态</string>
     <string name="SettingSwitch_Sensor_Title">体感</string>
-    <string name="SettingSwitch_Sensor_status_on">开启状态</string>
-    <string name="SettingSwitch_Sensor_status_off">关闭状态</string>
     <string name="SettingSwitch_Video_Title">视频</string>
-    <string name="SettingSwitch_Video_status_on">开启状态</string>
-    <string name="SettingSwitch_Video_status_off">关闭状态</string>
     <string name="SettingSwitch_Audio_Title">音频</string>
-    <string name="SettingSwitch_Audio_status_on">开启状态</string>
-    <string name="SettingSwitch_Audio_status_off">关闭状态</string>
     <string name="SettingSwitch_Vibrator_Title">震动</string>
+    <string name="SettingSwitch_HomePage_Title">首页设为遥控器</string>
+    <string name="SettingSwitch_iScene_Title">智能场景</string>
 
     <!-- toast -->
     <string name="toast_KeepAlive_packet_loss">网络异常！</string>
     <string name="toast_VIME_close">虚拟输入法关闭！</string>
-    <string name="AccessController_refuse_access_tips">抱歉，无法接入！</string>
+    <string name="AccessController_refuse_access_tips">抱歉，可能网络不佳，请重新连接！</string>
     <string name="toast_network_error">WiFi已断开，请检查网络!</string>
     <string name="one_more_exit">再按一次退出</string>
 
@@ -94,6 +88,7 @@
 
     <!-- 遥控器界面 -->
     <string name="remote_stay">待用</string>
+    <string name="remote_number_done">完成</string>
     <string name="remote_device_not_found">未检测到WIFI机顶盒！</string>
     <string name="remote_mouse_name">鼠标模式</string>
     <string name="remote_game_name">游戏模式</string>

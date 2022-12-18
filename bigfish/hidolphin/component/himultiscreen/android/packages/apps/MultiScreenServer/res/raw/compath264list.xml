@@ -24,4 +24,12 @@
           <buildModel>H60-L12</buildModel>
           <sdkVersion>4.4.2</sdkVersion>
       </device>
+      <device>
+          <buildModel>SM-G9006V</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
+      <device>
+          <buildModel>SM-G9008V</buildModel>
+          <sdkVersion>4.4.2</sdkVersion>
+      </device>
     </deviceList>

@@ -101,8 +101,15 @@ LOCAL_C_INCLUDES+= . \
                    $(bdroid_C_INCLUDES)
 
 ifeq ($(BOARD_HAVE_BLUETOOTH_RTK),true)
+LOCAL_CFLAGS += \
+    -DBLUETOOTH_RTK
 LOCAL_C_INCLUDES += . \
     $(LOCAL_PATH)/../realtek/include
+endif
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_RTK_COEX),true)
+LOCAL_C_INCLUDES += . \
+    $(LOCAL_PATH)/../hci/include
 endif
 
 include $(BUILD_STATIC_LIBRARY)

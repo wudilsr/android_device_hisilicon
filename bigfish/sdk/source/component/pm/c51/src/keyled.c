@@ -31,11 +31,7 @@ HI_VOID chan_display(HI_VOID)
     DATA_U32_S  channum;
 
     /* Get display digits */
-#ifdef  HI_ADVCA_SUPPORT
-	regAddr.val32 = CFG_BASE_ADDR + SC_GEN13;
-#else	
     regAddr.val32 = DATA_DISPVAL;
-#endif
     read_regVal();
     channum.val32 = regData.val32;
 

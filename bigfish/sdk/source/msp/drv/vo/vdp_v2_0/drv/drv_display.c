@@ -83,26 +83,8 @@ static HDMI_EXPORT_FUNC_S* s_pstHDMIFunc;
     }
 
 
-#define DispCheckNullPointer(ptr) \
-    {                                \
-        if (!ptr)                    \
-        {                            \
-            DISP_ERROR("DISP ERROR! Input null pointer in %s!\n", __FUNCTION__); \
-            return HI_ERR_DISP_NULL_PTR;  \
-        }                             \
-    }
 
-#if 0
 
-#define DispCheckID(id)    \
-    {                                \
-        if ( (id > HI_DRV_DISPLAY_BUTT) || (id > HI_DRV_DISPLAY_BUTT))  \
-        {                            \
-            DISP_ERROR("DISP ERROR! Invalid display in %s!\n", __FUNCTION__); \
-            return HI_ERR_DISP_INVALID_PARA;  \
-        }                             \
-    }
-#endif
 
 #define DispGetPointerByID(id, ptr)    \
     {                                      \
@@ -425,8 +407,8 @@ HI_S32 DispPrepareHDMI( HI_DRV_DISP_INTF_ID_E enHDMIId)
     {
         DispGetPointerByID((HI_DRV_DISPLAY_E) i, pstDisp);
         pstIt = &pstDisp->stSetting.stIntf[enHDMIId];
-		
-        if ((!DispGetHdmiFunction())) 
+
+        if ((!DispGetHdmiFunction()))
 		{
             if (s_pstHDMIFunc->pfnHdmiDetach && s_pstHDMIFunc->pfnHdmiAttach)
             {
@@ -437,7 +419,7 @@ HI_S32 DispPrepareHDMI( HI_DRV_DISP_INTF_ID_E enHDMIId)
             }
 			pfOpt->PF_ReleaseIntf2(i, pstIt);
 			DispCleanIntf(pstIt);
-        } 
+        }
         continue;
     }
 
@@ -637,6 +619,8 @@ HI_S32 DispAddIntf(DISP_S* pstDisp, HI_DRV_DISP_INTF_S* pstIntf)
     HI_BOOL bBkFlag = HI_FALSE;
     HI_S32 nRet = HI_SUCCESS;
     DispCheckNullPointer(pfOpt);
+    DispCheckNullPointer(pfOpt->PF_ReleaseIntf2);
+    DispCheckNullPointer(pfOpt->PF_AcquireIntf2);
 
     //printk("DispAddIntf ***0**add (%d)----%d (%d)(%d)(%d)\n",pstDisp->enDisp,pstIntf->eID,pstIntf->u8VDAC_Y_G,pstIntf->u8VDAC_Pb_B,pstIntf->u8VDAC_Pr_R);
     /* if intf exist, release firstly */
@@ -647,7 +631,6 @@ HI_S32 DispAddIntf(DISP_S* pstDisp, HI_DRV_DISP_INTF_S* pstIntf)
         stBackup = pstIt->stIf;
 
         // s1 release vdac
-        DispCheckNullPointer(pfOpt->PF_ReleaseIntf2);
         pfOpt->PF_ReleaseIntf2(pstDisp->enDisp, pstIt);
     }
 
@@ -657,7 +640,7 @@ HI_S32 DispAddIntf(DISP_S* pstDisp, HI_DRV_DISP_INTF_S* pstIntf)
     DISP_PRINT("DispAddIntf  pstIntf->u8VDAC_Y_G = %d\n", pstIntf->u8VDAC_Y_G);
 
     pstIt->stIf = *pstIntf;
-        DispCheckNullPointer(pfOpt->PF_AcquireIntf2);
+
     nRet = pfOpt->PF_AcquireIntf2(pstDisp->enDisp, pstIt);
 
     if (nRet)
@@ -672,7 +655,7 @@ HI_S32 DispAddIntf(DISP_S* pstDisp, HI_DRV_DISP_INTF_S* pstIntf)
         if (s_pstHDMIFunc->pfnHdmiDetach && s_pstHDMIFunc->pfnHdmiAttach)
         {
         #if defined (HI_HDMI_SUPPORT_2_0)
-		 
+
          HDMI_VIDEO_ATTR_S  stVideoAttr;
 
 		 if (HI_SUCCESS == DISPGetDispPara(pstDisp->enDisp,&stVideoAttr))
@@ -756,7 +739,7 @@ HI_S32 DispProduceDisplayInfo(DISP_S* pstDisp, HI_DISP_DISPLAY_INFO_S* pstInfo)
         pstInfo->eColorSpace = stFmt.enColorSpace;
 #if defined (HI_HDMI_SUPPORT_2_0)
 		pstDisp->stSetting.stColor.enOutCS= pstDisp->stSetting.stColor.enInCS;
-#endif		
+#endif
        // printk(">>>>>>>>>>>>>>>> 002 cs =%d\n",  pstInfo->eColorSpace);
 
         if (!pstDisp->stSetting.bCustomRatio)
@@ -831,7 +814,7 @@ HI_S32 DispProduceDisplayInfo(DISP_S* pstDisp, HI_DISP_DISPLAY_INFO_S* pstInfo)
         pstInfo->eColorSpace = HI_DRV_CS_BT709_RGB_FULL;
 #if defined (HI_HDMI_SUPPORT_2_0)
 		pstDisp->stSetting.stColor.enOutCS= pstDisp->stSetting.stColor.enInCS;
-#endif	
+#endif
         pstInfo->stAR.u32ARh = pstDisp->stSetting.stCustomTimg.u32AspectRatioH;
         pstInfo->stAR.u32ARw = pstDisp->stSetting.stCustomTimg.u32AspectRatioW;
 
@@ -1165,7 +1148,7 @@ HI_VOID DispInitDisplay(HI_DRV_DISPLAY_E enDisp)
         {
             //todo
             DispAddIntf(pstDisp, &stDefSetting.stIntf[i]);
-			
+
 			pstIntfOpt = DISP_HAL_GetOperationPtr();
             if ((!pstIntfOpt) ||(!pstIntfOpt->PF_GetChnEnable ))
             {
@@ -1175,7 +1158,7 @@ HI_VOID DispInitDisplay(HI_DRV_DISPLAY_E enDisp)
             pstIntfOpt->PF_InitDacDetect(&stDefSetting.stIntf[i]);
         }
     }
- 
+
 
     return;
 }
@@ -1482,7 +1465,7 @@ HI_S32 DISP_Init(HI_VOID)
             HI_DRV_HDMI_ATTR_S stAttr;
             HI_DRV_DISP_TIMING_S  stTiming;
 
-            
+
             if (HI_SUCCESS != HI_DRV_HDMI_Open(HI_UNF_HDMI_ID_0))
             {
                 DISP_PRINT("HI_UNF_HDMI_Open Err \n");
@@ -1504,7 +1487,7 @@ HI_S32 DISP_Init(HI_VOID)
                 stAttr.enVidInMode  = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
                 stAttr.enVidOutMode = HI_UNF_HDMI_VIDEO_MODE_YCBCR444;
             }
-           
+
             stAttr.u32DispFmt   = enEncFmt;
 
             DispGetFmtTiming(enEncFmt,&stTiming);
@@ -1518,13 +1501,13 @@ HI_S32 DISP_Init(HI_VOID)
     		{
     			stAttr.u32ClkFs = stTiming.u32PixFreq;
     		}
-            
+
             printf("stAttr.u32ClkFs=%d\n",stAttr.u32ClkFs);
             HI_DRV_HDMI_SetAttr(HI_UNF_HDMI_ID_0, &stAttr);
             HI_DRV_HDMI_Start(HI_UNF_HDMI_ID_0);
 
-            
-            
+
+
 #else
             if (HI_SUCCESS != HI_DRV_HDMI_Open(enEncFmt))
             {
@@ -1544,14 +1527,14 @@ HI_S32 DISP_Init(HI_VOID)
 
 #ifndef HI_MCE_SUPPORT
 
-			   
+
 #if defined (HI_HDMI_SUPPORT_2_0)
-			/*do nothing */					
-#else	
+			/*do nothing */
+#else
 
             if ((pstDisp->stSetting.stIntf[HI_DRV_DISP_INTF_HDMI0].bOpen) && (!DispGetHdmiFunction()))
             {
- 
+
                     if (s_pstHDMIFunc->pfnHdmiInit && s_pstHDMIFunc->pfnHdmiOpen)
                     {
                         DISP_PRINT(">>>>>>>>>>>>>>>>>>>>>>>>>>>> disp init hdmi\n");
@@ -1559,7 +1542,7 @@ HI_S32 DISP_Init(HI_VOID)
                         s_pstHDMIFunc->pfnHdmiOpen(HI_UNF_HDMI_ID_0);
                     }
             }
-#endif			
+#endif
 #endif
 
         }
@@ -2424,7 +2407,7 @@ HI_DRV_DISPLAY_E  DISPGetIntfChannel(HI_DRV_DISP_INTF_ID_E enIntfID)
 HI_S32 DispGetFmtTiming(HI_DRV_DISP_FMT_E eFmt,HI_DRV_DISP_TIMING_S *pstTiming)
 {
     DISP_S* pstDisp;
-	
+
     HI_S32 nRet = HI_FAILURE;
     DISP_INTF_OPERATION_S* pfOpt = DISP_HAL_GetOperationPtr();
 
@@ -2473,12 +2456,12 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 	HI_DRV_DISP_TIMING_S  stTiming;
 	DispCheckID(enDisp);
 	DispGetPointerByID(enDisp, pstDisp);
-	
+
 	pstVideoAttr->enVideoFmt = pstDisp->stSetting.enFormat;
 	nRet = DispGetFmtTiming(pstVideoAttr->enVideoFmt,&stTiming);
 	if ( HI_SUCCESS != nRet )
 	{
-		
+
 		pstVideoAttr->u32ClkFs = 0;
 		pstVideoAttr->enHvSyncPol = DRV_HDMI_HV_SYNC_POL_HPVP;
 		pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_BUTT;
@@ -2488,7 +2471,7 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 		pstVideoAttr->u32PixelRepeat = 1;
 		pstVideoAttr->enInBitDepth = HI_UNF_HDMI_DEEP_COLOR_30BIT;
 		pstVideoAttr->enVideoFmt = HI_DRV_DISP_FMT_BUTT;
-		
+
 		DISP_WARN("DISPGetDispPara err nRet=%d !\n",nRet);
 		return HI_SUCCESS;
 	}
@@ -2520,14 +2503,14 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 			pstVideoAttr->u32ClkFs = stTiming.u32PixFreq;
 		}
 	}
-	
+
 	/*need to do  start--->*/
 	pstVideoAttr->u32ColorSpace = pstDisp->stSetting.stColor.enOutCS;
 	pstVideoAttr->u32DispRatioWidth = pstDisp->stSetting.u32CustomRatioWidth;
 	pstVideoAttr->u32DispRatioHeight = pstDisp->stSetting.u32CustomRatioHeight;
 	pstVideoAttr->enInBitDepth = HI_UNF_HDMI_DEEP_COLOR_30BIT;
 
-	if ((pstDisp->stSetting.enFormat >= HI_DRV_DISP_FMT_PAL  ) 
+	if ((pstDisp->stSetting.enFormat >= HI_DRV_DISP_FMT_PAL  )
 		&& (pstDisp->stSetting.enFormat <= HI_DRV_DISP_FMT_1440x480i_60 )
 		)
 	{
@@ -2543,11 +2526,11 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 		case DISP_STEREO_FPK:
 			pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_FRAME_PACKETING;
 			break;
-			
+
 		case DISP_STEREO_SBS_HALF:
 			pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_SIDE_BY_SIDE_HALF;
 			break;
-			
+
 		case DISP_STEREO_TAB:
 			pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_TOP_AND_BOTTOM;
 			break;
@@ -2567,7 +2550,7 @@ HI_S32  DISPGetDispPara(HI_DRV_DISPLAY_E enDisp ,HDMI_VIDEO_ATTR_S  *pstVideoAtt
 			pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_L_DEPTH_GRAPHICS_GRAPHICS_DEPTH;
 			break;
 		case DISP_STEREO_NONE:
-			
+
 		default:
 			pstVideoAttr->enStereoMode = HI_UNF_EDID_3D_BUTT;
 			break;
@@ -2764,7 +2747,7 @@ HI_S32 DISP_SetFormat(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_STEREO_MODE_E enStere
         DISP_ERROR("Display %d does not support fmt %d\n", (HI_S32)enDisp, (HI_S32)enEncFmt2);
         return HI_ERR_DISP_INVALID_PARA;
     }
-	
+
 #ifndef HI_VO_DISP_ISOLATED_FMT_SUPPORT
     // If hd work at follow-mode, set display0 sd format
     if (   (enDisp == HI_DRV_DISPLAY_1) && pstDisp->bIsMaster
@@ -2796,7 +2779,7 @@ HI_S32 DISP_SetFormat(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_STEREO_MODE_E enStere
 				#endif
             }
         }
-		
+
 #ifdef HI_VO_DISP_ISOLATED_FMT_SUPPORT
 		if ( (enDisp == HI_DRV_DISPLAY_1) && pstDisp->bIsMaster)
         {
@@ -3989,7 +3972,6 @@ HI_S32 DISP_AddIntf(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_INTF_S* pstIntf)
     DispCheckNullPointer(pstIntf);
     //printk("add****DISP_AddIntf**************** (%d)(%d)(%d)\n",pstIntf->eID,pstIntf->u8VDAC_Pb_B,pstIntf->u8VDAC_Pr_R);
     nRet = DispCheckIntfValid(pstIntf);
-
     if (nRet)
     {
         DISP_ERROR("Invalid intf parameters in %s!\n", __FUNCTION__);
@@ -4041,6 +4023,12 @@ HI_S32 DISP_DelIntf(HI_DRV_DISPLAY_E enDisp, HI_DRV_DISP_INTF_S* pstIntf)
 
     DispCheckID(enDisp);
     DispCheckNullPointer(pstIntf);
+
+    if (HI_SUCCESS != DispCheckIntfValid(pstIntf))
+    {
+        DISP_ERROR("Invalid intf parameters in %s!\n", __FUNCTION__);
+        return HI_ERR_DISP_INVALID_PARA;
+    }
 
     // s2 get pointer
     DispGetPointerByID(enDisp, pstDisp);
@@ -4392,6 +4380,7 @@ HI_S32 DISP_GetProcInto(HI_DRV_DISPLAY_E enDisp, DISP_PROC_INFO_S* pstInfo)
 
     return HI_SUCCESS;
 }
+
 
 #if ((!defined(__DISP_PLATFORM_BOOT__)) && defined(DAC_TYPE_SYNOPSYS))
 

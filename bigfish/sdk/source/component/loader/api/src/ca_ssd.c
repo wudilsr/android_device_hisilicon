@@ -67,7 +67,8 @@ HI_S32 CA_SSD_DecryptImage(HI_U8 *pu8Buffer, HI_U32 u32Len, CA_SSD_KEY_TYPE enKe
 #else
     HI_INFO_CA_SSD("No need to decrypt image for nagra.\n");
 #endif
-    HI_ERR_CA_SSD("No need to decrypt image for verimatrix.\n");
+#else
+    HI_INFO_CA_SSD("No need to decrypt image for verimatrix.\n");
 #endif
 
     return HI_SUCCESS;
@@ -76,7 +77,6 @@ HI_S32 CA_SSD_DecryptImage(HI_U8 *pu8Buffer, HI_U32 u32Len, CA_SSD_KEY_TYPE enKe
 HI_S32 CA_SSD_EncryptImage(HI_U8 *pu8Buffer, HI_U32 u32Len, CA_SSD_KEY_TYPE enKeyType)
 {
 #ifndef HI_ADVCA_TYPE_VERIMATRIX
-
 #ifndef HI_ADVCA_TYPE_NAGRA
     HI_S32 s32Ret = HI_SUCCESS;
     HI_CA_KEY_GROUP_E enKeyGroup;
@@ -115,7 +115,6 @@ HI_S32 CA_SSD_EncryptImage(HI_U8 *pu8Buffer, HI_U32 u32Len, CA_SSD_KEY_TYPE enKe
 HI_S32 CA_SSD_AuthenticateEx(HI_U8 *ppu8Buffer, HI_U32 *pu32Len)
 {
 #ifndef HI_ADVCA_TYPE_VERIMATRIX
-
     HI_S32 s32Ret = HI_SUCCESS;
 #ifndef HI_ADVCA_TYPE_NAGRA
     HI_U32 u32CodeOffset = 0;

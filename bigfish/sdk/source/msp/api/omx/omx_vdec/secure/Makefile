@@ -19,14 +19,16 @@ CFLAGS  +=  -I$(COMMON_UNF_INCLUDE)                 \
             -I$(COMMON_DRV_INCLUDE)                 \
             -I$(MSP_UNF_INCLUDE)                    \
             -I$(MSP_API_INCLUDE)                    \
-            -I$(MSP_DRV_INCLUDE)                    \
-	        -I$(TVP_DIR)/libteec/inc                \
-	        -I$(TVP_DIR)/libteec/sec_mmz/inc
-CFLAGS  +=  -DHI_TVP_SUPPORT
+            -I$(MSP_DRV_INCLUDE)
+			
+			
+CFLAGS  +=  -I$(HI_TEE_OS_DIR)/libteec/sec_mmz/inc
+CFLAGS  +=  -I$(TEE_API_INCLUDE)			
+CFLAGS  +=  -DHI_OMX_TEE_SUPPORT
 
 LIBS        := libOMX.hisi.video.decoder.secure
 
-OBJS        := omx_allocator.o omx_event_queue.o omx_vdec.o omx_drv_ctx.o
+OBJS        := omx_event_queue.o omx_vdec.o omx_drv_ctx.o
 
 #===============================================================================
 # rules

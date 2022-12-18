@@ -321,6 +321,125 @@ typedef struct hiUNF_ADVCA_OTP_ATTR_S
 #define CA_V200_RSV3_INFO_ADD         (CA_BASE_ADDR + 0xcc)
 #define CA_V200_VERSION_ADD           (CA_BASE_ADDR + 0xd0)
 
+
+typedef union
+{
+    struct
+    {
+        HI_U32 boot_mode_sel_0      : 1;//0x00[0]
+        HI_U32 boot_mode_sel_1      : 1;//0x00[1]
+        HI_U32 bload_dec_en         : 1;//0x00[2]
+        HI_U32 self_boot_disable    : 1;//0x00[3]
+        HI_U32 ddr_wakeup_disable   : 1;//0x00[4]
+        HI_U32 csa2_lv_sel          : 1;//0x00[5]
+        HI_U32 r2r_lv_sel           : 1;//0x00[6]
+        HI_U32 sp_lv_sel            : 1;//0x00[7]
+        HI_U32 csa3_lv_sel          : 1;//0x01[0]
+        HI_U32 link_prt_disable     : 1;//0x01[1]
+        HI_U32 ts_csa2_hardonly_en  : 1;//0x01[2]
+        HI_U32 ts_sp_hardonly_en    : 1;//0x01[3]
+        HI_U32 ts_des_hardonly_en   : 1;//0x01[4]
+        HI_U32 ts_nv_hardonly_en    : 1;//0x01[5]
+        HI_U32 ts_csa3_hardonly_en  : 1;//0x01[6]
+        HI_U32 ts_others_hardonly_en: 1;//0x01[7]
+        HI_U32 tskl_csa2_disable    : 1;//0x02[0]
+        HI_U32 tskl_sp_disable      : 1;//0x02[1]
+        HI_U32 tskl_des_disable     : 1;//0x02[2]
+        HI_U32 tskl_nv_disable      : 1;//0x02[3]
+        HI_U32 tskl_csa3_disable    : 1;//0x02[4]
+        HI_U32 tskl_others_disable  : 1;//0x02[5]
+        HI_U32 mc_aes_hardonly_en   : 1;//0x02[6]
+        HI_U32 mc_tdes_hardonly_en  : 1;//0x02[7]
+        HI_U32 mc_des_hardonly_en   : 1;//0x03[0], use as "itcsa3_disable" in irdeto MSR2.2
+        HI_U32 mc_rc4_hardonly_en   : 1;//0x03[1], used as "itcsa3_enable" in irdeto MSR2.2
+        HI_U32 mckl_des_hard_disable: 1;//0x03[2], use as "runcheck_lv_0" in irdeto MSR2.2
+        HI_U32 mckl_rc4_disable     : 1;//0x03[3]
+        HI_U32 tskl_tdes_disable    : 1;//0x03[4]  DEMUX TDES engine control.
+        HI_U32 bload_mode_sel       : 1;//0x03[5]
+        HI_U32 ddr_scramble_en      : 1;//0x03[6]
+        HI_U32 otp_global_lock_en   : 1;//0x03[7]
+    } bits;
+    HI_U32 u32;
+} CA_OTP_V200_INTERNAL_PV_0_U;
+
+
+typedef union
+{
+    struct
+    {
+        HI_U32 secure_chip_flag      : 1;//0x04[0]
+        HI_U32 soc_tz_enable         : 1;//0x04[1]
+        HI_U32 otp_tz_area_enable    : 1;//0x04[2]
+        HI_U32 misc_kl_disable       : 1;//0x04[3]
+        HI_U32 gg_kl_disable         : 1;//0x04[4]
+        HI_U32 dcas_kl_disable       : 1;//0x04[5]
+        HI_U32 kl_dpa_clk_sel_en     : 1;//0x04[6]
+        HI_U32 kl_dpa_filter_clk_en  : 1;//0x04[7]
+        HI_U32 mc_dpa_clk_sel_en     : 1;//0x05[0]
+        HI_U32 pvr_dpa_filter_clk_en : 1;//0x05[1]
+        HI_U32 uart_disable          : 1;//0x05[2]
+        HI_U32 pcie_disable          : 1;//0x05[3]
+        HI_U32 usb_disable           : 1;//0x05[4]
+        HI_U32 sata_disable          : 1;//0x05[5]
+        HI_U32 vmx_bl_fuse           : 1;//0x05[6]
+        HI_U32 ts_out_disable        : 1;//0x05[7]
+        HI_U32 lpc_disable           : 1;//0x06[0]
+        HI_U32 lpc_master_disable    : 1;//0x06[1]
+        HI_U32 bootsel_ctrl          : 1;//0x06[2]
+        HI_U32 bload_enc_disable     : 1;//0x06[3]
+        HI_U32 runtime_check_en      : 1;//0x06[4]
+        HI_U32 dolby_flag            : 1;//0x06[5]
+        HI_U32 macrovision_flag      : 1;//0x06[6]
+        HI_U32 dts_flag              : 1;//0x06[7]
+        HI_U32 wakeup_ddr_check_en   : 1;//0x07[0]
+        HI_U32 misc_lv_sel           : 1;//0x07[1]
+        HI_U32 version_id_check_en   : 1;//0x07[2]
+        HI_U32 bl_msid_check_en      : 1;//0x07[3]
+        HI_U32 nf_rng_disable        : 1;//0x07[4]
+        HI_U32 soft_hash_flag        : 1;//0x07[5]
+        HI_U32 sp_lv_sel_2           : 1;//0x07[6]
+        HI_U32 misc_lv_sel_2         : 1;//0x07[7]
+    } bits;
+    HI_U32 u32;
+} CA_OTP_V200_INTERNAL_PV_1_U;
+
+/** JTAG protect mode*/
+typedef enum
+{
+    CA_OTP_KEY_LEV1 = 0,
+    CA_OTP_KEY_LEV2,
+    CA_OTP_KEY_LEV3,
+    CA_OTP_KEY_LEV4,
+    CA_OTP_KEY_LEV5,
+    CA_OTP_KEY_LEV6,
+    CA_OTP_KEY_LEV_BUTT
+}CA_OTP_KEY_LEVEL_E;
+
+
+/** CA vendor type*/
+typedef enum
+{
+    CA_OTP_VENDOR_NONE  = 0x0,
+    CA_OTP_VENDOR_NAGRA,
+    CA_OTP_VENDOR_IRDETO,
+    CA_OTP_VENDOR_CONAX,
+    CA_OTP_VENDOR_NDS,
+    CA_OTP_VENDOR_SUMA,
+    CA_OTP_VENDOR_NOVEL,
+    CA_OTP_VENDOR_VERIMATRIX,
+    CA_OTP_VENDOR_CTI,
+    CA_OTP_VENDOR_SAFEVIEW,
+    CA_OTP_VERDOR_LATENSE,
+    CA_OTP_VERDOR_SH_TELECOM,
+    CA_OTP_VERDOR_VIACCESS,
+    CA_OTP_VENDOR_BUTT
+}CA_OTP_VENDOR_TYPE_E;
+
+#define CA_OTP_V200_INTERNAL_PV_0                 (0x00)
+#define CA_OTP_V200_INTERNAL_PV_1                 (0x04)
+
+#define CA_OTP_V200_INTERNAL_CA_VENDOR_ID         (0xAC)
+
 #define ca_rdReg(addr, val)  ((val) = (*(volatile HI_U32 *)(addr)))
 #define ca_wtReg(addr, val)  ((*(volatile HI_U32 *)(addr)) = (val))
 

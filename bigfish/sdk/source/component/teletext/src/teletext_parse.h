@@ -1,9 +1,9 @@
 /******************************************************************************
 
 *
-* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved. 
+* Copyright (C) 2014 Hisilicon Technologies Co., Ltd.  All rights reserved.
 *
-* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon), 
+* This program is confidential and proprietary to Hisilicon  Technologies Co., Ltd. (Hisilicon),
 *  and may not be copied, reproduced, modified, disclosed to others, published or used, in
 * whole or in part, without the express prior written permission of Hisilicon.
 *
@@ -56,6 +56,9 @@ typedef enum tagTTX_DRCS_MODE_E
 #define TTX_DEC_TO_HEX(value) ((value)=(((value)/10 *16)+((value)%10)))
 #define TTX_HEX_TO_DEC(value) ((value)=(((value)>>4)*10+((value)&0xf)))
 
+#define TTX_CHAR_TO_INT(value) ((value) - '0')
+#define TTX_INT_TO_CHAR(value) ((value) + '0')
+
 /*
  *@brief: Set the address of a page.
  *
@@ -92,7 +95,7 @@ HI_S32       TTX_Parse_GetPgAddr(const HI_UNF_TTX_PAGE_ADDR_S pstPgAddr, HI_U8 *
  *
  *@retval ::None
  */
-HI_S32      TTX_Parse_GetPgData(HI_HANDLE hTtx, TTX_SEGMENT_S_PTR pstSegment);
+HI_S32      TTX_Parse_GetPgData(const HI_VOID* hDataParse, TTX_SEGMENT_S_PTR pstSegment);
 
 /*
  *@brief: The thread to update time and  flash
@@ -112,12 +115,19 @@ HI_VOID      TTX_Parse_InputNumber(TTX_PAGE_CONTEXT_S * pstContextHead);
 HI_VOID      TTX_Parse_InvalidRequest(TTX_PAGE_CONTEXT_S * pstContextHead);
 
 HI_VOID      TTX_Parse_UpdateSubpage(TTX_PAGE_CONTEXT_S * pstContextHead);
-HI_S32 		 TTX_DecodeMOTPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_MOT_INFO_S* pstMotInfo, HI_BOOL bHasP27);
-HI_S32 		 TTX_DecodePOPPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_OBJECT_POINTER_S* pstObj, HI_U32* pu32TripPos, HI_U8* pu8Line);
-HI_BOOL  	 TTX_DecodeHam24_18  (HI_U8 * pu8Triplet, HI_U8 *pu8Address, HI_U8 *pu8Mode, HI_U8 *pu8Data);
-HI_VOID  	 TTX_SetPgActPos (TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_U32 u32Row, HI_U32 u32Column,
+HI_S32       TTX_DecodeMOTPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_MOT_INFO_S* pstMotInfo, HI_BOOL bHasP27);
+HI_S32       TTX_DecodePOPPage(HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, TTX_OBJECT_POINTER_S* pstObj, HI_U32* pu32TripPos, HI_U8* pu8Line);
+HI_BOOL      TTX_DecodeHam24_18  (HI_U8 * pu8Triplet, HI_U8 *pu8Address, HI_U8 *pu8Mode, HI_U8 *pu8Data);
+HI_VOID      TTX_SetPgActPos (TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_U32 u32Row, HI_U32 u32Column,
                                  HI_U32 u32Code, HI_U32 u32Char,HI_U32 u32Masks);
-HI_S32   	 TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, HI_U8 u8PTUNum, TTX_DRCS_MODE_E* penDRCSMode,  HI_U32* pu32DRCSColorInfo );
+HI_S32       TTX_DecodeDRCSPage(TTX_PAGE_CONTEXT_S  *   pstCurrentPoint, HI_UNF_TTX_PAGE_ADDR_S* pstPgAddr, HI_U8 u8PTUNum, TTX_DRCS_MODE_E* penDRCSMode,  HI_U32* pu32DRCSColorInfo );
+HI_VOID      TTX_ConvertLine(HI_U8 * pu8Line, HI_U32 u32Length);
+HI_BOOL      TTX_IsEraseFlagSet(TTX_PAGE_S* pstpage);
+HI_S32       TTX_Show_Zoom(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_PAGEAREA_S * pstPageArea);
+HI_S32       TTT_Show_DrawChar(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_DRAWCAHR_S * pstDrawCharParam);
+HI_S32       TTT_Show_FillRect(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_FILLRECT_S * pstFillRectParam);
+
+HI_S32       TTT_Show_Refresh(TTX_PAGE_CONTEXT_S *pstContextHead, HI_UNF_TTX_REFRESHLAYER_S* pstRefrshLayerParam);
 
 #ifdef __cplusplus
 }

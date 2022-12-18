@@ -1,9 +1,12 @@
 
 #define LOG_TAG "SVR_EXTRATOR_ADP"
+#define ANDROID_VER(major, minor)   ((major)*100 + (minor)*10)
+
 #include <utils/Log.h>
 #include <utils/String8.h>
 #include <string.h>
 
+#include <media/stagefright/foundation/AMessage.h>
 #include <media/stagefright/DataSource.h>
 #include <media/stagefright/FileSource.h>
 #include <media/stagefright/MediaExtractor.h>
@@ -12,11 +15,20 @@
 #include <media/stagefright/MediaBuffer.h>
 #include <media/stagefright/MediaSource.h>
 #include <media/stagefright/foundation/ABitReader.h>
+#if (PLATFORM_SDK_VERSION >= 21)
+#include <media/IMediaHTTPService.h>
+#include <media/IMediaHTTPConnection.h>
+#include <media/stagefright/MediaHTTP.h>
+#endif
+
 #include "include/NuCachedSource2.h"
 #include <include/DRMExtractor.h>
 #include <include/WVMExtractor.h>
 
 #include "include/ESDS.h"
+#if defined (ANDROID_VERSION)
+#include "cutils/properties.h"
+#endif
 
 //#include <include/AwesomePlayer.h>
 
@@ -117,12 +129,14 @@ do { \
 
 #define EXTRATOR_REALLOC_1MORE_PROGRAM(stFileInfo) \
     do{ \
-            int32_t s32AllocSize = 0; \
-            int32_t index = 0; \
+            HI_U32 u32AllocSize = 0; \
+            HI_U32 u32OldSize = 0; \
+            HI_U32 index = 0; \
             HI_FORMAT_PROGRAM_INFO_S *pastProgramInfo; \
             s32AddResult = HI_FAILURE; \
-            s32AllocSize =  (stFileInfo.u32ProgramNum + 1) * sizeof(HI_FORMAT_PROGRAM_INFO_S); \
-            pastProgramInfo = (HI_FORMAT_PROGRAM_INFO_S*)realloc(stFileInfo.pastProgramInfo, s32AllocSize); \
+            u32OldSize   =  stFileInfo.u32ProgramNum * sizeof(HI_FORMAT_PROGRAM_INFO_S); \
+            u32AllocSize =  u32OldSize + sizeof(HI_FORMAT_PROGRAM_INFO_S); \
+            pastProgramInfo = (HI_FORMAT_PROGRAM_INFO_S*)SVR_EXTRACTOR_Realloc(stFileInfo.pastProgramInfo, u32OldSize, u32AllocSize); \
             if (pastProgramInfo != NULL) \
             { \
                 index = stFileInfo.u32ProgramNum; \
@@ -141,11 +155,13 @@ do { \
 #define EXTRATOR_REALLOC_NMORE_STREAM(stProgramInfo, TYPE, Type, n) \
     do{ \
         HI_FORMAT_##TYPE##_INFO_S *pstStream = NULL; \
-        int32_t s32AllocSize = 0; \
-        int32_t index = 0; \
+        HI_U32 u32AllocSize = 0; \
+        HI_U32 u32OldSize = 0; \
+        HI_U32 index = 0; \
         s32AddResult = HI_FAILURE;\
-        s32AllocSize = (stProgramInfo.u32##Type##StreamNum + n) * sizeof(*pstStream); \
-        pstStream =  (HI_FORMAT_##TYPE##_INFO_S *)realloc(stProgramInfo.past##Type##Stream, s32AllocSize); \
+        u32OldSize   = stProgramInfo.u32##Type##StreamNum * sizeof(*pstStream); \
+        u32AllocSize = (stProgramInfo.u32##Type##StreamNum + n) * sizeof(*pstStream); \
+        pstStream =  (HI_FORMAT_##TYPE##_INFO_S *)SVR_EXTRACTOR_Realloc(stProgramInfo.past##Type##Stream, u32OldSize, u32AllocSize); \
         if (pstStream != NULL) \
         { \
             index = stProgramInfo.u32##Type##StreamNum; \
@@ -179,9 +195,10 @@ do { \
 
 #define EXTRATOR_FREE_LAST_PROGRAM(stFileInfo) \
     do{ \
-        uint32_t i = 0; \
+        HI_U32 i = 0; \
         HI_FORMAT_PROGRAM_INFO_S *pastProgramInfo; \
-        int32_t s32AllocSize; \
+        HI_U32 u32AllocSize = 0; \
+        HI_U32 u32OldSize = 0; \
         if (stFileInfo.pastProgramInfo != NULL) \
         { \
             i = stFileInfo.u32ProgramNum - 1; \
@@ -192,8 +209,9 @@ do { \
             } \
             else \
             { \
-                s32AllocSize =  (stFileInfo.u32ProgramNum - 1) * sizeof(HI_FORMAT_PROGRAM_INFO_S); \
-                pastProgramInfo = (HI_FORMAT_PROGRAM_INFO_S *)realloc(stFileInfo.pastProgramInfo, s32AllocSize); \
+                u32AllocSize =  (stFileInfo.u32ProgramNum - 1) * sizeof(HI_FORMAT_PROGRAM_INFO_S); \
+                u32OldSize   =  u32AllocSize + sizeof(HI_FORMAT_PROGRAM_INFO_S); \
+                pastProgramInfo = (HI_FORMAT_PROGRAM_INFO_S *)SVR_EXTRACTOR_Realloc(stFileInfo.pastProgramInfo, u32OldSize, u32AllocSize); \
                 if (pastProgramInfo != NULL) \
                 { \
                     stFileInfo.pastProgramInfo = pastProgramInfo; \
@@ -211,17 +229,19 @@ do { \
 #define SEPARATE_SYMBOL_OFFSET "::offset="
 #define SEPARATE_SYMBOL_LENGTH "::length="
 #define FMT_MAX_URL_LEN  (1024)
+#define LICENSE_DATA_MAX_LEN (2048)
 
-#define DEMUX_BUFFER_SIZE_LENGTH          (5*1024*1024)/* 5MB */
-#define DEMUX_BUFFER_SIZE_EVENT_START     (512*1024)   /* 512KB */
-#define DEMUX_BUFFER_SIZE_EVENT_ENOUGH    (4*1024*1024)/* 4MB */
-#define DEMUX_BUFFER_MAX_SIZE             (10*1024*1024) /* 10MB */
+#define INT_MAX  (0x7fffffff)
 #define DEMUX_BUFFER_SIZE_LIMIT           (2*1024*1024)
 
 #define FILEINFO_UPDATE_DOING               (1)
 #define FILEINFO_UPDATE_DONE                (2)
 #define FILEINFO_UPDATE_NONE                (0)
 #define FILEINFO_UPDATE_WAIT_MAX            (50) //unit:ms
+
+#ifndef min
+#define min(a,b) ( a < b ? a : b)
+#endif
 
 typedef struct tagADTSHeader
 {
@@ -247,6 +267,26 @@ typedef struct tagADTSHeader
     /* CRC */
     int32_t   crcCheckWord;                   /* 16-bit CRC check word (present if protectBit == 0) */
 } ADTSHeader;
+
+HI_VOID *SVR_EXTRACTOR_Realloc(HI_VOID *ptr, HI_U32 oldsize, HI_U32 newsize)
+{
+    /* do not use realloc for ICSL */
+    HI_VOID *ptrNew = malloc(newsize);
+    if (ptrNew == NULL)
+    {
+        return NULL;
+    }
+    if (ptr != NULL)
+    {
+        if (oldsize > 0  && newsize > 0)
+        {
+            memcpy(ptrNew, ptr, (newsize > oldsize?oldsize:newsize));
+        }
+        free(ptr);
+    }
+
+    return ptrNew;
+}
 
 static int32_t _getH264SpsPps(uint8_t *pu8ExtraData, uint32_t u32ExtraDataLen,
     uint8_t *pu8InBuff, uint32_t u32InBufLen, uint32_t*pu32OutLen)
@@ -567,8 +607,12 @@ SVRExtratorAdp::SVRExtratorAdp()
     mbAudioEndOfStream   = true;
     misWidevineStreaming = false;
     mSeeking = false;
+    s64BufferMaxSize = 0;
+    aszHeaders = NULL;
+    mDrmManagerClient = NULL;
 
     memset(&mFileInfo, 0, sizeof(mFileInfo));
+    memset(&stBufConfig, 0, sizeof(stBufConfig));
     options.clearSeekTo();
 
     DataSource::RegisterDefaultSniffers();
@@ -603,11 +647,197 @@ void SVRExtratorAdp::checkDrmStatus(const sp<DataSource>& dataSource)
     }
 }
 
+#ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
+status_t SVRExtratorAdp::setInitBps()
+{
+    HI_CHAR *aszKey = NULL;
+    HI_CHAR szTemp[64] = {};
+    HI_PTR hissplayer = NULL;
+    HI_U32 u32InitialBps, u32Len;
+
+    sp<MetaData> FileMeta = mExtractor->getMetaData();
+
+    if (NULL != aszHeaders)
+    {
+        aszKey = strstr(aszHeaders, "mss_bitrate: ");
+        if (NULL != aszKey && (FileMeta->findPointer(kKeyHiSShandle, &hissplayer)) && NULL != hissplayer)
+        {
+            aszKey = (HI_CHAR *)((uint32_t)aszKey + strlen("mss_bitrate: "));
+            u32Len = min(((uint32_t)(strstr(aszKey, "\r\n")) - (uint32_t)aszKey), 64);
+            memcpy(szTemp, aszKey, u32Len);
+            EX_PRINTF("[%s:%d] mss_bitrate:%s\n", __FUNCTION__, __LINE__, szTemp);
+
+            if (atoi(szTemp) < 0)
+            {
+                EX_PRINTF("[%s:%d] set initial bps failed, invalid mss_bitrate:%d kbps", __FUNCTION__, __LINE__, atoi(szTemp));
+                return HI_FAILURE;
+            }
+
+            u32InitialBps = atoi(szTemp) * 1000;
+            if (u32InitialBps > INT_MAX)
+            {
+                EX_PRINTF("[%s:%d] set initial bps failed, invalid mss_bitrate:%d bps", __FUNCTION__, __LINE__, u32InitialBps);
+                return HI_FAILURE;
+            }
+
+            EX_PRINTF("[%s:%d] begin to set initial bitrate:%d bps\n", __FUNCTION__, __LINE__, u32InitialBps);
+            uint32_t s32Ret = HI_SVR_SMOOTHSTREAMING_SetParam(hissplayer,
+                                                            HI_SVR_SMOOTHSTREAMING_ATTR_INITIAL_BPS,
+                                                            &u32InitialBps);
+            if (HI_SUCCESS != s32Ret)
+            {
+                EX_PRINTF("[%s:%d] set initial bps failed, HI_SVR_SMOOTHSTREAMING_SetParam return:0x%x", __FUNCTION__, __LINE__, s32Ret);
+                return HI_FAILURE;
+            }
+            EX_PRINTF("[%s:%d] set initial bps success\n", __FUNCTION__, __LINE__);
+        }
+    }
+    return HI_SUCCESS;
+}
+
+status_t SVRExtratorAdp::acquireDrmInfo()
+{
+    String8 mimeType;
+    float confidence;
+    bool success;
+
+    //sp<MetaData> FileMeta = mExtractor->getMetaData();
+
+    success = SniffSS(mSource, &mimeType, &confidence, NULL);
+    if ((mExtractor->getDrmFlag()) && success && (!strcasecmp(mimeType.string(), MEDIA_MIMETYPE_CONTAINER_SS)))
+    {
+        DrmManagerClient *drmClient_header;
+        DrmInfoRequest *request_header;
+        DrmInfo *response;
+        DrmBuffer ipmpBox;
+        int i = 0;
+
+        ipmpBox.data = mExtractor->getDrmTrackInfo(NULL, &(ipmpBox.length));
+        if ((ipmpBox.length) && (ipmpBox.data))
+        {
+            EX_PRINTF("[%s:%d] acquire drm header start.\n", __FUNCTION__, __LINE__);
+
+            /* save drm header to local and move the black space */
+            HI_CHAR *drm_header = (HI_CHAR *)malloc(ipmpBox.length);
+            if (!drm_header)
+            {
+                EX_PRINTF("[%s:%d] memory alloc failed\n", __FUNCTION__, __LINE__);
+                return ERROR_UNSUPPORTED;
+            }
+            memcpy(drm_header, ipmpBox.data, ipmpBox.length);
+            for (i = 0; i < ipmpBox.length - 2; i++)
+            {
+                if (drm_header[i] == '\0')
+                {
+                    memcpy((HI_CHAR *)&drm_header[i], (HI_CHAR *)&drm_header[i+1], (ipmpBox.length - i - 1));
+                    ipmpBox.length--;
+                    i--;
+                }
+            }
+            HI_CHAR *header_str = strstr(drm_header, "<");
+            if (!header_str)
+            {
+                free(drm_header);
+                EX_PRINTF("[%s:%d] drm header is unvalid\n", __FUNCTION__, __LINE__);
+                return ERROR_UNSUPPORTED;
+            }
+
+            drmClient_header = new DrmManagerClient();
+            request_header = new DrmInfoRequest(DrmInfoRequest::TYPE_RIGHTS_ACQUISITION_INFO, String8("video/ismv"));
+            request_header->put(String8("Action"), String8("AcquireLicenseFull"));
+
+            EX_PRINTF("[%s:%d] Header:%s\n", __FUNCTION__, __LINE__, (char *)(header_str));
+            request_header->put(String8("Header"), String8(header_str));
+
+            if (aszHeaders)
+            {
+                HI_CHAR *aszKey = NULL;
+                HI_CHAR *szTemp = (HI_CHAR *)malloc(LICENSE_DATA_MAX_LEN);
+                if (!szTemp)
+                {
+                    EX_PRINTF("[%s:%d] memory alloc failed\n", __FUNCTION__, __LINE__);
+                    return ERROR_UNSUPPORTED;
+                }
+
+                aszKey = strstr(aszHeaders, "custom_data: ");
+                if (aszKey)
+                {
+                    aszKey = (HI_CHAR *)((uint32_t)aszKey + strlen("custom_data: "));
+                    memset(szTemp, 0, LICENSE_DATA_MAX_LEN);
+                    memcpy(szTemp, aszKey, ((uint32_t)(strstr(aszKey, "\r\n")) - (uint32_t)aszKey));
+                    EX_PRINTF("[%s:%d] CustomData:%s\n", __FUNCTION__, __LINE__, szTemp);
+                    request_header->put(String8("CustomData"), String8(szTemp));
+                }
+
+                aszKey = strstr(aszHeaders, "la_url: ");
+                if (aszKey)
+                {
+                    aszKey = (HI_CHAR *)((uint32_t)aszKey + strlen("la_url: "));
+                    memset(szTemp, 0, LICENSE_DATA_MAX_LEN);
+                    memcpy(szTemp, aszKey, ((uint32_t)(strstr(aszKey, "\r\n")) - (uint32_t)aszKey));
+                    EX_PRINTF("[%s:%d] LA_URL:%s\n", __FUNCTION__, __LINE__, szTemp);
+                    request_header->put(String8("LA_URL"), String8(szTemp));
+                }
+            }
+
+            response = drmClient_header->acquireDrmInfo(request_header);
+            free(drm_header);
+            delete drmClient_header;
+            delete request_header;
+
+            if (!response || strcasecmp(response->get(String8("Status")).string(), "ok"))
+            {
+
+                EX_PRINTF("[%s:%d] acquireDrmInfo failed\n", __FUNCTION__, __LINE__);
+                return ERROR_UNSUPPORTED;
+            }
+            EX_PRINTF("[%s:%d] acquire drm header success.\n", __FUNCTION__, __LINE__);
+        }
+    }
+    return HI_SUCCESS;
+}
+
+void SVRExtratorAdp::setInitBufConfig()
+{
+    HI_PTR handle = NULL;
+    sp<MetaData> FileMeta = mExtractor->getMetaData();
+    if ((FileMeta->findPointer(kKeyStreamBufInfo, &handle)) && handle)
+    {
+        DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+        if (HI_FORMAT_BUFFER_CONFIG_SIZE == stBufConfig.eType)
+        {
+            pstDemuxBufInfo->stConfigSize.eType          = HI_FORMAT_BUFFER_CONFIG_SIZE;
+            pstDemuxBufInfo->stConfigSize.s64EventEnough = stBufConfig.s64EventEnough;
+            pstDemuxBufInfo->stConfigSize.s64EventStart  = stBufConfig.s64EventStart;
+            pstDemuxBufInfo->stConfigSize.s64TimeOut     = stBufConfig.s64TimeOut;
+            pstDemuxBufInfo->stConfigSize.s64Total       = stBufConfig.s64Total;
+            pstDemuxBufInfo->eConfigUser = HI_FORMAT_BUFFER_CONFIG_SIZE;
+            EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG Args is HI_FORMAT_BUFFER_CONFIG_SIZE\n");
+        }
+        else if(HI_FORMAT_BUFFER_CONFIG_TIME == stBufConfig.eType)
+        {
+            pstDemuxBufInfo->stConfigTime.eType          = HI_FORMAT_BUFFER_CONFIG_TIME;
+            pstDemuxBufInfo->stConfigTime.s64EventEnough = stBufConfig.s64EventEnough;
+            pstDemuxBufInfo->stConfigTime.s64EventStart  = stBufConfig.s64EventStart;
+            pstDemuxBufInfo->stConfigTime.s64TimeOut     = stBufConfig.s64TimeOut;
+            pstDemuxBufInfo->stConfigTime.s64Total       = stBufConfig.s64Total;
+            pstDemuxBufInfo->eConfigUser = HI_FORMAT_BUFFER_CONFIG_TIME;
+            EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG Args is HI_FORMAT_BUFFER_CONFIG_TIME\n");
+        }
+
+        if (s64BufferMaxSize)
+        {
+            pstDemuxBufInfo->s64BufferMaxSize = s64BufferMaxSize;
+        }
+    }
+}
+#endif
+
 status_t SVRExtratorAdp::createDataSource(const char *uri,
-    const KeyedVector<String8, String8> *headers)
+    const KeyedVector<String8, String8> *headers, void *parg)
 {
     String8 newURI(uri);
-
+    String8 mimeType("");
     EX_PRINTF("[%s:%d] Enter SVRExtratorAdp::createDataSource\n", __FUNCTION__, __LINE__);
     misWidevineStreaming = false;
 
@@ -622,6 +852,9 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
         }
     }
 
+#if (PLATFORM_SDK_VERSION >= 21)
+    sp<IMediaHTTPService>httpService = static_cast<IMediaHTTPService *>(parg);
+#endif
     //local file url
     if (strncasecmp("http", uri, 4)
             && strncasecmp("widevine://", uri, 11)
@@ -630,12 +863,12 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
         int fd = -1;
         uint64_t offset = -1;
         uint64_t length = -1;
-        if (3 == sscanf(localUri, "::offset=%lld::length=%lld::fd=%d", &offset, &length, &fd))
+        if (NULL != localUri && 3 == sscanf(localUri, "::offset=%lld::length=%lld::fd=%d", &offset, &length, &fd))
         {
-            mSource = new FileSource(fd, offset, length);
+            mSource = new FileSource(dup(fd), offset, length);
         } else {
             localUri = strdup(uri);
-            char* tmp = strstr(localUri, "::offset=");
+            char* tmp = localUri ? strstr(localUri, "::offset=") : NULL;
             if (tmp) {
                 *tmp = 0;
             }
@@ -647,27 +880,84 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
             ALOGE("create wvm source failed");
             return ERROR_UNSUPPORTED;
         }
-        mExtractor = MediaExtractor::Create(mSource);
-
-        if (mExtractor == NULL)
+        if (misWidevineStreaming)
         {
-            EX_PRINTF("[%s:%d] Unable to instantiate an extractor for '%s'.\n", __FUNCTION__, __LINE__, uri);
-            mSource.clear();
-            return ERROR_UNSUPPORTED;
+            float confidence;
+            bool success;
+            success = SniffWVM(mSource, &mimeType, &confidence, NULL);
+            if (!success || strcasecmp(mimeType.string(), MEDIA_MIMETYPE_CONTAINER_WVM))
+            {
+                mSource.clear();
+                EX_PRINTF("[%s:%d] Widevine datasource create fail \n", __FUNCTION__, __LINE__);
+                return ERROR_UNSUPPORTED;
+            }
+
+            mMimeType = mimeType;
+            mWVMExtractor = new WVMExtractor(mSource);
+            mWVMExtractor->setCryptoPluginMode(true);
+            mExtractor = mWVMExtractor;
+
+            if (mExtractor->getDrmFlag())
+            {
+                checkDrmStatus(mSource);
+            }
         }
         else
         {
-            EX_PRINTF("[%s:%d] Create extractor success \n", __FUNCTION__, __LINE__);
-        }
-        if (mExtractor->getDrmFlag())
-        {
-            EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
-            checkDrmStatus(mSource);
+            const char *mime = NULL;
+            sp<AMessage> meta;
+            if (mime == NULL) {
+                float confidence;
+                if (!mSource->sniff(&mimeType, &confidence, &meta)) {
+                    EX_PRINTF("FAILED to autodetect media content.");
+
+                    return NULL;
+                }
+
+                mime = mimeType.string();
+            }
+
+            // DRM MIME type syntax is "drm+type+original" where
+            // type is "es_based" or "container_based" and
+            // original is the content's cleartext MIME type
+            if (!strncmp(mime, "drm+", 4)) {
+                const char *originalMime = strchr(mime+4, '+');
+                if (originalMime == NULL) {
+                    // second + not found
+                    return NULL;
+                }
+                ++originalMime;
+                if (!strncmp(mime, "drm+es_based+", 13)) {
+                    // DRMExtractor sets container metadata kKeyIsDRM to 1
+                    mime = originalMime;
+                } else if (!strncmp(mime, "drm+container_based+", 20)) {
+                    mime = originalMime;
+                } else {
+                    return NULL;
+                }
+            }
+
+            mExtractor = MediaExtractor::Create(mSource, mime);
+            if (mExtractor == NULL)
+            {
+                EX_PRINTF("[%s:%d] Unable to instantiate an extractor for '%s'.\n", __FUNCTION__, __LINE__, uri);
+                mSource.clear();
+                return ERROR_UNSUPPORTED;
+            }
+            else
+            {
+                mMimeType = String8(mime);
+                EX_PRINTF("[%s:%d] Create extractor success \n", __FUNCTION__, __LINE__);
+            }
         }
     }
     else if (false == misWidevineStreaming)
     {
+    #if (PLATFORM_SDK_VERSION >= 21)
+        mSource = DataSource::CreateFromURI(httpService, uri, headers);
+    #else
         mSource = DataSource::CreateFromURI(uri, headers);
+    #endif
 
         if (mSource == NULL)
         {
@@ -679,61 +969,101 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
             EX_PRINTF("[%s:%d] Create data source success \n", __FUNCTION__, __LINE__);
         }
 
-        mExtractor = MediaExtractor::Create(mSource);
+        String8 tmp;
+        const char *mime = NULL;
+        sp<AMessage> meta;
+        if (mime == NULL) {
+            float confidence;
+            if (!mSource->sniff(&tmp, &confidence, &meta)) {
+                EX_PRINTF("FAILED to autodetect media content.");
 
+                return NULL;
+            }
+
+            mime = tmp.string();
+            EX_PRINTF("Autodetected media content as '%s' with confidence %.2f",
+                 mime, confidence);
+        }
+
+        // DRM MIME type syntax is "drm+type+original" where
+        // type is "es_based" or "container_based" and
+        // original is the content's cleartext MIME type
+        if (!strncmp(mime, "drm+", 4)) {
+            const char *originalMime = strchr(mime+4, '+');
+            if (originalMime == NULL) {
+                // second + not found
+                return NULL;
+            }
+            ++originalMime;
+            if (!strncmp(mime, "drm+es_based+", 13)) {
+                // DRMExtractor sets container metadata kKeyIsDRM to 1
+                mime = originalMime;
+            } else if (!strncmp(mime, "drm+container_based+", 20)) {
+                mime = originalMime;
+            } else {
+                return NULL;
+            }
+        }
+
+        //specify the original mimetype to avoid create DRMExtractor
+        mExtractor = MediaExtractor::Create(mSource, mime);
         if (mExtractor == NULL)
         {
             EX_PRINTF("[%s:%d] Unable to instantiate an extractor for '%s'.\n", __FUNCTION__, __LINE__, uri);
             mSource.clear();
             return ERROR_UNSUPPORTED;
         }
-        else
+        else if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_SS))
         {
-            EX_PRINTF("[%s:%d] Create extractor success \n", __FUNCTION__, __LINE__);
-        }
-
-        EX_PRINTF("[%s:%d] drm flag = %d \n", __FUNCTION__, __LINE__, mExtractor->getDrmFlag());
-
-        if (!mExtractor->getDrmFlag())
-        {
-            String8 mimeType;
-            float confidence;
-            bool success;
-
-            success = SniffSS(mSource, &mimeType, &confidence, NULL);
-            if (!success || strcasecmp(mimeType.string(), MEDIA_MIMETYPE_CONTAINER_SS))
-            {
-                EX_PRINTF("[%s:%d] not drm file or ss file, use best demux ");
-
-                mSource.clear();
-                return ERROR_UNSUPPORTED;
-            }
-
-            EX_PRINTF("[%s:%d] ss file \n", __FUNCTION__, __LINE__);
+            mMimeType = String8(MEDIA_MIMETYPE_CONTAINER_SS);
+            EX_PRINTF("[%s:%d] Create extractor success mime:%s\n", __FUNCTION__, __LINE__, mime);
         }
 
         sp<MetaData> FileMeta = mExtractor->getMetaData();
 
 #ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
-        HI_S32 handle;
-        if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
+#if defined (ANDROID_VERSION)
         {
-            DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
-            pstDemuxBufInfo->stConfigSize.s64Total = DEMUX_BUFFER_SIZE_LENGTH;
-            pstDemuxBufInfo->stConfigSize.s64EventStart = DEMUX_BUFFER_SIZE_EVENT_START;
-            pstDemuxBufInfo->stConfigSize.s64EventEnough = DEMUX_BUFFER_SIZE_EVENT_ENOUGH;
-            pstDemuxBufInfo->s64BufferMaxSize = DEMUX_BUFFER_MAX_SIZE;
-            EX_PRINTF("[%s:%d] demux buffer set success\n", __FUNCTION__, __LINE__);
-        }
-        else
-        {
-            EX_PRINTF("[%s:%d] demux buffer set fail\n", __FUNCTION__, __LINE__);
+            bool bAcqLicense_disable = 0;
+            HI_CHAR value[PROPERTY_VALUE_MAX] = {0};
+            if (property_get("media.ss.LicenseAcq.disabled", value, NULL) > 0)
+            {
+                if (!strncmp(value, "true", 4))
+                {
+                    bAcqLicense_disable = 1;
+                    EX_PRINTF("[%s:%d] media.ss.LicenseAcq.disabled prop is set\n", __FUNCTION__, __LINE__);
+                }
+            }
+            if (!bAcqLicense_disable)
+            {
+                EX_PRINTF("[%s:%d] media.ss.LicenseAcq.disabled prop is not set\n", __FUNCTION__, __LINE__);
+                if (acquireDrmInfo())
+                {
+                    return ERROR_UNSUPPORTED;
+                }
+            }
         }
 #endif
-    } else {
+        (void)setInitBps();
+        setInitBufConfig();
+#endif
+    }
+    else
+    {
         EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
 
+    #if (PLATFORM_SDK_VERSION >= 21)
+        /* for android 5.0 modification*/
+        if (httpService == NULL)
+        {
+             EX_PRINTF("Invalid http service!");
+             return ERROR_UNSUPPORTED;
+        }
+        sp<IMediaHTTPConnection> conn = httpService->makeHTTPConnection();
+        mConnectingDataSource = new MediaHTTP(conn);
+    #else
         mConnectingDataSource = HTTPBase::Create(0);
+    #endif
         #if 0
         if (mUIDValid) {
             mConnectingDataSource->setUID(mUID);
@@ -774,7 +1104,6 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
         }
 
         /* widevine stream */
-        String8 mimeType;
         float confidence;
         bool success;
 
@@ -782,6 +1111,7 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
         // Do not call it with mLock held.
         //mLock.unlock();
         success = SniffWVM(mSource, &mimeType, &confidence, NULL);
+        mMimeType = mimeType;
         //mLock.lock();
         EX_PRINTF("[%s:%d] Create extractor \n", __FUNCTION__, __LINE__);
 
@@ -793,6 +1123,7 @@ status_t SVRExtratorAdp::createDataSource(const char *uri,
         }
 
         mWVMExtractor = new WVMExtractor(mSource);
+        mWVMExtractor->setCryptoPluginMode(true);
         mWVMExtractor->setAdaptiveStreamingMode(true);
         mExtractor = mWVMExtractor;
 
@@ -837,23 +1168,22 @@ status_t SVRExtratorAdp::reset()
 status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
 {
     size_t numTracks = 0;
-    status_t err;
 
     uint32_t videoNum = 0, audioNum = 0;
     int32_t videoWidth = 0, videoHeig = 0;
     int32_t value = 0, rotationAngle = 0;
 
-    int64_t maxDurationUs = 0;
-    String8 timedTextLang;
     int32_t s32AddResult = HI_SUCCESS;
 
     EX_PRINTF("Enter [%s:%d] \n", __FUNCTION__, __LINE__);
 
     if (NULL == mExtractor.get())
     {
-        EX_PRINTF("Track number is zero \n");
+        EX_PRINTF("mExtractor is null \n");
         return UNKNOWN_ERROR;
     }
+
+    mFileInfo.bIsDrmFile = (HI_BOOL)mExtractor->getDrmFlag();
 
     numTracks = mExtractor->countTracks();
 
@@ -951,10 +1281,18 @@ status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
 
                 if (NULL == mAudioTrack.get())
                 {
+                    int data_len = 0;
+                    int32_t trackID = 0;
+                    (HI_VOID)trackMeta->findInt32(kKeyTrackID, &trackID);
+                    HI_CHAR* data = (HI_CHAR*)mExtractor->getDrmTrackInfo(trackID, &data_len);
+                    if (data && data_len > 0)
+                    {
+                        mFileInfo.bIsDrmFile = HI_TRUE;
+                    }
                     mAudioTrack = mExtractor->getTrack(i);
                     mAudioTrackIndex = value;
-                    EX_PRINTF("Enter [%s:%d], audio track, mime = %s, track index = %d \n",
-                        __FUNCTION__, __LINE__, mime, mAudioTrackIndex);
+                    EX_PRINTF("Enter [%s:%d], audio track, mime = %s, track index = %d bIsDrmFile = %d \n",
+                        __FUNCTION__, __LINE__, mime, mAudioTrackIndex, mFileInfo.bIsDrmFile);
 
                     // To be fixed. The mime variable is modified abnormally somewhere, get it again.
                     trackMeta->findCString(kKeyMIMEType, &mime);
@@ -994,6 +1332,10 @@ status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
                 else if (!strncasecmp(mime, MEDIA_MIMETYPE_AUDIO_AAC_ADTS, strlen(MEDIA_MIMETYPE_AUDIO_AAC_ADTS)))
                 {
                     mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].u32Format = HI_FORMAT_AUDIO_AAC;
+                }
+                else if (!strncasecmp(mime, MEDIA_MIMETYPE_AUDIO_WMAPRO, strlen(MEDIA_MIMETYPE_AUDIO_WMAPRO)))
+                {
+                    mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].u32Format = HI_FORMAT_AUDIO_WMAPRO;
                 }
                 else if (!strncasecmp(mime,MEDIA_MIMETYPE_AUDIO_WMA, strlen(MEDIA_MIMETYPE_AUDIO_WMA)))
                 {
@@ -1185,8 +1527,7 @@ status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
                     {
                         mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata =
                             (HI_U8*)malloc(sizeof(HI_U8) * size + 16);
-                        memset(mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata, 0, \
-                            sizeof(mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata));
+                        memset(mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata, 0, size + 16);
                         memcpy(mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata, data, size);
                     }
                     HI_U8 *pstdata = mFileInfo.pastProgramInfo[0].pastAudStream[audioNum].pu8Extradata;
@@ -1222,17 +1563,19 @@ status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
 
                 if (NULL == mVideoTrack.get())
                 {
-                    mVideoTrack = mExtractor->getTrack(i);
-                    mVideoTrackIndex = value;
-                    EX_PRINTF("Enter [%s:%d], video track, mime = %s, track index = %d \n",
-                        __FUNCTION__, __LINE__, mime, mVideoTrackIndex);
-                    #ifdef HI_TVP_SUPPORT
-                    int32_t drm=0;
-                    if(mVideoTrack->getFormat()->findInt32(kKeyIsDRM,&drm)&&(0 != drm))
+                    int data_len = 0;
+                    int32_t trackID = 0;
+                    (HI_VOID)trackMeta->findInt32(kKeyTrackID, &trackID);
+                    HI_CHAR* data = (HI_CHAR*)mExtractor->getDrmTrackInfo(trackID, &data_len);
+                    if (data && data_len > 0)
                     {
                         mFileInfo.pastProgramInfo[0].pastVidStream[videoNum].bEnableTVP = HI_TRUE;
+                        mFileInfo.bIsDrmFile = HI_TRUE;
                     }
-                    #endif
+                    mVideoTrack = mExtractor->getTrack(i);
+                    mVideoTrackIndex = value;
+                    EX_PRINTF("Enter [%s:%d], video track, mime = %s, track index = %d, bIsDrmFile = %d \n",
+                        __FUNCTION__, __LINE__, mime, mVideoTrackIndex, mFileInfo.bIsDrmFile);
 
                     // To be fixed. The mime variable is modified abnormally somewhere, get it again.
                     trackMeta->findCString(kKeyMIMEType, &mime);
@@ -1317,6 +1660,7 @@ status_t SVRExtratorAdp::openFile(HI_FORMAT_FILE_INFO_S **fileinfo)
 
     *fileinfo = &mFileInfo;
     mParseFileInfo = true;
+    EX_PRINTF("[%s:%d] mFileInfo.bIsDrmFile:%d", __FUNCTION__, __LINE__, mFileInfo.bIsDrmFile);
 
     return OK;
 }
@@ -1378,7 +1722,7 @@ status_t SVRExtratorAdp::getTrackExtraData(HI_FORMAT_FRAME_S *frame)
     for (size_t i = 0; i < numTracks; ++i)
     {
         sp<MetaData> trackMeta = mExtractor->getTrackMetaData(i);
-        trackMeta->findInt32(kKeyTrackID, &value);
+        (HI_VOID)trackMeta->findInt32(kKeyTrackID, &value);
 
         if (HI_FORMAT_DATA_VID == frame->eType && value == mVideoTrackIndex)
         {
@@ -1425,7 +1769,8 @@ status_t SVRExtratorAdp::getTrackExtraData(HI_FORMAT_FRAME_S *frame)
         {
             int32_t objectType, freqIndex, numChannels;
 
-            if (trackMeta->findData(kKeyESDS, &keytype, (void const**)&ptr, &size))
+            if (misWidevineStreaming == false &&
+                trackMeta->findData(kKeyESDS, &keytype, (void const**)&ptr, &size))
             {
                 if (keytype == kTypeESDS)
                 {
@@ -1485,23 +1830,90 @@ status_t SVRExtratorAdp::getTrackExtraData(HI_FORMAT_FRAME_S *frame)
     return HI_SUCCESS;
 }
 
-#ifdef HI_TVP_SUPPORT
+status_t SVRExtratorAdp::getFrameMetadata(HI_FORMAT_FRAME_S *pFrame, MediaBuffer *pFrameRead)
+{
+    const void *pData = NULL;
+    size_t size = 0;
+    uint32_t type = 0;
+    HI_S32 s32MetaValue = 0;
+    HI_S32 IsKeyFrame = 0;
 
-extern "C" {
-#include "tee_client_api.h"
-#include "tee_client_id.h"
-#include "hi_common.h"
+    if (pFrameRead->meta_data()->findInt32(kKeyIsSyncFrame, &IsKeyFrame))
+    {
+        pFrame->bKeyFrame = IsKeyFrame == 0 ? HI_FALSE : HI_TRUE;
+    }
+
+    if (pFrameRead->meta_data()->findData(kKeyCryptoIV, &type, &pData, &size))
+    {
+        if (size > 0)
+        {
+            pFrame->pu8IVBuffer = (HI_U8*)malloc(size);
+            pFrame->u32IVSize = size;
+            memcpy(pFrame->pu8IVBuffer, pData, size);
+        }
+
+        ALOGD("copy replicated data size:%d", size);
+    } else {
+        pFrame->pu8IVBuffer = NULL;
+        pFrame->u32IVSize = 0;
+        ALOGE("get replicated data faield, size:%d", size);
+    }
+
+    // get decryptsize
+    if (pFrameRead->meta_data()->findData(kKeyEncryptedSizes, &type, &pData, &size))
+    {
+        if (size > 0)
+        {
+            pFrame->ps32Encryptsize = (HI_S32*)malloc(size);
+            memset(pFrame->ps32Encryptsize, 0, size);
+            memcpy(pFrame->ps32Encryptsize, pData, size);
+            pFrame->s32Encryptsize = size;
+        }
+
+        ALOGD("copy decryptsize data size:%d", size);
+    } else {
+        pFrame->ps32Encryptsize = NULL;
+        pFrame->ps32Encryptsize = 0;
+        ALOGE("get decryptsize data faield, size:%d", size);
+    }
+
+    if (pFrameRead->meta_data()->findInt32(kKeyCryptoMode, &s32MetaValue))
+    {
+        pFrame->s32Cryptomode = s32MetaValue;
+        ALOGD("s32Cryptomode is :%d", s32MetaValue);
+    } else {
+        pFrame->s32Cryptomode = 0;
+        ALOGE("get s32Cryptomode faield");
+    }
+
+    if (pFrameRead->meta_data()->findData(kKeyCryptoKey, &type, &pData, &size))
+    {
+        if (size > 0)
+        {
+            pFrame->pu8KeyID = (HI_U8*)malloc(size);
+            memset(pFrame->pu8KeyID, 0, size);
+            memcpy(pFrame->pu8KeyID, pData, size);
+            pFrame->u32KeyIDSize = size;
+        }
+
+        ALOGD("copy cryptokey data size:%d", size);
+    } else {
+        pFrame->pu8KeyID = NULL;
+        pFrame->u32KeyIDSize = 0;
+        ALOGE("get cryptokey data faield, size:%d", size);
+    }
+    return HI_SUCCESS;
 }
-
-static HI_MMZ_BUF_S g_stExCAStreamBuf_Header;
-
-#endif
-
 status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
 {
     status_t err = OK;
     int64_t timestamp = -1;
     int32_t IsKeyFrame = -1;
+    //copy DRM IV Buffer for player using
+    const void *pData = NULL;
+    size_t size = 0;
+    uint32_t type = 0;
+    HI_S32 s32MetaValue = 0;
 
     if (NULL == frame){
         EX_PRINTF("%s,%d\n",__FILE__,__LINE__);
@@ -1509,7 +1921,7 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
     }
 
 #ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
-        HI_S32 handle;
+        HI_S32 handle = 0;
         HI_FORMAT_FILE_INFO_S *pstFileInfo = NULL;
         sp<MetaData> FileMeta = mExtractor->getMetaData();
         if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
@@ -1570,7 +1982,7 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
         || (mVideoReadTimes < MAX_READ_TIMES && false == mbVideoEndOfStream)
         || true == mbAudioEndOfStream))*/
     if (NULL != mVideoTrack.get()
-        && ((mLastVideoFramePts < mLastAudioFramePts && false == mbVideoEndOfStream)
+        && ((mLastVideoFramePts <= mLastAudioFramePts && false == mbVideoEndOfStream)
         || (true == mbAudioEndOfStream) || (true == misWidevineStreaming && true == mSeeking)))
     {
         if (mSeeking)
@@ -1607,16 +2019,8 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
 
         frame->s32StreamIndex = mVideoTrackIndex;
         frame->eType = HI_FORMAT_DATA_VID;
-        if (true == misWidevineStreaming)
-        {
-            frame->pu8Addr = (unsigned char*)mVideoBuffer->data() + mVideoBuffer->range_offset();
-            frame->u32Len = mVideoBuffer->range_length();
-        }
-        else
-        {
-            frame->pu8Addr = (unsigned char*)mVideoBuffer->data();
-            frame->u32Len  = mVideoBuffer->size();
-        }
+        frame->pu8Addr = (unsigned char*)mVideoBuffer->data() + mVideoBuffer->range_offset();
+        frame->u32Len = mVideoBuffer->range_length();
         frame->s64Pts = HI_FORMAT_NO_PTS;
         frame->s64Pos = HI_FORMAT_NO_POS;
         if ( mVideoBuffer->meta_data()->findInt64(kKeyTime, &timestamp))
@@ -1629,7 +2033,25 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
             frame->bKeyFrame  = (HI_BOOL)IsKeyFrame;
         }
 
+        getFrameMetadata(frame, mVideoBuffer);
+
         getTrackExtraData(frame);
+        /*separate extradata from original frame,
+         *if video is AVC, frame should not contain another codec private data,
+         *otherwise encrypt data offset is invalid */
+        if (!frame->pu8FrameHeader && mVideoBuffer->meta_data()->findData(kKeyCodecPriData, &type, &pData, &size)) {
+            if (size < frame->u32Len) {
+                frame->pu8FrameHeader = (HI_U8*)malloc(size);
+                memcpy(frame->pu8FrameHeader, pData, size);
+                frame->pu8Addr += size;//change frame offset
+                frame->u32FrameHeaderLen = size;
+                frame->u32Len -= size;
+                ALOGD("video codec private data contained in frame buffer, size:%d", size);
+            } else {
+                ALOGE("video Media buffer's extra data(%d Bytes) too large, buffer size(%d Bytes)", size, frame->u32Len);
+            }
+        }
+
         mVideoReadTimes++;
 #if 0
         EX_PRINTF("[%s:%d], read frame", __FUNCTION__, __LINE__);
@@ -1668,26 +2090,6 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
             EX_PRINTF("[%s:%d], read video frame fail", __FUNCTION__, __LINE__);
             fwrite(caBuffer.user_viraddr, 1, frame->u32Len + frame->u32FrameHeaderLen, pfile);
         }
-#endif
-
-#ifdef HI_TVP_SUPPORT
-        if (NULL != frame->pu8FrameHeader) //the pu8FrameHeader of the frame in smoothstreaming will always be 0
-        {
-            memset(&g_stExCAStreamBuf_Header, 0, sizeof(g_stExCAStreamBuf_Header));
-            g_stExCAStreamBuf_Header.bufsize = 0x100000;
-            g_stExCAStreamBuf_Header.overflow_threshold  = 100;
-            g_stExCAStreamBuf_Header.underflow_threshold = 0;
-
-            err = HI_MMZ_Malloc(&g_stExCAStreamBuf_Header);
-            if (HI_SUCCESS != err)
-            {
-                ALOGE("=== HI_MMZ_Malloc g_stExCAStreamBuf_Header malloc failed %d\n", __LINE__);
-            }
-
-            memcpy(g_stExCAStreamBuf_Header.user_viraddr, frame->pu8FrameHeader, frame->u32FrameHeaderLen);
-            frame->pu8FrameHeader = (HI_U8*)(g_stExCAStreamBuf_Header.phyaddr);
-        }
-
 #endif
 
         //EX_PRINTF("======READ VID Frame: index = %d, data len = %d, frame header len = %d, timestampl = %lld ",
@@ -1772,6 +2174,7 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
             frame->s64Pts  = timestamp / 1000;
             mLastAudioFramePts = frame->s64Pts;
         }
+        getFrameMetadata(frame, mAudioBuffer);
 
         getTrackExtraData(frame);
         mAudioReadTimes++;
@@ -1794,6 +2197,16 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
                 }
                 frame->pu8Addr = pframe;
                 frame->u32Len  += frame->u32FrameHeaderLen;
+            }
+        }
+        else if (mAudioBuffer->meta_data()->findData(kKeyCodecPriData, &type, &pData, &size)) {
+            if (size < frame->u32Len) {
+                frame->pu8FrameHeader = (HI_U8*)malloc(size);
+                memcpy(frame->pu8FrameHeader, pData, size);
+                frame->u32FrameHeaderLen = size;
+                ALOGD("aduio codec private data contained in frame buffer, size:%d", size);
+            } else {
+                ALOGE("audio Media buffer's extra data(%d Bytes) too large, buffer size(%d Bytes)", size, frame->u32Len);
             }
         }
 
@@ -1826,27 +2239,19 @@ status_t SVRExtratorAdp::readFrame(HI_FORMAT_FRAME_S *frame)
 status_t SVRExtratorAdp::freeFrame(HI_FORMAT_FRAME_S *frame)
 {
     HI_S32 s32IsSecureBuffer = 0;
-    if (NULL != frame && frame->eType == HI_FORMAT_DATA_VID)
+    if (NULL == frame)
+    {
+        return OK;
+    }
+
+    if (frame->eType == HI_FORMAT_DATA_VID)
     {
         if (NULL != mVideoBuffer)
         {
-#ifdef HI_TVP_SUPPORT
-            if ( mVideoBuffer->meta_data()->findInt32(kKeyIsSecureBuffer, &s32IsSecureBuffer) )
-            {
-                if (s32IsSecureBuffer)
-                {
-                    mVideoTrack->releaseSecureBuffer((unsigned long)mVideoBuffer->data(), mVideoBuffer->size());
-                    if (NULL != frame->pu8FrameHeader)
-                    {
-                        HI_MMZ_Free(&g_stExCAStreamBuf_Header);
-                    }
-                }
-            }
-#endif
             mVideoBuffer->release();
         }
     }
-    else if (NULL != frame && frame->eType == HI_FORMAT_DATA_AUD)
+    else if (frame->eType == HI_FORMAT_DATA_AUD)
     {
         if (mAudioBuffer->data() != frame->pu8Addr && NULL != frame->pu8FrameHeader)
         {
@@ -1863,6 +2268,22 @@ status_t SVRExtratorAdp::freeFrame(HI_FORMAT_FRAME_S *frame)
         free(frame->pu8FrameHeader);
         frame->pu8FrameHeader = NULL;
     }
+    if (NULL != frame->pu8IVBuffer)
+    {
+        free(frame->pu8IVBuffer);
+        frame->pu8IVBuffer = NULL;
+    }
+    if (NULL != frame->pu8KeyID)
+    {
+        free(frame->pu8KeyID);
+        frame->pu8KeyID = NULL;
+    }
+
+    if (NULL != frame->ps32Encryptsize)
+    {
+        free(frame->ps32Encryptsize);
+        frame->ps32Encryptsize = NULL;
+    }
 
     return OK;
 }
@@ -1871,33 +2292,84 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
 {
     const char *mime = NULL;
 
-    sp<MetaData> FileMeta = mExtractor->getMetaData();
-
-#ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
-    HI_S32 handle;
-    DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = NULL;
-    if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
+    if (HI_FORMAT_INVOKE_SET_COOKIE == u32InvokeId)
     {
-        pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+        EX_PRINTF("[%s:%d], HI_FORMAT_INVOKE_SET_COOKIE", __FUNCTION__, __LINE__);
+
+        aszHeaders = (HI_CHAR*)(*((HI_U32 *) pArg));
+
+        EX_PRINTF("[%s:%d]: headers='%s'\n", __FUNCTION__, __LINE__, aszHeaders);
+        return HI_SUCCESS;
     }
-
-    if (HI_FORMAT_INVOKE_PRE_CLOSE_FILE == u32InvokeId)
+#ifdef HISMOOTHSTREAMINGPLAYER_DRM_ENABLE
+    else if (HI_FORMAT_INVOKE_SET_BUFFER_CONFIG == u32InvokeId)
     {
-        HI_S32 hissplayer;
-        if ((FileMeta->findInt32(kKeyHiSShandle, &hissplayer))
-            && hissplayer)
+        EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_CONFIG\n");
+
+        memcpy(&stBufConfig, pArg, sizeof(HI_FORMAT_BUFFER_CONFIG_S));
+        if (mExtractor != NULL)
         {
-            uint32_t s32Ret = HI_SVR_SMOOTHSTREAMING_Invoke((HI_U32)hissplayer, u32InvokeId, pArg);
-            if (HI_SUCCESS != s32Ret)
+            HI_S32 handle;
+            DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = NULL;
+            sp<MetaData> FileMeta = mExtractor->getMetaData();
+
+            if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
             {
-                EX_PRINTF("[%s:%d], HI_SVR_SMOOTHSTREAMING_Invoke failed:0x%x", __FUNCTION__, __LINE__, s32Ret);
+                pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+            }
+
+            if (NULL == pstDemuxBufInfo)
+            {
+                EX_PRINTF("pstDemuxBufInfo is NULL\n");
                 return HI_FAILURE;
             }
+
+            HI_FORMAT_BUFFER_CONFIG_S *pstConfig = (HI_FORMAT_BUFFER_CONFIG_S *)pArg;
+            if (pstConfig->s64EventEnough > pstConfig->s64Total
+                || pstConfig->s64EventStart > pstConfig->s64Total
+                || pstConfig->s64EventStart < 0 || pstConfig->s64TimeOut < 0
+                || pstConfig->s64EventEnough < 0 || pstConfig->s64Total < 0)
+            {
+                EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG Args is not right\n");
+                return HI_FAILURE;
+            }
+            if (HI_FORMAT_BUFFER_CONFIG_SIZE == pstConfig->eType)
+            {
+                if ((s64BufferMaxSize) && (pstConfig->s64Total > s64BufferMaxSize))
+                {
+                    EX_PRINTF("s64Total(%lld) can not larger than s64BufferMaxSize(%lld)\n", pstConfig->s64Total, s64BufferMaxSize);
+                    return HI_FAILURE;
+                }
+                pstDemuxBufInfo->stConfigSize.eType          = pstConfig->eType;
+                pstDemuxBufInfo->stConfigSize.s64EventEnough = pstConfig->s64EventEnough;
+                pstDemuxBufInfo->stConfigSize.s64EventStart  = pstConfig->s64EventStart;
+                pstDemuxBufInfo->stConfigSize.s64TimeOut     = pstConfig->s64TimeOut;
+                pstDemuxBufInfo->stConfigSize.s64Total       = pstConfig->s64Total;
+                pstDemuxBufInfo->eConfigUser = HI_FORMAT_BUFFER_CONFIG_SIZE;
+                EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG Args is HI_FORMAT_BUFFER_CONFIG_SIZE\n");
+            }
+            else if(HI_FORMAT_BUFFER_CONFIG_TIME == pstConfig->eType)
+            {
+                pstDemuxBufInfo->stConfigTime.eType          = pstConfig->eType;
+                pstDemuxBufInfo->stConfigTime.s64EventEnough = pstConfig->s64EventEnough;
+                pstDemuxBufInfo->stConfigTime.s64EventStart  = pstConfig->s64EventStart;
+                pstDemuxBufInfo->stConfigTime.s64TimeOut     = pstConfig->s64TimeOut;
+                pstDemuxBufInfo->stConfigTime.s64Total       = pstConfig->s64Total;
+                pstDemuxBufInfo->eConfigUser = HI_FORMAT_BUFFER_CONFIG_TIME;
+                EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG Args is HI_FORMAT_BUFFER_CONFIG_TIME\n");
+            }
+            else
+            {
+                EX_PRINTF("HI_FORMAT_INVOKE_SET_BUFFER_CONFIG ,unknow config type\n");
+                return HI_FAILURE;
+            }
+            return HI_SUCCESS;
         }
+        return HI_SUCCESS;
     }
     else if (HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE == u32InvokeId)
     {
-        //EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE\n");
+        EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE\n");
         if (NULL == pArg)
         {
             return HI_FAILURE;
@@ -1908,45 +2380,47 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
             EX_PRINTF("[%s:%d], SVRExtratorAdp::invoke, buffer max size is less than 2MB!!\n", __FUNCTION__, __LINE__);
             return HI_FAILURE;
         }
-        HI_S32 handle;
-        if (pstDemuxBufInfo)
+
+        s64BufferMaxSize = maxsize;
+
+        if (mExtractor != NULL)
         {
-            pstDemuxBufInfo->s64BufferMaxSize = maxsize;
-            EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE success\n");
-        }
-    }
-    else if (HI_FORMAT_INVOKE_SET_BUFFER_CONFIG == u32InvokeId)
-    {
-        //EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_CONFIG\n");
-        if (NULL == pArg)
-        {
-            EX_PRINTF("HI_FORMAT_INVOKE_BUFFER_SETCONFIG Args is NULL\n");
-            return HI_FAILURE;
-        }
-        HI_FORMAT_BUFFER_CONFIG_S *pstConfig = (HI_FORMAT_BUFFER_CONFIG_S *)pArg;
-        if (pstConfig->s64EventEnough > pstConfig->s64Total
-            || pstConfig->s64EventStart > pstConfig->s64Total
-            || pstConfig->s64EventStart < 0 || pstConfig->s64TimeOut < 0
-            || pstConfig->s64EventEnough < 0 || pstConfig->s64Total < 0)
-        {
-            EX_PRINTF("HI_FORMAT_INVOKE_BUFFER_SETCONFIG Args is not right\n");
-            return HI_FAILURE;
-        }
-        if (HI_FORMAT_BUFFER_CONFIG_SIZE == pstConfig->eType)
-        {
+            HI_S32 handle;
+            DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = NULL;
+            sp<MetaData> FileMeta = mExtractor->getMetaData();
+
+            if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
+            {
+                pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+            }
             if (pstDemuxBufInfo)
             {
-                pstDemuxBufInfo->stConfigSize.s64Total = pstConfig->s64Total;
-                pstDemuxBufInfo->stConfigSize.s64EventStart = pstConfig->s64EventStart;
-                pstDemuxBufInfo->stConfigSize.s64EventEnough = pstConfig->s64EventEnough;
-                EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_CONFIG success\n");
+                pstDemuxBufInfo->s64BufferMaxSize = maxsize;
+                EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_SET_BUFFER_MAX_SIZE success\n");
             }
-            EX_PRINTF("HI_FORMAT_INVOKE_BUFFER_SETCONFIG Args is HI_FORMAT_BUFFER_CONFIG_SIZE\n");
         }
-        else
+        return HI_SUCCESS;
+    }
+    sp<MetaData> FileMeta = mExtractor->getMetaData();
+    HI_S32 handle;
+    DEMUX_BUFFER_MGR_S *pstDemuxBufInfo = NULL;
+    if ((FileMeta->findInt32(kKeyStreamBufInfo, &handle)) && handle)
+    {
+        pstDemuxBufInfo = (DEMUX_BUFFER_MGR_S *)handle;
+    }
+
+    if (HI_FORMAT_INVOKE_PRE_CLOSE_FILE == u32InvokeId)
+    {
+        HI_PTR hissplayer;
+        if ((FileMeta->findPointer(kKeyHiSShandle, &hissplayer))
+            && hissplayer)
         {
-            EX_PRINTF("HI_FORMAT_INVOKE_BUFFER_SETCONFIG ,only support the size format\n");
-            return HI_FAILURE;
+            uint32_t s32Ret = HI_SVR_SMOOTHSTREAMING_Invoke(hissplayer, u32InvokeId, pArg);
+            if (HI_SUCCESS != s32Ret)
+            {
+                EX_PRINTF("[%s:%d], HI_SVR_SMOOTHSTREAMING_Invoke failed:0x%x", __FUNCTION__, __LINE__, s32Ret);
+                return HI_FAILURE;
+            }
         }
     }
     else if (HI_FORMAT_INVOKE_GET_BUFFER_CONFIG == u32InvokeId)
@@ -1963,7 +2437,7 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
 
         memset(pstConfig, 0, sizeof(HI_FORMAT_BUFFER_CONFIG_S));
 
-        if (HI_FORMAT_BUFFER_CONFIG_SIZE == s32Type)
+        if (NULL != pstDemuxBufInfo && HI_FORMAT_BUFFER_CONFIG_SIZE == s32Type)
         {
             pstConfig->eType          = HI_FORMAT_BUFFER_CONFIG_SIZE;
             pstConfig->s64EventEnough = pstDemuxBufInfo->stConfigSize.s64EventEnough;
@@ -1978,7 +2452,9 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
             return HI_FAILURE;
         }
     }
-    else if (HI_FORMAT_INVOKE_GET_BUFFER_STATUS == u32InvokeId)
+    else if ((HI_FORMAT_INVOKE_GET_BUFFER_STATUS == u32InvokeId)
+        || (HI_FORMAT_INVOKE_GET_VIDEO_FORMAT_BUFFER == u32InvokeId)
+        || (HI_FORMAT_INVOKE_GET_AUDIO_FORMAT_BUFFER == u32InvokeId))
     {
         if (NULL == pArg)
         {
@@ -1990,27 +2466,27 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
         if (pstDemuxBufInfo)
         {
             pstStat->s64BufferSize = pstDemuxBufInfo->s64Size;
-            pstStat->s64Duration   = 0;
-            //EX_PRINTF("SVRExtratorAdp::invoke HI_FORMAT_INVOKE_GET_BUFFER_STATUS success, s64BufferSize:%lld\n", pstStat->s64BufferSize);
+            pstStat->s64Duration   = pstDemuxBufInfo->s64RearPts - pstDemuxBufInfo->s64FrontPts;
         }
     }
-    else if (HI_FORMAT_INVOKE_GET_BUFFER_LAST_PTS == u32InvokeId)
+    else if ((HI_FORMAT_INVOKE_GET_BUFFER_LAST_PTS == u32InvokeId)
+        || (HI_FORMAT_INVOKE_GET_LAST_AUDBUF_PTS == u32InvokeId)
+        || (HI_FORMAT_INVOKE_GET_LAST_VIDBUF_PTS == u32InvokeId))
     {
         if (NULL == pArg)
         {
             EX_PRINTF("HI_FORMAT_INVOKE_GET_BUFFER_LAST_PTS Args is null\n");
             return HI_FAILURE;
         }
-        HI_S64 *ps64Pts = (HI_S64*)pArg;
 
         if (pstDemuxBufInfo)
         {
-            *ps64Pts = pstDemuxBufInfo->s64RearPts;
+            *(HI_S64*)pArg = pstDemuxBufInfo->s64RearPts;
         }
     }
     else if (HI_FORMAT_INVOKE_GET_BANDWIDTH == u32InvokeId)
     {
-        HI_S32 hissplayer;
+        HI_PTR hissplayer;
         HI_SVR_SMOOTHSTREAMING_RUNNING_INFO_S stPlayerRunningInfo;
 
         if (NULL == pArg)
@@ -2019,10 +2495,10 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
             return HI_FAILURE;
         }
 
-        if ((FileMeta->findInt32(kKeyHiSShandle, &hissplayer))
+        if ((FileMeta->findPointer(kKeyHiSShandle, &hissplayer))
             && hissplayer)
         {
-            uint32_t s32Ret = HI_SVR_SMOOTHSTREAMING_GetPlayerInfo((HI_U32)hissplayer, &stPlayerRunningInfo);
+            uint32_t s32Ret = HI_SVR_SMOOTHSTREAMING_GetPlayerInfo(hissplayer, &stPlayerRunningInfo);
             if (HI_SUCCESS != s32Ret)
             {
                 EX_PRINTF("[%s:%d], HI_SVR_SMOOTHSTREAMING_GetPlayerInfo failed:0x%x", __FUNCTION__, __LINE__, s32Ret);
@@ -2054,13 +2530,13 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
         {
             stream_index = prog->pastSubStream[info->s32SubID].s32StreamIndex;
             uint32_t s32Ret = HI_SUCCESS;
-            HI_S32 hissplayer;
+            HI_PTR hissplayer;
             HI_SVR_SMOOTHSTREAMING_STREAMID_S stStreamID;
             HI_SVR_SMOOTHSTREAMING_RUNNING_INFO_S stPlayerRunningInfo;
-            if ((FileMeta->findInt32(kKeyHiSShandle, &hissplayer))
+            if ((FileMeta->findPointer(kKeyHiSShandle, &hissplayer))
                 && hissplayer)
             {
-                s32Ret = HI_SVR_SMOOTHSTREAMING_GetPlayerInfo((HI_U32)hissplayer, &stPlayerRunningInfo);
+                s32Ret = HI_SVR_SMOOTHSTREAMING_GetPlayerInfo(hissplayer, &stPlayerRunningInfo);
                 if (HI_SUCCESS != s32Ret)
                 {
                     EX_PRINTF("[%s:%d], HI_SVR_SMOOTHSTREAMING_GetPlayerInfo failed:0x%x", __FUNCTION__, __LINE__, s32Ret);
@@ -2070,7 +2546,7 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
                 stStreamID.u16SubStreamId = stream_index;
                 stStreamID.u16VidStreamId = stPlayerRunningInfo.s32CurVidStreamIdx;
                 stStreamID.u16AudStreamId = stPlayerRunningInfo.s32CurAudStreamIdx;
-                s32Ret = HI_SVR_SMOOTHSTREAMING_SetParam((HI_U32)hissplayer,
+                s32Ret = HI_SVR_SMOOTHSTREAMING_SetParam(hissplayer,
                                                          HI_SVR_SMOOTHSTREAMING_ATTR_STREAM_ID,
                                                          &stStreamID);
                 if (HI_SUCCESS != s32Ret)
@@ -2105,6 +2581,43 @@ status_t SVRExtratorAdp::invoke (HI_U32 u32InvokeId, HI_VOID *pArg)
         }
     }
 #endif
+    else if (HI_FORMAT_INVOKE_GET_DRM_INFO == u32InvokeId)
+    {
+        //TODO:to support widevine & ASF
+        HI_FORMAT_DRM_INFO_S* drm_info = (HI_FORMAT_DRM_INFO_S*)pArg;
+        memset(drm_info, 0, sizeof(*drm_info));
+        int mime_str_len = 0;
+        int data_len = 0;
+        int32_t trackID = 0;
+        size_t numTracks = mExtractor->countTracks();
+
+        if (strcasecmp(mMimeType.string(), MEDIA_MIMETYPE_CONTAINER_WVM))
+        {
+            for (size_t i = 0; i < numTracks; ++i)
+            {
+                sp<MetaData> trackMeta = mExtractor->getTrackMetaData(i);
+                (HI_VOID)trackMeta->findInt32(kKeyTrackID, &trackID);
+
+                HI_CHAR* data = (HI_CHAR*)mExtractor->getDrmTrackInfo(trackID, &data_len);
+                if (data)
+                {
+                    drm_info->headers[drm_info->u32HeaderNum].pu8Data = (HI_U8*)data;
+                    drm_info->headers[drm_info->u32HeaderNum].s32Size = data_len;
+                    drm_info->headers[drm_info->u32HeaderNum].s32ID = trackID;
+                    drm_info->u32HeaderNum++;
+                    ALOGE("Get SmoothStreaming DRM info succeed, track id:%d, ipmp size:%d, val:%p",
+                            trackID, data_len, data);
+                }
+            }
+        }
+
+        mime_str_len = strlen(mMimeType.string());
+        mime_str_len = (mime_str_len <= HI_FORMAT_MIMETYPE_LEN) ? mime_str_len:HI_FORMAT_MIMETYPE_LEN;
+        memcpy(drm_info->szMimeType, mMimeType.string(), mime_str_len);
+        ALOGE("mMimeType is %s",mMimeType.string());
+        return HI_SUCCESS;
+    }
+
     return HI_SUCCESS;
 }
 
@@ -2181,7 +2694,6 @@ typedef struct tagEXTRACTOR_MEMBER_S
 extern "C" HI_S32 SVR_EXTRACTOR_Create(HI_HANDLE *phandle)
 {
     EXTRACTOR_MEMBER_S *handle = NULL;
-    status_t ret;
     HI_FORMAT_FILE_INFO_S *pstFileInfo;
 
     EX_PRINTF("[%s:%d] Enter SVR_EXTRACTOR_Create\n", __FUNCTION__, __LINE__);
@@ -2222,7 +2734,8 @@ err:
     return HI_FAILURE;
 }
 
-extern "C" HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI_CHAR *headers)
+extern "C" HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI_CHAR *headers,
+                                                            HI_VOID *pArg)
 {
     status_t ret;
     EXTRACTOR_MEMBER_S *phandle = (EXTRACTOR_MEMBER_S*)handle;
@@ -2269,9 +2782,12 @@ extern "C" HI_S32 SVR_EXTRACTOR_SetDataSource(HI_HANDLE handle, HI_CHAR *uri, HI
     }
 #endif
     EX_PRINTF("[%s:%d] New url = %s ", __FUNCTION__, __LINE__, pszFileUrl);
+    EX_PRINTF("[%s:%d] HI_FORMAT_INVOKE_SET_COOKIE headers:%s ", __FUNCTION__, __LINE__, headers);
+
+    (void)phandle->extractor->invoke(HI_FORMAT_INVOKE_SET_COOKIE, (void *)&headers);
 
     // TODO: send headers by createDataSource function
-    ret = phandle->extractor->createDataSource(pszFileUrl, NULL);
+    ret = phandle->extractor->createDataSource(pszFileUrl, NULL, pArg);
     if (OK != ret)
     {
         EX_PRINTF("[%s:%d] Create data source fail, exit", __FUNCTION__, __LINE__);

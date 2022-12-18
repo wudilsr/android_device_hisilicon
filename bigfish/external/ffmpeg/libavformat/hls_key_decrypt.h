@@ -27,7 +27,7 @@
 #include "libavutil/avstring.h"
 #include "internal.h"
 
-int hls_decrypt_open(Hls_CryptoContext *h, const char *url, AVDictionary **options,
+int hls_decrypt_open(Hls_CryptoContext *h, const char *url, int64_t size, AVDictionary **options,
         const uint8_t *key, int keylen, const uint8_t *iv, int ivlen);
 
 int hls_decrypt_read(Hls_CryptoContext *h, uint8_t *buf, int size);

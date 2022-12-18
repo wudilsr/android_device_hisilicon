@@ -518,14 +518,7 @@ void bta_hh_api_disc_act(tBTA_HH_DEV_CB *p_cb, tBTA_HH_DATA *p_data)
 
 #if BTA_HH_LE_INCLUDED == TRUE
     if (p_cb->is_le_device)
-#ifdef BLUETOOTH_RTK
-    {
-         bta_hh_le_remove_dev_bg_conn(p_cb);
-#endif
         bta_hh_le_api_disc_act(p_cb);
-#ifdef BLUETOOTH_RTK
-    }
-#endif
     else
 #endif
     {
@@ -1042,6 +1035,9 @@ void bta_hh_maint_dev_act(tBTA_HH_DEV_CB *p_cb, tBTA_HH_DATA *p_data)
 #if BTA_HH_LE_INCLUDED == TRUE
         if (p_cb->is_le_device)
         {
+#ifdef BLUETOOTH_RTK
+            bta_hh_le_deregister_input_notif(p_cb, 0, p_cb->mode, FALSE);
+#endif
             bta_hh_le_remove_dev_bg_conn(p_cb);
             bta_hh_sm_execute(p_cb, BTA_HH_API_CLOSE_EVT, NULL);
             bta_hh_clean_up_kdev(p_cb);

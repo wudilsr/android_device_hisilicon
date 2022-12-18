@@ -445,6 +445,30 @@ int HiVSink::dispatchCheckFence(va_list args)
     return OK;
 }
 
+
+int HiVSink::dispatchSetUsage(va_list args)
+{
+    int usage;
+    ANativeWindow* w = mNativeWindow.get();
+
+    if (!w)
+    {
+        ALOGE("native window did not set");
+        return UNKNOWN_ERROR;
+    }
+    usage = va_arg(args, int);
+    if (usage & HI_SVR_VSINK_USEAGE_SEC)
+    {
+        mUsage |= GRALLOC_USAGE_PROTECTED;
+        ALOGI("set usage protected");
+    }
+    if (native_window_set_usage(w, mUsage)) {
+        ALOGE("set native window usage:%#x failed!", mUsage);
+        return HI_FAILURE;
+    }
+    return HI_SUCCESS;
+}
+
 int HiVSink::control(HI_U32 cmd, va_list args)
 {
     switch (cmd) {
@@ -468,6 +492,8 @@ int HiVSink::control(HI_U32 cmd, va_list args)
         break;
     case HI_SVR_VSINK_CHECK_FENCE:
         return dispatchCheckFence(args);
+    case HI_SVR_VSINK_SET_USAGE:
+        return dispatchSetUsage(args);
     default:
         return UNKNOWN_ERROR;
         break;

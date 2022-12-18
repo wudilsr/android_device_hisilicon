@@ -16,6 +16,9 @@
 ******************************************************************************/
 
 #include <config.h>
+#ifdef CONFIG_DDR_TRAINING_V2
+extern int ddr_sw_training_if(void *ddrtr_result);
+#endif
 
 #define readb(_a)        (*(volatile unsigned char *)(_a))
 #define readl(_a)        (*(volatile unsigned int *)(_a))
@@ -38,18 +41,8 @@
 #define R_REG_BIT_OFFSET	(W_REG_BIT_OFFSET+16)
 #define R_REG_BIT_MASK		(W_REG_BIT_MASK<<16)
 
-#ifdef CONFIG_DDR_DATAEYE_TRAINING_STARTUP
-extern int ddr_dataeye_training(void *param);
-#endif /* CONFIG_DDR_DATAEYE_TRAINING_STARTUP */
-
-extern void ddr_training_info(int value);
-extern int ddrphy_train_route(void);
-
-extern long long get_chipid_reg(void);
-extern unsigned int get_ca_vendor_reg(void);
 extern void reset_cpu(unsigned long addr);
 extern void check_bootfromsd(void);
-extern void ddr_training_print(int type, int num);
 #if defined(CONFIG_AVS_SUPPORT) && !defined(CONFIG_PMU_DEVICE)
 extern void set_core_voltage(void);
 #endif
@@ -258,32 +251,15 @@ static void reg_v110_init(unsigned int base, unsigned int pm,
 #if defined(CONFIG_AVS_SUPPORT) && !defined(CONFIG_PMU_DEVICE)
 		set_core_voltage();
 #endif
-		if (!pm && (!(readl(REG_BASE_SCTL + REG_SC_GEN20) & 0x1))) {
-			ret = ddrphy_train_route();
+		#ifdef CONFIG_DDR_TRAINING_V2
+		if (!pm) {
+			ret = ddr_sw_training_if(0);
+
 			if (ret) {
-				ddr_training_print(ret&0xffff, ret>>16);
-				ddr_training_info(ret);
 				reset_cpu(0);
 			}
 		}
-
-#ifdef CONFIG_DDR_DATAEYE_TRAINING_STARTUP
-		if (!pm && (!(readl(REG_BASE_SCTL + REG_SC_GEN20) & (0x1<<16)))) {
-			ret = ddr_dataeye_training(0);
-			if (ret) {
-				ddr_training_info(ret);
-				if (!(readl(REG_BASE_SCTL + REG_SC_GEN20) & (0x1<<31)))
-					reset_cpu(0);
-			}
-		}
-#endif /* CONFIG_DDR_DATAEYE_TRAINING_STARTUP */
-		/*do sf read dqs gating*/
-		ret = readl(REG_BASE_SCTL + REG_SC_GEN20);
-		if(!pm && (!(ret & 0x1))&&(ret&0x100)){
-				writel(0x10, REG_BASE_SCTL + REG_SC_GEN20);
-				ddrphy_train_route();
-				writel(ret,REG_BASE_SCTL + REG_SC_GEN20);
-		}
+		#endif
 
 #endif
 	}

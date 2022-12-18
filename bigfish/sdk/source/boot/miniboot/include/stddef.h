@@ -27,7 +27,6 @@
 #define NULL                           (void*)0
 #endif
 
-#define _512B                          (0x200)
 #define _1K                            (0x400)
 #define _2K                            (0x800)
 #define _4K                            (0x1000)
