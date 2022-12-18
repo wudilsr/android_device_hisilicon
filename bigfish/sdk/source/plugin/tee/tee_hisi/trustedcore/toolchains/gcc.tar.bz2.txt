@@ -1,0 +1,2 @@
+remote: warning: File bigfish/sdk/source/plugin/tee/tee_hisi/trustedcore/toolchains/gcc.tar.bz2 is 64.40 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+
