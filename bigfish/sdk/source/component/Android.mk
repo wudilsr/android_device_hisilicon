@@ -14,10 +14,6 @@ ifeq ($(CFG_HI_ALSA_SUPPORT),y)
 COMPONENT_MODULE += alsa
 endif
 
-ifeq ($(CFG_HI_BLUETOOTH_SUPPORT),y)
-COMPONENT_MODULE += bluetooth
-endif
-
 ifeq ($(CFG_HI_SND_AFLT_SUPPORT),y)
 objects += ha_effect
 endif

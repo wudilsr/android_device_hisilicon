@@ -23,10 +23,6 @@ ifeq ($(CFG_HI_ALSA_SUPPORT),y)
 objects += alsa
 endif
 
-ifeq ($(CFG_HI_BLUETOOTH_SUPPORT),y)
-objects += bluetooth
-endif
-
 ifeq ($(CFG_HI_VOIP_SUPPORT),y)
 objects += usbphone voip
 endif

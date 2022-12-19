@@ -122,46 +122,7 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 PAGE_BLOCK_SIZE :=8k_2M 4k_1M
 
 # Enable WiFi Only module used in the board.
-# Supported WiFi Only modules:
-#   RealTek RTL8188EUS (1T1R 2.4G)(Supported mode: STA, AP, WiFi Direct)
-#   RealTek RTL8188ETV (1T1R 2.4G)(Supported mode: STA, AP, WiFi Direct)
-#   RealTek RTL8192EU  (2T2R 2.4G)(Supported mode: STA, AP, WiFi Direct)
-#   RealTek RTL8192DU  (2T2R 5G)(Supported mode: STA, AP, WiFi Direct)
-#   RealTek RTL8812AU  (11ac 2T2R 2.4G+5G)(Supported mode: STA, AP, WiFi Direct)
-#   MediaTek MT7601U   (1T1R 2.4G)(Supported mode: STA, AP, WiFi Direct)
-#   MediaTek RT5572    (2T2R 2.4G+5G)(Supported mode: STA, AP)
-#   Atheros AR9374-B   (2T2R 2.4G+5G)(Supported mode: STA, AP, WiFi Direct)
-#   Atheros QCA1021G   (2T2R 2.4G)(Supported mode: STA, AP, WiFi Direct)
-#   Atheros QCA1021X   (2T2R 2.4G+5G)(Supported mode: STA, AP, WiFi Direct)
-# Set to 'y', enable the WiFi module, the driver will be compiled.
-# Set to 'n', disable the WiFi module, the driver won't be compiled.
-# Can set more than one module to 'y'.
-# Example:
-#   enable RTL8188EUS : BOARD_WLAN_DEVICE_RTL8188EUS = y
-#   disable RTL8188EUS: BOARD_WLAN_DEVICE_RTL8188EUS = n
-
-# RTL8188EUS
-BOARD_WLAN_DEVICE_RTL8188EUS := n
-# RTL8188ETV
-BOARD_WLAN_DEVICE_RTL8188ETV := n
-# RTL8188FTV RTL8188FU
 BOARD_WLAN_DEVICE_RTL8188FTV := y
-# RTL8192DU
-BOARD_WLAN_DEVICE_RTL8192DU := n
-# RTL8192EU
-BOARD_WLAN_DEVICE_RTL8192EU := n
-# RTL8812AU
-BOARD_WLAN_DEVICE_RTL8812AU := n
-# MT7601U
-BOARD_WLAN_DEVICE_MT7601U := n
-# RT5572
-BOARD_WLAN_DEVICE_RT5572 := n
-# AR9374-B
-BOARD_WLAN_DEVICE_AR9374 := n
-# QCA1021G
-BOARD_WLAN_DEVICE_QCA1021G := n
-# QCA1021X
-BOARD_WLAN_DEVICE_QCA1021X := n
 
 ################################################################################
 ##  Stable configuration definitions
