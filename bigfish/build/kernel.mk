@@ -134,12 +134,9 @@ WIFI_CFG := \
 	CFG_HI_WIFI_DEVICE_RTL8192DU=$(BOARD_WLAN_DEVICE_RTL8192DU) \
 	CFG_HI_WIFI_DEVICE_RTL8812AU=$(BOARD_WLAN_DEVICE_RTL8812AU) \
 	CFG_HI_WIFI_DEVICE_RTL8188FU=$(BOARD_WLAN_DEVICE_RTL8188FTV) \
-	CFG_HI_WIFI_DEVICE_RTL8723BU=$(BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU) \
-	CFG_HI_WIFI_DEVICE_RTL8821AU=$(BOARD_BLUETOOTH_WIFI_DEVICE_RLT8821AU) \
 	CFG_HI_WIFI_DEVICE_RT5370=$(BOARD_WLAN_DEVICE_RT5370) \
 	CFG_HI_WIFI_DEVICE_RT5572=$(BOARD_WLAN_DEVICE_RT5572) \
 	CFG_HI_WIFI_DEVICE_MT7601U=$(BOARD_WLAN_DEVICE_MT7601U) \
-	CFG_HI_WIFI_DEVICE_MT76X2U=$(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U) \
 	CFG_HI_WIFI_DEVICE_AR9271=$(BOARD_WLAN_DEVICE_AR9271) \
 	CFG_HI_WIFI_DEVICE_AR9374=$(BOARD_WLAN_DEVICE_AR9374) \
 	CFG_HI_WIFI_DEVICE_QCA1021G=$(BOARD_WLAN_DEVICE_QCA1021G) \
@@ -160,66 +157,3 @@ wifi: kernel
 #----------------------------------------------------------------------
 # Update Wifi Drivers END
 #----------------------------------------------------------------------
-
-#----------------------------------------------------------------------
-# Make Bluetooth Drivers
-#----------------------------------------------------------------------
-BLUETOOTH_DIR := $(SDK_DIR)
-ifeq ($(BOARD_BLUETOOTH_DEVICE_BCM20705),y)
-   ifeq ($(BOARD_BLUETOOTH_DEVICE_CSR8510),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-   ifeq ($(BOARD_BLUETOOTH_DEVICE_REALTEK),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-   ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-endif
-ifeq ($(BOARD_BLUETOOTH_DEVICE_CSR8510),y)
-   ifeq ($(BOARD_BLUETOOTH_REALTEK),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-   ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-endif
-ifeq ($(BOARD_BLUETOOTH_REALTEK),y)
-   ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U),y)
-   $(error only one bluetooth could be built at the same time)
-   endif
-endif
-
-ifeq ($(BOARD_BLUETOOTH_DEVICE_REALTEK),y)
-BLUETOOTH_DIR := $(ANDROID_BUILD_TOP)/device/hisilicon/bigfish/bluetooth/realtek8xxx/driver
-endif
-
-ifeq ($(BOARD_BLUETOOTH_DEVICE_BCM20705),y)
-BLUETOOTH_DIR := $(ANDROID_BUILD_TOP)/device/hisilicon/bigfish/bluetooth/bcm20705/driver
-endif
-
-ifeq ($(BOARD_BLUETOOTH_DEVICE_CSR8510),y)
-BLUETOOTH_DIR := $(ANDROID_BUILD_TOP)/device/hisilicon/bigfish/bluetooth/csr8510/driver
-endif
-
-ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U),y)
-BLUETOOTH_DIR := $(ANDROID_BUILD_TOP)/device/hisilicon/bigfish/bluetooth/mt76x2u/driver
-endif
-
-ifeq ($(BOARD_HAVE_BLUETOOTH),true)
-bluetooth: $(KERNEL_IAMGE)
-	$(MAKE) -j1 -C $(BLUETOOTH_DIR) \
-                ARCH=arm CROSS_COMPILE=$(CFG_HI_TOOLCHAINS_NAME)- \
-		KERNEL_VERSION=$(HISI_LINUX_KERNEL) \
-		CHIPNAME=$(CHIPNAME) \
-		ANDROID_PRODUCT_OUT=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT) \
-		SDK_CFGFILE=$(SDK_CFGFILE)
-
-ALL_DEFAULT_INSTALLED_MODULES += bluetooth
-endif
-
-.PHONY: bluetooth
-bluetooth: kernel
-#----------------------------------------------------------------------
-# Make Bluetooth Drivers END
-#---------------------------------------------------------------------

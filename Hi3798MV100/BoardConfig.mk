@@ -15,6 +15,7 @@ HISI_SDK_TEE_CFG := hi3798mdmo_hi3798mv100_android_tee_cfg.mak
 HISI_SDK_RECOVERY_CFG := hi3798mdmo_hi3798mv100_android_recovery_cfg.mak
 HISI_SDK_TEE_VMX_CFG := hi3798mdmo_hi3798mv100_android_tee_vmx_cfg.mak
 SDK_CFG_DIR := configs/hi3798mv100
+
 ifeq ($(strip $(HISILICON_TEE)),true)
 ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
 SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_TEE_VMX_CFG)
@@ -41,11 +42,13 @@ RECOVERY_KERNEL_CONFIG := hi3798mv100_android_recovery_defconfig
 # emmc fastboot configure
 EMMC_BOOT_CFG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_emmc.cfg
 EMMC_BOOT_REG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_emmc.reg
+
 ifeq ($(strip $(SUPPORT_UNIFIED_UPDATE)),true)
 # emmc fastboot configuration for QFP
 EMMC_BOOT_CFG_NAME_2 := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_2layers_emmc.cfg
 EMMC_BOOT_REG_NAME_2 := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_2layers_emmc.reg
 endif
+
 EMMC_BOOT_ENV_STARTADDR :=0x100000
 EMMC_BOOT_ENV_SIZE=0x10000
 EMMC_BOOT_ENV_RANGE=0x10000
@@ -56,6 +59,7 @@ NAND_BOOT_REG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_nand.
 NAND_BOOT_ENV_STARTADDR :=0x800000
 NAND_BOOT_ENV_SIZE=0x10000
 NAND_BOOT_ENV_RANGE=0x10000
+
 #false: system build with recovery
 #true: system build with loader
 ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
@@ -159,62 +163,11 @@ BOARD_WLAN_DEVICE_QCA1021G := n
 # QCA1021X
 BOARD_WLAN_DEVICE_QCA1021X := n
 
-#Supported BT Only modules:
-# BROADCOM BCM20705   (BT4.0)
-# CSR CSR8510         (BT4.0)
-# RealTek RTL8761     (BT4.0)
-#Supported WiFi + BT Combo modules:
-# MediaTek MT7632U  (WiFi: 2T2R 2.4G+5G(Supported mode: STA, AP, WiFi Direct), BT: BT4.0)
-# RealTek RTL8723BU (WiFi: 2T2R 2.4G+5G(Supported mode: STA, AP, WiFi Direct), BT: BT4.0)
-
-#enable BT Only module or WiFi + BT Combo module used in the board
-# Set to 'y', enable the BT Only module or WiFi+BT Combo module, the driver will be compiled.
-# Set to 'n', disable the BT Only module or WiFi+BT Combo module, the driver won't be compiled.
-# Can set only one module to 'y' every build.
-# Example:
-# enable RTL8723BU WiFi+BT : BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := y
-# if RTL8723BU is set to y, must modify device\hisilicon\Hi3798MV100\Hi3798MV100.mk as follows:
-# BOARD_BLUETOOTH_DEVICE_REALTEK := y
-# if RTL8723BU is set to n,must modify BOARD_BLUETOOTH_DEVICE_REALTEK := n
-# if MT7632U is set to y, must modify device\hisilicon\Hi3798MV100\etc\init.Hi3798MV100.rc as follows:
-# write /proc/sys/vm/min_free_kbytes 32768 (from 10240 to 32768 to get more memory)
-
-################################################################################
-#ATTENTION:ONLY ONE MODULE CAN BE SET TO "y" AT SAME TIME AS FOLLOWs:
-################################################################################
-# BCM20705 BT Only
-BOARD_BLUETOOTH_DEVICE_BCM20705 := n
-# CSR8510 BT Only
-BOARD_BLUETOOTH_DEVICE_CSR8510 := n
-# RTL8761 BT Only
-BOARD_BLUETOOTH_DEVICE_RTL8761 := n
-# MT7632U WiFi+BT Combo
-BOARD_BLUETOOTH_WIFI_DEVICE_MT7632U := n
-# RTL8723BU WiFi+BT Combo
-BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU := n
-# RTL8821AU WiFi+BT Combo
-BOARD_BLUETOOTH_WIFI_DEVICE_RLT8821AU := n
-
-
-
-ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_RTL8723BU),y)
-BOARD_BLUETOOTH_DEVICE_REALTEK := y
-endif
-ifeq ($(BOARD_BLUETOOTH_WIFI_DEVICE_RTL8821AU),y)
-BOARD_BLUETOOTH_DEVICE_REALTEK := y
-endif
-ifeq ($(BOARD_BLUETOOTH_DEVICE_RTL8761),y)
-BOARD_BLUETOOTH_DEVICE_REALTEK := y
-endif
-
-
-
 ################################################################################
 ##  Stable configuration definitions
 ################################################################################
 
 # The generic product target doesn't have any hardware-specific pieces.
-BOARD_HAVE_BLUETOOTH := true
 TARGET_NO_BOOTLOADER := true
 ifeq ($(RAMDISK_ENABLE),false)
 TARGET_NO_KERNEL := true
