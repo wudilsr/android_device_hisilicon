@@ -1,1 +1,0 @@
-remote: error: File bigfish/sdk/tools/linux/toolchains/arm-histbv300-linux/arm-histbv300-linux.tar.bz2 is 690.79 MB; this exceeds GitHub's file size limit of 100.00 MB
