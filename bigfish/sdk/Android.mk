@@ -7,7 +7,6 @@ driver_modules :=         \
 	source/common/api \
 	source/msp/api    \
 	source/rootfs     \
-	tools/windows     \
 	source/component  \
 	configs \
 	prebuilts         \
