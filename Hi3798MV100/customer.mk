@@ -55,9 +55,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vmx.support=true
 endif
 
-#Unified update.zip for BGA and QFP fastboots
-SUPPORT_UNIFIED_UPDATE := false
-
 #support sdcardfs.
 SUPPORT_SDCARDFS := false
 #support fuse
