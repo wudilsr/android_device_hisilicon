@@ -26,39 +26,6 @@ LOCAL_MODULE_CLASS := EXECUTABLES
 LOCAL_MODULE_TAG := optional
 include $(BUILD_PREBUILT)
 
-ifeq ($(strip $(PRODUCT_TARGET)), shcmcc)
-include $(CLEAR_VARS)
-LOCAL_MODULE := bootanimation.zip
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/media
-LOCAL_SRC_FILES := bootanimation_chinamobile.zip
-include $(BUILD_PREBUILT)
-else
-ifeq ($(strip $(PRODUCT_TARGET)), demo)
-include $(CLEAR_VARS)
-LOCAL_MODULE := bootanimation.zip
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/media
-LOCAL_SRC_FILES := bootanimation_1080p.zip
-include $(BUILD_PREBUILT)
-endif
-endif
-
-ifeq ($(BOARD_QBSUPPORT),true)
-include $(CLEAR_VARS)
-LOCAL_MODULE := quickboot.zip
-ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ETC
-LOCAL_MODULE_PATH := $(TARGET_OUT)/media
-LOCAL_SRC_FILES := quickboot.zip
-include $(BUILD_PREBUILT)
-endif
-
 include $(CLEAR_VARS)
 LOCAL_MODULE := networkprovider.xml
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
@@ -127,6 +94,3 @@ include $(BUILD_PREBUILT)
 
 include $(LOCAL_PATH)/nfsClient/Android.mk \
         $(LOCAL_PATH)/enforce/Android.mk
-
--include $(LOCAL_PATH)/ThirdPartyApplications/Android.mk
--include $(GPLAY_LOCAL_PATH)/googleplay/Android.mk
