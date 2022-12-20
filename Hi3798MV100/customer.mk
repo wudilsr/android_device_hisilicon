@@ -57,22 +57,24 @@ endif
 
 #support sdcardfs.
 SUPPORT_SDCARDFS := false
+
 #support fuse
 SUPPORT_FUSE := false
+
 #SUPPROT UI for wipe data or update from USB when pressed remote control power button on boot
-SUPPORT_REMOTE_RECOVERY := false
+SUPPORT_REMOTE_RECOVERY := true
 
 # Whether fastplay should be played completely or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.fastplay.fullyplay=false
+    persist.sys.fastplay.fullyplay=true
 
 # Enable low RAM config or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.config.low_ram=false
+    ro.config.low_ram=true
 
 # Enable wallpaper or not for low_ram: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.low_ram.wp.enable=false
+    persist.low_ram.wp.enable=true
 
 # Whether bootanimation should be played or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -83,21 +85,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.tde_compose=true
 
 #set video output rate for telecom and unicom, defalt 4:3
-ifeq ($(strip $(PRODUCT_TARGET)),telecom)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.video.cvrs= 1
-else ifeq ($(strip $(PRODUCT_TARGET)),unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.video.cvrs= 1
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.video.cvrs= 0
-endif
 
 #if thirdparty dhcp service is needed to obtain ip, please set this property true
 # default value is false
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.thirdparty.dhcp=false
+    ro.thirdparty.dhcp=true
 
 # smart_suspend, deep_launcher, deep_restart, deep_resume;
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -112,44 +106,28 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.zygote.optimize=true \
     persist.sys.boot.optimize=true \
     persist.sys.preload.fork=true
+    
 # Whether CVBS is enabled or not when HDMI is plugged in
-ifeq ($(strip $(PRODUCT_TARGET)), telecom)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.cvbs.and.hdmi=true
-else ifeq ($(strip $(PRODUCT_TARGET)), unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.cvbs.and.hdmi=true
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.cvbs.and.hdmi=false
-endif
+
 # apk control mode: none/whitelist/signature/md5
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.apkcontrol.mode=none
+    ro.sys.apkcontrol.mode=whitelist
+    
 # Whether display format self-adaption is enabled or not when HDMI is plugged in
 # 0 -> disable; 1 -> enable
-ifeq ($(strip $(PRODUCT_TARGET)), telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.optimalfmt.enable=0
-else ifeq ($(strip $(PRODUCT_TARGET)), unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.optimalfmt.enable=0
-else ifeq ($(strip $(PRODUCT_TARGET)), shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.optimalfmt.enable=0
-else
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.optimalfmt.enable=1
-endif
 
 # display hdmi cec
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.hdmi.cec=false
+    persist.sys.hdmi.cec=true
 
 # Preferential display format: native, i50hz, p50hz, i60hz, p60hz or max_fmt
 # persist.sys.optimalfmt.perfer is valid only if persist.sys.optimalfmt.enable=1
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.optimalfmt.perfer=native
+    persist.sys.optimalfmt.perfer=p60hz
 
 # Preferential hiplayer cache setting
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -169,3 +147,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.hiplayer.rtspusetcp=false
 
+# hdrmode set 0:SDR, 1:Dolby, 2:HDR10, 3:auto
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.hdrmode=3

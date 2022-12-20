@@ -112,7 +112,7 @@ BOARD_FLASH_BLOCK_SIZE := 4096
 # example:
 #      PAGE_BLOCK_SIZE:=8k_2M 4k_1M 2k_128k
 
-PAGE_BLOCK_SIZE :=8k_2M 4k_1M
+PAGE_BLOCK_SIZE :=16k_4M 8k_2M 4k_1M
 
 # Enable WiFi Only module used in the board.
 BOARD_WLAN_DEVICE_RTL8188FTV := y

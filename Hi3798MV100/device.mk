@@ -16,35 +16,22 @@
 include device/hisilicon/$(TARGET_PRODUCT)/customer.mk
 
 ifndef PRODUCT_TARGET
-PRODUCT_TARGET := ott
+PRODUCT_TARGET := aosp
 endif
 
 #HiPlayer graphic output
-ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.graphic=false
-else ifeq ($(strip $(PRODUCT_TARGET)),telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.graphic=false
-else ifeq ($(strip $(PRODUCT_TARGET)),unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    service.media.hiplayer.graphic=false
-else
 PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.graphic=true
-endif
 
 #HiPlayer: video frame counts to be played before underrun while seeked
-ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.vfcnt=0
-endif
 
 #HiPlayer: for vo switch channel freeze
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.hiplayer.vo.freeze=false
+    
 #if open HiPlayer: for vo switch channel freeze
-
 ifeq ($(PRODUCT_TARGET),shcmcc)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.media.timeshift=1
@@ -61,47 +48,19 @@ PRODUCT_PROPERTY_OVERRIDES += \
 endif
 
 #wifi disguise
-ifeq ($(strip $(PRODUCT_TARGET)),telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.ethernet.wifidisguise=false
-else ifeq ($(strip $(PRODUCT_TARGET)),unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.ethernet.wifidisguise=false
-else ifeq ($(PRODUCT_TARGET),shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.ethernet.wifidisguise=false
-else
-PRODUCT_PROPERTY_OVERRIDES += \
     persist.ethernet.wifidisguise=true
-endif
 
 #ethernet switch
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.ethernet.on=true
 
 # open 2D drawing
-ifeq ($(PRODUCT_TARGET),shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.ui.hw=false
-else
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.ui.hw=true
-endif
 
 #setup UI density
-ifeq ($(strip $(PRODUCT_TARGET)),shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-     ro.sf.lcd_density=160
-else ifeq ($(strip $(PRODUCT_TARGET)),telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-     ro.sf.lcd_density=160
-else ifeq ($(strip $(PRODUCT_TARGET)),unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-     ro.sf.lcd_density=160
-else
 PRODUCT_PROPERTY_OVERRIDES += \
      ro.sf.lcd_density=240
-endif
 
 ifdef HISILICON_SECURITY_L1
 ifeq ($(HISILICON_SECURITY_L1),true)
@@ -226,7 +185,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Disable lockscreen by default
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.lockscreen.disable.default=true
+    ro.lockscreen.disable.default=false
 
 # Disable hardware menu key
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -238,7 +197,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # DEFAULT STORAGE
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.defaultStorage.enable=false
+    ro.defaultStorage.enable=true
 
 # DLNA&Skyplay Toast
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -266,15 +225,15 @@ endif
 
 # Dobly DMA Certification
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.dolby.dmacert.enable=false
+    ro.dolby.dmacert.enable=true
 
 # Dobly IPTV Certification
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.dolby.iptvcert.enable=false
+    ro.dolby.iptvcert.enable=true
 
 # Dobly DVB Certification
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.dolby.dvbcert.enable=false
+    ro.dolby.dvbcert.enable=true
 
 # add release version
 PRODUCT_PROPERTY_OVERRIDES += \
