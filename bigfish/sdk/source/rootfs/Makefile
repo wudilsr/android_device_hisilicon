@@ -28,11 +28,8 @@
 #  CFG_HI_EXPORT_FLAG
 #  SERVER_UNTILS_DIR
 #  ROOTFS_DIR
-#  CFG_HI_NAND_SUPPORT
 #  CFG_HI_SPI_SUPPORT
 #  CFG_HI_EMMC_SUPPORT
-#  CFG_HI_NAND_PAGE_SIZE
-#  CFG_HI_NAND_ECC_TYPE
 #  CFG_HI_ROOTFS_STRIP
 #  CFG_HI_ROOTFS_CRAMFS
 #  CFG_HI_ROOTFS_JFFS2
@@ -199,25 +196,8 @@ uninstall:
 PHONYS        += yaffs2 yaffs2_clean
 
 ################################################################################
-#  if support nand, you should config HI_NAND_PAGE_SIZE and HI_NAND_ECC_TYPE
-#
-ifdef HI_NAND_SUPPORT
-ifndef HI_NAND_PAGE_SIZE
-$(error "Please config HI_NAND_PAGE_SIZE")
-else
-ifndef HI_NAND_ECC_TYPE
-$(error "Please config HI_NAND_ECC_TYPE")
-endif
-endif
-endif
 
 YAFFS2_MODE   := 2k-1bit 4k-1bit 4k-4byte 4k-24bit1k 8k-24bit1k 8k-40bit1k
-
-ifdef HI_NAND_PAGE_SIZE
-ifdef HI_NAND_ECC_TYPE
-YAFFS2_MODE   :=$(HI_NAND_PAGE_SIZE)-$(HI_NAND_ECC_TYPE)
-endif
-endif
 
 HOST_MKYAFFS2 := $(HOST_PREFIX)/mkyaffs2image504
 

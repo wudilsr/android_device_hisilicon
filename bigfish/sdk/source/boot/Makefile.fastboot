@@ -204,8 +204,6 @@ $(CONFIG_FILE): $(if $(OBJ_DIR), copy_code,) force
 	chmod 0755 $(CONFIG_EXPORT)
 	@$(CONFIG_EXPORT) "SDK_VERSION_STRING=\"$(CFG_HI_SDK_VERSION)\"" \
 		"SDK Version" $@
-	@$(CONFIG_EXPORT) "CONFIG_NAND_SUPPORT=$(CFG_HI_NAND_SUPPORT)" \
-		"nand flash support" $@
 	@$(CONFIG_EXPORT) "CONFIG_SPIFLASH_SUPPORT=$(CFG_HI_SPI_SUPPORT)" \
 		"spi flash support" $@
 	@$(CONFIG_EXPORT) "CONFIG_NET_SUPPORT=$(CFG_HI_ETH_SUPPORT)" \
@@ -244,10 +242,6 @@ $(CONFIG_FILE): $(if $(OBJ_DIR), copy_code,) force
 	@$(CONFIG_EXPORT) "CHIP_TYPE_$(CFG_HI_CHIP_TYPE)=1" \
 		"Chip type" $@
 ifeq ($(CFG_HI_FORCE_ENV_TO_MEDIA), y)
-ifeq ($(CFG_FORCE_ENV_IN_NAND), y)
-	@$(CONFIG_EXPORT) "CONFIG_FORCE_ENV_IN_NAND=$(CFG_FORCE_ENV_IN_NAND)" \
-		"Force env to Nand" $@
-endif
 ifeq ($(CFG_FORCE_ENV_IN_SPI), y)
 	@$(CONFIG_EXPORT) "CONFIG_FORCE_ENV_IN_SPI=$(CFG_FORCE_ENV_IN_SPI)" \
 		"Force env to SPI Flash " $@

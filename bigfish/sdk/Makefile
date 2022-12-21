@@ -115,19 +115,10 @@ ifeq ($(CFG_HI_EMMC_SUPPORT),y)
 	$(AT)(cd $(IMAGE_DIR) && $(MKBOOTARGS) -b $(CFG_HI_BOOT_ENV_SIZE) -r $(HI_PREBUILTS_DIR)/emmc_$(BOOTARGS_INPUT) -o bootargs_emmc.bin)
 	$(AT)cp -f $(HI_PREBUILTS_DIR)/emmc_*.xml $(IMAGE_DIR)/
 endif	
-ifeq ($(CFG_HI_NAND_SUPPORT),y)
-ifneq ($(CFG_HI_TEE_SUPPORT),y)
-	$(AT)(cd $(IMAGE_DIR) && $(MKBOOTARGS) -b $(CFG_HI_BOOT_ENV_SIZE) -r $(HI_PREBUILTS_DIR)/nand_$(BOOTARGS_INPUT) -o bootargs_nand.bin)
-	$(AT)cp -f $(HI_PREBUILTS_DIR)/nand_*.xml $(IMAGE_DIR)/
-endif	
-endif
 	$(AT)cp -f $(HI_PREBUILTS_DIR)/logo.img $(HI_PREBUILTS_DIR)/baseparam.img $(HI_PREBUILTS_DIR)/pq_param.bin $(IMAGE_DIR)/	
 prebuilts_clean:
 ifeq ($(CFG_HI_EMMC_SUPPORT),y)	
 	$(AT)rm -rf $(IMAGE_DIR)/bootargs_emmc.bin
-endif
-ifeq ($(CFG_HI_NAND_SUPPORT),y)
-	$(AT)rm -rf $(IMAGE_DIR)/bootargs_nand.bin
 endif
 	
 #====================================================================================
@@ -320,11 +311,6 @@ SPI_BLOCK_SIZE := 0x10000 0x20000 0x40000
 endif
 
 YAFFS_MODE := 2k-1bit 4k-1bit 4k-4byte 4k-24bit1k 8k-24bit1k 8k-40bit1k
-ifdef CFG_HI_NAND_PAGE_SIZE
-ifdef CFG_HI_NAND_ECC_TYPE
-YAFFS_MODE :=$(CFG_HI_NAND_PAGE_SIZE)-$(CFG_HI_NAND_ECC_TYPE)
-endif
-endif
 
 ifdef CFG_HI_EMMC_ROOTFS_SIZE
 EMMC_SIZE     := $(shell expr $(CFG_HI_EMMC_ROOTFS_SIZE) \* 1024)
@@ -363,13 +349,6 @@ yaffs:
 			$(IMAGE_DIR)/rootfs_$$NAME.yaffs $$PARAM; \
 		chmod a+r $(IMAGE_DIR)/rootfs_$$NAME.yaffs; \
 	) done )
-#++++++++++++++++++++++++++++++++++++++++++++++++++++
-ubiimg:
-	cd ${SERVER_UNTILS_DIR}; \
-	$(MKUBIIMG) $(CFG_HI_NAND_PAGE_SIZE) $(CFG_HI_NAND_BLOCK_SIZE) $(ROOTBOX_DIR) $(CFG_HI_UBI_PARTITION_SIZE) $(IMAGE_DIR)/rootfs_$(CFG_HI_UBI_PARTITION_SIZE).ubiimg ; \
-	cd -
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++
 ROOTBOX_SIZE  := $(word 1,$(shell du -s $(ROOTBOX_DIR) 2>/dev/null))
 
 extfs:

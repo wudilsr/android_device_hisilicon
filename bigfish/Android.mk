@@ -5,8 +5,7 @@ BIGFISH_MODULES := sdk \
                    frameworks \
                    hidolphin \
                    host \
-                   prebuilts \
-                   bluetooth
+                   prebuilts
 
 -include $(call all-named-subdir-makefiles,$(BIGFISH_MODULES))
 
