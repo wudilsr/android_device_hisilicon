@@ -1,52 +1,9 @@
 include $(CLEAR_VARS)
-ifeq ($(SUPPORT_SDCARDFS),true)
-	ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
-	CHIP_TABLE := $(CHIPNAME)-sdcardfs-emmc-loader.xml
-	else
-	CHIP_TABLE := $(CHIPNAME)-sdcardfs-emmc.xml
-	endif
-else
-ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-ifeq ($(strip $(HISILICON_TEE)),true)
-CHIP_TABLE := $(CHIPNAME)-emmc-tee-vmx.xml
-else
-CHIP_TABLE := $(CHIPNAME)-emmc-vmx.xml
-endif
-else
-CHIP_TABLE := $(CHIPNAME)-emmc-loader.xml
-endif
-else
-ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
-CHIP_TABLE := $(CHIPNAME)-emmc-recovery.xml
-else
-ifeq ($(strip $(HISILICON_TEE)),true)
-CHIP_TABLE := $(CHIPNAME)-emmc-tee.xml
-else
-CHIP_TABLE := $(CHIPNAME)-emmc.xml
-endif
-endif
-endif
-endif
+CHIP_TABLE              := $(CHIPNAME)-sdcardfs-emmc.xml	
 CHIP_TABLE_PATH         := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-
-ifeq ($(strip $(PRODUCT_TARGET)), shcmcc)
-PREBUILT_BASEPARAM_PATH := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/mobile
-PREBUILT_LOGO_PATH      := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/mobile
-PREBUILT_FASTPLAY_PATH  := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/mobile
-else ifeq ($(strip $(PRODUCT_TARGET)), telecom)
-PREBUILT_BASEPARAM_PATH := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/telecom
-PREBUILT_LOGO_PATH      := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-PREBUILT_FASTPLAY_PATH  := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-else ifeq ($(strip $(PRODUCT_TARGET)), unicom)
-PREBUILT_BASEPARAM_PATH := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/unicom
-PREBUILT_LOGO_PATH      := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-PREBUILT_FASTPLAY_PATH  := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-else
 PREBUILT_BASEPARAM_PATH := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
 PREBUILT_LOGO_PATH      := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
 PREBUILT_FASTPLAY_PATH  := $(TOP)/device/hisilicon/$(CHIPNAME)/prebuilts/
-endif
 
 EMMC_CHIP_TABLE := $(EMMC_PRODUCT_OUT)/$(CHIP_TABLE)
 $(EMMC_CHIP_TABLE) : $(EMMC_PRODUCT_OUT)/% : $(CHIP_TABLE_PATH)/% | $(ACP)
@@ -137,23 +94,7 @@ include $(CLEAR_VARS)
 
 EMMC_HIBOOT_IMG := fastboot-burn-emmc.bin
 EMMC_HIBOOT_OBJ := $(TARGET_OUT_INTERMEDIATES)/EMMC_HIBOOT_OBJ
-ifeq ($(strip $(HISILICON_TEE)),true)
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_TEE_VMX_CFG)
-else
-EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_TEE_CFG)
-endif
-else
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_SECURE_CFG)
-else
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_VMX_CFG)
-else
 EMMC_BOOT_ANDROID_CFG := $(HISI_SDK_ANDROID_CFG)
-endif
-endif
-endif
 
 emmc_fastboot_prepare:
 	mkdir -p $(EMMC_HIBOOT_OBJ)
@@ -167,10 +108,6 @@ $(EMMC_HIBOOT_IMG): emmc_fastboot_prepare
 	if [ "$(SUPPORT_REMOTE_RECOVERY)" = "true" ]; then \
 	sed -i -e '/# CFG_HI_BUILD_WITH_IR /a\CFG_HI_BUILD_WITH_IR = y' -e '/# CFG_HI_BUILD_WITH_IR/d' \
 	$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
-	fi
-	if [ "$(TARGET_HAVE_APPLOADER)" = "true" ]; then \
-	sed -i '/Ethernet/i\\CFG_HI_LOADER_SUPPORT=y\
-CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
 	fi
 	if [ -n "$(EMMC_BOOT_REG_NAME)" ]; then \
 	sed -i s/CFG_HI_BOOT_REG_NAME=.*/CFG_HI_BOOT_REG_NAME=${EMMC_BOOT_REG_NAME}/ $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG);\
@@ -217,10 +154,6 @@ $(EMMC_HIBOOT_IMG_2): emmc_fastboot_prepare_2
 	if [ "$(SUPPORT_REMOTE_RECOVERY)" = "true" ]; then \
 	sed -i -e '/# CFG_HI_BUILD_WITH_IR /a\CFG_HI_BUILD_WITH_IR = y' -e '/# CFG_HI_BUILD_WITH_IR/d' \
 	$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
-	fi
-	if [ "$(TARGET_HAVE_APPLOADER)" = "true" ]; then \
-	sed -i '/Ethernet/i\\CFG_HI_LOADER_SUPPORT=y\
-CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
 	fi
 	if [ -n "$(EMMC_BOOT_ENV_STARTADDR)" ];then \
 	sed -i s/CFG_HI_BOOT_ENV_STARTADDR=.*/CFG_HI_BOOT_ENV_STARTADDR=${EMMC_BOOT_ENV_STARTADDR}/ $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG);\

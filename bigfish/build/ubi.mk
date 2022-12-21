@@ -43,11 +43,6 @@ $(UBITOOLS_DST) : $(HOST_OUT_EXECUTABLES)/% : $(TOOLS_OUT)/% | $(ACP)
 	$(transform-prebuilt-to-target)
 	$(hide) chmod a+x $@
 
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-	$(ACP) $(TOOLS_OUT)/mksquashfs $(HOST_OUT_EXECUTABLES)
-	chmod a+x $(HOST_OUT_EXECUTABLES)/mksquashfs
-endif
-
 ifeq ($(SUPPORT_SDCARDFS),true)
 define make_ubi_core
 	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT) $(1) $(2);\
@@ -78,12 +73,6 @@ endef
 
 $(UBI_IMG):$(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGET) $(INSTALLED_CACHEIMAGE_TARGET) $(UBITOOLS_DST) $(UBISH_DST)
 	$(call make_ubi_img,$(PAGE_BLOCK_SIZE))
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-	mkdir -p $(SQUASHFS_OUT)
-	$(MKSQUASHFS) $(TARGET_OUT) $(SQUASHFS_OUT_SYSTEM) -no-fragments -noappend -noI -b 131072
-	echo "$(MKSQUASHFS) $(TARGET_OUT) $(SQUASHFS_OUT_SYSTEM)"
-	cp -avf $(SQUASHFS_OUT_SYSTEM) $(EMMC_PRODUCT_OUT)
-endif
 
 .PHONY: ubifs
 ubifs: $(UBI_IMG)

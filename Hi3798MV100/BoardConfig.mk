@@ -16,24 +16,6 @@ HISI_SDK_RECOVERY_CFG := hi3798mdmo_hi3798mv100_android_recovery_cfg.mak
 HISI_SDK_TEE_VMX_CFG := hi3798mdmo_hi3798mv100_android_tee_vmx_cfg.mak
 SDK_CFG_DIR := configs/hi3798mv100
 
-ifeq ($(strip $(HISILICON_TEE)),true)
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_TEE_VMX_CFG)
-else
-SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_TEE_CFG)
-endif
-else
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_SECURE_CFG)
-else
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_ANDROID_VMX_CFG)
-else
-SDK_CFGFILE := $(SDK_CFG_DIR)/$(HISI_SDK_ANDROID_CFG)
-endif
-endif
-endif
-
 # Kernel configure
 RAMDISK_ENABLE := true
 ANDROID_KERNEL_CONFIG := hi3798mv100_android_defconfig
@@ -45,15 +27,6 @@ EMMC_BOOT_REG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_emmc.
 EMMC_BOOT_ENV_STARTADDR :=0x100000
 EMMC_BOOT_ENV_SIZE=0x10000
 EMMC_BOOT_ENV_RANGE=0x10000
-
-#false: system build with recovery
-#true: system build with loader
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-TARGET_HAVE_APPLOADER := true
-#apploader config
-APPLOADER_CFG := hi3798mdmo_hi3798mv100_android_apploader_vmx_cfg.mak
-APPLOADER_KERNEL_CONFIG := hi3798mv100_loader_defconfig
-endif
 
 #
 # ext4 file system configure

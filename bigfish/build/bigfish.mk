@@ -86,11 +86,9 @@ endif
 -include device/hisilicon/bigfish/build/bootargs.mk
 # hipro
 -include device/hisilicon/bigfish/build/hipro.mk
-# apploader
--include device/hisilicon/bigfish/build/apploader.mk
+# security
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
 ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
-# security
 -include device/hisilicon/bigfish/build/security.mk
 endif
 endif
@@ -116,11 +114,9 @@ prebuilt: $(EMMC_PREBUILT_IMG)
 #----------------------------------------------------------------------
 # Full Compile
 #----------------------------------------------------------------------
-ifeq ($(strip $(TARGET_HAVE_APPLOADER)),true)
-RECORVERY_OR_APPLOADER_TARGET := apploader
-else
+
 RECORVERY_OR_APPLOADER_TARGET := recoveryimg updatezip
-endif
+
 .PHONY: bigfish
 bigfish: prebuilt hiboot secureos kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
 ifdef BOARD_QBSUPPORT

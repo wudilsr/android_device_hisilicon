@@ -66,10 +66,6 @@ ifeq ($(CFG_HI_RESAMPLER_QUALITY_LINEAR),y)
 objects += resampler
 endif
 
-ifeq ($(CFG_HI_LOADER_SUPPORT),y)
-objects += loader
-endif
-
 ifeq ($(CFG_HI_WIFI_SUPPORT),y)
 objects += wifi
 endif

@@ -21,7 +21,7 @@
 #ott stands for OTT or the China Mobile provincial procurement mode.
 #dvb stands for dvb version.
 #Please modify here before compilation
-PRODUCT_TARGET := telecom
+PRODUCT_TARGET := aosp
 
 #Setup SecurityL1
 HISILICON_SECURITY_L1 := false
@@ -47,14 +47,6 @@ endif
 #Quick Boot Support
 BOARD_QBSUPPORT := false
 
-#Verimatrix Advanced
-VMX_ADVANCED_SUPPORT := false
-
-ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vmx.support=true
-endif
-
 #support sdcardfs.
 SUPPORT_SDCARDFS := true
 
@@ -62,7 +54,7 @@ SUPPORT_SDCARDFS := true
 SUPPORT_FUSE := fuse
 
 #SUPPROT UI for wipe data or update from USB when pressed remote control power button on boot
-SUPPORT_REMOTE_RECOVERY := true
+SUPPORT_REMOTE_RECOVERY := false
 
 # Whether fastplay should be played completely or not: true or false
 PRODUCT_PROPERTY_OVERRIDES += \

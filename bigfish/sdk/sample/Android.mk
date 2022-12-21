@@ -14,14 +14,6 @@ SAMPLE_MODULE := common esplay ao tsplay es_ts_switch ipplay mosaic pip log memd
           gpio ir e2prom i2c  \
           otp flash uart network fs cipher snapshot pwm edid video_test pq playready
 
-ifneq ($(PRODUCT_TARGET),shcmcc)
-ifneq ($(VMX_ADVANCED_SUPPORT),true)
-ifneq ($(HISILICON_TEE),true)
-SAMPLE_MODULE += pmoc
-endif
-endif
-endif
-
 ifeq ($(CFG_HI_FRONTEND_SUPPORT),y)
 SAMPLE_MODULE += tuner demux dvbplay psi iframe_dec uti1201 factory_detect
 endif
@@ -67,10 +59,6 @@ endif
 ifeq ($(CFG_HI_RESAMPLER_QUALITY_LINEAR),y)
 SAMPLE_MODULE += resampler
 endif
-
-#ifeq ($(CFG_HI_LOADER_SUPPORT),y)
-SAMPLE_MODULE += loader
-#endif
 
 ifeq ($(CFG_HI_MCE_SUPPORT),y)
 SAMPLE_MODULE += mce

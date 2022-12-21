@@ -37,9 +37,6 @@ endif
 ifeq ($(CFG_HI_CURL_SUPPORT),y)
 COMPONENT_MODULE += curl
 endif
-#ifeq ($(CFG_HI_LOADER_SUPPORT),y)
-COMPONENT_MODULE += loader
-#endif
 
 ifeq ($(CFG_HI_DIRECTFB_SUPPORT),y)
 COMPONENT_MODULE += directfb

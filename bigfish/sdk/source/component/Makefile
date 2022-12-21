@@ -120,12 +120,6 @@ depends_install     := $(addsuffix _install,$(depends))
 depends_uninstall   := $(addsuffix _uninstall,$(depends))
 
 ifeq ($(obj),)
-    ifeq ($(CFG_HI_LOADER_SUPPORT),y)
-    depends             += loader
-    depends_clean       += loader_clean
-    depends_install     += loader_install
-    depends_uninstall   += loader_uninstall
-    endif
 else ifeq ($(obj), loader)
     depends             += loader
     depends_clean       += loader_clean
