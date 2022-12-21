@@ -38,22 +38,14 @@ loader_root: recovery_root_for_loader
 	$(hide) cp   $(ANDROID_BUILD_TOP)/device/hisilicon/bigfish/upgrade/loader/etc/init.rc $(TARGET_LOADER_ROOT_OUT)/
 	$(hide) cp   $(PRODUCT_OUT)/system/bin/busybox  $(TARGET_LOADER_ROOT_OUT)/sbin/
 	$(hide) cp   $(PRODUCT_OUT)/system/bin/loader_recovery  $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_animation $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_bitmapfont $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_dec $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_fillrect $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_gdev $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_logo $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_performance $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_text $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(PRODUCT_OUT)/system/bin/sample_wm $(TARGET_LOADER_ROOT_OUT)/sbin/
-#	$(hide) cp   $(SDK_DIR)/sample/higo/res $(TARGET_LOADER_ROOT_OUT)/sbin/ -rf
 	$(hide) rm  -r $(TARGET_LOADER_ROOT_OUT)/sbin/recovery
+	
 loader_prepare: loader_root
 	mkdir -p $(LOADER_OUT)
 	$(MAKE) -C $(HISI_KERNEL_SOURCE) distclean
 	echo "build loader config: KERNEL_CONFIG=$(ANDROID_KERNEL_CONFIG)"
 	cd $(SDK_DIR);$(MAKE) linux_prepare SDK_CFGFILE=$(SDK_CFGFILE); cd -;
+	
 loader_config: loader_prepare
 	if [ -f $(LOADER_OUT)/.config ]; then \
 	echo "Attention:$(LOADER_OUT)/.config exist"; \
@@ -65,10 +57,12 @@ loader_config: loader_prepare
 	ARCH=arm CROSS_COMPILE=arm-hisiv200-linux- \
 	$(ANDROID_KERNEL_CONFIG); \
 	fi
+	
 loader_menuconfig: loader_config
 	$(MAKE) -C $(HISI_KERNEL_SOURCE) O=$(ANDROID_BUILD_TOP)/$(TARGET_OUT_INTERMEDIATES)/LOADER_OBJ \
 		SDK_CFGFILE=$(SDK_CFGFILE) \
 		ARCH=arm CROSS_COMPILE=arm-hisiv200-linux- menuconfig
+		
 $(LOADER_IMAGE): loader_config $(INSTALLED_RAMDISK_TARGET) | $(ACP)
 	$(MAKE) -C $(HISI_KERNEL_SOURCE) O=$(ANDROID_BUILD_TOP)/$(TARGET_OUT_INTERMEDIATES)/LOADER_OBJ \
 		SDK_CFGFILE=$(SDK_CFGFILE) \

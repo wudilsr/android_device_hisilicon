@@ -15,10 +15,6 @@
 #
 include device/hisilicon/$(TARGET_PRODUCT)/customer.mk
 
-ifndef PRODUCT_TARGET
-PRODUCT_TARGET := aosp
-endif
-
 #HiPlayer graphic output
 PRODUCT_PROPERTY_OVERRIDES += \
     service.media.hiplayer.graphic=true
@@ -30,22 +26,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 #HiPlayer: for vo switch channel freeze
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.hiplayer.vo.freeze=false
-    
-#if open HiPlayer: for vo switch channel freeze
-ifeq ($(PRODUCT_TARGET),shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.media.timeshift=1
-PRODUCT_PROPERTY_OVERRIDES += \
-    client.apk.name= wasu.app
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.settings.support=1
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.settings.support.net.flags=7
-PRODUCT_PROPERTY_OVERRIDES += \
-    sys.deepdiagnose.support=1
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.timezone=Asia/Shanghai
-endif
 
 #wifi disguise
     persist.ethernet.wifidisguise=true
@@ -62,69 +42,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
      ro.sf.lcd_density=240
 
-ifdef HISILICON_SECURITY_L1
-ifeq ($(HISILICON_SECURITY_L1),true)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hs.security.l1.enable=$(HISILICON_SECURITY_L1)
-ifneq (,$(wildcard device/hisilicon/${CHIPNAME}/security/releasekey.x509.pem))
-ifneq (,$(wildcard device/hisilicon/${CHIPNAME}/security/releasekey.pk8))
-PRODUCT_DEFAULT_DEV_CERTIFICATE := \
-    device/hisilicon/${CHIPNAME}/security/releasekey
-else
-$(warning device/hisilicon/${CHIPNAME}/security/releasekey.pk8 does not exist!)
-endif
-else
-$(warning device/hisilicon/${CHIPNAME}/security/releasekey.x509.pem does not exist!)
-endif
-endif
-endif
-
-ifeq ($(strip $(HISILICON_SECURITY_L3)),true)
-HISILICON_SECURITY_L2 := true
-endif
-
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-PRODUCT_DEFAULT_DEV_CERTIFICATE := \
-    device/hisilicon/${CHIPNAME}/security/releasekey
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hs.security.l1.enable=true
-HISILICON_SECURITY_L2_SYSTEM_CHECK := false
-endif
-
-ifeq ($(strip $(PRODUCT_TARGET)), telecom)
-UEVENTD_TYPE_NAME := telecom
-else ifeq ($(strip $(PRODUCT_TARGET)), unicom)
-UEVENTD_TYPE_NAME := telecom
-else ifeq ($(strip $(PRODUCT_TARGET)), shcmcc)
-UEVENTD_TYPE_NAME := mobile
-else
 UEVENTD_TYPE_NAME := default
-endif
 
-ifeq ($(strip $(PRODUCT_TARGET)), ott)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.target=ott
-endif
-ifeq ($(strip $(PRODUCT_TARGET)), shcmcc)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.target=shcmcc
-endif
-ifeq ($(strip $(PRODUCT_TARGET)), telecom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.target=telecom
-endif
-ifeq ($(strip $(PRODUCT_TARGET)), unicom)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.target=unicom
-endif
-ifeq ($(strip $(PRODUCT_TARGET)), dvb)
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.product.target=dvb
-endif
-ifeq ($(strip $(PRODUCT_TARGET)), demo)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.target=demo
-endif
 
 PRODUCT_PROPERTY_FOR_DRM_SERVICE := true
 ifeq ($(strip $(PRODUCT_PROPERTY_FOR_DRM_SERVICE)), true)
@@ -287,17 +208,6 @@ PRODUCT_PACKAGES += \
     libWVStreamControlAPI_L$(BOARD_WIDEVINE_OEMCRYPTO_LEVEL) \
     libwvdrm_L$(BOARD_WIDEVINE_OEMCRYPTO_LEVEL)
 
-ifeq ($(strip $(HISILICON_TEE)),true)
-PRODUCT_PACKAGES += \
-    teecd \
-    liboemcrypto \
-    libemptydrmplugin \
-    test_modularwv_hal \
-    sample_keybox \
-    sample_checkkeybox \
-    upgrade_keybox \
-    oemcrypto_test
-endif
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
@@ -351,7 +261,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/base/cmds/preload/preloadclass.jar:system/framework/preloadclass.jar
 
-PRODUCT_COPY_FILES += device/hisilicon/bigfish/frameworks/fastbootoptimize/prebuilt/ZygoteOptimize.jar:system/framework/ZygoteOptimize.jar
+PRODUCT_COPY_FILES += \
+    device/hisilicon/bigfish/frameworks/fastbootoptimize/prebuilt/ZygoteOptimize.jar:system/framework/ZygoteOptimize.jar
 
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 

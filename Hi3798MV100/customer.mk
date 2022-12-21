@@ -23,27 +23,6 @@
 #Please modify here before compilation
 PRODUCT_TARGET := aosp
 
-#Setup SecurityL1
-HISILICON_SECURITY_L1 := false
-
-#Setup SecurityL2
-HISILICON_SECURITY_L2 := false
-HISILICON_SECURITY_L2_COMMON_MODE_SIGN := false
-
-#Setup SecurityL3
-HISILICON_SECURITY_L3 := false
-
-#setup android tee
-HISILICON_TEE := false
-
-ifeq ($(strip $(HISILICON_TEE)),true)
-HISILICON_TEE_MEM := 2G
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.drm.tee=true \
-    ro.drm.tvp=true \
-    ro.playready.tee=false
-endif
-
 #Quick Boot Support
 BOARD_QBSUPPORT := false
 
