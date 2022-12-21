@@ -56,10 +56,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 endif
 
 #support sdcardfs.
-SUPPORT_SDCARDFS := false
+SUPPORT_SDCARDFS := true
 
 #support fuse
-SUPPORT_FUSE := false
+SUPPORT_FUSE := fuse
 
 #SUPPROT UI for wipe data or update from USB when pressed remote control power button on boot
 SUPPORT_REMOTE_RECOVERY := true
