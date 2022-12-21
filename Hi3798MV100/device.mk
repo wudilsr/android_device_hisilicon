@@ -193,7 +193,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # MediaScanner
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.mediaScanner.enable=false
+    ro.mediaScanner.enable=true
 
 # DEFAULT STORAGE
 PRODUCT_PROPERTY_OVERRIDES += \

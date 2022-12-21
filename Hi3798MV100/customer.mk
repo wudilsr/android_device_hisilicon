@@ -86,7 +86,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 #set video output rate for telecom and unicom, defalt 4:3
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.video.cvrs= 1
+    persist.sys.video.cvrs= 0
 
 #if thirdparty dhcp service is needed to obtain ip, please set this property true
 # default value is false
@@ -95,7 +95,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # smart_suspend, deep_launcher, deep_restart, deep_resume;
 PRODUCT_PROPERTY_OVERRIDES += \
-     persist.suspend.mode=deep_restart
+     persist.suspend.mode=deep_resume
 
 # Output format adaption for 2D streams
 # false -> disable; true -> enable

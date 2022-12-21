@@ -26,7 +26,6 @@ endif
 recovery_prepare:
 	mkdir -p $(RECOVERY_OUT)
 	mkdir -p $(EMMC_PRODUCT_OUT)
-	mkdir -p $(NAND_PRODUCT_OUT)
 	$(MAKE) -C $(HISI_KERNEL_SOURCE) distclean
 	echo "build recovery config: KERNEL_CONFIG=$(RECOVERY_KERNEL_CONFIG)"
 	cd $(SDK_DIR);$(MAKE) linux_prepare SDK_CFGFILE=$(SDK_CFG_DIR)/$(HISI_SDK_RECOVERY_CFG); cd -;
@@ -103,7 +102,6 @@ $(RECOVERY_IMAGE): \
 		-j 128 uImage
 	$(hide) cp -avf $(RECOVERY_OUT)/arch/arm/boot/uImage $@
 	$(hide) chmod a+r $@
-	cp -avf $@ $(NAND_PRODUCT_OUT)
 	cp -avf $@ $(EMMC_PRODUCT_OUT)
 
 endif

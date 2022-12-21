@@ -78,7 +78,6 @@ $(LOADER_IMAGE): loader_config $(INSTALLED_RAMDISK_TARGET) | $(ACP)
 		-j 128 uImage
 	$(hide) cp -avf $(LOADER_OUT)/arch/arm/boot/uImage $@
 	$(hide) chmod a+r $@
-	cp -avf $@ $(NAND_PRODUCT_OUT)
 	cp -avf $@ $(EMMC_PRODUCT_OUT)
 .PHONY: loaderimg $(LOADER_IMAGE)
 loaderimg: $(LOADER_IMAGE)

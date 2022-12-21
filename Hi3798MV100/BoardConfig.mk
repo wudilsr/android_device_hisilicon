@@ -46,13 +46,6 @@ EMMC_BOOT_ENV_STARTADDR :=0x100000
 EMMC_BOOT_ENV_SIZE=0x10000
 EMMC_BOOT_ENV_RANGE=0x10000
 
-# nand fastboot configure
-NAND_BOOT_CFG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_nand.cfg
-NAND_BOOT_REG_NAME := hi3798mdmo1g_hi3798mv100_ddr3_1gbyte_16bitx2_4layers_nand.reg
-NAND_BOOT_ENV_STARTADDR :=0x800000
-NAND_BOOT_ENV_SIZE=0x10000
-NAND_BOOT_ENV_RANGE=0x10000
-
 #false: system build with recovery
 #true: system build with loader
 ifeq ($(strip $(VMX_ADVANCED_SUPPORT)),true)
@@ -186,7 +179,7 @@ TARGET_CPU_SMP := true
 
 # Disable use system/core/rootdir/init.rc
 # HiSilicon use device/hisilicon/bigfish/etc/init.rc
-TARGET_PROVIDES_INIT_RC := true
+TARGET_PROVIDES_INIT_RC := truehttps://github.com/wudilsr/android_device_hisilicon-test/search?q=nand
 
 # Configure Board Platform name
 TARGET_BOARD_PLATFORM := bigfish

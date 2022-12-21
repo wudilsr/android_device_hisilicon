@@ -17,7 +17,6 @@ ifeq ($(strip $(SUPPORT_REMOTE_RECOVERY)),true)
 TARGET_OUT_BACKUP:=$(PRODUCT_OUT)/backup
 endif
 TARGET_OUT_PRIVATE:=$(PRODUCT_OUT)/private
-NAND_PRODUCT_OUT := $(PRODUCT_OUT)/Nand
 EMMC_PRODUCT_OUT := $(PRODUCT_OUT)/Emmc
 ifeq ($(strip $(HISILICON_TEE)),true)
 TARGET_OUT_SECURESTORE:=$(PRODUCT_OUT)/securestore
@@ -79,8 +78,6 @@ endif
 -include device/hisilicon/bigfish/build/ubi.mk
 # ext4
 -include device/hisilicon/bigfish/build/ext4.mk
-# nand
--include device/hisilicon/bigfish/build/nand.mk
 # emmc
 -include device/hisilicon/bigfish/build/emmc.mk
 # Audio Update zip
@@ -101,7 +98,7 @@ endif
 
 # hiboot
 .PHONY: hiboot
-hiboot: $(NAND_HIBOOT_IMG) $(EMMC_HIBOOT_IMG)
+hiboot: $(EMMC_HIBOOT_IMG)
 # updatezip
 .PHONY: updatezip
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
@@ -111,11 +108,11 @@ else
 updatezip: $(EMMC_UPDATE_PACKAGE)
 endif
 else
-updatezip: $(NAND_UPDATE_PACKAGE) $(EMMC_UPDATE_PACKAGE)
+updatezip: $(EMMC_UPDATE_PACKAGE)
 endif
 # prebuilt
 .PHONY:prebuilt
-prebuilt: $(NAND_PREBUILT_IMG) $(EMMC_PREBUILT_IMG)
+prebuilt: $(EMMC_PREBUILT_IMG)
 #----------------------------------------------------------------------
 # Full Compile
 #----------------------------------------------------------------------
@@ -127,14 +124,10 @@ endif
 .PHONY: bigfish
 bigfish: prebuilt hiboot secureos kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
 ifdef BOARD_QBSUPPORT
-ifeq ($(strip $(BOARD_QBSUPPORT)),true)
-	$(hide) rm  -rf $(NAND_PRODUCT_OUT)
-endif
 ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
 ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
 	$(hide) rm  -rf $(EMMC_PRODUCT_OUT)
 endif
-	$(hide) rm  -rf $(NAND_PRODUCT_OUT)
 endif
 endif
 #----------------------------------------------------------------------

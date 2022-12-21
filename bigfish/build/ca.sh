@@ -20,7 +20,6 @@ sed -i '/^.*CFG_HI_ADVCA_SUPPORT is not set*/c\CFG_HI_ADVCA_SUPPORT=y\nCFG_ADVCA
 sed -i '/^.*# CFG_HI_BOOT_COMPRESSED is not set*/c\CFG_HI_BOOT_COMPRESSED=y' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/sdk/configs/$ChipName/$HISI_SDK_ANDROID_CFG
 sed -i 's/^.*ext4@system.*/\    mount ext4 ext4@system \/system ro rro/g' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/etc/init.rc
 sed -i 's/20M(misc),500M(system)/20M(misc),4M(systemsign),500M(system)/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/etc/bootargs_$TARGET_PRODUCT-emmc.txt
-sed -i 's/20M(misc),500M(system)/20M(misc),4M(systemsign),500M(system)ro/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/etc/bootargs_$TARGET_PRODUCT-nand.txt
 sed -i 's/mtd13\/mtdblock13 Ubifs=ubi3_0/mtd14\/mtdblock14 Ubifs=ubi3_0/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/etc/vold.fstab
 sed -i 's/mmcblk0p16/mmcblk0p17/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/etc/vold.emmc.fstab
 
@@ -31,22 +30,10 @@ sed -i 's/Start="710M" Length="1024M"/Start="714M" Length="1024M"/g' ${ANDROID_B
 sed -i 's/Start="1734M" Length="100M"/Start="1738M" Length="100M"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-emmc.xml
 sed -i 's/Start="1834M" Length="-"/Start="1838M" Length="-"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-emmc.xml
 
-sed -i '/PartitionName="systemsign"/d' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-sed -i '/PartitionName="misc"/a<Part Sel="1" PartitionName="systemsign" FlashType="nand" FileSystem="none" Start="196M" Length="4M" SelectFile=""/>' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-sed -i 's/Start="196M" Length="500M"/Start="200M" Length="500M"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-sed -i 's/Start="696M" Length="1024M"/Start="700M" Length="1024M"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-sed -i 's/Start="1720M" Length="100M"/Start="1724M" Length="100M"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-sed -i 's/Start="1820M" Length="-"/Start="1824M" Length="-"/g' ${ANDROID_BUILD_TOP}/device/hisilicon/$TARGET_PRODUCT/prebuilts/$TARGET_PRODUCT-nand.xml
-
 sed -i '/update\/update.zip /a\\t$(hide) cp -a $(EMMC_PRODUCT_OUT)/update/file/META-INF.zip  $(EMMC_PRODUCT_OUT)/' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/emmc.mk
 sed -i '/update\/update.zip /a\\t$(hide) (cd $(EMMC_PRODUCT_OUT)/update/file && zip -ry META-INF.zip META-INF/*)' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/emmc.mk
 sed -i '/update\/update.zip /a\\t$(hide) cp -a $(TOPDIR)bootable/recovery/etc/META-INF/com/google/android/updater-script-ca-emmc $(EMMC_PRODUCT_OUT)/update/file/META-INF/com/google/android/updater-script' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/emmc.mk
 sed -i '/update\/update.zip /d' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/emmc.mk
-
-sed -i '/update\/update.zip /a\\t$(hide) cp -a $(NAND_PRODUCT_OUT)/update/file/META-INF.zip  $(NAND_PRODUCT_OUT)/' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/nand.mk
-sed -i '/update\/update.zip /a\\t$(hide) (cd $(NAND_PRODUCT_OUT)/update/file && zip -ry META-INF.zip META-INF/*)' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/nand.mk
-sed -i '/update\/update.zip /a\\t$(hide) cp -a $(TOPDIR)bootable/recovery/etc/META-INF/com/google/android/updater-script-ca-nand $(NAND_PRODUCT_OUT)/update/file/META-INF/com/google/android/updater-script' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/nand.mk
-sed -i '/update\/update.zip /d' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/build/nand.mk
 
 CFG_HI_CHIP_TYPE=` grep "CFG_HI_CHIP_TYPE"  ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/sdk/configs/$ChipName/$HISI_SDK_ANDROID_CFG |cut -d =  -f2 | tr -d ' '`
 sed -i '/CONFIG_CA_RUNTIME_CHECK/d' ${ANDROID_BUILD_TOP}/device/hisilicon/bigfish/sdk/source/kernel/linux-3.10.y/arch/arm/configs/${CFG_HI_CHIP_TYPE}_android_defconfig

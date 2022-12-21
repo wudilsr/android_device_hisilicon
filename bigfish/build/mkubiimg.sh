@@ -10,8 +10,6 @@ function usage ()
 	echo "Usage: ${selfname} toolspath Dir Pagesize Blocksize"
 	echo "  toolspath     the path of mkfs.ubifs,ubinize:"
 	echo "  Dir           the directory you want to make ubifs"
-	echo "  Pagesize      NAND page size. 2k/4k/8k."
-	echo "  Blocksize     NAND block size. 128k/1M "
 	echo "Example:"
 	echo "  ${selfname} tools  system 4k 1M"
 	echo ""

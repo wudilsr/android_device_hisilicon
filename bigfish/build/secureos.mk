@@ -14,7 +14,6 @@ ANDROID_SECUREOS_FLAGS := CFG_TVP_MEM_${HISILICON_TEE_MEM}=y CFG_HI_TVP_MEM_LAYO
 SECUREOS_OBJ_prepare:
 	mkdir -p $(SECUREOS_OUT)
 	mkdir -p $(EMMC_PRODUCT_OUT)
-	mkdir -p $(NAND_PRODUCT_OUT)
 
 $(SECUREOS_IMAGE):SECUREOS_OBJ_prepare
 	cd $(SDK_DIR);$(MAKE) tee O=$(SECUREOS_OUT) $(ANDROID_SECUREOS_FLAGS) \
@@ -25,7 +24,6 @@ ifeq ($(strip $(HISILICON_TEE)),true)
 secureos: $(SECUREOS_IMAGE)
 	cp -avf $(SECUREOS_IMAGE) $(PRODUCT_OUT)
 	cp -avf $(SECUREOS_IMAGE) $(EMMC_PRODUCT_OUT)
-	cp -avf $(SECUREOS_IMAGE) $(NAND_PRODUCT_OUT)
 
 #	$(hide) mkdir -p $(SECURE_OBJ_DIR)
 #	$(hide) chmod a+x $(SDK_LINUX_SIGN_TOOL_DIR)/CASignTool

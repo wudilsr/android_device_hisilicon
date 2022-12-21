@@ -159,11 +159,8 @@ emmc_fastboot_prepare:
 	mkdir -p $(EMMC_HIBOOT_OBJ)
 	mkdir -p $(EMMC_PRODUCT_OUT)
 
-ifneq ($(NAND_HIBOOT_IMG),)
-$(EMMC_HIBOOT_IMG): emmc_fastboot_prepare $(NAND_HIBOOT_IMG)
-else
 $(EMMC_HIBOOT_IMG): emmc_fastboot_prepare
-endif
+
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
@@ -212,11 +209,8 @@ emmc_fastboot_prepare_2:
 	mkdir -p $(EMMC_HIBOOT_OBJ_2)
 	mkdir -p $(EMMC_PRODUCT_OUT)
 
-ifneq ($(NAND_HIBOOT_IMG),)
-$(EMMC_HIBOOT_IMG_2): emmc_fastboot_prepare_2 $(NAND_HIBOOT_IMG)
-else
 $(EMMC_HIBOOT_IMG_2): emmc_fastboot_prepare_2
-endif
+
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ_2);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
@@ -242,7 +236,6 @@ CFG_HI_APPLOADER_SUPPORT=y' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
 
 .PHONY: hiboot-emmc-2
 hiboot-emmc-2: $(EMMC_HIBOOT_IMG_2)
-endif
 #----------------------------------------------------------------------
 # hiboot END
 #

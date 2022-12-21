@@ -43,7 +43,6 @@ $(info -------------HI_EXTRA_AFLAGS=$(HI_EXTRA_AFLAGS))
 kernel_prepare:
 	mkdir -p $(KERNEL_OUT)
 	mkdir -p $(EMMC_PRODUCT_OUT)
-	mkdir -p $(NAND_PRODUCT_OUT)
 	mkdir -p $(TARGET_OUT_SHARED_LIBRARIES)/modules
 	$(MAKE) -C $(HISI_KERNEL_SOURCE) $(HI_EXTRA_FLAGS) CFLAGS_KERNEL=$(HI_EXTRA_CFLAGS) AFLAGS_KERNEL=$(HI_EXTRA_AFLAGS) distclean
 	echo "build kernel config: KERNEL_CONFIG=$(ANDROID_KERNEL_CONFIG)"
@@ -77,7 +76,6 @@ $(KERNEL_IMAGE): kernel_config $(INSTALLED_RAMDISK_TARGET) | $(ACP)
 	$(hide) cp -avf $(KERNEL_OUT)/arch/arm/boot/uImage $@
 	$(hide) chmod a+r $@
 	$(hide) echo HI_EXTRA_FLAGS=$(HI_EXTRA_FLAGS) CFLAGS_KERNEL=$(HI_EXTRA_CFLAGS) AFLAGS_KERNEL=$(HI_EXTRA_AFLAGS)
-	cp -avf $@ $(NAND_PRODUCT_OUT)
 	cp -avf $@ $(EMMC_PRODUCT_OUT)
 else
 $(KERNEL_IMAGE): kernel_config $(INSTALLED_RAMDISK_TARGET) | $(ACP)
@@ -114,7 +112,6 @@ else
 .PHONY: kernel $(KERNEL_IMAGE) $(INSTALLED_BOOTIMAGE_TARGET)
 $(INSTALLED_KERNEL_TARGET): $(KERNEL_IMAGE)
 kernel: $(INSTALLED_BOOTIMAGE_TARGET)
-	cp -avf $(INSTALLED_BOOTIMAGE_TARGET) $(NAND_PRODUCT_OUT)/kernel.img
 	cp -avf $(INSTALLED_BOOTIMAGE_TARGET) $(EMMC_PRODUCT_OUT)/kernel.img
 endif
 
