@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <VideoView android:id="@id/VideoView01" android:layout_width="800.0px" android:layout_height="680.0px" />
-    <Button android:id="@id/LoadButton" android:layout_width="80.0px" android:layout_height="wrap_content" android:layout_x="300.0px" android:layout_y="30.0px" />
-    <Button android:id="@id/PlayButton" android:layout_width="80.0px" android:layout_height="wrap_content" android:layout_x="300.0px" android:layout_y="120.0px" />
-    <Button android:id="@id/PauseButton" android:layout_width="80.0px" android:layout_height="wrap_content" android:layout_x="300.0px" android:layout_y="210.0px" />
-</LinearLayout>
