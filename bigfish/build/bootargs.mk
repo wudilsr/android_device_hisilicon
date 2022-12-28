@@ -1,5 +1,5 @@
 MAKEBOOTARGS := $(BUILD_OUT_EXECUTABLES)/mkbootargs$(BUILD_EXECUTABLE_SUFFIX)
-EMMC_SRCFILE := device/hisilicon/$(CHIPNAME)/etc/bootargs_$(CHIPNAME).txt
+EMMC_SRCFILE := device/hisilicon/$(CHIPNAME)/rootdir/etc/bootargs_$(CHIPNAME).txt
 
 EMMC_BOOTARGS := $(EMMC_PRODUCT_OUT)/bootargs.bin
 

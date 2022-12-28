@@ -5,7 +5,7 @@ ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT)/etc
-LOCAL_SRC_FILES := vold.emmc.fstab
+LOCAL_SRC_FILES := etc/vold.emmc.fstab
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
@@ -14,14 +14,14 @@ ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT)/etc
-LOCAL_SRC_FILES := vold.fstab
+LOCAL_SRC_FILES := etc/vold.fstab
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := limitApplications.xml
+LOCAL_MODULE := etclimitApplications.xml
 ALL_DEFAULT_INSTALLED_MODULES += $(LOCAL_MODULE)
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT)/etc
-LOCAL_SRC_FILES := limitApplications.xml
+LOCAL_SRC_FILES := etc/limitApplications.xml
 include $(BUILD_PREBUILT)

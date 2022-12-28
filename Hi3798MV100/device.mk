@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 The Android Open-Source Project
+# Copyright 2014 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 include device/hisilicon/$(TARGET_PRODUCT)/customer.mk
 
 #HiPlayer graphic output
@@ -206,8 +207,8 @@ PRODUCT_COPY_FILES += \
     device/hisilicon/bigfish/etc/tablet_core_hardware.xml:system/etc/permissions/tablet_core_hardware.xml
 
 PRODUCT_COPY_FILES += \
-    device/hisilicon/${CHIPNAME}/etc/root/init.bigfish.rc:root/init.bigfish.rc \
-    device/hisilicon/${CHIPNAME}/etc/init.bigfish.sh:system/etc/init.bigfish.sh
+    device/hisilicon/${CHIPNAME}/rootdir/etc/root/init.bigfish.rc:root/init.bigfish.rc \
+    device/hisilicon/${CHIPNAME}/rootdir/etc/init.bigfish.sh:system/etc/init.bigfish.sh
 
 # audio
 PRODUCT_COPY_FILES += \

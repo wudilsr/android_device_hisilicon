@@ -16,6 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-# bigfish
--include device/hisilicon/bigfish/build/bigfish.mk
-
+ifneq ($(filter Hi3798MV100,$(TARGET_DEVICE)),)
+include $(call all-makefiles-under,$(LOCAL_PATH))
+endif
