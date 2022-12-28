@@ -3,7 +3,6 @@ LOCAL_PATH := $(call my-dir)
 driver_modules := \
     sampleatc \
     hinetworkutils \
-    hiaudio       \
     hibdinfo      \
     hidvdinfo     \
     hidisplaymanager \

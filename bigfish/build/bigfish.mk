@@ -24,8 +24,6 @@ UPDATE_TOOLS :=$(HOST_OUT_EXECUTABLES)/bsdiff \
 -include device/hisilicon/bigfish/build/ext4.mk
 # emmc
 -include device/hisilicon/bigfish/build/emmc.mk
-# Audio Update zip
--include device/hisilicon/bigfish/build/audio.mk
 # bootargs
 -include device/hisilicon/bigfish/build/bootargs.mk
 # hipro
