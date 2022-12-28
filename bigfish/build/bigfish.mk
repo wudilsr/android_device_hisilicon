@@ -34,9 +34,6 @@ UPDATE_TOOLS :=$(HOST_OUT_EXECUTABLES)/bsdiff \
 # hiboot
 .PHONY: hiboot
 hiboot: $(EMMC_HIBOOT_IMG)
-# updatezip
-.PHONY: updatezip
-updatezip: $(EMMC_UPDATE_PACKAGE)
 # prebuilt
 .PHONY:prebuilt
 prebuilt: $(EMMC_PREBUILT_IMG)
@@ -44,7 +41,7 @@ prebuilt: $(EMMC_PREBUILT_IMG)
 # Full Compile
 #----------------------------------------------------------------------
 
-RECORVERY_OR_APPLOADER_TARGET := recoveryimg updatezip
+RECORVERY_OR_APPLOADER_TARGET := recoveryimg
 
 .PHONY: bigfish
 bigfish: prebuilt hiboot kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
