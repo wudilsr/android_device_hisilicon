@@ -14,13 +14,6 @@
 # limitations under the License.
 #
 
-#Product usage selection, possible values are: shcmcc/telecom/unicom/ott/dvb/demo
-#shcmcc stands for the ShangHai Mobile video base mode.
-#telecom stands for the China Telecom centralized procurement mode.
-#unicom stands for the China Unicom centralized procurement mode.
-#ott stands for OTT or the China Mobile provincial procurement mode.
-#dvb stands for dvb version.
-#Please modify here before compilation
 PRODUCT_TARGET := aosp
 
 #Quick Boot Support

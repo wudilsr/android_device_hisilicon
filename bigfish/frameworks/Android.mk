@@ -15,16 +15,8 @@ driver_modules := \
     hisysmanager \
     fastbootoptimize \
     qb \
-    audio_nodelay
-
-ifneq (,$(findstring Hi379,$(CHIPNAME)))
-driver_modules += hipq
-endif
-
-ifneq ($(PRODUCT_TARGET),shcmcc)
-    driver_modules += himediaplayer
-else
-    driver_modules += himediaplayer_mobile
-endif
+    audio_nodelay \
+    himediaplayer \
+    hipq
 
 include $(call all-named-subdir-makefiles,$(driver_modules))

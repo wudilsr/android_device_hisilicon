@@ -38,18 +38,7 @@ CFG_HI_BOOTLOADER_MODE_USB=y\
 CFG_HI_BOOTLOADER_USB_PROTOCOL_HISI_FILE=y' $(EMMC_HIPRO_OBJ)/$(HISI_SDK_ANDROID_CFG); \
 
 $(EMMC_HIPRO_IMG): emmc_hipro_prepare
-
 	cd $(SDK_DIR);$(MAKE) hiboot O=$(ANDROID_BUILD_TOP)/$(EMMC_HIPRO_OBJ) \
-	SDK_CFGFILE=../../../../$(EMMC_HIPRO_OBJ)/$(HISI_SDK_ANDROID_CFG);\
-	cp -arf $(ANDROID_BUILD_TOP)/$(SDK_DIR)/tools/windows/HiPro-serial $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/
-	cp -avf $(ANDROID_BUILD_TOP)/$(EMMC_HIPRO_OBJ)/fastboot-burn.bin $(ANDROID_BUILD_TOP)/$(EMMC_PRODUCT_OUT)/HiPro-serial/program.bin
-.PHONY: hipro-emmc
-hipro-emmc: $(EMMC_HIPRO_IMG)
-#----------------------------------------------------------------------
-# hipro-emmc END
-#
-
-# hiboot
+	SDK_CFGFILE=../../../../$(EMMC_HIPRO_OBJ)/$(HISI_SDK_ANDROID_CFG);
 .PHONY: hipro
 hipro: $(EMMC_HIPRO_IMG)
-

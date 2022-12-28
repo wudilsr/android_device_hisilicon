@@ -15,4 +15,5 @@
 #
 
 add_lunch_combo Hi3798MV100-eng
+add_lunch_combo Hi3798MV100-userdebug
 add_lunch_combo Hi3798MV100-user

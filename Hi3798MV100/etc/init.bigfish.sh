@@ -19,7 +19,6 @@ case $QBENABLE in
  esac
 
 #DVFS
-#echo 400000 > /sys/module/mali/parameters/mali_dvfs_max_freqency
 echo 0 > /sys/module/mali/parameters/mali_dvfs_enable
 echo 432000 1200 >/proc/msp/pm_gpu
 
@@ -39,14 +38,4 @@ case $LOW_RAM in
  *)
   ;;
  esac
-
-# Forced standby restart function
-#SUSPEND_RESTAR=`getprop persist.suspend.mode`
-#case $SUSPEND_RESTAR in
-# deep_restart)
-#  sleep 3;
-#  echo 0x1 0x1 > /proc/msp/pm
-#  ;;
-# *)
-#  ;;
-# esac
+ 

@@ -12,34 +12,6 @@ EMMC_PRODUCT_OUT := $(PRODUCT_OUT)/Emmc
 UPDATE_TOOLS :=$(HOST_OUT_EXECUTABLES)/bsdiff \
                $(HOST_OUT_EXECUTABLES)/fs_config
 
-ROOT_PRIV_KEY := $(shell test -f device/hisilicon/${CHIPNAME}/security/root_rsa_priv.txt && echo yes)
-ifeq ($(ROOT_PRIV_KEY),yes)
-$(warning device/hisilicon/${CHIPNAME}/security/root_rsa_priv.txt have exist!)
-else
-$(error device/hisilicon/${CHIPNAME}/security/root_rsa_priv.txt do not exist!)
-endif
-
-EXTERN_PRIV_KEY := $(shell test -f device/hisilicon/${CHIPNAME}/security/extern_rsa_priv.txt && echo yes)
-ifeq ($(EXTERN_PRIV_KEY),yes)
-$(warning device/hisilicon/${CHIPNAME}/security/extern_rsa_priv.txt have exist!)
-else
-$(error device/hisilicon/${CHIPNAME}/security/extern_rsa_priv.txt do not exist!)
-endif
-
-EXTERN_PUB_KEY := $(shell test -f device/hisilicon/${CHIPNAME}/security/extern_rsa_pub.txt && echo yes)
-ifeq ($(EXTERN_PUB_KEY),yes)
-$(warning device/hisilicon/${CHIPNAME}/security/extern_rsa_pub.txt have exist!)
-else
-$(error device/hisilicon/${CHIPNAME}/security/extern_rsa_pub.txt do not exist!)
-endif
-
-SECURITY_PRODUCTION_OUT := $(PRODUCT_OUT)/Security_L2/PRODUCTION
-SECURITY_MAINTAIN_OUT := $(PRODUCT_OUT)/Security_L2/MAINTAIN
-L2_EMMC_PRODUCTION_OUT :=  $(PRODUCT_OUT)/Security_L2/PRODUCTION
-L2_EMMC_MAINTAIN_OUT := $(PRODUCT_OUT)/Security_L2/MAINTAIN
-endif
-endif
-
 # kernel
 -include device/hisilicon/bigfish/build/kernel.mk
 # loader
@@ -58,28 +30,13 @@ endif
 -include device/hisilicon/bigfish/build/bootargs.mk
 # hipro
 -include device/hisilicon/bigfish/build/hipro.mk
-# security
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
--include device/hisilicon/bigfish/build/security.mk
-endif
-endif
--include device/hisilicon/bigfish/build/secureos.mk
 
 # hiboot
 .PHONY: hiboot
 hiboot: $(EMMC_HIBOOT_IMG)
 # updatezip
 .PHONY: updatezip
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
-updatezip: $(EMMC_SECURITY_UPDATE_PACKAGE)
-else
 updatezip: $(EMMC_UPDATE_PACKAGE)
-endif
-else
-updatezip: $(EMMC_UPDATE_PACKAGE)
-endif
 # prebuilt
 .PHONY:prebuilt
 prebuilt: $(EMMC_PREBUILT_IMG)
@@ -90,14 +47,7 @@ prebuilt: $(EMMC_PREBUILT_IMG)
 RECORVERY_OR_APPLOADER_TARGET := recoveryimg updatezip
 
 .PHONY: bigfish
-bigfish: prebuilt hiboot secureos kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
-ifdef BOARD_QBSUPPORT
-ifeq ($(strip $(HISILICON_SECURITY_L2)),true)
-ifneq ($(strip $(HISILICON_SECURITY_L3)),true)
-	$(hide) rm  -rf $(EMMC_PRODUCT_OUT)
-endif
-endif
-endif
+bigfish: prebuilt hiboot kernel ubifs ext4fs $(RECORVERY_OR_APPLOADER_TARGET)
 #----------------------------------------------------------------------
 # Full Compile End
 #----------------------------------------------------------------------

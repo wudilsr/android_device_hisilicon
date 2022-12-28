@@ -50,43 +50,33 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_FOR_DRM_SERVICE := true
 ifeq ($(strip $(PRODUCT_PROPERTY_FOR_DRM_SERVICE)), true)
 # add drm enable property for PlayReady/Widevine
-PRODUCT_PROPERTY_OVERRIDES += drm.service.enabled=true
+PRODUCT_PROPERTY_OVERRIDES += \
+    drm.service.enabled=true
 else
-PRODUCT_PROPERTY_OVERRIDES += drm.service.enabled=false
+PRODUCT_PROPERTY_OVERRIDES += \
+    drm.service.enabled=false
 endif
 
 PRODUCT_PROPERTY_FOR_DRM_CLIENT := true
 ifeq ($(strip $(PRODUCT_PROPERTY_FOR_DRM_CLIENT)), true)
 # add drm enable property for PlayReady/Widevine
-PRODUCT_PROPERTY_OVERRIDES += drm.client.enabled=true
+PRODUCT_PROPERTY_OVERRIDES += \
+    drm.client.enabled=true
 else
-PRODUCT_PROPERTY_OVERRIDES += drm.client.enabled=false
+PRODUCT_PROPERTY_OVERRIDES += \
+    drm.client.enabled=false
 endif
 
 # Configure Widevine Stream Cache Size for HD content
-PRODUCT_PROPERTY_OVERRIDES += ro.com.widevine.cachesize=16777216
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.com.widevine.cachesize=16777216
 
 # widevine debug fuse
-PRODUCT_PROPERTY_OVERRIDES += drm.widevine.debug=false
+PRODUCT_PROPERTY_OVERRIDES += \
+    drm.widevine.debug=false
 
-ifeq ($(strip $(BOARD_QBSUPPORT)), true)
-# isFirstBoot
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.firstboot.flag=true
-# FastBoot
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.qb.flag=true
-# quickboot enable
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.qb.enable=true
-
-PRODUCT_COPY_FILES += \
-    device/hisilicon/bigfish/etc/snapshot:root/sbin/snapshot \
-    device/hisilicon/bigfish/etc/andsnap:root/sbin/andsnap
-else
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.laterscan.enable=true
-endif
 
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0
@@ -125,24 +115,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.toastshow.enable=false
 
 # support sdcardfs
-ifeq ($(SUPPORT_SDCARDFS),true)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sdcardfs.support=true
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.sdcardfs.support=false
+    
 #fuse
-ifeq ($(SUPPORT_FUSE),true)
 HISI_FUSE_SDCARD := true
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.fuse.support=true
-else
-HISI_FUSE_SDCARD :=false
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.fuse.support=false
-endif
-
-endif
 
 # Dobly DMA Certification
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -227,8 +206,8 @@ PRODUCT_COPY_FILES += \
     device/hisilicon/bigfish/etc/tablet_core_hardware.xml:system/etc/permissions/tablet_core_hardware.xml
 
 PRODUCT_COPY_FILES += \
-    device/hisilicon/${CHIPNAME}/etc/init.${CHIPNAME}.rc:root/init.bigfish.rc \
-    device/hisilicon/${CHIPNAME}/etc/init.${CHIPNAME}.sh:system/etc/init.bigfish.sh
+    device/hisilicon/${CHIPNAME}/etc/root/init.bigfish.rc:root/init.bigfish.rc \
+    device/hisilicon/${CHIPNAME}/etc/init.bigfish.sh:system/etc/init.bigfish.sh
 
 # audio
 PRODUCT_COPY_FILES += \
@@ -258,6 +237,7 @@ PRODUCT_COPY_FILES += \
     device/hisilicon/bigfish/etc/restore:system/etc/restore \
     device/hisilicon/bigfish/etc/exitfastplay:system/etc/exitfastplay \
     device/hisilicon/bigfish/etc/security_l2_num:system/etc/security_l2_num
+    
 PRODUCT_COPY_FILES += \
     frameworks/base/cmds/preload/preloadclass.jar:system/framework/preloadclass.jar
 

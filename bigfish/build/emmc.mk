@@ -28,7 +28,7 @@ EMMC_PREBUILT_IMG := $(EMMC_CHIP_TABLE) \
 
 $(EMMC_PREBUILT_IMG) : $(EMMC_CHIP_TABLE) $(EMMC_PREBUILT_BASEPARAM_IMG) $(EMMC_PREBUILT_LOGO_IMG) $(EMMC_PREBUILT_FASTPLAY_IMG)
 
-.PHONY:prebuilt-emmc
+.PHONY: prebuilt-emmc
 prebuilt-emmc:$(EMMC_PREBUILT_IMG)
 
 #----------------------------------------------------------------------
@@ -45,7 +45,6 @@ emmc_fastboot_prepare:
 	mkdir -p $(EMMC_PRODUCT_OUT)
 
 $(EMMC_HIBOOT_IMG): emmc_fastboot_prepare
-
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
@@ -91,14 +90,9 @@ emmc_fastboot_prepare_2:
 	mkdir -p $(EMMC_PRODUCT_OUT)
 
 $(EMMC_HIBOOT_IMG_2): emmc_fastboot_prepare_2
-
 	cp $(SDK_DIR)/$(SDK_CFG_DIR)/$(EMMC_BOOT_ANDROID_CFG) $(EMMC_HIBOOT_OBJ_2);\
 	sed -i '/CFG_HI_LOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
 	sed -i '/CFG_HI_APPLOADER_SUPPORT/,1d' $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG); \
-	if [ "$(SUPPORT_REMOTE_RECOVERY)" = "true" ]; then \
-	sed -i -e '/# CFG_HI_BUILD_WITH_IR /a\CFG_HI_BUILD_WITH_IR = y' -e '/# CFG_HI_BUILD_WITH_IR/d' \
-	$(EMMC_HIBOOT_OBJ)/$(EMMC_BOOT_ANDROID_CFG); \
-	fi
 	if [ -n "$(EMMC_BOOT_ENV_STARTADDR)" ];then \
 	sed -i s/CFG_HI_BOOT_ENV_STARTADDR=.*/CFG_HI_BOOT_ENV_STARTADDR=${EMMC_BOOT_ENV_STARTADDR}/ $(EMMC_HIBOOT_OBJ_2)/$(EMMC_BOOT_ANDROID_CFG);\
 	fi
@@ -134,29 +128,15 @@ $(EMMC_UPDATE_PACKAGE): $(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGE
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file/META
-ifeq ($(strip $(SUPPROT_REMOTE_RECOVERY)),true)
-	$(hide) cp -af $(call include-path-for, recovery)/etc/recovery.emmc.fstab.update $(EMMC_PRODUCT_OUT)/update/file/META/recovery.fstab
-else
 	$(hide) cp -af $(call include-path-for, recovery)/etc/recovery.emmc.fstab $(EMMC_PRODUCT_OUT)/update/file/META/recovery.fstab
-endif
 	$(hide) cp -a $(PRODUCT_OUT)/bootargs_emmc.txt $(EMMC_PRODUCT_OUT)/update/file/META/bootargs.txt
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/fastboot.bin $(EMMC_PRODUCT_OUT)/update/file/fastboot.img
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/recovery.img $(EMMC_PRODUCT_OUT)/update/file/recovery.img
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/baseparam.img $(EMMC_PRODUCT_OUT)/update/file/baseparam.img
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/logo.img $(EMMC_PRODUCT_OUT)/update/file/logo.img
-ifneq ($(strip $(BOARD_QBSUPPORT)),true)
-	$(hide) cp -a $(EMMC_PRODUCT_OUT)/fastplay.img $(EMMC_PRODUCT_OUT)/update/file/fastplay.img
-endif
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/bootargs.bin $(EMMC_PRODUCT_OUT)/update/file/bootargs.img
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/kernel.img $(EMMC_PRODUCT_OUT)/update/file/boot.img
-ifeq ($(strip $(HISILICON_TEE)),true)
-	$(hide) cp -a $(EMMC_PRODUCT_OUT)/trustedcore.img $(EMMC_PRODUCT_OUT)/update/file/trustedcore.img
-endif
 	$(hide) cp -a $(EMMC_PRODUCT_OUT)/pq_param.bin $(EMMC_PRODUCT_OUT)/update/file/pq_param.img
-ifeq ($(strip $(BOARD_QBSUPPORT)),true)
-	$(hide) cp -a $(EMMC_PRODUCT_OUT)/userapi.bin $(EMMC_PRODUCT_OUT)/update/file/userapi.img
-	$(hide) cp -a $(EMMC_PRODUCT_OUT)/hibdrv.bin $(EMMC_PRODUCT_OUT)/update/file/hibdrv.img
-endif
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file/META-INF/com/google/android
 	$(hide) mkdir -p $(EMMC_PRODUCT_OUT)/update/file/META-INF/com/android
 	sed -n 's/ro.build.fingerprint/post-build/p' $(PRODUCT_OUT)/system/build.prop  > $(EMMC_PRODUCT_OUT)/update/file/META-INF/com/android/metadata
@@ -176,8 +156,8 @@ endif
 
 
 
-.PHONY: updatezip-emmc
-updatezip-emmc: $(EMMC_UPDATE_PACKAGE)
+.PHONY: updatezip
+updatezip: $(EMMC_UPDATE_PACKAGE)
 #----------------------------------------------------------------------
 # Generate The Update Package End
 #----------------------------------------------------------------------

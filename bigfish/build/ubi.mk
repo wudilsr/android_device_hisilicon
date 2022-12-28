@@ -43,7 +43,6 @@ $(UBITOOLS_DST) : $(HOST_OUT_EXECUTABLES)/% : $(TOOLS_OUT)/% | $(ACP)
 	$(transform-prebuilt-to-target)
 	$(hide) chmod a+x $@
 
-ifeq ($(SUPPORT_SDCARDFS),true)
 define make_ubi_core
 	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT) $(1) $(2);\
 	cp -rf $(TARGET_OUT_DATA) $(TARGET_OUT_USERDATA);\
@@ -51,16 +50,6 @@ define make_ubi_core
 	rm -rf $(TARGET_OUT_USERDATA);\
 	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT_CACHE) $(1) $(2)
 endef
-else
-define make_ubi_core
-	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT) $(1) $(2);\
-	cp -rf $(TARGET_OUT_DATA) $(TARGET_OUT_USERDATA);\
-	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT_USERDATA) $(1) $(2);\
-	rm -rf $(TARGET_OUT_USERDATA);\
-	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT_CACHE) $(1) $(2);\
-	$(UBISH_DST) $(HOST_OUT_EXECUTABLES) $(TARGET_OUT_SDCARD) $(1) $(2)
-endef
-endif
 
 define make_ubi_img
 	for page_block_size in $(1); do \
